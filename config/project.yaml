@@ -47,6 +47,27 @@ motion:
 # 話者定義。style_id は VOICEVOX の「スタイルID」。
 #   `python -m src.cli speakers` で ENGINE から一覧を取得できる。
 cast:
+  # ニュース向け。立ち絵なしのレイアウトではこちらを使う
+  キャスター:
+    key: anchor
+    aliases: [caster, anchor]
+    style_id: 2        # 四国めたん / ノーマル
+    speed: 1.02
+    pitch: 0.0
+    intonation: 1.0
+    position: none
+    color: "#3ea6ff"
+  解説:
+    key: analyst
+    aliases: [analyst, 記者]
+    style_id: 13       # 青山龍星 / ノーマル
+    speed: 1.0
+    pitch: 0.0
+    intonation: 1.0
+    position: none
+    color: "#f0c419"
+
+  # ゆっくり実況向け（show_characters: true のとき）
   霊夢:
     key: reimu
     aliases: [れいむ, reimu]

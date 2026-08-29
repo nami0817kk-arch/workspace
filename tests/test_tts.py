@@ -118,13 +118,22 @@ def test_wav_duration_matches_written_frames(tmp_path):
     assert wav_duration(path) == pytest.approx(1.0)
 
 
-def test_credits_list_voicevox_speakers():
-    class Named(SilentBackend):
-        def speaker_name(self, style_id):
-            return {2: "四国めたん", 3: "ずんだもん"}.get(style_id)
+class _Named(SilentBackend):
+    def speaker_name(self, style_id):
+        return {2: "四国めたん", 3: "ずんだもん"}.get(style_id)
 
-    assert credits(_config(), Named()) == ["音声: VOICEVOX（四国めたん・ずんだもん）"]
+
+def test_credits_list_voicevox_speakers():
+    script = parse_script("## S\n霊夢: あ。\n魔理沙: い。\n")
+    assert credits(script, _config(), _Named()) == ["音声: VOICEVOX（四国めたん・ずんだもん）"]
+
+
+def test_credits_skip_unused_speakers():
+    """config に定義してあっても、その動画で喋っていない話者は載せない。"""
+    script = parse_script("## S\n霊夢: あ。\n")
+    assert credits(script, _config(), _Named()) == ["音声: VOICEVOX（四国めたん）"]
 
 
 def test_credits_empty_without_speaker_names():
-    assert credits(_config(), SilentBackend()) == []
+    script = parse_script("## S\n霊夢: あ。\n")
+    assert credits(script, _config(), SilentBackend()) == []

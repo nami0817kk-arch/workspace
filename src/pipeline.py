@@ -68,7 +68,7 @@ def build(
         subtitle=str(script.meta.get("thumbnail_subtitle", "")),
         background=script.background,
     )
-    outputs = subtitles.write_outputs(script, out_dir, credits=credits(config, backend))
+    outputs = subtitles.write_outputs(script, out_dir, credits=credits(script, config, backend))
 
     if not keep_work:
         shutil.rmtree(work_dir, ignore_errors=True)

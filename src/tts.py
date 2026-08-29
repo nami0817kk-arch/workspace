@@ -291,11 +291,15 @@ def synthesize_script(
     return backend.name
 
 
-def credits(config: ProjectConfig, backend) -> list[str]:
-    """概要欄に入れるクレジット。VOICEVOX の規約でキャラ名の表記が必要。"""
+def credits(script: Script, config: ProjectConfig, backend) -> list[str]:
+    """概要欄に入れるクレジット。VOICEVOX の規約でキャラ名の表記が必要。
+
+    config に定義してあっても、その動画で使っていない話者はクレジットしない。
+    """
+    used = {config.resolve_speaker(line.speaker).style_id for line in script.lines}
     names: list[str] = []
-    for member in config.cast.values():
-        name = backend.speaker_name(member.style_id)
+    for style_id in sorted(used):
+        name = backend.speaker_name(style_id)
         if name and name not in names:
             names.append(name)
     if not names:
