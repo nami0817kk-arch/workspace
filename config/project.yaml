@@ -6,6 +6,10 @@ video:
   fps: 30
   # 空にすると環境から日本語フォントを自動検出する
   font: ""
+  # false にすると立ち絵を出さず、見出しを大きく置くニュース風の画面になる
+  show_characters: false
+  headline_size: 74
+  accent: "#3ea6ff"          # 見出し左のアクセント帯の色
   telop_size: 58
   name_size: 40
   title_size: 72

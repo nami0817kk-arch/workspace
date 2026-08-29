@@ -36,6 +36,9 @@ class VideoConfig:
     telop_size: int = 58
     name_size: int = 40
     title_size: int = 72
+    show_characters: bool = True   # False にすると立ち絵を出さないニュース風レイアウト
+    headline_size: int = 74        # 立ち絵なしのときの見出し文字サイズ
+    accent: str = "#3ea6ff"        # 見出し左のアクセント帯（確度バッジが無いとき）
     background: str = "assets/backgrounds/default.png"
 
     def font_path(self) -> Path:

@@ -43,6 +43,8 @@ def build_thumbnail(
 
     # 立ち絵を右下に大きく置いて“顔”を作る
     speakers = [m for m in config.cast.values() if m.position in ("left", "right")]
+    if not config.video.show_characters:
+        speakers = []
     for offset, member in enumerate(speakers[:2]):
         sprite_path = member.sprite_dir() / "smile_close.png"
         if not sprite_path.exists():

@@ -48,11 +48,61 @@ def test_frame_entries_match_audio_duration(tmp_path, motion):
 def test_frames_are_cached_by_content(tmp_path):
     config = load_config()
     config.motion.enabled = False
+    config.video.show_characters = True
     script = _script_with_timing()
     renderer = Renderer(config, tmp_path)
     renderer.frame_entries(script)
     # 2行 x (口を閉じた絵 + 開けた絵) = 4枚だけ
     assert len(list((tmp_path / "frames").glob("*.png"))) == 4
+
+
+def test_news_layout_skips_mouth_frames(tmp_path):
+    """立ち絵を出さないなら口パクは絵に影響しないので、フレームは倍にならない。"""
+    config = load_config()
+    config.motion.enabled = False
+    config.video.show_characters = False
+    script = parse_script(
+        "## S\n霊夢: 一つめ。\n  telop: 見出しA\n魔理沙: 二つめ。\n  telop: 見出しB\n"
+    )
+    for line in script.lines:
+        line.duration, line.pause = 2.0, 0.4
+
+    renderer = Renderer(config, tmp_path)
+    renderer.frame_entries(script)
+    # 見出し2種類ぶんだけ。口の開閉では増えない
+    assert len(list((tmp_path / "frames").glob("*.png"))) == 2
+
+
+def test_news_layout_keeps_previous_headline(tmp_path):
+    """telop を書いていない行では、直前の見出しを出したままにする。"""
+    config = load_config()
+    config.motion.enabled = False
+    config.video.show_characters = False
+    script = parse_script(
+        "## S\n霊夢: 見出しを出す行。\n  telop: 大きな見出し\n魔理沙: あいづちの行。\n"
+    )
+    for line in script.lines:
+        line.duration, line.pause = 2.0, 0.4
+
+    renderer = Renderer(config, tmp_path)
+    entries = renderer.frame_entries(script)
+    # 見出しが変わらないので、2行とも同じ絵を使い回す
+    assert len({path for path, _ in entries}) == 1
+
+
+def test_news_layout_clears_headline_on_no_telop(tmp_path):
+    config = load_config()
+    config.motion.enabled = False
+    config.video.show_characters = False
+    script = parse_script(
+        "## S\n霊夢: 見出し。\n  telop: 見出し\n魔理沙: 消す。\n  no_telop: true\n"
+    )
+    for line in script.lines:
+        line.duration, line.pause = 2.0, 0.4
+
+    renderer = Renderer(config, tmp_path)
+    entries = renderer.frame_entries(script)
+    assert len({path for path, _ in entries}) == 2
 
 
 def test_motion_adds_intro_frames(tmp_path):
@@ -115,3 +165,20 @@ def test_video_background_frames_keep_alpha(tmp_path):
         # 上端は完全に透過していて、下端は幕がかかっている
         assert image.getpixel((10, 10))[3] == 0
         assert image.getpixel((10, config.video.height - 10))[3] > 0
+
+
+def test_news_headline_keeps_its_source_badge(tmp_path):
+    """見出しを引き継いだ行では、確度バッジも一緒に残る。"""
+    config = load_config()
+    config.motion.enabled = False
+    config.video.show_characters = False
+    script = parse_script(
+        "## S\n霊夢: 報道の話。\n  telop: 見出し\n  source: 報道\n魔理沙: あいづち。\n"
+    )
+    for line in script.lines:
+        line.duration, line.pause = 2.0, 0.4
+
+    renderer = Renderer(config, tmp_path)
+    entries = renderer.frame_entries(script)
+    # 見出しも確度も変わらないので、2行とも同じ絵になる
+    assert len({path for path, _ in entries}) == 1

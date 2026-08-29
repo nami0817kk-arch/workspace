@@ -38,11 +38,18 @@ TELOP_BOTTOM = 58
 class Layout:
     width: int
     height: int
+    with_characters: bool = True
 
     @property
     def telop_box(self) -> tuple[int, int, int, int]:
         top = self.height - TELOP_BOTTOM - TELOP_HEIGHT
         return (TELOP_MARGIN, top, self.width - TELOP_MARGIN, top + TELOP_HEIGHT)
+
+    @property
+    def headline_box(self) -> tuple[int, int, int, int]:
+        """立ち絵なしのときの見出し領域。下寄せで、画面の幅をたっぷり使う。"""
+        left = int(self.width * 0.075)
+        return (left, int(self.height * 0.58), self.width - left, int(self.height * 0.88))
 
     def character_anchor(self, position: str) -> tuple[int, int]:
         """立ち絵の中心 x と足元 y。"""
@@ -53,12 +60,15 @@ class Layout:
 class Renderer:
     def __init__(self, config: ProjectConfig, work_dir: Path):
         self.config = config
-        self.layout = Layout(config.video.width, config.video.height)
+        self.layout = Layout(
+            config.video.width, config.video.height, config.video.show_characters
+        )
         self.frame_dir = work_dir / "frames"
         self.frame_dir.mkdir(parents=True, exist_ok=True)
 
         font_path = str(config.video.font_path())
         self.font_telop = ImageFont.truetype(font_path, config.video.telop_size)
+        self.font_headline = ImageFont.truetype(font_path, config.video.headline_size)
         self.font_name = ImageFont.truetype(font_path, config.video.name_size)
         self.font_scene = ImageFont.truetype(font_path, 36)
 
@@ -77,25 +87,31 @@ class Renderer:
         mouth_open: bool,
         telop_t: float = 1.0,
         hop_t: float = 1.0,
+        headline: tuple[str, str | None] | None = None,
     ) -> Path:
         """1枚の画面を描いて PNG のパスを返す。
 
         telop_t / hop_t は 0→1 のアニメーション進捗。同じ絵は使い回すので、
         アニメーションを入れてもフレーム数は必要なぶんしか増えない。
+
+        headline に (文字列, 確度) を渡すと、その行の telop / source ではなく
+        そちらを描く。ニュース風レイアウトで見出しを次の行にも残すために使う。
         """
         member = self.config.resolve_speaker(line.speaker)
+        text, source = (line.telop_text(), line.source) if headline is None else headline
         background = scene.background or self.script_background or self.config.video.background
         key = "|".join(
             [
                 background,
                 scene.title,
-                member.key,
-                line.emotion,
-                line.telop_text(),
-                line.source or "",
+                member.key if self.layout.with_characters else "-",
+                line.emotion if self.layout.with_characters else "-",
+                text,
+                source or "",
                 line.image or "",
-                "open" if mouth_open else "close",
-                f"{telop_t:.2f}/{hop_t:.2f}",
+                # 立ち絵を出さないなら口パクも跳ねも絵に影響しない
+                ("open" if mouth_open else "close") if self.layout.with_characters else "-",
+                f"{telop_t:.2f}/{hop_t if self.layout.with_characters else 1.0:.2f}",
                 f"{self.layout.width}x{self.layout.height}",
             ]
         )
@@ -105,11 +121,15 @@ class Renderer:
 
         over_video = self.over_video
         canvas = self._transparent() if over_video else self._background(background).copy()
-        self._draw_characters(canvas, member, line.emotion, mouth_open, hop_t)
+        if self.layout.with_characters:
+            self._draw_characters(canvas, member, line.emotion, mouth_open, hop_t)
         if line.image:
             self._draw_inset(canvas, line.image)
         self._draw_scene_title(canvas, scene.title)
-        self._draw_telop(canvas, member, line.telop_text(), telop_t, line.source)
+        if self.layout.with_characters:
+            self._draw_telop(canvas, member, text, telop_t, source)
+        else:
+            self._draw_headline(canvas, text, telop_t, source)
         # 動画背景のときは重ねる前提なのでアルファを残す
         canvas.save(target) if over_video else canvas.convert("RGB").save(target)
         return target
@@ -287,6 +307,54 @@ class Renderer:
             layer.putalpha(layer.getchannel("A").point(lambda a: int(a * _ease_out(telop_t))))
         canvas.alpha_composite(layer)
 
+    def _draw_headline(
+        self,
+        canvas: Image.Image,
+        text: str,
+        telop_t: float = 1.0,
+        source: str | None = None,
+    ) -> None:
+        """立ち絵なしのときの見出し。左に縦のアクセント帯を置いたニュース風。"""
+        if not text:
+            return
+        layer, draw = _layer(canvas.size)
+        left, top, right, bottom = self.layout.headline_box
+        rise = int(TELOP_RISE * (1.0 - _ease_out(telop_t)))
+
+        lines = wrap_text(draw, text, self.font_headline, right - left - 90)[:3]
+        line_height = self.config.video.headline_size + 26
+        text_top = bottom - line_height * len(lines) + rise
+
+        badge = SOURCE_BADGES.get(source or "")
+        # 話者ではなく情報の確度で色を決める。会話が続くあいだ見出しを動かさないため
+        accent = badge[1] if badge else _hex(self.config.video.accent)
+
+        # 縦のアクセント帯
+        draw.rounded_rectangle(
+            [left, text_top - 6, left + 11, text_top + line_height * len(lines) - 12],
+            radius=6, fill=accent + (255,),
+        )
+
+        if badge:
+            label, color = badge
+            label_w = draw.textlength(label, font=self.font_name)
+            chip = [left + 34, text_top - 84, left + 34 + label_w + 46, text_top - 20]
+            draw.rounded_rectangle(chip, radius=22, fill=color + (255,))
+            draw.text((chip[0] + 23, chip[1] + 9), label, font=self.font_name,
+                      fill=(16, 16, 20, 255))
+
+        y = text_top
+        for chunk in lines:
+            draw.text(
+                (left + 34, y), chunk, font=self.font_headline, fill=(255, 255, 255, 255),
+                stroke_width=5, stroke_fill=(0, 0, 0, 225),
+            )
+            y += line_height
+
+        if telop_t < 1.0:
+            layer.putalpha(layer.getchannel("A").point(lambda a: int(a * _ease_out(telop_t))))
+        canvas.alpha_composite(layer)
+
     # ------------------------------------------------------------ タイムライン
 
     def frame_entries(self, script: Script) -> list[tuple[Path, float]]:
@@ -301,9 +369,24 @@ class Renderer:
         previous: Path | None = None
 
         for scene in script.scenes:
+            headline: tuple[str, str | None] = ("", None)
             for index, line in enumerate(scene.lines):
-                closed = self.frame(line, scene, mouth_open=False)
-                opened = self.frame(line, scene, mouth_open=True)
+                # 立ち絵なしのニュース風では、見出しは telop を書いた行でだけ差し替え、
+                # それ以外の行は直前の見出しを出したままにする（生のセリフは出さない）
+                changed = True
+                current: tuple[str, str | None] | None = None
+                if not self.layout.with_characters:
+                    previous_headline = headline
+                    if line.no_telop:
+                        headline = ("", None)
+                    elif line.telop is not None:
+                        # 見出しと確度はセットで差し替える
+                        headline = (line.telop, line.source)
+                    current = headline
+                    changed = headline != previous_headline
+
+                closed = self.frame(line, scene, mouth_open=False, headline=current)
+                opened = self.frame(line, scene, mouth_open=True, headline=current)
                 pause = line.pause or 0.0
                 speaking = max(0.0, line.duration - pause)
                 is_scene_head = index == 0
@@ -314,10 +397,12 @@ class Renderer:
                         # シーン転換。前の画面から新しい画面へ溶かす
                         intro = min(motion.scene_fade, speaking * 0.5)
                         entries += self._transition(previous, closed, intro)
-                    elif line.telop_text() and motion.telop_in > 0:
-                        # テロップがせり上がりつつ、話し手がひょいと跳ねる
+                    elif changed and motion.telop_in > 0 and (
+                        current[0] if current else line.telop_text()
+                    ):
+                        # 見出しが変わったときだけ、せり上がりのアニメを入れる
                         intro = min(motion.telop_in, speaking * 0.5)
-                        entries += self._intro(line, scene, intro)
+                        entries += self._intro(line, scene, intro, current)
 
                 entries += self._mouth_loop(closed, opened, speaking - intro)
                 if pause > 0.01:
@@ -348,7 +433,13 @@ class Renderer:
         entries += [(self.blend(black, after, (i + 1) / rest), step) for i in range(rest)]
         return entries
 
-    def _intro(self, line: Line, scene: Scene, seconds: float) -> list[tuple[Path, float]]:
+    def _intro(
+        self,
+        line: Line,
+        scene: Scene,
+        seconds: float,
+        headline: tuple[str, str | None] | None = None,
+    ) -> list[tuple[Path, float]]:
         steps = max(1, round(seconds * self.config.motion.fps))
         step = seconds / steps
         entries = []
@@ -356,7 +447,12 @@ class Renderer:
             progress = (i + 1) / steps
             # 出現中は口を閉じたままにして、フレームの種類が増えすぎないようにする
             entries.append(
-                (self.frame(line, scene, False, telop_t=progress, hop_t=progress), step)
+                (
+                    self.frame(
+                        line, scene, False, telop_t=progress, hop_t=progress, headline=headline
+                    ),
+                    step,
+                )
             )
         return entries
 
