@@ -1,13 +1,13 @@
 # 取材の計画。「いつ・どこから・どの情報を取るか」をここに書く。
 #
-#   python -m src.cli plan            今日ぶんの検索リストを出す
-#   python -m src.cli plan --write    取材メモの雛形を research/ に作る
-#   python -m src.cli draft research/YYYYMMDD.yaml   取材メモ→台本
-#
-# クエリの中で使える置き換え:
-#   {date_ja} 2026年8月29日 / {month_ja} 2026年8月 / {year} 2026
-#   {period_en} August 2026 / {today_en} 29 August 2026
-#   {topic}   step の topics を1つずつ当てはめる
+#   python -m src.cli plan --routine morning     その枠の取材リスト
+#   python -m src.cli plan --routine all         今日の3本ぶんまとめて
+#   python -m src.cli plan --routine morning --write   取材メモの雛形も作る
+#   python -m src.cli draft research/xxx.yaml    取材メモ→台本（確度と重複を検証）
+
+cadence:
+  per_day: 3
+  slots: [morning, noon, evening]   # 1日の並び
 
 # 使ってよい情報源。ここに無いサイトは検索対象にしない（docs/news-sources.md の実測結果）
 domains:
@@ -36,51 +36,107 @@ tiers:
     needs_official: false
     description: SNS・単一ソース・噂の段階
 
+# 同じ話題を繰り返さないための設定
+coverage:
+  ledger: research/covered.yaml
+  repeat_within_hours: 36     # この時間内に扱った話題は draft で止める
+  show_recent: 12             # plan のときに直近いくつを表示するか
+
 routines:
-  weekly:
-    name: 週まとめ
-    when: 毎週土曜 20:00（収録）／日曜 公開
-    cover_days: 7
-    target_minutes: 3
+  # ---------------------------------------------------------------- 朝
+  morning:
+    name: 朝の一報
+    when: 07:00 公開（06:00 収録）
+    cover_hours: 12
+    target_minutes: 1.5
+    angle: |
+      欧州は日本の深夜に動く。夜のあいだに出た発表と試合結果を、
+      朝いちばんに短くまとめる枠。速さ優先で、深掘りはしない。
     steps:
-      - id: confirmed
-        what: この1週間で確定した移籍・契約
+      - id: overnight
+        what: 夜のあいだに出た公式発表
         tier: 確定
         queries:
-          - {q: "confirmed transfers {period_en}", domains: english}
-          - {q: "海外サッカー 移籍 発表 {month_ja}"}
-        check: クラブの発表があるか。発表日を必ず控える
+          - {q: "official announcement transfer {today_en}", domains: english}
+          - {q: "海外サッカー 発表 {date_ja}"}
+        check: クラブの発表か。発表の日時を控える
 
-      - id: japanese
-        what: 日本人選手の動向
+      - id: results
+        what: 夜の試合結果と日本人選手
         tier: 報道
         queries:
-          - {q: "海外日本人選手 移籍 {month_ja}"}
-          - {q: "Japan international transfer {period_en}", domains: english}
-        check: 2社以上で移籍先が一致しているか
+          - {q: "海外日本人選手 試合結果 {date_ja}"}
+          - {q: "results {today_en}", domains: english}
+        check: スコアと得点者は2ソースで突き合わせる
+
+  # ---------------------------------------------------------------- 昼
+  noon:
+    name: 昼の日本人選手
+    when: 12:00 公開（11:00 収録）
+    cover_hours: 24
+    target_minutes: 1.5
+    angle: |
+      昼休みに見られる枠。日本人選手とJリーグに絞る。
+      朝の枠で扱った話題は繰り返さない（前提として ledger が止める）。
+    steps:
+      - id: japanese
+        what: 日本人選手の移籍・起用・評価
+        tier: 報道
+        queries:
+          - {q: "海外日本人選手 {date_ja}"}
+          - {q: "Japan international {today_en}", domains: english}
+        check: 2社以上で内容が一致しているか
+
+      - id: jleague
+        what: Jリーグの動き
+        tier: 報道
+        queries:
+          - {q: "Jリーグ 移籍 {date_ja}"}
+          - {q: "Jリーグ 順位 {month_ja}"}
+
+  # ---------------------------------------------------------------- 夜
+  evening:
+    name: 夜のまとめ・深掘り
+    when: 19:00 公開（18:00 収録）
+    cover_hours: 24
+    target_minutes: 3
+    angle: |
+      1日を振り返る枠。ここだけ尺を取り、背景の説明や図解を入れる。
+      朝と昼で速報として出した話題を、まとめ直して深く扱ってよい
+      （その場合は取材メモに follow_up: true を書く）。
+    steps:
+      - id: biggest
+        what: その日いちばん大きかった話題
+        tier: 報道
+        queries:
+          - {q: "biggest story {today_en}", domains: english}
+          - {q: "海外サッカー 話題 {date_ja}"}
+        check: 朝・昼で扱っていれば follow_up として深掘りに回す
 
       - id: rumours
-        what: 大きな噂・交渉中の案件
+        what: 交渉中の案件・噂
         tier: 未確認
         topics: []            # 追いたい選手名をここに足す
         queries:
-          - {q: "{topic} transfer latest", domains: english}
+          - {q: "{topic} latest", domains: english}
           - {q: "{topic} transfer", domains: social}
         check: |
           SNSは投稿日が取れない。内容に日付や文脈があるものだけ採用する。
           公式アカウントか実績のある記者か、ファンアカウントかを見分ける
 
-      - id: schedule
-        what: 日程・制度（移籍期限、開幕日など）
+      - id: numbers
+        what: 数字で見せられるもの（順位・得点ランキング）
         tier: 確定
         queries:
-          - {q: "transfer window deadline {year}", domains: english}
-        check: 日本時間への換算を必ず併記する
+          - {q: "Premier League table {period_en}", domains: english}
+          - {q: "top scorers {period_en}", domains: english}
+        check: 表カード(type table)や棒グラフ(type bars)にする。出典を明記
 
+  # ---------------------------------------------------------------- 特別編
   deadline_day:
-    name: 移籍期限日
+    name: 移籍期限日（特別編）
     when: 各国の移籍期限の当日と翌日
-    cover_days: 2
+    cover_hours: 24
     target_minutes: 4
     steps:
       - id: done_deals
@@ -93,21 +149,3 @@ routines:
         tier: 報道
         queries:
           - {q: "deadline day collapsed transfer {today_en}", domains: english}
-
-  match_week:
-    name: 節後まとめ
-    when: 週明け（欧州リーグの節が終わったあと）
-    cover_days: 3
-    target_minutes: 3
-    steps:
-      - id: japanese_results
-        what: 日本人選手の出場・ゴール
-        tier: 報道
-        queries:
-          - {q: "海外日本人選手 試合結果 {month_ja}"}
-      - id: standings
-        what: 順位表・得点ランキング
-        tier: 確定
-        queries:
-          - {q: "Premier League table {period_en}", domains: english}
-        check: 表カード(type table)や棒グラフ(type bars)にするなら出典を明記

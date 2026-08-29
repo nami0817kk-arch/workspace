@@ -12,6 +12,7 @@ from pathlib import Path
 
 import yaml
 
+from . import coverage
 from .config import _resolve
 from .plan import Plan
 
@@ -36,6 +37,7 @@ class Item:
     say: list[str]
     sources: list[str]
     official: bool = False
+    follow_up: bool = False     # 前の枠で速報した話題を深掘りする
     card: dict | None = None
 
     @property
@@ -47,6 +49,7 @@ class Item:
 class Notes:
     date: str
     title: str
+    slot: str = ""
     intro_title: str = ""
     lead: str = ""
     items: list[Item] = field(default_factory=list)
@@ -85,6 +88,7 @@ def build_notes(raw: dict) -> Notes:
                 say=[str(s).strip() for s in say_lines],
                 sources=[str(u).strip() for u in (entry.get("sources") or []) if str(u).strip()],
                 official=bool(entry.get("official", False)),
+                follow_up=bool(entry.get("follow_up", False)),
                 card=entry.get("card"),
             )
         )
@@ -94,6 +98,7 @@ def build_notes(raw: dict) -> Notes:
     return Notes(
         date=str(raw.get("date", "")).strip(),
         title=str(raw.get("title", "")).strip(),
+        slot=str(raw.get("slot", "")).strip(),
         intro_title=str(raw.get("intro_title", "")).strip(),
         lead=str(raw.get("lead", "")).strip(),
         items=items,
@@ -134,6 +139,35 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
                 f"{label}: 確度『{item.tier}』はクラブ・当事者の発表が条件です。"
                 "発表を確認できないなら tier を下げてください"
             )
+    return problems
+
+
+def check_repeats(notes: Notes, plan: Plan, now=None) -> list[str]:
+    """直近で扱った話題と重なっていないか調べる。
+
+    1日3本だと同じネタを繰り返しがちなので、記録と突き合わせる。
+    深掘りとして意図的に再度扱う場合は follow_up: true を書く。
+    """
+    settings = plan.coverage or {}
+    ledger = settings.get("ledger")
+    if not ledger:
+        return []
+
+    within = int(settings.get("repeat_within_hours", 36))
+    entries = coverage.load(ledger)
+    keys = [item.id for item in notes.items if not item.follow_up]
+    hits = coverage.duplicates(entries, keys, within, now)
+
+    problems = []
+    for item in notes.items:
+        entry = hits.get(item.id)
+        if entry is None:
+            continue
+        stamp = entry.at.strftime("%m/%d %H:%M")
+        problems.append(
+            f"{item.id}: {stamp} の［{entry.slot}］で扱った話題です"
+            f"（{entry.headline}）。深掘りとして出すなら follow_up: true を書いてください"
+        )
     return problems
 
 

@@ -98,3 +98,43 @@ def test_generated_script_is_parseable_and_carries_the_tiers():
     assert {line.source for line in script.lines} == {None, "official", "rumor"}
     assert "b_card" in script.cards and "wrap" in script.cards
     assert len(script.sources) == 2
+
+
+def test_repeat_is_flagged(tmp_path, monkeypatch):
+    """直近で扱った話題は重複として拾う。"""
+    from datetime import datetime, timedelta
+
+    from src import coverage
+    from src.research import check_repeats
+
+    ledger = tmp_path / "covered.yaml"
+    now = datetime(2026, 8, 29, 19, 0)
+    coverage.save(
+        ledger,
+        [coverage.Entry("a", "移籍が決まった", "morning", now - timedelta(hours=6))],
+    )
+
+    plan = _plan()
+    plan.coverage = {"ledger": str(ledger), "repeat_within_hours": 36}
+    problems = check_repeats(build_notes(BASE), plan, now=now)
+    assert len(problems) == 1 and "morning" in problems[0]
+
+
+def test_follow_up_is_allowed(tmp_path):
+    """深掘りとして意図的に再度扱う場合は止めない。"""
+    from datetime import datetime, timedelta
+
+    from src import coverage
+    from src.research import check_repeats
+
+    ledger = tmp_path / "covered.yaml"
+    now = datetime(2026, 8, 29, 19, 0)
+    coverage.save(
+        ledger,
+        [coverage.Entry("a", "移籍が決まった", "morning", now - timedelta(hours=6))],
+    )
+
+    plan = _plan()
+    plan.coverage = {"ledger": str(ledger), "repeat_within_hours": 36}
+    raw = {**BASE, "items": [{**BASE["items"][0], "follow_up": True}]}
+    assert check_repeats(build_notes(raw), plan, now=now) == []

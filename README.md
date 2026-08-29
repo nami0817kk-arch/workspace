@@ -24,11 +24,12 @@ ffmpeg は `imageio-ffmpeg` に同梱されるので別途インストール不�
 
 どちらも無い場合は無音で書き出し、構成と尺だけ確認できる。
 
-## 毎週の運用
+## 毎日の運用（朝・昼・夜の3本）
 
 ```bash
-python -m src.cli plan --write                 # 取材リストと取材メモの雛形
-python -m src.cli draft research/YYYYMMDD_weekly.yaml   # 検証して台本に
+python -m src.cli plan --routine all                     # 今日の3枠ぶんの取材リスト
+python -m src.cli plan --routine morning --write         # 枠ごとに取材メモの雛形
+python -m src.cli draft research/YYYYMMDD_morning.yaml   # 検証して台本に
 python -m src.cli new                          # テンプレートから直接書く場合
 python -m src.cli check scripts/YYYYMMDD.md    # 書式と想定尺の確認
 python -m src.cli build scripts/YYYYMMDD.md    # 動画一式を書き出す

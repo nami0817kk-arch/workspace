@@ -50,9 +50,16 @@ class Routine:
     key: str
     name: str
     when: str
-    cover_days: int
-    target_minutes: int
+    cover_hours: int
+    target_minutes: float
     steps: list[Step]
+    angle: str = ""
+
+    @property
+    def span(self) -> str:
+        if self.cover_hours % 24 == 0 and self.cover_hours >= 24:
+            return f"直近{self.cover_hours // 24}日"
+        return f"直近{self.cover_hours}時間"
 
 
 @dataclass
@@ -60,6 +67,8 @@ class Plan:
     routines: dict[str, Routine]
     tiers: dict[str, dict]
     domains: dict[str, list[str]]
+    slots: list[str] = field(default_factory=list)
+    coverage: dict = field(default_factory=dict)
 
     def routine(self, key: str) -> Routine:
         if key not in self.routines:
@@ -78,6 +87,8 @@ def load_plan(path: str | Path | None = None) -> Plan:
 
 def build_plan(raw: dict) -> Plan:
     domains = {k: list(v or []) for k, v in (raw.get("domains") or {}).items()}
+    cadence = raw.get("cadence") or {}
+    coverage = dict(raw.get("coverage") or {})
     tiers = dict(raw.get("tiers") or {})
     if not tiers:
         raise PlanError("tiers が定義されていません")
@@ -101,17 +112,29 @@ def build_plan(raw: dict) -> Plan:
             )
         if not steps:
             raise PlanError(f"{key}: steps が空です")
+        # cover_days は日単位の旧表記。時間に直して持つ
+        hours = body.get("cover_hours")
+        if hours is None:
+            hours = int(body.get("cover_days", 1)) * 24
         routines[key] = Routine(
             key=key,
             name=str(body.get("name", key)),
             when=str(body.get("when", "")),
-            cover_days=int(body.get("cover_days", 7)),
-            target_minutes=int(body.get("target_minutes", 3)),
+            cover_hours=int(hours),
+            target_minutes=float(body.get("target_minutes", 3)),
             steps=steps,
+            angle=str(body.get("angle", "")).strip(),
         )
     if not routines:
         raise PlanError("routines が定義されていません")
-    return Plan(routines=routines, tiers=tiers, domains=domains)
+
+    slots = [str(s) for s in (cadence.get("slots") or [])]
+    for slot in slots:
+        if slot not in routines:
+            raise PlanError(f"cadence.slots の『{slot}』に対応する routine がありません")
+    return Plan(
+        routines=routines, tiers=tiers, domains=domains, slots=slots, coverage=coverage
+    )
 
 
 def _expand_queries(step: dict, domains: dict[str, list[str]]) -> list[Query]:
@@ -132,27 +155,41 @@ def _expand_queries(step: dict, domains: dict[str, list[str]]) -> list[Query]:
     return queries
 
 
-def tokens(today: date, cover_days: int) -> dict[str, str]:
+def tokens(today: date, cover_hours: int = 24) -> dict[str, str]:
     """クエリに差し込む日付の言い回し。"""
+    yesterday = date.fromordinal(today.toordinal() - 1)
     return {
+        "{yesterday_en}": f"{yesterday.day} {MONTHS_EN[yesterday.month - 1]} {yesterday.year}",
+        "{cover_hours}": str(cover_hours),
         "{date_ja}": f"{today.year}年{today.month}月{today.day}日",
         "{month_ja}": f"{today.year}年{today.month}月",
         "{year}": str(today.year),
         "{period_en}": f"{MONTHS_EN[today.month - 1]} {today.year}",
         "{today_en}": f"{today.day} {MONTHS_EN[today.month - 1]} {today.year}",
-        "{cover_days}": str(cover_days),
     }
 
 
-def render(routine: Routine, today: date) -> str:
-    """その日の取材指示書を文字列で組み立てる。"""
-    words = tokens(today, routine.cover_days)
+def render(routine: Routine, today: date, covered: list | None = None) -> str:
+    """その枠の取材指示書を文字列で組み立てる。"""
+    words = tokens(today, routine.cover_hours)
+    minutes = f"{routine.target_minutes:g}"
     lines = [
         f"■ {routine.name}　{words['{date_ja}']}",
         f"　収録の目安: {routine.when}",
-        f"　対象期間: 直近{routine.cover_days}日 / 想定尺: 約{routine.target_minutes}分",
-        "",
+        f"　対象期間: {routine.span} / 想定尺: 約{minutes}分",
     ]
+    if routine.angle:
+        for note in routine.angle.splitlines():
+            if note.strip():
+                lines.append(f"　狙い: {note.strip()}")
+    lines.append("")
+
+    if covered:
+        lines.append("　直近で扱った話題（繰り返さない）:")
+        for entry in covered:
+            stamp = entry.at.strftime("%m/%d %H:%M")
+            lines.append(f"　　{stamp} [{entry.slot}] {entry.headline}")
+        lines.append("")
     for number, step in enumerate(routine.steps, start=1):
         lines.append(f"{number}. {step.what}　［{step.tier}］")
         for query in step.queries:
@@ -169,10 +206,11 @@ def render(routine: Routine, today: date) -> str:
 
 def worksheet(routine: Routine, today: date) -> str:
     """取材メモの雛形（YAML）。ここに拾った内容を書き込んでいく。"""
-    words = tokens(today, routine.cover_days)
+    words = tokens(today, routine.cover_hours)
     lines = [
         f"# {routine.name} の取材メモ（{words['{date_ja}']}）",
         "# 埋めたら python -m src.cli draft このファイル で台本になる",
+        f"slot: {routine.key}",
         f'date: "{words["{date_ja}"]}"',
         'title: ""            # 動画タイトル（【サッカーニュース】は自動で付く）',
         'intro_title: ""      # 冒頭カードの短いタイトル',
@@ -187,6 +225,7 @@ def worksheet(routine: Routine, today: date) -> str:
             '    telop: ""          # 画面の見出し',
             '    say: ""            # 読み上げ文。人名・数字はひらがなに開く',
             "    official: false    # クラブ・当事者の発表なら true",
+            "    # follow_up: true  # 前の枠で速報した話題を深掘りするとき",
             "    sources:",
             '      - ""',
             "",

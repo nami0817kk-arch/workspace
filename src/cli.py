@@ -52,7 +52,10 @@ def main(argv: list[str] | None = None) -> int:
     p_thumb.add_argument("--out", default=None)
 
     p_plan = sub.add_parser("plan", help="今日ぶんの取材リストを出す")
-    p_plan.add_argument("--routine", default="weekly", help="config/sources.yaml の routines の名前")
+    p_plan.add_argument(
+        "--routine", default="morning",
+        help="config/sources.yaml の routines の名前。all で今日の全枠",
+    )
     p_plan.add_argument("--date", default=None, help="基準日 YYYY-MM-DD（既定: 今日）")
     p_plan.add_argument("--write", action="store_true", help="取材メモの雛形を research/ に作る")
 
@@ -60,6 +63,7 @@ def main(argv: list[str] | None = None) -> int:
     p_draft.add_argument("notes")
     p_draft.add_argument("--out", default=None, help="出力先の台本パス")
     p_draft.add_argument("--check-only", action="store_true", help="検証だけして書き出さない")
+    p_draft.add_argument("--allow-repeat", action="store_true", help="重複の警告を無視する")
 
     p_new = sub.add_parser("new", help="テンプレートから台本の下書きを作る")
     p_new.add_argument("name", nargs="?", default=None, help="ファイル名（既定: 日付）")
@@ -167,11 +171,29 @@ def _dispatch(args, config) -> int:
         from .config import _resolve
         from .plan import load_plan, render, worksheet
 
+        from . import coverage as coverage_mod
+
         plan = load_plan()
-        routine = plan.routine(args.routine)
         today = _date.fromisoformat(args.date) if args.date else _date.today()
 
-        print(render(routine, today))
+        settings = plan.coverage or {}
+        recent = []
+        if settings.get("ledger"):
+            recent = coverage_mod.recent(
+                coverage_mod.load(settings["ledger"]), int(settings.get("show_recent", 12))
+            )
+
+        if args.routine == "all":
+            if not plan.slots:
+                print("cadence.slots が定義されていません", file=sys.stderr)
+                return 1
+            for key in plan.slots:
+                print(render(plan.routine(key), today, recent))
+                print()
+            return 0
+
+        routine = plan.routine(args.routine)
+        print(render(routine, today, recent))
         if args.write:
             target = _resolve(f"research/{today.strftime('%Y%m%d')}_{routine.key}.yaml")
             if target.exists():
@@ -186,7 +208,8 @@ def _dispatch(args, config) -> int:
     if args.command == "draft":
         from .config import _resolve
         from .plan import load_plan
-        from .research import ResearchError, load_notes, to_script, verify
+        from . import coverage as coverage_mod
+        from .research import ResearchError, check_repeats, load_notes, to_script, verify
 
         plan = load_plan()
         notes = load_notes(args.notes)
@@ -197,18 +220,37 @@ def _dispatch(args, config) -> int:
             for problem in problems:
                 print(f"  - {problem}", file=sys.stderr)
             return 1
+
+        repeats = check_repeats(notes, plan)
+        if repeats:
+            label = "警告" if args.allow_repeat else "重複しています"
+            print(f"{label}:", file=sys.stderr)
+            for problem in repeats:
+                print(f"  - {problem}", file=sys.stderr)
+            if not args.allow_repeat:
+                return 1
+
         print(f"検証OK: {len(notes.items)}件 / 出典 {len(notes.sources)}本")
         if args.check_only:
             return 0
 
         target = Path(args.out) if args.out else _resolve(
-            f"scripts/{Path(args.notes).stem.split('_')[0]}.md"
+            f"scripts/{Path(args.notes).stem}.md"
         )
         if target.exists():
             print(f"すでにあります: {target}", file=sys.stderr)
             return 1
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_text(to_script(notes, plan), encoding="utf-8")
+
+        # 扱った話題を記録して、次の枠で繰り返さないようにする
+        ledger = (plan.coverage or {}).get("ledger")
+        if ledger:
+            coverage_mod.record(
+                ledger,
+                notes.slot or "-",
+                [(item.id, item.headline) for item in notes.items],
+            )
         print(f"台本: {target}")
         print(f"`python -m src.cli check {target}` で書式と尺を確認してください")
         return 0

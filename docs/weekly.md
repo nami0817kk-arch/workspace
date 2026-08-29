@@ -1,17 +1,20 @@
-# 毎週の作り方（定期更新の手順）
+# 1本あたりの作り方（1日3本の運用）
 
-1本あたり、素材集めから公開まで **30〜60分**を想定した手順。
+朝・昼・夜の3枠を回す前提の手順。1本あたり **20〜40分**を想定している
+（夜の枠だけ尺が長いぶん時間がかかる）。
+
+枠ごとの役割と時刻は [取材の仕組み](research.md) にある。
 
 ## 手順
 
 ### 1. 取材リストを出す
 
 ```bash
-python -m src.cli plan --write
+python -m src.cli plan --routine morning --write
 ```
 
-その日ぶんの検索リストが出て、`research/YYYYMMDD_weekly.yaml`（取材メモの雛形）が
-できる。検索の型は `config/sources.yaml` に定義してあるので、毎回同じ手順になる。
+その枠の検索リストが出て、`research/YYYYMMDD_morning.yaml`（取材メモの雛形）が
+できる。**直近で扱った話題も一緒に出る**ので、繰り返しを避けられる。検索の型は `config/sources.yaml` に定義してあるので、毎回同じ手順になる。
 仕組みの詳細は [取材の仕組み](research.md)。
 
 ### 2. ネタを集めて取材メモに書く
@@ -37,10 +40,11 @@ python -m src.cli plan --write
 ### 4. 台本にする
 
 ```bash
-python -m src.cli draft research/YYYYMMDD_weekly.yaml
+python -m src.cli draft research/YYYYMMDD_morning.yaml
 ```
 
-確度の条件（`確定` は発表の確認が必要、`報道` は2社以上）を満たしていないと
+確度の条件（`確定` は発表の確認が必要、`報道` は2社以上）と、
+直近で扱った話題との重複を確認する。どちらか引っかかると
 ここで止まる。通れば章立て・バッジ・出典が入った台本ができる。
 
 ### 5. 構成を整える
@@ -57,8 +61,8 @@ python -m src.cli draft research/YYYYMMDD_weekly.yaml
 ### 6. 確認してから作る
 
 ```bash
-python -m src.cli check scripts/YYYYMMDD.md   # 書式と想定尺（VOICEVOX不要）
-python -m src.cli build scripts/YYYYMMDD.md   # 本番ビルド
+python -m src.cli check scripts/YYYYMMDD_morning.md   # 書式と想定尺（VOICEVOX不要）
+python -m src.cli build scripts/YYYYMMDD_morning.md   # 本番ビルド
 ```
 
 `check` は話者名の誤りやカード名の間違いも拾う。想定尺が長すぎたらここで削る。
@@ -74,9 +78,19 @@ python -m src.cli build scripts/YYYYMMDD.md   # 本番ビルド
 投稿は既定で非公開になる。
 
 ```bash
-python -m src.cli upload output/YYYYMMDD              # private
-python -m src.cli upload output/YYYYMMDD --privacy public
+python -m src.cli upload output/YYYYMMDD_morning              # private
+python -m src.cli upload output/YYYYMMDD_morning --privacy public
 ```
+
+## 1日3本を回すときの現実的な話
+
+- **ネタが3本ぶん無い日がある。** 移籍市場が閉まっている時期は特に。
+  その場合は夜の枠に寄せて1〜2本にするか、`numbers`（順位・得点ランキング）
+  のようなデータもので埋める。無理に3本出して質を落とすほうが損
+- **検証がボトルネックになる。** `報道` は2社以上の一致が条件なので、
+  ここが一番時間を食う。朝の枠は `確定`（公式発表）に寄せると速い
+- **夜の枠だけ手をかける。** 朝・昼は短く速く、夜に図解とまとめを入れる。
+  3本すべてに同じ手間をかけると続かない
 
 ## 続報が出たとき
 

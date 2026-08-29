@@ -11,11 +11,12 @@ RAW = {
         "報道": {"needs_sources": 2, "needs_official": False},
         "未確認": {"needs_sources": 1, "needs_official": False},
     },
+    "cadence": {"per_day": 3, "slots": ["weekly"]},
     "routines": {
         "weekly": {
             "name": "週まとめ",
             "when": "毎週土曜",
-            "cover_days": 7,
+            "cover_hours": 12,
             "target_minutes": 3,
             "steps": [
                 {
@@ -90,7 +91,41 @@ def test_worksheet_has_one_entry_per_step():
     assert "tier: 確定" in text and "tier: 未確認" in text
 
 
-def test_bundled_plan_loads():
+def test_cover_hours_reads_as_a_span():
+    routine = build_plan(RAW).routine("weekly")
+    assert routine.cover_hours == 12
+    assert routine.span == "直近12時間"
+
+
+def test_cover_days_is_still_understood():
+    """日単位の旧表記も時間に直して読む。"""
+    raw = {**RAW}
+    raw["routines"]["weekly"] = {**raw["routines"]["weekly"], "cover_hours": None,
+                                 "cover_days": 3}
+    del raw["routines"]["weekly"]["cover_hours"]
+    routine = build_plan(raw).routine("weekly")
+    assert routine.cover_hours == 72 and routine.span == "直近3日"
+    raw["routines"]["weekly"]["cover_hours"] = 12  # 戻す
+
+
+def test_slot_without_a_routine_is_rejected():
+    raw = {**RAW, "cadence": {"slots": ["morning"]}}
+    with pytest.raises(PlanError, match="morning"):
+        build_plan(raw)
+
+
+def test_render_lists_recent_coverage():
+    from datetime import datetime
+
+    from src.coverage import Entry
+
+    covered = [Entry("a", "扱った話題", "morning", datetime(2026, 8, 29, 7, 0))]
+    text = render(build_plan(RAW).routine("weekly"), date(2026, 8, 29), covered)
+    assert "扱った話題" in text and "morning" in text
+
+
+def test_bundled_plan_has_three_daily_slots():
     plan = load_plan()
-    assert "weekly" in plan.routines
+    assert plan.slots == ["morning", "noon", "evening"]
+    assert all(slot in plan.routines for slot in plan.slots)
     assert set(plan.tiers) >= {"確定", "報道", "未確認"}
