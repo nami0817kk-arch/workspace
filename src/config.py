@@ -58,7 +58,10 @@ class VideoConfig:
 
 @dataclass
 class VoicevoxConfig:
+    # auto: ENGINE(HTTP) → CORE(ローカル) → 無音 の順に試す
+    backend: str = "auto"  # auto / engine / core / silent
     url: str = "http://127.0.0.1:50021"
+    core_dir: str = "vendor/voicevox"
     timeout: int = 60
     pause: float = 0.35
 

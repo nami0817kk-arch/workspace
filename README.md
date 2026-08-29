@@ -1,7 +1,8 @@
 # PJT007 - YouTube動画作成
 
-台本(Markdown)を書くだけで、**ゆっくり実況風の動画・字幕・サムネイル・概要欄**を
-まとめて書き出すパイプライン。音声は [VOICEVOX](https://voicevox.hiroshiba.jp/)（無料・ローカル）を使う。
+台本(Markdown)を書くだけで、**ゆっくり実況風の動画・音声・字幕・サムネイル・概要欄**を
+まとめて書き出すパイプライン。読み上げは [VOICEVOX](https://voicevox.hiroshiba.jp/)（無料・ローカル）。
+VOICEVOX アプリ経由でも、CORE を組み込んでアプリ無しでも合成できる。
 
 ## セットアップ
 
@@ -14,13 +15,23 @@ python -m src.cli init-assets    # 仮の背景・立ち絵を生成
 
 ffmpeg は `imageio-ffmpeg` に同梱されるので別途インストール不要。
 
+音声合成は次のどちらかを用意する（詳細は [docs/voicevox.md](docs/voicevox.md)）。
+
+- **VOICEVOX アプリを起動しておく** … 何も設定せずそのまま動く
+- **CORE を組み込む** … `python scripts/setup_voicevox_core.py`（数GB）。アプリの起動が不要になる
+
+どちらも無い場合は無音で書き出し、構成と尺だけ確認できる。
+
 ## 使い方
 
 ```bash
 # 1. 台本の書式と想定尺を確認（VOICEVOX 不要）
 python -m src.cli check scripts/sample.md
 
-# 2. VOICEVOX を起動してからビルド
+# 2. 使える話者(style_id)を確認
+python -m src.cli speakers
+
+# 3. ビルド（音声・口パク・テロップ・字幕・サムネまで一括）
 python -m src.cli build scripts/sample.md
 
 # 音声なしで構成だけ見たいとき
@@ -55,13 +66,13 @@ tags: [ゆっくり解説, VOICEVOX]
 |---|---|
 | `src/cli.py` | コマンドラインの入口 |
 | `src/script_model.py` | 台本 Markdown のパース |
-| `src/tts.py` | VOICEVOX で行ごとに音声合成（キャッシュ付き） |
+| `src/tts.py` | VOICEVOX で行ごとに音声合成（ENGINE / CORE、キャッシュ付き） |
 | `src/render.py` | フレーム描画・口パク・動画合成 |
 | `src/subtitles.py` | 字幕 SRT・チャプター・概要欄 |
 | `src/thumbnail.py` | サムネイル生成 |
 | `src/upload.py` | YouTube Data API での投稿 |
 | `config/project.yaml` | 画面サイズ・話者(style_id)・声の設定 |
-| `scripts/` | 台本 |
+| `scripts/` | 台本と `setup_voicevox_core.py` |
 | `docs/` | [パイプライン仕様](docs/pipeline.md) / [VOICEVOX設定](docs/voicevox.md) |
 
 ## テスト
@@ -72,6 +83,6 @@ python -m pytest tests -q
 
 ## ライセンスまわりの注意
 
-- VOICEVOX のキャラには個別の利用規約がある。概要欄にクレジットを入れること。
+- VOICEVOX の利用にはクレジット表記が必要。`description.txt` に自動で入るので、そのまま概要欄に貼ればよい。
 - 立ち絵・背景に配布素材を使う場合は、二次配布可否とクレジット表記を確認すること。
 - `init-assets` が作るのは自前の仮素材なので、そのまま使っても権利上の問題はない。

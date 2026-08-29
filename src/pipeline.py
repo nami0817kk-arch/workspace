@@ -11,7 +11,7 @@ from .config import ProjectConfig, _resolve
 from .render import Renderer
 from .script_model import Script, load_script
 from .thumbnail import build_thumbnail
-from .tts import synthesize_script
+from .tts import create_backend, credits, synthesize_script
 
 
 @dataclass
@@ -20,7 +20,7 @@ class BuildResult:
     thumbnail: Path
     outputs: dict[str, Path]
     duration: float
-    used_voicevox: bool
+    backend: str
 
 
 def build(
@@ -39,7 +39,8 @@ def build(
     # 音声はキャッシュが効くので work を消してもここは残す
     audio_dir = out_dir / "audio"
 
-    used_voicevox = synthesize_script(script, config, audio_dir, use_tts=use_tts)
+    backend = create_backend(config, use_tts)
+    synthesize_script(script, config, audio_dir, backend=backend)
 
     voice_track = ffmpeg.concat_audio(
         [line.audio_path for line in script.lines if line.audio_path],
@@ -56,7 +57,7 @@ def build(
         out_dir / "thumbnail.png",
         subtitle=str(script.meta.get("thumbnail_subtitle", "")),
     )
-    outputs = subtitles.write_outputs(script, out_dir)
+    outputs = subtitles.write_outputs(script, out_dir, credits=credits(config, backend))
 
     if not keep_work:
         shutil.rmtree(work_dir, ignore_errors=True)
@@ -66,5 +67,5 @@ def build(
         thumbnail=thumbnail,
         outputs=outputs,
         duration=script.duration,
-        used_voicevox=used_voicevox,
+        backend=backend.name,
     )

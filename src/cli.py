@@ -2,6 +2,7 @@
 
     python -m src.cli init-assets              仮の背景・立ち絵を生成
     python -m src.cli speakers                 VOICEVOX の話者/スタイルID一覧
+    python -m src.cli build <台本> --backend core   合成方式を明示する
     python -m src.cli check scripts/sample.md  台本の書式と想定尺だけ確認
     python -m src.cli build scripts/sample.md  動画・字幕・サムネを書き出し
     python -m src.cli upload output/sample     出来上がりを YouTube に投稿
@@ -17,8 +18,8 @@ from .assets import ensure_assets
 from .config import ConfigError, load_config
 from .pipeline import build
 from .script_model import ScriptError, load_script
-from .subtitles import chapters, _clock
 from .thumbnail import build_thumbnail
+from .tts import TtsError
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -38,6 +39,8 @@ def main(argv: list[str] | None = None) -> int:
     p_build.add_argument("script")
     p_build.add_argument("--out", default=None, help="出力先ディレクトリ")
     p_build.add_argument("--no-tts", action="store_true", help="音声合成せず無音で尺だけ確認する")
+    p_build.add_argument("--backend", default=None, choices=["auto", "engine", "core", "silent"],
+                         help="音声合成の方式を明示する（既定は config の設定）")
     p_build.add_argument("--keep-work", action="store_true", help="中間フレームを残す")
 
     p_thumb = sub.add_parser("thumbnail", help="サムネイルだけ作り直す")
@@ -53,7 +56,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         config = load_config(args.config)
         return _dispatch(args, config)
-    except (ConfigError, ScriptError) as exc:
+    except (ConfigError, ScriptError, TtsError) as exc:
         print(f"エラー: {exc}", file=sys.stderr)
         return 1
 
@@ -69,17 +72,18 @@ def _dispatch(args, config) -> int:
         return 0
 
     if args.command == "speakers":
-        from .tts import VoicevoxClient
+        from .tts import create_backend
 
-        client = VoicevoxClient(config.voicevox.url, config.voicevox.timeout)
-        if not client.available():
+        backend = create_backend(config)
+        if backend.name == "silent":
             print(
-                f"VOICEVOX ENGINE に接続できません: {config.voicevox.url}\n"
-                "VOICEVOX アプリを起動してから実行してください。",
+                "VOICEVOX が見つかりません。VOICEVOX アプリを起動するか、\n"
+                "`python scripts/setup_voicevox_core.py` でローカル合成を用意してください。",
                 file=sys.stderr,
             )
             return 1
-        for speaker in client.speakers():
+        print(f"backend: {backend.name}")
+        for speaker in backend.speakers():
             styles = ", ".join(f"{s['name']}={s['id']}" for s in speaker["styles"])
             print(f"{speaker['name']}: {styles}")
         return 0
@@ -99,6 +103,8 @@ def _dispatch(args, config) -> int:
         return 0
 
     if args.command == "build":
+        if args.backend:
+            config.voicevox.backend = args.backend
         ensure_assets(config)
         result = build(
             args.script,
@@ -107,8 +113,10 @@ def _dispatch(args, config) -> int:
             use_tts=not args.no_tts,
             keep_work=args.keep_work,
         )
-        if not result.used_voicevox:
-            print("※ VOICEVOX に接続できなかったため無音で書き出しました（尺確認用）")
+        if result.backend == "silent":
+            print("※ VOICEVOX が見つからないため無音で書き出しました（尺確認用）")
+        else:
+            print(f"音声: VOICEVOX ({result.backend})")
         minutes, seconds = divmod(int(result.duration), 60)
         print(f"完成: {result.video}  ({minutes}分{seconds:02d}秒)")
         print(f"サムネ: {result.thumbnail}")

@@ -12,3 +12,6 @@ assets/images/
 
 # OAuth クライアント情報とトークン
 secrets/
+
+# VOICEVOX CORE 一式（scripts/setup_voicevox_core.py で用意する。数GB）
+vendor/

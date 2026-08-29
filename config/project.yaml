@@ -12,7 +12,10 @@ video:
   background: "assets/backgrounds/default.png"
 
 voicevox:
+  # auto = VOICEVOXアプリ(ENGINE)があればそれを使い、無ければローカルのCOREで合成する
+  backend: "auto"          # auto / engine / core / silent
   url: "http://127.0.0.1:50021"
+  core_dir: "vendor/voicevox"
   timeout: 60
   # 行と行のあいだに入る既定の無音（秒）
   pause: 0.35

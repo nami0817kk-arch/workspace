@@ -15,10 +15,12 @@
 | コマンド | 用途 |
 |---|---|
 | `python -m src.cli init-assets` | 仮の背景・立ち絵を生成（初回のみ） |
+| `python scripts/setup_voicevox_core.py` | VOICEVOX CORE を組み込む（アプリ不要にする） |
 | `python -m src.cli speakers` | VOICEVOX の話者とスタイルIDを一覧表示 |
 | `python -m src.cli check <台本>` | 書式チェックと想定尺の確認（VOICEVOX 不要） |
 | `python -m src.cli build <台本>` | 動画一式を書き出す |
 | `python -m src.cli build <台本> --no-tts` | 音声を作らず無音で構成だけ確認する |
+| `python -m src.cli build <台本> --backend core` | 合成方式を明示する（auto / engine / core / silent） |
 | `python -m src.cli thumbnail <台本>` | サムネイルだけ作り直す |
 | `python -m src.cli upload output/<名前>` | YouTube に投稿する |
 
@@ -27,7 +29,7 @@
 - `video.mp4` … 本体（1920x1080 / H.264 / AAC）
 - `subtitles.srt` … 字幕ファイル（YouTube にそのままアップロードできる）
 - `thumbnail.png` … 1280x720 のサムネイル
-- `description.txt` … 1行目タイトル、以降が概要欄（チャプター入り）
+- `description.txt` … 1行目タイトル、以降が概要欄（チャプター・VOICEVOXクレジット入り）
 - `script.json` … 各行の開始時刻・尺（編集ソフトに持っていく用）
 - `audio/` … 行ごとの wav。内容が変わらなければ再合成しないキャッシュ
 
@@ -80,8 +82,15 @@ ffmpeg の concat demuxer で `MOUTH_INTERVAL`（既定 0.14 秒）ごとに交�
 
 ## VOICEVOX
 
-`docs/voicevox.md` を参照。ENGINE が起動していない場合、`build` は自動で無音に切り替えて
-尺だけ確認できる状態で書き出す（その旨をメッセージで出す）。
+`docs/voicevox.md` を参照。合成方式は `voicevox.backend` で選ぶ:
+
+- `auto`（既定） … ENGINE(HTTP) → CORE(ローカル) → 無音 の順に試す
+- `engine` … VOICEVOX アプリ / ENGINE の HTTP API
+- `core` … `scripts/setup_voicevox_core.py` で入れた VOICEVOX CORE を直接呼ぶ
+- `silent` … 合成しない
+
+どれも使えないときは無音で書き出し、尺だけ確認できる状態にする（その旨をメッセージで出す）。
+使用した話者名は `description.txt` のクレジット欄に自動で入る。
 
 ## YouTube への投稿
 
