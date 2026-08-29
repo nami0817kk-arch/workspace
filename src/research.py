@@ -16,7 +16,7 @@ from pathlib import Path
 
 import yaml
 
-from . import coverage
+from . import coverage, xposts
 from .plan import Plan
 
 BACKGROUNDS = (
@@ -191,7 +191,7 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
     return problems
 
 
-def advise(notes: Notes) -> list[str]:
+def advise(notes: Notes, plan: Plan | None = None, now=None) -> list[str]:
     """止めるほどではないが直したほうがよい点。draft のときに出す。"""
     notes_warnings: list[str] = []
 
@@ -214,7 +214,28 @@ def advise(notes: Notes) -> list[str]:
         notes_warnings.append("thumbnail.line1 が長めです。16文字くらいまでが読みやすい")
     if len(str(notes.thumbnail.get("line2", ""))) > 18:
         notes_warnings.append("thumbnail.line2 が長めです。18文字くらいまでが読みやすい")
+
+    notes_warnings += _advise_posts(notes, plan, now)
     return notes_warnings
+
+
+def _advise_posts(notes: Notes, plan: Plan | None, now=None) -> list[str]:
+    """Xの投稿を出典に使っている節を見る。
+
+    投稿URLに時刻が埋まっているので、開かなくても古さが分かる。
+    古い噂をそのまま読み上げると、すでに決着した話を流すことになる。
+    """
+    if plan is None:
+        return []
+    stale = int((plan.social or {}).get("stale_hours", 24))
+    hints: list[str] = []
+    for section in notes.sections:
+        for url in section.sources:
+            if not xposts.is_post(url):
+                continue
+            for problem in xposts.review(url, plan.accounts, stale, now):
+                hints.append(f"節『{section.heading}』: {problem}")
+    return hints
 
 
 def check_repeats(notes: Notes, plan: Plan, now=None) -> list[str]:

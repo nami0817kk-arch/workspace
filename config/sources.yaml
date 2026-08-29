@@ -21,6 +21,26 @@ domains:
             telegraph.co.uk, independent.co.uk, mirror.co.uk, standard.co.uk,
             talksport.com, transfermarkt.com]
 
+# Xで追うアカウント。x.com は直接開けないが、検索結果に投稿本文が出る。
+# ここに無いアカウントの投稿は「未確認」より上に上げない
+#   tier … その人の投稿だけで置ける最大の確度
+#   note … 何に強いか
+accounts:
+  - {handle: FabrizioRomano, name: Fabrizio Romano, tier: 未確認, note: 移籍全般。完了案件は here we go}
+  - {handle: David_Ornstein, name: David Ornstein, tier: 未確認, note: プレミア・The Athletic}
+  - {handle: MatteMoretto, name: Matteo Moretto, tier: 未確認, note: スペイン・イタリア}
+  - {handle: DiMarzio, name: Gianluca Di Marzio, tier: 未確認, note: セリエA}
+  - {handle: TheAthleticFC, name: The Athletic Football, tier: 報道, note: 媒体の公式}
+
+# 記者の投稿をどう扱うか
+social:
+  # これより古い投稿は、続報が出ていないか確認してから使う
+  stale_hours: 24
+  check: |
+    投稿本文は検索結果のタイトルから取る。x.com のページは開けない。
+    末尾が … で切れている投稿は、切れたまま引用するか使わないかのどちらか。
+    足りない部分を推測で補わない
+
 # 収集は2段階にする。
 #   1. スキャン … 1日1回、候補テーマを広く拾う（枠ごとに探すより速い）
 #   2. 深掘り　 … 選んだテーマについて、節を埋めるための検索
@@ -110,9 +130,12 @@ scan:
     - {q: "football news {today_en}", domains: english, label: 英語の総覧}
     - {q: "transfer news {today_en}", domains: english, label: 移籍}
     - {q: "Jリーグ {date_ja}", label: Jリーグ}
+    - {q: "Fabrizio Romano here we go", domains: social, label: 記者（移籍の完了）}
+    - {q: "David Ornstein exclusive", domains: social, label: 記者（プレミア）}
   check: |
     1件ずつ candidates に書き出す。この時点では深掘りしない。
-    見出しから拾えるものだけを埋め、判断は pick に任せる
+    見出しから拾えるものだけを埋め、判断は pick に任せる。
+    Xの投稿は python -m src.cli x <URL> で投稿時刻が出る。hours_ago はそれを使う
 
 routines:
   # ---------------------------------------------------------------- 朝

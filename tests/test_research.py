@@ -227,3 +227,49 @@ def test_thumbnail_lines_reach_the_script():
     script = parse_script(to_script(build_notes(raw), _plan()))
     assert script.meta["thumbnail_line1"] == "黄色帯の文字"
     assert script.meta["thumbnail_tags"] == ["反応1", "反応2"]
+
+
+def test_stale_x_sources_are_flagged():
+    from src.research import advise
+
+    plan = _plan()
+    plan.accounts = [{"handle": "FabrizioRomano", "name": "Fabrizio Romano"}]
+    plan.social = {"stale_hours": 24}
+    raw = _raw()
+    # 2019年の投稿。開かなくてもURLから古さが分かる
+    raw["sections"][2]["sources"] = [
+        "https://x.com/FabrizioRomano/status/1183028368629010432"
+    ]
+    hints = advise(build_notes(raw), plan)
+    assert any("時間前" in h and "これからどうなる" in h for h in hints)
+
+
+def test_unknown_x_accounts_are_flagged():
+    from src.research import advise
+
+    plan = _plan()
+    plan.accounts = [{"handle": "FabrizioRomano"}]
+    plan.social = {"stale_hours": 24}
+    raw = _raw()
+    raw["sections"][2]["sources"] = ["https://x.com/whoever/status/2092546263447146991"]
+    assert any("登録済み" in h for h in advise(build_notes(raw), plan))
+
+
+def test_non_x_sources_are_left_alone():
+    from src.research import advise
+
+    plan = _plan()
+    plan.accounts = []
+    raw = _raw()
+    raw["sections"][2]["sources"] = ["https://www.skysports.com/football/news/1"]
+    assert not any("時間前" in h for h in advise(build_notes(raw), plan))
+
+
+def test_advise_skips_the_x_checks_without_a_plan():
+    from src.research import advise
+
+    raw = _raw()
+    raw["sections"][2]["sources"] = [
+        "https://x.com/FabrizioRomano/status/1183028368629010432"
+    ]
+    assert not any("時間前" in h for h in advise(build_notes(raw)))

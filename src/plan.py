@@ -74,6 +74,8 @@ class Plan:
     scan: dict = field(default_factory=dict)
     scoring: dict = field(default_factory=dict)
     deep: list = field(default_factory=list)
+    accounts: list = field(default_factory=list)
+    social: dict = field(default_factory=dict)
 
     def routine(self, key: str) -> Routine:
         if key not in self.routines:
@@ -98,6 +100,8 @@ def build_plan(raw: dict) -> Plan:
     scan = dict(raw.get("scan") or {})
     scoring = dict(raw.get("scoring") or {})
     deep = [dict(x) for x in (raw.get("deep") or [])]
+    accounts = [dict(x) for x in (raw.get("accounts") or [])]
+    social = dict(raw.get("social") or {})
     tiers = dict(raw.get("tiers") or {})
     if not tiers:
         raise PlanError("tiers が定義されていません")
@@ -152,6 +156,8 @@ def build_plan(raw: dict) -> Plan:
         scan=scan,
         scoring=scoring,
         deep=deep,
+        accounts=accounts,
+        social=social,
     )
 
 

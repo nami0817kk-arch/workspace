@@ -6,6 +6,7 @@
     python -m src.cli make-clip <画像>         静止画から背景クリップを作る
     python -m src.cli scan                     候補テーマを拾う検索リスト
     python -m src.cli pick research/x.yaml     候補を採点して枠に割り振る
+    python -m src.cli x                        記者Xアカウントの検索リスト
     python -m src.cli plan                     枠ごとの取材リストを出す
     python -m src.cli draft research/x.yaml    取材メモを検証して台本にする
     python -m src.cli new                      テンプレートから台本の下書きを作る
@@ -69,6 +70,10 @@ def main(argv: list[str] | None = None) -> int:
 
     p_pick = sub.add_parser("pick", help="候補を採点して枠に割り振り、深掘りの検索を出す")
     p_pick.add_argument("candidates")
+
+    p_x = sub.add_parser("x", help="記者Xアカウントの検索リスト／投稿URLの確認")
+    p_x.add_argument("urls", nargs="*", help="投稿URL。省略すると検索リストを出す")
+    p_x.add_argument("--topic", default=None, help="この語で各アカウントを検索する")
 
     p_draft = sub.add_parser("draft", help="取材メモ(YAML)を検証して台本にする")
     p_draft.add_argument("notes")
@@ -258,6 +263,41 @@ def _dispatch(args, config) -> int:
             print(f"埋めたら `python -m src.cli pick {target}`")
         return 0
 
+    if args.command == "x":
+        from . import xposts
+        from .plan import load_plan
+
+        plan = load_plan()
+        stale = int(plan.social.get("stale_hours", 24))
+
+        if not args.urls:
+            print("■ 追っているアカウント")
+            for entry in plan.accounts:
+                handle = str(entry.get("handle", ""))
+                print(f"  @{handle}　{entry.get('name', '')}　［{entry.get('tier', '未確認')}］")
+                print(f"      {entry.get('note', '')}")
+                topic = args.topic or entry.get("name") or handle
+                print(f'      検索: "{topic}"  （x.com に限定）')
+            for note in str(plan.social.get("check", "")).splitlines():
+                if note.strip():
+                    print(f"\n  確認: {note}")
+            return 0
+
+        for url in args.urls:
+            if not xposts.is_post(url):
+                print(f"× {url}\n    Xの投稿URLとして読めません")
+                continue
+            handle, _ = xposts.parse_url(url)
+            when = xposts.posted_at(url)
+            age = xposts.Post(url=url, posted_at=when).hours_ago()
+            entry = xposts.trusted(handle, plan.accounts)
+            who = f"{entry['name']}（{entry.get('tier', '未確認')}）" if entry else "未登録"
+            print(f"@{handle}　{who}")
+            print(f"    投稿: {when:%Y-%m-%d %H:%M} UTC　（{age:.0f}時間前）")
+            for problem in xposts.review(url, plan.accounts, stale):
+                print(f"    ! {problem}")
+        return 0
+
     if args.command == "pick":
         from . import candidates as candidates_mod
         from . import coverage as coverage_mod
@@ -334,7 +374,7 @@ def _dispatch(args, config) -> int:
             f"検証OK: 節 {len(notes.sections)}つ / 出典 {len(notes.sources)}本"
             f"\n  タイトル: {notes.video_title}\n  問い　　: {notes.question}"
         )
-        for note in advise(notes):
+        for note in advise(notes, plan):
             print(f"  ヒント: {note}")
         if args.check_only:
             return 0
