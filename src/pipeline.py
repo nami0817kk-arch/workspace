@@ -72,6 +72,8 @@ def build(
         out_dir / "thumbnail.png",
         subtitle=str(script.meta.get("thumbnail_subtitle", "")),
         background=script.background,
+        badge=str(script.meta.get("thumbnail_badge", "")),
+        date=script.date,
     )
     outputs = subtitles.write_outputs(script, out_dir, credits=credits(script, config, backend))
 

@@ -43,6 +43,7 @@ motion:
   speaker_pop: 0.16    # 話者が切り替わるときの立ち絵のバウンド秒
   scene_fade: 0.32     # シーン転換にかける秒数
   scene_transition: "dip"   # dip=一度黒に落とす / crossfade=前後を直接混ぜる
+  background_zoom: 1.12     # 静止画背景をゆっくり寄せる。1.0 にすると止まったまま
 
 # 冒頭と章の変わり目に出すタイトルカード。0 にすると出さない
 titles:

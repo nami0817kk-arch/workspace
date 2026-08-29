@@ -111,6 +111,7 @@ class MotionConfig:
     speaker_pop: float = 0.16  # 話者が切り替わるときの立ち絵のバウンド秒
     scene_fade: float = 0.32   # シーン転換にかける秒数
     scene_transition: str = "dip"  # dip（暗転）/ crossfade（直接混ぜる）
+    background_zoom: float = 1.0   # 静止画背景をゆっくり寄せる。1.0 で止めたまま
 
 
 @dataclass

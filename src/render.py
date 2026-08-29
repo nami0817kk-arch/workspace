@@ -411,7 +411,7 @@ class Renderer:
         left, top, right, bottom = self.layout.headline_box
         rise = int(TELOP_RISE * (1.0 - _ease_out(telop_t)))
 
-        lines = wrap_text(draw, text, self.font_headline, right - left - 90)[:3]
+        lines = balanced_wrap(draw, text, self.font_headline, right - left - 90)[:3]
         line_height = self.config.video.headline_size + 26
         text_top = bottom - line_height * len(lines) + rise
 
@@ -700,8 +700,30 @@ class Renderer:
                 extra += inserts.intro
             if index == len(script.scenes) - 1:
                 extra += inserts.outro
-            segments.append((_resolve(name), scene.duration + extra))
+            seconds = scene.duration + extra
+            segments.append((self._moving(_resolve(name), seconds), seconds))
         return segments
+
+    def _moving(self, path: Path, seconds: float) -> Path:
+        """静止画の背景を、ゆっくり寄っていくクリップに置き換える。
+
+        止まった絵が続くと動画に見えないので既定で有効。同じ画と長さの
+        組み合わせは作り直さない。
+        """
+        zoom = self.config.motion.background_zoom
+        if zoom <= 1.0 or is_video(path) or not path.exists():
+            return path
+
+        length = max(4.0, math.ceil(seconds))
+        cache = _resolve("assets/backgrounds/.motion")
+        target = cache / f"{path.stem}_{int(length)}s_{int(zoom * 100)}.mp4"
+        if not target.exists():
+            cache.mkdir(parents=True, exist_ok=True)
+            ffmpeg.still_to_clip(
+                path, target, length,
+                (self.layout.width, self.layout.height), zoom, self.config.video.fps,
+            )
+        return target
 
     def build_video(
         self,
@@ -728,6 +750,25 @@ class Renderer:
                 list_path, track, audio_path, out_path, size, self.config.video.fps
             )
         return ffmpeg.encode_video(list_path, audio_path, out_path, self.config.video.fps)
+
+
+def balanced_wrap(
+    draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont, max_width: float
+) -> list[str]:
+    """折り返した行の長さをそろえる。
+
+    素直に詰めると最後の行だけ数文字になりがちで、見出しとして落ち着かない。
+    行数を変えずに幅を狭めて配り直す。
+    """
+    lines = wrap_text(draw, text, font, max_width)
+    if len(lines) < 2:
+        return lines
+
+    for ratio in (0.62, 0.7, 0.78, 0.86, 0.94):
+        candidate = wrap_text(draw, text, font, max_width * ratio)
+        if len(candidate) == len(lines):
+            return candidate
+    return lines
 
 
 def wrap_text(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont, max_width: float) -> list[str]:

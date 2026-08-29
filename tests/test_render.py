@@ -219,3 +219,20 @@ def test_card_none_clears_it(tmp_path):
     renderer = Renderer(config, tmp_path)
     entries = renderer.frame_entries(script)
     assert len({path for path, _ in entries}) == 2
+
+
+def test_balanced_wrap_evens_out_line_lengths():
+    """折り返しで最後の行だけ極端に短くならない。"""
+    from src.render import balanced_wrap, wrap_text
+
+    image = Image.new("RGB", (10, 10))
+    draw = ImageDraw.Draw(image)
+    font = ImageFont.truetype(str(load_config().video.font_path()), 40)
+    text = "バルサ拒否／アーセナルか残留／決めるのは本人"
+
+    greedy = wrap_text(draw, text, font, 700)
+    balanced = balanced_wrap(draw, text, font, 700)
+
+    assert len(balanced) == len(greedy)          # 行数は変えない
+    assert "".join(balanced) == text             # 文字は落とさない
+    assert len(balanced[-1]) >= len(greedy[-1])  # 最後の行が短くなっていない

@@ -21,3 +21,6 @@ assets/audio/
 
 # 生成した背景クリップ
 assets/backgrounds/*.mp4
+
+# 静止画から作った背景クリップのキャッシュ
+assets/backgrounds/.motion/
