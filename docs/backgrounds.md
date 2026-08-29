@@ -47,6 +47,20 @@ python -m src.cli make-clip assets/backgrounds/stadium.png --seconds 12
 python -m src.cli make-clip pitch_photo.jpg --seconds 15 --zoom 1.25
 ```
 
+## BGM・効果音（同梱）
+
+`init-assets` が `assets/audio/` に生成する。これも自前で合成しているので権利上の制約はない。
+
+| ファイル | 内容 |
+|---|---|
+| `bgm_loop.wav` | 20秒ループ。パッド・アルペジオ・低音パルスの3層をステレオで重ねたもの |
+| `se_pon.wav` | テロップ用の軽い打点 |
+| `se_whoosh.wav` | 場面転換用 |
+| `se_jingle.wav` | 締め用の3音 |
+
+BGMは喋りとぶつからないよう中音域を薄くしてある。差し替えるときは
+`config/project.yaml` の `audio.bgm` を変えるだけでよい。
+
 ## フリー素材を使うとき
 
 この環境からは素材サイトにアクセスできないので、**素材のダウンロードは手元で**行い、

@@ -17,6 +17,7 @@ from .script_model import Script
 @dataclass
 class Inserts:
     intro: float = 0.0                            # 冒頭タイトルの秒数
+    outro: float = 0.0                            # 末尾のカードの秒数
     chapters: dict[int, float] = field(default_factory=dict)  # シーン番号 -> 秒数
 
     def before_scene(self, index: int) -> float:
@@ -24,7 +25,7 @@ class Inserts:
 
     @property
     def total(self) -> float:
-        return self.intro + sum(self.chapters.values())
+        return self.intro + self.outro + sum(self.chapters.values())
 
 
 def plan(script: Script, config: ProjectConfig) -> Inserts:
@@ -33,7 +34,7 @@ def plan(script: Script, config: ProjectConfig) -> Inserts:
     冒頭はタイトル、以降の章の頭には章タイトル。最初の章はタイトル直後なので入れない。
     """
     titles = config.titles
-    inserts = Inserts(intro=max(0.0, titles.intro))
+    inserts = Inserts(intro=max(0.0, titles.intro), outro=max(0.0, titles.outro))
     if titles.chapter > 0:
         start = 1 if inserts.intro > 0 else 0
         for index in range(start, len(script.scenes)):
@@ -63,6 +64,8 @@ def audio_segments(script: Script, inserts: Inserts) -> list[tuple[Path | None, 
         for line in scene.lines:
             if line.audio_path:
                 segments.append((line.audio_path, line.duration))
+    if inserts.outro > 0:
+        segments.append((None, inserts.outro))
     return segments
 
 

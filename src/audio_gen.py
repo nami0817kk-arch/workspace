@@ -15,15 +15,22 @@ from pathlib import Path
 from .config import _resolve
 
 RATE = 44100
-BGM_SECONDS = 8.0  # ループ素材。長さは ffmpeg 側で伸ばす
+BPM = 96
+BEAT = 60.0 / BPM
+BARS_PER_CHORD = 2
+BEATS_PER_BAR = 4
 
-# Am - F - C - G。1コードあたり2秒
+# Am - F - C - G。ニュースの下に敷いても邪魔にならない進行
 PROGRESSION = [
     (220.00, 261.63, 329.63),  # Am
     (174.61, 220.00, 261.63),  # F
     (261.63, 329.63, 392.00),  # C
     (196.00, 246.94, 293.66),  # G
 ]
+CHORD_SECONDS = BEAT * BEATS_PER_BAR * BARS_PER_CHORD
+BGM_SECONDS = CHORD_SECONDS * len(PROGRESSION)
+
+EDGE = 0.06  # 継ぎ目のクリックを消すための立ち上がり/立ち下がり
 
 
 def ensure_audio_assets(force: bool = False) -> list[Path]:
@@ -47,20 +54,99 @@ def ensure_audio_assets(force: bool = False) -> list[Path]:
 
 
 def generate_bgm(path: Path) -> Path:
-    """コード進行をなぞるだけの静かなパッド。喋りの下に敷く前提で倍音は少なめ。"""
-    samples: list[float] = []
-    chord_len = BGM_SECONDS / len(PROGRESSION)
-    for index, chord in enumerate(PROGRESSION):
-        for n in range(int(RATE * chord_len)):
-            t = n / RATE
-            # コードの継ぎ目でプツッと鳴らないよう、両端をなだらかにする
-            envelope = _fade_window(t, chord_len, 0.35)
-            value = sum(math.sin(2 * math.pi * freq * (t + index * chord_len)) for freq in chord)
-            # 低いオクターブを薄く足して厚みを出す
-            value += 0.5 * math.sin(math.pi * chord[0] * (t + index * chord_len))
-            samples.append(value / 4.0 * envelope * 0.5)
-    _write(path, samples)
+    """ニュースの下に敷く BGM。
+
+    パッド（和音の持続音）・アルペジオ・低音のパルスの3層を重ねる。
+    喋りとぶつからないよう、中音域は薄めにして低音と高音に寄せている。
+    ループさせる前提なので、両端は無音に落として継ぎ目が鳴らないようにする。
+    """
+    total = int(RATE * BGM_SECONDS)
+    left = [0.0] * total
+    right = [0.0] * total
+
+    _lay_pad(left, right)
+    _lay_arpeggio(left, right)
+    _lay_pulse(left, right)
+
+    for index in range(total):
+        gain = _edge_gain(index / RATE, BGM_SECONDS)
+        left[index] *= gain
+        right[index] *= gain
+
+    _write_stereo(path, left, right)
     return path
+
+
+def _chord_at(seconds: float) -> tuple[float, ...]:
+    return PROGRESSION[int(seconds / CHORD_SECONDS) % len(PROGRESSION)]
+
+
+def _lay_pad(left: list[float], right: list[float]) -> None:
+    """和音の持続音。わずかにデチューンした2声を左右に振って広がりを出す。"""
+    for index in range(len(left)):
+        t = index / RATE
+        chord = _chord_at(t)
+        value_l = value_r = 0.0
+        for freq in chord:
+            value_l += math.sin(2 * math.pi * freq * t)
+            value_r += math.sin(2 * math.pi * freq * 1.003 * t)  # デチューン
+        # 1オクターブ下を薄く足して土台にする
+        low = math.sin(math.pi * chord[0] * t) * 0.6
+        left[index] += (value_l / len(chord) * 0.5 + low) * 0.17
+        right[index] += (value_r / len(chord) * 0.5 + low) * 0.17
+
+
+def _lay_arpeggio(left: list[float], right: list[float]) -> None:
+    """8分音符のアルペジオ。1音ずつ左右に振る。"""
+    step = BEAT / 2
+    count = int(BGM_SECONDS / step)
+    length = int(RATE * step * 1.8)
+
+    for number in range(count):
+        start = number * step
+        chord = _chord_at(start)
+        freq = chord[number % len(chord)] * 2  # 1オクターブ上
+        offset = int(start * RATE)
+        pan = 0.62 if number % 2 == 0 else 0.38
+
+        for n in range(length):
+            index = offset + n
+            if index >= len(left):
+                break
+            t = n / RATE
+            decay = math.exp(-t * 7.5)
+            value = (math.sin(2 * math.pi * freq * t) * 0.7
+                     + math.sin(4 * math.pi * freq * t) * 0.18) * decay * 0.16
+            left[index] += value * pan
+            right[index] += value * (1 - pan)
+
+
+def _lay_pulse(left: list[float], right: list[float]) -> None:
+    """拍を感じさせる低音。強く出すと喋りを邪魔するので控えめに。"""
+    length = int(RATE * 0.24)
+    beats = int(BGM_SECONDS / BEAT)
+
+    for beat in range(beats):
+        if beat % 2:  # 1拍おき
+            continue
+        offset = int(beat * BEAT * RATE)
+        for n in range(length):
+            index = offset + n
+            if index >= len(left):
+                break
+            t = n / RATE
+            freq = 92 - 46 * min(1.0, t / 0.16)   # 下に落ちるサイン
+            value = math.sin(2 * math.pi * freq * t) * math.exp(-t * 13) * 0.30
+            left[index] += value
+            right[index] += value
+
+
+def _edge_gain(t: float, length: float) -> float:
+    if t < EDGE:
+        return t / EDGE
+    if t > length - EDGE:
+        return max(0.0, (length - t) / EDGE)
+    return 1.0
 
 
 def generate_pon(path: Path) -> Path:
@@ -107,12 +193,20 @@ def generate_jingle(path: Path) -> Path:
     return path
 
 
-def _fade_window(t: float, length: float, edge: float) -> float:
-    if t < edge:
-        return t / edge
-    if t > length - edge:
-        return max(0.0, (length - t) / edge)
-    return 1.0
+def _write_stereo(path: Path, left: list[float], right: list[float]) -> None:
+    """ステレオ16bitで書き出す。"""
+    frames = bytearray()
+    for value_l, value_r in zip(left, right):
+        frames += struct.pack(
+            "<hh",
+            int(max(-1.0, min(1.0, value_l)) * 32000),
+            int(max(-1.0, min(1.0, value_r)) * 32000),
+        )
+    with wave.open(str(path), "wb") as out:
+        out.setnchannels(2)
+        out.setsampwidth(2)
+        out.setframerate(RATE)
+        out.writeframes(bytes(frames))
 
 
 def _write(path: Path, samples: list[float]) -> None:

@@ -6,6 +6,8 @@ bg: assets/backgrounds/stadium.mp4
 date: 2026年8月29日
 intro_title: 移籍期限直前まとめ
 intro_label: 海外サッカー ニュース
+outro_title: 移籍期限は9月2日 朝7時
+outro_sub: 動きがあり次第、続報をお伝えします
 description: |
   2026年8月時点の海外サッカー移籍トピックをまとめました。
   ※各社の報道をもとにしています。クラブが発表した「確定」情報と、
@@ -19,6 +21,38 @@ sources:
   - https://football-tribe.com/japan/2026/08/02/357664/
   - https://www.espn.com/soccer/story/_/id/48944912/premier-league-efl-summer-transfer-window-2026-dates-does-open-deadline-day
   - https://www.skysports.com/football/news/11095/13546220/summer-transfer-window-2026-dates-when-is-deadline-day-for-premier-league-and-efl-clubs-to-sign-players
+cards:
+  suzuki_move:
+    type: transfer
+    player: 鈴木彩艶（GK・日本代表）
+    from: パルマ（イタリア）
+    to: アストン・ヴィラ（イングランド）
+    fee: 日本人選手の史上最高額にならぶ規模と報道
+    color: "#5cc98a"
+  suzuki_points:
+    type: points
+    title: 移籍のポイント
+    color: "#5cc98a"
+    items:
+      - 8月19日にクラブが正式発表
+      - パリ・サンジェルマン行きは土壇場で破談と報道
+      - 今季プレミアでプレーする日本人は10人目
+  sano_points:
+    type: points
+    title: 佐野海舟の現状（すべて報道段階）
+    color: "#9aa0a6"
+    items:
+      - 所属はドイツ・マインツ
+      - リバプールやアーセナルなど複数クラブが関心と報道
+      - 代理人と直接交渉に入ったとの報道もある
+      - クラブからの発表は出ていない
+  wrap:
+    type: points
+    title: 今回のまとめ
+    items:
+      - 確定 … 鈴木彩艶のアストン・ヴィラ移籍
+      - 注目 … 佐野海舟の去就（未確定）
+      - 移籍期限は9月2日 朝7時（日本時間）
 ---
 
 ## オープニング
@@ -35,6 +69,7 @@ sources:
 キャスター: まずは、すでに決まったニュースから。日本代表ゴールキーパー、すずきざいおん選手が、イタリアのパルマから、プレミアリーグのアストンビラへ完全移籍しました。
   telop: 鈴木彩艶 パルマ → アストン・ヴィラ
   source: 確定
+  card: suzuki_move
   se: assets/audio/se_pon.wav
 キャスター: クラブが正式に発表したのは、はちがつじゅうくにちです。
   telop: 8月19日 クラブが正式発表
@@ -42,6 +77,7 @@ sources:
 解説: この移籍にはパリ・サンジェルマンも関心を示していましたが、交渉は土壇場で破談になったと報じられています。そこからアストンビラ行きが決まった形です。
   telop: PSG移籍は破談と報道
   source: 報道
+  card: suzuki_points
 解説: 移籍金は、日本人選手の史上最高額にならぶ規模と伝えられています。今シーズン、プレミアリーグでプレーする日本人としては、じゅうにんめになるということです。
   telop: 日本人最高額タイと報道／プレミアの日本人は10人目
   source: 報道
@@ -53,9 +89,11 @@ sources:
 キャスター: 続いて、まだ決まっていない案件です。ここからは確定情報ではなく、報道の段階であることを、あらかじめお伝えしておきます。
   telop: 佐野海舟の去就
   source: 未確認
+  card: none
 解説: 注目されているのは、ドイツのマインツに所属する、さのかいしゅう選手です。リバプールやアーセナルをふくむ複数のクラブが関心を示していると、各メディアが伝えています。
   telop: リバプール・アーセナルなど複数クラブが関心と報道
   source: 未確認
+  card: sano_points
 解説: 代理人と直接交渉に入ったという報道もあります。ただし、いずれもクラブの発表ではありません。
   telop: 代理人と直接交渉との報道も（クラブ発表ではない）
   source: 未確認
@@ -64,6 +102,7 @@ sources:
 
 キャスター: まとめます。確定しているのは、すずき選手のアストンビラ移籍。注目は、さの選手の去就です。
   telop: 確定=鈴木のヴィラ移籍／注目=佐野の去就
+  card: wrap
 解説: 市場が閉まるまで、あと数日です。
 キャスター: 動きがあり次第、あらためてお伝えします。続報はチャンネル登録してお待ちください。
   telop: 続報はチャンネル登録でチェック

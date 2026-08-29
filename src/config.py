@@ -119,6 +119,7 @@ class TitleConfig:
 
     intro: float = 2.6      # 冒頭のタイトル（秒）
     chapter: float = 1.4    # 章タイトル（秒）
+    outro: float = 3.0      # 最後のカード（秒）
     fade: float = 0.32      # 出入りのフェード（秒）
 
 

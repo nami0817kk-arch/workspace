@@ -48,6 +48,7 @@ motion:
 titles:
   intro: 2.6           # 冒頭のタイトル（秒）
   chapter: 1.4         # 章タイトル（秒）
+  outro: 3.0           # 最後のカード（秒）
   fade: 0.32           # 出入りのフェード（秒）
 
 # 話者定義。style_id は VOICEVOX の「スタイルID」。

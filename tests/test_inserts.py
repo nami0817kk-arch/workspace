@@ -18,7 +18,8 @@ def _script():
 
 
 def _config(**titles):
-    return build_config({"cast": CAST, "titles": {"intro": 2.6, "chapter": 1.4, **titles}})
+    base = {"intro": 2.6, "chapter": 1.4, "outro": 3.0}
+    return build_config({"cast": CAST, "titles": {**base, **titles}})
 
 
 def test_plan_puts_chapter_cards_after_the_first_scene():
@@ -26,7 +27,8 @@ def test_plan_puts_chapter_cards_after_the_first_scene():
     assert inserts.intro == 2.6
     # 冒頭タイトルの直後になるので、1つ目の章には章タイトルを入れない
     assert inserts.chapters == {1: 1.4, 2: 1.4}
-    assert inserts.total == pytest.approx(2.6 + 1.4 * 2)
+    assert inserts.outro == 3.0
+    assert inserts.total == pytest.approx(2.6 + 1.4 * 2 + 3.0)
 
 
 def test_first_scene_gets_a_chapter_card_when_there_is_no_intro():
@@ -36,8 +38,16 @@ def test_first_scene_gets_a_chapter_card_when_there_is_no_intro():
 
 
 def test_titles_can_be_switched_off():
-    inserts = plan(_script(), _config(intro=0, chapter=0))
+    inserts = plan(_script(), _config(intro=0, chapter=0, outro=0))
     assert inserts.total == 0.0
+
+
+def test_outro_does_not_shift_any_line():
+    """末尾のカードは全セリフの後ろなので、開始時刻には影響しない。"""
+    script = _script()
+    apply_timing(script, plan(script, _config(outro=5.0)))
+    assert script.lines[0].start == pytest.approx(2.6)
+    assert script.lines[-1].start == pytest.approx(11.4)
 
 
 def test_apply_timing_shifts_every_line():
@@ -65,8 +75,9 @@ def test_audio_segments_interleave_silence(tmp_path):
 
     segments = audio_segments(script, inserts)
     gaps = [seconds for path, seconds in segments if path is None]
-    assert gaps == [2.6, 1.4, 1.4]
-    assert len(segments) == len(script.lines) + 3
+    assert gaps == [2.6, 1.4, 1.4, 3.0]      # 冒頭・章2つ・末尾
+    assert segments[-1][0] is None            # 最後は無音（エンディングカード）
+    assert len(segments) == len(script.lines) + 4
 
 
 def test_realize_audio_matches_the_voice_format(tmp_path):

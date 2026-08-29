@@ -613,6 +613,19 @@ class Renderer:
                     entries.append((closed, pause))
                 previous = closed
 
+        if inserts.outro > 0 and script.scenes:
+            last_bg = (
+                script.scenes[-1].background or script.background or self.config.video.background
+            )
+            entries += self._title_entries(
+                last_bg,
+                str(script.meta.get("outro_title") or "ご視聴ありがとうございました"),
+                str(script.meta.get("outro_sub") or "チャンネル登録で続報をチェック"),
+                inserts.outro,
+                "outro",
+                str(script.meta.get("intro_label") or ""),
+            )
+
         return entries
 
     def _transition(self, before: Path, after: Path, seconds: float) -> list[tuple[Path, float]]:
@@ -682,7 +695,11 @@ class Renderer:
         segments: list[tuple[Path, float]] = []
         for index, scene in enumerate(script.scenes):
             name = scene.background or script.background or self.config.video.background
-            extra = inserts.before_scene(index) + (inserts.intro if index == 0 else 0.0)
+            extra = inserts.before_scene(index)
+            if index == 0:
+                extra += inserts.intro
+            if index == len(script.scenes) - 1:
+                extra += inserts.outro
             segments.append((_resolve(name), scene.duration + extra))
         return segments
 
