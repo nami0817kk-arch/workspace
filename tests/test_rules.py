@@ -1,4 +1,4 @@
-"""ルールと横展開のテスト。"""
+"""ルール全体の性質と、横展開（cross-pollination）のテスト。"""
 
 from __future__ import annotations
 
@@ -31,54 +31,15 @@ def test_healthy_project_produces_no_baseline_findings(tmp_path):
         "requirements.txt": "requests==2.31.0\n",
         ".gitignore": ".env\n",
         "tests/test_a.py": "def test_a():\n    assert True\n",
-        ".github/workflows/ci.yml": "jobs:\n  t:\n    steps:\n      - uses: actions/checkout@v4\n      - run: pytest\n",
+        ".github/workflows/ci.yml": (
+            "permissions:\n  contents: read\n"
+            "jobs:\n  t:\n    timeout-minutes: 10\n    steps:\n"
+            "      - uses: actions/checkout@v4\n      - run: pytest\n"
+        ),
         ".github/dependabot.yml": "version: 2\n",
     })
     assert _ids(rules.run_baseline([snap])) == set()
 
-
-def test_tracked_env_file_is_critical(tmp_path):
-    snap = _snap(tmp_path, "leaky", {".env": "TOKEN=x\n", "main.py": PY_APP2})
-    found = [f for f in rules.run_baseline([snap]) if f.rule_id == "secret.tracked-env-file"]
-    assert found and found[0].severity == "critical"
-    assert found[0].evidence == [".env"]
-
-
-def test_scheduled_workflow_without_failure_alert_is_flagged(tmp_path):
-    snap = _snap(tmp_path, "cronjob", {
-        "main.py": PY_APP2,
-        ".github/workflows/daily.yml": "on:\n  schedule:\n    - cron: '0 7 * * 1-5'\njobs:\n  b:\n    steps:\n      - run: python main.py\n",
-    })
-    assert "ci.silent-failure" in _ids(rules.run_baseline([snap]))
-
-
-def test_unpinned_action_refs_are_flagged(tmp_path):
-    snap = _snap(tmp_path, "app", {
-        "main.py": PY_APP2,
-        ".github/workflows/ci.yml": "jobs:\n  t:\n    steps:\n      - uses: actions/checkout@main\n",
-    })
-    found = [f for f in rules.run_baseline([snap]) if f.rule_id == "ci.unpinned-actions"]
-    assert found and found[0].evidence == ["actions/checkout@main"]
-
-
-def test_ci_without_tests_step_is_flagged(tmp_path):
-    snap = _snap(tmp_path, "app", {
-        "main.py": PY_APP2,
-        "tests/test_a.py": "def test_a():\n    assert True\n",
-        ".github/workflows/ci.yml": "jobs:\n  t:\n    steps:\n      - run: python main.py\n",
-    })
-    assert "ci.no-test-run" in _ids(rules.run_baseline([snap]))
-
-
-def test_empty_scaffold_is_nudged_but_not_over_reported(tmp_path):
-    snap = _snap(tmp_path, "empty", {"README.md": "# x\n", "src/.gitkeep": ""})
-    ids = _ids(rules.run_baseline([snap]))
-    assert "scaffold.dormant" in ids
-    # 中身が無いのに「テストを書け」「CIを作れ」とは言わない
-    assert "test.missing" not in ids and "ci.missing" not in ids
-
-
-# --- 横展開 ---------------------------------------------------------------
 
 def test_crosspollination_needs_an_exemplar(tmp_path):
     """誰もやっていない習慣については何も言わない。"""
@@ -121,19 +82,6 @@ def test_every_registered_rule_has_a_unique_id():
     assert len(ids) == len(set(ids))
 
 
-def test_scheduled_workflow_with_a_failure_alert_is_not_flagged(tmp_path):
-    """通知ステップが既にあるものを、いつまでも指摘し続けない。"""
-    snap = _snap(tmp_path, "cronjob", {
-        "main.py": PY_APP2,
-        ".github/workflows/daily.yml": (
-            "on:\n  schedule:\n    - cron: '0 7 * * 1-5'\n"
-            "jobs:\n  b:\n    steps:\n      - run: python main.py\n"
-            "      - name: alert\n        if: failure()\n        run: echo notify\n"
-        ),
-    })
-    assert "ci.silent-failure" not in _ids(rules.run_baseline([snap]))
-
-
 def test_practice_is_not_pushed_where_it_would_be_meaningless(tmp_path):
     """依存を1つも持たないPJTに「バージョンを固定しろ」とは言わない。"""
     pinned = _snap(tmp_path, "pinned", {
@@ -161,3 +109,25 @@ def test_baseline_and_crosspollination_are_both_reachable_from_rules(tmp_path):
     ids = _ids(rules.run_all([a, b]))
     assert "test.missing" in ids           # ベースライン診断
     assert "xpol.claude-md" in ids         # 横展開
+
+
+# --- 深い検出（第2層） -----------------------------------------------------
+
+
+def test_every_check_module_is_wired_into_the_registry():
+    """checks/ にモジュールを足して import し忘れる、を防ぐ。
+
+    登録漏れは「ルールが静かに動かない」形で出るので、テストが無いと気づけない。
+    """
+    import pkgutil
+
+    from growth import checks
+    from growth.ruleset import baseline_rule_ids
+
+    modules = {m.name for m in pkgutil.iter_modules(checks.__path__)}
+    assert modules == {"automation", "docs", "reliability"}
+
+    ids = baseline_rule_ids()
+    # 各モジュールの代表を1つずつ確認する
+    assert {"secret.tracked-env-file", "ci.no-timeout", "docs.bom"} <= set(ids)
+    assert len(ids) == len(set(ids))

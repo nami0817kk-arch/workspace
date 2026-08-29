@@ -83,8 +83,10 @@ def test_repeated_unaddressed_proposal_gets_quieter(tmp_path):
     ledger = Ledger(path=tmp_path / "l.json")
     f = _finding("x", severity="high")
     fresh = score_priority(f, ledger, 1.0, 3)
-    for _ in range(6):
+    for day in range(6):
         ledger.reconcile([f])
+        # 日をまたいで提示し続けた状況を作る（同じ日に何度回しても1回分）
+        ledger.proposals[f.fingerprint]["last_seen_date"] = f"2026-01-{day + 1:02d}"
     assert score_priority(f, ledger, 1.0, 3) < fresh
 
 

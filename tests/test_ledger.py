@@ -32,12 +32,11 @@ def test_new_finding_is_recorded_as_open(tmp_path):
     assert entry["status"] == OPEN and entry["seen_count"] == 1
 
 
-def test_repeat_run_increments_seen_count_without_duplicating(tmp_path):
+def test_repeat_run_does_not_duplicate_the_proposal(tmp_path):
     ledger = Ledger(path=tmp_path / "l.json")
     ledger.reconcile([_finding()])
     report = ledger.reconcile([_finding()])
     assert report["new"] == []
-    assert ledger.seen_count(_finding().fingerprint) == 2
     assert len(ledger.proposals) == 1
 
 
@@ -128,3 +127,24 @@ def test_roundtrip_through_disk(tmp_path):
 
 def test_marking_an_unknown_fingerprint_fails_cleanly(tmp_path):
     assert Ledger(path=tmp_path / "l.json").mark("deadbeef", DISMISSED) is False
+
+
+def test_seen_count_advances_once_per_day_not_once_per_run(tmp_path):
+    """1日に何度走らせても「何回言ったか」は1回分。
+
+    手元で確認のために繰り返し実行しただけで、しつこさ減衰がかかって
+    提案が沈んでいくのを防ぐ。
+    """
+    ledger = Ledger(path=tmp_path / "l.json")
+    for _ in range(5):
+        ledger.reconcile([_finding()])
+    assert ledger.seen_count(_finding().fingerprint) == 1
+
+
+def test_seen_count_advances_when_the_day_changes(tmp_path):
+    ledger = Ledger(path=tmp_path / "l.json")
+    ledger.reconcile([_finding()])
+    ledger.proposals[_finding().fingerprint]["last_seen_date"] = "2000-01-01"
+
+    ledger.reconcile([_finding()])
+    assert ledger.seen_count(_finding().fingerprint) == 2

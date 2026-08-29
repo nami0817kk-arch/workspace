@@ -16,7 +16,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from . import github, rules
-from .ledger import DISMISSED, RESOLVED, Ledger
+from .ledger import DISMISSED, RESOLVED, SNOOZED, Ledger
 from .planner import build_plan
 from .registry import expand_subprojects, load_registry, repo_names
 from .render import (
@@ -66,6 +66,10 @@ def build_parser() -> argparse.ArgumentParser:
     dismiss = sub.add_parser("dismiss", help="この提案を今後出さない")
     dismiss.add_argument("fingerprint")
     dismiss.add_argument("-n", "--note", default=None, help="やらない理由")
+
+    snooze = sub.add_parser("snooze", help="見たうえで今はやらない（理由を残す）")
+    snooze.add_argument("fingerprint")
+    snooze.add_argument("-n", "--note", required=True, help="今やらない理由")
 
     done = sub.add_parser("done", help="対応済みにする")
     done.add_argument("fingerprint")
@@ -217,7 +221,11 @@ def cmd_mark(args, status: str) -> int:
         print(f"指紋 {args.fingerprint} は台帳にありません。", file=sys.stderr)
         return 1
     ledger.save()
-    label = {DISMISSED: "今後出しません", RESOLVED: "対応済みにしました"}[status]
+    label = {
+        DISMISSED: "今後出しません",
+        RESOLVED: "対応済みにしました",
+        SNOOZED: "保留にしました（理由つきで残ります）",
+    }[status]
     print(f"{args.fingerprint}: {label}")
     return 0
 
@@ -232,6 +240,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_status(args)
     if args.command == "dismiss":
         return cmd_mark(args, DISMISSED)
+    if args.command == "snooze":
+        return cmd_mark(args, SNOOZED)
     if args.command == "done":
         return cmd_mark(args, RESOLVED)
     return 1

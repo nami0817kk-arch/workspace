@@ -26,8 +26,10 @@ RESOLVED = "resolved"
 DISMISSED = "dismissed"
 SNOOZED = "snoozed"
 
-# 却下扱いになっていて、今後もう提案しないステータス
+# 今後もう提案しないステータス
 MUTED_STATUSES = {DISMISSED}
+# 「見たうえで今はやらない」。消さずに残すが、作業リストの枠は使わない。
+DEFERRED_STATUSES = {SNOOZED}
 
 
 def _now() -> str:
@@ -98,6 +100,7 @@ class Ledger:
         current = {f.fingerprint: f for f in findings}
         report: dict[str, list[str]] = {"new": [], "resolved": [], "regressed": []}
         now = _now()
+        today = _today()
 
         for fp, finding in current.items():
             entry = self.proposals.get(fp)
@@ -111,6 +114,7 @@ class Ledger:
                     "status": OPEN,
                     "first_seen": now,
                     "last_seen": now,
+                    "last_seen_date": today,
                     "seen_count": 1,
                     "issue_url": None,
                 }
@@ -118,8 +122,12 @@ class Ledger:
                 report["new"].append(fp)
                 continue
 
+            # 「何回言ったか」は日単位で数える。1日に複数回走らせただけで
+            # しつこさ減衰がかかると、手元で確認するたびに提案が沈んでいく。
+            if entry.get("last_seen_date") != today:
+                entry["seen_count"] = int(entry.get("seen_count", 0)) + 1
+            entry["last_seen_date"] = today
             entry["last_seen"] = now
-            entry["seen_count"] = int(entry.get("seen_count", 0)) + 1
             entry["title"] = finding.title
             entry["topic"] = finding.topic
             if entry.get("status") == RESOLVED:
@@ -131,7 +139,7 @@ class Ledger:
         for fp, entry in self.proposals.items():
             if fp in current:
                 continue
-            if entry.get("status") == OPEN:
+            if entry.get("status") in (OPEN, SNOOZED):
                 entry["status"] = RESOLVED
                 entry["resolved_at"] = now
                 self._stat(entry.get("rule_id", "?"))["resolved"] += 1
@@ -206,6 +214,9 @@ class Ledger:
 
     def open_fingerprints(self) -> list[str]:
         return [fp for fp, e in self.proposals.items() if e.get("status") == OPEN]
+
+    def snoozed_fingerprints(self) -> list[str]:
+        return [fp for fp, e in self.proposals.items() if e.get("status") == SNOOZED]
 
     def latest_scores(self) -> dict[str, int]:
         return dict(self.history[-1]["scores"]) if self.history else {}

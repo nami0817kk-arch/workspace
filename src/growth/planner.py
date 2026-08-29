@@ -10,7 +10,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, Iterable
 
-from .ledger import DISMISSED, OPEN, Ledger
+from .ledger import DISMISSED, OPEN, SNOOZED, Ledger
 from .models import SEVERITY_WEIGHT, Finding, Proposal, Snapshot
 from .survey import maturity_score
 
@@ -27,6 +27,8 @@ class Plan:
 
     proposals: list[Proposal] = field(default_factory=list)
     deferred: list[Proposal] = field(default_factory=list)
+    decisions: list[Proposal] = field(default_factory=list)
+    snoozed: list[Proposal] = field(default_factory=list)
     resolved: list[dict[str, Any]] = field(default_factory=list)
     regressed: list[dict[str, Any]] = field(default_factory=list)
     scores: dict[str, int] = field(default_factory=dict)
@@ -46,6 +48,8 @@ class Plan:
     def to_dict(self) -> dict[str, Any]:
         return {
             "proposals": [p.to_dict() for p in self.proposals],
+            "decisions": [p.to_dict() for p in self.decisions],
+            "snoozed": [p.to_dict() for p in self.snoozed],
             "deferred_count": len(self.deferred),
             "resolved": self.resolved,
             "regressed": self.regressed,
@@ -141,17 +145,28 @@ def build_plan(
                 last_seen=entry.get("last_seen", ""),
                 seen_count=int(entry.get("seen_count", 1)),
                 issue_url=entry.get("issue_url"),
+                note=entry.get("note"),
             )
         )
 
     candidates.sort(key=lambda p: (-p.priority, p.finding.ref_key, p.finding.rule_id))
-    selected, deferred = _apply_caps(candidates, cfg)
+    # 持ち主にしか決められないものは、作業リストの枠を使わない。
+    # 同じ列に混ぜると、着手できない項目が上位を占めて全体が読まれなくなる。
+    # 「見たうえで今はやらない」と記録したものは、理由つきで別枠に置く。
+    # 消してしまうと判断の記録が残らず、作業枠に混ぜると毎回上位を占める。
+    snoozed = [p for p in candidates if p.status == SNOOZED]
+    rest = [p for p in candidates if p.status != SNOOZED]
+    decisions = [p for p in rest if p.finding.decision]
+    actionable = [p for p in rest if not p.finding.decision]
+    selected, deferred = _apply_caps(actionable, cfg)
 
     ledger.record_history(scores, open_count=len(candidates))
 
     return Plan(
         proposals=selected,
         deferred=deferred,
+        decisions=decisions,
+        snoozed=snoozed,
         resolved=[_entry_summary(ledger, fp) for fp in report["resolved"]],
         regressed=[_entry_summary(ledger, fp) for fp in report["regressed"]],
         scores=scores,

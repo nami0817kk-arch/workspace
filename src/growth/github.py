@@ -10,6 +10,7 @@ from __future__ import annotations
 import json
 import os
 import subprocess
+import sys
 import urllib.error
 import urllib.request
 from pathlib import Path
@@ -98,14 +99,21 @@ def find_issue_by_marker(repo: str, marker: str) -> dict | None:
 
 
 def ensure_label(repo: str) -> None:
+    """growth-loop ラベルを用意する。既にあれば何もしない。
+
+    ラベルが無くても Issue 自体は立てられるので、ここでの失敗は致命的でない。
+    ただし黙って飲み込むと、権限不足なのか単に既存なのか分からなくなるため、
+    「既にある」以外は理由を出す。
+    """
     try:
         _request(
             "POST",
             f"{API}/repos/{repo}/labels",
             {"name": "growth-loop", "color": "0E8A16", "description": "ai-lab 成長ループの自動提案"},
         )
-    except GitHubError:
-        pass  # 既にあれば 422 が返る。無視してよい。
+    except GitHubError as exc:
+        if "422" not in str(exc):  # 422 = 既に同名のラベルがある
+            print(f"[warn] ラベルを用意できなかった ({repo}): {exc}", file=sys.stderr)
 
 
 def create_issue(repo: str, title: str, body: str) -> str:

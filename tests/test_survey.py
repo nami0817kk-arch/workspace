@@ -152,3 +152,13 @@ def test_failure_alert_in_workflow_is_detected(tmp_path):
     })
     snap = collect(tmp_path, ref("app"))
     assert snap.has("has_scheduled_workflow") and snap.has("has_failure_alert")
+
+
+def test_long_test_files_are_not_counted_as_oversized(tmp_path):
+    """テストが増えて長くなることを欠陥として数えない。"""
+    make_repo(tmp_path, "app", {
+        "main.py": PY_APP2,
+        "tests/test_all.py": "def test_x():\n    assert True\n" * 300,
+    })
+    snap = collect(tmp_path, ref("app"))
+    assert snap.get("oversized_files") == []

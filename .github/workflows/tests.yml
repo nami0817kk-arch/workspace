@@ -6,9 +6,15 @@ on:
   pull_request:
   workflow_dispatch: {}
 
+# 読むだけのジョブなので、トークンの権限は最小にしておく。
+permissions:
+  contents: read
+
 jobs:
   pytest:
     runs-on: ubuntu-latest
+    # ハングしたジョブが既定の6時間走り続けるのを防ぐ
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 

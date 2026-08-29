@@ -103,7 +103,8 @@ def _proposal_block(proposal: Proposal, snapshots: list[Snapshot], index: int) -
         claude_prompt(proposal, slug),
         "```",
         "",
-        f"やらない場合: `python -m growth dismiss {proposal.fingerprint} --note \"理由\"`",
+        f"今はやらない: `python -m growth snooze {proposal.fingerprint} -n \"理由\"`",
+        f"今後も出さない: `python -m growth dismiss {proposal.fingerprint} -n \"理由\"`",
         "</details>",
         "",
     ]
@@ -139,6 +140,31 @@ def render_digest(plan: Plan, ledger: Ledger) -> str:
     else:
         lines += ["## 今回の推奨アクション", "", "なし。すべて対応済みか、保留中。", ""]
 
+    if plan.decisions:
+        lines += [
+            "## あなたの判断が要るもの",
+            "",
+            "これは作業ではなく決めごと。決まるまで私の側では動かせない。",
+            "",
+        ]
+        for proposal in plan.decisions:
+            f = proposal.finding
+            lines.append(f"- `{f.ref_key}` **{f.title}** — {' '.join(f.action.split(chr(10)))}")
+        lines.append("")
+
+    if plan.snoozed:
+        lines += [
+            "## 保留中（理由あり）",
+            "",
+            "見たうえで今はやらないと判断したもの。状況が変われば `growth run` の次回で戻せる。",
+            "",
+        ]
+        for proposal in plan.snoozed:
+            f = proposal.finding
+            note = proposal.note or "（理由未記入）"
+            lines.append(f"- `{f.ref_key}` {f.title} — {note}")
+        lines.append("")
+
     if plan.deferred:
         lines += [
             "## 見送った分",
@@ -160,7 +186,7 @@ def render_digest(plan: Plan, ledger: Ledger) -> str:
 def _score_table(plan: Plan) -> list[str]:
     lines = ["## プロジェクト別の成熟度", "", "| プロジェクト | 種別 | 成熟度 | 前回比 | 未対応 |", "|---|---|---:|---:|---:|"]
     open_by_project: dict[str, int] = {}
-    for proposal in [*plan.proposals, *plan.deferred]:
+    for proposal in [*plan.proposals, *plan.deferred, *plan.decisions]:
         key = proposal.finding.ref_key
         open_by_project[key] = open_by_project.get(key, 0) + 1
 
@@ -193,7 +219,8 @@ def render_dashboard(plan: Plan, ledger: Ledger) -> str:
         f"- 最終更新: {_today()}",
         f"- 平均成熟度: **{plan.average_score}** {trend and f'`{trend}`'}",
         f"- これまでに解決: **{resolved_total}** 件",
-        f"- 未対応: **{len(plan.proposals) + len(plan.deferred)}** 件",
+        f"- 未対応: **{len(plan.proposals) + len(plan.deferred)}** 件"
+        + (f"（ほかに判断待ち {len(plan.decisions)} 件）" if plan.decisions else ""),
         "",
     ]
     lines += _score_table(plan)
@@ -212,6 +239,20 @@ def render_dashboard(plan: Plan, ledger: Ledger) -> str:
         lines.append("なし。")
     lines.append("")
 
+    if plan.decisions:
+        lines += ["## あなたの判断が要るもの", ""]
+        for proposal in plan.decisions:
+            f = proposal.finding
+            lines.append(f"- `{f.ref_key}` **{f.title}**")
+        lines.append("")
+
+    if plan.snoozed:
+        lines += ["## 保留中（理由あり）", ""]
+        for proposal in plan.snoozed:
+            f = proposal.finding
+            lines.append(f"- `{f.ref_key}` {f.title} — {proposal.note or '（理由未記入）'}")
+        lines.append("")
+
     if plan.resolved:
         lines += ["## 直近で解決したもの", ""]
         for item in plan.resolved[:10]:
@@ -224,6 +265,7 @@ def render_dashboard(plan: Plan, ledger: Ledger) -> str:
         "```bash",
         "python -m growth run --workspace ../growth-workspace   # 観測 → 提案 → 出力",
         "python -m growth status                       # 今の未対応一覧",
+        "python -m growth snooze <fingerprint> -n 理由  # 今はやらない（理由つきで残す）",
         "python -m growth dismiss <fingerprint> -n 理由 # その提案を今後出さない",
         "python -m growth done <fingerprint>            # 対応済みにする",
         "```",

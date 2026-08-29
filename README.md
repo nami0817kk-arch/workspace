@@ -44,6 +44,9 @@ python -m growth run --workspace ../growth-workspace
 # 今の未対応一覧
 python -m growth status
 
+# 「今はやらない」と伝える（理由つきで残り、作業リストの枠は使わない）
+python -m growth snooze <fingerprint> -n "上流の方針が決まってから"
+
 # 「これはやらない」と伝える（以後この提案は出てこなくなる）
 python -m growth dismiss <fingerprint> -n "この PJT では方針が違うため"
 
@@ -74,8 +77,11 @@ weight = 1.0        # 壊れたときの痛みが大きいものは 1.0 より�
 
 | パス | 役割 |
 |---|---|
-| `src/growth/survey.py` | 観測。リポジトリを読んでシグナルにする |
-| `src/growth/rules.py` | ベースライン診断のルール |
+| `src/growth/survey.py` | 観測。リポジトリを読んで Snapshot にする |
+| `src/growth/signals.py` | 判断材料（シグナル）の抽出 |
+| `src/growth/rules.py` | 診断の入口。`run_all` だけ使えばよい |
+| `src/growth/ruleset.py` | ルールの登録と実行 |
+| `src/growth/checks/` | 診断ルール本体（reliability / automation / docs） |
 | `src/growth/practices.py` | 横展開する習慣の定義 |
 | `src/growth/ledger.py` | 台帳。記憶と学習を担う |
 | `src/growth/planner.py` | 論点のマージ・優先度づけ・件数の絞り込み |

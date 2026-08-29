@@ -118,6 +118,10 @@ class Finding:
     # 同じ論点をベースライン診断と横展開の両方から指摘したときに
     # まとめるためのキー（"tests" / "ci" など）。
     topic: str = ""
+    # 持ち主にしか決められないもの（ライセンス選定、着手するか否か）。
+    # 誰がやっても同じ「作業」と混ぜると、片付かない項目がいつまでも
+    # 残り続けて、リストそのものが読まれなくなる。
+    decision: bool = False
 
     @property
     def fingerprint(self) -> str:
@@ -142,6 +146,7 @@ class Proposal:
     last_seen: str = ""
     seen_count: int = 0
     issue_url: str | None = None
+    note: str | None = None
 
     @property
     def fingerprint(self) -> str:
@@ -165,10 +170,12 @@ class Proposal:
             "evidence": list(f.evidence),
             "exemplar": f.exemplar,
             "topic": f.topic,
+            "decision": f.decision,
             "priority": round(self.priority, 2),
             "status": self.status,
             "first_seen": self.first_seen,
             "last_seen": self.last_seen,
             "seen_count": self.seen_count,
             "issue_url": self.issue_url,
+            "note": self.note,
         }

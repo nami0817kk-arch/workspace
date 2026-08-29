@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import json
 
+import pytest
+
 from growth.cli import main
 from growth.ledger import Ledger
 from helpers import PY_APP2, make_repo
@@ -75,7 +77,11 @@ def test_full_loop_writes_digest_dashboard_and_ledger(tmp_path):
 
 
 def test_second_run_is_idempotent(tmp_path):
-    """同じ状態で2回走らせても、提案が増殖しない。"""
+    """同じ状態で2回走らせても、提案が増殖しない。
+
+    「何回言ったか」は日単位で数えるので、同じ日の2回目では増えない。
+    手元で確認のため繰り返し実行しても、提案が沈まないようにするため。
+    """
     ws, registry = _setup(tmp_path)
     _run(tmp_path, ws, registry)
     before = len(Ledger.load(tmp_path / "ledger.json").proposals)
@@ -83,7 +89,7 @@ def test_second_run_is_idempotent(tmp_path):
     _run(tmp_path, ws, registry)
     after = Ledger.load(tmp_path / "ledger.json")
     assert len(after.proposals) == before
-    assert all(e["seen_count"] == 2 for e in after.proposals.values())
+    assert all(e["seen_count"] == 1 for e in after.proposals.values())
 
 
 def test_fixing_a_gap_is_recorded_as_resolved(tmp_path):
@@ -249,3 +255,73 @@ def test_existing_issue_found_on_github_is_adopted(tmp_path, monkeypatch):
     _run(tmp_path, ws, registry, ["--summary-issue", "owner/home"])
     assert len(fake.created) == 1
     assert Ledger.load(tmp_path / "ledger.json").summary_issues
+
+
+# --- 保留（snooze） --------------------------------------------------------
+
+def test_snooze_keeps_the_record_but_frees_the_action_slot(tmp_path):
+    """「今はやらない」を、消さずに理由つきで残せること。"""
+    ws, registry = _setup(tmp_path)
+    _run(tmp_path, ws, registry)
+
+    ledger = Ledger.load(tmp_path / "ledger.json")
+    target = next(
+        fp for fp, e in ledger.proposals.items()
+        if e["project"] == "app" and e["rule_id"] == "test.missing"
+    )
+    assert main([
+        "--registry", str(registry), "--ledger", str(tmp_path / "ledger.json"),
+        "snooze", target, "-n", "先に設計を決めるため",
+    ]) == 0
+
+    _run(tmp_path, ws, registry)
+    reloaded = Ledger.load(tmp_path / "ledger.json")
+    entry = reloaded.proposals[target]
+    assert entry["status"] == "snoozed"
+    assert entry["note"] == "先に設計を決めるため"
+    # 台帳には残るが、未対応の作業としては数えない
+    assert target not in reloaded.open_fingerprints()
+    assert target in reloaded.snoozed_fingerprints()
+
+
+def test_snoozed_item_appears_in_the_digest_with_its_reason(tmp_path):
+    ws, registry = _setup(tmp_path)
+    _run(tmp_path, ws, registry)
+    ledger = Ledger.load(tmp_path / "ledger.json")
+    target = ledger.open_fingerprints()[0]
+    main(["--registry", str(registry), "--ledger", str(tmp_path / "ledger.json"),
+          "snooze", target, "-n", "上流の方針待ち"])
+
+    _run(tmp_path, ws, registry)
+    digest = next((tmp_path / "digests").glob("*.md")).read_text(encoding="utf-8")
+    assert "保留中（理由あり）" in digest
+    assert "上流の方針待ち" in digest
+
+
+def test_snoozed_finding_that_gets_fixed_is_recorded_as_resolved(tmp_path):
+    """保留にしたものを直したら、ちゃんと解決として数えられること。"""
+    ws, registry = _setup(tmp_path)
+    _run(tmp_path, ws, registry)
+    ledger = Ledger.load(tmp_path / "ledger.json")
+    target = next(
+        fp for fp, e in ledger.proposals.items()
+        if e["project"] == "app" and e["rule_id"] == "test.missing"
+    )
+    main(["--registry", str(registry), "--ledger", str(tmp_path / "ledger.json"),
+          "snooze", target, "-n", "あとで"])
+
+    (ws / "app" / "tests").mkdir()
+    (ws / "app" / "tests" / "test_util.py").write_text(
+        "def test_x():\n    assert True\n", encoding="utf-8"
+    )
+    _run(tmp_path, ws, registry)
+    assert Ledger.load(tmp_path / "ledger.json").proposals[target]["status"] == "resolved"
+
+
+def test_snooze_requires_a_reason(tmp_path, capsys):
+    ws, registry = _setup(tmp_path)
+    _run(tmp_path, ws, registry)
+    fp = Ledger.load(tmp_path / "ledger.json").open_fingerprints()[0]
+    with pytest.raises(SystemExit):
+        main(["--registry", str(registry), "--ledger", str(tmp_path / "ledger.json"),
+              "snooze", fp])

@@ -24,6 +24,8 @@ concurrency:
 jobs:
   loop:
     runs-on: ubuntu-latest
+    # 全リポジトリのクローンを含むが、それでも15分あれば足りる
+    timeout-minutes: 15
     env:
       # src レイアウトなので、インストールせずに python -m growth を動かすため
       PYTHONPATH: src
