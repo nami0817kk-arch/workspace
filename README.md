@@ -27,7 +27,8 @@ ffmpeg は `imageio-ffmpeg` に同梱されるので別途インストール不�
 ## 毎日の運用（朝・昼・夜の3本）
 
 ```bash
-python -m src.cli plan --routine all                     # 今日の3枠ぶんの取材リスト
+python -m src.cli scan --write                            # 朝いちど、候補を広く拾う
+python -m src.cli pick research/YYYYMMDD_candidates.yaml # 採点して朝・昼・夜に割り振る
 python -m src.cli plan --routine morning --write         # 枠ごとに取材メモの雛形
 python -m src.cli draft research/YYYYMMDD_morning.yaml   # 検証して台本に
 python -m src.cli new                          # テンプレートから直接書く場合

@@ -4,7 +4,9 @@
     python -m src.cli speakers                 VOICEVOX の話者/スタイルID一覧
     python -m src.cli build <台本> --backend core   合成方式を明示する
     python -m src.cli make-clip <画像>         静止画から背景クリップを作る
-    python -m src.cli plan                     今日ぶんの取材リストを出す
+    python -m src.cli scan                     候補テーマを拾う検索リスト
+    python -m src.cli pick research/x.yaml     候補を採点して枠に割り振る
+    python -m src.cli plan                     枠ごとの取材リストを出す
     python -m src.cli draft research/x.yaml    取材メモを検証して台本にする
     python -m src.cli new                      テンプレートから台本の下書きを作る
     python -m src.cli check scripts/sample.md  台本の書式と想定尺だけ確認
@@ -60,6 +62,13 @@ def main(argv: list[str] | None = None) -> int:
     )
     p_plan.add_argument("--date", default=None, help="基準日 YYYY-MM-DD（既定: 今日）")
     p_plan.add_argument("--write", action="store_true", help="取材メモの雛形を research/ に作る")
+
+    p_scan = sub.add_parser("scan", help="候補テーマを拾うための検索リストを出す")
+    p_scan.add_argument("--date", default=None, help="基準日 YYYY-MM-DD（既定: 今日）")
+    p_scan.add_argument("--write", action="store_true", help="候補ファイルの雛形を作る")
+
+    p_pick = sub.add_parser("pick", help="候補を採点して枠に割り振り、深掘りの検索を出す")
+    p_pick.add_argument("candidates")
 
     p_draft = sub.add_parser("draft", help="取材メモ(YAML)を検証して台本にする")
     p_draft.add_argument("notes")
@@ -205,6 +214,95 @@ def _dispatch(args, config) -> int:
             target.write_text(worksheet(routine, today), encoding="utf-8")
             print(f"取材メモ: {target}")
             print(f"埋めたら `python -m src.cli draft {target}` で台本になります")
+        return 0
+
+    if args.command == "scan":
+        from datetime import date as _date
+
+        from . import candidates as candidates_mod
+        from .config import _resolve
+        from .plan import load_plan, tokens
+
+        plan = load_plan()
+        today = _date.fromisoformat(args.date) if args.date else _date.today()
+        words = tokens(today, 24)
+        scan = plan.scan
+
+        print(f"■ 候補スキャン　{words['{date_ja}']}")
+        if scan.get("when"):
+            print(f"　目安の時刻: {scan['when']}")
+        print()
+        for number, item in enumerate(scan.get("queries") or [], start=1):
+            text = str(item.get("q", ""))
+            for key, value in words.items():
+                text = text.replace(key, value)
+            group = item.get("domains")
+            domains = plan.domains.get(str(group), []) if group else []
+            label = str(item.get("label", ""))
+            line = f'{number}. {label}: "{text}"'
+            if domains:
+                line += f"  （{', '.join(domains)} に限定）"
+            print(line)
+        for note in str(scan.get("check", "")).splitlines():
+            if note.strip():
+                print(f"   確認: {note.strip()}")
+
+        if args.write:
+            target = _resolve(f"research/{today.strftime('%Y%m%d')}_candidates.yaml")
+            if target.exists():
+                print(f"\nすでにあります: {target}", file=sys.stderr)
+                return 1
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(candidates_mod.worksheet(words["{date_ja}"]), encoding="utf-8")
+            print(f"\n候補ファイル: {target}")
+            print(f"埋めたら `python -m src.cli pick {target}`")
+        return 0
+
+    if args.command == "pick":
+        from . import candidates as candidates_mod
+        from . import coverage as coverage_mod
+        from .plan import load_plan
+
+        plan = load_plan()
+        date_label, items = candidates_mod.load_candidates(args.candidates)
+        ranked = candidates_mod.score(items, plan.scoring)
+
+        # 1日3本だと、朝に出した話が夜にまた上がってくる。記録と突き合わせて外す
+        ledger = coverage_mod.load(plan.coverage.get("ledger", "research/covered.yaml"))
+        covered = coverage_mod.duplicates(
+            ledger,
+            [c.id for c in ranked],
+            int(plan.coverage.get("repeat_within_hours", 36)),
+        )
+        ranked, dropped = candidates_mod.exclude_covered(ranked, covered)
+
+        print(f"■ 候補の採点　{date_label}　{len(ranked)}件")
+        for item in ranked:
+            detail = " ".join(f"{k}+{v}" for k, v in item.breakdown.items()) or "加点なし"
+            print(f"  {item.score:2d}点  {item.title}　［{item.tier}／{item.hours_ago:g}時間前］")
+            print(f"        {detail}")
+        for item in dropped:
+            entry = covered[item.id]
+            print(f"  ーー　{item.title}　（{entry.slot}で既出 {entry.at:%m/%d %H:%M}）")
+        print()
+
+        chosen = candidates_mod.assign(ranked, plan.scoring, plan.slots)
+
+        for slot in plan.slots:
+            pick = chosen.get(slot)
+            routine = plan.routines.get(slot)
+            name = routine.name if routine else slot
+            if pick is None:
+                print(f"■ {name}: 割り当てる候補がありません")
+                continue
+            print(f"■ {name} → {pick.title}（{pick.score}点）")
+            for query in candidates_mod.deep_queries(pick, plan.deep, plan.domains):
+                line = f'   {query["label"]}: "{query["q"]}"'
+                if query["domains"]:
+                    line += f"  （{', '.join(query['domains'])} に限定）"
+                print(line)
+            print(f"   取材メモ: python -m src.cli plan --routine {slot} --write")
+            print()
         return 0
 
     if args.command == "draft":

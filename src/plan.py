@@ -71,6 +71,9 @@ class Plan:
     slots: list[str] = field(default_factory=list)
     coverage: dict = field(default_factory=dict)
     policy: dict = field(default_factory=dict)
+    scan: dict = field(default_factory=dict)
+    scoring: dict = field(default_factory=dict)
+    deep: list = field(default_factory=list)
 
     def routine(self, key: str) -> Routine:
         if key not in self.routines:
@@ -92,6 +95,9 @@ def build_plan(raw: dict) -> Plan:
     cadence = raw.get("cadence") or {}
     coverage = dict(raw.get("coverage") or {})
     policy = dict(raw.get("policy") or {})
+    scan = dict(raw.get("scan") or {})
+    scoring = dict(raw.get("scoring") or {})
+    deep = [dict(x) for x in (raw.get("deep") or [])]
     tiers = dict(raw.get("tiers") or {})
     if not tiers:
         raise PlanError("tiers が定義されていません")
@@ -143,6 +149,9 @@ def build_plan(raw: dict) -> Plan:
         slots=slots,
         coverage=coverage,
         policy=policy,
+        scan=scan,
+        scoring=scoring,
+        deep=deep,
     )
 
 

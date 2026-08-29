@@ -1,0 +1,45 @@
+# 候補テーマ（2026年8月29日）
+# スキャンで拾ったものを並べる。深掘りはまだしない。
+date: "2026年8月29日"
+candidates:
+  - id: alvarez_barca
+    title: アルバレスがバルサに行けない本当の理由
+    en: Julian Alvarez Atletico Barcelona
+    hours_ago: 4
+    tier: 報道
+    reaction: true
+    numbers: true
+    note: アトレティコが「可能性ゼロ」と発言。アーセナルが待機
+    sources:
+      - https://www.skysports.com/football/news/11095/13577412/julian-alvarez-atletico-madrid-say-theres-zero-per-cent-chance-of-him-joining-barcelona-despite-clubs-plea-as-arsenal-wait-in-wings
+
+  - id: suzuki_villa
+    title: 鈴木彩艶のアストン・ヴィラ移籍
+    en: Zion Suzuki Aston Villa
+    hours_ago: 20
+    tier: 確定
+    japanese: true
+    numbers: true
+    note: パルマから完全移籍。日本人最高額タイと報道
+
+  - id: sano_next
+    title: 佐野海舟にプレミア勢が関心
+    en: Kaishu Sano Mainz Premier League
+    hours_ago: 9
+    tier: 未確認
+    japanese: true
+    note: マインツ所属。リバプール・アーセナルなど
+
+  - id: deadline_dates
+    title: 移籍期限はいつ締まるのか
+    en: transfer deadline day
+    hours_ago: 30
+    tier: 確定
+    note: 英国は9月1日23時BST
+
+  - id: jleague_top
+    title: J1首位攻防の行方
+    hours_ago: 14
+    tier: 報道
+    japanese: true
+    reaction: true

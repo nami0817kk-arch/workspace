@@ -5,7 +5,10 @@
 
 ```
 config/sources.yaml   いつ・どこから・何を取るか（計画）
-        │  plan
+        │  scan                     朝いちど、候補を広く拾う
+        ▼
+research/YYYYMMDD_candidates.yaml   候補（見出しだけ。深掘りはまだしない）
+        │  pick → plan              採点して枠に割り振り、取材メモの雛形を作る
         ▼
 research/YYYYMMDD.yaml   取材メモ（拾った内容をここに書く）
         │  draft  ← ここで確度の条件を機械的に確認
@@ -44,7 +47,89 @@ output/YYYYMMDD/         動画一式
 「何を」は各 routine の `steps`。1ステップ＝1つの話題で、それぞれに
 **既定の確度**と**検索の型**と**確認事項**が付いている。
 
-## 2. 取材リストを出す
+## 2. 候補を拾って、選ぶ（scan → pick）
+
+1日3本を毎日続けると、**選ぶところ**が一番の負担になる。
+「拾う」と「選ぶ」を分けて、選ぶ基準を設定ファイルに固定してある。
+
+### 拾う（朝いちど）
+
+```bash
+python -m src.cli scan --write
+```
+
+`scan` の検索を回して、返ってきた**見出しだけ**を候補ファイルに並べる。
+ここでは深掘りしない。1件1行、5〜10件も拾えば足りる。
+
+```yaml
+candidates:
+  - id: alvarez_barca
+    title: アルバレスがバルサに行けない本当の理由
+    en: Julian Alvarez Atletico Barcelona   # 英語サイトを引くときの語
+    hours_ago: 4        # 何時間前の話題か
+    tier: 報道           # 確定 / 報道 / 未確認
+    japanese: false     # 日本人選手が絡むか
+    reaction: true      # 賛否が割れる・驚きがあるか
+    numbers: true       # 金額・記録など数字が立つか
+```
+
+`en` は**英語サイトを検索するための語**。日本語の見出しで skysports.com を
+引いても何も返らないので、選手名とクラブ名を英語で入れておく。
+Jリーグの話題のように英語圏で報じられないものは、空のままでよい。
+`big_club` は `scoring.big_clubs` の名前が見出しに入っていれば自動で立つ。
+
+### 選ぶ
+
+```bash
+python -m src.cli pick research/20260829_candidates.yaml
+```
+
+やることは3つ。
+
+**1. 採点する。** `scoring.weights` の配点で並べ替える。
+
+| 項目 | 点 | 理由 |
+|---|---|---|
+| 新しさ | 3 | 6時間以内=満点、12時間=2/3、24時間=1/3、それ以降=0 |
+| 日本人選手 | 3 | 視聴者層に直結する |
+| 反応 | 3 | 賛否が割れる話はコメントが伸びる |
+| ビッグクラブ | 2 | 名前だけで再生が付く |
+| 数字 | 1 | 金額・記録はサムネにしやすい |
+
+内訳も一緒に出るので、**なぜその順になったかが読める**。
+点数は並べ替えの目安で、最後に決めるのは人。違うと思えば手で入れ替えてよい。
+
+**2. 直近で扱った話題を外す。** `research/covered.yaml` と突き合わせ、
+`coverage.repeat_within_hours`（既定36時間）以内に出したものは候補から落ちる。
+朝に出した話が夜にまた上がってくるのを止めるため。落ちたものも
+「どの枠で既出か」つきで表示される。
+
+**3. 枠に割り振る。** `scoring.slots` の方針で1枠1本ずつ、重複なく。
+
+| 枠 | 方針 | 条件 |
+|---|---|---|
+| `morning` | いちばん新しいもの | 確度が 確定 か 報道 のものだけ |
+| `noon` | 日本人選手が絡むもの | — |
+| `evening` | 残りの最高点 | — |
+
+条件に合う候補が無ければ全体から選ぶ（朝が空になるより出したほうがよい）。
+
+そのうえで、選んだテーマごとに**深掘りの検索**が出る。`deep` の雛形に
+`{theme}`（日本語の見出し）と `{en}`（英語の語）が入る。
+`{en}` を使う行は、候補に `en` が書かれているときだけ出る。
+
+```
+■ 朝の一報 → アルバレスがバルサに行けない本当の理由（9点）
+   何が起きたか: "アルバレスがバルサに行けない本当の理由 詳細"
+   何が起きたか（英語）: "Julian Alvarez Atletico Barcelona latest news"  （skysports.com … に限定）
+   なぜそうなったか: "Julian Alvarez Atletico Barcelona why explained"  （skysports.com … に限定）
+   反応: "Julian Alvarez Atletico Barcelona"  （x.com に限定）
+   数字: "Julian Alvarez Atletico Barcelona fee OR record OR stats"  （skysports.com … に限定）
+```
+
+ここまでで**その日の3本のテーマが決まる**。あとは枠ごとに取材メモを書く。
+
+## 3. 取材リストを出す
 
 ```bash
 python -m src.cli plan --routine all          # 今日の3本ぶんまとめて
@@ -64,7 +149,7 @@ python -m src.cli plan --routine deadline_day --date 2026-09-01
         topics: [Julian Alvarez, 佐野海舟]
 ```
 
-## 3. 取材メモに書く（1本＝1テーマ）
+## 4. 取材メモに書く（1本＝1テーマ）
 
 **複数の話題を並べるまとめは作らない。** 1本で1つのテーマを掘る。
 
@@ -134,7 +219,7 @@ sections:
 読み上げ文は**人名・数字をひらがなに開く**（誤読を防ぐ）。画面には `telop` の
 漢字表記が出るので、見た目は変わらない。
 
-## 4. 同じ話題を繰り返さない
+## 5. 同じ話題を繰り返さない
 
 1日3本を続けると「朝に出した話を夜にもう一度出す」が必ず起きる。
 台本を作るたびに `research/covered.yaml` に記録され、次に作るとき突き合わせる。
@@ -160,7 +245,7 @@ sections:
 
 判定の幅は `coverage.repeat_within_hours`（既定36時間）で変えられる。
 
-## 5. 検証してから台本にする
+## 6. 検証してから台本にする
 
 ```bash
 python -m src.cli draft research/20260829_weekly.yaml
@@ -200,7 +285,7 @@ python -m src.cli draft research/20260829_weekly.yaml --check-only   # 検証だ
 生成される台本には、章立て・確度バッジ・出典・まとめカードが入った状態になる。
 あとは言い回しを整えて `build` すればよい。
 
-## 6. 出来上がりまで
+## 7. 出来上がりまで
 
 ```bash
 python -m src.cli check scripts/20260829.md   # 書式と想定尺
@@ -216,5 +301,9 @@ python -m src.cli build scripts/20260829.md   # 動画一式
 - 使えた検索の型 → `queries` に足す
 - 引っかかった落とし穴 → `check` に書く（取材リストに毎回出る）
 - 追う選手が変わった → `topics` を入れ替える
+- 伸びた動画・伸びなかった動画 → `scoring.weights` を調整する
+- 新しくビッグクラブ扱いにしたいクラブ → `scoring.big_clubs` に足す
 
-この3つを回していくと、回を重ねるほど取材が速く・正確になる。
+回していくと、回を重ねるほど取材が速く・正確になる。
+とくに `weights` は、実際の再生数を見て動かすところ。
+最初の配点はあくまで初期値で、当てるつもりの数字ではない。
