@@ -74,3 +74,62 @@ def test_card_key_changes_with_content_and_width():
     assert card_key(base, 900) == card_key({"type": "quote", "text": "a"}, 900)
     assert card_key(base, 900) != card_key({"type": "quote", "text": "b"}, 900)
     assert card_key(base, 900) != card_key(base, 800)
+
+
+def test_bars_card_renders(tmp_path, fonts):
+    font, latin = fonts
+    path = render(
+        {
+            "type": "bars",
+            "title": "比較",
+            "unit": "点",
+            "items": [{"label": "A", "value": 14, "highlight": True}, {"label": "B", "value": 7}],
+            "note": "※出典",
+        },
+        WIDTH, font, tmp_path / "bars.png", latin,
+    )
+    assert path.exists()
+
+
+def test_bars_needs_label_and_value(tmp_path, fonts):
+    font, latin = fonts
+    with pytest.raises(CardError, match="items"):
+        render({"type": "bars", "title": "x"}, WIDTH, font, tmp_path / "a.png", latin)
+    with pytest.raises(CardError, match="label"):
+        render(
+            {"type": "bars", "items": [{"label": "A"}]}, WIDTH, font, tmp_path / "b.png", latin
+        )
+
+
+def test_bars_survives_a_zero_maximum(tmp_path, fonts):
+    """全部ゼロでも割り算で落ちない。"""
+    font, latin = fonts
+    path = render(
+        {"type": "bars", "items": [{"label": "A", "value": 0}, {"label": "B", "value": 0}]},
+        WIDTH, font, tmp_path / "zero.png", latin,
+    )
+    assert path.exists()
+
+
+def test_table_card_renders(tmp_path, fonts):
+    font, latin = fonts
+    path = render(
+        {
+            "type": "table",
+            "title": "順位",
+            "columns": ["順位", "クラブ", "勝点"],
+            "rows": [["1", "A", "12"], ["2", "B", "10"]],
+            "highlight_row": 0,
+        },
+        WIDTH, font, tmp_path / "table.png", latin,
+    )
+    assert path.exists()
+
+
+def test_table_rejects_mismatched_row_length(tmp_path, fonts):
+    font, latin = fonts
+    with pytest.raises(CardError, match="columns と同じ数"):
+        render(
+            {"type": "table", "columns": ["a", "b"], "rows": [["1"]]},
+            WIDTH, font, tmp_path / "bad.png", latin,
+        )

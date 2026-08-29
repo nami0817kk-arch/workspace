@@ -13,7 +13,16 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
-CARD_TYPES = ("quote", "transfer", "points")
+CARD_TYPES = ("quote", "transfer", "points", "bars", "table")
+
+# 棒グラフは「同じ指標を並べて比べる」用途なので、色は1色で通し、
+# 注目させたい1本だけ同じ色相の明るい段を使う（カテゴリ配色にはしない）。
+BAR_BASE = (47, 106, 176)        # 下地の青。カード面に対して 3.3:1
+BAR_HIGHLIGHT = (89, 176, 255)   # 注目させる1本。7.8:1
+# カード面の上に直接描くので、半透明ではなく塗り込んだ色を使う
+# （RGBA で半透明を描くと下地を置き換えてしまい、帯が白く抜ける）
+GRID = (62, 72, 90, 255)
+ZEBRA = (32, 41, 58, 255)
 
 PANEL = (16, 22, 34, 232)
 BORDER = (255, 255, 255, 46)
@@ -41,7 +50,13 @@ def render(spec: dict, width: int, font_path: str, out_path: Path,
     if kind not in CARD_TYPES:
         raise CardError(f"カードの type は {CARD_TYPES} のいずれか: {kind}")
 
-    builder = {"quote": _quote, "transfer": _transfer, "points": _points}[kind]
+    builder = {
+        "quote": _quote,
+        "transfer": _transfer,
+        "points": _points,
+        "bars": _bars,
+        "table": _table,
+    }[kind]
     blocks = builder(spec, width, font_path, latin_font_path or font_path)
 
     height = PAD * 2 + sum(block["height"] for block in blocks)
@@ -178,6 +193,140 @@ def _points(spec: dict, width: int, font_path: str, latin_path: str) -> list[dic
 
         blocks.append({"height": 52 * len(lines) + 12, "draw": draw_item})
     return blocks
+
+
+def _bars(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
+    """横棒で数量を比べるカード。
+
+    同じ指標どうしの比較なので棒は1色で通し、注目させたい1本だけ明るくする。
+    数値は棒の右端に直接置く（動画なのでホバーで見せられない）。
+    """
+    title_font = ImageFont.truetype(font_path, 42)
+    label_font = ImageFont.truetype(font_path, 34)
+    value_font = ImageFont.truetype(font_path, 34)
+
+    items = [dict(item) for item in (spec.get("items") or [])]
+    if not items:
+        raise CardError("bars カードには items が必要です")
+    for item in items:
+        if "label" not in item or "value" not in item:
+            raise CardError("bars の items には label と value が必要です")
+
+    unit = str(spec.get("unit") or "")
+    top = max(float(item["value"]) for item in items) or 1.0
+    measure = ImageDraw.Draw(Image.new("RGB", (1, 1)))
+    label_width = max(measure.textlength(str(i["label"]), font=label_font) for i in items)
+    label_width = min(label_width, width * 0.34)
+    value_width = max(
+        measure.textlength(f"{_number(i['value'])}{unit}", font=value_font) for i in items
+    )
+
+    blocks: list[dict] = []
+    title = str(spec.get("title") or "").strip()
+    if title:
+        blocks.append(
+            {
+                "height": 62,
+                "draw": lambda draw, y: draw.text(
+                    (PAD + 12, y), title, font=title_font, fill=TEXT
+                ),
+            }
+        )
+
+    bar_left = PAD + 12 + label_width + 24
+    bar_span = width - PAD - bar_left - value_width - 34
+    row_height = 54
+
+    for item in items[:6]:
+        ratio = max(0.0, float(item["value"])) / top
+        color = BAR_HIGHLIGHT if item.get("highlight") else BAR_BASE
+
+        def draw_row(draw, y, item=item, ratio=ratio, color=color):
+            draw.text((PAD + 12, y + 6), str(item["label"]), font=label_font, fill=SUB)
+            length = max(6, int(bar_span * ratio))
+            # 端を少し丸めた細い棒。土台（左端）は角を立てて基準線に合わせる
+            draw.rounded_rectangle(
+                [bar_left, y + 8, bar_left + length, y + 42], radius=4, fill=color + (255,)
+            )
+            draw.rectangle([bar_left, y + 8, bar_left + 6, y + 42], fill=color + (255,))
+            draw.text(
+                (bar_left + length + 16, y + 6),
+                f"{_number(item['value'])}{unit}",
+                font=value_font,
+                fill=TEXT,
+            )
+
+        blocks.append({"height": row_height, "draw": draw_row})
+
+    note = str(spec.get("note") or "").strip()
+    if note:
+        note_font = ImageFont.truetype(font_path, 28)
+        blocks.append({"height": 14, "draw": lambda draw, y: None})
+        blocks.append(_text_block(note, note_font, width - PAD * 2 - 12, SUB, 6))
+    return blocks
+
+
+def _table(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
+    """順位表のような表。1行だけ強調できる。"""
+    title_font = ImageFont.truetype(font_path, 42)
+    head_font = ImageFont.truetype(font_path, 30)
+    cell_font = ImageFont.truetype(font_path, 34)
+
+    columns = [str(c) for c in (spec.get("columns") or [])]
+    rows = [[str(cell) for cell in row] for row in (spec.get("rows") or [])]
+    if not columns or not rows:
+        raise CardError("table カードには columns と rows が必要です")
+    if any(len(row) != len(columns) for row in rows):
+        raise CardError("table の各行は columns と同じ数にしてください")
+
+    highlight = spec.get("highlight_row")
+    inner = width - PAD * 2 - 12
+    # 1列目は狭く、2列目を広く取る（順位＋名前の並びが多いため）
+    weights = [0.14] + [0.5] + [0.36 / max(1, len(columns) - 2)] * max(0, len(columns) - 2)
+    weights = weights[: len(columns)]
+    total = sum(weights)
+    widths = [inner * w / total for w in weights]
+
+    blocks: list[dict] = []
+    title = str(spec.get("title") or "").strip()
+    if title:
+        blocks.append(
+            {
+                "height": 62,
+                "draw": lambda draw, y: draw.text(
+                    (PAD + 12, y), title, font=title_font, fill=TEXT
+                ),
+            }
+        )
+
+    def draw_head(draw, y):
+        x = PAD + 12
+        for index, name in enumerate(columns):
+            draw.text((x, y), name, font=head_font, fill=SUB)
+            x += widths[index]
+        draw.line([(PAD + 12, y + 42), (width - PAD, y + 42)], fill=GRID, width=2)
+
+    blocks.append({"height": 56, "draw": draw_head})
+
+    for number, row in enumerate(rows[:6]):
+        def draw_row(draw, y, row=row, number=number):
+            if number == highlight:
+                draw.rounded_rectangle(
+                    [PAD + 4, y - 4, width - PAD + 4, y + 44], radius=8, fill=ZEBRA
+                )
+            x = PAD + 12
+            for index, cell in enumerate(row):
+                color = TEXT if index != 0 else SUB
+                draw.text((x, y), cell, font=cell_font, fill=color)
+                x += widths[index]
+
+        blocks.append({"height": 52, "draw": draw_row})
+    return blocks
+
+
+def _number(value) -> str:
+    number = float(value)
+    return str(int(number)) if number.is_integer() else f"{number:g}"
 
 
 # ------------------------------------------------------------------ 補助

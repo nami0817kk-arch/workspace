@@ -4,6 +4,7 @@
     python -m src.cli speakers                 VOICEVOX の話者/スタイルID一覧
     python -m src.cli build <台本> --backend core   合成方式を明示する
     python -m src.cli make-clip <画像>         静止画から背景クリップを作る
+    python -m src.cli new                      テンプレートから台本の下書きを作る
     python -m src.cli check scripts/sample.md  台本の書式と想定尺だけ確認
     python -m src.cli build scripts/sample.md  動画・字幕・サムネを書き出し
     python -m src.cli upload output/sample     出来上がりを YouTube に投稿
@@ -47,6 +48,11 @@ def main(argv: list[str] | None = None) -> int:
     p_thumb = sub.add_parser("thumbnail", help="サムネイルだけ作り直す")
     p_thumb.add_argument("script")
     p_thumb.add_argument("--out", default=None)
+
+    p_new = sub.add_parser("new", help="テンプレートから台本の下書きを作る")
+    p_new.add_argument("name", nargs="?", default=None, help="ファイル名（既定: 日付）")
+    p_new.add_argument("--template", default="weekly", help="scripts/templates/ の名前")
+    p_new.add_argument("--date", default=None, help="動画に出す日付（既定: 今日）")
 
     p_clip = sub.add_parser("make-clip", help="静止画からゆっくり寄る背景クリップを作る")
     p_clip.add_argument("image", help="元になる画像")
@@ -141,6 +147,31 @@ def _dispatch(args, config) -> int:
             subtitle=str(script.meta.get("thumbnail_subtitle", "")),
         )
         print(f"サムネ: {path}")
+        return 0
+
+    if args.command == "new":
+        from datetime import date as _date
+
+        from .config import _resolve
+
+        template = _resolve(f"scripts/templates/{args.template}.md")
+        if not template.exists():
+            print(f"テンプレートがありません: {template}", file=sys.stderr)
+            return 1
+
+        today = _date.today()
+        stamp = args.date or f"{today.year}年{today.month}月{today.day}日"
+        target = _resolve(f"scripts/{args.name or today.strftime('%Y%m%d')}.md")
+        if target.exists():
+            print(f"すでにあります: {target}", file=sys.stderr)
+            return 1
+
+        text = template.read_text(encoding="utf-8")
+        text = text.replace("{{DATE}}", stamp)
+        text = text.replace("{{DATE_SHORT}}", f"{today.month}/{today.day}")
+        target.write_text(text, encoding="utf-8")
+        print(f"下書き: {target}")
+        print("{{...}} を埋めてから `python -m src.cli check` で確認してください")
         return 0
 
     if args.command == "make-clip":

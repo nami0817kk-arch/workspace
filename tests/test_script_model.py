@@ -75,3 +75,9 @@ def test_estimated_duration_grows_with_text():
     script = parse_script("## S\n霊夢: 短い。\n霊夢: " + "長い文章。" * 10 + "\n")
     short, long = script.lines
     assert long.estimated_duration() > short.estimated_duration()
+
+
+def test_broken_frontmatter_gives_a_readable_message():
+    """YAMLの生の例外ではなく、直し方が分かるメッセージにする。"""
+    with pytest.raises(ScriptError, match="引用符"):
+        parse_script("---\ntitle: {{PLACEHOLDER}}\n---\n\n## S\n霊夢: あ。\n")

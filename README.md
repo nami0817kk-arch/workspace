@@ -24,6 +24,16 @@ ffmpeg は `imageio-ffmpeg` に同梱されるので別途インストール不�
 
 どちらも無い場合は無音で書き出し、構成と尺だけ確認できる。
 
+## 毎週の運用
+
+```bash
+python -m src.cli new                          # 台本の下書きを作る
+python -m src.cli check scripts/YYYYMMDD.md    # 書式と想定尺の確認
+python -m src.cli build scripts/YYYYMMDD.md    # 動画一式を書き出す
+```
+
+ネタの集め方から公開前の確認まで、手順は [docs/weekly.md](docs/weekly.md) にまとめてある。
+
 ## 使い方
 
 ```bash
@@ -80,7 +90,8 @@ tags: [ゆっくり解説, VOICEVOX]
 | `src/upload.py` | YouTube Data API での投稿 |
 | `config/project.yaml` | 画面サイズ・話者(style_id)・声・BGM・演出の設定 |
 | `scripts/` | 台本と `setup_voicevox_core.py` |
-| `docs/` | [パイプライン仕様](docs/pipeline.md) / [VOICEVOX設定](docs/voicevox.md) / [背景](docs/backgrounds.md) / [カードと画像](docs/cards.md) / [情報源](docs/news-sources.md) |
+| `scripts/templates/` | 台本のテンプレート |
+| `docs/` | [毎週の作り方](docs/weekly.md) / [パイプライン仕様](docs/pipeline.md) / [VOICEVOX設定](docs/voicevox.md) / [背景](docs/backgrounds.md) / [カードと画像](docs/cards.md) / [情報源](docs/news-sources.md) |
 
 ## テスト
 

@@ -284,7 +284,15 @@ def _split_frontmatter(text: str) -> tuple[str, dict]:
     for index in range(1, len(lines)):
         if lines[index].strip() == "---":
             raw = "\n".join(lines[1:index])
-            meta = yaml.safe_load(raw) or {}
+            try:
+                meta = yaml.safe_load(raw) or {}
+            except yaml.YAMLError as exc:
+                # 記号を含む値を素で書いたときに起きやすい。生の例外だと読めない
+                raise ScriptError(
+                    "frontmatter の書式が正しくありません。"
+                    "記号（{ } : # など）を含む値は \"引用符\" で囲んでください。\n"
+                    f"{exc}"
+                ) from exc
             if not isinstance(meta, dict):
                 raise ScriptError("frontmatter は key: value のマッピングにしてください")
             meta["_offset"] = index + 1
