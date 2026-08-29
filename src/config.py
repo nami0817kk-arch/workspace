@@ -23,6 +23,16 @@ FONT_CANDIDATES = [
 ]
 
 
+# 英文の見出しをそのまま出すことがあるので、欧文はプロポーショナルなフォントを使う
+LATIN_FONT_CANDIDATES = [
+    "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+    "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+    "C:/Windows/Fonts/segoeui.ttf",
+    "C:/Windows/Fonts/arial.ttf",
+    "/System/Library/Fonts/Helvetica.ttc",
+]
+
+
 class ConfigError(Exception):
     """設定ファイルが壊れている / 必要な項目が無い。"""
 
@@ -33,6 +43,7 @@ class VideoConfig:
     height: int = 1080
     fps: int = 30
     font: str = ""
+    latin_font: str = ""           # 英文用。空なら環境から自動検出
     telop_size: int = 58
     name_size: int = 40
     title_size: int = 72
@@ -54,6 +65,17 @@ class VideoConfig:
             "日本語フォントが見つかりません。config/project.yaml の video.font に "
             "TTF/OTF のパスを指定してください。"
         )
+
+    def latin_font_path(self) -> Path:
+        """英文用のフォント。見つからなければ日本語フォントで代用する。"""
+        if self.latin_font:
+            path = _resolve(self.latin_font)
+            if path.exists():
+                return path
+        for candidate in LATIN_FONT_CANDIDATES:
+            if Path(candidate).exists():
+                return Path(candidate)
+        return self.font_path()
 
     def background_path(self) -> Path:
         return _resolve(self.background)

@@ -182,3 +182,40 @@ def test_news_headline_keeps_its_source_badge(tmp_path):
     entries = renderer.frame_entries(script)
     # 見出しも確度も変わらないので、2行とも同じ絵になる
     assert len({path for path, _ in entries}) == 1
+
+
+def _card_script():
+    script = parse_script(
+        "---\ncards:\n  c1: {type: quote, source: ESPN, text: hello}\n---\n\n"
+        "## S\n霊夢: 見出し。\n  telop: 見出し\n  card: c1\n魔理沙: 続き。\n"
+    )
+    for line in script.lines:
+        line.duration, line.pause = 2.0, 0.4
+    return script
+
+
+def test_card_persists_to_following_lines(tmp_path):
+    """カードも見出しと同じく、指定した行以降そのまま出したままになる。"""
+    config = load_config()
+    config.motion.enabled = False
+    config.video.show_characters = False
+    renderer = Renderer(config, tmp_path)
+    entries = renderer.frame_entries(_card_script())
+    assert len({path for path, _ in entries}) == 1
+    assert list((tmp_path / "cards").glob("*.png"))
+
+
+def test_card_none_clears_it(tmp_path):
+    config = load_config()
+    config.motion.enabled = False
+    config.video.show_characters = False
+    script = parse_script(
+        "---\ncards:\n  c1: {type: quote, source: ESPN, text: hello}\n---\n\n"
+        "## S\n霊夢: 出す。\n  telop: 見出し\n  card: c1\n魔理沙: 消す。\n  card: none\n"
+    )
+    for line in script.lines:
+        line.duration, line.pause = 2.0, 0.4
+
+    renderer = Renderer(config, tmp_path)
+    entries = renderer.frame_entries(script)
+    assert len({path for path, _ in entries}) == 2

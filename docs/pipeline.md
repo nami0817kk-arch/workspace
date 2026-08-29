@@ -51,7 +51,8 @@ tags: [ゆっくり解説, VOICEVOX]
 霊夢: 実際に読み上げるセリフ。
   telop: 画面に出す文字（省略するとセリフがそのまま出る）
   emotion: smile                 ← normal / smile / angry / surprise
-  image: assets/images/graph.png ← 画面中央に差し込む画像
+  image: assets/images/graph.png ← 画面上部に差し込む画像
+  card: sky_zero                 ← frontmatter の cards で定義したカード（docs/cards.md）
   pause: 0.8                     ← この行のあとの無音（秒）
   speed: 1.2                     ← この行だけ話速を変える
   no_telop: true                 ← テロップを出さない

@@ -31,7 +31,7 @@ LINE_RE = re.compile(r"^(?P<speaker>[^:：]{1,20})[:：]\s*(?P<text>.*)$")
 ATTR_RE = re.compile(r"^(?P<key>[a-zA-Z_]+)[:：]\s*(?P<value>.*)$")
 DIRECTIVE_RE = re.compile(r"^@(?P<key>[a-zA-Z_]+)[:：]\s*(?P<value>.*)$")
 
-LINE_ATTRS = {"telop", "emotion", "pause", "image", "speed", "no_telop", "se", "source"}
+LINE_ATTRS = {"telop", "emotion", "pause", "image", "speed", "no_telop", "se", "source", "card"}
 
 # 情報の確度。ニュース系では、これを画面に出さないと視聴者が判断できない
 SOURCE_TIERS = {
@@ -67,6 +67,7 @@ class Line:
     emotion: str = "normal"
     image: str | None = None
     se: str | None = None
+    card: str | None = None     # frontmatter の cards で定義したカードの名前
     source: str | None = None   # official / report / rumor
     pause: float | None = None
     speed: float | None = None
@@ -110,6 +111,7 @@ class Script:
     tags: list[str] = field(default_factory=list)
     sources: list[str] = field(default_factory=list)
     background: str | None = None   # 動画全体の既定背景
+    cards: dict = field(default_factory=dict)   # 画面に差し込むカードの定義
     meta: dict = field(default_factory=dict)
     source: Path | None = None
 
@@ -174,6 +176,7 @@ def parse_script(text: str) -> Script:
         tags=[str(tag) for tag in (meta.get("tags") or [])],
         sources=[str(url) for url in (meta.get("sources") or [])],
         background=str(meta["bg"]) if meta.get("bg") else None,
+        cards=dict(meta.get("cards") or {}),
         meta=meta,
     )
 
@@ -233,6 +236,14 @@ def parse_script(text: str) -> Script:
 
     if not script.lines:
         raise ScriptError("台本にセリフが1つもありません")
+
+    for line in script.lines:
+        if line.card and line.card not in ("none", "なし") and line.card not in script.cards:
+            known = ", ".join(script.cards) or "（定義なし）"
+            raise ScriptError(
+                f"{line.source_line}行目: カード『{line.card}』は frontmatter の "
+                f"cards に定義されていません（定義済み: {known}）"
+            )
     return script
 
 

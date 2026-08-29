@@ -14,7 +14,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
-from . import ffmpeg
+from . import cards, ffmpeg
 from .ffmpeg import is_video
 from .config import CastMember, ProjectConfig, _resolve
 from .script_model import Line, Scene, Script
@@ -46,6 +46,12 @@ class Layout:
         return (TELOP_MARGIN, top, self.width - TELOP_MARGIN, top + TELOP_HEIGHT)
 
     @property
+    def media_slot(self) -> tuple[int, int]:
+        """画像やカードを置く縦の範囲。文字の上を使う。"""
+        floor = (self.headline_box if not self.with_characters else self.telop_box)[1]
+        return (int(self.height * 0.11), floor - 34)
+
+    @property
     def headline_box(self) -> tuple[int, int, int, int]:
         """立ち絵なしのときの見出し領域。下寄せで、画面の幅をたっぷり使う。"""
         left = int(self.width * 0.075)
@@ -73,6 +79,8 @@ class Renderer:
         self.font_scene = ImageFont.truetype(font_path, 36)
 
         self.script_background: str | None = None  # 台本 frontmatter の bg
+        self.script_cards: dict = {}
+        self.card_dir = work_dir / "cards"
         # 背景に動画が1つでも混ざる場合、フレームは透過で描いて後から重ねる
         self.over_video = False
         self._backgrounds: dict[str, Image.Image] = {}
@@ -87,18 +95,21 @@ class Renderer:
         mouth_open: bool,
         telop_t: float = 1.0,
         hop_t: float = 1.0,
-        headline: tuple[str, str | None] | None = None,
+        panel: tuple[str, str | None, str | None] | None = None,
     ) -> Path:
         """1枚の画面を描いて PNG のパスを返す。
 
         telop_t / hop_t は 0→1 のアニメーション進捗。同じ絵は使い回すので、
         アニメーションを入れてもフレーム数は必要なぶんしか増えない。
 
-        headline に (文字列, 確度) を渡すと、その行の telop / source ではなく
-        そちらを描く。ニュース風レイアウトで見出しを次の行にも残すために使う。
+        panel に (見出し, 確度, カード名) を渡すと、その行の telop / source / card
+        ではなくそちらを描く。ニュース風レイアウトで見出しやカードを次の行にも
+        残すために使う。
         """
         member = self.config.resolve_speaker(line.speaker)
-        text, source = (line.telop_text(), line.source) if headline is None else headline
+        text, source, card = (
+            (line.telop_text(), line.source, line.card) if panel is None else panel
+        )
         background = scene.background or self.script_background or self.config.video.background
         key = "|".join(
             [
@@ -108,6 +119,7 @@ class Renderer:
                 line.emotion if self.layout.with_characters else "-",
                 text,
                 source or "",
+                card or "",
                 line.image or "",
                 # 立ち絵を出さないなら口パクも跳ねも絵に影響しない
                 ("open" if mouth_open else "close") if self.layout.with_characters else "-",
@@ -123,8 +135,7 @@ class Renderer:
         canvas = self._transparent() if over_video else self._background(background).copy()
         if self.layout.with_characters:
             self._draw_characters(canvas, member, line.emotion, mouth_open, hop_t)
-        if line.image:
-            self._draw_inset(canvas, line.image)
+        self._draw_media(canvas, line.image, card, telop_t)
         self._draw_scene_title(canvas, scene.title)
         if self.layout.with_characters:
             self._draw_telop(canvas, member, text, telop_t, source)
@@ -231,20 +242,84 @@ class Renderer:
                 sprite, (cx - sprite.width // 2, base_y - sprite.height + hop)
             )
 
-    def _draw_inset(self, canvas: Image.Image, image_path: str) -> None:
+    def _draw_media(
+        self,
+        canvas: Image.Image,
+        image_path: str | None,
+        card_name: str | None,
+        progress: float = 1.0,
+    ) -> None:
+        """画像とカードを文字の上のスペースに積む。両方あれば画像が上。"""
+        slot_top, slot_bottom = self.layout.media_slot
+        slot_height = max(80, slot_bottom - slot_top)
+        items: list[Image.Image] = []
+
+        if image_path:
+            picture = self._picture(image_path, slot_height)
+            if picture is not None:
+                items.append(picture)
+        if card_name:
+            card = self._card(card_name)
+            if card is not None:
+                items.append(card)
+        if not items:
+            return
+
+        gap = 26
+        total = sum(item.height for item in items) + gap * (len(items) - 1)
+        if total > slot_height:  # 入りきらないときは全体を縮める
+            ratio = slot_height / total
+            items = [
+                item.resize(
+                    (int(item.width * ratio), int(item.height * ratio)), Image.LANCZOS
+                )
+                for item in items
+            ]
+            total = sum(item.height for item in items) + gap * (len(items) - 1)
+
+        y = slot_top + (slot_height - total) // 2
+        for item in items:
+            if progress < 1.0:
+                item = item.copy()
+                item.putalpha(
+                    item.getchannel("A").point(lambda a: int(a * _ease_out(progress)))
+                )
+            canvas.alpha_composite(item, ((self.layout.width - item.width) // 2, y))
+            y += item.height + gap
+
+    def _picture(self, image_path: str, slot_height: int) -> Image.Image | None:
+        """差し込む写真。白フチを付けて画面になじませる。"""
         path = _resolve(image_path)
         if not path.exists():
-            return
-        inset = Image.open(path).convert("RGBA")
-        max_w, max_h = int(self.layout.width * 0.42), int(self.layout.height * 0.42)
-        scale = min(max_w / inset.width, max_h / inset.height)
-        inset = inset.resize((int(inset.width * scale), int(inset.height * scale)), Image.LANCZOS)
+            return None
+        picture = Image.open(path).convert("RGBA")
+        max_w = int(self.layout.width * (0.62 if not self.layout.with_characters else 0.42))
+        max_h = int(slot_height * 0.72)
+        scale = min(max_w / picture.width, max_h / picture.height)
+        picture = picture.resize(
+            (int(picture.width * scale), int(picture.height * scale)), Image.LANCZOS
+        )
+        framed = Image.new(
+            "RGBA", (picture.width + 16, picture.height + 16), (255, 255, 255, 235)
+        )
+        framed.alpha_composite(picture, (8, 8))
+        return framed
 
-        cx, cy = self.layout.width // 2, int(self.layout.height * 0.38)
-        box = (cx - inset.width // 2, cy - inset.height // 2)
-        frame = Image.new("RGBA", (inset.width + 16, inset.height + 16), (255, 255, 255, 235))
-        canvas.alpha_composite(frame, (box[0] - 8, box[1] - 8))
-        canvas.alpha_composite(inset, box)
+    def _card(self, name: str) -> Image.Image | None:
+        spec = self.script_cards.get(name)
+        if not spec:
+            return None
+        width = int(self.layout.width * (0.64 if not self.layout.with_characters else 0.46))
+        target = self.card_dir / f"{cards.card_key(spec, width)}.png"
+        if not target.exists():
+            cards.render(
+                spec,
+                width,
+                str(self.config.video.font_path()),
+                target,
+                str(self.config.video.latin_font_path()),
+            )
+        return Image.open(target).convert("RGBA")
 
     def _draw_scene_title(self, canvas: Image.Image, title: str) -> None:
         # RGBA の canvas に直接半透明の図形を描くと下地を「置き換えて」しまうため、
@@ -359,6 +434,7 @@ class Renderer:
 
     def frame_entries(self, script: Script) -> list[tuple[Path, float]]:
         self.script_background = script.background
+        self.script_cards = script.cards
         self.over_video = any(is_video(bg) for bg, _ in self.background_segments(script))
         """(画像, 表示秒数) の並びを作る。口パクと演出をここで展開する。
 
@@ -370,23 +446,27 @@ class Renderer:
 
         for scene in script.scenes:
             headline: tuple[str, str | None] = ("", None)
+            card: str | None = None
             for index, line in enumerate(scene.lines):
                 # 立ち絵なしのニュース風では、見出しは telop を書いた行でだけ差し替え、
                 # それ以外の行は直前の見出しを出したままにする（生のセリフは出さない）
                 changed = True
-                current: tuple[str, str | None] | None = None
+                current: tuple[str, str | None, str | None] | None = None
                 if not self.layout.with_characters:
-                    previous_headline = headline
+                    before = (headline, card)
                     if line.no_telop:
                         headline = ("", None)
                     elif line.telop is not None:
                         # 見出しと確度はセットで差し替える
                         headline = (line.telop, line.source)
-                    current = headline
-                    changed = headline != previous_headline
+                    if line.card is not None:
+                        # カードも指定した行で差し替え、それ以外は出したまま
+                        card = None if line.card in ("none", "なし") else line.card
+                    current = (headline[0], headline[1], card)
+                    changed = (headline, card) != before
 
-                closed = self.frame(line, scene, mouth_open=False, headline=current)
-                opened = self.frame(line, scene, mouth_open=True, headline=current)
+                closed = self.frame(line, scene, mouth_open=False, panel=current)
+                opened = self.frame(line, scene, mouth_open=True, panel=current)
                 pause = line.pause or 0.0
                 speaking = max(0.0, line.duration - pause)
                 is_scene_head = index == 0
@@ -398,9 +478,9 @@ class Renderer:
                         intro = min(motion.scene_fade, speaking * 0.5)
                         entries += self._transition(previous, closed, intro)
                     elif changed and motion.telop_in > 0 and (
-                        current[0] if current else line.telop_text()
+                        (current[0] or current[2]) if current else line.telop_text()
                     ):
-                        # 見出しが変わったときだけ、せり上がりのアニメを入れる
+                        # 見出しやカードが変わったときだけ、出現のアニメを入れる
                         intro = min(motion.telop_in, speaking * 0.5)
                         entries += self._intro(line, scene, intro, current)
 
@@ -438,7 +518,7 @@ class Renderer:
         line: Line,
         scene: Scene,
         seconds: float,
-        headline: tuple[str, str | None] | None = None,
+        panel: tuple[str, str | None, str | None] | None = None,
     ) -> list[tuple[Path, float]]:
         steps = max(1, round(seconds * self.config.motion.fps))
         step = seconds / steps
@@ -449,7 +529,7 @@ class Renderer:
             entries.append(
                 (
                     self.frame(
-                        line, scene, False, telop_t=progress, hop_t=progress, headline=headline
+                        line, scene, False, telop_t=progress, hop_t=progress, panel=panel
                     ),
                     step,
                 )
