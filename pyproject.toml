@@ -1,0 +1,26 @@
+[project]
+name = "ai-lab-growth"
+version = "0.1.0"
+description = "各プロジェクトの現状を観測し、伸びしろを見つけ、良い習慣を横展開する成長ループ"
+requires-python = ">=3.11"
+# 実行時の依存はゼロ。標準ライブラリだけで動くようにしてある。
+# 依存を増やすほど「定期実行が勝手に壊れる」確率が上がるため。
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=7.4"]
+
+[project.scripts]
+growth = "growth.cli:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "tests"]
+addopts = "-q"

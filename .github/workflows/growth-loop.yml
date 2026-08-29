@@ -1,0 +1,81 @@
+name: growth-loop
+
+# 全プロジェクトを定期的に点検し、次にやることを提案する。
+# 毎週月曜 09:13 JST（= 日曜 00:13 UTC）。
+# 分を 0 から外しているのは、GitHub 側の混雑時刻を避けて実行遅延を減らすため。
+on:
+  schedule:
+    - cron: "13 0 * * 1"
+  workflow_dispatch:
+    inputs:
+      publish_issues:
+        description: "提案を各リポジトリの Issue として起票する"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: growth-loop
+  cancel-in-progress: false
+
+jobs:
+  loop:
+    runs-on: ubuntu-latest
+    env:
+      # src レイアウトなので、インストールせずに python -m growth を動かすため
+      PYTHONPATH: src
+      # GROWTH_TOKEN が未設定なら空文字になり、GITHUB_TOKEN へフォールバックする。
+      # その場合は公開リポジトリのみが対象になり、サマリ Issue はこのリポジトリに立つ。
+      GROWTH_TOKEN: ${{ secrets.GROWTH_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # 対象リポジトリを浅くクローンする。
+      # 非公開リポジトリを読むには GROWTH_TOKEN（contents:read / issues:write を持つ
+      # Fine-grained PAT）が要る。無い場合は公開リポジトリだけが対象になり、
+      # 読めなかったものは run 側で warn として報告される。
+      - name: Fetch target repositories
+        continue-on-error: true
+        run: python -m growth fetch --workspace "${{ runner.temp }}/growth-workspace"
+
+      # projects.toml の summary_issue_repo 宛てに、点検結果をまとめた Issue が
+      # 1本立つ。これが「依頼しなくても向こうから伝わる」経路にあたる。
+      - name: Run growth loop
+        run: |
+          python -m growth run \
+            --workspace "${{ runner.temp }}/growth-workspace" \
+            ${{ (github.event_name == 'workflow_dispatch' && inputs.publish_issues) && '--publish-issues' || '' }}
+
+      - name: Commit results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add GROWTH.md docs/growth growth/ledger.json
+          if git diff --cached --quiet; then
+            echo "変化なし。コミットしない。"
+          else
+            git commit -m "chore(growth): 週次の点検結果を更新"
+            git push
+          fi
+
+      # 定期実行は失敗しても手元で気づけない。自分のルール（ci.silent-failure）を
+      # 自分で守るため、落ちたら Issue を立てて必ず気づけるようにしておく。
+      - name: Report failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          curl -sS -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "${{ github.api_url }}/repos/${{ github.repository }}/issues" \
+            -d "$(printf '{"title":"[成長ループ] 定期実行が失敗しました","body":"週次の点検ジョブが失敗しました。\\n\\n実行ログ: %s","labels":["growth-loop"]}' "$RUN_URL")"
