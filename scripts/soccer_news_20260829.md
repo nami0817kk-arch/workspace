@@ -3,6 +3,9 @@ title: 【サッカーニュース】鈴木彩艶がアストン・ヴィラへ�
 thumbnail_title: 鈴木彩艶\nアストン・ヴィラへ
 thumbnail_subtitle: 移籍期限直前まとめ
 bg: assets/backgrounds/stadium.mp4
+date: 2026年8月29日
+intro_title: 移籍期限直前まとめ
+intro_label: 海外サッカー ニュース
 description: |
   2026年8月時点の海外サッカー移籍トピックをまとめました。
   ※各社の報道をもとにしています。クラブが発表した「確定」情報と、

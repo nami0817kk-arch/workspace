@@ -15,6 +15,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 from . import cards, ffmpeg
+from .inserts import Inserts
 from .ffmpeg import is_video
 from .config import CastMember, ProjectConfig, _resolve
 from .script_model import Line, Scene, Script
@@ -77,9 +78,15 @@ class Renderer:
         self.font_headline = ImageFont.truetype(font_path, config.video.headline_size)
         self.font_name = ImageFont.truetype(font_path, config.video.name_size)
         self.font_scene = ImageFont.truetype(font_path, 36)
+        self.font_title = ImageFont.truetype(font_path, config.video.title_size)
+        # 冒頭のタイトルは全画面なので大きめに組む
+        self.font_title_big = ImageFont.truetype(font_path, int(config.video.title_size * 1.4))
+        self.font_label = ImageFont.truetype(font_path, 32)
+        self.font_date = ImageFont.truetype(font_path, 30)
 
         self.script_background: str | None = None  # 台本 frontmatter の bg
         self.script_cards: dict = {}
+        self.script_date = ""
         self.card_dir = work_dir / "cards"
         # 背景に動画が1つでも混ざる場合、フレームは透過で描いて後から重ねる
         self.over_video = False
@@ -330,6 +337,14 @@ class Renderer:
             [48, 42, 48 + text_w + 56, 42 + 68], radius=34, fill=(0, 0, 0, 150)
         )
         draw.text((76, 58), title, font=self.font_scene, fill=(240, 240, 240, 255))
+
+        if self.script_date:
+            date_w = draw.textlength(self.script_date, font=self.font_date)
+            right = canvas.width - 48
+            draw.text(
+                (right - date_w, 62), self.script_date, font=self.font_date,
+                fill=(206, 214, 226, 255), stroke_width=3, stroke_fill=(0, 0, 0, 190),
+            )
         canvas.alpha_composite(layer)
 
     def _draw_telop(
@@ -430,21 +445,130 @@ class Renderer:
             layer.putalpha(layer.getchannel("A").point(lambda a: int(a * _ease_out(telop_t))))
         canvas.alpha_composite(layer)
 
+    def title_frame(
+        self,
+        background: str,
+        heading: str,
+        sub: str,
+        progress: float,
+        kind: str,
+        label: str = "",
+    ) -> Path:
+        """冒頭タイトル / 章タイトルの1枚。progress は 0→1 のフェード。"""
+        key = f"title|{kind}|{background}|{heading}|{sub}|{label}|{progress:.2f}|{self.over_video}"
+        target = self.frame_dir / f"t{hashlib.sha1(key.encode('utf-8')).hexdigest()[:15]}.png"
+        if target.exists():
+            return target
+
+        base = self._transparent() if self.over_video else self._background(background).copy()
+        layer, draw = _layer(base.size)
+
+        # 背景を落として文字を主役にする。落としすぎると背景が死ぬので控えめに
+        draw.rectangle([0, 0, base.width, base.height], fill=(6, 10, 18, 178))
+
+        accent = _hex(self.config.video.accent)
+        font = self.font_title_big if kind == "intro" else self.font_title
+        lines = wrap_text(draw, heading, font, int(base.width * 0.76))[:3]
+        line_height = font.size + 26
+        block = line_height * len(lines)
+        top = (base.height - block) // 2 - (34 if sub else 0)
+
+        left = int(base.width * 0.11)
+        if label:
+            draw.text(
+                (left, top - 60), label, font=self.font_label, fill=accent + (255,),
+                stroke_width=3, stroke_fill=(0, 0, 0, 190),
+            )
+        draw.rounded_rectangle(
+            [left - 36, top + 6, left - 22, top + block - 14], radius=7, fill=accent + (255,)
+        )
+        y = top
+        for chunk in lines:
+            draw.text(
+                (left, y), chunk, font=font, fill=(255, 255, 255, 255),
+                stroke_width=6, stroke_fill=(0, 0, 0, 205),
+            )
+            y += line_height
+
+        if sub:
+            draw.text((left, y + 14), sub, font=self.font_scene, fill=(190, 200, 216, 255))
+
+        if progress < 1.0:
+            layer.putalpha(layer.getchannel("A").point(lambda a: int(a * _ease_out(progress))))
+        base.alpha_composite(layer)
+        base.save(target) if self.over_video else base.convert("RGB").save(target)
+        return target
+
+    def _title_entries(
+        self,
+        background: str,
+        heading: str,
+        sub: str,
+        seconds: float,
+        kind: str,
+        label: str = "",
+    ) -> list[tuple[Path, float]]:
+        """フェードイン → 静止 → フェードアウト。静止部分は1枚を使い回す。"""
+        fade = min(self.config.titles.fade, seconds / 2.5)
+        steps = max(1, round(fade * self.config.motion.fps))
+        step = fade / steps
+        entries: list[tuple[Path, float]] = []
+
+        for i in range(steps):
+            entries.append(
+                (self.title_frame(background, heading, sub, (i + 1) / steps, kind, label), step)
+            )
+        hold = max(0.0, seconds - fade * 2)
+        if hold > 0:
+            entries.append((self.title_frame(background, heading, sub, 1.0, kind, label), hold))
+        for i in range(steps):
+            entries.append(
+                (self.title_frame(background, heading, sub, 1 - (i + 1) / steps, kind, label), step)
+            )
+        return entries
+
     # ------------------------------------------------------------ タイムライン
 
-    def frame_entries(self, script: Script) -> list[tuple[Path, float]]:
+    def frame_entries(
+        self, script: Script, inserts: Inserts | None = None
+    ) -> list[tuple[Path, float]]:
+        """(画像, 表示秒数) の並びを作る。タイトルカード・口パク・演出をここで展開する。
+
+        セリフの尺は動かさない。演出に使う時間は発話時間の内側から取り、
+        タイトルカードのぶんは音声側に無音が入っているので、ここでも同じ秒数を使う。
+        """
         self.script_background = script.background
         self.script_cards = script.cards
+        self.script_date = script.date
         self.over_video = any(is_video(bg) for bg, _ in self.background_segments(script))
-        """(画像, 表示秒数) の並びを作る。口パクと演出をここで展開する。
-
-        音声の尺は動かさない。演出に使う時間は、そのセリフの発話時間の内側から取る。
-        """
         motion = self.config.motion
+        inserts = inserts or Inserts()
         entries: list[tuple[Path, float]] = []
         previous: Path | None = None
 
-        for scene in script.scenes:
+        if inserts.intro > 0 and script.scenes:
+            first_bg = script.scenes[0].background or script.background or self.config.video.background
+            entries += self._title_entries(
+                first_bg,
+                script.intro_title(),
+                script.date,
+                inserts.intro,
+                "intro",
+                str(script.meta.get("intro_label") or ""),
+            )
+
+        for scene_index, scene in enumerate(script.scenes):
+            gap = inserts.before_scene(scene_index)
+            if gap > 0:
+                background = scene.background or script.background or self.config.video.background
+                entries += self._title_entries(
+                    background,
+                    scene.title,
+                    f"{scene_index + 1} / {len(script.scenes)}",
+                    gap,
+                    "chapter",
+                )
+                previous = None  # 章タイトル直後は転換の溶かしを入れない
             headline: tuple[str, str | None] = ("", None)
             card: str | None = None
             for index, line in enumerate(scene.lines):
@@ -547,18 +671,30 @@ class Renderer:
             remaining -= step
         return entries
 
-    def background_segments(self, script: Script) -> list[tuple[Path, float]]:
-        """シーンごとの (背景, 表示秒数)。静止画と動画を混ぜてよい。"""
+    def background_segments(
+        self, script: Script, inserts: Inserts | None = None
+    ) -> list[tuple[Path, float]]:
+        """シーンごとの (背景, 表示秒数)。静止画と動画を混ぜてよい。
+
+        タイトルカードのぶんも、そのシーンの背景で埋める。
+        """
+        inserts = inserts or Inserts()
         segments: list[tuple[Path, float]] = []
-        for scene in script.scenes:
+        for index, scene in enumerate(script.scenes):
             name = scene.background or script.background or self.config.video.background
-            segments.append((_resolve(name), scene.duration))
+            extra = inserts.before_scene(index) + (inserts.intro if index == 0 else 0.0)
+            segments.append((_resolve(name), scene.duration + extra))
         return segments
 
     def build_video(
-        self, script: Script, audio_path: Path | None, out_path: Path, work_dir: Path
+        self,
+        script: Script,
+        audio_path: Path | None,
+        out_path: Path,
+        work_dir: Path,
+        inserts: Inserts | None = None,
     ) -> Path:
-        entries = self.frame_entries(script)
+        entries = self.frame_entries(script, inserts)
         list_path = ffmpeg.write_concat_list(entries, work_dir / "frames.txt")
         out_path.parent.mkdir(parents=True, exist_ok=True)
         size = (self.layout.width, self.layout.height)
@@ -566,7 +702,7 @@ class Renderer:
         if self.over_video:
             # 背景をつないだ1本の動画にしてから、透過フレームを重ねる
             track = ffmpeg.build_background_track(
-                self.background_segments(script),
+                self.background_segments(script, inserts),
                 work_dir / "background.mp4",
                 size,
                 self.config.video.fps,

@@ -6,7 +6,7 @@ import shutil
 from dataclasses import dataclass
 from pathlib import Path
 
-from . import audio, ffmpeg, subtitles
+from . import audio, ffmpeg, inserts as inserts_mod, subtitles
 from .config import ProjectConfig, _resolve
 from .render import Renderer
 from .script_model import Script, load_script
@@ -42,8 +42,11 @@ def build(
     backend = create_backend(config, use_tts)
     synthesize_script(script, config, audio_dir, backend=backend)
 
+    # タイトルカードのぶんの無音を挟み、各セリフの開始時刻を振り直す
+    inserts = inserts_mod.plan(script, config)
+    inserts_mod.apply_timing(script, inserts)
     voice_track = ffmpeg.concat_audio(
-        [line.audio_path for line in script.lines if line.audio_path],
+        inserts_mod.realize_audio(inserts_mod.audio_segments(script, inserts), work_dir / "gaps"),
         work_dir / "voice.wav",
         work_dir,
     )
@@ -53,13 +56,15 @@ def build(
         work_dir / "soundtrack.m4a",
         work_dir,
         config.audio,
-        duration=script.duration,
+        duration=script.duration + inserts.total,
         effects=audio.collect_effects(script, config),
         bgm=script.meta.get("bgm"),
     )
 
     renderer = Renderer(config, work_dir)
-    video = renderer.build_video(script, soundtrack, out_dir / "video.mp4", work_dir)
+    video = renderer.build_video(
+        script, soundtrack, out_dir / "video.mp4", work_dir, inserts
+    )
 
     thumbnail = build_thumbnail(
         config,
@@ -77,6 +82,6 @@ def build(
         video=video,
         thumbnail=thumbnail,
         outputs=outputs,
-        duration=script.duration,
+        duration=script.duration + inserts.total,
         backend=backend.name,
     )

@@ -44,6 +44,12 @@ motion:
   scene_fade: 0.32     # シーン転換にかける秒数
   scene_transition: "dip"   # dip=一度黒に落とす / crossfade=前後を直接混ぜる
 
+# 冒頭と章の変わり目に出すタイトルカード。0 にすると出さない
+titles:
+  intro: 2.6           # 冒頭のタイトル（秒）
+  chapter: 1.4         # 章タイトル（秒）
+  fade: 0.32           # 出入りのフェード（秒）
+
 # 話者定義。style_id は VOICEVOX の「スタイルID」。
 #   `python -m src.cli speakers` で ENGINE から一覧を取得できる。
 cast:

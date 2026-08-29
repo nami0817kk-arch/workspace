@@ -40,6 +40,18 @@ def test_chapters_start_at_zero():
     assert marks[1][0] == 3.0
 
 
+def test_chapters_follow_actual_line_starts():
+    """タイトルカードで時刻がずれても、チャプターは実際の開始時刻に追従する。"""
+    script = _timed_script()
+    # 冒頭に2.6秒、2章の前に1.4秒のタイトルカードが入った状態
+    script.scenes[0].lines[0].start = 2.6
+    script.scenes[1].lines[0].start = 7.0
+
+    marks = chapters(script)
+    assert marks[0] == (0.0, "章1")   # 先頭は必ず 0:00
+    assert marks[1] == (7.0, "章2")
+
+
 def test_description_contains_toc_and_tags():
     text = description(_timed_script())
     assert "説明文" in text

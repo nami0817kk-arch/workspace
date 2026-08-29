@@ -112,6 +112,12 @@ class Script:
     sources: list[str] = field(default_factory=list)
     background: str | None = None   # 動画全体の既定背景
     cards: dict = field(default_factory=dict)   # 画面に差し込むカードの定義
+    date: str = ""                              # 画面隅に出す日付
+
+    def intro_title(self) -> str:
+        """冒頭のタイトルカードに出す文字列。長いタイトルより短い方が読みやすい。"""
+        raw = self.meta.get("intro_title") or self.meta.get("thumbnail_title") or self.title
+        return str(raw).replace("\\n", "\n")
     meta: dict = field(default_factory=dict)
     source: Path | None = None
 
@@ -177,6 +183,7 @@ def parse_script(text: str) -> Script:
         sources=[str(url) for url in (meta.get("sources") or [])],
         background=str(meta["bg"]) if meta.get("bg") else None,
         cards=dict(meta.get("cards") or {}),
+        date=str(meta.get("date") or ""),
         meta=meta,
     )
 

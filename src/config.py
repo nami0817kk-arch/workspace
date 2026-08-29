@@ -114,6 +114,15 @@ class MotionConfig:
 
 
 @dataclass
+class TitleConfig:
+    """冒頭と章の変わり目に差し込むタイトルカード。0 にすると出さない。"""
+
+    intro: float = 2.6      # 冒頭のタイトル（秒）
+    chapter: float = 1.4    # 章タイトル（秒）
+    fade: float = 0.32      # 出入りのフェード（秒）
+
+
+@dataclass
 class CastMember:
     """登場キャラ1人ぶんの音声・立ち絵設定。"""
 
@@ -138,6 +147,7 @@ class ProjectConfig:
     cast: dict[str, CastMember]
     audio: AudioConfig = field(default_factory=AudioConfig)
     motion: MotionConfig = field(default_factory=MotionConfig)
+    titles: TitleConfig = field(default_factory=TitleConfig)
     path: Path = DEFAULT_CONFIG_PATH
 
     def resolve_speaker(self, name: str) -> CastMember:
@@ -174,6 +184,7 @@ def build_config(raw: dict, path: Path = DEFAULT_CONFIG_PATH) -> ProjectConfig:
     voicevox = VoicevoxConfig(**(raw.get("voicevox") or {}))
     audio = AudioConfig(**(raw.get("audio") or {}))
     motion = MotionConfig(**(raw.get("motion") or {}))
+    titles = TitleConfig(**(raw.get("titles") or {}))
 
     cast_raw = raw.get("cast") or {}
     if not cast_raw:
@@ -196,5 +207,11 @@ def build_config(raw: dict, path: Path = DEFAULT_CONFIG_PATH) -> ProjectConfig:
             aliases=list(values.get("aliases") or []),
         )
     return ProjectConfig(
-        video=video, voicevox=voicevox, cast=cast, audio=audio, motion=motion, path=path
+        video=video,
+        voicevox=voicevox,
+        cast=cast,
+        audio=audio,
+        motion=motion,
+        titles=titles,
+        path=path,
     )

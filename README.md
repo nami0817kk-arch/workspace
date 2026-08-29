@@ -72,6 +72,7 @@ tags: [ゆっくり解説, VOICEVOX]
 | `src/render.py` | フレーム描画・口パク・演出・動画合成 |
 | `src/backgrounds.py` | サッカー背景（スタジアム/ピッチ/戦術ボード）の生成 |
 | `src/cards.py` | 引用・移籍・箇条書きカードの描画 |
+| `src/inserts.py` | タイトルカードのぶんの時間を映像と音声に差し込む |
 | `src/audio.py` | BGM/効果音のミックス、ダッキング、音圧調整 |
 | `src/audio_gen.py` | 仮のBGM・効果音の生成 |
 | `src/subtitles.py` | 字幕 SRT・チャプター・概要欄 |

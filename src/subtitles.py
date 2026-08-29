@@ -25,12 +25,15 @@ def to_srt(script: Script) -> str:
 
 
 def chapters(script: Script) -> list[tuple[float, str]]:
-    """シーンの開始時刻から YouTube のチャプターを作る。"""
+    """YouTube のチャプター。各シーンの最初のセリフの開始時刻を使う。
+
+    タイトルカードのぶん時刻がずれるので、尺の足し算ではなく実際の start を見る。
+    """
     result: list[tuple[float, str]] = []
-    cursor = 0.0
     for scene in script.scenes:
-        result.append((cursor, scene.title))
-        cursor += scene.duration
+        if not scene.lines:
+            continue
+        result.append((scene.lines[0].start, scene.title))
     if result:
         result[0] = (0.0, result[0][1])  # 最初のチャプターは必ず 0:00
     return result
