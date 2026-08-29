@@ -113,8 +113,14 @@ def _no_adr(snap):
 
 ### 横展開する習慣を足す
 
-`rules.PRACTICES` にエントリを足す。`signal` は `survey.py` が出すシグナル名。
+`practices.py` の `PRACTICES` にエントリを足す。`signal` は `survey.py` が出すシグナル名。
 新しいシグナルが要るなら `survey.py` 側に追加する。
+
+`requires_signal` を指定すると、その習慣がそもそも意味を持つPJTだけに絞れる。
+たとえば `pinned-deps` は `requires_signal="has_requirements"` としてある。
+依存を1つも持たないPJTに「バージョンを固定しろ」と言っても仕方がないため。
+**適用条件を書き忘れると、対象外のPJTに的外れな指摘が出て、
+システム全体が信用されなくなる。** ここは省略しない。
 
 ## 限界
 

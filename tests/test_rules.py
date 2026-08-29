@@ -132,3 +132,32 @@ def test_scheduled_workflow_with_a_failure_alert_is_not_flagged(tmp_path):
         ),
     })
     assert "ci.silent-failure" not in _ids(rules.run_baseline([snap]))
+
+
+def test_practice_is_not_pushed_where_it_would_be_meaningless(tmp_path):
+    """依存を1つも持たないPJTに「バージョンを固定しろ」とは言わない。"""
+    pinned = _snap(tmp_path, "pinned", {
+        "main.py": PY_APP2, "b.py": PY_APP2,
+        "requirements.txt": "requests==2.31.0\nlxml==5.0.0\n",
+    })
+    no_deps = _snap(tmp_path, "nodeps", {"main.py": PY_APP2, "b.py": PY_APP2})
+    loose = _snap(tmp_path, "loose", {
+        "main.py": PY_APP2, "b.py": PY_APP2,
+        "requirements.txt": "requests>=2.31.0\nlxml>=5.0.0\n",
+    })
+
+    targets = {
+        f.ref_key for f in rules.run_crosspollination([pinned, no_deps, loose])
+        if f.rule_id == "xpol.pinned-deps"
+    }
+    assert targets == {"loose"}          # 緩い固定のPJTにだけ伝える
+    assert "nodeps" not in targets       # 固定すべき依存が無いPJTには言わない
+
+
+def test_baseline_and_crosspollination_are_both_reachable_from_rules(tmp_path):
+    """モジュールを分けても、まとめて走らせる入口は1つに保つ。"""
+    a = _snap(tmp_path, "a", {"main.py": PY_APP2, "b.py": PY_APP2, "CLAUDE.md": "# ctx\n"})
+    b = _snap(tmp_path, "b", {"main.py": PY_APP2, "b.py": PY_APP2})
+    ids = _ids(rules.run_all([a, b]))
+    assert "test.missing" in ids           # ベースライン診断
+    assert "xpol.claude-md" in ids         # 横展開

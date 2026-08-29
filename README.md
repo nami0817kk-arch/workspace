@@ -75,7 +75,8 @@ weight = 1.0        # 壊れたときの痛みが大きいものは 1.0 より�
 | パス | 役割 |
 |---|---|
 | `src/growth/survey.py` | 観測。リポジトリを読んでシグナルにする |
-| `src/growth/rules.py` | 診断ルールと横展開の定義 |
+| `src/growth/rules.py` | ベースライン診断のルール |
+| `src/growth/practices.py` | 横展開する習慣の定義 |
 | `src/growth/ledger.py` | 台帳。記憶と学習を担う |
 | `src/growth/planner.py` | 論点のマージ・優先度づけ・件数の絞り込み |
 | `src/growth/render.py` | ダイジェスト / ダッシュボード / Issue 本文 |

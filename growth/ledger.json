@@ -2,7 +2,7 @@
   "history": [
     {
       "average": 54,
-      "date": "2026-08-29",
+      "date": "2026-08-28",
       "open": 23,
       "resolved_total": 0,
       "scores": {
@@ -14,6 +14,21 @@
         "kabu-agari-ranking": 55,
         "youtube-video-creation": 15
       }
+    },
+    {
+      "average": 72,
+      "date": "2026-08-29",
+      "open": 6,
+      "resolved_total": 18,
+      "scores": {
+        "ai-lab": 100,
+        "claude-code-dev": 79,
+        "claude-code-dev/projects/PJT001-stock-investment": 100,
+        "claude-code-dev/projects/PJT002-ai-blog": 15,
+        "claude-code-dev/projects/PJT003-soccer-manager": 95,
+        "kabu-agari-ranking": 100,
+        "youtube-video-creation": 15
+      }
     }
   ],
   "proposals": {
@@ -23,9 +38,10 @@
       "issue_url": null,
       "last_seen": "2026-08-29T10:18:31+00:00",
       "project": "youtube-video-creation",
+      "resolved_at": "2026-08-29T11:54:34+00:00",
       "rule_id": "xpol.claude-md",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "CLAUDE.md で AI に前提を渡す（PJT008 AIラボ / 成長ループ本体 で既に実践中）",
       "topic": "claude-md"
     },
@@ -35,9 +51,10 @@
       "issue_url": null,
       "last_seen": "2026-08-29T10:18:31+00:00",
       "project": "claude-code-dev",
+      "resolved_at": "2026-08-29T11:54:34+00:00",
       "rule_id": "docs.readme-missing",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "README が無い",
       "topic": "readme"
     },
@@ -45,10 +62,10 @@
       "exemplar": null,
       "first_seen": "2026-08-29T10:18:31+00:00",
       "issue_url": null,
-      "last_seen": "2026-08-29T10:18:31+00:00",
+      "last_seen": "2026-08-29T11:56:17+00:00",
       "project": "claude-code-dev/projects/PJT002-ai-blog",
       "rule_id": "scaffold.dormant",
-      "seen_count": 1,
+      "seen_count": 4,
       "status": "open",
       "title": "雛形だけ作られて中身が無い",
       "topic": "dormant"
@@ -59,9 +76,10 @@
       "issue_url": null,
       "last_seen": "2026-08-29T10:18:31+00:00",
       "project": "kabu-agari-ranking",
+      "resolved_at": "2026-08-29T11:54:34+00:00",
       "rule_id": "test.missing",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "自動テストが1本もない",
       "topic": "tests"
     },
@@ -69,10 +87,10 @@
       "exemplar": null,
       "first_seen": "2026-08-29T10:18:31+00:00",
       "issue_url": null,
-      "last_seen": "2026-08-29T10:18:31+00:00",
+      "last_seen": "2026-08-29T11:56:17+00:00",
       "project": "claude-code-dev/projects/PJT001-stock-investment",
       "rule_id": "quality.oversized-file",
-      "seen_count": 1,
+      "seen_count": 4,
       "status": "open",
       "title": "1ファイルが大きくなりすぎている",
       "topic": "structure"
@@ -81,10 +99,10 @@
       "exemplar": null,
       "first_seen": "2026-08-29T10:18:31+00:00",
       "issue_url": null,
-      "last_seen": "2026-08-29T10:18:31+00:00",
+      "last_seen": "2026-08-29T11:56:17+00:00",
       "project": "youtube-video-creation",
       "rule_id": "scaffold.dormant",
-      "seen_count": 1,
+      "seen_count": 4,
       "status": "open",
       "title": "雛形だけ作られて中身が無い",
       "topic": "dormant"
@@ -95,9 +113,10 @@
       "issue_url": null,
       "last_seen": "2026-08-29T10:18:31+00:00",
       "project": "claude-code-dev/projects/PJT001-stock-investment",
+      "resolved_at": "2026-08-29T11:54:34+00:00",
       "rule_id": "ci.missing",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "CI が無く、push しても誰も検証していない",
       "topic": "ci"
     },
@@ -107,9 +126,10 @@
       "issue_url": null,
       "last_seen": "2026-08-29T10:18:31+00:00",
       "project": "kabu-agari-ranking",
+      "resolved_at": "2026-08-29T11:54:34+00:00",
       "rule_id": "deps.no-dependabot",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "依存更新の自動チェックが無い",
       "topic": "deps-update"
     },
@@ -119,9 +139,10 @@
       "issue_url": null,
       "last_seen": "2026-08-29T10:18:31+00:00",
       "project": "claude-code-dev/projects/PJT001-stock-investment",
+      "resolved_at": "2026-08-29T11:54:34+00:00",
       "rule_id": "test.missing",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "自動テストが1本もない",
       "topic": "tests"
     },
@@ -129,10 +150,10 @@
       "exemplar": null,
       "first_seen": "2026-08-29T10:18:31+00:00",
       "issue_url": null,
-      "last_seen": "2026-08-29T10:18:31+00:00",
+      "last_seen": "2026-08-29T11:56:17+00:00",
       "project": "claude-code-dev/projects/PJT003-soccer-manager",
       "rule_id": "quality.oversized-file",
-      "seen_count": 1,
+      "seen_count": 4,
       "status": "open",
       "title": "1ファイルが大きくなりすぎている",
       "topic": "structure"
@@ -143,9 +164,10 @@
       "issue_url": null,
       "last_seen": "2026-08-29T10:18:31+00:00",
       "project": "claude-code-dev/projects/PJT003-soccer-manager",
+      "resolved_at": "2026-08-29T11:54:34+00:00",
       "rule_id": "deps.no-dependabot",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "依存更新の自動チェックが無い",
       "topic": "deps-update"
     },
@@ -155,11 +177,25 @@
       "issue_url": null,
       "last_seen": "2026-08-29T10:18:31+00:00",
       "project": "kabu-agari-ranking",
+      "resolved_at": "2026-08-29T11:54:34+00:00",
       "rule_id": "env.no-example",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "必要な環境変数の一覧が無い",
       "topic": "env"
+    },
+    "9b5d638c7ca2": {
+      "exemplar": "kabu-agari-ranking",
+      "first_seen": "2026-08-29T11:54:34+00:00",
+      "issue_url": null,
+      "last_seen": "2026-08-29T11:54:34+00:00",
+      "project": "ai-lab",
+      "resolved_at": "2026-08-29T11:55:54+00:00",
+      "rule_id": "xpol.pinned-deps",
+      "seen_count": 1,
+      "status": "resolved",
+      "title": "依存バージョンを固定する（日本株 値上がりランキング自動サイト で既に実践中）",
+      "topic": "deps"
     },
     "9d52f669969d": {
       "exemplar": "ai-lab",
@@ -167,9 +203,10 @@
       "issue_url": null,
       "last_seen": "2026-08-29T10:18:31+00:00",
       "project": "claude-code-dev/projects/PJT002-ai-blog",
+      "resolved_at": "2026-08-29T11:54:34+00:00",
       "rule_id": "xpol.claude-md",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "CLAUDE.md で AI に前提を渡す（PJT008 AIラボ / 成長ループ本体 で既に実践中）",
       "topic": "claude-md"
     },
@@ -177,11 +214,12 @@
       "exemplar": null,
       "first_seen": "2026-08-29T10:18:31+00:00",
       "issue_url": null,
-      "last_seen": "2026-08-29T10:18:31+00:00",
+      "last_seen": "2026-08-29T11:54:34+00:00",
       "project": "ai-lab",
+      "resolved_at": "2026-08-29T11:55:54+00:00",
       "rule_id": "quality.oversized-file",
-      "seen_count": 1,
-      "status": "open",
+      "seen_count": 2,
+      "status": "resolved",
       "title": "1ファイルが大きくなりすぎている",
       "topic": "structure"
     },
@@ -191,9 +229,10 @@
       "issue_url": null,
       "last_seen": "2026-08-29T10:18:31+00:00",
       "project": "kabu-agari-ranking",
+      "resolved_at": "2026-08-29T11:54:34+00:00",
       "rule_id": "deps.unpinned",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "依存バージョンが固定されていない",
       "topic": "deps"
     },
@@ -203,9 +242,10 @@
       "issue_url": null,
       "last_seen": "2026-08-29T10:18:31+00:00",
       "project": "claude-code-dev/projects/PJT001-stock-investment",
+      "resolved_at": "2026-08-29T11:54:34+00:00",
       "rule_id": "deps.no-dependabot",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "依存更新の自動チェックが無い",
       "topic": "deps-update"
     },
@@ -215,9 +255,10 @@
       "issue_url": null,
       "last_seen": "2026-08-29T10:18:31+00:00",
       "project": "kabu-agari-ranking",
+      "resolved_at": "2026-08-29T11:54:34+00:00",
       "rule_id": "xpol.claude-md",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "CLAUDE.md で AI に前提を渡す（PJT008 AIラボ / 成長ループ本体 で既に実践中）",
       "topic": "claude-md"
     },
@@ -225,10 +266,10 @@
       "exemplar": null,
       "first_seen": "2026-08-29T10:18:31+00:00",
       "issue_url": null,
-      "last_seen": "2026-08-29T10:18:31+00:00",
+      "last_seen": "2026-08-29T11:56:17+00:00",
       "project": "youtube-video-creation",
       "rule_id": "test.empty-dir",
-      "seen_count": 1,
+      "seen_count": 4,
       "status": "open",
       "title": "tests/ が空のまま置かれている",
       "topic": "tests"
@@ -239,9 +280,10 @@
       "issue_url": null,
       "last_seen": "2026-08-29T10:18:31+00:00",
       "project": "claude-code-dev/projects/PJT003-soccer-manager",
+      "resolved_at": "2026-08-29T11:54:34+00:00",
       "rule_id": "xpol.claude-md",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "CLAUDE.md で AI に前提を渡す（PJT008 AIラボ / 成長ループ本体 で既に実践中）",
       "topic": "claude-md"
     },
@@ -251,9 +293,10 @@
       "issue_url": null,
       "last_seen": "2026-08-29T10:18:31+00:00",
       "project": "claude-code-dev/projects/PJT001-stock-investment",
+      "resolved_at": "2026-08-29T11:54:34+00:00",
       "rule_id": "xpol.claude-md",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "CLAUDE.md で AI に前提を渡す（PJT008 AIラボ / 成長ループ本体 で既に実践中）",
       "topic": "claude-md"
     },
@@ -263,9 +306,10 @@
       "issue_url": null,
       "last_seen": "2026-08-29T10:18:31+00:00",
       "project": "kabu-agari-ranking",
+      "resolved_at": "2026-08-29T11:54:34+00:00",
       "rule_id": "ci.silent-failure",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "定期実行ジョブが黙って失敗する状態になっている",
       "topic": "alerting"
     },
@@ -273,10 +317,10 @@
       "exemplar": null,
       "first_seen": "2026-08-29T10:18:31+00:00",
       "issue_url": null,
-      "last_seen": "2026-08-29T10:18:31+00:00",
+      "last_seen": "2026-08-29T11:56:17+00:00",
       "project": "claude-code-dev/projects/PJT001-stock-investment",
       "rule_id": "deps.unpinned",
-      "seen_count": 1,
+      "seen_count": 4,
       "status": "open",
       "title": "依存バージョンが固定されていない",
       "topic": "deps"
@@ -287,9 +331,10 @@
       "issue_url": null,
       "last_seen": "2026-08-29T10:18:31+00:00",
       "project": "kabu-agari-ranking",
+      "resolved_at": "2026-08-29T11:54:34+00:00",
       "rule_id": "secret.gitignore-env",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "環境変数を使っているのに .gitignore が .env を除外していない",
       "topic": "secrets"
     }
@@ -298,37 +343,37 @@
     "ci.missing": {
       "dismissed": 0,
       "emitted": 1,
-      "resolved": 0
+      "resolved": 1
     },
     "ci.silent-failure": {
       "dismissed": 0,
       "emitted": 1,
-      "resolved": 0
+      "resolved": 1
     },
     "deps.no-dependabot": {
       "dismissed": 0,
       "emitted": 3,
-      "resolved": 0
+      "resolved": 3
     },
     "deps.unpinned": {
       "dismissed": 0,
       "emitted": 2,
-      "resolved": 0
+      "resolved": 1
     },
     "docs.readme-missing": {
       "dismissed": 0,
       "emitted": 1,
-      "resolved": 0
+      "resolved": 1
     },
     "env.no-example": {
       "dismissed": 0,
       "emitted": 1,
-      "resolved": 0
+      "resolved": 1
     },
     "quality.oversized-file": {
       "dismissed": 0,
       "emitted": 3,
-      "resolved": 0
+      "resolved": 1
     },
     "scaffold.dormant": {
       "dismissed": 0,
@@ -338,7 +383,7 @@
     "secret.gitignore-env": {
       "dismissed": 0,
       "emitted": 1,
-      "resolved": 0
+      "resolved": 1
     },
     "test.empty-dir": {
       "dismissed": 0,
@@ -348,17 +393,22 @@
     "test.missing": {
       "dismissed": 0,
       "emitted": 2,
-      "resolved": 0
+      "resolved": 2
     },
     "xpol.claude-md": {
       "dismissed": 0,
       "emitted": 5,
-      "resolved": 0
+      "resolved": 5
+    },
+    "xpol.pinned-deps": {
+      "dismissed": 0,
+      "emitted": 1,
+      "resolved": 1
     }
   },
   "summary_issues": {
     "2026-08-29": "https://github.com/nami0817kk-arch/ai-lab/issues/1"
   },
-  "updated_at": "2026-08-29T10:18:31+00:00",
+  "updated_at": "2026-08-29T11:56:17+00:00",
   "version": 1
 }
