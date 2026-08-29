@@ -13,6 +13,8 @@ sources:
   - https://www.footballchannel.jp/2026/08/19/post991845/
   - https://football-tribe.com/japan/2026/08/03/357692/
   - https://football-tribe.com/japan/2026/08/02/357664/
+  - https://www.espn.com/soccer/story/_/id/48944912/premier-league-efl-summer-transfer-window-2026-dates-does-open-deadline-day
+  - https://www.skysports.com/football/news/11095/13546220/summer-transfer-window-2026-dates-when-is-deadline-day-for-premier-league-and-efl-clubs-to-sign-players
 ---
 
 ## オープニング
@@ -21,35 +23,42 @@ sources:
   telop: 海外サッカー 移籍トピックまとめ
 魔理沙: ゆっくり魔理沙だぜ。そろそろ夏の移籍期限が近いんだよな。
   emotion: surprise
-霊夢: そう。ヨーロッパの主要リーグはくがつあたまに移籍市場が閉まるから、いまがいちばん動く時期ね。
-  telop: 移籍期限は9月上旬
+霊夢: そう。イングランドの移籍期限は現地じかんくがつついたちのごご十一時。日本時間だとくがつふつかの朝七時ね。
+  telop: 英国の移籍期限: 9/1 23:00 BST（日本時間 9/2 7:00）
+  source: 確定
 
 ## 鈴木彩艶がアストン・ヴィラへ
 
 霊夢: まずは確定のニュースから。ゴールキーパーのすずきざいおん選手が、パルマからアストンビラへ完全移籍したわ。
-  telop: 【確定】鈴木彩艶 パルマ → アストン・ヴィラ
+  telop: 鈴木彩艶 パルマ → アストン・ヴィラ
+  source: 確定
   se: assets/audio/se_pon.wav
 魔理沙: おお、ついにプレミアリーグか。いつ発表されたんだ？
   emotion: surprise
 霊夢: はちがつじゅうくにちに、クラブが正式に発表したわ。
   telop: 8月19日 クラブが正式発表
+  source: 確定
 魔理沙: たしかパリ・サンジェルマンに行くって話もなかったか？
 霊夢: それは土壇場で破談になったと報じられているわ。そこからビラ行きが決まった形ね。
   telop: PSG移籍は破談と報道
+  source: 報道
 魔理沙: 移籍金はどのくらいなんだ？
 霊夢: 金額は、日本人選手の史上最高額にならぶ規模と報じられているわ。今シーズンのプレミアでプレーする日本人としては、じゅうにんめになるそうよ。
   telop: 日本人最高額タイと報道／プレミアの日本人は10人目
+  source: 報道
   pause: 0.7
 
 ## 注目は佐野海舟の去就
 
 魔理沙: ほかに動きそうな選手はいるのか？
 霊夢: 注目はマインツのさのかいしゅう選手。ただしこっちは確定じゃなくて報道段階だから、そのつもりで聞いてね。
-  telop: 【報道段階】佐野海舟の去就
+  telop: 佐野海舟の去就
+  source: 未確認
 魔理沙: おっと、ずいぶん慎重だな。
   emotion: smile
 霊夢: リバプールやアーセナルをふくむ複数のクラブが関心を示していると、各メディアが伝えているわ。代理人と直接交渉に入ったという報道もあるの。
   telop: リバプール・アーセナルなど複数クラブが関心と報道
+  source: 未確認
 魔理沙: 期限までに決まるかどうか、ってところだな。
 
 ## まとめ

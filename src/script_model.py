@@ -31,7 +31,20 @@ LINE_RE = re.compile(r"^(?P<speaker>[^:：]{1,20})[:：]\s*(?P<text>.*)$")
 ATTR_RE = re.compile(r"^(?P<key>[a-zA-Z_]+)[:：]\s*(?P<value>.*)$")
 DIRECTIVE_RE = re.compile(r"^@(?P<key>[a-zA-Z_]+)[:：]\s*(?P<value>.*)$")
 
-LINE_ATTRS = {"telop", "emotion", "pause", "image", "speed", "no_telop", "se"}
+LINE_ATTRS = {"telop", "emotion", "pause", "image", "speed", "no_telop", "se", "source"}
+
+# 情報の確度。ニュース系では、これを画面に出さないと視聴者が判断できない
+SOURCE_TIERS = {
+    "official": "official",   # クラブ・当事者が発表した
+    "report": "report",       # 報道機関が報じた
+    "rumor": "rumor",         # 未確認・噂の段階
+    "確定": "official",
+    "公式": "official",
+    "発表": "official",
+    "報道": "report",
+    "噂": "rumor",
+    "未確認": "rumor",
+}
 SCENE_DIRECTIVES = {"bg", "background"}
 
 # 読み上げ時間の概算（TTS を使わない --no-tts モード用）
@@ -54,6 +67,7 @@ class Line:
     emotion: str = "normal"
     image: str | None = None
     se: str | None = None
+    source: str | None = None   # official / report / rumor
     pause: float | None = None
     speed: float | None = None
     no_telop: bool = False
@@ -223,7 +237,15 @@ def parse_script(text: str) -> Script:
 def _apply_attr(line: Line, key: str, value: str, number: int) -> None:
     if key not in LINE_ATTRS:
         raise ScriptError(f"{number}行目: 未対応の属性『{key}』（使えるのは {sorted(LINE_ATTRS)}）")
-    if key in ("pause", "speed"):
+    if key == "source":
+        tier = SOURCE_TIERS.get(value.strip().lower()) or SOURCE_TIERS.get(value.strip())
+        if tier is None:
+            raise ScriptError(
+                f"{number}行目: source は {sorted(set(SOURCE_TIERS.values()))} "
+                "または 確定/報道/噂 で指定してください"
+            )
+        line.source = tier
+    elif key in ("pause", "speed"):
         try:
             setattr(line, key, float(value))
         except ValueError as exc:

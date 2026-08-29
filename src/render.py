@@ -20,6 +20,13 @@ from .script_model import Line, Scene, Script
 
 MOUTH_INTERVAL = 0.14  # 口パクの切り替え間隔（秒）
 TELOP_RISE = 46        # テロップが せり上がる 距離(px)
+
+# 情報の確度バッジ。ニュース系で「確定」と「噂」を見た目で分けるためのもの
+SOURCE_BADGES = {
+    "official": ("確定", (61, 200, 120)),
+    "report": ("報道", (235, 165, 40)),
+    "rumor": ("未確認", (150, 152, 158)),
+}
 SPEAKER_HOP = 24       # 話し始めに立ち絵が跳ねる高さ(px)
 TELOP_MARGIN = 110
 TELOP_HEIGHT = 250
@@ -81,6 +88,7 @@ class Renderer:
                 member.key,
                 line.emotion,
                 line.telop_text(),
+                line.source or "",
                 line.image or "",
                 "open" if mouth_open else "close",
                 f"{telop_t:.2f}/{hop_t:.2f}",
@@ -96,7 +104,7 @@ class Renderer:
         if line.image:
             self._draw_inset(canvas, line.image)
         self._draw_scene_title(canvas, scene.title)
-        self._draw_telop(canvas, member, line.telop_text(), telop_t)
+        self._draw_telop(canvas, member, line.telop_text(), telop_t, line.source)
         canvas.convert("RGB").save(target)
         return target
 
@@ -210,7 +218,12 @@ class Renderer:
         canvas.alpha_composite(layer)
 
     def _draw_telop(
-        self, canvas: Image.Image, member: CastMember, text: str, telop_t: float = 1.0
+        self,
+        canvas: Image.Image,
+        member: CastMember,
+        text: str,
+        telop_t: float = 1.0,
+        source: str | None = None,
     ) -> None:
         if not text:
             return
@@ -227,6 +240,15 @@ class Renderer:
         tag = [left + 26, top - 34, left + 26 + name_w + 48, top + 30]
         draw.rounded_rectangle(tag, radius=22, fill=_hex(member.color) + (255,))
         draw.text((tag[0] + 24, tag[1] + 8), member.name, font=self.font_name, fill=(20, 20, 24, 255))
+
+        # 確度バッジは話者名の右隣に置く
+        badge = SOURCE_BADGES.get(source or "")
+        if badge:
+            label, color = badge
+            label_w = draw.textlength(label, font=self.font_name)
+            box = [tag[2] + 16, tag[1], tag[2] + 16 + label_w + 44, tag[3]]
+            draw.rounded_rectangle(box, radius=22, fill=color + (255,))
+            draw.text((box[0] + 22, box[1] + 8), label, font=self.font_name, fill=(16, 16, 20, 255))
 
         lines = wrap_text(draw, text, self.font_telop, right - left - 88)
         line_height = self.config.video.telop_size + 16

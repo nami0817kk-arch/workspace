@@ -10,8 +10,11 @@ from .script_model import Script
 def to_srt(script: Script) -> str:
     blocks = []
     index = 1
+    labels = {"official": "確定", "report": "報道", "rumor": "未確認"}
     for line in script.lines:
         text = line.telop_text() or line.text
+        if line.source in labels:
+            text = f"[{labels[line.source]}] {text}"
         pause = line.pause or 0.0
         end = line.start + max(0.4, line.duration - pause)
         blocks.append(
