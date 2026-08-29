@@ -39,6 +39,9 @@ def description(script: Script, credits: list[str] | None = None) -> str:
     marks = chapters(script)
     if len(marks) > 1:
         parts.append("■ 目次\n" + "\n".join(f"{_clock(t)} {title}" for t, title in marks))
+    if script.sources:
+        # ニュース系では出典の明示が要る。frontmatter の sources をそのまま並べる
+        parts.append("■ 出典\n" + "\n".join(script.sources))
     if credits:
         parts.append("■ クレジット\n" + "\n".join(credits))
     if script.tags:

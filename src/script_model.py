@@ -94,6 +94,7 @@ class Script:
     scenes: list[Scene] = field(default_factory=list)
     description: str = ""
     tags: list[str] = field(default_factory=list)
+    sources: list[str] = field(default_factory=list)
     meta: dict = field(default_factory=dict)
     source: Path | None = None
 
@@ -156,6 +157,7 @@ def parse_script(text: str) -> Script:
         title=str(meta.get("title", "")),
         description=str(meta.get("description", "")),
         tags=[str(tag) for tag in (meta.get("tags") or [])],
+        sources=[str(url) for url in (meta.get("sources") or [])],
         meta=meta,
     )
 
