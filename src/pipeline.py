@@ -74,6 +74,11 @@ def build(
         background=script.background,
         badge=str(script.meta.get("thumbnail_badge", "")),
         date=script.date,
+        lines=(
+            str(script.meta.get("thumbnail_line1", "")),
+            str(script.meta.get("thumbnail_line2", "")),
+        ) if script.meta.get("thumbnail_line1") else None,
+        tags=[str(t) for t in (script.meta.get("thumbnail_tags") or [])],
     )
     outputs = subtitles.write_outputs(script, out_dir, credits=credits(script, config, backend))
 

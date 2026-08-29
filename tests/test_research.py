@@ -169,3 +169,61 @@ def test_follow_up_is_allowed(tmp_path):
     plan = _plan()
     plan.coverage = {"ledger": str(ledger), "repeat_within_hours": 36}
     assert check_repeats(build_notes(_raw(follow_up=True)), plan, now=NOW) == []
+
+
+def test_video_title_takes_a_prefix():
+    raw = _raw()
+    raw["theme"] = {**raw["theme"], "prefix": "速報"}
+    assert build_notes(raw).video_title == "【速報】なぜ移籍が決まらないのか"
+    assert build_notes(_raw()).video_title == "なぜ移籍が決まらないのか"
+
+
+def test_breaking_prefix_without_solid_sections_is_flagged():
+    """未確認だけの回に【速報】を付けると、内容と釣り合わない。"""
+    from src.research import advise
+
+    raw = _raw()
+    raw["theme"] = {**raw["theme"], "prefix": "速報"}
+    raw["sections"] = [
+        _section(id="a", tier="未確認", official=False),
+        _section(id="b", tier="未確認", official=False),
+        _section(id="c", tier="未確認", official=False),
+    ]
+    assert any("速報" in w for w in advise(build_notes(raw)))
+
+
+def test_breaking_prefix_is_fine_with_a_confirmed_section():
+    from src.research import advise
+
+    raw = _raw()
+    raw["theme"] = {**raw["theme"], "prefix": "速報"}
+    raw["thumbnail"] = {"line1": "短い見出し", "line2": "赤帯の文字"}
+    assert advise(build_notes(raw)) == []
+
+
+def test_unknown_prefix_is_flagged():
+    from src.research import advise
+
+    raw = _raw()
+    raw["theme"] = {**raw["theme"], "prefix": "衝撃"}
+    raw["thumbnail"] = {"line1": "短い見出し", "line2": "赤帯の文字"}
+    assert any("定番ではありません" in w for w in advise(build_notes(raw)))
+
+
+def test_long_thumbnail_lines_are_flagged():
+    from src.research import advise
+
+    raw = _raw(thumbnail={"line1": "あ" * 20, "line2": "い" * 25})
+    hints = advise(build_notes(raw))
+    assert any("line1 が長め" in w for w in hints)
+    assert any("line2 が長め" in w for w in hints)
+
+
+def test_thumbnail_lines_reach_the_script():
+    from src.script_model import parse_script
+
+    raw = _raw(thumbnail={"line1": "黄色帯の文字", "line2": "赤帯の文字",
+                          "tags": ["反応1", "反応2"]})
+    script = parse_script(to_script(build_notes(raw), _plan()))
+    assert script.meta["thumbnail_line1"] == "黄色帯の文字"
+    assert script.meta["thumbnail_tags"] == ["反応1", "反応2"]

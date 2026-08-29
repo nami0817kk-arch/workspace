@@ -211,7 +211,7 @@ def _dispatch(args, config) -> int:
         from .config import _resolve
         from .plan import load_plan
         from . import coverage as coverage_mod
-        from .research import check_repeats, load_notes, to_script, verify
+        from .research import advise, check_repeats, load_notes, to_script, verify
 
         plan = load_plan()
         notes = load_notes(args.notes)
@@ -234,8 +234,10 @@ def _dispatch(args, config) -> int:
 
         print(
             f"検証OK: 節 {len(notes.sections)}つ / 出典 {len(notes.sources)}本"
-            f"\n  テーマ: {notes.title}\n  問い　: {notes.question}"
+            f"\n  タイトル: {notes.video_title}\n  問い　　: {notes.question}"
         )
+        for note in advise(notes):
+            print(f"  ヒント: {note}")
         if args.check_only:
             return 0
 

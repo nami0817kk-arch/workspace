@@ -58,7 +58,7 @@ routines:
     name: 朝の一報
     when: 07:00 公開（06:00 収録）
     cover_hours: 12
-    target_minutes: 1.5
+    target_minutes: 2
     angle: |
       欧州は日本の深夜に動く。夜のあいだに出た発表のうち
       いちばん大きいもの1件を選び、それだけを扱う。速報だが薄くはしない。
@@ -88,7 +88,7 @@ routines:
     name: 昼の日本人選手
     when: 12:00 公開（11:00 収録）
     cover_hours: 24
-    target_minutes: 1.5
+    target_minutes: 2
     angle: |
       昼休みに見られる枠。日本人選手かJリーグから1人・1件を選んで掘る。
       朝の枠で扱った話題は繰り返さない（前提として ledger が止める）。

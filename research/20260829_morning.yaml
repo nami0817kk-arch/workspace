@@ -4,10 +4,16 @@ slot: morning
 date: "2026年8月29日"
 
 theme:
+  prefix: 朗報
   id: suzuki_villa
-  title: 鈴木彩艶がアストン・ヴィラへ
+  title: 鈴木彩艶さん、まさかの移籍先が決定ｷﾀｰ！
   hook: 日本代表ゴールキーパーの移籍が決まりました。
   question: なぜパリ・サンジェルマンではなくアストン・ヴィラだったのか
+
+thumbnail:
+  line1: 鈴木彩艶がヴィラへ
+  line2: PSG破談からまさかの展開www
+  tags: [これは嬉しい]
 
 answer: PSGとの交渉が土壇場で破談になり、そこからヴィラ行きが決まったと報じられている
 watch: 新天地での起用。プレミアでプレーする日本人は10人目

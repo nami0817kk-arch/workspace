@@ -45,6 +45,15 @@ class Section:
     card: dict | None = None
 
 
+# タイトルの頭に付ける札。まとめ系で定番の使い分け
+PREFIXES = {
+    "速報": "いま入った確定・報道",
+    "朗報": "良いニュース",
+    "悲報": "悪いニュース",
+    "": "",
+}
+
+
 @dataclass
 class Notes:
     date: str
@@ -52,11 +61,21 @@ class Notes:
     question: str                    # この動画が答える問い
     slot: str = ""
     theme_id: str = ""
+    prefix: str = ""                 # 【速報】【朗報】【悲報】
     hook: str = ""                   # 冒頭のつかみ
     answer: str = ""                 # まとめで返す答え
     watch: str = ""                  # 次に何を見るか
     follow_up: bool = False
+    thumbnail: dict = field(default_factory=dict)
     sections: list[Section] = field(default_factory=list)
+
+    @property
+    def video_title(self) -> str:
+        return f"【{self.prefix}】{self.title}" if self.prefix else self.title
+
+    @property
+    def tiers_used(self) -> set[str]:
+        return {section.tier for section in self.sections}
 
     @property
     def sources(self) -> list[str]:
@@ -109,7 +128,9 @@ def build_notes(raw: dict) -> Notes:
         title=str(theme.get("title", "")).strip(),
         theme_id=str(theme.get("id", "")).strip(),
         question=str(theme.get("question", "")).strip(),
+        prefix=str(theme.get("prefix", "")).strip().strip("【】"),
         hook=str(theme.get("hook", "")).strip(),
+        thumbnail=dict(raw.get("thumbnail") or {}),
         answer=str(raw.get("answer", "")).strip(),
         watch=str(raw.get("watch", "")).strip(),
         follow_up=bool(raw.get("follow_up", False)),
@@ -170,6 +191,32 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
     return problems
 
 
+def advise(notes: Notes) -> list[str]:
+    """止めるほどではないが直したほうがよい点。draft のときに出す。"""
+    notes_warnings: list[str] = []
+
+    if notes.prefix and notes.prefix not in PREFIXES:
+        known = " / ".join(k for k in PREFIXES if k)
+        notes_warnings.append(f"prefix『{notes.prefix}』は定番ではありません（{known}）")
+
+    # 【速報】は確定か報道にだけ。噂だけの回に付けると釣りになる
+    if notes.prefix == "速報" and not (notes.tiers_used & {"確定", "報道"}):
+        notes_warnings.append(
+            "【速報】が付いていますが、確定・報道の節がありません。"
+            "未確認だけの回に速報と書くと、内容と釣り合いません"
+        )
+
+    if not notes.thumbnail.get("line1"):
+        notes_warnings.append(
+            "thumbnail.line1 が空です。サムネの黄色帯に出す文字を書いてください"
+        )
+    if len(str(notes.thumbnail.get("line1", ""))) > 16:
+        notes_warnings.append("thumbnail.line1 が長めです。16文字くらいまでが読みやすい")
+    if len(str(notes.thumbnail.get("line2", ""))) > 18:
+        notes_warnings.append("thumbnail.line2 が長めです。18文字くらいまでが読みやすい")
+    return notes_warnings
+
+
 def check_repeats(notes: Notes, plan: Plan, now=None) -> list[str]:
     """直近で扱ったテーマと重なっていないか調べる。
 
@@ -199,11 +246,12 @@ def to_script(notes: Notes, plan: Plan) -> str:
     if problems:
         raise ResearchError("取材メモに不備があります:\n  - " + "\n  - ".join(problems))
 
+    thumbnail = notes.thumbnail or {}
     front = {
-        "title": f"【サッカーニュース】{notes.title}",
-        "thumbnail_title": notes.title,
-        "thumbnail_badge": "深掘り",
-        "thumbnail_subtitle": notes.question,
+        "title": notes.video_title,
+        "thumbnail_line1": str(thumbnail.get("line1") or notes.title),
+        "thumbnail_line2": str(thumbnail.get("line2") or notes.question),
+        "thumbnail_tags": [str(t) for t in (thumbnail.get("tags") or [])],
         "bg": "assets/backgrounds/stadium.mp4",
         "date": notes.date,
         "intro_title": notes.title,

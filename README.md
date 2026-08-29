@@ -100,7 +100,7 @@ tags: [ゆっくり解説, VOICEVOX]
 | `research/` | 取材メモ |
 | `scripts/` | 台本と `setup_voicevox_core.py` |
 | `scripts/templates/` | 台本のテンプレート |
-| `docs/` | [取材の仕組み](docs/research.md) / [毎週の作り方](docs/weekly.md) / [パイプライン仕様](docs/pipeline.md) / [VOICEVOX設定](docs/voicevox.md) / [背景](docs/backgrounds.md) / [カードと画像](docs/cards.md) / [情報源](docs/news-sources.md) |
+| `docs/` | [タイトルとサムネの型](docs/style.md) / [取材の仕組み](docs/research.md) / [毎週の作り方](docs/weekly.md) / [パイプライン仕様](docs/pipeline.md) / [VOICEVOX設定](docs/voicevox.md) / [背景](docs/backgrounds.md) / [カードと画像](docs/cards.md) / [情報源](docs/news-sources.md) |
 
 ## テスト
 

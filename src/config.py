@@ -50,6 +50,7 @@ class VideoConfig:
     show_characters: bool = True   # False にすると立ち絵を出さないニュース風レイアウト
     headline_size: int = 74        # 立ち絵なしのときの見出し文字サイズ
     accent: str = "#3ea6ff"        # 見出し左のアクセント帯（確度バッジが無いとき）
+    thumbnail_style: str = "band"  # band=黄色帯＋赤帯 / clean=文字組みだけ
     background: str = "assets/backgrounds/default.png"
 
     def font_path(self) -> Path:

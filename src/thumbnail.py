@@ -17,6 +17,14 @@ from .render import _cover, _hex, _layer, wrap_text
 
 SIZE = (1280, 720)
 MARGIN = 64
+
+# 帯スタイル。まとめ系チャンネルで定番の、黄色帯＋赤帯の2段組み
+BAND_YELLOW = (255, 232, 0)
+BAND_RED = (222, 20, 30)
+BAND_TEXT_DARK = (12, 12, 14)
+BAND_TEXT_LIGHT = (255, 255, 255)
+TAG_RED = (214, 26, 38)
+BAND_SIZES = (104, 94, 86, 78, 70, 62, 56, 50)
 BADGE_HEIGHT = 62
 SUBTITLE_HEIGHT = 70
 DATE_HEIGHT = 40
@@ -32,7 +40,21 @@ def build_thumbnail(
     background: str | None = None,
     badge: str = "",
     date: str = "",
+    style: str = "",
+    lines: tuple[str, str] | None = None,
+    tags: list[str] | None = None,
 ) -> Path:
+    """サムネイルを1枚作る。
+
+    style="band" にすると、写真の上に黄色帯と赤帯を重ねる形になる。
+    lines は (黄色帯の文字, 赤帯の文字)。省略時は title / subtitle を使う。
+    """
+    if (style or config.video.thumbnail_style) == "band":
+        return _band_thumbnail(
+            config, out_path, background,
+            lines or (title, subtitle), tags or [],
+        )
+
     font_path = str(config.video.font_path())
     accent = _hex(config.video.accent)
 
@@ -72,6 +94,94 @@ def build_thumbnail(
     out_path.parent.mkdir(parents=True, exist_ok=True)
     canvas.convert("RGB").save(out_path, quality=95)
     return out_path
+
+
+def _band_thumbnail(
+    config: ProjectConfig,
+    out_path: Path,
+    background: str | None,
+    lines: tuple[str, str],
+    tags: list[str],
+) -> Path:
+    """写真の上に帯を重ねるスタイル。一覧で目を引くことだけを狙う。"""
+    font_path = str(config.video.font_path())
+    canvas = _base(config, background, out_path)
+
+    # 写真をそのまま活かすので、暗幕は下側だけ薄くかける
+    scrim, draw = _layer(SIZE)
+    for y in range(int(SIZE[1] * 0.45), SIZE[1]):
+        ratio = (y - SIZE[1] * 0.45) / (SIZE[1] * 0.55)
+        draw.line([(0, y), (SIZE[0], y)], fill=(0, 0, 0, int(120 * ratio)))
+    canvas.alpha_composite(scrim)
+
+    layer, draw = _layer(SIZE)
+    _draw_tags(draw, tags, font_path)
+
+    top_text, bottom_text = (lines[0] or "").replace("\\n", " "), (lines[1] or "")
+    bands = [(top_text, BAND_YELLOW, BAND_TEXT_DARK)]
+    if bottom_text:
+        bands.append((bottom_text, BAND_RED, BAND_TEXT_LIGHT))
+
+    # 下から積む。帯は詰めて、写真をなるべく残す
+    bottom = SIZE[1] - 22
+    for text, fill, ink in reversed(bands):
+        font, rows = _fit_band(draw, text, font_path)
+        line_height = font.size + 10
+        height = line_height * len(rows) + 18
+        top = bottom - height
+        draw.rectangle([16, top, SIZE[0] - 16, bottom], fill=fill + (255,))
+        y = top + 6
+        for row in rows:
+            draw.text(
+                (34, y), row, font=font, fill=ink + (255,),
+                stroke_width=0 if ink == BAND_TEXT_DARK else 5,
+                stroke_fill=(0, 0, 0, 225),
+            )
+            y += line_height
+        bottom = top - 10
+
+    canvas.alpha_composite(layer)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    canvas.convert("RGB").save(out_path, quality=95)
+    return out_path
+
+
+def _fit_band(draw: ImageDraw.ImageDraw, text: str, font_path: str):
+    """帯に入る中でいちばん大きい字を選ぶ。
+
+    帯は1行に収めるのが基本。入らないときだけ2行にするが、
+    2行目が数文字だけになる（泣き別れ）ときはさらに字を詰める。
+    """
+    width = SIZE[0] - 80
+    fallback = None
+    for size in BAND_SIZES:
+        font = ImageFont.truetype(font_path, size)
+        rows = wrap_text(draw, text, font, width)
+        if len(rows) == 1:
+            return font, rows
+        if len(rows) == 2:
+            if fallback is None:
+                fallback = (font, rows)
+            if len(rows[-1]) > 3:
+                return font, rows
+    if fallback:
+        return fallback
+    font = ImageFont.truetype(font_path, BAND_SIZES[-1])
+    return font, wrap_text(draw, text, font, width)[:2]
+
+
+def _draw_tags(draw: ImageDraw.ImageDraw, tags: list[str], font_path: str) -> None:
+    """右上に小さな赤タグ。反応の引用を置く場所。"""
+    if not tags:
+        return
+    font = ImageFont.truetype(font_path, 34)
+    y = 28
+    for tag in tags[:2]:
+        text_w = draw.textlength(tag, font=font)
+        left = SIZE[0] - 28 - text_w - 32
+        draw.rectangle([left, y, SIZE[0] - 28, y + 52], fill=TAG_RED + (255,))
+        draw.text((left + 16, y + 6), tag, font=font, fill=(255, 255, 255, 255))
+        y += 62
 
 
 # ------------------------------------------------------------------ パーツ

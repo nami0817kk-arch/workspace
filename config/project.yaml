@@ -10,6 +10,7 @@ video:
   show_characters: false
   headline_size: 74
   accent: "#3ea6ff"          # 見出し左のアクセント帯の色
+  thumbnail_style: "band"    # band=写真＋黄色帯＋赤帯 / clean=文字組みだけ
   telop_size: 58
   name_size: 40
   title_size: 72
