@@ -1,0 +1,49 @@
+# プロジェクト全体の設定。台本ごとに変えたい値はここを編集する。
+
+video:
+  width: 1920
+  height: 1080
+  fps: 30
+  # 空にすると環境から日本語フォントを自動検出する
+  font: ""
+  telop_size: 58
+  name_size: 40
+  title_size: 72
+  background: "assets/backgrounds/default.png"
+
+voicevox:
+  url: "http://127.0.0.1:50021"
+  timeout: 60
+  # 行と行のあいだに入る既定の無音（秒）
+  pause: 0.35
+
+# 話者定義。style_id は VOICEVOX の「スタイルID」。
+#   `python -m src.cli speakers` で ENGINE から一覧を取得できる。
+cast:
+  霊夢:
+    key: reimu
+    aliases: [れいむ, reimu]
+    style_id: 2        # 四国めたん / ノーマル
+    speed: 1.05
+    pitch: 0.0
+    intonation: 1.1
+    position: left
+    color: "#e2495a"
+  魔理沙:
+    key: marisa
+    aliases: [まりさ, marisa]
+    style_id: 3        # ずんだもん / ノーマル
+    speed: 1.05
+    pitch: -0.02
+    intonation: 1.2
+    position: right
+    color: "#f0c419"
+  ナレーター:
+    key: narrator
+    aliases: [ナレ, narrator, N]
+    style_id: 13       # 青山龍星 / ノーマル
+    speed: 1.0
+    pitch: 0.0
+    intonation: 1.0
+    position: none
+    color: "#8ab4f8"

@@ -4,3 +4,11 @@ __pycache__/
 .env
 output/
 *.log
+
+# 生成物・差し替え素材（init-assets で作り直せる）
+assets/backgrounds/
+assets/characters/
+assets/images/
+
+# OAuth クライアント情報とトークン
+secrets/
