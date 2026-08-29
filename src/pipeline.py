@@ -6,7 +6,7 @@ import shutil
 from dataclasses import dataclass
 from pathlib import Path
 
-from . import ffmpeg, subtitles
+from . import audio, ffmpeg, subtitles
 from .config import ProjectConfig, _resolve
 from .render import Renderer
 from .script_model import Script, load_script
@@ -48,8 +48,18 @@ def build(
         work_dir,
     )
 
+    soundtrack = audio.mix(
+        voice_track,
+        work_dir / "soundtrack.m4a",
+        work_dir,
+        config.audio,
+        duration=script.duration,
+        effects=audio.collect_effects(script, config),
+        bgm=script.meta.get("bgm"),
+    )
+
     renderer = Renderer(config, work_dir)
-    video = renderer.build_video(script, voice_track, out_dir / "video.mp4", work_dir)
+    video = renderer.build_video(script, soundtrack, out_dir / "video.mp4", work_dir)
 
     thumbnail = build_thumbnail(
         config,

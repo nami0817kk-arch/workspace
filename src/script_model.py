@@ -13,6 +13,7 @@
     霊夢: 今日は〇〇について解説するわよ。
       telop: 〇〇ってなに？
       emotion: normal
+      se: assets/audio/se_pon.wav
       pause: 0.6
 """
 
@@ -30,7 +31,7 @@ LINE_RE = re.compile(r"^(?P<speaker>[^:：]{1,20})[:：]\s*(?P<text>.*)$")
 ATTR_RE = re.compile(r"^(?P<key>[a-zA-Z_]+)[:：]\s*(?P<value>.*)$")
 DIRECTIVE_RE = re.compile(r"^@(?P<key>[a-zA-Z_]+)[:：]\s*(?P<value>.*)$")
 
-LINE_ATTRS = {"telop", "emotion", "pause", "image", "speed", "no_telop"}
+LINE_ATTRS = {"telop", "emotion", "pause", "image", "speed", "no_telop", "se"}
 SCENE_DIRECTIVES = {"bg", "background"}
 
 # 読み上げ時間の概算（TTS を使わない --no-tts モード用）
@@ -52,6 +53,7 @@ class Line:
     telop: str | None = None
     emotion: str = "normal"
     image: str | None = None
+    se: str | None = None
     pause: float | None = None
     speed: float | None = None
     no_telop: bool = False

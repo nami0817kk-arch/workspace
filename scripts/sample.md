@@ -16,6 +16,7 @@ tags: [ゆっくり解説, VOICEVOX, 動画制作, 自動化]
   emotion: surprise
 霊夢: 台本のテキストを書くだけ。音声も口パクもテロップも勝手に付くわ。
   telop: 台本を書くだけでOK
+  se: assets/audio/se_pon.wav
   pause: 0.7
 
 ## 台本の書き方
@@ -44,4 +45,5 @@ tags: [ゆっくり解説, VOICEVOX, 動画制作, 自動化]
   telop: 字幕・サムネ・概要欄も自動生成
 魔理沙: 便利すぎるぜ。チャンネル登録、よろしくな！
   emotion: smile
+  se: assets/audio/se_jingle.wav
   pause: 1.2

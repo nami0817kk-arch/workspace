@@ -8,6 +8,7 @@
 from __future__ import annotations
 
 import hashlib
+import math
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -18,6 +19,8 @@ from .config import CastMember, ProjectConfig, _resolve
 from .script_model import Line, Scene, Script
 
 MOUTH_INTERVAL = 0.14  # 口パクの切り替え間隔（秒）
+TELOP_RISE = 46        # テロップが せり上がる 距離(px)
+SPEAKER_HOP = 24       # 話し始めに立ち絵が跳ねる高さ(px)
 TELOP_MARGIN = 110
 TELOP_HEIGHT = 250
 TELOP_BOTTOM = 58
@@ -56,7 +59,19 @@ class Renderer:
 
     # ------------------------------------------------------------------ 画面
 
-    def frame(self, line: Line, scene: Scene, mouth_open: bool) -> Path:
+    def frame(
+        self,
+        line: Line,
+        scene: Scene,
+        mouth_open: bool,
+        telop_t: float = 1.0,
+        hop_t: float = 1.0,
+    ) -> Path:
+        """1枚の画面を描いて PNG のパスを返す。
+
+        telop_t / hop_t は 0→1 のアニメーション進捗。同じ絵は使い回すので、
+        アニメーションを入れてもフレーム数は必要なぶんしか増えない。
+        """
         member = self.config.resolve_speaker(line.speaker)
         background = scene.background or self.config.video.background
         key = "|".join(
@@ -68,6 +83,7 @@ class Renderer:
                 line.telop_text(),
                 line.image or "",
                 "open" if mouth_open else "close",
+                f"{telop_t:.2f}/{hop_t:.2f}",
                 f"{self.layout.width}x{self.layout.height}",
             ]
         )
@@ -76,12 +92,29 @@ class Renderer:
             return target
 
         canvas = self._background(background).copy()
-        self._draw_characters(canvas, member, line.emotion, mouth_open)
+        self._draw_characters(canvas, member, line.emotion, mouth_open, hop_t)
         if line.image:
             self._draw_inset(canvas, line.image)
         self._draw_scene_title(canvas, scene.title)
-        self._draw_telop(canvas, member, line.telop_text())
+        self._draw_telop(canvas, member, line.telop_text(), telop_t)
         canvas.convert("RGB").save(target)
+        return target
+
+    def _black(self) -> Path:
+        target = self.frame_dir / "black.png"
+        if not target.exists():
+            Image.new("RGB", (self.layout.width, self.layout.height), (0, 0, 0)).save(target)
+        return target
+
+    def blend(self, first: Path, second: Path, ratio: float) -> Path:
+        """2枚の画面を混ぜた中間フレーム。シーン転換のクロスフェードに使う。"""
+        key = f"{first.name}|{second.name}|{ratio:.3f}"
+        target = self.frame_dir / f"x{hashlib.sha1(key.encode('utf-8')).hexdigest()[:15]}.png"
+        if target.exists():
+            return target
+        a = Image.open(first).convert("RGB")
+        b = Image.open(second).convert("RGB")
+        Image.blend(a, b, ratio).save(target)
         return target
 
     def _background(self, name: str) -> Image.Image:
@@ -111,9 +144,17 @@ class Renderer:
         return None
 
     def _draw_characters(
-        self, canvas: Image.Image, speaking: CastMember, emotion: str, mouth_open: bool
+        self,
+        canvas: Image.Image,
+        speaking: CastMember,
+        emotion: str,
+        mouth_open: bool,
+        hop_t: float = 1.0,
     ) -> None:
-        """左右の立ち絵を配置する。話していない側は少し縮めて暗くする。"""
+        """左右の立ち絵を配置する。話していない側は少し縮めて暗くする。
+
+        話し始めの一瞬だけ、喋る側をひょいと跳ねさせる（hop_t が 0→1 の間）。
+        """
         for member in self.config.cast.values():
             if member.position not in ("left", "right"):
                 continue
@@ -135,7 +176,12 @@ class Renderer:
                 sprite = _dim(sprite, 0.55)
 
             cx, base_y = self.layout.character_anchor(member.position)
-            canvas.alpha_composite(sprite, (cx - sprite.width // 2, base_y - sprite.height))
+            hop = 0
+            if is_active and hop_t < 1.0:
+                hop = int(-SPEAKER_HOP * math.sin(math.pi * max(0.0, hop_t)))
+            canvas.alpha_composite(
+                sprite, (cx - sprite.width // 2, base_y - sprite.height + hop)
+            )
 
     def _draw_inset(self, canvas: Image.Image, image_path: str) -> None:
         path = _resolve(image_path)
@@ -163,11 +209,16 @@ class Renderer:
         draw.text((76, 58), title, font=self.font_scene, fill=(240, 240, 240, 255))
         canvas.alpha_composite(layer)
 
-    def _draw_telop(self, canvas: Image.Image, member: CastMember, text: str) -> None:
+    def _draw_telop(
+        self, canvas: Image.Image, member: CastMember, text: str, telop_t: float = 1.0
+    ) -> None:
         if not text:
             return
         layer, draw = _layer(canvas.size)
         left, top, right, bottom = self.layout.telop_box
+        # せり上がりながらフェードインする
+        rise = int(TELOP_RISE * (1.0 - _ease_out(telop_t)))
+        top, bottom = top + rise, bottom + rise
         draw.rounded_rectangle([left, top, right, bottom], radius=28, fill=(12, 14, 22, 205))
         draw.rounded_rectangle([left, top, right, bottom], radius=28, outline=(255, 255, 255, 60), width=3)
 
@@ -190,29 +241,90 @@ class Renderer:
                 stroke_fill=(0, 0, 0, 220),
             )
             y += line_height
+        if telop_t < 1.0:
+            layer.putalpha(layer.getchannel("A").point(lambda a: int(a * _ease_out(telop_t))))
         canvas.alpha_composite(layer)
 
     # ------------------------------------------------------------ タイムライン
 
     def frame_entries(self, script: Script) -> list[tuple[Path, float]]:
-        """(画像, 表示秒数) の並びを作る。口パクはここで展開する。"""
+        """(画像, 表示秒数) の並びを作る。口パクと演出をここで展開する。
+
+        音声の尺は動かさない。演出に使う時間は、そのセリフの発話時間の内側から取る。
+        """
+        motion = self.config.motion
         entries: list[tuple[Path, float]] = []
+        previous: Path | None = None
+
         for scene in script.scenes:
-            for line in scene.lines:
+            for index, line in enumerate(scene.lines):
                 closed = self.frame(line, scene, mouth_open=False)
                 opened = self.frame(line, scene, mouth_open=True)
                 pause = line.pause or 0.0
                 speaking = max(0.0, line.duration - pause)
+                is_scene_head = index == 0
 
-                remaining = speaking
-                mouth_open = False
-                while remaining > 0.01:
-                    step = min(MOUTH_INTERVAL, remaining)
-                    entries.append((opened if mouth_open else closed, step))
-                    mouth_open = not mouth_open
-                    remaining -= step
+                intro = 0.0
+                if motion.enabled:
+                    if is_scene_head and previous is not None and motion.scene_fade > 0:
+                        # シーン転換。前の画面から新しい画面へ溶かす
+                        intro = min(motion.scene_fade, speaking * 0.5)
+                        entries += self._transition(previous, closed, intro)
+                    elif line.telop_text() and motion.telop_in > 0:
+                        # テロップがせり上がりつつ、話し手がひょいと跳ねる
+                        intro = min(motion.telop_in, speaking * 0.5)
+                        entries += self._intro(line, scene, intro)
+
+                entries += self._mouth_loop(closed, opened, speaking - intro)
                 if pause > 0.01:
                     entries.append((closed, pause))
+                previous = closed
+
+        return entries
+
+    def _transition(self, before: Path, after: Path, seconds: float) -> list[tuple[Path, float]]:
+        """シーン転換。
+
+        crossfade は前後の画面を直接混ぜるので、テロップが一瞬二重に見える。
+        既定の dip は一度黒に落としてから次の画面を出すため、文字が重ならない。
+        """
+        style = self.config.motion.scene_transition
+        steps = max(2, round(seconds * self.config.motion.fps))
+        step = seconds / steps
+
+        if style == "crossfade":
+            return [(self.blend(before, after, (i + 1) / steps), step) for i in range(steps)]
+
+        black = self._black()
+        half = steps // 2
+        entries = [
+            (self.blend(before, black, (i + 1) / half), step) for i in range(half)
+        ]
+        rest = steps - half
+        entries += [(self.blend(black, after, (i + 1) / rest), step) for i in range(rest)]
+        return entries
+
+    def _intro(self, line: Line, scene: Scene, seconds: float) -> list[tuple[Path, float]]:
+        steps = max(1, round(seconds * self.config.motion.fps))
+        step = seconds / steps
+        entries = []
+        for i in range(steps):
+            progress = (i + 1) / steps
+            # 出現中は口を閉じたままにして、フレームの種類が増えすぎないようにする
+            entries.append(
+                (self.frame(line, scene, False, telop_t=progress, hop_t=progress), step)
+            )
+        return entries
+
+    def _mouth_loop(self, closed: Path, opened: Path, seconds: float) -> list[tuple[Path, float]]:
+        entries: list[tuple[Path, float]] = []
+        remaining = max(0.0, seconds)
+        mouth_open = False
+        while remaining > 1e-6:
+            step = min(MOUTH_INTERVAL, remaining)
+            entries.append((opened if mouth_open else closed, step))
+            mouth_open = not mouth_open
+            remaining -= step
         return entries
 
     def build_video(
@@ -247,6 +359,12 @@ def wrap_text(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont
     if current:
         lines.append(current)
     return lines
+
+
+def _ease_out(t: float) -> float:
+    """最後にゆっくり止まるイージング。"""
+    t = max(0.0, min(1.0, t))
+    return 1.0 - (1.0 - t) ** 3
 
 
 def _layer(size: tuple[int, int]) -> tuple[Image.Image, ImageDraw.ImageDraw]:

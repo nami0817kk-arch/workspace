@@ -11,6 +11,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw
 
+from .audio_gen import ensure_audio_assets
 from .config import ProjectConfig, _resolve
 
 EMOTIONS = ("normal", "smile", "angry", "surprise")
@@ -28,6 +29,8 @@ def ensure_assets(config: ProjectConfig, force: bool = False) -> list[Path]:
         background.parent.mkdir(parents=True, exist_ok=True)
         generate_background(background, (config.video.width, config.video.height))
         created.append(background)
+
+    created += ensure_audio_assets(force=force)
 
     for member in config.cast.values():
         if member.position == "none":

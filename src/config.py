@@ -67,6 +67,28 @@ class VoicevoxConfig:
 
 
 @dataclass
+class AudioConfig:
+    bgm: str = ""              # 空ならBGMなし
+    bgm_gain: float = -22.0    # dB
+    bgm_fade: float = 2.0      # 前後のフェード秒
+    duck: bool = True          # 喋っている間だけBGMを下げる
+    duck_ratio: float = 8.0
+    se_gain: float = -8.0      # dB
+    scene_se: str = ""         # シーン頭で鳴らす効果音
+    loudness_target: float = -14.0  # LUFS。YouTube の基準。0 にすると正規化しない
+
+
+@dataclass
+class MotionConfig:
+    enabled: bool = True
+    fps: int = 30              # アニメーション部分の描画レート
+    telop_in: float = 0.18     # テロップが出るときのアニメ秒
+    speaker_pop: float = 0.16  # 話者が切り替わるときの立ち絵のバウンド秒
+    scene_fade: float = 0.32   # シーン転換にかける秒数
+    scene_transition: str = "dip"  # dip（暗転）/ crossfade（直接混ぜる）
+
+
+@dataclass
 class CastMember:
     """登場キャラ1人ぶんの音声・立ち絵設定。"""
 
@@ -89,6 +111,8 @@ class ProjectConfig:
     video: VideoConfig
     voicevox: VoicevoxConfig
     cast: dict[str, CastMember]
+    audio: AudioConfig = field(default_factory=AudioConfig)
+    motion: MotionConfig = field(default_factory=MotionConfig)
     path: Path = DEFAULT_CONFIG_PATH
 
     def resolve_speaker(self, name: str) -> CastMember:
@@ -123,6 +147,8 @@ def load_config(path: str | Path | None = None) -> ProjectConfig:
 def build_config(raw: dict, path: Path = DEFAULT_CONFIG_PATH) -> ProjectConfig:
     video = VideoConfig(**(raw.get("video") or {}))
     voicevox = VoicevoxConfig(**(raw.get("voicevox") or {}))
+    audio = AudioConfig(**(raw.get("audio") or {}))
+    motion = MotionConfig(**(raw.get("motion") or {}))
 
     cast_raw = raw.get("cast") or {}
     if not cast_raw:
@@ -144,4 +170,6 @@ def build_config(raw: dict, path: Path = DEFAULT_CONFIG_PATH) -> ProjectConfig:
             color=values.get("color", "#ffffff"),
             aliases=list(values.get("aliases") or []),
         )
-    return ProjectConfig(video=video, voicevox=voicevox, cast=cast, path=path)
+    return ProjectConfig(
+        video=video, voicevox=voicevox, cast=cast, audio=audio, motion=motion, path=path
+    )

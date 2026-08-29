@@ -36,6 +36,22 @@ def run(args: list[str], quiet: bool = True) -> None:
         raise FfmpegError(f"ffmpeg が失敗しました（exit {result.returncode}）:\n{tail}")
 
 
+def max_volume(path: Path) -> float:
+    """ファイルのピーク音量(dB)。完全な無音なら -inf を返す。"""
+    result = subprocess.run(
+        [ffmpeg_exe(), "-nostats", "-i", str(path), "-af", "volumedetect", "-f", "null", "-"],
+        capture_output=True,
+        text=True,
+    )
+    for line in result.stderr.splitlines():
+        if "max_volume:" in line:
+            try:
+                return float(line.split("max_volume:")[1].strip().split()[0])
+            except (IndexError, ValueError):
+                break
+    return float("-inf")
+
+
 def write_concat_list(entries: list[tuple[Path, float]], list_path: Path) -> Path:
     """concat demuxer 用のリストを書き出す。
 

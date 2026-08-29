@@ -20,6 +20,26 @@ voicevox:
   # 行と行のあいだに入る既定の無音（秒）
   pause: 0.35
 
+# BGM・効果音。assets/audio/ の音源は init-assets で生成される仮素材。
+audio:
+  bgm: "assets/audio/bgm_loop.wav"   # 空文字にするとBGMなし
+  bgm_gain: -22                      # BGMの音量(dB)
+  bgm_fade: 2.0                      # 開始/終了のフェード秒
+  duck: true                         # 喋っている間だけBGMを下げる
+  duck_ratio: 8
+  se_gain: -8                        # 効果音の音量(dB)
+  scene_se: ""                       # シーン頭に鳴らす効果音（例: assets/audio/se_whoosh.wav）
+  loudness_target: -14               # 仕上がりの音圧(LUFS)。YouTubeの基準。0で無効
+
+# 画面の動き。切ると静止画の切り替えだけになる（書き出しは速い）
+motion:
+  enabled: true
+  fps: 30
+  telop_in: 0.18       # テロップが出るときのアニメ秒
+  speaker_pop: 0.16    # 話者が切り替わるときの立ち絵のバウンド秒
+  scene_fade: 0.32     # シーン転換にかける秒数
+  scene_transition: "dip"   # dip=一度黒に落とす / crossfade=前後を直接混ぜる
+
 # 話者定義。style_id は VOICEVOX の「スタイルID」。
 #   `python -m src.cli speakers` で ENGINE から一覧を取得できる。
 cast:

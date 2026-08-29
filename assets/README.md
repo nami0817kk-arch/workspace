@@ -8,6 +8,7 @@ assets/
   backgrounds/default.png          背景
   characters/<key>/<表情>_<close|open>.png   立ち絵（背景透過PNG）
   images/                          本編に差し込む図など（任意）
+  audio/                           BGM・効果音（init-assets が仮素材を合成する）
 ```
 
 表情は normal / smile / angry / surprise。無いものは normal にフォールバックする。

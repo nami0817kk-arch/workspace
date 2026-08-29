@@ -1,7 +1,8 @@
 # PJT007 - YouTube動画作成
 
-台本(Markdown)を書くだけで、**ゆっくり実況風の動画・音声・字幕・サムネイル・概要欄**を
-まとめて書き出すパイプライン。読み上げは [VOICEVOX](https://voicevox.hiroshiba.jp/)（無料・ローカル）。
+台本(Markdown)を書くだけで、**ゆっくり実況風の動画・音声・BGM・字幕・サムネイル・概要欄**を
+まとめて書き出すパイプライン。口パク、テロップの出現アニメ、シーン転換、
+喋りに合わせたBGMの自動ダッキング、YouTube基準(-14 LUFS)の音圧調整まで入っている。読み上げは [VOICEVOX](https://voicevox.hiroshiba.jp/)（無料・ローカル）。
 VOICEVOX アプリ経由でも、CORE を組み込んでアプリ無しでも合成できる。
 
 ## セットアップ
@@ -67,11 +68,13 @@ tags: [ゆっくり解説, VOICEVOX]
 | `src/cli.py` | コマンドラインの入口 |
 | `src/script_model.py` | 台本 Markdown のパース |
 | `src/tts.py` | VOICEVOX で行ごとに音声合成（ENGINE / CORE、キャッシュ付き） |
-| `src/render.py` | フレーム描画・口パク・動画合成 |
+| `src/render.py` | フレーム描画・口パク・演出・動画合成 |
+| `src/audio.py` | BGM/効果音のミックス、ダッキング、音圧調整 |
+| `src/audio_gen.py` | 仮のBGM・効果音の生成 |
 | `src/subtitles.py` | 字幕 SRT・チャプター・概要欄 |
 | `src/thumbnail.py` | サムネイル生成 |
 | `src/upload.py` | YouTube Data API での投稿 |
-| `config/project.yaml` | 画面サイズ・話者(style_id)・声の設定 |
+| `config/project.yaml` | 画面サイズ・話者(style_id)・声・BGM・演出の設定 |
 | `scripts/` | 台本と `setup_voicevox_core.py` |
 | `docs/` | [パイプライン仕様](docs/pipeline.md) / [VOICEVOX設定](docs/voicevox.md) |
 

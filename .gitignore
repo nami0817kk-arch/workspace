@@ -15,3 +15,6 @@ secrets/
 
 # VOICEVOX CORE 一式（scripts/setup_voicevox_core.py で用意する。数GB）
 vendor/
+
+# 生成した仮のBGM・効果音
+assets/audio/

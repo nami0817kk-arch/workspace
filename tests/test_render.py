@@ -1,3 +1,4 @@
+import pytest
 from PIL import Image, ImageDraw, ImageFont
 
 from src.config import load_config
@@ -32,19 +33,56 @@ def test_wrap_text_keeps_punctuation_off_line_head():
     assert not any(line.startswith(("、", "。")) for line in lines)
 
 
-def test_frame_entries_match_audio_duration(tmp_path):
+@pytest.mark.parametrize("motion", [True, False])
+def test_frame_entries_match_audio_duration(tmp_path, motion):
+    """演出を入れても映像の尺は音声とずれない（演出は発話時間の内側で行う）。"""
     config = load_config()
+    config.motion.enabled = motion
     script = _script_with_timing()
     renderer = Renderer(config, tmp_path)
     entries = renderer.frame_entries(script)
     total = sum(duration for _, duration in entries)
-    assert abs(total - script.duration) < 0.01
+    assert total == pytest.approx(script.duration, abs=1e-6)
 
 
 def test_frames_are_cached_by_content(tmp_path):
     config = load_config()
+    config.motion.enabled = False
     script = _script_with_timing()
     renderer = Renderer(config, tmp_path)
     renderer.frame_entries(script)
     # 2行 x (口を閉じた絵 + 開けた絵) = 4枚だけ
     assert len(list((tmp_path / "frames").glob("*.png"))) == 4
+
+
+def test_motion_adds_intro_frames(tmp_path):
+    config = load_config()
+    script = _script_with_timing()
+
+    config.motion.enabled = False
+    without = len(Renderer(config, tmp_path / "off").frame_entries(script))
+    config.motion.enabled = True
+    with_motion = len(Renderer(config, tmp_path / "on").frame_entries(script))
+    assert with_motion > without
+
+
+def test_scene_change_uses_crossfade(tmp_path):
+    """2つ目のシーンの頭には、前の画面と混ざった中間フレームが入る。"""
+    config = load_config()
+    script = parse_script("## 章1\n霊夢: あいうえお。\n\n## 章2\n魔理沙: かきくけこ。\n")
+    for line in script.lines:
+        line.duration, line.pause = 2.0, 0.4
+    renderer = Renderer(config, tmp_path)
+    renderer.frame_entries(script)
+    # blend() が作る中間フレームは x で始まる名前にしている
+    assert list((tmp_path / "frames").glob("x*.png"))
+
+
+def test_intro_is_capped_by_speaking_time(tmp_path):
+    """発話が極端に短くても、演出が音声をはみ出さない。"""
+    config = load_config()
+    script = parse_script("## S\n霊夢: あ。\n")
+    script.lines[0].duration, script.lines[0].pause = 0.2, 0.0
+    renderer = Renderer(config, tmp_path)
+    entries = renderer.frame_entries(script)
+    assert sum(d for _, d in entries) == pytest.approx(0.2, abs=1e-6)
