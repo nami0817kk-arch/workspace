@@ -133,3 +133,37 @@ def test_table_rejects_mismatched_row_length(tmp_path, fonts):
             {"type": "table", "columns": ["a", "b"], "rows": [["1"]]},
             WIDTH, font, tmp_path / "bad.png", latin,
         )
+
+
+def test_reactions_card_renders(tmp_path, fonts):
+    font, latin = fonts
+    path = render(
+        {
+            "type": "reactions",
+            "title": "この移籍への反応",
+            "items": [{"text": "短い反応", "label": "X"}, {"text": "もうひとつ"}],
+            "note": "※公開されている投稿から引用",
+        },
+        WIDTH, font, tmp_path / "react.png", latin,
+    )
+    assert path.exists()
+
+
+def test_reactions_needs_text(tmp_path, fonts):
+    font, latin = fonts
+    with pytest.raises(CardError, match="items"):
+        render({"type": "reactions", "title": "x"}, WIDTH, font, tmp_path / "a.png", latin)
+    with pytest.raises(CardError, match="text"):
+        render(
+            {"type": "reactions", "items": [{"label": "X"}]},
+            WIDTH, font, tmp_path / "b.png", latin,
+        )
+
+
+def test_reactions_accepts_plain_strings(tmp_path, fonts):
+    font, latin = fonts
+    path = render(
+        {"type": "reactions", "items": ["ひとこと", "ふたこと"]},
+        WIDTH, font, tmp_path / "plain.png", latin,
+    )
+    assert path.exists()

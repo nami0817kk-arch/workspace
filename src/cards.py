@@ -13,7 +13,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
-CARD_TYPES = ("quote", "transfer", "points", "bars", "table")
+CARD_TYPES = ("quote", "transfer", "points", "bars", "table", "reactions")
 
 # 棒グラフは「同じ指標を並べて比べる」用途なので、色は1色で通し、
 # 注目させたい1本だけ同じ色相の明るい段を使う（カテゴリ配色にはしない）。
@@ -23,6 +23,7 @@ BAR_HIGHLIGHT = (89, 176, 255)   # 注目させる1本。7.8:1
 # （RGBA で半透明を描くと下地を置き換えてしまい、帯が白く抜ける）
 GRID = (62, 72, 90, 255)
 ZEBRA = (32, 41, 58, 255)
+BUBBLE = (30, 38, 54, 255)      # 反応カードの吹き出し
 
 PANEL = (16, 22, 34, 232)
 BORDER = (255, 255, 255, 46)
@@ -56,6 +57,7 @@ def render(spec: dict, width: int, font_path: str, out_path: Path,
         "points": _points,
         "bars": _bars,
         "table": _table,
+        "reactions": _reactions,
     }[kind]
     blocks = builder(spec, width, font_path, latin_font_path or font_path)
 
@@ -321,6 +323,65 @@ def _table(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict
                 x += widths[index]
 
         blocks.append({"height": 52, "draw": draw_row})
+    return blocks
+
+
+def _reactions(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
+    """短い反応を並べて見せるカード。
+
+    1件ずつ吹き出しに入れ、どこの発言かを右端に小さく出す。
+    引用である以上、出どころの分からない発言は載せない前提。
+    """
+    title_font = ImageFont.truetype(font_path, 40)
+    text_font = ImageFont.truetype(font_path, 36)
+    label_font = ImageFont.truetype(font_path, 26)
+
+    items = [dict(i) if isinstance(i, dict) else {"text": str(i)} for i in (spec.get("items") or [])]
+    if not items:
+        raise CardError("reactions カードには items が必要です")
+    for item in items:
+        if not str(item.get("text", "")).strip():
+            raise CardError("reactions の items には text が必要です")
+
+    blocks: list[dict] = []
+    title = str(spec.get("title") or "").strip()
+    if title:
+        blocks.append(
+            {
+                "height": 58,
+                "draw": lambda draw, y: draw.text(
+                    (PAD + 12, y), title, font=title_font, fill=TEXT
+                ),
+            }
+        )
+
+    inner = width - PAD * 2 - 60
+    for item in items[:5]:
+        text = str(item["text"]).strip()
+        label = str(item.get("label") or "").strip()
+        lines = _wrap(text, text_font, inner)
+        height = 34 + 46 * len(lines)
+
+        def draw_bubble(draw, y, lines=lines, label=label, height=height):
+            draw.rounded_rectangle(
+                [PAD + 12, y, width - PAD, y + height - 14], radius=16, fill=BUBBLE
+            )
+            for offset, chunk in enumerate(lines):
+                draw.text((PAD + 36, y + 14 + offset * 46), chunk, font=text_font, fill=TEXT)
+            if label:
+                label_w = draw.textlength(label, font=label_font)
+                draw.text(
+                    (width - PAD - label_w - 22, y + height - 44),
+                    label, font=label_font, fill=SUB,
+                )
+
+        blocks.append({"height": height, "draw": draw_bubble})
+
+    note = str(spec.get("note") or "").strip()
+    if note:
+        note_font = ImageFont.truetype(font_path, 26)
+        blocks.append({"height": 10, "draw": lambda draw, y: None})
+        blocks.append(_text_block(note, note_font, width - PAD * 2 - 12, SUB, 6))
     return blocks
 
 
