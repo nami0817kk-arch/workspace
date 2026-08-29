@@ -21,6 +21,12 @@ domains:
             telegraph.co.uk, independent.co.uk, mirror.co.uk, standard.co.uk,
             talksport.com, transfermarkt.com]
 
+# 1本の作り方。まとめではなく、1テーマを掘る
+policy:
+  one_theme_per_video: true
+  min_sections: 3             # これ未満は「深掘り」と呼べないので draft で止める
+  require_question: true      # 動画が答える問いを必ず立てる
+
 # 確度の判定基準。draft のときに機械的にチェックする
 tiers:
   確定:
@@ -35,6 +41,10 @@ tiers:
     needs_sources: 1
     needs_official: false
     description: SNS・単一ソース・噂の段階
+  背景:
+    needs_sources: 0
+    needs_official: false
+    description: 経緯・前提の説明。新規の報道ではないことを画面で明示する
 
 # 同じ話題を繰り返さないための設定
 coverage:
@@ -50,11 +60,15 @@ routines:
     cover_hours: 12
     target_minutes: 1.5
     angle: |
-      欧州は日本の深夜に動く。夜のあいだに出た発表と試合結果を、
-      朝いちばんに短くまとめる枠。速さ優先で、深掘りはしない。
+      欧州は日本の深夜に動く。夜のあいだに出た発表のうち
+      いちばん大きいもの1件を選び、それだけを扱う。速報だが薄くはしない。
+    structure:
+      - {id: what, heading: 何が起きたか, tier: 確定}
+      - {id: why, heading: なぜ動いたのか, tier: 報道}
+      - {id: next, heading: これからどうなる, tier: 報道}
     steps:
       - id: overnight
-        what: 夜のあいだに出た公式発表
+        what: 夜のあいだに出た公式発表（この中から1件を選ぶ）
         tier: 確定
         queries:
           - {q: "official announcement transfer {today_en}", domains: english}
@@ -76,8 +90,12 @@ routines:
     cover_hours: 24
     target_minutes: 1.5
     angle: |
-      昼休みに見られる枠。日本人選手とJリーグに絞る。
+      昼休みに見られる枠。日本人選手かJリーグから1人・1件を選んで掘る。
       朝の枠で扱った話題は繰り返さない（前提として ledger が止める）。
+    structure:
+      - {id: what, heading: 何が起きたか, tier: 報道}
+      - {id: background, heading: この選手の状況, tier: 背景}
+      - {id: next, heading: 次の焦点, tier: 報道}
     steps:
       - id: japanese
         what: 日本人選手の移籍・起用・評価
@@ -101,12 +119,18 @@ routines:
     cover_hours: 24
     target_minutes: 3
     angle: |
-      1日を振り返る枠。ここだけ尺を取り、背景の説明や図解を入れる。
-      朝と昼で速報として出した話題を、まとめ直して深く扱ってよい
-      （その場合は取材メモに follow_up: true を書く）。
+      その日いちばん大きいテーマを1つ選び、正面から掘る枠。
+      「なぜそうなったか」「争点はどこか」を必ず入れる。図解を使う。
+      朝と昼で速報した話題を掘り直してよい（follow_up: true を書く）。
+    structure:
+      - {id: what, heading: 何が起きたか, tier: 報道}
+      - {id: background, heading: ここに至る経緯, tier: 背景}
+      - {id: point, heading: 争点はどこか, tier: 報道}
+      - {id: numbers, heading: 数字で見ると, tier: 確定}
+      - {id: next, heading: これからどうなる, tier: 未確認}
     steps:
       - id: biggest
-        what: その日いちばん大きかった話題
+        what: その日いちばん大きかった話題（この中から1つを選ぶ）
         tier: 報道
         queries:
           - {q: "biggest story {today_en}", domains: english}

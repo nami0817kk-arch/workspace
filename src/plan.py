@@ -54,6 +54,7 @@ class Routine:
     target_minutes: float
     steps: list[Step]
     angle: str = ""
+    structure: list[dict] = field(default_factory=list)
 
     @property
     def span(self) -> str:
@@ -69,6 +70,7 @@ class Plan:
     domains: dict[str, list[str]]
     slots: list[str] = field(default_factory=list)
     coverage: dict = field(default_factory=dict)
+    policy: dict = field(default_factory=dict)
 
     def routine(self, key: str) -> Routine:
         if key not in self.routines:
@@ -89,6 +91,7 @@ def build_plan(raw: dict) -> Plan:
     domains = {k: list(v or []) for k, v in (raw.get("domains") or {}).items()}
     cadence = raw.get("cadence") or {}
     coverage = dict(raw.get("coverage") or {})
+    policy = dict(raw.get("policy") or {})
     tiers = dict(raw.get("tiers") or {})
     if not tiers:
         raise PlanError("tiers が定義されていません")
@@ -124,6 +127,7 @@ def build_plan(raw: dict) -> Plan:
             target_minutes=float(body.get("target_minutes", 3)),
             steps=steps,
             angle=str(body.get("angle", "")).strip(),
+            structure=[dict(x) for x in (body.get("structure") or [])],
         )
     if not routines:
         raise PlanError("routines が定義されていません")
@@ -133,7 +137,12 @@ def build_plan(raw: dict) -> Plan:
         if slot not in routines:
             raise PlanError(f"cadence.slots の『{slot}』に対応する routine がありません")
     return Plan(
-        routines=routines, tiers=tiers, domains=domains, slots=slots, coverage=coverage
+        routines=routines,
+        tiers=tiers,
+        domains=domains,
+        slots=slots,
+        coverage=coverage,
+        policy=policy,
     )
 
 
@@ -205,27 +214,42 @@ def render(routine: Routine, today: date, covered: list | None = None) -> str:
 
 
 def worksheet(routine: Routine, today: date) -> str:
-    """取材メモの雛形（YAML）。ここに拾った内容を書き込んでいく。"""
+    """取材メモの雛形（YAML）。1本＝1テーマの深掘りとして書く。"""
     words = tokens(today, routine.cover_hours)
     lines = [
         f"# {routine.name} の取材メモ（{words['{date_ja}']}）",
+        "# 1本＝1テーマ。まとめではなく、1つの話を掘る",
         "# 埋めたら python -m src.cli draft このファイル で台本になる",
         f"slot: {routine.key}",
         f'date: "{words["{date_ja}"]}"',
-        'title: ""            # 動画タイトル（【サッカーニュース】は自動で付く）',
-        'intro_title: ""      # 冒頭カードの短いタイトル',
-        "items:",
+        "",
+        "theme:",
+        '  id: ""             # 短い識別子。重複の判定に使う（例: alvarez）',
+        '  title: ""          # 動画タイトル。テーマそのもの',
+        '  hook: ""           # 冒頭のつかみ。何が起きたかを一文で',
+        '  question: ""       # この動画が答える問い。ここが深掘りの軸',
+        "",
+        'answer: ""           # まとめで問いにどう答えるか',
+        'watch: ""            # 次に何を見ればよいか',
+        "# follow_up: true    # 前の枠で扱ったテーマを掘り直すとき",
+        "",
+        "sections:",
     ]
-    for step in routine.steps:
+
+    structure = routine.structure or [
+        {"id": "what", "heading": "何が起きたか", "tier": "報道"},
+        {"id": "why", "heading": "なぜそうなったか", "tier": "背景"},
+        {"id": "next", "heading": "これからどうなる", "tier": "報道"},
+    ]
+    for block in structure:
         lines += [
-            f"  # --- {step.what}（{step.tier}） ---",
-            f"  - id: {step.id}",
-            f'    tier: {step.tier}',
-            '    headline: ""       # 章タイトルになる',
-            '    telop: ""          # 画面の見出し',
-            '    say: ""            # 読み上げ文。人名・数字はひらがなに開く',
-            "    official: false    # クラブ・当事者の発表なら true",
-            "    # follow_up: true  # 前の枠で速報した話題を深掘りするとき",
+            f'  - id: {block.get("id", "s")}',
+            f'    heading: {block.get("heading", "")}',
+            f'    tier: {block.get("tier", "報道")}',
+            '    telop: ""        # 画面の見出し',
+            "    say:             # 読み上げ文。人名・数字はひらがなに開く",
+            '      - ""',
+            "    official: false  # クラブ・当事者の発表なら true",
             "    sources:",
             '      - ""',
             "",

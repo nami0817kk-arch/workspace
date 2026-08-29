@@ -38,12 +38,15 @@ SOURCE_TIERS = {
     "official": "official",   # クラブ・当事者が発表した
     "report": "report",       # 報道機関が報じた
     "rumor": "rumor",         # 未確認・噂の段階
+    "context": "context",     # 経緯・前提の説明（新規の報道ではない）
     "確定": "official",
     "公式": "official",
     "発表": "official",
     "報道": "report",
     "噂": "rumor",
     "未確認": "rumor",
+    "背景": "context",
+    "解説": "context",
 }
 SCENE_DIRECTIVES = {"bg", "background"}
 

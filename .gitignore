@@ -24,3 +24,6 @@ assets/backgrounds/*.mp4
 
 # 静止画から作った背景クリップのキャッシュ
 assets/backgrounds/.motion/
+
+# 扱った話題の記録（実運用で溜まっていくもの）
+research/covered.yaml

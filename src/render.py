@@ -28,6 +28,7 @@ SOURCE_BADGES = {
     "official": ("確定", (61, 200, 120)),
     "report": ("報道", (235, 165, 40)),
     "rumor": ("未確認", (150, 152, 158)),
+    "context": ("背景", (124, 148, 184)),
 }
 SPEAKER_HOP = 24       # 話し始めに立ち絵が跳ねる高さ(px)
 TELOP_MARGIN = 110

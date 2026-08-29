@@ -85,10 +85,28 @@ def test_render_fills_dates_and_domains():
     assert "発表日を控える" in text
 
 
-def test_worksheet_has_one_entry_per_step():
+def test_worksheet_is_a_deep_dive_template():
+    """1本＝1テーマなので、雛形はテーマ・問い・節で構成される。"""
     text = worksheet(build_plan(RAW).routine("weekly"), date(2026, 8, 29))
+    assert "theme:" in text and "question:" in text and "answer:" in text
+    assert "sections:" in text
+    # structure 未定義なら既定の3節（何が起きたか／なぜ／これから）
+    assert text.count("- id:") == 3
+
+
+def test_worksheet_follows_the_configured_structure():
+    raw = {**RAW}
+    raw["routines"]["weekly"] = {
+        **raw["routines"]["weekly"],
+        "structure": [
+            {"id": "a", "heading": "見出しA", "tier": "確定"},
+            {"id": "b", "heading": "見出しB", "tier": "背景"},
+        ],
+    }
+    text = worksheet(build_plan(raw).routine("weekly"), date(2026, 8, 29))
+    assert "heading: 見出しA" in text and "tier: 背景" in text
     assert text.count("- id:") == 2
-    assert "tier: 確定" in text and "tier: 未確認" in text
+    del raw["routines"]["weekly"]["structure"]
 
 
 def test_cover_hours_reads_as_a_span():

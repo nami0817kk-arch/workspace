@@ -1,140 +1,171 @@
+from datetime import datetime, timedelta
+
 import pytest
 
+from src import coverage
 from src.plan import build_plan
-from src.research import ResearchError, build_notes, load_notes, to_script, verify
+from src.research import (
+    ResearchError,
+    build_notes,
+    check_repeats,
+    to_script,
+    verify,
+)
 from tests.test_plan import RAW
 
-BASE = {
-    "date": "2026年8月29日",
-    "title": "テストのまとめ",
-    "items": [
-        {
-            "id": "a",
-            "tier": "確定",
-            "headline": "移籍が決まった",
-            "telop": "A → B",
-            "say": "えーからびーへうつりました。",
-            "official": True,
-            "sources": ["https://example.com/1"],
-        }
-    ],
-}
+NOW = datetime(2026, 8, 29, 19, 0)
+
+
+def _section(**overrides):
+    base = {
+        "id": "what",
+        "heading": "何が起きたか",
+        "tier": "確定",
+        "telop": "A → B",
+        "say": "えーからびーへうつりました。",
+        "official": True,
+        "sources": ["https://example.com/1"],
+    }
+    return {**base, **overrides}
+
+
+def _raw(**overrides):
+    base = {
+        "date": "2026年8月29日",
+        "slot": "evening",
+        "theme": {
+            "id": "move",
+            "title": "なぜ移籍が決まらないのか",
+            "hook": "大きな移籍が動いています。",
+            "question": "なぜ金の問題ではないのか",
+        },
+        "answer": "ライバルに売りたくないから",
+        "watch": "本人の決断",
+        "sections": [
+            _section(),
+            _section(id="why", heading="なぜそうなったか", tier="背景", sources=[],
+                     official=False),
+            _section(id="next", heading="これからどうなる", tier="未確認", official=False),
+        ],
+    }
+    return {**base, **overrides}
 
 
 def _plan():
-    return build_plan(RAW)
+    plan = build_plan(RAW)
+    plan.tiers["背景"] = {"needs_sources": 0, "needs_official": False}
+    plan.policy = {"min_sections": 3, "require_question": True}
+    return plan
 
 
 def test_valid_notes_pass():
-    assert verify(build_notes(BASE), _plan()) == []
+    assert verify(build_notes(_raw()), _plan()) == []
+
+
+def test_theme_is_required():
+    with pytest.raises(ResearchError, match="1本＝1テーマ"):
+        build_notes({"date": "d", "sections": [_section()]})
+
+
+def test_sections_are_required():
+    with pytest.raises(ResearchError, match="sections が空"):
+        build_notes({"theme": {"title": "t"}, "sections": []})
+
+
+def test_question_is_required():
+    raw = _raw()
+    raw["theme"] = {**raw["theme"], "question": ""}
+    problems = verify(build_notes(raw), _plan())
+    assert any("question" in p for p in problems)
+
+
+def test_answer_is_required():
+    problems = verify(build_notes(_raw(answer="")), _plan())
+    assert any("answer" in p for p in problems)
+
+
+def test_too_few_sections_is_not_a_deep_dive():
+    problems = verify(build_notes(_raw(sections=[_section()])), _plan())
+    assert any("深掘りには3つ以上" in p for p in problems)
+
+
+def test_context_tier_needs_no_sources():
+    """背景の説明は新規の報道ではないので、出典を求めない。"""
+    raw = _raw()
+    raw["sections"][1]["sources"] = []
+    assert verify(build_notes(raw), _plan()) == []
 
 
 def test_report_tier_needs_two_sources():
-    raw = {**BASE, "items": [{**BASE["items"][0], "tier": "報道", "official": False}]}
+    raw = _raw()
+    raw["sections"][0] = _section(tier="報道", official=False)
     problems = verify(build_notes(raw), _plan())
     assert any("出典が2本必要" in p for p in problems)
 
 
 def test_confirmed_tier_needs_an_official_announcement():
-    raw = {**BASE, "items": [{**BASE["items"][0], "official": False}]}
+    raw = _raw()
+    raw["sections"][0] = _section(official=False)
     problems = verify(build_notes(raw), _plan())
     assert any("発表が条件" in p for p in problems)
 
 
-def test_missing_fields_are_reported_with_the_item_id():
-    raw = {**BASE, "items": [{**BASE["items"][0], "id": "zzz", "telop": "", "say": ""}]}
+def test_problems_name_the_section():
+    raw = _raw()
+    raw["sections"][0] = _section(id="zzz", telop="", say="")
     problems = verify(build_notes(raw), _plan())
     assert any(p.startswith("zzz:") and "telop" in p for p in problems)
-    assert any(p.startswith("zzz:") and "say" in p for p in problems)
-
-
-def test_empty_items_is_an_error():
-    with pytest.raises(ResearchError, match="items が空"):
-        build_notes({"date": "d", "title": "t", "items": []})
 
 
 def test_sources_are_collected_without_duplicates():
-    raw = {
-        **BASE,
-        "items": [
-            BASE["items"][0],
-            {**BASE["items"][0], "id": "b", "sources": ["https://example.com/1",
-                                                        "https://example.com/2"]},
-        ],
-    }
-    notes = build_notes(raw)
-    assert notes.sources == ["https://example.com/1", "https://example.com/2"]
+    raw = _raw()
+    raw["sections"][2]["sources"] = ["https://example.com/1", "https://example.com/2"]
+    assert build_notes(raw).sources == ["https://example.com/1", "https://example.com/2"]
 
 
 def test_to_script_refuses_notes_that_fail_verification():
-    raw = {**BASE, "items": [{**BASE["items"][0], "official": False}]}
     with pytest.raises(ResearchError, match="不備"):
-        to_script(build_notes(raw), _plan())
+        to_script(build_notes(_raw(answer="")), _plan())
 
 
-def test_generated_script_is_parseable_and_carries_the_tiers():
+def test_generated_script_opens_with_the_question():
     from src.script_model import parse_script
 
-    raw = {
-        **BASE,
-        "items": [
-            BASE["items"][0],
-            {
-                "id": "b",
-                "tier": "未確認",
-                "headline": "噂の話",
-                "telop": "噂です",
-                "say": ["うわさです。", "かくていではありません。"],
-                "sources": ["https://example.com/3"],
-                "card": {"type": "points", "title": "整理", "items": ["ひとつ"]},
-            },
-        ],
-    }
-    script = parse_script(to_script(build_notes(raw), _plan()))
-
+    script = parse_script(to_script(build_notes(_raw()), _plan()))
     assert [s.title for s in script.scenes] == [
-        "オープニング", "移籍が決まった", "噂の話", "まとめ"
+        "オープニング", "何が起きたか", "なぜそうなったか", "これからどうなる", "まとめ"
     ]
-    assert {line.source for line in script.lines} == {None, "official", "rumor"}
-    assert "b_card" in script.cards and "wrap" in script.cards
-    assert len(script.sources) == 2
+    # 冒頭で問いを立て、まとめで答える
+    assert any("なぜ金の問題ではないのか" in line.telop_text() for line in script.lines)
+    assert any("ライバルに売りたくないから" in line.telop_text() for line in script.lines)
+    assert "wrap" in script.cards
 
 
-def test_repeat_is_flagged(tmp_path, monkeypatch):
-    """直近で扱った話題は重複として拾う。"""
-    from datetime import datetime, timedelta
+def test_generated_script_carries_the_context_tier():
+    from src.script_model import parse_script
 
-    from src import coverage
-    from src.research import check_repeats
+    script = parse_script(to_script(build_notes(_raw()), _plan()))
+    assert "context" in {line.source for line in script.lines}
 
+
+def test_repeat_is_flagged(tmp_path):
     ledger = tmp_path / "covered.yaml"
-    now = datetime(2026, 8, 29, 19, 0)
     coverage.save(
-        ledger,
-        [coverage.Entry("a", "移籍が決まった", "morning", now - timedelta(hours=6))],
+        ledger, [coverage.Entry("move", "なぜ移籍が決まらないのか", "morning",
+                                NOW - timedelta(hours=6))]
     )
-
     plan = _plan()
     plan.coverage = {"ledger": str(ledger), "repeat_within_hours": 36}
-    problems = check_repeats(build_notes(BASE), plan, now=now)
+    problems = check_repeats(build_notes(_raw()), plan, now=NOW)
     assert len(problems) == 1 and "morning" in problems[0]
 
 
 def test_follow_up_is_allowed(tmp_path):
-    """深掘りとして意図的に再度扱う場合は止めない。"""
-    from datetime import datetime, timedelta
-
-    from src import coverage
-    from src.research import check_repeats
-
     ledger = tmp_path / "covered.yaml"
-    now = datetime(2026, 8, 29, 19, 0)
     coverage.save(
-        ledger,
-        [coverage.Entry("a", "移籍が決まった", "morning", now - timedelta(hours=6))],
+        ledger, [coverage.Entry("move", "なぜ移籍が決まらないのか", "morning",
+                                NOW - timedelta(hours=6))]
     )
-
     plan = _plan()
     plan.coverage = {"ledger": str(ledger), "repeat_within_hours": 36}
-    raw = {**BASE, "items": [{**BASE["items"][0], "follow_up": True}]}
-    assert check_repeats(build_notes(raw), plan, now=now) == []
+    assert check_repeats(build_notes(_raw(follow_up=True)), plan, now=NOW) == []

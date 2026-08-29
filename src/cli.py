@@ -21,6 +21,8 @@ from pathlib import Path
 from .assets import ensure_assets
 from .config import ConfigError, load_config
 from .pipeline import build
+from .plan import PlanError
+from .research import ResearchError
 from .script_model import ScriptError, load_script
 from .thumbnail import build_thumbnail
 from .tts import TtsError
@@ -209,7 +211,7 @@ def _dispatch(args, config) -> int:
         from .config import _resolve
         from .plan import load_plan
         from . import coverage as coverage_mod
-        from .research import ResearchError, check_repeats, load_notes, to_script, verify
+        from .research import check_repeats, load_notes, to_script, verify
 
         plan = load_plan()
         notes = load_notes(args.notes)
@@ -230,7 +232,10 @@ def _dispatch(args, config) -> int:
             if not args.allow_repeat:
                 return 1
 
-        print(f"検証OK: {len(notes.items)}件 / 出典 {len(notes.sources)}本")
+        print(
+            f"検証OK: 節 {len(notes.sections)}つ / 出典 {len(notes.sources)}本"
+            f"\n  テーマ: {notes.title}\n  問い　: {notes.question}"
+        )
         if args.check_only:
             return 0
 
@@ -247,9 +252,7 @@ def _dispatch(args, config) -> int:
         ledger = (plan.coverage or {}).get("ledger")
         if ledger:
             coverage_mod.record(
-                ledger,
-                notes.slot or "-",
-                [(item.id, item.headline) for item in notes.items],
+                ledger, notes.slot or "-", [(notes.theme_id, notes.title)]
             )
         print(f"台本: {target}")
         print(f"`python -m src.cli check {target}` で書式と尺を確認してください")
