@@ -4,25 +4,20 @@
 
 ## 手順
 
-### 1. 下書きを作る
+### 1. 取材リストを出す
 
 ```bash
-python -m src.cli new
+python -m src.cli plan --write
 ```
 
-`scripts/YYYYMMDD.md` ができる。日付は自動で入る。以降は `{{...}}` を埋めていく。
+その日ぶんの検索リストが出て、`research/YYYYMMDD_weekly.yaml`（取材メモの雛形）が
+できる。検索の型は `config/sources.yaml` に定義してあるので、毎回同じ手順になる。
+仕組みの詳細は [取材の仕組み](research.md)。
 
-### 2. ネタを集める
+### 2. ネタを集めて取材メモに書く
 
 使えるサイトと使えないサイトは [情報源](news-sources.md) にまとめてある。
-検索は毎回この4本を回すと漏れにくい。
-
-| ねらい | 検索の型 |
-|---|---|
-| 今週の確定移籍 | `Premier League confirmed transfers <今週の日付>`（skysports.com / espn.com に限定） |
-| 日本人選手 | `海外日本人選手 移籍 <年月>` |
-| 大きな噂 | `<選手名> transfer latest`（x.com に限定して投稿本文を見る） |
-| 日程・制度 | `transfer window deadline <年>` |
+`plan` が出した検索を上から回して、拾った内容を取材メモに書いていく。
 
 **検索ツールが付ける要約は使わない。** 見出しと投稿本文だけを採用する。
 要約は見出しにない内容を混ぜてくることがある（実例は [情報源](news-sources.md)）。
@@ -39,7 +34,16 @@ python -m src.cli new
 
 判断に迷ったら1つ下げる。数字（移籍金・順位）は伝聞のまま「〜と報じられている」で止める。
 
-### 4. 構成に流し込む
+### 4. 台本にする
+
+```bash
+python -m src.cli draft research/YYYYMMDD_weekly.yaml
+```
+
+確度の条件（`確定` は発表の確認が必要、`報道` は2社以上）を満たしていないと
+ここで止まる。通れば章立て・バッジ・出典が入った台本ができる。
+
+### 5. 構成を整える
 
 章立ては毎回この形にすると、視聴者が慣れて見やすくなる。
 
@@ -50,7 +54,7 @@ python -m src.cli new
 まとめ         … points カードで3点に整理
 ```
 
-### 5. 確認してから作る
+### 6. 確認してから作る
 
 ```bash
 python -m src.cli check scripts/YYYYMMDD.md   # 書式と想定尺（VOICEVOX不要）
@@ -59,7 +63,7 @@ python -m src.cli build scripts/YYYYMMDD.md   # 本番ビルド
 
 `check` は話者名の誤りやカード名の間違いも拾う。想定尺が長すぎたらここで削る。
 
-### 6. 公開前の確認
+### 7. 公開前の確認
 
 - [ ] `description.txt` の出典URLをすべて開いて、内容が変わっていないか見る
 - [ ] 確度バッジが画面で正しく出ているか（確定と未確認の取り違えは致命的）

@@ -1,0 +1,113 @@
+# 取材の計画。「いつ・どこから・どの情報を取るか」をここに書く。
+#
+#   python -m src.cli plan            今日ぶんの検索リストを出す
+#   python -m src.cli plan --write    取材メモの雛形を research/ に作る
+#   python -m src.cli draft research/YYYYMMDD.yaml   取材メモ→台本
+#
+# クエリの中で使える置き換え:
+#   {date_ja} 2026年8月29日 / {month_ja} 2026年8月 / {year} 2026
+#   {period_en} August 2026 / {today_en} 29 August 2026
+#   {topic}   step の topics を1つずつ当てはめる
+
+# 使ってよい情報源。ここに無いサイトは検索対象にしない（docs/news-sources.md の実測結果）
+domains:
+  english: [skysports.com, espn.com, goal.com, 90min.com, football365.com]
+  german: [kicker.de]
+  italian: [football-italia.net]
+  social: [x.com]
+  # 恒久的に取得できないサイト。ここを検索しても結果は返らない
+  blocked: [bbc.com, theguardian.com, theathletic.com, nytimes.com, marca.com,
+            as.com, mundodeportivo.com, lequipe.fr, gazzetta.it, bild.de,
+            telegraph.co.uk, independent.co.uk, mirror.co.uk, standard.co.uk,
+            talksport.com, transfermarkt.com]
+
+# 確度の判定基準。draft のときに機械的にチェックする
+tiers:
+  確定:
+    needs_sources: 1
+    needs_official: true      # クラブ・リーグ・当事者の発表であること
+    description: クラブ・リーグ・当事者が発表した
+  報道:
+    needs_sources: 2          # 2社以上で一致していること
+    needs_official: false
+    description: 報道機関が報じた
+  未確認:
+    needs_sources: 1
+    needs_official: false
+    description: SNS・単一ソース・噂の段階
+
+routines:
+  weekly:
+    name: 週まとめ
+    when: 毎週土曜 20:00（収録）／日曜 公開
+    cover_days: 7
+    target_minutes: 3
+    steps:
+      - id: confirmed
+        what: この1週間で確定した移籍・契約
+        tier: 確定
+        queries:
+          - {q: "confirmed transfers {period_en}", domains: english}
+          - {q: "海外サッカー 移籍 発表 {month_ja}"}
+        check: クラブの発表があるか。発表日を必ず控える
+
+      - id: japanese
+        what: 日本人選手の動向
+        tier: 報道
+        queries:
+          - {q: "海外日本人選手 移籍 {month_ja}"}
+          - {q: "Japan international transfer {period_en}", domains: english}
+        check: 2社以上で移籍先が一致しているか
+
+      - id: rumours
+        what: 大きな噂・交渉中の案件
+        tier: 未確認
+        topics: []            # 追いたい選手名をここに足す
+        queries:
+          - {q: "{topic} transfer latest", domains: english}
+          - {q: "{topic} transfer", domains: social}
+        check: |
+          SNSは投稿日が取れない。内容に日付や文脈があるものだけ採用する。
+          公式アカウントか実績のある記者か、ファンアカウントかを見分ける
+
+      - id: schedule
+        what: 日程・制度（移籍期限、開幕日など）
+        tier: 確定
+        queries:
+          - {q: "transfer window deadline {year}", domains: english}
+        check: 日本時間への換算を必ず併記する
+
+  deadline_day:
+    name: 移籍期限日
+    when: 各国の移籍期限の当日と翌日
+    cover_days: 2
+    target_minutes: 4
+    steps:
+      - id: done_deals
+        what: 期限までに成立した移籍
+        tier: 確定
+        queries:
+          - {q: "deadline day confirmed transfers {today_en}", domains: english}
+      - id: collapsed
+        what: 破談・不成立になった案件
+        tier: 報道
+        queries:
+          - {q: "deadline day collapsed transfer {today_en}", domains: english}
+
+  match_week:
+    name: 節後まとめ
+    when: 週明け（欧州リーグの節が終わったあと）
+    cover_days: 3
+    target_minutes: 3
+    steps:
+      - id: japanese_results
+        what: 日本人選手の出場・ゴール
+        tier: 報道
+        queries:
+          - {q: "海外日本人選手 試合結果 {month_ja}"}
+      - id: standings
+        what: 順位表・得点ランキング
+        tier: 確定
+        queries:
+          - {q: "Premier League table {period_en}", domains: english}
+        check: 表カード(type table)や棒グラフ(type bars)にするなら出典を明記

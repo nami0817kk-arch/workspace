@@ -27,12 +27,16 @@ ffmpeg は `imageio-ffmpeg` に同梱されるので別途インストール不�
 ## 毎週の運用
 
 ```bash
-python -m src.cli new                          # 台本の下書きを作る
+python -m src.cli plan --write                 # 取材リストと取材メモの雛形
+python -m src.cli draft research/YYYYMMDD_weekly.yaml   # 検証して台本に
+python -m src.cli new                          # テンプレートから直接書く場合
 python -m src.cli check scripts/YYYYMMDD.md    # 書式と想定尺の確認
 python -m src.cli build scripts/YYYYMMDD.md    # 動画一式を書き出す
 ```
 
-ネタの集め方から公開前の確認まで、手順は [docs/weekly.md](docs/weekly.md) にまとめてある。
+「いつ・どこから・何を取るか」は `config/sources.yaml` に定義してある。
+仕組みの説明は [docs/research.md](docs/research.md)、
+公開前の確認まで含めた手順は [docs/weekly.md](docs/weekly.md)。
 
 ## 使い方
 
@@ -83,15 +87,19 @@ tags: [ゆっくり解説, VOICEVOX]
 | `src/backgrounds.py` | サッカー背景（スタジアム/ピッチ/戦術ボード）の生成 |
 | `src/cards.py` | 引用・移籍・箇条書きカードの描画 |
 | `src/inserts.py` | タイトルカードのぶんの時間を映像と音声に差し込む |
+| `src/plan.py` | 取材計画を読み、その日の検索リストに展開する |
+| `src/research.py` | 取材メモの確度を検証し、台本に変換する |
 | `src/audio.py` | BGM/効果音のミックス、ダッキング、音圧調整 |
 | `src/audio_gen.py` | 仮のBGM・効果音の生成 |
 | `src/subtitles.py` | 字幕 SRT・チャプター・概要欄 |
 | `src/thumbnail.py` | サムネイル生成 |
 | `src/upload.py` | YouTube Data API での投稿 |
 | `config/project.yaml` | 画面サイズ・話者(style_id)・声・BGM・演出の設定 |
+| `config/sources.yaml` | 取材計画（いつ・どこから・何を取るか） |
+| `research/` | 取材メモ |
 | `scripts/` | 台本と `setup_voicevox_core.py` |
 | `scripts/templates/` | 台本のテンプレート |
-| `docs/` | [毎週の作り方](docs/weekly.md) / [パイプライン仕様](docs/pipeline.md) / [VOICEVOX設定](docs/voicevox.md) / [背景](docs/backgrounds.md) / [カードと画像](docs/cards.md) / [情報源](docs/news-sources.md) |
+| `docs/` | [取材の仕組み](docs/research.md) / [毎週の作り方](docs/weekly.md) / [パイプライン仕様](docs/pipeline.md) / [VOICEVOX設定](docs/voicevox.md) / [背景](docs/backgrounds.md) / [カードと画像](docs/cards.md) / [情報源](docs/news-sources.md) |
 
 ## テスト
 

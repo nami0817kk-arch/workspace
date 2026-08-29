@@ -1,0 +1,54 @@
+# 週まとめ の取材メモ（2026年8月29日）
+date: "2026年8月29日"
+title: "鈴木彩艶がアストン・ヴィラへ／移籍期限は9月2日朝"
+intro_title: "移籍期限直前まとめ"
+lead: "夏の移籍市場が、まもなく閉まります。"
+items:
+  - id: suzuki
+    tier: 確定
+    headline: 鈴木彩艶がアストン・ヴィラへ
+    telop: 鈴木彩艶 パルマ → アストン・ヴィラ
+    official: true
+    say:
+      - 日本代表ゴールキーパー、すずきざいおん選手が、イタリアのパルマから、プレミアリーグのアストンビラへ完全移籍しました。クラブが正式に発表したのは、はちがつじゅうくにちです。
+      - この移籍にはパリ・サンジェルマンも関心を示していましたが、交渉は土壇場で破談になったと報じられています。
+    sources:
+      - https://www.soccer-king.jp/news/world/ita/20260819/2192845.html
+      - https://news.yahoo.co.jp/articles/2047f5382cf066489e766a4e5b97f1f2f9b4b703
+    card:
+      type: transfer
+      player: 鈴木彩艶（GK・日本代表）
+      from: パルマ（イタリア）
+      to: アストン・ヴィラ（イングランド）
+      fee: 日本人選手の史上最高額にならぶ規模と報道
+      color: "#5cc98a"
+
+  - id: deadline
+    tier: 確定
+    headline: 移籍期限は9月2日 朝7時
+    telop: "英国の移籍期限: 9/1 23:00 BST（日本時間 9/2 7:00）"
+    official: true
+    say:
+      - イングランドの移籍期限は、現地じかんくがつついたちのごご十一時。日本時間では、くがつふつかの朝七時です。
+    sources:
+      - https://www.espn.com/soccer/story/_/id/48944912/premier-league-efl-summer-transfer-window-2026-dates-does-open-deadline-day
+      - https://www.skysports.com/football/news/11095/13546220/summer-transfer-window-2026-dates-when-is-deadline-day-for-premier-league-and-efl-clubs-to-sign-players
+
+  - id: sano
+    tier: 未確認
+    headline: 佐野海舟の去就
+    telop: リバプール・アーセナルなど複数クラブが関心と報道
+    official: false
+    say:
+      - ここからは確定情報ではなく、報道の段階です。注目されているのは、ドイツのマインツに所属する、さのかいしゅう選手です。
+      - リバプールやアーセナルをふくむ複数のクラブが関心を示していると各メディアが伝えていますが、いずれもクラブの発表ではありません。
+    sources:
+      - https://football-tribe.com/japan/2026/08/03/357692/
+    card:
+      type: points
+      title: 佐野海舟の現状（すべて報道段階）
+      color: "#9aa0a6"
+      items:
+        - 所属はドイツ・マインツ
+        - 複数クラブが関心と報道
+        - クラブからの発表は出ていない

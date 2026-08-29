@@ -4,6 +4,8 @@
     python -m src.cli speakers                 VOICEVOX の話者/スタイルID一覧
     python -m src.cli build <台本> --backend core   合成方式を明示する
     python -m src.cli make-clip <画像>         静止画から背景クリップを作る
+    python -m src.cli plan                     今日ぶんの取材リストを出す
+    python -m src.cli draft research/x.yaml    取材メモを検証して台本にする
     python -m src.cli new                      テンプレートから台本の下書きを作る
     python -m src.cli check scripts/sample.md  台本の書式と想定尺だけ確認
     python -m src.cli build scripts/sample.md  動画・字幕・サムネを書き出し
@@ -49,6 +51,16 @@ def main(argv: list[str] | None = None) -> int:
     p_thumb.add_argument("script")
     p_thumb.add_argument("--out", default=None)
 
+    p_plan = sub.add_parser("plan", help="今日ぶんの取材リストを出す")
+    p_plan.add_argument("--routine", default="weekly", help="config/sources.yaml の routines の名前")
+    p_plan.add_argument("--date", default=None, help="基準日 YYYY-MM-DD（既定: 今日）")
+    p_plan.add_argument("--write", action="store_true", help="取材メモの雛形を research/ に作る")
+
+    p_draft = sub.add_parser("draft", help="取材メモ(YAML)を検証して台本にする")
+    p_draft.add_argument("notes")
+    p_draft.add_argument("--out", default=None, help="出力先の台本パス")
+    p_draft.add_argument("--check-only", action="store_true", help="検証だけして書き出さない")
+
     p_new = sub.add_parser("new", help="テンプレートから台本の下書きを作る")
     p_new.add_argument("name", nargs="?", default=None, help="ファイル名（既定: 日付）")
     p_new.add_argument("--template", default="weekly", help="scripts/templates/ の名前")
@@ -69,7 +81,7 @@ def main(argv: list[str] | None = None) -> int:
     try:
         config = load_config(args.config)
         return _dispatch(args, config)
-    except (ConfigError, ScriptError, TtsError) as exc:
+    except (ConfigError, ScriptError, TtsError, PlanError, ResearchError) as exc:
         print(f"エラー: {exc}", file=sys.stderr)
         return 1
 
@@ -147,6 +159,58 @@ def _dispatch(args, config) -> int:
             subtitle=str(script.meta.get("thumbnail_subtitle", "")),
         )
         print(f"サムネ: {path}")
+        return 0
+
+    if args.command == "plan":
+        from datetime import date as _date
+
+        from .config import _resolve
+        from .plan import load_plan, render, worksheet
+
+        plan = load_plan()
+        routine = plan.routine(args.routine)
+        today = _date.fromisoformat(args.date) if args.date else _date.today()
+
+        print(render(routine, today))
+        if args.write:
+            target = _resolve(f"research/{today.strftime('%Y%m%d')}_{routine.key}.yaml")
+            if target.exists():
+                print(f"すでにあります: {target}", file=sys.stderr)
+                return 1
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(worksheet(routine, today), encoding="utf-8")
+            print(f"取材メモ: {target}")
+            print(f"埋めたら `python -m src.cli draft {target}` で台本になります")
+        return 0
+
+    if args.command == "draft":
+        from .config import _resolve
+        from .plan import load_plan
+        from .research import ResearchError, load_notes, to_script, verify
+
+        plan = load_plan()
+        notes = load_notes(args.notes)
+
+        problems = verify(notes, plan)
+        if problems:
+            print("取材メモに不備があります:", file=sys.stderr)
+            for problem in problems:
+                print(f"  - {problem}", file=sys.stderr)
+            return 1
+        print(f"検証OK: {len(notes.items)}件 / 出典 {len(notes.sources)}本")
+        if args.check_only:
+            return 0
+
+        target = Path(args.out) if args.out else _resolve(
+            f"scripts/{Path(args.notes).stem.split('_')[0]}.md"
+        )
+        if target.exists():
+            print(f"すでにあります: {target}", file=sys.stderr)
+            return 1
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_text(to_script(notes, plan), encoding="utf-8")
+        print(f"台本: {target}")
+        print(f"`python -m src.cli check {target}` で書式と尺を確認してください")
         return 0
 
     if args.command == "new":
