@@ -109,6 +109,7 @@ class Script:
     description: str = ""
     tags: list[str] = field(default_factory=list)
     sources: list[str] = field(default_factory=list)
+    background: str | None = None   # 動画全体の既定背景
     meta: dict = field(default_factory=dict)
     source: Path | None = None
 
@@ -172,6 +173,7 @@ def parse_script(text: str) -> Script:
         description=str(meta.get("description", "")),
         tags=[str(tag) for tag in (meta.get("tags") or [])],
         sources=[str(url) for url in (meta.get("sources") or [])],
+        background=str(meta["bg"]) if meta.get("bg") else None,
         meta=meta,
     )
 

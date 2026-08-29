@@ -11,6 +11,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw
 
+from . import backgrounds
 from .audio_gen import ensure_audio_assets
 from .config import ProjectConfig, _resolve
 
@@ -29,6 +30,14 @@ def ensure_assets(config: ProjectConfig, force: bool = False) -> list[Path]:
         background.parent.mkdir(parents=True, exist_ok=True)
         generate_background(background, (config.video.width, config.video.height))
         created.append(background)
+
+    # サッカー向けの背景。素材サイトが使えない環境でも「サッカーの画面」にするため
+    size = (config.video.width, config.video.height)
+    for variant in backgrounds.VARIANTS:
+        target = _resolve(f"assets/backgrounds/{variant}.png")
+        if force or not target.exists():
+            backgrounds.generate(target, size, variant)
+            created.append(target)
 
     created += ensure_audio_assets(force=force)
 

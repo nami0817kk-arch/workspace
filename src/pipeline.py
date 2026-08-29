@@ -66,6 +66,7 @@ def build(
         script.meta.get("thumbnail_title", script.title),
         out_dir / "thumbnail.png",
         subtitle=str(script.meta.get("thumbnail_subtitle", "")),
+        background=script.background,
     )
     outputs = subtitles.write_outputs(script, out_dir, credits=credits(config, backend))
 

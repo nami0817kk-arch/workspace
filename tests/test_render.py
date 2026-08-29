@@ -86,3 +86,32 @@ def test_intro_is_capped_by_speaking_time(tmp_path):
     renderer = Renderer(config, tmp_path)
     entries = renderer.frame_entries(script)
     assert sum(d for _, d in entries) == pytest.approx(0.2, abs=1e-6)
+
+
+def test_is_video_detects_clip_extensions():
+    from src.render import is_video
+
+    assert is_video("assets/backgrounds/clip.mp4")
+    assert is_video("CLIP.MOV")
+    assert not is_video("assets/backgrounds/stadium.png")
+    assert not is_video(None)
+
+
+def test_video_background_frames_keep_alpha(tmp_path):
+    """動画背景に重ねるフレームは、透過を残して書き出す。"""
+    from PIL import Image
+
+    config = load_config()
+    script = parse_script("## S\n霊夢: あ。\n")
+    script.background = "clip.mp4"
+    script.lines[0].duration, script.lines[0].pause = 1.0, 0.0
+
+    renderer = Renderer(config, tmp_path)
+    renderer.frame_entries(script)
+    frames = list((tmp_path / "frames").glob("*.png"))
+    assert frames
+    with Image.open(frames[0]) as image:
+        assert image.mode == "RGBA"
+        # 上端は完全に透過していて、下端は幕がかかっている
+        assert image.getpixel((10, 10))[3] == 0
+        assert image.getpixel((10, config.video.height - 10))[3] > 0

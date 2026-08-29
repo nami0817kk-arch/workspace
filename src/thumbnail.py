@@ -7,6 +7,8 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 from .config import ProjectConfig, _resolve
+from . import ffmpeg
+from .ffmpeg import is_video
 from .render import wrap_text, _cover, _hex, _layer
 
 SIZE = (1280, 720)
@@ -24,6 +26,11 @@ def build_thumbnail(
     font_sub = ImageFont.truetype(font_path, 44)
 
     source = _resolve(background or config.video.background)
+    if source.exists() and is_video(source.name):
+        # 動画背景のときは、そこから1枚抜いてサムネの下地にする
+        still = out_path.parent / "thumbnail_bg.png"
+        still.parent.mkdir(parents=True, exist_ok=True)
+        source = ffmpeg.grab_frame(source, still)
     if source.exists():
         canvas = _cover(Image.open(source).convert("RGBA"), *SIZE)
     else:

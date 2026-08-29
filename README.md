@@ -69,6 +69,7 @@ tags: [ゆっくり解説, VOICEVOX]
 | `src/script_model.py` | 台本 Markdown のパース |
 | `src/tts.py` | VOICEVOX で行ごとに音声合成（ENGINE / CORE、キャッシュ付き） |
 | `src/render.py` | フレーム描画・口パク・演出・動画合成 |
+| `src/backgrounds.py` | サッカー背景（スタジアム/ピッチ/戦術ボード）の生成 |
 | `src/audio.py` | BGM/効果音のミックス、ダッキング、音圧調整 |
 | `src/audio_gen.py` | 仮のBGM・効果音の生成 |
 | `src/subtitles.py` | 字幕 SRT・チャプター・概要欄 |
@@ -76,7 +77,7 @@ tags: [ゆっくり解説, VOICEVOX]
 | `src/upload.py` | YouTube Data API での投稿 |
 | `config/project.yaml` | 画面サイズ・話者(style_id)・声・BGM・演出の設定 |
 | `scripts/` | 台本と `setup_voicevox_core.py` |
-| `docs/` | [パイプライン仕様](docs/pipeline.md) / [VOICEVOX設定](docs/voicevox.md) |
+| `docs/` | [パイプライン仕様](docs/pipeline.md) / [VOICEVOX設定](docs/voicevox.md) / [背景](docs/backgrounds.md) / [情報源](docs/news-sources.md) |
 
 ## テスト
 

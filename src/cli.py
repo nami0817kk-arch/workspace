@@ -3,6 +3,7 @@
     python -m src.cli init-assets              仮の背景・立ち絵を生成
     python -m src.cli speakers                 VOICEVOX の話者/スタイルID一覧
     python -m src.cli build <台本> --backend core   合成方式を明示する
+    python -m src.cli make-clip <画像>         静止画から背景クリップを作る
     python -m src.cli check scripts/sample.md  台本の書式と想定尺だけ確認
     python -m src.cli build scripts/sample.md  動画・字幕・サムネを書き出し
     python -m src.cli upload output/sample     出来上がりを YouTube に投稿
@@ -46,6 +47,12 @@ def main(argv: list[str] | None = None) -> int:
     p_thumb = sub.add_parser("thumbnail", help="サムネイルだけ作り直す")
     p_thumb.add_argument("script")
     p_thumb.add_argument("--out", default=None)
+
+    p_clip = sub.add_parser("make-clip", help="静止画からゆっくり寄る背景クリップを作る")
+    p_clip.add_argument("image", help="元になる画像")
+    p_clip.add_argument("--out", default=None, help="出力先 (既定: assets/backgrounds/<名前>.mp4)")
+    p_clip.add_argument("--seconds", type=float, default=10.0)
+    p_clip.add_argument("--zoom", type=float, default=1.18, help="寄りの強さ（1.0で寄らない）")
 
     p_upload = sub.add_parser("upload", help="ビルド結果を YouTube に投稿する")
     p_upload.add_argument("build_dir", help="build の出力ディレクトリ")
@@ -134,6 +141,24 @@ def _dispatch(args, config) -> int:
             subtitle=str(script.meta.get("thumbnail_subtitle", "")),
         )
         print(f"サムネ: {path}")
+        return 0
+
+    if args.command == "make-clip":
+        from . import ffmpeg
+        from .config import _resolve
+
+        source = _resolve(args.image)
+        if not source.exists():
+            print(f"画像がありません: {source}", file=sys.stderr)
+            return 1
+        out = Path(args.out) if args.out else _resolve(f"assets/backgrounds/{source.stem}.mp4")
+        out.parent.mkdir(parents=True, exist_ok=True)
+        ffmpeg.still_to_clip(
+            source, out, args.seconds,
+            (config.video.width, config.video.height), args.zoom, config.video.fps,
+        )
+        print(f"クリップ: {out}")
+        print(f"台本の frontmatter に  bg: {out}  と書けば背景に使えます")
         return 0
 
     if args.command == "upload":

@@ -15,6 +15,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 from . import ffmpeg
+from .ffmpeg import is_video
 from .config import CastMember, ProjectConfig, _resolve
 from .script_model import Line, Scene, Script
 
@@ -61,6 +62,9 @@ class Renderer:
         self.font_name = ImageFont.truetype(font_path, config.video.name_size)
         self.font_scene = ImageFont.truetype(font_path, 36)
 
+        self.script_background: str | None = None  # 台本 frontmatter の bg
+        # 背景に動画が1つでも混ざる場合、フレームは透過で描いて後から重ねる
+        self.over_video = False
         self._backgrounds: dict[str, Image.Image] = {}
         self._sprites: dict[tuple[str, str, bool], Image.Image | None] = {}
 
@@ -80,7 +84,7 @@ class Renderer:
         アニメーションを入れてもフレーム数は必要なぶんしか増えない。
         """
         member = self.config.resolve_speaker(line.speaker)
-        background = scene.background or self.config.video.background
+        background = scene.background or self.script_background or self.config.video.background
         key = "|".join(
             [
                 background,
@@ -99,13 +103,15 @@ class Renderer:
         if target.exists():
             return target
 
-        canvas = self._background(background).copy()
+        over_video = self.over_video
+        canvas = self._transparent() if over_video else self._background(background).copy()
         self._draw_characters(canvas, member, line.emotion, mouth_open, hop_t)
         if line.image:
             self._draw_inset(canvas, line.image)
         self._draw_scene_title(canvas, scene.title)
         self._draw_telop(canvas, member, line.telop_text(), telop_t, line.source)
-        canvas.convert("RGB").save(target)
+        # 動画背景のときは重ねる前提なのでアルファを残す
+        canvas.save(target) if over_video else canvas.convert("RGB").save(target)
         return target
 
     def _black(self) -> Path:
@@ -124,6 +130,20 @@ class Renderer:
         b = Image.open(second).convert("RGB")
         Image.blend(a, b, ratio).save(target)
         return target
+
+    def _transparent(self) -> Image.Image:
+        """動画背景に重ねるための透過キャンバス。
+
+        実写のうえに白文字を置くと読めないので、下側だけ暗くする幕を先に敷く。
+        """
+        canvas = Image.new("RGBA", (self.layout.width, self.layout.height), (0, 0, 0, 0))
+        scrim, draw = _layer(canvas.size)
+        start = int(self.layout.height * 0.45)
+        for y in range(start, self.layout.height):
+            ratio = (y - start) / max(1, self.layout.height - start)
+            draw.line([(0, y), (self.layout.width, y)], fill=(4, 8, 14, int(215 * ratio**1.3)))
+        canvas.alpha_composite(scrim)
+        return canvas
 
     def _background(self, name: str) -> Image.Image:
         if name not in self._backgrounds:
@@ -270,6 +290,8 @@ class Renderer:
     # ------------------------------------------------------------ タイムライン
 
     def frame_entries(self, script: Script) -> list[tuple[Path, float]]:
+        self.script_background = script.background
+        self.over_video = any(is_video(bg) for bg, _ in self.background_segments(script))
         """(画像, 表示秒数) の並びを作る。口パクと演出をここで展開する。
 
         音声の尺は動かさない。演出に使う時間は、そのセリフの発話時間の内側から取る。
@@ -349,12 +371,33 @@ class Renderer:
             remaining -= step
         return entries
 
+    def background_segments(self, script: Script) -> list[tuple[Path, float]]:
+        """シーンごとの (背景, 表示秒数)。静止画と動画を混ぜてよい。"""
+        segments: list[tuple[Path, float]] = []
+        for scene in script.scenes:
+            name = scene.background or script.background or self.config.video.background
+            segments.append((_resolve(name), scene.duration))
+        return segments
+
     def build_video(
         self, script: Script, audio_path: Path | None, out_path: Path, work_dir: Path
     ) -> Path:
         entries = self.frame_entries(script)
         list_path = ffmpeg.write_concat_list(entries, work_dir / "frames.txt")
         out_path.parent.mkdir(parents=True, exist_ok=True)
+        size = (self.layout.width, self.layout.height)
+
+        if self.over_video:
+            # 背景をつないだ1本の動画にしてから、透過フレームを重ねる
+            track = ffmpeg.build_background_track(
+                self.background_segments(script),
+                work_dir / "background.mp4",
+                size,
+                self.config.video.fps,
+            )
+            return ffmpeg.encode_video_over_clip(
+                list_path, track, audio_path, out_path, size, self.config.video.fps
+            )
         return ffmpeg.encode_video(list_path, audio_path, out_path, self.config.video.fps)
 
 

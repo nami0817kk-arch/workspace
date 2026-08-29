@@ -7,8 +7,15 @@ import subprocess
 from pathlib import Path
 
 
+VIDEO_SUFFIXES = {".mp4", ".mov", ".webm", ".mkv", ".m4v"}
+
+
 class FfmpegError(RuntimeError):
     pass
+
+
+def is_video(name: str | Path | None) -> bool:
+    return bool(name) and Path(name).suffix.lower() in VIDEO_SUFFIXES
 
 
 def ffmpeg_exe() -> str:
@@ -77,6 +84,126 @@ def concat_audio(paths: list[Path], out_path: Path, work_dir: Path) -> Path:
         encoding="utf-8",
     )
     run(["-f", "concat", "-safe", "0", "-i", str(list_path), "-c", "copy", str(out_path)])
+    return out_path
+
+
+def build_background_track(
+    segments: list[tuple[Path, float]],
+    out_path: Path,
+    size: tuple[int, int],
+    fps: int = 30,
+) -> Path:
+    """シーンごとの背景（静止画でも動画でもよい）を、指定の秒数ずつつないだ1本の動画にする。
+
+    静止画はその秒数だけ止め、動画は足りなければループさせる。どちらも画面いっぱいに
+    拡大して中央を切り出すので、素材の比率が違っても混ぜられる。
+    """
+    if not segments:
+        raise FfmpegError("背景トラックの素材がありません")
+    width, height = size
+
+    args: list[str] = []
+    for path, duration in segments:
+        if is_video(path):
+            args += ["-stream_loop", "-1", "-t", f"{duration:.3f}", "-i", str(path)]
+        else:
+            args += ["-loop", "1", "-t", f"{duration:.3f}", "-i", str(path)]
+
+    chains = [
+        f"[{index}:v]scale={width}:{height}:force_original_aspect_ratio=increase,"
+        f"crop={width}:{height},setsar=1,fps={fps},"
+        f"trim=duration={duration:.3f},setpts=PTS-STARTPTS[b{index}]"
+        for index, (_, duration) in enumerate(segments)
+    ]
+    chains.append(
+        "".join(f"[b{i}]" for i in range(len(segments)))
+        + f"concat=n={len(segments)}:v=1:a=0[bg]"
+    )
+    args += [
+        "-filter_complex", ";".join(chains),
+        "-map", "[bg]",
+        "-c:v", "libx264", "-preset", "veryfast", "-crf", "18",
+        "-pix_fmt", "yuv420p",
+        str(out_path),
+    ]
+    run(args)
+    return out_path
+
+
+def still_to_clip(
+    image: Path,
+    out_path: Path,
+    seconds: float = 10.0,
+    size: tuple[int, int] = (1920, 1080),
+    zoom: float = 1.18,
+    fps: int = 30,
+) -> Path:
+    """静止画から、ゆっくり寄っていく背景クリップを作る。
+
+    フリー素材の写真1枚でも、止まった絵より動画らしくなる。
+    """
+    width, height = size
+    frames = max(1, int(seconds * fps))
+    step = (zoom - 1.0) / frames
+    run([
+        "-loop", "1", "-i", str(image), "-t", f"{seconds:.2f}",
+        "-vf",
+        f"zoompan=z='min(zoom+{step:.6f},{zoom})':d={frames}"
+        f":x='iw/2-(iw/zoom/2)':y='ih/2-(ih/zoom/2)':s={width}x{height}:fps={fps},"
+        "format=yuv420p",
+        "-c:v", "libx264", "-preset", "medium", "-crf", "22",
+        str(out_path),
+    ])
+    return out_path
+
+
+def grab_frame(clip: Path, out_path: Path, at: float = 1.0) -> Path:
+    """動画から静止画を1枚取り出す。サムネイルの下地に使う。"""
+    run(["-ss", f"{at:.2f}", "-i", str(clip), "-frames:v", "1", str(out_path)])
+    return out_path
+
+
+def encode_video_over_clip(
+    frame_list: Path,
+    clip: Path,
+    audio_path: Path | None,
+    out_path: Path,
+    size: tuple[int, int],
+    fps: int = 30,
+) -> Path:
+    """背景動画の上に、透過PNGのフレーム列を重ねて書き出す。
+
+    背景クリップは尺に足りなければループし、画面いっぱいになるよう拡大して中央を切り出す。
+    """
+    width, height = size
+    args = [
+        "-stream_loop", "-1", "-i", str(clip),
+        "-f", "concat", "-safe", "0", "-i", str(frame_list),
+    ]
+    if audio_path is not None:
+        args += ["-i", str(audio_path)]
+
+    chains = [
+        f"[0:v]scale={width}:{height}:force_original_aspect_ratio=increase,"
+        f"crop={width}:{height},setsar=1,fps={fps}[bg]",
+        f"[1:v]format=rgba,fps={fps},setsar=1[fg]",
+        "[bg][fg]overlay=shortest=1:format=auto[v]",
+    ]
+    args += [
+        "-filter_complex", ";".join(chains),
+        "-map", "[v]",
+        *(["-map", "2:a"] if audio_path is not None else []),
+        "-c:v", "libx264",
+        "-preset", "medium",
+        "-crf", "20",
+        "-pix_fmt", "yuv420p",
+        "-r", str(fps),
+        "-movflags", "+faststart",
+    ]
+    if audio_path is not None:
+        args += ["-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-shortest"]
+    args.append(str(out_path))
+    run(args)
     return out_path
 
 

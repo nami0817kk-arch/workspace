@@ -18,3 +18,6 @@ vendor/
 
 # 生成した仮のBGM・効果音
 assets/audio/
+
+# 生成した背景クリップ
+assets/backgrounds/*.mp4
