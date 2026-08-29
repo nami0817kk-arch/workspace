@@ -75,7 +75,8 @@ def _quote(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict
     sub_font = ImageFont.truetype(font_path, 34)
 
     blocks: list[dict] = []
-    source = str(spec.get("source") or "").strip()
+    # 出典は概要欄に書く運用なので、label を明示したときだけチップを出す
+    source = str(spec.get("label") or "").strip()
     if source:
         accent = _hex(str(spec.get("color") or DEFAULT_ACCENT))
 
