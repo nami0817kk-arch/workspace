@@ -11,6 +11,7 @@
     python -m src.cli fresh <URL>...           拾ったURLの新しさを判定
     python -m src.cli today                    今日の進み具合と次の一手
     python -m src.cli stats                    これまで何を出してきたか
+    python -m src.cli doctor                   収集の仕組みの健康診断
     python -m src.cli queries                  どの検索が効いているか
     python -m src.cli sources                  情報源の網と確度の上限
     python -m src.cli review scripts/x.md      公開前の点検
@@ -110,6 +111,8 @@ def main(argv: list[str] | None = None) -> int:
 
     p_queries = sub.add_parser("queries", help="どの検索が効いているかを見る")
     p_queries.add_argument("--days", type=int, default=30)
+
+    sub.add_parser("doctor", help="収集の仕組みが効いているかをまとめて点検する")
 
     sub.add_parser("sources", help="情報源の網と、群ごとに置ける確度を表示する")
 
@@ -510,6 +513,22 @@ def _dispatch(args, config) -> int:
         for label in queries_mod.dead(rows):
             print(f"\n! 『{label}』は何度も回して1件も候補になっていません。"
                   "検索語を見直すか、config/sources.yaml から外してください")
+        return 0
+
+    if args.command == "doctor":
+        from .doctor import diagnose
+        from .plan import load_plan
+
+        notes = diagnose(load_plan())
+        print("■ 収集の健康診断")
+        for note in notes:
+            print(note.line())
+
+        failed = [n for n in notes if not n.ok]
+        if failed:
+            print(f"\n{len(failed)}件、手を入れたほうがよいところがあります")
+            return 1
+        print("\n問題ありません")
         return 0
 
     if args.command == "sources":
