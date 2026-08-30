@@ -413,3 +413,44 @@ def test_doctor_json_reports_failures(monkeypatch, capsys):
     payload = json.loads(capsys.readouterr().out)
     assert payload["failed"] == 1
     assert "繋がらない" in payload["results"][0]["detail"]
+
+
+# --- grab ---------------------------------------------------------------
+def test_grab_downloads_by_url(monkeypatch, tmp_path, capsys):
+    monkeypatch.setattr(
+        assets,
+        "request",
+        lambda *a, **kw: FakeResponse(content=b"\x89PNG\r\n\x1a\n", headers={"Content-Type": "image/png"}),
+    )
+    assert (
+        cli.main(
+            [
+                "grab", "https://example.com/neko.png", "-o", str(tmp_path),
+                "--from", "https://example.com/page", "--license", "CC0", "--by", "Taro",
+            ]
+        )
+        == 0
+    )
+    out = capsys.readouterr().out
+    assert "保存しました" in out and "CC0" in out
+    assert (tmp_path / "CREDITS.md").exists()
+
+
+def test_grab_warns_when_the_license_is_unknown(monkeypatch, tmp_path, capsys):
+    monkeypatch.setattr(
+        assets,
+        "request",
+        lambda *a, **kw: FakeResponse(content=b"x", headers={"Content-Type": "image/png"}),
+    )
+    cli.main(["grab", "https://example.com/a.png", "-o", str(tmp_path)])
+    assert "ライセンスが未指定" in capsys.readouterr().out
+
+
+def test_grab_reports_a_page_url(monkeypatch, tmp_path, capsys):
+    monkeypatch.setattr(
+        assets,
+        "request",
+        lambda *a, **kw: FakeResponse(content=b"<html>", headers={"Content-Type": "text/html"}),
+    )
+    assert cli.main(["grab", "https://example.com/page", "-o", str(tmp_path)]) == 1
+    assert "画像そのもののURL" in capsys.readouterr().err

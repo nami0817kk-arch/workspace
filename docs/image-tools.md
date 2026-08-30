@@ -164,6 +164,20 @@ ailab fetch "cat illustration" -l 3
 
 アイコンだけ欲しいときは `--source iconify`、写真なら `--source unsplash` のように絞る。
 
+### 自分で見つけた画像を取り込む
+
+サイトを見ていて見つけた画像は、URLを直接渡して取り込める。
+`ailab fetch` と同じ場所に保存され、クレジットにも残る。
+
+```bash
+ailab grab https://example.com/img/neko.png \
+  --from https://example.com/page --license "CC BY 4.0" --by "Taro"
+```
+
+- 渡すのは**画像そのもののURL**。ページのURLを渡すと「画像ではない」と断る。
+- ページのHTMLを解析して画像を探すことはしない（規約上の問題があるため）。
+- `--license` を省くと `unknown` として記録し、確認するよう促す。
+
 ### ライセンスの扱い
 
 `ailab fetch` は画像と一緒に、保存先へ次の2つを書き出す。

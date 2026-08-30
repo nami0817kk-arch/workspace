@@ -36,6 +36,7 @@ echo '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | python -m ailab mcp
 | `generate_image` | 画像を生成して保存し、パスを返す |
 | `search_assets` | フリー素材を検索する（DLはしない） |
 | `fetch_assets` | フリー素材をDLし、CREDITS.md も書き出す |
+| `grab_image` | 画像のURLを直接指定して取り込む（出典つき） |
 | `fetch_feed` | 記事・リリース情報を取得する |
 | `publish_file` | ファイルを外部サービスへ送る（既定はドライラン） |
 | `run_recipe` | レシピを実行する（publish は既定でドライラン） |

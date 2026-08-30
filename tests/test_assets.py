@@ -97,3 +97,49 @@ def test_download_all_runs_in_parallel_for_multiple_assets(tmp_path, monkeypatch
     saved = assets.download_all(items, tmp_path)
 
     assert [asset.source_id for asset, _ in saved] == ["0", "1", "2"]  # 順序は保つ
+
+
+# --- URL を直接指定して取り込む ------------------------------------------
+def test_grab_saves_the_image_and_credits(tmp_path):
+    sess = FakeSession([FakeResponse(content=PNG, headers={"Content-Type": "image/png"})])
+
+    asset, path = assets.grab(
+        "https://example.com/img/neko.png",
+        tmp_path,
+        page_url="https://example.com/page",
+        license="CC BY 4.0",
+        creator="Taro",
+        sess=sess,
+    )
+
+    assert path.read_bytes() == PNG
+    assert path.name == "example.com_neko.png"
+    assert asset.source == "example.com"
+    credits = (tmp_path / "CREDITS.md").read_text(encoding="utf-8")
+    assert "CC BY 4.0" in credits and "Taro" in credits
+
+
+def test_grab_uses_the_given_title(tmp_path):
+    sess = FakeSession([FakeResponse(content=PNG, headers={"Content-Type": "image/png"})])
+    _asset, path = assets.grab(
+        "https://example.com/a.png", tmp_path, title="猫のイラスト", sess=sess
+    )
+    assert path.name == "example.com_猫のイラスト.png"
+
+
+def test_grab_rejects_a_page_url(tmp_path):
+    """ページのHTMLを解析して画像を探すことはしない。"""
+    sess = FakeSession([FakeResponse(content=b"<html></html>", headers={"Content-Type": "text/html"})])
+    with pytest.raises(ConfigError, match="画像そのもののURL"):
+        assets.grab("https://example.com/page", tmp_path, sess=sess)
+
+
+def test_grab_rejects_a_non_url(tmp_path):
+    with pytest.raises(ConfigError, match="画像のURL"):
+        assets.grab("neko.png", tmp_path)
+
+
+def test_grab_defaults_to_unknown_license(tmp_path):
+    sess = FakeSession([FakeResponse(content=PNG, headers={"Content-Type": "image/png"})])
+    asset, _path = assets.grab("https://example.com/a.png", tmp_path, sess=sess)
+    assert asset.license == "unknown"

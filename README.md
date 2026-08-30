@@ -11,6 +11,7 @@ AI活用のアイデア検証・試作を行うラボプロジェクト。
 | `ailab gen "プロンプト"` | 画像を生成する（**APIキー無しでも Pollinations で本物のAI画像**。OpenAI / Gemini / Replicate / Hugging Face / Stability にも対応） |
 | `ailab search "キーワード"` | フリー素材を横断検索する（Iconify / Openverse / Wikimedia / Pixabay / Unsplash / Pexels） |
 | `ailab fetch "キーワード"` | フリーイラストを検索してダウンロードし、クレジットも書き出す |
+| `ailab grab URL` | 自分で見つけた画像をURL指定で取り込む（出典つき） |
 | `ailab feed "対象" --source rss\|github\|qiita` | 記事・リリース情報を取得する |
 | `ailab publish FILE --repo owner/name` | 生成物を GitHub へコミットする（既定はドライラン） |
 | `ailab usage` | 画像生成の利用量と概算コストを見る |

@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 
 import pytest
+from fakes import FakeResponse
 
 from ailab import mcp_server
 from ailab.core.types import PublishResult
@@ -209,3 +210,31 @@ def test_serve_reports_broken_json():
     stdout = io.StringIO()
     mcp_server.serve(io.StringIO("{壊れている\n"), stdout)
     assert json.loads(stdout.getvalue())["error"]["code"] == mcp_server.PARSE_ERROR
+
+
+def test_grab_image_tool(monkeypatch, tmp_path):
+    from ailab import assets
+
+    monkeypatch.setattr(
+        assets,
+        "request",
+        lambda *a, **kw: FakeResponse(content=b"\x89PNG", headers={"Content-Type": "image/png"}),
+    )
+    result = mcp_server.call_tool(
+        "grab_image",
+        {"url": "https://example.com/neko.png", "license": "CC0", "out": str(tmp_path)},
+    )
+    assert result["isError"] is False
+    assert "保存しました" in result["content"][0]["text"]
+
+
+def test_grab_image_warns_about_unknown_licenses(monkeypatch, tmp_path):
+    from ailab import assets
+
+    monkeypatch.setattr(
+        assets,
+        "request",
+        lambda *a, **kw: FakeResponse(content=b"x", headers={"Content-Type": "image/png"}),
+    )
+    result = mcp_server.call_tool("grab_image", {"url": "https://x/a.png", "out": str(tmp_path)})
+    assert "ライセンスが未指定" in result["content"][0]["text"]

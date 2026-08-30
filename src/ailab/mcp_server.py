@@ -104,6 +104,25 @@ def tool_definitions() -> list[dict]:
             },
         },
         {
+            "name": "grab_image",
+            "description": (
+                "画像のURLを直接指定して取り込む。自分で見つけた画像を出典つきで"
+                "手元に置くときに使う。ページのURLではなく画像そのもののURLを渡す。"
+            ),
+            "inputSchema": {
+                "type": "object",
+                "properties": {
+                    "url": {"type": "string", "description": "画像そのもののURL"},
+                    "page_url": {"type": "string", "description": "出典ページのURL"},
+                    "license": {"type": "string", "description": "ライセンス表記"},
+                    "creator": {"type": "string"},
+                    "title": {"type": "string"},
+                    "out": {"type": "string"},
+                },
+                "required": ["url"],
+            },
+        },
+        {
             "name": "fetch_feed",
             "description": (
                 "記事やリリース情報を取得する。"
@@ -214,6 +233,24 @@ def _tool_fetch_assets(arguments: dict) -> str:
     return "保存しました:\n" + "\n".join(lines) + f"\nクレジット: {destination}/CREDITS.md"
 
 
+def _tool_grab_image(arguments: dict) -> str:
+    destination = arguments.get("out") or output_dir("illust")
+    asset, path = assets.grab(
+        _required(arguments, "url"),
+        destination,
+        page_url=arguments.get("page_url", ""),
+        license=arguments.get("license", "unknown"),
+        creator=arguments.get("creator", ""),
+        title=arguments.get("title", ""),
+    )
+    warning = (
+        "\nライセンスが未指定です。利用前に出典元の条件を確認してください。"
+        if asset.license == "unknown"
+        else ""
+    )
+    return f"保存しました: {path}\n出典: {asset.attribution}{warning}"
+
+
 def _tool_fetch_feed(arguments: dict) -> str:
     connector = registry.get(_required(arguments, "source"))
     items = connector.fetch_items(_required(arguments, "query"), limit=int(arguments.get("limit", 5)))
@@ -275,6 +312,7 @@ TOOLS: dict[str, Callable[[dict], str]] = {
     "generate_image": _tool_generate_image,
     "search_assets": _tool_search_assets,
     "fetch_assets": _tool_fetch_assets,
+    "grab_image": _tool_grab_image,
     "fetch_feed": _tool_fetch_feed,
     "publish_file": _tool_publish_file,
     "run_recipe": _tool_run_recipe,

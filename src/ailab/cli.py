@@ -3,6 +3,7 @@
     ailab gen "プロンプト"        画像を生成する
     ailab search "キーワード"     フリー素材を検索する
     ailab fetch "キーワード"      フリー素材を検索してダウンロードする
+    ailab grab URL                画像のURLを直接指定して取り込む
     ailab publish FILE --to ...   生成物を外部サービスへ送る
     ailab feed "対象" --source ...  記事・リリース情報を取得する
     ailab run レシピ              集める→作る→送る を1コマンドで実行する
@@ -88,6 +89,14 @@ def build_parser() -> argparse.ArgumentParser:
     )
     fetch.add_argument("-l", "--limit", type=int, default=3, help="ダウンロードする件数")
     fetch.add_argument("-o", "--out", default=None, help="出力先ディレクトリ (既定: output/illust)")
+
+    grab = sub.add_parser("grab", help="画像のURLを直接指定して取り込む")
+    grab.add_argument("url", help="画像そのもののURL（ページのURLではない）")
+    grab.add_argument("-o", "--out", default=None, help="出力先ディレクトリ (既定: output/illust)")
+    grab.add_argument("--from", dest="page_url", default="", help="出典ページのURL")
+    grab.add_argument("--license", default="unknown", help="ライセンス表記（例: CC BY 4.0）")
+    grab.add_argument("--by", dest="creator", default="", help="作者名")
+    grab.add_argument("--title", default="", help="素材の名前（既定はファイル名）")
 
     publish = sub.add_parser("publish", help="ファイルを外部サービスへ送る")
     publish.add_argument("file", help="送るファイル")
@@ -279,6 +288,24 @@ def _cmd_fetch(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_grab(args: argparse.Namespace) -> int:
+    destination = args.out or output_dir("illust")
+    asset, path = assets.grab(
+        args.url,
+        destination,
+        page_url=args.page_url,
+        license=args.license,
+        creator=args.creator,
+        title=args.title,
+    )
+    print(f"保存しました: {path}")
+    print(f"    出典: {asset.attribution}")
+    if asset.license == "unknown":
+        print("    ライセンスが未指定です。--license と --from で出典を残してください。")
+    print(f"\nクレジットは {destination}/CREDITS.md にまとめました。")
+    return 0
+
+
 def _cmd_publish(args: argparse.Namespace) -> int:
     connector = registry.get(args.to)
     options = {
@@ -405,6 +432,7 @@ def main(argv: list[str] | None = None) -> int:
         "gen": _cmd_gen,
         "search": _cmd_search,
         "fetch": _cmd_fetch,
+        "grab": _cmd_grab,
         "publish": _cmd_publish,
         "feed": _cmd_feed,
         "run": _cmd_run,

@@ -68,6 +68,55 @@ def _notify_source(asset: Asset) -> None:
         pass
 
 
+def grab(
+    url: str,
+    dest_dir: str | Path,
+    *,
+    page_url: str = "",
+    license: str = "unknown",
+    creator: str = "",
+    title: str = "",
+    timeout: int = 60,
+    sess=None,
+) -> tuple[Asset, Path]:
+    """画像のURLを直接指定して取り込み、クレジットにも残す。
+
+    自分でサイトを見て見つけた画像を、出典を書き添えて手元に置くための入口。
+    ページのHTMLを解析して画像を探すことはしない（規約上の問題があるため）。
+    """
+    from urllib.parse import urlparse
+
+    if not url.startswith(("http://", "https://")):
+        raise ConfigError(f"画像のURLを指定してください: {url!r}")
+
+    host = urlparse(url).netloc or "web"
+    asset = Asset(
+        source=host,
+        title=title or Path(urlparse(url).path).stem or host,
+        image_url=url,
+        page_url=page_url,
+        license=license,
+        creator=creator,
+    )
+
+    response = request("GET", url, sess=sess, label=host, timeout=timeout)
+    content_type = response.headers.get("Content-Type", "").split(";")[0].strip().lower()
+    if content_type and not content_type.startswith("image/"):
+        raise ConfigError(
+            f"画像ではありません（{content_type}）。"
+            "ページのURLではなく、画像そのもののURLを指定してください"
+        )
+
+    directory = Path(dest_dir)
+    directory.mkdir(parents=True, exist_ok=True)
+    ext = _extension(url, content_type)
+    path = directory / f"{slugify(host, 20)}_{slugify(asset.title, 30)}{ext}"
+    path.write_bytes(response.content)
+
+    write_credits([(asset, path)], directory)
+    return asset, path
+
+
 def download_all(
     assets: list[Asset], dest_dir: str | Path, *, timeout: int = 60, sess=None
 ) -> list[tuple[Asset, Path]]:
