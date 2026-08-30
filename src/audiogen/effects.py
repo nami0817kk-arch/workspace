@@ -10,39 +10,65 @@ from .core import SAMPLE_RATE, num_samples
 CutoffLike = float | Callable[[float], float]
 
 
+def _clamp_cutoff(value: float, sr: int) -> float:
+    return min(max(float(value), 1.0), sr / 2.0 - 1.0)
+
+
 def _as_cutoff_fn(cutoff: CutoffLike, sr: int) -> Callable[[float], float]:
-    nyquist = sr / 2.0 - 1.0
     if callable(cutoff):
-        return lambda t: min(max(cutoff(t), 1.0), nyquist)
-    value = min(max(float(cutoff), 1.0), nyquist)
+        return lambda t: _clamp_cutoff(cutoff(t), sr)
+    value = _clamp_cutoff(cutoff, sr)
     return lambda _t: value
+
+
+def _alpha_lowpass(cutoff: float, sr: int) -> float:
+    """1次ローパスの平滑化係数。"""
+    dt = 1.0 / sr
+    rc = 1.0 / (2.0 * math.pi * cutoff)
+    return dt / (rc + dt)
+
+
+def _alpha_highpass(cutoff: float, sr: int) -> float:
+    """1次ハイパスの平滑化係数。"""
+    dt = 1.0 / sr
+    rc = 1.0 / (2.0 * math.pi * cutoff)
+    return rc / (rc + dt)
 
 
 def lowpass(buf: Sequence[float], cutoff: CutoffLike, sr: int = SAMPLE_RATE) -> list[float]:
     """1次ローパス。``cutoff`` に ``f(t) -> Hz`` を渡すとフィルタスイープになる。"""
-    cutoff_fn = _as_cutoff_fn(cutoff, sr)
     out = [0.0] * len(buf)
     y = 0.0
+    if not callable(cutoff):  # 係数が一定なら毎サンプル計算しない
+        alpha = _alpha_lowpass(_clamp_cutoff(cutoff, sr), sr)
+        for i, x in enumerate(buf):
+            y += alpha * (x - y)
+            out[i] = y
+        return out
+
+    cutoff_fn = _as_cutoff_fn(cutoff, sr)
     for i, x in enumerate(buf):
-        dt = 1.0 / sr
-        rc = 1.0 / (2.0 * math.pi * cutoff_fn(i / sr))
-        alpha = dt / (rc + dt)
-        y += alpha * (x - y)
+        y += _alpha_lowpass(cutoff_fn(i / sr), sr) * (x - y)
         out[i] = y
     return out
 
 
 def highpass(buf: Sequence[float], cutoff: CutoffLike, sr: int = SAMPLE_RATE) -> list[float]:
     """1次ハイパス。"""
-    cutoff_fn = _as_cutoff_fn(cutoff, sr)
     out = [0.0] * len(buf)
     prev_x = 0.0
     y = 0.0
+    if not callable(cutoff):
+        alpha = _alpha_highpass(_clamp_cutoff(cutoff, sr), sr)
+        for i, x in enumerate(buf):
+            y = alpha * (y + x - prev_x)
+            prev_x = x
+            out[i] = y
+        return out
+
+    cutoff_fn = _as_cutoff_fn(cutoff, sr)
     for i, x in enumerate(buf):
-        dt = 1.0 / sr
-        rc = 1.0 / (2.0 * math.pi * cutoff_fn(i / sr))
-        alpha = rc / (rc + dt)
-        y = alpha * (y + x - prev_x)
+        y = _alpha_highpass(cutoff_fn(i / sr), sr) * (y + x - prev_x)
         prev_x = x
         out[i] = y
     return out
@@ -64,11 +90,10 @@ def delay(
     """フィードバックディレイ。``tail`` 秒ぶん余韻を後ろに伸ばす。"""
     step = max(1, num_samples(time, sr))
     tail_samples = num_samples(tail if tail is not None else time * 4, sr)
-    out = list(buf) + [0.0] * tail_samples
-    for i in range(len(out)):
-        if i >= step:
-            out[i] += out[i - step] * feedback
     dry = list(buf) + [0.0] * tail_samples
+    out = list(dry)
+    for i in range(step, len(out)):  # 最初の step サンプルには帰還が届かない
+        out[i] += out[i - step] * feedback
     return [d + (w - d) * wet for d, w in zip(dry, out)]
 
 
@@ -90,26 +115,31 @@ def reverb(
     src = list(buf) + [0.0] * (n - len(buf))
 
     wet_signal = [0.0] * n
+    share = 1.0 / len(_COMB_DELAYS)
+    keep = 1.0 - damping
     for delay_time in _COMB_DELAYS:
-        step = max(1, num_samples(delay_time, sr))
+        step = min(max(1, num_samples(delay_time, sr)), n)
         line = [0.0] * n
+        # 遅延線が埋まるまでは帰還がないので、入力をそのまま通す。
+        line[:step] = src[:step]
         filtered = 0.0
-        for i in range(n):
-            delayed = line[i - step] if i >= step else 0.0
-            filtered = delayed * (1.0 - damping) + filtered * damping
+        for i in range(step, n):
+            filtered = line[i - step] * keep + filtered * damping
             line[i] = src[i] + filtered * room
-            wet_signal[i] += line[i] / len(_COMB_DELAYS)
+        wet_signal = [w + v * share for w, v in zip(wet_signal, line)]
 
+    g = 0.5
     for delay_time in _ALLPASS_DELAYS:
-        step = max(1, num_samples(delay_time, sr))
+        step = min(max(1, num_samples(delay_time, sr)), n)
         line = [0.0] * n
-        g = 0.5
-        for i in range(n):
-            delayed = line[i - step] if i >= step else 0.0
+        line[:step] = wet_signal[:step]
+        wet_signal[:step] = [-value * g for value in line[:step]]
+        for i in range(step, n):
+            delayed = line[i - step]
             line[i] = wet_signal[i] + delayed * g
             wet_signal[i] = delayed - line[i] * g
 
-    return [src[i] + (wet_signal[i] - src[i]) * wet for i in range(n)]
+    return [s + (w - s) * wet for s, w in zip(src, wet_signal)]
 
 
 def distort(buf: Sequence[float], drive: float = 3.0) -> list[float]:

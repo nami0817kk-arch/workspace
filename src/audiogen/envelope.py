@@ -38,14 +38,10 @@ def adsr(
     n_r = num_samples(release, sr)
     n_s = max(0, n - n_a - n_d - n_r)
 
-    env: list[float] = []
-    for i in range(n_a):
-        env.append(i / n_a)
-    for i in range(n_d):
-        env.append(1.0 + (sustain - 1.0) * (i / n_d))
-    env.extend([sustain] * n_s)
-    for i in range(n_r):
-        env.append(sustain * (1.0 - i / n_r))
+    env: list[float] = [i / n_a for i in range(n_a)]
+    env += [1.0 + (sustain - 1.0) * (i / n_d) for i in range(n_d)]
+    env += [sustain] * n_s
+    env += [sustain * (1.0 - i / n_r) for i in range(n_r)]
     del env[n:]
     env.extend([0.0] * (n - len(env)))
     return env
@@ -56,11 +52,10 @@ def percussive(duration: float, tau: float = 0.12, attack: float = 0.002, sr: in
     n = num_samples(duration, sr)
     n_a = min(num_samples(attack, sr), n)
     tau = max(tau, 1e-4)
-    env = [0.0] * n
-    for i in range(n_a):
-        env[i] = i / n_a
-    for i in range(n_a, n):
-        env[i] = math.exp(-((i - n_a) / sr) / tau)
+    exp = math.exp
+    decay = -1.0 / (sr * tau)
+    env = [i / n_a for i in range(n_a)]
+    env += [exp((i - n_a) * decay) for i in range(n_a, n)]
     return env
 
 
@@ -74,4 +69,4 @@ def ramp(duration: float, start: float = 1.0, end: float = 0.0, sr: int = SAMPLE
 
 def apply(buf: Sequence[float], env: Sequence[float]) -> list[float]:
     """バッファにエンベロープを掛ける。長さは短い方に揃う。"""
-    return [value * env[i] for i, value in enumerate(buf[: len(env)])]
+    return [value * level for value, level in zip(buf, env)]

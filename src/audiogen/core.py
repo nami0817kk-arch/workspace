@@ -6,8 +6,10 @@
 
 from __future__ import annotations
 
+import array
 import math
 import os
+import sys
 import wave
 from typing import Iterable, Sequence
 
@@ -42,8 +44,10 @@ def add_into(dst: list[float], src: Sequence[float], offset: int = 0, gain: floa
     end = offset + len(src)
     if end > len(dst):
         dst.extend([0.0] * (end - len(dst)))
-    for i, value in enumerate(src):
-        dst[offset + i] += value * gain
+    if gain == 1.0:
+        dst[offset:end] = [a + b for a, b in zip(dst[offset:end], src)]
+    else:
+        dst[offset:end] = [a + b * gain for a, b in zip(dst[offset:end], src)]
     return dst
 
 
@@ -57,8 +61,11 @@ def mix(*buffers: Sequence[float], gains: Sequence[float] | None = None) -> list
         raise ValueError("gains must have the same length as buffers")
     out = [0.0] * max(len(b) for b in buffers)
     for buf, g in zip(buffers, gains):
-        for i, value in enumerate(buf):
-            out[i] += value * g
+        end = len(buf)
+        if g == 1.0:
+            out[:end] = [a + b for a, b in zip(out, buf)]
+        else:
+            out[:end] = [a + b * g for a, b in zip(out, buf)]
     return out
 
 
@@ -172,16 +179,15 @@ def write_wav(
     parent = os.path.dirname(os.path.abspath(path))
     os.makedirs(parent, exist_ok=True)
 
-    frames = bytearray()
-    for value in buf:
-        sample = int(round(clip(value) * 32767.0))
-        frames += sample.to_bytes(2, "little", signed=True)
+    frames = array.array("h", (round(clip(value) * 32767.0) for value in buf))
+    if sys.byteorder == "big":  # WAV は常にリトルエンディアン
+        frames.byteswap()
 
     with wave.open(path, "wb") as fp:
         fp.setnchannels(channels)
         fp.setsampwidth(2)
         fp.setframerate(sr)
-        fp.writeframes(bytes(frames))
+        fp.writeframes(frames.tobytes())
     return path
 
 

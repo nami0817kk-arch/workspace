@@ -262,3 +262,44 @@ def test_tremolo_modulates_amplitude():
     out = effects.tremolo([1.0] * SR, rate=2.0, depth=1.0, sr=SR)
     assert min(out) < 0.1
     assert max(out) > 0.9
+
+
+def test_pulse_shape_reuses_instances():
+    assert oscillators.pulse_shape(0.25) is oscillators.pulse_shape(0.25)
+    assert oscillators.pulse_shape(0.25) is not oscillators.pulse_shape(0.5)
+
+
+def test_pulse_object_matches_the_shape_function():
+    pulse = oscillators.Pulse(0.3)
+    for phase in (0.0, 0.1, 0.29, 0.31, 0.9):
+        assert pulse(phase) == oscillators.square_shape(phase, 0.3)
+
+
+def test_constant_frequency_fast_path_matches_the_generic_loop():
+    """固定周波数の高速経路が、汎用の積算ループと同じ音を出すこと。"""
+    fast = oscillators.render("sine", 300.0, 0.05, SR)
+    generic = oscillators.render("sine", lambda _t: 300.0, 0.05, SR)
+    assert fast == pytest.approx(generic, abs=1e-9)
+
+
+def test_fast_path_matches_the_generic_loop_except_at_wrap_points():
+    """不連続な波形では、位相が 0 に折り返す瞬間だけ丸め方の違いが出る。
+
+    その差はサイクルごとに高々1サンプルで、それ以外は完全に一致する。
+    """
+    freq, duration = 300.0, 0.05
+    fast = oscillators.render("saw", freq, duration, SR)
+    generic = oscillators.render("saw", lambda _t: freq, duration, SR)
+    differing = [i for i, (a, b) in enumerate(zip(fast, generic)) if abs(a - b) > 1e-6]
+    assert len(differing) <= int(freq * duration) + 1
+    period = SR / freq
+    for index in differing:
+        offset = index % period
+        assert min(offset, period - offset) < 1.0  # 位相の折り返し位置にだけ現れる
+
+
+def test_write_wav_rounds_rather_than_truncates(tmp_path):
+    path = core.write_wav(tmp_path / "round.wav", [0.99999], sr=SR)
+    with wave.open(path, "rb") as fp:
+        frames = fp.readframes(1)
+    assert int.from_bytes(frames[0:2], "little", signed=True) == 32767

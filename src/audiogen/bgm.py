@@ -177,28 +177,59 @@ def _root_midi(key: str, octave: int) -> int:
     return notes.note_to_midi(f"{key}{octave}")
 
 
-def _render_chords(config: BGMConfig, style: Style, degrees: Sequence[int], bar_seconds: float) -> list[float]:
+def _cached(cache: dict, key: tuple, factory) -> list[float]:
+    """同じ音色・音程・長さの音を作り直さずに使い回す。
+
+    小節をまたいで同じ和音や同じベース音が何度も出てくるため、
+    ここでの使い回しが生成時間にそのまま効く。返した音は加算にしか使わない
+    (``add_into`` は元のバッファを書き換えない)ので共有して問題ない。
+    """
+    buf = cache.get(key)
+    if buf is None:
+        buf = cache[key] = factory()
+    return buf
+
+
+def _render_chords(
+    config: BGMConfig,
+    style: Style,
+    degrees: Sequence[int],
+    bar_seconds: float,
+    cache: dict,
+) -> list[float]:
     sr = config.sr
     root = _root_midi(config.key, style.chord_octave)
+    shape = style.chord_shape
     out: list[float] = []
     for bar, degree in enumerate(degrees):
         chord = notes.diatonic_chord(root, style.scale, degree, seventh=style.chord_seventh)
         offset = num_samples(bar * bar_seconds, sr)
         for voice, midi in enumerate(chord):
-            tone = osc.render(style.chord_shape, notes.midi_to_freq(midi), bar_seconds, sr)
-            shaped = env.apply(
-                tone,
-                env.adsr(bar_seconds, attack=0.08, decay=0.25, sustain=0.6, release=bar_seconds * 0.3, sr=sr),
+            shaped = _cached(
+                cache,
+                ("chord", shape, midi),
+                lambda midi=midi: env.apply(
+                    osc.render(shape, notes.midi_to_freq(midi), bar_seconds, sr),
+                    env.adsr(bar_seconds, 0.08, 0.25, 0.6, bar_seconds * 0.3, sr),
+                ),
             )
             add_into(out, shaped, offset, gain=1.0 / (voice + 2))
     return out
 
 
-def _render_bass(config: BGMConfig, style: Style, degrees: Sequence[int], bar_seconds: float) -> list[float]:
+def _render_bass(
+    config: BGMConfig,
+    style: Style,
+    degrees: Sequence[int],
+    bar_seconds: float,
+    cache: dict,
+) -> list[float]:
     sr = config.sr
     root = _root_midi(config.key, style.bass_octave)
     step_seconds = bar_seconds / drums.STEPS_PER_BAR
     pattern = style.bass_pattern
+    length = step_seconds * 1.6
+    shape = style.bass_shape
     out: list[float] = []
     for bar, degree in enumerate(degrees):
         midi = notes.degree_to_midi(root, style.scale, degree)
@@ -207,10 +238,18 @@ def _render_bass(config: BGMConfig, style: Style, degrees: Sequence[int], bar_se
             if symbol == ".":
                 continue
             note_midi = midi if symbol == "x" else fifth
-            length = step_seconds * 1.6
-            tone = osc.render(style.bass_shape, notes.midi_to_freq(note_midi), length, sr)
-            shaped = env.apply(tone, env.adsr(length, 0.006, 0.05, 0.75, length * 0.35, sr))
-            shaped = fx.lowpass(shaped, 900.0, sr)
+            shaped = _cached(
+                cache,
+                ("bass", shape, note_midi),
+                lambda m=note_midi: fx.lowpass(
+                    env.apply(
+                        osc.render(shape, notes.midi_to_freq(m), length, sr),
+                        env.adsr(length, 0.006, 0.05, 0.75, length * 0.35, sr),
+                    ),
+                    900.0,
+                    sr,
+                ),
+            )
             add_into(out, shaped, num_samples(bar * bar_seconds + step * step_seconds, sr))
     return out
 
@@ -221,12 +260,14 @@ def _render_lead(
     degrees: Sequence[int],
     bar_seconds: float,
     rng: random.Random,
+    cache: dict,
 ) -> list[float]:
     """コードトーンを軸にしたランダムウォークでメロディを作る。"""
     sr = config.sr
     root = _root_midi(config.key, style.lead_octave)
     scale_size = len(notes.scale_degrees(style.scale))
     beat_seconds = bar_seconds / BEATS_PER_BAR
+    shape = style.lead_shape
     out: list[float] = []
     current = 0
 
@@ -247,8 +288,14 @@ def _render_lead(
 
             length = length_beats * beat_seconds * 0.92
             midi = notes.degree_to_midi(root, style.scale, current)
-            tone = osc.render(style.lead_shape, notes.midi_to_freq(midi), length, sr)
-            shaped = env.apply(tone, env.adsr(length, 0.012, 0.08, 0.7, length * 0.3, sr))
+            shaped = _cached(
+                cache,
+                ("lead", shape, midi, round(length, 6)),
+                lambda m=midi, ln=length: env.apply(
+                    osc.render(shape, notes.midi_to_freq(m), ln, sr),
+                    env.adsr(ln, 0.012, 0.08, 0.7, ln * 0.3, sr),
+                ),
+            )
             add_into(out, shaped, num_samples(start, sr))
     return out
 
@@ -305,13 +352,14 @@ def render_tracks(config: BGMConfig) -> dict[str, list[float]]:
     degrees = _chord_degrees_for_bars(style, config.bars)
     parts = set(config.parts)
 
+    cache: dict = {}
     tracks: dict[str, list[float]] = {}
     if "chords" in parts:
-        tracks["chords"] = _render_chords(config, style, degrees, bar_seconds)
+        tracks["chords"] = _render_chords(config, style, degrees, bar_seconds, cache)
     if "bass" in parts:
-        tracks["bass"] = _render_bass(config, style, degrees, bar_seconds)
+        tracks["bass"] = _render_bass(config, style, degrees, bar_seconds, cache)
     if "lead" in parts:
-        tracks["lead"] = _render_lead(config, style, degrees, bar_seconds, rng)
+        tracks["lead"] = _render_lead(config, style, degrees, bar_seconds, rng, cache)
     if "drums" in parts:
         drum_track = _render_drums(config, style, config.bars, bar_seconds)
         if drum_track:
