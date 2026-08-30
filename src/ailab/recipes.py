@@ -184,9 +184,9 @@ def _step_gen(options: dict, _state: dict) -> list[dict]:
     prompt = options.get("prompt")
     if not prompt:
         raise ConfigError("gen には prompt が必要です")
-    provider = imagegen.get_provider(options.get("provider", "auto"))
-    images = provider.generate(
+    images = imagegen.generate(
         prompt,
+        provider=options.get("provider", "auto"),
         size=str(options.get("size", "1024x1024")),
         n=int(options.get("n", 1)),
         model=options.get("model"),

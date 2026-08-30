@@ -156,8 +156,9 @@ def _tool_list_connectors(_arguments: dict) -> str:
 
 def _tool_generate_image(arguments: dict) -> str:
     provider = imagegen.get_provider(arguments.get("provider", "auto"))
-    images = provider.generate(
+    images = imagegen.generate(
         _required(arguments, "prompt"),
+        provider=provider.name,
         size=arguments.get("size", "1024x1024"),
         n=int(arguments.get("n", 1)),
         model=arguments.get("model"),

@@ -13,6 +13,7 @@ AI活用のアイデア検証・試作を行うラボプロジェクト。
 | `ailab fetch "キーワード"` | フリーイラストを検索してダウンロードし、クレジットも書き出す |
 | `ailab feed "対象" --source rss\|github\|qiita` | 記事・リリース情報を取得する |
 | `ailab publish FILE --repo owner/name` | 生成物を GitHub へコミットする（既定はドライラン） |
+| `ailab usage` | 画像生成の利用量と概算コストを見る |
 | `ailab run レシピ` | 「集める→作る→送る」をYAML1本で実行する |
 | `ailab mcp` | MCPサーバとして起動し、Claude から直接使えるようにする |
 | `ailab connectors` / `ailab doctor` | 連携先の設定状況を見る / 実際に接続して確認する |

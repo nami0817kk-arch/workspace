@@ -47,9 +47,18 @@ def generate(
     size: str = "1024x1024",
     n: int = 1,
     model: str | None = None,
+    **options,
 ) -> list[GeneratedImage]:
-    """プロンプトから画像を生成する（もっとも手軽な入口）。"""
-    return get_provider(provider).generate(prompt, size=size, n=n, model=model)
+    """プロンプトから画像を生成する（もっとも手軽な入口）。
+
+    生成の入口をここに集約し、利用量の記録も行う。CLI・レシピ・MCP は
+    すべてこれを経由する。
+    """
+    from . import usage
+
+    images = get_provider(provider).generate(prompt, size=size, n=n, model=model, **options)
+    usage.record(images)
+    return images
 
 
 __all__ = [

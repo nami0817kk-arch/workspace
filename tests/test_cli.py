@@ -314,3 +314,28 @@ def test_bundled_recipes_are_valid():
         assert recipe["steps"], f"{path}: 手順が空"
         for index, step in enumerate(recipe["steps"], 1):
             recipes_module._parse_step(step, index)  # 動詞と設定の形を検証
+
+
+# --- usage -------------------------------------------------------------
+def test_usage_reports_nothing_at_first(capsys):
+    assert cli.main(["usage"]) == 0
+    assert "まだ記録がありません" in capsys.readouterr().out
+
+
+def test_usage_summarizes_generations(tmp_path, capsys):
+    cli.main(["gen", "集計テスト", "--provider", "local", "--size", "64x64", "-o", str(tmp_path)])
+    capsys.readouterr()
+
+    assert cli.main(["usage"]) == 0
+    out = capsys.readouterr().out
+    assert "local" in out and "1" in out
+
+
+def test_usage_json_output(tmp_path, capsys):
+    cli.main(["gen", "集計テスト", "--provider", "local", "--size", "64x64", "-o", str(tmp_path)])
+    capsys.readouterr()
+
+    assert cli.main(["usage", "--json", "--days", "7"]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["images"] == 1
+    assert payload["since_days"] == 7

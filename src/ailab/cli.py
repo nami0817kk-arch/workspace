@@ -6,6 +6,7 @@
     ailab publish FILE --to ...   生成物を外部サービスへ送る
     ailab feed "対象" --source ...  記事・リリース情報を取得する
     ailab run レシピ              集める→作る→送る を1コマンドで実行する
+    ailab usage                   画像生成の利用量と概算コストを見る
     ailab mcp                     MCPサーバとして起動する（Claude から直接使う）
     ailab connectors              連携先の一覧と設定状況を表示する
     ailab doctor [名前]           連携先へ実際に接続して確認する
@@ -20,7 +21,7 @@ import sys
 
 import requests
 
-from . import __version__, assets, imagegen, recipes
+from . import __version__, assets, imagegen, recipes, usage
 from .config import load_dotenv, output_dir
 from .core import registry
 from .core.connector import CAPABILITY_LABELS, capabilities_of
@@ -114,6 +115,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--json", action="store_true", help="JSON で出力する"
     )
 
+    usage_parser = sub.add_parser("usage", help="画像生成の利用量と概算コスト")
+    usage_parser.add_argument("-d", "--days", type=int, default=None, help="直近N日に絞る")
+    usage_parser.add_argument("--json", action="store_true", help="JSON で出力する")
+
     sub.add_parser("mcp", help="MCPサーバとして起動する（stdio）")
 
     doctor = sub.add_parser("doctor", help="連携先へ実際に接続して確認する")
@@ -184,8 +189,13 @@ def _cmd_gen(args: argparse.Namespace) -> int:
     if provider.name == "local":
         kwargs["caption"] = not args.no_caption
 
-    images = provider.generate(
-        args.prompt, size=args.size, n=args.count, model=args.model, **kwargs
+    images = imagegen.generate(
+        args.prompt,
+        provider=provider.name,
+        size=args.size,
+        n=args.count,
+        model=args.model,
+        **kwargs,
     )
     destination = args.out or output_dir("images")
     for index, image in enumerate(images):
@@ -271,6 +281,26 @@ def _cmd_feed(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_usage(args: argparse.Namespace) -> int:
+    summary = usage.summarize(days=args.days)
+    if args.json:
+        print(json.dumps(summary, ensure_ascii=False, indent=2))
+        return 0
+
+    if not summary["entries"]:
+        print("まだ記録がありません（画像を生成すると記録されます）")
+        return 0
+
+    span = f"直近{args.days}日" if args.days else "全期間"
+    print(f"{span}: {summary['images']}枚 / 概算 ${summary['cost_usd']:.2f}\n")
+    print(f"  {'コネクタ':<14}{'モデル':<34}{'枚数':>6}{'概算$':>9}")
+    for row in summary["breakdown"]:
+        print(f"  {row['provider']:<14}{row['model']:<34}{row['images']:>6}{row['cost_usd']:>9.3f}")
+    print("\n金額は概算です。正確な請求額は各社のダッシュボードで確認してください。")
+    print(f"単価を変えるには {usage.log_path().parent / usage.COSTS_NAME} を置きます。")
+    return 0
+
+
 def _cmd_mcp() -> int:
     """MCPサーバを起動する。標準出力は JSON-RPC 専用なので何も表示しない。"""
     from .mcp_server import serve
@@ -336,6 +366,7 @@ def main(argv: list[str] | None = None) -> int:
         "connectors": _cmd_connectors,
         "status": _cmd_connectors,
         "doctor": _cmd_doctor,
+        "usage": _cmd_usage,
         "mcp": lambda _args: _cmd_mcp(),
     }
     try:

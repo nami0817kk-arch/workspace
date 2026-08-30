@@ -90,6 +90,24 @@ Gemini で今使えるモデルは `ailab doctor` が件数を返すので、
 - `gpt-image-1.5` / `gpt-image-1-mini` / `chatgpt-image-latest` … 2026-12-01 に停止予定。移行先は `gpt-image-2`
 - Imagen 各種 … 2026-08-17 に停止。Gemini の画像モデルへ移行する
 
+## 使いすぎていないか見る
+
+有料APIは気づかないうちに積み上がるので、生成のたびに1行ずつ記録している
+（`output/usage.jsonl`、Git管理外）。
+
+```bash
+ailab usage            # 全期間
+ailab usage -d 7       # 直近7日
+ailab usage --json     # 集計をJSONで
+```
+
+**金額は概算**で、請求額とは一致しない。正確な数字は各社のダッシュボードで確認する。
+単価を変えたいときは `output/costs.json` を置く。
+
+```json
+{ "openai": { "gpt-image-2": 0.03 }, "replicate": { "flux-schnell": 0.003 } }
+```
+
 ## フリーイラストの検索・取得
 
 ```bash
