@@ -10,7 +10,7 @@
 | 生成モデル追加（Replicate / Hugging Face） | **完了** |
 | 3. 情報収集（RSS / GitHub / Qiita） | **完了** |
 | 4. パイプライン（YAMLレシピ） | **完了** |
-| 5. MCP化 | 次にやる |
+| 5. MCP化 | **完了** |
 
 実装の使い方と新しい連携先の足し方は [connectors.md](connectors.md)。
 
@@ -149,7 +149,7 @@ RSS/Atom（キー不要）✅、GitHub リリース ✅、Qiita ✅、（今後�
 | **生成モデル追加** ✅ | Replicate / Hugging Face | 完了。`ailab gen --provider replicate --model owner/name` | 完了 |
 | **3. 情報収集** ✅ | RSS / Atom、GitHub リリース、Qiita | 完了。`ailab feed "対象" --source rss\|github\|qiita` | 完了 |
 | **4. パイプライン** ✅ | YAMLレシピ。`ailab run <レシピ>` | 完了。[recipes.md](recipes.md) |
-| **5. MCP化** | `ailab mcp` でMCPサーバとして起動 | Claude から `ailab` の全コネクタを直接呼べる | 1日 |
+| **5. MCP化** ✅ | `ailab mcp`（stdio / JSON-RPC、依存追加なし） | 完了。[mcp.md](mcp.md) |
 
 Phase 0 と 2 は完了。残りは基盤の上に1コネクタ50〜80行を足すだけで済む。
 
@@ -197,7 +197,13 @@ steps:
 
 ## 7. 次の一手
 
-Phase 0〜3 と生成モデル追加まで完了し、15コネクタが同じ基盤に乗った。
-残るは **Phase 4（YAMLレシピで「集める→作る→送る」を1コマンドに）** と
-**Phase 5（`ailab mcp` でClaudeから直接叩けるようにする）**。
-レシピは今ある能力の組み合わせなので、新しい外部連携を増やさずに価値が出る。
+計画した Phase 0〜5 は完了。15コネクタが同じ基盤に乗り、レシピと MCP から
+同じ能力を呼べる状態になった。ここから先は「必要になったら足す」段階で、
+候補は次のとおり。
+
+- **送信先**: Slack / Discord（Webhookなので各50行程度）、S3 / R2（公開URL化）、Notion
+- **取得先**: Zenn、arXiv、Hacker News、Google Fonts
+- **運用**: `ailab usage`（生成APIの利用量と概算コスト）、レシピの定期実行
+- **OAuth**: Google Drive など。認可フローが要るので基盤に auth.py を足すところから
+
+新しい連携先は1つ50〜80行、CLI と MCP の両方に自動で現れる。

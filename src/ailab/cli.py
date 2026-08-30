@@ -6,6 +6,7 @@
     ailab publish FILE --to ...   生成物を外部サービスへ送る
     ailab feed "対象" --source ...  記事・リリース情報を取得する
     ailab run レシピ              集める→作る→送る を1コマンドで実行する
+    ailab mcp                     MCPサーバとして起動する（Claude から直接使う）
     ailab connectors              連携先の一覧と設定状況を表示する
     ailab doctor [名前]           連携先へ実際に接続して確認する
 """
@@ -109,6 +110,8 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser("status", help="connectors と同じ（旧名）").add_argument(
         "--json", action="store_true", help="JSON で出力する"
     )
+
+    sub.add_parser("mcp", help="MCPサーバとして起動する（stdio）")
 
     doctor = sub.add_parser("doctor", help="連携先へ実際に接続して確認する")
     doctor.add_argument("name", nargs="?", default=None, help="確認する連携先（省略で全部）")
@@ -265,6 +268,14 @@ def _cmd_feed(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_mcp() -> int:
+    """MCPサーバを起動する。標準出力は JSON-RPC 専用なので何も表示しない。"""
+    from .mcp_server import serve
+
+    print("ailab MCP サーバを起動しました（stdio）", file=sys.stderr)
+    return serve()
+
+
 def _parse_variables(pairs: list[str]) -> dict[str, str]:
     """--set KEY=VALUE を辞書にする。"""
     variables = {}
@@ -321,6 +332,7 @@ def main(argv: list[str] | None = None) -> int:
         "connectors": _cmd_connectors,
         "status": _cmd_connectors,
         "doctor": _cmd_doctor,
+        "mcp": lambda _args: _cmd_mcp(),
     }
     try:
         return handlers[args.command](args)

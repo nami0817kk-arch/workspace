@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "ailab": {
+      "command": "python",
+      "args": ["-m", "ailab", "mcp"],
+      "env": {
+        "PYTHONPATH": "src"
+      }
+    }
+  }
+}

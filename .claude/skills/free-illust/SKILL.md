@@ -5,7 +5,7 @@ description: Web上のフリーイラスト・フリー素材を検索してダ�
 
 # フリーイラストの取得
 
-`ailab search` / `ailab fetch` を使う。実装は `src/ailab/connectors/assets_*.py`。使える検索先は `python -m ailab connectors` で分かる。
+`ailab search` / `ailab fetch` を使う（MCP接続時は `search_assets` / `fetch_assets` ツールでも同じ）。実装は `src/ailab/connectors/assets_*.py`。使える検索先は `python -m ailab connectors` で分かる。
 
 ## 手順
 

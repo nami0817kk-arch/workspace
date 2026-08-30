@@ -6,6 +6,7 @@ description: このリポジトリで画像を生成する。ユーザーが「�
 # 画像生成
 
 `ailab gen` コマンドを使う。実装は `src/ailab/connectors/images_*.py`。
+MCPサーバ（`.mcp.json` の ailab）が繋がっているなら `generate_image` ツールでもよい。
 
 ## 手順
 
