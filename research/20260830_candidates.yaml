@@ -4,6 +4,7 @@ date: "2026年8月30日"
 candidates:
   - id: alvarez_deadline
     topic: alvarez
+    league: spain
     title: アルバレスに示された日曜という期限
     en: Julian Alvarez Atletico Arsenal
     url: https://www.espn.com/soccer/story/_/id/49750822/julian-alvarez-sits-latest-atletico-madrid-training-session-amid-transfer-links
@@ -18,6 +19,7 @@ candidates:
 
   - id: spurs_crisis
     topic: spurs
+    league: england
     title: 320億円使って最下位のトッテナム
     en: Tottenham De Zerbi Spurs problem
     url: https://www.skysports.com/football/news/11095/13578837/tottenham-hotspur-roberto-de-zerbi-highlights-biggest-problem-at-spurs-after-newcastle-defeat-as-jamie-carragher-slams-start
@@ -30,6 +32,7 @@ candidates:
 
   - id: liverpool_sarr
     topic: liverpool
+    league: england
     title: リバプールがイスマイラ・サール獲得へ交渉
     en: Liverpool Ismaila Sarr Crystal Palace
     url: https://www.skysports.com/football/transfer-paper-talk/12709/13578898/liverpool-transfer-news-reds-continue-talks-with-crystal-palace-to-sign-ismaila-sarr-paper-talk

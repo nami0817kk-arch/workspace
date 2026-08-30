@@ -20,7 +20,8 @@ domains:
   official: [en.atleticodemadrid.com, atleticodemadrid.com, fcbarcelona.com,
              arsenal.com, realmadrid.com, chelseafc.com, manutd.com,
              liverpoolfc.com, juventus.com,
-             premierleague.com, laliga.com, uefa.com]
+             premierleague.com, laliga.com, bundesliga.com, legaseriea.it,
+             uefa.com]
 
   # 日本の公式。Jリーグ・日本人選手の話をここまで辿れば確定にできる
   official_jp: [jleague.jp, jfa.jp, urawa-reds.co.jp, frontale.co.jp,
@@ -37,8 +38,14 @@ domains:
   # 複数媒体を横断できる。見出しに媒体名が入る
   aggregator: [news.yahoo.co.jp]
 
-  german: [kicker.de]
-  italian: [football-italia.net]
+  # 現地語の報道機関。その国のリーグの話はここが速い。
+  # 検索はその言語で書く（kicker をドイツ語以外で引いても返らない）
+  german: [kicker.de, sport1.de]
+  italian: [football-italia.net, calciomercato.com, tuttomercatoweb.com]
+  french: [footmercato.net, eurosport.fr]
+  dutch: [voetbalzone.nl, vi.nl]
+  spanish: [besoccer.com]        # marca / as / mundodeportivo は塞がれている
+
   social: [x.com]
 
   # 噂まとめ。単独では根拠にしない
@@ -48,7 +55,8 @@ domains:
   blocked: [bbc.com, theguardian.com, theathletic.com, nytimes.com, marca.com,
             as.com, mundodeportivo.com, lequipe.fr, gazzetta.it, bild.de,
             telegraph.co.uk, independent.co.uk, mirror.co.uk, standard.co.uk,
-            talksport.com, transfermarkt.com, football.london]
+            talksport.com, transfermarkt.com, transfermarkt.de,
+            football.london, sofoot.com, relevo.com, sport.es]
 
 # 群ごとに置ける確度の上限。draft のときに突き合わせる
 domain_tiers:
@@ -59,6 +67,9 @@ domain_tiers:
   aggregator: 報道
   german: 報道
   italian: 報道
+  french: 報道
+  dutch: 報道
+  spanish: 報道
   social: 未確認
   rumour: 未確認
 
@@ -148,6 +159,12 @@ deep:
   - {q: "{en} why explained", domains: english, label: なぜそうなったか}
   - {q: "{en}", domains: social, label: 反応}
   - {q: "{en} fee OR record OR stats", domains: english, label: 数字}
+  # 現地語。そのリーグの話のときだけ出す。英語圏より詳しいことが多い
+  - {q: "{en} Transfer offiziell", domains: german, when: germany, label: 現地（ドイツ語）}
+  - {q: "{en} calciomercato ufficiale", domains: italian, when: italy, label: 現地（イタリア語）}
+  - {q: "{en} transfert officiel", domains: french, when: france, label: 現地（フランス語）}
+  - {q: "{en} transfer officieel", domains: dutch, when: netherlands, label: 現地（オランダ語）}
+  - {q: "{en} fichaje oficial", domains: spanish, when: spain, label: 現地（スペイン語）}
 
 # 1本の作り方。まとめではなく、1テーマを掘る
 policy:
@@ -189,6 +206,10 @@ scan:
     - {q: "移籍 発表 OR 決定 OR 公式", domains: japanese, label: 日本語（決まったもの）}
     - {q: "移籍 交渉 OR 関心 OR 浮上", domains: japanese, label: 日本語（動いているもの）}
     - {q: "日本人選手 移籍 OR ゴール OR デビュー", domains: japanese, label: 日本人選手}
+    # 日本人選手の移籍は現地語のほうが速く、しかも公式に辿れる。
+    # 「Japaner Transfer offiziell」で bundesliga.com の発表が出る（実測）
+    - {q: "Japaner Transfer offiziell", domains: german, label: 日本人選手（ドイツ語）}
+    - {q: "Japanse speler transfer", domains: dutch, label: 日本人選手（オランダ語）}
     - {q: "Jリーグ 移籍 OR 監督 OR 首位", domains: japanese, label: Jリーグ}
     - {q: "football news {today_en}", domains: english, label: 英語の総覧}
     - {q: "transfer news {today_en}", domains: english, label: 移籍（英語）}

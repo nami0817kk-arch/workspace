@@ -20,7 +20,11 @@ python -m src.cli sources     # 網の全体と、群ごとの確度の上限を
 | `english` | Sky Sports / ESPN / goal.com / 90min / football365 / SI / CBS Sports | 報道 |
 | `japanese` | サッカーキング / フットボールチャンネル / 超WORLDサッカー / theWORLD / football-tribe | 報道 |
 | `aggregator` | Yahoo!ニュース（複数媒体を横断できる） | 報道 |
-| `german` / `italian` | kicker.de / football-italia.net | 報道 |
+| `german` | kicker.de / sport1.de | 報道 |
+| `italian` | football-italia.net / calciomercato.com / TUTTOmercatoWEB | 報道 |
+| `french` | footmercato.net / eurosport.fr | 報道 |
+| `dutch` | voetbalzone.nl / vi.nl | 報道 |
+| `spanish` | besoccer.com（marca / AS / MD は塞がれている） | 報道 |
 | `social` | x.com | 未確認 |
 | `rumour` | caughtoffside / givemesport / tribalfootball | 未確認 |
 
@@ -54,6 +58,38 @@ urawa-reds.co.jp/topteamtopics/242808/     ← クラブの移籍発表
 「公式発表」が入っているので、声明が取れれば `確定` として出せます。
 日本の公式サイトを引く検索は、日本人選手が絡む候補のときだけ出ます
 （jleague.jp でアルバレスを検索しても意味がないため）。
+
+### 現地語で引くと、英語では出ないものが出る
+
+**いちばん効いた発見です。** 日本人選手の移籍を日本語・英語で探しても出てこなかったのに、
+ドイツ語で引くと出てきました。しかも**リーグ公式**（＝`確定`）です。
+
+```
+検索: "Japaner Transfer offiziell"  （kicker.de, sport1.de, bundesliga.com に限定）
+
+→ bundesliga.com  ボルシアMGが橋岡大樹を獲得（スラビア・プラハからレンタル）
+→ bundesliga.com  マインツが川崎颯太の完全移籍を発表
+→ sport1.de       RBライプツィヒが山本理仁と2031年まで契約
+```
+
+同じ日に日本語サイトを「日本人選手 移籍」で引いても、この4件は1件も出ませんでした。
+**現地の話は現地語がいちばん速く、公式に辿り着きやすい。**
+
+### リーグを書くと現地語の検索が出る
+
+サイトを増やすだけでは使えません。kicker をドイツ語以外で引いても何も返らないからです。
+候補に `league` を書くと、そのリーグの言語の検索だけが出ます。
+
+```yaml
+  - id: alvarez
+    league: spain      # → スペイン語の検索だけが出る
+  - id: sano
+    league: germany    # → ドイツ語の検索だけが出る
+    japanese: true     # → さらに日本の公式を引く検索も出る
+```
+
+書けるのは `england` / `spain` / `germany` / `italy` / `france` / `netherlands` / `japan`。
+書かなければ現地語の検索は出ません。
 
 ### 網が古くなったら
 

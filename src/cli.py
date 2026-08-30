@@ -291,8 +291,11 @@ def _dispatch(args, config) -> int:
             "english": "英語の報道機関",
             "japanese": "日本語の報道機関",
             "aggregator": "横断（複数媒体）",
-            "german": "ドイツ",
-            "italian": "イタリア",
+            "german": "ドイツ語",
+            "italian": "イタリア語",
+            "french": "フランス語",
+            "dutch": "オランダ語",
+            "spanish": "スペイン語",
             "social": "SNS",
             "rumour": "噂まとめ",
         }

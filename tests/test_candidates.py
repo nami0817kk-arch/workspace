@@ -261,3 +261,42 @@ def test_japan_only_queries_are_skipped_for_european_topics():
 def test_japan_only_queries_appear_for_japanese_topics():
     japanese = Candidate(id="b", title="鈴木彩艶の移籍", japanese=True)
     assert [q["label"] for q in deep_queries(japanese, DEEP_WHEN, {})] == ["日本語", "日本の公式"]
+
+
+DEEP_LEAGUE = [
+    {"q": "{en} latest", "domains": "english", "label": "英語"},
+    {"q": "{en} Transfer offiziell", "domains": "german", "when": "germany", "label": "ドイツ語"},
+    {"q": "{en} fichaje oficial", "domains": "spanish", "when": "spain", "label": "スペイン語"},
+    {"q": "{theme} のお知らせ", "domains": "official_jp", "when": "japanese", "label": "日本の公式"},
+]
+
+
+def test_only_the_matching_leagues_local_language_query_appears():
+    spain = Candidate(id="a", title="アルバレス", en="Julian Alvarez", league="spain")
+    assert [q["label"] for q in deep_queries(spain, DEEP_LEAGUE, {})] == ["英語", "スペイン語"]
+
+    germany = Candidate(id="b", title="佐野", en="Kaishu Sano", league="germany")
+    assert [q["label"] for q in deep_queries(germany, DEEP_LEAGUE, {})] == ["英語", "ドイツ語"]
+
+
+def test_league_and_japanese_conditions_can_both_fire():
+    item = Candidate(id="c", title="佐野海舟", en="Kaishu Sano", league="germany", japanese=True)
+    assert [q["label"] for q in deep_queries(item, DEEP_LEAGUE, {})] == [
+        "英語", "ドイツ語", "日本の公式",
+    ]
+
+
+def test_no_league_means_no_local_language_query():
+    item = Candidate(id="d", title="どこかの話", en="Something")
+    assert [q["label"] for q in deep_queries(item, DEEP_LEAGUE, {})] == ["英語"]
+
+
+def test_the_league_is_read_and_normalised(tmp_path):
+    path = tmp_path / "c.yaml"
+    path.write_text(
+        "candidates:\n  - id: a\n    title: A\n    league: Germany\n    topic: bayern\n",
+        encoding="utf-8",
+    )
+    _, items = load_candidates(path)
+    assert items[0].league == "germany"    # 大文字で書かれても拾う
+    assert items[0].topic == "bayern"

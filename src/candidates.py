@@ -28,6 +28,8 @@ class Candidate:
     en: str = ""        # 英語サイトを検索するときの語。無ければ英語の検索は出さない
     url: str = ""       # 元になった記事・投稿。hours_ago を省くとここから割り出す
     topic: str = ""     # 話題のまとまり（クラブ名・移籍案件など）。枠の重複を避けるのに使う
+    league: str = ""    # england / spain / germany / italy / france / netherlands / japan
+                        # 現地語の検索を出すかどうかの判断に使う
     hours_ago: float = 99.0
     tier: str = "未確認"
     japanese: bool = False
@@ -61,6 +63,7 @@ def load_candidates(path: str | Path) -> tuple[str, list[Candidate]]:
                 en=str(entry.get("en", "")).strip(),
                 url=str(entry.get("url", "")).strip(),
                 topic=str(entry.get("topic", "")).strip(),
+                league=str(entry.get("league", "")).strip().lower(),
                 hours_ago=float(entry["hours_ago"]) if "hours_ago" in entry else -1.0,
                 tier=str(entry.get("tier", "未確認")).strip(),
                 japanese=bool(entry.get("japanese", False)),
@@ -216,9 +219,10 @@ def deep_queries(
         if "{en}" in text and not item.en:
             continue
 
-        # 日本のサイトで欧州の話を引いても無駄なので、条件の合うときだけ出す
-        when = str(template.get("when", ""))
-        if when == "japanese" and not item.japanese:
+        # 条件の合うときだけ出す。ドイツ語の検索をスペインの話に出しても返らないし、
+        # 日本のサイトで欧州の話を引いても無駄になる
+        when = str(template.get("when", "")).strip().lower()
+        if when and not _matches(item, when):
             continue
 
         group = template.get("domains")
@@ -230,6 +234,13 @@ def deep_queries(
             }
         )
     return queries
+
+
+def _matches(item: Candidate, when: str) -> bool:
+    """deep の when: が指す条件に、この候補が当てはまるか。"""
+    if when == "japanese":
+        return item.japanese
+    return item.league == when
 
 
 def exclude_covered(items: list[Candidate], covered: dict[str, object]) -> tuple[list, list]:
@@ -251,6 +262,8 @@ candidates:
     en: ""            # 英語サイトを引くときの語（例: Julian Alvarez Atletico）
     url: ""           # 元の記事・投稿のURL
     topic: ""         # 話題のまとまり（例: alvarez）。同じ topic は1日1枠まで
+    league: ""        # england/spain/germany/italy/france/netherlands/japan
+                      # 書くと現地語の検索も出る
     hours_ago:        # 何時間前か。空にすると url から割り出す
     tier: 報道         # 確定 / 報道 / 未確認
     japanese: false   # 日本人選手が絡むか
