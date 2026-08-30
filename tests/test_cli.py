@@ -179,3 +179,58 @@ def test_list_prints_instruments(capsys):
     out = capsys.readouterr().out
     assert "Instruments:" in out
     assert "marimba" in out
+
+
+def _sample_manifest(tmp_path):
+    import json
+
+    path = tmp_path / "assets.json"
+    path.write_text(
+        json.dumps(
+            {
+                "sample_rate": 11025,
+                "sfx": [{"name": "coin", "as": "se/coin", "seed": 1}],
+                "bgm": [{"as": "bgm/title", "style": "menu", "bars": 1, "seed": 2}],
+            }
+        ),
+        encoding="utf-8",
+    )
+    return path
+
+
+def test_build_generates_the_declared_assets(tmp_path, capsys):
+    out = tmp_path / "assets"
+    assert cli.main(["build", str(_sample_manifest(tmp_path)), "-d", str(out)]) == 0
+    assert (out / "se" / "coin.wav").exists()
+    assert (out / "bgm" / "title.wav").exists()
+    assert "written: 2" in capsys.readouterr().out
+
+
+def test_build_skips_unchanged_assets_on_a_second_run(tmp_path, capsys):
+    out = tmp_path / "assets"
+    path = _sample_manifest(tmp_path)
+    assert cli.main(["build", str(path), "-d", str(out)]) == 0
+    capsys.readouterr()
+    assert cli.main(["build", str(path), "-d", str(out)]) == 0
+    assert "skipped: 2" in capsys.readouterr().out
+
+
+def test_build_dry_run_writes_nothing(tmp_path, capsys):
+    out = tmp_path / "assets"
+    assert cli.main(["build", str(_sample_manifest(tmp_path)), "-d", str(out), "--dry-run"]) == 0
+    assert "planned: 2" in capsys.readouterr().out
+    assert not out.exists()
+
+
+def test_build_reports_a_bad_manifest(tmp_path, capsys):
+    import json
+
+    path = tmp_path / "bad.json"
+    path.write_text(json.dumps({"sfx": [{"name": "kazoo"}]}), encoding="utf-8")
+    assert cli.main(["build", str(path), "-d", str(tmp_path / "out")]) == 2
+    assert "unknown preset" in capsys.readouterr().err
+
+
+def test_build_reports_a_missing_manifest(tmp_path, capsys):
+    assert cli.main(["build", str(tmp_path / "nope.json")]) == 2
+    assert "error:" in capsys.readouterr().err

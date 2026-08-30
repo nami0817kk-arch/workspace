@@ -7,10 +7,12 @@
     write_wav("output/coin.wav", sfx.generate("coin"))
     write_wav("output/theme.wav", bgm.generate(bgm.BGMConfig(style="adventure", seed=1)))
 
+素材一式をまとめて作る場合は ``python -m audiogen build assets.json`` を使う。
+
 コマンドラインからは ``python -m audiogen --help`` を参照。
 """
 
-from . import bgm, drums, effects, envelope, notes, oscillators, sfx
+from . import bgm, drums, effects, envelope, instruments, manifest, notes, oscillators, sfx
 from .bgm import BGMConfig
 from .core import SAMPLE_RATE, duration_of, mix, normalize, to_stereo, write_wav
 
@@ -25,6 +27,8 @@ __all__ = [
     "duration_of",
     "effects",
     "envelope",
+    "instruments",
+    "manifest",
     "mix",
     "normalize",
     "notes",

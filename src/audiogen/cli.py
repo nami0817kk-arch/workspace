@@ -3,6 +3,8 @@
     python -m audiogen sfx coin -o output/coin.wav
     python -m audiogen bgm --style battle --key A --bars 16 --seed 7
     python -m audiogen list
+    python -m audiogen describe --style battle --seed 3
+    python -m audiogen build assets.json -d assets/audio
     python -m audiogen demo -d output/demo
 """
 
@@ -15,7 +17,7 @@ import sys
 from typing import Sequence
 
 from . import bgm as bgm_module
-from . import drums, instruments, notes, sfx
+from . import drums, instruments, manifest as manifest_module, notes, sfx
 from .core import SAMPLE_RATE, duration_of, write_wav
 
 
@@ -127,6 +129,29 @@ def cmd_describe(args: argparse.Namespace) -> int:
         print(f"  {note['start']:>7.3f}s  {note['note']:<4} {note['length']:.3f}s")
     if len(summary["melody"]) > 16:
         print(f"  ... {len(summary['melody']) - 16} more")
+    return 0
+
+
+def cmd_build(args: argparse.Namespace) -> int:
+    """マニフェストに書かれた素材一式をまとめて生成する。"""
+    try:
+        manifest = manifest_module.load(args.manifest)
+        results = manifest_module.build(
+            manifest, directory=args.dir, force=args.force, dry_run=args.dry_run
+        )
+    except manifest_module.ManifestError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+    except OSError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+
+    directory = args.dir or manifest.output
+    for result in results:
+        for name in result.files:
+            print(f"{result.status:>7}  {os.path.join(directory, name)}")
+    counts = manifest_module.summarise(results)
+    print(", ".join(f"{status}: {count}" for status, count in sorted(counts.items())))
     return 0
 
 
@@ -246,6 +271,15 @@ def build_parser() -> argparse.ArgumentParser:
     _add_bgm_options(describe_parser)
     describe_parser.add_argument("--json", action="store_true", help="JSON で出力する")
     describe_parser.set_defaults(func=cmd_describe, stereo=False, no_loop=False)
+
+    build_parser = subparsers.add_parser(
+        "build", help="マニフェスト(JSON)に書かれた素材一式をまとめて生成する"
+    )
+    build_parser.add_argument("manifest", help="マニフェストの JSON ファイル")
+    build_parser.add_argument("-d", "--dir", default=None, help="出力ディレクトリ(マニフェストの output を上書き)")
+    build_parser.add_argument("--force", action="store_true", help="変更がなくてもすべて作り直す")
+    build_parser.add_argument("--dry-run", action="store_true", help="何も書かずに予定だけ表示する")
+    build_parser.set_defaults(func=cmd_build)
 
     list_parser = subparsers.add_parser("list", help="使えるプリセットを一覧する")
     list_parser.set_defaults(func=cmd_list)
