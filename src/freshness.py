@@ -73,6 +73,11 @@ MIN_SPAN_HOURS = 4.0
 # 範囲を超えたら数字を出さず「不明」にする
 MAX_EXTRAPOLATION = 3.0
 
+# 記録した最大IDからこの割合より下なら、シーズンをまたぐほど古いとみなす。
+# プレミアリーグ公式で、前シーズンの記事が「今節」として返った実例がある
+# （返ってきたIDが約4.39M、そのとき記録していた最大が約4.70M）
+STALE_ID_RATIO = 0.98
+
 # 前回からこれだけ経っていないと「索引が止まった」とは言わない。
 # 数分後に回し直しただけで警告を出すと、警告として機能しなくなる
 MIN_STALL_HOURS = 6.0
@@ -254,6 +259,25 @@ def hours_ago(ref: Ref, entries: list[Observation], now: datetime | None = None)
     if behind > span(entries, ref.site) * MAX_EXTRAPOLATION:
         return None  # 測った範囲から離れすぎている。憶測になるので出さない
     return behind + (now - anchor.at).total_seconds() / 3600
+
+
+def suspects(groups: dict[str, list[Ref]], entries: list[Observation]) -> list[tuple[Ref, int]]:
+    """記録した最大IDから大きく下回るURLを拾う。
+
+    日付や節で検索すると、同じ見出しの前シーズンの記事が返ることがある。
+    見出しだけでは気づけないが、記事IDの水準を見れば分かる。
+    """
+    found: list[tuple[Ref, int]] = []
+    for site, refs in groups.items():
+        anchor = latest(entries, site)
+        if anchor is None or anchor.max_number <= 0:
+            continue
+        for ref in refs:
+            if ref.exact or ref.number <= 0:
+                continue  # 日付が読めるものは、そちらで判断できる
+            if ref.number < anchor.max_number * STALE_ID_RATIO:
+                found.append((ref, anchor.max_number))
+    return found
 
 
 def observe(

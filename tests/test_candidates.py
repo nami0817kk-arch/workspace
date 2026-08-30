@@ -405,3 +405,31 @@ def test_league_scoped_queries_are_dropped_without_hosts():
     assert _labels(item, league_official=[], league_media=["vi.nl"], match_q="verslag") == [
         "共通", "現地の報道",
     ]
+
+
+def test_the_morning_slot_picks_the_bigger_story_among_equally_fresh_ones():
+    # 実際に起きた例。8点の大ニュースより、30分新しいだけの4点が選ばれていた
+    ranked = score(
+        [
+            Candidate(id="big", title="大きい話", hours_ago=0.5, tier="確定",
+                      reaction=True, big_club=True),
+            Candidate(id="small", title="小さい話", hours_ago=0.0, tier="報道", numbers=True),
+        ],
+        SCORING,
+    )
+    chosen, _ = assign(ranked, SCORING, ["morning"])
+    assert chosen["morning"].id == "big"
+
+
+def test_freshness_still_wins_across_the_band():
+    # 帯を外れるほど古ければ、点数が高くても選ばない
+    ranked = score(
+        [
+            Candidate(id="old", title="古い大物", hours_ago=20, tier="報道",
+                      reaction=True, big_club=True, numbers=True),
+            Candidate(id="new", title="新しい小物", hours_ago=1, tier="報道"),
+        ],
+        SCORING,
+    )
+    chosen, _ = assign(ranked, SCORING, ["morning"])
+    assert chosen["morning"].id == "new"

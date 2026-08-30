@@ -192,6 +192,26 @@ python -m src.cli fresh <URL> <URL> ...
 `research/freshness.yaml` に記録する。対応しているのは skysports.com と
 espn.com と x.com。goal.com などIDがハッシュのサイトは判定できない。
 
+### 前のシーズンの記事に気づける
+
+日付や節で検索すると、**同じ見出しの前シーズンの記事**が返ることがあります。
+見出しだけでは気づけません。実際に踏んだ例:
+
+```
+検索: "Premier League Gameweek 2 report goals winner"
+→ premierleague.com/en/news/4391799/who-was-the-best-player-of-matchweek-2
+   これは前シーズンの第2節。記事IDが 4,391,799 で、当時の最大 4,698,606 より
+   30万以上も下だった
+```
+
+`fresh` は記録した最大IDと比べて、大きく下回るURLを知らせます。
+
+```
+! 前のシーズンの記事かもしれません: premierleague.com/en/news/4391799/…
+    記事ID 4391799 は、記録している最大 4698606 を大きく下回っています。
+    見出しが同じでも別の年の試合のことがあります
+```
+
 ### 索引が止まっていたら分かる
 
 記録があると、**前回から索引が進んだかどうか**が出る。

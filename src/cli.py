@@ -406,6 +406,13 @@ def _dispatch(args, config) -> int:
                 print(f"  {url}")
             print()
 
+        for ref, top in freshness.suspects(groups, entries):
+            print(
+                f"! 前のシーズンの記事かもしれません: {ref.url}\n"
+                f"    記事ID {ref.number} は、記録している最大 {top} を大きく下回っています。"
+                "見出しが同じでも別の年の試合のことがあります"
+            )
+
         for note in freshness.advice(growth, entries):
             print(f"! {note}")
 

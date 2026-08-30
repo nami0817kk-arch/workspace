@@ -21,3 +21,6 @@ observed:
 - site: football-tribe.com
   max: 0
   at: 2026-08-30T13:26
+- site: premierleague.com
+  max: 4698606
+  at: 2026-08-30T15:41

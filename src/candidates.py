@@ -210,7 +210,11 @@ def _prefer(
     if not pool:
         return None
     if prefer == "freshness":
-        return min(pool, key=lambda c: (c.hours_ago, -c.score))
+        # 時刻の順に並べるだけだと、30分新しいだけの小さい話が、その日の
+        # いちばん大きい話を押しのける。同じくらい新しいものは点数で選ぶ
+        newest = min(c.hours_ago for c in pool)
+        band = [c for c in pool if c.hours_ago <= newest + FRESH_BAND_HOURS]
+        return max(band, key=lambda c: (c.score, -c.hours_ago))
 
     flags = {"reaction": "賛否が割れる", "big_club": "ビッグクラブが絡む"}
     if prefer in flags:
@@ -225,6 +229,9 @@ def _prefer(
 # domains にこれを書くと、その候補のリーグの公式サイトに絞る。
 # 試合レポートは premierleague.com と bundesliga.com で別物なので、
 # 公式をひとまとめにすると関係ないリーグまで引いてしまう
+# 「同じくらい新しい」とみなす幅。この中なら、新しさではなく点数で選ぶ
+FRESH_BAND_HOURS = 6.0
+
 LEAGUE_OFFICIAL = "league_official"
 
 # こちらはそのリーグの現地語メディア。ドイツの試合なら kicker / sport1 に絞る

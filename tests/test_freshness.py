@@ -250,3 +250,33 @@ def test_named_patterns_win_over_the_generic_one():
     assert ref.site == "skysports.com"
     assert ref.number == 13578318
     assert ref.posted_on is None
+
+
+def test_articles_far_below_the_watermark_are_flagged():
+    from src.freshness import suspects
+
+    # 実際に踏んだ例。前シーズンの「Matchweek 2」記事が今節として返った
+    entries = [Observation("premierleague.com", 4_698_606, T0)]
+    groups = rank([
+        "https://www.premierleague.com/en/news/4391799/who-was-the-best-player-of-matchweek-2",
+        "https://www.premierleague.com/en/news/4698429/the-scouts-fpl-gameweek-2-radar",
+    ])
+    found = suspects(groups, entries)
+    assert [ref.number for ref, _ in found] == [4391799]
+    assert found[0][1] == 4_698_606
+
+
+def test_nothing_is_flagged_without_a_watermark():
+    from src.freshness import suspects
+
+    groups = rank(["https://www.premierleague.com/en/news/4391799/x"])
+    assert suspects(groups, []) == []
+
+
+def test_urls_with_a_readable_date_are_not_flagged():
+    from src.freshness import suspects
+
+    # 日付が読めるものは、そちらで判断できるので ID を持ち出さない
+    entries = [Observation("footballchannel.jp", 999_999, T0)]
+    groups = rank(["https://www.footballchannel.jp/2024/01/01/post1/"])
+    assert suspects(groups, entries) == []
