@@ -596,7 +596,8 @@ def _dispatch(args, config) -> int:
 
         if not args.no_record:
             if len(updated) > len(entries):
-                path = freshness.save(ledger, updated)
+                # 回すたびに増えるので、書くついでに整理する
+                path = freshness.save(ledger, freshness.prune(updated))
                 print(f"索引の記録を更新しました: {path}")
             else:
                 print("索引は前回から進んでいません（記録は変えていません）")

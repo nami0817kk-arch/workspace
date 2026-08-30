@@ -267,6 +267,40 @@ def hours_ago(ref: Ref, entries: list[Observation], now: datetime | None = None)
     return behind + (now - anchor.at).total_seconds() / 3600
 
 
+# 記録を残す日数。増加ペースの算出に使うので、短すぎると精度が落ちる
+KEEP_DAYS = 30
+# 1日に残す観測の数。同じ日に何度も回すと行だけが増える
+KEEP_PER_DAY = 3
+
+
+def prune(entries: list[Observation], now: datetime | None = None) -> list[Observation]:
+    """記録を整理する。
+
+    回すたびに1行ずつ増えるので、放っておくと読みにくくなる。
+    ペースの算出には「日をまたいだ2点」があればよいので、1日あたりの数を
+    絞り、古いものは落とす。いちばん新しい行は必ず残す（水準の判定に使う）。
+    """
+    now = now or datetime.now()
+    edge = now - timedelta(days=KEEP_DAYS)
+
+    kept: list[Observation] = []
+    for site in {entry.site for entry in entries}:
+        found = sorted(
+            (e for e in entries if e.site == site), key=lambda o: o.at, reverse=True
+        )
+        per_day: dict[date, int] = {}
+        for entry in found:
+            day = entry.at.date()
+            if entry.at < edge and kept and any(k.site == site for k in kept):
+                continue
+            if per_day.get(day, 0) >= KEEP_PER_DAY:
+                continue
+            per_day[day] = per_day.get(day, 0) + 1
+            kept.append(entry)
+
+    return sorted(kept, key=lambda o: o.at)
+
+
 def suspects(groups: dict[str, list[Ref]], entries: list[Observation]) -> list[tuple[Ref, int]]:
     """記録した最大IDから大きく下回るURLを拾う。
 
@@ -291,7 +325,8 @@ def observe(
 ) -> tuple[list[Observation], dict[str, int]]:
     """今回見た最大IDを記録に足す。(新しい記録, サイトごとの前回からの伸び) を返す。
 
-    x.com は投稿時刻が直接分かるので記録しない。
+    日付が直接分かるサイト（x.com、URLに日付が入るサイト）は記録しない。
+    IDを持たないので max が 0 のまま溜まり、水準の判定の邪魔になる。
     """
     now = now or datetime.now()
     added = list(entries)
@@ -300,6 +335,8 @@ def observe(
         if site == "x.com" or not refs:
             continue
         seen = max(ref.number for ref in refs)
+        if seen <= 0:
+            continue  # 記事IDを持たないサイト。日付で判断できるので記録しない
         previous = latest(entries, site)
         growth[site] = seen - previous.max_number if previous else 0
         if previous is None or seen > previous.max_number:

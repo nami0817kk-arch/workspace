@@ -286,3 +286,73 @@ def test_kicker_match_report_ids_are_recognised():
     ref = read("https://www.kicker.de/leverkusen-gegen-wolfsburg-2026-bundesliga-5050994/spielbericht")
     assert ref.site == "kicker.de"
     assert ref.number == 5050994
+
+
+def _obs(site, number, days=0, minutes=0):
+    return Observation(site, number, T0 - timedelta(days=days, minutes=minutes))
+
+
+def test_pruning_caps_how_many_are_kept_per_day():
+    from src.freshness import KEEP_PER_DAY, prune
+
+    # 同じ日に6回回した。番号は回すほど大きくなる
+    entries = [_obs("skysports.com", 1005 - i, minutes=i * 10) for i in range(6)]
+    kept = prune(entries, T0)
+    assert len(kept) == KEEP_PER_DAY
+    # いちばん新しいものは必ず残る（水準の判定に使う）
+    assert max(k.max_number for k in kept) == 1005
+
+
+def test_pruning_keeps_several_days_for_the_pace():
+    from src.freshness import prune
+
+    entries = [_obs("skysports.com", 1000 + day * 100, days=day) for day in range(10)]
+    kept = prune(entries, T0)
+    assert len(kept) == 10          # 日をまたいだぶんは残す
+
+
+def test_pruning_drops_what_is_too_old():
+    from src.freshness import KEEP_DAYS, prune
+
+    entries = [_obs("skysports.com", 900, days=KEEP_DAYS + 10), _obs("skysports.com", 1000)]
+    kept = prune(entries, T0)
+    assert [k.max_number for k in kept] == [1000]
+
+
+def test_pruning_never_empties_a_site():
+    from src.freshness import KEEP_DAYS, prune
+
+    # 古い記録しかないサイトでも、1つは残す
+    kept = prune([_obs("espn.com", 900, days=KEEP_DAYS + 10)], T0)
+    assert len(kept) == 1
+
+
+def test_pruning_handles_each_site_separately():
+    from src.freshness import prune
+
+    entries = [_obs("skysports.com", 1000 + i, minutes=i) for i in range(5)]
+    entries += [_obs("espn.com", 2000 + i, minutes=i) for i in range(5)]
+    kept = prune(entries, T0)
+    assert len({k.site for k in kept}) == 2
+    assert sum(1 for k in kept if k.site == "espn.com") == 3
+
+
+def test_pruned_records_stay_in_time_order():
+    from src.freshness import prune
+
+    entries = [_obs("skysports.com", 1000 + day * 10, days=day) for day in (3, 1, 2)]
+    kept = prune(entries, T0)
+    assert [k.at for k in kept] == sorted(k.at for k in kept)
+
+
+def test_sites_without_article_ids_are_not_recorded():
+    from src.freshness import observe
+
+    # 日付が読めるサイトは max が 0 になる。記録すると水準の判定を汚す
+    groups = rank([
+        "https://www.footballchannel.jp/2026/08/29/post1/",
+        "https://www.skysports.com/football/news/11095/13578318/x",
+    ])
+    entries, growth = observe(groups, [], T0)
+    assert [e.site for e in entries] == ["skysports.com"]
+    assert "footballchannel.jp" not in growth

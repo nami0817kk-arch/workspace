@@ -15,12 +15,6 @@ observed:
 - site: skysports.com
   max: 13578971
   at: 2026-08-30T13:26
-- site: soccer-king.jp
-  max: 0
-  at: 2026-08-30T13:26
-- site: football-tribe.com
-  max: 0
-  at: 2026-08-30T13:26
 - site: premierleague.com
   max: 4698606
   at: 2026-08-30T15:41
