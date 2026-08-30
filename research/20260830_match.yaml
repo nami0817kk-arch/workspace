@@ -1,0 +1,83 @@
+# 試合結果 の取材メモ（2026年8月30日）
+# 見出しに書いてあることだけ。検索の要約は使っていない
+slot: match
+date: "2026年8月30日"
+
+theme:
+  id: spurs_newcastle
+  prefix: 悲報
+  title: 3億8000万ポンド使ったトッテナムが2試合で無得点
+  hook: 補強に大金を投じたクラブが、開幕から2試合、まだ1点も取れていません。
+  question: 選手は揃えたのに、なぜ点が入らないのか
+
+thumbnail:
+  line1: トッテナム 開幕2連敗
+  line2: 3億8000万ポンド使って無得点
+  tags: [デゼルビ, 退団志願3人]
+
+answer: 足りないのは選手ではない。監督いわく「メンタリティは買えない」
+watch: 移籍期限は9月1日。退団を志願した3人がどうなるか
+
+sections:
+  - id: score
+    heading: 試合はこうなった
+    tier: 確定
+    official: true
+    telop: "スパーズ 0-2 ニューカッスル（8月29日）"
+    say:
+      - プレミアリーグ、トッテナム対ニューカッスルです。ホームのトッテナムが、ゼロ対に、で敗れました。
+      - 失点はどちらも後半。エランガ選手とウィッサ選手が決めています。トッテナムは、これで開幕から2連敗です。
+    sources:
+      - https://www.tottenhamhotspur.com/news/1087602/second-half-goals-seal-win-for-magpies
+      - https://www.tottenhamhotspur.com/news/1087616/spurs-0-2-newcastle-roberto-de-zerbis-verdict
+    card:
+      type: score
+      color: "#132257"
+      competition: プレミアリーグ 第2節
+      home: トッテナム
+      away: ニューカッスル
+      score: "0 - 2"
+      away_scorers: [エランガ, ウィッサ]
+      note: 2ゴールとも後半
+
+  - id: turning
+    heading: 何が起きていないのか
+    tier: 報道
+    telop: 2試合続けて無得点。ホームでの敗戦は監督就任後はじめて
+    say:
+      - ここからが問題です。トッテナムは、この試合も得点できませんでした。開幕から2試合、まだ1点も取れていません。
+      - デゼルビ監督にとっては、就任してからホームでの初黒星です。解説者のジェイミー・キャラガー氏は、この立ち上がりを厳しく批判したと伝えられています。
+    sources:
+      - https://www.skysports.com/football/tottenham-hotspur-vs-newcastle-united/report/559463
+      - https://www.skysports.com/football/news/11095/13578837/tottenham-hotspur-roberto-de-zerbi-highlights-biggest-problem-at-spurs-after-newcastle-defeat-as-jamie-carragher-slams-start
+      - https://www.espn.com/soccer/story/_/id/49764441/spurs-vs-newcastle-premier-league-result
+
+  - id: numbers
+    heading: 数字で見ると
+    tier: 報道
+    telop: この夏の補強に3億8000万ポンド
+    say:
+      - 数字の話をします。トッテナムがこの夏の移籍市場で使った額は、さんおくはっせんまんポンド。プレミアリーグでも屈指の支出です。
+      - それだけ使って、開幕2試合の得点はゼロ。「お金でメンタリティは買えない」と書いた媒体もあります。
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49765222/tottenham-hotspur-spent-380-million-transfers-summer-roberto-de-zerbi-cant-buy-mentality
+      - https://www.skysports.com/football/news/11095/13578837/tottenham-hotspur-roberto-de-zerbi-highlights-biggest-problem-at-spurs-after-newcastle-defeat-as-jamie-carragher-slams-start
+    card:
+      type: points
+      title: 開幕からのトッテナム
+      color: "#132257"
+      items:
+        - 開幕2試合で無得点、2連敗
+        - この夏の補強に3億8000万ポンド
+        - ホームでの敗戦はデゼルビ監督就任後はじめて
+
+  - id: next
+    heading: 次の焦点
+    tier: 報道
+    telop: 監督が明かした「3人が退団を志願」
+    say:
+      - 試合後、デゼルビ監督は、リシャルリソン選手、ダンソ選手、サール選手の3人が退団を望んでいると明かしたと報じられています。
+      - 移籍期限はくがつついたち。チームを立て直す前に、まず人が動くかもしれません。
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49765158/tottenham-roberto-de-zerbi-richarlison-kevin-danso-pape-sarr
+      - https://www.skysports.com/football/news/11661/13578971/iliman-ndiaye-and-richarlison-transfer-news-tottenham-and-everton-in-advanced-talks

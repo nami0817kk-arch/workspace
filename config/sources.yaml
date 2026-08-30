@@ -21,6 +21,7 @@ domains:
              arsenal.com, realmadrid.com, chelseafc.com, manutd.com,
              liverpoolfc.com, juventus.com,
              acmilan.com, bvb.de, fcbayern.com, psg.fr, slbenfica.pt,
+             tottenhamhotspur.com, newcastleunited.co.uk,
              premierleague.com, laliga.com, bundesliga.com, legaseriea.it,
              mlssoccer.com, uefa.com]
 
@@ -72,7 +73,8 @@ domains:
 leagues:
   england:
     name: プレミアリーグ
-    official: [premierleague.com, arsenal.com, chelseafc.com, manutd.com, liverpoolfc.com]
+    official: [premierleague.com, arsenal.com, chelseafc.com, manutd.com,
+               liverpoolfc.com, tottenhamhotspur.com, newcastleunited.co.uk]
     media: english
     match_q: "match report player ratings"
     official_q: "match report"
