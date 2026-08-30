@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import time
 from typing import Any
+from urllib.parse import urlsplit
 
 import requests
 
@@ -134,7 +135,10 @@ def request(
             response = (sess or session()).request(method, url, **kwargs)
         except requests.RequestException as exc:
             if attempt == retries - 1:
-                raise NetworkError(f"{label}: 接続できませんでした（{str(exc)[:150]}）") from exc
+                host = urlsplit(url).netloc or url
+                raise NetworkError(
+                    f"{label}: {host} へ接続できませんでした（{type(exc).__name__}）"
+                ) from exc
             time.sleep(backoff * (2**attempt))
             continue
 
