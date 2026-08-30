@@ -6,7 +6,8 @@ import pytest
 from ailab.connectors.images_gemini import BASE_URL, GeminiImages
 from ailab.connectors.images_local import LocalImages
 from ailab.connectors.images_openai import API_URL, OpenAIImages
-from ailab.connectors.images_stability import ASPECT_RATIOS, StabilityImages, closest_aspect_ratio
+from ailab.connectors.images_stability import StabilityImages
+from ailab.utils import ASPECT_RATIOS, closest_aspect_ratio
 from ailab.core.errors import AuthError, ConnectorError
 from fakes import FakeResponse, FakeSession
 

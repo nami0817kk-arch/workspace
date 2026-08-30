@@ -6,7 +6,7 @@ from ..core.connector import AuthSpec, CheckResult, Connector, RateLimit
 from ..core.errors import AuthError
 from ..core.registry import register
 from ..core.types import GeneratedImage
-from ..utils import ASPECT_RATIOS, closest_aspect_ratio  # noqa: F401  (旧来の import 先を維持)
+from ..utils import closest_aspect_ratio
 
 BASE_URL = "https://api.stability.ai/v2beta/stable-image/generate"
 ACCOUNT_URL = "https://api.stability.ai/v1/user/account"
