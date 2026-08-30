@@ -100,3 +100,79 @@ def test_an_unknown_account_is_reported():
 def test_an_old_post_is_reported():
     url = "https://x.com/FabrizioRomano/status/1183028368629010432"  # 2019年
     assert any("時間前" in p for p in review(url, ACCOUNTS, 24, NOW))
+
+
+def _call(handle, outcome="未判明", url=""):
+    from datetime import datetime
+
+    from src.xposts import Call
+
+    return Call(handle=handle, url=url or f"https://x.com/{handle}/status/1",
+                said="x", at=datetime(2026, 8, 30, 12, 0), outcome=outcome)
+
+
+def test_a_post_is_recorded_with_its_time(tmp_path):
+    from src.xposts import load_calls, record_call
+
+    ledger = tmp_path / "r.yaml"
+    call = record_call(
+        "https://x.com/FabrizioRomano/status/2092160046985543990", "アーセナルが合意", ledger
+    )
+    assert call.handle == "FabrizioRomano"
+    assert call.at.year == 2026
+    (stored,) = load_calls(ledger)
+    assert stored.said == "アーセナルが合意"
+    assert stored.outcome == "未判明"      # 判定は後で人が書く
+
+
+def test_the_same_post_is_not_recorded_twice(tmp_path):
+    from src.xposts import load_calls, record_call
+
+    ledger = tmp_path / "r.yaml"
+    url = "https://x.com/FabrizioRomano/status/2092160046985543990"
+    record_call(url, "一回目", ledger)
+    record_call(url, "二回目", ledger)
+    assert len(load_calls(ledger)) == 1
+
+
+def test_outcomes_are_tallied_per_account():
+    from src.xposts import hit_rate
+
+    calls = [_call("A", "的中"), _call("A", "外れ"), _call("A"), _call("B", "的中")]
+    assert hit_rate(calls) == {"A": (1, 1, 1), "B": (1, 0, 0)}
+
+
+def test_nothing_is_said_until_enough_have_been_judged():
+    from src.xposts import review_accounts
+
+    calls = [_call("A", "外れ") for _ in range(4)]
+    assert review_accounts(calls, [{"handle": "A"}]) == []
+
+
+def test_a_poor_hit_rate_is_reported():
+    from src.xposts import review_accounts
+
+    calls = [_call("A", "外れ") for _ in range(5)] + [_call("A", "的中")]
+    notes = review_accounts(calls, [{"handle": "A"}])
+    assert any("半分を切っています" in note for note in notes)
+
+
+def test_a_good_hit_rate_says_nothing():
+    from src.xposts import review_accounts
+
+    calls = [_call("A", "的中") for _ in range(5)] + [_call("A", "外れ")]
+    assert review_accounts(calls, [{"handle": "A"}]) == []
+
+
+def test_an_unregistered_account_being_followed_is_reported():
+    from src.xposts import review_accounts
+
+    calls = [_call("Unknown", "的中") for _ in range(5)]
+    notes = review_accounts(calls, [{"handle": "A"}])
+    assert any("accounts に無い" in note for note in notes)
+
+
+def test_a_missing_ledger_reads_as_empty(tmp_path):
+    from src.xposts import load_calls
+
+    assert load_calls(tmp_path / "none.yaml") == []

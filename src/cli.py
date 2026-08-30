@@ -114,6 +114,8 @@ def main(argv: list[str] | None = None) -> int:
     p_x = sub.add_parser("x", help="記者Xアカウントの検索リスト／投稿URLの確認")
     p_x.add_argument("urls", nargs="*", help="投稿URL。省略すると検索リストを出す")
     p_x.add_argument("--topic", default=None, help="この語で各アカウントを検索する")
+    p_x.add_argument("--note", default=None, help="この投稿を答え合わせ用に控える（内容を書く）")
+    p_x.add_argument("--calls", action="store_true", help="控えた投稿の的中を集計する")
 
     p_draft = sub.add_parser("draft", help="取材メモ(YAML)を検証して台本にする")
     p_draft.add_argument("notes")
@@ -611,6 +613,28 @@ def _dispatch(args, config) -> int:
         stale = int(plan.social.get("stale_hours", 24))
 
         backend = str(plan.social.get("backend", "search"))
+
+        if args.calls:
+            calls = xposts.load_calls()
+            if not calls:
+                print("まだ控えがありません。`x <URL> --note \"内容\"` で控えます")
+                return 0
+            print(f"■ 記者の答え合わせ　{len(calls)}件")
+            for handle, (hit, miss, pending) in sorted(xposts.hit_rate(calls).items()):
+                entry = xposts.trusted(handle, plan.accounts)
+                tier = f"［{entry.get('tier', '未確認')}］" if entry else "［未登録］"
+                print(f"  @{handle}　{tier}　的中{hit} / 外れ{miss} / 未判明{pending}")
+            for note in xposts.review_accounts(calls, plan.accounts):
+                print(f"\n! {note}")
+            print(f"\n判定は {xposts.LEDGER} の outcome を 的中 / 外れ に直します")
+            return 0
+
+        if args.note and args.urls:
+            for url in args.urls:
+                call = xposts.record_call(url, args.note)
+                print(f"控えました: @{call.handle}　{call.at:%m/%d %H:%M} UTC")
+            print(f"あとで {xposts.LEDGER} の outcome を直してください")
+            return 0
 
         if not args.urls and backend == "api":
             from . import xapi

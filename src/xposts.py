@@ -11,7 +11,12 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
+from pathlib import Path
 from datetime import datetime, timezone
+
+import yaml
+
+from .config import _resolve
 
 # X の ID は「2010-11-04 01:42:54.657 UTC からの経過ミリ秒 << 22」で作られている
 EPOCH_MS = 1_288_834_974_657
@@ -100,6 +105,111 @@ def from_search_result(title: str, url: str) -> Post:
         posted_at=when,
         truncated=text.endswith(TRUNCATED),
     )
+
+
+LEDGER = "research/reporters.yaml"
+
+
+@dataclass
+class Call:
+    """記者の投稿を1件、あとで答え合わせするために控えたもの。"""
+
+    handle: str
+    url: str
+    said: str                    # 何と言っていたか（見出しの範囲で）
+    at: datetime
+    outcome: str = ""            # 的中 / 外れ / 未判明
+    note: str = ""
+
+    def to_dict(self) -> dict:
+        return {
+            "handle": self.handle,
+            "url": self.url,
+            "said": self.said,
+            "at": self.at.isoformat(timespec="minutes"),
+            "outcome": self.outcome or "未判明",
+            "note": self.note,
+        }
+
+
+def load_calls(path: str | Path = LEDGER) -> list[Call]:
+    target = _resolve(path)
+    if not target.exists():
+        return []
+    raw = yaml.safe_load(target.read_text(encoding="utf-8")) or {}
+    calls: list[Call] = []
+    for row in raw.get("calls") or []:
+        try:
+            calls.append(
+                Call(
+                    handle=str(row.get("handle", "")).lstrip("@"),
+                    url=str(row.get("url", "")),
+                    said=str(row.get("said", "")),
+                    at=datetime.fromisoformat(str(row.get("at"))),
+                    outcome=str(row.get("outcome", "未判明")),
+                    note=str(row.get("note", "")),
+                )
+            )
+        except (TypeError, ValueError):
+            continue
+    return calls
+
+
+def save_calls(calls: list[Call], path: str | Path = LEDGER) -> Path:
+    target = _resolve(path)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(
+        "# 記者の投稿の答え合わせ。outcome を 的中 / 外れ に直していく\n"
+        + yaml.safe_dump(
+            {"calls": [call.to_dict() for call in calls]}, allow_unicode=True, sort_keys=False
+        ),
+        encoding="utf-8",
+    )
+    return target
+
+
+def record_call(url: str, said: str, path: str | Path = LEDGER) -> Call:
+    """投稿を控える。判定は後で人が書き込む。"""
+    handle, _ = parse_url(url)
+    call = Call(handle=handle, url=url, said=said.strip(), at=posted_at(url))
+
+    calls = load_calls(path)
+    if not any(existing.url == url for existing in calls):
+        calls.append(call)
+        save_calls(calls, path)
+    return call
+
+
+def hit_rate(calls: list[Call]) -> dict[str, tuple[int, int, int]]:
+    """アカウントごとに (的中, 外れ, 未判明) を数える。"""
+    tally: dict[str, list[int]] = {}
+    for call in calls:
+        row = tally.setdefault(call.handle, [0, 0, 0])
+        index = {"的中": 0, "外れ": 1}.get(call.outcome, 2)
+        row[index] += 1
+    return {handle: tuple(row) for handle, row in tally.items()}
+
+
+def review_accounts(calls: list[Call], accounts: list[dict]) -> list[str]:
+    """実績と、設定に書いた確度が食い違っていないか。"""
+    notes: list[str] = []
+    for handle, (hit, miss, _) in sorted(hit_rate(calls).items()):
+        judged = hit + miss
+        if judged < 5:
+            continue  # 判定済みが少ないうちは何も言わない
+        rate = hit / judged
+        entry = trusted(handle, accounts)
+        if entry is None:
+            notes.append(
+                f"@{handle} は accounts に無いのに{judged}件控えています。"
+                f"的中 {hit}/{judged}。追うなら登録してください"
+            )
+        elif rate < 0.5:
+            notes.append(
+                f"@{handle} の的中は {hit}/{judged}。半分を切っています。"
+                "出典に使うのをやめるか、確度を下げてください"
+            )
+    return notes
 
 
 def trusted(handle: str, accounts: list[dict]) -> dict | None:
