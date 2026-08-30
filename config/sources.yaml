@@ -23,7 +23,7 @@ domains:
              premierleague.com, laliga.com, bundesliga.com, legaseriea.it,
              uefa.com]
 
-  # 日本の公式。Jリーグ・日本人選手の話をここまで辿れば確定にできる
+  # 日本の公式。Jリーグの話をここまで辿れば確定にできる
   official_jp: [jleague.jp, jfa.jp, urawa-reds.co.jp, frontale.co.jp,
                 vissel-kobe.co.jp]
 
@@ -116,7 +116,6 @@ social:
 scoring:
   weights:
     freshness: 3      # 新しさ。速報性がそのまま再生に効く
-    japanese: 1       # 日本人選手が絡む。多少の後押しにとどめる（縛りにはしない）
     reaction: 3       # 賛否が割れる・驚きがある。コメントが伸びる
     big_club: 2       # ビッグクラブが絡む
     numbers: 1        # 金額・記録など、数字が立つ
@@ -154,7 +153,7 @@ deep:
   - {q: "{theme} 詳細", domains: japanese, label: 何が起きたか}
   # まず公式を当たる。声明そのものが取れれば「確定」で出せる
   - {q: "{en} official statement OR announcement", domains: official, label: 公式発表（欧州）}
-  - {q: "{theme} 移籍 OR 加入 のお知らせ", domains: official_jp, when: japanese, label: 公式発表（日本）}
+  - {q: "{theme} 移籍 OR 加入 のお知らせ", domains: official_jp, when: japan, label: 公式発表（日本）}
   - {q: "{en} latest news", domains: english, label: 何が起きたか（英語）}
   - {q: "{en} why explained", domains: english, label: なぜそうなったか}
   - {q: "{en}", domains: social, label: 反応}
@@ -205,11 +204,10 @@ scan:
   queries:
     - {q: "移籍 発表 OR 決定 OR 公式", domains: japanese, label: 日本語（決まったもの）}
     - {q: "移籍 交渉 OR 関心 OR 浮上", domains: japanese, label: 日本語（動いているもの）}
-    - {q: "日本人選手 移籍 OR ゴール OR デビュー", domains: japanese, label: 日本人選手}
-    # 日本人選手の移籍は現地語のほうが速く、しかも公式に辿れる。
-    # 「Japaner Transfer offiziell」で bundesliga.com の発表が出る（実測）
-    - {q: "Japaner Transfer offiziell", domains: german, label: 日本人選手（ドイツ語）}
-    - {q: "Japanse speler transfer", domains: dutch, label: 日本人選手（オランダ語）}
+    # 現地語で引くと、英語より速く、しかもリーグ公式に辿り着きやすい（実測）
+    - {q: "Transfer offiziell Wechsel", domains: german, label: ドイツ}
+    - {q: "calciomercato ufficiale", domains: italian, label: イタリア}
+    - {q: "transfert officiel", domains: french, label: フランス}
     - {q: "Jリーグ 移籍 OR 監督 OR 首位", domains: japanese, label: Jリーグ}
     - {q: "football news {today_en}", domains: english, label: 英語の総覧}
     - {q: "transfer news {today_en}", domains: english, label: 移籍（英語）}
@@ -249,11 +247,11 @@ routines:
         check: クラブの発表か。発表の日時を控える
 
       - id: results
-        what: 夜の試合結果と日本人選手
+        what: 夜の試合結果
         tier: 報道
         queries:
-          - {q: "海外日本人選手 試合結果 {date_ja}"}
           - {q: "results {today_en}", domains: english}
+          - {q: "試合結果 {date_ja}", domains: japanese}
         check: スコアと得点者は2ソースで突き合わせる
 
   # ---------------------------------------------------------------- 昼
@@ -264,7 +262,7 @@ routines:
     target_minutes: 2
     angle: |
       昼休みに見られる枠。賛否が割れている話・驚きのある話を1件選んで掘る。
-      題材は問わない。欧州でも日本人選手でもJリーグでもよい。
+      題材は問わない。どのリーグでもよい。
       朝の枠とは別の話題にする（同じ話を1日2回出さない）。
     structure:
       - {id: what, heading: 何が起きたか, tier: 報道}
@@ -279,12 +277,12 @@ routines:
           - {q: "海外サッカー 批判 OR 議論 {date_ja}"}
         check: 誰が言ったのかを特定する。「ファンの声」で済ませない
 
-      - id: japanese
-        what: 日本人選手・Jリーグ（あれば。無ければ無理に入れない）
+      - id: jleague
+        what: Jリーグ（あれば。無ければ無理に入れない）
         tier: 報道
         queries:
-          - {q: "海外日本人選手 {date_ja}"}
-          - {q: "Jリーグ {date_ja}"}
+          - {q: "Jリーグ 移籍 OR 監督 OR 首位", domains: japanese}
+          - {q: "Jリーグ 移籍 のお知らせ", domains: official_jp}
         check: 2社以上で内容が一致しているか
 
   # ---------------------------------------------------------------- 夜

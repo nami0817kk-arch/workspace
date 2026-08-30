@@ -32,7 +32,6 @@ class Candidate:
                         # 現地語の検索を出すかどうかの判断に使う
     hours_ago: float = 99.0
     tier: str = "未確認"
-    japanese: bool = False
     reaction: bool = False
     big_club: bool = False
     numbers: bool = False
@@ -66,7 +65,6 @@ def load_candidates(path: str | Path) -> tuple[str, list[Candidate]]:
                 league=str(entry.get("league", "")).strip().lower(),
                 hours_ago=float(entry["hours_ago"]) if "hours_ago" in entry else -1.0,
                 tier=str(entry.get("tier", "未確認")).strip(),
-                japanese=bool(entry.get("japanese", False)),
                 reaction=bool(entry.get("reaction", False)),
                 big_club=bool(entry.get("big_club", False)),
                 numbers=bool(entry.get("numbers", False)),
@@ -125,7 +123,6 @@ def score(items: list[Candidate], scoring: dict) -> list[Candidate]:
             breakdown["新しさ"] = round(stage / top * fresh_weight)
 
         for key, label in (
-            ("japanese", "日本人"),
             ("reaction", "反応"),
             ("big_club", "ビッグクラブ"),
             ("numbers", "数字"),
@@ -194,7 +191,7 @@ def _prefer(
     if prefer == "freshness":
         return min(pool, key=lambda c: (c.hours_ago, -c.score))
 
-    flags = {"japanese": "日本人選手が絡む", "reaction": "賛否が割れる", "big_club": "ビッグクラブが絡む"}
+    flags = {"reaction": "賛否が割れる", "big_club": "ビッグクラブが絡む"}
     if prefer in flags:
         matching = [c for c in pool if getattr(c, prefer)]
         if not matching:
@@ -211,7 +208,7 @@ def deep_queries(
 
     海外サイトを日本語で検索しても何も出ないので、{en} を使う雛形は
     候補に英語の語が入っているときだけ出す。
-    when: japanese の雛形も、日本人選手が絡む候補のときだけ出す。
+    when: を書いた雛形は、そのリーグの候補のときだけ出す。
     """
     queries = []
     for template in templates:
@@ -219,10 +216,9 @@ def deep_queries(
         if "{en}" in text and not item.en:
             continue
 
-        # 条件の合うときだけ出す。ドイツ語の検索をスペインの話に出しても返らないし、
-        # 日本のサイトで欧州の話を引いても無駄になる
+        # リーグが合うときだけ出す。ドイツ語の検索をスペインの話に出しても返らない
         when = str(template.get("when", "")).strip().lower()
-        if when and not _matches(item, when):
+        if when and item.league != when:
             continue
 
         group = template.get("domains")
@@ -234,13 +230,6 @@ def deep_queries(
             }
         )
     return queries
-
-
-def _matches(item: Candidate, when: str) -> bool:
-    """deep の when: が指す条件に、この候補が当てはまるか。"""
-    if when == "japanese":
-        return item.japanese
-    return item.league == when
 
 
 def exclude_covered(items: list[Candidate], covered: dict[str, object]) -> tuple[list, list]:
@@ -266,7 +255,6 @@ candidates:
                       # 書くと現地語の検索も出る
     hours_ago:        # 何時間前か。空にすると url から割り出す
     tier: 報道         # 確定 / 報道 / 未確認
-    japanese: false   # 日本人選手が絡むか
     reaction: false   # 賛否が割れる・驚きがあるか
     big_club: false   # ビッグクラブが絡むか
     numbers: false    # 金額・記録など数字が立つか

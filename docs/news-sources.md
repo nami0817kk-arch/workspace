@@ -56,24 +56,26 @@ urawa-reds.co.jp/topteamtopics/242808/     ← クラブの移籍発表
 
 **深掘りの検索でも、まず公式を当たります。** `pick` が出す検索リストの先頭近くに
 「公式発表」が入っているので、声明が取れれば `確定` として出せます。
-日本の公式サイトを引く検索は、日本人選手が絡む候補のときだけ出ます
+日本の公式サイトを引く検索は、`league: japan` の候補のときだけ出ます
 （jleague.jp でアルバレスを検索しても意味がないため）。
 
 ### 現地語で引くと、英語では出ないものが出る
 
-**いちばん効いた発見です。** 日本人選手の移籍を日本語・英語で探しても出てこなかったのに、
+**いちばん効いた発見です。** ブンデスリーガの移籍を日本語・英語で探しても出てこなかったのに、
 ドイツ語で引くと出てきました。しかも**リーグ公式**（＝`確定`）です。
 
 ```
-検索: "Japaner Transfer offiziell"  （kicker.de, sport1.de, bundesliga.com に限定）
+検索: "Transfer offiziell Wechsel"  （kicker.de, sport1.de に限定）
+      "official statement OR announcement transfer"  （bundesliga.com ほか公式に限定）
 
 → bundesliga.com  ボルシアMGが橋岡大樹を獲得（スラビア・プラハからレンタル）
 → bundesliga.com  マインツが川崎颯太の完全移籍を発表
 → sport1.de       RBライプツィヒが山本理仁と2031年まで契約
 ```
 
-同じ日に日本語サイトを「日本人選手 移籍」で引いても、この4件は1件も出ませんでした。
+同じ日に日本語サイト・英語サイトを引いても、この4件は1件も出ませんでした。
 **現地の話は現地語がいちばん速く、公式に辿り着きやすい。**
+スキャンには各国語の検索を入れてあります。
 
 ### リーグを書くと現地語の検索が出る
 
@@ -85,7 +87,8 @@ urawa-reds.co.jp/topteamtopics/242808/     ← クラブの移籍発表
     league: spain      # → スペイン語の検索だけが出る
   - id: sano
     league: germany    # → ドイツ語の検索だけが出る
-    japanese: true     # → さらに日本の公式を引く検索も出る
+  - id: jleague_move
+    league: japan      # → 日本の公式（jleague.jp ほか）を引く検索が出る
 ```
 
 書けるのは `england` / `spain` / `germany` / `italy` / `france` / `netherlands` / `japan`。

@@ -12,7 +12,7 @@ from src.candidates import (
 )
 
 SCORING = {
-    "weights": {"freshness": 3, "japanese": 1, "reaction": 3, "big_club": 2, "numbers": 1},
+    "weights": {"freshness": 3, "reaction": 3, "big_club": 2, "numbers": 1},
     "freshness_hours": {6: 3, 12: 2, 24: 1},
     "big_clubs": ["アーセナル", "バルセロナ"],
     "slots": {
@@ -38,9 +38,9 @@ def test_freshness_is_scaled_to_its_weight():
 
 
 def test_flags_add_their_weights_and_leave_a_breakdown():
-    (item,) = score([Candidate(id="a", title="A", hours_ago=1, japanese=True, numbers=True)], SCORING)
-    assert item.breakdown == {"新しさ": 3, "日本人": 1, "数字": 1}
-    assert item.score == 5
+    (item,) = score([Candidate(id="a", title="A", hours_ago=1, reaction=True, numbers=True)], SCORING)
+    assert item.breakdown == {"新しさ": 3, "反応": 3, "数字": 1}
+    assert item.score == 7
 
 
 def test_big_club_is_detected_from_the_title():
@@ -223,7 +223,6 @@ def test_loading_reads_flags_and_defaults(tmp_path):
     assert date_label == "2026年8月29日"
     assert items[0].en == "Julian Alvarez"
     assert items[0].reaction is True
-    assert items[0].japanese is False
     assert items[1].id == "c2"          # id は自動で振る
     assert items[1].hours_ago == -1.0   # 未記入の印。fill_ages で埋める
 
@@ -249,25 +248,25 @@ def test_loading_reports_a_missing_file(tmp_path):
 
 DEEP_WHEN = [
     {"q": "{theme} 詳細", "label": "日本語"},
-    {"q": "{theme} のお知らせ", "domains": "official_jp", "when": "japanese", "label": "日本の公式"},
+    {"q": "{theme} のお知らせ", "domains": "official_jp", "when": "japan", "label": "日本の公式"},
 ]
 
 
-def test_japan_only_queries_are_skipped_for_european_topics():
-    european = Candidate(id="a", title="アルバレスの去就", japanese=False)
+def test_japan_only_queries_are_skipped_for_other_leagues():
+    european = Candidate(id="a", title="アルバレスの去就", league="spain")
     assert [q["label"] for q in deep_queries(european, DEEP_WHEN, {})] == ["日本語"]
 
 
-def test_japan_only_queries_appear_for_japanese_topics():
-    japanese = Candidate(id="b", title="鈴木彩艶の移籍", japanese=True)
-    assert [q["label"] for q in deep_queries(japanese, DEEP_WHEN, {})] == ["日本語", "日本の公式"]
+def test_japan_only_queries_appear_for_the_japanese_league():
+    jleague = Candidate(id="b", title="Jリーグの移籍", league="japan")
+    assert [q["label"] for q in deep_queries(jleague, DEEP_WHEN, {})] == ["日本語", "日本の公式"]
 
 
 DEEP_LEAGUE = [
     {"q": "{en} latest", "domains": "english", "label": "英語"},
     {"q": "{en} Transfer offiziell", "domains": "german", "when": "germany", "label": "ドイツ語"},
     {"q": "{en} fichaje oficial", "domains": "spanish", "when": "spain", "label": "スペイン語"},
-    {"q": "{theme} のお知らせ", "domains": "official_jp", "when": "japanese", "label": "日本の公式"},
+    {"q": "{theme} のお知らせ", "domains": "official_jp", "when": "japan", "label": "日本の公式"},
 ]
 
 
@@ -279,11 +278,9 @@ def test_only_the_matching_leagues_local_language_query_appears():
     assert [q["label"] for q in deep_queries(germany, DEEP_LEAGUE, {})] == ["英語", "ドイツ語"]
 
 
-def test_league_and_japanese_conditions_can_both_fire():
-    item = Candidate(id="c", title="佐野海舟", en="Kaishu Sano", league="germany", japanese=True)
-    assert [q["label"] for q in deep_queries(item, DEEP_LEAGUE, {})] == [
-        "英語", "ドイツ語", "日本の公式",
-    ]
+def test_the_japanese_league_gets_its_own_official_query():
+    item = Candidate(id="c", title="Jリーグの移籍", en="J League transfer", league="japan")
+    assert [q["label"] for q in deep_queries(item, DEEP_LEAGUE, {})] == ["英語", "日本の公式"]
 
 
 def test_no_league_means_no_local_language_query():
