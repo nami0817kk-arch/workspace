@@ -1,29 +1,43 @@
-"""Google Gemini / Imagen による画像生成。"""
+"""Google Gemini / Imagen の画像生成。"""
 
 from __future__ import annotations
 
 import base64
 
-from ..http import error_detail, session
-from .base import GeneratedImage, ImageProvider, ProviderError
+from ..core.connector import AuthSpec, CheckResult, Connector, RateLimit
+from ..core.errors import AuthError, ConnectorError
+from ..core.registry import register
+from ..core.types import GeneratedImage
 
 BASE_URL = "https://generativelanguage.googleapis.com/v1beta/models"
 
 
-class GeminiProvider(ImageProvider):
+@register
+class GeminiImages(Connector):
     name = "gemini"
+    category = "images"
+    summary = "Gemini / Imagen の画像生成"
+    auth = AuthSpec(
+        env=("GEMINI_API_KEY", "GOOGLE_API_KEY"),
+        any_of=True,
+        signup_url="https://aistudio.google.com/apikey",
+    )
+    terms_url = "https://ai.google.dev/gemini-api/terms"
+    rate_limit = RateLimit(requests=15, per_seconds=60)
     default_model = "gemini-2.5-flash-image"
-    api_key_env = "GEMINI_API_KEY"
+    priority = 20
 
-    def api_key(self):  # GOOGLE_API_KEY もフォールバックとして許可する
-        from ..config import get_env
+    def default_headers(self) -> dict[str, str]:
+        key = self.api_key()
+        return {"x-goog-api-key": key} if key else {}
 
-        return get_env("GEMINI_API_KEY") or get_env("GOOGLE_API_KEY")
-
-    def unavailable_reason(self) -> str:
-        if self.is_available():
-            return ""
-        return "環境変数 GEMINI_API_KEY (または GOOGLE_API_KEY) が未設定です"
+    def check(self) -> CheckResult:
+        if not self.is_available():
+            return CheckResult(self.name, ok=False, detail=self.unavailable_reason(), skipped=True)
+        body = self.get_json(BASE_URL, use_cache=False, timeout=30)
+        return CheckResult(
+            self.name, ok=True, detail=f"利用可能モデル {len(body.get('models', []))} 件"
+        )
 
     def generate(
         self,
@@ -34,19 +48,13 @@ class GeminiProvider(ImageProvider):
         model: str | None = None,
         timeout: int = 180,
     ) -> list[GeneratedImage]:
-        key = self.api_key()
-        if not key:
-            raise ProviderError(self.unavailable_reason())
+        if not self.is_available():
+            raise AuthError(self.unavailable_reason())
 
         model = model or self.default_model
-        sess = session({"x-goog-api-key": key})
-
         if model.startswith("imagen"):
             url = f"{BASE_URL}/{model}:predict"
-            payload = {
-                "instances": [{"prompt": prompt}],
-                "parameters": {"sampleCount": n},
-            }
+            payload = {"instances": [{"prompt": prompt}], "parameters": {"sampleCount": n}}
         else:
             url = f"{BASE_URL}/{model}:generateContent"
             payload = {
@@ -54,11 +62,7 @@ class GeminiProvider(ImageProvider):
                 "generationConfig": {"responseModalities": ["IMAGE"]},
             }
 
-        response = sess.post(url, json=payload, timeout=timeout)
-        if not response.ok:
-            raise ProviderError(f"Gemini 画像生成に失敗しました ({error_detail(response)})")
-
-        body = response.json()
+        body = self.request("POST", url, json=payload, timeout=timeout).json()
         images = [
             GeneratedImage(
                 data=base64.b64decode(data),
@@ -70,8 +74,8 @@ class GeminiProvider(ImageProvider):
             for mime, data in _iter_inline_images(body)
         ]
         if not images:
-            raise ProviderError(
-                "Gemini から画像が返りませんでした（モデル名が画像生成対応か確認してください）"
+            raise ConnectorError(
+                "gemini: 画像が返りませんでした（モデル名が画像生成対応か確認してください）"
             )
         return images[:n] if model.startswith("imagen") else images
 

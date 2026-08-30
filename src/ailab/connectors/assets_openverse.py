@@ -2,26 +2,37 @@
 
 from __future__ import annotations
 
-from ..http import error_detail, session
-from .base import IllustItem, IllustSource, SourceError
+from ..core.connector import AuthSpec, CheckResult, Connector, RateLimit
+from ..core.registry import register
+from ..core.types import Asset
 
 API_URL = "https://api.openverse.org/v1/images/"
 
 
-class OpenverseSource(IllustSource):
+@register
+class OpenverseAssets(Connector):
     name = "openverse"
-    api_key_env = None
+    category = "assets"
+    summary = "CC素材の横断検索（キー不要）"
+    auth = AuthSpec()
+    terms_url = "https://openverse.org/terms"
     license_note = "CC0 / CC BY など（作品ごとに異なる。license 欄を必ず確認）"
+    rate_limit = RateLimit(requests=100, per_seconds=3600)
+    priority = 10
 
-    def search(
+    def check(self) -> CheckResult:
+        body = self.get_json(API_URL, params={"q": "test", "page_size": 1}, use_cache=False, timeout=30)
+        return CheckResult(self.name, ok=True, detail=f"検索可能（{body.get('result_count', 0)}件ヒット）")
+
+    def search_assets(
         self,
         query: str,
         *,
         limit: int = 10,
-        timeout: int = 30,
         commercial_only: bool = True,
         category: str | None = "illustration",
-    ) -> list[IllustItem]:
+        timeout: int = 30,
+    ) -> list[Asset]:
         params: dict = {"q": query, "page_size": max(1, min(limit, 50))}
         if commercial_only:
             # 商用利用可・改変可のライセンスに絞る
@@ -29,18 +40,14 @@ class OpenverseSource(IllustSource):
         if category:
             params["category"] = category
 
-        response = session().get(API_URL, params=params, timeout=timeout)
-        if not response.ok:
-            raise SourceError(f"Openverse の検索に失敗しました ({error_detail(response)})")
-
-        items = [_to_item(result) for result in response.json().get("results", [])]
-        return items[:limit]
+        body = self.get_json(API_URL, params=params, timeout=timeout)
+        return [_to_asset(result) for result in body.get("results", [])][:limit]
 
 
-def _to_item(result: dict) -> IllustItem:
+def _to_asset(result: dict) -> Asset:
     license_name = result.get("license", "")
     version = result.get("license_version", "")
-    return IllustItem(
+    return Asset(
         source="openverse",
         title=result.get("title") or "",
         image_url=result.get("url") or "",

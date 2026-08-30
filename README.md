@@ -9,10 +9,12 @@ AI活用のアイデア検証・試作を行うラボプロジェクト。
 | `ailab gen "プロンプト"` | 画像を生成する（OpenAI / Gemini / Stability、APIキー無しでも動く `local` あり） |
 | `ailab search "キーワード"` | Web上のフリーイラストを横断検索する（Openverse / Wikimedia / Pixabay） |
 | `ailab fetch "キーワード"` | フリーイラストを検索してダウンロードし、クレジットも書き出す |
-| `ailab status` | 使えるプロバイダ・素材サイトを確認する |
+| `ailab publish FILE --repo owner/name` | 生成物を GitHub へコミットする（既定はドライラン） |
+| `ailab connectors` / `ailab doctor` | 連携先の設定状況を見る / 実際に接続して確認する |
 
 詳しい使い方は [docs/image-tools.md](docs/image-tools.md)。
-外部サービス連携を広げる計画は [docs/integrations-plan.md](docs/integrations-plan.md)。
+連携の仕組みと増やし方は [docs/connectors.md](docs/connectors.md)、
+今後の計画は [docs/integrations-plan.md](docs/integrations-plan.md)。
 
 ## セットアップ
 
@@ -25,7 +27,7 @@ copy .env.example .env   # 使うAPIキーだけ入れる（無くても local �
 ```
 
 ```bash
-ailab status
+ailab connectors                                    # 何が使える状態か
 ailab gen "青空の下でノートPCを使う猫、フラットイラスト"
 ailab fetch "cat illustration" -l 3
 ```
@@ -36,7 +38,7 @@ ailab fetch "cat illustration" -l 3
 
 | フォルダ | 用途 |
 |---|---|
-| `src/` | 実装コード（`src/ailab/` … 画像生成 `imagegen/` とフリー素材 `illust/`） |
+| `src/` | 実装コード（`core/` … 連携基盤、`connectors/` … 連携先を1ファイル1つ） |
 | `docs/` | 調査メモ・検証記録 |
 | `tests/` | テストコード（`python -m pytest`。外部通信はモック） |
 

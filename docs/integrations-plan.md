@@ -1,9 +1,24 @@
 # 外部サイト連携プラン
 
+## 進捗
+
+| Phase | 状態 |
+|---|---|
+| 0. 基盤（`core/` + `connectors/` + `ailab connectors` / `doctor`） | **完了** |
+| 2. 出力先（GitHub） | **完了**（`ailab publish`。Slack / Discord は当面不要と判断） |
+| 1. 取得先追加（Iconify → Unsplash / Pexels） | 次にやる |
+| 生成モデル追加（Replicate / Hugging Face） | その次 |
+| 3. 情報収集（RSS / GitHub / Qiita） | その次 |
+| 4. パイプライン / 5. MCP化 | 未着手 |
+
+実装の使い方と新しい連携先の足し方は [connectors.md](connectors.md)。
+
+---
+
 `ailab` を「画像生成＋フリー素材取得ツール」から、**外部サービス連携の共通基盤**へ広げるための計画。
-現状（v0.1）は `imagegen/`（生成API 4種）と `illust/`（素材サイト 3種）が別々の構造を持っているが、
-どちらも「アダプタ＋APIキー有無の判定＋共通の戻り値型＋CLIサブコマンド」という同じ形をしている。
-まずこれを1つの仕組みに統合し、その上に連携先を足していく。
+出発点（v0.1）では `imagegen/`（生成API 4種）と `illust/`（素材サイト 3種）が別々の構造を持っていたが、
+どちらも「アダプタ＋APIキー有無の判定＋共通の戻り値型＋CLIサブコマンド」という同じ形をしていた。
+これを1つの仕組みに統合し（Phase 0 で実施済み）、その上に連携先を足していく。
 
 ## 0. 方針：何を自前実装し、何をMCPに任せるか
 
@@ -24,27 +39,28 @@
 
 ### ディレクトリ構成
 
+実装済みの構成（Phase 0 の結果）。
+
 ```
 src/ailab/
   core/
-    connector.py     # Connector 基底クラスと能力プロトコル
-    registry.py      # 名前 → コネクタの登録簿。CLI/MCPはここだけを見る
-    auth.py          # APIキー / Bearer / OAuth2 トークンの取り回し
-    http.py          # 再試行・レート制限・キャッシュ付きセッション（現 http.py を拡張）
+    connector.py     # Connector 基底クラス、AuthSpec、能力プロトコル
+    registry.py      # 名前 → コネクタの登録簿。CLI はここだけを見る
+    http.py          # 再試行・レート制限・エラー言い換え付きの通信
+    cache.py         # 検索結果のディスクキャッシュ
     errors.py        # AuthError / RateLimitError / NotFoundError / NetworkError
-    types.py         # Asset / GeneratedImage / PublishResult / FeedItem
+    types.py         # Asset / GeneratedImage / PublishResult
   connectors/
     images_openai.py  images_gemini.py  images_stability.py  images_local.py
-    assets_openverse.py  assets_wikimedia.py  assets_pixabay.py ...
-    publish_slack.py  publish_discord.py  publish_notion.py ...
-    feed_rss.py  feed_github.py ...
-  recipes/           # YAMLパイプライン（Phase 4）
-  mcp_server.py      # ailab 自体をMCPサーバ化（Phase 5）
+    assets_openverse.py  assets_wikimedia.py  assets_pixabay.py
+    publish_github.py
+    （今後）assets_iconify.py  assets_unsplash.py  feed_rss.py ...
+  assets.py          # 素材のダウンロードとクレジット出力
+  imagegen.py        # 後方互換シム（ailab.imagegen.generate は今も動く）
+  illust.py          # 後方互換シム
   cli.py
+  （今後）recipes/ … YAMLパイプライン、mcp_server.py … MCPサーバ化
 ```
-
-既存の `imagegen/` `illust/` は**薄いラッパとして残す**（`ailab.imagegen.generate()` は
-そのまま動く）。移行で既存テスト50件を壊さないことを Phase 0 の完了条件にする。
 
 ### コネクタの共通契約
 
@@ -109,9 +125,9 @@ CLIは「コネクタ名」ではなく「**能力**」でディスパッチす�
 
 | 連携先 | 認証 | 実装コスト | 備考 |
 |---|---|---|---|
-| **Discord Webhook** | URLのみ | 小 | 最も簡単。動作確認の第一候補 |
+| **GitHub** | PAT | 小 | **実装済み**。生成物をリポジトリへコミット（`ailab publish`） |
+| **Discord Webhook** | URLのみ | 小 | 最も簡単。必要になったら |
 | **Slack** | Webhook（投稿のみ）/ Bot token（ファイル添付） | 小〜中 | 画像添付はBot tokenが要る |
-| **GitHub** | PAT / 既存MCP | 小 | 生成物をリポジトリへコミット、Releaseへ添付 |
 | **Notion** | Integration Token | 中 | ページ作成＋画像は外部URLが要る（Notionは直接アップロード不可） |
 | **Google Drive** | OAuth2 | 大 | 認可フローが必要。優先度は下げる |
 | **S3 / Cloudflare R2** | キー | 中 | 生成物の公開URL化。Notion連携の前提にもなる |
@@ -125,14 +141,15 @@ RSS/Atom（キー不要）、GitHub（リリース・Issue）、Qiita/Zenn、arX
 
 | Phase | 内容 | 完了条件 | 目安 |
 |---|---|---|---|
-| **0. 基盤** | `core/` 新設、既存6コネクタを移行、`ailab connectors` / `ailab doctor` 追加 | 既存テストが全て通る。`ailab doctor` が各サービスの疎通と枠を表示 | 1〜2日 |
-| **1. 取得先追加** | Iconify、Unsplash、Pexels | `ailab assets search "cat" --source all` が5サイト横断。ライセンス表記は自動 | 半日 |
-| **2. 出力先** | Discord Webhook → Slack → GitHub | `ailab publish output/images/x.png --to slack --channel dev` が通る | 1〜2日 |
+| **0. 基盤** ✅ | `core/` 新設、既存7コネクタを移行、`ailab connectors` / `ailab doctor` 追加 | 完了。契約テストで新コネクタの実装漏れも検出する | 完了 |
+| **2. 出力先** ✅ | GitHub（`ailab publish`、既定ドライラン） | 完了。Slack / Discord は要望が出たら追加 | 完了 |
+| **1. 取得先追加** | Iconify（キー不要）→ Unsplash / Pexels | `ailab search "cat"` が5サイト横断。ライセンス表記は自動 | 半日 |
+| **生成モデル追加** | Replicate / Hugging Face | `ailab gen --provider replicate --model ...` | 半日 |
 | **3. 情報収集** | RSS、GitHub、Qiita | `ailab feed "claude" --source rss,github` | 半日 |
 | **4. パイプライン** | YAMLレシピ。`ailab run recipes/weekly-report.yaml` | 「検索→生成→投稿」を1コマンドで再実行できる | 2日 |
 | **5. MCP化** | `ailab mcp` でMCPサーバとして起動 | Claude から `ailab` の全コネクタを直接呼べる | 1日 |
 
-Phase 0 と 2 が本体。1・3 は基盤が出来ていれば1コネクタ50行程度で足せる。
+Phase 0 と 2 は完了。残りは基盤の上に1コネクタ50〜80行を足すだけで済む。
 
 ### Phase 4 のレシピ例
 
@@ -178,6 +195,6 @@ steps:
 
 ## 7. 次の一手
 
-Phase 0（基盤）と Phase 2 の最初の1つ（Discord か Slack）を同時に作ると、
-「基盤が実用に耐えるか」を出力先1つで検証できる。連携先の名前を先に増やすより、
-**1本の縦の流れ（取得 → 生成 → 投稿）を通す**ほうが早く価値が出る。
+Phase 0（基盤）と GitHub 送信は完了し、「取得 → 生成 → 送信」の縦の流れは通った。
+次は取得先を増やす番で、順番は **Iconify → Unsplash / Pexels → Replicate / Hugging Face →
+RSS / GitHub / Qiita**。キー不要の Iconify から始めれば、その日のうちに効果が出る。

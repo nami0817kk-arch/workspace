@@ -1,4 +1,7 @@
-"""素材のダウンロードとクレジット（出典表記）ファイルの生成。"""
+"""素材のダウンロードとクレジット（出典表記）ファイルの生成。
+
+どのコネクタで見つけた素材でも扱えるよう、core.types.Asset だけに依存する。
+"""
 
 from __future__ import annotations
 
@@ -6,9 +9,10 @@ import json
 import mimetypes
 from pathlib import Path
 
-from ..http import error_detail, session
-from ..utils import slugify
-from .base import IllustItem, SourceError
+from .core.errors import ConfigError
+from .core.http import request
+from .core.types import Asset
+from .utils import slugify
 
 CREDITS_JSON = "credits.json"
 CREDITS_MD = "CREDITS.md"
@@ -21,38 +25,38 @@ def _extension(url: str, content_type: str) -> str:
     return mimetypes.guess_extension(content_type.split(";")[0].strip()) or ".jpg"
 
 
-def download(item: IllustItem, dest_dir: str | Path, *, timeout: int = 60) -> Path:
+def download(asset: Asset, dest_dir: str | Path, *, timeout: int = 60, sess=None) -> Path:
     """素材1点をダウンロードして保存先パスを返す。"""
-    if not item.image_url:
-        raise SourceError(f"画像URLがありません: {item.title}")
+    if not asset.image_url:
+        raise ConfigError(f"画像URLがありません: {asset.title}")
 
     directory = Path(dest_dir)
     directory.mkdir(parents=True, exist_ok=True)
 
-    response = session().get(item.image_url, timeout=timeout)
-    if not response.ok:
-        raise SourceError(f"ダウンロードに失敗しました ({error_detail(response)})")
+    response = request("GET", asset.image_url, sess=sess, label=asset.source, timeout=timeout)
 
-    ext = _extension(item.image_url, response.headers.get("Content-Type", ""))
-    name = "_".join(part for part in (item.source, item.source_id, slugify(item.title, 30)) if part)
+    ext = _extension(asset.image_url, response.headers.get("Content-Type", ""))
+    name = "_".join(
+        part for part in (asset.source, asset.source_id, slugify(asset.title, 30)) if part
+    )
     path = directory / f"{name}{ext}"
     path.write_bytes(response.content)
     return path
 
 
 def download_all(
-    items: list[IllustItem], dest_dir: str | Path, *, timeout: int = 60
-) -> list[tuple[IllustItem, Path]]:
+    assets: list[Asset], dest_dir: str | Path, *, timeout: int = 60, sess=None
+) -> list[tuple[Asset, Path]]:
     """複数の素材をまとめて取得し、クレジットファイルも更新する。"""
-    saved: list[tuple[IllustItem, Path]] = []
-    for item in items:
-        saved.append((item, download(item, dest_dir, timeout=timeout)))
+    saved: list[tuple[Asset, Path]] = []
+    for asset in assets:
+        saved.append((asset, download(asset, dest_dir, timeout=timeout, sess=sess)))
     if saved:
         write_credits(saved, dest_dir)
     return saved
 
 
-def write_credits(saved: list[tuple[IllustItem, Path]], dest_dir: str | Path) -> tuple[Path, Path]:
+def write_credits(saved: list[tuple[Asset, Path]], dest_dir: str | Path) -> tuple[Path, Path]:
     """credits.json と CREDITS.md を追記更新する。
 
     ライセンス表記が必要な素材のために、必ず出典を残しておくのが目的。
@@ -72,8 +76,8 @@ def write_credits(saved: list[tuple[IllustItem, Path]], dest_dir: str | Path) ->
             records = []
 
     known = {record.get("file") for record in records}
-    for item, path in saved:
-        record = item.to_dict()
+    for asset, path in saved:
+        record = asset.to_dict()
         record["file"] = path.name
         if record["file"] not in known:
             records.append(record)
@@ -108,3 +112,26 @@ def write_credits(saved: list[tuple[IllustItem, Path]], dest_dir: str | Path) ->
         )
     md_path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return json_path, md_path
+
+
+def search(query: str, *, source: str = "all", limit: int = 10, **kwargs) -> list[Asset]:
+    """素材を検索する。source='all' なら使える全コネクタを横断する。"""
+    from .core import registry
+    from .core.errors import ConnectorError
+
+    if source != "all":
+        connector = registry.get(source, **kwargs)
+        if not hasattr(connector, "search_assets"):
+            raise ConfigError(f"{source} は素材検索に対応していません")
+        return connector.search_assets(query, limit=limit)
+
+    found: list[Asset] = []
+    errors: list[str] = []
+    for connector in registry.by_capability("search_assets", available_only=True, **kwargs):
+        try:
+            found.extend(connector.search_assets(query, limit=limit))
+        except ConnectorError as exc:  # 1サイト落ちても他は返す
+            errors.append(f"{connector.name}: {exc}")
+    if not found and errors:
+        raise ConnectorError(" / ".join(errors))
+    return found

@@ -1,36 +1,86 @@
 import json
 
-from ailab import cli
-from ailab.illust import downloader as dl, openverse
+import pytest
+
+from ailab import assets, cli
+from ailab.connectors.assets_openverse import OpenverseAssets
+from ailab.connectors.assets_wikimedia import WikimediaAssets
+from ailab.connectors.publish_github import GitHubPublish
+from ailab.core.types import Asset
 from fakes import FakeResponse, FakeSession
 
-OPENVERSE_BODY = {
-    "results": [
-        {
-            "id": "abc",
-            "title": "Cat",
-            "url": "https://example.com/cat.png",
-            "foreign_landing_url": "https://example.com/page",
-            "license": "by",
-            "license_version": "4.0",
-            "creator": "Taro",
-            "width": 100,
-            "height": 100,
-        }
-    ]
-}
+SAMPLE = Asset(
+    source="openverse",
+    title="Cat",
+    image_url="https://example.com/cat.png",
+    page_url="https://example.com/page",
+    license="BY 4.0",
+    creator="Taro",
+    width=100,
+    height=100,
+)
 
 
-def test_status_lists_providers_and_sources(capsys):
-    assert cli.main(["status"]) == 0
+@pytest.fixture
+def stub_search(monkeypatch):
+    """素材検索を差し替える（openverse だけがヒットする状態にする）。"""
+    monkeypatch.setattr(OpenverseAssets, "search_assets", lambda self, q, **kw: [SAMPLE])
+    monkeypatch.setattr(WikimediaAssets, "search_assets", lambda self, q, **kw: [])
+
+
+# --- connectors / doctor ---------------------------------------------
+def test_connectors_lists_every_category(capsys):
+    assert cli.main(["connectors"]) == 0
     out = capsys.readouterr().out
-    assert "local" in out and "openverse" in out
+    assert "画像生成" in out and "素材取得" in out and "送信先" in out
+    assert "local" in out and "openverse" in out and "github" in out
 
 
+def test_status_is_an_alias_of_connectors(capsys):
+    assert cli.main(["status"]) == 0
+    assert "画像生成" in capsys.readouterr().out
+
+
+def test_connectors_json_output(capsys):
+    assert cli.main(["connectors", "--json"]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    names = {entry["name"] for entry in payload}
+    assert {"local", "openverse", "github"} <= names
+    local = next(entry for entry in payload if entry["name"] == "local")
+    assert local["available"] is True and local["category"] == "images"
+
+
+def test_doctor_marks_unset_keys_as_skipped(monkeypatch, capsys):
+    from ailab.core.connector import CheckResult
+
+    monkeypatch.setattr(
+        OpenverseAssets, "check", lambda self: CheckResult("openverse", ok=True, detail="検索可能")
+    )
+    monkeypatch.setattr(
+        WikimediaAssets, "check", lambda self: CheckResult("wikimedia", ok=True, detail="検索可能")
+    )
+    assert cli.main(["doctor"]) == 0
+    out = capsys.readouterr().out
+    assert "--  openai" in out  # キー未設定は未確認扱い
+    assert "OK  openverse" in out
+
+
+def test_doctor_reports_failure(monkeypatch, capsys):
+    from ailab.core.errors import ConnectorError
+
+    def boom(self):
+        raise ConnectorError("繋がらない")
+
+    monkeypatch.setattr(OpenverseAssets, "check", boom)
+    monkeypatch.setattr(WikimediaAssets, "check", boom)
+    assert cli.main(["doctor", "openverse"]) == 1
+    assert "繋がらない" in capsys.readouterr().out
+
+
+# --- gen --------------------------------------------------------------
 def test_gen_writes_image(tmp_path, capsys):
     assert cli.main(["gen", "テスト", "--provider", "local", "--size", "64x64", "-o", str(tmp_path)]) == 0
-    files = list(tmp_path.glob("*.png"))
-    assert len(files) == 1
+    assert len(list(tmp_path.glob("*.png"))) == 1
     assert "保存しました" in capsys.readouterr().out
 
 
@@ -39,9 +89,12 @@ def test_gen_multiple_images(tmp_path):
     assert len(list(tmp_path.glob("*.png"))) == 2
 
 
-def test_gen_reports_missing_api_key(monkeypatch, capsys):
-    monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-    monkeypatch.setattr(cli, "load_dotenv", lambda *a, **k: {})
+def test_gen_auto_falls_back_to_local(tmp_path, capsys):
+    assert cli.main(["gen", "自動選択", "--size", "64x64", "-o", str(tmp_path)]) == 0
+    assert "local/abstract-v1" in capsys.readouterr().out
+
+
+def test_gen_reports_missing_api_key(capsys):
     assert cli.main(["gen", "猫", "--provider", "openai"]) == 1
     assert "OPENAI_API_KEY" in capsys.readouterr().err
 
@@ -51,51 +104,79 @@ def test_gen_reports_invalid_size(capsys):
     assert "サイズの指定が不正" in capsys.readouterr().err
 
 
-def test_search_json_output(monkeypatch, capsys):
-    monkeypatch.setattr(
-        openverse, "session", lambda headers=None: FakeSession([FakeResponse(json_data=OPENVERSE_BODY)])
-    )
+# --- search / fetch ---------------------------------------------------
+def test_search_json_output(stub_search, capsys):
     assert cli.main(["search", "猫", "--source", "openverse", "--json"]) == 0
     payload = json.loads(capsys.readouterr().out)
     assert payload[0]["license"] == "BY 4.0"
     assert payload[0]["attribution"].startswith('"Cat" by Taro')
 
 
-def test_search_text_output(monkeypatch, capsys):
-    monkeypatch.setattr(
-        openverse, "session", lambda headers=None: FakeSession([FakeResponse(json_data=OPENVERSE_BODY)])
-    )
-    cli.main(["search", "猫", "--source", "openverse"])
-    out = capsys.readouterr().out
-    assert "ライセンス: BY 4.0" in out
+def test_search_text_output(stub_search, capsys):
+    cli.main(["search", "猫"])
+    assert "ライセンス: BY 4.0" in capsys.readouterr().out
 
 
-def test_fetch_downloads_and_writes_credits(tmp_path, monkeypatch, capsys):
-    monkeypatch.setattr(
-        openverse, "session", lambda headers=None: FakeSession([FakeResponse(json_data=OPENVERSE_BODY)])
-    )
-    monkeypatch.setattr(
-        dl, "session", lambda headers=None: FakeSession([FakeResponse(content=b"\x89PNG\r\n\x1a\n")])
-    )
-    assert cli.main(["fetch", "猫", "--source", "openverse", "-l", "1", "-o", str(tmp_path)]) == 0
-    assert (tmp_path / "CREDITS.md").exists()
-    assert "保存しました" in capsys.readouterr().out
-
-
-def test_fetch_reports_no_results(tmp_path, monkeypatch, capsys):
-    monkeypatch.setattr(
-        openverse, "session", lambda headers=None: FakeSession([FakeResponse(json_data={"results": []})])
-    )
-    assert cli.main(["fetch", "存在しない", "--source", "openverse", "-o", str(tmp_path)]) == 1
+def test_search_reports_no_results(monkeypatch, capsys):
+    monkeypatch.setattr(assets, "search", lambda *a, **kw: [])
+    assert cli.main(["search", "存在しない"]) == 0
     assert "見つかりませんでした" in capsys.readouterr().out
 
 
-def test_network_error_is_reported_without_traceback(monkeypatch, capsys):
-    import requests
+def test_fetch_downloads_and_writes_credits(stub_search, monkeypatch, tmp_path, capsys):
+    monkeypatch.setattr(
+        assets, "request", lambda *a, **kw: FakeResponse(content=b"\x89PNG\r\n\x1a\n")
+    )
+    assert cli.main(["fetch", "猫", "-l", "1", "-o", str(tmp_path)]) == 0
+    assert (tmp_path / "CREDITS.md").exists()
+    out = capsys.readouterr().out
+    assert "保存しました" in out and "出典" in out
 
-    def boom(*args, **kwargs):
-        raise requests.ConnectionError("接続できません")
 
-    monkeypatch.setattr(cli.illust, "search", boom)
-    assert cli.main(["search", "猫", "--source", "openverse"]) == 1
-    assert "ネットワークエラー" in capsys.readouterr().err
+def test_fetch_reports_no_results(monkeypatch, tmp_path, capsys):
+    monkeypatch.setattr(assets, "search", lambda *a, **kw: [])
+    assert cli.main(["fetch", "存在しない", "-o", str(tmp_path)]) == 1
+    assert "見つかりませんでした" in capsys.readouterr().out
+
+
+def test_no_cache_flag_disables_cache(monkeypatch, capsys):
+    seen = {}
+
+    def fake_search(query, *, source="all", limit=10, **kwargs):
+        seen.update(kwargs)
+        return []
+
+    monkeypatch.setattr(assets, "search", fake_search)
+    cli.main(["--no-cache", "search", "猫"])
+    assert seen == {"cache_ttl": 0}
+
+
+# --- publish ----------------------------------------------------------
+def test_publish_is_dry_run_by_default(tmp_path, capsys):
+    target = tmp_path / "a.png"
+    target.write_bytes(b"x")
+    assert cli.main(["publish", str(target), "--repo", "someone/notes"]) == 0
+    out = capsys.readouterr().out
+    assert "[ドライラン]" in out and "--yes" in out
+
+
+def test_publish_sends_with_yes(monkeypatch, tmp_path, capsys):
+    monkeypatch.setenv("GITHUB_TOKEN", "gh-test")
+    target = tmp_path / "a.png"
+    target.write_bytes(b"x")
+    sess = FakeSession(
+        [
+            FakeResponse(json_data={"default_branch": "main"}),
+            FakeResponse(status_code=404, json_data={"message": "Not Found"}),
+            FakeResponse(json_data={"content": {"html_url": "https://github.com/x/y/blob/main/a.png"}}),
+        ]
+    )
+    monkeypatch.setattr(GitHubPublish, "session", property(lambda self: sess))
+
+    assert cli.main(["publish", str(target), "--repo", "someone/notes", "--yes"]) == 0
+    assert "github.com/x/y" in capsys.readouterr().out
+
+
+def test_publish_reports_missing_file(capsys):
+    assert cli.main(["publish", "no/such.png", "--repo", "someone/notes"]) == 1
+    assert "見つかりません" in capsys.readouterr().err

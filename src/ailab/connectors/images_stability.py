@@ -1,12 +1,15 @@
-"""Stability AI (Stable Image) による画像生成。"""
+"""Stability AI (Stable Image) の画像生成。"""
 
 from __future__ import annotations
 
-from ..http import error_detail, session
+from ..core.connector import AuthSpec, CheckResult, Connector, RateLimit
+from ..core.errors import AuthError
+from ..core.registry import register
+from ..core.types import GeneratedImage
 from ..utils import parse_size
-from .base import GeneratedImage, ImageProvider, ProviderError
 
 BASE_URL = "https://api.stability.ai/v2beta/stable-image/generate"
+ACCOUNT_URL = "https://api.stability.ai/v1/user/account"
 
 #: Stability は自由なピクセル指定ではなくアスペクト比を受け取る
 ASPECT_RATIOS = ["1:1", "16:9", "9:16", "3:2", "2:3", "4:5", "5:4", "21:9", "9:21"]
@@ -25,10 +28,28 @@ def closest_aspect_ratio(size: str) -> str:
     )
 
 
-class StabilityProvider(ImageProvider):
+@register
+class StabilityImages(Connector):
     name = "stability"
-    default_model = "core"  # core / ultra / sd3
-    api_key_env = "STABILITY_API_KEY"
+    category = "images"
+    summary = "Stability AI の画像生成 (core / ultra / sd3)"
+    auth = AuthSpec(
+        env=("STABILITY_API_KEY",), signup_url="https://platform.stability.ai/account/keys"
+    )
+    terms_url = "https://stability.ai/terms-of-service"
+    rate_limit = RateLimit(requests=150, per_seconds=10)
+    default_model = "core"
+    priority = 30
+
+    def default_headers(self) -> dict[str, str]:
+        key = self.api_key()
+        return {"Authorization": f"Bearer {key}"} if key else {}
+
+    def check(self) -> CheckResult:
+        if not self.is_available():
+            return CheckResult(self.name, ok=False, detail=self.unavailable_reason(), skipped=True)
+        body = self.get_json(ACCOUNT_URL, use_cache=False, timeout=30)
+        return CheckResult(self.name, ok=True, detail=f"アカウント {body.get('email', '')}")
 
     def generate(
         self,
@@ -39,18 +60,16 @@ class StabilityProvider(ImageProvider):
         model: str | None = None,
         timeout: int = 180,
     ) -> list[GeneratedImage]:
-        key = self.api_key()
-        if not key:
-            raise ProviderError(self.unavailable_reason())
+        if not self.is_available():
+            raise AuthError(self.unavailable_reason())
 
         model = model or self.default_model
-        sess = session({"Authorization": f"Bearer {key}", "Accept": "image/*"})
-        url = f"{BASE_URL}/{model}"
-
         images: list[GeneratedImage] = []
         for _ in range(max(1, n)):  # Stability は1リクエスト1枚
-            response = sess.post(
-                url,
+            response = self.request(
+                "POST",
+                f"{BASE_URL}/{model}",
+                headers={"Accept": "image/*"},
                 files={"none": ""},
                 data={
                     "prompt": prompt,
@@ -59,8 +78,6 @@ class StabilityProvider(ImageProvider):
                 },
                 timeout=timeout,
             )
-            if not response.ok:
-                raise ProviderError(f"Stability 画像生成に失敗しました ({error_detail(response)})")
             images.append(
                 GeneratedImage(
                     data=response.content,

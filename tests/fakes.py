@@ -31,19 +31,26 @@ class FakeResponse:
 class FakeSession:
     """requests.Session の最小限の差し替え。呼び出し内容を記録する。"""
 
-    def __init__(self, responses):
+    def __init__(self, responses=()):
         self._responses = list(responses)
         self.calls: list[tuple[str, str, dict]] = []
         self.headers: dict[str, str] = {}
 
-    def _next(self, method, url, kwargs):
-        self.calls.append((method, url, kwargs))
+    def queue(self, *responses) -> "FakeSession":
+        self._responses.extend(responses)
+        return self
+
+    def request(self, method, url, **kwargs):
+        self.calls.append((method.upper(), url, kwargs))
         if not self._responses:
             raise AssertionError(f"想定外のリクエスト: {method} {url}")
         return self._responses.pop(0)
 
     def get(self, url, **kwargs):
-        return self._next("GET", url, kwargs)
+        return self.request("GET", url, **kwargs)
 
     def post(self, url, **kwargs):
-        return self._next("POST", url, kwargs)
+        return self.request("POST", url, **kwargs)
+
+    def last_params(self) -> dict:
+        return self.calls[-1][2].get("params") or {}

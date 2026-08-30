@@ -13,8 +13,11 @@ import io
 import random
 from pathlib import Path
 
+from ..core.connector import AuthSpec, CheckResult, Connector
+from ..core.errors import ConnectorError
+from ..core.registry import register
+from ..core.types import GeneratedImage
 from ..utils import parse_size
-from .base import GeneratedImage, ImageProvider, ProviderError
 
 #: 日本語が化けないように、よくある CJK フォントを順に探す
 FONT_CANDIDATES = [
@@ -72,10 +75,21 @@ def _wrap(text: str, font, max_width: int, draw) -> list[str]:
     return lines[:3]
 
 
-class LocalProvider(ImageProvider):
+@register
+class LocalImages(Connector):
     name = "local"
+    category = "images"
+    summary = "APIキー不要のローカル生成（プレースホルダ画像）"
+    auth = AuthSpec()
     default_model = "abstract-v1"
-    api_key_env = None
+    priority = 90
+
+    def check(self) -> CheckResult:
+        try:
+            import PIL  # noqa: F401
+        except ImportError:
+            return CheckResult(self.name, ok=False, detail="Pillow が入っていません")
+        return CheckResult(self.name, ok=True, detail="ローカル生成が使えます")
 
     def generate(
         self,
@@ -90,7 +104,7 @@ class LocalProvider(ImageProvider):
         try:
             from PIL import Image, ImageDraw, ImageFilter
         except ImportError as exc:  # pragma: no cover - 環境依存
-            raise ProviderError("Pillow が必要です: pip install Pillow") from exc
+            raise ConnectorError("Pillow が必要です: pip install Pillow") from exc
 
         width, height = parse_size(size)
         images: list[GeneratedImage] = []

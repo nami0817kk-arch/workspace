@@ -5,14 +5,14 @@ description: このリポジトリで画像を生成する。ユーザーが「�
 
 # 画像生成
 
-`ailab gen` コマンドを使う。実装は `src/ailab/imagegen/`。
+`ailab gen` コマンドを使う。実装は `src/ailab/connectors/images_*.py`。
 
 ## 手順
 
-1. 使えるプロバイダを確認する（初回のみ）。
+1. 使えるコネクタを確認する（初回のみ）。
 
    ```bash
-   python -m ailab status   # PYTHONPATH=src が必要。pip install -e . 済みなら ailab status
+   python -m ailab connectors   # PYTHONPATH=src が必要。pip install -e . 済みなら ailab connectors
    ```
 
 2. 生成する。プロンプトは具体的に（被写体・構図・画風・色）。
@@ -22,6 +22,9 @@ description: このリポジトリで画像を生成する。ユーザーが「�
    ```
 
 3. 保存先パス（既定 `output/images/`）をユーザーに伝え、必要なら画像を Read して内容を確認する。
+
+4. GitHub へ置きたいと言われたら `python -m ailab publish <path> --repo owner/name --path <保存先>`。
+   既定はドライランなので、内容を見せて確認を取ってから `--yes` を付ける。
 
 ## 使い分け
 
