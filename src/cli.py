@@ -278,9 +278,16 @@ def _dispatch(args, config) -> int:
                 print(f"      {entry.get('note', '')}")
                 topic = args.topic or entry.get("name") or handle
                 print(f'      検索: "{topic}"  （x.com に限定）')
+            lag = int(plan.social.get("stale_hours", 72))
+            index_lag = int(plan.social.get("index_lag_hours", 48))
+            print(
+                f"\n  検索に出るのは{index_lag}時間ほど前までの投稿（実測）。"
+                "Xは速報には使えない。背景・反応・裏取りに使う"
+            )
+            print(f"  {lag}時間より古い投稿は、続報が出ていないか確認してから使う")
             for note in str(plan.social.get("check", "")).splitlines():
                 if note.strip():
-                    print(f"\n  確認: {note}")
+                    print(f"  確認: {note}")
             return 0
 
         for url in args.urls:
@@ -292,8 +299,10 @@ def _dispatch(args, config) -> int:
             age = xposts.Post(url=url, posted_at=when).hours_ago()
             entry = xposts.trusted(handle, plan.accounts)
             who = f"{entry['name']}（{entry.get('tier', '未確認')}）" if entry else "未登録"
+            lag = int(plan.social.get("index_lag_hours", 48))
+            note = "　※検索に出るなかでは新しいほう" if age <= lag else ""
             print(f"@{handle}　{who}")
-            print(f"    投稿: {when:%Y-%m-%d %H:%M} UTC　（{age:.0f}時間前）")
+            print(f"    投稿: {when:%Y-%m-%d %H:%M} UTC　（{age:.0f}時間前）{note}")
             for problem in xposts.review(url, plan.accounts, stale):
                 print(f"    ! {problem}")
         return 0
