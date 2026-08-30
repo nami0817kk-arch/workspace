@@ -1,10 +1,30 @@
 # CLAUDE.md
 
-このリポジトリで作業するときの前提をまとめたもの。
+このリポジトリ（PJT008 AIラボ）は、独立した試作パッケージを `src/` 以下に並べて置く。
+パッケージごとに前提が違うので、触る対象の節を読むこと。
 
-## これは何か
+| パッケージ | 内容 |
+|---|---|
+| `src/ailab/` | 画像生成・フリー素材取得・外部サービス連携の CLI + MCPサーバ |
 
-`ailab` は「画像生成・フリー素材取得・外部サービス連携」をまとめた CLI + MCP サーバ。
+（他の試作を足すときは、この表と節を増やす）
+
+## 共通
+
+```bash
+pip install -e ".[dev]"
+pytest -q
+python -m ruff check src tests
+```
+
+- テストは**外部通信をしない**。CI（`.github/workflows/tests.yml`）は
+  Ubuntu / Windows × Python 3.10・3.12 で回る。
+- APIキーは `.env`（`.gitignore` 済み）。ログにも `--json` 出力にも出さない。
+- Claude Code の web セッションからは多くの外部ホストが egress ポリシーで塞がれる。
+  疎通確認が NG でも、手元では通ることがある。
+
+## ailab
+
 外部サービスは**すべて同じ形（コネクタ）**で `src/ailab/connectors/` に1ファイルずつ置く。
 
 ```
@@ -16,21 +36,14 @@ src/ailab/
   mcp_server.py  MCPサーバ（stdio / JSON-RPC、依存追加なし）
   cli.py         コマンドの入口
   imagegen.py / illust.py   後方互換シム
-recipes/         同梱レシピ
-docs/            使い方・連携の増やし方・レシピ・MCP・計画
 ```
-
-## よく使うコマンド
 
 ```bash
-pip install -r requirements-dev.txt && pip install -e .
-python -m pytest -q          # テスト（外部通信は一切しない）
-python -m ruff check src tests
-ailab connectors             # 連携先と設定状況
-ailab doctor                 # 実際に接続して確認
+ailab connectors     # 連携先と設定状況
+ailab doctor         # 実際に接続して確認
 ```
 
-## 設計の決めごと
+### 設計の決めごと
 
 - **能力はプロトコルで判定する。** 継承ではなくメソッドの有無
   （`search_assets` / `generate` / `publish` / `fetch_items`）で分岐する。
@@ -45,29 +58,22 @@ ailab doctor                 # 実際に接続して確認
   MCP の `publish_file` は `confirm: true` を渡すまで送信しない。
 - **ライセンスと出典は必ず持ち回る。** 素材取得時は `CREDITS.md` / `credits.json` を書く。
 - **APIがあるものだけ連携する。** HTMLスクレイピングはしない。
-- **キーはログにも `--json` 出力にも出さない。**
 - **モデルIDは変わる。** `AILAB_<コネクタ名>_MODEL` で `.env` から差し替えられる
   （`--model` 引数 > 環境変数 > 既定値）。
 
-## テストの約束
+### テストの約束
 
-- **外部通信をしない。** `tests/conftest.py` が `requests.Session.request` を塞いでいるので、
+- **外部通信をしない。** `tests/conftest.py` が `requests.Session.request` を塞ぐので、
   差し替え漏れがあれば通信前に落ちる。HTTPは `FakeSession` を注入する
   （`Connector(session=FakeSession([...]))`）。
 - **待たない。** `time.sleep` も conftest で止めてある。
-- **契約テストがある。** `tests/test_registry.py` が全コネクタに対して
-  summary・キー取得先URL・能力の有無を検査する。コネクタを足したらここが自動で効く。
+- **契約テストがある。** `tests/test_registry.py` が全コネクタの summary・
+  キー取得先URL・能力の有無を検査する。コネクタを足すと自動で効く。
 - キー未設定を前提にする。conftest が実環境の APIキー環境変数を消している。
 
-## コネクタを足すとき
+### コネクタを足すとき
 
 1. `src/ailab/connectors/<category>_<name>.py` に `Connector` 継承クラス＋`@register`
 2. 能力に応じたメソッドを実装（詳細は `docs/connectors.md`）
 3. `connectors/__init__.py` に import を1行
 4. テストを書く（HTTPは `FakeSession`）
-
-## 環境
-
-- 開発は Windows 想定（README のセットアップも Windows）。CI は Windows と Ubuntu で回す。
-- Claude Code の web セッションからは多くの外部ホストが egress ポリシーで塞がれる。
-  `ailab doctor` が NG でも、手元では通ることがある。
