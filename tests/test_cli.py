@@ -234,3 +234,26 @@ def test_build_reports_a_bad_manifest(tmp_path, capsys):
 def test_build_reports_a_missing_manifest(tmp_path, capsys):
     assert cli.main(["build", str(tmp_path / "nope.json")]) == 2
     assert "error:" in capsys.readouterr().err
+
+
+def test_preview_writes_a_page(tmp_path, capsys):
+    assert cli.main(["--rate", SR, "sfx", "coin", "-d", str(tmp_path)]) == 0
+    assert cli.main(["preview", "-d", str(tmp_path)]) == 0
+    assert "index.html" in capsys.readouterr().out
+    assert "<audio" in (tmp_path / "index.html").read_text(encoding="utf-8")
+
+
+def test_preview_reports_an_empty_directory(tmp_path, capsys):
+    assert cli.main(["preview", "-d", str(tmp_path)]) == 2
+    assert "no .wav files" in capsys.readouterr().err
+
+
+def test_demo_writes_a_preview_page(tmp_path):
+    assert cli.main(["--rate", SR, "demo", "-d", str(tmp_path), "--bars", "1"]) == 0
+    assert (tmp_path / "index.html").exists()
+
+
+def test_demo_can_skip_the_preview_page(tmp_path):
+    args = ["--rate", SR, "demo", "-d", str(tmp_path), "--bars", "1", "--no-preview"]
+    assert cli.main(args) == 0
+    assert not (tmp_path / "index.html").exists()

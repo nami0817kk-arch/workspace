@@ -17,7 +17,7 @@ import sys
 from typing import Sequence
 
 from . import bgm as bgm_module
-from . import drums, instruments, manifest as manifest_module, notes, sfx
+from . import drums, instruments, manifest as manifest_module, notes, preview, sfx
 from .core import SAMPLE_RATE, duration_of, write_wav
 
 
@@ -155,6 +155,17 @@ def cmd_build(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_preview(args: argparse.Namespace) -> int:
+    """生成済みの WAV を並べた試聴ページを書き出す。"""
+    try:
+        path = preview.write_preview(args.dir, title=args.title)
+    except (OSError, ValueError) as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+    print(f"wrote {path}")
+    return 0
+
+
 def cmd_list(args: argparse.Namespace) -> int:
     print("SFX presets:")
     for name in sfx.available():
@@ -196,6 +207,9 @@ def cmd_demo(args: argparse.Namespace) -> int:
         path = _default_path(args.dir, f"bgm_{name}")
         write_wav(path, samples, sr=args.rate)
         _report(path, samples, args.rate, 1)
+
+    if not args.no_preview:
+        print(f"wrote {preview.write_preview(args.dir)}")
     return 0
 
 
@@ -281,6 +295,13 @@ def build_parser() -> argparse.ArgumentParser:
     build_parser.add_argument("--dry-run", action="store_true", help="何も書かずに予定だけ表示する")
     build_parser.set_defaults(func=cmd_build)
 
+    preview_parser = subparsers.add_parser(
+        "preview", help="生成済みの WAV を並べた試聴ページ(HTML)を書き出す"
+    )
+    preview_parser.add_argument("-d", "--dir", default="output", help="対象ディレクトリ (既定: output)")
+    preview_parser.add_argument("--title", default=None, help="ページの見出し")
+    preview_parser.set_defaults(func=cmd_preview)
+
     list_parser = subparsers.add_parser("list", help="使えるプリセットを一覧する")
     list_parser.set_defaults(func=cmd_list)
 
@@ -288,6 +309,7 @@ def build_parser() -> argparse.ArgumentParser:
     demo_parser.add_argument("-d", "--dir", default="output/demo", help="出力ディレクトリ")
     demo_parser.add_argument("--bars", type=int, default=4, help="BGM の小節数 (既定: 4)")
     demo_parser.add_argument("--seed", type=int, default=0, help="乱数シード (既定: 0)")
+    demo_parser.add_argument("--no-preview", action="store_true", help="試聴ページを作らない")
     demo_parser.set_defaults(func=cmd_demo)
 
     return parser

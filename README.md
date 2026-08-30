@@ -34,10 +34,16 @@ python -m audiogen list
 # 効果音を1つ生成 -> output/coin.wav
 python -m audiogen sfx coin
 
+# 足音を4通り作る -> output/footstep_1.wav ... _4.wav
+python -m audiogen sfx footstep --count 4
+
 # BGM を1曲生成 -> output/bgm_battle.wav
 python -m audiogen bgm --style battle --key A --bars 16 --seed 7
 
-# 全プリセットをまとめて書き出す -> output/demo/
+# 音を作らずに曲の中身だけ見る
+python -m audiogen describe --style battle --structure verse_chorus
+
+# 全プリセットを書き出し、試聴ページも作る -> output/demo/index.html
 python -m audiogen demo
 ```
 
@@ -46,18 +52,21 @@ python -m audiogen demo
 
 ### 効果音 (SFX)
 
-15種類のプリセットを用意。`--pitch` で音程を、`--seed` でノイズの当たり方を変えられる。
+27種類のプリセットを用意。すべて `--pitch` で音程を、`--seed` でノイズの当たり方を変えられる。
 
-| プリセット | 用途 |
+| 分類 | プリセット |
 |---|---|
-| `coin` / `pickup` / `powerup` | コイン・アイテム取得、パワーアップ |
-| `jump` / `laser` / `hit` / `explosion` | ジャンプ、ショット、被弾、爆発 |
-| `blip` / `select` / `error` | UI のカーソル移動、決定、キャンセル |
-| `heal` / `teleport` / `whoosh` | 回復、ワープ、風切り |
-| `footstep` / `alarm` | 足音、警報 |
+| 収集・獲得 | `coin` `pickup` `powerup` `level_up` `heal` |
+| 動作・攻撃 | `jump` `land` `footstep` `dash` `swing` `whoosh` `laser` `charge` |
+| 衝撃・破壊 | `hit` `explosion` `shatter` `thunder` `engine` |
+| UI・演出 | `blip` `select` `error` `menu_open` `menu_close` `teleport` `shield` `water_drop` `alarm` |
+
+足音や打撃のように何度も鳴る音は、毎回同じだと耳につく。`--count` で
+音程とノイズを散らした一組を作れる(1つ目は指定どおりの音のまま)。
 
 ```bash
 python -m audiogen sfx laser --pitch 1.5 -o assets/se/shot.wav
+python -m audiogen sfx footstep --count 6 --spread 0.15 -d assets/se
 ```
 
 ### BGM
@@ -75,12 +84,22 @@ python -m audiogen sfx laser --pitch 1.5 -o assets/se/shot.wav
 | `chiptune` | レトロゲーム風 (144 BPM, ビットクラッシュ) |
 | `tension` | 不穏・緊迫 (104 BPM, フリジアン) |
 
-スタイルの既定値は個別に上書きできる。
+メロディは1小節ぶんのモチーフを作り、小節ごとの和音に合わせて置き直しながら
+`A / A / B / A'` と展開する。同じ形が返ってくるので旋律として頭に残る。
+
+`--structure` で曲の起伏を付けられる。
+
+| 構成 | 並び |
+|---|---|
+| `loop` | 単一区間(既定) |
+| `intro` | 静かな入り(ドラムとメロディなし)→ 本編 |
+| `verse_chorus` | A メロ → サビ(メロディが1オクターブ上がる) |
+| `full` | イントロ → A メロ → サビ → アウトロ |
 
 ```bash
 python -m audiogen bgm --style adventure \
-    --key F --scale lydian --bpm 120 --bars 16 \
-    --progression "I-V-vi-IV" --drums drive --stereo --seed 42
+    --key F --scale lydian --bpm 120 --bars 16 --structure full \
+    --progression "I-V-vi-IV" --drums drive --swing 0.3 --stereo --seed 42
 ```
 
 主なオプション:
@@ -89,12 +108,54 @@ python -m audiogen bgm --style adventure \
 |---|---|
 | `--key` / `--scale` | キーと音階(`major`, `minor`, `dorian`, `blues` ほか) |
 | `--bpm` / `--bars` | テンポと小節数 |
+| `--structure` | 曲構成(`loop` `intro` `verse_chorus` `full`) |
 | `--progression` | コード進行(ローマ数字。例 `"i-VI-III-VII"`) |
-| `--drums` | ドラムパターン(`none`, `soft`, `basic`, `drive`, `march`, `shuffle`) |
+| `--drums` | ドラムパターン(`none` `soft` `basic` `drive` `march` `shuffle`) |
+| `--swing` / `--humanize` | 裏拍のずらし量と、タイミング・音量のゆらぎ |
+| `--chord-instrument` ほか | パートごとの音色(下記) |
 | `--without` | 外すパート(`chords` `bass` `lead` `drums`) |
 | `--seed` | 乱数シード。同じ値なら同じ曲になる |
-| `--stereo` | ステレオで書き出す |
-| `--no-loop` | 末尾の残響を切らずに残す |
+| `--stereo` / `--no-loop` | ステレオ出力 / 末尾の残響を切らずに残す |
+
+音色は波形を重ねてフィルタとエンベロープを通した「楽器」として定義してある。
+`pad` `strings` `pluck` `organ` `bell` `marimba` `chip_lead` `pulse_lead`
+`sub_bass` `pick_bass` と、素の波形(`sine` `triangle` `saw` `square` `pulse25` `pulse12`)。
+どれも同じ音量感になるよう補正済みなので、差し替えても全体のバランスは崩れない。
+
+### 素材一式をまとめて作る
+
+ゲーム1本ぶんの素材を JSON に宣言しておくと、そこから一括生成できる。
+
+```json
+{
+  "sample_rate": 44100,
+  "output": "assets/audio",
+  "sfx": [
+    {"name": "coin",     "as": "se/coin", "seed": 1},
+    {"name": "footstep", "as": "se/step", "count": 4, "seed": 2}
+  ],
+  "bgm": [
+    {"as": "bgm/title",  "style": "calm",   "bars": 16, "seed": 7, "structure": "intro", "stereo": true},
+    {"as": "bgm/battle", "style": "battle", "bars": 32, "seed": 3, "structure": "verse_chorus"}
+  ]
+}
+```
+
+```bash
+python -m audiogen build assets.json          # 変更のあったものだけ作り直す
+python -m audiogen build assets.json --dry-run  # 予定だけ表示
+python -m audiogen build assets.json --force    # すべて作り直す
+```
+
+前回どの設定で作ったかを出力先の索引ファイルに記録しているので、2回目以降は差分だけを生成する。
+
+### 試聴
+
+生成した WAV を並べて聴き比べるページを作れる。波形の概形と再生ボタンが並ぶ。
+
+```bash
+python -m audiogen preview -d output/demo   # -> output/demo/index.html
+```
 
 ### Python から使う
 
@@ -106,6 +167,11 @@ write_wav("output/coin.wav", sfx.generate("coin", seed=1))
 config = bgm.BGMConfig(style="night", key="D", bars=16, seed=99)
 write_wav("output/night.wav", bgm.generate(config))
 
+# 音を作らずに譜面だけ組み立てる
+arrangement = bgm.compose(config)
+print(arrangement.notes["lead"][:4])       # Note(start=..., midi=..., length=...)
+print(bgm.describe(config)["chords"][:2])  # コード進行を音名で
+
 # パート別に取り出してミックスを自分で調整することもできる
 tracks = bgm.render_tracks(config)
 write_wav("output/night_bass_only.wav", tracks["bass"])
@@ -114,12 +180,14 @@ write_wav("output/night_bass_only.wav", tracks["bass"])
 音を1から組み立てる場合は、低レベルのモジュールを直接使う。
 
 ```python
-from audiogen import core, effects, envelope, notes, oscillators
+from audiogen import core, effects, instruments, notes, oscillators
 
-tone = oscillators.saw(notes.note_to_freq("A3"), 1.0)
-tone = envelope.apply(tone, envelope.adsr(1.0, 0.01, 0.2, 0.6, 0.3))
-tone = effects.lowpass(tone, oscillators.sweep(4000, 400, 1.0))
+tone = instruments.get("pluck").render(notes.note_to_freq("A3"), 1.0)
 core.write_wav("output/pluck.wav", effects.reverb(tone, wet=0.3))
+
+# 波形やフィルタを直接触ることもできる
+sweep = oscillators.saw(oscillators.sweep(880, 110, 1.0), 1.0)
+core.write_wav("output/sweep.wav", effects.lowpass(sweep, 1200))
 ```
 
 ### モジュール構成
@@ -127,14 +195,19 @@ core.write_wav("output/pluck.wav", effects.reverb(tone, wet=0.3))
 | モジュール | 役割 |
 |---|---|
 | `core` | バッファ操作、ミックス、正規化、WAV 書き出し |
-| `oscillators` | サイン/ノコギリ/三角/矩形/ノイズ、周波数スイープ |
+| `oscillators` | 波形生成(段差は PolyBLEP で帯域制限)、周波数スイープ |
 | `envelope` | ADSR、打楽器向けの指数減衰 |
-| `effects` | フィルタ、ディレイ、リバーブ、歪み、ビットクラッシュ |
+| `effects` | フィルタ、ディレイ、リバーブ、歪み、リミッター、サイドチェイン |
 | `notes` | 音名・音階・和音・コード進行 |
+| `instruments` | 波形を重ねた音色の定義 |
 | `drums` | ドラム音源と16分グリッドのパターン |
-| `sfx` | 効果音プリセット |
-| `bgm` | 曲の構成と生成 |
+| `sfx` | 効果音プリセットとバリエーション生成 |
+| `bgm` | 作曲(`compose`)と合成(`render_tracks` / `generate`) |
+| `manifest` | JSON からの一括生成と差分ビルド |
+| `preview` | 試聴ページの生成 |
 | `cli` | コマンドラインインターフェース |
+
+設計の詳細と検証結果は [`docs/audiogen.md`](docs/audiogen.md) を参照。
 
 ### テスト
 
