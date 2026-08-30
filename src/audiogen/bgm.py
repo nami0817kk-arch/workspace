@@ -13,6 +13,7 @@ from typing import Sequence
 from . import drums
 from . import effects as fx
 from . import envelope as env
+from . import instruments
 from . import notes
 from . import oscillators as osc
 from .core import (
@@ -85,15 +86,15 @@ class Style:
     scale: str = "major"
     bpm: int = 100
     progression: str = "I-V-vi-IV"
-    chord_shape: str = "triangle"
+    chord_instrument: str = "pad"
     chord_seventh: bool = False
     chord_octave: int = 4
     chord_gain: float = 0.30
-    bass_shape: str = "triangle"
+    bass_instrument: str = "sub_bass"
     bass_octave: int = 2
     bass_gain: float = 0.55
     bass_pattern: str = "x...x...x...x..."
-    lead_shape: str = "square"
+    lead_instrument: str = "pulse_lead"
     lead_octave: int = 5
     lead_gain: float = 0.40
     lead_rest_prob: float = 0.22
@@ -111,59 +112,59 @@ class Style:
 STYLES: dict[str, Style] = {
     "calm": Style(
         scale="major", bpm=76, progression="I-vi-IV-V",
-        chord_shape="triangle", chord_seventh=True, chord_gain=0.34,
-        bass_shape="sine", bass_pattern="x.......x.......",
-        lead_shape="sine", lead_gain=0.30, lead_rest_prob=0.35,
+        chord_instrument="pad", chord_seventh=True, chord_gain=0.34,
+        bass_instrument="sub_bass", bass_pattern="x.......x.......",
+        lead_instrument="bell", lead_gain=0.30, lead_rest_prob=0.35,
         lead_durations=(1.0, 2.0, 2.0, 4.0),
         drum_pattern="soft", drum_gain=0.30, reverb_wet=0.38,
         groove=Groove(accent=0.3, humanize=0.006),  # ゆったりした曲ほど揺れてよい
     ),
     "adventure": Style(
         scale="major", bpm=132, progression="I-V-vi-IV",
-        chord_shape="triangle", bass_shape="saw", bass_pattern="x.x.x.x.x.x.x.x.",
-        lead_shape="pulse25", lead_gain=0.42, lead_rest_prob=0.15,
+        chord_instrument="strings", bass_instrument="pick_bass", bass_pattern="x.x.x.x.x.x.x.x.",
+        lead_instrument="pulse_lead", lead_gain=0.42, lead_rest_prob=0.15,
         lead_durations=(0.5, 0.5, 0.5, 1.0, 1.0),
         drum_pattern="drive", reverb_wet=0.20,
     ),
     "battle": Style(
         scale="harmonic_minor", bpm=158, progression="i-vi-vii-v",
-        chord_shape="saw", chord_gain=0.24, chord_octave=3,
-        bass_shape="saw", bass_pattern="x.xxx.xxx.xxx.xx", bass_gain=0.6,
-        lead_shape="saw", lead_gain=0.36, lead_rest_prob=0.12,
+        chord_instrument="strings", chord_gain=0.24, chord_octave=3,
+        bass_instrument="pick_bass", bass_pattern="x.xxx.xxx.xxx.xx", bass_gain=0.6,
+        lead_instrument="pulse_lead", lead_gain=0.36, lead_rest_prob=0.12,
         lead_durations=(0.25, 0.5, 0.5, 0.5, 1.0), lead_range=10,
         drum_pattern="drive", drum_gain=0.6, reverb_wet=0.16,
     ),
     "menu": Style(
         scale="pentatonic_major", bpm=96, progression="I-IV-I-V",
-        chord_shape="triangle", chord_gain=0.28,
-        bass_shape="triangle", bass_pattern="x...x...x...x...",
-        lead_shape="square", lead_gain=0.36, lead_rest_prob=0.28,
+        chord_instrument="pluck", chord_gain=0.28,
+        bass_instrument="sub_bass", bass_pattern="x...x...x...x...",
+        lead_instrument="marimba", lead_gain=0.36, lead_rest_prob=0.28,
         lead_durations=(0.5, 1.0, 1.0, 2.0), lead_range=6,
         drum_pattern="soft", drum_gain=0.35, reverb_wet=0.26, delay_wet=0.18,
         groove=Groove(swing=0.2, accent=0.25, humanize=0.004),
     ),
     "night": Style(
         scale="minor", bpm=68, progression="i-VI-III-VII",
-        chord_shape="sine", chord_seventh=True, chord_gain=0.36,
-        bass_shape="sine", bass_pattern="x.......x.......", bass_gain=0.5,
-        lead_shape="triangle", lead_gain=0.28, lead_rest_prob=0.45,
+        chord_instrument="pad", chord_seventh=True, chord_gain=0.36,
+        bass_instrument="sub_bass", bass_pattern="x.......x.......", bass_gain=0.5,
+        lead_instrument="bell", lead_gain=0.28, lead_rest_prob=0.45,
         lead_durations=(2.0, 2.0, 4.0), lead_range=6,
         drum_pattern="none", reverb_wet=0.45, reverb_room=0.82, delay_wet=0.22,
     ),
     "chiptune": Style(
         scale="major", bpm=144, progression="I-V-vi-IV",
-        chord_shape="pulse25", chord_gain=0.24,
-        bass_shape="square", bass_pattern="x.x.x.x.x.x.x.x.", bass_gain=0.5,
-        lead_shape="pulse12", lead_gain=0.40, lead_rest_prob=0.12,
+        chord_instrument="pulse25", chord_gain=0.24,
+        bass_instrument="square", bass_pattern="x.x.x.x.x.x.x.x.", bass_gain=0.5,
+        lead_instrument="chip_lead", lead_gain=0.40, lead_rest_prob=0.12,
         lead_durations=(0.25, 0.5, 0.5, 1.0),
         drum_pattern="march", drum_gain=0.45, reverb_wet=0.10, bitcrush_bits=6,
         groove=STRAIGHT,  # チップチューンは正確に並んでいるほうが らしい
     ),
     "tension": Style(
         scale="phrygian", bpm=104, progression="i-ii-i-vii",
-        chord_shape="saw", chord_gain=0.22, chord_octave=3,
-        bass_shape="saw", bass_pattern="x...x...x..x.x..",
-        lead_shape="triangle", lead_gain=0.30, lead_rest_prob=0.4,
+        chord_instrument="organ", chord_gain=0.22, chord_octave=3,
+        bass_instrument="pick_bass", bass_pattern="x...x...x..x.x..",
+        lead_instrument="strings", lead_gain=0.30, lead_rest_prob=0.4,
         lead_durations=(0.5, 1.0, 2.0), lead_range=7,
         drum_pattern="shuffle", drum_gain=0.4, reverb_wet=0.32,
         groove=Groove(swing=0.55, accent=0.3, humanize=0.005),
@@ -260,6 +261,9 @@ class BGMConfig:
     structure: str = "loop"
     swing: float | None = None
     humanize: float | None = None
+    chord_instrument: str | None = None
+    bass_instrument: str | None = None
+    lead_instrument: str | None = None
     parts: Sequence[str] = field(default_factory=lambda: ("chords", "bass", "lead", "drums"))
     loop: bool = True
     stereo: bool = False
@@ -281,6 +285,11 @@ class BGMConfig:
             overrides["progression"] = self.progression
         if self.drum_pattern is not None:
             overrides["drum_pattern"] = self.drum_pattern
+        for part in ("chord", "bass", "lead"):
+            chosen = getattr(self, f"{part}_instrument")
+            if chosen is not None:
+                instruments.get(chosen)  # 名前が正しいかここで確かめる
+                overrides[f"{part}_instrument"] = chosen
         if self.swing is not None or self.humanize is not None:
             groove_overrides = {}
             if self.swing is not None:
@@ -575,65 +584,22 @@ def _render_notes(
 
 
 def _render_hits(plan: Sequence[Hit], sr: int) -> list[float]:
-    voices = {hit.voice: drums.VOICES[hit.voice](sr=sr) for hit in plan}
+    # 音色は種類ごとに1回だけ作る(打数ぶん作り直すと桁違いに遅くなる)。
+    voices = {voice: drums.VOICES[voice](sr=sr) for voice in {hit.voice for hit in plan}}
     out: list[float] = []
     for hit in plan:
         _place(out, voices[hit.voice], hit.start, sr, gain=hit.velocity)
     return out
 
 
-def _chord_synth(style: Style, sr: int):
+def _synth_for(name: str, sr: int):
+    """楽器名から ``(midi, 長さ) -> 音`` の関数を作る。"""
+    instrument = instruments.get(name)
+
     def synth(midi: int, length: float) -> list[float]:
-        return env.apply(
-            osc.render(style.chord_shape, notes.midi_to_freq(midi), length, sr),
-            env.adsr(length, 0.08, 0.25, 0.6, length * 0.3, sr),
-        )
+        return instrument.render(notes.midi_to_freq(midi), length, sr)
 
     return synth
-
-
-def _bass_synth(style: Style, sr: int):
-    def synth(midi: int, length: float) -> list[float]:
-        tone = env.apply(
-            osc.render(style.bass_shape, notes.midi_to_freq(midi), length, sr),
-            env.adsr(length, 0.006, 0.05, 0.75, length * 0.35, sr),
-        )
-        return fx.lowpass(tone, 900.0, sr)
-
-    return synth
-
-
-def _lead_synth(style: Style, sr: int):
-    def synth(midi: int, length: float) -> list[float]:
-        return env.apply(
-            osc.render(style.lead_shape, notes.midi_to_freq(midi), length, sr),
-            env.adsr(length, 0.012, 0.08, 0.7, length * 0.3, sr),
-        )
-
-    return synth
-
-
-def _next_degree(
-    rng: random.Random,
-    current: int,
-    chord_degree: int,
-    scale_size: int,
-    span: int,
-    prefer_chord_tone: bool,
-) -> int:
-    """次の音の度数を選ぶ。強拍ではコードトーンに寄せる。"""
-    step = rng.choice((-3, -2, -1, -1, 1, 1, 2, 3))
-    candidate = current + step
-    if prefer_chord_tone:
-        chord_offsets = (0, 2, 4)
-        options = [
-            candidate + shift
-            for shift in range(-3, 4)
-            if (candidate + shift - chord_degree) % scale_size in chord_offsets
-        ]
-        if options:
-            candidate = min(options, key=lambda value: (abs(value - current), abs(value)))
-    return max(-span, min(span, candidate))
 
 
 @dataclass(frozen=True)
@@ -773,9 +739,9 @@ def render_tracks(config: BGMConfig | None = None, **overrides) -> dict[str, lis
     cache: dict = {}
 
     synths = {
-        "chords": _chord_synth(style, sr),
-        "bass": _bass_synth(style, sr),
-        "lead": _lead_synth(style, sr),
+        "chords": _synth_for(style.chord_instrument, sr),
+        "bass": _synth_for(style.bass_instrument, sr),
+        "lead": _synth_for(style.lead_instrument, sr),
     }
     tracks: dict[str, list[float]] = {}
     for part, plan in arrangement.notes.items():

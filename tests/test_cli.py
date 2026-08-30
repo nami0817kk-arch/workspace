@@ -149,3 +149,26 @@ def test_bgm_swing_and_humanize_options(tmp_path):
     ]
     assert cli.main(args) == 0
     assert (tmp_path / "bgm_calm.wav").exists()
+
+
+def test_bgm_instrument_options(tmp_path):
+    args = [
+        "--rate", SR, "bgm", "--bars", "2", "--seed", "1",
+        "--lead-instrument", "marimba", "--chord-instrument", "organ",
+        "-d", str(tmp_path),
+    ]
+    assert cli.main(args) == 0
+    assert (tmp_path / "bgm_calm.wav").exists()
+
+
+def test_bgm_reports_an_unknown_instrument(tmp_path, capsys):
+    args = ["bgm", "--bars", "2", "--lead-instrument", "kazoo", "-d", str(tmp_path)]
+    assert cli.main(args) == 2
+    assert "unknown instrument" in capsys.readouterr().err
+
+
+def test_list_prints_instruments(capsys):
+    assert cli.main(["list"]) == 0
+    out = capsys.readouterr().out
+    assert "Instruments:" in out
+    assert "marimba" in out

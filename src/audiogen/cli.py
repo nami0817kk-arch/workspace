@@ -16,7 +16,7 @@ import sys
 from typing import Sequence
 
 from . import bgm as bgm_module
-from . import drums, notes, sfx
+from . import drums, instruments, notes, sfx
 from .core import SAMPLE_RATE, duration_of, write_wav
 
 
@@ -66,6 +66,9 @@ def _bgm_config(args: argparse.Namespace) -> bgm_module.BGMConfig:
         structure=args.structure,
         swing=args.swing,
         humanize=args.humanize,
+        chord_instrument=args.chord_instrument,
+        bass_instrument=args.bass_instrument,
+        lead_instrument=args.lead_instrument,
         parts=parts,
         loop=not args.no_loop,
         stereo=args.stereo,
@@ -131,11 +134,18 @@ def cmd_list(args: argparse.Namespace) -> int:
     print("\nBGM styles:")
     for name in bgm_module.style_names():
         style = bgm_module.STYLES[name]
-        print(f"  {name:<10} scale={style.scale} bpm={style.bpm} progression={style.progression}")
+        print(
+            f"  {name:<10} scale={style.scale} bpm={style.bpm} progression={style.progression}\n"
+            f"{'':<13}chords={style.chord_instrument} bass={style.bass_instrument} "
+            f"lead={style.lead_instrument} drums={style.drum_pattern}"
+        )
     print("\nSong structures:")
     for name in bgm_module.structure_names():
         parts = " -> ".join(section.name for section in bgm_module.STRUCTURES[name])
         print(f"  {name:<14} {parts}")
+
+    print("\nInstruments:")
+    print("  " + ", ".join(instruments.available()))
 
     print("\nDrum patterns:")
     print("  " + ", ".join(drums.pattern_names()))
@@ -188,6 +198,11 @@ def _add_bgm_options(parser: argparse.ArgumentParser) -> None:
         "--without", nargs="*", default=[], choices=["chords", "bass", "lead", "drums"],
         help="外すパート",
     )
+    for part, label in (("chord", "和音"), ("bass", "ベース"), ("lead", "メロディ")):
+        parser.add_argument(
+            f"--{part}-instrument", default=None, metavar="NAME",
+            help=f"{label}の音色 ({', '.join(instruments.available())})",
+        )
 
 
 def build_parser() -> argparse.ArgumentParser:
