@@ -375,3 +375,87 @@ def test_antialiasing_is_skipped_at_and_above_nyquist():
 
 def test_sine_ignores_the_antialias_flag():
     assert oscillators.sine(440.0, 0.01, SR) == oscillators.sine(440.0, 0.01, SR, antialias=False)
+
+
+# --- マスター段(リミッター・サイドチェイン) ---------------------------------
+
+
+def test_limiter_pulls_loud_material_down_to_the_threshold():
+    loud = [0.9 * math.sin(i * 0.1) for i in range(SR)]
+    limited = effects.limiter(loud, threshold=0.5, sr=SR)
+    assert core.peak(limited[SR // 2 :]) == pytest.approx(0.5, abs=0.06)
+
+
+def test_limiter_leaves_quiet_material_alone():
+    quiet = [0.2 * math.sin(i * 0.1) for i in range(SR // 2)]
+    assert effects.limiter(quiet, threshold=0.7, sr=SR) == pytest.approx(quiet, abs=1e-9)
+
+
+def test_mastering_chain_raises_loudness_at_the_same_peak():
+    """まばらに飛び出す音に引きずられず、全体を持ち上げられること。
+
+    ピーク正規化だけだと、たまに出る大きな音に合わせて曲全体が小さくなる。
+    リミッターで山を削ってから正規化すると、同じピークでも中身が大きくなる。
+    """
+    signal = [0.3 * math.sin(i * 0.05) for i in range(SR * 2)]
+    for position in (SR // 2, SR, SR + SR // 2):
+        for k in range(int(0.02 * SR)):
+            signal[position + k] = 0.95 * math.sin((position + k) * 0.05)
+
+    plain = core.normalize(signal, 0.9)
+    mastered = core.normalize(
+        effects.soft_clip(effects.limiter(signal, threshold=0.4, sr=SR), 0.98), 0.9
+    )
+    assert _rms(mastered) > _rms(plain) * 1.1
+    assert core.peak(mastered) == pytest.approx(0.9)
+
+
+def test_limiter_alone_does_not_lift_evenly_loud_material():
+    """全体が一様に大きい音では、削る山がないので得はしない(副作用の確認)。"""
+    steady = [0.8 * math.sin(i * 0.05) for i in range(SR)]
+    limited = effects.limiter(steady, threshold=0.4, sr=SR)
+    assert core.peak(limited[SR // 2 :]) < core.peak(steady)
+
+
+def test_limiter_of_an_empty_buffer():
+    assert effects.limiter([], sr=SR) == []
+
+
+def test_soft_clip_never_exceeds_the_ceiling():
+    clipped = effects.soft_clip([-3.0, -1.0, 0.0, 1.0, 3.0], ceiling=0.9)
+    assert max(abs(value) for value in clipped) < 0.9
+    assert all(a < b for a, b in zip(clipped, clipped[1:]))
+
+
+def test_soft_clip_barely_touches_quiet_material():
+    assert effects.soft_clip([0.05, -0.05], ceiling=0.98) == pytest.approx([0.05, -0.05], abs=1e-3)
+
+
+def test_sidechain_envelope_dips_at_each_trigger():
+    env = effects.sidechain_envelope([0.0, 0.5], SR, sr=SR, amount=0.4)
+    assert len(env) == SR
+    assert min(env[: SR // 4]) == pytest.approx(0.6, abs=1e-6)
+    assert min(env[SR // 2 : 3 * SR // 4]) == pytest.approx(0.6, abs=1e-6)
+    assert max(env) == pytest.approx(1.0)
+    assert min(env) >= 0.6 - 1e-9
+
+
+def test_sidechain_envelope_recovers_between_triggers():
+    env = effects.sidechain_envelope([0.0], SR, sr=SR, amount=0.5, attack=0.005, release=0.1)
+    assert env[-1] == pytest.approx(1.0)
+
+
+def test_sidechain_envelope_without_triggers_is_flat():
+    assert set(effects.sidechain_envelope([], 100, sr=SR, amount=0.5)) == {1.0}
+
+
+def test_sidechain_envelope_with_zero_amount_is_flat():
+    assert set(effects.sidechain_envelope([0.0, 0.1], 100, sr=SR, amount=0.0)) == {1.0}
+
+
+def test_sidechain_ignores_triggers_past_the_end():
+    assert set(effects.sidechain_envelope([10.0], 100, sr=SR, amount=0.5)) == {1.0}
+
+
+def _rms(buf):
+    return math.sqrt(sum(value * value for value in buf) / len(buf))

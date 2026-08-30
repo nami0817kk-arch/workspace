@@ -428,3 +428,50 @@ def test_describe_is_json_serialisable():
     import json
 
     assert json.loads(json.dumps(bgm.describe(_config(bars=4))))["bars"] == 4
+
+
+# --- マスター段 ---------------------------------------------------------------
+
+
+def test_kick_ducks_the_other_parts():
+    """バスドラムの瞬間に、ドラム以外のパートが下がること。"""
+    config = _config(style="adventure", bars=2, humanize=0.0)
+    arrangement = bgm.compose(config)
+    plain = bgm._render_arrangement(arrangement, config)
+    ducked = bgm._duck_to_kick(dict(plain), arrangement, SR)
+
+    kick = min(hit.start for hit in arrangement.hits if hit.voice == "kick")
+    at_kick = core.num_samples(kick + 0.02, SR)
+    assert abs(ducked["bass"][at_kick]) < abs(plain["bass"][at_kick])
+    assert ducked["drums"] == plain["drums"]  # ドラム自身は下げない
+
+
+def test_ducking_is_skipped_without_a_kick():
+    config = _config(style="night", bars=2)
+    arrangement = bgm.compose(config)
+    plain = bgm._render_arrangement(arrangement, config)
+    assert bgm._duck_to_kick(dict(plain), arrangement, SR) == plain
+
+
+def test_mastering_raises_loudness_without_clipping():
+    """リミッターを通したほうが、同じピークでも中身が大きいこと。"""
+    config = _config(style="battle", bars=4, seed=4)
+    mastered = bgm.generate(config)
+
+    style = config.resolved_style()
+    arrangement = bgm.compose(config)
+    tracks = bgm._render_arrangement(arrangement, config)
+    gains = bgm._part_gains(style)
+    names = list(tracks)
+    raw = core.mix(*(tracks[name] for name in names), gains=[gains[name] for name in names])
+    raw = bgm._post_process(raw, style, config, len(mastered), limit=False)
+    raw = core.normalize(raw, bgm.TARGET_PEAK)
+
+    assert core.peak(mastered) == pytest.approx(bgm.TARGET_PEAK, abs=1e-6)
+    assert _rms(mastered) > _rms(raw) * 1.15
+
+
+def _rms(buf):
+    import math
+
+    return math.sqrt(sum(value * value for value in buf) / len(buf))

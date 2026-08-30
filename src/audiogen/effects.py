@@ -169,3 +169,75 @@ def tremolo(buf: Sequence[float], rate: float = 5.0, depth: float = 0.5, sr: int
         value * (1.0 - depth + depth * (0.5 + 0.5 * math.sin(2.0 * math.pi * rate * (i / sr))))
         for i, value in enumerate(buf)
     ]
+
+
+def soft_clip(buf: Sequence[float], ceiling: float = 0.98) -> list[float]:
+    """天井付近だけを丸めて 0dBFS を超えさせない。"""
+    ceiling = max(1e-6, ceiling)
+    return [ceiling * math.tanh(value / ceiling) for value in buf]
+
+
+def limiter(
+    buf: Sequence[float],
+    threshold: float = 0.7,
+    attack: float = 0.004,
+    release: float = 0.12,
+    sr: int = SAMPLE_RATE,
+) -> list[float]:
+    """飛び出した音だけを押さえるリミッター。
+
+    ピークだけを見て正規化すると、一発の立ち上がりに引きずられて曲全体が
+    小さくなる。しきい値を超えたぶんだけ滑らかに抑えることで、
+    山を削って全体を持ち上げられる。
+    """
+    if not buf:
+        return []
+    threshold = max(1e-6, threshold)
+    attack_coef = 1.0 - math.exp(-1.0 / max(1.0, attack * sr))
+    release_coef = 1.0 - math.exp(-1.0 / max(1.0, release * sr))
+
+    out = [0.0] * len(buf)
+    gain = 1.0
+    for i, value in enumerate(buf):
+        level = abs(value)
+        target = threshold / level if level > threshold else 1.0
+        gain += (target - gain) * (attack_coef if target < gain else release_coef)
+        out[i] = value * gain
+    return out
+
+
+def sidechain_envelope(
+    triggers: Sequence[float],
+    length: int,
+    sr: int = SAMPLE_RATE,
+    amount: float = 0.25,
+    attack: float = 0.006,
+    release: float = 0.13,
+) -> list[float]:
+    """指定時刻で一瞬へこむ音量カーブを作る。
+
+    バスドラムの瞬間だけ他のパートを下げると、低音がぶつからず
+    リズムの芯が前に出る(サイドチェインコンプの簡易版)。
+    """
+    amount = min(max(amount, 0.0), 1.0)
+    env = [1.0] * max(0, length)
+    if not env or amount == 0.0:
+        return env
+
+    n_attack = max(1, num_samples(attack, sr))
+    n_release = max(1, num_samples(release, sr))
+    for trigger in triggers:
+        start = num_samples(trigger, sr)
+        if start >= length:
+            continue
+        for k in range(n_attack):
+            index = start + k
+            if index >= length:
+                break
+            env[index] = min(env[index], 1.0 - amount * (k / n_attack))
+        for k in range(n_release):
+            index = start + n_attack + k
+            if index >= length:
+                break
+            env[index] = min(env[index], 1.0 - amount * (1.0 - k / n_release))
+    return env

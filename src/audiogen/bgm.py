@@ -733,7 +733,10 @@ def describe(config: BGMConfig | None = None, **overrides) -> dict:
 def render_tracks(config: BGMConfig | None = None, **overrides) -> dict[str, list[float]]:
     """パートごとのバッファを ``{名前: バッファ}`` で返す(ミックス前)。"""
     config = _with_overrides(config, overrides)
-    arrangement = compose(config)
+    return _render_arrangement(compose(config), config)
+
+
+def _render_arrangement(arrangement: Arrangement, config: BGMConfig) -> dict[str, list[float]]:
     style = arrangement.style
     sr = config.sr
     cache: dict = {}
@@ -765,9 +768,40 @@ def _part_gains(style: Style) -> dict[str, float]:
 
 
 TARGET_PEAK = 0.86
+DUCK_AMOUNT = 0.22
+"""バスドラムの瞬間に他パートを下げる量。"""
+
+LIMIT_THRESHOLD = 0.62
+"""リミッターが働き始める大きさ。"""
 
 
-def _post_process(buf: list[float], style: Style, config: BGMConfig, length: int) -> list[float]:
+def _duck_to_kick(
+    tracks: dict[str, list[float]],
+    arrangement: Arrangement,
+    sr: int,
+) -> dict[str, list[float]]:
+    """バスドラムの瞬間だけ、ドラム以外のパートを軽く下げる。
+
+    低音どうしがぶつかると輪郭がぼやけるので、キックの頭で場所を空ける。
+    """
+    kicks = [hit.start for hit in arrangement.hits if hit.voice == "kick"]
+    if not kicks:
+        return tracks
+    length = max((len(track) for track in tracks.values()), default=0)
+    curve = fx.sidechain_envelope(kicks, length, sr, amount=DUCK_AMOUNT)
+    return {
+        name: (track if name == "drums" else env.apply(track, curve))
+        for name, track in tracks.items()
+    }
+
+
+def _post_process(
+    buf: list[float],
+    style: Style,
+    config: BGMConfig,
+    length: int,
+    limit: bool = True,
+) -> list[float]:
     """マスターエフェクトをかけ、ループ用に長さを揃える(音量調整は呼び出し側)。"""
     sr = config.sr
     if style.bitcrush_bits:
@@ -777,14 +811,19 @@ def _post_process(buf: list[float], style: Style, config: BGMConfig, length: int
         buf = fx.delay(buf, time=beat_seconds * 0.75, feedback=0.3, wet=style.delay_wet, sr=sr, tail=beat_seconds * 3)
     if style.reverb_wet > 0:
         buf = fx.reverb(buf, room=style.reverb_room, wet=style.reverb_wet, sr=sr, tail=1.0)
-    return remove_dc(wrap_tail(buf, length) if config.loop else buf)
+    buf = remove_dc(wrap_tail(buf, length) if config.loop else buf)
+    if not limit:
+        return buf
+    # 飛び出した山を削ってから持ち上げる。天井付近だけ丸めて 0dBFS を超えさせない。
+    return fx.soft_clip(fx.limiter(buf, threshold=LIMIT_THRESHOLD, sr=sr), ceiling=0.98)
 
 
 def generate(config: BGMConfig | None = None, **overrides) -> list[float]:
     """BGM をモノラルバッファとして生成する。"""
     config = _with_overrides(config, overrides)
-    style = config.resolved_style()
-    tracks = render_tracks(config)
+    arrangement = compose(config)
+    style = arrangement.style
+    tracks = _duck_to_kick(_render_arrangement(arrangement, config), arrangement, config.sr)
     gains = _part_gains(style)
     bar_seconds = BEATS_PER_BAR * 60.0 / style.bpm
     length = num_samples(config.bars * bar_seconds, config.sr)
@@ -797,8 +836,9 @@ def generate(config: BGMConfig | None = None, **overrides) -> list[float]:
 def generate_stereo(config: BGMConfig | None = None, **overrides) -> list[float]:
     """BGM を L,R インターリーブのステレオバッファとして生成する。"""
     config = _with_overrides(config, overrides)
-    style = config.resolved_style()
-    tracks = render_tracks(config)
+    arrangement = compose(config)
+    style = arrangement.style
+    tracks = _duck_to_kick(_render_arrangement(arrangement, config), arrangement, config.sr)
     gains = _part_gains(style)
     bar_seconds = BEATS_PER_BAR * 60.0 / style.bpm
     length = num_samples(config.bars * bar_seconds, config.sr)
