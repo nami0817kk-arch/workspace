@@ -208,12 +208,19 @@ def deep_queries(
 
     海外サイトを日本語で検索しても何も出ないので、{en} を使う雛形は
     候補に英語の語が入っているときだけ出す。
+    when: japanese の雛形も、日本人選手が絡む候補のときだけ出す。
     """
     queries = []
     for template in templates:
         text = str(template.get("q", ""))
         if "{en}" in text and not item.en:
             continue
+
+        # 日本のサイトで欧州の話を引いても無駄なので、条件の合うときだけ出す
+        when = str(template.get("when", ""))
+        if when == "japanese" and not item.japanese:
+            continue
+
         group = template.get("domains")
         queries.append(
             {

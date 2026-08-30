@@ -77,6 +77,7 @@ class Plan:
     accounts: list = field(default_factory=list)
     social: dict = field(default_factory=dict)
     domain_tiers: dict = field(default_factory=dict)
+    verified_on: str = ""
 
     def group_of(self, url: str) -> str:
         """URLがどの情報源の群に属するか。分からなければ空。"""
@@ -87,6 +88,11 @@ class Plan:
             if any(str(host).lower() in text for host in hosts):
                 return group
         return ""
+
+    def is_blocked(self, url: str) -> bool:
+        """恒久的に取得できないサイトか。出典に混ざると検証できなくなる。"""
+        text = (url or "").lower()
+        return any(str(host).lower() in text for host in (self.domains.get("blocked") or []))
 
     def ceiling(self, url: str) -> str:
         """そのURLだけを根拠に置ける最大の確度。分からなければ空。"""
@@ -118,6 +124,7 @@ def build_plan(raw: dict) -> Plan:
     accounts = [dict(x) for x in (raw.get("accounts") or [])]
     social = dict(raw.get("social") or {})
     domain_tiers = dict(raw.get("domain_tiers") or {})
+    verified_on = str(raw.get("verified_on", "") or "")
     tiers = dict(raw.get("tiers") or {})
     if not tiers:
         raise PlanError("tiers が定義されていません")
@@ -175,6 +182,7 @@ def build_plan(raw: dict) -> Plan:
         accounts=accounts,
         social=social,
         domain_tiers=domain_tiers,
+        verified_on=verified_on,
     )
 
 

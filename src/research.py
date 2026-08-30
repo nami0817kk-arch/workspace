@@ -242,6 +242,12 @@ def _advise_sources(notes: Notes, plan: Plan | None) -> list[str]:
 
         best, group = -1, ""
         for url in section.sources:
+            if plan.is_blocked(url):
+                hints.append(
+                    f"節『{section.heading}』: 取得できないサイトを出典にしています"
+                    f"（{url}）。裏を取り直せないので、別の出典に替えてください"
+                )
+                continue
             rank = TIER_RANK.get(plan.ceiling(url), -1)
             if rank > best:
                 best, group = rank, plan.group_of(url)

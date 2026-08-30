@@ -385,3 +385,27 @@ def test_an_unknown_domain_is_reported():
     raw = _raw()
     raw["sections"][0]["sources"] = ["https://example.com/article"]
     assert any("どの情報源の群にも入っていません" in h for h in advise(build_notes(raw), plan))
+
+
+def test_a_blocked_domain_in_the_sources_is_flagged():
+    from src.research import advise
+
+    plan = _plan_with_domains()
+    raw = _raw()
+    raw["sections"][0]["sources"] = ["https://www.bbc.com/sport/football/12345"]
+    hints = advise(build_notes(raw), plan)
+    assert any("取得できないサイト" in h for h in hints)
+
+
+def test_a_blocked_domain_does_not_prop_up_the_tier():
+    from src.research import advise
+
+    plan = _plan_with_domains()
+    raw = _raw()
+    raw["sections"][0]["tier"] = "確定"
+    raw["sections"][0]["sources"] = [
+        "https://www.bbc.com/sport/1",
+        "https://www.caughtoffside.com/2026/08/29/x/",
+    ]
+    hints = advise(build_notes(raw), plan)
+    assert any("出典が弱い" in h for h in hints)   # bbc は数に入れない

@@ -9,9 +9,14 @@ WebSearch 経由でのアクセス可否を実際に試した結果。
 すべて実際に検索して確認したもの。`config/sources.yaml` の `domains` に群ごとに分けてある。
 **群ごとに「置ける確度の上限」が決まっていて、`draft` が突き合わせる。**
 
+```bash
+python -m src.cli sources     # 網の全体と、群ごとの確度の上限を表示
+```
+
 | 群 | サイト | 置ける上限 |
 |---|---|---|
-| `official` | atleticodemadrid.com / fcbarcelona.com / arsenal.com / premierleague.com / laliga.com / uefa.com | **確定** |
+| `official` | アトレティコ / バルサ / アーセナル / レアル / チェルシー / ユナイテッド / リバプール / ユベントス / プレミアリーグ / ラリーガ / UEFA | **確定** |
+| `official_jp` | Jリーグ / JFA / 浦和 / 川崎 / 神戸 | **確定** |
 | `english` | Sky Sports / ESPN / goal.com / 90min / football365 / SI / CBS Sports | 報道 |
 | `japanese` | サッカーキング / フットボールチャンネル / 超WORLDサッカー / theWORLD / football-tribe | 報道 |
 | `aggregator` | Yahoo!ニュース（複数媒体を横断できる） | 報道 |
@@ -26,6 +31,13 @@ WebSearch 経由でのアクセス可否を実際に試した結果。
 （いちばん強いもので english 群 = 報道 まで）。確度を下げるか、より強い出典を足してください
 ```
 
+取得できないサイトを出典に入れると、これも警告が出ます。裏を取り直せないためです。
+
+```
+ヒント: 節『…』: 取得できないサイトを出典にしています（https://www.bbc.com/…）。
+裏を取り直せないので、別の出典に替えてください
+```
+
 ### クラブ公式が引ける
 
 クラブ・リーグの公式サイトは検索でき、**声明そのものを引けます**。報道の又聞きではなく
@@ -34,7 +46,20 @@ WebSearch 経由でのアクセス可否を実際に試した結果。
 ```
 en.atleticodemadrid.com/noticias/unanimous-support-from-the-board-of-directors-...
 premierleague.com/en/news/4664145/when-does-summer-2026-...-open-and-close
+jleague.jp/j1/special/transfer/            ← Jリーグの移籍まとめ（公式）
+urawa-reds.co.jp/topteamtopics/242808/     ← クラブの移籍発表
 ```
+
+**深掘りの検索でも、まず公式を当たります。** `pick` が出す検索リストの先頭近くに
+「公式発表」が入っているので、声明が取れれば `確定` として出せます。
+日本の公式サイトを引く検索は、日本人選手が絡む候補のときだけ出ます
+（jleague.jp でアルバレスを検索しても意味がないため）。
+
+### 網が古くなったら
+
+`config/sources.yaml` の `verified_on` に最終確認日が入っています。
+90日を過ぎると `sources` コマンドが再確認を促します。塞がれたサイトも、
+開いたサイトもあるので、各群に1本ずつ検索をかけて確かめてください。
 
 ## ❌ 使えない（クローラーを恒久的にブロックしている）
 

@@ -245,3 +245,19 @@ def test_loading_rejects_an_empty_file(tmp_path):
 def test_loading_reports_a_missing_file(tmp_path):
     with pytest.raises(CandidateError, match="ありません"):
         load_candidates(tmp_path / "none.yaml")
+
+
+DEEP_WHEN = [
+    {"q": "{theme} 詳細", "label": "日本語"},
+    {"q": "{theme} のお知らせ", "domains": "official_jp", "when": "japanese", "label": "日本の公式"},
+]
+
+
+def test_japan_only_queries_are_skipped_for_european_topics():
+    european = Candidate(id="a", title="アルバレスの去就", japanese=False)
+    assert [q["label"] for q in deep_queries(european, DEEP_WHEN, {})] == ["日本語"]
+
+
+def test_japan_only_queries_appear_for_japanese_topics():
+    japanese = Candidate(id="b", title="鈴木彩艶の移籍", japanese=True)
+    assert [q["label"] for q in deep_queries(japanese, DEEP_WHEN, {})] == ["日本語", "日本の公式"]

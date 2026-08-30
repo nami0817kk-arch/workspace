@@ -10,12 +10,21 @@ cadence:
   slots: [morning, noon, evening]   # 1日の並び
 
 # 使ってよい情報源。ここに無いサイトは検索対象にしない（docs/news-sources.md の実測結果）
-# 情報源の網。すべて実測で確認したもの（最終確認 2026-08-30）。
+# 情報源の網。すべて実測で確認したもの。
+# verified_on を過ぎたら sources コマンドが再確認を促す
 # max_tier … その群だけを根拠に置ける最大の確度。超えるなら別の群で裏を取る
+verified_on: 2026-08-30
+
 domains:
-  # クラブ・リーグの公式。声明そのものを引ける
+  # クラブ・リーグの公式（欧州）。声明そのものを引ける
   official: [en.atleticodemadrid.com, atleticodemadrid.com, fcbarcelona.com,
-             arsenal.com, premierleague.com, laliga.com, uefa.com]
+             arsenal.com, realmadrid.com, chelseafc.com, manutd.com,
+             liverpoolfc.com, juventus.com,
+             premierleague.com, laliga.com, uefa.com]
+
+  # 日本の公式。Jリーグ・日本人選手の話をここまで辿れば確定にできる
+  official_jp: [jleague.jp, jfa.jp, urawa-reds.co.jp, frontale.co.jp,
+                vissel-kobe.co.jp]
 
   # 英語の報道機関
   english: [skysports.com, espn.com, goal.com, 90min.com, football365.com,
@@ -44,6 +53,7 @@ domains:
 # 群ごとに置ける確度の上限。draft のときに突き合わせる
 domain_tiers:
   official: 確定
+  official_jp: 確定
   english: 報道
   japanese: 報道
   aggregator: 報道
@@ -130,7 +140,10 @@ scoring:
 # {theme} には候補の見出し、{en} には候補の en（英語の語）が入る。
 # {en} を使う行は、候補に en が書かれているときだけ出る
 deep:
-  - {q: "{theme} 詳細", label: 何が起きたか}
+  - {q: "{theme} 詳細", domains: japanese, label: 何が起きたか}
+  # まず公式を当たる。声明そのものが取れれば「確定」で出せる
+  - {q: "{en} official statement OR announcement", domains: official, label: 公式発表（欧州）}
+  - {q: "{theme} 移籍 OR 加入 のお知らせ", domains: official_jp, when: japanese, label: 公式発表（日本）}
   - {q: "{en} latest news", domains: english, label: 何が起きたか（英語）}
   - {q: "{en} why explained", domains: english, label: なぜそうなったか}
   - {q: "{en}", domains: social, label: 反応}
@@ -179,7 +192,8 @@ scan:
     - {q: "Jリーグ 移籍 OR 監督 OR 首位", domains: japanese, label: Jリーグ}
     - {q: "football news {today_en}", domains: english, label: 英語の総覧}
     - {q: "transfer news {today_en}", domains: english, label: 移籍（英語）}
-    - {q: "official statement OR announcement transfer", domains: official, label: クラブの公式発表}
+    - {q: "official statement OR announcement transfer", domains: official, label: 公式発表（欧州）}
+    - {q: "完全移籍 OR 期限付き移籍 のお知らせ", domains: official_jp, label: 公式発表（日本）}
     - {q: "Fabrizio Romano here we go", domains: social, label: 記者（移籍の完了）}
     - {q: "David Ornstein exclusive", domains: social, label: 記者（プレミア）}
   check: |

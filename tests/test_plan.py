@@ -147,3 +147,31 @@ def test_bundled_plan_has_three_daily_slots():
     assert plan.slots == ["morning", "noon", "evening"]
     assert all(slot in plan.routines for slot in plan.slots)
     assert set(plan.tiers) >= {"確定", "報道", "未確認"}
+
+
+def test_domains_map_to_their_confidence_ceiling():
+    from src.plan import build_plan
+
+    plan = build_plan(RAW)
+    plan.domains = {
+        "official": ["atleticodemadrid.com"],
+        "english": ["skysports.com"],
+        "blocked": ["bbc.com"],
+    }
+    plan.domain_tiers = {"official": "確定", "english": "報道"}
+
+    assert plan.group_of("https://en.atleticodemadrid.com/noticias/x") == "official"
+    assert plan.ceiling("https://en.atleticodemadrid.com/noticias/x") == "確定"
+    assert plan.ceiling("https://www.skysports.com/football/news/1/2/x") == "報道"
+    assert plan.ceiling("https://example.com/x") == ""
+
+
+def test_blocked_domains_are_recognised_but_not_grouped():
+    from src.plan import build_plan
+
+    plan = build_plan(RAW)
+    plan.domains = {"english": ["skysports.com"], "blocked": ["bbc.com"]}
+
+    assert plan.is_blocked("https://www.bbc.com/sport/1") is True
+    assert plan.group_of("https://www.bbc.com/sport/1") == ""   # blocked は群にしない
+    assert plan.is_blocked("https://www.skysports.com/x") is False

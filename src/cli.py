@@ -8,6 +8,7 @@
     python -m src.cli pick research/x.yaml     候補を採点して枠に割り振る
     python -m src.cli x                        記者Xアカウントの検索リスト
     python -m src.cli fresh <URL>...           拾ったURLの新しさを判定
+    python -m src.cli sources                  情報源の網と確度の上限
     python -m src.cli plan                     枠ごとの取材リストを出す
     python -m src.cli draft research/x.yaml    取材メモを検証して台本にする
     python -m src.cli new                      テンプレートから台本の下書きを作る
@@ -71,6 +72,8 @@ def main(argv: list[str] | None = None) -> int:
 
     p_pick = sub.add_parser("pick", help="候補を採点して枠に割り振り、深掘りの検索を出す")
     p_pick.add_argument("candidates")
+
+    sub.add_parser("sources", help="情報源の網と、群ごとに置ける確度を表示する")
 
     p_fresh = sub.add_parser("fresh", help="検索で拾ったURLの新しさを判定する")
     p_fresh.add_argument("urls", nargs="*", help="URL。省略すると標準入力から読む")
@@ -274,6 +277,49 @@ def _dispatch(args, config) -> int:
             target.write_text(candidates_mod.worksheet(words["{date_ja}"]), encoding="utf-8")
             print(f"\n候補ファイル: {target}")
             print(f"埋めたら `python -m src.cli pick {target}`")
+        return 0
+
+    if args.command == "sources":
+        from datetime import date as _date
+
+        from .plan import load_plan
+
+        plan = load_plan()
+        labels = {
+            "official": "クラブ・リーグ公式（欧州）",
+            "official_jp": "公式（日本）",
+            "english": "英語の報道機関",
+            "japanese": "日本語の報道機関",
+            "aggregator": "横断（複数媒体）",
+            "german": "ドイツ",
+            "italian": "イタリア",
+            "social": "SNS",
+            "rumour": "噂まとめ",
+        }
+        print("■ 情報源の網")
+        for group, hosts in plan.domains.items():
+            if group == "blocked":
+                continue
+            ceiling = plan.domain_tiers.get(group, "—")
+            print(f"\n  {labels.get(group, group)}（{group}）　置ける確度: {ceiling}")
+            for host in hosts:
+                print(f"    {host}")
+
+        blocked = plan.domains.get("blocked") or []
+        print(f"\n■ 取得できない {len(blocked)}件（検索しても結果が返らない）")
+        print("  " + " / ".join(str(h) for h in blocked))
+
+        if plan.verified_on:
+            print(f"\n最終確認: {plan.verified_on}")
+            try:
+                days = (_date.today() - _date.fromisoformat(plan.verified_on)).days
+            except ValueError:
+                days = 0
+            if days > 90:
+                print(
+                    f"  ! {days}日たっています。塞がれたサイト・開いたサイトがあるかもしれません。"
+                    "各群に1本ずつ検索をかけて確かめ、verified_on を更新してください"
+                )
         return 0
 
     if args.command == "fresh":
