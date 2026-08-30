@@ -209,10 +209,10 @@ def advise(notes: Notes, plan: Plan | None = None, now=None) -> list[str]:
 
     if not notes.thumbnail.get("line1"):
         notes_warnings.append(
-            "thumbnail.line1 が空です。サムネの黄色帯に出す文字を書いてください"
+            "thumbnail.line1 が空です。サムネの主見出しを書いてください"
         )
-    if len(str(notes.thumbnail.get("line1", ""))) > 16:
-        notes_warnings.append("thumbnail.line1 が長めです。16文字くらいまでが読みやすい")
+    if len(str(notes.thumbnail.get("line1", ""))) > 14:
+        notes_warnings.append("thumbnail.line1 が長めです。14文字くらいまでが読みやすい")
     if len(str(notes.thumbnail.get("line2", ""))) > 18:
         notes_warnings.append("thumbnail.line2 が長めです。18文字くらいまでが読みやすい")
 

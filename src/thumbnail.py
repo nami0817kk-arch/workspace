@@ -6,6 +6,7 @@
 
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
@@ -30,6 +31,21 @@ SUBTITLE_HEIGHT = 70
 DATE_HEIGHT = 40
 TITLE_GAP = 18
 TITLE_SIZES = (116, 104, 94, 84, 76, 68, 60)
+
+# ニューススタイル。テレビの報道テロップの組み方に寄せる。
+# 帯で画面を割らず、行ごとにプレートを敷いて、下にティッカーを通す
+NEWS_FLAG = (198, 18, 28)          # 速報フラグの赤
+NEWS_PLATE = (9, 13, 21, 219)      # 見出しの下敷き
+NEWS_TICKER = (7, 10, 17, 238)     # 下部の帯
+NEWS_INK = (255, 255, 255, 255)
+NEWS_SUB_INK = (222, 228, 238, 255)
+NEWS_META_INK = (150, 160, 176, 255)
+NEWS_FLAG_HEIGHT = 64
+NEWS_TICKER_HEIGHT = 78
+NEWS_BAR = 10                      # 見出し左の縦棒の太さ
+NEWS_HEAD_SIZES = (96, 88, 80, 72, 64, 58, 52)
+NEWS_SUB_SIZES = (64, 58, 52, 48, 44, 40, 36)
+NEWS_LABEL = "海外サッカーニュース"
 
 
 def from_meta(meta: dict, title: str) -> dict:
@@ -68,7 +84,13 @@ def build_thumbnail(
     style="band" にすると、写真の上に黄色帯と赤帯を重ねる形になる。
     lines は (黄色帯の文字, 赤帯の文字)。省略時は title / subtitle を使う。
     """
-    if (style or config.video.thumbnail_style) == "band":
+    chosen = style or config.video.thumbnail_style
+    if chosen == "news":
+        return _news_thumbnail(
+            config, out_path, background,
+            lines or (title, subtitle), tags or [], badge, date,
+        )
+    if chosen == "band":
         return _band_thumbnail(
             config, out_path, background,
             lines or (title, subtitle), tags or [],
@@ -163,6 +185,146 @@ def _band_thumbnail(
     out_path.parent.mkdir(parents=True, exist_ok=True)
     canvas.convert("RGB").save(out_path, quality=95)
     return out_path
+
+
+def _news_thumbnail(
+    config: ProjectConfig,
+    out_path: Path,
+    background: str | None,
+    lines: tuple[str, str],
+    tags: list[str],
+    badge: str,
+    date: str,
+) -> Path:
+    """報道テロップ風。写真を帯で塗りつぶさず、情報として読ませる。
+
+    構成は上から、速報フラグと日付 / 写真 / 見出しのプレート / ティッカー。
+    煽り帯と違い、行ごとに必要な幅だけ下敷きを敷くので写真が残る。
+    """
+    font_path = str(config.video.font_path())
+    canvas = _base(config, background, out_path)
+    _news_scrim(canvas)
+
+    layer, draw = _layer(SIZE)
+
+    # ---- 上段: 速報フラグ と 日付
+    x = MARGIN - 16
+    flag = (badge or "速報").strip()
+    flag_font = ImageFont.truetype(font_path, 38)
+    flag_w = draw.textlength(flag, font=flag_font) + 48
+    draw.rectangle([x, 44, x + flag_w, 44 + NEWS_FLAG_HEIGHT], fill=NEWS_FLAG + (255,))
+    _centered(draw, flag, flag_font, x + 24, 44, NEWS_FLAG_HEIGHT, NEWS_INK)
+
+    stamp = _news_date(date)
+    if stamp:
+        # 日付は数字だけなので欧文フォントのほうが締まる
+        meta_font = ImageFont.truetype(str(config.video.latin_font_path()), 32)
+        left = x + flag_w + 14
+        width = draw.textlength(stamp, font=meta_font) + 40
+        draw.rectangle(
+            [left, 44, left + width, 44 + NEWS_FLAG_HEIGHT], fill=NEWS_PLATE
+        )
+        _centered(draw, stamp, meta_font, left + 20, 44, NEWS_FLAG_HEIGHT, NEWS_SUB_INK)
+
+    # ---- 下段: ティッカー
+    ticker_top = SIZE[1] - NEWS_TICKER_HEIGHT
+    draw.rectangle([0, ticker_top, SIZE[0], SIZE[1]], fill=NEWS_TICKER)
+    draw.rectangle([0, ticker_top, SIZE[0], ticker_top + 4], fill=NEWS_FLAG + (255,))
+
+    label_font = ImageFont.truetype(font_path, 30)
+    mark_y = ticker_top + 30
+    draw.rectangle([MARGIN - 16, mark_y, MARGIN - 16 + 14, mark_y + 14], fill=NEWS_FLAG + (255,))
+    draw.text((MARGIN + 12, ticker_top + 22), NEWS_LABEL, font=label_font, fill=NEWS_INK)
+
+    if tags:
+        keywords = "　".join(str(t) for t in tags[:2])
+        width = draw.textlength(keywords, font=label_font)
+        draw.text(
+            (SIZE[0] - MARGIN + 16 - width, ticker_top + 22),
+            keywords, font=label_font, fill=NEWS_META_INK,
+        )
+
+    # ---- 見出し: 下から積む。行ごとに必要なぶんだけ下敷きを敷く
+    head, sub = (lines[0] or "").replace("\\n", " "), (lines[1] or "")
+    bottom = ticker_top - 26
+    rows = [(sub, NEWS_SUB_SIZES, NEWS_SUB_INK)] if sub else []
+    rows.append((head, NEWS_HEAD_SIZES, NEWS_INK))
+
+    for text, sizes, ink in rows:
+        font, wrapped = _fit_news(draw, text, font_path, sizes)
+
+        # 折り返した2行は同じ見出しなので、下敷きは1枚にする。
+        # 行ごとに敷くと行間から背景が覗いて、別々の見出しに見えてしまう
+        line_height = font.size + 18
+        block = line_height * len(wrapped) + 14
+        top = bottom - block
+        width = max(draw.textlength(chunk, font=font) for chunk in wrapped)
+
+        left = MARGIN - 16
+        draw.rectangle([left, top, MARGIN + 16 + NEWS_BAR + width + 24, bottom], fill=NEWS_PLATE)
+        draw.rectangle([left, top, left + NEWS_BAR, bottom], fill=NEWS_FLAG + (255,))
+
+        y = top + 7
+        for chunk in wrapped:
+            draw.text((MARGIN + 6 + NEWS_BAR, y), chunk, font=font, fill=ink)
+            y += line_height
+        bottom = top - 10
+
+    canvas.alpha_composite(layer)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    canvas.convert("RGB").save(out_path, quality=95)
+    return out_path
+
+
+def _centered(draw, text, font, x: int, top: int, height: int, fill) -> None:
+    """箱の高さに対して字を縦中央に置く。フォントごとの余白差を吸収する。"""
+    box = draw.textbbox((0, 0), text, font=font)
+    draw.text((x, top + (height - (box[3] - box[1])) // 2 - box[1]), text, font=font, fill=fill)
+
+
+def _news_scrim(canvas: Image.Image) -> None:
+    """写真は残しつつ、上下だけ沈めて文字を読ませる。"""
+    scrim, draw = _layer(SIZE)
+    for y in range(SIZE[1]):
+        ratio = y / SIZE[1]
+        if ratio < 0.24:                      # 上: フラグのぶんだけ軽く
+            alpha = int(140 * (1 - ratio / 0.24) ** 1.4)
+        elif ratio > 0.30:                    # 下: 見出しが乗るので濃く
+            # 二乗で効かせると、境目が線に見えずになじむ
+            alpha = int(185 * ((ratio - 0.30) / 0.70) ** 1.8)
+        else:
+            alpha = 0
+        if alpha:
+            draw.line([(0, y), (SIZE[0], y)], fill=(4, 7, 13, alpha))
+    canvas.alpha_composite(scrim)
+
+
+def _news_date(date: str) -> str:
+    """「2026年8月30日」を「2026.08.30」にする。報道テロップの見え方に寄せる。"""
+    numbers = re.findall(r"\d+", str(date or ""))
+    if len(numbers) < 3:
+        return str(date or "").strip()
+    year, month, day = numbers[:3]
+    return f"{year}.{int(month):02d}.{int(day):02d}"
+
+
+def _fit_news(draw: ImageDraw.ImageDraw, text: str, font_path: str, sizes):
+    """見出しを2行以内に収める。幅は測って確かめる。"""
+    width = SIZE[0] - MARGIN * 2 - 90
+    fallback = None
+    for size in sizes:
+        font = ImageFont.truetype(font_path, size)
+        rows = wrap_text(draw, text, font, width)
+        if any(draw.textlength(row, font=font) > width for row in rows):
+            continue
+        if len(rows) == 1:
+            return font, rows
+        if len(rows) == 2 and fallback is None:
+            fallback = (font, rows)
+    if fallback:
+        return fallback
+    font = ImageFont.truetype(font_path, sizes[-1])
+    return font, wrap_text(draw, text, font, width)[:2]
 
 
 def _fit_band(draw: ImageDraw.ImageDraw, text: str, font_path: str):

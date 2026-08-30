@@ -103,3 +103,59 @@ def test_band_text_never_overflows_the_band():
         for row in rows:
             right = 34 + draw.textlength(row, font=font)
             assert right <= SIZE[0] - 16, f"はみ出し: {text} / {row}"
+
+
+def _news(tmp_path, **kwargs):
+    from src.config import load_config
+    from src.thumbnail import build_thumbnail
+
+    options = {
+        "lines": ("見出し", "副見出し"),
+        "tags": ["キーワード"],
+        "badge": "速報",
+        "date": "2026年8月30日",
+    }
+    options.update(kwargs)
+    return build_thumbnail(
+        load_config(), options["lines"][0], tmp_path / "t.png", style="news", **options
+    )
+
+
+def test_the_news_style_renders_for_every_combination(tmp_path):
+    from PIL import Image
+
+    # 日付・タグ・副見出しは無いことがある。どれが欠けても落ちない
+    for options in (
+        {},
+        {"date": "", "tags": [], "badge": ""},
+        {"lines": ("見出しだけ", "")},
+        {"lines": ("とても長い見出しを入れたときに2行へ折り返されることの確認", "副見出しも長めに書いてみる")},
+    ):
+        path = _news(tmp_path, **options)
+        assert Image.open(path).size == (1280, 720)
+
+
+def test_the_date_is_reformatted_for_the_news_flag():
+    from src.thumbnail import _news_date
+
+    assert _news_date("2026年8月30日") == "2026.08.30"
+    assert _news_date("2026年12月5日") == "2026.12.05"
+    assert _news_date("") == ""
+    assert _news_date("移籍期限直前") == "移籍期限直前"   # 数字が無ければそのまま
+
+
+def test_news_headlines_never_overflow_their_plate():
+    from PIL import Image, ImageDraw
+
+    from src.config import load_config
+    from src.thumbnail import MARGIN, NEWS_BAR, NEWS_HEAD_SIZES, SIZE, _fit_news
+
+    config = load_config()
+    font_path = str(config.video.font_path())
+    draw = ImageDraw.Draw(Image.new("RGBA", SIZE))
+
+    for text in ("アルバレスに決断の期限", "とても長い見出しを入れたときにどう折り返されるかの確認です", "短い"):
+        font, rows = _fit_news(draw, text, font_path, NEWS_HEAD_SIZES)
+        for row in rows:
+            right = MARGIN + 6 + NEWS_BAR + draw.textlength(row, font=font)
+            assert right <= SIZE[0] - MARGIN + 40, f"はみ出し: {text} / {row}"
