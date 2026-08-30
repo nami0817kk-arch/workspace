@@ -63,6 +63,10 @@ PATTERNS: dict[str, list[re.Pattern]] = {
     "premierleague.com": [
         re.compile(r"premierleague\.com/[a-z-]+/news/(\d+)"),
     ],
+    # kicker.de/leverkusen-gegen-wolfsburg-2026-bundesliga-5050994/spielbericht
+    "kicker.de": [
+        re.compile(r"kicker\.de/[^?]*?-(\d{6,})(?:/|$)"),
+    ],
 }
 
 # 記録が2点以上あり、これだけの時間が空いていないと増加ペースを出さない

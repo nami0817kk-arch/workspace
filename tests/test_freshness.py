@@ -280,3 +280,9 @@ def test_urls_with_a_readable_date_are_not_flagged():
     entries = [Observation("footballchannel.jp", 999_999, T0)]
     groups = rank(["https://www.footballchannel.jp/2024/01/01/post1/"])
     assert suspects(groups, entries) == []
+
+
+def test_kicker_match_report_ids_are_recognised():
+    ref = read("https://www.kicker.de/leverkusen-gegen-wolfsburg-2026-bundesliga-5050994/spielbericht")
+    assert ref.site == "kicker.de"
+    assert ref.number == 5050994

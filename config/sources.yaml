@@ -76,43 +76,43 @@ leagues:
     official: [premierleague.com, arsenal.com, chelseafc.com, manutd.com,
                liverpoolfc.com, tottenhamhotspur.com, newcastleunited.co.uk]
     media: english
-    match_q: "match report player ratings"
+    match_q: "Premier League match report second half winner"
     official_q: "match report"
   spain:
     name: ラ・リーガ
     official: [laliga.com, realmadrid.com, fcbarcelona.com, en.atleticodemadrid.com]
     media: spanish
-    match_q: "cronica resultado partido"
+    match_q: "LaLiga cronica del partido goles"
     official_q: "cronica del partido"
   germany:
     name: ブンデスリーガ
     official: [bundesliga.com, fcbayern.com, bvb.de]
     media: german
-    match_q: "Spielbericht Noten Analyse"
+    match_q: "Bundesliga Spielbericht Tore Analyse"
     official_q: "Spielbericht"
   italy:
     name: セリエA
     official: [legaseriea.it, juventus.com, acmilan.com]
     media: italian
-    match_q: "cronaca pagelle partita"
+    match_q: "Serie A cronaca della partita gol"
     official_q: "cronaca della partita"
   france:
     name: リーグアン
     official: [psg.fr]
     media: french
-    match_q: "resume match note"
+    match_q: "Ligue 1 resume du match buts"
     official_q: "resume du match"
   netherlands:
     name: エールディヴィジ
     official: []
     media: dutch
-    match_q: "wedstrijdverslag uitslag"
+    match_q: "Eredivisie wedstrijdverslag doelpunten"
     official_q: "wedstrijdverslag"
   japan:
     name: Jリーグ
     official: [jleague.jp]
     media: japanese
-    match_q: "試合結果 採点 OR 寸評"
+    match_q: "Jリーグ 試合結果 ハイライト 得点"
     official_q: "試合結果 レポート"
 
 # 群ごとに置ける確度の上限。draft のときに突き合わせる

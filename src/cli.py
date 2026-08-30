@@ -156,6 +156,20 @@ def _dispatch(args, config) -> int:
             print(f"  ## {scene.title} ({len(scene.lines)}行)")
         for line in script.lines:  # 話者が config に無ければここで落ちる
             config.resolve_speaker(line.speaker)
+        from .reading import check as reading_check
+        from .reading import load_dictionary
+
+        # 読み違えそうな箇所を出す。直すかどうかは書き手が決める
+        dictionary = load_dictionary()
+        seen: set[str] = set()
+        for line in script.lines:
+            for hint in reading_check(line.text, dictionary):
+                if hint.found in seen:
+                    continue
+                seen.add(hint.found)
+                arrow = f" → {hint.suggest}" if hint.suggest else ""
+                print(f"　読み: {hint.found}{arrow}　（{hint.why}）")
+
         print("書式OK")
         return 0
 
