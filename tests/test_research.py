@@ -409,3 +409,61 @@ def test_a_blocked_domain_does_not_prop_up_the_tier():
     ]
     hints = advise(build_notes(raw), plan)
     assert any("出典が弱い" in h for h in hints)   # bbc は数に入れない
+
+
+def _reaction_raw(**card_overrides):
+    raw = _raw()
+    card = {
+        "type": "reactions",
+        "items": [{"text": "補強しても勝てないのか", "label": "X"}],
+    }
+    card.update(card_overrides)
+    raw["sections"][2].update({
+        "tier": "未確認",
+        "card": card,
+        "sources": ["https://x.com/someone/status/2093440301448737183"],
+    })
+    return raw
+
+
+def test_a_reactions_card_without_sources_is_blocked():
+    plan = _plan()
+    raw = _reaction_raw()
+    raw["sections"][2]["sources"] = []
+    problems = verify(build_notes(raw), plan)
+    assert any("反応カードに出典がありません" in p for p in problems)
+
+
+def test_a_reactions_card_with_sources_passes():
+    assert verify(build_notes(_reaction_raw()), _plan()) == []
+
+
+def test_an_account_name_on_a_reaction_is_blocked():
+    raw = _reaction_raw(items=[{"text": "補強しても勝てないのか", "label": "@spursfan"}])
+    problems = verify(build_notes(raw), _plan())
+    assert any("アカウント名" in p for p in problems)
+
+
+def test_other_cards_are_not_subject_to_the_reaction_rules():
+    raw = _raw()
+    raw["sections"][2].update({"card": {"type": "points", "items": ["a"]}, "sources": []})
+    problems = verify(build_notes(raw), _plan())
+    assert not any("反応カード" in p for p in problems)
+
+
+def test_reactions_reported_as_a_majority_are_flagged():
+    from src.research import advise
+
+    raw = _reaction_raw()
+    raw["sections"][2]["say"] = ["補強を疑問視する声が多いようです。"]
+    hints = advise(build_notes(raw))
+    assert any("数を数えた言い方" in h for h in hints)
+
+
+def test_reactions_presented_as_reporting_are_flagged():
+    from src.research import advise
+
+    raw = _reaction_raw()
+    raw["sections"][2]["tier"] = "報道"
+    hints = advise(build_notes(raw))
+    assert any("未確認" in h for h in hints)

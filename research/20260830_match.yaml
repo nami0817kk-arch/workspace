@@ -52,6 +52,23 @@ sections:
       - https://www.skysports.com/football/news/11095/13578837/tottenham-hotspur-roberto-de-zerbi-highlights-biggest-problem-at-spurs-after-newcastle-defeat-as-jamie-carragher-slams-start
       - https://www.espn.com/soccer/story/_/id/49764441/spurs-vs-newcastle-premier-league-result
 
+  - id: voices
+    heading: 試合後の言葉
+    tier: 報道
+    telop: デゼルビ監督「同じ話だと思われるかもしれない」
+    say:
+      - 試合後、デゼルビ監督はこう話したと伝えられています。「結果には失望している。ファンにも申し訳ない。2連敗のあとでは、また同じ話の繰り返しだと思う人もいるだろう。だが、そうではないと確信している」
+      - 一方、解説者のジェイミー・キャラガー氏は、この開幕の戦いぶりを厳しく批判したと報じられています。
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49764441/spurs-vs-newcastle-premier-league-result
+      - https://www.skysports.com/football/news/11095/13578837/tottenham-hotspur-roberto-de-zerbi-highlights-biggest-problem-at-spurs-after-newcastle-defeat-as-jamie-carragher-slams-start
+      - https://www.tottenhamhotspur.com/news/1087616/spurs-0-2-newcastle-roberto-de-zerbis-verdict
+    card:
+      type: quote
+      color: "#132257"
+      text: "I'm disappointed with the result, and I'm sorry for the fans... I have no doubt it's not like this."
+      translation: 結果には失望しているし、ファンにも申し訳ない。……だが、そうではないと確信している
+
   - id: numbers
     heading: 数字で見ると
     tier: 報道

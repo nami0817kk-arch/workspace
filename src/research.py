@@ -184,10 +184,40 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
                 f"{label}: 確度『{section.tier}』には出典が{needed}本必要です"
                 f"（いまは{len(section.sources)}本）"
             )
+        problems += _check_reactions(section)
+
         if rule.get("needs_official") and not section.official:
             problems.append(
                 f"{label}: 確度『{section.tier}』はクラブ・当事者の発表が条件です。"
                 "発表を確認できないなら tier を下げてください"
+            )
+    return problems
+
+
+def _check_reactions(section: Section) -> list[str]:
+    """反応カードは、実在する投稿・記事に基づいているかを見る。
+
+    もっともらしいファンの声は、思いつきでいくらでも書ける。だからここは
+    警告ではなく、通さない扱いにしている。出典が無ければ台本にしない。
+    """
+    card = section.card or {}
+    if str(card.get("type", "")).lower() != "reactions":
+        return []
+
+    problems: list[str] = []
+    if not section.sources:
+        problems.append(
+            f"{section.id}: 反応カードに出典がありません。"
+            "実在する投稿・記事のURLを sources に入れてください"
+        )
+
+    for item in card.get("items") or []:
+        entry = item if isinstance(item, dict) else {"text": str(item)}
+        label = str(entry.get("label", "")).strip()
+        if label.startswith("@"):
+            problems.append(
+                f"{section.id}: 反応のラベルにアカウント名（{label}）が入っています。"
+                "個人が特定できる形では出しません。「X」「海外のファン」などにしてください"
             )
     return problems
 
@@ -218,7 +248,39 @@ def advise(notes: Notes, plan: Plan | None = None, now=None) -> list[str]:
 
     notes_warnings += _advise_posts(notes, plan, now)
     notes_warnings += _advise_sources(notes, plan)
+    notes_warnings += _advise_voices(notes)
     return notes_warnings
+
+
+# 数を語る言い回し。ファンの反応で使うと、数えていないのに数えたことになる
+CROWD_WORDS = (
+    "声が多", "意見が多", "が大半", "ほとんど", "みんな", "世論",
+    "圧倒的に", "軒並み", "総じて", "口を揃え",
+)
+
+
+def _advise_voices(notes: Notes) -> list[str]:
+    """反応の扱いで気をつける点。"""
+    hints: list[str] = []
+    for section in notes.sections:
+        card = section.card or {}
+        if str(card.get("type", "")).lower() != "reactions":
+            continue
+
+        if section.tier not in ("未確認", "背景"):
+            hints.append(
+                f"節『{section.heading}』: ファンの反応は確度『未確認』で出すのが無難です"
+                f"（いまは『{section.tier}』）。数人の投稿は世の中の総意ではありません"
+            )
+        for line in section.say:
+            for word in CROWD_WORDS:
+                if word in line:
+                    hints.append(
+                        f"節『{section.heading}』: 「{word}」は数を数えた言い方です。"
+                        "投稿を数えていないなら「こういう声もある」に留めてください"
+                    )
+                    break
+    return hints
 
 
 # 確度の強さ。出典の群が支えられる上限と突き合わせるために順序を付ける

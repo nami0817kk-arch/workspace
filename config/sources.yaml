@@ -216,7 +216,12 @@ deep:
   - {q: "{theme} 詳細", domains: japanese, label: 何が起きたか}
   - {q: "{en} latest news", domains: english, label: 何が起きたか（英語）}
   - {q: "{en} why explained", domains: english, label: なぜそうなったか}
-  - {q: "{en}", domains: social, label: 反応}
+  # 世の中の言葉。誰の言葉かで扱いが変わるので、識者と一般の反応を分けて集める
+  #   識者・当事者 … 名前を出して引用できる（報道）
+  #   一般の反応   … 名前を出さない。数の話もしない（未確認）
+  - {q: "{en} said OR quotes reaction", domains: english, label: 識者・当事者の発言}
+  - {q: "{theme} 反応 OR 声 OR 批判", domains: japanese, label: 反応（日本語）}
+  - {q: "{en} fans reaction", domains: social, label: 反応（SNS）}
   - {q: "{en} stats goals assists", domains: stats, label: 数字（成績）}
 
   # --- 移籍のとき
@@ -380,6 +385,7 @@ routines:
       - {id: what, heading: 何が起きたか, tier: 報道}
       - {id: background, heading: ここに至る経緯, tier: 背景}
       - {id: point, heading: 争点はどこか, tier: 報道}
+      - {id: voices, heading: 世の中はどう見ているか, tier: 未確認}
       - {id: numbers, heading: 数字で見ると, tier: 確定}
       - {id: next, heading: これからどうなる, tier: 未確認}
     steps:
@@ -424,6 +430,7 @@ routines:
     structure:
       - {id: score, heading: 試合はこうなった, tier: 確定}
       - {id: turning, heading: 試合が決まった場面, tier: 報道}
+      - {id: voices, heading: 試合後の言葉, tier: 報道}
       - {id: numbers, heading: 数字で見ると, tier: 報道}
       - {id: next, heading: 順位と次の一戦, tier: 報道}
     steps:
@@ -441,6 +448,17 @@ routines:
         queries:
           - {q: "turning point OR red card OR VAR", domains: english}
         check: 何分の出来事かを控える。「終盤」で済ませない
+
+      - id: voices
+        what: 監督・選手の試合後コメントと、ファンの反応
+        tier: 報道
+        queries:
+          - {q: "post match reaction said", domains: english}
+          - {q: "監督 コメント 試合後", domains: japanese}
+        check: |
+          発言は誰のものかを特定する。監督か、選手か、解説者か。
+          ファンの反応は名前を出さない。「〜という声が多い」と数の話にもしない。
+          思いつきで書かない。実在する投稿・記事だけを引く
 
       - id: numbers
         what: xG・シュート数・ポゼッション・順位
