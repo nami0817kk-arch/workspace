@@ -92,6 +92,88 @@ def _resolve_shape(shape: Shape | str) -> Shape:
         raise ValueError(f"unknown shape: {shape!r} (available: {', '.join(SHAPES)})") from None
 
 
+# --- 帯域制限(PolyBLEP) -----------------------------------------------------
+#
+# ノコギリ波や矩形波の「段差」はそのまま鳴らすとナイキスト周波数を超える倍音を含み、
+# 折り返し(エイリアシング)で調子外れの金属音になる。段差の前後2サンプルだけを
+# 多項式で滑らかにつなぐ PolyBLEP を使い、少ない計算量でこれを抑える。
+
+
+def _polyblep(t: float, dt: float) -> float:
+    """位相 ``t`` が段差から ``dt`` 以内にあるときの補正値。"""
+    if t < dt:
+        t /= dt
+        return t + t - t * t - 1.0
+    if t > 1.0 - dt:
+        t = (t - 1.0) / dt
+        return t * t + t + t + 1.0
+    return 0.0
+
+
+def _edge_crossings(n: int, inc: float, phase: float, edge: float):
+    """位相が ``edge`` を跨いだ直後のサンプル番号と、その跨いだ位置を返す。"""
+    if inc <= 0.0:
+        return
+    k = math.ceil(phase - edge)
+    while True:
+        target = edge + k
+        index = math.ceil((target - phase) / inc)
+        if index >= n:
+            return
+        if index > 0:  # 先頭より前の段差は補正しようがない
+            yield index, target
+        k += 1
+
+
+def _apply_blep(out: list[float], n: int, inc: float, phase: float, edge: float, weight: float) -> None:
+    """段差の直前・直後のサンプルに PolyBLEP 補正を加える(その場で書き換える)。"""
+    for index, target in _edge_crossings(n, inc, phase, edge):
+        after = (phase + index * inc - target) / inc  # 0.0〜1.0
+        out[index] += weight * (after + after - after * after - 1.0)
+        before = after - 1.0  # -1.0〜0.0
+        out[index - 1] += weight * (before * before + before + before + 1.0)
+
+
+def _render_bandlimited(shape: Shape, n: int, inc: float, amp: float, phase: float) -> list[float]:
+    """固定周波数の帯域制限レンダリング。素の波形を作ってから段差だけ補正する。"""
+    out = _render_constant(shape, n, inc, amp, phase)
+    if shape is saw_shape:
+        _apply_blep(out, n, inc, phase, 0.0, -amp)
+        return out
+    # 矩形波: 立ち上がりで +、立ち下がりで -。振幅は上下の幅の半分。
+    half = amp * (shape.high - shape.low) / 2.0
+    _apply_blep(out, n, inc, phase, 0.0, half)
+    _apply_blep(out, n, inc, phase, shape.duty, -half)
+    return out
+
+
+def _render_bandlimited_variable(
+    shape: Shape, n: int, freq: Callable[[float], float], sr: int, amp: float, phase: float
+) -> list[float]:
+    """周波数が動く場合の帯域制限レンダリング(1サンプルずつ補正する)。"""
+    is_saw = shape is saw_shape
+    if is_saw:
+        half = 0.0
+        duty = 0.0
+    else:
+        half = amp * (shape.high - shape.low) / 2.0
+        duty = shape.duty
+    out = [0.0] * n
+    ph = phase
+    for i in range(n):
+        dt = freq(i / sr) / sr
+        value = amp * shape(ph)
+        if 0.0 < dt < 0.5:
+            if is_saw:
+                value -= amp * _polyblep(ph, dt)
+            else:
+                value += half * _polyblep(ph, dt)
+                value -= half * _polyblep((ph - duty) % 1.0, dt)
+        out[i] = value
+        ph = (ph + dt) % 1.0
+    return out
+
+
 def _render_constant(shape: Shape, n: int, inc: float, amp: float, phase: float) -> list[float]:
     """周波数が一定の場合の高速経路。位相を直接計算して関数呼び出しを避ける。"""
     if shape is sine_shape:
@@ -109,6 +191,11 @@ def _render_constant(shape: Shape, n: int, inc: float, amp: float, phase: float)
     return [amp * shape((phase + i * inc) % 1.0) for i in range(n)]
 
 
+def is_band_limitable(shape: Shape) -> bool:
+    """段差を持つ波形(帯域制限の対象)かどうか。"""
+    return shape is saw_shape or isinstance(shape, Pulse)
+
+
 def render(
     shape: Shape | str,
     freq: FreqLike,
@@ -116,15 +203,27 @@ def render(
     sr: int = SAMPLE_RATE,
     amp: float = 1.0,
     phase: float = 0.0,
+    antialias: bool = True,
 ) -> list[float]:
-    """任意の波形関数を鳴らす。位相積算式なので周波数変化に追従する。"""
+    """任意の波形関数を鳴らす。位相積算式なので周波数変化に追従する。
+
+    ``antialias=True``(既定)ではノコギリ波・矩形波に PolyBLEP をかけて
+    折り返し歪みを抑える。素の段差がほしい場合は ``False`` を渡す。
+    """
     shape = _resolve_shape(shape)
     n = num_samples(duration, sr)
     if n == 0:
         return []
+    band_limited = antialias and is_band_limitable(shape)
 
     if not callable(freq):
-        return _render_constant(shape, n, float(freq) / sr, amp, phase)
+        inc = float(freq) / sr
+        if band_limited and 0.0 < inc < 0.5:
+            return _render_bandlimited(shape, n, inc, amp, phase)
+        return _render_constant(shape, n, inc, amp, phase)
+
+    if band_limited:
+        return _render_bandlimited_variable(shape, n, freq, sr, amp, phase)
 
     out = [0.0] * n
     ph = phase
@@ -135,16 +234,34 @@ def render(
     return out
 
 
-def sine(freq: FreqLike, duration: float, sr: int = SAMPLE_RATE, amp: float = 1.0) -> list[float]:
-    return render(sine_shape, freq, duration, sr, amp)
+def sine(
+    freq: FreqLike,
+    duration: float,
+    sr: int = SAMPLE_RATE,
+    amp: float = 1.0,
+    antialias: bool = True,
+) -> list[float]:
+    return render(sine_shape, freq, duration, sr, amp, antialias=antialias)
 
 
-def saw(freq: FreqLike, duration: float, sr: int = SAMPLE_RATE, amp: float = 1.0) -> list[float]:
-    return render(saw_shape, freq, duration, sr, amp)
+def saw(
+    freq: FreqLike,
+    duration: float,
+    sr: int = SAMPLE_RATE,
+    amp: float = 1.0,
+    antialias: bool = True,
+) -> list[float]:
+    return render(saw_shape, freq, duration, sr, amp, antialias=antialias)
 
 
-def triangle(freq: FreqLike, duration: float, sr: int = SAMPLE_RATE, amp: float = 1.0) -> list[float]:
-    return render(triangle_shape, freq, duration, sr, amp)
+def triangle(
+    freq: FreqLike,
+    duration: float,
+    sr: int = SAMPLE_RATE,
+    amp: float = 1.0,
+    antialias: bool = True,
+) -> list[float]:
+    return render(triangle_shape, freq, duration, sr, amp, antialias=antialias)
 
 
 _PULSE_CACHE: dict[float, Pulse] = {}
@@ -164,8 +281,9 @@ def square(
     sr: int = SAMPLE_RATE,
     amp: float = 1.0,
     duty: float = 0.5,
+    antialias: bool = True,
 ) -> list[float]:
-    return render(pulse_shape(duty), freq, duration, sr, amp)
+    return render(pulse_shape(duty), freq, duration, sr, amp, antialias=antialias)
 
 
 def noise(

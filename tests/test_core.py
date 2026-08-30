@@ -144,8 +144,17 @@ def test_square_duty_controls_the_high_portion():
     assert high / len(buf) == pytest.approx(0.25, abs=0.05)
 
 
-def test_square_with_default_duty_is_a_plain_square_wave():
-    assert set(oscillators.square(100.0, 0.05, SR)) == {1.0, -1.0}
+def test_square_without_antialiasing_is_a_plain_square_wave():
+    assert set(oscillators.square(100.0, 0.05, SR, antialias=False)) == {1.0, -1.0}
+
+
+def test_antialiasing_only_smooths_the_edges():
+    """帯域制限をかけても、段差の前後以外は素の矩形波と同じ値であること。"""
+    plain = oscillators.square(100.0, 0.05, SR, antialias=False)
+    smooth = oscillators.square(100.0, 0.05, SR)
+    differing = [i for i, (a, b) in enumerate(zip(plain, smooth)) if a != b]
+    edges_per_second = 2 * 100.0
+    assert 0 < len(differing) <= 2 * edges_per_second * 0.05 + 2
 
 
 @pytest.mark.parametrize("duty", [0.125, 0.25, 0.5, 0.75])
@@ -303,3 +312,66 @@ def test_write_wav_rounds_rather_than_truncates(tmp_path):
     with wave.open(path, "rb") as fp:
         frames = fp.readframes(1)
     assert int.from_bytes(frames[0:2], "little", signed=True) == 32767
+
+
+# --- 帯域制限(エイリアシング対策) -------------------------------------------
+
+
+def _goertzel(buf, freq, sr):
+    """1周波数だけの離散フーリエ変換。スペクトルの一点を測るのに使う。"""
+    w = 2 * math.pi * freq / sr
+    cosine, sine = math.cos(w), math.sin(w)
+    s1 = s2 = 0.0
+    for value in buf:
+        s0 = value + 2 * cosine * s1 - s2
+        s2, s1 = s1, s0
+    return math.hypot(s1 - s2 * cosine, s2 * sine) / len(buf)
+
+
+@pytest.mark.parametrize("shape", ["saw", "square", "pulse25"])
+def test_antialiasing_suppresses_folded_partials(shape):
+    """折り返してきた倍音が、帯域制限によって桁違いに小さくなること。
+
+    3000Hz を 8000Hz で鳴らすと 3倍音 9000Hz は 1000Hz に折り返す。
+    そこは本来の倍音列にない周波数なので、残っていればエイリアシング。
+    """
+    freq, folded = 3000.0, 1000.0
+    plain = oscillators.render(shape, freq, 0.25, SR, antialias=False)
+    limited = oscillators.render(shape, freq, 0.25, SR)
+    assert _goertzel(limited, folded, SR) < 0.05 * _goertzel(plain, folded, SR)
+
+
+@pytest.mark.parametrize("shape", ["saw", "square"])
+def test_antialiasing_keeps_the_fundamental(shape):
+    """基音の大きさは帯域制限の前後でほとんど変わらないこと。"""
+    freq = 500.0
+    plain = oscillators.render(shape, freq, 0.2, SR, antialias=False)
+    limited = oscillators.render(shape, freq, 0.2, SR)
+    assert _goertzel(limited, freq, SR) == pytest.approx(_goertzel(plain, freq, SR), rel=0.1)
+
+
+@pytest.mark.parametrize("shape", ["saw", "square", "pulse25", "pulse12"])
+def test_fast_and_reference_bandlimiting_agree(shape):
+    """段差だけ補正する高速版と、1サンプルずつ補正する参照版が一致すること。"""
+    freq = 700.0
+    fast = oscillators.render(shape, freq, 0.05, SR)
+    reference = oscillators.render(shape, lambda _t: freq, 0.05, SR)
+    differing = [i for i, (a, b) in enumerate(zip(fast, reference)) if abs(a - b) > 1e-9]
+    assert len(differing) <= int(freq * 0.05) + 1  # 位相の折り返し位置のみ
+
+
+@pytest.mark.parametrize("shape", ["saw", "square", "pulse25", "pulse12"])
+def test_bandlimited_output_stays_in_range_and_dc_free(shape):
+    buf = oscillators.render(shape, 1200.0, 0.1, SR)
+    assert core.peak(buf) <= 1.0
+    assert abs(sum(buf) / len(buf)) < 0.01
+
+
+def test_antialiasing_is_skipped_at_and_above_nyquist():
+    """1サンプルあたりの位相が半周を超えると PolyBLEP は成り立たないので素の波形に戻る。"""
+    buf = oscillators.render("square", SR * 0.5, 0.01, SR)
+    assert set(buf) == {1.0, -1.0}
+
+
+def test_sine_ignores_the_antialias_flag():
+    assert oscillators.sine(440.0, 0.01, SR) == oscillators.sine(440.0, 0.01, SR, antialias=False)
