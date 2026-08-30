@@ -17,6 +17,7 @@ from .images_gemini import GeminiImages
 from .images_huggingface import HuggingFaceImages
 from .images_local import LocalImages
 from .images_openai import OpenAIImages
+from .images_pollinations import PollinationsImages
 from .images_replicate import ReplicateImages
 from .images_stability import StabilityImages
 
@@ -31,6 +32,7 @@ __all__ = [
     "OpenverseAssets",
     "PexelsAssets",
     "PixabayAssets",
+    "PollinationsImages",
     "QiitaFeed",
     "ReplicateImages",
     "RssFeed",

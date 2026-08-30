@@ -5,6 +5,7 @@ import pytest
 from ailab import assets, cli
 from ailab.connectors.assets_iconify import IconifyAssets
 from ailab.connectors.feed_qiita import QiitaFeed
+from ailab.connectors.images_pollinations import PollinationsImages
 from ailab.connectors.assets_openverse import OpenverseAssets
 from ailab.connectors.assets_wikimedia import WikimediaAssets
 from ailab.connectors.github import GitHubConnector
@@ -57,7 +58,7 @@ def test_doctor_marks_unset_keys_as_skipped(monkeypatch, capsys):
     from ailab.core.connector import CheckResult
 
     # キー不要で通信するコネクタは疎通確認を差し替える（テストは通信しない）
-    for connector_cls in (OpenverseAssets, WikimediaAssets, IconifyAssets, QiitaFeed):
+    for connector_cls in (OpenverseAssets, WikimediaAssets, IconifyAssets, QiitaFeed, PollinationsImages):
         monkeypatch.setattr(
             connector_cls, "check", lambda self: CheckResult(self.name, ok=True, detail="確認済み")
         )
@@ -91,8 +92,23 @@ def test_gen_multiple_images(tmp_path):
     assert len(list(tmp_path.glob("*.png"))) == 2
 
 
-def test_gen_auto_falls_back_to_local(tmp_path, capsys):
+def test_gen_auto_prefers_keyless_ai_over_the_placeholder(monkeypatch, tmp_path, capsys):
+    """キーが無くても pollinations（本物の生成AI）が選ばれ、local は最後の砦。"""
+    from ailab.core.types import GeneratedImage
+
+    monkeypatch.setattr(
+        PollinationsImages,
+        "generate",
+        lambda self, prompt, **kw: [
+            GeneratedImage(data=b"\x89PNG\r\n\x1a\n", provider="pollinations", model="flux", prompt=prompt)
+        ],
+    )
     assert cli.main(["gen", "自動選択", "--size", "64x64", "-o", str(tmp_path)]) == 0
+    assert "pollinations/flux" in capsys.readouterr().out
+
+
+def test_gen_can_still_force_the_local_placeholder(tmp_path, capsys):
+    assert cli.main(["gen", "ダミー", "--provider", "local", "--size", "64x64", "-o", str(tmp_path)]) == 0
     assert "local/abstract-v1" in capsys.readouterr().out
 
 

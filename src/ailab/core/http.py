@@ -82,10 +82,17 @@ class RateLimiter:
     #: これ以上待つなら、黙って止まるより例外で知らせる（秒）
     MAX_WAIT = 10.0
 
-    def __init__(self, requests_per_period: int, period_seconds: float, label: str = "外部API"):
+    def __init__(
+        self,
+        requests_per_period: int,
+        period_seconds: float,
+        label: str = "外部API",
+        max_wait: float | None = None,
+    ):
         self.rate = max(1, requests_per_period) / max(1e-6, period_seconds)
         self.capacity = float(max(1, requests_per_period))
         self.label = label
+        self.max_wait = self.MAX_WAIT if max_wait is None else max_wait
         self._tokens = self.capacity
         self._last = time.monotonic()
 
@@ -100,7 +107,7 @@ class RateLimiter:
             return 0.0
 
         need = (1.0 - self._tokens) / self.rate
-        if need > self.MAX_WAIT:
+        if need > self.max_wait:
             raise RateLimitError(
                 f"{self.label}: 無料枠を使い切りました。約{int(need)}秒あけて再実行してください。",
                 retry_after=need,

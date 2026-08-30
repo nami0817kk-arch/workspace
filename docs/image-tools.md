@@ -52,10 +52,21 @@ ailab gen "PJT008 AIラボ" --provider local --size 1200x630
 | `stability` | `STABILITY_API_KEY` | `core` | `--model ultra` / `sd3`。サイズは近いアスペクト比に丸められる |
 | `replicate` | `REPLICATE_API_TOKEN` | `black-forest-labs/flux-schnell` | `--model owner/name` または `owner/name:バージョン`。完了まで自動で待つ |
 | `huggingface` | `HF_TOKEN` (or `HUGGINGFACE_API_KEY`) | `black-forest-labs/FLUX.1-schnell` | 無料枠あり。エンドポイントは `HF_INFERENCE_URL` で差し替え可 |
+| `pollinations` | **不要**（任意で `POLLINATIONS_TOKEN`） | `flux` | 無料・オープンソースの公開サービス。キーが無くても本物のAI画像が作れる |
 | `local` | 不要 | `abstract-v1` | 生成AIではなくプロンプトから決まるグラデ画像。ダミー用 |
 
-`--provider auto`（既定）は openai → gemini → replicate → huggingface → stability → local の順
-（各コネクタの `priority`）に、使えるものを選ぶ。どのAPIも有料なので、試作中は `local` で十分なことも多い。
+`--provider auto`（既定）は openai → gemini → replicate → huggingface → stability →
+**pollinations** → local の順（各コネクタの `priority`）に、使えるものを選ぶ。
+**キーを1つも設定していない場合は pollinations が選ばれる**ので、支払い設定なしでも
+本物の生成AI画像が得られる。`local` はその更に後ろの、通信すらしない最後の砦。
+
+### pollinations の注意点
+
+- 匿名利用は概ね**15秒に1回**。連続生成では自動で待つ（レート制限は基盤が管理する）。
+- 既定で `private=true` を送り、**生成物が公開フィードに流れないように**している。
+- 透かし（ロゴ）を外す `nologo` は登録ユーザーのみ。`POLLINATIONS_TOKEN` を設定すると自動で付く。
+- 公開の無料サービスなので、品質・可用性・規約は提供元次第。業務で常用するなら
+  有料APIか、後述のローカル実行を検討する。
 
 ### モデルIDは変わる
 

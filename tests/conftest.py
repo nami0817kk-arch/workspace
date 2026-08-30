@@ -11,6 +11,14 @@ if str(SRC) not in sys.path:
 
 
 @pytest.fixture(autouse=True)
+def no_sleeping(monkeypatch):
+    """テストで実際に待たない（再試行の待ちやレート制限の回復待ち）。"""
+    import time
+
+    monkeypatch.setattr(time, "sleep", lambda _seconds: None)
+
+
+@pytest.fixture(autouse=True)
 def block_network(monkeypatch):
     """テストから実際の外部通信が出ないようにする。
 

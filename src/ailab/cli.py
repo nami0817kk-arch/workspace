@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import sys
 
 import requests
@@ -345,6 +346,11 @@ def main(argv: list[str] | None = None) -> int:
     except requests.RequestException as exc:  # pragma: no cover - 通常は NetworkError に包まれる
         print(f"ネットワークエラー: {exc}", file=sys.stderr)
         return 1
+    except BrokenPipeError:
+        # `ailab connectors | head` のように読み手が先に閉じた場合。
+        # 終了時の flush でも落ちないよう、標準出力を捨て先に付け替える。
+        os.dup2(os.open(os.devnull, os.O_WRONLY), sys.stdout.fileno())
+        return 0
 
 
 if __name__ == "__main__":  # pragma: no cover

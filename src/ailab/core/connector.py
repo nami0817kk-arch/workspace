@@ -58,6 +58,8 @@ class RateLimit:
 
     requests: int
     per_seconds: float
+    #: 枠が回復するまで待ってよい秒数（None なら RateLimiter の既定値）
+    max_wait_seconds: float | None = None
 
 
 @dataclass
@@ -136,7 +138,10 @@ class Connector(ABC):
             return None
         if self._limiter is None:
             self._limiter = http.RateLimiter(
-                self.rate_limit.requests, self.rate_limit.per_seconds, label=self.name
+                self.rate_limit.requests,
+                self.rate_limit.per_seconds,
+                label=self.name,
+                max_wait=self.rate_limit.max_wait_seconds,
             )
         return self._limiter
 
