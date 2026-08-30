@@ -9,7 +9,6 @@
 from __future__ import annotations
 
 import argparse
-import inspect
 import json
 import os
 import sys
@@ -36,14 +35,18 @@ def cmd_sfx(args: argparse.Namespace) -> int:
         print(f"available: {', '.join(sfx.available())}", file=sys.stderr)
         return 2
 
-    params = {}
-    if args.pitch != 1.0:
-        if "pitch" not in inspect.signature(sfx.PRESETS[args.name]).parameters:
-            print(f"error: preset {args.name!r} does not support --pitch", file=sys.stderr)
-            return 2
-        params["pitch"] = args.pitch
-    samples = sfx.generate(args.name, sr=args.rate, seed=args.seed, **params)
+    if args.count > 1:
+        takes = sfx.variations(
+            args.name, count=args.count, sr=args.rate, seed=args.seed,
+            spread=args.spread, pitch=args.pitch,
+        )
+        for index, samples in enumerate(takes, start=1):
+            path = _default_path(args.dir, f"{args.name}_{index}")
+            write_wav(path, samples, sr=args.rate, channels=1)
+            _report(path, samples, args.rate, 1)
+        return 0
 
+    samples = sfx.generate(args.name, sr=args.rate, seed=args.seed, pitch=args.pitch)
     path = args.output or _default_path(args.dir, args.name)
     write_wav(path, samples, sr=args.rate, channels=1)
     _report(path, samples, args.rate, 1)
@@ -219,6 +222,13 @@ def build_parser() -> argparse.ArgumentParser:
     sfx_parser.add_argument("-d", "--dir", default="output", help="出力ディレクトリ (既定: output)")
     sfx_parser.add_argument("--seed", type=int, default=None, help="乱数シード(ノイズ系の再現用)")
     sfx_parser.add_argument("--pitch", type=float, default=1.0, help="音程の倍率 (既定: 1.0)")
+    sfx_parser.add_argument(
+        "--count", type=int, default=1,
+        help="少しずつ違う版をいくつ作るか。2以上で <名前>_1.wav ... を書き出す",
+    )
+    sfx_parser.add_argument(
+        "--spread", type=float, default=0.12, help="版ごとの音程のばらつき (既定: 0.12)"
+    )
     sfx_parser.set_defaults(func=cmd_sfx)
 
     bgm_parser = subparsers.add_parser("bgm", help="BGM を1曲生成する")

@@ -29,9 +29,16 @@ def test_sfx_rejects_an_unknown_preset(tmp_path, capsys):
     assert "unknown sfx preset" in capsys.readouterr().err
 
 
-def test_sfx_rejects_pitch_on_a_preset_without_it(tmp_path, capsys):
-    assert cli.main(["sfx", "explosion", "--pitch", "2.0", "-d", str(tmp_path)]) == 2
-    assert "--pitch" in capsys.readouterr().err
+def test_sfx_pitch_works_on_every_preset(tmp_path):
+    assert cli.main(["--rate", SR, "sfx", "explosion", "--pitch", "2.0", "-d", str(tmp_path)]) == 0
+    assert (tmp_path / "explosion.wav").exists()
+
+
+def test_sfx_count_writes_numbered_variations(tmp_path):
+    args = ["--rate", SR, "sfx", "footstep", "--count", "4", "--seed", "1", "-d", str(tmp_path)]
+    assert cli.main(args) == 0
+    written = sorted(path.name for path in tmp_path.glob("*.wav"))
+    assert written == ["footstep_1.wav", "footstep_2.wav", "footstep_3.wav", "footstep_4.wav"]
 
 
 def test_bgm_writes_a_wav_file(tmp_path):
