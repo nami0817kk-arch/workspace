@@ -8,6 +8,8 @@
     python -m src.cli pick research/x.yaml     候補を採点して枠に割り振る
     python -m src.cli x                        記者Xアカウントの検索リスト
     python -m src.cli fresh <URL>...           拾ったURLの新しさを判定
+    python -m src.cli today                    今日の進み具合と次の一手
+    python -m src.cli stats                    これまで何を出してきたか
     python -m src.cli sources                  情報源の網と確度の上限
     python -m src.cli review scripts/x.md      公開前の点検
     python -m src.cli short scripts/x.md       縦9:16のショート
@@ -89,6 +91,12 @@ def main(argv: list[str] | None = None) -> int:
 
     p_pick = sub.add_parser("pick", help="候補を採点して枠に割り振り、深掘りの検索を出す")
     p_pick.add_argument("candidates")
+
+    p_today = sub.add_parser("today", help="今日の進み具合と、次に打つコマンドを出す")
+    p_today.add_argument("--date", default=None, help="基準日 YYYY-MM-DD（既定: 今日）")
+
+    p_stats = sub.add_parser("stats", help="これまで何を出してきたかを振り返る")
+    p_stats.add_argument("--days", type=int, default=14, help="さかのぼる日数（既定: 14）")
 
     sub.add_parser("sources", help="情報源の網と、群ごとに置ける確度を表示する")
 
@@ -398,6 +406,66 @@ def _dispatch(args, config) -> int:
             target.write_text(candidates_mod.worksheet(words["{date_ja}"]), encoding="utf-8")
             print(f"\n候補ファイル: {target}")
             print(f"埋めたら `python -m src.cli pick {target}`")
+        return 0
+
+    if args.command == "today":
+        from datetime import date as _date
+
+        from . import today as today_mod
+        from .plan import load_plan
+
+        plan = load_plan()
+        day = _date.fromisoformat(args.date) if args.date else _date.today()
+        stamp = day.strftime("%Y%m%d")
+
+        pairs = [(key, plan.routine(key).name) for key in plan.slots]
+        candidates, slots = today_mod.survey(pairs, day)
+
+        print(f"■ {day:%Y年%-m月%-d日} の進み具合")
+        mark = "✓" if candidates.exists() else "・"
+        print(f"  {mark} 候補　{today_mod._short(candidates)}")
+
+        for slot in slots:
+            done = slot.done
+            marks = "".join(
+                "✓" if step in done else "・" for step in today_mod.STEPS[1:]
+            )
+            print(f"  {marks} {slot.name}　{' / '.join(done) or 'まだ何もない'}")
+
+        print(f"\n次にこれを打つ:\n  {today_mod.next_step(candidates, slots, stamp)}")
+        return 0
+
+    if args.command == "stats":
+        from . import coverage as coverage_mod
+        from . import stats as stats_mod
+        from .plan import load_plan
+
+        plan = load_plan()
+        entries = coverage_mod.load(plan.coverage.get("ledger", "research/covered.yaml"))
+        target = len(plan.slots) or 3   # 1日に出す本数（cadence.slots の数）
+        summary = stats_mod.summarise(entries, args.days)
+
+        print(f"■ 直近{args.days}日　{summary.total}本（1日あたり {summary.average:.1f}本 / 目標 {target}本）")
+        for row in stats_mod.bars(summary, target):
+            print(row)
+
+        if summary.slots:
+            print("\n■ 枠ごと")
+            for key in plan.slots:
+                routine = plan.routines.get(key)
+                name = routine.name if routine else key
+                print(f"  {name}　{summary.slots.get(key, 0)}本")
+
+        if summary.themes:
+            print("\n■ よく扱ったテーマ")
+            for key, count in summary.themes:
+                print(f"  {count}回　{key}")
+
+        notes = stats_mod.advice(summary, target)
+        if notes:
+            print()
+            for note in notes:
+                print(f"! {note}")
         return 0
 
     if args.command == "sources":
