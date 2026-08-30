@@ -6,13 +6,12 @@
 from __future__ import annotations
 
 import json
-import mimetypes
 from pathlib import Path
 
 from .core.errors import ConfigError
 from .core.http import request
 from .core.types import Asset
-from .utils import slugify
+from .utils import extension_for, slugify
 
 CREDITS_JSON = "credits.json"
 CREDITS_MD = "CREDITS.md"
@@ -22,7 +21,7 @@ def _extension(url: str, content_type: str) -> str:
     for ext in (".png", ".jpg", ".jpeg", ".svg", ".gif", ".webp"):
         if url.lower().split("?")[0].endswith(ext):
             return ext
-    return mimetypes.guess_extension(content_type.split(";")[0].strip()) or ".jpg"
+    return extension_for(content_type, default=".jpg")
 
 
 def download(asset: Asset, dest_dir: str | Path, *, timeout: int = 60, sess=None) -> Path:

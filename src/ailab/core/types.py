@@ -2,11 +2,10 @@
 
 from __future__ import annotations
 
-import mimetypes
 from dataclasses import asdict, dataclass, field
 from pathlib import Path
 
-from ..utils import slugify, timestamp
+from ..utils import extension_for, slugify, timestamp
 
 
 @dataclass
@@ -59,7 +58,7 @@ class GeneratedImage:
 
     @property
     def ext(self) -> str:
-        return mimetypes.guess_extension(self.mime) or ".png"
+        return extension_for(self.mime)
 
     def default_name(self, index: int = 0) -> str:
         suffix = f"_{index + 1}" if index else ""

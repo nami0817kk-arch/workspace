@@ -95,7 +95,7 @@ class ReplicateImages(Connector):
         """完了するまで状態を問い合わせる（Prefer: wait で既に終わっていれば何もしない）。"""
         deadline = time.monotonic() + timeout
         while prediction.get("status") not in TERMINAL_STATUSES:
-            if time.monotonic() > deadline:
+            if time.monotonic() >= deadline:  # 分解能の粗いOSでも確実に打ち切る
                 raise ConnectorError(f"replicate: {timeout}秒待っても完了しませんでした")
             time.sleep(POLL_INTERVAL)
             poll_url = (prediction.get("urls") or {}).get("get")

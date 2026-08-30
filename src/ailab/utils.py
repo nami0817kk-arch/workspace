@@ -2,9 +2,30 @@
 
 from __future__ import annotations
 
+import mimetypes
 import re
 import unicodedata
 from datetime import datetime
+
+#: MIMEタイプ → 拡張子。mimetypes は OS の設定に左右されるので自前で持つ
+#: （Windows では image/webp が引けず、拡張子が化けていた）
+IMAGE_EXTENSIONS = {
+    "image/png": ".png",
+    "image/jpeg": ".jpg",
+    "image/jpg": ".jpg",
+    "image/webp": ".webp",
+    "image/gif": ".gif",
+    "image/svg+xml": ".svg",
+    "image/avif": ".avif",
+    "image/bmp": ".bmp",
+    "image/tiff": ".tiff",
+}
+
+
+def extension_for(mime: str, default: str = ".png") -> str:
+    """MIMEタイプから拡張子を決める（どのOSでも同じ結果になる）。"""
+    key = (mime or "").split(";")[0].strip().lower()
+    return IMAGE_EXTENSIONS.get(key) or mimetypes.guess_extension(key) or default
 
 
 def slugify(text: str, max_length: int = 40) -> str:
