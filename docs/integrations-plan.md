@@ -206,8 +206,7 @@ Windows 固有の不具合を実際に検出できている。ここから先は
 
 - **送信先**: Slack / Discord（Webhookなので各50行程度）、S3 / R2（公開URL化）、Notion
 - **取得先**: Zenn、arXiv、Hacker News、Google Fonts
-- **運用**: `ailab usage`（生成APIの利用量と概算コスト）、レシピの定期実行
-  （GitHub Actions から `ailab run` を回す）
+- **運用**: ~~`ailab usage`~~ ✅、~~レシピの定期実行~~ ✅（`.github/workflows/recipe.yml`）
 - **OAuth**: Google Drive など。認可フローが要るので基盤に auth.py を足すところから
 
 新しい連携先は1つ50〜80行、CLI と MCP の両方に自動で現れる。

@@ -373,3 +373,18 @@ def test_gen_with_a_style(tmp_path, capsys):
         == 0
     )
     assert len(list(tmp_path.glob("*.png"))) == 1
+
+
+def test_workflows_are_valid_yaml():
+    """CI とレシピ実行のワークフローが壊れていないことを確認する。"""
+    from pathlib import Path
+
+    import yaml
+
+    for path in sorted(Path(".github/workflows").glob("*.yml")):
+        workflow = yaml.safe_load(path.read_text(encoding="utf-8"))
+        assert isinstance(workflow, dict), path
+        assert workflow.get("jobs"), f"{path}: jobs がない"
+        for name, job in workflow["jobs"].items():
+            assert job.get("steps"), f"{path}:{name}: steps がない"
+            assert job.get("timeout-minutes"), f"{path}:{name}: 実行時間の上限がない"
