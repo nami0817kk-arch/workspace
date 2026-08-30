@@ -12,6 +12,7 @@ AI活用のアイデア検証・試作を行うラボプロジェクト。
 | `ailab status` | 使えるプロバイダ・素材サイトを確認する |
 
 詳しい使い方は [docs/image-tools.md](docs/image-tools.md)。
+外部サービス連携を広げる計画は [docs/integrations-plan.md](docs/integrations-plan.md)。
 
 ## セットアップ
 
