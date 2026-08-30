@@ -11,6 +11,7 @@
     python -m src.cli fresh <URL>...           拾ったURLの新しさを判定
     python -m src.cli today                    今日の進み具合と次の一手
     python -m src.cli stats                    これまで何を出してきたか
+    python -m src.cli queries                  どの検索が効いているか
     python -m src.cli sources                  情報源の網と確度の上限
     python -m src.cli review scripts/x.md      公開前の点検
     python -m src.cli short scripts/x.md       縦9:16のショート
@@ -95,6 +96,8 @@ def main(argv: list[str] | None = None) -> int:
     p_collect.add_argument("--out", default=None, help="書き出し先")
     p_collect.add_argument("--append", action="store_true", help="既にあるファイルに足す")
     p_collect.add_argument("--no-merge", action="store_true", help="同じ話をまとめない")
+    p_collect.add_argument("--from", dest="source_label", default=None,
+                           help="どの検索から拾ったか（scan の名前）。効かない検索を見つけるのに使う")
 
     p_pick = sub.add_parser("pick", help="候補を採点して枠に割り振り、深掘りの検索を出す")
     p_pick.add_argument("candidates")
@@ -104,6 +107,9 @@ def main(argv: list[str] | None = None) -> int:
 
     p_stats = sub.add_parser("stats", help="これまで何を出してきたかを振り返る")
     p_stats.add_argument("--days", type=int, default=14, help="さかのぼる日数（既定: 14）")
+
+    p_queries = sub.add_parser("queries", help="どの検索が効いているかを見る")
+    p_queries.add_argument("--days", type=int, default=30)
 
     sub.add_parser("sources", help="情報源の網と、群ごとに置ける確度を表示する")
 
@@ -488,6 +494,24 @@ def _dispatch(args, config) -> int:
                 print(f"! {note}")
         return 0
 
+    if args.command == "queries":
+        from . import queries as queries_mod
+
+        rows = queries_mod.tally(queries_mod.load(), args.days)
+        if not rows:
+            print("まだ記録がありません。")
+            print("`collect --from \"検索の名前\"` で、どの検索から拾ったかを控えます")
+            return 0
+
+        print(f"■ 直近{args.days}日の検索　候補の少ない順")
+        for label, times, hits in rows:
+            print(f"  {hits:3d}件 / {times:2d}回　{label}")
+
+        for label in queries_mod.dead(rows):
+            print(f"\n! 『{label}』は何度も回して1件も候補になっていません。"
+                  "検索語を見直すか、config/sources.yaml から外してください")
+        return 0
+
     if args.command == "sources":
         from datetime import date as _date
 
@@ -753,6 +777,12 @@ def _dispatch(args, config) -> int:
             mark = head.posted_on or (str(head.number) if head.number else "—")
             same = f"　＋{len(bunch) - 1}媒体" if len(bunch) > 1 else ""
             print(f"  {mark:12} {head.title[:48] or '（見出しなし）'}{same}")
+        if args.source_label:
+            from . import queries as queries_mod
+
+            queries_mod.record({args.source_label: len(bunches)})
+            print(f"『{args.source_label}』から{len(bunches)}件、と記録しました")
+
         print(f"\n候補ファイル: {target}")
         print("tier / topic / league は判断が要ります。目で見て埋めてください")
         return 0
