@@ -53,6 +53,8 @@ PATTERNS: dict[str, list[re.Pattern]] = {
     # 増えても拾えるように、2つめの区切りは決め打ちにしない
     "skysports.com": [
         re.compile(r"skysports\.com/(?:football|transfer)/[a-z0-9-]+/\d+/(\d+)/"),
+        # 試合レポートは別の形。skysports.com/football/<対戦>/report/559463
+        re.compile(r"skysports\.com/football/[a-z0-9-]+/report/(\d+)"),
     ],
     "espn.com": [
         re.compile(r"espn\.com/soccer/story/_/id/(\d+)/"),

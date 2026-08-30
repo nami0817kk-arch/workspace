@@ -5,6 +5,7 @@
     python -m src.cli build <台本> --backend core   合成方式を明示する
     python -m src.cli make-clip <画像>         静止画から背景クリップを作る
     python -m src.cli scan                     候補テーマを拾う検索リスト
+    python -m src.cli collect < 検索結果.txt    検索結果から候補ファイルの下書き
     python -m src.cli pick research/x.yaml     候補を採点して枠に割り振る
     python -m src.cli x                        記者Xアカウントの検索リスト
     python -m src.cli fresh <URL>...           拾ったURLの新しさを判定
@@ -88,6 +89,12 @@ def main(argv: list[str] | None = None) -> int:
     p_scan = sub.add_parser("scan", help="候補テーマを拾うための検索リストを出す")
     p_scan.add_argument("--date", default=None, help="基準日 YYYY-MM-DD（既定: 今日）")
     p_scan.add_argument("--write", action="store_true", help="候補ファイルの雛形を作る")
+
+    p_collect = sub.add_parser("collect", help="検索結果を貼ると候補ファイルの下書きを作る")
+    p_collect.add_argument("--date", default=None, help="基準日 YYYY-MM-DD（既定: 今日）")
+    p_collect.add_argument("--out", default=None, help="書き出し先")
+    p_collect.add_argument("--append", action="store_true", help="既にあるファイルに足す")
+    p_collect.add_argument("--no-merge", action="store_true", help="同じ話をまとめない")
 
     p_pick = sub.add_parser("pick", help="候補を採点して枠に割り振り、深掘りの検索を出す")
     p_pick.add_argument("candidates")
@@ -658,6 +665,60 @@ def _dispatch(args, config) -> int:
             print(f"    投稿: {when:%Y-%m-%d %H:%M} UTC　（{age:.0f}時間前）{note}")
             for problem in xposts.review(url, plan.accounts, stale):
                 print(f"    ! {problem}")
+        return 0
+
+    if args.command == "collect":
+        from datetime import date as _date
+
+        from . import collect as collect_mod
+        from . import freshness
+        from .config import _resolve
+        from .plan import tokens
+
+        text = sys.stdin.read()
+        hits = collect_mod.enrich(collect_mod.parse(text), freshness.read)
+        if not hits:
+            print(
+                "URLが1つも見つかりませんでした。\n"
+                "検索結果を『見出し<タブ>URL』か、見出しの次の行にURL、の形で貼ってください",
+                file=sys.stderr,
+            )
+            return 1
+
+        today = _date.fromisoformat(args.date) if args.date else _date.today()
+        label = tokens(today, 24)["{date_ja}"]
+        body = collect_mod.to_yaml(hits, label, merge=not args.no_merge)
+        bunches = collect_mod.group(hits) if not args.no_merge else [[h] for h in hits]
+
+        target = Path(args.out) if args.out else _resolve(
+            f"research/{today.strftime('%Y%m%d')}_candidates.yaml"
+        )
+        if target.exists() and not args.append:
+            print(f"すでにあります: {target}（足すなら --append）", file=sys.stderr)
+            return 1
+
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if args.append and target.exists():
+            # 見出し部分を落として、候補の行だけを足す
+            rows = body.split("candidates:\n", 1)[-1]
+            with target.open("a", encoding="utf-8") as handle:
+                handle.write("\n" + rows)
+        else:
+            target.write_text(body, encoding="utf-8")
+
+        known = sum(1 for hit in hits if hit.site)
+        dated = sum(1 for hit in hits if hit.posted_on)
+        print(
+            f"{len(hits)}件 → 候補{len(bunches)}件"
+            f"　（サイトが分かったもの {known}件 / 日付が読めたもの {dated}件）"
+        )
+        for bunch in bunches:
+            head = bunch[0]
+            mark = head.posted_on or (str(head.number) if head.number else "—")
+            same = f"　＋{len(bunch) - 1}媒体" if len(bunch) > 1 else ""
+            print(f"  {mark:12} {head.title[:48] or '（見出しなし）'}{same}")
+        print(f"\n候補ファイル: {target}")
+        print("tier / topic / league は判断が要ります。目で見て埋めてください")
         return 0
 
     if args.command == "pick":
