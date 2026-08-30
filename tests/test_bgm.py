@@ -140,3 +140,72 @@ def test_drum_voices_are_short_and_audible(voice):
     buf = drums.VOICES[voice](sr=SR)
     assert 0.1 < core.peak(buf) <= 1.0
     assert core.duration_of(buf, SR) < 0.5
+
+
+# --- 曲構成 -------------------------------------------------------------------
+
+
+@pytest.mark.parametrize("structure", bgm.structure_names())
+def test_every_structure_renders(structure):
+    buf = bgm.generate(_config(style="adventure", bars=8, structure=structure))
+    assert core.peak(buf) == pytest.approx(bgm.TARGET_PEAK, abs=1e-6)
+
+
+@pytest.mark.parametrize("structure", bgm.structure_names())
+@pytest.mark.parametrize("bars", [1, 2, 3, 8, 16, 17])
+def test_section_bars_always_sum_to_the_requested_total(structure, bars):
+    plan = bgm.plan_sections(structure, bars)
+    assert sum(count for _, _, count in plan) == bars
+    assert all(count >= 1 for _, _, count in plan)
+
+
+@pytest.mark.parametrize("structure", bgm.structure_names())
+def test_sections_are_laid_out_end_to_end(structure):
+    plan = bgm.plan_sections(structure, 16)
+    expected_start = 0
+    for _, start, count in plan:
+        assert start == expected_start
+        expected_start += count
+
+
+def test_structure_does_not_change_the_total_length():
+    """構成を変えても、小節数が同じなら曲の長さは変わらない。"""
+    plain = bgm.generate(_config(style="adventure", bars=8, structure="loop"))
+    full = bgm.generate(_config(style="adventure", bars=8, structure="full"))
+    assert len(plain) == len(full)
+
+
+def test_intro_section_has_no_drums():
+    """イントロではドラムが鳴らないこと。"""
+    config = _config(style="adventure", bars=8, structure="intro")
+    tracks = bgm.render_tracks(config)
+    bar_seconds = bgm.BEATS_PER_BAR * 60.0 / config.resolved_style().bpm
+    intro_bars = bgm.plan_sections("intro", 8)[0][2]
+    intro_end = core.num_samples(intro_bars * bar_seconds, SR)
+    assert core.peak(tracks["drums"][:intro_end]) == 0.0
+    assert core.peak(tracks["drums"][intro_end:]) > 0.0
+
+
+def test_chorus_lead_sits_higher_than_the_verse_lead():
+    """サビのメロディが A メロより高い位置にあること。"""
+    config = _config(style="adventure", bars=8, structure="verse_chorus", parts=("lead",))
+    lead = bgm.render_tracks(config)["lead"]
+    half = len(lead) // 2
+    verse, chorus = lead[:half], lead[half:]
+    assert _zero_crossing_rate(chorus) > _zero_crossing_rate(verse)
+
+
+def test_too_few_bars_falls_back_to_the_leading_sections():
+    plan = bgm.plan_sections("full", 2)
+    assert [section.name for section, _, _ in plan] == ["intro", "verse"]
+
+
+def test_unknown_structure_raises():
+    with pytest.raises(ValueError, match="unknown structure"):
+        bgm.generate(_config(structure="sonata"))
+
+
+def _zero_crossing_rate(buf) -> float:
+    """ゼロ交差の割合。音の高さの目安になる。"""
+    crossings = sum(1 for a, b in zip(buf, buf[1:]) if (a < 0) != (b < 0))
+    return crossings / max(1, len(buf))

@@ -61,6 +61,7 @@ def cmd_bgm(args: argparse.Namespace) -> int:
         sr=args.rate,
         progression=args.progression,
         drum_pattern=args.drums,
+        structure=args.structure,
         parts=parts,
         loop=not args.no_loop,
         stereo=args.stereo,
@@ -91,6 +92,11 @@ def cmd_list(args: argparse.Namespace) -> int:
     for name in bgm_module.style_names():
         style = bgm_module.STYLES[name]
         print(f"  {name:<10} scale={style.scale} bpm={style.bpm} progression={style.progression}")
+    print("\nSong structures:")
+    for name in bgm_module.structure_names():
+        parts = " -> ".join(section.name for section in bgm_module.STRUCTURES[name])
+        print(f"  {name:<14} {parts}")
+
     print("\nDrum patterns:")
     print("  " + ", ".join(drums.pattern_names()))
     print("\nScales:")
@@ -143,6 +149,10 @@ def build_parser() -> argparse.ArgumentParser:
     bgm_parser.add_argument("--progression", default=None, help='コード進行(例: "I-V-vi-IV")')
     bgm_parser.add_argument(
         "--drums", default=None, help=f"ドラムパターン ({', '.join(drums.pattern_names())})"
+    )
+    bgm_parser.add_argument(
+        "--structure", default="loop",
+        help=f"曲構成 ({', '.join(bgm_module.structure_names())})",
     )
     bgm_parser.add_argument(
         "--without", nargs="*", default=[], choices=["chords", "bass", "lead", "drums"],

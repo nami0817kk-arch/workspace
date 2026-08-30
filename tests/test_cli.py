@@ -90,3 +90,22 @@ def test_demo_writes_every_preset(tmp_path):
 def test_missing_subcommand_exits_with_an_error():
     with pytest.raises(SystemExit):
         cli.main([])
+
+
+def test_bgm_structure_option_is_accepted(tmp_path):
+    args = ["--rate", SR, "bgm", "--bars", "8", "--seed", "1", "--structure", "full", "-d", str(tmp_path)]
+    assert cli.main(args) == 0
+    assert (tmp_path / "bgm_calm.wav").exists()
+
+
+def test_bgm_reports_an_unknown_structure(tmp_path, capsys):
+    args = ["bgm", "--bars", "4", "--structure", "sonata", "-d", str(tmp_path)]
+    assert cli.main(args) == 2
+    assert "unknown structure" in capsys.readouterr().err
+
+
+def test_list_prints_song_structures(capsys):
+    assert cli.main(["list"]) == 0
+    out = capsys.readouterr().out
+    assert "Song structures" in out
+    assert "verse_chorus" in out

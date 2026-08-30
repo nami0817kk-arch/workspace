@@ -119,6 +119,79 @@ STYLES: dict[str, Style] = {
 }
 
 
+@dataclass(frozen=True)
+class Section:
+    """曲の一区切り。どのパートを鳴らすか、どのくらいの長さかを持つ。"""
+
+    name: str
+    weight: float
+    """曲全体の小節数に対する比。"""
+    drop: tuple[str, ...] = ()
+    """この区間で鳴らさないパート。"""
+    gain: float = 1.0
+    lead_octave: int = 0
+    """メロディのオクターブ移動。サビを1つ上げる、といった使い方をする。"""
+
+
+STRUCTURES: dict[str, tuple[Section, ...]] = {
+    # 8小節をそのまま繰り返す、いちばん素直な構成。
+    "loop": (Section("main", 1.0),),
+    # 静かに入って本編へ。
+    "intro": (
+        Section("intro", 0.25, drop=("drums", "lead"), gain=0.75),
+        Section("main", 0.75),
+    ),
+    # A メロ → サビ。サビでメロディが1オクターブ上がる。
+    "verse_chorus": (
+        Section("verse", 0.5, gain=0.85),
+        Section("chorus", 0.5, gain=1.0, lead_octave=1),
+    ),
+    # イントロ・A メロ・サビ・アウトロの4部構成。
+    "full": (
+        Section("intro", 0.15, drop=("drums", "lead"), gain=0.7),
+        Section("verse", 0.35, gain=0.85),
+        Section("chorus", 0.35, gain=1.0, lead_octave=1),
+        Section("outro", 0.15, drop=("drums",), gain=0.65),
+    ),
+}
+
+
+def structure_names() -> list[str]:
+    """使える曲構成の名前を並べる。"""
+    return sorted(STRUCTURES)
+
+
+def plan_sections(structure: str, bars: int) -> list[tuple[Section, int, int]]:
+    """構成と総小節数から ``(区間, 開始小節, 小節数)`` の並びを組み立てる。
+
+    比率で割り振ったうえで、どの区間も最低1小節を確保し、
+    端数は最後の区間で吸収して合計をぴったり ``bars`` に合わせる。
+    """
+    try:
+        sections = STRUCTURES[structure]
+    except KeyError:
+        raise ValueError(
+            f"unknown structure: {structure!r} (available: {', '.join(structure_names())})"
+        ) from None
+    if bars < 1:
+        raise ValueError("bars must be >= 1")
+
+    if bars < len(sections):  # 小節が足りないときは前半の区間だけ使う
+        sections = sections[:bars]
+
+    counts = [max(1, round(section.weight * bars)) for section in sections]
+    while sum(counts) > bars:  # 丸めで溢れたぶんは長い区間から削る
+        counts[counts.index(max(counts))] -= 1
+    counts[-1] += bars - sum(counts)
+
+    plan: list[tuple[Section, int, int]] = []
+    start = 0
+    for section, count in zip(sections, counts):
+        plan.append((section, start, count))
+        start += count
+    return plan
+
+
 @dataclass
 class BGMConfig:
     """1曲ぶんの設定。未指定の項目はスタイルの既定値を使う。"""
@@ -132,6 +205,7 @@ class BGMConfig:
     sr: int = SAMPLE_RATE
     progression: str | None = None
     drum_pattern: str | None = None
+    structure: str = "loop"
     parts: Sequence[str] = field(default_factory=lambda: ("chords", "bass", "lead", "drums"))
     loop: bool = True
     stereo: bool = False
@@ -261,10 +335,11 @@ def _render_lead(
     bar_seconds: float,
     rng: random.Random,
     cache: dict,
+    octave_shift: int = 0,
 ) -> list[float]:
     """コードトーンを軸にしたランダムウォークでメロディを作る。"""
     sr = config.sr
-    root = _root_midi(config.key, style.lead_octave)
+    root = _root_midi(config.key, style.lead_octave + octave_shift)
     scale_size = len(notes.scale_degrees(style.scale))
     beat_seconds = bar_seconds / BEATS_PER_BAR
     shape = style.lead_shape
@@ -342,7 +417,11 @@ def _render_drums(config: BGMConfig, style: Style, bars: int, bar_seconds: float
 
 
 def render_tracks(config: BGMConfig) -> dict[str, list[float]]:
-    """パートごとのバッファを ``{名前: バッファ}`` で返す(ミックス前)。"""
+    """パートごとのバッファを ``{名前: バッファ}`` で返す(ミックス前)。
+
+    曲は ``structure`` で決まる区間に分けて作り、区間ごとに
+    鳴らすパート・音量・メロディの高さを変えてから元の位置に貼り合わせる。
+    """
     style = config.resolved_style()
     if config.bars < 1:
         raise ValueError("bars must be >= 1")
@@ -350,21 +429,42 @@ def render_tracks(config: BGMConfig) -> dict[str, list[float]]:
     rng = random.Random(config.seed)
     bar_seconds = BEATS_PER_BAR * 60.0 / style.bpm
     degrees = _chord_degrees_for_bars(style, config.bars)
-    parts = set(config.parts)
+    requested = [part for part in ("chords", "bass", "lead", "drums") if part in set(config.parts)]
 
     cache: dict = {}
     tracks: dict[str, list[float]] = {}
-    if "chords" in parts:
-        tracks["chords"] = _render_chords(config, style, degrees, bar_seconds, cache)
-    if "bass" in parts:
-        tracks["bass"] = _render_bass(config, style, degrees, bar_seconds, cache)
-    if "lead" in parts:
-        tracks["lead"] = _render_lead(config, style, degrees, bar_seconds, rng, cache)
-    if "drums" in parts:
-        drum_track = _render_drums(config, style, config.bars, bar_seconds)
-        if drum_track:
-            tracks["drums"] = drum_track
+    for section, start_bar, bar_count in plan_sections(config.structure, config.bars):
+        offset = num_samples(start_bar * bar_seconds, config.sr)
+        section_degrees = degrees[start_bar : start_bar + bar_count]
+        for part in requested:
+            if part in section.drop:
+                continue
+            buf = _render_part(part, config, style, section, section_degrees, bar_seconds, rng, cache)
+            if buf:
+                add_into(tracks.setdefault(part, []), buf, offset, gain=section.gain)
     return tracks
+
+
+def _render_part(
+    part: str,
+    config: BGMConfig,
+    style: Style,
+    section: Section,
+    degrees: Sequence[int],
+    bar_seconds: float,
+    rng: random.Random,
+    cache: dict,
+) -> list[float]:
+    """1区間ぶんのパートを、区間の先頭を 0 秒として作る。"""
+    if part == "chords":
+        return _render_chords(config, style, degrees, bar_seconds, cache)
+    if part == "bass":
+        return _render_bass(config, style, degrees, bar_seconds, cache)
+    if part == "lead":
+        return _render_lead(config, style, degrees, bar_seconds, rng, cache, section.lead_octave)
+    if part == "drums":
+        return _render_drums(config, style, len(degrees), bar_seconds)
+    raise ValueError(f"unknown part: {part!r}")
 
 
 _PART_PAN = {"chords": -0.35, "bass": 0.0, "lead": 0.28, "drums": 0.0}
