@@ -10,7 +10,7 @@ import random
 from . import effects as fx
 from . import envelope as env
 from . import oscillators as osc
-from .core import SAMPLE_RATE, mix
+from .core import SAMPLE_RATE, mix, normalize
 
 STEPS_PER_BAR = 16
 
@@ -60,12 +60,55 @@ def clap(sr: int = SAMPLE_RATE, duration: float = 0.22, seed: int | None = None)
     return out
 
 
+def timpani(sr: int = SAMPLE_RATE, duration: float = 0.9) -> list[float]:
+    """ティンパニ。バスドラムより長く鳴り、音程がはっきり残る。"""
+    body = mix(
+        osc.sine(osc.sweep(110.0, 73.0, duration * 0.3), duration, sr),
+        osc.sine(osc.sweep(220.0, 146.0, duration * 0.2), duration, sr, amp=0.35),
+    )
+    body = env.apply(body, env.percussive(duration, tau=duration * 0.28, attack=0.004, sr=sr))
+    # 歪みで持ち上がったぶんを戻す。他の音色と同じ天井にそろえておく。
+    return normalize(fx.distort(body, drive=1.4), 0.95)
+
+
+def tom(sr: int = SAMPLE_RATE, duration: float = 0.35, seed: int | None = None) -> list[float]:
+    """タム。胴の鳴りに少しだけ皮の音を混ぜる。"""
+    rng = random.Random(seed if seed is not None else 4)
+    body = osc.sine(osc.sweep(210.0, 105.0, duration * 0.35), duration, sr)
+    body = env.apply(body, env.percussive(duration, tau=0.13, attack=0.002, sr=sr))
+    skin = fx.bandpass(osc.noise(duration, sr, rng=rng), 300.0, 2600.0, sr)
+    skin = env.apply(skin, env.percussive(duration, tau=0.03, attack=0.001, sr=sr))
+    return mix(body, skin, gains=(0.9, 0.25))
+
+
+def crash(sr: int = SAMPLE_RATE, duration: float = 1.4, seed: int | None = None) -> list[float]:
+    """クラッシュシンバル。区切りの一発。"""
+    rng = random.Random(seed if seed is not None else 5)
+    body = fx.highpass(osc.noise(duration, sr, rng=rng), 3500.0, sr)
+    body = env.apply(body, env.percussive(duration, tau=0.42, attack=0.002, sr=sr))
+    return fx.lowpass(body, 12000.0, sr)
+
+
+def ride(sr: int = SAMPLE_RATE, duration: float = 0.5, seed: int | None = None) -> list[float]:
+    """ライドシンバル。芯のある短い打点に、わずかな余韻。"""
+    rng = random.Random(seed if seed is not None else 6)
+    ping = fx.bandpass(osc.noise(duration, sr, rng=rng), 4000.0, 9000.0, sr)
+    ping = env.apply(ping, env.percussive(duration, tau=0.035, attack=0.001, sr=sr))
+    wash = fx.highpass(osc.noise(duration, sr, rng=rng), 6000.0, sr)
+    wash = env.apply(wash, env.percussive(duration, tau=0.16, attack=0.002, sr=sr))
+    return mix(ping, wash, gains=(1.0, 0.3))
+
+
 VOICES = {
     "kick": kick,
     "snare": snare,
     "hihat": hihat,
     "open_hihat": open_hihat,
     "clap": clap,
+    "timpani": timpani,
+    "tom": tom,
+    "crash": crash,
+    "ride": ride,
 }
 
 
@@ -94,6 +137,33 @@ PATTERNS: dict[str, dict[str, str]] = {
         "kick": "x.....x.....x...",
         "clap": "....x.......x...",
         "open_hihat": "..o.....o.....o.",
+    },
+    # 報道番組向け。細かい刻みの上でティンパニが小節の頭を締める。
+    "news": {
+        "kick": "x..x..x...x.x...",
+        "snare": "....x.......x...",
+        "hihat": "oxoxoxoxoxoxoxox",
+        "timpani": "x...............",
+    },
+    # 行進曲風。ゆったりした足取りに小太鼓とティンパニを重ねる。
+    "anthem": {
+        "kick": "x.......x.......",
+        "snare": "..o.o.o...o.o.o.",
+        "timpani": "x.......x...x...",
+        "crash": "x...............",
+    },
+    # スポーツ中継向け。押しの強い刻みに、小節終わりのタム回し。
+    "sports": {
+        "kick": "x..x..x.x..x..x.",
+        "snare": "....x.......x...",
+        "ride": "oxoxoxoxoxoxoxox",
+        "tom": "..............oo",
+    },
+    # 手拍子で煽る形。隙間が多いぶん実況や歓声が乗せやすい。
+    "stomp": {
+        "kick": "x.x.....x.x.....",
+        "clap": "....x.......x...",
+        "crash": "x...............",
     },
 }
 

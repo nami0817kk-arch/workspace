@@ -42,7 +42,7 @@ FORMAT_VERSION = 1
 _SFX_KEYS = {"name", "as", "seed", "pitch", "count", "spread"}
 _BGM_KEYS = {
     "as", "style", "key", "scale", "bpm", "bars", "seed", "progression",
-    "drums", "structure", "swing", "humanize", "parts", "loop", "stereo",
+    "drums", "structure", "swing", "humanize", "parts", "without", "loop", "stereo",
     "chord_instrument", "bass_instrument", "lead_instrument",
 }
 
@@ -185,8 +185,9 @@ def _render(asset: Asset) -> list[tuple[str, list[float], int]]:
     stereo = bool(spec.pop("stereo", False))
     if "drums" in spec:
         spec["drum_pattern"] = spec.pop("drums")
-    if "parts" in spec:
-        spec["parts"] = tuple(spec["parts"])
+    for key in ("parts", "without"):
+        if key in spec:
+            spec[key] = tuple(spec[key])
     config = bgm_module.BGMConfig(sr=sr, stereo=stereo, **spec)
     samples = bgm_module.generate_stereo(config) if stereo else bgm_module.generate(config)
     return [(asset.outputs()[0], samples, 2 if stereo else 1)]

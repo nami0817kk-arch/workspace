@@ -190,6 +190,34 @@ INSTRUMENTS: dict[str, Instrument] = {
         attack=0.008, decay=0.09, sustain=0.72, release_ratio=0.3,
         cutoff=800.0, cutoff_track=4.0,
      level=1.22,),
+    "brass": Instrument(
+        # 吹き始めに音が open していく、金管らしい立ち上がり。
+        # cutoff_sweep が 1 未満なので、暗い状態から明るい方へ開く。
+        layers=(
+            Layer("saw", gain=0.55, detune=-0.003),
+            Layer("saw", gain=0.55, detune=0.003),
+            Layer("square", gain=0.22),
+        ),
+        attack=0.045, decay=0.14, sustain=0.74, release_ratio=0.28,
+        cutoff=260.0, cutoff_track=3.2, cutoff_sweep=0.4,
+     level=1.54,),
+    "low_brass": Instrument(
+        # 低音域を支える金管。倍音を抑えて土台に回る。
+        layers=(Layer("saw", gain=0.6), Layer("square", gain=0.35, ratio=0.5)),
+        attack=0.055, decay=0.16, sustain=0.7, release_ratio=0.3,
+        cutoff=180.0, cutoff_track=1.8, cutoff_sweep=0.5,
+     level=1.21,),
+    "choir": Instrument(
+        # 人の声を模した持続音。アンセムの厚みづけに使う。
+        layers=(
+            Layer("triangle", gain=0.6, detune=-0.005),
+            Layer("triangle", gain=0.6, detune=0.005),
+            Layer("saw", gain=0.2),
+        ),
+        attack=0.18, decay=0.3, sustain=0.82, release_ratio=0.45,
+        cutoff=380.0, cutoff_track=2.2,
+        vibrato_rate=4.6, vibrato_depth=0.005,
+     level=1.44,),
     "sub_bass": Instrument(
         layers=(Layer("sine"), Layer("triangle", gain=0.35), Layer("sine", ratio=2.0, gain=0.2)),
         attack=0.006, decay=0.1, sustain=0.8, release_ratio=0.3,

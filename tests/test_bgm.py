@@ -137,10 +137,22 @@ def test_drum_patterns_only_use_known_voices(name):
 
 
 @pytest.mark.parametrize("voice", sorted(drums.VOICES))
-def test_drum_voices_are_short_and_audible(voice):
+def test_drum_voices_are_audible_and_bounded(voice):
     buf = drums.VOICES[voice](sr=SR)
     assert 0.1 < core.peak(buf) <= 1.0
-    assert core.duration_of(buf, SR) < 0.5
+    assert core.duration_of(buf, SR) < 1.5
+
+
+@pytest.mark.parametrize("voice", ["kick", "snare", "hihat", "clap", "tom", "ride"])
+def test_tight_drum_voices_stay_short(voice):
+    """打点がはっきりしていてほしい音色は、次の16分に被らない長さに収める。"""
+    assert core.duration_of(drums.VOICES[voice](sr=SR), SR) < 0.5
+
+
+@pytest.mark.parametrize("voice", ["timpani", "crash"])
+def test_orchestral_voices_are_allowed_to_ring(voice):
+    """ティンパニとシンバルは余韻が持ち味なので長くてよい。"""
+    assert 0.5 <= core.duration_of(drums.VOICES[voice](sr=SR), SR) < 1.5
 
 
 # --- 曲構成 -------------------------------------------------------------------
@@ -475,3 +487,95 @@ def _rms(buf):
     import math
 
     return math.sqrt(sum(value * value for value in buf) / len(buf))
+
+
+# --- 放送向けの曲想 -----------------------------------------------------------
+
+BROADCAST = ["news_open", "news_bed", "sports_anthem", "sports_drive"]
+
+
+@pytest.mark.parametrize("style", BROADCAST)
+def test_broadcast_styles_render(style):
+    buf = bgm.generate(_config(style=style, bars=4))
+    assert core.peak(buf) == pytest.approx(bgm.TARGET_PEAK, abs=1e-6)
+
+
+def test_the_news_bed_leaves_out_the_melody():
+    """話し声とぶつからないよう、下敷きにはメロディを乗せない。"""
+    arrangement = bgm.compose(_config(style="news_bed", bars=4))
+    assert "lead" not in arrangement.parts()
+    assert "chords" in arrangement.parts()
+
+
+def test_the_news_bed_is_quieter_than_the_opening_theme():
+    bed = bgm.compose(_config(style="news_bed", bars=4))
+    theme = bgm.compose(_config(style="news_open", bars=4))
+    assert bed.style.drum_gain < theme.style.drum_gain
+    assert bed.part_count("lead") == 0 < theme.part_count("lead")
+
+
+def test_a_style_can_declare_its_own_parts():
+    assert "arp" in bgm.STYLES["news_open"].parts
+    assert "arp" not in bgm.STYLES["calm"].parts
+    assert "arp" not in bgm.compose(_config(style="calm", bars=2)).parts()
+
+
+def test_without_drops_a_part_from_the_style_default():
+    arrangement = bgm.compose(_config(style="news_open", bars=2, without=("arp", "drums")))
+    assert "arp" not in arrangement.parts()
+    assert "drums" not in arrangement.parts()
+    assert "chords" in arrangement.parts()
+
+
+def test_explicit_parts_override_the_style_default():
+    assert bgm.compose(_config(style="news_open", bars=2, parts=("bass",))).parts() == ["bass"]
+
+
+# --- 和音のリズムとアルペジオ -------------------------------------------------
+
+
+def test_a_chord_pattern_turns_sustained_chords_into_stabs():
+    """刻みを指定すると、1小節1回ではなくパターンどおりの回数だけ鳴る。"""
+    held = bgm.compose(_config(style="calm", bars=1, parts=("chords",))).notes["chords"]
+    stabs = bgm.compose(_config(style="news_open", bars=1, parts=("chords",))).notes["chords"]
+    assert len({round(note.start, 4) for note in held}) == 1
+    assert len({round(note.start, 4) for note in stabs}) == 5  # x..x..x...x.x...
+
+
+def test_stabbed_chords_are_shorter_than_a_bar():
+    arrangement = bgm.compose(_config(style="news_open", bars=1, parts=("chords",)))
+    assert all(note.length < arrangement.bar_seconds * 0.5 for note in arrangement.notes["chords"])
+
+
+def test_sustained_chords_fill_the_whole_bar():
+    arrangement = bgm.compose(_config(style="calm", bars=1, parts=("chords",)))
+    assert all(
+        note.length == pytest.approx(arrangement.bar_seconds) for note in arrangement.notes["chords"]
+    )
+
+
+def test_the_arpeggio_walks_through_the_chord_tones():
+    """アルペジオが和音の構成音だけを、指定した順に辿ること。"""
+    config = _config(style="news_open", bars=1, parts=("chords", "arp"))
+    arrangement = bgm.compose(config)
+    chord_classes = {note.midi % 12 for note in arrangement.notes["chords"]}
+    arp = arrangement.notes["arp"]
+    assert len(arp) == 16  # oxoxoxoxoxoxoxox
+    assert all(note.midi % 12 in chord_classes for note in arp)
+    assert len({note.midi for note in arp}) > 1  # 同じ音の連打ではない
+
+
+def test_the_arpeggio_sits_above_the_chords():
+    arrangement = bgm.compose(_config(style="news_open", bars=1, parts=("chords", "arp")))
+    lowest_arp = min(note.midi for note in arrangement.notes["arp"])
+    highest_chord = max(note.midi for note in arrangement.notes["chords"])
+    assert lowest_arp >= highest_chord
+
+
+def test_a_style_without_an_arp_pattern_has_no_arpeggio():
+    assert bgm.compose(_config(style="sports_anthem", bars=2)).part_count("arp") == 0
+
+
+def test_the_arpeggio_is_panned_opposite_the_chords():
+    """和音とアルペジオが左右に分かれ、混ざって団子にならないこと。"""
+    assert bgm._PART_PAN["arp"] * bgm._PART_PAN["chords"] < 0

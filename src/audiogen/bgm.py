@@ -90,6 +90,10 @@ class Style:
     chord_seventh: bool = False
     chord_octave: int = 4
     chord_gain: float = 0.30
+    chord_pattern: str = ""
+    """和音を刻む16分グリッド。空なら1小節伸ばす(従来どおり)。"""
+    chord_length: float = 0.25
+    """``chord_pattern`` を使うときの1音の長さ(1小節を 1.0 とした比)。"""
     bass_instrument: str = "sub_bass"
     bass_octave: int = 2
     bass_gain: float = 0.55
@@ -100,6 +104,13 @@ class Style:
     lead_rest_prob: float = 0.22
     lead_durations: tuple[float, ...] = (0.5, 0.5, 1.0, 1.0, 2.0)
     lead_range: int = 8
+    arp_instrument: str = "pluck"
+    arp_pattern: str = ""
+    """アルペジオを刻む16分グリッド。空ならアルペジオなし。"""
+    arp_octave: int = 4
+    arp_gain: float = 0.22
+    arp_shape: tuple[int, ...] = (0, 1, 2, 1)
+    """和音の何番目の音を順に鳴らすか。範囲を超えるとオクターブ上に回る。"""
     drum_pattern: str = "basic"
     drum_gain: float = 0.55
     reverb_wet: float = 0.22
@@ -107,6 +118,11 @@ class Style:
     delay_wet: float = 0.0
     bitcrush_bits: int = 0
     groove: Groove = Groove(humanize=0.003)
+    parts: tuple[str, ...] = ("chords", "bass", "lead", "drums")
+    """既定で鳴らすパート。設定側で明示しなければこれが使われる。"""
+
+
+PART_ORDER = ("chords", "arp", "bass", "lead", "drums")
 
 
 STYLES: dict[str, Style] = {
@@ -168,6 +184,61 @@ STYLES: dict[str, Style] = {
         lead_durations=(0.5, 1.0, 2.0), lead_range=7,
         drum_pattern="shuffle", drum_gain=0.4, reverb_wet=0.32,
         groove=Groove(swing=0.55, accent=0.3, humanize=0.005),
+    ),
+
+    # --- 放送向け ---------------------------------------------------------
+    # 報道番組のテーマ。ドリアンは短調の緊張感を持ちながら暗くなりすぎない。
+    # 刻んだ金管と休みなく走るアルペジオで、切迫感と前進感を作る。
+    "news_open": Style(
+        scale="dorian", bpm=138, progression="i-vii-i-iv",
+        chord_instrument="brass", chord_octave=4, chord_gain=0.30,
+        chord_pattern="x..x..x...x.x...", chord_length=0.16,
+        arp_instrument="pluck", arp_pattern="oxoxoxoxoxoxoxox", arp_octave=5,
+        arp_gain=0.20, arp_shape=(0, 1, 2, 3, 2, 1),
+        bass_instrument="pick_bass", bass_pattern="x.x.x.x.x.x.x.x.", bass_gain=0.56,
+        lead_instrument="brass", lead_octave=4, lead_gain=0.42, lead_rest_prob=0.18,
+        lead_durations=(0.5, 0.5, 1.0, 1.0), lead_range=5,
+        drum_pattern="news", drum_gain=0.58, reverb_wet=0.20,
+        groove=Groove(accent=0.32, humanize=0.002),  # 報道ものは詰めて正確に
+        parts=("chords", "arp", "bass", "lead", "drums"),
+    ),
+    # 番組中に敷く音。話し声の帯域を空けるため、メロディを外して
+    # 低い持続音と控えめな刻みだけで進む。和音も動かしすぎない。
+    "news_bed": Style(
+        scale="dorian", bpm=98, progression="i-i-iv-i",
+        chord_instrument="pad", chord_octave=3, chord_gain=0.30, chord_seventh=True,
+        arp_instrument="marimba", arp_pattern="o...o...o...o...", arp_octave=5,
+        arp_gain=0.13, arp_shape=(0, 2, 1, 2),
+        bass_instrument="sub_bass", bass_pattern="x.......x.......", bass_gain=0.42,
+        drum_pattern="soft", drum_gain=0.24, reverb_wet=0.30,
+        groove=Groove(accent=0.2, humanize=0.004),
+        parts=("chords", "arp", "bass", "drums"),  # メロディなし
+    ),
+    # 試合前後のアンセム。ゆったりした行進の足取りに、
+    # 金管の和音とティンパニを重ねて格式を出す。
+    "sports_anthem": Style(
+        scale="major", bpm=104, progression="I-IV-V-I",
+        chord_instrument="brass", chord_octave=4, chord_gain=0.34,
+        chord_pattern="x.......x.......", chord_length=0.42,
+        bass_instrument="low_brass", bass_pattern="x...x...x...x...", bass_gain=0.52, bass_octave=2,
+        lead_instrument="brass", lead_octave=4, lead_gain=0.44, lead_rest_prob=0.24,
+        lead_durations=(0.5, 1.0, 1.0, 2.0), lead_range=5,
+        drum_pattern="anthem", drum_gain=0.60, reverb_wet=0.34, reverb_room=0.80,
+        groove=Groove(accent=0.35, humanize=0.005),
+    ),
+    # ハイライトや煽り。ミクソリディアンの VII が明るいまま勢いを出す。
+    "sports_drive": Style(
+        scale="mixolydian", bpm=152, progression="I-vii-IV-I",
+        chord_instrument="brass", chord_octave=4, chord_gain=0.28,
+        chord_pattern="x.xx..x.x.xx..x.", chord_length=0.12,
+        arp_instrument="pluck", arp_pattern="..x...x...x...x.", arp_octave=5,
+        arp_gain=0.18, arp_shape=(2, 1, 0, 1),
+        bass_instrument="pick_bass", bass_pattern="x.xxx.xxx.xxx.xx", bass_gain=0.58,
+        lead_instrument="brass", lead_octave=4, lead_gain=0.40, lead_rest_prob=0.15,
+        lead_durations=(0.25, 0.5, 0.5, 1.0), lead_range=6,
+        drum_pattern="sports", drum_gain=0.62, reverb_wet=0.16,
+        groove=Groove(accent=0.3, humanize=0.003),
+        parts=("chords", "arp", "bass", "lead", "drums"),
     ),
 }
 
@@ -264,7 +335,10 @@ class BGMConfig:
     chord_instrument: str | None = None
     bass_instrument: str | None = None
     lead_instrument: str | None = None
-    parts: Sequence[str] = field(default_factory=lambda: ("chords", "bass", "lead", "drums"))
+    parts: Sequence[str] | None = None
+    """鳴らすパートの明示指定。None ならスタイルの既定を使う。"""
+    without: Sequence[str] = ()
+    """既定から外すパート。"""
     loop: bool = True
     stereo: bool = False
 
@@ -455,14 +529,78 @@ def _next_degree(
 # 前者だけを取り出せるので、音を作らずに中身を確認できる(describe を参照)。
 
 
-def _plan_chords(config: BGMConfig, style: Style, degrees: Sequence[int], bar_seconds: float) -> list[Note]:
+def _plan_chords(
+    config: BGMConfig,
+    style: Style,
+    degrees: Sequence[int],
+    bar_seconds: float,
+    groove_rng: random.Random,
+) -> list[Note]:
+    """和音を並べる。
+
+    ``chord_pattern`` が空なら1小節伸ばす。指定があれば16分グリッドで刻む。
+    報道やスポーツの曲想では、伸ばしっぱなしより刻んだほうが前へ出る。
+    """
     root = _root_midi(config.key, style.chord_octave)
+    step_seconds = bar_seconds / drums.STEPS_PER_BAR
+    groove = style.groove
     plan: list[Note] = []
+
     for bar, degree in enumerate(degrees):
         chord = notes.diatonic_chord(root, style.scale, degree, seventh=style.chord_seventh)
-        for voice, midi in enumerate(chord):
-            # 上の声部ほど小さくして、根音が土台に聞こえるようにする。
-            plan.append(Note(bar * bar_seconds, midi, bar_seconds, 1.0 / (voice + 2)))
+        # 上の声部ほど小さくして、根音が土台に聞こえるようにする。
+        levels = [1.0 / (voice + 2) for voice in range(len(chord))]
+
+        if not style.chord_pattern:
+            for midi, level in zip(chord, levels):
+                plan.append(Note(bar * bar_seconds, midi, bar_seconds, level))
+            continue
+
+        length = bar_seconds * style.chord_length
+        for step, symbol in enumerate(style.chord_pattern[: drums.STEPS_PER_BAR]):
+            if symbol == ".":
+                continue
+            start = bar * bar_seconds + step * step_seconds
+            start = max(0.0, start + groove.time_offset(step, step_seconds, groove_rng))
+            velocity = groove.velocity(step, groove_rng) * (1.0 if symbol == "x" else 0.7)
+            for midi, level in zip(chord, levels):
+                plan.append(Note(start, midi, length, level * velocity))
+    return plan
+
+
+def _plan_arp(
+    config: BGMConfig,
+    style: Style,
+    degrees: Sequence[int],
+    bar_seconds: float,
+    groove_rng: random.Random,
+) -> list[Note]:
+    """和音の構成音を順に鳴らす細かい刻み(アルペジオ)を並べる。
+
+    伸ばした和音の上を走る動きが、報道番組のテーマ曲らしい前進感を作る。
+    """
+    if not style.arp_pattern:
+        return []
+    root = _root_midi(config.key, style.arp_octave)
+    step_seconds = bar_seconds / drums.STEPS_PER_BAR
+    groove = style.groove
+    length = step_seconds * 1.5
+    plan: list[Note] = []
+    position = 0
+
+    for bar, degree in enumerate(degrees):
+        chord = notes.diatonic_chord(root, style.scale, degree, seventh=style.chord_seventh)
+        for step, symbol in enumerate(style.arp_pattern[: drums.STEPS_PER_BAR]):
+            if symbol == ".":
+                continue
+            index = style.arp_shape[position % len(style.arp_shape)]
+            position += 1
+            octave, voice = divmod(index, len(chord))
+            midi = chord[voice] + octave * 12
+            start = bar * bar_seconds + step * step_seconds
+            start = max(0.0, start + groove.time_offset(step, step_seconds, groove_rng))
+            velocity = groove.velocity(step, groove_rng) * (1.0 if symbol == "x" else 0.75)
+            plan.append(Note(start, midi, length, velocity))
     return plan
 
 
@@ -620,7 +758,7 @@ class Arrangement:
 
     def parts(self) -> list[str]:
         """実際に音の入っているパート名。"""
-        return [name for name in ("chords", "bass", "lead", "drums") if self.part_count(name)]
+        return [name for name in PART_ORDER if self.part_count(name)]
 
     def part_count(self, name: str) -> int:
         if name == "drums":
@@ -643,7 +781,8 @@ def compose(config: BGMConfig | None = None, **overrides) -> Arrangement:
     groove_rng = random.Random((config.seed or 0) + 7919)
     bar_seconds = BEATS_PER_BAR * 60.0 / style.bpm
     degrees = _chord_degrees_for_bars(style, config.bars)
-    requested = [part for part in ("chords", "bass", "lead", "drums") if part in set(config.parts)]
+    chosen = set(config.parts if config.parts is not None else style.parts)
+    requested = [part for part in PART_ORDER if part in chosen and part not in set(config.without)]
     motifs = _ensure_motifs(style, rng, {})
 
     plan = plan_sections(config.structure, config.bars)
@@ -680,7 +819,9 @@ def _plan_notes(
     bar_offset: int,
 ) -> list[Note]:
     if part == "chords":
-        return _plan_chords(config, style, degrees, bar_seconds)
+        return _plan_chords(config, style, degrees, bar_seconds, groove_rng)
+    if part == "arp":
+        return _plan_arp(config, style, degrees, bar_seconds, groove_rng)
     if part == "bass":
         return _plan_bass(config, style, degrees, bar_seconds, groove_rng)
     if part == "lead":
@@ -743,6 +884,7 @@ def _render_arrangement(arrangement: Arrangement, config: BGMConfig) -> dict[str
 
     synths = {
         "chords": _synth_for(style.chord_instrument, sr),
+        "arp": _synth_for(style.arp_instrument, sr),
         "bass": _synth_for(style.bass_instrument, sr),
         "lead": _synth_for(style.lead_instrument, sr),
     }
@@ -755,12 +897,13 @@ def _render_arrangement(arrangement: Arrangement, config: BGMConfig) -> dict[str
     return tracks
 
 
-_PART_PAN = {"chords": -0.35, "bass": 0.0, "lead": 0.28, "drums": 0.0}
+_PART_PAN = {"chords": -0.35, "arp": 0.4, "bass": 0.0, "lead": 0.28, "drums": 0.0}
 
 
 def _part_gains(style: Style) -> dict[str, float]:
     return {
         "chords": style.chord_gain,
+        "arp": style.arp_gain,
         "bass": style.bass_gain,
         "lead": style.lead_gain,
         "drums": style.drum_gain,

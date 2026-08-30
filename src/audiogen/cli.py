@@ -57,7 +57,6 @@ def cmd_sfx(args: argparse.Namespace) -> int:
 
 def _bgm_config(args: argparse.Namespace) -> bgm_module.BGMConfig:
     """コマンドライン引数から BGM の設定を組み立てる。"""
-    parts = [part for part in ("chords", "bass", "lead", "drums") if part not in args.without]
     return bgm_module.BGMConfig(
         style=args.style,
         key=args.key,
@@ -74,7 +73,7 @@ def _bgm_config(args: argparse.Namespace) -> bgm_module.BGMConfig:
         chord_instrument=args.chord_instrument,
         bass_instrument=args.bass_instrument,
         lead_instrument=args.lead_instrument,
-        parts=parts,
+        without=tuple(args.without),
         loop=not args.no_loop,
         stereo=args.stereo,
     )
@@ -174,9 +173,8 @@ def cmd_list(args: argparse.Namespace) -> int:
     for name in bgm_module.style_names():
         style = bgm_module.STYLES[name]
         print(
-            f"  {name:<10} scale={style.scale} bpm={style.bpm} progression={style.progression}\n"
-            f"{'':<13}chords={style.chord_instrument} bass={style.bass_instrument} "
-            f"lead={style.lead_instrument} drums={style.drum_pattern}"
+            f"  {name:<14} scale={style.scale} bpm={style.bpm} progression={style.progression}\n"
+            f"{'':<17}parts={'+'.join(style.parts)} drums={style.drum_pattern}"
         )
     print("\nSong structures:")
     for name in bgm_module.structure_names():
@@ -237,7 +235,7 @@ def _add_bgm_options(parser: argparse.ArgumentParser) -> None:
         help="タイミングと音量のゆらぎ(秒)。0 で機械的に正確",
     )
     parser.add_argument(
-        "--without", nargs="*", default=[], choices=["chords", "bass", "lead", "drums"],
+        "--without", nargs="*", default=[], choices=list(bgm_module.PART_ORDER),
         help="外すパート",
     )
     for part, label in (("chord", "和音"), ("bass", "ベース"), ("lead", "メロディ")):

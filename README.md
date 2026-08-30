@@ -83,9 +83,32 @@ python -m audiogen sfx footstep --count 6 --spread 0.15 -d assets/se
 | `night` | 夜・静かな場面 (68 BPM, マイナー、深いリバーブ) |
 | `chiptune` | レトロゲーム風 (144 BPM, ビットクラッシュ) |
 | `tension` | 不穏・緊迫 (104 BPM, フリジアン) |
+| `news_open` | 報道番組のテーマ (138 BPM, ドリアン、刻んだ金管) |
+| `news_bed` | 原稿読みの下敷き (98 BPM, メロディなし) |
+| `sports_anthem` | 入場・表彰のアンセム (104 BPM, 行進 + ティンパニ) |
+| `sports_drive` | ハイライト・煽り (152 BPM, ミクソリディアン) |
 
 メロディは1小節ぶんのモチーフを作り、小節ごとの和音に合わせて置き直しながら
 `A / A / B / A'` と展開する。同じ形が返ってくるので旋律として頭に残る。
+
+パートは和音・アルペジオ・ベース・メロディ・ドラムの5つ。どれを鳴らすかは
+スタイルごとに決まっていて(`news_bed` はメロディなし、など)、`--without` で更に外せる。
+
+放送向けの使い方の例:
+
+```bash
+# ニュースのオープニング(静かに入って本編へ)
+python -m audiogen bgm --style news_open --bars 12 --structure intro --seed 3
+
+# 原稿読みの下敷き。8小節でループする
+python -m audiogen bgm --style news_bed --key D --bars 8 --seed 5
+
+# 試合前後のアンセム
+python -m audiogen bgm --style sports_anthem --bars 12 --structure full --seed 3
+
+# ハイライト。後半でメロディが1オクターブ上がる
+python -m audiogen bgm --style sports_drive --key G --bars 12 --structure verse_chorus --seed 3
+```
 
 `--structure` で曲の起伏を付けられる。
 
@@ -110,16 +133,17 @@ python -m audiogen bgm --style adventure \
 | `--bpm` / `--bars` | テンポと小節数 |
 | `--structure` | 曲構成(`loop` `intro` `verse_chorus` `full`) |
 | `--progression` | コード進行(ローマ数字。例 `"i-VI-III-VII"`) |
-| `--drums` | ドラムパターン(`none` `soft` `basic` `drive` `march` `shuffle`) |
+| `--drums` | ドラムパターン(`none` `soft` `basic` `drive` `march` `shuffle` `news` `anthem` `sports` `stomp`) |
 | `--swing` / `--humanize` | 裏拍のずらし量と、タイミング・音量のゆらぎ |
 | `--chord-instrument` ほか | パートごとの音色(下記) |
-| `--without` | 外すパート(`chords` `bass` `lead` `drums`) |
+| `--without` | 外すパート(`chords` `arp` `bass` `lead` `drums`) |
 | `--seed` | 乱数シード。同じ値なら同じ曲になる |
 | `--stereo` / `--no-loop` | ステレオ出力 / 末尾の残響を切らずに残す |
 
 音色は波形を重ねてフィルタとエンベロープを通した「楽器」として定義してある。
-`pad` `strings` `pluck` `organ` `bell` `marimba` `chip_lead` `pulse_lead`
-`sub_bass` `pick_bass` と、素の波形(`sine` `triangle` `saw` `square` `pulse25` `pulse12`)。
+`pad` `strings` `choir` `brass` `low_brass` `pluck` `organ` `bell` `marimba`
+`chip_lead` `pulse_lead` `sub_bass` `pick_bass` と、
+素の波形(`sine` `triangle` `saw` `square` `pulse25` `pulse12`)。
 どれも同じ音量感になるよう補正済みなので、差し替えても全体のバランスは崩れない。
 
 ### 素材一式をまとめて作る
