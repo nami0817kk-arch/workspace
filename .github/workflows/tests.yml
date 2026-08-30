@@ -37,7 +37,8 @@ jobs:
         run: python -m ruff check src/ailab tests
 
       - name: Run tests
-        run: pytest -q
+        # 網羅率が下がったら気づけるようにしておく
+        run: pytest -q --cov=ailab --cov-report=term-missing --cov-fail-under=90
 
       - name: CLI smoke test
         run: |

@@ -70,6 +70,7 @@ ailab doctor         # 実際に接続して確認
 - **契約テストがある。** `tests/test_registry.py` が全コネクタの summary・
   キー取得先URL・能力の有無を検査する。コネクタを足すと自動で効く。
 - キー未設定を前提にする。conftest が実環境の APIキー環境変数を消している。
+- **網羅率90%以上**を CI で守る（`pytest --cov=ailab --cov-fail-under=90`）。
 
 ### コネクタを足すとき
 
