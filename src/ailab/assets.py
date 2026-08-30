@@ -35,6 +35,8 @@ def download(asset: Asset, dest_dir: str | Path, *, timeout: int = 60, sess=None
 
     response = request("GET", asset.image_url, sess=sess, label=asset.source, timeout=timeout)
 
+    _notify_source(asset)
+
     ext = _extension(asset.image_url, response.headers.get("Content-Type", ""))
     name = "_".join(
         part for part in (asset.source, asset.source_id, slugify(asset.title, 30)) if part
@@ -42,6 +44,27 @@ def download(asset: Asset, dest_dir: str | Path, *, timeout: int = 60, sess=None
     path = directory / f"{name}{ext}"
     path.write_bytes(response.content)
     return path
+
+
+def _notify_source(asset: Asset) -> None:
+    """取得元が通知を求めている場合に知らせる（Unsplash のダウンロード計測など）。
+
+    通知に失敗しても素材の取得自体は成功させる。
+    """
+    from .core import registry
+    from .core.errors import AilabError
+
+    try:
+        connector = registry.get(asset.source)
+    except AilabError:
+        return
+    hook = getattr(connector, "notify_download", None)
+    if hook is None:
+        return
+    try:
+        hook(asset)
+    except AilabError:
+        pass
 
 
 def download_all(

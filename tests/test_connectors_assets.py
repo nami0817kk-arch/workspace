@@ -1,6 +1,7 @@
 import pytest
 
 from ailab import assets
+from ailab.connectors.assets_iconify import IconifyAssets
 from ailab.connectors.assets_openverse import API_URL as OPENVERSE_URL, OpenverseAssets
 from ailab.connectors.assets_pixabay import PixabayAssets
 from ailab.connectors.assets_wikimedia import WikimediaAssets
@@ -123,7 +124,7 @@ def test_search_all_skips_connectors_without_key(monkeypatch):
     monkeypatch.setattr(
         OpenverseAssets, "search_assets", lambda self, q, **kw: [_asset("openverse")]
     )
-    monkeypatch.setattr(WikimediaAssets, "search_assets", lambda self, q, **kw: [])
+    _silence(monkeypatch, WikimediaAssets, IconifyAssets)
 
     found = assets.search("猫", limit=5)
 
@@ -138,6 +139,7 @@ def test_search_all_survives_one_failing_source(monkeypatch):
     monkeypatch.setattr(
         OpenverseAssets, "search_assets", lambda self, q, **kw: [_asset("openverse")]
     )
+    _silence(monkeypatch, IconifyAssets)
 
     assert len(assets.search("猫")) == 1
 
@@ -148,6 +150,7 @@ def test_search_raises_when_every_source_fails(monkeypatch):
 
     monkeypatch.setattr(OpenverseAssets, "search_assets", broken)
     monkeypatch.setattr(WikimediaAssets, "search_assets", broken)
+    monkeypatch.setattr(IconifyAssets, "search_assets", broken)
     with pytest.raises(ConnectorError):
         assets.search("猫")
 
@@ -178,6 +181,12 @@ def test_attribution_line():
         creator="Taro",
     )
     assert asset.attribution == '"Cat" by Taro (https://example.com/p) [BY 4.0]'
+
+
+def _silence(monkeypatch, *connector_classes):
+    """指定したコネクタを「ヒット0件」にして、横断検索の検証対象から外す。"""
+    for cls in connector_classes:
+        monkeypatch.setattr(cls, "search_assets", lambda self, q, **kw: [])
 
 
 def _asset(source: str):

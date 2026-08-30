@@ -11,6 +11,20 @@ if str(SRC) not in sys.path:
 
 
 @pytest.fixture(autouse=True)
+def block_network(monkeypatch):
+    """テストから実際の外部通信が出ないようにする。
+
+    FakeSession は requests.Session ではないので、差し替え済みのテストには影響しない。
+    """
+    import requests
+
+    def refuse(self, method, url, *args, **kwargs):
+        raise AssertionError(f"テストから外部通信しようとしました: {method} {url}")
+
+    monkeypatch.setattr(requests.sessions.Session, "request", refuse)
+
+
+@pytest.fixture(autouse=True)
 def isolated_environment(tmp_path, monkeypatch):
     """テストが実ユーザーのキャッシュや .env を触らないようにする。"""
     monkeypatch.setenv("AILAB_CACHE_DIR", str(tmp_path / "cache"))

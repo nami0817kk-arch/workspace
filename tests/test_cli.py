@@ -3,6 +3,7 @@ import json
 import pytest
 
 from ailab import assets, cli
+from ailab.connectors.assets_iconify import IconifyAssets
 from ailab.connectors.assets_openverse import OpenverseAssets
 from ailab.connectors.assets_wikimedia import WikimediaAssets
 from ailab.connectors.publish_github import GitHubPublish
@@ -26,6 +27,7 @@ def stub_search(monkeypatch):
     """素材検索を差し替える（openverse だけがヒットする状態にする）。"""
     monkeypatch.setattr(OpenverseAssets, "search_assets", lambda self, q, **kw: [SAMPLE])
     monkeypatch.setattr(WikimediaAssets, "search_assets", lambda self, q, **kw: [])
+    monkeypatch.setattr(IconifyAssets, "search_assets", lambda self, q, **kw: [])
 
 
 # --- connectors / doctor ---------------------------------------------
@@ -58,6 +60,9 @@ def test_doctor_marks_unset_keys_as_skipped(monkeypatch, capsys):
     )
     monkeypatch.setattr(
         WikimediaAssets, "check", lambda self: CheckResult("wikimedia", ok=True, detail="検索可能")
+    )
+    monkeypatch.setattr(
+        IconifyAssets, "check", lambda self: CheckResult("iconify", ok=True, detail="検索可能")
     )
     assert cli.main(["doctor"]) == 0
     out = capsys.readouterr().out

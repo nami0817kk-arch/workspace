@@ -6,8 +6,8 @@
 |---|---|
 | 0. 基盤（`core/` + `connectors/` + `ailab connectors` / `doctor`） | **完了** |
 | 2. 出力先（GitHub） | **完了**（`ailab publish`。Slack / Discord は当面不要と判断） |
-| 1. 取得先追加（Iconify → Unsplash / Pexels） | 次にやる |
-| 生成モデル追加（Replicate / Hugging Face） | その次 |
+| 1. 取得先追加（Iconify / Unsplash / Pexels） | **完了** |
+| 生成モデル追加（Replicate / Hugging Face） | 次にやる |
 | 3. 情報収集（RSS / GitHub / Qiita） | その次 |
 | 4. パイプライン / 5. MCP化 | 未着手 |
 
@@ -108,9 +108,9 @@ CLIは「コネクタ名」ではなく「**能力**」でディスパッチす�
 
 | 連携先 | 認証 | 価値 | 注意 |
 |---|---|---|---|
-| **Iconify** | 不要 | アイコン20万点をSVGで直接取得。資料作りに即効性がある | アイコンセットごとにライセンスが違う |
-| **Unsplash** | 無料キー | 高品質写真 | クレジット必須、ダウンロード計測エンドポイントの呼び出しが規約上必要 |
-| **Pexels** | 無料キー | 写真・動画 | クレジット推奨 |
+| **Iconify** ✅ | 不要 | アイコン20万点をSVGで直接取得。資料作りに即効性がある | アイコンセットごとにライセンスが違う（`license` 欄に入れている） |
+| **Unsplash** ✅ | 無料キー | 高品質写真 | ダウンロード計測エンドポイントの呼び出しを `notify_download` で自動実行 |
+| **Pexels** ✅ | 無料キー | 写真・動画 | クレジット推奨 |
 | **Google Fonts** | 不要 | フォント取得（バナー生成の品質が上がる） | OFL等の同梱条件 |
 | **OpenMoji / Noto Emoji** | 不要 | 絵文字SVG。GitHub raw から取得 | CC BY-SA（OpenMoji） |
 
@@ -143,7 +143,7 @@ RSS/Atom（キー不要）、GitHub（リリース・Issue）、Qiita/Zenn、arX
 |---|---|---|---|
 | **0. 基盤** ✅ | `core/` 新設、既存7コネクタを移行、`ailab connectors` / `ailab doctor` 追加 | 完了。契約テストで新コネクタの実装漏れも検出する | 完了 |
 | **2. 出力先** ✅ | GitHub（`ailab publish`、既定ドライラン） | 完了。Slack / Discord は要望が出たら追加 | 完了 |
-| **1. 取得先追加** | Iconify（キー不要）→ Unsplash / Pexels | `ailab search "cat"` が5サイト横断。ライセンス表記は自動 | 半日 |
+| **1. 取得先追加** ✅ | Iconify（キー不要）、Unsplash、Pexels | 完了。`ailab search "cat"` が6サイト横断 | 完了 |
 | **生成モデル追加** | Replicate / Hugging Face | `ailab gen --provider replicate --model ...` | 半日 |
 | **3. 情報収集** | RSS、GitHub、Qiita | `ailab feed "claude" --source rss,github` | 半日 |
 | **4. パイプライン** | YAMLレシピ。`ailab run recipes/weekly-report.yaml` | 「検索→生成→投稿」を1コマンドで再実行できる | 2日 |

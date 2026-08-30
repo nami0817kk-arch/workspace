@@ -68,11 +68,16 @@ ailab search "cat illustration" --source openverse --json
 ailab fetch "cat illustration" -l 3
 ```
 
-| コネクタ | APIキー | ライセンス |
+| コネクタ | APIキー | 内容 / ライセンス |
 |---|---|---|
+| `iconify` | 不要 | SVGアイコン20万点以上。ライセンスはアイコンセットごと（MIT / Apache / CC BY など） |
 | `openverse` | 不要 | CC0 / CC BY など作品ごとに異なる。既定で「商用利用可・改変可」に絞って検索する |
 | `wikimedia` | 不要 | パブリックドメイン / CC BY-SA など |
-| `pixabay` | `PIXABAY_API_KEY`（無料登録） | Pixabay Content License（商用可・クレジット不要） |
+| `pixabay` | `PIXABAY_API_KEY`（無料登録） | イラスト・ベクター。Pixabay Content License（商用可・クレジット不要） |
+| `unsplash` | `UNSPLASH_ACCESS_KEY`（無料登録） | 写真。Unsplash License。ダウンロード時にAPIへ通知する（規約要件、自動で行う） |
+| `pexels` | `PEXELS_API_KEY`（無料登録） | 写真。Pexels License（商用可・クレジット不要） |
+
+アイコンだけ欲しいときは `--source iconify`、写真なら `--source unsplash` のように絞る。
 
 ### ライセンスの扱い
 

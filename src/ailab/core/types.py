@@ -26,6 +26,8 @@ class Asset:
     height: int = 0
     source_id: str = ""
     tags: list[str] = field(default_factory=list)
+    #: サイト固有の情報（Unsplash のダウンロード計測URLなど）
+    meta: dict = field(default_factory=dict)
 
     @property
     def attribution(self) -> str:
