@@ -325,6 +325,35 @@ def _dispatch(args, config) -> int:
         plan = load_plan()
         stale = int(plan.social.get("stale_hours", 24))
 
+        backend = str(plan.social.get("backend", "search"))
+
+        if not args.urls and backend == "api":
+            from . import xapi
+
+            settings = dict(plan.social.get("api") or {})
+            handles = [str(a.get("handle", "")) for a in plan.accounts]
+            try:
+                client = xapi.Client.from_env()
+                posts = client.by_accounts(
+                    handles, args.topic or "", int(settings.get("max_results", 10))
+                )
+            except xapi.XApiError as error:
+                print(f"X API を使えませんでした:\n{error}", file=sys.stderr)
+                print("\nconfig/sources.yaml の social.backend を search に戻すと、"
+                      "検索経由（無料）で拾えます", file=sys.stderr)
+                return 1
+
+            if not posts:
+                print("該当する投稿がありませんでした。")
+                return 0
+            print(f"■ X API　{len(posts)}件（新しい順）")
+            for post in posts:
+                age = post.hours_ago()
+                print(f"\n@{post.handle}　{post.author}　（{age:.0f}時間前）")
+                print(f"  {post.text}")
+                print(f"  {post.url}")
+            return 0
+
         if not args.urls:
             print("■ 追っているアカウント")
             for entry in plan.accounts:
@@ -340,6 +369,9 @@ def _dispatch(args, config) -> int:
                 "Xは速報には使えない。背景・反応・裏取りに使う"
             )
             print(f"  {lag}時間より古い投稿は、続報が出ていないか確認してから使う")
+            print(
+                "  social.backend を api にすると、遅れなし・本文も切れずに取れる（有料）"
+            )
             for note in str(plan.social.get("check", "")).splitlines():
                 if note.strip():
                     print(f"  確認: {note}")
