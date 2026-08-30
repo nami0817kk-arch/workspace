@@ -15,11 +15,12 @@ python -m src.cli sources     # 網の全体と、群ごとの確度の上限を
 
 | 群 | サイト | 置ける上限 |
 |---|---|---|
-| `official` | アトレティコ / バルサ / アーセナル / レアル / チェルシー / ユナイテッド / リバプール / ユベントス / プレミアリーグ / ラリーガ / UEFA | **確定** |
+| `official` | **クラブ**: アトレティコ / バルサ / アーセナル / レアル / チェルシー / ユナイテッド / リバプール / ユベントス / ミラン / ドルトムント / バイエルン / PSG / ベンフィカ<br>**リーグ**: プレミア / ラリーガ / ブンデス / セリエA / MLS / UEFA | **確定** |
 | `official_jp` | Jリーグ / JFA / 浦和 / 川崎 / 神戸 | **確定** |
-| `english` | Sky Sports / ESPN / goal.com / 90min / football365 / SI / CBS Sports | 報道 |
-| `japanese` | サッカーキング / フットボールチャンネル / 超WORLDサッカー / theWORLD / football-tribe | 報道 |
+| `english` | Sky Sports / ESPN / goal.com / 90min / football365 / SI / CBS Sports / Bleacher Report | 報道 |
+| `japanese` | サッカーキング / フットボールチャンネル / 超WORLDサッカー / theWORLD / football-tribe / webスポルティーバ | 報道 |
 | `aggregator` | Yahoo!ニュース（複数媒体を横断できる） | 報道 |
+| `stats` | FBref / Understat / worldfootball / Sofascore / BeSoccer / Flashscore | 報道 |
 | `german` | kicker.de / sport1.de | 報道 |
 | `italian` | football-italia.net / calciomercato.com / TUTTOmercatoWEB | 報道 |
 | `french` | footmercato.net / eurosport.fr | 報道 |
@@ -140,6 +141,17 @@ football.london
 
 記事の本文は開けないので、**公開日はどこにも書いていない**。それでも新しさは判定できる。
 
+### 記録・数字は統計サイトから
+
+「数字で見ると」の節のために、統計サイトを群として分けてあります。
+深掘りの検索リストに「数字（成績）」が入るので、得点・アシスト・出場数・
+順位はここから取れます。移籍金は報道機関、成績は統計サイト、という分担です。
+
+```
+数字（移籍金・記録）: "... fee OR record"        （skysports.com ほか）
+数字（成績）:         "... stats goals assists"  （fbref.com, understat.com ほか）
+```
+
 ### 日本語サイトはURLに日付が入る（推定不要）
 
 いちばん確かな手がかりです。推定ではなく**日付そのもの**が読めます。
@@ -148,7 +160,12 @@ football.london
 soccer-king.jp/news/world/esp/20260828/2197673.html   → 2026-08-28
 footballchannel.jp/2026/08/29/post1000500/            → 2026-08-29
 caughtoffside.com/2026/08/29/julian-alvarez-arsenal/  → 2026-08-29
+acmilan.com/en/news/articles/media/2026-01-30/...     → 2026-01-30
 ```
+
+**登録していないサイトでも読めます。** URLに `/2026/08/30/` の形が入っていれば、
+どのサイトでも日付を取ります（WordPress系に多い形）。日付として成立しない
+ものは弾くので、記事IDを日付と誤読することはありません。
 
 `fresh` はこれを「確定」と表示します。時刻までは分からないので、その日の正午に
 出たものとして扱っています（半日ぶんの誤差はありますが、日付は確かめてあります）。

@@ -286,11 +286,12 @@ def _dispatch(args, config) -> int:
 
         plan = load_plan()
         labels = {
-            "official": "クラブ・リーグ公式（欧州）",
+            "official": "クラブ・リーグ公式",
             "official_jp": "公式（日本）",
             "english": "英語の報道機関",
             "japanese": "日本語の報道機関",
             "aggregator": "横断（複数媒体）",
+            "stats": "記録・数字",
             "german": "ドイツ語",
             "italian": "イタリア語",
             "french": "フランス語",

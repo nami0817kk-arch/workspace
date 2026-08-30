@@ -39,7 +39,13 @@ DATE_PATTERNS: dict[str, re.Pattern] = {
     # caughtoffside.com/2026/08/29/...
     "caughtoffside.com": re.compile(r"caughtoffside\.com/(\d{4})/(\d{2})/(\d{2})/"),
     "football-tribe.com": re.compile(r"football-tribe\.com/[^?]*?/(\d{4})/(\d{2})/(\d{2})/"),
+    "slbenfica.pt": re.compile(r"slbenfica\.pt/[^?]*?/(\d{4})/(\d{2})/(\d{2})/"),
+    "acmilan.com": re.compile(r"acmilan\.com/[^?]*?/(\d{4})-(\d{2})-(\d{2})/"),
 }
+
+# 上のどれにも当たらないとき用。/2026/08/30/ を含むURLはどのサイトでも日付が読める
+# （WordPress系に多い）。日付として成立しないものは弾く
+GENERIC_DATE = re.compile(r"https?://(?:www\.)?([^/]+)/(?:[^?]*?/)?(\d{4})/(\d{2})/(\d{2})(?:/|-)")
 
 # サイトごとの記事IDの取り出し方。連番であることが確認できたものだけ載せる
 PATTERNS: dict[str, list[re.Pattern]] = {
@@ -135,6 +141,15 @@ def read(url: str) -> Ref:
             match = pattern.search(text)
             if match:
                 return Ref(url=text, site=site, number=int(match.group(1)))
+
+    # 登録していないサイトでも、URLに日付が入っていれば読む
+    match = GENERIC_DATE.search(text)
+    if match:
+        host, year, month, day = match.groups()
+        try:
+            return Ref(url=text, site=host, posted_on=date(int(year), int(month), int(day)))
+        except ValueError:
+            pass
     return Ref(url=text)
 
 

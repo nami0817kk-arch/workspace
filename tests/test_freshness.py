@@ -220,3 +220,33 @@ def test_premier_league_news_ids_are_recognised():
     assert ref.site == "premierleague.com"
     assert ref.number == 4664145
     assert ref.exact is False      # IDだけなので日付は分からない
+
+
+def test_any_site_with_a_date_in_the_url_is_read():
+    from datetime import date
+
+    # 登録していないサイトでも /2026/08/30/ があれば日付が読める
+    ref = read("https://some-new-site.example/news/2026/08/30/a-story/")
+    assert ref.site == "some-new-site.example"
+    assert ref.posted_on == date(2026, 8, 30)
+    assert ref.exact is True
+
+
+def test_the_generic_pattern_also_reads_hyphenated_dates():
+    from datetime import date
+
+    ref = read("https://www.acmilan.com/en/news/articles/media/2026-01-30/official-statement")
+    assert ref.posted_on == date(2026, 1, 30)
+
+
+def test_the_generic_pattern_rejects_impossible_dates():
+    assert read("https://example.com/2026/13/45/x/").known is False
+    assert read("https://example.com/2026/02/30/x/").known is False
+
+
+def test_named_patterns_win_over_the_generic_one():
+    # skysports は日付ではなく記事IDで判定する
+    ref = read("https://www.skysports.com/football/news/11095/13578318/x")
+    assert ref.site == "skysports.com"
+    assert ref.number == 13578318
+    assert ref.posted_on is None
