@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import threading
 import time
 from typing import Any
 from urllib.parse import urlsplit
@@ -95,26 +96,33 @@ class RateLimiter:
         self.max_wait = self.MAX_WAIT if max_wait is None else max_wait
         self._tokens = self.capacity
         self._last = time.monotonic()
+        self._lock = threading.Lock()
 
     def wait(self) -> float:
-        """必要なら待機し、待った秒数を返す。"""
-        now = time.monotonic()
-        self._tokens = min(self.capacity, self._tokens + (now - self._last) * self.rate)
-        self._last = now
+        """必要なら待機し、待った秒数を返す。
 
-        if self._tokens >= 1.0:
+        並列実行から同時に呼ばれるので、枠の計算はロックの中で行う。
+        待つ側がロックを持ったままだと他が進めないため、待機はロックの外で行う。
+        """
+        with self._lock:
+            now = time.monotonic()
+            self._tokens = min(self.capacity, self._tokens + (now - self._last) * self.rate)
+            self._last = now
+
+            if self._tokens >= 1.0:
+                self._tokens -= 1.0
+                return 0.0
+
+            need = (1.0 - self._tokens) / self.rate
+            if need > self.max_wait:
+                raise RateLimitError(
+                    f"{self.label}: 無料枠を使い切りました。約{int(need)}秒あけて再実行してください。",
+                    retry_after=need,
+                )
+            # 待つ分をここで確保しておく（他のスレッドが同じ枠を二重取りしないように）
             self._tokens -= 1.0
-            return 0.0
 
-        need = (1.0 - self._tokens) / self.rate
-        if need > self.max_wait:
-            raise RateLimitError(
-                f"{self.label}: 無料枠を使い切りました。約{int(need)}秒あけて再実行してください。",
-                retry_after=need,
-            )
         time.sleep(need)
-        self._tokens = 0.0
-        self._last = time.monotonic()
         return need
 
 

@@ -72,3 +72,28 @@ def test_credits_recover_from_broken_json(tmp_path):
     (tmp_path / "credits.json").write_text("{ broken", encoding="utf-8")
     assets.download_all([make_asset()], tmp_path, sess=FakeSession([FakeResponse(content=PNG)]))
     assert len(json.loads((tmp_path / "credits.json").read_text(encoding="utf-8"))) == 1
+
+
+def test_download_all_of_an_empty_list_does_nothing(tmp_path):
+    assert assets.download_all([], tmp_path) == []
+    assert not (tmp_path / "CREDITS.md").exists()
+
+
+def test_download_all_runs_in_parallel_for_multiple_assets(tmp_path, monkeypatch):
+    """取得先が別サイトなので並列に落とす（1件ずつだと待ち時間が積み上がる）。"""
+    import threading
+
+    started = threading.Barrier(3, timeout=5)
+
+    def fake_download(asset, dest_dir, *, timeout=60, sess=None):
+        started.wait()  # 3件が同時に走らないと詰まる
+        path = tmp_path / f"{asset.source_id}.png"
+        path.write_bytes(PNG)
+        return path
+
+    monkeypatch.setattr(assets, "download", fake_download)
+    items = [make_asset(source_id=str(i)) for i in range(3)]
+
+    saved = assets.download_all(items, tmp_path)
+
+    assert [asset.source_id for asset, _ in saved] == ["0", "1", "2"]  # 順序は保つ

@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 import json
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
 from .core.errors import ConfigError
@@ -69,12 +70,24 @@ def _notify_source(asset: Asset) -> None:
 def download_all(
     assets: list[Asset], dest_dir: str | Path, *, timeout: int = 60, sess=None
 ) -> list[tuple[Asset, Path]]:
-    """複数の素材をまとめて取得し、クレジットファイルも更新する。"""
-    saved: list[tuple[Asset, Path]] = []
-    for asset in assets:
-        saved.append((asset, download(asset, dest_dir, timeout=timeout, sess=sess)))
-    if saved:
-        write_credits(saved, dest_dir)
+    """複数の素材をまとめて取得し、クレジットファイルも更新する。
+
+    取得先が別サイトなので並列に落とす。順序は入力どおりに保つ。
+    """
+    if not assets:
+        return []
+
+    def fetch(asset: Asset) -> tuple[Asset, Path]:
+        return asset, download(asset, dest_dir, timeout=timeout, sess=sess)
+
+    if len(assets) == 1 or sess is not None:
+        # セッションを共有している場合（テストなど）は直列にする
+        saved = [fetch(asset) for asset in assets]
+    else:
+        with ThreadPoolExecutor(max_workers=min(len(assets), max_workers())) as pool:
+            saved = list(pool.map(fetch, assets))
+
+    write_credits(saved, dest_dir)
     return saved
 
 
@@ -136,8 +149,22 @@ def write_credits(saved: list[tuple[Asset, Path]], dest_dir: str | Path) -> tupl
     return json_path, md_path
 
 
+def max_workers() -> int:
+    """横断検索・一括ダウンロードの並列数（AILAB_MAX_WORKERS で変更可）。"""
+    from .config import get_env
+
+    try:
+        return max(1, int(get_env("AILAB_MAX_WORKERS") or 4))
+    except ValueError:
+        return 4
+
+
 def search(query: str, *, source: str = "all", limit: int = 10, **kwargs) -> list[Asset]:
-    """素材を検索する。source='all' なら使える全コネクタを横断する。"""
+    """素材を検索する。source='all' なら使える全コネクタを横断する。
+
+    横断時は各サイトへ並列に問い合わせる（直列だと遅いサイトに引きずられるため）。
+    結果の順序はコネクタの優先順位で安定させる。
+    """
     from .core import registry
     from .core.errors import ConnectorError
 
@@ -147,13 +174,29 @@ def search(query: str, *, source: str = "all", limit: int = 10, **kwargs) -> lis
             raise ConfigError(f"{source} は素材検索に対応していません")
         return connector.search_assets(query, limit=limit)
 
+    connectors = registry.by_capability("search_assets", available_only=True, **kwargs)
+    if not connectors:
+        return []
+
+    def run(connector):
+        try:
+            return connector.search_assets(query, limit=limit), None
+        except ConnectorError as exc:  # 1サイト落ちても他は返す
+            return [], f"{connector.name}: {exc}"
+
+    if len(connectors) == 1:
+        results = [run(connectors[0])]
+    else:
+        with ThreadPoolExecutor(max_workers=min(len(connectors), max_workers())) as pool:
+            results = list(pool.map(run, connectors))
+
     found: list[Asset] = []
     errors: list[str] = []
-    for connector in registry.by_capability("search_assets", available_only=True, **kwargs):
-        try:
-            found.extend(connector.search_assets(query, limit=limit))
-        except ConnectorError as exc:  # 1サイト落ちても他は返す
-            errors.append(f"{connector.name}: {exc}")
+    for items, error in results:  # 優先順位どおりの並びを保つ
+        found.extend(items)
+        if error:
+            errors.append(error)
+
     if not found and errors:
         raise ConnectorError(" / ".join(errors))
     return found

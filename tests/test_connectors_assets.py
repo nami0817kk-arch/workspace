@@ -194,3 +194,47 @@ def _asset(source: str):
     from ailab.core.types import Asset
 
     return Asset(source=source, title="Cat", image_url="https://example.com/cat.png")
+
+
+# --- 横断検索の並列化 ---------------------------------------------------
+def test_parallel_search_keeps_priority_order(monkeypatch):
+    """並列に問い合わせても、結果はコネクタの優先順位どおりに並ぶ。"""
+    from ailab.core.types import Asset
+
+    monkeypatch.setattr(
+        IconifyAssets, "search_assets", lambda self, q, **kw: [Asset("iconify", "i", "u")]
+    )
+    monkeypatch.setattr(
+        OpenverseAssets, "search_assets", lambda self, q, **kw: [Asset("openverse", "o", "u")]
+    )
+    monkeypatch.setattr(
+        WikimediaAssets, "search_assets", lambda self, q, **kw: [Asset("wikimedia", "w", "u")]
+    )
+
+    assert [a.source for a in assets.search("猫")] == ["iconify", "openverse", "wikimedia"]
+
+
+def test_parallel_search_runs_sources_concurrently(monkeypatch):
+    """遅いサイトが1つあっても、他のサイトを待たせない。"""
+    import threading
+    import time as real_time
+
+    started = threading.Barrier(3, timeout=5)
+
+    def slow(self, query, **kwargs):
+        started.wait()  # 3サイトが同時に走らないとここで詰まる
+        return []
+
+    for cls in (IconifyAssets, OpenverseAssets, WikimediaAssets):
+        monkeypatch.setattr(cls, "search_assets", slow)
+
+    start = real_time.monotonic()
+    assets.search("猫")
+    assert real_time.monotonic() - start < 5  # 直列なら Barrier で待ち続ける
+
+
+def test_worker_count_is_configurable(monkeypatch):
+    monkeypatch.setenv("AILAB_MAX_WORKERS", "8")
+    assert assets.max_workers() == 8
+    monkeypatch.setenv("AILAB_MAX_WORKERS", "おかしな値")
+    assert assets.max_workers() == 4

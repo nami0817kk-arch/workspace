@@ -107,3 +107,28 @@ def test_clear_removes_cache_files():
     cache.store(cache.make_key("a", None), {"a": 1}, ttl=600)
     cache.store(cache.make_key("b", None), {"b": 1}, ttl=600)
     assert cache.clear() == 2
+
+
+def test_rate_limiter_is_thread_safe():
+    """並列検索から同時に呼ばれても、枠を二重に使わない。"""
+    import threading
+
+    limiter = http.RateLimiter(5, 3600, label="テストAPI")
+    granted = []
+    denied = []
+
+    def take():
+        try:
+            limiter.wait()
+            granted.append(1)
+        except RateLimitError:
+            denied.append(1)
+
+    threads = [threading.Thread(target=take) for _ in range(20)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join()
+
+    assert len(granted) == 5  # 枠ちょうど
+    assert len(denied) == 15
