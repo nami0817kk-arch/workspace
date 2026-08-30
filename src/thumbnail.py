@@ -32,6 +32,25 @@ TITLE_GAP = 18
 TITLE_SIZES = (116, 104, 94, 84, 76, 68, 60)
 
 
+def from_meta(meta: dict, title: str) -> dict:
+    """台本の frontmatter からサムネの引数を取り出す。
+
+    draft が書くのは thumbnail_line1 / line2 / tags。手書きの古い台本は
+    thumbnail_title / thumbnail_subtitle なので、どちらでも読めるようにする。
+    ここを1か所にまとめないと、CLI とビルドで指定が食い違う。
+    """
+    line1 = str(meta.get("thumbnail_line1") or meta.get("thumbnail_title") or title)
+    line2 = str(meta.get("thumbnail_line2") or meta.get("thumbnail_subtitle") or "")
+    return {
+        "title": line1,
+        "subtitle": line2,
+        "lines": (line1, line2),
+        "tags": [str(t) for t in (meta.get("thumbnail_tags") or [])],
+        "badge": str(meta.get("thumbnail_badge", "")),
+        "date": str(meta.get("date", "")),
+    }
+
+
 def build_thumbnail(
     config: ProjectConfig,
     title: str,
@@ -157,6 +176,12 @@ def _fit_band(draw: ImageDraw.ImageDraw, text: str, font_path: str):
     for size in BAND_SIZES:
         font = ImageFont.truetype(font_path, size)
         rows = wrap_text(draw, text, font, width)
+
+        # 禁則で改行できないと、収まらない1行がそのまま返ってくる。
+        # 行数だけ見て採用すると帯からはみ出すので、幅を測って確かめる
+        if any(draw.textlength(row, font=font) > width for row in rows):
+            continue
+
         if len(rows) == 1:
             return font, rows
         if len(rows) == 2:

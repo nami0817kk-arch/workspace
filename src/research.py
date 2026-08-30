@@ -12,6 +12,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from datetime import datetime
 from pathlib import Path
 
 import yaml
@@ -254,11 +255,58 @@ def check_repeats(notes: Notes, plan: Plan, now=None) -> list[str]:
     entry = hits.get(notes.theme_id)
     if entry is None:
         return []
+
+    # 同じ日・同じ枠の記録は、この動画そのもの。作り直しは重複ではない
+    today = (now or datetime.now()).date()
+    if entry.slot == notes.slot and entry.at.date() == today:
+        return []
+
     stamp = entry.at.strftime("%m/%d %H:%M")
     return [
         f"{notes.theme_id}: {stamp} の［{entry.slot}］で扱ったテーマです（{entry.headline}）。"
         "掘り直すなら follow_up: true を書いてください"
     ]
+
+
+# テロップに入る目安。これを超えると読みきれないうちに次へ行く
+TELOP_LIMIT = 26
+
+
+def _telop(text: str, limit: int = TELOP_LIMIT) -> str:
+    """読み上げ文をそのままテロップにすると長すぎる。頭の一文だけ使う。"""
+    head = str(text).strip().split("。")[0].strip("　 ")
+    if len(head) > limit:
+        head = head[: limit - 1] + "…"
+    return head
+
+
+# 動詞・形容詞の言い切りはこの音で終わる。名詞止めと区別するために使う
+PLAIN_ENDINGS = tuple("うくぐすつぬぶむるい")
+POLITE_ENDINGS = ("です", "ます", "ました", "ません", "でした", "ましょう", "ください", "でしょう")
+
+
+def _spoken(text: str) -> str:
+    """メモの書き言葉を、読み上げても不自然でない形にする。
+
+    「〜を拒んでいる」で終わるメモをそのまま読ませると、原稿の下書きを
+    そのまま読んだように聞こえる。最後の文だけ、ですます に直す。
+    """
+    body = str(text).strip().rstrip("。")
+    if not body:
+        return ""
+    parts = [part for part in body.split("。") if part.strip()]
+    parts[-1] = _polite(parts[-1])
+    return "。".join(parts) + "。"
+
+
+def _polite(sentence: str) -> str:
+    sentence = sentence.rstrip("　 ")
+    if sentence.endswith(POLITE_ENDINGS):
+        return sentence
+    # 「拒んでいる」のような動詞止めと、「朝7時」のような名詞止めで付け方が違う
+    if sentence.endswith(PLAIN_ENDINGS):
+        return sentence + "、ということです"
+    return sentence + "です"
 
 
 def to_script(notes: Notes, plan: Plan) -> str:
@@ -277,7 +325,7 @@ def to_script(notes: Notes, plan: Plan) -> str:
         "date": notes.date,
         "intro_title": notes.title,
         "intro_label": "海外サッカー ニュース",
-        "outro_title": notes.watch or "続報は次回お伝えします",
+        "outro_title": _telop(notes.watch, 20) or "続報は次回お伝えします",
         "outro_sub": "チャンネル登録でお待ちください",
         "description": (
             f"{notes.title}\n\n"
@@ -298,7 +346,7 @@ def to_script(notes: Notes, plan: Plan) -> str:
         f"  telop: {notes.title}",
         "  se: assets/audio/se_pon.wav",
         f"キャスター: この動画では、{notes.question}、ここを掘っていきます。",
-        f"  telop: 今回の問い: {notes.question}",
+        f"  telop: 今回の問い: {_telop(notes.question, 20)}",
         "",
     ]
 
@@ -317,12 +365,15 @@ def to_script(notes: Notes, plan: Plan) -> str:
     lines += [
         "## まとめ",
         "",
-        f"キャスター: まとめます。{notes.question}。{notes.answer}",
-        f"  telop: {notes.answer}",
+        f"キャスター: まとめます。{notes.question}。{_spoken(notes.answer)}",
+        f"  telop: {_telop(notes.answer)}",
         "  card: wrap",
     ]
     if notes.watch:
-        lines += [f"解説: {notes.watch}", f"  telop: 次の焦点: {notes.watch}"]
+        lines += [
+            f"解説: 次の焦点です。{_spoken(notes.watch)}",
+            f"  telop: 次の焦点: {_telop(notes.watch, 22)}",
+        ]
     lines += [
         "キャスター: 動きがあり次第、あらためてお伝えします。"
         "続報はチャンネル登録してお待ちください。",

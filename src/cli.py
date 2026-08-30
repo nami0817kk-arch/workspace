@@ -177,11 +177,19 @@ def _dispatch(args, config) -> int:
     if args.command == "thumbnail":
         script = load_script(args.script)
         out = Path(args.out) if args.out else Path(f"output/{Path(args.script).stem}/thumbnail.png")
+        from .thumbnail import from_meta
+
+        look = from_meta(script.meta, script.title)
         path = build_thumbnail(
             config,
-            script.meta.get("thumbnail_title", script.title),
+            look["title"],
             out,
-            subtitle=str(script.meta.get("thumbnail_subtitle", "")),
+            subtitle=look["subtitle"],
+            background=script.background,
+            badge=look["badge"],
+            date=look["date"],
+            lines=look["lines"],
+            tags=look["tags"],
         )
         print(f"サムネ: {path}")
         return 0

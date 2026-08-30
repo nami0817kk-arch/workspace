@@ -10,7 +10,7 @@ from . import audio, ffmpeg, inserts as inserts_mod, subtitles
 from .config import ProjectConfig, _resolve
 from .render import Renderer
 from .script_model import Script, load_script
-from .thumbnail import build_thumbnail
+from .thumbnail import build_thumbnail, from_meta
 from .tts import create_backend, credits, synthesize_script
 
 
@@ -66,19 +66,17 @@ def build(
         script, soundtrack, out_dir / "video.mp4", work_dir, inserts
     )
 
+    look = from_meta(script.meta, script.title)
     thumbnail = build_thumbnail(
         config,
-        script.meta.get("thumbnail_title", script.title),
+        look["title"],
         out_dir / "thumbnail.png",
-        subtitle=str(script.meta.get("thumbnail_subtitle", "")),
+        subtitle=look["subtitle"],
         background=script.background,
-        badge=str(script.meta.get("thumbnail_badge", "")),
+        badge=look["badge"],
         date=script.date,
-        lines=(
-            str(script.meta.get("thumbnail_line1", "")),
-            str(script.meta.get("thumbnail_line2", "")),
-        ) if script.meta.get("thumbnail_line1") else None,
-        tags=[str(t) for t in (script.meta.get("thumbnail_tags") or [])],
+        lines=look["lines"],
+        tags=look["tags"],
     )
     outputs = subtitles.write_outputs(script, out_dir, credits=credits(script, config, backend))
 

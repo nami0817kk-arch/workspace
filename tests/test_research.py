@@ -273,3 +273,60 @@ def test_advise_skips_the_x_checks_without_a_plan():
         "https://x.com/FabrizioRomano/status/1183028368629010432"
     ]
     assert not any("時間前" in h for h in advise(build_notes(raw)))
+
+
+def test_regenerating_the_same_slot_today_is_not_a_repeat(tmp_path):
+    plan = _plan()
+    ledger = tmp_path / "covered.yaml"
+    plan.coverage = {"ledger": str(ledger), "repeat_within_hours": 36}
+    notes = build_notes(_raw(slot="evening"))
+
+    coverage.record(ledger, "evening", [("move", "なぜ移籍が決まらないのか")], NOW)
+    assert check_repeats(notes, plan, NOW) == []          # 同じ枠の作り直し
+
+
+def test_the_same_theme_in_another_slot_is_still_a_repeat(tmp_path):
+    plan = _plan()
+    ledger = tmp_path / "covered.yaml"
+    plan.coverage = {"ledger": str(ledger), "repeat_within_hours": 36}
+    notes = build_notes(_raw(slot="evening"))
+
+    coverage.record(ledger, "morning", [("move", "なぜ移籍が決まらないのか")], NOW)
+    assert check_repeats(notes, plan, NOW)                # 朝に出した話を夜にも出そうとしている
+
+
+def test_recording_the_same_slot_twice_replaces_rather_than_piles_up(tmp_path):
+    ledger = tmp_path / "covered.yaml"
+    coverage.record(ledger, "morning", [("move", "1回目")], NOW)
+    coverage.record(ledger, "morning", [("move", "2回目")], NOW)
+    entries = coverage.load(ledger)
+    assert len(entries) == 1
+    assert entries[0].headline == "2回目"
+
+
+def test_long_notes_are_shortened_for_the_screen():
+    from src.research import _telop
+
+    long_answer = "問題は金額ではなく「誰に売るか」。ライバルに主力を渡すこと自体を拒んでいる"
+    assert _telop(long_answer) == "問題は金額ではなく「誰に売るか」"      # 1文目だけ
+    assert len(_telop("あ" * 40)) == 26                                  # 上限で切って…を付ける
+    assert _telop("あ" * 40).endswith("…")
+    assert _telop("") == ""
+
+
+def test_written_notes_are_turned_into_spoken_lines():
+    from src.research import _spoken
+
+    # 動詞の言い切り → 「ということです」
+    assert _spoken("主力を渡すこと自体を拒んでいる").endswith("拒んでいる、ということです。")
+    # 名詞止め → 「です」
+    assert _spoken("期限は9月2日の朝7時").endswith("朝7時です。")
+    # すでに ですます なら触らない
+    assert _spoken("移籍は成立しました") == "移籍は成立しました。"
+    assert _spoken("") == ""
+
+
+def test_only_the_last_sentence_is_made_polite():
+    from src.research import _spoken
+
+    assert _spoken("A。Bを拒んでいる") == "A。Bを拒んでいる、ということです。"

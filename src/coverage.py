@@ -89,5 +89,13 @@ def record(
     """(id, 見出し) の並びを記録に足す。"""
     now = now or datetime.now()
     entries = load(path)
+    keys = {key for key, _ in items}
+
+    # 同じ日・同じ枠・同じ話題は「作り直し」。積み増さず置き換える
+    entries = [
+        entry
+        for entry in entries
+        if not (entry.key in keys and entry.slot == slot and entry.at.date() == now.date())
+    ]
     entries += [Entry(key=key, headline=headline, slot=slot, at=now) for key, headline in items]
     return save(path, entries)
