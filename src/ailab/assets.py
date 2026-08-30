@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import json
 from concurrent.futures import ThreadPoolExecutor
+from itertools import zip_longest
 from pathlib import Path
 
 from .core.errors import ConfigError
@@ -190,13 +191,43 @@ def search(query: str, *, source: str = "all", limit: int = 10, **kwargs) -> lis
         with ThreadPoolExecutor(max_workers=min(len(connectors), max_workers())) as pool:
             results = list(pool.map(run, connectors))
 
-    found: list[Asset] = []
+    groups: list[list[Asset]] = []
     errors: list[str] = []
     for items, error in results:  # 優先順位どおりの並びを保つ
-        found.extend(items)
+        if items:
+            groups.append(items)
         if error:
             errors.append(error)
 
-    if not found and errors:
+    if not groups and errors:
         raise ConnectorError(" / ".join(errors))
-    return found
+    return deduplicate(interleave(groups))
+
+
+def interleave(groups: list[list[Asset]]) -> list[Asset]:
+    """サイトごとの結果を1件ずつ交互に並べる。
+
+    連結すると先頭のサイトだけで上位が埋まり、-l で絞ったときに
+    他のサイトの結果が1件も見えなくなるため。
+    """
+    merged: list[Asset] = []
+    for row in zip_longest(*groups):
+        merged.extend(asset for asset in row if asset is not None)
+    return merged
+
+
+def deduplicate(found: list[Asset]) -> list[Asset]:
+    """同じ素材を1件にまとめる（先に来たものを残す）。
+
+    Openverse は Wikimedia の作品も返すので、横断すると同じ画像が重複する。
+    """
+    seen: set[str] = set()
+    unique: list[Asset] = []
+    for asset in found:
+        key = (asset.image_url or asset.page_url or "").split("?")[0].lower()
+        if key and key in seen:
+            continue
+        if key:
+            seen.add(key)
+        unique.append(asset)
+    return unique

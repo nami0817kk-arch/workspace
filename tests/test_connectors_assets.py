@@ -202,13 +202,13 @@ def test_parallel_search_keeps_priority_order(monkeypatch):
     from ailab.core.types import Asset
 
     monkeypatch.setattr(
-        IconifyAssets, "search_assets", lambda self, q, **kw: [Asset("iconify", "i", "u")]
+        IconifyAssets, "search_assets", lambda self, q, **kw: [Asset("iconify", "i", "https://i/1")]
     )
     monkeypatch.setattr(
-        OpenverseAssets, "search_assets", lambda self, q, **kw: [Asset("openverse", "o", "u")]
+        OpenverseAssets, "search_assets", lambda self, q, **kw: [Asset("openverse", "o", "https://o/1")]
     )
     monkeypatch.setattr(
-        WikimediaAssets, "search_assets", lambda self, q, **kw: [Asset("wikimedia", "w", "u")]
+        WikimediaAssets, "search_assets", lambda self, q, **kw: [Asset("wikimedia", "w", "https://w/1")]
     )
 
     assert [a.source for a in assets.search("猫")] == ["iconify", "openverse", "wikimedia"]
@@ -238,3 +238,51 @@ def test_worker_count_is_configurable(monkeypatch):
     assert assets.max_workers() == 8
     monkeypatch.setenv("AILAB_MAX_WORKERS", "おかしな値")
     assert assets.max_workers() == 4
+
+
+def test_results_are_interleaved_across_sources(monkeypatch):
+    """先頭のサイトだけで上位が埋まらないよう、1件ずつ交互に並べる。"""
+    from ailab.core.types import Asset
+
+    monkeypatch.setattr(
+        IconifyAssets,
+        "search_assets",
+        lambda self, q, **kw: [Asset("iconify", f"i{i}", f"https://i/{i}") for i in range(3)],
+    )
+    monkeypatch.setattr(
+        OpenverseAssets,
+        "search_assets",
+        lambda self, q, **kw: [Asset("openverse", f"o{i}", f"https://o/{i}") for i in range(2)],
+    )
+    _silence(monkeypatch, WikimediaAssets)
+
+    found = assets.search("猫")
+
+    assert [a.title for a in found] == ["i0", "o0", "i1", "o1", "i2"]
+
+
+def test_same_image_from_two_sources_is_returned_once(monkeypatch):
+    """Openverse は Wikimedia の作品も返すので、横断すると重複する。"""
+    from ailab.core.types import Asset
+
+    shared = "https://upload.wikimedia.org/neko.png"
+    monkeypatch.setattr(
+        OpenverseAssets, "search_assets", lambda self, q, **kw: [Asset("openverse", "Neko", shared)]
+    )
+    monkeypatch.setattr(
+        WikimediaAssets,
+        "search_assets",
+        lambda self, q, **kw: [Asset("wikimedia", "Neko.png", f"{shared}?width=480")],
+    )
+    _silence(monkeypatch, IconifyAssets)
+
+    found = assets.search("猫")
+
+    assert [a.source for a in found] == ["openverse"]  # 先に来たほうを残す
+
+
+def test_assets_without_urls_are_kept():
+    from ailab.core.types import Asset
+
+    items = [Asset("x", "a", ""), Asset("x", "b", "")]
+    assert len(assets.deduplicate(items)) == 2
