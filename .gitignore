@@ -8,3 +8,6 @@ output/
 *.egg-info/
 build/
 dist/
+.coverage
+coverage.xml
+htmlcov/
