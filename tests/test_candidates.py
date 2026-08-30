@@ -12,12 +12,12 @@ from src.candidates import (
 )
 
 SCORING = {
-    "weights": {"freshness": 3, "japanese": 3, "reaction": 3, "big_club": 2, "numbers": 1},
+    "weights": {"freshness": 3, "japanese": 1, "reaction": 3, "big_club": 2, "numbers": 1},
     "freshness_hours": {6: 3, 12: 2, 24: 1},
     "big_clubs": ["アーセナル", "バルセロナ"],
     "slots": {
         "morning": {"prefer": "freshness", "require_tier": ["確定", "報道"]},
-        "noon": {"prefer": "japanese"},
+        "noon": {"prefer": "reaction"},
         "evening": {"prefer": "total"},
     },
 }
@@ -39,8 +39,8 @@ def test_freshness_is_scaled_to_its_weight():
 
 def test_flags_add_their_weights_and_leave_a_breakdown():
     (item,) = score([Candidate(id="a", title="A", hours_ago=1, japanese=True, numbers=True)], SCORING)
-    assert item.breakdown == {"新しさ": 3, "日本人": 3, "数字": 1}
-    assert item.score == 7
+    assert item.breakdown == {"新しさ": 3, "日本人": 1, "数字": 1}
+    assert item.score == 5
 
 
 def test_big_club_is_detected_from_the_title():
@@ -52,8 +52,8 @@ def test_big_club_is_detected_from_the_title():
 def test_scoring_sorts_by_points_then_freshness():
     ranked = score(
         [
-            Candidate(id="old", title="古い", hours_ago=5, japanese=True),
-            Candidate(id="new", title="新しい", hours_ago=1, japanese=True),
+            Candidate(id="old", title="古い", hours_ago=5, reaction=True),
+            Candidate(id="new", title="新しい", hours_ago=1, reaction=True),
         ],
         SCORING,
     )
@@ -63,36 +63,81 @@ def test_scoring_sorts_by_points_then_freshness():
 def test_each_slot_gets_a_different_candidate():
     ranked = score(
         [
-            Candidate(id="a", title="速報", hours_ago=1, tier="報道", reaction=True),
-            Candidate(id="b", title="日本人", hours_ago=10, tier="未確認", japanese=True),
-            Candidate(id="c", title="その他", hours_ago=20, tier="確定", numbers=True),
+            Candidate(id="a", title="速報", hours_ago=1, tier="報道", numbers=True),
+            Candidate(id="b", title="賛否", hours_ago=10, tier="未確認", reaction=True),
+            Candidate(id="c", title="その他", hours_ago=20, tier="確定", big_club=True),
         ],
         SCORING,
     )
-    chosen, _ = assign(ranked, SCORING, ["morning", "noon", "evening"])
+    chosen, fallbacks = assign(ranked, SCORING, ["morning", "noon", "evening"])
     assert chosen["morning"].id == "a"   # いちばん新しい、かつ確定/報道
-    assert chosen["noon"].id == "b"      # 日本人優先
+    assert chosen["noon"].id == "b"      # 賛否が割れるもの優先
     assert chosen["evening"].id == "c"   # 残りから最高点
     assert len({c.id for c in chosen.values()}) == 3
+    assert fallbacks == {}
+
+
+def test_the_same_topic_is_not_used_in_two_slots():
+    ranked = score(
+        [
+            Candidate(id="a1", title="移籍の続報", hours_ago=1, tier="報道",
+                      topic="alvarez", reaction=True, numbers=True),
+            Candidate(id="a2", title="同じ件の別記事", hours_ago=2, tier="報道",
+                      topic="alvarez", reaction=True, numbers=True),
+            Candidate(id="b", title="別の話", hours_ago=20, tier="報道", topic="spurs"),
+        ],
+        SCORING,
+    )
+    chosen, _ = assign(ranked, SCORING, ["morning", "noon"])
+    assert chosen["morning"].topic == "alvarez"
+    assert chosen["noon"].topic == "spurs"   # 同じ topic は2枠目に入れない
+
+
+def test_a_repeated_topic_is_allowed_but_reported_when_nothing_else_is_left():
+    ranked = score(
+        [
+            Candidate(id="a1", title="続報1", hours_ago=1, tier="報道", topic="alvarez"),
+            Candidate(id="a2", title="続報2", hours_ago=2, tier="報道", topic="alvarez"),
+        ],
+        SCORING,
+    )
+    chosen, fallbacks = assign(ranked, SCORING, ["morning", "noon"])
+    assert chosen["noon"].topic == "alvarez"
+    assert any("別の話題" in r for r in fallbacks["noon"])
+
+
+def test_candidates_without_a_topic_are_never_blocked():
+    ranked = score(
+        [
+            Candidate(id="a", title="話題つき", hours_ago=1, tier="報道", topic="alvarez"),
+            Candidate(id="b", title="話題なし", hours_ago=2, tier="報道"),
+            Candidate(id="c", title="話題なし2", hours_ago=3, tier="報道"),
+        ],
+        SCORING,
+    )
+    chosen, fallbacks = assign(ranked, SCORING, ["morning", "noon", "evening"])
+    assert len(chosen) == 3
+    # topic を書いていない候補は、話題の重複では弾かれない
+    assert not any("別の話題" in r for r in fallbacks.get("noon", []))
 
 
 def test_morning_falls_back_when_no_candidate_matches_the_tier():
     ranked = score([Candidate(id="a", title="噂", hours_ago=1, tier="未確認")], SCORING)
     chosen, fallbacks = assign(ranked, SCORING, ["morning"])
     assert chosen["morning"].id == "a"
-    assert "確度" in fallbacks["morning"]      # 黙って入れ替えない
+    assert any("確度" in r for r in fallbacks["morning"])   # 黙って入れ替えない
 
 
-def test_noon_says_so_when_no_japanese_candidate_exists():
-    ranked = score([Candidate(id="a", title="欧州の話", hours_ago=1, tier="報道")], SCORING)
+def test_noon_says_so_when_nothing_divisive_exists():
+    ranked = score([Candidate(id="a", title="淡々とした話", hours_ago=1, tier="報道")], SCORING)
     chosen, fallbacks = assign(ranked, SCORING, ["noon"])
     assert chosen["noon"].id == "a"
-    assert "日本人選手" in fallbacks["noon"]
+    assert any("賛否" in r for r in fallbacks["noon"])
 
 
 def test_no_fallback_is_reported_when_the_conditions_are_met():
     ranked = score(
-        [Candidate(id="a", title="日本人の話", hours_ago=1, tier="報道", japanese=True)], SCORING
+        [Candidate(id="a", title="賛否のある話", hours_ago=1, tier="報道", reaction=True)], SCORING
     )
     _, fallbacks = assign(ranked, SCORING, ["morning", "noon"])
     assert fallbacks == {}

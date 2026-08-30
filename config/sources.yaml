@@ -64,7 +64,7 @@ social:
 scoring:
   weights:
     freshness: 3      # 新しさ。速報性がそのまま再生に効く
-    japanese: 3       # 日本人選手が絡む。視聴者層に直結
+    japanese: 1       # 日本人選手が絡む。多少の後押しにとどめる（縛りにはしない）
     reaction: 3       # 賛否が割れる・驚きがある。コメントが伸びる
     big_club: 2       # ビッグクラブが絡む
     numbers: 1        # 金額・記録など、数字が立つ
@@ -87,9 +87,12 @@ scoring:
     - ユヴェントス
     - アトレティコ・マドリード
   # 枠ごとの選び方。上から順に条件を見て、合うものを割り当てる
+  # 同じ話題（topic）を1日に2枠へ入れない。大きい話が1つあると
+  # 3本ともそれになりがちなので、枠をまたいだ重複を止める
+  spread_topics: true
   slots:
     morning: {prefer: freshness, require_tier: [確定, 報道]}
-    noon: {prefer: japanese}
+    noon: {prefer: reaction}
     evening: {prefer: total}
 
 # テーマが決まったあとの深掘り検索。{theme} に選んだテーマが入る
@@ -184,32 +187,34 @@ routines:
 
   # ---------------------------------------------------------------- 昼
   noon:
-    name: 昼の日本人選手
+    name: 昼の話題
     when: 12:00 公開（11:00 収録）
     cover_hours: 24
     target_minutes: 2
     angle: |
-      昼休みに見られる枠。日本人選手かJリーグから1人・1件を選んで掘る。
-      朝の枠で扱った話題は繰り返さない（前提として ledger が止める）。
+      昼休みに見られる枠。賛否が割れている話・驚きのある話を1件選んで掘る。
+      題材は問わない。欧州でも日本人選手でもJリーグでもよい。
+      朝の枠とは別の話題にする（同じ話を1日2回出さない）。
     structure:
       - {id: what, heading: 何が起きたか, tier: 報道}
-      - {id: background, heading: この選手の状況, tier: 背景}
+      - {id: background, heading: なぜ割れているのか, tier: 背景}
       - {id: next, heading: 次の焦点, tier: 報道}
     steps:
+      - id: talking_point
+        what: いま賛否が割れている話（この中から1件を選ぶ）
+        tier: 報道
+        queries:
+          - {q: "criticism OR backlash OR pressure {today_en}", domains: english}
+          - {q: "海外サッカー 批判 OR 議論 {date_ja}"}
+        check: 誰が言ったのかを特定する。「ファンの声」で済ませない
+
       - id: japanese
-        what: 日本人選手の移籍・起用・評価
+        what: 日本人選手・Jリーグ（あれば。無ければ無理に入れない）
         tier: 報道
         queries:
           - {q: "海外日本人選手 {date_ja}"}
-          - {q: "Japan international {today_en}", domains: english}
+          - {q: "Jリーグ {date_ja}"}
         check: 2社以上で内容が一致しているか
-
-      - id: jleague
-        what: Jリーグの動き
-        tier: 報道
-        queries:
-          - {q: "Jリーグ 移籍 {date_ja}"}
-          - {q: "Jリーグ 順位 {month_ja}"}
 
   # ---------------------------------------------------------------- 夜
   evening:

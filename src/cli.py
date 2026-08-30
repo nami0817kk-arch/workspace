@@ -450,8 +450,8 @@ def _dispatch(args, config) -> int:
                 print(f"■ {name}: 割り当てる候補がありません")
                 continue
             print(f"■ {name} → {pick.title}（{pick.score}点）")
-            if slot in fallbacks:
-                print(f"   ! {fallbacks[slot]}。枠の条件から外れた候補を入れています")
+            for reason in fallbacks.get(slot, []):
+                print(f"   ! {reason}。枠の狙いから外れた候補を入れています")
             for query in candidates_mod.deep_queries(pick, plan.deep, plan.domains):
                 line = f'   {query["label"]}: "{query["q"]}"'
                 if query["domains"]:

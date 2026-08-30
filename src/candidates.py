@@ -27,6 +27,7 @@ class Candidate:
     title: str
     en: str = ""        # 英語サイトを検索するときの語。無ければ英語の検索は出さない
     url: str = ""       # 元になった記事・投稿。hours_ago を省くとここから割り出す
+    topic: str = ""     # 話題のまとまり（クラブ名・移籍案件など）。枠の重複を避けるのに使う
     hours_ago: float = 99.0
     tier: str = "未確認"
     japanese: bool = False
@@ -59,6 +60,7 @@ def load_candidates(path: str | Path) -> tuple[str, list[Candidate]]:
                 title=title,
                 en=str(entry.get("en", "")).strip(),
                 url=str(entry.get("url", "")).strip(),
+                topic=str(entry.get("topic", "")).strip(),
                 hours_ago=float(entry["hours_ago"]) if "hours_ago" in entry else -1.0,
                 tier=str(entry.get("tier", "未確認")).strip(),
                 japanese=bool(entry.get("japanese", False)),
@@ -135,44 +137,68 @@ def score(items: list[Candidate], scoring: dict) -> list[Candidate]:
 
 def assign(
     items: list[Candidate], scoring: dict, slots: list[str]
-) -> tuple[dict[str, Candidate], dict[str, str]]:
+) -> tuple[dict[str, Candidate], dict[str, list[str]]]:
     """枠ごとに1本ずつ割り当てる。同じ候補は2つの枠に入れない。
 
     条件に合う候補が無ければ全体から選ぶ（枠を空けるより出したほうがよい）。
-    そのときは「条件を満たせなかった」を添えて返す。黙って別のものを
-    入れると、日本人選手の枠に無関係な話が入っていることに気づけない。
+    そのときは満たせなかった条件を並べて返す。黙って別のものを入れると、
+    枠の狙いから外れていることに気づけない。条件は複数外れることがあるので、
+    1件で上書きせず全部残す。
     """
     rules = dict(scoring.get("slots") or {})
+    spread = bool(scoring.get("spread_topics", True))
     remaining = list(items)
     chosen: dict[str, Candidate] = {}
-    fallbacks: dict[str, str] = {}
+    fallbacks: dict[str, list[str]] = {}
+    used_topics: set[str] = set()
 
     for slot in slots:
         rule = dict(rules.get(slot) or {})
         pool = remaining
+
+        # 大きい話が1つあると3本ともそれになる。すでに使った話題は外す
+        if spread and used_topics:
+            fresh_topics = [c for c in pool if not c.topic or c.topic not in used_topics]
+            if not fresh_topics and pool:
+                fallbacks.setdefault(slot, []).append("他の枠と別の話題が残っていません")
+            pool = fresh_topics or pool
+
         tiers = rule.get("require_tier")
         if tiers:
             filtered = [c for c in pool if c.tier in tiers]
             if not filtered and pool:
-                fallbacks[slot] = f"確度が{' か '.join(tiers)}の候補がありません"
+                fallbacks.setdefault(slot, []).append(
+                    f"確度が{' か '.join(tiers)}の候補がありません"
+                )
             pool = filtered or pool
 
-        prefer = str(rule.get("prefer", "total"))
-        if prefer == "freshness":
-            pick = min(pool, key=lambda c: (c.hours_ago, -c.score), default=None)
-        elif prefer == "japanese":
-            japanese = [c for c in pool if c.japanese]
-            if not japanese and pool:
-                fallbacks[slot] = "日本人選手が絡む候補がありません"
-            pick = max(japanese or pool, key=lambda c: c.score, default=None)
-        else:
-            pick = max(pool, key=lambda c: c.score, default=None)
-
+        pick = _prefer(pool, str(rule.get("prefer", "total")), slot, fallbacks)
         if pick is None:
             continue
         chosen[slot] = pick
         remaining = [c for c in remaining if c.id != pick.id]
+        if pick.topic:
+            used_topics.add(pick.topic)
     return chosen, fallbacks
+
+
+def _prefer(
+    pool: list[Candidate], prefer: str, slot: str, fallbacks: dict[str, list[str]]
+) -> Candidate | None:
+    """枠の方針に沿って1つ選ぶ。条件に合うものが無ければ全体から最高点。"""
+    if not pool:
+        return None
+    if prefer == "freshness":
+        return min(pool, key=lambda c: (c.hours_ago, -c.score))
+
+    flags = {"japanese": "日本人選手が絡む", "reaction": "賛否が割れる", "big_club": "ビッグクラブが絡む"}
+    if prefer in flags:
+        matching = [c for c in pool if getattr(c, prefer)]
+        if not matching:
+            fallbacks.setdefault(slot, []).append(f"{flags[prefer]}候補がありません")
+        return max(matching or pool, key=lambda c: c.score)
+
+    return max(pool, key=lambda c: c.score)
 
 
 def deep_queries(
@@ -217,6 +243,7 @@ candidates:
     title: ""         # 一言で。あとで動画タイトルの素になる
     en: ""            # 英語サイトを引くときの語（例: Julian Alvarez Atletico）
     url: ""           # 元の記事・投稿のURL
+    topic: ""         # 話題のまとまり（例: alvarez）。同じ topic は1日1枠まで
     hours_ago:        # 何時間前か。空にすると url から割り出す
     tier: 報道         # 確定 / 報道 / 未確認
     japanese: false   # 日本人選手が絡むか
