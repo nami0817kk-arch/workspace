@@ -45,6 +45,19 @@ ailab gen "PJT008 AIラボ" --provider local --size 1200x630
 
 保存先は既定で `output/images/`（`-o` で変更、`output/` は Git 管理外）。
 
+### 保存時に軽くする
+
+生成APIの出力はそのままだと重い。バナーやOGP画像にするなら幅を揃えて webp にする。
+
+```bash
+ailab gen "ブログのアイキャッチ" --size 1200x630 --format webp --max-width 1200
+```
+
+- `--format png|jpg|webp` … webp が一番軽い。jpg は透過が白で埋まる。
+- `--max-width N` … これを超えていたら縮小する（縦横比は維持。小さい画像はそのまま）。
+- レシピでは `format:` / `max_width:` と書く。
+- 利用量の記録は**変換前の枚数**で行うので、課金の集計はずれない。
+
 | コネクタ | 環境変数 | 既定モデル | 備考 |
 |---|---|---|---|
 | `openai` | `OPENAI_API_KEY` | `gpt-image-2` | 新規アカウントに無料クレジットが付く（時期により変動） |

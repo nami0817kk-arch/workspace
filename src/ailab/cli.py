@@ -59,6 +59,13 @@ def build_parser() -> argparse.ArgumentParser:
     gen.add_argument("-n", "--count", type=int, default=1, help="生成枚数")
     gen.add_argument("-o", "--out", default=None, help="出力先ディレクトリ (既定: output/images)")
     gen.add_argument("--no-caption", action="store_true", help="local で文字を描き込まない")
+    gen.add_argument(
+        "--format", dest="fmt", default=None, choices=["png", "jpg", "webp"],
+        help="保存形式を変換する（webp は軽い）",
+    )
+    gen.add_argument(
+        "--max-width", type=int, default=None, help="この幅を超えていたら縮小する（縦横比は維持）"
+    )
 
     search = sub.add_parser("search", help="フリー素材を検索する")
     search.add_argument("query", help="検索キーワード")
@@ -195,6 +202,8 @@ def _cmd_gen(args: argparse.Namespace) -> int:
         size=args.size,
         n=args.count,
         model=args.model,
+        fmt=args.fmt,
+        max_width=args.max_width,
         **kwargs,
     )
     destination = args.out or output_dir("images")

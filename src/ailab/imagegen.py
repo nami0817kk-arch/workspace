@@ -47,17 +47,21 @@ def generate(
     size: str = "1024x1024",
     n: int = 1,
     model: str | None = None,
+    fmt: str | None = None,
+    max_width: int | None = None,
     **options,
 ) -> list[GeneratedImage]:
     """プロンプトから画像を生成する（もっとも手軽な入口）。
 
-    生成の入口をここに集約し、利用量の記録も行う。CLI・レシピ・MCP は
-    すべてこれを経由する。
+    生成の入口をここに集約し、利用量の記録と後処理（縮小・形式変換）も行う。
+    CLI・レシピ・MCP はすべてこれを経由する。
     """
-    from . import usage
+    from . import imaging, usage
 
     images = get_provider(provider).generate(prompt, size=size, n=n, model=model, **options)
-    usage.record(images)
+    usage.record(images)  # 変換前の枚数で記録する
+    if fmt or max_width:
+        images = [imaging.convert(image, fmt=fmt, max_width=max_width) for image in images]
     return images
 
 

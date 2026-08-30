@@ -339,3 +339,21 @@ def test_usage_json_output(tmp_path, capsys):
     payload = json.loads(capsys.readouterr().out)
     assert payload["images"] == 1
     assert payload["since_days"] == 7
+
+
+def test_gen_can_resize_and_convert(tmp_path):
+    assert (
+        cli.main(
+            [
+                "gen", "変換", "--provider", "local", "--size", "800x400",
+                "--format", "webp", "--max-width", "200", "-o", str(tmp_path),
+            ]
+        )
+        == 0
+    )
+    files = list(tmp_path.glob("*.webp"))
+    assert len(files) == 1
+
+    from PIL import Image
+
+    assert Image.open(files[0]).size == (200, 100)
