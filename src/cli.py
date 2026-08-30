@@ -9,6 +9,7 @@
     python -m src.cli x                        記者Xアカウントの検索リスト
     python -m src.cli fresh <URL>...           拾ったURLの新しさを判定
     python -m src.cli sources                  情報源の網と確度の上限
+    python -m src.cli review scripts/x.md      公開前の点検
     python -m src.cli plan                     枠ごとの取材リストを出す
     python -m src.cli draft research/x.yaml    取材メモを検証して台本にする
     python -m src.cli new                      テンプレートから台本の下書きを作る
@@ -53,6 +54,10 @@ def main(argv: list[str] | None = None) -> int:
     p_build.add_argument("--backend", default=None, choices=["auto", "engine", "core", "silent"],
                          help="音声合成の方式を明示する（既定は config の設定）")
     p_build.add_argument("--keep-work", action="store_true", help="中間フレームを残す")
+
+    p_review = sub.add_parser("review", help="書き出したものを公開前に点検する")
+    p_review.add_argument("script")
+    p_review.add_argument("--out", default=None, help="出力先（既定: output/<台本名>）")
 
     p_thumb = sub.add_parser("thumbnail", help="サムネイルだけ作り直す")
     p_thumb.add_argument("script")
@@ -193,6 +198,29 @@ def _dispatch(args, config) -> int:
         print(f"サムネ: {result.thumbnail}")
         for name, path in result.outputs.items():
             print(f"{name}: {path}")
+        return 0
+
+    if args.command == "review":
+        from .review import built_duration, inspect, manual_checks
+
+        script = load_script(args.script)
+        out = Path(args.out) if args.out else Path(f"output/{Path(args.script).stem}")
+        duration = built_duration(out)
+
+        print(f"■ 公開前の点検　{script.title}")
+        findings = inspect(script, out, duration)
+        for finding in findings:
+            print(finding.line())
+
+        failed = [f for f in findings if not f.ok]
+        print("\n■ 目と耳で確かめる")
+        for note in manual_checks():
+            print(f"  □ {note}")
+
+        if failed:
+            print(f"\n{len(failed)}件、直してから出してください", file=sys.stderr)
+            return 1
+        print("\n機械で見られるところは問題ありません")
         return 0
 
     if args.command == "thumbnail":
