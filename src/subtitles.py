@@ -12,7 +12,9 @@ def to_srt(script: Script) -> str:
     index = 1
     labels = {"official": "確定", "report": "報道", "rumor": "未確認", "context": "背景"}
     for line in script.lines:
-        text = line.telop_text() or line.text
+        # 字幕は読み上げた内容そのもの。テロップは画面に焼き込んであるし、
+        # 画面用に短く切ってあるので、そのまま字幕にすると途中で切れる
+        text = line.text or line.telop_text()
         if line.source in labels:
             text = f"[{labels[line.source]}] {text}"
         pause = line.pause or 0.0

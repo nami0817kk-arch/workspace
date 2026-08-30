@@ -57,3 +57,17 @@ def test_description_contains_toc_and_tags():
     assert "説明文" in text
     assert "0:00 章1" in text
     assert "#a" in text
+
+
+def test_subtitles_carry_the_spoken_line_not_the_shortened_telop():
+    from src.script_model import parse_script
+    from src.subtitles import to_srt
+
+    script = parse_script(
+        "---\ntitle: T\n---\n\n## S\n\n"
+        "キャスター: 移籍期限まであと2日。ヨーロッパで最大の焦点になっています。\n"
+        "  telop: 今回の問い: 金額で折り合えるのに、なぜアトレティコ…\n"
+    )
+    srt = to_srt(script)
+    assert "ヨーロッパで最大の焦点になっています。" in srt
+    assert "…" not in srt          # 画面用に切った文字列は字幕に出さない
