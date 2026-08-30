@@ -47,6 +47,7 @@ def generate(
     size: str = "1024x1024",
     n: int = 1,
     model: str | None = None,
+    style: str | None = None,
     fmt: str | None = None,
     max_width: int | None = None,
     **options,
@@ -56,8 +57,9 @@ def generate(
     生成の入口をここに集約し、利用量の記録と後処理（縮小・形式変換）も行う。
     CLI・レシピ・MCP はすべてこれを経由する。
     """
-    from . import imaging, usage
+    from . import imaging, styles, usage
 
+    prompt = styles.apply(prompt, style)
     images = get_provider(provider).generate(prompt, size=size, n=n, model=model, **options)
     usage.record(images)  # 変換前の枚数で記録する
     if fmt or max_width:

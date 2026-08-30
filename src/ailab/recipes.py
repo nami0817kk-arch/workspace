@@ -190,6 +190,7 @@ def _step_gen(options: dict, _state: dict) -> list[dict]:
         size=str(options.get("size", "1024x1024")),
         n=int(options.get("n", 1)),
         model=options.get("model"),
+        style=options.get("style"),
         fmt=options.get("format"),
         max_width=int(options["max_width"]) if options.get("max_width") else None,
     )

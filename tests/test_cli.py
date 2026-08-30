@@ -357,3 +357,19 @@ def test_gen_can_resize_and_convert(tmp_path):
     from PIL import Image
 
     assert Image.open(files[0]).size == (200, 100)
+
+
+def test_styles_command_lists_presets(capsys):
+    assert cli.main(["styles"]) == 0
+    out = capsys.readouterr().out
+    assert "flat" in out and "banner" in out
+
+
+def test_gen_with_a_style(tmp_path, capsys):
+    assert (
+        cli.main(
+            ["gen", "猫", "--provider", "local", "--style", "flat", "--size", "64x64", "-o", str(tmp_path)]
+        )
+        == 0
+    )
+    assert len(list(tmp_path.glob("*.png"))) == 1

@@ -31,6 +31,12 @@ def _sources(capability: str) -> list[str]:
     return [connector.name for connector in registry.by_capability(capability)]
 
 
+def _styles() -> list[str]:
+    from . import styles
+
+    return styles.names()
+
+
 def tool_definitions() -> list[dict]:
     """公開するツールの一覧。選択肢は登録簿から作るのでコネクタ追加に自動で追随する。"""
     return [
@@ -53,6 +59,11 @@ def tool_definitions() -> list[dict]:
                         "type": "string",
                         "enum": ["auto", *_sources("generate")],
                         "description": "既定は auto（使えるものを優先順に選ぶ）",
+                    },
+                    "style": {
+                        "type": "string",
+                        "enum": _styles(),
+                        "description": "絵柄のプリセット（flat / banner / icon など）",
                     },
                     "size": {"type": "string", "description": "例: 1024x1024"},
                     "n": {"type": "integer", "description": "生成枚数"},
@@ -162,6 +173,7 @@ def _tool_generate_image(arguments: dict) -> str:
         size=arguments.get("size", "1024x1024"),
         n=int(arguments.get("n", 1)),
         model=arguments.get("model"),
+        style=arguments.get("style"),
     )
     destination = arguments.get("out") or output_dir("images")
     saved = [str(image.save(f"{destination}/{image.default_name(i)}")) for i, image in enumerate(images)]

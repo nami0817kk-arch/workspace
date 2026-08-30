@@ -45,6 +45,25 @@ ailab gen "PJT008 AIラボ" --provider local --size 1200x630
 
 保存先は既定で `output/images/`（`-o` で変更、`output/` は Git 管理外）。
 
+### 絵柄をそろえる
+
+「フラットイラストで、余白多めで…」と毎回書くとぶれるので、プリセットを用意した。
+
+```bash
+ailab styles                                    # 一覧
+ailab gen "打ち合わせをする2人" --style flat
+ailab gen "AIラボ" --style banner --size 1200x630
+```
+
+`flat` / `banner` / `icon` / `watercolor` / `line` / `photo` / `diagram` が組み込み。
+リポジトリ直下に `styles.json` を置けば追加・上書きできる。
+
+```json
+{ "社内資料": { "description": "社内トーン", "prompt": "青系の配色、フラット、文字なし" } }
+```
+
+レシピでは `style:` と書く。
+
 ### 保存時に軽くする
 
 生成APIの出力はそのままだと重い。バナーやOGP画像にするなら幅を揃えて webp にする。

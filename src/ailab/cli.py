@@ -21,7 +21,7 @@ import sys
 
 import requests
 
-from . import __version__, assets, imagegen, recipes, usage
+from . import __version__, assets, imagegen, recipes, styles, usage
 from .config import load_dotenv, output_dir
 from .core import registry
 from .core.connector import CAPABILITY_LABELS, capabilities_of
@@ -55,6 +55,10 @@ def build_parser() -> argparse.ArgumentParser:
         help="使う生成コネクタ (既定: auto = 使えるものを優先順に選ぶ)",
     )
     gen.add_argument("--model", default=None, help="モデル名（既定値を上書き）")
+    gen.add_argument(
+        "--style", default=None, choices=styles.names(),
+        help="絵柄のプリセット（ailab styles で一覧）",
+    )
     gen.add_argument("--size", default="1024x1024", help="画像サイズ 例: 1024x1024")
     gen.add_argument("-n", "--count", type=int, default=1, help="生成枚数")
     gen.add_argument("-o", "--out", default=None, help="出力先ディレクトリ (既定: output/images)")
@@ -121,6 +125,8 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser("status", help="connectors と同じ（旧名）").add_argument(
         "--json", action="store_true", help="JSON で出力する"
     )
+
+    sub.add_parser("styles", help="絵柄のプリセット一覧")
 
     usage_parser = sub.add_parser("usage", help="画像生成の利用量と概算コスト")
     usage_parser.add_argument("-d", "--days", type=int, default=None, help="直近N日に絞る")
@@ -202,6 +208,7 @@ def _cmd_gen(args: argparse.Namespace) -> int:
         size=args.size,
         n=args.count,
         model=args.model,
+        style=args.style,
         fmt=args.fmt,
         max_width=args.max_width,
         **kwargs,
@@ -290,6 +297,14 @@ def _cmd_feed(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_styles(_args: argparse.Namespace) -> int:
+    for name, (description, prompt) in sorted(styles.all_styles().items()):
+        print(f"{name:<12}{description}")
+        print(f"            + {prompt}")
+    print(f"\n{styles.custom_path()} を置けば追加・上書きできます。")
+    return 0
+
+
 def _cmd_usage(args: argparse.Namespace) -> int:
     summary = usage.summarize(days=args.days)
     if args.json:
@@ -375,6 +390,7 @@ def main(argv: list[str] | None = None) -> int:
         "connectors": _cmd_connectors,
         "status": _cmd_connectors,
         "doctor": _cmd_doctor,
+        "styles": _cmd_styles,
         "usage": _cmd_usage,
         "mcp": lambda _args: _cmd_mcp(),
     }

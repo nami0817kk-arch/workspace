@@ -45,7 +45,7 @@ steps:
 | `feed` | `source`（必須）, `query`, `limit` | 記事・リリースの一覧 |
 | `search` | `query`, `source`（既定 all）, `limit` | 素材の一覧（ダウンロードはしない） |
 | `fetch` | `query`, `source`, `limit`, `out` | 素材をDLし `path` とクレジットを残す |
-| `gen` | `prompt`（必須）, `provider`, `model`, `size`, `n`, `out`, `filename`, `format`, `max_width` | 生成画像の `path` |
+| `gen` | `prompt`（必須）, `provider`, `model`, `style`, `size`, `n`, `out`, `filename`, `format`, `max_width` | 生成画像の `path` |
 | `publish` | `to`（既定 github）, `file`, ほかは送信先へそのまま渡す | 送信結果 |
 
 `publish` の `file` を省略すると、**直前までの手順が作った最後のファイル**を送る。
