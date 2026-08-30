@@ -295,18 +295,24 @@ def _dispatch(args, config) -> int:
         updated, growth = freshness.observe(groups, entries)
 
         for site, refs in groups.items():
-            pace = freshness.rate(entries, site)
+            # 日付がURLに入るサイトは推定が要らないので、伸びの話も出さない
+            dated = all(ref.exact for ref in refs)
+            pace = None if dated else freshness.rate(entries, site)
             observed_for = freshness.span(entries, site)
+
             head = f"■ {site}　新しい順に{len(refs)}件"
-            if site != "x.com":
+            if not dated:
                 head += f"　（記事IDの伸び: {pace:.0f}/時）" if pace else "　（伸びは記録待ち）"
             print(head)
+
             for ref in refs:
                 age = freshness.hours_ago(ref, entries)
                 when = f"{age:.0f}時間前" if age is not None else "不明"
-                mark = "確定" if site == "x.com" else "概算"
-                print(f"  {ref.number}　{when}（{mark}）")
+                mark = "確定" if ref.exact else "概算"
+                label = ref.posted_on.strftime("%m/%d") if ref.posted_on else str(ref.number)
+                print(f"  {label}　{when}（{mark}）")
                 print(f"      {ref.url}")
+
             if pace and observed_for < 24:
                 print(
                     f"  ※ 観測がまだ{observed_for:.0f}時間ぶんです。記事の出る量は時間帯で"

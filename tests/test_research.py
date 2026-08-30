@@ -330,3 +330,58 @@ def test_only_the_last_sentence_is_made_polite():
     from src.research import _spoken
 
     assert _spoken("A。Bを拒んでいる") == "A。Bを拒んでいる、ということです。"
+
+
+def _plan_with_domains():
+    plan = _plan()
+    plan.domains = {
+        "official": ["atleticodemadrid.com"],
+        "english": ["skysports.com"],
+        "rumour": ["caughtoffside.com"],
+        "blocked": ["bbc.com"],
+    }
+    plan.domain_tiers = {"official": "確定", "english": "報道", "rumour": "未確認"}
+    return plan
+
+
+def test_a_confident_claim_backed_only_by_rumour_sites_is_flagged():
+    from src.research import advise
+
+    plan = _plan_with_domains()
+    raw = _raw()
+    raw["sections"][0]["tier"] = "確定"
+    raw["sections"][0]["sources"] = ["https://www.caughtoffside.com/2026/08/29/x/"]
+    hints = advise(build_notes(raw), plan)
+    assert any("出典が弱い" in h and "rumour" in h for h in hints)
+
+
+def test_an_official_source_supports_a_confident_claim():
+    from src.research import advise
+
+    plan = _plan_with_domains()
+    raw = _raw()
+    raw["sections"][0]["tier"] = "確定"
+    raw["sections"][0]["sources"] = ["https://en.atleticodemadrid.com/noticias/statement"]
+    assert not any("出典が弱い" in h for h in advise(build_notes(raw), plan))
+
+
+def test_the_strongest_source_in_a_section_decides():
+    from src.research import advise
+
+    plan = _plan_with_domains()
+    raw = _raw()
+    raw["sections"][0]["tier"] = "確定"
+    raw["sections"][0]["sources"] = [
+        "https://www.caughtoffside.com/2026/08/29/x/",
+        "https://en.atleticodemadrid.com/noticias/statement",
+    ]
+    assert not any("出典が弱い" in h for h in advise(build_notes(raw), plan))
+
+
+def test_an_unknown_domain_is_reported():
+    from src.research import advise
+
+    plan = _plan_with_domains()
+    raw = _raw()
+    raw["sections"][0]["sources"] = ["https://example.com/article"]
+    assert any("どの情報源の群にも入っていません" in h for h in advise(build_notes(raw), plan))

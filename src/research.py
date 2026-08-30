@@ -217,7 +217,47 @@ def advise(notes: Notes, plan: Plan | None = None, now=None) -> list[str]:
         notes_warnings.append("thumbnail.line2 が長めです。18文字くらいまでが読みやすい")
 
     notes_warnings += _advise_posts(notes, plan, now)
+    notes_warnings += _advise_sources(notes, plan)
     return notes_warnings
+
+
+# 確度の強さ。出典の群が支えられる上限と突き合わせるために順序を付ける
+TIER_RANK = {"背景": 0, "未確認": 1, "報道": 2, "確定": 3}
+
+
+def _advise_sources(notes: Notes, plan: Plan | None) -> list[str]:
+    """節の確度を、出典の情報源が支えられるか調べる。
+
+    噂まとめだけを根拠に「確定」と出すと、視聴者に対して嘘になる。
+    群ごとの上限（config/sources.yaml の domain_tiers）と比べる。
+    """
+    if plan is None or not plan.domain_tiers:
+        return []
+
+    hints: list[str] = []
+    for section in notes.sections:
+        want = TIER_RANK.get(section.tier)
+        if want is None or not section.sources:
+            continue
+
+        best, group = -1, ""
+        for url in section.sources:
+            rank = TIER_RANK.get(plan.ceiling(url), -1)
+            if rank > best:
+                best, group = rank, plan.group_of(url)
+
+        if best < 0:
+            hints.append(
+                f"節『{section.heading}』: 出典がどの情報源の群にも入っていません。"
+                "config/sources.yaml の domains に足すか、別の出典に替えてください"
+            )
+        elif best < want:
+            hints.append(
+                f"節『{section.heading}』: 確度『{section.tier}』に対して出典が弱いです"
+                f"（いちばん強いもので {group} 群 = {plan.domain_tiers.get(group)} まで）。"
+                "確度を下げるか、より強い出典を足してください"
+            )
+    return hints
 
 
 def _advise_posts(notes: Notes, plan: Plan | None, now=None) -> list[str]:

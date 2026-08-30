@@ -4,25 +4,60 @@ WebSearch 経由でのアクセス可否を実際に試した結果。
 **記事の本文はどのサイトも読めない**（見出しとスニペットのみ）ので、
 本文が必要なときは人が読んで貼るしかない。
 
-## ✅ 使える
+## 情報源の網（最終確認 2026-08-30）
 
-| サイト | 言語 | 備考 |
+すべて実際に検索して確認したもの。`config/sources.yaml` の `domains` に群ごとに分けてある。
+**群ごとに「置ける確度の上限」が決まっていて、`draft` が突き合わせる。**
+
+| 群 | サイト | 置ける上限 |
 |---|---|---|
-| Sky Sports | 英 | 移籍情報が厚い。Transfer Centre が使いやすい |
-| ESPN | 英 | 記者名つきの記事が多く、確度の判断がしやすい |
-| goal.com | 英/日 | 日本語版もある |
-| kicker.de | 独 | ドイツの老舗サッカー誌。ブンデス系はここ |
-| 90min.com / football365.com / tribalfootball.com | 英 | 二次的な扱いに |
-| football-italia.net | 英 | セリエA |
-| x.com（旧Twitter） | 各国 | ページは開けないが、**検索結果に投稿本文が出る**。投稿日はURLから分かる |
+| `official` | atleticodemadrid.com / fcbarcelona.com / arsenal.com / premierleague.com / laliga.com / uefa.com | **確定** |
+| `english` | Sky Sports / ESPN / goal.com / 90min / football365 / SI / CBS Sports | 報道 |
+| `japanese` | サッカーキング / フットボールチャンネル / 超WORLDサッカー / theWORLD / football-tribe | 報道 |
+| `aggregator` | Yahoo!ニュース（複数媒体を横断できる） | 報道 |
+| `german` / `italian` | kicker.de / football-italia.net | 報道 |
+| `social` | x.com | 未確認 |
+| `rumour` | caughtoffside / givemesport / tribalfootball | 未確認 |
+
+噂まとめだけを根拠に「確定」と出すと視聴者に対して嘘になるので、`draft` が止めます。
+
+```
+ヒント: 節『残された時間』: 確度『確定』に対して出典が弱いです
+（いちばん強いもので english 群 = 報道 まで）。確度を下げるか、より強い出典を足してください
+```
+
+### クラブ公式が引ける
+
+クラブ・リーグの公式サイトは検索でき、**声明そのものを引けます**。報道の又聞きではなく
+一次情報になるので、`確定` として出せるのはここだけです。
+
+```
+en.atleticodemadrid.com/noticias/unanimous-support-from-the-board-of-directors-...
+premierleague.com/en/news/4664145/when-does-summer-2026-...-open-and-close
+```
 
 ## ❌ 使えない（クローラーを恒久的にブロックしている）
 
 BBC / The Guardian / The Athletic / New York Times / Marca / AS /
 Mundo Deportivo / L'Équipe / Gazzetta dello Sport / Bild /
-Telegraph / Independent / Mirror / Standard / talkSPORT / Transfermarkt
+Telegraph / Independent / Mirror / Standard / talkSPORT / Transfermarkt /
+football.london
 
 これらを使いたい場合は、人が本文をコピーして渡すしかない。
+
+## 日本語サイトは「日付」で引かない
+
+これが最大の落とし穴でした。同じ日に両方を試した結果:
+
+| 検索 | 結果 |
+|---|---|
+| `海外サッカー ニュース 2026年8月30日` | **一覧ページばかり**。個別記事ゼロ |
+| `アルバレス アトレティコ 移籍` | 個別記事が10件。うち9件が当日〜3日以内 |
+
+**日付を入れると一覧ページが返り、話題の語を入れると記事が返ります。**
+英語サイトでは日付が効くので、つい同じ書き方をしてしまいますが、日本語では効きません。
+
+`scan` の日本語クエリは、選手名・クラブ名・動詞（発表 / 交渉 / 移籍）で組んであります。
 
 ## 検索ツールの要約は信用しない
 
@@ -40,6 +75,19 @@ Telegraph / Independent / Mirror / Standard / talkSPORT / Transfermarkt
 ## 「最新かどうか」をどう判定するか
 
 記事の本文は開けないので、**公開日はどこにも書いていない**。それでも新しさは判定できる。
+
+### 日本語サイトはURLに日付が入る（推定不要）
+
+いちばん確かな手がかりです。推定ではなく**日付そのもの**が読めます。
+
+```
+soccer-king.jp/news/world/esp/20260828/2197673.html   → 2026-08-28
+footballchannel.jp/2026/08/29/post1000500/            → 2026-08-29
+caughtoffside.com/2026/08/29/julian-alvarez-arsenal/  → 2026-08-29
+```
+
+`fresh` はこれを「確定」と表示します。時刻までは分からないので、その日の正午に
+出たものとして扱っています（半日ぶんの誤差はありますが、日付は確かめてあります）。
 
 ### ニュースサイト：記事IDが時系列に増える
 

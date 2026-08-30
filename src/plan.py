@@ -76,6 +76,21 @@ class Plan:
     deep: list = field(default_factory=list)
     accounts: list = field(default_factory=list)
     social: dict = field(default_factory=dict)
+    domain_tiers: dict = field(default_factory=dict)
+
+    def group_of(self, url: str) -> str:
+        """URLがどの情報源の群に属するか。分からなければ空。"""
+        text = (url or "").lower()
+        for group, hosts in self.domains.items():
+            if group == "blocked":
+                continue
+            if any(str(host).lower() in text for host in hosts):
+                return group
+        return ""
+
+    def ceiling(self, url: str) -> str:
+        """そのURLだけを根拠に置ける最大の確度。分からなければ空。"""
+        return str(self.domain_tiers.get(self.group_of(url), ""))
 
     def routine(self, key: str) -> Routine:
         if key not in self.routines:
@@ -102,6 +117,7 @@ def build_plan(raw: dict) -> Plan:
     deep = [dict(x) for x in (raw.get("deep") or [])]
     accounts = [dict(x) for x in (raw.get("accounts") or [])]
     social = dict(raw.get("social") or {})
+    domain_tiers = dict(raw.get("domain_tiers") or {})
     tiers = dict(raw.get("tiers") or {})
     if not tiers:
         raise PlanError("tiers が定義されていません")
@@ -158,6 +174,7 @@ def build_plan(raw: dict) -> Plan:
         deep=deep,
         accounts=accounts,
         social=social,
+        domain_tiers=domain_tiers,
     )
 
 

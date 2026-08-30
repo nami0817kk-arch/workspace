@@ -21,13 +21,25 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import date, datetime, time, timedelta
 from pathlib import Path
 
 import yaml
 
 from . import xposts
 from .config import _resolve
+
+# URLに公開日が入っているサイト。ここに当たれば推定は要らない。
+# 日本語media はたいてい日付を含む。実測で確認できたものだけ載せる
+DATE_PATTERNS: dict[str, re.Pattern] = {
+    # soccer-king.jp/news/world/esp/20260828/2197673.html
+    "soccer-king.jp": re.compile(r"soccer-king\.jp/news/[^?]*?/(\d{4})(\d{2})(\d{2})/"),
+    # footballchannel.jp/2026/08/27/post999381/
+    "footballchannel.jp": re.compile(r"footballchannel\.jp/(\d{4})/(\d{2})/(\d{2})/"),
+    # caughtoffside.com/2026/08/29/...
+    "caughtoffside.com": re.compile(r"caughtoffside\.com/(\d{4})/(\d{2})/(\d{2})/"),
+    "football-tribe.com": re.compile(r"football-tribe\.com/[^?]*?/(\d{4})/(\d{2})/(\d{2})/"),
+}
 
 # サイトごとの記事IDの取り出し方。連番であることが確認できたものだけ載せる
 PATTERNS: dict[str, list[re.Pattern]] = {
@@ -38,6 +50,12 @@ PATTERNS: dict[str, list[re.Pattern]] = {
     ],
     "espn.com": [
         re.compile(r"espn\.com/soccer/story/_/id/(\d+)/"),
+    ],
+    "web.ultra-soccer.jp": [
+        re.compile(r"ultra-soccer\.jp/news/[a-z]+/(\d+)"),
+    ],
+    "premierleague.com": [
+        re.compile(r"premierleague\.com/[a-z-]+/news/(\d+)"),
     ],
 }
 
@@ -67,11 +85,17 @@ class Ref:
     url: str
     site: str = ""
     number: int = 0          # 記事ID。大きいほど新しい
-    posted_at: datetime | None = None   # x.com だけ正確に分かる
+    posted_at: datetime | None = None   # 正確な時刻が分かるとき（x.com）
+    posted_on: date | None = None       # 正確な日付が分かるとき（URLに入っているサイト）
 
     @property
     def known(self) -> bool:
-        return bool(self.site)
+        return bool(self.site or self.posted_on)
+
+    @property
+    def exact(self) -> bool:
+        """推定ではなく、はっきり分かっているか。"""
+        return self.posted_at is not None or self.posted_on is not None
 
 
 @dataclass
@@ -96,6 +120,16 @@ def read(url: str) -> Ref:
         _, post_id = xposts.parse_url(text)
         return Ref(url=text, site="x.com", number=post_id, posted_at=xposts.posted_at(text))
 
+    # URLに日付が入っていれば、それがいちばん確かな手がかり
+    for site, pattern in DATE_PATTERNS.items():
+        match = pattern.search(text)
+        if match:
+            year, month, day = (int(g) for g in match.groups())
+            try:
+                return Ref(url=text, site=site, posted_on=date(year, month, day))
+            except ValueError:
+                break  # 日付として成立しない。IDの手がかりを探しにいく
+
     for site, patterns in PATTERNS.items():
         for pattern in patterns:
             match = pattern.search(text)
@@ -115,7 +149,8 @@ def rank(urls: list[str]) -> dict[str, list[Ref]]:
         if ref.known:
             groups.setdefault(ref.site, []).append(ref)
     for refs in groups.values():
-        refs.sort(key=lambda r: r.number, reverse=True)
+        # 日付が分かるものはそれで、分からなければ記事IDで並べる
+        refs.sort(key=lambda r: (r.posted_on or date.min, r.number), reverse=True)
     return groups
 
 
@@ -186,8 +221,14 @@ def hours_ago(ref: Ref, entries: list[Observation], now: datetime | None = None)
     いれば推定する。出せなければ None。
     """
     now = now or datetime.now()
-    if ref.site == "x.com":
+    if ref.posted_at is not None:
         return xposts.Post(url=ref.url, posted_at=ref.posted_at).hours_ago()
+
+    if ref.posted_on is not None:
+        # 日付までしか分からないので、その日の正午に出たものとして扱う。
+        # 半日ぶんの誤差はあるが、推定と違って日付そのものは確かめてある
+        noon = datetime.combine(ref.posted_on, time(12, 0))
+        return max(0.0, (now - noon).total_seconds() / 3600)
 
     anchor = latest(entries, ref.site)
     pace = rate(entries, ref.site)

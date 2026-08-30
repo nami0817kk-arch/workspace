@@ -6,13 +6,13 @@ date: "2026年8月30日"
 theme:
   id: alvarez
   prefix: 速報
-  title: アルバレスに突きつけられた「日曜まで」
+  title: アトレティコが公式声明「バルサとは交渉しない」
   hook: 移籍期限まであと2日。ヨーロッパで最大の焦点になっている移籍に、期限が切られました。
   question: 金額で折り合えるのに、なぜアトレティコは売らないのか
 
 thumbnail:
-  line1: アルバレスに決断の期限
-  line2: アトレティコ「バルサには売らない」
+  line1: アトレティコが公式声明
+  line2: 「バルセロナとは交渉しない」
   tags: [移籍期限まで2日, アーセナル]
 
 answer: 問題は金額ではなく「誰に売るか」。ライバルに主力を渡すこと自体を拒んでいる
@@ -20,20 +20,21 @@ watch: 本人がアーセナル行きを受け入れるかどうか。期限は�
 
 sections:
   - id: what
-    heading: 何が起きたか
-    tier: 報道
-    telop: アトレティコが本人に決断の期限を提示
+    heading: クラブが公式に表明した
+    tier: 確定
+    official: true
+    telop: アトレティコ「バルセロナとの交渉は行わない」
     say:
-      - アトレティコ・マドリードに所属する、フリアン・アルバレス選手の去就です。クラブが本人に対し、残留するか、アーセナル行きを受け入れるか、決断の期限を示したと報じられています。
-      - アルバレス選手は、直近のセビージャ戦に出場していません。移籍のうわさが理由だと伝えられています。
+      - アトレティコ・マドリードが、フリアン・アルバレス選手の去就について、クラブとして公式に声明を出しました。
+      - 声明では、バルセロナが交渉の要件を満たしていないと判断したため、アルバレス選手の移籍についてバルセロナとの交渉は今後も行わない、としています。この方針は取締役会で全会一致で支持されました。
     sources:
-      - https://www.espn.com/soccer/story/_/id/49750822/julian-alvarez-sits-latest-atletico-madrid-training-session-amid-transfer-links
-      - https://www.skysports.com/football/news/11095/13578318/julian-alvarez-transfer-news-atletico-madrid-set-deadline-for-striker-to-decide-whether-he-stays-or-joins-arsenal
+      - https://en.atleticodemadrid.com/noticias/unanimous-support-from-the-board-of-directors-for-the-club-s-strategy
+      - https://www.footballchannel.jp/2026/08/27/post999381/
     card:
       type: quote
       color: "#e2495a"
-      text: "Atletico Madrid set deadline for striker to decide whether he stays or joins Arsenal"
-      translation: アトレティコは、残留かアーセナル行きかを決めるための期限を本人に設定した
+      text: "Unanimous support from the Board of Directors for the club's strategy"
+      translation: 取締役会は、クラブの方針を全会一致で支持した
 
   - id: why
     heading: なぜ売らないのか
@@ -41,12 +42,12 @@ sections:
     telop: 金額ではなく「誰に売るか」が問題
     say:
       - ここが今回の核心です。本人が望んでいるのはバルセロナ。ところがアトレティコは、バルセロナとは交渉のテーブルにすら着かないという姿勢を崩していません。
-      - バルセロナのラポルタ会長は、獲得にまだ期待を持っていると話したと伝えられています。それでもアトレティコの態度は変わっていません。
+      - アトレティコの最高経営責任者は「私がCEOである限り、バルセロナへの移籍は絶対にない」と語ったと報じられています。
       - 一方で、アーセナル相手なら話は動くと報じられています。金額はいちおくごせんまんユーロ規模。同じ選手、同じ規模の金額でも、相手がバルセロナかどうかで扱いが変わる。つまり、これは金の問題ではないということです。
     sources:
       - https://www.espn.com/soccer/story/_/id/49741017/atletico-madrid-julian-alvarez-transfer-barcelona
       - https://www.skysports.com/football/news/11670/13577751/julian-alvarez-transfer-news-atletico-madrid-wont-sell-striker-to-barcelona-with-arsenal-the-only-option
-      - https://www.espn.com/soccer/story/_/id/49731730/barcelona-hopeful-signing-julian-alvarez-atletico-madrid-joan-laporta
+      - https://www.soccer-king.jp/news/world/esp/20260828/2197638.html
     card:
       type: points
       title: 争点の整理
@@ -65,8 +66,9 @@ sections:
       - 時間の話をします。イングランドの移籍期限は、現地じかんくがつついたちの、よるじゅういちじ。日本時間では、くがつふつかの朝しちじです。
       - 書類を出し終えていれば、そのあと2時間の猶予があります。それでも、残された時間はごくわずかです。
     sources:
+      - https://www.premierleague.com/en/news/4664145/when-does-summer-2026-premier-league-transfer-window-open-and-close
+      - https://www.premierleague.com/en/news/4698998/copy-transfer-deadline-day-everything-you-need-to-know
       - https://www.espn.com/soccer/story/_/id/48944912/premier-league-efl-summer-transfer-window-2026-dates-does-open-deadline-day
-      - https://www.skysports.com/football/news/11095/13546220/summer-transfer-window-2026-dates-when-is-deadline-day-for-premier-league-and-efl-clubs-to-sign-players
 
   - id: next
     heading: これからどうなる
@@ -74,6 +76,7 @@ sections:
     telop: 決めるのはクラブではなく本人
     say:
       - ここからは未確認の情報です。本拠地では、サポーターが自軍のストライカーにブーイングを浴びせる場面まで報じられました。
-      - 本人がアーセナル行きを受け入れれば、移籍は動く。受け入れなければ、このまま残る。決めるのはクラブではなく本人だ、というのが各紙の見方です。
+      - クラブは本人に、きょう日曜を期限として決断を求めたと報じられています。受け入れれば移籍は動き、受け入れなければこのまま残る。決めるのはクラブではなく本人だ、というのが各紙の見方です。
     sources:
       - https://www.skysports.com/football/news/11095/13576511/julian-alvarez-does-atletico-madrid-fans-booing-their-own-striker-increase-his-chances-of-an-arsenal-or-barcelona-move
+      - https://www.footballchannel.jp/2026/08/29/post1000500/

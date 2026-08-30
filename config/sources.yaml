@@ -10,16 +10,47 @@ cadence:
   slots: [morning, noon, evening]   # 1日の並び
 
 # 使ってよい情報源。ここに無いサイトは検索対象にしない（docs/news-sources.md の実測結果）
+# 情報源の網。すべて実測で確認したもの（最終確認 2026-08-30）。
+# max_tier … その群だけを根拠に置ける最大の確度。超えるなら別の群で裏を取る
 domains:
-  english: [skysports.com, espn.com, goal.com, 90min.com, football365.com]
+  # クラブ・リーグの公式。声明そのものを引ける
+  official: [en.atleticodemadrid.com, atleticodemadrid.com, fcbarcelona.com,
+             arsenal.com, premierleague.com, laliga.com, uefa.com]
+
+  # 英語の報道機関
+  english: [skysports.com, espn.com, goal.com, 90min.com, football365.com,
+            si.com, cbssports.com]
+
+  # 日本語の報道機関。訳す手間が要らないぶん速い
+  japanese: [soccer-king.jp, footballchannel.jp, web.ultra-soccer.jp,
+             theworldmagazine.jp, football-tribe.com]
+
+  # 複数媒体を横断できる。見出しに媒体名が入る
+  aggregator: [news.yahoo.co.jp]
+
   german: [kicker.de]
   italian: [football-italia.net]
   social: [x.com]
+
+  # 噂まとめ。単独では根拠にしない
+  rumour: [caughtoffside.com, givemesport.com, tribalfootball.com]
+
   # 恒久的に取得できないサイト。ここを検索しても結果は返らない
   blocked: [bbc.com, theguardian.com, theathletic.com, nytimes.com, marca.com,
             as.com, mundodeportivo.com, lequipe.fr, gazzetta.it, bild.de,
             telegraph.co.uk, independent.co.uk, mirror.co.uk, standard.co.uk,
-            talksport.com, transfermarkt.com]
+            talksport.com, transfermarkt.com, football.london]
+
+# 群ごとに置ける確度の上限。draft のときに突き合わせる
+domain_tiers:
+  official: 確定
+  english: 報道
+  japanese: 報道
+  aggregator: 報道
+  german: 報道
+  italian: 報道
+  social: 未確認
+  rumour: 未確認
 
 # Xで追うアカウント。x.com は直接開けないが、検索結果に投稿本文が出る。
 # ここに無いアカウントの投稿は「未確認」より上に上げない
@@ -139,20 +170,25 @@ coverage:
 # 1日1回のスキャン。ここで候補を広く拾う
 scan:
   when: 05:30（朝の枠に間に合わせる）
+  # 日本語サイトを日付で引くと一覧ページしか返らない（実測）。話題の語で引く。
+  # 日付が効くのは英語サイトだけ
   queries:
-    - {q: "海外サッカー ニュース {date_ja}", label: 日本語の総覧}
-    - {q: "海外日本人選手 {date_ja}", label: 日本人選手}
+    - {q: "移籍 発表 OR 決定 OR 公式", domains: japanese, label: 日本語（決まったもの）}
+    - {q: "移籍 交渉 OR 関心 OR 浮上", domains: japanese, label: 日本語（動いているもの）}
+    - {q: "日本人選手 移籍 OR ゴール OR デビュー", domains: japanese, label: 日本人選手}
+    - {q: "Jリーグ 移籍 OR 監督 OR 首位", domains: japanese, label: Jリーグ}
     - {q: "football news {today_en}", domains: english, label: 英語の総覧}
-    - {q: "transfer news {today_en}", domains: english, label: 移籍}
-    - {q: "Jリーグ {date_ja}", label: Jリーグ}
+    - {q: "transfer news {today_en}", domains: english, label: 移籍（英語）}
+    - {q: "official statement OR announcement transfer", domains: official, label: クラブの公式発表}
     - {q: "Fabrizio Romano here we go", domains: social, label: 記者（移籍の完了）}
     - {q: "David Ornstein exclusive", domains: social, label: 記者（プレミア）}
   check: |
     1件ずつ candidates に書き出す。この時点では深掘りしない。
     見出しから拾えるものだけを埋め、判断は pick に任せる。
-    拾ったURLを python -m src.cli fresh に流すと、新しい順に並び、索引が進んだかも分かる。
-    索引が進んでいないと出たら、その日の検索結果は速報にならない。深掘り側に切り替える。
-    候補の hours_ago は空でよい。url を書いておけば pick が割り出す
+    日本語サイトは日付で引かない。選手名・クラブ名・動詞（発表/交渉/移籍）で引く。
+    確定として出すなら official 群まで辿る。報道の又聞きでは確定にしない。
+    拾ったURLを python -m src.cli fresh に流すと、新しい順に並ぶ。
+    soccer-king / footballchannel はURLに日付が入るので、経過時間が正確に出る
 
 routines:
   # ---------------------------------------------------------------- 朝

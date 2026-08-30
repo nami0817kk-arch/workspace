@@ -165,3 +165,58 @@ def test_every_sky_section_is_recognised():
 
 def test_other_sky_pages_are_not_mistaken_for_articles():
     assert read("https://www.skysports.com/football/teams/arsenal").known is False
+
+
+def test_dates_in_the_url_are_read_exactly():
+    from datetime import date
+
+    cases = {
+        "https://www.soccer-king.jp/news/world/esp/20260828/2197673.html": date(2026, 8, 28),
+        "https://www.footballchannel.jp/2026/08/29/post1000500/": date(2026, 8, 29),
+        "https://www.caughtoffside.com/2026/08/29/julian-alvarez-arsenal/": date(2026, 8, 29),
+    }
+    for url, when in cases.items():
+        ref = read(url)
+        assert ref.posted_on == when, url
+        assert ref.exact is True, url
+        assert ref.known is True, url
+
+
+def test_an_exact_date_needs_no_ledger():
+    from datetime import date, datetime
+
+    ref = read("https://www.footballchannel.jp/2026/08/29/post1/")
+    # その日の正午に出たものとして扱う
+    assert hours_ago(ref, [], datetime(2026, 8, 30, 12, 0)) == 24.0
+    assert ref.posted_on == date(2026, 8, 29)
+
+
+def test_a_future_date_does_not_go_negative():
+    from datetime import datetime
+
+    ref = read("https://www.footballchannel.jp/2026/08/30/post1/")
+    assert hours_ago(ref, [], datetime(2026, 8, 30, 6, 0)) == 0.0
+
+
+def test_a_nonsense_date_in_the_url_is_ignored():
+    assert read("https://www.footballchannel.jp/2026/13/45/post1/").known is False
+
+
+def test_ultra_soccer_ids_are_recognised():
+    ref = read("https://web.ultra-soccer.jp/news/all/34358/")
+    assert ref.site == "web.ultra-soccer.jp"
+    assert ref.number == 34358
+
+
+def test_dated_and_numbered_refs_sort_together():
+    dated_new = "https://www.footballchannel.jp/2026/08/29/post1/"
+    dated_old = "https://www.footballchannel.jp/2026/08/27/post2/"
+    groups = rank([dated_old, dated_new])
+    assert [r.posted_on.day for r in groups["footballchannel.jp"]] == [29, 27]
+
+
+def test_premier_league_news_ids_are_recognised():
+    ref = read("https://www.premierleague.com/en/news/4664145/when-does-the-window-close")
+    assert ref.site == "premierleague.com"
+    assert ref.number == 4664145
+    assert ref.exact is False      # IDだけなので日付は分からない
