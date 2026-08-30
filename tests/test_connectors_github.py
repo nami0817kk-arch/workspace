@@ -1,10 +1,10 @@
 import base64
 
 import pytest
+from fakes import FakeResponse, FakeSession
 
 from ailab.connectors.github import API_BASE, GitHubConnector
 from ailab.core.errors import AuthError, ConfigError
-from fakes import FakeResponse, FakeSession
 
 REPO = "someone/notes"
 

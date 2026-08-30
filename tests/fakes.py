@@ -36,7 +36,7 @@ class FakeSession:
         self.calls: list[tuple[str, str, dict]] = []
         self.headers: dict[str, str] = {}
 
-    def queue(self, *responses) -> "FakeSession":
+    def queue(self, *responses) -> FakeSession:
         self._responses.extend(responses)
         return self
 

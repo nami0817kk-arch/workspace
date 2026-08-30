@@ -13,6 +13,7 @@ from .assets_wikimedia import WikimediaAssets
 from .feed_qiita import QiitaFeed
 from .feed_rss import RssFeed
 from .github import GitHubConnector
+from .images_cloudflare import CloudflareImages
 from .images_gemini import GeminiImages
 from .images_huggingface import HuggingFaceImages
 from .images_local import LocalImages
@@ -21,8 +22,8 @@ from .images_pollinations import PollinationsImages
 from .images_replicate import ReplicateImages
 from .images_stability import StabilityImages
 
-
 __all__ = [
+    "CloudflareImages",
     "GeminiImages",
     "GitHubConnector",
     "HuggingFaceImages",

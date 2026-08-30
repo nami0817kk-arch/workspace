@@ -1,16 +1,16 @@
 import json
 
 import pytest
+from fakes import FakeResponse, FakeSession
 
 from ailab import assets, cli
 from ailab.connectors.assets_iconify import IconifyAssets
-from ailab.connectors.feed_qiita import QiitaFeed
-from ailab.connectors.images_pollinations import PollinationsImages
 from ailab.connectors.assets_openverse import OpenverseAssets
 from ailab.connectors.assets_wikimedia import WikimediaAssets
+from ailab.connectors.feed_qiita import QiitaFeed
 from ailab.connectors.github import GitHubConnector
+from ailab.connectors.images_pollinations import PollinationsImages
 from ailab.core.types import Asset
-from fakes import FakeResponse, FakeSession
 
 SAMPLE = Asset(
     source="openverse",

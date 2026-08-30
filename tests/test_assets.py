@@ -1,11 +1,11 @@
 import json
 
 import pytest
+from fakes import FakeResponse, FakeSession
 
 from ailab import assets
 from ailab.core.errors import ConfigError
 from ailab.core.types import Asset
-from fakes import FakeResponse, FakeSession
 
 PNG = b"\x89PNG\r\n\x1a\nfake"
 

@@ -242,9 +242,10 @@ def test_step_errors_mention_the_position():
 
 
 def test_fetch_step_downloads_and_records_paths(tmp_path, monkeypatch):
+    from fakes import FakeResponse
+
     from ailab import assets as assets_module
     from ailab.core.types import Asset
-    from fakes import FakeResponse
 
     asset = Asset(source="openverse", title="Cat", image_url="https://example.com/c.png", source_id="1")
     monkeypatch.setattr(assets_module, "search", lambda *a, **kw: [asset])
@@ -269,3 +270,51 @@ def test_search_step_returns_assets(monkeypatch):
     )
     result = recipes.run({"steps": [{"id": "found", "search": {"query": "cat"}}]})
     assert result.steps[0].items[0]["source"] == "iconify"
+
+
+def test_named_output_files_do_not_overwrite_each_other(tmp_path):
+    """filename 指定で複数枚生成しても互いに上書きしない。"""
+    recipe = {
+        "steps": [
+            {
+                "id": "banner",
+                "gen": {
+                    "provider": "local",
+                    "prompt": "猫",
+                    "size": "64x64",
+                    "n": 3,
+                    "filename": "banner",
+                    "out": str(tmp_path),
+                },
+            }
+        ]
+    }
+
+    result = recipes.run(recipe)
+
+    paths = [item["path"] for item in result.steps[0].items]
+    assert len(set(paths)) == 3
+    assert sorted(p.name for p in tmp_path.glob("*.png")) == [
+        "banner_1.png",
+        "banner_2.png",
+        "banner_3.png",
+    ]
+
+
+def test_single_named_output_keeps_the_plain_name(tmp_path):
+    recipes.run(
+        {
+            "steps": [
+                {
+                    "gen": {
+                        "provider": "local",
+                        "prompt": "猫",
+                        "size": "64x64",
+                        "filename": "banner",
+                        "out": str(tmp_path),
+                    }
+                }
+            ]
+        }
+    )
+    assert [p.name for p in tmp_path.glob("*.png")] == ["banner.png"]

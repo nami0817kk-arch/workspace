@@ -8,10 +8,11 @@ from __future__ import annotations
 
 import json
 import re
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 from . import assets as assets_module
 from . import imagegen
@@ -194,7 +195,12 @@ def _step_gen(options: dict, _state: dict) -> list[dict]:
     results = []
     for index, image in enumerate(images):
         name = options.get("filename")
-        filename = f"{slugify(name)}{image.ext}" if name else image.default_name(index)
+        if name:
+            # 複数枚のときに同じ名前で上書きしないよう連番を付ける
+            suffix = f"_{index + 1}" if len(images) > 1 else ""
+            filename = f"{slugify(name)}{suffix}{image.ext}"
+        else:
+            filename = image.default_name(index)
         path = image.save(destination / filename)
         results.append(
             {

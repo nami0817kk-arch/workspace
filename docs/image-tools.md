@@ -52,11 +52,12 @@ ailab gen "PJT008 AIラボ" --provider local --size 1200x630
 | `stability` | `STABILITY_API_KEY` | `core` | `--model ultra` / `sd3`。サイズは近いアスペクト比に丸められる |
 | `replicate` | `REPLICATE_API_TOKEN` | `black-forest-labs/flux-schnell` | `--model owner/name` または `owner/name:バージョン`。完了まで自動で待つ |
 | `huggingface` | `HF_TOKEN` (or `HUGGINGFACE_API_KEY`) | `black-forest-labs/FLUX.1-schnell` | 無料枠あり。エンドポイントは `HF_INFERENCE_URL` で差し替え可 |
+| `cloudflare` | `CLOUDFLARE_ACCOUNT_ID` + `CLOUDFLARE_API_TOKEN` | `@cf/black-forest-labs/flux-1-schnell` | 無料枠が大きい。常用するならこれ |
 | `pollinations` | **不要**（任意で `POLLINATIONS_TOKEN`） | `flux` | 無料・オープンソースの公開サービス。キーが無くても本物のAI画像が作れる |
 | `local` | 不要 | `abstract-v1` | 生成AIではなくプロンプトから決まるグラデ画像。ダミー用 |
 
 `--provider auto`（既定）は openai → gemini → replicate → huggingface → stability →
-**pollinations** → local の順（各コネクタの `priority`）に、使えるものを選ぶ。
+cloudflare → **pollinations** → local の順（各コネクタの `priority`）に、使えるものを選ぶ。
 **キーを1つも設定していない場合は pollinations が選ばれる**ので、支払い設定なしでも
 本物の生成AI画像が得られる。`local` はその更に後ろの、通信すらしない最後の砦。
 

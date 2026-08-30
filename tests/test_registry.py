@@ -91,3 +91,30 @@ def test_auth_spec_requires_all_by_default(monkeypatch):
     spec = AuthSpec(env=("A_KEY", "B_KEY"))
     monkeypatch.setenv("A_KEY", "value")
     assert spec.missing() == ["B_KEY"]
+
+
+# --- レート制限の共有 ---------------------------------------------------
+def test_rate_limiter_is_shared_between_instances():
+    """registry.get() は毎回新しいインスタンスを作るので、枠は名前で共有する。"""
+    first = registry.get("pollinations")
+    second = registry.get("pollinations")
+    assert first is not second
+    assert first.limiter is second.limiter
+
+
+def test_rate_limiters_are_separate_per_connector():
+    assert registry.get("pollinations").limiter is not registry.get("unsplash").limiter
+
+
+def test_shared_limiter_actually_consumes_the_quota():
+    from ailab.core.errors import RateLimitError
+
+    registry.get("pollinations").limiter.wait()  # 1回目で枠を使い切る（1回/15秒）
+    limiter = registry.get("pollinations").limiter
+    limiter.max_wait = 0  # 待たずに失敗させて、枠が持ち越されていることを確かめる
+    with pytest.raises(RateLimitError):
+        limiter.wait()
+
+
+def test_connector_without_rate_limit_has_no_limiter():
+    assert registry.get("local").limiter is None

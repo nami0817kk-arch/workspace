@@ -1,12 +1,13 @@
 import pytest
+from fakes import FakeResponse, FakeSession
 
 from ailab import assets
 from ailab.connectors.assets_iconify import IconifyAssets
-from ailab.connectors.assets_openverse import API_URL as OPENVERSE_URL, OpenverseAssets
+from ailab.connectors.assets_openverse import API_URL as OPENVERSE_URL
+from ailab.connectors.assets_openverse import OpenverseAssets
 from ailab.connectors.assets_pixabay import PixabayAssets
 from ailab.connectors.assets_wikimedia import WikimediaAssets
 from ailab.core.errors import AuthError, ConnectorError
-from fakes import FakeResponse, FakeSession
 
 OPENVERSE_BODY = {
     "results": [

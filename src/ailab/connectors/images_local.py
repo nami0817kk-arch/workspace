@@ -110,7 +110,7 @@ class LocalImages(Connector):
         images: list[GeneratedImage] = []
 
         for index in range(max(1, n)):
-            seed = hashlib.sha256(f"{prompt}#{index}".encode("utf-8")).hexdigest()
+            seed = hashlib.sha256(f"{prompt}#{index}".encode()).hexdigest()
             rng = random.Random(int(seed[:16], 16))
             top, bottom = _palette(rng)
 

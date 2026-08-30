@@ -10,6 +10,7 @@ from .connector import (
     ReadFeed,
     SearchAssets,
     capabilities_of,
+    reset_limiters,
 )
 from .errors import (
     AilabError,
@@ -43,4 +44,5 @@ __all__ = [
     "ReadFeed",
     "SearchAssets",
     "capabilities_of",
+    "reset_limiters",
 ]

@@ -1,9 +1,9 @@
 import pytest
 import requests
+from fakes import FakeResponse, FakeSession
 
 from ailab.core import cache, http
 from ailab.core.errors import AuthError, ConnectorError, NetworkError, NotFoundError, RateLimitError
-from fakes import FakeResponse, FakeSession
 
 
 def test_request_returns_successful_response():

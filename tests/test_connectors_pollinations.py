@@ -1,11 +1,11 @@
 """Pollinations（APIキー不要の画像生成）。"""
 
 import pytest
+from fakes import FakeResponse, FakeSession
 
 from ailab.connectors.images_pollinations import BASE_URL, PollinationsImages
 from ailab.core.errors import ConnectorError
 from ailab.core.http import RateLimiter
-from fakes import FakeResponse, FakeSession
 
 JPEG = b"\xff\xd8\xff\xe0fake"
 

@@ -1,11 +1,11 @@
 """情報収集コネクタ（RSS / Qiita）。"""
 
 import pytest
+from fakes import FakeResponse, FakeSession
 
 from ailab.connectors.feed_qiita import QiitaFeed
 from ailab.connectors.feed_rss import RssFeed, parse_feed
 from ailab.core.errors import ConfigError, ConnectorError
-from fakes import FakeResponse, FakeSession
 
 RSS_XML = """<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/">

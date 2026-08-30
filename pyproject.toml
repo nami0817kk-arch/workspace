@@ -4,19 +4,27 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ailab"
-version = "0.3.0"
+version = "0.4.0"
 description = "画像生成・フリー素材取得・外部サービス連携のツール群"
 requires-python = ">=3.10"
 dependencies = ["requests>=2.31", "Pillow>=10.0", "PyYAML>=6.0"]
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0"]
+dev = ["pytest>=8.0", "ruff>=0.6"]
 
 [project.scripts]
 ailab = "ailab.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+# 既定(E4/E7/E9/F)に、import順(I)・古い書き方(UP)・よくある落とし穴(B)を足す
+select = ["E4", "E7", "E9", "F", "I", "UP", "B"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

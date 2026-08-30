@@ -6,7 +6,6 @@
 
 from __future__ import annotations
 
-from abc import ABC
 from dataclasses import dataclass
 from typing import Any, Protocol, runtime_checkable
 
@@ -16,6 +15,16 @@ from ..config import get_env
 from . import cache as cache_module
 from . import http
 from .types import Asset, FeedItem, GeneratedImage, PublishResult
+
+#: レート制限はコネクタ名で共有する。
+#: registry.get() は毎回新しいインスタンスを作るため、インスタンス変数に持たせると
+#: 呼び出しのたびに枠が回復したことになり、MCPサーバのような常駐プロセスで枠を守れない。
+_LIMITERS: dict[str, http.RateLimiter] = {}
+
+
+def reset_limiters() -> None:
+    """共有しているレート制限の状態を捨てる（主にテスト用）。"""
+    _LIMITERS.clear()
 
 
 @dataclass(frozen=True)
@@ -72,8 +81,12 @@ class CheckResult:
     skipped: bool = False
 
 
-class Connector(ABC):
-    """外部サービス連携の基底クラス。"""
+class Connector:
+    """外部サービス連携の基底クラス。
+
+    抽象メソッドは持たない。「何ができるか」は継承ではなく、
+    下の能力プロトコル（メソッドの有無）で判定する。
+    """
 
     name: str = "base"
     #: assets（素材取得） / images（画像生成） / publish（送信） / feed（情報収集）
@@ -91,7 +104,6 @@ class Connector(ABC):
 
     def __init__(self, *, session: requests.Session | None = None, cache_ttl: int | None = None):
         self._session = session
-        self._limiter: http.RateLimiter | None = None
         self.cache_ttl = cache_module.default_ttl() if cache_ttl is None else cache_ttl
 
     # --- 認証・可用性 -------------------------------------------------
@@ -134,16 +146,19 @@ class Connector(ABC):
 
     @property
     def limiter(self) -> http.RateLimiter | None:
+        """このコネクタのレート制限。同じ連携先なら全インスタンスで共有する。"""
         if self.rate_limit is None:
             return None
-        if self._limiter is None:
-            self._limiter = http.RateLimiter(
+        limiter = _LIMITERS.get(self.name)
+        if limiter is None:
+            limiter = http.RateLimiter(
                 self.rate_limit.requests,
                 self.rate_limit.per_seconds,
                 label=self.name,
                 max_wait=self.rate_limit.max_wait_seconds,
             )
-        return self._limiter
+            _LIMITERS[self.name] = limiter
+        return limiter
 
     def request(self, method: str, url: str, **kwargs):
         return http.request(
@@ -219,6 +234,6 @@ CAPABILITY_LABELS = {
 }
 
 
-def capabilities_of(connector: "Connector") -> list[str]:
+def capabilities_of(connector: Connector) -> list[str]:
     """そのコネクタが持つ能力の名前。"""
     return [name for name, protocol in CAPABILITIES.items() if isinstance(connector, protocol)]

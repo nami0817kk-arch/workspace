@@ -1,13 +1,13 @@
 """Phase 1 で足した取得先（Iconify / Unsplash / Pexels）。"""
 
 import pytest
+from fakes import FakeResponse, FakeSession
 
 from ailab import assets
 from ailab.connectors.assets_iconify import MIN_LIMIT, SVG_URL, IconifyAssets
 from ailab.connectors.assets_pexels import PexelsAssets
 from ailab.connectors.assets_unsplash import UnsplashAssets
 from ailab.core.errors import AuthError
-from fakes import FakeResponse, FakeSession
 
 ICONIFY_BODY = {
     "icons": ["mdi:cat", "ph:dog-bold"],

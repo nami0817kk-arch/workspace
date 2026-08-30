@@ -1,12 +1,12 @@
 """Replicate / Hugging Face の生成コネクタ。"""
 
 import pytest
+from fakes import FakeResponse, FakeSession
 
 from ailab.connectors import images_replicate
 from ailab.connectors.images_huggingface import DEFAULT_BASE_URL, HuggingFaceImages, base_url
 from ailab.connectors.images_replicate import API_BASE, ReplicateImages
 from ailab.core.errors import AuthError, ConnectorError
-from fakes import FakeResponse, FakeSession
 
 PNG = b"\x89PNG\r\n\x1a\nfake"
 DONE = {

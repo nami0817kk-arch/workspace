@@ -26,6 +26,7 @@ from .core import registry
 from .core.connector import CAPABILITY_LABELS, capabilities_of
 from .core.errors import AilabError, ConfigError
 
+
 def _capability_names(capability: str) -> list[str]:
     return [c.name for c in registry.by_capability(capability)]
 

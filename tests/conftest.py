@@ -11,6 +11,16 @@ if str(SRC) not in sys.path:
 
 
 @pytest.fixture(autouse=True)
+def fresh_rate_limiters():
+    """レート制限はコネクタ名で共有されるので、テストごとに捨てる。"""
+    from ailab.core.connector import reset_limiters
+
+    reset_limiters()
+    yield
+    reset_limiters()
+
+
+@pytest.fixture(autouse=True)
 def no_sleeping(monkeypatch):
     """テストで実際に待たない（再試行の待ちやレート制限の回復待ち）。"""
     import time
