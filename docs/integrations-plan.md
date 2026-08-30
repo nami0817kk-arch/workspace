@@ -7,8 +7,8 @@
 | 0. 基盤（`core/` + `connectors/` + `ailab connectors` / `doctor`） | **完了** |
 | 2. 出力先（GitHub） | **完了**（`ailab publish`。Slack / Discord は当面不要と判断） |
 | 1. 取得先追加（Iconify / Unsplash / Pexels） | **完了** |
-| 生成モデル追加（Replicate / Hugging Face） | 次にやる |
-| 3. 情報収集（RSS / GitHub / Qiita） | その次 |
+| 生成モデル追加（Replicate / Hugging Face） | **完了** |
+| 3. 情報収集（RSS / GitHub / Qiita） | 次にやる |
 | 4. パイプライン / 5. MCP化 | 未着手 |
 
 実装の使い方と新しい連携先の足し方は [connectors.md](connectors.md)。
@@ -118,8 +118,8 @@ CLIは「コネクタ名」ではなく「**能力**」でディスパッチす�
 
 | 連携先 | 認証 | 価値 |
 |---|---|---|
-| **Replicate** | APIキー | SDXL/Flux等をモデル差し替えで試せる。ラボ用途に合う |
-| **Hugging Face Inference** | APIキー | 無料枠で試作可能 |
+| **Replicate** ✅ | APIキー | SDXL/Flux等をモデル差し替えで試せる。ラボ用途に合う |
+| **Hugging Face Inference** ✅ | APIキー | 無料枠で試作可能 |
 
 ### C. 出力先（WRITE・ここから価値が跳ねる）
 
@@ -144,7 +144,7 @@ RSS/Atom（キー不要）、GitHub（リリース・Issue）、Qiita/Zenn、arX
 | **0. 基盤** ✅ | `core/` 新設、既存7コネクタを移行、`ailab connectors` / `ailab doctor` 追加 | 完了。契約テストで新コネクタの実装漏れも検出する | 完了 |
 | **2. 出力先** ✅ | GitHub（`ailab publish`、既定ドライラン） | 完了。Slack / Discord は要望が出たら追加 | 完了 |
 | **1. 取得先追加** ✅ | Iconify（キー不要）、Unsplash、Pexels | 完了。`ailab search "cat"` が6サイト横断 | 完了 |
-| **生成モデル追加** | Replicate / Hugging Face | `ailab gen --provider replicate --model ...` | 半日 |
+| **生成モデル追加** ✅ | Replicate / Hugging Face | 完了。`ailab gen --provider replicate --model owner/name` | 完了 |
 | **3. 情報収集** | RSS、GitHub、Qiita | `ailab feed "claude" --source rss,github` | 半日 |
 | **4. パイプライン** | YAMLレシピ。`ailab run recipes/weekly-report.yaml` | 「検索→生成→投稿」を1コマンドで再実行できる | 2日 |
 | **5. MCP化** | `ailab mcp` でMCPサーバとして起動 | Claude から `ailab` の全コネクタを直接呼べる | 1日 |

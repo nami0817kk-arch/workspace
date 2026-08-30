@@ -11,14 +11,17 @@ from .assets_pixabay import PixabayAssets
 from .assets_unsplash import UnsplashAssets
 from .assets_wikimedia import WikimediaAssets
 from .images_gemini import GeminiImages
+from .images_huggingface import HuggingFaceImages
 from .images_local import LocalImages
 from .images_openai import OpenAIImages
+from .images_replicate import ReplicateImages
 from .images_stability import StabilityImages
 from .publish_github import GitHubPublish
 
 __all__ = [
     "GeminiImages",
     "GitHubPublish",
+    "HuggingFaceImages",
     "IconifyAssets",
     "LocalImages",
     "OpenAIImages",

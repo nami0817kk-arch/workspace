@@ -6,26 +6,10 @@ from ..core.connector import AuthSpec, CheckResult, Connector, RateLimit
 from ..core.errors import AuthError
 from ..core.registry import register
 from ..core.types import GeneratedImage
-from ..utils import parse_size
+from ..utils import ASPECT_RATIOS, closest_aspect_ratio  # noqa: F401  (旧来の import 先を維持)
 
 BASE_URL = "https://api.stability.ai/v2beta/stable-image/generate"
 ACCOUNT_URL = "https://api.stability.ai/v1/user/account"
-
-#: Stability は自由なピクセル指定ではなくアスペクト比を受け取る
-ASPECT_RATIOS = ["1:1", "16:9", "9:16", "3:2", "2:3", "4:5", "5:4", "21:9", "9:21"]
-
-
-def closest_aspect_ratio(size: str) -> str:
-    """'1024x1536' のようなサイズを、もっとも近いアスペクト比表記に変換する。"""
-    try:
-        width, height = parse_size(size)
-    except ValueError:
-        return "1:1"
-    target = width / height
-    return min(
-        ASPECT_RATIOS,
-        key=lambda ratio: abs(target - (int(ratio.split(":")[0]) / int(ratio.split(":")[1]))),
-    )
 
 
 @register

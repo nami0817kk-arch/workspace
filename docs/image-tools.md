@@ -50,10 +50,12 @@ ailab gen "PJT008 AIラボ" --provider local --size 1200x630
 | `openai` | `OPENAI_API_KEY` | `gpt-image-1` | `--model dall-e-3` も可 |
 | `gemini` | `GEMINI_API_KEY` (or `GOOGLE_API_KEY`) | `gemini-2.5-flash-image` | `--model imagen-4.0-generate-001` は Imagen の predict API を使う |
 | `stability` | `STABILITY_API_KEY` | `core` | `--model ultra` / `sd3`。サイズは近いアスペクト比に丸められる |
+| `replicate` | `REPLICATE_API_TOKEN` | `black-forest-labs/flux-schnell` | `--model owner/name` または `owner/name:バージョン`。完了まで自動で待つ |
+| `huggingface` | `HF_TOKEN` (or `HUGGINGFACE_API_KEY`) | `black-forest-labs/FLUX.1-schnell` | 無料枠あり。エンドポイントは `HF_INFERENCE_URL` で差し替え可 |
 | `local` | 不要 | `abstract-v1` | 生成AIではなくプロンプトから決まるグラデ画像。ダミー用 |
 
-`--provider auto`（既定）は openai → gemini → stability → local の順（各コネクタの
-`priority`）に、使えるものを選ぶ。どのAPIも有料なので、試作中は `local` で十分なことも多い。
+`--provider auto`（既定）は openai → gemini → replicate → huggingface → stability → local の順
+（各コネクタの `priority`）に、使えるものを選ぶ。どのAPIも有料なので、試作中は `local` で十分なことも多い。
 
 ## フリーイラストの検索・取得
 
