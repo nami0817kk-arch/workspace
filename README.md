@@ -24,23 +24,32 @@ Claude から直接使う方法は [docs/mcp.md](docs/mcp.md)、
 連携の仕組みと増やし方は [docs/connectors.md](docs/connectors.md)、
 今後の計画は [docs/integrations-plan.md](docs/integrations-plan.md)。
 
-## セットアップ
+## まず試す（APIキーなしで動きます）
 
 ```bash
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements-dev.txt
 pip install -e .
-copy .env.example .env   # 使うAPIキーだけ入れる（無くても local 生成と Openverse 検索は動く）
 ```
 
 ```bash
-ailab connectors                                    # 何が使える状態か
-ailab gen "青空の下でノートPCを使う猫、フラットイラスト"
-ailab fetch "cat illustration" -l 3
+ailab connectors                                     # 何が使える状態か
+ailab gen "青空の下でノートPCを使う猫" --style flat   # 本物のAI画像（Pollinations）
+ailab fetch "cat illustration" -l 3                  # フリー素材＋クレジット
 ```
 
-生成物は `output/`（Git管理外）に保存される。
+キーが1つも無くても、`pollinations`（生成）と `iconify` / `openverse` /
+`wikimedia`（素材）が動きます。生成物は `output/`（Git管理外）へ。
+
+## APIキーを足す
+
+```bash
+copy .env.example .env   # 使うものだけ記入
+ailab doctor             # 実際に接続して確認（-- は未設定、NG は失敗）
+```
+
+有料APIを使い始めたら `ailab usage` で使用量と概算コストを確認できます。
 
 ## 構成
 

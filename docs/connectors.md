@@ -13,6 +13,7 @@ ailab connectors          # 連携先の一覧と、必要な環境変数が揃�
 ailab connectors --json   # スクリプト用
 ailab doctor              # 実際に接続して確認（キー未設定は -- で未確認扱い）
 ailab doctor github       # 1つだけ確認
+ailab doctor --json       # スクリプトから使う（失敗があれば終了コード1）
 ```
 
 ```

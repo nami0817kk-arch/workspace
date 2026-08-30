@@ -136,6 +136,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     doctor = sub.add_parser("doctor", help="連携先へ実際に接続して確認する")
     doctor.add_argument("name", nargs="?", default=None, help="確認する連携先（省略で全部）")
+    doctor.add_argument("--json", action="store_true", help="JSON で出力する")
 
     return parser
 
@@ -180,18 +181,38 @@ def _cmd_connectors(args: argparse.Namespace) -> int:
 
 def _cmd_doctor(args: argparse.Namespace) -> int:
     targets = [registry.get(args.name)] if args.name else [registry.get(n) for n in registry.names()]
-    failed = 0
+    results = []
     for connector in targets:
         try:
             result = connector.check()
+            results.append(
+                {
+                    "name": connector.name,
+                    "ok": result.ok,
+                    "skipped": result.skipped,
+                    "detail": result.detail,
+                }
+            )
         except AilabError as exc:
-            print(f"  NG  {connector.name:<12} {exc}")
-            failed += 1
-            continue
-        mark = "-- " if result.skipped else ("OK " if result.ok else "NG ")
-        print(f"  {mark} {connector.name:<12} {result.detail}")
-        if not result.ok and not result.skipped:
-            failed += 1
+            results.append(
+                {"name": connector.name, "ok": False, "skipped": False, "detail": str(exc)}
+            )
+
+    failed = [row for row in results if not row["ok"] and not row["skipped"]]
+
+    if args.json:
+        print(
+            json.dumps(
+                {"results": results, "failed": len(failed), "checked": len(results)},
+                ensure_ascii=False,
+                indent=2,
+            )
+        )
+        return 1 if failed else 0
+
+    for row in results:
+        mark = "-- " if row["skipped"] else ("OK " if row["ok"] else "NG ")
+        print(f"  {mark} {row['name']:<12} {row['detail']}")
     print("\n-- はキー未設定のため未確認。ailab connectors で必要な環境変数を確認できます。")
     return 1 if failed else 0
 

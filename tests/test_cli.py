@@ -388,3 +388,28 @@ def test_workflows_are_valid_yaml():
         for name, job in workflow["jobs"].items():
             assert job.get("steps"), f"{path}:{name}: steps がない"
             assert job.get("timeout-minutes"), f"{path}:{name}: 実行時間の上限がない"
+
+
+def test_doctor_json_output(monkeypatch, capsys):
+    from ailab.core.connector import CheckResult
+
+    monkeypatch.setattr(
+        IconifyAssets, "check", lambda self: CheckResult("iconify", ok=True, detail="検索可能")
+    )
+    assert cli.main(["doctor", "iconify", "--json"]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["checked"] == 1 and payload["failed"] == 0
+    assert payload["results"][0]["name"] == "iconify"
+
+
+def test_doctor_json_reports_failures(monkeypatch, capsys):
+    from ailab.core.errors import ConnectorError
+
+    def boom(self):
+        raise ConnectorError("繋がらない")
+
+    monkeypatch.setattr(IconifyAssets, "check", boom)
+    assert cli.main(["doctor", "iconify", "--json"]) == 1
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["failed"] == 1
+    assert "繋がらない" in payload["results"][0]["detail"]
