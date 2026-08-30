@@ -236,3 +236,65 @@ def test_feed_requires_source():
 def test_feed_reports_bad_target(capsys):
     assert cli.main(["feed", "キーワード", "--source", "rss"]) == 1
     assert "フィードのURL" in capsys.readouterr().err
+
+
+# --- run（レシピ） ------------------------------------------------------
+def test_run_executes_a_recipe(tmp_path, capsys):
+    recipe = tmp_path / "r.yaml"
+    recipe.write_text(
+        "name: テスト\n"
+        "steps:\n"
+        "  - id: img\n"
+        "    gen:\n"
+        "      provider: local\n"
+        "      prompt: 猫\n"
+        "      size: 64x64\n"
+        f"      out: {tmp_path}\n",
+        encoding="utf-8",
+    )
+    assert cli.main(["run", str(recipe)]) == 0
+    out = capsys.readouterr().out
+    assert "[1/1] gen (img)" in out
+    assert "作られたファイル" in out
+
+
+def test_run_applies_set_variables(tmp_path, capsys):
+    recipe = tmp_path / "r.yaml"
+    recipe.write_text(
+        "vars:\n  prompt: 既定\n"
+        "steps:\n"
+        "  - gen:\n"
+        "      provider: local\n"
+        '      prompt: "{{ vars.prompt }}"\n'
+        "      size: 64x64\n"
+        f"      out: {tmp_path}\n",
+        encoding="utf-8",
+    )
+    assert cli.main(["run", str(recipe), "--set", "prompt=差し替え", "--json"]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["steps"][0]["items"][0]["prompt"] == "差し替え"
+
+
+def test_run_rejects_malformed_set(tmp_path, capsys):
+    recipe = tmp_path / "r.yaml"
+    recipe.write_text("steps: []\n", encoding="utf-8")
+    assert cli.main(["run", str(recipe), "--set", "壊れている"]) == 1
+    assert "KEY=VALUE" in capsys.readouterr().err
+
+
+def test_run_reports_missing_recipe(capsys):
+    assert cli.main(["run", "no-such-recipe"]) == 1
+    assert "見つかりません" in capsys.readouterr().err
+
+
+def test_bundled_recipes_are_valid():
+    """同梱レシピが壊れていないことを確認する（実行はしない）。"""
+    from pathlib import Path
+
+    from ailab import recipes as recipes_module
+
+    for path in sorted(Path("recipes").glob("*.yaml")):
+        recipe = recipes_module.load_recipe(str(path))
+        assert recipe["steps"], f"{path}: 手順が空"
+        for index, step in enumerate(recipe["steps"], 1):
+            recipes_module._parse_step(step, index)  # 動詞と設定の形を検証

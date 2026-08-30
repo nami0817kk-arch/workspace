@@ -9,7 +9,8 @@
 | 1. 取得先追加（Iconify / Unsplash / Pexels） | **完了** |
 | 生成モデル追加（Replicate / Hugging Face） | **完了** |
 | 3. 情報収集（RSS / GitHub / Qiita） | **完了** |
-| 4. パイプライン（YAMLレシピ） / 5. MCP化 | 未着手（次の候補） |
+| 4. パイプライン（YAMLレシピ） | **完了** |
+| 5. MCP化 | 次にやる |
 
 実装の使い方と新しい連携先の足し方は [connectors.md](connectors.md)。
 
@@ -147,7 +148,7 @@ RSS/Atom（キー不要）✅、GitHub リリース ✅、Qiita ✅、（今後�
 | **1. 取得先追加** ✅ | Iconify（キー不要）、Unsplash、Pexels | 完了。`ailab search "cat"` が6サイト横断 | 完了 |
 | **生成モデル追加** ✅ | Replicate / Hugging Face | 完了。`ailab gen --provider replicate --model owner/name` | 完了 |
 | **3. 情報収集** ✅ | RSS / Atom、GitHub リリース、Qiita | 完了。`ailab feed "対象" --source rss\|github\|qiita` | 完了 |
-| **4. パイプライン** | YAMLレシピ。`ailab run recipes/weekly-report.yaml` | 「検索→生成→投稿」を1コマンドで再実行できる | 2日 |
+| **4. パイプライン** ✅ | YAMLレシピ。`ailab run <レシピ>` | 完了。[recipes.md](recipes.md) |
 | **5. MCP化** | `ailab mcp` でMCPサーバとして起動 | Claude から `ailab` の全コネクタを直接呼べる | 1日 |
 
 Phase 0 と 2 は完了。残りは基盤の上に1コネクタ50〜80行を足すだけで済む。

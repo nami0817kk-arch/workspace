@@ -5,6 +5,7 @@
     ailab fetch "キーワード"      フリー素材を検索してダウンロードする
     ailab publish FILE --to ...   生成物を外部サービスへ送る
     ailab feed "対象" --source ...  記事・リリース情報を取得する
+    ailab run レシピ              集める→作る→送る を1コマンドで実行する
     ailab connectors              連携先の一覧と設定状況を表示する
     ailab doctor [名前]           連携先へ実際に接続して確認する
 """
@@ -17,11 +18,11 @@ import sys
 
 import requests
 
-from . import __version__, assets, imagegen
+from . import __version__, assets, imagegen, recipes
 from .config import load_dotenv, output_dir
 from .core import registry
 from .core.connector import CAPABILITY_LABELS, capabilities_of
-from .core.errors import AilabError
+from .core.errors import AilabError, ConfigError
 
 def _capability_names(capability: str) -> list[str]:
     return [c.name for c in registry.by_capability(capability)]
@@ -93,6 +94,15 @@ def build_parser() -> argparse.ArgumentParser:
     )
     feed.add_argument("-l", "--limit", type=int, default=10, help="取得件数")
     feed.add_argument("--json", action="store_true", help="JSON で出力する")
+
+    run = sub.add_parser("run", help="レシピ（YAML）を実行する")
+    run.add_argument("recipe", help="レシピのパス、または recipes/ 内の名前")
+    run.add_argument(
+        "--set", dest="variables", action="append", default=[], metavar="KEY=VALUE",
+        help="レシピ内の {{ vars.KEY }} を差し替える（複数指定可）",
+    )
+    run.add_argument("--yes", action="store_true", help="publish を実際に実行する（既定はドライラン）")
+    run.add_argument("--json", action="store_true", help="結果を JSON で出力する")
 
     connectors = sub.add_parser("connectors", help="連携先の一覧と設定状況")
     connectors.add_argument("--json", action="store_true", help="JSON で出力する")
@@ -255,6 +265,45 @@ def _cmd_feed(args: argparse.Namespace) -> int:
     return 0
 
 
+def _parse_variables(pairs: list[str]) -> dict[str, str]:
+    """--set KEY=VALUE を辞書にする。"""
+    variables = {}
+    for pair in pairs:
+        key, sep, value = pair.partition("=")
+        if not sep or not key.strip():
+            raise ConfigError(f"--set は KEY=VALUE の形式です: {pair!r}")
+        variables[key.strip()] = value
+    return variables
+
+
+def _cmd_run(args: argparse.Namespace) -> int:
+    recipe = recipes.load_recipe(args.recipe)
+    variables = _parse_variables(args.variables)
+
+    def report(index: int, total: int, step) -> None:
+        print(f"[{index}/{total}] {step.verb} ({step.id}) … {step.summary}")
+
+    result = recipes.run(
+        recipe,
+        dry_run=not args.yes,
+        variables=variables,
+        on_step=None if args.json else report,
+    )
+
+    if args.json:
+        print(json.dumps(result.to_dict(), ensure_ascii=False, indent=2))
+        return 0
+
+    files = result.files()
+    if files:
+        print("\n作られたファイル:")
+        for path in files:
+            print(f"  {path}")
+    if not args.yes and any(step.verb == "publish" for step in result.steps):
+        print("\npublish はドライランです。実際に送るには --yes を付けてください。")
+    return 0
+
+
 def _cache_kwargs(args: argparse.Namespace) -> dict:
     return {"cache_ttl": 0} if getattr(args, "no_cache", False) else {}
 
@@ -268,6 +317,7 @@ def main(argv: list[str] | None = None) -> int:
         "fetch": _cmd_fetch,
         "publish": _cmd_publish,
         "feed": _cmd_feed,
+        "run": _cmd_run,
         "connectors": _cmd_connectors,
         "status": _cmd_connectors,
         "doctor": _cmd_doctor,

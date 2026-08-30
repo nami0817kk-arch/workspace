@@ -11,9 +11,11 @@ AI活用のアイデア検証・試作を行うラボプロジェクト。
 | `ailab fetch "キーワード"` | フリーイラストを検索してダウンロードし、クレジットも書き出す |
 | `ailab feed "対象" --source rss\|github\|qiita` | 記事・リリース情報を取得する |
 | `ailab publish FILE --repo owner/name` | 生成物を GitHub へコミットする（既定はドライラン） |
+| `ailab run レシピ` | 「集める→作る→送る」をYAML1本で実行する |
 | `ailab connectors` / `ailab doctor` | 連携先の設定状況を見る / 実際に接続して確認する |
 
 詳しい使い方は [docs/image-tools.md](docs/image-tools.md)。
+レシピの書き方は [docs/recipes.md](docs/recipes.md)、
 連携の仕組みと増やし方は [docs/connectors.md](docs/connectors.md)、
 今後の計画は [docs/integrations-plan.md](docs/integrations-plan.md)。
 
@@ -41,6 +43,7 @@ ailab fetch "cat illustration" -l 3
 |---|---|
 | `src/` | 実装コード（`core/` … 連携基盤、`connectors/` … 連携先を1ファイル1つ） |
 | `docs/` | 調査メモ・検証記録 |
+| `recipes/` | レシピ（`ailab run` で実行するYAML） |
 | `tests/` | テストコード（`python -m pytest`。外部通信はモック） |
 
 ## ライセンスの注意
