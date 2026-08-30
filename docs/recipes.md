@@ -50,6 +50,34 @@ steps:
 
 `publish` の `file` を省略すると、**直前までの手順が作った最後のファイル**を送る。
 
+## 繰り返す
+
+`foreach:` を書くと、前の手順の各要素について同じ処理を繰り返す。
+「取得した記事それぞれにバナーを1枚」がこれでできる。
+
+```yaml
+  - id: releases
+    feed: {source: github, query: "{{ vars.repo }}", limit: 3}
+
+  - id: banners
+    foreach: releases            # {{ releases }} と書いてもよい
+    gen:
+      prompt: "{{ item.title }}"
+      style: banner
+      filename: "release_{{ number }}"
+```
+
+繰り返しの中では次が使える。
+
+| 参照 | 内容 |
+|---|---|
+| `{{ item.フィールド }}` | その回の要素 |
+| `{{ index }}` | 0始まりの番号 |
+| `{{ number }}` | 1始まりの番号（ファイル名向き） |
+
+結果は1つの手順の結果としてまとめて返るので、後続から
+`{{ banners.0.path }}` のように参照できる。元が0件なら何もせず次へ進む。
+
 ## 参照
 
 前の手順の結果は `{{ 手順id.番号.フィールド }}` で参照する。
@@ -74,3 +102,4 @@ steps:
 |---|---|
 | `recipes/weekly-release-banner.yaml` | リリース情報 → バナー生成 → リポジトリへコミット |
 | `recipes/illust-pack.yaml` | キーワードでフリー素材を集め、クレジット付きで保存 |
+| `recipes/release-banners.yaml` | リリースを取得し、それぞれのバナーを1枚ずつ生成（`foreach` の例） |

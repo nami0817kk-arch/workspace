@@ -2,6 +2,8 @@
 
 レシピは手順（steps）の並びで、各手順は1つの動詞を持つ。
 前の手順の結果は `{{ 手順id.0.フィールド }}` で参照できる。
+`foreach:` を書くと、前の手順の各要素について同じ処理を繰り返す
+（そのときは `{{ item.フィールド }}` で1件ずつ参照する）。
 """
 
 from __future__ import annotations
@@ -269,9 +271,13 @@ def run(
 
     for index, raw_step in enumerate(steps, 1):
         step_id, verb, options = _parse_step(raw_step, index)
-        rendered = render(options, context)
+        loop_over = raw_step.get("foreach")
+
         try:
-            items = STEP_HANDLERS[verb](rendered, state)
+            if loop_over is None:
+                items = STEP_HANDLERS[verb](render(options, context), state)
+            else:
+                items = _run_foreach(verb, options, context, state, loop_over)
         except ConfigError as exc:
             raise ConfigError(f"手順{index}（{verb}）: {exc}") from exc
 
@@ -285,6 +291,31 @@ def run(
             on_step(index, len(steps), step_result)
 
     return result
+
+
+def _run_foreach(
+    verb: str, options: dict, context: dict, state: dict, loop_over: Any
+) -> list[dict]:
+    """前の手順の各要素について同じ処理を繰り返す。
+
+    参照先は手順id（`foreach: releases`）でも、テンプレート
+    （`foreach: "{{ releases }}"`）でもよい。
+    """
+    if isinstance(loop_over, str):
+        path = loop_over.strip()
+        whole = PLACEHOLDER_RE.fullmatch(path)
+        elements = lookup(whole.group(1) if whole else path, context)
+    else:
+        elements = loop_over
+
+    if not isinstance(elements, list):
+        raise ConfigError(f"foreach にはリストを指定してください: {loop_over!r}")
+
+    collected: list[dict] = []
+    for position, element in enumerate(elements):
+        scoped = {**context, "item": element, "index": position, "number": position + 1}
+        collected.extend(STEP_HANDLERS[verb](render(options, scoped), state))
+    return collected
 
 
 def _parse_step(raw_step: Any, index: int) -> tuple[str, str, dict]:

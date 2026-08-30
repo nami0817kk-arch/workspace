@@ -1,6 +1,7 @@
 """レシピ（YAML）実行。"""
 
 import json
+from pathlib import Path
 
 import pytest
 
@@ -318,3 +319,97 @@ def test_single_named_output_keeps_the_plain_name(tmp_path):
         }
     )
     assert [p.name for p in tmp_path.glob("*.png")] == ["banner.png"]
+
+
+# --- foreach ----------------------------------------------------------
+def test_foreach_repeats_a_step_for_each_item(tmp_path, monkeypatch):
+    recipe = {
+        "steps": [
+            {"id": "titles", "search": {"query": "x"}},
+            {
+                "id": "banners",
+                "foreach": "titles",
+                "gen": {
+                    "provider": "local",
+                    "prompt": "{{ item.title }} のバナー",
+                    "size": "64x64",
+                    "filename": "b{{ number }}",
+                    "out": str(tmp_path),
+                },
+            },
+        ]
+    }
+    from ailab import assets as assets_module
+    from ailab.core.types import Asset
+
+    monkeypatch.setattr(
+        assets_module,
+        "search",
+        lambda *a, **kw: [
+            Asset("openverse", "記事A", "https://x/a"),
+            Asset("openverse", "記事B", "https://x/b"),
+        ],
+    )
+    result = recipes.run(recipe)
+
+    banners = result.steps[1]
+    assert len(banners.items) == 2
+    assert [Path(item["path"]).name for item in banners.items] == ["b1.png", "b2.png"]
+    assert "記事A のバナー" in banners.items[0]["prompt"]
+    assert "記事B のバナー" in banners.items[1]["prompt"]
+
+
+def test_foreach_accepts_a_template_reference(tmp_path, monkeypatch):
+    from ailab.connectors.feed_qiita import QiitaFeed
+    from ailab.core.types import FeedItem
+
+    monkeypatch.setattr(
+        QiitaFeed,
+        "fetch_items",
+        lambda self, q, **kw: [FeedItem(source="qiita", title=f"記事{i}") for i in range(3)],
+    )
+    recipe = {
+        "steps": [
+            {"id": "posts", "feed": {"source": "qiita", "query": "claude"}},
+            {
+                "foreach": "{{ posts }}",
+                "gen": {
+                    "provider": "local",
+                    "prompt": "{{ item.title }}",
+                    "size": "64x64",
+                    "out": str(tmp_path),
+                },
+            },
+        ]
+    }
+
+    assert len(recipes.run(recipe).steps[1].items) == 3
+
+
+def test_foreach_over_nothing_produces_nothing(tmp_path, monkeypatch):
+    from ailab import assets as assets_module
+
+    monkeypatch.setattr(assets_module, "search", lambda *a, **kw: [])
+    recipe = {
+        "steps": [
+            {"id": "found", "search": {"query": "x"}},
+            {
+                "foreach": "found",
+                "gen": {"provider": "local", "prompt": "{{ item.title }}", "out": str(tmp_path)},
+            },
+        ]
+    }
+
+    assert recipes.run(recipe).steps[1].items == []
+
+
+def test_foreach_needs_a_list():
+    recipe = {"steps": [{"foreach": "{{ today }}", "gen": {"provider": "local", "prompt": "x"}}]}
+    with pytest.raises(ConfigError, match="リストを指定"):
+        recipes.run(recipe)
+
+
+def test_foreach_with_an_unknown_reference():
+    recipe = {"steps": [{"foreach": "存在しない", "gen": {"provider": "local", "prompt": "x"}}]}
+    with pytest.raises(ConfigError, match="参照できません"):
+        recipes.run(recipe)
