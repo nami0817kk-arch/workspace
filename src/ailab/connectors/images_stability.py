@@ -47,7 +47,7 @@ class StabilityImages(Connector):
         if not self.is_available():
             raise AuthError(self.unavailable_reason())
 
-        model = model or self.default_model
+        model = self.resolve_model(model)
         images: list[GeneratedImage] = []
         for _ in range(max(1, n)):  # Stability は1リクエスト1枚
             response = self.request(

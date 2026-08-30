@@ -162,3 +162,31 @@ def test_closest_aspect_ratio(size, ratio):
 def test_closest_aspect_ratio_falls_back_to_square():
     assert closest_aspect_ratio("invalid") in ASPECT_RATIOS
     assert closest_aspect_ratio("invalid") == "1:1"
+
+
+# --- モデルの決め方 ---------------------------------------------------
+def test_model_argument_wins():
+    assert OpenAIImages().resolve_model("gpt-image-1.5") == "gpt-image-1.5"
+
+
+def test_model_falls_back_to_environment(monkeypatch):
+    """各社のモデルIDは入れ替わるので .env だけで追随できる。"""
+    monkeypatch.setenv("AILAB_OPENAI_MODEL", "gpt-image-3")
+    assert OpenAIImages().resolve_model() == "gpt-image-3"
+    assert OpenAIImages().resolve_model("gpt-image-2") == "gpt-image-2"  # 引数が優先
+
+
+def test_model_defaults_to_the_connector_value():
+    assert OpenAIImages().resolve_model() == "gpt-image-2"
+    assert GeminiImages().resolve_model() == GeminiImages.default_model
+
+
+def test_environment_model_is_used_when_generating(monkeypatch):
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-test")
+    monkeypatch.setenv("AILAB_OPENAI_MODEL", "gpt-image-3")
+    sess = FakeSession([FakeResponse(json_data={"data": [{"b64_json": B64}]})])
+
+    images = OpenAIImages(session=sess).generate("猫")
+
+    assert sess.calls[0][2]["json"]["model"] == "gpt-image-3"
+    assert images[0].model == "gpt-image-3"

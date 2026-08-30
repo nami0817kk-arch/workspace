@@ -47,8 +47,8 @@ ailab gen "PJT008 AIラボ" --provider local --size 1200x630
 
 | コネクタ | 環境変数 | 既定モデル | 備考 |
 |---|---|---|---|
-| `openai` | `OPENAI_API_KEY` | `gpt-image-1` | `--model dall-e-3` も可 |
-| `gemini` | `GEMINI_API_KEY` (or `GOOGLE_API_KEY`) | `gemini-2.5-flash-image` | `--model imagen-4.0-generate-001` は Imagen の predict API を使う |
+| `openai` | `OPENAI_API_KEY` | `gpt-image-2` | 新規アカウントに無料クレジットが付く（時期により変動） |
+| `gemini` | `GEMINI_API_KEY` (or `GOOGLE_API_KEY`) | `gemini-2.5-flash-image` | 画像生成モデルに無料枠は無い。新しいIDは `ailab doctor` で確認して差し替える |
 | `stability` | `STABILITY_API_KEY` | `core` | `--model ultra` / `sd3`。サイズは近いアスペクト比に丸められる |
 | `replicate` | `REPLICATE_API_TOKEN` | `black-forest-labs/flux-schnell` | `--model owner/name` または `owner/name:バージョン`。完了まで自動で待つ |
 | `huggingface` | `HF_TOKEN` (or `HUGGINGFACE_API_KEY`) | `black-forest-labs/FLUX.1-schnell` | 無料枠あり。エンドポイントは `HF_INFERENCE_URL` で差し替え可 |
@@ -56,6 +56,27 @@ ailab gen "PJT008 AIラボ" --provider local --size 1200x630
 
 `--provider auto`（既定）は openai → gemini → replicate → huggingface → stability → local の順
 （各コネクタの `priority`）に、使えるものを選ぶ。どのAPIも有料なので、試作中は `local` で十分なことも多い。
+
+### モデルIDは変わる
+
+各社のモデルは短い周期で入れ替わり、古いIDは提供終了する。
+コードを直さなくても `.env` で追随できる。
+
+```bash
+AILAB_OPENAI_MODEL=gpt-image-2
+AILAB_GEMINI_MODEL=gemini-3.1-flash-image
+AILAB_REPLICATE_MODEL=black-forest-labs/flux-schnell
+```
+
+優先順位は `--model` 引数 > `AILAB_<コネクタ名>_MODEL` > コネクタの既定値。
+Gemini で今使えるモデルは `ailab doctor` が件数を返すので、
+`GET /v1beta/models` の結果（AI Studio の一覧）で確認する。
+
+既知の提供終了（2026年8月時点で調べた範囲）:
+
+- DALL·E 2 / 3 … 2026-05-12 に提供終了。`--model dall-e-3` はもう使えない
+- `gpt-image-1.5` / `gpt-image-1-mini` / `chatgpt-image-latest` … 2026-12-01 に停止予定。移行先は `gpt-image-2`
+- Imagen 各種 … 2026-08-17 に停止。Gemini の画像モデルへ移行する
 
 ## フリーイラストの検索・取得
 

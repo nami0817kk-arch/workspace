@@ -84,6 +84,8 @@ class Connector(ABC):
     rate_limit: RateLimit | None = None
     #: 自動選択の優先順位（小さいほど先に選ばれる）
     priority: int = 50
+    #: 既定のモデル名（生成コネクタのみ）
+    default_model: str = ""
 
     def __init__(self, *, session: requests.Session | None = None, cache_ttl: int | None = None):
         self._session = session
@@ -105,6 +107,17 @@ class Connector(ABC):
         joiner = " または " if self.auth.any_of else ", "
         reason = f"環境変数 {joiner.join(missing)} が未設定です"
         return f"{reason}（取得: {self.auth.signup_url}）" if self.auth.signup_url else reason
+
+    def resolve_model(self, model: str | None = None) -> str:
+        """使うモデル名を決める。
+
+        優先順位は 引数 > 環境変数 AILAB_<名前>_MODEL > コネクタの既定値。
+        各社のモデルIDは短い周期で入れ替わるので、コードを直さなくても
+        .env だけで追随できるようにしてある。
+        """
+        from ..config import get_env
+
+        return model or get_env(f"AILAB_{self.name.upper()}_MODEL") or self.default_model
 
     # --- 通信 ---------------------------------------------------------
     def default_headers(self) -> dict[str, str]:

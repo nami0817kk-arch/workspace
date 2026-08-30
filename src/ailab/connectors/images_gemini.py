@@ -51,7 +51,7 @@ class GeminiImages(Connector):
         if not self.is_available():
             raise AuthError(self.unavailable_reason())
 
-        model = model or self.default_model
+        model = self.resolve_model(model)
         if model.startswith("imagen"):
             url = f"{BASE_URL}/{model}:predict"
             payload = {"instances": [{"prompt": prompt}], "parameters": {"sampleCount": n}}

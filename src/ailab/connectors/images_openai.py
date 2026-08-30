@@ -17,11 +17,11 @@ MODELS_URL = "https://api.openai.com/v1/models"
 class OpenAIImages(Connector):
     name = "openai"
     category = "images"
-    summary = "OpenAI の画像生成 (gpt-image-1 / dall-e-3)"
+    summary = "OpenAI の画像生成 (gpt-image-2)"
     auth = AuthSpec(env=("OPENAI_API_KEY",), signup_url="https://platform.openai.com/api-keys")
     terms_url = "https://openai.com/policies/usage-policies/"
     rate_limit = RateLimit(requests=20, per_seconds=60)
-    default_model = "gpt-image-1"
+    default_model = "gpt-image-2"
     priority = 10
 
     def default_headers(self) -> dict[str, str]:
@@ -46,10 +46,8 @@ class OpenAIImages(Connector):
         if not self.is_available():
             raise AuthError(self.unavailable_reason())
 
-        model = model or self.default_model
+        model = self.resolve_model(model)
         payload: dict = {"model": model, "prompt": prompt, "n": n, "size": size}
-        if model.startswith("dall-e"):
-            payload["response_format"] = "b64_json"
 
         response = self.request("POST", API_URL, json=payload, timeout=timeout)
 
