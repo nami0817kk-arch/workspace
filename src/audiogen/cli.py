@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import inspect
+import json
 import os
 import sys
 from typing import Sequence
@@ -49,9 +50,10 @@ def cmd_sfx(args: argparse.Namespace) -> int:
     return 0
 
 
-def cmd_bgm(args: argparse.Namespace) -> int:
+def _bgm_config(args: argparse.Namespace) -> bgm_module.BGMConfig:
+    """コマンドライン引数から BGM の設定を組み立てる。"""
     parts = [part for part in ("chords", "bass", "lead", "drums") if part not in args.without]
-    config = bgm_module.BGMConfig(
+    return bgm_module.BGMConfig(
         style=args.style,
         key=args.key,
         scale=args.scale,
@@ -62,10 +64,16 @@ def cmd_bgm(args: argparse.Namespace) -> int:
         progression=args.progression,
         drum_pattern=args.drums,
         structure=args.structure,
+        swing=args.swing,
+        humanize=args.humanize,
         parts=parts,
         loop=not args.no_loop,
         stereo=args.stereo,
     )
+
+
+def cmd_bgm(args: argparse.Namespace) -> int:
+    config = _bgm_config(args)
     try:
         if args.stereo:
             samples = bgm_module.generate_stereo(config)
@@ -81,6 +89,38 @@ def cmd_bgm(args: argparse.Namespace) -> int:
     path = args.output or _default_path(args.dir, name)
     write_wav(path, samples, sr=args.rate, channels=channels)
     _report(path, samples, args.rate, channels)
+    return 0
+
+
+def cmd_describe(args: argparse.Namespace) -> int:
+    """音を作らずに、これから生成される曲の中身だけを表示する。"""
+    config = _bgm_config(args)
+    try:
+        summary = bgm_module.describe(config)
+    except ValueError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 2
+
+    if args.json:
+        print(json.dumps(summary, ensure_ascii=False, indent=2))
+        return 0
+
+    print(
+        f"{summary['style']} / key={summary['key']} {summary['scale']} / "
+        f"{summary['bpm']}bpm / {summary['bars']} bars / {summary['duration']}s"
+    )
+    print(f"progression: {summary['progression']}  seed: {summary['seed']}")
+    print("sections:")
+    for section in summary["sections"]:
+        print(f"  {section['name']:<8} bar {section['start_bar']:>3} + {section['bars']}")
+    print("chords:")
+    for chord in summary["chords"]:
+        print(f"  bar {chord['bar']:>3}  {' '.join(chord['notes'])}")
+    print(f"melody: {len(summary['melody'])} notes")
+    for note in summary["melody"][:16]:
+        print(f"  {note['start']:>7.3f}s  {note['note']:<4} {note['length']:.3f}s")
+    if len(summary["melody"]) > 16:
+        print(f"  ... {len(summary['melody']) - 16} more")
     return 0
 
 
@@ -121,6 +161,35 @@ def cmd_demo(args: argparse.Namespace) -> int:
     return 0
 
 
+def _add_bgm_options(parser: argparse.ArgumentParser) -> None:
+    """bgm と describe で共通の、曲そのものを決めるオプション。"""
+    parser.add_argument("--style", default="calm", help=f"曲想 ({', '.join(bgm_module.style_names())})")
+    parser.add_argument("--key", default="C", help="キー(例: C, F#, A)")
+    parser.add_argument("--scale", default=None, help=f"音階 ({', '.join(sorted(notes.SCALES))})")
+    parser.add_argument("--bpm", type=int, default=None, help="テンポ")
+    parser.add_argument("--bars", type=int, default=8, help="小節数 (既定: 8)")
+    parser.add_argument("--seed", type=int, default=None, help="乱数シード(同じ値なら同じ曲)")
+    parser.add_argument("--progression", default=None, help='コード進行(例: "I-V-vi-IV")')
+    parser.add_argument(
+        "--drums", default=None, help=f"ドラムパターン ({', '.join(drums.pattern_names())})"
+    )
+    parser.add_argument(
+        "--structure", default="loop", help=f"曲構成 ({', '.join(bgm_module.structure_names())})"
+    )
+    parser.add_argument(
+        "--swing", type=float, default=None,
+        help="裏の8分音符を後ろへずらす量 (0.0〜0.7。0.67 で三連符のシャッフル)",
+    )
+    parser.add_argument(
+        "--humanize", type=float, default=None,
+        help="タイミングと音量のゆらぎ(秒)。0 で機械的に正確",
+    )
+    parser.add_argument(
+        "--without", nargs="*", default=[], choices=["chords", "bass", "lead", "drums"],
+        help="外すパート",
+    )
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="audiogen",
@@ -138,32 +207,20 @@ def build_parser() -> argparse.ArgumentParser:
     sfx_parser.set_defaults(func=cmd_sfx)
 
     bgm_parser = subparsers.add_parser("bgm", help="BGM を1曲生成する")
-    bgm_parser.add_argument(
-        "--style", default="calm", help=f"曲想 ({', '.join(bgm_module.style_names())})"
-    )
-    bgm_parser.add_argument("--key", default="C", help="キー(例: C, F#, A)")
-    bgm_parser.add_argument("--scale", default=None, help=f"音階 ({', '.join(sorted(notes.SCALES))})")
-    bgm_parser.add_argument("--bpm", type=int, default=None, help="テンポ")
-    bgm_parser.add_argument("--bars", type=int, default=8, help="小節数 (既定: 8)")
-    bgm_parser.add_argument("--seed", type=int, default=None, help="乱数シード(同じ値なら同じ曲)")
-    bgm_parser.add_argument("--progression", default=None, help='コード進行(例: "I-V-vi-IV")')
-    bgm_parser.add_argument(
-        "--drums", default=None, help=f"ドラムパターン ({', '.join(drums.pattern_names())})"
-    )
-    bgm_parser.add_argument(
-        "--structure", default="loop",
-        help=f"曲構成 ({', '.join(bgm_module.structure_names())})",
-    )
-    bgm_parser.add_argument(
-        "--without", nargs="*", default=[], choices=["chords", "bass", "lead", "drums"],
-        help="外すパート",
-    )
+    _add_bgm_options(bgm_parser)
     bgm_parser.add_argument("--stereo", action="store_true", help="ステレオで書き出す")
     bgm_parser.add_argument("--no-loop", action="store_true", help="末尾の残響を切らずに残す")
     bgm_parser.add_argument("-n", "--name", default=None, help="出力ファイル名(拡張子なし)")
     bgm_parser.add_argument("-o", "--output", help="出力先の WAV パス")
     bgm_parser.add_argument("-d", "--dir", default="output", help="出力ディレクトリ (既定: output)")
     bgm_parser.set_defaults(func=cmd_bgm)
+
+    describe_parser = subparsers.add_parser(
+        "describe", help="音を作らずに、生成される曲の中身を表示する"
+    )
+    _add_bgm_options(describe_parser)
+    describe_parser.add_argument("--json", action="store_true", help="JSON で出力する")
+    describe_parser.set_defaults(func=cmd_describe, stereo=False, no_loop=False)
 
     list_parser = subparsers.add_parser("list", help="使えるプリセットを一覧する")
     list_parser.set_defaults(func=cmd_list)

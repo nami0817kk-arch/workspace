@@ -109,3 +109,43 @@ def test_list_prints_song_structures(capsys):
     out = capsys.readouterr().out
     assert "Song structures" in out
     assert "verse_chorus" in out
+
+
+def test_describe_prints_a_readable_summary(capsys):
+    args = ["describe", "--style", "battle", "--key", "A", "--bars", "4", "--seed", "3"]
+    assert cli.main(args) == 0
+    out = capsys.readouterr().out
+    assert "battle" in out
+    assert "harmonic_minor" in out
+    assert "sections:" in out
+    assert "melody:" in out
+
+
+def test_describe_json_is_machine_readable(capsys):
+    import json
+
+    assert cli.main(["describe", "--bars", "4", "--seed", "1", "--json"]) == 0
+    summary = json.loads(capsys.readouterr().out)
+    assert summary["bars"] == 4
+    assert summary["seed"] == 1
+    assert summary["melody"]
+
+
+def test_describe_reports_an_unknown_style(capsys):
+    assert cli.main(["describe", "--style", "polka"]) == 2
+    assert "unknown bgm style" in capsys.readouterr().err
+
+
+def test_describe_writes_no_files(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    assert cli.main(["describe", "--bars", "2"]) == 0
+    assert list(tmp_path.iterdir()) == []
+
+
+def test_bgm_swing_and_humanize_options(tmp_path):
+    args = [
+        "--rate", SR, "bgm", "--bars", "2", "--seed", "1",
+        "--swing", "0.5", "--humanize", "0.0", "-d", str(tmp_path),
+    ]
+    assert cli.main(args) == 0
+    assert (tmp_path / "bgm_calm.wav").exists()

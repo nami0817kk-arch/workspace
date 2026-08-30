@@ -32,6 +32,53 @@ BEATS_PER_BAR = 4
 
 
 @dataclass(frozen=True)
+class Groove:
+    """機械的に並んだ音符に「ノリ」を与えるための設定。
+
+    完全に等間隔・等音量で並べると、正確ではあるが打ち込みらしさが強く出る。
+    裏拍を少し後ろにずらし(スウィング)、拍の重さで音量を変え(アクセント)、
+    ごくわずかに時間と音量を揺らす(ヒューマナイズ)ことで人が弾いた感じに近づける。
+    """
+
+    swing: float = 0.0
+    """裏の8分音符を後ろへずらす量。16分音符を 1.0 とした比。0.67 で三連符のシャッフル。"""
+    accent: float = 0.25
+    """拍の重さによる音量差の大きさ。0 で強弱なし。"""
+    humanize: float = 0.0
+    """時間の揺らぎ(秒)。音量も同じ割合で揺らす。"""
+
+    def time_offset(self, step: int, step_seconds: float, rng: random.Random) -> float:
+        """16分グリッド上の ``step`` 番目の音を、何秒ずらすか。"""
+        offset = 0.0
+        if self.swing and step % 4 == 2:  # 各拍の裏の8分音符
+            offset += self.swing * step_seconds
+        if self.humanize:
+            offset += rng.uniform(-self.humanize, self.humanize)
+        return offset
+
+    def velocity(self, step: int, rng: random.Random) -> float:
+        """16分グリッド上の ``step`` 番目の音の音量倍率。"""
+        if step % 16 == 0:
+            weight = 1.0
+        elif step % 8 == 0:
+            weight = 0.95
+        elif step % 4 == 0:
+            weight = 0.85
+        elif step % 2 == 0:
+            weight = 0.75
+        else:
+            weight = 0.65
+        level = 1.0 - self.accent * (1.0 - weight)
+        if self.humanize:
+            level *= 1.0 + rng.uniform(-self.humanize, self.humanize) * 12.0
+        return max(0.0, level)
+
+
+STRAIGHT = Groove()
+"""ゆらぎのないグルーヴ。チップチューンなど機械的な曲想向け。"""
+
+
+@dataclass(frozen=True)
 class Style:
     """曲想ごとのパラメータ一式。"""
 
@@ -58,6 +105,7 @@ class Style:
     reverb_room: float = 0.7
     delay_wet: float = 0.0
     bitcrush_bits: int = 0
+    groove: Groove = Groove(humanize=0.003)
 
 
 STYLES: dict[str, Style] = {
@@ -68,6 +116,7 @@ STYLES: dict[str, Style] = {
         lead_shape="sine", lead_gain=0.30, lead_rest_prob=0.35,
         lead_durations=(1.0, 2.0, 2.0, 4.0),
         drum_pattern="soft", drum_gain=0.30, reverb_wet=0.38,
+        groove=Groove(accent=0.3, humanize=0.006),  # ゆったりした曲ほど揺れてよい
     ),
     "adventure": Style(
         scale="major", bpm=132, progression="I-V-vi-IV",
@@ -91,6 +140,7 @@ STYLES: dict[str, Style] = {
         lead_shape="square", lead_gain=0.36, lead_rest_prob=0.28,
         lead_durations=(0.5, 1.0, 1.0, 2.0), lead_range=6,
         drum_pattern="soft", drum_gain=0.35, reverb_wet=0.26, delay_wet=0.18,
+        groove=Groove(swing=0.2, accent=0.25, humanize=0.004),
     ),
     "night": Style(
         scale="minor", bpm=68, progression="i-VI-III-VII",
@@ -107,6 +157,7 @@ STYLES: dict[str, Style] = {
         lead_shape="pulse12", lead_gain=0.40, lead_rest_prob=0.12,
         lead_durations=(0.25, 0.5, 0.5, 1.0),
         drum_pattern="march", drum_gain=0.45, reverb_wet=0.10, bitcrush_bits=6,
+        groove=STRAIGHT,  # チップチューンは正確に並んでいるほうが らしい
     ),
     "tension": Style(
         scale="phrygian", bpm=104, progression="i-ii-i-vii",
@@ -115,6 +166,7 @@ STYLES: dict[str, Style] = {
         lead_shape="triangle", lead_gain=0.30, lead_rest_prob=0.4,
         lead_durations=(0.5, 1.0, 2.0), lead_range=7,
         drum_pattern="shuffle", drum_gain=0.4, reverb_wet=0.32,
+        groove=Groove(swing=0.55, accent=0.3, humanize=0.005),
     ),
 }
 
@@ -206,6 +258,8 @@ class BGMConfig:
     progression: str | None = None
     drum_pattern: str | None = None
     structure: str = "loop"
+    swing: float | None = None
+    humanize: float | None = None
     parts: Sequence[str] = field(default_factory=lambda: ("chords", "bass", "lead", "drums"))
     loop: bool = True
     stereo: bool = False
@@ -227,7 +281,20 @@ class BGMConfig:
             overrides["progression"] = self.progression
         if self.drum_pattern is not None:
             overrides["drum_pattern"] = self.drum_pattern
+        if self.swing is not None or self.humanize is not None:
+            groove_overrides = {}
+            if self.swing is not None:
+                groove_overrides["swing"] = min(max(float(self.swing), 0.0), 0.7)
+            if self.humanize is not None:
+                groove_overrides["humanize"] = max(float(self.humanize), 0.0)
+            overrides["groove"] = replace(base.groove, **groove_overrides)
         return replace(base, **overrides) if overrides else base
+
+
+def _with_overrides(config: BGMConfig | None, overrides: dict) -> BGMConfig:
+    """設定オブジェクトとキーワード指定をひとつにまとめる。"""
+    config = config or BGMConfig()
+    return replace(config, **overrides) if overrides else config
 
 
 def style_names() -> list[str]:
@@ -251,6 +318,26 @@ def _root_midi(key: str, octave: int) -> int:
     return notes.note_to_midi(f"{key}{octave}")
 
 
+@dataclass(frozen=True)
+class Note:
+    """譜面上の1音。「いつ・どの高さで・どれだけ」だけを持ち、音色は持たない。"""
+
+    start: float
+    """区間の先頭からの秒数。"""
+    midi: int
+    length: float
+    velocity: float = 1.0
+
+
+@dataclass(frozen=True)
+class Hit:
+    """ドラムの1打。"""
+
+    start: float
+    voice: str
+    velocity: float = 1.0
+
+
 def _cached(cache: dict, key: tuple, factory) -> list[float]:
     """同じ音色・音程・長さの音を作り直さずに使い回す。
 
@@ -264,68 +351,9 @@ def _cached(cache: dict, key: tuple, factory) -> list[float]:
     return buf
 
 
-def _render_chords(
-    config: BGMConfig,
-    style: Style,
-    degrees: Sequence[int],
-    bar_seconds: float,
-    cache: dict,
-) -> list[float]:
-    sr = config.sr
-    root = _root_midi(config.key, style.chord_octave)
-    shape = style.chord_shape
-    out: list[float] = []
-    for bar, degree in enumerate(degrees):
-        chord = notes.diatonic_chord(root, style.scale, degree, seventh=style.chord_seventh)
-        offset = num_samples(bar * bar_seconds, sr)
-        for voice, midi in enumerate(chord):
-            shaped = _cached(
-                cache,
-                ("chord", shape, midi),
-                lambda midi=midi: env.apply(
-                    osc.render(shape, notes.midi_to_freq(midi), bar_seconds, sr),
-                    env.adsr(bar_seconds, 0.08, 0.25, 0.6, bar_seconds * 0.3, sr),
-                ),
-            )
-            add_into(out, shaped, offset, gain=1.0 / (voice + 2))
-    return out
-
-
-def _render_bass(
-    config: BGMConfig,
-    style: Style,
-    degrees: Sequence[int],
-    bar_seconds: float,
-    cache: dict,
-) -> list[float]:
-    sr = config.sr
-    root = _root_midi(config.key, style.bass_octave)
-    step_seconds = bar_seconds / drums.STEPS_PER_BAR
-    pattern = style.bass_pattern
-    length = step_seconds * 1.6
-    shape = style.bass_shape
-    out: list[float] = []
-    for bar, degree in enumerate(degrees):
-        midi = notes.degree_to_midi(root, style.scale, degree)
-        fifth = notes.degree_to_midi(root, style.scale, degree + 4)
-        for step, symbol in enumerate(pattern[: drums.STEPS_PER_BAR]):
-            if symbol == ".":
-                continue
-            note_midi = midi if symbol == "x" else fifth
-            shaped = _cached(
-                cache,
-                ("bass", shape, note_midi),
-                lambda m=note_midi: fx.lowpass(
-                    env.apply(
-                        osc.render(shape, notes.midi_to_freq(m), length, sr),
-                        env.adsr(length, 0.006, 0.05, 0.75, length * 0.35, sr),
-                    ),
-                    900.0,
-                    sr,
-                ),
-            )
-            add_into(out, shaped, num_samples(bar * bar_seconds + step * step_seconds, sr))
-    return out
+def _place(out: list[float], buf: list[float], start_seconds: float, sr: int, gain: float = 1.0) -> None:
+    """音を指定時刻に置く(負の時刻は譜面側で 0 に丸めてある)。"""
+    add_into(out, buf, max(0, num_samples(start_seconds, sr)), gain=gain)
 
 
 # メロディは「1小節ぶんの短いフレーズ(モチーフ)」を作り、それを小節ごとに
@@ -389,31 +417,88 @@ def _anchor_shift(phrase: Phrase, chord_degree: int, scale_size: int) -> int:
     )
 
 
-def _render_lead(
+def _next_degree(
+    rng: random.Random,
+    current: int,
+    chord_degree: int,
+    scale_size: int,
+    span: int,
+    prefer_chord_tone: bool,
+) -> int:
+    """次の音の度数を選ぶ。強拍ではコードトーンに寄せる。"""
+    step = rng.choice((-3, -2, -1, -1, 1, 1, 2, 3))
+    candidate = current + step
+    if prefer_chord_tone:
+        chord_offsets = (0, 2, 4)
+        options = [
+            candidate + shift
+            for shift in range(-3, 4)
+            if (candidate + shift - chord_degree) % scale_size in chord_offsets
+        ]
+        if options:
+            candidate = min(options, key=lambda value: (abs(value - current), abs(value)))
+    return max(-span, min(span, candidate))
+
+
+# --- 作曲(譜面を組み立てる) -------------------------------------------------
+#
+# 「どの音をいつ鳴らすか」と「その音をどう合成するか」を分けている。
+# 前者だけを取り出せるので、音を作らずに中身を確認できる(describe を参照)。
+
+
+def _plan_chords(config: BGMConfig, style: Style, degrees: Sequence[int], bar_seconds: float) -> list[Note]:
+    root = _root_midi(config.key, style.chord_octave)
+    plan: list[Note] = []
+    for bar, degree in enumerate(degrees):
+        chord = notes.diatonic_chord(root, style.scale, degree, seventh=style.chord_seventh)
+        for voice, midi in enumerate(chord):
+            # 上の声部ほど小さくして、根音が土台に聞こえるようにする。
+            plan.append(Note(bar * bar_seconds, midi, bar_seconds, 1.0 / (voice + 2)))
+    return plan
+
+
+def _plan_bass(
     config: BGMConfig,
     style: Style,
     degrees: Sequence[int],
     bar_seconds: float,
-    rng: random.Random,
-    cache: dict,
-    octave_shift: int = 0,
-    motifs: dict | None = None,
-    bar_offset: int = 0,
-) -> list[float]:
-    """モチーフを展開してメロディを作る。"""
-    sr = config.sr
-    root = _root_midi(config.key, style.lead_octave + octave_shift)
+    groove_rng: random.Random,
+) -> list[Note]:
+    root = _root_midi(config.key, style.bass_octave)
+    step_seconds = bar_seconds / drums.STEPS_PER_BAR
+    groove = style.groove
+    length = step_seconds * 1.6
+    plan: list[Note] = []
+    for bar, degree in enumerate(degrees):
+        midi = notes.degree_to_midi(root, style.scale, degree)
+        fifth = notes.degree_to_midi(root, style.scale, degree + 4)
+        for step, symbol in enumerate(style.bass_pattern[: drums.STEPS_PER_BAR]):
+            if symbol == ".":
+                continue
+            start = bar * bar_seconds + step * step_seconds
+            start = max(0.0, start + groove.time_offset(step, step_seconds, groove_rng))
+            plan.append(
+                Note(start, midi if symbol == "x" else fifth, length, groove.velocity(step, groove_rng))
+            )
+    return plan
+
+
+def _plan_lead(
+    style: Style,
+    degrees: Sequence[int],
+    bar_seconds: float,
+    root: int,
+    groove_rng: random.Random,
+    motifs: dict,
+    bar_offset: int,
+) -> list[Note]:
+    """モチーフを小節ごとの和音に合わせて展開し、メロディの譜面を作る。"""
     scale_size = len(notes.scale_degrees(style.scale))
     beat_seconds = bar_seconds / BEATS_PER_BAR
-    shape = style.lead_shape
-    motifs = {} if motifs is None else motifs
+    step_seconds = bar_seconds / drums.STEPS_PER_BAR
+    groove = style.groove
+    plan: list[Note] = []
 
-    if "motif" not in motifs:  # 曲を通して同じ素材を使い回す
-        motifs["motif"] = _make_phrase(style, rng, scale_size)
-        motifs["contrast"] = _make_phrase(style, rng, scale_size, start_degree=2)
-        motifs["variation"] = _vary_phrase(motifs["motif"], rng, style.lead_range)
-
-    out: list[float] = []
     for bar, chord_degree in enumerate(degrees):
         role = DEVELOPMENT[(bar + bar_offset) % len(DEVELOPMENT)]
         phrase = {"A": motifs["motif"], "B": motifs["contrast"], "A'": motifs["variation"]}[role]
@@ -422,21 +507,110 @@ def _render_lead(
         position = 0.0
         for degree, length_beats in phrase:
             start = bar * bar_seconds + position * beat_seconds
+            step = round(position * drums.STEPS_PER_BAR / BEATS_PER_BAR)
             position += length_beats
             if degree is None:
                 continue
-            length = length_beats * beat_seconds * 0.92
-            midi = notes.degree_to_midi(root, style.scale, degree + shift)
-            shaped = _cached(
-                cache,
-                ("lead", shape, midi, round(length, 6)),
-                lambda m=midi, ln=length: env.apply(
-                    osc.render(shape, notes.midi_to_freq(m), ln, sr),
-                    env.adsr(ln, 0.012, 0.08, 0.7, ln * 0.3, sr),
-                ),
+            start = max(0.0, start + groove.time_offset(step, step_seconds, groove_rng))
+            plan.append(
+                Note(
+                    start,
+                    notes.degree_to_midi(root, style.scale, degree + shift),
+                    length_beats * beat_seconds * 0.92,
+                    groove.velocity(step, groove_rng),
+                )
             )
-            add_into(out, shaped, num_samples(start, sr))
+    return plan
+
+
+def _plan_drums(style: Style, bars: int, bar_seconds: float, groove_rng: random.Random) -> list[Hit]:
+    pattern = drums.get_pattern(style.drum_pattern)
+    if not pattern:
+        return []
+    step_seconds = bar_seconds / drums.STEPS_PER_BAR
+    groove = style.groove
+    plan: list[Hit] = []
+    for bar in range(bars):
+        for voice, steps in pattern.items():
+            for step, symbol in enumerate(steps[: drums.STEPS_PER_BAR]):
+                if symbol == ".":
+                    continue
+                start = bar * bar_seconds + step * step_seconds
+                start = max(0.0, start + groove.time_offset(step, step_seconds, groove_rng))
+                level = (1.0 if symbol == "x" else 0.6) * groove.velocity(step, groove_rng)
+                plan.append(Hit(start, voice, level))
+    return plan
+
+
+def _ensure_motifs(style: Style, rng: random.Random, motifs: dict) -> dict:
+    """曲を通して使い回すモチーフを、最初の1回だけ作る。"""
+    if "motif" not in motifs:
+        scale_size = len(notes.scale_degrees(style.scale))
+        motifs["motif"] = _make_phrase(style, rng, scale_size)
+        motifs["contrast"] = _make_phrase(style, rng, scale_size, start_degree=2)
+        motifs["variation"] = _vary_phrase(motifs["motif"], rng, style.lead_range)
+    return motifs
+
+
+# --- 合成(譜面を音にする) ---------------------------------------------------
+
+
+def _render_notes(
+    plan: Sequence[Note],
+    voice: str,
+    sr: int,
+    cache: dict,
+    synth,
+) -> list[float]:
+    """譜面の各音を ``synth(midi, length)`` で作り、時間軸に並べる。"""
+    out: list[float] = []
+    for note in plan:
+        buf = _cached(
+            cache,
+            (voice, note.midi, round(note.length, 6)),
+            lambda n=note: synth(n.midi, n.length),
+        )
+        _place(out, buf, note.start, sr, gain=note.velocity)
     return out
+
+
+def _render_hits(plan: Sequence[Hit], sr: int) -> list[float]:
+    voices = {hit.voice: drums.VOICES[hit.voice](sr=sr) for hit in plan}
+    out: list[float] = []
+    for hit in plan:
+        _place(out, voices[hit.voice], hit.start, sr, gain=hit.velocity)
+    return out
+
+
+def _chord_synth(style: Style, sr: int):
+    def synth(midi: int, length: float) -> list[float]:
+        return env.apply(
+            osc.render(style.chord_shape, notes.midi_to_freq(midi), length, sr),
+            env.adsr(length, 0.08, 0.25, 0.6, length * 0.3, sr),
+        )
+
+    return synth
+
+
+def _bass_synth(style: Style, sr: int):
+    def synth(midi: int, length: float) -> list[float]:
+        tone = env.apply(
+            osc.render(style.bass_shape, notes.midi_to_freq(midi), length, sr),
+            env.adsr(length, 0.006, 0.05, 0.75, length * 0.35, sr),
+        )
+        return fx.lowpass(tone, 900.0, sr)
+
+    return synth
+
+
+def _lead_synth(style: Style, sr: int):
+    def synth(midi: int, length: float) -> list[float]:
+        return env.apply(
+            osc.render(style.lead_shape, notes.midi_to_freq(midi), length, sr),
+            env.adsr(length, 0.012, 0.08, 0.7, length * 0.3, sr),
+        )
+
+    return synth
 
 
 def _next_degree(
@@ -462,82 +636,154 @@ def _next_degree(
     return max(-span, min(span, candidate))
 
 
-def _render_drums(config: BGMConfig, style: Style, bars: int, bar_seconds: float) -> list[float]:
-    sr = config.sr
-    pattern = drums.get_pattern(style.drum_pattern)
-    if not pattern:
-        return []
-    step_seconds = bar_seconds / drums.STEPS_PER_BAR
-    cache = {voice: drums.VOICES[voice](sr=sr) for voice in pattern}
-    out: list[float] = []
-    for bar in range(bars):
-        for voice, steps in pattern.items():
-            for step, symbol in enumerate(steps[: drums.STEPS_PER_BAR]):
-                if symbol == ".":
-                    continue
-                gain = 1.0 if symbol == "x" else 0.6
-                add_into(out, cache[voice], num_samples(bar * bar_seconds + step * step_seconds, sr), gain)
-    return out
+@dataclass(frozen=True)
+class Arrangement:
+    """音にする前の曲の姿。どの音をいつ鳴らすかだけを持つ。"""
+
+    style: Style
+    bars: int
+    bar_seconds: float
+    sections: tuple[tuple[Section, int, int], ...]
+    notes: dict[str, list[Note]]
+    """パート名 -> 音符の並び(曲頭からの絶対時刻。区間の音量も反映済み)。"""
+    hits: list[Hit]
+
+    @property
+    def length_seconds(self) -> float:
+        return self.bars * self.bar_seconds
+
+    def parts(self) -> list[str]:
+        """実際に音の入っているパート名。"""
+        return [name for name in ("chords", "bass", "lead", "drums") if self.part_count(name)]
+
+    def part_count(self, name: str) -> int:
+        if name == "drums":
+            return len(self.hits)
+        return len(self.notes.get(name, ()))
 
 
-def render_tracks(config: BGMConfig) -> dict[str, list[float]]:
-    """パートごとのバッファを ``{名前: バッファ}`` で返す(ミックス前)。
+def compose(config: BGMConfig | None = None, **overrides) -> Arrangement:
+    """音を合成せずに譜面だけを組み立てる。
 
-    曲は ``structure`` で決まる区間に分けて作り、区間ごとに
-    鳴らすパート・音量・メロディの高さを変えてから元の位置に貼り合わせる。
+    生成前に中身を確認したり、別の音源へ渡したりできるようにしてある。
     """
+    config = _with_overrides(config, overrides)
     style = config.resolved_style()
     if config.bars < 1:
         raise ValueError("bars must be >= 1")
 
     rng = random.Random(config.seed)
+    # グルーヴ用は別系列にしておく。ゆらぎの有無でメロディまで変わらないようにする。
+    groove_rng = random.Random((config.seed or 0) + 7919)
     bar_seconds = BEATS_PER_BAR * 60.0 / style.bpm
     degrees = _chord_degrees_for_bars(style, config.bars)
     requested = [part for part in ("chords", "bass", "lead", "drums") if part in set(config.parts)]
+    motifs = _ensure_motifs(style, rng, {})
 
-    cache: dict = {}
-    motifs: dict = {}
-    tracks: dict[str, list[float]] = {}
-    for section, start_bar, bar_count in plan_sections(config.structure, config.bars):
-        offset = num_samples(start_bar * bar_seconds, config.sr)
+    plan = plan_sections(config.structure, config.bars)
+    notes_by_part: dict[str, list[Note]] = {}
+    hits: list[Hit] = []
+    for section, start_bar, bar_count in plan:
+        offset = start_bar * bar_seconds
         section_degrees = degrees[start_bar : start_bar + bar_count]
         for part in requested:
             if part in section.drop:
                 continue
-            buf = _render_part(
-                part, config, style, section, section_degrees,
-                bar_seconds, rng, cache, motifs, start_bar,
-            )
-            if buf:
-                add_into(tracks.setdefault(part, []), buf, offset, gain=section.gain)
-    return tracks
+            if part == "drums":
+                hits.extend(
+                    Hit(hit.start + offset, hit.voice, hit.velocity * section.gain)
+                    for hit in _plan_drums(style, bar_count, bar_seconds, groove_rng)
+                )
+                continue
+            for note in _plan_notes(part, config, style, section, section_degrees, bar_seconds, groove_rng, motifs, start_bar):
+                notes_by_part.setdefault(part, []).append(
+                    replace(note, start=note.start + offset, velocity=note.velocity * section.gain)
+                )
+    return Arrangement(style, config.bars, bar_seconds, tuple(plan), notes_by_part, hits)
 
 
-def _render_part(
+def _plan_notes(
     part: str,
     config: BGMConfig,
     style: Style,
     section: Section,
     degrees: Sequence[int],
     bar_seconds: float,
-    rng: random.Random,
-    cache: dict,
+    groove_rng: random.Random,
     motifs: dict,
     bar_offset: int,
-) -> list[float]:
-    """1区間ぶんのパートを、区間の先頭を 0 秒として作る。"""
+) -> list[Note]:
     if part == "chords":
-        return _render_chords(config, style, degrees, bar_seconds, cache)
+        return _plan_chords(config, style, degrees, bar_seconds)
     if part == "bass":
-        return _render_bass(config, style, degrees, bar_seconds, cache)
+        return _plan_bass(config, style, degrees, bar_seconds, groove_rng)
     if part == "lead":
-        return _render_lead(
-            config, style, degrees, bar_seconds, rng, cache,
-            section.lead_octave, motifs, bar_offset,
-        )
-    if part == "drums":
-        return _render_drums(config, style, len(degrees), bar_seconds)
+        root = _root_midi(config.key, style.lead_octave + section.lead_octave)
+        return _plan_lead(style, degrees, bar_seconds, root, groove_rng, motifs, bar_offset)
     raise ValueError(f"unknown part: {part!r}")
+
+
+def describe(config: BGMConfig | None = None, **overrides) -> dict:
+    """これから作られる曲の中身を、そのまま印刷・JSON 化できる形で返す。"""
+    config = _with_overrides(config, overrides)
+    arrangement = compose(config)
+    style = arrangement.style
+    degrees = _chord_degrees_for_bars(style, config.bars)
+    root = _root_midi(config.key, style.chord_octave)
+    return {
+        "style": config.style,
+        "key": config.key,
+        "scale": style.scale,
+        "bpm": style.bpm,
+        "bars": config.bars,
+        "seed": config.seed,
+        "structure": config.structure,
+        "progression": style.progression,
+        "duration": round(arrangement.length_seconds, 3),
+        "swing": style.groove.swing,
+        "humanize": style.groove.humanize,
+        "sections": [
+            {"name": section.name, "start_bar": start, "bars": count}
+            for section, start, count in arrangement.sections
+        ],
+        "chords": [
+            {
+                "bar": bar,
+                "notes": [
+                    notes.midi_to_name(midi)
+                    for midi in notes.diatonic_chord(root, style.scale, degree, style.chord_seventh)
+                ],
+            }
+            for bar, degree in enumerate(degrees)
+        ],
+        "melody": [
+            {"start": round(note.start, 4), "note": notes.midi_to_name(note.midi), "length": round(note.length, 4)}
+            for note in arrangement.notes.get("lead", ())
+        ],
+        "note_counts": {name: arrangement.part_count(name) for name in arrangement.parts()},
+    }
+
+
+def render_tracks(config: BGMConfig | None = None, **overrides) -> dict[str, list[float]]:
+    """パートごとのバッファを ``{名前: バッファ}`` で返す(ミックス前)。"""
+    config = _with_overrides(config, overrides)
+    arrangement = compose(config)
+    style = arrangement.style
+    sr = config.sr
+    cache: dict = {}
+
+    synths = {
+        "chords": _chord_synth(style, sr),
+        "bass": _bass_synth(style, sr),
+        "lead": _lead_synth(style, sr),
+    }
+    tracks: dict[str, list[float]] = {}
+    for part, plan in arrangement.notes.items():
+        if plan:
+            tracks[part] = _render_notes(plan, part, sr, cache, synths[part])
+    if arrangement.hits:
+        tracks["drums"] = _render_hits(arrangement.hits, sr)
+    return tracks
 
 
 _PART_PAN = {"chords": -0.35, "bass": 0.0, "lead": 0.28, "drums": 0.0}
@@ -570,7 +816,7 @@ def _post_process(buf: list[float], style: Style, config: BGMConfig, length: int
 
 def generate(config: BGMConfig | None = None, **overrides) -> list[float]:
     """BGM をモノラルバッファとして生成する。"""
-    config = replace(config or BGMConfig(), **overrides) if overrides else (config or BGMConfig())
+    config = _with_overrides(config, overrides)
     style = config.resolved_style()
     tracks = render_tracks(config)
     gains = _part_gains(style)
@@ -584,7 +830,7 @@ def generate(config: BGMConfig | None = None, **overrides) -> list[float]:
 
 def generate_stereo(config: BGMConfig | None = None, **overrides) -> list[float]:
     """BGM を L,R インターリーブのステレオバッファとして生成する。"""
-    config = replace(config or BGMConfig(), **overrides) if overrides else (config or BGMConfig())
+    config = _with_overrides(config, overrides)
     style = config.resolved_style()
     tracks = render_tracks(config)
     gains = _part_gains(style)

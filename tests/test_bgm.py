@@ -5,6 +5,7 @@ from __future__ import annotations
 import pytest
 
 from audiogen import bgm, core, drums
+from audiogen import notes as notes_module
 
 SR = 11025
 
@@ -177,13 +178,12 @@ def test_structure_does_not_change_the_total_length():
 
 def test_intro_section_has_no_drums():
     """イントロではドラムが鳴らないこと。"""
-    config = _config(style="adventure", bars=8, structure="intro")
-    tracks = bgm.render_tracks(config)
-    bar_seconds = bgm.BEATS_PER_BAR * 60.0 / config.resolved_style().bpm
-    intro_bars = bgm.plan_sections("intro", 8)[0][2]
-    intro_end = core.num_samples(intro_bars * bar_seconds, SR)
-    assert core.peak(tracks["drums"][:intro_end]) == 0.0
-    assert core.peak(tracks["drums"][intro_end:]) > 0.0
+    config = _config(style="adventure", bars=8, structure="intro", humanize=0.0)
+    arrangement = bgm.compose(config)
+    intro_bars = arrangement.sections[0][2]
+    intro_end = intro_bars * arrangement.bar_seconds
+    assert arrangement.hits
+    assert min(hit.start for hit in arrangement.hits) >= intro_end
 
 
 def test_chorus_lead_sits_higher_than_the_verse_lead():
@@ -276,3 +276,155 @@ def test_verse_and_chorus_reuse_the_same_motif():
     lead = bgm.render_tracks(config)["lead"]
     bar_seconds = bgm.BEATS_PER_BAR * 60.0 / config.resolved_style().bpm
     assert _bar_rhythm(lead, 0, bar_seconds, SR) == _bar_rhythm(lead, 4, bar_seconds, SR)
+
+
+# --- グルーヴ -----------------------------------------------------------------
+
+
+def test_swing_delays_only_the_offbeat_eighths():
+    import random as _random
+
+    groove = bgm.Groove(swing=0.5)
+    rng = _random.Random(0)
+    offsets = [groove.time_offset(step, 0.1, rng) for step in range(16)]
+    assert [i for i, value in enumerate(offsets) if value > 0] == [2, 6, 10, 14]
+    assert offsets[2] == pytest.approx(0.05)
+
+
+def test_a_straight_groove_moves_nothing():
+    import random as _random
+
+    rng = _random.Random(0)
+    assert all(bgm.STRAIGHT.time_offset(step, 0.1, rng) == 0.0 for step in range(16))
+
+
+def test_accents_make_the_downbeat_the_loudest():
+    import random as _random
+
+    groove = bgm.Groove(accent=0.4)
+    rng = _random.Random(0)
+    levels = [groove.velocity(step, rng) for step in range(16)]
+    assert levels[0] == max(levels)
+    assert levels[1] == min(levels)
+    assert levels[8] > levels[4] > levels[2] > levels[1]
+
+
+def test_no_accent_means_every_note_is_equal():
+    import random as _random
+
+    rng = _random.Random(0)
+    groove = bgm.Groove(accent=0.0)
+    assert {groove.velocity(step, rng) for step in range(16)} == {1.0}
+
+
+def test_humanize_jitters_within_the_requested_range():
+    import random as _random
+
+    groove = bgm.Groove(humanize=0.01)
+    rng = _random.Random(0)
+    offsets = [groove.time_offset(step, 0.1, rng) for step in range(200) if step % 4 != 2]
+    assert all(abs(value) <= 0.01 for value in offsets)
+    assert any(value != 0.0 for value in offsets)
+
+
+def test_swing_shifts_the_offbeat_later():
+    """スウィングを強めると、裏の8分音符だけが後ろへ動くこと。"""
+    straight = bgm.compose(_config(bars=1, parts=("drums",), swing=0.0, humanize=0.0)).hits
+    swung = bgm.compose(_config(bars=1, parts=("drums",), swing=0.6, humanize=0.0)).hits
+    assert len(straight) == len(swung)
+    assert all(b.start >= a.start for a, b in zip(straight, swung))
+    assert any(b.start > a.start for a, b in zip(straight, swung))
+
+
+def test_humanize_zero_keeps_the_grid_exact():
+    """ゆらぎ 0 なら、音は16分グリッドの上にぴったり乗ること。"""
+    config = _config(style="adventure", bars=2, parts=("drums",), swing=0.0, humanize=0.0)
+    arrangement = bgm.compose(config)
+    step = arrangement.bar_seconds / drums.STEPS_PER_BAR
+    for hit in arrangement.hits:
+        assert hit.start % step == pytest.approx(0.0, abs=1e-9) or (
+            step - hit.start % step
+        ) == pytest.approx(0.0, abs=1e-9)
+
+
+def test_humanize_moves_notes_off_the_grid():
+    exact = bgm.compose(_config(bars=2, parts=("drums",), swing=0.0, humanize=0.0)).hits
+    loose = bgm.compose(_config(bars=2, parts=("drums",), swing=0.0, humanize=0.01)).hits
+    assert [hit.start for hit in exact] != [hit.start for hit in loose]
+    assert all(abs(b.start - a.start) <= 0.01 for a, b in zip(exact, loose))
+
+
+def test_groove_does_not_change_the_melody():
+    """ゆらぎを変えても、メロディの音そのものは変わらないこと。"""
+    tight = bgm.compose(_config(bars=4, parts=("lead",), humanize=0.0, seed=5)).notes["lead"]
+    loose = bgm.compose(_config(bars=4, parts=("lead",), humanize=0.01, seed=5)).notes["lead"]
+    assert [note.midi for note in tight] == [note.midi for note in loose]
+    assert [note.start for note in tight] != [note.start for note in loose]
+
+
+def test_chiptune_stays_perfectly_quantized():
+    assert bgm.STYLES["chiptune"].groove is bgm.STRAIGHT
+
+
+def test_swing_is_clamped_to_a_usable_range():
+    assert _config(swing=5.0).resolved_style().groove.swing == pytest.approx(0.7)
+    assert _config(swing=-1.0).resolved_style().groove.swing == 0.0
+
+
+
+
+# --- 譜面(compose / describe) -----------------------------------------------
+
+
+def test_compose_returns_notes_for_every_requested_part():
+    arrangement = bgm.compose(_config(style="adventure", bars=4))
+    assert set(arrangement.notes) == {"chords", "bass", "lead"}
+    assert arrangement.hits
+    assert arrangement.parts() == ["chords", "bass", "lead", "drums"]
+
+
+def test_composed_notes_stay_inside_the_track():
+    arrangement = bgm.compose(_config(style="adventure", bars=4))
+    for plan in arrangement.notes.values():
+        assert all(0.0 <= note.start < arrangement.length_seconds for note in plan)
+    assert all(0.0 <= hit.start < arrangement.length_seconds for hit in arrangement.hits)
+
+
+def test_composed_notes_are_in_the_scale():
+    """作られた音がすべて指定した音階に収まっていること。"""
+    config = _config(style="calm", key="C", bars=8)
+    arrangement = bgm.compose(config)
+    allowed = {(60 + step) % 12 for step in notes_module.scale_degrees(arrangement.style.scale)}
+    for part, plan in arrangement.notes.items():
+        for note in plan:
+            assert note.midi % 12 in allowed, f"{part}: {notes_module.midi_to_name(note.midi)}"
+
+
+def test_compose_is_deterministic():
+    assert bgm.compose(_config(seed=9)).notes == bgm.compose(_config(seed=9)).notes
+
+
+def test_compose_costs_no_audio_rendering():
+    """譜面だけなら小節数を増やしても音符が増えるだけであること。"""
+    short = bgm.compose(_config(bars=4, style="adventure"))
+    long = bgm.compose(_config(bars=8, style="adventure"))
+    assert long.part_count("lead") > short.part_count("lead")
+    assert long.length_seconds == pytest.approx(2 * short.length_seconds)
+
+
+def test_describe_summarises_the_track():
+    summary = bgm.describe(_config(style="battle", key="A", bars=8, structure="full", seed=2))
+    assert summary["style"] == "battle"
+    assert summary["key"] == "A"
+    assert summary["bars"] == 8
+    assert [section["name"] for section in summary["sections"]] == ["intro", "verse", "chorus", "outro"]
+    assert len(summary["chords"]) == 8
+    assert all(len(chord["notes"]) >= 3 for chord in summary["chords"])
+    assert summary["melody"]
+    assert summary["note_counts"]["lead"] == len(summary["melody"])
+
+
+def test_describe_is_json_serialisable():
+    import json
+
+    assert json.loads(json.dumps(bgm.describe(_config(bars=4))))["bars"] == 4
