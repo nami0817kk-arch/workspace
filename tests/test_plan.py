@@ -175,3 +175,52 @@ def test_blocked_domains_are_recognised_but_not_grouped():
     assert plan.is_blocked("https://www.bbc.com/sport/1") is True
     assert plan.group_of("https://www.bbc.com/sport/1") == ""   # blocked は群にしない
     assert plan.is_blocked("https://www.skysports.com/x") is False
+
+
+def _plan_with_leagues():
+    from src.plan import build_plan
+
+    plan = build_plan(RAW)
+    plan.domains = {"german": ["kicker.de", "sport1.de"], "english": ["espn.com"]}
+    plan.leagues = {
+        "germany": {
+            "name": "ブンデスリーガ",
+            "official": ["bundesliga.com", "bvb.de"],
+            "media": "german",
+            "match_q": "Spielbericht Noten",
+            "official_q": "Spielbericht",
+        },
+        "netherlands": {"name": "エールディヴィジ", "official": [], "media": "dutch"},
+    }
+    return plan
+
+
+def test_match_queries_are_scoped_to_one_league():
+    plan = _plan_with_leagues()
+    media, official = plan.match_queries("germany")
+
+    assert media.text == "Spielbericht Noten"
+    assert media.domains == ["kicker.de", "sport1.de"]
+    assert official.text == "Spielbericht"
+    assert official.domains == ["bundesliga.com", "bvb.de"]
+    assert media.label == official.label == "ブンデスリーガ"
+
+
+def test_the_official_half_can_be_left_out():
+    plan = _plan_with_leagues()
+    assert len(plan.match_queries("germany", official=False)) == 1
+
+
+def test_a_league_without_official_sites_gets_only_the_media_query():
+    plan = _plan_with_leagues()
+    assert len(plan.match_queries("netherlands")) == 1
+
+
+def test_an_unknown_league_returns_nothing():
+    assert _plan_with_leagues().match_queries("brazil") == []
+
+
+def test_the_league_name_falls_back_to_its_key():
+    plan = _plan_with_leagues()
+    assert plan.league_name("germany") == "ブンデスリーガ"
+    assert plan.league_name("brazil") == "brazil"

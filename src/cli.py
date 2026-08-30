@@ -65,6 +65,10 @@ def main(argv: list[str] | None = None) -> int:
     )
     p_plan.add_argument("--date", default=None, help="基準日 YYYY-MM-DD（既定: 今日）")
     p_plan.add_argument("--write", action="store_true", help="取材メモの雛形を research/ に作る")
+    p_plan.add_argument(
+        "--league", default=None,
+        help="match ルーティンで、どのリーグの試合かを指定する（england / spain / germany など）",
+    )
 
     p_scan = sub.add_parser("scan", help="候補テーマを拾うための検索リストを出す")
     p_scan.add_argument("--date", default=None, help="基準日 YYYY-MM-DD（既定: 今日）")
@@ -226,6 +230,19 @@ def _dispatch(args, config) -> int:
 
         routine = plan.routine(args.routine)
         print(render(routine, today, recent))
+
+        # 試合結果はリーグごとに引き先が変わる。指定があればその2本を添える
+        if args.league:
+            queries = plan.match_queries(args.league)
+            if not queries:
+                known = " / ".join(plan.leagues)
+                print(f"\n知らないリーグです: {args.league}（{known}）", file=sys.stderr)
+                return 1
+            print(f"\n■ {plan.league_name(args.league)} の試合レポートを引く")
+            for query in queries:
+                print(f"   {query.line()}")
+            print("   確認: スコアと得点者は公式で確かめる。見出しのスコアを鵜呑みにしない")
+
         if args.write:
             target = _resolve(f"research/{today.strftime('%Y%m%d')}_{routine.key}.yaml")
             if target.exists():
@@ -253,13 +270,25 @@ def _dispatch(args, config) -> int:
         if scan.get("when"):
             print(f"　目安の時刻: {scan['when']}")
         print()
-        for number, item in enumerate(scan.get("queries") or [], start=1):
+        number = 0
+        for item in scan.get("queries") or []:
+            label = str(item.get("label", ""))
+
+            # per_league の行は、追っているリーグのぶんに展開する。
+            # 全リーグまとめて1本で引くと、どの試合の記事か分からないまま返ってくる
+            if item.get("per_league"):
+                for key in scan.get("match_leagues") or []:
+                    for query in plan.match_queries(key, official=False):
+                        number += 1
+                        print(f"{number}. {label}　{query.line()}")
+                continue
+
             text = str(item.get("q", ""))
-            for key, value in words.items():
-                text = text.replace(key, value)
+            for token, value in words.items():
+                text = text.replace(token, value)
             group = item.get("domains")
             domains = plan.domains.get(str(group), []) if group else []
-            label = str(item.get("label", ""))
+            number += 1
             line = f'{number}. {label}: "{text}"'
             if domains:
                 line += f"  （{', '.join(domains)} に限定）"
@@ -516,7 +545,14 @@ def _dispatch(args, config) -> int:
             print(f"■ {name} → {pick.title}（{pick.score}点）")
             for reason in fallbacks.get(slot, []):
                 print(f"   ! {reason}。枠の狙いから外れた候補を入れています")
-            for query in candidates_mod.deep_queries(pick, plan.deep, plan.domains):
+            entry = plan.league(pick.league)
+            official = [str(h) for h in (entry.get("official") or [])]
+            media = plan.domains.get(str(entry.get("media")), [])
+            for query in candidates_mod.deep_queries(
+                pick, plan.deep, plan.domains,
+                league_official=official, league_media=media,
+                match_q=str(entry.get("match_q") or ""),
+            ):
                 line = f'   {query["label"]}: "{query["q"]}"'
                 if query["domains"]:
                     line += f"  （{', '.join(query['domains'])} に限定）"

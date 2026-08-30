@@ -65,6 +65,54 @@ domains:
             hochi.news, nikkansports.com, sponichi.co.jp,
             ole.com.ar, tycsports.com]
 
+# リーグごとの情報源。試合結果は「どのリーグの話か」で引き先が変わる。
+#   official   … そのリーグ・クラブの公式。スコアはここで確かめる（確定）
+#   media      … 現地語の報道機関の群（domains のキー）
+#   match_q    … 試合レポートを引くための語。その言語で書く
+leagues:
+  england:
+    name: プレミアリーグ
+    official: [premierleague.com, arsenal.com, chelseafc.com, manutd.com, liverpoolfc.com]
+    media: english
+    match_q: "match report player ratings"
+    official_q: "match report"
+  spain:
+    name: ラ・リーガ
+    official: [laliga.com, realmadrid.com, fcbarcelona.com, en.atleticodemadrid.com]
+    media: spanish
+    match_q: "cronica resultado partido"
+    official_q: "cronica del partido"
+  germany:
+    name: ブンデスリーガ
+    official: [bundesliga.com, fcbayern.com, bvb.de]
+    media: german
+    match_q: "Spielbericht Noten Analyse"
+    official_q: "Spielbericht"
+  italy:
+    name: セリエA
+    official: [legaseriea.it, juventus.com, acmilan.com]
+    media: italian
+    match_q: "cronaca pagelle partita"
+    official_q: "cronaca della partita"
+  france:
+    name: リーグアン
+    official: [psg.fr]
+    media: french
+    match_q: "resume match note"
+    official_q: "resume du match"
+  netherlands:
+    name: エールディヴィジ
+    official: []
+    media: dutch
+    match_q: "wedstrijdverslag uitslag"
+    official_q: "wedstrijdverslag"
+  japan:
+    name: Jリーグ
+    official: [jleague.jp]
+    media: japanese
+    match_q: "試合結果 採点 OR 寸評"
+    official_q: "試合結果 レポート"
+
 # 群ごとに置ける確度の上限。draft のときに突き合わせる
 domain_tiers:
   official: 確定
@@ -162,25 +210,34 @@ scoring:
 # {theme} には候補の見出し、{en} には候補の en（英語の語）が入る。
 # {en} を使う行は、候補に en が書かれているときだけ出る
 deep:
+  # --- どちらの種類でも引く
   - {q: "{theme} 詳細", domains: japanese, label: 何が起きたか}
-  # まず公式を当たる。声明そのものが取れれば「確定」で出せる
-  - {q: "{en} official statement OR announcement", domains: official, label: 公式発表（欧州）}
-  - {q: "{theme} 移籍 OR 加入 のお知らせ", domains: official_jp, when: japan, label: 公式発表（日本）}
   - {q: "{en} latest news", domains: english, label: 何が起きたか（英語）}
   - {q: "{en} why explained", domains: english, label: なぜそうなったか}
   - {q: "{en}", domains: social, label: 反応}
-  - {q: "{en} fee OR record", domains: english, label: 数字（移籍金・記録）}
   - {q: "{en} stats goals assists", domains: stats, label: 数字（成績）}
-  # 試合結果のときだけ。スコアだけで終わらせないための材料
-  - {q: "{en} match report", domains: official, when: match, label: 試合（公式レポート）}
+
+  # --- 移籍のとき
+  # まず公式を当たる。声明そのものが取れれば「確定」で出せる
+  - {q: "{en} official statement OR announcement", domains: official, when: transfer, label: 公式発表（欧州）}
+  - {q: "{theme} 移籍 OR 加入 のお知らせ", domains: official_jp, when: [japan, transfer], label: 公式発表（日本）}
+  - {q: "{en} fee OR record", domains: english, when: transfer, label: 数字（移籍金）}
+  # 現地語。そのリーグの移籍のときだけ
+  - {q: "{en} Transfer offiziell", domains: german, when: [germany, transfer], label: 現地（ドイツ語）}
+  - {q: "{en} calciomercato ufficiale", domains: italian, when: [italy, transfer], label: 現地（イタリア語）}
+  - {q: "{en} transfert officiel", domains: french, when: [france, transfer], label: 現地（フランス語）}
+  - {q: "{en} transfer officieel", domains: dutch, when: [netherlands, transfer], label: 現地（オランダ語）}
+  - {q: "{en} fichaje oficial", domains: spanish, when: [spain, transfer], label: 現地（スペイン語）}
+
+  # --- 試合結果のとき
+  # league_official / league_media と書くと、その候補のリーグの引き先に絞られる。
+  # 試合レポートは premierleague.com と bundesliga.com で別物なので、
+  # 公式をひとまとめにすると関係ないリーグまで引いてしまう
+  - {q: "{en} match report", domains: league_official, when: match, label: 試合（公式レポート）}
+  # {match_q} はそのリーグの現地語（ドイツなら Spielbericht）に置き換わる
+  - {q: "{en} {match_q}", domains: league_media, when: match, label: 試合（現地の報道）}
   - {q: "{en} player ratings analysis", domains: english, when: match, label: 試合（採点・分析）}
   - {q: "{en} xG shots possession", domains: stats, when: match, label: 試合（xG・スタッツ）}
-  # 現地語。そのリーグの話のときだけ出す。英語圏より詳しいことが多い
-  - {q: "{en} Transfer offiziell", domains: german, when: germany, label: 現地（ドイツ語）}
-  - {q: "{en} calciomercato ufficiale", domains: italian, when: italy, label: 現地（イタリア語）}
-  - {q: "{en} transfert officiel", domains: french, when: france, label: 現地（フランス語）}
-  - {q: "{en} transfer officieel", domains: dutch, when: netherlands, label: 現地（オランダ語）}
-  - {q: "{en} fichaje oficial", domains: spanish, when: spain, label: 現地（スペイン語）}
 
 # 1本の作り方。まとめではなく、1テーマを掘る
 policy:
@@ -216,6 +273,8 @@ coverage:
 # 1日1回のスキャン。ここで候補を広く拾う
 scan:
   when: 05:30（朝の枠に間に合わせる）
+  # 毎日スキャンするリーグ。増やすほど検索が増えるので、追うものだけ並べる
+  match_leagues: [england, spain, germany, italy, japan]
   # 日本語サイトを日付で引くと一覧ページしか返らない（実測）。話題の語で引く。
   # 日付が効くのは英語サイトだけ
   queries:
@@ -230,10 +289,9 @@ scan:
     - {q: "transfer news {today_en}", domains: english, label: 移籍（英語）}
     - {q: "official statement OR announcement transfer", domains: official, label: 公式発表（欧州）}
     - {q: "完全移籍 OR 期限付き移籍 のお知らせ", domains: official_jp, label: 公式発表（日本）}
-    # 試合結果。日付で引くと一覧ページしか返らないので、内容の語で引く
-    - {q: "match report reaction talking points", domains: english, label: 試合結果（英語）}
-    - {q: "試合結果 採点 OR 寸評 OR 逆転", domains: japanese, label: 試合結果（日本語）}
-    - {q: "match report", domains: official, label: 試合結果（公式）}
+    # 試合結果。日付で引くと一覧ページしか返らないので、内容の語で引く。
+    # per_league: true と書くと、下の match_leagues のリーグぶんに展開される
+    - {per_league: true, label: 試合結果}
     - {q: "Fabrizio Romano here we go", domains: social, label: 記者（移籍の完了）}
     - {q: "David Ornstein exclusive", domains: social, label: 記者（プレミア）}
   check: |

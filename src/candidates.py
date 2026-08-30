@@ -222,8 +222,22 @@ def _prefer(
     return max(pool, key=lambda c: c.score)
 
 
+# domains にこれを書くと、その候補のリーグの公式サイトに絞る。
+# 試合レポートは premierleague.com と bundesliga.com で別物なので、
+# 公式をひとまとめにすると関係ないリーグまで引いてしまう
+LEAGUE_OFFICIAL = "league_official"
+
+# こちらはそのリーグの現地語メディア。ドイツの試合なら kicker / sport1 に絞る
+LEAGUE_MEDIA = "league_media"
+
+
 def deep_queries(
-    item: Candidate, templates: list[dict], domains: dict[str, list[str]]
+    item: Candidate,
+    templates: list[dict],
+    domains: dict[str, list[str]],
+    league_official: list[str] | None = None,
+    league_media: list[str] | None = None,
+    match_q: str = "",
 ) -> list[dict]:
     """選んだテーマの深掘り検索を組み立てる。
 
@@ -236,22 +250,48 @@ def deep_queries(
         text = str(template.get("q", ""))
         if "{en}" in text and not item.en:
             continue
-
-        # 条件が合うときだけ出す。when はリーグ名（germany）か種別（match）。
-        # ドイツ語の検索をスペインの話に出しても、移籍の話にxGを引いても無駄になる
-        when = str(template.get("when", "")).strip().lower()
-        if when and when not in (item.league, item.kind):
+        if "{match_q}" in text and not match_q:
             continue
 
-        group = template.get("domains")
+        # 条件が合うときだけ出す。when はリーグ名（germany）か種別（match）。
+        # 並べて書くと「どちらも満たすとき」になる（when: [germany, match]）。
+        # ドイツ語の検索をスペインの話に出しても、移籍の話にxGを引いても無駄になる
+        if not _wanted(item, template.get("when")):
+            continue
+
+        group = str(template.get("domains") or "")
+        if group in (LEAGUE_OFFICIAL, LEAGUE_MEDIA):
+            hosts = list((league_official if group == LEAGUE_OFFICIAL else league_media) or [])
+            if not hosts:
+                continue  # そのリーグの引き先が登録されていない
+        else:
+            hosts = domains.get(group, []) if group else []
+
         queries.append(
             {
-                "q": text.replace("{theme}", item.title).replace("{en}", item.en),
+                "q": (
+                    text.replace("{theme}", item.title)
+                    .replace("{en}", item.en)
+                    .replace("{match_q}", match_q)
+                    .strip()
+                ),
                 "label": str(template.get("label", "")),
-                "domains": domains.get(str(group), []) if group else [],
+                "domains": hosts,
             }
         )
     return queries
+
+
+def _wanted(item: Candidate, when) -> bool:
+    """when の条件をすべて満たすか。when は文字列でも並びでもよい。"""
+    if not when:
+        return True
+    wanted = [when] if isinstance(when, str) else list(when)
+    return all(
+        str(value).strip().lower() in (item.league, item.kind)
+        for value in wanted
+        if str(value).strip()
+    )
 
 
 def exclude_covered(items: list[Candidate], covered: dict[str, object]) -> tuple[list, list]:

@@ -46,6 +46,53 @@ python -m src.cli plan --routine match
 **スコアを読み上げて終わりにしない。** どこで試合が決まったのかを1つ挙げて掘る。
 勝ったチームを褒めるだけにせず、負けた側に何が起きたかも入れる。
 
+### 試合の収集はリーグごとに分ける
+
+リーグをまたいで1本の検索で済ませると、どの試合の記事か分からないまま雑多に返ります。
+`config/sources.yaml` の `leagues` に、リーグごとの引き先と検索語を書いてあります。
+
+| リーグ | 公式（スコアの確認先） | 現地語 | 検索語 |
+|---|---|---|---|
+| プレミアリーグ | premierleague.com ほか | 英語 | `match report player ratings` |
+| ラ・リーガ | laliga.com ほか | スペイン語 | `cronica resultado partido` |
+| ブンデスリーガ | bundesliga.com ほか | ドイツ語 | `Spielbericht Noten Analyse` |
+| セリエA | legaseriea.it ほか | イタリア語 | `cronaca pagelle partita` |
+| リーグアン | psg.fr | フランス語 | `resume match note` |
+| エールディヴィジ | — | オランダ語 | `wedstrijdverslag uitslag` |
+| Jリーグ | jleague.jp | 日本語 | `試合結果 採点 OR 寸評` |
+
+スキャンでは現地語の1本だけを出します（`scan.match_leagues` に並べたリーグぶん）。
+公式はテーマが決まってから当たれば足ります。
+
+```bash
+python -m src.cli plan --routine match --league germany
+```
+
+```
+■ ブンデスリーガ の試合レポートを引く
+   ［ブンデスリーガ］ "Spielbericht Noten Analyse"  （kicker.de, sport1.de に限定）
+   ［ブンデスリーガ］ "Spielbericht"  （bundesliga.com, fcbayern.com, bvb.de に限定）
+   確認: スコアと得点者は公式で確かめる。見出しのスコアを鵜呑みにしない
+```
+
+深掘りでも同じで、候補に `league` を書いておけば、`league_official` と
+`league_media` の検索がそのリーグの引き先だけに絞られます。
+
+```
+試合（公式レポート）: "Bayern Dortmund match report"      （bundesliga.com, bvb.de …）
+試合（現地の報道）:   "Bayern Dortmund Spielbericht Noten" （kicker.de, sport1.de）
+```
+
+### 条件は並べて書ける
+
+`when` に並びを書くと「どちらも満たすとき」になります。
+
+```yaml
+  - {q: "{en} offiziell", domains: german, when: [germany, transfer]}
+```
+
+ドイツの**移籍**のときだけ出ます。スペインの移籍にも、ドイツの試合にも出ません。
+
 **どの枠も「1本＝1テーマ」。** 速報枠でも複数の話題を並べない。
 朝が短いのは節が少ないからで、掘り方が浅いわけではない。
 

@@ -353,3 +353,55 @@ def test_goals_and_upset_score_for_matches():
     )
     assert item.breakdown == {"新しさ": 3, "得点": 2, "番狂わせ": 3}
     assert item.score == 8
+
+
+LEAGUE_DEEP = [
+    {"q": "{en} latest", "domains": "english", "label": "共通"},
+    {"q": "{en} fee", "domains": "english", "when": "transfer", "label": "移籍金"},
+    {"q": "{en} match report", "domains": "league_official", "when": "match", "label": "公式レポート"},
+    {"q": "{en} {match_q}", "domains": "league_media", "when": "match", "label": "現地の報道"},
+    {"q": "{en} offiziell", "domains": "german", "when": ["germany", "transfer"], "label": "独・移籍"},
+]
+DOMAIN_MAP = {"english": ["espn.com"], "german": ["kicker.de"]}
+
+
+def _labels(item, **kwargs):
+    return [q["label"] for q in deep_queries(item, LEAGUE_DEEP, DOMAIN_MAP, **kwargs)]
+
+
+def test_match_queries_use_the_leagues_own_sites():
+    item = Candidate(id="a", title="試合", en="Bayern Dortmund", kind="match", league="germany")
+    queries = deep_queries(
+        item, LEAGUE_DEEP, DOMAIN_MAP,
+        league_official=["bundesliga.com"], league_media=["kicker.de"], match_q="Spielbericht",
+    )
+    by_label = {q["label"]: q for q in queries}
+    assert by_label["公式レポート"]["domains"] == ["bundesliga.com"]
+    assert by_label["現地の報道"]["domains"] == ["kicker.de"]
+    assert by_label["現地の報道"]["q"] == "Bayern Dortmund Spielbericht"
+    assert "移籍金" not in by_label          # 試合に移籍金の検索は出さない
+    assert "独・移籍" not in by_label
+
+
+def test_transfer_queries_do_not_get_the_match_ones():
+    item = Candidate(id="b", title="移籍", en="Some Player", kind="transfer", league="germany")
+    labels = _labels(item, league_official=["bundesliga.com"], league_media=["kicker.de"])
+    assert labels == ["共通", "移籍金", "独・移籍"]
+
+
+def test_a_when_list_needs_every_condition():
+    # ドイツの移籍だけ。スペインの移籍にもドイツの試合にも出さない
+    german_move = Candidate(id="c", title="x", en="X", kind="transfer", league="germany")
+    spanish_move = Candidate(id="d", title="x", en="X", kind="transfer", league="spain")
+    german_match = Candidate(id="e", title="x", en="X", kind="match", league="germany")
+    assert "独・移籍" in _labels(german_move)
+    assert "独・移籍" not in _labels(spanish_move)
+    assert "独・移籍" not in _labels(german_match)
+
+
+def test_league_scoped_queries_are_dropped_without_hosts():
+    item = Candidate(id="f", title="試合", en="X", kind="match", league="netherlands")
+    # オランダは公式を登録していない。空のまま検索を出さない
+    assert _labels(item, league_official=[], league_media=["vi.nl"], match_q="verslag") == [
+        "共通", "現地の報道",
+    ]

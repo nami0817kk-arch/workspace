@@ -29,11 +29,13 @@ class PlanError(Exception):
 class Query:
     text: str
     domains: list[str] = field(default_factory=list)
+    label: str = ""      # リーグ名など、何を狙った検索かの短い印
 
     def line(self) -> str:
+        head = f"［{self.label}］ " if self.label else ""
         if not self.domains:
-            return f'"{self.text}"'
-        return f'"{self.text}"  （{", ".join(self.domains)} に限定）'
+            return f'{head}"{self.text}"'
+        return f'{head}"{self.text}"  （{", ".join(self.domains)} に限定）'
 
 
 @dataclass
@@ -77,6 +79,7 @@ class Plan:
     accounts: list = field(default_factory=list)
     social: dict = field(default_factory=dict)
     domain_tiers: dict = field(default_factory=dict)
+    leagues: dict = field(default_factory=dict)
     verified_on: str = ""
 
     def group_of(self, url: str) -> str:
@@ -88,6 +91,42 @@ class Plan:
             if any(str(host).lower() in text for host in hosts):
                 return group
         return ""
+
+    def league(self, key: str) -> dict:
+        return dict(self.leagues.get(str(key), {}))
+
+    def league_name(self, key: str) -> str:
+        return str(self.league(key).get("name") or key)
+
+    def match_queries(self, key: str, official: bool = True) -> list[Query]:
+        """そのリーグの試合レポートを引く検索。
+
+        リーグをまたいで1本の検索で済ませると、どの試合の記事か分からないまま
+        雑多に返ってくる。引き先をリーグで絞ると、そのリーグの記事だけが出る。
+        検索語もその言語で書く（kicker をドイツ語以外で引いても返らない）。
+
+        official=False にすると現地語の1本だけ。候補を探すスキャンではこれで足り、
+        公式はテーマが決まってから当たればよい。
+        """
+        entry = self.league(key)
+        if not entry:
+            return []
+        name = self.league_name(key)
+
+        queries = [
+            Query(
+                text=str(entry.get("match_q") or "match report"),
+                domains=list(self.domains.get(str(entry.get("media")), [])),
+            )
+        ]
+        hosts = [str(h) for h in (entry.get("official") or [])]
+        if official and hosts:
+            queries.append(
+                Query(text=str(entry.get("official_q") or "match report"), domains=hosts)
+            )
+        for query in queries:
+            query.label = name
+        return queries
 
     def is_blocked(self, url: str) -> bool:
         """恒久的に取得できないサイトか。出典に混ざると検証できなくなる。"""
@@ -124,6 +163,7 @@ def build_plan(raw: dict) -> Plan:
     accounts = [dict(x) for x in (raw.get("accounts") or [])]
     social = dict(raw.get("social") or {})
     domain_tiers = dict(raw.get("domain_tiers") or {})
+    leagues = {k: dict(v or {}) for k, v in (raw.get("leagues") or {}).items()}
     verified_on = str(raw.get("verified_on", "") or "")
     tiers = dict(raw.get("tiers") or {})
     if not tiers:
@@ -182,6 +222,7 @@ def build_plan(raw: dict) -> Plan:
         accounts=accounts,
         social=social,
         domain_tiers=domain_tiers,
+        leagues=leagues,
         verified_on=verified_on,
     )
 
