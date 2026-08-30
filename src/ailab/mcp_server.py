@@ -16,6 +16,7 @@ from .config import load_dotenv, output_dir
 from .core import registry
 from .core.connector import capabilities_of
 from .core.errors import AilabError
+from .utils import ensure_utf8_streams
 
 PROTOCOL_VERSION = "2025-06-18"
 SERVER_INFO = {"name": "ailab", "version": __version__}
@@ -315,6 +316,8 @@ def _error(message_id: Any, code: int, message: str) -> dict:
 
 def serve(stdin=None, stdout=None) -> int:
     """stdio で待ち受ける。1行1メッセージ（MCP の stdio トランスポート）。"""
+    # JSON-RPC は UTF-8。Windows の既定エンコーディングのままだと日本語で落ちる
+    ensure_utf8_streams()
     load_dotenv()
     stdin = stdin or sys.stdin
     stdout = stdout or sys.stdout

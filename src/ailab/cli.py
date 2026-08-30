@@ -25,6 +25,7 @@ from .config import load_dotenv, output_dir
 from .core import registry
 from .core.connector import CAPABILITY_LABELS, capabilities_of
 from .core.errors import AilabError, ConfigError
+from .utils import ensure_utf8_streams
 
 
 def _capability_names(capability: str) -> list[str]:
@@ -322,6 +323,7 @@ def _cache_kwargs(args: argparse.Namespace) -> dict:
 
 
 def main(argv: list[str] | None = None) -> int:
+    ensure_utf8_streams()  # Windows のコンソールでも日本語を出せるようにする
     load_dotenv()
     args = build_parser().parse_args(argv)
     handlers = {

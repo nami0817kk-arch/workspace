@@ -69,3 +69,24 @@ def closest_aspect_ratio(size: str) -> str:
         ASPECT_RATIOS,
         key=lambda ratio: abs(target - (int(ratio.split(":")[0]) / int(ratio.split(":")[1]))),
     )
+
+
+def ensure_utf8_streams(streams=None) -> None:
+    """標準出力・標準エラーを UTF-8 にする。
+
+    Windows のコンソールは既定が cp932 などで、日本語を print すると
+    UnicodeEncodeError で落ちる。表示のために処理を止めたくないので、
+    書けない文字は置き換える設定にしておく。
+    """
+    import sys
+
+    for stream in streams if streams is not None else (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure is None:
+            continue
+        if (getattr(stream, "encoding", "") or "").lower().replace("-", "") == "utf8":
+            continue
+        try:
+            reconfigure(encoding="utf-8", errors="replace")
+        except (ValueError, OSError):  # 付け替えられない環境では諦める
+            pass

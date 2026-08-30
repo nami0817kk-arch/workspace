@@ -51,3 +51,49 @@ def test_extension_for_unknown_type_uses_the_default():
 
     assert extension_for("application/octet-stream", default=".bin") == ".bin"
     assert extension_for("") == ".png"
+
+
+class _FakeStream:
+    """reconfigure を記録するだけの標準出力もどき。"""
+
+    def __init__(self, encoding, fails=False):
+        self.encoding = encoding
+        self.fails = fails
+        self.reconfigured = None
+
+    def reconfigure(self, **kwargs):
+        if self.fails:
+            raise OSError("付け替えられない")
+        self.reconfigured = kwargs
+
+
+def test_streams_are_switched_to_utf8():
+    """Windows の cp932 コンソールで日本語を出すと落ちるため。"""
+    from ailab.utils import ensure_utf8_streams
+
+    stream = _FakeStream("cp932")
+    ensure_utf8_streams([stream])
+    assert stream.reconfigured == {"encoding": "utf-8", "errors": "replace"}
+
+
+def test_utf8_streams_are_left_alone():
+    from ailab.utils import ensure_utf8_streams
+
+    for encoding in ("utf-8", "UTF8"):
+        stream = _FakeStream(encoding)
+        ensure_utf8_streams([stream])
+        assert stream.reconfigured is None
+
+
+def test_streams_without_reconfigure_are_skipped():
+    import io
+
+    from ailab.utils import ensure_utf8_streams
+
+    ensure_utf8_streams([io.StringIO(), object()])  # 例外を出さない
+
+
+def test_failure_to_reconfigure_is_not_fatal():
+    from ailab.utils import ensure_utf8_streams
+
+    ensure_utf8_streams([_FakeStream("cp932", fails=True)])  # 例外を出さない
