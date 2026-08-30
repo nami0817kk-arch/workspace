@@ -467,3 +467,64 @@ def test_reactions_presented_as_reporting_are_flagged():
     raw["sections"][2]["tier"] = "報道"
     hints = advise(build_notes(raw))
     assert any("未確認" in h for h in hints)
+
+
+def _sourced(*per_section):
+    raw = _raw()
+    for section, sources in zip(raw["sections"], per_section):
+        section["sources"] = list(sources)
+        section["tier"] = "報道" if len(sources) >= 2 else "未確認"
+        section["official"] = False
+    return raw
+
+
+def test_reusing_one_article_across_sections_is_flagged():
+    from src.research import advise
+
+    same = "https://www.skysports.com/football/news/1/2/a"
+    raw = _sourced([same, "https://www.espn.com/soccer/story/_/id/1/x"], [same], [same])
+    hints = advise(build_notes(raw), _plan_with_domains())
+    assert any("同じ記事を3つの節" in h for h in hints)
+
+
+def test_using_an_article_twice_is_not_flagged():
+    from src.research import advise
+
+    same = "https://www.skysports.com/football/news/1/2/a"
+    raw = _sourced([same, "https://www.espn.com/soccer/story/_/id/1/x"], [same], [])
+    assert not any("同じ記事を" in h for h in advise(build_notes(raw), _plan_with_domains()))
+
+
+def test_leaning_on_one_outlet_is_flagged():
+    from src.research import advise
+
+    plan = _plan_with_domains()
+    raw = _sourced(
+        ["https://www.skysports.com/football/news/1/2/a", "https://www.skysports.com/football/news/1/3/b"],
+        ["https://www.skysports.com/football/news/1/4/c"],
+        [],
+    )
+    hints = advise(build_notes(raw), plan)
+    assert any("1社の報道に乗っている" in h for h in hints)
+
+
+def test_a_spread_of_outlets_is_not_flagged():
+    from src.research import advise
+
+    plan = _plan_with_domains()
+    raw = _sourced(
+        ["https://www.skysports.com/football/news/1/2/a", "https://www.espn.com/soccer/story/_/id/1/b"],
+        ["https://www.footballchannel.jp/2026/08/29/post1/"],
+        [],
+    )
+    assert not any("1社の報道" in h for h in advise(build_notes(raw), plan))
+
+
+def test_official_sources_are_not_counted_as_leaning():
+    from src.research import advise
+
+    plan = _plan_with_domains()
+    official = "https://en.atleticodemadrid.com/noticias/"
+    raw = _sourced([official + "a", official + "b"], [official + "c"], [])
+    # 公式は1社に寄って当然
+    assert not any("1社の報道" in h for h in advise(build_notes(raw), plan))

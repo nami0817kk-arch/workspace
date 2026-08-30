@@ -249,7 +249,53 @@ def advise(notes: Notes, plan: Plan | None = None, now=None) -> list[str]:
     notes_warnings += _advise_posts(notes, plan, now)
     notes_warnings += _advise_sources(notes, plan)
     notes_warnings += _advise_voices(notes)
+    notes_warnings += _advise_spread(notes, plan)
     return notes_warnings
+
+
+# 1つの媒体にこの割合を超えて頼ると、実質1社の報道になる
+SINGLE_SITE_SHARE = 0.6
+
+
+def _advise_spread(notes: Notes, plan: Plan | None) -> list[str]:
+    """出典の使い回しと、1媒体への偏りを見る。
+
+    同じ記事を複数の節で使い回すと、出典欄には何本も並ぶのに、実際に
+    確かめた記事は1本しかない。数だけ見ると裏が取れているように見える。
+    """
+    hints: list[str] = []
+
+    seen: dict[str, list[str]] = {}
+    for section in notes.sections:
+        for url in section.sources:
+            seen.setdefault(url, []).append(section.heading)
+
+    for url, headings in seen.items():
+        if len(headings) >= 3:
+            hints.append(
+                f"同じ記事を{len(headings)}つの節で使っています（{' / '.join(headings)}）。"
+                "出典の数だけ見ると裏が取れているように見えますが、実際は1本です"
+            )
+
+    if plan is None or not notes.sources:
+        return hints
+
+    counts: dict[str, int] = {}
+    for url in notes.sources:
+        group = plan.group_of(url)
+        host = url.split("/")[2] if "://" in url else url
+        if group != "official":     # 公式は1社に寄って当然なので数えない
+            counts[host] = counts.get(host, 0) + 1
+
+    total = sum(counts.values())
+    if total >= 3:
+        host, count = max(counts.items(), key=lambda pair: pair[1])
+        if count > total * SINGLE_SITE_SHARE:
+            hints.append(
+                f"出典{total}本のうち{count}本が {host} です。"
+                "1社の報道に乗っているだけになっていないか確かめてください"
+            )
+    return hints
 
 
 # 数を語る言い回し。ファンの反応で使うと、数えていないのに数えたことになる
