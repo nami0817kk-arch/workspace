@@ -297,3 +297,59 @@ def test_the_league_is_read_and_normalised(tmp_path):
     _, items = load_candidates(path)
     assert items[0].league == "germany"    # 大文字で書かれても拾う
     assert items[0].topic == "bayern"
+
+
+SCORING_KINDS = {
+    **SCORING,
+    "spread_kinds": True,
+    "weights": {**SCORING["weights"], "goals": 2, "upset": 3},
+}
+
+
+def test_two_slots_of_one_kind_is_the_limit():
+    ranked = score(
+        [
+            Candidate(id="m1", title="試合1", hours_ago=1, tier="報道", kind="match", topic="a"),
+            Candidate(id="m2", title="試合2", hours_ago=2, tier="報道", kind="match", topic="b"),
+            Candidate(id="m3", title="試合3", hours_ago=3, tier="報道", kind="match", topic="c"),
+            Candidate(id="t1", title="移籍", hours_ago=9, tier="報道", kind="transfer", topic="d"),
+        ],
+        SCORING_KINDS,
+    )
+    chosen, _ = assign(ranked, SCORING_KINDS, ["morning", "noon", "evening"])
+    kinds = [c.kind for c in chosen.values()]
+    assert kinds.count("match") == 2      # 3本とも試合結果にはしない
+    assert "transfer" in kinds
+
+
+def test_an_all_transfer_day_reports_nothing_about_kinds():
+    ranked = score(
+        [
+            Candidate(id="a", title="A", hours_ago=1, tier="報道", topic="a"),
+            Candidate(id="b", title="B", hours_ago=2, tier="報道", topic="b"),
+            Candidate(id="c", title="C", hours_ago=3, tier="報道", topic="c"),
+        ],
+        SCORING_KINDS,
+    )
+    _, fallbacks = assign(ranked, SCORING_KINDS, ["morning", "noon", "evening"])
+    assert not any("種類" in r for reasons in fallbacks.values() for r in reasons)
+
+
+def test_match_only_queries_are_skipped_for_transfers():
+    templates = [
+        {"q": "{en} latest", "label": "共通"},
+        {"q": "{en} xG shots", "domains": "stats", "when": "match", "label": "試合のスタッツ"},
+    ]
+    transfer = Candidate(id="a", title="移籍", en="Some Player", kind="transfer")
+    match = Candidate(id="b", title="試合", en="Arsenal Liverpool", kind="match")
+    assert [q["label"] for q in deep_queries(transfer, templates, {})] == ["共通"]
+    assert [q["label"] for q in deep_queries(match, templates, {})] == ["共通", "試合のスタッツ"]
+
+
+def test_goals_and_upset_score_for_matches():
+    (item,) = score(
+        [Candidate(id="a", title="番狂わせ", hours_ago=1, kind="match", goals=True, upset=True)],
+        SCORING_KINDS,
+    )
+    assert item.breakdown == {"新しさ": 3, "得点": 2, "番狂わせ": 3}
+    assert item.score == 8

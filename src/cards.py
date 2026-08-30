@@ -13,7 +13,9 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
-CARD_TYPES = ("quote", "transfer", "points", "bars", "table", "reactions")
+TEAM_SIZES = (46, 42, 38, 34, 30, 26, 22)
+
+CARD_TYPES = ("quote", "transfer", "score", "points", "bars", "table", "reactions")
 
 # 棒グラフは「同じ指標を並べて比べる」用途なので、色は1色で通し、
 # 注目させたい1本だけ同じ色相の明るい段を使う（カテゴリ配色にはしない）。
@@ -54,6 +56,7 @@ def render(spec: dict, width: int, font_path: str, out_path: Path,
     builder = {
         "quote": _quote,
         "transfer": _transfer,
+        "score": _score,
         "points": _points,
         "bars": _bars,
         "table": _table,
@@ -160,6 +163,115 @@ def _transfer(spec: dict, width: int, font_path: str, latin_path: str) -> list[d
             }
         )
     return blocks
+
+
+def _score(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
+    """スコアカード。どちらが何点で、誰が決めたか。
+
+    スコアを大きく置き、得点者を左右に分けて並べる。試合結果の動画では
+    これが画面の主役になるので、数字は欧文フォントで大きく組む。
+    """
+    comp_font = ImageFont.truetype(font_path, 32)
+    score_font = ImageFont.truetype(latin_path, 84)
+    scorer_font = ImageFont.truetype(font_path, 30)
+
+    home = str(spec.get("home") or "").strip()
+    away = str(spec.get("away") or "").strip()
+    score = str(spec.get("score") or "").strip()
+    if not (home and away and score):
+        raise CardError("score カードには home / away / score が必要です")
+
+    # チーム名は長さの幅が大きい（「浦和」から「ボルシア・メンヒェングラートバッハ」まで）。
+    # スコアの左右に収まる大きさを選ぶ。決め打ちにするとはみ出す
+    ruler = ImageDraw.Draw(Image.new("RGBA", (width, 10)))
+    score_width = ruler.textlength(score, font=score_font)
+    side = (width - PAD * 2 - 24 - score_width) / 2 - 28
+    team_font = ImageFont.truetype(font_path, TEAM_SIZES[-1])
+    for size in TEAM_SIZES:
+        candidate = ImageFont.truetype(font_path, size)
+        if max(ruler.textlength(home, font=candidate),
+               ruler.textlength(away, font=candidate)) <= side:
+            team_font = candidate
+            break
+    else:
+        # いちばん小さい字でも入らない長さがある（ボルシア・メンヒェングラートバッハ）。
+        # はみ出させるくらいなら縮める
+        home = _shorten(ruler, home, team_font, side)
+        away = _shorten(ruler, away, team_font, side)
+
+    competition = str(spec.get("competition") or "").strip()
+    home_scorers = [str(x).strip() for x in (spec.get("home_scorers") or []) if str(x).strip()]
+    away_scorers = [str(x).strip() for x in (spec.get("away_scorers") or []) if str(x).strip()]
+    accent = _hex(str(spec.get("color") or DEFAULT_ACCENT)) + (255,)
+
+    blocks: list[dict] = []
+    if competition:
+        blocks.append(
+            {
+                "height": 44,
+                "draw": lambda draw, y: draw.text(
+                    (PAD + 12, y), competition, font=comp_font, fill=SUB
+                ),
+            }
+        )
+
+    left = PAD + 12
+    right = width - PAD - 12
+
+    def draw_line(draw, y):
+        # スコアを中央に置き、チーム名を内側に寄せて左右に配置する
+        score_w = draw.textlength(score, font=score_font)
+        center = width // 2
+        draw.text((center - score_w / 2, y), score, font=score_font, fill=accent)
+
+        # 内側に寄せる。ただし枠の外には出さない
+        home_w = draw.textlength(home, font=team_font)
+        away_w = draw.textlength(away, font=team_font)
+        home_x = max(left, min(left, center - score_w / 2 - home_w - 28))
+        away_x = min(right - away_w, max(center + score_w / 2 + 28, right - away_w))
+        draw.text((home_x, y + 24), home, font=team_font, fill=TEXT)
+        draw.text((away_x, y + 24), away, font=team_font, fill=TEXT)
+
+    blocks.append({"height": 108, "draw": draw_line})
+
+    if home_scorers or away_scorers:
+        rows = max(len(home_scorers), len(away_scorers))
+
+        def draw_scorers(draw, y):
+            draw.line([(left, y - 8), (right, y - 8)], fill=GRID, width=2)
+            for index in range(rows):
+                line_y = y + 8 + index * 36
+                if index < len(home_scorers):
+                    draw.text((left, line_y), home_scorers[index], font=scorer_font, fill=SUB)
+                if index < len(away_scorers):
+                    text = away_scorers[index]
+                    draw.text((right - draw.textlength(text, font=scorer_font), line_y),
+                              text, font=scorer_font, fill=SUB)
+
+        blocks.append({"height": 22 + rows * 36, "draw": draw_scorers})
+
+    note = str(spec.get("note") or "").strip()
+    if note:
+        blocks.append(
+            {
+                "height": 42,
+                "draw": lambda draw, y: draw.text(
+                    (PAD + 12, y), note, font=scorer_font, fill=SUB
+                ),
+            }
+        )
+    return blocks
+
+
+def _shorten(ruler, text: str, font, limit: float) -> str:
+    """収まる長さまで削って末尾に … を付ける。"""
+    if ruler.textlength(text, font=font) <= limit:
+        return text
+    for cut in range(len(text) - 1, 0, -1):
+        candidate = text[:cut] + "…"
+        if ruler.textlength(candidate, font=font) <= limit:
+            return candidate
+    return "…"
 
 
 def _points(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:

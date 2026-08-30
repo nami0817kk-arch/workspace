@@ -30,9 +30,12 @@ class Candidate:
     topic: str = ""     # 話題のまとまり（クラブ名・移籍案件など）。枠の重複を避けるのに使う
     league: str = ""    # england / spain / germany / italy / france / netherlands / japan
                         # 現地語の検索を出すかどうかの判断に使う
+    kind: str = "transfer"   # transfer / match / other。枠に散らすのと検索の出し分けに使う
     hours_ago: float = 99.0
     tier: str = "未確認"
     reaction: bool = False
+    goals: bool = False     # 試合結果むけ。点が多く動いた
+    upset: bool = False     # 試合結果むけ。番狂わせ
     big_club: bool = False
     numbers: bool = False
     note: str = ""
@@ -63,9 +66,12 @@ def load_candidates(path: str | Path) -> tuple[str, list[Candidate]]:
                 url=str(entry.get("url", "")).strip(),
                 topic=str(entry.get("topic", "")).strip(),
                 league=str(entry.get("league", "")).strip().lower(),
+                kind=str(entry.get("kind", "transfer")).strip().lower() or "transfer",
                 hours_ago=float(entry["hours_ago"]) if "hours_ago" in entry else -1.0,
                 tier=str(entry.get("tier", "未確認")).strip(),
                 reaction=bool(entry.get("reaction", False)),
+                goals=bool(entry.get("goals", False)),
+                upset=bool(entry.get("upset", False)),
                 big_club=bool(entry.get("big_club", False)),
                 numbers=bool(entry.get("numbers", False)),
                 note=str(entry.get("note", "")).strip(),
@@ -124,6 +130,8 @@ def score(items: list[Candidate], scoring: dict) -> list[Candidate]:
 
         for key, label in (
             ("reaction", "反応"),
+            ("goals", "得点"),
+            ("upset", "番狂わせ"),
             ("big_club", "ビッグクラブ"),
             ("numbers", "数字"),
         ):
@@ -147,10 +155,13 @@ def assign(
     """
     rules = dict(scoring.get("slots") or {})
     spread = bool(scoring.get("spread_topics", True))
+    # 候補が全部同じ種類の日は、散らしようがない。条件そのものを持ち出さない
+    spread_kinds = bool(scoring.get("spread_kinds", True)) and len({c.kind for c in items}) > 1
     remaining = list(items)
     chosen: dict[str, Candidate] = {}
     fallbacks: dict[str, list[str]] = {}
     used_topics: set[str] = set()
+    used_kinds: list[str] = []
 
     for slot in slots:
         rule = dict(rules.get(slot) or {})
@@ -162,6 +173,15 @@ def assign(
             if not fresh_topics and pool:
                 fallbacks.setdefault(slot, []).append("他の枠と別の話題が残っていません")
             pool = fresh_topics or pool
+
+        # 3本とも試合結果、3本とも移籍だと単調になる。すでに2枠で使った種別は外す
+        if spread_kinds and pool:
+            over = {k for k in set(used_kinds) if used_kinds.count(k) >= 2}
+            if over:
+                varied = [c for c in pool if c.kind not in over]
+                if not varied:
+                    fallbacks.setdefault(slot, []).append("他の枠と別の種類が残っていません")
+                pool = varied or pool
 
         tiers = rule.get("require_tier")
         if tiers:
@@ -179,6 +199,7 @@ def assign(
         remaining = [c for c in remaining if c.id != pick.id]
         if pick.topic:
             used_topics.add(pick.topic)
+        used_kinds.append(pick.kind)
     return chosen, fallbacks
 
 
@@ -216,9 +237,10 @@ def deep_queries(
         if "{en}" in text and not item.en:
             continue
 
-        # リーグが合うときだけ出す。ドイツ語の検索をスペインの話に出しても返らない
+        # 条件が合うときだけ出す。when はリーグ名（germany）か種別（match）。
+        # ドイツ語の検索をスペインの話に出しても、移籍の話にxGを引いても無駄になる
         when = str(template.get("when", "")).strip().lower()
-        if when and item.league != when:
+        if when and when not in (item.league, item.kind):
             continue
 
         group = template.get("domains")
@@ -253,11 +275,14 @@ candidates:
     topic: ""         # 話題のまとまり（例: alvarez）。同じ topic は1日1枠まで
     league: ""        # england/spain/germany/italy/france/netherlands/japan
                       # 書くと現地語の検索も出る
+    kind: transfer    # transfer / match / other。match と書くと試合むけの検索が出る
     hours_ago:        # 何時間前か。空にすると url から割り出す
     tier: 報道         # 確定 / 報道 / 未確認
     reaction: false   # 賛否が割れる・驚きがあるか
     big_club: false   # ビッグクラブが絡むか
     numbers: false    # 金額・記録など数字が立つか
+    goals: false      # 試合結果むけ。点が多く動いたか
+    upset: false      # 試合結果むけ。番狂わせか
     note: ""          # ひとことメモ
     sources:
       - ""

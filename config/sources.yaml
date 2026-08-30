@@ -127,6 +127,8 @@ scoring:
     reaction: 3       # 賛否が割れる・驚きがある。コメントが伸びる
     big_club: 2       # ビッグクラブが絡む
     numbers: 1        # 金額・記録など、数字が立つ
+    goals: 2          # 試合結果むけ。点が多く動いた試合は見られる
+    upset: 3          # 試合結果むけ。番狂わせ・格上撃破
   freshness_hours:    # 何時間前なら何点か
     6: 3
     12: 2
@@ -149,6 +151,8 @@ scoring:
   # 同じ話題（topic）を1日に2枠へ入れない。大きい話が1つあると
   # 3本ともそれになりがちなので、枠をまたいだ重複を止める
   spread_topics: true
+  # 種別（transfer / match / other）も散らす。3本とも試合結果にしない
+  spread_kinds: true
   slots:
     morning: {prefer: freshness, require_tier: [確定, 報道]}
     noon: {prefer: reaction}
@@ -167,6 +171,10 @@ deep:
   - {q: "{en}", domains: social, label: 反応}
   - {q: "{en} fee OR record", domains: english, label: 数字（移籍金・記録）}
   - {q: "{en} stats goals assists", domains: stats, label: 数字（成績）}
+  # 試合結果のときだけ。スコアだけで終わらせないための材料
+  - {q: "{en} match report", domains: official, when: match, label: 試合（公式レポート）}
+  - {q: "{en} player ratings analysis", domains: english, when: match, label: 試合（採点・分析）}
+  - {q: "{en} xG shots possession", domains: stats, when: match, label: 試合（xG・スタッツ）}
   # 現地語。そのリーグの話のときだけ出す。英語圏より詳しいことが多い
   - {q: "{en} Transfer offiziell", domains: german, when: germany, label: 現地（ドイツ語）}
   - {q: "{en} calciomercato ufficiale", domains: italian, when: italy, label: 現地（イタリア語）}
@@ -222,6 +230,10 @@ scan:
     - {q: "transfer news {today_en}", domains: english, label: 移籍（英語）}
     - {q: "official statement OR announcement transfer", domains: official, label: 公式発表（欧州）}
     - {q: "完全移籍 OR 期限付き移籍 のお知らせ", domains: official_jp, label: 公式発表（日本）}
+    # 試合結果。日付で引くと一覧ページしか返らないので、内容の語で引く
+    - {q: "match report reaction talking points", domains: english, label: 試合結果（英語）}
+    - {q: "試合結果 採点 OR 寸評 OR 逆転", domains: japanese, label: 試合結果（日本語）}
+    - {q: "match report", domains: official, label: 試合結果（公式）}
     - {q: "Fabrizio Romano here we go", domains: social, label: 記者（移籍の完了）}
     - {q: "David Ornstein exclusive", domains: social, label: 記者（プレミア）}
   check: |
@@ -339,6 +351,45 @@ routines:
         check: 表カード(type table)や棒グラフ(type bars)にする。出典を明記
 
   # ---------------------------------------------------------------- 特別編
+  # ------------------------------------------------------- 試合結果（特別編）
+  match:
+    name: 試合結果
+    when: 試合の翌朝（欧州の試合は日本の深夜に終わる）
+    cover_hours: 18
+    target_minutes: 2
+    angle: |
+      1試合を1本で扱う。スコアを読み上げて終わりにしない。
+      「どこで試合が決まったのか」を1つ挙げて、そこを掘る。
+      勝ったチームを褒めるだけの内容にしない。負けた側に何が起きたかも入れる。
+    structure:
+      - {id: score, heading: 試合はこうなった, tier: 確定}
+      - {id: turning, heading: 試合が決まった場面, tier: 報道}
+      - {id: numbers, heading: 数字で見ると, tier: 報道}
+      - {id: next, heading: 順位と次の一戦, tier: 報道}
+    steps:
+      - id: result
+        what: スコアと得点者（この中から1試合を選ぶ）
+        tier: 確定
+        queries:
+          - {q: "match report", domains: official}
+          - {q: "試合結果 採点 OR 寸評", domains: japanese}
+        check: スコアと得点者は公式かリーグ公式で確かめる。見出しのスコアを鵜呑みにしない
+
+      - id: turning
+        what: 試合が決まった場面（得点・退場・判定）
+        tier: 報道
+        queries:
+          - {q: "turning point OR red card OR VAR", domains: english}
+        check: 何分の出来事かを控える。「終盤」で済ませない
+
+      - id: numbers
+        what: xG・シュート数・ポゼッション・順位
+        tier: 報道
+        queries:
+          - {q: "xG shots possession", domains: stats}
+          - {q: "table standings", domains: official}
+        check: スタッツは1つの媒体だけに頼らない。順位はリーグ公式で確かめる
+
   deadline_day:
     name: 移籍期限日（特別編）
     when: 各国の移籍期限の当日と翌日

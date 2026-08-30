@@ -167,3 +167,62 @@ def test_reactions_accepts_plain_strings(tmp_path, fonts):
         WIDTH, font, tmp_path / "plain.png", latin,
     )
     assert path.exists()
+
+
+def _render_score(tmp_path, **overrides):
+    from src.cards import render
+    from src.config import load_config
+
+    config = load_config()
+    spec = {"type": "score", "home": "アーセナル", "away": "リバプール", "score": "2 - 1"}
+    spec.update(overrides)
+    return render(
+        spec, 980, str(config.video.font_path()), tmp_path / "s.png",
+        str(config.video.latin_font_path()),
+    )
+
+
+def test_a_score_card_renders_with_and_without_the_extras(tmp_path):
+    from PIL import Image
+
+    for extras in (
+        {},
+        {"competition": "プレミアリーグ 第3節"},
+        {"home_scorers": ["45' サカ", "78' ハヴァーツ"], "away_scorers": ["67' サラー"]},
+        {"note": "エミレーツ・スタジアム", "color": "#e2495a"},
+    ):
+        path = _render_score(tmp_path, **extras)
+        assert Image.open(path).width == 980
+
+
+def test_a_score_card_needs_both_teams_and_a_score(tmp_path):
+    import pytest
+
+    from src.cards import CardError
+
+    for missing in ({"home": ""}, {"away": ""}, {"score": ""}):
+        with pytest.raises(CardError, match="score カード"):
+            _render_score(tmp_path, **missing)
+
+
+def test_long_team_names_are_shortened_rather_than_overflowing():
+    from PIL import Image, ImageDraw, ImageFont
+
+    from src.cards import _shorten
+    from src.config import load_config
+
+    font = ImageFont.truetype(str(load_config().video.font_path()), 22)
+    ruler = ImageDraw.Draw(Image.new("RGBA", (10, 10)))
+    long_name = "ボルシア・メンヒェングラートバッハ"
+
+    result = _shorten(ruler, long_name, font, 200)
+    assert result.endswith("…")
+    assert ruler.textlength(result, font=font) <= 200
+    # 収まる名前はそのまま
+    assert _shorten(ruler, "浦和", font, 200) == "浦和"
+
+
+def test_score_is_a_known_card_type():
+    from src.cards import CARD_TYPES
+
+    assert "score" in CARD_TYPES
