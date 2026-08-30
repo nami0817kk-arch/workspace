@@ -67,6 +67,51 @@ def from_meta(meta: dict, title: str) -> dict:
     }
 
 
+def contact_sheet(paths: list[Path], out_path: Path) -> Path:
+    """案を縦に並べた1枚を作る。実際に並ぶのは一覧なので、並べて比べる。"""
+    images = [Image.open(path).convert("RGB") for path in paths]
+    gap = 16
+    sheet = Image.new(
+        "RGB",
+        (SIZE[0], sum(i.height for i in images) + gap * (len(images) - 1)),
+        (18, 22, 30),
+    )
+    y = 0
+    for image in images:
+        sheet.paste(image, (0, y))
+        y += image.height + gap
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    sheet.save(out_path, quality=95)
+    return out_path
+
+
+def variants(meta: dict, title: str) -> list[dict]:
+    """サムネの案を並べて返す。
+
+    1案しか作らないと良し悪しを比べられない。台本に thumbnail_alt を書くと、
+    その数だけ案が増える。並べて見て、一覧で目を引くほうを選ぶ。
+    """
+    base = from_meta(meta, title)
+    found = [dict(base, name="案1")]
+
+    for number, entry in enumerate(meta.get("thumbnail_alt") or [], start=2):
+        entry = dict(entry or {})
+        line1 = str(entry.get("line1") or base["title"])
+        line2 = str(entry.get("line2") or base["subtitle"])
+        found.append(
+            {
+                **base,
+                "name": f"案{number}",
+                "title": line1,
+                "subtitle": line2,
+                "lines": (line1, line2),
+                "tags": [str(t) for t in (entry.get("tags") or base["tags"])],
+                "badge": str(entry.get("badge") or base["badge"]),
+            }
+        )
+    return found
+
+
 def build_thumbnail(
     config: ProjectConfig,
     title: str,

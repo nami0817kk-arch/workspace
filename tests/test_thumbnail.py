@@ -159,3 +159,49 @@ def test_news_headlines_never_overflow_their_plate():
         for row in rows:
             right = MARGIN + 6 + NEWS_BAR + draw.textlength(row, font=font)
             assert right <= SIZE[0] - MARGIN + 40, f"はみ出し: {text} / {row}"
+
+
+def test_a_script_without_alternatives_gives_one_option():
+    from src.thumbnail import variants
+
+    (only,) = variants({"thumbnail_line1": "見出し", "thumbnail_line2": "そえ書き"}, "T")
+    assert only["name"] == "案1"
+    assert only["lines"] == ("見出し", "そえ書き")
+
+
+def test_alternatives_become_extra_options():
+    from src.thumbnail import variants
+
+    meta = {
+        "thumbnail_line1": "本命",
+        "thumbnail_line2": "そえ書き",
+        "thumbnail_tags": ["タグA"],
+        "thumbnail_badge": "速報",
+        "thumbnail_alt": [
+            {"line1": "別案", "line2": "別のそえ書き"},
+            {"line1": "3案目", "badge": "詳報"},
+        ],
+    }
+    options = variants(meta, "T")
+    assert [o["name"] for o in options] == ["案1", "案2", "案3"]
+    assert options[1]["lines"] == ("別案", "別のそえ書き")
+    # 書かなかったところは1案目を引き継ぐ
+    assert options[2]["lines"][1] == "そえ書き"
+    assert options[2]["badge"] == "詳報"
+    assert options[1]["tags"] == ["タグA"]
+
+
+def test_options_are_stacked_into_one_sheet(tmp_path):
+    from PIL import Image
+
+    from src.thumbnail import SIZE, contact_sheet
+
+    paths = []
+    for index in range(3):
+        path = tmp_path / f"t{index}.png"
+        Image.new("RGB", SIZE, (0, 0, 0)).save(path)
+        paths.append(path)
+
+    sheet = Image.open(contact_sheet(paths, tmp_path / "sheet.png"))
+    assert sheet.width == SIZE[0]
+    assert sheet.height == SIZE[1] * 3 + 16 * 2      # 案のあいだに隙間が入る

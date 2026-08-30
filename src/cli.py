@@ -60,6 +60,7 @@ def main(argv: list[str] | None = None) -> int:
     p_review.add_argument("--out", default=None, help="出力先（既定: output/<台本名>）")
 
     p_thumb = sub.add_parser("thumbnail", help="サムネイルだけ作り直す")
+    p_thumb.add_argument("--all", action="store_true", help="台本の案を全部作って並べる")
     p_thumb.add_argument("script")
     p_thumb.add_argument("--out", default=None)
 
@@ -226,21 +227,34 @@ def _dispatch(args, config) -> int:
     if args.command == "thumbnail":
         script = load_script(args.script)
         out = Path(args.out) if args.out else Path(f"output/{Path(args.script).stem}/thumbnail.png")
-        from .thumbnail import from_meta
+        from .thumbnail import from_meta, variants
 
-        look = from_meta(script.meta, script.title)
-        path = build_thumbnail(
-            config,
-            look["title"],
-            out,
-            subtitle=look["subtitle"],
-            background=script.background,
-            badge=look["badge"],
-            date=look["date"],
-            lines=look["lines"],
-            tags=look["tags"],
-        )
-        print(f"サムネ: {path}")
+        looks = variants(script.meta, script.title) if args.all else [
+            dict(from_meta(script.meta, script.title), name="")
+        ]
+
+        made = []
+        for index, look in enumerate(looks, start=1):
+            target = out if len(looks) == 1 else out.with_name(f"{out.stem}_{index}{out.suffix}")
+            build_thumbnail(
+                config, look["title"], target,
+                subtitle=look["subtitle"], background=script.background,
+                badge=look["badge"], date=look["date"],
+                lines=look["lines"], tags=look["tags"],
+            )
+            made.append((look.get("name") or "", target, look["lines"]))
+
+        for name, target, lines in made:
+            head = f"{name}　" if name else ""
+            print(f"サムネ: {head}{target}")
+            print(f"        {lines[0]} / {lines[1]}")
+
+        if len(made) > 1:
+            from .thumbnail import contact_sheet
+
+            sheet = contact_sheet([t for _, t, _ in made], out.with_name("thumbnails.png"))
+            print(f"\n並べたもの: {sheet}")
+            print("一覧で見て、目を引くほうを選んでください")
         return 0
 
     if args.command == "plan":

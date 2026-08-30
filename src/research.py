@@ -429,6 +429,8 @@ def to_script(notes: Notes, plan: Plan) -> str:
         "thumbnail_line1": str(thumbnail.get("line1") or notes.title),
         "thumbnail_line2": str(thumbnail.get("line2") or notes.question),
         "thumbnail_tags": [str(t) for t in (thumbnail.get("tags") or [])],
+        # 案を書いてあれば台本に持ち越す。thumbnail --all で並べて比べる
+        "thumbnail_alt": [dict(a or {}) for a in (thumbnail.get("alt") or [])],
         "bg": "assets/backgrounds/stadium.mp4",
         "date": notes.date,
         "intro_title": notes.title,
