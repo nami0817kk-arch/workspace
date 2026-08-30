@@ -328,6 +328,67 @@ def _render_bass(
     return out
 
 
+# メロディは「1小節ぶんの短いフレーズ(モチーフ)」を作り、それを小節ごとに
+# 和音へ合わせて置き直したり少し変えたりして展開する。毎小節ランダムに歩かせると
+# とりとめのない音の並びになるが、同じ形が返ってくると旋律として聞こえる。
+#
+# 4小節ひとまとまりの展開の型。A = モチーフ、A' = 末尾を変えた形、B = 対の句。
+DEVELOPMENT = ("A", "A", "B", "A'")
+
+Phrase = list  # [(音階上の度数 | None(休符), 拍数), ...]
+
+
+def _make_phrase(
+    style: Style,
+    rng: random.Random,
+    scale_size: int,
+    start_degree: int = 0,
+) -> Phrase:
+    """1小節ぶんのフレーズを作る。度数はモチーフ内の相対値として扱う。"""
+    phrase: Phrase = []
+    position = 0.0
+    current = start_degree
+    while position < BEATS_PER_BAR - 1e-6:
+        remaining = BEATS_PER_BAR - position
+        choices = [d for d in style.lead_durations if d <= remaining] or [remaining]
+        length = rng.choice(choices)
+        if rng.random() < style.lead_rest_prob:
+            phrase.append((None, length))
+        else:
+            on_strong_beat = position < 1e-6 or abs(position - 2.0) < 1e-6
+            current = _next_degree(rng, current, 0, scale_size, style.lead_range, on_strong_beat)
+            phrase.append((current, length))
+        position += length
+    return phrase
+
+
+def _vary_phrase(phrase: Phrase, rng: random.Random, span: int) -> Phrase:
+    """フレーズの最後の音だけを動かした変形を作る(A' 用)。"""
+    varied = list(phrase)
+    for index in range(len(varied) - 1, -1, -1):
+        degree, length = varied[index]
+        if degree is None:
+            continue
+        shifted = max(-span, min(span, degree + rng.choice((-2, -1, 1, 2))))
+        varied[index] = (shifted, length)
+        break
+    return varied
+
+
+def _anchor_shift(phrase: Phrase, chord_degree: int, scale_size: int) -> int:
+    """フレーズ最初の音がその小節の和音の構成音に乗るような移動量を返す。"""
+    first = next((degree for degree, _ in phrase if degree is not None), None)
+    if first is None:
+        return 0
+    chord_offsets = (0, 2, 4)
+    return min(
+        (shift for shift in range(-scale_size, scale_size + 1)
+         if (first + shift - chord_degree) % scale_size in chord_offsets),
+        key=abs,
+        default=0,
+    )
+
+
 def _render_lead(
     config: BGMConfig,
     style: Style,
@@ -336,33 +397,36 @@ def _render_lead(
     rng: random.Random,
     cache: dict,
     octave_shift: int = 0,
+    motifs: dict | None = None,
+    bar_offset: int = 0,
 ) -> list[float]:
-    """コードトーンを軸にしたランダムウォークでメロディを作る。"""
+    """モチーフを展開してメロディを作る。"""
     sr = config.sr
     root = _root_midi(config.key, style.lead_octave + octave_shift)
     scale_size = len(notes.scale_degrees(style.scale))
     beat_seconds = bar_seconds / BEATS_PER_BAR
     shape = style.lead_shape
-    out: list[float] = []
-    current = 0
+    motifs = {} if motifs is None else motifs
 
+    if "motif" not in motifs:  # 曲を通して同じ素材を使い回す
+        motifs["motif"] = _make_phrase(style, rng, scale_size)
+        motifs["contrast"] = _make_phrase(style, rng, scale_size, start_degree=2)
+        motifs["variation"] = _vary_phrase(motifs["motif"], rng, style.lead_range)
+
+    out: list[float] = []
     for bar, chord_degree in enumerate(degrees):
+        role = DEVELOPMENT[(bar + bar_offset) % len(DEVELOPMENT)]
+        phrase = {"A": motifs["motif"], "B": motifs["contrast"], "A'": motifs["variation"]}[role]
+        shift = _anchor_shift(phrase, chord_degree, scale_size)
+
         position = 0.0
-        while position < BEATS_PER_BAR - 1e-6:
-            remaining = BEATS_PER_BAR - position
-            choices = [d for d in style.lead_durations if d <= remaining] or [remaining]
-            length_beats = rng.choice(choices)
+        for degree, length_beats in phrase:
             start = bar * bar_seconds + position * beat_seconds
             position += length_beats
-
-            if rng.random() < style.lead_rest_prob:
+            if degree is None:
                 continue
-
-            on_strong_beat = abs(position - length_beats) < 1e-6 or abs(position - length_beats - 2.0) < 1e-6
-            current = _next_degree(rng, current, chord_degree, scale_size, style.lead_range, on_strong_beat)
-
             length = length_beats * beat_seconds * 0.92
-            midi = notes.degree_to_midi(root, style.scale, current)
+            midi = notes.degree_to_midi(root, style.scale, degree + shift)
             shaped = _cached(
                 cache,
                 ("lead", shape, midi, round(length, 6)),
@@ -432,6 +496,7 @@ def render_tracks(config: BGMConfig) -> dict[str, list[float]]:
     requested = [part for part in ("chords", "bass", "lead", "drums") if part in set(config.parts)]
 
     cache: dict = {}
+    motifs: dict = {}
     tracks: dict[str, list[float]] = {}
     for section, start_bar, bar_count in plan_sections(config.structure, config.bars):
         offset = num_samples(start_bar * bar_seconds, config.sr)
@@ -439,7 +504,10 @@ def render_tracks(config: BGMConfig) -> dict[str, list[float]]:
         for part in requested:
             if part in section.drop:
                 continue
-            buf = _render_part(part, config, style, section, section_degrees, bar_seconds, rng, cache)
+            buf = _render_part(
+                part, config, style, section, section_degrees,
+                bar_seconds, rng, cache, motifs, start_bar,
+            )
             if buf:
                 add_into(tracks.setdefault(part, []), buf, offset, gain=section.gain)
     return tracks
@@ -454,6 +522,8 @@ def _render_part(
     bar_seconds: float,
     rng: random.Random,
     cache: dict,
+    motifs: dict,
+    bar_offset: int,
 ) -> list[float]:
     """1区間ぶんのパートを、区間の先頭を 0 秒として作る。"""
     if part == "chords":
@@ -461,7 +531,10 @@ def _render_part(
     if part == "bass":
         return _render_bass(config, style, degrees, bar_seconds, cache)
     if part == "lead":
-        return _render_lead(config, style, degrees, bar_seconds, rng, cache, section.lead_octave)
+        return _render_lead(
+            config, style, degrees, bar_seconds, rng, cache,
+            section.lead_octave, motifs, bar_offset,
+        )
     if part == "drums":
         return _render_drums(config, style, len(degrees), bar_seconds)
     raise ValueError(f"unknown part: {part!r}")

@@ -209,3 +209,70 @@ def _zero_crossing_rate(buf) -> float:
     """ゼロ交差の割合。音の高さの目安になる。"""
     crossings = sum(1 for a, b in zip(buf, buf[1:]) if (a < 0) != (b < 0))
     return crossings / max(1, len(buf))
+
+
+# --- モチーフによるメロディ展開 -----------------------------------------------
+
+
+def _bar_rhythm(lead, bar_index, bar_seconds, sr, slots=16):
+    """1小節を16分割し、それぞれの区画に音があるかどうかを並べる。"""
+    start = core.num_samples(bar_index * bar_seconds, sr)
+    step = core.num_samples(bar_seconds / slots, sr)
+    return [core.peak(lead[start + i * step : start + (i + 1) * step]) > 1e-6 for i in range(slots)]
+
+
+def test_repeated_bars_share_the_same_rhythm():
+    """同じ役割の小節では、音の置かれる位置がそろっていること。"""
+    config = _config(style="adventure", bars=4, parts=("lead",), seed=11)
+    lead = bgm.render_tracks(config)["lead"]
+    bar_seconds = bgm.BEATS_PER_BAR * 60.0 / config.resolved_style().bpm
+    first = _bar_rhythm(lead, 0, bar_seconds, SR)   # A
+    second = _bar_rhythm(lead, 1, bar_seconds, SR)  # A(同じモチーフ)
+    assert first == second
+    assert any(first)  # 全休符ではない
+
+
+def test_the_contrasting_bar_differs_from_the_motif():
+    """3小節目(B)はモチーフと別の句であること。"""
+    config = _config(style="adventure", bars=4, parts=("lead",), seed=11)
+    lead = bgm.render_tracks(config)["lead"]
+    bar_seconds = bgm.BEATS_PER_BAR * 60.0 / config.resolved_style().bpm
+    assert _bar_rhythm(lead, 0, bar_seconds, SR) != _bar_rhythm(lead, 2, bar_seconds, SR)
+
+
+@pytest.mark.parametrize("style", bgm.style_names())
+def test_phrases_fill_exactly_one_bar(style):
+    import random as _random
+
+    resolved = bgm.STYLES[style]
+    phrase = bgm._make_phrase(resolved, _random.Random(0), 7)
+    assert sum(length for _, length in phrase) == pytest.approx(bgm.BEATS_PER_BAR)
+
+
+def test_anchor_shift_lands_the_first_note_on_a_chord_tone():
+    phrase = [(3, 1.0), (5, 1.0), (None, 2.0)]
+    for chord_degree in range(7):
+        shift = bgm._anchor_shift(phrase, chord_degree, 7)
+        assert (3 + shift - chord_degree) % 7 in (0, 2, 4)
+
+
+def test_anchor_shift_of_an_all_rest_phrase_is_zero():
+    assert bgm._anchor_shift([(None, 4.0)], 3, 7) == 0
+
+
+def test_variation_changes_only_the_last_sounding_note():
+    import random as _random
+
+    motif = [(0, 1.0), (2, 1.0), (None, 1.0), (4, 1.0)]
+    varied = bgm._vary_phrase(motif, _random.Random(1), span=8)
+    assert varied[:3] == motif[:3]
+    assert varied[3] != motif[3]
+    assert varied[3][1] == motif[3][1]  # 長さは変わらない
+
+
+def test_verse_and_chorus_reuse_the_same_motif():
+    """区間をまたいでも同じ素材を使い、曲としてのまとまりを保つこと。"""
+    config = _config(style="adventure", bars=8, structure="verse_chorus", parts=("lead",), seed=3)
+    lead = bgm.render_tracks(config)["lead"]
+    bar_seconds = bgm.BEATS_PER_BAR * 60.0 / config.resolved_style().bpm
+    assert _bar_rhythm(lead, 0, bar_seconds, SR) == _bar_rhythm(lead, 4, bar_seconds, SR)
