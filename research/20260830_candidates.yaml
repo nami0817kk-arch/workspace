@@ -1,0 +1,45 @@
+# 候補テーマ（2026年8月30日）
+# 見出しに書いてあることだけ。検索の要約は使っていない
+date: "2026年8月30日"
+candidates:
+  - id: alvarez_deadline
+    title: アルバレスに示された日曜という期限
+    en: Julian Alvarez Atletico Arsenal
+    url: https://www.espn.com/soccer/story/_/id/49750822/julian-alvarez-sits-latest-atletico-madrid-training-session-amid-transfer-links
+    tier: 報道
+    reaction: true
+    numbers: true
+    note: セビージャ戦に出場せず。アトレティコが本人に決断の期限を提示と報道
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49750822/julian-alvarez-sits-latest-atletico-madrid-training-session-amid-transfer-links
+      - https://www.skysports.com/football/news/11095/13578318/julian-alvarez-transfer-news-atletico-madrid-set-deadline-for-striker-to-decide-whether-he-stays-or-joins-arsenal
+      - https://www.espn.com/soccer/story/_/id/49741017/atletico-madrid-julian-alvarez-transfer-barcelona
+
+  - id: spurs_crisis
+    title: 320億円使って最下位のトッテナム
+    en: Tottenham De Zerbi Spurs problem
+    url: https://www.skysports.com/football/news/11095/13578837/tottenham-hotspur-roberto-de-zerbi-highlights-biggest-problem-at-spurs-after-newcastle-defeat-as-jamie-carragher-slams-start
+    tier: 報道
+    reaction: true
+    numbers: true
+    note: 開幕2試合無得点で最下位。デゼルビ監督が問題点を指摘、カラガーが批判
+    sources:
+      - https://www.skysports.com/football/news/11095/13578837/tottenham-hotspur-roberto-de-zerbi-highlights-biggest-problem-at-spurs-after-newcastle-defeat-as-jamie-carragher-slams-start
+
+  - id: liverpool_sarr
+    title: リバプールがイスマイラ・サール獲得へ交渉
+    en: Liverpool Ismaila Sarr Crystal Palace
+    url: https://www.skysports.com/football/transfer-paper-talk/12709/13578898/liverpool-transfer-news-reds-continue-talks-with-crystal-palace-to-sign-ismaila-sarr-paper-talk
+    tier: 未確認
+    note: Paper Talk（各紙の報道まとめ）段階。クラブ発表なし
+    sources:
+      - https://www.skysports.com/football/transfer-paper-talk/12709/13578898/liverpool-transfer-news-reds-continue-talks-with-crystal-palace-to-sign-ismaila-sarr-paper-talk
+
+  - id: window_closes
+    title: 移籍期限まであと2日
+    en: Premier League transfer deadline day 2026
+    url: https://www.espn.com/soccer/story/_/id/48944912/premier-league-efl-summer-transfer-window-2026-dates-does-open-deadline-day
+    tier: 確定
+    note: 英国の期限は9月1日23時。書類提出済みなら2時間の猶予あり
+    sources:
+      - https://www.espn.com/soccer/story/_/id/48944912/premier-league-efl-summer-transfer-window-2026-dates-does-open-deadline-day

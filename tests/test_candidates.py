@@ -69,7 +69,7 @@ def test_each_slot_gets_a_different_candidate():
         ],
         SCORING,
     )
-    chosen = assign(ranked, SCORING, ["morning", "noon", "evening"])
+    chosen, _ = assign(ranked, SCORING, ["morning", "noon", "evening"])
     assert chosen["morning"].id == "a"   # いちばん新しい、かつ確定/報道
     assert chosen["noon"].id == "b"      # 日本人優先
     assert chosen["evening"].id == "c"   # 残りから最高点
@@ -78,13 +78,29 @@ def test_each_slot_gets_a_different_candidate():
 
 def test_morning_falls_back_when_no_candidate_matches_the_tier():
     ranked = score([Candidate(id="a", title="噂", hours_ago=1, tier="未確認")], SCORING)
-    chosen = assign(ranked, SCORING, ["morning"])
+    chosen, fallbacks = assign(ranked, SCORING, ["morning"])
     assert chosen["morning"].id == "a"
+    assert "確度" in fallbacks["morning"]      # 黙って入れ替えない
+
+
+def test_noon_says_so_when_no_japanese_candidate_exists():
+    ranked = score([Candidate(id="a", title="欧州の話", hours_ago=1, tier="報道")], SCORING)
+    chosen, fallbacks = assign(ranked, SCORING, ["noon"])
+    assert chosen["noon"].id == "a"
+    assert "日本人選手" in fallbacks["noon"]
+
+
+def test_no_fallback_is_reported_when_the_conditions_are_met():
+    ranked = score(
+        [Candidate(id="a", title="日本人の話", hours_ago=1, tier="報道", japanese=True)], SCORING
+    )
+    _, fallbacks = assign(ranked, SCORING, ["morning", "noon"])
+    assert fallbacks == {}
 
 
 def test_slots_are_skipped_when_candidates_run_out():
     ranked = score([Candidate(id="a", title="A", hours_ago=1, tier="報道")], SCORING)
-    chosen = assign(ranked, SCORING, ["morning", "noon", "evening"])
+    chosen, _ = assign(ranked, SCORING, ["morning", "noon", "evening"])
     assert set(chosen) == {"morning"}
 
 

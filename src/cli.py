@@ -288,6 +288,7 @@ def _dispatch(args, config) -> int:
 
         for site, refs in groups.items():
             pace = freshness.rate(entries, site)
+            observed_for = freshness.span(entries, site)
             head = f"■ {site}　新しい順に{len(refs)}件"
             if site != "x.com":
                 head += f"　（記事IDの伸び: {pace:.0f}/時）" if pace else "　（伸びは記録待ち）"
@@ -295,9 +296,14 @@ def _dispatch(args, config) -> int:
             for ref in refs:
                 age = freshness.hours_ago(ref, entries)
                 when = f"{age:.0f}時間前" if age is not None else "不明"
-                mark = "推定" if site != "x.com" else "確定"
+                mark = "確定" if site == "x.com" else "概算"
                 print(f"  {ref.number}　{when}（{mark}）")
                 print(f"      {ref.url}")
+            if pace and observed_for < 24:
+                print(
+                    f"  ※ 観測がまだ{observed_for:.0f}時間ぶんです。記事の出る量は時間帯で"
+                    "変わるので、数時間より前の概算はずれます。並び順は正確です"
+                )
             print()
 
         skipped = [u for u in urls if not freshness.read(u).known]
@@ -434,7 +440,7 @@ def _dispatch(args, config) -> int:
             print(f"  ーー　{item.title}　（{entry.slot}で既出 {entry.at:%m/%d %H:%M}）")
         print()
 
-        chosen = candidates_mod.assign(ranked, plan.scoring, plan.slots)
+        chosen, fallbacks = candidates_mod.assign(ranked, plan.scoring, plan.slots)
 
         for slot in plan.slots:
             pick = chosen.get(slot)
@@ -444,6 +450,8 @@ def _dispatch(args, config) -> int:
                 print(f"■ {name}: 割り当てる候補がありません")
                 continue
             print(f"■ {name} → {pick.title}（{pick.score}点）")
+            if slot in fallbacks:
+                print(f"   ! {fallbacks[slot]}。枠の条件から外れた候補を入れています")
             for query in candidates_mod.deep_queries(pick, plan.deep, plan.domains):
                 line = f'   {query["label"]}: "{query["q"]}"'
                 if query["domains"]:

@@ -113,6 +113,14 @@ def test_a_standstill_adds_no_record_and_is_reported():
     assert any("索引が進んでいない" in note for note in advice(growth, before, now))
 
 
+def test_a_rerun_soon_after_is_not_called_a_standstill():
+    before = [Observation("skysports.com", 13578318, T0)]
+    soon = T0 + timedelta(minutes=5)
+    _, growth = observe(rank([SKY]), before, soon)
+    assert growth["skysports.com"] == 0        # 伸びはゼロだが
+    assert advice(growth, before, soon) == []  # 止まったとは言わない
+
+
 def test_growth_is_not_reported_when_the_index_moved():
     before = [Observation("skysports.com", 13578000, T0)]
     assert advice({"skysports.com": 318}, before) == []
@@ -139,3 +147,21 @@ def test_broken_rows_are_skipped_rather_than_raising(tmp_path):
         encoding="utf-8",
     )
     assert [e.site for e in load(path)] == ["skysports.com"]
+
+
+def test_every_sky_section_is_recognised():
+    # セクション名は news だけではない。実際に出てきたものを並べる
+    sections = {
+        "https://www.skysports.com/football/news/11095/13578318/a": 13578318,
+        "https://www.skysports.com/football/transfer-paper-talk/12709/13578898/b": 13578898,
+        "https://www.skysports.com/football/live-blog/11095/12476234/c": 12476234,
+        "https://www.skysports.com/transfer/news/12691/13501314/d": 13501314,
+    }
+    for url, number in sections.items():
+        ref = read(url)
+        assert ref.site == "skysports.com", url
+        assert ref.number == number, url
+
+
+def test_other_sky_pages_are_not_mistaken_for_articles():
+    assert read("https://www.skysports.com/football/teams/arsenal").known is False

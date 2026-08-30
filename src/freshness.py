@@ -31,8 +31,10 @@ from .config import _resolve
 
 # サイトごとの記事IDの取り出し方。連番であることが確認できたものだけ載せる
 PATTERNS: dict[str, list[re.Pattern]] = {
+    # セクション名は news / live-blog / transfer-paper-talk など複数ある。
+    # 増えても拾えるように、2つめの区切りは決め打ちにしない
     "skysports.com": [
-        re.compile(r"skysports\.com/(?:football|transfer)/(?:news|live-blog)/\d+/(\d+)/"),
+        re.compile(r"skysports\.com/(?:football|transfer)/[a-z0-9-]+/\d+/(\d+)/"),
     ],
     "espn.com": [
         re.compile(r"espn\.com/soccer/story/_/id/(\d+)/"),
@@ -40,7 +42,16 @@ PATTERNS: dict[str, list[re.Pattern]] = {
 }
 
 # 記録が2点以上あり、これだけの時間が空いていないと増加ペースを出さない
-MIN_SPAN_HOURS = 12.0
+MIN_SPAN_HOURS = 4.0
+
+# 測った時間の何倍まで外挿してよいか。
+# 記事の出る量は時間帯で変わるので、5時間の観測から4日前を割り出すのは無理がある。
+# 範囲を超えたら数字を出さず「不明」にする
+MAX_EXTRAPOLATION = 3.0
+
+# 前回からこれだけ経っていないと「索引が止まった」とは言わない。
+# 数分後に回し直しただけで警告を出すと、警告として機能しなくなる
+MIN_STALL_HOURS = 6.0
 
 LEDGER_HEADER = "# 検索の索引がどこまで進んだかの記録。fresh のたびに追記される\n"
 
@@ -160,6 +171,14 @@ def rate(entries: list[Observation], site: str) -> float | None:
     return step / hours if step > 0 else None
 
 
+def span(entries: list[Observation], site: str) -> float:
+    """そのサイトを何時間ぶん観測できているか。"""
+    found = sorted((e for e in entries if e.site == site), key=lambda o: o.at)
+    if len(found) < 2:
+        return 0.0
+    return (found[-1].at - found[0].at).total_seconds() / 3600
+
+
 def hours_ago(ref: Ref, entries: list[Observation], now: datetime | None = None) -> float | None:
     """その記事が何時間前のものかの推定。
 
@@ -174,7 +193,10 @@ def hours_ago(ref: Ref, entries: list[Observation], now: datetime | None = None)
     pace = rate(entries, ref.site)
     if anchor is None or not pace:
         return None
+
     behind = (anchor.max_number - ref.number) / pace
+    if behind > span(entries, ref.site) * MAX_EXTRAPOLATION:
+        return None  # 測った範囲から離れすぎている。憶測になるので出さない
     return behind + (now - anchor.at).total_seconds() / 3600
 
 
@@ -210,6 +232,8 @@ def advice(growth: dict[str, int], entries: list[Observation], now=None) -> list
         if previous is None:
             continue
         stale = (now - previous.at).total_seconds() / 3600
+        if stale < MIN_STALL_HOURS:
+            continue  # 前回からまだ間がない。止まったかどうかは判断できない
         notes.append(
             f"{site}: 前回（{previous.at:%m/%d %H:%M}／{stale:.0f}時間前）から"
             "いちばん新しい記事が変わっていません。検索の索引が進んでいないので、"

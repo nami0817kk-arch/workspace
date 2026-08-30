@@ -133,11 +133,19 @@ def score(items: list[Candidate], scoring: dict) -> list[Candidate]:
     return sorted(items, key=lambda c: (-c.score, c.hours_ago))
 
 
-def assign(items: list[Candidate], scoring: dict, slots: list[str]) -> dict[str, Candidate]:
-    """枠ごとに1本ずつ割り当てる。同じ候補は2つの枠に入れない。"""
+def assign(
+    items: list[Candidate], scoring: dict, slots: list[str]
+) -> tuple[dict[str, Candidate], dict[str, str]]:
+    """枠ごとに1本ずつ割り当てる。同じ候補は2つの枠に入れない。
+
+    条件に合う候補が無ければ全体から選ぶ（枠を空けるより出したほうがよい）。
+    そのときは「条件を満たせなかった」を添えて返す。黙って別のものを
+    入れると、日本人選手の枠に無関係な話が入っていることに気づけない。
+    """
     rules = dict(scoring.get("slots") or {})
     remaining = list(items)
     chosen: dict[str, Candidate] = {}
+    fallbacks: dict[str, str] = {}
 
     for slot in slots:
         rule = dict(rules.get(slot) or {})
@@ -145,13 +153,17 @@ def assign(items: list[Candidate], scoring: dict, slots: list[str]) -> dict[str,
         tiers = rule.get("require_tier")
         if tiers:
             filtered = [c for c in pool if c.tier in tiers]
-            pool = filtered or pool  # 条件に合うものが無ければ全体から選ぶ
+            if not filtered and pool:
+                fallbacks[slot] = f"確度が{' か '.join(tiers)}の候補がありません"
+            pool = filtered or pool
 
         prefer = str(rule.get("prefer", "total"))
         if prefer == "freshness":
             pick = min(pool, key=lambda c: (c.hours_ago, -c.score), default=None)
         elif prefer == "japanese":
             japanese = [c for c in pool if c.japanese]
+            if not japanese and pool:
+                fallbacks[slot] = "日本人選手が絡む候補がありません"
             pick = max(japanese or pool, key=lambda c: c.score, default=None)
         else:
             pick = max(pool, key=lambda c: c.score, default=None)
@@ -160,7 +172,7 @@ def assign(items: list[Candidate], scoring: dict, slots: list[str]) -> dict[str,
             continue
         chosen[slot] = pick
         remaining = [c for c in remaining if c.id != pick.id]
-    return chosen
+    return chosen, fallbacks
 
 
 def deep_queries(
