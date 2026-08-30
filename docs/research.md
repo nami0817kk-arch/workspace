@@ -83,6 +83,55 @@ python -m src.cli plan --routine match --league germany
 試合（現地の報道）:   "Bayern Dortmund Spielbericht Noten" （kicker.de, sport1.de）
 ```
 
+## 検索結果から候補ファイルを作る
+
+検索結果を見ながら候補ファイルを手で書くと、URLを写し間違えるし、拾ったつもりで
+抜けることもあります。タイトルとURLを貼れば下書きができます。
+
+```bash
+python -m src.cli collect < 検索結果.txt
+```
+
+受け付ける形は3つ。
+
+```
+見出し<タブ>https://...
+見出し
+https://...
+https://...            （見出しは後で書く）
+```
+
+やることは4つです。
+
+1. **URLからサイトと日付を読む**（`fresh` と同じ仕組み）
+2. **同じ話をまとめる**。5媒体が同じ移籍を報じたら1件にして出典を並べる。
+   動画は1本なので、候補が5件に増えても困るだけ
+3. **英語の検索語を作る**。記事URLのスラッグから
+   （`emiliano-martinez-signs-for-chelsea` → `Emiliano Martinez Chelsea`）
+4. **確度の当たりをつける**。見出しの言い回しから
+
+```
+4件 → 候補2件　（サイトが分かったもの 3件 / 日付が読めたもの 0件）
+  559463       Spurs 0-2 Newcastle: Tottenham suffer second defeat　＋1媒体
+  —            Emiliano Martinez signs for Chelsea!　＋1媒体
+```
+
+**`tier` / `topic` / `league` は判断が要るので空のまま残します。**
+見出しに書いてあることしか入れません（要約は使いません）。
+
+### 確度の当たり
+
+| 見出しの言い回し | 当たり |
+|---|---|
+| 公式発表 / official / confirmed / signs for | `確定` |
+| **スコアが入っている**（0-2） | `確定`（点数は事実） |
+| と報じ / sources / in talks / agreed | `報道` |
+| 関心 / 浮上 / linked with / Paper Talk | `未確認` |
+| **疑問形で終わる**（〜か？ / Does…?） | `未確認`（観測・分析） |
+
+当たりでしかないので、`# 見て直す` と書いて残します。判断できなければ
+`# 判断できず` と書きます。
+
 ## 世の中の言葉をどう入れるか
 
 「誰の言葉か」で扱いが変わります。**同じ節に混ぜない。**

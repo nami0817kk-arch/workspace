@@ -67,6 +67,8 @@ class Notes:
     answer: str = ""                 # まとめで返す答え
     watch: str = ""                  # 次に何を見るか
     follow_up: bool = False
+    league: str = ""                 # england / spain / ... 何を追えていないかの集計に使う
+    kind: str = "transfer"           # transfer / match / other
     thumbnail: dict = field(default_factory=dict)
     sections: list[Section] = field(default_factory=list)
 
@@ -135,6 +137,8 @@ def build_notes(raw: dict) -> Notes:
         answer=str(raw.get("answer", "")).strip(),
         watch=str(raw.get("watch", "")).strip(),
         follow_up=bool(raw.get("follow_up", False)),
+        league=str(theme.get("league", "")).strip().lower(),
+        kind=str(theme.get("kind", "transfer")).strip().lower() or "transfer",
         sections=sections,
     )
 

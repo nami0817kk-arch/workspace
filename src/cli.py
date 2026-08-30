@@ -468,6 +468,17 @@ def _dispatch(args, config) -> int:
             for key, count in summary.themes:
                 print(f"  {count}回　{key}")
 
+        league_rows, kind_rows = stats_mod.gaps(entries, plan.leagues)
+        stale = [row for row in league_rows if row[2] != 0]
+        if stale:
+            print("\n■ 追えていない領域")
+            for _, name, days in stale[:6]:
+                print(f"  {name}　" + ("一度も扱っていない" if days < 0 else f"{days}日前が最後"))
+            for kind, days in kind_rows:
+                label = {"transfer": "移籍", "match": "試合結果"}.get(kind, kind)
+                if days != 0:
+                    print(f"  {label}　" + ("一度も扱っていない" if days < 0 else f"{days}日前が最後"))
+
         notes = stats_mod.advice(summary, target)
         if notes:
             print()
@@ -836,7 +847,8 @@ def _dispatch(args, config) -> int:
         ledger = (plan.coverage or {}).get("ledger")
         if ledger:
             coverage_mod.record(
-                ledger, notes.slot or "-", [(notes.theme_id, notes.title)]
+                ledger, notes.slot or "-", [(notes.theme_id, notes.title)],
+                league=notes.league, kind=notes.kind,
             )
         print(f"台本: {target}")
         print(f"`python -m src.cli check {target}` で書式と尺を確認してください")

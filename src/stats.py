@@ -83,3 +83,44 @@ def advice(summary: Summary, target: int) -> list[str]:
     for key, count in repeats:
         notes.append(f"『{key}』を{count}回扱っています。飽きられていないか見てください")
     return notes
+
+
+def gaps(
+    entries: list[coverage.Entry],
+    leagues: dict,
+    kinds: tuple[str, ...] = ("transfer", "match"),
+    now: datetime | None = None,
+) -> tuple[list[tuple[str, str, int]], list[tuple[str, int]]]:
+    """何日ぶん扱っていないかを、リーグと種別ごとに返す。
+
+    covered.yaml は繰り返しを止めるためのもの。裏返すと「追えていない領域」が
+    見える。ずっと扱っていないリーグは、視聴者から見れば扱っていないのと同じ。
+    """
+    now = now or datetime.now()
+    latest: dict[str, datetime] = {}
+    latest_kind: dict[str, datetime] = {}
+    for entry in entries:
+        if entry.league:
+            latest[entry.league] = max(latest.get(entry.league, entry.at), entry.at)
+        if entry.kind:
+            latest_kind[entry.kind] = max(latest_kind.get(entry.kind, entry.at), entry.at)
+
+    league_rows = [
+        (key, str((leagues.get(key) or {}).get("name") or key), _days(latest.get(key), now))
+        for key in leagues
+    ]
+    kind_rows = [(kind, _days(latest_kind.get(kind), now)) for kind in kinds]
+
+    # 「一度も扱っていない」がいちばん急ぐので先頭に置く
+    league_rows.sort(key=lambda row: _urgency(row[2]), reverse=True)
+    kind_rows.sort(key=lambda row: _urgency(row[1]), reverse=True)
+    return league_rows, kind_rows
+
+
+def _urgency(days: int) -> float:
+    return float("inf") if days < 0 else days
+
+
+def _days(when: datetime | None, now: datetime) -> int:
+    """扱っていなければ -1（「一度も」の印）。"""
+    return -1 if when is None else (now - when).days

@@ -65,3 +65,74 @@ def test_an_empty_ledger_says_so():
     summary = summarise([], days=7, now=NOW)
     assert summary.total == 0
     assert any("まだ記録がありません" in note for note in advice(summary, target=3))
+
+
+LEAGUES = {
+    "england": {"name": "プレミアリーグ"},
+    "spain": {"name": "ラ・リーガ"},
+    "japan": {"name": "Jリーグ"},
+}
+
+
+def _entry(days, league="", kind=""):
+    return Entry(key="k", headline="h", slot="morning",
+                 at=NOW - timedelta(days=days), league=league, kind=kind)
+
+
+def test_untouched_leagues_are_marked_as_never():
+    from src.stats import gaps
+
+    leagues, _ = gaps([_entry(0, "england", "match")], LEAGUES, now=NOW)
+    by_key = {key: days for key, _, days in leagues}
+    assert by_key["england"] == 0
+    assert by_key["spain"] == -1        # 一度も扱っていない
+    assert by_key["japan"] == -1
+
+
+def test_the_longest_untouched_comes_first():
+    from src.stats import gaps
+
+    entries = [_entry(0, "england"), _entry(20, "spain")]
+    leagues, _ = gaps(entries, LEAGUES, now=NOW)
+    assert leagues[0][0] == "japan"     # 一度も（-1 が先頭）
+    assert [key for key, _, _ in leagues][-1] == "england"
+
+
+def test_kinds_are_tracked_too():
+    from src.stats import gaps
+
+    _, kinds = gaps([_entry(3, "england", "match")], LEAGUES, now=NOW)
+    by_kind = dict(kinds)
+    assert by_kind["match"] == 3
+    assert by_kind["transfer"] == -1
+
+
+def test_old_entries_without_a_league_are_ignored():
+    from src.stats import gaps
+
+    # league を記録する前の古い行があっても落ちない
+    leagues, kinds = gaps([_entry(1)], LEAGUES, now=NOW)
+    assert all(days == -1 for _, _, days in leagues)
+    assert all(days == -1 for _, days in kinds)
+
+
+def test_the_ledger_keeps_the_new_fields(tmp_path):
+    from src import coverage
+
+    ledger = tmp_path / "c.yaml"
+    coverage.record(ledger, "morning", [("k", "見出し")], NOW, league="germany", kind="match")
+    (entry,) = coverage.load(ledger)
+    assert entry.league == "germany"
+    assert entry.kind == "match"
+
+
+def test_old_ledger_rows_still_load(tmp_path):
+    from src import coverage
+
+    ledger = tmp_path / "c.yaml"
+    ledger.write_text(
+        "covered:\n  - {key: k, headline: h, slot: morning, at: '2026-08-30T10:00'}\n",
+        encoding="utf-8",
+    )
+    (entry,) = coverage.load(ledger)
+    assert entry.league == "" and entry.kind == ""

@@ -21,14 +21,22 @@ class Entry:
     headline: str
     slot: str
     at: datetime
+    league: str = ""    # england / spain / ... 何を追えていないかを見るのに使う
+    kind: str = ""      # transfer / match / other
 
     def to_dict(self) -> dict:
-        return {
+        row = {
             "key": self.key,
             "headline": self.headline,
             "slot": self.slot,
             "at": self.at.isoformat(timespec="minutes"),
         }
+        # 古い記録には無いので、あるときだけ書く
+        if self.league:
+            row["league"] = self.league
+        if self.kind:
+            row["kind"] = self.kind
+        return row
 
 
 def load(path: str | Path) -> list[Entry]:
@@ -45,6 +53,8 @@ def load(path: str | Path) -> list[Entry]:
                     headline=str(row.get("headline", "")),
                     slot=str(row.get("slot", "")),
                     at=datetime.fromisoformat(str(row.get("at"))),
+                    league=str(row.get("league", "")),
+                    kind=str(row.get("kind", "")),
                 )
             )
         except (TypeError, ValueError):
@@ -84,7 +94,12 @@ def duplicates(
 
 
 def record(
-    path: str | Path, slot: str, items: list[tuple[str, str]], now: datetime | None = None
+    path: str | Path,
+    slot: str,
+    items: list[tuple[str, str]],
+    now: datetime | None = None,
+    league: str = "",
+    kind: str = "",
 ) -> Path:
     """(id, 見出し) の並びを記録に足す。"""
     now = now or datetime.now()
@@ -97,5 +112,8 @@ def record(
         for entry in entries
         if not (entry.key in keys and entry.slot == slot and entry.at.date() == now.date())
     ]
-    entries += [Entry(key=key, headline=headline, slot=slot, at=now) for key, headline in items]
+    entries += [
+        Entry(key=key, headline=headline, slot=slot, at=now, league=league, kind=kind)
+        for key, headline in items
+    ]
     return save(path, entries)
