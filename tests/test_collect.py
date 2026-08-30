@@ -78,8 +78,8 @@ def test_the_draft_leaves_the_judgement_fields_empty():
     body = to_yaml([Hit(title="見出し", url="https://example.com/a")], "2026年8月30日")
     assert 'topic: ""' in body
     assert 'league: ""' in body
-    assert "tier: 報道" in body          # 見て直す前提の初期値
-    assert "見出しを見て" in body
+    assert "tier: " in body              # 見出しからの当たりが入る
+    assert "見て直す" in body or "判断できず" in body
 
 
 def test_a_missing_headline_is_left_as_a_blank_to_fill():
@@ -171,3 +171,72 @@ def test_generic_words_are_not_used_as_keywords():
     )
     assert "Transfer" not in keywords and "News" not in keywords
     assert keywords.startswith("Julian Alvarez")
+
+
+def test_official_wording_reads_as_confirmed():
+    from src.collect import guess_tier
+
+    for title in (
+        "Emiliano Martinez signs for Chelsea! | Official Site",
+        "Chelsea complete signing of Emi Martinez",
+        "アトレティコが公式発表！移籍交渉を拒否",
+        "浦和が完全移籍加入を発表",
+    ):
+        assert guess_tier(title) == "確定", title
+
+
+def test_reporting_wording_reads_as_reported():
+    from src.collect import guess_tier
+
+    for title in (
+        "Arsenal ready if Julian Alvarez transfer door opens - sources",
+        "Spurs and Everton in talks over separate deals",
+        "デゼルビ監督が語った",
+    ):
+        assert guess_tier(title) == "報道", title
+
+
+def test_rumour_wording_reads_as_unconfirmed():
+    from src.collect import guess_tier
+
+    for title in (
+        "Liverpool transfer news: Reds continue talks - Paper Talk",
+        "Arsenal linked with Julian Alvarez",
+        "佐野海舟にリバプールが関心",
+    ):
+        assert guess_tier(title) == "未確認", title
+
+
+def test_a_scoreline_reads_as_confirmed():
+    from src.collect import guess_tier
+
+    # 点数は事実。試合結果は確定でよい
+    assert guess_tier("Spurs 0-2 Newcastle: Tottenham suffer second defeat") == "確定"
+    assert guess_tier("Chelsea 3-1 Arsenal (Aug 30, 2026) Game Analysis") == "確定"
+
+
+def test_a_question_reads_as_unconfirmed():
+    from src.collect import guess_tier
+
+    # 疑問形は観測・分析。事実の報道ではない
+    assert guess_tier("Does booing increase his chances of a move?") == "未確認"
+    assert guess_tier("Why Tottenham cannot score") == "未確認"
+
+
+def test_an_unreadable_headline_gives_nothing():
+    from src.collect import guess_tier
+
+    assert guess_tier("Tottenham Hotspur") == ""
+    assert guess_tier("") == ""
+
+
+def test_the_guess_lands_in_the_draft():
+    body = to_yaml([Hit("Emiliano Martinez signs for Chelsea!", "https://a.example/x-y")], "d")
+    assert "tier: 確定" in body
+    assert "見て直す" in body
+
+
+def test_an_unguessable_headline_says_so_in_the_draft():
+    body = to_yaml([Hit("Tottenham Hotspur", "https://a.example/x-y")], "d")
+    assert "tier: 報道" in body
+    assert "判断できず" in body

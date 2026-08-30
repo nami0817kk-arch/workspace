@@ -146,7 +146,7 @@ def to_yaml(hits: list[Hit], date_label: str, merge: bool = True) -> str:
             '    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで',
             '    league: ""         # england/spain/germany/italy/france/netherlands/japan',
             "    kind: transfer",
-            "    tier: 報道           # 見出しを見て 確定/報道/未確認 に直す",
+            _tier_line(head.title),
             f"    en: {_quote(english)}" + ("            # URLから作った。合っているか見る"
                                             if english else "            # 英語サイトを引く語"),
             f"    url: {head.url}",
@@ -163,6 +163,13 @@ def to_yaml(hits: list[Hit], date_label: str, merge: bool = True) -> str:
             lines.append(f"      # ↑ {hit.title[:60]}")
         lines.append("")
     return "\n".join(lines) + "\n"
+
+
+def _tier_line(title: str) -> str:
+    guess = guess_tier(title)
+    if guess:
+        return f"    tier: {guess}           # 見出しの言い回しからの当たり。見て直す"
+    return "    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す"
 
 
 def english_words(url: str, limit: int = 4) -> str:
@@ -186,6 +193,54 @@ def english_words(url: str, limit: int = 4) -> str:
     if len(words) < 2:
         return ""
     return " ".join(word.capitalize() for word in words[:limit])
+
+
+# 見出しの言い回しから確度の当たりをつける。上から順に見て、最初に当たったもの。
+# あくまで当たりで、決めるのは書き手。公式サイトの記事は別途 official 群で判断する
+TIER_HINTS: list[tuple[str, tuple[str, ...]]] = [
+    ("未確認", (
+        "rumour", "rumor", "linked with", "eyeing", "monitoring", "interested in",
+        "could", "may ", "reportedly", "paper talk", "gossip",
+        "の噂", "浮上", "関心", "候補に", "とみられる", "か？", "可能性",
+    )),
+    ("確定", (
+        "official", "confirmed", "completes", "complete signing", "have signed",
+        "signs for", "announce", "statement", "unveiled",
+        "公式発表", "正式発表", "発表", "決定", "完全移籍が", "合意に達し",
+    )),
+    ("報道", (
+        "understand", "sources", "agreed", "set to", "close to", "in talks",
+        "と報じ", "報道", "伝えられ", "明かした", "語った", "との情報",
+    )),
+]
+
+
+# 語ではなく形で分かるもの
+TIER_SHAPES: list[tuple[str, re.Pattern]] = [
+    # スコアが入っていれば試合結果。点数は事実
+    ("確定", re.compile(r"\b\d{1,2}\s*[-–:]\s*\d{1,2}\b")),
+    # 疑問形は分析・観測記事。事実の報道ではない
+    ("未確認", re.compile(r"[?？]\s*$|^(?:does|is|will|can|should|why|who|what)\b", re.I)),
+]
+
+
+def guess_tier(title: str) -> str:
+    """見出しから確度の当たりをつける。分からなければ空。
+
+    「公式発表」と「〜と報じられている」と「〜か？」では確度がまるで違う。
+    見出しに出ている言い回しは、その記事がどの段階かをよく表している。
+    ただし当たりでしかないので、書き手が見て直す前提にする。
+    """
+    text = (title or "").strip()
+    lowered = text.lower()
+
+    for tier, words in TIER_HINTS:
+        if any(word.lower() in lowered for word in words):
+            return tier
+    for tier, shape in TIER_SHAPES:
+        if shape.search(text):
+            return tier
+    return ""
 
 
 def _title_line(title: str) -> str:
