@@ -115,3 +115,55 @@ def test_generated_audio_assets_are_valid_wav():
     for path in [p for p in (ensure_audio_assets() or []) if p.suffix == ".wav"]:
         with wave.open(str(path), "rb") as handle:
             assert handle.getnframes() > 0
+
+
+def test_the_prefix_picks_the_music():
+    from src.audio_gen import track_for
+
+    # 速報とまとめで同じ曲が流れると、どちらも同じ温度に聞こえる
+    assert track_for("【速報】クラブが公式声明").endswith("bgm_breaking.wav")
+    assert track_for("【悲報】2試合で無得点").endswith("bgm_breaking.wav")
+    assert track_for("【詳報】移籍市場のまとめ").endswith("bgm_calm.wav")
+    assert track_for("【朗報】復帰へ").endswith("bgm_loop.wav")
+    assert track_for("札のないタイトル").endswith("bgm_loop.wav")
+
+
+def test_an_explicit_track_wins_over_the_prefix():
+    from src.audio_gen import track_for
+
+    assert track_for("【速報】x", "assets/audio/mine.wav") == "assets/audio/mine.wav"
+
+
+def test_each_mood_has_its_own_tempo_and_progression():
+    from src.audio_gen import MOODS, _mood
+
+    breaking, calm = _mood("breaking"), _mood("calm")
+    assert breaking["bpm"] > calm["bpm"]          # 速報のほうが速い
+    assert breaking["pulse"] > calm["pulse"]      # 低音も強い
+    assert breaking["progression"] != calm["progression"]
+    assert all(m["seconds"] > 10 for m in (breaking, calm))
+
+
+def test_an_unknown_mood_falls_back_to_news():
+    from src.audio_gen import _mood
+
+    assert _mood("しらない曲調")["bpm"] == _mood("news")["bpm"]
+
+
+def test_every_mood_renders_a_loopable_file(tmp_path):
+    import struct
+    import wave
+
+    from src.audio_gen import MOODS, generate_bgm
+
+    for name in MOODS:
+        path = generate_bgm(tmp_path / f"{name}.wav", name)
+        with wave.open(str(path)) as handle:
+            samples = struct.unpack(f"<{handle.getnframes() * 2}h", handle.readframes(handle.getnframes()))
+        assert handle.getnchannels() == 2
+
+        # 継ぎ目が鳴らないよう、両端は落ちきっている（真ん中は鳴っている）
+        assert max(abs(v) for v in samples[:40]) < 200, name
+        assert max(abs(v) for v in samples[-40:]) < 200, name
+        middle = samples[len(samples) // 2 - 400: len(samples) // 2 + 400]
+        assert max(abs(v) for v in middle) > 500, name

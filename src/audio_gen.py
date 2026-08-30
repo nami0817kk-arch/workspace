@@ -20,13 +20,47 @@ BEAT = 60.0 / BPM
 BARS_PER_CHORD = 2
 BEATS_PER_BAR = 4
 
-# Am - F - C - G。ニュースの下に敷いても邪魔にならない進行
-PROGRESSION = [
-    (220.00, 261.63, 329.63),  # Am
-    (174.61, 220.00, 261.63),  # F
-    (261.63, 329.63, 392.00),  # C
-    (196.00, 246.94, 293.66),  # G
-]
+# 曲調ごとの和音進行とテンポ。ニュースの中身に合わせて敷き分ける。
+#   news     … 通常の枠。Am-F-C-G。下に敷いても邪魔にならない
+#   breaking … 速報。半音進行を混ぜて落ち着かなくする。テンポも上げる
+#   calm     … まとめ・深掘り。長調で、動きを減らす
+MOODS = {
+    "news": {
+        "bpm": 96,
+        "progression": [
+            (220.00, 261.63, 329.63),  # Am
+            (174.61, 220.00, 261.63),  # F
+            (261.63, 329.63, 392.00),  # C
+            (196.00, 246.94, 293.66),  # G
+        ],
+        "pulse": 1.0,
+    },
+    "breaking": {
+        "bpm": 112,
+        "progression": [
+            (220.00, 261.63, 329.63),  # Am
+            (233.08, 277.18, 349.23),  # B♭（半音上。緊張を作る）
+            (220.00, 261.63, 329.63),  # Am
+            (196.00, 233.08, 293.66),  # Gm
+        ],
+        "pulse": 1.35,
+    },
+    "calm": {
+        "bpm": 80,
+        "progression": [
+            (261.63, 329.63, 392.00),  # C
+            (220.00, 261.63, 329.63),  # Am
+            (174.61, 220.00, 261.63),  # F
+            (196.00, 246.94, 293.66),  # G
+        ],
+        "pulse": 0.55,
+    },
+}
+
+# 台本の【】から曲調を選ぶ。書いていなければ news
+PREFIX_MOOD = {"速報": "breaking", "悲報": "breaking", "朗報": "news", "詳報": "calm"}
+
+PROGRESSION = MOODS["news"]["progression"]
 CHORD_SECONDS = BEAT * BEATS_PER_BAR * BARS_PER_CHORD
 BGM_SECONDS = CHORD_SECONDS * len(PROGRESSION)
 
@@ -41,6 +75,8 @@ def ensure_audio_assets(force: bool = False) -> list[Path]:
 
     targets = {
         "bgm_loop.wav": generate_bgm,
+        "bgm_breaking.wav": lambda p: generate_bgm(p, "breaking"),
+        "bgm_calm.wav": lambda p: generate_bgm(p, "calm"),
         "se_pon.wav": generate_pon,
         "se_whoosh.wav": generate_whoosh,
         "se_jingle.wav": generate_jingle,
@@ -53,23 +89,55 @@ def ensure_audio_assets(force: bool = False) -> list[Path]:
     return created
 
 
-def generate_bgm(path: Path) -> Path:
+def track_for(script_title: str, override: str | None = None) -> str:
+    """台本に合う BGM のパスを返す。
+
+    【速報】と【詳報】で同じ曲が流れると、どちらも同じ温度に聞こえる。
+    台本の頭の札から曲調を選ぶ。frontmatter に bgm を書けばそちらが優先。
+    """
+    if override:
+        return override
+    for prefix, mood in PREFIX_MOOD.items():
+        if f"【{prefix}】" in (script_title or ""):
+            return f"assets/audio/{TRACKS[mood]}"
+    return f"assets/audio/{TRACKS['news']}"
+
+
+TRACKS = {"news": "bgm_loop.wav", "breaking": "bgm_breaking.wav", "calm": "bgm_calm.wav"}
+
+
+def _mood(name: str) -> dict:
+    """曲調の設定を、テンポから割り出した秒数つきで返す。"""
+    entry = dict(MOODS.get(name) or MOODS["news"])
+    beat = 60.0 / float(entry["bpm"])
+    entry["beat"] = beat
+    entry["chord_seconds"] = beat * BEATS_PER_BAR * BARS_PER_CHORD
+    entry["seconds"] = entry["chord_seconds"] * len(entry["progression"])
+    return entry
+
+
+def generate_bgm(path: Path, mood: str = "news") -> Path:
     """ニュースの下に敷く BGM。
 
     パッド（和音の持続音）・アルペジオ・低音のパルスの3層を重ねる。
     喋りとぶつからないよう、中音域は薄めにして低音と高音に寄せている。
     ループさせる前提なので、両端は無音に落として継ぎ目が鳴らないようにする。
+
+    速報と、まとめの深掘りで同じ曲が流れると、どちらも同じ温度に聞こえる。
+    mood で進行とテンポを変える（MOODS を参照）。
     """
-    total = int(RATE * BGM_SECONDS)
+    entry = _mood(mood)
+    seconds = entry["seconds"]
+    total = int(RATE * seconds)
     left = [0.0] * total
     right = [0.0] * total
 
-    _lay_pad(left, right)
-    _lay_arpeggio(left, right)
-    _lay_pulse(left, right)
+    _lay_pad(left, right, entry, seconds)
+    _lay_arpeggio(left, right, entry, seconds)
+    _lay_pulse(left, right, entry, seconds)
 
     for index in range(total):
-        gain = _edge_gain(index / RATE, BGM_SECONDS)
+        gain = _edge_gain(index / RATE, seconds)
         left[index] *= gain
         right[index] *= gain
 
@@ -77,15 +145,17 @@ def generate_bgm(path: Path) -> Path:
     return path
 
 
-def _chord_at(seconds: float) -> tuple[float, ...]:
-    return PROGRESSION[int(seconds / CHORD_SECONDS) % len(PROGRESSION)]
+def _chord_at(seconds: float, progression=None, chord_seconds: float = 0.0) -> tuple[float, ...]:
+    progression = progression or PROGRESSION
+    chord_seconds = chord_seconds or CHORD_SECONDS
+    return progression[int(seconds / chord_seconds) % len(progression)]
 
 
-def _lay_pad(left: list[float], right: list[float]) -> None:
+def _lay_pad(left: list[float], right: list[float], mood: dict, seconds: float) -> None:
     """和音の持続音。わずかにデチューンした2声を左右に振って広がりを出す。"""
     for index in range(len(left)):
         t = index / RATE
-        chord = _chord_at(t)
+        chord = _chord_at(t, mood["progression"], mood["chord_seconds"])
         value_l = value_r = 0.0
         for freq in chord:
             value_l += math.sin(2 * math.pi * freq * t)
@@ -96,15 +166,15 @@ def _lay_pad(left: list[float], right: list[float]) -> None:
         right[index] += (value_r / len(chord) * 0.5 + low) * 0.17
 
 
-def _lay_arpeggio(left: list[float], right: list[float]) -> None:
+def _lay_arpeggio(left: list[float], right: list[float], mood: dict, seconds: float) -> None:
     """8分音符のアルペジオ。1音ずつ左右に振る。"""
-    step = BEAT / 2
-    count = int(BGM_SECONDS / step)
+    step = mood["beat"] / 2
+    count = int(seconds / step)
     length = int(RATE * step * 1.8)
 
     for number in range(count):
         start = number * step
-        chord = _chord_at(start)
+        chord = _chord_at(start, mood["progression"], mood["chord_seconds"])
         freq = chord[number % len(chord)] * 2  # 1オクターブ上
         offset = int(start * RATE)
         pan = 0.62 if number % 2 == 0 else 0.38
@@ -121,22 +191,22 @@ def _lay_arpeggio(left: list[float], right: list[float]) -> None:
             right[index] += value * (1 - pan)
 
 
-def _lay_pulse(left: list[float], right: list[float]) -> None:
+def _lay_pulse(left: list[float], right: list[float], mood: dict, seconds: float) -> None:
     """拍を感じさせる低音。強く出すと喋りを邪魔するので控えめに。"""
     length = int(RATE * 0.24)
-    beats = int(BGM_SECONDS / BEAT)
+    beats = int(seconds / mood["beat"])
 
     for beat in range(beats):
         if beat % 2:  # 1拍おき
             continue
-        offset = int(beat * BEAT * RATE)
+        offset = int(beat * mood["beat"] * RATE)
         for n in range(length):
             index = offset + n
             if index >= len(left):
                 break
             t = n / RATE
             freq = 92 - 46 * min(1.0, t / 0.16)   # 下に落ちるサイン
-            value = math.sin(2 * math.pi * freq * t) * math.exp(-t * 13) * 0.30
+            value = math.sin(2 * math.pi * freq * t) * math.exp(-t * 13) * 0.30 * mood["pulse"]
             left[index] += value
             right[index] += value
 

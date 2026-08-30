@@ -9,6 +9,7 @@ from pathlib import Path
 from . import audio, ffmpeg, inserts as inserts_mod, subtitles
 from .config import ProjectConfig, _resolve
 from .render import Renderer
+from . import audio_gen
 from .script_model import Script, load_script
 from .thumbnail import build_thumbnail, from_meta
 from .tts import create_backend, credits, synthesize_script
@@ -78,7 +79,8 @@ def build_script(
         config.audio,
         duration=script.duration + inserts.total,
         effects=audio.collect_effects(script, config),
-        bgm=script.meta.get("bgm"),
+        # 【速報】は緊迫した曲、【詳報】は落ち着いた曲。frontmatter の bgm が優先
+        bgm=audio_gen.track_for(script.title, script.meta.get("bgm")),
     )
 
     renderer = Renderer(config, work_dir)
