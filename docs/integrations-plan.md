@@ -119,6 +119,8 @@ CLIは「コネクタ名」ではなく「**能力**」でディスパッチす�
 
 | 連携先 | 認証 | 価値 |
 |---|---|---|
+| **Pollinations** ✅ | **不要** | キーなしで本物のAI画像。auto では local の直前 |
+| **Cloudflare Workers AI** ✅ | APIキー | 無料枠が大きく常用に耐える |
 | **Replicate** ✅ | APIキー | SDXL/Flux等をモデル差し替えで試せる。ラボ用途に合う |
 | **Hugging Face Inference** ✅ | APIキー | 無料枠で試作可能 |
 
@@ -197,13 +199,15 @@ steps:
 
 ## 7. 次の一手
 
-計画した Phase 0〜5 は完了。15コネクタが同じ基盤に乗り、レシピと MCP から
-同じ能力を呼べる状態になった。ここから先は「必要になったら足す」段階で、
+計画した Phase 0〜5 は完了。17コネクタが同じ基盤に乗り、レシピと MCP から
+同じ能力を呼べる状態になった。CI（Ubuntu / Windows × Python 3.10・3.12）も入り、
+Windows 固有の不具合を実際に検出できている。ここから先は「必要になったら足す」段階で、
 候補は次のとおり。
 
 - **送信先**: Slack / Discord（Webhookなので各50行程度）、S3 / R2（公開URL化）、Notion
 - **取得先**: Zenn、arXiv、Hacker News、Google Fonts
 - **運用**: `ailab usage`（生成APIの利用量と概算コスト）、レシピの定期実行
+  （GitHub Actions から `ailab run` を回す）
 - **OAuth**: Google Drive など。認可フローが要るので基盤に auth.py を足すところから
 
 新しい連携先は1つ50〜80行、CLI と MCP の両方に自動で現れる。

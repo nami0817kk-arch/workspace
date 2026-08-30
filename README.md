@@ -1,5 +1,7 @@
 # PJT008 - AIラボ
 
+[![tests](https://github.com/nami0817kk-arch/ai-lab/actions/workflows/tests.yml/badge.svg)](https://github.com/nami0817kk-arch/ai-lab/actions/workflows/tests.yml)
+
 AI活用のアイデア検証・試作を行うラボプロジェクト。
 
 ## できること
@@ -47,6 +49,8 @@ ailab fetch "cat illustration" -l 3
 | `docs/` | 調査メモ・検証記録 |
 | `recipes/` | レシピ（`ailab run` で実行するYAML） |
 | `tests/` | テストコード（`python -m pytest`。外部通信はモック） |
+
+開発時の決めごとは [CLAUDE.md](CLAUDE.md)。
 
 ## ライセンスの注意
 
