@@ -226,3 +226,19 @@ def test_score_is_a_known_card_type():
     from src.cards import CARD_TYPES
 
     assert "score" in CARD_TYPES
+
+
+def test_a_dark_club_colour_is_swapped_for_a_readable_one():
+    from src.cards import MIN_CONTRAST, PANEL, _contrast, _hex, readable
+
+    # トッテナムの濃紺。スコアの数字がパネルに沈んで読めなくなっていた
+    navy = _hex("#132257")
+    assert _contrast(navy, PANEL[:3]) < MIN_CONTRAST
+    assert _contrast(readable(navy), PANEL[:3]) >= MIN_CONTRAST
+
+
+def test_a_colour_that_already_reads_is_left_alone():
+    from src.cards import _hex, readable
+
+    red = _hex("#e2495a")
+    assert readable(red) == red

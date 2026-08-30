@@ -202,7 +202,8 @@ def _score(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict
     competition = str(spec.get("competition") or "").strip()
     home_scorers = [str(x).strip() for x in (spec.get("home_scorers") or []) if str(x).strip()]
     away_scorers = [str(x).strip() for x in (spec.get("away_scorers") or []) if str(x).strip()]
-    accent = _hex(str(spec.get("color") or DEFAULT_ACCENT)) + (255,)
+    # スコアはこのカードの主役。クラブカラーが暗くても読めるようにする
+    accent = readable(_hex(str(spec.get("color") or DEFAULT_ACCENT))) + (255,)
 
     blocks: list[dict] = []
     if competition:
@@ -547,6 +548,35 @@ def _wrap(text: str, font: ImageFont.FreeTypeFont, max_width: int) -> list[str]:
     if current:
         lines.append(current)
     return lines
+
+
+# パネルの明るさ。文字色がこれに対して十分明るいかを見る
+_PANEL_LUMA = 0.2126 * PANEL[0] + 0.7152 * PANEL[1] + 0.0722 * PANEL[2]
+MIN_CONTRAST = 3.0
+
+
+def _luma(color: tuple[int, int, int]) -> float:
+    channels = []
+    for value in color[:3]:
+        ratio = value / 255
+        channels.append(ratio / 12.92 if ratio <= 0.03928 else ((ratio + 0.055) / 1.055) ** 2.4)
+    return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2]
+
+
+def _contrast(color: tuple[int, int, int], against: tuple[int, int, int]) -> float:
+    first, second = _luma(color) + 0.05, _luma(against) + 0.05
+    return max(first, second) / min(first, second)
+
+
+def readable(color: tuple[int, int, int]) -> tuple[int, int, int]:
+    """パネルの上で読める色にする。
+
+    クラブカラーをアクセントに使うと、トッテナムの濃紺のように暗すぎて
+    文字が沈むことがある。線や帯なら沈んでもよいが、数字は読めないと困る。
+    """
+    if _contrast(color, PANEL[:3]) >= MIN_CONTRAST:
+        return color
+    return _hex(DEFAULT_ACCENT)
 
 
 def _hex(value: str) -> tuple[int, int, int]:

@@ -10,6 +10,7 @@
     python -m src.cli fresh <URL>...           拾ったURLの新しさを判定
     python -m src.cli sources                  情報源の網と確度の上限
     python -m src.cli review scripts/x.md      公開前の点検
+    python -m src.cli short scripts/x.md       縦9:16のショート
     python -m src.cli plan                     枠ごとの取材リストを出す
     python -m src.cli draft research/x.yaml    取材メモを検証して台本にする
     python -m src.cli new                      テンプレートから台本の下書きを作る
@@ -54,6 +55,12 @@ def main(argv: list[str] | None = None) -> int:
     p_build.add_argument("--backend", default=None, choices=["auto", "engine", "core", "silent"],
                          help="音声合成の方式を明示する（既定は config の設定）")
     p_build.add_argument("--keep-work", action="store_true", help="中間フレームを残す")
+
+    p_short = sub.add_parser("short", help="同じ台本から縦9:16のショートを作る")
+    p_short.add_argument("script")
+    p_short.add_argument("--section", default=None, help="どの節を使うか（既定: 冒頭の次）")
+    p_short.add_argument("--out", default=None)
+    p_short.add_argument("--no-tts", action="store_true", help="音声なしで尺だけ確認する")
 
     p_review = sub.add_parser("review", help="書き出したものを公開前に点検する")
     p_review.add_argument("script")
@@ -199,6 +206,35 @@ def _dispatch(args, config) -> int:
         print(f"サムネ: {result.thumbnail}")
         for name, path in result.outputs.items():
             print(f"{name}: {path}")
+        return 0
+
+    if args.command == "short":
+        from . import shorts
+        from .pipeline import build_script
+
+        script = load_script(args.script)
+        try:
+            short = shorts.trim(script, args.section or "")
+        except shorts.ShortError as error:
+            print(str(error), file=sys.stderr)
+            return 1
+
+        out = Path(args.out) if args.out else shorts.default_path(args.script)
+        estimate = shorts._estimate(short)
+        print(f"■ ショート　{' → '.join(scene.title for scene in short.scenes)}")
+        print(f"　想定尺: 約{estimate:.0f}秒 / セリフ {len(short.lines)}行")
+
+        result = build_script(
+            short, shorts.portrait(config), out, use_tts=not args.no_tts
+        )
+        print(f"完成: {result.video}  ({result.duration:.0f}秒)")
+        if result.duration > shorts.MAX_SECONDS:
+            print(
+                f"! {result.duration:.0f}秒あります。ショートは60秒までなので、"
+                "--section で短い節を選ぶか、台本のセリフを削ってください",
+                file=sys.stderr,
+            )
+            return 1
         return 0
 
     if args.command == "review":

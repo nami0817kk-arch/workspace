@@ -30,8 +30,28 @@ def build(
     use_tts: bool = True,
     keep_work: bool = False,
 ) -> BuildResult:
-    script = load_script(script_path)
-    out_dir = Path(out_dir) if out_dir else _resolve(f"output/{Path(script_path).stem}")
+    """台本ファイルから書き出す。"""
+    return build_script(
+        load_script(script_path),
+        config,
+        Path(out_dir) if out_dir else _resolve(f"output/{Path(script_path).stem}"),
+        use_tts=use_tts,
+        keep_work=keep_work,
+    )
+
+
+def build_script(
+    script: Script,
+    config: ProjectConfig,
+    out_dir: Path,
+    use_tts: bool = True,
+    keep_work: bool = False,
+) -> BuildResult:
+    """読み込み済みの台本から書き出す。
+
+    ショートのように、台本を加工してから書き出したいときはこちらを使う。
+    """
+    out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
 
     work_dir = out_dir / "work"
