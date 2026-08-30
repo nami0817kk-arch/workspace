@@ -87,3 +87,25 @@ class PublishResult:
     def describe(self) -> str:
         head = f"[ドライラン] {self.target}" if self.dry_run else f"{self.target} へ送信しました"
         return " ".join(part for part in (head, self.url, self.detail) if part)
+
+
+@dataclass
+class FeedItem:
+    """情報収集コネクタが返す記事・リリースなど1件。"""
+
+    source: str
+    title: str
+    url: str = ""
+    published: str = ""
+    summary: str = ""
+    author: str = ""
+    tags: list[str] = field(default_factory=list)
+    meta: dict = field(default_factory=dict)
+
+    def to_dict(self) -> dict:
+        return asdict(self)
+
+    def describe(self) -> str:
+        head = f"{self.title}"
+        when = f"（{self.published[:10]}）" if self.published else ""
+        return f"{head}{when}"

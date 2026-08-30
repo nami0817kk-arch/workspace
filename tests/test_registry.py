@@ -3,16 +3,24 @@
 import pytest
 
 from ailab.core import registry
-from ailab.core.connector import AuthSpec, Connector, GenerateImage, PublishFile, SearchAssets
+from ailab.core.connector import AuthSpec, Connector, capabilities_of
 from ailab.core.errors import ConfigError
 
 ALL_NAMES = registry.names()
 
 
 def test_expected_connectors_are_registered():
-    assert {"openai", "gemini", "stability", "local", "openverse", "pixabay", "wikimedia", "github"} <= set(
-        ALL_NAMES
-    )
+    expected = {
+        "openai", "gemini", "stability", "replicate", "huggingface", "local",
+        "iconify", "openverse", "pixabay", "wikimedia", "unsplash", "pexels",
+        "github", "rss", "qiita",
+    }
+    assert expected <= set(ALL_NAMES)
+
+
+def test_github_serves_two_capabilities():
+    """1つのコネクタが複数の能力を持てる（プロトコルで判定しているため）。"""
+    assert set(capabilities_of(registry.get("github"))) == {"publish", "fetch_items"}
 
 
 @pytest.mark.parametrize("name", ALL_NAMES)
@@ -30,8 +38,7 @@ def test_every_connector_satisfies_the_contract(name):
 
 @pytest.mark.parametrize("name", ALL_NAMES)
 def test_every_connector_has_at_least_one_capability(name):
-    connector = registry.get(name)
-    assert isinstance(connector, (SearchAssets, GenerateImage, PublishFile))
+    assert capabilities_of(registry.get(name)), f"{name}: どの能力も実装していない"
 
 
 def test_connectors_are_ordered_by_priority():

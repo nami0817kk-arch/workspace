@@ -16,11 +16,13 @@ from .images_local import LocalImages
 from .images_openai import OpenAIImages
 from .images_replicate import ReplicateImages
 from .images_stability import StabilityImages
-from .publish_github import GitHubPublish
+from .feed_qiita import QiitaFeed
+from .feed_rss import RssFeed
+from .github import GitHubConnector
 
 __all__ = [
     "GeminiImages",
-    "GitHubPublish",
+    "GitHubConnector",
     "HuggingFaceImages",
     "IconifyAssets",
     "LocalImages",

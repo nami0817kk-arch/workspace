@@ -4,6 +4,7 @@
     ailab search "キーワード"     フリー素材を検索する
     ailab fetch "キーワード"      フリー素材を検索してダウンロードする
     ailab publish FILE --to ...   生成物を外部サービスへ送る
+    ailab feed "対象" --source ...  記事・リリース情報を取得する
     ailab connectors              連携先の一覧と設定状況を表示する
     ailab doctor [名前]           連携先へ実際に接続して確認する
 """
@@ -19,16 +20,8 @@ import requests
 from . import __version__, assets, imagegen
 from .config import load_dotenv, output_dir
 from .core import registry
+from .core.connector import CAPABILITY_LABELS, capabilities_of
 from .core.errors import AilabError
-
-CATEGORY_LABELS = {
-    "images": "画像生成",
-    "assets": "素材取得",
-    "publish": "送信先",
-    "feed": "情報収集",
-    "misc": "その他",
-}
-
 
 def _capability_names(capability: str) -> list[str]:
     return [c.name for c in registry.by_capability(capability)]
@@ -92,6 +85,15 @@ def build_parser() -> argparse.ArgumentParser:
         "--yes", action="store_true", help="実際に送信する（既定はドライラン）"
     )
 
+    feed = sub.add_parser("feed", help="記事・リリース情報を取得する")
+    feed.add_argument("query", help="rss はフィードURL、github は owner/name、qiita はキーワード")
+    feed.add_argument(
+        "--source", required=True, choices=_capability_names("fetch_items"),
+        help="取得元（対象の指定方法が違うので必ず選ぶ）",
+    )
+    feed.add_argument("-l", "--limit", type=int, default=10, help="取得件数")
+    feed.add_argument("--json", action="store_true", help="JSON で出力する")
+
     connectors = sub.add_parser("connectors", help="連携先の一覧と設定状況")
     connectors.add_argument("--json", action="store_true", help="JSON で出力する")
     sub.add_parser("status", help="connectors と同じ（旧名）").add_argument(
@@ -106,7 +108,6 @@ def build_parser() -> argparse.ArgumentParser:
 
 # --- 各コマンド -------------------------------------------------------
 def _cmd_connectors(args: argparse.Namespace) -> int:
-    connectors = [registry.get(name) for name in registry.names()]
     if getattr(args, "json", False):
         print(
             json.dumps(
@@ -114,13 +115,14 @@ def _cmd_connectors(args: argparse.Namespace) -> int:
                     {
                         "name": c.name,
                         "category": c.category,
+                        "capabilities": capabilities_of(c),
                         "summary": c.summary,
                         "available": c.is_available(),
                         "reason": c.unavailable_reason(),
                         "env": list(c.auth.env),
                         "terms_url": c.terms_url,
                     }
-                    for c in connectors
+                    for c in (registry.get(name) for name in registry.names())
                 ],
                 ensure_ascii=False,
                 indent=2,
@@ -128,15 +130,15 @@ def _cmd_connectors(args: argparse.Namespace) -> int:
         )
         return 0
 
-    for category, label in CATEGORY_LABELS.items():
-        group = [c for c in connectors if c.category == category]
+    for capability, label in CAPABILITY_LABELS.items():
+        group = registry.by_capability(capability)
         if not group:
             continue
         print(f"{label}:")
         for connector in group:
             mark = "OK " if connector.is_available() else "NG "
             detail = connector.unavailable_reason() or connector.summary
-            print(f"  {mark} {connector.name:<10} {detail}")
+            print(f"  {mark} {connector.name:<12} {detail}")
         print()
     print("接続まで確認するには: ailab doctor")
     return 0
@@ -149,11 +151,11 @@ def _cmd_doctor(args: argparse.Namespace) -> int:
         try:
             result = connector.check()
         except AilabError as exc:
-            print(f"  NG  {connector.name:<10} {exc}")
+            print(f"  NG  {connector.name:<12} {exc}")
             failed += 1
             continue
         mark = "-- " if result.skipped else ("OK " if result.ok else "NG ")
-        print(f"  {mark} {connector.name:<10} {result.detail}")
+        print(f"  {mark} {connector.name:<12} {result.detail}")
         if not result.ok and not result.skipped:
             failed += 1
     print("\n-- はキー未設定のため未確認。ailab connectors で必要な環境変数を確認できます。")
@@ -233,6 +235,26 @@ def _cmd_publish(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_feed(args: argparse.Namespace) -> int:
+    connector = registry.get(args.source, **_cache_kwargs(args))
+    items = connector.fetch_items(args.query, limit=args.limit)
+    if args.json:
+        print(json.dumps([item.to_dict() for item in items], ensure_ascii=False, indent=2))
+        return 0
+    if not items:
+        print("見つかりませんでした")
+        return 0
+    for index, item in enumerate(items, 1):
+        print(f"[{index}] {item.describe()}")
+        if item.author:
+            print(f"    作者: {item.author}")
+        if item.url:
+            print(f"    URL : {item.url}")
+        if item.summary:
+            print(f"    概要: {item.summary.splitlines()[0][:100]}")
+    return 0
+
+
 def _cache_kwargs(args: argparse.Namespace) -> dict:
     return {"cache_ttl": 0} if getattr(args, "no_cache", False) else {}
 
@@ -245,6 +267,7 @@ def main(argv: list[str] | None = None) -> int:
         "search": _cmd_search,
         "fetch": _cmd_fetch,
         "publish": _cmd_publish,
+        "feed": _cmd_feed,
         "connectors": _cmd_connectors,
         "status": _cmd_connectors,
         "doctor": _cmd_doctor,

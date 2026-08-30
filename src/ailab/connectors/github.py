@@ -1,4 +1,4 @@
-"""GitHub リポジトリへファイルをコミットして公開する。"""
+"""GitHub 連携：ファイルのコミット（送信）とリリース情報の取得（情報収集）。"""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from ..config import get_env
 from ..core.connector import AuthSpec, CheckResult, Connector, RateLimit
 from ..core.errors import AuthError, ConfigError, NotFoundError
 from ..core.registry import register
-from ..core.types import PublishResult
+from ..core.types import FeedItem, PublishResult
 
 API_BASE = "https://api.github.com"
 #: Contents API は大きなファイルに向かない。これを超えたら Release や LFS を使う
@@ -17,10 +17,10 @@ MAX_BYTES = 25 * 1024 * 1024
 
 
 @register
-class GitHubPublish(Connector):
+class GitHubConnector(Connector):
     name = "github"
     category = "publish"
-    summary = "生成物をリポジトリへコミットする"
+    summary = "生成物のコミットと、リリース情報の取得"
     auth = AuthSpec(
         env=("GITHUB_TOKEN", "GH_TOKEN"),
         any_of=True,
@@ -134,6 +134,35 @@ class GitHubPublish(Connector):
         )
 
 
+    # --- 情報収集 -----------------------------------------------------
+    def fetch_items(self, query: str, *, limit: int = 10, timeout: int = 30) -> list[FeedItem]:
+        """リポジトリのリリースを新しい順に返す。query は owner/name。"""
+        repo = query.strip() or default_repo() or ""
+        if repo.count("/") != 1 or not all(repo.split("/")):
+            raise ConfigError(f"owner/name の形式で指定してください: {query!r}")
+
+        releases = self.get_json(
+            f"{API_BASE}/repos/{repo}/releases",
+            params={"per_page": max(1, min(limit, 100))},
+            timeout=timeout,
+        )
+        return [_release_to_item(repo, release) for release in releases][:limit]
+
+
 def default_repo() -> str | None:
     """既定の送信先リポジトリ（AILAB_GITHUB_REPO）。"""
     return get_env("AILAB_GITHUB_REPO")
+
+
+def _release_to_item(repo: str, release: dict) -> FeedItem:
+    body = (release.get("body") or "").strip().replace("\r\n", "\n")
+    return FeedItem(
+        source="github",
+        title=release.get("name") or release.get("tag_name") or "(無題のリリース)",
+        url=release.get("html_url") or "",
+        published=release.get("published_at") or release.get("created_at") or "",
+        summary=body[:300],
+        author=(release.get("author") or {}).get("login", ""),
+        tags=[tag for tag in (release.get("tag_name"),) if tag],
+        meta={"repo": repo, "prerelease": bool(release.get("prerelease"))},
+    )

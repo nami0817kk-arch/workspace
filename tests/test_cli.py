@@ -4,9 +4,10 @@ import pytest
 
 from ailab import assets, cli
 from ailab.connectors.assets_iconify import IconifyAssets
+from ailab.connectors.feed_qiita import QiitaFeed
 from ailab.connectors.assets_openverse import OpenverseAssets
 from ailab.connectors.assets_wikimedia import WikimediaAssets
-from ailab.connectors.publish_github import GitHubPublish
+from ailab.connectors.github import GitHubConnector
 from ailab.core.types import Asset
 from fakes import FakeResponse, FakeSession
 
@@ -55,15 +56,11 @@ def test_connectors_json_output(capsys):
 def test_doctor_marks_unset_keys_as_skipped(monkeypatch, capsys):
     from ailab.core.connector import CheckResult
 
-    monkeypatch.setattr(
-        OpenverseAssets, "check", lambda self: CheckResult("openverse", ok=True, detail="検索可能")
-    )
-    monkeypatch.setattr(
-        WikimediaAssets, "check", lambda self: CheckResult("wikimedia", ok=True, detail="検索可能")
-    )
-    monkeypatch.setattr(
-        IconifyAssets, "check", lambda self: CheckResult("iconify", ok=True, detail="検索可能")
-    )
+    # キー不要で通信するコネクタは疎通確認を差し替える（テストは通信しない）
+    for connector_cls in (OpenverseAssets, WikimediaAssets, IconifyAssets, QiitaFeed):
+        monkeypatch.setattr(
+            connector_cls, "check", lambda self: CheckResult(self.name, ok=True, detail="確認済み")
+        )
     assert cli.main(["doctor"]) == 0
     out = capsys.readouterr().out
     assert "--  openai" in out  # キー未設定は未確認扱い
@@ -176,7 +173,7 @@ def test_publish_sends_with_yes(monkeypatch, tmp_path, capsys):
             FakeResponse(json_data={"content": {"html_url": "https://github.com/x/y/blob/main/a.png"}}),
         ]
     )
-    monkeypatch.setattr(GitHubPublish, "session", property(lambda self: sess))
+    monkeypatch.setattr(GitHubConnector, "session", property(lambda self: sess))
 
     assert cli.main(["publish", str(target), "--repo", "someone/notes", "--yes"]) == 0
     assert "github.com/x/y" in capsys.readouterr().out
@@ -185,3 +182,57 @@ def test_publish_sends_with_yes(monkeypatch, tmp_path, capsys):
 def test_publish_reports_missing_file(capsys):
     assert cli.main(["publish", "no/such.png", "--repo", "someone/notes"]) == 1
     assert "見つかりません" in capsys.readouterr().err
+
+
+# --- feed -------------------------------------------------------------
+FEED_ITEM_KWARGS = {
+    "source": "rss",
+    "title": "新しい記事",
+    "url": "https://example.com/1",
+    "published": "2026-08-03T09:00:00Z",
+    "summary": "要約の1行目\n2行目",
+    "author": "Taro",
+}
+
+
+def test_feed_prints_items(monkeypatch, capsys):
+    from ailab.connectors.feed_rss import RssFeed
+    from ailab.core.types import FeedItem
+
+    monkeypatch.setattr(
+        RssFeed, "fetch_items", lambda self, q, **kw: [FeedItem(**FEED_ITEM_KWARGS)]
+    )
+    assert cli.main(["feed", "https://example.com/feed", "--source", "rss"]) == 0
+    out = capsys.readouterr().out
+    assert "新しい記事（2026-08-03）" in out
+    assert "要約の1行目" in out and "2行目" not in out  # 1行だけ出す
+
+
+def test_feed_json_output(monkeypatch, capsys):
+    from ailab.connectors.feed_qiita import QiitaFeed
+    from ailab.core.types import FeedItem
+
+    monkeypatch.setattr(
+        QiitaFeed, "fetch_items", lambda self, q, **kw: [FeedItem(**dict(FEED_ITEM_KWARGS, source="qiita"))]
+    )
+    assert cli.main(["feed", "claude", "--source", "qiita", "--json"]) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload[0]["source"] == "qiita"
+
+
+def test_feed_reports_no_results(monkeypatch, capsys):
+    from ailab.connectors.feed_rss import RssFeed
+
+    monkeypatch.setattr(RssFeed, "fetch_items", lambda self, q, **kw: [])
+    assert cli.main(["feed", "https://example.com/feed", "--source", "rss"]) == 0
+    assert "見つかりませんでした" in capsys.readouterr().out
+
+
+def test_feed_requires_source():
+    with pytest.raises(SystemExit):  # --source は必須（対象の指定方法が違うため）
+        cli.main(["feed", "https://example.com/feed"])
+
+
+def test_feed_reports_bad_target(capsys):
+    assert cli.main(["feed", "キーワード", "--source", "rss"]) == 1
+    assert "フィードのURL" in capsys.readouterr().err

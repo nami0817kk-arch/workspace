@@ -27,6 +27,17 @@ ailab doctor github       # 1つだけ確認
   OK  github     生成物をリポジトリへコミットする
 ```
 
+### 情報を集める
+
+```bash
+ailab feed https://example.com/feed.xml --source rss     # RSS / Atom
+ailab feed owner/name --source github                    # リリース一覧
+ailab feed "claude code" --source qiita                  # Qiita 記事検索
+ailab feed owner/name --source github --json             # 他のスクリプトへ渡す
+```
+
+対象の指定方法が取得元ごとに違う（URL / owner/name / キーワード）ので、`--source` は必須。
+
 ### GitHub へ送る
 
 ```bash
@@ -55,9 +66,11 @@ ailab publish output/images/banner.png --repo owner/name --path docs/img/banner.
 | 素材検索 | `search_assets(query, *, limit) -> list[Asset]` | `ailab search` / `fetch` |
 | 画像生成 | `generate(prompt, *, size, n, model) -> list[GeneratedImage]` | `ailab gen` |
 | 送信 | `publish(path, *, dry_run, **options) -> PublishResult` | `ailab publish` |
+| 情報収集 | `fetch_items(query, *, limit) -> list[FeedItem]` | `ailab feed` |
 
 継承ではなくメソッドの有無（プロトコル）で判定するので、1つのコネクタが複数の能力を
-持ってもよい。
+持ってもよい。実例が `github` で、`publish`（コミット）と `fetch_items`（リリース取得）の
+両方を持ち、`ailab connectors` では両方の見出しに現れる。
 
 ```python
 from ..core.connector import AuthSpec, CheckResult, Connector, RateLimit

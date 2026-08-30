@@ -8,8 +8,8 @@
 | 2. 出力先（GitHub） | **完了**（`ailab publish`。Slack / Discord は当面不要と判断） |
 | 1. 取得先追加（Iconify / Unsplash / Pexels） | **完了** |
 | 生成モデル追加（Replicate / Hugging Face） | **完了** |
-| 3. 情報収集（RSS / GitHub / Qiita） | 次にやる |
-| 4. パイプライン / 5. MCP化 | 未着手 |
+| 3. 情報収集（RSS / GitHub / Qiita） | **完了** |
+| 4. パイプライン（YAMLレシピ） / 5. MCP化 | 未着手（次の候補） |
 
 実装の使い方と新しい連携先の足し方は [connectors.md](connectors.md)。
 
@@ -134,8 +134,9 @@ CLIは「コネクタ名」ではなく「**能力**」でディスパッチす�
 
 ### D. 情報収集（READ）
 
-RSS/Atom（キー不要）、GitHub（リリース・Issue）、Qiita/Zenn、arXiv、Hacker News。
-「調べる→まとめる→画像を作る→投稿する」の**入口**として効く。
+RSS/Atom（キー不要）✅、GitHub リリース ✅、Qiita ✅、（今後）Zenn、arXiv、Hacker News。
+「調べる→まとめる→画像を作る→投稿する」の**入口**。GitHub は送信と同じコネクタが
+両方の能力を持つ形にした。
 
 ## 3. フェーズ計画
 
@@ -145,7 +146,7 @@ RSS/Atom（キー不要）、GitHub（リリース・Issue）、Qiita/Zenn、arX
 | **2. 出力先** ✅ | GitHub（`ailab publish`、既定ドライラン） | 完了。Slack / Discord は要望が出たら追加 | 完了 |
 | **1. 取得先追加** ✅ | Iconify（キー不要）、Unsplash、Pexels | 完了。`ailab search "cat"` が6サイト横断 | 完了 |
 | **生成モデル追加** ✅ | Replicate / Hugging Face | 完了。`ailab gen --provider replicate --model owner/name` | 完了 |
-| **3. 情報収集** | RSS、GitHub、Qiita | `ailab feed "claude" --source rss,github` | 半日 |
+| **3. 情報収集** ✅ | RSS / Atom、GitHub リリース、Qiita | 完了。`ailab feed "対象" --source rss\|github\|qiita` | 完了 |
 | **4. パイプライン** | YAMLレシピ。`ailab run recipes/weekly-report.yaml` | 「検索→生成→投稿」を1コマンドで再実行できる | 2日 |
 | **5. MCP化** | `ailab mcp` でMCPサーバとして起動 | Claude から `ailab` の全コネクタを直接呼べる | 1日 |
 
@@ -195,6 +196,7 @@ steps:
 
 ## 7. 次の一手
 
-Phase 0（基盤）と GitHub 送信は完了し、「取得 → 生成 → 送信」の縦の流れは通った。
-次は取得先を増やす番で、順番は **Iconify → Unsplash / Pexels → Replicate / Hugging Face →
-RSS / GitHub / Qiita**。キー不要の Iconify から始めれば、その日のうちに効果が出る。
+Phase 0〜3 と生成モデル追加まで完了し、15コネクタが同じ基盤に乗った。
+残るは **Phase 4（YAMLレシピで「集める→作る→送る」を1コマンドに）** と
+**Phase 5（`ailab mcp` でClaudeから直接叩けるようにする）**。
+レシピは今ある能力の組み合わせなので、新しい外部連携を増やさずに価値が出る。

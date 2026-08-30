@@ -6,9 +6,10 @@ AI活用のアイデア検証・試作を行うラボプロジェクト。
 
 | コマンド | 内容 |
 |---|---|
-| `ailab gen "プロンプト"` | 画像を生成する（OpenAI / Gemini / Stability、APIキー無しでも動く `local` あり） |
-| `ailab search "キーワード"` | Web上のフリーイラストを横断検索する（Openverse / Wikimedia / Pixabay） |
+| `ailab gen "プロンプト"` | 画像を生成する（OpenAI / Gemini / Replicate / Hugging Face / Stability、APIキー無しでも動く `local` あり） |
+| `ailab search "キーワード"` | フリー素材を横断検索する（Iconify / Openverse / Wikimedia / Pixabay / Unsplash / Pexels） |
 | `ailab fetch "キーワード"` | フリーイラストを検索してダウンロードし、クレジットも書き出す |
+| `ailab feed "対象" --source rss\|github\|qiita` | 記事・リリース情報を取得する |
 | `ailab publish FILE --repo owner/name` | 生成物を GitHub へコミットする（既定はドライラン） |
 | `ailab connectors` / `ailab doctor` | 連携先の設定状況を見る / 実際に接続して確認する |
 

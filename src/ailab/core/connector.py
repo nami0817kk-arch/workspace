@@ -15,7 +15,7 @@ import requests
 from ..config import get_env
 from . import cache as cache_module
 from . import http
-from .types import Asset, GeneratedImage, PublishResult
+from .types import Asset, FeedItem, GeneratedImage, PublishResult
 
 
 @dataclass(frozen=True)
@@ -26,6 +26,8 @@ class AuthSpec:
     env: tuple[str, ...] = ()
     #: True なら env のいずれか1つが揃っていればよい
     any_of: bool = False
+    #: True ならキーが無くても動く（あれば枠が広がる、など）
+    optional: bool = False
     #: キーの取得先URL（doctor で案内する）
     signup_url: str = ""
     note: str = ""
@@ -39,8 +41,8 @@ class AuthSpec:
         return None
 
     def missing(self) -> list[str]:
-        """未設定の環境変数名。"""
-        if not self.env:
+        """未設定の環境変数名（optional なら常に空）。"""
+        if not self.env or self.optional:
             return []
         if self.any_of:
             return [] if self.resolved() else list(self.env)
@@ -176,8 +178,29 @@ class PublishFile(Protocol):
     def publish(self, path, *, dry_run: bool = True, **options) -> PublishResult: ...
 
 
+@runtime_checkable
+class ReadFeed(Protocol):
+    """記事・リリースなどの一覧を取得できる。"""
+
+    def fetch_items(self, query: str, *, limit: int = 10) -> list[FeedItem]: ...
+
+
 CAPABILITIES: dict[str, type] = {
     "search_assets": SearchAssets,
     "generate": GenerateImage,
     "publish": PublishFile,
+    "fetch_items": ReadFeed,
 }
+
+#: 表示用の能力名
+CAPABILITY_LABELS = {
+    "generate": "画像生成",
+    "search_assets": "素材取得",
+    "publish": "送信先",
+    "fetch_items": "情報収集",
+}
+
+
+def capabilities_of(connector: "Connector") -> list[str]:
+    """そのコネクタが持つ能力の名前。"""
+    return [name for name, protocol in CAPABILITIES.items() if isinstance(connector, protocol)]

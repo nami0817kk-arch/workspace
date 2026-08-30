@@ -7,7 +7,9 @@ from .connector import (
     GenerateImage,
     PublishFile,
     RateLimit,
+    ReadFeed,
     SearchAssets,
+    capabilities_of,
 )
 from .errors import (
     AilabError,
@@ -18,7 +20,7 @@ from .errors import (
     NotFoundError,
     RateLimitError,
 )
-from .types import Asset, GeneratedImage, PublishResult
+from .types import Asset, FeedItem, GeneratedImage, PublishResult
 
 __all__ = [
     "AilabError",
@@ -29,6 +31,7 @@ __all__ = [
     "ConfigError",
     "Connector",
     "ConnectorError",
+    "FeedItem",
     "GenerateImage",
     "GeneratedImage",
     "NetworkError",
@@ -37,5 +40,7 @@ __all__ = [
     "PublishResult",
     "RateLimit",
     "RateLimitError",
+    "ReadFeed",
     "SearchAssets",
+    "capabilities_of",
 ]
