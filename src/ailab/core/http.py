@@ -12,6 +12,7 @@ import requests
 from .. import USER_AGENT
 from . import cache as cache_module
 from .errors import AuthError, ConnectorError, NetworkError, NotFoundError, RateLimitError
+from .redact import redact
 
 #: 再試行する状態コード
 RETRY_STATUS = (429, 500, 502, 503, 504)
@@ -43,7 +44,7 @@ def error_detail(response) -> str:
                     break
         if not text:
             text = str(payload)
-    text = text[:500]
+    text = redact(text)[:500]  # クエリ文字列に載ったAPIキーを表示しない
     return f"HTTP {response.status_code}: {text}" if text else f"HTTP {response.status_code}"
 
 
@@ -152,7 +153,7 @@ def request(
             if attempt == retries - 1:
                 host = urlsplit(url).netloc or url
                 raise NetworkError(
-                    f"{label}: {host} へ接続できませんでした（{type(exc).__name__}）"
+                    redact(f"{label}: {host} へ接続できませんでした（{type(exc).__name__}）")
                 ) from exc
             time.sleep(backoff * (2**attempt))
             continue

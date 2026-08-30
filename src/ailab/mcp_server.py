@@ -9,10 +9,11 @@ from __future__ import annotations
 import json
 import sys
 from collections.abc import Callable
+from pathlib import Path
 from typing import Any
 
 from . import __version__, assets, imagegen, recipes
-from .config import load_dotenv, output_dir
+from .config import load_dotenv, output_dir, project_root
 from .core import registry
 from .core.connector import capabilities_of
 from .core.errors import AilabError
@@ -223,6 +224,22 @@ def _tool_fetch_feed(arguments: dict) -> str:
     )
 
 
+def _check_inside_project(file_path: str) -> str:
+    """プロジェクト配下のファイルだけ送れるようにする。
+
+    MCP のツールは会話の流れで呼ばれるので、取り込んだ文章に誘導されて
+    無関係なファイルを外部へ送ってしまう余地を残さない。
+    """
+    resolved = Path(file_path).expanduser().resolve()
+    allowed = [project_root().resolve(), Path(output_dir()).resolve(), Path.cwd().resolve()]
+    if not any(resolved == root or root in resolved.parents for root in allowed):
+        raise AilabError(
+            f"プロジェクトの外にあるファイルは送れません: {resolved}"
+            f"（{project_root()} 配下に置いてから実行してください）"
+        )
+    return str(resolved)
+
+
 def _tool_publish_file(arguments: dict) -> str:
     connector = registry.get(arguments.get("to", "github"))
     options = {
@@ -231,7 +248,9 @@ def _tool_publish_file(arguments: dict) -> str:
         if arguments.get(key) is not None
     }
     result = connector.publish(
-        _required(arguments, "file"), dry_run=not bool(arguments.get("confirm")), **options
+        _check_inside_project(_required(arguments, "file")),
+        dry_run=not bool(arguments.get("confirm")),
+        **options,
     )
     tail = "\n実際に送るには confirm を true にしてください。" if result.dry_run else ""
     return result.describe() + tail

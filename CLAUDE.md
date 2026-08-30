@@ -20,6 +20,8 @@ python -m ruff check src tests
 - テストは**外部通信をしない**。CI（`.github/workflows/tests.yml`）は
   Ubuntu / Windows × Python 3.10・3.12 で回る。
 - APIキーは `.env`（`.gitignore` 済み）。ログにも `--json` 出力にも出さない。
+  表示直前に `core/redact.py` が環境変数の値と突き合わせて伏せる（最後の砦）。
+- MCP の `publish_file` はプロジェクト配下のファイルしか送れない。
 - Claude Code の web セッションからは多くの外部ホストが egress ポリシーで塞がれる。
   疎通確認が NG でも、手元では通ることがある。
 

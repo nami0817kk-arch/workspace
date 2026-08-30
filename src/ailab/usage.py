@@ -15,7 +15,7 @@ from collections import defaultdict
 from datetime import datetime, timedelta
 from pathlib import Path
 
-from .config import output_dir
+from .config import get_env, output_dir
 
 LOG_NAME = "usage.jsonl"
 COSTS_NAME = "costs.json"
@@ -32,6 +32,11 @@ DEFAULT_COSTS: dict[str, dict[str, float]] = {
     "pollinations": {"": 0.0},
     "local": {"": 0.0},
 }
+
+
+def record_prompts() -> bool:
+    """プロンプトを記録するか（AILAB_USAGE_PROMPTS=0 で止める）。"""
+    return (get_env("AILAB_USAGE_PROMPTS") or "1").strip().lower() not in ("0", "false", "no")
 
 
 def log_path() -> Path:
@@ -77,7 +82,8 @@ def record(images, *, path: Path | None = None) -> None:
         "model": first.model,
         "images": len(images),
         "bytes": sum(len(image.data) for image in images),
-        "prompt": (first.prompt or "")[:120],
+        # プロンプトには社外に出したくない語が混ざりうるので、切れるようにしておく
+        "prompt": (first.prompt or "")[:120] if record_prompts() else "",
         "cost_usd": round(unit_cost(first.provider, first.model) * len(images), 4),
     }
     target = path or log_path()

@@ -2,9 +2,22 @@
 
 import io
 import json
+from pathlib import Path
+
+import pytest
 
 from ailab import mcp_server
 from ailab.core.types import PublishResult
+
+
+@pytest.fixture
+def output_file():
+    """MCP から送れるのはプロジェクト配下のファイルだけなので、出力先に置く。"""
+    from ailab.config import output_dir
+
+    path = Path(output_dir()) / "a.png"
+    path.write_bytes(b"x")
+    return path
 
 
 def call(method: str, params: dict | None = None, message_id=1):
@@ -118,7 +131,7 @@ def test_fetch_feed_requires_a_source():
     assert mcp_server.call_tool("fetch_feed", {"query": "x"})["isError"] is True
 
 
-def test_publish_is_dry_run_unless_confirmed(monkeypatch, tmp_path):
+def test_publish_is_dry_run_unless_confirmed(monkeypatch, output_file):
     from ailab.connectors.github import GitHubConnector
 
     seen = {}
@@ -128,16 +141,16 @@ def test_publish_is_dry_run_unless_confirmed(monkeypatch, tmp_path):
         return PublishResult(target="github:owner/name", detail="コミット予定", dry_run=dry_run)
 
     monkeypatch.setattr(GitHubConnector, "publish", fake_publish)
-    target = tmp_path / "a.png"
-    target.write_bytes(b"x")
 
-    text = mcp_server.call_tool("publish_file", {"file": str(target), "repo": "owner/name"})["content"][0]["text"]
+    text = mcp_server.call_tool(
+        "publish_file", {"file": str(output_file), "repo": "owner/name"}
+    )["content"][0]["text"]
 
     assert seen["dry_run"] is True
     assert "confirm" in text
 
 
-def test_publish_sends_when_confirmed(monkeypatch, tmp_path):
+def test_publish_sends_when_confirmed(monkeypatch, output_file):
     from ailab.connectors.github import GitHubConnector
 
     seen = {}
@@ -147,12 +160,10 @@ def test_publish_sends_when_confirmed(monkeypatch, tmp_path):
         return PublishResult(target="github", url="https://github.com/x/y")
 
     monkeypatch.setattr(GitHubConnector, "publish", fake_publish)
-    target = tmp_path / "a.png"
-    target.write_bytes(b"x")
 
     mcp_server.call_tool(
         "publish_file",
-        {"file": str(target), "repo": "owner/name", "dest": "docs/a.png", "confirm": True},
+        {"file": str(output_file), "repo": "owner/name", "dest": "docs/a.png", "confirm": True},
     )
 
     assert seen["dry_run"] is False
