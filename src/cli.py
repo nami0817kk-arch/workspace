@@ -7,6 +7,7 @@
     python -m src.cli scan                     候補テーマを拾う検索リスト
     python -m src.cli pick research/x.yaml     候補を採点して枠に割り振る
     python -m src.cli x                        記者Xアカウントの検索リスト
+    python -m src.cli fresh <URL>...           拾ったURLの新しさを判定
     python -m src.cli plan                     枠ごとの取材リストを出す
     python -m src.cli draft research/x.yaml    取材メモを検証して台本にする
     python -m src.cli new                      テンプレートから台本の下書きを作る
@@ -70,6 +71,10 @@ def main(argv: list[str] | None = None) -> int:
 
     p_pick = sub.add_parser("pick", help="候補を採点して枠に割り振り、深掘りの検索を出す")
     p_pick.add_argument("candidates")
+
+    p_fresh = sub.add_parser("fresh", help="検索で拾ったURLの新しさを判定する")
+    p_fresh.add_argument("urls", nargs="*", help="URL。省略すると標準入力から読む")
+    p_fresh.add_argument("--no-record", action="store_true", help="索引の記録を更新しない")
 
     p_x = sub.add_parser("x", help="記者Xアカウントの検索リスト／投稿URLの確認")
     p_x.add_argument("urls", nargs="*", help="投稿URL。省略すると検索リストを出す")
@@ -263,6 +268,56 @@ def _dispatch(args, config) -> int:
             print(f"埋めたら `python -m src.cli pick {target}`")
         return 0
 
+    if args.command == "fresh":
+        from . import freshness
+
+        urls = args.urls or [line.strip() for line in sys.stdin if line.strip()]
+        if not urls:
+            print("URLを渡してください（引数か標準入力）", file=sys.stderr)
+            return 1
+
+        groups = freshness.rank(urls)
+        if not groups:
+            print("新しさを判定できるURLがありませんでした。", file=sys.stderr)
+            print("対応: skysports.com / espn.com / x.com", file=sys.stderr)
+            return 1
+
+        ledger = "research/freshness.yaml"
+        entries = freshness.load(ledger)
+        updated, growth = freshness.observe(groups, entries)
+
+        for site, refs in groups.items():
+            pace = freshness.rate(entries, site)
+            head = f"■ {site}　新しい順に{len(refs)}件"
+            if site != "x.com":
+                head += f"　（記事IDの伸び: {pace:.0f}/時）" if pace else "　（伸びは記録待ち）"
+            print(head)
+            for ref in refs:
+                age = freshness.hours_ago(ref, entries)
+                when = f"{age:.0f}時間前" if age is not None else "不明"
+                mark = "推定" if site != "x.com" else "確定"
+                print(f"  {ref.number}　{when}（{mark}）")
+                print(f"      {ref.url}")
+            print()
+
+        skipped = [u for u in urls if not freshness.read(u).known]
+        if skipped:
+            print(f"判定できなかったURL {len(skipped)}件（日付の手がかりが無い）:")
+            for url in skipped:
+                print(f"  {url}")
+            print()
+
+        for note in freshness.advice(growth, entries):
+            print(f"! {note}")
+
+        if not args.no_record:
+            if len(updated) > len(entries):
+                path = freshness.save(ledger, updated)
+                print(f"索引の記録を更新しました: {path}")
+            else:
+                print("索引は前回から進んでいません（記録は変えていません）")
+        return 0
+
     if args.command == "x":
         from . import xposts
         from .plan import load_plan
@@ -310,10 +365,22 @@ def _dispatch(args, config) -> int:
     if args.command == "pick":
         from . import candidates as candidates_mod
         from . import coverage as coverage_mod
+        from . import freshness
         from .plan import load_plan
 
         plan = load_plan()
         date_label, items = candidates_mod.load_candidates(args.candidates)
+
+        # hours_ago を書いていない候補は、url から割り出す
+        observations = freshness.load("research/freshness.yaml")
+
+        def age_of(url: str):
+            ref = freshness.read(url)
+            return freshness.hours_ago(ref, observations) if ref.known else None
+
+        for note in candidates_mod.fill_ages(items, age_of):
+            print(f"! {note}")
+
         ranked = candidates_mod.score(items, plan.scoring)
 
         # 1日3本だと、朝に出した話が夜にまた上がってくる。記録と突き合わせて外す

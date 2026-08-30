@@ -6,6 +6,7 @@ from src.candidates import (
     assign,
     deep_queries,
     exclude_covered,
+    fill_ages,
     load_candidates,
     score,
 )
@@ -113,6 +114,28 @@ def test_english_queries_are_dropped_without_english_keywords():
     assert [q["label"] for q in queries] == ["何が起きたか"]
 
 
+def test_ages_are_filled_in_from_the_url():
+    items = [
+        Candidate(id="a", title="A", url="https://example.com/a", hours_ago=-1),
+        Candidate(id="b", title="B", hours_ago=5),
+    ]
+    notes = fill_ages(items, lambda url: 3.25)
+    assert items[0].hours_ago == 3.2   # 割り出した値
+    assert items[1].hours_ago == 5     # 手で書いた値は触らない
+    assert notes == []
+
+
+def test_an_age_that_cannot_be_worked_out_is_treated_as_old():
+    items = [
+        Candidate(id="a", title="URLなし", hours_ago=-1),
+        Candidate(id="b", title="判定できないURL", url="https://example.com/b", hours_ago=-1),
+    ]
+    notes = fill_ages(items, lambda url: None)
+    assert [c.hours_ago for c in items] == [99.0, 99.0]
+    assert any("urlが無い" in n for n in notes)
+    assert any("割り出せない" in n for n in notes)
+
+
 def test_covered_topics_are_separated_out():
     items = [Candidate(id="a", title="A"), Candidate(id="b", title="B")]
     keep, dropped = exclude_covered(items, {"a": object()})
@@ -141,7 +164,7 @@ def test_loading_reads_flags_and_defaults(tmp_path):
     assert items[0].reaction is True
     assert items[0].japanese is False
     assert items[1].id == "c2"          # id は自動で振る
-    assert items[1].hours_ago == 99.0   # 既定は「古い」扱い
+    assert items[1].hours_ago == -1.0   # 未記入の印。fill_ages で埋める
 
 
 def test_loading_rejects_an_empty_title(tmp_path):

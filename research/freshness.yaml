@@ -1,0 +1,8 @@
+# 検索の索引がどこまで進んだかの記録。fresh のたびに追記される
+observed:
+- site: skysports.com
+  max: 13578352
+  at: 2026-08-30T02:06
+- site: espn.com
+  max: 49741962
+  at: 2026-08-30T02:06

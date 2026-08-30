@@ -29,8 +29,8 @@ ffmpeg は `imageio-ffmpeg` に同梱されるので別途インストール不�
 ```bash
 python -m src.cli scan --write                            # 朝いちど、候補を広く拾う
 python -m src.cli pick research/YYYYMMDD_candidates.yaml # 採点して朝・昼・夜に割り振る
+python -m src.cli fresh <拾ったURL>...                    # 新しい順に並べ、索引の進みを見る
 python -m src.cli x                                      # 記者Xアカウントの検索リスト
-python -m src.cli x <投稿URL>                             # その投稿がいつのものか
 python -m src.cli plan --routine morning --write         # 枠ごとに取材メモの雛形
 python -m src.cli draft research/YYYYMMDD_morning.yaml   # 検証して台本に
 python -m src.cli new                          # テンプレートから直接書く場合

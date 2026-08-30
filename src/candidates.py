@@ -26,6 +26,7 @@ class Candidate:
     id: str
     title: str
     en: str = ""        # 英語サイトを検索するときの語。無ければ英語の検索は出さない
+    url: str = ""       # 元になった記事・投稿。hours_ago を省くとここから割り出す
     hours_ago: float = 99.0
     tier: str = "未確認"
     japanese: bool = False
@@ -57,7 +58,8 @@ def load_candidates(path: str | Path) -> tuple[str, list[Candidate]]:
                 id=str(entry.get("id") or f"c{index}"),
                 title=title,
                 en=str(entry.get("en", "")).strip(),
-                hours_ago=float(entry.get("hours_ago", 99)),
+                url=str(entry.get("url", "")).strip(),
+                hours_ago=float(entry["hours_ago"]) if "hours_ago" in entry else -1.0,
                 tier=str(entry.get("tier", "未確認")).strip(),
                 japanese=bool(entry.get("japanese", False)),
                 reaction=bool(entry.get("reaction", False)),
@@ -70,6 +72,26 @@ def load_candidates(path: str | Path) -> tuple[str, list[Candidate]]:
     if not items:
         raise CandidateError("candidates が空です")
     return str(raw.get("date", "")).strip(), items
+
+
+def fill_ages(items: list[Candidate], age_of) -> list[str]:
+    """hours_ago を書かなかった候補を、url から割り出して埋める。
+
+    割り出せなければ 99（＝古い扱い）にする。新しさで点が付くので、
+    分からないものを新しい側に倒すと、確認していない候補が上に来てしまう。
+    """
+    notes: list[str] = []
+    for item in items:
+        if item.hours_ago >= 0:
+            continue
+        age = age_of(item.url) if item.url else None
+        if age is None:
+            item.hours_ago = 99.0
+            reason = "urlが無い" if not item.url else "urlから日付を割り出せない"
+            notes.append(f"{item.title}: hours_ago が空で、{reason}ため古い扱いにしました")
+        else:
+            item.hours_ago = round(age, 1)
+    return notes
 
 
 def score(items: list[Candidate], scoring: dict) -> list[Candidate]:
@@ -182,7 +204,8 @@ candidates:
   - id: ""            # 短い識別子。重複判定にも使う
     title: ""         # 一言で。あとで動画タイトルの素になる
     en: ""            # 英語サイトを引くときの語（例: Julian Alvarez Atletico）
-    hours_ago: 0      # 何時間前の話題か
+    url: ""           # 元の記事・投稿のURL
+    hours_ago:        # 何時間前か。空にすると url から割り出す
     tier: 報道         # 確定 / 報道 / 未確認
     japanese: false   # 日本人選手が絡むか
     reaction: false   # 賛否が割れる・驚きがあるか
