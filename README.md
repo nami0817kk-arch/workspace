@@ -42,6 +42,9 @@ python -m src.cli build scripts/YYYYMMDD.md    # 動画一式を書き出す
 仕組みの説明は [docs/research.md](docs/research.md)、
 公開前の確認まで含めた手順は [docs/weekly.md](docs/weekly.md)。
 
+**いま詰まっていることは [docs/handoff.md](docs/handoff.md) にまとめてある。**
+`python -m src.cli doctor` が出す × 3件の、詰まっている理由と直し方。
+
 ## 使い方
 
 ```bash
