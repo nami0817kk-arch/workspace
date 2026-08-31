@@ -12,3 +12,6 @@ anthropic>=1.0.0
 
 # 開発用
 pytest>=8.0.0
+
+# Chrome 自動操作（src/browser）に必要
+playwright>=1.55

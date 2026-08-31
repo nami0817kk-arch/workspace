@@ -574,10 +574,12 @@ pytest tests/ailab          # ツール単位で回す
 | `src/adsite/` | 広告収益型ツールサイトのジェネレータ |
 | `src/growth/` | 成長ループ（観測・診断・横展開・台帳） |
 | `src/audiogen/` | BGM / 効果音の合成ツールキット（標準ライブラリのみ） |
+| `src/browser/` | Chrome の自動操作（ヘッドレス Chromium / ローカル Chrome を CDP 経由で） |
 | `site/` | adsite のコンテンツとアセット |
 | `config/` | 設定ファイル（ニッチ・情報源・プラン・サイト設定） |
 | `growth/` | 成長ループの対象登録（`projects.toml`）と台帳（`ledger.json`） |
 | `recipes/` | ailab のレシピ（`ailab run` で実行するYAML） |
+| `scripts/` | 補助スクリプト（Chrome のデバッグ起動など） |
 | `docs/` | 収益モデル・設計・運用手順・成長ループの設計 |
 | `tests/` | テストコード（ツール別のサブディレクトリ） |
 | `CLAUDE.md` | 開発時の決めごと（パッケージごとの前提） |
@@ -598,5 +600,6 @@ pytest tests/ailab          # ツール単位で回す
 | [docs/ad-monetization.md](docs/ad-monetization.md) | 広告収益の規模感、動画/アプリとの比較、AdSense審査対策、KPI |
 | [docs/growth-system.md](docs/growth-system.md) | 成長ループの設計の考え方 |
 | [docs/audiogen.md](docs/audiogen.md) | audiogen の設計の詳細と検証結果 |
+| [docs/chrome-automation.md](docs/chrome-automation.md) | Chrome 自動操作の使い方と検証記録 |
 
 開発時の決めごとは [CLAUDE.md](CLAUDE.md)。
