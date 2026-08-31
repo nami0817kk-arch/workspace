@@ -192,6 +192,26 @@ transfermarkt.com / football.london / lequipe.fr / gazzetta.it / bild.de ...
 同じ種類の事故を疑うなら、ファイル入出力は全箇所 `encoding="utf-8"` 指定済み
 （監査済み）。残るリスクは外部プロセスの出力を読むところ。
 
+## クラウド環境でも音声つきでビルドできる
+
+制約の中で1つ大きく開けた。**VOICEVOX CORE はクラウド環境でも組める**
+（取得元が GitHub Releases で、GitHub はクラウド環境からも通るため）。
+
+```bash
+bash scripts/setup_voicevox_direct.sh   # クラウド環境用（Linux x64・約5GB）
+```
+
+公式ダウンローダ（setup_voicevox_core.py）はクラウド環境では動かない。
+GitHub API でファイル名を聞く設計で、そこだけが通らない（認証は Bad
+credentials・匿名はレート制限）。上のスクリプトはファイル名を確かめ済みの
+直接URLで取るので API を使わない。ふつうのPCでは公式のほうを使えばよい。
+
+vendor/ は .gitignore 済みで、コンテナは使い捨て。新しいクラウドセッションでは
+スクリプトを回し直すこと（約10分）。
+
+これでクラウド側でも `build` が音声つきで最後まで通る
+（実測: 2分36秒の動画、review 全✓）。**クラウドの限界は「情報を取る」だけになった。**
+
 ## 変わらないこと
 
 ネットワークが開いても、次の2つは変わらない。
