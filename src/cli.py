@@ -41,6 +41,16 @@ from .thumbnail import build_thumbnail
 from .tts import TtsError
 
 
+def _now_on(day) -> "datetime":
+    """その日の「いま」。日付を指定されたときは、その日の同じ時刻とみなす。"""
+    from datetime import datetime
+
+    if isinstance(day, datetime):
+        return day
+    now = datetime.now()
+    return datetime.combine(day, now.time())
+
+
 def _deadline_notices(plan, day) -> list[str]:
     """移籍期限が近ければ、その告知の行。遠ければ空。"""
     from datetime import datetime, time
@@ -422,6 +432,7 @@ def _dispatch(args, config) -> int:
         from datetime import date as _date
 
         from . import candidates as candidates_mod
+        from . import timing
         from .config import _resolve
         from .plan import load_plan, tokens
 
@@ -435,6 +446,9 @@ def _dispatch(args, config) -> int:
             print(f"　目安の時刻: {scan['when']}")
         for note in _deadline_notices(plan, today):
             print(f"　{note}")
+        # 欧州は日本の深夜に動く。いま何が取れる時間帯かを言う
+        for note in timing.advice(plan, _now_on(today)):
+            print(f"　{note}")
         print()
         number = 0
         for item in scan.get("queries") or []:
@@ -443,7 +457,10 @@ def _dispatch(args, config) -> int:
             # per_league の行は、追っているリーグのぶんに展開する。
             # 全リーグまとめて1本で引くと、どの試合の記事か分からないまま返ってくる
             if item.get("per_league"):
-                for key in scan.get("match_leagues") or []:
+                # 先に閉じるリーグから並べる。閉じたあとは翌日まで新しいものが出ない
+                for key in timing.order(
+                    plan, [str(k) for k in (scan.get("match_leagues") or [])], _now_on(today)
+                ):
                     for query in plan.match_queries(key, official=False):
                         number += 1
                         print(f"{number}. {label}　{query.line()}")
@@ -532,6 +549,7 @@ def _dispatch(args, config) -> int:
     if args.command == "today":
         from datetime import date as _date
 
+        from . import timing
         from . import today as today_mod
         from .plan import load_plan
 
@@ -544,6 +562,8 @@ def _dispatch(args, config) -> int:
 
         print(f"■ {day:%Y年%-m月%-d日} の進み具合")
         for note in _deadline_notices(plan, day):
+            print(f"  {note}")
+        for note in timing.advice(plan, _now_on(day)):
             print(f"  {note}")
         mark = "✓" if candidates.exists() else "・"
         print(f"  {mark} 候補　{today_mod._short(candidates)}")

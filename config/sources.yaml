@@ -70,48 +70,66 @@ domains:
 #   official   … そのリーグ・クラブの公式。スコアはここで確かめる（確定）
 #   media      … 現地語の報道機関の群（domains のキー）
 #   match_q    … 試合レポートを引くための語。その言語で書く
+# リーグごとの引き先と、情報が出る時間帯。
+# utc_offset  … 現地時刻とUTCの差。いまは夏時間の値
+# active_local… 現地でこの帯に記事が出る（公式発表は営業時間、試合は夜）
+#               日本時間に直したものを scan / today が使う
 leagues:
   england:
     name: プレミアリーグ
     official: [premierleague.com, arsenal.com, chelseafc.com, manutd.com,
                liverpoolfc.com, tottenhamhotspur.com, newcastleunited.co.uk]
     media: english
+    utc_offset: 1          # BST（夏時間）
+    active_local: "09:00-23:30"
     match_q: "Premier League match report second half winner"
     official_q: "match report"
   spain:
     name: ラ・リーガ
     official: [laliga.com, realmadrid.com, fcbarcelona.com, en.atleticodemadrid.com]
     media: spanish
+    utc_offset: 2          # CEST
+    active_local: "10:00-00:30"
     match_q: "LaLiga cronica del partido goles"
     official_q: "cronica del partido"
   germany:
     name: ブンデスリーガ
     official: [bundesliga.com, fcbayern.com, bvb.de]
     media: german
+    utc_offset: 2          # CEST
+    active_local: "09:00-23:30"
     match_q: "Bundesliga Spielbericht Tore Analyse"
     official_q: "Spielbericht"
   italy:
     name: セリエA
     official: [legaseriea.it, juventus.com, acmilan.com]
     media: italian
+    utc_offset: 2          # CEST
+    active_local: "09:00-00:30"
     match_q: "Serie A cronaca della partita gol"
     official_q: "cronaca della partita"
   france:
     name: リーグアン
     official: [psg.fr]
     media: french
+    utc_offset: 2          # CEST
+    active_local: "09:00-23:30"
     match_q: "Ligue 1 resume du match buts"
     official_q: "resume du match"
   netherlands:
     name: エールディヴィジ
     official: []
     media: dutch
+    utc_offset: 2          # CEST
+    active_local: "09:00-23:00"
     match_q: "Eredivisie wedstrijdverslag doelpunten"
     official_q: "wedstrijdverslag"
   japan:
     name: Jリーグ
     official: [jleague.jp]
     media: japanese
+    utc_offset: 9          # JST
+    active_local: "08:00-23:00"
     match_q: "Jリーグ 試合結果 ハイライト 得点"
     official_q: "試合結果 レポート"
 
@@ -120,6 +138,11 @@ leagues:
 #
 # confirmed: false は日付をこちらで確認できていないもの。
 # 各リーグの発表で確かめてから true にする（doctor が未確認を数える）。
+clocks:
+  # 上の utc_offset は夏時間の値。欧州は10月最終日曜に1時間戻る。
+  # この日を過ぎたら doctor が知らせるので、offset を1つ減らすこと
+  summer_until: 2026-10-25
+
 calendar:
   notice_days: 5     # 何日前から告知するか
   after_hours: 36    # 期限が過ぎてから何時間「総括を出せ」と言い続けるか

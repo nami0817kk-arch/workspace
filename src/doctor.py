@@ -9,7 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import date, datetime
 
-from . import coverage, deadlines, freshness, newsites, queries, stats, xposts
+from . import coverage, deadlines, freshness, newsites, queries, stats, timing, xposts
 
 # 情報源の網を確かめ直す間隔。塞がれるサイトも、開くサイトもある
 VERIFY_DAYS = 90
@@ -39,8 +39,25 @@ def diagnose(plan, now: datetime | None = None) -> list[Note]:
     notes.append(_feeds(plan))
     notes.append(_calendar(plan, now))
     notes.append(_newsites())
+    notes.append(_clocks(plan, now))
     notes += _coverage(plan, now)
     return notes
+
+
+def _clocks(plan, now: datetime) -> Note:
+    """現地時刻の差。夏時間のまま冬に入ると、時間帯の判断が1時間ずれる。"""
+    spans = timing.windows(plan)
+    if not spans:
+        return Note(True, "時間帯", "リーグに active_local が書かれていません")
+    if timing.summer_over(plan, now.date()):
+        return Note(
+            False,
+            "時間帯",
+            "夏時間の期限を過ぎています。leagues の utc_offset を1つ減らし、"
+            "clocks.summer_until を次の期限に直してください",
+        )
+    live = timing.open_now(plan, now)
+    return Note(True, "時間帯", f"{len(spans)}リーグに設定あり（いま動いている: {len(live)}）")
 
 
 def _newsites() -> Note:

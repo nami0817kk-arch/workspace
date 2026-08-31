@@ -83,6 +83,7 @@ class Plan:
     verified_on: str = ""
     feeds: list = field(default_factory=list)
     calendar: dict = field(default_factory=dict)
+    clocks: dict = field(default_factory=dict)
 
     def group_of(self, url: str) -> str:
         """URLがどの情報源の群に属するか。分からなければ空。"""
@@ -169,6 +170,7 @@ def build_plan(raw: dict) -> Plan:
     verified_on = str(raw.get("verified_on", "") or "")
     feeds = [dict(x or {}) for x in (raw.get("feeds") or [])]
     calendar = dict(raw.get("calendar") or {})
+    clocks = dict(raw.get("clocks") or {})
     tiers = dict(raw.get("tiers") or {})
     if not tiers:
         raise PlanError("tiers が定義されていません")
@@ -230,6 +232,7 @@ def build_plan(raw: dict) -> Plan:
         verified_on=verified_on,
         feeds=feeds,
         calendar=calendar,
+        clocks=clocks,
     )
 
 
