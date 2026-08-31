@@ -1,0 +1,46 @@
+# 計算ツールサイトを GitHub Pages に公開する。
+# テストが通らないとビルドに進まないので、収益導線の無いツールや
+# 説明・FAQ の欠けたツールは公開されない。
+name: サイトを公開する
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # 収益導線の無いツールや壊れた定義があれば、ここで止まる
+      - name: Test tools
+        run: python -m unittest discover -s tests
+      - name: Build tools
+        run: python build.py
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
