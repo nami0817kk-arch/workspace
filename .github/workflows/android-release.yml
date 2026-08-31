@@ -22,6 +22,8 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # ハングしたジョブが既定の6時間走り続けるのを防ぐ
+    timeout-minutes: 60
     defaults:
       run:
         working-directory: .

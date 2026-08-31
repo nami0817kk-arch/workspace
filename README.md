@@ -6,7 +6,7 @@
 （値上がりランキング公開サイト）と無関係だったため、こちらの開発ワークスペースへ移設した。
 
 Web版（お試し公開）: https://nami0817kk-arch.github.io/claude-code-dev/soccer-manager/
-（`.github/workflows/soccer-manager-web.yml` がpush時にビルド・GitHub Pagesへ自動デプロイする。
+（`.github/workflows/web.yml` がpush時にビルド・GitHub Pagesへ自動デプロイする。
 リポジトリの Settings → Pages → Source を「GitHub Actions」に設定する必要がある）
 
 ホーム/スカッド/戦術/順位表をボトムナビゲーションで切り替える構成。ホーム画面は
