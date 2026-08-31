@@ -1,4 +1,4 @@
-# [PJT003] soccer-manager
+# soccer-manager
 
 サッカークラブ経営・育成シミュレーションのスマホアプリ（Flutter + Flame）。
 
