@@ -221,7 +221,7 @@ jobs:
           rm -f ios/ExportOptions.plist
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: soccer-manager-ios
           path: build/ios/ipa/*.ipa
