@@ -1,0 +1,1202 @@
+"""BGM ジェネレータのテスト。"""
+
+from __future__ import annotations
+
+import random
+
+import pytest
+
+from audiogen import bgm, core, drums
+from audiogen import notes as notes_module
+
+SR = 11025
+
+
+def _config(**kwargs) -> bgm.BGMConfig:
+    params = {"bars": 2, "seed": 0, "sr": SR}
+    params.update(kwargs)
+    return bgm.BGMConfig(**params)
+
+
+@pytest.mark.parametrize("style", bgm.style_names())
+def test_every_style_renders_audible_bounded_audio(style):
+    """聞こえる大きさで、かつ天井を越えないこと。
+
+    仕上げは体感音量をそろえるので、ピークがちょうど天井に来るとは限らない
+    (音の詰まった曲は目標音量に達した時点で止まる)。
+    """
+    buf = bgm.generate(_config(style=style))
+    assert 0.3 < core.peak(buf) <= bgm.TARGET_PEAK + 1e-9
+
+
+@pytest.mark.parametrize("style", bgm.style_names())
+def test_every_style_is_free_of_dc_offset(style):
+    buf = bgm.generate(_config(style=style))
+    assert abs(sum(buf) / len(buf)) < 0.01
+
+
+@pytest.mark.parametrize("style", bgm.style_names())
+def test_loop_length_matches_bars_and_tempo(style):
+    config = _config(style=style, bars=2)
+    buf = bgm.generate(config)
+    bpm = config.resolved_style().bpm
+    expected = core.num_samples(2 * bgm.BEATS_PER_BAR * 60.0 / bpm, SR)
+    assert len(buf) == expected
+
+
+def test_no_loop_keeps_the_reverb_tail():
+    looped = bgm.generate(_config(style="night", loop=True))
+    open_ended = bgm.generate(_config(style="night", loop=False))
+    assert len(open_ended) > len(looped)
+
+
+@pytest.mark.parametrize("style", ["sports_drive", "news_bed", "adventure", "chiptune"])
+def test_the_loop_seam_is_not_a_step(style):
+    """継ぎ目の段差が、曲中の普通の波形の動きより小さいこと。
+
+    絶対値で決め打ちはできない(曲の音量で変わる)。プチッと聞こえるのは
+    「曲中では起きない大きさの段差」なので、曲自身の隣り合うサンプルの
+    差と比べる。全11曲想 x 4種の実測で最大 0.44 倍だった。
+    """
+    buf = bgm.generate(_config(style=style, bars=4, seed=8))
+    steps = sorted(abs(a - b) for a, b in zip(buf, buf[1:]))
+    normal = steps[int(len(steps) * 0.99)]
+    assert abs(buf[0] - buf[-1]) < normal
+
+
+def test_same_seed_gives_the_same_track():
+    assert bgm.generate(_config(seed=42)) == bgm.generate(_config(seed=42))
+
+
+def test_different_seeds_give_different_tracks():
+    assert bgm.generate(_config(seed=1)) != bgm.generate(_config(seed=2))
+
+
+def test_bars_scale_the_duration():
+    short = bgm.generate(_config(bars=2))
+    long = bgm.generate(_config(bars=4))
+    assert len(long) == pytest.approx(2 * len(short), rel=0.01)
+
+
+def test_bpm_override_shortens_the_track():
+    fast = bgm.generate(_config(style="calm", bpm=160))
+    slow = bgm.generate(_config(style="calm", bpm=80))
+    assert len(fast) < len(slow)
+
+
+def test_key_override_transposes_the_track():
+    c_major = bgm.generate(_config(key="C"))
+    a_major = bgm.generate(_config(key="A"))
+    assert c_major != a_major
+
+
+def test_render_tracks_returns_the_requested_parts():
+    tracks = bgm.render_tracks(_config(style="adventure"))
+    assert set(tracks) == {"chords", "bass", "lead", "drums"}
+    assert all(len(track) > 0 for track in tracks.values())
+
+
+def test_parts_can_be_dropped():
+    tracks = bgm.render_tracks(_config(parts=("bass",)))
+    assert set(tracks) == {"bass"}
+
+
+def test_style_without_drums_yields_no_drum_track():
+    assert "drums" not in bgm.render_tracks(_config(style="night"))
+
+
+def test_drum_pattern_override_is_applied():
+    tracks = bgm.render_tracks(_config(style="night", drum_pattern="basic"))
+    assert "drums" in tracks
+
+
+def test_progression_override_changes_the_harmony():
+    a = bgm.generate(_config(progression="I-I-I-I", parts=("chords",)))
+    b = bgm.generate(_config(progression="I-V-vi-IV", parts=("chords",)))
+    assert a != b
+
+
+def test_stereo_output_is_interleaved_and_twice_as_long():
+    config = _config(style="menu")
+    mono = bgm.generate(config)
+    stereo = bgm.generate_stereo(config)
+    assert len(stereo) == 2 * len(mono)
+    assert stereo[0::2] != stereo[1::2]  # パンで L/R に差が出る
+
+
+def test_keyword_overrides_work_without_building_a_config():
+    buf = bgm.generate(bars=1, seed=3, sr=SR, style="menu")
+    assert len(buf) > 0
+
+
+def test_unknown_style_raises():
+    with pytest.raises(ValueError, match="unknown bgm style"):
+        bgm.generate(_config(style="jazz-fusion"))
+
+
+def test_zero_bars_raises():
+    with pytest.raises(ValueError, match="bars"):
+        bgm.generate(_config(bars=0))
+
+
+def test_unknown_drum_pattern_raises():
+    with pytest.raises(ValueError, match="unknown drum pattern"):
+        bgm.generate(_config(drum_pattern="bossa"))
+
+
+@pytest.mark.parametrize("name", drums.pattern_names())
+def test_drum_patterns_are_sixteen_steps(name):
+    for steps in drums.get_pattern(name).values():
+        assert len(steps) == drums.STEPS_PER_BAR
+        assert set(steps) <= set(drums.SYMBOL_LEVELS) | {drums.REST}
+
+
+@pytest.mark.parametrize("name", drums.pattern_names())
+def test_drum_patterns_only_use_known_voices(name):
+    assert set(drums.get_pattern(name)) <= set(drums.VOICES)
+
+
+@pytest.mark.parametrize("voice", sorted(drums.VOICES))
+def test_drum_voices_are_audible_and_bounded(voice):
+    buf = drums.VOICES[voice](sr=SR)
+    assert 0.1 < core.peak(buf) <= 1.0
+    assert core.duration_of(buf, SR) < 1.5
+
+
+@pytest.mark.parametrize("voice", ["kick", "snare", "hihat", "clap", "tom", "ride"])
+def test_tight_drum_voices_stay_short(voice):
+    """打点がはっきりしていてほしい音色は、次の16分に被らない長さに収める。"""
+    assert core.duration_of(drums.VOICES[voice](sr=SR), SR) < 0.5
+
+
+@pytest.mark.parametrize("voice", ["timpani", "crash"])
+def test_orchestral_voices_are_allowed_to_ring(voice):
+    """ティンパニとシンバルは余韻が持ち味なので長くてよい。"""
+    assert 0.5 <= core.duration_of(drums.VOICES[voice](sr=SR), SR) < 1.5
+
+
+# --- 曲構成 -------------------------------------------------------------------
+
+
+@pytest.mark.parametrize("structure", bgm.structure_names())
+def test_every_structure_renders(structure):
+    buf = bgm.generate(_config(style="adventure", bars=8, structure=structure))
+    assert 0.3 < core.peak(buf) <= bgm.TARGET_PEAK + 1e-9
+
+
+@pytest.mark.parametrize("structure", bgm.structure_names())
+@pytest.mark.parametrize("bars", [1, 2, 3, 8, 16, 17])
+def test_section_bars_always_sum_to_the_requested_total(structure, bars):
+    plan = bgm.plan_sections(structure, bars)
+    assert sum(count for _, _, count in plan) == bars
+    assert all(count >= 1 for _, _, count in plan)
+
+
+@pytest.mark.parametrize("structure", bgm.structure_names())
+def test_sections_are_laid_out_end_to_end(structure):
+    plan = bgm.plan_sections(structure, 16)
+    expected_start = 0
+    for _, start, count in plan:
+        assert start == expected_start
+        expected_start += count
+
+
+def test_structure_does_not_change_the_total_length():
+    """構成を変えても、小節数が同じなら曲の長さは変わらない。"""
+    plain = bgm.generate(_config(style="adventure", bars=8, structure="loop"))
+    full = bgm.generate(_config(style="adventure", bars=8, structure="full"))
+    assert len(plain) == len(full)
+
+
+def test_intro_section_has_no_drums():
+    """イントロではドラムが鳴らないこと。"""
+    config = _config(style="adventure", bars=8, structure="intro", humanize=0.0)
+    arrangement = bgm.compose(config)
+    intro_bars = arrangement.sections[0][2]
+    intro_end = intro_bars * arrangement.bar_seconds
+    assert arrangement.hits
+    assert min(hit.start for hit in arrangement.hits) >= intro_end
+
+
+def test_chorus_lead_sits_higher_than_the_verse_lead():
+    """サビのメロディが A メロより高い位置にあること。"""
+    config = _config(style="adventure", bars=8, structure="verse_chorus", parts=("lead",))
+    lead = bgm.render_tracks(config)["lead"]
+    half = len(lead) // 2
+    verse, chorus = lead[:half], lead[half:]
+    assert _zero_crossing_rate(chorus) > _zero_crossing_rate(verse)
+
+
+def test_too_few_bars_falls_back_to_the_leading_sections():
+    plan = bgm.plan_sections("full", 2)
+    assert [section.name for section, _, _ in plan] == ["intro", "verse"]
+
+
+def test_unknown_structure_raises():
+    with pytest.raises(ValueError, match="unknown structure"):
+        bgm.generate(_config(structure="sonata"))
+
+
+def _zero_crossing_rate(buf) -> float:
+    """ゼロ交差の割合。音の高さの目安になる。"""
+    crossings = sum(1 for a, b in zip(buf, buf[1:]) if (a < 0) != (b < 0))
+    return crossings / max(1, len(buf))
+
+
+# --- モチーフによるメロディ展開 -----------------------------------------------
+
+
+def _bar_rhythm(lead, bar_index, bar_seconds, sr, slots=16):
+    """1小節を16分割し、それぞれの区画に音があるかどうかを並べる。"""
+    start = core.num_samples(bar_index * bar_seconds, sr)
+    step = core.num_samples(bar_seconds / slots, sr)
+    return [core.peak(lead[start + i * step : start + (i + 1) * step]) > 1e-6 for i in range(slots)]
+
+
+def test_repeated_bars_share_the_same_rhythm():
+    """同じ役割の小節では、音の置かれる位置がそろっていること。"""
+    config = _config(style="adventure", bars=4, parts=("lead",), seed=11)
+    lead = bgm.render_tracks(config)["lead"]
+    bar_seconds = bgm.BEATS_PER_BAR * 60.0 / config.resolved_style().bpm
+    first = _bar_rhythm(lead, 0, bar_seconds, SR)   # A
+    second = _bar_rhythm(lead, 1, bar_seconds, SR)  # A(同じモチーフ)
+    assert first == second
+    assert any(first)  # 全休符ではない
+
+
+def test_the_contrasting_bar_differs_from_the_motif():
+    """3小節目(B)はモチーフと別の句であること。"""
+    config = _config(style="adventure", bars=4, parts=("lead",), seed=11)
+    lead = bgm.render_tracks(config)["lead"]
+    bar_seconds = bgm.BEATS_PER_BAR * 60.0 / config.resolved_style().bpm
+    assert _bar_rhythm(lead, 0, bar_seconds, SR) != _bar_rhythm(lead, 2, bar_seconds, SR)
+
+
+@pytest.mark.parametrize("style", bgm.style_names())
+def test_phrases_fill_exactly_one_bar(style):
+    import random as _random
+
+    resolved = bgm.STYLES[style]
+    phrase = bgm._make_phrase(resolved, _random.Random(0), 7)
+    assert sum(length for _, length in phrase) == pytest.approx(bgm.BEATS_PER_BAR)
+
+
+def test_anchor_shift_lands_the_first_note_on_a_chord_tone():
+    phrase = [(3, 1.0), (5, 1.0), (None, 2.0)]
+    for chord_degree in range(7):
+        shift = bgm._anchor_shift(phrase, chord_degree, 7)
+        assert (3 + shift - chord_degree) % 7 in (0, 2, 4)
+
+
+def test_anchor_shift_of_an_all_rest_phrase_is_zero():
+    assert bgm._anchor_shift([(None, 4.0)], 3, 7) == 0
+
+
+def test_variation_changes_only_the_last_sounding_note():
+    import random as _random
+
+    motif = [(0, 1.0), (2, 1.0), (None, 1.0), (4, 1.0)]
+    varied = bgm._vary_phrase(motif, _random.Random(1), span=8)
+    assert varied[:3] == motif[:3]
+    assert varied[3] != motif[3]
+    assert varied[3][1] == motif[3][1]  # 長さは変わらない
+
+
+def test_verse_and_chorus_reuse_the_same_motif():
+    """区間をまたいでも同じ素材を使い、曲としてのまとまりを保つこと。"""
+    config = _config(style="adventure", bars=8, structure="verse_chorus", parts=("lead",), seed=3)
+    lead = bgm.render_tracks(config)["lead"]
+    bar_seconds = bgm.BEATS_PER_BAR * 60.0 / config.resolved_style().bpm
+    assert _bar_rhythm(lead, 0, bar_seconds, SR) == _bar_rhythm(lead, 4, bar_seconds, SR)
+
+
+# --- グルーヴ -----------------------------------------------------------------
+
+
+def test_swing_delays_only_the_offbeat_eighths():
+    import random as _random
+
+    groove = bgm.Groove(swing=0.5)
+    rng = _random.Random(0)
+    offsets = [groove.time_offset(step, 0.1, rng) for step in range(16)]
+    assert [i for i, value in enumerate(offsets) if value > 0] == [2, 6, 10, 14]
+    assert offsets[2] == pytest.approx(0.05)
+
+
+def test_a_straight_groove_moves_nothing():
+    import random as _random
+
+    rng = _random.Random(0)
+    assert all(bgm.STRAIGHT.time_offset(step, 0.1, rng) == 0.0 for step in range(16))
+
+
+def test_accents_make_the_downbeat_the_loudest():
+    import random as _random
+
+    groove = bgm.Groove(accent=0.4)
+    rng = _random.Random(0)
+    levels = [groove.velocity(step, rng) for step in range(16)]
+    assert levels[0] == max(levels)
+    assert levels[1] == min(levels)
+    assert levels[8] > levels[4] > levels[2] > levels[1]
+
+
+def test_no_accent_means_every_note_is_equal():
+    import random as _random
+
+    rng = _random.Random(0)
+    groove = bgm.Groove(accent=0.0)
+    assert {groove.velocity(step, rng) for step in range(16)} == {1.0}
+
+
+def test_humanize_jitters_within_the_requested_range():
+    import random as _random
+
+    groove = bgm.Groove(humanize=0.01)
+    rng = _random.Random(0)
+    offsets = [groove.time_offset(step, 0.1, rng) for step in range(200) if step % 4 != 2]
+    assert all(abs(value) <= 0.01 for value in offsets)
+    assert any(value != 0.0 for value in offsets)
+
+
+def test_swing_shifts_the_offbeat_later():
+    """スウィングを強めると、裏の8分音符だけが後ろへ動くこと。"""
+    straight = bgm.compose(_config(bars=1, parts=("drums",), swing=0.0, humanize=0.0)).hits
+    swung = bgm.compose(_config(bars=1, parts=("drums",), swing=0.6, humanize=0.0)).hits
+    assert len(straight) == len(swung)
+    assert all(b.start >= a.start for a, b in zip(straight, swung))
+    assert any(b.start > a.start for a, b in zip(straight, swung))
+
+
+def test_humanize_zero_keeps_the_grid_exact():
+    """ゆらぎ 0 なら、音は16分グリッドの上にぴったり乗ること。"""
+    config = _config(style="adventure", bars=2, parts=("drums",), swing=0.0, humanize=0.0)
+    arrangement = bgm.compose(config)
+    step = arrangement.bar_seconds / drums.STEPS_PER_BAR
+    for hit in arrangement.hits:
+        assert hit.start % step == pytest.approx(0.0, abs=1e-9) or (
+            step - hit.start % step
+        ) == pytest.approx(0.0, abs=1e-9)
+
+
+def test_humanize_moves_notes_off_the_grid():
+    exact = bgm.compose(_config(bars=2, parts=("drums",), swing=0.0, humanize=0.0)).hits
+    loose = bgm.compose(_config(bars=2, parts=("drums",), swing=0.0, humanize=0.01)).hits
+    assert [hit.start for hit in exact] != [hit.start for hit in loose]
+    assert all(abs(b.start - a.start) <= 0.01 for a, b in zip(exact, loose))
+
+
+def test_groove_does_not_change_the_melody():
+    """ゆらぎを変えても、メロディの音そのものは変わらないこと。"""
+    tight = bgm.compose(_config(bars=4, parts=("lead",), humanize=0.0, seed=5)).notes["lead"]
+    loose = bgm.compose(_config(bars=4, parts=("lead",), humanize=0.01, seed=5)).notes["lead"]
+    assert [note.midi for note in tight] == [note.midi for note in loose]
+    assert [note.start for note in tight] != [note.start for note in loose]
+
+
+def test_chiptune_stays_perfectly_quantized():
+    assert bgm.STYLES["chiptune"].groove is bgm.STRAIGHT
+
+
+def test_swing_is_clamped_to_a_usable_range():
+    assert _config(swing=5.0).resolved_style().groove.swing == pytest.approx(0.7)
+    assert _config(swing=-1.0).resolved_style().groove.swing == 0.0
+
+
+
+
+# --- 譜面(compose / describe) -----------------------------------------------
+
+
+def test_compose_returns_notes_for_every_requested_part():
+    arrangement = bgm.compose(_config(style="adventure", bars=4))
+    assert set(arrangement.notes) == {"chords", "bass", "lead"}
+    assert arrangement.hits
+    assert arrangement.parts() == ["chords", "bass", "lead", "drums"]
+
+
+def test_composed_notes_stay_inside_the_track():
+    arrangement = bgm.compose(_config(style="adventure", bars=4))
+    for plan in arrangement.notes.values():
+        assert all(0.0 <= note.start < arrangement.length_seconds for note in plan)
+    assert all(0.0 <= hit.start < arrangement.length_seconds for hit in arrangement.hits)
+
+
+def test_composed_notes_are_in_the_scale():
+    """作られた音がすべて指定した音階に収まっていること。"""
+    config = _config(style="calm", key="C", bars=8)
+    arrangement = bgm.compose(config)
+    allowed = {(60 + step) % 12 for step in notes_module.scale_degrees(arrangement.style.scale)}
+    for part, plan in arrangement.notes.items():
+        for note in plan:
+            assert note.midi % 12 in allowed, f"{part}: {notes_module.midi_to_name(note.midi)}"
+
+
+def test_compose_is_deterministic():
+    assert bgm.compose(_config(seed=9)).notes == bgm.compose(_config(seed=9)).notes
+
+
+def test_compose_costs_no_audio_rendering():
+    """譜面だけなら小節数を増やしても音符が増えるだけであること。"""
+    short = bgm.compose(_config(bars=4, style="adventure"))
+    long = bgm.compose(_config(bars=8, style="adventure"))
+    assert long.part_count("lead") > short.part_count("lead")
+    assert long.length_seconds == pytest.approx(2 * short.length_seconds)
+
+
+def test_describe_summarises_the_track():
+    summary = bgm.describe(_config(style="battle", key="A", bars=8, structure="full", seed=2))
+    assert summary["style"] == "battle"
+    assert summary["key"] == "A"
+    assert summary["bars"] == 8
+    assert [section["name"] for section in summary["sections"]] == ["intro", "verse", "chorus", "outro"]
+    assert len(summary["chords"]) == 8
+    assert all(len(chord["notes"]) >= 3 for chord in summary["chords"])
+    assert summary["melody"]
+    assert summary["note_counts"]["lead"] == len(summary["melody"])
+
+
+def test_describe_is_json_serialisable():
+    import json
+
+    assert json.loads(json.dumps(bgm.describe(_config(bars=4))))["bars"] == 4
+
+
+# --- マスター段 ---------------------------------------------------------------
+
+
+def test_kick_ducks_the_other_parts():
+    """バスドラムの瞬間に、ドラム以外のパートが下がること。"""
+    config = _config(style="adventure", bars=2, humanize=0.0)
+    arrangement = bgm.compose(config)
+    plain = bgm._render_arrangement(arrangement, config)
+    ducked = bgm._duck_to_kick(dict(plain), arrangement, SR)
+
+    kick = min(hit.start for hit in arrangement.hits if hit.voice == "kick")
+    at_kick = core.num_samples(kick + 0.02, SR)
+    assert abs(ducked["bass"][at_kick]) < abs(plain["bass"][at_kick])
+    assert ducked["drums"] == plain["drums"]  # ドラム自身は下げない
+
+
+def test_ducking_is_skipped_without_a_kick():
+    config = _config(style="night", bars=2)
+    arrangement = bgm.compose(config)
+    plain = bgm._render_arrangement(arrangement, config)
+    assert bgm._duck_to_kick(dict(plain), arrangement, SR) == plain
+
+
+def test_mastering_raises_loudness_without_clipping():
+    """リミッターを通したほうが、同じピークでも中身が大きいこと。"""
+    config = _config(style="battle", bars=4, seed=4)
+
+    style = config.resolved_style()
+    arrangement = bgm.compose(config)
+    tracks = bgm._render_arrangement(arrangement, config)
+    gains = bgm._part_gains(style)
+    names = list(tracks)
+    mixed = core.mix(*(tracks[name] for name in names), gains=[gains[name] for name in names])
+    length = core.num_samples(config.bars * arrangement.bar_seconds, SR)
+
+    limited = core.normalize(bgm._post_process(mixed, style, config, length), bgm.TARGET_PEAK)
+    raw = core.normalize(
+        bgm._post_process(mixed, style, config, length, limit=False), bgm.TARGET_PEAK
+    )
+    assert _rms(limited) > _rms(raw) * 1.15
+
+
+def _rms(buf):
+    import math
+
+    return math.sqrt(sum(value * value for value in buf) / len(buf))
+
+
+# --- 放送向けの曲想 -----------------------------------------------------------
+
+BROADCAST = ["news_open", "news_bed", "sports_anthem", "sports_drive"]
+
+
+@pytest.mark.parametrize("style", BROADCAST)
+def test_broadcast_styles_render(style):
+    buf = bgm.generate(_config(style=style, bars=4))
+    assert 0.3 < core.peak(buf) <= bgm.TARGET_PEAK + 1e-9
+
+
+def test_the_news_bed_leaves_out_the_melody():
+    """話し声とぶつからないよう、下敷きにはメロディを乗せない。"""
+    arrangement = bgm.compose(_config(style="news_bed", bars=4))
+    assert "lead" not in arrangement.parts()
+    assert "chords" in arrangement.parts()
+
+
+def test_the_news_bed_is_quieter_than_the_opening_theme():
+    bed = bgm.compose(_config(style="news_bed", bars=4))
+    theme = bgm.compose(_config(style="news_open", bars=4))
+    assert bed.style.drum_gain < theme.style.drum_gain
+    assert bed.part_count("lead") == 0 < theme.part_count("lead")
+
+
+def test_a_style_can_declare_its_own_parts():
+    assert "arp" in bgm.STYLES["news_open"].parts
+    assert "arp" not in bgm.STYLES["calm"].parts
+    assert "arp" not in bgm.compose(_config(style="calm", bars=2)).parts()
+
+
+def test_without_drops_a_part_from_the_style_default():
+    arrangement = bgm.compose(_config(style="news_open", bars=2, without=("arp", "drums")))
+    assert "arp" not in arrangement.parts()
+    assert "drums" not in arrangement.parts()
+    assert "chords" in arrangement.parts()
+
+
+def test_explicit_parts_override_the_style_default():
+    assert bgm.compose(_config(style="news_open", bars=2, parts=("bass",))).parts() == ["bass"]
+
+
+# --- 和音のリズムとアルペジオ -------------------------------------------------
+
+
+def test_a_chord_pattern_turns_sustained_chords_into_stabs():
+    """刻みを指定すると、1小節1回ではなくパターンどおりの回数だけ鳴る。"""
+    held = bgm.compose(_config(style="calm", bars=1, parts=("chords",))).notes["chords"]
+    stabs = bgm.compose(_config(style="news_open", bars=1, parts=("chords",))).notes["chords"]
+    assert len({round(note.start, 4) for note in held}) == 1
+    assert len({round(note.start, 4) for note in stabs}) == 5  # x..x..x...x.x...
+
+
+def test_stabbed_chords_are_shorter_than_a_bar():
+    arrangement = bgm.compose(_config(style="news_open", bars=1, parts=("chords",)))
+    assert all(note.length < arrangement.bar_seconds * 0.5 for note in arrangement.notes["chords"])
+
+
+def test_sustained_chords_fill_the_whole_bar():
+    arrangement = bgm.compose(_config(style="calm", bars=1, parts=("chords",)))
+    assert all(
+        note.length == pytest.approx(arrangement.bar_seconds) for note in arrangement.notes["chords"]
+    )
+
+
+def test_the_arpeggio_walks_through_the_chord_tones():
+    """アルペジオが和音の構成音だけを、指定した順に辿ること。"""
+    config = _config(style="news_open", bars=1, parts=("chords", "arp"))
+    arrangement = bgm.compose(config)
+    chord_classes = {note.midi % 12 for note in arrangement.notes["chords"]}
+    arp = arrangement.notes["arp"]
+    assert len(arp) == 16  # oxoxoxoxoxoxoxox
+    assert all(note.midi % 12 in chord_classes for note in arp)
+    assert len({note.midi for note in arp}) > 1  # 同じ音の連打ではない
+
+
+def test_the_arpeggio_sits_above_the_chords():
+    arrangement = bgm.compose(_config(style="news_open", bars=1, parts=("chords", "arp")))
+    lowest_arp = min(note.midi for note in arrangement.notes["arp"])
+    highest_chord = max(note.midi for note in arrangement.notes["chords"])
+    assert lowest_arp >= highest_chord
+
+
+def test_a_style_without_an_arp_pattern_has_no_arpeggio():
+    assert bgm.compose(_config(style="sports_anthem", bars=2)).part_count("arp") == 0
+
+
+def test_the_arpeggio_is_panned_opposite_the_chords():
+    """和音とアルペジオが左右に分かれ、混ざって団子にならないこと。"""
+    assert bgm._PART_PAN["arp"] * bgm._PART_PAN["chords"] < 0
+
+
+# --- 編曲の仕上げ(声部連結・フィル・終止・経過音) ---------------------------
+
+
+def _voicings_by_bar(arrangement, part="chords"):
+    bars = {}
+    for note in arrangement.notes[part]:
+        bars.setdefault(int(note.start / arrangement.bar_seconds + 0.001), set()).add(note.midi)
+    return [sorted(bars[bar]) for bar in sorted(bars)]
+
+
+def test_chords_are_voice_led_between_bars():
+    """和音が毎回基本形へ飛ばず、近い音へつながっていること。"""
+    config = _config(style="sports_anthem", bars=4, parts=("chords",), humanize=0.0)
+    voiced = _voicings_by_bar(bgm.compose(config))
+    led = sum(notes_module.voice_movement(a, b) for a, b in zip(voiced, voiced[1:]))
+
+    plain_style = bgm.STYLES["sports_anthem"]
+    root = bgm._root_midi("C", plain_style.chord_octave)
+    plain_chords = [
+        notes_module.diatonic_chord(root, plain_style.scale, degree)
+        for degree in notes_module.parse_progression(plain_style.progression)
+    ]
+    plain = sum(notes_module.voice_movement(a, b) for a, b in zip(plain_chords, plain_chords[1:]))
+    assert led < plain
+
+
+def test_voice_leading_can_be_turned_off_per_style():
+    """基本形の並びが持ち味の曲想では、連結しないこと。"""
+    assert bgm.STYLES["chiptune"].chord_voice_lead is False
+    voiced = _voicings_by_bar(bgm.compose(_config(style="chiptune", bars=4, parts=("chords",))))
+    root = bgm._root_midi("C", bgm.STYLES["chiptune"].chord_octave)
+    expected = notes_module.diatonic_chord(root, "major", 0)
+    assert voiced[0] == sorted(expected)
+
+
+def test_a_fill_replaces_the_last_bar_of_a_section():
+    """区間の最後の小節だけ、いつもと違う手になること。"""
+    config = _config(style="sports_drive", bars=4, parts=("drums",), humanize=0.0)
+    arrangement = bgm.compose(config)
+    bar = arrangement.bar_seconds
+
+    def voices(index):
+        return sorted({h.voice for h in arrangement.hits if index * bar <= h.start < (index + 1) * bar})
+
+    assert voices(0) == voices(1) == voices(2)
+    assert voices(3) != voices(0)
+
+
+def test_a_fill_needs_at_least_two_bars():
+    """1小節しかないときは、フィルだけの曲にならないこと。"""
+    arrangement = bgm.compose(_config(style="sports_drive", bars=1, parts=("drums",)))
+    assert "ride" in {hit.voice for hit in arrangement.hits}
+
+
+def test_styles_only_use_known_fills():
+    for name in bgm.style_names():
+        fill = bgm.STYLES[name].drum_fill
+        if fill:
+            drums.get_fill(fill)
+
+
+def test_unknown_fill_raises():
+    with pytest.raises(ValueError, match="unknown drum fill"):
+        drums.get_fill("paradiddle")
+
+
+@pytest.mark.parametrize("name", drums.fill_names())
+def test_fills_are_sixteen_steps_of_known_voices(name):
+    for voice, steps in drums.get_fill(name).items():
+        assert voice in drums.VOICES
+        assert len(steps) == drums.STEPS_PER_BAR
+        assert set(steps) <= set(drums.SYMBOL_LEVELS) | {drums.REST}
+
+
+def test_the_ending_lands_on_the_tonic():
+    """終止を付けると、最後の小節が主和音になること。"""
+    config = _config(style="sports_anthem", bars=8, ending=True, humanize=0.0)
+    arrangement = bgm.compose(config)
+    last = (arrangement.bars - 1) * arrangement.bar_seconds
+    final = {note.midi % 12 for note in arrangement.notes["chords"] if note.start >= last - 0.1}
+    tonic = {m % 12 for m in notes_module.diatonic_chord(bgm._root_midi("C", 4), "major", 0)}
+    assert final == tonic
+
+
+def test_the_ending_stops_the_melody_and_the_groove():
+    config = _config(style="sports_anthem", bars=8, ending=True, humanize=0.0)
+    arrangement = bgm.compose(config)
+    last = (arrangement.bars - 1) * arrangement.bar_seconds
+    assert not [note for note in arrangement.notes["lead"] if note.start >= last - 0.1]
+    assert sorted({h.voice for h in arrangement.hits if h.start >= last - 0.1}) == ["crash", "kick"]
+
+
+def test_the_ending_holds_the_final_chord_for_a_whole_bar():
+    arrangement = bgm.compose(_config(style="sports_anthem", bars=8, ending=True, humanize=0.0))
+    last = (arrangement.bars - 1) * arrangement.bar_seconds
+    final = [note for note in arrangement.notes["chords"] if note.start >= last - 0.1]
+    assert final
+    assert all(note.length == pytest.approx(arrangement.bar_seconds) for note in final)
+
+
+def test_the_ending_keeps_the_tail_instead_of_looping():
+    """終わる曲は、残響を先頭に折り返さずそのまま鳴らしきること。"""
+    looped = bgm.generate(_config(style="sports_anthem", bars=4))
+    ended = bgm.generate(_config(style="sports_anthem", bars=4, ending=True))
+    assert len(ended) > len(looped)
+
+
+def test_the_ending_leaves_earlier_bars_alone():
+    plain = bgm.compose(_config(style="sports_anthem", bars=8, humanize=0.0))
+    ended = bgm.compose(_config(style="sports_anthem", bars=8, ending=True, humanize=0.0))
+    limit = (plain.bars - 1) * plain.bar_seconds - 0.1
+    assert [n for n in plain.notes["lead"] if n.start < limit] == [
+        n for n in ended.notes["lead"] if n.start < limit
+    ]
+
+
+def test_the_bass_walks_into_the_next_chord():
+    """和音が変わる直前の音が、次の根音の隣へ寄っていること。"""
+    config = _config(style="sports_anthem", bars=4, parts=("bass",), humanize=0.0)
+    arrangement = bgm.compose(config)
+    bar = arrangement.bar_seconds
+    by_bar = {}
+    for note in arrangement.notes["bass"]:
+        by_bar.setdefault(int(note.start / bar + 0.001), []).append(note)
+
+    for index in range(len(by_bar) - 1):
+        approach = max(by_bar[index], key=lambda n: n.start).midi
+        landing = min(by_bar[index + 1], key=lambda n: n.start).midi
+        assert abs(approach - landing) <= 2, f"bar {index}: {approach} -> {landing}"
+
+
+def test_styles_without_walking_keep_the_plain_root():
+    assert bgm.STYLES["calm"].bass_walk is False
+    arrangement = bgm.compose(_config(style="calm", bars=4, parts=("bass",), humanize=0.0))
+    root = bgm._root_midi("C", bgm.STYLES["calm"].bass_octave)
+    assert arrangement.notes["bass"][0].midi == root
+
+
+# --- 転調 ---------------------------------------------------------------------
+
+
+def _part_pitches(arrangement, part, first_bar, last_bar):
+    lo = first_bar * arrangement.bar_seconds
+    hi = last_bar * arrangement.bar_seconds
+    return [note.midi for note in arrangement.notes[part] if lo <= note.start < hi]
+
+
+def test_the_chorus_is_transposed_up():
+    """転調つきの構成で、サビの各パートがまとめて上がること。"""
+    config = _config(style="sports_anthem", bars=8, structure="lift", humanize=0.0)
+    arrangement = bgm.compose(config)
+    for part in ("chords", "bass"):
+        verse = _part_pitches(arrangement, part, 0, 4)
+        chorus = _part_pitches(arrangement, part, 4, 8)
+        assert min(chorus) - min(verse) == 2, part
+
+
+def test_transposition_keeps_the_relative_progression():
+    """転調しても、和音の並び方(度数)は変わらないこと。"""
+    config = _config(style="sports_anthem", bars=8, structure="lift", humanize=0.0)
+    arrangement = bgm.compose(config)
+    verse = {m % 12 for m in _part_pitches(arrangement, "bass", 0, 4)}
+    chorus = {m % 12 for m in _part_pitches(arrangement, "bass", 4, 8)}
+    assert {(m + 2) % 12 for m in verse} == chorus
+
+
+def test_structures_without_transposition_stay_in_key():
+    config = _config(style="sports_anthem", bars=8, structure="verse_chorus", humanize=0.0)
+    arrangement = bgm.compose(config)
+    assert all(section.transpose == 0 for section, _, _ in arrangement.sections)
+    pitches = {m % 12 for m in _part_pitches(arrangement, "bass", 0, 8)}
+    root = bgm._root_midi("C", 2) % 12
+    assert root in pitches
+
+
+@pytest.mark.parametrize("structure", ["lift", "broadcast"])
+def test_transposing_structures_render(structure):
+    buf = bgm.generate(_config(style="sports_anthem", bars=8, structure=structure))
+    assert 0.3 < core.peak(buf) <= bgm.TARGET_PEAK + 1e-9
+
+
+def test_the_broadcast_structure_keeps_the_new_key_to_the_end():
+    """転調したあと元へ戻らず、最後まで上がったままであること。"""
+    arrangement = bgm.compose(_config(style="news_open", bars=12, structure="broadcast"))
+    named = {section.name: section.transpose for section, _, _ in arrangement.sections}
+    assert named["intro"] == named["verse"] == 0
+    assert named["chorus"] == named["outro"] == 2
+
+
+def test_describe_reports_the_transposition():
+    summary = bgm.describe(_config(style="sports_anthem", bars=8, structure="lift"))
+    assert [s["transpose"] for s in summary["sections"]] == [0, 2]
+
+
+# --- 帯域バランス -------------------------------------------------------------
+
+
+def test_the_master_eq_lifts_the_top_relative_to_the_bottom():
+    import dataclasses
+    import math
+
+    style = bgm.STYLES["sports_anthem"]
+    try:
+        bgm.STYLES["sports_anthem"] = dataclasses.replace(style, eq=bgm.FLAT)
+        plain = bgm.generate(_config(style="sports_anthem", bars=4, seed=3))
+        bgm.STYLES["sports_anthem"] = style
+        shaped = bgm.generate(_config(style="sports_anthem", bars=4, seed=3))
+    finally:
+        bgm.STYLES["sports_anthem"] = style
+
+    def tilt(buf):
+        """低域に対する高域の比。EQ で上がっているはずの向き。"""
+        from audiogen import effects
+
+        def band(lo, hi):
+            narrowed = effects.highpass(effects.lowpass(buf, hi, SR), lo, SR)
+            return math.sqrt(sum(v * v for v in narrowed) / len(narrowed))
+
+        return band(3000, 8000) / band(20, 120)
+
+    assert tilt(shaped) > tilt(plain)
+
+
+def test_a_flat_eq_leaves_the_signal_alone():
+    tone = [0.1, -0.2, 0.3]
+    assert bgm.FLAT.apply(list(tone), SR) != tone  # ローカットだけは効く
+    assert bgm.MasterEQ(low_cut=0.0, mud_db=0.0, presence_db=0.0).apply(list(tone), SR) == tone
+
+
+def test_the_news_bed_is_shaped_to_sit_back():
+    """話し声の帯域を空けるため、下敷きは輪郭を上げすぎないこと。"""
+    assert bgm.STYLES["news_bed"].eq.presence_db < bgm.STYLES["news_open"].eq.presence_db
+
+
+# --- 体感音量をそろえる -------------------------------------------------------
+
+DENSE_STYLES = ["adventure", "battle", "chiptune", "news_open", "sports_anthem", "sports_drive"]
+SPARSE_STYLES = ["calm", "menu", "night", "news_bed", "tension"]
+
+
+@pytest.mark.parametrize("style", DENSE_STYLES)
+def test_dense_styles_land_on_the_loudness_target(style):
+    """音の詰まった曲は、体感音量が目標ぴったりに揃うこと。"""
+    buf = bgm.generate(_config(style=style, bars=4, seed=3))
+    assert core.loudness(buf, SR) == pytest.approx(bgm.TARGET_LOUDNESS, abs=0.1)
+
+
+@pytest.mark.parametrize("style", SPARSE_STYLES)
+def test_sparse_styles_stop_at_the_peak_ceiling(style):
+    """隙間の多い曲は目標まで上げると歪むので、天井で止まること。
+
+    結果として静かな曲想は静かなまま残る(下敷きや夜の曲では望ましい)。
+    """
+    buf = bgm.generate(_config(style=style, bars=4, seed=3))
+    assert core.peak(buf) == pytest.approx(bgm.TARGET_PEAK, abs=1e-6)
+    assert core.loudness(buf, SR) <= bgm.TARGET_LOUDNESS + 0.1
+
+
+@pytest.mark.parametrize("style", bgm.style_names())
+def test_no_style_exceeds_the_peak_ceiling(style):
+    assert core.peak(bgm.generate(_config(style=style, bars=4, seed=3))) <= bgm.TARGET_PEAK + 1e-9
+
+
+def test_loudness_matching_is_tighter_than_peak_matching():
+    """ピークをそろえるより、体感音量のばらつきが小さくなること。"""
+    levels = [
+        core.loudness(bgm.generate(_config(style=style, bars=2, seed=3)), SR)
+        for style in bgm.style_names()
+    ]
+    assert max(levels) - min(levels) < 4.0
+
+
+def test_stereo_output_is_matched_the_same_way():
+    config = _config(style="sports_drive", bars=4, seed=3, stereo=True)
+    stereo = bgm.generate_stereo(config)
+    summed = [(a + b) * 0.5 for a, b in zip(stereo[0::2], stereo[1::2])]
+    assert core.loudness(summed, SR) == pytest.approx(bgm.TARGET_LOUDNESS, abs=0.3)
+    assert core.peak(stereo) <= bgm.TARGET_PEAK + 1e-9
+
+
+# --- ステレオ -----------------------------------------------------------------
+
+
+def _channel_correlation(stereo):
+    import math
+
+    left, right = stereo[0::2], stereo[1::2]
+    mean_l, mean_r = sum(left) / len(left), sum(right) / len(right)
+    numerator = sum((a - mean_l) * (b - mean_r) for a, b in zip(left, right))
+    dl = math.sqrt(sum((a - mean_l) ** 2 for a in left))
+    dr = math.sqrt(sum((b - mean_r) ** 2 for b in right))
+    return numerator / (dl * dr) if dl and dr else 1.0
+
+
+@pytest.mark.parametrize("style", ["sports_anthem", "night", "calm"])
+def test_stereo_output_is_wider_than_mono(style):
+    """左右が完全に同じ(=広がりなし)にはならないこと。"""
+    stereo = bgm.generate_stereo(_config(style=style, bars=4, seed=3))
+    assert _channel_correlation(stereo) < 0.99
+
+
+def test_stereo_survives_a_mono_fold_down():
+    """モノラルで再生しても音量が落ちないこと(位相をいじっていない証拠)。"""
+    stereo = bgm.generate_stereo(_config(style="sports_anthem", bars=4, seed=3))
+    left, right = stereo[0::2], stereo[1::2]
+    summed = [(a + b) * 0.5 for a, b in zip(left, right)]
+    assert abs(core.loudness(summed, SR) - core.loudness(left, SR)) < 1.0
+
+
+def test_low_end_stays_in_the_centre():
+    """低音とドラムは中央に置く(左右に振ると再生環境で不安定になる)。"""
+    assert bgm._PART_PAN["bass"] == 0.0
+    assert bgm._PART_PAN["drums"] == 0.0
+
+
+def test_upper_parts_are_spread_apart():
+    assert bgm._PART_PAN["chords"] < 0 < bgm._PART_PAN["arp"]
+
+
+def test_the_mono_path_is_unchanged_by_the_stereo_work():
+    """モノラル出力は左右の処理を通さず、これまでどおりであること。"""
+    config = _config(style="adventure", bars=2, seed=5)
+    assert bgm.generate(config) == bgm.generate(config)
+    assert len(bgm.generate_stereo(config)) == 2 * len(bgm.generate(config))
+
+
+# --- リタルダンド -------------------------------------------------------------
+
+
+def _kick_intervals(arrangement):
+    starts = sorted(hit.start for hit in arrangement.hits if hit.voice == "kick")
+    return [b - a for a, b in zip(starts, starts[1:])]
+
+
+def test_a_ritardando_stretches_the_end():
+    """終盤で打点の間隔が広がっていくこと。"""
+    config = _config(style="sports_anthem", bars=8, ending=True, ritardando=4.0, humanize=0.0)
+    intervals = _kick_intervals(bgm.compose(config))
+    assert intervals[-1] > intervals[0] * 1.15
+    assert all(b >= a - 1e-9 for a, b in zip(intervals[-4:], intervals[-3:]))
+
+
+def test_a_ritardando_leaves_the_opening_alone():
+    plain = bgm.compose(_config(style="sports_anthem", bars=8, ending=True, humanize=0.0))
+    slowed = bgm.compose(
+        _config(style="sports_anthem", bars=8, ending=True, ritardando=2.0, humanize=0.0)
+    )
+    limit = plain.length_seconds * 0.5
+    assert [n.start for n in plain.notes["bass"] if n.start < limit] == pytest.approx(
+        [n.start for n in slowed.notes["bass"] if n.start < limit]
+    )
+
+
+def test_a_ritardando_makes_the_track_longer():
+    plain = bgm.compose(_config(style="sports_anthem", bars=8, ending=True))
+    slowed = bgm.compose(_config(style="sports_anthem", bars=8, ending=True, ritardando=4.0))
+    assert slowed.length_seconds > plain.length_seconds
+    assert len(bgm.generate(_config(style="sports_anthem", bars=4, ending=True, ritardando=2.0))) > 0
+
+
+def test_a_deeper_slowdown_stretches_more():
+    gentle = bgm.compose(_config(bars=8, ritardando=4.0, final_tempo=0.9))
+    steep = bgm.compose(_config(bars=8, ritardando=4.0, final_tempo=0.5))
+    assert steep.length_seconds > gentle.length_seconds
+
+
+def test_notes_get_longer_as_the_tempo_eases():
+    """緩めた区間では音符そのものも伸びること。"""
+    config = _config(style="sports_anthem", bars=8, ritardando=4.0, humanize=0.0, parts=("bass",))
+    plan = bgm.compose(config).notes["bass"]
+    assert plan[-1].length > plan[0].length
+
+
+def test_no_ritardando_keeps_the_timing_exact():
+    curve = bgm.TempoCurve(bars=0.0)
+    assert not curve.enabled()
+    assert curve.warp(3.0, 10.0, 2.0) == 3.0
+
+
+def test_the_tempo_curve_is_continuous_at_the_ramp_start():
+    """緩め始める瞬間に時刻が飛ばないこと。"""
+    curve = bgm.TempoCurve(bars=2.0, final_ratio=0.6)
+    total, bar = 10.0, 1.0
+    start = total - 2.0
+    assert curve.warp(start, total, bar) == pytest.approx(start)
+    assert curve.warp(start + 1e-6, total, bar) == pytest.approx(start, abs=1e-5)
+
+
+def test_a_ritardando_does_not_loop():
+    """テンポを緩めた曲は、残響を折り返さずそのまま鳴らしきること。"""
+    looped = bgm.generate(_config(style="sports_anthem", bars=4))
+    slowed = bgm.generate(_config(style="sports_anthem", bars=4, ritardando=2.0))
+    assert len(slowed) > len(looped)
+
+
+# --- ゴーストノートとフラム ---------------------------------------------------
+
+
+def test_symbol_levels_cover_the_pattern_alphabet():
+    assert drums.symbol_level("x") == 1.0
+    assert drums.symbol_level("o") < drums.symbol_level("x")
+    assert drums.symbol_level("g") < drums.symbol_level("o")
+    assert drums.symbol_level(drums.REST) == 0.0
+    assert drums.symbol_level("?") == 0.0
+
+
+def test_ghost_notes_sit_well_below_the_main_hits():
+    """譜面に出ない小さな打点として鳴ること。"""
+    config = _config(style="sports_drive", bars=1, parts=("drums",), humanize=0.0, swing=0.0)
+    snares = [hit.velocity for hit in bgm.compose(config).hits if hit.voice == "snare"]
+    assert min(snares) < max(snares) * 0.4
+
+
+def test_a_flam_places_a_grace_note_just_before_the_beat():
+    config = _config(style="sports_drive", bars=1, parts=("drums",), humanize=0.0, swing=0.0)
+    arrangement = bgm.compose(config)
+    step = arrangement.bar_seconds / drums.STEPS_PER_BAR
+    snares = sorted((hit.start, hit.velocity) for hit in arrangement.hits if hit.voice == "snare")
+
+    main = max(snares, key=lambda item: item[1])
+    grace = [s for s in snares if 0 < main[0] - s[0] <= drums.FLAM_LEAD + 1e-9]
+    assert len(grace) == 1
+    assert grace[0][1] == pytest.approx(main[1] * drums.FLAM_LEVEL, rel=0.01)
+
+
+def test_a_flam_at_the_very_start_stays_inside_the_track():
+    """先頭にフラムが来ても、装飾音が負の時刻へ出ないこと。"""
+    original = drums.PATTERNS["basic"]
+    try:
+        drums.PATTERNS["basic"] = {"snare": "f" + "." * 15}
+        arrangement = bgm.compose(
+            _config(bars=1, parts=("drums",), drum_pattern="basic", humanize=0.0, swing=0.0)
+        )
+        assert all(hit.start >= 0.0 for hit in arrangement.hits)
+        assert len(arrangement.hits) == 2  # 装飾音と本打
+    finally:
+        drums.PATTERNS["basic"] = original
+
+
+def test_patterns_with_ghosts_have_more_hits():
+    """ゴーストを入れたぶん、打点の数が増えていること。"""
+    with_ghosts = drums.get_pattern("drive")["snare"]
+    assert with_ghosts.count("g") > 0
+    assert sum(1 for c in with_ghosts if c != drums.REST) > with_ghosts.count("x")
+
+
+# --- 入力の検証 ---------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "overrides,message",
+    [
+        ({"bars": 0}, "bars must be >= 1"),
+        ({"bars": -3}, "bars must be >= 1"),
+        ({"sr": 0}, "sample rate"),
+        ({"sr": -100}, "sample rate"),
+        ({"bpm": 0}, "bpm must be between"),
+        ({"bpm": -40}, "bpm must be between"),
+        ({"bpm": 5000}, "bpm must be between"),
+        ({"key": "H"}, "invalid key"),
+        ({"key": ""}, "invalid key"),
+        ({"ritardando": -1.0}, "ritardando must be >= 0"),
+        ({"final_tempo": 0.0}, "final_tempo must be between"),
+        ({"final_tempo": -1.0}, "final_tempo must be between"),
+        ({"parts": ("kazoo",)}, "unknown parts"),
+        ({"without": ("kazoo",)}, "unknown parts in 'without'"),
+    ],
+)
+def test_bad_settings_are_reported_clearly(overrides, message):
+    """おかしな値は入口で弾き、何が悪いか分かる文言を返すこと。"""
+    with pytest.raises(ValueError, match=message):
+        bgm.generate(_config(**overrides))
+
+
+def test_the_error_message_repeats_the_offending_value():
+    with pytest.raises(ValueError, match="99999"):
+        bgm.generate(_config(bpm=99999))
+
+
+def test_valid_settings_pass_validation():
+    bgm.validate(_config(bars=1, bpm=20, sr=4000, final_tempo=0.2))
+    bgm.validate(_config(bars=64, bpm=400, final_tempo=2.0, ritardando=0.0))
+
+
+# --- スタジアム向けの作り ------------------------------------------------------
+
+
+def test_a_chant_melody_stays_in_a_narrow_range():
+    """大群で歌える音域に収まること。実測40通りの平均で 2.6度。"""
+    style = bgm.STYLES["terrace_chant"]
+    spans = []
+    for seed in range(20):
+        phrase = bgm._ensure_motifs(style, random.Random(seed), {})["motif"]
+        pitched = [d for d, _ in phrase if d is not None]
+        spans.append(max(pitched) - min(pitched))
+    assert max(spans) <= 5
+
+
+def test_a_chant_melody_has_no_rests():
+    """チャントは途中で切れない。息継ぎは句の切れ目だけ。"""
+    style = bgm.STYLES["terrace_chant"]
+    for seed in range(20):
+        phrase = bgm._ensure_motifs(style, random.Random(seed), {})["motif"]
+        assert all(degree is not None for degree, _ in phrase)
+
+
+def test_a_chant_melody_repeats_notes_more_than_an_ordinary_one():
+    """同じ音の連打が多いこと(次に何を歌うか迷わせない)。"""
+
+    def repeat_ratio(style_name):
+        style = bgm.STYLES[style_name]
+        ratios = []
+        for seed in range(20):
+            phrase = bgm._ensure_motifs(style, random.Random(seed), {})["motif"]
+            pitched = [d for d, _ in phrase if d is not None]
+            if len(pitched) < 2:
+                continue
+            steps = [b - a for a, b in zip(pitched, pitched[1:])]
+            ratios.append(sum(1 for s in steps if s == 0) / len(steps))
+        return sum(ratios) / len(ratios)
+
+    assert repeat_ratio("terrace_chant") > repeat_ratio("adventure") * 3
+
+
+def test_a_chant_does_not_develop():
+    """A/A/B/A' で変えていく普通のメロディと違い、同じ句を押し通す。"""
+    assert bgm.STYLES["terrace_chant"].lead_development == ("A",)
+
+
+def test_the_lead_is_doubled_an_octave_below():
+    """大勢で歌うと声域がオクターブに散る。その厚みを重ねで作る。"""
+    config = _config(style="terrace_chant", bars=4, seed=1)
+    lead = bgm.compose(config).notes["lead"]
+    starts = {}
+    for note in lead:
+        starts.setdefault(round(note.start, 5), []).append(note.midi)
+    assert starts, "メロディが空"
+    for midis in starts.values():
+        assert len(midis) == 2
+        assert abs(max(midis) - min(midis)) == 12
+
+
+def test_a_pedal_bass_stays_on_the_tonic():
+    """和音が動いてもベースは主音に居座ること。"""
+    config = _config(style="stadium_anthem", bars=4, seed=1, key="C")
+    bass = bgm.compose(config).notes["bass"]
+    assert len({note.midi for note in bass}) == 1
+
+
+def test_a_walking_bass_moves_but_a_pedal_does_not():
+    walking = bgm.compose(_config(style="sports_anthem", bars=4, seed=1)).notes["bass"]
+    assert len({note.midi for note in walking}) > 1
+
+
+def test_a_borrowed_chord_reaches_the_arrangement():
+    """I-bVII-IV-I の2小節目が B♭ の和音になっていること。"""
+    config = _config(style="terrace_chant", bars=4, seed=1, key="C")
+    arrangement = bgm.compose(config)
+    bar = arrangement.bar_seconds
+    # ヒューマナイズで小節線の数ミリ秒前に出る音があるので、近いほうの小節で数える。
+    second = {
+        note.midi % 12
+        for note in arrangement.notes["chords"]
+        if int(note.start / bar + 0.05) == 1
+    }
+    assert second == {10, 2, 5}  # B♭ D F
+
+
+def test_the_melody_borrows_the_same_note_as_the_chord():
+    """♭VII の小節でメロディが構成音の半音上を弾かないこと。
+
+    音階どおりに B を弾くと B♭ とぶつかる。和音が下げた度数は旋律も下げる。
+    """
+    for seed in range(8):
+        config = _config(style="terrace_chant", bars=8, seed=seed, key="C")
+        arrangement = bgm.compose(config)
+        degrees = notes_module.parse_progression(arrangement.style.progression)
+        root = bgm._root_midi("C", arrangement.style.chord_octave)
+        for note in arrangement.notes["lead"]:
+            bar = int(note.start / arrangement.bar_seconds + 1e-6)
+            degree = degrees[bar % len(degrees)]
+            if not degree.alter:
+                continue
+            chord = notes_module.progression_chord(root, arrangement.style.scale, degree)
+            spread = [c + octave for c in chord for octave in (-24, -12, 0, 12)]
+            assert not any(
+                0 < note.midi - c <= 13 and (note.midi - c) % 12 == 1 for c in spread
+            ), f"seed={seed} {notes_module.midi_to_name(note.midi)} が和音の半音上"
+
+
+def test_the_anthem_structure_has_a_percussion_only_break():
+    """打楽器だけの切れ目を挟んでから総力戦へ戻る。"""
+    sections = dict(
+        (section.name, section) for section, _, _ in bgm.plan_sections("anthem", 16)
+    )
+    assert "break" in sections
+    assert set(sections["break"].drop) == {"chords", "arp", "lead"}
+    assert sections["final"].transpose == 2

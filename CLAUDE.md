@@ -6,6 +6,10 @@
 | パッケージ | 内容 |
 |---|---|
 | `src/ailab/` | 画像生成・フリー素材取得・外部サービス連携の CLI + MCPサーバ |
+| `src/moneyloop/` | 有料ニュースレターの収益化パイプライン（原価・粗利まで計算する） |
+| `src/adsite/` | 広告収益型ツールサイトのジェネレータ（収益は moneyloop の台帳へ） |
+| `src/growth/` | 全プロジェクトを定期点検し、次にやることを提示する成長ループ |
+| `src/audiogen/` | BGM / 効果音を手続き的に合成して WAV に書き出すツールキット |
 
 （他の試作を足すときは、この表と節を増やす）
 
@@ -13,14 +17,23 @@
 
 ```bash
 pip install -e ".[dev]"
-pytest -q
-python -m ruff check src tests
+pytest
+python -m ruff check src/ailab tests/ailab
 ```
 
+- Python 3.11 以上。**実行時の依存は既定でゼロ**。
+  moneyloop / growth / audiogen は標準ライブラリだけで動く。
+  依存が要るものは extras に切り出してある（`[image]` = ailab、`[llm]` = Claude 呼び出し）。
+  定期実行されるものが多く、依存が増えるほど勝手に壊れる確率が上がるため。
+- src レイアウト。テストは `pytest`（`pyproject.toml` で `pythonpath` を通してある）。
+- **テストはツールごとに `tests/<ツール名>/` に分ける。**
+  同名テストモジュールの衝突を避けるためと、`conftest.py` の autouse フィクスチャが
+  他のツールのテストへ漏れないようにするため。共有ヘルパ（`tests/helpers.py`、
+  `tests/fakes.py`）だけが `tests/` 直下にある。
 - テストは**外部通信をしない**。CI（`.github/workflows/tests.yml`）は
-  Ubuntu / Windows × Python 3.10・3.12 で回る。
+  Ubuntu × Python 3.11・3.12 で全体を回し、ailab だけ Windows でも回す。
 - APIキーは `.env`（`.gitignore` 済み）。ログにも `--json` 出力にも出さない。
-  表示直前に `core/redact.py` が環境変数の値と突き合わせて伏せる（最後の砦）。
+  表示直前に `ailab/core/redact.py` が環境変数の値と突き合わせて伏せる（最後の砦）。
 - MCP の `publish_file` はプロジェクト配下のファイルしか送れない。
 - Claude Code の web セッションからは多くの外部ホストが egress ポリシーで塞がれる。
   疎通確認が NG でも、手元では通ることがある。
@@ -65,11 +78,11 @@ ailab doctor         # 実際に接続して確認
 
 ### テストの約束
 
-- **外部通信をしない。** `tests/conftest.py` が `requests.Session.request` を塞ぐので、
+- **外部通信をしない。** `tests/ailab/conftest.py` が `requests.Session.request` を塞ぐので、
   差し替え漏れがあれば通信前に落ちる。HTTPは `FakeSession` を注入する
   （`Connector(session=FakeSession([...]))`）。
 - **待たない。** `time.sleep` も conftest で止めてある。
-- **契約テストがある。** `tests/test_registry.py` が全コネクタの summary・
+- **契約テストがある。** `tests/ailab/test_registry.py` が全コネクタの summary・
   キー取得先URL・能力の有無を検査する。コネクタを足すと自動で効く。
 - キー未設定を前提にする。conftest が実環境の APIキー環境変数を消している。
 - **網羅率90%以上**を CI で守る（`pytest --cov=ailab --cov-fail-under=90`）。
@@ -80,3 +93,41 @@ ailab doctor         # 実際に接続して確認
 2. 能力に応じたメソッドを実装（詳細は `docs/connectors.md`）
 3. `connectors/__init__.py` に import を1行
 4. テストを書く（HTTPは `FakeSession`）
+
+## moneyloop / adsite
+
+`--dry-run` は Claude API を呼ばずに全工程を通す。テストも追加依存なしで走る。
+実際に Claude を呼ぶときだけ `pip install -e ".[llm]"`。
+
+- **冪等性が最優先。** 同日に何度実行しても、号は1つ・配信は1回・計上は1回。
+  cron の二重起動で課金が増えてはいけない。
+- 料金表は `moneyloop.pricing` が単一の情報源。adsite のサイトもここから生成するので、
+  価格改定はここ1箇所だけを直す。
+- adsite の広告枠の制約（1ページ3枠まで、ツールUIの隣に置かない等）は
+  見た目の好みではなく、Core Web Vitals と AdSense のポリシー由来。緩めない。
+- 設計は `docs/architecture.md`、運用は `docs/runbook.md`。
+
+## growth
+
+- 提案の指紋は `ルールID + 対象プロジェクト` から作る。**ルールIDを変えると
+  台帳の履歴が切れて、解決済み・却下済みの記録が失われる**。文面の修正は自由。
+- ベースライン診断は `rules.py`、横展開は `practices.py`。入口は `rules.run_all`。
+- 新しいルールには `topic` を付ける。既存ルールと同じ `topic` なら
+  横展開ルールと自動でマージされ、同じ論点を二重に指摘しなくなる。
+- 横展開の習慣には、意味を持つ条件があるなら `requires_signal` を必ず書く。
+  的外れな指摘が1つ混ざると、正しい指摘まで読まれなくなる。
+- 提案には必ず「そのまま貼れる依頼文」が付く状態を保つ。
+  指摘して終わりにすると、この仕組みを作った意味がなくなる。
+- `growth/ledger.json` は自動生成物だが、**消すと過去の判断（却下・解決）が
+  全部消える**。手で編集しない。
+- 他PJTに要求していることは、まず ai-lab 自身が満たしていること。
+
+## audiogen
+
+- **外部ライブラリを入れない。** 標準ライブラリだけで合成する。
+  ここに依存を足すと「pip install なしで素材が作れる」という前提が崩れる。
+- `seed` を固定したら毎回まったく同じ WAV が出ること。再現性が素材としての価値。
+- 曲想・曲構成の定義は `styles.py` に宣言的に置く。合成のコードに埋めない。
+- 設定の検査は `bgm.compose()` の入口でやり、範囲外の値はその場で
+  `ValueError`（どの項目にいくつ渡したかをメッセージに出す）。
+- 設計の詳細は `docs/audiogen.md`。

@@ -1,0 +1,52 @@
+name: daily-issue
+
+# 平日 07:30 JST（= 22:30 UTC 前日）に号を生成・配信する。
+on:
+  schedule:
+    - cron: "30 22 * * 0-4"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Claude APIを呼ばずスタブで実行する"
+        type: boolean
+        default: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    # ハングしたジョブが既定の6時間走り続けるのを防ぐ（Claude API を呼ぶぶん長め）
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - run: pip install -r requirements.txt
+
+      # SQLiteが状態のすべて。消えると既読記録と配信済み記録が失われるため、
+      # 本番運用では db_path を永続ストレージに向けること（docs/runbook.md 参照）。
+      - name: Restore state
+        uses: actions/cache@v4
+        with:
+          path: output/moneyloop.db
+          key: moneyloop-db-${{ github.run_id }}
+          restore-keys: moneyloop-db-
+
+      - name: Run pipeline
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          MONEYLOOP_WEBHOOK_URL: ${{ secrets.MONEYLOOP_WEBHOOK_URL }}
+          PYTHONPATH: src
+        run: |
+          python -m moneyloop.cli run ${{ inputs.dry_run && '--dry-run' || '' }}
+          python -m moneyloop.cli report
+
+      - name: Upload issues
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: issues-${{ github.run_id }}
+          path: output/issues/
+          if-no-files-found: ignore

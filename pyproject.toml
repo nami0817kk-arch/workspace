@@ -3,24 +3,38 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "ailab"
+name = "ai-lab"
 version = "0.4.0"
-description = "画像生成・フリー素材取得・外部サービス連携のツール群"
-requires-python = ">=3.10"
-dependencies = ["requests>=2.31", "Pillow>=10.0", "PyYAML>=6.0"]
+description = "PJT008 AIラボ - 画像生成(ailab)・収益化(moneyloop/adsite)・成長ループ(growth)・音素材生成(audiogen)"
+requires-python = ">=3.11"
+# 既定の実行時依存はゼロ。moneyloop / growth / audiogen は標準ライブラリだけで動く。
+# 定期実行されるものが多いので、依存が増えるほど勝手に壊れる確率が上がるため、
+# 依存が要るものは extras に切り出してある。
+dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=8.0", "pytest-cov>=5.0", "ruff>=0.6"]
+# ailab（画像生成・素材取得・レシピ）の実行に必要
+image = ["requests>=2.31", "Pillow>=10.0", "PyYAML>=6.0"]
+# moneyloop から実際にClaudeを呼ぶときだけ必要（--dry-run とテストには不要）
+llm = ["anthropic>=1.0.0"]
+dev = ["ai-lab[image]", "pytest>=8.0.0", "pytest-cov>=5.0", "ruff>=0.6"]
 
 [project.scripts]
 ailab = "ailab.cli:main"
+moneyloop = "moneyloop.cli:main"
+adsite = "adsite.cli:main"
+growth = "growth.cli:main"
+audiogen = "audiogen.cli:main"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.ruff]
 line-length = 100
-target-version = "py310"
+target-version = "py311"
 
 [tool.ruff.lint]
 # 既定(E4/E7/E9/F)に、import順(I)・古い書き方(UP)・よくある落とし穴(B)を足す
@@ -28,4 +42,7 @@ select = ["E4", "E7", "E9", "F", "I", "UP", "B"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# tests をパスに入れているのは、共有ヘルパ(helpers.py / fakes.py)を
+# ツール別サブディレクトリのテストから import できるようにするため。
 pythonpath = ["src", "tests"]
+addopts = "-q"
