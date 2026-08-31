@@ -1,26 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
 [project]
-name = "ai-lab-growth"
-version = "0.1.0"
-description = "各プロジェクトの現状を観測し、伸びしろを見つけ、良い習慣を横展開する成長ループ"
+name = "ai-lab"
+version = "0.2.0"
+description = "PJT008 AIラボ - 収益化パイプライン(moneyloop/adsite)と成長ループ(growth)"
 requires-python = ">=3.11"
 # 実行時の依存はゼロ。標準ライブラリだけで動くようにしてある。
 # 依存を増やすほど「定期実行が勝手に壊れる」確率が上がるため。
 dependencies = []
 
 [project.optional-dependencies]
-dev = ["pytest>=7.4"]
+# 実際にClaudeを呼ぶときだけ必要（--dry-run とテストには不要）
+llm = ["anthropic>=1.0.0"]
+dev = ["pytest>=8.0.0"]
 
 [project.scripts]
+moneyloop = "moneyloop.cli:main"
+adsite = "adsite.cli:main"
 growth = "growth.cli:main"
-
-[build-system]
-requires = ["setuptools>=68"]
-build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+# tests をパスに入れているのは、共有ヘルパ(helpers.py など)を
+# ツール別サブディレクトリのテストから import できるようにするため。
 pythonpath = ["src", "tests"]
 addopts = "-q"
