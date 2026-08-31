@@ -6,7 +6,11 @@ google-auth-oauthlib が必要なので、requirements-upload.txt を入れて�
 
 from __future__ import annotations
 
+import json
+from dataclasses import dataclass, field
 from pathlib import Path
+
+from . import tags as tags_mod
 
 SCOPES = ["https://www.googleapis.com/auth/youtube.upload"]
 TOKEN_PATH = Path("secrets/token.json")
@@ -15,6 +19,79 @@ CLIENT_SECRET_PATH = Path("secrets/client_secret.json")
 
 class UploadError(RuntimeError):
     pass
+
+
+@dataclass
+class Draft:
+    """投稿の中身。送る前にそのまま見られるようにしておく。"""
+
+    video: Path
+    title: str
+    description: str = ""
+    tags: list[str] = field(default_factory=list)
+    thumbnail: Path | None = None
+    privacy: str = "private"
+
+    @property
+    def problems(self) -> list[str]:
+        """このまま送ると弾かれるところ。"""
+        found = list(tags_mod.problems(self.title, self.description, self.tags))
+        if not self.video.exists():
+            found.append(f"動画がありません: {self.video}")
+        if not self.title.strip():
+            found.append("タイトルが空です")
+        if self.thumbnail is not None and not self.thumbnail.exists():
+            found.append(f"サムネイルがありません: {self.thumbnail}")
+        if self.privacy not in ("private", "unlisted", "public"):
+            found.append(f"privacy は private/unlisted/public のいずれか: {self.privacy}")
+        return found
+
+    def lines(self) -> list[str]:
+        """何が送られるかを1画面で見せる。"""
+        size = self.video.stat().st_size / 1_000_000 if self.video.exists() else 0.0
+        head = self.description.strip().splitlines()
+        return [
+            f"タイトル　{self.title}　（{len(self.title)}字）",
+            f"公開設定　{self.privacy}",
+            f"動画　　　{self.video}　{size:.1f}MB",
+            f"サムネ　　{self.thumbnail if self.thumbnail else '（無し）'}",
+            f"タグ　　　{len(self.tags)}個 / 合計{tags_mod.text_length(self.tags)}字",
+            f"　　　　　{' / '.join(self.tags) or '（無し）'}",
+            f"概要欄　　{len(self.description)}字　先頭: {head[0][:40] if head else '（空）'}",
+        ]
+
+
+def prepare(build_dir: Path, privacy: str = "private") -> Draft:
+    """書き出したディレクトリから、投稿の中身を組み立てる。
+
+    タグは台本にしか無い（description.txt は本文だけ）。
+    ビルドが書いた script.json から取る。
+    """
+    build_dir = Path(build_dir)
+    text = ""
+    description_file = build_dir / "description.txt"
+    if description_file.exists():
+        text = description_file.read_text(encoding="utf-8")
+    title, _, body = text.partition("\n")
+
+    found: list[str] = []
+    script_json = build_dir / "script.json"
+    if script_json.exists():
+        try:
+            data = json.loads(script_json.read_text(encoding="utf-8"))
+            found = [str(tag) for tag in (data.get("tags") or [])]
+        except (OSError, ValueError):
+            found = []
+
+    thumbnail = build_dir / "thumbnail.png"
+    return Draft(
+        video=build_dir / "video.mp4",
+        title=title.strip() or build_dir.name,
+        description=body.strip(),
+        tags=tags_mod.fit(found),
+        thumbnail=thumbnail if thumbnail.exists() else None,
+        privacy=privacy,
+    )
 
 
 def _load_deps():
@@ -63,10 +140,12 @@ def upload(
     thumbnail: Path | None = None,
 ) -> str:
     """動画を投稿して videoId を返す。既定は限定公開ではなく非公開(private)。"""
-    if privacy not in ("private", "unlisted", "public"):
-        raise UploadError(f"privacy は private/unlisted/public のいずれか: {privacy}")
-    if not video_path.exists():
-        raise UploadError(f"動画がありません: {video_path}")
+    draft = Draft(
+        video=video_path, title=title, description=description,
+        tags=list(tags or []), thumbnail=thumbnail, privacy=privacy,
+    )
+    if draft.problems:
+        raise UploadError("このままでは投稿できません:\n  - " + "\n  - ".join(draft.problems))
 
     *_, MediaFileUpload = _load_deps()
     service = get_service()

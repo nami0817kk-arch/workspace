@@ -228,6 +228,8 @@ def main(argv: list[str] | None = None) -> int:
     p_upload = sub.add_parser("upload", help="ビルド結果を YouTube に投稿する")
     p_upload.add_argument("build_dir", help="build の出力ディレクトリ")
     p_upload.add_argument("--privacy", default="private", choices=["private", "unlisted", "public"])
+    p_upload.add_argument("--dry-run", action="store_true",
+                          help="送らずに、何が送られるかを見る（認証も通信もしない）")
 
     args = parser.parse_args(argv)
 
@@ -1407,24 +1409,37 @@ def _dispatch(args, config) -> int:
         return 0
 
     if args.command == "upload":
-        from .upload import upload
+        from . import upload as upload_mod
 
         build_dir = Path(args.build_dir)
-        video = build_dir / "video.mp4"
-        description_file = build_dir / "description.txt"
-        if not video.exists():
-            print(f"動画がありません: {video}", file=sys.stderr)
+        draft = upload_mod.prepare(build_dir, args.privacy)
+
+        print(f"■ 投稿の中身　{build_dir}")
+        for line in draft.lines():
+            print(f"  {line}")
+
+        problems = draft.problems
+        if problems:
+            print()
+            for note in problems:
+                print(f"  × {note}")
+            print("\n直してから投稿してください", file=sys.stderr)
             return 1
-        text = description_file.read_text(encoding="utf-8") if description_file.exists() else ""
-        title, _, body = text.partition("\n")
-        video_id = upload(
-            video,
-            title.strip() or build_dir.name,
-            body.strip(),
-            privacy=args.privacy,
-            thumbnail=build_dir / "thumbnail.png",
+
+        if args.dry_run:
+            print("\n--dry-run なので送っていません。"
+                  "この内容でよければ --dry-run を外してください")
+            return 0
+
+        video_id = upload_mod.upload(
+            draft.video,
+            draft.title,
+            draft.description,
+            tags=draft.tags,
+            privacy=draft.privacy,
+            thumbnail=draft.thumbnail,
         )
-        print(f"投稿しました: https://youtu.be/{video_id} ({args.privacy})")
+        print(f"\n投稿しました: https://youtu.be/{video_id} ({draft.privacy})")
         return 0
 
     return 1
