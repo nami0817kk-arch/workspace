@@ -225,6 +225,7 @@ accounts:
 # 記者の投稿をどう扱うか
 social:
   # search … WebSearch で拾う。無料。ただし索引が1〜2日遅れ、本文が切れることがある
+  #        拾ったあと `x <URL>` を打てば、本文は認証なしで全文取れる（src/xembed.py）
   # api  … X API v2 から取る。有料。遅れず、本文も切れず、なりすましも引かない
   #        トークンは環境変数 X_BEARER_TOKEN で渡す。料金は docs.x.com/x-api で確認
   backend: search

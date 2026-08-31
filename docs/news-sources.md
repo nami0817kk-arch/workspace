@@ -306,14 +306,34 @@ espn.com と x.com。goal.com などIDがハッシュのサイトは判定でき
 
 ## X（旧Twitter）の集め方
 
-x.com のページは開けない（egress で塞がれている）。取れるのは**検索結果のタイトル**だけで、
-そこに投稿本文がそのまま入っている。
+投稿を**見つける**のは検索から。検索結果のタイトルに投稿本文がそのまま入っている。
 
 ```
 Fabrizio Romano on X: "🚨🔵🔴 Understand Alejandro Balde has informed
 Barcelona about his desire to STAY at the club..." / X
 → https://x.com/FabrizioRomano/status/2092546263447146991
 ```
+
+### 本文は切れずに取れる（認証不要）
+
+検索結果のタイトルは長いと `…` で切れる。切れたものは引用に使えないが、
+**投稿URLさえ分かれば本文は全文で取れる。**
+
+```bash
+python -m src.cli x https://x.com/FabrizioRomano/status/2092546263447146991
+```
+
+X 公式の埋め込み用エンドポイント（publish.twitter.com/oembed）を使う。
+認証もトークンも要らない。`--no-body` を付けると通信しない。
+
+これで消えるのは「本文が切れる」と「なりすまし」の2つ。正のハンドルが
+`author_url` で返るので、表示名では判定しない。URLのハンドルと食い違えば警告が出る。
+
+**「索引が1〜2日遅れる」は消えない。** URLを既に持っている前提のしくみなので、
+見つけるのは検索か、有料の X API のまま。速報には使えない。
+
+レート制限は公開されていないので、1投稿につき1回にとどめる。
+一度引いた本文は `x <URL> --note` で控えて使い回す。
 
 ### 投稿日はURLから分かる
 
@@ -327,6 +347,7 @@ python -m src.cli x https://x.com/FabrizioRomano/status/2092546263447146991
 ```
 @FabrizioRomano　Fabrizio Romano（未確認）
     投稿: 2026-08-26 09:34 UTC　（79時間前）
+    | 🚨🔵🔴 Understand Alejandro Balde has informed Barcelona about his desire to STAY...
     ! @FabrizioRomano の投稿は 79時間前のものです（24時間を超過）
 ```
 

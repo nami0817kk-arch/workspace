@@ -253,6 +253,8 @@ def main(argv: list[str] | None = None) -> int:
     p_x.add_argument("--topic", default=None, help="この語で各アカウントを検索する")
     p_x.add_argument("--note", default=None, help="この投稿を答え合わせ用に控える（内容を書く）")
     p_x.add_argument("--calls", action="store_true", help="控えた投稿の的中を集計する")
+    p_x.add_argument("--no-body", action="store_true",
+                     help="本文を取りに行かない（通信しない。時刻と鮮度だけ見る）")
 
     p_draft = sub.add_parser("draft", help="取材メモ(YAML)を検証して台本にする")
     p_draft.add_argument("notes")
@@ -979,6 +981,27 @@ def _dispatch(args, config) -> int:
             note = "　※検索に出るなかでは新しいほう" if age <= lag else ""
             print(f"@{handle}　{who}")
             print(f"    投稿: {when:%Y-%m-%d %H:%M} UTC　（{age:.0f}時間前）{note}")
+
+            # 本文は埋め込み用のエンドポイントから取る。検索結果と違って切れない
+            if not args.no_body:
+                from . import xembed
+
+                try:
+                    post = xembed.fetch(url)
+                except xembed.XEmbedError as error:
+                    print(f"    ! 本文を取れませんでした: {error}")
+                else:
+                    mismatch = xembed.impersonation(url, post)
+                    if mismatch:
+                        print(f"    ! {mismatch}")
+                    if post.text:
+                        for line in post.text.splitlines():
+                            print(f"    | {line}")
+                        if post.truncated:
+                            print("    ! 本文が途中で切れています。この引用は使わないこと")
+                    else:
+                        print("    | （本文なし。画像や動画だけの投稿）")
+
             for problem in xposts.review(url, plan.accounts, stale):
                 print(f"    ! {problem}")
         return 0
