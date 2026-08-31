@@ -1,23 +1,11 @@
 import pytest
 from fastapi.testclient import TestClient
 
-from app.config import Settings
-from app.dependencies import get_cache, get_client
-from app.main import create_app
-from app.services.cache import TTLCache
 
 
 @pytest.fixture
-def secured_client(fake_client):
-    settings = Settings(
-        gemini_api_key="test-key",
-        api_keys="secret-one, secret-two",
-        cache_ttl=0,
-        _env_file=None,
-    )
-    app = create_app(settings)
-    app.dependency_overrides[get_client] = lambda: fake_client
-    app.dependency_overrides[get_cache] = lambda: TTLCache(0)
+def secured_client(make_client_for):
+    app = make_client_for(api_keys="secret-one, secret-two", cache_ttl=0)
     with TestClient(app) as c:
         yield c
 

@@ -1,5 +1,4 @@
 from app.clients.gemini import GeminiError
-from app.services.cache import TTLCache
 
 
 def test_generate_returns_text_and_usage(client, fake_client):
@@ -48,17 +47,10 @@ def test_upstream_error_maps_to_status(client, fake_client):
     assert "rate limited" in res.json()["detail"]
 
 
-def test_cache_hit_skips_upstream(fake_client):
+def test_cache_hit_skips_upstream(make_client_for, fake_client):
     from fastapi.testclient import TestClient
 
-    from app.config import Settings
-    from app.dependencies import get_cache, get_client
-    from app.main import create_app
-
-    cache = TTLCache(ttl_seconds=60)
-    app = create_app(Settings(gemini_api_key="test-key", cache_ttl=60, _env_file=None))
-    app.dependency_overrides[get_client] = lambda: fake_client
-    app.dependency_overrides[get_cache] = lambda: cache
+    app = make_client_for(cache_ttl=60)  # メモリキャッシュが入る
 
     with TestClient(app) as c:
         first = c.post("/v1/generate", json={"prompt": "同じ質問"})
@@ -66,7 +58,21 @@ def test_cache_hit_skips_upstream(fake_client):
 
     assert first.json()["cached"] is False
     assert second.json()["cached"] is True
+    assert second.json()["text"] == first.json()["text"]
+    assert second.json()["usage"] == first.json()["usage"]
     assert len(fake_client.calls) == 1
+
+
+def test_different_prompt_is_not_a_cache_hit(make_client_for, fake_client):
+    from fastapi.testclient import TestClient
+
+    app = make_client_for(cache_ttl=60)
+    with TestClient(app) as c:
+        c.post("/v1/generate", json={"prompt": "A"})
+        second = c.post("/v1/generate", json={"prompt": "B"})
+
+    assert second.json()["cached"] is False
+    assert len(fake_client.calls) == 2
 
 
 def test_list_models(client):
@@ -74,4 +80,4 @@ def test_list_models(client):
     assert res.status_code == 200
     body = res.json()
     assert body["count"] == 1
-    assert body["models"][0]["name"] == "models/gemini-3.7-flash"
+    assert body["models"][0]["name"] == "models/gemini-3.5-flash"

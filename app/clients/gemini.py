@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+from collections.abc import AsyncIterator
 from dataclasses import dataclass, field
 
 from google import genai
@@ -72,6 +73,24 @@ class GeminiClient:
             else genai.Client()
         )
 
+    def _build_config(
+        self,
+        *,
+        system_instruction: str | None,
+        temperature: float | None,
+        max_output_tokens: int | None,
+    ) -> types.GenerateContentConfig:
+        settings = self._settings
+        return types.GenerateContentConfig(
+            temperature=settings.temperature if temperature is None else temperature,
+            max_output_tokens=(
+                settings.max_output_tokens if max_output_tokens is None else max_output_tokens
+            ),
+            system_instruction=system_instruction,
+            # tools を渡していないので自動関数呼び出しは不要。有効なままだと毎回警告が出る
+            automatic_function_calling=types.AutomaticFunctionCallingConfig(disable=True),
+        )
+
     async def generate(
         self,
         prompt: str,
@@ -81,14 +100,11 @@ class GeminiClient:
         temperature: float | None = None,
         max_output_tokens: int | None = None,
     ) -> GenerationResult:
-        settings = self._settings
-        model_name = model or settings.gemini_model
-        config = types.GenerateContentConfig(
-            temperature=settings.temperature if temperature is None else temperature,
-            max_output_tokens=(
-                settings.max_output_tokens if max_output_tokens is None else max_output_tokens
-            ),
+        model_name = model or self._settings.gemini_model
+        config = self._build_config(
             system_instruction=system_instruction,
+            temperature=temperature,
+            max_output_tokens=max_output_tokens,
         )
 
         async def call() -> object:
@@ -104,6 +120,50 @@ class GeminiClient:
             # セーフティフィルタ等で候補が空になるケース
             raise GeminiError("モデルがテキストを返しませんでした（安全フィルタ等の可能性）", 502)
         return GenerationResult(text=text, model=model_name, usage=_extract_usage(response))
+
+    async def generate_stream(
+        self,
+        prompt: str,
+        *,
+        model: str | None = None,
+        system_instruction: str | None = None,
+        temperature: float | None = None,
+        max_output_tokens: int | None = None,
+    ) -> AsyncIterator[str]:
+        """生成されたテキストを届いた順に yield する。
+
+        リトライがかかるのはストリームを張るところまで。いったん本文が流れ始めたら、
+        途中で失敗しても最初からやり直さない（同じ内容が二重に届くため）。
+        """
+        model_name = model or self._settings.gemini_model
+        config = self._build_config(
+            system_instruction=system_instruction,
+            temperature=temperature,
+            max_output_tokens=max_output_tokens,
+        )
+
+        async def start() -> object:
+            return await self._client.aio.models.generate_content_stream(
+                model=model_name,
+                contents=prompt,
+                config=config,
+            )
+
+        stream = await self._with_retry(start, what=f"generate_content_stream({model_name})")
+
+        try:
+            async for chunk in stream:
+                text = getattr(chunk, "text", None)
+                if text:
+                    yield text
+        except GeminiError:
+            raise
+        except Exception as exc:
+            status = _upstream_status(exc)
+            raise GeminiError(
+                f"ストリーミング中に Gemini API との接続が切れました: {exc}",
+                status if status is not None else 502,
+            ) from exc
 
     async def list_models(self) -> list[dict[str, object]]:
         """利用可能なモデル一覧を取得する。

@@ -15,8 +15,9 @@ from fastapi.responses import JSONResponse
 from app.clients.gemini import GeminiClient, GeminiError
 from app.config import Settings, get_settings
 from app.routers import generate, health
-from app.security import require_api_key
-from app.services.cache import TTLCache
+from app.security import enforce_rate_limit, require_api_key
+from app.services.cache import build_cache
+from app.services.ratelimit import RateLimiter
 
 logger = logging.getLogger("gemini-api")
 
@@ -34,9 +35,16 @@ async def lifespan(app: FastAPI):
         logger.warning("API_KEYS が未設定です。/v1 は認証なしで公開されます")
 
     app.state.gemini_client = GeminiClient(settings)
-    app.state.cache = TTLCache(settings.cache_ttl)
-    logger.info("started (model=%s, cache_ttl=%ss)", settings.gemini_model, settings.cache_ttl)
+    app.state.cache = build_cache(settings.cache_ttl, settings.redis_url)
+    app.state.rate_limiter = RateLimiter(settings.rate_limit_per_minute)
+    logger.info(
+        "started (model=%s, cache_ttl=%ss, rate_limit=%s/min)",
+        settings.gemini_model,
+        settings.cache_ttl,
+        settings.rate_limit_per_minute or "無制限",
+    )
     yield
+    await app.state.cache.close()
     logger.info("shutting down")
 
 
@@ -65,7 +73,10 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         return JSONResponse(status_code=exc.status_code, content={"detail": str(exc)})
 
     app.include_router(health.router)
-    app.include_router(generate.router, dependencies=[Depends(require_api_key)])
+    app.include_router(
+        generate.router,
+        dependencies=[Depends(require_api_key), Depends(enforce_rate_limit)],
+    )
     return app
 
 

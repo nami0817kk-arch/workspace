@@ -26,6 +26,12 @@ class Settings(BaseSettings):
     # GEMINI_API_KEY（上流に出すキー）とは別物。
     api_keys: str = ""
 
+    # 1分あたりの許可リクエスト数。0 で無制限。キー単位（無ければIP単位）で数える
+    rate_limit_per_minute: int = 0
+
+    # 設定するとキャッシュを Redis に置く。空ならプロセス内メモリ
+    redis_url: str = ""
+
     cors_origins: str = "*"
     log_level: str = "INFO"
 
