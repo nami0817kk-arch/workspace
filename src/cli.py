@@ -99,7 +99,25 @@ def _active_deadlines(plan, day) -> list:
     )
 
 
+def _use_utf8_output() -> None:
+    """画面出力を UTF-8 にする。
+
+    Windows の既定は cp932 で、`✓` `×` `■` を出そうとした時点で
+    UnicodeEncodeError で落ちる（fetch --check や doctor が使えない）。
+    PYTHONIOENCODING を毎回付けなくて済むように、ここで揃えておく。
+    """
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure is None:
+            continue
+        try:
+            reconfigure(encoding="utf-8")
+        except (ValueError, OSError):
+            pass
+
+
 def main(argv: list[str] | None = None) -> int:
+    _use_utf8_output()
     parser = argparse.ArgumentParser(prog="src.cli", description="ゆっくり実況動画ビルダー")
     parser.add_argument("--config", default=None, help="設定ファイル (既定: config/project.yaml)")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -593,7 +611,8 @@ def _dispatch(args, config) -> int:
         pairs = [(key, plan.routine(key).name) for key in plan.slots]
         candidates, slots = today_mod.survey(pairs, day)
 
-        print(f"■ {day:%Y年%-m月%-d日} の進み具合")
+        # ゼロ詰めを外す strftime 書式は Windows に無い。月日は自分で組み立てる
+        print(f"■ {day.year}年{day.month}月{day.day}日 の進み具合")
         for note in _deadline_notices(plan, day):
             print(f"  {note}")
         for note in timing.advice(plan, _now_on(day)):

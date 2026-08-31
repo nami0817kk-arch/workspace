@@ -147,25 +147,40 @@ calendar:
   notice_days: 5     # 何日前から告知するか
   after_hours: 36    # 期限が過ぎてから何時間「総括を出せ」と言い続けるか
   deadlines:
+    # 2026-08-31 に各リーグ・各協会の公式発表で確認した。出典は下のコメント。
+    # ドイツだけ1日早い（8/31 締切）。他の4リーグに合わせない
     - {league: england, at: "2026-09-02 07:00", local: "現地 9/1 23:00 BST", confirmed: true}
-    - {league: spain, at: "2026-09-02 07:00", local: "現地 9/2 00:00 CEST", confirmed: false}
-    - {league: germany, at: "2026-09-02 05:00", local: "現地 9/1 22:00 CEST", confirmed: false}
-    - {league: italy, at: "2026-09-02 07:00", local: "現地 9/2 00:00 CEST", confirmed: false}
-    - {league: france, at: "2026-09-02 06:00", local: "現地 9/1 23:00 CEST", confirmed: false}
+    - {league: spain, at: "2026-09-02 06:59", local: "現地 9/1 23:59 CEST", confirmed: true}
+    - {league: germany, at: "2026-09-01 03:00", local: "現地 8/31 20:00 CEST", confirmed: true}
+    - {league: italy, at: "2026-09-02 03:00", local: "現地 9/1 20:00 CEST", confirmed: true}
+    - {league: france, at: "2026-09-02 02:59", local: "現地 9/1 19:59 CEST", confirmed: true}
+    # england … premierleague.com「close at 23:00 BST on Tuesday 1 September 2026」
+    # spain   … laliga.com「opens on 1 July and closes on 1 September 2026」
+    #           締切時刻は RFEF 競技規則62条5項「23:59 horas peninsulares」
+    # germany … bundesliga.com (DFL)「open from 1 July to 31 August 2026」
+    #           締切時刻は DFL ライセンス規程(LOS)「letzter Tag ... bis spätestens 20:00 Uhr」
+    #           （2025/26 から18時→20時。DFL用語集の「18.00 Uhr」は古い記述）
+    # italy   … FIGC 公示235号「dal 1° luglio 2026 al 1° settembre 2026 (ore 20.00)」
+    # france  … LFP 公示「s'achèvera le mardi 1er septembre 2026 à 19h59」
 
 # RSSフィード。検索より速く、見出しと正確な時刻が取れる。
-# 注意: URLはまだ実測できていない（開発環境から外に出られないため）。
-#       運用するPCで `python -m src.cli fetch --check` を回し、
-#       生きているものだけ verified: true に直すこと。死んだものは消す。
+# 2026-08-31 に `fetch --check` で9本すべて実測。生きているものだけ true。
+#
+# Sky は /rss/12040 を使っていたが、あれは全競技の「News」で、
+# 20件のうちサッカーは7件だけだった（クリケット・競馬・F1・テニス・ゴルフが混ざる）。
+# サッカー専門の /rss/11661 に差し替えた。
+# 移籍期限まわりは /rss/12691（Transfer Centre）が20件すべて移籍の話なので足した。
+# 参考: /rss/11660 は Premier League だが最新が2025年4月で止まっている。使わないこと
 feeds:
-  - {name: Sky Sports News, url: "https://www.skysports.com/rss/12040", league: england, verified: false}
-  - {name: ESPN Soccer, url: "https://www.espn.com/espn/rss/soccer/news", league: england, verified: false}
-  - {name: kicker, url: "https://newsfeed.kicker.de/news/fussball", league: germany, verified: false}
-  - {name: Football Italia, url: "https://football-italia.net/feed/", league: italy, verified: false}
-  - {name: サッカーキング, url: "https://www.soccer-king.jp/feed", league: "", verified: false}
-  - {name: フットボールチャンネル, url: "https://www.footballchannel.jp/feed/", league: "", verified: false}
-  - {name: Football Tribe, url: "https://football-tribe.com/japan/feed/", league: japan, verified: false}
-  - {name: CaughtOffside, url: "https://www.caughtoffside.com/feed/", league: england, verified: false}
+  - {name: Sky Sports Football, url: "https://www.skysports.com/rss/11661", league: england, verified: true}
+  - {name: Sky Transfer Centre, url: "https://www.skysports.com/rss/12691", league: england, verified: true}
+  - {name: ESPN Soccer, url: "https://www.espn.com/espn/rss/soccer/news", league: england, verified: true}
+  - {name: kicker, url: "https://newsfeed.kicker.de/news/fussball", league: germany, verified: true}
+  - {name: Football Italia, url: "https://football-italia.net/feed/", league: italy, verified: true}
+  - {name: サッカーキング, url: "https://www.soccer-king.jp/feed", league: "", verified: true}
+  - {name: フットボールチャンネル, url: "https://www.footballchannel.jp/feed/", league: "", verified: true}
+  - {name: Football Tribe, url: "https://football-tribe.com/japan/feed/", league: japan, verified: true}
+  - {name: CaughtOffside, url: "https://www.caughtoffside.com/feed/", league: england, verified: true}
 
 # 群ごとに置ける確度の上限。draft のときに突き合わせる
 domain_tiers:
