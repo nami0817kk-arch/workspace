@@ -157,6 +157,8 @@ def main(argv: list[str] | None = None) -> int:
     p_fetch.add_argument("--check", action="store_true", help="全フィードの生死を確かめる")
     p_fetch.add_argument("--url", default=None,
                          help="設定に無いURLを1本だけ試す（差し替える前の下見）")
+    p_fetch.add_argument("--discover", default=None, metavar="ページURL",
+                         help="そのページが宣言しているフィードを探す（当て推量をやめる）")
 
     p_gather = sub.add_parser(
         "gather", help="フィードと貼り付けをまとめて取り、候補ファイルまで作る")
@@ -948,6 +950,26 @@ def _dispatch(args, config) -> int:
         from .plan import load_plan
 
         plan = load_plan()
+
+        # フィードのURLは当て推量で探すと外す。ページ自身に聞く
+        if args.discover:
+            try:
+                found = feeds_mod.discover(args.discover)
+            except feeds_mod.FeedError as error:
+                print(f"× {error}", file=sys.stderr)
+                return 1
+            if not found:
+                print("このページはフィードを宣言していません", file=sys.stderr)
+                print("別のページ（トップや各セクション）で試してみてください", file=sys.stderr)
+                return 1
+
+            print(f"■ 宣言されているフィード　{args.discover}\n")
+            for name, url in found:
+                print(f"  {name}")
+                print(f"    {url}")
+            print("\n中身を見るには:")
+            print(f'  python -m src.cli fetch --url "{found[0][1]}"')
+            return 0
 
         # 設定に入れる前に、そのURLが何を返すか見る。
         # Sky のように「全スポーツ版」と「サッカー版」が別URLで並んでいることがあり、

@@ -94,3 +94,65 @@ def test_a_naive_pubdate_is_treated_as_utc():
     text = RSS.replace("Mon, 31 Aug 2026 09:00:00 GMT", "2026-08-31T09:00:00")
     items = parse(text)
     assert items[0].published.tzinfo is not None
+
+
+# ---------------------------------------------------------------- 探す
+# フィードのURLを当て推量で探すと外す。実測で Sky の全スポーツ版を掴んで、
+# クリケットも競馬もゴルフも候補に混ざった。ページ自身に聞けば外さない。
+
+PAGE = """<html><head>
+<link rel="alternate" type="application/rss+xml" title="Football News &amp; Transfers" href="/rss/11661">
+<link rel="stylesheet" href="/style.css">
+<link rel='alternate' type='application/atom+xml' title='All Sport' href='https://other.example/atom'>
+<link rel="alternate" type="application/rss+xml" href="/rss/11661">
+</head></html>"""
+
+
+def _page(monkeypatch, html):
+    from src import feeds
+
+    monkeypatch.setattr(feeds, "_get", lambda url, timeout=15: html)
+
+
+def test_ページが宣言しているフィードを拾う(monkeypatch):
+    from src import feeds
+
+    _page(monkeypatch, PAGE)
+    found = feeds.discover("https://www.skysports.com/football")
+    assert ("Football News & Transfers", "https://www.skysports.com/rss/11661") in found
+
+
+def test_相対URLは絶対に直す(monkeypatch):
+    from src import feeds
+
+    _page(monkeypatch, PAGE)
+    assert all(url.startswith("http") for _, url in feeds.discover("https://www.skysports.com/football"))
+
+
+def test_フィード以外のlinkは拾わない(monkeypatch):
+    from src import feeds
+
+    _page(monkeypatch, PAGE)
+    assert not any("style.css" in url for _, url in feeds.discover("https://x.example/"))
+
+
+def test_同じURLは1つにする(monkeypatch):
+    from src import feeds
+
+    _page(monkeypatch, PAGE)
+    urls = [url for _, url in feeds.discover("https://www.skysports.com/football")]
+    assert len(urls) == len(set(urls))
+
+
+def test_名前が無くても捨てない(monkeypatch):
+    from src import feeds
+
+    _page(monkeypatch, '<link rel="alternate" type="application/rss+xml" href="https://x.example/f">')
+    assert feeds.discover("https://x.example/") == [("（名前なし）", "https://x.example/f")]
+
+
+def test_宣言が無ければ空(monkeypatch):
+    from src import feeds
+
+    _page(monkeypatch, "<html><head><title>なにもない</title></head></html>")
+    assert feeds.discover("https://x.example/") == []
