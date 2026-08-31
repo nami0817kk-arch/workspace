@@ -1,0 +1,23 @@
+{
+  "base_url": "https://example.github.io/ai-lab",
+  "site_name": "AI実務ツール",
+  "tagline": "AI導入の判断に使える無料計算ツール",
+  "locale": "ja",
+  "author": "",
+  "contact_url": "",
+  "content_dir": "site/content",
+  "assets_dir": "site/assets",
+  "output_dir": "output/site",
+  "analytics_snippet": "",
+  "ads": {
+    "client": "",
+    "slot_top": "",
+    "slot_inline": "",
+    "slot_bottom": "",
+    "max_units_per_page": 3,
+    "min_words_for_ads": 400,
+    "reserved_height_px": 280,
+    "consent_required": false,
+    "consent_cmp_script": ""
+  }
+}
