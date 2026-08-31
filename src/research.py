@@ -471,6 +471,8 @@ def _polite(sentence: str) -> str:
 
 def to_script(notes: Notes, plan: Plan) -> str:
     """検証を通った取材メモから、台本の Markdown を組み立てる。"""
+    from . import tags as tags_mod
+
     problems = verify(notes, plan)
     if problems:
         raise ResearchError("取材メモに不備があります:\n  - " + "\n  - ".join(problems))
@@ -496,7 +498,12 @@ def to_script(notes: Notes, plan: Plan) -> str:
             "報道機関が伝える「報道」、SNS段階の「未確認」、\n"
             "経緯の説明である「背景」を画面上で分けています。\n"
         ),
-        "tags": ["サッカー", "海外サッカー", "サッカーニュース", "解説"],
+        # タグは話の中身から作る。どの動画にも同じ4つでは検索に掛からない
+        "tags": tags_mod.build(
+            f"{notes.title} {notes.topic}",
+            league_name=plan.league_name(notes.league) if notes.league else "",
+            kind=notes.kind,
+        ),
         "sources": notes.sources,
         "cards": _cards(notes),
     }

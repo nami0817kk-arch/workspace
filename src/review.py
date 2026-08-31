@@ -46,6 +46,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     else:
         findings.append(Finding(False, "概要欄", "description.txt がありません"))
 
+    findings.append(_tags(script))
     findings.append(_files(out_dir))
     findings.append(_sources(script))
     findings.append(_tiers(script))
@@ -53,6 +54,21 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     if duration is not None:
         findings.append(_duration(duration))
     return findings
+
+
+def _tags(script: Script) -> Finding:
+    """タグ。YouTube は合計500字までで、超えると投稿そのものが弾かれる。"""
+    from . import tags as tags_mod
+
+    if not script.tags:
+        return Finding(False, "タグ", "1つもありません。検索から見つけてもらえません")
+    length = tags_mod.text_length(script.tags)
+    long_ones = [t for t in script.tags if len(t) > tags_mod.MAX_TAG_LENGTH]
+    if long_ones:
+        return Finding(False, "タグ", f"長すぎるタグがあります: {long_ones[0]}")
+    if length > tags_mod.MAX_TAGS_TEXT:
+        return Finding(False, "タグ", f"合計{length}字（上限{tags_mod.MAX_TAGS_TEXT}字）")
+    return Finding(True, "タグ", f"{len(script.tags)}個 / 合計{length}字")
 
 
 def built_duration(out_dir: Path) -> float | None:

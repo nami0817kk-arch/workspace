@@ -6,7 +6,8 @@ from src.review import built_duration, inspect, manual_checks
 from src.script_model import parse_script
 
 BODY = (
-    "---\ntitle: T\nsources: [https://example.com/a]\n---\n\n"
+    "---\ntitle: T\nsources: [https://example.com/a]\n"
+    "tags: [サッカー, 海外サッカー]\n---\n\n"
     "## 章1\n\nキャスター: いちぎょうめ。\n  source: 確定\n\n"
     "## 章2\n\nキャスター: にぎょうめ。\n  source: 報道\n"
 )
@@ -92,3 +93,20 @@ def test_manual_checks_are_listed():
     checks = manual_checks()
     assert len(checks) >= 4
     assert any("確度バッジ" in c for c in checks)
+
+
+def test_タグが無ければ止める(tmp_path):
+    body = BODY.replace("tags: [サッカー, 海外サッカー]\n", "")
+    result = _by_label(inspect(parse_script(body), _built(tmp_path), 150.0))
+    assert result["タグ"].ok is False
+
+
+def test_タグの合計が上限を超えたら止める(tmp_path):
+    from src import tags as tags_mod
+
+    many = ", ".join(f"タグ{n:03d}あいうえおかきくけこ" for n in range(40))
+    body = BODY.replace("tags: [サッカー, 海外サッカー]", f"tags: [{many}]")
+    script = parse_script(body)
+    assert tags_mod.text_length(script.tags) > tags_mod.MAX_TAGS_TEXT
+    result = _by_label(inspect(script, _built(tmp_path), 150.0))
+    assert result["タグ"].ok is False
