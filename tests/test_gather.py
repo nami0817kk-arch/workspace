@@ -80,6 +80,42 @@ def test_同じURLは1件にする():
     assert len(kept) == 1
 
 
+def test_Skyの同じ記事はフィードが違っても1件にする():
+    """Sky は 11661 と 12691 に同じ記事を流す。違うのは途中の番号だけ。"""
+    hits = parse(
+        "同じ話\thttps://www.skysports.com/football/live-blog/11661/13279295/aston-villa\n"
+        "同じ話\thttps://www.skysports.com/football/live-blog/12691/13279295/aston-villa"
+    )
+    kept, _ = gather.drop_seen(hits, set())
+    assert len(kept) == 1
+
+
+def test_Skyでも記事が違えば別の候補にする():
+    hits = parse(
+        "A\thttps://www.skysports.com/football/live-blog/11661/13279295/a\n"
+        "B\thttps://www.skysports.com/football/live-blog/11661/13025491/b"
+    )
+    kept, _ = gather.drop_seen(hits, set())
+    assert len(kept) == 2
+
+
+def test_Skyの同じ記事は出典に使っていれば外す():
+    entries = [
+        Entry(key="a", headline="h", slot="morning", at=datetime.now(),
+              sources=["https://www.skysports.com/football/live-blog/11661/13279295/a"])
+    ]
+    hits = parse(
+        "同じ話\thttps://www.skysports.com/football/live-blog/12691/13279295/a"
+    )
+    kept, dropped = gather.drop_seen(hits, gather.used_urls(entries))
+    assert kept == []
+    assert len(dropped) == 1
+
+
+def test_Sky以外のURLはそのままの鍵で見る():
+    assert gather.same_story("https://x.example/1") == "https://x.example/1"
+
+
 def test_貼り付けだけでも動く(plan, tmp_path, monkeypatch):
     monkeypatch.setattr(gather.newsites, "LEDGER", str(tmp_path / "n.yaml"))
     haul = gather.run(

@@ -10,6 +10,7 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from datetime import date, datetime
 
@@ -57,18 +58,35 @@ def used_urls(entries) -> set[str]:
     return {url for entry in entries for url in getattr(entry, "sources", []) or []}
 
 
+#   .../football/live-blog/11661/13279295/…  ← フィードの番号／記事の番号
+_SKY_ARTICLE = re.compile(r"skysports\.com/[^?#]*?/\d+/(\d+)(?:/|$)")
+
+
+def same_story(url: str) -> str:
+    """同じ記事を指すURLを、1つの鍵にまとめる。
+
+    Sky は複数のフィードに同じ記事を流すが、URLの途中に入るフィードの番号だけが
+    違う（11661 と 12691 で記事の番号は同じ）。URLをそのまま鍵にすると、
+    同じ話が2件の候補として並んでしまう。記事の番号のほうで見る。
+    """
+    found = _SKY_ARTICLE.search(url)
+    return f"skysports:{found.group(1)}" if found else url
+
+
 def drop_seen(hits: list, known: set[str]) -> tuple[list, list]:
-    """既出のURLを外す。同じURLの重複もここで落とす。"""
+    """既出のURLを外す。同じ記事の重複もここで落とす。"""
     kept: list = []
     dropped: list = []
+    known_stories = {same_story(url) for url in known}
     here: set[str] = set()
     for hit in hits:
-        if hit.url in known:
+        story = same_story(hit.url)
+        if story in known_stories:
             dropped.append(hit)
-        elif hit.url in here:
+        elif story in here:
             continue
         else:
-            here.add(hit.url)
+            here.add(story)
             kept.append(hit)
     return kept, dropped
 
