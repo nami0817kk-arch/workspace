@@ -122,8 +122,10 @@ def build_historical_rankings(
             if not df.empty:
                 df.index = pd.to_datetime(df.index).strftime("%Y-%m-%d")
                 ticker_data[ticker] = df
-        except Exception:
-            pass
+        except Exception as e:
+            # 1銘柄の失敗でバックフィル全体は止めない。ただし黙って通すと
+            # 「なぜこの銘柄だけ履歴が無いのか」が後から追えなくなる。
+            print(f"    [WARN] {ticker}: 価格取得に失敗: {e}")
         if i % 15 == 0 or i == len(tickers):
             print(f"    {i}/{len(tickers)} 銘柄完了")
 
@@ -160,7 +162,9 @@ def build_historical_rankings(
                 metrics["ticker"] = ticker
                 metrics["name"]   = names.get(ticker, ticker)
                 day_rows.append(metrics)
-            except Exception:
+            except Exception as e:
+                # 1銘柄の失敗でその日の集計は止めない。原因は追えるように残す。
+                print(f"    [WARN] {ticker}: 指標計算に失敗: {e}")
                 continue
 
         if day_rows:

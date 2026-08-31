@@ -1,0 +1,24 @@
+name: tests
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    # ハングしたジョブが既定の6時間走り続けるのを防ぐ
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      # pyodbc / pywin32 は運用PC専用なので CI では入れない
+      - run: pip install pandas==3.0.4 ta==0.11.0 numpy pytest
+      - run: pytest

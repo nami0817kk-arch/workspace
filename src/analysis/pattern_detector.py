@@ -163,7 +163,9 @@ def detect_ab(past_records: list[dict]) -> tuple[pd.DataFrame, pd.DataFrame]:
                     "急騰日":    info["rec_date"],
                 })
 
-        except Exception:
+        except Exception as e:
+            # 1銘柄の失敗で検出全体は止めない。原因は追えるように残す。
+            print(f"  [WARN] {ticker}: A/B判定に失敗: {e}")
             continue
 
     df_a = (
@@ -225,7 +227,9 @@ def detect_c(
                 "MACD":    _macd_dir(df),
                 "既ランク": "◎" if (past_set and ticker in past_set) else "",
             })
-        except Exception:
+        except Exception as e:
+            # 1銘柄の失敗で検出全体は止めない。原因は追えるように残す。
+            print(f"  [WARN] {ticker}: C判定に失敗: {e}")
             continue
 
     if not results:
