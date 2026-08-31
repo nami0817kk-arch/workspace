@@ -46,6 +46,27 @@ from .thumbnail import build_thumbnail
 from .tts import TtsError
 
 
+def _use_utf8(*streams) -> None:
+    """出力を UTF-8 にそろえる。
+
+    Windows でコンソールに直接出すぶんには問題ないが、パイプやファイルに
+    渡した瞬間、ロケールの文字コード（日本語環境なら cp932）で書こうとする。
+    kicker の見出しに入る ü や ß、画面に出す ✓ は cp932 に無いので、
+    そこで落ちる。
+
+    `fetch | collect` は本来つないで使う流れなので、ここでそろえておく。
+    実運用のPCで、`fetch --check` をパイプに渡して落ちたのが見つかった。
+    """
+    for stream in streams or (sys.stdout, sys.stderr):
+        encoding = (getattr(stream, "encoding", "") or "").lower().replace("-", "")
+        if encoding == "utf8":
+            continue
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, ValueError, OSError):
+            pass  # 差し替えられた出力先（テストなど）。そのまま使う
+
+
 def candidates_mod_load(path):
     from . import candidates as candidates_mod
 
@@ -99,25 +120,8 @@ def _active_deadlines(plan, day) -> list:
     )
 
 
-def _use_utf8_output() -> None:
-    """画面出力を UTF-8 にする。
-
-    Windows の既定は cp932 で、`✓` `×` `■` を出そうとした時点で
-    UnicodeEncodeError で落ちる（fetch --check や doctor が使えない）。
-    PYTHONIOENCODING を毎回付けなくて済むように、ここで揃えておく。
-    """
-    for stream in (sys.stdout, sys.stderr):
-        reconfigure = getattr(stream, "reconfigure", None)
-        if reconfigure is None:
-            continue
-        try:
-            reconfigure(encoding="utf-8")
-        except (ValueError, OSError):
-            pass
-
-
 def main(argv: list[str] | None = None) -> int:
-    _use_utf8_output()
+    _use_utf8()
     parser = argparse.ArgumentParser(prog="src.cli", description="ゆっくり実況動画ビルダー")
     parser.add_argument("--config", default=None, help="設定ファイル (既定: config/project.yaml)")
     sub = parser.add_subparsers(dest="command", required=True)
@@ -173,6 +177,10 @@ def main(argv: list[str] | None = None) -> int:
     p_fetch.add_argument("--league", default=None, help="このリーグのフィードだけ")
     p_fetch.add_argument("--hours", type=float, default=24, help="この時間内の見出しだけ（既定: 24）")
     p_fetch.add_argument("--check", action="store_true", help="全フィードの生死を確かめる")
+    p_fetch.add_argument("--url", default=None,
+                         help="設定に無いURLを1本だけ試す（差し替える前の下見）")
+    p_fetch.add_argument("--discover", default=None, metavar="ページURL",
+                         help="そのページが宣言しているフィードを探す（当て推量をやめる）")
 
     p_gather = sub.add_parser(
         "gather", help="フィードと貼り付けをまとめて取り、候補ファイルまで作る")
@@ -965,6 +973,52 @@ def _dispatch(args, config) -> int:
         from .plan import load_plan
 
         plan = load_plan()
+
+        # フィードのURLは当て推量で探すと外す。ページ自身に聞く
+        if args.discover:
+            try:
+                found = feeds_mod.discover(args.discover)
+            except feeds_mod.FeedError as error:
+                print(f"× {error}", file=sys.stderr)
+                return 1
+            if not found:
+                print("このページはフィードを宣言していません", file=sys.stderr)
+                print("別のページ（トップや各セクション）で試してみてください", file=sys.stderr)
+                return 1
+
+            print(f"■ 宣言されているフィード　{args.discover}\n")
+            for name, url in found:
+                print(f"  {name}")
+                print(f"    {url}")
+            print("\n中身を見るには:")
+            print(f'  python -m src.cli fetch --url "{found[0][1]}"')
+            return 0
+
+        # 設定に入れる前に、そのURLが何を返すか見る。
+        # Sky のように「全スポーツ版」と「サッカー版」が別URLで並んでいることがあり、
+        # 生きているかどうかだけでは中身の違いが分からない
+        if args.url:
+            try:
+                items = feeds_mod.fetch(args.url)
+            except feeds_mod.FeedError as error:
+                print(f"× 取得できません: {error}", file=sys.stderr)
+                return 1
+            if not items:
+                print("× 取れましたが、項目が1つもありません", file=sys.stderr)
+                return 1
+
+            print(f"■ 下見　{args.url}")
+            print(f"　{len(items)}件\n")
+            for item in items[:20]:
+                age = item.hours_ago()
+                mark = f"{max(0.0, age):5.1f}時間前" if age is not None else "　時刻なし"
+                print(f"  {mark}  {item.title[:70]}")
+            if len(items) > 20:
+                print(f"  … 他{len(items) - 20}件")
+            print("\n見出しを見て、狙った内容が返っているか確かめてください。")
+            print("よければ config/sources.yaml の feeds に足します")
+            return 0
+
         wanted = [
             f for f in plan.feeds
             if not args.league or str(f.get("league")) == args.league

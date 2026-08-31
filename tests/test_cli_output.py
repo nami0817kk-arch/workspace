@@ -32,9 +32,10 @@ def test_output_is_switched_to_utf8(monkeypatch):
 
     monkeypatch.setattr(cli.sys, "stdout", Stream())
     monkeypatch.setattr(cli.sys, "stderr", Stream())
-    cli._use_utf8_output()
+    cli._use_utf8()
 
-    assert calls == [{"encoding": "utf-8"}, {"encoding": "utf-8"}]
+    expected = {"encoding": "utf-8", "errors": "replace"}
+    assert calls == [expected, expected]
 
 
 def test_survives_a_stream_that_refuses_to_reconfigure(monkeypatch):
@@ -44,10 +45,10 @@ def test_survives_a_stream_that_refuses_to_reconfigure(monkeypatch):
 
     monkeypatch.setattr(cli.sys, "stdout", Stream())
     monkeypatch.setattr(cli.sys, "stderr", Stream())
-    cli._use_utf8_output()  # 例外が出ないこと
+    cli._use_utf8()  # 例外が出ないこと
 
 
 def test_survives_a_stream_without_reconfigure(monkeypatch):
     monkeypatch.setattr(cli.sys, "stdout", io.StringIO())
     monkeypatch.setattr(cli.sys, "stderr", io.StringIO())
-    cli._use_utf8_output()  # 例外が出ないこと
+    cli._use_utf8()  # 例外が出ないこと

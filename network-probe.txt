@@ -1,0 +1,14 @@
+実行日時: 2026-08-31 12:04:39 UTC
+環境名: 副業
+
+https://www.skysports.com 000
+https://newsfeed.kicker.de/news/fussball 000
+https://www.soccer-king.jp 000
+https://www.laliga.com 000
+https://www.bundesliga.com 000
+https://x.com 000
+
+備考: 全URLでHTTPステータスは000(不達)。原因はcurlのエラーで確認済み:
+「CONNECT tunnel failed, response 403」。この環境の外向きHTTPSは
+エージェントプロキシ経由で、上記ドメインへのCONNECTがネットワーク
+ポリシーにより403で拒否されている。対象サイト側の応答ではない。

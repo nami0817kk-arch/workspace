@@ -166,11 +166,15 @@ calendar:
 # RSSフィード。検索より速く、見出しと正確な時刻が取れる。
 # 2026-08-31 に `fetch --check` で9本すべて実測。生きているものだけ true。
 #
+# 生きているかどうかと、狙った内容が返るかは別の話。
 # Sky は /rss/12040 を使っていたが、あれは全競技の「News」で、
 # 20件のうちサッカーは7件だけだった（クリケット・競馬・F1・テニス・ゴルフが混ざる）。
 # サッカー専門の /rss/11661 に差し替えた。
 # 移籍期限まわりは /rss/12691（Transfer Centre）が20件すべて移籍の話なので足した。
 # 参考: /rss/11660 は Premier League だが最新が2025年4月で止まっている。使わないこと
+#
+# 足す前に `fetch --url <URL>` で中身を見ること。生死だけ見て入れると、
+# Sky と同じで枠の3分の2が無駄になる。
 feeds:
   - {name: Sky Sports Football, url: "https://www.skysports.com/rss/11661", league: england, verified: true}
   - {name: Sky Transfer Centre, url: "https://www.skysports.com/rss/12691", league: england, verified: true}

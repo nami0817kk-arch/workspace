@@ -11,8 +11,10 @@
 
 from __future__ import annotations
 
+import html as html_lib
 import re
 import urllib.error
+import urllib.parse
 import urllib.request
 import xml.etree.ElementTree as ET
 from dataclasses import dataclass
@@ -24,6 +26,8 @@ TIMEOUT = 15
 USER_AGENT = "soccer-news-pipeline/1.0 (+rss reader)"
 
 ATOM = "{http://www.w3.org/2005/Atom}"
+# ページが宣言しているフィードを拾うため
+LINK_TAG = re.compile(r"<link\b[^>]*>", re.I)
 
 
 class FeedError(Exception):
@@ -56,15 +60,52 @@ class Item:
         return f"{self.title}\t{self.url}\t{max(0.0, age):.1f}h"
 
 
-def fetch(url: str, timeout: int = TIMEOUT) -> list[Item]:
-    """フィードを1本取って、新しい順に返す。"""
+def _get(url: str, timeout: int = TIMEOUT) -> str:
     request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
     try:
         with urllib.request.urlopen(request, timeout=timeout) as response:
-            body = response.read()
+            return response.read().decode("utf-8", errors="replace")
     except (urllib.error.URLError, OSError, TimeoutError) as error:
         raise FeedError(f"取得できません: {error}") from error
-    return parse(body.decode("utf-8", errors="replace"))
+
+
+def fetch(url: str, timeout: int = TIMEOUT) -> list[Item]:
+    """フィードを1本取って、新しい順に返す。"""
+    return parse(_get(url, timeout))
+
+
+def discover(page_url: str, timeout: int = TIMEOUT) -> list[tuple[str, str]]:
+    """ページが自分で宣言しているフィードを取り出す。(名前, URL) の並び。
+
+    フィードのURLを当て推量で探すと外す。Sky は全スポーツ版とサッカー版が
+    連番のIDで並んでいて、番号からは中身が読めない（実測で外した）。
+    ページ自身に聞けば、そのページ用のフィードが名前つきで返る。
+    """
+    html = _get(page_url, timeout)
+    found: list[tuple[str, str]] = []
+    for tag in LINK_TAG.findall(html):
+        lowered = tag.lower()
+        if "application/rss+xml" not in lowered and "application/atom+xml" not in lowered:
+            continue
+        href = _attr(tag, "href")
+        if not href:
+            continue
+        url = urllib.parse.urljoin(page_url, _unescape(href))
+        if url in {u for _, u in found}:
+            continue
+        found.append((_unescape(_attr(tag, "title")) or "（名前なし）", url))
+    return found
+
+
+def _attr(tag: str, name: str) -> str:
+    match = re.search(rf'{name}\s*=\s*"([^"]*)"', tag, re.I) or re.search(
+        rf"{name}\s*=\s*'([^']*)'", tag, re.I
+    )
+    return match.group(1).strip() if match else ""
+
+
+def _unescape(text: str) -> str:
+    return html_lib.unescape(text)
 
 
 def parse(text: str) -> list[Item]:

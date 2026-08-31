@@ -167,3 +167,44 @@ def test_every_mood_renders_a_loopable_file(tmp_path):
         assert max(abs(v) for v in samples[-40:]) < 200, name
         middle = samples[len(samples) // 2 - 400: len(samples) // 2 + 400]
         assert max(abs(v) for v in middle) > 500, name
+
+
+# ---------------------------------------------------------------- 文字コード
+# ffmpeg は UTF-8 で書く。読む側がロケールの文字コード（Windows の日本語環境なら
+# cp932）を使うと、エラー文の中身によっては読み取りそのものが落ちて、
+# 本当の失敗の理由が見えなくなる。
+
+def test_ffmpegの出力はUTF8で読む(monkeypatch):
+    import subprocess
+
+    from src import ffmpeg
+
+    seen = {}
+
+    def fake(command, **kwargs):
+        seen.update(kwargs)
+        return subprocess.CompletedProcess(command, 0, "", "")
+
+    monkeypatch.setattr(ffmpeg, "ffmpeg_exe", lambda: "ffmpeg")
+    monkeypatch.setattr(subprocess, "run", fake)
+    ffmpeg.run(["-i", "a.wav", "b.wav"])
+
+    assert seen["encoding"] == "utf-8"
+    assert seen["errors"] == "replace"
+
+
+def test_音量の測定も同じ(monkeypatch, tmp_path):
+    import subprocess
+
+    from src import ffmpeg
+
+    seen = {}
+
+    def fake(command, **kwargs):
+        seen.update(kwargs)
+        return subprocess.CompletedProcess(command, 0, "", "max_volume: -3.0 dB")
+
+    monkeypatch.setattr(ffmpeg, "ffmpeg_exe", lambda: "ffmpeg")
+    monkeypatch.setattr(subprocess, "run", fake)
+    assert ffmpeg.max_volume(tmp_path / "a.wav") == -3.0
+    assert seen["encoding"] == "utf-8"

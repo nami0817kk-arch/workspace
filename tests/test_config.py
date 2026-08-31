@@ -41,3 +41,40 @@ def test_project_config_loads():
     config = load_config()
     assert config.cast
     assert config.video.font_path().exists()
+
+
+# ---------------------------------------------------------------- 出力の文字コード
+# Windows で出力をパイプに渡すと cp932 で書こうとして、
+# kicker の見出しの ü や、画面の ✓ で落ちる。実運用のPCで見つかった。
+
+def test_cp932の出力をUTF8にそろえる():
+    import io
+
+    from src.cli import _use_utf8
+
+    raw = io.BytesIO()
+    stream = io.TextIOWrapper(raw, encoding="cp932")
+    _use_utf8(stream)
+
+    stream.write("✓ kicker　Bürki trifft in der 97. Minute")
+    stream.flush()
+    assert "Bürki" in raw.getvalue().decode("utf-8")
+
+
+def test_すでにUTF8なら触らない():
+    import io
+
+    from src.cli import _use_utf8
+
+    stream = io.TextIOWrapper(io.BytesIO(), encoding="utf-8")
+    _use_utf8(stream)
+    assert stream.encoding.lower().replace("-", "") == "utf8"
+
+
+def test_差し替えられた出力先でも落ちない():
+    from src.cli import _use_utf8
+
+    class Fake:
+        encoding = "cp932"
+
+    _use_utf8(Fake())   # reconfigure を持たない。例外を出さずに済ませる

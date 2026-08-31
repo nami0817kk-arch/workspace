@@ -31,13 +31,19 @@ def ffmpeg_exe() -> str:
     return imageio_ffmpeg.get_ffmpeg_exe()
 
 
+# ffmpeg は UTF-8 で書く。text=True だけだと、読む側がロケールの文字コード
+# （Windows の日本語環境なら cp932）を使うので、エラー文の中身によっては
+# 読み取りそのものが落ちる。本当の失敗の理由が見えなくなるのがまずい。
+CAPTURE = {"capture_output": True, "text": True, "encoding": "utf-8", "errors": "replace"}
+
+
 def run(args: list[str], quiet: bool = True) -> None:
     """ffmpeg を1回実行する。失敗したら stderr 末尾を添えて例外にする。"""
     command = [ffmpeg_exe(), "-y"]
     if quiet:
         command += ["-loglevel", "error"]
     command += args
-    result = subprocess.run(command, capture_output=True, text=True)
+    result = subprocess.run(command, **CAPTURE)
     if result.returncode != 0:
         tail = "\n".join(result.stderr.strip().splitlines()[-15:])
         raise FfmpegError(f"ffmpeg が失敗しました（exit {result.returncode}）:\n{tail}")
@@ -47,8 +53,7 @@ def max_volume(path: Path) -> float:
     """ファイルのピーク音量(dB)。完全な無音なら -inf を返す。"""
     result = subprocess.run(
         [ffmpeg_exe(), "-nostats", "-i", str(path), "-af", "volumedetect", "-f", "null", "-"],
-        capture_output=True,
-        text=True,
+        **CAPTURE,
     )
     for line in result.stderr.splitlines():
         if "max_volume:" in line:
