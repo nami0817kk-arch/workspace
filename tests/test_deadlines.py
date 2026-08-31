@@ -122,3 +122,47 @@ def test_期限日ルーティンには節の型がある():
     # 公式に辿る手と、現地語の手が要る
     ids = {step.id for step in routine.steps}
     assert {"done_deals", "collapsed", "local", "spend"} <= ids
+
+
+# `today` は朝6:00で固定して数えていた。23時に打つと「残り21時間」と出る一方、
+# 実時刻を見ている `doctor` は同じ期限を「残り3時間」と言っていた。
+# 期限日は1日で決着がつくので、この食い違いはそのまま見落としになる。
+
+
+def test_今日ぶんの残り時間は実時刻で数える():
+    from datetime import date
+
+    from src import cli
+
+    assert abs((cli._deadline_clock(date.today()) - datetime.now()).total_seconds()) < 5
+
+
+def test_別の日は枠が始まる前を基準にする():
+    from datetime import date, time, timedelta
+
+    from src import cli
+
+    day = date.today() + timedelta(days=1)
+    assert cli._deadline_clock(day).date() == day
+    assert cli._deadline_clock(day).time() == time(6, 0)
+
+
+def test_日時をそのまま渡したら触らない():
+    from src import cli
+
+    when = datetime(2026, 8, 31, 23, 13)
+    assert cli._deadline_clock(when) == when
+
+
+def test_todayとdoctorが同じ残り時間を言う(plan):
+    from datetime import date
+
+    from src import cli
+
+    body = plan.calendar or {}
+    assert cli._deadline_notices(plan, date.today()) == deadlines.notices(
+        deadlines.load(plan),
+        datetime.now(),
+        notice_days=float(body.get("notice_days", deadlines.NOTICE_DAYS)),
+        after_hours=float(body.get("after_hours", deadlines.AFTER_HOURS)),
+    )

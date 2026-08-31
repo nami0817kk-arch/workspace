@@ -89,14 +89,31 @@ def _now_on(day) -> "datetime":
     return datetime.combine(day, now.time())
 
 
-def _deadline_notices(plan, day) -> list[str]:
-    """移籍期限が近ければ、その告知の行。遠ければ空。"""
+def _deadline_clock(day) -> "datetime":
+    """期限までの残り時間を数えるときの「いま」。
+
+    今日ぶんを見ているなら実時刻を使う。朝6:00で固定していたせいで、
+    23時に `today` を打つと「残り21時間」と出る一方、実時刻を見ている
+    `doctor` は同じ期限を「残り3時間」と言っていた。期限日は1日で決着が
+    つくので、この食い違いはそのまま見落としになる。
+    別の日を指定されたときは、その日の最初の枠(07:00)が始まる前を基準にする。
+    """
     from datetime import datetime, time
 
+    if isinstance(day, datetime):
+        return day
+    now = datetime.now()
+    if day == now.date():
+        return now
+    return datetime.combine(day, time(6, 0))
+
+
+def _deadline_notices(plan, day) -> list[str]:
+    """移籍期限が近ければ、その告知の行。遠ければ空。"""
     from . import deadlines as deadlines_mod
 
     body = plan.calendar or {}
-    now = day if isinstance(day, datetime) else datetime.combine(day, time(6, 0))
+    now = _deadline_clock(day)
     return deadlines_mod.notices(
         deadlines_mod.load(plan),
         now,
@@ -107,12 +124,10 @@ def _deadline_notices(plan, day) -> list[str]:
 
 def _active_deadlines(plan, day) -> list:
     """いま特別編を出すべき期限。"""
-    from datetime import datetime, time
-
     from . import deadlines as deadlines_mod
 
     body = plan.calendar or {}
-    now = day if isinstance(day, datetime) else datetime.combine(day, time(6, 0))
+    now = _deadline_clock(day)
     return deadlines_mod.active(
         deadlines_mod.load(plan),
         now,
