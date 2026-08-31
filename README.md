@@ -1,4 +1,4 @@
-# [PJT004] ai-side-business
+# ai-side-business
 
 ## 概要
 
