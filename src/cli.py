@@ -154,7 +154,9 @@ def main(argv: list[str] | None = None) -> int:
 
     sub.add_parser("doctor", help="収集の仕組みが効いているかをまとめて点検する")
 
-    sub.add_parser("sources", help="情報源の網と、群ごとに置ける確度を表示する")
+    p_sources = sub.add_parser("sources", help="情報源の網と、群ごとに置ける確度を表示する")
+    p_sources.add_argument("--new", action="store_true",
+                           help="網に無いサイトのうち、繰り返し出てきたものを挙げる")
 
     p_clubs = sub.add_parser("clubs", help="クラブ名の別名辞書を引く")
     p_clubs.add_argument("text", nargs="?", default=None,
@@ -646,6 +648,31 @@ def _dispatch(args, config) -> int:
         from .plan import load_plan
 
         plan = load_plan()
+
+        if args.new:
+            from . import newsites
+
+            sites = newsites.load()
+            if not sites:
+                print("網の外のサイトはまだ控えていません（collect を回すと貯まります）")
+                return 0
+            picks = newsites.propose(sites)
+            print(f"■ 網に足す候補　控え{len(sites)}件のうち{len(picks)}件")
+            if not picks:
+                print(f"  別々の日に{newsites.MIN_DAYS}回以上出てきたサイトはまだありません")
+                print("  1日のうちに何度出ても、網に足す理由にはなりません")
+                return 0
+            for site in picks:
+                print(f"\n  {site.host}　{len(site.days)}日 / のべ{site.seen}回")
+                for url in site.examples:
+                    print(f"    {url}")
+            print(
+                "\n足すなら config/sources.yaml の domains に書き、"
+                "domain_tiers でその群の確度の上限も決めてください。"
+                "\n塞がれていて開かないサイトは blocked に入れます"
+            )
+            return 0
+
         labels = {
             "official": "クラブ・リーグ公式",
             "official_jp": "公式（日本）",
@@ -971,6 +998,15 @@ def _dispatch(args, config) -> int:
 
             queries_mod.record({args.source_label: len(bunches)})
             print(f"『{args.source_label}』から{len(bunches)}件、と記録しました")
+
+        # 網に無いサイトを控える。何度も出るサイトは、たいてい足すべきサイト
+        from . import newsites
+        from .plan import load_plan
+
+        fresh_hosts = newsites.record([hit.url for hit in hits], load_plan(), today)
+        if fresh_hosts:
+            print(f"\n網に無いサイト {len(fresh_hosts)}件を控えました: {' / '.join(fresh_hosts[:5])}")
+            print("繰り返し出たものは `python -m src.cli sources --new` に挙がります")
 
         print(f"\n候補ファイル: {target}")
         print("tier / topic / league は判断が要ります。目で見て埋めてください")

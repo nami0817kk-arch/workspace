@@ -9,7 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import date, datetime
 
-from . import coverage, deadlines, freshness, queries, stats, xposts
+from . import coverage, deadlines, freshness, newsites, queries, stats, xposts
 
 # 情報源の網を確かめ直す間隔。塞がれるサイトも、開くサイトもある
 VERIFY_DAYS = 90
@@ -38,8 +38,26 @@ def diagnose(plan, now: datetime | None = None) -> list[Note]:
     ]
     notes.append(_feeds(plan))
     notes.append(_calendar(plan, now))
+    notes.append(_newsites())
     notes += _coverage(plan, now)
     return notes
+
+
+def _newsites() -> Note:
+    """網の外から繰り返し返ってくるサイト。足すべきものを見落としていないか。"""
+    sites = newsites.load()
+    if not sites:
+        return Note(True, "網の外", "控えなし（collect を回すと貯まります）")
+    picks = newsites.propose(sites)
+    if picks:
+        return Note(
+            False,
+            "網の外",
+            f"繰り返し出るサイトが{len(picks)}件: "
+            f"{' / '.join(site.host for site in picks[:4])}。"
+            "足すか blocked に入れるか決めてください",
+        )
+    return Note(True, "網の外", f"控え{len(sites)}件（まだ繰り返しは無い）")
 
 
 def _calendar(plan, now: datetime) -> Note:
