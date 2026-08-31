@@ -59,16 +59,8 @@ python -m src.cli fetch --url "https://..."    # 見出しを20件出す。設�
 **生きていることと、狙った内容が返ることは別の話。** Sky で3分の2を捨てたのが実例。
 `--url` で中身を見てから `config/sources.yaml` に足す。
 
-### 途中で見つかった、Windows で落ちる2か所
-
-運用するPCが Windows なので、直さないと ① の確認自体ができなかった。両方直した。
-
-- `fetch --check` と `doctor` … 画面が cp932 のままで、`✓` を出した瞬間に
-  `UnicodeEncodeError`。`main()` の頭で出力を UTF-8 にそろえるようにした
-- `today` … `%-m` というゼロ詰めを外す書式が Windows の strftime に無く
-  `ValueError: Invalid format string`。月日を自分で組み立てるようにした
-
-`tests/test_cli_output.py` に戻り防止を置いた。
+この確認の途中で、Windows でしか出ない不具合を3つ踏んだ。直さないと ① の確認
+自体ができなかった。詳細は下の「Windows で見つかった不具合」。
 
 ---
 
@@ -203,6 +195,11 @@ python -m src.cli upload output/YYYYMMDD_morning --dry-run
   文字コードを使うので、エラーの中身によっては読み取り自体が落ちる。
   本当の失敗理由が見えなくなる。
   → `ffmpeg.CAPTURE` で UTF-8 固定にした
+- **`today` が書式で落ちる** … `%-m` というゼロ詰めを外す strftime 書式が
+  Windows に無く `ValueError: Invalid format string`。
+  → 月日を自分で組み立てるようにした
+
+`tests/test_cli_output.py` に戻り防止を置いてある。
 
 同じ種類の事故を疑うなら、ファイル入出力は全箇所 `encoding="utf-8"` 指定済み
 （監査済み）。残るリスクは外部プロセスの出力を読むところ。
