@@ -1,4 +1,4 @@
-# [PJT005] tool-factory
+# tool-factory
 
 ## 概要
 
