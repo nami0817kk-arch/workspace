@@ -257,3 +257,17 @@ def test_demo_can_skip_the_preview_page(tmp_path):
     args = ["--rate", SR, "demo", "-d", str(tmp_path), "--bars", "1", "--no-preview"]
     assert cli.main(args) == 0
     assert not (tmp_path / "index.html").exists()
+
+
+def test_bgm_midi_option_writes_a_score(tmp_path):
+    args = ["--rate", SR, "bgm", "--bars", "2", "--seed", "1", "--midi", "-d", str(tmp_path)]
+    assert cli.main(args) == 0
+    score = tmp_path / "bgm_calm.mid"
+    assert score.exists()
+    assert score.read_bytes()[:4] == b"MThd"
+    assert (tmp_path / "bgm_calm.wav").exists()
+
+
+def test_bgm_without_midi_writes_only_audio(tmp_path):
+    assert cli.main(["--rate", SR, "bgm", "--bars", "2", "-d", str(tmp_path)]) == 0
+    assert not list(tmp_path.glob("*.mid"))

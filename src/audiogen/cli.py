@@ -17,7 +17,7 @@ import sys
 from typing import Sequence
 
 from . import bgm as bgm_module
-from . import drums, instruments, manifest as manifest_module, notes, preview, sfx
+from . import drums, instruments, manifest as manifest_module, midi, notes, preview, sfx
 from .core import SAMPLE_RATE, duration_of, write_wav
 
 
@@ -97,6 +97,10 @@ def cmd_bgm(args: argparse.Namespace) -> int:
     path = args.output or _default_path(args.dir, name)
     write_wav(path, samples, sr=args.rate, channels=channels)
     _report(path, samples, args.rate, channels)
+
+    if args.midi:
+        score = midi.write(os.path.splitext(path)[0] + ".mid", bgm_module.compose(config))
+        print(f"wrote {score} (MIDI)")
     return 0
 
 
@@ -275,6 +279,10 @@ def build_parser() -> argparse.ArgumentParser:
     _add_bgm_options(bgm_parser)
     bgm_parser.add_argument("--stereo", action="store_true", help="ステレオで書き出す")
     bgm_parser.add_argument("--no-loop", action="store_true", help="末尾の残響を切らずに残す")
+    bgm_parser.add_argument(
+        "--midi", action="store_true",
+        help="同じ譜面を MIDI でも書き出す(DAW の音源で鳴らしたいとき)",
+    )
     bgm_parser.add_argument(
         "--ending", action="store_true",
         help="最後の小節を主和音で締める(ループではなく1曲として終わらせる)",

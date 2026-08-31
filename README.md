@@ -150,6 +150,7 @@ python -m audiogen bgm --style adventure \
 | `--without` | 外すパート(`chords` `arp` `bass` `lead` `drums`) |
 | `--seed` | 乱数シード。同じ値なら同じ曲になる |
 | `--ending` | 最後の小節を主和音で締める(1曲として終わらせる) |
+| `--midi` | 同じ譜面を MIDI でも書き出す(DAW の音源で鳴らせる) |
 | `--stereo` / `--no-loop` | ステレオ出力 / 末尾の残響を切らずに残す |
 
 音色は波形を重ねてフィルタとエンベロープを通した「楽器」として定義してある。
@@ -211,6 +212,10 @@ print(bgm.describe(config)["chords"][:2])  # コード進行を音名で
 # パート別に取り出してミックスを自分で調整することもできる
 tracks = bgm.render_tracks(config)
 write_wav("output/night_bass_only.wav", tracks["bass"])
+
+# 同じ譜面を MIDI で書き出して DAW の音源で鳴らす
+from audiogen import midi
+midi.write("output/night.mid", arrangement)
 ```
 
 音を1から組み立てる場合は、低レベルのモジュールを直接使う。
@@ -239,6 +244,7 @@ core.write_wav("output/sweep.wav", effects.lowpass(sweep, 1200))
 | `drums` | ドラム音源と16分グリッドのパターン |
 | `sfx` | 効果音プリセットとバリエーション生成 |
 | `bgm` | 作曲(`compose`)と合成(`render_tracks` / `generate`) |
+| `midi` | 譜面の MIDI 書き出し |
 | `manifest` | JSON からの一括生成と差分ビルド |
 | `preview` | 試聴ページの生成 |
 | `cli` | コマンドラインインターフェース |
