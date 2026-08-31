@@ -230,6 +230,35 @@ def tremolo(buf: Sequence[float], rate: float = 5.0, depth: float = 0.5, sr: int
     ]
 
 
+CIRCULAR_WARMUP = 0.25
+"""ループ素材にフィルタをかけるとき、前置きする長さ(秒)。
+
+一番低いカットオフ 30Hz でも時定数は 5.3ms なので、0.25秒あれば
+状態はほぼ収束する。
+"""
+
+
+def circular(
+    process: Callable[[list[float]], list[float]],
+    buf: Sequence[float],
+    sr: int = SAMPLE_RATE,
+    warmup: float = CIRCULAR_WARMUP,
+) -> list[float]:
+    """ループ素材に、継ぎ目を作らずに ``process`` をかける。
+
+    フィルタは状態を持つ。素直に通すと先頭は状態ゼロから始まるのに
+    末尾は溜まった状態で終わるので、ループさせたときに段差が出る。
+    末尾を前置きして通し、その分を捨てると両端の状態がそろう。
+    """
+    buf = list(buf)
+    if not buf:
+        return buf
+    lead = min(len(buf), num_samples(warmup, sr))
+    if lead <= 0:
+        return process(buf)
+    return process(buf[-lead:] + buf)[lead:]
+
+
 def soft_clip(buf: Sequence[float], ceiling: float = 0.98) -> list[float]:
     """天井付近だけを丸めて 0dBFS を超えさせない。"""
     ceiling = max(1e-6, ceiling)

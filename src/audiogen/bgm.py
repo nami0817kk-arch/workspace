@@ -873,7 +873,12 @@ def _master(
     # 終わる曲(と、テンポを緩める曲)は残響を折り返さず鳴らしきる。
     looping = config.loop and not config.ending and config.ritardando <= 0.0
     channels = [remove_dc(wrap_tail(c, length) if looping else c) for c in channels]
-    channels = [style.eq.apply(c, sr) for c in channels]
+    # ループ曲は EQ も一周ぶん前置きしてから通す。そうしないとフィルタの
+    # 状態が先頭でゼロ・末尾で満杯になり、継ぎ目に段差が残る。
+    if looping:
+        channels = [fx.circular(lambda c: style.eq.apply(c, sr), c, sr) for c in channels]
+    else:
+        channels = [style.eq.apply(c, sr) for c in channels]
     if not limit:
         return channels
 

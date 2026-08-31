@@ -48,6 +48,20 @@ def test_no_loop_keeps_the_reverb_tail():
     assert len(open_ended) > len(looped)
 
 
+@pytest.mark.parametrize("style", ["sports_drive", "news_bed", "adventure", "chiptune"])
+def test_the_loop_seam_is_not_a_step(style):
+    """継ぎ目の段差が、曲中の普通の波形の動きより小さいこと。
+
+    絶対値で決め打ちはできない(曲の音量で変わる)。プチッと聞こえるのは
+    「曲中では起きない大きさの段差」なので、曲自身の隣り合うサンプルの
+    差と比べる。全11曲想 x 4種の実測で最大 0.44 倍だった。
+    """
+    buf = bgm.generate(_config(style=style, bars=4, seed=8))
+    steps = sorted(abs(a - b) for a, b in zip(buf, buf[1:]))
+    normal = steps[int(len(steps) * 0.99)]
+    assert abs(buf[0] - buf[-1]) < normal
+
+
 def test_same_seed_gives_the_same_track():
     assert bgm.generate(_config(seed=42)) == bgm.generate(_config(seed=42))
 

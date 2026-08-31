@@ -713,3 +713,42 @@ def test_the_reverb_has_enough_reflections():
         rms = math.sqrt(sum(v * v for v in block) / window) or 1e-12
         ratios.append(sum(1 for v in block if abs(v) > rms) / window)
     assert sum(ratios) / len(ratios) > 0.25
+
+
+# --- ループ素材へのフィルタ ------------------------------------------------
+
+
+def test_circular_processing_lines_up_both_ends():
+    """末尾を前置きすると、フィルタをかけても継ぎ目に段差が出ないこと。"""
+    period = SR // 100
+    loop = [math.sin(2 * math.pi * i / period) for i in range(period * 50)]
+
+    plain = effects.highpass(loop, 200.0, SR)
+    wrapped = effects.circular(lambda b: effects.highpass(b, 200.0, SR), loop, SR)
+
+    assert abs(wrapped[0] - wrapped[-1]) < abs(plain[0] - plain[-1]) / 10
+
+
+def test_circular_processing_keeps_the_length():
+    loop = [0.5] * (SR // 4)
+    assert len(effects.circular(lambda b: effects.lowpass(b, 800.0, SR), loop, SR)) == len(loop)
+
+
+def test_circular_processing_settles_to_the_plain_result():
+    """前置きぶんを捨てたあとは、素直に通したものと後半で一致すること。"""
+    loop = [math.sin(2 * math.pi * i / 100) for i in range(SR)]
+    plain = effects.lowpass(loop, 1000.0, SR)
+    wrapped = effects.circular(lambda b: effects.lowpass(b, 1000.0, SR), loop, SR)
+    assert max(abs(a - b) for a, b in zip(plain[SR // 2 :], wrapped[SR // 2 :])) < 1e-6
+
+
+def test_circular_processing_matches_a_second_lap():
+    """2周ぶん通した2周目と一致すること(ループの定常状態そのもの)。"""
+    loop = [math.sin(2 * math.pi * i / 137) * (0.3 + 0.7 * (i % 500) / 500) for i in range(SR // 2)]
+    second_lap = effects.highpass(loop + loop, 200.0, SR)[len(loop) :]
+    wrapped = effects.circular(lambda b: effects.highpass(b, 200.0, SR), loop, SR)
+    assert max(abs(a - b) for a, b in zip(second_lap, wrapped)) < 1e-9
+
+
+def test_circular_processing_of_empty_input():
+    assert effects.circular(lambda b: effects.lowpass(b, 500.0, SR), [], SR) == []
