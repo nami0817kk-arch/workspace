@@ -1,6 +1,6 @@
 # 運用PC（システムPython）の実測値で固定。`>=` に緩めない。
 # 更新は Dependabot の PR で受け取り、CI が通るのを見てから上げる。
-yfinance==1.5.1
+yfinance==1.7.0
 pandas==3.0.4
 ta==0.11.0
 python-dotenv==1.2.2
