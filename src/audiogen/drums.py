@@ -168,6 +168,47 @@ PATTERNS: dict[str, dict[str, str]] = {
 }
 
 
+# 区間の変わり目に入れる1小節ぶんの手。同じ形が続いたあとに崩れが入ると、
+# 次の区間へ渡る感じが出る。フィルはその小節のパターンを丸ごと置き換える。
+FILLS: dict[str, dict[str, str]] = {
+    "none": {},
+    # 小太鼓を細かくしていく、いちばん素直なフィル。
+    "snare_roll": {
+        "kick": "x.......x.......",
+        "snare": "........x.x.xxxx",
+    },
+    # タムを低い方へ落としながら次へ渡す。
+    "tom_fall": {
+        "kick": "x...............",
+        "snare": "........x.......",
+        "tom": "..........x.x.xx",
+    },
+    # ティンパニの連打。報道・アンセム向け。
+    "timpani_roll": {
+        "kick": "x...............",
+        "timpani": "........x.x.xxxx",
+    },
+    # 一拍だけ残して止める。次の区間の頭が際立つ。
+    "break": {
+        "kick": "x...............",
+        "crash": "x...............",
+    },
+}
+
+
+def fill_names() -> list[str]:
+    """使えるフィル名を並べる。"""
+    return sorted(FILLS)
+
+
+def get_fill(name: str) -> dict[str, str]:
+    """フィル名から ``{音色: 16文字}`` を取り出す。"""
+    try:
+        return FILLS[name]
+    except KeyError:
+        raise ValueError(f"unknown drum fill: {name!r} (available: {', '.join(fill_names())})") from None
+
+
 def pattern_names() -> list[str]:
     """使えるドラムパターン名を並べる。"""
     return sorted(PATTERNS)

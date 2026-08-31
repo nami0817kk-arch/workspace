@@ -96,3 +96,66 @@ def test_parse_progression(text, expected):
 def test_invalid_progression_raises(text):
     with pytest.raises(ValueError):
         notes.parse_progression(text)
+
+
+# --- 声部連結 -----------------------------------------------------------------
+
+
+def test_voice_leading_moves_less_than_root_position():
+    """基本形で並べるより、声部の移動量が小さくなること。"""
+    root = notes.note_to_midi("C4")
+    progression = [notes.diatonic_chord(root, "major", d) for d in (0, 3, 4, 0)]
+
+    plain = sum(notes.voice_movement(a, b) for a, b in zip(progression, progression[1:]))
+    voiced, previous = [], None
+    for chord in progression:
+        previous = notes.voice_lead(chord, previous)
+        voiced.append(previous)
+    led = sum(notes.voice_movement(a, b) for a, b in zip(voiced, voiced[1:]))
+
+    assert led < plain / 2
+
+
+def test_voice_leading_keeps_the_same_notes():
+    """鳴る音の種類は変えず、オクターブだけ選び直すこと。"""
+    root = notes.note_to_midi("C4")
+    chord = notes.diatonic_chord(root, "major", 4)
+    voiced = notes.voice_lead(chord, [60, 65, 69])
+    assert sorted(m % 12 for m in voiced) == sorted(m % 12 for m in chord)
+    assert len(voiced) == len(chord)
+
+
+def test_voice_leading_without_a_previous_chord_is_the_plain_chord():
+    chord = notes.diatonic_chord(notes.note_to_midi("C4"), "major", 3)
+    assert notes.voice_lead(chord, None) == sorted(chord)
+    assert notes.voice_lead(chord, []) == sorted(chord)
+
+
+def test_voice_leading_stays_in_register():
+    """連結を優先しすぎて音域が上下へ流れていかないこと。"""
+    root = notes.note_to_midi("C4")
+    previous = None
+    for degree in [0, 4, 1, 5, 2, 6, 3] * 3:  # わざと跳ねる進行を長く続ける
+        chord = notes.diatonic_chord(root, "major", degree)
+        previous = notes.voice_lead(chord, previous)
+        centre = sum(previous) / len(previous)
+        nominal = sum(chord) / len(chord)
+        assert abs(centre - nominal) <= 7
+
+
+def test_voice_leading_handles_seventh_chords():
+    root = notes.note_to_midi("C4")
+    chord = notes.diatonic_chord(root, "major", 4, seventh=True)
+    voiced = notes.voice_lead(chord, [60, 64, 67])
+    assert len(voiced) == 4
+    assert sorted(m % 12 for m in voiced) == sorted(m % 12 for m in chord)
+
+
+def test_voice_movement_pairs_equal_sized_chords_in_order():
+    assert notes.voice_movement([60, 64, 67], [60, 64, 67]) == 0
+    assert notes.voice_movement([60, 64, 67], [62, 65, 69]) == 2 + 1 + 2
+
+
+def test_voice_movement_of_an_empty_chord_is_zero():
+    assert notes.voice_movement([], [60]) == 0
+    assert notes.voice_movement([60], []) == 0

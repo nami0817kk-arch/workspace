@@ -579,3 +579,141 @@ def test_a_style_without_an_arp_pattern_has_no_arpeggio():
 def test_the_arpeggio_is_panned_opposite_the_chords():
     """和音とアルペジオが左右に分かれ、混ざって団子にならないこと。"""
     assert bgm._PART_PAN["arp"] * bgm._PART_PAN["chords"] < 0
+
+
+# --- 編曲の仕上げ(声部連結・フィル・終止・経過音) ---------------------------
+
+
+def _voicings_by_bar(arrangement, part="chords"):
+    bars = {}
+    for note in arrangement.notes[part]:
+        bars.setdefault(int(note.start / arrangement.bar_seconds + 0.001), set()).add(note.midi)
+    return [sorted(bars[bar]) for bar in sorted(bars)]
+
+
+def test_chords_are_voice_led_between_bars():
+    """和音が毎回基本形へ飛ばず、近い音へつながっていること。"""
+    config = _config(style="sports_anthem", bars=4, parts=("chords",), humanize=0.0)
+    voiced = _voicings_by_bar(bgm.compose(config))
+    led = sum(notes_module.voice_movement(a, b) for a, b in zip(voiced, voiced[1:]))
+
+    plain_style = bgm.STYLES["sports_anthem"]
+    root = bgm._root_midi("C", plain_style.chord_octave)
+    plain_chords = [
+        notes_module.diatonic_chord(root, plain_style.scale, degree)
+        for degree in notes_module.parse_progression(plain_style.progression)
+    ]
+    plain = sum(notes_module.voice_movement(a, b) for a, b in zip(plain_chords, plain_chords[1:]))
+    assert led < plain
+
+
+def test_voice_leading_can_be_turned_off_per_style():
+    """基本形の並びが持ち味の曲想では、連結しないこと。"""
+    assert bgm.STYLES["chiptune"].chord_voice_lead is False
+    voiced = _voicings_by_bar(bgm.compose(_config(style="chiptune", bars=4, parts=("chords",))))
+    root = bgm._root_midi("C", bgm.STYLES["chiptune"].chord_octave)
+    expected = notes_module.diatonic_chord(root, "major", 0)
+    assert voiced[0] == sorted(expected)
+
+
+def test_a_fill_replaces_the_last_bar_of_a_section():
+    """区間の最後の小節だけ、いつもと違う手になること。"""
+    config = _config(style="sports_drive", bars=4, parts=("drums",), humanize=0.0)
+    arrangement = bgm.compose(config)
+    bar = arrangement.bar_seconds
+
+    def voices(index):
+        return sorted({h.voice for h in arrangement.hits if index * bar <= h.start < (index + 1) * bar})
+
+    assert voices(0) == voices(1) == voices(2)
+    assert voices(3) != voices(0)
+
+
+def test_a_fill_needs_at_least_two_bars():
+    """1小節しかないときは、フィルだけの曲にならないこと。"""
+    arrangement = bgm.compose(_config(style="sports_drive", bars=1, parts=("drums",)))
+    assert "ride" in {hit.voice for hit in arrangement.hits}
+
+
+def test_styles_only_use_known_fills():
+    for name in bgm.style_names():
+        fill = bgm.STYLES[name].drum_fill
+        if fill:
+            drums.get_fill(fill)
+
+
+def test_unknown_fill_raises():
+    with pytest.raises(ValueError, match="unknown drum fill"):
+        drums.get_fill("paradiddle")
+
+
+@pytest.mark.parametrize("name", drums.fill_names())
+def test_fills_are_sixteen_steps_of_known_voices(name):
+    for voice, steps in drums.get_fill(name).items():
+        assert voice in drums.VOICES
+        assert len(steps) == drums.STEPS_PER_BAR
+        assert set(steps) <= {"x", "o", "."}
+
+
+def test_the_ending_lands_on_the_tonic():
+    """終止を付けると、最後の小節が主和音になること。"""
+    config = _config(style="sports_anthem", bars=8, ending=True, humanize=0.0)
+    arrangement = bgm.compose(config)
+    last = (arrangement.bars - 1) * arrangement.bar_seconds
+    final = {note.midi % 12 for note in arrangement.notes["chords"] if note.start >= last - 0.1}
+    tonic = {m % 12 for m in notes_module.diatonic_chord(bgm._root_midi("C", 4), "major", 0)}
+    assert final == tonic
+
+
+def test_the_ending_stops_the_melody_and_the_groove():
+    config = _config(style="sports_anthem", bars=8, ending=True, humanize=0.0)
+    arrangement = bgm.compose(config)
+    last = (arrangement.bars - 1) * arrangement.bar_seconds
+    assert not [note for note in arrangement.notes["lead"] if note.start >= last - 0.1]
+    assert sorted({h.voice for h in arrangement.hits if h.start >= last - 0.1}) == ["crash", "kick"]
+
+
+def test_the_ending_holds_the_final_chord_for_a_whole_bar():
+    arrangement = bgm.compose(_config(style="sports_anthem", bars=8, ending=True, humanize=0.0))
+    last = (arrangement.bars - 1) * arrangement.bar_seconds
+    final = [note for note in arrangement.notes["chords"] if note.start >= last - 0.1]
+    assert final
+    assert all(note.length == pytest.approx(arrangement.bar_seconds) for note in final)
+
+
+def test_the_ending_keeps_the_tail_instead_of_looping():
+    """終わる曲は、残響を先頭に折り返さずそのまま鳴らしきること。"""
+    looped = bgm.generate(_config(style="sports_anthem", bars=4))
+    ended = bgm.generate(_config(style="sports_anthem", bars=4, ending=True))
+    assert len(ended) > len(looped)
+
+
+def test_the_ending_leaves_earlier_bars_alone():
+    plain = bgm.compose(_config(style="sports_anthem", bars=8, humanize=0.0))
+    ended = bgm.compose(_config(style="sports_anthem", bars=8, ending=True, humanize=0.0))
+    limit = (plain.bars - 1) * plain.bar_seconds - 0.1
+    assert [n for n in plain.notes["lead"] if n.start < limit] == [
+        n for n in ended.notes["lead"] if n.start < limit
+    ]
+
+
+def test_the_bass_walks_into_the_next_chord():
+    """和音が変わる直前の音が、次の根音の隣へ寄っていること。"""
+    config = _config(style="sports_anthem", bars=4, parts=("bass",), humanize=0.0)
+    arrangement = bgm.compose(config)
+    bar = arrangement.bar_seconds
+    by_bar = {}
+    for note in arrangement.notes["bass"]:
+        by_bar.setdefault(int(note.start / bar + 0.001), []).append(note)
+
+    for index in range(len(by_bar) - 1):
+        approach = max(by_bar[index], key=lambda n: n.start).midi
+        landing = min(by_bar[index + 1], key=lambda n: n.start).midi
+        assert abs(approach - landing) <= 2, f"bar {index}: {approach} -> {landing}"
+
+
+def test_styles_without_walking_keep_the_plain_root():
+    assert bgm.STYLES["calm"].bass_walk is False
+    arrangement = bgm.compose(_config(style="calm", bars=4, parts=("bass",), humanize=0.0))
+    root = bgm._root_midi("C", bgm.STYLES["calm"].bass_octave)
+    assert arrangement.notes["bass"][0].midi == root

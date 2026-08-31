@@ -75,6 +75,7 @@ def _bgm_config(args: argparse.Namespace) -> bgm_module.BGMConfig:
         lead_instrument=args.lead_instrument,
         without=tuple(args.without),
         loop=not args.no_loop,
+        ending=args.ending,
         stereo=args.stereo,
     )
 
@@ -186,6 +187,8 @@ def cmd_list(args: argparse.Namespace) -> int:
 
     print("\nDrum patterns:")
     print("  " + ", ".join(drums.pattern_names()))
+    print("\nDrum fills:")
+    print("  " + ", ".join(drums.fill_names()))
     print("\nScales:")
     print("  " + ", ".join(sorted(notes.SCALES)))
     return 0
@@ -272,6 +275,10 @@ def build_parser() -> argparse.ArgumentParser:
     _add_bgm_options(bgm_parser)
     bgm_parser.add_argument("--stereo", action="store_true", help="ステレオで書き出す")
     bgm_parser.add_argument("--no-loop", action="store_true", help="末尾の残響を切らずに残す")
+    bgm_parser.add_argument(
+        "--ending", action="store_true",
+        help="最後の小節を主和音で締める(ループではなく1曲として終わらせる)",
+    )
     bgm_parser.add_argument("-n", "--name", default=None, help="出力ファイル名(拡張子なし)")
     bgm_parser.add_argument("-o", "--output", help="出力先の WAV パス")
     bgm_parser.add_argument("-d", "--dir", default="output", help="出力ディレクトリ (既定: output)")
@@ -282,7 +289,7 @@ def build_parser() -> argparse.ArgumentParser:
     )
     _add_bgm_options(describe_parser)
     describe_parser.add_argument("--json", action="store_true", help="JSON で出力する")
-    describe_parser.set_defaults(func=cmd_describe, stereo=False, no_loop=False)
+    describe_parser.set_defaults(func=cmd_describe, stereo=False, no_loop=False, ending=False)
 
     build_parser = subparsers.add_parser(
         "build", help="マニフェスト(JSON)に書かれた素材一式をまとめて生成する"

@@ -42,7 +42,7 @@ FORMAT_VERSION = 1
 _SFX_KEYS = {"name", "as", "seed", "pitch", "count", "spread"}
 _BGM_KEYS = {
     "as", "style", "key", "scale", "bpm", "bars", "seed", "progression",
-    "drums", "structure", "swing", "humanize", "parts", "without", "loop", "stereo",
+    "drums", "structure", "swing", "humanize", "parts", "without", "loop", "ending", "stereo",
     "chord_instrument", "bass_instrument", "lead_instrument",
 }
 

@@ -5,7 +5,9 @@ MIDI ノート番号を基準に扱う(69 = A4 = 440Hz)。
 
 from __future__ import annotations
 
+import itertools
 import re
+from typing import Sequence
 
 A4_MIDI = 69
 A4_FREQ = 440.0
@@ -118,6 +120,46 @@ def diatonic_chord(root: int | str, scale: str, degree: int, seventh: bool = Fal
     """音階内の三和音(または四和音)を作る。``degree`` は 0 始まり。"""
     steps = [0, 2, 4, 6] if seventh else [0, 2, 4]
     return [degree_to_midi(root, scale, degree + step) for step in steps]
+
+
+def voice_movement(a: Sequence[int], b: Sequence[int]) -> int:
+    """2つの和音のあいだで、各声部が動いた半音数の合計。
+
+    声部数が同じなら低い順に対応づける。違う場合はいちばん近い音との距離で測る。
+    """
+    if not a or not b:
+        return 0
+    if len(a) == len(b):
+        return sum(abs(x - y) for x, y in zip(sorted(a), sorted(b)))
+    return sum(min(abs(note - other) for other in a) for note in b)
+
+
+def voice_lead(chord: Sequence[int], previous: Sequence[int] | None, drift: int = 7) -> list[int]:
+    """前の和音から動きが小さくなるよう、各構成音のオクターブを選び直す。
+
+    和音が変わるたびに全部の音を基本形へ飛ばすと、いちばん上の声部が大きく
+    跳ね回って不自然に聞こえる。構成音は変えずにオクターブだけ選び直すことで、
+    近い音へなめらかに移る(声部連結)。
+
+    候補は各音を1オクターブ上下させた組み合わせ全部で、そのうち移動量が
+    最小のものを選ぶ。``drift`` は和音の中心が元の音域からどれだけ離れて
+    よいかの上限(半音)で、連結を優先しすぎて音域が流れるのを防ぐ。
+    """
+    chord = list(chord)
+    if not chord or not previous:
+        return sorted(chord)
+
+    nominal = sum(chord) / len(chord)
+    best: list[int] | None = None
+    best_score: int | None = None
+    for shifts in itertools.product((-12, 0, 12), repeat=len(chord)):
+        candidate = sorted(midi + shift for midi, shift in zip(chord, shifts))
+        if abs(sum(candidate) / len(candidate) - nominal) > drift:
+            continue
+        score = voice_movement(previous, candidate)
+        if best_score is None or score < best_score:
+            best, best_score = candidate, score
+    return best if best is not None else sorted(chord)
 
 
 def parse_progression(progression: str) -> list[int]:

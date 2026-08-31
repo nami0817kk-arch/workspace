@@ -90,6 +90,8 @@ class Style:
     chord_seventh: bool = False
     chord_octave: int = 4
     chord_gain: float = 0.30
+    chord_voice_lead: bool = True
+    """和音を基本形に飛ばさず、前の和音から近い音へつなぐ。"""
     chord_pattern: str = ""
     """和音を刻む16分グリッド。空なら1小節伸ばす(従来どおり)。"""
     chord_length: float = 0.25
@@ -112,7 +114,11 @@ class Style:
     arp_shape: tuple[int, ...] = (0, 1, 2, 1)
     """和音の何番目の音を順に鳴らすか。範囲を超えるとオクターブ上に回る。"""
     drum_pattern: str = "basic"
+    drum_fill: str = ""
+    """区間の最後の小節に入れるフィル。空ならフィルなし。"""
     drum_gain: float = 0.55
+    bass_walk: bool = False
+    """次の和音の根音へ、直前の音で半歩近づく(経過音)。"""
     reverb_wet: float = 0.22
     reverb_room: float = 0.7
     delay_wet: float = 0.0
@@ -140,7 +146,7 @@ STYLES: dict[str, Style] = {
         chord_instrument="strings", bass_instrument="pick_bass", bass_pattern="x.x.x.x.x.x.x.x.",
         lead_instrument="pulse_lead", lead_gain=0.42, lead_rest_prob=0.15,
         lead_durations=(0.5, 0.5, 0.5, 1.0, 1.0),
-        drum_pattern="drive", reverb_wet=0.20,
+        drum_pattern="drive", drum_fill="snare_roll", reverb_wet=0.20,
     ),
     "battle": Style(
         scale="harmonic_minor", bpm=158, progression="i-vi-vii-v",
@@ -148,7 +154,7 @@ STYLES: dict[str, Style] = {
         bass_instrument="pick_bass", bass_pattern="x.xxx.xxx.xxx.xx", bass_gain=0.6,
         lead_instrument="pulse_lead", lead_gain=0.36, lead_rest_prob=0.12,
         lead_durations=(0.25, 0.5, 0.5, 0.5, 1.0), lead_range=10,
-        drum_pattern="drive", drum_gain=0.6, reverb_wet=0.16,
+        drum_pattern="drive", drum_fill="tom_fall", drum_gain=0.6, reverb_wet=0.16,
     ),
     "menu": Style(
         scale="pentatonic_major", bpm=96, progression="I-IV-I-V",
@@ -175,6 +181,7 @@ STYLES: dict[str, Style] = {
         lead_durations=(0.25, 0.5, 0.5, 1.0),
         drum_pattern="march", drum_gain=0.45, reverb_wet=0.10, bitcrush_bits=6,
         groove=STRAIGHT,  # チップチューンは正確に並んでいるほうが らしい
+        chord_voice_lead=False,  # 当時の音源は基本形で並べるのが持ち味
     ),
     "tension": Style(
         scale="phrygian", bpm=104, progression="i-ii-i-vii",
@@ -198,7 +205,8 @@ STYLES: dict[str, Style] = {
         bass_instrument="pick_bass", bass_pattern="x.x.x.x.x.x.x.x.", bass_gain=0.56,
         lead_instrument="brass", lead_octave=4, lead_gain=0.42, lead_rest_prob=0.18,
         lead_durations=(0.5, 0.5, 1.0, 1.0), lead_range=5,
-        drum_pattern="news", drum_gain=0.58, reverb_wet=0.20,
+        drum_pattern="news", drum_fill="timpani_roll", drum_gain=0.58, reverb_wet=0.20,
+        bass_walk=True,
         groove=Groove(accent=0.32, humanize=0.002),  # 報道ものは詰めて正確に
         parts=("chords", "arp", "bass", "lead", "drums"),
     ),
@@ -223,7 +231,8 @@ STYLES: dict[str, Style] = {
         bass_instrument="low_brass", bass_pattern="x...x...x...x...", bass_gain=0.52, bass_octave=2,
         lead_instrument="brass", lead_octave=4, lead_gain=0.44, lead_rest_prob=0.24,
         lead_durations=(0.5, 1.0, 1.0, 2.0), lead_range=5,
-        drum_pattern="anthem", drum_gain=0.60, reverb_wet=0.34, reverb_room=0.80,
+        drum_pattern="anthem", drum_fill="timpani_roll", drum_gain=0.60,
+        reverb_wet=0.34, reverb_room=0.80, bass_walk=True,
         groove=Groove(accent=0.35, humanize=0.005),
     ),
     # ハイライトや煽り。ミクソリディアンの VII が明るいまま勢いを出す。
@@ -236,7 +245,8 @@ STYLES: dict[str, Style] = {
         bass_instrument="pick_bass", bass_pattern="x.xxx.xxx.xxx.xx", bass_gain=0.58,
         lead_instrument="brass", lead_octave=4, lead_gain=0.40, lead_rest_prob=0.15,
         lead_durations=(0.25, 0.5, 0.5, 1.0), lead_range=6,
-        drum_pattern="sports", drum_gain=0.62, reverb_wet=0.16,
+        drum_pattern="sports", drum_fill="tom_fall", drum_gain=0.62, reverb_wet=0.16,
+        bass_walk=True,
         groove=Groove(accent=0.3, humanize=0.003),
         parts=("chords", "arp", "bass", "lead", "drums"),
     ),
@@ -340,6 +350,8 @@ class BGMConfig:
     without: Sequence[str] = ()
     """既定から外すパート。"""
     loop: bool = True
+    ending: bool = False
+    """最後の小節を主和音で締める。ループではなく1曲として終わらせたいとき。"""
     stereo: bool = False
 
     def resolved_style(self) -> Style:
@@ -545,10 +557,14 @@ def _plan_chords(
     step_seconds = bar_seconds / drums.STEPS_PER_BAR
     groove = style.groove
     plan: list[Note] = []
+    previous: list[int] | None = None
 
     for bar, degree in enumerate(degrees):
         chord = notes.diatonic_chord(root, style.scale, degree, seventh=style.chord_seventh)
-        # 上の声部ほど小さくして、根音が土台に聞こえるようにする。
+        if style.chord_voice_lead:
+            chord = notes.voice_lead(chord, previous)
+        previous = chord
+        # 下の声部ほど大きくして、低い音が土台に聞こえるようにする。
         levels = [1.0 / (voice + 2) for voice in range(len(chord))]
 
         if not style.chord_pattern:
@@ -615,18 +631,30 @@ def _plan_bass(
     step_seconds = bar_seconds / drums.STEPS_PER_BAR
     groove = style.groove
     length = step_seconds * 1.6
+    hits = [step for step, symbol in enumerate(style.bass_pattern[: drums.STEPS_PER_BAR]) if symbol != "."]
+    last_hit = hits[-1] if hits else -1
     plan: list[Note] = []
+
     for bar, degree in enumerate(degrees):
         midi = notes.degree_to_midi(root, style.scale, degree)
         fifth = notes.degree_to_midi(root, style.scale, degree + 4)
+        next_degree = degrees[bar + 1] if bar + 1 < len(degrees) else None
         for step, symbol in enumerate(style.bass_pattern[: drums.STEPS_PER_BAR]):
             if symbol == ".":
                 continue
+            note_midi = midi if symbol == "x" else fifth
+            if (
+                style.bass_walk
+                and step == last_hit
+                and next_degree is not None
+                and next_degree != degree
+            ):
+                # 小節の最後の音で、次の和音の根音のひとつ下へ寄せておく。
+                # 次の小節の頭が「着地」に聞こえる。
+                note_midi = notes.degree_to_midi(root, style.scale, next_degree - 1)
             start = bar * bar_seconds + step * step_seconds
             start = max(0.0, start + groove.time_offset(step, step_seconds, groove_rng))
-            plan.append(
-                Note(start, midi if symbol == "x" else fifth, length, groove.velocity(step, groove_rng))
-            )
+            plan.append(Note(start, note_midi, length, groove.velocity(step, groove_rng)))
     return plan
 
 
@@ -672,13 +700,16 @@ def _plan_lead(
 
 def _plan_drums(style: Style, bars: int, bar_seconds: float, groove_rng: random.Random) -> list[Hit]:
     pattern = drums.get_pattern(style.drum_pattern)
-    if not pattern:
+    fill = drums.get_fill(style.drum_fill) if style.drum_fill else {}
+    if not pattern and not fill:
         return []
     step_seconds = bar_seconds / drums.STEPS_PER_BAR
     groove = style.groove
     plan: list[Hit] = []
     for bar in range(bars):
-        for voice, steps in pattern.items():
+        # 区間の最後の小節だけフィルに差し替える。2小節以上ないと崩しに聞こえない。
+        bar_pattern = fill if (fill and bars >= 2 and bar == bars - 1) else pattern
+        for voice, steps in bar_pattern.items():
             for step, symbol in enumerate(steps[: drums.STEPS_PER_BAR]):
                 if symbol == ".":
                     continue
@@ -781,6 +812,8 @@ def compose(config: BGMConfig | None = None, **overrides) -> Arrangement:
     groove_rng = random.Random((config.seed or 0) + 7919)
     bar_seconds = BEATS_PER_BAR * 60.0 / style.bpm
     degrees = _chord_degrees_for_bars(style, config.bars)
+    if config.ending:
+        degrees[-1] = 0  # 最後は主和音へ帰る
     chosen = set(config.parts if config.parts is not None else style.parts)
     requested = [part for part in PART_ORDER if part in chosen and part not in set(config.without)]
     motifs = _ensure_motifs(style, rng, {})
@@ -804,7 +837,48 @@ def compose(config: BGMConfig | None = None, **overrides) -> Arrangement:
                 notes_by_part.setdefault(part, []).append(
                     replace(note, start=note.start + offset, velocity=note.velocity * section.gain)
                 )
+    if config.ending:
+        _apply_ending(notes_by_part, hits, config.bars, bar_seconds)
     return Arrangement(style, config.bars, bar_seconds, tuple(plan), notes_by_part, hits)
+
+
+def _apply_ending(
+    notes_by_part: dict[str, list[Note]],
+    hits: list[Hit],
+    bars: int,
+    bar_seconds: float,
+) -> None:
+    """最後の小節を終止の形に整える(その場で書き換える)。
+
+    刻みを続けたまま切ると「途中で止まった」ように聞こえる。最後の小節は
+    主和音をひとつ伸ばし、他は鳴らさないことで、曲として終わった形にする。
+    """
+    last_start = (bars - 1) * bar_seconds
+    tolerance = bar_seconds * 0.05  # 揺らぎで少し前に出た音も最後の小節とみなす
+
+    for part, plan in notes_by_part.items():
+        kept = [note for note in plan if note.start < last_start - tolerance]
+        if part == "chords":
+            # 主和音だけを1小節伸ばして締める。
+            final = [note for note in plan if note.start >= last_start - tolerance]
+            if final:
+                lowest = min(note.start for note in final)
+                voicing = {note.midi: note.velocity for note in final if note.start <= lowest + tolerance}
+                kept += [
+                    Note(last_start, midi, bar_seconds, velocity)
+                    for midi, velocity in sorted(voicing.items())
+                ]
+        elif part == "bass":
+            final = [note for note in plan if note.start >= last_start - tolerance]
+            if final:
+                first = min(final, key=lambda note: note.start)
+                kept.append(replace(first, start=last_start, length=bar_seconds * 0.9))
+        notes_by_part[part] = kept
+
+    remaining = [hit for hit in hits if hit.start < last_start - tolerance]
+    remaining.append(Hit(last_start, "crash", 1.0))
+    remaining.append(Hit(last_start, "kick", 1.0))
+    hits[:] = remaining
 
 
 def _plan_notes(
@@ -954,7 +1028,9 @@ def _post_process(
         buf = fx.delay(buf, time=beat_seconds * 0.75, feedback=0.3, wet=style.delay_wet, sr=sr, tail=beat_seconds * 3)
     if style.reverb_wet > 0:
         buf = fx.reverb(buf, room=style.reverb_room, wet=style.reverb_wet, sr=sr, tail=1.0)
-    buf = remove_dc(wrap_tail(buf, length) if config.loop else buf)
+    # 終わる曲は残響を折り返さず、そのまま鳴らしきる。
+    looping = config.loop and not config.ending
+    buf = remove_dc(wrap_tail(buf, length) if looping else buf)
     if not limit:
         return buf
     # 飛び出した山を削ってから持ち上げる。天井付近だけ丸めて 0dBFS を超えさせない。

@@ -94,6 +94,13 @@ python -m audiogen sfx footstep --count 6 --spread 0.15 -d assets/se
 パートは和音・アルペジオ・ベース・メロディ・ドラムの5つ。どれを鳴らすかは
 スタイルごとに決まっていて(`news_bed` はメロディなし、など)、`--without` で更に外せる。
 
+編曲まわりは自動で次のことをする。
+
+- **声部連結** — 和音が変わるとき、全部を基本形へ飛ばさず近い音へつなぐ
+- **フィル** — 区間の最後の小節でドラムの手が変わり、次の区間へ渡る感じが出る
+- **経過音** — ベースが次の和音の根音の隣へ寄ってから着地する(スタイルによる)
+- **終止** — `--ending` を付けると、最後の小節が主和音とシンバルで終わる
+
 放送向けの使い方の例:
 
 ```bash
@@ -103,8 +110,8 @@ python -m audiogen bgm --style news_open --bars 12 --structure intro --seed 3
 # 原稿読みの下敷き。8小節でループする
 python -m audiogen bgm --style news_bed --key D --bars 8 --seed 5
 
-# 試合前後のアンセム
-python -m audiogen bgm --style sports_anthem --bars 12 --structure full --seed 3
+# 試合前後のアンセム(最後を主和音で締める)
+python -m audiogen bgm --style sports_anthem --bars 12 --structure full --seed 3 --ending
 
 # ハイライト。後半でメロディが1オクターブ上がる
 python -m audiogen bgm --style sports_drive --key G --bars 12 --structure verse_chorus --seed 3
@@ -138,6 +145,7 @@ python -m audiogen bgm --style adventure \
 | `--chord-instrument` ほか | パートごとの音色(下記) |
 | `--without` | 外すパート(`chords` `arp` `bass` `lead` `drums`) |
 | `--seed` | 乱数シード。同じ値なら同じ曲になる |
+| `--ending` | 最後の小節を主和音で締める(1曲として終わらせる) |
 | `--stereo` / `--no-loop` | ステレオ出力 / 末尾の残響を切らずに残す |
 
 音色は波形を重ねてフィルタとエンベロープを通した「楽器」として定義してある。
