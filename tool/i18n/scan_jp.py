@@ -53,7 +53,9 @@ if __name__ == '__main__':
     total, rows = 0, []
     for f in sorted(set(files)):
         # 生成物。ARB(日本語)が原本なので日本語が入っていて当然。
-        if re.search(r'l10n/app_localizations.*\.dart$', f):
+        # glob は Windows で区切りに \ を返すため、正規化してから判定する。
+        # そのままだとこの除外が効かず、生成物を検査して誤検出になる。
+        if re.search(r'l10n/app_localizations.*\.dart$', f.replace(os.sep, '/')):
             continue
         hits = scan(f)
         if hits:

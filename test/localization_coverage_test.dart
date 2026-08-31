@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
+import 'python_tool.dart';
+
 /// 英語化の取りこぼしを検出する回帰テスト。
 ///
 /// 画面に出る文言を新しく足したとき、`Tr.pick` を通し忘れると、英語表示でも
@@ -12,23 +14,23 @@ void main() {
   test(
     'no Japanese UI string is left outside Tr.pick across lib/',
     () {
+      // Python が無い環境ではこの検査は行えないので、テストを落とさず
+      // 「検査していない」と分かるようにスキップする。ただしスキャナ自体が
+      // 壊れている場合は落とす。黙って検査が無効になるのが一番まずい。
+      final python = resolvePythonForTools();
+      if (python == null) {
+        markTestSkipped('Python が無いため未翻訳の検査を行っていない');
+        return;
+      }
+
       final result = Process.runSync(
-        'python3',
+        python,
         ['tool/i18n/scan_jp.py', 'lib'],
         stdoutEncoding: utf8,
         stderrEncoding: utf8,
       );
-
-      // python3 が無い環境ではこの検査は行えないので、テストを落とさず
-      // 「検査していない」と分かるようにスキップする。ただしスキャナ自体が
-      // 壊れている場合は落とす。黙って検査が無効になるのが一番まずい。
-      final stderr = result.stderr as String;
-      if (result.exitCode != 0 &&
-          stderr.contains('No such file or directory')) {
-        markTestSkipped('python3 が無いため未翻訳の検査を行っていない');
-        return;
-      }
-      expect(result.exitCode, 0, reason: 'スキャナの実行に失敗した(検査できていない)。\n$stderr');
+      expect(result.exitCode, 0,
+          reason: 'スキャナの実行に失敗した(検査できていない)。\n${result.stderr}');
 
       final out = (result.stdout as String).trim();
       expect(

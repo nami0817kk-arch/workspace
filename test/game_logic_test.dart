@@ -1409,6 +1409,10 @@ void main() {
     await gameState.startNewGame('テストFC');
     final target = gameState.transferMarket.first;
     gameState.save!.budget = target.marketValue; // 頭金分は十分ある
+    // 週給予算はシーズン開始時に確定し、獲得時はその枠でも判定される。
+    // ここを広げないと、ランダム生成された市場の週給次第で約1.5%の確率で
+    // 週給予算オーバーになり、分割払いとは無関係にこのテストが落ちる。
+    gameState.save!.wageBudget = 999999;
 
     final ok = await gameState.buyPlayerOnInstallments(target.id);
 
@@ -6833,6 +6837,10 @@ void main() {
     await gameState.startNewGame('テストFC');
     final target = gameState.transferMarket.first;
     gameState.save!.budget = target.marketValue;
+    // 週給予算はシーズン開始時に確定し、獲得時はその枠でも判定される。
+    // ここを広げないと、ランダム生成された市場の週給次第で約1.5%の確率で
+    // 週給予算オーバーになり、分割払いとは無関係にこのテストが落ちる。
+    gameState.save!.wageBudget = 999999;
 
     final bought = await gameState.buyPlayerOnInstallments(target.id);
     expect(bought, isTrue);

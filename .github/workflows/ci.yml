@@ -1,0 +1,43 @@
+name: CI
+
+# コードの検証だけを行うワークフロー。公開(デプロイ)は web.yml が持つ。
+# 分けてあるのは、公開先の設定ミスでビルドとテストの結果まで赤くなると、
+# 壊れているのがコードなのか公開の設定なのか判断できなくなるため。
+#
+# paths-ignore は意図的に置いていない。distribution_test.dart が
+# STORE_LISTING.md や legal/*.html を読んで整合性を検査しているので、
+# 「ドキュメントだけの変更」でも検証は回す必要がある。
+
+on:
+  push:
+    branches:
+      - master
+      - main
+  pull_request:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # 静的解析。これまでCIに入っておらず、一度も回っていなかった。
+      - name: Analyze
+        run: flutter analyze
+
+      # 未翻訳・字形の検査は python を呼ぶ。ubuntu-latest には入っている。
+      - name: Run tests
+        run: flutter test

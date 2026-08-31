@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
+import 'python_tool.dart';
+
 /// 同梱フォントに字形のない文字を検出する回帰テスト。
 ///
 /// このアプリはフォントを同梱している (Web版の実行時に fonts.gstatic.com へ
@@ -16,20 +18,24 @@ void main() {
   test(
     'every character used in lib/ can be drawn by the bundled fonts',
     () {
+      // Python が無い環境では検査できないので、落とさずスキップする。
+      // ただし黙って無効になるのが一番まずいので、それ以外の失敗は落とす。
+      final python = resolvePythonForTools();
+      if (python == null) {
+        markTestSkipped('Python が無いため字形の検査を行っていない');
+        return;
+      }
+
       final result = Process.runSync(
-        'python3',
+        python,
         ['tool/i18n/check_glyphs.py'],
         stdoutEncoding: utf8,
         stderrEncoding: utf8,
       );
-
-      // python3 が無い環境では検査できないので、落とさずスキップする。
-      // ただし黙って無効になるのが一番まずいので、それ以外の失敗は落とす。
-      final err = result.stderr as String;
-      if (err.contains('No such file or directory') && result.exitCode != 1) {
-        markTestSkipped('python3 が無いため字形の検査を行っていない');
-        return;
-      }
+      // 字形が足りないときだけ 1 で終わる。それ以外の異常終了は検査
+      // そのものが動いていないので、区別して落とす。
+      expect(result.exitCode, anyOf(0, 1),
+          reason: '字形の検査の実行に失敗した(検査できていない)。\n${result.stderr}');
 
       final out = (result.stdout as String).trim();
       expect(
