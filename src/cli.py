@@ -150,6 +150,9 @@ def main(argv: list[str] | None = None) -> int:
     p_pick = sub.add_parser("pick", help="候補を採点して枠に割り振り、深掘りの検索を出す")
     p_pick.add_argument("candidates")
 
+    p_saga = sub.add_parser("saga", help="候補が続報かどうかと、前回との差分を見る")
+    p_saga.add_argument("candidates", help="候補ファイル")
+
     p_lint = sub.add_parser("lint", help="候補ファイルの書き間違いを探す")
     p_lint.add_argument("candidates", help="候補ファイル（research/YYYYMMDD_candidates.yaml）")
 
@@ -1048,6 +1051,40 @@ def _dispatch(args, config) -> int:
         print("tier / topic / league は判断が要ります。目で見て埋めてください")
         return 0
 
+    if args.command == "saga":
+        from datetime import datetime as _dt
+
+        from . import candidates as candidates_mod
+        from . import coverage as coverage_mod
+        from . import saga as saga_mod
+        from .plan import load_plan
+
+        plan = load_plan()
+        date_label, items = candidates_mod.load_candidates(args.candidates)
+        entries = coverage_mod.load(plan.coverage.get("ledger", "research/covered.yaml"))
+        now = _dt.now()
+        found = saga_mod.follow(items, entries, now)
+
+        again = [f for f in found if not f.is_new]
+        print(f"■ 続報の見え方　{date_label}　新しい話題 {len(found) - len(again)}件 / 続報 {len(again)}件")
+        for item in found:
+            print(item.line(now))
+            if item.is_new:
+                continue
+            if item.fresh:
+                print(f"      前回のあとに出た出典 {len(item.fresh)}件:")
+                for url in item.fresh[:3]:
+                    print(f"        {url}")
+            else:
+                print("      前回に無い出典がありません")
+
+        notes = saga_mod.advise(found, now)
+        if notes:
+            print()
+            for note in notes:
+                print(f"  ! {note}")
+        return 0
+
     if args.command == "lint":
         from . import candidates as candidates_mod
         from . import lint as lint_mod
@@ -1112,15 +1149,32 @@ def _dispatch(args, config) -> int:
         )
         ranked, dropped = candidates_mod.exclude_covered(ranked, covered)
 
+        # 続報かどうかは点数に出ない。同じ話を同じ材料で二度出さないよう、印を付ける
+        from datetime import datetime as _dt
+
+        from . import saga as saga_mod
+
+        now = _dt.now()
+        threads = {f.candidate.id: f for f in saga_mod.follow(ranked, ledger, now)}
+
         print(f"■ 候補の採点　{date_label}　{len(ranked)}件")
         for item in ranked:
             detail = " ".join(f"{k}+{v}" for k, v in item.breakdown.items()) or "加点なし"
-            print(f"  {item.score:2d}点  {item.title}　［{item.tier}／{item.hours_ago:g}時間前］")
+            thread = threads.get(item.id)
+            mark = ""
+            if thread and not thread.is_new:
+                gap = thread.hours_since(now) or 0.0
+                span = f"{gap / 24:.0f}日前" if gap >= 24 else f"{gap:.0f}時間前"
+                mark = f"　［続報 {len(thread.past) + 1}本目・前回{span}］"
+            print(f"  {item.score:2d}点  {item.title}　［{item.tier}／{item.hours_ago:g}時間前］{mark}")
             print(f"        {detail}")
         for item in dropped:
             entry = covered[item.id]
             print(f"  ーー　{item.title}　（{entry.slot}で既出 {entry.at:%m/%d %H:%M}）")
         print()
+
+        for note in saga_mod.advise(list(threads.values()), now):
+            print(f"  ! {note}")
 
         chosen, fallbacks = candidates_mod.assign(ranked, plan.scoring, plan.slots)
 
@@ -1199,6 +1253,7 @@ def _dispatch(args, config) -> int:
             coverage_mod.record(
                 ledger, notes.slot or "-", [(notes.theme_id, notes.title)],
                 league=notes.league, kind=notes.kind,
+                topic=notes.topic, sources=notes.sources,
             )
         print(f"台本: {target}")
         print(f"`python -m src.cli check {target}` で書式と尺を確認してください")

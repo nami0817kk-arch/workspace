@@ -69,6 +69,7 @@ class Notes:
     follow_up: bool = False
     league: str = ""                 # england / spain / ... 何を追えていないかの集計に使う
     kind: str = "transfer"           # transfer / match / other
+    topic: str = ""                  # 話題のまとまり。続報かどうかを見るのに使う
     thumbnail: dict = field(default_factory=dict)
     sections: list[Section] = field(default_factory=list)
 
@@ -139,6 +140,7 @@ def build_notes(raw: dict) -> Notes:
         follow_up=bool(raw.get("follow_up", False)),
         league=str(theme.get("league", "")).strip().lower(),
         kind=str(theme.get("kind", "transfer")).strip().lower() or "transfer",
+        topic=str(theme.get("topic", "")).strip(),
         sections=sections,
     )
 

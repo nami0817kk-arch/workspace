@@ -6,7 +6,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -23,6 +23,8 @@ class Entry:
     at: datetime
     league: str = ""    # england / spain / ... 何を追えていないかを見るのに使う
     kind: str = ""      # transfer / match / other
+    topic: str = ""     # 話題のまとまり。続報かどうかを見るのに使う
+    sources: list[str] = field(default_factory=list)   # そのとき使った出典
 
     def to_dict(self) -> dict:
         row = {
@@ -36,6 +38,10 @@ class Entry:
             row["league"] = self.league
         if self.kind:
             row["kind"] = self.kind
+        if self.topic:
+            row["topic"] = self.topic
+        if self.sources:
+            row["sources"] = list(self.sources)
         return row
 
 
@@ -55,6 +61,8 @@ def load(path: str | Path) -> list[Entry]:
                     at=datetime.fromisoformat(str(row.get("at"))),
                     league=str(row.get("league", "")),
                     kind=str(row.get("kind", "")),
+                    topic=str(row.get("topic", "")),
+                    sources=[str(u) for u in (row.get("sources") or [])],
                 )
             )
         except (TypeError, ValueError):
@@ -100,6 +108,8 @@ def record(
     now: datetime | None = None,
     league: str = "",
     kind: str = "",
+    topic: str = "",
+    sources: list[str] | None = None,
 ) -> Path:
     """(id, 見出し) の並びを記録に足す。"""
     now = now or datetime.now()
@@ -113,7 +123,8 @@ def record(
         if not (entry.key in keys and entry.slot == slot and entry.at.date() == now.date())
     ]
     entries += [
-        Entry(key=key, headline=headline, slot=slot, at=now, league=league, kind=kind)
+        Entry(key=key, headline=headline, slot=slot, at=now, league=league, kind=kind,
+              topic=topic, sources=list(sources or []))
         for key, headline in items
     ]
     return save(path, entries)
