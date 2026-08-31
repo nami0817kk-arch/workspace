@@ -31,7 +31,14 @@ from .core import (
     wrap_tail,
 )
 
-from .styles import (  # noqa: F401  (公開 API として再輸出する)
+MIN_SAMPLE_RATE = 4000
+"""これより低いと、可聴域の音がほとんど残らない。"""
+
+MIN_BPM, MAX_BPM = 20, 400
+MIN_TEMPO_RATIO, MAX_TEMPO_RATIO = 0.2, 2.0
+"""リタルダンドの終端テンポ倍率の範囲。0 以下だと時間が止まる。"""
+
+from .styles import (  # noqa: F401,E402  (公開 API として再輸出する)
     BEATS_PER_BAR,
     FLAT,
     STRAIGHT,
@@ -127,9 +134,41 @@ def _chord_degrees_for_bars(style: Style, bars: int) -> list[int]:
 def _root_midi(key: str, octave: int) -> int:
     """``"C"`` や ``"F#"`` といったキー名を、指定オクターブの MIDI 番号にする。"""
     key = key.strip()
-    if key and key[-1].isdigit():
-        return notes.note_to_midi(key)
-    return notes.note_to_midi(f"{key}{octave}")
+    name = key if key and key[-1].isdigit() else f"{key}{octave}"
+    try:
+        return notes.note_to_midi(name)
+    except ValueError:
+        raise ValueError(
+            f"invalid key: {key!r} (例: C, F#, Bb, A3)"
+        ) from None
+
+
+def validate(config: BGMConfig) -> None:
+    """設定の値が音として成り立つ範囲にあるか確かめる。
+
+    範囲外の値は、そのまま計算に流すとゼロ除算や無音になり、
+    どこが悪かったのか分からなくなる。入口で弾いて理由を返す。
+    """
+    if config.bars < 1:
+        raise ValueError(f"bars must be >= 1 (指定: {config.bars})")
+    if config.sr < MIN_SAMPLE_RATE:
+        raise ValueError(f"sample rate must be >= {MIN_SAMPLE_RATE}Hz (指定: {config.sr})")
+    if config.bpm is not None and not MIN_BPM <= config.bpm <= MAX_BPM:
+        raise ValueError(f"bpm must be between {MIN_BPM} and {MAX_BPM} (指定: {config.bpm})")
+    if config.ritardando < 0:
+        raise ValueError(f"ritardando must be >= 0 (指定: {config.ritardando})")
+    if not MIN_TEMPO_RATIO <= config.final_tempo <= MAX_TEMPO_RATIO:
+        raise ValueError(
+            f"final_tempo must be between {MIN_TEMPO_RATIO} and {MAX_TEMPO_RATIO} "
+            f"(指定: {config.final_tempo})"
+        )
+    unknown = set(config.parts or ()) - set(PART_ORDER)
+    if unknown:
+        raise ValueError(f"unknown parts: {', '.join(sorted(unknown))} (使えるのは {', '.join(PART_ORDER)})")
+    unknown = set(config.without) - set(PART_ORDER)
+    if unknown:
+        raise ValueError(f"unknown parts in 'without': {', '.join(sorted(unknown))}")
+    _root_midi(config.key, 4)  # キー名の妥当性をここで確かめる
 
 
 @dataclass(frozen=True)
@@ -532,9 +571,8 @@ def compose(config: BGMConfig | None = None, **overrides) -> Arrangement:
     生成前に中身を確認したり、別の音源へ渡したりできるようにしてある。
     """
     config = _with_overrides(config, overrides)
+    validate(config)
     style = config.resolved_style()
-    if config.bars < 1:
-        raise ValueError("bars must be >= 1")
 
     rng = random.Random(config.seed)
     # グルーヴ用は別系列にしておく。ゆらぎの有無でメロディまで変わらないようにする。

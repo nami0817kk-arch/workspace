@@ -398,12 +398,22 @@ PRESETS: dict[str, SfxFunc] = {
 }
 
 
+MIN_SAMPLE_RATE = 4000
+"""これより低いと、可聴域の音がほとんど残らない。"""
+
+
 def generate(name: str, sr: int = SAMPLE_RATE, seed: int | None = None, **params) -> list[float]:
     """プリセット名から効果音を生成する。"""
     try:
         preset = PRESETS[name]
     except KeyError:
         raise ValueError(f"unknown sfx preset: {name!r} (available: {', '.join(sorted(PRESETS))})") from None
+    if sr < MIN_SAMPLE_RATE:
+        raise ValueError(f"sample rate must be >= {MIN_SAMPLE_RATE}Hz (指定: {sr})")
+    pitch = params.get("pitch", 1.0)
+    if pitch <= 0.0:
+        # 0 以下だと周波数が 0 か負になり、鳴っているのに音がしない状態になる。
+        raise ValueError(f"pitch must be > 0 (指定: {pitch})")
     return preset(sr=sr, seed=seed, **params)
 
 
@@ -422,7 +432,9 @@ def variations(
     同じ性格のまま重複して聞こえない一組を作る。
     """
     if count < 1:
-        raise ValueError("count must be >= 1")
+        raise ValueError(f"count must be >= 1 (指定: {count})")
+    if spread < 0.0:
+        raise ValueError(f"spread must be >= 0 (指定: {spread})")
     if name not in PRESETS:
         raise ValueError(f"unknown sfx preset: {name!r} (available: {', '.join(sorted(PRESETS))})")
 

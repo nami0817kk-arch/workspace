@@ -125,3 +125,20 @@ def test_every_preset_accepts_pitch(name):
     low = sfx.generate(name, sr=SR, seed=0, pitch=0.7)
     high = sfx.generate(name, sr=SR, seed=0, pitch=1.4)
     assert low != high
+
+
+@pytest.mark.parametrize("pitch", [0.0, -1.0])
+def test_a_non_positive_pitch_is_rejected(pitch):
+    """0 以下だと周波数が 0 か負になり、鳴っているのに音がしない。"""
+    with pytest.raises(ValueError, match="pitch must be > 0"):
+        sfx.generate("coin", sr=SR, pitch=pitch)
+
+
+def test_a_too_low_sample_rate_is_rejected():
+    with pytest.raises(ValueError, match="sample rate"):
+        sfx.generate("coin", sr=100)
+
+
+def test_a_negative_spread_is_rejected():
+    with pytest.raises(ValueError, match="spread must be >= 0"):
+        sfx.variations("coin", count=2, sr=SR, spread=-0.5)

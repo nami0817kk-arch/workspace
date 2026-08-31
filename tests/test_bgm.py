@@ -1030,3 +1030,41 @@ def test_patterns_with_ghosts_have_more_hits():
     with_ghosts = drums.get_pattern("drive")["snare"]
     assert with_ghosts.count("g") > 0
     assert sum(1 for c in with_ghosts if c != drums.REST) > with_ghosts.count("x")
+
+
+# --- 入力の検証 ---------------------------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "overrides,message",
+    [
+        ({"bars": 0}, "bars must be >= 1"),
+        ({"bars": -3}, "bars must be >= 1"),
+        ({"sr": 0}, "sample rate"),
+        ({"sr": -100}, "sample rate"),
+        ({"bpm": 0}, "bpm must be between"),
+        ({"bpm": -40}, "bpm must be between"),
+        ({"bpm": 5000}, "bpm must be between"),
+        ({"key": "H"}, "invalid key"),
+        ({"key": ""}, "invalid key"),
+        ({"ritardando": -1.0}, "ritardando must be >= 0"),
+        ({"final_tempo": 0.0}, "final_tempo must be between"),
+        ({"final_tempo": -1.0}, "final_tempo must be between"),
+        ({"parts": ("kazoo",)}, "unknown parts"),
+        ({"without": ("kazoo",)}, "unknown parts in 'without'"),
+    ],
+)
+def test_bad_settings_are_reported_clearly(overrides, message):
+    """おかしな値は入口で弾き、何が悪いか分かる文言を返すこと。"""
+    with pytest.raises(ValueError, match=message):
+        bgm.generate(_config(**overrides))
+
+
+def test_the_error_message_repeats_the_offending_value():
+    with pytest.raises(ValueError, match="99999"):
+        bgm.generate(_config(bpm=99999))
+
+
+def test_valid_settings_pass_validation():
+    bgm.validate(_config(bars=1, bpm=20, sr=4000, final_tempo=0.2))
+    bgm.validate(_config(bars=64, bpm=400, final_tempo=2.0, ritardando=0.0))

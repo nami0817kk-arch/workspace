@@ -253,6 +253,20 @@ core.write_wav("output/sweep.wav", effects.lowpass(sweep, 1200))
 | `preview` | 試聴ページの生成 |
 | `cli` | コマンドラインインターフェース |
 
+### 設定の検証
+
+`bgm.compose()` は最初に設定を検査する。範囲外の値はその場で
+`ValueError` になり、どの項目にいくつを渡したかがメッセージに出る。
+
+```python
+bgm.generate(bgm.BGMConfig(bpm=0))
+# ValueError: bpm must be between 20 and 400 (指定: 0)
+bgm.generate(bgm.BGMConfig(key="H"))
+# ValueError: invalid key: 'H' (例: C, F#, Bb, A3)
+sfx.generate("coin", pitch=0)
+# ValueError: pitch must be > 0 (指定: 0.0)
+```
+
 設計の詳細と検証結果は [`docs/audiogen.md`](docs/audiogen.md) を参照。
 
 ### テスト

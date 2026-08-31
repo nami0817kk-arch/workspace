@@ -319,9 +319,32 @@ Acoustic Guitar など)。GM に大太鼓がないのでティンパニは Low F
 一致すること、ノートオン/オフが釣り合うこと、小節線がテンポどおりの位置に
 来ることを確かめている。
 
+## 入力の検証
+
+おかしな設定を渡したときの挙動を一通り試したところ、次のように壊れていた。
+
+| 入力 | 以前 | 現在 |
+|---|---|---|
+| `bpm=0` | `ZeroDivisionError` | `bpm must be between 20 and 400 (指定: 0)` |
+| `bpm=-40` | 0サンプルの無音を返す | 同上 |
+| `sr=0` | `ZeroDivisionError` | `sample rate must be >= 4000Hz (指定: 0)` |
+| `final_tempo=0` | `ZeroDivisionError` | `final_tempo must be between 0.2 and 2.0 (指定: 0.0)` |
+| `final_tempo=-1` | `math domain error` | 同上 |
+| `key="H"` | `KeyError: 'H'` | `invalid key: 'H' (例: C, F#, Bb, A3)` |
+| `parts=("kazoo",)` | 無音のトラック | `unknown parts: kazoo (使えるのは chords, arp, bass, lead, drums)` |
+| `sfx.generate(pitch=0)` | 無音を返す | `pitch must be > 0 (指定: 0.0)` |
+
+例外の型ではなく中身が問題だった。`ZeroDivisionError` はどの値が悪いのか
+教えてくれないし、無音が返るのは最悪で、書き出した WAV を再生するまで
+気づけない。`bgm.validate(config)` を `compose()` の先頭で呼び、値の名前・
+許容範囲・渡された値を必ずメッセージに入れている。
+
+小節数の上限は設けていない。`bars=100000` は正しく動くが数十分かかる。
+時間がかかること自体は誤りではないので、止めずに通す。
+
 ## 検証結果
 
-- テスト 563 件がパス(`pytest`)
+- テスト 791 件がパス(`pytest`)
 - 全プリセットの実測: 最大 |DC| 0.0006、最大ピーク 0.92、ループ継ぎ目の段差 0.017 以下
 - `bgm_calm`(キー C メジャー)の周波数解析では、音階内の音の強さが
   音階外の 11 倍。狙ったキーの音が鳴っていることを確認した
