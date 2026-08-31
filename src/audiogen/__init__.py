@@ -12,7 +12,19 @@
 コマンドラインからは ``python -m audiogen --help`` を参照。
 """
 
-from . import bgm, drums, effects, envelope, instruments, manifest, midi, notes, oscillators, sfx
+from . import (
+    bgm,
+    drums,
+    effects,
+    envelope,
+    instruments,
+    manifest,
+    midi,
+    notes,
+    oscillators,
+    sfx,
+    styles,
+)
 from .bgm import BGMConfig
 from .core import SAMPLE_RATE, duration_of, mix, normalize, to_stereo, write_wav
 
@@ -35,6 +47,7 @@ __all__ = [
     "notes",
     "oscillators",
     "sfx",
+    "styles",
     "to_stereo",
     "write_wav",
 ]

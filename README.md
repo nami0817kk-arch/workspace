@@ -246,6 +246,7 @@ core.write_wav("output/sweep.wav", effects.lowpass(sweep, 1200))
 | `instruments` | 波形を重ねた音色の定義 |
 | `drums` | ドラム音源と16分グリッドのパターン |
 | `sfx` | 効果音プリセットとバリエーション生成 |
+| `styles` | 曲想・曲構成の定義(宣言的な設定だけ) |
 | `bgm` | 作曲(`compose`)と合成(`render_tracks` / `generate`) |
 | `midi` | 譜面の MIDI 書き出し |
 | `manifest` | JSON からの一括生成と差分ビルド |
