@@ -88,6 +88,10 @@ def slug(text: str, limit: int = 28) -> str:
     return "_".join(words[:3])[:limit].strip("_")
 
 
+# 同じクラブの話なら、語の重なりの条件をここまでゆるめる
+SAME_CLUB_EASE = 0.7
+
+
 def group(hits: list[Hit], threshold: float = 0.45) -> list[list[Hit]]:
     """同じ話を報じた記事をまとめる。
 
@@ -97,12 +101,25 @@ def group(hits: list[Hit], threshold: float = 0.45) -> list[list[Hit]]:
     判定は見出しの語の重なり。人名とクラブ名が共通していれば同じ話とみなす。
     英語と日本語の記事は語が重ならないので、まとまらない（それでよい。
     どちらを使うかは書き手が決める）。
+
+    ただしクラブ名だけは別扱いにする。「アーセナルがDFで合意」と
+    「マンUがDFで合意」は、合意・DF が共通しているだけで別の話。
+    どちらのクラブか分かっているなら、語が似ていてもまとめない。
+    逆に同じクラブなら、書き方が違っても同じ話の可能性が高い
+    （Man Utd と Manchester United は語としては重ならない）。
     """
     groups: list[list[Hit]] = []
     for hit in hits:
-        words = _words(hit)
+        words, clubs = _words(hit), _clubs(hit)
         for bunch in groups:
-            if _overlap(words, _words(bunch[0])) >= threshold:
+            head_words, head_clubs = _words(bunch[0]), _clubs(bunch[0])
+
+            # 別のクラブの話だと分かっているなら、語が似ていてもまとめない
+            if clubs and head_clubs and not (clubs & head_clubs):
+                continue
+            # 同じクラブなら、語の重なりの条件をゆるめる
+            need = threshold * SAME_CLUB_EASE if clubs & head_clubs else threshold
+            if _overlap(words, head_words) >= need:
                 bunch.append(hit)
                 break
         else:
@@ -110,8 +127,17 @@ def group(hits: list[Hit], threshold: float = 0.45) -> list[list[Hit]]:
     return groups
 
 
+def _clubs(hit: Hit) -> set[str]:
+    """見出しに出てくるクラブ。正式表記にそろえる。"""
+    from . import clubs as club_book
+
+    return set(club_book.canonical(hit.title))
+
+
 def _words(hit: Hit) -> set[str]:
     """見出しとURLから、話題を表す語だけを取り出す。"""
+    from . import clubs as club_book
+
     text = f"{hit.title} {hit.url.rsplit('/', 2)[-1].replace('-', ' ')}"
     found = {
         w.lower()
@@ -120,6 +146,9 @@ def _words(hit: Hit) -> set[str]:
     }
     # 日本語は語に切れないので、カタカナと漢字の並びをそのまま拾う
     found |= {w for w in re.findall(r"[ァ-ヴー]{3,}|[一-龠]{2,}", text)}
+    # クラブ名は書き方がばらばらなので、正式表記にそろえてから比べる。
+    # これで "Spurs sign X" と「トッテナムがXを獲得」が同じ話としてまとまる
+    found |= set(club_book.canonical(text))
     return found
 
 
@@ -135,6 +164,8 @@ def to_yaml(hits: list[Hit], date_label: str, merge: bool = True) -> str:
 
     merge=True なら同じ話をまとめて1件にし、出典を並べる。
     """
+    from . import clubs as club_book
+
     bunches = group(hits) if merge else [[hit] for hit in hits]
 
     lines = [
@@ -149,11 +180,20 @@ def to_yaml(hits: list[Hit], date_label: str, merge: bool = True) -> str:
         key = _from_url(head.url) or slug(head.title) or f"c{index}"
         english = next((english_words(hit.url) for hit in bunch if english_words(hit.url)), "")
 
+        # クラブ名の辞書から当たりを入れる。合っているかは目で見て直す
+        seen = " ".join(hit.title for hit in bunch)
+        topic = club_book.topic_of(seen)
+        league = club_book.league_of(seen)
+
         lines += [
             f"  - id: {key}",
             f"    title: {_title_line(head.title)}",
-            '    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで',
-            '    league: ""         # england/spain/germany/italy/france/netherlands/japan',
+            (f'    topic: "{topic}"    # クラブ名の辞書から。同じ topic は1日1枠まで'
+             if topic else
+             '    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで'),
+            (f'    league: {league}    # クラブ名の辞書から。違えば直す'
+             if league else
+             '    league: ""         # england/spain/germany/italy/france/netherlands/japan'),
             "    kind: transfer",
             _tier_line(head.title),
             f"    en: {_quote(english)}" + ("            # URLから作った。合っているか見る"

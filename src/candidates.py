@@ -105,6 +105,8 @@ def fill_ages(items: list[Candidate], age_of) -> list[str]:
 
 def score(items: list[Candidate], scoring: dict) -> list[Candidate]:
     """候補に点をつける。内訳も残す。"""
+    from . import clubs as club_book
+
     weights = dict(scoring.get("weights") or {})
     # 「6時間以内なら3点」のような段階。近いものから順に見る
     stages = sorted(
@@ -118,10 +120,12 @@ def score(items: list[Candidate], scoring: dict) -> list[Candidate]:
     for item in items:
         breakdown: dict[str, int] = {}
 
-        # ビッグクラブは名前で拾えるので、手で立てなくても効くようにする
-        if not item.big_club and clubs:
-            haystack = f"{item.title} {item.note}"
-            item.big_club = any(club in haystack for club in clubs)
+        # ビッグクラブは名前で拾えるので、手で立てなくても効くようにする。
+        # 見出しは英語で来ることが多いので、別名辞書でも当てる
+        # （scoring.big_clubs は日本語表記しか並んでいない）
+        if not item.big_club:
+            haystack = f"{item.title} {item.en} {item.note}"
+            item.big_club = any(club in haystack for club in clubs) or club_book.is_big(haystack)
 
         stage = next((points for hours, points in stages if item.hours_ago <= hours), 0)
         if stage:

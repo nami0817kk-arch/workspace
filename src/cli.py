@@ -153,6 +153,10 @@ def main(argv: list[str] | None = None) -> int:
 
     sub.add_parser("sources", help="情報源の網と、群ごとに置ける確度を表示する")
 
+    p_clubs = sub.add_parser("clubs", help="クラブ名の別名辞書を引く")
+    p_clubs.add_argument("text", nargs="?", default=None,
+                         help="見出しなど。どのクラブが読み取れるかを見る（省略で一覧）")
+
     p_fresh = sub.add_parser("fresh", help="検索で拾ったURLの新しさを判定する")
     p_fresh.add_argument("urls", nargs="*", help="URL。省略すると標準入力から読む")
     p_fresh.add_argument("--no-record", action="store_true", help="索引の記録を更新しない")
@@ -478,6 +482,46 @@ def _dispatch(args, config) -> int:
             target.write_text(candidates_mod.worksheet(words["{date_ja}"]), encoding="utf-8")
             print(f"\n候補ファイル: {target}")
             print(f"埋めたら `python -m src.cli pick {target}`")
+        return 0
+
+    if args.command == "clubs":
+        from . import clubs as club_book
+
+        book = club_book.load()
+        if not book:
+            print("クラブ名の辞書がありません: config/clubs.yaml", file=sys.stderr)
+            return 1
+
+        if args.text:
+            found = club_book.find(args.text, book)
+            if not found:
+                print("辞書に載っているクラブは見つかりませんでした")
+                print("見出しに略称しか無いなら、config/clubs.yaml の aka に足してください")
+                return 0
+            print(f"■ 読み取れたクラブ　{len(found)}件")
+            for club in found:
+                mark = "★" if club.big else "・"
+                where = f"　{club.league}" if club.league else ""
+                print(f"  {mark} {club.canonical}{where}")
+            league = club_book.league_of(args.text, book)
+            print(f"\nリーグ: {league or '（複数にまたがるので決めない）'}")
+            print(f"話題の当たり: {club_book.topic_of(args.text, book)}")
+            return 0
+
+        from .plan import load_plan
+
+        plan = load_plan()
+        by_league: dict[str, list] = {}
+        for club in book:
+            by_league.setdefault(club.league or "その他", []).append(club)
+        print(f"■ クラブ名の別名辞書　{len(book)}クラブ")
+        for key, found in by_league.items():
+            name = plan.league_name(key) if key != "その他" else key
+            print(f"\n― {name}　{len(found)}クラブ ―")
+            for club in found:
+                mark = "★" if club.big else "・"
+                print(f"  {mark} {club.canonical}　{' / '.join(club.aka)}")
+        print("\n★ … ビッグクラブ扱い（候補の採点で加点する）")
         return 0
 
     if args.command == "today":
