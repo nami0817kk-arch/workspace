@@ -140,6 +140,9 @@ def main(argv: list[str] | None = None) -> int:
     p_pick = sub.add_parser("pick", help="候補を採点して枠に割り振り、深掘りの検索を出す")
     p_pick.add_argument("candidates")
 
+    p_lint = sub.add_parser("lint", help="候補ファイルの書き間違いを探す")
+    p_lint.add_argument("candidates", help="候補ファイル（research/YYYYMMDD_candidates.yaml）")
+
     p_today = sub.add_parser("today", help="今日の進み具合と、次に打つコマンドを出す")
     p_today.add_argument("--date", default=None, help="基準日 YYYY-MM-DD（既定: 今日）")
 
@@ -973,14 +976,48 @@ def _dispatch(args, config) -> int:
         print("tier / topic / league は判断が要ります。目で見て埋めてください")
         return 0
 
+    if args.command == "lint":
+        from . import candidates as candidates_mod
+        from . import lint as lint_mod
+        from .plan import load_plan
+
+        plan = load_plan()
+        date_label, items = candidates_mod.load_candidates(args.candidates)
+        issues = lint_mod.inspect(items, plan)
+
+        print(f"■ 候補ファイルの点検　{date_label}　{len(items)}件")
+        for issue in issues:
+            print(issue.line())
+        print(f"\n{lint_mod.summarise(issues)}")
+        if any(issue.blocking for issue in issues):
+            print("× は直してから pick に進んでください", file=sys.stderr)
+            return 1
+        return 0
+
     if args.command == "pick":
         from . import candidates as candidates_mod
         from . import coverage as coverage_mod
         from . import freshness
         from .plan import load_plan
 
+        from . import lint as lint_mod
+
         plan = load_plan()
         date_label, items = candidates_mod.load_candidates(args.candidates)
+
+        # 綴りを外した項目は既定値に落ちるだけで、黙って効かなくなる。
+        # 深掘りの検索を出す前に落とす
+        issues = lint_mod.inspect(items, plan)
+        blocking = [issue for issue in issues if issue.blocking]
+        if blocking:
+            print(f"■ 候補ファイルに直すところがあります　{len(blocking)}件")
+            for issue in blocking:
+                print(issue.line())
+            print("\n`python -m src.cli lint <候補file>` で全部見られます", file=sys.stderr)
+            return 1
+        for issue in issues:
+            if issue.level == "!":
+                print(issue.line())
 
         # hours_ago を書いていない候補は、url から割り出す
         observations = freshness.load("research/freshness.yaml")
