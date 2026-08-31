@@ -13,7 +13,7 @@ cadence:
 # 情報源の網。すべて実測で確認したもの。
 # verified_on を過ぎたら sources コマンドが再確認を促す
 # max_tier … その群だけを根拠に置ける最大の確度。超えるなら別の群で裏を取る
-verified_on: 2026-08-30
+verified_on: 2026-08-31
 
 domains:
   # クラブ・リーグの公式（欧州）。声明そのものを引ける
@@ -30,16 +30,20 @@ domains:
                 vissel-kobe.co.jp]
 
   # 英語の報道機関
+  # nytimes / theathletic は本文が有料。見出しは読めるので、見出しだけ使う
   english: [skysports.com, espn.com, goal.com, 90min.com, football365.com,
-            si.com, cbssports.com, bleacherreport.com]
+            si.com, cbssports.com, bleacherreport.com,
+            bbc.com, theguardian.com, independent.co.uk, standard.co.uk,
+            football.london, theathletic.com, nytimes.com]
 
   # 記録・数字。「数字で見ると」の節で使う。順位・得点・出場数はここ
   stats: [fbref.com, understat.com, worldfootball.net, sofascore.com,
-          besoccer.com, flashscore.com]
+          besoccer.com, flashscore.com, transfermarkt.com, transfermarkt.de]
 
   # 日本語の報道機関。訳す手間が要らないぶん速い
   japanese: [soccer-king.jp, footballchannel.jp, web.ultra-soccer.jp,
-             theworldmagazine.jp, football-tribe.com, sportiva.shueisha.co.jp]
+             theworldmagazine.jp, football-tribe.com, sportiva.shueisha.co.jp,
+             hochi.news, nikkansports.com, sponichi.co.jp]
 
   # 複数媒体を横断できる。見出しに媒体名が入る
   aggregator: [news.yahoo.co.jp]
@@ -47,24 +51,29 @@ domains:
   # 現地語の報道機関。その国のリーグの話はここが速い。
   # 検索はその言語で書く（kicker をドイツ語以外で引いても返らない）
   german: [kicker.de, sport1.de]
-  italian: [football-italia.net, calciomercato.com, tuttomercatoweb.com]
-  french: [footmercato.net, eurosport.fr]
+  italian: [football-italia.net, calciomercato.com, tuttomercatoweb.com,
+            gazzetta.it]
+  french: [footmercato.net, eurosport.fr, lequipe.fr, sofoot.com]
   dutch: [voetbalzone.nl, vi.nl]
-  spanish: [besoccer.com]        # marca / as / mundodeportivo は塞がれている
+  # スペイン語圏。南米(ole / tycsports)もここで引く。検索はスペイン語で書く
+  spanish: [besoccer.com, marca.com, as.com, mundodeportivo.com, relevo.com,
+            sport.es, ole.com.ar, tycsports.com]
 
   social: [x.com]
 
   # 噂まとめ。単独では根拠にしない
-  rumour: [caughtoffside.com, givemesport.com, tribalfootball.com]
+  # 大衆紙もここ。移籍を最初に書くことはあるが、単独では根拠にしない
+  rumour: [caughtoffside.com, givemesport.com, tribalfootball.com,
+           bild.de, mirror.co.uk]
 
-  # 恒久的に取得できないサイト。ここを検索しても結果は返らない
-  blocked: [bbc.com, theguardian.com, theathletic.com, nytimes.com, marca.com,
-            as.com, mundodeportivo.com, lequipe.fr, gazzetta.it, bild.de,
-            telegraph.co.uk, independent.co.uk, mirror.co.uk, standard.co.uk,
-            talksport.com, transfermarkt.com, transfermarkt.de,
-            football.london, sofoot.com, relevo.com, sport.es,
-            hochi.news, nikkansports.com, sponichi.co.jp,
-            ole.com.ar, tycsports.com]
+  # 取得できないサイト。ここを検索しても結果は返らない。
+  #
+  # 2026-08-31 に運用PCから26件を測り直した。**24件は普通に開いた。**
+  # 以前の26件は Claude Code のクラウド環境（外向きが塞がれている）で
+  # 測った結果で、サイト側の問題ではなかった。開いたものは上の群に移した。
+  # 残っているのは、実機でも中身が取れなかった2件だけ。
+  blocked: [telegraph.co.uk,   # HTTP 402。有料の壁で本文どころか見出しも返らない
+            talksport.com]     # 200 だが 1.3KB の入口だけ。中身は JS でしか出ない
 
 # リーグごとの情報源。試合結果は「どのリーグの話か」で引き先が変わる。
 #   official   … そのリーグ・クラブの公式。スコアはここで確かめる（確定）

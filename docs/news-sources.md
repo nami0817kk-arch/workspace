@@ -22,12 +22,12 @@ python -m src.cli sources     # 網の全体と、群ごとの確度の上限を
 | `aggregator` | Yahoo!ニュース（複数媒体を横断できる） | 報道 |
 | `stats` | FBref / Understat / worldfootball / Sofascore / BeSoccer / Flashscore | 報道 |
 | `german` | kicker.de / sport1.de | 報道 |
-| `italian` | football-italia.net / calciomercato.com / TUTTOmercatoWEB | 報道 |
-| `french` | footmercato.net / eurosport.fr | 報道 |
+| `italian` | football-italia.net / calciomercato.com / TUTTOmercatoWEB / gazzetta.it | 報道 |
+| `french` | footmercato.net / eurosport.fr / lequipe.fr / sofoot.com | 報道 |
 | `dutch` | voetbalzone.nl / vi.nl | 報道 |
-| `spanish` | besoccer.com（marca / AS / MD は塞がれている） | 報道 |
+| `spanish` | besoccer.com / marca / AS / MD / relevo / sport.es / ole.com.ar / tycsports | 報道 |
 | `social` | x.com | 未確認 |
-| `rumour` | caughtoffside / givemesport / tribalfootball | 未確認 |
+| `rumour` | caughtoffside / givemesport / tribalfootball / bild.de / mirror.co.uk | 未確認 |
 
 噂まとめだけを根拠に「確定」と出すと視聴者に対して嘘になるので、`draft` が止めます。
 

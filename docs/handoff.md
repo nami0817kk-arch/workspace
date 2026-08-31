@@ -153,20 +153,39 @@ python -m src.cli upload output/YYYYMMDD_morning --dry-run
 
 ---
 
-## ネットワークが開いたら、もう1つやる価値があること
+## `blocked:` の測り直し ― 済（2026-08-31）
 
-`config/sources.yaml` の `blocked:` に**26サイト**入っている。
+`blocked:` に入っていた**26サイトを運用PCから測り直したら、24件が普通に開いた。**
+以前の26件は Claude Code のクラウド環境（外向きが塞がれている）で測った結果で、
+サイト側の問題ではなかった。網は 62サイト → **86サイト** になった。
 
-```
-bbc.com / theguardian.com / theathletic.com / marca.com / as.com /
-transfermarkt.com / football.london / lequipe.fr / gazzetta.it / bild.de ...
-```
+移した先は、その媒体だけを根拠に置ける確度で決めた。
 
-**これは全部、制限つきの環境で測った結果。** ネットワークを開けたら測り直すべきで、
-半分でも開けば情報源の網（現在62サイト）が大きく広がる。
-特に Transfermarkt が使えると、移籍金・契約年数の裏取りが桁違いに楽になる。
+| 移した先 | サイト |
+|---|---|
+| `english`（報道） | bbc.com / theguardian.com / independent.co.uk / standard.co.uk / football.london / theathletic.com / nytimes.com |
+| `spanish`（報道） | marca.com / as.com / mundodeportivo.com / relevo.com / sport.es / ole.com.ar / tycsports.com |
+| `french`（報道） | lequipe.fr / sofoot.com |
+| `italian`（報道） | gazzetta.it |
+| `japanese`（報道） | hochi.news / nikkansports.com / sponichi.co.jp |
+| `stats`（報道） | transfermarkt.com / transfermarkt.de |
+| `rumour`（**未確認**） | bild.de / mirror.co.uk |
 
-測り直したら `verified_on` の日付も更新すること（`doctor` が90日で再確認を促す）。
+- **Transfermarkt が使えるようになった。** 移籍金・契約年数の裏取りはここで引く
+- **nytimes / theathletic は本文が有料。** 見出しは読める。もともと見出ししか
+  使わない決まりなので支障はないが、本文を引いたつもりにならないこと
+- **bild と mirror は大衆紙なので `rumour`（未確認）に置いた。**
+  移籍を最初に書くことはあるが、単独では根拠にしない。
+  報道扱いに上げたくなったら、2社一致を確かめてからにする
+
+### 残った2件
+
+| | |
+|---|---|
+| `telegraph.co.uk` | HTTP 402。有料の壁で、本文どころか見出しも返らない |
+| `talksport.com` | 200 だが 1.3KB の入口だけ。中身は JS でしか出ない |
+
+`verified_on` は 2026-08-31 に更新済み（`doctor` が90日で再確認を促す）。
 
 ---
 
