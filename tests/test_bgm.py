@@ -717,3 +717,99 @@ def test_styles_without_walking_keep_the_plain_root():
     arrangement = bgm.compose(_config(style="calm", bars=4, parts=("bass",), humanize=0.0))
     root = bgm._root_midi("C", bgm.STYLES["calm"].bass_octave)
     assert arrangement.notes["bass"][0].midi == root
+
+
+# --- 転調 ---------------------------------------------------------------------
+
+
+def _part_pitches(arrangement, part, first_bar, last_bar):
+    lo = first_bar * arrangement.bar_seconds
+    hi = last_bar * arrangement.bar_seconds
+    return [note.midi for note in arrangement.notes[part] if lo <= note.start < hi]
+
+
+def test_the_chorus_is_transposed_up():
+    """転調つきの構成で、サビの各パートがまとめて上がること。"""
+    config = _config(style="sports_anthem", bars=8, structure="lift", humanize=0.0)
+    arrangement = bgm.compose(config)
+    for part in ("chords", "bass"):
+        verse = _part_pitches(arrangement, part, 0, 4)
+        chorus = _part_pitches(arrangement, part, 4, 8)
+        assert min(chorus) - min(verse) == 2, part
+
+
+def test_transposition_keeps_the_relative_progression():
+    """転調しても、和音の並び方(度数)は変わらないこと。"""
+    config = _config(style="sports_anthem", bars=8, structure="lift", humanize=0.0)
+    arrangement = bgm.compose(config)
+    verse = {m % 12 for m in _part_pitches(arrangement, "bass", 0, 4)}
+    chorus = {m % 12 for m in _part_pitches(arrangement, "bass", 4, 8)}
+    assert {(m + 2) % 12 for m in verse} == chorus
+
+
+def test_structures_without_transposition_stay_in_key():
+    config = _config(style="sports_anthem", bars=8, structure="verse_chorus", humanize=0.0)
+    arrangement = bgm.compose(config)
+    assert all(section.transpose == 0 for section, _, _ in arrangement.sections)
+    pitches = {m % 12 for m in _part_pitches(arrangement, "bass", 0, 8)}
+    root = bgm._root_midi("C", 2) % 12
+    assert root in pitches
+
+
+@pytest.mark.parametrize("structure", ["lift", "broadcast"])
+def test_transposing_structures_render(structure):
+    buf = bgm.generate(_config(style="sports_anthem", bars=8, structure=structure))
+    assert core.peak(buf) == pytest.approx(bgm.TARGET_PEAK, abs=1e-6)
+
+
+def test_the_broadcast_structure_keeps_the_new_key_to_the_end():
+    """転調したあと元へ戻らず、最後まで上がったままであること。"""
+    arrangement = bgm.compose(_config(style="news_open", bars=12, structure="broadcast"))
+    named = {section.name: section.transpose for section, _, _ in arrangement.sections}
+    assert named["intro"] == named["verse"] == 0
+    assert named["chorus"] == named["outro"] == 2
+
+
+def test_describe_reports_the_transposition():
+    summary = bgm.describe(_config(style="sports_anthem", bars=8, structure="lift"))
+    assert [s["transpose"] for s in summary["sections"]] == [0, 2]
+
+
+# --- 帯域バランス -------------------------------------------------------------
+
+
+def test_the_master_eq_lifts_the_top_relative_to_the_bottom():
+    import dataclasses
+    import math
+
+    style = bgm.STYLES["sports_anthem"]
+    try:
+        bgm.STYLES["sports_anthem"] = dataclasses.replace(style, eq=bgm.FLAT)
+        plain = bgm.generate(_config(style="sports_anthem", bars=4, seed=3))
+        bgm.STYLES["sports_anthem"] = style
+        shaped = bgm.generate(_config(style="sports_anthem", bars=4, seed=3))
+    finally:
+        bgm.STYLES["sports_anthem"] = style
+
+    def tilt(buf):
+        """低域に対する高域の比。EQ で上がっているはずの向き。"""
+        from audiogen import effects
+
+        def band(lo, hi):
+            narrowed = effects.highpass(effects.lowpass(buf, hi, SR), lo, SR)
+            return math.sqrt(sum(v * v for v in narrowed) / len(narrowed))
+
+        return band(3000, 8000) / band(20, 120)
+
+    assert tilt(shaped) > tilt(plain)
+
+
+def test_a_flat_eq_leaves_the_signal_alone():
+    tone = [0.1, -0.2, 0.3]
+    assert bgm.FLAT.apply(list(tone), SR) != tone  # ローカットだけは効く
+    assert bgm.MasterEQ(low_cut=0.0, mud_db=0.0, presence_db=0.0).apply(list(tone), SR) == tone
+
+
+def test_the_news_bed_is_shaped_to_sit_back():
+    """話し声の帯域を空けるため、下敷きは輪郭を上げすぎないこと。"""
+    assert bgm.STYLES["news_bed"].eq.presence_db < bgm.STYLES["news_open"].eq.presence_db

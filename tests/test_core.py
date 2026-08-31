@@ -459,3 +459,57 @@ def test_sidechain_ignores_triggers_past_the_end():
 
 def _rms(buf):
     return math.sqrt(sum(value * value for value in buf) / len(buf))
+
+
+# --- 帯域バランス(シェルフ / バンド) ---------------------------------------
+
+
+def _band_level(buf, freq):
+    """指定周波数の正弦波成分の大きさ。"""
+    w = 2 * math.pi * freq / SR
+    cosine, sine = math.cos(w), math.sin(w)
+    s1 = s2 = 0.0
+    for value in buf:
+        s0 = value + 2 * cosine * s1 - s2
+        s2, s1 = s1, s0
+    return math.hypot(s1 - s2 * cosine, s2 * sine) / len(buf)
+
+
+def _shift_db(processed, plain, freq):
+    return 20 * math.log10(_band_level(processed, freq) / _band_level(plain, freq))
+
+
+# 1次フィルタなので肩は緩く、帯域外にも 1dB 弱は漏れる。実用上は問題ない範囲。
+LEAKAGE_DB = 1.0
+
+
+def test_high_shelf_lifts_the_top_and_leaves_the_bottom():
+    low = oscillators.sine(80.0, 0.3, SR)
+    high = oscillators.sine(3000.0, 0.3, SR)
+    assert _shift_db(effects.high_shelf(high, 1200.0, 6.0, SR), high, 3000.0) > 4.0
+    assert abs(_shift_db(effects.high_shelf(low, 1200.0, 6.0, SR), low, 80.0)) < LEAKAGE_DB
+
+
+def test_low_shelf_lifts_the_bottom_and_leaves_the_top():
+    low = oscillators.sine(60.0, 0.3, SR)
+    high = oscillators.sine(3000.0, 0.3, SR)
+    assert _shift_db(effects.low_shelf(low, 200.0, 6.0, SR), low, 60.0) > 4.0
+    assert abs(_shift_db(effects.low_shelf(high, 200.0, 6.0, SR), high, 3000.0)) < LEAKAGE_DB
+
+
+def test_band_gain_only_touches_the_chosen_band():
+    inside = oscillators.sine(300.0, 0.3, SR)
+    outside = oscillators.sine(2500.0, 0.3, SR)
+    assert _shift_db(effects.band_gain(inside, 200.0, 450.0, -6.0, SR), inside, 300.0) < -2.0
+    assert abs(_shift_db(effects.band_gain(outside, 200.0, 450.0, -6.0, SR), outside, 2500.0)) < LEAKAGE_DB
+
+
+@pytest.mark.parametrize("shaper", ["low_shelf", "high_shelf"])
+def test_zero_db_passes_the_signal_through(shaper):
+    tone = oscillators.sine(440.0, 0.05, SR)
+    assert getattr(effects, shaper)(tone, 1000.0, 0.0, SR) == tone
+
+
+def test_band_gain_of_zero_db_passes_through():
+    tone = oscillators.sine(440.0, 0.05, SR)
+    assert effects.band_gain(tone, 200.0, 400.0, 0.0, SR) == tone

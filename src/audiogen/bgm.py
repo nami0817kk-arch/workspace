@@ -80,6 +80,37 @@ STRAIGHT = Groove()
 
 
 @dataclass(frozen=True)
+class MasterEQ:
+    """仕上げの帯域バランス。
+
+    音を重ねただけでは低い方に energy が偏り、上の帯域が埋もれる。
+    実測では最も強い帯域と 3k〜8k のあいだに 20dB 近い差があり、
+    メロディやシンバルの輪郭が出ていなかった。
+
+    可聴域より下を削り、溜まりやすい低中域を少し抜き、上を持ち上げる。
+    """
+
+    low_cut: float = 30.0
+    """これより下は削る。聞こえないのにヘッドルームだけ食う成分。"""
+    mud_range: tuple[float, float] = (200.0, 450.0)
+    mud_db: float = -2.5
+    """音が重なって溜まりやすい帯域を少し抜く。"""
+    presence: float = 2500.0
+    presence_db: float = 4.0
+    """輪郭が出る帯域を持ち上げる。"""
+
+    def apply(self, buf: list[float], sr: int) -> list[float]:
+        if self.low_cut > 0.0:
+            buf = fx.highpass(buf, self.low_cut, sr)
+        buf = fx.band_gain(buf, self.mud_range[0], self.mud_range[1], self.mud_db, sr)
+        return fx.high_shelf(buf, self.presence, self.presence_db, sr)
+
+
+FLAT = MasterEQ(mud_db=0.0, presence_db=0.0)
+"""何もしない EQ。素の帯域バランスを見たいとき用。"""
+
+
+@dataclass(frozen=True)
 class Style:
     """曲想ごとのパラメータ一式。"""
 
@@ -124,6 +155,7 @@ class Style:
     delay_wet: float = 0.0
     bitcrush_bits: int = 0
     groove: Groove = Groove(humanize=0.003)
+    eq: MasterEQ = MasterEQ()
     parts: tuple[str, ...] = ("chords", "bass", "lead", "drums")
     """既定で鳴らすパート。設定側で明示しなければこれが使われる。"""
 
@@ -220,6 +252,7 @@ STYLES: dict[str, Style] = {
         bass_instrument="sub_bass", bass_pattern="x.......x.......", bass_gain=0.42,
         drum_pattern="soft", drum_gain=0.24, reverb_wet=0.30,
         groove=Groove(accent=0.2, humanize=0.004),
+        eq=MasterEQ(presence_db=1.5),  # 話し声の帯域を空けたいので上げすぎない
         parts=("chords", "arp", "bass", "drums"),  # メロディなし
     ),
     # 試合前後のアンセム。ゆったりした行進の足取りに、
@@ -265,6 +298,8 @@ class Section:
     gain: float = 1.0
     lead_octave: int = 0
     """メロディのオクターブ移動。サビを1つ上げる、といった使い方をする。"""
+    transpose: int = 0
+    """区間まるごとの移調(半音)。サビで全体を持ち上げる定番の手。"""
 
 
 STRUCTURES: dict[str, tuple[Section, ...]] = {
@@ -279,6 +314,18 @@ STRUCTURES: dict[str, tuple[Section, ...]] = {
     "verse_chorus": (
         Section("verse", 0.5, gain=0.85),
         Section("chorus", 0.5, gain=1.0, lead_octave=1),
+    ),
+    # A メロ → サビ。サビで全体が全音上がる(転調による持ち上げ)。
+    "lift": (
+        Section("verse", 0.5, gain=0.85),
+        Section("chorus", 0.5, gain=1.0, lead_octave=1, transpose=2),
+    ),
+    # 放送向けの4部構成。サビで転調し、最後は静かに引く。
+    "broadcast": (
+        Section("intro", 0.2, drop=("drums", "lead"), gain=0.72),
+        Section("verse", 0.3, gain=0.85),
+        Section("chorus", 0.35, gain=1.0, lead_octave=1, transpose=2),
+        Section("outro", 0.15, drop=("lead",), gain=0.7, transpose=2),
     ),
     # イントロ・A メロ・サビ・アウトロの4部構成。
     "full": (
@@ -547,13 +594,14 @@ def _plan_chords(
     degrees: Sequence[int],
     bar_seconds: float,
     groove_rng: random.Random,
+    transpose: int = 0,
 ) -> list[Note]:
     """和音を並べる。
 
     ``chord_pattern`` が空なら1小節伸ばす。指定があれば16分グリッドで刻む。
     報道やスポーツの曲想では、伸ばしっぱなしより刻んだほうが前へ出る。
     """
-    root = _root_midi(config.key, style.chord_octave)
+    root = _root_midi(config.key, style.chord_octave) + transpose
     step_seconds = bar_seconds / drums.STEPS_PER_BAR
     groove = style.groove
     plan: list[Note] = []
@@ -590,6 +638,7 @@ def _plan_arp(
     degrees: Sequence[int],
     bar_seconds: float,
     groove_rng: random.Random,
+    transpose: int = 0,
 ) -> list[Note]:
     """和音の構成音を順に鳴らす細かい刻み(アルペジオ)を並べる。
 
@@ -597,7 +646,7 @@ def _plan_arp(
     """
     if not style.arp_pattern:
         return []
-    root = _root_midi(config.key, style.arp_octave)
+    root = _root_midi(config.key, style.arp_octave) + transpose
     step_seconds = bar_seconds / drums.STEPS_PER_BAR
     groove = style.groove
     length = step_seconds * 1.5
@@ -626,8 +675,9 @@ def _plan_bass(
     degrees: Sequence[int],
     bar_seconds: float,
     groove_rng: random.Random,
+    transpose: int = 0,
 ) -> list[Note]:
-    root = _root_midi(config.key, style.bass_octave)
+    root = _root_midi(config.key, style.bass_octave) + transpose
     step_seconds = bar_seconds / drums.STEPS_PER_BAR
     groove = style.groove
     length = step_seconds * 1.6
@@ -892,14 +942,15 @@ def _plan_notes(
     motifs: dict,
     bar_offset: int,
 ) -> list[Note]:
+    shift = section.transpose
     if part == "chords":
-        return _plan_chords(config, style, degrees, bar_seconds, groove_rng)
+        return _plan_chords(config, style, degrees, bar_seconds, groove_rng, shift)
     if part == "arp":
-        return _plan_arp(config, style, degrees, bar_seconds, groove_rng)
+        return _plan_arp(config, style, degrees, bar_seconds, groove_rng, shift)
     if part == "bass":
-        return _plan_bass(config, style, degrees, bar_seconds, groove_rng)
+        return _plan_bass(config, style, degrees, bar_seconds, groove_rng, shift)
     if part == "lead":
-        root = _root_midi(config.key, style.lead_octave + section.lead_octave)
+        root = _root_midi(config.key, style.lead_octave + section.lead_octave) + shift
         return _plan_lead(style, degrees, bar_seconds, root, groove_rng, motifs, bar_offset)
     raise ValueError(f"unknown part: {part!r}")
 
@@ -924,7 +975,7 @@ def describe(config: BGMConfig | None = None, **overrides) -> dict:
         "swing": style.groove.swing,
         "humanize": style.groove.humanize,
         "sections": [
-            {"name": section.name, "start_bar": start, "bars": count}
+            {"name": section.name, "start_bar": start, "bars": count, "transpose": section.transpose}
             for section, start, count in arrangement.sections
         ],
         "chords": [
@@ -1031,6 +1082,7 @@ def _post_process(
     # 終わる曲は残響を折り返さず、そのまま鳴らしきる。
     looping = config.loop and not config.ending
     buf = remove_dc(wrap_tail(buf, length) if looping else buf)
+    buf = style.eq.apply(buf, sr)
     if not limit:
         return buf
     # 飛び出した山を削ってから持ち上げる。天井付近だけ丸めて 0dBFS を超えさせない。

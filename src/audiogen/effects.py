@@ -241,3 +241,37 @@ def sidechain_envelope(
                 break
             env[index] = min(env[index], 1.0 - amount * (1.0 - k / n_release))
     return env
+
+
+def _gain_from_db(db: float) -> float:
+    return 10.0 ** (db / 20.0)
+
+
+def low_shelf(buf: Sequence[float], cutoff: float, db: float, sr: int = SAMPLE_RATE) -> list[float]:
+    """``cutoff`` より下だけ持ち上げる(または下げる)。"""
+    if db == 0.0:
+        return list(buf)
+    amount = _gain_from_db(db) - 1.0
+    return [x + amount * low for x, low in zip(buf, lowpass(buf, cutoff, sr))]
+
+
+def high_shelf(buf: Sequence[float], cutoff: float, db: float, sr: int = SAMPLE_RATE) -> list[float]:
+    """``cutoff`` より上だけ持ち上げる(または下げる)。"""
+    if db == 0.0:
+        return list(buf)
+    amount = _gain_from_db(db) - 1.0
+    return [x + amount * high for x, high in zip(buf, highpass(buf, cutoff, sr))]
+
+
+def band_gain(
+    buf: Sequence[float], low: float, high: float, db: float, sr: int = SAMPLE_RATE
+) -> list[float]:
+    """``low``〜``high`` の帯域だけ持ち上げる(または下げる)。
+
+    音を重ねると 200〜400Hz あたりが溜まって全体がこもる。そこを少し
+    削るだけで、上の帯域を上げなくても見通しがよくなる。
+    """
+    if db == 0.0:
+        return list(buf)
+    amount = _gain_from_db(db) - 1.0
+    return [x + amount * mid for x, mid in zip(buf, bandpass(buf, low, high, sr))]

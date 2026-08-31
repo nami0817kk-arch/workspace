@@ -100,6 +100,8 @@ python -m audiogen sfx footstep --count 6 --spread 0.15 -d assets/se
 - **フィル** — 区間の最後の小節でドラムの手が変わり、次の区間へ渡る感じが出る
 - **経過音** — ベースが次の和音の根音の隣へ寄ってから着地する(スタイルによる)
 - **終止** — `--ending` を付けると、最後の小節が主和音とシンバルで終わる
+- **転調** — `lift` / `broadcast` 構成では、サビで全パートが全音上がる
+- **帯域バランス** — 仕上げに低域の削り・低中域の抜き・輪郭の持ち上げをかける
 
 放送向けの使い方の例:
 
@@ -113,8 +115,8 @@ python -m audiogen bgm --style news_bed --key D --bars 8 --seed 5
 # 試合前後のアンセム(最後を主和音で締める)
 python -m audiogen bgm --style sports_anthem --bars 12 --structure full --seed 3 --ending
 
-# ハイライト。後半でメロディが1オクターブ上がる
-python -m audiogen bgm --style sports_drive --key G --bars 12 --structure verse_chorus --seed 3
+# ハイライト。後半のサビで全音上へ転調する
+python -m audiogen bgm --style sports_drive --key G --bars 12 --structure lift --seed 3 --ending
 ```
 
 `--structure` で曲の起伏を付けられる。
@@ -125,6 +127,8 @@ python -m audiogen bgm --style sports_drive --key G --bars 12 --structure verse_
 | `intro` | 静かな入り(ドラムとメロディなし)→ 本編 |
 | `verse_chorus` | A メロ → サビ(メロディが1オクターブ上がる) |
 | `full` | イントロ → A メロ → サビ → アウトロ |
+| `lift` | A メロ → サビ(全体が全音上へ転調) |
+| `broadcast` | イントロ → A メロ → サビ(転調)→ 締め |
 
 ```bash
 python -m audiogen bgm --style adventure \
@@ -138,7 +142,7 @@ python -m audiogen bgm --style adventure \
 |---|---|
 | `--key` / `--scale` | キーと音階(`major`, `minor`, `dorian`, `blues` ほか) |
 | `--bpm` / `--bars` | テンポと小節数 |
-| `--structure` | 曲構成(`loop` `intro` `verse_chorus` `full`) |
+| `--structure` | 曲構成(`loop` `intro` `verse_chorus` `full` `lift` `broadcast`) |
 | `--progression` | コード進行(ローマ数字。例 `"i-VI-III-VII"`) |
 | `--drums` | ドラムパターン(`none` `soft` `basic` `drive` `march` `shuffle` `news` `anthem` `sports` `stomp`) |
 | `--swing` / `--humanize` | 裏拍のずらし量と、タイミング・音量のゆらぎ |
