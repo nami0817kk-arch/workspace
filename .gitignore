@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# 環境変数・秘密情報
+.env
+.env.local
+*.key
+*.pem
+
+# 生成物（実行のたびに作られる。リポジトリには入れない）
+data/db/
+data/reports/
+data/cache/
+data/raw/
+data/processed/
+*.accdb
+*.xlsx
+*.log
+
+# OS / エディタ
+Thumbs.db
+.DS_Store
+.vscode/
+.idea/
