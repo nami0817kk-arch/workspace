@@ -1,7 +1,7 @@
 import json
 
 from moneyloop.cli import main
-from tests.conftest import CONFIG_RAW
+from tests.monetization.conftest import CONFIG_RAW
 
 
 def _config_file(tmp_path):

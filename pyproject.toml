@@ -3,23 +3,30 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "moneyloop"
-version = "0.1.0"
-description = "AI自動リサーチ→有料ニュースレター配信による収益化パイプライン"
+name = "ai-lab"
+version = "0.2.0"
+description = "PJT008 AIラボ - 収益化パイプライン(moneyloop/adsite)と成長ループ(growth)"
 requires-python = ">=3.11"
+# 実行時の依存はゼロ。標準ライブラリだけで動くようにしてある。
+# 依存を増やすほど「定期実行が勝手に壊れる」確率が上がるため。
 dependencies = []
 
 [project.optional-dependencies]
+# 実際にClaudeを呼ぶときだけ必要（--dry-run とテストには不要）
 llm = ["anthropic>=1.0.0"]
 dev = ["pytest>=8.0.0"]
 
 [project.scripts]
 moneyloop = "moneyloop.cli:main"
 adsite = "adsite.cli:main"
+growth = "growth.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
 
 [tool.pytest.ini_options]
-pythonpath = ["src"]
 testpaths = ["tests"]
+# tests をパスに入れているのは、共有ヘルパ(helpers.py など)を
+# ツール別サブディレクトリのテストから import できるようにするため。
+pythonpath = ["src", "tests"]
+addopts = "-q"

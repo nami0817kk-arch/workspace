@@ -1,0 +1,51 @@
+# 成長ループの管理対象プロジェクト
+#
+# ここに1行足すだけで、そのプロジェクトも週次の点検・提案の対象になる。
+# key を省略するとリポジトリ名（+ path）から自動生成される。
+
+[config]
+# 1回のランで1プロジェクトあたり提案する最大件数。
+# 「まとめて大量に言われても困る」ので、少数精鋭に絞るための上限。
+max_proposals_per_project = 3
+# 1回のランの総提案数の上限。
+max_proposals_total = 12
+# この回数だけ提案しても着手されなかったものは優先度を落とす（しつこくしない）。
+nag_decay_after = 3
+# 提案を各対象リポジトリの Issue として個別に起票するか。
+# 有効にするには GROWTH_TOKEN（issues:write）が要る。
+publish_issues = false
+# 点検結果をまとめた Issue を毎回1本立てる先。
+# ここは既定の GITHUB_TOKEN だけで動くので、追加設定なしに通知が届く。
+summary_issue_repo = "nami0817kk-arch/ai-lab"
+
+
+[[project]]
+key = "ai-lab"
+repo = "nami0817kk-arch/ai-lab"
+title = "PJT008 AIラボ / 成長ループ本体"
+tags = ["python", "meta"]
+weight = 1.0
+
+[[project]]
+key = "kabu-agari-ranking"
+repo = "nami0817kk-arch/kabu-agari-ranking"
+title = "日本株 値上がりランキング自動サイト"
+tags = ["python", "revenue", "scheduled", "public"]
+# 収益が乗っているので壊れたときの痛みが大きい。優先度を上げる。
+weight = 1.4
+
+[[project]]
+key = "youtube-video-creation"
+repo = "nami0817kk-arch/youtube-video-creation"
+title = "YouTube動画制作"
+tags = ["python"]
+weight = 1.0
+
+[[project]]
+key = "claude-code-dev"
+repo = "nami0817kk-arch/claude-code-dev"
+title = "Claude Code 開発ワークスペース（モノレポ）"
+tags = ["monorepo", "public"]
+weight = 1.0
+# projects/ 配下の各PJTを個別のプロジェクトとして自動で見る
+subprojects = ["projects/*"]
