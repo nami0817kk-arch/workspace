@@ -177,9 +177,15 @@ class TestSummaries(ScreenTestBase):
         self.assertEqual(screen.article_summary()["total"], 0)
 
     def test_collect_reports_the_previous_month(self):
+        # 「前月」は暦の前月。固定の月を書くと、月が変わった途端に
+        # 落ちる日付依存テストになるので、実行日から前月を計算する。
+        this_month = store.today()[:7]
+        y, m = map(int, this_month.split("-"))
+        prev_month = f"{y - 1}-12" if m == 1 else f"{y}-{m - 1:02d}"
+
         pjt.add("A", kind="media", status="運用", released="2026-01-01")
-        pjt.record(1, month="2026-07", revenue=1000, hours=1)
-        pjt.record(1, month=store.today()[:7], revenue=3000, hours=1)
+        pjt.record(1, month=prev_month, revenue=1000, hours=1)
+        pjt.record(1, month=this_month, revenue=3000, hours=1)
         self.assertEqual(screen.collect()["previous_month_revenue"], 1000)
 
 

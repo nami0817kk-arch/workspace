@@ -801,7 +801,7 @@ python main.py ask "3週間提案しても返信がありません"
 python main.py report --idea 1
 ```
 
-`data/reports/report-YYYY-MM-DD.md` に、プロフィール・売上推移・調査結果・計画・タスクを出力する。
+`data/reports/` 配下の `report-<日付>.md` に、プロフィール・売上推移・調査結果・計画・タスクを出力する。
 
 ## テスト
 

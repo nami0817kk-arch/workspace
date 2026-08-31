@@ -1,2 +1,4 @@
-anthropic>=0.30.0
-python-dotenv>=1.0.0
+# バージョンは固定する。更新は Dependabot の PR で受け取り、CI が通るのを見てから上げる。
+# anthropic は任意依存（無くても LLM 機能以外は動く。src/llm.py が実行時に判定する）。
+anthropic==0.113.0
+python-dotenv==1.2.2
