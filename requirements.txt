@@ -3,6 +3,6 @@
 requests==2.34.2
 beautifulsoup4==4.15.0
 pdfplumber==0.11.10
-anthropic==0.113.0
+anthropic==1.2.0
 openpyxl==3.1.5
 python-dotenv==1.2.2
