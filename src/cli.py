@@ -155,6 +155,8 @@ def main(argv: list[str] | None = None) -> int:
     p_fetch.add_argument("--league", default=None, help="このリーグのフィードだけ")
     p_fetch.add_argument("--hours", type=float, default=24, help="この時間内の見出しだけ（既定: 24）")
     p_fetch.add_argument("--check", action="store_true", help="全フィードの生死を確かめる")
+    p_fetch.add_argument("--url", default=None,
+                         help="設定に無いURLを1本だけ試す（差し替える前の下見）")
 
     p_gather = sub.add_parser(
         "gather", help="フィードと貼り付けをまとめて取り、候補ファイルまで作る")
@@ -946,6 +948,32 @@ def _dispatch(args, config) -> int:
         from .plan import load_plan
 
         plan = load_plan()
+
+        # 設定に入れる前に、そのURLが何を返すか見る。
+        # Sky のように「全スポーツ版」と「サッカー版」が別URLで並んでいることがあり、
+        # 生きているかどうかだけでは中身の違いが分からない
+        if args.url:
+            try:
+                items = feeds_mod.fetch(args.url)
+            except feeds_mod.FeedError as error:
+                print(f"× 取得できません: {error}", file=sys.stderr)
+                return 1
+            if not items:
+                print("× 取れましたが、項目が1つもありません", file=sys.stderr)
+                return 1
+
+            print(f"■ 下見　{args.url}")
+            print(f"　{len(items)}件\n")
+            for item in items[:20]:
+                age = item.hours_ago()
+                mark = f"{max(0.0, age):5.1f}時間前" if age is not None else "　時刻なし"
+                print(f"  {mark}  {item.title[:70]}")
+            if len(items) > 20:
+                print(f"  … 他{len(items) - 20}件")
+            print("\n見出しを見て、狙った内容が返っているか確かめてください。")
+            print("よければ config/sources.yaml の feeds に足します")
+            return 0
+
         wanted = [
             f for f in plan.feeds
             if not args.league or str(f.get("league")) == args.league

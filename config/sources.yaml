@@ -154,9 +154,12 @@ calendar:
     - {league: france, at: "2026-09-02 06:00", local: "現地 9/1 23:00 CEST", confirmed: false}
 
 # RSSフィード。検索より速く、見出しと正確な時刻が取れる。
-# 注意: URLはまだ実測できていない（開発環境から外に出られないため）。
-#       運用するPCで `python -m src.cli fetch --check` を回し、
-#       生きているものだけ verified: true に直すこと。死んだものは消す。
+# 生死は `python -m src.cli fetch --check` で確かめる。
+#
+# 生きているかどうかと、狙った内容が返るかは別の話。
+# Sky は「全スポーツ版」と「サッカー版」が別URLで並んでいて、
+# 全スポーツ版を引くとクリケットも競馬もゴルフも混ざってくる（実測）。
+# 差し替える前に `fetch --url <URL>` で中身を見てから足すこと。
 feeds:
   - {name: Sky Sports News, url: "https://www.skysports.com/rss/12040", league: england, verified: false}
   - {name: ESPN Soccer, url: "https://www.espn.com/espn/rss/soccer/news", league: england, verified: false}
