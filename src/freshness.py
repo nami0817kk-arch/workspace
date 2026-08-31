@@ -88,6 +88,7 @@ STALE_ID_RATIO = 0.98
 # 数分後に回し直しただけで警告を出すと、警告として機能しなくなる
 MIN_STALL_HOURS = 6.0
 
+LEDGER = "research/freshness.yaml"
 LEDGER_HEADER = "# 検索の索引がどこまで進んだかの記録。fresh のたびに追記される\n"
 
 
@@ -120,13 +121,17 @@ class Observation:
     site: str
     max_number: int
     at: datetime
+    exact: bool = False   # 記事そのものの公開時刻か（フィードから較正したもの）
 
     def to_dict(self) -> dict:
-        return {
+        body = {
             "site": self.site,
             "max": self.max_number,
             "at": self.at.isoformat(timespec="minutes"),
         }
+        if self.exact:
+            body["exact"] = True
+        return body
 
 
 def read(url: str) -> Ref:
@@ -193,6 +198,7 @@ def load(path: str | Path) -> list[Observation]:
                     site=str(row["site"]),
                     max_number=int(row["max"]),
                     at=datetime.fromisoformat(str(row["at"])),
+                    exact=bool(row.get("exact", False)),
                 )
             )
         except (KeyError, TypeError, ValueError):
@@ -222,6 +228,11 @@ def rate(entries: list[Observation], site: str) -> float | None:
     記録が足りないうちは None を返す。憶測で埋めない。
     """
     found = sorted((e for e in entries if e.site == site), key=lambda o: o.at)
+    # 較正した記録（記事そのものの公開時刻）が2つ以上あるなら、それだけで出す。
+    # 「見た時刻」は公開より遅いぶん、混ぜると伸びを実際より遅く見積もる
+    exact = [e for e in found if e.exact]
+    if len(exact) >= 2:
+        found = exact
     if len(found) < 2:
         return None
     first, last = found[0], found[-1]
@@ -342,6 +353,51 @@ def observe(
         if previous is None or seen > previous.max_number:
             added.append(Observation(site=site, max_number=seen, at=now))
     return added, growth
+
+
+def calibrate(
+    pairs: list[tuple[str, datetime]], entries: list[Observation]
+) -> tuple[list[Observation], dict[str, datetime]]:
+    """記事URLとその公開時刻の組から、索引の水準を較正する。
+
+    フィードは記事URLと正確な公開時刻を一緒にくれる。
+    「その記事IDが、いつの時点のものか」が推定ではなく分かるので、
+    そこから割り出す経過時間の精度が上がる。
+
+    IDを持たないサイト（URLに日付が入るサイト、x.com）は較正しない。
+    もともと日付が直接読めるので、水準を持つ意味がない。
+    """
+    seen: dict[str, list[tuple[int, datetime]]] = {}
+    for url, when in pairs:
+        ref = read(url)
+        if not ref.site or ref.site == "x.com" or ref.number <= 0 or when is None:
+            continue
+        if when.tzinfo is not None:
+            when = when.astimezone().replace(tzinfo=None)
+        seen.setdefault(ref.site, []).append((ref.number, when))
+
+    known = {(e.site, e.max_number) for e in entries if e.exact}
+    added = list(entries)
+    done: dict[str, datetime] = {}
+
+    for site, found in seen.items():
+        found.sort(key=lambda pair: pair[1])
+        oldest, newest = found[0], found[-1]
+
+        # 1回のフィードに新旧の記事が入っている。離れた2点が取れれば、
+        # その場で伸びの速さが出せる（1点ずつ日をまたいで待たなくてよい）
+        picks = [newest]
+        span = (newest[1] - oldest[1]).total_seconds() / 3600
+        if span >= MIN_SPAN_HOURS and oldest[0] != newest[0]:
+            picks.append(oldest)
+
+        for number, when in picks:
+            if (site, number) in known:
+                continue
+            known.add((site, number))
+            added.append(Observation(site=site, max_number=number, at=when, exact=True))
+            done.setdefault(site, newest[1])
+    return added, done
 
 
 def advice(growth: dict[str, int], entries: list[Observation], now=None) -> list[str]:

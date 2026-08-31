@@ -129,7 +129,7 @@ def _network(plan, now: datetime) -> Note:
 
 
 def _index(plan, now: datetime) -> Note:
-    entries = freshness.load("research/freshness.yaml")
+    entries = freshness.load(freshness.LEDGER)
     if not entries:
         return Note(False, "索引の記録", "まだありません。fresh を回すと貯まります")
 

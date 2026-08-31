@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
 
+import pytest
+
 from src.freshness import (
     Observation,
     Ref,
@@ -356,3 +358,101 @@ def test_sites_without_article_ids_are_not_recorded():
     entries, growth = observe(groups, [], T0)
     assert [e.site for e in entries] == ["skysports.com"]
     assert "footballchannel.jp" not in growth
+
+
+# ---------------------------------------------------------------- 較正
+# フィードは記事URLと正確な公開時刻を一緒にくれる。
+# 「そのIDがいつの時点のものか」が推定ではなく分かる。
+
+def _sky(number: int) -> str:
+    return f"https://www.skysports.com/football/news/11661/{number}/story"
+
+
+def test_フィードの時刻で水準を較正する():
+    from datetime import datetime
+
+    from src import freshness
+
+    pairs = [
+        (_sky(13000010), datetime(2026, 8, 31, 0, 0)),
+        (_sky(13000100), datetime(2026, 8, 31, 8, 0)),
+    ]
+    entries, tuned = freshness.calibrate(pairs, [])
+    assert set(tuned) == {"skysports.com"}
+    assert all(entry.exact for entry in entries)
+
+
+def test_1回の取得だけで伸びの速さが出る():
+    from datetime import datetime
+
+    from src import freshness
+
+    # 1本のフィードに新旧の記事が入っている。離れた2点が取れれば、
+    # 日をまたいで待たなくてもペースが出せる
+    pairs = [
+        (_sky(13000010), datetime(2026, 8, 31, 0, 0)),
+        (_sky(13000050), datetime(2026, 8, 31, 4, 0)),
+        (_sky(13000100), datetime(2026, 8, 31, 8, 0)),
+    ]
+    entries, _ = freshness.calibrate(pairs, [])
+    assert freshness.rate(entries, "skysports.com") == pytest.approx(11.25)
+
+
+def test_近すぎる2点では1点しか記録しない():
+    from datetime import datetime
+
+    from src import freshness
+
+    pairs = [
+        (_sky(13000090), datetime(2026, 8, 31, 7, 0)),
+        (_sky(13000100), datetime(2026, 8, 31, 8, 0)),
+    ]
+    entries, _ = freshness.calibrate(pairs, [])
+    assert len(entries) == 1
+
+
+def test_同じ較正を二度足さない():
+    from datetime import datetime
+
+    from src import freshness
+
+    pairs = [
+        (_sky(13000010), datetime(2026, 8, 31, 0, 0)),
+        (_sky(13000100), datetime(2026, 8, 31, 8, 0)),
+    ]
+    entries, _ = freshness.calibrate(pairs, [])
+    again, tuned = freshness.calibrate(pairs, entries)
+    assert len(again) == len(entries)
+    assert tuned == {}
+
+
+def test_IDを持たないサイトは較正しない():
+    from datetime import datetime
+
+    from src import freshness
+
+    pairs = [
+        ("https://www.soccer-king.jp/news/world/2026/08/31/1234567.html", datetime(2026, 8, 31, 8, 0)),
+        ("https://x.com/FabrizioRomano/status/1961000000000000000", datetime(2026, 8, 31, 8, 0)),
+    ]
+    entries, tuned = freshness.calibrate(pairs, [])
+    assert entries == [] and tuned == {}
+
+
+def test_較正した記録があるならそれだけでペースを出す():
+    from datetime import datetime
+
+    from src import freshness
+    from src.freshness import Observation
+
+    # 「見た時刻」は公開より遅いぶん、混ぜると伸びを実際より遅く見積もる
+    rough = [
+        Observation("skysports.com", 13000010, datetime(2026, 8, 30, 12, 0)),
+        Observation("skysports.com", 13000100, datetime(2026, 8, 31, 12, 0)),
+    ]
+    pairs = [
+        (_sky(13000010), datetime(2026, 8, 31, 0, 0)),
+        (_sky(13000100), datetime(2026, 8, 31, 8, 0)),
+    ]
+    entries, _ = freshness.calibrate(pairs, rough)
+    assert freshness.rate(entries, "skysports.com") == pytest.approx(11.25)

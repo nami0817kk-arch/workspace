@@ -748,7 +748,7 @@ def _dispatch(args, config) -> int:
             print("対応: skysports.com / espn.com / x.com", file=sys.stderr)
             return 1
 
-        ledger = "research/freshness.yaml"
+        ledger = freshness.LEDGER
         entries = freshness.load(ledger)
         updated, growth = freshness.observe(groups, entries)
 
@@ -954,6 +954,22 @@ def _dispatch(args, config) -> int:
             seen.add(item.url)
             print(item.line())
 
+        # フィードは記事URLと正確な公開時刻を一緒にくれる。
+        # 「そのIDがいつの時点のものか」が分かるので、索引の水準を較正できる
+        from . import freshness
+
+        entries = freshness.load(freshness.LEDGER)
+        entries, tuned = freshness.calibrate(
+            [(item.url, item.published) for item in collected if item.published],
+            entries,
+        )
+        if tuned:
+            freshness.save(freshness.LEDGER, freshness.prune(entries))
+            print(
+                f"索引の水準を較正しました: {' / '.join(sorted(tuned))}",
+                file=sys.stderr,
+            )
+
         if broken:
             print(f"取得できなかったフィード: {' / '.join(broken)}", file=sys.stderr)
         print(
@@ -1076,7 +1092,7 @@ def _dispatch(args, config) -> int:
                 print(issue.line())
 
         # hours_ago を書いていない候補は、url から割り出す
-        observations = freshness.load("research/freshness.yaml")
+        observations = freshness.load(freshness.LEDGER)
 
         def age_of(url: str):
             ref = freshness.read(url)
