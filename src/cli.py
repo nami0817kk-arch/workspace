@@ -46,6 +46,27 @@ from .thumbnail import build_thumbnail
 from .tts import TtsError
 
 
+def _use_utf8(*streams) -> None:
+    """出力を UTF-8 にそろえる。
+
+    Windows でコンソールに直接出すぶんには問題ないが、パイプやファイルに
+    渡した瞬間、ロケールの文字コード（日本語環境なら cp932）で書こうとする。
+    kicker の見出しに入る ü や ß、画面に出す ✓ は cp932 に無いので、
+    そこで落ちる。
+
+    `fetch | collect` は本来つないで使う流れなので、ここでそろえておく。
+    実運用のPCで、`fetch --check` をパイプに渡して落ちたのが見つかった。
+    """
+    for stream in streams or (sys.stdout, sys.stderr):
+        encoding = (getattr(stream, "encoding", "") or "").lower().replace("-", "")
+        if encoding == "utf8":
+            continue
+        try:
+            stream.reconfigure(encoding="utf-8", errors="replace")
+        except (AttributeError, ValueError, OSError):
+            pass  # 差し替えられた出力先（テストなど）。そのまま使う
+
+
 def candidates_mod_load(path):
     from . import candidates as candidates_mod
 
@@ -100,6 +121,7 @@ def _active_deadlines(plan, day) -> list:
 
 
 def main(argv: list[str] | None = None) -> int:
+    _use_utf8()
     parser = argparse.ArgumentParser(prog="src.cli", description="ゆっくり実況動画ビルダー")
     parser.add_argument("--config", default=None, help="設定ファイル (既定: config/project.yaml)")
     sub = parser.add_subparsers(dest="command", required=True)
