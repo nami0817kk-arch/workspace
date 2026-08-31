@@ -49,3 +49,56 @@ tags = ["monorepo", "public"]
 weight = 1.0
 # projects/ 配下の各PJTを個別のプロジェクトとして自動で見る
 subprojects = ["projects/*"]
+
+[[project]]
+key = "soccer-manager"
+repo = "nami0817kk-arch/soccer-manager"
+title = "サッカークラブ経営シミュレーション（Flutter）"
+tags = ["flutter", "app"]
+# ストア申請が近い。出す直前に壊れているのがいちばん困る。
+weight = 1.2
+
+[[project]]
+key = "tool-factory"
+repo = "nami0817kk-arch/tool-factory"
+title = "計算ツール量産サイト"
+tags = ["python", "revenue", "public"]
+# 公開済みで広告審査を待っている段階。
+weight = 1.2
+
+[[project]]
+key = "price-tracker"
+repo = "nami0817kk-arch/price-tracker"
+title = "楽天 値下がりウォッチ"
+tags = ["python", "revenue", "scheduled", "public"]
+# 収益目的の日次実行。kabu と同じ壊れ方をしうる。
+weight = 1.2
+
+[[project]]
+key = "ai-side-business"
+repo = "nami0817kk-arch/ai-side-business"
+title = "AI副業の実行エンジン・経営管理"
+tags = ["python"]
+weight = 1.0
+
+[[project]]
+key = "quality-gainer-tracker"
+repo = "nami0817kk-arch/quality-gainer-tracker"
+title = "好業績な値上がり銘柄の追跡"
+tags = ["python"]
+weight = 1.0
+
+[[project]]
+key = "ir-analysis"
+repo = "nami0817kk-arch/ir-analysis"
+title = "適時開示(IR)の取得・分析と Excel 出力"
+tags = ["python"]
+weight = 1.0
+
+[[project]]
+key = "cohabitation-budget"
+repo = "nami0817kk-arch/cohabitation-budget"
+title = "同棲費用シミュレーター（単一ページ）"
+tags = ["web", "public"]
+# 1ページで完成しているので、しつこく提案されても困る。
+weight = 0.8
