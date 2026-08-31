@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 
 import pytest
 
-from src.feeds import FeedError, Item, parse, recent
+from src.feeds import FeedError, Item, _when, age_text, parse, recent
 
 NOW = datetime(2026, 8, 31, 12, 0, tzinfo=timezone.utc)
 
@@ -156,3 +156,61 @@ def test_宣言が無ければ空(monkeypatch):
 
     _page(monkeypatch, "<html><head><title>なにもない</title></head></html>")
     assert feeds.discover("https://x.example/") == []
+
+
+# フィード側の時計が進んでいることがある（Sky は実測で40分ほど先）。
+# そのまま引き算すると「最新 -0.7時間前」になって読めない。
+
+
+def test_進んだ時刻は先であることが分かるように言う():
+    assert "40分先" in age_text(-0.67)
+    assert "時計が進んでいる" in age_text(-0.67)
+
+
+def test_ふつうの経過時間はそのまま言う():
+    assert age_text(1.26) == "最新 1.3時間前"
+    assert age_text(0.0) == "最新 0.0時間前"
+
+
+def test_時刻が無いフィードもある():
+    assert age_text(None) == "時刻なし"
+
+
+# RFC822 は BST や CEST という名前を知らない。読めないと「時間帯なし」になり、
+# こちらが UTC とみなして、夏時間のぶんだけ見出しが新しい方へずれていた。
+# Sky は BST と書いてくるので、全部の見出しが1時間新しくなっていた。
+
+
+def test_BSTは英国夏時間として読む():
+    when = _when("Mon, 31 Aug 2026 15:50:10 BST")
+    assert when.utcoffset().total_seconds() == 3600
+    assert when.astimezone(timezone.utc).hour == 14
+
+
+def test_CESTは中欧夏時間として読む():
+    when = _when("Mon, 31 Aug 2026 15:50:10 CEST")
+    assert when.utcoffset().total_seconds() == 7200
+
+
+def test_GMTと数字の時差はそのまま():
+    assert _when("Mon, 31 Aug 2026 15:50:10 GMT").utcoffset().total_seconds() == 0
+    assert _when("Mon, 31 Aug 2026 15:50:10 +0900").utcoffset().total_seconds() == 32400
+
+
+def test_知らない名前は当てずにUTCのままにする():
+    """IST はアイルランドとインドで割れる。当てられないものを当てたことにしない。"""
+    assert _when("Mon, 31 Aug 2026 15:50:10 IST").utcoffset().total_seconds() == 0
+    assert _when("Mon, 31 Aug 2026 15:50:10 XYZ").utcoffset().total_seconds() == 0
+
+
+def test_Skyの見出しが未来のものにならない():
+    now = datetime(2026, 8, 31, 14, 55, tzinfo=timezone.utc)
+    sky = """<?xml version="1.0"?>
+    <rss version="2.0"><channel>
+      <item><title>Newcastle closing in on deal</title>
+        <link>https://www.skysports.com/football/news/1</link>
+        <pubDate>Mon, 31 Aug 2026 15:50:10 BST</pubDate></item>
+    </channel></rss>"""
+    age = parse(sky)[0].hours_ago(now)
+    assert age > 0, "BSTをUTC扱いすると未来の投稿になる"
+    assert age == pytest.approx(0.08, abs=0.02)

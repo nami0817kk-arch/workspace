@@ -1072,8 +1072,7 @@ def _dispatch(args, config) -> int:
                 try:
                     items = feeds_mod.fetch(str(feed.get("url", "")))
                     newest = items[0].hours_ago() if items else None
-                    age = f"最新 {newest:.1f}時間前" if newest is not None else "時刻なし"
-                    print(f"  ✓ {feed.get('name')}　{len(items)}件　{age}")
+                    print(f"  ✓ {feed.get('name')}　{len(items)}件　{feeds_mod.age_text(newest)}")
                     alive += 1
                 except feeds_mod.FeedError as error:
                     print(f"  × {feed.get('name')}　{error}")

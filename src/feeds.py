@@ -60,6 +60,21 @@ class Item:
         return f"{self.title}\t{self.url}\t{max(0.0, age):.1f}h"
 
 
+def age_text(hours: float | None) -> str:
+    """フィードの新しさの言い方。
+
+    フィード側の時計が進んでいることがある（Sky は実測で40分ほど先の時刻を
+    付けてきた）。そのまま引き算すると「最新 -0.7時間前」になって読めない。
+    サイト側の時計の話なので、こちらで直せる種類のものではない。
+    黙って0に丸めると気づけないので、進んでいることが見えるようにする。
+    """
+    if hours is None:
+        return "時刻なし"
+    if hours < 0:
+        return f"最新の時刻が{-hours * 60:.0f}分先（フィード側の時計が進んでいる）"
+    return f"最新 {hours:.1f}時間前"
+
+
 def _get(url: str, timeout: int = TIMEOUT) -> str:
     request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
     try:
@@ -160,11 +175,37 @@ def _atom_entry(node) -> Item | None:
     return Item(title=title, url=url, published=_when(stamp) if stamp else None)
 
 
+# RFC822 が知らない時間帯の名前。書いてあるのに読めないと、
+# 「時間帯なし」→ UTC とみなされて、夏時間のぶんだけ新しい方へずれる。
+# Sky は BST と書いてくる。UTC扱いすると全部の見出しが1時間新しくなり、
+# `fetch --check` に「最新の時刻が46分先」と出ていた（実測）。
+#
+# IST は「アイルランド(+0100)」と「インド(+0530)」で割れるので入れない。
+# 当てられないものを当てたことにしない。
+NAMED_ZONES = {
+    "BST": "+0100",     # 英国夏時間。Sky
+    "CET": "+0100",
+    "CEST": "+0200",    # 中欧夏時間。kicker / Gazzetta の系統
+    "WET": "+0000",
+    "WEST": "+0100",
+    "EET": "+0200",
+    "EEST": "+0300",
+    "JST": "+0900",
+}
+
+ZONE_TAIL = re.compile("(" + "|".join(NAMED_ZONES) + ")[ ]*$")
+
+
+def _numeric_zone(stamp: str) -> str:
+    """末尾の時間帯の名前を、数字の時差に置き換える。"""
+    return ZONE_TAIL.sub(lambda m: NAMED_ZONES[m.group(1).upper()], stamp)
+
+
 def _when(stamp: str) -> datetime | None:
     """RFC822（RSS）と ISO8601（Atom/dc:date）の両方を読む。読めなければ None。"""
     stamp = stamp.strip()
     try:
-        found = parsedate_to_datetime(stamp)
+        found = parsedate_to_datetime(_numeric_zone(stamp))
         if found.tzinfo is None:
             found = found.replace(tzinfo=timezone.utc)
         return found
