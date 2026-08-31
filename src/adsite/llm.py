@@ -1,8 +1,11 @@
 """LLMクライアント。
 
-`ClaudeClient` が本番、`StubClient` がオフライン用（--dry-run とテスト）。
-どちらも同じ :class:`LLMResult` を返すので、上位のパイプラインは
-どちらを渡されたかを意識しない。
+このサイトでAIを使うのは**公開する文章を量産するためではない**。
+生成記事の量産は検索スパムポリシー（スケールされたコンテンツの不正使用）に
+該当し、順位もAdSenseアカウントも失う。
+
+使うのは社内側だけ ―― 「次にどのツールを作るべきか」の提案。
+提案は人間が取捨選択して初めて実装に進むので、公開物には直結しない。
 """
 
 from __future__ import annotations
@@ -15,17 +18,7 @@ from typing import Any, Protocol
 
 from .pricing import token_cost_usd
 
-# 生成の一貫性を担保するシステムプロンプト。プロンプトキャッシュを効かせるため、
-# 号ごとに変わる情報は絶対にここへ入れない（前半が1バイトでも変わるとキャッシュが無効化される）。
-EDITOR_SYSTEM = """あなたは実務家向け有料ニュースレターの編集者です。読者は多忙な意思決定者で、
-「読む時間」に対価を払っています。次の規律を厳守してください。
-
-1. 事実は与えられた記事の範囲内でのみ述べる。記事にない数値・固有名詞を創作しない。
-2. 推測・解釈を書くときは「筆者の見立て」と明示して事実と分ける。
-3. 各トピックには必ず出典URLをMarkdownリンクで添える。原文の丸写しはせず、要約と分析を書く。
-4. 「なぜ今これが重要か」「読者は明日何をすべきか」を必ず含める。一般論で埋めない。
-5. 出力は日本語のMarkdown。見出しレベルは ## 以下を使う。
-"""
+DEFAULT_MODEL = "claude-opus-5"
 
 
 class LLMError(RuntimeError):
@@ -45,7 +38,7 @@ class LLMResult:
         return token_cost_usd(self.model, self.input_tokens, self.output_tokens, self.cache_read_tokens)
 
     def json(self) -> Any:
-        """構造化出力をパースする。tool入力と同様、素の文字列一致は使わない。"""
+        """構造化出力をパースする。素の文字列一致はしない。"""
         try:
             return json.loads(self.text)
         except json.JSONDecodeError as exc:
@@ -54,22 +47,16 @@ class LLMResult:
 
 class LLMClient(Protocol):
     def complete(
-        self,
-        prompt: str,
-        *,
-        model: str,
-        schema: dict | None = None,
-        max_tokens: int = 16000,
-        effort: str = "high",
-        system: str = EDITOR_SYSTEM,
+        self, prompt: str, *, system: str, model: str = DEFAULT_MODEL, schema: dict | None = None,
+        max_tokens: int = 16000, effort: str = "high",
     ) -> LLMResult: ...
 
 
 class ClaudeClient:
     """Anthropic公式SDK経由の実装。
 
-    Claude Opus 5 の既定に合わせ、思考は adaptive（既定でオン）、
-    安全分類による拒否に備えてサーバサイドフォールバックを有効にしている。
+    思考は adaptive（Opus 5 の既定でオン）、安全分類による拒否に備えて
+    サーバサイドフォールバックを有効にしている。
     """
 
     FALLBACK_BETA = "server-side-fallback-2026-07-01"
@@ -83,25 +70,18 @@ class ClaudeClient:
             ) from exc
         self._anthropic = anthropic
         key = api_key or os.environ.get("ANTHROPIC_API_KEY")
-        # キー未設定でも `ant auth login` のプロファイルで解決されるため、
-        # ここでキーの有無を検査しない。
+        # キー未設定でも `ant auth login` のプロファイルで解決されるため、有無は検査しない。
         self.client = anthropic.Anthropic(api_key=key) if key else anthropic.Anthropic()
         self.enable_fallbacks = enable_fallbacks
 
     def complete(
-        self,
-        prompt: str,
-        *,
-        model: str,
-        schema: dict | None = None,
-        max_tokens: int = 16000,
-        effort: str = "high",
-        system: str = EDITOR_SYSTEM,
+        self, prompt: str, *, system: str, model: str = DEFAULT_MODEL, schema: dict | None = None,
+        max_tokens: int = 16000, effort: str = "high",
     ) -> LLMResult:
         kwargs: dict[str, Any] = {
             "model": model,
             "max_tokens": max_tokens,
-            # 安定部分をキャッシュ対象にして、号を重ねるほど入力原価を下げる。
+            # 安定部分をキャッシュ対象にする。可変情報を system に混ぜるとキャッシュが無効になる。
             "system": [{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
             "messages": [{"role": "user", "content": prompt}],
             "thinking": {"type": "adaptive"},
@@ -116,10 +96,9 @@ class ClaudeClient:
             details = getattr(response, "stop_details", None)
             raise LLMError(f"モデルがリクエストを拒否しました: {getattr(details, 'category', None)}")
 
-        text = "".join(b.text for b in response.content if b.type == "text")
         usage = response.usage
         return LLMResult(
-            text=text,
+            text="".join(b.text for b in response.content if b.type == "text"),
             model=getattr(response, "model", model),
             input_tokens=getattr(usage, "input_tokens", 0) or 0,
             output_tokens=getattr(usage, "output_tokens", 0) or 0,
@@ -135,63 +114,36 @@ class ClaudeClient:
                 betas=[self.FALLBACK_BETA], fallbacks="default", **kwargs
             )
         except (self._anthropic.BadRequestError, TypeError):
-            # SDK/アカウントがこのbetaに未対応の場合のみ、通常経路で再試行する。
             self.enable_fallbacks = False
             return self.client.messages.create(**kwargs)
 
 
 class StubClient:
-    """API不要の決定論的スタブ。
+    """API不要の決定論的スタブ。--dry-run とテストで使う。"""
 
-    課金が発生しないので、パイプラインの配線・冪等性・収支計算の検証に使う。
-    スキーマが与えられた場合はそれを満たす最小のJSONを組み立てて返す。
-    """
-
-    def __init__(self, tokens_per_call: tuple[int, int] = (4000, 1500)) -> None:
+    def __init__(self, tokens_per_call: tuple[int, int] = (3000, 1200)) -> None:
         self.tokens_per_call = tokens_per_call
         self.calls: list[dict[str, Any]] = []
 
     def complete(
-        self,
-        prompt: str,
-        *,
-        model: str,
-        schema: dict | None = None,
-        max_tokens: int = 16000,
-        effort: str = "high",
-        system: str = EDITOR_SYSTEM,
+        self, prompt: str, *, system: str, model: str = DEFAULT_MODEL, schema: dict | None = None,
+        max_tokens: int = 16000, effort: str = "high",
     ) -> LLMResult:
         self.calls.append({"prompt": prompt, "model": model, "schema": schema})
         text = json.dumps(self._synth(schema, prompt), ensure_ascii=False) if schema else "(stub output)"
         return LLMResult(
-            text=text,
-            model=model,
-            input_tokens=self.tokens_per_call[0],
-            output_tokens=self.tokens_per_call[1],
+            text=text, model=model, input_tokens=self.tokens_per_call[0], output_tokens=self.tokens_per_call[1]
         )
 
     def _synth(self, schema: dict, prompt: str) -> Any:
-        """スキーマ駆動でダミー値を組み立てる。配列長はプロンプト内の項目数に合わせる。"""
         seed = int(hashlib.sha256(prompt.encode()).hexdigest()[:8], 16)
-        n_items = max(1, prompt.count("[item "))
 
         def build(node: dict, depth: int = 0) -> Any:
             kind = node.get("type")
             if kind == "object":
-                props = node.get("properties", {})
-                return {k: build(v, depth + 1) for k, v in props.items()}
+                return {k: build(v, depth + 1) for k, v in node.get("properties", {}).items()}
             if kind == "array":
-                length = n_items if depth == 0 or "index" in str(node) else 2
-                items = node.get("items", {"type": "string"})
-                out = []
-                for i in range(length):
-                    value = build(items, depth + 1)
-                    if isinstance(value, dict) and "index" in value:
-                        value["index"] = i
-                    if isinstance(value, dict) and "score" in value:
-                        value["score"] = 60 + (seed + i * 7) % 40
-                    out.append(value)
-                return out
+                return [build(node.get("items", {"type": "string"}), depth + 1) for _ in range(3)]
             if kind == "integer":
                 return (seed % 40) + 60
             if kind == "number":

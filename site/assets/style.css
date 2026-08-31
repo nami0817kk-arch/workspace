@@ -134,3 +134,18 @@ footer {
 footer div { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-bottom: 0.75rem; }
 footer a { color: var(--muted); }
 .copy { margin: 0; }
+
+/* ---- 関連ツール ---- */
+/* 1セッションで2本目に進んでもらえるかがPVを決めるので、本文末に必ず置く。 */
+.related { margin-top: 2.5rem; }
+.related h2 { margin-top: 0; }
+.related ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 0.6rem; }
+.related li {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0.7rem 0.85rem;
+  background: var(--surface);
+}
+.related li a { font-weight: 600; text-decoration: none; }
+.related li a:hover { text-decoration: underline; }
+.related li span { display: block; font-size: 0.82rem; color: var(--muted); margin-top: 0.15rem; }

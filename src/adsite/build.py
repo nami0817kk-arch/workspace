@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import shutil
 from dataclasses import dataclass, field
 from datetime import date
@@ -31,6 +32,35 @@ class BuildReport:
         }
 
 
+_INTERNAL_LINK = re.compile(r"\]\((/[^)\s]*)\)")
+
+
+def check_links(pages: list[Page], report: BuildReport) -> None:
+    """内部リンク切れと、どこからも辿れないページを検出する。
+
+    リンク切れは訪問者を失うだけでなく、クロールの評価にも効く。
+    孤立ページは検索エンジンに見つけてもらえず、PVにならない。
+    """
+    known = {p.url_path for p in pages}
+    inbound: dict[str, int] = {p.url_path: 0 for p in pages}
+
+    for page in pages:
+        for href in _INTERNAL_LINK.findall(page.body_md):
+            target = href.split("#")[0]
+            if target in known:
+                inbound[target] += 1
+            elif not target.startswith("/assets/"):
+                report.warnings.append(f"{page.slug}: リンク切れ {href}")
+
+    # フッターから常に辿れるページは孤立扱いしない。
+    always_linked = {"/", "/privacy/", "/about/"}
+    for page in pages:
+        if page.url_path in always_linked or page.noindex:
+            continue
+        if inbound[page.url_path] == 0:
+            report.warnings.append(f"{page.slug}: どのページからもリンクされていない（検索に拾われにくい）")
+
+
 def _check(page: Page, site: SiteConfig, report: BuildReport) -> None:
     """公開前に落としておきたい品質問題を警告する。"""
     if not page.description:
@@ -45,8 +75,8 @@ def _check(page: Page, site: SiteConfig, report: BuildReport) -> None:
 
 
 def price_table_json() -> str:
-    """ツールが使うモデル料金表。moneyloop側の定義を単一の情報源にする。"""
-    from moneyloop.pricing import MODEL_PRICES_USD_PER_MTOK
+    """ツールが使うモデル料金表。adsite.pricing を単一の情報源にする。"""
+    from .pricing import MODEL_PRICES_USD_PER_MTOK
 
     return json.dumps(
         {model: {"input": rates[0], "output": rates[1]} for model, rates in MODEL_PRICES_USD_PER_MTOK.items()},
@@ -66,6 +96,7 @@ def build(site: SiteConfig, today: date | None = None) -> BuildReport:
     out.mkdir(parents=True, exist_ok=True)
 
     report = BuildReport()
+    check_links(pages, report)
     for page in pages:
         _check(page, site, report)
         target = out / page.output_path

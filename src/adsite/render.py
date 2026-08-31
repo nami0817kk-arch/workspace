@@ -30,6 +30,23 @@ def body_blocks(page: Page) -> list[str]:
     return [*blocks[:1], mount, *blocks[1:]]
 
 
+def related_html(pages: list[Page], current: Page) -> str:
+    """他のツールへの導線。
+
+    広告収益は PV = セッション数 × 回遊ページ数 で決まるので、
+    1セッションで2本目のツールに進んでもらえるかが直接効く。
+    """
+    others = [p for p in pages if p.is_tool and p.slug != current.slug and not p.noindex]
+    if not others:
+        return ""
+    items = "".join(
+        f'<li><a href="{p.url_path}">{html.escape(p.title)}</a>'
+        f'<span>{html.escape(p.description)}</span></li>'
+        for p in others
+    )
+    return f'<section class="related"><h2>ほかの計算ツール</h2><ul>{items}</ul></section>'
+
+
 def nav_html(pages: list[Page], current: Page) -> str:
     links = ['<a href="/">ホーム</a>']
     for page in pages:
@@ -94,6 +111,7 @@ def render_page(page: Page, site: SiteConfig, pages: list[Page]) -> str:
 <h1>{html.escape(page.title)}</h1>
 {updated}
 {chr(10).join(blocks)}
+{related_html(pages, page)}
 </main>
 {footer_html(site, pages)}
 {tool_script}

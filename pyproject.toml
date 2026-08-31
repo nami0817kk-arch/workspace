@@ -3,9 +3,9 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "moneyloop"
+name = "adsite"
 version = "0.1.0"
-description = "AI自動リサーチ→有料ニュースレター配信による収益化パイプライン"
+description = "広告収益型の実用ツールサイト・ジェネレータ"
 requires-python = ">=3.11"
 dependencies = []
 
@@ -14,7 +14,6 @@ llm = ["anthropic>=1.0.0"]
 dev = ["pytest>=8.0.0"]
 
 [project.scripts]
-moneyloop = "moneyloop.cli:main"
 adsite = "adsite.cli:main"
 
 [tool.setuptools.packages.find]
