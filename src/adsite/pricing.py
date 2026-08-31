@@ -1,15 +1,13 @@
-"""料金表。左が原価（Claudeのトークン単価）、右が売価（購読プラン）。
+"""料金表。
 
-この2つを1ファイルに置いているのは、粗利がこの差でしか決まらないため。
-価格改定時はここだけを触る。
+左（モデルのトークン単価）は LLM API料金計算ツールの表示元であり、
+かつ AI機能を動かしたときの自分の原価でもある。
+価格改定時はここだけを直せば、サイトの表示も台帳の原価計算も同時に追随する。
 """
 
 from __future__ import annotations
 
-from dataclasses import dataclass
-
-# 1Mトークンあたりのドル単価 (input, output)。
-# 出典: Anthropic 公開価格。改定時はここを更新する。
+# 1Mトークンあたりのドル単価 (input, output)。出典: Anthropic 公開価格。
 MODEL_PRICES_USD_PER_MTOK: dict[str, tuple[float, float]] = {
     "claude-fable-5": (10.00, 50.00),
     "claude-opus-5": (5.00, 25.00),
@@ -21,18 +19,8 @@ MODEL_PRICES_USD_PER_MTOK: dict[str, tuple[float, float]] = {
     "claude-haiku-4-5": (1.00, 5.00),
 }
 
-# キャッシュ読み出しは入力単価の10%（概算）。号のプロンプト前半を再利用する運用向け。
+# キャッシュ読み出しは入力単価の10%（概算）。
 CACHE_READ_DISCOUNT = 0.10
-
-
-@dataclass(frozen=True)
-class Plan:
-    """購読プラン。paywalled=False は無料枠（ティザーのみ受信）。"""
-
-    code: str
-    name: str
-    monthly_usd: float
-    paywalled: bool
 
 
 def token_cost_usd(

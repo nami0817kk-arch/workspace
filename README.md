@@ -80,111 +80,66 @@ Claude から直接使う方法は [docs/mcp.md](docs/mcp.md)、
 連携の仕組みと増やし方は [docs/connectors.md](docs/connectors.md)、
 今後の計画は [docs/integrations-plan.md](docs/integrations-plan.md)。
 
-## moneyloop — AI自動リサーチによる有料ニュースレター収益化パイプライン
-
-公開情報を毎日集め、Claudeが読者価値で選別し、有料/無料に出し分けて配信し、
-**原価と粗利と損益分岐購読者数を自動で計算する**仕組みです。
-
-制作原価は1号あたり約$0.18。有料購読者が2〜3人いれば全コストを回収できます。
-つまりこの仕組みの価値は「記事が自動で出ること」ではなく、
-**収益構造が常に数字で見えていること** にあります。
-
-```
-収集(RSS) → 選別(採点・しきい値) → 生成(号) → 分割(無料/有料) → 配信 → 計上(PL)
-```
-
-### まず動かす（APIキー不要・課金なし）
-
-```bash
-cp config/moneyloop.example.json config/moneyloop.json
-python -m moneyloop.cli run --dry-run
-```
-
-Claude APIを呼ばずに全工程を通し、`output/issues/<niche>/` に
-無料版と有料版のMarkdownを書き出します。
-
-### 本番実行
-
-```bash
-export ANTHROPIC_API_KEY=sk-ant-...
-
-python -m moneyloop.cli sub add reader@example.com --niche ai-ops --plan pro
-python -m moneyloop.cli run
-python -m moneyloop.cli report
-```
-
-`report` の出力例:
-
-```
-売上            : $30.00
-API原価         : $0.1150
-粗利            : $29.89  (約 4,483 円)
-粗利率          : 99.6%
-発行号数        : 1  / 1号あたり原価 $0.1150
-購読者          : 有料 1 / 無料 1  (転換率 50.0%)
-損益分岐購読者数: 1人
-```
-
-### 目標から逆算する
-
-```bash
-python -m moneyloop.cli plan --target-profit 3000 --conversion 5
-# → 必要な有料購読者 101人 / 必要な無料読者規模 2,020人
-```
-
-### 主なコマンド
-
-| コマンド | 用途 |
-|---|---|
-| `run [--dry-run] [--date] [--niche] [--no-send]` | パイプライン実行 |
-| `sub add/cancel/list` | 購読者管理 |
-| `revenue accrue` | 当月の購読収益を計上（冪等） |
-| `report [--month] [--json]` | PLとユニットエコノミクス |
-| `plan --target-profit N` | 目標利益に必要な購読者数を逆算 |
-
-### 設計上の要点
-
-- **冪等**: 同日に何度実行しても、号は1つ・配信は1回・計上は1回。cronの二重起動でも課金が増えません。
-- **2段構え**: 安い採点でふるいにかけ、高い本文生成は上位数件だけ。原価が記事数に比例しません。
-- **品質ゲート**: スコアがしきい値に届かない日は号を出しません。薄い号は解約の最大要因です。
-- **依存ゼロで動く**: 本体は標準ライブラリのみ。`anthropic` は実際にClaudeを呼ぶときだけ必要です。
-
 ## adsite — 広告収益型の実用ツールサイト
 
-無料の実務計算ツールを置いた静的サイトを生成し、AdSense枠を安全な位置に挿入して、
-**広告収益の実測をmoneyloopと同じ台帳に取り込む**仕組みです。
+無料の実務計算ツールを置いた静的サイトを生成し、AdSense枠をポリシー上安全な位置に挿入し、
+**収益と原価を台帳で追跡する**仕組みです。収益源は広告一本に絞っています。
 
-AIで記事を量産して広告を貼る手法は、Googleの「スケールされたコンテンツの不正使用」
-ポリシーに該当して成立しません。そのため**用の足りるツール**を売り物にしています。
+```
+コンテンツ(Markdown) → ビルド(HTML/SEO/広告枠) → 公開(GitHub Pages)
+                                                      ↓
+                              AdSenseレポート取り込み → PL / RPM / 損益分岐PV
+```
 
-### すぐ試せます
+### すぐ動かせます
 
 ```bash
 cp config/site.example.json config/site.json
 python -m adsite.cli serve      # http://127.0.0.1:8000
 ```
 
-同梱のツール（すべてブラウザ内で完結、入力値は送信しません）:
+APIキーもAdSense IDも不要です。`ads.client` が空の間は広告タグを一切出力しません。
+
+### 同梱ツール（全7本）
+
+すべてブラウザ内で完結し、入力値は送信しません。
 
 | ツール | 用途 |
 |---|---|
 | LLM API料金 計算 | リクエスト数と入出力トークンから月額を主要モデル横断で比較 |
 | トークン数 見積もり | テキストを貼り付けて概算トークン数と1回あたりの費用を確認 |
-| 業務自動化 ROI計算 | 削減時間と開発費から投資回収月数と年間効果額を試算 |
+| ドル建て費用の円換算 | 為替が振れたときの年間予算の幅を出す |
+| 業務自動化 ROI計算 | 削減時間と開発費から投資回収月数と年間効果額 |
+| 年収・時給 換算 | 費用対効果に使う「間接費込みの時間単価」 |
+| 工数見積もり (人日→金額) | バッファ込みの開発費用と期間 |
+| 文字数カウント | 文字数・単語数・原稿用紙換算 |
 
-料金表は `moneyloop.pricing` を単一の情報源としてビルド時に生成されるため、
-価格改定はコード側の1箇所を直すだけでサイトにも反映されます。
+モデル料金表は `adsite.pricing` を単一の情報源としてビルド時に生成されるため、
+価格改定はコード1箇所を直せばサイトの表示にも反映されます。
 
-### 収益の取り込み
+### 収益と原価の追跡
 
 ```bash
-python -m adsite.cli ingest adsense-report.csv
-python -m moneyloop.cli report        # 広告 + 購読を合算したPL
+PYTHONPATH=src python -m adsite.cli cost add --category domain --amount 1.20
+PYTHONPATH=src python -m adsite.cli ingest adsense-report.csv
+PYTHONPATH=src python -m adsite.cli report
 ```
 
 ```
-売上            : $40.35     ← 購読 $30.00 + 広告 $10.35
-粗利率          : 99.7%
+広告収益        : $11.75  (約 1,762 円)
+原価            : $1.2450
+利益率          : 89.4%
+PV              : 3,300  / 表示 4,400 / クリック 47
+RPM             : $3.56  (約 534 円/1000PV)
+CTR             : 1.07%
+損益分岐PV      : 350
+```
+
+RPMが実測できていれば、目標収益に必要なPVを実測値から逆算します。
+
+```bash
+PYTHONPATH=src python -m adsite.cli forecast --target 700
+# → 必要な月間PV 196,596 (1日あたり約 6,553 PV)
 ```
 
 ### 主なコマンド
@@ -192,9 +147,23 @@ python -m moneyloop.cli report        # 広告 + 購読を合算したPL
 | コマンド | 用途 |
 |---|---|
 | `build` / `serve` | 静的サイトの生成とローカル確認 |
-| `check` | 公開前チェック（説明文の欠落、広告非掲載ページの検出） |
-| `ingest <csv>` | AdSenseのCSVを台帳に取り込む（日次で冪等） |
-| `forecast --target N --rpm R` | 目標収益に必要な月間PVを逆算 |
+| `check` | 公開前チェック（説明文の欠落、リンク切れ、孤立ページ、審査に足りるページ数） |
+| `ingest <csv>` | AdSenseのCSVを取り込む（日次実績 + 収益。再取り込みは上書き） |
+| `report [--month] [--json]` | PL・RPM・CTR・損益分岐PV・収益上位ページ |
+| `forecast --target N [--rpm R]` | 目標収益に必要な月間PV（RPM省略時は実測を使用） |
+| `cost add --category X --amount N` | 固定費・一時費用の計上（月次で冪等） |
+| `ideas [--dry-run]` | 次に作るツールの案を出す（人がレビューして選ぶ） |
+
+### AIの使いどころは「公開文章」ではない
+
+生成記事の量産はGoogleの「スケールされたコンテンツの不正使用」に該当し、
+AdSenseの審査基準にも触れます。順位もアカウントも失うので、このリポジトリでは
+**公開する文章の自動生成をしません**。
+
+AIを使うのは `adsite ideas` だけ ―― 既存ページを踏まえて
+「まだ埋めていない検索意図」をツール案として出す社内用途です。
+出力は `docs/tool-ideas.md` に書き出されるだけで、公開物には直結しません。
+何を作るかは人が決めます。
 
 ### 広告まわりで機械的に守っていること
 
@@ -203,24 +172,33 @@ python -m moneyloop.cli report        # 広告 + 購読を合算したPL
 - **ツールUIの隣に置かない** — 誤クリック誘発はアカウント停止の理由になる
 - **見出しと本文を分断しない** — 広告は各節の最初の段落の後に入る
 - **本文量が足りないページには出さない** — AdSenseの掲載ポリシー対策
+- **CTR 10%超で警告** — 誤クリックを疑われる水準
 
-### 規模感（購読モデルとの違い）
+### 規模感
 
-月10万円を出すのに必要な数字です。
+広告は**規模の商売**です。RPM $4（約600円）の前提で:
 
-| モデル | 必要な数 |
+| 月間PV | 月間収益 | 1日あたりPV |
+|---|---|---|
+| 10,000 | 約 6,000円 | 約 330 |
+| 50,000 | 約 30,000円 | 約 1,700 |
+| 175,000 | 約 105,000円 | 約 5,800 |
+
+制作費用はほぼゼロなので、**コスト最適化は論点になりません**。
+必要なのはPVです。詳細は [docs/ad-monetization.md](docs/ad-monetization.md)。
+
+### ドキュメント
+
+| ファイル | 内容 |
 |---|---|
-| 購読 (Pro $30/月) | 有料34人 |
-| 広告 (RPM $4) | 月間17万PV |
-
-広告は**規模の商売**、購読は**単価の商売**です。詳細と、動画・アプリを選んだ場合の
-比較は [docs/ad-monetization.md](docs/ad-monetization.md) を参照してください。
+| [docs/ad-monetization.md](docs/ad-monetization.md) | 収益の規模感、動画/アプリとの比較、AdSense審査対策、KPI、法務上の注意 |
+| [docs/runbook.md](docs/runbook.md) | セットアップ、公開までの手順、日次/月次運用、障害対応 |
 
 ### この仕組みが解決しないこと
 
-読者獲得は自動化されません。制作原価がほぼゼロになる結果、
-ボトルネックは最初から最後まで配布です。詳細は
-[docs/business-model.md](docs/business-model.md) を参照してください。
+**検索流入は自動では増えません。** 公開してからGoogleに認識されるまで数週間、
+順位が付くまで数か月かかり、その間の収益はほぼゼロです。
+ここはコードで代替できない部分です。
 
 ## growth — 成長ループ
 
@@ -570,7 +548,6 @@ pytest tests/ailab          # ツール単位で回す
 | パス | 用途 |
 |---|---|
 | `src/ailab/` | 画像生成・素材取得・連携（`core/` 連携基盤、`connectors/` 連携先） |
-| `src/moneyloop/` | 有料ニュースレターのパイプライン実装 |
 | `src/adsite/` | 広告収益型ツールサイトのジェネレータ |
 | `src/growth/` | 成長ループ（観測・診断・横展開・台帳） |
 | `src/audiogen/` | BGM / 効果音の合成ツールキット（標準ライブラリのみ） |
@@ -594,12 +571,11 @@ pytest tests/ailab          # ツール単位で回す
 | [docs/recipes.md](docs/recipes.md) | レシピの書き方 |
 | [docs/mcp.md](docs/mcp.md) | Claude から直接使う方法 |
 | [docs/integrations-plan.md](docs/integrations-plan.md) | 連携まわりの今後の計画 |
-| [docs/business-model.md](docs/business-model.md) | 収益モデル、価格設計、立ち上げ手順、KPI、法務上の注意 |
-| [docs/architecture.md](docs/architecture.md) | パイプライン設計、冪等性、拡張ポイント |
 | [docs/runbook.md](docs/runbook.md) | セットアップ、日次運用、障害対応、コスト管理 |
 | [docs/ad-monetization.md](docs/ad-monetization.md) | 広告収益の規模感、動画/アプリとの比較、AdSense審査対策、KPI |
 | [docs/growth-system.md](docs/growth-system.md) | 成長ループの設計の考え方 |
 | [docs/audiogen.md](docs/audiogen.md) | audiogen の設計の詳細と検証結果 |
 | [docs/chrome-automation.md](docs/chrome-automation.md) | Chrome 自動操作の使い方と検証記録 |
+| [docs/local-setup.md](docs/local-setup.md) | ローカル PC で動かす手順 |
 
 開発時の決めごとは [CLAUDE.md](CLAUDE.md)。

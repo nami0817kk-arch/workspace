@@ -1,4 +1,5 @@
 from datetime import date
+from pathlib import Path
 
 import pytest
 
@@ -129,3 +130,45 @@ def test_robots_points_at_sitemap():
 def test_html_is_escaped_in_meta(tmp_path):
     page = _page(title='悪意"><script>', description="d")
     assert "<script>" not in meta_tags(page, SITE)
+
+
+def test_broken_internal_links_are_reported(tmp_path):
+    site = _write_site(tmp_path)
+    (site.content_dir / "linky.md").write_text(
+        "---\ntitle: リンク\ndescription: せつめい\n---\n[こわれ](/nope/) と [正常](/tools/calc/)",
+        encoding="utf-8",
+    )
+    report = build(site)
+    assert any("リンク切れ /nope/" in w for w in report.warnings)
+    assert not any("リンク切れ /tools/calc/" in w for w in report.warnings)
+
+
+def test_orphan_pages_are_reported(tmp_path):
+    site = _write_site(tmp_path)
+    (site.content_dir / "lonely.md").write_text(
+        "---\ntitle: 孤立\ndescription: せつめい\n---\n本文", encoding="utf-8"
+    )
+    report = build(site)
+    assert any("lonely" in w and "リンクされていない" in w for w in report.warnings)
+
+
+def test_policy_pages_are_not_treated_as_orphans(tmp_path):
+    """privacy と about はフッターから常に辿れるので孤立ではない。"""
+    site = _write_site(tmp_path)
+    report = build(site)
+    assert not any("privacy" in w and "リンクされていない" in w for w in report.warnings)
+
+
+def test_paths_in_config_are_parsed_as_paths():
+    """db_path を取りこぼすと収支データが既定のファイルに書かれてしまう。"""
+    site = parse_site_config(
+        {"db_path": "/tmp/x/custom.db", "output_dir": "out", "content_dir": "c", "assets_dir": "a"}
+    )
+    assert site.db_path == Path("/tmp/x/custom.db")
+    assert (site.output_dir, site.content_dir, site.assets_dir) == (Path("out"), Path("c"), Path("a"))
+    assert parse_site_config({}).db_path == Path("output/adsite.db")
+
+
+def test_unknown_config_keys_are_ignored():
+    site = parse_site_config({"site_name": "S", "future_option": True, "ads": {"client": "c", "unknown": 1}})
+    assert site.site_name == "S" and site.ads.client == "c"

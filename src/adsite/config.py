@@ -37,12 +37,15 @@ class SiteConfig:
     base_url: str = "https://example.com"
     site_name: str = "AI Tools"
     tagline: str = ""
+    theme: str = ""
     locale: str = "ja"
     author: str = ""
     contact_url: str = ""
     content_dir: Path = Path("site/content")
     assets_dir: Path = Path("site/assets")
     output_dir: Path = Path("output/site")
+    db_path: Path = Path("output/adsite.db")
+    usd_jpy: float = 150.0
     analytics_snippet: str = ""
     ads: AdsConfig = field(default_factory=AdsConfig)
 
@@ -60,7 +63,7 @@ def parse_site_config(raw: dict) -> SiteConfig:
     ads = AdsConfig(**{k: v for k, v in ads_raw.items() if k in known_ads})
     known = set(SiteConfig.__dataclass_fields__) - {"ads"}
     kwargs = {k: v for k, v in raw.items() if k in known}
-    for key in ("content_dir", "assets_dir", "output_dir"):
+    for key in ("content_dir", "assets_dir", "output_dir", "db_path"):
         if key in kwargs:
             kwargs[key] = Path(kwargs[key])
     return SiteConfig(ads=ads, **kwargs)

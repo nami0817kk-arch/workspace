@@ -1,7 +1,7 @@
-"""広告収益の実測取り込みと、必要トラフィックの逆算。
+"""広告レポートの取り込み。
 
-AdSenseの管理画面からCSVを落として食わせると、moneyloopの台帳に計上される。
-購読収益と同じPLに載るので、`moneyloop report` で合算して見られる。
+AdSenseの管理画面から落としたCSVを食わせると、日次実績と収益が台帳に入る。
+以降 `adsite report` がRPM・CTR・損益分岐PVを実測から計算する。
 """
 
 from __future__ import annotations
@@ -11,10 +11,11 @@ import io
 from dataclasses import dataclass
 from datetime import date, datetime
 
-from moneyloop.ledger import record_revenue
-from moneyloop.storage import Storage
+from .ledger import record_revenue
+from .models import AdDaily
+from .storage import Storage
 
-# AdSenseのCSVは言語設定で列名が変わるため、別名で吸収する。
+# AdSenseのCSVは言語設定や単位表記で列名が変わるため、別名で吸収する。
 _ALIASES = {
     "date": ("date", "日付", "day", "日"),
     "page": ("page", "page url", "ページ", "url", "ページ url"),
@@ -23,16 +24,6 @@ _ALIASES = {
     "earnings": ("estimated earnings", "earnings", "推定収益額", "推定収益", "収益"),
     "pageviews": ("page views", "pageviews", "ページビュー", "ページビュー数"),
 }
-
-
-@dataclass
-class AdRow:
-    day: date
-    page: str
-    impressions: int
-    clicks: int
-    earnings_usd: float
-    pageviews: int = 0
 
 
 def _index(header: list[str]) -> dict[str, int]:
@@ -75,7 +66,17 @@ def _number(value: str) -> float:
         return 0.0
 
 
-def parse_report(csv_text: str) -> tuple[list[AdRow], list[str]]:
+def _parse_date(value: str) -> date:
+    value = value.strip()
+    for fmt in ("%Y-%m-%d", "%Y/%m/%d", "%m/%d/%Y", "%Y年%m月%d日"):
+        try:
+            return datetime.strptime(value, fmt).date()
+        except ValueError:
+            continue
+    raise ValueError(value)
+
+
+def parse_report(csv_text: str) -> tuple[list[AdDaily], list[str]]:
     """AdSenseのCSVを読む。壊れた行は落として理由を返す。"""
     reader = csv.reader(io.StringIO(csv_text.lstrip("﻿")))
     try:
@@ -88,7 +89,7 @@ def parse_report(csv_text: str) -> tuple[list[AdRow], list[str]]:
     if missing:
         return [], [f"必須列が見つかりません: {', '.join(missing)}（列名: {', '.join(header)}）"]
 
-    rows: list[AdRow] = []
+    rows: list[AdDaily] = []
     errors: list[str] = []
     for lineno, raw in enumerate(reader, start=2):
         if not raw or len(raw) <= idx["date"]:
@@ -100,50 +101,46 @@ def parse_report(csv_text: str) -> tuple[list[AdRow], list[str]]:
             continue
         get = lambda key: raw[idx[key]] if key in idx and idx[key] < len(raw) else ""  # noqa: E731
         rows.append(
-            AdRow(
+            AdDaily(
                 day=day,
                 page=get("page").strip(),
                 impressions=int(_number(get("impressions"))),
                 clicks=int(_number(get("clicks"))),
-                earnings_usd=_number(get("earnings")),
                 pageviews=int(_number(get("pageviews"))),
+                earnings_usd=_number(get("earnings")),
             )
         )
     return rows, errors
 
 
-def _parse_date(value: str) -> date:
-    value = value.strip()
-    for fmt in ("%Y-%m-%d", "%Y/%m/%d", "%m/%d/%Y", "%Y年%m月%d日"):
-        try:
-            return datetime.strptime(value, fmt).date()
-        except ValueError:
-            continue
-    raise ValueError(value)
+def ingest(storage: Storage, rows: list[AdDaily], network: str = "adsense") -> tuple[int, float]:
+    """日次実績を保存し、日ごとに集計した収益を台帳へ計上する。
 
+    収益は上書き計上（replace）にしている。AdSenseの金額は推定値で、
+    後日確定値に改定されるため、「最後に取り込んだ値が正」が実態に合う。
+    実績テーブルも同じ理由で上書きする。
+    """
+    storage.save_ad_daily(rows)
 
-def record_ad_revenue(storage: Storage, rows: list[AdRow], network: str = "adsense") -> tuple[int, float]:
-    """日次で集計して計上する。ref に日付を使うので再取り込みしても二重計上しない。"""
     by_day: dict[date, float] = {}
     for row in rows:
         by_day[row.day] = by_day.get(row.day, 0.0) + row.earnings_usd
 
-    count = 0
+    days = 0
     total = 0.0
     for day, amount in sorted(by_day.items()):
-        if amount <= 0:
-            continue
-        if record_revenue(
+        record_revenue(
             storage,
             category=f"ads:{network}",
             amount_usd=amount,
             ref=f"ads:{network}:{day.isoformat()}",
             note=f"{network} {day.isoformat()}",
             ts=datetime.combine(day, datetime.min.time()),
-        ):
-            count += 1
-            total += amount
-    return count, total
+            replace=True,
+        )
+        days += 1
+        total += amount
+    return days, total
 
 
 @dataclass
@@ -164,7 +161,7 @@ class AdStats:
         return self.earnings_usd / base * 1000 if base else 0.0
 
 
-def summarize_rows(rows: list[AdRow]) -> AdStats:
+def summarize_rows(rows: list[AdDaily]) -> AdStats:
     return AdStats(
         impressions=sum(r.impressions for r in rows),
         clicks=sum(r.clicks for r in rows),
@@ -173,16 +170,9 @@ def summarize_rows(rows: list[AdRow]) -> AdStats:
     )
 
 
-def top_pages(rows: list[AdRow], limit: int = 10) -> list[tuple[str, float]]:
+def top_pages(rows: list[AdDaily], limit: int = 10) -> list[tuple[str, float]]:
     totals: dict[str, float] = {}
     for row in rows:
         if row.page:
             totals[row.page] = totals.get(row.page, 0.0) + row.earnings_usd
     return sorted(totals.items(), key=lambda kv: -kv[1])[:limit]
-
-
-def pageviews_needed(target_monthly_usd: float, rpm_usd: float) -> int:
-    """目標月間収益に必要な月間PV。広告が規模の商売であることがここで数字になる。"""
-    if rpm_usd <= 0:
-        return 0
-    return int(round(target_monthly_usd / rpm_usd * 1000))
