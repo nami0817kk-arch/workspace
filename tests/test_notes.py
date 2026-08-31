@@ -159,3 +159,49 @@ def test_voice_movement_pairs_equal_sized_chords_in_order():
 def test_voice_movement_of_an_empty_chord_is_zero():
     assert notes.voice_movement([], [60]) == 0
     assert notes.voice_movement([60], []) == 0
+
+
+# --- 借用和音 -----------------------------------------------------------------
+
+
+def test_a_flat_seven_lowers_the_root_and_turns_major():
+    """C メジャーの ♭VII は B♭ の長三和音(音階どおりなら B の減三和音)。"""
+    degree = notes.parse_progression("bVII")[0]
+    assert degree == 6 and degree.alter == -1
+    chord = notes.progression_chord("C4", "major", degree)
+    assert [notes.midi_to_name(m) for m in chord] == ["A#4", "D5", "F5"]
+
+
+def test_a_plain_numeral_still_gives_the_diatonic_chord():
+    degree = notes.parse_progression("vii")[0]
+    assert degree.alter == 0
+    assert notes.progression_chord("C4", "major", degree) == notes.diatonic_chord(
+        "C4", "major", 6
+    )
+
+
+@pytest.mark.parametrize("token", ["bVII", "♭VII", "bvii"])
+def test_flat_signs_are_accepted_in_either_form(token):
+    assert notes.parse_progression(token)[0].alter == -1
+
+
+def test_a_sharp_raises_the_root():
+    assert notes.parse_progression("#IV")[0].alter == 1
+
+
+def test_the_borrowed_degrees_of_a_sports_rock_loop():
+    """I-bVII-IV は、メジャーのまま ♭VII を借りるスポーツ中継の定番。"""
+    degrees = notes.parse_progression("I-bVII-IV-I")
+    assert [(int(d), d.alter) for d in degrees] == [(0, 0), (6, -1), (3, 0), (0, 0)]
+
+
+def test_a_degree_still_behaves_as_an_int():
+    """既存のコードは度数を int として扱うので、そのまま使えること。"""
+    degree = notes.parse_progression("bVII")[0]
+    assert degree + 1 == 7
+    assert [0, 1, 2, 3, 4, 5, 6][degree] == 6
+
+
+def test_an_unknown_numeral_names_what_is_allowed():
+    with pytest.raises(ValueError, match="bVII"):
+        notes.parse_progression("H")

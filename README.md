@@ -88,9 +88,13 @@ python -m audiogen sfx footstep --count 6 --spread 0.15 -d assets/se
 | `news_bed` | 原稿読みの下敷き (98 BPM, メロディなし) |
 | `sports_anthem` | 入場・表彰のアンセム (104 BPM, 行進 + ティンパニ) |
 | `sports_drive` | ハイライト・煽り (152 BPM, ミクソリディアン) |
+| `terrace_chant` | 客席の合唱 (128 BPM, I-bVII-IV + 手拍子) |
+| `stadium_anthem` | 入場曲 (92 BPM, 主音ペダル + 分散和音) |
 
 メロディは1小節ぶんのモチーフを作り、小節ごとの和音に合わせて置き直しながら
 `A / A / B / A'` と展開する。同じ形が返ってくるので旋律として頭に残る。
+`terrace_chant` だけは作りが違い、客席が歌える条件(狭い音域・同音連打・
+拍の頭・休まない)に合わせた句を、展開せずそのまま押し通す。
 
 パートは和音・アルペジオ・ベース・メロディ・ドラムの5つ。どれを鳴らすかは
 スタイルごとに決まっていて(`news_bed` はメロディなし、など)、`--without` で更に外せる。
@@ -102,7 +106,10 @@ python -m audiogen sfx footstep --count 6 --spread 0.15 -d assets/se
 - **経過音** — ベースが次の和音の根音の隣へ寄ってから着地する(スタイルによる)
 - **終止** — `--ending` を付けると、最後の小節が主和音とシンバルで終わる
 - **リタルダンド** — `--ritardando 4` で、終わりにかけてテンポを緩める
-- **転調** — `lift` / `broadcast` 構成では、サビで全パートが全音上がる
+- **転調** — `lift` / `broadcast` / `anthem` 構成では、サビで全パートが全音上がる
+- **借用和音** — 進行に `bVII` のように書くと、音階の外から和音を借りる
+  (`I-bVII-IV` はメジャーのまま明るく外へ広がる、中継の定番)
+- **ペダル** — 和音が動いてもベースを主音に据え置く(入場曲の助走)
 - **帯域バランス** — 仕上げに低域の削り・低中域の抜き・輪郭の持ち上げをかける
 
 放送向けの使い方の例:
@@ -120,6 +127,12 @@ python -m audiogen bgm --style sports_anthem --bars 12 --structure full --seed 3
 
 # ハイライト。後半のサビで全音上へ転調する
 python -m audiogen bgm --style sports_drive --key G --bars 12 --structure lift --seed 3 --ending
+
+# 客席の合唱。狭い音域・同音連打・展開しないチャント型の旋律
+python -m audiogen bgm --style terrace_chant --bars 16 --structure anthem --seed 3 --ending
+
+# 入場曲。主音のペダルの上で分散和音が回り、打楽器だけの切れ目を挟んで転調
+python -m audiogen bgm --style stadium_anthem --bars 16 --structure anthem --seed 5 --ending
 ```
 
 `--structure` で曲の起伏を付けられる。

@@ -243,6 +243,45 @@ def _make_phrase(
     return phrase
 
 
+# スタジアムのチャントは、旋律としての面白さより「大群で歌えること」で
+# 形が決まっている。実際に歌われている歌に共通するのは次の4点で、
+# ふつうのメロディ生成とは前提が違うので作り方ごと分けてある。
+#
+#   1. 音域が狭い(5〜6度に収まる)。素人が上も下も外さずに出せる範囲
+#   2. 同じ音の連打が多い。次に何を歌うか迷わない
+#   3. 音は拍の頭に来る。シンコペーションは大勢では揃わない
+#   4. 途中で休まない。息継ぎは句の切れ目だけ
+#
+# 実在の歌の旋律を写しているわけではなく、この4つの条件を満たす形を作る。
+CHANT_STEPS = (0, 0, 0, 1, 1, -1, -1, 2, -2)
+"""次の音への動き。0(同音連打)が3/9を占める。"""
+
+CHANT_DURATIONS = (1.0, 1.0, 1.0, 0.5, 2.0)
+"""拍の頭に来る長さだけ。4分音符を中心に置く。"""
+
+
+def _make_chant(style: Style, rng: random.Random, scale_size: int) -> Phrase:
+    """チャント型の1小節フレーズを作る。
+
+    主音から始めて主音か5度で終わる山なりの形にする。休符は入れない。
+    """
+    span = min(style.lead_range, 5)
+    phrase: Phrase = []
+    position = 0.0
+    current = 0
+    while position < BEATS_PER_BAR - 1e-6:
+        remaining = BEATS_PER_BAR - position
+        choices = [d for d in CHANT_DURATIONS if d <= remaining] or [remaining]
+        length = rng.choice(choices)
+        if position + length >= BEATS_PER_BAR - 1e-6:
+            current = rng.choice((0, 4))  # 句の終わりは主音か5度に落とす
+        else:
+            current = max(0, min(span, current + rng.choice(CHANT_STEPS)))
+        phrase.append((current, length))
+        position += length
+    return phrase
+
+
 def _vary_phrase(phrase: Phrase, rng: random.Random, span: int) -> Phrase:
     """フレーズの最後の音だけを動かした変形を作る(A' 用)。"""
     varied = list(phrase)
@@ -257,11 +296,16 @@ def _vary_phrase(phrase: Phrase, rng: random.Random, span: int) -> Phrase:
 
 
 def _anchor_shift(phrase: Phrase, chord_degree: int, scale_size: int) -> int:
-    """フレーズ最初の音がその小節の和音の構成音に乗るような移動量を返す。"""
+    """フレーズ最初の音がその小節の和音の構成音に乗るような移動量を返す。
+
+    借用和音のときは根音を候補から外す。C メジャーの ♭VII は根音が B♭ だが
+    メロディは音階の B を弾くので、根音に寄せると半音でぶつかる。
+    3度と5度は音階内にそのままあるので、そちらへ乗せる。
+    """
     first = next((degree for degree, _ in phrase if degree is not None), None)
     if first is None:
         return 0
-    chord_offsets = (0, 2, 4)
+    chord_offsets = (2, 4) if getattr(chord_degree, "alter", 0) else (0, 2, 4)
     return min(
         (shift for shift in range(-scale_size, scale_size + 1)
          if (first + shift - chord_degree) % scale_size in chord_offsets),
@@ -282,7 +326,8 @@ def _next_degree(
     step = rng.choice((-3, -2, -1, -1, 1, 1, 2, 3))
     candidate = current + step
     if prefer_chord_tone:
-        chord_offsets = (0, 2, 4)
+        # 借用和音では根音を外す(_anchor_shift と同じ理由)。
+        chord_offsets = (2, 4) if getattr(chord_degree, "alter", 0) else (0, 2, 4)
         options = [
             candidate + shift
             for shift in range(-3, 4)
@@ -319,7 +364,7 @@ def _plan_chords(
     previous: list[int] | None = None
 
     for bar, degree in enumerate(degrees):
-        chord = notes.diatonic_chord(root, style.scale, degree, seventh=style.chord_seventh)
+        chord = notes.progression_chord(root, style.scale, degree, seventh=style.chord_seventh)
         if style.chord_voice_lead:
             chord = notes.voice_lead(chord, previous)
         previous = chord
@@ -365,7 +410,7 @@ def _plan_arp(
     position = 0
 
     for bar, degree in enumerate(degrees):
-        chord = notes.diatonic_chord(root, style.scale, degree, seventh=style.chord_seventh)
+        chord = notes.progression_chord(root, style.scale, degree, seventh=style.chord_seventh)
         for step, symbol in enumerate(style.arp_pattern[: drums.STEPS_PER_BAR]):
             if symbol == ".":
                 continue
@@ -397,8 +442,14 @@ def _plan_bass(
     plan: list[Note] = []
 
     for bar, degree in enumerate(degrees):
-        midi = notes.degree_to_midi(root, style.scale, degree)
-        fifth = notes.degree_to_midi(root, style.scale, degree + 4)
+        alter = getattr(degree, "alter", 0)
+        if style.bass_pedal:
+            # 和音が動いてもベースは主音に居座る。上の和音との緊張が
+            # そのまま「まだ終わらない」という感じになる。
+            midi = fifth = root
+        else:
+            midi = notes.degree_to_midi(root, style.scale, degree) + alter
+            fifth = notes.degree_to_midi(root, style.scale, degree + 4) + alter
         next_degree = degrees[bar + 1] if bar + 1 < len(degrees) else None
         for step, symbol in enumerate(style.bass_pattern[: drums.STEPS_PER_BAR]):
             if symbol == ".":
@@ -406,13 +457,16 @@ def _plan_bass(
             note_midi = midi if symbol == "x" else fifth
             if (
                 style.bass_walk
+                and not style.bass_pedal
                 and step == last_hit
                 and next_degree is not None
                 and next_degree != degree
             ):
                 # 小節の最後の音で、次の和音の根音のひとつ下へ寄せておく。
                 # 次の小節の頭が「着地」に聞こえる。
-                note_midi = notes.degree_to_midi(root, style.scale, next_degree - 1)
+                note_midi = notes.degree_to_midi(root, style.scale, next_degree - 1) + getattr(
+                    next_degree, "alter", 0
+                )
             start = bar * bar_seconds + step * step_seconds
             start = max(0.0, start + groove.time_offset(step, step_seconds, groove_rng))
             plan.append(Note(start, note_midi, length, groove.velocity(step, groove_rng)))
@@ -435,8 +489,9 @@ def _plan_lead(
     groove = style.groove
     plan: list[Note] = []
 
+    development = style.lead_development or DEVELOPMENT
     for bar, chord_degree in enumerate(degrees):
-        role = DEVELOPMENT[(bar + bar_offset) % len(DEVELOPMENT)]
+        role = development[(bar + bar_offset) % len(development)]
         phrase = {"A": motifs["motif"], "B": motifs["contrast"], "A'": motifs["variation"]}[role]
         shift = _anchor_shift(phrase, chord_degree, scale_size)
 
@@ -448,14 +503,19 @@ def _plan_lead(
             if degree is None:
                 continue
             start = max(0.0, start + groove.time_offset(step, step_seconds, groove_rng))
-            plan.append(
-                Note(
-                    start,
-                    notes.degree_to_midi(root, style.scale, degree + shift),
-                    length_beats * beat_seconds * 0.92,
-                    groove.velocity(step, groove_rng),
-                )
-            )
+            midi = notes.degree_to_midi(root, style.scale, degree + shift)
+            # 借用和音の小節では、メロディ側でも同じ音を借りる。C メジャーの
+            # ♭VII(B♭)の上で音階どおり B を弾くと根音と半音でぶつかる。
+            # 和音が下げた度数は旋律も下げる、というだけの規則で揃う。
+            alter = getattr(chord_degree, "alter", 0)
+            if alter and (degree + shift) % scale_size == int(chord_degree) % scale_size:
+                midi += alter
+            length = length_beats * beat_seconds * 0.92
+            velocity = groove.velocity(step, groove_rng)
+            plan.append(Note(start, midi, length, velocity))
+            if style.lead_double:
+                # 重ねたほうは少し弱く。上の声が主で、下は厚みを足すだけ。
+                plan.append(Note(start, midi + style.lead_double * 12, length, velocity * 0.7))
     return plan
 
 
@@ -490,8 +550,12 @@ def _ensure_motifs(style: Style, rng: random.Random, motifs: dict) -> dict:
     """曲を通して使い回すモチーフを、最初の1回だけ作る。"""
     if "motif" not in motifs:
         scale_size = len(notes.scale_degrees(style.scale))
-        motifs["motif"] = _make_phrase(style, rng, scale_size)
-        motifs["contrast"] = _make_phrase(style, rng, scale_size, start_degree=2)
+        if style.lead_chant:
+            motifs["motif"] = _make_chant(style, rng, scale_size)
+            motifs["contrast"] = _make_chant(style, rng, scale_size)
+        else:
+            motifs["motif"] = _make_phrase(style, rng, scale_size)
+            motifs["contrast"] = _make_phrase(style, rng, scale_size, start_degree=2)
         motifs["variation"] = _vary_phrase(motifs["motif"], rng, style.lead_range)
     return motifs
 
@@ -730,7 +794,7 @@ def describe(config: BGMConfig | None = None, **overrides) -> dict:
                 "bar": bar,
                 "notes": [
                     notes.midi_to_name(midi)
-                    for midi in notes.diatonic_chord(root, style.scale, degree, style.chord_seventh)
+                    for midi in notes.progression_chord(root, style.scale, degree, style.chord_seventh)
                 ],
             }
             for bar, degree in enumerate(degrees)

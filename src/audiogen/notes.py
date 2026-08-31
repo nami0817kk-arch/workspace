@@ -50,6 +50,26 @@ CHORDS: dict[str, tuple[int, ...]] = {
 }
 
 _ROMAN = {"i": 0, "ii": 1, "iii": 2, "iv": 3, "v": 4, "vi": 5, "vii": 6}
+_ALTER_SIGNS = {"b": -1, "♭": -1, "#": 1, "♯": 1}
+_ROMAN_RE = re.compile(r"^([b#♭♯]?)([ivIV]+)([°o+7]*)$")
+
+
+class Degree(int):
+    """音階上の度数と、根音の半音移動をひとつにしたもの。
+
+    ``int`` として振る舞うので度数としてはこれまでどおり使える。
+    ``alter`` が 0 でないときだけ借用和音(♭VII など)になる。
+    """
+
+    alter: int
+
+    def __new__(cls, index: int, alter: int = 0) -> "Degree":
+        self = super().__new__(cls, index)
+        self.alter = int(alter)
+        return self
+
+    def __repr__(self) -> str:
+        return f"Degree({int(self)}, alter={self.alter})"
 
 
 def midi_to_freq(midi: float) -> float:
@@ -162,16 +182,38 @@ def voice_lead(chord: Sequence[int], previous: Sequence[int] | None, drift: int 
     return best if best is not None else sorted(chord)
 
 
-def parse_progression(progression: str) -> list[int]:
-    """``"I-V-vi-IV"`` のようなローマ数字表記を 0 始まりの度数リストにする。"""
-    degrees: list[int] = []
+def parse_progression(progression: str) -> list[Degree]:
+    """``"I-V-vi-IV"`` のようなローマ数字表記を 0 始まりの度数リストにする。
+
+    頭に ``b`` / ``#`` を付けると根音を半音動かした借用和音になる。
+    ``I-bVII-IV`` はメジャーのままミクソリディアンの ♭VII を借りる形で、
+    スポーツ中継やスタジアムの曲が繰り返し使ってきた響き。
+    """
+    degrees: list[Degree] = []
     for token in re.split(r"[-,\s|]+", progression.strip()):
         if not token:
             continue
-        key = token.lower().rstrip("°o+7")
-        if key not in _ROMAN:
-            raise ValueError(f"invalid roman numeral: {token!r}")
-        degrees.append(_ROMAN[key])
+        match = _ROMAN_RE.match(token)
+        if match is None or match.group(2).lower() not in _ROMAN:
+            raise ValueError(
+                f"invalid roman numeral: {token!r} "
+                "(例: I, vi, bVII — 頭の b / # で半音動かせる)"
+            )
+        sign, roman, _ = match.groups()
+        degrees.append(Degree(_ROMAN[roman.lower()], _ALTER_SIGNS.get(sign, 0)))
     if not degrees:
         raise ValueError("progression is empty")
     return degrees
+
+
+def progression_chord(root: int | str, scale: str, degree: int, seventh: bool = False) -> list[int]:
+    """進行上の1和音を作る。借用和音(``alter`` あり)にも対応する。
+
+    半音動かした和音は長三和音として扱う。メジャーへ借りてくる ♭VII・♭VI・
+    ♭III はいずれも平行短調から来た長三和音なので、これで足りる。
+    """
+    alter = getattr(degree, "alter", 0)
+    if not alter:
+        return diatonic_chord(root, scale, degree, seventh)
+    quality = "dom7" if seventh else "maj"
+    return chord_midi(degree_to_midi(root, scale, degree) + alter, quality)

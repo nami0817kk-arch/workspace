@@ -161,6 +161,20 @@ class Style:
     lead_rest_prob: float = 0.22
     lead_durations: tuple[float, ...] = (0.5, 0.5, 1.0, 1.0, 2.0)
     lead_range: int = 8
+    lead_chant: bool = False
+    """チャント型のメロディにする。
+
+    スタジアムの歌は素人の大群が歌えることが条件になっていて、音域が狭く、
+    同じ音の連打が多く、音は拍の頭に来て、休符で切れない。ふつうの旋律とは
+    作りが違うので、生成の仕方ごと分ける。
+    """
+    lead_development: tuple[str, ...] = ("A", "A", "B", "A'")
+    """4小節ぶんの展開の型。チャントは展開せず ("A",) で押し通す。"""
+    lead_double: int = 0
+    """メロディを何オクターブずらして重ねるか。0 で重ねない。
+
+    -1 にすると1オクターブ下を重ねる。大勢で同じ旋律を歌うと声域が
+    ばらけてオクターブに散る、その厚みを真似たもの。"""
     arp_instrument: str = "pluck"
     arp_pattern: str = ""
     """アルペジオを刻む16分グリッド。空ならアルペジオなし。"""
@@ -174,6 +188,11 @@ class Style:
     drum_gain: float = 0.55
     bass_walk: bool = False
     """次の和音の根音へ、直前の音で半歩近づく(経過音)。"""
+    bass_pedal: bool = False
+    """和音が動いてもベースを主音に置いたままにする(ペダル)。
+
+    上で和音が動くのに低音が動かないと、解決していない感じが持続する。
+    入場曲が長い助走で期待を溜めるときの定番。"""
     reverb_wet: float = 0.22
     reverb_room: float = 0.7
     delay_wet: float = 0.0
@@ -307,6 +326,38 @@ STYLES: dict[str, Style] = {
         groove=Groove(accent=0.3, humanize=0.003),
         parts=("chords", "arp", "bass", "lead", "drums"),
     ),
+    # 客席の合唱。メジャーのまま ♭VII を借りるのがスタジアムの定番で、
+    # 旋律はチャント型(狭い音域・同音連打・展開しない)。
+    "terrace_chant": Style(
+        scale="major", bpm=128, progression="I-bVII-IV-I",
+        chord_instrument="brass", chord_octave=4, chord_gain=0.30,
+        chord_pattern="x.......x.......", chord_length=0.46,
+        bass_instrument="pick_bass", bass_pattern="x...x...x...x...", bass_gain=0.56, bass_octave=2,
+        lead_instrument="choir", lead_octave=4, lead_gain=0.46,
+        lead_chant=True, lead_development=("A",), lead_double=-1,
+        lead_rest_prob=0.0, lead_range=5,
+        drum_pattern="terrace", drum_fill="snare_roll", drum_gain=0.58,
+        reverb_wet=0.40, reverb_room=0.86,
+        groove=Groove(accent=0.32, humanize=0.008),
+        parts=("chords", "bass", "lead", "drums"),
+    ),
+    # 入場曲。主音のペダルの上で分散和音が回り続け、そこへ合唱が乗る。
+    # 和音は動くのに低音が動かないので、解決しないまま期待だけが溜まる。
+    "stadium_anthem": Style(
+        scale="major", bpm=92, progression="I-I-IV-V",
+        chord_instrument="choir", chord_octave=4, chord_gain=0.30, chord_seventh=False,
+        chord_pattern="x.......x.......", chord_length=0.5,
+        arp_instrument="pluck", arp_pattern="x.x.x.x.x.x.x.x.", arp_octave=5,
+        arp_gain=0.20, arp_shape=(0, 1, 2, 1),
+        bass_instrument="low_brass", bass_pattern="x...x...x...x...", bass_gain=0.54, bass_octave=2,
+        bass_pedal=True,
+        lead_instrument="brass", lead_octave=5, lead_gain=0.42, lead_rest_prob=0.18,
+        lead_durations=(0.5, 1.0, 1.0, 2.0), lead_range=6, lead_double=-1,
+        drum_pattern="march", drum_fill="timpani_roll", drum_gain=0.50,
+        reverb_wet=0.44, reverb_room=0.88,
+        groove=Groove(accent=0.30, humanize=0.006),
+        parts=("chords", "arp", "bass", "lead", "drums"),
+    ),
 }
 
 
@@ -350,6 +401,14 @@ STRUCTURES: dict[str, tuple[Section, ...]] = {
         Section("verse", 0.3, gain=0.85),
         Section("chorus", 0.35, gain=1.0, lead_octave=1, transpose=2),
         Section("outro", 0.15, drop=("lead",), gain=0.7, transpose=2),
+    ),
+    # 入場曲の型。長い助走 → 合唱 → 打楽器だけの切れ目 → 転調して総力戦。
+    # 全部鳴っている時間を作るより、いったん減らしてから戻すほうが大きく聞こえる。
+    "anthem": (
+        Section("build", 0.3, drop=("lead",), gain=0.68),
+        Section("chorus", 0.35, gain=1.0),
+        Section("break", 0.1, drop=("chords", "arp", "lead"), gain=0.92),
+        Section("final", 0.25, gain=1.0, lead_octave=1, transpose=2),
     ),
     # イントロ・A メロ・サビ・アウトロの4部構成。
     "full": (

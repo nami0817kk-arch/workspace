@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import random
+
 import pytest
 
 from audiogen import bgm, core, drums
@@ -1082,3 +1084,119 @@ def test_the_error_message_repeats_the_offending_value():
 def test_valid_settings_pass_validation():
     bgm.validate(_config(bars=1, bpm=20, sr=4000, final_tempo=0.2))
     bgm.validate(_config(bars=64, bpm=400, final_tempo=2.0, ritardando=0.0))
+
+
+# --- スタジアム向けの作り ------------------------------------------------------
+
+
+def test_a_chant_melody_stays_in_a_narrow_range():
+    """大群で歌える音域に収まること。実測40通りの平均で 2.6度。"""
+    style = bgm.STYLES["terrace_chant"]
+    spans = []
+    for seed in range(20):
+        phrase = bgm._ensure_motifs(style, random.Random(seed), {})["motif"]
+        pitched = [d for d, _ in phrase if d is not None]
+        spans.append(max(pitched) - min(pitched))
+    assert max(spans) <= 5
+
+
+def test_a_chant_melody_has_no_rests():
+    """チャントは途中で切れない。息継ぎは句の切れ目だけ。"""
+    style = bgm.STYLES["terrace_chant"]
+    for seed in range(20):
+        phrase = bgm._ensure_motifs(style, random.Random(seed), {})["motif"]
+        assert all(degree is not None for degree, _ in phrase)
+
+
+def test_a_chant_melody_repeats_notes_more_than_an_ordinary_one():
+    """同じ音の連打が多いこと(次に何を歌うか迷わせない)。"""
+
+    def repeat_ratio(style_name):
+        style = bgm.STYLES[style_name]
+        ratios = []
+        for seed in range(20):
+            phrase = bgm._ensure_motifs(style, random.Random(seed), {})["motif"]
+            pitched = [d for d, _ in phrase if d is not None]
+            if len(pitched) < 2:
+                continue
+            steps = [b - a for a, b in zip(pitched, pitched[1:])]
+            ratios.append(sum(1 for s in steps if s == 0) / len(steps))
+        return sum(ratios) / len(ratios)
+
+    assert repeat_ratio("terrace_chant") > repeat_ratio("adventure") * 3
+
+
+def test_a_chant_does_not_develop():
+    """A/A/B/A' で変えていく普通のメロディと違い、同じ句を押し通す。"""
+    assert bgm.STYLES["terrace_chant"].lead_development == ("A",)
+
+
+def test_the_lead_is_doubled_an_octave_below():
+    """大勢で歌うと声域がオクターブに散る。その厚みを重ねで作る。"""
+    config = _config(style="terrace_chant", bars=4, seed=1)
+    lead = bgm.compose(config).notes["lead"]
+    starts = {}
+    for note in lead:
+        starts.setdefault(round(note.start, 5), []).append(note.midi)
+    assert starts, "メロディが空"
+    for midis in starts.values():
+        assert len(midis) == 2
+        assert abs(max(midis) - min(midis)) == 12
+
+
+def test_a_pedal_bass_stays_on_the_tonic():
+    """和音が動いてもベースは主音に居座ること。"""
+    config = _config(style="stadium_anthem", bars=4, seed=1, key="C")
+    bass = bgm.compose(config).notes["bass"]
+    assert len({note.midi for note in bass}) == 1
+
+
+def test_a_walking_bass_moves_but_a_pedal_does_not():
+    walking = bgm.compose(_config(style="sports_anthem", bars=4, seed=1)).notes["bass"]
+    assert len({note.midi for note in walking}) > 1
+
+
+def test_a_borrowed_chord_reaches_the_arrangement():
+    """I-bVII-IV-I の2小節目が B♭ の和音になっていること。"""
+    config = _config(style="terrace_chant", bars=4, seed=1, key="C")
+    arrangement = bgm.compose(config)
+    bar = arrangement.bar_seconds
+    # ヒューマナイズで小節線の数ミリ秒前に出る音があるので、近いほうの小節で数える。
+    second = {
+        note.midi % 12
+        for note in arrangement.notes["chords"]
+        if int(note.start / bar + 0.05) == 1
+    }
+    assert second == {10, 2, 5}  # B♭ D F
+
+
+def test_the_melody_borrows_the_same_note_as_the_chord():
+    """♭VII の小節でメロディが構成音の半音上を弾かないこと。
+
+    音階どおりに B を弾くと B♭ とぶつかる。和音が下げた度数は旋律も下げる。
+    """
+    for seed in range(8):
+        config = _config(style="terrace_chant", bars=8, seed=seed, key="C")
+        arrangement = bgm.compose(config)
+        degrees = notes_module.parse_progression(arrangement.style.progression)
+        root = bgm._root_midi("C", arrangement.style.chord_octave)
+        for note in arrangement.notes["lead"]:
+            bar = int(note.start / arrangement.bar_seconds + 1e-6)
+            degree = degrees[bar % len(degrees)]
+            if not degree.alter:
+                continue
+            chord = notes_module.progression_chord(root, arrangement.style.scale, degree)
+            spread = [c + octave for c in chord for octave in (-24, -12, 0, 12)]
+            assert not any(
+                0 < note.midi - c <= 13 and (note.midi - c) % 12 == 1 for c in spread
+            ), f"seed={seed} {notes_module.midi_to_name(note.midi)} が和音の半音上"
+
+
+def test_the_anthem_structure_has_a_percussion_only_break():
+    """打楽器だけの切れ目を挟んでから総力戦へ戻る。"""
+    sections = dict(
+        (section.name, section) for section, _, _ in bgm.plan_sections("anthem", 16)
+    )
+    assert "break" in sections
+    assert set(sections["break"].drop) == {"chords", "arp", "lead"}
+    assert sections["final"].transpose == 2
