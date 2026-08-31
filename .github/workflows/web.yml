@@ -61,7 +61,7 @@ jobs:
           cp marketing/screenshots/*.png dist/lp/shots/
 
       - name: Setup Pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
         with:
           enablement: true
 
