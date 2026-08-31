@@ -5,6 +5,7 @@
     python -m src.cli build <台本> --backend core   合成方式を明示する
     python -m src.cli make-clip <画像>         静止画から背景クリップを作る
     python -m src.cli scan                     候補テーマを拾う検索リスト
+    python -m src.cli fetch | ... collect      RSSから最新見出し（運用PCで）
     python -m src.cli collect < 検索結果.txt    検索結果から候補ファイルの下書き
     python -m src.cli pick research/x.yaml     候補を採点して枠に割り振る
     python -m src.cli x                        記者Xアカウントの検索リスト
@@ -91,6 +92,11 @@ def main(argv: list[str] | None = None) -> int:
     p_scan = sub.add_parser("scan", help="候補テーマを拾うための検索リストを出す")
     p_scan.add_argument("--date", default=None, help="基準日 YYYY-MM-DD（既定: 今日）")
     p_scan.add_argument("--write", action="store_true", help="候補ファイルの雛形を作る")
+
+    p_fetch = sub.add_parser("fetch", help="RSSフィードから最新の見出しを取る（運用PCで使う）")
+    p_fetch.add_argument("--league", default=None, help="このリーグのフィードだけ")
+    p_fetch.add_argument("--hours", type=float, default=24, help="この時間内の見出しだけ（既定: 24）")
+    p_fetch.add_argument("--check", action="store_true", help="全フィードの生死を確かめる")
 
     p_collect = sub.add_parser("collect", help="検索結果を貼ると候補ファイルの下書きを作る")
     p_collect.add_argument("--date", default=None, help="基準日 YYYY-MM-DD（既定: 今日）")
@@ -745,6 +751,67 @@ def _dispatch(args, config) -> int:
             for problem in xposts.review(url, plan.accounts, stale):
                 print(f"    ! {problem}")
         return 0
+
+    if args.command == "fetch":
+        from . import feeds as feeds_mod
+        from .plan import load_plan
+
+        plan = load_plan()
+        wanted = [
+            f for f in plan.feeds
+            if not args.league or str(f.get("league")) == args.league
+        ]
+        if not wanted:
+            print("フィードがありません（config/sources.yaml の feeds）", file=sys.stderr)
+            return 1
+
+        if args.check:
+            alive = 0
+            print(f"■ フィードの生死確認　{len(wanted)}本")
+            for feed in wanted:
+                try:
+                    items = feeds_mod.fetch(str(feed.get("url", "")))
+                    newest = items[0].hours_ago() if items else None
+                    age = f"最新 {newest:.1f}時間前" if newest is not None else "時刻なし"
+                    print(f"  ✓ {feed.get('name')}　{len(items)}件　{age}")
+                    alive += 1
+                except feeds_mod.FeedError as error:
+                    print(f"  × {feed.get('name')}　{error}")
+            print(
+                f"\n{alive}/{len(wanted)}本が生きています。"
+                "生きたものは verified: true に、死んだものは消してください"
+            )
+            return 0 if alive else 1
+
+        collected: list = []
+        broken: list[str] = []
+        for feed in wanted:
+            try:
+                items = feeds_mod.fetch(str(feed.get("url", "")))
+            except feeds_mod.FeedError:
+                broken.append(str(feed.get("name")))
+                continue
+            collected += feeds_mod.recent(items, args.hours)
+
+        # 見出し<タブ>URL で出す。そのまま collect に流せる
+        seen: set[str] = set()
+        for item in sorted(
+            collected,
+            key=lambda i: i.hours_ago() if i.hours_ago() is not None else 9e9,
+        ):
+            if item.url in seen:
+                continue
+            seen.add(item.url)
+            print(item.line())
+
+        if broken:
+            print(f"取得できなかったフィード: {' / '.join(broken)}", file=sys.stderr)
+        print(
+            f"{len(seen)}件（{args.hours:g}時間以内）。"
+            "`| python -m src.cli collect` で候補ファイルにできます",
+            file=sys.stderr,
+        )
+        return 0 if seen else 1
 
     if args.command == "collect":
         from datetime import date as _date

@@ -81,6 +81,7 @@ class Plan:
     domain_tiers: dict = field(default_factory=dict)
     leagues: dict = field(default_factory=dict)
     verified_on: str = ""
+    feeds: list = field(default_factory=list)
 
     def group_of(self, url: str) -> str:
         """URLがどの情報源の群に属するか。分からなければ空。"""
@@ -165,6 +166,7 @@ def build_plan(raw: dict) -> Plan:
     domain_tiers = dict(raw.get("domain_tiers") or {})
     leagues = {k: dict(v or {}) for k, v in (raw.get("leagues") or {}).items()}
     verified_on = str(raw.get("verified_on", "") or "")
+    feeds = [dict(x or {}) for x in (raw.get("feeds") or [])]
     tiers = dict(raw.get("tiers") or {})
     if not tiers:
         raise PlanError("tiers が定義されていません")
@@ -224,6 +226,7 @@ def build_plan(raw: dict) -> Plan:
         domain_tiers=domain_tiers,
         leagues=leagues,
         verified_on=verified_on,
+        feeds=feeds,
     )
 
 

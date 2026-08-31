@@ -115,6 +115,20 @@ leagues:
     match_q: "Jリーグ 試合結果 ハイライト 得点"
     official_q: "試合結果 レポート"
 
+# RSSフィード。検索より速く、見出しと正確な時刻が取れる。
+# 注意: URLはまだ実測できていない（開発環境から外に出られないため）。
+#       運用するPCで `python -m src.cli fetch --check` を回し、
+#       生きているものだけ verified: true に直すこと。死んだものは消す。
+feeds:
+  - {name: Sky Sports News, url: "https://www.skysports.com/rss/12040", league: england, verified: false}
+  - {name: ESPN Soccer, url: "https://www.espn.com/espn/rss/soccer/news", league: england, verified: false}
+  - {name: kicker, url: "https://newsfeed.kicker.de/news/fussball", league: germany, verified: false}
+  - {name: Football Italia, url: "https://football-italia.net/feed/", league: italy, verified: false}
+  - {name: サッカーキング, url: "https://www.soccer-king.jp/feed", league: "", verified: false}
+  - {name: フットボールチャンネル, url: "https://www.footballchannel.jp/feed/", league: "", verified: false}
+  - {name: Football Tribe, url: "https://football-tribe.com/japan/feed/", league: japan, verified: false}
+  - {name: CaughtOffside, url: "https://www.caughtoffside.com/feed/", league: england, verified: false}
+
 # 群ごとに置ける確度の上限。draft のときに突き合わせる
 domain_tiers:
   official: 確定

@@ -25,6 +25,7 @@ class Hit:
     site: str = ""
     posted_on: str = ""      # URLから日付が読めたとき
     number: int = 0          # 記事ID
+    hours_ago: float = -1.0  # フィード経由なら正確な経過時間が付く（無ければ -1）
 
 
 def parse(text: str) -> list[Hit]:
@@ -52,7 +53,15 @@ def parse(text: str) -> list[Hit]:
         # 全角の括弧や読点がURLの末尾にくっついてくる
         url = found.group(0).rstrip(').,、。）」』】>＞')
         title = line[: found.start()].strip(" \t-—|:：（(「『【<＜") or pending
-        hits.append(Hit(title=title.strip(), url=url))
+
+        # fetch が付ける3列目（経過時間）。「3.5h」の形だけを受け付ける
+        hours = -1.0
+        tail = line[found.end():].strip()
+        age = re.fullmatch(r"(\d+(?:\.\d+)?)h", tail)
+        if age:
+            hours = float(age.group(1))
+
+        hits.append(Hit(title=title.strip(), url=url, hours_ago=hours))
         pending = ""
 
     return hits
@@ -151,7 +160,9 @@ def to_yaml(hits: list[Hit], date_label: str, merge: bool = True) -> str:
                                             if english else "            # 英語サイトを引く語"),
             f"    url: {head.url}",
         ]
-        if head.posted_on:
+        if head.hours_ago >= 0:
+            lines.append(f"    hours_ago: {head.hours_ago:g}   # フィードの時刻から")
+        elif head.posted_on:
             lines.append(f"    # 公開日: {head.posted_on}（URLから読めた）")
         if len(bunch) > 1:
             lines.append(f"    # 同じ話を {len(bunch)}媒体が報じている")

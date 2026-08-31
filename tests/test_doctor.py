@@ -107,3 +107,20 @@ def test_a_poor_reporter_is_flagged(plan, monkeypatch):
     monkeypatch.setattr(doctor.xposts, "load_calls", lambda: calls)
     plan.accounts = [{"handle": "A"}]
     assert _by_label(diagnose(plan, NOW))["記者の答え合わせ"].ok is False
+
+
+def test_unverified_feeds_are_flagged(plan):
+    plan.feeds = [{"name": "Sky", "url": "https://x", "verified": False}]
+    result = _by_label(diagnose(plan, NOW))["RSSフィード"]
+    assert result.ok is False
+    assert "fetch --check" in result.detail
+
+
+def test_verified_feeds_pass(plan):
+    plan.feeds = [{"name": "Sky", "url": "https://x", "verified": True}]
+    assert _by_label(diagnose(plan, NOW))["RSSフィード"].ok is True
+
+
+def test_no_feeds_is_not_an_error(plan):
+    plan.feeds = []
+    assert _by_label(diagnose(plan, NOW))["RSSフィード"].ok is True

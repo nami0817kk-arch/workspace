@@ -36,8 +36,24 @@ def diagnose(plan, now: datetime | None = None) -> list[Note]:
         _searches(),
         _reporters(plan),
     ]
+    notes.append(_feeds(plan))
     notes += _coverage(plan, now)
     return notes
+
+
+def _feeds(plan) -> Note:
+    feeds = getattr(plan, "feeds", []) or []
+    if not feeds:
+        return Note(True, "RSSフィード", "登録なし（検索経由のみ）")
+    unverified = [f for f in feeds if not f.get("verified")]
+    if unverified:
+        return Note(
+            False,
+            "RSSフィード",
+            f"{len(feeds)}本のうち{len(unverified)}本が未確認。"
+            "運用PCで `fetch --check` を回して verified を直してください",
+        )
+    return Note(True, "RSSフィード", f"{len(feeds)}本すべて確認済み")
 
 
 def _network(plan, now: datetime) -> Note:
