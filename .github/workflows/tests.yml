@@ -1,3 +1,5 @@
+# 実体は claude-code-dev の共通ワークフロー（python-tests.yml）。
+# actions の更新や手順の変更はあちら1箇所で済む。
 name: tests
 
 on:
@@ -11,13 +13,6 @@ permissions:
 
 jobs:
   pytest:
-    runs-on: ubuntu-latest
-    # ハングしたジョブが既定の6時間走り続けるのを防ぐ
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
-        with:
-          python-version: "3.12"
-      - run: pip install pytest
-      - run: pytest
+    uses: nami0817kk-arch/claude-code-dev/.github/workflows/python-tests.yml@master
+    with:
+      install: "pip install pytest"
