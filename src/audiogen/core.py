@@ -115,12 +115,9 @@ def loudness(buf: Sequence[float], sr: int = SAMPLE_RATE) -> float:
 
     正確な実装ではないので絶対値の保証はしないが、同じ物差しで比べるぶんには足りる。
     """
-    from . import effects  # 循環 import を避けるため関数内で読む
-
     if not buf:
         return ABSOLUTE_GATE
-    # K特性: 低域を落とし、1.5kHz 以上を持ち上げる。人の耳の感度に寄せる重み。
-    weighted = effects.high_shelf(effects.highpass(buf, 38.0, sr), 1500.0, 4.0, sr)
+    weighted = k_weight(buf, sr)
 
     size = max(1, num_samples(BLOCK_SECONDS, sr))
     # 二乗の累積和を1度だけ作れば、重なり合う窓の合計を引き算で取り出せる。
@@ -145,6 +142,36 @@ def loudness(buf: Sequence[float], sr: int = SAMPLE_RATE) -> float:
     ungated = level(sum(loud) / len(loud))
     kept = [b for b in loud if level(b) > ungated + RELATIVE_GATE]
     return level(sum(kept) / len(kept)) if kept else ungated
+
+
+K_HIGHPASS = 38.0
+K_SHELF = 1500.0
+K_SHELF_DB = 4.0
+
+
+def k_weight(buf: Sequence[float], sr: int = SAMPLE_RATE) -> list[float]:
+    """人の耳の感度に寄せた重み付け。低域を落とし、中高域を持ち上げる。
+
+    ハイパスとシェルフを別々に掛けると同じ列を3回なめることになるので、
+    2つのフィルタの状態を持って1回で通す。
+    """
+    dt = 1.0 / sr
+    rc_high = 1.0 / (2.0 * math.pi * K_HIGHPASS)
+    alpha_high = rc_high / (rc_high + dt)
+    rc_shelf = 1.0 / (2.0 * math.pi * K_SHELF)
+    alpha_shelf = rc_shelf / (rc_shelf + dt)
+    amount = 10.0 ** (K_SHELF_DB / 20.0) - 1.0
+
+    out = [0.0] * len(buf)
+    low_y = low_prev = 0.0
+    shelf_y = shelf_prev = 0.0
+    for i, x in enumerate(buf):
+        low_y = alpha_high * (low_y + x - low_prev)
+        low_prev = x
+        shelf_y = alpha_shelf * (shelf_y + low_y - shelf_prev)
+        shelf_prev = low_y
+        out[i] = low_y + amount * shelf_y
+    return out
 
 
 def normalize_loudness(

@@ -1024,7 +1024,9 @@ def _render_arrangement(arrangement: Arrangement, config: BGMConfig) -> dict[str
     return tracks
 
 
-_PART_PAN = {"chords": -0.35, "arp": 0.4, "bass": 0.0, "lead": 0.28, "drums": 0.0}
+# パートの定位。低音とドラムは中央に置き、上物を左右に振って場所を空ける。
+# 位相をいじる widening は使わない(モノラルにまとめたとき打ち消しが出る)。
+_PART_PAN = {"chords": -0.5, "arp": 0.55, "bass": 0.0, "lead": 0.22, "drums": 0.0}
 
 
 def _part_gains(style: Style) -> dict[str, float]:
@@ -1078,23 +1080,61 @@ def _post_process(
     length: int,
     limit: bool = True,
 ) -> list[float]:
-    """マスターエフェクトをかけ、ループ用に長さを揃える(音量調整は呼び出し側)。"""
+    """モノラル1本にマスター処理をかける(音量調整は呼び出し側)。"""
+    return _master([buf], style, config, length, limit)[0]
+
+
+def _master(
+    channels: list[list[float]],
+    style: Style,
+    config: BGMConfig,
+    length: int,
+    limit: bool = True,
+) -> list[list[float]]:
+    """1本(モノラル)または2本(ステレオ)に、同じマスター処理をかける。
+
+    ステレオでは左右を別々に処理せず、残響は共通のセンドから左右へ分け、
+    リミッターは共通のゲインで動かす。そうしないと音像が左右へ動いてしまう。
+    """
     sr = config.sr
     if style.bitcrush_bits:
-        buf = fx.bitcrush(buf, bits=style.bitcrush_bits)
+        channels = [fx.bitcrush(c, bits=style.bitcrush_bits) for c in channels]
     if style.delay_wet > 0:
-        beat_seconds = 60.0 / style.bpm
-        buf = fx.delay(buf, time=beat_seconds * 0.75, feedback=0.3, wet=style.delay_wet, sr=sr, tail=beat_seconds * 3)
+        beat = 60.0 / style.bpm
+        channels = [
+            fx.delay(c, time=beat * 0.75, feedback=0.3, wet=style.delay_wet, sr=sr, tail=beat * 3)
+            for c in channels
+        ]
+
     if style.reverb_wet > 0:
-        buf = fx.reverb(buf, room=style.reverb_room, wet=style.reverb_wet, sr=sr, tail=1.0)
+        if len(channels) == 2:
+            # 左右をまとめた信号を1つの部屋へ送り、返りだけ左右で変える。
+            send = [(a + b) * 0.5 for a, b in zip(*channels)]
+            wet_pair = fx.reverb_stereo(send, room=style.reverb_room, sr=sr, tail=1.0)
+            amount = style.reverb_wet
+            channels = [
+                [
+                    (c[i] if i < len(c) else 0.0) * (1.0 - amount) + w[i] * amount
+                    for i in range(len(w))
+                ]
+                for c, w in zip(channels, wet_pair)
+            ]
+        else:
+            channels = [
+                fx.reverb(c, room=style.reverb_room, wet=style.reverb_wet, sr=sr, tail=1.0)
+                for c in channels
+            ]
+
     # 終わる曲は残響を折り返さず、そのまま鳴らしきる。
     looping = config.loop and not config.ending
-    buf = remove_dc(wrap_tail(buf, length) if looping else buf)
-    buf = style.eq.apply(buf, sr)
+    channels = [remove_dc(wrap_tail(c, length) if looping else c) for c in channels]
+    channels = [style.eq.apply(c, sr) for c in channels]
     if not limit:
-        return buf
+        return channels
+
     # 飛び出した山を削ってから持ち上げる。天井付近だけ丸めて 0dBFS を超えさせない。
-    return fx.soft_clip(fx.limiter(buf, threshold=LIMIT_THRESHOLD, sr=sr), ceiling=0.98)
+    limited = fx.linked_limiter(channels, threshold=LIMIT_THRESHOLD, sr=sr)
+    return [fx.soft_clip(c, ceiling=0.98) for c in limited]
 
 
 def generate(config: BGMConfig | None = None, **overrides) -> list[float]:
@@ -1104,8 +1144,7 @@ def generate(config: BGMConfig | None = None, **overrides) -> list[float]:
     style = arrangement.style
     tracks = _duck_to_kick(_render_arrangement(arrangement, config), arrangement, config.sr)
     gains = _part_gains(style)
-    bar_seconds = BEATS_PER_BAR * 60.0 / style.bpm
-    length = num_samples(config.bars * bar_seconds, config.sr)
+    length = num_samples(config.bars * arrangement.bar_seconds, config.sr)
 
     names = list(tracks)
     mixed = mix(*(tracks[name] for name in names), gains=[gains[name] for name in names]) if names else []
@@ -1121,8 +1160,7 @@ def generate_stereo(config: BGMConfig | None = None, **overrides) -> list[float]
     style = arrangement.style
     tracks = _duck_to_kick(_render_arrangement(arrangement, config), arrangement, config.sr)
     gains = _part_gains(style)
-    bar_seconds = BEATS_PER_BAR * 60.0 / style.bpm
-    length = num_samples(config.bars * bar_seconds, config.sr)
+    length = num_samples(config.bars * arrangement.bar_seconds, config.sr)
 
     left_parts: list[list[float]] = []
     right_parts: list[list[float]] = []
@@ -1131,14 +1169,25 @@ def generate_stereo(config: BGMConfig | None = None, **overrides) -> list[float]
         left_parts.append([value * gains[name] for value in left])
         right_parts.append([value * gains[name] for value in right])
 
-    left = _post_process(mix(*left_parts) if left_parts else [], style, config, length)
-    right = _post_process(mix(*right_parts) if right_parts else [], style, config, length)
+    left, right = _master(
+        [mix(*left_parts) if left_parts else [], mix(*right_parts) if right_parts else []],
+        style, config, length,
+    )
 
     # 定位を崩さないよう、L/R をまとめて同じ倍率で調整する。
-    # 体感音量は左右を足したもので測る。
     summed = [(a + b) * 0.5 for a, b in zip(left, right)]
     scale = _loudness_scale(summed, max(peak(left), peak(right)), config.sr)
     return to_stereo([v * scale for v in left], [v * scale for v in right])
+
+
+def _loudness_scale(reference: list[float], current_peak: float, sr: int) -> float:
+    """体感音量を目標に合わせる倍率。天井を越えるならそこで止める。"""
+    if not reference or current_peak < 1e-12:
+        return 1.0
+    current = loudness(reference, sr)
+    scale = 10.0 ** ((TARGET_LOUDNESS - current) / 20.0)
+    return min(scale, TARGET_PEAK / current_peak)
+
 
 
 def _loudness_scale(reference: list[float], current_peak: float, sr: int) -> float:

@@ -115,6 +115,42 @@ _COMB_DELAYS = (0.0297, 0.0371, 0.0411, 0.0437)
 _ALLPASS_DELAYS = (0.0050, 0.0017)
 
 
+def _reverb_wet(
+    src: Sequence[float],
+    comb_delays: Sequence[float],
+    room: float,
+    damping: float,
+    sr: int,
+) -> list[float]:
+    """コムフィルタとオールパスを通した残響成分だけを返す。"""
+    n = len(src)
+    wet = [0.0] * n
+    share = 1.0 / len(comb_delays)
+    keep = 1.0 - damping
+    for delay_time in comb_delays:
+        step = min(max(1, num_samples(delay_time, sr)), n)
+        line = [0.0] * n
+        # 遅延線が埋まるまでは帰還がないので、入力をそのまま通す。
+        line[:step] = src[:step]
+        filtered = 0.0
+        for i in range(step, n):
+            filtered = line[i - step] * keep + filtered * damping
+            line[i] = src[i] + filtered * room
+        wet = [w + v * share for w, v in zip(wet, line)]
+
+    g = 0.5
+    for delay_time in _ALLPASS_DELAYS:
+        step = min(max(1, num_samples(delay_time, sr)), n)
+        line = [0.0] * n
+        line[:step] = wet[:step]
+        wet[:step] = [-value * g for value in line[:step]]
+        for i in range(step, n):
+            delayed = line[i - step]
+            line[i] = wet[i] + delayed * g
+            wet[i] = delayed - line[i] * g
+    return wet
+
+
 def reverb(
     buf: Sequence[float],
     room: float = 0.7,
@@ -127,33 +163,39 @@ def reverb(
     room = min(max(room, 0.0), 0.95)
     n = len(buf) + num_samples(tail, sr)
     src = list(buf) + [0.0] * (n - len(buf))
-
-    wet_signal = [0.0] * n
-    share = 1.0 / len(_COMB_DELAYS)
-    keep = 1.0 - damping
-    for delay_time in _COMB_DELAYS:
-        step = min(max(1, num_samples(delay_time, sr)), n)
-        line = [0.0] * n
-        # 遅延線が埋まるまでは帰還がないので、入力をそのまま通す。
-        line[:step] = src[:step]
-        filtered = 0.0
-        for i in range(step, n):
-            filtered = line[i - step] * keep + filtered * damping
-            line[i] = src[i] + filtered * room
-        wet_signal = [w + v * share for w, v in zip(wet_signal, line)]
-
-    g = 0.5
-    for delay_time in _ALLPASS_DELAYS:
-        step = min(max(1, num_samples(delay_time, sr)), n)
-        line = [0.0] * n
-        line[:step] = wet_signal[:step]
-        wet_signal[:step] = [-value * g for value in line[:step]]
-        for i in range(step, n):
-            delayed = line[i - step]
-            line[i] = wet_signal[i] + delayed * g
-            wet_signal[i] = delayed - line[i] * g
-
+    wet_signal = _reverb_wet(src, _COMB_DELAYS, room, damping, sr)
     return [s + (w - s) * wet for s, w in zip(src, wet_signal)]
+
+
+STEREO_SPREAD = 0.021
+"""左右で遅延時間をずらす割合。
+
+左右にまったく同じ残響を出すと、耳には1点から鳴っているように聞こえる。
+遅延時間を数%ずらすと反射の並びが食い違い、空間として広がる。
+ずらしすぎると左右で別の部屋になり、モノラルにまとめたとき打ち消しが出る。
+"""
+
+
+def reverb_stereo(
+    buf: Sequence[float],
+    room: float = 0.7,
+    sr: int = SAMPLE_RATE,
+    damping: float = 0.35,
+    tail: float = 1.2,
+    spread: float = STEREO_SPREAD,
+) -> tuple[list[float], list[float]]:
+    """モノラル入力から、左右で異なる残響成分を作る(センド用)。
+
+    戻り値は残響成分だけ。元の音とどう混ぜるかは呼び出し側が決める。
+    """
+    room = min(max(room, 0.0), 0.95)
+    n = len(buf) + num_samples(tail, sr)
+    src = list(buf) + [0.0] * (n - len(buf))
+    right_delays = tuple(d * (1.0 + spread) for d in _COMB_DELAYS)
+    return (
+        _reverb_wet(src, _COMB_DELAYS, room, damping, sr),
+        _reverb_wet(src, right_delays, room, damping, sr),
+    )
 
 
 def distort(buf: Sequence[float], drive: float = 3.0) -> list[float]:
@@ -218,6 +260,43 @@ def limiter(
         gain += (target - gain) * (attack_coef if target < gain else release_coef)
         out[i] = value * gain
     return out
+
+
+def linked_limiter(
+    channels: Sequence[Sequence[float]],
+    threshold: float = 0.7,
+    attack: float = 0.004,
+    release: float = 0.12,
+    sr: int = SAMPLE_RATE,
+) -> list[list[float]]:
+    """複数チャンネルに同じ音量変化をかけるリミッター。
+
+    左右を別々に抑えると、片方だけ小さくなった瞬間に音像が横へ動く。
+    大きいほうのチャンネルから1つのゲインを決め、両方に同じだけ掛ける。
+    """
+    if not channels or not channels[0]:
+        return [list(channel) for channel in channels]
+    if len(channels) == 1:  # 1本ならチャンネル間の比較がいらない
+        return [limiter(channels[0], threshold, attack, release, sr)]
+
+    threshold = max(1e-6, threshold)
+    attack_coef = 1.0 - math.exp(-1.0 / max(1.0, attack * sr))
+    release_coef = 1.0 - math.exp(-1.0 / max(1.0, release * sr))
+
+    left, right = channels[0], channels[1]
+    out_left = [0.0] * len(left)
+    out_right = [0.0] * len(right)
+    gain = 1.0
+    for i, (a, b) in enumerate(zip(left, right)):
+        level = -a if a < 0.0 else a
+        other = -b if b < 0.0 else b
+        if other > level:
+            level = other
+        target = threshold / level if level > threshold else 1.0
+        gain += (target - gain) * (attack_coef if target < gain else release_coef)
+        out_left[i] = a * gain
+        out_right[i] = b * gain
+    return [out_left, out_right] + [list(c) for c in channels[2:]]
 
 
 def sidechain_envelope(

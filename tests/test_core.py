@@ -594,3 +594,57 @@ def test_normalize_loudness_stops_at_the_ceiling():
 def test_normalize_loudness_of_silence_is_unchanged():
     assert core.normalize_loudness([0.0, 0.0], sr=SR) == [0.0, 0.0]
     assert core.normalize_loudness([], sr=SR) == []
+
+
+# --- ステレオのマスター処理 ---------------------------------------------------
+
+
+def test_stereo_reverb_decorrelates_the_two_channels():
+    """左右の残響が食い違い、1点から鳴っているようには聞こえないこと。"""
+    tone = oscillators.sine(440.0, 0.2, SR)
+    left, right = effects.reverb_stereo(tone, sr=SR, tail=0.4)
+    assert _correlation(left, right) < 0.9
+
+
+def test_stereo_reverb_survives_a_mono_fold_down():
+    """モノラルにまとめても打ち消しで消えないこと。"""
+    tone = oscillators.sine(440.0, 0.2, SR)
+    left, right = effects.reverb_stereo(tone, sr=SR, tail=0.4)
+    summed = [(a + b) * 0.5 for a, b in zip(left, right)]
+    assert core.peak(summed) > core.peak(left) * 0.6
+
+
+def test_a_wider_spread_decorrelates_more():
+    tone = oscillators.sine(440.0, 0.2, SR)
+    narrow = effects.reverb_stereo(tone, sr=SR, tail=0.4, spread=0.002)
+    wide = effects.reverb_stereo(tone, sr=SR, tail=0.4, spread=0.06)
+    assert _correlation(*wide) < _correlation(*narrow)
+
+
+def test_the_linked_limiter_applies_one_gain_to_both_channels():
+    """片方だけ抑えて音像が横へ動かないこと。"""
+    loud = [0.9 * math.sin(i * 0.05) for i in range(SR)]
+    quiet = [0.2 * math.sin(i * 0.05) for i in range(SR)]
+    left, right = effects.linked_limiter([loud, quiet], threshold=0.4, sr=SR)
+    ratios = [b / a for a, b in zip(quiet[SR // 2 :], right[SR // 2 :]) if abs(a) > 0.05]
+    assert max(ratios) - min(ratios) < 0.05  # 右も左と同じ倍率で動く
+
+
+def test_the_linked_limiter_matches_the_plain_limiter_on_one_channel():
+    tone = [0.9 * math.sin(i * 0.05) for i in range(SR // 2)]
+    assert effects.linked_limiter([tone], threshold=0.5, sr=SR)[0] == effects.limiter(
+        tone, threshold=0.5, sr=SR
+    )
+
+
+def test_the_linked_limiter_of_empty_input():
+    assert effects.linked_limiter([]) == []
+    assert effects.linked_limiter([[]]) == [[]]
+
+
+def _correlation(a, b):
+    mean_a, mean_b = sum(a) / len(a), sum(b) / len(b)
+    numerator = sum((x - mean_a) * (y - mean_b) for x, y in zip(a, b))
+    da = math.sqrt(sum((x - mean_a) ** 2 for x in a))
+    db = math.sqrt(sum((y - mean_b) ** 2 for y in b))
+    return numerator / (da * db) if da and db else 1.0

@@ -864,3 +864,49 @@ def test_stereo_output_is_matched_the_same_way():
     summed = [(a + b) * 0.5 for a, b in zip(stereo[0::2], stereo[1::2])]
     assert core.loudness(summed, SR) == pytest.approx(bgm.TARGET_LOUDNESS, abs=0.3)
     assert core.peak(stereo) <= bgm.TARGET_PEAK + 1e-9
+
+
+# --- ステレオ -----------------------------------------------------------------
+
+
+def _channel_correlation(stereo):
+    import math
+
+    left, right = stereo[0::2], stereo[1::2]
+    mean_l, mean_r = sum(left) / len(left), sum(right) / len(right)
+    numerator = sum((a - mean_l) * (b - mean_r) for a, b in zip(left, right))
+    dl = math.sqrt(sum((a - mean_l) ** 2 for a in left))
+    dr = math.sqrt(sum((b - mean_r) ** 2 for b in right))
+    return numerator / (dl * dr) if dl and dr else 1.0
+
+
+@pytest.mark.parametrize("style", ["sports_anthem", "night", "calm"])
+def test_stereo_output_is_wider_than_mono(style):
+    """左右が完全に同じ(=広がりなし)にはならないこと。"""
+    stereo = bgm.generate_stereo(_config(style=style, bars=4, seed=3))
+    assert _channel_correlation(stereo) < 0.99
+
+
+def test_stereo_survives_a_mono_fold_down():
+    """モノラルで再生しても音量が落ちないこと(位相をいじっていない証拠)。"""
+    stereo = bgm.generate_stereo(_config(style="sports_anthem", bars=4, seed=3))
+    left, right = stereo[0::2], stereo[1::2]
+    summed = [(a + b) * 0.5 for a, b in zip(left, right)]
+    assert abs(core.loudness(summed, SR) - core.loudness(left, SR)) < 1.0
+
+
+def test_low_end_stays_in_the_centre():
+    """低音とドラムは中央に置く(左右に振ると再生環境で不安定になる)。"""
+    assert bgm._PART_PAN["bass"] == 0.0
+    assert bgm._PART_PAN["drums"] == 0.0
+
+
+def test_upper_parts_are_spread_apart():
+    assert bgm._PART_PAN["chords"] < 0 < bgm._PART_PAN["arp"]
+
+
+def test_the_mono_path_is_unchanged_by_the_stereo_work():
+    """モノラル出力は左右の処理を通さず、これまでどおりであること。"""
+    config = _config(style="adventure", bars=2, seed=5)
+    assert bgm.generate(config) == bgm.generate(config)
+    assert len(bgm.generate_stereo(config)) == 2 * len(bgm.generate(config))
