@@ -9,7 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from datetime import date, datetime
 
-from . import coverage, freshness, queries, stats, xposts
+from . import coverage, deadlines, freshness, queries, stats, xposts
 
 # 情報源の網を確かめ直す間隔。塞がれるサイトも、開くサイトもある
 VERIFY_DAYS = 90
@@ -37,8 +37,31 @@ def diagnose(plan, now: datetime | None = None) -> list[Note]:
         _reporters(plan),
     ]
     notes.append(_feeds(plan))
+    notes.append(_calendar(plan, now))
     notes += _coverage(plan, now)
     return notes
+
+
+def _calendar(plan, now: datetime) -> Note:
+    """移籍期限の日程。近いのに日付を確かめていないものは、告知が嘘になる。"""
+    items = deadlines.load(plan)
+    if not items:
+        return Note(True, "日程", "移籍期限の登録なし")
+
+    body = plan.calendar or {}
+    notice_days = float(body.get("notice_days", deadlines.NOTICE_DAYS))
+    soon = deadlines.notices(items, now, notice_days=notice_days)
+    unsure = deadlines.unconfirmed(items, now, notice_days=notice_days)
+    if unsure:
+        return Note(
+            False,
+            "日程",
+            f"間近の移籍期限{len(unsure)}件の日付が未確認: "
+            f"{' / '.join(item.name for item in unsure)}",
+        )
+    if soon:
+        return Note(True, "日程", soon[0])
+    return Note(True, "日程", f"移籍期限{len(items)}件を登録（当面なし）")
 
 
 def _feeds(plan) -> Note:

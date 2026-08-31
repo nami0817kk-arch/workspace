@@ -41,6 +41,37 @@ from .thumbnail import build_thumbnail
 from .tts import TtsError
 
 
+def _deadline_notices(plan, day) -> list[str]:
+    """移籍期限が近ければ、その告知の行。遠ければ空。"""
+    from datetime import datetime, time
+
+    from . import deadlines as deadlines_mod
+
+    body = plan.calendar or {}
+    now = day if isinstance(day, datetime) else datetime.combine(day, time(6, 0))
+    return deadlines_mod.notices(
+        deadlines_mod.load(plan),
+        now,
+        notice_days=float(body.get("notice_days", deadlines_mod.NOTICE_DAYS)),
+        after_hours=float(body.get("after_hours", deadlines_mod.AFTER_HOURS)),
+    )
+
+
+def _active_deadlines(plan, day) -> list:
+    """いま特別編を出すべき期限。"""
+    from datetime import datetime, time
+
+    from . import deadlines as deadlines_mod
+
+    body = plan.calendar or {}
+    now = day if isinstance(day, datetime) else datetime.combine(day, time(6, 0))
+    return deadlines_mod.active(
+        deadlines_mod.load(plan),
+        now,
+        after_hours=float(body.get("after_hours", deadlines_mod.AFTER_HOURS)),
+    )
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="src.cli", description="ゆっくり実況動画ビルダー")
     parser.add_argument("--config", default=None, help="設定ファイル (既定: config/project.yaml)")
@@ -393,6 +424,8 @@ def _dispatch(args, config) -> int:
         print(f"■ 候補スキャン　{words['{date_ja}']}")
         if scan.get("when"):
             print(f"　目安の時刻: {scan['when']}")
+        for note in _deadline_notices(plan, today):
+            print(f"　{note}")
         print()
         number = 0
         for item in scan.get("queries") or []:
@@ -417,6 +450,21 @@ def _dispatch(args, config) -> int:
             if domains:
                 line += f"  （{', '.join(domains)} に限定）"
             print(line)
+        # 期限日は1日で決着がつく。当日と直後だけ、特別編の検索も並べる
+        for item in _active_deadlines(plan, today):
+            print(f"\n― 移籍期限（{item.name}・{item.stamp} JST）ぶんの追加検索 ―")
+            for step in plan.routine("deadline_day").steps:
+                for query in step.queries:
+                    number += 1
+                    text = query.text
+                    for token, value in words.items():
+                        text = text.replace(token, value)
+                    line = f'{number}. {step.id}: "{text}"'
+                    if query.domains:
+                        line += f"  （{', '.join(query.domains)} に限定）"
+                    print(line)
+            break
+
         for note in str(scan.get("check", "")).splitlines():
             if note.strip():
                 print(f"   確認: {note.strip()}")
@@ -446,6 +494,8 @@ def _dispatch(args, config) -> int:
         candidates, slots = today_mod.survey(pairs, day)
 
         print(f"■ {day:%Y年%-m月%-d日} の進み具合")
+        for note in _deadline_notices(plan, day):
+            print(f"  {note}")
         mark = "✓" if candidates.exists() else "・"
         print(f"  {mark} 候補　{today_mod._short(candidates)}")
 
@@ -457,6 +507,12 @@ def _dispatch(args, config) -> int:
             print(f"  {marks} {slot.name}　{' / '.join(done) or 'まだ何もない'}")
 
         print(f"\n次にこれを打つ:\n  {today_mod.next_step(candidates, slots, stamp)}")
+        for item in _active_deadlines(plan, day):
+            print(
+                "\n今日は移籍期限日。3本の枠とは別に特別編を出す:\n"
+                "  python -m src.cli plan --routine deadline_day --write"
+            )
+            break
         return 0
 
     if args.command == "stats":

@@ -115,6 +115,21 @@ leagues:
     match_q: "Jリーグ 試合結果 ハイライト 得点"
     official_q: "試合結果 レポート"
 
+# 日程。移籍期限のように「その日だけ別の枠を出す」日をここに書く。
+# 時刻はすべて日本時間（JST）。期限が近づくと today / scan が告知する。
+#
+# confirmed: false は日付をこちらで確認できていないもの。
+# 各リーグの発表で確かめてから true にする（doctor が未確認を数える）。
+calendar:
+  notice_days: 5     # 何日前から告知するか
+  after_hours: 36    # 期限が過ぎてから何時間「総括を出せ」と言い続けるか
+  deadlines:
+    - {league: england, at: "2026-09-02 07:00", local: "現地 9/1 23:00 BST", confirmed: true}
+    - {league: spain, at: "2026-09-02 07:00", local: "現地 9/2 00:00 CEST", confirmed: false}
+    - {league: germany, at: "2026-09-02 05:00", local: "現地 9/1 22:00 CEST", confirmed: false}
+    - {league: italy, at: "2026-09-02 07:00", local: "現地 9/2 00:00 CEST", confirmed: false}
+    - {league: france, at: "2026-09-02 06:00", local: "現地 9/1 23:00 CEST", confirmed: false}
+
 # RSSフィード。検索より速く、見出しと正確な時刻が取れる。
 # 注意: URLはまだ実測できていない（開発環境から外に出られないため）。
 #       運用するPCで `python -m src.cli fetch --check` を回し、
@@ -487,14 +502,47 @@ routines:
     when: 各国の移籍期限の当日と翌日
     cover_hours: 24
     target_minutes: 4
+    angle: |
+      期限日は1日で決着がつく。噂を並べる日ではない。
+      「決まったもの」「壊れたもの」を分けて出す。
+      期限を過ぎた案件は成立か不成立のどちらかしかない。曖昧なまま並べない。
+    structure:
+      - {id: what, heading: 何が決まったか, tier: 確定}
+      - {id: collapsed, heading: 壊れた話, tier: 報道}
+      - {id: numbers, heading: 数字で見ると, tier: 確定}
+      - {id: voices, heading: 世の中はどう見ているか, tier: 未確認}
+      - {id: next, heading: これからどうなる, tier: 報道}
     steps:
       - id: done_deals
-        what: 期限までに成立した移籍
+        what: 期限までに成立した移籍（公式発表まで辿る）
         tier: 確定
         queries:
+          - {q: "official announcement signing deadline day", domains: official}
+          - {q: "完全移籍 OR 期限付き移籍 のお知らせ", domains: official_jp}
           - {q: "deadline day confirmed transfers {today_en}", domains: english}
+        check: クラブの発表に辿り着いたものだけ確定にする。記者の投稿は報道どまり
+
       - id: collapsed
         what: 破談・不成立になった案件
         tier: 報道
         queries:
-          - {q: "deadline day collapsed transfer {today_en}", domains: english}
+          - {q: "deadline day collapsed OR failed move {today_en}", domains: english}
+          - {q: "移籍 破談 OR 白紙 OR 見送り", domains: japanese}
+        check: どちらが断ったのかを特定する。「破談」だけでは中身が無い
+
+      - id: local
+        what: 現地語での駆け込み（英語より速く出る）
+        tier: 報道
+        queries:
+          - {q: "Deadline Day offiziell Wechsel", domains: german}
+          - {q: "calciomercato ultimo giorno ufficiale", domains: italian}
+          - {q: "mercato dernier jour officiel", domains: french}
+        check: 現地語の見出しをそのまま控える。訳は台本で行う
+
+      - id: spend
+        what: 使った額・人数（数字の節に使う）
+        tier: 確定
+        queries:
+          - {q: "summer transfer window spending total", domains: english}
+          - {q: "transfer window net spend club", domains: stats}
+        check: どの範囲の集計か（リーグ全体か1クラブか）を必ず確かめる
