@@ -546,3 +546,51 @@ def test_a_constant_cutoff_is_unaffected_by_the_block_size():
     finally:
         effects.FILTER_BLOCK = original
     assert effects.lowpass(buf, 800.0, SR) == one
+
+
+# --- 体感音量 -----------------------------------------------------------------
+
+
+def test_loudness_tracks_amplitude():
+    """振幅を半分にすると 6dB 下がること。"""
+    tone = oscillators.sine(1000.0, 1.5, SR)
+    half = [v * 0.5 for v in tone]
+    assert core.loudness(tone, SR) - core.loudness(half, SR) == pytest.approx(6.0, abs=0.1)
+
+
+def test_silence_reports_the_gate_level():
+    assert core.loudness([0.0] * SR, SR) == core.ABSOLUTE_GATE
+    assert core.loudness([], SR) == core.ABSOLUTE_GATE
+
+
+def test_loudness_weights_the_midrange_above_the_bass():
+    """同じ振幅でも、低い音のほうが小さく聞こえる重み付けになっていること。"""
+    low = oscillators.sine(50.0, 1.5, SR)
+    mid = oscillators.sine(1000.0, 1.5, SR)
+    assert core.loudness(low, SR) < core.loudness(mid, SR)
+
+
+def test_loudness_ignores_a_long_silent_tail():
+    """静かな区間は平均から外れるので、後ろに無音を足しても値が変わらないこと。"""
+    tone = oscillators.sine(1000.0, 2.0, SR)
+    padded = tone + [0.0] * (SR * 3)
+    assert core.loudness(padded, SR) == pytest.approx(core.loudness(tone, SR), abs=0.5)
+
+
+def test_normalize_loudness_hits_the_target_when_there_is_headroom():
+    quiet = [v * 0.05 for v in oscillators.sine(1000.0, 1.5, SR)]
+    louder = core.normalize_loudness(quiet, target=-16.0, sr=SR)
+    assert core.loudness(louder, SR) == pytest.approx(-16.0, abs=0.05)
+
+
+def test_normalize_loudness_stops_at_the_ceiling():
+    """目標に届かなくても、天井を越えて歪ませないこと。"""
+    dense = oscillators.sine(1000.0, 1.5, SR)
+    result = core.normalize_loudness(dense, target=0.0, sr=SR, ceiling=0.5)
+    assert core.peak(result) == pytest.approx(0.5)
+    assert core.loudness(result, SR) < 0.0
+
+
+def test_normalize_loudness_of_silence_is_unchanged():
+    assert core.normalize_loudness([0.0, 0.0], sr=SR) == [0.0, 0.0]
+    assert core.normalize_loudness([], sr=SR) == []

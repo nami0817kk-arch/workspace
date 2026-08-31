@@ -19,8 +19,10 @@ from . import oscillators as osc
 from .core import (
     SAMPLE_RATE,
     add_into,
+    loudness,
     mix,
     normalize,
+    normalize_loudness,
     num_samples,
     pan,
     peak,
@@ -1036,6 +1038,12 @@ def _part_gains(style: Style) -> dict[str, float]:
 
 
 TARGET_PEAK = 0.86
+TARGET_LOUDNESS = -15.0
+"""仕上げの体感音量(LUFS 相当)。
+
+ピークだけ揃えると、音の詰まった曲と隙間の多い曲で聞こえる大きさが変わる。
+素材として並べたときに音量を触らなくて済むよう、体感音量の方をそろえる。
+天井を越える場合はピーク優先(歪ませない)。"""
 DUCK_AMOUNT = 0.22
 """バスドラムの瞬間に他パートを下げる量。"""
 
@@ -1101,7 +1109,9 @@ def generate(config: BGMConfig | None = None, **overrides) -> list[float]:
 
     names = list(tracks)
     mixed = mix(*(tracks[name] for name in names), gains=[gains[name] for name in names]) if names else []
-    return normalize(_post_process(mixed, style, config, length), TARGET_PEAK)
+    return normalize_loudness(
+        _post_process(mixed, style, config, length), TARGET_LOUDNESS, config.sr, TARGET_PEAK
+    )
 
 
 def generate_stereo(config: BGMConfig | None = None, **overrides) -> list[float]:
@@ -1124,10 +1134,17 @@ def generate_stereo(config: BGMConfig | None = None, **overrides) -> list[float]
     left = _post_process(mix(*left_parts) if left_parts else [], style, config, length)
     right = _post_process(mix(*right_parts) if right_parts else [], style, config, length)
 
-    # 定位を崩さないよう、L/R をまとめて同じ倍率で正規化する。
-    loudest = max(peak(left), peak(right))
-    if loudest > 1e-12:
-        scale = TARGET_PEAK / loudest
-        left = [value * scale for value in left]
-        right = [value * scale for value in right]
-    return to_stereo(left, right)
+    # 定位を崩さないよう、L/R をまとめて同じ倍率で調整する。
+    # 体感音量は左右を足したもので測る。
+    summed = [(a + b) * 0.5 for a, b in zip(left, right)]
+    scale = _loudness_scale(summed, max(peak(left), peak(right)), config.sr)
+    return to_stereo([v * scale for v in left], [v * scale for v in right])
+
+
+def _loudness_scale(reference: list[float], current_peak: float, sr: int) -> float:
+    """体感音量を目標に合わせる倍率。天井を越えるならそこで止める。"""
+    if not reference or current_peak < 1e-12:
+        return 1.0
+    current = loudness(reference, sr)
+    scale = 10.0 ** ((TARGET_LOUDNESS - current) / 20.0)
+    return min(scale, TARGET_PEAK / current_peak)

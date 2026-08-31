@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import array
+import itertools
 import math
 import os
 import sys
@@ -95,6 +96,78 @@ def normalize(buf: Sequence[float], target: float = 0.89) -> list[float]:
     if current < 1e-12:
         return list(buf)
     return gain(buf, target / current)
+
+
+BLOCK_SECONDS = 0.4
+"""ラウドネスを測る窓の長さ。BS.1770 に合わせてある。"""
+
+ABSOLUTE_GATE = -70.0
+RELATIVE_GATE = -10.0
+"""静かな区間を平均から外すためのしきい値(LUFS / dB)。"""
+
+
+def loudness(buf: Sequence[float], sr: int = SAMPLE_RATE) -> float:
+    """体感音量の目安を LUFS 相当で返す。
+
+    ピークだけ揃えても、音の詰まり方によって聞こえる大きさは変わる。
+    ITU-R BS.1770 の考え方(K特性で重み付け → 0.4秒ごとの二乗平均 →
+    静かな区間を除いて平均)を簡略化して実装している。
+
+    正確な実装ではないので絶対値の保証はしないが、同じ物差しで比べるぶんには足りる。
+    """
+    from . import effects  # 循環 import を避けるため関数内で読む
+
+    if not buf:
+        return ABSOLUTE_GATE
+    # K特性: 低域を落とし、1.5kHz 以上を持ち上げる。人の耳の感度に寄せる重み。
+    weighted = effects.high_shelf(effects.highpass(buf, 38.0, sr), 1500.0, 4.0, sr)
+
+    size = max(1, num_samples(BLOCK_SECONDS, sr))
+    # 二乗の累積和を1度だけ作れば、重なり合う窓の合計を引き算で取り出せる。
+    # 窓ごとに数え直すと重なりのぶんだけ同じ計算を繰り返すことになる。
+    cumulative = [0.0]
+    cumulative.extend(itertools.accumulate(v * v for v in weighted))
+    step = max(1, size // 4)
+    blocks = [
+        (cumulative[i + size] - cumulative[i]) / size
+        for i in range(0, max(1, len(weighted) - size + 1), step)
+        if i + size < len(cumulative)
+    ]
+    if not blocks:
+        blocks = [cumulative[-1] / len(weighted)]
+
+    def level(mean_square: float) -> float:
+        return -0.691 + 10.0 * math.log10(mean_square + 1e-12)
+
+    loud = [b for b in blocks if level(b) > ABSOLUTE_GATE]
+    if not loud:
+        return ABSOLUTE_GATE
+    ungated = level(sum(loud) / len(loud))
+    kept = [b for b in loud if level(b) > ungated + RELATIVE_GATE]
+    return level(sum(kept) / len(kept)) if kept else ungated
+
+
+def normalize_loudness(
+    buf: Sequence[float],
+    target: float = -16.0,
+    sr: int = SAMPLE_RATE,
+    ceiling: float = 0.89,
+) -> list[float]:
+    """体感音量を ``target`` に合わせる。``ceiling`` を超える場合はそこで止める。
+
+    音量を上げると波形が天井を越えることがある。そのときは目標より小さくても
+    天井に合わせる(歪ませない方を優先する)。
+    """
+    if not buf:
+        return []
+    current = loudness(buf, sr)
+    if current <= ABSOLUTE_GATE:
+        return list(buf)
+    scale = 10.0 ** ((target - current) / 20.0)
+    current_peak = peak(buf)
+    if current_peak * scale > ceiling:
+        scale = ceiling / current_peak
+    return [value * scale for value in buf]
 
 
 def fade(

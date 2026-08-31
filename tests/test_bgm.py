@@ -18,9 +18,13 @@ def _config(**kwargs) -> bgm.BGMConfig:
 
 @pytest.mark.parametrize("style", bgm.style_names())
 def test_every_style_renders_audible_bounded_audio(style):
+    """聞こえる大きさで、かつ天井を越えないこと。
+
+    仕上げは体感音量をそろえるので、ピークがちょうど天井に来るとは限らない
+    (音の詰まった曲は目標音量に達した時点で止まる)。
+    """
     buf = bgm.generate(_config(style=style))
-    assert core.peak(buf) == pytest.approx(bgm.TARGET_PEAK, abs=1e-6)
-    assert max(abs(v) for v in buf) <= 1.0
+    assert 0.3 < core.peak(buf) <= bgm.TARGET_PEAK + 1e-9
 
 
 @pytest.mark.parametrize("style", bgm.style_names())
@@ -161,7 +165,7 @@ def test_orchestral_voices_are_allowed_to_ring(voice):
 @pytest.mark.parametrize("structure", bgm.structure_names())
 def test_every_structure_renders(structure):
     buf = bgm.generate(_config(style="adventure", bars=8, structure=structure))
-    assert core.peak(buf) == pytest.approx(bgm.TARGET_PEAK, abs=1e-6)
+    assert 0.3 < core.peak(buf) <= bgm.TARGET_PEAK + 1e-9
 
 
 @pytest.mark.parametrize("structure", bgm.structure_names())
@@ -468,19 +472,20 @@ def test_ducking_is_skipped_without_a_kick():
 def test_mastering_raises_loudness_without_clipping():
     """リミッターを通したほうが、同じピークでも中身が大きいこと。"""
     config = _config(style="battle", bars=4, seed=4)
-    mastered = bgm.generate(config)
 
     style = config.resolved_style()
     arrangement = bgm.compose(config)
     tracks = bgm._render_arrangement(arrangement, config)
     gains = bgm._part_gains(style)
     names = list(tracks)
-    raw = core.mix(*(tracks[name] for name in names), gains=[gains[name] for name in names])
-    raw = bgm._post_process(raw, style, config, len(mastered), limit=False)
-    raw = core.normalize(raw, bgm.TARGET_PEAK)
+    mixed = core.mix(*(tracks[name] for name in names), gains=[gains[name] for name in names])
+    length = core.num_samples(config.bars * arrangement.bar_seconds, SR)
 
-    assert core.peak(mastered) == pytest.approx(bgm.TARGET_PEAK, abs=1e-6)
-    assert _rms(mastered) > _rms(raw) * 1.15
+    limited = core.normalize(bgm._post_process(mixed, style, config, length), bgm.TARGET_PEAK)
+    raw = core.normalize(
+        bgm._post_process(mixed, style, config, length, limit=False), bgm.TARGET_PEAK
+    )
+    assert _rms(limited) > _rms(raw) * 1.15
 
 
 def _rms(buf):
@@ -497,7 +502,7 @@ BROADCAST = ["news_open", "news_bed", "sports_anthem", "sports_drive"]
 @pytest.mark.parametrize("style", BROADCAST)
 def test_broadcast_styles_render(style):
     buf = bgm.generate(_config(style=style, bars=4))
-    assert core.peak(buf) == pytest.approx(bgm.TARGET_PEAK, abs=1e-6)
+    assert 0.3 < core.peak(buf) <= bgm.TARGET_PEAK + 1e-9
 
 
 def test_the_news_bed_leaves_out_the_melody():
@@ -759,7 +764,7 @@ def test_structures_without_transposition_stay_in_key():
 @pytest.mark.parametrize("structure", ["lift", "broadcast"])
 def test_transposing_structures_render(structure):
     buf = bgm.generate(_config(style="sports_anthem", bars=8, structure=structure))
-    assert core.peak(buf) == pytest.approx(bgm.TARGET_PEAK, abs=1e-6)
+    assert 0.3 < core.peak(buf) <= bgm.TARGET_PEAK + 1e-9
 
 
 def test_the_broadcast_structure_keeps_the_new_key_to_the_end():
@@ -813,3 +818,49 @@ def test_a_flat_eq_leaves_the_signal_alone():
 def test_the_news_bed_is_shaped_to_sit_back():
     """話し声の帯域を空けるため、下敷きは輪郭を上げすぎないこと。"""
     assert bgm.STYLES["news_bed"].eq.presence_db < bgm.STYLES["news_open"].eq.presence_db
+
+
+# --- 体感音量をそろえる -------------------------------------------------------
+
+DENSE_STYLES = ["adventure", "battle", "chiptune", "news_open", "sports_anthem", "sports_drive"]
+SPARSE_STYLES = ["calm", "menu", "night", "news_bed", "tension"]
+
+
+@pytest.mark.parametrize("style", DENSE_STYLES)
+def test_dense_styles_land_on_the_loudness_target(style):
+    """音の詰まった曲は、体感音量が目標ぴったりに揃うこと。"""
+    buf = bgm.generate(_config(style=style, bars=4, seed=3))
+    assert core.loudness(buf, SR) == pytest.approx(bgm.TARGET_LOUDNESS, abs=0.1)
+
+
+@pytest.mark.parametrize("style", SPARSE_STYLES)
+def test_sparse_styles_stop_at_the_peak_ceiling(style):
+    """隙間の多い曲は目標まで上げると歪むので、天井で止まること。
+
+    結果として静かな曲想は静かなまま残る(下敷きや夜の曲では望ましい)。
+    """
+    buf = bgm.generate(_config(style=style, bars=4, seed=3))
+    assert core.peak(buf) == pytest.approx(bgm.TARGET_PEAK, abs=1e-6)
+    assert core.loudness(buf, SR) <= bgm.TARGET_LOUDNESS + 0.1
+
+
+@pytest.mark.parametrize("style", bgm.style_names())
+def test_no_style_exceeds_the_peak_ceiling(style):
+    assert core.peak(bgm.generate(_config(style=style, bars=4, seed=3))) <= bgm.TARGET_PEAK + 1e-9
+
+
+def test_loudness_matching_is_tighter_than_peak_matching():
+    """ピークをそろえるより、体感音量のばらつきが小さくなること。"""
+    levels = [
+        core.loudness(bgm.generate(_config(style=style, bars=2, seed=3)), SR)
+        for style in bgm.style_names()
+    ]
+    assert max(levels) - min(levels) < 4.0
+
+
+def test_stereo_output_is_matched_the_same_way():
+    config = _config(style="sports_drive", bars=4, seed=3, stereo=True)
+    stereo = bgm.generate_stereo(config)
+    summed = [(a + b) * 0.5 for a, b in zip(stereo[0::2], stereo[1::2])]
+    assert core.loudness(summed, SR) == pytest.approx(bgm.TARGET_LOUDNESS, abs=0.3)
+    assert core.peak(stereo) <= bgm.TARGET_PEAK + 1e-9
