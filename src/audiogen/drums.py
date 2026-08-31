@@ -1,6 +1,12 @@
 """ドラム音源と、16分音符グリッドのパターン。
 
-パターンは16文字の文字列で表す。``x`` = 強、``o`` = 弱、``.`` = 休符。
+パターンは16文字の文字列で表す。
+
+    ``x`` 強打  ``o`` 弱打  ``g`` ゴーストノート  ``f`` フラム  ``.`` 休符
+
+ゴーストノートは、主要な打点のあいだに入るごく小さな音。譜面には出ないが、
+これがあるとリズムが平坦にならない。フラムは装飾音を少し前に置いた2連打で、
+一発が厚くなる。
 """
 
 from __future__ import annotations
@@ -13,6 +19,22 @@ from . import oscillators as osc
 from .core import SAMPLE_RATE, mix, normalize
 
 STEPS_PER_BAR = 16
+
+REST = "."
+SYMBOL_LEVELS: dict[str, float] = {"x": 1.0, "o": 0.6, "g": 0.28, "f": 1.0}
+"""記号ごとの音量倍率。"""
+
+FLAM_SYMBOL = "f"
+FLAM_LEAD = 0.026
+"""フラムの装飾音を、本打の何秒前に置くか。"""
+
+FLAM_LEVEL = 0.45
+"""装飾音の音量(本打に対する比)。"""
+
+
+def symbol_level(symbol: str) -> float:
+    """記号から音量倍率を引く。未知の記号は休符とみなす。"""
+    return SYMBOL_LEVELS.get(symbol, 0.0)
 
 
 def kick(sr: int = SAMPLE_RATE, duration: float = 0.32) -> list[float]:
@@ -125,7 +147,7 @@ PATTERNS: dict[str, dict[str, str]] = {
     },
     "drive": {
         "kick": "x..x..x.x..x..x.",
-        "snare": "....x.......x...",
+        "snare": "..g.x..g..g.x.g.",  # 主要な打点のあいだにゴーストを置く
         "hihat": "oxoxoxoxoxoxoxox",
     },
     "march": {
@@ -148,14 +170,14 @@ PATTERNS: dict[str, dict[str, str]] = {
     # 行進曲風。ゆったりした足取りに小太鼓とティンパニを重ねる。
     "anthem": {
         "kick": "x.......x.......",
-        "snare": "..o.o.o...o.o.o.",
+        "snare": "..o.f.o...o.o.o.",
         "timpani": "x.......x...x...",
         "crash": "x...............",
     },
     # スポーツ中継向け。押しの強い刻みに、小節終わりのタム回し。
     "sports": {
         "kick": "x..x..x.x..x..x.",
-        "snare": "....x.......x...",
+        "snare": "..g.f..g..g.x...",  # 2拍目はフラムで厚くする
         "ride": "oxoxoxoxoxoxoxox",
         "tom": "..............oo",
     },

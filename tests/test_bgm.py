@@ -132,7 +132,7 @@ def test_unknown_drum_pattern_raises():
 def test_drum_patterns_are_sixteen_steps(name):
     for steps in drums.get_pattern(name).values():
         assert len(steps) == drums.STEPS_PER_BAR
-        assert set(steps) <= {"x", "o", "."}
+        assert set(steps) <= set(drums.SYMBOL_LEVELS) | {drums.REST}
 
 
 @pytest.mark.parametrize("name", drums.pattern_names())
@@ -657,7 +657,7 @@ def test_fills_are_sixteen_steps_of_known_voices(name):
     for voice, steps in drums.get_fill(name).items():
         assert voice in drums.VOICES
         assert len(steps) == drums.STEPS_PER_BAR
-        assert set(steps) <= {"x", "o", "."}
+        assert set(steps) <= set(drums.SYMBOL_LEVELS) | {drums.REST}
 
 
 def test_the_ending_lands_on_the_tonic():
@@ -979,3 +979,54 @@ def test_a_ritardando_does_not_loop():
     looped = bgm.generate(_config(style="sports_anthem", bars=4))
     slowed = bgm.generate(_config(style="sports_anthem", bars=4, ritardando=2.0))
     assert len(slowed) > len(looped)
+
+
+# --- ゴーストノートとフラム ---------------------------------------------------
+
+
+def test_symbol_levels_cover_the_pattern_alphabet():
+    assert drums.symbol_level("x") == 1.0
+    assert drums.symbol_level("o") < drums.symbol_level("x")
+    assert drums.symbol_level("g") < drums.symbol_level("o")
+    assert drums.symbol_level(drums.REST) == 0.0
+    assert drums.symbol_level("?") == 0.0
+
+
+def test_ghost_notes_sit_well_below_the_main_hits():
+    """譜面に出ない小さな打点として鳴ること。"""
+    config = _config(style="sports_drive", bars=1, parts=("drums",), humanize=0.0, swing=0.0)
+    snares = [hit.velocity for hit in bgm.compose(config).hits if hit.voice == "snare"]
+    assert min(snares) < max(snares) * 0.4
+
+
+def test_a_flam_places_a_grace_note_just_before_the_beat():
+    config = _config(style="sports_drive", bars=1, parts=("drums",), humanize=0.0, swing=0.0)
+    arrangement = bgm.compose(config)
+    step = arrangement.bar_seconds / drums.STEPS_PER_BAR
+    snares = sorted((hit.start, hit.velocity) for hit in arrangement.hits if hit.voice == "snare")
+
+    main = max(snares, key=lambda item: item[1])
+    grace = [s for s in snares if 0 < main[0] - s[0] <= drums.FLAM_LEAD + 1e-9]
+    assert len(grace) == 1
+    assert grace[0][1] == pytest.approx(main[1] * drums.FLAM_LEVEL, rel=0.01)
+
+
+def test_a_flam_at_the_very_start_stays_inside_the_track():
+    """先頭にフラムが来ても、装飾音が負の時刻へ出ないこと。"""
+    original = drums.PATTERNS["basic"]
+    try:
+        drums.PATTERNS["basic"] = {"snare": "f" + "." * 15}
+        arrangement = bgm.compose(
+            _config(bars=1, parts=("drums",), drum_pattern="basic", humanize=0.0, swing=0.0)
+        )
+        assert all(hit.start >= 0.0 for hit in arrangement.hits)
+        assert len(arrangement.hits) == 2  # 装飾音と本打
+    finally:
+        drums.PATTERNS["basic"] = original
+
+
+def test_patterns_with_ghosts_have_more_hits():
+    """ゴーストを入れたぶん、打点の数が増えていること。"""
+    with_ghosts = drums.get_pattern("drive")["snare"]
+    assert with_ghosts.count("g") > 0
+    assert sum(1 for c in with_ghosts if c != drums.REST) > with_ghosts.count("x")

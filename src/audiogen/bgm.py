@@ -810,11 +810,16 @@ def _plan_drums(style: Style, bars: int, bar_seconds: float, groove_rng: random.
         bar_pattern = fill if (fill and bars >= 2 and bar == bars - 1) else pattern
         for voice, steps in bar_pattern.items():
             for step, symbol in enumerate(steps[: drums.STEPS_PER_BAR]):
-                if symbol == ".":
+                weight = drums.symbol_level(symbol)
+                if weight <= 0.0:
                     continue
                 start = bar * bar_seconds + step * step_seconds
                 start = max(0.0, start + groove.time_offset(step, step_seconds, groove_rng))
-                level = (1.0 if symbol == "x" else 0.6) * groove.velocity(step, groove_rng)
+                level = weight * groove.velocity(step, groove_rng)
+                if symbol == drums.FLAM_SYMBOL:
+                    # 装飾音を少し前に置く。2連打で一発が厚くなる。
+                    grace = max(0.0, start - drums.FLAM_LEAD)
+                    plan.append(Hit(grace, voice, level * drums.FLAM_LEVEL))
                 plan.append(Hit(start, voice, level))
     return plan
 
