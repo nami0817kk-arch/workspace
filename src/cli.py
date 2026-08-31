@@ -4,9 +4,12 @@
     python -m src.cli speakers                 VOICEVOX の話者/スタイルID一覧
     python -m src.cli build <台本> --backend core   合成方式を明示する
     python -m src.cli make-clip <画像>         静止画から背景クリップを作る
+    python -m src.cli gather                   フィードと貼り付けを一息で候補に
     python -m src.cli scan                     候補テーマを拾う検索リスト
     python -m src.cli fetch | ... collect      RSSから最新見出し（運用PCで）
     python -m src.cli collect < 検索結果.txt    検索結果から候補ファイルの下書き
+    python -m src.cli lint research/x.yaml     候補ファイルの書き間違いを探す
+    python -m src.cli saga research/x.yaml     続報かどうかと前回との差分
     python -m src.cli pick research/x.yaml     候補を採点して枠に割り振る
     python -m src.cli x                        記者Xアカウントの検索リスト
     python -m src.cli fresh <URL>...           拾ったURLの新しさを判定
@@ -15,6 +18,7 @@
     python -m src.cli doctor                   収集の仕組みの健康診断
     python -m src.cli queries                  どの検索が効いているか
     python -m src.cli sources                  情報源の網と確度の上限
+    python -m src.cli clubs "見出し"            クラブ名の別名辞書を引く
     python -m src.cli review scripts/x.md      公開前の点検
     python -m src.cli short scripts/x.md       縦9:16のショート
     python -m src.cli plan                     枠ごとの取材リストを出す
@@ -22,6 +26,7 @@
     python -m src.cli new                      テンプレートから台本の下書きを作る
     python -m src.cli check scripts/sample.md  台本の書式と想定尺だけ確認
     python -m src.cli build scripts/sample.md  動画・字幕・サムネを書き出し
+    python -m src.cli upload output/sample --dry-run   送る前に中身を見る
     python -m src.cli upload output/sample     出来上がりを YouTube に投稿
 """
 
