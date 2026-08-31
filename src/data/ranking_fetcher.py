@@ -110,93 +110,39 @@ def _kdragon_page_date(html: str) -> str | None:
 
 
 # ── kabutan ─────────────────────────────────────────────────
-_KABUTAN_URL = "https://kabutan.jp/warning/?mode=2_1&market={market}"
-_KABUTAN_MARKETS = [1, 2, 3]  # プライム, スタンダード, グロース
+# HTML の取得・解析は ai-lab の共有パッケージ `kabutan` に一本化してある
+# （kabu-agari-ranking と共通）。構造の変化は ai-lab 側で直す。
+from kabutan import MARKETS as _KABUTAN_MARKETS  # noqa: E402
+from kabutan import MODE_GAINERS as _MODE_GAINERS  # noqa: E402
+from kabutan import fetch_ranking_html as _lib_fetch_ranking_html  # noqa: E402
+from kabutan import fetch_stock_name as _lib_fetch_stock_name  # noqa: E402
+from kabutan import parse_ranking_table as _lib_parse_ranking_table  # noqa: E402
 
 
 def _kabutan_fetch_market(market: int, retries: int = 3) -> str | None:
-    url = _KABUTAN_URL.format(market=market)
-    for attempt in range(retries):
-        try:
-            resp = requests.get(url, headers=_HEADERS, timeout=30)
-            resp.raise_for_status()
-            return resp.text
-        except Exception as e:
-            if attempt < retries - 1:
-                time.sleep(3 * (attempt + 1))
-            else:
-                print(f"  [WARN] kabutan market={market} 取得失敗: {e}")
-    return None
+    return _lib_fetch_ranking_html(_MODE_GAINERS, market, retries=retries)
 
 
 def _kabutan_parse(html: str) -> pd.DataFrame:
-    """
-    kabutan の stock_table を解析する。
-    市場により列数が異なる:
-      13列 (プライム): code[0] name[1] market[2] _ _ close[5] _ 前日比[7] gain%[8] vol[9]
-      12列 (スタンダード/グロース): code[0] market[1] _ _ close[4] _ 前日比[6] gain%[7] vol[8]
-    """
-    soup = BeautifulSoup(html, "lxml")
-    tbl = soup.find("table", class_="stock_table")
-    if tbl is None:
+    """共有パッケージの中立な列名を、このプロジェクトの列名に変換し、上昇銘柄だけ残す。"""
+    df = _lib_parse_ranking_table(html)
+    if df.empty:
+        return df
+    df = df[df["change_pct"] > 0]
+    if df.empty:
         return pd.DataFrame()
-
-    rows = []
-    for tr in tbl.find_all("tr"):
-        tds = tr.find_all("td")
-        n = len(tds)
-        if n < 9:
-            continue
-        texts = [td.get_text(strip=True) for td in tds]
-
-        try:
-            code = texts[0]
-            if not re.match(r"^\d{4}$", code):
-                continue
-
-            if n >= 13:
-                # プライム形式: 銘柄名あり
-                name   = texts[1]
-                close  = texts[5].replace(",", "")
-                gain_s = texts[8]
-                vol_s  = texts[9].replace(",", "")
-            else:
-                # スタンダード/グロース形式: 銘柄名なし
-                name   = code  # コードを仮名として使用
-                close  = texts[4].replace(",", "")
-                gain_s = texts[7]
-                vol_s  = texts[8].replace(",", "")
-
-            gain = float(re.sub(r"[^0-9.\-]", "", gain_s))
-            if gain <= 0:
-                continue
-
-            rows.append({
-                "ticker":    code + ".T",
-                "name":      name,
-                "終値":      float(close) if close.replace(".", "").isdigit() else None,
-                "値上がり率%": gain,
-                "出来高":    int(vol_s) if vol_s.isdigit() else None,
-            })
-        except (IndexError, ValueError):
-            continue
-
-    return pd.DataFrame(rows) if rows else pd.DataFrame()
+    return pd.DataFrame({
+        "ticker":      df["ticker"],
+        "name":        df["name"],
+        "終値":        df["close"],
+        "値上がり率%": df["change_pct"],
+        "出来高":      df["metric_value"],
+    }).reset_index(drop=True)
 
 
 def _fetch_name_kabutan(code: str) -> str:
-    """kabutan の個別ページから日本語銘柄名を取得する。"""
-    try:
-        url = f"https://kabutan.jp/stock/?code={code}"
-        resp = requests.get(url, headers=_HEADERS, timeout=10)
-        soup = BeautifulSoup(resp.text, "lxml")
-        h1 = soup.find("h1")
-        if h1:
-            # "東京ボード工業(7815) 基本情報" → "東京ボード工業"
-            return h1.get_text(strip=True).split("(")[0].strip()
-    except Exception:
-        pass
-    return code
+    """kabutan の個別ページから日本語銘柄名を取得する（共有パッケージへ委譲）。"""
+    return _lib_fetch_stock_name(code)
 
 
 def _fill_names_kabutan(df: pd.DataFrame) -> pd.DataFrame:
