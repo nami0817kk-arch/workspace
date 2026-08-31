@@ -12,7 +12,7 @@ AI活用のアイデア検証・試作を行うラボプロジェクト。
 | `ailab search "キーワード"` | フリー素材を横断検索する（Iconify / Openverse / Wikimedia / Pixabay / Unsplash / Pexels） |
 | `ailab fetch "キーワード"` | フリーイラストを検索してダウンロードし、クレジットも書き出す |
 | `ailab grab URL` | 自分で見つけた画像をURL指定で取り込む（出典つき） |
-| `ailab feed "対象" --source rss\|github\|qiita` | 記事・リリース情報を取得する |
+| `ailab feed "対象" --source ...` | 記事・リリース情報を取得する（RSS / GitHub / Qiita / Wikipedia） |
 | `ailab publish FILE --repo owner/name` | 生成物を GitHub へコミットする（既定はドライラン） |
 | `ailab usage` | 画像生成の利用量と概算コストを見る |
 | `ailab run レシピ` | 「集める→作る→送る」をYAML1本で実行する |

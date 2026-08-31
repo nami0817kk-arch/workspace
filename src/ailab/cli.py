@@ -112,7 +112,10 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     feed = sub.add_parser("feed", help="記事・リリース情報を取得する")
-    feed.add_argument("query", help="rss はフィードURL、github は owner/name、qiita はキーワード")
+    feed.add_argument(
+        "query",
+        help="rss はフィードURL、github は owner/name、qiita と wikipedia はキーワード",
+    )
     feed.add_argument(
         "--source", required=True, choices=_capability_names("fetch_items"),
         help="取得元（対象の指定方法が違うので必ず選ぶ）",

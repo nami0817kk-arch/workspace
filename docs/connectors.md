@@ -34,8 +34,14 @@ ailab doctor --json       # スクリプトから使う（失敗があれば終�
 ailab feed https://example.com/feed.xml --source rss     # RSS / Atom
 ailab feed owner/name --source github                    # リリース一覧
 ailab feed "claude code" --source qiita                  # Qiita 記事検索
+ailab feed "リオネル・メッシ" --source wikipedia          # Wikipedia の見出しと導入文
+ailab feed "en:Lionel Messi" --source wikipedia          # 言語を指定する
 ailab feed owner/name --source github --json             # 他のスクリプトへ渡す
 ```
+
+Wikipedia は既定で日本語版を引く（`AILAB_WIKIPEDIA_LANG` か `en:` の前置きで変更）。
+本文は CC BY-SA なので、引用するときは出典表示が要る。
+画像は別サイトなので `--source wikimedia`（Commons）を使う。
 
 対象の指定方法が取得元ごとに違う（URL / owner/name / キーワード）ので、`--source` は必須。
 

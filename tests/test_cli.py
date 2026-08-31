@@ -8,6 +8,7 @@ from ailab.connectors.assets_iconify import IconifyAssets
 from ailab.connectors.assets_openverse import OpenverseAssets
 from ailab.connectors.assets_wikimedia import WikimediaAssets
 from ailab.connectors.feed_qiita import QiitaFeed
+from ailab.connectors.feed_wikipedia import WikipediaFeed
 from ailab.connectors.github import GitHubConnector
 from ailab.connectors.images_pollinations import PollinationsImages
 from ailab.core.types import Asset
@@ -58,7 +59,14 @@ def test_doctor_marks_unset_keys_as_skipped(monkeypatch, capsys):
     from ailab.core.connector import CheckResult
 
     # キー不要で通信するコネクタは疎通確認を差し替える（テストは通信しない）
-    for connector_cls in (OpenverseAssets, WikimediaAssets, IconifyAssets, QiitaFeed, PollinationsImages):
+    for connector_cls in (
+        OpenverseAssets,
+        WikimediaAssets,
+        IconifyAssets,
+        QiitaFeed,
+        WikipediaFeed,
+        PollinationsImages,
+    ):
         monkeypatch.setattr(
             connector_cls, "check", lambda self: CheckResult(self.name, ok=True, detail="確認済み")
         )

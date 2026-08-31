@@ -12,6 +12,7 @@ from .assets_unsplash import UnsplashAssets
 from .assets_wikimedia import WikimediaAssets
 from .feed_qiita import QiitaFeed
 from .feed_rss import RssFeed
+from .feed_wikipedia import WikipediaFeed
 from .github import GitHubConnector
 from .images_cloudflare import CloudflareImages
 from .images_gemini import GeminiImages
@@ -38,6 +39,7 @@ __all__ = [
     "ReplicateImages",
     "RssFeed",
     "StabilityImages",
+    "WikipediaFeed",
     "UnsplashAssets",
     "WikimediaAssets",
 ]
