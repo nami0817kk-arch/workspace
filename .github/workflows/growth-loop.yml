@@ -34,7 +34,7 @@ jobs:
       GROWTH_TOKEN: ${{ secrets.GROWTH_TOKEN }}
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-python@v7
         with:
