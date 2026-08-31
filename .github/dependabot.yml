@@ -1,0 +1,18 @@
+version: 2
+updates:
+  # 実行時の依存はゼロなので、監視するのは主に Actions のバージョン。
+  # 自分のルール（ci.unpinned-actions）でタグ固定を求めている以上、
+  # 上がったことに気づく経路は用意しておく必要がある。
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3
+
+  - package-ecosystem: pip
+    directory: "/"
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 3
