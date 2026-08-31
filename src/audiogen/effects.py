@@ -10,6 +10,14 @@ from .core import SAMPLE_RATE, num_samples
 CutoffLike = float | Callable[[float], float]
 
 
+FILTER_BLOCK = 16
+"""スイープするフィルタの係数を作り直す間隔(サンプル)。
+
+44.1kHz なら 0.36ms ごと。この間にカットオフが動く量は無視できるので、
+1サンプルごとに pow と除算をやり直すより桁違いに速く、音は変わらない。
+"""
+
+
 def _clamp_cutoff(value: float, sr: int) -> float:
     return min(max(float(value), 1.0), sr / 2.0 - 1.0)
 
@@ -47,8 +55,11 @@ def lowpass(buf: Sequence[float], cutoff: CutoffLike, sr: int = SAMPLE_RATE) -> 
         return out
 
     cutoff_fn = _as_cutoff_fn(cutoff, sr)
+    alpha = 0.0
     for i, x in enumerate(buf):
-        y += _alpha_lowpass(cutoff_fn(i / sr), sr) * (x - y)
+        if i % FILTER_BLOCK == 0:
+            alpha = _alpha_lowpass(cutoff_fn(i / sr), sr)
+        y += alpha * (x - y)
         out[i] = y
     return out
 
@@ -67,8 +78,11 @@ def highpass(buf: Sequence[float], cutoff: CutoffLike, sr: int = SAMPLE_RATE) ->
         return out
 
     cutoff_fn = _as_cutoff_fn(cutoff, sr)
+    alpha = 0.0
     for i, x in enumerate(buf):
-        y = _alpha_highpass(cutoff_fn(i / sr), sr) * (y + x - prev_x)
+        if i % FILTER_BLOCK == 0:
+            alpha = _alpha_highpass(cutoff_fn(i / sr), sr)
+        y = alpha * (y + x - prev_x)
         prev_x = x
         out[i] = y
     return out

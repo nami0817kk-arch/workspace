@@ -513,3 +513,36 @@ def test_zero_db_passes_the_signal_through(shaper):
 def test_band_gain_of_zero_db_passes_through():
     tone = oscillators.sine(440.0, 0.05, SR)
     assert effects.band_gain(tone, 200.0, 400.0, 0.0, SR) == tone
+
+
+@pytest.mark.parametrize("rate,limit_db", [(8000, -40), (22050, -50), (44100, -55)])
+def test_block_updated_filter_coefficients_match_per_sample_updates(rate, limit_db):
+    """係数をブロック単位で更新しても、音は実質変わらないこと。
+
+    誤差はブロックの長さ(秒)に比例するので、サンプリング周波数が低いほど
+    大きくなる。既定の 44.1kHz では -55dB 以下、8kHz でも -40dB 以下に収まる。
+    """
+    buf = oscillators.saw(220.0, 0.5, rate)
+    sweep = oscillators.sweep(3000.0, 200.0, 0.5)
+
+    blocked = effects.lowpass(buf, sweep, rate)
+    original = effects.FILTER_BLOCK
+    try:
+        effects.FILTER_BLOCK = 1
+        per_sample = effects.lowpass(buf, sweep, rate)
+    finally:
+        effects.FILTER_BLOCK = original
+
+    error = max(abs(a - b) for a, b in zip(blocked, per_sample))
+    assert 20 * math.log10(error / core.peak(per_sample)) < limit_db
+
+
+def test_a_constant_cutoff_is_unaffected_by_the_block_size():
+    buf = oscillators.saw(220.0, 0.2, SR)
+    original = effects.FILTER_BLOCK
+    try:
+        effects.FILTER_BLOCK = 1
+        one = effects.lowpass(buf, 800.0, SR)
+    finally:
+        effects.FILTER_BLOCK = original
+    assert effects.lowpass(buf, 800.0, SR) == one
