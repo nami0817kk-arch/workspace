@@ -41,6 +41,18 @@ from .thumbnail import build_thumbnail
 from .tts import TtsError
 
 
+def candidates_mod_load(path):
+    from . import candidates as candidates_mod
+
+    return candidates_mod.load_candidates(path)
+
+
+def today_short(path) -> str:
+    from . import today as today_mod
+
+    return today_mod._short(Path(path))
+
+
 def _now_on(day) -> "datetime":
     """その日の「いま」。日付を指定されたときは、その日の同じ時刻とみなす。"""
     from datetime import datetime
@@ -138,6 +150,17 @@ def main(argv: list[str] | None = None) -> int:
     p_fetch.add_argument("--league", default=None, help="このリーグのフィードだけ")
     p_fetch.add_argument("--hours", type=float, default=24, help="この時間内の見出しだけ（既定: 24）")
     p_fetch.add_argument("--check", action="store_true", help="全フィードの生死を確かめる")
+
+    p_gather = sub.add_parser(
+        "gather", help="フィードと貼り付けをまとめて取り、候補ファイルまで作る")
+    p_gather.add_argument("--hours", type=float, default=24.0, help="何時間以内のものを取るか")
+    p_gather.add_argument("--league", default=None, help="このリーグのフィードだけ")
+    p_gather.add_argument("--paste", action="store_true",
+                          help="標準入力に貼った検索結果も混ぜる")
+    p_gather.add_argument("--no-feeds", action="store_true", help="フィードを使わない")
+    p_gather.add_argument("--date", default=None, help="基準日 YYYY-MM-DD（既定: 今日）")
+    p_gather.add_argument("--out", default=None, help="書き出し先")
+    p_gather.add_argument("--append", action="store_true", help="既にある候補ファイルに足す")
 
     p_collect = sub.add_parser("collect", help="検索結果を貼ると候補ファイルの下書きを作る")
     p_collect.add_argument("--date", default=None, help="基準日 YYYY-MM-DD（既定: 今日）")
@@ -578,7 +601,13 @@ def _dispatch(args, config) -> int:
             )
             print(f"  {marks} {slot.name}　{' / '.join(done) or 'まだ何もない'}")
 
-        print(f"\n次にこれを打つ:\n  {today_mod.next_step(candidates, slots, stamp)}")
+        # フィードが使えるなら、そちらのほうが速く確実に取れる
+        first = (
+            "python -m src.cli gather"
+            if any(feed.get("verified") for feed in (plan.feeds or []))
+            else "python -m src.cli scan --write"
+        )
+        print(f"\n次にこれを打つ:\n  {today_mod.next_step(candidates, slots, stamp, first)}")
         for item in _active_deadlines(plan, day):
             print(
                 "\n今日は移籍期限日。3本の枠とは別に特別編を出す:\n"
@@ -981,6 +1010,81 @@ def _dispatch(args, config) -> int:
             file=sys.stderr,
         )
         return 0 if seen else 1
+
+    if args.command == "gather":
+        from datetime import date as _date
+
+        from . import collect as collect_mod
+        from . import coverage as coverage_mod
+        from . import gather as gather_mod
+        from . import lint as lint_mod
+        from . import timing
+        from .config import _resolve
+        from .plan import load_plan, tokens
+
+        plan = load_plan()
+        today = _date.fromisoformat(args.date) if args.date else _date.today()
+
+        print(f"■ 収集　{tokens(today, 24)['{date_ja}']}")
+        for note in _deadline_notices(plan, today):
+            print(f"　{note}")
+        for note in timing.advice(plan, _now_on(today)):
+            print(f"　{note}")
+        print()
+
+        pasted = sys.stdin.read() if args.paste and not sys.stdin.isatty() else ""
+        haul = gather_mod.run(
+            plan,
+            hours=args.hours,
+            pasted=pasted,
+            league=args.league or "",
+            covered=coverage_mod.load(plan.coverage.get("ledger", "research/covered.yaml")),
+            today=today,
+            use_feeds=not args.no_feeds,
+        )
+        for note in haul.notes:
+            print(f"  ! {note}")
+        for line in gather_mod.summary(haul):
+            print(f"  {line}")
+
+        if not haul.hits:
+            print("\n候補になるものがありませんでした", file=sys.stderr)
+            return 1
+
+        label = tokens(today, 24)["{date_ja}"]
+        body = collect_mod.to_yaml(haul.hits, label)
+        bunches = collect_mod.group(haul.hits)
+
+        target = Path(args.out) if args.out else _resolve(
+            f"research/{today.strftime('%Y%m%d')}_candidates.yaml"
+        )
+        if target.exists() and not args.append:
+            print(f"\nすでにあります: {target}（足すなら --append）", file=sys.stderr)
+            return 1
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if args.append and target.exists():
+            rows = body.split("candidates:\n", 1)[-1]
+            with target.open("a", encoding="utf-8") as handle:
+                handle.write("\n" + rows)
+        else:
+            target.write_text(body, encoding="utf-8")
+
+        print(f"\n候補{len(bunches)}件　{target}")
+        for bunch in bunches:
+            head = bunch[0]
+            same = f"　＋{len(bunch) - 1}媒体" if len(bunch) > 1 else ""
+            age = f"{head.hours_ago:.0f}時間前" if head.hours_ago >= 0 else (head.posted_on or "—")
+            print(f"  {age:12} {head.title[:48] or '（見出しなし）'}{same}")
+
+        # 埋めるところを、その場で挙げる
+        date_label, items = candidates_mod_load(target)
+        issues = [i for i in lint_mod.inspect(items, plan) if i.level == "・"]
+        if issues:
+            print(f"\n埋めるところ {len(issues)}件（tier / topic / league は判断が要ります）")
+            for issue in issues[:6]:
+                print(issue.line())
+        print(f"\n次にこれを打つ:\n  python -m src.cli pick {today_short(target)}")
+        return 0
 
     if args.command == "collect":
         from datetime import date as _date

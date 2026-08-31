@@ -63,10 +63,16 @@ def survey(slots: list[tuple[str, str]], today: date | None = None) -> tuple[Pat
     return candidates, found
 
 
-def next_step(candidates: Path, slots: list[Slot], stamp: str) -> str:
-    """いま打つべきコマンドを1つだけ返す。"""
+def next_step(
+    candidates: Path, slots: list[Slot], stamp: str,
+    first: str = "python -m src.cli scan --write",
+) -> str:
+    """いま打つべきコマンドを1つだけ返す。
+
+    first … 候補がまだ無いときの一手。フィードが使えるなら gather のほうが速い。
+    """
     if not candidates.exists():
-        return "python -m src.cli scan --write"
+        return first
 
     # どの枠にも取材メモが無いなら、まだテーマが決まっていない
     if not any(slot.notes.exists() for slot in slots):
