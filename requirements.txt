@@ -1,6 +1,8 @@
-requests
-beautifulsoup4
-pdfplumber
-anthropic
-openpyxl
-python-dotenv
+# 動いている .venv の実測値で固定。`>=` に緩めない。
+# 更新は Dependabot の PR で受け取り、CI が通るのを見てから上げる。
+requests==2.34.2
+beautifulsoup4==4.15.0
+pdfplumber==0.11.10
+anthropic==0.113.0
+openpyxl==3.1.5
+python-dotenv==1.2.2
