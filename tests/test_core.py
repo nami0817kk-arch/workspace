@@ -648,3 +648,68 @@ def _correlation(a, b):
     da = math.sqrt(sum((x - mean_a) ** 2 for x in a))
     db = math.sqrt(sum((y - mean_b) ** 2 for y in b))
     return numerator / (da * db) if da and db else 1.0
+
+
+def test_no_reverb_delay_is_a_whole_multiple_of_another():
+    """一方が他方の2倍・3倍だと、反射が同じ位置に重なって金属的になる。"""
+    lengths = sorted(round(d * 44100) for d in effects._COMB_DELAYS)
+    assert len(set(lengths)) == len(lengths)
+    for i, shorter in enumerate(lengths):
+        for longer in lengths[i + 1 :]:
+            ratio = longer / shorter
+            nearest = round(ratio)
+            assert nearest < 2 or abs(ratio - nearest) > 0.02, f"{shorter} と {longer} が整数倍"
+
+
+def test_the_reverb_delays_stay_in_a_narrow_range():
+    """短すぎる遅延は響きが箱っぽくなり、長すぎると反射が薄くなる。"""
+    milliseconds = sorted(d * 1000 for d in effects._COMB_DELAYS)
+    assert 20.0 < milliseconds[0]
+    assert milliseconds[-1] < 45.0
+
+
+def _tail_periodicity(comb_delays, allpass_delays=None):
+    """尾の自己相関のピーク。反射が同じ間隔で並ぶほど大きくなる(=金属的)。"""
+    impulse = [1.0] + [0.0] * (SR // 2)
+    saved = effects._ALLPASS_DELAYS
+    try:
+        if allpass_delays is not None:
+            effects._ALLPASS_DELAYS = allpass_delays
+        tail = effects._reverb_wet(impulse, comb_delays, 0.8, 0.35, SR)[SR // 10 :]
+    finally:
+        effects._ALLPASS_DELAYS = saved
+
+    window = tail[: SR // 2]
+    mean = sum(window) / len(window)
+    centred = [v - mean for v in window]
+    energy = sum(v * v for v in centred) or 1e-12
+    return max(
+        abs(sum(a * b for a, b in zip(centred, centred[lag:])) / energy)
+        for lag in range(int(0.002 * SR), int(0.06 * SR))
+    )
+
+
+def test_the_reverb_tail_is_less_periodic_than_a_sparse_one():
+    """反射を増やすと、尾の繰り返しが弱まること(金属的な響きが減る)。"""
+    sparse = _tail_periodicity((0.0297, 0.0371, 0.0411, 0.0437), (0.0050, 0.0017))
+    assert _tail_periodicity(effects._COMB_DELAYS) < sparse
+
+
+def test_simple_ratios_make_the_tail_more_periodic():
+    """遅延長を整数比にすると、はっきり周期的になることを確かめる(対照)。"""
+    simple = _tail_periodicity((0.010, 0.020, 0.030, 0.040, 0.050, 0.060))
+    assert simple > _tail_periodicity(effects._COMB_DELAYS)
+
+
+def test_the_reverb_has_enough_reflections():
+    """局所平均を超えるサンプルが十分にあること(反射が詰まっている)。"""
+    impulse = [1.0] + [0.0] * (SR // 2)
+    tail = effects._reverb_wet(impulse, effects._COMB_DELAYS, 0.8, 0.35, SR)[SR // 10 :]
+
+    window = 256
+    ratios = []
+    for start in range(0, len(tail) - window, window):
+        block = tail[start : start + window]
+        rms = math.sqrt(sum(v * v for v in block) / window) or 1e-12
+        ratios.append(sum(1 for v in block if abs(v) > rms) / window)
+    assert sum(ratios) / len(ratios) > 0.25

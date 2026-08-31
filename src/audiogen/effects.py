@@ -111,8 +111,11 @@ def delay(
     return [d + (w - d) * wet for d, w in zip(dry, out)]
 
 
-_COMB_DELAYS = (0.0297, 0.0371, 0.0411, 0.0437)
-_ALLPASS_DELAYS = (0.0050, 0.0017)
+# 遅延長は、互いが単純な整数比にならないよう散らす。2倍・3倍のような比が
+# あると反射が同じ位置に重なり、同じ間隔の繰り返し(金属的な響き)になる。
+# 値は Freeverb の系列から取った(公約数は残るが、比はどれも 1.05〜1.34)。
+_COMB_DELAYS = tuple(n / 44100 for n in (1116, 1188, 1277, 1356, 1422, 1491))
+_ALLPASS_DELAYS = tuple(n / 44100 for n in (556, 441, 341, 225))
 
 
 def _reverb_wet(
