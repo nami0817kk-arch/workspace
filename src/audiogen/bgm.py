@@ -6,6 +6,7 @@
 
 from __future__ import annotations
 
+import math
 import random
 from dataclasses import dataclass, field, replace
 from typing import Sequence
@@ -110,6 +111,48 @@ class MasterEQ:
 
 FLAT = MasterEQ(mud_db=0.0, presence_db=0.0)
 """何もしない EQ。素の帯域バランスを見たいとき用。"""
+
+
+@dataclass(frozen=True)
+class TempoCurve:
+    """曲の終わりでテンポを落とす(リタルダンド)。
+
+    一定のテンポのまま最後の和音に飛び込むと、演奏が途中で止まったように
+    聞こえる。終わりにかけて緩めると「締めた」感じになる。
+
+    音符の時刻は等速で組み立てておき、あとから時間軸を伸ばす形で実装している。
+    """
+
+    bars: float = 0.0
+    """最後の何小節でテンポを緩めるか。0 でリタルダンドなし。"""
+    final_ratio: float = 0.72
+    """終端でのテンポ倍率。0.72 なら 1.4 倍近くまで遅くなる。"""
+
+    def enabled(self) -> bool:
+        return self.bars > 0.0 and self.final_ratio != 1.0
+
+    def warp(self, seconds: float, total: float, bar_seconds: float) -> float:
+        """等速で組み立てた時刻を、テンポを緩めたあとの時刻へ移す。
+
+        テンポ倍率が ``speed(s)`` のとき、実際の時刻は ``∫ds/speed(s)``。
+        直線的に緩める場合は対数で閉じた形になる。
+        """
+        if not self.enabled():
+            return seconds
+        ramp = min(self.bars * bar_seconds, total)
+        start = total - ramp
+        if seconds <= start or ramp <= 0.0:
+            return seconds
+        slope = (self.final_ratio - 1.0) / ramp
+        elapsed = min(seconds, total) - start
+        stretched = math.log1p(slope * elapsed) / slope if slope else elapsed
+        # 終端を越える音(残響用の余白)は、終端の速度のまま伸ばす
+        overshoot = max(0.0, seconds - total)
+        return start + stretched + overshoot / self.final_ratio
+
+    def total(self, straight_total: float, bar_seconds: float) -> float:
+        """緩めたあとの曲全体の長さ。"""
+        return self.warp(straight_total, straight_total, bar_seconds)
 
 
 @dataclass(frozen=True)
@@ -399,6 +442,10 @@ class BGMConfig:
     without: Sequence[str] = ()
     """既定から外すパート。"""
     loop: bool = True
+    ritardando: float = 0.0
+    """最後の何小節でテンポを緩めるか。0 でなし(ループはできなくなる)。"""
+    final_tempo: float = 0.72
+    """リタルダンドの終端でのテンポ倍率。"""
     ending: bool = False
     """最後の小節を主和音で締める。ループではなく1曲として終わらせたいとき。"""
     stereo: bool = False
@@ -834,10 +881,12 @@ class Arrangement:
     notes: dict[str, list[Note]]
     """パート名 -> 音符の並び(曲頭からの絶対時刻。区間の音量も反映済み)。"""
     hits: list[Hit]
+    duration: float = 0.0
+    """曲の長さ(秒)。テンポを緩めた場合はそのぶん長い。"""
 
     @property
     def length_seconds(self) -> float:
-        return self.bars * self.bar_seconds
+        return self.duration or self.bars * self.bar_seconds
 
     def parts(self) -> list[str]:
         """実際に音の入っているパート名。"""
@@ -891,7 +940,37 @@ def compose(config: BGMConfig | None = None, **overrides) -> Arrangement:
                 )
     if config.ending:
         _apply_ending(notes_by_part, hits, config.bars, bar_seconds)
-    return Arrangement(style, config.bars, bar_seconds, tuple(plan), notes_by_part, hits)
+
+    duration = config.bars * bar_seconds
+    curve = TempoCurve(config.ritardando, config.final_tempo)
+    if curve.enabled():
+        duration = _apply_tempo_curve(notes_by_part, hits, curve, duration, bar_seconds)
+    return Arrangement(style, config.bars, bar_seconds, tuple(plan), notes_by_part, hits, duration)
+
+
+def _apply_tempo_curve(
+    notes_by_part: dict[str, list[Note]],
+    hits: list[Hit],
+    curve: TempoCurve,
+    total: float,
+    bar_seconds: float,
+) -> float:
+    """等速で並べた譜面の時間軸を伸ばす(その場で書き換える)。
+
+    音の長さも同じ物差しで伸ばすので、緩めた区間では音符も長くなる。
+    """
+    for part, plan in notes_by_part.items():
+        notes_by_part[part] = [
+            replace(
+                note,
+                start=curve.warp(note.start, total, bar_seconds),
+                length=curve.warp(note.start + note.length, total, bar_seconds)
+                - curve.warp(note.start, total, bar_seconds),
+            )
+            for note in plan
+        ]
+    hits[:] = [replace(hit, start=curve.warp(hit.start, total, bar_seconds)) for hit in hits]
+    return curve.total(total, bar_seconds)
 
 
 def _apply_ending(
@@ -1125,8 +1204,8 @@ def _master(
                 for c in channels
             ]
 
-    # 終わる曲は残響を折り返さず、そのまま鳴らしきる。
-    looping = config.loop and not config.ending
+    # 終わる曲(と、テンポを緩める曲)は残響を折り返さず鳴らしきる。
+    looping = config.loop and not config.ending and config.ritardando <= 0.0
     channels = [remove_dc(wrap_tail(c, length) if looping else c) for c in channels]
     channels = [style.eq.apply(c, sr) for c in channels]
     if not limit:
@@ -1144,7 +1223,7 @@ def generate(config: BGMConfig | None = None, **overrides) -> list[float]:
     style = arrangement.style
     tracks = _duck_to_kick(_render_arrangement(arrangement, config), arrangement, config.sr)
     gains = _part_gains(style)
-    length = num_samples(config.bars * arrangement.bar_seconds, config.sr)
+    length = num_samples(arrangement.length_seconds, config.sr)
 
     names = list(tracks)
     mixed = mix(*(tracks[name] for name in names), gains=[gains[name] for name in names]) if names else []
@@ -1160,7 +1239,7 @@ def generate_stereo(config: BGMConfig | None = None, **overrides) -> list[float]
     style = arrangement.style
     tracks = _duck_to_kick(_render_arrangement(arrangement, config), arrangement, config.sr)
     gains = _part_gains(style)
-    length = num_samples(config.bars * arrangement.bar_seconds, config.sr)
+    length = num_samples(arrangement.length_seconds, config.sr)
 
     left_parts: list[list[float]] = []
     right_parts: list[list[float]] = []

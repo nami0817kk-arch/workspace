@@ -910,3 +910,72 @@ def test_the_mono_path_is_unchanged_by_the_stereo_work():
     config = _config(style="adventure", bars=2, seed=5)
     assert bgm.generate(config) == bgm.generate(config)
     assert len(bgm.generate_stereo(config)) == 2 * len(bgm.generate(config))
+
+
+# --- リタルダンド -------------------------------------------------------------
+
+
+def _kick_intervals(arrangement):
+    starts = sorted(hit.start for hit in arrangement.hits if hit.voice == "kick")
+    return [b - a for a, b in zip(starts, starts[1:])]
+
+
+def test_a_ritardando_stretches_the_end():
+    """終盤で打点の間隔が広がっていくこと。"""
+    config = _config(style="sports_anthem", bars=8, ending=True, ritardando=4.0, humanize=0.0)
+    intervals = _kick_intervals(bgm.compose(config))
+    assert intervals[-1] > intervals[0] * 1.15
+    assert all(b >= a - 1e-9 for a, b in zip(intervals[-4:], intervals[-3:]))
+
+
+def test_a_ritardando_leaves_the_opening_alone():
+    plain = bgm.compose(_config(style="sports_anthem", bars=8, ending=True, humanize=0.0))
+    slowed = bgm.compose(
+        _config(style="sports_anthem", bars=8, ending=True, ritardando=2.0, humanize=0.0)
+    )
+    limit = plain.length_seconds * 0.5
+    assert [n.start for n in plain.notes["bass"] if n.start < limit] == pytest.approx(
+        [n.start for n in slowed.notes["bass"] if n.start < limit]
+    )
+
+
+def test_a_ritardando_makes_the_track_longer():
+    plain = bgm.compose(_config(style="sports_anthem", bars=8, ending=True))
+    slowed = bgm.compose(_config(style="sports_anthem", bars=8, ending=True, ritardando=4.0))
+    assert slowed.length_seconds > plain.length_seconds
+    assert len(bgm.generate(_config(style="sports_anthem", bars=4, ending=True, ritardando=2.0))) > 0
+
+
+def test_a_deeper_slowdown_stretches_more():
+    gentle = bgm.compose(_config(bars=8, ritardando=4.0, final_tempo=0.9))
+    steep = bgm.compose(_config(bars=8, ritardando=4.0, final_tempo=0.5))
+    assert steep.length_seconds > gentle.length_seconds
+
+
+def test_notes_get_longer_as_the_tempo_eases():
+    """緩めた区間では音符そのものも伸びること。"""
+    config = _config(style="sports_anthem", bars=8, ritardando=4.0, humanize=0.0, parts=("bass",))
+    plan = bgm.compose(config).notes["bass"]
+    assert plan[-1].length > plan[0].length
+
+
+def test_no_ritardando_keeps_the_timing_exact():
+    curve = bgm.TempoCurve(bars=0.0)
+    assert not curve.enabled()
+    assert curve.warp(3.0, 10.0, 2.0) == 3.0
+
+
+def test_the_tempo_curve_is_continuous_at_the_ramp_start():
+    """緩め始める瞬間に時刻が飛ばないこと。"""
+    curve = bgm.TempoCurve(bars=2.0, final_ratio=0.6)
+    total, bar = 10.0, 1.0
+    start = total - 2.0
+    assert curve.warp(start, total, bar) == pytest.approx(start)
+    assert curve.warp(start + 1e-6, total, bar) == pytest.approx(start, abs=1e-5)
+
+
+def test_a_ritardando_does_not_loop():
+    """テンポを緩めた曲は、残響を折り返さずそのまま鳴らしきること。"""
+    looped = bgm.generate(_config(style="sports_anthem", bars=4))
+    slowed = bgm.generate(_config(style="sports_anthem", bars=4, ritardando=2.0))
+    assert len(slowed) > len(looped)

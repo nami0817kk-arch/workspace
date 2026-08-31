@@ -271,3 +271,17 @@ def test_bgm_midi_option_writes_a_score(tmp_path):
 def test_bgm_without_midi_writes_only_audio(tmp_path):
     assert cli.main(["--rate", SR, "bgm", "--bars", "2", "-d", str(tmp_path)]) == 0
     assert not list(tmp_path.glob("*.mid"))
+
+
+def test_bgm_ritardando_option(tmp_path):
+    args = [
+        "--rate", SR, "bgm", "--bars", "4", "--seed", "1",
+        "--ritardando", "2", "--final-tempo", "0.6", "--ending", "-d", str(tmp_path),
+    ]
+    assert cli.main(args) == 0
+    assert (tmp_path / "bgm_calm.wav").exists()
+
+
+def test_describe_works_without_the_ritardando_flags(capsys):
+    assert cli.main(["describe", "--bars", "2"]) == 0
+    assert "sections:" in capsys.readouterr().out

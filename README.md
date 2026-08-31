@@ -100,6 +100,7 @@ python -m audiogen sfx footstep --count 6 --spread 0.15 -d assets/se
 - **フィル** — 区間の最後の小節でドラムの手が変わり、次の区間へ渡る感じが出る
 - **経過音** — ベースが次の和音の根音の隣へ寄ってから着地する(スタイルによる)
 - **終止** — `--ending` を付けると、最後の小節が主和音とシンバルで終わる
+- **リタルダンド** — `--ritardando 4` で、終わりにかけてテンポを緩める
 - **転調** — `lift` / `broadcast` 構成では、サビで全パートが全音上がる
 - **帯域バランス** — 仕上げに低域の削り・低中域の抜き・輪郭の持ち上げをかける
 
@@ -112,8 +113,9 @@ python -m audiogen bgm --style news_open --bars 12 --structure intro --seed 3
 # 原稿読みの下敷き。8小節でループする
 python -m audiogen bgm --style news_bed --key D --bars 8 --seed 5
 
-# 試合前後のアンセム(最後を主和音で締める)
-python -m audiogen bgm --style sports_anthem --bars 12 --structure full --seed 3 --ending
+# 試合前後のアンセム(終わりでテンポを緩めて主和音で締める)
+python -m audiogen bgm --style sports_anthem --bars 12 --structure full --seed 3 \
+    --ending --ritardando 3
 
 # ハイライト。後半のサビで全音上へ転調する
 python -m audiogen bgm --style sports_drive --key G --bars 12 --structure lift --seed 3 --ending
@@ -151,6 +153,7 @@ python -m audiogen bgm --style adventure \
 | `--seed` | 乱数シード。同じ値なら同じ曲になる |
 | `--ending` | 最後の小節を主和音で締める(1曲として終わらせる) |
 | `--midi` | 同じ譜面を MIDI でも書き出す(DAW の音源で鳴らせる) |
+| `--ritardando` | 最後の何小節でテンポを緩めるか(`--final-tempo` で緩め方) |
 | `--stereo` / `--no-loop` | ステレオ出力 / 末尾の残響を切らずに残す |
 
 音色は波形を重ねてフィルタとエンベロープを通した「楽器」として定義してある。

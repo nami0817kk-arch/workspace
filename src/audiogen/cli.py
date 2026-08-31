@@ -75,6 +75,8 @@ def _bgm_config(args: argparse.Namespace) -> bgm_module.BGMConfig:
         lead_instrument=args.lead_instrument,
         without=tuple(args.without),
         loop=not args.no_loop,
+        ritardando=args.ritardando,
+        final_tempo=args.final_tempo,
         ending=args.ending,
         stereo=args.stereo,
     )
@@ -280,6 +282,14 @@ def build_parser() -> argparse.ArgumentParser:
     bgm_parser.add_argument("--stereo", action="store_true", help="ステレオで書き出す")
     bgm_parser.add_argument("--no-loop", action="store_true", help="末尾の残響を切らずに残す")
     bgm_parser.add_argument(
+        "--ritardando", type=float, default=0.0, metavar="BARS",
+        help="最後の何小節でテンポを緩めるか(0 でなし。ループはできなくなる)",
+    )
+    bgm_parser.add_argument(
+        "--final-tempo", type=float, default=0.72, metavar="RATIO",
+        help="リタルダンドの終端でのテンポ倍率 (既定: 0.72)",
+    )
+    bgm_parser.add_argument(
         "--midi", action="store_true",
         help="同じ譜面を MIDI でも書き出す(DAW の音源で鳴らしたいとき)",
     )
@@ -297,7 +307,10 @@ def build_parser() -> argparse.ArgumentParser:
     )
     _add_bgm_options(describe_parser)
     describe_parser.add_argument("--json", action="store_true", help="JSON で出力する")
-    describe_parser.set_defaults(func=cmd_describe, stereo=False, no_loop=False, ending=False)
+    describe_parser.set_defaults(
+        func=cmd_describe, stereo=False, no_loop=False, ending=False,
+        ritardando=0.0, final_tempo=0.72,
+    )
 
     build_parser = subparsers.add_parser(
         "build", help="マニフェスト(JSON)に書かれた素材一式をまとめて生成する"
