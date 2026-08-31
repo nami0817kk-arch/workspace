@@ -10,8 +10,8 @@ DB スキーマと記録済みデータを壊さないことを最優先にす�
 - **DB は Microsoft Access（.accdb）で Windows 専用**（pyodbc + ACE OLEDB + pywin32）。
   CI（ubuntu）では DB・ネットワークに触れない分析ロジックだけをテストする。
 - 取得元は kabutan（当日）/ kabudragon（過去日）/ yfinance（追跡価格）。
-  **kabutan の HTML 取得・解析は ai-lab の共有パッケージ `kabutan`**（kabu-agari-ranking と共通）。
-  解析の修正は ai-lab 側で行い、requirements.txt のコミット固定を進めて取り込む。
+  **kabutan の HTML 取得・解析は 共有パッケージ [kabutan-client](https://github.com/nami0817kk-arch/kabutan-client)**（kabu-agari-ranking と共通）。
+  解析の修正は kabutan-client 側で行い、requirements.txt のコミット固定を進めて取り込む。
 
 ## よく使うコマンド
 

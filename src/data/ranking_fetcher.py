@@ -110,8 +110,8 @@ def _kdragon_page_date(html: str) -> str | None:
 
 
 # ── kabutan ─────────────────────────────────────────────────
-# HTML の取得・解析は ai-lab の共有パッケージ `kabutan` に一本化してある
-# （kabu-agari-ranking と共通）。構造の変化は ai-lab 側で直す。
+# HTML の取得・解析は 共有パッケージ kabutan-client に一本化してある
+# （kabu-agari-ranking と共通）。構造の変化は kabutan-client 側で直す。
 from kabutan import MARKETS as _KABUTAN_MARKETS  # noqa: E402
 from kabutan import MODE_GAINERS as _MODE_GAINERS  # noqa: E402
 from kabutan import fetch_ranking_html as _lib_fetch_ranking_html  # noqa: E402

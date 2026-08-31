@@ -10,6 +10,6 @@ requests==2.34.2
 beautifulsoup4==4.15.0
 lxml==6.1.2
 
-# kabutan の取得・解析は ai-lab の共有パッケージに一本化してある
+# kabutan の取得・解析は 共有パッケージ kabutan-client に一本化してある
 # （kabu-agari-ranking と共通。HTML 構造の変化はここを更新して直す）。
-ai-lab[kabutan] @ git+https://github.com/nami0817kk-arch/ai-lab.git@fba472d6d64ac6e78361f6e4a9bc63fa6d32f0a4
+kabutan-client @ git+https://github.com/nami0817kk-arch/kabutan-client.git@44c7e1dd357c5380050c1343ffe932268b80ec62
