@@ -1,3 +1,5 @@
+# 実体は ai-lab の共通ワークフロー（python-tests.yml）。
+# actions の更新や手順の変更は ai-lab 側1箇所で済む。
 name: tests
 
 on:
@@ -11,14 +13,6 @@ permissions:
 
 jobs:
   pytest:
-    runs-on: ubuntu-latest
-    # ハングしたジョブが既定の6時間走り続けるのを防ぐ
-    timeout-minutes: 15
-    steps:
-      - uses: actions/checkout@v7
-      - uses: actions/setup-python@v7
-        with:
-          python-version: "3.12"
-      # pywin32 は sys_platform マーカーで Windows 以外では入らない
-      - run: pip install -r requirements.txt pytest
-      - run: pytest
+    uses: nami0817kk-arch/ai-lab/.github/workflows/python-tests.yml@master
+    with:
+      install: "pip install -r requirements.txt pytest"
