@@ -12,8 +12,10 @@ RUN_DATE = date(2026, 8, 29)
 
 
 def _seed_subscribers(storage):
-    storage.upsert_subscriber(Subscriber(email="pro@x.test", niche="ai-ops", plan="pro"))
-    storage.upsert_subscriber(Subscriber(email="free@x.test", niche="ai-ops", plan="free"))
+    # 開始日を固定する。today に任せると、実行日が RUN_DATE より後の日はテストが落ちる。
+    started = date(2026, 8, 1)
+    storage.upsert_subscriber(Subscriber(email="pro@x.test", niche="ai-ops", plan="pro", started_at=started))
+    storage.upsert_subscriber(Subscriber(email="free@x.test", niche="ai-ops", plan="free", started_at=started))
 
 
 def test_end_to_end_produces_issue_and_delivers(config, storage, fetcher):
@@ -101,7 +103,9 @@ def test_file_deliverer_writes_one_file_per_variant(config, storage, fetcher, tm
 
     config = replace(config, output_dir=tmp_path, delivery=replace(config.delivery, file=True))
     _seed_subscribers(storage)
-    storage.upsert_subscriber(Subscriber(email="pro2@x.test", niche="ai-ops", plan="pro"))
+    storage.upsert_subscriber(
+        Subscriber(email="pro2@x.test", niche="ai-ops", plan="pro", started_at=date(2026, 8, 1))
+    )
 
     run_niche(config, storage, StubClient(), config.niches[0], run_date=RUN_DATE, fetcher=fetcher)
 
