@@ -34,6 +34,7 @@ from __future__ import annotations
 
 import argparse
 import sys
+import unicodedata
 from pathlib import Path
 
 from .assets import ensure_assets
@@ -65,6 +66,32 @@ def _use_utf8(*streams) -> None:
             stream.reconfigure(encoding="utf-8", errors="replace")
         except (AttributeError, ValueError, OSError):
             pass  # 差し替えられた出力先（テストなど）。そのまま使う
+
+
+def _columns(text: str) -> int:
+    """表示に使う桁数。全角は2桁として数える。"""
+    return sum(2 if unicodedata.east_asian_width(ch) in "WF" else 1 for ch in text)
+
+
+def _fit(text: str, width: int = 60) -> str:
+    """見出しを表示の幅で切り詰める。
+
+    文字数で切ると、日本語の見出しだけ倍の幅になって折り返す。
+    候補を選ぶ画面なので、そろっていないと並べて比べられない。
+    切ったことが分かるように、末尾に … を付ける。
+    """
+    if _columns(text) <= width:
+        return text
+
+    kept: list[str] = []
+    used = 0
+    for char in text:
+        step = 2 if unicodedata.east_asian_width(char) in "WF" else 1
+        if used + step > width - 1:
+            break
+        kept.append(char)
+        used += step
+    return "".join(kept) + "…"
 
 
 def candidates_mod_load(path):
@@ -1191,7 +1218,7 @@ def _dispatch(args, config) -> int:
             head = bunch[0]
             same = f"　＋{len(bunch) - 1}媒体" if len(bunch) > 1 else ""
             age = f"{head.hours_ago:.0f}時間前" if head.hours_ago >= 0 else (head.posted_on or "—")
-            print(f"  {age:12} {head.title[:48] or '（見出しなし）'}{same}")
+            print(f"  {age:12} {_fit(head.title) or '（見出しなし）'}{same}")
 
         # 埋めるところを、その場で挙げる
         date_label, items = candidates_mod_load(target)
@@ -1253,7 +1280,7 @@ def _dispatch(args, config) -> int:
             head = bunch[0]
             mark = head.posted_on or (str(head.number) if head.number else "—")
             same = f"　＋{len(bunch) - 1}媒体" if len(bunch) > 1 else ""
-            print(f"  {mark:12} {head.title[:48] or '（見出しなし）'}{same}")
+            print(f"  {mark:12} {_fit(head.title) or '（見出しなし）'}{same}")
         if args.source_label:
             from . import queries as queries_mod
 

@@ -52,3 +52,32 @@ def test_survives_a_stream_without_reconfigure(monkeypatch):
     monkeypatch.setattr(cli.sys, "stdout", io.StringIO())
     monkeypatch.setattr(cli.sys, "stderr", io.StringIO())
     cli._use_utf8()  # 例外が出ないこと
+
+
+# 候補を選ぶ画面で、日本語の見出しだけ倍の幅になって折り返していた。
+# 文字数で切っていたため。並べて比べる画面なので、幅をそろえる。
+
+
+def test_全角は2桁として数える():
+    assert cli._columns("abc") == 3
+    assert cli._columns("移籍") == 4
+    assert cli._columns("Man Utd と移籍") == 14   # 半角8 + 全角3×2
+
+
+def test_短い見出しはそのまま():
+    assert cli._fit("Arsenal latest", 60) == "Arsenal latest"
+
+
+def test_日本語と英語が同じ幅に収まる():
+    japanese = cli._fit("あ" * 60, 20)
+    english = cli._fit("a" * 60, 20)
+    assert cli._columns(japanese) <= 20
+    assert cli._columns(english) <= 20
+    assert japanese.endswith("…")
+    assert english.endswith("…")
+
+
+def test_全角の途中で半端に切らない():
+    """1桁だけ残して全角を入れると、幅をはみ出す。"""
+    fitted = cli._fit("あ" * 10, 7)
+    assert cli._columns(fitted) <= 7
