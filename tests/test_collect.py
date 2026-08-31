@@ -1,5 +1,6 @@
 import pytest
 
+from src import collect
 from src.collect import Hit, enrich, parse, slug, to_yaml
 from src.freshness import read
 
@@ -240,3 +241,102 @@ def test_an_unguessable_headline_says_so_in_the_draft():
     body = to_yaml([Hit("Tottenham Hotspur", "https://a.example/x-y")], "d")
     assert "tier: 報道" in body
     assert "判断できず" in body
+
+
+# 見出しの言い回しだけで確度を当てると、噂まとめの「Official: ...」が『確定』になる。
+# その群では置けない確度なので、書いた瞬間に lint が × を出す。
+# 実測で、拾った56件のうち5件がこれだった。
+
+
+def _plan_with_tiers():
+    from src.plan import build_plan
+
+    return build_plan({
+        "tiers": {"確定": {}, "報道": {}, "未確認": {}},
+        "domains": {
+            "official": ["arsenal.com"],
+            "english": ["skysports.com"],
+            "rumour": ["caughtoffside.com"],
+        },
+        "domain_tiers": {"official": "確定", "english": "報道", "rumour": "未確認"},
+        "routines": {"morning": {"name": "朝", "steps": [
+            {"id": "a", "what": "a", "tier": "確定", "queries": []}]}},
+    })
+
+
+def _tier_of(line: str) -> str:
+    return line.split("tier:")[1].split("#")[0].strip()
+
+
+def _yaml_for(title, url, plan=None):
+    hit = collect.Hit(title=title, url=url)
+    return collect.to_yaml([hit], "8月31日", plan=plan)
+
+
+def test_噂まとめの公式発表風の見出しは未確認で止まる():
+    body = _yaml_for("Official: £22m deal completed",
+                     "https://caughtoffside.com/a", _plan_with_tiers())
+    line = [l for l in body.splitlines() if "tier:" in l][0]
+    assert _tier_of(line) == "未確認"
+    assert "この情報源では未確認まで" in line
+
+
+def test_上限の内側なら当たりのまま残す():
+    body = _yaml_for("Official: Arsenal confirm signing",
+                     "https://arsenal.com/news/1", _plan_with_tiers())
+    assert _tier_of([l for l in body.splitlines() if "tier:" in l][0]) == "確定"
+
+
+def test_見出しから判断できないものも上限は超えない():
+    body = _yaml_for("Scottish Premiership round-up",
+                     "https://caughtoffside.com/b", _plan_with_tiers())
+    assert _tier_of([l for l in body.splitlines() if "tier:" in l][0]) == "未確認"
+
+
+def test_網の外のサイトは当たりのまま():
+    """上限が分からないものを、分かったことにしない。"""
+    body = _yaml_for("Official: deal completed",
+                     "https://example.com/a", _plan_with_tiers())
+    assert _tier_of([l for l in body.splitlines() if "tier:" in l][0]) == "確定"
+
+
+def test_planを渡さなければ今までどおり():
+    body = _yaml_for("Official: deal completed", "https://caughtoffside.com/a")
+    assert _tier_of([l for l in body.splitlines() if "tier:" in l][0]) == "確定"
+
+
+# id が重なると、後から出てきたほうが既出として弾かれる。
+# 実測で、1回の収集で拾った56件のうち18件がこれで落ちていた。
+
+
+def test_kickerの記事が全部同じidにならない():
+    """kicker は全記事が `/artikel#omrss` で終わる。12件が同じ id になっていた。"""
+    hits = [
+        Hit(title="Puertas Doppel-Wechsel", url="https://www.kicker.de/puertas-doppel-wechsel-1248504/artikel#omrss"),
+        Hit(title="Benzema loest Vertrag auf", url="https://www.kicker.de/benzema-loest-vertrag-auf-1248330/artikel#omrss"),
+    ]
+    keys = [l.split("id:")[1].strip() for l in collect.to_yaml(hits, "8月31日", merge=False).splitlines() if "- id:" in l]
+    assert len(set(keys)) == 2
+    assert keys[0].startswith("puertas")
+    assert keys[1].startswith("benzema")
+
+
+def test_どうしても重なるときは番号で分ける():
+    """同じ書き出しの記事は、URLが違っても最初の3語が同じになる。"""
+    hits = [
+        Hit(title="Arsenal latest", url="https://www.skysports.com/football/live-blog/1/2/arsenal-transfer-news-live"),
+        Hit(title="Papers: Arsenal", url="https://www.skysports.com/football/news/1/3/arsenal-transfer-news-rashford"),
+    ]
+    keys = [l.split("id:")[1].strip() for l in collect.to_yaml(hits, "8月31日", merge=False).splitlines() if "- id:" in l]
+    assert keys == ["arsenal_transfer_news", "arsenal_transfer_news_2"]
+
+
+def test_リーグ別の棚はidにしない():
+    """サッカーキングの /world/eng/ は棚であって記事の識別ではない。"""
+    hits = [
+        Hit(title="ニューカッスルがパルド獲得へ", url="https://www.soccer-king.jp/news/world/eng/20260831/2199302.html"),
+        Hit(title="高井幸大がレンタル移籍か", url="https://www.soccer-king.jp/news/world/eng/20260831/2199304.html"),
+    ]
+    keys = [l.split("id:")[1].strip() for l in collect.to_yaml(hits, "8月31日", merge=False).splitlines() if "- id:" in l]
+    assert "eng" not in keys
+    assert len(set(keys)) == 2

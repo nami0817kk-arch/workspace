@@ -1169,7 +1169,7 @@ def _dispatch(args, config) -> int:
             return 1
 
         label = tokens(today, 24)["{date_ja}"]
-        body = collect_mod.to_yaml(haul.hits, label)
+        body = collect_mod.to_yaml(haul.hits, label, plan=plan)
         bunches = collect_mod.group(haul.hits)
 
         target = Path(args.out) if args.out else _resolve(
@@ -1209,8 +1209,9 @@ def _dispatch(args, config) -> int:
         from . import collect as collect_mod
         from . import freshness
         from .config import _resolve
-        from .plan import tokens
+        from .plan import load_plan, tokens
 
+        plan = load_plan()   # 確度の当たりを、情報源の群で置ける上限までに抑えるため
         text = sys.stdin.read()
         hits = collect_mod.enrich(collect_mod.parse(text), freshness.read)
         if not hits:
@@ -1223,7 +1224,7 @@ def _dispatch(args, config) -> int:
 
         today = _date.fromisoformat(args.date) if args.date else _date.today()
         label = tokens(today, 24)["{date_ja}"]
-        body = collect_mod.to_yaml(hits, label, merge=not args.no_merge)
+        body = collect_mod.to_yaml(hits, label, merge=not args.no_merge, plan=plan)
         bunches = collect_mod.group(hits) if not args.no_merge else [[h] for h in hits]
 
         target = Path(args.out) if args.out else _resolve(

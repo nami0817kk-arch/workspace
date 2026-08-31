@@ -12,6 +12,8 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass, field
 
+from .lint import TIER_ORDER
+
 # 「タイトル<空白/タブ>URL」か、URLだけの行を拾う
 URL = re.compile(r"https?://\S+")
 
@@ -159,10 +161,11 @@ def _overlap(left: set[str], right: set[str]) -> float:
     return len(left & right) / min(len(left), len(right))
 
 
-def to_yaml(hits: list[Hit], date_label: str, merge: bool = True) -> str:
+def to_yaml(hits: list[Hit], date_label: str, merge: bool = True, plan=None) -> str:
     """候補ファイルの下書き。判断が要るところは空にして残す。
 
     merge=True なら同じ話をまとめて1件にし、出典を並べる。
+    plan を渡すと、確度の当たりを情報源の群で置ける上限までに抑える。
     """
     from . import clubs as club_book
 
@@ -175,9 +178,10 @@ def to_yaml(hits: list[Hit], date_label: str, merge: bool = True) -> str:
         f'date: "{date_label}"',
         "candidates:",
     ]
+    used: set[str] = set()
     for index, bunch in enumerate(bunches, start=1):
         head = bunch[0]
-        key = _from_url(head.url) or slug(head.title) or f"c{index}"
+        key = _unique(_from_url(head.url) or slug(head.title) or f"c{index}", used)
         english = next((english_words(hit.url) for hit in bunch if english_words(hit.url)), "")
 
         # クラブ名の辞書から当たりを入れる。合っているかは目で見て直す
@@ -195,7 +199,7 @@ def to_yaml(hits: list[Hit], date_label: str, merge: bool = True) -> str:
              if league else
              '    league: ""         # england/spain/germany/italy/france/netherlands/japan'),
             "    kind: transfer",
-            _tier_line(head.title),
+            _tier_line(head.title, head.url, plan),
             f"    en: {_quote(english)}" + ("            # URLから作った。合っているか見る"
                                             if english else "            # 英語サイトを引く語"),
             f"    url: {head.url}",
@@ -216,11 +220,25 @@ def to_yaml(hits: list[Hit], date_label: str, merge: bool = True) -> str:
     return "\n".join(lines) + "\n"
 
 
-def _tier_line(title: str) -> str:
+def _tier_line(title: str, url: str = "", plan=None) -> str:
+    """確度の当たりを1行にする。情報源の群で置ける上限は超えない。
+
+    見出しの言い回しだけで見ると、噂まとめの「Official: ...」が『確定』になる。
+    その群では置けない確度なので、書いた瞬間に lint が × を出す。
+    実測で、拾った56件のうち5件がこれだった。
+    上限が分かっているなら、はじめからそこで止める。
+    """
     guess = guess_tier(title)
-    if guess:
-        return f"    tier: {guess}           # 見出しの言い回しからの当たり。見て直す"
-    return "    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す"
+    tier = guess or "報道"
+    note = ("見出しの言い回しからの当たり。見て直す" if guess
+            else "見出しから判断できず。確定/報道/未確認 に直す")
+
+    ceiling = plan.ceiling(url) if (plan is not None and url) else ""
+    if ceiling in TIER_ORDER and TIER_ORDER.index(tier) > TIER_ORDER.index(ceiling):
+        note = f"見出しは『{tier}』寄りだが、この情報源では{ceiling}まで"
+        tier = ceiling
+
+    return f"    tier: {tier}           # {note}"
 
 
 def english_words(url: str, limit: int = 4) -> str:
@@ -309,9 +327,11 @@ NOISE = {
 }
 
 # URLに必ず入る、中身を表さない区切り。id にしても意味がない
+# artikel / slideshow は kicker、eng などの3文字はサッカーキングのリーグ別の棚
 GENERIC = {
     "report", "news", "article", "articles", "story", "index", "en", "jp", "post",
     "detail", "topteamtopics", "noticias", "soccer", "football", "match", "video",
+    "artikel", "slideshow", "world", "eng", "esp", "ita", "ger", "fra", "ned",
 }
 
 
@@ -319,13 +339,34 @@ def _from_url(url: str) -> str:
     """URLの人が読める部分から id を作る。
 
     数字だけの区切りと、report / news のような中身を表さない語は飛ばす。
+
+    フラグメント（`#omrss`）は記事の識別ではないので落とす。落とさないと
+    kicker の全記事が `artikel_omrss` になる。実測では1回の収集で12件が
+    同じ id になり、既出として弾かれていた。
     """
-    parts = [p for p in url.split("?")[0].rstrip("/").split("/") if p]
+    parts = [p for p in url.split("?")[0].split("#")[0].rstrip("/").split("/") if p]
     for part in reversed(parts[-3:]):
         key = slug(part.replace("-", " ").replace(".html", ""))
         if key and key not in GENERIC:
             return key
     return ""
+
+
+def _unique(key: str, used: set[str]) -> str:
+    """同じ id を2度出さない。
+
+    id が重なると、後から出てきたほうが既出として弾かれる。
+    URLの作りによっては何件でも重なる（kicker の `/artikel`、
+    サッカーキングの `/eng/`、Sky の同じ書き出しの記事）。
+    見出しは違うのに落ちるので、ここで必ず違うものにする。
+    """
+    candidate = key
+    number = 2
+    while candidate in used:
+        candidate = f"{key}_{number}"
+        number += 1
+    used.add(candidate)
+    return candidate
 
 
 def _quote(text: str) -> str:
