@@ -2,15 +2,12 @@
 
 from __future__ import annotations
 
-import sys
 from pathlib import Path
 
 import pytest
 
-sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-
-from src.browser import config  # noqa: E402
-from src.browser.headless_demo import DEMO_PAGE, run_demo_page  # noqa: E402
+from browser import config
+from browser.headless_demo import DEMO_PAGE, run_demo_page
 
 playwright_api = pytest.importorskip("playwright.sync_api")
 
@@ -28,7 +25,7 @@ def test_demo_page_exists():
 
 def test_powershell_script_has_utf8_bom():
     """BOM がないと Windows PowerShell 5.1 が CP932 として読み、日本語で構文エラーになる。"""
-    script = Path(__file__).resolve().parents[1] / "scripts" / "start-chrome-debug.ps1"
+    script = Path(__file__).resolve().parents[2] / "scripts" / "start-chrome-debug.ps1"
     assert script.is_file()
     assert script.read_bytes().startswith(b"\xef\xbb\xbf"), "UTF-8 BOM が必要"
 

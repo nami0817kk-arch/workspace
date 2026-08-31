@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import os
+
 import pytest
 
 from audiogen import core, preview, sfx
@@ -68,6 +70,10 @@ def test_each_track_gets_one_waveform_path(sample_dir):
     assert page.count("<path") == 3  # 列ごとの線ではなく1本にまとめている
 
 
+@pytest.mark.skipif(
+    os.name == "nt",
+    reason="Windows では < > がファイル名の予約文字で、この名前のファイルを作れない",
+)
 def test_track_names_are_escaped(tmp_path):
     core.write_wav(tmp_path / "a<b>&c.wav", [0.1, -0.1], sr=SR)
     page = preview.build_page(preview.collect(str(tmp_path)))

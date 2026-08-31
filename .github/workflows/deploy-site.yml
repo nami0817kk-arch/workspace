@@ -6,7 +6,6 @@ on:
     paths:
       - "site/**"
       - "src/adsite/**"
-      - "src/moneyloop/pricing.py"
       - "config/site.json"
       - ".github/workflows/deploy-site.yml"
   workflow_dispatch:

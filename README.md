@@ -10,10 +10,10 @@ AI活用のアイデア検証・試作を行うラボプロジェクト。
 | ツール | 何をするか |
 |---|---|
 | [`ailab`](#ailab--画像生成とフリー素材の取得) | 画像を生成し、フリー素材を横断検索して出典つきで取り込む |
-| [`moneyloop`](#moneyloop--ai自動リサーチによる有料ニュースレター収益化パイプライン) | 公開情報を集めて有料ニュースレターを出し、原価と粗利を自動計算する |
 | [`adsite`](#adsite--広告収益型の実用ツールサイト) | 実用ツールを置いた静的サイトを生成し、広告収益を同じ台帳に取り込む |
 | [`growth`](#growth--成長ループ) | 全プロジェクトを定期点検し、次にやることを提示する |
 | [`audiogen`](#audiogen--bgm--効果音ジェネレータ) | BGM と効果音を手続き的に合成して WAV に書き出す |
+| [`browser`](#chrome-の自動操作) | Chrome を自動操作する（ヘッドレス Chromium / ローカル Chrome を CDP 経由で） |
 
 ## セットアップ
 
@@ -28,7 +28,7 @@ pip install -e ".[dev]"
 | extras | 何に要るか |
 |---|---|
 | `[image]` | ailab の実行（`requests` / `Pillow` / `PyYAML`） |
-| `[llm]` | moneyloop から実際に Claude を呼ぶとき（`anthropic`） |
+| `[llm]` | 実際に Claude を呼ぶとき（`anthropic`） |
 | `[dev]` | テストと lint（`[image]` を含む） |
 
 ## ailab — 画像生成とフリー素材の取得
