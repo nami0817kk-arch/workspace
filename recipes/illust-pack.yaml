@@ -1,0 +1,15 @@
+# キーワードでフリー素材を集め、クレジット付きで手元に落とす。
+#   ailab run illust-pack --set query="cat illustration"
+name: 素材まとめ取得
+
+vars:
+  query: cat illustration
+  count: 3
+
+steps:
+  - id: picked
+    fetch:
+      query: "{{ vars.query }}"
+      source: all
+      limit: "{{ vars.count }}"
+      out: output/illust

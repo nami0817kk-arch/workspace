@@ -1,6 +1,13 @@
 # 各ツールの本体は標準ライブラリのみで動作します
-# （moneyloop の --dry-run も、テストも、追加依存なしで実行できます）。
-# 実際にClaudeを呼ぶ場合のみ anthropic が必要です。
+# （moneyloop の --dry-run も、growth も、追加依存なしで実行できます）。
+# 以下は、それを超えて使う場合に必要になるものです。
+
+# ailab（画像生成・素材取得）の実行に必要
+requests>=2.31
+Pillow>=10.0
+PyYAML>=6.0
+
+# moneyloop から実際にClaudeを呼ぶ場合のみ必要
 anthropic>=1.0.0
 
 # 開発用

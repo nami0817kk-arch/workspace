@@ -1,5 +1,7 @@
 # PJT008 - AIラボ
 
+[![tests](https://github.com/nami0817kk-arch/ai-lab/actions/workflows/tests.yml/badge.svg)](https://github.com/nami0817kk-arch/ai-lab/actions/workflows/tests.yml)
+
 AI活用のアイデア検証・試作を行うラボプロジェクト。
 検証したものはそのままこのリポジトリに残していくので、複数のツールが同居している。
 
@@ -7,6 +9,7 @@ AI活用のアイデア検証・試作を行うラボプロジェクト。
 
 | ツール | 何をするか |
 |---|---|
+| [`ailab`](#ailab--画像生成とフリー素材の取得) | 画像を生成し、フリー素材を横断検索して出典つきで取り込む |
 | [`moneyloop`](#moneyloop--ai自動リサーチによる有料ニュースレター収益化パイプライン) | 公開情報を集めて有料ニュースレターを出し、原価と粗利を自動計算する |
 | [`adsite`](#adsite--広告収益型の実用ツールサイト) | 実用ツールを置いた静的サイトを生成し、広告収益を同じ台帳に取り込む |
 | [`growth`](#growth--成長ループ) | 全プロジェクトを定期点検し、次にやることを提示する |
@@ -20,7 +23,62 @@ python -m venv .venv
 pip install -e ".[dev]"
 ```
 
-実行時の依存は最小限に抑えてある。`anthropic` は実際にClaudeを呼ぶときだけ必要。
+実行時の依存は既定でゼロ。必要なものだけ extras で足す。
+
+| extras | 何に要るか |
+|---|---|
+| `[image]` | ailab の実行（`requests` / `Pillow` / `PyYAML`） |
+| `[llm]` | moneyloop から実際に Claude を呼ぶとき（`anthropic`） |
+| `[dev]` | テストと lint（`[image]` を含む） |
+
+## ailab — 画像生成とフリー素材の取得
+
+| コマンド | 内容 |
+|---|---|
+| `ailab gen "プロンプト"` | 画像を生成する（**APIキー無しでも Pollinations で本物のAI画像**。OpenAI / Gemini / Replicate / Hugging Face / Stability にも対応） |
+| `ailab search "キーワード"` | フリー素材を横断検索する（Iconify / Openverse / Wikimedia / Pixabay / Unsplash / Pexels） |
+| `ailab fetch "キーワード"` | フリーイラストを検索してダウンロードし、クレジットも書き出す |
+| `ailab grab URL` | 自分で見つけた画像をURL指定で取り込む（出典つき） |
+| `ailab feed "対象" --source ...` | 記事・リリース情報を取得する（RSS / GitHub / Qiita / Wikipedia） |
+| `ailab publish FILE --repo owner/name` | 生成物を GitHub へコミットする（既定はドライラン） |
+| `ailab usage` | 画像生成の利用量と概算コストを見る |
+| `ailab run レシピ` | 「集める→作る→送る」をYAML1本で実行する |
+| `ailab mcp` | MCPサーバとして起動し、Claude から直接使えるようにする |
+| `ailab connectors` / `ailab doctor` | 連携先の設定状況を見る / 実際に接続して確認する |
+
+このリポジトリで唯一、実行時に外部ライブラリが要る（`requests` / `Pillow` / `PyYAML`）。
+`pip install -e ".[image]"` で入る（`[dev]` にも含まれる）。
+
+### まず試す（APIキーなしで動きます）
+
+```bash
+ailab connectors                                     # 何が使える状態か
+ailab gen "青空の下でノートPCを使う猫" --style flat   # 本物のAI画像（Pollinations）
+ailab fetch "cat illustration" -l 3                  # フリー素材＋クレジット
+```
+
+キーが1つも無くても、`pollinations`（生成）と `iconify` / `openverse` /
+`wikimedia`（素材）が動きます。生成物は `output/`（Git管理外）へ。
+
+### APIキーを足す
+
+```bash
+cp .env.example .env     # Windows: copy .env.example .env
+ailab doctor             # 実際に接続して確認（-- は未設定、NG は失敗）
+```
+
+有料APIを使い始めたら `ailab usage` で使用量と概算コストを確認できます。
+
+### ライセンスの注意
+
+`ailab fetch` は取得先の `CREDITS.md` / `credits.json` に出典とライセンスを残す。
+CC BY 系はクレジット表示が必須なので、成果物に使うときは必ず確認すること。
+
+詳しい使い方は [docs/image-tools.md](docs/image-tools.md)。
+レシピの書き方は [docs/recipes.md](docs/recipes.md)、
+Claude から直接使う方法は [docs/mcp.md](docs/mcp.md)、
+連携の仕組みと増やし方は [docs/connectors.md](docs/connectors.md)、
+今後の計画は [docs/integrations-plan.md](docs/integrations-plan.md)。
 
 ## moneyloop — AI自動リサーチによる有料ニュースレター収益化パイプライン
 
@@ -501,7 +559,7 @@ sfx.generate("coin", pitch=0)
 
 ```bash
 pytest                      # 全部
-pytest tests/growth         # ツール単位で回す
+pytest tests/ailab          # ツール単位で回す
 ```
 
 テストはツールごとに `tests/<ツール名>/` に分けてある。
@@ -511,6 +569,7 @@ pytest tests/growth         # ツール単位で回す
 
 | パス | 用途 |
 |---|---|
+| `src/ailab/` | 画像生成・素材取得・連携（`core/` 連携基盤、`connectors/` 連携先） |
 | `src/moneyloop/` | 有料ニュースレターのパイプライン実装 |
 | `src/adsite/` | 広告収益型ツールサイトのジェネレータ |
 | `src/growth/` | 成長ループ（観測・診断・横展開・台帳） |
@@ -518,17 +577,26 @@ pytest tests/growth         # ツール単位で回す
 | `site/` | adsite のコンテンツとアセット |
 | `config/` | 設定ファイル（ニッチ・情報源・プラン・サイト設定） |
 | `growth/` | 成長ループの対象登録（`projects.toml`）と台帳（`ledger.json`） |
+| `recipes/` | ailab のレシピ（`ailab run` で実行するYAML） |
 | `docs/` | 収益モデル・設計・運用手順・成長ループの設計 |
 | `tests/` | テストコード（ツール別のサブディレクトリ） |
+| `CLAUDE.md` | 開発時の決めごと（パッケージごとの前提） |
 | `GROWTH.md` | 成長ループの現状ダッシュボード（自動生成） |
 
 ### ドキュメント
 
 | ファイル | 内容 |
 |---|---|
+| [docs/image-tools.md](docs/image-tools.md) | ailab の使い方 |
+| [docs/connectors.md](docs/connectors.md) | 連携の仕組みとコネクタの増やし方 |
+| [docs/recipes.md](docs/recipes.md) | レシピの書き方 |
+| [docs/mcp.md](docs/mcp.md) | Claude から直接使う方法 |
+| [docs/integrations-plan.md](docs/integrations-plan.md) | 連携まわりの今後の計画 |
 | [docs/business-model.md](docs/business-model.md) | 収益モデル、価格設計、立ち上げ手順、KPI、法務上の注意 |
 | [docs/architecture.md](docs/architecture.md) | パイプライン設計、冪等性、拡張ポイント |
 | [docs/runbook.md](docs/runbook.md) | セットアップ、日次運用、障害対応、コスト管理 |
 | [docs/ad-monetization.md](docs/ad-monetization.md) | 広告収益の規模感、動画/アプリとの比較、AdSense審査対策、KPI |
 | [docs/growth-system.md](docs/growth-system.md) | 成長ループの設計の考え方 |
 | [docs/audiogen.md](docs/audiogen.md) | audiogen の設計の詳細と検証結果 |
+
+開発時の決めごとは [CLAUDE.md](CLAUDE.md)。

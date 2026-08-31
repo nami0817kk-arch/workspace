@@ -1,0 +1,26 @@
+# リリース情報を取ってきて、その見出しでバナーを作り、リポジトリへ置く。
+#   ailab run weekly-release-banner --set repo=owner/name
+#   ailab run weekly-release-banner --set repo=owner/name --yes   # 実際にコミットする
+name: 週次リリースバナー
+
+vars:
+  repo: nami0817kk-arch/ai-lab
+
+steps:
+  - id: releases
+    feed:
+      source: github
+      query: "{{ vars.repo }}"
+      limit: 1
+
+  - id: banner
+    gen:
+      prompt: "{{ releases.0.title }} のリリース告知バナー。フラットイラスト、余白多め"
+      size: 1200x630
+      filename: "release_{{ today }}"
+
+  - publish:
+      to: github
+      repo: "{{ vars.repo }}"
+      dest: "docs/img/release_{{ today }}.png"
+      message: "リリースバナーを追加 ({{ today }})"

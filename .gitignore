@@ -8,5 +8,8 @@ output/
 *.egg-info/
 build/
 dist/
+.coverage
+coverage.xml
+htmlcov/
 # growth fetch の作業ディレクトリ（対象リポジトリの浅いクローン置き場）
 growth-workspace/

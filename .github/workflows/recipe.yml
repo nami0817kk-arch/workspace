@@ -1,0 +1,86 @@
+# レシピを定期実行する。既定はドライラン（送信しない）。
+#
+# 使い方:
+#   1. リポジトリの Settings > Secrets にAPIキーを登録する
+#      （生成に使うものだけでよい。何も無ければ pollinations が使われる）
+#   2. 下の RECIPE を実行したいレシピ名に変える
+#   3. 実際に送信するなら CONFIRM を "true" にする
+#
+# 手動実行（Actions タブの Run workflow）ではレシピと送信可否をその場で選べる。
+name: recipe
+
+on:
+  schedule:
+    # 毎週月曜 09:00 JST（UTC では前日 00:00）
+    - cron: "0 0 * * 1"
+  workflow_dispatch:
+    inputs:
+      recipe:
+        description: 実行するレシピ（recipes/ 内の名前）
+        required: true
+        default: illust-pack
+      confirm:
+        description: 実際に送信する（false ならドライラン）
+        type: boolean
+        default: false
+
+permissions:
+  # publish で自分のリポジトリへコミットする場合に必要
+  contents: write
+
+env:
+  RECIPE: illust-pack
+  CONFIRM: "false"
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: pip install -e .
+
+      - name: 連携先の状態を出す
+        run: ailab connectors
+
+      - name: レシピを実行
+        env:
+          # 登録済みのものだけが渡る。未登録なら空文字になり、そのコネクタは使われない
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          POLLINATIONS_TOKEN: ${{ secrets.POLLINATIONS_TOKEN }}
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+          UNSPLASH_ACCESS_KEY: ${{ secrets.UNSPLASH_ACCESS_KEY }}
+          PEXELS_API_KEY: ${{ secrets.PEXELS_API_KEY }}
+          # publish 先のリポジトリへ書き込むためのトークン
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AILAB_GITHUB_REPO: ${{ github.repository }}
+        run: |
+          RECIPE="${{ github.event.inputs.recipe || env.RECIPE }}"
+          CONFIRM="${{ github.event.inputs.confirm || env.CONFIRM }}"
+          if [ "$CONFIRM" = "true" ]; then
+            ailab run "$RECIPE" --yes
+          else
+            echo "ドライランで実行します（送信はしません）"
+            ailab run "$RECIPE"
+          fi
+
+      - name: 生成物を成果物として残す
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ailab-output
+          path: output/
+          if-no-files-found: ignore
+          retention-days: 14

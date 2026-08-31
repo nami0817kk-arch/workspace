@@ -1,0 +1,23 @@
+# リリースを新しい順に取り、それぞれのバナーを1枚ずつ作る。
+#   ailab run release-banners --set repo=owner/name --set count=3
+name: リリースごとのバナー
+
+vars:
+  repo: nami0817kk-arch/ai-lab
+  count: 3
+
+steps:
+  - id: releases
+    feed:
+      source: github
+      query: "{{ vars.repo }}"
+      limit: "{{ vars.count }}"
+
+  - id: banners
+    foreach: releases          # 取得した各リリースについて繰り返す
+    gen:
+      prompt: "{{ item.title }}"
+      style: banner
+      size: 1200x630
+      format: webp
+      filename: "release_{{ number }}"

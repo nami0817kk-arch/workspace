@@ -12,19 +12,52 @@ permissions:
 
 jobs:
   pytest:
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12"]
     runs-on: ubuntu-latest
     # ハングしたジョブが既定の6時間走り続けるのを防ぐ
-    timeout-minutes: 10
+    timeout-minutes: 20
+
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
+          python-version: ${{ matrix.python-version }}
           cache: pip
 
       - name: Install dev dependencies
         run: pip install -e ".[dev]"
 
+      - name: Lint
+        # ruff を入れて運用しているのは ailab だけなので、範囲を合わせている
+        run: python -m ruff check src/ailab tests/ailab
+
       - name: Run tests
-        run: pytest
+        # ailab の網羅率が下がったら気づけるようにしておく
+        run: pytest --cov=ailab --cov-report=term-missing --cov-fail-under=90
+
+  # README が Windows 前提で書かれているので、ailab だけ Windows でも回す。
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install dev dependencies
+        run: pip install -e ".[dev]"
+
+      - name: Run ailab tests
+        run: pytest tests/ailab
+
+      - name: CLI smoke test
+        run: |
+          ailab --version
+          ailab connectors
