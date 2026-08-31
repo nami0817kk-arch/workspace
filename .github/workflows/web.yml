@@ -1,0 +1,80 @@
+name: Deploy Soccer Manager (GitHub Pages)
+
+# 独立リポジトリ化にともない、claude-code-dev のモノレポ用ワークフローから
+# 移設したもの。アプリがリポジトリ直下に来たため、working-directory の指定と
+# base-href、Pages 成果物の配置を変更している。
+#
+# 注意: このリポジトリは非公開のため、GitHub Pages を使うには
+# Pro/Team 以上のプランか、リポジトリの公開が必要。
+
+on:
+  push:
+    branches:
+      - master
+      - main
+    paths-ignore:
+      - "**.md"
+      - "legal/**"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Run tests
+        run: flutter test
+
+      - name: Build web
+        run: flutter build web --release --base-href "/soccer-manager/"
+
+      - name: Assemble Pages artifact
+        run: |
+          mkdir -p dist/legal
+          cp -r build/web/* dist/
+          cp legal/*.html dist/legal/
+          # 紹介ページ。コミュニティやSNSからのリンク先として、
+          # アプリ本体より先に「どんなゲームか」を見せるために置く。
+          mkdir -p dist/lp/shots
+          cp marketing/landing/index.html dist/lp/
+          cp marketing/screenshots/*.png dist/lp/shots/
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
