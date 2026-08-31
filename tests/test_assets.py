@@ -57,6 +57,8 @@ def test_download_all_writes_credits(tmp_path):
     markdown = (tmp_path / "CREDITS.md").read_text(encoding="utf-8")
     assert "Cat drawing" in markdown and "Taro" in markdown
     assert "https://creativecommons.org/licenses/by/4.0/" in markdown
+    # ライセンスが許すのは撮影者の著作権だけ、という注意を必ず添える
+    assert "肖像権" in markdown and "商標権" in markdown
 
 
 def test_credits_are_appended_not_overwritten(tmp_path):
