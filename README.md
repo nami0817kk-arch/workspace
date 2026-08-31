@@ -1,9 +1,15 @@
-# PJT008 - AIラボ
+# ai-lab
 
 [![tests](https://github.com/nami0817kk-arch/ai-lab/actions/workflows/tests.yml/badge.svg)](https://github.com/nami0817kk-arch/ai-lab/actions/workflows/tests.yml)
 
-AI活用のアイデア検証・試作を行うラボプロジェクト。
-検証したものはそのままこのリポジトリに残していくので、複数のツールが同居している。
+各プロジェクト（PJT）で使うための、新しい機能や仕組みを開発する場所。
+
+ここ自体は完成品を運営するプロジェクトではない。個別のPJTに直接書くと
+そのPJTでしか使えなくなる汎用的な仕組み——画像の生成、音素材の合成、
+ブラウザの自動操作、サイト生成、全PJTの定期点検——をここで作って共通化し、
+各PJTから呼び出して使う。
+
+そのため、複数のツールが1つのリポジトリに同居している。
 
 ## 収録しているもの
 

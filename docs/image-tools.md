@@ -40,7 +40,7 @@ ailab gen "青空の下でノートPCを使う猫、フラットイラスト"
 ailab gen "資料の表紙用の抽象背景" --provider openai --size 1536x1024 -n 2
 
 # APIキー無しでプレースホルダ画像（プロンプト文字入り）
-ailab gen "PJT008 AIラボ" --provider local --size 1200x630
+ailab gen "ai-lab" --provider local --size 1200x630
 ```
 
 保存先は既定で `output/images/`（`-o` で変更、`output/` は Git 管理外）。

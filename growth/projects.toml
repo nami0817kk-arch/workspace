@@ -22,7 +22,7 @@ summary_issue_repo = "nami0817kk-arch/ai-lab"
 [[project]]
 key = "ai-lab"
 repo = "nami0817kk-arch/ai-lab"
-title = "PJT008 AIラボ / 成長ループ本体"
+title = "ai-lab / 成長ループ本体"
 tags = ["python", "meta"]
 weight = 1.0
 
