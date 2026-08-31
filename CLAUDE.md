@@ -37,6 +37,9 @@ python -m ruff check src/ailab tests/ailab
 - MCP の `publish_file` はプロジェクト配下のファイルしか送れない。
 - Claude Code の web セッションからは多くの外部ホストが egress ポリシーで塞がれる。
   疎通確認が NG でも、手元では通ることがある。
+- **web セッションから利用者のPCへは接続できない**（出口は443のHTTPSのみ、宛先も許可リスト制）。
+  PC上のファイルやアプリを対象にする作業は、PC側で Claude Code を起動して行う。
+  手順と、Football Manager 関連の作業の引き継ぎは [`docs/local-setup.md`](docs/local-setup.md)。
 
 ## ailab
 

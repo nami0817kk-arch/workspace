@@ -13,3 +13,5 @@ coverage.xml
 htmlcov/
 # growth fetch の作業ディレクトリ（対象リポジトリの浅いクローン置き場）
 growth-workspace/
+# Football Manager から書き出したデータの置き場（ゲームの著作物なのでコミットしない）
+fm-data/
