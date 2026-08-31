@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<title>ブラウザ自動操作デモ</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 40px; color: #1a1a1a; }
+  h1 { font-size: 20px; }
+  label { display: block; margin: 14px 0 4px; font-size: 13px; color: #555; }
+  input, select { padding: 8px; width: 280px; font-size: 14px; }
+  button { margin-top: 20px; padding: 10px 20px; font-size: 14px; cursor: pointer; }
+  #result { margin-top: 24px; padding: 16px; background: #eef6ff; border-left: 4px solid #2563eb; }
+  #result:empty { display: none; }
+</style>
+</head>
+<body>
+  <h1>ブラウザ自動操作デモ</h1>
+  <p>Playwright から入力・選択・クリックできることを確認するページ。</p>
+
+  <label for="name">名前</label>
+  <input id="name" type="text" placeholder="山田太郎">
+
+  <label for="plan">プラン</label>
+  <select id="plan">
+    <option value="free">無料</option>
+    <option value="pro">プロ</option>
+    <option value="team">チーム</option>
+  </select>
+
+  <button id="submit">送信</button>
+
+  <div id="result"></div>
+
+<script>
+  document.getElementById('submit').addEventListener('click', () => {
+    const name = document.getElementById('name').value || '(未入力)';
+    const plan = document.getElementById('plan');
+    const planLabel = plan.options[plan.selectedIndex].text;
+    document.getElementById('result').textContent =
+      `受付完了: ${name} さん / ${planLabel}プラン`;
+  });
+</script>
+</body>
+</html>

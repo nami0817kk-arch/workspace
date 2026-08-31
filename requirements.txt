@@ -1,0 +1,4 @@
+playwright>=1.55
+
+# 開発用
+pytest>=8.0
