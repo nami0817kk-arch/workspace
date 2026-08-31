@@ -26,6 +26,13 @@ def test_demo_page_exists():
     assert DEMO_PAGE.is_file()
 
 
+def test_powershell_script_has_utf8_bom():
+    """BOM がないと Windows PowerShell 5.1 が CP932 として読み、日本語で構文エラーになる。"""
+    script = Path(__file__).resolve().parents[1] / "scripts" / "start-chrome-debug.ps1"
+    assert script.is_file()
+    assert script.read_bytes().startswith(b"\xef\xbb\xbf"), "UTF-8 BOM が必要"
+
+
 @pytest.fixture(scope="module")
 def browser():
     with playwright_api.sync_playwright() as p:

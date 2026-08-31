@@ -106,6 +106,16 @@ Chrome 自体は開いたまま残る。
 ただし **Chrome を完全に終了してから** 実行すること。プロファイルが使用中だと
 デバッグポートが開かない。
 
+### PowerShell スクリプトの文字コード
+
+`scripts/start-chrome-debug.ps1` は **UTF-8 (BOM 付き)** で保存すること。
+Windows PowerShell 5.1 は BOM のない `.ps1` を ANSI(日本語環境では CP932)として
+読むため、BOM を落とすとコメントやメッセージ内の日本語が壊れ、
+`文字列に終端記号 " がありません` のような構文エラーで起動できなくなる。
+
+編集時に BOM を落とすエディタもあるので、`tests/test_browser.py` に BOM の
+有無を確認するテストを入れてある。
+
 ## 注意点
 
 - **`--remote-debugging-port` を開いた Chrome は、そのポートに繋げる相手に
