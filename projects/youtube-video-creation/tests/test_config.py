@@ -78,3 +78,39 @@ def test_差し替えられた出力先でも落ちない():
         encoding = "cp932"
 
     _use_utf8(Fake())   # reconfigure を持たない。例外を出さずに済ませる
+
+
+# ---------------------------------------------------------------- 日本語フォント探し
+# CI（ubuntu）には日本語フォントが入っていないので、テストが丸ごと回せなかった。
+# apt で fonts-noto-cjk を入れれば済むが、ファイル名も置き場所も版ごとに変わる。
+# パスを固定で書くと ubuntu が上がるたびに外れるので、置き場所を舐めて探す。
+
+def test_明示の候補があればそれを使う(tmp_path, monkeypatch):
+    from src import config as config_mod
+
+    font = tmp_path / "explicit.ttc"
+    font.write_bytes(b"x")
+    monkeypatch.setattr(config_mod, "FONT_CANDIDATES", [str(font)])
+    monkeypatch.setattr(config_mod, "FONT_DIRS", ())
+    assert config_mod.VideoConfig().font_path() == font
+
+
+def test_候補が外れても置き場所から見つける(tmp_path, monkeypatch):
+    from src import config as config_mod
+
+    (tmp_path / "opentype" / "noto").mkdir(parents=True)
+    font = tmp_path / "opentype" / "noto" / "NotoSansCJK-Regular.ttc"
+    font.write_bytes(b"x")
+
+    monkeypatch.setattr(config_mod, "FONT_CANDIDATES", ["/nowhere/none.ttf"])
+    monkeypatch.setattr(config_mod, "FONT_DIRS", (str(tmp_path),))
+    assert config_mod.VideoConfig().font_path() == font
+
+
+def test_どこにも無ければ入れ方まで言う(monkeypatch, tmp_path):
+    from src import config as config_mod
+
+    monkeypatch.setattr(config_mod, "FONT_CANDIDATES", ["/nowhere/none.ttf"])
+    monkeypatch.setattr(config_mod, "FONT_DIRS", (str(tmp_path),))
+    with pytest.raises(config_mod.ConfigError, match="fonts-noto-cjk"):
+        config_mod.VideoConfig().font_path()

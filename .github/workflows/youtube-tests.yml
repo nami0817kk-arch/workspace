@@ -1,0 +1,28 @@
+name: youtube tests
+
+on:
+  push:
+    branches: ["**"]
+    paths: ["projects/youtube-video-creation/**", ".github/workflows/youtube-tests.yml"]
+  pull_request:
+    paths: ["projects/youtube-video-creation/**", ".github/workflows/youtube-tests.yml"]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    uses: ./.github/workflows/python-tests.yml
+    with:
+      workdir: "projects/youtube-video-creation"
+      # 日本語フォントが要る。ubuntu には入っていないので先に入れる。
+      # 入れないと font_path() が ConfigError を投げ、描画まわりの5ファイル
+      # （cards / config / render / shorts / thumbnail）が落ちる。
+      # 2026-09-01 に「環境依存」としてこのCIごと外されていたが、
+      # 依存は日本語フォント1つだけで、apt 1行で済むことが分かったので戻した。
+      # VOICEVOX と ffmpeg は要らない（テストは差し替えで動く）。
+      install: >-
+        sudo apt-get update &&
+        sudo apt-get install -y --no-install-recommends fonts-noto-cjk &&
+        pip install -r requirements.txt pytest

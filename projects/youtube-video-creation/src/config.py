@@ -14,6 +14,7 @@ DEFAULT_CONFIG_PATH = ROOT / "config" / "project.yaml"
 FONT_CANDIDATES = [
     "/usr/share/fonts/truetype/fonts-japanese-gothic.ttf",
     "/usr/share/fonts/opentype/ipafont-gothic/ipagp.ttf",
+    "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
     "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc",
     "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
     "C:/Windows/Fonts/meiryob.ttc",
@@ -21,6 +22,25 @@ FONT_CANDIDATES = [
     "C:/Windows/Fonts/msgothic.ttc",
     "/System/Library/Fonts/ヒラギノ角ゴシック W6.ttc",
 ]
+
+# 明示の候補で当たらないとき、置き場所を舐めて探す。
+# fonts-noto-cjk は版ごとにファイル名も置き場所も変わるので、
+# パスを固定で書いておくと CI の ubuntu が上がるたびに外れる。
+FONT_DIRS = ("/usr/share/fonts", "/usr/local/share/fonts")
+FONT_GLOBS = ("NotoSansCJK*.tt[cf]", "NotoSerifCJK*.tt[cf]", "ipag*.ttf", "*apanese*.ttf")
+
+
+def _font_in_system() -> Path | None:
+    """置き場所から日本語フォントを1つ見つける。無ければ None。"""
+    for root in FONT_DIRS:
+        base = Path(root)
+        if not base.is_dir():
+            continue
+        for pattern in FONT_GLOBS:
+            for hit in sorted(base.rglob(pattern)):
+                if hit.is_file():
+                    return hit
+    return None
 
 
 # 英文の見出しをそのまま出すことがあるので、欧文はプロポーショナルなフォントを使う
@@ -63,9 +83,13 @@ class VideoConfig:
         for candidate in FONT_CANDIDATES:
             if Path(candidate).exists():
                 return Path(candidate)
+        found = _font_in_system()
+        if found is not None:
+            return found
         raise ConfigError(
             "日本語フォントが見つかりません。config/project.yaml の video.font に "
             "TTF/OTF のパスを指定してください。"
+            "（Ubuntu なら apt-get install -y fonts-noto-cjk で入ります）"
         )
 
     def latin_font_path(self) -> Path:
