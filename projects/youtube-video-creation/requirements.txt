@@ -1,6 +1,10 @@
 # ゆっくり実況パイプライン: コア依存
-Pillow>=10.0
-imageio-ffmpeg>=0.5      # ffmpeg バイナリを同梱（別途インストール不要）
-requests>=2.34.2           # VOICEVOX ENGINE の HTTP API 用
-PyYAML>=6.0.3
-pytest>=8.0
+#
+# バージョンは `==` で固定する。この組み合わせで 590件のテストが通ることを
+# 2026-09-01 に実機（Windows）と CI（ubuntu）の両方で確認した。
+# 上げるときは Dependabot の PR で1つずつ、youtube-tests が緑なのを見てから。
+Pillow==12.3.0
+imageio-ffmpeg==0.6.0    # ffmpeg バイナリを同梱（別途インストール不要）
+requests==2.34.2         # VOICEVOX ENGINE の HTTP API と X の埋め込み取得用
+PyYAML==6.0.3
+pytest==9.1.1

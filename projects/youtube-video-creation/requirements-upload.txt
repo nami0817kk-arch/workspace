@@ -1,4 +1,7 @@
 # YouTube への自動投稿を使うときだけ追加でインストールする
+#
+# 2026-09-01 に導入と import までは確認した。投稿そのものは
+# secrets/client_secret.json が要るので未実行（docs/pipeline.md 参照）。
 -r requirements.txt
-google-api-python-client>=2.100
-google-auth-oauthlib>=1.2
+google-api-python-client==2.200.0
+google-auth-oauthlib==1.4.1
