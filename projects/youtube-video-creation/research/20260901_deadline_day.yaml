@@ -4,6 +4,7 @@ date: "2026年9月1日"
 
 theme:
   id: bundesliga_deadline
+  league: germany
   prefix: ""
   title: ブンデスリーガだけ1日早く閉まった移籍期限、その理由
   hook: ヨーロッパの移籍市場が閉じました。ただしドイツだけは、ほかの4大リーグより1日早く終わっています。

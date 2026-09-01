@@ -315,6 +315,8 @@ def worksheet(routine: Routine, today: date) -> str:
         "",
         "theme:",
         '  id: ""             # 短い識別子。重複の判定に使う（例: alvarez）',
+        '  league: ""         # england/spain/germany/italy/france/netherlands/japan',
+        "                     # 空にすると stats の「追えていないリーグ」から減らない",
         '  prefix: ""         # 速報 / 朗報 / 悲報。付けないなら空',
         '  title: ""          # 動画タイトル。続きが気になる書き方で',
         '  hook: ""           # 冒頭のつかみ。何が起きたかを一文で',

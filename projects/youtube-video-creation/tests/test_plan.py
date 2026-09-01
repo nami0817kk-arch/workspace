@@ -224,3 +224,19 @@ def test_the_league_name_falls_back_to_its_key():
     plan = _plan_with_leagues()
     assert plan.league_name("germany") == "ブンデスリーガ"
     assert plan.league_name("brazil") == "brazil"
+
+
+# 取材メモの雛形に league が無く、書く人が埋めようがなかった。
+# その結果 covered.yaml にリーグが載らず、stats の「追えていないリーグ」が
+# 1本作っても永久に減らなかった。
+
+
+def test_取材メモの雛形にリーグの欄がある():
+    from datetime import date
+
+    from src.plan import load_plan, worksheet
+
+    body = worksheet(load_plan().routine("deadline_day"), date(2026, 9, 1))
+    assert "league:" in body
+    # 何を書けばよいかまで書いていないと、結局空のままになる
+    assert "germany" in body
