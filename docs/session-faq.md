@@ -106,6 +106,21 @@ rebase はそれを現在のブランチ上に再生しようとするため、`
 衝突を手で潰しても履歴が平坦化されて取り込み構造が壊れるので、`git rebase --abort` して
 merge に切り替えるのが正しい。新規追加した PJT でも、取り込みコミットを含むブランチは同じ。
 
+**Q. growth を手元で回したい / 件数が他セッションの報告と合わない**
+A. `growth run` の `--workspace` には **`growth fetch` で取得した実クローンを渡す**。
+作業ツリーを渡すと、gitignore 済みのローカルファイルや他セッションの未コミット物まで
+観測して誤検知が出る（実例: `projects/gemini-api/.env` は gitignore 済みで git 追跡も
+履歴も無いのに、作業ツリー観測では `[critical] .env がリポジトリに入ってしまっている`
+と判定された）。週次 Actions と同条件のクリーンクローンが正。
+
+```
+py -m growth fetch --workspace <scratch>/growth-ws
+py -m growth run   --workspace <scratch>/growth-ws
+```
+
+`dismiss` は**誤検知・恒久的に対象外のものにだけ**使う。既に直って自動解決した項目に
+かけると、恒久抑止だけが残って将来の退行を検出できなくなる。
+
 **Q. 旧リポジトリはいつ消える?**
 A. 消さずアーカイブ（読み取り専用化）する。時期は全セッションの移住完了をユーザーが
 確認してから。ai-lab は imagegen 合流後、kabu は日次パイプラインの完走確認後。
