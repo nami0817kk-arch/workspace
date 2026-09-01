@@ -1,0 +1,34 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# エディタ
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# 環境変数・秘密情報
+.env
+.env.local
+*.key
+*.pem
+
+# 個人データ（プロフィール・売上・タスク・案件）は共有しない
+data/*.json
+data/reports/
+
+# 納品物・記事・実行ログ（顧客情報や自サイトの資産が入るため共有しない）
+deliverables/
+articles/
+logs/
+
+# 生成されるダッシュボード（収益の実績が埋め込まれるため共有しない）
+dashboard.html
+
+# ログ
+*.log
