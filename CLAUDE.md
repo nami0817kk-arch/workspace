@@ -18,8 +18,16 @@ CI と Dependabot の増殖）を、この1本で構造的に解消する。
 
 複数の Claude セッションが同時にこのリポジトリで作業する前提のルール:
 
-1. **セッション開始時に `claude/<topic>` ブランチを作る。**
-   master へ直接 push してよいのは「単一の projects/ ディレクトリ内で完結する小さな変更」のみ。
+1. **セッション開始時に、git worktree で自分専用の作業ディレクトリを切る。**
+   ```
+   git -C C:/Users/なみ/dev/workspace worktree add C:/Users/なみ/dev/wt-<topic> -b claude/<topic> origin/master
+   ```
+   メインの作業ツリー（dev/workspace 直下）で checkout やブランチ切替を**してはならない**。
+   共有ツリーの奪い合いは、他セッションの未コミット作業を別ブランチに乗せる事故になる
+   （2026-09-01 に実際に発生した）。worktree なら構造的に起きない。
+   master に取り込んだら `git worktree remove` で片付ける。
+   master へ直接 push してよいのは「単一の projects/ ディレクトリ内で完結する小さな変更」のみで、
+   その場合も worktree 上で行う。
 2. **作業の区切りごとに push する。WIP で構わない。**
    ローカルにしか無い作業は、他セッションから見えず事故のもと。
    毎晩22時の wip-sweeper が未pushを `wip/` ブランチへ自動退避するが、それは保険であって代替ではない。
