@@ -86,6 +86,11 @@ A. 実体は `libs/kabutan`（kabu と qgt が共用）。公開名と出力列�
 **Q. 他セッションの worktree・ブランチ・未コミットに遭遇した**
 A. 触らない。報告も不要（作業中が正常）。自分の worktree で作業を続ける。
 
+**Q. projects/ai-blog が無い**
+A. 2026-09-01 にユーザー判断でクローズした（テスト・CI・依存固定なしの最薄PJTで、投資判断の結果）。
+書きかけ（generator.py 等）は git 履歴に残っている。復活させる場合:
+`git log --oneline -- projects/ai-blog` で最終コミットを見つけ、`git checkout <sha> -- projects/ai-blog`。
+
 **Q. 旧リポジトリはいつ消える?**
 A. 消さずアーカイブ（読み取り専用化）する。時期は全セッションの移住完了をユーザーが
 確認してから。ai-lab は imagegen 合流後、kabu は日次パイプラインの完走確認後。
