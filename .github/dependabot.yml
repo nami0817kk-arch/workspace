@@ -12,6 +12,7 @@ updates:
       - "/projects/ai-side-business"
       - "/projects/stock-investment"
       - "/projects/youtube-video-creation"
+      - "/projects/gemini-api"
       - "/libs/kabutan"
       - "/platform/ai-lab"
     schedule: { interval: weekly, day: monday }
