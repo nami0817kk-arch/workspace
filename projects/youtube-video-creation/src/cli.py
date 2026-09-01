@@ -193,6 +193,8 @@ def main(argv: list[str] | None = None) -> int:
     p_review = sub.add_parser("review", help="書き出したものを公開前に点検する")
     p_review.add_argument("script")
     p_review.add_argument("--out", default=None, help="出力先（既定: output/<台本名>）")
+    p_review.add_argument("--no-sources", action="store_true",
+                          help="出典URLの生死確認を飛ばす（通信しない）")
 
     p_thumb = sub.add_parser("thumbnail", help="サムネイルだけ作り直す")
     p_thumb.add_argument("--all", action="store_true", help="台本の案を全部作って並べる")
@@ -440,6 +442,16 @@ def _cmd_review(args, config) -> int:
 
     print(f"■ 公開前の点検　{script.title}")
     findings = inspect(script, out, duration)
+
+    # 出典の生死は機械で見られる。消えた記事を出典に載せたまま投稿しないため
+    if not args.no_sources:
+        from .review import check_sources
+
+        urls = sorted({line.source_url for line in script.lines if getattr(line, "source_url", "")})
+        if not urls:
+            urls = _description_urls(out)
+        findings += check_sources(urls)
+
     for finding in findings:
         print(finding.line())
 
@@ -453,6 +465,16 @@ def _cmd_review(args, config) -> int:
         return 1
     print("\n機械で見られるところは問題ありません")
     return 0
+
+
+def _description_urls(out_dir: Path) -> list[str]:
+    """概要欄に載せたURL。台本側に無ければ、実際に出すものから拾う。"""
+    import re
+
+    body = (out_dir / "description.txt")
+    if not body.exists():
+        return []
+    return sorted(set(re.findall(r"https?://\S+", body.read_text(encoding="utf-8"))))
 
 
 def _cmd_thumbnail(args, config) -> int:
@@ -944,7 +966,7 @@ def _cmd_x(args, config) -> int:
     from .plan import load_plan
 
     plan = load_plan()
-    stale = int(plan.social.get("stale_hours", 24))
+    stale = int(plan.social.get("stale_hours", 72))
 
     backend = str(plan.social.get("backend", "search"))
 
@@ -1005,7 +1027,7 @@ def _cmd_x(args, config) -> int:
             print(f"      {entry.get('note', '')}")
             topic = args.topic or entry.get("name") or handle
             print(f'      検索: "{topic}"  （x.com に限定）')
-        lag = int(plan.social.get("stale_hours", 72))
+        lag = stale
         index_lag = int(plan.social.get("index_lag_hours", 48))
         print(
             f"\n  検索に出るのは{index_lag}時間ほど前までの投稿（実測）。"
@@ -1103,7 +1125,7 @@ def _cmd_fetch(args, config) -> int:
         for item in items[:20]:
             age = item.hours_ago()
             mark = f"{max(0.0, age):5.1f}時間前" if age is not None else "　時刻なし"
-            print(f"  {mark}  {item.title[:70]}")
+            print(f"  {mark}  {_fit(item.title, 70)}")
         if len(items) > 20:
             print(f"  … 他{len(items) - 20}件")
         print("\n見出しを見て、狙った内容が返っているか確かめてください。")
@@ -1446,11 +1468,11 @@ def _cmd_pick(args, config) -> int:
             gap = thread.hours_since(now) or 0.0
             span = f"{gap / 24:.0f}日前" if gap >= 24 else f"{gap:.0f}時間前"
             mark = f"　［続報 {len(thread.past) + 1}本目・前回{span}］"
-        print(f"  {item.score:2d}点  {item.title}　［{item.tier}／{item.hours_ago:g}時間前］{mark}")
+        print(f"  {item.score:2d}点  {_fit(item.title)}　［{item.tier}／{item.hours_ago:g}時間前］{mark}")
         print(f"        {detail}")
     for item in dropped:
         entry = covered[item.id]
-        print(f"  ーー　{item.title}　（{entry.slot}で既出 {entry.at:%m/%d %H:%M}）")
+        print(f"  ーー　{_fit(item.title)}　（{entry.slot}で既出 {entry.at:%m/%d %H:%M}）")
     print()
 
     for note in saga_mod.advise(list(threads.values()), now):
@@ -1582,7 +1604,12 @@ def _cmd_make_clip(args, config) -> int:
         (config.video.width, config.video.height), args.zoom, config.video.fps,
     )
     print(f"クリップ: {out}")
-    print(f"台本の frontmatter に  bg: {out}  と書けば背景に使えます")
+    # 台本には相対パスで書く。絶対パスを書いた台本は、他のPCで開けなくなる
+    try:
+        hint = out.resolve().relative_to(Path.cwd().resolve()).as_posix()
+    except ValueError:
+        hint = str(out)
+    print(f"台本の frontmatter に  bg: {hint}  と書けば背景に使えます")
     return 0
 
 

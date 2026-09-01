@@ -14,8 +14,11 @@ BODY = (
 
 
 def _built(tmp_path, seconds=150.0):
-    for name in ("video.mp4", "thumbnail.png", "subtitles.srt"):
+    for name in ("video.mp4", "thumbnail.png"):
         (tmp_path / name).write_bytes(b"x")
+    (tmp_path / "subtitles.srt").write_text(
+        "1\n00:00:01,000 --> 00:00:03,000\n字幕\n", encoding="utf-8"
+    )
     (tmp_path / "description.txt").write_text("概要", encoding="utf-8")
     (tmp_path / "script.json").write_text(
         json.dumps({"scenes": [{"lines": [{"start": seconds - 10, "duration": 10}]}]}),
@@ -110,3 +113,100 @@ def test_タグの合計が上限を超えたら止める(tmp_path):
     assert tags_mod.text_length(script.tags) > tags_mod.MAX_TAGS_TEXT
     result = _by_label(inspect(script, _built(tmp_path), 150.0))
     assert result["タグ"].ok is False
+
+
+# 手引きには「出典URLを開いて確認しろ」とだけ書いてあったが、人は5本を毎回は
+# 開かない。開かないまま upload に進むと、消えた記事を出典に載せた動画が出る。
+# 生死だけは機械で見る。実測で kicker が生きている記事に 403 を返したので、
+# ボット判定と「消えた」は区別する。
+
+
+def test_生きている出典はそのまま通る():
+    from src.review import check_sources
+
+    (f,) = check_sources(["https://a.com/1"], fetch=lambda u: 200)
+    assert f.ok
+
+
+def test_消えた出典は止める():
+    from src.review import check_sources
+
+    (f,) = check_sources(["https://a.com/gone"], fetch=lambda u: 404)
+    assert not f.ok
+    assert "404" in f.detail
+
+
+def test_ボット判定は消えた扱いにしない():
+    """kicker は生きている記事にも 403 を返す（実測）。止めずに目視に回す。"""
+    from src.review import check_sources
+
+    (f,) = check_sources(["https://kicker.de/a"], fetch=lambda u: 403)
+    assert f.ok
+    assert "目で確かめる" in f.detail
+
+
+def test_つながらない出典は止める():
+    from src.review import check_sources
+
+    def boom(url):
+        raise OSError("dns")
+
+    (f,) = check_sources(["https://nowhere.example/1"], fetch=boom)
+    assert not f.ok
+
+
+# 字幕の逆行やゼロ秒表示は、プレイヤーでは黙って飛ばされるので投稿してからしか
+# 気づけない。書き出した srt をそのまま読んで確かめる。
+
+
+def _srt(tmp_path, body):
+    path = tmp_path / "subtitles.srt"
+    path.write_text(body, encoding="utf-8")
+    return path
+
+
+def test_正しい字幕は枚数を数えて通す(tmp_path):
+    from src.review import check_subtitles
+
+    f = check_subtitles(_srt(tmp_path, """1
+00:00:01,000 --> 00:00:03,000
+一枚目
+
+2
+00:00:03,500 --> 00:00:05,000
+二枚目
+"""))
+    assert f.ok
+    assert "2枚" in f.detail
+
+
+def test_ゼロ秒の表示を止める(tmp_path):
+    from src.review import check_subtitles
+
+    f = check_subtitles(_srt(tmp_path, """1
+00:00:03,000 --> 00:00:03,000
+消えている字幕
+"""))
+    assert not f.ok
+    assert "0秒" in f.detail
+
+
+def test_前の字幕と重なっていたら止める(tmp_path):
+    from src.review import check_subtitles
+
+    f = check_subtitles(_srt(tmp_path, """1
+00:00:01,000 --> 00:00:04,000
+一枚目
+
+2
+00:00:03,000 --> 00:00:05,000
+重なっている
+"""))
+    assert not f.ok
+    assert "重なって" in f.detail
+
+
+def test_srtが無ければ止める(tmp_path):
+    from src.review import check_subtitles
+
+    assert not check_subtitles(tmp_path / "subtitles.srt").ok

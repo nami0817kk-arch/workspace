@@ -486,3 +486,19 @@ def test_1社だけの話には媒体数の点が付かない():
 def test_内訳に媒体数が残る():
     """なぜその順位なのかを、後から説明できるようにしておく。"""
     assert _scored([f"https://{c}.com/1" for c in "abcde"]).breakdown["媒体数"] == 3
+
+
+def test_同じ媒体の配信面の違いは1社と数える():
+    """m.gianlucadimarzio.com と gianlucadimarzio.com を2社にしない（実測で遭遇）。
+
+    媒体数は確度ではなく注目度の指標だが、水増しされると
+    1社しか書いていない話が「2社一致」に見えてしまう。
+    """
+    from src.candidates import outlet_count
+
+    assert outlet_count([
+        "https://m.gianlucadimarzio.com/a",
+        "https://gianlucadimarzio.com/b",
+        "https://amp.theguardian.com/c",
+        "https://www.theguardian.com/d",
+    ]) == 2

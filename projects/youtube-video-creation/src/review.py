@@ -51,6 +51,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     findings.append(_sources(script))
     findings.append(_tiers(script))
     findings.append(_marks(script))
+    findings.append(check_subtitles(out_dir / "subtitles.srt"))
     if duration is not None:
         findings.append(_duration(duration))
     return findings
@@ -149,3 +150,75 @@ def _duration(seconds: float) -> Finding:
     if seconds > MAX_SECONDS:
         return Finding(False, "尺", f"{shown}　長すぎます（{MAX_SECONDS // 60}分まで）")
     return Finding(True, "尺", shown)
+
+
+def check_sources(urls: list[str], fetch=None) -> list[Finding]:
+    """出典URLがまだ生きているかを、送る前に機械で見る。
+
+    手引きには「出典URLを開いて確認しろ」とだけ書いてあったが、
+    人は5本のURLを毎回は開かない。開かないまま upload に進むと、
+    消えた記事を出典に載せた動画が出てしまう（投稿は取り返しがつかない）。
+
+    見るのは生死だけ。内容が変わっていないかまでは機械には分からないので、
+    そこは今までどおり目で見る。
+    """
+    import requests as requests_mod
+
+    fetch = fetch or (lambda url: requests_mod.get(
+        url, timeout=15, stream=True,
+        headers={"User-Agent": "Mozilla/5.0 (news script builder; source check)"},
+    ).status_code)
+
+    findings: list[Finding] = []
+    for url in urls:
+        try:
+            status = int(fetch(url))
+        except Exception as error:
+            findings.append(Finding(False, "出典URL", f"{url}　開けません（{type(error).__name__}）"))
+            continue
+        if status == 200:
+            findings.append(Finding(True, "出典URL", url))
+        elif status in (401, 403, 429):
+            # ボット判定・有料の壁。kicker は生きている記事にも 403 を返す（実測）。
+            # 消えた証拠ではないので止めないが、目で見る対象として残す
+            findings.append(Finding(True, "出典URL", f"{url}　HTTP {status}（機械には開けない。目で確かめる）"))
+        else:
+            findings.append(Finding(False, "出典URL", f"{url}　HTTP {status}"))
+    return findings
+
+
+def check_subtitles(srt_path: Path) -> Finding:
+    """字幕の時刻が壊れていないか。
+
+    逆行・ゼロ秒表示・終了より後の開始は、プレイヤーでは黙って飛ばされるので
+    投稿してからしか気づけない。書き出したファイルをそのまま読んで確かめる。
+    """
+    if not srt_path.exists():
+        return Finding(False, "字幕", "subtitles.srt がありません")
+
+    import re
+
+    stamp = re.compile(
+        r"(\d{2}):(\d{2}):(\d{2}),(\d{3}) --> (\d{2}):(\d{2}):(\d{2}),(\d{3})"
+    )
+
+    def seconds(h, m, s, ms):
+        return int(h) * 3600 + int(m) * 60 + int(s) + int(ms) / 1000
+
+    previous_end = -1.0
+    count = 0
+    for line in srt_path.read_text(encoding="utf-8").splitlines():
+        match = stamp.fullmatch(line.strip())
+        if not match:
+            continue
+        count += 1
+        start = seconds(*match.groups()[:4])
+        end = seconds(*match.groups()[4:])
+        if end <= start:
+            return Finding(False, "字幕", f"{count}番目の表示が0秒以下です（{line.strip()}）")
+        if start < previous_end:
+            return Finding(False, "字幕", f"{count}番目が前の字幕と重なっています（{line.strip()}）")
+        previous_end = end
+    if count == 0:
+        return Finding(False, "字幕", "時刻の行が1つも読めません")
+    return Finding(True, "字幕", f"{count}枚、時刻の乱れなし")

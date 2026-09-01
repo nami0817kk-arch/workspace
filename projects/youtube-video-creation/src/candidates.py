@@ -113,7 +113,10 @@ def outlet_count(sources: list[str]) -> int:
     hosts = set()
     for url in sources or []:
         host = str(url).split("://", 1)[-1].split("/", 1)[0].lower().strip()
-        host = host.removeprefix("www.")
+        # www / m / amp は同じ媒体の配信面の違い。別の社として数えると
+        # 「2社が一致」が実は1社、という水増しになる（m.gianlucadimarzio.com で実測）
+        for prefix in ("www.", "m.", "amp."):
+            host = host.removeprefix(prefix)
         if host:
             hosts.add(host)
     return len(hosts)
