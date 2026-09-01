@@ -42,5 +42,6 @@ flutter build web --base-href /
 - 試合シミュレーション・信頼度・契約まわりは相互に影響する。
   片方だけ調整するとゲームバランスが崩れるので、変更したらテストで挙動を固定する。
 - ストア公開の文面は `STORE_LISTING.md` にある。
-- ストア提出は `soccer-manager-v*` タグで `android-release.yml` / `ios-release.yml` が動く。
+- ストア提出は `soccer-manager-v*` タグで `soccer-android-release.yml` /
+  `soccer-ios-release.yml` が動く。
   署名鍵・API キーは GitHub Secrets に未登録なので、初回は登録が要る。
