@@ -1,6 +1,6 @@
 # リリース情報を取ってきて、その見出しでバナーを作り、リポジトリへ置く。
-#   ailab run weekly-release-banner --set repo=owner/name
-#   ailab run weekly-release-banner --set repo=owner/name --yes   # 実際にコミットする
+#   imagegen run weekly-release-banner --set repo=owner/name
+#   imagegen run weekly-release-banner --set repo=owner/name --yes   # 実際にコミットする
 name: 週次リリースバナー
 
 vars:

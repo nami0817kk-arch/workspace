@@ -41,14 +41,18 @@ jobs:
         run: pip install -e ".[dev]"
 
       - name: Lint
-        # ruff を入れて運用しているのは ailab だけなので、範囲を合わせている
-        run: python -m ruff check src/ailab tests/ailab
+        # ruff を入れて運用しているのは imagegen / videogen / docparse。範囲を合わせている
+        run: >-
+          python -m ruff check
+          src/imagegen tests/imagegen
+          src/videogen tests/videogen
+          src/docparse tests/docparse
 
       - name: Run tests
-        # ailab の網羅率が下がったら気づけるようにしておく
-        run: pytest --cov=ailab --cov-report=term-missing --cov-fail-under=90
+        # imagegen の網羅率が下がったら気づけるようにしておく
+        run: pytest --cov=imagegen --cov-report=term-missing --cov-fail-under=90
 
-  # README が Windows 前提で書かれているので、ailab だけ Windows でも回す。
+  # README が Windows 前提で書かれているので、imagegen だけ Windows でも回す。
   windows:
     runs-on: windows-latest
     timeout-minutes: 20
@@ -63,10 +67,10 @@ jobs:
       - name: Install dev dependencies
         run: pip install -e ".[dev]"
 
-      - name: Run ailab tests
-        run: pytest tests/ailab
+      - name: Run imagegen tests
+        run: pytest tests/imagegen
 
       - name: CLI smoke test
         run: |
-          ailab --version
-          ailab connectors
+          imagegen --version
+          imagegen connectors

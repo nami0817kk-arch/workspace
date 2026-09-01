@@ -5,14 +5,14 @@ description: Web上のフリーイラスト・フリー素材を検索してダ�
 
 # フリーイラストの取得
 
-`ailab search` / `ailab fetch` を使う（MCP接続時は `search_assets` / `fetch_assets` ツールでも同じ）。実装は `src/ailab/connectors/assets_*.py`。使える検索先は `python -m ailab connectors` で分かる。
+`imagegen search` / `imagegen fetch` を使う（MCP接続時は `search_assets` / `fetch_assets` ツールでも同じ）。実装は `src/imagegen/connectors/assets_*.py`。使える検索先は `python -m imagegen connectors` で分かる。
 
 ## 手順
 
 1. まず検索して候補を見せる（勝手に大量ダウンロードしない）。
 
    ```bash
-   python -m ailab search "cat illustration" -l 5
+   python -m imagegen search "cat illustration" -l 5
    ```
 
    英語のキーワードのほうがヒットしやすい（Openverse / Wikimedia は英語中心）。
@@ -20,7 +20,7 @@ description: Web上のフリーイラスト・フリー素材を検索してダ�
 2. ダウンロードする。
 
    ```bash
-   python -m ailab fetch "cat illustration" -l 3 -o output/illust
+   python -m imagegen fetch "cat illustration" -l 3 -o output/illust
    ```
 
    画像と一緒に `CREDITS.md` / `credits.json`（出典・作者・ライセンス）が書き出される。
@@ -32,7 +32,7 @@ description: Web上のフリーイラスト・フリー素材を検索してダ�
 ユーザーが画像のURLを提示したときは検索せず、直接取り込む。
 
 ```bash
-python -m ailab grab <画像URL> --from <ページURL> --license "<ライセンス>" --by "<作者>"
+python -m imagegen grab <画像URL> --from <ページURL> --license "<ライセンス>" --by "<作者>"
 ```
 
 ライセンスが分からないときは `--license` を省いてよいが、`unknown` として
