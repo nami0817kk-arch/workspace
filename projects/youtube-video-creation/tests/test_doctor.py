@@ -124,3 +124,37 @@ def test_verified_feeds_pass(plan):
 def test_no_feeds_is_not_an_error(plan):
     plan.feeds = []
     assert _by_label(diagnose(plan, NOW))["RSSフィード"].ok is True
+
+
+# build は VOICEVOX が無いと黙って無音で書き出す。朝の運用でこれに気づかないと
+# 無音の動画を3本作ってから気づく。週1の健康診断に声の確認も入れる。
+
+
+def test_声が出ない状態は健康診断が拾う(monkeypatch):
+    from src import cli, tts
+
+    monkeypatch.setattr(tts, "create_backend", lambda config: tts.SilentBackend())
+    note = cli._voice_note(None)
+    assert not note.ok
+    assert "無音" in note.detail
+
+
+def test_声が出るなら緑(monkeypatch):
+    from src import cli, tts
+
+    class Fake:
+        name = "engine"
+
+    monkeypatch.setattr(tts, "create_backend", lambda config: Fake())
+    assert cli._voice_note(None).ok
+
+
+def test_バックエンドが作れなくても診断は落ちない(monkeypatch):
+    from src import cli, tts
+
+    def boom(config):
+        raise tts.TtsError("接続失敗")
+
+    monkeypatch.setattr(tts, "create_backend", boom)
+    note = cli._voice_note(None)
+    assert not note.ok

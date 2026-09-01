@@ -128,6 +128,14 @@ def order(plan, keys: list[str], now: datetime | None = None) -> list[str]:
     return sorted(keys, key=rank)
 
 
+def _left(hours: float) -> str:
+    """残り時間の言い方。「あと0時間」では、いま動くべきかが読めない。"""
+    if hours < 1:
+        minutes = int(hours * 60)
+        return "まもなく" if minutes < 10 else f"あと{minutes}分"
+    return f"あと{hours:.0f}時間"
+
+
 def advice(plan, now: datetime | None = None) -> list[str]:
     """いま何を見ればよいか。1〜2行。"""
     now = now or datetime.now()
@@ -145,7 +153,7 @@ def advice(plan, now: datetime | None = None) -> list[str]:
         if closing and len(closing) < len(live):
             lines.append(
                 f"先に当たる: {' / '.join(w.name for w in closing)}"
-                f"（あと{closing[0].hours_left(at):.0f}時間で静かになります）"
+                f"（{_left(closing[0].hours_left(at))}で静かになります）"
             )
     else:
         lines.append(f"どのリーグも静かな時間帯です（{now:%H:%M}）")
@@ -156,7 +164,7 @@ def advice(plan, now: datetime | None = None) -> list[str]:
     )
     if closed and not live:
         soon = closed[0]
-        lines.append(f"次に開くのは {soon.name}　{soon.label}（あと{soon.hours_until(at):.0f}時間）")
+        lines.append(f"次に開くのは {soon.name}　{soon.label}（{_left(soon.hours_until(at))}）")
     return lines
 
 

@@ -805,6 +805,7 @@ def _cmd_doctor(args, config) -> int:
     from .plan import load_plan
 
     notes = diagnose(load_plan())
+    notes.append(_voice_note(config))
     print("■ 収集の健康診断")
     for note in notes:
         print(note.line())
@@ -815,6 +816,29 @@ def _cmd_doctor(args, config) -> int:
         return 1
     print("\n問題ありません")
     return 0
+
+
+def _voice_note(config):
+    """音声合成が使える状態か。
+
+    build は VOICEVOX が見つからないと黙って無音で書き出す（尺確認用としては
+    正しい）。ただ朝の運用でこれに気づかないと、無音の動画を3本作ってから
+    気づくことになる。週1で見る健康診断に、声の確認も入れておく。
+    """
+    from .doctor import Note
+    from .tts import create_backend
+
+    try:
+        backend = create_backend(config)
+    except Exception as error:
+        return Note(False, "音声", f"バックエンドを作れません: {error}")
+    if backend.name == "silent":
+        return Note(
+            False, "音声",
+            "VOICEVOX が見つかりません（このまま build すると無音になります）。"
+            "アプリを起動するか scripts/setup_voicevox_core.py を実行",
+        )
+    return Note(True, "音声", f"VOICEVOX（{backend.name}）が使えます")
 
 
 def _cmd_sources(args, config) -> int:

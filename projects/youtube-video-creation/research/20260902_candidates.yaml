@@ -1,0 +1,1153 @@
+# 候補テーマ（2026年9月2日）
+# collect が作った下書き。見出しに書いてあることだけが入っている。
+# tier / topic / league は判断が要るので、目で見て埋めること。
+date: "2026年9月2日"
+candidates:
+  - id: enzo_fernandez_transfer
+    title: "Man City sign Fernandez in British-record-equalling deal"
+    topic: "マンチェスター・シティ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Enzo Fernandez Man City"            # URLから作った。合っているか見る
+    url: https://www.skysports.com/football/news/11661/13579972/enzo-fernandez-transfer-news-man-city-sign-midfielder-from-chelsea-in-british-record-equalling-125m-deal
+    hours_ago: 0.5   # フィードの時刻から
+    # 同じ話を 4媒体が報じている
+    sources:
+      - https://www.skysports.com/football/news/11661/13579972/enzo-fernandez-transfer-news-man-city-sign-midfielder-from-chelsea-in-british-record-equalling-125m-deal
+      - https://www.skysports.com/football/live-blog/11661/13025499/man-city-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+      - https://www.espn.com/soccer/story/_/id/49794375/man-city-agree-record-equalling-125m-deal-chelsea-enzo-fernandez-sources
+      - https://www.espn.com/soccer/story/_/id/49773926/iliman-ndiaye-joins-man-city-everton
+      # ↑ Man City latest: Fernandez posts Chelsea farewell message
+      # ↑ Man City sign Fernández in joint-PL record deal
+      # ↑ Man City sign Ndiaye for $88M from Everton
+
+  - id: chelsea_transfer_news
+    title: "Chelsea latest: Should Blues have stopped Fernandez deal after Camara drama?"
+    topic: "チェルシー"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 未確認           # 見出しの言い回しからの当たり。見て直す
+    en: "Chelsea Rumours Gossip Live"            # URLから作った。合っているか見る
+    url: https://www.skysports.com/football/live-blog/11661/13025497/chelsea-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+    hours_ago: 0.6   # フィードの時刻から
+    # 同じ話を 3媒体が報じている
+    sources:
+      - https://www.skysports.com/football/live-blog/11661/13025497/chelsea-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+      - https://www.skysports.com/football/news/11661/13580189/lamine-camara-monaco-pull-out-of-selling-midfielder-to-chelsea-in-47m-deal-after-blues-agreed-deal-for-enzo-fernandez-replacement
+      - https://www.skysports.com/football/live-blog/11661/13353569/leeds-united-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+      # ↑ Deal off! Chelsea move for Fernandez replacement falls throu
+      # ↑ Leeds latest: Bard joins from Nice as Okafor bid rejected
+
+  - id: ipswich_transfers_latest
+    title: "Ipswich latest: Flemming joins from Burnley in £20m deal"
+    topic: "エヴァートン"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Ipswich Transfers Rumours Gossip"            # URLから作った。合っているか見る
+    url: https://www.skysports.com/football/live-blog/11661/13279317/ipswich-transfers-latest-news-rumours-and-gossip-live-updates-goals-and-highlights
+    hours_ago: 0.7   # フィードの時刻から
+    # 同じ話を 5媒体が報じている
+    sources:
+      - https://www.skysports.com/football/live-blog/11661/13279317/ipswich-transfers-latest-news-rumours-and-gossip-live-updates-goals-and-highlights
+      - https://www.skysports.com/football/live-blog/11661/13279303/everton-transfers-latest-news-rumours-and-gossip-live-updates-goals-and-highlights
+      - https://www.skysports.com/football/live-blog/11661/13548674/hull-city-transfers-latest-news-rumours-and-gossip-live-updates-goals-and-highlights
+      - https://www.skysports.com/football/live-blog/11661/13279313/fulham-transfers-latest-news-rumours-and-gossip-live-updates-goals-and-highlights
+      - https://www.skysports.com/football/live-blog/12691/13279295/brighton-transfers-latest-news-rumours-and-gossip-live-updates-goals-and-highlights
+      # ↑ Everton latest: Confidence for Balogun deal as Maitland-Nile
+      # ↑ Hull latest: Tigers make SIX Deadline Day signings
+      # ↑ Fulham latest: Midfielder Larsson joins from Frankfurt
+      # ↑ Brighton latest: Seagulls complete Chema deal
+
+  - id: iliman_ndiaye_transfer
+    title: "Man City confirm £65m Ndiaye signing as Grealish joins Everton"
+    topic: "マンチェスター・シティ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Iliman Ndiaye Man City"            # URLから作った。合っているか見る
+    url: https://www.skysports.com/football/news/11661/13579669/iliman-ndiaye-transfer-news-man-city-sign-65m-winger-from-everton-as-jack-grealish-joins-toffees-on-loan
+    hours_ago: 1.2   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.skysports.com/football/news/11661/13579669/iliman-ndiaye-transfer-news-man-city-sign-65m-winger-from-everton-as-jack-grealish-joins-toffees-on-loan
+      - https://www.espn.com/soccer/story/_/id/49791241/jack-grealish-rejoins-everton-loan-man-city
+      # ↑ Grealish re-joins Everton on loan from Man City
+
+  - id: brooke_norton_cuffy
+    title: "Why Norton-Cuffy is ready after long road to the Premier League"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 未確認           # 見出しの言い回しからの当たり。見て直す
+    en: "Brooke Norton Cuffy Hull"            # URLから作った。合っているか見る
+    url: https://www.skysports.com/football/news/11661/13549731/brooke-norton-cuffy-to-hull-from-genoa-how-loans-at-lincoln-rotherham-coventry-and-millwall-got-him-to-the-top
+    hours_ago: 1.5   # フィードの時刻から
+    sources:
+      - https://www.skysports.com/football/news/11661/13549731/brooke-norton-cuffy-to-hull-from-genoa-how-loans-at-lincoln-rotherham-coventry-and-millwall-got-him-to-the-top
+
+  - id: tottenham_transfer_news
+    title: "Spurs latest: 'I'm so excited to be reunited with De Zerbi' - Mudryk"
+    topic: "チェルシー"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Tottenham Rumours Gossip Live"            # URLから作った。合っているか見る
+    url: https://www.skysports.com/football/live-blog/11661/13025489/tottenham-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+    hours_ago: 1.6   # フィードの時刻から
+    # 同じ話を 3媒体が報じている
+    sources:
+      - https://www.skysports.com/football/live-blog/11661/13025489/tottenham-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+      - https://www.espn.com/soccer/story/_/id/49787439/tottenham-sign-mykhailo-mudryk-tosin-adarabioyo-chelsea
+      - https://www.caughtoffside.com/2026/09/01/tottenham-officially-confirm-mykhailo-mudryk-loan-transfer/
+      # ↑ Spurs loan Mudryk from Chelsea; $101M option
+      # ↑ Done deal: Tottenham confirm new signing as he aims to “make
+
+  - id: man_utd_transfer
+    title: "Man Utd latest: Shock move explored for Man City's Ait-Nouri"
+    topic: "マンチェスター・ユナイテッド"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Man Utd Rumours Gossip"            # URLから作った。合っているか見る
+    url: https://www.skysports.com/football/live-blog/11661/13025492/man-utd-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+    hours_ago: 2.2   # フィードの時刻から
+    sources:
+      - https://www.skysports.com/football/live-blog/11661/13025492/man-utd-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+
+  - id: sunderland_transfer_news
+    title: "Sunderland latest: Fofana gives green light but Benfica winger deal off"
+    topic: "ベンフィカ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Sunderland Rumours Gossip Live"            # URLから作った。合っているか見る
+    url: https://www.skysports.com/football/live-blog/11661/13375102/sunderland-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+    hours_ago: 2.3   # フィードの時刻から
+    sources:
+      - https://www.skysports.com/football/live-blog/11661/13375102/sunderland-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+
+  - id: newcastle_transfer_news
+    title: "Newcastle latest: Juventus sign Woltemade on loan"
+    topic: "ユヴェントス"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Newcastle Rumours Gossip Live"            # URLから作った。合っているか見る
+    url: https://www.skysports.com/football/live-blog/11661/13025496/newcastle-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+    hours_ago: 5.3   # フィードの時刻から
+    # 同じ話を 3媒体が報じている
+    sources:
+      - https://www.skysports.com/football/live-blog/11661/13025496/newcastle-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+      - https://football-italia.net/official-juventus-loan-david-atletico-madrid/
+      - https://football-italia.net/juventus-sign-woltemade-from-newcastle/
+      # ↑ Official: Juventus loan David to Atletico Madrid with €25m o
+      # ↑ Official: Juventus sign Woltemade from Newcastle United in €
+
+  - id: liverpool_transfer_news
+    title: "Liverpool latest: Goalkeeper joins from Genk as Carra questions strategy"
+    topic: "リバプール"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Liverpool Rumours Gossip Live"            # URLから作った。合っているか見る
+    url: https://www.skysports.com/football/live-blog/11661/13025501/liverpool-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+    hours_ago: 7   # フィードの時刻から
+    sources:
+      - https://www.skysports.com/football/live-blog/11661/13025501/liverpool-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+
+  - id: aston_villa_transfer
+    title: "Aston Villa latest: Abraham staying at Villa Park, says Emery"
+    topic: "アストン・ヴィラ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Aston Villa Rumours Gossip"            # URLから作った。合っているか見る
+    url: https://www.skysports.com/football/live-blog/11661/13025491/aston-villa-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+    hours_ago: 15   # フィードの時刻から
+    sources:
+      - https://www.skysports.com/football/live-blog/11661/13025491/aston-villa-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+
+  - id: arsenal_fail_to
+    title: "Alvarez stays at Atletico - so are Arsenal too short in attack?"
+    topic: "アーセナル"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 未確認           # 見出しの言い回しからの当たり。見て直す
+    en: "Arsenal Fail Julian Alvarez"            # URLから作った。合っているか見る
+    url: https://www.skysports.com/football/news/12691/13579965/arsenal-fail-to-sign-julian-alvarez-and-with-no-elite-attacker-in-are-mikel-artetas-team-short-in-the-forward-options
+    hours_ago: 1   # フィードの時刻から
+    sources:
+      - https://www.skysports.com/football/news/12691/13579965/arsenal-fail-to-sign-julian-alvarez-and-with-no-elite-attacker-in-are-mikel-artetas-team-short-in-the-forward-options
+
+  - id: scottish_premiership_news
+    title: "Sorensen joins as Celtic target SIX signings while McInnes shares Rangers update"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Scottish Premiership Transfers Rumours"            # URLから作った。合っているか見る
+    url: https://www.skysports.com/football/live-blog/12691/13176154/scottish-premiership-news-transfers-rumours-gossip-and-more
+    hours_ago: 4.3   # フィードの時刻から
+    sources:
+      - https://www.skysports.com/football/live-blog/12691/13176154/scottish-premiership-news-transfers-rumours-gossip-and-more
+
+  - id: matias_fernandez_pardo
+    title: "Newcastle sign Fernandez-Pardo from Lille"
+    topic: "ニューカッスル"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Matias Fernandez Pardo Newcastle"            # URLから作った。合っているか見る
+    url: https://www.skysports.com/football/news/12691/13579855/matias-fernandez-pardo-transfer-news-newcastle-sign-lille-forward-ahead-of-transfer-deadline-in-deal-worth-51m
+    hours_ago: 5   # フィードの時刻から
+    sources:
+      - https://www.skysports.com/football/news/12691/13579855/matias-fernandez-pardo-transfer-news-newcastle-sign-lille-forward-ahead-of-transfer-deadline-in-deal-worth-51m
+
+  - id: west_ham_latest
+    title: "West Ham latest: Morato in, Todibo out as Olympiakos cool Alvarez interest"
+    topic: "ウェストハム"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "West Ham"            # URLから作った。合っているか見る
+    url: https://www.skysports.com/football/live-blog/12691/13210475/west-ham-latest-news
+    hours_ago: 6.7   # フィードの時刻から
+    sources:
+      - https://www.skysports.com/football/live-blog/12691/13210475/west-ham-latest-news
+
+  - id: gabriel_jesus_arsenal
+    title: "Jesus joins Barcelona in 'dream' move from Arsenal"
+    topic: "バルセロナ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Gabriel Jesus Arsenal Forward"            # URLから作った。合っているか見る
+    url: https://www.skysports.com/football/news/12691/13579275/gabriel-jesus-arsenal-forward-completes-barcelona-transfer-in-8-6m-deal-on-deadline-day
+    hours_ago: 10.2   # フィードの時刻から
+    # 同じ話を 4媒体が報じている
+    sources:
+      - https://www.skysports.com/football/news/12691/13579275/gabriel-jesus-arsenal-forward-completes-barcelona-transfer-in-8-6m-deal-on-deadline-day
+      - https://www.espn.com/soccer/story/_/id/49773859/gabriel-jesus-completes-transfer-barcelona-arsenal
+      - https://www.espn.com/soccer/story/_/id/49781683/chelsea-real-madrid-win-transfer-window-liverpool-biggest-losers
+      - https://www.espn.com/soccer/story/_/id/49791970/why-barcelona-turned-arsenal-gabriel-jesus-julian-alvarez-transfer-bid-failed
+      # ↑ Gabriel Jesus completes Barça move from Arsenal
+      # ↑ Transfer window winners and losers: How Arsenal, Liverpool, 
+      # ↑ Why Barcelona turned to Jesus, and why Álvarez could still s
+
+  - id: ibrahim_mbaye_aston
+    title: "Villa sign PSG forward Mbaye and Saints defender Harwood-Bellis"
+    topic: "アストン・ヴィラ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Ibrahim Mbaye Aston Villa"            # URLから作った。合っているか見る
+    url: https://www.skysports.com/football/news/12691/13579783/ibrahim-mbaye-aston-villa-confirm-signing-of-18-year-old-paris-saint-germain-winger
+    hours_ago: 12.5   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.skysports.com/football/news/12691/13579783/ibrahim-mbaye-aston-villa-confirm-signing-of-18-year-old-paris-saint-germain-winger
+      - https://www.espn.com/soccer/story/_/id/49750588/bradley-barcola-joins-liverpool-123-million-move-paris-saint-germain
+      # ↑ Liverpool land PSG's Barcola in $167M transfer
+
+  - id: fifa_world_cup
+    title: "Kushner says he regrets role in WC sell-off plan"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Fifa Cup Sell Josh"            # URLから作った。合っているか見る
+    url: https://www.espn.com/soccer/story/_/id/49796943/fifa-world-cup-sell-josh-kushner-gianni-infantino
+    hours_ago: 0   # フィードの時刻から
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49796943/fifa-world-cup-sell-josh-kushner-gianni-infantino
+
+  - id: everton_need_extension
+    title: "Sources: Everton need extension for Balogun deal"
+    topic: "エヴァートン"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しの言い回しからの当たり。見て直す
+    en: "Everton Need Extension Folarin"            # URLから作った。合っているか見る
+    url: https://www.espn.com/soccer/story/_/id/49795948/everton-need-extension-folarin-balogun-deal
+    hours_ago: 0   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49795948/everton-need-extension-folarin-balogun-deal
+      - https://www.espn.com/soccer/story/_/id/49783677/everton-deal-usmnt-forward-folarin-balogun-sources
+      # ↑ Sources: Balogun to Everton deal could hit $54M
+
+  - id: chelsea_make_lamine
+    title: "Sources: Chelsea fume at Monaco's Camara U-turn"
+    topic: "チェルシー"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しの言い回しからの当たり。見て直す
+    en: "Chelsea Make Lamine Camara"            # URLから作った。合っているか見る
+    url: https://www.espn.com/soccer/story/_/id/49792150/chelsea-make-lamine-camara-offer-amid-enzo-fernandez-talks-sources
+    hours_ago: 0   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49792150/chelsea-make-lamine-camara-offer-amid-enzo-fernandez-talks-sources
+      - https://www.caughtoffside.com/2026/09/01/chelsea-lamine-camara-transfer-monaco/
+      # ↑ Fabrizio Romano delivers late “here we go” for €55m Chelsea 
+
+  - id: wrexham_sign_joe
+    title: "Wrexham make 2 transfer deadline-day signings"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Wrexham Joe Worrall Close"            # URLから作った。合っているか見る
+    url: https://www.espn.com/soccer/story/_/id/49791600/wrexham-sign-joe-worrall-close-callum-ohare-deal
+    hours_ago: 0   # フィードの時刻から
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49791600/wrexham-sign-joe-worrall-close-callum-ohare-deal
+
+  - id: chelsea_xabi_alonso
+    title: "⚽ Marcotti assesses busy European weekend"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Chelsea Xabi Alonso Tottenham"            # URLから作った。合っているか見る
+    url: https://www.espn.com/soccer/story/_/id/49781063/chelsea-xabi-alonso-tottenham-premier-league-analysis-reaction-gab-marcotti
+    hours_ago: 0   # フィードの時刻から
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49781063/chelsea-xabi-alonso-tottenham-premier-league-analysis-reaction-gab-marcotti
+
+  - id: jonathan_david_atletico
+    title: "Canada star David joins Atlético on loan from Juve"
+    topic: "ユヴェントス"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: italy    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Jonathan David Atletico Madrid"            # URLから作った。合っているか見る
+    url: https://www.espn.com/soccer/story/_/id/49783215/jonathan-david-atletico-madrid-la-liga-serie-transfers
+    hours_ago: 0   # フィードの時刻から
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49783215/jonathan-david-atletico-madrid-la-liga-serie-transfers
+
+  - id: crystal_palace_swoop
+    title: "Sources: Sunderland set to beat Palace to Fofana"
+    topic: "クリスタル・パレス"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しの言い回しからの当たり。見て直す
+    en: "Crystal Palace Swoop Malick"            # URLから作った。合っているか見る
+    url: https://www.espn.com/soccer/story/_/id/49792242/crystal-palace-swoop-malick-fofana-sunderland-talks-sources
+    hours_ago: 0   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49792242/crystal-palace-swoop-malick-fofana-sunderland-talks-sources
+      - https://www.caughtoffside.com/2026/09/01/malick-fofana-sunderland-transfer-over-palace/
+      # ↑ Malick Fofana chooses next club after bizarre medical “joint
+
+  - id: southampton_loans_usmnt
+    title: "Sources: Saints loan USMNT's Downs to St. Louis"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しの言い回しからの当たり。見て直す
+    en: "Southampton Loans Usmnt Downs"            # URLから作った。合っているか見る
+    url: https://www.espn.com/soccer/story/_/id/49785118/southampton-loans-usmnt-downs-st-louis
+    hours_ago: 0   # フィードの時刻から
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49785118/southampton-loans-usmnt-downs-st-louis
+
+  - id: summer_transfer_window
+    title: "Men's transfer grades: Man City get a B- for Ndiaye"
+    topic: "マンチェスター・シティ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Summer Window Grading Big"            # URLから作った。合っているか見る
+    url: https://www.espn.com/soccer/story/_/id/48990955/summer-transfer-window-grading-big-signings-mens-soccer
+    hours_ago: 0   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.espn.com/soccer/story/_/id/48990955/summer-transfer-window-grading-big-signings-mens-soccer
+      - https://www.espn.com/soccer/story/_/id/48991002/summer-transfer-window-grading-big-signings-womens-soccer
+      # ↑ Women's transfer grades: Man City get a B for Wamser
+
+  - id: messi_argentina_retirement
+    title: "Messi's emotional Argentina farewell shows he hasn't forgotten criticism of the past"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Messi Argentina Retirement Cup"            # URLから作った。合っているか見る
+    url: https://www.espn.com/soccer/story/_/id/49784884/messi-argentina-retirement-world-cup-copa-america-gab-marcotti
+    hours_ago: 6.4   # フィードの時刻から
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49784884/messi-argentina-retirement-world-cup-copa-america-gab-marcotti
+
+  - id: nwsl_power_rankings
+    title: "NWSL Power Rankings: Wave eyeing Gotham FC after superb fightback"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 未確認           # 見出しの言い回しからの当たり。見て直す
+    en: "Nwsl Power Rankings Wave"            # URLから作った。合っているか見る
+    url: https://www.espn.com/soccer/story/_/id/49779666/nwsl-power-rankings-wave-eyeing-gotham-fc-superb-fightback
+    hours_ago: 9.9   # フィードの時刻から
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49779666/nwsl-power-rankings-wave-eyeing-gotham-fc-superb-fightback
+
+  - id: fuer_ueber_millionen
+    title: "Für über 20 Millionen Euro: Chema wechselt zu Brighton"
+    topic: "ブライトン"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Fuer Ueber Millionen Euro"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/fuer-ueber-20-millionen-euro-chema-wechselt-zu-brighton-1248831/artikel#omrss
+    hours_ago: 0.3   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/fuer-ueber-20-millionen-euro-chema-wechselt-zu-brighton-1248831/artikel#omrss
+
+  - id: englischer_transferrekord_ei
+    title: "Englischer Transferrekord eingestellt: Fernandez wechselt von Chelsea zu ManCity"
+    topic: "チェルシー"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Englischer Transferrekord Eingestellt Fernandez"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/englischer-transferrekord-eingestellt-fernandez-wechselt-von-chelsea-zu-mancity-1248765/artikel#omrss
+    hours_ago: 0.5   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/englischer-transferrekord-eingestellt-fernandez-wechselt-von-chelsea-zu-mancity-1248765/artikel#omrss
+
+  - id: transferticker
+    title: "Mudryk nach Doping-Sperre bei den Spurs - Camara-Transfer zu Chelsea geplatzt"
+    topic: "トッテナム"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://www.kicker.de/transferticker-953155/artikel#omrss
+    hours_ago: 0.5   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/transferticker-953155/artikel#omrss
+
+  - id: die_teuersten_transfers
+    title: "Die teuersten Transfers der Welt: Wo reihen sich Diomande und Fernandez ein?"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 未確認           # 見出しの言い回しからの当たり。見て直す
+    en: "Die Teuersten Transfers Der"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/die-teuersten-transfers-der-welt-wo-reihen-sich-diomande-und-fernandez-ein-867614/slideshow#omrss
+    hours_ago: 0.5   # フィードの時刻から
+    # 同じ話を 3媒体が報じている
+    sources:
+      - https://www.kicker.de/die-teuersten-transfers-der-welt-wo-reihen-sich-diomande-und-fernandez-ein-867614/slideshow#omrss
+      - https://www.kicker.de/ueberblick-die-transfers-am-deadline-day-935443/artikel#omrss
+      - https://www.kicker.de/von-wirtz-bis-kane-die-fuenf-teuersten-transfers-der-bundesliga-1248884/video#omrss
+      # ↑ Überblick: Die Transfers am Deadline Day
+      # ↑ Von Wirtz bis Kane: Die fünf teuersten Transfers der Bundesl
+
+  - id: ryerson_haette_mir
+    title: "Ryerson: 'Hätte mir mehr Tore gewünscht'"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Ryerson Haette Mir Mehr"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/ryerson-haette-mir-mehr-tore-gewuenscht-1248895/video#omrss
+    hours_ago: 0.6   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/ryerson-haette-mir-mehr-tore-gewuenscht-1248895/video#omrss
+
+  - id: wie_geht_es
+    title: "Wie geht es nach dem Deadline Day weiter? Alle Infos zum Sommer-Transferfenster"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Wie Geht Nach Dem"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/wie-geht-es-nach-dem-deadline-day-weiter-alle-infos-zum-sommer-transferfenster-964067/artikel#omrss
+    hours_ago: 0.8   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/wie-geht-es-nach-dem-deadline-day-weiter-alle-infos-zum-sommer-transferfenster-964067/artikel#omrss
+
+  - id: ich_war_balljunge
+    title: "'Ich war Balljunge hier': Meyers besondere Rückkehr"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Ich War Balljunge Hier"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/ich-war-balljunge-hier-meyers-besondere-rueckkehr-1248894/video#omrss
+    hours_ago: 0.9   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/ich-war-balljunge-hier-meyers-besondere-rueckkehr-1248894/video#omrss
+
+  - id: zwei_spieler_des
+    title: "Zwei Spieler des Spiels und ein Erinnerungsfoto: 'Das bleibt den Jungs fürs Leben'"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Zwei Spieler Des Spiels"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/zwei-spieler-des-spiels-und-ein-erinnerungsfoto-das-bleibt-den-jungs-fuers-leben-1248886/artikel#omrss
+    hours_ago: 0.9   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/zwei-spieler-des-spiels-und-ein-erinnerungsfoto-das-bleibt-den-jungs-fuers-leben-1248886/artikel#omrss
+
+  - id: rueckholaktion_geglueckt_eve
+    title: "Rückholaktion geglückt: Everton holt 'Ladenhüter' Grealish von ManCity"
+    topic: "エヴァートン"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Rueckholaktion Geglueckt Everton Holt"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/rueckholaktion-geglueckt-everton-holt-ladenhueter-grealish-von-mancity-1248829/artikel#omrss
+    hours_ago: 1.5   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/rueckholaktion-geglueckt-everton-holt-ladenhueter-grealish-von-mancity-1248829/artikel#omrss
+
+  - id: mit_dem_linienbus
+    title: "Mit dem Linienbus zum Arbeitsplatz: So verlief der emotionale Abend für den HEBC"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Mit Dem Linienbus Zum"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/mit-dem-linienbus-zum-arbeitsplatz-so-verlief-der-emotionale-abend-fuer-den-hebc-1248888/video#omrss
+    hours_ago: 1.7   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/mit-dem-linienbus-zum-arbeitsplatz-so-verlief-der-emotionale-abend-fuer-den-hebc-1248888/video#omrss
+
+  - id: nach_drei_jahren
+    title: "Nach drei Jahren in Frankfurt: Larsson zieht es auf die Insel"
+    topic: "フランクフルト"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: germany    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Nach Drei Jahren Frankfurt"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/nach-drei-jahren-in-frankfurt-larsson-zieht-es-auf-die-insel-1248666/artikel#omrss
+    hours_ago: 1.9   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/nach-drei-jahren-in-frankfurt-larsson-zieht-es-auf-die-insel-1248666/artikel#omrss
+
+  - id: termine_teams_toepfe
+    title: "Termine, Teams, Töpfe: Alles zur Auslosung der 2. DFB-Pokal-Runde"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Termine Teams Toepfe Alles"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/termine-teams-toepfe-alles-zur-auslosung-der-2-dfb-pokal-runde-1245665/artikel#omrss
+    hours_ago: 2.2   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/termine-teams-toepfe-alles-zur-auslosung-der-2-dfb-pokal-runde-1245665/artikel#omrss
+
+  - id: spritzigkeit_zuspiele_flanke
+    title: "Spritzigkeit, Zuspiele, Flanken: Wie Gladbach den Kleindienst-Faktor herauskitzeln kann"
+    topic: "ボルシアMG"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: germany    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Spritzigkeit Zuspiele Flanken Wie"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/spritzigkeit-zuspiele-flanken-wie-gladbach-den-kleindienst-faktor-herauskitzeln-kann-1248736/artikel#omrss
+    hours_ago: 2.4   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/spritzigkeit-zuspiele-flanken-wie-gladbach-den-kleindienst-faktor-herauskitzeln-kann-1248736/artikel#omrss
+
+  - id: wuerzburger_kickers_verpflic
+    title: "Würzburger Kickers verpflichten Kastanaras und drei weitere Spieler"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Wuerzburger Kickers Verpflichten Kastanaras"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/wuerzburger-kickers-verpflichten-kastanaras-und-drei-weitere-spieler-1248799/artikel#omrss
+    hours_ago: 2.5   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/wuerzburger-kickers-verpflichten-kastanaras-und-drei-weitere-spieler-1248799/artikel#omrss
+
+  - id: eintracht_wechselspiele_in
+    title: "Eintracht-Wechselspiele in der Abwehr: Koutsidis kommt, Breunig geht"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Eintracht Wechselspiele Der Abwehr"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/eintracht-wechselspiele-in-der-abwehr-koutsidis-kommt-breunig-geht-1248868/artikel#omrss
+    hours_ago: 3   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/eintracht-wechselspiele-in-der-abwehr-koutsidis-kommt-breunig-geht-1248868/artikel#omrss
+
+  - id: die_grosse_deadline
+    title: "Die große Deadline-Day-Show: Woltemades wegweisender Wechsel und HSV-Hype"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Die Grosse Deadline Day"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/die-grosse-deadline-day-show-woltemades-wegweisender-wechsel-und-hsv-hype-1248870/video#omrss
+    hours_ago: 3.3   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/die-grosse-deadline-day-show-woltemades-wegweisender-wechsel-und-hsv-hype-1248870/video#omrss
+
+  - id: spielbericht
+    title: "Gegen harmlose Schalker: BVB-Nachwuchs gewinnt das kleine Revierderby"
+    topic: "ドルトムント"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: germany    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Spielbericht Dortmund Gegen Schalke"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/dortmund-ii-gegen-schalke-ii-2026-regionalliga-west-5238493/spielbericht#omrss
+    hours_ago: 3.4   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/dortmund-ii-gegen-schalke-ii-2026-regionalliga-west-5238493/spielbericht#omrss
+
+  - id: auf_den_letzten
+    title: "Auf den letzten Metern: Köln leiht Ex-Stuttgarter Sosa von Crystal Palace aus"
+    topic: "クリスタル・パレス"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Auf Den Letzten Metern"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/auf-den-letzten-metern-koeln-leiht-ex-stuttgarter-sosa-von-crystal-palace-aus-1248838/artikel#omrss
+    hours_ago: 3.5   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/auf-den-letzten-metern-koeln-leiht-ex-stuttgarter-sosa-von-crystal-palace-aus-1248838/artikel#omrss
+
+  - id: official_milan_loan
+    title: "Official: Milan loan Fofana to Sevilla without purchase option"
+    topic: "ミラン"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: "Milan Loan Fofana Sevilla"            # URLから作った。合っているか見る
+    url: https://football-italia.net/official-milan-loan-fofana-sevilla-no-option/
+    hours_ago: 0.8   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://football-italia.net/official-milan-loan-fofana-sevilla-no-option/
+      - https://football-italia.net/milan-fury-fofana-failure-lyon-e12m-besiktas/
+      # ↑ Milan fury at Fofana failure of Lyon €12m deal, hope for Bes
+
+  - id: official_robinio_vaz
+    title: "Official: Robinio Vaz from Roma to Hull City with option to buy for total €32m"
+    topic: "ローマ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: "Robinio Vaz Roma Hull"            # URLから作った。合っているか見る
+    url: https://football-italia.net/official-robinio-vaz-from-roma-to-hull-city/
+    hours_ago: 1   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://football-italia.net/official-robinio-vaz-from-roma-to-hull-city/
+      - https://football-italia.net/official-el-aynaoui-joins-rb-leipzig-roma/
+      # ↑ Official: El Aynaoui joins RB Leipzig on loan with option to
+
+  - id: report_sottil_dropped
+    title: "Report Sottil dropped by Watford, while El Shaarawy close to Genoa"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しの言い回しからの当たり。見て直す
+    en: "Sottil Dropped Watford Elshaarawy"            # URLから作った。合っているか見る
+    url: https://football-italia.net/report-sottil-dropped-watford-elshaarawy-genoa/
+    hours_ago: 1.3   # フィードの時刻から
+    sources:
+      - https://football-italia.net/report-sottil-dropped-watford-elshaarawy-genoa/
+
+  - id: lazio_dia_ratkov
+    title: "Lazio details as Dia and Ratkov conditions to become obligation revealed"
+    topic: "ラツィオ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: italy    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Lazio Dia Ratkov Conditions"            # URLから作った。合っているか見る
+    url: https://football-italia.net/lazio-dia-ratkov-conditions-become-obligation/
+    hours_ago: 1.5   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://football-italia.net/lazio-dia-ratkov-conditions-become-obligation/
+      - https://football-italia.net/official-dia-joins-rennes-lazio-formula-change/
+      # ↑ Official: Dia joins Rennes from Lazio, but formula changes f
+
+  - id: coppa_italia_cremonese
+    title: "Coppa Italia: Big upsets as Cremonese eliminate Parma, Monza knock Torino out"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Coppa Italia Cremonese Parma"            # URLから作った。合っているか見る
+    url: https://football-italia.net/coppa-italia-cremonese-parma-monza-torino/
+    hours_ago: 1.9   # フィードの時刻から
+    sources:
+      - https://football-italia.net/coppa-italia-cremonese-parma-monza-torino/
+
+  - id: torino_mandragora_braganca
+    title: "Torino sign Mandragora, Braganca and Patterson, but Celtic waiting for Gineitis"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Torino Mandragora Braganca Patterson"            # URLから作った。合っているか見る
+    url: https://football-italia.net/torino-mandragora-braganca-patterson-gineitis/
+    hours_ago: 2.6   # フィードの時刻から
+    sources:
+      - https://football-italia.net/torino-mandragora-braganca-patterson-gineitis/
+
+  - id: top_most_expensive
+    title: "Top 10 most expensive Serie A signings of 2026 summer transfer window"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Top Most Expensive Serie"            # URLから作った。合っているか見る
+    url: https://football-italia.net/top-10-most-expensive-serie-a-signings-2026/
+    hours_ago: 2.7   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://football-italia.net/top-10-most-expensive-serie-a-signings-2026/
+      - https://football-italia.net/every-transfer-completed-serie-a-2026-summer/
+      # ↑ Every transfer completed by Serie A clubs in 2026 summer tra
+
+  - id: tomori_welcomed_back
+    title: "Tomori welcomed back to Milan fold after failure to guarantee transfer"
+    topic: "ミラン"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: italy    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Tomori Welcomed Back Milan"            # URLから作った。合っているか見る
+    url: https://football-italia.net/tomori-welcomed-back-milan-failure-transfer/
+    hours_ago: 2.9   # フィードの時刻から
+    sources:
+      - https://football-italia.net/tomori-welcomed-back-milan-failure-transfer/
+
+  - id: official_como_sign
+    title: "Official: Como sign Robert Sanchez from Chelsea on deadline day"
+    topic: "チェルシー"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: "Como Robert Sanchez Chelsea"            # URLから作った。合っているか見る
+    url: https://football-italia.net/official-como-sign-robert-sanchez-from-chelsea/
+    hours_ago: 3   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://football-italia.net/official-como-sign-robert-sanchez-from-chelsea/
+      - https://www.caughtoffside.com/2026/09/01/lamine-camara-transfer-to-chelsea-due-to-folarin-balogun-medical/
+      # ↑ Failed medical elsewhere helped Chelsea secure signing in “o
+
+  - id: official_venezia_sign
+    title: "Official: Venezia sign Toni Fernandez, 18-year-old Barcelona talent"
+    topic: "バルセロナ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: spain    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: "Venezia Toni Fernandez Barcelona"            # URLから作った。合っているか見る
+    url: https://football-italia.net/official-venezia-sign-toni-fernandez-barcelona/
+    hours_ago: 3.8   # フィードの時刻から
+    sources:
+      - https://football-italia.net/official-venezia-sign-toni-fernandez-barcelona/
+
+  - id: official_fiorentina_pedro
+    title: "Official: Fiorentina sign Pedro Goncalves and Gnonto from Sporting and Leeds United"
+    topic: "フィオレンティーナ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: italy    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: "Fiorentina Pedro Goncalves Gnonto"            # URLから作った。合っているか見る
+    url: https://football-italia.net/official-fiorentina-pedro-goncalves-gnonto/
+    hours_ago: 4   # フィードの時刻から
+    sources:
+      - https://football-italia.net/official-fiorentina-pedro-goncalves-gnonto/
+
+  - id: official_lazio_sign
+    title: "Official: Lazio sign Gudmundsson from Fiorentina in €13m package agreement"
+    topic: "ラツィオ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: italy    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: "Lazio Gudmundsson Fiorentina"            # URLから作った。合っているか見る
+    url: https://football-italia.net/official-lazio-sign-gudmundsson-fiorentina/
+    hours_ago: 4.7   # フィードの時刻から
+    sources:
+      - https://football-italia.net/official-lazio-sign-gudmundsson-fiorentina/
+
+  - id: official_monza_buy
+    title: "Official: Monza buy Zeballos from Boca Juniors, leaving 40 per cent sale clause"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: "Monza Buy Zeballos Boca"            # URLから作った。合っているか見る
+    url: https://football-italia.net/official-monza-buy-zeballos-from-boca-juniors/
+    hours_ago: 5   # フィードの時刻から
+    sources:
+      - https://football-italia.net/official-monza-buy-zeballos-from-boca-juniors/
+
+  - id: official_cagliari_sign
+    title: "Official: Cagliari sign Sugawara from Southampton with €5.5m option to buy"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: "Cagliari Sugawara Southampton"            # URLから作った。合っているか見る
+    url: https://football-italia.net/official-cagliari-sign-sugawara-southampton/
+    hours_ago: 5.3   # フィードの時刻から
+    sources:
+      - https://football-italia.net/official-cagliari-sign-sugawara-southampton/
+
+  - id: c
+    title: "マンC、エヴァートンの”10番”を獲得！「このようなチャンスを待ち望んできた」…移籍金総額は推定140億円"
+    topic: "マンチェスター・シティ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://www.soccer-king.jp/news/world/eng/20260902/2199727.html
+    hours_ago: 1.1   # フィードの時刻から
+    # 同じ話を 4媒体が報じている
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20260902/2199727.html
+      - https://www.soccer-king.jp/news/world/ita/20260902/2199707.html
+      - https://www.footballchannel.jp/2026/09/02/post1002405/
+      - https://www.footballchannel.jp/2026/09/02/post1002339/
+      # ↑ フィオレンティーナがギニアビサウ代表FWベトをエヴァートンから完全移籍で獲得
+      # ↑ マンC、チェルシーMFエンソ獲得を正式発表　移籍金は“英国史上最高額タイ”の約269億円、2031年までの5年契約
+      # ↑ マンC、エバートンFWエンジアイの獲得を発表　移籍金は最大約140億円の大型補強、FWガクポ交渉停滞から急転
+
+  - id: mf_mf
+    title: "ドルトムントがアーセナルMFヌワネリをレンタルで獲得、重傷のギリシャ代表MFの代役に"
+    topic: "ドルトムント"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://www.soccer-king.jp/news/world/eng/20260902/2199717.html
+    hours_ago: 2.5   # フィードの時刻から
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20260902/2199717.html
+
+  - id: fw
+    title: "アトレティコがユーヴェからFWジョナサン・デイヴィッドを獲得！ 買取オプション付きのレンタル移籍で加入"
+    topic: "アトレティコ・マドリード"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: spain    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://www.soccer-king.jp/news/world/ita/20260902/2199724.html
+    hours_ago: 3   # フィードの時刻から
+    sources:
+      - https://www.soccer-king.jp/news/world/ita/20260902/2199724.html
+
+  - id: fw_2
+    title: "ユヴェントスがドイツ代表FWウォルトメイドをニューカッスルからレンタルで獲得"
+    topic: "ユヴェントス"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://www.soccer-king.jp/news/world/ita/20260902/2199710.html
+    hours_ago: 5.1   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.soccer-king.jp/news/world/ita/20260902/2199710.html
+      - https://www.soccer-king.jp/news/world/ita/20260902/2199700.html
+      # ↑ CL初出場のコモがイタリア代表FWキーンを約72億円の買取義務付きレンタルで獲得！
+
+  - id: a_op
+    title: "菅原由勢の新天地はセリエA！　カリアリへレンタル移籍…約10億円の買取OPも付帯"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://www.soccer-king.jp/news/world/ita/20260902/2199507.html
+    hours_ago: 5.4   # フィードの時刻から
+    sources:
+      - https://www.soccer-king.jp/news/world/ita/20260902/2199507.html
+
+  - id: mg_mf
+    title: "日本人4人所属のボルシアMGがコモのMFキューンをレンタルで獲得、かつてセルティックでも日本人とプレー"
+    topic: "ボルシアMG"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: germany    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://www.soccer-king.jp/news/world/ita/20260902/2199697.html
+    hours_ago: 5.9   # フィードの時刻から
+    sources:
+      - https://www.soccer-king.jp/news/world/ita/20260902/2199697.html
+
+  - id: mf
+    title: "バレンシアがリヴァプールMFエリオットをレンタルで獲得、佐藤龍之介とチームメイトに"
+    topic: "バレンシア"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://www.soccer-king.jp/news/world/eng/20260902/2199686.html
+    hours_ago: 6.8   # フィードの時刻から
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20260902/2199686.html
+
+  - id: df
+    title: "レアルDFリュディガーがドイツ代表引退を表明…通算86試合出場「若い世代に道を譲る時が来た」"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://www.soccer-king.jp/news/world/ger/20260902/2199680.html
+    hours_ago: 7.3   # フィードの時刻から
+    sources:
+      - https://www.soccer-king.jp/news/world/ger/20260902/2199680.html
+
+  - id: post1002417
+    title: "イングランド2部のバーンリー、MF旗手怜央の獲得を発表　セルティックから完全移籍、2029年までの3年契約"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.footballchannel.jp/2026/09/02/post1002417/
+    hours_ago: 0.1   # フィードの時刻から
+    sources:
+      - https://www.footballchannel.jp/2026/09/02/post1002417/
+
+  - id: post1002399
+    title: "中村敬斗、リヨンが移籍市場閉幕後に“ジョーカー枠”で獲得か　現地紙は特例制度でレンタル加入の見通しと報道"
+    topic: "リヨン"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: france    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しの言い回しからの当たり。見て直す
+    en: ""            # 英語サイトを引く語
+    url: https://www.footballchannel.jp/2026/09/02/post1002399/
+    hours_ago: 0.5   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.footballchannel.jp/2026/09/02/post1002399/
+      - https://www.footballchannel.jp/2026/09/02/post1002354/
+      # ↑ 中村敬斗、リヨン移籍へ大きく前進か　加入の条件とされたベルギー代表FWがサンダーランド移籍へ
+
+  - id: post1002390
+    title: "エバートン、マンCグリーリッシュの再獲得を発表　2シーズン連続の期限付き移籍、昨季は2得点6アシスト"
+    topic: "エヴァートン"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.footballchannel.jp/2026/09/02/post1002390/
+    hours_ago: 1   # フィードの時刻から
+    sources:
+      - https://www.footballchannel.jp/2026/09/02/post1002390/
+
+  - id: post1002093
+    title: "森田晃樹、今季リーグ戦初出場も再び負傷交代。東京ヴェルディに問われる「森田不在」の戦い方とは？"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 未確認           # 見出しの言い回しからの当たり。見て直す
+    en: ""            # 英語サイトを引く語
+    url: https://www.footballchannel.jp/2026/09/02/post1002093/
+    hours_ago: 1.5   # フィードの時刻から
+    sources:
+      - https://www.footballchannel.jp/2026/09/02/post1002093/
+
+  - id: post1002375
+    title: "トッテナム、チェルシーFWムドリクの獲得を発表　約161億円の買い取りOP付き、デ・ゼルビ監督と再会へ"
+    topic: "トッテナム"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.footballchannel.jp/2026/09/02/post1002375/
+    hours_ago: 1.5   # フィードの時刻から
+    sources:
+      - https://www.footballchannel.jp/2026/09/02/post1002375/
+
+  - id: post1002366
+    title: "コモ、フィオレンティーナからイタリア代表FWキーンの獲得を発表　最大約74億円の買い取り義務付きレンタル"
+    topic: "フィオレンティーナ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: italy    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.footballchannel.jp/2026/09/02/post1002366/
+    hours_ago: 1.9   # フィードの時刻から
+    sources:
+      - https://www.footballchannel.jp/2026/09/02/post1002366/
+
+  - id: post1000404
+    title: "まさかのコンバートで覚醒！ ポジション変更が大成功した選手5選"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://www.footballchannel.jp/2026/09/02/post1000404/
+    hours_ago: 2   # フィードの時刻から
+    sources:
+      - https://www.footballchannel.jp/2026/09/02/post1000404/
+
+  - id: c76
+    title: "上田綺世はフェイエノールトで「受け入れられなかった」リール移籍直後に斬る！"
+    topic: "フェイエノールト"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://football-tribe.com/japan/2026/09/02/358821/
+    hours_ago: 0.4   # フィードの時刻から
+    sources:
+      - https://football-tribe.com/japan/2026/09/02/358821/
+
+  - id: c77
+    title: "高井幸大についてトッテナム専門メディア「当たりくじというよりはハズレくじの…」"
+    topic: "トッテナム"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://football-tribe.com/japan/2026/09/01/358819/
+    hours_ago: 17.1   # フィードの時刻から
+    sources:
+      - https://football-tribe.com/japan/2026/09/01/358819/
+
+  - id: c78
+    title: "バイエルンの伊藤洋輝「居場所はもはやなくなっている」「代理人がアヤックスに」"
+    topic: "バイエルン"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://football-tribe.com/japan/2026/09/01/358817/
+    hours_ago: 19   # フィードの時刻から
+    sources:
+      - https://football-tribe.com/japan/2026/09/01/358817/
+
+  - id: j
+    title: "海外組・Jリーグ日本人選手ベストイレブン【2026年8月26日～30日】"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://football-tribe.com/japan/2026/09/01/358772/
+    hours_ago: 19   # フィードの時刻から
+    sources:
+      - https://football-tribe.com/japan/2026/09/01/358772/
+
+  - id: c80
+    title: "橋岡大樹の診断結果が発表「医療上の検査が完全に終了したわけではなく」"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://football-tribe.com/japan/2026/09/01/358813/
+    hours_ago: 20.2   # フィードの時刻から
+    sources:
+      - https://football-tribe.com/japan/2026/09/01/358813/
+
+  - id: c_mf
+    title: "C大阪移籍消滅！？前田大然・旗手怜央・古橋亨梧の元同僚、元セルティックMFの去就で動き「代理人は…」"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://football-tribe.com/japan/2026/09/01/358811/
+    hours_ago: 22.3   # フィードの時刻から
+    sources:
+      - https://football-tribe.com/japan/2026/09/01/358811/
+
+  - id: fm
+    title: "浦和レッズ西川周作が激白！横浜FM戦前日に「サポーターが泣きながら…」"
+    topic: "浦和レッズ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: japan    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://football-tribe.com/japan/2026/09/01/358806/
+    hours_ago: 22.6   # フィードの時刻から
+    sources:
+      - https://football-tribe.com/japan/2026/09/01/358806/
+
+  - id: c83
+    title: "京都サンガに1.7億円の可能性も！？ポーランド移籍・福田心之助の契約内容判明！"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 未確認           # 見出しの言い回しからの当たり。見て直す
+    en: ""            # 英語サイトを引く語
+    url: https://football-tribe.com/japan/2026/09/01/358808/
+    hours_ago: 22.7   # フィードの時刻から
+    sources:
+      - https://football-tribe.com/japan/2026/09/01/358808/
+
+  - id: enzo_fernandez_confirms
+    title: "“l haven’t been in a good place” – Star confirms Chelsea exit with emotional statement"
+    topic: "チェルシー"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 未確認           # 見出しは『確定』寄りだが、この情報源では未確認まで
+    en: "Enzo Fernandez Confirms Chelsea"            # URLから作った。合っているか見る
+    url: https://www.caughtoffside.com/2026/09/01/enzo-fernandez-confirms-chelsea-exit-with-message-to-fans/
+    hours_ago: 1   # フィードの時刻から
+    sources:
+      - https://www.caughtoffside.com/2026/09/01/enzo-fernandez-confirms-chelsea-exit-with-message-to-fans/
+
+  - id: everton_transfer_joshua
+    title: "Bid made: PL club try to sign Man United misfit as another transfer in doubt"
+    topic: "マンチェスター・ユナイテッド"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 未確認           # 見出しは『報道』寄りだが、この情報源では未確認まで
+    en: "Everton Joshua Zirkzee"            # URLから作った。合っているか見る
+    url: https://www.caughtoffside.com/2026/09/01/everton-transfer-joshua-zirkzee/
+    hours_ago: 2.2   # フィードの時刻から
+    sources:
+      - https://www.caughtoffside.com/2026/09/01/everton-transfer-joshua-zirkzee/
+
+  - id: man_united_rayan
+    title: "Deadline Day surprise as Man United make late enquiry about signing Man City star"
+    topic: "マンチェスター・ユナイテッド"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 未確認           # 見出しは『報道』寄りだが、この情報源では未確認まで
+    en: "Man United Rayan Ait"            # URLから作った。合っているか見る
+    url: https://www.caughtoffside.com/2026/09/01/man-united-rayan-ait-nouri-transfer-man-city/
+    hours_ago: 2.8   # フィードの時刻から
+    sources:
+      - https://www.caughtoffside.com/2026/09/01/man-united-rayan-ait-nouri-transfer-man-city/
+
+  - id: chelsea_arsenal_transfer
+    title: "Chelsea enquired about signing “one of the best players for Arsenal last season”"
+    topic: "チェルシー"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 未確認           # 見出しは『報道』寄りだが、この情報源では未確認まで
+    en: "Chelsea Arsenal Martin Zubimendi"            # URLから作った。合っているか見る
+    url: https://www.caughtoffside.com/2026/09/01/chelsea-arsenal-transfer-martin-zubimendi/
+    hours_ago: 3   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.caughtoffside.com/2026/09/01/chelsea-arsenal-transfer-martin-zubimendi/
+      - https://www.caughtoffside.com/2026/09/01/alex-scott-transfer-2027/
+      # ↑ Contract rebel eyed by Arsenal, Liverpool, Chelsea & Man Utd
+
+  - id: gabriel_martinelli_transfer
+    title: "Deal still on, medical tomorrow, but Arsenal won’t finalise £60m transfer by tonight’s 11pm deadline"
+    topic: "アーセナル"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 未確認           # 見出しは『報道』寄りだが、この情報源では未確認まで
+    en: "Gabriel Martinelli Hilal Wont"            # URLから作った。合っているか見る
+    url: https://www.caughtoffside.com/2026/09/01/gabriel-martinelli-transfer-to-al-hilal-wont-be-done-by-deadline/
+    hours_ago: 3.5   # フィードの時刻から
+    sources:
+      - https://www.caughtoffside.com/2026/09/01/gabriel-martinelli-transfer-to-al-hilal-wont-be-done-by-deadline/
+

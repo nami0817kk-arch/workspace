@@ -101,3 +101,15 @@ def test_期限を書いていなければ黙る():
     raw = dict(RAW)
     raw["clocks"] = {}
     assert not timing.summer_over(build_plan(raw), date(2030, 1, 1))
+
+
+# 「次に開くのは Jリーグ（あと0時間）」と出ていた。0時間では、いま動くべきか
+# 読めない。1時間を切ったら分で言い、10分を切ったら「まもなく」と言う。
+
+
+def test_残り時間は1時間を切ったら分で言う():
+    from src.timing import _left
+
+    assert _left(0.5) == "あと30分"
+    assert _left(0.05) == "まもなく"
+    assert _left(2.0) == "あと2時間"
