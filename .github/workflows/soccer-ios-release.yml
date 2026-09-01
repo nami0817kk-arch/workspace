@@ -31,6 +31,9 @@ jobs:
     # Apple のツールチェーンは macOS でしか動かないため、ここだけ macOS ランナー。
     # 非公開リポジトリのため macOS ランナーは無料枠の対象外（分単位で消費する）。
     runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: projects/soccer-manager
     # ハングしたジョブが既定の6時間走り続けるのを防ぐ
     timeout-minutes: 60
     defaults:

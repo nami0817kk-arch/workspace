@@ -1,0 +1,19 @@
+name: kabu tests
+
+on:
+  push:
+    branches: ["**"]
+    paths: ["projects/kabu-agari-ranking/**", "libs/kabutan/**", ".github/workflows/kabu-tests.yml", ".github/workflows/python-tests.yml"]
+  pull_request:
+    paths: ["projects/kabu-agari-ranking/**", "libs/kabutan/**", ".github/workflows/kabu-tests.yml", ".github/workflows/python-tests.yml"]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    uses: ./.github/workflows/python-tests.yml
+    with:
+      workdir: "projects/kabu-agari-ranking"
+      install: "pip install -e ../../libs/kabutan -r requirements.txt pytest"

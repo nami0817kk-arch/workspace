@@ -13,7 +13,13 @@ on:
     branches:
       - master
       - main
+    paths:
+      - "projects/soccer-manager/**"
+      - ".github/workflows/soccer-ci.yml"
   pull_request:
+    paths:
+      - "projects/soccer-manager/**"
+      - ".github/workflows/soccer-ci.yml"
   workflow_dispatch: {}
 
 permissions:
@@ -22,6 +28,9 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/soccer-manager
     # ハングしたジョブが既定の6時間走り続けるのを防ぐ
     timeout-minutes: 30
     steps:

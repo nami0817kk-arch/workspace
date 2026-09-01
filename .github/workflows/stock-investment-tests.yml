@@ -1,16 +1,16 @@
-name: PJT001 stock-investment tests
+name: stock-investment tests
 
-# projects/PJT001-stock-investment を触ったときだけ走らせる。
+# projects/stock-investment を触ったときだけ走らせる。
 # モノレポなので、無関係な変更でCIが回らないようにパスで絞っている。
 on:
   push:
     paths:
-      - "projects/PJT001-stock-investment/**"
-      - ".github/workflows/pjt001-tests.yml"
+      - "projects/stock-investment/**"
+      - ".github/workflows/stock-investment-tests.yml"
   pull_request:
     paths:
-      - "projects/PJT001-stock-investment/**"
-      - ".github/workflows/pjt001-tests.yml"
+      - "projects/stock-investment/**"
+      - ".github/workflows/stock-investment-tests.yml"
   workflow_dispatch: {}
 
 # 読むだけのジョブなので、トークンの権限は最小にする。
@@ -24,7 +24,7 @@ jobs:
     timeout-minutes: 10
     defaults:
       run:
-        working-directory: projects/PJT001-stock-investment
+        working-directory: projects/stock-investment
     steps:
       - uses: actions/checkout@v7
 

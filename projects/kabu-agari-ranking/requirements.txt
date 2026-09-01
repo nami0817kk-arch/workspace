@@ -11,4 +11,5 @@ requests-oauthlib==2.0.0
 # kabutan の取得・解析は 共有パッケージ kabutan-client に一本化してある
 # （quality-gainer-tracker と共通。HTML 構造の変化はここを更新して直す）。
 # コミット固定なのは、ai-lab 側の変更で毎朝のジョブが勝手に壊れないようにするため。
-kabutan-client @ git+https://github.com/nami0817kk-arch/kabutan-client.git@44c7e1dd357c5380050c1343ffe932268b80ec62
+# モノレポ内参照: pip install -e ../../libs/kabutan
+-e ../../libs/kabutan

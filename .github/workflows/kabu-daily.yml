@@ -7,9 +7,10 @@ on:
   push:
     branches: [master]
     paths:
-      - "data/**"
-      - "src/**"
-      - ".github/workflows/daily-gainers-site.yml"
+      - "projects/kabu-agari-ranking/data/**"
+      - "projects/kabu-agari-ranking/src/**"
+      - "libs/kabutan/**"
+      - ".github/workflows/kabu-daily.yml"
   schedule:
     # 17:00 JST = 08:00 UTC、平日のみ。手元PCの取得が止まっていないかの監視役。
     - cron: "0 8 * * 1-5"
@@ -23,6 +24,9 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/kabu-agari-ranking
     # 取得先が応答しないまま既定の6時間走り続けるのを防ぐ。
     # 通常は数分で終わる。超えたら失敗として通知が飛ぶ。
     timeout-minutes: 30
@@ -36,7 +40,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install -r requirements.txt pytest
+        run: pip install -e ../../libs/kabutan -r requirements.txt pytest
 
       # 壊れたパーサのまま取得・デプロイまで進むと、空のランキングで
       # サイトを上書きしてしまう。その前に落とす。
@@ -76,7 +80,7 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: kabu-agari-ranking
-          directory: output
+          directory: projects/kabu-agari-ranking/output
 
       # GitHub は定期ジョブの失敗を通知しないので、Issue を立てて明示的に鳴らす。
       # 既に開いている失敗 Issue があれば、増やさずコメントを足す。

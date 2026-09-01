@@ -1,0 +1,19 @@
+name: ai-side-business tests
+
+on:
+  push:
+    branches: ["**"]
+    paths: ["projects/ai-side-business/**", ".github/workflows/ai-side-business-tests.yml"]
+  pull_request:
+    paths: ["projects/ai-side-business/**", ".github/workflows/ai-side-business-tests.yml"]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    uses: ./.github/workflows/python-tests.yml
+    with:
+      workdir: "projects/ai-side-business"
+      install: "pip install -r requirements.txt pytest"

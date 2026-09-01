@@ -1,0 +1,19 @@
+name: quality-gainer-tracker tests
+
+on:
+  push:
+    branches: ["**"]
+    paths: ["projects/quality-gainer-tracker/**", "libs/kabutan/**", ".github/workflows/quality-gainer-tracker-tests.yml"]
+  pull_request:
+    paths: ["projects/quality-gainer-tracker/**", "libs/kabutan/**", ".github/workflows/quality-gainer-tracker-tests.yml"]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    uses: ./.github/workflows/python-tests.yml
+    with:
+      workdir: "projects/quality-gainer-tracker"
+      install: "pip install -e ../../libs/kabutan -r requirements.txt pytest"

@@ -1,0 +1,19 @@
+name: kabutan-lib tests
+
+on:
+  push:
+    branches: ["**"]
+    paths: ["libs/kabutan/**", ".github/workflows/kabutan-lib-tests.yml"]
+  pull_request:
+    paths: ["libs/kabutan/**", ".github/workflows/kabutan-lib-tests.yml"]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    uses: ./.github/workflows/python-tests.yml
+    with:
+      workdir: "libs/kabutan"
+      install: "pip install -e .[dev]"

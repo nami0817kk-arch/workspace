@@ -3,7 +3,13 @@ name: tests
 on:
   push:
     branches: ["**"]
+    paths:
+      - "platform/ai-lab/**"
+      - ".github/workflows/ailab-tests.yml"
   pull_request:
+    paths:
+      - "platform/ai-lab/**"
+      - ".github/workflows/ailab-tests.yml"
   workflow_dispatch: {}
 
 # 読むだけのジョブなので、トークンの権限は最小にしておく。
@@ -17,6 +23,9 @@ jobs:
       matrix:
         python-version: ["3.11", "3.12"]
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: platform/ai-lab
     # ハングしたジョブが既定の6時間走り続けるのを防ぐ
     timeout-minutes: 20
 

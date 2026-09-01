@@ -12,4 +12,5 @@ lxml==6.1.2
 
 # kabutan の取得・解析は 共有パッケージ kabutan-client に一本化してある
 # （kabu-agari-ranking と共通。HTML 構造の変化はここを更新して直す）。
-kabutan-client @ git+https://github.com/nami0817kk-arch/kabutan-client.git@44c7e1dd357c5380050c1343ffe932268b80ec62
+# モノレポ内参照: pip install -e ../../libs/kabutan
+-e ../../libs/kabutan

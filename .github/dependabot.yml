@@ -1,0 +1,22 @@
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule: { interval: weekly, day: monday }
+    open-pull-requests-limit: 3
+  - package-ecosystem: pip
+    directories:
+      - "/projects/kabu-agari-ranking"
+      - "/projects/quality-gainer-tracker"
+      - "/projects/ir-analysis"
+      - "/projects/ai-side-business"
+      - "/projects/stock-investment"
+      - "/projects/youtube-video-creation"
+      - "/libs/kabutan"
+      - "/platform/ai-lab"
+    schedule: { interval: weekly, day: monday }
+    open-pull-requests-limit: 6
+  - package-ecosystem: pub
+    directory: "/projects/soccer-manager"
+    schedule: { interval: weekly, day: monday }
+    open-pull-requests-limit: 3

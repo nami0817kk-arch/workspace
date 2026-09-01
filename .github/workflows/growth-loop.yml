@@ -26,6 +26,9 @@ jobs:
     runs-on: ubuntu-latest
     # 全リポジトリのクローンを含むが、それでも15分あれば足りる
     timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: platform/ai-lab
     env:
       # src レイアウトなので、インストールせずに python -m growth を動かすため
       PYTHONPATH: src
@@ -60,7 +63,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add GROWTH.md docs/growth growth/ledger.json
+          git add GROWTH.md docs/growth growth/ledger.json growth/projects.toml
           if git diff --cached --quiet; then
             echo "変化なし。コミットしない。"
           else

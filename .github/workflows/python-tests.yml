@@ -3,7 +3,7 @@
 # ほぼ同一の tests.yml が各リポジトリに複製されていたのを一本化した。
 # actions のバージョン更新（checkout / setup-python のバンプ）はこのファイル
 # 1箇所で済み、Dependabot の PR が全リポジトリに1本ずつ届く状態を解消する。
-# ここ（claude-code-dev）に置くのは、参照元は public リポジトリである必要があるため。
+# 同一リポジトリ内からの参照なので、リポジトリが private でも使える。
 #
 # トレードオフ: 参照は @master なので、ここを壊すと利用側のテスト CI が
 # 一斉に赤くなる。影響はテスト CI のみで、各リポジトリの公開・デプロイ系
@@ -21,6 +21,10 @@ on:
       python-version:
         type: string
         default: "3.12"
+      workdir:
+        description: "テストを実行するディレクトリ（モノレポ内のPJTパス）"
+        type: string
+        default: "." 
 
 permissions:
   contents: read
@@ -28,6 +32,9 @@ permissions:
 jobs:
   pytest:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ inputs.workdir }}
     # ハングしたジョブが既定の6時間走り続けるのを防ぐ
     timeout-minutes: 15
     steps:

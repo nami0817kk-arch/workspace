@@ -9,6 +9,9 @@ name: サイトを公開する
 on:
   push:
     branches: [master]
+    paths:
+      - "projects/tool-factory/**"
+      - ".github/workflows/tool-factory-pages.yml"
   workflow_dispatch: {}
 
 permissions:
@@ -17,6 +20,9 @@ permissions:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/tool-factory
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v7
@@ -43,4 +49,4 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: seisan-kanri-tools
-          directory: dist
+          directory: projects/tool-factory/dist
