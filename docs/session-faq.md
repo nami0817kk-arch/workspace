@@ -41,6 +41,31 @@ Flutter ビルドは `--base-href "/"` に変更が必要）。担当セッシ�
 **Q. kabu-daily / tool-factory-pages がデプロイ段で failure**
 A. 既知。Cloudflare の Secrets（CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID）の
 ユーザー登録待ち。デプロイ以外のステップが緑なら正常。
+`gh secret list` が空かどうかで、まだ未登録かを判定できる。
+
+**Q. Cloudflare の API トークンは1本を使い回せるか**
+A. **使い回せない。** 画像生成（imagegen の Workers AI コネクタ）用に発行したトークンでは
+Pages デプロイができない。実測値:
+
+| 叩いた先 | Workers AI 権限のトークン |
+|---|---|
+| `GET /client/v4/user/tokens/verify` | HTTP 200 `success: true` |
+| `GET /client/v4/accounts/<id>/pages/projects` | **HTTP 403 Authentication error** |
+
+`verify` が通るのでトークン自体は有効に見えるが、Pages API は権限不足で弾かれる。
+**「トークンは有効」を Pages が使える根拠にしないこと。** 切り分けるなら
+`pages/projects` を直接叩く。
+
+用途ごとに別トークンを発行する。
+
+| 用途 | 必要な権限（ダッシュボード → カスタムトークンを作成する） |
+|---|---|
+| 画像生成（imagegen） | アカウント / **Workers AI** / 読み取り |
+| Pages デプロイ（CI の Secrets） | アカウント / **Cloudflare Pages** / 編集 |
+
+`CLOUDFLARE_ACCOUNT_ID` は秘密情報ではない公開識別子なので両方で共用してよい。
+**トークンの値を Claude セッションが `gh secret set` に投入するのは禁止**（認証情報の
+取り扱いとして、調整役を含むどのセッションでも行わない）。登録はユーザーが実施する。
 
 **Q. kabu の取得を CI に戻したい / 取得が動いていない**
 A. kabutan は GitHub Actions の IP を 405 でブロックする。**CI からの取得に戻さない**。
