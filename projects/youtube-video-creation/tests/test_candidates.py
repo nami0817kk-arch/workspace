@@ -502,3 +502,53 @@ def test_同じ媒体の配信面の違いは1社と数える():
         "https://amp.theguardian.com/c",
         "https://www.theguardian.com/d",
     ]) == 2
+
+
+# 実測（参考チャンネルの再生数）で、日本人選手が絡む話は絡まない話の約2倍。
+# 朝2本・夜2本とは別カウントで、毎日1本を日本人枠に充てる。
+
+JAPAN_SCORING = {
+    "weights": {"freshness": 3},
+    "freshness_hours": {6: 3},
+    "japanese": ["鈴木彩艶", "佐藤龍之介", "Japan"],
+    "slots": {
+        "morning_1": {"prefer": "total"},
+        "japan": {"prefer": "total", "require_japanese": True},
+    },
+}
+
+
+def _c(cid, title, hours=1.0):
+    from src.candidates import Candidate
+
+    return Candidate(id=cid, title=title, hours_ago=hours, topic=cid)
+
+
+def test_名前で日本人選手の話を見分ける():
+    from src.candidates import is_japanese
+
+    words = JAPAN_SCORING["japanese"]
+    assert is_japanese(_c("a", "鈴木彩艶がプレミアデビュー"), words)
+    assert not is_japanese(_c("b", "Chelsea sign Kone from Roma"), words)
+
+
+def test_日本人枠には日本人が絡む候補だけが入る():
+    from src.candidates import assign, score
+
+    items = score([
+        _c("kone", "Chelsea sign Kone from Roma", 0.5),
+        _c("sato", "佐藤龍之介がバレンシアで新シーズンへ", 2.0),
+    ], JAPAN_SCORING)
+    chosen, _ = assign(items, JAPAN_SCORING, ["morning_1", "japan"])
+    assert chosen["japan"].id == "sato"
+    assert chosen["morning_1"].id == "kone"
+
+
+def test_日本人の候補が無ければ枠を空ける():
+    """別の話で埋めると、枠の意味がなくなる。空けて理由を出す。"""
+    from src.candidates import assign, score
+
+    items = score([_c("kone", "Chelsea sign Kone from Roma")], JAPAN_SCORING)
+    chosen, fallbacks = assign(items, JAPAN_SCORING, ["japan"])
+    assert "japan" not in chosen
+    assert any("日本人選手が絡む候補がありません" in n for n in fallbacks["japan"])

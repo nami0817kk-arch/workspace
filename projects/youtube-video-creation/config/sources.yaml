@@ -6,8 +6,11 @@
 #   python -m src.cli draft research/xxx.yaml    取材メモ→台本（確度と重複を検証）
 
 cadence:
-  per_day: 3
-  slots: [morning, noon, evening]   # 1日の並び
+  # 朝2本・夜2本。加えて日本人選手の枠を別カウントで1本（合計5本）
+  per_day: 5
+  slots: [morning_1, morning_2, evening_1, evening_2, japan]
+  # morning_1 と morning_2 は同じ morning の取材計画を使う（plan.routine が
+  # 末尾の _1 / _2 を落として引く）。枠ごとに計画を書き写すと片方だけ古くなる
 
 # 使ってよい情報源。ここに無いサイトは検索対象にしない（docs/news-sources.md の実測結果）
 # 情報源の網。すべて実測で確認したもの。
@@ -273,6 +276,31 @@ scoring:
     2: 1
     3: 2
     5: 3
+  # 日本人選手の枠に入れてよいかの判定。見出し・en・メモを見る。
+  # クラブ名の辞書と同じで、名前で拾えるものは手で立てなくても効くようにする。
+  # 出てくる選手は入れ替わるので、ここを足していく前提
+  japanese:
+    - 日本代表
+    - Japan
+    - 鈴木彩艶
+    - 上田綺世
+    - 中村敬斗
+    - 堂安律
+    - 三笘
+    - 久保建英
+    - 鎌田大地
+    - 遠藤航
+    - 冨安
+    - 菅原由勢
+    - 前田大然
+    - 鈴木唯人
+    - 伊東純也
+    - 板倉滉
+    - 守田英正
+    - 田中碧
+    - 佐野海舟
+    - 高井幸大
+    - 佐藤龍之介
   big_clubs:
     - レアル・マドリード
     - バルセロナ
@@ -294,9 +322,14 @@ scoring:
   # 種別（transfer / match / other）も散らす。3本とも試合結果にしない
   spread_kinds: true
   slots:
-    morning: {prefer: freshness, require_tier: [確定, 報道]}
-    noon: {prefer: reaction}
-    evening: {prefer: total}
+    # 朝は速さ。確度の低いものを朝いちに出さない
+    morning_1: {prefer: freshness, require_tier: [確定, 報道]}
+    morning_2: {prefer: freshness, require_tier: [確定, 報道]}
+    # 夜は1日の総まとめ。点数の高いものから
+    evening_1: {prefer: total}
+    evening_2: {prefer: total}
+    # 日本人選手の枠。他の4本とは別カウントで、必ず1本出す
+    japan: {prefer: total, require_japanese: true}
 
 # テーマが決まったあとの深掘り検索。{theme} に選んだテーマが入る
 # {theme} には候補の見出し、{en} には候補の en（英語の語）が入る。
@@ -460,6 +493,39 @@ routines:
           - {q: "Jリーグ 移籍 OR 監督 OR 首位", domains: japanese}
           - {q: "Jリーグ 移籍 のお知らせ", domains: official_jp}
         check: 2社以上で内容が一致しているか
+
+  # ---------------------------------------------------------------- 日本人枠
+  # 実測（参考チャンネルの再生数）で、日本人選手が絡む話は絡まない話の約2倍。
+  # 朝2本・夜2本とは別カウントで、毎日1本ここに充てる。
+  japan:
+    name: 日本人選手
+    when: 22:00 公開（21:00 収録）
+    cover_hours: 24
+    target_minutes: 2
+    angle: |
+      日本人選手が絡む話を1件選んで掘る。移籍でも試合でもよい。
+      他の4本と同じ話題は使わない。
+      「日本人だから」で持ち上げない。何が起きたかをそのまま伝える。
+    structure:
+      - {id: what, heading: 何が起きたか, tier: 報道}
+      - {id: numbers, heading: 数字で見ると, tier: 確定}
+      - {id: next, heading: これからどうなる, tier: 報道}
+    steps:
+      - id: japanese_move
+        what: 日本人選手の移籍・契約（この中から1件を選ぶ）
+        tier: 報道
+        queries:
+          - {q: "日本人選手 移籍 OR 契約 {date_ja}", domains: japanese}
+          - {q: "Japan international transfer {today_en}", domains: english}
+        check: 2社以上で内容が一致しているか。公式発表まで辿れたら確定にする
+
+      - id: japanese_match
+        what: 日本人選手の出場・活躍（試合があった日）
+        tier: 報道
+        queries:
+          - {q: "日本人選手 先発 OR 得点 OR アシスト {date_ja}", domains: japanese}
+          - {q: "Japan international goal OR assist OR debut {today_en}", domains: english}
+        check: 得点時間や記録は見出しに書いてあるものだけ使う
 
   # ---------------------------------------------------------------- 夜
   evening:

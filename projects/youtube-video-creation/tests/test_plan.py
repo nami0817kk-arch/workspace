@@ -142,10 +142,14 @@ def test_render_lists_recent_coverage():
     assert "扱った話題" in text and "morning" in text
 
 
-def test_bundled_plan_has_three_daily_slots():
+def test_1日の枠は朝2本_夜2本_日本人1本():
+    """朝2・夜2に加えて、日本人選手の枠を別カウントで1本（2026-09-02 の決定）。"""
     plan = load_plan()
-    assert plan.slots == ["morning", "noon", "evening"]
-    assert all(slot in plan.routines for slot in plan.slots)
+    assert plan.slots == ["morning_1", "morning_2", "evening_1", "evening_2", "japan"]
+    # morning_1 / morning_2 は同じ morning の計画を共有する
+    assert plan.routine("morning_1") is plan.routine("morning_2")
+    assert plan.routine("evening_1").name == plan.routine("evening_2").name
+    assert plan.routine("japan").name == "日本人選手"
     assert set(plan.tiers) >= {"確定", "報道", "未確認"}
 
 

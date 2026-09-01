@@ -1,6 +1,7 @@
 """候補テーマの採点と、枠への割り振り。
 
-1日3本ぶんのテーマを、毎回同じものさしで選ぶための仕組み。
+1日ぶんのテーマを、毎回同じものさしで選ぶための仕組み。
+枠の数と並びは config の cadence.slots で決まる。
 スキャンで拾った候補を点数化し、朝・昼・夜のどれに回すかを決める。
 
 点数はあくまで並べ替えの目安で、最後に選ぶのは人。
@@ -122,6 +123,16 @@ def outlet_count(sources: list[str]) -> int:
     return len(hosts)
 
 
+def is_japanese(item: "Candidate", words: list[str]) -> bool:
+    """日本人選手が絡む話か。設定に並べた語で見る。
+
+    国籍そのものは記事から機械では分からない。名前で拾える範囲だけを見て、
+    拾えなかったものを「日本人ではない」と断定はしない（枠に入れないだけ）。
+    """
+    haystack = f"{item.title} {item.en} {item.note} {item.topic}"
+    return any(str(w).strip() and str(w).strip() in haystack for w in (words or []))
+
+
 def score(items: list[Candidate], scoring: dict) -> list[Candidate]:
     """候補に点をつける。内訳も残す。"""
     from . import clubs as club_book
@@ -222,6 +233,17 @@ def assign(
                 if not varied:
                     fallbacks.setdefault(slot, []).append("他の枠と別の種類が残っていません")
                 pool = varied or pool
+
+        # 日本人選手の枠。名前で拾えたものだけを入れる
+        if rule.get("require_japanese") and pool:
+            words = list(scoring.get("japanese") or [])
+            japanese = [c for c in pool if is_japanese(c, words)]
+            if not japanese:
+                fallbacks.setdefault(slot, []).append(
+                    "日本人選手が絡む候補がありません（scoring.japanese に名前を足すか、枠を空けます）"
+                )
+                continue    # 別の話で埋めない。空けたほうが枠の意味が保てる
+            pool = japanese
 
         tiers = rule.get("require_tier")
         if tiers:

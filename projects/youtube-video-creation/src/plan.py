@@ -141,10 +141,19 @@ class Plan:
         return str(self.domain_tiers.get(self.group_of(url), ""))
 
     def routine(self, key: str) -> Routine:
-        if key not in self.routines:
-            known = " / ".join(self.routines)
-            raise PlanError(f"『{key}』という取材計画はありません（定義済み: {known}）")
-        return self.routines[key]
+        """枠の名前から取材計画を引く。
+
+        1日に同じ枠を2本出すので、`morning_1` と `morning_2` は同じ
+        `morning` の計画を使う。枠ごとに同じ計画を書き写すと、
+        片方だけ直して食い違う。
+        """
+        if key in self.routines:
+            return self.routines[key]
+        base = key.rsplit("_", 1)[0]
+        if base in self.routines:
+            return self.routines[base]
+        known = " / ".join(self.routines)
+        raise PlanError(f"『{key}』という取材計画はありません（定義済み: {known}）")
 
 
 def load_plan(path: str | Path | None = None) -> Plan:
@@ -213,7 +222,7 @@ def build_plan(raw: dict) -> Plan:
 
     slots = [str(s) for s in (cadence.get("slots") or [])]
     for slot in slots:
-        if slot not in routines:
+        if slot not in routines and slot.rsplit("_", 1)[0] not in routines:
             raise PlanError(f"cadence.slots の『{slot}』に対応する routine がありません")
     return Plan(
         routines=routines,

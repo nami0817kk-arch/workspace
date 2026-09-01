@@ -724,7 +724,7 @@ def _cmd_today(args, config) -> int:
     print(f"\n次にこれを打つ:\n  {today_mod.next_step(candidates, slots, stamp, first)}")
     for item in _active_deadlines(plan, day):
         print(
-            "\n今日は移籍期限日。3本の枠とは別に特別編を出す:\n"
+            "\n今日は移籍期限日。通常の枠とは別に特別編を出す:\n"
             "  python -m src.cli plan --routine deadline_day --write"
         )
         break
@@ -1466,7 +1466,7 @@ def _cmd_pick(args, config) -> int:
 
     ranked = candidates_mod.score(items, plan.scoring)
 
-    # 1日3本だと、朝に出した話が夜にまた上がってくる。記録と突き合わせて外す
+    # 1日に何本も出すと、朝に出した話が夜にまた上がってくる。記録と突き合わせて外す
     ledger = coverage_mod.load(plan.coverage.get("ledger", "research/covered.yaml"))
     covered = coverage_mod.duplicates(
         ledger,

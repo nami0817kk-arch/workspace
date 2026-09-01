@@ -402,7 +402,7 @@ def _advise_posts(notes: Notes, plan: Plan | None, now=None) -> list[str]:
 def check_repeats(notes: Notes, plan: Plan, now=None) -> list[str]:
     """直近で扱ったテーマと重なっていないか調べる。
 
-    1日3本だと同じテーマを繰り返しがちなので、記録と突き合わせる。
+    1日に何本も出すと同じテーマを繰り返しがちなので、記録と突き合わせる。
     掘り直しとして意図的に扱う場合は follow_up: true を書く。
     """
     settings = plan.coverage or {}
