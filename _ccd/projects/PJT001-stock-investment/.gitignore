@@ -1,0 +1,35 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# エディタ
+.vscode/
+.idea/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node.js
+node_modules/
+.npm
+
+# 環境変数・秘密情報
+.env
+.env.local
+*.key
+*.pem
+
+# ログ
+*.log
+
+# データ
+data/raw/
+data/processed/
+
+# 保有銘柄・取得単価は個人の資産情報。このリポジトリは公開されているため、
+# 追跡対象にしてはいけない。watchlist.csv (単なる銘柄リスト) は追跡してよい。
+data/portfolio.csv
+data/portfolio*.csv
