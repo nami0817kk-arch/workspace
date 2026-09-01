@@ -292,6 +292,98 @@ def _reference_signals(root: Path, files: list[str], repo_root: Path) -> dict[st
     return {"stale_references": sorted(set(stale))}
 
 
+_JOBS_HEADER_RE = re.compile(r"^jobs:\s*(?:#.*)?$")
+_JOB_USES_RE = re.compile(r"\s*uses:\s*(\S+)")
+_LOCAL_WORKFLOW_RE = re.compile(r"^\./(\.github/workflows/[\w.\-]+\.ya?ml)$")
+
+
+def _workflow_jobs(text: str) -> list[list[str]]:
+    """ワークフローの ``jobs:`` 配下を job ごとの行に切り分ける。
+
+    PyYAML を使わないのは、成長ループが標準ライブラリだけで動くことを
+    前提に CI（growth-loop.yml）が依存のインストールを持たないため。
+    """
+    lines = text.splitlines()
+    start = None
+    for i, line in enumerate(lines):
+        if _JOBS_HEADER_RE.match(line):
+            start = i + 1
+            break
+    if start is None:
+        return []
+
+    body: list[str] = []
+    for line in lines[start:]:
+        if line.strip() and not line.startswith((" ", "	")):
+            break  # トップレベルの別キーに戻った
+        body.append(line)
+
+    indents = [len(x) - len(x.lstrip()) for x in body if x.strip()]
+    if not indents:
+        return []
+    job_indent = min(indents)
+
+    jobs: list[list[str]] = []
+    for line in body:
+        if not line.strip():
+            if jobs:
+                jobs[-1].append(line)
+            continue
+        if len(line) - len(line.lstrip()) == job_indent:
+            jobs.append([line])
+        elif jobs:
+            jobs[-1].append(line)
+    return jobs
+
+
+def _reusable_target(job: list[str]) -> str | None:
+    """job が再利用ワークフロー呼び出しなら、その呼び先を返す。
+
+    job 直下の ``uses:`` だけを見る。step の ``- uses:`` は
+    インデントが深く、行頭が ``-`` なので拾わない。
+    """
+    body = [x for x in job[1:] if x.strip()]
+    if not body:
+        return None
+    indent = min(len(x) - len(x.lstrip()) for x in body)
+    for line in body:
+        if len(line) - len(line.lstrip()) != indent:
+            continue
+        m = _JOB_USES_RE.match(line)
+        if m:
+            return m.group(1).strip("'\"")
+    return None
+
+
+def _workflow_has_time_limit(rel: str, texts: dict[str, str], seen: frozenset[str] = frozenset()) -> bool:
+    """そのワークフローの全 job に実行時間の上限が掛かっているか。
+
+    再利用ワークフローを呼ぶだけの job には ``timeout-minutes`` を
+    書けない（GitHub が受け付けない）。同一リポジトリ内の呼び先なら
+    辿って判断し、外部リポジトリの呼び先は対象外として扱う。
+    """
+    if rel in seen:
+        return True  # 呼び先が循環している。ここで打ち切る
+    seen = seen | {rel}
+
+    jobs = _workflow_jobs(texts.get(rel, ""))
+    if not jobs:
+        return True  # job を読み取れないものは指摘しない
+
+    for job in jobs:
+        target = _reusable_target(job)
+        if target is None:
+            if not any("timeout-minutes:" in x for x in job):
+                return False
+            continue
+        m = _LOCAL_WORKFLOW_RE.match(target)
+        if m is None:
+            continue  # 外部リポジトリの呼び先までは面倒を見ない
+        if not _workflow_has_time_limit(m.group(1), texts, seen):
+            return False
+    return True
+
+
 def _repo_signals(repo_root: Path, repo_files: list[str], ref: ProjectRef) -> dict[str, Any]:
     """リポジトリ全体にしか存在しないもの（CI 等）を見る。"""
     workflows = [f for f in repo_files if f.startswith(".github/workflows/") and f.endswith((".yml", ".yaml"))]
@@ -317,7 +409,7 @@ def _repo_signals(repo_root: Path, repo_files: list[str], ref: ProjectRef) -> di
             set(re.findall(r"uses:\s*([\w.\-/]+@(?:master|main))", covering_text))
         ),
         "workflows_without_timeout": [
-            w for w in covering if "timeout-minutes" not in texts[w]
+            w for w in covering if not _workflow_has_time_limit(w, texts)
         ],
         "workflows_without_permissions": [
             w for w in covering if not re.search(r"^permissions:", texts[w], re.M)
