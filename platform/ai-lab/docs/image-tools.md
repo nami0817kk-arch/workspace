@@ -134,7 +134,7 @@ imagegen usage --json     # 集計をJSONで
 ```
 
 **金額は概算**で、請求額とは一致しない。正確な数字は各社のダッシュボードで確認する。
-単価を変えたいときは `output/costs.json` を置く。
+単価を変えたいときは `output/costs.json`（任意） を置く。
 
 ```json
 { "openai": { "gpt-image-2": 0.03 }, "replicate": { "flux-schnell": 0.003 } }

@@ -58,7 +58,7 @@ imagegen usage        # 画像の枚数と音声の文字数・概算コスト
 ```
 
 音声の単価は**1000文字あたり**で、画像（1枚あたり）とは単位が違う。
-そのため単価表を分けてある（上書きは `output/costs.json` の `speech` キー）。
+そのため単価表を分けてある（上書きは `output/costs.json`（任意） の `speech` キー）。
 
 ```json
 { "speech": { "elevenlabs": { "": 0.22 } } }

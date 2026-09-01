@@ -272,6 +272,22 @@ def _link_signals(root: Path, files: list[str], repo_root: Path) -> dict[str, An
     return {"broken_links": sorted(set(broken))}
 
 
+# パスの直後に置く除外印。「まだ無くて当たり前」のものを書き手が明示する。
+# 全角・半角の括弧はどちらでもよい（書く人が揺れる）。
+_GENERATED_MARK_RE = re.compile(
+    r"[ \t]*[（(](?:生成物|自動生成|出力|利用者が作成|ユーザーが作成|任意)[）)]"
+)
+
+# 成長ループ自身が書き出す日付つきの過去スナップショット。
+# 過去の記録が当時のパスを指すのは正常なので、参照検査の対象にしない。
+# ここを検査すると、リポジトリが変わるたびに誤検知が永久に増える。
+_GENERATED_DOC_DIRS = ("docs/growth/",)
+
+
+def _is_generated_doc(rel: str) -> bool:
+    return rel.replace("\\", "/").startswith(_GENERATED_DOC_DIRS)
+
+
 def _reference_signals(root: Path, files: list[str], repo_root: Path) -> dict[str, Any]:
     """ドキュメントが「ある」と書いているのに実在しないパスを拾う。
 
@@ -282,8 +298,15 @@ def _reference_signals(root: Path, files: list[str], repo_root: Path) -> dict[st
     for rel in files:
         if not rel.endswith(".md"):
             continue
+        if _is_generated_doc(rel):
+            continue
         base = (root / rel).parent
-        for target in _MD_PATH_RE.findall(_read_text(root / rel)):
+        text = _read_text(root / rel)
+        for m in _MD_PATH_RE.finditer(text):
+            target = m.group(1)
+            # 「まだ無くて当たり前」と書き手が明示したものは指摘しない。
+            if _GENERATED_MARK_RE.match(text, m.end()):
+                continue
             # サブPJTのドキュメントから `.github/workflows/...` のような
             # リポジトリ直下のパスを指すことがあるので、そちらも見る。
             if any((r / target).exists() for r in (root, base, repo_root)):
