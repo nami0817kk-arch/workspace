@@ -340,3 +340,39 @@ def test_リーグ別の棚はidにしない():
     keys = [l.split("id:")[1].strip() for l in collect.to_yaml(hits, "8月31日", merge=False).splitlines() if "- id:" in l]
     assert "eng" not in keys
     assert len(set(keys)) == 2
+
+
+# URL からの検索語に、ホスト名とフラグメントが混ざっていた。
+# kicker の `.../artikel#omrss` から "Omrss Transferticker Www Kicker" ができ、
+# 貼っても何も返らない検索語になっていた（実測）。
+
+
+def test_検索語にフラグメントを混ぜない():
+    from src.collect import english_words
+
+    assert "Omrss" not in english_words(
+        "https://www.kicker.de/bvb-durchbruch-bei-nwaneri-1248510/artikel#omrss"
+    )
+
+
+def test_検索語にホスト名を混ぜない():
+    from src.collect import english_words
+
+    words = english_words("https://www.kicker.de/transferticker-953155/artikel#omrss")
+    assert "Kicker" not in words
+    assert "Www" not in words
+
+
+def test_記事のスラッグからは今までどおり作る():
+    from src.collect import english_words
+
+    assert english_words(
+        "https://www.kicker.de/bvb-durchbruch-bei-nwaneri-1248510/artikel#omrss"
+    ) == "Bvb Durchbruch Bei Nwaneri"
+
+
+def test_スラッグが無いURLは当てずに空を返す():
+    """記事名の入っていないURLから無理に語を作ると、検索が空振りする。"""
+    from src.collect import english_words
+
+    assert english_words("https://www.kicker.de/transferticker-953155/artikel#omrss") == ""

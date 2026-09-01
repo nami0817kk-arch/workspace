@@ -241,14 +241,25 @@ def _tier_line(title: str, url: str = "", plan=None) -> str:
     return f"    tier: {tier}           # {note}"
 
 
+def _path_parts(url: str) -> list[str]:
+    """URLの「道筋」だけを返す。スキーム・ホスト名・フラグメントは落とす。"""
+    body = url.split("?")[0].split("#")[0].rstrip("/")
+    body = body.split("://", 1)[-1]          # スキーム
+    return [p for p in body.split("/")[1:] if p]   # 先頭はホスト名
+
+
 def english_words(url: str, limit: int = 4) -> str:
     """記事URLから英語の検索語を作る。
 
     記事URLのスラッグには選手名とクラブ名が入っている。
     transfer / news / latest のような、どの記事にも入る語は落とす。
     残りが2語に満たなければ当てにならないので空を返す（手で書くほうが早い）。
+
+    ホスト名とフラグメントは記事の中身を表さないので外す。外さないと
+    kicker の `.../artikel#omrss` から "Omrss Transferticker Www Kicker" という
+    検索語ができて、貼っても何も返ってこない（実測）。
     """
-    parts = [p for p in url.split("?")[0].rstrip("/").split("/") if p]
+    parts = _path_parts(url)
     words: list[str] = []
     for part in reversed(parts[-3:]):
         for word in re.findall(r"[A-Za-z]+", part.replace("-", " ").replace("_", " ")):
