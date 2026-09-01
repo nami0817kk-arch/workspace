@@ -1,0 +1,18 @@
+# 実体は claude-code-dev の共通ワークフロー（python-tests.yml）。
+# actions の更新や手順の変更はあちら1箇所で済む。
+name: tests
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    uses: nami0817kk-arch/claude-code-dev/.github/workflows/python-tests.yml@master
+    with:
+      install: "pip install -r requirements.txt pytest"
