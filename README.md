@@ -35,7 +35,6 @@
 | [soccer-manager](projects/soccer-manager/) | サッカークラブ経営・育成シミュレーションのスマホアプリ（Flutter + Flame） | 開発中・ストア準備 |
 | [youtube-video-creation](projects/youtube-video-creation/) | 台本(Markdown)から、ゆっくり実況風の動画・音声・BGM・字幕・サムネイルを書き出すパイプライン | 開発中 |
 | [ai-side-business](projects/ai-side-business/) | AI で成果物を自動生成して納品する副業のための実行エンジン + 経営管理ツール | 開発中 |
-| [ai-blog](projects/ai-blog/) | AI を使ったブログ生成・運営システム | **着手段階**（継続/中止が未決） |
 
 ### 投資・分析のためのもの
 
