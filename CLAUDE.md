@@ -2,8 +2,10 @@
 
 サッカークラブ経営・育成シミュレーション。Flutter + Flame のスマホアプリ。
 
-Web版: https://nami0817kk-arch.github.io/soccer-manager/
-（非公開リポジトリのため、Pages を使うには Pro/Team 以上か公開設定が必要）
+Web版: https://soccer-manager.pages.dev/
+（Cloudflare Pages へ移行中。GitHub Secrets に CLOUDFLARE_API_TOKEN と
+CLOUDFLARE_ACCOUNT_ID を登録するまでデプロイは動かない。GitHub Pages は
+非公開 + Free だとサイトを作成できず、毎回失敗していた）
 
 ## よく使うコマンド
 
@@ -11,13 +13,22 @@ Web版: https://nami0817kk-arch.github.io/soccer-manager/
 flutter pub get
 flutter test              # テスト
 flutter run               # 実機/エミュレータ
-flutter build web --base-href /soccer-manager/
+flutter build web --base-href /
 ```
 
 ## 手を入れるときに気をつけること
 
-- Web版は `.github/workflows/web.yml` が push 時に自動デプロイする。
-  `--base-href` を変えるとリンクが全部壊れるので触らない。
+- Web版は `.github/workflows/web.yml` が push 時に Cloudflare Pages へ
+  自動デプロイする。base-href は "/" 固定。変えると資産の参照先がずれて
+  真っ白な画面になる。
+- 検証(analyze + test)は `ci.yml` が別に回す。デプロイと分けてあるので、
+  赤いワークフローを見たときにコードと公開設定のどちらが壊れたか切り分けられる。
+- アプリ内の法務リンク(settings_screen.dart)とストア掲載情報は、まだ旧モノレポ
+  claude-code-dev の GitHub Pages を指している。現在は200で生きているが、
+  このリポジトリの更新は届かない。先に差し替えると今動いているリンクを404に
+  してしまうため、Cloudflare Pages のデプロイが通ってから
+  settings_screen.dart / STORE_LISTING.md / README.md / distribution_test.dart
+  の4箇所をまとめて移す。
 - ポジションは GK/DR/DC/DL/WBR/WBL/DM/MR/MC/ML/AMR/AMC/AML/ST の14種類。
   自動編成は 主ポジション → 副ポジション → 同じ大分類 の順に割り当てる。
   この優先順を変えるとスタメンが総入れ替えになる。

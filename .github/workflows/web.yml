@@ -1,11 +1,14 @@
-name: Deploy Soccer Manager (GitHub Pages)
+name: Deploy Soccer Manager (Cloudflare Pages)
 
-# 独立リポジトリ化にともない、claude-code-dev のモノレポ用ワークフローから
-# 移設したもの。アプリがリポジトリ直下に来たため、working-directory の指定と
-# base-href、Pages 成果物の配置を変更している。
+# Web版の公開。GitHub Pages から Cloudflare Pages へ移した。
+# 理由: このリポジトリは非公開で、Free プランでは Pages サイトを作成できず
+# configure-pages が毎回 "Resource not accessible by integration" で失敗して
+# いた。Cloudflare Pages は非公開リポジトリのままでも無料で使える。
 #
-# 注意: このリポジトリは非公開のため、GitHub Pages を使うには
-# Pro/Team 以上のプランか、リポジトリの公開が必要。
+# 連携方式は direct upload。GitHub 連携ではなく、ここでビルドした成果物を
+# wrangler で送る。Cloudflare にリポジトリの読み取り権限を渡さずに済む。
+#
+# テストは ci.yml が同じコミットに対して回すので、ここでは重複させない。
 
 on:
   push:
@@ -14,26 +17,30 @@ on:
       - main
     paths-ignore:
       - "**.md"
-      - "legal/**"
   workflow_dispatch: {}
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
-  group: "pages"
+  group: "cloudflare-pages"
   cancel-in-progress: false
 
+env:
+  # Cloudflare Pages のプロジェクト名。公開URLは https://<ここ>.pages.dev。
+  CF_PAGES_PROJECT: soccer-manager
+  # そのプロジェクトの「本番ブランチ」。direct upload では --branch は
+  # デプロイに付くラベルでしかなく、ここがプロジェクト設定の本番ブランチと
+  # 一致したときだけ https://<project>.pages.dev に反映される。ずれていると
+  # プレビュー用の別URLに出てしまい、アプリ内の法務リンクが 404 になる。
+  CF_PAGES_PRODUCTION_BRANCH: main
+
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
-    # ハングしたジョブが既定の6時間走り続けるのを防ぐ
-    timeout-minutes: 30
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@v5
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
@@ -43,13 +50,13 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run tests
-        run: flutter test
-
+      # Cloudflare Pages はプロジェクトのルートで配信するため base-href は "/"。
+      # GitHub Pages 時代の "/soccer-manager/" のままだと資産を一段深い階層から
+      # 探しに行き、真っ白な画面になる。
       - name: Build web
-        run: flutter build web --release --base-href "/soccer-manager/"
+        run: flutter build web --release --base-href "/"
 
-      - name: Assemble Pages artifact
+      - name: Assemble site
         run: |
           mkdir -p dist/legal
           cp -r build/web/* dist/
@@ -60,25 +67,12 @@ jobs:
           cp marketing/landing/index.html dist/lp/
           cp marketing/screenshots/*.png dist/lp/shots/
 
-      - name: Setup Pages
-        uses: actions/configure-pages@v6
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
         with:
-          enablement: true
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    # ハングしたジョブが既定の6時間走り続けるのを防ぐ
-    timeout-minutes: 30
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: >-
+            pages deploy dist
+            --project-name=${{ env.CF_PAGES_PROJECT }}
+            --branch=${{ env.CF_PAGES_PRODUCTION_BRANCH }}
