@@ -61,6 +61,127 @@ def _macd_dir(df: pd.DataFrame) -> str:
     return "↑買い" if (not pd.isna(macd) and not pd.isna(sig) and macd > sig) else "↓売り"
 
 
+def _latest_per_ticker(past_records: list[dict]) -> dict[str, dict]:
+    """ticker ごとに、終値が入っている中で最も新しい記録だけを残す。"""
+    best: dict[str, dict] = {}
+    for r in past_records:
+        t = r["ticker"]
+        if r.get("rec_close") and (t not in best or r["rec_date"] > best[t]["rec_date"]):
+            best[t] = r
+    return best
+
+
+def _align_to_session(rec_date: str, dates: list[str]) -> str | None:
+    """記録日が非営業日なら翌営業日に補正する。以降に営業日が無ければ None。"""
+    if rec_date in dates:
+        return rec_date
+    later = [d for d in dates if d >= rec_date]
+    return later[0] if later else None
+
+
+def _spike_high(df: pd.DataFrame, dates: list[str], rec_date: str, rec_close) -> float:
+    """急騰高値 = 記録日前後3日の最高値。High が無ければ記録時終値の15%増で代用。"""
+    if "High" not in df.columns:
+        return float(rec_close) * 1.15
+    rec_idx = dates.index(rec_date)
+    window = df.iloc[max(0, rec_idx - 1): min(len(df), rec_idx + 3)]
+    return float(window["High"].max())
+
+
+def _measure(ticker: str, info: dict) -> dict | None:
+    """1銘柄分の判定材料を測る。材料が揃わなければ None。"""
+    df = fetch_price(ticker, period="6mo")
+    if len(df) < 30:
+        return None
+    df = add_indicators(df)
+    df.index = pd.to_datetime(df.index).strftime("%Y-%m-%d")
+
+    dates = df.index.tolist()
+    rec_date = _align_to_session(info["rec_date"], dates)
+    if rec_date is None:
+        return None
+
+    base_price, base_cv = _pre_spike_base(df, rec_date)
+    if base_price == 0.0:
+        return None
+
+    spike_high = _spike_high(df, dates, rec_date, info["rec_close"])
+    # データ異常チェック（急騰高値 < 元値は有り得ない）
+    if spike_high <= base_price * 1.05:
+        return None
+
+    rsi_raw = df["RSI14"].iloc[-1]
+    return {
+        "base_price": base_price,
+        "base_cv":    base_cv,
+        "spike_high": spike_high,
+        "current":    float(df["Close"].iloc[-1]),
+        "rsi":        round(float(rsi_raw), 1) if not pd.isna(rsi_raw) else None,
+        "macd":       _macd_dir(df),
+        "recent_cv":  _cv(df["Close"].tail(7)),
+    }
+
+
+def _pattern_a_row(ticker: str, name: str, info: dict, m: dict) -> dict | None:
+    """A: 全モ手法。
+
+    ① 急騰前の水平帯が存在（CV < 6%）
+    ② 現在価格が元値の ±6% 以内に戻っている
+    """
+    pct_from_base = (m["current"] - m["base_price"]) / m["base_price"] * 100
+    if not (m["base_cv"] < 0.06 and abs(pct_from_base) <= 6.0):
+        return None
+    return {
+        "ticker":   ticker,
+        "name":     name,
+        "元値":     round(m["base_price"], 2),
+        "現在価格": round(m["current"], 2),
+        "元値差%":  round(pct_from_base, 1),
+        "水平CV%":  round(m["base_cv"] * 100, 1),
+        "RSI14":    m["rsi"],
+        "MACD":     m["macd"],
+        "急騰日":   info["rec_date"],
+    }
+
+
+def _pattern_b_row(ticker: str, name: str, info: dict, m: dict) -> dict | None:
+    """B: 手法２改。
+
+    ① 急騰高値から20%以上下落している
+    ② 現在価格がフィボナッチ半値（元値〜急騰高値の50%）の ±12% 圏内
+    ③ 直近7本の価格が水平（丸ばり: CV < 5%）
+    """
+    fib50         = (m["base_price"] + m["spike_high"]) / 2
+    pct_fib       = (m["current"] - fib50) / fib50 * 100
+    pct_from_high = (m["current"] - m["spike_high"]) / m["spike_high"] * 100
+
+    if not (pct_from_high <= -20.0 and abs(pct_fib) <= 12.0 and m["recent_cv"] < 0.05):
+        return None
+    return {
+        "ticker":    ticker,
+        "name":      name,
+        "フィボ半値": round(fib50, 2),
+        "現在価格":  round(m["current"], 2),
+        "フィボ差%": round(pct_fib, 1),
+        "丸ばりCV%": round(m["recent_cv"] * 100, 1),
+        "高値比%":   round(pct_from_high, 1),
+        "RSI14":     m["rsi"],
+        "MACD":      m["macd"],
+        "急騰日":    info["rec_date"],
+    }
+
+
+def _ranked_frame(rows: list[dict], key: str) -> pd.DataFrame:
+    """候補を key の絶対値が小さい順（元値・半値に近い順）に並べる。"""
+    if not rows:
+        return pd.DataFrame()
+    return (
+        pd.DataFrame(rows)
+        .sort_values(key, key=lambda s: s.abs())
+        .reset_index(drop=True)
+    )
+
+
 def detect_ab(past_records: list[dict]) -> tuple[pd.DataFrame, pd.DataFrame]:
     """
     A（全モ手法）・B（手法２改）の候補を過去ランキング記録から検出する。
@@ -71,116 +192,28 @@ def detect_ab(past_records: list[dict]) -> tuple[pd.DataFrame, pd.DataFrame]:
     Returns:
         (df_a, df_b) 各手法の候補 DataFrame
     """
-    # ticker ごとに最新の記録を使う
-    best: dict[str, dict] = {}
-    for r in past_records:
-        t = r["ticker"]
-        if r.get("rec_close") and (t not in best or r["rec_date"] > best[t]["rec_date"]):
-            best[t] = r
-
     results_a, results_b = [], []
 
-    for ticker, info in best.items():
+    for ticker, info in _latest_per_ticker(past_records).items():
         try:
-            df = fetch_price(ticker, period="6mo")
-            if len(df) < 30:
-                continue
-            df = add_indicators(df)
-            df.index = pd.to_datetime(df.index).strftime("%Y-%m-%d")
-
-            rec_date = info["rec_date"]
-            name     = info.get("name", ticker)
-            dates    = df.index.tolist()
-
-            # 記録日が非営業日の場合は翌営業日に補正
-            if rec_date not in dates:
-                later = [d for d in dates if d >= rec_date]
-                if not later:
-                    continue
-                rec_date = later[0]
-
-            base_price, base_cv = _pre_spike_base(df, rec_date)
-            if base_price == 0.0:
+            m = _measure(ticker, info)
+            if m is None:
                 continue
 
-            # 急騰高値: 記録日前後3日の最高値
-            rec_idx      = dates.index(rec_date)
-            spike_window = df.iloc[max(0, rec_idx - 1): min(len(df), rec_idx + 3)]
-            spike_high   = (
-                float(spike_window["High"].max())
-                if "High" in df.columns
-                else float(info["rec_close"]) * 1.15
-            )
-
-            # データ異常チェック（急騰高値 < 元値は有り得ない）
-            if spike_high <= base_price * 1.05:
-                continue
-
-            current  = float(df["Close"].iloc[-1])
-            rsi_raw  = df["RSI14"].iloc[-1]
-            rsi      = round(float(rsi_raw), 1) if not pd.isna(rsi_raw) else None
-            macd_d   = _macd_dir(df)
-
-            # ── Pattern A: 全モ手法 ────────────────────────────────────
-            # ① 急騰前の水平帯が存在（CV < 6%）
-            # ② 現在価格が元値の ±6% 以内に戻っている
-            pct_from_base = (current - base_price) / base_price * 100
-            if base_cv < 0.06 and abs(pct_from_base) <= 6.0:
-                results_a.append({
-                    "ticker":   ticker,
-                    "name":     name,
-                    "元値":     round(base_price, 2),
-                    "現在価格": round(current, 2),
-                    "元値差%":  round(pct_from_base, 1),
-                    "水平CV%":  round(base_cv * 100, 1),
-                    "RSI14":    rsi,
-                    "MACD":     macd_d,
-                    "急騰日":   info["rec_date"],
-                })
-
-            # ── Pattern B: 手法２改 ───────────────────────────────────
-            # ① 急騰高値から20%以上下落している
-            # ② 現在価格がフィボナッチ半値（元値〜急騰高値の50%）の ±12% 圏内
-            # ③ 直近7本の価格が水平（丸ばり: CV < 5%）
-            fib50         = (base_price + spike_high) / 2
-            pct_fib       = (current - fib50) / fib50 * 100
-            pct_from_high = (current - spike_high) / spike_high * 100
-            recent_cv     = _cv(df["Close"].tail(7))
-
-            if (pct_from_high <= -20.0
-                    and abs(pct_fib) <= 12.0
-                    and recent_cv < 0.05):
-                results_b.append({
-                    "ticker":    ticker,
-                    "name":      name,
-                    "フィボ半値": round(fib50, 2),
-                    "現在価格":  round(current, 2),
-                    "フィボ差%": round(pct_fib, 1),
-                    "丸ばりCV%": round(recent_cv * 100, 1),
-                    "高値比%":   round(pct_from_high, 1),
-                    "RSI14":     rsi,
-                    "MACD":      macd_d,
-                    "急騰日":    info["rec_date"],
-                })
+            name = info.get("name", ticker)
+            row_a = _pattern_a_row(ticker, name, info, m)
+            if row_a:
+                results_a.append(row_a)
+            row_b = _pattern_b_row(ticker, name, info, m)
+            if row_b:
+                results_b.append(row_b)
 
         except Exception as e:
             # 1銘柄の失敗で検出全体は止めない。原因は追えるように残す。
             print(f"  [WARN] {ticker}: A/B判定に失敗: {e}")
             continue
 
-    df_a = (
-        pd.DataFrame(results_a)
-        .sort_values("元値差%", key=lambda s: s.abs())
-        .reset_index(drop=True)
-        if results_a else pd.DataFrame()
-    )
-    df_b = (
-        pd.DataFrame(results_b)
-        .sort_values("フィボ差%", key=lambda s: s.abs())
-        .reset_index(drop=True)
-        if results_b else pd.DataFrame()
-    )
-    return df_a, df_b
+    return _ranked_frame(results_a, "元値差%"), _ranked_frame(results_b, "フィボ差%")
 
 
 def detect_c(
