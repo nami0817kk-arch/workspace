@@ -1,7 +1,7 @@
 # MCP サーバとして使う
 
-`ailab mcp` は ailab を MCP サーバ（stdio / JSON-RPC 2.0）として起動する。
-Claude から `ailab` の連携先を直接呼べるようになり、コマンドを打たなくても
+`imagegen mcp` は imagegen を MCP サーバ（stdio / JSON-RPC 2.0）として起動する。
+Claude から `imagegen` の連携先を直接呼べるようになり、コマンドを打たなくても
 「猫のイラストを探して」「バナーを作ってリポジトリに置いて」が通る。
 
 ## 設定
@@ -12,9 +12,9 @@ Claude から `ailab` の連携先を直接呼べるようになり、コマン�
 ```json
 {
   "mcpServers": {
-    "ailab": {
+    "imagegen": {
       "command": "python",
-      "args": ["-m", "ailab", "mcp"],
+      "args": ["-m", "imagegen", "mcp"],
       "env": { "PYTHONPATH": "src" }
     }
   }
@@ -25,7 +25,7 @@ APIキーは通常どおり `.env` から読む（サーバ起動時に読み込
 手元で動作を確かめるだけなら、標準入力に JSON-RPC を1行ずつ流せばよい。
 
 ```bash
-echo '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | python -m ailab mcp
+echo '{"jsonrpc":"2.0","id":1,"method":"tools/list"}' | python -m imagegen mcp
 ```
 
 ## 公開しているツール
@@ -60,4 +60,4 @@ MCP のツールは会話の流れで呼ばれるため、取り込んだ文章�
   通知（id なし）には応答しない。
 - `protocolVersion` はクライアントが提示したものをそのまま返す
   （未提示なら `mcp_server.PROTOCOL_VERSION`）。
-- 追加の依存ライブラリは無し。`src/ailab/mcp_server.py` の1ファイル。
+- 追加の依存ライブラリは無し。`src/imagegen/mcp_server.py` の1ファイル。

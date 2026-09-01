@@ -15,10 +15,12 @@
 
 | ツール | 何をするか |
 |---|---|
-| [`ailab`](#ailab--画像生成とフリー素材の取得) | 画像を生成し、フリー素材を横断検索して出典つきで取り込む |
+| [`imagegen`](#imagegen--画像生成音声合成とフリー素材の取得) | 画像を生成し、文章を読み上げ、フリー素材を横断検索して出典つきで取り込む |
 | [`adsite`](#adsite--広告収益型の実用ツールサイト) | 実用ツールを置いた静的サイトを生成し、広告収益を同じ台帳に取り込む |
 | [`growth`](#growth--成長ループ) | 全プロジェクトを定期点検し、次にやることを提示する |
 | [`audiogen`](#audiogen--bgm--効果音ジェネレータ) | BGM と効果音を手続き的に合成して WAV に書き出す |
+| [`videogen`](#videogen--画像--音声--字幕--動画) | 画像・音声・字幕を1本の動画にまとめる |
+| [`docparse`](#docparse--pdf-から本文と表を抜く) | PDF から本文と表を、ページ番号つきで抜き出す |
 | [`browser`](#chrome-の自動操作) | Chrome を自動操作する（ヘッドレス Chromium / ローカル Chrome を CDP 経由で） |
 
 ## セットアップ
@@ -33,24 +35,29 @@ pip install -e ".[dev]"
 
 | extras | 何に要るか |
 |---|---|
-| `[image]` | ailab の実行（`requests` / `Pillow` / `PyYAML`） |
+| `[image]` | imagegen の実行（`requests` / `Pillow` / `PyYAML`） |
 | `[llm]` | 実際に Claude を呼ぶとき（`anthropic`） |
+| `[video]` | videogen の書き出しに ffmpeg を同梱する（システムに ffmpeg があれば不要） |
+| `[docs]` | docparse の PDF 読み取り（`pdfplumber`） |
 | `[dev]` | テストと lint（`[image]` を含む） |
 
-## ailab — 画像生成とフリー素材の取得
+## imagegen — 画像生成・音声合成とフリー素材の取得
 
 | コマンド | 内容 |
 |---|---|
-| `ailab gen "プロンプト"` | 画像を生成する（**APIキー無しでも Pollinations で本物のAI画像**。OpenAI / Gemini / Replicate / Hugging Face / Stability にも対応） |
-| `ailab search "キーワード"` | フリー素材を横断検索する（Iconify / Openverse / Wikimedia / Pixabay / Unsplash / Pexels） |
-| `ailab fetch "キーワード"` | フリーイラストを検索してダウンロードし、クレジットも書き出す |
-| `ailab grab URL` | 自分で見つけた画像をURL指定で取り込む（出典つき） |
-| `ailab feed "対象" --source ...` | 記事・リリース情報を取得する（RSS / GitHub / Qiita / Wikipedia） |
-| `ailab publish FILE --repo owner/name` | 生成物を GitHub へコミットする（既定はドライラン） |
-| `ailab usage` | 画像生成の利用量と概算コストを見る |
-| `ailab run レシピ` | 「集める→作る→送る」をYAML1本で実行する |
-| `ailab mcp` | MCPサーバとして起動し、Claude から直接使えるようにする |
-| `ailab connectors` / `ailab doctor` | 連携先の設定状況を見る / 実際に接続して確認する |
+| `imagegen gen "プロンプト"` | 画像を生成する（**APIキー無しでも Pollinations で本物のAI画像**。OpenAI / Gemini / Replicate / Hugging Face / Stability にも対応） |
+| `imagegen compose --title "見出し"` | 画像に見出しを載せた1枚を作る（サムネイル / OGP / 共有画像。生成AI不要） |
+| `imagegen say "読み上げる文章"` | 文章を読み上げた音声を作る（**APIキー無しでも VOICEVOX で無料**。OpenAI / ElevenLabs にも対応） |
+| `imagegen voices` | 読み上げに使える声の一覧 |
+| `imagegen search "キーワード"` | フリー素材を横断検索する（Iconify / Openverse / Wikimedia / Pixabay / Unsplash / Pexels） |
+| `imagegen fetch "キーワード"` | フリーイラストを検索してダウンロードし、クレジットも書き出す |
+| `imagegen grab URL` | 自分で見つけた画像をURL指定で取り込む（出典つき） |
+| `imagegen feed "対象" --source ...` | 記事・リリース情報と**一次情報**を取得する（RSS / GitHub / Qiita / Wikipedia / EDINET / e-Stat） |
+| `imagegen publish FILE --repo owner/name` | 生成物を GitHub へコミットする（既定はドライラン） |
+| `imagegen usage` | 画像生成・音声合成の利用量と概算コストを見る |
+| `imagegen run レシピ` | 「集める→作る→送る」をYAML1本で実行する |
+| `imagegen mcp` | MCPサーバとして起動し、Claude から直接使えるようにする |
+| `imagegen connectors` / `imagegen doctor` | 連携先の設定状況を見る / 実際に接続して確認する |
 
 このリポジトリで唯一、実行時に外部ライブラリが要る（`requests` / `Pillow` / `PyYAML`）。
 `pip install -e ".[image]"` で入る（`[dev]` にも含まれる）。
@@ -58,29 +65,73 @@ pip install -e ".[dev]"
 ### まず試す（APIキーなしで動きます）
 
 ```bash
-ailab connectors                                     # 何が使える状態か
-ailab gen "青空の下でノートPCを使う猫" --style flat   # 本物のAI画像（Pollinations）
-ailab fetch "cat illustration" -l 3                  # フリー素材＋クレジット
+imagegen connectors                                     # 何が使える状態か
+imagegen gen "青空の下でノートPCを使う猫" --style flat   # 本物のAI画像（Pollinations）
+imagegen fetch "cat illustration" -l 3                  # フリー素材＋クレジット
 ```
 
 キーが1つも無くても、`pollinations`（生成）と `iconify` / `openverse` /
 `wikimedia`（素材）が動きます。生成物は `output/`（Git管理外）へ。
 
+### サムネイル・OGP（文字入り画像）
+
+```bash
+imagegen compose --title "今日の値上がりランキング" --subtitle "2026-09-01" --preset ogp --band
+imagegen compose --title "移籍が決まりました" --bg output/images/stadium.png --dim 0.45 --stroke 3
+```
+
+生成AIは使わないので待たされず、**同じ指定からは常に同じ画像**が出る。
+見出しは枠に収まるまで自動で折り返し・縮小する（日本語対応）。
+プリセットは `youtube` / `ogp` / `shorts` / `square` / `wide`。詳しくは [docs/compose.md](docs/compose.md)。
+
+### 一次情報を引く
+
+報道やまとめではなく、**官公庁が出した書類そのもの**を引く。
+
+```bash
+imagegen feed "2026-09-01" --source edinet    # その日の提出書類（有報・大量保有など）
+imagegen feed "7203" --source edinet          # 証券コードで今日の提出書類を絞る
+imagegen feed "国勢調査" --source estat       # 政府統計の統計表を探す
+```
+
+どちらも無料だが登録が要る（`EDINET_API_KEY` / `ESTAT_APP_ID`）。
+`imagegen doctor` が未設定のキーと取得先URLを教えてくれる。
+
+TDnet（適時開示）は公式APIが無いので入れていない。**HTMLスクレイピングはしない**方針のため。
+
+### 読み上げ（音声合成）
+
+```bash
+imagegen say "今日のニュースをお伝えします。" -o output/speech
+imagegen voices --provider voicevox        # 使える声の一覧
+```
+
+| コネクタ | キー | 備考 |
+|---|---|---|
+| `voicevox` | 不要 | 手元で [VOICEVOX ENGINE](https://voicevox.hiroshiba.jp/) を起動しておく。**「VOICEVOX:キャラ名」の表示が要る**（`CREDITS.md` に自動で残す） |
+| `openai_tts` | `OPENAI_API_KEY` | 画像生成と同じキーを共用 |
+| `elevenlabs` | `ELEVENLABS_API_KEY` | 多言語・高品質。文字単価は高め |
+| `beep` | 不要 | 読み上げではなく、**尺だけ本物に合わせたプレースホルダ音声**。TTS を呼ばずに構成を確かめるためのもの |
+
+長文は上限に合わせて自動で分割して合成し、WAV なら1本につなぎ直す。
+`imagegen usage` に文字数と概算コストが残る。詳しくは [docs/speech.md](docs/speech.md)。
+
 ### APIキーを足す
 
 ```bash
 cp .env.example .env     # Windows: copy .env.example .env
-ailab doctor             # 実際に接続して確認（-- は未設定、NG は失敗）
+imagegen doctor             # 実際に接続して確認（-- は未設定、NG は失敗）
 ```
 
-有料APIを使い始めたら `ailab usage` で使用量と概算コストを確認できます。
+有料APIを使い始めたら `imagegen usage` で使用量と概算コストを確認できます。
 
 ### ライセンスの注意
 
-`ailab fetch` は取得先の `CREDITS.md` / `credits.json` に出典とライセンスを残す。
+`imagegen fetch` は取得先の `CREDITS.md` / `credits.json` に出典とライセンスを残す。
 CC BY 系はクレジット表示が必須なので、成果物に使うときは必ず確認すること。
 
-詳しい使い方は [docs/image-tools.md](docs/image-tools.md)。
+詳しい使い方は [docs/image-tools.md](docs/image-tools.md)、
+読み上げは [docs/speech.md](docs/speech.md)。
 レシピの書き方は [docs/recipes.md](docs/recipes.md)、
 Claude から直接使う方法は [docs/mcp.md](docs/mcp.md)、
 連携の仕組みと増やし方は [docs/connectors.md](docs/connectors.md)、
@@ -539,11 +590,71 @@ sfx.generate("coin", pitch=0)
 
 設計の詳細と検証結果は [`docs/audiogen.md`](docs/audiogen.md) を参照。
 
+## videogen — 画像 + 音声 + 字幕 → 動画
+
+`src/videogen/` は、`imagegen`（画）と `imagegen say` / `audiogen`（音）で作った素材を
+1本の mp4 にまとめるツール。構成（タイムライン）を書いて1コマンド。
+
+```bash
+videogen doctor                       # ffmpeg が使えるか
+videogen build news.yaml -o news.mp4  # 書き出す（字幕 SRT も隣に出る）
+videogen build news.yaml --dry-run    # 実行せず、組み上がった ffmpeg のコマンドを見る
+videogen build news.yaml --size 1080x1920   # 同じ構成のまま縦動画にする
+```
+
+```yaml
+size: 1920x1080
+fade: 0.5
+scenes:
+  - image: output/images/opening.png
+    audio: output/speech/n1.wav      # ← この音声の長さがシーンの長さになる
+    text: バルセロナが新加入選手を発表  # ← 字幕
+    motion: zoom_in
+  - image: output/images/end.png
+    seconds: 3
+```
+
+- **シーンの尺は音声から決まる。** ナレーションを先に作ってから画を並べる作り方に合わせてある
+- **字幕（SRT）は焼き込むかどうかに関係なく必ず書き出す。** YouTube にそのまま渡せる
+- Ken Burns（`zoom_in` / `zoom_out` / `pan_left` / `pan_right`）、BGM、暗転に対応
+- Python の依存は増やしていない。要るのは ffmpeg の実行ファイルだけで、
+  システムに無ければ `pip install -e ".[video]"`（imageio-ffmpeg 同梱）で足りる
+- **組み立てと実行を分けてある**ので、ffmpeg が無い環境でもテストが全部通る
+
+詳しくは [docs/videogen.md](docs/videogen.md)。
+
+## docparse — PDF から本文と表を抜く
+
+`src/docparse/` は、決算短信・有価証券報告書・官公庁の資料といった**一次情報の原文**を
+機械で読む道具。`imagegen feed --source edinet` で見つけた書類をそのまま渡せる。
+
+```bash
+pip install -e ".[docs]"
+docparse info 決算短信.pdf              # ページ数・文字の有無・表の数
+docparse find 決算短信.pdf 営業利益      # 語を含む行をページ番号つきで探す
+docparse tables 決算短信.pdf -d output/  # 表を CSV に書き出す
+```
+
+```
+$ docparse find 決算短信.pdf 利益
+p.1  営業利益 1,234 百万円
+       数値: 1,234=1234.0
+p.1  経常利益 △567 百万円
+       数値: △567=-567.0
+```
+
+- **ページ番号を必ず持ち回る。** 出典を言えない数字は一次情報として使えない
+- **△ と ▲ を負数として読む**（決算資料の慣習。素直に読むと減益を増益と取り違える）
+- 読めなかった数値は `None`。**0 とは違う**ので勝手に 0 にしない
+- 文字の入っていない PDF（スキャン画像）は、空を返さずに OCR が要ると伝える
+
+詳しくは [docs/docparse.md](docs/docparse.md)。
+
 ## テスト
 
 ```bash
 pytest                      # 全部
-pytest tests/ailab          # ツール単位で回す
+pytest tests/imagegen          # ツール単位で回す
 ```
 
 テストはツールごとに `tests/<ツール名>/` に分けてある。
@@ -553,15 +664,17 @@ pytest tests/ailab          # ツール単位で回す
 
 | パス | 用途 |
 |---|---|
-| `src/ailab/` | 画像生成・素材取得・連携（`core/` 連携基盤、`connectors/` 連携先） |
+| `src/imagegen/` | 画像生成・素材取得・連携（`core/` 連携基盤、`connectors/` 連携先） |
 | `src/adsite/` | 広告収益型ツールサイトのジェネレータ |
 | `src/growth/` | 成長ループ（観測・診断・横展開・台帳） |
 | `src/audiogen/` | BGM / 効果音の合成ツールキット（標準ライブラリのみ） |
+| `src/videogen/` | 画像・音声・字幕を動画にまとめる（要 ffmpeg。Python の依存は無し） |
+| `src/docparse/` | PDF から本文と表をページ番号つきで抜く（`[docs]` extras） |
 | `src/browser/` | Chrome の自動操作（ヘッドレス Chromium / ローカル Chrome を CDP 経由で） |
 | `site/` | adsite のコンテンツとアセット |
 | `config/` | 設定ファイル（ニッチ・情報源・プラン・サイト設定） |
 | `growth/` | 成長ループの対象登録（`projects.toml`）と台帳（`ledger.json`） |
-| `recipes/` | ailab のレシピ（`ailab run` で実行するYAML） |
+| `recipes/` | imagegen のレシピ（`imagegen run` で実行するYAML） |
 | `scripts/` | 補助スクリプト（Chrome のデバッグ起動など） |
 | `docs/` | 収益モデル・設計・運用手順・成長ループの設計 |
 | `tests/` | テストコード（ツール別のサブディレクトリ） |
@@ -572,7 +685,7 @@ pytest tests/ailab          # ツール単位で回す
 
 | ファイル | 内容 |
 |---|---|
-| [docs/image-tools.md](docs/image-tools.md) | ailab の使い方 |
+| [docs/image-tools.md](docs/image-tools.md) | imagegen の使い方 |
 | [docs/connectors.md](docs/connectors.md) | 連携の仕組みとコネクタの増やし方 |
 | [docs/recipes.md](docs/recipes.md) | レシピの書き方 |
 | [docs/mcp.md](docs/mcp.md) | Claude から直接使う方法 |
@@ -581,6 +694,10 @@ pytest tests/ailab          # ツール単位で回す
 | [docs/ad-monetization.md](docs/ad-monetization.md) | 広告収益の規模感、動画/アプリとの比較、AdSense審査対策、KPI |
 | [docs/growth-system.md](docs/growth-system.md) | 成長ループの設計の考え方 |
 | [docs/audiogen.md](docs/audiogen.md) | audiogen の設計の詳細と検証結果 |
+| [docs/compose.md](docs/compose.md) | 見出し入り画像（サムネイル / OGP）の作り方 |
+| [docs/speech.md](docs/speech.md) | 読み上げ（音声合成）の使い方と決めごと |
+| [docs/videogen.md](docs/videogen.md) | 動画の組み立て方と構成ファイルの書き方 |
+| [docs/docparse.md](docs/docparse.md) | PDF の読み取りと、決算資料を読むときの決めごと |
 | [docs/chrome-automation.md](docs/chrome-automation.md) | Chrome 自動操作の使い方と検証記録 |
 | [docs/local-setup.md](docs/local-setup.md) | ローカル PC で動かす手順 |
 

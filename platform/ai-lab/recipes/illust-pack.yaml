@@ -1,5 +1,5 @@
 # キーワードでフリー素材を集め、クレジット付きで手元に落とす。
-#   ailab run illust-pack --set query="cat illustration"
+#   imagegen run illust-pack --set query="cat illustration"
 name: 素材まとめ取得
 
 vars:
