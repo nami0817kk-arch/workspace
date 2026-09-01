@@ -423,122 +423,148 @@ def cmd_app(args):
 
 # ------------------------------------------------------- メディア運営
 
+def _media_params(args):
+    params = media_model.load_params()
+    if args.set:
+        params = _set_numeric_params(params, media_model.DEFAULTS, args.set,
+                                     media_model.save_params)
+    media_model.print_params(params)
+
+
+def _media_plan(args):
+    target = args.target or _require_profile()["target_income"]
+    media_model.print_plan(media_model.plan(
+        target=target, avg_volume=args.volume, model=args.model,
+        articles_per_month=args.per_month))
+
+
+def _media_simulate(args):
+    target = args.target or (profile_mod.load()["target_income"]
+                             if profile_mod.exists() else 0)
+    # 定額制なら記事を増やしても費用は増えないので、1本あたりは0円
+    if profile_mod.is_subscription():
+        article_cost = 0
+    else:
+        written = media_articles.load()
+        article_cost = (sum(a["cost_jpy"] for a in written) / len(written)
+                        if written else args.article_cost)
+    sim = media_model.simulate(
+        months=args.months, articles_per_month=args.per_month,
+        avg_volume=args.volume, target=target, model=args.model,
+        article_cost=article_cost)
+    media_model.print_simulation(sim, target=target)
+
+
+def _media_genre(args):
+    prof = _require_profile()
+    if media_genre.load() and not args.refresh:
+        media_genre.print_genres(detail=args.detail)
+        print("  作り直す: python main.py media genre --refresh")
+        return
+    print("ジャンルを検討中です...（30秒ほどかかります）")
+    genres = media_genre.generate(prof, target=prof["target_income"],
+                                  theme=args.theme, n=args.count,
+                                  articles_per_month=args.per_month)
+    media_genre.print_genres(genres, detail=args.detail)
+
+
+def _media_keywords(args):
+    if args.import_csv:
+        try:
+            r = media_keywords.import_volumes(args.import_csv)
+        except FileNotFoundError:
+            print(f"ファイルが見つかりません: {args.import_csv}")
+            sys.exit(1)
+        print(f"{r['read']} 件読み込み、{r['matched']}/{r['total']} 件のキーワードに"
+              "検索数を反映しました。")
+        media_keywords.print_keywords(detail=args.detail)
+        return
+
+    saved = media_keywords.load()
+    if args.list or (saved and not args.refresh):
+        if not saved:
+            print("キーワードがまだありません。"
+                  '`python main.py media keywords --theme "テーマ"` を実行してください。')
+            return
+        media_keywords.print_keywords(top=args.top, detail=args.detail)
+        if not args.list:
+            print("  作り直す: python main.py media keywords --refresh")
+        return
+
+    prof = _require_profile()
+    theme = args.theme or media_keywords.theme()
+    if not theme:
+        print('テーマを指定してください。 例) python main.py media keywords '
+              '--theme "業務効率化ツール"')
+        sys.exit(1)
+    print(f"「{theme}」のキーワードを設計中です...（30秒ほどかかります）")
+    media_keywords.print_keywords(
+        media_keywords.generate(prof, theme, n=args.count), detail=args.detail)
+
+
+def _media_write(args):
+    if not media_keywords.load():
+        print("先にキーワードを設計してください: "
+              'python main.py media keywords --theme "テーマ"')
+        sys.exit(1)
+    media_articles.write_batch(kw_ids=args.ids, limit=args.limit,
+                               options=args.options, use_ai_qa=not args.no_qa)
+
+
+def _media_publish(args):
+    record = media_analytics.record(args.id, published=args.date or store.today())
+    if not record:
+        print(f"記事 {args.id} が見つかりません。")
+        sys.exit(1)
+    print(f"公開日を記録しました: [{record['keyword_id']}] {record['keyword']}  "
+          f"{record['published_at']}")
+    print(f"  検索評価が付くまで約{media_model.load_params()['seo_lag_months']}ヶ月です。"
+          "その後に実績を記録してください。")
+
+
+def _media_stats(args):
+    if args.id:
+        record = media_analytics.record(args.id, pv=args.pv, revenue=args.revenue,
+                                        rank=args.rank)
+        if not record:
+            print(f"記事 {args.id} が見つかりません。")
+            sys.exit(1)
+        print(f"記録しました: [{record['keyword_id']}] {record['keyword']}  "
+              f"{record.get('rank') or '-'}位 / {record.get('pv', 0):,}PV / "
+              f"{record.get('revenue', 0):,}円")
+    media_analytics.print_articles()
+
+
+def _media_status(args):
+    media_analytics.print_articles()
+    media_analytics.print_rewrite_queue()
+
+
 def cmd_media(args):
     action = args.media_command or "status"
 
     if action == "params":
-        params = media_model.load_params()
-        if args.set:
-            params = _set_numeric_params(params, media_model.DEFAULTS, args.set,
-                                         media_model.save_params)
-        media_model.print_params(params)
-
+        _media_params(args)
     elif action == "plan":
-        target = args.target or _require_profile()["target_income"]
-        media_model.print_plan(media_model.plan(
-            target=target, avg_volume=args.volume, model=args.model,
-            articles_per_month=args.per_month))
-
+        _media_plan(args)
     elif action == "simulate":
-        target = args.target or (profile_mod.load()["target_income"]
-                                 if profile_mod.exists() else 0)
-        # 定額制なら記事を増やしても費用は増えないので、1本あたりは0円
-        if profile_mod.is_subscription():
-            article_cost = 0
-        else:
-            written = media_articles.load()
-            article_cost = (sum(a["cost_jpy"] for a in written) / len(written)
-                            if written else args.article_cost)
-        sim = media_model.simulate(
-            months=args.months, articles_per_month=args.per_month,
-            avg_volume=args.volume, target=target, model=args.model,
-            article_cost=article_cost)
-        media_model.print_simulation(sim, target=target)
-
+        _media_simulate(args)
     elif action == "genre":
-        prof = _require_profile()
-        if media_genre.load() and not args.refresh:
-            media_genre.print_genres(detail=args.detail)
-            print("  作り直す: python main.py media genre --refresh")
-            return
-        print("ジャンルを検討中です...（30秒ほどかかります）")
-        genres = media_genre.generate(prof, target=prof["target_income"],
-                                      theme=args.theme, n=args.count,
-                                      articles_per_month=args.per_month)
-        media_genre.print_genres(genres, detail=args.detail)
-
+        _media_genre(args)
     elif action == "keywords":
-        if args.import_csv:
-            try:
-                r = media_keywords.import_volumes(args.import_csv)
-            except FileNotFoundError:
-                print(f"ファイルが見つかりません: {args.import_csv}")
-                sys.exit(1)
-            print(f"{r['read']} 件読み込み、{r['matched']}/{r['total']} 件のキーワードに"
-                  "検索数を反映しました。")
-            media_keywords.print_keywords(detail=args.detail)
-            return
-
-        saved = media_keywords.load()
-        if args.list or (saved and not args.refresh):
-            if not saved:
-                print("キーワードがまだありません。"
-                      '`python main.py media keywords --theme "テーマ"` を実行してください。')
-                return
-            media_keywords.print_keywords(top=args.top, detail=args.detail)
-            if not args.list:
-                print("  作り直す: python main.py media keywords --refresh")
-            return
-
-        prof = _require_profile()
-        theme = args.theme or media_keywords.theme()
-        if not theme:
-            print('テーマを指定してください。 例) python main.py media keywords '
-                  '--theme "業務効率化ツール"')
-            sys.exit(1)
-        print(f"「{theme}」のキーワードを設計中です...（30秒ほどかかります）")
-        media_keywords.print_keywords(
-            media_keywords.generate(prof, theme, n=args.count), detail=args.detail)
-
+        _media_keywords(args)
     elif action == "write":
-        if not media_keywords.load():
-            print("先にキーワードを設計してください: "
-                  'python main.py media keywords --theme "テーマ"')
-            sys.exit(1)
-        media_articles.write_batch(kw_ids=args.ids, limit=args.limit,
-                                   options=args.options, use_ai_qa=not args.no_qa)
-
+        _media_write(args)
     elif action == "publish":
-        record = media_analytics.record(args.id, published=args.date or store.today())
-        if not record:
-            print(f"記事 {args.id} が見つかりません。")
-            sys.exit(1)
-        print(f"公開日を記録しました: [{record['keyword_id']}] {record['keyword']}  "
-              f"{record['published_at']}")
-        print(f"  検索評価が付くまで約{media_model.load_params()['seo_lag_months']}ヶ月です。"
-              "その後に実績を記録してください。")
-
+        _media_publish(args)
     elif action == "stats":
-        if args.id:
-            record = media_analytics.record(args.id, pv=args.pv, revenue=args.revenue,
-                                            rank=args.rank)
-            if not record:
-                print(f"記事 {args.id} が見つかりません。")
-                sys.exit(1)
-            print(f"記録しました: [{record['keyword_id']}] {record['keyword']}  "
-                  f"{record.get('rank') or '-'}位 / {record.get('pv', 0):,}PV / "
-                  f"{record.get('revenue', 0):,}円")
-        media_analytics.print_articles()
-
+        _media_stats(args)
     elif action == "rewrite":
         media_analytics.print_rewrite_queue()
-
     elif action == "check":
         media_analytics.print_calibration()
-
     else:
-        media_analytics.print_articles()
-        media_analytics.print_rewrite_queue()
+        _media_status(args)
 
 
 # ------------------------------------------------------- 自動化エンジン
