@@ -32,10 +32,10 @@ jobs:
         with:
           python-version: "3.12"
 
-      # 本体の requirements.txt は Windows 前提のパッケージを含むため、
-      # Linux ランナーでは requirements-test.txt（テスト用の最小セット）を使う。
-      - name: Install test dependencies
-        run: pip install -r requirements-test.txt
+      # 本番と同じ requirements.txt を入れる。Windows 専用のものは
+      # requirements.txt 側の環境マーカーで外れる。
+      - name: Install dependencies
+        run: pip install -r requirements.txt pytest
 
       - name: Run tests
         run: pytest
