@@ -1,0 +1,56 @@
+# 移籍期限日（特別編） の取材メモ（2026年9月1日）
+slot: deadline_day
+date: "2026年9月1日"
+
+theme:
+  id: bundesliga_deadline
+  prefix: ""
+  title: ブンデスリーガだけ1日早く閉まった移籍期限、その理由
+  hook: ヨーロッパの移籍市場が閉じました。ただしドイツだけは、ほかの4大リーグより1日早く終わっています。
+  question: なぜブンデスリーガの期限だけ1日早いのか。そして最後の1日で何が動いたのか。
+
+thumbnail:
+  line1: ドイツだけ1日早い
+  line2: 移籍期限が閉じた理由
+  tags: [ブンデスリーガ, 移籍期限]
+
+answer: ドイツの期限が早いのは、DFLのライセンス規程が最終日を8月31日と定めているからです。ほかの4リーグは9月1日に閉まります。
+watch: クラブの公式発表です。最後の1日に伝えられた移籍は、まだ発表まで辿れていません。
+
+sections:
+  - id: what
+    heading: 何が決まったか
+    tier: 確定
+    telop: 期限は日本時間9月1日3時に終了
+    say:
+      - ブンデスリーガの移籍期限が、現地時間の8月31日20時に締め切られました。
+      - 日本時間では、9月1日の午前3時にあたります。
+      - 5大リーグのうち、ドイツだけが1日早く閉まります。ほかの4リーグは9月1日です。
+    official: true
+    sources:
+      - https://www.bundesliga.com/
+
+  - id: numbers
+    heading: 数字で見ると
+    tier: 確定
+    telop: 締切は20時。3年前までは18時
+    say:
+      - 締め切りの時刻は、DFLのライセンス規程に書かれています。最終日の20時までです。
+      - この20時という時刻は、2025年から26年のシーズンに、18時から変更されたものです。
+      - DFLの用語集には、いまも18時と書かれたページが残っています。古い記述です。
+    official: true
+    sources:
+      - https://www.bundesliga.com/
+
+  - id: next
+    heading: これからどうなる
+    tier: 報道
+    telop: ヌワネリのレンタル退団が近づく
+    say:
+      - 最後の1日で動いたものの一つが、アーセナルのヌワネリです。
+      - スカイスポーツは、レンタルでの退団が近づいた、と伝えています。キッカーは、ドルトムントで突破口が開いた、と書いています。
+      - 行き先をドルトムントと名指ししているのは、キッカーだけです。クラブの公式発表までは、まだ辿れていません。
+    official: false
+    sources:
+      - https://www.skysports.com/football/live-blog/11661/13025486/arsenal-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+      - https://www.kicker.de/transferticker-953155/artikel

@@ -485,7 +485,9 @@ def to_script(notes: Notes, plan: Plan) -> str:
         "thumbnail_tags": [str(t) for t in (thumbnail.get("tags") or [])],
         # 案を書いてあれば台本に持ち越す。thumbnail --all で並べて比べる
         "thumbnail_alt": [dict(a or {}) for a in (thumbnail.get("alt") or [])],
-        "bg": "assets/backgrounds/stadium.mp4",
+        # init-assets が必ず作るものを既定にする。動く背景にしたいときは
+        # `make-clip` で mp4 を作ってから、台本の bg を差し替える
+        "bg": "assets/backgrounds/stadium.png",
         "date": notes.date,
         "intro_title": notes.title,
         "intro_label": "海外サッカー ニュース",

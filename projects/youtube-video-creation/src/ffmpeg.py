@@ -105,6 +105,19 @@ def build_background_track(
     """
     if not segments:
         raise FfmpegError("背景トラックの素材がありません")
+
+    # 無いまま ffmpeg に渡すと、生のエラー出力だけが出て原因が分からない。
+    # 台本の bg に、まだ作っていない mp4 を書いてあるのがだいたいの原因
+    missing = sorted({str(path) for path, _ in segments if not Path(path).exists()})
+    if missing:
+        raise FfmpegError(
+            "背景の素材がありません:\n  "
+            + "\n  ".join(missing)
+            + "\n台本の bg / @bg を見直してください。"
+            "`python -m src.cli init-assets` で静止画を作れます。"
+            "動く背景は `python -m src.cli make-clip <画像>` で作ります"
+        )
+
     width, height = size
 
     args: list[str] = []

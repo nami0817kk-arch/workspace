@@ -3,7 +3,7 @@ title: "【サッカーニュース】{{TITLE}}"
 thumbnail_title: "{{THUMB_TITLE}}"
 thumbnail_badge: まとめ
 thumbnail_subtitle: {{DATE_SHORT}}のまとめ
-bg: assets/backgrounds/stadium.mp4
+bg: assets/backgrounds/stadium.png
 date: {{DATE}}
 intro_title: "{{INTRO_TITLE}}"
 intro_label: 海外サッカー ニュース

@@ -1,0 +1,208 @@
+# 候補テーマ（2026年9月1日）
+# collect が作った下書き。見出しに書いてあることだけが入っている。
+# tier / topic / league は判断が要るので、目で見て埋めること。
+date: "2026年9月1日"
+candidates:
+  - id: setzt_sich_triers
+    title: "Setzt sich Triers Aufwärtstrend in Kassel fort?"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 未確認           # 見出しの言い回しからの当たり。見て直す
+    en: "Setzt Sich Triers Aufwaertstrend"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/setzt-sich-triers-aufwaertstrend-in-kassel-fort-1241457/artikel#omrss
+    hours_ago: 0.1   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/setzt-sich-triers-aufwaertstrend-in-kassel-fort-1241457/artikel#omrss
+
+  - id: guetersloh_und_rwo
+    title: "Gütersloh und RWO im Fernduell um die Spitze - Kleines Revierderby in Dortmund"
+    topic: "ドルトムント"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: germany    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Guetersloh Und Rwo Fernduell"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/guetersloh-und-rwo-im-fernduell-um-die-spitze-kleines-revierderby-in-dortmund-1243113/artikel#omrss
+    hours_ago: 0.3   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/guetersloh-und-rwo-im-fernduell-um-die-spitze-kleines-revierderby-in-dortmund-1243113/artikel#omrss
+
+  - id: luebecker_teufelskreis_zusch
+    title: "Lübecker Teufelskreis: Zuschauerschwund verschärft die Krise"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Luebecker Teufelskreis Zuschauerschwund Verschaerft"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/luebecker-teufelskreis-zuschauerschwund-verschaerft-die-krise-1248094/artikel#omrss
+    hours_ago: 0.6   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/luebecker-teufelskreis-zuschauerschwund-verschaerft-die-krise-1248094/artikel#omrss
+
+  - id: sezer_stuermt_fuer
+    title: "Sezer stürmt für Kassel: Die aktuellen Transfers in der Regionalliga"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Sezer Stuermt Fuer Kassel"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/sezer-stuermt-fuer-kassel-die-aktuellen-transfers-in-der-regionalliga-1213018/artikel#omrss
+    hours_ago: 0.8   # フィードの時刻から
+    # 同じ話を 3媒体が報じている
+    sources:
+      - https://www.kicker.de/sezer-stuermt-fuer-kassel-die-aktuellen-transfers-in-der-regionalliga-1213018/artikel#omrss
+      - https://www.kicker.de/die-sommer-zugaenge-in-der-regionalliga-west-2026-27-1220976/artikel#omrss
+      - https://www.kicker.de/die-sommer-zugaenge-in-der-regionalliga-suedwest-2026-27-1221025/artikel#omrss
+      # ↑ Die Sommer-Zugänge in der Regionalliga West 2026/27
+      # ↑ Die Sommer-Zugänge in der Regionalliga Südwest 2026/27
+
+  - id: die_spektakulaersten_deadlin
+    title: "Die spektakulärsten Deadline-Day-Transfers in diesem Jahrhundert"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Die Spektakulaersten Deadline Day"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/die-spektakulaersten-deadline-day-transfers-in-diesem-jahrhundert-870001/slideshow#omrss
+    hours_ago: 0.9   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.kicker.de/die-spektakulaersten-deadline-day-transfers-in-diesem-jahrhundert-870001/slideshow#omrss
+      - https://www.kicker.de/diese-transfers-taetigten-die-bundesligisten-am-deadline-day-2025-1248411/slideshow#omrss
+      # ↑ Diese Transfers tätigten die Bundesligisten am Deadline Day 
+
+  - id: die_sommer_zugaenge
+    title: "Die Sommer-Zugänge in der Regionalliga Bayern 2026/27"
+    topic: "バイエルン"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: germany    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Die Sommer Zugaenge Der"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/die-sommer-zugaenge-in-der-regionalliga-bayern-2026-27-1221319/artikel#omrss
+    hours_ago: 1.2   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/die-sommer-zugaenge-in-der-regionalliga-bayern-2026-27-1221319/artikel#omrss
+
+  - id: bayers_haengepartie_mit
+    title: "Bayers Hängepartie mit Diaby: Positive Signale von Al-Ittihad"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Bayers Haengepartie Mit Diaby"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/bayers-haengepartie-mit-diaby-positive-signale-von-al-ittihad-1248625/artikel#omrss
+    hours_ago: 1.2   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/bayers-haengepartie-mit-diaby-positive-signale-von-al-ittihad-1248625/artikel#omrss
+
+  - id: transferticker
+    title: "BVB-Durchbruch bei Nwaneri - Ben Farhat klar mit Freiburg - Leipzig verleiht Harder"
+    topic: "ドルトムント"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: germany    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: ""            # 英語サイトを引く語
+    url: https://www.kicker.de/transferticker-953155/artikel#omrss
+    hours_ago: 1.5   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/transferticker-953155/artikel#omrss
+
+  - id: fuerths_fragilitaet_und
+    title: "Fürths 'Fragilität' und die nun geschlossene Lücke"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Fuerths Fragilitaet Und Die"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/fuerths-fragilitaet-und-die-nun-geschlossene-luecke-1248098/artikel#omrss
+    hours_ago: 2.3   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/fuerths-fragilitaet-und-die-nun-geschlossene-luecke-1248098/artikel#omrss
+
+  - id: hoeness_sorgt_sich
+    title: "Hoeneß sorgt sich um Musiala: 'Wahnsinn, was wir gerade erleben'"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Hoeness Sorgt Sich Musiala"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/hoeness-sorgt-sich-um-musiala-wahnsinn-was-wir-gerade-erleben-1248626/video#omrss
+    hours_ago: 2.5   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/hoeness-sorgt-sich-um-musiala-wahnsinn-was-wir-gerade-erleben-1248626/video#omrss
+
+  - id: hat_natuerlich_weh
+    title: "'Hat natürlich weh getan': Mintzlaff über Klopps RB-Abschied"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Hat Natuerlich Weh Getan"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/hat-natuerlich-weh-getan-mintzlaff-ueber-klopps-rb-abschied-1248622/video#omrss
+    hours_ago: 2.8   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/hat-natuerlich-weh-getan-mintzlaff-ueber-klopps-rb-abschied-1248622/video#omrss
+
+  - id: wer_uebertraegt_hebc
+    title: "Wer überträgt HEBC Hamburg gegen den BVB heute live im Free-TV & Stream?"
+    topic: "ドルトムント"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: germany    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 未確認           # 見出しの言い回しからの当たり。見て直す
+    en: "Wer Uebertraegt Hebc Hamburg"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/wer-uebertraegt-hebc-hamburg-gegen-den-bvb-heute-live-im-free-tv-stream-1248183/artikel#omrss
+    hours_ago: 3.4   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/wer-uebertraegt-hebc-hamburg-gegen-den-bvb-heute-live-im-free-tv-stream-1248183/artikel#omrss
+
+  - id: reaktionen_auf_den
+    title: "Reaktionen auf den Messi-Rücktritt: 'Ein Abschiedsbrief'"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Reaktionen Auf Den Messi"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/reaktionen-auf-den-messi-ruecktritt-ein-abschiedsbrief-1248611/artikel#omrss
+    hours_ago: 3.7   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/reaktionen-auf-den-messi-ruecktritt-ein-abschiedsbrief-1248611/artikel#omrss
+
+  - id: das_macht_hoffnung
+    title: "'Das macht Hoffnung': Wohin Herthas Höhenflug führen kann"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Das Macht Hoffnung Wohin"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/das-macht-hoffnung-wohin-herthas-hoehenflug-fuehren-kann-1245104/artikel#omrss
+    hours_ago: 4.2   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/das-macht-hoffnung-wohin-herthas-hoehenflug-fuehren-kann-1245104/artikel#omrss
+
+  - id: inklusive_traumtor_lamine
+    title: "Inklusive Traumtor: Lamine Yamal führt Barca zum 5:2-Sieg"
+    topic: "バルセロナ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: spain    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: "Inklusive Traumtor Lamine Yamal"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/inklusive-traumtor-lamine-yamal-fuehrt-barca-zum-5-2-sieg-1248607/video#omrss
+    hours_ago: 9.4   # フィードの時刻から
+    sources:
+      - https://www.kicker.de/inklusive-traumtor-lamine-yamal-fuehrt-barca-zum-5-2-sieg-1248607/video#omrss
+
+  - id: barcelona_ray_tor
+    title: "Barcelona - RAY: Tor in der 90. Minute"
+    topic: "バルセロナ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: spain    # クラブ名の辞書から。違えば直す
+    kind: transfer
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Barcelona Ray Tor Der"            # URLから作った。合っているか見る
+    url: https://www.kicker.de/barcelona-ray-tor-in-der-90-minute-1248598/video#omrss
+    hours_ago: 10.9   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.kicker.de/barcelona-ray-tor-in-der-90-minute-1248598/video#omrss
+      - https://www.kicker.de/barcelona-rayo-tor-zum-4-2-durch-raphinha-in-der-71-minute-1248597/video#omrss
+      # ↑ Barcelona - Rayo: Tor zum 4:2 durch Raphinha in der 71. Minu
+
