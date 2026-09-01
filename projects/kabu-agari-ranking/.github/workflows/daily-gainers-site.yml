@@ -1,0 +1,96 @@
+name: Daily Gainers Site
+
+# 運用: 取得は手元PC（run-daily.ps1、毎平日16:10）が行い data/ を push する。
+# kabutan が GitHub Actions の IP を 405 でブロックしているため、CI からは取得しない。
+# この CI は push された data/ からのビルド・X投稿・公開と、鮮度の監視だけを行う。
+on:
+  push:
+    branches: [master]
+    paths:
+      - "data/**"
+      - "src/**"
+      - ".github/workflows/daily-gainers-site.yml"
+  schedule:
+    # 17:00 JST = 08:00 UTC、平日のみ。手元PCの取得が止まっていないかの監視役。
+    - cron: "0 8 * * 1-5"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  # 失敗を Issue で知らせるために必要
+  issues: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # 取得先が応答しないまま既定の6時間走り続けるのを防ぐ。
+    # 通常は数分で終わる。超えたら失敗として通知が飛ぶ。
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt pytest
+
+      # 壊れたパーサのまま取得・デプロイまで進むと、空のランキングで
+      # サイトを上書きしてしまう。その前に落とす。
+      - name: Run tests
+        run: pytest
+
+      - name: Build site (data/ から。取得はしない)
+        run: python src/build_site.py --no-fetch
+
+      # 手元PCの取得タスクが止まっていないかの監視。
+      # 最新データが4日より古ければ失敗し、下の Issue 通知が鳴る。
+      - name: Check data freshness
+        run: |
+          python - <<'PY'
+          import json, sys
+          from datetime import date, datetime
+          d = json.load(open("data/latest.json", encoding="utf-8"))
+          rec = datetime.strptime(d["rec_date"], "%Y-%m-%d").date()
+          age = (date.today() - rec).days
+          print(f"latest rec_date={rec} ({age}日前)")
+          if age > 4:
+              print("::error::ランキングデータが4日以上更新されていません。手元PCの取得タスク(run-daily.ps1)を確認してください。")
+              sys.exit(1)
+          PY
+
+      - name: Ensure Cloudflare Pages project exists
+        run: |
+          curl -s -o /dev/null -w "%{http_code}\n" -X POST \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/pages/projects" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"name":"kabu-agari-ranking","production_branch":"master"}'
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: kabu-agari-ranking
+          directory: output
+
+      # GitHub は定期ジョブの失敗を通知しないので、Issue を立てて明示的に鳴らす。
+      # 既に開いている失敗 Issue があれば、増やさずコメントを足す。
+      - name: Notify on failure
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          gh label create ci-failure --color B60205 --description "定期実行の失敗" --force || true
+          body="$(date -u '+%Y-%m-%d %H:%M UTC') の実行が失敗しました。 ログ: ${RUN_URL}"
+          existing=$(gh issue list --label ci-failure --state open --limit 1 --json number --jq '.[0].number // empty')
+          if [ -n "$existing" ]; then
+            gh issue comment "$existing" --body "$body"
+          else
+            gh issue create --title "日次ランキングの取得・公開が失敗しています" --label ci-failure --body "$body"
+          fi

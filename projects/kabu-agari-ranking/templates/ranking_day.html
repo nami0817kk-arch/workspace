@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}{{ rec_date }} {{ heading }}｜値上がり株ランキング{% endblock %}
+{% block description %}{{ rec_date }}時点の{{ heading }}のアーカイブ。{% endblock %}
+{% block content %}
+<h1>{{ rec_date }} の{{ heading }}</h1>
+{% include "_ranking_table.html" %}
+{% include "_ad_slot.html" %}
+<p><a href="index.html">← 過去の{{ heading }}一覧に戻る</a></p>
+{% endblock %}

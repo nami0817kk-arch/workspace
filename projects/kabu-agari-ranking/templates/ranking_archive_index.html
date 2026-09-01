@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}過去の{{ heading }}一覧｜値上がり株ランキング{% endblock %}
+{% block description %}{{ heading }}の過去掲載日一覧。{% endblock %}
+{% block content %}
+<h1>過去の{{ heading }}一覧</h1>
+<div class="archive-list">
+  {% for d in dates %}
+  <a href="{{ d }}.html">{{ d }} の{{ heading }}</a>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="google-site-verification" content="0hcqlTHZBjIT-I9RKazTzGUVa2pZKmFREjTWbpvXRlk" />
+<title>{% block title %}値上がり株ランキング{% endblock %}</title>
+<meta name="description" content="{% block description %}日本株の値上がり率ランキングを毎日更新して掲載しています。{% endblock %}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="値上がり株ランキング">
+<meta property="og:title" content="{{ self.title() }}">
+<meta property="og:description" content="{{ self.description() }}">
+<meta property="og:image" content="https://kabu-agari-ranking.pages.dev/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<style>
+  :root {
+    --bg: #f7f8fa;
+    --card-bg: #ffffff;
+    --text: #1a1a1a;
+    --muted: #6b7280;
+    --accent: #d64545;
+    --border: #e5e7eb;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+  }
+  header.site-header {
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem;
+  }
+  header.site-header .inner {
+    max-width: 800px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  header.site-header a.logo {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: var(--text);
+    text-decoration: none;
+  }
+  nav a {
+    color: var(--muted);
+    text-decoration: none;
+    margin-left: 1rem;
+    font-size: 0.9rem;
+  }
+  nav a:hover { color: var(--accent); }
+  main {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+  }
+  .ad-slot {
+    max-width: 800px;
+    margin: 1rem auto;
+    padding: 0.5rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.75rem;
+    border: 1px dashed var(--border);
+  }
+  .table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  table.ranking {
+    width: 100%;
+    min-width: 560px;
+    border-collapse: collapse;
+    background: var(--card-bg);
+    font-size: 0.9rem;
+  }
+  table.ranking th, table.ranking td {
+    padding: 0.5rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+    text-align: right;
+  }
+  table.ranking th:nth-child(2), table.ranking td:nth-child(2),
+  table.ranking th:nth-child(3), table.ranking td:nth-child(3) {
+    text-align: left;
+  }
+  table.ranking th { color: var(--muted); font-weight: normal; }
+  table.ranking td.gain { color: var(--accent); font-weight: bold; }
+  table.ranking td.loss { color: #2563a8; font-weight: bold; }
+  .archive-list a {
+    display: block;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+    text-decoration: none;
+  }
+  .disclaimer {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: #fff8e1;
+    border: 1px solid #f0e0a0;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  footer {
+    max-width: 800px;
+    margin: 2rem auto 1rem;
+    padding: 1rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  footer a { color: var(--muted); margin: 0 0.5rem; }
+  .date-jump {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .date-jump input[type="date"] {
+    font-size: 0.85rem;
+    padding: 0.15rem 0.3rem;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    background: var(--card-bg);
+    color: var(--text);
+  }
+  dl { margin: 0 0 1rem; }
+  dt { margin-top: 0.75rem; }
+  dd { margin: 0.25rem 0 0; color: var(--muted); }
+</style>
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c8d25daf2f614e8c8b4e20694bacc1f8"}'></script><!-- End Cloudflare Web Analytics -->
+</head>
+<body>
+<header class="site-header">
+  <div class="inner">
+    <a class="logo" href="{{ base_url }}index.html">値上がり株ランキング</a>
+    <nav>
+      <a href="{{ base_url }}index.html">値上がり</a>
+      <a href="{{ base_url }}losers.html">値下がり</a>
+      <a href="{{ base_url }}active.html">活況</a>
+      <a href="{{ base_url }}about.html">このサイトについて</a>
+    </nav>
+    <div class="date-jump">
+      <label for="dateJump">📅 日付から探す</label>
+      <input type="date" id="dateJump" min="{{ GAINERS_DATES_MIN }}" max="{{ GAINERS_DATES_MAX }}">
+    </div>
+  </div>
+</header>
+
+<!-- TODO: AdSense publisher ID を取得後、下記コメントアウトを外して設置する
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
+-->
+
+<main>
+{% include "_ad_slot.html" %}
+{% block content %}{% endblock %}
+
+<div class="disclaimer">
+  本サイトに掲載する情報は投資判断の参考となる一般的な情報の提供を目的としており、
+  特定の銘柄の売買を推奨または勧誘するものではありません。掲載データの正確性・完全性を
+  保証するものではなく、投資に関する最終判断はご自身の責任で行ってください。
+  詳しくは<a href="{{ base_url }}about.html">このサイトについて</a>をご覧ください。
+</div>
+</main>
+
+<footer>
+  <a href="{{ base_url }}about.html">このサイトについて</a>
+  <a href="{{ base_url }}privacy.html">プライバシーポリシー</a>
+</footer>
+<script>
+(function () {
+  var dates = {{ GAINERS_DATES_JSON|safe }};
+  var input = document.getElementById('dateJump');
+  if (!input || !dates.length) return;
+  input.addEventListener('change', function () {
+    var picked = input.value;
+    if (!picked) return;
+    var target = null;
+    for (var i = 0; i < dates.length; i++) {
+      if (dates[i] <= picked) { target = dates[i]; break; }
+    }
+    if (!target) target = dates[dates.length - 1];
+    var base = "{{ base_url }}";
+    window.location.href = (target === dates[0])
+      ? base + "index.html"
+      : base + "archive/gainers/" + target + ".html";
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# 認証情報。X API のキーをローカルで .env に置いたときに、
+# うっかりコミットしないようにする。
+.env
+
+# ビルド成果物（CI実行のたびに再生成）
+output/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 環境変数（APIキーなど）
+.env
+.pytest_cache/
+commit-msg.tmp
+run-daily.log

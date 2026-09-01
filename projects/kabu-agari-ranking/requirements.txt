@@ -1,0 +1,14 @@
+# バージョンは固定する。`>=` のままだと、こちらが何も変えていないのに
+# 上流の新版が出た日にビルドが壊れ、平日毎朝の自動更新が止まる。
+# 更新は Dependabot の PR で受け取り、CI が通ることを確認してから上げる。
+requests==2.34.2
+beautifulsoup4==4.15.0
+lxml==6.1.2
+pandas==3.0.5
+jinja2==3.1.6
+requests-oauthlib==2.0.0
+
+# kabutan の取得・解析は 共有パッケージ kabutan-client に一本化してある
+# （quality-gainer-tracker と共通。HTML 構造の変化はここを更新して直す）。
+# コミット固定なのは、ai-lab 側の変更で毎朝のジョブが勝手に壊れないようにするため。
+kabutan-client @ git+https://github.com/nami0817kk-arch/kabutan-client.git@44c7e1dd357c5380050c1343ffe932268b80ec62

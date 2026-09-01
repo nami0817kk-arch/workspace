@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}{{ rec_date }} {{ heading }} TOP{{ rows|length }}｜値上がり株ランキング{% endblock %}
+{% block description %}{{ rec_date }}時点の{{ heading }} TOP{{ rows|length }}を掲載。{% endblock %}
+{% block content %}
+<h1>本日の{{ heading }}</h1>
+<p>
+  更新日: {{ rec_date }}。{{ intro }}
+  各項目の意味は<a href="{{ base_url }}about.html">このサイトについて</a>の用語解説をご覧ください。
+</p>
+{% include "_ranking_table.html" %}
+{% include "_ad_slot.html" %}
+<p><a href="{{ base_url }}{{ archive_href }}">過去の{{ heading }}を見る →</a></p>
+{% endblock %}
