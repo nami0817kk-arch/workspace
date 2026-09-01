@@ -1,0 +1,20 @@
+name: gemini-api tests
+
+on:
+  push:
+    branches: ["**"]
+    paths: ["projects/gemini-api/**", ".github/workflows/gemini-api-tests.yml"]
+  pull_request:
+    paths: ["projects/gemini-api/**", ".github/workflows/gemini-api-tests.yml"]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    uses: ./.github/workflows/python-tests.yml
+    with:
+      workdir: "projects/gemini-api"
+      # 上流はスタブ化してあるので GEMINI_API_KEY なしで通る
+      install: "pip install -r requirements-dev.txt"
