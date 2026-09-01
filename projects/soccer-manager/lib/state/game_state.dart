@@ -287,7 +287,7 @@ class GameState extends ChangeNotifier {
       _refreshScoutCandidates();
     }
     initialized = true;
-    notifyListeners();
+    _notify();
   }
 
   /// セーブデータ内の全選手IDを集め、[PlayerGenerator]のIDカウンターへ反映する。
@@ -371,6 +371,12 @@ class GameState extends ChangeNotifier {
     }
   }
 
+  /// 状態変更を購読側へ通知する。
+  /// ChangeNotifier.notifyListeners は @protected かつ @visibleForTesting
+  /// のため、クラス外(part ファイルの extension)から直接呼ぶと解析警告になる。
+  /// 通知はすべてこの委譲を経由させる。
+  void _notify() => notifyListeners();
+
   /// セーブデータをローカルストレージへ書き込む。ブラウザのストレージ容量
   /// 超過など、書き込み自体が失敗する場合がある(特にディビジョン数が増えて
   /// セーブデータが肥大化した場合)。ここで例外を握りつぶさずに外へ伝播させると、
@@ -393,7 +399,7 @@ class GameState extends ChangeNotifier {
     } catch (e) {
       lastSaveError = Tr.pick('セーブデータの保存に失敗しました。端末の空き容量を確認してください。',
           'The game could not be saved. Check the free space on your device.');
-      notifyListeners();
+      _notify();
     }
   }
 
@@ -455,7 +461,7 @@ class GameState extends ChangeNotifier {
     }
     lastContractExpirations = [];
     lastRetirements = [];
-    notifyListeners();
+    _notify();
   }
 
   /// 指定スロットのセーブデータを完全に削除する。カレントスロットの場合は
@@ -467,7 +473,7 @@ class GameState extends ChangeNotifier {
       _save = null;
       transferMarket = [];
       scoutCandidates = [];
-      notifyListeners();
+      _notify();
     }
   }
 
@@ -484,7 +490,7 @@ class GameState extends ChangeNotifier {
     GameDifficulty difficulty = GameDifficulty.normal,
   }) async {
     isBusy = true;
-    notifyListeners();
+    _notify();
     // ローディング表示を1フレーム描画させてから、重いクラブ生成処理に入る。
     await Future<void>.delayed(Duration.zero);
     final userTeam = PlayerGenerator.generateSquad(
@@ -589,7 +595,7 @@ class GameState extends ChangeNotifier {
     FreeAgentEngine.topUp(_save!.freeAgents);
     lastContractExpirations = [];
     isBusy = false;
-    notifyListeners();
+    _notify();
     await _persist();
   }
 
@@ -613,7 +619,7 @@ class GameState extends ChangeNotifier {
     transferMarket = [];
     scoutCandidates = [];
     lastContractExpirations = [];
-    notifyListeners();
+    _notify();
     await _persist();
   }
 
@@ -636,7 +642,7 @@ class GameState extends ChangeNotifier {
     _migrateDivisionPyramidIfNeeded();
     transferMarket = TransferMarket.generate();
     _refreshScoutCandidates();
-    notifyListeners();
+    _notify();
     await _persist();
     return true;
   }
@@ -650,7 +656,7 @@ class GameState extends ChangeNotifier {
     if (save == null) return;
     if (save.firstRunStepsSeen.contains(step.name)) return;
     save.firstRunStepsSeen.add(step.name);
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -660,7 +666,7 @@ class GameState extends ChangeNotifier {
     if (save == null) return;
     if (save.firstRunGuideDismissed) return;
     save.firstRunGuideDismissed = true;
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -668,7 +674,7 @@ class GameState extends ChangeNotifier {
   void setTeamTrainingFocus(TrainingFocus focus) {
     if (_save == null) return;
     userTeam.defaultTrainingFocus = focus;
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -677,7 +683,7 @@ class GameState extends ChangeNotifier {
     if (_save == null) return;
     final player = userTeam.players.firstWhere((p) => p.id == playerId);
     player.individualFocus = focus;
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -687,7 +693,7 @@ class GameState extends ChangeNotifier {
     if (_save == null) return;
     final player = _save!.youthProspects.firstWhere((p) => p.id == playerId);
     player.individualFocus = focus;
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -707,7 +713,7 @@ class GameState extends ChangeNotifier {
     _save!.budget += amount;
     _logNews(Tr.pick('スポンサーの特別協賛金として$amount万円を受け取った。',
         'You received $amount in special sponsorship.'));
-    notifyListeners();
+    _notify();
     _persist();
     return amount;
   }
@@ -717,7 +723,7 @@ class GameState extends ChangeNotifier {
   void addDebugFunds(int amount) {
     if (_save == null) return;
     _save!.budget += amount;
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -728,7 +734,7 @@ class GameState extends ChangeNotifier {
     if (_save == null) return;
     final player = userTeam.players.firstWhere((p) => p.id == playerId);
     player.trainingConvertTargetPosition = target?.name;
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -736,7 +742,7 @@ class GameState extends ChangeNotifier {
   void setTrainingIntensity(TrainingIntensity intensity) {
     if (_save == null) return;
     userTeam.trainingIntensity = intensity;
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -744,7 +750,7 @@ class GameState extends ChangeNotifier {
   void setTrainingDayOfWeek(int weekday) {
     if (_save == null) return;
     userTeam.trainingDayOfWeek = weekday;
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -753,7 +759,7 @@ class GameState extends ChangeNotifier {
   void setAutoTrainingEnabled(bool enabled) {
     if (_save == null) return;
     userTeam.autoTrainingEnabled = enabled;
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -764,7 +770,7 @@ class GameState extends ChangeNotifier {
     final mentee = userTeam.players.firstWhere((p) => p.id == menteeId);
     if (mentorId == null) {
       mentee.mentorId = null;
-      notifyListeners();
+      _notify();
       _persist();
       return true;
     }
@@ -780,7 +786,7 @@ class GameState extends ChangeNotifier {
       return false;
     }
     mentee.mentorId = mentorId;
-    notifyListeners();
+    _notify();
     _persist();
     return true;
   }
@@ -802,7 +808,7 @@ class GameState extends ChangeNotifier {
       if (activeCount >= maxDrillSlots) return false;
     }
     player.drillAttributeKey = attributeKey;
-    notifyListeners();
+    _notify();
     _persist();
     return true;
   }
@@ -818,7 +824,7 @@ class GameState extends ChangeNotifier {
       if (activeCount >= maxDrillSlots) return false;
     }
     player.drillAttributeKey2 = attributeKey;
-    notifyListeners();
+    _notify();
     _persist();
     return true;
   }
@@ -833,7 +839,7 @@ class GameState extends ChangeNotifier {
     }
     final player = userTeam.players.firstWhere((p) => p.id == playerId);
     player.traitTrainingTarget = target;
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -847,7 +853,7 @@ class GameState extends ChangeNotifier {
     }
     final player = userTeam.players.firstWhere((p) => p.id == playerId);
     player.personalityTraitTrainingTarget = target;
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -863,7 +869,7 @@ class GameState extends ChangeNotifier {
       return;
     }
     player.developmentTargetRole = role;
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -875,7 +881,7 @@ class GameState extends ChangeNotifier {
     player.focusRotation =
         (rotation == null || rotation.isEmpty) ? null : rotation;
     player.rotationWeekIndex = 0;
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -931,7 +937,7 @@ class GameState extends ChangeNotifier {
     _evaluateAchievements();
     _save!.trainingDoneThisWeek = true;
     lastTrainingResults = _diffTrainingResults(overallBefore, attrsBefore);
-    notifyListeners();
+    _notify();
     await _persist();
     return true;
   }
@@ -993,7 +999,7 @@ class GameState extends ChangeNotifier {
     if (_save!.budget < cost) return false;
     _save!.budget -= cost;
     infra.upgradeStaff(role);
-    notifyListeners();
+    _notify();
     await _persist();
     return true;
   }
@@ -1007,7 +1013,7 @@ class GameState extends ChangeNotifier {
     if (_save!.budget < cost) return false;
     _save!.budget -= cost;
     infra.upgradeFacility(type);
-    notifyListeners();
+    _notify();
     await _persist();
     return true;
   }
@@ -1016,14 +1022,14 @@ class GameState extends ChangeNotifier {
   Future<void> setTicketPricing(TicketPricing pricing) async {
     if (_save == null) return;
     _save!.ticketPricing = pricing;
-    notifyListeners();
+    _notify();
     await _persist();
   }
 
   void setPressing(int value) {
     if (_save == null) return;
     userTeam.pressing = value.clamp(0, 100);
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -1031,7 +1037,7 @@ class GameState extends ChangeNotifier {
   void setMentality(TeamMentality mentality) {
     if (_save == null) return;
     userTeam.mentality = mentality;
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -1039,7 +1045,7 @@ class GameState extends ChangeNotifier {
   void setTacticalStyle(TacticalStyle style) {
     if (_save == null) return;
     userTeam.tacticalStyle = style;
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -1049,28 +1055,28 @@ class GameState extends ChangeNotifier {
     final idx = userTeam.players.indexWhere((p) => p.id == playerId);
     if (idx < 0) return;
     userTeam.players[idx].squadStatus = status;
-    notifyListeners();
+    _notify();
     _persist();
   }
 
   void setLineHeight(int value) {
     if (_save == null) return;
     userTeam.lineHeight = value.clamp(0, 100);
-    notifyListeners();
+    _notify();
     _persist();
   }
 
   void setWidth(int value) {
     if (_save == null) return;
     userTeam.width = value.clamp(0, 100);
-    notifyListeners();
+    _notify();
     _persist();
   }
 
   void setTempo(int value) {
     if (_save == null) return;
     userTeam.tempo = value.clamp(0, 100);
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -1079,7 +1085,7 @@ class GameState extends ChangeNotifier {
     if (_save == null) return;
     final player = userTeam.players.firstWhere((p) => p.id == playerId);
     player.duty = duty;
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -1088,7 +1094,7 @@ class GameState extends ChangeNotifier {
     if (_save == null) return;
     final player = userTeam.players.firstWhere((p) => p.id == playerId);
     player.role = role;
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -1099,7 +1105,7 @@ class GameState extends ChangeNotifier {
     if (playerId != null && userTeam.viceCaptainId == playerId) {
       userTeam.viceCaptainId = null;
     }
-    notifyListeners();
+    _notify();
     await _persist();
   }
 
@@ -1110,7 +1116,7 @@ class GameState extends ChangeNotifier {
     if (playerId != null && userTeam.captainId == playerId) {
       userTeam.captainId = null;
     }
-    notifyListeners();
+    _notify();
     await _persist();
   }
 
@@ -1118,7 +1124,7 @@ class GameState extends ChangeNotifier {
   void setPenaltyTaker(String? playerId) {
     if (_save == null) return;
     userTeam.penaltyTakerId = playerId;
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -1126,7 +1132,7 @@ class GameState extends ChangeNotifier {
   void setFreeKickTaker(String? playerId) {
     if (_save == null) return;
     userTeam.freeKickTakerId = playerId;
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -1134,7 +1140,7 @@ class GameState extends ChangeNotifier {
   void setCornerTaker(String? playerId) {
     if (_save == null) return;
     userTeam.cornerTakerId = playerId;
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -1142,7 +1148,7 @@ class GameState extends ChangeNotifier {
   void setSetPieceDefender(String? playerId) {
     if (_save == null) return;
     userTeam.setPieceDefenderId = playerId;
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -1151,7 +1157,7 @@ class GameState extends ChangeNotifier {
   void setManMarker(String? playerId) {
     if (_save == null) return;
     userTeam.manMarkerId = playerId;
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -1160,7 +1166,7 @@ class GameState extends ChangeNotifier {
   void setTimeWastingMode(bool enabled) {
     if (_save == null) return;
     userTeam.timeWastingMode = enabled;
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -1176,7 +1182,7 @@ class GameState extends ChangeNotifier {
       final delta = (base * p.personality.resultSensitivity).round();
       p.morale = (p.morale + delta).clamp(0, 100);
     }
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -1184,7 +1190,7 @@ class GameState extends ChangeNotifier {
     if (_save == null) return;
     userTeam.formation = formation;
     LineupUtils.autoFill(userTeam);
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -1214,7 +1220,7 @@ class GameState extends ChangeNotifier {
       }
       team.tacticPresets.add(preset);
     }
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -1244,7 +1250,7 @@ class GameState extends ChangeNotifier {
     team.cornerTakerId =
         rosterIds.contains(preset.cornerTakerId) ? preset.cornerTakerId : null;
     LineupUtils.autoFill(team);
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -1252,7 +1258,7 @@ class GameState extends ChangeNotifier {
   void deleteTacticPreset(String name) {
     if (_save == null) return;
     userTeam.tacticPresets.removeWhere((p) => p.name == name);
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -1266,14 +1272,14 @@ class GameState extends ChangeNotifier {
     final id = current.removeAt(oldIndex);
     current.insert(newIndex, id);
     team.depthChartOrder[position.name] = current;
-    notifyListeners();
+    _notify();
     _persist();
   }
 
   void autoFillStartingXI() {
     if (_save == null) return;
     LineupUtils.autoFill(userTeam);
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -1295,7 +1301,7 @@ class GameState extends ChangeNotifier {
       if (currentInPosition >= quota) return;
       team.startingXI.add(playerId);
     }
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -1310,7 +1316,7 @@ class GameState extends ChangeNotifier {
     final team = userTeam;
     if (outPlayerId != null) team.startingXI.remove(outPlayerId);
     if (!team.startingXI.contains(inPlayerId)) team.startingXI.add(inPlayerId);
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -1327,7 +1333,7 @@ class GameState extends ChangeNotifier {
     _save!.budget -= player.marketValue;
     userTeam.players.add(player);
     transferMarket.removeWhere((p) => p.id == playerId);
-    notifyListeners();
+    _notify();
     await _persist();
     return true;
   }
@@ -1377,7 +1383,7 @@ class GameState extends ChangeNotifier {
     final accepted = _transferOfferRng.nextDouble() < chance;
     if (!accepted) {
       transferOffersRejectedThisWeek.add(playerId);
-      notifyListeners();
+      _notify();
       return (attempted: true, accepted: false);
     }
     _save!.budget -= offer;
@@ -1387,7 +1393,7 @@ class GameState extends ChangeNotifier {
       _save!.negotiationSignings++;
       _evaluateAchievements();
     }
-    notifyListeners();
+    _notify();
     await _persist();
     return (attempted: true, accepted: true);
   }
@@ -1469,7 +1475,7 @@ class GameState extends ChangeNotifier {
               "You sold ${player.name}, one of the dressing room's leaders, and it has unsettled the squad"),
           context: Tr.pick('移籍', 'Transfer'));
     }
-    notifyListeners();
+    _notify();
     await _persist();
     return true;
   }
@@ -1563,7 +1569,7 @@ class GameState extends ChangeNotifier {
     if (_save!.budget < cost) return false;
     _save!.budget -= cost;
     ContractEngine.renewContract(player);
-    notifyListeners();
+    _notify();
     await _persist();
     return true;
   }
@@ -1583,7 +1589,7 @@ class GameState extends ChangeNotifier {
       offeredWage: player.wage,
       counterWage: ContractEngine.initialDemand(player),
     );
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -1606,7 +1612,7 @@ class GameState extends ChangeNotifier {
       // 交渉相手が何らかの理由で既にチームを離れている(インポートされた
       // セーブなど)場合は、交渉自体を破棄して安全に終了する。
       _save!.pendingContractNegotiation = null;
-      notifyListeners();
+      _notify();
       await _persist();
       return ContractOfferResult.walkedAway;
     }
@@ -1619,20 +1625,20 @@ class GameState extends ChangeNotifier {
       player.wage = wage;
       ContractEngine.renewContract(player);
       _save!.pendingContractNegotiation = null;
-      notifyListeners();
+      _notify();
       await _persist();
       return ContractOfferResult.accepted;
     }
     negotiation.roundsUsed += 1;
     if (negotiation.roundsUsed >= ContractEngine.maxNegotiationRounds) {
       _save!.pendingContractNegotiation = null;
-      notifyListeners();
+      _notify();
       await _persist();
       return ContractOfferResult.walkedAway;
     }
     negotiation.offeredWage = wage;
     negotiation.counterWage = ContractEngine.counterOffer(player, wage);
-    notifyListeners();
+    _notify();
     await _persist();
     return ContractOfferResult.countered;
   }
@@ -1641,7 +1647,7 @@ class GameState extends ChangeNotifier {
   void cancelContractNegotiation() {
     if (_save == null) return;
     _save!.pendingContractNegotiation = null;
-    notifyListeners();
+    _notify();
     _persist();
   }
 
@@ -1651,7 +1657,7 @@ class GameState extends ChangeNotifier {
     final player = userTeam.players.firstWhere((p) => p.id == playerId);
     final ok = HappinessEngine.reassure(player);
     if (ok) {
-      notifyListeners();
+      _notify();
       await _persist();
     }
     return ok;
@@ -1675,7 +1681,7 @@ class GameState extends ChangeNotifier {
         (talkBaseMoraleBoost * player.personality.resultSensitivity).round();
     player.morale = (player.morale + delta).clamp(0, 100);
     player.talkCooldownWeeks = TrainingEngine.talkCooldownWeeks;
-    notifyListeners();
+    _notify();
     await _persist();
     return true;
   }
@@ -1690,7 +1696,7 @@ class GameState extends ChangeNotifier {
     if (userTeam.tacticalMeetingCooldownWeeks > 0) return false;
     TrainingEngine.applyTacticalMeeting(userTeam.players);
     userTeam.tacticalMeetingCooldownWeeks = tacticalMeetingCooldownWeeks;
-    notifyListeners();
+    _notify();
     await _persist();
     return true;
   }
@@ -1723,7 +1729,7 @@ class GameState extends ChangeNotifier {
     );
     userTeam.players.add(player);
     transferMarket.removeAt(idx);
-    notifyListeners();
+    _notify();
     await _persist();
     return true;
   }
@@ -1763,7 +1769,7 @@ class GameState extends ChangeNotifier {
     player.releaseClause = null;
     userTeam.players.add(player);
     transferMarket.removeAt(idx);
-    notifyListeners();
+    _notify();
     await _persist();
     return true;
   }
@@ -1785,7 +1791,7 @@ class GameState extends ChangeNotifier {
     // あたって元の水準に戻す。そのままだと恒久的に割引契約のままになる。
     player.wage = (player.wage / 0.6).round().clamp(1, 999);
     player.contractYearsRemaining = ContractEngine.negotiatedYears(player);
-    notifyListeners();
+    _notify();
     await _persist();
     return true;
   }
@@ -1801,7 +1807,7 @@ class GameState extends ChangeNotifier {
     }
     _save!.sponsorDeal = _save!.pendingSponsorOffers[offerIndex];
     _save!.pendingSponsorOffers = [];
-    notifyListeners();
+    _notify();
     await _persist();
     return true;
   }
@@ -1865,7 +1871,7 @@ class GameState extends ChangeNotifier {
     if (_save!.budget < cost) return false;
     _save!.budget -= cost;
     _refreshScoutCandidates();
-    notifyListeners();
+    _notify();
     await _persist();
     return true;
   }
@@ -1889,7 +1895,7 @@ class GameState extends ChangeNotifier {
     scoutCandidates.add(
       ScoutingEngine.generateScoutedProspect(scoutLevel: scoutLevel),
     );
-    notifyListeners();
+    _notify();
     await _persist();
     return true;
   }
@@ -1901,7 +1907,7 @@ class GameState extends ChangeNotifier {
     if (idx < 0) return false;
     final player = _save!.youthProspects.removeAt(idx);
     userTeam.players.add(player);
-    notifyListeners();
+    _notify();
     await _persist();
     return true;
   }
@@ -1909,7 +1915,7 @@ class GameState extends ChangeNotifier {
   Future<void> releaseYouthProspect(String playerId) async {
     if (_save == null) return;
     _save!.youthProspects.removeWhere((p) => p.id == playerId);
-    notifyListeners();
+    _notify();
     await _persist();
   }
 
@@ -1924,7 +1930,7 @@ class GameState extends ChangeNotifier {
     if (idx < 0) return false;
     final player = _save!.pendingYouthIntake.removeAt(idx);
     _save!.youthProspects.add(player);
-    notifyListeners();
+    _notify();
     await _persist();
     return true;
   }
@@ -1933,7 +1939,7 @@ class GameState extends ChangeNotifier {
   Future<void> releaseYouthIntakePlayer(String playerId) async {
     if (_save == null) return;
     _save!.pendingYouthIntake.removeWhere((p) => p.id == playerId);
-    notifyListeners();
+    _notify();
     await _persist();
   }
 
@@ -1953,7 +1959,7 @@ class GameState extends ChangeNotifier {
     final player = _save!.freeAgents.removeAt(idx);
     ContractEngine.renewContract(player);
     userTeam.players.add(player);
-    notifyListeners();
+    _notify();
     await _persist();
     return true;
   }
@@ -1963,7 +1969,7 @@ class GameState extends ChangeNotifier {
     if (_save == null) return;
     final player = userTeam.players.firstWhere((p) => p.id == playerId);
     player.releaseClause = amount;
-    notifyListeners();
+    _notify();
     await _persist();
   }
 
@@ -1972,7 +1978,7 @@ class GameState extends ChangeNotifier {
     if (_save == null) return;
     final player = userTeam.players.firstWhere((p) => p.id == playerId);
     player.isTransferListed = listed;
-    notifyListeners();
+    _notify();
     await _persist();
   }
 
@@ -1987,7 +1993,7 @@ class GameState extends ChangeNotifier {
     if (!_save!.watchlistPlayerIds.remove(playerId)) {
       _save!.watchlistPlayerIds.add(playerId);
     }
-    notifyListeners();
+    _notify();
     await _persist();
   }
 
@@ -2020,7 +2026,7 @@ class GameState extends ChangeNotifier {
     if (wasStarter) {
       LineupUtils.autoFill(team);
     }
-    notifyListeners();
+    _notify();
     await _persist();
     return true;
   }
@@ -2081,7 +2087,7 @@ class GameState extends ChangeNotifier {
     for (final p in MatchEngine.lineupOf(userTeam)) {
       p.morale = (p.morale + 3).clamp(0, 100);
     }
-    notifyListeners();
+    _notify();
     await _persist();
     return result;
   }
@@ -2100,7 +2106,7 @@ class GameState extends ChangeNotifier {
     // 承諾などで既に放出済み)は、対価を得ずにオファーだけを破棄する。
     if (!team.players.any((p) => p.id == offer.playerId)) {
       _save!.incomingOffers.removeAt(idx);
-      notifyListeners();
+      _notify();
       await _persist();
       return false;
     }
@@ -2120,7 +2126,7 @@ class GameState extends ChangeNotifier {
       LineupUtils.autoFill(team);
     }
     _save!.budget += offer.amount;
-    notifyListeners();
+    _notify();
     await _persist();
     return true;
   }
@@ -2128,7 +2134,7 @@ class GameState extends ChangeNotifier {
   Future<void> declineIncomingOffer(String offerId) async {
     if (_save == null) return;
     _save!.incomingOffers.removeWhere((o) => o.id == offerId);
-    notifyListeners();
+    _notify();
     await _persist();
   }
 
@@ -2359,7 +2365,7 @@ class GameState extends ChangeNotifier {
   Future<void> dismissBoardReview() async {
     if (_save == null) return;
     _save!.pendingBoardReviewMessage = null;
-    notifyListeners();
+    _notify();
     await _persist();
   }
 
@@ -2384,7 +2390,7 @@ class GameState extends ChangeNotifier {
       p.morale = (p.morale + option.moraleDelta).clamp(0, 100);
     }
     _save!.pendingPressConference = null;
-    notifyListeners();
+    _notify();
     await _persist();
   }
 
@@ -2407,7 +2413,7 @@ class GameState extends ChangeNotifier {
       BoardEngine.estimateTargetRank(_save!.league, newTeamId),
     );
     _save!.clubHistory.add(newTeamName);
-    notifyListeners();
+    _notify();
     await _persist();
     return true;
   }
@@ -2415,7 +2421,7 @@ class GameState extends ChangeNotifier {
   Future<void> declineJobOffer() async {
     if (_save == null) return;
     _save!.pendingJobOfferTeamId = null;
-    notifyListeners();
+    _notify();
     await _persist();
   }
 
@@ -2573,7 +2579,7 @@ class GameState extends ChangeNotifier {
       ),
     );
     _save!.budget += amount;
-    notifyListeners();
+    _notify();
     await _persist();
     return true;
   }
@@ -2602,7 +2608,7 @@ class GameState extends ChangeNotifier {
         weeksRemaining: term.weeks,
       ),
     );
-    notifyListeners();
+    _notify();
     await _persist();
     return true;
   }
@@ -2768,7 +2774,7 @@ class GameState extends ChangeNotifier {
     final state = _liveSecondHalfState ?? _liveFirstHalfState;
     if (state == null || state.isFinished) return;
     MatchEngine.setInstruction(state, instruction);
-    notifyListeners();
+    _notify();
   }
 
   int get substitutionsUsed => _liveSubstitutionsUsed;
@@ -2783,7 +2789,7 @@ class GameState extends ChangeNotifier {
     if (!canMakeSubstitution) return false;
     swapStartingPlayer(outPlayerId: outPlayerId, inPlayerId: inPlayerId);
     _liveSubstitutionsUsed++;
-    notifyListeners();
+    _notify();
     return true;
   }
 
@@ -2808,7 +2814,7 @@ class GameState extends ChangeNotifier {
     if (!applied) return false;
     swapStartingPlayer(outPlayerId: outPlayerId, inPlayerId: inPlayerId);
     _liveSubstitutionsUsed++;
-    notifyListeners();
+    _notify();
     return true;
   }
 
@@ -2838,7 +2844,7 @@ class GameState extends ChangeNotifier {
     final wasAlreadyBusy = isBusy;
     if (!wasAlreadyBusy) {
       isBusy = true;
-      notifyListeners();
+      _notify();
     }
 
     _save!.trainingDoneThisWeek = false;
@@ -3246,7 +3252,7 @@ class GameState extends ChangeNotifier {
     if (!wasAlreadyBusy) {
       isBusy = false;
     }
-    notifyListeners();
+    _notify();
     await _persist();
     return userFirstHalf;
   }
@@ -3288,7 +3294,7 @@ class GameState extends ChangeNotifier {
     if (state.isFinished) {
       return _finalizeSecondHalf(state.toHalfResult());
     }
-    notifyListeners();
+    _notify();
     await _persist();
     return null;
   }
@@ -3310,7 +3316,7 @@ class GameState extends ChangeNotifier {
         final merged = await _finalizeSecondHalf(secondState.toHalfResult());
         return (merged: merged, decisionEvent: event);
       }
-      notifyListeners();
+      _notify();
       await _persist();
       return (merged: null, decisionEvent: event);
     }
@@ -3325,7 +3331,7 @@ class GameState extends ChangeNotifier {
               home: home, away: away, weather: _liveWeatherNow);
         }
       }
-      notifyListeners();
+      _notify();
       await _persist();
       return (merged: null, decisionEvent: event);
     }
@@ -3468,7 +3474,7 @@ class GameState extends ChangeNotifier {
     _liveSubstitutionsUsed = 0;
     _liveWasInteractive = false;
 
-    notifyListeners();
+    _notify();
     await _persist();
     return merged;
   }
@@ -3554,7 +3560,7 @@ class GameState extends ChangeNotifier {
   /// シーズンが終了する、またはユーザーの試合がない節に達した時点で止まる。
   Future<List<MatchResult>> simulateAheadMatchdays(int matchdays) async {
     isBusy = true;
-    notifyListeners();
+    _notify();
     final results = <MatchResult>[];
     try {
       for (int i = 0; i < matchdays; i++) {
@@ -3565,7 +3571,7 @@ class GameState extends ChangeNotifier {
       }
     } finally {
       isBusy = false;
-      notifyListeners();
+      _notify();
     }
     return results;
   }
@@ -3666,7 +3672,7 @@ class GameState extends ChangeNotifier {
       _applyUserCupPostMatchEffects(result);
       _afterDomesticCupMatchApplied(match);
     }
-    notifyListeners();
+    _notify();
     await _persist();
     return result;
   }
@@ -3711,7 +3717,7 @@ class GameState extends ChangeNotifier {
       _applyUserCupPostMatchEffects(result);
       _afterContinentalGroupMatchApplied(match);
     }
-    notifyListeners();
+    _notify();
     await _persist();
     return result;
   }
@@ -3737,7 +3743,7 @@ class GameState extends ChangeNotifier {
       _applyUserCupPostMatchEffects(result);
       _afterContinentalKnockoutLegApplied(leg.tie);
     }
-    notifyListeners();
+    _notify();
     await _persist();
     return result;
   }
@@ -3768,7 +3774,7 @@ class GameState extends ChangeNotifier {
     }
     _applyUserCupPostMatchEffects(result);
     _afterSuperCupApplied(match);
-    notifyListeners();
+    _notify();
     await _persist();
     return result;
   }
@@ -3888,7 +3894,7 @@ class GameState extends ChangeNotifier {
       weather: weather,
       homeAdvantageFactor: _homeAdvantageFor(home.id),
     );
-    notifyListeners();
+    _notify();
     await _persist();
     return true;
   }
@@ -4205,7 +4211,7 @@ class GameState extends ChangeNotifier {
   Future<void> startNextSeason() async {
     if (_save == null) return;
     isBusy = true;
-    notifyListeners();
+    _notify();
     // ローディング表示を1フレーム描画させてから、裏ディビジョンの1シーズン分の
     // シミュレーションなど重い処理に入る。
     await Future<void>.delayed(Duration.zero);
@@ -4727,7 +4733,7 @@ class GameState extends ChangeNotifier {
     }
 
     isBusy = false;
-    notifyListeners();
+    _notify();
     await _persist();
   }
 }
