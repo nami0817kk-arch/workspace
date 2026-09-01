@@ -3,9 +3,10 @@
 サッカークラブ経営・育成シミュレーション。Flutter + Flame のスマホアプリ。
 
 Web版: https://soccer-manager.pages.dev/
-（Cloudflare Pages へ移行中。GitHub Secrets に CLOUDFLARE_API_TOKEN と
-CLOUDFLARE_ACCOUNT_ID を登録するまでデプロイは動かない。GitHub Pages は
-非公開 + Free だとサイトを作成できず、毎回失敗していた）
+（Cloudflare Pages。workspace リポジトリに CLOUDFLARE_API_TOKEN と
+CLOUDFLARE_ACCOUNT_ID を登録するまでデプロイは動かない。tool-factory と
+同じ値でよい。GitHub Pages は非公開 + Free だとサイトを作成できず、
+統合前は毎回失敗していた）
 
 ## よく使うコマンド
 
@@ -18,11 +19,15 @@ flutter build web --base-href /
 
 ## 手を入れるときに気をつけること
 
-- Web版は `.github/workflows/web.yml` が push 時に Cloudflare Pages へ
-  自動デプロイする。base-href は "/" 固定。変えると資産の参照先がずれて
-  真っ白な画面になる。
-- 検証(analyze + test)は `ci.yml` が別に回す。デプロイと分けてあるので、
-  赤いワークフローを見たときにコードと公開設定のどちらが壊れたか切り分けられる。
+- Web版はリポジトリ直下の `.github/workflows/soccer-pages.yml` が push 時に
+  Cloudflare Pages へ自動デプロイする。base-href は "/" 固定。変えると資産の
+  参照先がずれて真っ白な画面になる。
+- 検証(analyze + test)は `.github/workflows/soccer-ci.yml` が別に回す。
+  デプロイと分けてあるので、赤いワークフローを見たときにコードと公開設定の
+  どちらが壊れたか切り分けられる。
+- ローカルで `flutter analyze` を回すときは、パスに非ASCII文字が入っていると
+  解析サーバーがクラッシュする。`subst X: <このディレクトリ>` してから
+  X: 側で実行する。`flutter test` はこの問題を踏まない。
 - アプリ内の法務リンク(settings_screen.dart)とストア掲載情報は、まだ旧モノレポ
   claude-code-dev の GitHub Pages を指している。現在は200で生きているが、
   このリポジトリの更新は届かない。先に差し替えると今動いているリンクを404に
