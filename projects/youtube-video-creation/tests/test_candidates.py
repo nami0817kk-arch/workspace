@@ -433,3 +433,56 @@ def test_freshness_still_wins_across_the_band():
     )
     chosen, _ = assign(ranked, SCORING, ["morning"])
     assert chosen["morning"].id == "new"
+
+
+# 何社が同じ話を書いているかは、世の中がいま何に注目しているかの代わりになる。
+# reaction / numbers / goals / upset は人が手で立てる欄で、gather は全部 false で
+# 書き出す。実際に回すと点数が「新しさ＋ビッグクラブ」だけになり、地域リーグの
+# 記事と移籍期限の話が同点で並んでいた。
+
+
+def test_同じ媒体の複数記事は1社と数える():
+    from src.candidates import outlet_count
+
+    assert outlet_count([
+        "https://www.kicker.de/a/artikel",
+        "https://kicker.de/b/artikel",
+        "https://www.skysports.com/football/news/1",
+    ]) == 2
+
+
+def test_出典が無ければ0社():
+    from src.candidates import outlet_count
+
+    assert outlet_count([]) == 0
+    assert outlet_count(None) == 0
+
+
+OUTLET_SCORING = {
+    "weights": {"freshness": 3, "outlets": 3},
+    "freshness_hours": {6: 3, 12: 2, 24: 1},
+    "outlets_count": {2: 1, 3: 2, 5: 3},
+}
+
+
+def _scored(sources):
+    from src.candidates import Candidate, score
+
+    (item,) = score([Candidate(id="a", title="a", hours_ago=1, sources=sources)], OUTLET_SCORING)
+    return item
+
+
+def test_複数の媒体が書いている話ほど高くなる():
+    one = _scored(["https://a.com/1"])
+    two = _scored(["https://a.com/1", "https://b.com/1"])
+    five = _scored([f"https://{c}.com/1" for c in "abcde"])
+    assert one.score < two.score < five.score
+
+
+def test_1社だけの話には媒体数の点が付かない():
+    assert "媒体数" not in _scored(["https://a.com/1"]).breakdown
+
+
+def test_内訳に媒体数が残る():
+    """なぜその順位なのかを、後から説明できるようにしておく。"""
+    assert _scored([f"https://{c}.com/1" for c in "abcde"]).breakdown["媒体数"] == 3

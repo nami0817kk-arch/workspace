@@ -735,12 +735,17 @@ def _cmd_stats(args, config) -> int:
         for key, count in summary.themes:
             print(f"  {count}回　{key}")
 
-    league_rows, kind_rows = stats_mod.gaps(entries, plan.leagues)
-    stale = [row for row in league_rows if row[2] != 0]
-    if stale:
-        print("\n■ 追えていない領域")
-        for _, name, days in stale[:6]:
-            print(f"  {name}　" + ("一度も扱っていない" if days < 0 else f"{days}日前が最後"))
+    # どのリーグを次に見るか決めるための材料。追えていない期間・いま記事が
+    # 出る時間帯か・移籍期限がどうなっているかは、別々の場所に散っていた
+    rows = stats_mod.league_status(entries, plan)
+    if rows:
+        print("\n■ リーグの状況")
+        for row in rows:
+            print(row.line())
+
+    _, kind_rows = stats_mod.gaps(entries, plan.leagues)
+    if any(days != 0 for _, days in kind_rows):
+        print("\n■ 追えていない種別")
         for kind, days in kind_rows:
             label = {"transfer": "移籍", "match": "試合結果"}.get(kind, kind)
             if days != 0:

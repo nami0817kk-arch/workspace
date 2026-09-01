@@ -136,3 +136,81 @@ def test_old_ledger_rows_still_load(tmp_path):
     )
     (entry,) = coverage.load(ledger)
     assert entry.league == "" and entry.kind == ""
+
+
+# 追えていない期間・いま記事が出る時間帯か・移籍期限がどうなっているかは、
+# それぞれ別の場所で持っていて、突き合わせる所が無かった。
+# 「セリエAは期限まで8時間で、まだ一度も扱っていない」が一目で要る。
+
+LEAGUE_RAW = {
+    "tiers": {"確定": {}, "報道": {}, "未確認": {}},
+    "leagues": {
+        "england": {"name": "プレミアリーグ"},
+        "germany": {"name": "ブンデスリーガ"},
+        "italy": {"name": "セリエA"},
+    },
+    "calendar": {
+        "deadlines": [
+            {"league": "germany", "at": "2026-09-01 03:00", "confirmed": True},
+            {"league": "italy", "at": "2026-09-02 03:00", "confirmed": True},
+        ]
+    },
+    "routines": {"morning": {"name": "朝", "steps": [
+        {"id": "a", "what": "a", "tier": "確定", "queries": []}]}},
+}
+
+
+def _league_plan():
+    from src.plan import build_plan
+
+    return build_plan(LEAGUE_RAW)
+
+
+def _status(now=None):
+    from datetime import datetime
+
+    from src.coverage import Entry
+    from src.stats import league_status
+
+    entries = [Entry(key="x", headline="x", slot="morning",
+                     at=datetime(2026, 9, 1, 9, 0), league="germany")]
+    return {r.key: r for r in league_status(entries, _league_plan(),
+                                            now or datetime(2026, 9, 1, 19, 0))}
+
+
+def test_一度も扱っていないリーグが先に来る():
+    from datetime import datetime
+
+    from src.coverage import Entry
+    from src.stats import league_status
+
+    entries = [Entry(key="x", headline="x", slot="morning",
+                     at=datetime(2026, 9, 1, 9, 0), league="germany")]
+    rows = league_status(entries, _league_plan(), datetime(2026, 9, 1, 19, 0))
+    assert rows[-1].key == "germany"          # 今日扱ったものは最後
+    assert all(r.never for r in rows[:-1])
+
+
+def test_扱った日からの日数が出る():
+    assert _status()["germany"].days == 0
+    assert _status()["italy"].never
+
+
+def test_締まった期限は終了と言う():
+    assert _status()["germany"].deadline == "移籍期限は終了"
+
+
+def test_残っている期限は残り時間で言う():
+    """当日は「あと1日」では今日中かどうか判断できない。"""
+    assert _status()["italy"].deadline == "移籍期限まで8時間"
+
+
+def test_期限の無いリーグには何も付けない():
+    assert _status()["england"].deadline == ""
+
+
+def test_1行に読める形でまとまる():
+    line = _status()["italy"].line()
+    assert "セリエA" in line
+    assert "一度もなし" in line
+    assert "移籍期限まで8時間" in line

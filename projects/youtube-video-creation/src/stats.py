@@ -124,3 +124,70 @@ def _urgency(days: int) -> float:
 def _days(when: datetime | None, now: datetime) -> int:
     """扱っていなければ -1（「一度も」の印）。"""
     return -1 if when is None else (now - when).days
+
+
+@dataclass
+class LeagueStatus:
+    """1リーグぶんの「いまどうなっているか」。
+
+    どのリーグを次に見るか決めるための材料を1行にまとめる。
+    追えていない期間・いま記事が出る時間帯か・移籍期限がどうなっているかは、
+    それぞれ別の場所で持っていて、突き合わせる所が無かった。
+    """
+
+    key: str
+    name: str
+    days: int = -1          # 最後に扱ってから何日。-1 は一度も扱っていない
+    open_now: bool = False  # いま記事が出る時間帯か
+    deadline: str = ""      # 移籍期限の状態。無ければ空
+
+    @property
+    def never(self) -> bool:
+        return self.days < 0
+
+    def line(self) -> str:
+        when = "一度もなし" if self.never else ("今日" if self.days == 0 else f"{self.days}日前")
+        marks = []
+        if self.open_now:
+            marks.append("いま記事が出る時間帯")
+        if self.deadline:
+            marks.append(self.deadline)
+        tail = f"　（{' / '.join(marks)}）" if marks else ""
+        return f"  {self.name}　最後に扱ったのは {when}{tail}"
+
+
+def league_status(entries: list[coverage.Entry], plan, now: datetime | None = None) -> list[LeagueStatus]:
+    """リーグごとの状況。手を付けていないものと、いま動いているものを上に。"""
+    from . import deadlines as deadlines_mod
+    from . import timing
+
+    now = now or datetime.now()
+    latest: dict[str, datetime] = {}
+    for entry in entries:
+        if entry.league:
+            latest[entry.league] = max(latest.get(entry.league, entry.at), entry.at)
+
+    live = {w.league for w in timing.open_now(plan, now)}
+
+    limits: dict[str, str] = {}
+    for item in deadlines_mod.load(plan):
+        hours = item.hours_from(now)
+        if hours < 0:
+            limits[item.league] = "移籍期限は終了"
+        elif hours <= 24:
+            limits[item.league] = f"移籍期限まで{int(hours)}時間"
+        else:
+            limits[item.league] = f"移籍期限まで{int(hours // 24)}日"
+
+    rows = [
+        LeagueStatus(
+            key=key,
+            name=str((body or {}).get("name") or key),
+            days=_days(latest.get(key), now),
+            open_now=key in live,
+            deadline=limits.get(key, ""),
+        )
+        for key, body in (plan.leagues or {}).items()
+    ]
+    # 一度も扱っていないものが先。次に、放置が長いもの。同じなら今動いているもの
+    return sorted(rows, key=lambda r: (not r.never, -r.days, not r.open_now, r.name))

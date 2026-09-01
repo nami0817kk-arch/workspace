@@ -103,6 +103,22 @@ def fill_ages(items: list[Candidate], age_of) -> list[str]:
     return notes
 
 
+def outlet_count(sources: list[str]) -> int:
+    """その話を書いている媒体の数。同じ媒体の複数記事は1社と数える。
+
+    「2社以上で一致」は確度の条件でもあるが、ここでは別の使い方をする。
+    何社が同時に書いているかは、世の中がいま何に注目しているかの代わりになる。
+    数えるのはホスト名で、www の有無は揃える。
+    """
+    hosts = set()
+    for url in sources or []:
+        host = str(url).split("://", 1)[-1].split("/", 1)[0].lower().strip()
+        host = host.removeprefix("www.")
+        if host:
+            hosts.add(host)
+    return len(hosts)
+
+
 def score(items: list[Candidate], scoring: dict) -> list[Candidate]:
     """候補に点をつける。内訳も残す。"""
     from . import clubs as club_book
@@ -114,6 +130,14 @@ def score(items: list[Candidate], scoring: dict) -> list[Candidate]:
     )
     top = max((points for _, points in stages), default=1)
     fresh_weight = int(weights.get("freshness", 0))
+
+    # 「3社以上なら2点」のような段階。多いほうから見て、最初に届いたもの
+    outlet_stages = sorted(
+        ((int(k), int(v)) for k, v in (scoring.get("outlets_count") or {}).items()),
+        reverse=True,
+    )
+    outlet_top = max((points for _, points in outlet_stages), default=1)
+    outlet_weight = int(weights.get("outlets", 0))
 
     clubs = [str(c).strip() for c in (scoring.get("big_clubs") or []) if str(c).strip()]
 
@@ -131,6 +155,15 @@ def score(items: list[Candidate], scoring: dict) -> list[Candidate]:
         if stage:
             # 段階の点を、この項目の重み（満点）に合わせて割り当てる
             breakdown["新しさ"] = round(stage / top * fresh_weight)
+
+        # 何社が同じ話を書いているか。5社が1時間で一斉に書いた話と、1社しか
+        # 書いていない話を同点にしないための手がかり。
+        # reaction などは人が手で立てる欄で、gather は false のまま書き出すので、
+        # 自動で効く材料はここと新しさ・ビッグクラブしかない
+        outlets = outlet_count(item.sources)
+        points = max((p for n, p in outlet_stages if outlets >= n), default=0)
+        if points:
+            breakdown["媒体数"] = round(points / outlet_top * outlet_weight)
 
         for key, label in (
             ("reaction", "反応"),
