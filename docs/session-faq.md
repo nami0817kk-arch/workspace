@@ -90,6 +90,14 @@ A. 触らない。報告も不要（作業中が正常）。自分の worktree �
 A. 2026-09-01 にユーザー判断でクローズした（テスト・CI・依存固定なしの最薄PJTで、投資判断の結果）。
 書きかけ（generator.py 等）は git 履歴に残っている。復活させる場合:
 `git log --oneline -- projects/ai-blog` で最終コミットを見つけ、`git checkout <sha> -- projects/ai-blog`。
+**Q. master に追従したい / ブランチが遅れている（統合済みPJTを触っている場合）**
+A. **`git rebase` を使わない。`git merge origin/master` で追従する。**
+`projects/<pjt>` の多くは旧リポジトリを subtree merge（`merge -s ours` + `read-tree --prefix`）
+で取り込んだもので、履歴には**元リポジトリのルート直下パスのままのコミット**が含まれている。
+rebase はそれを現在のブランチ上に再生しようとするため、`projects/<pjt>/` 配下ではなく
+リポジトリ直下にファイルを作ろうとして衝突する（2026-09-01、gemini-api 取り込み時に発生）。
+衝突を手で潰しても履歴が平坦化されて取り込み構造が壊れるので、`git rebase --abort` して
+merge に切り替えるのが正しい。新規追加した PJT でも、取り込みコミットを含むブランチは同じ。
 
 **Q. 旧リポジトリはいつ消える?**
 A. 消さずアーカイブ（読み取り専用化）する。時期は全セッションの移住完了をユーザーが
