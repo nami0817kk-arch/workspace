@@ -1,0 +1,46 @@
+# 計算ツールサイトを Cloudflare Pages に公開する（kabu-agari-ranking と同方式）。
+# リポジトリは private のまま公開できる。テストが通らないとビルドに進まないので、
+# 収益導線の無いツールや説明・FAQ の欠けたツールは公開されない。
+#
+# 必要な Secrets（リポジトリ設定 → Secrets and variables → Actions）:
+#   CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID（kabu-agari-ranking と同じ値でよい）
+name: サイトを公開する
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      # 収益導線の無いツールや壊れた定義があれば、ここで止まる
+      - name: Test tools
+        run: python -m unittest discover -s tests
+      - name: Build tools
+        run: python build.py
+
+      - name: Ensure Cloudflare Pages project exists
+        run: |
+          curl -s -o /dev/null -w "%{http_code}\n" -X POST \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/pages/projects" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"name":"seisan-kanri-tools","production_branch":"master"}'
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/pages-action@v1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: seisan-kanri-tools
+          directory: dist
