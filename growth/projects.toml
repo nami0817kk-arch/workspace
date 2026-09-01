@@ -62,16 +62,16 @@ weight = 1.2
 key = "tool-factory"
 repo = "nami0817kk-arch/tool-factory"
 title = "計算ツール量産サイト"
-tags = ["python", "revenue", "public"]
-# 公開済みで広告審査を待っている段階。
+tags = ["python", "revenue"]
+# private のまま Cloudflare Pages で公開する方式（2026-09-01 決定）。広告審査待ち。
 weight = 1.2
 
 [[project]]
 key = "price-tracker"
 repo = "nami0817kk-arch/price-tracker"
 title = "楽天 値下がりウォッチ"
-tags = ["python", "revenue", "scheduled", "public"]
-# 収益目的の日次実行。kabu と同じ壊れ方をしうる。
+tags = ["python", "revenue", "scheduled"]
+# 収益目的の日次実行。kabu と同じ壊れ方をしうる。リポジトリは private。
 weight = 1.2
 
 [[project]]
@@ -99,6 +99,14 @@ weight = 1.0
 key = "cohabitation-budget"
 repo = "nami0817kk-arch/cohabitation-budget"
 title = "同棲費用シミュレーター（単一ページ）"
-tags = ["web", "public"]
+tags = ["web"]
 # 1ページで完成しているので、しつこく提案されても困る。
 weight = 0.8
+
+[[project]]
+key = "kabutan-client"
+repo = "nami0817kk-arch/kabutan-client"
+title = "kabutan 取得・解析の共有ライブラリ"
+tags = ["python", "public"]
+# kabu と qgt の両方が依存する。壊れると2プロジェクトに波及する。
+weight = 1.2
