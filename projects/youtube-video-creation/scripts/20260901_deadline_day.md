@@ -34,8 +34,10 @@ tags:
 - 移籍市場
 sources:
 - https://www.bundesliga.com/
-- https://www.skysports.com/football/live-blog/11661/13025486/arsenal-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
 - https://www.kicker.de/transferticker-953155/artikel
+- https://www.skysports.com/football/live-blog/11661/13025486/arsenal-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+- https://www.lequipe.fr/
+- https://www.soccer-king.jp/news/world/ger/20260901/2199488.html
 cards:
   wrap:
     type: points
@@ -76,10 +78,11 @@ cards:
 @bg: assets/backgrounds/stadium.png
 
 キャスター: 最後の1日で動いたものの一つが、アーセナルのヌワネリです。
-  telop: ヌワネリのレンタル退団が近づく
+  telop: ヌワネリのドルトムント移籍へ4媒体
   source: 報道
-解説: スカイスポーツは、レンタルでの退団が近づいた、と伝えています。キッカーは、ドルトムントで突破口が開いた、と書いています。
-キャスター: 行き先をドルトムントと名指ししているのは、キッカーだけです。クラブの公式発表までは、まだ辿れていません。
+解説: ドルトムントへのレンタル移籍を、ドイツ、イギリス、フランス、日本の4つの媒体が伝えています。
+キャスター: サッカーキングは、ドルトムントが動いた背景として、ギリシャ代表ミッドフィルダーの重傷を挙げています。
+解説: ただし、クラブの公式発表までは、まだ辿れていません。ここは報道の段階として扱います。
 
 ## まとめ
 

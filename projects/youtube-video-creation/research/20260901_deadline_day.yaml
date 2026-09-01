@@ -46,12 +46,15 @@ sections:
   - id: next
     heading: これからどうなる
     tier: 報道
-    telop: ヌワネリのレンタル退団が近づく
+    telop: ヌワネリのドルトムント移籍へ4媒体
     say:
       - 最後の1日で動いたものの一つが、アーセナルのヌワネリです。
-      - スカイスポーツは、レンタルでの退団が近づいた、と伝えています。キッカーは、ドルトムントで突破口が開いた、と書いています。
-      - 行き先をドルトムントと名指ししているのは、キッカーだけです。クラブの公式発表までは、まだ辿れていません。
+      - ドルトムントへのレンタル移籍を、ドイツ、イギリス、フランス、日本の4つの媒体が伝えています。
+      - サッカーキングは、ドルトムントが動いた背景として、ギリシャ代表ミッドフィルダーの重傷を挙げています。
+      - ただし、クラブの公式発表までは、まだ辿れていません。ここは報道の段階として扱います。
     official: false
     sources:
-      - https://www.skysports.com/football/live-blog/11661/13025486/arsenal-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
       - https://www.kicker.de/transferticker-953155/artikel
+      - https://www.skysports.com/football/live-blog/11661/13025486/arsenal-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+      - https://www.lequipe.fr/
+      - https://www.soccer-king.jp/news/world/ger/20260901/2199488.html
