@@ -7,3 +7,12 @@ pandas==3.0.5
 ta==0.11.0
 yfinance==1.7.0
 pytest==9.1.1
+
+# src/report/news.py を import するために必要（いずれも Linux で入る）。
+# 例外経路のテストを「skip されるだけの空テスト」にしないため、ここに入れている。
+# バージョンは requirements.txt の下限に合わせて固定。
+feedparser==6.0.14
+anthropic==1.2.0
+requests==2.34.2
+beautifulsoup4==4.15.0
+lxml==6.1.2
