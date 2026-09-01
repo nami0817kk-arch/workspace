@@ -50,6 +50,28 @@
         "tool-factory": 60,
         "youtube-video-creation": 15
       }
+    },
+    {
+      "average": 86,
+      "date": "2026-09-01",
+      "open": 39,
+      "resolved_total": 90,
+      "scores": {
+        "workspace": 57,
+        "workspace/libs/kabutan": 95,
+        "workspace/projects/ai-blog": 45,
+        "workspace/projects/ai-side-business": 100,
+        "workspace/projects/cohabitation-budget": 15,
+        "workspace/projects/gemini-api": 93,
+        "workspace/projects/ir-analysis": 100,
+        "workspace/projects/kabu-agari-ranking": 100,
+        "workspace/projects/price-tracker": 100,
+        "workspace/projects/quality-gainer-tracker": 100,
+        "workspace/projects/soccer-manager": 95,
+        "workspace/projects/stock-investment": 100,
+        "workspace/projects/tool-factory": 100,
+        "workspace/projects/youtube-video-creation": 100
+      }
     }
   ],
   "proposals": {
@@ -61,12 +83,25 @@
       "last_seen_date": "2026-08-31",
       "project": "youtube-video-creation",
       "regressed_at": "2026-08-31T15:01:24+00:00",
-      "resolved_at": "2026-08-29T11:54:34+00:00",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "xpol.claude-md",
       "seen_count": 2,
-      "status": "open",
+      "status": "resolved",
       "title": "CLAUDE.md で AI に前提を渡す（サッカークラブ経営シミュレーション（Flutter） で既に実践中）",
       "topic": "claude-md"
+    },
+    "026a9c4b42b7": {
+      "exemplar": null,
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace",
+      "rule_id": "ci.no-timeout",
+      "seen_count": 1,
+      "status": "open",
+      "title": "ワークフローに実行時間の上限が無い",
+      "topic": "ci-hygiene"
     },
     "0455a85702e3": {
       "exemplar": null,
@@ -89,11 +124,25 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "claude-code-dev",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "legal.no-license",
       "seen_count": 2,
-      "status": "open",
+      "status": "resolved",
       "title": "公開リポジトリにライセンスが無い",
       "topic": "license"
+    },
+    "065d59fd28a0": {
+      "exemplar": "workspace",
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/libs/kabutan",
+      "rule_id": "xpol.env-example",
+      "seen_count": 1,
+      "status": "open",
+      "title": ".env.example で必要な設定を明示する（開発モノレポ（全PJT） で既に実践中）",
+      "topic": "env"
     },
     "0680b4cc7ce2": {
       "exemplar": null,
@@ -116,9 +165,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "quality-gainer-tracker",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "test.missing",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "自動テストが1本もない",
       "topic": "tests"
     },
@@ -129,11 +179,25 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "soccer-manager",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "ci.no-timeout",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "ワークフローに実行時間の上限が無い",
       "topic": "ci-hygiene"
+    },
+    "0e30629abc0f": {
+      "exemplar": null,
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/quality-gainer-tracker",
+      "rule_id": "quality.swallowed-exception",
+      "seen_count": 1,
+      "status": "open",
+      "title": "例外を握りつぶしている箇所がある",
+      "topic": "error-handling"
     },
     "0e36a3a6a2f6": {
       "exemplar": null,
@@ -149,6 +213,19 @@
       "title": "README が無い",
       "topic": "readme"
     },
+    "0f7e2c7eeeb2": {
+      "exemplar": null,
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/stock-investment",
+      "rule_id": "quality.swallowed-exception",
+      "seen_count": 1,
+      "status": "open",
+      "title": "例外を握りつぶしている箇所がある",
+      "topic": "error-handling"
+    },
     "0f8316fe910d": {
       "exemplar": null,
       "first_seen": "2026-08-29T10:18:31+00:00",
@@ -156,9 +233,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "claude-code-dev/projects/PJT002-ai-blog",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "scaffold.dormant",
       "seen_count": 2,
-      "status": "open",
+      "status": "resolved",
       "title": "雛形だけ作られて中身が無い",
       "topic": "dormant"
     },
@@ -169,9 +247,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "quality-gainer-tracker",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "xpol.claude-md",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "CLAUDE.md で AI に前提を渡す（サッカークラブ経営シミュレーション（Flutter） で既に実践中）",
       "topic": "claude-md"
     },
@@ -182,9 +261,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "quality-gainer-tracker",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "xpol.env-example",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": ".env.example で必要な設定を明示する（ai-lab / 成長ループ本体 で既に実践中）",
       "topic": "env"
     },
@@ -195,9 +275,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "quality-gainer-tracker",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "deps.unpinned",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "依存バージョンが固定されていない",
       "topic": "deps"
     },
@@ -208,9 +289,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "cohabitation-budget",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "docs.readme-missing",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "README が無い",
       "topic": "readme"
     },
@@ -221,9 +303,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "tool-factory",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "docs.broken-link",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "ドキュメント内のリンク先が存在しない",
       "topic": "links"
     },
@@ -235,12 +318,25 @@
       "last_seen_date": "2026-08-31",
       "project": "kabu-agari-ranking",
       "regressed_at": "2026-08-31T15:01:24+00:00",
-      "resolved_at": "2026-08-29T11:54:34+00:00",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "test.missing",
       "seen_count": 2,
-      "status": "open",
+      "status": "resolved",
       "title": "自動テストが1本もない",
       "topic": "tests"
+    },
+    "219683e87101": {
+      "exemplar": "workspace/projects/ai-side-business",
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/stock-investment",
+      "rule_id": "deps.unpinned",
+      "seen_count": 1,
+      "status": "open",
+      "title": "依存バージョンが固定されていない",
+      "topic": "deps"
     },
     "21cd171bacf3": {
       "exemplar": "soccer-manager",
@@ -249,9 +345,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "ir-analysis",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "test.missing",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "自動テストが1本もない",
       "topic": "tests"
     },
@@ -269,6 +366,19 @@
       "title": "1ファイルが大きくなりすぎている",
       "topic": "structure"
     },
+    "28eb20516b9d": {
+      "exemplar": null,
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/youtube-video-creation",
+      "rule_id": "ci.no-timeout",
+      "seen_count": 1,
+      "status": "open",
+      "title": "ワークフローに実行時間の上限が無い",
+      "topic": "ci-hygiene"
+    },
     "28f94168a598": {
       "exemplar": null,
       "first_seen": "2026-08-31T15:18:08+00:00",
@@ -276,9 +386,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "price-tracker",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "legal.no-license",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "公開リポジトリにライセンスが無い",
       "topic": "license"
     },
@@ -289,9 +400,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "youtube-video-creation",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "scaffold.dormant",
       "seen_count": 2,
-      "status": "open",
+      "status": "resolved",
       "title": "雛形だけ作られて中身が無い",
       "topic": "dormant"
     },
@@ -302,9 +414,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "kabu-agari-ranking",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "legal.no-license",
       "seen_count": 2,
-      "status": "open",
+      "status": "resolved",
       "title": "公開リポジトリにライセンスが無い",
       "topic": "license"
     },
@@ -316,12 +429,26 @@
       "last_seen_date": "2026-08-31",
       "note": "index.html 1枚で完結させるのが意図の完成品。README にもその旨を明記済み",
       "project": "cohabitation-budget",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "scaffold.dormant",
       "seen_count": 1,
-      "status": "snoozed",
+      "status": "resolved",
       "status_changed_at": "2026-08-31T15:52:43+00:00",
       "title": "雛形だけ作られて中身が無い",
       "topic": "dormant"
+    },
+    "30d45652864c": {
+      "exemplar": null,
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/quality-gainer-tracker",
+      "rule_id": "ci.no-timeout",
+      "seen_count": 1,
+      "status": "open",
+      "title": "ワークフローに実行時間の上限が無い",
+      "topic": "ci-hygiene"
     },
     "33abedcb0a56": {
       "exemplar": "soccer-manager",
@@ -330,9 +457,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "price-tracker",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "ci.missing",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "CI が無く、push しても誰も検証していない",
       "topic": "ci"
     },
@@ -344,9 +472,10 @@
       "last_seen_date": "2026-08-31",
       "note": "テスト土台を入れたばかり。挙動を固定するテストを増やしてから分割する",
       "project": "quality-gainer-tracker",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "quality.long-function",
       "seen_count": 1,
-      "status": "snoozed",
+      "status": "resolved",
       "status_changed_at": "2026-08-31T15:52:42+00:00",
       "title": "1つの関数が長くなりすぎている",
       "topic": "structure"
@@ -358,11 +487,25 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "ir-analysis",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "deps.no-dependabot",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "依存更新の自動チェックが無い",
       "topic": "deps-update"
+    },
+    "3cbecdaad989": {
+      "exemplar": null,
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace",
+      "rule_id": "quality.long-function",
+      "seen_count": 1,
+      "status": "open",
+      "title": "1つの関数が長くなりすぎている",
+      "topic": "structure"
     },
     "3de8f5dd70ad": {
       "exemplar": null,
@@ -371,11 +514,25 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "ai-side-business",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "deps.no-dependabot",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "依存更新の自動チェックが無い",
       "topic": "deps-update"
+    },
+    "3e08ad62e194": {
+      "exemplar": null,
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace",
+      "rule_id": "docs.readme-missing",
+      "seen_count": 1,
+      "status": "open",
+      "title": "README が無い",
+      "topic": "readme"
     },
     "405783832f52": {
       "exemplar": null,
@@ -384,9 +541,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "price-tracker",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "secret.gitignore-env",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "環境変数を使っているのに .gitignore が .env を除外していない",
       "topic": "secrets"
     },
@@ -397,11 +555,25 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "tool-factory",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "xpol.claude-md",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "CLAUDE.md で AI に前提を渡す（サッカークラブ経営シミュレーション（Flutter） で既に実践中）",
       "topic": "claude-md"
+    },
+    "4a96739ea3a7": {
+      "exemplar": null,
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/price-tracker",
+      "rule_id": "ci.no-timeout",
+      "seen_count": 1,
+      "status": "open",
+      "title": "ワークフローに実行時間の上限が無い",
+      "topic": "ci-hygiene"
     },
     "4c0828086e59": {
       "exemplar": null,
@@ -431,6 +603,19 @@
       "title": "CI が無く、push しても誰も検証していない",
       "topic": "ci"
     },
+    "516eb2e25755": {
+      "exemplar": null,
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/libs/kabutan",
+      "rule_id": "ci.no-timeout",
+      "seen_count": 1,
+      "status": "open",
+      "title": "ワークフローに実行時間の上限が無い",
+      "topic": "ci-hygiene"
+    },
     "5414d4b7e849": {
       "exemplar": null,
       "first_seen": "2026-08-29T10:18:31+00:00",
@@ -439,10 +624,10 @@
       "last_seen_date": "2026-08-31",
       "project": "kabu-agari-ranking",
       "regressed_at": "2026-08-31T15:01:24+00:00",
-      "resolved_at": "2026-08-29T11:54:34+00:00",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "deps.no-dependabot",
       "seen_count": 2,
-      "status": "open",
+      "status": "resolved",
       "title": "依存更新の自動チェックが無い",
       "topic": "deps-update"
     },
@@ -454,9 +639,10 @@
       "last_seen_date": "2026-08-31",
       "note": "chrome-control ブランチで ailab→imagegen の大規模改名が進行中。masterでの分割はマージ後に行う",
       "project": "ai-lab",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "quality.long-function",
       "seen_count": 1,
-      "status": "snoozed",
+      "status": "resolved",
       "status_changed_at": "2026-08-31T15:52:41+00:00",
       "title": "1つの関数が長くなりすぎている",
       "topic": "structure"
@@ -468,9 +654,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "tool-factory",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "deps.undeclared",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "依存パッケージがどこにも書かれていない",
       "topic": "deps"
     },
@@ -502,6 +689,19 @@
       "title": "ワークフローに実行時間の上限が無い",
       "topic": "ci-hygiene"
     },
+    "666635dc2785": {
+      "exemplar": null,
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/stock-investment",
+      "rule_id": "quality.long-function",
+      "seen_count": 1,
+      "status": "open",
+      "title": "1つの関数が長くなりすぎている",
+      "topic": "structure"
+    },
     "668b6d6c0d18": {
       "exemplar": null,
       "first_seen": "2026-08-31T15:18:08+00:00",
@@ -509,6 +709,20 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "soccer-manager",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
+      "rule_id": "docs.stale-reference",
+      "seen_count": 1,
+      "status": "resolved",
+      "title": "ドキュメントが存在しないファイルを載せている",
+      "topic": "doc-accuracy"
+    },
+    "6701dd965a41": {
+      "exemplar": null,
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/kabu-agari-ranking",
       "rule_id": "docs.stale-reference",
       "seen_count": 1,
       "status": "open",
@@ -523,12 +737,52 @@
       "last_seen_date": "2026-08-31",
       "note": "site/content の /tools/ /guides/ は公開サイトのルートで、ビルド後には存在する。リポジトリ内パスとしての検査は誤検知",
       "project": "ai-lab",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "docs.broken-link",
       "seen_count": 1,
-      "status": "snoozed",
+      "status": "resolved",
       "status_changed_at": "2026-08-31T15:52:42+00:00",
       "title": "ドキュメント内のリンク先が存在しない",
       "topic": "links"
+    },
+    "69471cc351f0": {
+      "exemplar": null,
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/tool-factory",
+      "rule_id": "docs.stale-reference",
+      "seen_count": 1,
+      "status": "open",
+      "title": "ドキュメントが存在しないファイルを載せている",
+      "topic": "doc-accuracy"
+    },
+    "6adc491dd04a": {
+      "exemplar": "workspace/projects/soccer-manager",
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/ai-blog",
+      "rule_id": "docs.readme-no-runbook",
+      "seen_count": 1,
+      "status": "open",
+      "title": "README に「動かし方」のコマンドが書かれていない",
+      "topic": "readme"
+    },
+    "6b1cc77c692b": {
+      "exemplar": "workspace/projects/ai-side-business",
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/price-tracker",
+      "rule_id": "xpol.pinned-deps",
+      "seen_count": 1,
+      "status": "open",
+      "title": "依存バージョンを固定する（ai-side-business で既に実践中）",
+      "topic": "deps"
     },
     "6b8cfaa5b99a": {
       "exemplar": null,
@@ -538,9 +792,10 @@
       "last_seen_date": "2026-08-31",
       "note": "この PC に Flutter 実行環境が無く、ゲーム挙動の確認とセットでないと分割できない",
       "project": "soccer-manager",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "quality.oversized-file",
       "seen_count": 1,
-      "status": "snoozed",
+      "status": "resolved",
       "status_changed_at": "2026-08-31T15:52:43+00:00",
       "title": "1ファイルが大きくなりすぎている",
       "topic": "structure"
@@ -558,6 +813,32 @@
       "status": "resolved",
       "title": "ワークフローに実行時間の上限が無い",
       "topic": "ci-hygiene"
+    },
+    "72e7d5f4fb4b": {
+      "exemplar": "workspace/projects/soccer-manager",
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/ai-blog",
+      "rule_id": "test.missing",
+      "seen_count": 1,
+      "status": "open",
+      "title": "自動テストが1本もない",
+      "topic": "tests"
+    },
+    "7581efc719c3": {
+      "exemplar": null,
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/cohabitation-budget",
+      "rule_id": "scaffold.dormant",
+      "seen_count": 1,
+      "status": "open",
+      "title": "雛形だけ作られて中身が無い",
+      "topic": "dormant"
     },
     "7776cdbdb0b1": {
       "exemplar": null,
@@ -582,9 +863,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "price-tracker",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "xpol.claude-md",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "CLAUDE.md で AI に前提を渡す（サッカークラブ経営シミュレーション（Flutter） で既に実践中）",
       "topic": "claude-md"
     },
@@ -596,12 +878,26 @@
       "last_seen_date": "2026-08-31",
       "note": "226本のテストはあるが対象関数(screen.collect)の分割は挙動固定を広げてから",
       "project": "ai-side-business",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "quality.long-function",
       "seen_count": 1,
-      "status": "snoozed",
+      "status": "resolved",
       "status_changed_at": "2026-08-31T15:52:43+00:00",
       "title": "1つの関数が長くなりすぎている",
       "topic": "structure"
+    },
+    "7a42c46f3287": {
+      "exemplar": null,
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/ir-analysis",
+      "rule_id": "ci.no-timeout",
+      "seen_count": 1,
+      "status": "open",
+      "title": "ワークフローに実行時間の上限が無い",
+      "topic": "ci-hygiene"
     },
     "7a5545d0b300": {
       "exemplar": null,
@@ -639,10 +935,10 @@
       "last_seen_date": "2026-08-31",
       "project": "claude-code-dev/projects/PJT001-stock-investment",
       "regressed_at": "2026-08-31T15:01:24+00:00",
-      "resolved_at": "2026-08-29T12:34:45+00:00",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "quality.swallowed-exception",
       "seen_count": 2,
-      "status": "open",
+      "status": "resolved",
       "title": "例外を握りつぶしている箇所がある",
       "topic": "error-handling"
     },
@@ -654,10 +950,10 @@
       "last_seen_date": "2026-08-31",
       "project": "kabu-agari-ranking",
       "regressed_at": "2026-08-31T15:01:24+00:00",
-      "resolved_at": "2026-08-29T11:54:34+00:00",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "env.no-example",
       "seen_count": 2,
-      "status": "open",
+      "status": "resolved",
       "title": "必要な環境変数の一覧が無い",
       "topic": "env"
     },
@@ -697,11 +993,25 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "tool-factory",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "xpol.env-example",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": ".env.example で必要な設定を明示する（ai-lab / 成長ループ本体 で既に実践中）",
       "topic": "env"
+    },
+    "85d68187ef12": {
+      "exemplar": "workspace/projects/ai-side-business",
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/gemini-api",
+      "rule_id": "deps.unpinned",
+      "seen_count": 1,
+      "status": "open",
+      "title": "依存バージョンが固定されていない",
+      "topic": "deps"
     },
     "86075df289de": {
       "exemplar": null,
@@ -710,9 +1020,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "ai-side-business",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "deps.unpinned",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "依存バージョンが固定されていない",
       "topic": "deps"
     },
@@ -729,6 +1040,32 @@
       "status": "resolved",
       "title": "ワークフローがトークンの権限を絞っていない",
       "topic": "ci-permissions"
+    },
+    "872145fabf41": {
+      "exemplar": null,
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/ai-side-business",
+      "rule_id": "ci.no-timeout",
+      "seen_count": 1,
+      "status": "open",
+      "title": "ワークフローに実行時間の上限が無い",
+      "topic": "ci-hygiene"
+    },
+    "88ebb9fde6bb": {
+      "exemplar": "workspace",
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/tool-factory",
+      "rule_id": "xpol.env-example",
+      "seen_count": 1,
+      "status": "open",
+      "title": ".env.example で必要な設定を明示する（開発モノレポ（全PJT） で既に実践中）",
+      "topic": "env"
     },
     "8e10c4f154c7": {
       "exemplar": null,
@@ -752,10 +1089,10 @@
       "last_seen_date": "2026-08-31",
       "project": "kabu-agari-ranking",
       "regressed_at": "2026-08-31T15:01:24+00:00",
-      "resolved_at": "2026-08-29T12:34:45+00:00",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "quality.swallowed-exception",
       "seen_count": 2,
-      "status": "open",
+      "status": "resolved",
       "title": "例外を握りつぶしている箇所がある",
       "topic": "error-handling"
     },
@@ -766,9 +1103,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "ai-side-business",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "ci.missing",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "CI が無く、push しても誰も検証していない",
       "topic": "ci"
     },
@@ -800,6 +1138,32 @@
       "title": "ワークフローがトークンの権限を絞っていない",
       "topic": "ci-permissions"
     },
+    "946d7987cac7": {
+      "exemplar": null,
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/ai-side-business",
+      "rule_id": "quality.long-function",
+      "seen_count": 1,
+      "status": "open",
+      "title": "1つの関数が長くなりすぎている",
+      "topic": "structure"
+    },
+    "960a26d669ae": {
+      "exemplar": "workspace",
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/youtube-video-creation",
+      "rule_id": "env.no-example",
+      "seen_count": 1,
+      "status": "open",
+      "title": "必要な環境変数の一覧が無い",
+      "topic": "env"
+    },
     "9649b2972b0f": {
       "exemplar": null,
       "first_seen": "2026-08-29T12:20:52+00:00",
@@ -813,6 +1177,19 @@
       "status": "resolved",
       "title": "公開リポジトリにライセンスが無い",
       "topic": "license"
+    },
+    "9a8299a05754": {
+      "exemplar": "workspace/projects/ai-side-business",
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/youtube-video-creation",
+      "rule_id": "deps.unpinned",
+      "seen_count": 1,
+      "status": "open",
+      "title": "依存バージョンが固定されていない",
+      "topic": "deps"
     },
     "9b5d638c7ca2": {
       "exemplar": "kabu-agari-ranking",
@@ -835,9 +1212,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "quality-gainer-tracker",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "deps.no-dependabot",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "依存更新の自動チェックが無い",
       "topic": "deps-update"
     },
@@ -849,9 +1227,10 @@
       "last_seen_date": "2026-08-31",
       "note": "改名作業中でドキュメントが旧パスを指している。追随はマージ時にまとめて行う",
       "project": "ai-lab",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "docs.stale-reference",
       "seen_count": 1,
-      "status": "snoozed",
+      "status": "resolved",
       "status_changed_at": "2026-08-31T15:52:42+00:00",
       "title": "ドキュメントが存在しないファイルを載せている",
       "topic": "doc-accuracy"
@@ -877,10 +1256,24 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "cohabitation-budget",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
+      "rule_id": "xpol.claude-md",
+      "seen_count": 1,
+      "status": "resolved",
+      "title": "CLAUDE.md で AI に前提を渡す（サッカークラブ経営シミュレーション（Flutter） で既に実践中）",
+      "topic": "claude-md"
+    },
+    "a1d6ca32d45a": {
+      "exemplar": "workspace/projects/soccer-manager",
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/gemini-api",
       "rule_id": "xpol.claude-md",
       "seen_count": 1,
       "status": "open",
-      "title": "CLAUDE.md で AI に前提を渡す（サッカークラブ経営シミュレーション（Flutter） で既に実践中）",
+      "title": "CLAUDE.md で AI に前提を渡す（soccer-manager で既に実践中）",
       "topic": "claude-md"
     },
     "a238f1d6ec05": {
@@ -919,9 +1312,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "cohabitation-budget",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "legal.no-license",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "公開リポジトリにライセンスが無い",
       "topic": "license"
     },
@@ -947,12 +1341,25 @@
       "last_seen_date": "2026-08-31",
       "project": "kabu-agari-ranking",
       "regressed_at": "2026-08-31T15:01:24+00:00",
-      "resolved_at": "2026-08-29T11:54:34+00:00",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "deps.unpinned",
       "seen_count": 2,
-      "status": "open",
+      "status": "resolved",
       "title": "依存バージョンが固定されていない",
       "topic": "deps"
+    },
+    "b02bab0a7f0e": {
+      "exemplar": null,
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/gemini-api",
+      "rule_id": "quality.swallowed-exception",
+      "seen_count": 1,
+      "status": "open",
+      "title": "例外を握りつぶしている箇所がある",
+      "topic": "error-handling"
     },
     "b10ee312fed0": {
       "exemplar": "soccer-manager",
@@ -961,9 +1368,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "quality-gainer-tracker",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "ci.missing",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "CI が無く、push しても誰も検証していない",
       "topic": "ci"
     },
@@ -974,11 +1382,25 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "ir-analysis",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "xpol.claude-md",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "CLAUDE.md で AI に前提を渡す（サッカークラブ経営シミュレーション（Flutter） で既に実践中）",
       "topic": "claude-md"
+    },
+    "b3e2f8965caf": {
+      "exemplar": null,
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/youtube-video-creation",
+      "rule_id": "quality.long-function",
+      "seen_count": 1,
+      "status": "open",
+      "title": "1つの関数が長くなりすぎている",
+      "topic": "structure"
     },
     "b62408f8ef35": {
       "exemplar": null,
@@ -1001,9 +1423,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "tool-factory",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "ci.missing",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "CI が無く、push しても誰も検証していない",
       "topic": "ci"
     },
@@ -1014,9 +1437,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "price-tracker",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "env.no-example",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "必要な環境変数の一覧が無い",
       "topic": "env"
     },
@@ -1028,12 +1452,26 @@
       "last_seen_date": "2026-08-31",
       "note": "selector.py はテストが1本も無く、ネットワークに出る処理も多い。screener.py のように挙動を固定してからでないと切り出せない",
       "project": "claude-code-dev/projects/PJT001-stock-investment",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "quality.long-function",
       "seen_count": 2,
-      "status": "snoozed",
+      "status": "resolved",
       "status_changed_at": "2026-08-29T12:35:53+00:00",
       "title": "1つの関数が長くなりすぎている",
       "topic": "structure"
+    },
+    "bdea2c078018": {
+      "exemplar": null,
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/soccer-manager",
+      "rule_id": "docs.stale-reference",
+      "seen_count": 1,
+      "status": "open",
+      "title": "ドキュメントが存在しないファイルを載せている",
+      "topic": "doc-accuracy"
     },
     "bea2c461146a": {
       "exemplar": "ai-lab",
@@ -1043,10 +1481,10 @@
       "last_seen_date": "2026-08-31",
       "project": "kabu-agari-ranking",
       "regressed_at": "2026-08-31T15:01:24+00:00",
-      "resolved_at": "2026-08-29T11:54:34+00:00",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "xpol.claude-md",
       "seen_count": 2,
-      "status": "open",
+      "status": "resolved",
       "title": "CLAUDE.md で AI に前提を渡す（サッカークラブ経営シミュレーション（Flutter） で既に実践中）",
       "topic": "claude-md"
     },
@@ -1058,9 +1496,10 @@
       "last_seen_date": "2026-08-31",
       "note": "テスト対象のコードがまだ無い。最初に作る機能が決まってから",
       "project": "youtube-video-creation",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "test.empty-dir",
       "seen_count": 2,
-      "status": "snoozed",
+      "status": "resolved",
       "status_changed_at": "2026-08-29T12:35:53+00:00",
       "title": "tests/ が空のまま置かれている",
       "topic": "tests"
@@ -1073,12 +1512,38 @@
       "last_seen_date": "2026-08-31",
       "project": "kabu-agari-ranking",
       "regressed_at": "2026-08-31T15:01:24+00:00",
-      "resolved_at": "2026-08-29T12:25:07+00:00",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "ci.no-timeout",
       "seen_count": 2,
-      "status": "open",
+      "status": "resolved",
       "title": "ワークフローに実行時間の上限が無い",
       "topic": "ci-hygiene"
+    },
+    "c438bc0959a7": {
+      "exemplar": "workspace/projects/ai-side-business",
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/ai-blog",
+      "rule_id": "deps.unpinned",
+      "seen_count": 1,
+      "status": "open",
+      "title": "依存バージョンが固定されていない",
+      "topic": "deps"
+    },
+    "c74d8d0e3822": {
+      "exemplar": "workspace/projects/ai-side-business",
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/tool-factory",
+      "rule_id": "xpol.pinned-deps",
+      "seen_count": 1,
+      "status": "open",
+      "title": "依存バージョンを固定する（ai-side-business で既に実践中）",
+      "topic": "deps"
     },
     "c86d1b0d78c9": {
       "exemplar": "ai-lab",
@@ -1094,6 +1559,32 @@
       "title": "CLAUDE.md で AI に前提を渡す（PJT008 AIラボ / 成長ループ本体 で既に実践中）",
       "topic": "claude-md"
     },
+    "c8ade36d74fc": {
+      "exemplar": null,
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/gemini-api",
+      "rule_id": "ci.no-timeout",
+      "seen_count": 1,
+      "status": "open",
+      "title": "ワークフローに実行時間の上限が無い",
+      "topic": "ci-hygiene"
+    },
+    "ca32fb1de7dc": {
+      "exemplar": null,
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace",
+      "rule_id": "docs.stale-reference",
+      "seen_count": 1,
+      "status": "open",
+      "title": "ドキュメントが存在しないファイルを載せている",
+      "topic": "doc-accuracy"
+    },
     "d562584e6f6a": {
       "exemplar": null,
       "first_seen": "2026-08-31T15:18:08+00:00",
@@ -1101,9 +1592,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "price-tracker",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "deps.undeclared",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "依存パッケージがどこにも書かれていない",
       "topic": "deps"
     },
@@ -1114,9 +1606,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "ir-analysis",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "deps.unpinned",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "依存バージョンが固定されていない",
       "topic": "deps"
     },
@@ -1127,9 +1620,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "ir-analysis",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "docs.readme-missing",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "README が無い",
       "topic": "readme"
     },
@@ -1140,11 +1634,38 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "tool-factory",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
+      "rule_id": "docs.stale-reference",
+      "seen_count": 1,
+      "status": "resolved",
+      "title": "ドキュメントが存在しないファイルを載せている",
+      "topic": "doc-accuracy"
+    },
+    "db40052fba2d": {
+      "exemplar": null,
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/youtube-video-creation",
       "rule_id": "docs.stale-reference",
       "seen_count": 1,
       "status": "open",
       "title": "ドキュメントが存在しないファイルを載せている",
       "topic": "doc-accuracy"
+    },
+    "dd26b02a6594": {
+      "exemplar": null,
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/soccer-manager",
+      "rule_id": "quality.oversized-file",
+      "seen_count": 1,
+      "status": "open",
+      "title": "1ファイルが大きくなりすぎている",
+      "topic": "structure"
     },
     "df6605cff269": {
       "exemplar": null,
@@ -1154,9 +1675,10 @@
       "last_seen_date": "2026-08-31",
       "note": "同上。改名ブランチのマージ後に .venv の実測値で固定する",
       "project": "ai-lab",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "deps.unpinned",
       "seen_count": 1,
-      "status": "snoozed",
+      "status": "resolved",
       "status_changed_at": "2026-08-31T15:52:41+00:00",
       "title": "依存バージョンが固定されていない",
       "topic": "deps"
@@ -1168,11 +1690,25 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "tool-factory",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "legal.no-license",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "公開リポジトリにライセンスが無い",
       "topic": "license"
+    },
+    "e267e04f7b46": {
+      "exemplar": null,
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace",
+      "rule_id": "docs.broken-link",
+      "seen_count": 1,
+      "status": "open",
+      "title": "ドキュメント内のリンク先が存在しない",
+      "topic": "links"
     },
     "e443781823df": {
       "exemplar": null,
@@ -1181,9 +1717,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "ai-side-business",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "docs.stale-reference",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "ドキュメントが存在しないファイルを載せている",
       "topic": "doc-accuracy"
     },
@@ -1194,9 +1731,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "ir-analysis",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "ci.missing",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "CI が無く、push しても誰も検証していない",
       "topic": "ci"
     },
@@ -1222,10 +1760,10 @@
       "last_seen_date": "2026-08-31",
       "project": "kabu-agari-ranking",
       "regressed_at": "2026-08-31T15:01:24+00:00",
-      "resolved_at": "2026-08-29T11:54:34+00:00",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "ci.silent-failure",
       "seen_count": 2,
-      "status": "open",
+      "status": "resolved",
       "title": "定期実行ジョブが黙って失敗する状態になっている",
       "topic": "alerting"
     },
@@ -1236,9 +1774,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "ai-side-business",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "xpol.claude-md",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "CLAUDE.md で AI に前提を渡す（サッカークラブ経営シミュレーション（Flutter） で既に実践中）",
       "topic": "claude-md"
     },
@@ -1249,11 +1788,51 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "quality-gainer-tracker",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "quality.swallowed-exception",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "例外を握りつぶしている箇所がある",
       "topic": "error-handling"
+    },
+    "efcac6367544": {
+      "exemplar": null,
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/kabu-agari-ranking",
+      "rule_id": "ci.no-timeout",
+      "seen_count": 1,
+      "status": "open",
+      "title": "ワークフローに実行時間の上限が無い",
+      "topic": "ci-hygiene"
+    },
+    "f1106e728c4f": {
+      "exemplar": "workspace/projects/soccer-manager",
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/ai-blog",
+      "rule_id": "ci.missing",
+      "seen_count": 1,
+      "status": "open",
+      "title": "CI が無く、push しても誰も検証していない",
+      "topic": "ci"
+    },
+    "f5d43d1bee7a": {
+      "exemplar": null,
+      "first_seen": "2026-09-01T04:44:27+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-01T04:44:27+00:00",
+      "last_seen_date": "2026-09-01",
+      "project": "workspace/projects/quality-gainer-tracker",
+      "rule_id": "quality.long-function",
+      "seen_count": 1,
+      "status": "open",
+      "title": "1つの関数が長くなりすぎている",
+      "topic": "structure"
     },
     "f700c6d39036": {
       "exemplar": null,
@@ -1263,9 +1842,10 @@
       "last_seen_date": "2026-08-31",
       "note": "pywin32 を含むため Windows 側で pip freeze を取る必要がある。検証できないまま版を固定すると、動いている環境をかえって壊す",
       "project": "claude-code-dev/projects/PJT001-stock-investment",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "deps.unpinned",
       "seen_count": 2,
-      "status": "snoozed",
+      "status": "resolved",
       "status_changed_at": "2026-08-29T12:35:53+00:00",
       "title": "依存バージョンが固定されていない",
       "topic": "deps"
@@ -1277,9 +1857,10 @@
       "last_seen": "2026-08-31T15:18:08+00:00",
       "last_seen_date": "2026-08-31",
       "project": "quality-gainer-tracker",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "docs.readme-missing",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "README が無い",
       "topic": "readme"
     },
@@ -1291,10 +1872,10 @@
       "last_seen_date": "2026-08-31",
       "project": "kabu-agari-ranking",
       "regressed_at": "2026-08-31T15:01:24+00:00",
-      "resolved_at": "2026-08-29T11:54:34+00:00",
+      "resolved_at": "2026-09-01T04:44:27+00:00",
       "rule_id": "secret.gitignore-env",
       "seen_count": 2,
-      "status": "open",
+      "status": "resolved",
       "title": "環境変数を使っているのに .gitignore が .env を除外していない",
       "topic": "secrets"
     }
@@ -1307,33 +1888,33 @@
     },
     "ci.missing": {
       "dismissed": 0,
-      "emitted": 6,
-      "resolved": 1
+      "emitted": 7,
+      "resolved": 6
     },
     "ci.no-timeout": {
       "dismissed": 0,
-      "emitted": 6,
-      "resolved": 5
+      "emitted": 15,
+      "resolved": 7
     },
     "ci.silent-failure": {
       "dismissed": 0,
       "emitted": 1,
-      "resolved": 1
+      "resolved": 2
     },
     "deps.no-dependabot": {
       "dismissed": 0,
       "emitted": 6,
-      "resolved": 3
+      "resolved": 7
     },
     "deps.undeclared": {
       "dismissed": 0,
       "emitted": 2,
-      "resolved": 0
+      "resolved": 2
     },
     "deps.unpinned": {
       "dismissed": 0,
-      "emitted": 6,
-      "resolved": 1
+      "emitted": 10,
+      "resolved": 7
     },
     "docs.bom": {
       "dismissed": 0,
@@ -1342,83 +1923,88 @@
     },
     "docs.broken-link": {
       "dismissed": 0,
-      "emitted": 2,
-      "resolved": 0
+      "emitted": 3,
+      "resolved": 2
     },
     "docs.readme-missing": {
       "dismissed": 0,
-      "emitted": 4,
-      "resolved": 1
+      "emitted": 5,
+      "resolved": 4
+    },
+    "docs.readme-no-runbook": {
+      "dismissed": 0,
+      "emitted": 1,
+      "resolved": 0
     },
     "docs.stale-reference": {
       "dismissed": 0,
-      "emitted": 6,
-      "resolved": 2
+      "emitted": 11,
+      "resolved": 6
     },
     "env.no-example": {
       "dismissed": 0,
-      "emitted": 2,
-      "resolved": 1
+      "emitted": 3,
+      "resolved": 3
     },
     "legal.no-license": {
       "dismissed": 0,
       "emitted": 8,
-      "resolved": 3
+      "resolved": 8
     },
     "quality.long-function": {
       "dismissed": 0,
-      "emitted": 4,
-      "resolved": 0
+      "emitted": 9,
+      "resolved": 4
     },
     "quality.oversized-file": {
       "dismissed": 0,
-      "emitted": 4,
-      "resolved": 6
+      "emitted": 5,
+      "resolved": 7
     },
     "quality.swallowed-exception": {
       "dismissed": 0,
-      "emitted": 4,
-      "resolved": 6
+      "emitted": 7,
+      "resolved": 9
     },
     "scaffold.dormant": {
       "dismissed": 0,
-      "emitted": 3,
-      "resolved": 0
+      "emitted": 4,
+      "resolved": 3
     },
     "secret.gitignore-env": {
       "dismissed": 0,
       "emitted": 2,
-      "resolved": 1
+      "resolved": 3
     },
     "test.empty-dir": {
       "dismissed": 0,
       "emitted": 1,
-      "resolved": 0
+      "resolved": 1
     },
     "test.missing": {
+      "dismissed": 0,
+      "emitted": 5,
+      "resolved": 5
+    },
+    "xpol.claude-md": {
+      "dismissed": 0,
+      "emitted": 12,
+      "resolved": 13
+    },
+    "xpol.env-example": {
       "dismissed": 0,
       "emitted": 4,
       "resolved": 2
     },
-    "xpol.claude-md": {
-      "dismissed": 0,
-      "emitted": 11,
-      "resolved": 5
-    },
-    "xpol.env-example": {
-      "dismissed": 0,
-      "emitted": 2,
-      "resolved": 0
-    },
     "xpol.pinned-deps": {
       "dismissed": 0,
-      "emitted": 1,
+      "emitted": 3,
       "resolved": 1
     }
   },
   "summary_issues": {
     "2026-08-29": "https://github.com/nami0817kk-arch/ai-lab/issues/1"
   },
-  "updated_at": "2026-08-31T15:52:43+00:00",
+  "updated_at": "2026-09-01T04:44:27+00:00",
   "version": 1
 }
