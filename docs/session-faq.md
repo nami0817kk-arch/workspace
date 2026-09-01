@@ -48,9 +48,11 @@ A. kabutan は GitHub Actions の IP を 405 でブロックする。**CI から
 ログは同ディレクトリの run-daily.log。
 
 **Q. youtube のテストが CI に無い**
-A. 日本語フォント・VOICEVOX などマシン依存で CI では動かないため一旦外した。
-環境非依存化（フォント同梱 or スキップマーカー）ができたら
-`youtube-tests.yml` を復活させてよい。
+A. **2026-09-01 に復活済み**（`youtube-tests.yml`、590件が ubuntu で緑・約1分）。
+「マシン依存」の実体は**日本語フォント1つだけ**だった。VOICEVOX も ffmpeg も
+テストは差し替えで動くので要らない。CI では `fonts-noto-cjk` を apt で入れている。
+フォントのファイル名と置き場所は版ごとに変わるので、`config.FONT_CANDIDATES` で
+当たらなければ `/usr/share/fonts` を舐めて探す（`config._font_in_system`）。
 
 **Q. kabutan の解析を直したい**
 A. 実体は `libs/kabutan`（kabu と qgt が共用）。公開名と出力列は両PJTのテストが
