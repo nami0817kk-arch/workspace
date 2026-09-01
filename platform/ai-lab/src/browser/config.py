@@ -36,7 +36,15 @@ def chromium_executable() -> str | None:
 
 def _ca_spki_hash(cert: Path) -> str | None:
     """CA 証明書の公開鍵 (SPKI) の SHA-256 を base64 で返す。"""
-    if not cert.exists() or shutil.which("openssl") is None:
+    try:
+        if not cert.exists():
+            return None
+    except OSError:
+        # GitHub Actions のランナーでは /root が読めず、存在チェック自体が
+        # PermissionError になる。読めない場所にある CA は「無い」扱いでよい。
+        return None
+
+    if shutil.which("openssl") is None:
         return None
 
     pipeline = (
