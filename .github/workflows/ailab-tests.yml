@@ -55,6 +55,9 @@ jobs:
   # README が Windows 前提で書かれているので、imagegen だけ Windows でも回す。
   windows:
     runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: platform/ai-lab
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
