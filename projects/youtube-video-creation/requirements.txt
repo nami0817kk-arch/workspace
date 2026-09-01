@@ -1,6 +1,6 @@
 # ゆっくり実況パイプライン: コア依存
 Pillow>=10.0
 imageio-ffmpeg>=0.5      # ffmpeg バイナリを同梱（別途インストール不要）
-requests>=2.31           # VOICEVOX ENGINE の HTTP API 用
+requests>=2.34.2           # VOICEVOX ENGINE の HTTP API 用
 PyYAML>=6.0
 pytest>=8.0
