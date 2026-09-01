@@ -9,7 +9,7 @@ pip install -e .
 cp config/site.example.json config/site.json
 ```
 
-`config/site.json` で最低限これらを埋めます。
+`config/site.json`（利用者が作成） で最低限これらを埋めます。
 
 | 項目 | 内容 |
 |---|---|
