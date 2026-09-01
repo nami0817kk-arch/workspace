@@ -3,8 +3,6 @@ import io
 import sys
 from datetime import date
 
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
-
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -65,6 +63,10 @@ def cmd_run(args):
 
 
 def main():
+    # Windows のコンソールは既定が CP932 で、日本語がそのまま出ると化ける。
+    # import 時に差し替えると pytest の出力捕捉を壊すので、実行時に行う。
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+
     parser = argparse.ArgumentParser(
         description="PJT004 — 株探IR分析ツール",
         formatter_class=argparse.RawDescriptionHelpFormatter,
