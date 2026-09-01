@@ -8,7 +8,7 @@
 
 - Python 3.12、**標準ライブラリのみ**。依存を足すときは `requirements.txt` に `==` で固定し、理由を書く。
 - テストは `unittest`（pytest ではない）。`python -m unittest discover -s tests`
-- 公開は GitHub Pages（`.github/workflows/pages.yml`）。**テストが通らないと公開されない**。
+- 公開は Cloudflare Pages（`.github/workflows/pages.yml`、リポジトリは private のまま）。**テストが通らないと公開されない**。
   収益導線の無いツールはテストが弾く。この関門を外さない。
 - 設定は環境変数ではなく `site.json`（サイト名・base_url・広告ID・計測ID）。
 
@@ -25,7 +25,7 @@ python build.py --serve    # ローカル確認
 
 - `site.json` の `owner` / `contact_email` が空。ASP・AdSense の審査で見られるため、
   公開前に埋める必要がある。**これは個人情報なので勝手に埋めない**。
-- リポジトリの GitHub Pages が有効化されているか（Settings → Pages → Source: GitHub Actions）。
+- Cloudflare の Secrets（CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID）が登録されているか。kabu-agari-ranking と同じ値でよい。
 
 ## 手を入れるときに気をつけること
 
