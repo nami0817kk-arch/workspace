@@ -96,10 +96,12 @@
       "issue_url": null,
       "last_seen": "2026-09-01T04:44:27+00:00",
       "last_seen_date": "2026-09-01",
+      "note": "再利用ワークフロー呼び出し（uses:）のジョブには timeout-minutes を指定できない。実行時間の上限は共通の .github/workflows/python-tests.yml が timeout-minutes: 15 で一括適用済み。検出側が呼び出し側だけを見ているための誤検知",
       "project": "workspace",
       "rule_id": "ci.no-timeout",
       "seen_count": 1,
-      "status": "open",
+      "status": "dismissed",
+      "status_changed_at": "2026-09-01T04:53:05+00:00",
       "title": "ワークフローに実行時間の上限が無い",
       "topic": "ci-hygiene"
     },
@@ -609,10 +611,12 @@
       "issue_url": null,
       "last_seen": "2026-09-01T04:44:27+00:00",
       "last_seen_date": "2026-09-01",
+      "note": "再利用ワークフロー呼び出し（uses:）のジョブには timeout-minutes を指定できない。実行時間の上限は共通の .github/workflows/python-tests.yml が timeout-minutes: 15 で一括適用済み。検出側が呼び出し側だけを見ているための誤検知",
       "project": "workspace/libs/kabutan",
       "rule_id": "ci.no-timeout",
       "seen_count": 1,
-      "status": "open",
+      "status": "dismissed",
+      "status_changed_at": "2026-09-01T04:53:05+00:00",
       "title": "ワークフローに実行時間の上限が無い",
       "topic": "ci-hygiene"
     },
@@ -1894,7 +1898,7 @@
       "resolved": 6
     },
     "ci.no-timeout": {
-      "dismissed": 0,
+      "dismissed": 2,
       "emitted": 15,
       "resolved": 7
     },
@@ -2007,6 +2011,6 @@
   "summary_issues": {
     "2026-08-29": "https://github.com/nami0817kk-arch/ai-lab/issues/1"
   },
-  "updated_at": "2026-09-01T04:48:15+00:00",
+  "updated_at": "2026-09-01T04:53:05+00:00",
   "version": 1
 }
