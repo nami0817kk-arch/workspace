@@ -1,0 +1,64 @@
+# Miscellaneous
+*.class
+*.log
+*.pyc
+*.swp
+.DS_Store
+.atom/
+.buildlog/
+.history
+.svn/
+migrate_working_dir/
+
+# IntelliJ related
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+
+# Flutter/Dart/Pub related
+**/doc/api/
+**/ios/Flutter/.last_build_id
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+/build/
+
+# Symbolication related
+app.*.symbols
+
+# Obfuscation related
+app.*.map.json
+
+# Android Studio will place build artifacts here
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# 署名・配布用の秘密情報 (絶対にコミットしない)
+# Android
+android/key.properties
+**/*.jks
+**/*.keystore
+# iOS / Apple
+**/*.p12
+**/*.p8
+**/*.cer
+**/*.certSigningRequest
+**/*.mobileprovision
+**/*.provisionprofile
+ios/Runner/GoogleService-Info.plist
+# ストア API 資格情報
+**/play-store-service-account*.json
+**/AuthKey_*.p8
+
+
+# gen-l10n が出す未翻訳レポート。生成物なので追跡しない。
+l10n_untranslated.json
