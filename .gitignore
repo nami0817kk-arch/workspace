@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+*.egg-info/
+
+# 環境変数・秘密情報
+.env
+.env.local
+*.key
+*.pem
+
+# 各PJTのビルド成果物・ログ（PJT側の .gitignore も併用）
+dist/
+output/
+run-daily.log
+commit-msg.tmp
+scripts/wip-sweeper.log
+
+# OS / エディタ
+Thumbs.db
+.DS_Store
+.vscode/
+.idea/
