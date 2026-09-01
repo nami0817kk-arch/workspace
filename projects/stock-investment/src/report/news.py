@@ -247,7 +247,10 @@ def fetch_yahoo_finance_news(max_items: int = 20) -> list[dict]:
                 })
                 if sum(1 for i in items if i["source"] == source) >= per_page:
                     break
-        except Exception:
+        except Exception as e:
+            # 1ソースの失敗で市況ニュース全体を落とさない。ただし黙って捨てると
+            # 「なぜ Yahoo! の記事が0件なのか」が追えなくなる。
+            print(f"  [WARN] Yahoo!ファイナンス（{source}）を取得できませんでした: {e}")
             continue
     return items[:max_items]
 
@@ -375,7 +378,10 @@ def fetch_youtube_with_transcripts(max_videos: int = 40) -> list[dict]:
                 })
                 if len(items) >= max_videos:
                     break
-        except Exception:
+        except Exception as e:
+            # 1チャンネルの失敗で残りのチャンネルを諦めない。ただし黙って捨てると
+            # 「なぜこのチャンネルの動画が出てこないのか」が追えなくなる。
+            print(f"  [WARN] YouTube チャンネル {ch_id} を取得できませんでした: {e}")
             continue
     return items[:max_videos]
 
