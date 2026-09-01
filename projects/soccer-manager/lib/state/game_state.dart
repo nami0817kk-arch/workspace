@@ -1,3 +1,14 @@
+// GameState は 4700行超の単一クラスだった。関心事ごとに part + extension へ
+// 分割してある(game_state_squad / _transfer / _finance / _match / _season)。
+//
+// これは「見た目の分割」であって結合度は下がっていない。extension は同じ
+// ライブラリの一部なので、どのファイルからでも本体の private フィールドに
+// 触れる。フィールドと static は extension に置けないため本体に残っている。
+//
+// 本当に結合を下げるなら、純粋な計算を lib/logic/*_engine.dart へ抽出するのが
+// このコードベースの流儀に合う。ただし startNextSeason と playNextMatchday は
+// 状態変更と分かちがたいため、出せる範囲は限られる。将来の選択肢として記す。
+
 import 'dart:convert';
 import 'dart:math';
 
