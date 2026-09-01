@@ -5,26 +5,26 @@ description: このリポジトリで画像を生成する。ユーザーが「�
 
 # 画像生成
 
-`ailab gen` コマンドを使う。実装は `src/ailab/connectors/images_*.py`。
-MCPサーバ（`.mcp.json` の ailab）が繋がっているなら `generate_image` ツールでもよい。
+`imagegen gen` コマンドを使う。実装は `src/imagegen/connectors/images_*.py`。
+MCPサーバ（`.mcp.json` の imagegen）が繋がっているなら `generate_image` ツールでもよい。
 
 ## 手順
 
 1. 使えるコネクタを確認する（初回のみ）。
 
    ```bash
-   python -m ailab connectors   # PYTHONPATH=src が必要。pip install -e . 済みなら ailab connectors
+   python -m imagegen connectors   # PYTHONPATH=src が必要。pip install -e . 済みなら imagegen connectors
    ```
 
 2. 生成する。プロンプトは具体的に（被写体・構図・画風・色）。
 
    ```bash
-   python -m ailab gen "青空の下でノートPCを使う猫、フラットイラスト、パステル調" --size 1024x1024
+   python -m imagegen gen "青空の下でノートPCを使う猫、フラットイラスト、パステル調" --size 1024x1024
    ```
 
 3. 保存先パス（既定 `output/images/`）をユーザーに伝え、必要なら画像を Read して内容を確認する。
 
-4. GitHub へ置きたいと言われたら `python -m ailab publish <path> --repo owner/name --path <保存先>`。
+4. GitHub へ置きたいと言われたら `python -m imagegen publish <path> --repo owner/name --path <保存先>`。
    既定はドライランなので、内容を見せて確認を取ってから `--yes` を付ける。
 
 ## 使い分け

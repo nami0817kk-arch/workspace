@@ -1,8 +1,8 @@
 {
   "mcpServers": {
-    "ailab": {
+    "imagegen": {
       "command": "python",
-      "args": ["-m", "ailab", "mcp"],
+      "args": ["-m", "imagegen", "mcp"],
       "env": {
         "PYTHONPATH": "src"
       }

@@ -1,5 +1,5 @@
 # リリースを新しい順に取り、それぞれのバナーを1枚ずつ作る。
-#   ailab run release-banners --set repo=owner/name --set count=3
+#   imagegen run release-banners --set repo=owner/name --set count=3
 name: リリースごとのバナー
 
 vars:

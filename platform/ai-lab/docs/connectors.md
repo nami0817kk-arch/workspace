@@ -1,7 +1,7 @@
 # コネクタ基盤と外部サービス連携
 
-`ailab` の外部サービス連携は、すべて**コネクタ**という同じ形をしている。
-画像生成APIも素材サイトも送信先も区別なく `src/ailab/connectors/` に1ファイルずつ置き、
+`imagegen` の外部サービス連携は、すべて**コネクタ**という同じ形をしている。
+画像生成APIも素材サイトも送信先も区別なく `src/imagegen/connectors/` に1ファイルずつ置き、
 CLI は登録簿（registry）だけを見る。
 
 計画の全体像は [integrations-plan.md](integrations-plan.md)。
@@ -9,11 +9,11 @@ CLI は登録簿（registry）だけを見る。
 ## 使う側
 
 ```bash
-ailab connectors          # 連携先の一覧と、必要な環境変数が揃っているか
-ailab connectors --json   # スクリプト用
-ailab doctor              # 実際に接続して確認（キー未設定は -- で未確認扱い）
-ailab doctor github       # 1つだけ確認
-ailab doctor --json       # スクリプトから使う（失敗があれば終了コード1）
+imagegen connectors          # 連携先の一覧と、必要な環境変数が揃っているか
+imagegen connectors --json   # スクリプト用
+imagegen doctor              # 実際に接続して確認（キー未設定は -- で未確認扱い）
+imagegen doctor github       # 1つだけ確認
+imagegen doctor --json       # スクリプトから使う（失敗があれば終了コード1）
 ```
 
 ```
@@ -31,15 +31,15 @@ ailab doctor --json       # スクリプトから使う（失敗があれば終�
 ### 情報を集める
 
 ```bash
-ailab feed https://example.com/feed.xml --source rss     # RSS / Atom
-ailab feed owner/name --source github                    # リリース一覧
-ailab feed "claude code" --source qiita                  # Qiita 記事検索
-ailab feed "リオネル・メッシ" --source wikipedia          # Wikipedia の見出しと導入文
-ailab feed "en:Lionel Messi" --source wikipedia          # 言語を指定する
-ailab feed owner/name --source github --json             # 他のスクリプトへ渡す
+imagegen feed https://example.com/feed.xml --source rss     # RSS / Atom
+imagegen feed owner/name --source github                    # リリース一覧
+imagegen feed "claude code" --source qiita                  # Qiita 記事検索
+imagegen feed "リオネル・メッシ" --source wikipedia          # Wikipedia の見出しと導入文
+imagegen feed "en:Lionel Messi" --source wikipedia          # 言語を指定する
+imagegen feed owner/name --source github --json             # 他のスクリプトへ渡す
 ```
 
-Wikipedia は既定で日本語版を引く（`AILAB_WIKIPEDIA_LANG` か `en:` の前置きで変更）。
+Wikipedia は既定で日本語版を引く（`IMAGEGEN_WIKIPEDIA_LANG` か `en:` の前置きで変更）。
 本文は CC BY-SA なので、引用するときは出典表示が要る。
 画像は別サイトなので `--source wikimedia`（Commons）を使う。
 
@@ -49,14 +49,14 @@ Wikipedia は既定で日本語版を引く（`AILAB_WIKIPEDIA_LANG` か `en:` �
 
 ```bash
 # 既定はドライラン。何が送られるかだけ表示する
-ailab publish output/images/banner.png --repo owner/name --path docs/img/banner.png
+imagegen publish output/images/banner.png --repo owner/name --path docs/img/banner.png
 
 # 実際にコミットする
-ailab publish output/images/banner.png --repo owner/name --path docs/img/banner.png --yes \
+imagegen publish output/images/banner.png --repo owner/name --path docs/img/banner.png --yes \
   -m "バナーを追加"
 ```
 
-- リポジトリは `--repo`、省略時は `.env` の `AILAB_GITHUB_REPO`。
+- リポジトリは `--repo`、省略時は `.env` の `IMAGEGEN_GITHUB_REPO`。
 - ブランチは `--branch`、省略時はリポジトリの既定ブランチ。
 - 同じパスに既にファイルがあれば上書き（内部で sha を取得して更新する）。
 - 25MB を超えるファイルは弾く（Contents API に向かないため）。
@@ -64,20 +64,20 @@ ailab publish output/images/banner.png --repo owner/name --path docs/img/banner.
 
 ## 作る側：新しい連携先の足し方
 
-1. `src/ailab/connectors/<category>_<name>.py` を作る。
+1. `src/imagegen/connectors/<category>_<name>.py` を作る。
 2. `Connector` を継承し、`@register` を付ける。
 3. 能力に応じたメソッドを実装する。
 
 | 能力 | 実装するメソッド | CLI |
 |---|---|---|
-| 素材検索 | `search_assets(query, *, limit) -> list[Asset]` | `ailab search` / `fetch` |
-| 画像生成 | `generate(prompt, *, size, n, model) -> list[GeneratedImage]` | `ailab gen` |
-| 送信 | `publish(path, *, dry_run, **options) -> PublishResult` | `ailab publish` |
-| 情報収集 | `fetch_items(query, *, limit) -> list[FeedItem]` | `ailab feed` |
+| 素材検索 | `search_assets(query, *, limit) -> list[Asset]` | `imagegen search` / `fetch` |
+| 画像生成 | `generate(prompt, *, size, n, model) -> list[GeneratedImage]` | `imagegen gen` |
+| 送信 | `publish(path, *, dry_run, **options) -> PublishResult` | `imagegen publish` |
+| 情報収集 | `fetch_items(query, *, limit) -> list[FeedItem]` | `imagegen feed` |
 
 継承ではなくメソッドの有無（プロトコル）で判定するので、1つのコネクタが複数の能力を
 持ってもよい。実例が `github` で、`publish`（コミット）と `fetch_items`（リリース取得）の
-両方を持ち、`ailab connectors` では両方の見出しに現れる。
+両方を持ち、`imagegen connectors` では両方の見出しに現れる。
 
 ```python
 from ..core.connector import AuthSpec, CheckResult, Connector, RateLimit
@@ -88,7 +88,7 @@ from ..core.types import Asset
 @register
 class ExampleAssets(Connector):
     name = "example"
-    category = "assets"                 # images / assets / publish / feed
+    category = "assets"                 # images / speech / assets / publish / feed
     summary = "サンプル素材サイト"
     priority = 40                       # 小さいほど auto / all で先に使われる
     auth = AuthSpec(env=("EXAMPLE_API_KEY",), signup_url="https://example.com/api")
@@ -111,7 +111,7 @@ class ExampleAssets(Connector):
         return [Asset(source=self.name, title=x["title"], image_url=x["url"]) for x in body["items"]]
 ```
 
-4. `src/ailab/connectors/__init__.py` に import を1行足す。CLI 側の変更は不要
+4. `src/imagegen/connectors/__init__.py` に import を1行足す。CLI 側の変更は不要
    （`--source` や `--to` の選択肢は registry から自動で作られる）。
 5. テストを書く。`Connector(session=FakeSession([...]))` でHTTPを差し替えられるので、
    実際の通信は不要。`tests/test_registry.py` の契約テストが自動で新コネクタも検査する。

@@ -2,7 +2,7 @@
 # （moneyloop の --dry-run も、growth も、追加依存なしで実行できます）。
 # 以下は、それを超えて使う場合に必要になるものです。
 
-# ailab（画像生成・素材取得）の実行に必要
+# imagegen（画像生成・素材取得）の実行に必要
 requests>=2.31
 Pillow>=10.0
 PyYAML>=6.0

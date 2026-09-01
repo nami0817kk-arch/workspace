@@ -1,14 +1,14 @@
 # レシピ：手順をYAMLにまとめて再実行する
 
-`ailab run` は「集める → 作る → 送る」の一連の流れを1つのYAMLにまとめて実行する。
+`imagegen run` は「集める → 作る → 送る」の一連の流れを1つのYAMLにまとめて実行する。
 毎回同じ手順を打ち込む代わりに、レシピを1本用意して回す。
 
 ```bash
-ailab run recipes/illust-pack.yaml
-ailab run illust-pack                       # recipes/ の中なら名前だけでよい
-ailab run weekly-release-banner --set repo=owner/name
-ailab run weekly-release-banner --set repo=owner/name --yes   # publish を実際に行う
-ailab run illust-pack --json                # 結果を JSON で受け取る
+imagegen run recipes/illust-pack.yaml
+imagegen run illust-pack                       # recipes/ の中なら名前だけでよい
+imagegen run weekly-release-banner --set repo=owner/name
+imagegen run weekly-release-banner --set repo=owner/name --yes   # publish を実際に行う
+imagegen run illust-pack --json                # 結果を JSON で受け取る
 ```
 
 ## 書き方
@@ -46,6 +46,8 @@ steps:
 | `search` | `query`, `source`（既定 all）, `limit` | 素材の一覧（ダウンロードはしない） |
 | `fetch` | `query`, `source`, `limit`, `out` | 素材をDLし `path` とクレジットを残す |
 | `gen` | `prompt`（必須）, `provider`, `model`, `style`, `size`, `n`, `out`, `filename`, `format`, `max_width` | 生成画像の `path` |
+| `compose` | `title` か `subtitle`（どちらか必須）, `background`, `preset`, `size`, `band`, `stroke`, `dim`, `blur`, `logo`, `out`, `filename` | 見出し入り画像の `path` と `size` |
+| `say` | `text`（必須）, `provider`, `voice`, `model`, `speed`, `format`, `join`, `out`, `filename` | 音声の `path` と `seconds`（尺） |
 | `publish` | `to`（既定 github）, `file`, ほかは送信先へそのまま渡す | 送信結果 |
 
 `publish` の `file` を省略すると、**直前までの手順が作った最後のファイル**を送る。

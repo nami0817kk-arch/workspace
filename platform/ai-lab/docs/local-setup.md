@@ -93,7 +93,7 @@ Python 環境は [README のセットアップ](../README.md#セットアップ)
 
 - **`.env`**: `.env.example` をコピーして `.env` を作る。APIキーはクラウドのセッションには渡っていないので、
   ローカルで初めて設定することになる。`.env` は `.gitignore` 済みで、コミットしてはいけない。
-- **`.mcp.json`**: このリポジトリは `ailab` の MCP サーバを `python -m ailab mcp` で起動する設定を持つ。
+- **`.mcp.json`**: このリポジトリは `imagegen` の MCP サーバを `python -m imagegen mcp` で起動する設定を持つ。
   Claude Code をリポジトリ直下で起動すると読み込まれるので、`python` が仮想環境のものを指している状態
   （= venv を有効化してから `claude` を起動する）にしておく。
   Windows で `python` が Microsoft Store のスタブに取られている場合はここで失敗する。

@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from browser import config
+from browser import config, control
 from browser.headless_demo import DEMO_PAGE, run_demo_page
 
 playwright_api = pytest.importorskip("playwright.sync_api")
@@ -64,3 +64,32 @@ def test_screenshot_is_written(browser, tmp_path):
 
     assert out.is_file() and out.stat().st_size > 0
     page.close()
+
+
+def test_select_index_defaults_to_last():
+    """match 無しなら最後のタブ(直近に開いたもの)を選ぶ。"""
+    entries = [("Google", "https://google.com"), ("X", "https://x.com/home")]
+    assert control.select_index(entries, None) == 1
+
+
+def test_select_index_matches_url_or_title():
+    entries = [("Google", "https://google.com"), ("X", "https://x.com/home")]
+    assert control.select_index(entries, "x.com") == 1
+    assert control.select_index(entries, "google") == 0
+
+
+def test_select_index_prefers_the_newest_hit():
+    """同じ条件に複数一致したら、後に開いたほうを操作対象にする。"""
+    entries = [("X", "https://x.com/a"), ("Google", "https://google.com"), ("X", "https://x.com/b")]
+    assert control.select_index(entries, "x.com") == 2
+
+
+def test_select_index_returns_none_when_nothing_matches():
+    assert control.select_index([("Google", "https://google.com")], "example") is None
+    assert control.select_index([], None) is None
+
+
+def test_close_requires_match():
+    """取り違えて利用者のタブを消さないよう、close は --match 必須。"""
+    with pytest.raises(SystemExit):
+        control.build_parser().parse_args(["close"])

@@ -99,6 +99,48 @@ Chrome をリモートデバッグポート付きで起動しておき、Playwri
 実装は `src/browser/local_chrome.py`。`browser.close()` は CDP 接続を切るだけで、
 Chrome 自体は開いたまま残る。
 
+### 他のプロジェクトから使う（汎用 CLI）
+
+`src/browser/control.py` は、他の PJT のセッションから日常的に呼ぶための道具箱。
+`local_chrome.py` が最小の接続例なのに対し、こちらはサブコマンドで一通りの操作を提供する。
+
+```bash
+python -m src.browser.control list                                  # タブ一覧（ウィンドウIDも出る）
+python -m src.browser.control open https://example.com              # 新しいタブで開く
+python -m src.browser.control open https://example.com --window     # 別ウィンドウで開く
+python -m src.browser.control open https://example.com --shot output/x.png
+python -m src.browser.control text --match example.com              # 本文テキストを読む
+python -m src.browser.control text --match x.com --selector article # 部分だけ読む
+python -m src.browser.control shot output/tab.png --match x.com     # 撮影
+python -m src.browser.control dup --match x.com                     # 別ウィンドウに複製
+python -m src.browser.control pdf output/genpon.pdf --match go.jp   # 表示中のページを PDF で残す
+python -m src.browser.control links --match go.jp --filter .pdf     # ページ内のリンクを探す
+python -m src.browser.control close --match example.com             # タブを閉じる
+```
+
+`pdf` と `links` は「一次情報に当たる」ための組み合わせ。`links --filter .pdf` で
+官公庁ページの原文PDFの在り処を探し、`pdf` で**見た目ごと手元に固定する**。
+公的資料は差し替えや削除が起きるので、根拠にするなら取得時点の姿を残しておく。
+
+- `pdf` は Playwright の `page.pdf()`（ヘッドレス専用）ではなく CDP の
+  `Page.printToPDF` を直接呼ぶ。目の前の Chrome でもそのまま保存できる
+- `links` は同じ URL への導線が何本もあるとき、最初の1件だけ残す
+- 用紙は `--paper a4|letter`、`--landscape` で横向き
+
+対象タブは `--match`（URL かタイトルの一部）で選ぶ。複数一致したときは**最後に開いたもの**。
+`close` だけは取り違えると利用者のタブを消すため `--match` を必須にしてあり、
+複数一致したときは一覧を出して止まる（`--all` で全部閉じる）。
+
+別プロジェクトのディレクトリからは絶対パスで呼ぶ。venv の Python を使うこと
+（システムの `python` には playwright が入っていない）:
+
+```bash
+"C:/Users/なみ/dev/ai-lab/.venv/Scripts/python.exe" -m src.browser.control list
+```
+
+出力は UTF-8 に固定してある（`use_utf8_stdout`）。これが無いと Windows のコンソールが
+CP932 で読み、外国語の本文で `UnicodeEncodeError` になって落ちる。
+
 ### 普段のプロファイルを使いたい場合
 
 ログイン済みセッションや拡張機能をそのまま使いたいときは、起動スクリプトに

@@ -1,0 +1,85 @@
+# Web版を Cloudflare Pages に公開する（tool-factory-pages.yml と同じ方針）。
+# リポジトリは private のまま公開できる。GitHub Pages は非公開 + Free だと
+# サイトを作成できず、統合前は configure-pages が毎回失敗していた。
+#
+# 必要な Secrets（リポジトリ設定 → Secrets and variables → Actions）:
+#   CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID（tool-factory と同じ値でよい）
+#
+# tool-factory-pages.yml は cloudflare/pages-action@v1 を使っているが、これは
+# Cloudflare がアーカイブ済みで wrangler-action への移行を案内している。
+# こちらは wrangler-action を使う。統合前の soccer リポジトリで実際に動作を
+# 確認できているのもこちら。tool-factory も揃えるなら別途まとめて移す。
+#
+# 検証(analyze + test)は soccer-ci.yml が同じコミットに対して回すので、
+# ここでは重複させない。
+name: Web版を公開する
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "projects/soccer-manager/**"
+      - ".github/workflows/soccer-pages.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: soccer-pages
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/soccer-manager
+    # ハングしたジョブが既定の6時間走り続けるのを防ぐ
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # Cloudflare Pages はプロジェクトのルートで配信するため base-href は "/"。
+      # GitHub Pages 時代の "/soccer-manager/" のままだと、資産を一段深い階層から
+      # 探しに行って真っ白な画面になる。
+      - name: Build web
+        run: flutter build web --release --base-href "/"
+
+      - name: Assemble site
+        run: |
+          mkdir -p dist/legal
+          cp -r build/web/* dist/
+          cp legal/*.html dist/legal/
+          # 紹介ページ。コミュニティやSNSからのリンク先として、
+          # アプリ本体より先に「どんなゲームか」を見せるために置く。
+          mkdir -p dist/lp/shots
+          cp marketing/landing/index.html dist/lp/
+          cp marketing/screenshots/*.png dist/lp/shots/
+
+      # 無ければ作る。既にあれば重複エラーが返るだけで、後続には影響しない。
+      # production_branch を master に固定するのが要点。ここがデプロイ時の
+      # --branch とずれると、本番ではなくプレビュー用の別URLに出てしまい、
+      # アプリ内の法務リンクが404になる。
+      - name: Ensure Cloudflare Pages project exists
+        run: |
+          curl -s -o /dev/null -w "%{http_code}\n" -X POST \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/pages/projects" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"name":"soccer-manager","production_branch":"master"}'
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: projects/soccer-manager
+          command: pages deploy dist --project-name=soccer-manager --branch=master
