@@ -833,10 +833,12 @@
       "issue_url": null,
       "last_seen": "2026-09-01T04:44:27+00:00",
       "last_seen_date": "2026-09-01",
+      "note": "index.html 1枚で完結させることが価値の完成品。README に「完成・運用中／構成を分割しない」と明記済み",
       "project": "workspace/projects/cohabitation-budget",
       "rule_id": "scaffold.dormant",
       "seen_count": 1,
-      "status": "open",
+      "status": "snoozed",
+      "status_changed_at": "2026-09-01T04:48:15+00:00",
       "title": "雛形だけ作られて中身が無い",
       "topic": "dormant"
     },
@@ -2005,6 +2007,6 @@
   "summary_issues": {
     "2026-08-29": "https://github.com/nami0817kk-arch/ai-lab/issues/1"
   },
-  "updated_at": "2026-09-01T04:44:27+00:00",
+  "updated_at": "2026-09-01T04:48:15+00:00",
   "version": 1
 }
