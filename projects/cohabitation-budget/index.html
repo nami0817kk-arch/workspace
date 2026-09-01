@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>同棲費用シミュレーター</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Hiragino Sans', 'Meiryo', sans-serif;
+      background: #f5f5f0;
+      color: #333;
+      min-height: 100vh;
+      padding: 24px 16px 60px;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #2d2d2d;
+    }
+    .subtitle {
+      text-align: center;
+      font-size: 0.82rem;
+      color: #888;
+      margin-bottom: 28px;
+    }
+
+    .card {
+      background: #fff;
+      border-radius: 14px;
+      padding: 20px 22px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    }
+    .card-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #888;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .card-title .icon { font-size: 1rem; }
+
+    /* 収入セクション */
+    .income-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    .income-box label {
+      display: block;
+      font-size: 0.8rem;
+      color: #666;
+      margin-bottom: 5px;
+    }
+    .income-box .name-input {
+      width: 100%;
+      border: 1px solid #e0e0e0;
+      border-radius: 7px;
+      padding: 7px 10px;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .income-box .name-input:focus { border-color: #6b8cff; }
+    .income-input-wrap {
+      display: flex;
+      align-items: center;
+      border: 1px solid #e0e0e0;
+      border-radius: 7px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+    .income-input-wrap:focus-within { border-color: #6b8cff; }
+    .income-input-wrap span {
+      background: #f5f5f0;
+      padding: 8px 10px;
+      font-size: 0.85rem;
+      color: #888;
+      border-right: 1px solid #e0e0e0;
+      white-space: nowrap;
+    }
+    .income-input-wrap input {
+      flex: 1;
+      border: none;
+      outline: none;
+      padding: 8px 10px;
+      font-size: 1rem;
+      width: 100%;
+    }
+    .income-input-wrap .unit {
+      padding: 8px 10px;
+      font-size: 0.8rem;
+      color: #888;
+      border-right: none;
+      border-left: 1px solid #e0e0e0;
+      background: #f5f5f0;
+    }
+
+    .ratio-bar-wrap {
+      margin-top: 16px;
+    }
+    .ratio-mode-toggle {
+      display: flex;
+      background: #f0f0eb;
+      border-radius: 8px;
+      padding: 3px;
+      margin-bottom: 12px;
+    }
+    .ratio-mode-toggle input[type="radio"] { display: none; }
+    .ratio-mode-toggle label {
+      flex: 1;
+      text-align: center;
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      color: #888;
+      transition: all 0.18s;
+      user-select: none;
+    }
+    .ratio-mode-toggle input:checked + label {
+      background: #fff;
+      color: #333;
+      font-weight: 700;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    }
+    .ratio-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: #666;
+      margin-bottom: 5px;
+    }
+    .ratio-bar {
+      height: 10px;
+      background: #e0e0e0;
+      border-radius: 5px;
+      overflow: hidden;
+      display: flex;
+    }
+    .ratio-bar .bar-a {
+      background: linear-gradient(90deg, #6b8cff, #8faeff);
+      transition: width 0.25s ease;
+    }
+    .ratio-bar .bar-b {
+      background: linear-gradient(90deg, #ff8c6b, #ffb08f);
+      transition: width 0.25s ease;
+    }
+    .ratio-values {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-top: 5px;
+    }
+    .ratio-values .val-a { color: #6b8cff; }
+    .ratio-values .val-b { color: #ff8c6b; }
+    .manual-slider-wrap { margin-top: 14px; }
+    .ratio-slider {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      height: 10px;
+      border-radius: 5px;
+      outline: none;
+      cursor: pointer;
+      background: linear-gradient(to right, #8faeff var(--pct, 50%), #ffb08f var(--pct, 50%));
+    }
+    .ratio-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #fff;
+      border: 2px solid #bbb;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+      cursor: grab;
+    }
+    .ratio-slider:active::-webkit-slider-thumb { cursor: grabbing; border-color: #6b8cff; }
+    .slider-hint {
+      text-align: center;
+      font-size: 0.75rem;
+      color: #bbb;
+      margin-top: 5px;
+    }
+
+    /* 費用テーブル */
+    .expense-section-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #aaa;
+      letter-spacing: 0.05em;
+      margin: 18px 0 8px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .expense-row {
+      display: grid;
+      grid-template-columns: 1fr 120px 72px 72px 32px;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 0;
+      border-bottom: 1px solid #f8f8f8;
+    }
+    .expense-row:last-child { border-bottom: none; }
+    .expense-row .cat-name {
+      font-size: 0.9rem;
+      color: #444;
+    }
+    .expense-row .cat-name input {
+      width: 100%;
+      border: none;
+      outline: none;
+      font-size: 0.9rem;
+      color: #444;
+      background: transparent;
+      padding: 2px 0;
+    }
+    .expense-row .cat-name input:focus {
+      border-bottom: 1px solid #6b8cff;
+    }
+    .amount-input-wrap {
+      display: flex;
+      align-items: center;
+      border: 1px solid #e8e8e8;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .amount-input-wrap span {
+      padding: 5px 7px;
+      font-size: 0.8rem;
+      color: #aaa;
+      background: #fafafa;
+      border-right: 1px solid #e8e8e8;
+    }
+    .amount-input-wrap input {
+      flex: 1;
+      border: none;
+      outline: none;
+      padding: 5px 6px;
+      font-size: 0.9rem;
+      width: 100%;
+      text-align: right;
+      background: transparent;
+    }
+    .share-cell {
+      text-align: right;
+      font-size: 0.85rem;
+    }
+    .share-cell.share-a { color: #6b8cff; font-weight: 600; }
+    .share-cell.share-b { color: #ff8c6b; font-weight: 600; }
+
+    .del-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #ccc;
+      font-size: 1rem;
+      padding: 2px 4px;
+      border-radius: 4px;
+      transition: color 0.15s;
+    }
+    .del-btn:hover { color: #e55; }
+
+    /* ヘッダー行 */
+    .expense-header {
+      display: grid;
+      grid-template-columns: 1fr 120px 72px 72px 32px;
+      gap: 8px;
+      padding: 4px 0 6px;
+      font-size: 0.73rem;
+      color: #bbb;
+      font-weight: 700;
+    }
+    .expense-header div:nth-child(2),
+    .expense-header div:nth-child(3),
+    .expense-header div:nth-child(4) { text-align: right; }
+
+    .add-btn {
+      background: none;
+      border: 1px dashed #ccc;
+      border-radius: 7px;
+      padding: 7px;
+      width: 100%;
+      cursor: pointer;
+      font-size: 0.82rem;
+      color: #aaa;
+      margin-top: 8px;
+      transition: all 0.15s;
+    }
+    .add-btn:hover { border-color: #6b8cff; color: #6b8cff; background: #f0f3ff; }
+
+    /* サマリー */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .summary-box {
+      border-radius: 10px;
+      padding: 14px 16px;
+    }
+    .summary-box.box-a { background: #f0f3ff; }
+    .summary-box.box-b { background: #fff3f0; }
+    .summary-box.box-total { background: #f0f5ee; grid-column: 1 / -1; }
+    .summary-box .sname {
+      font-size: 0.78rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .summary-box.box-a .sname { color: #6b8cff; }
+    .summary-box.box-b .sname { color: #ff8c6b; }
+    .summary-box.box-total .sname { color: #5a8a55; }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.82rem;
+      color: #666;
+      margin-bottom: 4px;
+    }
+    .summary-row.total-row {
+      font-size: 1rem;
+      font-weight: 700;
+      color: #333;
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(0,0,0,0.06);
+    }
+    .summary-row.remain-row {
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    .remain-positive { color: #5a8a55; }
+    .remain-negative { color: #e55; }
+
+    /* 保存ボタン */
+    .save-btn {
+      display: block;
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, #6b8cff, #8b6bff);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: opacity 0.2s;
+    }
+    .save-btn:hover { opacity: 0.88; }
+    .save-msg {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #5a8a55;
+      margin-top: 6px;
+      min-height: 18px;
+    }
+
+    .expense-section-title.personal-a { color: #6b8cff; border-color: #dde4ff; }
+    .expense-section-title.personal-b { color: #ff8c6b; border-color: #ffe4dd; }
+    .share-cell.share-dash { color: #ccc; text-align: right; font-size: 0.85rem; }
+    .personal-divider {
+      border: none; border-top: 2px dashed #ececec;
+      margin: 18px 0 4px;
+    }
+    .add-btn.add-btn-b:hover { border-color: #ff8c6b; color: #ff8c6b; background: #fff3f0; }
+
+    @media (max-width: 480px) {
+      .expense-header div:nth-child(1) { font-size: 0.7rem; }
+      .expense-row { grid-template-columns: 1fr 100px 62px 62px 28px; gap: 5px; }
+      .expense-header { grid-template-columns: 1fr 100px 62px 62px 28px; gap: 5px; }
+    }
+  </style>
+</head>
+<body>
+
+<h1>💑 同棲費用シミュレーター</h1>
+<p class="subtitle">収入比で月々の分担額を自動計算します</p>
+
+<!-- 収入入力 -->
+<div class="card">
+  <div class="card-title"><span class="icon">💰</span> 月収入力</div>
+  <div class="income-grid">
+    <div class="income-box">
+      <label>名前（Aさん）</label>
+      <input class="name-input" id="nameA" type="text" value="自分" placeholder="名前">
+      <div class="income-input-wrap">
+        <span>月収</span>
+        <input id="incomeA" type="number" value="250000" min="0" step="10000">
+        <span class="unit">円</span>
+      </div>
+    </div>
+    <div class="income-box">
+      <label>名前（Bさん）</label>
+      <input class="name-input" id="nameB" type="text" value="パートナー" placeholder="名前">
+      <div class="income-input-wrap">
+        <span>月収</span>
+        <input id="incomeB" type="number" value="200000" min="0" step="10000">
+        <span class="unit">円</span>
+      </div>
+    </div>
+  </div>
+  <div class="ratio-bar-wrap">
+    <div class="ratio-mode-toggle">
+      <input type="radio" name="ratioMode" id="modeAuto" value="auto" checked>
+      <label for="modeAuto">収入比で自動</label>
+      <input type="radio" name="ratioMode" id="modeManual" value="manual">
+      <label for="modeManual">手動で設定</label>
+    </div>
+    <div class="ratio-label">
+      <span id="ratioLabelA">自分の割合</span>
+      <span id="ratioLabelB">パートナーの割合</span>
+    </div>
+    <div class="ratio-bar">
+      <div class="bar-a" id="barA"></div>
+      <div class="bar-b" id="barB"></div>
+    </div>
+    <div class="ratio-values">
+      <span class="val-a" id="ratioValA">55.6%</span>
+      <span class="val-b" id="ratioValB">44.4%</span>
+    </div>
+    <div class="manual-slider-wrap" id="manualSliderWrap" style="display:none">
+      <input type="range" class="ratio-slider" id="ratioSlider" min="0" max="100" value="50" step="1">
+      <div class="slider-hint">← ドラッグで割合を調整</div>
+    </div>
+  </div>
+</div>
+
+<!-- 費用テーブル -->
+<div class="card" id="expenseCard">
+  <div class="card-title"><span class="icon">📋</span> 月々の費用</div>
+  <div id="expenseTable"></div>
+</div>
+
+<!-- サマリー -->
+<div class="card">
+  <div class="card-title"><span class="icon">📊</span> 月次サマリー</div>
+  <div class="summary-grid">
+    <div class="summary-box box-a">
+      <div class="sname" id="summaryNameA">自分</div>
+      <div class="summary-row"><span>共同費の分担額</span><span id="sumSharedA">-</span></div>
+      <div class="summary-row"><span>個人支出</span><span id="sumPersonalA">-</span></div>
+      <div class="summary-row total-row"><span>合計支出</span><span id="sumShareA">-</span></div>
+      <div class="summary-row"><span>月収</span><span id="sumIncomeA">-</span></div>
+      <div class="summary-row remain-row"><span>手取り残り</span><span id="sumRemainA" class="remain-positive">-</span></div>
+    </div>
+    <div class="summary-box box-b">
+      <div class="sname" id="summaryNameB">パートナー</div>
+      <div class="summary-row"><span>共同費の分担額</span><span id="sumSharedB">-</span></div>
+      <div class="summary-row"><span>個人支出</span><span id="sumPersonalB">-</span></div>
+      <div class="summary-row total-row"><span>合計支出</span><span id="sumShareB">-</span></div>
+      <div class="summary-row"><span>月収</span><span id="sumIncomeB">-</span></div>
+      <div class="summary-row remain-row"><span>手取り残り</span><span id="sumRemainB" class="remain-positive">-</span></div>
+    </div>
+    <div class="summary-box box-total">
+      <div class="sname">共同費合計</div>
+      <div class="summary-row"><span>固定費</span><span id="sumFixed">-</span></div>
+      <div class="summary-row"><span>変動費</span><span id="sumVariable">-</span></div>
+      <div class="summary-row"><span>貯蓄・その他</span><span id="sumSavings">-</span></div>
+      <div class="summary-row total-row"><span>共同費合計</span><span id="sumTotal">-</span></div>
+    </div>
+  </div>
+</div>
+
+<button class="save-btn" onclick="saveData()">💾 この内容を保存する</button>
+<div class="save-msg" id="saveMsg"></div>
+
+<script>
+// ============================================================
+// データ定義
+// ============================================================
+const SHARED_SECTIONS = ['fixed', 'variable', 'savings'];
+const PERSONAL_SECTIONS = ['personal_a', 'personal_b'];
+const SECTIONS = [...SHARED_SECTIONS, ...PERSONAL_SECTIONS];
+const SECTION_LABELS = {
+  fixed: '🏠 固定費',
+  variable: '🛒 変動費',
+  savings: '💎 貯蓄・その他',
+};
+
+const DEFAULT_EXPENSES = {
+  fixed: [
+    { id: 1, name: '家賃', amount: 120000 },
+    { id: 2, name: '電気代', amount: 6000 },
+    { id: 3, name: 'ガス代', amount: 4000 },
+    { id: 4, name: '水道代', amount: 2000 },
+    { id: 5, name: 'インターネット', amount: 5000 },
+    { id: 6, name: 'NHK受信料', amount: 2600 },
+  ],
+  variable: [
+    { id: 7, name: '食費（自炊）', amount: 40000 },
+    { id: 8, name: '日用品', amount: 8000 },
+    { id: 9, name: '外食・カフェ', amount: 15000 },
+  ],
+  savings: [
+    { id: 10, name: '共同貯蓄', amount: 20000 },
+    { id: 11, name: 'レジャー積立', amount: 10000 },
+  ],
+  personal_a: [
+    { id: 12, name: '携帯代', amount: 5000 },
+    { id: 13, name: '交際費・趣味', amount: 20000 },
+  ],
+  personal_b: [
+    { id: 14, name: '携帯代', amount: 5000 },
+    { id: 15, name: '交際費・趣味', amount: 15000 },
+  ],
+};
+
+let nextId = 100;
+let expenses = {};
+
+// ============================================================
+// 初期化
+// ============================================================
+function init() {
+  const saved = localStorage.getItem('cohabitation_data');
+  if (saved) {
+    try {
+      const data = JSON.parse(saved);
+      document.getElementById('nameA').value = data.nameA || '自分';
+      document.getElementById('nameB').value = data.nameB || 'パートナー';
+      document.getElementById('incomeA').value = data.incomeA || 250000;
+      document.getElementById('incomeB').value = data.incomeB || 200000;
+      expenses = data.expenses || structuredClone(DEFAULT_EXPENSES);
+      SECTIONS.forEach(sec => { if (!expenses[sec]) expenses[sec] = []; });
+      if (data.ratioMode === 'manual') {
+        document.getElementById('modeManual').checked = true;
+        document.getElementById('manualSliderWrap').style.display = 'block';
+        const slider = document.getElementById('ratioSlider');
+        slider.value = data.manualRatio || 50;
+        slider.style.setProperty('--pct', (data.manualRatio || 50) + '%');
+      }
+    } catch {
+      expenses = structuredClone(DEFAULT_EXPENSES);
+    }
+  } else {
+    expenses = structuredClone(DEFAULT_EXPENSES);
+  }
+  renderTable();
+  recalc();
+
+  document.getElementById('nameA').addEventListener('input', () => recalc());
+  document.getElementById('nameB').addEventListener('input', () => recalc());
+  document.getElementById('incomeA').addEventListener('input', () => recalc());
+  document.getElementById('incomeB').addEventListener('input', () => recalc());
+
+  document.getElementById('modeAuto').addEventListener('change', () => {
+    document.getElementById('manualSliderWrap').style.display = 'none';
+    recalc();
+  });
+  document.getElementById('modeManual').addEventListener('change', () => {
+    document.getElementById('manualSliderWrap').style.display = 'block';
+    recalc();
+  });
+  document.getElementById('ratioSlider').addEventListener('input', function() {
+    this.style.setProperty('--pct', this.value + '%');
+    recalc();
+  });
+}
+
+// ============================================================
+// テーブルレンダリング
+// ============================================================
+function renderTable() {
+  const container = document.getElementById('expenseTable');
+  container.innerHTML = '';
+
+  const nameA = document.getElementById('nameA').value || 'Aさん';
+  const nameB = document.getElementById('nameB').value || 'Bさん';
+
+  const header = document.createElement('div');
+  header.className = 'expense-header';
+  header.innerHTML = `<div>項目</div><div>予算</div><div>${nameA}</div><div>${nameB}</div><div></div>`;
+  container.appendChild(header);
+
+  SHARED_SECTIONS.forEach(sec => {
+    const title = document.createElement('div');
+    title.className = 'expense-section-title';
+    title.textContent = SECTION_LABELS[sec];
+    container.appendChild(title);
+
+    (expenses[sec] || []).forEach(item => container.appendChild(makeRow(sec, item)));
+
+    const addBtn = document.createElement('button');
+    addBtn.className = 'add-btn';
+    addBtn.textContent = '+ 項目を追加';
+    addBtn.onclick = () => addItem(sec);
+    container.appendChild(addBtn);
+  });
+
+  // 個人支出セクション（区切り線 + 各人ごと）
+  const hr = document.createElement('hr');
+  hr.className = 'personal-divider';
+  container.appendChild(hr);
+
+  const personalDefs = [
+    { sec: 'personal_a', label: `👤 ${nameA}の個人支出`, cls: 'personal-a', btnCls: '' },
+    { sec: 'personal_b', label: `👤 ${nameB}の個人支出`, cls: 'personal-b', btnCls: 'add-btn-b' },
+  ];
+  personalDefs.forEach(({ sec, label, cls, btnCls }) => {
+    const title = document.createElement('div');
+    title.className = `expense-section-title ${cls}`;
+    title.textContent = label;
+    container.appendChild(title);
+
+    (expenses[sec] || []).forEach(item => container.appendChild(makeRow(sec, item)));
+
+    const addBtn = document.createElement('button');
+    addBtn.className = `add-btn ${btnCls}`;
+    addBtn.textContent = '+ 項目を追加';
+    addBtn.onclick = () => addItem(sec);
+    container.appendChild(addBtn);
+  });
+}
+
+function makeRow(sec, item) {
+  const row = document.createElement('div');
+  row.className = 'expense-row';
+  row.dataset.id = item.id;
+  row.dataset.sec = sec;
+  row.innerHTML = `
+    <div class="cat-name"><input type="text" value="${item.name}" placeholder="項目名"
+      onchange="updateName(${item.id}, '${sec}', this.value)"></div>
+    <div class="amount-input-wrap">
+      <span>¥</span>
+      <input type="number" value="${item.amount}" min="0" step="1000"
+        oninput="updateAmount(${item.id}, '${sec}', this.value)">
+    </div>
+    <div class="share-cell share-a" id="shareA-${item.id}">-</div>
+    <div class="share-cell share-b" id="shareB-${item.id}">-</div>
+    <button class="del-btn" onclick="deleteItem(${item.id}, '${sec}')">✕</button>
+  `;
+  return row;
+}
+
+// ============================================================
+// CRUD
+// ============================================================
+function addItem(sec) {
+  const id = nextId++;
+  if (!expenses[sec]) expenses[sec] = [];
+  expenses[sec].push({ id, name: '新しい項目', amount: 0 });
+  renderTable();
+  recalc();
+}
+
+function updateName(id, sec, val) {
+  const item = expenses[sec].find(i => i.id === id);
+  if (item) item.name = val;
+}
+
+function updateAmount(id, sec, val) {
+  const item = expenses[sec].find(i => i.id === id);
+  if (item) { item.amount = Number(val) || 0; recalc(); }
+}
+
+function deleteItem(id, sec) {
+  expenses[sec] = expenses[sec].filter(i => i.id !== id);
+  renderTable();
+  recalc();
+}
+
+// ============================================================
+// 計算・表示更新
+// ============================================================
+function recalc() {
+  const nameA = document.getElementById('nameA').value || 'Aさん';
+  const nameB = document.getElementById('nameB').value || 'Bさん';
+  const incomeA = Number(document.getElementById('incomeA').value) || 0;
+  const incomeB = Number(document.getElementById('incomeB').value) || 0;
+  const totalIncome = incomeA + incomeB;
+
+  const isManual = document.getElementById('modeManual').checked;
+  const slider = document.getElementById('ratioSlider');
+  let ratioA;
+  if (isManual) {
+    ratioA = Number(slider.value) / 100;
+  } else {
+    ratioA = totalIncome > 0 ? incomeA / totalIncome : 0.5;
+    slider.value = Math.round(ratioA * 100);
+    slider.style.setProperty('--pct', Math.round(ratioA * 100) + '%');
+  }
+  const ratioB = 1 - ratioA;
+
+  // 割合バー更新
+  document.getElementById('barA').style.width = (ratioA * 100) + '%';
+  document.getElementById('barB').style.width = (ratioB * 100) + '%';
+  document.getElementById('ratioLabelA').textContent = nameA + 'の割合';
+  document.getElementById('ratioLabelB').textContent = nameB + 'の割合';
+  document.getElementById('ratioValA').textContent = (ratioA * 100).toFixed(1) + '%';
+  document.getElementById('ratioValB').textContent = (ratioB * 100).toFixed(1) + '%';
+
+  // ヘッダー行の名前更新
+  const headers = document.querySelectorAll('.expense-header');
+  headers.forEach(h => {
+    const divs = h.querySelectorAll('div');
+    if (divs[2]) divs[2].textContent = nameA;
+    if (divs[3]) divs[3].textContent = nameB;
+  });
+
+  // 各項目のシェア計算
+  let totalFixed = 0, totalVariable = 0, totalSavings = 0;
+  let sharedShareA = 0, sharedShareB = 0;
+  let totalPersonalA = 0, totalPersonalB = 0;
+
+  SHARED_SECTIONS.forEach(sec => {
+    (expenses[sec] || []).forEach(item => {
+      const a = Math.round(item.amount * ratioA);
+      const b = item.amount - a;
+      const cellA = document.getElementById('shareA-' + item.id);
+      const cellB = document.getElementById('shareB-' + item.id);
+      if (cellA) cellA.textContent = '¥' + a.toLocaleString();
+      if (cellB) cellB.textContent = '¥' + b.toLocaleString();
+      sharedShareA += a;
+      sharedShareB += b;
+      if (sec === 'fixed') totalFixed += item.amount;
+      if (sec === 'variable') totalVariable += item.amount;
+      if (sec === 'savings') totalSavings += item.amount;
+    });
+  });
+
+  (expenses.personal_a || []).forEach(item => {
+    const cellA = document.getElementById('shareA-' + item.id);
+    const cellB = document.getElementById('shareB-' + item.id);
+    if (cellA) cellA.textContent = '¥' + item.amount.toLocaleString();
+    if (cellB) { cellB.textContent = '—'; cellB.className = 'share-cell share-dash'; }
+    totalPersonalA += item.amount;
+  });
+
+  (expenses.personal_b || []).forEach(item => {
+    const cellA = document.getElementById('shareA-' + item.id);
+    const cellB = document.getElementById('shareB-' + item.id);
+    if (cellA) { cellA.textContent = '—'; cellA.className = 'share-cell share-dash'; }
+    if (cellB) cellB.textContent = '¥' + item.amount.toLocaleString();
+    totalPersonalB += item.amount;
+  });
+
+  const totalShareA = sharedShareA + totalPersonalA;
+  const totalShareB = sharedShareB + totalPersonalB;
+  const sharedTotal = totalFixed + totalVariable + totalSavings;
+  const remainA = incomeA - totalShareA;
+  const remainB = incomeB - totalShareB;
+
+  // サマリー更新
+  document.getElementById('summaryNameA').textContent = nameA;
+  document.getElementById('summaryNameB').textContent = nameB;
+  document.getElementById('sumSharedA').textContent = '¥' + sharedShareA.toLocaleString();
+  document.getElementById('sumPersonalA').textContent = '¥' + totalPersonalA.toLocaleString();
+  document.getElementById('sumShareA').textContent = '¥' + totalShareA.toLocaleString();
+  document.getElementById('sumSharedB').textContent = '¥' + sharedShareB.toLocaleString();
+  document.getElementById('sumPersonalB').textContent = '¥' + totalPersonalB.toLocaleString();
+  document.getElementById('sumShareB').textContent = '¥' + totalShareB.toLocaleString();
+  document.getElementById('sumIncomeA').textContent = '¥' + incomeA.toLocaleString();
+  document.getElementById('sumIncomeB').textContent = '¥' + incomeB.toLocaleString();
+
+  const remA = document.getElementById('sumRemainA');
+  remA.textContent = '¥' + remainA.toLocaleString();
+  remA.className = 'remain-' + (remainA >= 0 ? 'positive' : 'negative');
+
+  const remB = document.getElementById('sumRemainB');
+  remB.textContent = '¥' + remainB.toLocaleString();
+  remB.className = 'remain-' + (remainB >= 0 ? 'positive' : 'negative');
+
+  document.getElementById('sumFixed').textContent = '¥' + totalFixed.toLocaleString();
+  document.getElementById('sumVariable').textContent = '¥' + totalVariable.toLocaleString();
+  document.getElementById('sumSavings').textContent = '¥' + totalSavings.toLocaleString();
+  document.getElementById('sumTotal').textContent = '¥' + sharedTotal.toLocaleString();
+}
+
+// ============================================================
+// 保存
+// ============================================================
+function saveData() {
+  const data = {
+    nameA: document.getElementById('nameA').value,
+    nameB: document.getElementById('nameB').value,
+    incomeA: document.getElementById('incomeA').value,
+    incomeB: document.getElementById('incomeB').value,
+    ratioMode: document.getElementById('modeManual').checked ? 'manual' : 'auto',
+    manualRatio: document.getElementById('ratioSlider').value,
+    expenses,
+  };
+  localStorage.setItem('cohabitation_data', JSON.stringify(data));
+  const msg = document.getElementById('saveMsg');
+  msg.textContent = '✅ 保存しました！次回開いたときも引き継がれます';
+  setTimeout(() => { msg.textContent = ''; }, 3000);
+}
+
+// ============================================================
+init();
+</script>
+</body>
+</html>
