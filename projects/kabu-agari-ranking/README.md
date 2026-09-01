@@ -58,7 +58,7 @@ X API と Cloudflare の認証情報は `.env`（gitignore 済み）か GitHub S
 
 ## 自動更新（GitHub Actions）
 
-`.github/workflows/daily-gainers-site.yml` が平日 16:00 JST に自動実行し、
+`.github/workflows/kabu-daily.yml` が平日 16:00 JST に自動実行し、
 `data/*.json`（当日ランキング）をコミット、`output/` を Cloudflare Pages にデプロイする。
 手動テストは GitHub の Actions タブから `workflow_dispatch` で実行できる。
 

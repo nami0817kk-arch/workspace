@@ -84,7 +84,7 @@
 - アカウント登録・ログイン機能は引き続き無い。提供者自身は何も収集していない。
 - 「融資」「スポンサー契約」は実際の金銭のやり取りを伴わないゲーム内経済である旨を
   Reviewer向けメモ（App Store Connect の「レビュー用メモ」欄等）に明記すると良い。
-- Web版（GitHub Pages、`.github/workflows/web.yml`）は無料の試遊版として
+- Web版（Cloudflare Pages、`.github/workflows/soccer-pages.yml`）は無料の試遊版として
   引き続き公開する想定。ストア版と機能差分が出た場合はこのドキュメントを更新する。
 
 ## 申請チェックリスト

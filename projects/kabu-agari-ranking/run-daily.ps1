@@ -1,7 +1,7 @@
 # 日次のランキング取得（このPCのタスクスケジューラから毎平日16:10に実行される）。
 #
 # kabutan が GitHub Actions の IP を 405 でブロックしているため、
-# 取得だけは手元で行い、data/ を push する。push を受けた CI（daily-gainers-site.yml）が
+# 取得だけは手元で行い、data/ を push する。push を受けた CI（kabu-daily.yml）が
 # ビルド・X投稿・Cloudflare Pages への公開を行う。
 #
 # このスクリプトが動かなくなっても、CI 側の 17:00 JST の鮮度監視が

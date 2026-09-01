@@ -91,13 +91,13 @@ TOOL = Tool(
 **ASP と広告配信の審査では、運営者情報と連絡先の記載が見られる**ため、
 空のまま公開しても審査を通りにくい。
 
-### GitHub Pages に自動公開する
+### Cloudflare Pages に自動公開する
 
-リポジトリ直下の `.github/workflows/pages.yml` が、`master` への push で
-テスト → ビルド → 公開まで自動で実行する。設定済みなので、追加の作業は不要。
+リポジトリ直下の `.github/workflows/tool-factory-pages.yml` が、`master` への
+push でテスト → ビルド → 公開まで自動で実行する。設定済みなので、追加の作業は不要。
 
-公開先は `https://<ユーザー名>.github.io/<リポジトリ名>/tools/`。
-`site.json` の `base_url` もこれに合わせてある。
+公開先は `https://seisan-kanri-tools.pages.dev`（`site.json` の `base_url` と同じ）。
+private リポジトリでは GitHub Pages が使えないため、そちらから移行した。
 
 テストが落ちるとビルドされないので、収益導線の無いツールや壊れた定義が
 公開されることはない。

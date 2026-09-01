@@ -25,7 +25,7 @@ python build.py       # data/ から静的サイトを生成（通信しない�
   勘で選ばず `explore.py` の調査結果で決める。
 - 公開先。`config.json` の `base_url` が切り出し前の claude-code-dev のパスを指したまま。
 - 日次実行のワークフローが未作成。作るときは kabu-agari-ranking の
-  daily-gainers-site.yml を参考に、失敗時に Issue を立てるステップを必ず入れる。
+  kabu-daily.yml を参考に、失敗時に Issue を立てるステップを必ず入れる。
 
 ## 手を入れるときに気をつけること
 

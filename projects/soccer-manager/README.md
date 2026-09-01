@@ -5,9 +5,10 @@
 もとは `kabu-agari-ranking` リポジトリで開発していたが、同リポジトリ本来の目的
 （値上がりランキング公開サイト）と無関係だったため、こちらの開発ワークスペースへ移設した。
 
-Web版（お試し公開）: https://nami0817kk-arch.github.io/claude-code-dev/soccer-manager/
-（`.github/workflows/web.yml` がpush時にビルド・GitHub Pagesへ自動デプロイする。
-リポジトリの Settings → Pages → Source を「GitHub Actions」に設定する必要がある）
+Web版（お試し公開）: https://soccer-manager.pages.dev/
+（`.github/workflows/soccer-pages.yml` が master への push でビルドし、
+Cloudflare Pages へ自動デプロイする。private リポジトリでは GitHub Pages が
+使えないため、そちらから移行した）
 
 ホーム/スカッド/戦術/順位表をボトムナビゲーションで切り替える構成。ホーム画面は
 順位・資金・総合力・信頼度をカード形式で一覧でき、選手はポジションの大分類
