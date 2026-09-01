@@ -13,8 +13,8 @@
 | 対象年齢 | 全年齢（暴力表現・実写、ギャンブル要素なし。クラブ経営の「融資」「スポンサー契約」はすべて架空のゲーム内通貨） |
 | 価格モデル | 無料（任意視聴のリワード広告 + 買い切りのサポーター課金） |
 | 対応言語 | 日本語 |
-| プライバシーポリシー | https://nami0817kk-arch.github.io/claude-code-dev/soccer-manager/legal/privacy.html |
-| 利用規約 | https://nami0817kk-arch.github.io/claude-code-dev/soccer-manager/legal/terms.html |
+| プライバシーポリシー | https://soccer-manager.pages.dev/legal/privacy.html |
+| 利用規約 | https://soccer-manager.pages.dev/legal/terms.html |
 | サポート窓口 | https://github.com/nami0817kk-arch/claude-code-dev/issues |
 
 ## 短い説明文（Google Play「簡単な説明」80字以内 目安）

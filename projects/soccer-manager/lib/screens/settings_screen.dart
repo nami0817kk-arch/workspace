@@ -13,9 +13,9 @@ import 'onboarding_screen.dart';
 import 'start_screen.dart';
 
 const String _privacyPolicyUrl =
-    'https://nami0817kk-arch.github.io/claude-code-dev/soccer-manager/legal/privacy.html';
+    'https://soccer-manager.pages.dev/legal/privacy.html';
 const String _termsUrl =
-    'https://nami0817kk-arch.github.io/claude-code-dev/soccer-manager/legal/terms.html';
+    'https://soccer-manager.pages.dev/legal/terms.html';
 
 /// 表示・操作設定とセーブデータ管理をまとめた画面。
 class SettingsScreen extends StatelessWidget {

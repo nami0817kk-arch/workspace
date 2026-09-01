@@ -10,10 +10,11 @@ import 'package:flutter_test/flutter_test.dart';
 void main() {
   group('配信設定の整合性', () {
     test('プライバシーポリシー・利用規約のURLが公開先と一致している', () {
-      // Web版のデプロイ先。soccer-manager-web.yml が --base-href に指定し、
-      // legal/*.html をこの下の legal/ へコピーしている。
+      // Web版のデプロイ先。ルートの .github/workflows/soccer-pages.yml が
+      // Cloudflare Pages へ公開し、legal/*.html をこの下の legal/ へコピーする。
+      // base-href が "/" なので、サイトのルート直下がそのまま公開URLになる。
       const publishedLegalBase =
-          'https://nami0817kk-arch.github.io/claude-code-dev/soccer-manager/legal';
+          'https://soccer-manager.pages.dev/legal';
 
       final settingsSource =
           File('lib/screens/settings_screen.dart').readAsStringSync();
