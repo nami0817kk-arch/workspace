@@ -86,6 +86,13 @@ A. 実体は `libs/kabutan`（kabu と qgt が共用）。公開名と出力列�
 **Q. 他セッションの worktree・ブランチ・未コミットに遭遇した**
 A. 触らない。報告も不要（作業中が正常）。自分の worktree で作業を続ける。
 
+**Q. `git worktree remove` が「Permission denied」で失敗する**
+A. Windows でディレクトリにハンドルが残っていると起きる。多くの場合**登録解除だけは完了していて、
+空ディレクトリが残る**状態になる。`git worktree list` に出なくなっていれば、残ったディレクトリを
+`rmdir <path>` で消せば整合が取れる（消えない場合はそのパスを cwd にしているシェルやエディタを
+閉じてから再実行）。`git worktree prune` は登録が既に消えているため効かない。
+ブランチ削除は別途 `git branch -D claude/<topic>` が要る。
+
 **Q. projects/ai-blog が無い**
 A. 2026-09-01 にユーザー判断でクローズした（テスト・CI・依存固定なしの最薄PJTで、投資判断の結果）。
 書きかけ（generator.py 等）は git 履歴に残っている。復活させる場合:
