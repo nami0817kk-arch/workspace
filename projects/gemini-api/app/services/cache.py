@@ -127,8 +127,10 @@ class RedisCache:
     async def close(self) -> None:
         try:
             await self._redis.aclose()
-        except Exception:  # pragma: no cover
-            pass
+        except Exception as exc:  # pragma: no cover - 切断失敗で停止処理を止めない
+            # get/set と同じ方針。キャッシュは最適化であって、その失敗を
+            # アプリ本体（ここでは shutdown）の失敗に昇格させない
+            logger.debug("redis close failed (%s); 無視して終了します", exc)
 
 
 def build_cache(ttl_seconds: int, redis_url: str = "") -> CacheBackend:

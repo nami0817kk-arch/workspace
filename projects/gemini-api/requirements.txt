@@ -1,8 +1,9 @@
-fastapi>=0.115.0
-uvicorn[standard]>=0.30.0
-google-genai>=1.0.0
-pydantic>=2.8.0
-pydantic-settings>=2.4.0
+# バージョンは実測値で固定（更新は Dependabot の PR で行う）
+fastapi==0.141.1
+uvicorn[standard]==0.52.4
+google-genai==2.21.0
+pydantic==2.13.5
+pydantic-settings==2.15.0
 
 # REDIS_URL を使う場合のみ必要
 # redis>=5.0.0
