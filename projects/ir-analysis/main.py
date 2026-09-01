@@ -63,10 +63,6 @@ def cmd_run(args):
 
 
 def main():
-    # Windows のコンソールは既定が CP932 で、日本語がそのまま出ると化ける。
-    # import 時に差し替えると pytest の出力捕捉を壊すので、実行時に行う。
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
-
     parser = argparse.ArgumentParser(
         description="PJT004 — 株探IR分析ツール",
         formatter_class=argparse.RawDescriptionHelpFormatter,
@@ -101,4 +97,8 @@ def main():
 
 
 if __name__ == "__main__":
+    # Windows のコンソールは既定が CP932 で、日本語がそのまま出ると化ける。
+    # 差し替えるのはコンソールから起動したときだけ。import 時や main() の中で
+    # 差し替えると pytest の出力捕捉を壊し、main を通るテストが書けなくなる。
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
     main()
