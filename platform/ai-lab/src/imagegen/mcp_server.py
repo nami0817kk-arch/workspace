@@ -38,204 +38,208 @@ def _styles() -> list[str]:
     return styles.names()
 
 
+def _tool(
+    name: str,
+    description: str,
+    properties: dict[str, Any] | None = None,
+    required: list[str] | None = None,
+) -> dict:
+    """ツール1件の定義を組み立てる。schema の外枠はどのツールも同じなのでここに寄せる。"""
+    schema: dict[str, Any] = {"type": "object", "properties": properties or {}}
+    if required:
+        schema["required"] = required
+    return {"name": name, "description": description, "inputSchema": schema}
+
+
 def tool_definitions() -> list[dict]:
     """公開するツールの一覧。選択肢は登録簿から作るのでコネクタ追加に自動で追随する。"""
     return [
-        {
-            "name": "list_connectors",
-            "description": "使える連携先と、APIキーが設定されているかを一覧する。",
-            "inputSchema": {"type": "object", "properties": {}},
-        },
-        {
-            "name": "generate_image",
-            "description": (
+        _tool(
+            "list_connectors",
+            "使える連携先と、APIキーが設定されているかを一覧する。",
+        ),
+        *_image_tools(),
+        *_speech_tools(),
+        *_asset_tools(),
+        *_integration_tools(),
+    ]
+
+
+def _image_tools() -> list[dict]:
+    return [
+        _tool(
+            "generate_image",
+            (
                 "プロンプトから画像を生成してファイルに保存し、保存先パスを返す。"
                 "APIキーが無い場合は local（プレースホルダ画像）が使われる。"
             ),
-            "inputSchema": {
-                "type": "object",
-                "properties": {
-                    "prompt": {"type": "string", "description": "生成したい画像の説明"},
-                    "provider": {
-                        "type": "string",
-                        "enum": ["auto", *_sources("generate")],
-                        "description": "既定は auto（使えるものを優先順に選ぶ）",
-                    },
-                    "style": {
-                        "type": "string",
-                        "enum": _styles(),
-                        "description": "絵柄のプリセット（flat / banner / icon など）",
-                    },
-                    "size": {"type": "string", "description": "例: 1024x1024"},
-                    "n": {"type": "integer", "description": "生成枚数"},
-                    "out": {"type": "string", "description": "保存先ディレクトリ"},
+            {
+                "prompt": {"type": "string", "description": "生成したい画像の説明"},
+                "provider": {
+                    "type": "string",
+                    "enum": ["auto", *_sources("generate")],
+                    "description": "既定は auto（使えるものを優先順に選ぶ）",
                 },
-                "required": ["prompt"],
+                "style": {
+                    "type": "string",
+                    "enum": _styles(),
+                    "description": "絵柄のプリセット（flat / banner / icon など）",
+                },
+                "size": {"type": "string", "description": "例: 1024x1024"},
+                "n": {"type": "integer", "description": "生成枚数"},
+                "out": {"type": "string", "description": "保存先ディレクトリ"},
             },
-        },
-        {
-            "name": "compose_image",
-            "description": (
+            ["prompt"],
+        ),
+        _tool(
+            "compose_image",
+            (
                 "画像に見出しを載せた1枚（サムネイル・OGP・共有画像）を作って保存する。"
                 "背景を省くとベタ塗りになる。生成AIは使わないので待たされず、"
                 "同じ指定からは常に同じ画像が出る。"
             ),
-            "inputSchema": {
-                "type": "object",
-                "properties": {
-                    "title": {"type": "string", "description": "大きく載せる見出し"},
-                    "subtitle": {"type": "string", "description": "小さく載せる補足"},
-                    "background": {"type": "string", "description": "背景に敷く画像のパス"},
-                    "color": {"type": "string", "description": "背景色（例: #101828）"},
-                    "preset": {"type": "string", "enum": sorted(compose.PRESETS)},
-                    "size": {"type": "string", "description": "例: 1280x720（preset より優先）"},
-                    "position": {"type": "string", "enum": list(compose.POSITIONS)},
-                    "align": {"type": "string", "enum": list(compose.ALIGNS)},
-                    "band": {"type": "boolean", "description": "文字の背後に帯を敷く"},
-                    "stroke": {"type": "integer", "description": "袋文字の太さ（px）"},
-                    "dim": {"type": "number", "description": "背景を暗くする 0〜1"},
-                    "blur": {"type": "number", "description": "背景をぼかす"},
-                    "out": {"type": "string", "description": "保存先ディレクトリ"},
-                },
-                "required": ["title"],
+            {
+                "title": {"type": "string", "description": "大きく載せる見出し"},
+                "subtitle": {"type": "string", "description": "小さく載せる補足"},
+                "background": {"type": "string", "description": "背景に敷く画像のパス"},
+                "color": {"type": "string", "description": "背景色（例: #101828）"},
+                "preset": {"type": "string", "enum": sorted(compose.PRESETS)},
+                "size": {"type": "string", "description": "例: 1280x720（preset より優先）"},
+                "position": {"type": "string", "enum": list(compose.POSITIONS)},
+                "align": {"type": "string", "enum": list(compose.ALIGNS)},
+                "band": {"type": "boolean", "description": "文字の背後に帯を敷く"},
+                "stroke": {"type": "integer", "description": "袋文字の太さ（px）"},
+                "dim": {"type": "number", "description": "背景を暗くする 0〜1"},
+                "blur": {"type": "number", "description": "背景をぼかす"},
+                "out": {"type": "string", "description": "保存先ディレクトリ"},
             },
-        },
-        {
-            "name": "synthesize_speech",
-            "description": (
+            ["title"],
+        ),
+    ]
+
+
+def _speech_tools() -> list[dict]:
+    return [
+        _tool(
+            "synthesize_speech",
+            (
                 "文章を読み上げた音声を作ってファイルに保存し、保存先パスを返す。"
                 "長文は自動で分割して合成し、WAV なら1本につなぎ直す。"
                 "APIキーが無く VOICEVOX も起動していない場合は beep"
                 "（尺だけ合わせたプレースホルダ音声）が使われる。"
             ),
-            "inputSchema": {
-                "type": "object",
-                "properties": {
-                    "text": {"type": "string", "description": "読み上げる文章"},
-                    "provider": {
-                        "type": "string",
-                        "enum": ["auto", *_sources("synthesize")],
-                        "description": "既定は auto（使えるものを優先順に選ぶ）",
-                    },
-                    "voice": {"type": "string", "description": "声の指定（list_voices で確認）"},
-                    "model": {"type": "string"},
-                    "speed": {"type": "number", "description": "読み上げ速度（既定 1.0）"},
-                    "format": {"type": "string", "enum": ["wav", "mp3", "opus", "aac", "flac"]},
-                    "out": {"type": "string", "description": "保存先ディレクトリ"},
+            {
+                "text": {"type": "string", "description": "読み上げる文章"},
+                "provider": {
+                    "type": "string",
+                    "enum": ["auto", *_sources("synthesize")],
+                    "description": "既定は auto（使えるものを優先順に選ぶ）",
                 },
-                "required": ["text"],
+                "voice": {"type": "string", "description": "声の指定（list_voices で確認）"},
+                "model": {"type": "string"},
+                "speed": {"type": "number", "description": "読み上げ速度（既定 1.0）"},
+                "format": {"type": "string", "enum": ["wav", "mp3", "opus", "aac", "flac"]},
+                "out": {"type": "string", "description": "保存先ディレクトリ"},
             },
-        },
-        {
-            "name": "list_voices",
-            "description": "音声合成で使える声の一覧を返す。",
-            "inputSchema": {
-                "type": "object",
-                "properties": {
-                    "provider": {"type": "string", "enum": ["auto", *_sources("synthesize")]}
-                },
+            ["text"],
+        ),
+        _tool(
+            "list_voices",
+            "音声合成で使える声の一覧を返す。",
+            {"provider": {"type": "string", "enum": ["auto", *_sources("synthesize")]}},
+        ),
+    ]
+
+
+def _asset_tools() -> list[dict]:
+    return [
+        _tool(
+            "search_assets",
+            "フリー素材（アイコン・イラスト・写真）を検索する。ダウンロードはしない。",
+            {
+                "query": {"type": "string"},
+                "source": {"type": "string", "enum": ["all", *_sources("search_assets")]},
+                "limit": {"type": "integer"},
             },
-        },
-        {
-            "name": "search_assets",
-            "description": "フリー素材（アイコン・イラスト・写真）を検索する。ダウンロードはしない。",
-            "inputSchema": {
-                "type": "object",
-                "properties": {
-                    "query": {"type": "string"},
-                    "source": {"type": "string", "enum": ["all", *_sources("search_assets")]},
-                    "limit": {"type": "integer"},
-                },
-                "required": ["query"],
-            },
-        },
-        {
-            "name": "fetch_assets",
-            "description": (
+            ["query"],
+        ),
+        _tool(
+            "fetch_assets",
+            (
                 "フリー素材を検索してダウンロードする。"
                 "保存先に CREDITS.md（出典とライセンス）も書き出す。"
             ),
-            "inputSchema": {
-                "type": "object",
-                "properties": {
-                    "query": {"type": "string"},
-                    "source": {"type": "string", "enum": ["all", *_sources("search_assets")]},
-                    "limit": {"type": "integer"},
-                    "out": {"type": "string"},
-                },
-                "required": ["query"],
+            {
+                "query": {"type": "string"},
+                "source": {"type": "string", "enum": ["all", *_sources("search_assets")]},
+                "limit": {"type": "integer"},
+                "out": {"type": "string"},
             },
-        },
-        {
-            "name": "grab_image",
-            "description": (
+            ["query"],
+        ),
+        _tool(
+            "grab_image",
+            (
                 "画像のURLを直接指定して取り込む。自分で見つけた画像を出典つきで"
                 "手元に置くときに使う。ページのURLではなく画像そのもののURLを渡す。"
             ),
-            "inputSchema": {
-                "type": "object",
-                "properties": {
-                    "url": {"type": "string", "description": "画像そのもののURL"},
-                    "page_url": {"type": "string", "description": "出典ページのURL"},
-                    "license": {"type": "string", "description": "ライセンス表記"},
-                    "creator": {"type": "string"},
-                    "title": {"type": "string"},
-                    "out": {"type": "string"},
-                },
-                "required": ["url"],
+            {
+                "url": {"type": "string", "description": "画像そのもののURL"},
+                "page_url": {"type": "string", "description": "出典ページのURL"},
+                "license": {"type": "string", "description": "ライセンス表記"},
+                "creator": {"type": "string"},
+                "title": {"type": "string"},
+                "out": {"type": "string"},
             },
-        },
-        {
-            "name": "fetch_feed",
-            "description": (
+            ["url"],
+        ),
+    ]
+
+
+def _integration_tools() -> list[dict]:
+    return [
+        _tool(
+            "fetch_feed",
+            (
                 "記事やリリース情報を取得する。"
                 "rss はフィードURL、github は owner/name、qiita と estat はキーワード、"
                 "edinet は日付(2026-09-01)か証券コード(7203)を query に渡す。"
                 "edinet（金融庁の提出書類）と estat（政府統計）は官公庁の一次情報。"
             ),
-            "inputSchema": {
-                "type": "object",
-                "properties": {
-                    "query": {"type": "string"},
-                    "source": {"type": "string", "enum": _sources("fetch_items")},
-                    "limit": {"type": "integer"},
-                },
-                "required": ["query", "source"],
+            {
+                "query": {"type": "string"},
+                "source": {"type": "string", "enum": _sources("fetch_items")},
+                "limit": {"type": "integer"},
             },
-        },
-        {
-            "name": "publish_file",
-            "description": (
+            ["query", "source"],
+        ),
+        _tool(
+            "publish_file",
+            (
                 "ファイルを外部サービスへ送る。既定はドライランで、"
                 "confirm を true にしたときだけ実際に送信する。"
             ),
-            "inputSchema": {
-                "type": "object",
-                "properties": {
-                    "file": {"type": "string"},
-                    "to": {"type": "string", "enum": _sources("publish")},
-                    "repo": {"type": "string", "description": "github の場合 owner/name"},
-                    "dest": {"type": "string", "description": "送信先でのパス"},
-                    "branch": {"type": "string"},
-                    "message": {"type": "string"},
-                    "confirm": {"type": "boolean", "description": "true で実際に送信する"},
-                },
-                "required": ["file"],
+            {
+                "file": {"type": "string"},
+                "to": {"type": "string", "enum": _sources("publish")},
+                "repo": {"type": "string", "description": "github の場合 owner/name"},
+                "dest": {"type": "string", "description": "送信先でのパス"},
+                "branch": {"type": "string"},
+                "message": {"type": "string"},
+                "confirm": {"type": "boolean", "description": "true で実際に送信する"},
             },
-        },
-        {
-            "name": "run_recipe",
-            "description": "レシピ（YAML）を実行する。publish は confirm を true にするまでドライラン。",
-            "inputSchema": {
-                "type": "object",
-                "properties": {
-                    "recipe": {"type": "string", "description": "パス、または recipes/ 内の名前"},
-                    "variables": {"type": "object", "description": "{{ vars.X }} の差し替え"},
-                    "confirm": {"type": "boolean"},
-                },
-                "required": ["recipe"],
+            ["file"],
+        ),
+        _tool(
+            "run_recipe",
+            "レシピ（YAML）を実行する。publish は confirm を true にするまでドライラン。",
+            {
+                "recipe": {"type": "string", "description": "パス、または recipes/ 内の名前"},
+                "variables": {"type": "object", "description": "{{ vars.X }} の差し替え"},
+                "confirm": {"type": "boolean"},
             },
-        },
+            ["recipe"],
+        ),
     ]
 
 
