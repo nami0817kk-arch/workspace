@@ -19,6 +19,22 @@ def test_launch_args_are_wellformed():
     assert len(args) <= 1
 
 
+def test_ca_spki_hash_survives_unreadable_cert(monkeypatch):
+    """読めない場所にある CA は「無い」扱いにする。
+
+    GitHub Actions のランナーでは /root が読めず、Path.exists() が False では
+    なく PermissionError を送出する（EACCES は pathlib の無視対象外）。
+    ここを素通しにすると launch_args() ごと落ちて CI 全体が赤くなる。
+    """
+
+    def raise_permission_error(self, **kwargs):
+        raise PermissionError(13, "Permission denied")
+
+    monkeypatch.setattr(Path, "exists", raise_permission_error)
+    assert config._ca_spki_hash(Path("/root/.ccr/agent-proxy-ca.crt")) is None
+    assert config.launch_args() == []
+
+
 def test_demo_page_exists():
     assert DEMO_PAGE.is_file()
 
