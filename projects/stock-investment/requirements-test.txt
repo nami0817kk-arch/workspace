@@ -16,3 +16,11 @@ anthropic==1.2.0
 requests==2.34.2
 beautifulsoup4==4.15.0
 lxml==6.1.2
+
+# src/report/excel_exporter.py を import するために必要。
+# excel_exporter は db_manager 経由で pyodbc に依存する。pyodbc は Linux でも
+# wheel が入り import できる（quality-gainer-tracker の CI で実証済み）。
+# 冒頭のコメントにある「Linux ランナーではインストールできない」は
+# pywin32 についてのみ当てはまる。
+openpyxl==3.1.5
+pyodbc==5.3.0

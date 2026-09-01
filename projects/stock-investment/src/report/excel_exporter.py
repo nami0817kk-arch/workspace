@@ -132,13 +132,10 @@ def _write_legend_sheet(wb):
         ws.row_dimensions[j].height = 20
 
 
-def _write_block(ws, result: dict, start_row: int, now: datetime):
-    row = start_row
-
+def _write_run_header(ws, result: dict, row: int, now: datetime, n_cols: int) -> int:
+    """実行時刻・フロー・市場・センチメントの1行を書く。"""
     flow_raw   = result.get("flow", "")
     flow_label = FLOW_LABELS.get(flow_raw, flow_raw)
-    has_news_col = flow_raw in ("ニュース起点", "YouTube起点")
-    N = 13 if has_news_col else 12
 
     # ── 実行時刻ヘッダー ────────────────────────
     vix = result.get("vix")
@@ -148,7 +145,7 @@ def _write_block(ws, result: dict, start_row: int, now: datetime):
         sentiment_str += f"  VIX:{vix}"
     if fg:
         sentiment_str += f"  恐怖&欲指数:{fg}/100"
-    ws.merge_cells(f"A{row}:{get_column_letter(N)}{row}")
+    ws.merge_cells(f"A{row}:{get_column_letter(n_cols)}{row}")
     c = ws.cell(row=row, column=1,
                 value=f"実行: {now.strftime('%H:%M')}　【{flow_label}】　{result.get('market','')}{sentiment_str}")
     c.font      = Font(bold=True, color="FFFFFF", size=11, name="游ゴシック")
@@ -156,7 +153,11 @@ def _write_block(ws, result: dict, start_row: int, now: datetime):
     c.alignment = Alignment(horizontal="left", vertical="center")
     ws.row_dimensions[row].height = 22
     row += 1
+    return row
 
+
+def _write_column_headers(ws, row: int, has_news_col: bool) -> int:
+    """ランキング表の列見出しを書く。"""
     # ── 列ヘッダー ──────────────────────────────
     headers = [
         "順位",
@@ -182,7 +183,11 @@ def _write_block(ws, result: dict, start_row: int, now: datetime):
         c.border    = _border()
     ws.row_dimensions[row].height = 32
     row += 1
+    return row
 
+
+def _write_rankings(ws, result: dict, row: int, has_news_col: bool) -> int:
+    """推奨銘柄を1銘柄1行で書く。上位3位は背景色を変える。"""
     # ── ランキング ──────────────────────────────
     for item in result.get("rankings", []):
         rank = item.get("rank", row)
@@ -203,9 +208,13 @@ def _write_block(ws, result: dict, start_row: int, now: datetime):
             _cell(ws, row, 13, item.get("news_basis", ""),        bg=bg, wrap=True)
         ws.row_dimensions[row].height = 45
         row += 1
+    return row
 
+
+def _write_summary(ws, result: dict, row: int, n_cols: int) -> int:
+    """総評の見出しと本文を書く。市場全体の見通しがあれば本文に足す。"""
     # ── 総評 ────────────────────────────────────
-    ws.merge_cells(f"A{row}:{get_column_letter(N)}{row}")
+    ws.merge_cells(f"A{row}:{get_column_letter(n_cols)}{row}")
     c = ws.cell(row=row, column=1, value="【まとめ・市場の状況】")
     c.font      = Font(bold=True, color="FFFFFF", size=10, name="游ゴシック")
     c.fill      = _fill(C_SUBHEAD)
@@ -216,14 +225,26 @@ def _write_block(ws, result: dict, start_row: int, now: datetime):
     summary_text = result.get("summary", "")
     if result.get("market_outlook"):
         summary_text += f"\n【市場全体の状況】{result['market_outlook']}"
-    ws.merge_cells(f"A{row}:{get_column_letter(N)}{row}")
+    ws.merge_cells(f"A{row}:{get_column_letter(n_cols)}{row}")
     c = ws.cell(row=row, column=1, value=summary_text)
     c.font      = Font(size=10, name="游ゴシック")
     c.alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
     c.border    = _border()
     ws.row_dimensions[row].height = 65
     row += 1
+    return row
 
+
+def _write_block(ws, result: dict, start_row: int, now: datetime):
+    """1回の実行分（実行時刻→列ヘッダー→ランキング→総評）を書き、次の行を返す。"""
+    has_news_col = result.get("flow", "") in ("ニュース起点", "YouTube起点")
+    n_cols = 13 if has_news_col else 12
+
+    row = start_row
+    row = _write_run_header(ws, result, row, now, n_cols)
+    row = _write_column_headers(ws, row, has_news_col)
+    row = _write_rankings(ws, result, row, has_news_col)
+    row = _write_summary(ws, result, row, n_cols)
     return row
 
 
