@@ -14,15 +14,7 @@ from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-# main は import 時に sys.stdout を UTF-8 の TextIOWrapper へ差し替える
-# （Windows のコンソール向け）。pytest の捕捉と噛み合わず後続テストが
-# 「I/O operation on closed file」で落ちるため、import の前後で退避・復元する。
-_stdout = sys.stdout
 import main  # noqa: E402
-_wrapper, sys.stdout = sys.stdout, _stdout
-# detach しないと、差し替えられた TextIOWrapper が回収されるときに
-# pytest 側のバッファまで閉じてしまう。閉じずに切り離す。
-_wrapper.detach()
 
 # action -> 呼ばれるべき main の属性名
 ROUTES = {

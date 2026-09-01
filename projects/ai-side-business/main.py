@@ -9,8 +9,6 @@ import io
 import sys
 from pathlib import Path
 
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
-
 try:
     from dotenv import load_dotenv
     load_dotenv(Path(__file__).parent / ".env")
@@ -1010,6 +1008,10 @@ COMMANDS = {
 
 
 def main():
+    # Windows のコンソールは既定が CP932 で、日本語がそのまま出ると化ける。
+    # import 時に差し替えると pytest の出力捕捉を壊すので、実行時に行う。
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+
     parser = build_parser()
     args = parser.parse_args()
 
