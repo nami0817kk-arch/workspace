@@ -2,7 +2,6 @@ import argparse
 import sys
 import io
 from datetime import date
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 
 from src.analysis.screener import screen_quality_gainers
 from src.analysis.pattern_detector import detect_ab, detect_c
@@ -172,6 +171,10 @@ def cmd_query(args):
 
 
 def main():
+    # Windows のコンソールは既定が CP932 で、日本語がそのまま出ると化ける。
+    # import 時に差し替えると pytest の出力捕捉を壊すので、実行時に行う。
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+
     parser = argparse.ArgumentParser(
         description="値上がり質ランキング トラッカー",
         formatter_class=argparse.RawDescriptionHelpFormatter,
