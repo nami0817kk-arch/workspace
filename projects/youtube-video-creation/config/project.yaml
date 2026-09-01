@@ -1,0 +1,108 @@
+# プロジェクト全体の設定。台本ごとに変えたい値はここを編集する。
+
+video:
+  width: 1920
+  height: 1080
+  fps: 30
+  # 空にすると環境から日本語フォントを自動検出する
+  font: ""
+  # false にすると立ち絵を出さず、見出しを大きく置くニュース風の画面になる
+  show_characters: false
+  headline_size: 74
+  accent: "#3ea6ff"          # 見出し左のアクセント帯の色
+  # news=報道テロップ風（速報フラグ＋見出しプレート＋ティッカー）
+  # band=写真＋黄色帯＋赤帯 / clean=文字組みだけ
+  thumbnail_style: "news"
+  telop_size: 58
+  name_size: 40
+  title_size: 72
+  background: "assets/backgrounds/default.png"
+
+voicevox:
+  # auto = VOICEVOXアプリ(ENGINE)があればそれを使い、無ければローカルのCOREで合成する
+  backend: "auto"          # auto / engine / core / silent
+  url: "http://127.0.0.1:50021"
+  core_dir: "vendor/voicevox"
+  timeout: 60
+  # 行と行のあいだに入る既定の無音（秒）
+  pause: 0.35
+
+# BGM・効果音。assets/audio/ の音源は init-assets で生成される仮素材。
+audio:
+  bgm: "assets/audio/bgm_loop.wav"   # 空文字にするとBGMなし
+  bgm_gain: -22                      # BGMの音量(dB)
+  bgm_fade: 2.0                      # 開始/終了のフェード秒
+  duck: true                         # 喋っている間だけBGMを下げる
+  duck_ratio: 8
+  se_gain: -8                        # 効果音の音量(dB)
+  scene_se: ""                       # シーン頭に鳴らす効果音（例: assets/audio/se_whoosh.wav）
+  loudness_target: -14               # 仕上がりの音圧(LUFS)。YouTubeの基準。0で無効
+
+# 画面の動き。切ると静止画の切り替えだけになる（書き出しは速い）
+motion:
+  enabled: true
+  fps: 30
+  telop_in: 0.18       # テロップが出るときのアニメ秒
+  speaker_pop: 0.16    # 話者が切り替わるときの立ち絵のバウンド秒
+  scene_fade: 0.32     # シーン転換にかける秒数
+  scene_transition: "dip"   # dip=一度黒に落とす / crossfade=前後を直接混ぜる
+  background_zoom: 1.12     # 静止画背景をゆっくり寄せる。1.0 にすると止まったまま
+
+# 冒頭と章の変わり目に出すタイトルカード。0 にすると出さない
+titles:
+  intro: 2.6           # 冒頭のタイトル（秒）
+  chapter: 1.4         # 章タイトル（秒）
+  outro: 3.0           # 最後のカード（秒）
+  fade: 0.32           # 出入りのフェード（秒）
+
+# 話者定義。style_id は VOICEVOX の「スタイルID」。
+#   `python -m src.cli speakers` で ENGINE から一覧を取得できる。
+cast:
+  # ニュース向け。立ち絵なしのレイアウトではこちらを使う
+  キャスター:
+    key: anchor
+    aliases: [caster, anchor]
+    style_id: 2        # 四国めたん / ノーマル
+    speed: 1.02
+    pitch: 0.0
+    intonation: 1.0
+    position: none
+    color: "#3ea6ff"
+  解説:
+    key: analyst
+    aliases: [analyst, 記者]
+    style_id: 13       # 青山龍星 / ノーマル
+    speed: 1.0
+    pitch: 0.0
+    intonation: 1.0
+    position: none
+    color: "#f0c419"
+
+  # ゆっくり実況向け（show_characters: true のとき）
+  霊夢:
+    key: reimu
+    aliases: [れいむ, reimu]
+    style_id: 2        # 四国めたん / ノーマル
+    speed: 1.05
+    pitch: 0.0
+    intonation: 1.1
+    position: left
+    color: "#e2495a"
+  魔理沙:
+    key: marisa
+    aliases: [まりさ, marisa]
+    style_id: 3        # ずんだもん / ノーマル
+    speed: 1.05
+    pitch: -0.02
+    intonation: 1.2
+    position: right
+    color: "#f0c419"
+  ナレーター:
+    key: narrator
+    aliases: [ナレ, narrator, N]
+    style_id: 13       # 青山龍星 / ノーマル
+    speed: 1.0
+    pitch: 0.0
+    intonation: 1.0
+    position: none
+    color: "#8ab4f8"

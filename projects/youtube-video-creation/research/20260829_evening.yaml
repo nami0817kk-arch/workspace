@@ -1,0 +1,95 @@
+# 夜のまとめ・深掘り の取材メモ（2026年8月29日）
+# 1本＝1テーマ。まとめではなく、1つの話を掘る
+slot: evening
+date: "2026年8月29日"
+
+theme:
+  prefix: 速報
+  id: alvarez_barca
+  title: アルバレスがバルサに行けない本当の理由
+  hook: 移籍市場の閉幕をまえに、ヨーロッパで最大の焦点になっている移籍があります。
+  question: なぜこれは、お金の問題ではないのか
+
+thumbnail:
+  line1: アトレティコが完全拒否
+  line2: バルサ移籍の可能性0%ｷﾀｰ！！
+  tags: [そこまで言う？, アーセナル待機中]
+
+answer: 移籍金ではなく、ライバルに主力を渡すこと自体を拒んでいるから
+watch: 本人がアーセナル行きに前向きになるかどうか。期限は9月1日
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: アトレティコ「バルサ移籍の可能性はゼロパーセント」
+    say:
+      - アトレティコ・マドリードに所属する、フリアン・アルバレス選手の去就です。本人はバルセロナへの移籍を望んでいると各紙が伝えています。
+      - ところがアトレティコ側は「バルサ移籍の可能性はゼロパーセントだ」と語ったと報じられています。交渉のテーブルにすら着かない、という姿勢です。
+    sources:
+      - https://www.skysports.com/football/news/11095/13577412/julian-alvarez-atletico-madrid-say-theres-zero-per-cent-chance-of-him-joining-barcelona-despite-clubs-plea-as-arsenal-wait-in-wings
+      - https://www.espn.com/soccer/story/_/id/49741017/atletico-madrid-julian-alvarez-transfer-barcelona
+    card:
+      type: quote
+      color: "#e2495a"
+      text: "Atletico Madrid say there's 'zero per cent chance' of him joining Barcelona despite club's plea as Arsenal wait in wings"
+      translation: アトレティコは、バルセロナ側の要請にもかかわらず「バルサ移籍の可能性はゼロパーセント」だと語った。アーセナルは様子をうかがっている
+
+  - id: background
+    heading: ここに至る経緯
+    tier: 背景
+    telop: 本人はバルサ希望／クラブは拒否という膠着
+    say:
+      - ここからは経緯の説明です。アルバレス選手は、アルゼンチン代表のフォワード。マンチェスター・シティを経てアトレティコに加入した、チームの主力です。
+      - その主力が、ライバルクラブへの移籍を望んでいる。クラブは首を縦に振らない。この膠着が、夏のあいだ続いてきました。
+      - 本拠地メトロポリターノでは、サポーターが自軍のストライカーにブーイングを浴びせる場面まで報じられています。
+    sources:
+      - https://www.skysports.com/football/news/11095/13576511/julian-alvarez-does-atletico-madrid-fans-booing-their-own-striker-increase-his-chances-of-an-arsenal-or-barcelona-move
+
+  - id: point
+    heading: 争点はどこか
+    tier: 報道
+    telop: 金額ではなく「誰に売るか」が争点
+    say:
+      - ここが今回の核心です。争点は移籍金の額ではありません。誰に売るか、です。
+      - バルセロナのラポルタ会長は、オファーはいまもテーブルに残っていると話したと伝えられています。それでもアトレティコの態度は変わっていません。
+      - 一方で、アーセナル移籍であれば話は動くと報じられています。同じ選手、同じ規模の金額でも、相手がバルセロナかどうかで扱いが変わる。つまり、これはスポーツ上の判断だということです。
+    sources:
+      - https://www.skysports.com/football/news/11670/13577751/julian-alvarez-transfer-news-atletico-madrid-wont-sell-striker-to-barcelona-with-arsenal-the-only-option
+      - https://www.espn.com/soccer/story/_/id/49710404/arsenal-ready-swoop-julian-alvarez-atletico-madrid-sources
+    card:
+      type: points
+      title: 争点の整理
+      color: "#e2495a"
+      items:
+        - 移籍金の額では合意できる可能性がある
+        - バルセロナへの売却だけは拒否
+        - アーセナルなら交渉に応じる姿勢
+
+  - id: numbers
+    heading: 残された時間
+    tier: 確定
+    telop: "英国の移籍期限: 9/1 23:00 BST（日本時間 9/2 7:00）"
+    official: true
+    say:
+      - 時間の話をします。イングランドの移籍期限は、現地じかんくがつついたちのごご十一時。日本時間ではくがつふつかの朝七時です。
+      - つまり、残された時間はごくわずかです。
+    sources:
+      - https://www.espn.com/soccer/story/_/id/48944912/premier-league-efl-summer-transfer-window-2026-dates-does-open-deadline-day
+      - https://www.skysports.com/football/news/11095/13546220/summer-transfer-window-2026-dates-when-is-deadline-day-for-premier-league-and-efl-clubs-to-sign-players
+
+  - id: next
+    heading: これからどうなる
+    tier: 未確認
+    telop: 「動くのは本人が前向きになった場合だけ」
+    say:
+      - ここからは未確認の情報です。アトレティコは、このまま残るか、アーセナル行きを受け入れるか、本人に決断の期限を示したと報じられています。
+      - 移籍情報にくわしい記者は、エスエヌエスでこう伝えています。「アーセナルは、移籍金でアトレティコと合意できる感触を持っている。ただし動くのは、本人が移籍に前向きになった場合だけだ。いまのところ、彼が望んでいるのはバルセロナだけだ」
+      - 決めるのは、クラブではなく本人だということです。
+    sources:
+      - https://x.com/FabrizioRomano/status/2092160046985543990
+    card:
+      type: quote
+      color: "#9aa0a6"
+      text: "Arsenal remain attentive to Julian Alvarez situation and internal feeling is they can reach an agreement with Atletico on the fee. But #AFC will only bid if Julian decides to open doors to the move: his stance will be the key factor. So far, Julian only wanted Barcel..."
+      translation: アーセナルは移籍金でアトレティコと合意できる感触を持っている。ただし動くのは本人が移籍に前向きになった場合だけ。いまのところ彼が望んでいるのはバルセロナだけだ

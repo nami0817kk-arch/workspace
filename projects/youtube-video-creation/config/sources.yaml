@@ -1,0 +1,600 @@
+# 取材の計画。「いつ・どこから・どの情報を取るか」をここに書く。
+#
+#   python -m src.cli plan --routine morning     その枠の取材リスト
+#   python -m src.cli plan --routine all         今日の3本ぶんまとめて
+#   python -m src.cli plan --routine morning --write   取材メモの雛形も作る
+#   python -m src.cli draft research/xxx.yaml    取材メモ→台本（確度と重複を検証）
+
+cadence:
+  per_day: 3
+  slots: [morning, noon, evening]   # 1日の並び
+
+# 使ってよい情報源。ここに無いサイトは検索対象にしない（docs/news-sources.md の実測結果）
+# 情報源の網。すべて実測で確認したもの。
+# verified_on を過ぎたら sources コマンドが再確認を促す
+# max_tier … その群だけを根拠に置ける最大の確度。超えるなら別の群で裏を取る
+verified_on: 2026-08-31
+
+domains:
+  # クラブ・リーグの公式（欧州）。声明そのものを引ける
+  official: [en.atleticodemadrid.com, atleticodemadrid.com, fcbarcelona.com,
+             arsenal.com, realmadrid.com, chelseafc.com, manutd.com,
+             liverpoolfc.com, juventus.com,
+             acmilan.com, bvb.de, fcbayern.com, psg.fr, slbenfica.pt,
+             tottenhamhotspur.com, newcastleunited.co.uk,
+             premierleague.com, laliga.com, bundesliga.com, legaseriea.it,
+             mlssoccer.com, uefa.com]
+
+  # 日本の公式。Jリーグの話をここまで辿れば確定にできる
+  official_jp: [jleague.jp, jfa.jp, urawa-reds.co.jp, frontale.co.jp,
+                vissel-kobe.co.jp]
+
+  # 英語の報道機関
+  # nytimes / theathletic は本文が有料。見出しは読めるので、見出しだけ使う
+  english: [skysports.com, espn.com, goal.com, 90min.com, football365.com,
+            si.com, cbssports.com, bleacherreport.com,
+            bbc.com, theguardian.com, independent.co.uk, standard.co.uk,
+            football.london, theathletic.com, nytimes.com]
+
+  # 記録・数字。「数字で見ると」の節で使う。順位・得点・出場数はここ
+  stats: [fbref.com, understat.com, worldfootball.net, sofascore.com,
+          besoccer.com, flashscore.com, transfermarkt.com, transfermarkt.de]
+
+  # 日本語の報道機関。訳す手間が要らないぶん速い
+  japanese: [soccer-king.jp, footballchannel.jp, web.ultra-soccer.jp,
+             theworldmagazine.jp, football-tribe.com, sportiva.shueisha.co.jp,
+             hochi.news, nikkansports.com, sponichi.co.jp]
+
+  # 複数媒体を横断できる。見出しに媒体名が入る
+  aggregator: [news.yahoo.co.jp]
+
+  # 現地語の報道機関。その国のリーグの話はここが速い。
+  # 検索はその言語で書く（kicker をドイツ語以外で引いても返らない）
+  german: [kicker.de, sport1.de]
+  italian: [football-italia.net, calciomercato.com, tuttomercatoweb.com,
+            gazzetta.it]
+  french: [footmercato.net, eurosport.fr, lequipe.fr, sofoot.com]
+  dutch: [voetbalzone.nl, vi.nl]
+  # スペイン語圏。南米(ole / tycsports)もここで引く。検索はスペイン語で書く
+  spanish: [besoccer.com, marca.com, as.com, mundodeportivo.com, relevo.com,
+            sport.es, ole.com.ar, tycsports.com]
+
+  social: [x.com]
+
+  # 噂まとめ。単独では根拠にしない
+  # 大衆紙もここ。移籍を最初に書くことはあるが、単独では根拠にしない
+  rumour: [caughtoffside.com, givemesport.com, tribalfootball.com,
+           bild.de, mirror.co.uk]
+
+  # 取得できないサイト。ここを検索しても結果は返らない。
+  #
+  # 2026-08-31 に運用PCから26件を測り直した。**24件は普通に開いた。**
+  # 以前の26件は Claude Code のクラウド環境（外向きが塞がれている）で
+  # 測った結果で、サイト側の問題ではなかった。開いたものは上の群に移した。
+  # 残っているのは、実機でも中身が取れなかった2件だけ。
+  blocked: [telegraph.co.uk,   # HTTP 402。有料の壁で本文どころか見出しも返らない
+            talksport.com]     # 200 だが 1.3KB の入口だけ。中身は JS でしか出ない
+
+# リーグごとの情報源。試合結果は「どのリーグの話か」で引き先が変わる。
+#   official   … そのリーグ・クラブの公式。スコアはここで確かめる（確定）
+#   media      … 現地語の報道機関の群（domains のキー）
+#   match_q    … 試合レポートを引くための語。その言語で書く
+# リーグごとの引き先と、情報が出る時間帯。
+# utc_offset  … 現地時刻とUTCの差。いまは夏時間の値
+# active_local… 現地でこの帯に記事が出る（公式発表は営業時間、試合は夜）
+#               日本時間に直したものを scan / today が使う
+leagues:
+  england:
+    name: プレミアリーグ
+    official: [premierleague.com, arsenal.com, chelseafc.com, manutd.com,
+               liverpoolfc.com, tottenhamhotspur.com, newcastleunited.co.uk]
+    media: english
+    utc_offset: 1          # BST（夏時間）
+    active_local: "09:00-23:30"
+    match_q: "Premier League match report second half winner"
+    official_q: "match report"
+  spain:
+    name: ラ・リーガ
+    official: [laliga.com, realmadrid.com, fcbarcelona.com, en.atleticodemadrid.com]
+    media: spanish
+    utc_offset: 2          # CEST
+    active_local: "10:00-00:30"
+    match_q: "LaLiga cronica del partido goles"
+    official_q: "cronica del partido"
+  germany:
+    name: ブンデスリーガ
+    official: [bundesliga.com, fcbayern.com, bvb.de]
+    media: german
+    utc_offset: 2          # CEST
+    active_local: "09:00-23:30"
+    match_q: "Bundesliga Spielbericht Tore Analyse"
+    official_q: "Spielbericht"
+  italy:
+    name: セリエA
+    official: [legaseriea.it, juventus.com, acmilan.com]
+    media: italian
+    utc_offset: 2          # CEST
+    active_local: "09:00-00:30"
+    match_q: "Serie A cronaca della partita gol"
+    official_q: "cronaca della partita"
+  france:
+    name: リーグアン
+    official: [psg.fr]
+    media: french
+    utc_offset: 2          # CEST
+    active_local: "09:00-23:30"
+    match_q: "Ligue 1 resume du match buts"
+    official_q: "resume du match"
+  netherlands:
+    name: エールディヴィジ
+    official: []
+    media: dutch
+    utc_offset: 2          # CEST
+    active_local: "09:00-23:00"
+    match_q: "Eredivisie wedstrijdverslag doelpunten"
+    official_q: "wedstrijdverslag"
+  japan:
+    name: Jリーグ
+    official: [jleague.jp]
+    media: japanese
+    utc_offset: 9          # JST
+    active_local: "08:00-23:00"
+    match_q: "Jリーグ 試合結果 ハイライト 得点"
+    official_q: "試合結果 レポート"
+
+# 日程。移籍期限のように「その日だけ別の枠を出す」日をここに書く。
+# 時刻はすべて日本時間（JST）。期限が近づくと today / scan が告知する。
+#
+# confirmed: false は日付をこちらで確認できていないもの。
+# 各リーグの発表で確かめてから true にする（doctor が未確認を数える）。
+clocks:
+  # 上の utc_offset は夏時間の値。欧州は10月最終日曜に1時間戻る。
+  # この日を過ぎたら doctor が知らせるので、offset を1つ減らすこと
+  summer_until: 2026-10-25
+
+calendar:
+  notice_days: 5     # 何日前から告知するか
+  after_hours: 36    # 期限が過ぎてから何時間「総括を出せ」と言い続けるか
+  deadlines:
+    # 2026-08-31 に各リーグ・各協会の公式発表で確認した。出典は下のコメント。
+    # ドイツだけ1日早い（8/31 締切）。他の4リーグに合わせない
+    - {league: england, at: "2026-09-02 07:00", local: "現地 9/1 23:00 BST", confirmed: true}
+    - {league: spain, at: "2026-09-02 06:59", local: "現地 9/1 23:59 CEST", confirmed: true}
+    - {league: germany, at: "2026-09-01 03:00", local: "現地 8/31 20:00 CEST", confirmed: true}
+    - {league: italy, at: "2026-09-02 03:00", local: "現地 9/1 20:00 CEST", confirmed: true}
+    - {league: france, at: "2026-09-02 02:59", local: "現地 9/1 19:59 CEST", confirmed: true}
+    # england … premierleague.com「close at 23:00 BST on Tuesday 1 September 2026」
+    # spain   … laliga.com「opens on 1 July and closes on 1 September 2026」
+    #           締切時刻は RFEF 競技規則62条5項「23:59 horas peninsulares」
+    # germany … bundesliga.com (DFL)「open from 1 July to 31 August 2026」
+    #           締切時刻は DFL ライセンス規程(LOS)「letzter Tag ... bis spätestens 20:00 Uhr」
+    #           （2025/26 から18時→20時。DFL用語集の「18.00 Uhr」は古い記述）
+    # italy   … FIGC 公示235号「dal 1° luglio 2026 al 1° settembre 2026 (ore 20.00)」
+    # france  … LFP 公示「s'achèvera le mardi 1er septembre 2026 à 19h59」
+
+# RSSフィード。検索より速く、見出しと正確な時刻が取れる。
+# 2026-08-31 に `fetch --check` で9本すべて実測。生きているものだけ true。
+#
+# 生きているかどうかと、狙った内容が返るかは別の話。
+# Sky は /rss/12040 を使っていたが、あれは全競技の「News」で、
+# 20件のうちサッカーは7件だけだった（クリケット・競馬・F1・テニス・ゴルフが混ざる）。
+# サッカー専門の /rss/11661 に差し替えた。
+# 移籍期限まわりは /rss/12691（Transfer Centre）が20件すべて移籍の話なので足した。
+# 参考: /rss/11660 は Premier League だが最新が2025年4月で止まっている。使わないこと
+#
+# 足す前に `fetch --url <URL>` で中身を見ること。生死だけ見て入れると、
+# Sky と同じで枠の3分の2が無駄になる。
+feeds:
+  - {name: Sky Sports Football, url: "https://www.skysports.com/rss/11661", league: england, verified: true}
+  - {name: Sky Transfer Centre, url: "https://www.skysports.com/rss/12691", league: england, verified: true}
+  - {name: ESPN Soccer, url: "https://www.espn.com/espn/rss/soccer/news", league: england, verified: true}
+  - {name: kicker, url: "https://newsfeed.kicker.de/news/fussball", league: germany, verified: true}
+  - {name: Football Italia, url: "https://football-italia.net/feed/", league: italy, verified: true}
+  - {name: サッカーキング, url: "https://www.soccer-king.jp/feed", league: "", verified: true}
+  - {name: フットボールチャンネル, url: "https://www.footballchannel.jp/feed/", league: "", verified: true}
+  - {name: Football Tribe, url: "https://football-tribe.com/japan/feed/", league: japan, verified: true}
+  - {name: CaughtOffside, url: "https://www.caughtoffside.com/feed/", league: england, verified: true}
+
+# 群ごとに置ける確度の上限。draft のときに突き合わせる
+domain_tiers:
+  official: 確定
+  official_jp: 確定
+  english: 報道
+  japanese: 報道
+  aggregator: 報道
+  stats: 報道
+  german: 報道
+  italian: 報道
+  french: 報道
+  dutch: 報道
+  spanish: 報道
+  social: 未確認
+  rumour: 未確認
+
+# Xで追うアカウント。x.com は直接開けないが、検索結果に投稿本文が出る。
+# ここに無いアカウントの投稿は「未確認」より上に上げない
+#   tier … その人の投稿だけで置ける最大の確度
+#   note … 何に強いか
+accounts:
+  - {handle: FabrizioRomano, name: Fabrizio Romano, tier: 未確認, note: 移籍全般。完了案件は here we go}
+  - {handle: David_Ornstein, name: David Ornstein, tier: 未確認, note: プレミア・The Athletic}
+  - {handle: MatteMoretto, name: Matteo Moretto, tier: 未確認, note: スペイン・イタリア}
+  - {handle: DiMarzio, name: Gianluca Di Marzio, tier: 未確認, note: セリエA}
+  - {handle: TheAthleticFC, name: The Athletic Football, tier: 報道, note: 媒体の公式}
+
+# 記者の投稿をどう扱うか
+social:
+  # search … WebSearch で拾う。無料。ただし索引が1〜2日遅れ、本文が切れることがある
+  #        拾ったあと `x <URL>` を打てば、本文は認証なしで全文取れる（src/xembed.py）
+  # api  … X API v2 から取る。有料。遅れず、本文も切れず、なりすましも引かない
+  #        トークンは環境変数 X_BEARER_TOKEN で渡す。料金は docs.x.com/x-api で確認
+  backend: search
+  api:
+    max_results: 10       # 1回の検索で取る件数。読み取りは課金対象なので絞る
+    exclude_retweets: true
+  # 検索でXの投稿を引くと、いちばん新しいもので1〜2日前になる（実測）。
+  # 検索の索引がそこまでしか追いついていないため、こちらでは短くできない。
+  # → Xは「速報」には使えない。背景・反応・裏取りに使う
+  index_lag_hours: 48
+  # これより古い投稿は、続報が出ていないか確認してから使う
+  stale_hours: 72
+  check: |
+    投稿本文は検索結果のタイトルから取る。x.com のページは開けない。
+    末尾が … で切れている投稿は、切れたまま引用するか使わないかのどちらか。
+    足りない部分を推測で補わない。
+    なりすましアカウントが検索に出る（例: fabrizioromab0）。ハンドルを1文字ずつ確認する
+
+# 収集は2段階にする。
+#   1. スキャン … 1日1回、候補テーマを広く拾う（枠ごとに探すより速い）
+#   2. 深掘り　 … 選んだテーマについて、節を埋めるための検索
+#
+#   python -m src.cli scan            候補探しの検索リスト＋候補ファイルの雛形
+#   python -m src.cli pick <候補file>  採点して枠に割り振り、深掘りの検索リストを出す
+
+# 候補の採点。どれを動画にするかの判断を、毎回同じものさしで行う
+scoring:
+  weights:
+    freshness: 3      # 新しさ。速報性がそのまま再生に効く
+    reaction: 3       # 賛否が割れる・驚きがある。コメントが伸びる
+    big_club: 2       # ビッグクラブが絡む
+    numbers: 1        # 金額・記録など、数字が立つ
+    goals: 2          # 試合結果むけ。点が多く動いた試合は見られる
+    upset: 3          # 試合結果むけ。番狂わせ・格上撃破
+  freshness_hours:    # 何時間前なら何点か
+    6: 3
+    12: 2
+    24: 1
+  big_clubs:
+    - レアル・マドリード
+    - バルセロナ
+    - マンチェスター・シティ
+    - マンチェスター・ユナイテッド
+    - リバプール
+    - アーセナル
+    - チェルシー
+    - バイエルン
+    - パリ・サンジェルマン
+    - インテル
+    - ミラン
+    - ユヴェントス
+    - アトレティコ・マドリード
+  # 枠ごとの選び方。上から順に条件を見て、合うものを割り当てる
+  # 同じ話題（topic）を1日に2枠へ入れない。大きい話が1つあると
+  # 3本ともそれになりがちなので、枠をまたいだ重複を止める
+  spread_topics: true
+  # 種別（transfer / match / other）も散らす。3本とも試合結果にしない
+  spread_kinds: true
+  slots:
+    morning: {prefer: freshness, require_tier: [確定, 報道]}
+    noon: {prefer: reaction}
+    evening: {prefer: total}
+
+# テーマが決まったあとの深掘り検索。{theme} に選んだテーマが入る
+# {theme} には候補の見出し、{en} には候補の en（英語の語）が入る。
+# {en} を使う行は、候補に en が書かれているときだけ出る
+deep:
+  # --- どちらの種類でも引く
+  - {q: "{theme} 詳細", domains: japanese, label: 何が起きたか}
+  - {q: "{en} latest news", domains: english, label: 何が起きたか（英語）}
+  - {q: "{en} why explained", domains: english, label: なぜそうなったか}
+  # 世の中の言葉。誰の言葉かで扱いが変わるので、識者と一般の反応を分けて集める
+  #   識者・当事者 … 名前を出して引用できる（報道）
+  #   一般の反応   … 名前を出さない。数の話もしない（未確認）
+  - {q: "{en} said OR quotes reaction", domains: english, label: 識者・当事者の発言}
+  - {q: "{theme} 反応 OR 声 OR 批判", domains: japanese, label: 反応（日本語）}
+  - {q: "{en} fans reaction", domains: social, label: 反応（SNS）}
+  - {q: "{en} stats goals assists", domains: stats, label: 数字（成績）}
+
+  # --- 移籍のとき
+  # まず公式を当たる。声明そのものが取れれば「確定」で出せる
+  - {q: "{en} official statement OR announcement", domains: official, when: transfer, label: 公式発表（欧州）}
+  - {q: "{theme} 移籍 OR 加入 のお知らせ", domains: official_jp, when: [japan, transfer], label: 公式発表（日本）}
+  - {q: "{en} fee OR record", domains: english, when: transfer, label: 数字（移籍金）}
+  # 現地語。そのリーグの移籍のときだけ
+  - {q: "{en} Transfer offiziell", domains: german, when: [germany, transfer], label: 現地（ドイツ語）}
+  - {q: "{en} calciomercato ufficiale", domains: italian, when: [italy, transfer], label: 現地（イタリア語）}
+  - {q: "{en} transfert officiel", domains: french, when: [france, transfer], label: 現地（フランス語）}
+  - {q: "{en} transfer officieel", domains: dutch, when: [netherlands, transfer], label: 現地（オランダ語）}
+  - {q: "{en} fichaje oficial", domains: spanish, when: [spain, transfer], label: 現地（スペイン語）}
+
+  # --- 試合結果のとき
+  # league_official / league_media と書くと、その候補のリーグの引き先に絞られる。
+  # 試合レポートは premierleague.com と bundesliga.com で別物なので、
+  # 公式をひとまとめにすると関係ないリーグまで引いてしまう
+  - {q: "{en} match report", domains: league_official, when: match, label: 試合（公式レポート）}
+  # {match_q} はそのリーグの現地語（ドイツなら Spielbericht）に置き換わる
+  - {q: "{en} {match_q}", domains: league_media, when: match, label: 試合（現地の報道）}
+  - {q: "{en} player ratings analysis", domains: english, when: match, label: 試合（採点・分析）}
+  - {q: "{en} xG shots possession", domains: stats, when: match, label: 試合（xG・スタッツ）}
+
+# 1本の作り方。まとめではなく、1テーマを掘る
+policy:
+  one_theme_per_video: true
+  min_sections: 3             # これ未満は「深掘り」と呼べないので draft で止める
+  require_question: true      # 動画が答える問いを必ず立てる
+
+# 確度の判定基準。draft のときに機械的にチェックする
+tiers:
+  確定:
+    needs_sources: 1
+    needs_official: true      # クラブ・リーグ・当事者の発表であること
+    description: クラブ・リーグ・当事者が発表した
+  報道:
+    needs_sources: 2          # 2社以上で一致していること
+    needs_official: false
+    description: 報道機関が報じた
+  未確認:
+    needs_sources: 1
+    needs_official: false
+    description: SNS・単一ソース・噂の段階
+  背景:
+    needs_sources: 0
+    needs_official: false
+    description: 経緯・前提の説明。新規の報道ではないことを画面で明示する
+
+# 同じ話題を繰り返さないための設定
+coverage:
+  ledger: research/covered.yaml
+  repeat_within_hours: 36     # この時間内に扱った話題は draft で止める
+  show_recent: 12             # plan のときに直近いくつを表示するか
+
+# 1日1回のスキャン。ここで候補を広く拾う
+scan:
+  when: 05:30（朝の枠に間に合わせる）
+  # 毎日スキャンするリーグ。増やすほど検索が増えるので、追うものだけ並べる
+  match_leagues: [england, spain, germany, italy, japan]
+  # 日本語サイトを日付で引くと一覧ページしか返らない（実測）。話題の語で引く。
+  # 日付が効くのは英語サイトだけ
+  queries:
+    - {q: "移籍 発表 OR 決定 OR 公式", domains: japanese, label: 日本語（決まったもの）}
+    - {q: "移籍 交渉 OR 関心 OR 浮上", domains: japanese, label: 日本語（動いているもの）}
+    # 現地語で引くと、英語より速く、しかもリーグ公式に辿り着きやすい（実測）
+    - {q: "Transfer offiziell Wechsel", domains: german, label: ドイツ}
+    - {q: "calciomercato ufficiale", domains: italian, label: イタリア}
+    - {q: "transfert officiel", domains: french, label: フランス}
+    - {q: "Jリーグ 移籍 OR 監督 OR 首位", domains: japanese, label: Jリーグ}
+    - {q: "football news {today_en}", domains: english, label: 英語の総覧}
+    - {q: "transfer news {today_en}", domains: english, label: 移籍（英語）}
+    - {q: "official statement OR announcement transfer", domains: official, label: 公式発表（欧州）}
+    - {q: "完全移籍 OR 期限付き移籍 のお知らせ", domains: official_jp, label: 公式発表（日本）}
+    # 試合結果。日付で引くと一覧ページしか返らないので、内容の語で引く。
+    # per_league: true と書くと、下の match_leagues のリーグぶんに展開される
+    - {per_league: true, label: 試合結果}
+    - {q: "Fabrizio Romano here we go", domains: social, label: 記者（移籍の完了）}
+    - {q: "David Ornstein exclusive", domains: social, label: 記者（プレミア）}
+  check: |
+    1件ずつ candidates に書き出す。この時点では深掘りしない。
+    見出しから拾えるものだけを埋め、判断は pick に任せる。
+    日本語サイトは日付で引かない。選手名・クラブ名・動詞（発表/交渉/移籍）で引く。
+    確定として出すなら official 群まで辿る。報道の又聞きでは確定にしない。
+    拾ったURLを python -m src.cli fresh に流すと、新しい順に並ぶ。
+    soccer-king / footballchannel はURLに日付が入るので、経過時間が正確に出る
+
+routines:
+  # ---------------------------------------------------------------- 朝
+  morning:
+    name: 朝の一報
+    when: 07:00 公開（06:00 収録）
+    cover_hours: 12
+    target_minutes: 2
+    angle: |
+      欧州は日本の深夜に動く。夜のあいだに出た発表のうち
+      いちばん大きいもの1件を選び、それだけを扱う。速報だが薄くはしない。
+    structure:
+      - {id: what, heading: 何が起きたか, tier: 確定}
+      - {id: why, heading: なぜ動いたのか, tier: 報道}
+      - {id: next, heading: これからどうなる, tier: 報道}
+    steps:
+      - id: overnight
+        what: 夜のあいだに出た公式発表（この中から1件を選ぶ）
+        tier: 確定
+        queries:
+          - {q: "official announcement transfer {today_en}", domains: english}
+          - {q: "海外サッカー 発表 {date_ja}"}
+        check: クラブの発表か。発表の日時を控える
+
+      - id: results
+        what: 夜の試合結果
+        tier: 報道
+        queries:
+          - {q: "results {today_en}", domains: english}
+          - {q: "試合結果 {date_ja}", domains: japanese}
+        check: スコアと得点者は2ソースで突き合わせる
+
+  # ---------------------------------------------------------------- 昼
+  noon:
+    name: 昼の話題
+    when: 12:00 公開（11:00 収録）
+    cover_hours: 24
+    target_minutes: 2
+    angle: |
+      昼休みに見られる枠。賛否が割れている話・驚きのある話を1件選んで掘る。
+      題材は問わない。どのリーグでもよい。
+      朝の枠とは別の話題にする（同じ話を1日2回出さない）。
+    structure:
+      - {id: what, heading: 何が起きたか, tier: 報道}
+      - {id: background, heading: なぜ割れているのか, tier: 背景}
+      - {id: next, heading: 次の焦点, tier: 報道}
+    steps:
+      - id: talking_point
+        what: いま賛否が割れている話（この中から1件を選ぶ）
+        tier: 報道
+        queries:
+          - {q: "criticism OR backlash OR pressure {today_en}", domains: english}
+          - {q: "海外サッカー 批判 OR 議論 {date_ja}"}
+        check: 誰が言ったのかを特定する。「ファンの声」で済ませない
+
+      - id: jleague
+        what: Jリーグ（あれば。無ければ無理に入れない）
+        tier: 報道
+        queries:
+          - {q: "Jリーグ 移籍 OR 監督 OR 首位", domains: japanese}
+          - {q: "Jリーグ 移籍 のお知らせ", domains: official_jp}
+        check: 2社以上で内容が一致しているか
+
+  # ---------------------------------------------------------------- 夜
+  evening:
+    name: 夜のまとめ・深掘り
+    when: 19:00 公開（18:00 収録）
+    cover_hours: 24
+    target_minutes: 3
+    angle: |
+      その日いちばん大きいテーマを1つ選び、正面から掘る枠。
+      「なぜそうなったか」「争点はどこか」を必ず入れる。図解を使う。
+      朝と昼で速報した話題を掘り直してよい（follow_up: true を書く）。
+    structure:
+      - {id: what, heading: 何が起きたか, tier: 報道}
+      - {id: background, heading: ここに至る経緯, tier: 背景}
+      - {id: point, heading: 争点はどこか, tier: 報道}
+      - {id: voices, heading: 世の中はどう見ているか, tier: 未確認}
+      - {id: numbers, heading: 数字で見ると, tier: 確定}
+      - {id: next, heading: これからどうなる, tier: 未確認}
+    steps:
+      - id: biggest
+        what: その日いちばん大きかった話題（この中から1つを選ぶ）
+        tier: 報道
+        queries:
+          - {q: "biggest story {today_en}", domains: english}
+          - {q: "海外サッカー 話題 {date_ja}"}
+        check: 朝・昼で扱っていれば follow_up として深掘りに回す
+
+      - id: rumours
+        what: 交渉中の案件・噂
+        tier: 未確認
+        topics: []            # 追いたい選手名をここに足す
+        queries:
+          - {q: "{topic} latest", domains: english}
+          - {q: "{topic} transfer", domains: social}
+        check: |
+          SNSは投稿日が取れない。内容に日付や文脈があるものだけ採用する。
+          公式アカウントか実績のある記者か、ファンアカウントかを見分ける
+
+      - id: numbers
+        what: 数字で見せられるもの（順位・得点ランキング）
+        tier: 確定
+        queries:
+          - {q: "Premier League table {period_en}", domains: english}
+          - {q: "top scorers {period_en}", domains: english}
+        check: 表カード(type table)や棒グラフ(type bars)にする。出典を明記
+
+  # ---------------------------------------------------------------- 特別編
+  # ------------------------------------------------------- 試合結果（特別編）
+  match:
+    name: 試合結果
+    when: 試合の翌朝（欧州の試合は日本の深夜に終わる）
+    cover_hours: 18
+    target_minutes: 2
+    angle: |
+      1試合を1本で扱う。スコアを読み上げて終わりにしない。
+      「どこで試合が決まったのか」を1つ挙げて、そこを掘る。
+      勝ったチームを褒めるだけの内容にしない。負けた側に何が起きたかも入れる。
+    structure:
+      - {id: score, heading: 試合はこうなった, tier: 確定}
+      - {id: turning, heading: 試合が決まった場面, tier: 報道}
+      - {id: voices, heading: 試合後の言葉, tier: 報道}
+      - {id: numbers, heading: 数字で見ると, tier: 報道}
+      - {id: next, heading: 順位と次の一戦, tier: 報道}
+    steps:
+      - id: result
+        what: スコアと得点者（この中から1試合を選ぶ）
+        tier: 確定
+        queries:
+          - {q: "match report", domains: official}
+          - {q: "試合結果 採点 OR 寸評", domains: japanese}
+        check: スコアと得点者は公式かリーグ公式で確かめる。見出しのスコアを鵜呑みにしない
+
+      - id: turning
+        what: 試合が決まった場面（得点・退場・判定）
+        tier: 報道
+        queries:
+          - {q: "turning point OR red card OR VAR", domains: english}
+        check: 何分の出来事かを控える。「終盤」で済ませない
+
+      - id: voices
+        what: 監督・選手の試合後コメントと、ファンの反応
+        tier: 報道
+        queries:
+          - {q: "post match reaction said", domains: english}
+          - {q: "監督 コメント 試合後", domains: japanese}
+        check: |
+          発言は誰のものかを特定する。監督か、選手か、解説者か。
+          ファンの反応は名前を出さない。「〜という声が多い」と数の話にもしない。
+          思いつきで書かない。実在する投稿・記事だけを引く
+
+      - id: numbers
+        what: xG・シュート数・ポゼッション・順位
+        tier: 報道
+        queries:
+          - {q: "xG shots possession", domains: stats}
+          - {q: "table standings", domains: official}
+        check: スタッツは1つの媒体だけに頼らない。順位はリーグ公式で確かめる
+
+  deadline_day:
+    name: 移籍期限日（特別編）
+    when: 各国の移籍期限の当日と翌日
+    cover_hours: 24
+    target_minutes: 4
+    angle: |
+      期限日は1日で決着がつく。噂を並べる日ではない。
+      「決まったもの」「壊れたもの」を分けて出す。
+      期限を過ぎた案件は成立か不成立のどちらかしかない。曖昧なまま並べない。
+    structure:
+      - {id: what, heading: 何が決まったか, tier: 確定}
+      - {id: collapsed, heading: 壊れた話, tier: 報道}
+      - {id: numbers, heading: 数字で見ると, tier: 確定}
+      - {id: voices, heading: 世の中はどう見ているか, tier: 未確認}
+      - {id: next, heading: これからどうなる, tier: 報道}
+    steps:
+      - id: done_deals
+        what: 期限までに成立した移籍（公式発表まで辿る）
+        tier: 確定
+        queries:
+          - {q: "official announcement signing deadline day", domains: official}
+          - {q: "完全移籍 OR 期限付き移籍 のお知らせ", domains: official_jp}
+          - {q: "deadline day confirmed transfers {today_en}", domains: english}
+        check: クラブの発表に辿り着いたものだけ確定にする。記者の投稿は報道どまり
+
+      - id: collapsed
+        what: 破談・不成立になった案件
+        tier: 報道
+        queries:
+          - {q: "deadline day collapsed OR failed move {today_en}", domains: english}
+          - {q: "移籍 破談 OR 白紙 OR 見送り", domains: japanese}
+        check: どちらが断ったのかを特定する。「破談」だけでは中身が無い
+
+      - id: local
+        what: 現地語での駆け込み（英語より速く出る）
+        tier: 報道
+        queries:
+          - {q: "Deadline Day offiziell Wechsel", domains: german}
+          - {q: "calciomercato ultimo giorno ufficiale", domains: italian}
+          - {q: "mercato dernier jour officiel", domains: french}
+        check: 現地語の見出しをそのまま控える。訳は台本で行う
+
+      - id: spend
+        what: 使った額・人数（数字の節に使う）
+        tier: 確定
+        queries:
+          - {q: "summer transfer window spending total", domains: english}
+          - {q: "transfer window net spend club", domains: stats}
+        check: どの範囲の集計か（リーグ全体か1クラブか）を必ず確かめる

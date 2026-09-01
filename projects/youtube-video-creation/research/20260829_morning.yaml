@@ -1,0 +1,61 @@
+# 朝の一報 の取材メモ（2026年8月29日）
+# 1本＝1テーマ。速報枠でも複数の話題は並べない
+slot: morning
+date: "2026年8月29日"
+
+theme:
+  prefix: 朗報
+  id: suzuki_villa
+  title: 鈴木彩艶さん、まさかの移籍先が決定ｷﾀｰ！
+  hook: 日本代表ゴールキーパーの移籍が決まりました。
+  question: なぜパリ・サンジェルマンではなくアストン・ヴィラだったのか
+
+thumbnail:
+  line1: 鈴木彩艶がヴィラへ
+  line2: PSG破談からまさかの展開www
+  tags: [これは嬉しい]
+
+answer: PSGとの交渉が土壇場で破談になり、そこからヴィラ行きが決まったと報じられている
+watch: 新天地での起用。プレミアでプレーする日本人は10人目
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 確定
+    telop: 鈴木彩艶 パルマ → アストン・ヴィラ
+    official: true
+    say:
+      - 日本代表ゴールキーパー、すずきざいおん選手が、イタリアのパルマから、プレミアリーグのアストンビラへ完全移籍しました。
+      - クラブが正式に発表したのは、はちがつじゅうくにちです。
+    sources:
+      - https://www.soccer-king.jp/news/world/ita/20260819/2192845.html
+      - https://news.yahoo.co.jp/articles/2047f5382cf066489e766a4e5b97f1f2f9b4b703
+    card:
+      type: transfer
+      player: 鈴木彩艶（GK・日本代表）
+      from: パルマ（イタリア）
+      to: アストン・ヴィラ（イングランド）
+      fee: 日本人選手の史上最高額にならぶ規模と報道
+      color: "#5cc98a"
+
+  - id: why
+    heading: なぜ動いたのか
+    tier: 報道
+    telop: PSG移籍は土壇場で破談と報道
+    say:
+      - この移籍には、パリ・サンジェルマンも関心を示していました。
+      - ところが交渉は土壇場で破談になったと報じられています。そこからアストンビラ行きが決まった形です。
+    sources:
+      - https://www.soccer-king.jp/news/world/ita/20260819/2192845.html
+      - https://www.footballchannel.jp/2026/08/19/post991845/
+
+  - id: next
+    heading: これからどうなる
+    tier: 報道
+    telop: 今季プレミアでプレーする日本人は10人目
+    say:
+      - 移籍金は、日本人選手の史上最高額にならぶ規模と伝えられています。
+      - 今シーズン、プレミアリーグでプレーする日本人としては、じゅうにんめになるということです。
+    sources:
+      - https://www.soccer-king.jp/news/world/ita/20260819/2192845.html
+      - https://news.yahoo.co.jp/articles/2047f5382cf066489e766a4e5b97f1f2f9b4b703

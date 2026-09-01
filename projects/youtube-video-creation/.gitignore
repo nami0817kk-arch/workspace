@@ -1,0 +1,29 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+output/
+*.log
+
+# 生成物・差し替え素材（init-assets で作り直せる）
+assets/backgrounds/
+assets/characters/
+assets/images/
+
+# OAuth クライアント情報とトークン
+secrets/
+
+# VOICEVOX CORE 一式（scripts/setup_voicevox_core.py で用意する。数GB）
+vendor/
+
+# 生成した仮のBGM・効果音
+assets/audio/
+
+# 生成した背景クリップ
+assets/backgrounds/*.mp4
+
+# 静止画から作った背景クリップのキャッシュ
+assets/backgrounds/.motion/
+
+# 扱った話題の記録（実運用で溜まっていくもの）
+research/covered.yaml

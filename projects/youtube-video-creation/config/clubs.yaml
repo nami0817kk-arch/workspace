@@ -1,0 +1,123 @@
+# クラブ名の別名辞書。
+#
+# 見出しは英語・現地語・日本語・略称が入り混じる。
+# "Spurs" と "トッテナム"、"Man City" と "マンチェスター・シティ" が
+# 同じクラブだと分かっていないと、
+#   ・ビッグクラブの判定（日本語表記しか見ていない）
+#   ・同じ話題のまとめ（英語記事と日本語記事が別件になる）
+#   ・リーグの割り当て（手で埋めるしかない）
+# を取りこぼす。
+#
+#   canonical … 台本で使う日本語表記。これが topic のもとになる
+#   league    … 候補の league を埋めるのに使う
+#   big       … scoring.big_club の判定に使う
+#   aka       … 見出しに出る書き方。長いものから順に照合する
+#
+# 注意: 短すぎる別名は書かない。"Madrid" はレアルにもアトレティコにも当たり、
+#       "Milan" は Inter Milan にも当たる。"AFC" は AFC Bournemouth に当たる。
+#       曖昧なものは入れないこと。
+clubs:
+  # ---- イングランド
+  - {canonical: マンチェスター・シティ, league: england, big: true,
+     aka: [Manchester City, Man City, Man. City, MCFC, シティ, マンC, マンチェスターシティ]}
+  - {canonical: マンチェスター・ユナイテッド, league: england, big: true,
+     aka: [Manchester United, Man United, Man Utd, MUFC, ユナイテッド, マンU, マンチェスターユナイテッド]}
+  - {canonical: リバプール, league: england, big: true,
+     aka: [Liverpool, LFC, リヴァプール]}
+  - {canonical: アーセナル, league: england, big: true,
+     aka: [Arsenal, Gunners]}
+  - {canonical: チェルシー, league: england, big: true,
+     aka: [Chelsea, Blues]}
+  - {canonical: トッテナム, league: england, big: true,
+     aka: [Tottenham Hotspur, Tottenham, Spurs, THFC, トッテナム・ホットスパー]}
+  - {canonical: ニューカッスル, league: england, big: false,
+     aka: [Newcastle United, Newcastle, NUFC, Magpies, ニューカッスル・ユナイテッド]}
+  - {canonical: アストン・ヴィラ, league: england, big: false,
+     aka: [Aston Villa, Villa, AVFC, アストンビラ, アストン・ビラ]}
+  - {canonical: ウェストハム, league: england, big: false,
+     aka: [West Ham United, West Ham, ウェスト・ハム]}
+  - {canonical: ブライトン, league: england, big: false,
+     aka: [Brighton, Brighton & Hove Albion]}
+  - {canonical: エヴァートン, league: england, big: false,
+     aka: [Everton, エバートン]}
+  - {canonical: ノッティンガム・フォレスト, league: england, big: false,
+     aka: [Nottingham Forest, Nott'm Forest, ノッティンガムフォレスト]}
+  - {canonical: クリスタル・パレス, league: england, big: false,
+     aka: [Crystal Palace, クリスタルパレス]}
+  - {canonical: フラム, league: england, big: false, aka: [Fulham]}
+  - {canonical: ブレントフォード, league: england, big: false, aka: [Brentford]}
+  - {canonical: ウォルバーハンプトン, league: england, big: false,
+     aka: [Wolverhampton Wanderers, Wolves, ウルヴァーハンプトン]}
+
+  # ---- スペイン
+  - {canonical: レアル・マドリード, league: spain, big: true,
+     aka: [Real Madrid, Los Blancos, レアル・マドリー, レアルマドリード, マドリー]}
+  - {canonical: バルセロナ, league: spain, big: true,
+     aka: [Barcelona, Barca, Barça, FCB, バルサ]}
+  - {canonical: アトレティコ・マドリード, league: spain, big: true,
+     aka: [Atletico Madrid, Atlético Madrid, Atleti, アトレティコ, アトレティコ・マドリー]}
+  - {canonical: セビージャ, league: spain, big: false, aka: [Sevilla, セビリア]}
+  - {canonical: ビジャレアル, league: spain, big: false, aka: [Villarreal, ビリャレアル]}
+  - {canonical: アスレティック・ビルバオ, league: spain, big: false,
+     aka: [Athletic Bilbao, Athletic Club, ビルバオ]}
+  - {canonical: レアル・ソシエダ, league: spain, big: false, aka: [Real Sociedad, ソシエダ]}
+  - {canonical: バレンシア, league: spain, big: false, aka: [Valencia, ヴァレンシア]}
+  - {canonical: ベティス, league: spain, big: false, aka: [Real Betis, Betis]}
+
+  # ---- ドイツ
+  - {canonical: バイエルン, league: germany, big: true,
+     aka: [Bayern Munich, Bayern München, Bayern Muenchen, FC Bayern, Bayern, バイエルン・ミュンヘン]}
+  - {canonical: ドルトムント, league: germany, big: true,
+     aka: [Borussia Dortmund, Dortmund, BVB, ボルシア・ドルトムント]}
+  - {canonical: レバークーゼン, league: germany, big: false,
+     aka: [Bayer Leverkusen, Leverkusen, レヴァークーゼン]}
+  - {canonical: ライプツィヒ, league: germany, big: false,
+     aka: [RB Leipzig, Leipzig, RBライプツィヒ]}
+  - {canonical: シュツットガルト, league: germany, big: false,
+     aka: [VfB Stuttgart, Stuttgart, シュトゥットガルト]}
+  - {canonical: フランクフルト, league: germany, big: false,
+     aka: [Eintracht Frankfurt, Frankfurt, アイントラハト・フランクフルト]}
+  - {canonical: ボルシアMG, league: germany, big: false,
+     aka: [Borussia Mönchengladbach, Gladbach, メンヒェングラートバッハ]}
+
+  # ---- イタリア
+  - {canonical: インテル, league: italy, big: true,
+     aka: [Inter Milan, Internazionale, Inter, インテル・ミラノ]}
+  - {canonical: ミラン, league: italy, big: true,
+     aka: [AC Milan, Milan, ACミラン]}
+  - {canonical: ユヴェントス, league: italy, big: true,
+     aka: [Juventus, Juve, ユベントス, ユーベ]}
+  - {canonical: ナポリ, league: italy, big: false, aka: [Napoli]}
+  - {canonical: ローマ, league: italy, big: false, aka: [AS Roma, Roma, ASローマ]}
+  - {canonical: ラツィオ, league: italy, big: false, aka: [Lazio]}
+  - {canonical: アタランタ, league: italy, big: false, aka: [Atalanta]}
+  - {canonical: フィオレンティーナ, league: italy, big: false, aka: [Fiorentina]}
+
+  # ---- フランス
+  - {canonical: パリ・サンジェルマン, league: france, big: true,
+     aka: [Paris Saint-Germain, Paris St-Germain, PSG, パリSG, パリ・サンジェルマンFC]}
+  - {canonical: マルセイユ, league: france, big: false,
+     aka: [Olympique Marseille, Marseille, OM]}
+  - {canonical: リヨン, league: france, big: false, aka: [Olympique Lyonnais, Lyon]}
+  - {canonical: モナコ, league: france, big: false, aka: [AS Monaco, Monaco]}
+  - {canonical: リール, league: france, big: false, aka: [Lille, LOSC]}
+
+  # ---- オランダ・ポルトガル
+  - {canonical: アヤックス, league: netherlands, big: false, aka: [Ajax, アヤックス・アムステルダム]}
+  - {canonical: PSV, league: netherlands, big: false, aka: [PSV Eindhoven, PSVアイントホーフェン]}
+  - {canonical: フェイエノールト, league: netherlands, big: false, aka: [Feyenoord]}
+  - {canonical: ベンフィカ, league: "", big: false, aka: [Benfica, SLベンフィカ]}
+  - {canonical: ポルト, league: "", big: false, aka: [FC Porto, Porto]}
+  - {canonical: スポルティング, league: "", big: false, aka: [Sporting CP, Sporting Lisbon]}
+
+  # ---- Jリーグ
+  - {canonical: 浦和レッズ, league: japan, big: false, aka: [Urawa Reds, Urawa, 浦和]}
+  - {canonical: 川崎フロンターレ, league: japan, big: false, aka: [Kawasaki Frontale, Kawasaki, 川崎F, フロンターレ]}
+  - {canonical: ヴィッセル神戸, league: japan, big: false, aka: [Vissel Kobe, 神戸, ヴィッセル]}
+  - {canonical: 横浜F・マリノス, league: japan, big: false, aka: [Yokohama F. Marinos, Yokohama F Marinos, マリノス, 横浜FM]}
+  - {canonical: 鹿島アントラーズ, league: japan, big: false, aka: [Kashima Antlers, Kashima, 鹿島, アントラーズ]}
+  - {canonical: FC町田ゼルビア, league: japan, big: false, aka: [Machida Zelvia, 町田, ゼルビア]}
+  - {canonical: サンフレッチェ広島, league: japan, big: false, aka: [Sanfrecce Hiroshima, 広島, サンフレッチェ]}
+  - {canonical: ガンバ大阪, league: japan, big: false, aka: [Gamba Osaka, ガンバ]}
+  - {canonical: セレッソ大阪, league: japan, big: false, aka: [Cerezo Osaka, セレッソ]}
+  - {canonical: FC東京, league: japan, big: false, aka: [FC Tokyo]}
