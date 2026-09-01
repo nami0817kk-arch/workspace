@@ -224,7 +224,11 @@ def update_prices():
                     )
                     updated += 1
 
-            except Exception:
+            except Exception as e:
+                # 1銘柄の失敗で更新全体を止めない（記録の連続性が最優先。commit は
+                # ループ後なので、ここで中断すると他銘柄の更新まで失われる）。
+                # ただし黙って捨てると d カラムが埋まらない原因を追えなくなる。
+                print(f"  [WARN] {ticker}: 追跡価格の更新に失敗: {e}")
                 continue
 
         con.commit()
