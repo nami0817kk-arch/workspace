@@ -75,12 +75,12 @@ jobs:
             --data '{"name":"kabu-agari-ranking","production_branch":"master"}'
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: kabu-agari-ranking
-          directory: projects/kabu-agari-ranking/output
+          workingDirectory: projects/kabu-agari-ranking
+          command: pages deploy output --project-name=kabu-agari-ranking --branch=master
 
       # GitHub は定期ジョブの失敗を通知しないので、Issue を立てて明示的に鳴らす。
       # 既に開いている失敗 Issue があれば、増やさずコメントを足す。
