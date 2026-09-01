@@ -377,7 +377,7 @@
       "resolved_at": "2026-09-01T04:57:47+00:00",
       "rule_id": "ci.no-timeout",
       "seen_count": 1,
-      "status": "resolved",
+      "status": "open",
       "title": "ワークフローに実行時間の上限が無い",
       "topic": "ci-hygiene"
     },
@@ -449,7 +449,7 @@
       "resolved_at": "2026-09-01T04:57:47+00:00",
       "rule_id": "ci.no-timeout",
       "seen_count": 1,
-      "status": "resolved",
+      "status": "open",
       "title": "ワークフローに実行時間の上限が無い",
       "topic": "ci-hygiene"
     },
@@ -534,7 +534,7 @@
       "resolved_at": "2026-09-01T04:57:47+00:00",
       "rule_id": "docs.readme-missing",
       "seen_count": 1,
-      "status": "resolved",
+      "status": "open",
       "title": "README が無い",
       "topic": "readme"
     },
@@ -576,7 +576,7 @@
       "resolved_at": "2026-09-01T04:57:47+00:00",
       "rule_id": "ci.no-timeout",
       "seen_count": 1,
-      "status": "resolved",
+      "status": "open",
       "title": "ワークフローに実行時間の上限が無い",
       "topic": "ci-hygiene"
     },
@@ -775,7 +775,7 @@
       "resolved_at": "2026-09-01T04:57:47+00:00",
       "rule_id": "docs.readme-no-runbook",
       "seen_count": 1,
-      "status": "resolved",
+      "status": "open",
       "title": "README に「動かし方」のコマンドが書かれていない",
       "topic": "readme"
     },
@@ -785,10 +785,12 @@
       "issue_url": null,
       "last_seen": "2026-09-01T04:57:47+00:00",
       "last_seen_date": "2026-09-01",
+      "note": "requirements.txt に「意図的に標準ライブラリだけで動かしている。追加するときは == で固定し理由を書く」と明記済み。固定すべき依存が存在しない",
       "project": "workspace/projects/price-tracker",
       "rule_id": "xpol.pinned-deps",
       "seen_count": 1,
-      "status": "open",
+      "status": "dismissed",
+      "status_changed_at": "2026-09-01T04:58:19+00:00",
       "title": "依存バージョンを固定する（ai-side-business で既に実践中）",
       "topic": "deps"
     },
@@ -832,7 +834,7 @@
       "resolved_at": "2026-09-01T04:57:47+00:00",
       "rule_id": "test.missing",
       "seen_count": 1,
-      "status": "resolved",
+      "status": "open",
       "title": "自動テストが1本もない",
       "topic": "tests"
     },
@@ -907,7 +909,7 @@
       "resolved_at": "2026-09-01T04:57:47+00:00",
       "rule_id": "ci.no-timeout",
       "seen_count": 1,
-      "status": "resolved",
+      "status": "open",
       "title": "ワークフローに実行時間の上限が無い",
       "topic": "ci-hygiene"
     },
@@ -1063,7 +1065,7 @@
       "resolved_at": "2026-09-01T04:57:47+00:00",
       "rule_id": "ci.no-timeout",
       "seen_count": 1,
-      "status": "resolved",
+      "status": "open",
       "title": "ワークフローに実行時間の上限が無い",
       "topic": "ci-hygiene"
     },
@@ -1542,7 +1544,7 @@
       "resolved_at": "2026-09-01T04:57:47+00:00",
       "rule_id": "deps.unpinned",
       "seen_count": 1,
-      "status": "resolved",
+      "status": "open",
       "title": "依存バージョンが固定されていない",
       "topic": "deps"
     },
@@ -1552,10 +1554,12 @@
       "issue_url": null,
       "last_seen": "2026-09-01T04:57:47+00:00",
       "last_seen_date": "2026-09-01",
+      "note": "requirements.txt に「意図的に標準ライブラリだけで動かしている。追加するときは == で固定し理由を書く」と明記済み。固定すべき依存が存在しない",
       "project": "workspace/projects/tool-factory",
       "rule_id": "xpol.pinned-deps",
       "seen_count": 1,
-      "status": "open",
+      "status": "dismissed",
+      "status_changed_at": "2026-09-01T04:58:19+00:00",
       "title": "依存バージョンを固定する（ai-side-business で既に実践中）",
       "topic": "deps"
     },
@@ -1583,7 +1587,7 @@
       "resolved_at": "2026-09-01T04:57:47+00:00",
       "rule_id": "ci.no-timeout",
       "seen_count": 1,
-      "status": "resolved",
+      "status": "open",
       "title": "ワークフローに実行時間の上限が無い",
       "topic": "ci-hygiene"
     },
@@ -1593,10 +1597,12 @@
       "issue_url": null,
       "last_seen": "2026-09-01T04:57:47+00:00",
       "last_seen_date": "2026-09-01",
+      "note": "指摘の index.html は cohabitation-budget の実在ファイルを正しく説明している行。記述は実在物と一致",
       "project": "workspace",
       "rule_id": "docs.stale-reference",
       "seen_count": 1,
-      "status": "open",
+      "status": "dismissed",
+      "status_changed_at": "2026-09-01T04:58:20+00:00",
       "title": "ドキュメントが存在しないファイルを載せている",
       "topic": "doc-accuracy"
     },
@@ -1662,10 +1668,12 @@
       "issue_url": null,
       "last_seen": "2026-09-01T04:57:47+00:00",
       "last_seen_date": "2026-09-01",
+      "note": "指摘された video.mp4 / subtitles.srt / script.json 等は出力物の説明。scripts/setup_voicevox_core.py も実在。記述は実在物と一致",
       "project": "workspace/projects/youtube-video-creation",
       "rule_id": "docs.stale-reference",
       "seen_count": 1,
-      "status": "open",
+      "status": "dismissed",
+      "status_changed_at": "2026-09-01T04:58:20+00:00",
       "title": "ドキュメントが存在しないファイルを載せている",
       "topic": "doc-accuracy"
     },
@@ -1820,7 +1828,7 @@
       "resolved_at": "2026-09-01T04:57:47+00:00",
       "rule_id": "ci.no-timeout",
       "seen_count": 1,
-      "status": "resolved",
+      "status": "open",
       "title": "ワークフローに実行時間の上限が無い",
       "topic": "ci-hygiene"
     },
@@ -1834,7 +1842,7 @@
       "resolved_at": "2026-09-01T04:57:47+00:00",
       "rule_id": "ci.missing",
       "seen_count": 1,
-      "status": "resolved",
+      "status": "open",
       "title": "CI が無く、push しても誰も検証していない",
       "topic": "ci"
     },
