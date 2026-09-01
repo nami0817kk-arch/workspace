@@ -226,7 +226,8 @@ Windows 固有の不具合を実際に検出できている。ここから先は
 - **動画**: 画像（imagegen）＋音声（speech / audiogen）＋字幕を1本にまとめる層
 - **送信先**: Slack / Discord（Webhookなので各50行程度）、S3 / R2（公開URL化）、Notion
 - **取得先**: Zenn、arXiv、Hacker News、Google Fonts
-- **運用**: ~~`imagegen usage`~~ ✅、~~レシピの定期実行~~ ✅（`.github/workflows/recipe.yml`）
+- **運用**: ~~`imagegen usage`~~ ✅、レシピの定期実行（一度実装したが、モノレポ統合の
+  再配線で未移植。詳細は `docs/recipes.md`）
 - **OAuth**: Google Drive など。認可フローが要るので基盤に auth.py を足すところから
 
 新しい連携先は1つ50〜80行、CLI と MCP の両方に自動で現れる。

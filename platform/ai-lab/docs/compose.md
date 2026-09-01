@@ -42,7 +42,7 @@ imagegen compose --title "バルセロナが新加入選手を発表" --bg outpu
 | `--position top/center/bottom` `--align left/center/right` | 文字の置き場所 |
 
 日本語が「□□□」になるときはフォントが見つかっていない。`--font C:/Windows/Fonts/meiryo.ttc`
-のように渡すか、`imagegen/fonts.py` の候補に足す。
+のように渡すか、`src/imagegen/fonts.py` の候補に足す。
 
 ## ロゴ
 

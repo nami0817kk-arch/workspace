@@ -36,10 +36,10 @@ python -m ruff check src/imagegen tests/imagegen
   同名テストモジュールの衝突を避けるためと、`conftest.py` の autouse フィクスチャが
   他のツールのテストへ漏れないようにするため。共有ヘルパ（`tests/helpers.py`、
   `tests/fakes.py`）だけが `tests/` 直下にある。
-- テストは**外部通信をしない**。CI（`.github/workflows/tests.yml`）は
+- テストは**外部通信をしない**。CI（`.github/workflows/ailab-tests.yml`）は
   Ubuntu × Python 3.11・3.12 で全体を回し、imagegen だけ Windows でも回す。
 - APIキーは `.env`（`.gitignore` 済み）。ログにも `--json` 出力にも出さない。
-  表示直前に `imagegen/core/redact.py` が環境変数の値と突き合わせて伏せる（最後の砦）。
+  表示直前に `src/imagegen/core/redact.py` が環境変数の値と突き合わせて伏せる（最後の砦）。
 - MCP の `publish_file` はプロジェクト配下のファイルしか送れない。
 - Claude Code の web セッションからは多くの外部ホストが egress ポリシーで塞がれる。
   疎通確認が NG でも、手元では通ることがある。
@@ -75,7 +75,7 @@ imagegen doctor         # 実際に接続して確認
 - **CLI と MCP は登録簿だけを見る。** `--provider` `--source` `--to` の選択肢も
   MCP のツール定義も registry から作るので、コネクタ追加時に触る必要はない。
 - **再試行・レート制限・キャッシュ・エラーの言い換えは基盤の仕事。**
-  コネクタ側には書かない（`core/http.py`, `core/cache.py`）。
+  コネクタ側には書かない（`src/imagegen/core/http.py`, `src/imagegen/core/cache.py`）。
 - **レート制限はコネクタ名で共有する。** インスタンスごとに持つと、
   常駐する MCP サーバで枠を守れない。
 - **書き込み系は既定でドライラン。** `imagegen publish` は `--yes`、
@@ -124,7 +124,7 @@ imagegen doctor         # 実際に接続して確認
 
 1. `src/imagegen/connectors/<category>_<name>.py` に `Connector` 継承クラス＋`@register`
 2. 能力に応じたメソッドを実装（詳細は `docs/connectors.md`）
-3. `connectors/__init__.py` に import を1行
+3. `src/imagegen/connectors/__init__.py` に import を1行
 4. テストを書く（HTTPは `FakeSession`）
 
 ## moneyloop / adsite
@@ -138,7 +138,7 @@ imagegen doctor         # 実際に接続して確認
   価格改定はここ1箇所だけを直す。
 - adsite の広告枠の制約（1ページ3枠まで、ツールUIの隣に置かない等）は
   見た目の好みではなく、Core Web Vitals と AdSense のポリシー由来。緩めない。
-- 設計は `docs/architecture.md`、運用は `docs/runbook.md`。
+- 設計は `docs/ad-monetization.md`、運用は `docs/runbook.md`。
 
 ## growth
 

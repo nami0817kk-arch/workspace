@@ -155,7 +155,7 @@ Windows PowerShell 5.1 は BOM のない `.ps1` を ANSI(日本語環境では C
 読むため、BOM を落とすとコメントやメッセージ内の日本語が壊れ、
 `文字列に終端記号 " がありません` のような構文エラーで起動できなくなる。
 
-編集時に BOM を落とすエディタもあるので、`tests/test_browser.py` に BOM の
+編集時に BOM を落とすエディタもあるので、`tests/browser/test_browser.py` に BOM の
 有無を確認するテストを入れてある。
 
 ## 注意点

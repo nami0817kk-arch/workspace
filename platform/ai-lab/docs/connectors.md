@@ -114,7 +114,7 @@ class ExampleAssets(Connector):
 4. `src/imagegen/connectors/__init__.py` に import を1行足す。CLI 側の変更は不要
    （`--source` や `--to` の選択肢は registry から自動で作られる）。
 5. テストを書く。`Connector(session=FakeSession([...]))` でHTTPを差し替えられるので、
-   実際の通信は不要。`tests/test_registry.py` の契約テストが自動で新コネクタも検査する。
+   実際の通信は不要。`tests/imagegen/test_registry.py` の契約テストが自動で新コネクタも検査する。
 
 ## 基盤が面倒を見ること
 
@@ -122,11 +122,11 @@ class ExampleAssets(Connector):
 
 | 機能 | 場所 | 内容 |
 |---|---|---|
-| 再試行 | `core/http.py` | 429/5xx を指数バックオフで最大3回。`Retry-After` に従う |
-| レート制限 | `core/http.py` | `rate_limit` 宣言に基づくトークンバケット。枠内はバースト可 |
-| キャッシュ | `core/cache.py` | `get_json` の結果を既定15分キャッシュ（`--no-cache` で無効） |
-| エラーの言い換え | `core/http.py` | 401/403→AuthError、404→NotFoundError、429→RateLimitError |
-| キーの扱い | `core/connector.py` | `AuthSpec` が未設定の変数名と取得先URLを案内する |
+| 再試行 | `src/imagegen/core/http.py` | 429/5xx を指数バックオフで最大3回。`Retry-After` に従う |
+| レート制限 | `src/imagegen/core/http.py` | `rate_limit` 宣言に基づくトークンバケット。枠内はバースト可 |
+| キャッシュ | `src/imagegen/core/cache.py` | `get_json` の結果を既定15分キャッシュ（`--no-cache` で無効） |
+| エラーの言い換え | `src/imagegen/core/http.py` | 401/403→AuthError、404→NotFoundError、429→RateLimitError |
+| キーの扱い | `src/imagegen/core/connector.py` | `AuthSpec` が未設定の変数名と取得先URLを案内する |
 
 ## 決めごと
 

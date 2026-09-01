@@ -27,9 +27,12 @@ cp config/site.example.json config/site.json
    雛形のままでは審査に通りません。運営者名・連絡先・実際に使うサービスに合わせます。
 2. **`adsite check` を通す**
    説明文の欠落、リンク切れ、孤立ページ、ページ数不足がここで出ます。
-3. **GitHub Pages を有効にする**
-   Settings → Pages → Source を "GitHub Actions" に設定。
-   `main`/`master` への push で `.github/workflows/deploy-site.yml` が公開します。
+3. **Cloudflare Pages で公開する**
+   このモノレポは private なので GitHub Pages は使えません。配信は Cloudflare Pages で、
+   先例はルートの `.github/workflows/tool-factory-pages.yml`（Secrets は
+   `CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID`）。
+   ai-lab 単体のサイトを配信するワークフローは**まだありません**。作るときは
+   `paths:` を `platform/ai-lab/**` に絞ります。
 4. **Search Console にサイトを登録し、sitemap.xml を送信する**
    `https://<ドメイン>/sitemap.xml`。ここをやらないと認識まで余計に時間がかかります。
 5. **数週間運用してからAdSenseに申請する**

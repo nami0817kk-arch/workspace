@@ -117,7 +117,9 @@ adsite forecast --target 700  # 実測RPMから必要PVを逆算
 adsite ideas --dry-run        # 次に作るツールの案（人がレビューして選ぶ）
 ```
 
-デプロイは `.github/workflows/deploy-site.yml` がGitHub Pagesへ自動で行います。
+デプロイ先は Cloudflare Pages です（モノレポが private のため GitHub Pages は使えません）。
+先例はルートの `.github/workflows/tool-factory-pages.yml`。ai-lab 単体のサイトを配信する
+ワークフローはまだ無いので、手順は `docs/runbook.md` を見てください。
 
 ## ツールを増やす順番
 

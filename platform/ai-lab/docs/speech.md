@@ -38,7 +38,7 @@ ENGINE が動いていないことは失敗ではなく「未確認（`--`）」
 サービスごとに入力の上限が違う（OpenAI 4096文字など）。上限より長い文章は
 **句点・感嘆符・改行の切れ目**で分割して合成し、WAV なら1本につなぎ直す。
 
-- 分割はコネクタではなく `imagegen/speech.py` の仕事。コネクタは1回分の合成だけを知っていればよい
+- 分割はコネクタではなく `src/imagegen/speech.py` の仕事。コネクタは1回分の合成だけを知っていればよい
 - つなげない形式（MP3 など）は分かれたまま連番で保存する
 - `--no-join` を付けると WAV でも分けたまま保存する
 - 課金は**つなぐ前の文字数**で決まるので、記録も分割後の実回数で残す
@@ -91,7 +91,7 @@ steps:
 
 1. `src/imagegen/connectors/speech_<名前>.py` に `Connector` 継承クラス＋`@register`
 2. `category = "speech"` と `synthesize()` / `list_voices()` を実装する
-3. `connectors/__init__.py` に import を1行
+3. `src/imagegen/connectors/__init__.py` に import を1行
 4. テストを書く（HTTPは `FakeSession`）
 
 `max_chars`（1回に渡せる文字数）と `default_voice` を宣言しておけば、
