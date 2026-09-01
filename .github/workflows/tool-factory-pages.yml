@@ -44,9 +44,9 @@ jobs:
             --data '{"name":"seisan-kanri-tools","production_branch":"master"}'
 
       - name: Deploy to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: seisan-kanri-tools
-          directory: projects/tool-factory/dist
+          workingDirectory: projects/tool-factory
+          command: pages deploy dist --project-name=seisan-kanri-tools --branch=master

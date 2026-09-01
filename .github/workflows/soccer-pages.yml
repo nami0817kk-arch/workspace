@@ -5,10 +5,9 @@
 # 必要な Secrets（リポジトリ設定 → Secrets and variables → Actions）:
 #   CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID（tool-factory と同じ値でよい）
 #
-# tool-factory-pages.yml は cloudflare/pages-action@v1 を使っているが、これは
-# Cloudflare がアーカイブ済みで wrangler-action への移行を案内している。
-# こちらは wrangler-action を使う。統合前の soccer リポジトリで実際に動作を
-# 確認できているのもこちら。tool-factory も揃えるなら別途まとめて移す。
+# デプロイは cloudflare/wrangler-action を使う。以前使われていた
+# cloudflare/pages-action@v1 は Cloudflare がアーカイブ済みで、移行を案内して
+# いるため。kabu-daily.yml / tool-factory-pages.yml も同じ方式に揃えてある。
 #
 # 検証(analyze + test)は soccer-ci.yml が同じコミットに対して回すので、
 # ここでは重複させない。
