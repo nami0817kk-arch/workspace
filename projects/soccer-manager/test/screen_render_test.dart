@@ -10,6 +10,10 @@ import 'package:soccer_manager/monetization/ad_service.dart';
 import 'package:soccer_manager/monetization/monetization_controller.dart';
 import 'package:soccer_manager/monetization/purchase_service.dart';
 import 'package:soccer_manager/state/game_state.dart';
+import 'package:soccer_manager/screens/fixtures_screen.dart';
+import 'package:soccer_manager/screens/home_screen.dart';
+import 'package:soccer_manager/screens/lineup_screen.dart';
+import 'package:soccer_manager/screens/squad_screen.dart';
 import 'package:soccer_manager/state/settings_controller.dart';
 
 /// クイックアクセスから開く全画面を実際に描画して、はみ出しと例外を検出する。
@@ -25,6 +29,20 @@ import 'package:soccer_manager/state/settings_controller.dart';
 ///
 /// 幅は狭いスマートフォン(360)と、さらに狭い小型端末(320)。言語は日本語と英語。
 /// 英語はラベルが横に長くなるため、日本語で収まっていても英語だけはみ出す。
+/// 検査する画面。クイックアクセスの登録に、ボトムナビの4画面を足したもの。
+///
+/// メインタブは quickAccessDestinations に入っていないため、以前はこの網の
+/// 外にあった。実際、ホーム画面のはみ出しを取りこぼし、別のテストが偶然
+/// 拾っている。利用者が最も長く見る4画面なので、ここに含める。
+List<({String label, WidgetBuilder builder})> _screensUnderTest() => [
+      for (final d in quickAccessDestinations)
+        (label: d.label, builder: d.builder),
+      (label: 'ホーム', builder: (_) => const HomeScreen()),
+      (label: 'スカッド', builder: (_) => const SquadScreen()),
+      (label: '戦術', builder: (_) => const LineupScreen()),
+      (label: '日程', builder: (_) => const FixturesScreen()),
+    ];
+
 void main() {
   const sizes = <String, Size>{
     '360x780': Size(360, 780),
@@ -89,8 +107,8 @@ void main() {
 
           // 言語が本当に切り替わっているかを先に確かめる。ここが効いていないと
           // 「両言語で検証した」という前提が崩れ、片方しか見ていないことになる。
-          await tester.pumpWidget(wrap(Builder(
-              builder: quickAccessDestinations.first.builder)));
+          await tester.pumpWidget(
+              wrap(Builder(builder: quickAccessDestinations.first.builder)));
           await tester.pump();
           tester.takeException();
           expect(
@@ -100,7 +118,7 @@ void main() {
           );
 
           final failures = <String>[];
-          for (final dest in quickAccessDestinations) {
+          for (final dest in _screensUnderTest()) {
             await tester.pumpWidget(wrap(Builder(builder: dest.builder)));
             // はみ出しはレイアウト時に出るので settle は待たない。待つと、
             // 終わらないアニメーションを持つ画面でテストごと止まる。
@@ -110,8 +128,8 @@ void main() {
             // 1画面で止めず全部見る。まとめて出た方が傾向を掴みやすい。
             final err = tester.takeException();
             if (err != null) {
-              failures.add(
-                  '${dest.label}: ${err.toString().split('\n').first}');
+              failures
+                  .add('${dest.label}: ${err.toString().split('\n').first}');
             }
           }
 

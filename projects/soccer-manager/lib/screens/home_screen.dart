@@ -1546,12 +1546,15 @@ class _ThisWeekCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  Tr.pick('今週の予定 ($dateLabel)', 'This week ($dateLabel)'),
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall
-                      ?.copyWith(fontWeight: FontWeight.bold),
+                Flexible(
+                  child: Text(
+                    Tr.pick('今週の予定 ($dateLabel)', 'This week ($dateLabel)'),
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleSmall
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  ),
                 ),
                 TextButton.icon(
                   icon: const Icon(Icons.calendar_month, size: 16),
