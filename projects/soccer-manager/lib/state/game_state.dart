@@ -244,6 +244,19 @@ class GameState extends ChangeNotifier {
     return _save!.league.fixtures.map((f) => f.matchday).reduce(max);
   }
 
+  /// 今シーズンの残り節数。シーズンを終えていれば0。
+  ///
+  /// 表彰・シーズン成績・ベストイレブンはシーズンを1つ終えるまで空のままなので、
+  /// 「あと何節で開くか」をメニューに出すために使う。
+  int get remainingMatchdaysThisSeason {
+    if (_save == null) return 0;
+    final nextMd = _save!.league.nextUnplayedFixture?.matchday;
+    if (nextMd == null) return 0; // シーズン終了後
+    final total = _totalMatchdaysThisSeason;
+    if (total == 0) return 0;
+    return (total - nextMd + 1).clamp(0, total);
+  }
+
   /// 移籍ウィンドウが開いているか。プレシーズン(開幕前)・シーズン中盤の
   /// 数節・シーズン終了後(オフシーズン)にのみ、選手の獲得・放出ができる。
   bool get isTransferWindowOpen {
@@ -840,5 +853,4 @@ class GameState extends ChangeNotifier {
 
   /// 直近のプレーオフにユーザークラブが出場していたかどうか。
   bool userInvolvedInLastPromotionPlayoff = false;
-
 }

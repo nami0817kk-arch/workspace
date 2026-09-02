@@ -636,6 +636,8 @@ class HomeScreen extends StatelessWidget {
                         icon: dest.icon,
                         label: dest.label,
                         color: dest.color,
+                        // まだ中身が空になる画面は、開く前にその旨を見せる。
+                        lockedReason: dest.lockedReason?.call(gameState),
                         onTap: () => Navigator.of(context)
                             .push(MaterialPageRoute(builder: dest.builder)),
                       ),
@@ -1544,12 +1546,15 @@ class _ThisWeekCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  Tr.pick('今週の予定 ($dateLabel)', 'This week ($dateLabel)'),
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall
-                      ?.copyWith(fontWeight: FontWeight.bold),
+                Flexible(
+                  child: Text(
+                    Tr.pick('今週の予定 ($dateLabel)', 'This week ($dateLabel)'),
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleSmall
+                        ?.copyWith(fontWeight: FontWeight.bold),
+                  ),
                 ),
                 TextButton.icon(
                   icon: const Icon(Icons.calendar_month, size: 16),
@@ -1698,34 +1703,73 @@ class _ActionTile extends StatelessWidget {
   final Color color;
   final VoidCallback onTap;
 
+  /// null 以外なら、まだ中身が空になる画面。開放条件を添えて控えめに出す。
+  final String? lockedReason;
+
   const _ActionTile({
     required this.icon,
     required this.label,
     required this.color,
     required this.onTap,
+    this.lockedReason,
   });
 
   @override
   Widget build(BuildContext context) {
+    final locked = lockedReason;
     return Material(
-      color: color.withValues(alpha: 0.12),
+      color: color.withValues(alpha: locked == null ? 0.12 : 0.05),
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
         borderRadius: BorderRadius.circular(16),
-        onTap: onTap,
+        // 押しても開けないので、無反応にせず理由を出す。
+        onTap: locked == null
+            ? onTap
+            : () => ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('$label: $locked')),
+                ),
         child: Padding(
           padding: const EdgeInsets.all(12),
           child: Row(
             children: [
               CircleAvatar(
-                backgroundColor: color,
-                child: Icon(icon, color: Colors.white, size: 20),
+                backgroundColor:
+                    locked == null ? color : color.withValues(alpha: 0.35),
+                child: Icon(
+                  locked == null ? icon : Icons.lock_outline,
+                  color: Colors.white,
+                  size: 20,
+                ),
               ),
               const SizedBox(width: 10),
               Expanded(
-                child: Text(
-                  label,
-                  style: const TextStyle(fontWeight: FontWeight.w600),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        label,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    if (locked != null)
+                      // タイルは固定比率で狭い。ここは要点だけ見せ、全文は
+                      // 押したときの案内で出す。切り詰めないと溢れる。
+                      Flexible(
+                        child: Text(
+                          locked,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: SemanticColors.subtleText(context),
+                          ),
+                        ),
+                      ),
+                  ],
                 ),
               ),
             ],
