@@ -982,6 +982,18 @@ class HomeScreen extends StatelessWidget {
       ));
       gameState.lastMaturedDeposits = [];
     }
+    final feesPaid = gameState.lastAppearanceFeesPaid;
+    if (feesPaid > 0) {
+      // 出場給は資金から自動で引かれる。週次収支の見込みには出ているが、
+      // 実際に引かれた額を知らせないと、資金だけが理由なく減ったように
+      // 見える。
+      messages.add((
+        Tr.pick('出場給として$feesPaid万円を支払いました',
+            'You paid $feesPaid in appearance fees'),
+        false
+      ));
+      gameState.lastAppearanceFeesPaid = 0;
+    }
     final aiTransferNews = gameState.lastAiTransferNews;
     if (aiTransferNews != null) {
       messages.add((

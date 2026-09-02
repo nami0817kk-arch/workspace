@@ -10,6 +10,7 @@ import 'state/game_state.dart';
 import 'state/settings_controller.dart';
 import 'screens/onboarding_screen.dart';
 import 'screens/start_screen.dart';
+import 'widgets/save_error_notifier.dart';
 
 void main() {
   runApp(const SoccerManagerApp());
@@ -211,7 +212,9 @@ class SoccerManagerApp extends StatelessWidget {
                 data: mediaQuery.copyWith(
                   textScaler: TextScaler.linear(settings.textScale),
                 ),
-                child: child!,
+                // 保存の失敗はどの画面の操作でも起きるので、個々の画面では
+                // なくここで拾って知らせる。
+                child: SaveErrorNotifier(child: child!),
               );
             },
             home: const _RootScreen(),
