@@ -164,6 +164,38 @@ part 間では素通しで触れる。
 **ブロックの先頭は宣言行とは限らない。**`///` だけでなく `//` のセクション見出しも
 飛ばさないと、直後のフィールドや static を「移せる」と誤判定する。
 
+**Q. Chrome 操作（ai-lab の control / romano-latest）が接続でタイムアウトする**
+A. `connect_over_cdp: Timeout ... exceeded` が出るのに、
+`curl http://127.0.0.1:9222/json/version` は応答し `/json/list` でタブも取れる、
+という状態になることがある（2026-09-02 に発生）。ブラウザ内部の状態が原因で、
+新規に立てた Chrome では起きない。**デバッグ用の Chrome を再起動すれば直る。
+プロファイルは残るのでログイン状態も維持される。**
+
+普段使いの Chrome を巻き込まないよう、**PID で特定して落とす**こと
+（`Get-Process chrome` は通常の Chrome も含む。実測で34プロセスあった）。
+
+```powershell
+# 1. デバッグ用の親プロセスだけを探す
+Get-CimInstance Win32_Process -Filter "Name='chrome.exe'" |
+  Where-Object { $_.CommandLine -like '*remote-debugging-port=9222*' } |
+  Select-Object ProcessId, CommandLine
+# 2. --remote-debugging-port を持つ親（--type= が付いていないもの）を止める
+Stop-Process -Id <親のPID>
+# 3. 立て直す
+powershell -ExecutionPolicy Bypass -File platform/ai-lab/scripts/start-chrome-debug.ps1
+```
+
+**Q. X（Twitter）の取得が1アカウント5件で頭打ちになる**
+A. 未ログイン。ログイン済みプロファイルなら20件以上読める（実測）。
+ログイン操作は利用者にしてもらう（スキルの決まり）。`x.com/login` を開くところまで:
+
+```bash
+curl -s -X PUT "http://127.0.0.1:9222/json/new?https://x.com/login"
+```
+
+ログインは**永続プロファイル側（9222、`%LOCALAPPDATA%i-lab\chrome-debug-profile`）**で
+行うこと。一時プロファイルで立てた Chrome に入れても、消えると失われる。
+
 ## 調整役への連絡方法
 
 ```
