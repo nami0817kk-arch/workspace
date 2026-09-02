@@ -365,16 +365,25 @@ class _LoanSection extends StatelessWidget {
             ),
           ),
         Card(
-          child: ListTile(
-            leading: const Icon(Icons.savings_outlined),
-            title: Text(Tr.pick(
-                '借入可能額: $maxAmount万円', 'You can borrow up to $maxAmount')),
-            subtitle: Text(Tr.pick('スタジアムの規模・監督としての評価が高いほど上限が上がる',
-                'A bigger stadium and a better reputation raise the ceiling')),
-            trailing: FilledButton(
-              onPressed: maxAmount <= 0 ? null : () => _showLoanSheet(context),
-              child: Text(Tr.pick('融資を申し込む', 'Apply for a loan')),
-            ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              ListTile(
+                leading: const Icon(Icons.savings_outlined),
+                title: Text(Tr.pick(
+                    '借入可能額: $maxAmount万円', 'You can borrow up to $maxAmount')),
+                subtitle: Text(Tr.pick('スタジアムの規模・監督としての評価が高いほど上限が上がる',
+                    'A bigger stadium and a better reputation raise the ceiling')),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+                child: FilledButton(
+                  onPressed:
+                      maxAmount <= 0 ? null : () => _showLoanSheet(context),
+                  child: Text(Tr.pick('融資を申し込む', 'Apply for a loan')),
+                ),
+              ),
+            ],
           ),
         ),
       ],
