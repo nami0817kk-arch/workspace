@@ -20,7 +20,7 @@ from playwright.sync_api import sync_playwright
 HINT = """\
 Chrome に接続できません。リモートデバッグ付きで起動してください:
 
-    powershell -ExecutionPolicy Bypass -File "C:/Users/なみ/dev/ai-lab/scripts/start-chrome-debug.ps1"
+    powershell -ExecutionPolicy Bypass -File "C:/Users/なみ/dev/workspace/platform/ai-lab/scripts/start-chrome-debug.ps1"
 """
 
 
