@@ -5,6 +5,7 @@ import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../widgets/player_face_avatar.dart';
 import '../l10n/tr.dart';
+import '../theme/semantic_colors.dart';
 
 /// シーズン終了時に一括生成されたユースインテーク候補を選抜する画面。
 class YouthIntakeScreen extends StatelessWidget {
@@ -29,7 +30,8 @@ class YouthIntakeScreen extends StatelessWidget {
                 Tr.pick(
                     '今季のアカデミーから${candidates.length}名の新人が入団を希望しています。引き取る選手を選んでください(残り枠: ${slotsLeft.clamp(0, 999)})。',
                     "${candidates.length} youngsters from this year's academy intake want to join. Choose who you take on (places left: ${slotsLeft.clamp(0, 999)})."),
-                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                style: TextStyle(
+                    fontSize: 12, color: SemanticColors.subtleText(context)),
               ),
             ),
           ),

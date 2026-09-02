@@ -15,6 +15,7 @@ import '../widgets/busy_overlay.dart';
 import '../widgets/position_filter_bar.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../l10n/tr.dart';
+import '../theme/semantic_colors.dart';
 
 /// 技術特訓ピッカーで表示するカテゴリ分け(技術カテゴリの特性のみ)。
 const Map<({String ja, String en}), List<PlayerTrait>>
@@ -150,8 +151,9 @@ class _TrainingScreenState extends State<TrainingScreen> {
                         Text(
                           Tr.pick('コーチ陣が育成面で手を打つべき選手を挙げています。',
                               'Your coaches have flagged players who need attention.'),
-                          style:
-                              const TextStyle(fontSize: 11, color: Colors.grey),
+                          style: TextStyle(
+                              fontSize: 11,
+                              color: SemanticColors.subtleText(context)),
                         ),
                         const SizedBox(height: 8),
                         for (final a in advices)
@@ -184,7 +186,8 @@ class _TrainingScreenState extends State<TrainingScreen> {
                     Text(
                       Tr.pick('個別方針を設定していない選手にはこの方針が適用される。',
                           'Applies to every player without an individual focus.'),
-                      style: const TextStyle(color: Colors.grey),
+                      style:
+                          TextStyle(color: SemanticColors.subtleText(context)),
                     ),
                     const SizedBox(height: 8),
                     Wrap(
@@ -209,7 +212,8 @@ class _TrainingScreenState extends State<TrainingScreen> {
                     const SizedBox(height: 4),
                     Text(
                       team.trainingIntensity.description,
-                      style: const TextStyle(color: Colors.grey),
+                      style:
+                          TextStyle(color: SemanticColors.subtleText(context)),
                     ),
                     const SizedBox(height: 8),
                     Wrap(
@@ -235,7 +239,8 @@ class _TrainingScreenState extends State<TrainingScreen> {
                     Text(
                       Tr.pick('カレンダー画面でこの曜日が重点トレーニング日として表示される。',
                           'This weekday is shown as the main training day on the calendar.'),
-                      style: const TextStyle(color: Colors.grey),
+                      style:
+                          TextStyle(color: SemanticColors.subtleText(context)),
                     ),
                     const SizedBox(height: 8),
                     Wrap(
@@ -381,9 +386,9 @@ class _TrainingScreenState extends State<TrainingScreen> {
                                 Tr.pick(
                                     '紅白戦: スタメン外の$practiceMatchCount人が実戦感覚を維持しました',
                                     'Practice match: ${Tr.plural(practiceMatchCount, 'player')} outside the XI kept their sharpness'),
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 12,
-                                  color: Colors.grey,
+                                  color: SemanticColors.subtleText(context),
                                 ),
                               ),
                             ),
@@ -446,7 +451,8 @@ class _TrainingScreenState extends State<TrainingScreen> {
                                           ? Colors.green
                                           : r.overallDelta < 0
                                               ? Colors.redAccent
-                                              : Colors.grey,
+                                              : SemanticColors.subtleText(
+                                                  context),
                                     ),
                                   ),
                                 ),
@@ -460,9 +466,9 @@ class _TrainingScreenState extends State<TrainingScreen> {
                                           '${AttributeKeys.labelOf(e.key)}${e.value > 0 ? '+' : ''}${e.value}',
                                     )
                                     .join(' / '),
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 12,
-                                  color: Colors.grey,
+                                  color: SemanticColors.subtleText(context),
                                 ),
                               ),
                           ],
@@ -747,7 +753,8 @@ class _PlayerTrainingCard extends StatelessWidget {
               child: Text(
                 Tr.pick('設定したロールの重視能力値が、週次トレーニングで優先的に伸びるようになる。',
                     'The attributes that matter for the chosen role improve first in weekly training.'),
-                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                style: TextStyle(
+                    fontSize: 12, color: SemanticColors.subtleText(context)),
               ),
             ),
             if (p.developmentTargetRole != null)
@@ -818,7 +825,7 @@ class _PlayerTrainingCard extends StatelessWidget {
                 child: Text(
                   Tr.pick('${TrainingEngine.minMentorAge}歳以上の選手がいないため指名できません',
                       'Nobody is ${TrainingEngine.minMentorAge} or older, so no mentor can be named'),
-                  style: const TextStyle(color: Colors.grey),
+                  style: TextStyle(color: SemanticColors.subtleText(context)),
                 ),
               ),
             for (final c in candidates)
@@ -860,7 +867,8 @@ class _PlayerTrainingCard extends StatelessWidget {
                 Tr.pick(
                     '特訓ドリル指定中: $activeCount / $maxSlots人（ヘッドコーチのレベルを上げると上限が増える）',
                     'Focus drills in use: $activeCount / $maxSlots (a higher head coach level raises the cap)'),
-                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                style: TextStyle(
+                    fontSize: 12, color: SemanticColors.subtleText(context)),
               ),
             ),
             ListTile(
@@ -912,7 +920,8 @@ class _PlayerTrainingCard extends StatelessWidget {
               child: Text(
                 Tr.pick('2つ目の特訓ドリル指定中: $activeCount / $maxSlots人（1つ目より成長率は控えめ）',
                     'Second focus drills in use: $activeCount / $maxSlots (they grow more slowly than the first)'),
-                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                style: TextStyle(
+                    fontSize: 12, color: SemanticColors.subtleText(context)),
               ),
             ),
             ListTile(
@@ -965,7 +974,8 @@ class _PlayerTrainingCard extends StatelessWidget {
                   Tr.pick(
                       'タップした順に方針が並び、週次トレーニングのたびに上から順番へ自動的に切り替わる。1件も選ばなければ従来通り個別方針/既定方針に従う。',
                       'The focuses queue up in the order you tap them, and each weekly session moves to the next one. Choose none and the player keeps their individual or default focus.'),
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  style: TextStyle(
+                      fontSize: 12, color: SemanticColors.subtleText(context)),
                 ),
               ),
               if (rotation.isNotEmpty)
@@ -1060,7 +1070,8 @@ class _PlayerTrainingCard extends StatelessWidget {
                   Tr.pick(
                       '狙いたい技術特性を選ぶと、以後の週次トレーニングで低確率に獲得を目指す特訓を行う。能力値・年齢がその特性に合っているほど成功率が上がる(適性表示を参考に)。',
                       "Pick a technical trait and each weekly session works towards it, with a small chance of picking it up. The better the player's attributes and age suit the trait, the better the odds (see the fit marks)."),
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  style: TextStyle(
+                      fontSize: 12, color: SemanticColors.subtleText(context)),
                 ),
               ),
               if (p.traitTrainingTarget != null)
@@ -1114,7 +1125,8 @@ class _PlayerTrainingCard extends StatelessWidget {
                   Tr.pick(
                       '性格特性は練習では身につかない。メンター(チームメイト)を指名しているか、監督が今週この選手に声をかけていた週にのみ、低確率で選んだ特性を獲得する。${p.mentorId == null && p.talkCooldownWeeks == 0 ? '(現在はどちらの条件も満たしていない)' : ''}',
                       "Personality traits cannot be trained. The player only has a small chance of picking one up in a week where he has a mentor among his team-mates, or where you had a word with him.${p.mentorId == null && p.talkCooldownWeeks == 0 ? ' (neither applies right now)' : ''}"),
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  style: TextStyle(
+                      fontSize: 12, color: SemanticColors.subtleText(context)),
                 ),
               ),
               if (p.personalityTraitTrainingTarget != null)
@@ -1236,7 +1248,8 @@ class _PositionConvertPicker extends StatelessWidget {
                   : Tr.pick(
                       '転向先: ${target.label}(慣れ度${player.familiarityFor(target)}/100)',
                       'Retraining to ${target.label} (familiarity ${player.familiarityFor(target)}/100)'),
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
+              style: TextStyle(
+                  fontSize: 12, color: SemanticColors.subtleText(context)),
               overflow: TextOverflow.ellipsis,
             ),
           ),

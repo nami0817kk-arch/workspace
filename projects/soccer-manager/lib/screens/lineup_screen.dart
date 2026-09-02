@@ -147,7 +147,8 @@ class _FormationTab extends StatelessWidget {
               Expanded(
                 child: Text(
                   Tr.pick('選手をタップして入れ替え', 'Tap a player to swap him'),
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  style: TextStyle(
+                      fontSize: 12, color: SemanticColors.subtleText(context)),
                 ),
               ),
             ],
@@ -207,9 +208,9 @@ class _FormationTab extends StatelessWidget {
                         const SizedBox(width: 6),
                         Text(
                           Tr.pick('${bench.length}人', '${bench.length}'),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
-                            color: Colors.grey,
+                            color: SemanticColors.subtleText(context),
                           ),
                         ),
                         const Spacer(),
@@ -222,7 +223,7 @@ class _FormationTab extends StatelessWidget {
                             fontSize: 11,
                             color: isDragOver
                                 ? SemanticColors.positive(context)
-                                : Colors.grey,
+                                : SemanticColors.subtleText(context),
                           ),
                         ),
                       ],
@@ -237,8 +238,9 @@ class _FormationTab extends StatelessWidget {
                       ),
                       child: Text(
                         Tr.pick('ベンチに選手がいません', 'Nobody on the bench'),
-                        style:
-                            const TextStyle(fontSize: 12, color: Colors.grey),
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: SemanticColors.subtleText(context)),
                       ),
                     )
                   else
@@ -291,7 +293,8 @@ class _TacticsTab extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   team.mentality.description,
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  style: TextStyle(
+                      fontSize: 12, color: SemanticColors.subtleText(context)),
                 ),
               ],
             ),
@@ -310,7 +313,8 @@ class _TacticsTab extends StatelessWidget {
                   Tr.pick(
                       '数値はいまの先発での適性。適性が高いほど攻守の補正が大きく、低いスタイルを選ぶと逆効果になる。スタイル間には相性がある(プレス→ポゼッション→カウンター→ウイング→ロングボール→プレス…の順に有利)。',
                       'The figures show how well your current XI fits each style. A better fit means a bigger bonus; picking a poor fit works against you. Styles also counter each other, in the order press → possession → counter → wing play → direct → press.'),
-                  style: const TextStyle(fontSize: 11, color: Colors.grey),
+                  style: TextStyle(
+                      fontSize: 11, color: SemanticColors.subtleText(context)),
                 ),
                 const SizedBox(height: 8),
                 Wrap(
@@ -334,7 +338,8 @@ class _TacticsTab extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   team.tacticalStyle.description,
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  style: TextStyle(
+                      fontSize: 12, color: SemanticColors.subtleText(context)),
                 ),
               ],
             ),
@@ -424,7 +429,9 @@ class _TacticsTab extends StatelessWidget {
                     Tr.pick(
                         'プレッシングは守備を高めるが疲労が増えやすい。ラインを上げると攻撃的になるが裏を突かれやすい。\n幅を広げると攻撃力が増すが中央の守備が薄くなる。テンポを上げると攻撃的だが疲労が増えやすい。',
                         'Pressing strengthens the defence but tires the side. A higher line is more aggressive but exposes the space behind.\nMore width adds attacking threat but thins out the middle. A quicker tempo attacks more but tires the side.'),
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: SemanticColors.subtleText(context)),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -521,7 +528,8 @@ class _TacticalImpactSummary extends StatelessWidget {
             Tr.pick(
                 'スカッド適性: プレッシング x${pressingFit.toStringAsFixed(2)}(労働量平均${avgWorkRate.round()}) / テンポ x${tempoFit.toStringAsFixed(2)}(スタミナ平均${avgStamina.round()})',
                 'Squad fit: pressing x${pressingFit.toStringAsFixed(2)} (avg work rate ${avgWorkRate.round()}) / tempo x${tempoFit.toStringAsFixed(2)} (avg stamina ${avgStamina.round()})'),
-            style: const TextStyle(fontSize: 11, color: Colors.grey),
+            style: TextStyle(
+                fontSize: 11, color: SemanticColors.subtleText(context)),
           ),
         ],
       ),
@@ -685,7 +693,8 @@ class _SetPieceTakersCard extends StatelessWidget {
             Text(
               Tr.pick('相手のCK・FKの得点確率を、ヘディング・ジャンプ力に応じて下げる。',
                   'Cuts the chance of conceding from corners and free kicks, based on heading and jumping reach.'),
-              style: const TextStyle(color: Colors.grey, fontSize: 12),
+              style: TextStyle(
+                  color: SemanticColors.subtleText(context), fontSize: 12),
             ),
             const SizedBox(height: 8),
             Row(
@@ -806,7 +815,8 @@ class _TacticPresetsCard extends StatelessWidget {
                 child: Text(
                   Tr.pick(
                       '保存済みのプリセットはありません', 'You have not saved any tactics yet'),
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  style: TextStyle(
+                      fontSize: 12, color: SemanticColors.subtleText(context)),
                 ),
               )
             else
@@ -901,7 +911,8 @@ class _DepthChartSection extends StatelessWidget {
         subtitle: Text(
           Tr.pick('ドラッグハンドルで控え順を入れ替えられます',
               'Drag the handles to reorder the backups'),
-          style: const TextStyle(fontSize: 11, color: Colors.grey),
+          style: TextStyle(
+              fontSize: 11, color: SemanticColors.subtleText(context)),
         ),
         children: [
           for (final pos in positions)
@@ -1122,7 +1133,8 @@ class _PitchView extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
                 child: Text(
                   Tr.pick('ロール', 'Role'),
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  style: TextStyle(
+                      fontSize: 12, color: SemanticColors.subtleText(context)),
                 ),
               ),
               Padding(

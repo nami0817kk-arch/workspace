@@ -107,7 +107,8 @@ class _PlayerHeader extends StatelessWidget {
         ),
         Text(
           player.position.label,
-          style: const TextStyle(color: Colors.grey, fontSize: 12),
+          style: TextStyle(
+              color: SemanticColors.subtleText(context), fontSize: 12),
         ),
       ],
     );
@@ -151,7 +152,9 @@ class _CompareRow extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Column(
         children: [
-          Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+          Text(label,
+              style: TextStyle(
+                  fontSize: 12, color: SemanticColors.subtleText(context))),
           const SizedBox(height: 4),
           Row(
             children: [

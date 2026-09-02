@@ -6,6 +6,7 @@ import '../state/game_state.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import '../l10n/tr.dart';
+import '../theme/semantic_colors.dart';
 
 /// クラブニュース(お知らせ履歴)画面。SnackBarやダイアログで一度だけ
 /// 流れて消える通知(移籍・賞金・実績・シーズン開始の出来事など)を、
@@ -34,7 +35,7 @@ class NewsScreen extends StatelessWidget {
                         'まだニュースはありません。\n節を進めると、移籍・賞金・実績などのお知らせがここに記録されていきます。',
                         'No news yet.\nAs you play through the matchdays, transfers, prize money, achievements and the rest are recorded here.'),
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.grey),
+                    style: TextStyle(color: SemanticColors.subtleText(context)),
                   ),
                 ),
               )

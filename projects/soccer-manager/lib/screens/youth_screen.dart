@@ -12,6 +12,7 @@ import '../widgets/position_filter_bar.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import '../l10n/tr.dart';
+import '../theme/semantic_colors.dart';
 
 /// 潜在能力と現在能力の差がこの値以上なら、伸びしろの大きい「有望株」として強調する。
 const int _wonderkidGap = 15;
@@ -219,7 +220,7 @@ class _YouthScreenState extends State<YouthScreen> {
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: Text(
                   Tr.pick('該当する候補選手はいません', 'No prospects match'),
-                  style: const TextStyle(color: Colors.grey),
+                  style: TextStyle(color: SemanticColors.subtleText(context)),
                 ),
               )
             else
@@ -295,7 +296,8 @@ class _YouthScreenState extends State<YouthScreen> {
                 Tr.pick(
                     '昇格候補はユース施設で育成され続けます(成長係数 x${gameState.youthAcademyGrowthFactor.toStringAsFixed(2)}。ユース施設のレベルを上げるとじっくり育てる価値が高まります)。毎週ユース練習試合も行われ、活躍した候補はさらに伸びます',
                     'Prospects keep developing in your youth setup (growth x${gameState.youthAcademyGrowthFactor.toStringAsFixed(2)}; better facilities make it more worthwhile to be patient). They also play a youth match each week, and those who do well improve faster'),
-                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                style: TextStyle(
+                    fontSize: 12, color: SemanticColors.subtleText(context)),
               ),
             ),
             if (gameState.lastYouthMatchReport != null) ...[
@@ -328,9 +330,9 @@ class _YouthScreenState extends State<YouthScreen> {
                                 Tr.pick(
                                     'ベストプレイヤー: ${best.player.name}(評点 ${best.rating.toStringAsFixed(1)}${best.goals > 0 ? '・${best.goals}得点' : ''})',
                                     "Best on the day: ${best.player.name} (rated ${best.rating.toStringAsFixed(1)}${best.goals > 0 ? ', ${Tr.plural(best.goals, 'goal')}' : ''})"),
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 12,
-                                  color: Colors.grey,
+                                  color: SemanticColors.subtleText(context),
                                 ),
                               ),
                           ],
@@ -410,7 +412,7 @@ class _YouthScreenState extends State<YouthScreen> {
                               color: p.lastYouthMatchRating >=
                                       YouthMatchEngine.standoutRatingThreshold
                                   ? Colors.green
-                                  : Colors.grey,
+                                  : SemanticColors.subtleText(context),
                             ),
                           ),
                           Row(

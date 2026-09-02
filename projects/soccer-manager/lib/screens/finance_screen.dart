@@ -296,7 +296,8 @@ class _SponsorSection extends StatelessWidget {
             child: Text(
               Tr.pick('週間収入が高いほど契約期間は短くなる。契約する候補を選んでください。',
                   'The more it pays weekly, the shorter the deal. Choose which offer to take.'),
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
+              style: TextStyle(
+                  fontSize: 12, color: SemanticColors.subtleText(context)),
             ),
           ),
         ),
@@ -447,7 +448,8 @@ class _LoanRequestSheetState extends State<_LoanRequestSheet> {
             const SizedBox(height: 4),
             Text(
               Tr.pick('借入可能額: $maxAmount万円', 'You can borrow up to $maxAmount'),
-              style: const TextStyle(color: Colors.grey, fontSize: 12),
+              style: TextStyle(
+                  color: SemanticColors.subtleText(context), fontSize: 12),
             ),
             const SizedBox(height: 12),
             TextField(
@@ -612,7 +614,8 @@ class _DepositRequestSheetState extends State<_DepositRequestSheet> {
             Text(
               Tr.pick(
                   '運用可能な資金: $maxAmount万円', 'Available to invest: $maxAmount'),
-              style: const TextStyle(color: Colors.grey, fontSize: 12),
+              style: TextStyle(
+                  color: SemanticColors.subtleText(context), fontSize: 12),
             ),
             const SizedBox(height: 12),
             TextField(

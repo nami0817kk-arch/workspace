@@ -58,7 +58,8 @@ class ScoutReportScreen extends StatelessWidget {
                           Text(
                             Tr.pick('平均総合力: ${report.opponentOverall}',
                                 'Average overall: ${report.opponentOverall}'),
-                            style: const TextStyle(color: Colors.grey),
+                            style: TextStyle(
+                                color: SemanticColors.subtleText(context)),
                           ),
                         ],
                       ),
@@ -142,9 +143,9 @@ class ScoutReportScreen extends StatelessWidget {
                                   : Tr.pick(
                                       'マンマーク: ${_playerName(userTeam, userTeam.manMarkerId!)}',
                                       'Man-marking: ${_playerName(userTeam, userTeam.manMarkerId!)}'),
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 12,
-                                color: Colors.grey,
+                                color: SemanticColors.subtleText(context),
                               ),
                             ),
                           ),

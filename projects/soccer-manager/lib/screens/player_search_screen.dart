@@ -8,6 +8,7 @@ import '../widgets/player_face_avatar.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import '../l10n/tr.dart';
+import '../theme/semantic_colors.dart';
 
 /// FMの選手検索に相当する画面。全ディビジョンの全選手を名前・ポジション・
 /// 年齢・総合力で絞り込み、スカッド計画や補強ターゲットの調査に使う
@@ -148,7 +149,9 @@ class _PlayerSearchScreenState extends State<PlayerSearchScreen> {
                         'Searches every division (top 50). You sign players through the transfer market or as free agents.'),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 3,
-                    style: const TextStyle(fontSize: 11, color: Colors.grey),
+                    style: TextStyle(
+                        fontSize: 11,
+                        color: SemanticColors.subtleText(context)),
                   ),
                 ),
               ),
@@ -158,7 +161,8 @@ class _PlayerSearchScreenState extends State<PlayerSearchScreen> {
                   ? Center(
                       child: Text(
                         Tr.pick('条件に合う選手が見つかりません', 'No players match'),
-                        style: const TextStyle(color: Colors.grey),
+                        style: TextStyle(
+                            color: SemanticColors.subtleText(context)),
                       ),
                     )
                   : ListView.builder(
@@ -203,9 +207,6 @@ class _PlayerSearchScreenState extends State<PlayerSearchScreen> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 IconButton(
-                                  // 既定の48pxはListTileのtrailing枠(44px)を
-                                  // 超えて縦にはみ出す。詰めて収める。
-                                  visualDensity: VisualDensity.compact,
                                   icon: Icon(
                                     gameState.isWatched(p.id)
                                         ? Icons.star

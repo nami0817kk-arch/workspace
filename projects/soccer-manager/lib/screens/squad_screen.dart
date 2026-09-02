@@ -15,6 +15,7 @@ import 'glossary_screen.dart';
 import 'player_compare_screen.dart';
 import 'player_detail_screen.dart';
 import '../l10n/tr.dart';
+import '../theme/semantic_colors.dart';
 
 enum SquadSortOption {
   position,
@@ -580,7 +581,8 @@ class _SquadScreenState extends State<SquadScreen> {
                                           SquadStatus.keyPlayer =>
                                             Colors.amber.shade800,
                                           SquadStatus.rotation => Colors.teal,
-                                          _ => Colors.grey,
+                                          _ =>
+                                            SemanticColors.subtleText(context),
                                         },
                                       ),
                                     ),
@@ -870,7 +872,9 @@ class _SummaryItem extends StatelessWidget {
               .titleMedium
               ?.copyWith(color: valueColor),
         ),
-        Text(label, style: const TextStyle(fontSize: 11, color: Colors.grey)),
+        Text(label,
+            style: TextStyle(
+                fontSize: 11, color: SemanticColors.subtleText(context))),
       ],
     );
   }
@@ -894,7 +898,8 @@ class _ConditionLine extends StatelessWidget {
             Tr.pick('$label$value', '$label $value'),
             style: TextStyle(
               fontSize: 11,
-              color: bad ? Colors.redAccent : Colors.grey,
+              color:
+                  bad ? Colors.redAccent : SemanticColors.subtleText(context),
               fontWeight: bad ? FontWeight.bold : FontWeight.normal,
             ),
           ),
@@ -915,7 +920,8 @@ class _ConditionLine extends StatelessWidget {
               '今季${stats.appearances}試合${stats.goals}点${stats.averageRating != null ? '・評点${stats.averageRating!.toStringAsFixed(1)}' : ''}',
               "${Tr.plural(stats.appearances, 'app')}, ${Tr.plural(stats.goals, 'goal')}${stats.averageRating != null ? ', avg ${stats.averageRating!.toStringAsFixed(1)}' : ''}"),
           overflow: TextOverflow.ellipsis,
-          style: const TextStyle(fontSize: 11, color: Colors.grey),
+          style: TextStyle(
+              fontSize: 11, color: SemanticColors.subtleText(context)),
         ),
       ],
     );
