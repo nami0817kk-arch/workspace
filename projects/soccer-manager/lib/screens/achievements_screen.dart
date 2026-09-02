@@ -6,6 +6,7 @@ import '../state/game_state.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import '../l10n/tr.dart';
+import '../theme/semantic_colors.dart';
 
 /// 実績(アチーブメント)一覧画面。カテゴリごとに達成済み・未達成の実績を
 /// まとめて表示し、長期的なやり込み目標を可視化する。
@@ -55,7 +56,8 @@ class AchievementsScreen extends StatelessWidget {
                             Text(
                               Tr.pick('${all.length}件中 $unlockedCount件達成',
                                   '$unlockedCount of ${all.length} unlocked'),
-                              style: const TextStyle(color: Colors.grey),
+                              style: TextStyle(
+                                  color: SemanticColors.subtleText(context)),
                             ),
                           ],
                         ),
@@ -186,7 +188,9 @@ class _AchievementTile extends StatelessWidget {
                       '${achievement.description} (unlocked in season $season)')
                   : achievement.description,
               style: TextStyle(
-                color: unlocked ? Colors.grey.shade700 : Colors.grey,
+                color: unlocked
+                    ? Colors.grey.shade700
+                    : SemanticColors.subtleText(context),
               ),
             ),
             if (progress != null) ...[
@@ -208,7 +212,9 @@ class _AchievementTile extends StatelessWidget {
                   const SizedBox(width: 8),
                   Text(
                     '${progress.$1.clamp(0, progress.$2)} / ${progress.$2}',
-                    style: const TextStyle(fontSize: 11, color: Colors.grey),
+                    style: TextStyle(
+                        fontSize: 11,
+                        color: SemanticColors.subtleText(context)),
                   ),
                 ],
               ),

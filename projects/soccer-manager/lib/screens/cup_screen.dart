@@ -172,7 +172,9 @@ class _DomesticCupTab extends StatelessWidget {
                     child: Text(
                       Tr.pick('リーグ戦を1節進めると次の試合を消化できます',
                           'Play one more league matchday and you can take the next tie'),
-                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: SemanticColors.subtleText(context)),
                     ),
                   ),
               ],
@@ -318,7 +320,9 @@ class _ContinentalCupTab extends StatelessWidget {
                     child: Text(
                       Tr.pick('リーグ戦を1節進めると次の試合を消化できます',
                           'Play one more league matchday and you can take the next tie'),
-                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: SemanticColors.subtleText(context)),
                     ),
                   ),
               ],
@@ -364,7 +368,9 @@ class _ContinentalCupTab extends StatelessWidget {
                     child: Text(
                       Tr.pick('リーグ戦を1節進めると次の試合を消化できます',
                           'Play one more league matchday and you can take the next tie'),
-                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: SemanticColors.subtleText(context)),
                     ),
                   ),
               ],

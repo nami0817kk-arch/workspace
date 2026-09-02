@@ -10,6 +10,7 @@ import '../widgets/position_filter_bar.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import '../l10n/tr.dart';
+import '../theme/semantic_colors.dart';
 
 enum TransferSortOption { overall, potential, marketValue, age }
 
@@ -292,7 +293,8 @@ class _TransferScreenState extends State<TransferScreen>
             child: Text(
               Tr.pick('移籍金なし・週俸のみで獲得できる選手です。',
                   'These players cost no fee, only wages.'),
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
+              style: TextStyle(
+                  fontSize: 12, color: SemanticColors.subtleText(context)),
             ),
           ),
         ),
@@ -401,7 +403,8 @@ class _TransferScreenState extends State<TransferScreen>
                 Text(
                   Tr.pick('断られるとこの週は再交渉できない(満額での獲得は可能)。',
                       'If they turn you down you cannot bid again this week, though you can still pay full price.'),
-                  style: const TextStyle(fontSize: 12, color: Colors.grey),
+                  style: TextStyle(
+                      fontSize: 12, color: SemanticColors.subtleText(context)),
                 ),
               ],
             ),

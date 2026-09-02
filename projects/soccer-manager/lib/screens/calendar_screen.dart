@@ -6,6 +6,7 @@ import '../state/game_state.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import '../l10n/tr.dart';
+import '../theme/semantic_colors.dart';
 
 /// シーズンの実日付をもとに、試合日・重点練習日を月表示で見渡せる
 /// カレンダー画面。「今日は試合か練習か」を一目で把握できるようにする。
@@ -88,6 +89,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   IconButton(
+                    tooltip: Tr.pick('前の月', 'Previous month'),
                     icon: const Icon(Icons.chevron_left),
                     onPressed: () => setState(() {
                       _visibleMonth = DateTime(
@@ -102,6 +104,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   IconButton(
+                    tooltip: Tr.pick('次の月', 'Next month'),
                     icon: const Icon(Icons.chevron_right),
                     onPressed: () => setState(() {
                       _visibleMonth = DateTime(
@@ -133,8 +136,10 @@ class _CalendarScreenState extends State<CalendarScreen> {
                           style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
+                            // shade700 だと 4.37 で WCAG AA(4.5)に僅かに
+                            // 届かない。土日の色分けは保ったまま1段濃くする。
                             color: label == Tr.pick('土', 'Sat')
-                                ? Colors.blue.shade700
+                                ? Colors.blue.shade800
                                 : label == Tr.pick('日', 'Sun')
                                     ? Colors.red.shade700
                                     : Colors.grey.shade700,
@@ -149,9 +154,15 @@ class _CalendarScreenState extends State<CalendarScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(8),
                 child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 7,
-                    childAspectRatio: 0.78,
+                    // 幅は7列で固定なので、文字を大きくした分はセルの高さで
+                    // 吸収する。比を固定したままだと、端末の文字サイズを
+                    // 大きくした利用者の画面で日付とマーカーが枠から溢れる。
+                    childAspectRatio: 0.78 /
+                        MediaQuery.textScalerOf(context)
+                            .scale(1)
+                            .clamp(1.0, 2.5),
                     mainAxisSpacing: 4,
                     crossAxisSpacing: 4,
                   ),
@@ -242,52 +253,82 @@ class _CalendarDayCell extends StatelessWidget {
       );
     }
 
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        decoration: BoxDecoration(
-          color: background,
-          borderRadius: BorderRadius.circular(8),
-          border: day.isToday
-              ? Border.all(color: scheme.primary, width: 2)
-              : Border.all(color: Colors.transparent),
-        ),
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Stack(
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  '${day.date.day}',
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight:
-                        day.isToday ? FontWeight.bold : FontWeight.normal,
-                    color: dimmed ? Colors.grey.shade400 : null,
+    return Semantics(
+      button: true,
+      label: _semanticLabel(),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          decoration: BoxDecoration(
+            color: background,
+            borderRadius: BorderRadius.circular(8),
+            border: day.isToday
+                ? Border.all(color: scheme.primary, width: 2)
+                : Border.all(color: Colors.transparent),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 4),
+          child: Stack(
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    '${day.date.day}',
+                    style: TextStyle(
+                      fontSize: 12,
+                      fontWeight:
+                          day.isToday ? FontWeight.bold : FontWeight.normal,
+                      // grey.shade400 は白背景で約1.9:1しか出ず読めない。
+                      // 月外であることは onSurfaceVariant でも十分伝わる。
+                      color: dimmed
+                          ? Theme.of(context).colorScheme.onSurfaceVariant
+                          : null,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 2),
-                SizedBox(height: 14, child: marker),
-              ],
-            ),
-            if (day.isCupMatchDay)
-              Positioned(
-                top: 0,
-                right: 0,
-                child: Icon(
-                  Icons.emoji_events,
-                  size: 12,
-                  color: Colors.amber.shade700.withValues(
-                    alpha: dimmed ? 0.5 : 1,
-                  ),
-                ),
+                  const SizedBox(height: 2),
+                  SizedBox(height: 14, child: marker),
+                ],
               ),
-          ],
+              if (day.isCupMatchDay)
+                Positioned(
+                  top: 0,
+                  right: 0,
+                  child: Icon(
+                    Icons.emoji_events,
+                    size: 12,
+                    color: Colors.amber.shade700.withValues(
+                      alpha: dimmed ? 0.5 : 1,
+                    ),
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  /// 読み上げ用。日付と、その日に何があるかを短く伝える。
+  /// セルは押せるのに、これが無いと読み上げでは日付すら分からない。
+  String _semanticLabel() {
+    final parts = <String>[
+      Tr.pick('${day.date.month}月${day.date.day}日',
+          '${day.date.month}/${day.date.day}')
+    ];
+    if (day.isToday) parts.add(Tr.pick('今日', 'today'));
+    if (day.isLeagueMatchDay) {
+      parts.add(Tr.pick(
+          '第${day.matchday}節 ${day.isHomeMatch ? 'ホーム' : 'アウェイ'} 対 ${day.opponentName ?? '未定'}',
+          "matchday ${day.matchday} ${day.isHomeMatch ? 'home' : 'away'} vs ${day.opponentName ?? 'TBC'}"));
+    } else if (day.isFriendlyMatchDay) {
+      parts.add(Tr.pick('親善試合 対 ${day.opponentName ?? '未定'}',
+          "friendly vs ${day.opponentName ?? 'TBC'}"));
+    } else if (day.isTrainingFocusDay) {
+      parts.add(Tr.pick('重点トレーニング', 'main training'));
+    }
+    if (day.isCupMatchDay) parts.add(day.cupLabels.join(' '));
+    return parts.join(' ');
   }
 }
 
@@ -302,7 +343,8 @@ class _CalendarLegend extends StatelessWidget {
             Icon(icon, size: 14, color: color),
             const SizedBox(width: 4),
             Text(label,
-                style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                style: TextStyle(
+                    fontSize: 11, color: SemanticColors.subtleText(context))),
           ],
         );
 

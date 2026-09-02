@@ -102,7 +102,7 @@ class PlayerDetailScreen extends StatelessWidget {
                 Tr.pick(
                     '対応可能ポジション: ${p.secondaryPositions.map((s) => s.label).join(', ')}',
                     "Also plays: ${p.secondaryPositions.map((s) => s.label).join(', ')}"),
-                style: const TextStyle(color: Colors.grey),
+                style: TextStyle(color: SemanticColors.subtleText(context)),
               ),
             ),
           Builder(
@@ -121,7 +121,8 @@ class PlayerDetailScreen extends StatelessWidget {
                   Tr.pick(
                       'ポジション慣れ度(習得中): ${familiarities.map((f) => '${f.pos.label} ${f.value}/100').join(' / ')}${p.trainingConvertTargetPosition != null ? ' ★コンバート特訓中' : ''}',
                       "Learning positions: ${familiarities.map((f) => '${f.pos.label} ${f.value}/100').join(' / ')}${p.trainingConvertTargetPosition != null ? ' ★retraining' : ''}"),
-                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                  style: TextStyle(
+                      color: SemanticColors.subtleText(context), fontSize: 12),
                 ),
               );
             },
@@ -145,7 +146,8 @@ class PlayerDetailScreen extends StatelessWidget {
               child: Text(
                 Tr.pick('通算成績: ${p.careerAppearances}試合 ${p.careerGoals}得点',
                     'Career: ${Tr.plural(p.careerAppearances, 'app')}, ${Tr.plural(p.careerGoals, 'goal')}'),
-                style: const TextStyle(color: Colors.grey, fontSize: 12),
+                style: TextStyle(
+                    color: SemanticColors.subtleText(context), fontSize: 12),
               ),
             ),
           const SizedBox(height: 8),
@@ -240,7 +242,8 @@ class PlayerDetailScreen extends StatelessWidget {
                   return Tr.pick(
                       '${type.label}${e.value}回', '${type.label} x${e.value}');
                 }).join(Tr.pick('・', ' • '))}',
-                style: const TextStyle(color: Colors.grey, fontSize: 12),
+                style: TextStyle(
+                    color: SemanticColors.subtleText(context), fontSize: 12),
               ),
             ),
           if (p.isSuspended)
@@ -265,7 +268,7 @@ class PlayerDetailScreen extends StatelessWidget {
                 style: TextStyle(
                   color: p.yellowCards >= yellowCardSuspensionThreshold - 1
                       ? Colors.redAccent
-                      : Colors.grey,
+                      : SemanticColors.subtleText(context),
                   fontSize: 12,
                 ),
               ),
@@ -336,7 +339,9 @@ class PlayerDetailScreen extends StatelessWidget {
                             "Growth this season: ${seasonDelta > 0 ? '+' : ''}$seasonDelta"),
                         style: TextStyle(
                           fontSize: 12,
-                          color: seasonDelta > 0 ? Colors.green : Colors.grey,
+                          color: seasonDelta > 0
+                              ? Colors.green
+                              : SemanticColors.subtleText(context),
                           fontWeight: seasonDelta > 0
                               ? FontWeight.bold
                               : FontWeight.normal,
@@ -356,7 +361,8 @@ class PlayerDetailScreen extends StatelessWidget {
                 Tr.pick(
                     '内訳: 基礎${b.base.round()}万円 + 伸びしろ${b.potentialBonus.round()}万円 を年齢×${b.ageFactor.toStringAsFixed(2)} 性格×${b.personalityFactor.toStringAsFixed(2)} 統率力×${b.leadershipFactor.toStringAsFixed(2)}',
                     'Breakdown: base ${b.base.round()} + potential ${b.potentialBonus.round()}, times age ${b.ageFactor.toStringAsFixed(2)}, personality ${b.personalityFactor.toStringAsFixed(2)}, leadership ${b.leadershipFactor.toStringAsFixed(2)}'),
-                style: const TextStyle(fontSize: 11, color: Colors.grey),
+                style: TextStyle(
+                    fontSize: 11, color: SemanticColors.subtleText(context)),
               );
             },
           ),
@@ -377,7 +383,8 @@ class PlayerDetailScreen extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             p.personality.description,
-            style: const TextStyle(fontSize: 12, color: Colors.grey),
+            style: TextStyle(
+                fontSize: 12, color: SemanticColors.subtleText(context)),
           ),
           Text(
             p.wantsTransfer
@@ -389,7 +396,9 @@ class PlayerDetailScreen extends StatelessWidget {
                     'Transfer-request line: they ask for a move below ${p.personality.transferRequestThreshold} happiness (currently ${p.happiness})'),
             style: TextStyle(
               fontSize: 11,
-              color: p.wantsTransfer ? Colors.redAccent : Colors.grey,
+              color: p.wantsTransfer
+                  ? Colors.redAccent
+                  : SemanticColors.subtleText(context),
             ),
           ),
           if (p.role != PlayerRole.standard) ...[
@@ -490,7 +499,8 @@ class PlayerDetailScreen extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               p.squadStatus.description,
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
+              style: TextStyle(
+                  fontSize: 12, color: SemanticColors.subtleText(context)),
             ),
             const SizedBox(height: 12),
           ],
@@ -503,7 +513,9 @@ class PlayerDetailScreen extends StatelessWidget {
                   Text(
                     Tr.pick('ローン加入中の選手は契約更新・放出の対象外です。ローン期間終了時に自動的にチームを離れます。',
                         'Players on loan here cannot be re-signed or released. They leave automatically when the loan ends.'),
-                    style: const TextStyle(color: Colors.grey, fontSize: 12),
+                    style: TextStyle(
+                        color: SemanticColors.subtleText(context),
+                        fontSize: 12),
                   ),
                   if (p.loanBuyOptionFee != null) ...[
                     const SizedBox(height: 8),
@@ -525,14 +537,16 @@ class PlayerDetailScreen extends StatelessWidget {
               child: Text(
                 Tr.pick('他クラブへローン放出中は契約更新・放出の対象外です。期間終了時に自動的に復帰します。',
                     'A player out on loan cannot be re-signed or released. They return automatically when the loan ends.'),
-                style: const TextStyle(color: Colors.grey, fontSize: 12),
+                style: TextStyle(
+                    color: SemanticColors.subtleText(context), fontSize: 12),
               ),
             )
           else ...[
             Text(
               Tr.pick('現在の出場手当: ${p.appearanceFee}万円/試合',
                   'Current appearance fee: ${p.appearanceFee} per match'),
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
+              style: TextStyle(
+                  fontSize: 12, color: SemanticColors.subtleText(context)),
             ),
             const SizedBox(height: 8),
             FilledButton(
@@ -595,7 +609,8 @@ class PlayerDetailScreen extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 gameState.transferWindowStatusLabel,
-                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                style: TextStyle(
+                    fontSize: 12, color: SemanticColors.subtleText(context)),
               ),
             ],
           ],
@@ -707,7 +722,7 @@ class PlayerDetailScreen extends StatelessWidget {
                   Tr.pick(
                       '平均 ${(category.keys.fold<int>(0, (s, k) => s + p.attributeValue(k)) / category.keys.length).round()}',
                       'avg ${(category.keys.fold<int>(0, (s, k) => s + p.attributeValue(k)) / category.keys.length).round()}'),
-                  style: const TextStyle(color: Colors.grey),
+                  style: TextStyle(color: SemanticColors.subtleText(context)),
                 ),
                 initiallyExpanded: false,
                 children: [
@@ -791,7 +806,8 @@ class PlayerDetailScreen extends StatelessWidget {
               Tr.pick(
                   '交渉回数: ${negotiation.roundsUsed}/${ContractEngine.maxNegotiationRounds}',
                   'Rounds used: ${negotiation.roundsUsed}/${ContractEngine.maxNegotiationRounds}'),
-              style: const TextStyle(color: Colors.grey, fontSize: 12),
+              style: TextStyle(
+                  color: SemanticColors.subtleText(context), fontSize: 12),
             ),
             const SizedBox(height: 12),
             TextField(

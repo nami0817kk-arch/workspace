@@ -11,11 +11,11 @@ import '../widgets/quick_access_drawer.dart';
 import '../widgets/supporter_section.dart';
 import 'onboarding_screen.dart';
 import 'start_screen.dart';
+import '../theme/semantic_colors.dart';
 
 const String _privacyPolicyUrl =
     'https://soccer-manager.pages.dev/legal/privacy.html';
-const String _termsUrl =
-    'https://soccer-manager.pages.dev/legal/terms.html';
+const String _termsUrl = 'https://soccer-manager.pages.dev/legal/terms.html';
 
 /// 表示・操作設定とセーブデータ管理をまとめた画面。
 class SettingsScreen extends StatelessWidget {
@@ -270,9 +270,9 @@ class SettingsScreen extends StatelessWidget {
                                     'Version ${info.version}+${info.buildNumber}');
                             return Text(
                               label,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 12,
-                                color: Colors.grey,
+                                color: SemanticColors.subtleText(context),
                               ),
                             );
                           },

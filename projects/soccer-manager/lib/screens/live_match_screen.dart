@@ -19,6 +19,7 @@ import '../state/game_state.dart';
 import '../widgets/match_widgets.dart';
 import '../widgets/player_face_avatar.dart';
 import '../l10n/tr.dart';
+import '../theme/semantic_colors.dart';
 
 enum _Phase { firstHalf, halfTime, secondHalf, finished }
 
@@ -843,7 +844,8 @@ class _MomentumBar extends StatelessWidget {
           children: [
             Text(
               Tr.pick('試合の流れ', 'Momentum'),
-              style: const TextStyle(fontSize: 10, color: Colors.grey),
+              style: TextStyle(
+                  fontSize: 10, color: SemanticColors.subtleText(context)),
             ),
             const SizedBox(height: 2),
             ClipRRect(
@@ -909,7 +911,7 @@ class _HalfTimePanel extends StatelessWidget {
                 ),
                 Text(
                   '${home.name} vs ${away.name}',
-                  style: const TextStyle(color: Colors.grey),
+                  style: TextStyle(color: SemanticColors.subtleText(context)),
                 ),
               ],
             ),
@@ -921,7 +923,8 @@ class _HalfTimePanel extends StatelessWidget {
           Text(
             Tr.pick('先発イレブンの士気を変動させる。選手の性格によって効果は変わる。',
                 "Shifts the morale of your starting XI. How it lands depends on each player's personality."),
-            style: const TextStyle(color: Colors.grey, fontSize: 12),
+            style: TextStyle(
+                color: SemanticColors.subtleText(context), fontSize: 12),
           ),
           const SizedBox(height: 8),
           Wrap(
@@ -953,7 +956,8 @@ class _HalfTimePanel extends StatelessWidget {
           Text(
             Tr.pick('前半の展開を見て、後半だけフォーメーションを変更できる。',
                 'Having seen the first half, you can change formation for the second.'),
-            style: const TextStyle(color: Colors.grey, fontSize: 12),
+            style: TextStyle(
+                color: SemanticColors.subtleText(context), fontSize: 12),
           ),
           const SizedBox(height: 8),
           Row(

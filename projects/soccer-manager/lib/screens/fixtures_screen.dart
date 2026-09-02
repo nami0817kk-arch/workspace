@@ -216,7 +216,8 @@ class FixturesScreen extends StatelessWidget {
               Text(
                 Tr.pick('現在の総合力をもとに残り試合を簡易シミュレーションした見込みです。実際の結果を保証するものではありません。',
                     'A rough projection of the remaining matches based on current squad strength. It is not a guarantee.'),
-                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                style: TextStyle(
+                    fontSize: 12, color: SemanticColors.subtleText(context)),
               ),
               const SizedBox(height: 8),
               Expanded(
@@ -440,9 +441,9 @@ class _StandingsTab extends StatelessWidget {
                               Tr.pick('戦力${team.overallRating}',
                                   'Squad ${team.overallRating}'),
                               overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 11,
-                                color: Colors.grey,
+                                color: SemanticColors.subtleText(context),
                               ),
                             ),
                           ),
@@ -556,7 +557,7 @@ Future<void> _showFixtureResultDialog(
           children: [
             if (goals.isEmpty)
               Text(Tr.pick('得点者はいませんでした', 'Nobody scored'),
-                  style: const TextStyle(color: Colors.grey))
+                  style: TextStyle(color: SemanticColors.subtleText(context)))
             else ...[
               Text(Tr.pick('得点者', 'Scorers'),
                   style: Theme.of(dialogContext).textTheme.titleSmall),
@@ -622,7 +623,9 @@ class _ZoneLegend extends StatelessWidget {
       children: [
         Container(width: 10, height: 10, color: color),
         const SizedBox(width: 4),
-        Text(label, style: const TextStyle(fontSize: 11, color: Colors.grey)),
+        Text(label,
+            style: TextStyle(
+                fontSize: 11, color: SemanticColors.subtleText(context))),
       ],
     );
   }

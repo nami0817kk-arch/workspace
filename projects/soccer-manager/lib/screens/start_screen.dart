@@ -8,6 +8,7 @@ import '../widgets/busy_overlay.dart';
 import 'main_shell.dart';
 import '../l10n/l10n_ext.dart';
 import '../l10n/tr.dart';
+import '../theme/semantic_colors.dart';
 
 class StartScreen extends StatefulWidget {
   const StartScreen({super.key});
@@ -355,7 +356,8 @@ class _NewClubDialogState extends State<_NewClubDialog> {
             const SizedBox(height: 4),
             Text(
               _difficulty.description,
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
+              style: TextStyle(
+                  fontSize: 12, color: SemanticColors.subtleText(context)),
             ),
           ],
         ),

@@ -8,6 +8,7 @@ import '../state/game_state.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import '../l10n/tr.dart';
+import '../theme/semantic_colors.dart';
 
 /// スタッフ・施設の現在レベル(と最大未満なら次レベル)の具体的な効果を1行にまとめる。
 String _staffEffectLabel(StaffRole role, int level) {
@@ -147,7 +148,9 @@ class ClubScreen extends StatelessWidget {
                     Text(
                       Tr.pick('スタッフ週俸合計: ${infra.totalStaffWeeklyWage}万円',
                           'Total staff wages: ${infra.totalStaffWeeklyWage}'),
-                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: SemanticColors.subtleText(context)),
                     ),
                     const SizedBox(height: 8),
                     Row(
@@ -243,7 +246,8 @@ class _TicketPricingCard extends StatelessWidget {
               Tr.pick(
                   '観客動員率と1人あたり収入はトレードオフです。値上げは収容人数に対する実入場者数を減らし、値下げは満員に近づけます。',
                   'Attendance and revenue per head pull against each other. Raise prices and fewer of your seats fill; lower them and you get closer to a full house.'),
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
+              style: TextStyle(
+                  fontSize: 12, color: SemanticColors.subtleText(context)),
             ),
             const SizedBox(height: 10),
             SegmentedButton<TicketPricing>(
@@ -256,7 +260,8 @@ class _TicketPricingCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               current.description,
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
+              style: TextStyle(
+                  fontSize: 12, color: SemanticColors.subtleText(context)),
             ),
           ],
         ),
@@ -323,13 +328,15 @@ class _UpgradeCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               description,
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
+              style: TextStyle(
+                  fontSize: 12, color: SemanticColors.subtleText(context)),
             ),
             if (extraLabel != null) ...[
               const SizedBox(height: 2),
               Text(
                 extraLabel!,
-                style: const TextStyle(fontSize: 12, color: Colors.grey),
+                style: TextStyle(
+                    fontSize: 12, color: SemanticColors.subtleText(context)),
               ),
             ],
             const SizedBox(height: 8),

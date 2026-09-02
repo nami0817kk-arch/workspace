@@ -512,7 +512,9 @@ class HomeScreen extends StatelessWidget {
                                   ),
                                   Text(
                                     _fixtureLabel(league, next),
-                                    style: const TextStyle(color: Colors.grey),
+                                    style: TextStyle(
+                                        color:
+                                            SemanticColors.subtleText(context)),
                                   ),
                                   // 対戦相手の現在の順位・戦力・直近フォームを
                                   // 一目で確認できるようにする(詳細な分析は
@@ -536,9 +538,10 @@ class HomeScreen extends StatelessWidget {
                                             Tr.pick(
                                                 '$oppRank位・総合${opp.overallRating}',
                                                 '$oppRank in the table • overall ${opp.overallRating}'),
-                                            style: const TextStyle(
+                                            style: TextStyle(
                                               fontSize: 12,
-                                              color: Colors.grey,
+                                              color: SemanticColors.subtleText(
+                                                  context),
                                             ),
                                           ),
                                           const SizedBox(width: 8),
@@ -828,7 +831,7 @@ class HomeScreen extends StatelessWidget {
                 if (goals.isEmpty)
                   Text(
                     Tr.pick('得点者はいませんでした', 'Nobody scored'),
-                    style: const TextStyle(color: Colors.grey),
+                    style: TextStyle(color: SemanticColors.subtleText(context)),
                   )
                 else ...[
                   Text(

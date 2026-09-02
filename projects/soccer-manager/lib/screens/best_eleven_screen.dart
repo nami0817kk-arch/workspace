@@ -10,6 +10,7 @@ import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import 'player_detail_screen.dart';
 import '../l10n/tr.dart';
+import '../theme/semantic_colors.dart';
 
 /// シーズンごとに選出されたベストイレブン(GK1・DF4・MF4・FW2)の履歴を表示する画面。
 class BestElevenScreen extends StatelessWidget {
@@ -166,9 +167,9 @@ class _BestElevenCard extends StatelessWidget {
                               Text(
                                 Tr.pick('${e.appearances}試合',
                                     Tr.plural(e.appearances, 'app')),
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 11,
-                                  color: Colors.grey,
+                                  color: SemanticColors.subtleText(context),
                                 ),
                               ),
                             ],

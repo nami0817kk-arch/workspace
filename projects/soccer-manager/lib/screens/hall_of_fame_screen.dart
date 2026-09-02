@@ -7,6 +7,7 @@ import '../widgets/player_face_avatar.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import '../l10n/tr.dart';
+import '../theme/semantic_colors.dart';
 
 /// 高齢により正式に引退した選手(殿堂)の一覧画面。契約満了で単に自由契約に
 /// なった選手とは異なり、再契約はできない。
@@ -83,7 +84,8 @@ class _LegendCard extends StatelessWidget {
             Text(
               Tr.pick('${player.careerGoals}得点',
                   Tr.plural(player.careerGoals, 'goal')),
-              style: const TextStyle(fontSize: 12, color: Colors.grey),
+              style: TextStyle(
+                  fontSize: 12, color: SemanticColors.subtleText(context)),
             ),
           ],
         ),

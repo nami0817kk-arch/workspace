@@ -46,7 +46,9 @@ class ManagerCareerScreen extends StatelessWidget {
                     Text(
                       Tr.pick('進行中のシーズンの成績もここに含まれます',
                           'The season in progress is included here'),
-                      style: const TextStyle(fontSize: 11, color: Colors.grey),
+                      style: TextStyle(
+                          fontSize: 11,
+                          color: SemanticColors.subtleText(context)),
                     ),
                     const SizedBox(height: 8),
                     Row(
@@ -93,7 +95,9 @@ class ManagerCareerScreen extends StatelessWidget {
                               'Your contract: ${Tr.plural(save.managerContractYears, 'year')} left')
                           : Tr.pick('監督契約: 次のシーズン開始時に締結予定',
                               'Your contract: to be agreed at the start of next season'),
-                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: SemanticColors.subtleText(context)),
                     ),
                   ],
                 ),
@@ -131,7 +135,9 @@ class ManagerCareerScreen extends StatelessWidget {
                       Tr.pick(
                           '通算勝敗・獲得タイトル・実績解除数の積み重ねで監督として成長し、選手の成長効率がわずかに上がり続ける',
                           'Wins, trophies and achievements build you up as a manager, and your players develop a little faster for it'),
-                      style: const TextStyle(fontSize: 12, color: Colors.grey),
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: SemanticColors.subtleText(context)),
                     ),
                     const SizedBox(height: 8),
                     if (gameState.managerCareerLevel <
@@ -148,9 +154,9 @@ class ManagerCareerScreen extends StatelessWidget {
                         Tr.pick(
                             '次のレベルまであとXP ${gameState.managerCareerXpToNextLevel}',
                             '${gameState.managerCareerXpToNextLevel} XP to the next level'),
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 11,
-                          color: Colors.grey,
+                          color: SemanticColors.subtleText(context),
                         ),
                       ),
                     ],
@@ -177,7 +183,7 @@ class ManagerCareerScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 8),
                 child: Text(
                   Tr.pick('まだタイトルを獲得していません', 'You have not won anything yet'),
-                  style: const TextStyle(color: Colors.grey),
+                  style: TextStyle(color: SemanticColors.subtleText(context)),
                 ),
               )
             else
@@ -233,7 +239,9 @@ class _StatColumn extends StatelessWidget {
             color: color,
           ),
         ),
-        Text(label, style: const TextStyle(fontSize: 11, color: Colors.grey)),
+        Text(label,
+            style: TextStyle(
+                fontSize: 11, color: SemanticColors.subtleText(context))),
       ],
     );
   }
