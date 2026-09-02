@@ -182,9 +182,12 @@ class _TrainingScreenState extends State<TrainingScreen> {
                             const Icon(Icons.tips_and_updates_outlined,
                                 size: 18),
                             const SizedBox(width: 6),
-                            Text(
-                              Tr.pick('育成アドバイザー', 'Development adviser'),
-                              style: Theme.of(context).textTheme.titleSmall,
+                            Flexible(
+                              child: Text(
+                                Tr.pick('育成アドバイザー', 'Development adviser'),
+                                overflow: TextOverflow.ellipsis,
+                                style: Theme.of(context).textTheme.titleSmall,
+                              ),
                             ),
                           ],
                         ),
@@ -200,32 +203,35 @@ class _TrainingScreenState extends State<TrainingScreen> {
                         for (final a in advices)
                           Padding(
                             padding: const EdgeInsets.only(bottom: 4),
-                            child: Row(
+                            // 説明文とボタンを横に並べると、提案文もボタンの
+                            // 文言も長いため狭い端末で溢れる。縦に積む。
+                            child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Expanded(
-                                  child: Text(
-                                    Tr.pick(
-                                        '・[${a.kind.label}] ${a.playerName}: ${a.message}',
-                                        '• [${a.kind.label}] ${a.playerName}: ${a.message}'),
-                                    style: const TextStyle(fontSize: 12),
-                                  ),
+                                Text(
+                                  Tr.pick(
+                                      '・[${a.kind.label}] ${a.playerName}: ${a.message}',
+                                      '• [${a.kind.label}] ${a.playerName}: ${a.message}'),
+                                  style: const TextStyle(fontSize: 12),
                                 ),
                                 // 提案どおりでよいなら、画面を移動せずここで
                                 // 済ませられるようにする。決め打ちできない
                                 // 提案(実戦感覚)にはボタンを出さない。
                                 if (a.fix != null)
-                                  TextButton(
-                                    // visualDensity で詰めるとタップ領域が
-                                    // 48x48 を割る。横の余白だけ詰める。
-                                    style: TextButton.styleFrom(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 8),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: TextButton(
+                                      // visualDensity で詰めるとタップ領域が
+                                      // 48x48 を割る。横の余白だけ詰める。
+                                      style: TextButton.styleFrom(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 8),
+                                      ),
+                                      onPressed: () =>
+                                          _applyAdvice(context, gameState, a),
+                                      child: Text(a.fix!.label,
+                                          style: const TextStyle(fontSize: 12)),
                                     ),
-                                    onPressed: () =>
-                                        _applyAdvice(context, gameState, a),
-                                    child: Text(a.fix!.label,
-                                        style: const TextStyle(fontSize: 12)),
                                   ),
                               ],
                             ),
