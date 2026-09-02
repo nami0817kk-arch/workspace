@@ -193,7 +193,7 @@ A. 未ログイン。ログイン済みプロファイルなら20件以上読め
 curl -s -X PUT "http://127.0.0.1:9222/json/new?https://x.com/login"
 ```
 
-ログインは**永続プロファイル側（9222、`%LOCALAPPDATA%i-lab\chrome-debug-profile`）**で
+ログインは**永続プロファイル側（9222、`%LOCALAPPDATA%` 直下の `ai-lab/chrome-debug-profile`）**で
 行うこと。一時プロファイルで立てた Chrome に入れても、消えると失われる。
 
 ## 調整役への連絡方法
