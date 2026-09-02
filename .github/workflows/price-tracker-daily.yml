@@ -44,10 +44,11 @@ jobs:
         id: gate
         env:
           RAKUTEN_APP_ID: ${{ secrets.RAKUTEN_APP_ID }}
+          RAKUTEN_ACCESS_KEY: ${{ secrets.RAKUTEN_ACCESS_KEY }}
         run: |
           ready=true
-          if [ -z "$RAKUTEN_APP_ID" ]; then
-            echo "::warning::RAKUTEN_APP_ID が未登録です。取得をスキップします。"
+          if [ -z "$RAKUTEN_APP_ID" ] || [ -z "$RAKUTEN_ACCESS_KEY" ]; then
+            echo "::warning::RAKUTEN_APP_ID / RAKUTEN_ACCESS_KEY が未登録です。取得をスキップします。"
             ready=false
           fi
           if ! python -c "import json,sys; sys.exit(0 if json.load(open('config.json',encoding='utf-8')).get('genres') else 1)"; then
@@ -60,6 +61,7 @@ jobs:
         if: steps.gate.outputs.ready == 'true'
         env:
           RAKUTEN_APP_ID: ${{ secrets.RAKUTEN_APP_ID }}
+          RAKUTEN_ACCESS_KEY: ${{ secrets.RAKUTEN_ACCESS_KEY }}
           RAKUTEN_AFFILIATE_ID: ${{ secrets.RAKUTEN_AFFILIATE_ID }}
         run: python fetch.py
 

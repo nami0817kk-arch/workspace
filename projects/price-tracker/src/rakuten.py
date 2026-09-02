@@ -12,8 +12,11 @@ import time
 import urllib.parse
 import urllib.request
 
-SEARCH_URL = "https://app.rakuten.co.jp/services/api/IchibaItem/Search/20220601"
-GENRE_URL = "https://app.rakuten.co.jp/services/api/IchibaGenre/Search/20120723"
+# 旧 app.rakuten.co.jp/services/api/ は 2026-05-13 に廃止された。
+# 新方式は applicationId に加えて accessKey が必須で、ホストも API ごとに違う
+# （商品検索は ichibams、ジャンル検索は ichibagt）。
+SEARCH_URL = "https://openapi.rakuten.co.jp/ichibams/api/IchibaItem/Search/20260701"
+GENRE_URL = "https://openapi.rakuten.co.jp/ichibagt/api/IchibaGenre/Search/20260701"
 
 # 楽天の制限は「1アプリIDにつき1秒1回」。余裕を持たせる。
 MIN_INTERVAL = 1.1
@@ -25,18 +28,21 @@ class RakutenError(RuntimeError):
     pass
 
 
-def credentials() -> tuple[str, str]:
-    """アプリIDとアフィリエイトIDを環境変数から読む。
+def credentials() -> tuple[str, str, str]:
+    """アプリID・アクセスキー・アフィリエイトIDを環境変数から読む。
 
     アプリIDはリクエストURLに乗る準公開の識別子だが、それでもリポジトリには置かない。
-    GitHub Actions のシークレットから環境変数として渡す。
+    アクセスキーは秘密情報。どちらも GitHub Actions のシークレットから環境変数で渡す。
     """
     app_id = os.environ.get("RAKUTEN_APP_ID", "").strip()
-    if not app_id:
+    access_key = os.environ.get("RAKUTEN_ACCESS_KEY", "").strip()
+    missing = [n for n, v in (("RAKUTEN_APP_ID", app_id),
+                              ("RAKUTEN_ACCESS_KEY", access_key)) if not v]
+    if missing:
         raise RakutenError(
-            "RAKUTEN_APP_ID が設定されていません。"
+            f"{' と '.join(missing)} が設定されていません。"
             "GitHub のリポジトリ設定 > Secrets and variables > Actions に登録してください。")
-    return app_id, os.environ.get("RAKUTEN_AFFILIATE_ID", "").strip()
+    return app_id, access_key, os.environ.get("RAKUTEN_AFFILIATE_ID", "").strip()
 
 
 class Throttle:
@@ -134,11 +140,12 @@ def _get(url: str, params: dict, throttle: Throttle, opener=urllib.request.urlop
 def search_genre(genre_id: str, hits: int, throttle: Throttle,
                  opener=urllib.request.urlopen) -> list[dict]:
     """ジャンル内の商品を売れ筋順に hits 件ぶん取る。"""
-    app_id, affiliate_id = credentials()
+    app_id, access_key, affiliate_id = credentials()
     items, page = [], 1
     while len(items) < hits and page <= MAX_PAGE:
         payload = _get(SEARCH_URL, {
             "applicationId": app_id,
+            "accessKey": access_key,
             "affiliateId": affiliate_id,
             "genreId": genre_id,
             "hits": min(MAX_HITS, hits - len(items)),
@@ -160,9 +167,10 @@ def search_genre(genre_id: str, hits: int, throttle: Throttle,
 def genre_children(genre_id: str, throttle: Throttle,
                    opener=urllib.request.urlopen) -> list[dict]:
     """ジャンルの直下の子ジャンルを返す。狙う分野をデータから決めるために使う。"""
-    app_id, _ = credentials()
+    app_id, access_key, _ = credentials()
     payload = _get(GENRE_URL, {
         "applicationId": app_id,
+        "accessKey": access_key,
         "genreId": genre_id,
         "format": "json",
         "formatVersion": 2,

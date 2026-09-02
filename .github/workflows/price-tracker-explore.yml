@@ -41,9 +41,10 @@ jobs:
       - name: Explore genres
         env:
           RAKUTEN_APP_ID: ${{ secrets.RAKUTEN_APP_ID }}
+          RAKUTEN_ACCESS_KEY: ${{ secrets.RAKUTEN_ACCESS_KEY }}
         run: |
-          if [ -z "$RAKUTEN_APP_ID" ]; then
-            echo "::error::RAKUTEN_APP_ID が未登録です。リポジトリの Secrets に登録してから実行してください。"
+          if [ -z "$RAKUTEN_APP_ID" ] || [ -z "$RAKUTEN_ACCESS_KEY" ]; then
+            echo "::error::RAKUTEN_APP_ID / RAKUTEN_ACCESS_KEY が未登録です。リポジトリの Secrets に登録してから実行してください。"
             exit 1
           fi
           python explore.py --genre "${{ inputs.genre }}" --depth "${{ inputs.depth }}" --sample "${{ inputs.sample }}"
