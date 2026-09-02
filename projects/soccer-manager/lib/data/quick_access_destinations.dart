@@ -20,6 +20,7 @@ import '../screens/training_screen.dart';
 import '../screens/transfer_screen.dart';
 import '../screens/youth_screen.dart';
 import '../l10n/tr.dart';
+import '../state/game_state.dart';
 
 /// ホーム画面の「クラブ運営」タイルと、各メインタブのクイックアクセス
 /// ドロワーの両方から参照する遷移先の一覧。1箇所で管理することで、
@@ -30,12 +31,34 @@ class QuickAccessDestination {
   final Color color;
   final WidgetBuilder builder;
 
+  /// 条件を満たすまで中身が空になる画面の、開放条件の説明を返す。
+  /// 開いてよければ null。
+  ///
+  /// 表彰・シーズン成績・ベストイレブン・殿堂は、シーズンを1つ終えるまで
+  /// 「まだ記録がありません」しか出ない。始めたばかりの利用者がメニューを
+  /// 開くと、20項目のうち4つが空振りになる。項目を隠すのではなく、
+  /// いつ開くかを見せて目標として機能させる。
+  final String? Function(GameState)? lockedReason;
+
   const QuickAccessDestination({
     required this.icon,
     required this.label,
     required this.color,
     required this.builder,
+    this.lockedReason,
   });
+}
+
+/// シーズンを1つ終えるまで空になる画面に共通の開放条件。
+/// 残り節数が分かるときは具体的な数を出す。
+String? _needsFirstSeason(GameState game) {
+  if (game.seasonHistory.isNotEmpty) return null;
+  final left = game.remainingMatchdaysThisSeason;
+  if (left > 0) {
+    return Tr.pick('今シーズンを終えると開きます(残り$left節)',
+        'Opens when you finish this season ($left to play)');
+  }
+  return Tr.pick('シーズンの切り替えで開きます', 'Opens when the season rolls over');
 }
 
 // 同上。final だと最初のアクセス時の言語でラベルが固定される。
@@ -93,6 +116,7 @@ List<QuickAccessDestination> get quickAccessDestinations => [
         label: Tr.pick('個人タイトル', 'Individual awards'),
         color: Colors.amber.shade700,
         builder: (_) => const AwardsScreen(),
+        lockedReason: _needsFirstSeason,
       ),
       QuickAccessDestination(
         icon: Icons.format_list_numbered,
@@ -117,18 +141,26 @@ List<QuickAccessDestination> get quickAccessDestinations => [
         label: Tr.pick('シーズン成績', 'Season archive'),
         color: Colors.teal.shade700,
         builder: (_) => const SeasonHistoryScreen(),
+        lockedReason: _needsFirstSeason,
       ),
       QuickAccessDestination(
         icon: Icons.groups,
         label: Tr.pick('ベストイレブン', 'Team of the season'),
         color: Colors.orange.shade700,
         builder: (_) => const BestElevenScreen(),
+        lockedReason: _needsFirstSeason,
       ),
       QuickAccessDestination(
         icon: Icons.emoji_events,
         label: Tr.pick('殿堂', 'Hall of fame'),
         color: Colors.brown.shade700,
         builder: (_) => const HallOfFameScreen(),
+        // 殿堂はシーズンを終えるだけでは埋まらない。引退した選手が出て
+        // 初めて中身ができるので、条件を分けてある。
+        lockedReason: (game) => game.save?.retiredLegends.isNotEmpty ?? false
+            ? null
+            : Tr.pick('選手が引退すると殿堂入りします(シーズン終了時に判定)',
+                'Players enter the hall of fame when they retire (checked at season end)'),
       ),
       QuickAccessDestination(
         icon: Icons.menu_book,
