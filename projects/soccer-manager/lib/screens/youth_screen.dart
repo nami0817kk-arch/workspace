@@ -125,13 +125,22 @@ class _YouthScreenState extends State<YouthScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    Tr.pick('資金: ${save.budget}万円', 'Funds: ${save.budget}'),
-                    style: Theme.of(context).textTheme.titleMedium,
+                  Flexible(
+                    child: Text(
+                      Tr.pick('資金: ${save.budget}万円', 'Funds: ${save.budget}'),
+                      style: Theme.of(context).textTheme.titleMedium,
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
-                  Text(Tr.pick(
-                      '昇格枠: ${save.youthProspects.length}/$maxProspects',
-                      'Academy places: ${save.youthProspects.length}/$maxProspects')),
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Text(
+                      Tr.pick(
+                          '昇格枠: ${save.youthProspects.length}/$maxProspects',
+                          'Academy places: ${save.youthProspects.length}/$maxProspects'),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
                 ],
               ),
             ),

@@ -155,13 +155,22 @@ class _TransferScreenState extends State<TransferScreen>
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                Tr.pick('資金: ${save.budget}万円', 'Funds: ${save.budget}'),
-                style: Theme.of(context).textTheme.titleMedium,
+              Flexible(
+                child: Text(
+                  Tr.pick('資金: ${save.budget}万円', 'Funds: ${save.budget}'),
+                  style: Theme.of(context).textTheme.titleMedium,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
-              Text(Tr.pick(
-                  'スカッド: ${gameState.userTeam.players.length}/$maxSquadSize',
-                  'Squad: ${gameState.userTeam.players.length}/$maxSquadSize')),
+              const SizedBox(width: 8),
+              Flexible(
+                child: Text(
+                  Tr.pick(
+                      'スカッド: ${gameState.userTeam.players.length}/$maxSquadSize',
+                      'Squad: ${gameState.userTeam.players.length}/$maxSquadSize'),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
             ],
           ),
         ),

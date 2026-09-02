@@ -52,28 +52,38 @@ class ManagerCareerScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        _StatColumn(
-                          label: Tr.pick('指揮シーズン数', 'Seasons managed'),
-                          value: '${save.careerSeasons}',
+                        Expanded(
+                          child: _StatColumn(
+                            label: Tr.pick('指揮シーズン数', 'Seasons managed'),
+                            value: '${save.careerSeasons}',
+                          ),
                         ),
-                        _StatColumn(
-                          label: Tr.pick('勝', 'W'),
-                          value: '${record.wins}',
-                          color: SemanticColors.positive(context),
+                        Expanded(
+                          child: _StatColumn(
+                            label: Tr.pick('勝', 'W'),
+                            value: '${record.wins}',
+                            color: SemanticColors.positive(context),
+                          ),
                         ),
-                        _StatColumn(
-                          label: Tr.pick('分', 'D'),
-                          value: '${record.draws}',
-                          color: Colors.grey,
+                        Expanded(
+                          child: _StatColumn(
+                            label: Tr.pick('分', 'D'),
+                            value: '${record.draws}',
+                            color: Colors.grey,
+                          ),
                         ),
-                        _StatColumn(
-                          label: Tr.pick('敗', 'L'),
-                          value: '${record.losses}',
-                          color: SemanticColors.negative(context),
+                        Expanded(
+                          child: _StatColumn(
+                            label: Tr.pick('敗', 'L'),
+                            value: '${record.losses}',
+                            color: SemanticColors.negative(context),
+                          ),
                         ),
-                        _StatColumn(
-                            label: Tr.pick('勝率', 'Win rate'),
-                            value: '$winRate%'),
+                        Expanded(
+                          child: _StatColumn(
+                              label: Tr.pick('勝率', 'Win rate'),
+                              value: '$winRate%'),
+                        ),
                       ],
                     ),
                     const SizedBox(height: 8),
@@ -99,10 +109,14 @@ class ManagerCareerScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          Tr.pick('生涯成長', 'Career progression'),
-                          style: Theme.of(context).textTheme.titleMedium,
+                        Flexible(
+                          child: Text(
+                            Tr.pick('生涯成長', 'Career progression'),
+                            style: Theme.of(context).textTheme.titleMedium,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
+                        const SizedBox(width: 8),
                         Chip(
                           label: Text(
                             'Lv.${gameState.managerCareerLevel}'

@@ -435,16 +435,19 @@ class _TrainingScreenState extends State<TrainingScreen> {
                                     ),
                                   ),
                                 ),
-                                Text(
-                                  Tr.pick(
-                                      '総合 ${r.overallBefore} → ${r.overallAfter}${r.overallDelta > 0 ? ' (+${r.overallDelta})' : r.overallDelta < 0 ? ' (${r.overallDelta})' : ''}',
-                                      "Overall ${r.overallBefore} → ${r.overallAfter}${r.overallDelta > 0 ? ' (+${r.overallDelta})' : r.overallDelta < 0 ? ' (${r.overallDelta})' : ''}"),
-                                  style: TextStyle(
-                                    color: r.overallDelta > 0
-                                        ? Colors.green
-                                        : r.overallDelta < 0
-                                            ? Colors.redAccent
-                                            : Colors.grey,
+                                Flexible(
+                                  child: Text(
+                                    Tr.pick(
+                                        '総合 ${r.overallBefore} → ${r.overallAfter}${r.overallDelta > 0 ? ' (+${r.overallDelta})' : r.overallDelta < 0 ? ' (${r.overallDelta})' : ''}',
+                                        "Overall ${r.overallBefore} → ${r.overallAfter}${r.overallDelta > 0 ? ' (+${r.overallDelta})' : r.overallDelta < 0 ? ' (${r.overallDelta})' : ''}"),
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: r.overallDelta > 0
+                                          ? Colors.green
+                                          : r.overallDelta < 0
+                                              ? Colors.redAccent
+                                              : Colors.grey,
+                                    ),
                                   ),
                                 ),
                               ],

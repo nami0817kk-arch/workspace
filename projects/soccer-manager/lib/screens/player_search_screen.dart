@@ -134,14 +134,22 @@ class _PlayerSearchScreenState extends State<PlayerSearchScreen> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  Tr.pick('全ディビジョンから検索(上位50人)。獲得は移籍市場・FA経由で行えます。',
-                      'Searches every division (top 50). You sign players through the transfer market or as free agents.'),
-                  style: const TextStyle(fontSize: 11, color: Colors.grey),
+            // 補足説明なので、縦が足りないときは縮んでよい。英語だと絞り込み
+            // チップが何段にも折り返し、固定部分だけで画面高を超えることが
+            // ある。Flexible は Column の直下に置く必要があるため、Padding
+            // ごと包む。広い端末では今までどおりに出る。
+            Flexible(
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    Tr.pick('全ディビジョンから検索(上位50人)。獲得は移籍市場・FA経由で行えます。',
+                        'Searches every division (top 50). You sign players through the transfer market or as free agents.'),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 3,
+                    style: const TextStyle(fontSize: 11, color: Colors.grey),
+                  ),
                 ),
               ),
             ),
@@ -175,6 +183,8 @@ class _PlayerSearchScreenState extends State<PlayerSearchScreen> {
                               Tr.pick(
                                   '${p.name}(${p.position.label}・${p.age}歳)',
                                   '${p.name} (${p.position.label}, ${p.age})'),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontWeight: isUser
                                     ? FontWeight.bold
@@ -185,12 +195,17 @@ class _PlayerSearchScreenState extends State<PlayerSearchScreen> {
                               Tr.pick(
                                   '${r.team.name}${isUser ? '(自クラブ)' : ''} / 市場価値${p.marketValue}万円',
                                   "${r.team.name}${isUser ? ' (your club)' : ''} / value ${p.marketValue}"),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                               style: const TextStyle(fontSize: 12),
                             ),
                             trailing: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 IconButton(
+                                  // 既定の48pxはListTileのtrailing枠(44px)を
+                                  // 超えて縦にはみ出す。詰めて収める。
+                                  visualDensity: VisualDensity.compact,
                                   icon: Icon(
                                     gameState.isWatched(p.id)
                                         ? Icons.star
