@@ -102,6 +102,47 @@ class _TrainingScreenState extends State<TrainingScreen> {
   PositionGroup? _filter;
   bool _isRunningTraining = false;
 
+  /// アドバイザーの提案を1件適用し、結果を伝える。
+  void _applyAdvice(
+      BuildContext context, GameState gameState, DevelopmentAdvice advice) {
+    FeedbackService.tap();
+    final ok = gameState.applyAdviceFix(advice);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(ok
+            ? '${advice.playerName}: ${advice.fix!.label}'
+            // 失敗するのは特訓の枠が埋まっているとき。黙って何も起きないと
+            // 押し間違いか不具合か分からないので、理由を出す。
+            : Tr.pick('適用できませんでした。特訓ドリルの枠が埋まっています(ヘッドコーチのレベルで増えます)',
+                'Could not apply it. Every drill slot is taken (a better head coach adds more)')),
+      ),
+    );
+  }
+
+  /// 適用できる提案をまとめて処理する。毎週いくつも設定して回る手間を省く。
+  void _applyAllAdvices(BuildContext context, GameState gameState,
+      List<DevelopmentAdvice> advices) {
+    FeedbackService.tap();
+    var applied = 0;
+    var failed = 0;
+    for (final a in advices) {
+      if (a.fix == null) continue;
+      if (gameState.applyAdviceFix(a)) {
+        applied++;
+      } else {
+        failed++;
+      }
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(failed == 0
+            ? Tr.pick('$applied件の提案を適用しました', 'Applied $applied suggestions')
+            : Tr.pick('$applied件を適用しました($failed件は特訓の枠が足りず見送り)',
+                'Applied $applied ($failed skipped, no drill slots left)')),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final gameState = context.watch<GameState>();
@@ -159,11 +200,44 @@ class _TrainingScreenState extends State<TrainingScreen> {
                         for (final a in advices)
                           Padding(
                             padding: const EdgeInsets.only(bottom: 4),
-                            child: Text(
-                              Tr.pick(
-                                  '・[${a.kind.label}] ${a.playerName}: ${a.message}',
-                                  '• [${a.kind.label}] ${a.playerName}: ${a.message}'),
-                              style: const TextStyle(fontSize: 12),
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    Tr.pick(
+                                        '・[${a.kind.label}] ${a.playerName}: ${a.message}',
+                                        '• [${a.kind.label}] ${a.playerName}: ${a.message}'),
+                                    style: const TextStyle(fontSize: 12),
+                                  ),
+                                ),
+                                // 提案どおりでよいなら、画面を移動せずここで
+                                // 済ませられるようにする。決め打ちできない
+                                // 提案(実戦感覚)にはボタンを出さない。
+                                if (a.fix != null)
+                                  TextButton(
+                                    // visualDensity で詰めるとタップ領域が
+                                    // 48x48 を割る。横の余白だけ詰める。
+                                    style: TextButton.styleFrom(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8),
+                                    ),
+                                    onPressed: () =>
+                                        _applyAdvice(context, gameState, a),
+                                    child: Text(a.fix!.label,
+                                        style: const TextStyle(fontSize: 12)),
+                                  ),
+                              ],
+                            ),
+                          ),
+                        if (advices.any((a) => a.fix != null))
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: TextButton.icon(
+                              icon: const Icon(Icons.done_all, size: 16),
+                              label: Text(Tr.pick('提案をまとめて適用', 'Apply all')),
+                              onPressed: () =>
+                                  _applyAllAdvices(context, gameState, advices),
                             ),
                           ),
                       ],

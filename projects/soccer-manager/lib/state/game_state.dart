@@ -79,6 +79,7 @@ import '../data/name_pool.dart';
 import '../models/first_run_step.dart';
 import '../monetization/reward_offer.dart';
 import '../l10n/tr.dart';
+import '../logic/development_advisor.dart';
 
 part 'game_state_squad.dart';
 part 'game_state_transfer.dart';
