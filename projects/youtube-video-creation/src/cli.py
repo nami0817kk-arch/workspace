@@ -1246,7 +1246,7 @@ def _cmd_results(args, config) -> int:
     フィードは移籍ニュースが中心で、試合結果は数時間で流れ切る。実測で、
     移籍期限の翌日に177件拾って試合結果は0件だった。結果は結果として取る。
     """
-    from datetime import date as _date, timedelta
+    from datetime import date as _date, datetime as _dt, time as _time, timedelta
 
     from . import collect as collect_mod
     from . import results as results_mod
@@ -1267,9 +1267,25 @@ def _cmd_results(args, config) -> int:
         print(f"{day} に、設定しているリーグの試合はありませんでした", file=sys.stderr)
         return 1
 
+    # 試合の中身まで見て、手で立てていたフラグを機械で決める。
+    # 1試合ずつ問い合わせるので、--write のときだけ取りに行く
+    details = {}
+    if args.write:
+        for match in wanted:
+            try:
+                details[match.match_id] = results_mod.fetch_detail(match.match_id)
+            except results_mod.ResultsError as error:
+                print(f"  ! {match.title()} の中身を取れません: {error}", file=sys.stderr)
+
     print(f"■ {day} の試合　{len(wanted)}件")
     for match in sorted(wanted, key=lambda m: (m.league, -m.goals)):
-        print(f"  [{plan.league_name(match.league)}] {_fit(match.title(), 44)}　{match.goals}点")
+        detail = details.get(match.match_id)
+        marks = results_mod.flags(match, detail)
+        note = ("　" + " ".join(f"[{k}]" for k in marks)) if marks else ""
+        best = detail.best if detail else None
+        if best:
+            note += f"　最高{best[1]}({_fit(best[0], 16)})"
+        print(f"  [{plan.league_name(match.league)}] {_fit(match.title(), 40)}　{match.goals}点{note}")
 
     if not args.write:
         print("\n候補ファイルに書き出すには --write を付けます")
@@ -1279,6 +1295,10 @@ def _cmd_results(args, config) -> int:
         collect_mod.Hit(
             title=f"{m.title()}（{m.competition}）", url=m.url(),
             league=m.league, kind="match",
+            flags=results_mod.flags(m, details.get(m.match_id)),
+            # 試合の日付は分かっている。空にすると url から割り出せず、
+            # 全件が99時間（＝古い扱い）に落ちて新しさの点が付かない
+            hours_ago=round(max(0.0, (_dt.now() - _dt.combine(day, _time(21, 0))).total_seconds() / 3600), 1),
         )
         for m in wanted
     ]

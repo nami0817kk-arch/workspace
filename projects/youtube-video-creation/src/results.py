@@ -137,3 +137,88 @@ def league_key(block: dict, leagues: dict | None = None) -> str:
         if ccode == want_cc and primary == want_id:
             return key
     return ""
+
+
+# 採点がこの値以上なら「数字が立つ試合」と見る。
+#
+# 8.0 だと 20試合中18試合で立ってしまい、印としての意味がない。
+# 2026-08-30 の20試合で各試合の最高採点を並べたところ、9.0以上が7試合だった。
+# 「その日いちばん目立った選手がいた試合」を1/3ほどに絞る値として 9.0 を採る。
+STANDOUT_RATING = 9.0
+# 合計得点がこれ以上なら「点が動いた試合」と見る
+MANY_GOALS = 5
+
+
+@dataclass
+class Detail:
+    """1試合の中身。手で立てていたフラグを、ここから機械で決める。"""
+
+    match_id: str
+    ratings: dict = field(default_factory=dict)      # 選手名 -> 採点
+    scorers: list = field(default_factory=list)      # 得点した選手名
+    countries: dict = field(default_factory=dict)    # 選手名 -> 国コード
+
+    @property
+    def best(self) -> tuple[str, float] | None:
+        if not self.ratings:
+            return None
+        name = max(self.ratings, key=lambda n: self.ratings[n])
+        return name, self.ratings[name]
+
+    def japanese_scorers(self) -> list[str]:
+        return [n for n in self.scorers if self.countries.get(n) == "JPN"]
+
+    def japanese_players(self) -> list[str]:
+        return [n for n, cc in self.countries.items() if cc == "JPN"]
+
+
+def fetch_detail(match_id: str, session=None) -> Detail:
+    """1試合の採点・得点者・国籍を取る。
+
+    国籍まで取れるので、日本人選手が絡む試合かどうかを名前の一覧に頼らず
+    判定できる（名前の表記ゆれと、載せ忘れの両方を避けられる）。
+    """
+    payload = _get("matchDetails", {"matchId": str(match_id)}, session)
+    lineup = (payload.get("content") or {}).get("lineup") or {}
+
+    detail = Detail(match_id=str(match_id))
+    for side in ("homeTeam", "awayTeam"):
+        team = lineup.get(side) or {}
+        for player in (team.get("starters") or []) + (team.get("subs") or []):
+            name = str(player.get("name", "")).strip()
+            if not name:
+                continue
+            performance = player.get("performance") or {}
+            rating = performance.get("rating")
+            if rating is not None:
+                try:
+                    detail.ratings[name] = float(rating)
+                except (TypeError, ValueError):
+                    pass
+            country = str(player.get("countryCode", "")).strip().upper()
+            if country:
+                detail.countries[name] = country
+            for event in performance.get("events") or []:
+                if str(event.get("type")) == "goal":
+                    detail.scorers.append(name)
+    return detail
+
+
+def flags(match: Match, detail: Detail | None = None) -> dict:
+    """候補に立てるフラグ。手で立てていたものを機械で決める。
+
+    人が365件を見て立てる前提だったので、実際には1件も立たなかった。
+    ここで決まるのは「点が動いたか」「傑出した選手がいたか」「日本人が絡むか」で、
+    どれも試合データから機械的に読める。**反応（賛否が割れているか）は
+    ここでは決めない。** 数えていないものを立てたことにしない。
+    """
+    found: dict[str, bool] = {}
+    if match.goals >= MANY_GOALS:
+        found["goals"] = True
+    if detail:
+        best = detail.best
+        if best and best[1] >= STANDOUT_RATING:
+            found["numbers"] = True
+        if detail.japanese_players():
+            found["japanese"] = True
+    return found

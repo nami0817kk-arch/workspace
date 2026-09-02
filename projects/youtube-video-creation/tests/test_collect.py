@@ -413,3 +413,15 @@ def test_取得元で分かっているリーグを辞書の推定で上書き�
     body = collect.to_yaml([hit], "8月30日", merge=False)
     assert "league: netherlands" in body
     assert "kind: match" in body
+
+
+def test_取得元で決まったフラグを候補に書く():
+    from src import collect
+
+    hit = collect.Hit(title="Man United 5 - 2 Ipswich", url="https://example.com/a",
+                      league="england", kind="match",
+                      flags={"goals": True, "numbers": True})
+    body = collect.to_yaml([hit], "8月30日", merge=False)
+    assert "goals: true" in body
+    assert "numbers: true" in body
+    assert "upset:" not in body       # 立っていないものは書かない

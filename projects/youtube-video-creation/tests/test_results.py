@@ -101,3 +101,70 @@ def test_つながらないときも理由を言う():
     fake = FakeSession(error=requests.ConnectionError("切断"))
     with pytest.raises(ResultsError, match="接続できません"):
         fetch_day(date(2026, 8, 30), LEAGUES, session=fake)
+
+
+# 手で立てる欄（反応/番狂わせ/得点/数字）は、実際には365件中0件しか立たなかった。
+# 重み17点のうち9点分が死んでいた。試合データから機械で決める。
+
+DETAIL = {
+    "content": {"lineup": {
+        "homeTeam": {"starters": [
+            {"name": "Yuito Suzuki", "countryCode": "JPN",
+             "performance": {"rating": 9.7, "events": [{"type": "goal"}]}},
+            {"name": "Anton Kade", "countryCode": "GER",
+             "performance": {"rating": 7.1, "events": [{"type": "yellowCard"}]}},
+        ], "subs": []},
+        "awayTeam": {"starters": [
+            {"name": "Marco Friedl", "countryCode": "AUT",
+             "performance": {"rating": 6.2, "events": []}},
+        ], "subs": []},
+    }}
+}
+
+
+def _detail_session():
+    return FakeSession(response=FakeResponse(payload=DETAIL))
+
+
+def test_採点と得点者と国籍を取る():
+    from src.results import fetch_detail
+
+    d = fetch_detail("1", session=_detail_session())
+    assert d.best == ("Yuito Suzuki", 9.7)
+    assert d.scorers == ["Yuito Suzuki"]
+    assert d.japanese_players() == ["Yuito Suzuki"]
+    assert d.japanese_scorers() == ["Yuito Suzuki"]
+
+
+def test_国籍で日本人を見分ける():
+    """名前の一覧に頼ると、表記ゆれと載せ忘れの両方で外す。"""
+    from src.results import fetch_detail
+
+    d = fetch_detail("1", session=_detail_session())
+    assert "Anton Kade" not in d.japanese_players()
+
+
+def test_点が多く動いた試合に得点のフラグが立つ():
+    from src.results import Match, flags
+
+    assert flags(Match("x", "y", "A", "B", "4 - 3")).get("goals")
+    assert not flags(Match("x", "y", "A", "B", "1 - 0")).get("goals")
+
+
+def test_傑出した採点があれば数字のフラグが立つ():
+    """8.0 だと20試合中18試合で立ち、印にならなかった（実測）。9.0 に絞る。"""
+    from src.results import Match, fetch_detail, flags
+
+    d = fetch_detail("1", session=_detail_session())
+    assert flags(Match("x", "y", "A", "B", "1 - 0"), d).get("numbers")
+
+    d.ratings["Yuito Suzuki"] = 8.4
+    assert not flags(Match("x", "y", "A", "B", "1 - 0"), d).get("numbers")
+
+
+def test_反応のフラグは機械で立てない():
+    """賛否が割れているかは試合データからは分からない。数えていないものを立てない。"""
+    from src.results import Match, fetch_detail, flags
+
+    d = fetch_detail("1", session=_detail_session())
+    assert "reaction" not in flags(Match("x", "y", "A", "B", "5 - 4"), d)

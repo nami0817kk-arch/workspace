@@ -29,6 +29,7 @@ class Hit:
     number: int = 0          # 記事ID
     hours_ago: float = -1.0  # フィード経由なら正確な経過時間が付く（無ければ -1）
     league: str = ""         # 取得元で分かっているとき。空ならクラブ名辞書で当てる
+    flags: dict = field(default_factory=dict)  # 取得元で決まったフラグ（goals / numbers など）
     kind: str = ""           # 同上。空なら見出しから当てる
 
 
@@ -215,6 +216,11 @@ def to_yaml(hits: list[Hit], date_label: str, merge: bool = True, plan=None) -> 
             lines.append(f"    # 公開日: {head.posted_on}（URLから読めた）")
         if len(bunch) > 1:
             lines.append(f"    # 同じ話を {len(bunch)}媒体が報じている")
+
+        # 取得元で決まったフラグ。人が365件を見て立てる前提だと1件も立たない
+        for key in ("goals", "upset", "numbers", "reaction"):
+            if head.flags.get(key):
+                lines.append(f"    {key}: true        # 試合データから自動で立てた")
 
         lines.append("    sources:")
         for hit in bunch:
