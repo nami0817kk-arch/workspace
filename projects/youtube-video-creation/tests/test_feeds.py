@@ -235,3 +235,43 @@ def test_止まったかどうかの境目は設定で変えられる():
 
     assert is_stale(80.0, limit=72)
     assert not is_stale(80.0, limit=168)
+
+
+# まとめサイト（livedoor blog 系）はほぼ RSS 1.0(RDF)。<item> が名前空間付きに
+# なるため、RSS 2.0 と同じ探し方では1件も拾えない。実測で footballnet が
+# 11件あるのに0件と報告されていた（エラーは出ないので気づきにくい）。
+
+RSS1 = """<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+ xmlns="http://purl.org/rss/1.0/"
+ xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel rdf:about="http://example.com/"><title>まとめ</title>
+    <link>http://example.com/</link><description>d</description></channel>
+  <item rdf:about="http://example.com/1">
+    <title>旗手怜央がバーンリーに移籍</title>
+    <link>http://example.com/1</link>
+    <dc:date>2026-09-02T09:00:00+09:00</dc:date>
+  </item>
+  <item rdf:about="http://example.com/2">
+    <title>菅原由勢がカリアリへ</title>
+    <link>http://example.com/2</link>
+    <dc:date>2026-09-02T07:00:00+09:00</dc:date>
+  </item>
+</rdf:RDF>"""
+
+
+def test_RSS1_0のフィードを読む():
+    items = parse(RSS1)
+    assert [i.title for i in items] == ["旗手怜央がバーンリーに移籍", "菅原由勢がカリアリへ"]
+    assert items[0].url == "http://example.com/1"
+
+
+def test_RSS1_0の時刻はdc_dateから読む():
+    items = parse(RSS1)
+    assert items[0].published is not None
+    assert items[0].published > items[1].published
+
+
+def test_RSS2_0とAtomは今までどおり読める():
+    """RSS1 に対応しても、既存の形式が壊れていないこと。"""
+    assert parse(RSS)          # このファイル冒頭の RSS 2.0

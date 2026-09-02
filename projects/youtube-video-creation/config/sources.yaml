@@ -69,8 +69,17 @@ domains:
 
   # 噂まとめ。単独では根拠にしない
   # 大衆紙もここ。移籍を最初に書くことはあるが、単独では根拠にしない
+  # 噂まとめ。単独では根拠にしない
+  #
+  # まとめサイト（footballnet / サカサカ10）もここ。**匿名掲示板の書き込みを
+  # 集めたもの**なので、事実の根拠には決してならない。使ってよいのは
+  #   ・そこで何が話題になっているか（題材選びの手がかり）
+  #   ・引用元として明示された報道機関の記事（そちらを直接当たる）
+  # の2つだけ。書き込みそのものを引くときは CLAUDE.md の決まりに従う:
+  #   匿名の声は未確認 / ハンドルは画面に出さない / 数を数えた言い方をしない
   rumour: [caughtoffside.com, givemesport.com, tribalfootball.com,
-           bild.de, mirror.co.uk, dailymail.co.uk]
+           bild.de, mirror.co.uk, dailymail.co.uk,
+           footballnet.2chblog.jp, sakasaka10.blog.jp]
 
   # 取得できないサイト。ここを検索しても結果は返らない。
   #
@@ -221,6 +230,15 @@ feeds:
   - {name: ゲキサカ, url: "https://web.gekisaka.jp/feed", league: "", verified: true}
   - {name: Transfermarkt, url: "https://www.transfermarkt.co.uk/rss/news", league: "", verified: true}
   - {name: Daily Mail Football, url: "https://www.dailymail.co.uk/sport/football/index.rss", league: england, verified: true}
+  # まとめサイト。2026-09-02 に実測して足した。確度は未確認どまり（rumour 群）。
+  # 参考チャンネルが「ネット民の反応」を主題にしているので、いま何が話題かを
+  # 掴む用途では効く。ただし**書き込みは事実の根拠にならない**。
+  #
+  # 形式は RSS 1.0(RDF)。RSS 2.0 の探し方では1件も拾えないので、
+  # feeds.parse が RSS1 の名前空間も見るようにしてある。
+  # WorldFootballNews(wfnews) は3.7年前で止まっていた（停止検出で弾かれる）
+  - {name: footballnet, url: "http://footballnet.2chblog.jp/index.rdf", league: "", verified: true}
+  - {name: サカサカ10, url: "http://sakasaka10.blog.jp/index.rdf", league: "", verified: true}
   - {name: Foot Mercato, url: "https://www.footmercato.net/flux-rss", league: france, verified: true}
 
 # 群ごとに置ける確度の上限。draft のときに突き合わせる

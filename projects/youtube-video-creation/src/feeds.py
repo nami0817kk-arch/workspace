@@ -26,6 +26,9 @@ TIMEOUT = 15
 USER_AGENT = "soccer-news-pipeline/1.0 (+rss reader)"
 
 ATOM = "{http://www.w3.org/2005/Atom}"
+# RSS 1.0(RDF)。まとめサイト（livedoor blog 系）はほぼこの形式で、
+# <item> が名前空間付きになるため、RSS 2.0 と同じ探し方では1件も拾えない
+RSS1 = "{http://purl.org/rss/1.0/}"
 # ページが宣言しているフィードを拾うため
 LINK_TAG = re.compile(r"<link\b[^>]*>", re.I)
 
@@ -138,7 +141,7 @@ def _unescape(text: str) -> str:
 
 
 def parse(text: str) -> list[Item]:
-    """RSS 2.0 と Atom の両方を読む。壊れた項目は飛ばす。"""
+    """RSS 2.0 / RSS 1.0(RDF) / Atom を読む。壊れた項目は飛ばす。"""
     try:
         root = ET.fromstring(text.strip())
     except ET.ParseError as error:
@@ -148,6 +151,12 @@ def parse(text: str) -> list[Item]:
     # RSS 2.0: <rss><channel><item>
     for node in root.iter("item"):
         entry = _rss_item(node)
+        if entry:
+            items.append(entry)
+    # RSS 1.0(RDF): <rdf:RDF><item> が名前空間付きで並ぶ。
+    # 中身の探し方は RSS 2.0 と同じでよいが、タグ名が一致しないので別に拾う
+    for node in root.iter(f"{RSS1}item"):
+        entry = _rss1_item(node)
         if entry:
             items.append(entry)
     # Atom: <feed><entry>
@@ -174,6 +183,16 @@ def _rss_item(node) -> Item | None:
     if stamp:
         published = _when(stamp)
     return Item(title=title, url=url, published=published)
+
+
+def _rss1_item(node) -> Item | None:
+    """RSS 1.0(RDF) の1件。時刻は dc:date（ISO8601）で入っている。"""
+    title = _clean(node.findtext(f"{RSS1}title") or "")
+    url = (node.findtext(f"{RSS1}link") or "").strip()
+    if not (title and url.startswith("http")):
+        return None
+    stamp = node.findtext("{http://purl.org/dc/elements/1.1/}date")
+    return Item(title=title, url=url, published=_when(stamp) if stamp else None)
 
 
 def _atom_entry(node) -> Item | None:

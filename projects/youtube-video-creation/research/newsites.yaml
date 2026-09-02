@@ -2,6 +2,13 @@
 # 繰り返し出るものは config/sources.yaml に足す候補。
 #   python -m src.cli sources --new
 sites:
+- host: dailymail.com
+  seen: 2
+  days:
+  - '2026-09-02'
+  examples:
+  - https://www.dailymail.com/sport/football/article-16097269/Tottenham-sign-Chelsea-winger-Mykhailo-Mudryk-season-long-loan.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+  - https://www.dailymail.com/sport/football/article-16098909/Chelsea-transfer-window-Enzo-Fernandez.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
 - host: forzaroma.info
   seen: 1
   days:
@@ -20,9 +27,3 @@ sites:
   - '2026-09-02'
   examples:
   - https://www.transfermarkt.co.uk/folarin-balogun-transfer-to-everton-collapses-monaco-miss-out-on-euro-45m-fee-plus-add-ons/view/news/486066
-- host: dailymail.com
-  seen: 1
-  days:
-  - '2026-09-02'
-  examples:
-  - https://www.dailymail.com/sport/football/article-16097269/Tottenham-sign-Chelsea-winger-Mykhailo-Mudryk-season-long-loan.html?ns_mchannel=rss&ns_campaign=1490&ito=1490

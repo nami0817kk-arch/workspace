@@ -425,3 +425,25 @@ def test_取得元で決まったフラグを候補に書く():
     assert "goals: true" in body
     assert "numbers: true" in body
     assert "upset:" not in body       # 立っていないものは書かない
+
+
+# まとめサイトは匿名掲示板の書き込みを集めたもので、事実の根拠にならない。
+# 見出しが「Official:」でも、その情報源だけでは未確認どまりに止める。
+
+
+def test_まとめサイト単独では公式発表風でも未確認で止まる():
+    from src import collect
+    from src.plan import build_plan
+
+    plan = build_plan({
+        "tiers": {"確定": {}, "報道": {}, "未確認": {}},
+        "domains": {"rumour": ["sakasaka10.blog.jp"], "japanese": ["web.gekisaka.jp"]},
+        "domain_tiers": {"rumour": "未確認", "japanese": "報道"},
+        "routines": {"morning": {"name": "朝", "steps": [
+            {"id": "a", "what": "a", "tier": "確定", "queries": []}]}},
+    })
+    hit = collect.Hit(title="Official: 移籍が正式発表",
+                      url="http://sakasaka10.blog.jp/archives/9.html")
+    body = collect.to_yaml([hit], "9月2日", plan=plan)
+    line = [l for l in body.splitlines() if "tier:" in l][0]
+    assert "未確認" in line
