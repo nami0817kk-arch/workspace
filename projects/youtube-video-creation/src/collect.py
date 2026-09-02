@@ -28,6 +28,8 @@ class Hit:
     posted_on: str = ""      # URLから日付が読めたとき
     number: int = 0          # 記事ID
     hours_ago: float = -1.0  # フィード経由なら正確な経過時間が付く（無ければ -1）
+    league: str = ""         # 取得元で分かっているとき。空ならクラブ名辞書で当てる
+    kind: str = ""           # 同上。空なら見出しから当てる
 
 
 def parse(text: str) -> list[Hit]:
@@ -187,7 +189,9 @@ def to_yaml(hits: list[Hit], date_label: str, merge: bool = True, plan=None) -> 
         # クラブ名の辞書から当たりを入れる。合っているかは目で見て直す
         seen = " ".join(hit.title for hit in bunch)
         topic = club_book.topic_of(seen)
-        league = club_book.league_of(seen)
+        # 取得元でリーグが分かっているならそれを使う。辞書の推定で上書きしない
+        league = head.league or club_book.league_of(seen)
+        kind = head.kind or guess_kind(head.title)
 
         lines += [
             f"  - id: {key}",
@@ -195,10 +199,11 @@ def to_yaml(hits: list[Hit], date_label: str, merge: bool = True, plan=None) -> 
             (f'    topic: "{topic}"    # クラブ名の辞書から。同じ topic は1日1枠まで'
              if topic else
              '    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで'),
-            (f'    league: {league}    # クラブ名の辞書から。違えば直す'
+            (f'    league: {league}    # 取得元 or クラブ名の辞書から。違えば直す'
              if league else
              '    league: ""         # england/spain/germany/italy/france/netherlands/japan'),
-            "    kind: transfer",
+            f"    kind: {kind}"
+            "           # transfer / match。見出しからの当たり。見て直す",
             _tier_line(head.title, head.url, plan),
             f"    en: {_quote(english)}" + ("            # URLから作った。合っているか見る"
                                             if english else "            # 英語サイトを引く語"),
@@ -304,6 +309,36 @@ TIER_SHAPES: list[tuple[str, re.Pattern]] = [
 ]
 
 
+# 見出しにスコアが入っていれば試合結果。「4-3」「2 - 1」「3:0」のような形
+SCORE = re.compile(r"(?<![\d.,])\d{1,2}\s*[-–—:]\s*\d{1,2}(?![\d.,])")
+
+
+def guess_kind(title: str) -> str:
+    """見出しから種類を当てる。transfer / match のどちらか。
+
+    ここを transfer で決め打ちしていたので、フィードに試合結果が流れてきても
+    全部「移籍」として書き出されていた。実測で1日88件すべて transfer になり、
+    stats の「試合結果 一度も扱っていない」が永久に消えない状態だった。
+
+    当たりでしかないので、書き手が見て直す前提にする。
+    """
+    text = (title or "").strip()
+    if SCORE.search(text):
+        return "match"
+    for word in MATCH_WORDS:
+        if word.lower() in text.lower():
+            return "match"
+    return "transfer"
+
+
+# スコアが出ていなくても試合の話と分かる語
+MATCH_WORDS = (
+    "ハイライト", "試合結果", "採点", "寸評", "勝利", "敗戦", "引き分け", "先発",
+    "highlights", "match report", "player ratings", "full time",
+    "Spielbericht", "Einzelkritik", "pagelle", "resumen", "resultado",
+)
+
+
 def guess_tier(title: str) -> str:
     """見出しから確度の当たりをつける。分からなければ空。
 
@@ -343,6 +378,7 @@ GENERIC = {
     "report", "news", "article", "articles", "story", "index", "en", "jp", "post",
     "detail", "topteamtopics", "noticias", "soccer", "football", "match", "video",
     "artikel", "slideshow", "world", "eng", "esp", "ita", "ger", "fra", "ned",
+    "matches", "match", "fixtures", "results", "scores",
 }
 
 
@@ -358,8 +394,10 @@ def _from_url(url: str) -> str:
     parts = [p for p in url.split("?")[0].split("#")[0].rstrip("/").split("/") if p]
     for part in reversed(parts[-3:]):
         key = slug(part.replace("-", " ").replace(".html", ""))
-        if key and key not in GENERIC:
-            return key
+        # 1文字の区切りは記事の識別ではない（FotMob の /matches/x/12345 で実測）
+        if len(key) < 2 or key in GENERIC:
+            continue
+        return key
     return ""
 
 

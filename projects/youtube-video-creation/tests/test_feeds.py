@@ -214,3 +214,24 @@ def test_Skyの見出しが未来のものにならない():
     age = parse(sky)[0].hours_ago(now)
     assert age > 0, "BSTをUTC扱いすると未来の投稿になる"
     assert age == pytest.approx(0.08, abs=0.02)
+
+
+# 「取れる」と「使える」は別。AS の as.com/rss/futbol/portada.xml は 68件返すが
+# 最新が4年前だった（実測）。件数だけ見ていると生きているように見える。
+# Premier League のフィードでも同じことが起き、そのときは手で見つけている。
+
+
+def test_止まったフィードを見分ける():
+    from src.feeds import is_stale
+
+    assert is_stale(37130.0)          # 実測: ASの古いほう（約4年前）
+    assert is_stale(100.0)
+    assert not is_stale(0.4)
+    assert not is_stale(None)         # 時刻の無いフィードは判定しない
+
+
+def test_止まったかどうかの境目は設定で変えられる():
+    from src.feeds import is_stale
+
+    assert is_stale(80.0, limit=72)
+    assert not is_stale(80.0, limit=168)

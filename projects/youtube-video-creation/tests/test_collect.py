@@ -376,3 +376,40 @@ def test_スラッグが無いURLは当てずに空を返す():
     from src.collect import english_words
 
     assert english_words("https://www.kicker.de/transferticker-953155/artikel#omrss") == ""
+
+
+# gather が全件 kind: transfer と決め打ちしていたので、フィードに試合結果が
+# 流れてきても「移籍」として書き出されていた。実測で1日88件すべて transfer に
+# なり、stats の「試合結果 一度も扱っていない」が永久に消えない状態だった。
+
+
+def test_スコアが入っていれば試合結果と見る():
+    from src.collect import guess_kind
+
+    assert guess_kind("Chelsea 4-3 Brighton") == "match"
+    assert guess_kind("Elversberg 3 - 2 Leverkusen") == "match"
+    assert guess_kind("Arsenal sign Nwaneri from loan") == "transfer"
+
+
+def test_金額をスコアと取り違えない():
+    from src.collect import guess_kind
+
+    assert guess_kind("Official: £22m deal completed") == "transfer"
+    assert guess_kind("€14m package plus 20% sell-on clause") == "transfer"
+
+
+def test_スコアが無くても試合の話は拾う():
+    from src.collect import guess_kind
+
+    assert guess_kind("鈴木彩艶のプレミアデビュー戦ハイライト") == "match"
+    assert guess_kind("Man Utd player ratings") == "match"
+
+
+def test_取得元で分かっているリーグを辞書の推定で上書きしない():
+    from src import collect
+
+    hit = collect.Hit(title="FC Utrecht 1 - 6 PSV（Eredivisie）",
+                      url="https://example.com/a", league="netherlands", kind="match")
+    body = collect.to_yaml([hit], "8月30日", merge=False)
+    assert "league: netherlands" in body
+    assert "kind: match" in body

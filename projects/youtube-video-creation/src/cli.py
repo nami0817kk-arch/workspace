@@ -226,6 +226,11 @@ def main(argv: list[str] | None = None) -> int:
     p_fetch.add_argument("--discover", default=None, metavar="ページURL",
                          help="そのページが宣言しているフィードを探す（当て推量をやめる）")
 
+    p_results = sub.add_parser("results", help="その日の試合結果を候補にする")
+    p_results.add_argument("--date", default=None, help="YYYY-MM-DD（既定: 昨日）")
+    p_results.add_argument("--league", default=None, help="england/spain/germany/italy/france など")
+    p_results.add_argument("--write", action="store_true", help="候補ファイルに書き出す")
+
     p_gather = sub.add_parser(
         "gather", help="フィードと貼り付けをまとめて取り、候補ファイルまで作る")
     p_gather.add_argument("--hours", type=float, default=24.0, help="何時間以内のものを取るか")
@@ -1171,8 +1176,15 @@ def _cmd_fetch(args, config) -> int:
             try:
                 items = feeds_mod.fetch(str(feed.get("url", "")))
                 newest = items[0].hours_ago() if items else None
-                print(f"  ✓ {feed.get('name')}　{len(items)}件　{feeds_mod.age_text(newest)}")
-                alive += 1
+                if feeds_mod.is_stale(newest):
+                    # 取れるが止まっている。件数だけ見ていると気づけない
+                    print(
+                        f"  × {feed.get('name')}　{len(items)}件あるが"
+                        f"最新が{int(newest // 24)}日前。止まっています。使わないこと"
+                    )
+                else:
+                    print(f"  ✓ {feed.get('name')}　{len(items)}件　{feeds_mod.age_text(newest)}")
+                    alive += 1
             except feeds_mod.FeedError as error:
                 print(f"  × {feed.get('name')}　{error}")
         print(
@@ -1226,6 +1238,57 @@ def _cmd_fetch(args, config) -> int:
         file=sys.stderr,
     )
     return 0 if seen else 1
+
+
+def _cmd_results(args, config) -> int:
+    """試合結果を候補にする。
+
+    フィードは移籍ニュースが中心で、試合結果は数時間で流れ切る。実測で、
+    移籍期限の翌日に177件拾って試合結果は0件だった。結果は結果として取る。
+    """
+    from datetime import date as _date, timedelta
+
+    from . import collect as collect_mod
+    from . import results as results_mod
+    from .config import _resolve
+    from .plan import load_plan, tokens
+
+    plan = load_plan()
+    day = _date.fromisoformat(args.date) if args.date else _date.today() - timedelta(days=1)
+
+    try:
+        matches = results_mod.fetch_day(day, plan.leagues)
+    except results_mod.ResultsError as error:
+        print(f"× {error}", file=sys.stderr)
+        return 1
+
+    wanted = [m for m in matches if m.league and (not args.league or m.league == args.league)]
+    if not wanted:
+        print(f"{day} に、設定しているリーグの試合はありませんでした", file=sys.stderr)
+        return 1
+
+    print(f"■ {day} の試合　{len(wanted)}件")
+    for match in sorted(wanted, key=lambda m: (m.league, -m.goals)):
+        print(f"  [{plan.league_name(match.league)}] {_fit(match.title(), 44)}　{match.goals}点")
+
+    if not args.write:
+        print("\n候補ファイルに書き出すには --write を付けます")
+        return 0
+
+    hits = [
+        collect_mod.Hit(
+            title=f"{m.title()}（{m.competition}）", url=m.url(),
+            league=m.league, kind="match",
+        )
+        for m in wanted
+    ]
+    label = tokens(day, 24)["{date_ja}"]
+    body = collect_mod.to_yaml(hits, label, merge=False, plan=plan)
+    target = _resolve(f"research/{day:%Y%m%d}_results.yaml")
+    target.write_text(body, encoding="utf-8")
+    print(f"\n候補: {target}")
+    print("スコアと得点者は、台本にする段でリーグ公式まで辿ってください")
+    return 0
 
 
 def _cmd_gather(args, config) -> int:
@@ -1692,6 +1755,7 @@ HANDLERS = {
     "fresh": _cmd_fresh,
     "x": _cmd_x,
     "fetch": _cmd_fetch,
+    "results": _cmd_results,
     "gather": _cmd_gather,
     "collect": _cmd_collect,
     "saga": _cmd_saga,

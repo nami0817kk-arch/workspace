@@ -54,6 +54,14 @@ gather ─→ lint ─→ saga ─→ pick ─→ plan --write ─→ draft ─�
  収集      検証     続報     選定      取材メモ       台本      書出      点検      公開
 ```
 
+試合結果は `results` で別に取る。フィードは移籍ニュース中心で、試合結果は
+数時間で流れ切る（実測で1日177件拾って試合結果は0件だった）。
+
+```bash
+python -m src.cli results --write        # 昨日の試合を候補にする
+python -m src.cli results --date 2026-08-30 --league germany
+```
+
 - `gather` … フィードと貼り付けをまとめて候補ファイルに（`--paste` で検索結果を混ぜる）
 - `doctor` … 仕組みが効いているかの健康診断。週に1回は見る
 - `upload --dry-run` … 送る前に中身を確認。**投稿は取り返しがつかない**

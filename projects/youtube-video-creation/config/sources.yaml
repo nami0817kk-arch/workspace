@@ -41,7 +41,8 @@ domains:
 
   # 記録・数字。「数字で見ると」の節で使う。順位・得点・出場数はここ
   stats: [fbref.com, understat.com, worldfootball.net, sofascore.com,
-          besoccer.com, flashscore.com, transfermarkt.com, transfermarkt.de]
+          besoccer.com, flashscore.com, transfermarkt.com, transfermarkt.de,
+          fotmob.com]
 
   # 日本語の報道機関。訳す手間が要らないぶん速い
   japanese: [soccer-king.jp, footballchannel.jp, web.ultra-soccer.jp,
@@ -197,6 +198,14 @@ feeds:
   - {name: フットボールチャンネル, url: "https://www.footballchannel.jp/feed/", league: "", verified: true}
   - {name: Football Tribe, url: "https://football-tribe.com/japan/feed/", league: japan, verified: true}
   - {name: CaughtOffside, url: "https://www.caughtoffside.com/feed/", league: england, verified: true}
+  # 2026-09-02 に実測して足した。スペインとフランスのフィードが1本も無く、
+  # ラ・リーガとリーグアンを拾う経路そのものが無かった。
+  #
+  # AS は as.com/rss/futbol/portada.xml も 68件返すが、**最新が4年前**だった。
+  # 生きているように見えるので、必ず feeds.as.com のほうを使う
+  - {name: Marca Futbol, url: "https://www.marca.com/rss/googlenews/futbol.xml", league: spain, verified: true}
+  - {name: AS Futbol, url: "https://feeds.as.com/mrss-s/pages/as/site/as.com/section/futbol/portada/", league: spain, verified: true}
+  - {name: Foot Mercato, url: "https://www.footmercato.net/flux-rss", league: france, verified: true}
 
 # 群ごとに置ける確度の上限。draft のときに突き合わせる
 domain_tiers:

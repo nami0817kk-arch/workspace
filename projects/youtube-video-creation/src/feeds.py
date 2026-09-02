@@ -60,6 +60,20 @@ class Item:
         return f"{self.title}\t{self.url}\t{max(0.0, age):.1f}h"
 
 
+# これより古い見出ししか無いフィードは、生きていても止まっている
+STALE_HOURS = 72
+
+
+def is_stale(hours: float | None, limit: float = STALE_HOURS) -> bool:
+    """フィードが止まっているか。
+
+    「取れる」と「使える」は別。AS の as.com/rss/futbol/portada.xml は
+    68件返すが最新が4年前だった（実測）。件数だけ見ていると気づけない。
+    Premier League のフィードでも同じことが起きて、手で見つけている。
+    """
+    return hours is not None and hours > limit
+
+
 def age_text(hours: float | None) -> str:
     """フィードの新しさの言い方。
 
