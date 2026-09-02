@@ -125,6 +125,77 @@ py -m growth run   --workspace <scratch>/growth-ws
 A. 消さずアーカイブ（読み取り専用化）する。時期は全セッションの移住完了をユーザーが
 確認してから。ai-lab は imagegen 合流後、kabu は日次パイプラインの完走確認後。
 
+## Dart / Flutter のリファクタで踏んだ罠（2026-09-01 実測）
+
+game_state.dart(4733行)を part + extension で6分割したときに実際に出たもの。
+同種の作業では最初に読むこと。
+
+**flutter analyze の緑を安全網に数えない。テストのコンパイルを正とする。**
+static を未修飾のまま解析したとき `No issues found` を返したが、
+`flutter test` のコンパイルは10件以上のエラーで落ちた。実行時間が通常19秒に対し
+9.5秒だったので解析サーバーのキャッシュと思われる。この分割作業で見つかった
+不備5件は、すべて analyze ではなくテストのコンパイルが検出した。
+通過条件は `flutter test` に置く。
+
+**1つのクラスは複数ファイルに分割できない。**`part` はライブラリを分ける仕組みで、
+クラス本体は分けられない。`extension Xxx on GameState` を part ファイルに置いて
+メソッドを移す形になる。private(`_`)は Dart ではライブラリ単位なので、
+part 間では素通しで触れる。
+
+**移動すると参照の解決規則が変わる。4種類ある。**
+
+- `notifyListeners()` は `@protected` かつ `@visibleForTesting`。extension から
+  直接呼ぶと analyze が赤になる。クラス本体に `void _notify() => notifyListeners();`
+  を1つ置いて経由させる。
+- クラス直下の `static` への**無修飾参照**は解決されない。`GameState.xxx` と書く。
+- 文字列補間の `$staticName` も同じ。`${GameState.staticName}` に直す。
+- extension は**インスタンスフィールドを宣言できない**。フィールドと static 宣言は
+  本体に残すしかない。
+
+**自動置換スクリプトで区画を行番号で指定しない。**移動のたびに行番号がずれる。
+しかも**ずれてもテストは通ってしまう**ため、意図と違うグルーピングに気付けない。
+実際 `buyPlayer` が取り残されたまま無関係の領域が混入したが、453件は全部緑だった。
+メンバー名から宣言行を毎回引き直すこと。
+
+**Python の `\w` は Unicode 対応。**`$continentalTieWinPrize万円` の「万」が
+単語文字と判定され、`(?![\w])` の否定先読みが成立せず置換が効かなかった。
+日英混在のコードベースで識別子を置換するときは `[A-Za-z0-9_]` を明示する。
+
+**ブロックの先頭は宣言行とは限らない。**`///` だけでなく `//` のセクション見出しも
+飛ばさないと、直後のフィールドや static を「移せる」と誤判定する。
+
+**Q. Chrome 操作（ai-lab の control / romano-latest）が接続でタイムアウトする**
+A. `connect_over_cdp: Timeout ... exceeded` が出るのに、
+`curl http://127.0.0.1:9222/json/version` は応答し `/json/list` でタブも取れる、
+という状態になることがある（2026-09-02 に発生）。ブラウザ内部の状態が原因で、
+新規に立てた Chrome では起きない。**デバッグ用の Chrome を再起動すれば直る。
+プロファイルは残るのでログイン状態も維持される。**
+
+普段使いの Chrome を巻き込まないよう、**PID で特定して落とす**こと
+（`Get-Process chrome` は通常の Chrome も含む。実測で34プロセスあった）。
+
+```powershell
+# 1. デバッグ用の親プロセスだけを探す
+Get-CimInstance Win32_Process -Filter "Name='chrome.exe'" |
+  Where-Object { $_.CommandLine -like '*remote-debugging-port=9222*' } |
+  Select-Object ProcessId, CommandLine
+# 2. --remote-debugging-port を持つ親（--type= が付いていないもの）を止める
+Stop-Process -Id <親のPID>
+# 3. 立て直す
+powershell -ExecutionPolicy Bypass -File platform/ai-lab/scripts/start-chrome-debug.ps1
+```
+
+**Q. X（Twitter）の取得が1アカウント5件で頭打ちになる**
+A. 未ログイン。ログイン済みプロファイルなら20件以上読める（実測）。
+ログイン操作は利用者にしてもらう（スキルの決まり）。`x.com/login` を開くところまで:
+
+```bash
+curl -s -X PUT "http://127.0.0.1:9222/json/new?https://x.com/login"
+```
+
+ログインは**永続プロファイル側（9222、`%LOCALAPPDATA%` 直下の `ai-lab/chrome-debug-profile`）**で
+行うこと。一時プロファイルで立てた Chrome に入れても、消えると失われる。
+
 ## 調整役への連絡方法
 
 ```

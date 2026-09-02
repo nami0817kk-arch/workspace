@@ -4,10 +4,11 @@
 
 ## 前提
 
-- Windows 11 / PowerShell 前提。`requirements.txt` に `pyodbc` と `pywin32` が入っており、
-  **Linux では丸ごとはインストールできない**。
-- CI（Linux）はテスト用の最小セット `requirements-test.txt` だけを入れて `pytest` を回す。
-  テストは Windows 専用パッケージに依存しない部分だけを対象にしている。
+- Windows 11 / PowerShell 前提。ただし依存は `requirements.txt` の1本にまとめてあり、
+  **CI（Linux）も同じファイルを入れる**。Windows 専用の `pywin32` だけ
+  `; sys_platform == "win32"` で外れる（`pyodbc` は Linux でも入る）。
+- 依存を足すときは requirements.txt に足す。テスト用に別ファイルを作らない。
+  本番と CI で入る物が違うと、テストが対象を import できていないことに気づけない。
 
 ## よく使うコマンド
 

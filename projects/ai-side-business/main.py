@@ -9,8 +9,6 @@ import io
 import sys
 from pathlib import Path
 
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
-
 try:
     from dotenv import load_dotenv
     load_dotenv(Path(__file__).parent / ".env")
@@ -1054,4 +1052,8 @@ def main():
 
 
 if __name__ == "__main__":
+    # Windows のコンソールは既定が CP932 で、日本語がそのまま出ると化ける。
+    # 差し替えるのはコンソールから起動したときだけ。import 時や main() の中で
+    # 差し替えると pytest の出力捕捉を壊し、main を通るテストが書けなくなる。
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
     main()

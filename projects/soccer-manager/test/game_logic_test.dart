@@ -3043,6 +3043,10 @@ void main() {
     expect(gameState.seasonAwards.first.season, 1);
   });
 
+  // startNextSeason はシーズンを丸ごと回すため、このファイルで最も重い。
+  // 既定の30秒制限に対する余裕が小さく、マシンが混んでいると TimeoutException で
+  // 落ちることがある(2026-09-01 に実測。スイート全体も2分40秒→5分42秒に伸び、
+  // 再実行では緑)。ロジックの失敗と紛らわしいので、落ちたらまず所要時間を見る。
   test(
       'GameState.startNextSeason leaves the growth summary empty for the '
       'very first season but populates it from the second season onward',

@@ -1,3 +1,7 @@
+# 本番も CI もこの1ファイルを使う。Linux で入らないものだけ環境マーカーで外す。
+# （テスト専用の別ファイルに分けると「本番と CI で入る物が違う」状態になり、
+#  テストが実は対象を import できていない、という事故につながる。）
+# pytest は CI 側で足す。
 yfinance>=0.2.40
 pandas>=2.2.0
 ta>=0.11.0
@@ -11,4 +15,4 @@ requests>=2.34.2
 beautifulsoup4>=4.12.0
 lxml>=5.0.0
 pyodbc>=5.3.0
-pywin32>=312
+pywin32>=312; sys_platform == "win32"
