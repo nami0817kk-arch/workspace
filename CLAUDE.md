@@ -12,6 +12,7 @@ CI と Dependabot の増殖）を、この1本で構造的に解消する。
 | `libs/` | 複数PJTが使う共有コード（例: `libs/kabutan`）。参照は `pip install -e libs/<name>` |
 | `platform/ai-lab/` | 基盤（growth 点検ループ / browser / imagegen / adsite / audiogen） |
 | `templates/` `scripts/` | PJT雛形・横断スクリプト（wip-sweeper など） |
+| `claude-skills/` | ユーザーレベルスキル（`~/.claude/skills`）のバックアップ。正は `~` 側、同期は `sync-skills.ps1 -Export` |
 | `.github/workflows/` | 全ワークフロー。**必ず `paths:` で対象PJTに絞る**（絞らないと全PJTのCIが回る） |
 
 ## セッション運用ルール（最重要）
