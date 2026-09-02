@@ -45,7 +45,7 @@ domains:
           fotmob.com]
 
   # 日本語の報道機関。訳す手間が要らないぶん速い
-  japanese: [soccer-king.jp, footballchannel.jp, web.ultra-soccer.jp,
+  japanese: [soccer-king.jp, footballchannel.jp, web.ultra-soccer.jp, web.gekisaka.jp,
              theworldmagazine.jp, football-tribe.com, sportiva.shueisha.co.jp,
              hochi.news, nikkansports.com, sponichi.co.jp]
 
@@ -59,6 +59,8 @@ domains:
             gazzetta.it]
   french: [footmercato.net, eurosport.fr, lequipe.fr, sofoot.com]
   dutch: [voetbalzone.nl, vi.nl]
+  # ポルトガル。日本人選手が多く、欧州ビッグクラブへの経由地になる
+  portuguese: [abola.pt, record.pt]
   # スペイン語圏。南米(ole / tycsports)もここで引く。検索はスペイン語で書く
   spanish: [besoccer.com, marca.com, as.com, mundodeportivo.com, relevo.com,
             sport.es, ole.com.ar, tycsports.com]
@@ -68,7 +70,7 @@ domains:
   # 噂まとめ。単独では根拠にしない
   # 大衆紙もここ。移籍を最初に書くことはあるが、単独では根拠にしない
   rumour: [caughtoffside.com, givemesport.com, tribalfootball.com,
-           bild.de, mirror.co.uk]
+           bild.de, mirror.co.uk, dailymail.co.uk]
 
   # 取得できないサイト。ここを検索しても結果は返らない。
   #
@@ -205,6 +207,20 @@ feeds:
   # 生きているように見えるので、必ず feeds.as.com のほうを使う
   - {name: Marca Futbol, url: "https://www.marca.com/rss/googlenews/futbol.xml", league: spain, verified: true}
   - {name: AS Futbol, url: "https://feeds.as.com/mrss-s/pages/as/site/as.com/section/futbol/portada/", league: spain, verified: true}
+  # 2026-09-02、Gemini に候補を挙げてもらい、URLを1本ずつ実測して足した。
+  # 提案10件のうち、そのまま使えたのは4件。4件はURLが違い（404/403）、
+  # うち2件は fetch --discover と候補試行で正しいURLに辿り着いた。
+  #
+  # このとき「取れるが止まっている」フィードを2本踏んでいる:
+  #   as.com/rss/futbol/portada.xml … 68件あるが最新が4年前
+  #   gazzetta.it/rss/home.xml      … 125件あるが最新が2.7年前
+  # どちらも件数だけ見ると生きて見える。fetch --check の停止検出で弾かれる
+  - {name: Gazzetta Calcio, url: "https://www.gazzetta.it/dynamic-feed/rss/section/Calcio.xml", league: italy, verified: true}
+  - {name: VI, url: "https://www.vi.nl/rss", league: netherlands, verified: true}
+  - {name: A Bola, url: "https://www.abola.pt/rss-articles.xml", league: "", verified: true}
+  - {name: ゲキサカ, url: "https://web.gekisaka.jp/feed", league: "", verified: true}
+  - {name: Transfermarkt, url: "https://www.transfermarkt.co.uk/rss/news", league: "", verified: true}
+  - {name: Daily Mail Football, url: "https://www.dailymail.co.uk/sport/football/index.rss", league: england, verified: true}
   - {name: Foot Mercato, url: "https://www.footmercato.net/flux-rss", league: france, verified: true}
 
 # 群ごとに置ける確度の上限。draft のときに突き合わせる
@@ -219,6 +235,7 @@ domain_tiers:
   italian: 報道
   french: 報道
   dutch: 報道
+  portuguese: 報道
   spanish: 報道
   social: 未確認
   rumour: 未確認
