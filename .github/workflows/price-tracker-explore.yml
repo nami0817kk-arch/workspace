@@ -1,0 +1,49 @@
+name: price-tracker explore genres
+
+# 対象ジャンルを勘ではなく報酬額のデータで決めるための調査。
+# この環境からは楽天へ到達できないため、Actions 上で手動実行して
+# ログの表を見て config.json の genres を決める。
+on:
+  workflow_dispatch:
+    inputs:
+      genre:
+        description: "調べる親ジャンルID（0 が最上位）"
+        default: "0"
+      depth:
+        description: "何段掘るか"
+        default: "1"
+      sample:
+        description: "各ジャンルから見る商品数"
+        default: "30"
+
+permissions:
+  contents: read
+
+jobs:
+  explore:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/price-tracker
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Python
+        uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Explore genres
+        env:
+          RAKUTEN_APP_ID: ${{ secrets.RAKUTEN_APP_ID }}
+        run: |
+          if [ -z "$RAKUTEN_APP_ID" ]; then
+            echo "::error::RAKUTEN_APP_ID が未登録です。リポジトリの Secrets に登録してから実行してください。"
+            exit 1
+          fi
+          python explore.py --genre "${{ inputs.genre }}" --depth "${{ inputs.depth }}" --sample "${{ inputs.sample }}"
