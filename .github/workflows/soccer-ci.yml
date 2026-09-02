@@ -20,7 +20,19 @@ on:
     paths:
       - "projects/soccer-manager/**"
       - ".github/workflows/soccer-ci.yml"
-  workflow_dispatch: {}
+  # 手で回すとき用。テストの反復はローカルではなくここで行う方針のため
+  # (docs/session-faq.md「テストはクラウドで回す」)、対象を絞れるようにして
+  # ある。1ファイルだけ直しては回す、という使い方で全件を待たずに済む。
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "回すテスト(例 test/game_logic_test.dart)。空なら全件"
+        required: false
+        default: ""
+      skip_analyze:
+        description: "analyze を省く(テストの反復だけしたいとき)"
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -45,10 +57,32 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      # 静的解析。これまでCIに入っておらず、一度も回っていなかった。
+      # 静的解析。手で対象を絞って回すときだけ省ける。push/PR では必ず走る。
       - name: Analyze
+        if: ${{ inputs.skip_analyze != true }}
         run: flutter analyze
 
       # 未翻訳・字形の検査は python を呼ぶ。ubuntu-latest には入っている。
       - name: Run tests
-        run: flutter test
+        env:
+          # 入力を run の中へ直接展開しない(スクリプト注入を避ける)。
+          TARGET: ${{ inputs.target }}
+        run: |
+          if [ -z "$TARGET" ]; then
+            flutter test
+            exit $?
+          fi
+          # 素直な test/ 配下のパスだけ通す。
+          case "$TARGET" in
+            test|test/|test/*) ;;
+            *)
+              echo "::error::target は test/ 配下を指定してください: $TARGET"
+              exit 1 ;;
+          esac
+          case "$TARGET" in
+            *[!A-Za-z0-9_/.-]*)
+              echo "::error::target に使えない文字が含まれています: $TARGET"
+              exit 1 ;;
+          esac
+          echo "対象を絞って実行: $TARGET"
+          flutter test "$TARGET"
