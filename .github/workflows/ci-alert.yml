@@ -1,0 +1,74 @@
+name: master の CI 失敗を Issue にする
+
+# 調整役の巡回を待たずに、master が赤くなった時点で気づけるようにする。
+# 巡回（1時間おき、クラウドのセッション）は費用がかかるうえ、最大1時間の遅れが出る。
+# こちらは失敗した瞬間に走り、Claude を一切使わない。
+#
+# 同じワークフローの失敗が続く間は Issue を増やさず、既存の Issue にコメントを足す。
+# 同じワークフローが master で緑に戻ったら、その Issue を自動で閉じる。
+# つまり **open な [CI] Issue の一覧 = いま赤いものの一覧** になる。
+
+on:
+  workflow_run:
+    types: [completed]
+    workflows:
+      - "CI"
+      - "Web版を公開する"
+      - "youtube tests"
+      - "stock-investment tests"
+      - "price-tracker tests"
+      - "price-tracker daily"
+      - "price-tracker explore genres"
+      - "kabu tests"
+      - "Daily Gainers Site"
+      - "kabutan-lib tests"
+      - "gemini-api tests"
+      - "ir-analysis tests"
+      - "quality-gainer-tracker tests"
+      - "ai-side-business tests"
+      - "サイトを公開する"
+      - "growth-loop"
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  alert:
+    # master 以外（PR・作業ブランチ）は担当セッションが自分で見るので対象外
+    if: github.event.workflow_run.head_branch == 'master'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: 失敗なら起票、成功なら解決
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          WF: ${{ github.event.workflow_run.name }}
+          CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+          RUN_URL: ${{ github.event.workflow_run.html_url }}
+          HEAD_SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          set -euo pipefail
+
+          title="[CI] master が赤い: ${WF}"
+
+          # 同じワークフローの Issue が既に開いていないか（タイトル完全一致）。
+          # gh の --jq は --arg を取れないので、jq に渡して比較する。
+          number=$(gh issue list --repo "$REPO" --state open --limit 100 --json number,title \
+            | jq -r --arg t "$title" 'map(select(.title == $t)) | .[0].number // empty')
+
+          if [ "$CONCLUSION" = "failure" ] || [ "$CONCLUSION" = "timed_out" ]; then
+            body=$(printf 'ワークフロー: **%s**\nコミット: `%s`\n実行: %s\n\n自動起票。master で緑に戻れば自動で閉じる。\n' \
+              "$WF" "$HEAD_SHA" "$RUN_URL")
+            if [ -n "$number" ]; then
+              gh issue comment "$number" --repo "$REPO" --body "$body"
+            else
+              gh issue create --repo "$REPO" --title "$title" --body "$body"
+            fi
+          elif [ "$CONCLUSION" = "success" ] && [ -n "$number" ]; then
+            gh issue close "$number" --repo "$REPO" \
+              --comment "master で緑に戻ったので閉じる。実行: ${RUN_URL}"
+          else
+            echo "conclusion=${CONCLUSION}: 何もしない"
+          fi
