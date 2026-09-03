@@ -20,10 +20,26 @@ import yaml
 from . import coverage, xposts
 from .plan import Plan
 
+# 節の中身に合う背景を選ぶ。順番に配るだけだと、緑の芝ばかりが続く
+# （実測: 17カット中13カットが緑系だった）。節の性格で下地を変える。
+BACKGROUND_BY_SECTION = {
+    "what": "assets/backgrounds/stadium.png",       # 何が起きたか
+    "score": "assets/backgrounds/pitch.png",        # 試合そのもの
+    "turning": "assets/backgrounds/pitch.png",      # 試合が決まった場面
+    "numbers": "assets/backgrounds/studio.png",     # 数字・表は模様の無い下地に
+    "point": "assets/backgrounds/studio.png",       # 争点
+    "background": "assets/backgrounds/night.png",   # 経緯・背景は芝を出さない
+    "collapsed": "assets/backgrounds/night.png",    # 壊れた話
+    "voices": "assets/backgrounds/night.png",       # 世の中の声
+    "next": "assets/backgrounds/tactics.png",       # これからどうなる
+}
+# 上に無い節に配る並び。緑が続かないよう交互にする
 BACKGROUNDS = (
-    "assets/backgrounds/pitch.png",
-    "assets/backgrounds/tactics.png",
     "assets/backgrounds/stadium.png",
+    "assets/backgrounds/night.png",
+    "assets/backgrounds/tactics.png",
+    "assets/backgrounds/studio.png",
+    "assets/backgrounds/pitch.png",
 )
 SPEAKERS = ("キャスター", "解説")
 
@@ -523,8 +539,15 @@ def to_script(notes: Notes, plan: Plan) -> str:
         "",
     ]
 
+    previous_background = ""
     for index, section in enumerate(notes.sections):
-        background = section.bg or BACKGROUNDS[index % len(BACKGROUNDS)]
+        background = section.bg or BACKGROUND_BY_SECTION.get(section.id, "")
+        if not background or background == previous_background:
+            # 同じ下地が続くと、節が変わったことが画面から分からない。
+            # 割り当てが無いときと、前の節と同じになったときは並びから選ぶ
+            order = list(BACKGROUNDS[index % len(BACKGROUNDS):]) + list(BACKGROUNDS)
+            background = next(c for c in order if c != previous_background)
+        previous_background = background
         lines += [f"## {section.heading}", f"@bg: {background}", ""]
         for number, sentence in enumerate(section.say):
             speaker = SPEAKERS[number % len(SPEAKERS)]
