@@ -10,6 +10,7 @@ import json
 import os
 import time
 import urllib.parse
+import urllib.error
 import urllib.request
 
 # 旧 app.rakuten.co.jp/services/api/ は 2026-05-13 に廃止された。
@@ -129,12 +130,38 @@ def parse_items(payload: dict) -> list[dict]:
     return out
 
 
+SECRET_PARAMS = ("applicationId", "accessKey", "affiliateId")
+
+
+def redact(url: str) -> str:
+    """例外やログに載せるため、URL から認証情報を落とす。
+
+    アクセスキーはクエリに乗るので、そのまま出すと Actions のログに残る。
+    """
+    parts = urllib.parse.urlsplit(url)
+    kept = [(k, v) for k, v in urllib.parse.parse_qsl(parts.query)
+            if k not in SECRET_PARAMS]
+    return urllib.parse.urlunsplit(
+        (parts.scheme, parts.netloc, parts.path, urllib.parse.urlencode(kept), ""))
+
+
 def _get(url: str, params: dict, throttle: Throttle, opener=urllib.request.urlopen) -> dict:
     query = urllib.parse.urlencode({k: v for k, v in params.items() if v not in (None, "")})
     throttle.wait()
-    req = urllib.request.Request(f"{url}?{query}", headers={"User-Agent": "price-tracker/1.0"})
-    with opener(req, timeout=30) as res:
-        return json.loads(res.read().decode("utf-8"))
+    full = f"{url}?{query}"
+    req = urllib.request.Request(full, headers={"User-Agent": "price-tracker/1.0"})
+    try:
+        with opener(req, timeout=30) as res:
+            return json.loads(res.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        # 楽天は 403 などの本文に理由を JSON で返す。これを拾わないと
+        # スコープ未設定・ドメイン制限・キー誤りのどれなのか切り分けられない。
+        try:
+            detail = exc.read().decode("utf-8", "replace").strip()[:500]
+        except Exception:
+            detail = ""
+        raise RakutenError(
+            f"HTTP {exc.code} {redact(full)} : {detail or '(本文なし)'}") from exc
 
 
 def search_genre(genre_id: str, hits: int, throttle: Throttle,

@@ -327,3 +327,40 @@ class RequestShapeTest(unittest.TestCase):
             with self.assertRaises(rakuten.RakutenError) as cm:
                 rakuten.credentials()
         self.assertIn("RAKUTEN_ACCESS_KEY", str(cm.exception))
+
+
+class ErrorDetailTest(unittest.TestCase):
+    """403 の理由を握りつぶさない。ただしキーはログに出さない。"""
+
+    def test_redactは認証情報を落として他は残す(self):
+        url = ("https://openapi.rakuten.co.jp/ichibagt/api/IchibaGenre/Search/20260701"
+               "?applicationId=app-uuid&accessKey=pk_secret&affiliateId=aff&genreId=0")
+
+        out = rakuten.redact(url)
+
+        self.assertNotIn("pk_secret", out)
+        self.assertNotIn("app-uuid", out)
+        self.assertNotIn("aff", out)
+        self.assertIn("genreId=0", out)
+        self.assertIn("IchibaGenre/Search/20260701", out)
+
+    def test_HTTPエラーの本文を例外に載せる(self):
+        import io
+        import urllib.error
+
+        def opener(req, timeout=None):
+            raise urllib.error.HTTPError(
+                req.full_url, 403, "Forbidden", {},
+                io.BytesIO(b'{"error":"wrong_parameter"}'))
+
+        with unittest.mock.patch.dict(
+                "os.environ",
+                {"RAKUTEN_APP_ID": "app-uuid", "RAKUTEN_ACCESS_KEY": "pk_secret",
+                 "RAKUTEN_AFFILIATE_ID": ""}):
+            with self.assertRaises(rakuten.RakutenError) as cm:
+                rakuten.genre_children("0", rakuten.Throttle(interval=0), opener)
+
+        msg = str(cm.exception)
+        self.assertIn("403", msg)
+        self.assertIn("wrong_parameter", msg)
+        self.assertNotIn("pk_secret", msg)
