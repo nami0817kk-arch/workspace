@@ -7,11 +7,13 @@
 import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_manager/logic/player_generator.dart';
 import 'package:soccer_manager/models/league.dart';
 import 'package:soccer_manager/models/player.dart';
 import 'package:soccer_manager/models/save_game.dart';
 import 'package:soccer_manager/models/team.dart';
+import 'package:soccer_manager/state/game_state.dart';
 
 /// 指定した強さのスカッドを持つチームを作る。
 Team _teamWithSquad(String id, int strengthTier) {
@@ -110,6 +112,52 @@ void main() {
       );
     });
 
+    test('保存すると他ディビジョンの選手データが落ち、強度だけが残る', () {
+      final save = _saveWithOtherDivision();
+      final before = {
+        for (final t in save.otherDivisionLeagues[1]!.teams)
+          t.id: t.overallRating,
+      };
+
+      final json = jsonDecode(jsonEncode(save.toJson()))
+          as Map<String, dynamic>;
+      final d2 =
+          (json['otherDivisionLeagues'] as List)[1] as Map<String, dynamic>;
+      for (final t in (d2['teams'] as List).cast<Map<String, dynamic>>()) {
+        expect(t['players'], isEmpty,
+            reason: '他ディビジョンのチームは選手データを保存しない');
+        expect(t['retainedOverall'], isA<int>(),
+            reason: '代わりに強度を残す');
+      }
+
+      final restored = SaveGame.fromJson(json);
+      final after = {
+        for (final t in restored.otherDivisionLeagues[1]!.teams)
+          t.id: t.overallRating,
+      };
+      expect(after, before,
+          reason: '選手を落としてもチーム強度は変わらない(背面シミュレーションの力量差が壊れない)');
+      expect(after.values.every((r) => r > 0), isTrue,
+          reason: '0 を返すと力量差が消える');
+    });
+
+    test('セーブが実際に小さくなる', () {
+      final save = _saveWithOtherDivision();
+      final reduced = jsonEncode(save.toJson()).length;
+
+      // 比較用に、他ディビジョンも選手を持ったまま書き出した場合の大きさ。
+      final full = jsonEncode({
+        ...save.toJson(),
+        'otherDivisionLeagues':
+            save.otherDivisionLeagues.map((l) => l?.toJson()).toList(),
+      }).length;
+
+      expect(reduced, lessThan(full),
+          reason: '他ディビジョンの選手データを落とした分だけ小さい');
+      expect(reduced / full, lessThan(0.7),
+          reason: '削減が効いていること(このセーブでは3割以上減る想定)');
+    });
+
     test('ユーザーのチームは選手データを保持し続ける', () {
       // 削減の対象は他ディビジョンだけ。ユーザーのリーグを巻き込まないこと。
       final save = _saveWithOtherDivision();
@@ -122,6 +170,54 @@ void main() {
           reason: 'ユーザーの所属ディビジョンは選手を持ったまま');
       expect(user.startingXI, isNotEmpty,
           reason: 'スタメンの指定も残る');
+    });
+  });
+
+  group('昇格してユーザーのディビジョンに入るチーム', () {
+    testWidgets('選手を持たない状態から、強度に見合うスカッドが用意される',
+        (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      final gameState = GameState();
+      await gameState.startNewGame('テストFC');
+
+      // 保存を経たセーブと同じ状態にする(他ディビジョンは選手を持たない)。
+      final stripped = <String, int>{};
+      for (final other in gameState.save!.otherDivisionLeagues) {
+        if (other == null) continue;
+        for (final t in other.teams) {
+          stripped[t.id] = t.overallRating;
+          t.retainedOverall = t.overallRating;
+          t.players = [];
+          t.startingXI.clear();
+        }
+      }
+      expect(stripped, isNotEmpty, reason: '他ディビジョンが存在する前提');
+
+      while (!gameState.save!.league.isSeasonComplete) {
+        await gameState.playNextMatchday();
+        if (gameState.isHalfTime) {
+          await gameState.playSecondHalf();
+        }
+      }
+      await gameState.startNextSeason();
+
+      // ユーザーと同じディビジョンのチームは選手ごとに試合を進めるので、
+      // 全チームがスカッドを持っていなければならない。
+      for (final t in gameState.save!.league.teams) {
+        expect(t.players, isNotEmpty,
+            reason: '${t.name} に選手がいないと MatchEngine が試合を組めない');
+        expect(t.overallRating, greaterThan(0),
+            reason: '${t.name} の強度が 0 だと力量差が壊れる');
+      }
+
+      // 他ディビジョンのままのチームは、選手を持たずに強度だけを保つ。
+      for (final other in gameState.save!.otherDivisionLeagues) {
+        if (other == null) continue;
+        for (final t in other.teams) {
+          expect(t.overallRating, greaterThan(0),
+              reason: '${t.name} は選手がいなくても順位表と昇降格のために強度が要る');
+        }
+      }
     });
   });
 }
