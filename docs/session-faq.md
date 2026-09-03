@@ -126,6 +126,12 @@ py -m growth run   --workspace <scratch>/growth-ws
 A. 消さずアーカイブ（読み取り専用化）する。時期は全セッションの移住完了をユーザーが
 確認してから。ai-lab は imagegen 合流後、kabu は日次パイプラインの完走確認後。
 
+**ただし `claude-code-dev` はアーカイブしない**（2026-09-03 ユーザー判断）。
+soccer-manager のストア掲載が、サポート窓口としてこのリポジトリの issues を指しているため。
+アーカイブすると閲覧は残るが**新規 issue が立てられなくなり、窓口として機能しなくなる**。
+public のまま残す。`STORE_LISTING.md` / `settings_screen.dart` / `README.md` /
+`distribution_test.dart` の4箇所は現状の URL のままでよい（差し替え不要）。
+
 ## Dart / Flutter のリファクタで踏んだ罠（2026-09-01 実測）
 
 game_state.dart(4733行)を part + extension で6分割したときに実際に出たもの。
