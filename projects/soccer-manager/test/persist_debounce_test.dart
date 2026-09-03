@@ -70,4 +70,51 @@ void main() {
     expect(after, isNot(before),
         reason: '節の進行が待たずに保存されていない');
   });
+
+  test('スロットを切り替えても、変更は元のスロットに書き込まれる', () async {
+    final game = GameState();
+    await game.init();
+
+    await game.loadSlot(0);
+    await game.startNewGame('スロット0FC');
+    // 保存を予約した直後にスロットを移る。予約が切り替え後に発火すると、
+    // スロット1へ書き込まれるか、この変更が失われる。
+    game.setPressing(71);
+    await game.loadSlot(1);
+    await game.startNewGame('スロット1FC');
+
+    final slots = await game.listSaveSlots();
+    expect(slots[0].clubName, 'スロット0FC',
+        reason: 'スロット0が別の内容で上書きされている');
+    expect(slots[1].clubName, 'スロット1FC',
+        reason: 'スロット1が別の内容で上書きされている');
+
+    await game.loadSlot(0);
+    expect(game.save!.clubName, 'スロット0FC');
+    expect(game.userTeam.pressing, 71,
+        reason: '切り替え前の変更が書き出されずに失われている');
+  });
+
+  test('古いセーブの予約が、後から作ったセーブを上書きしない', () async {
+    // CI で実際に起きた形。前のテストが残した予約が、次のテストの
+    // セーブを上書きして「期待 スロット0FC / 実際 テストFC」になった。
+    // 保存が即時だった頃は、操作が終わった時点で書き終わっていたので
+    // 起きなかった。まとめるようにしたことで生まれた壊れ方。
+    final old = GameState();
+    await old.startNewGame('古いFC');
+    old.setPressing(40); // 予約だけ残して放置する
+
+    final fresh = GameState();
+    await fresh.init();
+    await fresh.loadSlot(0);
+    await fresh.startNewGame('新しいFC');
+
+    // 古い予約が発火する時間まで待つ。
+    await Future<void>.delayed(
+        GameState.persistDebounce + const Duration(milliseconds: 300));
+
+    final slots = await fresh.listSaveSlots();
+    expect(slots[0].clubName, '新しいFC',
+        reason: '古いインスタンスの予約が、後から作ったセーブを上書きしている');
+  });
 }
