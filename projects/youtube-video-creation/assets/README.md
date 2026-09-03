@@ -47,6 +47,9 @@ python -m src.cli make-clip <画像> --out assets/backgrounds/chelsea.mp4
 
 - 素材は `~/.claude/skills/video-edit/fetch_safe.py` で取る。CC0 / PD / CC BY だけに絞る
 - 書き出す前に `check_licenses.py` を通す
+- この2つは**リポジトリにも `claude-skills/video-edit/` として控えがある**。
+  正は `~` 側で、同期は `scripts/sync-skills.ps1 -Export`（ルート CLAUDE.md 参照）。
+  `~` 側が無い環境では、リポジトリの控えを使う
 - **判定が OK でも必ず目視する。** ライセンスは写真の著作権しか見ていない。
   実測で6枚中4枚を目視で落とした（被写体が違う / 彫刻が写っている /
   クラブ掲示やメーカーロゴが主役級）
