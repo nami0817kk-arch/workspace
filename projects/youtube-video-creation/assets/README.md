@@ -12,4 +12,46 @@ assets/
 ```
 
 表情は normal / smile / angry / surprise。無いものは normal にフォールバックする。
+
+## 素材は2種類ある。復元の手順が違う
+
+台本の `bg:` / `@bg:` が指す先が無くて build が止まったときは、どちらか見分ける。
+
+**1. init-assets が作るもの**（`stadium.png` `pitch.png` `tactics.png` など）
+
+```bash
+python -m src.cli init-assets
+```
+
+これで作り直せる。既存の台本が参照しているのはほぼこれ。
+
+**2. 外から取ってきた写真から作ったもの**（`chelsea.mp4` `monaco.mp4` など）
+
+`init-assets` では作れない。**元の写真を取り直してから、クリップにし直す。**
+
+```bash
+# どの画像から作ったかは、クリップの隣の .source.txt に書いてある
+cat assets/backgrounds/chelsea.mp4.source.txt
+
+# その画像の取得元URLとライセンスは credits.json にある（こちらは git 管理下）
+python -c "import json;[print(r['file'],r['license'],r['image_url']) for r in json.load(open('assets/images/camara/credits.json',encoding='utf-8'))]"
+
+# 取り直したらクリップにする
+python -m src.cli make-clip <画像> --out assets/backgrounds/chelsea.mp4
+```
+
+## ライセンス
+
 配布素材を使う場合はライセンスを確認し、必要なクレジットを概要欄に入れること。
+**CC BY 系は表示が条件**で、書かないと利用条件を満たさない。
+
+- 素材は `~/.claude/skills/video-edit/fetch_safe.py` で取る。CC0 / PD / CC BY だけに絞る
+- 書き出す前に `check_licenses.py` を通す
+- **判定が OK でも必ず目視する。** ライセンスは写真の著作権しか見ていない。
+  実測で6枚中4枚を目視で落とした（被写体が違う / 彫刻が写っている /
+  クラブ掲示やメーカーロゴが主役級）
+- クレジットは `src/tts.py` の `image_credits` が概要欄に自動で入れる。
+  クリップにすると名前が変わるので、`.source.txt` で元画像に繋いでいる
+
+`assets/images/` 自体は git 管理外だが、**`CREDITS.md` と `credits.json` だけは
+追跡している**（由来を後から確かめられるようにするため／再取得の手順書を兼ねる）。
