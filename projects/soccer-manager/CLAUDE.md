@@ -28,12 +28,17 @@ flutter build web --base-href /
 - ローカルで `flutter analyze` を回すときは、パスに非ASCII文字が入っていると
   解析サーバーがクラッシュする。`subst X: <このディレクトリ>` してから
   X: 側で実行する。`flutter test` はこの問題を踏まない。
-- アプリ内の法務リンク(settings_screen.dart)とストア掲載情報は、まだ旧モノレポ
-  claude-code-dev の GitHub Pages を指している。現在は200で生きているが、
-  このリポジトリの更新は届かない。先に差し替えると今動いているリンクを404に
-  してしまうため、Cloudflare Pages のデプロイが通ってから
-  settings_screen.dart / STORE_LISTING.md / README.md / distribution_test.dart
-  の4箇所をまとめて移す。
+- アプリ内の法務リンク(プライバシーポリシー・利用規約)は
+  `https://soccer-manager.pages.dev/legal/*.html` を指している(2026-09-01 に
+  旧モノレポの GitHub Pages から移設済み)。URL は distribution_test.dart が
+  アプリ内・STORE_LISTING.md の双方と一致するか検査しているので、片方だけ
+  変えると落ちる。
+- **STORE_LISTING.md のサポート窓口だけは、意図して旧リポジトリ
+  (`github.com/nami0817kk-arch/claude-code-dev/issues`)のままにしてある。**
+  claude-code-dev は public で匿名でも開けるが、workspace は private で 404
+  になる。ストア掲載の窓口は利用者が実際に開く URL なので、機械的に
+  書き換えると誰も到達できなくなる。claude-code-dev をアーカイブしない方針が
+  決まっている(2026-09-03)。
 - ポジションは GK/DR/DC/DL/WBR/WBL/DM/MR/MC/ML/AMR/AMC/AML/ST の14種類。
   自動編成は 主ポジション → 副ポジション → 同じ大分類 の順に割り当てる。
   この優先順を変えるとスタメンが総入れ替えになる。
