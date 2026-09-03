@@ -198,8 +198,12 @@ class League {
     return result;
   }
 
-  Map<String, dynamic> toJson() => {
-        'teams': teams.map((t) => t.toJson()).toList(),
+  /// [includePlayers]をfalseにすると、所属チームの選手データを書き出さない。
+  /// 他ディビジョンのリーグに使う(`SaveGame.otherDivisionLeagues`を参照)。
+  Map<String, dynamic> toJson({bool includePlayers = true}) => {
+        'teams': teams
+            .map((t) => t.toJson(includePlayers: includePlayers))
+            .toList(),
         'fixtures': fixtures.map((f) => f.toJson()).toList(),
         'season': season,
       };
