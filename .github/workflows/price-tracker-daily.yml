@@ -1,26 +1,33 @@
-name: price-tracker daily fetch
+name: price-tracker daily
 
-# このPJTの価値は文章ではなく履歴の蓄積にある（後から買い直せない）。
-# 毎日1回 楽天から価格を取得し、data/ に追記して commit する。
+# 運用: 取得は手元PC（run-daily.ps1、毎日10:10）が行い data/ を push する。
+# 楽天は Backend Service 型で許可IPからのリクエストしか受け付けず、Actions の
+# ランナーはIPを固定できないため、CI からは取得しない。
+# この CI は push された data/ の検証と、取得が止まっていないかの監視を行う。
 on:
+  push:
+    branches: [master]
+    paths:
+      - "projects/price-tracker/data/**"
+      - "projects/price-tracker/src/**"
+      - ".github/workflows/price-tracker-daily.yml"
   schedule:
-    # 10:00 JST = 01:00 UTC。土日も価格は動くので毎日。
-    - cron: "0 1 * * *"
+    # 13:00 JST = 04:00 UTC。手元PCの取得（10:10）が済んだ頃に見る。
+    - cron: "0 4 * * *"
   workflow_dispatch: {}
 
 permissions:
-  contents: write
+  contents: read
   # 失敗を Issue で知らせるために必要
   issues: write
 
 jobs:
-  fetch:
+  monitor:
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: projects/price-tracker
-    # 楽天が応答しないまま既定の6時間走り続けるのを防ぐ。通常は数分。
-    timeout-minutes: 30
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -33,50 +40,34 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt pytest
 
-      # 壊れたパーサのまま取得すると、その日の記録が丸ごと無駄になる。
-      # 履歴は後から取り直せないので、取得の前に落とす。
       - name: Run tests
         run: pytest
 
-      # 準備が済むまでは「失敗」ではなく「スキップ」にする。
-      # 毎日赤くして通知を鳴らすと、本物の異常に気づけなくなるため。
-      - name: Check prerequisites
-        id: gate
-        env:
-          RAKUTEN_APP_ID: ${{ secrets.RAKUTEN_APP_ID }}
-          RAKUTEN_ACCESS_KEY: ${{ secrets.RAKUTEN_ACCESS_KEY }}
+      # 手元PCの取得タスクが止まっていないかの監視。
+      # 記録開始前は「まだ0日」なので、失敗させず警告だけにする。
+      # ここで毎日赤くすると、本物の停止に気づけなくなる。
+      - name: Check data freshness
         run: |
-          ready=true
-          if [ -z "$RAKUTEN_APP_ID" ] || [ -z "$RAKUTEN_ACCESS_KEY" ]; then
-            echo "::warning::RAKUTEN_APP_ID / RAKUTEN_ACCESS_KEY が未登録です。取得をスキップします。"
-            ready=false
-          fi
-          if ! python -c "import json,sys; sys.exit(0 if json.load(open('config.json',encoding='utf-8')).get('genres') else 1)"; then
-            echo "::warning::config.json の genres が空です。explore ワークフローで対象ジャンルを決めてください。"
-            ready=false
-          fi
-          echo "ready=$ready" >> "$GITHUB_OUTPUT"
+          python - <<'PY'
+          import sys
+          from datetime import date, datetime
+          from pathlib import Path
 
-      - name: Fetch prices
-        if: steps.gate.outputs.ready == 'true'
-        env:
-          RAKUTEN_APP_ID: ${{ secrets.RAKUTEN_APP_ID }}
-          RAKUTEN_ACCESS_KEY: ${{ secrets.RAKUTEN_ACCESS_KEY }}
-          RAKUTEN_AFFILIATE_ID: ${{ secrets.RAKUTEN_AFFILIATE_ID }}
-        run: python fetch.py
+          snaps = sorted(Path("data/snapshots").glob("*.csv.gz"))
+          if not snaps:
+              print("::warning::まだ価格履歴がありません。"
+                    "config.json の genres を決め、手元PCの取得タスクを登録してください。")
+              sys.exit(0)
 
-      - name: Commit price history if changed
-        if: steps.gate.outputs.ready == 'true'
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data
-          if git diff --cached --quiet; then
-            echo "No new price data to commit."
-          else
-            git commit -m "chore(price-tracker): 価格履歴を記録"
-            git push
-          fi
+          latest = snaps[-1].name.removesuffix(".csv.gz")
+          age = (date.today() - datetime.strptime(latest, "%Y-%m-%d").date()).days
+          print(f"最新の記録 {latest}（{age}日前） / 通算 {len(snaps)}日分")
+          if age > 3:
+              print("::error::価格履歴が3日以上更新されていません。"
+                    "手元PCの取得タスク(run-daily.ps1)と、楽天アプリの許可IPを確認してください。"
+                    "自宅のグローバルIPが変わると 403 で止まります。")
+              sys.exit(1)
+          PY
 
       # GitHub は定期ジョブの失敗を通知しないので、Issue を立てて明示的に鳴らす。
       # 既に開いている失敗 Issue があれば、増やさずコメントを足す。
@@ -87,10 +78,10 @@ jobs:
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           gh label create ci-failure --color B60205 --description "定期実行の失敗" --force || true
-          body="$(date -u '+%Y-%m-%d %H:%M UTC') の price-tracker 取得が失敗しました。 ログ: ${RUN_URL}"
+          body="$(date -u '+%Y-%m-%d %H:%M UTC') の price-tracker 監視が失敗しました。 ログ: ${RUN_URL}"
           existing=$(gh issue list --label ci-failure --state open --limit 1 --json number --jq '.[0].number // empty')
           if [ -n "$existing" ]; then
             gh issue comment "$existing" --body "$body"
           else
-            gh issue create --title "price-tracker の価格取得が失敗しています" --label ci-failure --body "$body"
+            gh issue create --title "price-tracker の価格取得が止まっています" --label ci-failure --body "$body"
           fi
