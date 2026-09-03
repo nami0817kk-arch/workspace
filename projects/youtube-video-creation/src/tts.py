@@ -351,3 +351,46 @@ def _digest(line: Line, member: CastMember, pause: float, backend: str) -> str:
         f"|{member.pitch}|{member.intonation}|{pause}"
     )
     return hashlib.sha1(seed.encode("utf-8")).hexdigest()[:8]
+
+
+def image_credits(script, root=None) -> list[str]:
+    """台本が使っている画像のクレジット。
+
+    CC BY 系は表示が必須で、書かないと利用条件を満たさない。素材を取ったときに
+    imagegen が credits.json を残しているので、実際に使った画像の分だけ拾う。
+    自前生成の背景（assets/backgrounds）は権利が無いので何も出さない。
+    """
+    import json
+    from pathlib import Path
+
+    root = Path(root) if root else Path(".")
+    def origin(path: str) -> str:
+        """使った背景の元になった画像の名前。クリップなら記録から辿る。"""
+        target = root / path
+        sidecar = target.with_suffix(target.suffix + ".source.txt")
+        if sidecar.exists():
+            return sidecar.read_text(encoding="utf-8").strip()
+        return Path(path).name
+
+    used = {origin(scene.background) for scene in script.scenes if scene.background}
+    if script.background:
+        used.add(origin(script.background))
+
+    lines: list[str] = []
+    for ledger in sorted(root.glob("assets/images/**/credits.json")):
+        try:
+            rows = json.loads(ledger.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        for row in rows if isinstance(rows, list) else rows.get("items", []):
+            name = str(row.get("file") or row.get("filename") or "")
+            if Path(name).name not in used:
+                continue
+            title = str(row.get("title", "")).strip()
+            author = str(row.get("author") or row.get("creator") or "").strip()
+            license_ = str(row.get("license", "")).strip()
+            url = str(row.get("url") or row.get("source") or "").strip()
+            part = " / ".join(x for x in (title, author, license_, url) if x)
+            if part and part not in lines:
+                lines.append(part)
+    return [f"画像: {line}" for line in lines]

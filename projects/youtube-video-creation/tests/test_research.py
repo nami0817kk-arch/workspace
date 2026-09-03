@@ -528,3 +528,17 @@ def test_official_sources_are_not_counted_as_leaning():
     raw = _sourced([official + "a", official + "b"], [official + "c"], [])
     # 公式は1社に寄って当然
     assert not any("1社の報道" in h for h in advise(build_notes(raw), plan))
+
+
+# まとめのカードに問い・答え・次の焦点の3つを詰めていたので、2分の動画の締めに
+# しては字が細かく、下のテロップとも重なっていた（作った動画を目視して発見）。
+
+
+def test_まとめのカードは答えだけにする():
+    from src.research import _cards, load_notes
+
+    notes = load_notes("research/20260903_evening.yaml")
+    card = _cards(notes)["wrap"]
+    assert card["items"] == [notes.answer]
+    assert notes.question not in card["items"]   # 問いは冒頭で出している
+    assert notes.watch not in card["items"]      # 次の焦点は読み上げで言う

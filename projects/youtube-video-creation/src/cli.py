@@ -1710,6 +1710,11 @@ def _cmd_make_clip(args, config) -> int:
         source, out, args.seconds,
         (config.video.width, config.video.height), args.zoom, config.video.fps,
     )
+    # 元画像との対応を残す。クリップにすると名前が変わり、CC BY のクレジットを
+    # 引けなくなる（表示しないと利用条件を満たさない）
+    out.with_suffix(out.suffix + ".source.txt").write_text(
+        source.name, encoding="utf-8"
+    )
     print(f"クリップ: {out}")
     # 台本には相対パスで書く。絶対パスを書いた台本は、他のPCで開けなくなる
     try:

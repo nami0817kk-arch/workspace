@@ -469,10 +469,20 @@ def _reactions(spec: dict, width: int, font_path: str, latin_path: str) -> list[
         )
 
     inner = width - PAD * 2 - 60
+    ruler = ImageDraw.Draw(Image.new("RGB", (10, 10)))
     for item in items[:5]:
         text = str(item["text"]).strip()
         label = str(item.get("label") or "").strip()
+        # ラベルは吹き出しの右下に置く。本文をそのままの幅で折り返すと、
+        # 最終行がラベルの下に潜り込んで重なる（実際に重なっていた）
+        label_w = ruler.textlength(label, font=label_font) if label else 0
         lines = _wrap(text, text_font, inner)
+        if label and len(lines) > 1:
+            lines = _wrap(text, text_font, int(inner - label_w - 30))
+        elif label:
+            # 1行に収まっていても、ラベルと横に並ぶので幅を分け合う
+            if ruler.textlength(text, font=text_font) > inner - label_w - 30:
+                lines = _wrap(text, text_font, int(inner - label_w - 30))
         height = 34 + 46 * len(lines)
 
         def draw_bubble(draw, y, lines=lines, label=label, height=height):

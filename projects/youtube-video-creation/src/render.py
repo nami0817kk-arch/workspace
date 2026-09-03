@@ -765,16 +765,71 @@ def balanced_wrap(
     if len(lines) < 2:
         return lines
 
+    # 行数が同じ候補の中から、切れ目のいちばん良いものを選ぶ。
+    # 幅だけで詰めると「チェルシーが激怒した、移／籍期限…」のように
+    # 熟語の途中で割れる。句読点の直後で切れているほうが読みやすい。
+    best = lines
+    best_score = _break_score(lines)
     for ratio in (0.62, 0.7, 0.78, 0.86, 0.94):
         candidate = wrap_text(draw, text, font, max_width * ratio)
-        if len(candidate) == len(lines):
-            return candidate
-    return lines
+        if len(candidate) != len(lines):
+            continue
+        score = _break_score(candidate)
+        if score > best_score:
+            best, best_score = candidate, score
+    return best
+
+
+# 行末がこの文字なら、切れ目として良い（意味の区切りで改行できている）
+GOOD_BREAK_END = "、。！？」』）・"
+
+
+def _is_kanji(char: str) -> bool:
+    return "一" <= char <= "鿿"
+
+
+def _break_score(lines: list[str]) -> int:
+    """行の切れ目の良さ。大きいほど読みやすい。
+
+    - 句読点や閉じ括弧で終わっていれば +2（意味の区切りで改行できている）
+    - 漢字が続く途中で割ったら -3（「移／籍」「成／立」のような熟語の分断）
+
+    分断のほうを重く見る。多少 行末がそろわなくても、熟語が割れないほうが読める。
+    """
+    score = 0
+    for index, line in enumerate(lines[:-1]):
+        if not line:
+            continue
+        if line[-1] in GOOD_BREAK_END:
+            score += 2
+        next_line = lines[index + 1]
+        if next_line and _is_kanji(line[-1]) and _is_kanji(next_line[0]):
+            score -= 3
+    return score
+
+
+# 行頭に置いてはいけない文字（行頭禁則）。
+# 約物だけでは足りない。実測で「チェルシー」が「チ／ェルシー」に割れ、
+# 行頭が小文字の「ェ」になっていた。拗音・促音・長音符も行頭に来てはいけない。
+LINE_START_FORBIDDEN = (
+    "、。，．・：；！？」』）］｝〉》"      # 約物
+    "ぁぃぅぇぉっゃゅょゎゕゖ"              # ひらがなの小書き
+    "ァィゥェォッャュョヮヵヶ"              # カタカナの小書き
+    "ーヽヾゝゞ々〻"                        # 長音符・繰り返し記号
+    ",.!?:;)]}’”"                # 欧文の約物
+)
+
+# 行末に置いてはいけない文字（行末禁則）。開き括弧はぶら下げない
+LINE_END_FORBIDDEN = "「『（［｛〈《([{‘“"
 
 
 def wrap_text(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont, max_width: float) -> list[str]:
-    """日本語向けに1文字ずつ幅を見て折り返す。禁則は行頭約物のみ簡易対応。"""
-    forbidden = "、。！？」』）,.!?"
+    """日本語向けに1文字ずつ幅を見て折り返す。行頭・行末の禁則を守る。
+
+    幅だけで切ると、単語や拗音の途中で改行されて読みにくくなる。
+    実測では「チェルシー」が「チ／ェルシー」に、「成立」が「成／立」に割れていた。
+    """
+    forbidden = LINE_START_FORBIDDEN
     lines: list[str] = []
     current = ""
     for char in text:
@@ -784,9 +839,15 @@ def wrap_text(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont
             continue
         if draw.textlength(current + char, font=font) > max_width and current:
             if char in forbidden:
+                # 行頭に来てはいけない文字は、はみ出しても前の行にぶら下げる
                 current += char
                 lines.append(current)
                 current = ""
+                continue
+            # 行末に来てはいけない文字（開き括弧）は、次の行へ送る
+            if current[-1] in LINE_END_FORBIDDEN:
+                lines.append(current[:-1])
+                current = current[-1] + char
                 continue
             lines.append(current)
             current = char

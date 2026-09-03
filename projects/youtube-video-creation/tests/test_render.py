@@ -236,3 +236,92 @@ def test_balanced_wrap_evens_out_line_lengths():
     assert len(balanced) == len(greedy)          # 行数は変えない
     assert "".join(balanced) == text             # 文字は落とさない
     assert len(balanced[-1]) >= len(greedy[-1])  # 最後の行が短くなっていない
+
+
+# 幅だけで折り返していたので、単語や拗音の途中で改行されていた。
+# 実測（作った動画を目視して発見）で「チェルシー」が「チ／ェルシー」に、
+# 「成立」が「成／立」に割れ、行頭が小文字の「ェ」になっていた。
+
+
+def _wrapped(text, width=900, size=58):
+    from PIL import Image, ImageDraw, ImageFont
+
+    from src.config import load_config
+    from src.render import wrap_text
+
+    font = ImageFont.truetype(str(load_config().video.font_path()), size)
+    draw = ImageDraw.Draw(Image.new("RGB", (10, 10)))
+    return wrap_text(draw, text, font, width)
+
+
+def test_小書き文字を行頭に置かない():
+    """「チェルシー」が「チ」＋「ェルシー」に割れていた。"""
+    for line in _wrapped("次の焦点: モナコの説明と、チェルシーが今後この件をどう扱うかです。"):
+        assert line[0] not in "ぁぃぅぇぉっゃゅょァィゥェォッャュョ", line
+
+
+def test_長音符を行頭に置かない():
+    for line in _wrapped("サンダーランドとクリスタルパレスがフォファナの獲得を争っています。"):
+        assert not line.startswith("ー"), line
+
+
+def test_句読点は前の行にぶら下げる():
+    for line in _wrapped("合意していた、はずの移籍が、期限の直前に、消えました。"):
+        assert line[0] not in "、。", line
+
+
+def test_開き括弧を行末に置かない():
+    for line in _wrapped("モナコの説明はこうです「別の選手の退団が成立しなかった」ということです。"):
+        assert not line.endswith("「"), line
+
+
+def test_折り返しても文字は落ちない():
+    """禁則の処理で1文字も消えたり増えたりしないこと。"""
+    text = "チェルシーが激怒した、移籍期限最終日の破談劇「合意の重さ」をめぐる対立。"
+    assert "".join(_wrapped(text)) == text
+
+
+# 見出しの折り返しは行数をそろえることだけを見ていたので、幅が広いと
+# 「チェルシーが激怒した、移／籍期限…」と熟語の途中で割れていた。
+# 実際に作った動画を目視して見つけた。
+
+
+def _balanced(text, width=1460, size=74):
+    from PIL import Image, ImageDraw, ImageFont
+
+    from src.config import load_config
+    from src.render import balanced_wrap
+
+    font = ImageFont.truetype(str(load_config().video.font_path()), size)
+    draw = ImageDraw.Draw(Image.new("RGB", (10, 10)))
+    return balanced_wrap(draw, text, font, width)
+
+
+def _splits_kanji(lines):
+    def kanji(c):
+        return "\u4e00" <= c <= "\u9fff"
+
+    return any(
+        kanji(a[-1]) and kanji(b[0])
+        for a, b in zip(lines, lines[1:]) if a and b
+    )
+
+
+def test_熟語の途中で改行しない():
+    assert not _splits_kanji(_balanced("チェルシーが激怒した、移籍期限最終日の破談劇"))
+    assert not _splits_kanji(
+        _balanced("今回の問い: なぜ、決まっていたはずの移籍が土壇場でひっくり返ったのか。")
+    )
+
+
+def test_句読点で切れるほうを選ぶ():
+    from src.render import _break_score
+
+    good = ["チェルシーが激怒した、", "移籍期限最終日の破談劇"]
+    bad = ["チェルシーが激怒した、移", "籍期限最終日の破談劇"]
+    assert _break_score(good) > _break_score(bad)
+
+
+def test_見出しを折り返しても文字は落ちない():
+    text = "モナコが、別の選手の退団が成立しなかったために、カマラを手放せなくなったからです。"
+    assert "".join(_balanced(text)) == text

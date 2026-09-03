@@ -44,6 +44,7 @@ class Section:
     sources: list[str] = field(default_factory=list)
     official: bool = False
     card: dict | None = None
+    bg: str = ""      # この節の背景。空なら既定の並びから割り当てる
 
 
 # タイトルの頭に付ける札。まとめ系で定番の使い分け
@@ -121,6 +122,7 @@ def build_notes(raw: dict) -> Notes:
                 sources=[str(u).strip() for u in (entry.get("sources") or []) if str(u).strip()],
                 official=bool(entry.get("official", False)),
                 card=entry.get("card"),
+                bg=str(entry.get("bg", "")).strip(),
             )
         )
     if not sections:
@@ -522,7 +524,8 @@ def to_script(notes: Notes, plan: Plan) -> str:
     ]
 
     for index, section in enumerate(notes.sections):
-        lines += [f"## {section.heading}", f"@bg: {BACKGROUNDS[index % len(BACKGROUNDS)]}", ""]
+        background = section.bg or BACKGROUNDS[index % len(BACKGROUNDS)]
+        lines += [f"## {section.heading}", f"@bg: {background}", ""]
         for number, sentence in enumerate(section.say):
             speaker = SPEAKERS[number % len(SPEAKERS)]
             lines.append(f"{speaker}: {sentence}")
@@ -561,10 +564,14 @@ def _cards(notes: Notes) -> dict:
     for section in notes.sections:
         if section.card:
             cards[f"{section.id}_card"] = section.card
+    # まとめのカードは「答え」だけにする。
+    # 問い・答え・次の焦点を3つ並べたら、2分の動画の締めには字が細かすぎ、
+    # 下のテロップとも重なっていた（作った動画を目視して発見）。
+    # 問いは冒頭で、次の焦点は読み上げで言うので、画面で繰り返す必要はない。
     cards["wrap"] = {
         "type": "points",
         "title": "この動画の答え",
-        "items": [notes.question, notes.answer] + ([notes.watch] if notes.watch else []),
+        "items": [notes.answer],
     }
     return cards
 

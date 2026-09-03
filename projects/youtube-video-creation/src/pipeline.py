@@ -12,7 +12,7 @@ from .render import Renderer
 from . import audio_gen
 from .script_model import Script, load_script
 from .thumbnail import build_thumbnail, from_meta
-from .tts import create_backend, credits, synthesize_script
+from .tts import create_backend, credits, image_credits, synthesize_script
 
 
 @dataclass
@@ -100,7 +100,11 @@ def build_script(
         lines=look["lines"],
         tags=look["tags"],
     )
-    outputs = subtitles.write_outputs(script, out_dir, credits=credits(script, config, backend))
+    # 画像のクレジットも概要欄に出す。CC BY 系は表示しないと利用条件を満たさない
+    outputs = subtitles.write_outputs(
+        script, out_dir,
+        credits=credits(script, config, backend) + image_credits(script),
+    )
 
     if not keep_work:
         shutil.rmtree(work_dir, ignore_errors=True)
