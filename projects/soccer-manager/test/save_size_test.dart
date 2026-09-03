@@ -53,6 +53,10 @@ SaveGame _saveWithOtherDivision() {
 }
 
 void main() {
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+  });
+
   group('旧形式(他ディビジョンが選手データを持つ)のセーブ', () {
     test('読み込めて、他ディビジョンのチーム強度が保たれる', () {
       final save = _saveWithOtherDivision();
@@ -173,10 +177,43 @@ void main() {
     });
   });
 
+  group('削減率の実測', () {
+    // 合成データの比率は当てにならない(日程も結果も無いため)。
+    // 1シーズン消化した実際のセーブで測り、数値をログに出す。
+    test('1シーズン消化後のセーブで、他ディビジョンの選手を落とした効果を測る',
+        () async {
+      final gameState = GameState();
+      await gameState.startNewGame('テストFC');
+      while (!gameState.save!.league.isSeasonComplete) {
+        await gameState.playNextMatchday();
+        if (gameState.isHalfTime) {
+          await gameState.playSecondHalf();
+        }
+      }
+
+      final save = gameState.save!;
+      final reduced = jsonEncode(save.toJson()).length;
+      // 削減前の形: 他ディビジョンも選手データを持ったまま書き出す。
+      final full = jsonEncode({
+        ...save.toJson(),
+        'otherDivisionLeagues':
+            save.otherDivisionLeagues.map((l) => l?.toJson()).toList(),
+      }).length;
+
+      // ignore: avoid_print
+      print('[save-size] 削減前=${(full / 1024).toStringAsFixed(1)}KB '
+          '削減後=${(reduced / 1024).toStringAsFixed(1)}KB '
+          '比率=${(reduced / full * 100).toStringAsFixed(1)}%');
+
+      expect(reduced, lessThan(full), reason: '削減が効いていること');
+    });
+  });
+
   group('昇格してユーザーのディビジョンに入るチーム', () {
-    testWidgets('選手を持たない状態から、強度に見合うスカッドが用意される',
-        (tester) async {
-      SharedPreferences.setMockInitialValues({});
+    // testWidgets は使わないこと。fake-async の中で実タイマーを待つと
+    // シーズンの周回が進まず、10分でタイムアウトする(2026-09-03 に踏んだ)。
+    // 既存のシーズン周回テストも全て素の test()。
+    test('選手を持たない状態から、強度に見合うスカッドが用意される', () async {
       final gameState = GameState();
       await gameState.startNewGame('テストFC');
 
