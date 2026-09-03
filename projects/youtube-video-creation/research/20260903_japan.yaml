@@ -1,0 +1,83 @@
+# 日本人選手 の取材メモ（2026年9月3日）
+slot: japan
+date: "2026年9月3日"
+
+theme:
+  id: ueda_lille
+  league: france
+  prefix: ""
+  title: 上田綺世のリール移籍、鹿島にも入る移籍金
+  hook: 上田綺世選手のリール移籍が、クラブから正式に発表されました。
+  question: この移籍は、上田選手と古巣の鹿島に何をもたらすのか。
+
+thumbnail:
+  line1: 上田綺世 リールへ
+  line2: 鹿島にも移籍金が入る
+  tags: [上田綺世, リーグアン]
+
+answer: 上田選手にはチャンピオンズリーグ出場の場が、鹿島には育成の対価としての移籍金が入ります。
+watch: リールでの初戦と、起用のされ方です。
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 確定
+    telop: リールが正式発表
+    bg: assets/backgrounds/stadium.png
+    card:
+      type: transfer
+      player: 上田 綺世
+      from: フェイエノールト
+      to: リール
+      fee: 契約4年 / 背番号18
+    say:
+      - フランス、リーグアンのリールが、日本代表フォワード上田綺世選手の獲得を正式に発表しました。
+      - 契約は4年、背番号は18です。
+      - リールの公式サイトでは、入団会見の告知も出ています。
+    official: true
+    sources:
+      - https://www.losc.fr/
+      - https://footballnet.2chblog.jp/archives/60029572.html
+
+  - id: numbers
+    heading: 数字で見ると
+    tier: 報道
+    telop: 鹿島の累計収入が1億円を突破
+    bg: assets/backgrounds/pitch.png
+    card:
+      type: points
+      title: この移籍で分かっていること
+      items:
+        - 契約は4年、背番号は18
+        - 鹿島アントラーズの累計収入が1億円を突破
+        - リールはチャンピオンズリーグ出場クラブ
+    say:
+      - フットボールトライブは、この移籍で鹿島アントラーズの累計収入が1億円を超えた、と伝えています。
+      - 育てたクラブに対価が入る仕組みが働いた形です。
+      - また同メディアは、リールでの上田選手の得点力について、限られた選手しか上回っていないと報じています。
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/09/03/358839/
+      - https://www.losc.fr/
+
+  - id: voices
+    heading: 世の中はどう見ているか
+    tier: 未確認
+    telop: 期待と、慎重な見方
+    bg: assets/backgrounds/tactics.png
+    card:
+      type: reactions
+      title: ネット上の反応
+      items:
+        - text: チャンピオンズリーグに出られるクラブへ行けたのは大きい
+          label: まとめサイト
+        - text: フェイエノールトでは合わなかったという見方もある
+          label: まとめサイト
+    say:
+      - まとめサイトには、チャンピオンズリーグに出られるクラブへ移れたことを評価する声が出ています。
+      - 一方で、前の所属クラブでの評価をめぐっては、慎重な見方も出ています。
+      - いずれも匿名の書き込みなので、ここでは確定した評価としては扱いません。
+    official: false
+    sources:
+      - https://footballnet.2chblog.jp/archives/60029572.html
+      - https://football-tribe.com/japan/2026/09/02/358821/

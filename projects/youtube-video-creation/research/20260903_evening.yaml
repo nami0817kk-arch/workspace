@@ -1,0 +1,77 @@
+# 夜のまとめ・深掘り の取材メモ（2026年9月3日）
+slot: evening_1
+date: "2026年9月3日"
+
+theme:
+  id: camara_chelsea_collapse
+  league: england
+  prefix: ""
+  title: チェルシーが激怒した、移籍期限最終日の破談劇
+  hook: 移籍金でいったん合意し、メディカルまで進んでいた移籍が、期限の直前に消えました。
+  question: なぜ、決まっていたはずの移籍が土壇場でひっくり返ったのか。
+
+thumbnail:
+  line1: 合意済みの移籍が消えた
+  line2: チェルシーがモナコに激怒
+  tags: [チェルシー, 移籍期限]
+
+answer: モナコが、別の選手の退団が成立しなかったために、カマラを手放せなくなったからです。
+watch: モナコの説明と、チェルシーが今後この件をどう扱うかです。
+
+sections:
+  - id: what
+    bg: assets/backgrounds/chelsea.mp4
+    heading: 何が起きたか
+    tier: 報道
+    telop: 合意済みの移籍が期限直前に消滅
+    say:
+      - チェルシーが、モナコのラミン・カマラの獲得で合意していた移籍が、期限の直前に破談になりました。
+      - スカイスポーツは、モナコが売却から手を引いた、と伝えています。
+      - デイリーメールは、移籍金をよんせんななひゃくまんポンドと報じています。
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13580189/lamine-camara-monaco-pull-out-of-selling-midfielder
+      - https://www.dailymail.com/sport/football/article-16095381/Chelsea-agree-47m-Lamine-Camara-deal.html
+      - https://web.gekisaka.jp/news/world/detail/?458022-458022-fl
+
+  - id: background
+    bg: assets/backgrounds/monaco.mp4
+    heading: ここに至る経緯
+    tier: 背景
+    telop: 玉突きが崩れた
+    say:
+      - この移籍は、単独で動いていたわけではありませんでした。
+      - モナコは、フォラリン・バログンをエバートンへ売る話を進めていました。その売却が成立すれば、カマラを手放す余裕ができます。
+      - ところが、バログンの移籍が先に壊れました。売る側の計算が崩れ、カマラを出せなくなった、という順番です。
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13580201/folarin-balogun-monaco-strikers-move-to-everton
+      - https://www.espn.com/soccer/story/_/id/49800449/folarin-balogun-uturn-deadline-scuppered-everton-move
+
+  - id: point
+    bg: assets/backgrounds/chelsea.mp4
+    heading: 争点はどこか
+    tier: 報道
+    telop: 合意の重さをめぐる対立
+    say:
+      - 争点は、クラブ間で交わした合意をどう扱うか、です。
+      - イーエスピーエヌは、チェルシーがモナコの方針転換に激怒していると伝えています。
+      - フランスのフットメルカートも、チェルシーがモナコに対して強い不満を持っている、と報じています。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49792150/chelsea-make-lamine-camara-offer-amid-enzo-fernandez
+      - https://www.footmercato.net/a8086960524063446042-chelsea-est-fou-furieux-contre-las-monaco-apres-le-fiasco-lamine-camara
+
+  - id: next
+    bg: assets/backgrounds/monaco.mp4
+    heading: これからどうなる
+    tier: 報道
+    telop: 代理人が公然と批判
+    say:
+      - カマラの代理人は、クラブ側の対応を公然と批判しています。デイリーメールがその発言を伝えています。
+      - フットメルカートによると、モナコのスポーツディレクターがこの件について説明を行いました。
+      - カマラはモナコの練習に戻っています。次の移籍市場まで、この関係がどう続くかが焦点です。
+    official: false
+    sources:
+      - https://www.dailymail.com/sport/football/article-16098485/Ismaila-Sarrs-agent-launches-extraordinary-attack.html
+      - https://www.footmercato.net/a9031939018722865360-monaco-balogun-lamine-camara-la-grosse-mise-au-point-de-thiago-scuro

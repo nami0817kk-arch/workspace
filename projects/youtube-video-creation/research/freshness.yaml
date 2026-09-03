@@ -59,28 +59,12 @@ observed:
   at: 2026-09-01T22:05
   exact: true
 - site: skysports.com
-  max: 13279295
-  at: 2026-09-02T07:45
-  exact: true
-- site: kicker.de
-  max: 935443
-  at: 2026-09-02T07:55
-  exact: true
-- site: skysports.com
   max: 13375102
   at: 2026-09-02T08:24
   exact: true
 - site: espn.com
-  max: 49791970
-  at: 2026-09-02T09:42
-  exact: true
-- site: espn.com
   max: 49733177
   at: 2026-09-02T17:20
-  exact: true
-- site: kicker.de
-  max: 1248907
-  at: 2026-09-02T17:59
   exact: true
 - site: skysports.com
   max: 13579892
@@ -93,4 +77,20 @@ observed:
 - site: kicker.de
   max: 1213018
   at: 2026-09-02T22:14
+  exact: true
+- site: skysports.com
+  max: 13025492
+  at: 2026-09-02T23:20
+  exact: true
+- site: kicker.de
+  max: 1249143
+  at: 2026-09-02T23:36
+  exact: true
+- site: kicker.de
+  max: 1249132
+  at: 2026-09-02T23:50
+  exact: true
+- site: espn.com
+  max: 49781199
+  at: 2026-09-02T23:57
   exact: true
