@@ -3,7 +3,7 @@
 #  テストが実は対象を import できていない、という事故につながる。）
 # pytest は CI 側で足す。
 yfinance>=0.2.40
-pandas>=2.2.0
+pandas>=3.0.5
 ta>=0.11.0
 plotly>=7.0.0
 matplotlib>=3.11.1
