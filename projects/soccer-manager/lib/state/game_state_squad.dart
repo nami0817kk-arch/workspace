@@ -123,6 +123,26 @@ extension GameStateSquad on GameState {
     return true;
   }
 
+  /// 育成アドバイザーの提案を、その場で適用する。
+  ///
+  /// 助言を読んでから該当画面へ移動して設定する往復が、毎週分だけ積み重なる。
+  /// 提案どおりでよいときは1タップで済ませられるようにする。
+  /// 適用できたら true。ドリルは枠(ヘッドコーチのレベル)が埋まっていると
+  /// 失敗するので、その結果をそのまま返す。
+  bool applyAdviceFix(DevelopmentAdvice advice) {
+    final fix = advice.fix;
+    if (fix == null) return false;
+    switch (fix) {
+      case AssignMentorFix(:final mentorId):
+        return setMentor(advice.playerId, mentorId);
+      case SetDrillFix(:final attributeKey):
+        return setDrillAttribute(advice.playerId, attributeKey);
+      case RestFix():
+        setPlayerTrainingFocus(advice.playerId, TrainingFocus.rest);
+        return true;
+    }
+  }
+
   /// 同時にピンポイント特訓ドリルを指定できる人数の上限。ヘッドコーチの
   /// レベルが高いほど、より多くの選手を同時に個別指導できる。
   int get maxDrillSlots =>

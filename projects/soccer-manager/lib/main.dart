@@ -214,7 +214,9 @@ class SoccerManagerApp extends StatelessWidget {
                 ),
                 // 保存の失敗はどの画面の操作でも起きるので、個々の画面では
                 // なくここで拾って知らせる。
-                child: SaveErrorNotifier(child: child!),
+                child: SaveErrorNotifier(
+                  child: _SaveOnPause(child: child!),
+                ),
               );
             },
             home: const _RootScreen(),
@@ -245,4 +247,46 @@ class _RootScreen extends StatelessWidget {
     }
     return const StartScreen();
   }
+}
+
+/// アプリが背面に回るときに、保存待ちの変更を書き出す。
+///
+/// 保存は連打で1MB超のJSONを何度も書かないようまとめてある([GameState.
+/// persistDebounce])。そのぶん、まとめている最中にアプリを閉じられると
+/// 直近の変更が消える。ここで書き切る。
+class _SaveOnPause extends StatefulWidget {
+  final Widget child;
+
+  const _SaveOnPause({required this.child});
+
+  @override
+  State<_SaveOnPause> createState() => _SaveOnPauseState();
+}
+
+class _SaveOnPauseState extends State<_SaveOnPause>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.inactive ||
+        state == AppLifecycleState.paused ||
+        state == AppLifecycleState.detached ||
+        state == AppLifecycleState.hidden) {
+      context.read<GameState>().flushPendingSave();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.child;
 }

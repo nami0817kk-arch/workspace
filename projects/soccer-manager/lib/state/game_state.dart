@@ -9,6 +9,7 @@
 // このコードベースの流儀に合う。ただし startNextSeason と playNextMatchday は
 // 状態変更と分かちがたいため、出せる範囲は限られる。将来の選択肢として記す。
 
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 
@@ -79,6 +80,7 @@ import '../data/name_pool.dart';
 import '../models/first_run_step.dart';
 import '../monetization/reward_offer.dart';
 import '../l10n/tr.dart';
+import '../logic/development_advisor.dart';
 
 part 'game_state_squad.dart';
 part 'game_state_transfer.dart';
@@ -414,14 +416,69 @@ class GameState extends ChangeNotifier {
   /// 表示のまま進行できなくなる(UI側でエラーを拾えないため)。プレイ自体は
   /// メモリ上のセーブデータで継続できるため、保存失敗はここで捕捉して
   /// [lastSaveError] に記録するに留める。
+  /// 保存をまとめるためのタイマー。
+  Timer? _persistTimer;
+
+  /// 保存の間隔。短くすると中断時に失う変更が減るが、まとめる効果も減る。
+  static const Duration persistDebounce = Duration(milliseconds: 400);
+
+  /// 「今どのセーブが正か」を表す世代番号。新しくセーブを作る・読み込む
+  /// たびに進む。
+  ///
+  /// 保存をまとめるようにしたことで、書き出しは予約から遅れて起きる。その間に
+  /// 別のセーブが正になっていると、古い内容で上書きしてしまう。予約した時点の
+  /// 世代を覚えておき、発火時に食い違っていたら書かない。
+  ///
+  /// static なのは、GameState を作り直しても保存先(端末のストレージ)は
+  /// 共有だから。実際、前のインスタンスが残した予約が次のセーブを
+  /// 上書きする形で CI が落ちた。
+  static int _saveGeneration = 0;
+
+  /// 保存を予約する。呼び出しが続く間は書き出さず、止まってからまとめて1回。
+  ///
+  /// セーブは1MBを超える(大半は他ディビジョンの選手データ)。設定を1つ変える
+  /// たびに丸ごとJSON化していたため、1回あたり約26msかかっていた。60fpsの
+  /// 1フレーム(16.7ms)を超えるので、スライダーを動かすと目に見えて引っかかる。
+  /// 端から端まで動かすと1.3秒ぶんの処理が走っていた(実測)。
+  ///
+  /// 中断されると直近の変更を失うため、区切りになる操作([_persistNow])と
+  /// アプリが背面に回るとき([flushPendingSave])は即時に書き出す。
   Future<void> _persist() async {
+    // 予約時点のスロットを覚えておく。書き出しは後になるので、そのとき
+    // currentSlot を読むと、間にスロットを切り替えられていた場合に別の
+    // スロットへ書き込んでしまう。
+    final slot = currentSlot;
+    final generation = _saveGeneration;
+    _persistTimer?.cancel();
+    _persistTimer = Timer(persistDebounce, () {
+      _persistTimer = null;
+      if (generation != _saveGeneration) return; // 既に別のセーブが正
+      _persistNow(slot: slot);
+    });
+  }
+
+  /// 予約されている保存があれば、待たずに書き出す。
+  /// アプリが背面に回るときなど、中断されうる場面で呼ぶ。
+  Future<void> flushPendingSave() async {
+    if (_persistTimer == null) return;
+    _persistTimer!.cancel();
+    _persistTimer = null;
+    await _persistNow();
+  }
+
+  /// 待たずに書き出す。予約されている保存はこれで置き換わるので取り消す。
+  /// 取り消さないと、この書き出しの後から古い内容が上書きしにいく。
+  Future<void> _persistNow({int? slot}) async {
+    _persistTimer?.cancel();
+    _persistTimer = null;
+    final target = slot ?? currentSlot;
     try {
       final prefs = await SharedPreferences.getInstance();
       if (_save == null) {
-        await prefs.remove(_slotKey(currentSlot));
+        await prefs.remove(_slotKey(target));
       } else {
         await prefs.setString(
-          _slotKey(currentSlot),
+          _slotKey(target),
           jsonEncode(_save!.toJson()),
         );
       }
@@ -431,6 +488,15 @@ class GameState extends ChangeNotifier {
           'The game could not be saved. Check the free space on your device.');
       _notify();
     }
+  }
+
+  @override
+  void dispose() {
+    // 破棄した後にタイマーが発火すると、既に別の状態になっている保存先へ
+    // 書き込みにいく。テストのように複数の GameState を作る場面で顕在化する。
+    _persistTimer?.cancel();
+    _persistTimer = null;
+    super.dispose();
   }
 
   /// 各スロットの概要一覧を返す(スロット番号順)。
@@ -463,6 +529,11 @@ class GameState extends ChangeNotifier {
 
   /// 指定スロットをカレントスロットにして読み込む(データがなければ空の状態にする)。
   Future<void> loadSlot(int slot) async {
+    // ここから先はこのセーブが正。古い予約は無効になる。
+    _saveGeneration++;
+    // 切り替える前に、今のスロット宛の保留を書き切る。残したまま切り替えると
+    // 直前の変更が失われる(あるいは切り替え先へ書き込まれる)。
+    await flushPendingSave();
     final prefs = await SharedPreferences.getInstance();
     currentSlot = slot;
     await prefs.setInt(_currentSlotKey, slot);
@@ -497,6 +568,10 @@ class GameState extends ChangeNotifier {
   /// 指定スロットのセーブデータを完全に削除する。カレントスロットの場合は
   /// メモリ上のセーブも破棄する。
   Future<void> deleteSlot(int slot) async {
+    // ここから先はこのセーブが正。古い予約は無効になる。
+    _saveGeneration++;
+    // 消す前に保留を書き切る。消した後に保留が発火すると復活してしまう。
+    await flushPendingSave();
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove(_slotKey(slot));
     if (slot == currentSlot) {
@@ -519,6 +594,8 @@ class GameState extends ChangeNotifier {
     LeagueTheme theme = LeagueTheme.england,
     GameDifficulty difficulty = GameDifficulty.normal,
   }) async {
+    // ここから先はこのセーブが正。古い予約は無効になる。
+    _saveGeneration++;
     isBusy = true;
     _notify();
     // ローディング表示を1フレーム描画させてから、重いクラブ生成処理に入る。
@@ -626,7 +703,7 @@ class GameState extends ChangeNotifier {
     lastContractExpirations = [];
     isBusy = false;
     _notify();
-    await _persist();
+    await _persistNow();
   }
 
   /// シーズン開幕前の親善試合を2試合分生成する(ランダムな相手と)。
@@ -645,12 +722,14 @@ class GameState extends ChangeNotifier {
   }
 
   Future<void> deleteSave() async {
+    // ここから先はこのセーブが正。古い予約は無効になる。
+    _saveGeneration++;
     _save = null;
     transferMarket = [];
     scoutCandidates = [];
     lastContractExpirations = [];
     _notify();
-    await _persist();
+    await _persistNow();
   }
 
   /// バックアップ用にセーブデータ全体をJSON文字列として書き出す。
@@ -661,6 +740,8 @@ class GameState extends ChangeNotifier {
 
   /// エクスポートされたJSON文字列からセーブデータを復元する。形式が不正な場合はfalseを返す。
   Future<bool> importSaveJson(String json) async {
+    // ここから先はこのセーブが正。古い予約は無効になる。
+    _saveGeneration++;
     final SaveGame restored;
     try {
       restored = SaveGame.fromJson(jsonDecode(json) as Map<String, dynamic>);
@@ -673,7 +754,7 @@ class GameState extends ChangeNotifier {
     transferMarket = TransferMarket.generate();
     _refreshScoutCandidates();
     _notify();
-    await _persist();
+    await _persistNow();
     return true;
   }
 

@@ -616,7 +616,7 @@ extension GameStateMatch on GameState {
       isBusy = false;
     }
     _notify();
-    await _persist();
+    await _persistNow();
     return userFirstHalf;
   }
 
@@ -658,7 +658,7 @@ extension GameStateMatch on GameState {
       return _finalizeSecondHalf(state.toHalfResult());
     }
     _notify();
-    await _persist();
+    await _persistNow();
     return null;
   }
 
@@ -680,7 +680,7 @@ extension GameStateMatch on GameState {
         return (merged: merged, decisionEvent: event);
       }
       _notify();
-      await _persist();
+      await _persistNow();
       return (merged: null, decisionEvent: event);
     }
     final firstState = _liveFirstHalfState;
@@ -695,7 +695,7 @@ extension GameStateMatch on GameState {
         }
       }
       _notify();
-      await _persist();
+      await _persistNow();
       return (merged: null, decisionEvent: event);
     }
     return (merged: null, decisionEvent: null);
@@ -838,7 +838,7 @@ extension GameStateMatch on GameState {
     _liveWasInteractive = false;
 
     _notify();
-    await _persist();
+    await _persistNow();
     return merged;
   }
 

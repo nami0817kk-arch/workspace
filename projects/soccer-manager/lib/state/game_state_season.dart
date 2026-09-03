@@ -84,7 +84,7 @@ extension GameStateSeason on GameState {
       _afterDomesticCupMatchApplied(match);
     }
     _notify();
-    await _persist();
+    await _persistNow();
     return result;
   }
 
@@ -129,7 +129,7 @@ extension GameStateSeason on GameState {
       _afterContinentalGroupMatchApplied(match);
     }
     _notify();
-    await _persist();
+    await _persistNow();
     return result;
   }
 
@@ -155,7 +155,7 @@ extension GameStateSeason on GameState {
       _afterContinentalKnockoutLegApplied(leg.tie);
     }
     _notify();
-    await _persist();
+    await _persistNow();
     return result;
   }
 
@@ -182,7 +182,7 @@ extension GameStateSeason on GameState {
     _applyUserCupPostMatchEffects(result);
     _afterSuperCupApplied(match);
     _notify();
-    await _persist();
+    await _persistNow();
     return result;
   }
 
@@ -291,7 +291,7 @@ extension GameStateSeason on GameState {
       homeAdvantageFactor: _homeAdvantageFor(home.id),
     );
     _notify();
-    await _persist();
+    await _persistNow();
     return true;
   }
 
@@ -1104,6 +1104,6 @@ extension GameStateSeason on GameState {
 
     isBusy = false;
     _notify();
-    await _persist();
+    await _persistNow();
   }
 }

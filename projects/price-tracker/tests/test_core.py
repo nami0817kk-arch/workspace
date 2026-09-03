@@ -3,6 +3,7 @@ import json
 import sys
 import tempfile
 import unittest
+import unittest.mock
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -253,3 +254,113 @@ class RevenueTest(unittest.TestCase):
     def test_margin_is_negative_below_break_even(self):
         from src import revenue
         self.assertLess(revenue.margin(5000, 15000), 0)
+
+
+class RequestShapeTest(unittest.TestCase):
+    """リクエスト先と認証パラメータを固定する。
+
+    2026-05-13 に旧APIが廃止され、ホスト・バージョン・accessKey の
+    どれが欠けても取得できない。これは例外ではなく「0件」として
+    静かに現れるので、URLとパラメータをテストで留めておく。
+    """
+
+    def setUp(self):
+        self.env = unittest.mock.patch.dict(
+            "os.environ",
+            {"RAKUTEN_APP_ID": "app-uuid", "RAKUTEN_ACCESS_KEY": "pk_test",
+             "RAKUTEN_AFFILIATE_ID": "aff-id"})
+        self.env.start()
+        self.addCleanup(self.env.stop)
+        self.seen = []
+
+    def opener(self, payload):
+        def _open(req, timeout=None):
+            self.seen.append(req.full_url)
+            body = json.dumps(payload).encode("utf-8")
+
+            class Res:
+                def read(self_inner):
+                    return body
+
+                def __enter__(self_inner):
+                    return self_inner
+
+                def __exit__(self_inner, *exc):
+                    return False
+            return Res()
+        return _open
+
+    def query(self, url):
+        from urllib.parse import parse_qs, urlsplit
+        return parse_qs(urlsplit(url).query)
+
+    def test_商品検索は新ホストと新バージョンを叩く(self):
+        rakuten.search_genre("100", 1, rakuten.Throttle(interval=0),
+                             self.opener({"Items": [], "pageCount": 1}))
+
+        url = self.seen[0]
+        self.assertIn("https://openapi.rakuten.co.jp/ichibams/api/", url)
+        self.assertIn("/IchibaItem/Search/20260701", url)
+        self.assertNotIn("app.rakuten.co.jp", url)
+
+    def test_商品検索はアプリIDとアクセスキーを両方送る(self):
+        rakuten.search_genre("100", 1, rakuten.Throttle(interval=0),
+                             self.opener({"Items": [], "pageCount": 1}))
+
+        q = self.query(self.seen[0])
+        self.assertEqual(q["applicationId"], ["app-uuid"])
+        self.assertEqual(q["accessKey"], ["pk_test"])
+        self.assertEqual(q["affiliateId"], ["aff-id"])
+
+    def test_ジャンル検索は別ホスト_ichibagt_を叩く(self):
+        rakuten.genre_children("0", rakuten.Throttle(interval=0),
+                               self.opener({"children": []}))
+
+        url = self.seen[0]
+        self.assertIn("https://openapi.rakuten.co.jp/ichibagt/api/", url)
+        self.assertIn("/IchibaGenre/Search/20260701", url)
+        q = self.query(url)
+        self.assertEqual(q["accessKey"], ["pk_test"])
+
+    def test_アクセスキーが無ければ取得前に落ちる(self):
+        with unittest.mock.patch.dict("os.environ", {"RAKUTEN_ACCESS_KEY": ""}):
+            with self.assertRaises(rakuten.RakutenError) as cm:
+                rakuten.credentials()
+        self.assertIn("RAKUTEN_ACCESS_KEY", str(cm.exception))
+
+
+class ErrorDetailTest(unittest.TestCase):
+    """403 の理由を握りつぶさない。ただしキーはログに出さない。"""
+
+    def test_redactは認証情報を落として他は残す(self):
+        url = ("https://openapi.rakuten.co.jp/ichibagt/api/IchibaGenre/Search/20260701"
+               "?applicationId=app-uuid&accessKey=pk_secret&affiliateId=aff&genreId=0")
+
+        out = rakuten.redact(url)
+
+        self.assertNotIn("pk_secret", out)
+        self.assertNotIn("app-uuid", out)
+        self.assertNotIn("aff", out)
+        self.assertIn("genreId=0", out)
+        self.assertIn("IchibaGenre/Search/20260701", out)
+
+    def test_HTTPエラーの本文を例外に載せる(self):
+        import io
+        import urllib.error
+
+        def opener(req, timeout=None):
+            raise urllib.error.HTTPError(
+                req.full_url, 403, "Forbidden", {},
+                io.BytesIO(b'{"error":"wrong_parameter"}'))
+
+        with unittest.mock.patch.dict(
+                "os.environ",
+                {"RAKUTEN_APP_ID": "app-uuid", "RAKUTEN_ACCESS_KEY": "pk_secret",
+                 "RAKUTEN_AFFILIATE_ID": ""}):
+            with self.assertRaises(rakuten.RakutenError) as cm:
+                rakuten.genre_children("0", rakuten.Throttle(interval=0), opener)
+
+        msg = str(cm.exception)
+        self.assertIn("403", msg)
+        self.assertIn("wrong_parameter", msg)
+        self.assertNotIn("pk_secret", msg)
