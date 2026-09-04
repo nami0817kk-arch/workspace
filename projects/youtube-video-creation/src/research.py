@@ -246,6 +246,19 @@ def _check_reactions(section: Section) -> list[str]:
     return problems
 
 
+def _has_name(title: str, sections) -> bool:
+    """タイトルに人名かクラブ名らしきものが入っているか。
+
+    カタカナが4文字以上続くか、漢字が2〜4文字続けば名前とみなす。
+    厳密な判定ではなく、**入れ忘れに気づかせる**ための目安。
+    """
+    import re
+
+    if re.search(r"[ァ-ヴー]{4,}", title):
+        return True
+    return bool(re.search(r"[一-鿿]{2,4}", title))
+
+
 def advise(notes: Notes, plan: Plan | None = None, now=None) -> list[str]:
     """止めるほどではないが直したほうがよい点。draft のときに出す。"""
     notes_warnings: list[str] = []
@@ -259,6 +272,29 @@ def advise(notes: Notes, plan: Plan | None = None, now=None) -> list[str]:
         notes_warnings.append(
             "【速報】が付いていますが、確定・報道の節がありません。"
             "未確認だけの回に速報と書くと、内容と釣り合いません"
+        )
+
+    # 参考3チャンネルの実測（2026-09-04）。**例外なく**先頭にラベルが付く。
+    #   2chサッカーの噂話(10.3万)  【悲報】【速報】【朗報】【衝撃】【現地反応】
+    #   さっかー情報館(1.73万)      【速報】＋「〜してしまうww」
+    #   クロニカ(1.11万)            【海外の反応】
+    if not notes.prefix:
+        notes_warnings.append(
+            "prefix が空です。参考3チャンネルは例外なく先頭にラベルを付けています"
+            "（速報 / 悲報 / 朗報 …）。付けないと一覧で埋もれます"
+        )
+
+    # 同じく3チャンネルとも、タイトルに人名かクラブ名が入る
+    if notes.title and not _has_name(notes.title, notes.sections):
+        notes_warnings.append(
+            "タイトルに選手名・クラブ名が見当たりません。"
+            "参考3チャンネルはどれも人の名前を入れています"
+        )
+
+    if len(notes.video_title) > 40:
+        notes_warnings.append(
+            f"タイトルが{len(notes.video_title)}文字。一覧では途中で切れます"
+            "（参考3チャンネルは20〜35文字が中心）"
         )
 
     if not notes.thumbnail.get("line1"):
