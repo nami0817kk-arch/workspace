@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../models/corner_routine.dart';
 import '../models/attributes.dart';
 import '../models/formation.dart';
 import '../models/player.dart';
@@ -682,6 +683,37 @@ class _SetPieceTakersCard extends StatelessWidget {
           children: [
             Text(Tr.pick('セットプレー担当', 'Set piece takers'),
                 style: Theme.of(context).textTheme.titleSmall),
+            const SizedBox(height: 8),
+            // コーナーの狙い。どれが強いという順番は無く、手持ちの選手に
+            // 合うものを選ぶ。合っていなければ形だけになる。
+            Row(
+              children: [
+                SizedBox(
+                  width: 90,
+                  child: Text(Tr.pick('CKの狙い', 'Corners')),
+                ),
+                Expanded(
+                  child: DropdownButton<CornerRoutine>(
+                    isExpanded: true,
+                    value: team.cornerRoutine,
+                    items: [
+                      for (final r in CornerRoutine.values)
+                        DropdownMenuItem(value: r, child: Text(r.label)),
+                    ],
+                    onChanged: (r) {
+                      if (r == null) return;
+                      FeedbackService.tap();
+                      context.read<GameState>().setCornerRoutine(r);
+                    },
+                  ),
+                ),
+              ],
+            ),
+            Text(
+              team.cornerRoutine.description,
+              style: TextStyle(
+                  fontSize: 11, color: SemanticColors.subtleText(context)),
+            ),
             const SizedBox(height: 8),
             _TakerDropdown(
               label: 'PK',

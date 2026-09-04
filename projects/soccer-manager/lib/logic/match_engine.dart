@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import '../models/corner_routine.dart';
 import '../models/attributes.dart';
 import '../models/formation.dart';
 import '../models/player.dart';
@@ -729,6 +730,88 @@ class MatchEngine {
   }
 
   /// クロスに合わせる標的を、ヘディング・ジャンプ力で重み付けして選ぶ。
+  /// コーナーキックを解決する。ライブ観戦と一括シミュレーションの両方から
+  /// 呼ばれる。以前は同じ処理が2箇所に写してあり、片方だけ直す事故が
+  /// 起きうる形だった。
+  ///
+  /// 狙い(CornerRoutine)によって、合わせる選手に求められる能力が変わる。
+  /// 手持ちの選手に合う狙いを選べているかが結果に出る。
+  static ({Player? scorer, Player? taker, double scoreProb}) resolveCorner({
+    required Team attackingTeam,
+    required List<Player> attackingLineup,
+    required Team defendingTeam,
+    required List<Player> defendingLineup,
+    required double baseProb,
+  }) {
+    final routine = attackingTeam.cornerRoutine;
+    final taker = _pickSetPieceTaker(
+      attackingTeam.cornerTakerId,
+      attackingLineup,
+    );
+    final scorer = _pickCornerTarget(
+      attackingLineup,
+      routine,
+      excludeId: taker?.id,
+    );
+
+    var scoreProb = baseProb;
+    if (taker != null) {
+      final cornersAttr = taker.attributeValue(AttributeKeys.corners);
+      // ロングスローもコーナーと同様に、ワイドからの精度あるボールの供給と
+      // いう点で質に少し寄与させる(コーナーの専門性を主としつつ)。
+      final longThrowsAttr = taker.attributeValue(AttributeKeys.longThrows);
+      final deliveryQuality =
+          (cornersAttr * 0.8 + longThrowsAttr * 0.2).round();
+      scoreProb =
+          (scoreProb * (1 + (deliveryQuality - 50) / 200)).clamp(0.05, 0.75);
+    }
+
+    // 狙いに合った選手が入っているかを、そのまま決定率に反映する。
+    // 長身がいないのにファーで競っても、こぼれ球を狙う形で長距離砲が
+    // いないのと同じで、形だけになる。
+    final fit = scorer?.attributeValue(routine.targetAttribute) ?? 50;
+    scoreProb = (scoreProb * (1 + (fit - 50) / 200)).clamp(0.05, 0.75);
+
+    scoreProb = applySetPieceDefense(scoreProb, defendingTeam, defendingLineup);
+    if (routine.isAerial) {
+      scoreProb = _applyHeaderQuality(scoreProb, scorer);
+    }
+    return (scorer: scorer, taker: taker, scoreProb: scoreProb);
+  }
+
+  /// 狙いに応じて、合わせる選手を選ぶ。
+  ///
+  /// ファー・ニアは前線の選手から、エリア手前とショートは中盤も含めて
+  /// 選ぶ。ミドルを狙う形で前線しか見ないのは実態に合わない。
+  static Player? _pickCornerTarget(
+    List<Player> lineup,
+    CornerRoutine routine, {
+    String? excludeId,
+  }) {
+    if (routine == CornerRoutine.farPost) {
+      // 従来どおり、空中戦に強い前線の選手。
+      return _pickAerialTarget(lineup, excludeId: excludeId);
+    }
+    final pool = lineup
+        .where(
+          (p) =>
+              p.id != excludeId &&
+              p.position != Position.gk &&
+              (routine == CornerRoutine.nearPost
+                  ? p.position.group == PositionGroup.att
+                  : p.position.group == PositionGroup.att ||
+                      p.position.group == PositionGroup.mid),
+        )
+        .toList();
+    if (pool.isEmpty) {
+      return _pickAerialTarget(lineup, excludeId: excludeId);
+    }
+    pool.sort((a, b) => b
+        .attributeValue(routine.targetAttribute)
+        .compareTo(a.attributeValue(routine.targetAttribute)));
+    return pool.first;
+  }
+
   static Player? _pickAerialTarget(List<Player> lineup, {String? excludeId}) {
     final candidates = lineup
         .where(
@@ -1285,39 +1368,16 @@ class MatchEngine {
             defendingLineup,
           );
         } else {
-          final cornerTaker = _pickSetPieceTaker(
-            attackingTeam.cornerTakerId,
-            attackingLineup,
+          final corner = resolveCorner(
+            attackingTeam: attackingTeam,
+            attackingLineup: attackingLineup,
+            defendingTeam: defendingTeam,
+            defendingLineup: defendingLineup,
+            baseProb: scoreProb,
           );
-          // コーナーは実際の得点シーンと同様、ヘディングに強い選手が
-          // 合わせるケースを主として扱う(蹴った選手がそのままアシストになる)。
-          scorer = _pickAerialTarget(
-            attackingLineup,
-            excludeId: cornerTaker?.id,
-          );
-          forcedAssist = cornerTaker;
-          if (cornerTaker != null) {
-            final cornersAttr = cornerTaker.attributeValue(
-              AttributeKeys.corners,
-            );
-            // ロングスローもコーナーと同様に、ワイドからの精度あるボールの
-            // 供給という点で質に少し寄与させる(コーナーの専門性を主としつつ)。
-            final longThrowsAttr = cornerTaker.attributeValue(
-              AttributeKeys.longThrows,
-            );
-            final deliveryQuality =
-                (cornersAttr * 0.8 + longThrowsAttr * 0.2).round();
-            scoreProb = (scoreProb * (1 + (deliveryQuality - 50) / 200)).clamp(
-              0.05,
-              0.75,
-            );
-          }
-          scoreProb = applySetPieceDefense(
-            scoreProb,
-            defendingTeam,
-            defendingLineup,
-          );
-          scoreProb = _applyHeaderQuality(scoreProb, scorer);
+          scorer = corner.scorer;
+          forcedAssist = corner.taker;
+          scoreProb = corner.scoreProb;
         }
       } else {
         // オープンプレー: まずサイドでの1対1を判定する。ワイドな選手が
@@ -2175,35 +2235,16 @@ class MatchEngine {
             defendingLineup,
           );
         } else {
-          final cornerTaker = _pickSetPieceTaker(
-            attackingTeam.cornerTakerId,
-            attackingLineup,
+          final corner = resolveCorner(
+            attackingTeam: attackingTeam,
+            attackingLineup: attackingLineup,
+            defendingTeam: defendingTeam,
+            defendingLineup: defendingLineup,
+            baseProb: scoreProb,
           );
-          scorer = _pickAerialTarget(
-            attackingLineup,
-            excludeId: cornerTaker?.id,
-          );
-          forcedAssist = cornerTaker;
-          if (cornerTaker != null) {
-            final cornersAttr = cornerTaker.attributeValue(
-              AttributeKeys.corners,
-            );
-            final longThrowsAttr = cornerTaker.attributeValue(
-              AttributeKeys.longThrows,
-            );
-            final deliveryQuality =
-                (cornersAttr * 0.8 + longThrowsAttr * 0.2).round();
-            scoreProb = (scoreProb * (1 + (deliveryQuality - 50) / 200)).clamp(
-              0.05,
-              0.75,
-            );
-          }
-          scoreProb = applySetPieceDefense(
-            scoreProb,
-            defendingTeam,
-            defendingLineup,
-          );
-          scoreProb = _applyHeaderQuality(scoreProb, scorer);
+          scorer = corner.scorer;
+          forcedAssist = corner.taker;
+          scoreProb = corner.scoreProb;
         }
       } else {
         // オープンプレー: サイドでの1対1をまず判定する。

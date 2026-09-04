@@ -555,6 +555,14 @@ extension GameStateSquad on GameState {
     _persist();
   }
 
+  /// コーナーキックの狙いを決める。
+  void setCornerRoutine(CornerRoutine routine) {
+    if (_save == null) return;
+    userTeam.cornerRoutine = routine;
+    _notify();
+    _persist();
+  }
+
   /// 相手のセットプレー(CK・FK)を守る担当選手を指名する。
   void setSetPieceDefender(String? playerId) {
     if (_save == null) return;

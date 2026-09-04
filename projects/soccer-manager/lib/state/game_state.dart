@@ -82,6 +82,7 @@ import '../monetization/reward_offer.dart';
 import '../l10n/tr.dart';
 import '../logic/development_advisor.dart';
 import '../logic/staff_market.dart';
+import '../models/corner_routine.dart';
 import '../models/staff_member.dart';
 
 part 'game_state_squad.dart';
