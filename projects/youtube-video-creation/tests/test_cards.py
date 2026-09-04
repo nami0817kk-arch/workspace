@@ -242,3 +242,26 @@ def test_a_colour_that_already_reads_is_left_alone():
 
     red = _hex("#e2495a")
     assert readable(red) == red
+
+
+def test_カードの折り返しも熟語を割らない():
+    """カード内は文字幅だけで切っていたので、禁則も熟語の判定も効いていなかった。
+
+    実測（2026-09-04）で、写真と横に並べてカードを細くしたとたん
+    「2シーズン以上いることが必\n要」と割れた。折り返しの規則は
+    render 側に1つだけ置き、カードもそれを使う。
+    """
+    from PIL import ImageFont
+
+    from src.cards import _wrap
+    from src.config import load_config
+
+    font = ImageFont.truetype(str(load_config().video.font_path()), 40)
+    lines = _wrap("使うにはクラブに2シーズン以上いることが必要", font, 760)
+
+    def kanji(c):
+        return "\u4e00" <= c <= "\u9fff"
+
+    assert not any(
+        kanji(a[-1]) and kanji(b[0]) for a, b in zip(lines, lines[1:]) if a and b
+    )

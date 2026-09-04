@@ -120,6 +120,42 @@ def fetch(title: str, session=None) -> Subjects:
     return Subjects(title=name, ids=ids, names=names)
 
 
+PORTRAIT = "P18"
+
+
+def is_portrait_of(title: str, *names: str, session=None) -> bool:
+    """その人物の Wikidata 項目が、この画像を P18 に挙げているか。
+
+    Commons の depicts が無い写真でも、人物側から辿れば身元が取れる。
+    実測（2026-09-04）で、キエーザとエキティケの写真がこれに当たった。
+    """
+    wanted = _file_name(title)
+    for name in [n for n in names if n and n.strip()]:
+        hits = _get(WIKIDATA_API, {
+            "action": "wbsearchentities", "format": "json", "language": "en",
+            "uselang": "en", "search": name.strip(), "limit": 5,
+        }, session).get("search", [])
+        for hit in hits:
+            entity = _get(WIKIDATA_API, {
+                "action": "wbgetentities", "format": "json",
+                "ids": hit["id"], "props": "claims",
+            }, session).get("entities", {}).get(hit["id"], {})
+            for claim in (entity.get("claims") or {}).get(PORTRAIT, []):
+                try:
+                    value = claim["mainsnak"]["datavalue"]["value"]
+                except (KeyError, TypeError):
+                    continue
+                if _file_name(str(value)) == wanted:
+                    return True
+    return False
+
+
+def _file_name(title: str) -> str:
+    """File: の前置きと下線・空白の違いを吸収した比較用の名前。"""
+    name = title[5:] if title.startswith("File:") else title
+    return name.replace("_", " ").strip().lower()
+
+
 def verify(title: str, *names: str, session=None) -> tuple[bool, str]:
     """その写真に、渡した人物が写っていると言い切れるか。
 
@@ -130,6 +166,11 @@ def verify(title: str, *names: str, session=None) -> tuple[bool, str]:
     label = " / ".join(n for n in names if n)
     found = fetch(title, session)
     if not found.stated:
+        # depicts が無い写真は多い。人物の Wikidata 項目が「その人の画像」
+        # （P18）としてこの1枚を挙げているなら、それも本人である根拠になる。
+        # ファイル名と違い、人が項目に紐づけた指定なので信用できる。
+        if is_portrait_of(title, *names, session=session):
+            return True, f"Wikidata が {label} の画像として挙げている1枚です"
         return False, "被写体の指定がありません。ファイル名だけでは本人と断定できません"
     if found.includes(*names):
         return True, f"被写体に {label} が明記されています"

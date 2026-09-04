@@ -548,6 +548,17 @@ def _wrap(text: str, font: ImageFont.FreeTypeFont, max_width: int) -> list[str]:
             lines.append(current)
         return lines
 
+    # 日本語は render 側の折り返しに任せる。ここは文字幅だけで切っていたので、
+    # 禁則も熟語の判定も効いていなかった。実測（2026-09-04）で、カードを
+    # 細くしたとたん「必／要」と割れた。**同じ規則を2か所に持たない。**
+    from .render import balanced_wrap  # 循環importを避けるため関数の中で読む
+
+    return balanced_wrap(measure, text, font, max_width)
+
+
+def _wrap_by_char(text: str, font: ImageFont.FreeTypeFont, max_width: int) -> list[str]:
+    """文字幅だけで折り返す。折り返しの規則を通さない用途向け。"""
+    measure = ImageDraw.Draw(Image.new("RGB", (1, 1)))
     lines, current = [], ""
     for char in text:
         if measure.textlength(current + char, font=font) > max_width and current:
