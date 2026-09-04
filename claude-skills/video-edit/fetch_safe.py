@@ -21,7 +21,30 @@ sys.path.insert(0, str(Path(__file__).parent))
 from check_licenses import classify  # noqa: E402
 
 
+def use_utf8_streams() -> None:
+    """Windows のコンソールでも日本語と欧文の記号を出せるようにする。
+
+    既定は CP932 で、素材のタイトルに `Perú` の `ú` のような文字が入ると
+    表示の途中で UnicodeEncodeError を出して落ちる。実測では
+    「Argentina 2-0 Perú - Copa América 2024」で落ち、**ライセンス確認の
+    工程がそこで止まった**。ヨーロッパの選手・クラブ・スタジアム名は
+    é ú ñ ü を含むことが多く、サッカー用途では高い確率で当たる。
+
+    差し替えではなく付け替え（reconfigure）にしてあるので、pytest が
+    出力を捕捉しているときも壊さない。
+    """
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure is None:
+            continue
+        try:
+            reconfigure(encoding="utf-8", errors="replace")
+        except (ValueError, OSError):   # 付け替えられない環境では諦める
+            pass
+
+
 def main() -> int:
+    use_utf8_streams()
     parser = argparse.ArgumentParser(
         description="CC0 / PD / CC BY の素材だけを選んで取得する",
     )
