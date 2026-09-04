@@ -928,12 +928,47 @@ extension GameStateMatch on GameState {
         final result = await playNextMatchdayQuickSim();
         if (result == null) break;
         results.add(result);
+        // 節を進めたらカップ戦も消化する。ここで進めないと、まとめて
+        // シミュレーションした分だけカップが取り残され、シーズン終了時に
+        // 優勝者が決まらないまま賞金も入らない(実際にそうなっていた)。
+        // カップは「リーグが1節進むごとに1試合」の制約があるので、
+        // 1節につき各カップ最大1試合で足りる。
+        //
+        // 戻り値には混ぜない。このメソッドは「リーグの結果を節の順で返す」
+        // もので、呼び出し側(シミュレーション結果の一覧)もその前提で並べる。
+        // カップの結果はカップ画面とニュースに出る。
+        await _playAvailableCupMatches();
       }
     } finally {
       isBusy = false;
       _notify();
     }
     return results;
+  }
+
+  /// いま消化できるカップ戦を1試合ずつ進める。
+  ///
+  /// 判定と実行はカップ画面が使っているものと同じ。まとめてシミュレーション
+  /// するときだけ別扱いにすると、進み方が画面ごとに食い違う。
+  Future<void> _playAvailableCupMatches() async {
+    if (canPlayNextDomesticCupMatch) {
+      await playNextCupMatch();
+    }
+
+    if (canPlayNextContinentalMatch) {
+      final cup = _save?.continentalCup;
+      if (cup != null) {
+        if (cup.isGroupStageComplete) {
+          await playNextContinentalKnockoutLeg();
+        } else {
+          await playNextContinentalGroupMatch();
+        }
+      }
+    }
+
+    if (pendingSuperCup != null) {
+      await playSuperCup();
+    }
   }
 
   /// 現在の順位表を起点に、残り試合をチーム総合力ベースで簡易シミュレー
