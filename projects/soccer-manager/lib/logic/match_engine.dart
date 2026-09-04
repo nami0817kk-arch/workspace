@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import '../models/corner_routine.dart';
+import '../models/player_instruction.dart';
 import '../models/attributes.dart';
 import '../models/formation.dart';
 import '../models/player.dart';
@@ -514,6 +515,18 @@ class MatchEngine {
   /// 「重視する能力値の平均が総合力を明確に上回るか」で判定しているため。
   /// 攻撃/守備どちらの位相で評価する場合も基準は同じ総合力であり、
   /// forAttackはあくまで「今どちらの位相の貢献として使うか」を表す。
+  /// 個別指示による攻撃力の補正。
+  ///
+  /// 「持ち上がれ」「守備に残れ」は攻守の引き換え。「シュートを狙え」
+  /// 「内側へ切れ込め」は、その選手に向いていれば得、向いていなければ損。
+  /// 全員に付ければ強くなる作りにはしていない。
+  static double instructionAttackMultiplier(Player p) =>
+      p.instruction?.attackFactor(p.attributeValue) ?? 1.0;
+
+  /// 個別指示による守備力の補正。
+  static double instructionDefenseMultiplier(Player p) =>
+      p.instruction?.defenseFactor ?? 1.0;
+
   static double roleMultiplier(Player p, {required bool forAttack}) {
     final keyAttributes = p.role.keyAttributes;
     if (keyAttributes.isEmpty) return 1.0;
@@ -565,6 +578,7 @@ class MatchEngine {
               _condition(p) *
               dutyAttackMultiplier(p.duty) *
               roleMultiplier(p, forAttack: true) *
+              instructionAttackMultiplier(p) *
               positionFitMultiplier(p, slotById[p.id] ?? p.position) *
               (p.id == suppressedId ? 0.8 : 1.0),
     );
@@ -601,6 +615,7 @@ class MatchEngine {
               _condition(p) *
               dutyDefenseMultiplier(p.duty) *
               roleMultiplier(p, forAttack: false) *
+              instructionDefenseMultiplier(p) *
               positionFitMultiplier(p, slotById[p.id] ?? p.position),
     );
     final avgWorkRate = _avgAttribute(lineup, AttributeKeys.workRate);

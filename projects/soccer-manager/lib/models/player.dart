@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'player_instruction.dart';
 import 'attributes.dart';
 import 'enum_json.dart';
 import 'training_focus.dart';
@@ -1127,6 +1128,9 @@ class Player {
   /// プレースタイル(ロール)。デューティとは別に、活躍する能力値の傾向を表す。
   PlayerRole role;
 
+  /// 個別指示。ロールの上に重ねる細かい注文。未設定なら null。
+  PlayerInstruction? instruction;
+
   /// 本職(主ポジション)以外のポジションで起用された際の慣れ度(0-100、
   /// Position.name → 慣れ度)。出場を重ねるごとに上昇し、攻撃/守備への
   /// ペナルティを徐々に軽減する。主ポジションは常に完全適性のため含まない。
@@ -1273,6 +1277,7 @@ class Player {
     this.originClubName,
     this.appearanceFee = 0,
     this.role = PlayerRole.standard,
+    this.instruction,
     Map<String, int>? positionFamiliarity,
     this.matchSharpness = 80,
     this.youthMatchApps = 0,
@@ -1510,6 +1515,7 @@ class Player {
     put('originClubName', originClubName, null);
     put('appearanceFee', appearanceFee, 0);
     put('role', role.name, PlayerRole.standard.name);
+    put('instruction', instruction?.name, null);
     put('positionFamiliarity', positionFamiliarity, null);
     put('matchSharpness', matchSharpness, 80);
     put('youthMatchApps', youthMatchApps, 0);
@@ -1609,6 +1615,14 @@ class Player {
         json['duty'] as String?,
         PlayerDuty.support,
       ),
+      // 旧セーブには指示が無い。null(=指示なし)のまま読む。
+      instruction: json['instruction'] == null
+          ? null
+          : enumFromName(
+              PlayerInstruction.values,
+              json['instruction'] as String?,
+              PlayerInstruction.getForward,
+            ),
       squadStatus: enumFromName(
         SquadStatus.values,
         json['squadStatus'] as String?,

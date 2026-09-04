@@ -501,6 +501,16 @@ extension GameStateSquad on GameState {
   }
 
   /// 選手のプレースタイル(ロール)を設定する。
+  /// 選手に個別指示を出す。null を渡すと指示を外す。
+  void setPlayerInstruction(String playerId, PlayerInstruction? instruction) {
+    if (_save == null) return;
+    final p = userTeam.players.where((p) => p.id == playerId).firstOrNull;
+    if (p == null) return;
+    p.instruction = instruction;
+    _notify();
+    _persist();
+  }
+
   void setPlayerRole(String playerId, PlayerRole role) {
     if (_save == null) return;
     final player = userTeam.players.firstWhere((p) => p.id == playerId);

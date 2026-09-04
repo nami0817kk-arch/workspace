@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/corner_routine.dart';
+import '../models/player_instruction.dart';
 import '../models/attributes.dart';
 import '../models/formation.dart';
 import '../models/player.dart';
@@ -1219,6 +1220,52 @@ class _PitchView extends StatelessWidget {
                   ],
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
+                child: Text(
+                  Tr.pick('個別指示', 'Instruction'),
+                  style: TextStyle(
+                      fontSize: 12, color: SemanticColors.subtleText(context)),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 4,
+                  children: [
+                    ChoiceChip(
+                      label: Text(Tr.pick('指示なし', 'None')),
+                      selected: current.instruction == null,
+                      onSelected: (_) {
+                        Navigator.pop(ctx);
+                        FeedbackService.tap();
+                        gameState.setPlayerInstruction(current.id, null);
+                      },
+                    ),
+                    for (final ins in PlayerInstruction.values)
+                      ChoiceChip(
+                        label: Text(ins.label),
+                        selected: current.instruction == ins,
+                        onSelected: (_) {
+                          Navigator.pop(ctx);
+                          FeedbackService.tap();
+                          gameState.setPlayerInstruction(current.id, ins);
+                        },
+                      ),
+                  ],
+                ),
+              ),
+              if (current.instruction != null)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 4, 16, 0),
+                  child: Text(
+                    current.instruction!.description,
+                    style: TextStyle(
+                        fontSize: 11,
+                        color: SemanticColors.subtleText(context)),
+                  ),
+                ),
               if (slotPosition != current.position)
                 Padding(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
