@@ -6,9 +6,14 @@
 #   python -m src.cli draft research/xxx.yaml    取材メモ→台本（確度と重複を検証）
 
 cadence:
-  # 朝2本・夜2本。加えて日本人選手の枠を別カウントで1本（合計5本）
-  per_day: 5
-  slots: [morning_1, morning_2, evening_1, evening_2, japan]
+  # 1日9本。うち日本人選手が絡むものを4本（2026-09-04 にユーザー判断で変更）。
+  # 参考3チャンネルの実測（docs/news-sources.md）が根拠:
+  #   さっかー情報館は直近30本のほぼ全部が日本人選手で、登録1.73万に対し54万回。
+  #   2chサッカーの噂話は約10本/日で登録10.3万。**本数と日本人比率が効いている。**
+  # 変更前は5本・日本人1本だった。
+  per_day: 9
+  slots: [morning_1, morning_2, morning_3, japan_1,
+          evening_1, evening_2, evening_3, japan_2, japan_3]
   # morning_1 と morning_2 は同じ morning の取材計画を使う（plan.routine が
   # 末尾の _1 / _2 を落として引く）。枠ごとに計画を書き写すと片方だけ古くなる
 
@@ -80,7 +85,10 @@ domains:
   #   匿名の声は未確認 / ハンドルは画面に出さない / 数を数えた言い方をしない
   rumour: [caughtoffside.com, givemesport.com, tribalfootball.com,
            bild.de, mirror.co.uk, dailymail.co.uk,
-           footballnet.2chblog.jp, sakasaka10.blog.jp]
+           footballnet.2chblog.jp, sakasaka10.blog.jp,
+           # 2026-09-04 にユーザーから。まとめサイトを横断する集約サイトと、
+           # そこから辿れるまとめ。反応の取り出しは実測済み（下の注記）
+           www.footballtopic.com, football-2ch.com, worldfn.net]
 
   # 取得できないサイト。ここを検索しても結果は返らない。
   #
@@ -240,6 +248,10 @@ feeds:
   # WorldFootballNews(wfnews) は3.7年前で止まっていた（停止検出で弾かれる）
   - {name: footballnet, url: "http://footballnet.2chblog.jp/index.rdf", league: "", verified: true}
   - {name: サカサカ10, url: "http://sakasaka10.blog.jp/index.rdf", league: "", verified: true}
+  # まとめを横断する集約サイト。「いま何が話題か」を掴むのに使う。
+  # 記事本体は他のまとめサイトへのリンクなので、反応は reactions で辿って取る。
+  # ?sort=click_cnt でクリック数順に並ぶ（題材選びの手がかり）
+  - {name: FOOTBALL TOPIC, url: "https://www.footballtopic.com/feed/", league: "", verified: true}
   - {name: Foot Mercato, url: "https://www.footmercato.net/flux-rss", league: france, verified: true}
 
 # 群ごとに置ける確度の上限。draft のときに突き合わせる
@@ -303,6 +315,9 @@ social:
 scoring:
   weights:
     freshness: 3      # 新しさ。速報性がそのまま再生に効く
+    # 日本人選手が絡むか。日本人枠だけでなく、朝夜の枠の並べ替えにも効かせる。
+    # 参考チャンネルの実測（2026-09-04）で、日本人選手の回が再生の中心だった。
+    japanese: 3
     # 何社が同じ話を書いているか。世の中がいま何に注目しているかの代わりになる。
     # reaction や numbers は人が手で立てる欄で、gather は全部 false で書き出す。
     # 実際に回すと点数が「新しさ＋ビッグクラブ」だけになり、地域リーグの記事と
@@ -366,15 +381,24 @@ scoring:
   spread_topics: true
   # 種別（transfer / match / other）も散らす。3本とも試合結果にしない
   spread_kinds: true
+  # 枠に入れてよい最低点。これに届かなければ**枠を空ける**。
+  # 1日9本に増やしたとき、埋めるために2点のブログ雑感が入った（2026-09-04 実測）。
+  # 本数を増やすほど、この下限が要る。
+  min_score: 5
   slots:
     # 朝は速さ。確度の低いものを朝いちに出さない
     morning_1: {prefer: freshness, require_tier: [確定, 報道]}
     morning_2: {prefer: freshness, require_tier: [確定, 報道]}
+    morning_3: {prefer: freshness, require_tier: [確定, 報道]}
     # 夜は1日の総まとめ。点数の高いものから
     evening_1: {prefer: total}
     evening_2: {prefer: total}
-    # 日本人選手の枠。他の4本とは別カウントで、必ず1本出す
-    japan: {prefer: total, require_japanese: true}
+    evening_3: {prefer: total}
+    # 日本人選手の枠を4本。該当が無い日は、埋めずに空ける
+    # （別の話で埋めると枠の意味がなくなる）
+    japan_1: {prefer: total, require_japanese: true}
+    japan_2: {prefer: total, require_japanese: true}
+    japan_3: {prefer: freshness, require_japanese: true}
 
 # テーマが決まったあとの深掘り検索。{theme} に選んだテーマが入る
 # {theme} には候補の見出し、{en} には候補の en（英語の語）が入る。

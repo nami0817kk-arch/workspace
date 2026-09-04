@@ -32,7 +32,7 @@ def _by_label(findings):
 
 
 def test_a_finished_build_passes_everything(tmp_path):
-    findings = inspect(parse_script(BODY), _built(tmp_path), 150.0)
+    findings = inspect(parse_script(BODY), _built(tmp_path), 100.0)
     assert all(f.ok for f in findings), [f.line() for f in findings if not f.ok]
 
 
@@ -64,7 +64,8 @@ def test_a_single_chapter_fails(tmp_path):
 
 @pytest.mark.parametrize(
     "seconds, ok",
-    [(60.0, False), (95.0, True), (150.0, True), (235.0, True), (300.0, False)],
+    # 1〜2分（2026-09-04 に 90〜240秒 から変更）。参考3チャンネルは 1:01〜1:59
+    [(50.0, False), (60.0, True), (95.0, True), (130.0, True), (150.0, False), (235.0, False)],
 )
 def test_the_length_has_a_floor_and_a_ceiling(tmp_path, seconds, ok):
     result = _by_label(inspect(parse_script(BODY), _built(tmp_path), seconds))

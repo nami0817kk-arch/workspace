@@ -1713,7 +1713,13 @@ def _cmd_pick(args, config) -> int:
         routine = plan.routines.get(slot)
         name = routine.name if routine else slot
         if pick is None:
-            print(f"■ {name}: 割り当てる候補がありません")
+            # 空けた理由が分かっているなら、それを出す。「候補がありません」
+            # だけだと、下限で見送ったのか本当に無いのかが区別できない
+            why = fallbacks.get(slot) or []
+            if why:
+                print(f"■ {name}: 見送りました　{why[0]}")
+            else:
+                print(f"■ {name}: 割り当てる候補がありません")
             continue
         print(f"■ {name} → {pick.title}（{pick.score}点）")
         for reason in fallbacks.get(slot, []):

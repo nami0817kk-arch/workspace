@@ -17,8 +17,11 @@ from .subtitles import chapters
 TITLE_LIMIT = 100
 DESCRIPTION_LIMIT = 5000
 # 参考チャンネルの尺。短すぎても長すぎても離脱する
-MIN_SECONDS = 90
-MAX_SECONDS = 240
+# 尺の幅（2026-09-04 にユーザー判断で 90〜240 秒から変更）。
+# 参考3チャンネルの実測は 1:01〜1:59。長尺のクロニカ（8〜19分）は
+# 登録者が近いのに再生が1桁少なかった。docs/news-sources.md 参照。
+MIN_SECONDS = 60
+MAX_SECONDS = 130
 
 
 @dataclass

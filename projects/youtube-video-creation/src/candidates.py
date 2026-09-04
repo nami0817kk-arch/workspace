@@ -154,6 +154,8 @@ def score(items: list[Candidate], scoring: dict) -> list[Candidate]:
     outlet_weight = int(weights.get("outlets", 0))
 
     clubs = [str(c).strip() for c in (scoring.get("big_clubs") or []) if str(c).strip()]
+    japanese_weight = int(weights.get("japanese", 0))
+    japanese_words = list(scoring.get("japanese") or [])
 
     for item in items:
         breakdown: dict[str, int] = {}
@@ -188,6 +190,12 @@ def score(items: list[Candidate], scoring: dict) -> list[Candidate]:
         ):
             if getattr(item, key):
                 breakdown[label] = int(weights.get(key, 0))
+
+        # 日本人選手が絡むか。日本人枠だけでなく、朝夜の枠の並べ替えにも効かせる。
+        # 参考3チャンネルの実測（2026-09-04、docs/news-sources.md）で、
+        # 再生の中心が日本人選手の回だった。名前で拾えるので手で立てなくてよい。
+        if japanese_weight and is_japanese(item, japanese_words):
+            breakdown["日本人"] = japanese_weight
 
         item.breakdown = {k: v for k, v in breakdown.items() if v}
         item.score = sum(item.breakdown.values())
@@ -225,9 +233,13 @@ def assign(
                 fallbacks.setdefault(slot, []).append("他の枠と別の話題が残っていません")
             pool = fresh_topics or pool
 
-        # 3本とも試合結果、3本とも移籍だと単調になる。すでに2枠で使った種別は外す
+        # 3本とも試合結果、3本とも移籍だと単調になる。使いすぎた種別は外す。
+        # **上限は枠数に比例させる。**「2枠まで」で固定していたため、枠を9本に
+        # 増やしたとき候補が413件から5件まで削られ、後半の枠が埋まらなくなった
+        # （2026-09-04 実測）。種別は3つしかないので、枠数の3分の1が目安。
         if spread_kinds and pool:
-            over = {k for k in set(used_kinds) if used_kinds.count(k) >= 2}
+            cap = max(2, -(-len(slots) // 3))
+            over = {k for k in set(used_kinds) if used_kinds.count(k) >= cap}
             if over:
                 varied = [c for c in pool if c.kind not in over]
                 if not varied:
@@ -256,6 +268,17 @@ def assign(
 
         pick = _prefer(pool, str(rule.get("prefer", "total")), slot, fallbacks)
         if pick is None:
+            continue
+
+        # 本数を増やすと、埋めるために弱い候補が入る。実測（2026-09-04）で
+        # 枠を5→9に増やしたとたん、2点のブログ雑感が枠に入った。
+        # **点の低いものを出すくらいなら空ける。**枠は埋めるためのものではない。
+        floor = int(rule.get("min_score", scoring.get("min_score", 0)) or 0)
+        if floor and pick.score < floor:
+            fallbacks.setdefault(slot, []).append(
+                f"いちばん高い候補でも{pick.score}点で、下限{floor}点に届きません。"
+                "無理に埋めず空けます"
+            )
             continue
         chosen[slot] = pick
         remaining = [c for c in remaining if c.id != pick.id]

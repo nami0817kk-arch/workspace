@@ -60,7 +60,9 @@ def parse(html: str) -> list[Post]:
     text = (text.replace("&gt;", ">").replace("&lt;", "<")
                 .replace("&amp;", "&").replace("&nbsp;", " ").replace("&quot;", '"'))
 
-    lines = [line.strip() for line in text.split(chr(10))]
+    # 空行は落としてから走査する。残したままだと「番号」と「ID:」の間に
+    # 空行が入るサイトで見出しを取り逃がす（football-2ch で実測 2026-09-04）
+    lines = [line.strip() for line in text.split(chr(10)) if line.strip()]
     posts: list[Post] = []
     number: int | None = None
     buffer: list[str] = []
@@ -99,14 +101,20 @@ def parse(html: str) -> list[Post]:
 
 
 def _head_at(lines: list[str], index: int) -> tuple[int, int] | None:
-    """行が「番号 / 名前 / 日時+ID」の3行組なら、レス番号と次の位置を返す。"""
-    line = lines[index]
-    match = re.fullmatch(r"({d}{{1,4}}):".format(d=chr(92) + "d"), line)
+    """レスの頭なら、レス番号と本文が始まる位置を返す。
+
+    まとめサイトによって書き方が違う（2026-09-04 実測）。
+
+        footballnet   「172:」「名無しさん＠恐縮です」「2026/… ID:xxx」
+        football-2ch  「1」「名前：」「ゴアマガラ ★」「：2026/… ID:xxx」
+
+    共通しているのは**番号の行があり、数行以内に ID: の行が来る**こと。
+    番号のうしろのコロンは、あってもなくてもよい扱いにする。
+    """
+    match = re.fullmatch(r"({d}{{1,4}}):?".format(d=chr(92) + "d"), lines[index])
     if not match:
         return None
-    tail = lines[index + 1 : index + 4]
-    if not any("ID:" in item for item in tail):
-        return None
+    tail = lines[index + 1 : index + 5]
     for offset, item in enumerate(tail):
         if "ID:" in item:
             return int(match.group(1)), index + 2 + offset

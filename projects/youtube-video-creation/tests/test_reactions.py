@@ -58,3 +58,36 @@ def test_短すぎる書き込みと広告は捨てる():
     posts = parse(noisy)
 
     assert all("adsbygoogle" not in p.text for p in posts)
+
+
+# まとめサイトによってレスの書き方が違う（2026-09-04 実測）。
+#   footballnet   「172:」「名無しさん＠恐縮です」「2026/… ID:xxx」
+#   football-2ch  「1」「名前：」「ゴアマガラ ★」「：2026/… ID:xxx」
+# 番号のうしろのコロンは、あってもなくてもよい。
+
+FOOTBALL_2CH = """
+<div>
+6<br>名前：<br>名無しさん＠恐縮です<br>：2026/09/04(金) 21:20:00.00 ID:AbC123<br>
+意外といけるんだよそれが<br>
+8<br>名前：<br>名無しさん＠恐縮です<br>：2026/09/04(金) 21:22:00.00 ID:DeF456<br>
+モチベ無くなるからな<br>
+</div>
+"""
+
+
+def test_コロンの無い書き方も読める():
+    from src.reactions import parse
+
+    posts = parse(FOOTBALL_2CH)
+
+    assert [p.no for p in posts] == [6, 8]
+    assert posts[0].text == "意外といけるんだよそれが"
+
+
+def test_番号とIDの間に空行があっても読める():
+    from src.reactions import parse
+
+    spaced = FOOTBALL_2CH.replace("<br>名前：", "<br><br><br>名前：")
+    posts = parse(spaced)
+
+    assert [p.no for p in posts] == [6, 8]
