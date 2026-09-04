@@ -77,8 +77,15 @@ class _FormationTab extends StatelessWidget {
                     value: formation,
                     items: Formation.values
                         .map(
-                          (f) =>
-                              DropdownMenuItem(value: f, child: Text(f.label)),
+                          (f) => DropdownMenuItem(
+                            value: f,
+                            // どの布陣にどれだけ馴染んでいるかは、選ぶ前に
+                            // 見えていないと判断できない。
+                            child: Text(
+                              '${f.label} '
+                              '(${team.formationFamiliarity[f] ?? 0}%)',
+                            ),
+                          ),
                         )
                         .toList(),
                     onChanged: (f) {
@@ -87,6 +94,22 @@ class _FormationTab extends StatelessWidget {
                         context.read<GameState>().setFormation(f);
                       }
                     },
+                  ),
+                  Chip(
+                    label: Text(
+                      Tr.pick('習熟 ${team.currentFamiliarity}%',
+                          'Familiarity ${team.currentFamiliarity}%'),
+                    ),
+                    avatar: Icon(
+                      team.currentFamiliarity >= 70
+                          ? Icons.check_circle
+                          : Icons.hourglass_bottom,
+                      size: 18,
+                      color: team.currentFamiliarity >= 70
+                          ? SemanticColors.positive(context)
+                          : SemanticColors.neutral(context),
+                    ),
+                    visualDensity: VisualDensity.compact,
                   ),
                   Chip(
                     label: Text(

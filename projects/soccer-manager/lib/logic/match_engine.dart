@@ -570,6 +570,7 @@ class MatchEngine {
     final avgStamina = _avgAttribute(lineup, AttributeKeys.stamina);
     final result = (total / relevant.length) *
         t.formation.attackBias *
+        t.familiarityFactor *
         t.mentality.attackFactor *
         StyleEngine.powerFactor(t, lineup: lineup) *
         (opponentStyle == null
@@ -604,6 +605,7 @@ class MatchEngine {
     final avgWorkRate = _avgAttribute(lineup, AttributeKeys.workRate);
     final result = (total / relevant.length) *
         t.formation.defenseBias *
+        t.familiarityFactor *
         t.mentality.defenseFactor *
         StyleEngine.powerFactor(t, lineup: lineup) *
         pressingDefenseFactor(t.pressing, avgWorkRate) *

@@ -129,6 +129,25 @@ class Team {
   /// チーム全体の姿勢(メンタリティ)。旧セーブはバランス扱い。
   TeamMentality mentality;
 
+  /// 新しくゲームを始めたとき、いま使っている布陣に与える習熟度。
+  ///
+  /// 満点にはしない。開幕直後から完成された状態だと、習熟度が上がっていく
+  /// 手応えが無くなる。
+  static const int familiarityStartForCurrent = 70;
+
+  /// 習熟度が最低のときにチーム力へ掛かる係数。
+  ///
+  /// 0 と 100 の差を12%に収めてある。ここを大きくすると布陣変更が
+  /// 事実上できなくなり、小さくすると入れた意味が無くなる。
+  static const double familiarityFloorFactor = 0.88;
+
+  /// フォーメーションごとの習熟度(0-100)。
+  ///
+  /// 新しい布陣はすぐには機能しない。毎週の練習と試合で馴染んでいき、
+  /// 使わない布陣は少しずつ忘れる。シーズン途中で戦術を変えることに
+  /// 代償が生まれ、選ぶ判断に重みが出る。
+  Map<Formation, int> formationFamiliarity;
+
   /// 戦術スタイル。旧セーブは柔軟(中立)扱い。
   TacticalStyle tacticalStyle;
 
@@ -210,9 +229,41 @@ class Team {
     List<TacticPreset>? tacticPresets,
     Map<String, List<String>>? depthChartOrder,
     this.tacticalMeetingCooldownWeeks = 0,
+    Map<Formation, int>? formationFamiliarity,
   })  : startingXI = startingXI ?? [],
         tacticPresets = tacticPresets ?? [],
-        depthChartOrder = depthChartOrder ?? {};
+        depthChartOrder = depthChartOrder ?? {},
+        // 開始時は「いま使っている布陣だけは仕込み済み」とする。全部0から
+        // 始めると、新規開始した瞬間に全チームが機能しなくなる。
+        formationFamiliarity = formationFamiliarity ??
+            {formation: Team.familiarityStartForCurrent};
+
+  /// いま使っている布陣の習熟度(0-100)。
+  int get currentFamiliarity =>
+      formationFamiliarity[formation] ?? 0;
+
+  /// 習熟度がチーム力へ掛ける係数(0.88〜1.00)。
+  ///
+  /// 攻撃力・守備力の両方に同じだけ掛ける。馴染んでいない布陣は、攻めも
+  /// 守りもかみ合わない。
+  double get familiarityFactor =>
+      familiarityFloorFactor +
+      (1 - familiarityFloorFactor) * (currentFamiliarity / 100);
+
+  /// 1週ぶん習熟度を進める。使っていない布陣は少しずつ薄れる。
+  ///
+  /// [coachingBonus]はヘッドコーチの水準(1-8)。良いコーチほど早く仕込める。
+  void advanceFamiliarity({int coachingBonus = 1}) {
+    final gain = 4 + coachingBonus;
+    formationFamiliarity[formation] =
+        (currentFamiliarity + gain).clamp(0, 100);
+    for (final f in Formation.values) {
+      if (f == formation) continue;
+      final v = formationFamiliarity[f];
+      if (v == null || v <= 0) continue;
+      formationFamiliarity[f] = (v - 1).clamp(0, 100);
+    }
+  }
 
   int get overallRating {
     // 選手を持たないチーム(他ディビジョン)は保持しておいた強度を返す。
@@ -252,6 +303,9 @@ class Team {
         'id': id,
         'name': name,
         'formation': formation.name,
+        'formationFamiliarity': {
+          for (final e in formationFamiliarity.entries) e.key.name: e.value,
+        },
         'startingXI': startingXI,
         'defaultTrainingFocus': defaultTrainingFocus.name,
         'trainingIntensity': trainingIntensity.name,
@@ -283,6 +337,16 @@ class Team {
         id: json['id'] as String,
         name: json['name'] as String,
         formation: _parseFormation(json['formation'] as String?),
+        // 旧セーブには習熟度が無い。null のままにしてコンストラクタに
+        // 「いまの布陣は仕込み済み」を作らせる。読み込んだ途端に全チームの
+        // 戦術が機能しなくなるのを避ける。
+        formationFamiliarity: (json['formationFamiliarity'] as Map?) == null
+            ? null
+            : {
+                for (final f in Formation.values)
+                  if ((json['formationFamiliarity'] as Map)[f.name] != null)
+                    f: (json['formationFamiliarity'] as Map)[f.name] as int,
+              },
         startingXI:
             (json['startingXI'] as List?)?.map((e) => e as String).toList() ??
                 [],

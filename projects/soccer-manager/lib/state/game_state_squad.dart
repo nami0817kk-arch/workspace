@@ -279,6 +279,12 @@ extension GameStateSquad on GameState {
       injuryFactor: _userInjuryFactor,
       careerGrowthBonus: managerCareerGrowthBonus,
     );
+    // 布陣の仕込み。良いヘッドコーチほど早く馴染む。使っていない布陣は
+    // 少しずつ薄れるので、あれこれ試すほど何も身につかない。
+    userTeam.advanceFamiliarity(
+      coachingBonus: infra.staffLevel(StaffRole.headCoach),
+    );
+
     // 紅白戦: スタメン外の選手が実戦感覚を維持する(週次トレーニング付随)。
     lastPracticeMatchCount =
         TrainingEngine.applyIntraSquadMatch(userTeam).length;
