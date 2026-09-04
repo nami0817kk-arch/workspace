@@ -583,9 +583,13 @@ def to_script(notes: Notes, plan: Plan) -> str:
         "## まとめ",
         "@bg: assets/backgrounds/studio.png",
         "",
-        f"キャスター: まとめます。{_ends_sentence(notes.question)}{_spoken(notes.answer)}",
-        f"  telop: {_telop(notes.answer)}",
+        # 問いと答えを1行にすると、実測で15.7秒ぶん画面が止まった（2026-09-04）。
+        # 掛け合いの形にも合うので、問いをキャスター、答えを解説に分ける。
+        f"キャスター: まとめます。{_ends_sentence(notes.question)}",
+        f"  telop: 今回の問い: {_telop(notes.question, 20)}",
         "  card: wrap",
+        f"解説: {_spoken(notes.answer)}",
+        f"  telop: {_telop(notes.answer)}",
     ]
     if notes.watch:
         lines += [
