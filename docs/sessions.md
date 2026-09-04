@@ -18,13 +18,38 @@
 | 動画編集 | 動画編集スキル（ai-lab videogen） | `platform/ai-lab` | `claude/video-skill-update` |
 | Chrome操作 | ブラウザ操作基盤 | `platform/ai-lab/src/browser` | — |
 | 画像生成 | imagegen | `platform/ai-lab/src/imagegen` | — |
-| ゲーム操作 | （要確認） | — | — |
-| API | （要確認） | — | — |
-| 新設ラボ | （要確認） | — | — |
-| mcp | （要確認） | — | — |
+| ゲーム操作 | kabu-agari-ranking | `projects/kabu-agari-ranking` | — |
+| API | gemini-api | `projects/gemini-api` | — |
+| 新設ラボ | tool-factory | `projects/tool-factory` | — |
+| mcp | stock-investment | `projects/stock-investment` | — |
 
-「要確認」は、GitHub 側に対応する成果が見当たらず担当を特定できなかったもの。
-担当が無いなら畳む。
+下の4つは担当が特定できず「要確認」だったものに、2026-09-04 にユーザー指示で
+担当を割り当てた。**セッション名と担当が一致していない**（「ゲーム操作」が
+株ランキング、など）。名前は担当が分かるものへ変えたほうがよいが、
+セッションの改名はユーザーが行う。
+
+割り当ての根拠は「運用中で、壊れても気づかれにくい順」。
+
+- `kabu-agari-ranking` と `tool-factory` は**公開サイトを持ちながら担当が
+  いなかった**。収益面に露出しているのに、止まっても誰も見ていない状態だった
+- `stock-investment` は未担当のうち最も活発（直近30日で10コミット）
+- `gemini-api` はセッション名「API」と実体が一致する唯一の組み合わせ
+
+## まだ担当のいないプロジェクト
+
+1プロジェクト = 1セッションの原則に対し、常設セッションが足りていない。
+以下は担当不在のまま動いている。
+
+| プロジェクト | 直近30日 | 備考 |
+|---|---|---|
+| `quality-gainer-tracker` | 7コミット | kabu-daily スキルがユーザー操作で回している |
+| `ir-analysis` | 5コミット | ir-scan スキルがユーザー操作で回している |
+| `ai-side-business` | 6コミット | — |
+| `cohabitation-budget` | 1コミット | ほぼ休止。畳んだままでよければ対象外にする |
+
+上2つはスキル経由でユーザーが直接回しているため、常設セッションが無くても
+気づかれずに止まることはない。下2つは**止まっても誰も気づかない**ので、
+セッションを増やすなら次はここ。増やすかどうかはユーザーが決める。
 
 ## 定期セッション
 
