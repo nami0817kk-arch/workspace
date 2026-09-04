@@ -223,6 +223,29 @@ base64 -w 0 AuthKey_XXXXXXXX.p8 > appstore_key.base64.txt
 | `IOS_PROVISIONING_PROFILE_BASE64` | `ios_profile.base64.txt` の中身 |
 | `IOS_TEAM_ID` | 10 文字の Team ID |
 
+### AdMob（必須）
+
+**これを登録しないとリリースビルドは失敗します。** 未登録のまま公開すると、
+広告は表示されるのに Google のテスト用IDで配信され、**収益が一切発生しません。**
+しかも審査は通ってしまうため、気づくのが遅れます。署名と同じ必須項目として
+扱っています。
+
+AdMob の管理画面（https://apps.admob.com/）でアプリを2つ（Android用・iOS用）
+登録し、それぞれに「リワード」広告ユニットを1つ作って、以下を控えます。
+
+| Secret 名 | 中身 | どこで取るか |
+|---|---|---|
+| `ADMOB_APP_ID_ANDROID` | `ca-app-pub-XXXX~YYYY` | アプリ → アプリ設定 → アプリID |
+| `ADMOB_APP_ID_IOS` | `ca-app-pub-XXXX~ZZZZ` | 同上（iOS 用アプリ） |
+| `ADMOB_REWARDED_ANDROID` | `ca-app-pub-XXXX/AAAA` | 広告ユニット → リワード |
+| `ADMOB_REWARDED_IOS` | `ca-app-pub-XXXX/BBBB` | 同上（iOS 用） |
+
+アプリIDは `~`（チルダ）、広告ユニットIDは `/`（スラッシュ）で区切られています。
+取り違えると動きません。
+
+`ca-app-pub-3940256099942544` で始まる値は Google のテスト用IDです。これを
+登録するとワークフローが検出して止まります。
+
 ### iOS TestFlight 自動アップロード（任意）
 
 | Secret 名 | 中身 |

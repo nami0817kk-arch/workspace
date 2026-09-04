@@ -12,6 +12,7 @@ import '../widgets/supporter_section.dart';
 import 'onboarding_screen.dart';
 import 'start_screen.dart';
 import '../theme/semantic_colors.dart';
+import '../monetization/ad_service.dart';
 
 const String _privacyPolicyUrl =
     'https://soccer-manager.pages.dev/legal/privacy.html';
@@ -233,6 +234,33 @@ class SettingsScreen extends StatelessWidget {
               ),
             ),
           ],
+          // テスト用の広告IDのままだと、広告は表示されるのに収益にならない。
+          // 提出前に気づけるよう、そのときだけ警告を出す。正しく設定されて
+          // いればこのカードは現れないので、出荷時に残る心配はない。
+          if (AdMobAdService.isUsingTestUnitId)
+            Card(
+              color: Theme.of(context).colorScheme.errorContainer,
+              child: ListTile(
+                leading: Icon(
+                  Icons.warning_amber_outlined,
+                  color: Theme.of(context).colorScheme.onErrorContainer,
+                ),
+                title: Text(
+                  Tr.pick('広告がテスト用IDのままです', 'Ads are still using test IDs'),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onErrorContainer,
+                  ),
+                ),
+                subtitle: Text(
+                  Tr.pick(
+                      'この状態で配信しても広告収益は発生しません。ビルド時に本番のIDを渡してください。',
+                      'Shipping like this earns nothing from ads. Pass your production IDs at build time.'),
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.onErrorContainer,
+                  ),
+                ),
+              ),
+            ),
           const SupporterSection(),
           const SizedBox(height: 20),
           Text(Tr.pick('アプリ情報', 'About'),
