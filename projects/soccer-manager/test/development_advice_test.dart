@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
 
+import 'package:soccer_manager/main.dart';
 import 'package:soccer_manager/l10n/app_localizations.dart';
 import 'package:soccer_manager/monetization/ad_service.dart';
 import 'package:soccer_manager/monetization/monetization_controller.dart';
@@ -15,6 +16,8 @@ import 'package:soccer_manager/logic/training_engine.dart';
 import 'package:soccer_manager/models/team.dart';
 import 'package:soccer_manager/l10n/tr.dart';
 import 'package:soccer_manager/state/game_state.dart';
+
+import 'support/app_fonts.dart';
 
 /// 育成アドバイスが「読むだけ」で終わらず、その場で適用できることを固定する。
 ///
@@ -41,6 +44,9 @@ void _clearAdviceTriggers(Team team) {
 }
 
 void main() {
+  // 代替フォントは全文字が同じ幅で、英語だけおよそ2倍に太る。
+  setUpAll(loadAppFonts);
+
   setUp(() {
     SharedPreferences.setMockInitialValues({});
     Tr.language = AppLanguage.japanese;
@@ -136,10 +142,12 @@ void main() {
   /// 取りこぼし CI で落ちた)。助言が必ず出る状態を作って描画する。
   for (final lang in const [AppLanguage.japanese, AppLanguage.english]) {
     for (final size in const [Size(360, 780), Size(320, 568)]) {
+      for (final scale in const [1.0, SettingsController.maxTextScale]) {
       testWidgets(
         '助言が出ている状態のトレーニング画面が崩れない '
         '(${lang == AppLanguage.english ? "en" : "ja"}, '
-        '${size.width.toInt()}x${size.height.toInt()})',
+        '${size.width.toInt()}x${size.height.toInt()}, '
+        '文字${(scale * 100).round()}%)',
         (WidgetTester tester) async {
           SharedPreferences.setMockInitialValues({});
           late final SettingsController settings;
@@ -189,6 +197,17 @@ void main() {
             ],
             child: MaterialApp(
               locale: Locale(lang == AppLanguage.english ? 'en' : 'ja'),
+              // アプリ本来のテーマで測る。既定テーマのままだと余白も文字種も
+              // 本物と違い、実機で起きないはみ出しを拾う。
+              theme: const SoccerManagerApp()
+                  .buildTheme(Brightness.light, boldText: false),
+              // 利用者は文字を 130% まで大きくできる。既定で収まっていても
+              // 大きくすると溢れる箇所があるため、上限でも見る。
+              builder: (context, inner) => MediaQuery(
+                data: MediaQuery.of(context).copyWith(
+                    textScaler: TextScaler.linear(scale)),
+                child: inner!,
+              ),
               localizationsDelegates: AppLocalizations.localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
               home: const TrainingScreen(),
@@ -201,6 +220,7 @@ void main() {
           expect(tester.takeException(), isNull, reason: '助言カードのある画面が崩れている');
         },
       );
+      }
     }
   }
 }
