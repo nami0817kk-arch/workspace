@@ -537,7 +537,8 @@ def to_script(notes: Notes, plan: Plan) -> str:
         f"キャスター: 海外サッカーのニュースです。{hook}",
         f"  telop: {notes.title}",
         "  se: assets/audio/se_pon.wav",
-        f"キャスター: この動画では、{notes.question}、ここを掘っていきます。",
+        # 問いは「〜のか。」で終わることが多い。そのまま繋ぐと「。、ここを」になる
+        f"キャスター: この動画では、{notes.question.rstrip('。')}、ここを掘っていきます。",
         f"  telop: 今回の問い: {_telop(notes.question, 20)}",
         "",
     ]
@@ -553,7 +554,10 @@ def to_script(notes: Notes, plan: Plan) -> str:
         previous_background = background
         lines += [f"## {section.heading}", f"@bg: {background}", ""]
         for number, sentence in enumerate(section.say):
-            speaker = SPEAKERS[number % len(SPEAKERS)]
+            # 掛け合いにする。1文目は事実をキャスターが読み、
+            # 2文目以降は解説が受ける。交互に振ると同じ文体の読み分けになり、
+            # 会話に聞こえない（実測）
+            speaker = SPEAKERS[0] if number == 0 else SPEAKERS[1 if number % 2 else 0]
             lines.append(f"{speaker}: {sentence}")
             if number == 0:
                 lines.append(f"  telop: {section.telop}")
