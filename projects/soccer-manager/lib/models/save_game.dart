@@ -15,6 +15,7 @@ import 'press_question.dart';
 import 'season_award.dart';
 import 'season_record.dart';
 import 'sponsor.dart';
+import 'staff_member.dart';
 import 'team.dart';
 import '../l10n/tr.dart';
 
@@ -145,6 +146,9 @@ class SaveGame {
 
   /// シーズンごとに確定した個人タイトル(得点王・年間MVP)の履歴。
   List<SeasonAward> seasonAwards;
+
+  /// いま雇えるスタッフの候補。シーズン開始時に入れ替わる。
+  List<StaffMember> staffCandidates;
 
   /// ライバルクラブのID・表示名(開幕時に決定し、以後固定)。
   String? rivalTeamId;
@@ -309,6 +313,7 @@ class SaveGame {
     List<BankLoan>? bankLoans,
     List<FixedDeposit>? fixedDeposits,
     List<SeasonAward>? seasonAwards,
+    List<StaffMember>? staffCandidates,
     this.rivalTeamId,
     this.rivalTeamName,
     this.pendingPressConference,
@@ -368,6 +373,7 @@ class SaveGame {
         bankLoans = bankLoans ?? [],
         fixedDeposits = fixedDeposits ?? [],
         seasonAwards = seasonAwards ?? [],
+        staffCandidates = staffCandidates ?? [],
         otherDivisionLeagues = otherDivisionLeagues ??
             List<League?>.filled(totalDivisionTiers, null);
 
@@ -413,6 +419,8 @@ class SaveGame {
         'incomingOffers': incomingOffers.map((o) => o.toJson()).toList(),
         'bankLoans': bankLoans.map((l) => l.toJson()).toList(),
         'fixedDeposits': fixedDeposits.map((d) => d.toJson()).toList(),
+        'staffCandidates':
+            staffCandidates.map((s) => s.toJson()).toList(),
         'seasonAwards': seasonAwards.map((a) => a.toJson()).toList(),
         'rivalTeamId': rivalTeamId,
         'rivalTeamName': rivalTeamName,
@@ -541,6 +549,10 @@ class SaveGame {
             [],
         seasonAwards: (json['seasonAwards'] as List?)
                 ?.map((e) => SeasonAward.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            [],
+        staffCandidates: (json['staffCandidates'] as List?)
+                ?.map((e) => StaffMember.fromJson(e as Map<String, dynamic>))
                 .toList() ??
             [],
         rivalTeamId: json['rivalTeamId'] as String?,

@@ -1,4 +1,6 @@
 import '../l10n/tr.dart';
+import '../logic/staff_market.dart';
+import 'staff_member.dart';
 
 /// チケット価格戦略。値上げは1人あたり収入を増やす一方で観客動員率を下げ、
 /// 値下げはその逆になる(合計の増収効果は保証されない)。
@@ -92,24 +94,37 @@ extension FacilityTypeInfo on FacilityType {
       };
 }
 
-/// クラブのスタッフ・施設レベル（1-8）。ユーザークラブにのみ適用される。
+/// クラブの施設レベル(1-8)と、雇っているスタッフ。ユーザークラブにのみ
+/// 適用される。
+///
+/// スタッフは以前「役職ごとのレベル数値」だった。金を払えば誰でも同じだけ
+/// 上がる仕組みで、誰を雇うかという判断が無かった。いまは人を雇う形にして、
+/// 仕事の質はその人の能力から決まる。
 class ClubInfrastructure {
   static const int maxLevel = 8;
 
-  final Map<StaffRole, int> staffLevels;
+  /// 役職ごとに雇っているスタッフ。空席なら null。
+  final Map<StaffRole, StaffMember?> staff;
   final Map<FacilityType, int> facilityLevels;
 
   ClubInfrastructure({
-    Map<StaffRole, int>? staffLevels,
+    Map<StaffRole, StaffMember?>? staff,
     Map<FacilityType, int>? facilityLevels,
-  })  : staffLevels = staffLevels ?? {for (final r in StaffRole.values) r: 1},
+  })  : staff = staff ?? {for (final r in StaffRole.values) r: null},
         facilityLevels =
             facilityLevels ?? {for (final f in FacilityType.values) f: 1};
 
-  int staffLevel(StaffRole role) => staffLevels[role] ?? 1;
+  StaffMember? staffFor(StaffRole role) => staff[role];
+
+  /// その役職の仕事の質(1-8)。空席なら1(=最低限、下部リーグの兼任扱い)。
+  ///
+  /// トレーニング効率・負傷率・スカウトの質などは以前からこの数値を見て
+  /// 決まっている。人に置き換えても、そこから先の計算は変わらない。
+  int staffLevel(StaffRole role) => staff[role]?.effectiveLevel ?? 1;
   int facilityLevel(FacilityType type) => facilityLevels[type] ?? 1;
 
-  static int staffUpgradeCost(int currentLevel) => 250 * currentLevel;
+  /// 役職を空けたまま置いたときの週俸(=0)との比較用に残している、
+  /// 旧レベル制の週俸。セーブの移行でのみ使う。
   static int staffWeeklyWage(int level) => level * 20;
   static int facilityUpgradeCost(int currentLevel) =>
       500 * currentLevel * currentLevel;
@@ -147,14 +162,7 @@ class ClubInfrastructure {
   static double commercialRevenueMultiplier(int level) => 1 + (level - 1) * 0.1;
 
   int get totalStaffWeeklyWage =>
-      staffLevels.values.fold<int>(0, (s, lvl) => s + staffWeeklyWage(lvl));
-
-  bool upgradeStaff(StaffRole role) {
-    final lvl = staffLevel(role);
-    if (lvl >= maxLevel) return false;
-    staffLevels[role] = lvl + 1;
-    return true;
-  }
+      staff.values.fold<int>(0, (s, m) => s + (m?.wage ?? 0));
 
   bool upgradeFacility(FacilityType type) {
     final lvl = facilityLevel(type);
@@ -164,17 +172,30 @@ class ClubInfrastructure {
   }
 
   Map<String, dynamic> toJson() => {
-        'staffLevels': staffLevels.map((k, v) => MapEntry(k.name, v)),
+        'staff': {
+          for (final e in staff.entries)
+            if (e.value != null) e.key.name: e.value!.toJson(),
+        },
         'facilityLevels': facilityLevels.map((k, v) => MapEntry(k.name, v)),
       };
 
   factory ClubInfrastructure.fromJson(Map<String, dynamic>? json) {
     if (json == null) return ClubInfrastructure();
-    final staffJson = json['staffLevels'] as Map<String, dynamic>?;
+    final staffJson = json['staff'] as Map<String, dynamic>?;
+    // 旧セーブはレベル数値しか持っていない。そのまま読むと全役職が空席に
+    // なり、トレーニング効率も負傷率も一斉に最低へ落ちる。同じ働きをする
+    // 人物を置いて続きから遊べるようにする(StaffMarket.fromLegacyLevel)。
+    final legacyLevels = json['staffLevels'] as Map<String, dynamic>?;
     final facilityJson = json['facilityLevels'] as Map<String, dynamic>?;
     return ClubInfrastructure(
-      staffLevels: {
-        for (final r in StaffRole.values) r: (staffJson?[r.name] as int?) ?? 1,
+      staff: {
+        for (final r in StaffRole.values)
+          r: switch ((staffJson?[r.name], legacyLevels?[r.name])) {
+            (final Map<String, dynamic> m, _) => StaffMember.fromJson(m),
+            (_, final int lvl) when lvl > 1 =>
+              StaffMarket.fromLegacyLevel(r, lvl),
+            _ => null,
+          },
       },
       facilityLevels: {
         for (final f in FacilityType.values)

@@ -933,6 +933,23 @@ extension GameStateSeason on GameState {
       );
     }
 
+    // スタッフの契約消化と、候補の入れ替え。良いスタッフはクラブの規模を
+    // 見て来るかどうかを決めるので、昇格するほど顔ぶれが良くなる。
+    for (final role in StaffRole.values) {
+      final s = _save!.infrastructure.staffFor(role);
+      if (s == null) continue;
+      s.contractYears -= 1;
+      if (s.contractYears <= 0) {
+        _save!.infrastructure.staff[role] = null;
+        _logNews(
+          Tr.pick('${s.name}との契約が満了し、${role.label}が空席になりました。',
+              "${s.name}'s contract has expired, leaving the ${role.label} post vacant."),
+          context: Tr.pick('スタッフ', 'Staff'),
+        );
+      }
+    }
+    _refreshStaffCandidates();
+
     // 高齢選手の引退判定(ユースプロスペクトは対象外)。
     final retirees = RetirementEngine.resolveRetirements(userTeam);
     for (final p in retirees) {

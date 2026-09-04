@@ -41,6 +41,7 @@ import 'package:soccer_manager/logic/weather_engine.dart';
 import 'package:soccer_manager/data/name_pool.dart';
 import 'package:soccer_manager/models/attributes.dart';
 import 'package:soccer_manager/models/club_infrastructure.dart';
+import 'package:soccer_manager/models/staff_member.dart';
 import 'package:soccer_manager/models/contract_negotiation.dart';
 import 'package:soccer_manager/models/cup.dart';
 import 'package:soccer_manager/models/enum_json.dart';
@@ -636,10 +637,17 @@ void main() {
     await gameState.startNewGame('テストFC');
     final baseCount = gameState.scoutCandidates.length;
     gameState.save!.budget = 100000;
+    gameState.save!.wageBudget = 100000;
 
-    await gameState.upgradeStaff(StaffRole.scout);
+    // 候補のうち一番良いスカウトを雇う。空席のときの水準は1なので、
+    // それより上の人を雇えば候補数が増える。
+    final best = gameState.staffCandidatesFor(StaffRole.scout)
+        .reduce((a, b) => a.effectiveLevel >= b.effectiveLevel ? a : b);
+    expect(best.effectiveLevel, greaterThan(1),
+        reason: '候補が全員最低水準では、この検証が成り立たない');
+    await gameState.hireStaff(best.id);
 
-    expect(gameState.scoutCandidateCount, baseCount + 1);
+    expect(gameState.scoutCandidateCount, greaterThan(baseCount));
   });
 
   test('GameState.promoteYouthProspect moves the prospect into the squad',
@@ -834,29 +842,33 @@ void main() {
     expect(gameState.save!.budget, 0);
   });
 
-  test('ClubInfrastructure upgrades increase level and cost more each time',
-      () {
+  test('空席のスタッフ役職は水準1として扱われる', () {
     final infra = ClubInfrastructure();
-    expect(infra.staffLevel(StaffRole.physio), 1);
-    final firstCost =
-        ClubInfrastructure.staffUpgradeCost(infra.staffLevel(StaffRole.physio));
-
-    final upgraded = infra.upgradeStaff(StaffRole.physio);
-
-    expect(upgraded, isTrue);
-    expect(infra.staffLevel(StaffRole.physio), 2);
-    final secondCost =
-        ClubInfrastructure.staffUpgradeCost(infra.staffLevel(StaffRole.physio));
-    expect(secondCost, greaterThan(firstCost));
+    expect(infra.staffFor(StaffRole.physio), isNull);
+    expect(infra.staffLevel(StaffRole.physio), 1,
+        reason: '空席なら効果なし(=最低水準)として扱う');
+    expect(infra.totalStaffWeeklyWage, 0);
   });
 
-  test('ClubInfrastructure staff cannot upgrade past max level', () {
-    final infra = ClubInfrastructure();
-    for (int i = 0; i < ClubInfrastructure.maxLevel - 1; i++) {
-      expect(infra.upgradeStaff(StaffRole.scout), isTrue);
-    }
-    expect(infra.staffLevel(StaffRole.scout), ClubInfrastructure.maxLevel);
-    expect(infra.upgradeStaff(StaffRole.scout), isFalse);
+  test('スタッフの水準は、その役職に効く能力だけで決まる', () {
+    // 見極め20・指導1のスカウトは優秀。指導20・見極め1では働かない。
+    StaffMember scout(int judging, int coaching) => StaffMember(
+          id: 's',
+          name: 'n',
+          age: 45,
+          role: StaffRole.scout,
+          attributes: {
+            StaffAttribute.judging: judging,
+            StaffAttribute.coaching: coaching,
+            StaffAttribute.medical: 10,
+            StaffAttribute.motivating: 10,
+          },
+          wage: 50,
+        );
+
+    expect(scout(20, 1).effectiveLevel,
+        greaterThan(scout(1, 20).effectiveLevel),
+        reason: 'スカウトは見極めで決まるべき');
   });
 
   test('GameState.upgradeFacility deducts budget and raises the level',
@@ -891,15 +903,20 @@ void main() {
         greaterThan(incomeAtLevel1));
   });
 
-  test('GameState.upgradeStaff fails when budget is insufficient', () async {
+  test('給与予算を超えるスタッフは雇えない', () async {
     final gameState = GameState();
     await gameState.startNewGame('テストFC');
-    gameState.save!.budget = 0;
+    // スタッフの週俸は選手と同じ給与予算から出る。枠を使い切った状態に
+    // すると、どれだけ資金があっても雇えない。
+    // wageBudget は 0 だと「未設定」として既定値に戻るので 1 を入れる。
+    gameState.save!.budget = 1000000;
+    gameState.save!.wageBudget = 1;
 
-    final ok = await gameState.upgradeStaff(StaffRole.headCoach);
+    final candidate = gameState.staffCandidatesFor(StaffRole.headCoach).first;
+    final ok = await gameState.hireStaff(candidate.id);
 
     expect(ok, isFalse);
-    expect(gameState.save!.infrastructure.staffLevel(StaffRole.headCoach), 1);
+    expect(gameState.staffFor(StaffRole.headCoach), isNull);
   });
 
   test(

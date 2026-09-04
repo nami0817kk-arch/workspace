@@ -8,7 +8,10 @@ import '../state/game_state.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import '../l10n/tr.dart';
+import '../models/staff_member.dart';
 import '../theme/semantic_colors.dart';
+
+part 'club_screen_staff.dart';
 
 /// スタッフ・施設の現在レベル(と最大未満なら次レベル)の具体的な効果を1行にまとめる。
 String _staffEffectLabel(StaffRole role, int level) {
@@ -181,18 +184,7 @@ class ClubScreen extends StatelessWidget {
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
             for (final role in StaffRole.values)
-              _UpgradeCard(
-                title: role.label,
-                description: role.description,
-                level: infra.staffLevel(role),
-                cost: gameState.staffUpgradeCostFor(role),
-                costLabel: Tr.pick('雇用費', 'Hiring cost'),
-                extraLabel: Tr.pick(
-                    '週俸 ${ClubInfrastructure.staffWeeklyWage(infra.staffLevel(role))}万円 / ${_staffEffectLabel(role, infra.staffLevel(role))}',
-                    'Wage ${ClubInfrastructure.staffWeeklyWage(infra.staffLevel(role))} / ${_staffEffectLabel(role, infra.staffLevel(role))}'),
-                canAfford: save.budget >= gameState.staffUpgradeCostFor(role),
-                onUpgrade: () => gameState.upgradeStaff(role),
-              ),
+              _StaffCard(role: role),
             const Divider(height: 32),
             Text(Tr.pick('施設', 'Facilities'),
                 style: Theme.of(context).textTheme.titleMedium),

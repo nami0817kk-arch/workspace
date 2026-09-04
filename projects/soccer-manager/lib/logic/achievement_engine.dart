@@ -192,11 +192,10 @@ class AchievementEngine {
           id: 'staff_maxed',
           category: AchievementCategory.management,
           name: Tr.pick('最強スタッフ陣', 'The Best Backroom'),
-          description: Tr.pick('全てのスタッフをレベルMAXまで強化する',
-              'Upgrade every member of staff to their maximum'),
-          isUnlocked: (save, team) =>
-              save.infrastructure.staffLevels.values.every(
-            (v) => v >= ClubInfrastructure.maxLevel,
+          description: Tr.pick('全ての役職に最高水準のスタッフを揃える',
+              'Fill every post with staff of the highest standard'),
+          isUnlocked: (save, team) => save.infrastructure.staff.values.every(
+            (s) => s != null && s.effectiveLevel >= ClubInfrastructure.maxLevel,
           ),
         ),
         Achievement(

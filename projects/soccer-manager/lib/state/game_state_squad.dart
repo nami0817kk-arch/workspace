@@ -329,12 +329,27 @@ extension GameStateSquad on GameState {
     return changes;
   }
 
-  /// スタッフ雇用・昇格の費用(万円)。上限レベルなら0を返す。
-  int staffUpgradeCostFor(StaffRole role) {
-    if (_save == null) return 0;
-    final lvl = _save!.infrastructure.staffLevel(role);
-    return ClubInfrastructure.staffUpgradeCost(lvl);
+  /// 雇えるスタッフの候補を作り直す。シーズン開始時と新規開始時に呼ぶ。
+  void _refreshStaffCandidates() {
+    if (_save == null) return;
+    _save!.staffCandidates = StaffMarket.generate(
+      divisionTier: _save!.currentDivisionTier,
+      confidence: _save!.confidence,
+      seed: _save!.careerSeasons,
+      avoidNames: {
+        for (final s in _save!.infrastructure.staff.values)
+          if (s != null) s.name,
+      },
+    );
   }
+
+  /// いま雇えるスタッフの候補。シーズンごとに入れ替わる。
+  List<StaffMember> staffCandidatesFor(StaffRole role) =>
+      _save?.staffCandidates.where((s) => s.role == role).toList() ?? [];
+
+  /// [role]に就いているスタッフ。空席なら null。
+  StaffMember? staffFor(StaffRole role) =>
+      _save?.infrastructure.staffFor(role);
 
   int facilityUpgradeCostFor(FacilityType type) {
     if (_save == null) return 0;
@@ -342,15 +357,53 @@ extension GameStateSquad on GameState {
     return ClubInfrastructure.facilityUpgradeCost(lvl);
   }
 
-  Future<bool> upgradeStaff(StaffRole role) async {
+  /// 候補[staffId]を雇う。既にその役職に人がいれば入れ替わる。
+  ///
+  /// 費用は掛からない。掛かるのは週俸で、以後ずっと出ていく。一度の出費で
+  /// 済んだ旧レベル制と違い、良いスタッフを抱えるほど毎週の重荷になる。
+  Future<bool> hireStaff(String staffId) async {
     if (_save == null) return false;
-    final infra = _save!.infrastructure;
-    final lvl = infra.staffLevel(role);
-    if (lvl >= ClubInfrastructure.maxLevel) return false;
-    final cost = ClubInfrastructure.staffUpgradeCost(lvl);
-    if (_save!.budget < cost) return false;
-    _save!.budget -= cost;
-    infra.upgradeStaff(role);
+    final idx = _save!.staffCandidates.indexWhere((s) => s.id == staffId);
+    if (idx < 0) return false;
+    final hired = _save!.staffCandidates[idx];
+
+    // 週俸の総額が給与予算を食い潰さないよう、選手と同じ枠で見る。
+    if (!_wageBudgetAllowsSigning(hired.wage)) return false;
+
+    final previous = _save!.infrastructure.staffFor(hired.role);
+    _save!.infrastructure.staff[hired.role] = hired;
+    _save!.staffCandidates.removeAt(idx);
+    // 入れ替えで空いた人は候補に戻さない。断った相手が翌週も同じ条件で
+    // 待っているのは不自然なため。
+    if (previous != null) {
+      _logNews(
+        Tr.pick('${previous.name}が${previous.role.label}を退任し、${hired.name}が就任しました。',
+            '${previous.name} leaves as ${previous.role.label}; ${hired.name} takes over.'),
+        context: Tr.pick('スタッフ', 'Staff'),
+      );
+    } else {
+      _logNews(
+        Tr.pick('${hired.name}が${hired.role.label}に就任しました。',
+            '${hired.name} joins as ${hired.role.label}.'),
+        context: Tr.pick('スタッフ', 'Staff'),
+      );
+    }
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// [role]のスタッフを解任する。空席のままにもできる(週俸は浮く)。
+  Future<bool> dismissStaff(StaffRole role) async {
+    if (_save == null) return false;
+    final current = _save!.infrastructure.staffFor(role);
+    if (current == null) return false;
+    _save!.infrastructure.staff[role] = null;
+    _logNews(
+      Tr.pick('${current.name}が${role.label}を退任しました。',
+          '${current.name} leaves his post as ${role.label}.'),
+      context: Tr.pick('スタッフ', 'Staff'),
+    );
     _notify();
     await _persist();
     return true;

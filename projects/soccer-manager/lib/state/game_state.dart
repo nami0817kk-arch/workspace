@@ -81,6 +81,8 @@ import '../models/first_run_step.dart';
 import '../monetization/reward_offer.dart';
 import '../l10n/tr.dart';
 import '../logic/development_advisor.dart';
+import '../logic/staff_market.dart';
+import '../models/staff_member.dart';
 
 part 'game_state_squad.dart';
 part 'game_state_transfer.dart';
@@ -699,6 +701,8 @@ class GameState extends ChangeNotifier {
     _save!.rivalTeamName = rival.name;
     transferMarket = TransferMarket.generate();
     _refreshScoutCandidates();
+    // 開始時は全役職が空席。誰を先に雇うかが最初の判断になる。
+    _refreshStaffCandidates();
     FreeAgentEngine.topUp(_save!.freeAgents);
     lastContractExpirations = [];
     isBusy = false;
