@@ -797,10 +797,13 @@ def balanced_wrap(
     # 行数が同じ候補の中から、切れ目のいちばん良いものを選ぶ。
     # 幅だけで詰めると「チェルシーが激怒した、移／籍期限…」のように
     # 熟語の途中で割れる。句読点の直後で切れているほうが読みやすい。
+    # 幅を少しずつ狭めて候補を作る。刻みが粗いと、良い切れ目の幅を飛ばす。
+    # 実測（2026-09-04）で、5段階だと「12月まで／戻らない」で切れる幅
+    # （上限の約0.88倍）が候補に入らず、「まで戻／らない」しか選べなかった。
     best = lines
     best_score = _break_score(lines)
-    for ratio in (0.62, 0.7, 0.78, 0.86, 0.94):
-        candidate = wrap_text(draw, text, font, max_width * ratio)
+    for step in range(60, 100, 2):
+        candidate = wrap_text(draw, text, font, max_width * step / 100)
         if len(candidate) != len(lines):
             continue
         score = _break_score(candidate)
@@ -817,13 +820,34 @@ def _is_kanji(char: str) -> bool:
     return "一" <= char <= "鿿"
 
 
+def _is_hiragana(char: str) -> bool:
+    return "ぁ" <= char <= "ん"
+
+
+def _is_katakana(char: str) -> bool:
+    return "ァ" <= char <= "ヴ"
+
+
+# 行頭に来ても読みを壊さないひらがな（助詞・助動詞の頭）。
+# 「選手が／外れた」は読めるが、「戻／らない」は動詞が割れて読めない。
+# どちらも「漢字のあとにひらがな」で、字種だけでは見分けられないので、
+# 助詞として使われる字を挙げて区別する。
+PARTICLE_HEAD = "がをにはへもとやでかねよ"
+
+
 def _break_score(lines: list[str]) -> int:
     """行の切れ目の良さ。大きいほど読みやすい。
 
     - 句読点や閉じ括弧で終わっていれば +2（意味の区切りで改行できている）
     - 漢字が続く途中で割ったら -3（「移／籍」「成／立」のような熟語の分断）
+    - カタカナが続く途中で割ったら -3（「シー／ズン」。外来語は1語で読む）
+    - ひらがなが続く途中で割ったら -2（「12月ま／で」「動くかど／うか」）
+    - 送り仮名を置き去りにしたら -2（「戻／らない」。助詞なら減点しない）
 
-    分断のほうを重く見る。多少 行末がそろわなくても、熟語が割れないほうが読める。
+    分断のほうを重く見る。多少 行末がそろわなくても、語が割れないほうが読める。
+
+    ひらがなを漢字より軽くしているのは、助詞の切れ目（「遠藤選手が／外れた」）は
+    実際には読めるため。同じ減点にすると、まともな切れ目まで避けてしまう。
     """
     score = 0
     for index, line in enumerate(lines[:-1]):
@@ -832,8 +856,17 @@ def _break_score(lines: list[str]) -> int:
         if line[-1] in GOOD_BREAK_END:
             score += 2
         next_line = lines[index + 1]
-        if next_line and _is_kanji(line[-1]) and _is_kanji(next_line[0]):
+        if not next_line:
+            continue
+        tail, head = line[-1], next_line[0]
+        if _is_kanji(tail) and _is_kanji(head):
             score -= 3
+        elif _is_katakana(tail) and _is_katakana(head):
+            score -= 3
+        elif _is_hiragana(tail) and _is_hiragana(head):
+            score -= 2
+        elif _is_kanji(tail) and _is_hiragana(head) and head not in PARTICLE_HEAD:
+            score -= 2
     return score
 
 
