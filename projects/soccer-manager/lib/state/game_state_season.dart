@@ -2,6 +2,32 @@ part of 'game_state.dart';
 
 /// カップ戦(国内/大陸/スーパーカップ)と昇降格・シーズン遷移。
 extension GameStateSeason on GameState {
+  /// ユーザーの所属ディビジョンに入るチームに、選手がいなければ用意する。
+  ///
+  /// 他ディビジョンのチームはセーブ容量のために選手データを持たない
+  /// (`SaveGame.otherDivisionLeagues`を参照)。順位表と昇降格には強度だけで
+  /// 足りるが、ユーザーと同じディビジョンでは`MatchEngine.simulate`が選手
+  /// ごとに試合を進めるため、この時点でスカッドが要る。
+  ///
+  /// 生成されるのは「昇格を勝ち取った実際のスカッド」ではなく、保持していた
+  /// 強度に見合う新しい選手たちになる。他ディビジョンの選手を見る画面は
+  /// 無いので利用者からは分からないが、内部的には別物になる。
+  void _ensureSquadsForActiveTier(List<Team> teams) {
+    for (final t in teams) {
+      if (t.players.isNotEmpty) continue;
+      final generated = PlayerGenerator.generateSquad(
+        id: t.id,
+        name: t.name,
+        // 保持していた強度。壊れたセーブで欠けていた場合に0のスカッドを
+        // 作らないよう、移行時と同じ範囲に収める。
+        strengthTier: (t.retainedOverall ?? 50).clamp(15, 90),
+      );
+      t.players = generated.players;
+      t.retainedOverall = null;
+      LineupUtils.autoFill(t);
+    }
+  }
+
   Cup? _cupOfType(CupType type) {
     for (final c in _save!.cups) {
       if (c.type == type) return c;
@@ -816,6 +842,7 @@ extension GameStateSeason on GameState {
       }
     }
     final newActiveTeams = newTeamsByTier[newTier]!;
+    _ensureSquadsForActiveTier(newActiveTeams);
 
     final userInPromotionPlayoff = relevantPlayoffMatches.any(
       (m) => m.homeId == _save!.userTeamId || m.awayId == _save!.userTeamId,

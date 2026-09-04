@@ -69,6 +69,27 @@ jobs:
             exit 1
           fi
 
+      # 署名と同じ扱いにする。テスト用の広告IDのまま公開すると、広告は出るのに
+      # 収益がゼロになる。しかも審査は通ってしまうので、気づくのが遅れる。
+      - name: Verify AdMob production IDs are present
+        env:
+          ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID_ANDROID }}
+          ADMOB_REWARDED: ${{ secrets.ADMOB_REWARDED_ANDROID }}
+        run: |
+          missing=""
+          [ -n "$ADMOB_APP_ID" ]  || missing="$missing ADMOB_APP_ID_ANDROID"
+          [ -n "$ADMOB_REWARDED" ] || missing="$missing ADMOB_REWARDED_ANDROID"
+          if [ -n "$missing" ]; then
+            echo "::error::次の GitHub Secrets が未設定です:$missing"
+            echo "::error::未設定のままだと Google のテスト用IDで公開され、広告収益が発生しません。"
+            exit 1
+          fi
+          case "$ADMOB_APP_ID$ADMOB_REWARDED" in
+            *ca-app-pub-3940256099942544*)
+              echo "::error::Google のテスト用IDが登録されています。自分の AdMob のIDに置き換えてください。"
+              exit 1 ;;
+          esac
+
       - name: Restore keystore from secrets
         env:
           KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
@@ -92,22 +113,32 @@ jobs:
           echo "keystore を復元しました ($(wc -c < "$KEYSTORE_PATH") bytes)"
 
       - name: Build AAB (Google Play 提出用)
+        env:
+          ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID_ANDROID }}
+          ADMOB_REWARDED: ${{ secrets.ADMOB_REWARDED_ANDROID }}
         run: |
           set -euo pipefail
           EXTRA=""
           if [ -n "${{ github.event.inputs.build_number }}" ]; then
             EXTRA="--build-number=${{ github.event.inputs.build_number }}"
           fi
-          flutter build appbundle --release $EXTRA
+          flutter build appbundle --release $EXTRA \
+            -PADMOB_APP_ID="$ADMOB_APP_ID" \
+            --dart-define=ADMOB_REWARDED_ANDROID="$ADMOB_REWARDED"
 
       - name: Build APK (実機での動作確認用)
+        env:
+          ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID_ANDROID }}
+          ADMOB_REWARDED: ${{ secrets.ADMOB_REWARDED_ANDROID }}
         run: |
           set -euo pipefail
           EXTRA=""
           if [ -n "${{ github.event.inputs.build_number }}" ]; then
             EXTRA="--build-number=${{ github.event.inputs.build_number }}"
           fi
-          flutter build apk --release $EXTRA
+          flutter build apk --release $EXTRA \
+            -PADMOB_APP_ID="$ADMOB_APP_ID" \
+            --dart-define=ADMOB_REWARDED_ANDROID="$ADMOB_REWARDED"
 
       # デバッグ鍵で署名された成果物を誤って提出しないための最終確認。
       # デバッグ鍵は必ず CN=Android Debug になる。

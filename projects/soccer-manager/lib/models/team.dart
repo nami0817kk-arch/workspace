@@ -176,10 +176,17 @@ class Team {
   /// 効果の形骸化を防ぐためのクールダウン。
   int tacticalMeetingCooldownWeeks;
 
+  /// 選手を持たないチームの強度。他ディビジョンのチームはセーブ容量のために
+  /// 選手データを保存しないので、[overallRating]の代わりにこの値を使う
+  /// (詳細は`SaveGame.otherDivisionLeagues`の宣言直下)。
+  /// 選手を持つチームでは使われない。
+  int? retainedOverall;
+
   Team({
     required this.id,
     required this.name,
     required this.players,
+    this.retainedOverall,
     this.formation = Formation.f442,
     List<String>? startingXI,
     this.defaultTrainingFocus = TrainingFocus.balanced,
@@ -208,7 +215,9 @@ class Team {
         depthChartOrder = depthChartOrder ?? {};
 
   int get overallRating {
-    if (players.isEmpty) return 0;
+    // 選手を持たないチーム(他ディビジョン)は保持しておいた強度を返す。
+    // ここで0を返すと背面シミュレーションの力量差が壊れる。
+    if (players.isEmpty) return retainedOverall ?? 0;
     final sum = players.fold<int>(0, (s, p) => s + p.overall);
     return (sum / players.length).round();
   }
@@ -236,7 +245,10 @@ class Team {
     return ordered;
   }
 
-  Map<String, dynamic> toJson() => {
+  /// [includePlayers]をfalseにすると選手データを書き出さず、代わりに
+  /// そのときの強度を`retainedOverall`として残す。他ディビジョンのチームに
+  /// 使う(セーブの79%がこの選手データだったため)。
+  Map<String, dynamic> toJson({bool includePlayers = true}) => {
         'id': id,
         'name': name,
         'formation': formation.name,
@@ -262,7 +274,9 @@ class Team {
         'tacticPresets': tacticPresets.map((t) => t.toJson()).toList(),
         'depthChartOrder': depthChartOrder,
         'tacticalMeetingCooldownWeeks': tacticalMeetingCooldownWeeks,
-        'players': players.map((p) => p.toJson()).toList(),
+        'players':
+            includePlayers ? players.map((p) => p.toJson()).toList() : const [],
+        'retainedOverall': includePlayers ? retainedOverall : overallRating,
       };
 
   factory Team.fromJson(Map<String, dynamic> json) => Team(
@@ -320,9 +334,13 @@ class Team {
             {},
         tacticalMeetingCooldownWeeks:
             json['tacticalMeetingCooldownWeeks'] as int? ?? 0,
-        players: (json['players'] as List)
-            .map((e) => Player.fromJson(e as Map<String, dynamic>))
-            .toList(),
+        // 選手データを持たないセーブ(他ディビジョン)では空になる。旧セーブは
+        // 必ず持っているので、そのときは従来どおり選手から強度を計算する。
+        players: (json['players'] as List?)
+                ?.map((e) => Player.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            [],
+        retainedOverall: json['retainedOverall'] as int?,
       );
 
   /// 廃止されたフォーメーション名（旧f532など）のセーブでもクラッシュしないようにする。

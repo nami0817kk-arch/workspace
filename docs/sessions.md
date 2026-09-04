@@ -57,9 +57,13 @@ PC（`C:\Users\なみ\dev\workspace`）は単一障害点。実際 2026-09-02 �
 巡回ごとに判断がブレないよう、**通知する条件を数字で固定する**。
 これを超えたものだけをユーザーに知らせる。超えていなければ黙る。
 
+master の CI が赤いかどうかは、**open な `[CI]` Issue の一覧を見れば分かる**
+（`ci-alert.yml` が失敗した瞬間に起票し、緑に戻ると自動で閉じる）。
+巡回はワークフロー実行を一覧しなくてよい。
+
 | 対象 | 異常とみなす条件 |
 |---|---|
-| master の CI | 赤いまま **30分以上** |
+| master の CI | `[CI]` Issue が開いたまま **30分以上** |
 | open PR（CI 緑） | **3日以上**マージも close もされず滞留 |
 | open PR（CI 赤） | 赤いまま **24時間以上** |
 | `claude/` ブランチ | 最終コミットから **24時間以上**動かず、master に未取り込み |
@@ -75,6 +79,7 @@ dependabot の PR は滞留の対象外（マージ判断はユーザーが行�
 |---|---|---|
 | kabu の日次取得 | `kabu-daily.yml`（平日 17:00 JST） | データが古いと Issue が立つ |
 | 各PJTのテスト | `<pjt>-tests.yml` | PR / push で赤くなる |
+| master が赤い | `ci-alert.yml`（失敗した瞬間） | `[CI]` の Issue が立つ。緑に戻ると自動で閉じる |
 | コード品質の劣化 | `growth-loop.yml`（毎週月曜 09:13 JST） | `platform/ai-lab/GROWTH.md` が更新される |
 | 未 push の作業 | 夜間 22:00 の `scripts/wip-sweeper.sh` | `wip/` ブランチへ退避される |
 | セッションの停止・CI の赤・放置ブランチ | 調整役の定期巡回（2時間おき） | 異常時のみ通知が来る。見た記録は [docs/patrol-log.md](patrol-log.md) |

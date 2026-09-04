@@ -417,8 +417,11 @@ class SaveGame {
         'rivalTeamId': rivalTeamId,
         'rivalTeamName': rivalTeamName,
         'pendingPressConference': pendingPressConference?.toJson(),
-        'otherDivisionLeagues':
-            otherDivisionLeagues.map((l) => l?.toJson()).toList(),
+        // 他ディビジョンは選手データを保存しない。順位表と昇降格にしか
+        // 使わないため、強度だけ retainedOverall として残す。
+        'otherDivisionLeagues': otherDivisionLeagues
+            .map((l) => l?.toJson(includePlayers: false))
+            .toList(),
         'currentDivisionTier': currentDivisionTier,
         'careerWins': careerWins,
         'careerDraws': careerDraws,
