@@ -190,6 +190,12 @@ def main(argv: list[str] | None = None) -> int:
     p_short.add_argument("--out", default=None)
     p_short.add_argument("--no-tts", action="store_true", help="音声なしで尺だけ確認する")
 
+    p_react = sub.add_parser("reactions", help="まとめスレから書き込みを取り出して数える")
+    p_react.add_argument("url", help="まとめサイトの記事URL")
+    p_react.add_argument("--limit", type=int, default=5, help="カードに載せる件数（既定5）")
+    p_react.add_argument("--word", action="append", default=[],
+                         help="数える言葉。ラベル:語,語 の形。何度でも指定できる")
+
     p_contact = sub.add_parser("contact", help="画面が変わるたびの1枚を並べて見る")
     p_contact.add_argument("script")
     p_contact.add_argument("--out", default=None, help="出力先（既定: output/<台本名>）")
@@ -444,6 +450,51 @@ def _cmd_short(args, config) -> int:
             file=sys.stderr,
         )
         return 1
+    return 0
+
+
+def _cmd_reactions(args, config) -> int:
+    """まとめスレの書き込みを取り出して数える。
+
+    **「多い」と言うには数える。**数えた件数と母数を出すので、台本には
+    「47件中12件」のように書ける。数えずに「声が多い」とは書かない。
+    """
+    from . import reactions as reactions_mod
+
+    try:
+        posts = reactions_mod.fetch(args.url)
+    except reactions_mod.ReactionError as error:
+        print(str(error), file=sys.stderr)
+        return 1
+    if not posts:
+        print("書き込みを取り出せませんでした。ページの作りが違うかもしれません",
+              file=sys.stderr)
+        return 1
+
+    print(f"■ 書き込み　{len(posts)}件　（母数はこの数）")
+    for post in posts[: args.limit]:
+        print(f"  >>{post.no}　{_fit(post.short, 56)}")
+
+    words: dict[str, tuple[str, ...]] = {}
+    for item in args.word:
+        label, _, keys = item.partition(":")
+        if label and keys:
+            words[label] = tuple(k for k in keys.split(",") if k)
+    if words:
+        print("\n■ 数えた結果")
+        for label, count in reactions_mod.tally(posts, words).items():
+            share = count / len(posts) * 100
+            print(f"  {label}　{count}件 / {len(posts)}件（{share:.0f}%）")
+
+    print("\n取材メモに貼る形:")
+    print("    card:")
+    print("      type: reactions")
+    print(f"      title: ネットの反応（{len(posts)}件から）")
+    print("      items:")
+    for post in posts[: args.limit]:
+        print(f"        - {{text: {post.short}, label: '>>{post.no}'}}")
+    print(f"    tier: 未確認    # 匿名の書き込みなので、単独では根拠にしない")
+    print(f"    sources:\n      - {args.url}")
     return 0
 
 
@@ -1837,6 +1888,7 @@ HANDLERS = {
     "check": _cmd_check,
     "build": _cmd_build,
     "short": _cmd_short,
+    "reactions": _cmd_reactions,
     "review": _cmd_review,
     "contact": _cmd_contact,
     "thumbnail": _cmd_thumbnail,
