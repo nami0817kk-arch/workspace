@@ -594,12 +594,16 @@ class _RotationSuggestionsCard extends StatelessWidget {
                   color: Colors.orange.shade800,
                 ),
                 const SizedBox(width: 6),
-                Text(
-                  Tr.pick('疲労ローテーション提案', 'Suggested rotation for tired legs'),
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleSmall
-                      ?.copyWith(color: Colors.orange.shade900),
+                // Row の中の Text は幅の制約を受けないため、そのままだと
+                // 1行に伸びてはみ出す。英語の見出しは日本語より長い。
+                Expanded(
+                  child: Text(
+                    Tr.pick('疲労ローテーション提案', 'Suggested rotation for tired legs'),
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleSmall
+                        ?.copyWith(color: Colors.orange.shade900),
+                  ),
                 ),
               ],
             ),

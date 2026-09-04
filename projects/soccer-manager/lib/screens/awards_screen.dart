@@ -99,7 +99,11 @@ class AwardsScreen extends StatelessWidget {
                             ),
                             title: Row(
                               children: [
-                                Text(Tr.pick('得点王', 'Top scorer')),
+                                // Row の中の Text は幅の制約を受けない。
+                                // 英語の見出しは長く、狭い端末ではみ出す。
+                                Flexible(
+                                  child: Text(Tr.pick('得点王', 'Top scorer')),
+                                ),
                                 if (scorerIsOwnClub) ...[
                                   const SizedBox(width: 6),
                                   const Icon(
@@ -129,7 +133,11 @@ class AwardsScreen extends StatelessWidget {
                             ),
                             title: Row(
                               children: [
-                                Text(Tr.pick('年間MVP', 'Player of the season')),
+                                // Row の中の Text は幅の制約を受けない。
+                                // 英語の見出しは長く、狭い端末ではみ出す。
+                                Flexible(
+                                  child: Text(Tr.pick('年間MVP', 'Player of the season')),
+                                ),
                                 if (mvpIsOwnClub) ...[
                                   const SizedBox(width: 6),
                                   const Icon(
@@ -156,7 +164,11 @@ class AwardsScreen extends StatelessWidget {
                             ),
                             title: Row(
                               children: [
-                                Text(Tr.pick('ゴールデングラブ', 'Golden Glove')),
+                                // Row の中の Text は幅の制約を受けない。
+                                // 英語の見出しは長く、狭い端末ではみ出す。
+                                Flexible(
+                                  child: Text(Tr.pick('ゴールデングラブ', 'Golden Glove')),
+                                ),
                                 if (gloveIsOwnClub) ...[
                                   const SizedBox(width: 6),
                                   const Icon(

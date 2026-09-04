@@ -5657,9 +5657,27 @@ void main() {
       'TrainingEngine.traitSuitability scales attribute-based trait chances '
       'so a well-suited player acquires the targeted trait faster than a '
       'poorly-suited one', () {
+    // 適性そのものは乱数を通さずに確かめられる。抽選結果の比較だけに
+    // 頼ると、たまたま逆転したときに「仕組みが壊れた」と読めてしまう。
+    final wellSuitedPlayer = makeFreshPlayer(determination: 99)
+      ..setAttributeValue(AttributeKeys.finishing, 95);
+    final poorlySuitedPlayer = makeFreshPlayer(determination: 99)
+      ..setAttributeValue(AttributeKeys.finishing, 10);
+    expect(
+      TrainingEngine.traitSuitability(
+          wellSuitedPlayer, PlayerTrait.clinicalFinisher),
+      greaterThan(TrainingEngine.traitSuitability(
+          poorlySuitedPlayer, PlayerTrait.clinicalFinisher)),
+      reason: '適性の計算そのものが能力値を反映していない',
+    );
+
+    // 適性が実際に抽選へ効いていることは、回数を数えて確かめるほかない。
+    // 800回では取得数が 30 前後と 12 前後で、標準偏差に対する差が小さく、
+    // まれに逆転する(実際にフルスイートで一度落ちた)。試行を増やして
+    // ばらつきを相対的に小さくする。
     int countAcquisitions(int finishingValue) {
       var count = 0;
-      for (int i = 0; i < 800; i++) {
+      for (int i = 0; i < 3000; i++) {
         final p = makeFreshPlayer(determination: 99);
         p.setAttributeValue(AttributeKeys.finishing, finishingValue);
         p.traitTrainingTarget = PlayerTrait.clinicalFinisher;

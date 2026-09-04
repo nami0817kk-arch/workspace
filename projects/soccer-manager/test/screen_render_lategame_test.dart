@@ -6,10 +6,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_manager/data/quick_access_destinations.dart';
 import 'package:soccer_manager/l10n/app_localizations.dart';
 import 'package:soccer_manager/l10n/tr.dart';
+import 'package:soccer_manager/main.dart';
+import 'package:soccer_manager/models/incoming_offer.dart';
+import 'package:soccer_manager/models/season_award.dart';
 import 'package:soccer_manager/monetization/ad_service.dart';
 import 'package:soccer_manager/monetization/monetization_controller.dart';
 import 'package:soccer_manager/monetization/purchase_service.dart';
-import 'package:soccer_manager/main.dart';
 import 'package:soccer_manager/state/game_state.dart';
 import 'package:soccer_manager/screens/fixtures_screen.dart';
 import 'package:soccer_manager/screens/home_screen.dart';
@@ -19,24 +21,20 @@ import 'package:soccer_manager/state/settings_controller.dart';
 
 import 'support/app_fonts.dart';
 
-/// クイックアクセスから開く全画面を実際に描画して、はみ出しと例外を検出する。
+/// 「データが溜まってから出る UI」を、実際の文字幅で検査する。
 ///
-/// これまで描画されていたのは start / 新クラブのダイアログ / メインタブ4つ /
-/// オンボーディングだけで、ここで開く20画面は一度も描画されていなかった。
-/// オーバーフローはリリースビルドでは縞模様も例外も出ないため、実機で目視する
-/// まで気づけない。デバッグビルドなら RenderFlex のはみ出しが報告されるので、
-/// ここで機械的に踏む。
+/// 既存の screen_render_test には2つの穴があった。
 ///
-/// 検出には tester.takeException() を使う。はみ出しは呼び出し側へ throw される
-/// のではなく FlutterError.onError に報告されるため、try/catch では捕まらない。
+/// 1. 新規セーブしか描画しない。受賞歴・疲労ローテーション提案・資金不足の
+///    表示などは条件が立たないので一度も描画されない。画面名は対象一覧に
+///    載っているため、覆えているように見えるのが厄介なところ。
+/// 2. 実フォントを読んでいない。テストの代替フォントは全文字が同じ幅で、
+///    英語だけおよそ2倍に太る(support/app_fonts.dart 参照)。実機では
+///    起きないはみ出しを検出してしまう。
 ///
-/// 幅は狭いスマートフォン(360)と、さらに狭い小型端末(320)。言語は日本語と英語。
-/// 英語はラベルが横に長くなるため、日本語で収まっていても英語だけはみ出す。
-/// 検査する画面。クイックアクセスの登録に、ボトムナビの4画面を足したもの。
-///
-/// メインタブは quickAccessDestinations に入っていないため、以前はこの網の
-/// 外にあった。実際、ホーム画面のはみ出しを取りこぼし、別のテストが偶然
-/// 拾っている。利用者が最も長く見る4画面なので、ここに含める。
+/// ここでは条件を乱数に頼らず直接組み立ててから、実フォントとアプリ本来の
+/// テーマで描画する。文字サイズは既定と設定の上限(130%)の両方で見る。
+/// 既定で収まっていても、利用者が文字を大きくすると溢れるため。
 List<({String label, WidgetBuilder builder})> _screensUnderTest() => [
       for (final d in quickAccessDestinations)
         (label: d.label, builder: d.builder),
@@ -47,34 +45,21 @@ List<({String label, WidgetBuilder builder})> _screensUnderTest() => [
     ];
 
 void main() {
-  // 実フォントを読まないと、全文字が同じ幅の代替フォントで測ることになる。
-  // 英語だけおよそ2倍に太り、実機では起きないはみ出しを検出してしまう。
   setUpAll(loadAppFonts);
-
-  const sizes = <String, Size>{
-    '360x780': Size(360, 780),
-    '320x568': Size(320, 568),
-  };
 
   for (final lang in const [AppLanguage.japanese, AppLanguage.english]) {
     final langLabel = lang == AppLanguage.english ? 'en' : 'ja';
-
-    for (final entry in sizes.entries) {
-      // 利用者は設定で文字を 130% まで大きくできる。既定で収まっていても
-      // 大きくすると溢れる箇所があるため、上限でも見る。
-      for (final scale in const [1.0, SettingsController.maxTextScale]) {
+    for (final scale in const [1.0, SettingsController.maxTextScale]) {
       final scaleLabel = '${(scale * 100).round()}%';
+
       testWidgets(
-        'every quick-access screen renders cleanly '
-        '($langLabel, ${entry.key}, text $scaleLabel)',
+        'データが溜まった状態でも全画面が収まる ($langLabel, 320x568, 文字$scaleLabel)',
         (WidgetTester tester) async {
           addTearDown(tester.view.resetPhysicalSize);
           addTearDown(tester.view.resetDevicePixelRatio);
           tester.view.devicePixelRatio = 1.0;
-          tester.view.physicalSize = entry.value;
+          tester.view.physicalSize = const Size(320, 568);
 
-          // testWidgets は疑似時間で動くため、SharedPreferences を待つ処理は
-          // そのままでは完了しない。セットアップだけ実時間で走らせる。
           SharedPreferences.setMockInitialValues({});
           late final SettingsController settings;
           late final MonetizationController monetization;
@@ -82,9 +67,6 @@ void main() {
           await tester.runAsync(() async {
             settings = SettingsController();
             await settings.init();
-            // 実装をそのまま使うと課金プラグインへ接続しにいき、テスト完了後に
-            // PlatformException が遅れて届いて無関係のテストを落とす。
-            // 広告・課金は差し替える。
             monetization = MonetizationController(
               adService: NoOpAdService(),
               purchases: _StubPurchaseService(),
@@ -92,12 +74,25 @@ void main() {
             await monetization.initialize();
             gameState = GameState();
             await gameState.startNewGame('テストFC');
+            _accumulateState(gameState);
           });
 
-          // SettingsController.init() が保存値から Tr.language を上書きするため、
-          // 言語の指定はその後で行う。先に設定すると消される。
+          // SettingsController.init() が保存値から Tr.language を上書きする
+          // ため、言語の指定はその後で行う。先に設定すると消される。
           Tr.language = lang;
           addTearDown(() => Tr.language = AppLanguage.system);
+
+          // 条件が本当に立っているかを先に確かめる。立っていなければ
+          // 「溜まった状態を見た」と言えない。
+          expect(gameState.save!.seasonAwards, isNotEmpty,
+              reason: '受賞歴が入っていない');
+          expect(gameState.rotationSuggestions, isNotEmpty,
+              reason: '疲労ローテーション提案が出ていない');
+          expect(gameState.save!.incomingOffers, isNotEmpty,
+              reason: '移籍オファーが入っていない');
+
+          final theme = const SoccerManagerApp()
+              .buildTheme(Brightness.light, boldText: false);
 
           Widget wrap(Widget child) => MultiProvider(
                 providers: [
@@ -109,10 +104,7 @@ void main() {
                 ],
                 child: MaterialApp(
                   locale: Locale(langLabel),
-                  // アプリ本来のテーマで測る。既定テーマのままだと余白も
-                  // 文字種も本物と違い、実機で起きないはみ出しを拾う。
-                  theme: const SoccerManagerApp()
-                      .buildTheme(Brightness.light, boldText: false),
+                  theme: theme,
                   localizationsDelegates:
                       AppLocalizations.localizationsDelegates,
                   supportedLocales: AppLocalizations.supportedLocales,
@@ -125,18 +117,6 @@ void main() {
                 ),
               );
 
-          // 言語が本当に切り替わっているかを先に確かめる。ここが効いていないと
-          // 「両言語で検証した」という前提が崩れ、片方しか見ていないことになる。
-          await tester.pumpWidget(
-              wrap(Builder(builder: quickAccessDestinations.first.builder)));
-          await tester.pump();
-          tester.takeException();
-          expect(
-            find.text(lang == AppLanguage.english ? 'Training' : 'トレーニング'),
-            findsWidgets,
-            reason: '$langLabel のはずが、その言語の見出しが描画されていない',
-          );
-
           final failures = <String>[];
           for (final dest in _screensUnderTest()) {
             await tester.pumpWidget(wrap(Builder(builder: dest.builder)));
@@ -144,8 +124,6 @@ void main() {
             // 終わらないアニメーションを持つ画面でテストごと止まる。
             await tester.pump();
             await tester.pump(const Duration(milliseconds: 400));
-
-            // 1画面で止めず全部見る。まとめて出た方が傾向を掴みやすい。
             final err = tester.takeException();
             if (err != null) {
               failures
@@ -153,21 +131,74 @@ void main() {
             }
           }
 
-          expect(
-            failures,
-            isEmpty,
-            reason: '$langLabel ${entry.key} 文字$scaleLabel で描画に問題のある画面がある:\n'
-                '${failures.join('\n')}',
-          );
+          expect(failures, isEmpty,
+              reason: '$langLabel 文字$scaleLabel で収まらない画面がある:\n'
+                  '${failures.join('\n')}');
         },
-        timeout: const Timeout(Duration(minutes: 3)),
+        timeout: const Timeout(Duration(minutes: 5)),
       );
-      }
     }
   }
 }
 
-/// ストアに触らない差し替え。画面の描画にはストアの応答は要らない。
+/// 長く遊んだセーブに現れる条件を、乱数に頼らず直接作る。
+///
+/// 検証したい条件以外は取り除いておく。生成された選手団の状態に任せると、
+/// 引き次第で条件が立ったり立たなかったりしてテストが不安定になる。
+void _accumulateState(GameState game) {
+  final save = game.save!;
+  final team = game.userTeam;
+
+  // 1. 受賞歴。個人タイトル画面はこれが無いと中身が描かれない。
+  save.seasonAwards.add(
+    SeasonAward(
+      season: 1,
+      topScorerId: team.players.first.id,
+      topScorerName: team.players.first.name,
+      topScorerTeamName: team.name,
+      topScorerTeamId: team.id,
+      topScorerGoals: 24,
+      mvpId: team.players.first.id,
+      mvpName: team.players.first.name,
+      mvpTeamName: team.name,
+      mvpTeamId: team.id,
+      goldenGloveId: team.players.last.id,
+      goldenGloveName: team.players.last.name,
+      goldenGloveTeamName: team.name,
+      goldenGloveTeamId: team.id,
+      goldenGloveCleanSheets: 15,
+    ),
+  );
+
+  // 2. 疲労ローテーション提案。スタメンを疲労させ、控えを休ませる。
+  //    控えは負傷・代表招集・レンタル・出場停止だと候補から外れるので、
+  //    それらも取り除いてから1つだけ条件を立てる。
+  for (final p in team.players) {
+    final starting = team.startingXI.contains(p.id);
+    p.fatigue = starting ? 95 : 0;
+    if (!starting) {
+      p.injuryWeeks = 0;
+      p.suspendedMatches = 0;
+      p.internationalDutyWeeksRemaining = 0;
+      p.loanedOutWeeksRemaining = 0;
+    }
+  }
+
+  // 3. 資金不足。移籍市場で「獲得できません」の錠アイコンが出る条件。
+  save.budget = 0;
+
+  // 4. 受け取り中の移籍オファー。ホームと通知バッジに出る。
+  save.incomingOffers.add(
+    IncomingOffer(
+      id: 'lategame-offer',
+      playerId: team.players.first.id,
+      playerName: team.players.first.name,
+      buyerClubName: 'Wanderers Athletic Club',
+      amount: 4800,
+    ),
+  );
+}
+
 class _StubPurchaseService implements PurchaseService {
   @override
   Future<void> initialize() async {}

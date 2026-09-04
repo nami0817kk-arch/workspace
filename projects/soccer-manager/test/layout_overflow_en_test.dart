@@ -5,12 +5,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:soccer_manager/l10n/tr.dart';
 import 'package:soccer_manager/main.dart';
 
+import 'support/app_fonts.dart';
+
 /// 英語は日本語よりラベルが横に長くなるため、日本語では収まっていたUIが
 /// 英語でだけ枠からはみ出すことがある。リリースビルドではオーバーフローの
 /// 縞模様も例外も出ないので目視でも気づきにくい。デバッグビルドのテストなら
 /// RenderFlexのオーバーフローが例外として上がるので、英語表示のまま
 /// 主要画面を狭いスマートフォン幅で描画して回帰を検出する。
 void main() {
+  // 代替フォントは全文字が同じ幅で、英語だけおよそ2倍に太る。
+  // 実機の幅で測るために同梱フォントを読み込む。
+  setUpAll(loadAppFonts);
+
   setUp(() {
     SharedPreferences.setMockInitialValues({});
     Tr.language = AppLanguage.english;

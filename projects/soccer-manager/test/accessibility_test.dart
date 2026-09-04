@@ -10,8 +10,11 @@ import 'package:soccer_manager/l10n/tr.dart';
 import 'package:soccer_manager/monetization/ad_service.dart';
 import 'package:soccer_manager/monetization/monetization_controller.dart';
 import 'package:soccer_manager/monetization/purchase_service.dart';
+import 'package:soccer_manager/main.dart';
 import 'package:soccer_manager/state/game_state.dart';
 import 'package:soccer_manager/state/settings_controller.dart';
+
+import 'support/app_fonts.dart';
 
 /// 読みやすさ・操作しやすさを固定するテスト。
 ///
@@ -24,6 +27,8 @@ import 'package:soccer_manager/state/settings_controller.dart';
 /// 端末の文字サイズを上げたときの崩れも見る。設定画面に文字サイズの調整が
 /// あるので、大きくして使う利用者は実在する。
 void main() {
+  setUpAll(loadAppFonts);
+
   late SettingsController settings;
   late MonetizationController monetization;
   late GameState gameState;
@@ -74,6 +79,11 @@ void main() {
         ],
         child: MaterialApp(
           locale: const Locale('ja'),
+          // アプリ本来のテーマで検査する。既定テーマのままだと Material の
+          // 標準色と標準の文字を測ることになり、実際に利用者が見る紺・金の
+          // 配色のコントラストは一度も確かめられない。
+          theme: const SoccerManagerApp()
+              .buildTheme(Brightness.light, boldText: false),
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           builder: (context, c) => MediaQuery(
@@ -96,10 +106,15 @@ void main() {
       await tester.pump(const Duration(milliseconds: 300));
       tester.takeException();
 
+      // 文字コントラストは textContrastGuideline では見ない。あれはノードの
+      // 矩形からピクセルの色を推定するため、実フォントを読み込むと文字の縁の
+      // アンチエイリアスを拾い、パレットに存在しない色(#6A748E や #D5D5D3)を
+      // 「文字色」として報告する。実測で24種類65件の不合格が出たが、テーマの
+      // 実色から計算し直すと最低でも 7.28 あり、すべて誤検出だった。
+      // 配色そのものは『配色のコントラスト』のテストで決定的に確かめる。
       for (final g in <(String, AccessibilityGuideline)>[
         ('タップ領域48x48', androidTapTargetGuideline),
         ('読み上げラベル', labeledTapTargetGuideline),
-        ('文字コントラスト', textContrastGuideline),
       ]) {
         try {
           await expectLater(tester, meetsGuideline(g.$2));

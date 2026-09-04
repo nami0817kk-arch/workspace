@@ -68,7 +68,11 @@ class SoccerManagerApp extends StatelessWidget {
     );
   }
 
-  ThemeData _buildTheme(Brightness brightness, {required bool boldText}) {
+  /// アプリのテーマ。レイアウトのテストは実際の文字幅で測る必要があるため、
+  /// テストからも同じものを組み立てられるように公開している。テスト側で
+  /// similar なテーマを組み直すと、余白やフォントが本物とずれていく。
+  @visibleForTesting
+  ThemeData buildTheme(Brightness brightness, {required bool boldText}) {
     final isDark = brightness == Brightness.dark;
     // primary/secondary/tertiaryを紺・金に固定するため、それぞれの
     // on〇〇色も明暗どちらでも十分なコントラストが出るよう明示的に固定する
@@ -191,11 +195,11 @@ class SoccerManagerApp extends StatelessWidget {
             supportedLocales: AppLocalizations.supportedLocales,
             onGenerateTitle: (context) =>
                 AppLocalizations.of(context)!.appTitle,
-            theme: _buildTheme(
+            theme: buildTheme(
               Brightness.light,
               boldText: settings.boldTextMode,
             ),
-            darkTheme: _buildTheme(
+            darkTheme: buildTheme(
               Brightness.dark,
               boldText: settings.boldTextMode,
             ),
