@@ -252,6 +252,10 @@ def main(argv: list[str] | None = None) -> int:
     p_gather.add_argument("--league", default=None, help="このリーグのフィードだけ")
     p_gather.add_argument("--paste", action="store_true",
                           help="標準入力に貼った検索結果も混ぜる")
+    p_gather.add_argument("--topics", action="store_true",
+                          help="まとめ集約サイト（FOOTBALL TOPIC）の一覧も取り込む")
+    p_gather.add_argument("--topics-sort", default="話題", choices=["話題", "新着"],
+                          help="話題=クリック数順 / 新着=新しい順（既定: 話題）")
     p_gather.add_argument("--no-feeds", action="store_true", help="フィードを使わない")
     p_gather.add_argument("--date", default=None, help="基準日 YYYY-MM-DD（既定: 今日）")
     p_gather.add_argument("--out", default=None, help="書き出し先")
@@ -1454,6 +1458,21 @@ def _cmd_gather(args, config) -> int:
     print()
 
     pasted = sys.stdin.read() if args.paste and not sys.stdin.isatty() else ""
+
+    # まとめ集約サイトの一覧。フィードだけでは1日ぶんの材料が足りなかった
+    # （2026-09-04 実測。9枠に対して条件を満たす候補が5本）。
+    # 取り込み口は貼り付けと同じなので、重複の除去も確度の判定もそのまま効く
+    if getattr(args, "topics", False):
+        from . import topics as topics_mod
+
+        try:
+            listed = topics_mod.lines(args.topics_sort)
+        except topics_mod.TopicError as error:
+            print(f"　まとめ集約サイトを取れません: {error}")
+        else:
+            count = len(listed.splitlines()) if listed else 0
+            print(f"　まとめ集約サイトから{count}件（{args.topics_sort}順）")
+            pasted = f"{pasted}\n{listed}" if pasted.strip() else listed
     haul = gather_mod.run(
         plan,
         hours=args.hours,

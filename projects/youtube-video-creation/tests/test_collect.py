@@ -447,3 +447,54 @@ def test_まとめサイト単独では公式発表風でも未確認で止ま�
     body = collect.to_yaml([hit], "9月2日", plan=plan)
     line = [l for l in body.splitlines() if "tier:" in l][0]
     assert "未確認" in line
+
+
+# kind: match なのに league が空、で lint が止まる形が3日続いた
+# （2026-09-03 に9件 / 09-04 に6件 / 09-05 に5件）。毎回手で直していた。
+# 原因は2つあり、どちらも guess_kind にあった。
+
+
+def test_語の途中に当たっても試合にしない():
+    """「extraresultados」を「resultado」で拾っていた。"""
+    from src.collect import guess_kind
+
+    assert guess_kind("Manuel Machado: «João Gião? Algo extraresultados terá acontecido»") == "transfer"
+    # 語として出ていれば拾う
+    assert guess_kind("Ninguém ficou contente com o resultado no Anoeta") != "transfer"
+
+
+def test_リーグの分からない試合はmatchにしない():
+    """扱っていない大会（大学サッカーなど）は match ではなく other。
+
+    **試合はリーグごとに引く**ので、リーグが分からないものを match として
+    立てると、そのあと必ず lint で止まる。立てないほうが正しい。
+    """
+    from src.collect import guess_kind
+
+    assert guess_kind("[POWER WORK CUP]日体大柏が勝利で大会を終える") == "other"
+    assert guess_kind("総理大臣杯の8強が決定!! 桐蔭横浜大がPK戦勝利") == "other"
+
+
+def test_リーグが分かる試合はmatchにする():
+    from src.collect import guess_kind
+
+    assert guess_kind("クリスタル・パレスはマンチェスター・Cに4失点で敗れる") == "match"
+    assert guess_kind("Palermo 5-2 Mantova", league="italy") == "match"
+
+
+def test_移籍は移籍のまま():
+    from src.collect import guess_kind
+
+    assert guess_kind("Martinelli joins Al Hilal in Arsenal club-record sale") == "transfer"
+
+
+def test_短い略語や代表を手がかりにしない():
+    """「EL」はスペイン語の el に、「代表」は league の無い代表戦に当たる。
+
+    実測（2026-09-05）で「Con el resultado de Balaídos」と
+    「U-19日本代表」が試合に分類され、lint が止まっていた。
+    """
+    from src.collect import guess_kind
+
+    assert guess_kind('Terzic: "Con el rendimiento y el resultado de Balaídos"') == "other"
+    assert guess_kind("カンボジア戦快勝に笑顔、大量8得点で2連勝のU-19日本代表") == "other"
