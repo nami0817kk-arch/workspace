@@ -257,23 +257,32 @@ class Renderer:
         card_name: str | None,
         progress: float = 1.0,
     ) -> None:
-        """画像とカードを文字の上のスペースに積む。両方あれば画像が上。"""
+        """画像とカードを文字の上のスペースに置く。両方あれば左右に並べる。
+
+        以前は縦に積んでいたが、カードが高いぶん写真が潰れた。実測
+        （2026-09-04）で、顔が判別できない大きさ（横120px）になっていた。
+        画面は横1920あるので、両方あるときは幅を使う。
+        """
         slot_top, slot_bottom = self.layout.media_slot
         slot_height = max(80, slot_bottom - slot_top)
+        side_by_side = bool(image_path) and bool(card_name)
         items: list[Image.Image] = []
 
         if image_path:
-            picture = self._picture(image_path, slot_height)
+            picture = self._picture(image_path, slot_height, beside=side_by_side)
             if picture is not None:
                 items.append(picture)
         if card_name:
-            card = self._card(card_name)
+            card = self._card(card_name, beside=side_by_side)
             if card is not None:
                 items.append(card)
         if not items:
             return
 
         gap = 26
+        if side_by_side and len(items) == 2:
+            self._place_beside(canvas, items, slot_top, slot_height, gap, progress)
+            return
         total = sum(item.height for item in items) + gap * (len(items) - 1)
         if total > slot_height:  # 入りきらないときは全体を縮める
             ratio = slot_height / total
@@ -295,14 +304,51 @@ class Renderer:
             canvas.alpha_composite(item, ((self.layout.width - item.width) // 2, y))
             y += item.height + gap
 
-    def _picture(self, image_path: str, slot_height: int) -> Image.Image | None:
-        """差し込む写真。白フチを付けて画面になじませる。"""
+    def _place_beside(
+        self,
+        canvas: Image.Image,
+        items: list[Image.Image],
+        slot_top: int,
+        slot_height: int,
+        gap: int,
+        progress: float,
+    ) -> None:
+        """写真とカードを左右に並べる。高さは各自の中央でそろえる。"""
+        total_w = sum(item.width for item in items) + gap
+        if total_w > self.layout.width - 96:  # 端に寄りすぎないよう全体を縮める
+            ratio = (self.layout.width - 96) / total_w
+            items = [
+                item.resize((int(item.width * ratio), int(item.height * ratio)), Image.LANCZOS)
+                for item in items
+            ]
+            total_w = sum(item.width for item in items) + gap
+        x = (self.layout.width - total_w) // 2
+        for item in items:
+            if progress < 1.0:
+                item = item.copy()
+                item.putalpha(item.getchannel("A").point(lambda a: int(a * _ease_out(progress))))
+            y = slot_top + (slot_height - item.height) // 2
+            canvas.alpha_composite(item, (x, y))
+            x += item.width + gap
+
+    def _picture(
+        self, image_path: str, slot_height: int, beside: bool = False
+    ) -> Image.Image | None:
+        """差し込む写真。白フチを付けて画面になじませる。
+
+        ``beside`` はカードと横に並べるとき。幅は譲るが、**高さは枠いっぱい
+        使う**。縦長の人物写真はここで効く。
+        """
         path = _resolve(image_path)
         if not path.exists():
             return None
         picture = Image.open(path).convert("RGBA")
-        max_w = int(self.layout.width * (0.62 if not self.layout.with_characters else 0.42))
-        max_h = int(slot_height * 0.72)
+        if beside:
+            max_w = int(self.layout.width * 0.26)
+            max_h = int(slot_height * 0.98)
+        else:
+            max_w = int(self.layout.width * (0.62 if not self.layout.with_characters else 0.42))
+            max_h = int(slot_height * 0.72)
         scale = min(max_w / picture.width, max_h / picture.height)
         picture = picture.resize(
             (int(picture.width * scale), int(picture.height * scale)), Image.LANCZOS
@@ -313,11 +359,14 @@ class Renderer:
         framed.alpha_composite(picture, (8, 8))
         return framed
 
-    def _card(self, name: str) -> Image.Image | None:
+    def _card(self, name: str, beside: bool = False) -> Image.Image | None:
         spec = self.script_cards.get(name)
         if not spec:
             return None
-        width = int(self.layout.width * (0.64 if not self.layout.with_characters else 0.46))
+        if beside:  # 写真と横に並べるぶん、カードは幅を譲る
+            width = int(self.layout.width * (0.52 if not self.layout.with_characters else 0.40))
+        else:
+            width = int(self.layout.width * (0.64 if not self.layout.with_characters else 0.46))
         target = self.card_dir / f"{cards.card_key(spec, width)}.png"
         if not target.exists():
             cards.render(

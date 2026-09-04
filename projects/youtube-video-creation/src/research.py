@@ -463,6 +463,19 @@ PLAIN_ENDINGS = tuple("うくぐすつぬぶむるい")
 POLITE_ENDINGS = ("です", "ます", "ました", "ません", "でした", "ましょう", "ください", "でしょう")
 
 
+def _ends_sentence(text: str) -> str:
+    """文末に句点を1つだけ付ける。
+
+    取材メモの問いは「〜のか。」と句点で終えて書くことが多い。そこへ機械が
+    もう1つ足していたので、読み上げが「〜のか。。25人枠の」となり、
+    合成音声が不自然に間を空けていた（2026-09-04 に台本を読んで気づいた）。
+    """
+    text = text.strip()
+    if not text:
+        return ""
+    return text if text[-1] in "。！？" else text + "。"
+
+
 def _spoken(text: str) -> str:
     """メモの書き言葉を、読み上げても不自然でない形にする。
 
@@ -570,7 +583,7 @@ def to_script(notes: Notes, plan: Plan) -> str:
         "## まとめ",
         "@bg: assets/backgrounds/studio.png",
         "",
-        f"キャスター: まとめます。{notes.question}。{_spoken(notes.answer)}",
+        f"キャスター: まとめます。{_ends_sentence(notes.question)}{_spoken(notes.answer)}",
         f"  telop: {_telop(notes.answer)}",
         "  card: wrap",
     ]

@@ -353,6 +353,13 @@ def _digest(line: Line, member: CastMember, pause: float, backend: str) -> str:
     return hashlib.sha1(seed.encode("utf-8")).hexdigest()[:8]
 
 
+def _plain(text: str) -> str:
+    """Commons の作者欄は HTML で返る。表示用にタグを落とす。"""
+    import re
+
+    return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", text)).strip()
+
+
 def image_credits(script, root=None) -> list[str]:
     """台本が使っている画像のクレジット。
 
@@ -375,6 +382,13 @@ def image_credits(script, root=None) -> list[str]:
     used = {origin(scene.background) for scene in script.scenes if scene.background}
     if script.background:
         used.add(origin(script.background))
+    # 行に image: で差し込んだ写真も拾う。背景だけ見ていたので、選手の写真に
+    # クレジットが付いていなかった（2026-09-04 実測）。CC BY は表示が必須で、
+    # 出ていないと利用条件を満たさない。
+    for scene in script.scenes:
+        for line in scene.lines:
+            if getattr(line, "image", None):
+                used.add(origin(line.image))
 
     lines: list[str] = []
     for ledger in sorted(root.glob("assets/images/**/credits.json")):
@@ -389,7 +403,10 @@ def image_credits(script, root=None) -> list[str]:
             title = str(row.get("title", "")).strip()
             author = str(row.get("author") or row.get("creator") or "").strip()
             license_ = str(row.get("license", "")).strip()
-            url = str(row.get("url") or row.get("source") or "").strip()
+            # Commons の控えは配布元ページを page_url に持つ。source は
+            # "wikimedia" のような媒体名なので、URL としては使えない。
+            url = str(row.get("page_url") or row.get("url") or "").strip()
+            author = _plain(author)
             part = " / ".join(x for x in (title, author, license_, url) if x)
             if part and part not in lines:
                 lines.append(part)

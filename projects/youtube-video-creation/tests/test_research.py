@@ -587,3 +587,13 @@ def test_同じ背景が連続しない():
     assert len(backgrounds) >= 3
     for a, b in zip(backgrounds, backgrounds[1:]):
         assert a != b, f"{a} が連続している"
+
+
+def test_問いが句点で終わっていても二重にしない():
+    """「〜のか。」に機械がもう1つ足して「。。」になっていた。"""
+    from src.research import _ends_sentence
+
+    assert _ends_sentence("なぜ外れたのか。") == "なぜ外れたのか。"
+    assert _ends_sentence("なぜ外れたのか") == "なぜ外れたのか。"
+    assert _ends_sentence("本当か？") == "本当か？"
+    assert _ends_sentence("") == ""

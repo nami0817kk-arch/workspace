@@ -137,3 +137,35 @@ def test_credits_skip_unused_speakers():
 def test_credits_empty_without_speaker_names():
     script = parse_script("## S\n霊夢: あ。\n")
     assert credits(script, _config(), SilentBackend()) == []
+
+
+# 背景画像しか見ておらず、行に image: で差し込んだ写真のクレジットが
+# 出ていなかった（2026-09-04 実測）。CC BY は表示が必須なので、
+# 出ないと利用条件を満たさない。
+
+
+def test_行に差し込んだ写真のクレジットも出す(tmp_path):
+    import json
+
+    from src.script_model import parse_script
+    from src.tts import image_credits
+
+    ledger = tmp_path / "assets" / "images" / "endo"
+    ledger.mkdir(parents=True)
+    (ledger / "credits.json").write_text(json.dumps([{
+        "file": "03.jpg", "title": "File:Wataru endo.jpg",
+        "author": '<a href="/wiki/User:X">Jeollo</a>', "license": "CC BY 3.0",
+        "page_url": "https://commons.wikimedia.org/wiki/File:Wataru_endo.jpg",
+        "source": "wikimedia",
+    }]), encoding="utf-8")
+
+    script = parse_script(
+        "## S\nキャスター: 遠藤選手です。\n  image: assets/images/endo/03.jpg\n"
+    )
+    lines = image_credits(script, root=tmp_path)
+
+    assert len(lines) == 1
+    assert "CC BY 3.0" in lines[0]
+    assert "Jeollo" in lines[0]          # HTML のタグは落とす
+    assert "<a href" not in lines[0]
+    assert "commons.wikimedia.org" in lines[0]   # source ではなく page_url を使う
