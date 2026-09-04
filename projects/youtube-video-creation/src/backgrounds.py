@@ -17,7 +17,10 @@ TURF = (34, 110, 52)
 TURF_DARK = (26, 88, 42)
 LINE = (236, 244, 238)
 
-VARIANTS = ("stadium", "pitch", "tactics")
+# 背景の種類。**緑のピッチ以外も要る。**
+# stadium / pitch / tactics は3枚とも緑が主役で、並べると同じ画に見える
+# （実測: 17カット中13カットが緑系で、殺風景の主因だった）
+VARIANTS = ("stadium", "pitch", "tactics", "night", "studio")
 
 
 def generate(path: Path, size: tuple[int, int], variant: str = "stadium") -> Path:
@@ -28,6 +31,10 @@ def generate(path: Path, size: tuple[int, int], variant: str = "stadium") -> Pat
 
     if variant == "tactics":
         _tactics_board(canvas)
+    elif variant == "night":
+        _night_sky(canvas)
+    elif variant == "studio":
+        _studio(canvas)
     else:
         horizon = int(height * (0.46 if variant == "stadium" else 0.30))
         if variant == "stadium":
@@ -39,6 +46,87 @@ def generate(path: Path, size: tuple[int, int], variant: str = "stadium") -> Pat
     path.parent.mkdir(parents=True, exist_ok=True)
     canvas.save(path)
     return path
+
+
+def _night_sky(canvas: Image.Image) -> None:
+    """夜の空とスタンドの灯り。ピッチを描かない。
+
+    移籍やクラブの話は、試合そのものの話ではない。緑の芝が映っていると
+    「試合の映像」に見えてしまう。芝を出さない背景がいる。
+    """
+    width, height = canvas.size
+    draw = ImageDraw.Draw(canvas)
+
+    # 上から下へ、濃紺から少し明るい紺へ
+    for y in range(height):
+        ratio = y / height
+        draw.line(
+            [(0, y), (width, y)],
+            fill=(
+                int(10 + 18 * ratio),
+                int(14 + 24 * ratio),
+                int(28 + 44 * ratio),
+            ),
+        )
+
+    # 遠くの灯り。規則的に並べると建物に見えるので、間隔をずらす
+    rng = random.Random(20260903)
+    for _ in range(220):
+        x = rng.randrange(width)
+        y = rng.randrange(int(height * 0.30), int(height * 0.72))
+        size = rng.choice((2, 2, 3, 4))
+        warm = rng.random() < 0.4
+        color = (255, 226, 168) if warm else (198, 220, 255)
+        draw.ellipse([x, y, x + size, y + size], fill=color)
+
+    # 地平のあたりに、灯りの帯を1本
+    band = int(height * 0.72)
+    glow = Image.new("RGB", (width, 90), (26, 34, 54))
+    canvas.paste(glow, (0, band))
+
+
+def _studio(canvas: Image.Image) -> None:
+    """表やグラフを載せるための下地。
+
+    緑の芝の上に表を置くと、線が芝の縞と干渉して読みにくい。模様の少ない
+    下地がいる。ただし暗くしすぎると、ただの黒画面になって手抜きに見える。
+    中央をわずかに持ち上げて、カードが載る位置に光を集める。
+    """
+    width, height = canvas.size
+    draw = ImageDraw.Draw(canvas)
+
+    # 濃い藍から、下にいくほど暗く
+    for y in range(height):
+        ratio = y / height
+        draw.line(
+            [(0, y), (width, y)],
+            fill=(
+                int(22 - 10 * ratio),
+                int(30 - 13 * ratio),
+                int(50 - 20 * ratio),
+            ),
+        )
+
+    # 中央の光。カードが載るあたりを明るくして、視線を集める
+    glow = Image.new("L", (width, height), 0)
+    glow_draw = ImageDraw.Draw(glow)
+    glow_draw.ellipse(
+        [int(width * 0.10), int(height * -0.30),
+         int(width * 0.90), int(height * 0.95)],
+        fill=70,
+    )
+    glow = glow.filter(ImageFilter.GaussianBlur(radius=width // 8))
+    canvas.paste(Image.new("RGB", (width, height), (52, 70, 104)), (0, 0), glow)
+
+    # 細いグリッド。情報番組の下地に寄せる。うっすらで十分
+    step = max(56, width // 24)
+    grid = Image.new("RGB", (width, height), (0, 0, 0))
+    grid_draw = ImageDraw.Draw(grid)
+    for x in range(0, width, step):
+        grid_draw.line([(x, 0), (x, height)], fill=(40, 52, 76), width=1)
+    for y in range(0, height, step):
+        grid_draw.line([(0, y), (width, y)], fill=(40, 52, 76), width=1)
+    canvas.paste(ImageChops.add(canvas, grid), (0, 0))
 
 
 # ------------------------------------------------------------------ パーツ

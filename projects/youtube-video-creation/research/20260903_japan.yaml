@@ -23,7 +23,6 @@ sections:
     heading: 何が起きたか
     tier: 確定
     telop: リールが正式発表
-    bg: assets/backgrounds/stadium.png
     card:
       type: transfer
       player: 上田 綺世
@@ -43,7 +42,6 @@ sections:
     heading: 数字で見ると
     tier: 報道
     telop: 鹿島の累計収入が1億円を突破
-    bg: assets/backgrounds/pitch.png
     card:
       type: points
       title: この移籍で分かっていること
@@ -60,11 +58,31 @@ sections:
       - https://football-tribe.com/japan/2026/09/03/358839/
       - https://www.losc.fr/
 
+  - id: point
+    heading: リーグアンはどんな舞台か
+    tier: 報道
+    telop: 移籍直前の第2節はこうなった
+    card:
+      type: table
+      title: リーグアン 8月30日の結果
+      columns: [ホーム, スコア, アウェイ]
+      rows:
+        - [パリFC, 3 - 0, ニース]
+        - [レンヌ, 3 - 2, ルマン]
+        - [モナコ, 2 - 0, マルセイユ]
+    say:
+      - 上田選手が向かうリーグアンは、8月30日に第2節が行われました。
+      - パリエフセーがニースに3対0、レンヌがルマンに3対2、モナコがマルセイユに2対0で勝っています。
+      - リールはこのリーグで、チャンピオンズリーグ出場権を持つ位置にいます。
+    official: false
+    sources:
+      - https://www.ligue1.com/
+      - https://www.fotmob.com/
+
   - id: voices
     heading: 世の中はどう見ているか
     tier: 未確認
     telop: 期待と、慎重な見方
-    bg: assets/backgrounds/tactics.png
     card:
       type: reactions
       title: ネット上の反応

@@ -50,6 +50,16 @@ python -m src.cli make-clip <画像> --out assets/backgrounds/chelsea.mp4
 - この2つは**リポジトリにも `claude-skills/video-edit/` として控えがある**。
   正は `~` 側で、同期は `scripts/sync-skills.ps1 -Export`（ルート CLAUDE.md 参照）。
   `~` 側が無い環境では、リポジトリの控えを使う
+- **人物が写る写真は `subject` で本人を確かめる。** ファイル名は根拠にならない
+
+  ```bash
+  python -m src.cli subject assets/images/<フォルダ> 上田綺世 "Ayase Ueda"
+  ```
+
+  実測で、ファイル名に `Ayase Ueda` と入った写真の被写体が構造化データでは
+  別人（Joris Kramer）だった。**ライセンス判定は3件とも OK を返していた。**
+  被写体の指定が無い写真は「本人ではない」ではなく「確かめられない」なので、
+  使わない
 - **判定が OK でも必ず目視する。** ライセンスは写真の著作権しか見ていない。
   実測で6枚中4枚を目視で落とした（被写体が違う / 彫刻が写っている /
   クラブ掲示やメーカーロゴが主役級）

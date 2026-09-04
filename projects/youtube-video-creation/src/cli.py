@@ -226,6 +226,10 @@ def main(argv: list[str] | None = None) -> int:
     p_fetch.add_argument("--discover", default=None, metavar="ページURL",
                          help="そのページが宣言しているフィードを探す（当て推量をやめる）")
 
+    p_subject = sub.add_parser("subject", help="画像に誰が写っているかを確かめる")
+    p_subject.add_argument("dir", help="credits.json のあるフォルダ")
+    p_subject.add_argument("names", nargs="+", help="本人の名前（日本語・英語の両方を渡してよい）")
+
     p_results = sub.add_parser("results", help="その日の試合結果を候補にする")
     p_results.add_argument("--date", default=None, help="YYYY-MM-DD（既定: 昨日）")
     p_results.add_argument("--league", default=None, help="england/spain/germany/italy/france など")
@@ -1240,6 +1244,49 @@ def _cmd_fetch(args, config) -> int:
     return 0 if seen else 1
 
 
+def _cmd_subject(args, config) -> int:
+    """取った画像に、目的の人物が本当に写っているかを確かめる。
+
+    ファイル名は根拠にならない。実測で、名前がファイル名に入った写真の
+    被写体が別人だった。ライセンス判定は OK を返していた。
+    """
+    import json
+    import time
+
+    from . import subjects as subjects_mod
+    from .config import _resolve
+
+    ledger = _resolve(args.dir) / "credits.json"
+    if not ledger.exists():
+        print(f"credits.json がありません: {ledger}", file=sys.stderr)
+        return 1
+
+    rows = json.loads(ledger.read_text(encoding="utf-8"))
+    rows = rows if isinstance(rows, list) else rows.get("items", [])
+    usable = 0
+    print(f"■ 被写体の確認　{len(rows)}件　（{' / '.join(args.names)}）")
+    for row in rows:
+        title = str(row.get("title", ""))
+        if not title:
+            continue
+        # 1件ごとに Commons と Wikidata へ2回聞く。続けて叩くと 429 になる（実測）
+        time.sleep(1.0)
+        try:
+            ok, why = subjects_mod.verify(title, *args.names)
+        except subjects_mod.SubjectError as error:
+            print(f"  ! {title[:44]}　{error}")
+            continue
+        print(f"  {'✓' if ok else '×'} {_fit(title, 44)}")
+        print(f"      {why}")
+        usable += 1 if ok else 0
+
+    print(f"\n{usable}/{len(rows)}件が本人と確かめられました")
+    if usable < len(rows):
+        print("確かめられなかったものは使わないでください。"
+              "ファイル名に名前が入っていても、別人のことがあります")
+    return 0 if usable else 1
+
+
 def _cmd_results(args, config) -> int:
     """試合結果を候補にする。
 
@@ -1780,6 +1827,7 @@ HANDLERS = {
     "fresh": _cmd_fresh,
     "x": _cmd_x,
     "fetch": _cmd_fetch,
+    "subject": _cmd_subject,
     "results": _cmd_results,
     "gather": _cmd_gather,
     "collect": _cmd_collect,

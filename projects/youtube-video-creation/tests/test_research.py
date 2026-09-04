@@ -542,3 +542,48 @@ def test_まとめのカードは答えだけにする():
     assert card["items"] == [notes.answer]
     assert notes.question not in card["items"]   # 問いは冒頭で出している
     assert notes.watch not in card["items"]      # 次の焦点は読み上げで言う
+
+
+# 背景を3枚から順番に配るだけだったので、緑の芝ばかりが続いていた
+# （実測: 1本17カット中13カットが緑系）。節の性格で下地を変える。
+
+
+def test_数字の節は模様の無い下地にする():
+    from src.research import BACKGROUND_BY_SECTION
+
+    assert "studio" in BACKGROUND_BY_SECTION["numbers"]
+
+
+def test_経緯や反応の節は芝を出さない():
+    """移籍やクラブの話で芝が映ると、試合の映像に見えてしまう。"""
+    from src.research import BACKGROUND_BY_SECTION
+
+    for sid in ("background", "voices", "collapsed"):
+        assert "pitch" not in BACKGROUND_BY_SECTION[sid]
+        assert "stadium" not in BACKGROUND_BY_SECTION[sid]
+
+
+def test_割り当ての無い節でも緑が連続しない():
+    from src.research import BACKGROUNDS
+
+    greens = {"pitch.png", "stadium.png"}
+    for a, b in zip(BACKGROUNDS, BACKGROUNDS[1:]):
+        assert not (a.split("/")[-1] in greens and b.split("/")[-1] in greens)
+
+
+def test_同じ背景が連続しない():
+    """節が変わったことが画面から分かるように、下地を変える。
+
+    実測で studio が2節続き、絵が変わらなかった。
+    """
+    import re
+
+    from src.plan import load_plan
+    from src.research import load_notes, to_script
+
+    notes = load_notes("research/20260903_japan.yaml")
+    body = to_script(notes, load_plan())
+    backgrounds = re.findall(r"^@bg: (\S+)", body, flags=re.M)
+    assert len(backgrounds) >= 3
+    for a, b in zip(backgrounds, backgrounds[1:]):
+        assert a != b, f"{a} が連続している"

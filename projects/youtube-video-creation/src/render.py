@@ -702,8 +702,37 @@ class Renderer:
             if index == len(script.scenes) - 1:
                 extra += inserts.outro
             seconds = scene.duration + extra
-            segments.append((self._moving(_resolve(name), seconds), seconds))
+            segments += self._split_long(name, seconds, index)
         return segments
+
+    # 1枚の絵をこれ以上見せ続けない。実測で「まとめ」が24秒あり、
+    # 同じ画面が3カット続いていた
+    MAX_STILL_SECONDS = 12.0
+
+    def _split_long(self, name: str, seconds: float, index: int) -> list[tuple[Path, float]]:
+        """長いシーンは背景を2枚に割る。読み上げの途中でも絵が変わる。
+
+        割る先は BACKGROUNDS の並びから、いまの絵と違うものを選ぶ。
+        動画の背景（mp4）は元から動いているので割らない。
+        """
+        source = _resolve(name)
+        if seconds <= self.MAX_STILL_SECONDS or is_video(source):
+            return [(self._moving(source, seconds), seconds)]
+
+        from .research import BACKGROUNDS
+
+        alternatives = [c for c in BACKGROUNDS if Path(c).name != source.name]
+        if not alternatives:
+            return [(self._moving(source, seconds), seconds)]
+        second = _resolve(alternatives[index % len(alternatives)])
+        if not second.exists():
+            return [(self._moving(source, seconds), seconds)]
+
+        half = seconds / 2
+        return [
+            (self._moving(source, half), half),
+            (self._moving(second, seconds - half), seconds - half),
+        ]
 
     def _moving(self, path: Path, seconds: float) -> Path:
         """静止画の背景を、ゆっくり寄っていくクリップに置き換える。
