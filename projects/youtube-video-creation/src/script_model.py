@@ -60,6 +60,39 @@ class ScriptError(Exception):
     """台本の書式エラー。行番号つきで投げる。"""
 
 
+def _scene_lines(scene) -> list[dict]:
+    """script.json に残す行。**画面に出ているものを記録する。**
+
+    見出しとカードは、指定した行で差し替わり、それ以外の行では出たままになる
+    （render 側の決まり）。ここで行ごとのセリフを telop として書いていたため、
+    記録と画面が食い違い、「見た目が何秒変わっていないか」を測れなかった
+    （2026-09-04 実測）。記録が画面と違うと、点検が効かない。
+    """
+    rows: list[dict] = []
+    headline = ""
+    source = None
+    card = None
+    for line in scene.lines:
+        if line.no_telop:
+            headline, source = "", None
+        elif line.telop is not None:
+            headline, source = line.telop, line.source
+        if line.card is not None:
+            card = None if line.card in ("none", "なし") else line.card
+        rows.append({
+            "speaker": line.speaker,
+            "text": line.text,
+            "telop": headline,
+            "source": source,
+            "card": card,
+            "emotion": line.emotion,
+            "image": line.image,
+            "start": round(line.start, 3),
+            "duration": round(line.duration, 3),
+        })
+    return rows
+
+
 @dataclass
 class Line:
     """1発話。音声1ファイル・テロップ1枚に対応する。"""
@@ -144,18 +177,7 @@ class Script:
                 {
                     "title": scene.title,
                     "background": scene.background,
-                    "lines": [
-                        {
-                            "speaker": line.speaker,
-                            "text": line.text,
-                            "telop": line.telop_text(),
-                            "emotion": line.emotion,
-                            "image": line.image,
-                            "start": round(line.start, 3),
-                            "duration": round(line.duration, 3),
-                        }
-                        for line in scene.lines
-                    ],
+                    "lines": _scene_lines(scene),
                 }
                 for scene in self.scenes
             ],

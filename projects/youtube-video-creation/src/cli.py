@@ -190,6 +190,11 @@ def main(argv: list[str] | None = None) -> int:
     p_short.add_argument("--out", default=None)
     p_short.add_argument("--no-tts", action="store_true", help="音声なしで尺だけ確認する")
 
+    p_contact = sub.add_parser("contact", help="画面が変わるたびの1枚を並べて見る")
+    p_contact.add_argument("script")
+    p_contact.add_argument("--out", default=None, help="出力先（既定: output/<台本名>）")
+    p_contact.add_argument("--columns", type=int, default=4, help="横に並べる枚数")
+
     p_review = sub.add_parser("review", help="書き出したものを公開前に点検する")
     p_review.add_argument("script")
     p_review.add_argument("--out", default=None, help="出力先（既定: output/<台本名>）")
@@ -439,6 +444,24 @@ def _cmd_short(args, config) -> int:
             file=sys.stderr,
         )
         return 1
+    return 0
+
+
+def _cmd_contact(args, config) -> int:
+    """完成した動画から、画面が変わるたびの1枚を並べた紙を作る。
+
+    機械の点検が緑でも、読める・読めないは見るまで分からない。
+    見るのを面倒にしない（2026-09-04 の実測から）。
+    """
+    from .review import contact_sheet
+
+    out = Path(args.out) if args.out else Path(f"output/{Path(args.script).stem}")
+    sheet = contact_sheet(out, columns=args.columns)
+    if sheet is None:
+        print(f"動画か script.json がありません: {out}", file=sys.stderr)
+        return 1
+    print(f"一覧: {sheet}")
+    print("開いて、文字の割れ・写真の大きさ・カードの重なりを見てください")
     return 0
 
 
@@ -1815,6 +1838,7 @@ HANDLERS = {
     "build": _cmd_build,
     "short": _cmd_short,
     "review": _cmd_review,
+    "contact": _cmd_contact,
     "thumbnail": _cmd_thumbnail,
     "plan": _cmd_plan,
     "scan": _cmd_scan,
