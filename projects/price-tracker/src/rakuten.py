@@ -33,7 +33,11 @@ def credentials() -> tuple[str, str, str]:
     """アプリID・アクセスキー・アフィリエイトIDを環境変数から読む。
 
     アプリIDはリクエストURLに乗る準公開の識別子だが、それでもリポジトリには置かない。
-    アクセスキーは秘密情報。どちらも GitHub Actions のシークレットから環境変数で渡す。
+    アクセスキーは秘密情報。
+
+    取得は手元PCで行うため、値は `.env`(gitignore済み)に置き、run-daily.ps1 が
+    環境変数として渡す。手で動かすときも同じで、`.env` を読み込んでから実行する。
+    Actions からは取得しない（楽天が許可IPを要求し、ランナーのIPは固定できない）。
     """
     app_id = os.environ.get("RAKUTEN_APP_ID", "").strip()
     access_key = os.environ.get("RAKUTEN_ACCESS_KEY", "").strip()
@@ -42,7 +46,9 @@ def credentials() -> tuple[str, str, str]:
     if missing:
         raise RakutenError(
             f"{' と '.join(missing)} が設定されていません。"
-            "GitHub のリポジトリ設定 > Secrets and variables > Actions に登録してください。")
+            "手元PCの projects/price-tracker/.env に入れてください"
+            "（キー名は .env.example にある）。"
+            "手で動かすときは run-daily.ps1 経由か、.env を環境変数へ読み込んでから実行します。")
     return app_id, access_key, os.environ.get("RAKUTEN_AFFILIATE_ID", "").strip()
 
 

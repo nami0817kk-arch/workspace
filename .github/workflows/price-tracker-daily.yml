@@ -44,20 +44,40 @@ jobs:
         run: pytest
 
       # 手元PCの取得タスクが止まっていないかの監視。
-      # 記録開始前は「まだ0日」なので、失敗させず警告だけにする。
-      # ここで毎日赤くすると、本物の停止に気づけなくなる。
+      #
+      # 以前はここで「履歴が1件も無い」場合に警告だけ出して成功させていた。
+      # 記録開始前を赤くしない意図だったが、結果として**一度も動き始めて
+      # いない状態が永久に緑のまま**になった（2026-09-04 に発覚。設定した
+      # 09-03 から丸1日、genres が空・データ0件・取得タスク未登録のまま
+      # 誰も気づかなかった）。「まだ始まっていない」と「止まった」を
+      # 区別できないなら、監視として機能していない。
+      #
+      # 段階ごとに別のことを言う。どれも黙って通さない。
       - name: Check data freshness
         run: |
           python - <<'PY'
+          import json
           import sys
           from datetime import date, datetime
           from pathlib import Path
 
-          snaps = sorted(Path("data/snapshots").glob("*.csv.gz"))
+          cfg = json.loads(Path("config.json").read_text(encoding="utf-8"))
+          genres = cfg.get("genres") or []
+          snap_dir = Path("data/snapshots")
+          snaps = sorted(snap_dir.glob("*.csv.gz")) if snap_dir.is_dir() else []
+
+          if not genres:
+              print("::error::config.json の genres が空のままです。価格の記録が"
+                    "一度も始まっていません。手元PCで .env に RAKUTEN_ACCESS_KEY を"
+                    "入れ、explore.py でジャンルを決め、取得タスク(run-daily.ps1)を"
+                    "タスクスケジューラに登録してください。")
+              sys.exit(1)
+
           if not snaps:
-              print("::warning::まだ価格履歴がありません。"
-                    "config.json の genres を決め、手元PCの取得タスクを登録してください。")
-              sys.exit(0)
+              print("::error::ジャンルは決まっているのに価格履歴が1件もありません。"
+                    "手元PCの取得タスク(run-daily.ps1)が登録されていないか、"
+                    "一度も成功していない可能性があります。run-daily.log を見てください。")
+              sys.exit(1)
 
           latest = snaps[-1].name.removesuffix(".csv.gz")
           age = (date.today() - datetime.strptime(latest, "%Y-%m-%d").date()).days
