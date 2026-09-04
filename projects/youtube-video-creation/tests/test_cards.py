@@ -265,3 +265,31 @@ def test_カードの折り返しも熟語を割らない():
     assert not any(
         kanji(a[-1]) and kanji(b[0]) for a, b in zip(lines, lines[1:]) if a and b
     )
+
+
+def test_kitカードは背番号が無くても描ける(tmp_path):
+    """背番号は調べがついたときだけ出す。**確かめていない数字は出さない。**"""
+    from src.cards import render
+    from src.config import load_config
+
+    cfg = load_config()
+    out = tmp_path / "kit.png"
+    render({"type": "kit", "title": "登録メンバー",
+            "items": [{"player": "遠藤 航", "short": "ENDO", "colors": ["#C8102E"], "mark": "×"},
+                      {"player": "エキティケ", "short": "EKITIKE", "colors": ["#C8102E"], "mark": "○"}]},
+           1000, str(cfg.video.font_path()), out, str(cfg.video.latin_font_path()))
+
+    assert out.exists() and out.stat().st_size > 0
+
+
+def test_kitカードにitemsが無ければ弾く(tmp_path):
+    import pytest
+
+    from src.cards import CardError, render
+    from src.config import load_config
+
+    cfg = load_config()
+    with pytest.raises(CardError):
+        render({"type": "kit", "title": "登録"}, 1000,
+               str(cfg.video.font_path()), tmp_path / "x.png",
+               str(cfg.video.latin_font_path()))
