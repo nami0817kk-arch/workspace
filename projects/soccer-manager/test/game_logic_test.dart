@@ -837,8 +837,10 @@ void main() {
     final ok = await gameState.renewContract(player.id);
 
     expect(ok, isTrue);
-    expect(
-        player.contractYearsRemaining, ContractEngine.negotiatedYears(player));
+    // 結んだ年数に今シーズンぶんを足す。足さないとシーズン境界で消化され、
+    // 更新した年数がそのまま消える(32歳以上は1年なので更新が無意味になる)。
+    expect(player.contractYearsRemaining,
+        ContractEngine.negotiatedYears(player) + 1);
     expect(gameState.save!.budget, 0);
   });
 
@@ -4439,7 +4441,7 @@ void main() {
     expect(result, ContractOfferResult.accepted);
     expect(player.wage, minAcceptable);
     expect(
-        player.contractYearsRemaining, ContractEngine.negotiatedYears(player));
+        player.contractYearsRemaining, ContractEngine.negotiatedYears(player) + 1);
     expect(gameState.save!.budget, 0);
     expect(gameState.pendingContractNegotiation, isNull);
   });

@@ -125,8 +125,19 @@ class ContractEngine {
   }
 
   /// [years]を指定しない場合は[negotiatedYears]で年齢に応じた契約年数を結ぶ。
+  ///
+  /// 結んだ年数に**今シーズンぶんを1年足す**。契約はシーズン境界で1年
+  /// 消化される(advanceSeason)ので、足さないと「今シーズンぶん」を結んだ
+  /// ことになり、その場で消えてしまう。
+  ///
+  /// 実際に壊れていた。32歳以上の契約年数は1年なので、更新しても境界で
+  /// 1→0となり**同じシーズン末に退団する**。更新が何の効果も持たず、
+  /// 「30歳を超えると更新してくれない」ように見えていた。
+  ///
+  /// 足したあとは、更新した時点から数えて[negotiatedYears]シーズンぶん
+  /// 在籍する。32歳なら今季＋来季。
   static void renewContract(Player p, {int? years}) {
-    p.contractYearsRemaining = years ?? negotiatedYears(p);
+    p.contractYearsRemaining = (years ?? negotiatedYears(p)) + 1;
     p.appearanceFee = appearanceFeeFor(p);
   }
 

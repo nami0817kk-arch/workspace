@@ -101,6 +101,51 @@ void main() {
     });
   });
 
+  group('契約更新が、翌シーズン以降の在籍につながる', () {
+    // 契約はシーズン境界で1年消化される。結んだ年数をそのまま入れると
+    // 「今シーズンぶん」を結んだことになり、その場で消える。
+    // 32歳以上の契約年数は1年なので、更新しても境界で 1→0 となり
+    // **同じシーズン末に退団していた**。更新が何の効果も持たない状態。
+    test('結んだ年数に、今シーズンぶんが足される', () {
+      for (final age in [24, 28, 30, 32, 36]) {
+        final p = make(age: age);
+        p.contractYearsRemaining = 1;
+
+        ContractEngine.renewContract(p);
+
+        expect(p.contractYearsRemaining,
+            ContractEngine.negotiatedYears(p) + 1,
+            reason: '$age歳で、結んだ年数がそのまま入っている');
+      }
+    });
+
+    test('更新した選手は、シーズンを跨いでも残る', () {
+      for (final age in [30, 32, 36]) {
+        final p = make(age: age);
+        p.contractYearsRemaining = 1;
+        final team = Team(id: 't', name: 'T', players: [p]);
+
+        ContractEngine.renewContract(p);
+        final result = ContractEngine.advanceSeason(team);
+
+        expect(result.expired.map((x) => x.id), isNot(contains(p.id)),
+            reason: '$age歳で、更新した直後のシーズン末に契約が切れている');
+        expect(team.players.map((x) => x.id), contains(p.id));
+      }
+    });
+
+    test('更新しなければ、最終年の選手は契約満了で去る', () {
+      // 更新が効くようになった代わりに、放っておいても残るようでは困る。
+      final p = make(age: 32);
+      p.contractYearsRemaining = 1;
+      final team = Team(id: 't', name: 'T', players: [p]);
+
+      final result = ContractEngine.advanceSeason(team);
+
+      expect(result.expired.map((x) => x.id), contains(p.id));
+    });
+  });
+
   group('2. スポンサー料がクラブの成長に応じて変わる', () {
     test('上のディビジョンほど高く付く', () {
       int offerFor(int tier) =>

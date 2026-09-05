@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../logic/contract_engine.dart';
+import '../logic/retirement_engine.dart';
 import '../logic/dynamics_engine.dart';
 import '../logic/lineup_utils.dart';
 import '../logic/match_engine.dart';
@@ -549,6 +550,24 @@ class PlayerDetailScreen extends StatelessWidget {
                   fontSize: 12, color: SemanticColors.subtleText(context)),
             ),
             const SizedBox(height: 8),
+            // 高齢の選手は、契約を残していてもシーズン終了時に引退しうる。
+            // 更新料を払った直後に引退されると、何が起きたのか分からない。
+            // 引退判定が実際に使っている確率をそのまま出す。
+            if (RetirementEngine.retirementChance(p) > 0)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Text(
+                  Tr.pick(
+                      '今シーズン終了時に引退する可能性: '
+                          '${(RetirementEngine.retirementChance(p) * 100).round()}%'
+                          '（契約が残っていても引退します）',
+                      'Chance he retires at the end of this season: '
+                          '${(RetirementEngine.retirementChance(p) * 100).round()}%'
+                          ' (he retires even with time left on his deal)'),
+                  style: TextStyle(
+                      fontSize: 12, color: SemanticColors.subtleText(context)),
+                ),
+              ),
             // 資金が足りないとボタンが灰色になるだけで、何がどれだけ
             // 足りないのかが出ていなかった。更新できない理由が分からないと、
             // 資金を作るのか、諦めて放出するのかも決められない。
