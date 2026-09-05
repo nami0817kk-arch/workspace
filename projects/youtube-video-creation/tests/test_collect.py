@@ -498,3 +498,25 @@ def test_短い略語や代表を手がかりにしない():
 
     assert guess_kind('Terzic: "Con el rendimiento y el resultado de Balaídos"') == "other"
     assert guess_kind("カンボジア戦快勝に笑顔、大量8得点で2連勝のU-19日本代表") == "other"
+
+
+def test_まとめる処理が候補の数に耐える():
+    """束の代表の語を毎回計算し直していたため、677件で168秒かかっていた。
+
+    クラブ名の辞書照合が重い。**情報源を増やすほど効いてくる**ので、
+    1件につき1回だけ数えて持ち回る（2026-09-05 実測 168.7秒 → 0.7秒）。
+    """
+    import time
+
+    from src.collect import Hit, group
+
+    hits = [
+        Hit(title=f"クラブ{i % 40}がMF{i}の獲得で合意", url=f"https://e.example/{i}")
+        for i in range(600)
+    ]
+    started = time.time()
+    bunches = group(hits)
+    spent = time.time() - started
+
+    assert sum(len(b) for b in bunches) == len(hits)   # 1件も落とさない
+    assert spent < 10.0, f"{spent:.1f}秒かかった"

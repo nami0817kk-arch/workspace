@@ -114,11 +114,15 @@ def group(hits: list[Hit], threshold: float = 0.45) -> list[list[Hit]]:
     逆に同じクラブなら、書き方が違っても同じ話の可能性が高い
     （Man Utd と Manchester United は語としては重ならない）。
     """
+    # 束の代表の語は、比べるたびに計算し直さない。**クラブ名の辞書照合が重く、
+    # 候補が677件になったとき group だけで168秒かかった**（2026-09-05 実測）。
+    # 情報源を増やすほど効いてくるので、1件につき1回だけ数える。
     groups: list[list[Hit]] = []
+    heads: list[tuple[set, set]] = []
     for hit in hits:
         words, clubs = _words(hit), _clubs(hit)
-        for bunch in groups:
-            head_words, head_clubs = _words(bunch[0]), _clubs(bunch[0])
+        for index, bunch in enumerate(groups):
+            head_words, head_clubs = heads[index]
 
             # 別のクラブの話だと分かっているなら、語が似ていてもまとめない
             if clubs and head_clubs and not (clubs & head_clubs):
@@ -130,6 +134,7 @@ def group(hits: list[Hit], threshold: float = 0.45) -> list[list[Hit]]:
                 break
         else:
             groups.append([hit])
+            heads.append((words, clubs))
     return groups
 
 

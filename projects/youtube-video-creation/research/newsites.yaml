@@ -3,7 +3,7 @@
 #   python -m src.cli sources --new
 sites:
 - host: dailymail.com
-  seen: 14
+  seen: 15
   days:
   - '2026-09-02'
   - '2026-09-03'
@@ -14,7 +14,7 @@ sites:
   - https://www.dailymail.com/sport/football/article-16098909/Chelsea-transfer-window-Enzo-Fernandez.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
   - https://www.dailymail.com/sport/football/article-16098687/Footballer-tears-mum.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
 - host: transfermarkt.co.uk
-  seen: 13
+  seen: 14
   days:
   - '2026-09-02'
   - '2026-09-03'
@@ -25,7 +25,7 @@ sites:
   - https://www.transfermarkt.co.uk/barcola-4th-rodri-19th-cucurella-29th-top-50-most-expensive-transfers-this-summer-ranked/view/news/483667
   - https://www.transfermarkt.co.uk/club-record-sale-why-arsenal-were-right-to-sell-gabriel-martinelli-to-al-hilal/view/news/484606
 - host: derbyderbyderby.it
-  seen: 12
+  seen: 13
   days:
   - '2026-09-02'
   - '2026-09-03'
@@ -36,7 +36,7 @@ sites:
   - https://www.derbyderbyderby.it/calcio-estero/monza-ecco-zeballos-in-italia-per-il-mito-di-maradona-e-i-consigli-di-paredes/?intcmp=gazzanet-derbyderbyderby
   - https://www.derbyderbyderby.it/calcio-italiano/lunione-che-non-ti-aspetti-haslem-con-la-maglia-del-frosinone/?intcmp=gazzanet-derbyderbyderby
 - host: samuraigoal.doorblog.jp
-  seen: 9
+  seen: 10
   days:
   - '2026-09-04'
   - '2026-09-05'
@@ -44,7 +44,7 @@ sites:
   - https://samuraigoal.doorblog.jp/archives/63437489.html
   - https://samuraigoal.doorblog.jp/archives/63450028.html
 - host: forzaroma.info
-  seen: 7
+  seen: 8
   days:
   - '2026-09-02'
   - '2026-09-05'
@@ -52,7 +52,7 @@ sites:
   - https://www.forzaroma.info/news-as-roma/rodrigo-mora-gasperini-fondamentale-nella-mia-scelta-e-un-sogno-giocare-con-dybala/?intcmp=gazzanet-forzaroma
   - https://www.forzaroma.info/news-as-roma/fenerbahce-guendouzi-squalificato-salta-la-roma-greenwood-ci-sara-ecco-perche/?intcmp=gazzanet-forzaroma
 - host: fcinter1908.it
-  seen: 6
+  seen: 7
   days:
   - '2026-09-05'
   examples:
@@ -81,6 +81,48 @@ sites:
   - '2026-09-05'
   examples:
   - https://www.ilmilanista.it/news-milan/il-padre-di-gimenez-al-milan-giocava-anche-infortunato-ora-deve-ripartire/?intcmp=gazzanet-ilmilanista
+- host: bbc.co.uk
+  seen: 4
+  days:
+  - '2026-09-05'
+  examples:
+  - https://www.bbc.co.uk/sport/football/articles/c209xvxe558o?at_medium=RSS&at_campaign=rss
+- host: vavel.com
+  seen: 4
+  days:
+  - '2026-09-05'
+  examples:
+  - https://www.vavel.com/en/football/2026/09/05/premier-league/1270194-brentford-vs-sunderland-can-the-bees-break-the-black-cats.html
+- host: thesun.my
+  seen: 4
+  days:
+  - '2026-09-05'
+  examples:
+  - https://thesun.my/sports/mbappe-misses-late-penalty-as-betis-stun-mourinhos-real-madrid-1-0/
+- host: liverpooloffside.sbnation.com
+  seen: 4
+  days:
+  - '2026-09-05'
+  examples:
+  - https://liverpooloffside.sbnation.com/liverpool-fc-match-coverage/83384/digging-deeper-liverpool-comfortable-2-0-victory-ipswich-town-epl-2026
+- host: the42.ie
+  seen: 4
+  days:
+  - '2026-09-05'
+  examples:
+  - https://www.the42.ie/london-city-lionesses-man-united-match-report-7153066-Sep2026/
+- host: espn.co.uk
+  seen: 4
+  days:
+  - '2026-09-05'
+  examples:
+  - https://www.espn.co.uk/football/story/_/id/49826046/richarlison-was-offered-new-contract-months-tottenham-squad-omission-roberto-de-zerbi
+- host: sportsmole.co.uk
+  seen: 4
+  days:
+  - '2026-09-05'
+  examples:
+  - https://www.sportsmole.co.uk/football/barcelona/race-for-the-la-liga-title/predicted-lineups/any-changes-for-flick-how-barca-could-line-up-against-valencia_604504.html
 - host: mondoudinese.it
   seen: 3
   days:
@@ -95,54 +137,12 @@ sites:
   - '2026-09-05'
   examples:
   - https://www.genoaoggi.it/calciomercato/mercato-genoa/ehizibue-al-genoa-anni-fa-dissi-no-oggi-e-il-modo-migliore-per-chiedere-perdono/?intcmp=gazzanet-genoaoggi
-- host: bbc.co.uk
-  seen: 3
-  days:
-  - '2026-09-05'
-  examples:
-  - https://www.bbc.co.uk/sport/football/articles/c209xvxe558o?at_medium=RSS&at_campaign=rss
-- host: vavel.com
-  seen: 3
-  days:
-  - '2026-09-05'
-  examples:
-  - https://www.vavel.com/en/football/2026/09/05/premier-league/1270194-brentford-vs-sunderland-can-the-bees-break-the-black-cats.html
-- host: thesun.my
-  seen: 3
-  days:
-  - '2026-09-05'
-  examples:
-  - https://thesun.my/sports/mbappe-misses-late-penalty-as-betis-stun-mourinhos-real-madrid-1-0/
-- host: liverpooloffside.sbnation.com
-  seen: 3
-  days:
-  - '2026-09-05'
-  examples:
-  - https://liverpooloffside.sbnation.com/liverpool-fc-match-coverage/83384/digging-deeper-liverpool-comfortable-2-0-victory-ipswich-town-epl-2026
-- host: the42.ie
-  seen: 3
-  days:
-  - '2026-09-05'
-  examples:
-  - https://www.the42.ie/london-city-lionesses-man-united-match-report-7153066-Sep2026/
-- host: espn.co.uk
-  seen: 3
-  days:
-  - '2026-09-05'
-  examples:
-  - https://www.espn.co.uk/football/story/_/id/49826046/richarlison-was-offered-new-contract-months-tottenham-squad-omission-roberto-de-zerbi
 - host: leedsunited.com
   seen: 3
   days:
   - '2026-09-05'
   examples:
   - https://www.leedsunited.com/en/news/history-dcl-and-a-perfect-away-start-opta-facts-ahead-of-brighton
-- host: sportsmole.co.uk
-  seen: 3
-  days:
-  - '2026-09-05'
-  examples:
-  - https://www.sportsmole.co.uk/football/barcelona/race-for-the-la-liga-title/predicted-lineups/any-changes-for-flick-how-barca-could-line-up-against-valencia_604504.html
 - host: today.rtl.lu
   seen: 2
   days:
