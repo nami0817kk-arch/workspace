@@ -68,6 +68,8 @@ def from_meta(meta: dict, title: str) -> dict:
         # どれも人の顔を全面に出しており、文字だけのサムネは一覧で埋もれる
         # （2026-09-05 実測）。指定が無ければ台本の背景を使う
         "photo": str(meta.get("thumbnail_photo") or ""),
+        # 写真のどこを残すか（0.0=上端 / 1.0=下端）。顔が中央にある写真で使う
+        "focus": meta.get("thumbnail_focus"),
     }
 
 
@@ -127,6 +129,7 @@ def build_thumbnail(
     style: str = "",
     lines: tuple[str, str] | None = None,
     tags: list[str] | None = None,
+    focus: float | None = None,
 ) -> Path:
     """サムネイルを1枚作る。
 
@@ -137,18 +140,18 @@ def build_thumbnail(
     if chosen == "news":
         return _news_thumbnail(
             config, out_path, background,
-            lines or (title, subtitle), tags or [], badge, date,
+            lines or (title, subtitle), tags or [], badge, date, focus,
         )
     if chosen == "band":
         return _band_thumbnail(
             config, out_path, background,
-            lines or (title, subtitle), tags or [],
+            lines or (title, subtitle), tags or [], focus,
         )
 
     font_path = str(config.video.font_path())
     accent = _hex(config.video.accent)
 
-    canvas = _base(config, background, out_path)
+    canvas = _base(config, background, out_path, focus)
     _scrim(canvas, accent)
 
     layer, draw = _layer(SIZE)
@@ -192,10 +195,11 @@ def _band_thumbnail(
     background: str | None,
     lines: tuple[str, str],
     tags: list[str],
+    focus: float | None = None,
 ) -> Path:
     """写真の上に帯を重ねるスタイル。一覧で目を引くことだけを狙う。"""
     font_path = str(config.video.font_path())
-    canvas = _base(config, background, out_path)
+    canvas = _base(config, background, out_path, focus)
 
     # 写真をそのまま活かすので、暗幕は下側だけ薄くかける
     scrim, draw = _layer(SIZE)
@@ -236,6 +240,43 @@ def _band_thumbnail(
     return out_path
 
 
+def _is_portrait(background: str | None) -> bool:
+    """下地の写真が縦長か。全面に敷くか、右に置くかの分かれ目。"""
+    if not background:
+        return False
+    path = _resolve(background)
+    if not path.exists() or is_video(path.name):
+        return False
+    try:
+        with Image.open(path) as image:
+            return image.height > image.width * 1.1
+    except OSError:
+        return False
+
+
+def _paste_side(canvas: Image.Image, background: str | None) -> None:
+    """縦長の写真を、画面の右側に置く。高さいっぱいに使う。"""
+    path = _resolve(background or "")
+    if not path.exists():
+        return
+    with Image.open(path) as source:
+        photo = source.convert("RGBA")
+    scale = SIZE[1] / photo.height
+    photo = photo.resize((max(1, int(photo.width * scale)), SIZE[1]), Image.LANCZOS)
+    width = min(photo.width, int(SIZE[0] * 0.46))
+    photo = photo.crop(((photo.width - width) // 2, 0, (photo.width + width) // 2, SIZE[1]))
+    canvas.alpha_composite(photo, (SIZE[0] - width, 0))
+
+    # 写真の左端をぼかして地になじませる（切り貼りに見せない）
+    fade, draw = _layer(SIZE)
+    edge = 90
+    for step in range(edge):
+        alpha = int(235 * (1 - step / edge))
+        draw.line([(SIZE[0] - width + step, 0), (SIZE[0] - width + step, SIZE[1])],
+                  fill=(10, 14, 22, alpha))
+    canvas.alpha_composite(fade)
+
+
 def _news_thumbnail(
     config: ProjectConfig,
     out_path: Path,
@@ -244,6 +285,7 @@ def _news_thumbnail(
     tags: list[str],
     badge: str,
     date: str,
+    focus: float | None = None,
 ) -> Path:
     """報道テロップ風。写真を帯で塗りつぶさず、情報として読ませる。
 
@@ -251,8 +293,16 @@ def _news_thumbnail(
     煽り帯と違い、行ごとに必要な幅だけ下敷きを敷くので写真が残る。
     """
     font_path = str(config.video.font_path())
-    canvas = _base(config, background, out_path)
-    _news_scrim(canvas)
+    portrait = _is_portrait(background)
+    if portrait:
+        # **縦長の写真は全面に敷けない。**16:9 に切ると顔が残らず、
+        # 下の見出しとぶつかる（2026-09-05 実測。切る位置を変えても解けなかった）。
+        # 右側に置いて、文字は左に寄せる。参考チャンネルもこの並び
+        canvas = _base(config, None, out_path)
+        _paste_side(canvas, background)
+    else:
+        canvas = _base(config, background, out_path, focus)
+    _news_scrim(canvas, narrow=portrait)
 
     layer, draw = _layer(SIZE)
 
@@ -331,8 +381,13 @@ def _centered(draw, text, font, x: int, top: int, height: int, fill) -> None:
     draw.text((x, top + (height - (box[3] - box[1])) // 2 - box[1]), text, font=font, fill=fill)
 
 
-def _news_scrim(canvas: Image.Image) -> None:
-    """写真は残しつつ、上下だけ沈めて文字を読ませる。"""
+def _news_scrim(canvas: Image.Image, narrow: bool = False) -> None:
+    """写真は残しつつ、上下だけ沈めて文字を読ませる。
+
+    ``narrow`` は写真を右に置いたとき。左は元から暗いので、沈めすぎない。
+    """
+    if narrow:
+        return
     scrim, draw = _layer(SIZE)
     for y in range(SIZE[1]):
         ratio = y / SIZE[1]
@@ -423,7 +478,8 @@ def _draw_tags(draw: ImageDraw.ImageDraw, tags: list[str], font_path: str) -> No
 # ------------------------------------------------------------------ パーツ
 
 
-def _base(config: ProjectConfig, background: str | None, out_path: Path) -> Image.Image:
+def _base(config: ProjectConfig, background: str | None, out_path: Path,
+          focus: float | None = None) -> Image.Image:
     source = _resolve(background or config.video.background)
     if source.exists() and is_video(source.name):
         # 背景が動画なら1フレーム抜いて下地にする
@@ -431,7 +487,7 @@ def _base(config: ProjectConfig, background: str | None, out_path: Path) -> Imag
         still.parent.mkdir(parents=True, exist_ok=True)
         source = ffmpeg.grab_frame(source, still)
     if source.exists():
-        return _cover(Image.open(source).convert("RGBA"), *SIZE)
+        return _cover(Image.open(source).convert("RGBA"), *SIZE, focus=focus)
     return Image.new("RGBA", SIZE, (14, 20, 32, 255))
 
 

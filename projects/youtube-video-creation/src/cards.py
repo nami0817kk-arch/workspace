@@ -91,7 +91,11 @@ def render(spec: dict, width: int, font_path: str, out_path: Path,
 def _quote(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
     """引用カード。海外紙の見出しを原文で出し、下に訳を添える。"""
     inner = width - PAD * 2 - 12
-    label_font = ImageFont.truetype(latin_path, 30)
+    # 名前は欧文とは限らない。**日本語だと豆腐になる**（2026-09-05 実測。
+    # 「ヒュルツェラー監督」が □□□□ と出た）。中身を見てフォントを選ぶ
+    label_font = ImageFont.truetype(
+        _font_for(str(spec.get("label") or ""), font_path, latin_path), 30
+    )
     text_font = ImageFont.truetype(_font_for(str(spec.get("text") or ""), font_path, latin_path), 46)
     sub_font = ImageFont.truetype(font_path, 34)
 

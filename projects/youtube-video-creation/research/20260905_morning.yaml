@@ -1,0 +1,83 @@
+# 朝の一報 の取材メモ（2026年9月5日）
+slot: morning
+date: "2026年9月5日"
+
+theme:
+  id: mitoma_return
+  league: england
+  prefix: 朗報
+  title: 三笘薫、監督の言葉が変わった 「今季は不在」から4か月
+  hook: ブライトンの三笘薫選手について、監督の見立てが変わりました。
+  question: 5月に「今シーズンは不在」と言われた選手が、なぜ戻ってこられるのか。
+
+thumbnail:
+  line1: 三笘薫 復帰が近づく
+  line2: 「今季は不在」から4か月
+  tags: [三笘薫, ブライトン]
+
+answer: 5月の手術から4か月がたち、監督は代表ウィーク後の復帰を見込むまでになりました。
+watch: 復帰後、ECLの登録に間に合うかどうかです。
+
+sections:
+  - id: what
+    heading: 監督の言葉が変わった
+    tier: 報道
+    telop: 「今季は不在」から「代表ウィーク後」へ
+    card:
+      type: quote
+      label: ヒュルツェラー監督
+      text: 代表ウィーク後には戻ってくる。
+      translation: 5月には「今シーズンは不在になる」と話していた
+    say:
+      - ブライトンの三笘薫選手について、監督の見立てが変わりました。
+      - 5月、監督はこう話していました。
+      - {voice: ヒュルツェラー監督, text: 今シーズンは不在になる。現時点で明確な復帰時期は示せない。}
+      - ゲキサカが5月14日に伝えたものです。そして今月、同じ監督がこう述べました。
+      - {voice: ヒュルツェラー監督, text: 代表ウィーク後には戻ってくる。}
+      - フットボールチャンネルが5日に伝えています。
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?451367-451367-fl=
+      - https://www.footballchannel.jp/2026/09/05/post1004562/
+
+  - id: why
+    heading: 5月に何があったか
+    tier: 報道
+    telop: 左ハムストリングを痛めて手術
+    card:
+      type: points
+      title: 5月からの経過
+      items:
+        - 5月9日 ウォルバーハンプトン戦で左ハムストリングを負傷
+        - 5月25日 手術
+        - 新シーズン開幕後も公式戦の出場なし
+    say:
+      - 三笘選手は5月9日のウォルバーハンプトン戦で、左のハムストリングを痛めました。
+      - 5月25日に手術を受けています。
+      - 新しいシーズンが始まってからも、公式戦には出ていません。
+      - 負傷から、およそ4か月がたちました。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/05/post1004562/
+      - https://web.gekisaka.jp/news/japan/detail/?451367-451367-fl=
+
+  - id: next
+    heading: これからどうなる
+    tier: 報道
+    telop: ECLの登録には入っていない
+    card:
+      type: points
+      title: いま分かっていること
+      items:
+        - ECLの登録メンバーには入っていない
+        - 日本人選手は16人が登録された
+        - 南野拓実はPSG戦の招集リスト入り
+    say:
+      - 一方で、ヨーロッパカンファレンスリーグの登録メンバーには入っていません。
+      - フットボールチャンネルは、日本人選手16人が登録されたと伝えています。
+      - そのなかには、およそ9か月ぶりの復帰が近づく南野拓実選手も入っています。
+      - 南野選手は、パリ・サンジェルマン戦の招集リストにも名を連ねました。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/05/post1004562/
+      - https://www.soccer-king.jp/news/world/fra/20260904/2200476.html

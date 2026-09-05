@@ -641,6 +641,7 @@ def _cmd_thumbnail(args, config) -> int:
             config, look["title"], target,
             subtitle=look["subtitle"],
             background=look.get("photo") or script.background,
+            focus=look.get("focus"),
             badge=look["badge"], date=look["date"],
             lines=look["lines"], tags=look["tags"],
         )

@@ -293,3 +293,38 @@ def test_kitカードにitemsが無ければ弾く(tmp_path):
         render({"type": "kit", "title": "登録"}, 1000,
                str(cfg.video.font_path()), tmp_path / "x.png",
                str(cfg.video.latin_font_path()))
+
+
+def test_引用カードの名前が日本語でも豆腐にならない(tmp_path):
+    """名前欄を欧文フォント固定にしていた。
+
+    実測（2026-09-05）で「ヒュルツェラー監督」が □□□□ になった。
+    **代弁の型にしたので、名前が日本語になる場面が普通になった。**
+    """
+    from PIL import Image
+
+    from src.cards import render
+    from src.config import load_config
+
+    cfg = load_config()
+    out = tmp_path / "quote.png"
+    render({"type": "quote", "label": "ヒュルツェラー監督",
+            "text": "代表ウィーク後には戻ってくる。"},
+           1000, str(cfg.video.font_path()), out, str(cfg.video.latin_font_path()))
+
+    # 名前の帯があるあたりに、地の色以外の画素があること（＝字が出ている）
+    band = Image.open(out).convert("L").crop((60, 30, 400, 90))
+    assert len(set(band.getdata())) > 8, "名前が描かれていない"
+
+
+def test_引用カードの名前が英語でも出る(tmp_path):
+    from src.cards import render
+    from src.config import load_config
+
+    cfg = load_config()
+    out = tmp_path / "quote_en.png"
+    render({"type": "quote", "label": "Jamie Carragher",
+            "text": "Endo has done a great job."},
+           1000, str(cfg.video.font_path()), out, str(cfg.video.latin_font_path()))
+
+    assert out.exists() and out.stat().st_size > 0
