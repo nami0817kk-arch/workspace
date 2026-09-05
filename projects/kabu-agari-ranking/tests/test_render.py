@@ -95,7 +95,8 @@ def test_build_generates_every_expected_page(site):
     render.build_all()
 
     for name in ("index.html", "losers.html", "active.html",
-                 "about.html", "privacy.html", "robots.txt", "ads.txt", "sitemap.xml"):
+                 "about.html", "privacy.html", "guide.html", "glossary.html",
+                 "robots.txt", "ads.txt", "sitemap.xml"):
         assert (out_dir / name).exists(), name
     for kind in ("gainers", "losers", "active"):
         assert (out_dir / "archive" / kind / "2026-01-05.html").exists()

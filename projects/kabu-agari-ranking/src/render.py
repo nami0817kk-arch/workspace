@@ -130,6 +130,8 @@ def _write_sitemap(days: list[dict]) -> None:
         (f"{SITE_URL}/active.html", latest_date),
         (f"{SITE_URL}/about.html", latest_date),
         (f"{SITE_URL}/privacy.html", latest_date),
+        (f"{SITE_URL}/guide.html", latest_date),
+        (f"{SITE_URL}/glossary.html", latest_date),
     ]
     for json_key, dirname, *_rest in _RANKING_TYPES:
         urls.append((f"{SITE_URL}/archive/{dirname}/index.html", latest_date))
@@ -166,7 +168,7 @@ def build_all() -> None:
 
     _build_ranking_pages(days)
 
-    for name in ("about.html", "privacy.html"):
+    for name in ("about.html", "privacy.html", "guide.html", "glossary.html"):
         tmpl = _env.get_template(name)
         _write(_OUTPUT_DIR / name, tmpl.render(base_url=""))
 
