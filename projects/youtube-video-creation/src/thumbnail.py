@@ -64,6 +64,10 @@ def from_meta(meta: dict, title: str) -> dict:
         "tags": [str(t) for t in (meta.get("thumbnail_tags") or [])],
         "badge": str(meta.get("thumbnail_badge", "")),
         "date": str(meta.get("date", "")),
+        # サムネの下地。**選手の顔を敷けるようにする。**参考3チャンネルは
+        # どれも人の顔を全面に出しており、文字だけのサムネは一覧で埋もれる
+        # （2026-09-05 実測）。指定が無ければ台本の背景を使う
+        "photo": str(meta.get("thumbnail_photo") or ""),
     }
 
 

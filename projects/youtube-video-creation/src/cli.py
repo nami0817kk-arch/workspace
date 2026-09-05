@@ -578,7 +578,8 @@ def _cmd_thumbnail(args, config) -> int:
         target = out if len(looks) == 1 else out.with_name(f"{out.stem}_{index}{out.suffix}")
         build_thumbnail(
             config, look["title"], target,
-            subtitle=look["subtitle"], background=script.background,
+            subtitle=look["subtitle"],
+            background=look.get("photo") or script.background,
             badge=look["badge"], date=look["date"],
             lines=look["lines"], tags=look["tags"],
         )

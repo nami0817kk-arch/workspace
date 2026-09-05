@@ -94,7 +94,7 @@ def build_script(
         look["title"],
         out_dir / "thumbnail.png",
         subtitle=look["subtitle"],
-        background=script.background,
+        background=look["photo"] or script.background,
         badge=look["badge"],
         date=script.date,
         lines=look["lines"],

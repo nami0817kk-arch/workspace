@@ -982,11 +982,18 @@ def _layer(size: tuple[int, int]) -> tuple[Image.Image, ImageDraw.ImageDraw]:
 
 
 def _cover(image: Image.Image, width: int, height: int) -> Image.Image:
-    """アスペクト比を保ったまま画面いっぱいに敷き詰める。"""
+    """アスペクト比を保ったまま画面いっぱいに敷き詰める。
+
+    **縦長の写真は上寄りに切る。**人物写真は顔が上にあるので、真ん中で切ると
+    顔が落ちる。実測（2026-09-05）で、サムネに選手の写真を敷いたら胴体だけが
+    残り、誰なのか分からなくなった。
+    """
     scale = max(width / image.width, height / image.height)
     resized = image.resize((int(image.width * scale), int(image.height * scale)), Image.LANCZOS)
     left = (resized.width - width) // 2
-    top = (resized.height - height) // 2
+    spare = resized.height - height
+    tall = image.height > image.width * 1.1
+    top = int(spare * (0.12 if tall else 0.5))
     return resized.crop((left, top, left + width, top + height))
 
 
