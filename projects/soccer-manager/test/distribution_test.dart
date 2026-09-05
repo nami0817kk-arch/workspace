@@ -74,6 +74,41 @@ void main() {
           reason: 'スタッフはレベルを強化する仕組みではなく、人を雇う仕組みになった');
     });
 
+    test('デバッグ機能がリリースビルドに出ない', () {
+      // 「デバッグ(管理者専用)」と書いてあるだけで、実際は設定画面を
+      // 開けば誰でも押せる状態だった。任意の額の資金を足せるので、
+      // 資金のやりくりという経営シミュレーションの根幹が意味を失う。
+      // 課金の特典を「資金」に絞って調整してきたことも台無しになる。
+      final settings =
+          File('lib/screens/settings_screen.dart').readAsStringSync();
+
+      expect(settings, contains('kDebugMode'),
+          reason: 'デバッグ導線がビルド種別で守られていない');
+
+      // 資金追加の導線は、必ず kDebugMode の分岐の中にある。
+      final debugIndex = settings.indexOf('kDebugMode &&');
+      final addFundsIndex = settings.indexOf('_showAddFundsDialog(context)');
+      expect(debugIndex, greaterThanOrEqualTo(0));
+      expect(addFundsIndex, greaterThan(debugIndex),
+          reason: '資金追加の導線が kDebugMode の外にある');
+    });
+
+    test('資金を直接足せる導線は、デバッグ用の1つだけ', () {
+      // 似た抜け道が増えていないか。増えるときは、それがリリースに
+      // 出てよいものかを考える機会になる。
+      final callers = Directory('lib')
+          .listSync(recursive: true)
+          .whereType<File>()
+          .where((f) => f.path.endsWith('.dart'))
+          .where((f) => f.readAsStringSync().contains('addDebugFunds('))
+          .map((f) => f.path)
+          .toList();
+
+      // 定義(game_state_squad.dart)と呼び出し(settings_screen.dart)の2つ。
+      expect(callers.length, 2,
+          reason: 'addDebugFunds を呼ぶ箇所が増えている: $callers');
+    });
+
     test('旧リポジトリを指すURLが残っていない', () {
       // このプロジェクトは kabu-agari-ranking から claude-code-dev へ移した。
       // 移行時に取り残されたURLが実際にアプリ内とストア掲載情報の両方に
