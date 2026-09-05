@@ -256,6 +256,10 @@ def main(argv: list[str] | None = None) -> int:
                           help="まとめ集約サイト（FOOTBALL TOPIC）の一覧も取り込む")
     p_gather.add_argument("--topics-sort", default="話題", choices=["話題", "新着"],
                           help="話題=クリック数順 / 新着=新しい順（既定: 話題）")
+    p_gather.add_argument("--newsnow", action="store_true",
+                          help="NewsNow（英語圏の集約サイト）の見出しも取り込む")
+    p_gather.add_argument("--newsnow-limit", type=int, default=30,
+                          help="NewsNow から取る件数（1件ごとに中継URLを1回叩く）")
     p_gather.add_argument("--no-feeds", action="store_true", help="フィードを使わない")
     p_gather.add_argument("--date", default=None, help="基準日 YYYY-MM-DD（既定: 今日）")
     p_gather.add_argument("--out", default=None, help="書き出し先")
@@ -1437,6 +1441,13 @@ def _cmd_results(args, config) -> int:
     return 0
 
 
+def _host(url: str) -> str:
+    """URL からホスト名だけ取り出す。表示用。"""
+    from urllib.parse import urlparse
+
+    return (urlparse(url).hostname or url)[:40]
+
+
 def _cmd_gather(args, config) -> int:
     from datetime import date as _date
 
@@ -1481,6 +1492,29 @@ def _cmd_gather(args, config) -> int:
             if head:
                 print(f"　　一番人気: {head.points}pt　{_fit(head.title, 46)}")
             pasted = f"{pasted}\n{listed}" if pasted.strip() else listed
+    # NewsNow。人気の点数は無いが、幅と**リーグの自動判定**を足す
+    if getattr(args, "newsnow", False):
+        from . import newsnow as newsnow_mod
+
+        try:
+            found = newsnow_mod.recent(hours=args.hours, limit=args.newsnow_limit)
+        except newsnow_mod.NewsNowError as error:
+            print(f"　NewsNow を取れません: {error}")
+        else:
+            # 取得できないと分かっているサイトは、ここで落とす。
+            # 候補に入れても lint が止めるだけで、直す手間が増える
+            blocked = [i for i in found if plan.is_blocked(i.url)]
+            found = [i for i in found if not plan.is_blocked(i.url)]
+            if blocked:
+                print(f"　　取得できないサイトを{len(blocked)}件外しました: "
+                      + " / ".join(sorted({_host(i.url) for i in blocked}))[:60])
+            leagues = sum(1 for i in found if i.league)
+            print(f"　NewsNow から{len(found)}件"
+                  f"（直近{args.hours:g}時間・うちリーグが分かるもの{leagues}件）")
+            block = newsnow_mod.lines(found)
+            pasted = f"{pasted}{chr(10)}{block}" if pasted.strip() else block
+            topic_ranks.update(newsnow_mod.meta(found))
+
     haul = gather_mod.run(
         plan,
         topics_meta=topic_ranks,

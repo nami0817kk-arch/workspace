@@ -139,6 +139,10 @@ def run(
         hours = float(found.get("hours_ago", -1.0))
         if hit.hours_ago < 0 <= hours:
             hit.hours_ago = hours
+        # 集約サイトがリーグを持っていれば使う。**毎回手で埋めていた欄。**
+        # 取得元で分かっているものを、あとでクラブ名の辞書で上書きしない
+        if not hit.league:
+            hit.league = str(found.get("league") or "")
     hits, haul.seen = drop_seen(hits, used_urls(covered or []))
     haul.hits = hits
 

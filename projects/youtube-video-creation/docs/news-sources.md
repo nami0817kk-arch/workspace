@@ -553,7 +553,7 @@ Yahoo のスポーツRSSを外したのは、Sky の全競技フィードを差�
 
 FOOTBALL TOPIC（まとめ集約＋Points）の海外版を探した。
 
-- **NewsNow Football**（`newsnow.co.uk/h/Sport/Football`）… いちばん近い。
+- **NewsNow Football**（`newsnow.co.uk/h/Sport/Football`）… **足した**（`gather --newsnow`）。
   HTMLに `<a class="hll">見出し</a>`、`data-pub` に媒体名、
   `<span class="time" data-time="1788563974">` に**UNIX時刻**、
   `<a class="fav" href="/h/Sport/Football/Premier+League/Ipswich+Town">` に
@@ -566,3 +566,16 @@ FOOTBALL TOPIC（まとめ集約＋Points）の海外版を探した。
 
 **「人気の実数が取れる」という点では FOOTBALL TOPIC が今のところ唯一。**
 海外は NewsNow で幅を足せるが、2つめの軸（読まれているか）は日本語側にしかない。
+
+
+### NewsNow を足したときに分かったこと（2026-09-05）
+
+- リンクは中継URL（`c.newsnow.co.uk/A/...`）で、**素の GET では飛ばない**。
+  Referer を付けても 200 が返るだけ。中継ページの HTML に実URLが書いてあるので、
+  そこから取り出す。**1件につき1回よけいに叩く**ので、取る件数は絞る（既定30件）
+- リーグのタグは `/h/Sport/Football/Premier+League/Liverpool` の形。
+  上の階層がリーグ、下がクラブ。**実測で20件中16件にリーグが入った**
+- WSL・Gossip・Legends のような、こちらのリーグ一覧に無いタグは**埋めない**。
+  分からないものを埋めると、あとで直す手間が増える
+- 取得できないサイト（`blocked`）の記事も流れてくる。実測で talksport.com が
+  混ざり lint が止まったので、取り込む前に落とすようにした
