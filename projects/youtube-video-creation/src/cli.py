@@ -249,6 +249,15 @@ def main(argv: list[str] | None = None) -> int:
     p_subject.add_argument("dir", help="credits.json のあるフォルダ")
     p_subject.add_argument("names", nargs="+", help="本人の名前（日本語・英語の両方を渡してよい）")
 
+    p_portrait = sub.add_parser(
+        "portrait", help="人物の顔写真を Commons から取る（被写体を確かめてから）")
+    p_portrait.add_argument("dir", help="置き先のフォルダ（例: assets/images/martinelli）")
+    p_portrait.add_argument("names", nargs="+", help="本人の名前（英語表記が当たりやすい）")
+    p_portrait.add_argument("--crop", default="",
+                            help="顔だけ切り出す x,y,w,h（画像に対する割合。例: 0.55,0.05,0.4,0.3）")
+    p_portrait.add_argument("--file", default="", dest="only",
+                            help="この File: だけを使う（現役/監督など、機械に選べない差を人が決める）")
+
     p_results = sub.add_parser("results", help="その日の試合結果を候補にする")
     p_results.add_argument("--date", default=None, help="YYYY-MM-DD（既定: 昨日）")
     p_results.add_argument("--league", default=None, help="england/spain/germany/italy/france など")
@@ -1385,6 +1394,31 @@ def _cmd_fetch(args, config) -> int:
     return 0 if seen else 1
 
 
+def _cmd_portrait(args, config) -> int:
+    """本人と確認できた顔写真を1枚落とす。**確かめられなければ落とさない。**"""
+    from .portrait import PortraitError, save
+    from .subjects import SubjectError
+
+    folder = Path(args.dir)
+    try:
+        entry = save(list(args.names), folder, only=getattr(args, "only", ""))
+    except (PortraitError, SubjectError) as err:
+        print(f"取れません: {err}", file=sys.stderr)
+        print("  台本の thumbnail_photo は手で用意してください", file=sys.stderr)
+        return 1
+    if getattr(args, "crop", ""):
+        from .portrait import crop_to
+
+        size = crop_to(folder / entry["file"], args.crop)
+        print(f"  切り出し: {size[0]}x{size[1]}")
+    print(f"■ {folder / entry['file']}")
+    print(f"  被写体: {entry['subject_check']}")
+    print(f"  出典　: {entry['title']}")
+    print(f"  権利　: {entry['license']} / {entry['author']}")
+    print(f"  台本に: thumbnail_photo: {folder.as_posix()}/{entry['file']}")
+    return 0
+
+
 def _cmd_subject(args, config) -> int:
     """取った画像に、目的の人物が本当に写っているかを確かめる。
 
@@ -2032,6 +2066,7 @@ HANDLERS = {
     "x": _cmd_x,
     "fetch": _cmd_fetch,
     "subject": _cmd_subject,
+    "portrait": _cmd_portrait,
     "results": _cmd_results,
     "gather": _cmd_gather,
     "collect": _cmd_collect,

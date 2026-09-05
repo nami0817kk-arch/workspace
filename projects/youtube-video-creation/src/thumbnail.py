@@ -48,6 +48,14 @@ NEWS_SUB_SIZES = (64, 58, 52, 48, 44, 40, 36)
 NEWS_LABEL = "海外サッカーニュース"
 
 
+def _prefix_of(title: str) -> str:
+    """タイトル先頭の【…】を返す。無ければ空。"""
+    text = (title or "").strip()
+    if text.startswith("【") and "】" in text:
+        return text[1:text.index("】")].strip()
+    return ""
+
+
 def from_meta(meta: dict, title: str) -> dict:
     """台本の frontmatter からサムネの引数を取り出す。
 
@@ -62,7 +70,10 @@ def from_meta(meta: dict, title: str) -> dict:
         "subtitle": line2,
         "lines": (line1, line2),
         "tags": [str(t) for t in (meta.get("thumbnail_tags") or [])],
-        "badge": str(meta.get("thumbnail_badge", "")),
+        # 指定が無ければ、タイトルの【】をそのままバッジにする。
+        # **既定の「速報」を出しっぱなしにすると、悲報の記事に速報と出る**
+        # （2026-09-06 実測。マルティネッリ退団の回で食い違っていた）
+        "badge": str(meta.get("thumbnail_badge", "")) or _prefix_of(title),
         "date": str(meta.get("date", "")),
         # サムネの下地。**選手の顔を敷けるようにする。**参考3チャンネルは
         # どれも人の顔を全面に出しており、文字だけのサムネは一覧で埋もれる

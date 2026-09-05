@@ -63,6 +63,10 @@ class Section:
     sources: list[str] = field(default_factory=list)
     official: bool = False
     card: dict | None = None
+    # **行ごとのテロップとカード。**節に1枚だけだと、節の途中で画面が
+    # まったく変わらない。実測（2026-09-06）で33秒・47秒の静止が出た
+    line_telops: list = field(default_factory=list)
+    line_cards: list = field(default_factory=list)
     bg: str = ""      # この節の背景。空なら既定の並びから割り当てる
 
 
@@ -135,13 +139,20 @@ def build_notes(raw: dict) -> Notes:
         # 誰かの発言を、その人の声で読ませるため
         lines: list[str] = []
         voices: list[str] = []
+        telops: list[str] = []
+        cards: list = []
         for item in raw_lines:
             if isinstance(item, dict):
                 lines.append(str(item.get("text", "")).strip())
                 voices.append(str(item.get("voice", "")).strip())
+                telops.append(str(item.get("telop", "")).strip())
+                cards.append(item.get("card"))
             else:
                 lines.append(str(item).strip())
                 voices.append("")
+                telops.append("")
+                cards.append(None)
+        keep = [i for i, s in enumerate(lines) if s]
         sections.append(
             Section(
                 id=str(entry.get("id") or f"s{index}"),
@@ -150,6 +161,8 @@ def build_notes(raw: dict) -> Notes:
                 telop=str(entry.get("telop", "")).strip(),
                 say=[s for s in lines if s],
                 voices=[v for s, v in zip(lines, voices) if s],
+                line_telops=[telops[i] for i in keep],
+                line_cards=[cards[i] for i in keep],
                 sources=[str(u).strip() for u in (entry.get("sources") or []) if str(u).strip()],
                 official=bool(entry.get("official", False)),
                 card=entry.get("card"),
@@ -627,11 +640,24 @@ def to_script(notes: Notes, plan: Plan) -> str:
                 SPEAKERS[0] if number == 0 else SPEAKERS[1 if number % 2 else 0]
             )
             lines.append(f"{speaker}: {sentence}")
+            own_telop = (section.line_telops[number]
+                         if number < len(section.line_telops) else "")
+            own_card = (section.line_cards[number]
+                        if number < len(section.line_cards) else None)
             if number == 0:
-                lines.append(f"  telop: {section.telop}")
+                lines.append(f"  telop: {own_telop or section.telop}")
                 lines.append(f"  source: {section.tier}")
-                if section.card:
+                if own_card:
+                    lines.append(f"  card: {section.id}_{number}_card")
+                elif section.card:
                     lines.append(f"  card: {section.id}_card")
+            else:
+                # **途中の行にもテロップとカードを出せる。**節に1枚だけだと
+                # 画面が止まる。指定が無い行は、前の見た目のまま続く
+                if own_telop:
+                    lines.append(f"  telop: {own_telop}")
+                if own_card:
+                    lines.append(f"  card: {section.id}_{number}_card")
         lines.append("")
 
     lines += [
@@ -667,6 +693,9 @@ def _cards(notes: Notes) -> dict:
     for section in notes.sections:
         if section.card:
             cards[f"{section.id}_card"] = section.card
+        for number, one in enumerate(section.line_cards):
+            if one:
+                cards[f"{section.id}_{number}_card"] = one
     # まとめのカードは「答え」だけにする。
     # 問い・答え・次の焦点を3つ並べたら、2分の動画の締めには字が細かすぎ、
     # 下のテロップとも重なっていた（作った動画を目視して発見）。

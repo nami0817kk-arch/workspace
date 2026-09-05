@@ -1,0 +1,123 @@
+slot: premier
+date: 2026年9月6日
+theme:
+  id: martinelli_arteta
+  league: england
+  prefix: 悲報
+  title: マルティネッリの別れの言葉に、アルテタだけが居ない
+  hook: シェフにも警備員にも清掃スタッフにも礼を言った。監督にだけ、触れなかった。
+  question: 監督の名前が無い別れの言葉に、当の監督はどう応じたのか
+thumbnail:
+  line1: アルテタだけ書かれず
+  line2: 監督は「欠かせない選手」
+  tags:
+  - マルティネッリ
+  - アルテタ
+answer: 選手は監督に触れず、監督は選手を称えた。食い違いはあるが、片方向の不仲話ではない
+watch: アル・ヒラルでの初戦。7年いたクラブを離れて何を見せるか
+sections:
+- id: what
+  heading: 何が起きたか
+  tier: 報道
+  telop: 60億円でアル・ヒラルへ、7年の在籍に区切り
+  say:
+  - voice: キャスター
+    text: ガブリエウ・マルティネッリが、アーセナルからアル・ヒラルへ移籍しました。
+  - voice: キャスター
+    text: ろくせんまんポンドのクラブ記録。にじゅうごさい、ななねんの在籍でした。
+    card:
+      type: transfer
+      player: ガブリエウ・マルティネッリ（25）
+      from: アーセナル（2019-2026）
+      to: アル・ヒラル
+      fee: 6000万ポンド。クラブの記録
+    telop: 7年在籍、クラブ記録での退団
+  official: false
+  sources:
+  - https://www.mirror.co.uk/sport/football/news/gabriel-martinelli-mikel-arteta-arsenal-37625674
+  - https://football-tribe.com/japan/2026/09/05/358907/
+- id: message
+  heading: 別れの言葉
+  tier: 報道
+  telop: シェフにも警備にも礼を言い、監督にだけ触れず
+  say:
+  - voice: キャスター
+    text: 本人が出した別れの言葉が、いま話題になっています。
+  - voice: マルティネッリ
+    text: シェフ、用具担当、医師、警備、メディアチーム、清掃スタッフ、理学療法士。
+    card:
+      type: quote
+      source: Gabriel Martinelli (SNS)
+      color: '#c8102e'
+      text: Thank you to the chefs, kit staff, doctors, doormen, security staff, media team, cleaning staff, physios, and every single teammate
+      translation: シェフ、用具担当、医師、ドアマン、警備、メディアチーム、清掃スタッフ、理学療法士、そしてすべてのチームメイトに感謝を
+  - voice: マルティネッリ
+    text: 僕のストーリーの一部になってくれた、すべての仲間に、ありがとう。
+  - voice: キャスター
+    text: ここまで細かく挙げながら、アルテタ監督への言及だけが、ありませんでした。
+    telop: 監督の名前だけが無い
+    card:
+      type: points
+      title: 名前が挙がった人たち
+      items:
+      - シェフ / 用具担当 / 医師
+      - ドアマン / 警備 / メディアチーム
+      - 清掃スタッフ / 理学療法士
+      - チームメイト全員
+      - アルテタ監督 ← 記載なし
+  official: false
+  sources:
+  - https://www.mirror.co.uk/sport/football/news/gabriel-martinelli-mikel-arteta-arsenal-37625674
+  - https://football-tribe.com/japan/2026/09/05/358907/
+- id: why
+  heading: 監督は何と言ったか
+  tier: 報道
+  telop: アルテタ「欠かせない選手だった」
+  say:
+  - voice: ミラー
+    text: 不快な終わりのあと、アルテタ監督を辛辣に無視。
+    card:
+      type: quote
+      source: The Mirror
+      color: '#e2495a'
+      text: Gabriel Martinelli savagely SNUBS Mikel Arteta following 'uncomfortable' end to Arsenal career
+      translation: アーセナルでの不快な終わりのあと、マルティネッリがアルテタを辛辣に無視
+  - voice: キャスター
+    text: ところが翌日の会見で、アルテタ監督はこう話しました。
+  - voice: アルテタ
+    text: 私が出会ったころのガビと、いま出ていくガビは、別人だ。クラブに欠かせない選手だった。
+    telop: アルテタ「欠かせない選手だった」
+    card:
+      type: quote
+      source: Mikel Arteta（会見）
+      color: '#ef0107'
+      text: The Gabi that I met and the Gabi that just left, it's a huge transformation. I think he's been a critical player.
+      translation: 出会ったころのガビと、いま出ていくガビは別人だ。欠かせない選手だったと思う
+  official: false
+  sources:
+  - https://sports.yahoo.com/articles/mikel-arteta-pays-tribute-gabriel-133159778.html
+  - https://football-tribe.com/japan/2026/09/05/358907/
+- id: next
+  heading: 何があったのか
+  tier: 報道
+  telop: 退団の3日前、練習を早退していた
+  say:
+  - voice: キャスター
+    text: 背景には出場機会がありました。退団のみっか前、彼は練習を早退しています。
+  - voice: キャスター
+    text: 監督は当時、クラブが対応している個人的な事情だと説明していました。
+    telop: 退団の3日前に練習を早退
+    card:
+      type: points
+      title: この夏アーセナルを去った攻撃陣
+      items:
+      - ガブリエウ・マルティネッリ → アル・ヒラル
+      - ガブリエウ・ジェズス
+      - レアンドロ・トロサール
+      - ※ 左の競争にはエゼ、トロサールが加わっていた
+  - voice: キャスター
+    text: つぎに見るべきは、アル・ヒラルでの初戦です。
+  official: false
+  sources:
+  - https://sports.yahoo.com/articles/mikel-arteta-pays-tribute-gabriel-133159778.html
+  - https://www.mirror.co.uk/sport/football/news/gabriel-martinelli-mikel-arteta-arsenal-37625674

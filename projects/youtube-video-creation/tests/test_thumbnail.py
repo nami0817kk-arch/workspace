@@ -287,3 +287,15 @@ def test_切る位置を台本から指定できる():
 
     assert from_meta({"thumbnail_focus": 0.3}, "見出し")["focus"] == 0.3
     assert from_meta({}, "見出し")["focus"] is None
+
+def test_バッジはタイトルの接頭辞から取る():
+    """**既定の「速報」を出しっぱなしにすると、悲報の記事に速報と出る。**
+
+    2026-09-06 に実際に食い違った（マルティネッリ退団の回）。
+    """
+    from src.thumbnail import _prefix_of
+
+    assert _prefix_of("【悲報】マルティネッリの別れの言葉") == "悲報"
+    assert _prefix_of("【朗報】モドリッチが代表続行") == "朗報"
+    assert _prefix_of("接頭辞のないタイトル") == ""
+    assert _prefix_of("") == ""

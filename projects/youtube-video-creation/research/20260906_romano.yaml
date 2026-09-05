@@ -1,0 +1,100 @@
+slot: romano
+date: 2026年9月6日
+theme:
+  id: modric_croatia
+  league: ''
+  prefix: 朗報
+  title: モドリッチ、代表引退の噂を自分で消す 202試合の物語は続く
+  hook: この代表ウィークで最後になる、と噂されていた。本人が、違うと示した。
+  question: 四日後に四十一歳になる男は、なぜまだ代表を続けるのか
+thumbnail:
+  line1: モドリッチ 代表続行
+  line2: 4日後に41歳、202試合
+  tags:
+  - モドリッチ
+  - クロアチア代表
+answer: 監督と会長に直接、参加を確約した。噂ではなく協会の発表で決着した
+watch: 今月26日のチェコ戦。41歳になって最初の代表戦
+sections:
+- id: what
+  heading: 何が起きたか
+  tier: 報道
+  telop: クロアチア協会が発表、ネーションズリーグへ
+  say:
+  - voice: キャスター
+    text: ミランのルカ・モドリッチが、クロアチア代表を続けることになりました。
+  - voice: キャスター
+    text: きゅうがついつか、クロアチアサッカー連盟が公式に発表しています。
+  - voice: クロアチアサッカー連盟
+    text: モドリッチは、ビリッチ監督と会長に対し、ネーションズリーグへの参加を確約しました。
+    telop: クロアチア協会が公式に発表
+    card:
+      type: quote
+      source: クロアチアサッカー連盟（HNS）
+      color: '#c8102e'
+      text: モドリッチは、ビリッチ監督とクスティッチ会長に対し、UEFAネーションズリーグへの参加を確約しました
+      translation: ''
+  - voice: クロアチアサッカー連盟
+    text: 代表通算にひゃくにしあいという歴史的な記録を持つキャリアは、これからも続きます。
+  official: true
+  sources:
+  - https://www.soccer-king.jp/news/world/world_other/20260905/2201062.html
+  - https://www.gazzetta.it/Calcio/Serie-A/Milan/05-09-2026/modric-avanti-con-la-croazia-giochera-la-nations-league.shtml
+- id: why
+  heading: なぜ噂が出ていたのか
+  tier: 報道
+  telop: 「今回で最後」と伝えられていた
+  say:
+  - voice: キャスター
+    text: じつは一部の報道で、こんどの代表ウィークを最後に退くのでは、と伝えられていました。
+  - voice: キャスター
+    text: にせんろくねんのデビューから、にじゅうねん。にひゃくにしあいで、にじゅうきゅうゴール。
+    telop: 代表20年の積み上げ
+    card:
+      type: bars
+      title: クロアチア代表での記録
+      unit: ''
+      items:
+      - label: 出場
+        value: 202
+        highlight: true
+      - label: アシスト
+        value: 32
+      - label: ゴール
+        value: 29
+      note: '※ 2006年3月のデビューから。出典: サッカーキング'
+  - voice: キャスター
+    text: にせんじゅうはちねんのワールドカップでは、母国を準優勝に導いています。
+  - voice: キャスター
+    text: そして、よっか後に、よんじゅういっさいの誕生日を迎えます。
+    telop: 9月9日に41歳
+  official: false
+  sources:
+  - https://web.gekisaka.jp/news/world/detail/?458264-458264-fl
+  - https://www.marca.com/futbol/2026/09/05/modric-baja-seleccion.html
+- id: next
+  heading: これからどうなる
+  tier: 報道
+  telop: ビリッチ監督「ピッチの内外で多くをもたらす」
+  say:
+  - voice: キャスター
+    text: ビリッチ監督は、こう話しています。
+  - voice: ビリッチ監督
+    text: このルカの決断を、うれしく思う。彼はピッチの内でも外でも、多くをもたらせる。
+    card:
+      type: quote
+      source: スラベン・ビリッチ監督
+      color: '#0b4ea2'
+      text: 私は、このルカの決断を嬉しく思う。我々は、彼がピッチ内外で多くのことをもたらせることを知っている
+      translation: ''
+  - voice: ビリッチ監督
+    text: クロアチアを世界最高のチームと肩を並べるところへ。その野心を、ともに持っている。
+  - voice: キャスター
+    text: つぎに見るべきは、こんげつにじゅうろくにちのチェコ戦。
+    telop: 次は今月26日のチェコ戦
+  - voice: キャスター
+    text: よんじゅういっさいになって、最初の代表戦になります。
+  official: false
+  sources:
+  - https://football-italia.net/modric-decides-to-continue-playing-croatia/
+  - https://www.vi.nl/nieuws/modric-40-gewoon-weer-opgeroepen-voor-kroatie-extreem-blij-mee
