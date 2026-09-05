@@ -31,8 +31,16 @@ def _by_label(findings):
     return {f.label: f for f in findings}
 
 
-def test_a_finished_build_passes_everything(tmp_path):
-    findings = inspect(parse_script(BODY), _built(tmp_path), 100.0)
+def test_a_finished_build_passes_everything(tmp_path, monkeypatch):
+    # サムネの顔は必須になった（2026-09-05）。見本にも写真を持たせる
+    from src import review as review_mod
+
+    face = tmp_path / "face.jpg"
+    face.write_bytes(b"x")
+    monkeypatch.setattr(review_mod, "_resolve", lambda value: face)
+    body = BODY.replace("title: T\n",
+                       "title: T\nthumbnail_photo: assets/images/x/face.jpg\n")
+    findings = inspect(parse_script(body), _built(tmp_path), 100.0)
     assert all(f.ok for f in findings), [f.line() for f in findings if not f.ok]
 
 
@@ -295,3 +303,34 @@ def test_見た目が変わらない場面を弾く(tmp_path):
     ]
     path.write_text(json.dumps({"scenes": [{"lines": varied}]}), encoding="utf-8")
     assert _screen_change(path).ok
+
+
+# サムネイルには顔を必ず入れる（2026-09-05 ユーザーの指示）。
+# **人の注意に頼ると忘れる。**実際、3本目で忘れた。仕組みのほうで止める。
+
+
+def test_サムネに写真が無ければ弾く():
+    from src.review import _thumbnail_face
+
+    script = _script("## S\nキャスター: 見出しです。\n")
+    assert not _thumbnail_face(script).ok
+
+
+def test_サムネの写真が実在しなければ弾く():
+    from src.script_model import parse_script
+    from src.review import _thumbnail_face
+
+    body = "---\ntitle: 見出し\nthumbnail_photo: assets/images/ない/ない.jpg\n---\n\n## S\nキャスター: あ。\n"
+    assert not _thumbnail_face(parse_script(body)).ok
+
+
+def test_サムネに実在する写真があれば通る(tmp_path, monkeypatch):
+    from src import review
+    from src.script_model import parse_script
+
+    photo = tmp_path / "face.jpg"
+    photo.write_bytes(b"x")
+    monkeypatch.setattr(review, "_resolve", lambda value: photo)
+
+    body = "---\ntitle: 見出し\nthumbnail_photo: assets/images/x/face.jpg\n---\n\n## S\nキャスター: あ。\n"
+    assert review._thumbnail_face(parse_script(body)).ok

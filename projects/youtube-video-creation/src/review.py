@@ -10,6 +10,7 @@ import json
 from dataclasses import dataclass
 from pathlib import Path
 
+from .config import _resolve
 from .script_model import Script
 from .subtitles import chapters
 
@@ -62,6 +63,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     findings.append(_caption_badges(out_dir / "subtitles.srt"))
     findings.append(_still_length(out_dir / "script.json"))
     findings.append(_screen_change(out_dir / "script.json"))
+    findings.append(_thumbnail_face(script))
     findings.append(_photo_credits(script, out_dir))
     findings.append(_double_marks(script))
     loudness = _loudness(out_dir / "video.mp4")
@@ -174,6 +176,25 @@ def _screen_change(script_json: Path) -> Finding:
                        f"{worst:.0f}秒 変わらない場面があります"
                        f"（上限{SAME_SCREEN_MAX:.0f}秒）: {worst_telop[:24]}")
     return Finding(True, "見た目の変化", f"変わらない最長 {worst:.0f}秒")
+
+
+def _thumbnail_face(script: Script) -> Finding:
+    """サムネイルに人の顔が入っているか。
+
+    **必ず入れる**（2026-09-05 ユーザーの指示）。参考3チャンネルはどれも顔が
+    全面で、文字だけのサムネは一覧で埋もれる。人の注意に頼ると忘れる——実際、
+    3本目で忘れた。**忘れられる仕組みのほうを直す。**
+
+    ここで見るのは「指定があるか」まで。誰が写っているかは `subject` が見る。
+    """
+    photo = str((script.meta or {}).get("thumbnail_photo") or "").strip()
+    if not photo:
+        return Finding(False, "サムネの顔",
+                       "thumbnail_photo がありません。**顔を必ず入れる**"
+                       "（写真は subject で被写体を確かめてから使う）")
+    if not _resolve(photo).exists():
+        return Finding(False, "サムネの顔", f"写真が見つかりません: {photo}")
+    return Finding(True, "サムネの顔", Path(photo).name)
 
 
 def _photo_credits(script: Script, out_dir: Path) -> Finding:
