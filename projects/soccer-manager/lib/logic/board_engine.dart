@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import '../models/club_infrastructure.dart';
 import '../models/club_vision.dart';
+import '../models/staff_member.dart';
 import '../models/league.dart';
 import '../models/team.dart';
 import '../models/match_result.dart';
@@ -64,6 +66,19 @@ class BoardEngine {
   /// 収入に紐づけると、伸ばした収入がそのまま枠になる。
   static const double wageBudgetIncomeShare = 0.6;
 
+  /// 理事会がスタッフ5人ぶんに見込む人件費(週あたり)。
+  ///
+  /// 給与予算は選手とスタッフの合計に掛かる。スタッフのぶんを見込まないと、
+  /// 「5つの役職があるのに1人しか雇えない」状態になる(実測: 5部で余裕64に
+  /// 対しスタッフ1人が週俸57)。理事会は裏方を置く前提で予算を組む。
+  ///
+  /// 見積もりは、そのティアに実際に来る人材の相場から出す
+  /// (StaffMember.expectedAbilityForTier)。willJoin と同じ式から導くので、
+  /// 雇える人材と見積もりがずれない。
+  static int staffWageAllowanceFor(int tier) =>
+      StaffMember.askingWage(StaffMember.expectedAbilityForTier(tier)) *
+      StaffRole.values.length;
+
   static int wageBudgetFor({
     required int tier,
     required int currentWeeklyWageBill,
@@ -74,7 +89,8 @@ class BoardEngine {
       (weeklyIncome * wageBudgetIncomeShare).round(),
     );
     final headroom = max(60, (base * 0.4).round());
-    return max(base, currentWeeklyWageBill + headroom);
+    return max(base, currentWeeklyWageBill + headroom) +
+        staffWageAllowanceFor(tier);
   }
 
   /// 理事会が期待する国内カップの到達ラウンド(そのラウンドの試合を

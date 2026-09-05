@@ -111,8 +111,21 @@ class StaffMember {
   }
 
   /// 能力に見合った週俸の相場。交渉は行わず、この額で受けるかどうかだけ。
+  ///
+  /// 選手より安い。以前は `10 + 能力^2 * 0.9` で、能力8のコーチが週俸68
+  /// (=5部の主力選手より高い)になり、給与予算の余裕(実測64)を1人で
+  /// 使い切っていた。5つの役職があるのに1人しか雇えない状態だった。
+  ///
+  /// 裏方の待遇は選手ほど高くない、という当たり前の形に直す。
   static int askingWage(double roleAbility) =>
-      (10 + roleAbility * roleAbility * 0.9).round();
+      (4 + roleAbility * roleAbility * 0.25).round();
+
+  /// その規模のクラブに来るスタッフの、おおよその能力。
+  ///
+  /// 理事会がスタッフ人件費を見積もるのに使う(BoardEngine)。willJoin と
+  /// 同じ式から導くので、実際に雇える人材と見積もりがずれない。
+  static double expectedAbilityForTier(int divisionTier) =>
+      (22 - divisionTier * 2.5 - 2).clamp(3, 20);
 
   /// この能力のスタッフが、その規模のクラブの誘いを受けるか。
   ///
