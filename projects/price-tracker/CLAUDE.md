@@ -19,16 +19,34 @@ python fetch.py       # 価格を取得して data/ に記録（要 RAKUTEN_APP_
 python build.py       # data/ から静的サイトを生成（通信しない）
 ```
 
-## まだ決まっていないこと（着手前に決める）
+## いまの運用（2026-09-05 に稼働開始）
 
-- `config.json` の `genres` が空。**対象ジャンルを決めるまで日次取得は走れない**。
-  勘で選ばず `explore.py` の調査結果で決める。
-- 公開先。`config.json` の `base_url` が切り出し前の claude-code-dev のパスを指したまま。
-- 日次実行のワークフローが未作成。作るときは kabu-agari-ranking の
-  kabu-daily.yml を参考に、失敗時に Issue を立てるステップを必ず入れる。
+- 取得は**手元PCのタスクスケジューラ `price-tracker-daily-fetch`**（毎日10:10、`run-daily.ps1`）。
+  楽天は Backend Service 型で**許可IPからのリクエストしか受け付けない**ため、IPを固定できない
+  GitHub Actions からは取得できない。**CI から取得する形に戻さない。**
+- CI（`price-tracker-daily.yml`）は push された `data/` を検証し、ビルドして
+  Cloudflare Pages へ公開する。あわせて鮮度を監視し、3日以上止まれば Issue を立てる。
+- 公開URL: https://price-tracker-bpe.pages.dev
+  （`price-tracker.pages.dev` は Cloudflare 全体で先に使われており、サブドメインが自動採番された）
+- 対象ジャンルは `explore.py` の実測で決めた3つ（パソコン・周辺機器 / TV・オーディオ・カメラ / 家電）。
+  価格が動き、型番が安定し、買い手が価格を比較する習慣を持つことを基準にした。
+  見直すときは `run-explore.ps1` を使う。
+
+## まだ決まっていないこと
+
+- `config.json` の `owner` と `contact_email` が空。アフィリエイトサイトには
+  運営者情報の表示が要るため、`build.py` が毎回警告する。公開名義はユーザーが決める。
 
 ## 手を入れるときに気をつけること
 
+- **保存の前に `src/validate.py` で検査している。閾値を緩めるときは理由を書く。**
+  このPJTが依存しているのは自分のコードではなく楽天のAPIで、仕様変更は例外ではなく
+  「0件」「空文字」といった静かな劣化として現れる（実際に4件踏んだ）。テストは全部
+  モックなので CI は緑のまま通る。数で見て止めるのがここの役目。
+  価格履歴は追記型の資産で、壊れた1日を混ぜると最安値・値下がりの判定が恒久的に歪む。
+  1日欠ける方が損失は小さい。
+- **`.ps1` は UTF-8 BOM 付きで保存する。** BOM が無いと PowerShell 5.1 が cp932 として
+  読み、日本語の文字列リテラルが壊れて起動できなくなる（実際に `run-explore.ps1` で起きた）。
 - `src/rakuten.py` は 1秒1回のレート制限を守っている。緩めない。
 - `src/store.py` は同日に二度動かしても壊れない設計。この性質をテストで守っている。
 - 秘密情報は `.env`（gitignore 済み）か GitHub Secrets へ。キー名は `.env.example` にある。

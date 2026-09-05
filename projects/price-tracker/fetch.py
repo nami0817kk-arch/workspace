@@ -1,8 +1,13 @@
 #!/usr/bin/env python3
-"""毎日1回、楽天から価格を取得して記録する。GitHub Actions から実行する。
+"""毎日1回、楽天から価格を取得して記録する。手元PCのタスクスケジューラから実行する。
 
-この環境（Claude の実行コンテナ）からは楽天へ到達できないため、
-ここでの動作確認は --dry-run と単体テストで行い、実通信は Actions 上で行う。
+楽天は Backend Service 型で許可IPからのリクエストしか受け付けないため、IPを
+固定できない GitHub Actions からは実行できない（run-daily.ps1 が呼ぶ）。
+Claude の実行コンテナからも楽天へ到達できないので、ここでの動作確認は
+--dry-run と単体テストで行う。
+
+保存の前に validate.check_snapshot で「記録に値するデータか」を検査する。
+壊れた1日を混ぜると履歴が恒久的に歪み、取り直せないため。
 """
 import argparse
 import sys
@@ -12,7 +17,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
-from src import rakuten, store  # noqa: E402
+from src import rakuten, store, validate  # noqa: E402
 
 JST = timezone(timedelta(hours=9))
 
@@ -22,6 +27,8 @@ def main() -> int:
     ap.add_argument("--dry-run", action="store_true",
                     help="通信せず、設定と保存先だけ確認する")
     ap.add_argument("--day", default=datetime.now(JST).strftime("%Y-%m-%d"))
+    ap.add_argument("--no-verify", action="store_true",
+                    help="保存前の検査で止めない（原因を承知のうえで記録するとき）")
     args = ap.parse_args()
 
     site = store.load_json(ROOT / "config.json", {})
@@ -66,6 +73,21 @@ def main() -> int:
     # 同じ商品が複数ジャンルで返ることがあるため、商品コードで一意にする
     unique = {row["item_code"]: row for row in fetched}
     rows = list(unique.values())
+
+    # 保存の前に検査する。壊れた1日を履歴に混ぜると、最安値・値下がりの判定が
+    # 恒久的に歪み、取り直しもできない。疑わしいときは記録しない方を選ぶ。
+    errors, warnings = validate.check_snapshot(
+        rows, expected=len(genres) * site.get("hits_per_genre", 90))
+    for w in warnings:
+        print(f"  警告: {w}")
+    if errors and not args.no_verify:
+        for e in errors:
+            print(f"  [ERROR] {e}")
+        for f in failed:
+            print(f"  失敗: {f}")
+        print("記録を中止しました。原因を確認してください。"
+              "検査を承知のうえで記録するなら --no-verify を付けます。")
+        return 1
 
     store.write_snapshot(data, args.day, rows)
     summary = store.update_summary(
