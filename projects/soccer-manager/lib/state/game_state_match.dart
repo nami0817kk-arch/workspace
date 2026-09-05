@@ -299,15 +299,19 @@ extension GameStateMatch on GameState {
       }
     }
 
-    // 理事会の路線。順位だけでなく、求められた戦い方を守れているかも
-    // 節ごとに評価される。破り続けると信頼が落ちていく。
-    _save!.confidence = (_save!.confidence +
-            BoardEngine.confidenceDeltaForVision(
-              vision: _save!.clubVision,
-              team: userTeam,
-              budget: _save!.budget,
-            ))
-        .clamp(0, 100);
+    // 理事会の路線。節ごとに守れているかを数えるだけで、信頼度への反映は
+    // シーズン終了時に一度だけ行う(startNextSeason)。節ごとに積むと
+    // 試合結果より大きく効いてしまう。
+    if (_save!.clubVision != ClubVision.none) {
+      _save!.visionCheckedMatchdays++;
+      if (BoardEngine.isVisionSatisfied(
+        vision: _save!.clubVision,
+        team: userTeam,
+        budget: _save!.budget,
+      )) {
+        _save!.visionCompliedMatchdays++;
+      }
+    }
 
     // スポンサー契約(年単位)の消化はシーズン開始時にまとめて処理する
     // (startNextSeason参照)。分割払いの引き落としは引き続き週次で行う。

@@ -271,13 +271,16 @@ class HomeScreen extends StatelessWidget {
                       style: const TextStyle(fontSize: 14),
                     ),
                     subtitle: Text(
-                      gameState.isClubVisionSatisfied
-                          ? Tr.pick(
-                              '守れています。${gameState.save!.clubVision.requirement}',
-                              'You are meeting it. ${gameState.save!.clubVision.requirement}')
-                          : Tr.pick(
-                              '守れていません。${gameState.save!.clubVision.requirement}',
-                              'You are not meeting it. ${gameState.save!.clubVision.requirement}'),
+                      // 評価はシーズン終了時に一度だけ。いま守れているかと、
+                      // 今季どれだけ守れてきたかの両方を出す。片方だけだと
+                      // 「いま直せば間に合うのか」が分からない。
+                      (gameState.isClubVisionSatisfied
+                              ? Tr.pick(
+                                  '守れています。', 'You are meeting it. ')
+                              : Tr.pick(
+                                  '守れていません。', 'You are not meeting it. ')) +
+                          gameState.clubVisionProgressLabel +
+                          gameState.save!.clubVision.requirement,
                       style: const TextStyle(fontSize: 12),
                     ),
                   ),

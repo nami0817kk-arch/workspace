@@ -148,6 +148,12 @@ class SaveGame {
   /// シーズンごとに確定した個人タイトル(得点王・年間MVP)の履歴。
   List<SeasonAward> seasonAwards;
 
+  /// 今シーズン、路線を守れていた節の数と、数えた節の数。
+  ///
+  /// 最終節だけ辻褄を合わせても認めないため、通しで記録する。
+  int visionCompliedMatchdays;
+  int visionCheckedMatchdays;
+
   /// 理事会がこのシーズンに求めている路線。
   ClubVision clubVision;
 
@@ -324,6 +330,8 @@ class SaveGame {
     List<StaffMember>? staffCandidates,
     this.preseasonCampPending = false,
     this.clubVision = ClubVision.none,
+    this.visionCompliedMatchdays = 0,
+    this.visionCheckedMatchdays = 0,
     this.rivalTeamId,
     this.rivalTeamName,
     this.pendingPressConference,
@@ -431,6 +439,8 @@ class SaveGame {
         'fixedDeposits': fixedDeposits.map((d) => d.toJson()).toList(),
         'preseasonCampPending': preseasonCampPending,
         'clubVision': clubVision.name,
+        'visionCompliedMatchdays': visionCompliedMatchdays,
+        'visionCheckedMatchdays': visionCheckedMatchdays,
         'staffCandidates':
             staffCandidates.map((s) => s.toJson()).toList(),
         'seasonAwards': seasonAwards.map((a) => a.toJson()).toList(),
@@ -569,6 +579,9 @@ class SaveGame {
           (v) => v.name == json['clubVision'],
           orElse: () => ClubVision.none,
         ),
+        visionCompliedMatchdays:
+            json['visionCompliedMatchdays'] as int? ?? 0,
+        visionCheckedMatchdays: json['visionCheckedMatchdays'] as int? ?? 0,
         staffCandidates: (json['staffCandidates'] as List?)
                 ?.map((e) => StaffMember.fromJson(e as Map<String, dynamic>))
                 .toList() ??

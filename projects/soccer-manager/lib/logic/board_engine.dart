@@ -163,13 +163,18 @@ class BoardEngine {
       };
 
   /// 路線の達成状況による、節ごとの信頼度への増減。
-  static int confidenceDeltaForVision({
+  /// シーズン終了時に、路線を守れていたかの評価を返す。
+  ///
+  /// 節ごとに積むのではなく、年に一度だけ効く。節ごとに±1〜2を積むと
+  /// 38節で±38〜76になり、試合結果(1試合±3)を上回って信頼度を支配する。
+  static int confidenceDeltaForVisionSeason({
     required ClubVision vision,
-    required Team team,
-    required int budget,
+    required int compliedMatchdays,
+    required int checkedMatchdays,
   }) {
-    if (vision == ClubVision.none) return 0;
-    return isVisionSatisfied(vision: vision, team: team, budget: budget)
+    if (vision == ClubVision.none || checkedMatchdays == 0) return 0;
+    final ratio = compliedMatchdays / checkedMatchdays;
+    return ratio >= ClubVisionInfo.complianceThreshold
         ? vision.satisfiedBonus
         : -vision.violatedPenalty;
   }
