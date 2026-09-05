@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -219,9 +220,18 @@ class SettingsScreen extends StatelessWidget {
               ],
             ),
           ),
-          if (gameState.save != null) ...[
+          // 開発中の動作確認用。**リリースビルドには出さない。**
+          //
+          // 「管理者専用」と書いてあるだけで、実際には設定画面を開けば
+          // 誰でも押せる状態だった。任意の額を足せるので、資金のやりくり
+          // という経営シミュレーションの根幹が意味を失う。課金の特典を
+          // 「資金」に絞って調整してきたことも、これがあると台無しになる。
+          //
+          // kDebugMode はリリースビルドで false 固定になり、この分岐ごと
+          // 実行ファイルから落ちる。
+          if (kDebugMode && gameState.save != null) ...[
             const SizedBox(height: 20),
-            Text(Tr.pick('デバッグ(管理者専用)', 'Debug (developer only)'),
+            Text(Tr.pick('デバッグ(開発ビルドのみ)', 'Debug (debug builds only)'),
                 style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 8),
             Card(
