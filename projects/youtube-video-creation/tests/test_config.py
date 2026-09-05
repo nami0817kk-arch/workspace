@@ -114,3 +114,67 @@ def test_どこにも無ければ入れ方まで言う(monkeypatch, tmp_path):
     monkeypatch.setattr(config_mod, "FONT_DIRS", (str(tmp_path),))
     with pytest.raises(config_mod.ConfigError, match="fonts-noto-cjk"):
         config_mod.VideoConfig().font_path()
+
+
+# 声の掛け合いは「ニュースを読む人」と「誰かの声を代弁する人」の2役。
+# **代弁は人ごとに声が変わる**（2026-09-05 のユーザー判断）。
+# 出てくる人を全部 config に書くのは無理なので、名前から声を決める。
+
+
+def _with_pool(raw=None):
+    from src.config import build_config
+
+    # **深くコピーする。**浅いコピーだと入れ子の dict を共有し、
+    # RAW 側に voice_pool が残って別のテストの結果を変えてしまう
+    import copy
+
+    raw = copy.deepcopy(raw if raw is not None else RAW)
+    raw.setdefault("voicevox", {})["voice_pool"] = [3, 8, 9, 10, 11]
+    return build_config(raw)
+
+
+def test_同じ名前はいつも同じ声():
+    """乱数で選ぶと「前回と声が違う」が起きて、同じ人だと分からなくなる。"""
+    config = _with_pool()
+
+    first = config.resolve_speaker("キャラガー").style_id
+    again = config.resolve_speaker("キャラガー").style_id
+
+    assert first == again
+
+
+def test_人が違えば声も違う():
+    config = _with_pool()
+
+    voices = {config.resolve_speaker(n).style_id
+              for n in ("キャラガー", "イラオラ監督", "ネット民", "遠藤航")}
+
+    assert len(voices) >= 2      # 全員同じ声にはならない
+
+
+def test_configに書いた話者は設定どおり():
+    """読み手（キャスター）は固定。代弁の割り当てに巻き込まない。"""
+    config = _with_pool()
+
+    member = config.resolve_speaker(next(iter(config.cast)))
+
+    assert member.style_id in {m.style_id for m in config.cast.values()}
+
+
+def test_候補が無ければ今までどおり弾く():
+    """voice_pool を空にすれば、未登録の話者はエラーのまま。"""
+    import pytest
+
+    from src.config import ConfigError, build_config
+
+    config = build_config(RAW)
+
+    with pytest.raises(ConfigError):
+        config.resolve_speaker("知らない人")
+
+
+def test_声は候補の中から選ぶ():
+    config = _with_pool()
+
+    for name in ("A", "B", "C", "D", "E", "F", "G"):
+        assert config.resolve_speaker(name).style_id in config.voice_pool
