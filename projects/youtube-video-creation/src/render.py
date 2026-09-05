@@ -989,7 +989,7 @@ def _layer(size: tuple[int, int]) -> tuple[Image.Image, ImageDraw.ImageDraw]:
     return layer, ImageDraw.Draw(layer)
 
 
-def _cover(image: Image.Image, width: int, height: int) -> Image.Image:
+def _cover(image: Image.Image, width: int, height: int, focus: float | None = None) -> Image.Image:
     """アスペクト比を保ったまま画面いっぱいに敷き詰める。
 
     **縦長の写真は上寄りに切る。**人物写真は顔が上にあるので、真ん中で切ると
@@ -1001,7 +1001,12 @@ def _cover(image: Image.Image, width: int, height: int) -> Image.Image:
     left = (resized.width - width) // 2
     spare = resized.height - height
     tall = image.height > image.width * 1.1
-    top = int(spare * (0.12 if tall else 0.5))
+    # focus は「縦のどこを残すか」（0.0=上端 / 1.0=下端）。**顔の位置は写真ごとに
+    # 違うので、割合の決め打ちでは当たらない**（2026-09-05 実測。上から12%で
+    # 切ったら、顔が真ん中にある写真で目の高さから切れた）。既定は当たりで、
+    # 合わないものは台本から指定する
+    where = focus if focus is not None else (0.12 if tall else 0.5)
+    top = int(spare * min(1.0, max(0.0, where)))
     return resized.crop((left, top, left + width, top + height))
 
 

@@ -242,3 +242,48 @@ def test_横長の写真は真ん中で切る():
 
     wide = Image.new("RGB", (2000, 800), (120, 120, 120))
     assert _cover(wide, 1280, 720).size == (1280, 720)
+
+
+# 縦長の顔写真を全面に敷くと、16:9 に切った時点で顔が残らず、下の見出しと
+# ぶつかる（2026-09-05 実測。切る位置を 0.12→0.30→0.14→0.20 と変えても解けなかった）。
+# 縦長は右に置いて、文字は左に寄せる。
+
+
+def test_縦長の写真は右に置く(tmp_path):
+    from PIL import Image
+
+    from src.thumbnail import _is_portrait
+
+    tall = tmp_path / "tall.jpg"
+    Image.new("RGB", (864, 1080), (200, 60, 60)).save(tall)
+    wide = tmp_path / "wide.jpg"
+    Image.new("RGB", (1920, 1080), (60, 60, 200)).save(wide)
+
+    assert _is_portrait(str(tall)) is True
+    assert _is_portrait(str(wide)) is False
+    assert _is_portrait(None) is False
+    assert _is_portrait(str(tmp_path / "ない.jpg")) is False
+
+
+def test_右に置いた写真が左の文字にかからない(tmp_path):
+    """左半分に写真が入り込むと、見出しが読めなくなる。"""
+    from PIL import Image, ImageStat
+
+    from src.thumbnail import SIZE, _paste_side
+
+    canvas = Image.new("RGBA", SIZE, (10, 14, 22, 255))
+    photo = tmp_path / "tall.png"
+    Image.new("RGB", (800, 1200), (240, 30, 30)).save(photo)
+
+    _paste_side(canvas, str(photo))
+
+    left = canvas.convert("RGB").crop((0, 0, int(SIZE[0] * 0.5), SIZE[1]))
+    assert ImageStat.Stat(left).mean[0] < 60, "左半分に写真がはみ出している"
+
+
+def test_切る位置を台本から指定できる():
+    """顔の位置は写真ごとに違うので、割合の決め打ちでは当たらない。"""
+    from src.thumbnail import from_meta
+
+    assert from_meta({"thumbnail_focus": 0.3}, "見出し")["focus"] == 0.3
+    assert from_meta({}, "見出し")["focus"] is None
