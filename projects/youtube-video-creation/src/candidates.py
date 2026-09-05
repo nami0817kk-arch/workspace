@@ -223,6 +223,45 @@ def score(items: list[Candidate], scoring: dict) -> list[Candidate]:
     return sorted(items, key=lambda c: (-c.score, c.hours_ago))
 
 
+# 実況ブログ・速報ティッカーの見出し。**1試合を多数の媒体が同時中継するので
+# 「媒体数」が伸び、注目度の代わりとして数えている点が高く出る。**
+# ところが中身は「47分に1点」だけで、2分の動画にする題材が無い。
+# 実測（2026-09-06）で、8点の「Nottingham Forest vs Tottenham LIVE!」が
+# 8点のPSG敗戦記事を押しのけて枠に入った。
+LIVE_MARKS = (
+    "live!", "live:", "liveblog", "live blog", "live updates", "live-ticker",
+    "liveticker", "en directo", "en vivo", "in diretta", "ao vivo", "en direct",
+    "as it happened", "minute-by-minute", "match centre",
+    "実況", "速報まとめ", "試合記録", "ライブ",
+)
+
+
+# 種別を散らすために、これ以上の点差を捨てない。kind は見出しからの推測なので、
+# 札を信じて良い記事を落とすほうが損になる
+KIND_TOLERANCE = 2
+
+
+def _best(pool: list["Candidate"]) -> int:
+    return max((c.score for c in pool), default=0)
+
+
+def is_live_feed(item: "Candidate") -> bool:
+    """実況・ティッカーの見出しか。題材にならないので枠から外す。
+
+    **正規表現を使わない。**単語境界を書こうとして、ファイルに書き出す途中で
+    記号が制御文字に化け、条件が黙って効かなくなった（2026-09-06 実測）。
+    見た目は正しく、テストを書くまで気づけなかった。素の文字列比較で足りる。
+    """
+    low = item.title.lower()
+    if any(m in low for m in LIVE_MARKS):
+        return True
+    # 「Tor zum 1:0 durch X in der 47. Minute」のような得点速報
+    if "tor zum " in low:
+        return True
+    # 「1:0 …… 47. Minute」。点差と分がそろっていれば試合中の速報
+    return ":" in low and "minute" in low and any(ch.isdigit() for ch in low)
+
+
 def assign(
     items: list[Candidate], scoring: dict, slots: list[str]
 ) -> tuple[dict[str, Candidate], dict[str, list[str]]]:
@@ -237,9 +276,13 @@ def assign(
     spread = bool(scoring.get("spread_topics", True))
     # 候補が全部同じ種類の日は、散らしようがない。条件そのものを持ち出さない
     spread_kinds = bool(scoring.get("spread_kinds", True)) and len({c.kind for c in items}) > 1
-    remaining = list(items)
-    chosen: dict[str, Candidate] = {}
+    # 実況ブログは題材にならない。**どの枠にも入れない**
     fallbacks: dict[str, list[str]] = {}
+    remaining = [c for c in items if not is_live_feed(c)]
+    dropped = len(items) - len(remaining)
+    if dropped:
+        fallbacks.setdefault("_", []).append(f"実況・速報の見出しを{dropped}件外しました")
+    chosen: dict[str, Candidate] = {}
     used_topics: set[str] = set()
     used_kinds: list[str] = []
 
@@ -265,6 +308,16 @@ def assign(
                 varied = [c for c in pool if c.kind not in over]
                 if not varied:
                     fallbacks.setdefault(slot, []).append("他の枠と別の種類が残っていません")
+                # **点が大きく劣るなら散らさない。**kind は見出しからの当てずっぽうで、
+                # 移籍でない記事にも transfer が付く。誤った札のために、
+                # 8点の記事を外して5点の記事を入れていた（2026-09-06 実測）。
+                # 見た目の変化より、話の大きさを優先する
+                elif _best(varied) + KIND_TOLERANCE < _best(pool):
+                    fallbacks.setdefault(slot, []).append(
+                        f"種別を散らすと{_best(pool)}点→{_best(varied)}点まで落ちるので、"
+                        "散らしません"
+                    )
+                    varied = pool
                 pool = varied or pool
 
         # 日本人選手の枠。名前で拾えたものだけを入れる
@@ -277,6 +330,43 @@ def assign(
                 )
                 continue    # 別の話で埋めない。空けたほうが枠の意味が保てる
             pool = japanese
+
+        # 日本人以外の枠。日本人枠と対にして使う（例: 9本中3本を日本人、2本をそれ以外）
+        if rule.get("exclude_japanese") and pool:
+            words = list(scoring.get("japanese") or [])
+            others = [c for c in pool if not is_japanese(c, words)]
+            if not others:
+                fallbacks.setdefault(slot, []).append(
+                    "日本人以外の候補がありません。枠を空けます"
+                )
+                continue
+            pool = others
+
+        # リーグを指定する枠。**別のリーグで埋めない。**
+        # 「プレミアの枠」にラ・リーガを入れたら、枠を分けた意味が無くなる
+        want = rule.get("require_league")
+        if want and pool:
+            names = [str(w).strip().lower() for w in (want if isinstance(want, list) else [want])]
+            same = [c for c in pool if c.league in names]
+            if not same:
+                fallbacks.setdefault(slot, []).append(
+                    f"{' か '.join(names)} の候補がありません。枠を空けます"
+                )
+                continue
+            pool = same
+
+        # 語で絞る枠。記者名（ロマーノ）や大会名など、群では表せない指定に使う。
+        # 見出しだけでなく注記・出典も見る（「ロマーノ氏によると」は本文側に出る）
+        needles = rule.get("require_words")
+        if needles and pool:
+            words = [str(w).strip().lower() for w in needles if str(w).strip()]
+            hit = [c for c in pool if _mentions(c, words)]
+            if not hit:
+                fallbacks.setdefault(slot, []).append(
+                    f"{' / '.join(words)} に触れた候補がありません。枠を空けます"
+                )
+                continue
+            pool = hit
 
         tiers = rule.get("require_tier")
         if tiers:
@@ -307,6 +397,12 @@ def assign(
             used_topics.add(pick.topic)
         used_kinds.append(pick.kind)
     return chosen, fallbacks
+
+
+def _mentions(item: Candidate, words: list[str]) -> bool:
+    """見出し・英語の語・注記・出典のどれかに、指定の語が入っているか。"""
+    hay = " ".join([item.title, item.en, item.note, *item.sources]).lower()
+    return any(w in hay for w in words)
 
 
 def _prefer(

@@ -142,27 +142,39 @@ def test_render_lists_recent_coverage():
     assert "扱った話題" in text and "morning" in text
 
 
-def test_1日の枠は9本で人気枠が先頭():
-    """人気1・朝3・日本人2・夜3（2026-09-05 の決定）。
+def test_枠は9本以上で狭い条件の枠が先頭寄り():
+    """日本人3・ロマーノ1・ラリーガ1・プレミア2・日本人以外2（2026-09-05 の指定）。
 
-    日本人は「1日に2枠」という**割り当ての制約**。全体を寄せるものではない。
-
-    変更前は5本・日本人1本。docs/news-sources.md に実測を残してある。
-    人気枠を先頭に置くのは、後ろだと人気の候補を他の枠が先に取ってしまうため。
+    **条件の狭い枠を先に置く。**枠は書いた順に埋まるので、広い枠を先にすると
+    良い候補を先に取られて狭い枠が空になる（popular_1 で実測済み）。
+    日本人枠を先頭に置くのは、日本人選手の多くがプレミアにいるため。
+    premier を先にすると三笘のような候補をプレミア枠が取り、日本人枠が痩せる。
     """
     plan = load_plan()
-    assert len(plan.slots) == 9
-    assert plan.slots[0] == "popular_1"
+    # **9本は下限**（2026-09-06 ユーザー）。良い候補がある日は足す。
+    # 足した枠も min_score で守られるので、無い日は空くだけ
+    assert len(plan.slots) >= 9
+    assert len(set(plan.slots)) == len(plan.slots)     # 同じ枠名を2度書かない
     rules = plan.scoring.get("slots") or {}
-    require = [s for s, r in rules.items() if (r or {}).get("require_japanese")]
-    assert len(require) == 2        # japan_1 / japan_2
-    # 人気枠は日本人に絞らない。こちらの採点も通さない
-    popular = rules.get("popular_1") or {}
-    assert popular.get("prefer") == "topic"
-    assert not popular.get("require_japanese")
+    for name in plan.slots:
+        assert name in rules, f"{name} に条件がありません"
+    assert len([s for s in plan.slots if s.startswith("world_")]) >= 2
+    # 日本人3枠・日本人以外2枠。対にして、寄りすぎを防ぐ
+    assert len([s for s, r in rules.items() if (r or {}).get("require_japanese")]) == 3
+    assert len([s for s, r in rules.items() if (r or {}).get("exclude_japanese")]) >= 2
+    # 同じ枠に両方を書くと必ず空になる
+    for name, rule in rules.items():
+        assert not ((rule or {}).get("require_japanese") and (rule or {}).get("exclude_japanese")), name
+    # リーグ指定と記者指定
+    assert (rules.get("laliga_1") or {}).get("require_league") == "spain"
+    assert (rules.get("premier_1") or {}).get("require_league") == "england"
+    assert "ロマーノ" in ((rules.get("romano_1") or {}).get("require_words") or [])
+    # 広い枠（日本人以外）は狭い枠より後ろ
+    assert plan.slots.index("world_1") > plan.slots.index("laliga_1")
+    assert plan.slots.index("japan_1") < plan.slots.index("premier_1")
     # 同じ系統の枠は同じ取材計画を共有する（枠ごとに書き写すと片方が古くなる）
-    assert plan.routine("morning_1") is plan.routine("morning_2")
-    assert plan.routine("evening_1").name == plan.routine("evening_2").name
+    assert plan.routine("japan_1") is plan.routine("japan_2")
+    assert plan.routine("premier_1").name == plan.routine("premier_2").name
     assert plan.routine("japan_1").name == "日本人選手"
     assert set(plan.tiers) >= {"確定", "報道", "未確認"}
 

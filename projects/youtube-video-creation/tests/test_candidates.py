@@ -634,3 +634,133 @@ def test_日本人には既定で点を付けない():
 
     weights = (load_plan().scoring.get("weights") or {})
     assert not weights.get("japanese")
+
+# ユーザーが枠を「日本人3・それ以外2・ロマーノ1・プレミア2・ラリーガ1」と
+# 指定した（2026-09-05）。群では表せない指定なので、枠の条件を3つ足した。
+
+PICK_SCORING = {
+    "weights": {"freshness": 3},
+    "freshness_hours": {6: 3},
+    "japanese": ["三笘薫", "久保建英"],
+    "spread_kinds": False,
+    "slots": {
+        "japan_1": {"prefer": "total", "require_japanese": True},
+        "world_1": {"prefer": "total", "exclude_japanese": True},
+        "romano_1": {"prefer": "total", "require_words": ["ロマーノ", "romano"]},
+        "premier_1": {"prefer": "total", "require_league": "england"},
+        "laliga_1": {"prefer": "total", "require_league": "spain"},
+    },
+}
+
+
+def _cl(cid, title, league="", note="", sources=None, hours=1.0):
+    from src.candidates import Candidate
+
+    return Candidate(id=cid, title=title, league=league, note=note,
+                     sources=list(sources or []), hours_ago=hours, topic=cid)
+
+
+def test_リーグ指定の枠にはそのリーグだけが入る():
+    from src.candidates import assign, score
+
+    items = score([
+        _cl("ars", "アーセナルが新加入を発表", "england"),
+        _cl("rma", "レアルが新加入を発表", "spain"),
+    ], PICK_SCORING)
+    chosen, _ = assign(items, PICK_SCORING, ["premier_1", "laliga_1"])
+    assert chosen["premier_1"].id == "ars"
+    assert chosen["laliga_1"].id == "rma"
+
+
+def test_指定したリーグが無ければ枠を空ける():
+    """別のリーグで埋めたら、枠を分けた意味が無くなる。"""
+    from src.candidates import assign, score
+
+    items = score([_cl("rma", "レアルが新加入を発表", "spain")], PICK_SCORING)
+    chosen, fallbacks = assign(items, PICK_SCORING, ["premier_1"])
+    assert "premier_1" not in chosen
+    assert any("england" in m for m in fallbacks["premier_1"])
+
+
+def test_語で絞る枠は見出し以外も見る():
+    """「ロマーノ氏によると」は見出しに出ず、注記や出典側に出る。"""
+    from src.candidates import assign, score
+
+    items = score([
+        _cl("a", "バルサがバルデ放出へ", "spain", note="ロマーノ氏によると交渉は最終段階"),
+        _cl("b", "ミランが新加入を発表", "italy"),
+    ], PICK_SCORING)
+    chosen, _ = assign(items, PICK_SCORING, ["romano_1"])
+    assert chosen["romano_1"].id == "a"
+
+
+def test_語に触れた候補が無ければ枠を空ける():
+    from src.candidates import assign, score
+
+    items = score([_cl("b", "ミランが新加入を発表", "italy")], PICK_SCORING)
+    chosen, fallbacks = assign(items, PICK_SCORING, ["romano_1"])
+    assert "romano_1" not in chosen
+    assert any("ロマーノ" in m for m in fallbacks["romano_1"])
+
+
+def test_日本人を除く枠には日本人が入らない():
+    from src.candidates import assign, score
+
+    items = score([
+        _cl("mit", "三笘薫が復帰へ", "england"),
+        _cl("hal", "ハーランドが移籍か", "england"),
+    ], PICK_SCORING)
+    chosen, _ = assign(items, PICK_SCORING, ["world_1"])
+    assert chosen["world_1"].id == "hal"
+
+
+def test_日本人以外が無ければ枠を空ける():
+    from src.candidates import assign, score
+
+    items = score([_cl("mit", "三笘薫が復帰へ", "england")], PICK_SCORING)
+    chosen, fallbacks = assign(items, PICK_SCORING, ["world_1"])
+    assert "world_1" not in chosen
+    assert fallbacks["world_1"]
+
+# 実況ブログは1試合を多数の媒体が同時中継するので「媒体数」が伸び、
+# 注目度の代わりとして数えている点が高く出る。ところが中身は
+# 「47分に1点」だけで動画にならない。実測（2026-09-06）で、8点の
+# 「Nottingham Forest vs Tottenham LIVE!」が8点のPSG敗戦記事を押しのけた。
+
+def test_実況やティッカーの見出しを外す():
+    from src.candidates import Candidate, is_live_feed
+
+    for title in [
+        "Nottingham Forest vs Tottenham LIVE!",
+        "Manchester City - Coventry, en directo: Premier League",
+        "Serie A Liveblog: Fiorentina vs. Torino",
+        "Fiorentina - Torino: Tor zum 1:0 durch Pellegrino in der 47. Minute",
+        "トゥールーズvsリール 試合記録",
+    ]:
+        assert is_live_feed(Candidate(id="x", title=title)), title
+
+
+def test_普通の記事は外さない():
+    """外しすぎると本命が消える。残る側も必ず確かめる。"""
+    from src.candidates import Candidate, is_live_feed
+
+    for title in [
+        "Luis Enrique unfazed by PSG historic winless start",
+        "Raphinha appointed Barcelona captain",
+        "リヴァプール、ヒューズSDの辞任を発表…新天地はサウジのアル・ヒラルが決定的",
+        "モドリッチ、41歳でクロアチア代表を続行",
+    ]:
+        assert not is_live_feed(Candidate(id="x", title=title)), title
+
+
+def test_実況は枠に入らない():
+    """点が高くても枠から外れる。理由も残す。"""
+    from src.candidates import assign, score
+
+    items = score([
+        _cl("live", "Forest vs Tottenham LIVE!", "england", hours=0.1),
+        _cl("news", "アーセナルが新加入を発表", "england", hours=3.0),
+    ], PICK_SCORING)
+    chosen, fallbacks = assign(items, PICK_SCORING, ["premier_1"])
+    assert chosen["premier_1"].id == "news"
+    assert any("実況" in m for m in fallbacks["_"])

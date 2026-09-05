@@ -13,10 +13,17 @@ cadence:
   #   2chサッカーの噂話は約10本/日で登録10.3万。**本数と日本人比率が効いている。**
   # 変更前は5本・日本人1本だった。
   per_day: 9
-  # **popular_1 を先頭に置く。**枠は書いた順に埋まるので、後ろに置くと
-  # 人気の候補を先に他の枠が取ってしまい、人気枠が空になる（2026-09-05 実測）
-  slots: [popular_1, morning_1, morning_2, morning_3,
-          japan_1, japan_2, evening_1, evening_2, evening_3]
+  # 2026-09-05 にユーザーが構成を指定した:
+  #   日本人3・日本人以外2・ロマーノ1・プレミア2・ラ・リーガ1
+  # **条件の狭い枠を先に置く。**枠は書いた順に埋まるので、広い枠を先にすると
+  # 良い候補を先に取られて、狭い枠が空になる（popular_1 で実測済み 2026-09-05）
+  # 日本人枠を先頭に置くのは、日本人選手の多くがプレミアにいるため。
+  # premier を先にすると三笘のような候補をプレミア枠が取り、日本人枠が痩せる
+  # 9本は**下限**。良い候補がある日は足す（2026-09-06 ユーザー）。
+  # 足した枠も min_score で守られるので、無い日は空くだけで害はない
+  slots: [japan_1, japan_2, japan_3,
+          romano_1, laliga_1, premier_1, premier_2,
+          world_1, world_2, world_3, world_4]
   # morning_1 と morning_2 は同じ morning の取材計画を使う（plan.routine が
   # 末尾の _1 / _2 を落として引く）。枠ごとに計画を書き写すと片方だけ古くなる
 
@@ -406,21 +413,24 @@ scoring:
   # 本数を増やすほど、この下限が要る。
   min_score: 5
   slots:
-    # 朝は速さ。確度の低いものを朝いちに出さない
-    morning_1: {prefer: freshness, require_tier: [確定, 報道]}
-    morning_2: {prefer: freshness, require_tier: [確定, 報道]}
-    morning_3: {prefer: freshness, require_tier: [確定, 報道]}
-    # 夜は1日の総まとめ。点数の高いものから
-    evening_1: {prefer: total}
-    evening_2: {prefer: total}
-    evening_3: {prefer: total}
-    # 日本人選手の枠を4本。該当が無い日は、埋めずに空ける
-    # （別の話で埋めると枠の意味がなくなる）
+    # --- 日本人選手 3本。該当が無い日は、埋めずに空ける
+    #     （別の話で埋めると枠の意味がなくなる）
     japan_1: {prefer: total, require_japanese: true}
     japan_2: {prefer: total, require_japanese: true}
-    # 当日いちばん読まれたもの。**日本人には絞らない。**
-    # こちらの採点も通さず、集約サイトの Points だけで決める
-    popular_1: {prefer: topic, min_score: 0}
+    japan_3: {prefer: total, require_japanese: true}
+    # --- ロマーノ 1本。記者名は情報源の群では表せないので語で絞る。
+    #     見出しに出ないことが多く（「ロマーノ氏によると」は本文側）、
+    #     注記と出典も見る
+    romano_1: {prefer: total, require_words: [ロマーノ, romano]}
+    # --- リーグ指定。別のリーグで埋めない
+    laliga_1: {prefer: total, require_league: spain}
+    premier_1: {prefer: total, require_league: england}
+    premier_2: {prefer: total, require_league: england}
+    # --- 日本人以外 2本。日本人枠と対にして、寄りすぎを防ぐ
+    world_1: {prefer: total, exclude_japanese: true}
+    world_2: {prefer: total, exclude_japanese: true}
+    world_3: {prefer: total, exclude_japanese: true}
+    world_4: {prefer: total, exclude_japanese: true}
 
 # テーマが決まったあとの深掘り検索。{theme} に選んだテーマが入る
 # {theme} には候補の見出し、{en} には候補の en（英語の語）が入る。
@@ -639,6 +649,118 @@ routines:
           - {q: "日本人選手 先発 OR 得点 OR アシスト {date_ja}", domains: japanese}
           - {q: "Japan international goal OR assist OR debut {today_en}", domains: english}
         check: 得点時間や記録は見出しに書いてあるものだけ使う
+
+  # ------------------------------------------------------- ロマーノ
+  romano:
+    name: ロマーノの一報
+    when: 収録当日
+    cover_hours: 24
+    target_minutes: 2
+    angle: |
+      Fabrizio Romano が伝えた移籍の話を1件。**本人の投稿は「未確認」から始まる。**
+      here we go でも、それだけでは確定にしない。クラブの発表まで辿れたら確定。
+      報道機関が2社以上で同じ内容を書いていれば報道。
+      「ロマーノが言った」ことを事実の根拠にしない。**誰が何を言ったかとして扱う。**
+    structure:
+      - {id: what, heading: 何が伝えられたか, tier: 未確認}
+      - {id: check, heading: 裏は取れているか, tier: 報道}
+      - {id: next, heading: これからどうなる, tier: 報道}
+    steps:
+      - id: romano_post
+        what: ロマーノが伝えた内容（この中から1件を選ぶ）
+        tier: 未確認
+        queries:
+          - {q: "Fabrizio Romano here we go", domains: social}
+          - {q: "ロマーノ 移籍 {date_ja}", domains: japanese}
+        check: |
+          投稿そのものの文言だけ使う。**要約や引用の引用は使わない。**
+          いつの投稿かを必ず控える（古い投稿が上位に出る。実測 2026-08-31）
+      - id: romano_backing
+        what: 同じ話を報道機関が書いているか
+        tier: 報道
+        queries:
+          - {q: "{en} transfer report", domains: english}
+          - {q: "{en} official statement", domains: official}
+        check: 2社以上で一致すれば報道。公式に辿れたら確定へ上げる
+
+  # ------------------------------------------------------- リーグ別
+  premier:
+    name: プレミアリーグ
+    when: 収録当日
+    cover_hours: 24
+    target_minutes: 2
+    angle: |
+      プレミアリーグの話を1件。移籍でも試合でもよい。
+      **他の枠と同じ話題は使わない。**日本人選手の話は日本人枠が先に取るので、
+      ここでは日本人以外の話になりやすい。それでよい。
+    structure:
+      - {id: what, heading: 何が起きたか, tier: 報道}
+      - {id: why, heading: なぜそうなったか, tier: 報道}
+      - {id: next, heading: これからどうなる, tier: 報道}
+    steps:
+      - id: pl_news
+        what: プレミアリーグの動き（この中から1件を選ぶ）
+        tier: 報道
+        queries:
+          - {q: "Premier League {en} news", domains: english}
+          - {q: "プレミアリーグ {date_ja}", domains: japanese}
+        check: 2社以上で一致しているか
+      - id: pl_official
+        what: クラブ・リーグの発表
+        tier: 確定
+        queries:
+          - {q: "{en} official", domains: league_official}
+        check: 発表そのものに辿れたら確定
+
+  laliga:
+    name: ラ・リーガ
+    when: 収録当日
+    cover_hours: 24
+    target_minutes: 2
+    angle: |
+      ラ・リーガの話を1件。**現地（スペイン語）が速い。**
+      日本語だけで追うと半日遅れる。
+    structure:
+      - {id: what, heading: 何が起きたか, tier: 報道}
+      - {id: why, heading: なぜそうなったか, tier: 報道}
+      - {id: next, heading: これからどうなる, tier: 報道}
+    steps:
+      - id: liga_news
+        what: ラ・リーガの動き（この中から1件を選ぶ）
+        tier: 報道
+        queries:
+          - {q: "{en} LaLiga", domains: spanish}
+          - {q: "ラ・リーガ {date_ja}", domains: japanese}
+        check: 現地紙と2社目が一致しているか
+      - id: liga_official
+        what: クラブ・リーグの発表
+        tier: 確定
+        queries:
+          - {q: "{en} oficial", domains: league_official}
+        check: 発表そのものに辿れたら確定
+
+  # ------------------------------------------------------- 日本人以外
+  world:
+    name: 日本人以外の大きい話
+    when: 収録当日
+    cover_hours: 24
+    target_minutes: 2
+    angle: |
+      日本人選手が絡まない話から、いちばん大きいものを1件。
+      **日本人枠と対にして置いている枠。**日本人の話に寄りすぎないための重し。
+      ビッグクラブ・代表・記録など、国内で名前が通っているものを優先する。
+    structure:
+      - {id: what, heading: 何が起きたか, tier: 報道}
+      - {id: why, heading: なぜそうなったか, tier: 報道}
+      - {id: next, heading: これからどうなる, tier: 報道}
+    steps:
+      - id: world_news
+        what: 日本人が絡まない大きい動き（この中から1件を選ぶ）
+        tier: 報道
+        queries:
+          - {q: "{en} latest news", domains: english}
+          - {q: "{theme} 詳細", domains: japanese}
+        check: 2社以上で一致しているか
 
   # ---------------------------------------------------------------- 夜
   evening:

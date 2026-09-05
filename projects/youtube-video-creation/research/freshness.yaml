@@ -1,10 +1,10 @@
 # 検索の索引がどこまで進んだかの記録。fresh のたびに追記される
 observed:
-- site: espn.com
-  max: 49741962
-  at: 2026-08-30T02:06
 - site: skysports.com
   max: 13578352
+  at: 2026-08-30T02:06
+- site: espn.com
+  max: 49741962
   at: 2026-08-30T02:06
 - site: espn.com
   max: 49750822
@@ -134,10 +134,6 @@ observed:
   max: 1249713
   at: 2026-09-04T23:17
   exact: true
-- site: espn.com
-  max: 49794711
-  at: 2026-09-05T00:46
-  exact: true
 - site: kicker.de
   max: 1249823
   at: 2026-09-05T07:21
@@ -149,4 +145,20 @@ observed:
 - site: espn.com
   max: 49827868
   at: 2026-09-05T11:12
+  exact: true
+- site: kicker.de
+  max: 1249839
+  at: 2026-09-05T15:44
+  exact: true
+- site: skysports.com
+  max: 559472
+  at: 2026-09-05T22:30
+  exact: true
+- site: kicker.de
+  max: 1249083
+  at: 2026-09-05T23:17
+  exact: true
+- site: espn.com
+  max: 49828385
+  at: 2026-09-05T23:50
   exact: true

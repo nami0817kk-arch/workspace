@@ -3,7 +3,7 @@
 #   python -m src.cli sources --new
 sites:
 - host: dailymail.com
-  seen: 15
+  seen: 17
   days:
   - '2026-09-02'
   - '2026-09-03'
@@ -44,19 +44,38 @@ sites:
   - https://samuraigoal.doorblog.jp/archives/63437489.html
   - https://samuraigoal.doorblog.jp/archives/63450028.html
 - host: forzaroma.info
-  seen: 8
+  seen: 10
   days:
   - '2026-09-02'
   - '2026-09-05'
   examples:
   - https://www.forzaroma.info/news-as-roma/rodrigo-mora-gasperini-fondamentale-nella-mia-scelta-e-un-sogno-giocare-con-dybala/?intcmp=gazzanet-forzaroma
   - https://www.forzaroma.info/news-as-roma/fenerbahce-guendouzi-squalificato-salta-la-roma-greenwood-ci-sara-ecco-perche/?intcmp=gazzanet-forzaroma
+  - https://www.forzaroma.info/news-as-roma/conti-omaggia-totti-ricordando-il-suo-primo-gol-sei-la-storia-della-roma-foto/?intcmp=gazzanet-forzaroma
 - host: fcinter1908.it
   seen: 7
   days:
   - '2026-09-05'
   examples:
   - https://www.fcinter1908.it/news/interviste/sneijder-inter-triplete-ausilio-chivu-dumfries/?intcmp=gazzanet-fcinter1908
+- host: calcionapoli1926.it
+  seen: 6
+  days:
+  - '2026-09-02'
+  - '2026-09-03'
+  - '2026-09-04'
+  - '2026-09-05'
+  examples:
+  - https://www.calcionapoli1926.it/ultimissime-calcio-napoli/mazzocchi-laddio-al-napoli-e-da-brividi-sono-stato-un-napoletano-con-quella-maglia-addosso/?intcmp=gazzanet-calcionapoli1926
+  - https://www.calcionapoli1926.it/altro/jorginho-agente-santos-proposte-serie-a/?intcmp=gazzanet-calcionapoli1926
+  - https://www.calcionapoli1926.it/photogallery/giovane-infortunio-napoli-seriea-intervento-ernia-inguinale-post-social-instagram-photogallery-ultime/?refresh_ce&intcmp=gazzanet-calcionapoli1926
+- host: bbc.co.uk
+  seen: 6
+  days:
+  - '2026-09-05'
+  examples:
+  - https://www.bbc.co.uk/sport/football/articles/c209xvxe558o?at_medium=RSS&at_campaign=rss
+  - https://www.bbc.co.uk/sport/football/videos/cm2r33yl57xo?at_medium=RSS&at_campaign=rss
 - host: blog.domesoccer.jp
   seen: 5
   days:
@@ -64,16 +83,20 @@ sites:
   - '2026-09-05'
   examples:
   - https://blog.domesoccer.jp/archives/60253571.html
-- host: calcionapoli1926.it
-  seen: 4
+- host: vavel.com
+  seen: 5
   days:
-  - '2026-09-02'
-  - '2026-09-03'
-  - '2026-09-04'
+  - '2026-09-05'
   examples:
-  - https://www.calcionapoli1926.it/ultimissime-calcio-napoli/mazzocchi-laddio-al-napoli-e-da-brividi-sono-stato-un-napoletano-con-quella-maglia-addosso/?intcmp=gazzanet-calcionapoli1926
-  - https://www.calcionapoli1926.it/altro/jorginho-agente-santos-proposte-serie-a/?intcmp=gazzanet-calcionapoli1926
-  - https://www.calcionapoli1926.it/photogallery/giovane-infortunio-napoli-seriea-intervento-ernia-inguinale-post-social-instagram-photogallery-ultime/?refresh_ce&intcmp=gazzanet-calcionapoli1926
+  - https://www.vavel.com/en/football/2026/09/05/premier-league/1270194-brentford-vs-sunderland-can-the-bees-break-the-black-cats.html
+  - https://www.vavel.com/en/football/2026/09/05/premier-league/1270256-daniel-farke-commends-the-work-done-in-the-transfer-market.html
+- host: espn.co.uk
+  seen: 5
+  days:
+  - '2026-09-05'
+  examples:
+  - https://www.espn.co.uk/football/story/_/id/49826046/richarlison-was-offered-new-contract-months-tottenham-squad-omission-roberto-de-zerbi
+  - https://www.espn.co.uk/football/story/_/id/49834658/raphinha-barcelona-la-liga-spain-brazil-pedri-lamine-yamal-frenkie-de-jong-eric-garcia
 - host: ilmilanista.it
   seen: 4
   days:
@@ -81,18 +104,6 @@ sites:
   - '2026-09-05'
   examples:
   - https://www.ilmilanista.it/news-milan/il-padre-di-gimenez-al-milan-giocava-anche-infortunato-ora-deve-ripartire/?intcmp=gazzanet-ilmilanista
-- host: bbc.co.uk
-  seen: 4
-  days:
-  - '2026-09-05'
-  examples:
-  - https://www.bbc.co.uk/sport/football/articles/c209xvxe558o?at_medium=RSS&at_campaign=rss
-- host: vavel.com
-  seen: 4
-  days:
-  - '2026-09-05'
-  examples:
-  - https://www.vavel.com/en/football/2026/09/05/premier-league/1270194-brentford-vs-sunderland-can-the-bees-break-the-black-cats.html
 - host: thesun.my
   seen: 4
   days:
@@ -111,12 +122,6 @@ sites:
   - '2026-09-05'
   examples:
   - https://www.the42.ie/london-city-lionesses-man-united-match-report-7153066-Sep2026/
-- host: espn.co.uk
-  seen: 4
-  days:
-  - '2026-09-05'
-  examples:
-  - https://www.espn.co.uk/football/story/_/id/49826046/richarlison-was-offered-new-contract-months-tottenham-squad-omission-roberto-de-zerbi
 - host: sportsmole.co.uk
   seen: 4
   days:
@@ -155,6 +160,33 @@ sites:
   - '2026-09-05'
   examples:
   - https://www.mylondon.news/news/zone-1-news/swindler-who-pawned-edgar-davids-34570474
+- host: liverpool.com
+  seen: 2
+  days:
+  - '2026-09-05'
+  examples:
+  - https://www.liverpool.com/liverpool-fc-news/transfer-news/liverpool-transfer-news-michael-olise-34570605
+  - https://www.liverpool.com/liverpool-fc-news/features/uk-media-hails-alexander-isak-34572193
+- host: manchestereveningnews.co.uk
+  seen: 2
+  days:
+  - '2026-09-05'
+  examples:
+  - https://www.manchestereveningnews.co.uk/sport/football/transfer-talks-continue-fernandes-intrigue-34565442
+  - https://www.manchestereveningnews.co.uk/sport/football/transfer-news/manchester-united-star-trial-contract-34570094
+- host: leeds-live.co.uk
+  seen: 2
+  days:
+  - '2026-09-05'
+  examples:
+  - https://www.leeds-live.co.uk/sport/leeds-united/how-joe-rodons-injury-impact-34569429
+  - https://www.leeds-live.co.uk/sport/leeds-united/brighton-hove-albion-vs-34571891
+- host: tuttobolognaweb.it
+  seen: 2
+  days:
+  - '2026-09-05'
+  examples:
+  - https://www.tuttobolognaweb.it/mercato/tedesco/?intcmp=gazzanet-tuttobolognaweb
 - host: mediagol.it
   seen: 1
   days:
@@ -167,24 +199,6 @@ sites:
   - '2026-09-05'
   examples:
   - https://guardian.ng/sport/different-administrators-familiar-problems-in-nff-since-1970/
-- host: liverpool.com
-  seen: 1
-  days:
-  - '2026-09-05'
-  examples:
-  - https://www.liverpool.com/liverpool-fc-news/transfer-news/liverpool-transfer-news-michael-olise-34570605
-- host: manchestereveningnews.co.uk
-  seen: 1
-  days:
-  - '2026-09-05'
-  examples:
-  - https://www.manchestereveningnews.co.uk/sport/football/transfer-talks-continue-fernandes-intrigue-34565442
-- host: leeds-live.co.uk
-  seen: 1
-  days:
-  - '2026-09-05'
-  examples:
-  - https://www.leeds-live.co.uk/sport/leeds-united/how-joe-rodons-injury-impact-34569429
 - host: fourfourtwo.com
   seen: 1
   days:
@@ -203,3 +217,87 @@ sites:
   - '2026-09-05'
   examples:
   - https://www.france24.com/en/live-news/20260904-winner-fernandez-fundamental-to-maresca-s-man-city-rebuild
+- host: heavy.com
+  seen: 1
+  days:
+  - '2026-09-05'
+  examples:
+  - https://heavy.com/sports/soccer/luka-modric-croatia-nations-league-retirement/
+- host: chroniclelive.co.uk
+  seen: 1
+  days:
+  - '2026-09-05'
+  examples:
+  - https://www.chroniclelive.co.uk/sport/football/football-news/matias-fernandez-pardo-moment-sparked-34572255
+- host: shieldsgazette.com
+  seen: 1
+  days:
+  - '2026-09-05'
+  examples:
+  - https://www.shieldsgazette.com/sport/football/newcastle-united/-8962131
+- host: cfbayerninsider.com
+  seen: 1
+  days:
+  - '2026-09-05'
+  examples:
+  - https://cfbayerninsider.com/2026/09/bayern-munich-in-talks-with-saudi-clubs-to-offload-sacha-boey/
+- host: irishnews.com
+  seen: 1
+  days:
+  - '2026-09-05'
+  examples:
+  - https://www.irishnews.com/sport/soccer/maisie-adam-unable-to-support-leeds-at-brighton-due-to-mother-in-laws-party-RHP62CSLUVJLFD7WNHDCNJKYDI/
+- host: aljazeera.com
+  seen: 1
+  days:
+  - '2026-09-05'
+  examples:
+  - https://www.aljazeera.com/sports/2026/9/5/coach-luis-enrique-unconcerned-by-psgs-poor-start-to-french-league-season
+- host: barcablaugranes.com
+  seen: 1
+  days:
+  - '2026-09-05'
+  examples:
+  - https://www.barcablaugranes.com/barcelona-team-news/131554/gabriel-jesus-not-100-yet-but-ready-to-make-barcelona-debut-against-valencia
+- host: mancity.com
+  seen: 1
+  days:
+  - '2026-09-05'
+  examples:
+  - https://www.mancity.com/citytv/eds-academy/u18s-stoke-city-highlights-63924206
+- host: glasgowtimes.co.uk
+  seen: 1
+  days:
+  - '2026-09-05'
+  examples:
+  - https://www.glasgowtimes.co.uk/sport/26525075.mcinnes-explains-rangers-xi-deadline-day-arrivals-miss/
+- host: rangersreview.co.uk
+  seen: 1
+  days:
+  - '2026-09-05'
+  examples:
+  - https://www.rangersreview.co.uk/interviews/26525050.rangers-two-latest-signings-not-xi-motherwell/
+- host: sportbible.com
+  seen: 1
+  days:
+  - '2026-09-05'
+  examples:
+  - https://www.sportbible.com/football/premier-league/liverpool-var-penalty-pgmol-chief-ipswich-town-darren-england-referee-255230-20260905
+- host: yorkshireeveningpost.co.uk
+  seen: 1
+  days:
+  - '2026-09-05'
+  examples:
+  - https://www.yorkshireeveningpost.co.uk/sport/football/leeds-united/-8962041
+- host: dailystar.co.uk
+  seen: 1
+  days:
+  - '2026-09-05'
+  examples:
+  - https://www.dailystar.co.uk/sport/football/breaking-liverpool-richard-hughes-quits-37630544
+- host: newcastleworld.com
+  seen: 1
+  days:
+  - '2026-09-05'
+  examples:
+  - https://www.newcastleworld.com/sport/football/newcastle-united/-8961947
