@@ -210,9 +210,11 @@ def score(items: list[Candidate], scoring: dict) -> list[Candidate]:
             if points:
                 breakdown["話題順"] = round(points / rank_top * rank_weight)
 
-        # 日本人選手が絡むか。日本人枠だけでなく、朝夜の枠の並べ替えにも効かせる。
-        # 参考3チャンネルの実測（2026-09-04、docs/news-sources.md）で、
-        # 再生の中心が日本人選手の回だった。名前で拾えるので手で立てなくてよい。
+        # 日本人選手に点は付けない。**枠で担保して、点では寄せない。**
+        # 一度 japanese: 3 を入れたところ、朝の3枠が全部日本人選手になった
+        # （2026-09-05 実測）。日本人は「1日に2枠」という割り当ての制約で、
+        # 全体の傾向を寄せるものではない。weights に japanese を書けば効くが、
+        # 既定では 0。
         if japanese_weight and is_japanese(item, japanese_words):
             breakdown["日本人"] = japanese_weight
 

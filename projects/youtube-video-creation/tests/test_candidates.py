@@ -622,3 +622,15 @@ def test_話題順の枠に載っている候補が無ければ空ける():
     chosen, fallbacks = assign(items, scoring, ["s"])
     assert "s" not in chosen
     assert "まとめ集約サイト" in fallbacks["s"][0]
+
+
+def test_日本人には既定で点を付けない():
+    """枠で担保して、点では寄せない。
+
+    一度 japanese: 3 を入れたところ、朝の3枠が全部日本人選手になった
+    （2026-09-05 実測）。日本人は割り当ての制約で、傾向を寄せるものではない。
+    """
+    from src.plan import load_plan
+
+    weights = (load_plan().scoring.get("weights") or {})
+    assert not weights.get("japanese")

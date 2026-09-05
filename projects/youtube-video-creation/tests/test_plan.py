@@ -143,7 +143,9 @@ def test_render_lists_recent_coverage():
 
 
 def test_1日の枠は9本で人気枠が先頭():
-    """朝3・夜3・日本人3・当日いちばん人気1（2026-09-05 の決定）。
+    """人気1・朝3・日本人2・夜3（2026-09-05 の決定）。
+
+    日本人は「1日に2枠」という**割り当ての制約**。全体を寄せるものではない。
 
     変更前は5本・日本人1本。docs/news-sources.md に実測を残してある。
     人気枠を先頭に置くのは、後ろだと人気の候補を他の枠が先に取ってしまうため。
@@ -153,7 +155,7 @@ def test_1日の枠は9本で人気枠が先頭():
     assert plan.slots[0] == "popular_1"
     rules = plan.scoring.get("slots") or {}
     require = [s for s, r in rules.items() if (r or {}).get("require_japanese")]
-    assert len(require) == 3        # japan_1..3
+    assert len(require) == 2        # japan_1 / japan_2
     # 人気枠は日本人に絞らない。こちらの採点も通さない
     popular = rules.get("popular_1") or {}
     assert popular.get("prefer") == "topic"

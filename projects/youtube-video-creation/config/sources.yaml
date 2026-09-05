@@ -6,7 +6,8 @@
 #   python -m src.cli draft research/xxx.yaml    取材メモ→台本（確度と重複を検証）
 
 cadence:
-  # 1日9本。日本人枠3本＋当日いちばん人気の枠1本（2026-09-05 に変更）。
+  # 1日9本。**日本人枠は2本**（1日のうち2件くらいが日本人、という制約）。
+  # 当日いちばん人気の枠1本。残り6本は国籍で寄せずに選ぶ。
   # 参考3チャンネルの実測（docs/news-sources.md）が根拠:
   #   さっかー情報館は直近30本のほぼ全部が日本人選手で、登録1.73万に対し54万回。
   #   2chサッカーの噂話は約10本/日で登録10.3万。**本数と日本人比率が効いている。**
@@ -15,7 +16,7 @@ cadence:
   # **popular_1 を先頭に置く。**枠は書いた順に埋まるので、後ろに置くと
   # 人気の候補を先に他の枠が取ってしまい、人気枠が空になる（2026-09-05 実測）
   slots: [popular_1, morning_1, morning_2, morning_3,
-          japan_1, japan_2, japan_3, evening_1, evening_2]
+          japan_1, japan_2, evening_1, evening_2, evening_3]
   # morning_1 と morning_2 は同じ morning の取材計画を使う（plan.routine が
   # 末尾の _1 / _2 を落として引く）。枠ごとに計画を書き写すと片方だけ古くなる
 
@@ -321,9 +322,10 @@ social:
 scoring:
   weights:
     freshness: 3      # 新しさ。速報性がそのまま再生に効く
-    # 日本人選手が絡むか。日本人枠だけでなく、朝夜の枠の並べ替えにも効かせる。
-    # 参考チャンネルの実測（2026-09-04）で、日本人選手の回が再生の中心だった。
-    japanese: 3
+    # **日本人選手には点を付けない（2026-09-05 にユーザーが訂正）。**
+    # 一度 japanese: 3 を入れたが、朝の3枠が全部日本人選手になった。
+    # 日本人は「1日に2枠」という**割り当ての制約**であって、
+    # 全体を寄せるものではない。枠で担保し、点では寄せない。
     # まとめ集約サイトの掲載順（クリック数順）。速報としての大きさではなく、
     # **いま実際に読まれているか**を測る、もう一つの軸
     topic_rank: 3
@@ -406,11 +408,11 @@ scoring:
     # 夜は1日の総まとめ。点数の高いものから
     evening_1: {prefer: total}
     evening_2: {prefer: total}
+    evening_3: {prefer: total}
     # 日本人選手の枠を4本。該当が無い日は、埋めずに空ける
     # （別の話で埋めると枠の意味がなくなる）
     japan_1: {prefer: total, require_japanese: true}
     japan_2: {prefer: total, require_japanese: true}
-    japan_3: {prefer: freshness, require_japanese: true}
     # 当日いちばん読まれたもの。**日本人には絞らない。**
     # こちらの採点も通さず、集約サイトの Points だけで決める
     popular_1: {prefer: topic, min_score: 0}
