@@ -142,18 +142,22 @@ def test_render_lists_recent_coverage():
     assert "扱った話題" in text and "morning" in text
 
 
-def test_1日の枠は9本で日本人が4本():
-    """朝3・夜3・日本人4（2026-09-04 の決定。参考3チャンネルの実測が根拠）。
+def test_1日の枠は9本で人気枠が先頭():
+    """朝3・夜3・日本人3・当日いちばん人気1（2026-09-05 の決定）。
 
-    変更前は5本・日本人1本だった。docs/news-sources.md に実測を残してある。
+    変更前は5本・日本人1本。docs/news-sources.md に実測を残してある。
+    人気枠を先頭に置くのは、後ろだと人気の候補を他の枠が先に取ってしまうため。
     """
     plan = load_plan()
     assert len(plan.slots) == 9
-    japan = [s for s in plan.slots if s.startswith("japan")]
-    assert len(japan) == 3          # japan_1..3
+    assert plan.slots[0] == "popular_1"
     rules = plan.scoring.get("slots") or {}
     require = [s for s, r in rules.items() if (r or {}).get("require_japanese")]
-    assert len(require) == 3
+    assert len(require) == 3        # japan_1..3
+    # 人気枠は日本人に絞らない。こちらの採点も通さない
+    popular = rules.get("popular_1") or {}
+    assert popular.get("prefer") == "topic"
+    assert not popular.get("require_japanese")
     # 同じ系統の枠は同じ取材計画を共有する（枠ごとに書き写すと片方が古くなる）
     assert plan.routine("morning_1") is plan.routine("morning_2")
     assert plan.routine("evening_1").name == plan.routine("evening_2").name

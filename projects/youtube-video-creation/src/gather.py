@@ -99,7 +99,7 @@ def run(
     covered=None,
     today: date | None = None,
     use_feeds: bool = True,
-    ranks: dict[str, int] | None = None,
+    topics_meta: dict[str, dict] | None = None,
 ) -> Haul:
     """取る・外す・控える をまとめて行う。"""
     haul = Haul()
@@ -127,10 +127,18 @@ def run(
         text = f"{text}\n{pasted}" if text else pasted
 
     hits = collect_mod.enrich(collect_mod.parse(text), freshness.read)
-    # 集約サイトの掲載順を貼り直す。取り込み口は見出しとURLしか通さないので、
-    # 順番はここで URL を鍵にして戻す
+    # 集約サイトで分かっていることを貼り直す。取り込み口は見出しとURLしか
+    # 通さないので、順位と時刻はここで URL を鍵にして戻す。
+    # **時刻が入ると「新しさ」の点も付く。**集約サイト経由の候補は時刻が
+    # 読めず点が伸びなかった（2026-09-05 実測）
     for hit in hits:
-        hit.rank = (ranks or {}).get(hit.url, 0)
+        found = (topics_meta or {}).get(hit.url)
+        if not found:
+            continue
+        hit.rank = int(found.get("rank") or 0)
+        hours = float(found.get("hours_ago", -1.0))
+        if hit.hours_ago < 0 <= hours:
+            hit.hours_ago = hours
     hits, haul.seen = drop_seen(hits, used_urls(covered or []))
     haul.hits = hits
 

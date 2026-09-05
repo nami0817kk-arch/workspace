@@ -6,14 +6,16 @@
 #   python -m src.cli draft research/xxx.yaml    取材メモ→台本（確度と重複を検証）
 
 cadence:
-  # 1日9本。うち日本人選手が絡むものを4本（2026-09-04 にユーザー判断で変更）。
+  # 1日9本。日本人枠3本＋当日いちばん人気の枠1本（2026-09-05 に変更）。
   # 参考3チャンネルの実測（docs/news-sources.md）が根拠:
   #   さっかー情報館は直近30本のほぼ全部が日本人選手で、登録1.73万に対し54万回。
   #   2chサッカーの噂話は約10本/日で登録10.3万。**本数と日本人比率が効いている。**
   # 変更前は5本・日本人1本だった。
   per_day: 9
-  slots: [morning_1, morning_2, morning_3, japan_1,
-          evening_1, evening_2, evening_3, japan_2, japan_3]
+  # **popular_1 を先頭に置く。**枠は書いた順に埋まるので、後ろに置くと
+  # 人気の候補を先に他の枠が取ってしまい、人気枠が空になる（2026-09-05 実測）
+  slots: [popular_1, morning_1, morning_2, morning_3,
+          japan_1, japan_2, japan_3, evening_1, evening_2]
   # morning_1 と morning_2 は同じ morning の取材計画を使う（plan.routine が
   # 末尾の _1 / _2 を落として引く）。枠ごとに計画を書き写すと片方だけ古くなる
 
@@ -400,14 +402,14 @@ scoring:
     # 夜は1日の総まとめ。点数の高いものから
     evening_1: {prefer: total}
     evening_2: {prefer: total}
-    # 掲載順だけで選ぶ枠。こちらの採点を通さない**二つ目の抽出**。
-    # 速報としては小さくても、実際に読まれている話を1本入れる
-    evening_3: {prefer: topic, min_score: 0}
     # 日本人選手の枠を4本。該当が無い日は、埋めずに空ける
     # （別の話で埋めると枠の意味がなくなる）
     japan_1: {prefer: total, require_japanese: true}
     japan_2: {prefer: total, require_japanese: true}
-    japan_3: {prefer: topic, require_japanese: true, min_score: 0}
+    japan_3: {prefer: freshness, require_japanese: true}
+    # 当日いちばん読まれたもの。**日本人には絞らない。**
+    # こちらの採点も通さず、集約サイトの Points だけで決める
+    popular_1: {prefer: topic, min_score: 0}
 
 # テーマが決まったあとの深掘り検索。{theme} に選んだテーマが入る
 # {theme} には候補の見出し、{en} には候補の en（英語の語）が入る。
@@ -511,6 +513,28 @@ scan:
     soccer-king / footballchannel はURLに日付が入るので、経過時間が正確に出る
 
 routines:
+  # ---------------------------------------------------------- 当日いちばん人気
+  popular:
+    name: 当日いちばん読まれた話
+    when: 21:00 公開（20:00 収録）
+    aim: |
+      まとめ集約サイトで、その日いちばんクリックされていたものを1本。
+      **日本人選手には絞らない。**こちらの採点も通さない。
+      速報としては小さくても、実際に読まれている話をそのまま拾う枠。
+    steps:
+      - what: 何が起きたか
+        tier: 報道
+        queries:
+          - {q: "{title} 詳細", sites: japanese}
+        check: まとめの引用元まで辿り、報道機関の記事を出典にする
+      - what: どこが読まれているのか
+        tier: 未確認
+        queries:
+          - {q: "{title} 反応", sites: japanese}
+        check: |
+          reactions で書き込みを数える。**数えた件数と母数を書く。**
+          まとめサイト自身の要約は使わない（誇張されている）
+
   # ---------------------------------------------------------------- 朝
   morning:
     name: 朝の一報

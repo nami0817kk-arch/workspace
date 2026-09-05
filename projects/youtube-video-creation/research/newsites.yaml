@@ -3,7 +3,7 @@
 #   python -m src.cli sources --new
 sites:
 - host: dailymail.com
-  seen: 10
+  seen: 11
   days:
   - '2026-09-02'
   - '2026-09-03'
@@ -14,7 +14,7 @@ sites:
   - https://www.dailymail.com/sport/football/article-16098909/Chelsea-transfer-window-Enzo-Fernandez.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
   - https://www.dailymail.com/sport/football/article-16098687/Footballer-tears-mum.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
 - host: transfermarkt.co.uk
-  seen: 9
+  seen: 10
   days:
   - '2026-09-02'
   - '2026-09-03'
@@ -25,7 +25,7 @@ sites:
   - https://www.transfermarkt.co.uk/barcola-4th-rodri-19th-cucurella-29th-top-50-most-expensive-transfers-this-summer-ranked/view/news/483667
   - https://www.transfermarkt.co.uk/club-record-sale-why-arsenal-were-right-to-sell-gabriel-martinelli-to-al-hilal/view/news/484606
 - host: derbyderbyderby.it
-  seen: 8
+  seen: 9
   days:
   - '2026-09-02'
   - '2026-09-03'
@@ -36,12 +36,13 @@ sites:
   - https://www.derbyderbyderby.it/calcio-estero/monza-ecco-zeballos-in-italia-per-il-mito-di-maradona-e-i-consigli-di-paredes/?intcmp=gazzanet-derbyderbyderby
   - https://www.derbyderbyderby.it/calcio-italiano/lunione-che-non-ti-aspetti-haslem-con-la-maglia-del-frosinone/?intcmp=gazzanet-derbyderbyderby
 - host: samuraigoal.doorblog.jp
-  seen: 5
+  seen: 6
   days:
   - '2026-09-04'
   - '2026-09-05'
   examples:
   - https://samuraigoal.doorblog.jp/archives/63437489.html
+  - https://samuraigoal.doorblog.jp/archives/63450028.html
 - host: blog.domesoccer.jp
   seen: 5
   days:
@@ -66,6 +67,14 @@ sites:
   - '2026-09-05'
   examples:
   - https://www.ilmilanista.it/news-milan/il-padre-di-gimenez-al-milan-giocava-anche-infortunato-ora-deve-ripartire/?intcmp=gazzanet-ilmilanista
+- host: forzaroma.info
+  seen: 4
+  days:
+  - '2026-09-02'
+  - '2026-09-05'
+  examples:
+  - https://www.forzaroma.info/news-as-roma/rodrigo-mora-gasperini-fondamentale-nella-mia-scelta-e-un-sogno-giocare-con-dybala/?intcmp=gazzanet-forzaroma
+  - https://www.forzaroma.info/news-as-roma/fenerbahce-guendouzi-squalificato-salta-la-roma-greenwood-ci-sara-ecco-perche/?intcmp=gazzanet-forzaroma
 - host: mondoudinese.it
   seen: 3
   days:
@@ -80,16 +89,8 @@ sites:
   - '2026-09-05'
   examples:
   - https://www.genoaoggi.it/calciomercato/mercato-genoa/ehizibue-al-genoa-anni-fa-dissi-no-oggi-e-il-modo-migliore-per-chiedere-perdono/?intcmp=gazzanet-genoaoggi
-- host: forzaroma.info
-  seen: 3
-  days:
-  - '2026-09-02'
-  - '2026-09-05'
-  examples:
-  - https://www.forzaroma.info/news-as-roma/rodrigo-mora-gasperini-fondamentale-nella-mia-scelta-e-un-sogno-giocare-con-dybala/?intcmp=gazzanet-forzaroma
-  - https://www.forzaroma.info/news-as-roma/fenerbahce-guendouzi-squalificato-salta-la-roma-greenwood-ci-sara-ecco-perche/?intcmp=gazzanet-forzaroma
 - host: fcinter1908.it
-  seen: 2
+  seen: 3
   days:
   - '2026-09-05'
   examples:

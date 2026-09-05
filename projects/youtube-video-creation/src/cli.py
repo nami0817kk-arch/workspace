@@ -1462,24 +1462,27 @@ def _cmd_gather(args, config) -> int:
     # まとめ集約サイトの一覧。フィードだけでは1日ぶんの材料が足りなかった
     # （2026-09-04 実測。9枠に対して条件を満たす候補が5本）。
     # 取り込み口は貼り付けと同じなので、重複の除去も確度の判定もそのまま効く
-    topic_ranks: dict[str, int] = {}
+    topic_ranks: dict[str, dict] = {}
     if getattr(args, "topics", False):
         from . import topics as topics_mod
 
         try:
-            rows = topics_mod.fetch(args.topics_sort)
+            rows = topics_mod.recent(hours=args.hours)
         except topics_mod.TopicError as error:
             print(f"　まとめ集約サイトを取れません: {error}")
         else:
-            listed = chr(10).join(f"{title}{chr(9)}{url}" for title, url in rows)
-            # 掲載順は URL を鍵にして渡す。取り込み口は見出しとURLしか通さない
-            topic_ranks = {url: i for i, (_, url) in enumerate(rows, start=1)}
-            count = len(rows)
-            print(f"　まとめ集約サイトから{count}件（{args.topics_sort}順）")
+            listed = topics_mod.lines(rows)
+            # 順位と時刻は URL を鍵にして渡す。取り込み口は見出しとURLしか通さない
+            topic_ranks = topics_mod.meta(rows)
+            head = rows[0] if rows else None
+            print(f"　まとめ集約サイトから{len(rows)}件"
+                  f"（直近{args.hours:g}時間・人気順）")
+            if head:
+                print(f"　　一番人気: {head.points}pt　{_fit(head.title, 46)}")
             pasted = f"{pasted}\n{listed}" if pasted.strip() else listed
     haul = gather_mod.run(
         plan,
-        ranks=topic_ranks,
+        topics_meta=topic_ranks,
         hours=args.hours,
         pasted=pasted,
         league=args.league or "",
