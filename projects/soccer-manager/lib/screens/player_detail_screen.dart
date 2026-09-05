@@ -418,6 +418,40 @@ class PlayerDetailScreen extends StatelessWidget {
                   'Trait (${p.trait!.category.label}): ${p.trait!.label} — ${p.trait!.description}'),
               style: const TextStyle(fontSize: 12, color: Colors.deepOrange),
             ),
+            // 能力値で発動する特性は、条件に届いていないと何も起きない。
+            // その条件が実装の中にしか無く、持っているのに効果が無い状態が
+            // 説明されないままだった。判定に使っている表をそのまま出す。
+            Builder(builder: (context) {
+              final gate = MatchEngine.attributeGatedTraits[p.trait!];
+              if (gate == null) return const SizedBox.shrink();
+              final current = p.attributeValue(gate.attribute);
+              final active = current >= gate.threshold;
+              final gain = ((gate.bonus - 1) * 100).round();
+              return Padding(
+                padding: const EdgeInsets.only(top: 2),
+                child: Text(
+                  active
+                      ? Tr.pick(
+                          '発動中: ${AttributeKeys.labelOf(gate.attribute)}$current '
+                              '（${gate.threshold}以上）→ 出来が+$gain%',
+                          'Active: ${AttributeKeys.labelOf(gate.attribute)} $current '
+                              '(needs ${gate.threshold}) → +$gain% to his display')
+                      : Tr.pick(
+                          '未発動: ${AttributeKeys.labelOf(gate.attribute)}が'
+                              '${gate.threshold}以上で+$gain%（現在$current / あと'
+                              '${gate.threshold - current}）',
+                          'Dormant: needs ${AttributeKeys.labelOf(gate.attribute)} '
+                              '${gate.threshold} for +$gain% '
+                              '(now $current, ${gate.threshold - current} to go)'),
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: active
+                        ? SemanticColors.positive(context)
+                        : SemanticColors.subtleText(context),
+                  ),
+                ),
+              );
+            }),
           ],
           if (p.growthType != PlayerGrowthType.balanced) ...[
             const SizedBox(height: 4),

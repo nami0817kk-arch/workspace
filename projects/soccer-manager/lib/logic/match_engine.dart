@@ -256,6 +256,52 @@ class MatchEngine {
   /// 選手特性による、この試合限りのパフォーマンス倍率を算出する。
   /// [selfAvg]は自チーム、[oppAvg]は相手チームの先発平均総合力。
   /// [isHome]はこの選手のチームがホームかどうか、[weather]はこの試合の天候。
+  /// 能力値がある水準に届いて初めて発動する特性の一覧。
+  ///
+  /// 例えば『冷徹なフィニッシャー』は決定力80以上でなければ何も起きない。
+  /// この条件は実装の中にしか無く、画面には出ていなかったため、特性を
+  /// 持っているのに効果が無い状態が説明されないままだった。
+  ///
+  /// 説明と実装が食い違わないよう、判定もこの表を引く(gatedTraitBonus)。
+  static const Map<PlayerTrait, ({String attribute, int threshold, double bonus})>
+      attributeGatedTraits = {
+    PlayerTrait.warriorSpirit: (attribute: AttributeKeys.determination, threshold: 80, bonus: 1.09),
+    PlayerTrait.calmHead: (attribute: AttributeKeys.composure, threshold: 80, bonus: 1.09),
+    PlayerTrait.leaderOnPitch: (attribute: AttributeKeys.leadership, threshold: 80, bonus: 1.09),
+    PlayerTrait.visionary: (attribute: AttributeKeys.vision, threshold: 80, bonus: 1.07),
+    PlayerTrait.paceMerchant: (attribute: AttributeKeys.pace, threshold: 80, bonus: 1.07),
+    PlayerTrait.powerhouse: (attribute: AttributeKeys.strength, threshold: 80, bonus: 1.07),
+    PlayerTrait.enginesRunning: (attribute: AttributeKeys.stamina, threshold: 80, bonus: 1.07),
+    PlayerTrait.silkyDribbler: (attribute: AttributeKeys.dribbling, threshold: 80, bonus: 1.07),
+    PlayerTrait.playmakerTrait: (attribute: AttributeKeys.passing, threshold: 80, bonus: 1.07),
+    PlayerTrait.ballWinner: (attribute: AttributeKeys.tackling, threshold: 80, bonus: 1.07),
+    PlayerTrait.shadowMarker: (attribute: AttributeKeys.marking, threshold: 80, bonus: 1.07),
+    PlayerTrait.clinicalFinisher: (attribute: AttributeKeys.finishing, threshold: 80, bonus: 1.07),
+    PlayerTrait.distanceShooter: (attribute: AttributeKeys.longShots, threshold: 80, bonus: 1.07),
+    PlayerTrait.aerialThreat: (attribute: AttributeKeys.jumpingReach, threshold: 80, bonus: 1.07),
+    PlayerTrait.showman: (attribute: AttributeKeys.flair, threshold: 80, bonus: 1.07),
+    PlayerTrait.sureTouch: (attribute: AttributeKeys.firstTouch, threshold: 80, bonus: 1.06),
+    PlayerTrait.crossSpecialist: (attribute: AttributeKeys.crossing, threshold: 80, bonus: 1.06),
+    PlayerTrait.setPieceMaestro: (attribute: AttributeKeys.freeKick, threshold: 80, bonus: 1.06),
+    PlayerTrait.clockwork: (attribute: AttributeKeys.anticipation, threshold: 80, bonus: 1.06),
+    PlayerTrait.decisiveMind: (attribute: AttributeKeys.decisions, threshold: 80, bonus: 1.06),
+    PlayerTrait.teamPlayer: (attribute: AttributeKeys.teamwork, threshold: 80, bonus: 1.06),
+    PlayerTrait.tirelessRunner: (attribute: AttributeKeys.workRate, threshold: 80, bonus: 1.06),
+    PlayerTrait.explosiveStart: (attribute: AttributeKeys.acceleration, threshold: 80, bonus: 1.06),
+    PlayerTrait.fearlessDefender: (attribute: AttributeKeys.bravery, threshold: 80, bonus: 1.06),
+    PlayerTrait.divineReflexes: (attribute: AttributeKeys.reflexes, threshold: 80, bonus: 1.07),
+  };
+
+  /// 能力値で発動する特性の倍率。条件を満たさなければ 1.0(効果なし)。
+  static double gatedTraitBonus(
+    PlayerTrait trait,
+    double Function(String) attr,
+  ) {
+    final gate = attributeGatedTraits[trait];
+    if (gate == null) return 1.0;
+    return attr(gate.attribute) >= gate.threshold ? gate.bonus : 1.0;
+  }
+
   static double _traitFormMultiplier(
     Player p, {
     required double selfAvg,
@@ -322,11 +368,11 @@ class MatchEngine {
         return p.age >= 26 && p.age <= 29 ? 1.05 : 1.0;
       // メンタル属性依存
       case PlayerTrait.warriorSpirit:
-        return attr(AttributeKeys.determination) >= 80 ? 1.09 : 1.0;
+        return gatedTraitBonus(PlayerTrait.warriorSpirit, attr);
       case PlayerTrait.calmHead:
-        return attr(AttributeKeys.composure) >= 80 ? 1.09 : 1.0;
+        return gatedTraitBonus(PlayerTrait.calmHead, attr);
       case PlayerTrait.leaderOnPitch:
-        return attr(AttributeKeys.leadership) >= 80 ? 1.09 : 1.0;
+        return gatedTraitBonus(PlayerTrait.leaderOnPitch, attr);
       // 波・安定性。streaky/volatileTalentは他の47特性と同様、期待値が
       // 1.0をわずかに上回るようレンジを設計する(=リスクを取るだけの
       // 見返りがある)。metronomeだけは「安定こそが持ち味」という特性の
@@ -339,51 +385,51 @@ class MatchEngine {
         return 0.95 + _rng.nextDouble() * 0.1;
       // 技術・フィジカル属性依存
       case PlayerTrait.visionary:
-        return attr(AttributeKeys.vision) >= 80 ? 1.07 : 1.0;
+        return gatedTraitBonus(PlayerTrait.visionary, attr);
       case PlayerTrait.paceMerchant:
-        return attr(AttributeKeys.pace) >= 80 ? 1.07 : 1.0;
+        return gatedTraitBonus(PlayerTrait.paceMerchant, attr);
       case PlayerTrait.powerhouse:
-        return attr(AttributeKeys.strength) >= 80 ? 1.07 : 1.0;
+        return gatedTraitBonus(PlayerTrait.powerhouse, attr);
       case PlayerTrait.enginesRunning:
-        return attr(AttributeKeys.stamina) >= 80 ? 1.07 : 1.0;
+        return gatedTraitBonus(PlayerTrait.enginesRunning, attr);
       case PlayerTrait.silkyDribbler:
-        return attr(AttributeKeys.dribbling) >= 80 ? 1.07 : 1.0;
+        return gatedTraitBonus(PlayerTrait.silkyDribbler, attr);
       case PlayerTrait.playmakerTrait:
-        return attr(AttributeKeys.passing) >= 80 ? 1.07 : 1.0;
+        return gatedTraitBonus(PlayerTrait.playmakerTrait, attr);
       case PlayerTrait.ballWinner:
-        return attr(AttributeKeys.tackling) >= 80 ? 1.07 : 1.0;
+        return gatedTraitBonus(PlayerTrait.ballWinner, attr);
       case PlayerTrait.shadowMarker:
-        return attr(AttributeKeys.marking) >= 80 ? 1.07 : 1.0;
+        return gatedTraitBonus(PlayerTrait.shadowMarker, attr);
       case PlayerTrait.clinicalFinisher:
-        return attr(AttributeKeys.finishing) >= 80 ? 1.07 : 1.0;
+        return gatedTraitBonus(PlayerTrait.clinicalFinisher, attr);
       case PlayerTrait.distanceShooter:
-        return attr(AttributeKeys.longShots) >= 80 ? 1.07 : 1.0;
+        return gatedTraitBonus(PlayerTrait.distanceShooter, attr);
       case PlayerTrait.aerialThreat:
-        return attr(AttributeKeys.jumpingReach) >= 80 ? 1.07 : 1.0;
+        return gatedTraitBonus(PlayerTrait.aerialThreat, attr);
       case PlayerTrait.showman:
-        return attr(AttributeKeys.flair) >= 80 ? 1.07 : 1.0;
+        return gatedTraitBonus(PlayerTrait.showman, attr);
       case PlayerTrait.sureTouch:
-        return attr(AttributeKeys.firstTouch) >= 80 ? 1.06 : 1.0;
+        return gatedTraitBonus(PlayerTrait.sureTouch, attr);
       case PlayerTrait.crossSpecialist:
-        return attr(AttributeKeys.crossing) >= 80 ? 1.06 : 1.0;
+        return gatedTraitBonus(PlayerTrait.crossSpecialist, attr);
       case PlayerTrait.setPieceMaestro:
-        return attr(AttributeKeys.freeKick) >= 80 ? 1.06 : 1.0;
+        return gatedTraitBonus(PlayerTrait.setPieceMaestro, attr);
       case PlayerTrait.clockwork:
-        return attr(AttributeKeys.anticipation) >= 80 ? 1.06 : 1.0;
+        return gatedTraitBonus(PlayerTrait.clockwork, attr);
       case PlayerTrait.decisiveMind:
-        return attr(AttributeKeys.decisions) >= 80 ? 1.06 : 1.0;
+        return gatedTraitBonus(PlayerTrait.decisiveMind, attr);
       case PlayerTrait.teamPlayer:
-        return attr(AttributeKeys.teamwork) >= 80 ? 1.06 : 1.0;
+        return gatedTraitBonus(PlayerTrait.teamPlayer, attr);
       case PlayerTrait.tirelessRunner:
-        return attr(AttributeKeys.workRate) >= 80 ? 1.06 : 1.0;
+        return gatedTraitBonus(PlayerTrait.tirelessRunner, attr);
       case PlayerTrait.explosiveStart:
-        return attr(AttributeKeys.acceleration) >= 80 ? 1.06 : 1.0;
+        return gatedTraitBonus(PlayerTrait.explosiveStart, attr);
       case PlayerTrait.fearlessDefender:
-        return attr(AttributeKeys.bravery) >= 80 ? 1.06 : 1.0;
+        return gatedTraitBonus(PlayerTrait.fearlessDefender, attr);
       // サッカー漫画のような劇的な特性(複合条件はより希少なので、その分
       // 倍率も他の単一条件の特性より大きくする)
       case PlayerTrait.divineReflexes:
-        return attr(AttributeKeys.reflexes) >= 80 ? 1.07 : 1.0;
+        return gatedTraitBonus(PlayerTrait.divineReflexes, attr);
       case PlayerTrait.awayDayHero:
         return !isHome && -diff >= 8 ? 1.12 : 1.0;
       case PlayerTrait.risingPhoenix:

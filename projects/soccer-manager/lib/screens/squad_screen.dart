@@ -13,6 +13,7 @@ import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import 'glossary_screen.dart';
 import 'player_compare_screen.dart';
+import '../logic/match_engine.dart';
 import '../models/player_instruction.dart';
 import 'player_detail_screen.dart';
 import '../l10n/tr.dart';
@@ -988,8 +989,11 @@ class _PlayerTagsLine extends StatelessWidget {
     // 記号で装飾しない。同梱フォントに字形の無い記号(▸ など)を使うと
     // 豆腐(□)になり、リリースビルドを見るまで気づけない。
     final parts = <String>[
+      // 能力値で発動する特性は、条件に届いていないと効果が無い。
+      // 一覧では「(未発動)」だけ添える。詳しい条件は選手詳細に出る。
       if (player.trait != null)
-        Tr.pick('特性 ${player.trait!.label}', 'Trait ${player.trait!.label}'),
+        Tr.pick('特性 ${player.trait!.label}${_traitDormantSuffix(player)}',
+            'Trait ${player.trait!.label}${_traitDormantSuffix(player)}'),
       if (player.role != PlayerRole.standard)
         Tr.pick('役割 ${player.role.label}', 'Role ${player.role.label}'),
       if (player.instruction != null)
@@ -1008,4 +1012,15 @@ class _PlayerTagsLine extends StatelessWidget {
       ),
     );
   }
+}
+
+/// 能力値で発動する特性が、まだ条件に届いていないときの但し書き。
+String _traitDormantSuffix(Player player) {
+  final trait = player.trait;
+  if (trait == null) return '';
+  final gate = MatchEngine.attributeGatedTraits[trait];
+  if (gate == null) return '';
+  return player.attributeValue(gate.attribute) >= gate.threshold
+      ? ''
+      : Tr.pick('(未発動)', ' (dormant)');
 }
