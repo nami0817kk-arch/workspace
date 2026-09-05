@@ -37,6 +37,43 @@ void main() {
       expect(storeListing, contains('$publishedLegalBase/terms.html'));
     });
 
+    test('掲載文の対応言語が、アプリが実際に持つ言語と一致する', () {
+      // 「対応言語: 日本語」と書いてあったが、アプリは英語にも対応し、
+      // 設定画面に切り替えもあった。掲載文が実装に追いついていない例。
+      final storeListing = File('STORE_LISTING.md').readAsStringSync();
+      final trSource = File('lib/l10n/tr.dart').readAsStringSync();
+
+      final hasEnglish = trSource.contains('AppLanguage.english');
+      if (hasEnglish) {
+        expect(storeListing, contains('英語'),
+            reason: 'アプリは英語に対応しているのに、掲載文が日本語のみになっている');
+      }
+    });
+
+    test('掲載文が、実装に無い呼び名で機能を説明していない', () {
+      // 掲載文だけ先に書き換えると、無い機能を宣伝することになる。
+      // 逆に実装だけ変えると、掲載文が古い呼び名のまま残る
+      // (スタッフは「強化」から「雇用」に変わった)。
+      final storeListing = File('STORE_LISTING.md').readAsStringSync();
+
+      // 掲載文が謳っている機能は、実装側に対応する語がある。
+      const claims = {
+        'メンター': 'lib/logic/training_engine.dart',
+        'スカウティングレポート': 'lib/logic/scout_report_engine.dart',
+        'リザーブ': 'lib/logic/reserve_match_engine.dart',
+        '育成型レンタル': 'lib/logic/training_engine.dart',
+      };
+      for (final entry in claims.entries) {
+        if (!storeListing.contains(entry.key)) continue;
+        expect(File(entry.value).existsSync(), isTrue,
+            reason: '掲載文の「${entry.key}」に対応する実装が見当たらない');
+      }
+
+      // 古い呼び名が残っていないか。
+      expect(storeListing, isNot(contains('スタッフ強化')),
+          reason: 'スタッフはレベルを強化する仕組みではなく、人を雇う仕組みになった');
+    });
+
     test('旧リポジトリを指すURLが残っていない', () {
       // このプロジェクトは kabu-agari-ranking から claude-code-dev へ移した。
       // 移行時に取り残されたURLが実際にアプリ内とストア掲載情報の両方に
