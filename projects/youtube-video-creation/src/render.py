@@ -795,7 +795,9 @@ class Renderer:
 
         length = max(4.0, math.ceil(seconds))
         cache = _resolve("assets/backgrounds/.motion")
-        target = cache / f"{path.stem}_{int(length)}s_{int(zoom * 100)}.mp4"
+        # 名前に作り方の版（r2）を入れる。寄り方を変えたとき、名前が同じだと
+        # 古いクリップが使い回されて直りが反映されない（2026-09-05）
+        target = cache / f"{path.stem}_{int(length)}s_{int(zoom * 100)}r2.mp4"
         if not target.exists():
             cache.mkdir(parents=True, exist_ok=True)
             ffmpeg.still_to_clip(

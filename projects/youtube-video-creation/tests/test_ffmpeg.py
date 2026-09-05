@@ -37,3 +37,27 @@ def test_draft_の既定の背景は_init_assets_が作るもの():
 
     template = Path("scripts/templates/weekly.md").read_text(encoding="utf-8")
     assert "bg: assets/backgrounds/stadium.png" in template
+
+
+def test_寄る速さは場面の長さで変わらない():
+    """総量を固定していたため、長い場面ほど1秒あたりの動きが小さくなっていた。
+
+    実測（2026-09-05）で20秒の場面はほぼ静止して見えた。
+    **長い場面こそ動きが要る。**秒あたりの速さを一定にする。
+    """
+    from src.ffmpeg import MAX_ZOOM, REFERENCE_SECONDS
+
+    def rate(seconds: float, zoom: float = 1.12) -> float:
+        total = min(MAX_ZOOM, 1.0 + (zoom - 1.0) / REFERENCE_SECONDS * seconds)
+        return (total - 1.0) / seconds
+
+    assert abs(rate(4) - rate(20)) < 0.0005      # 短くても長くても同じ速さ
+    assert rate(10) > 0.005                       # 止まって見えない程度には動く
+
+
+def test_寄りすぎないよう上限がある():
+    """長い場面で寄り続けると絵が荒れる。"""
+    from src.ffmpeg import MAX_ZOOM, REFERENCE_SECONDS
+
+    total = min(MAX_ZOOM, 1.0 + (1.12 - 1.0) / REFERENCE_SECONDS * 300)
+    assert total == MAX_ZOOM
