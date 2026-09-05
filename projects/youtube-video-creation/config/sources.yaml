@@ -51,6 +51,11 @@ domains:
   # 記録・数字。「数字で見ると」の節で使う。順位・得点・出場数はここ
   stats: [fbref.com, understat.com, worldfootball.net, sofascore.com,
           besoccer.com, flashscore.com, transfermarkt.com, transfermarkt.de,
+          # 2026-09-05 に追加。co.uk はフィードを登録しているのに群に無く、
+          # lint が毎回「網に無いサイト」と警告していた。
+          # jp は日本語で移籍金・市場価値・契約年数が読める（**数字の裏取り用**）。
+          # ニュースのフィードとしては死んでいる（実測: 1週間で0件）ので feeds には入れない
+          transfermarkt.co.uk, transfermarkt.jp,
           fotmob.com]
 
   # 日本語の報道機関。訳す手間が要らないぶん速い
