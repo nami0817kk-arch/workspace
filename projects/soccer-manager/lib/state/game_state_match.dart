@@ -304,6 +304,10 @@ extension GameStateMatch on GameState {
     if (_save!.sponsorDeal == null && _save!.pendingSponsorOffers.isEmpty) {
       _save!.pendingSponsorOffers = SponsorEngine.generateOffers(
         userTeam.overallRating,
+        tier: _save!.currentDivisionTier,
+        managerReputation: _save!.managerReputation,
+        stadiumLevel:
+            _save!.infrastructure.facilityLevel(FacilityType.stadium),
       );
     }
     for (final inst in List<Installment>.from(_save!.pendingInstallments)) {

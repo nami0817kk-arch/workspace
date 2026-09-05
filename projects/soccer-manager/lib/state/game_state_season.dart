@@ -915,6 +915,7 @@ extension GameStateSeason on GameState {
     _save!.wageBudget = BoardEngine.wageBudgetFor(
       tier: _save!.currentDivisionTier,
       currentWeeklyWageBill: weeklyWageBill,
+      weeklyIncome: weeklyIncomeFor(_save!.userTeamId),
     );
     transferMarket = TransferMarket.generate();
     _refreshScoutCandidates();
@@ -930,6 +931,10 @@ extension GameStateSeason on GameState {
     if (_save!.sponsorDeal == null && _save!.pendingSponsorOffers.isEmpty) {
       _save!.pendingSponsorOffers = SponsorEngine.generateOffers(
         userTeam.overallRating,
+        tier: _save!.currentDivisionTier,
+        managerReputation: _save!.managerReputation,
+        stadiumLevel:
+            _save!.infrastructure.facilityLevel(FacilityType.stadium),
       );
     }
 

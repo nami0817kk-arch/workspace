@@ -13,6 +13,7 @@ import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import 'glossary_screen.dart';
 import 'player_compare_screen.dart';
+import '../models/player_instruction.dart';
 import 'player_detail_screen.dart';
 import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
@@ -692,6 +693,11 @@ class _SquadScreenState extends State<SquadScreen> {
                                               color: Colors.orange)
                                           : null,
                                 ),
+                                // 特性・役割・指示は選手詳細を開かないと
+                                // 見えなかった。25人ぶん開いて回らないと
+                                // 誰がどういう選手か分からない状態だったので、
+                                // 設定されているものだけ一覧にも出す。
+                                if (!_compareMode) _PlayerTagsLine(player: p),
                                 if (!_compareMode &&
                                     !p.isInjured &&
                                     !p.isSuspended &&
@@ -949,6 +955,42 @@ class _LegendRow extends StatelessWidget {
           const SizedBox(width: 12),
           Expanded(child: Text(label)),
         ],
+      ),
+    );
+  }
+}
+
+/// 選手の特性・役割・指示を1行にまとめて出す。
+///
+/// これらは選手詳細を開かないと見えなかった。25人ぶん開いて回らないと
+/// 誰がどういう選手か分からず、特性を活かす編成が組みにくい。
+/// 設定されているものだけを並べるので、何も付いていない選手では消える。
+class _PlayerTagsLine extends StatelessWidget {
+  final Player player;
+  const _PlayerTagsLine({required this.player});
+
+  @override
+  Widget build(BuildContext context) {
+    // 記号で装飾しない。同梱フォントに字形の無い記号(▸ など)を使うと
+    // 豆腐(□)になり、リリースビルドを見るまで気づけない。
+    final parts = <String>[
+      if (player.trait != null)
+        Tr.pick('特性 ${player.trait!.label}', 'Trait ${player.trait!.label}'),
+      if (player.role != PlayerRole.standard)
+        Tr.pick('役割 ${player.role.label}', 'Role ${player.role.label}'),
+      if (player.instruction != null)
+        Tr.pick('指示 ${player.instruction!.label}',
+            'Instruction ${player.instruction!.label}'),
+    ];
+    if (parts.isEmpty) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(top: 2),
+      child: Text(
+        parts.join(' / '),
+        style: TextStyle(
+          fontSize: 11,
+          color: SemanticColors.subtleText(context),
+        ),
       ),
     );
   }

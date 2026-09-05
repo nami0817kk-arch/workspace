@@ -565,6 +565,18 @@ extension GameStateSquad on GameState {
     _persist();
   }
 
+  /// 次の試合に効いている自チームの状態。
+  ///
+  /// 戦術・習熟度・個別指示・疲労・士気と結果に効く要素が増えたのに、
+  /// どれがどう効いているかを見る場所が無かった。
+  List<MatchFactor> get matchFactors {
+    if (_save == null) return const [];
+    final team = userTeam;
+    final lineup =
+        team.players.where((p) => team.startingXI.contains(p.id)).toList();
+    return MatchFactorEngine.analyze(team: team, startingLineup: lineup);
+  }
+
   /// コーナーキックの狙いを決める。
   void setCornerRoutine(CornerRoutine routine) {
     if (_save == null) return;

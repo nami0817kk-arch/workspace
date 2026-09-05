@@ -17,6 +17,14 @@ import os
 import struct
 import sys
 
+# Windows の既定の標準出力は cp932 で、見つけた文字そのものを出そうとすると
+# UnicodeEncodeError で落ちる。落ちると『どの文字が足りないか』が出ないまま
+# クラッシュだけが残り、原因が分からない(実際にそうなった)。
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8', errors='backslashreplace')
+if hasattr(sys.stderr, 'reconfigure'):
+    sys.stderr.reconfigure(encoding='utf-8', errors='backslashreplace')
+
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from dartstr import scan_strings
 

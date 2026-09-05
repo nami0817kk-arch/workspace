@@ -51,11 +51,26 @@ class BoardEngine {
   /// 理事会が設定する週給総額の上限(万円/週)。ティア基準値と
   /// 「現在の週給総額+基準値の25%の余裕」の大きい方を採用するため、
   /// シーズン開始時点で必ず補強の余地が残る。
+  /// 理事会が人件費に回してよいと考える、週次収入の割合。
+  ///
+  /// 以前の上限はティアの基準値だけで決まっていた。スタジアムを広げても、
+  /// 良いスポンサーと契約しても、実績を積んでも上限は動かない。クラブを
+  /// 大きくしたぶんが返ってこないうえ、選手が育って要求週俸が上がると
+  /// 枠に収まらなくなる(実測: 4シーズン目に給与予算211に対し、総合67の
+  /// 選手1人が週俸41を要求)。
+  ///
+  /// 収入に紐づけると、伸ばした収入がそのまま枠になる。
+  static const double wageBudgetIncomeShare = 0.6;
+
   static int wageBudgetFor({
     required int tier,
     required int currentWeeklyWageBill,
+    int weeklyIncome = 0,
   }) {
-    final base = wageBudgetBaseForTier(tier);
+    final base = max(
+      wageBudgetBaseForTier(tier),
+      (weeklyIncome * wageBudgetIncomeShare).round(),
+    );
     final headroom = max(60, (base * 0.4).round());
     return max(base, currentWeeklyWageBill + headroom);
   }

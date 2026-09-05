@@ -30,6 +30,7 @@ import 'player_detail_screen.dart';
 import 'scout_report_screen.dart';
 import 'start_screen.dart';
 import 'youth_intake_screen.dart';
+import '../logic/match_factor_engine.dart';
 import '../l10n/tr.dart';
 
 /// 移籍オファーを選手ごとにグループ化し、各グループ内は金額の高い順に並べる
@@ -588,6 +589,9 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ],
                         ),
+                        // いま何が結果に効いているか。戦術・習熟度・指示と
+                        // 効く要素が増えたのに、それを見る場所が無かった。
+                        const _MatchFactorsPanel(),
                         const SizedBox(height: 12),
                         FilledButton(
                           onPressed: () => _playMatch(context),
@@ -1826,6 +1830,79 @@ class _DismissalScreen extends StatelessWidget {
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// 次の試合に効いている自チームの状態を並べるパネル。
+///
+/// 折りたたんでおく。毎回全部見たいものではないが、負けが込んだときに
+/// 「何が効いているのか」を確かめられる場所が要る。
+class _MatchFactorsPanel extends StatelessWidget {
+  const _MatchFactorsPanel();
+
+  @override
+  Widget build(BuildContext context) {
+    final factors = context.watch<GameState>().matchFactors;
+    if (factors.isEmpty) return const SizedBox.shrink();
+
+    final bad = factors.where((f) => f.direction == FactorDirection.bad).length;
+
+    return Theme(
+      data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+      child: ExpansionTile(
+        tilePadding: EdgeInsets.zero,
+        childrenPadding: const EdgeInsets.only(bottom: 8),
+        title: Text(
+          bad == 0
+              ? Tr.pick('この試合に効いている要素', 'What is shaping this match')
+              : Tr.pick('この試合に効いている要素（気になる点$bad件）',
+                  'What is shaping this match ($bad to look at)'),
+          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+        ),
+        children: [
+          for (final f in factors)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 6),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(
+                    switch (f.direction) {
+                      FactorDirection.good => Icons.check_circle,
+                      FactorDirection.bad => Icons.error_outline,
+                      FactorDirection.neutral => Icons.remove_circle_outline,
+                    },
+                    size: 16,
+                    color: switch (f.direction) {
+                      FactorDirection.good => SemanticColors.positive(context),
+                      FactorDirection.bad => SemanticColors.negative(context),
+                      FactorDirection.neutral =>
+                        SemanticColors.subtleText(context),
+                    },
+                  ),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text('${f.label}: ${f.value}',
+                            style: const TextStyle(fontSize: 12)),
+                        Text(
+                          f.detail,
+                          style: TextStyle(
+                            fontSize: 11,
+                            color: SemanticColors.subtleText(context),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
       ),
     );
   }

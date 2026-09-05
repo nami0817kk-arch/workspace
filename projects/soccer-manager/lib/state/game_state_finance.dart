@@ -194,6 +194,7 @@ extension GameStateFinance on GameState {
     return BoardEngine.wageBudgetFor(
       tier: _save!.currentDivisionTier,
       currentWeeklyWageBill: weeklyWageBill,
+      weeklyIncome: weeklyIncomeFor(_save!.userTeamId),
     );
   }
 
