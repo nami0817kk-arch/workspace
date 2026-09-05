@@ -101,3 +101,36 @@ class CheckSnapshotTest(unittest.TestCase):
         errors, _ = validate.check_snapshot(data, expected=270)
 
         self.assertGreaterEqual(len(errors), 3)
+
+
+class VerificationTagTest(unittest.TestCase):
+    """Search Console の所有権確認タグ。
+
+    pages.dev は自分のドメインではないため DNS 方式が使えず、この HTML タグが
+    唯一の確認手段になる。入っていないと登録そのものができない。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+        self.site = {"name": "テスト", "base_url": "https://example.pages.dev"}
+
+    def render(self, **kw):
+        return self.theme.head("題", "説明", "https://example.pages.dev/",
+                               {**self.site, **kw})
+
+    def test_値があれば全ページのheadに入る(self):
+        html = self.render(google_site_verification="abc123")
+
+        self.assertIn('<meta name="google-site-verification" content="abc123">', html)
+
+    def test_未設定なら何も出さない(self):
+        # 空タグを出すと確認に失敗するので、出さない方が正しい
+        self.assertNotIn("google-site-verification", self.render())
+        self.assertNotIn("google-site-verification",
+                         self.render(google_site_verification="   "))
+
+    def test_値はエスケープする(self):
+        html = self.render(google_site_verification='a"><script>x</script>')
+
+        self.assertNotIn("<script>", html)

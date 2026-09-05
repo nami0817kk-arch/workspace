@@ -69,6 +69,19 @@ AD_NOTICE = ('<p class="ad-notice">本サイトは楽天アフィリエイトを
 NAV = [("./", "今日の値下がり"), ("lows/", "最安値圏"), ("about/", "このサイトについて")]
 
 
+def _verification(site: dict) -> str:
+    """Search Console の所有権確認タグ。
+
+    pages.dev のサブドメインは自分のドメインではないため DNS 方式が使えない。
+    URLプレフィックス方式の HTML タグで確認する（kabu-agari-ranking と同じ）。
+    config.json の google_site_verification に値を入れると全ページに入る。
+    """
+    token = str(site.get("google_site_verification") or "").strip()
+    if not token:
+        return ""
+    return f'\n<meta name="google-site-verification" content="{esc(token)}">'
+
+
 def head(title: str, description: str, canonical: str, site: dict, prefix: str = "",
          extra: str = "") -> str:
     return f"""<!doctype html>
@@ -79,7 +92,7 @@ def head(title: str, description: str, canonical: str, site: dict, prefix: str =
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(description)}">
 <link rel="canonical" href="{esc(canonical)}">
-<meta name="robots" content="index,follow,max-image-preview:large">
+<meta name="robots" content="index,follow,max-image-preview:large">{_verification(site)}
 <meta property="og:type" content="website">
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(description)}">
