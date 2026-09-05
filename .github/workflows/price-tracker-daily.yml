@@ -3,13 +3,13 @@ name: price-tracker daily
 # 運用: 取得は手元PC（run-daily.ps1、毎日10:10）が行い data/ を push する。
 # 楽天は Backend Service 型で許可IPからのリクエストしか受け付けず、Actions の
 # ランナーはIPを固定できないため、CI からは取得しない。
-# この CI は push された data/ の検証と、取得が止まっていないかの監視を行う。
+# この CI は push された data/ を検証し、静的サイトを作って Cloudflare Pages に
+# 公開する。あわせて取得が止まっていないかを監視する。
 on:
   push:
     branches: [master]
     paths:
-      - "projects/price-tracker/data/**"
-      - "projects/price-tracker/src/**"
+      - "projects/price-tracker/**"
       - ".github/workflows/price-tracker-daily.yml"
   schedule:
     # 13:00 JST = 04:00 UTC。手元PCの取得（10:10）が済んだ頃に見る。
@@ -68,6 +68,26 @@ jobs:
                     "自宅のグローバルIPが変わると 403 で止まります。")
               sys.exit(1)
           PY
+
+      # 記録済みデータから静的サイトを作る。build.py は通信せず data/ だけを見る。
+      - name: Build site
+        run: python build.py
+
+      - name: Ensure Cloudflare Pages project exists
+        run: |
+          curl -s -o /dev/null -w "%{http_code}\n" -X POST \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/pages/projects" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"name":"price-tracker","production_branch":"master"}'
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: projects/price-tracker
+          command: pages deploy dist --project-name=price-tracker --branch=master
 
       # GitHub は定期ジョブの失敗を通知しないので、Issue を立てて明示的に鳴らす。
       # 既に開いている失敗 Issue があれば、増やさずコメントを足す。
