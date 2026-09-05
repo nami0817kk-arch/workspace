@@ -584,6 +584,55 @@ extension GameStateSquad on GameState {
     return MatchFactorEngine.analyze(team: team, startingLineup: lineup);
   }
 
+  /// 開幕前のキャンプで方針を選ぶ。選べるのはシーズンにつき一度だけ。
+  ///
+  /// 費用が払えなければ実施できない。見送る(none)ことはいつでもできる。
+  Future<bool> choosePreseasonCamp(PreseasonCamp camp) async {
+    if (_save == null || !_save!.preseasonCampPending) return false;
+    if (_save!.budget < camp.cost) return false;
+
+    _save!.budget -= camp.cost;
+    _save!.preseasonCampPending = false;
+
+    final team = userTeam;
+    for (final p in team.players) {
+      p.matchSharpness =
+          (p.matchSharpness + camp.sharpnessGain).clamp(0, 100);
+      p.fatigue = (p.fatigue + camp.fatigueCost).clamp(0, 100);
+      if (p.age <= 23 && camp.youthGrowthChance > 0) {
+        // 若手の遠征。出場経験と同じ経路で伸ばす。
+        if (GameState._campRng.nextDouble() < camp.youthGrowthChance) {
+          TrainingEngine.growFromMatchExperience(p);
+        }
+      }
+    }
+    if (camp.familiarityGain > 0) {
+      team.formationFamiliarity[team.formation] =
+          (team.currentFamiliarity + camp.familiarityGain).clamp(0, 100);
+    }
+
+    _logNews(
+      camp == PreseasonCamp.none
+          ? Tr.pick('今季はキャンプを張らずに開幕を迎えます。',
+              'You go into the season without a camp.')
+          : Tr.pick('${camp.label}のキャンプを行いました。',
+              'You held a ${camp.label}.'),
+      context: Tr.pick('キャンプ', 'Pre-season'),
+    );
+    _notify();
+    await _persist();
+    return true;
+  }
+
+  /// 理事会の路線を、いま守れているか。
+  bool get isClubVisionSatisfied => _save == null
+      ? true
+      : BoardEngine.isVisionSatisfied(
+          vision: _save!.clubVision,
+          team: userTeam,
+          budget: _save!.budget,
+        );
+
   /// 対戦相手への対策を決める。
   void setOppositionPlan(OppositionPlan plan) {
     if (_save == null) return;

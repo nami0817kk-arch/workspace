@@ -954,6 +954,15 @@ extension GameStateSeason on GameState {
       }
     }
     _refreshStaffCandidates();
+    // 理事会の路線。シーズンごとに変わる。半分は「特になし」で、
+    // 毎年何かを課され続けると窮屈になる。
+    const visions = ClubVision.values;
+    _save!.clubVision = Random().nextBool()
+        ? ClubVision.none
+        : visions[1 + Random().nextInt(visions.length - 1)];
+
+    // 開幕前のキャンプ。方針を選ぶか見送るまでホームで促す。
+    _save!.preseasonCampPending = true;
 
     // 高齢選手の引退判定(ユースプロスペクトは対象外)。
     final retirees = RetirementEngine.resolveRetirements(userTeam);

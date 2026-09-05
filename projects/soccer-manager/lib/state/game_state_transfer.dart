@@ -651,7 +651,19 @@ extension GameStateTransfer on GameState {
 
   /// 自クラブの選手を期限付きで他クラブへローン放出する。放出中は週俸を放出先が
   /// 負担し、自クラブの試合には出場できない。スタメンだった場合は自動で欠員を埋める。
-  Future<bool> loanOutPlayer(String playerId, int weeks) async {
+  /// 出場機会を約束させた貸出でクラブが受け取るレンタル料の割合。
+  ///
+  /// 0 は「受け取らない」。約束させるぶん、貸出先はこちらに払わない。
+  static const int developmentLoanFeePercent = 0;
+
+  /// 通常の貸出で受け取る週次のレンタル料の割合(市場価値に対する百分率)。
+  static const int standardLoanFeePercent = 2;
+
+  Future<bool> loanOutPlayer(
+    String playerId,
+    int weeks, {
+    bool guaranteePlayingTime = false,
+  }) async {
     if (_save == null) return false;
     if (!isTransferWindowOpen) return false;
     final team = userTeam;
@@ -669,6 +681,8 @@ extension GameStateTransfer on GameState {
       GameState.loanOutMaxWeeks,
     );
     player.loanedOutToClubName = destination.name;
+    // 育成型かどうか。約束させると成長は大きいが、レンタル料は入らない。
+    player.loanedWithPlayingTime = guaranteePlayingTime;
     // 復帰時の成長レポートのために放出時点の総合力を記録しておく。
     player.loanStartOverall = player.overall;
     final wasStarter = team.startingXI.remove(player.id);
@@ -787,6 +801,49 @@ extension GameStateTransfer on GameState {
     await _persist();
   }
 
+  /// 締切の節に入る駆け込みオファー。
+  ///
+  /// 相場より高い額を出してくる代わりに、有効期間は1週しかない。
+  /// 締切を過ぎれば同じ相手は現れないので、その場で決めることになる。
+  IncomingOffer? _rollDeadlineDayOffer(Team team) {
+    if (_save == null) return null;
+    if (GameState._offerRng.nextDouble() >= deadlineDayOfferChance) return null;
+
+    final eligible = team.players
+        .where((p) =>
+            !p.isLoan &&
+            !p.isLoanedOut &&
+            !_save!.incomingOffers.any((o) => o.playerId == p.id))
+        .toList();
+    if (eligible.length <= minSquadSize) return null;
+
+    // 狙われるのは主力。控えを高値で買いに来るのは不自然。
+    eligible.sort((a, b) => b.overall.compareTo(a.overall));
+    final target = eligible[GameState._offerRng.nextInt(
+        eligible.length < 5 ? eligible.length : 5)];
+
+    final rivals = _save!.league.teams
+        .where((t) => t.id != _save!.userTeamId)
+        .toList();
+    if (rivals.isEmpty) return null;
+    final buyer = rivals[GameState._offerRng.nextInt(rivals.length)];
+
+    return IncomingOffer(
+      id: 'deadline${_incomingOfferSeq++}',
+      playerId: target.id,
+      playerName: target.name,
+      buyerClubName: buyer.name,
+      amount: (target.marketValue * deadlineDayPremium).round(),
+      weeksRemaining: 1,
+    );
+  }
+
+  /// 締切の節に駆け込みオファーが入る確率。
+  static const double deadlineDayOfferChance = 0.35;
+
+  /// 駆け込みオファーの上乗せ率。相場より高いから迷う。
+  static const double deadlineDayPremium = 1.35;
+
   List<String> _advanceIncomingOffers() {
     final autoSold = <String>[];
     for (final o in List<IncomingOffer>.from(_save!.incomingOffers)) {
@@ -797,6 +854,26 @@ extension GameStateTransfer on GameState {
     }
 
     final team = userTeam;
+
+    // 締切の節には、相場より高い駆け込みのオファーが入ることがある。
+    // 期限があるだけでは判断が変わらない。締切間際に「今なら高く売れる」
+    // 場面が来るから、期限を意識することになる。
+    if (isTransferDeadlineMatchday) {
+      final deadlineOffer = _rollDeadlineDayOffer(team);
+      if (deadlineOffer != null) {
+        _save!.incomingOffers.add(deadlineOffer);
+        _logNews(
+          Tr.pick(
+              '締切間際: ${deadlineOffer.buyerClubName}が${deadlineOffer.playerName}に'
+                  '${deadlineOffer.amount}万円を提示しました。',
+              'Deadline day: ${deadlineOffer.buyerClubName} bid '
+                  '${deadlineOffer.amount} for ${deadlineOffer.playerName}.'),
+          context: Tr.pick('移籍', 'Transfers'),
+        );
+        return autoSold;
+      }
+    }
+
     if (isTransferWindowOpen && _save!.incomingOffers.length < 3) {
       // 既に1クラブからオファーが来ている選手に、別クラブから対抗の競合
       // オファーが届くことがある(入札合戦。同一選手へのオファーは最大2件まで)。

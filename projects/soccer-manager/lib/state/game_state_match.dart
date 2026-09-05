@@ -299,6 +299,16 @@ extension GameStateMatch on GameState {
       }
     }
 
+    // 理事会の路線。順位だけでなく、求められた戦い方を守れているかも
+    // 節ごとに評価される。破り続けると信頼が落ちていく。
+    _save!.confidence = (_save!.confidence +
+            BoardEngine.confidenceDeltaForVision(
+              vision: _save!.clubVision,
+              team: userTeam,
+              budget: _save!.budget,
+            ))
+        .clamp(0, 100);
+
     // スポンサー契約(年単位)の消化はシーズン開始時にまとめて処理する
     // (startNextSeason参照)。分割払いの引き落としは引き続き週次で行う。
     if (_save!.sponsorDeal == null && _save!.pendingSponsorOffers.isEmpty) {

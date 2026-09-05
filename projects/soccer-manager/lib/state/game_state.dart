@@ -85,6 +85,8 @@ import '../logic/match_factor_engine.dart';
 import '../logic/reserve_match_engine.dart';
 import '../logic/staff_market.dart';
 import '../models/corner_routine.dart';
+import '../models/club_vision.dart';
+import '../models/preseason_camp.dart';
 import '../models/opposition_plan.dart';
 import '../models/player_instruction.dart';
 import '../models/staff_member.dart';
@@ -283,10 +285,36 @@ class GameState extends ChangeNotifier {
     return nextMd >= midStart && nextMd <= midStart + 2;
   }
 
+  /// 移籍ウィンドウが閉じるまでの残り節数。
+  ///
+  /// 閉じているとき、オフシーズン、開幕前(締切は開幕そのもの)は null。
+  /// 締切が見えないと「まだ動ける」と思っているうちに閉まってしまう。
+  int? get transferWindowMatchdaysLeft {
+    if (_save == null || !isTransferWindowOpen) return null;
+    final nextMd = _save!.league.nextUnplayedFixture?.matchday;
+    if (nextMd == null) return null; // オフシーズン(期限なし)
+    final total = _totalMatchdaysThisSeason;
+    if (total == 0) return null;
+    if (nextMd <= 1) return 1; // 開幕前。開幕したら閉まる
+    final midStart = total ~/ 2;
+    return midStart + 2 - nextMd + 1;
+  }
+
+  /// この節を終えるとウィンドウが閉じるか。
+  bool get isTransferDeadlineMatchday => transferWindowMatchdaysLeft == 1;
+
   /// UI表示用の移籍ウィンドウ状態文言。
   String get transferWindowStatusLabel {
     if (isTransferWindowOpen) {
-      return Tr.pick('移籍ウィンドウ: オープン中', 'Transfer window: open');
+      final left = transferWindowMatchdaysLeft;
+      if (left == null) {
+        return Tr.pick('移籍ウィンドウ: オープン中', 'Transfer window: open');
+      }
+      if (left <= 1) {
+        return Tr.pick('移籍ウィンドウ: 今節で締切', 'Transfer window: deadline is this matchday');
+      }
+      return Tr.pick('移籍ウィンドウ: オープン中（あと$left節で締切）',
+          'Transfer window: open ($left matchdays to the deadline)');
     }
     final nextMd = _save?.league.nextUnplayedFixture?.matchday;
     final total = _totalMatchdaysThisSeason;
@@ -710,6 +738,8 @@ class GameState extends ChangeNotifier {
     _save!.rivalTeamName = rival.name;
     transferMarket = TransferMarket.generate();
     _refreshScoutCandidates();
+    // 新規開始時もキャンプの判断から始まる。
+    _save!.preseasonCampPending = true;
     // 開始時は全役職が空席。誰を先に雇うかが最初の判断になる。
     _refreshStaffCandidates();
     FreeAgentEngine.topUp(_save!.freeAgents);
@@ -832,6 +862,7 @@ class GameState extends ChangeNotifier {
   /// 移籍オファーの週次処理: 期限切れの削除、新規オファーの抽選発生、
   /// リリース条項の自動成立を行う。売却済み選手の名前を返す(UI通知用)。
   static final Random _offerRng = Random();
+  static final Random _campRng = Random();
 
   /// 直近のplayNextMatchdayでリリース条項により自動売却された選手名。
   List<String> lastReleaseClauseSales = [];

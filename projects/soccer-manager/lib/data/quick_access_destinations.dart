@@ -5,6 +5,7 @@ import '../screens/awards_screen.dart';
 import '../screens/best_eleven_screen.dart';
 import '../screens/calendar_screen.dart';
 import '../screens/club_screen.dart';
+import '../screens/analysis_screen.dart';
 import '../screens/cup_screen.dart';
 import '../screens/finance_screen.dart';
 import '../screens/glossary_screen.dart';
@@ -104,6 +105,12 @@ List<QuickAccessDestination> get quickAccessDestinations => [
         label: Tr.pick('施設・スタッフ', 'Facilities & staff'),
         color: Colors.blueGrey.shade400,
         builder: (_) => const ClubScreen(),
+      ),
+      QuickAccessDestination(
+        icon: Icons.query_stats,
+        label: Tr.pick('シーズン分析', 'Season analysis'),
+        color: Colors.teal.shade400,
+        builder: (_) => const AnalysisScreen(),
       ),
       QuickAccessDestination(
         icon: Icons.emoji_events,
