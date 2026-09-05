@@ -410,6 +410,21 @@ class PlayerDetailScreen extends StatelessWidget {
               style: const TextStyle(fontSize: 12, color: Colors.teal),
             ),
           ],
+          // 怪我のしやすさ。同じ疲労でも壊れやすい選手がいる。
+          // 補強で見るべき情報なので、特性と並べて出す。
+          Padding(
+            padding: const EdgeInsets.only(top: 4),
+            child: Text(
+              Tr.pick('怪我のしやすさ: ${p.injuryPronenessLabel}',
+                  'Injury proneness: ${p.injuryPronenessLabel}'),
+              style: TextStyle(
+                fontSize: 12,
+                color: p.injuryProneness >= 14
+                    ? SemanticColors.negative(context)
+                    : SemanticColors.subtleText(context),
+              ),
+            ),
+          ),
           if (p.trait != null) ...[
             const SizedBox(height: 4),
             Text(
@@ -1036,6 +1051,7 @@ class PlayerDetailScreen extends StatelessWidget {
   void _showLoanOutDialog(BuildContext context) {
     final gameState = context.read<GameState>();
     int weeks = 8;
+    bool guaranteePlayingTime = false;
     showDialog<void>(
       context: context,
       builder: (ctx) => StatefulBuilder(
@@ -1056,6 +1072,19 @@ class PlayerDetailScreen extends StatelessWidget {
                 label: Tr.pick('$weeks週', Tr.plural(weeks, 'week')),
                 onChanged: (v) => setState(() => weeks = v.round()),
               ),
+              // 育成型レンタル。ただ出すか、育てるために出すかの違い。
+              CheckboxListTile(
+                contentPadding: EdgeInsets.zero,
+                value: guaranteePlayingTime,
+                onChanged: (v) =>
+                    setState(() => guaranteePlayingTime = v ?? false),
+                title: Text(Tr.pick('出場機会を約束させる', 'Guarantee him playing time')),
+                subtitle: Text(
+                  Tr.pick('確実に試合に出るので大きく伸びる。代わりにレンタル料は受け取れない。',
+                      'He is sure to play and comes on a lot. In return you get no loan fee.'),
+                  style: const TextStyle(fontSize: 12),
+                ),
+              ),
             ],
           ),
           actions: [
@@ -1066,7 +1095,11 @@ class PlayerDetailScreen extends StatelessWidget {
             FilledButton(
               onPressed: () async {
                 Navigator.pop(ctx);
-                final ok = await gameState.loanOutPlayer(playerId, weeks);
+                final ok = await gameState.loanOutPlayer(
+                  playerId,
+                  weeks,
+                  guaranteePlayingTime: guaranteePlayingTime,
+                );
                 ok ? FeedbackService.success() : FeedbackService.error();
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(

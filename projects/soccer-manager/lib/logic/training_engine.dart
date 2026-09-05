@@ -3,6 +3,7 @@ import 'dart:math';
 import '../models/attributes.dart';
 import '../models/club_infrastructure.dart';
 import '../models/player.dart';
+import 'match_engine.dart';
 import '../models/team.dart';
 import '../models/training_focus.dart';
 
@@ -323,6 +324,7 @@ class TrainingEngine {
     final chance = (0.01 + p.fatigue / 100 * 0.015) *
         intensityFactor *
         naturalFitnessFactor *
+        MatchEngine.injuryPronenessFactor(p) *
         injuryFactor;
     if (_rng.nextDouble() < chance) {
       p.injuryWeeks = (p.injuryWeeks + 1 + _rng.nextInt(2)).clamp(1, 3);
@@ -379,12 +381,20 @@ class TrainingEngine {
   static const double loanDevelopmentVeteranFactor = 0.6;
   static const int loanDevelopmentSharpnessGain = 6;
 
+  /// 出場を約束させた貸出(育成型)で、成長に掛かる倍率。
+  ///
+  /// ただ貸し出すと、出番があるかは貸出先の都合次第になる。約束させると
+  /// 確実に試合に出るので伸びるが、貸出先はその見返りを求める
+  /// (レンタル料が入らない)。
+  static const double loanPlayingTimeFactor = 1.6;
+
   static void applyLoanDevelopment(Player p) {
     p.matchSharpness =
         (p.matchSharpness + loanDevelopmentSharpnessGain).clamp(0, 100);
     growFromMatchExperience(p);
-    final factor =
+    var factor =
         p.age < 24 ? loanDevelopmentYoungFactor : loanDevelopmentVeteranFactor;
+    if (p.loanedWithPlayingTime) factor *= loanPlayingTimeFactor;
     for (final k in _youthGrowthKeysFor(p)) {
       _grow(p, k, 0.5 * factor);
     }

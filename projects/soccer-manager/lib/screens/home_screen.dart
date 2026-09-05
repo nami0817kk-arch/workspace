@@ -31,6 +31,8 @@ import 'scout_report_screen.dart';
 import 'start_screen.dart';
 import 'youth_intake_screen.dart';
 import '../logic/match_factor_engine.dart';
+import '../models/club_vision.dart';
+import '../models/preseason_camp.dart';
 import '../l10n/tr.dart';
 
 /// 移籍オファーを選手ごとにグループ化し、各グループ内は金額の高い順に並べる
@@ -245,6 +247,53 @@ class HomeScreen extends StatelessWidget {
                         );
                       },
                       child: Text(Tr.pick('カップ戦へ', 'Go to the cup')),
+                    ),
+                  ),
+                ),
+              // 理事会の路線。順位だけでなく戦い方も見られている。
+              // 守れていないことに気づけないと、信頼が落ちる理由が
+              // 分からないまま解任される。
+              if ((gameState.save?.clubVision ?? ClubVision.none) !=
+                  ClubVision.none)
+                Card(
+                  child: ListTile(
+                    leading: Icon(
+                      gameState.isClubVisionSatisfied
+                          ? Icons.check_circle_outline
+                          : Icons.error_outline,
+                      color: gameState.isClubVisionSatisfied
+                          ? SemanticColors.positive(context)
+                          : SemanticColors.negative(context),
+                    ),
+                    title: Text(
+                      Tr.pick('理事会の路線: ${gameState.save!.clubVision.label}',
+                          'Board direction: ${gameState.save!.clubVision.label}'),
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                    subtitle: Text(
+                      gameState.isClubVisionSatisfied
+                          ? Tr.pick(
+                              '守れています。${gameState.save!.clubVision.requirement}',
+                              'You are meeting it. ${gameState.save!.clubVision.requirement}')
+                          : Tr.pick(
+                              '守れていません。${gameState.save!.clubVision.requirement}',
+                              'You are not meeting it. ${gameState.save!.clubVision.requirement}'),
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                  ),
+                ),
+              // 開幕前のキャンプ。方針を選ぶか見送るまで促す。
+              if (gameState.save?.preseasonCampPending ?? false)
+                Card(
+                  color: scheme.secondaryContainer,
+                  child: ListTile(
+                    leading: const Icon(Icons.terrain),
+                    title: Text(Tr.pick('シーズン前キャンプ', 'Pre-season camp')),
+                    subtitle: Text(Tr.pick('開幕までの数週間をどう使うか決めます',
+                        'Decide how to spend the weeks before kick-off')),
+                    trailing: FilledButton(
+                      onPressed: () => _showCampSheet(context),
+                      child: Text(Tr.pick('決める', 'Decide')),
                     ),
                   ),
                 ),
@@ -1906,4 +1955,52 @@ class _MatchFactorsPanel extends StatelessWidget {
       ),
     );
   }
+}
+
+
+/// キャンプの方針を選ぶシート。
+void _showCampSheet(BuildContext context) {
+  final gameState = context.read<GameState>();
+  showModalBottomSheet<void>(
+    context: context,
+    builder: (sheetContext) => SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(Tr.pick('シーズン前キャンプ', 'Pre-season camp'),
+                style: Theme.of(sheetContext).textTheme.titleMedium),
+            const SizedBox(height: 4),
+            Text(
+              Tr.pick('どれを選んでも、得るものと引き換えに何かを削ります。',
+                  'Each option gains you something at the cost of something else.'),
+              style: TextStyle(
+                  fontSize: 12,
+                  color: SemanticColors.subtleText(sheetContext)),
+            ),
+            const SizedBox(height: 12),
+            for (final camp in PreseasonCamp.values)
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                title: Text(camp.label),
+                subtitle: Text(
+                  camp.cost == 0
+                      ? camp.description
+                      : Tr.pick('${camp.description}（費用${camp.cost}万円）',
+                          '${camp.description} (${camp.cost})'),
+                  style: const TextStyle(fontSize: 12),
+                ),
+                enabled: (gameState.save?.budget ?? 0) >= camp.cost,
+                onTap: () async {
+                  Navigator.pop(sheetContext);
+                  await gameState.choosePreseasonCamp(camp);
+                },
+              ),
+          ],
+        ),
+      ),
+    ),
+  );
 }

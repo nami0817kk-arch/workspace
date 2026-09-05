@@ -1128,6 +1128,18 @@ class Player {
   /// プレースタイル(ロール)。デューティとは別に、活躍する能力値の傾向を表す。
   PlayerRole role;
 
+  /// 怪我のしやすさ(1-20)。高いほど負傷しやすい。
+  ///
+  /// 同じ疲労・同じ基礎体力でも、壊れやすい選手と壊れにくい選手がいる。
+  /// 補強のときに見るべき情報でありながら、これまでは全員同じ扱いだった。
+  int injuryProneness;
+
+  /// 育成型レンタル(出場機会を約束させた貸出)かどうか。
+  ///
+  /// 約束させると成長は大きくなるが、貸出先は見返りを求めるので
+  /// レンタル料が入らない。ただ出すか、育てるために出すかの違い。
+  bool loanedWithPlayingTime;
+
   /// 個別指示。ロールの上に重ねる細かい注文。未設定なら null。
   PlayerInstruction? instruction;
 
@@ -1278,6 +1290,8 @@ class Player {
     this.appearanceFee = 0,
     this.role = PlayerRole.standard,
     this.instruction,
+    this.injuryProneness = 10,
+    this.loanedWithPlayingTime = false,
     Map<String, int>? positionFamiliarity,
     this.matchSharpness = 80,
     this.youthMatchApps = 0,
@@ -1321,6 +1335,14 @@ class Player {
   bool get wantsTransfer => happiness < personality.transferRequestThreshold;
 
   int attributeValue(String key) => attributes[key] ?? 50;
+
+  /// 怪我のしやすさを3段階の語で表したもの。数値そのものは出さない。
+  /// 医療の見立ては幅のあるものなので、細かい数字を装わない。
+  String get injuryPronenessLabel => injuryProneness >= 14
+      ? Tr.pick('高い', 'High')
+      : injuryProneness <= 7
+          ? Tr.pick('低い', 'Low')
+          : Tr.pick('普通', 'Average');
 
   void setAttributeValue(String key, int value) {
     attributes[key] = value.clamp(1, 99);
@@ -1516,6 +1538,8 @@ class Player {
     put('appearanceFee', appearanceFee, 0);
     put('role', role.name, PlayerRole.standard.name);
     put('instruction', instruction?.name, null);
+    put('injuryProneness', injuryProneness, 10);
+    put('loanedWithPlayingTime', loanedWithPlayingTime, false);
     put('positionFamiliarity', positionFamiliarity, null);
     put('matchSharpness', matchSharpness, 80);
     put('youthMatchApps', youthMatchApps, 0);
@@ -1615,6 +1639,10 @@ class Player {
         json['duty'] as String?,
         PlayerDuty.support,
       ),
+      // 旧セーブには「怪我のしやすさ」が無い。普通(10)として読む。
+      injuryProneness: json['injuryProneness'] as int? ?? 10,
+      loanedWithPlayingTime:
+          json['loanedWithPlayingTime'] as bool? ?? false,
       // 旧セーブには指示が無い。null(=指示なし)のまま読む。
       instruction: json['instruction'] == null
           ? null

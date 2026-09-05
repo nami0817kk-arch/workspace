@@ -1111,6 +1111,13 @@ class MatchEngine {
     }
   }
 
+  /// 「怪我のしやすさ」による負傷確率の倍率(0.6〜1.4)。
+  ///
+  /// 同じ疲労・同じ基礎体力でも、壊れやすい選手と壊れにくい選手がいる。
+  /// 練習中の負傷にも同じ係数を掛ける(TrainingEngine)。
+  static double injuryPronenessFactor(Player p) =>
+      (0.6 + p.injuryProneness / 20 * 0.8).clamp(0.6, 1.4);
+
   static void _rollInjuries(List<Player> lineup, double injuryFactor) {
     for (final p in lineup) {
       // 基礎体力(naturalFitness)が高い選手ほど負傷しにくい。
@@ -1119,7 +1126,8 @@ class MatchEngine {
               .clamp(0.5, 1.5);
       final chance = (0.03 + (p.fatigue / 100) * 0.05) *
           injuryFactor *
-          naturalFitnessFactor;
+          naturalFitnessFactor *
+          injuryPronenessFactor(p);
       if (_rng.nextDouble() < chance) {
         final type = _rollInjuryType(p);
         final range = type.durationRange;

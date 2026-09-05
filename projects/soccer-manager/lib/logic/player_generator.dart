@@ -329,6 +329,9 @@ class PlayerGenerator {
       morale: 65 + _rng.nextInt(25),
       personality: _pickPersonality(),
       happiness: 55 + _rng.nextInt(30),
+      // 怪我のしやすさ。多くは普通で、端に寄る選手が少数出る。
+      // 全員同じだと補強で見るべき差にならない。
+      injuryProneness: (6 + _rng.nextInt(5) + _rng.nextInt(5)).clamp(1, 20),
     );
     player.wage = (player.marketValue / 40).round().clamp(5, 500);
     player.contractYearsRemaining = 1 + _rng.nextInt(4);

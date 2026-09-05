@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import '../models/club_vision.dart';
 import '../models/league.dart';
+import '../models/team.dart';
 import '../models/match_result.dart';
 import '../l10n/tr.dart';
 
@@ -121,6 +123,41 @@ class BoardEngine {
   /// クラブは試合結果だけでは信頼を失わないようにする。理事会の評価は
   /// シーズン中盤レビュー([midSeasonReviewDelta])とシーズン終了時の
   /// 順位評価([confidenceDeltaForSeasonEnd])が主役になる。
+  /// 理事会の路線を守れているか。
+  ///
+  /// 判定は「いま守れているか」だけを見る。守っていれば少し加算、
+  /// 破っていれば大きめに減算(satisfiedBonus / violatedPenalty)。
+  static bool isVisionSatisfied({
+    required ClubVision vision,
+    required Team team,
+    required int budget,
+  }) =>
+      switch (vision) {
+        ClubVision.none => true,
+        // 23歳以下がスタメンに規定人数いるか。
+        ClubVision.developYouth => team.players
+                .where((p) => team.startingXI.contains(p.id) && p.age <= 23)
+                .length >=
+            ClubVisionInfo.youthStartersRequired,
+        // 守備的な姿勢で臨んでいないか。
+        ClubVision.attackingFootball =>
+          team.mentality != TeamMentality.defensive,
+        // 資金が赤字でないか。
+        ClubVision.financialProudence => budget >= 0,
+      };
+
+  /// 路線の達成状況による、節ごとの信頼度への増減。
+  static int confidenceDeltaForVision({
+    required ClubVision vision,
+    required Team team,
+    required int budget,
+  }) {
+    if (vision == ClubVision.none) return 0;
+    return isVisionSatisfied(vision: vision, team: team, budget: budget)
+        ? vision.satisfiedBonus
+        : -vision.violatedPenalty;
+  }
+
   static int confidenceDeltaForMatch(MatchResult result, String userTeamId) {
     final isHome = result.homeTeamId == userTeamId;
     final userGoals = isHome ? result.homeGoals : result.awayGoals;

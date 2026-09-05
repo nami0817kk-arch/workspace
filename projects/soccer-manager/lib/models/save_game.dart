@@ -15,6 +15,7 @@ import 'press_question.dart';
 import 'season_award.dart';
 import 'season_record.dart';
 import 'sponsor.dart';
+import 'club_vision.dart';
 import 'staff_member.dart';
 import 'team.dart';
 import '../l10n/tr.dart';
@@ -146,6 +147,13 @@ class SaveGame {
 
   /// シーズンごとに確定した個人タイトル(得点王・年間MVP)の履歴。
   List<SeasonAward> seasonAwards;
+
+  /// 理事会がこのシーズンに求めている路線。
+  ClubVision clubVision;
+
+  /// 開幕前のキャンプで、まだ方針を選んでいなければ true。
+  /// 選ぶか見送るかするまで、ホーム画面で促し続ける。
+  bool preseasonCampPending;
 
   /// いま雇えるスタッフの候補。シーズン開始時に入れ替わる。
   List<StaffMember> staffCandidates;
@@ -314,6 +322,8 @@ class SaveGame {
     List<FixedDeposit>? fixedDeposits,
     List<SeasonAward>? seasonAwards,
     List<StaffMember>? staffCandidates,
+    this.preseasonCampPending = false,
+    this.clubVision = ClubVision.none,
     this.rivalTeamId,
     this.rivalTeamName,
     this.pendingPressConference,
@@ -419,6 +429,8 @@ class SaveGame {
         'incomingOffers': incomingOffers.map((o) => o.toJson()).toList(),
         'bankLoans': bankLoans.map((l) => l.toJson()).toList(),
         'fixedDeposits': fixedDeposits.map((d) => d.toJson()).toList(),
+        'preseasonCampPending': preseasonCampPending,
+        'clubVision': clubVision.name,
         'staffCandidates':
             staffCandidates.map((s) => s.toJson()).toList(),
         'seasonAwards': seasonAwards.map((a) => a.toJson()).toList(),
@@ -551,6 +563,12 @@ class SaveGame {
                 ?.map((e) => SeasonAward.fromJson(e as Map<String, dynamic>))
                 .toList() ??
             [],
+        preseasonCampPending: json['preseasonCampPending'] as bool? ?? false,
+        // 旧セーブは路線なし。順位だけで評価される従来の挙動。
+        clubVision: ClubVision.values.firstWhere(
+          (v) => v.name == json['clubVision'],
+          orElse: () => ClubVision.none,
+        ),
         staffCandidates: (json['staffCandidates'] as List?)
                 ?.map((e) => StaffMember.fromJson(e as Map<String, dynamic>))
                 .toList() ??
