@@ -241,6 +241,10 @@ feeds:
   - {name: ゲキサカ, url: "https://web.gekisaka.jp/feed", league: "", verified: true}
   - {name: Transfermarkt, url: "https://www.transfermarkt.co.uk/rss/news", league: "", verified: true}
   - {name: Daily Mail Football, url: "https://www.dailymail.co.uk/sport/football/index.rss", league: england, verified: true}
+  # 2026-09-05 に実測して足した。どちらもサッカー専用のフィードで、
+  # 全競技混在ではない（Yahoo のスポーツRSSは50件中サッカー8件だったので足さない）
+  - {name: BBC Football, url: "https://feeds.bbci.co.uk/sport/football/rss.xml", league: england, verified: true}
+  - {name: Guardian Football, url: "https://www.theguardian.com/football/rss", league: england, verified: true}
   # まとめサイト。2026-09-02 に実測して足した。確度は未確認どまり（rumour 群）。
   # 参考チャンネルが「ネット民の反応」を主題にしているので、いま何が話題かを
   # 掴む用途では効く。ただし**書き込みは事実の根拠にならない**。

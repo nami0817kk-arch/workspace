@@ -531,3 +531,38 @@ python -m src.cli x --topic "Alvarez"  # 話題で絞る
   こちらは同じ題材を 2:30 で作った。
 
 **サムネイルは3つとも通信社の報道写真。**ここは同じにできない（`docs/cards.md`）。
+
+
+## 情報源を探した記録（2026-09-05）
+
+ユーザーから3サイトをもらい、海外の似たものも探した。**到達性と中身を測ってから**足す。
+
+| サイト | 結果 |
+|---|---|
+| soccer-king.jp | **既に登録済み**（`https://www.soccer-king.jp/feed`） |
+| soccer.yahoo.co.jp/ws | 専用のRSSが無い。`/rss` は404 |
+| news.yahoo.co.jp スポーツRSS | **足さない。50件中サッカーは8件（16%）**。枠の8割が無駄になる |
+| goal.com/jp | **RSSが無い。**`/feeds/news`・`?fmt=rss` などいずれも404。取るなら解析が要る |
+| **BBC Football** | 足した。サッカー専用・84件・最新3.5時間前 |
+| **Guardian Football** | 足した。サッカー専用・59件・最新4.0時間前 |
+
+Yahoo のスポーツRSSを外したのは、Sky の全競技フィードを差し替えたときと同じ理由。
+あのときは20件中サッカー7件（35%）で外した。**今回はそれより悪い。**
+
+### 海外の「集約サイト」に当たるもの
+
+FOOTBALL TOPIC（まとめ集約＋Points）の海外版を探した。
+
+- **NewsNow Football**（`newsnow.co.uk/h/Sport/Football`）… いちばん近い。
+  HTMLに `<a class="hll">見出し</a>`、`data-pub` に媒体名、
+  `<span class="time" data-time="1788563974">` に**UNIX時刻**、
+  `<a class="fav" href="/h/Sport/Football/Premier+League/Ipswich+Town">` に
+  **クラブとリーグのタグ**が入っている。league を自動で埋められる見込み。
+  ただし**人気の点数は見当たらない**（FOOTBALL TOPIC の Points に当たるものが無い）
+- **Reddit r/soccer** … 反応と票数がそろう理想形だが、**JSON は 403**
+  （説明的な User-Agent でも拒否）。RSS は取れるが**票数が入らない**ので、
+  「いま読まれているか」の軸には使えない
+- OneFootball / 90min … RSS が無い
+
+**「人気の実数が取れる」という点では FOOTBALL TOPIC が今のところ唯一。**
+海外は NewsNow で幅を足せるが、2つめの軸（読まれているか）は日本語側にしかない。
