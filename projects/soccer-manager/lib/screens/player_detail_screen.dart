@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../logic/attribute_context_engine.dart';
 import '../logic/contract_engine.dart';
 import '../logic/retirement_engine.dart';
 import '../logic/dynamics_engine.dart';
@@ -50,6 +51,11 @@ class PlayerDetailScreen extends StatelessWidget {
         break;
       }
     }
+
+    // この選手で効いている能力。詳細一覧で印を付けるのに使う。
+    final keyAttributeKeys = AttributeContextEngine.keyAttributesFor(p)
+        .map((k) => k.key)
+        .toSet();
 
     final categories = [
       AttributeCategory.technical,
@@ -793,6 +799,10 @@ class PlayerDetailScreen extends StatelessWidget {
                 : SemanticColors.positive(context),
           ),
           const Divider(height: 32),
+          // 42項目のうち、この選手で実際に効いているものだけを先に出す。
+          // 全部並べても、どれを見ればいいのか分からない。
+          _KeyAttributesCard(player: p),
+          const SizedBox(height: 12),
           Text(Tr.pick('詳細能力値', 'Full attributes'),
               style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: 4),
@@ -816,7 +826,12 @@ class PlayerDetailScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: StatBar(
-                        label: AttributeKeys.labelOf(key),
+                        // 効いている能力には印を付ける。折りたたみを
+                        // 開いたときにも、見るべき行が分かるように。
+                        label: keyAttributeKeys.contains(key)
+                            ? Tr.pick('★${AttributeKeys.labelOf(key)}',
+                                '* ${AttributeKeys.labelOf(key)}')
+                            : AttributeKeys.labelOf(key),
                         value: p.attributeValue(key),
                       ),
                     ),
@@ -1230,6 +1245,76 @@ class _MatchImpactSummary extends StatelessWidget {
               ),
             ),
         ],
+      ),
+    );
+  }
+}
+
+
+/// この選手で効いている能力を、理由つきで並べるカード。
+///
+/// 42項目を全部見せても、どれを見ればいいのかは分からない。ロールが
+/// 見ている能力・特性の発動条件・そのポジションの総合力に効く能力——
+/// **実際に計算へ使われているもの**だけを拾って出す。
+class _KeyAttributesCard extends StatelessWidget {
+  final Player player;
+  const _KeyAttributesCard({required this.player});
+
+  @override
+  Widget build(BuildContext context) {
+    final gameState = context.watch<GameState>();
+    final keys = AttributeContextEngine.keyAttributesFor(
+      player,
+      league: gameState.save?.league,
+    );
+    if (keys.isEmpty) return const SizedBox.shrink();
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(Tr.pick('この選手で効いている能力', 'What matters for this player'),
+                style: Theme.of(context).textTheme.titleSmall),
+            const SizedBox(height: 8),
+            for (final k in keys)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            '${AttributeKeys.labelOf(k.key)} ${k.value}',
+                            style: const TextStyle(
+                                fontSize: 13, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        if (k.standingLabel != null)
+                          Text(
+                            k.standingLabel!,
+                            style: TextStyle(
+                              fontSize: 11,
+                              color: SemanticColors.subtleText(context),
+                            ),
+                          ),
+                      ],
+                    ),
+                    Text(
+                      k.why,
+                      style: TextStyle(
+                        fontSize: 11,
+                        color: SemanticColors.subtleText(context),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
