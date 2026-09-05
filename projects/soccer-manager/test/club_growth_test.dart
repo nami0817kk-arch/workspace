@@ -52,22 +52,35 @@ void main() {
   }
 
   group('1. 契約更新の費用', () {
-    test('更新費は市場価値ではなく週俸で決まる', () {
-      // 以前は市場価値の50%だった。選手が育つほど更新費が跳ね上がり、
-      // 移籍で獲るのと同じ値段を払わないと残せなかった。
-      final cheap = make(attr: 50, wage: 20);
-      final star = make(attr: 90, wage: 20);
-
-      expect(star.marketValue, greaterThan(cheap.marketValue * 3),
-          reason: '前提: 能力が上がると市場価値は大きく伸びる');
-      expect(ContractEngine.renewalCost(star),
-          ContractEngine.renewalCost(cheap),
-          reason: '週俸が同じなら更新費も同じであるべき');
+    test('残す方が、買い直すより必ず安い', () {
+      // この不変条件が崩れると「更新できない」が形を変えて戻ってくる。
+      // 前回、これを示していたテストを条件の方を緩めて通してしまい、
+      // 高給の主力で問題が残った。今度は条件を守る側を直してある。
+      for (final attr in [50, 65, 80, 90]) {
+        for (final wage in [10, 50, 200, 500]) {
+          final p = make(attr: attr, wage: wage);
+          final total = ContractEngine.renewalCost(p) +
+              ContractEngine.signingBonusFor(p);
+          expect(total, lessThan(p.marketValue * 0.5),
+              reason: '能力$attr・週俸$wage で、更新費が市場価値の半分を超えている');
+        }
+      }
     });
 
-    test('週俸が高い選手ほど更新費も高い', () {
-      expect(ContractEngine.renewalCost(make(wage: 100)),
-          greaterThan(ContractEngine.renewalCost(make(wage: 20))));
+    test('週俸が高いほど手数料も高いが、市場価値による上限がある', () {
+      // 更新のたびに要求週俸は上がる(最低希望額は現在の1.05〜1.20倍)。
+      // 週俸だけに紐づけると、何度も更新した主力ほど残しにくくなる。
+      expect(ContractEngine.renewalCost(make(wage: 40)),
+          greaterThan(ContractEngine.renewalCost(make(wage: 10))));
+
+      final inflated = make(attr: 50, wage: 500);
+      expect(
+        ContractEngine.renewalCost(inflated),
+        lessThanOrEqualTo(
+            (inflated.marketValue * ContractEngine.maxRenewalShareOfValue)
+                .round()),
+        reason: '週俸が膨らんでも、手数料は市場価値の一定割合を超えない',
+      );
     });
 
     test('能力が上がるほど、以前の計算との差が大きくなる', () {

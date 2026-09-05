@@ -211,6 +211,20 @@ class _SquadScreenState extends State<SquadScreen> {
                       'Wage: ${p.wage} / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}'),
                 ),
                 const SizedBox(height: 12),
+                if (gameState.save!.budget < totalCost)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Text(
+                      Tr.pick(
+                          '資金が${totalCost - gameState.save!.budget}万円足りません'
+                              '（必要$totalCost万円 / 手元${gameState.save!.budget}万円）。',
+                          'You are ${totalCost - gameState.save!.budget} short '
+                              '(need $totalCost, you have ${gameState.save!.budget}).'),
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: SemanticColors.negative(context)),
+                    ),
+                  ),
                 SizedBox(
                   width: double.infinity,
                   child: FilledButton(

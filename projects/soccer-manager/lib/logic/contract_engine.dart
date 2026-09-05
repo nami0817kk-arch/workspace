@@ -81,10 +81,23 @@ class ContractEngine {
   /// 手数料は週俸に紐づける。3か月分(12週)を目安にした。価値ではなく
   /// 待遇に応じた額になるので、高給の主力ほど高く、若手は安い。
   /// 市場価値に応じた大きな出費はサインボーナス(signingBonusFor)が担う。
-  static int renewalCost(Player p) => p.wage * agentFeeWeeks;
+  static int renewalCost(Player p) {
+    final agentFee = p.wage * agentFeeWeeks;
+    // 週俸だけに紐づけると、更新のたびに要求週俸が上がる(最低希望額は
+    // 現在の週俸の1.05〜1.20倍)ぶん手数料も膨らむ。何度も更新した主力ほど
+    // 残しにくくなり、元の問題が形を変えて戻ってくる。
+    //
+    // 市場価値に対する上限を置く。サインボーナス(12%)と合わせても
+    // 市場価値の3割に届かないので、**残す方が買い直すより必ず安い**。
+    final cap = (p.marketValue * maxRenewalShareOfValue).round();
+    return agentFee < cap ? agentFee : cap;
+  }
 
   /// 代理人手数料の週数。
   static const int agentFeeWeeks = 12;
+
+  /// 代理人手数料が市場価値に対して占めてよい上限。
+  static const double maxRenewalShareOfValue = 0.15;
 
   /// 放出(契約解除)にかかる違約金相当額（万円）。週俸が高く契約が長く
   /// 残っている選手ほど高額になり、移籍先が見つからない場合でもクラブが

@@ -549,6 +549,24 @@ class PlayerDetailScreen extends StatelessWidget {
                   fontSize: 12, color: SemanticColors.subtleText(context)),
             ),
             const SizedBox(height: 8),
+            // 資金が足りないとボタンが灰色になるだけで、何がどれだけ
+            // 足りないのかが出ていなかった。更新できない理由が分からないと、
+            // 資金を作るのか、諦めて放出するのかも決められない。
+            if (gameState.save!.budget < totalRenewalCost)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Text(
+                  Tr.pick(
+                      '資金が${totalRenewalCost - gameState.save!.budget}万円足りません'
+                          '（必要$totalRenewalCost万円 / 手元${gameState.save!.budget}万円）。'
+                          '選手の放出や融資で資金を作るか、週俸交渉で更新してください。',
+                      'You are ${totalRenewalCost - gameState.save!.budget} short '
+                          '(need $totalRenewalCost, you have ${gameState.save!.budget}). '
+                          'Sell someone, take a loan, or re-sign him through wage talks.'),
+                  style: TextStyle(
+                      fontSize: 12, color: SemanticColors.negative(context)),
+                ),
+              ),
             FilledButton(
               onPressed: gameState.save!.budget < totalRenewalCost
                   ? null
