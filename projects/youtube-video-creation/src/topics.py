@@ -69,3 +69,12 @@ def parse(html: str, limit: int = 60) -> list[tuple[str, str]]:
 def lines(sort: str = "話題", limit: int = 60, session=None) -> str:
     """`gather --paste` にそのまま渡せる「見出し<TAB>URL」の並び。"""
     return chr(10).join(f"{title}{chr(9)}{url}" for title, url in fetch(sort, limit, session))
+
+
+def ranks(sort: str = "話題", limit: int = 60, session=None) -> dict[str, int]:
+    """リンク先URL → 掲載順（1が最上位）。
+
+    話題順のページは**クリック数の多い順**に並んでいる。並び順そのものが
+    「いま何が読まれているか」で、こちらのフィードでは代わりが作れない。
+    """
+    return {url: index for index, (_, url) in enumerate(fetch(sort, limit, session), start=1)}

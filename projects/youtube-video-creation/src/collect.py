@@ -31,6 +31,7 @@ class Hit:
     league: str = ""         # 取得元で分かっているとき。空ならクラブ名辞書で当てる
     flags: dict = field(default_factory=dict)  # 取得元で決まったフラグ（goals / numbers など）
     kind: str = ""           # 同上。空なら見出しから当てる
+    rank: int = 0            # 集約サイトでの掲載順（クリック数順）。0 は載っていない
 
 
 def parse(text: str) -> list[Hit]:
@@ -191,7 +192,9 @@ def to_yaml(hits: list[Hit], date_label: str, merge: bool = True, plan=None) -> 
         seen = " ".join(hit.title for hit in bunch)
         topic = club_book.topic_of(seen)
         # 取得元でリーグが分かっているならそれを使う。辞書の推定で上書きしない
-        league = head.league or club_book.league_of(seen)
+        # リーグ名で試合と判定したなら、league もそこから埋める。
+        # 片方だけ使うと lint が「match なのに league が空」で止まる
+        league = head.league or club_book.league_of(seen) or league_from_hint(seen)
         kind = head.kind or guess_kind(head.title, head.league)
 
         lines += [
@@ -210,6 +213,11 @@ def to_yaml(hits: list[Hit], date_label: str, merge: bool = True, plan=None) -> 
                                             if english else "            # 英語サイトを引く語"),
             f"    url: {head.url}",
         ]
+        # 集約サイトの掲載順。**もう一つの採点の軸**なので、まとめの中で
+        # いちばん上に出ていたものが分かるように残す
+        best = min((hit.rank for hit in bunch if hit.rank), default=0)
+        if best:
+            lines.append(f"    topic_rank: {best}   # まとめ集約サイトの掲載順（クリック数順）")
         if head.hours_ago >= 0:
             lines.append(f"    hours_ago: {head.hours_ago:g}   # フィードの時刻から")
         elif head.posted_on:
@@ -347,33 +355,50 @@ def guess_kind(title: str, league: str = "") -> str:
 
 # 見出しに出るリーグ・大会の名前。クラブ名が入らない見出し
 # （「プレミアデビュー戦ハイライト」）でも、どこの試合かは分かる。
-LEAGUE_HINTS = (
-    "プレミア", "ラ・リーガ", "リーガ", "セリエ", "ブンデス", "リーグ・アン", "リーグアン",
-    "エールディビジ", "Jリーグ", "J1", "J2", "J3", "チャンピオンズリーグ",
-    "ヨーロッパリーグ",
-    # 「CL」「EL」は入れない。スペイン語の el / 英語の cl に当たる
-    # （実測 2026-09-05: 「Con el resultado de Balaídos」が試合になった）。
-    # 「代表」も入れない。代表戦はこちらのリーグ一覧に無いので league を埋められない
+# 見出しに出るリーグの名前と、対応するリーグ。**判定に使ったら league も埋める。**
+# 実測（2026-09-05）で、名前で「試合」と決めながら league を空のままにしたため、
+# lint が「match なのに league が空」で止まった。片方だけ使うと辻褄が合わない。
+#
+# チャンピオンズリーグとヨーロッパリーグは入れない。リーグをまたぐ大会なので、
+# どのリーグの試合かを決められない（＝こちらでは扱えない）。
+# 「CL」「EL」も入れない。スペイン語の el / 英語の cl に当たる
+# （「Con el resultado de Balaídos」が試合になった）。
+# 「代表」も入れない。代表戦はリーグ一覧に無い。
+LEAGUE_BY_HINT = {
+    "プレミア": "england", "Premier League": "england",
+    "ラ・リーガ": "spain", "リーガ": "spain", "La Liga": "spain",
+    "セリエ": "italy", "Serie A": "italy",
+    "ブンデス": "germany", "Bundesliga": "germany",
+    "リーグ・アン": "france", "リーグアン": "france", "Ligue 1": "france",
+    "エールディビジ": "netherlands", "Eredivisie": "netherlands",
+    "Jリーグ": "japan", "J1": "japan", "J2": "japan", "J3": "japan",
+}
+
+LEAGUE_HINTS = tuple(LEAGUE_BY_HINT)
+_UNUSED_HINTS = (
     "Premier League", "La Liga", "Serie A", "Bundesliga", "Ligue 1",
     "Eredivisie", "Champions League", "Europa League",
 )
 
 
-def _league_hint(text: str) -> bool:
-    """どのリーグの試合か、見出しから見当がつくか。"""
+def league_from_hint(text: str) -> str:
+    """見出しのリーグ名から、どのリーグかを返す。分からなければ空。"""
     import re
 
-    from . import clubs as club_book
-
-    if club_book.league_of(text):
-        return True
-    for word in LEAGUE_HINTS:
+    for word, league in LEAGUE_BY_HINT.items():
         if word.isascii():
             if re.search(rf"(?<![A-Za-z]){re.escape(word)}(?![A-Za-z])", text, re.I):
-                return True
+                return league
         elif word in text:
-            return True
-    return False
+            return league
+    return ""
+
+
+def _league_hint(text: str) -> bool:
+    """どのリーグの試合か、見出しから見当がつくか。"""
+    from . import clubs as club_book
+
+    return bool(club_book.league_of(text) or league_from_hint(text))
 
 
 def _match_like(text: str) -> bool:

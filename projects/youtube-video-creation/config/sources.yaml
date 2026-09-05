@@ -318,6 +318,9 @@ scoring:
     # 日本人選手が絡むか。日本人枠だけでなく、朝夜の枠の並べ替えにも効かせる。
     # 参考チャンネルの実測（2026-09-04）で、日本人選手の回が再生の中心だった。
     japanese: 3
+    # まとめ集約サイトの掲載順（クリック数順）。速報としての大きさではなく、
+    # **いま実際に読まれているか**を測る、もう一つの軸
+    topic_rank: 3
     # 何社が同じ話を書いているか。世の中がいま何に注目しているかの代わりになる。
     # reaction や numbers は人が手で立てる欄で、gather は全部 false で書き出す。
     # 実際に回すと点数が「新しさ＋ビッグクラブ」だけになり、地域リーグの記事と
@@ -332,6 +335,10 @@ scoring:
     6: 3
     12: 2
     24: 1
+  topic_ranks:        # 集約サイトの掲載順が何位以内なら何点か
+    10: 3
+    25: 2
+    50: 1
   outlets_count:      # 何社が書いていたら何点か（同じ媒体の複数記事は1社と数える）
     2: 1
     3: 2
@@ -393,12 +400,14 @@ scoring:
     # 夜は1日の総まとめ。点数の高いものから
     evening_1: {prefer: total}
     evening_2: {prefer: total}
-    evening_3: {prefer: total}
+    # 掲載順だけで選ぶ枠。こちらの採点を通さない**二つ目の抽出**。
+    # 速報としては小さくても、実際に読まれている話を1本入れる
+    evening_3: {prefer: topic, min_score: 0}
     # 日本人選手の枠を4本。該当が無い日は、埋めずに空ける
     # （別の話で埋めると枠の意味がなくなる）
     japan_1: {prefer: total, require_japanese: true}
     japan_2: {prefer: total, require_japanese: true}
-    japan_3: {prefer: freshness, require_japanese: true}
+    japan_3: {prefer: topic, require_japanese: true, min_score: 0}
 
 # テーマが決まったあとの深掘り検索。{theme} に選んだテーマが入る
 # {theme} には候補の見出し、{en} には候補の en（英語の語）が入る。

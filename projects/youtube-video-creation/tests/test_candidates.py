@@ -552,3 +552,73 @@ def test_日本人の候補が無ければ枠を空ける():
     chosen, fallbacks = assign(items, JAPAN_SCORING, ["japan"])
     assert "japan" not in chosen
     assert any("日本人選手が絡む候補がありません" in n for n in fallbacks["japan"])
+
+
+# 抽出の軸を2つにした（2026-09-05 ユーザー判断）。
+#   1つめ: 新しさ・媒体数・日本人など＝「速報としてどれだけ大きいか」
+#   2つめ: まとめ集約サイトの掲載順（クリック数順）＝「いま実際に読まれているか」
+# まとめ由来の候補は媒体数1・時刻不明で1つめでは点が伸びず、候補を増やしても
+# 枠が埋まらなかった。並び順そのものが手がかりになる。
+
+
+def _scoring():
+    return {
+        "weights": {"freshness": 3, "outlets": 3, "topic_rank": 3},
+        "freshness_hours": {6: 3, 12: 2, 24: 1},
+        "outlets_count": {2: 1, 3: 2, 5: 3},
+        "topic_ranks": {10: 3, 25: 2, 50: 1},
+    }
+
+
+def _candidate(**kw):
+    from src.candidates import Candidate
+
+    base = dict(id="x", title="見出し", hours_ago=99.0)
+    base.update(kw)
+    return Candidate(**base)
+
+
+def test_掲載順が上ほど点が高い():
+    from src.candidates import score
+
+    top, middle, low = (_candidate(id=f"c{i}", topic_rank=r) for i, r in enumerate((3, 20, 45)))
+    ranked = score([top, middle, low], _scoring())
+
+    points = {c.id: c.breakdown.get("話題順", 0) for c in ranked}
+    assert points["c0"] > points["c1"] > points["c2"]
+
+
+def test_載っていなければ話題順の点は付かない():
+    from src.candidates import score
+
+    (item,) = score([_candidate(topic_rank=0)], _scoring())
+    assert "話題順" not in item.breakdown
+
+
+def test_話題順の枠は掲載順だけで選ぶ():
+    """こちらの採点を通さない枠。点が低くても、読まれているものを入れる。"""
+    from src.candidates import assign, score
+
+    scoring = _scoring()
+    scoring["slots"] = {"s": {"prefer": "topic", "min_score": 0}}
+    scoring["spread_topics"] = False
+    scoring["spread_kinds"] = False
+    items = score([
+        _candidate(id="高得点", hours_ago=1.0, topic_rank=0),
+        _candidate(id="読まれている", hours_ago=99.0, topic_rank=2),
+    ], scoring)
+
+    chosen, _ = assign(items, scoring, ["s"])
+    assert chosen["s"].id == "読まれている"
+
+
+def test_話題順の枠に載っている候補が無ければ空ける():
+    from src.candidates import assign, score
+
+    scoring = _scoring()
+    scoring["slots"] = {"s": {"prefer": "topic"}}
+    items = score([_candidate(id="載っていない", topic_rank=0)], scoring)
+
+    chosen, fallbacks = assign(items, scoring, ["s"])
+    assert "s" not in chosen
+    assert "まとめ集約サイト" in fallbacks["s"][0]
