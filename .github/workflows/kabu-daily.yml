@@ -51,18 +51,38 @@ jobs:
         run: python src/build_site.py --no-fetch
 
       # 手元PCの取得タスクが止まっていないかの監視。
-      # 最新データが4日より古ければ失敗し、下の Issue 通知が鳴る。
+      # 失敗そのものは run-daily.ps1 がデスクトップ通知で知らせる。ここが拾うのは
+      # 「PCが起動していない」「タスクが実行されなかった」など、手元で通知すら
+      # 出ない止まり方。1営業日ぶん遅れたら鳴らす（2026-09-06 に4日→1営業日）。
+      #
+      # 祝日は考慮していない。休場日を挟むと1回だけ空振りするが、祝日表を
+      # 抱えて誤って「鳴らさない」より、空振りする側に倒す。空振りかどうかは
+      # 下のメッセージで判断できるようにしてある。
       - name: Check data freshness
         run: |
           python - <<'PY'
           import json, sys
-          from datetime import date, datetime
+          from datetime import datetime, timedelta, timezone
           d = json.load(open("data/latest.json", encoding="utf-8"))
           rec = datetime.strptime(d["rec_date"], "%Y-%m-%d").date()
-          age = (date.today() - rec).days
-          print(f"latest rec_date={rec} ({age}日前)")
-          if age > 4:
-              print("::error::ランキングデータが4日以上更新されていません。手元PCの取得タスク(run-daily.ps1)を確認してください。")
+          # 相場の日付なので JST で数える
+          today = datetime.now(timezone(timedelta(hours=9))).date()
+
+          business_days = 0
+          cur = rec
+          while cur < today:
+              cur += timedelta(days=1)
+              if cur.weekday() < 5:
+                  business_days += 1
+
+          print(f"latest rec_date={rec} / today={today} / 営業日で{business_days}日ぶん遅れ")
+          if business_days > 1:
+              print(
+                  f"::error::ランキングデータが{business_days}営業日ぶん古いままです"
+                  f"（最新 {rec}）。手元PCの取得タスク run-daily.ps1 が動いたか、"
+                  "同ディレクトリの run-daily.log を確認してください。"
+                  "この間に東証の休場日があったなら空振りです。"
+              )
               sys.exit(1)
           PY
 
