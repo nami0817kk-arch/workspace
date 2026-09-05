@@ -196,6 +196,9 @@ def main(argv: list[str] | None = None) -> int:
     p_react.add_argument("--word", action="append", default=[],
                          help="数える言葉。ラベル:語,語 の形。何度でも指定できる")
 
+    p_handoff = sub.add_parser("handoff", help="手で投稿するための手順書を書き出す")
+    p_handoff.add_argument("build_dir", help="build の出力ディレクトリ")
+
     p_contact = sub.add_parser("contact", help="画面が変わるたびの1枚を並べて見る")
     p_contact.add_argument("script")
     p_contact.add_argument("--out", default=None, help="出力先（既定: output/<台本名>）")
@@ -503,6 +506,26 @@ def _cmd_reactions(args, config) -> int:
         print(f"        - {{text: {post.short}, label: '>>{post.no}'}}")
     print(f"    tier: 未確認    # 匿名の書き込みなので、単独では根拠にしない")
     print(f"    sources:\n      - {args.url}")
+    return 0
+
+
+def _cmd_handoff(args, config) -> int:
+    """手で投稿するときの手順書を書き出す。
+
+    API の1日枠を超えたぶんは Studio から手で上げる。**何をどこに貼るのかを
+    毎回思い出すのは無駄**なので、投稿画面の順に並べて1枚に置く。
+    """
+    from . import handoff as handoff_mod
+    from .config import _resolve
+
+    out = _resolve(args.build_dir)
+    try:
+        target = handoff_mod.write_sheet(out)
+    except handoff_mod.HandoffError as error:
+        print(str(error), file=sys.stderr)
+        return 1
+    print(f"手順書: {target}")
+    print("  動画・サムネ・字幕の場所と、貼る文面が順番に並んでいます")
     return 0
 
 
@@ -1957,6 +1980,7 @@ HANDLERS = {
     "build": _cmd_build,
     "short": _cmd_short,
     "reactions": _cmd_reactions,
+    "handoff": _cmd_handoff,
     "review": _cmd_review,
     "contact": _cmd_contact,
     "thumbnail": _cmd_thumbnail,
