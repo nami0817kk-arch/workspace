@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:soccer_manager/logic/board_engine.dart';
 import 'package:soccer_manager/logic/staff_market.dart';
 import 'package:soccer_manager/models/club_infrastructure.dart';
 import 'package:soccer_manager/models/save_game.dart';
@@ -90,6 +91,74 @@ void main() {
           reason: '来ないはずの人が候補に出ている: ${s.roleAbility}',
         );
       }
+    });
+  });
+
+  group('雇える現実味', () {
+    test('スタッフの週俸は、同じ水準の選手より安い', () {
+      // 以前は 10 + 能力^2 * 0.9 で、能力8のコーチが週俸68。5部の主力
+      // 選手より高く、給与予算の余裕(実測64)を1人で使い切っていた。
+      expect(StaffMember.askingWage(8), lessThan(30));
+      expect(StaffMember.askingWage(3), lessThan(10));
+    });
+
+    test('理事会の予算はスタッフ5人ぶんを見込んでいる', () {
+      for (final tier in [1, 3, 5]) {
+        final allowance = BoardEngine.staffWageAllowanceFor(tier);
+        final expectedOne = StaffMember.askingWage(
+            StaffMember.expectedAbilityForTier(tier));
+        expect(allowance, expectedOne * StaffRole.values.length,
+            reason: 'tier$tier の見込みが5人ぶんになっていない');
+      }
+    });
+
+    test('見込みは、実際にそのティアへ来る人材の相場から出す', () {
+      // 見込みと現実がずれると、予算は足りているのに雇えない(または
+      // 予算だけ余る)状態になる。willJoin と同じ式から導く。
+      for (final tier in [1, 3, 5]) {
+        final expected = StaffMember.expectedAbilityForTier(tier);
+        expect(
+          StaffMember.willJoin(
+              roleAbility: expected, divisionTier: tier, confidence: 50),
+          isTrue,
+          reason: 'tier$tier で、見込んだ水準の人材が来ないことになっている',
+        );
+      }
+    });
+
+    test('新規開始のクラブで、5役職すべてを埋められる', () async {
+      final game = GameState();
+      await game.startNewGame('テストFC');
+
+      var hired = 0;
+      for (final role in StaffRole.values) {
+        final cands = [...game.staffCandidatesFor(role)]
+          ..sort((a, b) => a.wage.compareTo(b.wage));
+        for (final c in cands) {
+          if (await game.hireStaff(c.id)) {
+            hired++;
+            break;
+          }
+        }
+      }
+
+      expect(hired, StaffRole.values.length,
+          reason: '5つの役職があるのに全部は埋められない状態になっている');
+    });
+
+    test('全役職を埋めても、補強の余裕が残る', () async {
+      final game = GameState();
+      await game.startNewGame('テストFC');
+      for (final role in StaffRole.values) {
+        final cands = [...game.staffCandidatesFor(role)]
+          ..sort((a, b) => a.wage.compareTo(b.wage));
+        for (final c in cands) {
+          if (await game.hireStaff(c.id)) break;
+        }
+      }
+
+      expect(game.wageBudgetCap - game.weeklyWageBill, greaterThan(0),
+          reason: 'スタッフを揃えたら選手を獲れなくなるのでは、選ぶ意味が無い');
     });
   });
 
