@@ -435,3 +435,54 @@ class NewApiFieldTest(unittest.TestCase):
             rakuten.genre_children("0", throttle, opener)
 
         self.assertIn("429", str(cm.exception))
+
+
+class ByGenreTest(unittest.TestCase):
+    """ジャンル別の入口ページ。単品ページで大手と competing するより、
+    ジャンル単位で内部リンクを集約するための一覧。"""
+
+    def row(self, code, genre, drop=0.0, vs_low=0.5, off_high=0.0):
+        return {"item_code": code, "source_genre": genre, "drop_pct": drop,
+                "vs_low_pct": vs_low, "off_high_pct": off_high}
+
+    def test_取得元ジャンルで絞る(self):
+        rows = [self.row("a", "100026"), self.row("b", "562637"),
+                self.row("c", "100026")]
+
+        out = analyze.by_genre(rows, "100026")
+
+        self.assertEqual([r["item_code"] for r in out], ["a", "c"])
+
+    def test_数値と文字列のジャンルIDを同じものとして扱う(self):
+        # config は文字列、取得側が数値で入ることがある
+        out = analyze.by_genre([self.row("a", 100026)], "100026")
+
+        self.assertEqual(len(out), 1)
+
+    def test_下げ幅の大きい順に並ぶ(self):
+        rows = [self.row("small", "g", drop=0.02), self.row("big", "g", drop=0.30),
+                self.row("mid", "g", drop=0.10)]
+
+        out = analyze.by_genre(rows, "g")
+
+        self.assertEqual([r["item_code"] for r in out], ["big", "mid", "small"])
+
+    def test_値下がりが無くても空にならない(self):
+        # 値下がり0件の日でもページが成立するよう、最安値の近さで順序が付く
+        rows = [self.row("far", "g", vs_low=0.40), self.row("near", "g", vs_low=0.01)]
+
+        out = analyze.by_genre(rows, "g")
+
+        self.assertEqual([r["item_code"] for r in out], ["near", "far"])
+
+    def test_取得元ジャンルが無い商品は出さない(self):
+        # source_genre を記録する前に取った商品が混ざっても、誤ったページに出さない
+        out = analyze.by_genre([{"item_code": "old", "drop_pct": 0.5,
+                                 "vs_low_pct": 0.0, "off_high_pct": 0.0}], "g")
+
+        self.assertEqual(out, [])
+
+    def test_件数を絞れる(self):
+        rows = [self.row(str(i), "g") for i in range(10)]
+
+        self.assertEqual(len(analyze.by_genre(rows, "g", limit=3)), 3)

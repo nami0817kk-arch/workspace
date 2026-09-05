@@ -82,3 +82,17 @@ def lows(rows: list[dict], limit: int = 100) -> list[dict]:
     hit = [r for r in rows if r["at_low"] or r["near_low"]]
     hit.sort(key=lambda r: (r["vs_low_pct"], -r["days"]))
     return hit[:limit]
+
+
+def by_genre(rows: list[dict], genre_id: str, limit: int = 100) -> list[dict]:
+    """取得元ジャンルで絞り、注目すべき順に並べる。
+
+    単品ページは価格比較サイトと正面から競合して勝ち目が薄い。ジャンル単位の
+    入口ページを別に持ち、そこから各商品へ内部リンクを張る。
+
+    並び順は「下げ幅の大きいもの → 最安値に近いもの → 高値からの下落幅」。
+    値下がりが無い日でも空にならないよう、最後の基準で必ず順序が付く。
+    """
+    hit = [r for r in rows if str(r.get("source_genre") or "") == str(genre_id)]
+    hit.sort(key=lambda r: (-r["drop_pct"], r["vs_low_pct"], -r["off_high_pct"]))
+    return hit[:limit]

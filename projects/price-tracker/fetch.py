@@ -64,6 +64,10 @@ def main() -> int:
             items[row["item_code"]] = {
                 "name": row["name"], "shop": row["shop"], "url": row["url"],
                 "image": row["image"], "genre_id": row["genre_id"] or gid,
+                # genre_id は商品自身の細かいジャンル（例: 液晶テレビ）で数が多い。
+                # config で狙って取りに行った側も残しておかないと、ジャンル別の
+                # 入口ページが作れない。
+                "source_genre": gid,
             }
 
     if not fetched:

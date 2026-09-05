@@ -66,7 +66,8 @@ FAVICON = ("data:image/svg+xml,"
 AD_NOTICE = ('<p class="ad-notice">本サイトは楽天アフィリエイトを利用しており、'
              'リンク経由の購入により収益を得ています。</p>')
 
-NAV = [("./", "今日の値下がり"), ("lows/", "最安値圏"), ("about/", "このサイトについて")]
+NAV = [("./", "今日の値下がり"), ("lows/", "最安値圏"), ("genre/", "ジャンル別"),
+       ("about/", "このサイトについて")]
 
 
 def _verification(site: dict) -> str:
@@ -178,6 +179,25 @@ def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
             + f'<h1>{esc(title)}</h1><p class="lead">{esc(lead)}</p>'
             + AD_NOTICE
             + f'<ul class="cards">{body}</ul>'
+            + foot(site, prefix, updated))
+
+
+def genre_index(genres: list[dict], site: dict, canonical: str, updated: str,
+                prefix: str = "") -> str:
+    """ジャンル別ページへの入口。
+
+    単品ページは価格比較サイトと正面から競合する。ジャンル単位の入口を1枚持って
+    内部リンクを集約し、各商品ページへ回遊させる。
+    """
+    title = "ジャンル別で見る"
+    lead = "記録している商品をジャンルごとに、値下がりの大きい順で並べています。"
+    links = "".join(
+        f'<li class="genre"><a href="{prefix}genre/{esc(str(g["genre_id"]))}/">'
+        f'{esc(g["name"])}</a><span class="count">{g["count"]}商品</span></li>'
+        for g in genres)
+    return (head(f"{title}｜{site['name']}", lead, canonical, site, prefix)
+            + f'<h1>{esc(title)}</h1><p class="lead">{esc(lead)}</p>'
+            + f'<ul class="cards">{links}</ul>'
             + foot(site, prefix, updated))
 
 

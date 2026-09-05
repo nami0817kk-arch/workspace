@@ -74,6 +74,27 @@ def build(root: Path, out: Path) -> dict:
         write(out / page["slug"] / "index.html", pages.render(page, site, updated))
         urls.append(f'/{page["slug"]}/')
 
+    # ジャンル別の入口。単品ページで価格比較サイトと正面から競合するより、
+    # ジャンル単位のページを持って内部リンクを集約するほうが取りに行ける。
+    listed = []
+    for genre in site.get("genres") or []:
+        g = genre if isinstance(genre, dict) else {"genre_id": str(genre)}
+        gid = str(g.get("genre_id") or genre)
+        # 名前は config で付ける任意項目。無ければIDをそのまま見出しにする。
+        g = {**g, "genre_id": gid, "name": str(g.get("name") or gid)}
+        hit = analyze.by_genre(rows, gid)
+        write(out / "genre" / gid / "index.html", theme.listing(
+            f'{g["name"]}の値下がり',
+            f'{g["name"]}の商品を毎日記録し、値下がりの大きい順に並べています。',
+            hit, site, f"{base}/genre/{gid}/", updated, prefix="../../",
+            empty="このジャンルはまだ記録が始まったばかりです。"))
+        urls.append(f"/genre/{gid}/")
+        listed.append({**g, "count": len(hit)})
+
+    write(out / "genre" / "index.html",
+          theme.genre_index(listed, site, base + "/genre/", updated, prefix="../"))
+    urls.append("/genre/")
+
     for row in rows:
         s = theme.slug(row["item_code"])
         write(out / "item" / s / "index.html", theme.item_page(row, site, updated))

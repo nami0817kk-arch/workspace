@@ -17,9 +17,13 @@
     {
       "genre_id": "562637",
       "name": "家電"
+    },
+    {
+      "genre_id": "101205",
+      "name": "テレビゲーム"
     }
   ],
-  "hits_per_genre": 90,
+  "hits_per_genre": 300,
   "drop_threshold": 0.05,
   "near_low_threshold": 0.02,
   "history_tail_days": 90,
