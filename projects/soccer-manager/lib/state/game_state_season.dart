@@ -677,6 +677,24 @@ extension GameStateSeason on GameState {
     );
     _save!.confidence = (_save!.confidence + confidenceDelta).clamp(0, 100);
 
+    // 理事会の路線。1年を通して守れていたかを、ここで一度だけ評価する。
+    final visionDelta = BoardEngine.confidenceDeltaForVisionSeason(
+      vision: _save!.clubVision,
+      compliedMatchdays: _save!.visionCompliedMatchdays,
+      checkedMatchdays: _save!.visionCheckedMatchdays,
+    );
+    if (visionDelta != 0) {
+      _save!.confidence = (_save!.confidence + visionDelta).clamp(0, 100);
+      _logNews(
+        visionDelta > 0
+            ? Tr.pick('理事会: 今季は「${_save!.clubVision.label}」の路線に沿っていたと評価されました。',
+                'The board is satisfied you followed the "${_save!.clubVision.label}" direction.')
+            : Tr.pick('理事会: 今季は「${_save!.clubVision.label}」の路線に沿えていなかったと見られています。',
+                'The board feels you did not follow the "${_save!.clubVision.label}" direction.'),
+        context: Tr.pick('理事会', 'Board'),
+      );
+    }
+
     // 理事会の目標達成報奨金: シーズン目標順位を達成すると、リーグ賞金と
     // 同じティア係数で減衰する報奨金が理事会から支給される。目標を大きく
     // 上回った場合(3つ以上)は1.5倍に増額し、快挙をしっかり報いる。
@@ -956,10 +974,20 @@ extension GameStateSeason on GameState {
     _refreshStaffCandidates();
     // 理事会の路線。シーズンごとに変わる。半分は「特になし」で、
     // 毎年何かを課され続けると窮屈になる。
-    const visions = ClubVision.values;
+    //
+    // **達成しえない路線は課さない。** 23歳以下がスカッドに足りないのに
+    // 「若手の育成」を求められると、どうやっても評価が下がり続ける。
+    final feasible = ClubVision.values.where((v) {
+      if (v == ClubVision.none) return true;
+      if (v != ClubVision.developYouth) return true;
+      return userTeam.players.where((p) => p.age <= 23).length >=
+          ClubVisionInfo.youthStartersRequired;
+    }).toList();
     _save!.clubVision = Random().nextBool()
         ? ClubVision.none
-        : visions[1 + Random().nextInt(visions.length - 1)];
+        : feasible[Random().nextInt(feasible.length)];
+    _save!.visionCompliedMatchdays = 0;
+    _save!.visionCheckedMatchdays = 0;
 
     // 開幕前のキャンプ。方針を選ぶか見送るまでホームで促す。
     _save!.preseasonCampPending = true;

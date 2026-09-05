@@ -205,9 +205,44 @@ void main() {
 
     test('路線なしなら、信頼度は動かない(従来の挙動)', () {
       expect(
-        BoardEngine.confidenceDeltaForVision(
-            vision: ClubVision.none, team: teamWith(), budget: -999),
+        BoardEngine.confidenceDeltaForVisionSeason(
+            vision: ClubVision.none,
+            compliedMatchdays: 0,
+            checkedMatchdays: 38),
         0,
+      );
+    });
+
+    test('評価はシーズン終了時に一度だけで、試合結果を上回らない', () {
+      // 節ごとに積むと38節で±38〜76になり、試合結果(1試合±3)を
+      // 上回って信頼度を支配する(実測: 破ったシーズンに80→5)。
+      for (final v in ClubVision.values) {
+        if (v == ClubVision.none) continue;
+        expect(v.violatedPenalty, lessThan(20),
+            reason: '${v.name} の減点が1シーズンぶんとして大きすぎる');
+      }
+    });
+
+    test('通しで守っていれば評価され、ほとんど守れていなければ下がる', () {
+      int deltaFor(int complied) =>
+          BoardEngine.confidenceDeltaForVisionSeason(
+            vision: ClubVision.developYouth,
+            compliedMatchdays: complied,
+            checkedMatchdays: 38,
+          );
+
+      expect(deltaFor(38), greaterThan(0));
+      expect(deltaFor(0), lessThan(0));
+    });
+
+    test('最終節だけ辻褄を合わせても認められない', () {
+      expect(
+        BoardEngine.confidenceDeltaForVisionSeason(
+          vision: ClubVision.developYouth,
+          compliedMatchdays: 1,
+          checkedMatchdays: 38,
+        ),
+        lessThan(0),
       );
     });
   });

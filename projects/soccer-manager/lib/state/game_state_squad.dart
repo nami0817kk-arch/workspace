@@ -633,6 +633,18 @@ extension GameStateSquad on GameState {
           budget: _save!.budget,
         );
 
+  /// 今シーズン、路線をどれだけ守れてきたか。
+  ///
+  /// 評価はシーズン終了時に一度だけなので、途中経過が見えないと
+  /// 「いま直せば間に合うのか」が分からない。
+  String get clubVisionProgressLabel {
+    final save = _save;
+    if (save == null || save.visionCheckedMatchdays == 0) return '';
+    return Tr.pick(
+        '今季 ${save.visionCompliedMatchdays}/${save.visionCheckedMatchdays}節。',
+        '${save.visionCompliedMatchdays} of ${save.visionCheckedMatchdays} matchdays so far. ');
+  }
+
   /// 対戦相手への対策を決める。
   void setOppositionPlan(OppositionPlan plan) {
     if (_save == null) return;

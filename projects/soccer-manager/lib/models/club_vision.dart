@@ -47,12 +47,23 @@ extension ClubVisionInfo on ClubVision {
   /// 若手育成で求められるスタメン中の23歳以下の人数。
   static const int youthStartersRequired = 3;
 
-  /// 路線を守れているときの、節ごとの信頼度への加算。
-  int get satisfiedBonus => this == ClubVision.none ? 0 : 1;
+  /// シーズンを通して守り切ったときの、シーズン終了時の信頼度への加算。
+  ///
+  /// 節ごとではなくシーズン終了時に一度だけ効く。節ごとに±1〜2を積むと、
+  /// 38節で±38〜76になり、試合結果(1試合±3)を上回って信頼度を支配して
+  /// しまう(実測: 路線を破ったシーズンに信頼度が80→5まで落ちた)。
+  /// 理事会が「今年は路線に沿っていたか」を見るのは年に一度でよい。
+  int get satisfiedBonus => this == ClubVision.none ? 0 : 8;
 
-  /// 守れていないときの、節ごとの信頼度への減算。
+  /// 守れなかったときの、シーズン終了時の信頼度への減算。
   ///
   /// 加算より大きい。守って当たり前のことなので、守っても大きくは
   /// 褒められないが、破ると目に見えて評価が下がる。
-  int get violatedPenalty => this == ClubVision.none ? 0 : 2;
+  int get violatedPenalty => this == ClubVision.none ? 0 : 12;
+
+  /// 「守った」と認めるのに必要な、達成できていた節の割合。
+  ///
+  /// 最終節だけ辻褄を合わせても認めない。かといって全節を求めると、
+  /// 負傷などで一度崩れただけで挽回できなくなる。
+  static const double complianceThreshold = 0.7;
 }
