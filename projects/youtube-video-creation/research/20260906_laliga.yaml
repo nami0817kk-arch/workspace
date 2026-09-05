@@ -1,0 +1,98 @@
+slot: laliga
+date: 2026年9月6日
+theme:
+  id: raphinha_captain
+  league: spain
+  prefix: 朗報
+  title: バルサ新主将はラフィーニャ クラブ史上初のブラジル人
+  hook: 百二十六年の歴史で、ブラジル人が腕章を巻くのは初めてです。
+  question: なぜフリックは、この順番にしたのか
+thumbnail:
+  line1: バルサ新主将ラフィーニャ
+  line2: 史上初、ヤマルは5番目
+  tags:
+  - ラフィーニャ
+  - バルセロナ
+answer: 上の2人は監督が決め、下の3人は選手の投票で決まった
+watch: バレンシア戦。新しい主将で最初の試合
+sections:
+- id: what
+  heading: 何が起きたか
+  tier: 報道
+  telop: ラフィーニャが新主将、クラブ史上初のブラジル人
+  say:
+  - voice: キャスター
+    text: バルセロナの新しい主将が、ラフィーニャに決まりました。にじゅうきゅうさい。
+  - voice: キャスター
+    text: スペイン王者で、ブラジル人が主将を務めるのは、これが初めてです。
+    telop: クラブ史上初のブラジル人主将
+    card:
+      type: table
+      title: 2026-27 バルセロナの主将序列
+      columns:
+      - 順
+      - 選手
+      - 決め方
+      rows:
+      - - '1'
+        - ラフィーニャ（29）
+        - 監督が指名
+      - - '2'
+        - ペドリ
+        - 監督が指名
+      - - '3'
+        - エリック・ガルシア
+        - 選手の投票
+      - - '4'
+        - デ・ヨング
+        - 選手の投票
+      - - '5'
+        - ラミン・ヤマル（18）
+        - 選手の投票
+      highlight_row: 0
+  - voice: キャスター
+    text: 前の主将、テア・シュテーゲンがアヤックスへ期限付きで移籍したことを受けた交代です。
+  official: false
+  sources:
+  - https://www.espn.com/soccer/story/_/id/49834658/raphinha-barcelona-la-liga-spain-brazil-pedri-lamine-yamal-frenkie-de-jong-eric-garcia
+  - https://www.vi.nl/nieuws/de-jong-zakt-in-aanvoerdershierarchie-bij-barcelona
+- id: why
+  heading: どう決まったのか
+  tier: 報道
+  telop: 上2人は監督、下3人は選手の投票
+  say:
+  - voice: キャスター
+    text: 順番は、ラフィーニャ、ペドリ、エリック・ガルシア、デ・ヨング、そしてラミン・ヤマル。
+  - voice: キャスター
+    text: 決め方が、上と下で違いました。フリック監督はこう説明しています。
+  - voice: フリック監督
+    text: 私とスタッフはここに二年いる。チームで何が起きているか、より広く見えている。
+    telop: フリック「二人置くことが大事だった」
+    card:
+      type: quote
+      source: Hansi Flick（会見）
+      color: '#a50044'
+      text: For me, it was important that I have two captains. I decided two and the other players were named by the team.
+      translation: 主将を二人置くことが大事だった。二人は私が決め、あとは選手たちが選んだ
+  - voice: フリック監督
+    text: 主将を二人置くことが大事だと考えた。二人は私が決め、あとは選手たちが選んだ。
+  official: false
+  sources:
+  - https://www.espn.com/soccer/story/_/id/49834658/raphinha-barcelona-la-liga-spain-brazil-pedri-lamine-yamal-frenkie-de-jong-eric-garcia
+  - https://x.com/FabrizioRomano/status/2096207454933508460
+- id: next
+  heading: これからどうなる
+  tier: 報道
+  telop: デ・ヨングは序列を下げた
+  say:
+  - voice: キャスター
+    text: オランダでは、別の見出しが立ちました。デ・ヨングが主将の序列を下げた、というものです。
+  - voice: キャスター
+    text: じゅうはっさいのヤマルが五番目に入り、序列そのものが若返っています。
+    telop: 18歳のヤマルが序列に入る
+  - voice: キャスター
+    text: つぎに見るべきは、バレンシア戦です。新しい主将で、最初の試合になります。
+  official: false
+  sources:
+  - https://www.vi.nl/nieuws/de-jong-zakt-in-aanvoerdershierarchie-bij-barcelona
+  - https://www.espn.com/soccer/story/_/id/49834658/raphinha-barcelona-la-liga-spain-brazil-pedri-lamine-yamal-frenkie-de-jong-eric-garcia

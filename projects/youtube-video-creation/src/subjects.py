@@ -53,7 +53,7 @@ class Subjects:
         return any(k in n.lower() for k in keys for n in self.names)
 
 
-def _get(url: str, params: dict, session=None, tries: int = 3) -> dict:
+def _get(url: str, params: dict, session=None, tries: int = 6) -> dict:
     """問い合わせる。429 は待って数回やり直す。
 
     1件につき Commons と Wikidata へ2回聞くので、続けて叩くとすぐ 429 になる。
@@ -72,7 +72,15 @@ def _get(url: str, params: dict, session=None, tries: int = 3) -> dict:
         if response.status_code != 429:
             break
         if attempt < tries - 1:
-            time.sleep(2.0 * (attempt + 1))
+            # **サーバが待ち時間を指定してきたら、それに従う。**
+            # 1日10本ぶんの写真を続けて取ると、2秒刻みでは足りず
+            # 途中で必ず止まった（2026-09-06 実測）
+            wait = response.headers.get("Retry-After", "")
+            try:
+                pause = float(wait)
+            except ValueError:
+                pause = 0.0
+            time.sleep(max(pause, 3.0 * (attempt + 1)))
     if response.status_code == 429:
         raise SubjectError(
             "続けて問い合わせすぎました（HTTP 429）。しばらく待ってから試してください"
@@ -148,6 +156,35 @@ def is_portrait_of(title: str, *names: str, session=None) -> bool:
                 if _file_name(str(value)) == wanted:
                     return True
     return False
+
+
+def portrait_of(*names: str, session=None) -> tuple[str, str]:
+    """その人物の Wikidata 項目が「その人の画像」に挙げている1枚を返す。
+
+    返すのは (File:名前, 見つけた根拠)。無ければ ("", 理由)。
+
+    **人物側から引く。**Commons を名前で検索すると同姓の別人や、
+    ファイル名にだけ名前が入った集合写真が当たる。人が項目に紐づけた
+    P18 なら、その1枚は本人だと言い切れる。
+    """
+    for name in [n for n in names if n and n.strip()]:
+        hits = _get(WIKIDATA_API, {
+            "action": "wbsearchentities", "format": "json", "language": "en",
+            "uselang": "en", "search": name.strip(), "limit": 5,
+        }, session).get("search", [])
+        for hit in hits:
+            entity = _get(WIKIDATA_API, {
+                "action": "wbgetentities", "format": "json",
+                "ids": hit["id"], "props": "claims",
+            }, session).get("entities", {}).get(hit["id"], {})
+            for claim in (entity.get("claims") or {}).get(PORTRAIT, []):
+                try:
+                    value = claim["mainsnak"]["datavalue"]["value"]
+                except (KeyError, TypeError):
+                    continue
+                if value:
+                    return f"File:{value}", f"{hit['id']}（{hit.get('label') or name}）の P18"
+    return "", "Wikidata に、その人の画像として挙げられた1枚がありません"
 
 
 def _file_name(title: str) -> str:

@@ -53,7 +53,11 @@ domains:
   english: [skysports.com, espn.com, goal.com, 90min.com, football365.com,
             si.com, cbssports.com, bleacherreport.com,
             bbc.com, theguardian.com, independent.co.uk, standard.co.uk,
-            football.london, theathletic.com, nytimes.com]
+            football.london, theathletic.com, nytimes.com,
+            # 2026-09-06 に追加。どちらもブラウザで直接開いて本文が読めることを
+            # 確認した。フィードに載らない話（会見の発言、退団メッセージの全文）が
+            # ここにしか無く、網に無いせいで確度を決められない候補が毎日出ていた
+            mirror.co.uk, bbc.co.uk, espn.co.uk, dailymail.co.uk]
 
   # 記録・数字。「数字で見ると」の節で使う。順位・得点・出場数はここ
   stats: [fbref.com, understat.com, worldfootball.net, sofascore.com,

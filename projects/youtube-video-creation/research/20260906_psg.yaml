@@ -1,0 +1,111 @@
+slot: world
+date: 2026年9月6日
+theme:
+  id: psg_winless
+  league: france
+  prefix: 悲報
+  title: 王者PSG、開幕3試合未勝利 14年ぶりの出だしに監督は動じず
+  hook: リーグ王者が、3試合を終えて1勝もしていません。2012-13シーズン以来です。
+  question: 14年ぶりの最悪の出だしに、監督はなぜ動じないのか
+thumbnail:
+  line1: PSG 3試合未勝利
+  line2: 監督「望むところだ」
+  tags:
+  - PSG
+  - ルイス・エンリケ
+answer: 内容は勝っていた、という立場。xG が自分たちに有利だと言っている
+watch: 次節。ここで勝てなければ、内容の話は通らなくなる
+sections:
+- id: what
+  heading: 何が起きたか
+  tier: 報道
+  telop: ホームでモナコに1-2、開幕3試合未勝利
+  say:
+  - voice: キャスター
+    text: パリ・サンジェルマンが、ホームでモナコに、いちたいにで敗れました。
+  - voice: キャスター
+    text: これで、リーグ開幕からさんしあい、勝ちがありません。
+    telop: 2012-13シーズン以来、14年ぶり
+    card:
+      type: table
+      title: PSG 開幕3試合
+      columns:
+      - 節
+      - 相手
+      - 結果
+      rows:
+      - - '1'
+        - レンヌ
+        - 2-2 引き分け
+      - - '2'
+        - リール
+        - 2-2 引き分け
+      - - '3'
+        - モナコ（ホーム）
+        - 1-2 敗戦
+      highlight_row: 2
+  - voice: キャスター
+    text: リーグ王者がここまで勝てないのは、にせんじゅうにー、じゅうさんシーズン以来。じゅうよねんぶりです。
+  - voice: キャスター
+    text: いっぽうモナコは、さんしあい全勝で首位に立っています。
+  official: false
+  sources:
+  - https://www.espn.com/soccer/story/_/id/49829043/luis-enrique-unfazed-historic-psg-winless-start-deepens-monaco-defeat
+  - https://football-tribe.com/japan/2026/09/05/358893/
+- id: why
+  heading: 監督は何と言ったか
+  tier: 報道
+  telop: ルイス・エンリケ「見えたものには満足している」
+  say:
+  - voice: キャスター
+    text: ところが、ルイス・エンリケ監督は、まったく動じていません。
+    card:
+      type: quote
+      source: Luis Enrique（会見）
+      color: '#004170'
+      text: I'm pleased with what I've seen. We're not at our best yet, but we deserved to win this match. The xG are in our favor.
+      translation: 見えたものには満足している。まだ最善ではないが、この試合は勝つに値した。xG は我々に有利だ
+  - voice: ルイス・エンリケ
+    text: 見えたものには満足している。まだ最高の状態ではないが、この試合は勝つに値した。
+  - voice: ルイス・エンリケ
+    text: エックスジー、期待ゴール数は、我々のほうが上だ。
+    telop: 「説明はできない。サッカーは時に不可解だ」
+  - voice: ルイス・エンリケ
+    text: どう説明するか。サッカーは、ときに不可解なものだ。選手たちの姿勢を強調しておきたい。
+  official: false
+  sources:
+  - https://www.espn.com/soccer/story/_/id/49829043/luis-enrique-unfazed-historic-psg-winless-start-deepens-monaco-defeat
+  - https://www.abola.pt/noticias/luis-enrique-usa-o-sporting-para-explicar-o-terrivel-arranque-do-psg-2026090509050612333
+- id: next
+  heading: これからどうなる
+  tier: 報道
+  telop: 敗戦の数時間前、2030年まで契約を延長していた
+  say:
+  - voice: キャスター
+    text: この敗戦には、もうひとつの側面があります。
+    card:
+      type: points
+      title: 同じ日に起きた2つのこと
+      items:
+      - '昼: 監督と主力数人の契約延長を発表（監督は2030年まで）'
+      - '夜: ホームでモナコに1-2で敗戦'
+      - → 開幕3試合未勝利は14年ぶり
+  - voice: キャスター
+    text: 試合の数時間前、クラブは監督とのけいやくを、にせんさんじゅうねんまで延ばすと発表していました。
+  - voice: キャスター
+    text: 主力数人の延長も、同じ日です。クラブは、いまの内容を信じている、ということになります。
+    telop: クラブは、いまの内容を信じている
+  - voice: キャスター
+    text: つぎに見るべきは、次節です。ここで勝てなければ、内容の話は通らなくなります。
+    telop: 次節で勝てなければ、内容の話は通らない
+    card:
+      type: points
+      title: 次に見るところ
+      items:
+      - 勝点はまだ2。首位モナコは9
+      - xG で上回り続けても、順位表には載らない
+      - 次節で結果が出るかどうか
+  official: false
+  sources:
+  - https://football-tribe.com/japan/2026/09/05/358893/
+  - https://www.espn.com/soccer/story/_/id/49829043/luis-enrique-unfazed-historic-psg-winless-start-deepens-monaco-defeat
