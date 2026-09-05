@@ -285,9 +285,16 @@ extension GameStateSquad on GameState {
       coachingBonus: infra.staffLevel(StaffRole.headCoach),
     );
 
-    // 紅白戦: スタメン外の選手が実戦感覚を維持する(週次トレーニング付随)。
-    lastPracticeMatchCount =
-        TrainingEngine.applyIntraSquadMatch(userTeam).length;
+    // リザーブ(Bチーム)の試合。トップに絡めない選手が公式戦に近い形で
+    // 出場する。人数が足りるならこちらを行い、足りないときだけ紅白戦に
+    // 落とす。両方やると疲労も成長も二重取りになる。
+    lastReserveMatch = ReserveMatchEngine.play(
+      userTeam,
+      opponentName: Tr.pick('リザーブ', 'Reserves'),
+    );
+    lastPracticeMatchCount = lastReserveMatch == null
+        ? TrainingEngine.applyIntraSquadMatch(userTeam).length
+        : 0;
     for (final p in userTeam.players) {
       if (p.hadBreakthroughThisWeek) _save!.breakthroughCount++;
       if (p.acquiredTraitThisWeek != null) _save!.traitsAcquired++;
@@ -575,6 +582,14 @@ extension GameStateSquad on GameState {
     final lineup =
         team.players.where((p) => team.startingXI.contains(p.id)).toList();
     return MatchFactorEngine.analyze(team: team, startingLineup: lineup);
+  }
+
+  /// 対戦相手への対策を決める。
+  void setOppositionPlan(OppositionPlan plan) {
+    if (_save == null) return;
+    userTeam.oppositionPlan = plan;
+    _notify();
+    _persist();
   }
 
   /// コーナーキックの狙いを決める。

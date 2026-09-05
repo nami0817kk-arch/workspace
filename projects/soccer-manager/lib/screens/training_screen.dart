@@ -14,6 +14,7 @@ import '../state/game_state.dart';
 import '../widgets/busy_overlay.dart';
 import '../widgets/position_filter_bar.dart';
 import '../widgets/quick_access_drawer.dart';
+import '../logic/reserve_match_engine.dart';
 import '../l10n/tr.dart';
 import '../theme/semantic_colors.dart';
 
@@ -425,6 +426,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
         context,
         gameState.lastTrainingResults,
         practiceMatchCount: gameState.lastPracticeMatchCount,
+        reserveMatch: gameState.lastReserveMatch,
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -437,6 +439,7 @@ class _TrainingScreenState extends State<TrainingScreen> {
     BuildContext context,
     List<PlayerGrowthSummary> results, {
     int practiceMatchCount = 0,
+    ReserveMatchResult? reserveMatch,
   }) {
     showDialog<void>(
       context: context,
@@ -444,12 +447,49 @@ class _TrainingScreenState extends State<TrainingScreen> {
         title: Text(Tr.pick('トレーニング結果', 'Training report')),
         content: SizedBox(
           width: double.maxFinite,
-          child: results.isEmpty && practiceMatchCount == 0
+          child: results.isEmpty &&
+                  practiceMatchCount == 0 &&
+                  reserveMatch == null
               ? Text(Tr.pick('今週は目立った変化のあった選手はいませんでした。',
                   'No player changed noticeably this week.'))
               : ListView(
                   shrinkWrap: true,
                   children: [
+                    // リザーブの試合。トップに絡めない選手の出場機会。
+                    if (reserveMatch != null) ...[
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 4),
+                        child: Text(
+                          Tr.pick(
+                              'リザーブ ${reserveMatch.goalsFor}-${reserveMatch.goalsAgainst} '
+                                  '${reserveMatch.opponentName}',
+                              'Reserves ${reserveMatch.goalsFor}-${reserveMatch.goalsAgainst} '
+                                  '${reserveMatch.opponentName}'),
+                          style: const TextStyle(
+                              fontSize: 13, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                      for (final perf in ([...reserveMatch.performances]
+                            ..sort((a, b) => b.rating.compareTo(a.rating)))
+                          .take(5))
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 2),
+                          child: Text(
+                            Tr.pick(
+                                '${perf.player.name}（${perf.player.age}歳）'
+                                    '評点${perf.rating.toStringAsFixed(1)}'
+                                    '${perf.goals > 0 ? ' / ${perf.goals}得点' : ''}',
+                                '${perf.player.name} (${perf.player.age}) '
+                                    '${perf.rating.toStringAsFixed(1)}'
+                                    '${perf.goals > 0 ? ' / ${perf.goals} goal' : ''}'),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: SemanticColors.subtleText(context),
+                            ),
+                          ),
+                        ),
+                      const Divider(height: 16),
+                    ],
                     if (practiceMatchCount > 0)
                       Padding(
                         padding: const EdgeInsets.only(bottom: 8),

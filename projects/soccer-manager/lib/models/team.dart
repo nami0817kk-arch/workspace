@@ -1,4 +1,5 @@
 import 'corner_routine.dart';
+import 'opposition_plan.dart';
 import 'enum_json.dart';
 import 'formation.dart';
 import 'player.dart';
@@ -142,6 +143,9 @@ class Team {
   /// 事実上できなくなり、小さくすると入れた意味が無くなる。
   static const double familiarityFloorFactor = 0.88;
 
+  /// 対戦相手への対策指示。試合ごとに選び直す。
+  OppositionPlan oppositionPlan;
+
   /// コーナーキックの狙い。手持ちの選手に合うものを選ぶ。
   CornerRoutine cornerRoutine;
 
@@ -234,6 +238,7 @@ class Team {
     Map<String, List<String>>? depthChartOrder,
     this.tacticalMeetingCooldownWeeks = 0,
     this.cornerRoutine = CornerRoutine.farPost,
+    this.oppositionPlan = OppositionPlan.none,
     Map<Formation, int>? formationFamiliarity,
   })  : startingXI = startingXI ?? [],
         tacticPresets = tacticPresets ?? [],
@@ -309,6 +314,7 @@ class Team {
         'name': name,
         'formation': formation.name,
         'cornerRoutine': cornerRoutine.name,
+        'oppositionPlan': oppositionPlan.name,
         'formationFamiliarity': {
           for (final e in formationFamiliarity.entries) e.key.name: e.value,
         },
@@ -347,6 +353,11 @@ class Team {
         cornerRoutine: CornerRoutine.values.firstWhere(
           (r) => r.name == json['cornerRoutine'],
           orElse: () => CornerRoutine.farPost,
+        ),
+        // 旧セーブは対策なし。従来と挙動が変わらない。
+        oppositionPlan: OppositionPlan.values.firstWhere(
+          (p) => p.name == json['oppositionPlan'],
+          orElse: () => OppositionPlan.none,
         ),
         // 旧セーブには習熟度が無い。null のままにしてコンストラクタに
         // 「いまの布陣は仕込み済み」を作らせる。読み込んだ途端に全チームの

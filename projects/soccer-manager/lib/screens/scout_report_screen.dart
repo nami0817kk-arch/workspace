@@ -9,6 +9,7 @@ import '../theme/semantic_colors.dart';
 import '../widgets/club_emblem.dart';
 import '../widgets/responsive_body.dart';
 import '../widgets/stat_bar.dart';
+import '../models/opposition_plan.dart';
 import '../l10n/tr.dart';
 
 /// アシスタントコーチによる次節対戦相手のスカウティングレポート(試合プレビュー)画面。
@@ -130,6 +131,49 @@ class ScoutReportScreen extends StatelessWidget {
                       leading: const Icon(Icons.star, color: Colors.amber),
                       title: Text(report.keyPlayerName!),
                       subtitle: Text(report.keyPlayerDetail ?? ''),
+                    ),
+                    // レポートは読むだけで、打てる手はマンマーク指名しか
+                    // なかった。相手を見て立てた対策を、そのまま試合へ
+                    // 持ち込めるようにする。
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            Tr.pick('この相手への対策', 'Your plan for them'),
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: SemanticColors.subtleText(context),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 4,
+                            children: [
+                              for (final plan in OppositionPlan.values)
+                                ChoiceChip(
+                                  label: Text(plan.label),
+                                  selected: userTeam.oppositionPlan == plan,
+                                  onSelected: (_) =>
+                                      gameState.setOppositionPlan(plan),
+                                ),
+                            ],
+                          ),
+                          if (userTeam.oppositionPlan != OppositionPlan.none)
+                            Padding(
+                              padding: const EdgeInsets.only(top: 4),
+                              child: Text(
+                                userTeam.oppositionPlan.description,
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: SemanticColors.subtleText(context),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),

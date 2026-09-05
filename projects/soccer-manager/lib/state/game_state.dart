@@ -82,8 +82,10 @@ import '../monetization/reward_offer.dart';
 import '../l10n/tr.dart';
 import '../logic/development_advisor.dart';
 import '../logic/match_factor_engine.dart';
+import '../logic/reserve_match_engine.dart';
 import '../logic/staff_market.dart';
 import '../models/corner_routine.dart';
+import '../models/opposition_plan.dart';
 import '../models/player_instruction.dart';
 import '../models/staff_member.dart';
 
@@ -202,6 +204,10 @@ class GameState extends ChangeNotifier {
   /// 直近の週次トレーニングで紅白戦に参加した(=実戦感覚を維持できた)
   /// スタメン外の選手の人数。トレーニング結果の表示に使う。
   int lastPracticeMatchCount = 0;
+
+  /// 直近のリザーブ(Bチーム)の試合結果。人数が足りず行われなかった週は null。
+  /// セーブには残さない。次の週次処理で必ず入れ替わるため。
+  ReserveMatchResult? lastReserveMatch;
 
   /// 直近の節送りで行われたユース練習試合の結果(候補が0人ならnull)。
   /// ユース画面での直近戦の表示に使う(セーブデータには保存しない)。

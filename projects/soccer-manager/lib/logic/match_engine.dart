@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import '../models/corner_routine.dart';
+import '../models/opposition_plan.dart';
 import '../models/player_instruction.dart';
 import '../models/attributes.dart';
 import '../models/formation.dart';
@@ -526,6 +527,36 @@ class MatchEngine {
   /// 個別指示による守備力の補正。
   static double instructionDefenseMultiplier(Player p) =>
       p.instruction?.defenseFactor ?? 1.0;
+
+  /// 対策指示による攻撃力の補正。
+  ///
+  /// 「弱いサイドを突く」だけは相手を見て決まる。相手の左右の守備を比べ、
+  /// 弱い側がどれだけ弱いかがそのまま効き目になる。手薄なサイドが無ければ
+  /// ほとんど得をしない(空振りする)。
+  static double planAttackFactor(
+    Team team,
+    List<Player> opponentLineup,
+  ) {
+    final plan = team.oppositionPlan;
+    if (plan != OppositionPlan.targetWeakFlank) return plan.ownAttackFactor;
+
+    double sideStrength(bool right) {
+      final side = opponentLineup.where((p) {
+        if (p.position.group != PositionGroup.def) return false;
+        return right
+            ? (p.position == Position.dr || p.position == Position.wbr)
+            : (p.position == Position.dl || p.position == Position.wbl);
+      }).toList();
+      if (side.isEmpty) return 40; // サイドに人がいない=最も手薄
+      return side.fold<int>(0, (s, p) => s + p.defense) / side.length;
+    }
+
+    final weaker = sideStrength(true) < sideStrength(false)
+        ? sideStrength(true)
+        : sideStrength(false);
+    // 守備力50を基準に、弱いほど効き目が大きい。上下は 0.97〜1.08。
+    return (1 + (50 - weaker) / 250).clamp(0.97, 1.08);
+  }
 
   static double roleMultiplier(Player p, {required bool forAttack}) {
     final keyAttributes = p.role.keyAttributes;
@@ -1190,17 +1221,24 @@ class MatchEngine {
     final homeMarkedId = markedTargetId(away, awayLineup, homeLineup);
     final awayMarkedId = markedTargetId(home, homeLineup, awayLineup);
 
+    // 対策指示。自分の攻守に掛かるぶんと、相手の攻撃を鈍らせるぶんがある。
     final homeAttackBase = _attackPower(home, homeLineup,
             suppressedId: homeMarkedId, opponentStyle: away.tacticalStyle) *
+        planAttackFactor(home, awayLineup) *
+        away.oppositionPlan.opponentAttackFactor *
         homeAdvantageFactor *
         weather.attackMultiplier;
     final awayAttackBase = _attackPower(away, awayLineup,
             suppressedId: awayMarkedId, opponentStyle: home.tacticalStyle) *
+        planAttackFactor(away, homeLineup) *
+        home.oppositionPlan.opponentAttackFactor *
         weather.attackMultiplier;
-    final homeDefenseBase =
-        _defensePower(home, homeLineup) * weather.defenseMultiplier;
-    final awayDefenseBase =
-        _defensePower(away, awayLineup) * weather.defenseMultiplier;
+    final homeDefenseBase = _defensePower(home, homeLineup) *
+        home.oppositionPlan.ownDefenseFactor *
+        weather.defenseMultiplier;
+    final awayDefenseBase = _defensePower(away, awayLineup) *
+        away.oppositionPlan.ownDefenseFactor *
+        weather.defenseMultiplier;
 
     final events = <MatchEvent>[];
     int homeGoals = 0;
@@ -2054,17 +2092,24 @@ class MatchEngine {
     final homeMarkedId = markedTargetId(away, awayLineup, homeLineup);
     final awayMarkedId = markedTargetId(home, homeLineup, awayLineup);
 
+    // 対策指示。自分の攻守に掛かるぶんと、相手の攻撃を鈍らせるぶんがある。
     final homeAttackBase = _attackPower(home, homeLineup,
             suppressedId: homeMarkedId, opponentStyle: away.tacticalStyle) *
+        planAttackFactor(home, awayLineup) *
+        away.oppositionPlan.opponentAttackFactor *
         homeAdvantageFactor *
         weather.attackMultiplier;
     final awayAttackBase = _attackPower(away, awayLineup,
             suppressedId: awayMarkedId, opponentStyle: home.tacticalStyle) *
+        planAttackFactor(away, homeLineup) *
+        home.oppositionPlan.opponentAttackFactor *
         weather.attackMultiplier;
-    final homeDefenseBase =
-        _defensePower(home, homeLineup) * weather.defenseMultiplier;
-    final awayDefenseBase =
-        _defensePower(away, awayLineup) * weather.defenseMultiplier;
+    final homeDefenseBase = _defensePower(home, homeLineup) *
+        home.oppositionPlan.ownDefenseFactor *
+        weather.defenseMultiplier;
+    final awayDefenseBase = _defensePower(away, awayLineup) *
+        away.oppositionPlan.ownDefenseFactor *
+        weather.defenseMultiplier;
 
     final events = <MatchEvent>[];
     final span = endMinute - startMinute + 1;
