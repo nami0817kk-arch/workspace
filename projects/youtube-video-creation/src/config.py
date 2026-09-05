@@ -176,6 +176,8 @@ class ProjectConfig:
     audio: AudioConfig = field(default_factory=AudioConfig)
     motion: MotionConfig = field(default_factory=MotionConfig)
     titles: TitleConfig = field(default_factory=TitleConfig)
+    # 代弁に使う声の候補。空なら未登録の話者はエラーのまま
+    voice_pool: tuple[int, ...] = ()
     path: Path = DEFAULT_CONFIG_PATH
 
     def resolve_speaker(self, name: str) -> CastMember:
@@ -189,8 +191,36 @@ class ProjectConfig:
                 return member
             if any(alias.strip().lower() == lowered for alias in member.aliases):
                 return member
+        # 台本に出てくる名前は、ニュースを読む人か、**誰かの声を代弁する人**か
+        # のどちらか（2026-09-05 のユーザー判断）。代弁は人ごとに声が変わるので、
+        # 出てくる人を全部 config に書くのは無理がある。**名前から声を決める。**
+        if self.voice_pool:
+            return self.voiced(wanted)
         known = "/ ".join(self.cast)
         raise ConfigError(f"話者『{wanted}』は config に定義されていません（定義済み: {known}）")
+
+    def voiced(self, name: str) -> CastMember:
+        """代弁する人。**同じ名前なら、いつも同じ声になる。**
+
+        名前から選ぶので、動画をまたいでも声が変わらない。乱数で選ぶと
+        「前回と声が違う」が起きて、同じ人だと分からなくなる。
+        """
+        import hashlib
+
+        wanted = name.strip()
+        pool = list(self.voice_pool)
+        digest = hashlib.sha1(wanted.encode("utf-8")).digest()
+        style = pool[int.from_bytes(digest[:4], "big") % len(pool)]
+        return CastMember(
+            name=wanted,
+            key=f"voiced_{style}",
+            style_id=int(style),
+            speed=1.0,
+            pitch=0.0,
+            intonation=1.05,   # 代弁は少し抑揚を付ける。読み上げと区別が付く
+            position="none",
+            color="#f0c419",
+        )
 
 
 def _resolve(value: str | Path) -> Path:
@@ -209,7 +239,10 @@ def load_config(path: str | Path | None = None) -> ProjectConfig:
 
 def build_config(raw: dict, path: Path = DEFAULT_CONFIG_PATH) -> ProjectConfig:
     video = VideoConfig(**(raw.get("video") or {}))
-    voicevox = VoicevoxConfig(**(raw.get("voicevox") or {}))
+    voice_raw = dict(raw.get("voicevox") or {})
+    # voice_pool は VoicevoxConfig の項目ではない（代弁の割り当てに使う）
+    pool = voice_raw.pop("voice_pool", ())
+    voicevox = VoicevoxConfig(**voice_raw)
     audio = AudioConfig(**(raw.get("audio") or {}))
     motion = MotionConfig(**(raw.get("motion") or {}))
     titles = TitleConfig(**(raw.get("titles") or {}))
@@ -235,6 +268,7 @@ def build_config(raw: dict, path: Path = DEFAULT_CONFIG_PATH) -> ProjectConfig:
             aliases=list(values.get("aliases") or []),
         )
     return ProjectConfig(
+        voice_pool=tuple(int(v) for v in pool or ()),
         video=video,
         voicevox=voicevox,
         cast=cast,
