@@ -391,3 +391,27 @@ def test_良い切れ目の幅を飛ばさない():
     lines = _balanced("遠藤航がCL登録外 なぜ12月まで戻らない選手が選ばれたのか", width=1250, size=72)
     assert len(lines) == 2
     assert lines[0].endswith("まで")
+
+
+def test_動きクリップの名前は元画像の中身で変わる(tmp_path):
+    """背景を描き直したのに動画が前のままだった（2026-09-05 実測）。
+
+    クリップの名前が元画像の**中身**に依存していなかったため、キャッシュが
+    そのまま使われていた。名前を手で版上げして逃げるのではなく、指紋で決める。
+    """
+    import hashlib
+
+    a = (tmp_path / "bg.png")
+    a.write_bytes(b"first")
+    first = hashlib.sha1(a.read_bytes()).hexdigest()[:8]
+    a.write_bytes(b"second")
+    second = hashlib.sha1(a.read_bytes()).hexdigest()[:8]
+
+    assert first != second
+
+
+def test_1枚の絵を見せ続ける上限():
+    """絵が変わらない時間が長いと間が持たない（2026-09-05 に 12秒→7秒）。"""
+    from src.render import Renderer
+
+    assert Renderer.MAX_STILL_SECONDS <= 8.0

@@ -27,3 +27,18 @@ def test_pitch_is_green_and_bottom_is_dark(tmp_path):
         bottom = image.getpixel((SIZE[0] // 2, SIZE[1] - 6))
     assert middle[1] > middle[0] and middle[1] > middle[2]  # 緑が優勢
     assert sum(bottom) < sum(middle)                        # 下ほど暗い
+
+
+# 背景に模様が無いと、寄っていても動いて見えない（2026-09-05 実測）。
+# night は ばらつき7.3 で、stadium(22.4) の3分の1しかなかった。
+
+
+def test_どの背景にも寄りが分かるだけの模様がある(tmp_path):
+    from PIL import Image, ImageStat
+
+    from src.backgrounds import VARIANTS, generate
+
+    for variant in VARIANTS:
+        path = generate(tmp_path / f"{variant}.png", (960, 540), variant)
+        spread = ImageStat.Stat(Image.open(path).convert("L")).stddev[0]
+        assert spread >= 12.0, f"{variant} のばらつきが {spread:.1f} しかない"

@@ -755,8 +755,11 @@ class Renderer:
         return segments
 
     # 1枚の絵をこれ以上見せ続けない。実測で「まとめ」が24秒あり、
-    # 同じ画面が3カット続いていた
-    MAX_STILL_SECONDS = 12.0
+    # 同じ画面が3カット続いていた。
+    # 2026-09-05 に 12秒 → 7秒。参考3チャンネルは尺そのものが1〜2分で、
+    # 絵が変わらない時間が長いと**間が持たない**。背景が切り替わるだけでも
+    # 画面は動いて見える
+    MAX_STILL_SECONDS = 7.0
 
     def _split_long(self, name: str, seconds: float, index: int) -> list[tuple[Path, float]]:
         """長いシーンは背景を2枚に割る。読み上げの途中でも絵が変わる。
@@ -795,9 +798,12 @@ class Renderer:
 
         length = max(4.0, math.ceil(seconds))
         cache = _resolve("assets/backgrounds/.motion")
-        # 名前に作り方の版（r2）を入れる。寄り方を変えたとき、名前が同じだと
-        # 古いクリップが使い回されて直りが反映されない（2026-09-05）
-        target = cache / f"{path.stem}_{int(length)}s_{int(zoom * 100)}r2.mp4"
+        # 名前に**元画像の中身の指紋**を入れる。名前が同じだと古いクリップが
+        # 使い回され、背景を描き直しても反映されない（2026-09-05 に実際に
+        # 起きた。背景の模様を増やしたのに、動画は前のまま静止していた）。
+        # 寄り方を変えたときも同じことが起きるので、版（r2）も残す。
+        stamp = hashlib.sha1(path.read_bytes()).hexdigest()[:8]
+        target = cache / f"{path.stem}_{int(length)}s_{int(zoom * 100)}r2_{stamp}.mp4"
         if not target.exists():
             cache.mkdir(parents=True, exist_ok=True)
             ffmpeg.still_to_clip(

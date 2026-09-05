@@ -69,15 +69,44 @@ def _night_sky(canvas: Image.Image) -> None:
             ),
         )
 
-    # 遠くの灯り。規則的に並べると建物に見えるので、間隔をずらす
+    # 遠くの灯り。規則的に並べると建物に見えるので、間隔をずらす。
+    # **数と明暗の幅を増やしてある。**模様が少ない背景は、寄っていても
+    # 動いて見えない（2026-09-05 実測。ばらつき7.3 で、他の背景の3分の1だった）。
     rng = random.Random(20260903)
-    for _ in range(220):
+    for _ in range(900):
         x = rng.randrange(width)
-        y = rng.randrange(int(height * 0.30), int(height * 0.72))
-        size = rng.choice((2, 2, 3, 4))
+        y = rng.randrange(int(height * 0.18), int(height * 0.74))
+        size = rng.choice((2, 2, 3, 3, 4, 5, 6))
         warm = rng.random() < 0.4
-        color = (255, 226, 168) if warm else (198, 220, 255)
+        shade = rng.uniform(0.55, 1.0)     # 明暗に幅を持たせる
+        base = (255, 226, 168) if warm else (198, 220, 255)
+        color = tuple(int(c * shade) for c in base)
         draw.ellipse([x, y, x + size, y + size], fill=color)
+
+    # ぼけた光の玉。stadium が寄って見えるのはこれがあるから（ばらつき22.4）。
+    # night には無かったので、寄っても動いて見えなかった
+    from PIL import ImageDraw as _D, ImageFilter as _F
+
+    bokeh = Image.new("RGB", (width, height), (0, 0, 0))
+    bd = _D.Draw(bokeh)
+    for _ in range(120):
+        x = rng.randrange(width)
+        y = rng.randrange(int(height * 0.20), int(height * 0.70))
+        r = rng.randrange(10, 34)
+        warm = rng.random() < 0.45
+        tone = rng.uniform(0.30, 0.85)
+        base = (255, 214, 150) if warm else (170, 205, 255)
+        bd.ellipse([x - r, y - r, x + r, y + r], fill=tuple(int(c * tone) for c in base))
+    from PIL import ImageChops as _C
+
+    bokeh = bokeh.filter(_F.GaussianBlur(14))
+    canvas.paste(_C.add(canvas.convert("RGB"), bokeh), (0, 0))
+
+    # スタンドの段。横に伸びる線があると、寄っているのが目で分かる
+    for step in range(7):
+        y = int(height * (0.40 + step * 0.045))
+        tone = 34 + step * 5
+        draw.line([(0, y), (width, y)], fill=(tone, tone + 8, tone + 22), width=2)
 
     # 地平のあたりに、灯りの帯を1本
     band = int(height * 0.72)
@@ -118,14 +147,21 @@ def _studio(canvas: Image.Image) -> None:
     glow = glow.filter(ImageFilter.GaussianBlur(radius=width // 8))
     canvas.paste(Image.new("RGB", (width, height), (52, 70, 104)), (0, 0), glow)
 
-    # 細いグリッド。情報番組の下地に寄せる。うっすらで十分
+    # グリッド。情報番組の下地に寄せる。**線がはっきりしていないと、
+    # 寄っているのが目で分からない**（2026-09-05 実測でばらつき11.7と最低だった）
     step = max(56, width // 24)
     grid = Image.new("RGB", (width, height), (0, 0, 0))
     grid_draw = ImageDraw.Draw(grid)
-    for x in range(0, width, step):
-        grid_draw.line([(x, 0), (x, height)], fill=(40, 52, 76), width=1)
-    for y in range(0, height, step):
-        grid_draw.line([(0, y), (width, y)], fill=(40, 52, 76), width=1)
+    for index, x in enumerate(range(0, width, step)):
+        heavy = index % 4 == 0          # 4本に1本を太く
+        grid_draw.line([(x, 0), (x, height)],
+                       fill=(64, 84, 122) if heavy else (44, 58, 86),
+                       width=3 if heavy else 1)
+    for index, y in enumerate(range(0, height, step)):
+        heavy = index % 4 == 0
+        grid_draw.line([(0, y), (width, y)],
+                       fill=(64, 84, 122) if heavy else (44, 58, 86),
+                       width=3 if heavy else 1)
     canvas.paste(ImageChops.add(canvas, grid), (0, 0))
 
 
@@ -261,9 +297,15 @@ def _tactics_board(canvas: Image.Image) -> None:
         ratio = y / height
         draw.line([(0, y), (width, y)], fill=(int(12 + 10 * ratio), int(34 + 14 * ratio), int(26 + 12 * ratio)))
 
+    # 細かい格子。線があると寄っているのが目で分かる（実測でばらつき13.5と低かった）
+    for x in range(0, width, 96):
+        draw.line([(x, 0), (x, height)], fill=(30, 62, 48), width=2)
+    for y in range(0, height, 96):
+        draw.line([(0, y), (width, y)], fill=(30, 62, 48), width=2)
+
     margin_x, margin_y = int(width * 0.08), int(height * 0.10)
     box = [margin_x, margin_y, width - margin_x, height - margin_y]
-    draw.rectangle(box, outline=(120, 190, 150), width=3)
+    draw.rectangle(box, outline=(150, 225, 180), width=4)
     draw.line([(width // 2, margin_y), (width // 2, height - margin_y)], fill=(120, 190, 150), width=3)
     r = int(height * 0.16)
     draw.ellipse(
