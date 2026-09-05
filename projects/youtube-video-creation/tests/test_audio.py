@@ -120,11 +120,13 @@ def test_generated_audio_assets_are_valid_wav():
 def test_the_prefix_picks_the_music():
     from src.audio_gen import track_for
 
-    # 速報とまとめで同じ曲が流れると、どちらも同じ温度に聞こえる
+    # 速報とまとめで同じ曲が流れると、どちらも同じ温度に聞こえる。
+    # 2026-09-05 に曲調を5つへ増やした。**悲報と速報も温度が違う**ので分けた
+    # （登録外・退団・敗戦の回に急かす曲が流れると、内容と合わない）。
     assert track_for("【速報】クラブが公式声明").endswith("bgm_breaking.wav")
-    assert track_for("【悲報】2試合で無得点").endswith("bgm_breaking.wav")
+    assert track_for("【悲報】2試合で無得点").endswith("bgm_somber.wav")
     assert track_for("【詳報】移籍市場のまとめ").endswith("bgm_calm.wav")
-    assert track_for("【朗報】復帰へ").endswith("bgm_loop.wav")
+    assert track_for("【朗報】復帰へ").endswith("bgm_victory.wav")
     assert track_for("札のないタイトル").endswith("bgm_loop.wav")
 
 

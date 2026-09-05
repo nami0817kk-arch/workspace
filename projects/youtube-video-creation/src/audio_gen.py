@@ -55,10 +55,35 @@ MOODS = {
         ],
         "pulse": 0.55,
     },
+    # 【悲報】に breaking（緊迫）を当てていたが、**悲報と速報は温度が違う。**
+    # 登録外・退団・敗戦の回に急かす曲が流れると、内容と合わない（2026-09-05）
+    "somber": {
+        "bpm": 72,
+        "progression": [
+            (220.00, 261.63, 329.63),  # Am
+            (196.00, 233.08, 293.66),  # Gm
+            (174.61, 207.65, 261.63),  # Fm（暗くする）
+            (164.81, 196.00, 246.94),  # Em
+        ],
+        "pulse": 0.45,
+    },
+    # 【朗報】。デビュー弾・移籍成立など、明るく終わる回
+    "victory": {
+        "bpm": 108,
+        "progression": [
+            (261.63, 329.63, 392.00),  # C
+            (196.00, 246.94, 293.66),  # G
+            (220.00, 261.63, 329.63),  # Am
+            (174.61, 220.00, 261.63),  # F
+        ],
+        "pulse": 1.15,
+    },
 }
 
 # 台本の【】から曲調を選ぶ。書いていなければ news
-PREFIX_MOOD = {"速報": "breaking", "悲報": "breaking", "朗報": "news", "詳報": "calm"}
+# 台本の【】から曲調を選ぶ。**悲報と速報を同じ曲にしない。**
+PREFIX_MOOD = {"速報": "breaking", "悲報": "somber", "朗報": "victory",
+               "詳報": "calm", "衝撃": "breaking", "現地反応": "news"}
 
 PROGRESSION = MOODS["news"]["progression"]
 CHORD_SECONDS = BEAT * BEATS_PER_BAR * BARS_PER_CHORD
@@ -77,6 +102,8 @@ def ensure_audio_assets(force: bool = False) -> list[Path]:
         "bgm_loop.wav": generate_bgm,
         "bgm_breaking.wav": lambda p: generate_bgm(p, "breaking"),
         "bgm_calm.wav": lambda p: generate_bgm(p, "calm"),
+        "bgm_somber.wav": lambda p: generate_bgm(p, "somber"),
+        "bgm_victory.wav": lambda p: generate_bgm(p, "victory"),
         "se_pon.wav": generate_pon,
         "se_whoosh.wav": generate_whoosh,
         "se_jingle.wav": generate_jingle,
@@ -103,7 +130,14 @@ def track_for(script_title: str, override: str | None = None) -> str:
     return f"assets/audio/{TRACKS['news']}"
 
 
-TRACKS = {"news": "bgm_loop.wav", "breaking": "bgm_breaking.wav", "calm": "bgm_calm.wav"}
+def moods() -> tuple[str, ...]:
+    """作れる曲調の一覧。init-assets がこれを全部書き出す。"""
+    return tuple(TRACKS)
+
+
+TRACKS = {"news": "bgm_loop.wav", "breaking": "bgm_breaking.wav",
+          "calm": "bgm_calm.wav", "somber": "bgm_somber.wav",
+          "victory": "bgm_victory.wav"}
 
 
 def _mood(name: str) -> dict:

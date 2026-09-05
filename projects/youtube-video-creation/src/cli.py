@@ -199,6 +199,11 @@ def main(argv: list[str] | None = None) -> int:
     p_handoff = sub.add_parser("handoff", help="手で投稿するための手順書を書き出す")
     p_handoff.add_argument("build_dir", help="build の出力ディレクトリ")
 
+    p_stock = sub.add_parser("stock", help="内容に合う実写の背景を取ってくる")
+    p_stock.add_argument("query", help="探す言葉（英語のほうが当たる）")
+    p_stock.add_argument("--name", default=None, help="保存名（既定: 探す言葉から作る）")
+    p_stock.add_argument("--seconds", type=float, default=8.0, help="必要な尺")
+
     p_contact = sub.add_parser("contact", help="画面が変わるたびの1枚を並べて見る")
     p_contact.add_argument("script")
     p_contact.add_argument("--out", default=None, help="出力先（既定: output/<台本名>）")
@@ -526,6 +531,35 @@ def _cmd_handoff(args, config) -> int:
         return 1
     print(f"手順書: {target}")
     print("  動画・サムネ・字幕の場所と、貼る文面が順番に並んでいます")
+    return 0
+
+
+def _cmd_stock(args, config) -> int:
+    """内容に合う実写の背景を取ってくる。
+
+    **背景を決め打ちにしない**（2026-09-05 のユーザー判断）。自前で描いた
+    PNG に模様を足すより、実写のほうが強い。取得先は Pexels と Pixabay。
+    """
+    import re as _re
+
+    from . import stock as stock_mod
+    from .config import _resolve
+
+    slug = args.name or _re.sub(r"[^a-z0-9]+", "_", args.query.lower()).strip("_")[:40]
+    target = _resolve(f"assets/backgrounds/stock/{slug}.mp4")
+    try:
+        clip = stock_mod.fetch(args.query, target, args.seconds)
+    except stock_mod.StockError as error:
+        print(str(error), file=sys.stderr)
+        return 1
+    size = target.stat().st_size / 1024 / 1024
+    print(f"取れました: {target}")
+    print(f"  {clip.width}x{clip.height} / {clip.seconds:.0f}秒 / {size:.1f}MB")
+    print(f"  撮影 {clip.author}（{clip.source} / {clip.license}）")
+    print(f"  {clip.url}")
+    print()
+    print("台本に書くとき:")
+    print(f"  @bg: assets/backgrounds/stock/{slug}.mp4")
     return 0
 
 
@@ -1981,6 +2015,7 @@ HANDLERS = {
     "short": _cmd_short,
     "reactions": _cmd_reactions,
     "handoff": _cmd_handoff,
+    "stock": _cmd_stock,
     "review": _cmd_review,
     "contact": _cmd_contact,
     "thumbnail": _cmd_thumbnail,

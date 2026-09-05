@@ -391,7 +391,10 @@ def image_credits(script, root=None) -> list[str]:
                 used.add(origin(line.image))
 
     lines: list[str] = []
-    for ledger in sorted(root.glob("assets/images/**/credits.json")):
+    # 背景（実写クリップ）のぶんも拾う。写真と同じ台帳の形にしてある
+    ledgers = sorted(root.glob("assets/images/**/credits.json"))
+    ledgers += sorted(root.glob("assets/backgrounds/**/credits.json"))
+    for ledger in ledgers:
         try:
             rows = json.loads(ledger.read_text(encoding="utf-8"))
         except (OSError, ValueError):
