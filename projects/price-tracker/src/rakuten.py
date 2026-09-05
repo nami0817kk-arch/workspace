@@ -189,7 +189,11 @@ def raw_search(genre_id: str, hits: int, throttle: Throttle, page: int = 1,
         "genreId": genre_id,
         "hits": min(MAX_HITS, hits),
         "page": page,
-        "sort": "standard",
+        # 旧APIの standard は売れ筋に近い並びだったが、新API(20260701)の standard は
+        # レビュー0の雑多な出品が上位に来る（2026-09-05 実測: PC・周辺機器の上位が
+        # かき氷シロップ等で、itemCode 指定で引き直しても本当にレビュー0）。
+        # レビュー数の多い順なら定番商品が返り、価格履歴を貯める対象として適切。
+        "sort": "-reviewCount",
         "format": "json",
         "formatVersion": 2,
     }, throttle, opener)
@@ -197,7 +201,7 @@ def raw_search(genre_id: str, hits: int, throttle: Throttle, page: int = 1,
 
 def search_genre(genre_id: str, hits: int, throttle: Throttle,
                  opener=urllib.request.urlopen) -> list[dict]:
-    """ジャンル内の商品を売れ筋順に hits 件ぶん取る。"""
+    """ジャンル内の商品をレビュー数の多い順に hits 件ぶん取る（売れ筋の代理指標）。"""
     items, page = [], 1
     while len(items) < hits and page <= MAX_PAGE:
         payload = raw_search(genre_id, hits - len(items), throttle, page, opener)
