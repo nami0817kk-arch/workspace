@@ -1,0 +1,83 @@
+# 夜のまとめ の取材メモ（2026年9月5日）
+slot: evening
+date: "2026年9月5日"
+
+theme:
+  id: ueda_lille_debut
+  league: france
+  prefix: 朗報
+  title: 上田綺世が移籍3日でデビュー弾 会長「実現不可能にさえ思えた」
+  hook: リールに移籍した上田綺世選手が、デビュー戦でいきなり決勝ゴールを決めました。
+  question: 1週間前には無理だと思われていた移籍が、なぜまとまったのか。
+
+thumbnail:
+  line1: 上田綺世 デビュー弾
+  line2: 会長「実現不可能に思えた」
+  tags: [上田綺世, リール]
+
+answer: 別の選手の高額移籍で資金ができたことが、土壇場で移籍を成立させました。
+watch: ジルー選手との共存か、定位置争いかです。
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: 途中出場から73分に決勝弾
+    card:
+      type: points
+      title: デビュー戦
+      items:
+        - 現地9月3日 トゥールーズ戦
+        - 57分から途中出場
+        - 73分 こぼれ球を頭で押し込み先制
+    say:
+      - リールに加入した上田綺世選手が、デビュー戦で決勝ゴールを決めました。
+      - 現地時間9月3日のトゥールーズ戦です。
+      - 57分から途中出場し、73分にゴール前のこぼれ球を頭で押し込みました。
+      - 試合は1対0で、この1点が決勝点になりました。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/05/post1004610/
+      - https://web.gekisaka.jp/news/world/detail/?458170-458170-fl
+
+  - id: why
+    heading: 移籍はどう決まったか
+    tier: 報道
+    telop: 会長「実現不可能にさえ思えた」
+    card:
+      type: quote
+      label: レタン会長
+      text: 3週間から1カ月前には、要求された金額を提示できなかった。
+      translation: 経済的には当初、我々の範囲外だった
+    say:
+      - 移籍は8月31日、フェイエノールトから完全移籍で決まりました。
+      - リールのレタン会長は、こう振り返っています。
+      - {voice: レタン会長, text: 1週間前には、今日ここで上田を紹介できるとは思っていなかった。}
+      - {voice: レタン会長, text: 経済的には当初、我々の範囲外で、私には実現不可能にさえ思えた。}
+      - 別の選手の高額移籍で資金ができたことが、土壇場で移籍を成立させました。
+      - {voice: レタン会長, text: すぐに結果を出せるトップレベルのストライカーが必要だった。}
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/05/post1004610/
+      - https://web.gekisaka.jp/news/world/detail/?458170-458170-fl
+
+  - id: next
+    heading: ネットの反応
+    tier: 未確認
+    telop: 35件中9件がジルーとの比較
+    card:
+      type: reactions
+      title: ネットの反応（35件から）
+      items:
+        - {text: すげーな 得点王なれへんかな, label: ">>234"}
+        - {text: ジルーもうおっさんやし 普通にレギュラー狙えそ, label: ">>243"}
+        - {text: ジルーからポストプレーの技術を盗んだら最強になる, label: ">>5"}
+    say:
+      - まとめサイトの書き込みを数えました。35件のうち9件が、ジルー選手との比較でした。
+      - {voice: ネット民, text: ジルーもうおっさんやし、普通にレギュラー狙えそう。}
+      - {voice: ネット民, text: ジルーからポストプレーの技術を盗んだら最強になる。}
+      - 期待を書いたものは35件中4件でした。匿名の書き込みなので、確度は未確認です。
+    official: false
+    sources:
+      - https://footballnet.2chblog.jp/archives/60033605.html
+      - https://www.footballchannel.jp/2026/09/05/post1004610/
