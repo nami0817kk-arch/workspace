@@ -26,7 +26,9 @@ def to_srt(script: Script) -> str:
         pause = line.pause or 0.0
         end = line.start + max(0.4, line.duration - pause)
 
-        chunks = split_caption(text)
+        # 1枚目は話者名のぶん短く割る
+        room = max(12, CAPTION_LIMIT - len(line.speaker) - 2)
+        chunks = split_caption(text, room) if len(text) > room else [text]
         span = max(0.4, end - line.start)
         weights = [len(c) for c in chunks] or [1]
         total = sum(weights) or 1
@@ -39,6 +41,9 @@ def to_srt(script: Script) -> str:
             stop = end if last else min(end, at + take)
             if stop <= at:
                 stop = at + 0.4
+            # 話者名は1枚目にだけ。**名前ぶんの字数も上限に数える。**
+            # 代弁は人の名前がそのまま話者になるので、長い名前だと本文が
+            # 押し出されて上限を超える（2026-09-05 実測「ヒュルツェラー監督」）
             head = f"{line.speaker}: " if order == 0 else ""
             blocks.append(
                 f"{index}\n{_timestamp(at)} --> {_timestamp(stop)}\n{head}{chunk}\n"

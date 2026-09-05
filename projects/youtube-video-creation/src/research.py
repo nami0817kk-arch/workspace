@@ -57,6 +57,9 @@ class Section:
     tier: str
     telop: str
     say: list[str]
+    # 各行を誰の声で読むか。空文字はニュースを読む人（キャスター/解説）。
+    # **代弁は出典のある発言だけ**に使う（2026-09-05 の型）
+    voices: list[str] = field(default_factory=list)
     sources: list[str] = field(default_factory=list)
     official: bool = False
     card: dict | None = None
@@ -127,14 +130,26 @@ def build_notes(raw: dict) -> Notes:
     for index, entry in enumerate(raw.get("sections") or [], start=1):
         entry = dict(entry or {})
         say = entry.get("say")
-        lines = [say] if isinstance(say, str) else list(say or [])
+        raw_lines = [say] if isinstance(say, str) else list(say or [])
+        # `- text` でも `- {voice: 監督, text: …}` でも書けるようにする。
+        # 誰かの発言を、その人の声で読ませるため
+        lines: list[str] = []
+        voices: list[str] = []
+        for item in raw_lines:
+            if isinstance(item, dict):
+                lines.append(str(item.get("text", "")).strip())
+                voices.append(str(item.get("voice", "")).strip())
+            else:
+                lines.append(str(item).strip())
+                voices.append("")
         sections.append(
             Section(
                 id=str(entry.get("id") or f"s{index}"),
                 heading=str(entry.get("heading", "")).strip(),
                 tier=str(entry.get("tier", "")).strip(),
                 telop=str(entry.get("telop", "")).strip(),
-                say=[str(s).strip() for s in lines if str(s).strip()],
+                say=[s for s in lines if s],
+                voices=[v for s, v in zip(lines, voices) if s],
                 sources=[str(u).strip() for u in (entry.get("sources") or []) if str(u).strip()],
                 official=bool(entry.get("official", False)),
                 card=entry.get("card"),
@@ -606,7 +621,11 @@ def to_script(notes: Notes, plan: Plan) -> str:
             # 掛け合いにする。1文目は事実をキャスターが読み、
             # 2文目以降は解説が受ける。交互に振ると同じ文体の読み分けになり、
             # 会話に聞こえない（実測）
-            speaker = SPEAKERS[0] if number == 0 else SPEAKERS[1 if number % 2 else 0]
+            # 誰かの発言なら、その人の名前を話者にする。**代弁は人ごとに声が変わる。**
+            voice = section.voices[number] if number < len(section.voices) else ""
+            speaker = voice or (
+                SPEAKERS[0] if number == 0 else SPEAKERS[1 if number % 2 else 0]
+            )
             lines.append(f"{speaker}: {sentence}")
             if number == 0:
                 lines.append(f"  telop: {section.telop}")
