@@ -190,6 +190,17 @@ def main(argv: list[str] | None = None) -> int:
     p_short.add_argument("--out", default=None)
     p_short.add_argument("--no-tts", action="store_true", help="音声なしで尺だけ確認する")
 
+    p_react = sub.add_parser("reactions", help="まとめスレから書き込みを取り出して数える")
+    p_react.add_argument("url", help="まとめサイトの記事URL")
+    p_react.add_argument("--limit", type=int, default=5, help="カードに載せる件数（既定5）")
+    p_react.add_argument("--word", action="append", default=[],
+                         help="数える言葉。ラベル:語,語 の形。何度でも指定できる")
+
+    p_contact = sub.add_parser("contact", help="画面が変わるたびの1枚を並べて見る")
+    p_contact.add_argument("script")
+    p_contact.add_argument("--out", default=None, help="出力先（既定: output/<台本名>）")
+    p_contact.add_argument("--columns", type=int, default=4, help="横に並べる枚数")
+
     p_review = sub.add_parser("review", help="書き出したものを公開前に点検する")
     p_review.add_argument("script")
     p_review.add_argument("--out", default=None, help="出力先（既定: output/<台本名>）")
@@ -241,6 +252,14 @@ def main(argv: list[str] | None = None) -> int:
     p_gather.add_argument("--league", default=None, help="このリーグのフィードだけ")
     p_gather.add_argument("--paste", action="store_true",
                           help="標準入力に貼った検索結果も混ぜる")
+    p_gather.add_argument("--topics", action="store_true",
+                          help="まとめ集約サイト（FOOTBALL TOPIC）の一覧も取り込む")
+    p_gather.add_argument("--topics-sort", default="話題", choices=["話題", "新着"],
+                          help="話題=クリック数順 / 新着=新しい順（既定: 話題）")
+    p_gather.add_argument("--newsnow", action="store_true",
+                          help="NewsNow（英語圏の集約サイト）の見出しも取り込む")
+    p_gather.add_argument("--newsnow-limit", type=int, default=30,
+                          help="NewsNow から取る件数（1件ごとに中継URLを1回叩く）")
     p_gather.add_argument("--no-feeds", action="store_true", help="フィードを使わない")
     p_gather.add_argument("--date", default=None, help="基準日 YYYY-MM-DD（既定: 今日）")
     p_gather.add_argument("--out", default=None, help="書き出し先")
@@ -442,6 +461,69 @@ def _cmd_short(args, config) -> int:
     return 0
 
 
+def _cmd_reactions(args, config) -> int:
+    """まとめスレの書き込みを取り出して数える。
+
+    **「多い」と言うには数える。**数えた件数と母数を出すので、台本には
+    「47件中12件」のように書ける。数えずに「声が多い」とは書かない。
+    """
+    from . import reactions as reactions_mod
+
+    try:
+        posts = reactions_mod.fetch(args.url)
+    except reactions_mod.ReactionError as error:
+        print(str(error), file=sys.stderr)
+        return 1
+    if not posts:
+        print("書き込みを取り出せませんでした。ページの作りが違うかもしれません",
+              file=sys.stderr)
+        return 1
+
+    print(f"■ 書き込み　{len(posts)}件　（母数はこの数）")
+    for post in posts[: args.limit]:
+        print(f"  >>{post.no}　{_fit(post.short, 56)}")
+
+    words: dict[str, tuple[str, ...]] = {}
+    for item in args.word:
+        label, _, keys = item.partition(":")
+        if label and keys:
+            words[label] = tuple(k for k in keys.split(",") if k)
+    if words:
+        print("\n■ 数えた結果")
+        for label, count in reactions_mod.tally(posts, words).items():
+            share = count / len(posts) * 100
+            print(f"  {label}　{count}件 / {len(posts)}件（{share:.0f}%）")
+
+    print("\n取材メモに貼る形:")
+    print("    card:")
+    print("      type: reactions")
+    print(f"      title: ネットの反応（{len(posts)}件から）")
+    print("      items:")
+    for post in posts[: args.limit]:
+        print(f"        - {{text: {post.short}, label: '>>{post.no}'}}")
+    print(f"    tier: 未確認    # 匿名の書き込みなので、単独では根拠にしない")
+    print(f"    sources:\n      - {args.url}")
+    return 0
+
+
+def _cmd_contact(args, config) -> int:
+    """完成した動画から、画面が変わるたびの1枚を並べた紙を作る。
+
+    機械の点検が緑でも、読める・読めないは見るまで分からない。
+    見るのを面倒にしない（2026-09-04 の実測から）。
+    """
+    from .review import contact_sheet
+
+    out = Path(args.out) if args.out else Path(f"output/{Path(args.script).stem}")
+    sheet = contact_sheet(out, columns=args.columns)
+    if sheet is None:
+        print(f"動画か script.json がありません: {out}", file=sys.stderr)
+        return 1
+    print(f"一覧: {sheet}")
+    print("開いて、文字の割れ・写真の大きさ・カードの重なりを見てください")
+    return 0
+
+
 def _cmd_review(args, config) -> int:
     from .review import built_duration, inspect, manual_checks
 
@@ -500,7 +582,8 @@ def _cmd_thumbnail(args, config) -> int:
         target = out if len(looks) == 1 else out.with_name(f"{out.stem}_{index}{out.suffix}")
         build_thumbnail(
             config, look["title"], target,
-            subtitle=look["subtitle"], background=script.background,
+            subtitle=look["subtitle"],
+            background=look.get("photo") or script.background,
             badge=look["badge"], date=look["date"],
             lines=look["lines"], tags=look["tags"],
         )
@@ -1358,6 +1441,13 @@ def _cmd_results(args, config) -> int:
     return 0
 
 
+def _host(url: str) -> str:
+    """URL からホスト名だけ取り出す。表示用。"""
+    from urllib.parse import urlparse
+
+    return (urlparse(url).hostname or url)[:40]
+
+
 def _cmd_gather(args, config) -> int:
     from datetime import date as _date
 
@@ -1380,8 +1470,54 @@ def _cmd_gather(args, config) -> int:
     print()
 
     pasted = sys.stdin.read() if args.paste and not sys.stdin.isatty() else ""
+
+    # まとめ集約サイトの一覧。フィードだけでは1日ぶんの材料が足りなかった
+    # （2026-09-04 実測。9枠に対して条件を満たす候補が5本）。
+    # 取り込み口は貼り付けと同じなので、重複の除去も確度の判定もそのまま効く
+    topic_ranks: dict[str, dict] = {}
+    if getattr(args, "topics", False):
+        from . import topics as topics_mod
+
+        try:
+            rows = topics_mod.recent(hours=args.hours)
+        except topics_mod.TopicError as error:
+            print(f"　まとめ集約サイトを取れません: {error}")
+        else:
+            listed = topics_mod.lines(rows)
+            # 順位と時刻は URL を鍵にして渡す。取り込み口は見出しとURLしか通さない
+            topic_ranks = topics_mod.meta(rows)
+            head = rows[0] if rows else None
+            print(f"　まとめ集約サイトから{len(rows)}件"
+                  f"（直近{args.hours:g}時間・人気順）")
+            if head:
+                print(f"　　一番人気: {head.points}pt　{_fit(head.title, 46)}")
+            pasted = f"{pasted}\n{listed}" if pasted.strip() else listed
+    # NewsNow。人気の点数は無いが、幅と**リーグの自動判定**を足す
+    if getattr(args, "newsnow", False):
+        from . import newsnow as newsnow_mod
+
+        try:
+            found = newsnow_mod.recent(hours=args.hours, limit=args.newsnow_limit)
+        except newsnow_mod.NewsNowError as error:
+            print(f"　NewsNow を取れません: {error}")
+        else:
+            # 取得できないと分かっているサイトは、ここで落とす。
+            # 候補に入れても lint が止めるだけで、直す手間が増える
+            blocked = [i for i in found if plan.is_blocked(i.url)]
+            found = [i for i in found if not plan.is_blocked(i.url)]
+            if blocked:
+                print(f"　　取得できないサイトを{len(blocked)}件外しました: "
+                      + " / ".join(sorted({_host(i.url) for i in blocked}))[:60])
+            leagues = sum(1 for i in found if i.league)
+            print(f"　NewsNow から{len(found)}件"
+                  f"（直近{args.hours:g}時間・うちリーグが分かるもの{leagues}件）")
+            block = newsnow_mod.lines(found)
+            pasted = f"{pasted}{chr(10)}{block}" if pasted.strip() else block
+            topic_ranks.update(newsnow_mod.meta(found))
+
     haul = gather_mod.run(
         plan,
+        topics_meta=topic_ranks,
         hours=args.hours,
         pasted=pasted,
         league=args.league or "",
@@ -1639,7 +1775,13 @@ def _cmd_pick(args, config) -> int:
         routine = plan.routines.get(slot)
         name = routine.name if routine else slot
         if pick is None:
-            print(f"■ {name}: 割り当てる候補がありません")
+            # 空けた理由が分かっているなら、それを出す。「候補がありません」
+            # だけだと、下限で見送ったのか本当に無いのかが区別できない
+            why = fallbacks.get(slot) or []
+            if why:
+                print(f"■ {name}: 見送りました　{why[0]}")
+            else:
+                print(f"■ {name}: 割り当てる候補がありません")
             continue
         print(f"■ {name} → {pick.title}（{pick.score}点）")
         for reason in fallbacks.get(slot, []):
@@ -1814,7 +1956,9 @@ HANDLERS = {
     "check": _cmd_check,
     "build": _cmd_build,
     "short": _cmd_short,
+    "reactions": _cmd_reactions,
     "review": _cmd_review,
+    "contact": _cmd_contact,
     "thumbnail": _cmd_thumbnail,
     "plan": _cmd_plan,
     "scan": _cmd_scan,

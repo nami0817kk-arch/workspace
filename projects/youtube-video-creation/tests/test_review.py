@@ -32,7 +32,7 @@ def _by_label(findings):
 
 
 def test_a_finished_build_passes_everything(tmp_path):
-    findings = inspect(parse_script(BODY), _built(tmp_path), 150.0)
+    findings = inspect(parse_script(BODY), _built(tmp_path), 100.0)
     assert all(f.ok for f in findings), [f.line() for f in findings if not f.ok]
 
 
@@ -64,7 +64,8 @@ def test_a_single_chapter_fails(tmp_path):
 
 @pytest.mark.parametrize(
     "seconds, ok",
-    [(60.0, False), (95.0, True), (150.0, True), (235.0, True), (300.0, False)],
+    # 1〜2分（2026-09-04 に 90〜240秒 から変更）。参考3チャンネルは 1:01〜1:59
+    [(50.0, False), (60.0, True), (95.0, True), (130.0, True), (150.0, False), (235.0, False)],
 )
 def test_the_length_has_a_floor_and_a_ceiling(tmp_path, seconds, ok):
     result = _by_label(inspect(parse_script(BODY), _built(tmp_path), seconds))
@@ -210,3 +211,87 @@ def test_srtが無ければ止める(tmp_path):
     from src.review import check_subtitles
 
     assert not check_subtitles(tmp_path / "subtitles.srt").ok
+
+
+# 2026-09-04 に見つけた不具合は、ぜんぶ目視か実測で出た。書式の点検は
+# 1件も拾えていない。**同じものを次に機械が拾えるか**を、ここで確かめる。
+# 通る例だけのテストは、点検が壊れていても気づけない。
+
+
+def _script(body: str):
+    from src.script_model import parse_script
+
+    return parse_script(body)
+
+
+def test_字幕に確度バッジが混ざっていたら弾く(tmp_path):
+    from src.review import _caption_badges
+
+    srt = tmp_path / "subtitles.srt"
+    srt.write_text(
+        "1\n00:00:01,000 --> 00:00:04,000\nキャスター: [報道] 登録を確定させました。\n\n",
+        encoding="utf-8",
+    )
+    assert not _caption_badges(srt).ok
+
+
+def test_字幕1枚が長すぎたら弾く(tmp_path):
+    from src.review import _caption_load
+
+    srt = tmp_path / "subtitles.srt"
+    srt.write_text(
+        "1\n00:00:01,000 --> 00:00:06,000\n" + "あ" * 60 + "\n\n", encoding="utf-8"
+    )
+    assert not _caption_load(srt).ok
+
+
+def test_止まりすぎる画面を弾く(tmp_path):
+    import json
+
+    from src.review import _still_length
+
+    path = tmp_path / "script.json"
+    path.write_text(json.dumps({"scenes": [{"lines": [
+        {"duration": 15.7, "text": "まとめます。"},
+        {"duration": 4.0, "text": "次の焦点です。"},
+    ]}]}), encoding="utf-8")
+    assert not _still_length(path).ok
+
+
+def test_写真のクレジットが足りなければ弾く(tmp_path):
+    from src.review import _photo_credits
+
+    (tmp_path / "description.txt").write_text("本文だけ", encoding="utf-8")
+    script = _script("## S\nキャスター: 遠藤選手です。\n  image: assets/images/endo/03.jpg\n")
+    assert not _photo_credits(script, tmp_path).ok
+
+    (tmp_path / "description.txt").write_text(
+        "本文\n画像: File:Wataru endo.jpg / Jeollo / CC BY 3.0", encoding="utf-8"
+    )
+    assert _photo_credits(script, tmp_path).ok
+
+
+def test_句読点の二重を弾く():
+    from src.review import _double_marks
+
+    assert not _double_marks(_script("## S\nキャスター: 外れたのか。。25人枠の話です。\n")).ok
+    assert _double_marks(_script("## S\nキャスター: 外れたのか。25人枠の話です。\n")).ok
+
+
+def test_見た目が変わらない場面を弾く(tmp_path):
+    """1枚あたりが短くても、カードもテロップも同じなら画面は止まって見える。"""
+    import json
+
+    from src.review import _screen_change
+
+    path = tmp_path / "script.json"
+    same = [{"duration": 6.0, "telop": "同じ見出し", "card": "why", "image": None}] * 5
+    path.write_text(json.dumps({"scenes": [{"lines": same}]}), encoding="utf-8")
+    assert not _screen_change(path).ok
+
+    varied = [
+        {"duration": 6.0, "telop": f"見出し{i}", "card": "why", "image": None}
+        for i in range(5)
+    ]
+    path.write_text(json.dumps({"scenes": [{"lines": varied}]}), encoding="utf-8")
+    assert _screen_change(path).ok

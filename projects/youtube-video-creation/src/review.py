@@ -17,8 +17,11 @@ from .subtitles import chapters
 TITLE_LIMIT = 100
 DESCRIPTION_LIMIT = 5000
 # 参考チャンネルの尺。短すぎても長すぎても離脱する
-MIN_SECONDS = 90
-MAX_SECONDS = 240
+# 尺の幅（2026-09-04 にユーザー判断で 90〜240 秒から変更）。
+# 参考3チャンネルの実測は 1:01〜1:59。長尺のクロニカ（8〜19分）は
+# 登録者が近いのに再生が1桁少なかった。docs/news-sources.md 参照。
+MIN_SECONDS = 60
+MAX_SECONDS = 130
 
 
 @dataclass
@@ -52,9 +55,196 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     findings.append(_tiers(script))
     findings.append(_marks(script))
     findings.append(check_subtitles(out_dir / "subtitles.srt"))
+    # ここから下は「完成品」を見る点検。2026-09-04 に見つけた不具合は
+    # ぜんぶ目視か実測で出たもので、書式の点検は1件も拾えていなかった。
+    # **見て見つけたものは、その場で直すだけでなく、ここに足す。**
+    findings.append(_caption_load(out_dir / "subtitles.srt"))
+    findings.append(_caption_badges(out_dir / "subtitles.srt"))
+    findings.append(_still_length(out_dir / "script.json"))
+    findings.append(_screen_change(out_dir / "script.json"))
+    findings.append(_photo_credits(script, out_dir))
+    findings.append(_double_marks(script))
+    loudness = _loudness(out_dir / "video.mp4")
+    if loudness is not None:
+        findings.append(loudness)
     if duration is not None:
         findings.append(_duration(duration))
     return findings
+
+
+# 字幕1枚の上限。話者名を足すぶんを見込んで、subtitles 側の上限に余裕を持たせる
+CAPTION_MAX = 38
+STILL_MAX = 12.0
+TIER_MARKS = ("[確定]", "[報道]", "[未確認]", "[背景]")
+
+
+def _cues(srt_path: Path) -> list[str]:
+    import re
+
+    if not srt_path.exists():
+        return []
+    body = srt_path.read_text(encoding="utf-8")
+    return [
+        m.group(1).replace("\n", "")
+        for m in re.finditer(
+            r"\d+\n[\d:,]+ --> [\d:,]+\n(.+?)(?:\n\n|\Z)",
+            body, re.S,
+        )
+    ]
+
+
+def _caption_load(srt_path: Path) -> Finding:
+    """字幕1枚に載る量。多いと目で追えない（テレビは全角15字×2行）。"""
+    cues = _cues(srt_path)
+    if not cues:
+        return Finding(False, "字幕の量", "字幕が読めません")
+    longest = max(cues, key=len)
+    if len(longest) > CAPTION_MAX:
+        return Finding(False, "字幕の量",
+                       f"{len(longest)}字の枚があります（上限{CAPTION_MAX}）: {longest[:24]}…")
+    return Finding(True, "字幕の量", f"{len(cues)}枚 / 最大{len(longest)}字")
+
+
+def _caption_badges(srt_path: Path) -> Finding:
+    """字幕に画面用の確度バッジが混ざっていないか。
+
+    読み上げていない文字が字幕に出ると、聞こえた音と食い違う。
+    """
+    found = [m for m in TIER_MARKS if any(m in cue for cue in _cues(srt_path))]
+    if found:
+        return Finding(False, "字幕の中身",
+                       f"画面用のバッジが混ざっています: {' '.join(found)}")
+    return Finding(True, "字幕の中身", "読み上げた内容だけ")
+
+
+def _still_length(script_json: Path) -> Finding:
+    """1画面が止まっている時間。長いと見ていて飽きる。"""
+    import json
+
+    if not script_json.exists():
+        return Finding(False, "画面の切り替わり", "script.json がありません")
+    data = json.loads(script_json.read_text(encoding="utf-8"))
+    spans = [
+        (float(line.get("duration") or 0), (line.get("text") or "")[:20])
+        for scene in data.get("scenes", [])
+        for line in scene.get("lines", [])
+    ]
+    if not spans:
+        return Finding(False, "画面の切り替わり", "画面が1枚もありません")
+    longest, text = max(spans)
+    if longest > STILL_MAX:
+        return Finding(False, "画面の切り替わり",
+                       f"{longest:.1f}秒 止まる画面があります（上限{STILL_MAX:.0f}秒）: {text}…")
+    average = sum(s for s, _ in spans) / len(spans)
+    return Finding(True, "画面の切り替わり",
+                   f"{len(spans)}枚 / 平均{average:.1f}秒 / 最長{longest:.1f}秒")
+
+
+SAME_SCREEN_MAX = 20.0
+
+
+def _screen_change(script_json: Path) -> Finding:
+    """見た目が変わらないまま続く時間。
+
+    1枚あたりの秒数が短くても、**カードもテロップも同じなら画面は止まって
+    見える。**2026-09-04 に contact で一覧にして初めて気づいた。
+    「なぜ外れたのか」の節は7枚つづけて同じカードと同じテロップで、
+    約40秒ぶん見た目が変わっていなかった。
+    """
+    import json
+
+    if not script_json.exists():
+        return Finding(False, "見た目の変化", "script.json がありません")
+    data = json.loads(script_json.read_text(encoding="utf-8"))
+    look = None
+    span = 0.0
+    worst = 0.0
+    worst_telop = ""
+    for scene in data.get("scenes", []):
+        for line in scene.get("lines", []):
+            now = (line.get("telop") or "", line.get("card") or "", line.get("image") or "")
+            if now == look:
+                span += float(line.get("duration") or 0)
+            else:
+                look, span = now, float(line.get("duration") or 0)
+            if span > worst:
+                worst, worst_telop = span, now[0]
+    if worst > SAME_SCREEN_MAX:
+        return Finding(False, "見た目の変化",
+                       f"{worst:.0f}秒 変わらない場面があります"
+                       f"（上限{SAME_SCREEN_MAX:.0f}秒）: {worst_telop[:24]}")
+    return Finding(True, "見た目の変化", f"変わらない最長 {worst:.0f}秒")
+
+
+def _photo_credits(script: Script, out_dir: Path) -> Finding:
+    """使った写真のクレジットが概要欄に出ているか。
+
+    **CC BY 系は表示が必須。**出ていないと利用条件を満たさないまま公開になる。
+    実測（2026-09-04）で、行に差し込んだ写真が1件も拾われていなかった。
+    """
+    used = sorted({
+        Path(line.image).name for line in script.lines if getattr(line, "image", None)
+    })
+    if not used:
+        return Finding(True, "写真のクレジット", "写真を使っていません")
+    description = out_dir / "description.txt"
+    if not description.exists():
+        return Finding(False, "写真のクレジット", "概要欄がありません")
+    body = description.read_text(encoding="utf-8")
+    credits = [ln for ln in body.splitlines() if ln.startswith("画像:")]
+    if len(credits) < len(used):
+        return Finding(False, "写真のクレジット",
+                       f"写真{len(used)}枚に対しクレジット{len(credits)}件。"
+                       "CC BY 系は表示が必須です")
+    return Finding(True, "写真のクレジット", f"写真{len(used)}枚 / クレジット{len(credits)}件")
+
+
+def _double_marks(script: Script) -> Finding:
+    """句読点が二重になっていないか。合成音声が不自然に間を空ける。"""
+    bad = [line.text for line in script.lines if line.text and ("。。" in line.text or "、、" in line.text)]
+    if bad:
+        return Finding(False, "読み上げの文", f"句読点が二重です: {bad[0][:30]}…")
+    return Finding(True, "読み上げの文", "句読点の重なりなし")
+
+
+def _loudness(video: Path) -> Finding | None:
+    """音の大きさ。YouTube は -14 LUFS を基準に音量をそろえる。
+
+    小さすぎると他チャンネルより静かに聞こえる。大きすぎると下げられる。
+    """
+    import json as _json
+    import re
+    import subprocess
+
+    if not video.exists():
+        return None
+    try:
+        import imageio_ffmpeg
+
+        ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
+    except Exception:
+        return None
+    try:
+        result = subprocess.run(
+            [ffmpeg, "-i", str(video), "-af", "loudnorm=I=-14:TP=-1.5:print_format=json",
+             "-f", "null", "-"],
+            capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=300,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    match = re.search(r"\{[^{}]*input_i[^{}]*\}", result.stderr or "", re.S)
+    if not match:
+        return None
+    try:
+        measured = float(_json.loads(match.group(0))["input_i"])
+    except (ValueError, KeyError):
+        return None
+    gap = measured - (-14.0)
+    if abs(gap) > 2.0:
+        way = "小さい" if gap < 0 else "大きい"
+        return Finding(False, "音の大きさ",
+                       f"{measured:.1f} LUFS（基準 -14 より{abs(gap):.1f} dB {way}）")
+    return Finding(True, "音の大きさ", f"{measured:.1f} LUFS（基準 -14）")
 
 
 def _tags(script: Script) -> Finding:
@@ -222,3 +412,71 @@ def check_subtitles(srt_path: Path) -> Finding:
     if count == 0:
         return Finding(False, "字幕", "時刻の行が1つも読めません")
     return Finding(True, "字幕", f"{count}枚、時刻の乱れなし")
+
+
+def contact_sheet(out_dir: Path, columns: int = 4, limit: int = 24) -> Path | None:
+    """画面が変わるたびに1枚ずつ抜き出して、1枚の紙に並べる。
+
+    **完成品を見る作業を、毎回の手作業から1コマンドにする。**2026-09-04 に
+    見つけた不具合（見出しの割れ、写真が小さすぎる、カードの熟語の分断）は
+    どれも機械の点検が緑のまま出ていて、実際に見るまで分からなかった。
+    見るのが面倒だと見なくなるので、面倒をなくす。
+    """
+    import json
+    import subprocess
+
+    from PIL import Image, ImageDraw
+
+    video = out_dir / "video.mp4"
+    script_json = out_dir / "script.json"
+    if not video.exists() or not script_json.exists():
+        return None
+    try:
+        import imageio_ffmpeg
+
+        ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
+    except Exception:
+        return None
+
+    data = json.loads(script_json.read_text(encoding="utf-8"))
+    starts = [
+        float(line.get("start") or 0)
+        for scene in data.get("scenes", [])
+        for line in scene.get("lines", [])
+    ]
+    if not starts:
+        return None
+    if len(starts) > limit:  # 多すぎるときは等間隔に間引く
+        step = len(starts) / limit
+        starts = [starts[int(i * step)] for i in range(limit)]
+
+    frames_dir = out_dir / "frames"
+    frames_dir.mkdir(parents=True, exist_ok=True)
+    shots: list[tuple[float, Path]] = []
+    for index, start in enumerate(starts):
+        target = frames_dir / f"contact_{index:02d}.jpg"
+        subprocess.run(
+            [ffmpeg, "-loglevel", "error", "-ss", f"{start + 1.0:.2f}", "-i", str(video),
+             "-frames:v", "1", "-q:v", "4", str(target), "-y"],
+            check=False, capture_output=True,
+        )
+        if target.exists():
+            shots.append((start, target))
+    if not shots:
+        return None
+
+    thumb_w = 480
+    thumb_h = int(thumb_w * 9 / 16)
+    rows = (len(shots) + columns - 1) // columns
+    sheet = Image.new("RGB", (columns * thumb_w, rows * (thumb_h + 26)), (18, 22, 30))
+    draw = ImageDraw.Draw(sheet)
+    for index, (start, path) in enumerate(shots):
+        image = Image.open(path).convert("RGB").resize((thumb_w, thumb_h), Image.LANCZOS)
+        x = (index % columns) * thumb_w
+        y = (index // columns) * (thumb_h + 26)
+        sheet.paste(image, (x, y))
+        draw.text((x + 8, y + thumb_h + 5), f"{index + 1:02d}  {start:5.1f}s",
+                  fill=(210, 210, 210))
+    target = out_dir / "contact.jpg"
+    sheet.save(target, quality=86)
+    return target

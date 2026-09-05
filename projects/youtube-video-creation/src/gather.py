@@ -99,6 +99,7 @@ def run(
     covered=None,
     today: date | None = None,
     use_feeds: bool = True,
+    topics_meta: dict[str, dict] | None = None,
 ) -> Haul:
     """取る・外す・控える をまとめて行う。"""
     haul = Haul()
@@ -126,6 +127,22 @@ def run(
         text = f"{text}\n{pasted}" if text else pasted
 
     hits = collect_mod.enrich(collect_mod.parse(text), freshness.read)
+    # 集約サイトで分かっていることを貼り直す。取り込み口は見出しとURLしか
+    # 通さないので、順位と時刻はここで URL を鍵にして戻す。
+    # **時刻が入ると「新しさ」の点も付く。**集約サイト経由の候補は時刻が
+    # 読めず点が伸びなかった（2026-09-05 実測）
+    for hit in hits:
+        found = (topics_meta or {}).get(hit.url)
+        if not found:
+            continue
+        hit.rank = int(found.get("rank") or 0)
+        hours = float(found.get("hours_ago", -1.0))
+        if hit.hours_ago < 0 <= hours:
+            hit.hours_ago = hours
+        # 集約サイトがリーグを持っていれば使う。**毎回手で埋めていた欄。**
+        # 取得元で分かっているものを、あとでクラブ名の辞書で上書きしない
+        if not hit.league:
+            hit.league = str(found.get("league") or "")
     hits, haul.seen = drop_seen(hits, used_urls(covered or []))
     haul.hits = hits
 

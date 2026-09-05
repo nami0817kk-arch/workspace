@@ -39,6 +39,7 @@ class Candidate:
     upset: bool = False     # 試合結果むけ。番狂わせ
     big_club: bool = False
     numbers: bool = False
+    topic_rank: int = 0     # まとめ集約サイトの掲載順（クリック数順）。0 は載っていない
     note: str = ""
     sources: list[str] = field(default_factory=list)
 
@@ -75,6 +76,7 @@ def load_candidates(path: str | Path) -> tuple[str, list[Candidate]]:
                 upset=bool(entry.get("upset", False)),
                 big_club=bool(entry.get("big_club", False)),
                 numbers=bool(entry.get("numbers", False)),
+                topic_rank=int(entry.get("topic_rank", 0) or 0),
                 note=str(entry.get("note", "")).strip(),
                 sources=[str(u).strip() for u in (entry.get("sources") or []) if str(u).strip()],
             )
@@ -154,6 +156,14 @@ def score(items: list[Candidate], scoring: dict) -> list[Candidate]:
     outlet_weight = int(weights.get("outlets", 0))
 
     clubs = [str(c).strip() for c in (scoring.get("big_clubs") or []) if str(c).strip()]
+    japanese_weight = int(weights.get("japanese", 0))
+    # 「10位以内なら3点」のような段階。上位から順に見る
+    rank_stages = sorted(
+        ((int(k), int(v)) for k, v in (scoring.get("topic_ranks") or {}).items())
+    )
+    rank_top = max((p for _, p in rank_stages), default=1)
+    rank_weight = int(weights.get("topic_rank", 0))
+    japanese_words = list(scoring.get("japanese") or [])
 
     for item in items:
         breakdown: dict[str, int] = {}
@@ -188,6 +198,25 @@ def score(items: list[Candidate], scoring: dict) -> list[Candidate]:
         ):
             if getattr(item, key):
                 breakdown[label] = int(weights.get(key, 0))
+
+        # まとめ集約サイトの掲載順。**もう一つの採点の軸。**
+        # 新しさと媒体数は「速報として大きいか」を測るが、こちらは
+        # 「いま実際に読まれているか」を測る。まとめ由来の候補は媒体数1・
+        # 時刻不明で点が伸びず、幅を広げても枠が埋まらなかった（2026-09-05 実測）。
+        if item.topic_rank:
+            points = next(
+                (p for limit, p in rank_stages if item.topic_rank <= limit), 0
+            )
+            if points:
+                breakdown["話題順"] = round(points / rank_top * rank_weight)
+
+        # 日本人選手に点は付けない。**枠で担保して、点では寄せない。**
+        # 一度 japanese: 3 を入れたところ、朝の3枠が全部日本人選手になった
+        # （2026-09-05 実測）。日本人は「1日に2枠」という割り当ての制約で、
+        # 全体の傾向を寄せるものではない。weights に japanese を書けば効くが、
+        # 既定では 0。
+        if japanese_weight and is_japanese(item, japanese_words):
+            breakdown["日本人"] = japanese_weight
 
         item.breakdown = {k: v for k, v in breakdown.items() if v}
         item.score = sum(item.breakdown.values())
@@ -225,9 +254,13 @@ def assign(
                 fallbacks.setdefault(slot, []).append("他の枠と別の話題が残っていません")
             pool = fresh_topics or pool
 
-        # 3本とも試合結果、3本とも移籍だと単調になる。すでに2枠で使った種別は外す
+        # 3本とも試合結果、3本とも移籍だと単調になる。使いすぎた種別は外す。
+        # **上限は枠数に比例させる。**「2枠まで」で固定していたため、枠を9本に
+        # 増やしたとき候補が413件から5件まで削られ、後半の枠が埋まらなくなった
+        # （2026-09-04 実測）。種別は3つしかないので、枠数の3分の1が目安。
         if spread_kinds and pool:
-            over = {k for k in set(used_kinds) if used_kinds.count(k) >= 2}
+            cap = max(2, -(-len(slots) // 3))
+            over = {k for k in set(used_kinds) if used_kinds.count(k) >= cap}
             if over:
                 varied = [c for c in pool if c.kind not in over]
                 if not varied:
@@ -257,6 +290,17 @@ def assign(
         pick = _prefer(pool, str(rule.get("prefer", "total")), slot, fallbacks)
         if pick is None:
             continue
+
+        # 本数を増やすと、埋めるために弱い候補が入る。実測（2026-09-04）で
+        # 枠を5→9に増やしたとたん、2点のブログ雑感が枠に入った。
+        # **点の低いものを出すくらいなら空ける。**枠は埋めるためのものではない。
+        floor = int(rule.get("min_score", scoring.get("min_score", 0)) or 0)
+        if floor and pick.score < floor:
+            fallbacks.setdefault(slot, []).append(
+                f"いちばん高い候補でも{pick.score}点で、下限{floor}点に届きません。"
+                "無理に埋めず空けます"
+            )
+            continue
         chosen[slot] = pick
         remaining = [c for c in remaining if c.id != pick.id]
         if pick.topic:
@@ -271,6 +315,17 @@ def _prefer(
     """枠の方針に沿って1つ選ぶ。条件に合うものが無ければ全体から最高点。"""
     if not pool:
         return None
+    if prefer == "topic":
+        # **集約サイトの掲載順だけで選ぶ。**こちらの採点を通さない枠。
+        # 載っていないものは選ばない（比べる軸が無いので）
+        listed = [c for c in pool if c.topic_rank]
+        if not listed:
+            fallbacks.setdefault(slot, []).append(
+                "まとめ集約サイトに載っている候補がありません（gather --topics で取ります）"
+            )
+            return None
+        return min(listed, key=lambda c: (c.topic_rank, -c.score))
+
     if prefer == "freshness":
         # 時刻の順に並べるだけだと、30分新しいだけの小さい話が、その日の
         # いちばん大きい話を押しのける。同じくらい新しいものは点数で選ぶ

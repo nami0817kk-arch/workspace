@@ -45,7 +45,8 @@ audio:
 motion:
   enabled: true
   fps: 30
-  telop_in: 0.18       # テロップが出るときのアニメ秒
+  telop_in: 0.55       # テロップとカードが出るときのアニメ秒。
+                       # 0.18 では出た瞬間に止まって見えた（2026-09-05）
   speaker_pop: 0.16    # 話者が切り替わるときの立ち絵のバウンド秒
   scene_fade: 0.32     # シーン転換にかける秒数
   scene_transition: "dip"   # dip=一度黒に落とす / crossfade=前後を直接混ぜる

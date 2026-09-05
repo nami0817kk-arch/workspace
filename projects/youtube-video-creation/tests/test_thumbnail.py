@@ -205,3 +205,40 @@ def test_options_are_stacked_into_one_sheet(tmp_path):
     sheet = Image.open(contact_sheet(paths, tmp_path / "sheet.png"))
     assert sheet.width == SIZE[0]
     assert sheet.height == SIZE[1] * 3 + 16 * 2      # 案のあいだに隙間が入る
+
+
+# 参考3チャンネルはどれも人の顔を全面に出している。文字だけのサムネは
+# 一覧で埋もれる（2026-09-05 実測）。台本に thumbnail_photo と書けば敷ける。
+
+
+def test_サムネの下地に写真を指定できる():
+    from src.thumbnail import from_meta
+
+    look = from_meta({"thumbnail_photo": "assets/images/endo/08.jpg"}, "見出し")
+    assert look["photo"] == "assets/images/endo/08.jpg"
+
+    assert from_meta({}, "見出し")["photo"] == ""
+
+
+def test_縦長の写真は上寄りに切る():
+    """人物写真は顔が上にある。真ん中で切ると胴体だけが残る。"""
+    from PIL import Image
+
+    from src.render import _cover
+
+    # 上半分を白、下半分を黒にした縦長の画像
+    tall = Image.new("RGB", (400, 1000), (0, 0, 0))
+    tall.paste(Image.new("RGB", (400, 500), (255, 255, 255)), (0, 0))
+
+    cut = _cover(tall, 1280, 720)
+    top_half = cut.crop((0, 0, 1280, 360)).convert("L")
+    assert min(top_half.getdata()) > 200      # 上は白のまま＝顔の側が残っている
+
+
+def test_横長の写真は真ん中で切る():
+    from PIL import Image
+
+    from src.render import _cover
+
+    wide = Image.new("RGB", (2000, 800), (120, 120, 120))
+    assert _cover(wide, 1280, 720).size == (1280, 720)

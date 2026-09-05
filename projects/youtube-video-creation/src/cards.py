@@ -15,7 +15,7 @@ from PIL import Image, ImageDraw, ImageFont
 
 TEAM_SIZES = (46, 42, 38, 34, 30, 26, 22)
 
-CARD_TYPES = ("quote", "transfer", "score", "points", "bars", "table", "reactions")
+CARD_TYPES = ("quote", "transfer", "score", "points", "bars", "table", "reactions", "kit")
 
 # 棒グラフは「同じ指標を並べて比べる」用途なので、色は1色で通し、
 # 注目させたい1本だけ同じ色相の明るい段を使う（カテゴリ配色にはしない）。
@@ -55,6 +55,7 @@ def render(spec: dict, width: int, font_path: str, out_path: Path,
 
     builder = {
         "quote": _quote,
+        "kit": _kit,
         "transfer": _transfer,
         "score": _score,
         "points": _points,
@@ -310,6 +311,120 @@ def _points(spec: dict, width: int, font_path: str, latin_path: str) -> list[dic
     return blocks
 
 
+def _kit(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
+    """ユニフォーム風の図。誰が入って誰が外れたかを、背番号で並べる。
+
+    **試合中の写真は自由ライセンスでは手に入らない。**スタジアム内の撮影が
+    主催者の許可制で、撮れるのは契約した通信社だけだから（2026-09-04 に
+    Commons と Flickr を当たって確認）。クラブカラーと背番号なら自分で
+    描けるので、権利の問題が起きない。
+
+    ```yaml
+    type: kit
+    title: リバプールのCL登録
+    items:
+      - {player: 遠藤 航, number: 3, colors: ["#C8102E"], mark: "×"}
+      - {player: エキティケ, number: 22, colors: ["#C8102E"], mark: "○"}
+    ```
+    """
+    items = [i for i in (spec.get("items") or []) if isinstance(i, dict)][:4]
+    if not items:
+        raise CardError("kit カードには items が必要です")
+
+    title_font = ImageFont.truetype(font_path, 44)
+    number_font = ImageFont.truetype(latin_path, 68)
+    name_font = ImageFont.truetype(font_path, 34)
+    mark_font = ImageFont.truetype(latin_path, 52)
+    mark_small = ImageFont.truetype(latin_path, 30)
+    back_font = ImageFont.truetype(latin_path, 34)
+
+    blocks: list[dict] = []
+    title = str(spec.get("title") or "").strip()
+    if title:
+        blocks.append({
+            "height": 66,
+            "draw": lambda draw, y: draw.text((PAD + 12, y), title, font=title_font, fill=TEXT),
+        })
+
+    inner = width - PAD * 2
+    cell = inner // len(items)
+    shirt_w = min(int(cell * 0.72), 190)
+    shirt_h = int(shirt_w * 1.12)
+
+    def draw_row(draw, y, items=items, cell=cell, shirt_w=shirt_w, shirt_h=shirt_h,
+                 mark_font=mark_font, mark_small=mark_small,
+                 number_font=number_font, back_font=back_font,
+                 latin_path=latin_path):
+        for index, item in enumerate(items):
+            left = PAD + index * cell + (cell - shirt_w) // 2
+            colors = [c for c in (item.get("colors") or []) if c] or ["#C8102E"]
+            body = _hex(str(colors[0])) + (255,)
+            _shirt(draw, left, y, shirt_w, shirt_h, body,
+                   _hex(str(colors[1])) + (255,) if len(colors) > 1 else None)
+
+            # 背番号は調べがついたときだけ。**確かめていない数字は出さない。**
+            # 無ければ背中の名前として short を入れる（無ければ何も置かない）。
+            number = str(item.get("number") or "").strip()
+            face, font = (number, number_font) if number else (
+                str(item.get("short") or "").strip(), back_font)
+            if face:
+                # シャツの幅に収める。はみ出すと胴からはみ出て読みにくい
+                # 胴の幅は袖を除いた 0.58 ぶんしかない。全体幅で測ると
+                # 収まった判定になり、袖にはみ出す（実測 2026-09-04）
+                while font.size > 16 and draw.textlength(face, font=font) > shirt_w * 0.54:
+                    font = ImageFont.truetype(
+                        latin_path if not number else latin_path, font.size - 2
+                    )
+                w = draw.textlength(face, font=font)
+                top = y + shirt_h * (0.34 if number else 0.40)
+                draw.text((left + (shirt_w - w) / 2, top), face, font=font,
+                          fill=(255, 255, 255, 255), stroke_width=3,
+                          stroke_fill=(0, 0, 0, 120))
+
+            name = str(item.get("player") or "").strip()
+            if name:
+                w = draw.textlength(name, font=name_font)
+                draw.text((left + (shirt_w - w) / 2, y + shirt_h + 14),
+                          name, font=name_font, fill=TEXT)
+
+            mark = str(item.get("mark") or "").strip()
+            if mark:
+                # 印は判定そのものなので、丸地を敷いて確実に読めるようにする
+                ok = mark in "○◯"
+                color = (74, 200, 128, 255) if ok else (226, 80, 80, 255)
+                r = 30
+                cx, cy = left + shirt_w - 12, y + 4
+                draw.ellipse([cx - r, cy - r, cx + r, cy + r], fill=color)
+                glyph = "OK" if ok else "×"
+                font = mark_small if ok else mark_font
+                w = draw.textlength(glyph, font=font)
+                top = cy - (30 if ok else 34)
+                draw.text((cx - w / 2, top), glyph, font=font, fill=(255, 255, 255, 255))
+
+    blocks.append({"height": shirt_h + 62, "draw": draw_row})
+    return blocks
+
+
+def _shirt(draw, x: int, y: int, w: int, h: int, body, stripe=None) -> None:
+    """シャツの形。袖・肩・襟を多角形1つで描く。"""
+    def point(px, py):
+        return (x + w * px, y + h * py)
+
+    shape = [point(*p) for p in (
+        (0.30, 0.02), (0.42, 0.09), (0.58, 0.09), (0.70, 0.02),
+        (0.98, 0.22), (0.86, 0.44), (0.76, 0.38), (0.79, 1.00),
+        (0.21, 1.00), (0.24, 0.38), (0.14, 0.44), (0.02, 0.22),
+    )]
+    draw.polygon(shape, fill=body)
+    if stripe:  # 2色目があれば縦縞にする
+        for i in range(1, 4):
+            px = 0.21 + 0.145 * i
+            draw.polygon([point(px, 0.10), point(px + 0.06, 0.10),
+                          point(px + 0.06, 1.00), point(px, 1.00)], fill=stripe)
+    draw.polygon([point(0.42, 0.09), point(0.50, 0.19), point(0.58, 0.09)],
+                 fill=(245, 245, 245, 235))
+
+
 def _bars(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
     """横棒で数量を比べるカード。
 
@@ -548,6 +663,17 @@ def _wrap(text: str, font: ImageFont.FreeTypeFont, max_width: int) -> list[str]:
             lines.append(current)
         return lines
 
+    # 日本語は render 側の折り返しに任せる。ここは文字幅だけで切っていたので、
+    # 禁則も熟語の判定も効いていなかった。実測（2026-09-04）で、カードを
+    # 細くしたとたん「必／要」と割れた。**同じ規則を2か所に持たない。**
+    from .render import balanced_wrap  # 循環importを避けるため関数の中で読む
+
+    return balanced_wrap(measure, text, font, max_width)
+
+
+def _wrap_by_char(text: str, font: ImageFont.FreeTypeFont, max_width: int) -> list[str]:
+    """文字幅だけで折り返す。折り返しの規則を通さない用途向け。"""
+    measure = ImageDraw.Draw(Image.new("RGB", (1, 1)))
     lines, current = [], ""
     for char in text:
         if measure.textlength(current + char, font=font) > max_width and current:

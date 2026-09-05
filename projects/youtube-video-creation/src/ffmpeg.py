@@ -148,6 +148,12 @@ def build_background_track(
     return out_path
 
 
+# 寄りの速さを測る基準の秒数。zoom は「この秒数あたりどれだけ寄るか」
+REFERENCE_SECONDS = 10.0
+# 寄りの総量の上限。これ以上寄せると絵が荒れる
+MAX_ZOOM = 1.45
+
+
 def still_to_clip(
     image: Path,
     out_path: Path,
@@ -159,10 +165,20 @@ def still_to_clip(
     """静止画から、ゆっくり寄っていく背景クリップを作る。
 
     フリー素材の写真1枚でも、止まった絵より動画らしくなる。
+
+    **寄る速さは秒あたりで一定にする。**総量を固定にしていたため、長い場面ほど
+    1秒あたりの動きが小さくなり、**長い場面ほど止まって見えていた**
+    （2026-09-05 実測。20秒の場面はほぼ静止していた）。長い場面こそ動きが要る。
+
+    `zoom` は「10秒あたりどれだけ寄るか」として読む。長い場面では総量が増えるので、
+    寄りすぎて絵が荒れないよう上限で止める。
     """
     width, height = size
     frames = max(1, int(seconds * fps))
-    step = (zoom - 1.0) / frames
+    per_second = (zoom - 1.0) / REFERENCE_SECONDS
+    total = min(MAX_ZOOM, 1.0 + per_second * seconds)
+    step = (total - 1.0) / frames
+    zoom = total
     run([
         "-loop", "1", "-i", str(image), "-t", f"{seconds:.2f}",
         "-vf",

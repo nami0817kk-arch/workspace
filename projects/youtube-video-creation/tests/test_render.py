@@ -325,3 +325,93 @@ def test_句読点で切れるほうを選ぶ():
 def test_見出しを折り返しても文字は落ちない():
     text = "モナコが、別の選手の退団が成立しなかったために、カマラを手放せなくなったからです。"
     assert "".join(_balanced(text)) == text
+
+
+# 漢字の分断だけ見ていたので、かなの語が割れるのを止められなかった。
+# 実測（2026-09-04 の動画を目視）で「なぜ12月ま／で戻らない」と
+# 「動くかど／うかです」の2箇所が割れていた。どちらも前後がひらがなで、
+# 熟語の判定には引っかからない。
+
+
+def _splits_run(lines, lo, hi):
+    return any(
+        lo <= a[-1] <= hi and lo <= b[0] <= hi
+        for a, b in zip(lines, lines[1:]) if a and b
+    )
+
+
+def test_かなの語の途中で改行しない():
+    assert not _splits_run(
+        _balanced("遠藤航がCL登録外 なぜ12月まで戻らない選手が選ばれたのか", width=1100, size=72),
+        "ぁ", "ん",
+    )
+    assert not _splits_run(
+        _balanced("次の焦点: 冬の移籍市場で遠藤選手が動くかどうかです", width=1100),
+        "ぁ", "ん",
+    )
+
+
+def test_かなの分断より熟語の分断を重く見る():
+    from src.render import _break_score
+
+    # 助詞の切れ目（「が／外れた」）まで避けると、かえって収まりが悪くなる。
+    # ひらがなを漢字と同点にしないのは、そのため。
+    kana = ["遠藤選手が動くかど", "うかです"]
+    kanji = ["遠藤選手が動く移", "籍市場です"]
+    assert _break_score(kana) > _break_score(kanji)
+
+
+def test_カタカナの語の途中で改行しない():
+    assert not _splits_run(
+        _balanced("チャンピオンズリーグの登録メンバーが確定しました", width=900),
+        "ァ", "ヴ",
+    )
+
+
+def test_送り仮名を置き去りにしない():
+    """「戻／らない」のように、動詞の送り仮名だけ次の行に残さない。"""
+    from src.render import _break_score
+
+    assert _break_score(["12月まで", "戻らない選手"]) > _break_score(["12月まで戻", "らない選手"])
+
+
+def test_助詞は行頭に来てよい():
+    """「選手／が外れた」は読める。漢字＋ひらがなを一律に減点しない。"""
+    from src.render import _break_score
+
+    assert _break_score(["遠藤選手", "が外れた"]) == 0
+
+
+def test_良い切れ目の幅を飛ばさない():
+    """幅の刻みが粗いと、良い切れ目そのものが候補に入らない。
+
+    実測（2026-09-04）で、上限1250のとき「12月まで／戻らない」で切れる幅は
+    約0.88倍。5段階（0.62/0.7/0.78/0.86/0.94）では、その間を飛ばしていた。
+    """
+    lines = _balanced("遠藤航がCL登録外 なぜ12月まで戻らない選手が選ばれたのか", width=1250, size=72)
+    assert len(lines) == 2
+    assert lines[0].endswith("まで")
+
+
+def test_動きクリップの名前は元画像の中身で変わる(tmp_path):
+    """背景を描き直したのに動画が前のままだった（2026-09-05 実測）。
+
+    クリップの名前が元画像の**中身**に依存していなかったため、キャッシュが
+    そのまま使われていた。名前を手で版上げして逃げるのではなく、指紋で決める。
+    """
+    import hashlib
+
+    a = (tmp_path / "bg.png")
+    a.write_bytes(b"first")
+    first = hashlib.sha1(a.read_bytes()).hexdigest()[:8]
+    a.write_bytes(b"second")
+    second = hashlib.sha1(a.read_bytes()).hexdigest()[:8]
+
+    assert first != second
+
+
+def test_1枚の絵を見せ続ける上限():
+    """絵が変わらない時間が長いと間が持たない（2026-09-05 に 12秒→7秒）。"""
+    from src.render import Renderer
+
+    assert Renderer.MAX_STILL_SECONDS <= 8.0

@@ -142,15 +142,35 @@ def test_render_lists_recent_coverage():
     assert "扱った話題" in text and "morning" in text
 
 
-def test_1日の枠は朝2本_夜2本_日本人1本():
-    """朝2・夜2に加えて、日本人選手の枠を別カウントで1本（2026-09-02 の決定）。"""
+def test_1日の枠は9本で人気枠が先頭():
+    """人気1・朝3・日本人2・夜3（2026-09-05 の決定）。
+
+    日本人は「1日に2枠」という**割り当ての制約**。全体を寄せるものではない。
+
+    変更前は5本・日本人1本。docs/news-sources.md に実測を残してある。
+    人気枠を先頭に置くのは、後ろだと人気の候補を他の枠が先に取ってしまうため。
+    """
     plan = load_plan()
-    assert plan.slots == ["morning_1", "morning_2", "evening_1", "evening_2", "japan"]
-    # morning_1 / morning_2 は同じ morning の計画を共有する
+    assert len(plan.slots) == 9
+    assert plan.slots[0] == "popular_1"
+    rules = plan.scoring.get("slots") or {}
+    require = [s for s, r in rules.items() if (r or {}).get("require_japanese")]
+    assert len(require) == 2        # japan_1 / japan_2
+    # 人気枠は日本人に絞らない。こちらの採点も通さない
+    popular = rules.get("popular_1") or {}
+    assert popular.get("prefer") == "topic"
+    assert not popular.get("require_japanese")
+    # 同じ系統の枠は同じ取材計画を共有する（枠ごとに書き写すと片方が古くなる）
     assert plan.routine("morning_1") is plan.routine("morning_2")
     assert plan.routine("evening_1").name == plan.routine("evening_2").name
-    assert plan.routine("japan").name == "日本人選手"
+    assert plan.routine("japan_1").name == "日本人選手"
     assert set(plan.tiers) >= {"確定", "報道", "未確認"}
+
+
+def test_枠に入れる下限がある():
+    """本数を増やすと埋めるために弱い候補が入る。届かなければ空ける。"""
+    plan = load_plan()
+    assert int(plan.scoring.get("min_score", 0)) >= 1
 
 
 def test_domains_map_to_their_confidence_ceiling():

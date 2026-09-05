@@ -257,23 +257,32 @@ class Renderer:
         card_name: str | None,
         progress: float = 1.0,
     ) -> None:
-        """画像とカードを文字の上のスペースに積む。両方あれば画像が上。"""
+        """画像とカードを文字の上のスペースに置く。両方あれば左右に並べる。
+
+        以前は縦に積んでいたが、カードが高いぶん写真が潰れた。実測
+        （2026-09-04）で、顔が判別できない大きさ（横120px）になっていた。
+        画面は横1920あるので、両方あるときは幅を使う。
+        """
         slot_top, slot_bottom = self.layout.media_slot
         slot_height = max(80, slot_bottom - slot_top)
+        side_by_side = bool(image_path) and bool(card_name)
         items: list[Image.Image] = []
 
         if image_path:
-            picture = self._picture(image_path, slot_height)
+            picture = self._picture(image_path, slot_height, beside=side_by_side)
             if picture is not None:
                 items.append(picture)
         if card_name:
-            card = self._card(card_name)
+            card = self._card(card_name, beside=side_by_side)
             if card is not None:
                 items.append(card)
         if not items:
             return
 
         gap = 26
+        if side_by_side and len(items) == 2:
+            self._place_beside(canvas, items, slot_top, slot_height, gap, progress)
+            return
         total = sum(item.height for item in items) + gap * (len(items) - 1)
         if total > slot_height:  # 入りきらないときは全体を縮める
             ratio = slot_height / total
@@ -295,14 +304,51 @@ class Renderer:
             canvas.alpha_composite(item, ((self.layout.width - item.width) // 2, y))
             y += item.height + gap
 
-    def _picture(self, image_path: str, slot_height: int) -> Image.Image | None:
-        """差し込む写真。白フチを付けて画面になじませる。"""
+    def _place_beside(
+        self,
+        canvas: Image.Image,
+        items: list[Image.Image],
+        slot_top: int,
+        slot_height: int,
+        gap: int,
+        progress: float,
+    ) -> None:
+        """写真とカードを左右に並べる。高さは各自の中央でそろえる。"""
+        total_w = sum(item.width for item in items) + gap
+        if total_w > self.layout.width - 96:  # 端に寄りすぎないよう全体を縮める
+            ratio = (self.layout.width - 96) / total_w
+            items = [
+                item.resize((int(item.width * ratio), int(item.height * ratio)), Image.LANCZOS)
+                for item in items
+            ]
+            total_w = sum(item.width for item in items) + gap
+        x = (self.layout.width - total_w) // 2
+        for item in items:
+            if progress < 1.0:
+                item = item.copy()
+                item.putalpha(item.getchannel("A").point(lambda a: int(a * _ease_out(progress))))
+            y = slot_top + (slot_height - item.height) // 2
+            canvas.alpha_composite(item, (x, y))
+            x += item.width + gap
+
+    def _picture(
+        self, image_path: str, slot_height: int, beside: bool = False
+    ) -> Image.Image | None:
+        """差し込む写真。白フチを付けて画面になじませる。
+
+        ``beside`` はカードと横に並べるとき。幅は譲るが、**高さは枠いっぱい
+        使う**。縦長の人物写真はここで効く。
+        """
         path = _resolve(image_path)
         if not path.exists():
             return None
         picture = Image.open(path).convert("RGBA")
-        max_w = int(self.layout.width * (0.62 if not self.layout.with_characters else 0.42))
-        max_h = int(slot_height * 0.72)
+        if beside:
+            max_w = int(self.layout.width * 0.26)
+            max_h = int(slot_height * 0.98)
+        else:
+            max_w = int(self.layout.width * (0.62 if not self.layout.with_characters else 0.42))
+            max_h = int(slot_height * 0.72)
         scale = min(max_w / picture.width, max_h / picture.height)
         picture = picture.resize(
             (int(picture.width * scale), int(picture.height * scale)), Image.LANCZOS
@@ -313,11 +359,14 @@ class Renderer:
         framed.alpha_composite(picture, (8, 8))
         return framed
 
-    def _card(self, name: str) -> Image.Image | None:
+    def _card(self, name: str, beside: bool = False) -> Image.Image | None:
         spec = self.script_cards.get(name)
         if not spec:
             return None
-        width = int(self.layout.width * (0.64 if not self.layout.with_characters else 0.46))
+        if beside:  # 写真と横に並べるぶん、カードは幅を譲る
+            width = int(self.layout.width * (0.52 if not self.layout.with_characters else 0.40))
+        else:
+            width = int(self.layout.width * (0.64 if not self.layout.with_characters else 0.46))
         target = self.card_dir / f"{cards.card_key(spec, width)}.png"
         if not target.exists():
             cards.render(
@@ -706,8 +755,11 @@ class Renderer:
         return segments
 
     # 1枚の絵をこれ以上見せ続けない。実測で「まとめ」が24秒あり、
-    # 同じ画面が3カット続いていた
-    MAX_STILL_SECONDS = 12.0
+    # 同じ画面が3カット続いていた。
+    # 2026-09-05 に 12秒 → 7秒。参考3チャンネルは尺そのものが1〜2分で、
+    # 絵が変わらない時間が長いと**間が持たない**。背景が切り替わるだけでも
+    # 画面は動いて見える
+    MAX_STILL_SECONDS = 7.0
 
     def _split_long(self, name: str, seconds: float, index: int) -> list[tuple[Path, float]]:
         """長いシーンは背景を2枚に割る。読み上げの途中でも絵が変わる。
@@ -746,7 +798,12 @@ class Renderer:
 
         length = max(4.0, math.ceil(seconds))
         cache = _resolve("assets/backgrounds/.motion")
-        target = cache / f"{path.stem}_{int(length)}s_{int(zoom * 100)}.mp4"
+        # 名前に**元画像の中身の指紋**を入れる。名前が同じだと古いクリップが
+        # 使い回され、背景を描き直しても反映されない（2026-09-05 に実際に
+        # 起きた。背景の模様を増やしたのに、動画は前のまま静止していた）。
+        # 寄り方を変えたときも同じことが起きるので、版（r2）も残す。
+        stamp = hashlib.sha1(path.read_bytes()).hexdigest()[:8]
+        target = cache / f"{path.stem}_{int(length)}s_{int(zoom * 100)}r2_{stamp}.mp4"
         if not target.exists():
             cache.mkdir(parents=True, exist_ok=True)
             ffmpeg.still_to_clip(
@@ -797,10 +854,13 @@ def balanced_wrap(
     # 行数が同じ候補の中から、切れ目のいちばん良いものを選ぶ。
     # 幅だけで詰めると「チェルシーが激怒した、移／籍期限…」のように
     # 熟語の途中で割れる。句読点の直後で切れているほうが読みやすい。
+    # 幅を少しずつ狭めて候補を作る。刻みが粗いと、良い切れ目の幅を飛ばす。
+    # 実測（2026-09-04）で、5段階だと「12月まで／戻らない」で切れる幅
+    # （上限の約0.88倍）が候補に入らず、「まで戻／らない」しか選べなかった。
     best = lines
     best_score = _break_score(lines)
-    for ratio in (0.62, 0.7, 0.78, 0.86, 0.94):
-        candidate = wrap_text(draw, text, font, max_width * ratio)
+    for step in range(60, 100, 2):
+        candidate = wrap_text(draw, text, font, max_width * step / 100)
         if len(candidate) != len(lines):
             continue
         score = _break_score(candidate)
@@ -817,13 +877,34 @@ def _is_kanji(char: str) -> bool:
     return "一" <= char <= "鿿"
 
 
+def _is_hiragana(char: str) -> bool:
+    return "ぁ" <= char <= "ん"
+
+
+def _is_katakana(char: str) -> bool:
+    return "ァ" <= char <= "ヴ"
+
+
+# 行頭に来ても読みを壊さないひらがな（助詞・助動詞の頭）。
+# 「選手が／外れた」は読めるが、「戻／らない」は動詞が割れて読めない。
+# どちらも「漢字のあとにひらがな」で、字種だけでは見分けられないので、
+# 助詞として使われる字を挙げて区別する。
+PARTICLE_HEAD = "がをにはへもとやでかねよ"
+
+
 def _break_score(lines: list[str]) -> int:
     """行の切れ目の良さ。大きいほど読みやすい。
 
     - 句読点や閉じ括弧で終わっていれば +2（意味の区切りで改行できている）
     - 漢字が続く途中で割ったら -3（「移／籍」「成／立」のような熟語の分断）
+    - カタカナが続く途中で割ったら -3（「シー／ズン」。外来語は1語で読む）
+    - ひらがなが続く途中で割ったら -2（「12月ま／で」「動くかど／うか」）
+    - 送り仮名を置き去りにしたら -2（「戻／らない」。助詞なら減点しない）
 
-    分断のほうを重く見る。多少 行末がそろわなくても、熟語が割れないほうが読める。
+    分断のほうを重く見る。多少 行末がそろわなくても、語が割れないほうが読める。
+
+    ひらがなを漢字より軽くしているのは、助詞の切れ目（「遠藤選手が／外れた」）は
+    実際には読めるため。同じ減点にすると、まともな切れ目まで避けてしまう。
     """
     score = 0
     for index, line in enumerate(lines[:-1]):
@@ -832,8 +913,17 @@ def _break_score(lines: list[str]) -> int:
         if line[-1] in GOOD_BREAK_END:
             score += 2
         next_line = lines[index + 1]
-        if next_line and _is_kanji(line[-1]) and _is_kanji(next_line[0]):
+        if not next_line:
+            continue
+        tail, head = line[-1], next_line[0]
+        if _is_kanji(tail) and _is_kanji(head):
             score -= 3
+        elif _is_katakana(tail) and _is_katakana(head):
+            score -= 3
+        elif _is_hiragana(tail) and _is_hiragana(head):
+            score -= 2
+        elif _is_kanji(tail) and _is_hiragana(head) and head not in PARTICLE_HEAD:
+            score -= 2
     return score
 
 
@@ -900,11 +990,18 @@ def _layer(size: tuple[int, int]) -> tuple[Image.Image, ImageDraw.ImageDraw]:
 
 
 def _cover(image: Image.Image, width: int, height: int) -> Image.Image:
-    """アスペクト比を保ったまま画面いっぱいに敷き詰める。"""
+    """アスペクト比を保ったまま画面いっぱいに敷き詰める。
+
+    **縦長の写真は上寄りに切る。**人物写真は顔が上にあるので、真ん中で切ると
+    顔が落ちる。実測（2026-09-05）で、サムネに選手の写真を敷いたら胴体だけが
+    残り、誰なのか分からなくなった。
+    """
     scale = max(width / image.width, height / image.height)
     resized = image.resize((int(image.width * scale), int(image.height * scale)), Image.LANCZOS)
     left = (resized.width - width) // 2
-    top = (resized.height - height) // 2
+    spare = resized.height - height
+    tall = image.height > image.width * 1.1
+    top = int(spare * (0.12 if tall else 0.5))
     return resized.crop((left, top, left + width, top + height))
 
 
