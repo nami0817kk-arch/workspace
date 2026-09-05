@@ -364,3 +364,74 @@ class ErrorDetailTest(unittest.TestCase):
         self.assertIn("403", msg)
         self.assertIn("wrong_parameter", msg)
         self.assertNotIn("pk_secret", msg)
+
+
+class NewApiFieldTest(unittest.TestCase):
+    """新API(20260701)で変わった項目名と、429 の扱いを固定する。"""
+
+    def setUp(self):
+        self.env = unittest.mock.patch.dict(
+            "os.environ",
+            {"RAKUTEN_APP_ID": "app-uuid", "RAKUTEN_ACCESS_KEY": "pk_test",
+             "RAKUTEN_AFFILIATE_ID": ""})
+        self.env.start()
+        self.addCleanup(self.env.stop)
+
+    def _opener(self, payloads):
+        """payloads を順に返す。要素が int ならその HTTP エラーを起こす。"""
+        import io
+        import urllib.error
+        seq = list(payloads)
+
+        def _open(req, timeout=None):
+            nxt = seq.pop(0)
+            if isinstance(nxt, int):
+                raise urllib.error.HTTPError(
+                    req.full_url, nxt, "err", {}, io.BytesIO(b'{"message":"Rate limit"}'))
+            body = json.dumps(nxt).encode("utf-8")
+
+            class Res:
+                def read(self_inner):
+                    return body
+
+                def __enter__(self_inner):
+                    return self_inner
+
+                def __exit__(self_inner, *exc):
+                    return False
+            return Res()
+        return _open
+
+    def test_ジャンル名はnameJaから読む(self):
+        opener = self._opener([{"children": [{"genreId": "101", "nameJa": "パソコン"}]}])
+
+        out = rakuten.genre_children("0", rakuten.Throttle(interval=0), opener)
+
+        self.assertEqual(out, [{"genre_id": "101", "name": "パソコン"}])
+
+    def test_旧名genreNameしか無くても名前を落とさない(self):
+        opener = self._opener([{"children": [{"genreId": "101", "genreName": "旧名"}]}])
+
+        out = rakuten.genre_children("0", rakuten.Throttle(interval=0), opener)
+
+        self.assertEqual(out[0]["name"], "旧名")
+
+    def test_429は間隔を広げてやり直す(self):
+        slept = []
+        throttle = rakuten.Throttle(interval=1.0, sleep=slept.append,
+                                    clock=lambda: 0.0)
+        opener = self._opener([429, {"children": [{"genreId": "1", "nameJa": "A"}]}])
+
+        out = rakuten.genre_children("0", throttle, opener)
+
+        self.assertEqual(out[0]["name"], "A")
+        self.assertGreater(throttle.interval, 1.0)  # 次回以降は広がっている
+
+    def test_429が続けば理由つきで諦める(self):
+        throttle = rakuten.Throttle(interval=0, sleep=lambda _: None, clock=lambda: 0.0)
+        opener = self._opener([429] * (rakuten.RATE_LIMIT_RETRIES + 1))
+
+        with self.assertRaises(rakuten.RakutenError) as cm:
+            rakuten.genre_children("0", throttle, opener)
+
+        self.assertIn("429", str(cm.exception))

@@ -145,42 +145,62 @@ def redact(url: str) -> str:
         (parts.scheme, parts.netloc, parts.path, urllib.parse.urlencode(kept), ""))
 
 
+RATE_LIMIT_RETRIES = 3
+MAX_INTERVAL = 5.0
+
+
 def _get(url: str, params: dict, throttle: Throttle, opener=urllib.request.urlopen) -> dict:
     query = urllib.parse.urlencode({k: v for k, v in params.items() if v not in (None, "")})
-    throttle.wait()
     full = f"{url}?{query}"
     req = urllib.request.Request(full, headers={"User-Agent": "price-tracker/1.0"})
-    try:
-        with opener(req, timeout=30) as res:
-            return json.loads(res.read().decode("utf-8"))
-    except urllib.error.HTTPError as exc:
-        # 楽天は 403 などの本文に理由を JSON で返す。これを拾わないと
-        # スコープ未設定・ドメイン制限・キー誤りのどれなのか切り分けられない。
+    for attempt in range(RATE_LIMIT_RETRIES + 1):
+        throttle.wait()
         try:
-            detail = exc.read().decode("utf-8", "replace").strip()[:500]
-        except Exception:
-            detail = ""
-        raise RakutenError(
-            f"HTTP {exc.code} {redact(full)} : {detail or '(本文なし)'}") from exc
+            with opener(req, timeout=30) as res:
+                return json.loads(res.read().decode("utf-8"))
+        except urllib.error.HTTPError as exc:
+            # 楽天は 403 などの本文に理由を JSON で返す。これを拾わないと
+            # スコープ未設定・ドメイン制限・キー誤りのどれなのか切り分けられない。
+            try:
+                detail = exc.read().decode("utf-8", "replace").strip()[:500]
+            except Exception:
+                detail = ""
+            # 429 は間隔を守っていても出る。以降の間隔を広げて数回だけやり直す。
+            # 広げたまま続けるのは、1件だけ通しても次でまた落ちるため。
+            if exc.code == 429 and attempt < RATE_LIMIT_RETRIES:
+                throttle.interval = min(throttle.interval * 1.5, MAX_INTERVAL)
+                continue
+            raise RakutenError(
+                f"HTTP {exc.code} {redact(full)} : {detail or '(本文なし)'}") from exc
+
+
+def raw_search(genre_id: str, hits: int, throttle: Throttle, page: int = 1,
+               opener=urllib.request.urlopen) -> dict:
+    """検索の生レスポンスをそのまま返す。
+
+    API 側のフィールド名が変わったとき、こちらの解釈処理を疑う前に
+    実際に何が返っているかを見るために使う（--show-fields）。
+    """
+    app_id, access_key, affiliate_id = credentials()
+    return _get(SEARCH_URL, {
+        "applicationId": app_id,
+        "accessKey": access_key,
+        "affiliateId": affiliate_id,
+        "genreId": genre_id,
+        "hits": min(MAX_HITS, hits),
+        "page": page,
+        "sort": "standard",
+        "format": "json",
+        "formatVersion": 2,
+    }, throttle, opener)
 
 
 def search_genre(genre_id: str, hits: int, throttle: Throttle,
                  opener=urllib.request.urlopen) -> list[dict]:
     """ジャンル内の商品を売れ筋順に hits 件ぶん取る。"""
-    app_id, access_key, affiliate_id = credentials()
     items, page = [], 1
     while len(items) < hits and page <= MAX_PAGE:
-        payload = _get(SEARCH_URL, {
-            "applicationId": app_id,
-            "accessKey": access_key,
-            "affiliateId": affiliate_id,
-            "genreId": genre_id,
-            "hits": min(MAX_HITS, hits - len(items)),
-            "page": page,
-            "sort": "standard",
-            "format": "json",
-            "formatVersion": 2,
-        }, throttle, opener)
+        payload = raw_search(genre_id, hits - len(items), throttle, page, opener)
         batch = parse_items(payload)
         if not batch:
             break
@@ -207,5 +227,8 @@ def genre_children(genre_id: str, throttle: Throttle,
         node = child.get("child") if isinstance(child.get("child"), dict) else child
         gid = str(node.get("genreId") or "").strip()
         if gid:
-            out.append({"genre_id": gid, "name": str(node.get("genreName") or "").strip()})
+            # 新API(20260701)はジャンル名を nameJa で返す。旧名 genreName も
+            # 読めるようにしておく（片方しか無い応答が混ざっても名前を落とさない）。
+            name = node.get("nameJa") or node.get("genreName") or ""
+            out.append({"genre_id": gid, "name": str(name).strip()})
     return out

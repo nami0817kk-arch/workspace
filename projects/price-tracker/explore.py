@@ -22,7 +22,23 @@ def main() -> int:
     ap.add_argument("--genre", default="0", help="調べる親ジャンルID（0 が最上位）")
     ap.add_argument("--sample", type=int, default=30, help="各ジャンルから見る商品数")
     ap.add_argument("--depth", type=int, default=1, help="何段掘るか")
+    ap.add_argument("--show-fields", action="store_true",
+                    help="生レスポンスの項目名を1件だけ表示して終わる（API仕様変更の切り分け用）")
     args = ap.parse_args()
+
+    if args.show_fields:
+        payload = rakuten.raw_search(args.genre, 1, rakuten.Throttle())
+        entries = payload.get("Items") or payload.get("items") or []
+        print("トップレベルの項目:", sorted(payload.keys()))
+        if not entries:
+            print("商品が0件でした。ジャンルIDを変えて試してください。")
+            return 1
+        item = rakuten.item_of(entries[0])
+        print("商品1件の項目:")
+        for k in sorted(item):
+            v = item[k]
+            print(f"  {k} = {str(v)[:60]}")
+        return 0
 
     site = store.load_json(ROOT / "config.json", {})
     rate = site.get("commission_rate", 0.02)
