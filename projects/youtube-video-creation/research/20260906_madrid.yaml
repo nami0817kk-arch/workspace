@@ -1,0 +1,97 @@
+slot: world
+date: 2026年9月6日
+theme:
+  id: madrid_betis
+  league: spain
+  prefix: 悲報
+  title: レアル、枠内8本xG3.16で0-1 モウリーニョ「説明できない」
+  hook: 支配して、決定機を作って、負けました。監督は理由が分からないと言っています。
+  question: 内容で圧倒した試合を、なぜ落としたのか
+thumbnail:
+  line1: レアル まさかの0-1
+  line2: モウリーニョ「説明できない」
+  tags:
+  - レアル・マドリード
+  - モウリーニョ
+answer: 決定機は作った。決めきれず、終了間際のPKも止められた
+watch: 次節。xG で勝ち続けても、勝点は増えない
+sections:
+- id: what
+  heading: 何が起きたか
+  tier: 報道
+  telop: ベティスに0-1、モウリーニョ復帰後の初黒星
+  say:
+  - voice: キャスター
+    text: レアル・マドリードが、敵地でベティスに、ゼロたいいちで敗れました。
+  - voice: キャスター
+    text: モウリーニョ監督が、ラ・リーガに戻ってきてからの、初めての黒星です。
+    telop: 開幕4試合で敗戦は2014-15以来
+  - voice: キャスター
+    text: リーグの最初のよんしあいで負けたのは、にせんじゅうよんー、じゅうごシーズン以来です。
+  - voice: キャスター
+    text: 決めたのは、途中出場のトロイ・パロット。はちじゅういっぷんでした。
+    card:
+      type: points
+      title: 終盤に起きたこと
+      items:
+      - 81分 パロット（途中出場）がベティス先制
+      - その後 エスピの同点弾がオフサイドで取り消し
+      - アディショナルタイム ムバッペのPKをバジェスが阻止
+  official: false
+  sources:
+  - https://www.espn.com/soccer/story/_/id/49828781/jose-mourinho-real-madrid-betis-kylian-mbappe-penalty
+  - https://as.com/futbol/primera/polemica-analisis-y-reacciones-del-betis-real-madrid-de-laliga-ea-sports-f202609-d/
+- id: why
+  heading: 内容はどうだったか
+  tier: 報道
+  telop: 枠内8本、xG 3.16。それでも0点
+  say:
+  - voice: キャスター
+    text: 内容の数字は、まったく逆を向いていました。
+    card:
+      type: bars
+      title: レアル・マドリードのこの試合
+      unit: ''
+      items:
+      - label: 枠内シュート
+        value: 8
+        highlight: true
+      - label: 期待ゴール xG
+        value: 3.16
+      - label: 実際の得点
+        value: 0
+      note: '※ 出典: ESPN'
+  - voice: キャスター
+    text: 枠内シュートはっぽん。期待ゴールは、さんてんいちろく。そして得点はゼロ。
+  - voice: キャスター
+    text: モウリーニョ監督は、会見でこう話しました。
+    card:
+      type: quote
+      source: José Mourinho（会見）
+      color: '#febe10'
+      text: Sometimes you lose and you don't know why. We were very dominant, focused, we controlled absolutely everything.
+      translation: ときに、なぜ負けたのか分からないことがある。我々は支配していたし、集中もしていた。すべてを掌握していた
+  - voice: モウリーニョ
+    text: ときどき、負けても、その理由が分からないことがある。説明のしようがない。
+  official: false
+  sources:
+  - https://www.espn.com/soccer/story/_/id/49828781/jose-mourinho-real-madrid-betis-kylian-mbappe-penalty
+  - https://web.gekisaka.jp/news/world/detail/?458219-458219-fl
+- id: next
+  heading: これからどうなる
+  tier: 報道
+  telop: 「引き分けでも不満だった。まして負けだ」
+  say:
+  - voice: モウリーニョ
+    text: 引き分けだったとしても、我々は不満だっただろう。それだけの内容だった。まして負けとなれば、想像がつくはずだ。
+  - voice: キャスター
+    text: 内容が良ければ、いずれ結果は付いてくる。監督の言い分は、そこにあります。
+  - voice: キャスター
+    text: ただ、順位表に載るのは内容ではなく、勝点です。
+    telop: xGでは勝てても、勝点は増えない
+  - voice: キャスター
+    text: つぎに見るべきは、次節。ここで決めきれるかどうかです。
+  official: false
+  sources:
+  - https://www.espn.com/soccer/story/_/id/49828781/jose-mourinho-real-madrid-betis-kylian-mbappe-penalty
+  - https://as.com/futbol/primera/polemica-analisis-y-reacciones-del-betis-real-madrid-de-laliga-ea-sports-f202609-d/

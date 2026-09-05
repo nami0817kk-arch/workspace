@@ -1,0 +1,88 @@
+slot: world
+date: 2026年9月6日
+theme:
+  id: enzo_debut
+  league: england
+  prefix: 速報
+  title: 180億円の新加入、ウォームアップ中の負傷で急きょデビュー
+  hook: ベンチのはずでした。試合前の練習で味方が倒れ、いきなり先発になりました。
+  question: 準備のないデビューで、彼は何をしたのか
+thumbnail:
+  line1: 急きょ先発デビュー
+  line2: 180億円のエンソ
+  tags:
+  - エンソ
+  - マンチェスター・シティ
+answer: 決勝点の起点になった。監督の評価も高い
+watch: 次節。今度は準備のある状態で、どこまでやれるか
+sections:
+- id: what
+  heading: 何が起きたか
+  tier: 報道
+  telop: ベンチから一転、ウォームアップ中の負傷で先発
+  say:
+  - voice: キャスター
+    text: マンチェスター・シティが、コヴェントリーに、いちたいゼロで勝ちました。
+  - voice: キャスター
+    text: この試合で、エンソ・フェルナンデスがシティでのデビューを果たしています。
+    telop: 移籍金1億2500万ポンド。締切日の移籍
+    card:
+      type: transfer
+      player: エンソ・フェルナンデス
+      from: チェルシー
+      to: マンチェスター・シティ
+      fee: 1億2500万ポンド。移籍市場の締切日に成立
+  - voice: キャスター
+    text: ただ、予定ではベンチでした。
+    telop: 予定ではベンチだった
+  - voice: キャスター
+    text: 試合前のウォームアップで、ニコ・オライリーが負傷。そのまま先発に回されています。
+    telop: オライリーの負傷で、そのまま先発へ
+  - voice: ロマーノ
+    text: エンソ・フェルナンデスが先発。ウォームアップでのオライリーの負傷を受けて、そのまま入った。
+  official: false
+  sources:
+  - https://www.espn.com/soccer/report/_/gameId/401879287
+  - https://x.com/FabrizioRomano/status/2096236342128566659
+- id: why
+  heading: 何をしたのか
+  tier: 報道
+  telop: 決勝点は、彼が動かした流れから
+  say:
+  - voice: キャスター
+    text: にじゅうろっぷん、ハーランドのヘディングでシティが先制します。
+    card:
+      type: points
+      title: この試合のエンソ
+      items:
+      - 26分 決勝点につながる流れの起点になる
+      - セメンヨのクロスをハーランドがヘディング
+      - シェルキがポストに当てた場面にも絡む
+      - 後半、ハーランドへの一本はオフサイドで取り消し
+  - voice: キャスター
+    text: セメンヨのクロスを頭で合わせた形ですが、その流れを作ったのがフェルナンデスでした。
+  - voice: キャスター
+    text: ESPNは、精力的な出来で好印象を残した、と伝えています。
+    telop: ESPN「精力的な出来で好印象」
+  - voice: キャスター
+    text: 後半にはハーランドへ通した場面もありましたが、こちらはオフサイドで取り消されています。
+  official: false
+  sources:
+  - https://www.espn.com/soccer/report/_/gameId/401879287
+  - https://x.com/FabrizioRomano/status/2096236342128566659
+- id: next
+  heading: これからどうなる
+  tier: 報道
+  telop: シティは3連勝。コヴェントリーは3連敗で無得点
+  say:
+  - voice: キャスター
+    text: シティはこれでさんれんしょう。開幕からさんしあい、すべて勝っています。
+  - voice: キャスター
+    text: いっぽうのコヴェントリーは、ボール保持がにじゅうにパーセント。さんれんぱいで、まだ無得点です。
+  - voice: キャスター
+    text: つぎに見るべきは次節。今度は、準備のある状態でのフェルナンデスです。
+    telop: 次は準備のある状態で
+  official: false
+  sources:
+  - https://www.espn.com/soccer/report/_/gameId/401879287
+  - https://x.com/FabrizioRomano/status/2096236342128566659
