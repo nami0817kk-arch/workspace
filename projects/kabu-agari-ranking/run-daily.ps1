@@ -1,4 +1,4 @@
-# 日次のランキング取得（このPCのタスクスケジューラから毎平日16:10に実行される）。
+﻿# 日次のランキング取得（このPCのタスクスケジューラから毎平日16:10に実行される）。
 #
 # kabutan が GitHub Actions の IP を 405 でブロックしているため、
 # 取得だけは手元で行い、data/ を push する。push を受けた CI（kabu-daily.yml）が
@@ -20,9 +20,24 @@ function Run($cmdline) {
     return $LASTEXITCODE
 }
 
+# ネットワーク系のコマンドをリトライ付きで実行する。
+# 16:10 の定時実行で DNS 解決が一時的に失敗する事象が続いたため
+# （2026-09-03 / 09-04 に git pull が getaddrinfo 失敗で即死し、2営業日分を欠測）、
+# 少し待って引き直す。恒常的な障害なら3回で諦めて従来どおり FAILED を残す。
+function RunRetry($cmdline) {
+    foreach ($wait in 0, 90, 180) {
+        if ($wait -gt 0) {
+            Add-Content $log "retry in ${wait}s: $cmdline"
+            Start-Sleep -Seconds $wait
+        }
+        if ((Run $cmdline) -eq 0) { return 0 }
+    }
+    return 1
+}
+
 Add-Content $log "=== $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') ==="
 
-if ((Run "git pull --ff-only origin master") -ne 0) {
+if ((RunRetry "git pull --ff-only origin master") -ne 0) {
     Add-Content $log "FAILED: git pull"; exit 1
 }
 if ((Run "`"$repo\.venv\Scripts\python.exe`" src\build_site.py") -ne 0) {
@@ -38,7 +53,8 @@ if ($LASTEXITCODE -ne 0) {
     if ((Run "git commit -F `"$msgFile`"") -ne 0) {
         Add-Content $log "FAILED: git commit"; exit 1
     }
-    if ((Run "git push origin master") -ne 0) {
+    if ((RunRetry "git push origin master") -ne 0) {
+        # コミットはローカルに残っているので、翌営業日の git pull 後に push される
         Add-Content $log "FAILED: git push"; exit 1
     }
     Remove-Item $msgFile -ErrorAction SilentlyContinue
