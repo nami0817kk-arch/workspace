@@ -34,6 +34,57 @@ class _SupporterSectionState extends State<SupporterSection> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const SizedBox(height: 20),
+        Text(Tr.pick('課金とひろこく', 'Payments and ads'),
+            style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 4),
+        // 課金要素の全体像。個々の画面には説明があるが、「このアプリで
+        // お金が関わるのは何か」を一箇所で見られる場所が無かった。
+        // 買う前・見る前に全体を把握できる方が、判断の材料になる。
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  Tr.pick('このアプリでお金が関わるのは次の2つだけです。',
+                      'Only two things in this app involve money.'),
+                  style: const TextStyle(fontSize: 13),
+                ),
+                const SizedBox(height: 8),
+                _PointRow(
+                  icon: Icons.ondemand_video,
+                  title: Tr.pick('動画広告（無料・任意）',
+                      'Video ads (free, optional)'),
+                  body: Tr.pick(
+                      'クラブ経営の画面で、自分から選んだときだけ再生されます。'
+                          '1日${RewardOffer.dailyLimitFree}回まで、見ると特別協賛金を受け取れます。'
+                          '進行を止める全画面広告やバナーはありません。'
+                          '**一度も見なくても最後まで遊べます。**',
+                      'They play only when you choose to watch, from the club finance screen. '
+                          'Up to ${RewardOffer.dailyLimitFree} a day, each one pays sponsorship money. '
+                          'There are no interstitials or banners. '
+                          '**You can finish the game without ever watching one.**'),
+                ),
+                const SizedBox(height: 8),
+                _PointRow(
+                  icon: Icons.favorite_border,
+                  title: Tr.pick('サポーター（買い切り）',
+                      'Supporter (one-off purchase)'),
+                  body: Tr.pick(
+                      '広告を見ずに同じ協賛金を受け取れるようになり、1日の回数が'
+                          '${RewardOffer.dailyLimitFree}回から${RewardOffer.dailyLimitSupporter}回に増えます。'
+                          '月額ではありません。**選手の成長や試合の勝率は変わりません。**',
+                      'You take the same money without ads, and your daily limit rises from '
+                          '${RewardOffer.dailyLimitFree} to ${RewardOffer.dailyLimitSupporter}. '
+                          'It is not a subscription. '
+                          '**It does not change player growth or your chances in a match.**'),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 12),
         Text(Tr.pick('サポーター', 'Supporter'),
             style: Theme.of(context).textTheme.titleMedium),
         const SizedBox(height: 8),
@@ -116,5 +167,46 @@ class _SupporterSectionState extends State<SupporterSection> {
     if (message == null || !mounted) return;
     ScaffoldMessenger.of(context)
         .showSnackBar(SnackBar(content: Text(message)));
+  }
+}
+
+
+/// 課金要素の説明1件ぶん。
+class _PointRow extends StatelessWidget {
+  final IconData icon;
+  final String title;
+  final String body;
+  const _PointRow({
+    required this.icon,
+    required this.title,
+    required this.body,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, size: 18, color: Theme.of(context).colorScheme.primary),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(title,
+                  style: const TextStyle(
+                      fontSize: 13, fontWeight: FontWeight.bold)),
+              Text(
+                body.replaceAll('**', ''),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 }
