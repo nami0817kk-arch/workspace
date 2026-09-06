@@ -12,7 +12,14 @@ from pathlib import Path
 
 from . import tags as tags_mod
 
-SCOPES = ["https://www.googleapis.com/auth/youtube.upload"]
+# upload だけでは**公開済み動画の概要欄を書き換えられない**（403）。
+# クレジットの形を直すたびに手作業になるので、force-ssl を足した
+# （2026-09-06 ユーザーが同意画面にスコープを追加）。
+# **強い権限なので、使うのは概要欄の更新まで。**削除には触らない
+SCOPES = [
+    "https://www.googleapis.com/auth/youtube.upload",
+    "https://www.googleapis.com/auth/youtube.force-ssl",
+]
 TOKEN_PATH = Path("secrets/token.json")
 CLIENT_SECRET_PATH = Path("secrets/client_secret.json")
 
@@ -128,6 +135,59 @@ def get_service(client_secret: Path = CLIENT_SECRET_PATH, token: Path = TOKEN_PA
         token.parent.mkdir(parents=True, exist_ok=True)
         token.write_text(credentials.to_json(), encoding="utf-8")
     return build("youtube", "v3", credentials=credentials)
+
+
+def fetch_snippet(service, video_id: str) -> dict:
+    """いまの題名・概要欄・タグを取る。**書き換える前に、現物を見る。**"""
+    got = service.videos().list(part="snippet", id=video_id).execute()
+    items = got.get("items") or []
+    if not items:
+        raise UploadError(f"動画が見つかりません: {video_id}")
+    return items[0]["snippet"]
+
+
+def add_credits(current: str, top: list[str], tail: list[str]) -> str:
+    """いまの概要欄に、クレジットだけを足す。
+
+    **丸ごと差し替えない。**公開中の動画と手元の台本は尺が違うことがあり
+    （実測 2026-09-06: 公開 2分03秒 / 手元 1分52秒）、章の時刻が11秒ずれる。
+    足したいのはクレジットであって、章を直したいわけではない。
+
+    上の行は「音声:」のすぐ下、詳細はいちばん末尾に置く。
+    すでに入っている行は足さない（何度実行しても増えない）。
+    """
+    nl = chr(10)
+    lines = current.split(nl)
+    have = set(current.split(nl))
+
+    for one in reversed([x for x in top if x not in have]):
+        at = next((i for i, ln in enumerate(lines) if ln.startswith("音声:")), None)
+        if at is None:
+            at = len(lines) - 1
+        lines.insert(at + 1, one)
+
+    missing = [x for x in tail if x not in have]
+    if missing:
+        rule = "─" * 12
+        body = lines + ([""] if lines and lines[-1] else [])
+        if rule not in have:
+            body.append(rule)
+        body.extend(missing)
+        lines = body
+    return nl.join(lines).rstrip() + nl
+
+
+def update_description(service, video_id: str, description: str) -> str:
+    """概要欄だけを差し替える。
+
+    **題名・タグ・カテゴリはそのまま返す。**snippet は部分更新ができず、
+    渡さなかった項目は消える。取ってきたものを詰め直すのが唯一の安全策。
+    """
+    snippet = fetch_snippet(service, video_id)
+    snippet["description"] = description[:5000]
+    service.videos().update(
+        part="snippet", body={"id": video_id, "snippet": snippet}).execute()
+    return video_id
 
 
 def upload(
