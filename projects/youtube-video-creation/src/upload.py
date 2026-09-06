@@ -146,6 +146,20 @@ def fetch_snippet(service, video_id: str) -> dict:
     return items[0]["snippet"]
 
 
+def set_thumbnail(service, video_id: str, thumbnail: Path) -> str:
+    """サムネイルだけを後から設定する。
+
+    **投稿し直さない。**短時間に何本も上げると、動画は通るのに
+    サムネイルだけ 429（uploadRateLimitExceeded）で落ちることがある
+    （2026-09-06 実測。6本まとめて上げて6本ともこれだった）。
+    投稿からやり直すと同じ動画が二重に上がるので、ここだけを叩く。
+    """
+    if not thumbnail.exists():
+        raise UploadError(f"サムネイルがありません: {thumbnail}")
+    service.thumbnails().set(videoId=video_id, media_body=str(thumbnail)).execute()
+    return video_id
+
+
 def add_credits(current: str, top: list[str], tail: list[str]) -> str:
     """いまの概要欄に、クレジットだけを足す。
 
