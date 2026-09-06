@@ -50,4 +50,9 @@ flutter run -d chrome    # 手元で触ってみるとき
 - 収益化（リワード広告・課金）。ストア申請も未着手。`soccer-manager` の
   `STORE_LISTING.md` が先例になる。
 - 音・アニメーション・演出のたぐい。今はロジックと最低限のUIだけ。
-- Web版の公開。足すなら `soccer-pages.yml` に倣って別ワークフローにする。
+
+## 公開
+
+Web版は master への push で Cloudflare Pages に自動デプロイされる
+（`.github/workflows/soccer-clicker-pages.yml`）。検証は別ワークフローに分けてあり、
+公開設定のミスでテストまで赤くならないようにしてある。

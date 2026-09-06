@@ -1,0 +1,65 @@
+# Web版を Cloudflare Pages に公開する（soccer-pages.yml と同じ方針）。
+# リポジトリは private のまま公開できる。
+#
+# 必要な Secrets: CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID
+# トークンは「アカウント / Cloudflare Pages / 編集」の権限が要る。
+# 画像生成(Workers AI)用のトークンでは Pages API が 403 になる（docs/session-faq.md）。
+#
+# 検証(analyze + test)は soccer-clicker-ci.yml が同じコミットに対して回すので、
+# ここでは重複させない。
+name: soccer-clicker Web版を公開する
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "projects/soccer-clicker/**"
+      - ".github/workflows/soccer-clicker-pages.yml"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+
+concurrency:
+  group: soccer-clicker-pages
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: projects/soccer-clicker
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      # Cloudflare Pages はプロジェクトのルートで配信するため base-href は "/"。
+      - name: Build web
+        run: flutter build web --release --base-href "/"
+
+      # 無ければ作る。既にあれば重複エラーが返るだけで、後続には影響しない。
+      # production_branch を master に固定するのが要点。デプロイ時の --branch と
+      # ずれると本番ではなくプレビュー用の別URLに出てしまう。
+      - name: Ensure Cloudflare Pages project exists
+        run: |
+          curl -s -o /dev/null -w "%{http_code}\n" -X POST \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/pages/projects" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"name":"soccer-clicker","production_branch":"master"}'
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: projects/soccer-clicker
+          command: pages deploy build/web --project-name=soccer-clicker --branch=master
