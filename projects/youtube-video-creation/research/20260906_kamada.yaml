@@ -1,0 +1,102 @@
+slot: japan
+date: 2026年9月6日
+theme:
+  id: kamada_palace
+  league: england
+  prefix: 朗報
+  title: 鎌田大地、幻のゴールと同点弾の起点 パレスが2度追いつき逆転
+  hook: 決めたと思った一本は、ブイエーアールで消えました。ただ、彼の関与はそれだけではありません。
+  question: ゴールを取り消された選手は、その試合で何をしたのか
+thumbnail:
+  line1: 鎌田、幻のゴール
+  line2: パレスは2度追いつき逆転
+  tags:
+  - 鎌田大地
+  - クリスタル・パレス
+answer: 同点弾の起点になった。得点は消えたが、勝ちには関わった
+watch: 新監督サージュのもとで、鎌田がどこまで使われるか
+sections:
+- id: what
+  heading: 何が起きたか
+  tier: 報道
+  telop: フラム 2-3 クリスタル・パレス
+  say:
+  - voice: キャスター
+    text: プレミアリーグ第さん節、フラム対クリスタル・パレスは、にたいさんでパレスが勝ちました。
+  - voice: キャスター
+    text: パレスはにどリードを許しながら、二度とも追いつき、最後に逆転しています。
+    telop: 2度追いつき、77分に逆転
+    card:
+      type: table
+      title: 得点の流れ
+      columns:
+      - 時間
+      - 得点者
+      - スコア
+      rows:
+      - - 11分
+        - キング（フラム）
+        - 1-0
+      - - 35分
+        - ミッチェル（パレス）
+        - 1-1
+      - - 42分
+        - パラシオス（フラム）
+        - 2-1
+      - - 54分
+        - ミッチェル（パレス）
+        - 2-2
+      - - 77分
+        - チルウェル（パレス）
+        - 2-3
+      highlight_row: 4
+  - voice: キャスター
+    text: 決勝点は、ななじゅうよんぷんから入ったチルウェル。投入からさんぷん後のことでした。
+  - voice: キャスター
+    text: 新監督ピエール・サージュにとって、就任してはじめての勝利です。
+  official: false
+  sources:
+  - https://www.espn.com/soccer/report/_/gameId/401879289
+  - https://www.fulhamfc.com/news/2026/september/05/fulham-2-3-crystal-palace/
+- id: why
+  heading: 鎌田は何をしたのか
+  tier: 報道
+  telop: 決めたと思った一本は、VARで取り消し
+  say:
+  - voice: キャスター
+    text: 先制を許した直後、鎌田大地が決めたかに見えた場面がありました。
+  - voice: キャスター
+    text: エンケティアとピノの連係から抜け出した形でしたが、ブイエーアールの確認でオフサイド。得点は認められませんでした。
+  - voice: キャスター
+    text: しかし、さんじゅうごふんの同点弾は、彼から始まっています。
+    telop: 35分の同点弾は、鎌田から始まった
+    card:
+      type: points
+      title: 同点弾までの流れ
+      items:
+      - 鎌田がピノへつなぐ
+      - ピノが左のミッチェルを見つける
+      - ミッチェルが元同僚アンデルセンを抑えてニアへ
+      - → 1-1（35分）
+  - voice: キャスター
+    text: 鎌田がピノへ、ピノが左のミッチェルへ。ミッチェルが元同僚のアンデルセンを抑えて、ニアサイドに決めました。
+  official: false
+  sources:
+  - https://www.espn.com/soccer/report/_/gameId/401879289
+  - https://web.gekisaka.jp/news/world/detail/?458285-458285-fl
+- id: next
+  heading: これからどうなる
+  tier: 報道
+  telop: 新監督サージュ、この夏11人を補強
+  say:
+  - voice: キャスター
+    text: パレスはこの夏、じゅういちにんを補強しています。この試合でもディサシ、ハライリと、新加入が絡みました。
+  - voice: キャスター
+    text: 顔ぶれが大きく変わったなかで、鎌田は起点として使われています。
+  - voice: キャスター
+    text: つぎに見るべきは、新監督のもとで鎌田がどこまで任されるかです。
+    telop: 起点として、どこまで任されるか
+  official: false
+  sources:
+  - https://www.espn.com/soccer/report/_/gameId/401879289
+  - https://www.fulhamfc.com/news/2026/september/05/fulham-2-3-crystal-palace/

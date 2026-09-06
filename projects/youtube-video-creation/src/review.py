@@ -192,8 +192,24 @@ def _thumbnail_face(script: Script) -> Finding:
         return Finding(False, "サムネの顔",
                        "thumbnail_photo がありません。**顔を必ず入れる**"
                        "（写真は subject で被写体を確かめてから使う）")
-    if not _resolve(photo).exists():
+    target = _resolve(photo)
+    if not target.exists():
         return Finding(False, "サムネの顔", f"写真が見つかりません: {photo}")
+    # **改変不可(ND)の写真をサムネに使わない。**サムネは16:9に切って文字を重ねる。
+    # 本文にそのまま出すぶんには使えるので、取得時に印を残してある
+    import json as _json
+
+    ledger = target.parent / "credits.json"
+    if ledger.exists():
+        try:
+            rows = _json.loads(ledger.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            rows = []
+        for row in rows if isinstance(rows, list) else []:
+            if row.get("file") == target.name and row.get("no_derivatives"):
+                return Finding(False, "サムネの顔",
+                               f"{row.get('license', '')} は改変不可です。"
+                               "サムネは切り取って文字を重ねるので使えません")
     return Finding(True, "サムネの顔", Path(photo).name)
 
 
@@ -206,6 +222,12 @@ def _photo_credits(script: Script, out_dir: Path) -> Finding:
     used = sorted({
         Path(line.image).name for line in script.lines if getattr(line, "image", None)
     })
+    # **サムネイルの写真も数える。**動画本体には出ないが、サムネイルも配布物で、
+    # 表示義務は同じ。行の画像しか見ておらず、公開済みの5本が
+    # クレジット無しで出ていた（2026-09-06 実測）
+    thumb = str((script.meta or {}).get("thumbnail_photo") or "").strip()
+    if thumb:
+        used = sorted(set(used) | {Path(thumb).name})
     if not used:
         return Finding(True, "写真のクレジット", "写真を使っていません")
     description = out_dir / "description.txt"

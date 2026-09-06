@@ -253,6 +253,8 @@ def main(argv: list[str] | None = None) -> int:
         "portrait", help="人物の顔写真を Commons から取る（被写体を確かめてから）")
     p_portrait.add_argument("dir", help="置き先のフォルダ（例: assets/images/martinelli）")
     p_portrait.add_argument("names", nargs="+", help="本人の名前（英語表記が当たりやすい）")
+    p_portrait.add_argument("--whole", action="store_true",
+                            help="切らずにそのまま本文へ出す用途。改変不可(ND)の写真も使える")
     p_portrait.add_argument("--crop", default="",
                             help="顔だけ切り出す x,y,w,h（画像に対する割合。例: 0.55,0.05,0.4,0.3）")
     p_portrait.add_argument("--file", default="", dest="only",
@@ -1401,7 +1403,8 @@ def _cmd_portrait(args, config) -> int:
 
     folder = Path(args.dir)
     try:
-        entry = save(list(args.names), folder, only=getattr(args, "only", ""))
+        entry = save(list(args.names), folder, only=getattr(args, "only", ""),
+                     modify=not getattr(args, "whole", False))
     except (PortraitError, SubjectError) as err:
         print(f"取れません: {err}", file=sys.stderr)
         print("  台本の thumbnail_photo は手で用意してください", file=sys.stderr)
@@ -1415,6 +1418,9 @@ def _cmd_portrait(args, config) -> int:
     print(f"  被写体: {entry['subject_check']}")
     print(f"  出典　: {entry['title']}")
     print(f"  権利　: {entry['license']} / {entry['author']}")
+    if entry.get("no_derivatives"):
+        print("  ※ 改変不可。**サムネイルと背景には使えません。**"
+              "本文に image: で、切らずに出すだけ")
     print(f"  台本に: thumbnail_photo: {folder.as_posix()}/{entry['file']}")
     return 0
 

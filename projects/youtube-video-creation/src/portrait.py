@@ -55,24 +55,45 @@ def _plain(field) -> str:
     return " ".join(html.unescape("".join(out)).split())
 
 
-# 使ってよいライセンス。**BY-SA は入れない。**継承条件が付くので、
-# 使うと動画そのものを同じ条件で出すことになる。NC は商用不可、ND は改変不可で、
-# どちらもサムネイルの切り抜きができない。
-# **この決まりは前から方針としてあったが、コードのどこにも無かった。**
-# 実際、判定を入れる直前に BY-SA の1枚を落としている（2026-09-06）
+# 使ってよいライセンス。
+# **BY-SA を許可した（2026-09-06 ユーザーの判断）。**日本人選手は CC BY で
+# 見つかるものがほぼ全部スタジアムの引き写真で、顔が使えなかった。
+# 「サムネの顔は必須」と両立しないので、継承条件を受け入れる側を選んだ。
+#   → 継承（SA）の条件は「同じ条件で公開する」こと。**表示義務も強くなる**ので、
+#     概要欄にライセンス名を必ず出す（tts.image_credits）
+# NC は商用不可、ND は改変不可（切り抜きができない）で、こちらは引き続き断る。
 ALLOWED = ("cc0", "public domain", "pd-", "cc by 1.0", "cc by 2.0",
-           "cc by 2.5", "cc by 3.0", "cc by 4.0", "attribution")
-REFUSED = ("sa", "nc", "nd", "noncommercial", "sharealike", "share alike")
+           "cc by 2.5", "cc by 3.0", "cc by 4.0", "attribution",
+           "cc by-sa 1.0", "cc by-sa 2.0", "cc by-sa 2.5",
+           "cc by-sa 3.0", "cc by-sa 4.0")
+# 非営利（NC）は収益化と両立しないので、どこでも使わない
+REFUSED = ("nc", "noncommercial", "non commercial")
+# 改変不可（ND）は**切らずにそのまま出すなら使える**（2026-09-06 ユーザーの案）。
+# CC 4.0 は「媒体や形式を変えるための技術的な変更は改変物を生まない」と
+# 明記しており、**縮小はこれに当たる**。本文に差し込む写真は min で縮めるだけで、
+# 切り取りもズームもしていないので条件を満たす。
+# サムネイル（16:9に切り、文字を重ねる）と背景（ズームをかける）では使えない。
+NO_DERIVS = ("nd", "noderivatives", "no derivatives", "noderivs")
 
 
-def license_ok(name: str) -> tuple[bool, str]:
-    """そのライセンスで、切り抜いて動画に載せてよいか。"""
+def license_ok(name: str, modify: bool = True) -> tuple[bool, str]:
+    """そのライセンスで使ってよいか。
+
+    ``modify`` は、切り取り・ズーム・重ね書きをするかどうか。
+    サムネイルと背景は True、本文にそのまま差し込むだけなら False。
+    """
     low = (name or "").strip().lower()
     if not low:
         return False, "ライセンスが読めません"
     words = low.replace("-", " ").replace("/", " ").split()
     if any(w in REFUSED for w in words):
-        return False, f"{name} は継承・非営利・改変不可のいずれかが付きます"
+        return False, f"{name} は非営利で、収益化と両立しません"
+    banned = any(w in NO_DERIVS for w in words)
+    if banned and modify:
+        return False, (f"{name} は改変不可です。"
+                       "切り取らずそのまま出す用途（本文の image:）でだけ使えます")
+    if banned:
+        return True, name
     if any(a in low for a in ALLOWED):
         return True, name
     return False, f"{name} は許可した一覧にありません"
@@ -148,7 +169,8 @@ def crop_to(path: Path, box: str) -> tuple[int, int]:
         return cut.size
 
 
-def save(names: list[str], folder: Path, session=None, only: str = "") -> dict:
+def save(names: list[str], folder: Path, session=None, only: str = "",
+         modify: bool = True) -> dict:
     """本人と確認でき、ライセンスも通った1枚を落として控える。
 
     `only` に File: 名を渡すと、その1枚だけを見る。**機械が選べない差**
@@ -171,7 +193,7 @@ def save(names: list[str], folder: Path, session=None, only: str = "") -> dict:
                     f"{title}: {len(found.names)}つが写った場面の写真です（顔が小さい）")
                 continue
         meta = info(title, session)
-        fine, note = license_ok(meta["license"])
+        fine, note = license_ok(meta["license"], modify=modify)
         if not fine:
             reasons.append(f"{title}: {note}")
             continue
@@ -194,7 +216,12 @@ def save(names: list[str], folder: Path, session=None, only: str = "") -> dict:
     name = "01.jpg"
     (folder / name).write_bytes(body.content)
 
+    banned = any(w in NO_DERIVS for w in
+                 meta["license"].lower().replace("-", " ").split())
     entry = {"file": name, "source": "wikimedia", "title": title,
+             # **改変不可の印。**サムネイルや背景に回すと条件を破るので、
+             # review がこの印を見て止める
+             "no_derivatives": banned,
              "page_url": meta["page_url"], "image_url": meta["image_url"],
              "license": meta["license"], "author": meta["author"],
              "subject_check": reason}
