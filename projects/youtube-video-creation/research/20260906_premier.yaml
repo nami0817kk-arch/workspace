@@ -8,12 +8,12 @@ theme:
   hook: シェフにも警備員にも清掃スタッフにも礼を言った。監督にだけ、触れなかった。
   question: 監督の名前が無い別れの言葉に、当の監督はどう応じたのか
 thumbnail:
-  line1: アルテタだけ書かれず
-  line2: 監督は「欠かせない選手」
+  line1: マルティネッリ退団
+  line2: 監督にだけ触れず
   tags:
   - マルティネッリ
   - アルテタ
-  photo: assets/images/arteta/01.jpg
+  photo: assets/images/martinelli/01.jpg
 answer: 選手は監督に触れず、監督は選手を称えた。食い違いはあるが、片方向の不仲話ではない
 watch: アル・ヒラルでの初戦。7年いたクラブを離れて何を見せるか
 sections:
@@ -52,6 +52,7 @@ sections:
       color: '#c8102e'
       text: Thank you to the chefs, kit staff, doctors, doormen, security staff, media team, cleaning staff, physios, and every single teammate
       translation: シェフ、用具担当、医師、ドアマン、警備、メディアチーム、清掃スタッフ、理学療法士、そしてすべてのチームメイトに感謝を
+    image: assets/images/martinelli/01.jpg
   - voice: マルティネッリ
     text: 僕のストーリーの一部になってくれた、すべての仲間に、ありがとう。
   - voice: キャスター
@@ -95,6 +96,7 @@ sections:
       color: '#ef0107'
       text: The Gabi that I met and the Gabi that just left, it's a huge transformation. I think he's been a critical player.
       translation: 出会ったころのガビと、いま出ていくガビは別人だ。欠かせない選手だったと思う
+    image: assets/images/arteta/01.jpg
   official: false
   sources:
   - https://sports.yahoo.com/articles/mikel-arteta-pays-tribute-gabriel-133159778.html
