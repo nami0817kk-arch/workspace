@@ -610,12 +610,16 @@ def to_script(notes: Notes, plan: Plan) -> str:
     lines = ["---", _front_matter(front), "---", "",
              "## オープニング", "@bg: assets/backgrounds/night.png", ""]
     hook = notes.hook or notes.title
+    # **冒頭から名乗らない。**「海外サッカーのニュースです」は毎回同じで
+    # 中身が無く、続く「〜ここを掘っていきます」も問いを言い直しているだけだった。
+    # 実測（2026-09-06）で、**開始18秒のうち前に進む情報はつかみ1つ**しかない。
+    # つかみを先に置き、問いはそのまま短く続ける（2026-09-06 ユーザーの指示 A）
     lines += [
-        f"キャスター: 海外サッカーのニュースです。{hook}",
+        f"キャスター: {hook}",
         f"  telop: {notes.title}",
         "  se: assets/audio/se_pon.wav",
-        # 問いは「〜のか。」で終わることが多い。そのまま繋ぐと「。、ここを」になる
-        f"キャスター: この動画では、{notes.question.rstrip('。')}、ここを掘っていきます。",
+        # 問いは「〜のか。」で終わることが多い。言い直さず、そのまま問いにする
+        f"キャスター: {_ends_sentence(notes.question)}",
         f"  telop: 今回の問い: {_telop(notes.question, 20)}",
         "",
     ]
@@ -664,13 +668,12 @@ def to_script(notes: Notes, plan: Plan) -> str:
         "## まとめ",
         "@bg: assets/backgrounds/studio.png",
         "",
-        # 問いと答えを1行にすると、実測で15.7秒ぶん画面が止まった（2026-09-04）。
-        # 掛け合いの形にも合うので、問いをキャスター、答えを解説に分ける。
-        f"キャスター: まとめます。{_ends_sentence(notes.question)}",
-        f"  telop: 今回の問い: {_telop(notes.question, 20)}",
-        "  card: wrap",
+        # **問いを繰り返さない。**冒頭で立てた問いを終わりでもう一度読むと、
+        # 2分の動画の5分の1が言い直しになる（実測 2026-09-06、まとめは4行20〜25秒）。
+        # 答えから入る（2026-09-06 ユーザーの指示 D）
         f"解説: {_spoken(notes.answer)}",
         f"  telop: {_telop(notes.answer)}",
+        "  card: wrap",
     ]
     if notes.watch:
         lines += [
