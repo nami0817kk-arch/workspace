@@ -496,9 +496,17 @@ def _cmd_short(args, config) -> int:
         short, shorts.portrait(config), out, use_tts=not args.no_tts
     )
     print(f"完成: {result.video}  ({result.duration:.0f}秒)")
-    # **顔の出し方を点検する。**遅いと、その前に離脱される
+    # **どちらも要る点検。**顔が遅い／冒頭で喋っていない、は別の問題
     for problem in shorts.face_problems(short):
         print(f"  ! {problem}", file=sys.stderr)
+
+    # 冒頭で捨てられていないか、その場で見る。review は --out を渡さないと
+    # ショートの出力先を見ないので、作った直後に必ず出るようにしておく
+    from .review import check_short_opening
+
+    opening = check_short_opening(Path(result.video))
+    if opening is not None and not opening.ok:
+        print(f"! {opening.detail}", file=sys.stderr)
     if result.duration > shorts.MAX_SECONDS:
         print(
             f"! {result.duration:.0f}秒あります。ショートは60秒までなので、"

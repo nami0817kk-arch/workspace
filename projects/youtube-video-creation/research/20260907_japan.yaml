@@ -1,0 +1,55 @@
+# 日本人選手 の取材メモ（2026年9月7日）
+# 1本＝1テーマ。まとめではなく、1つの話を掘る
+# 埋めたら python -m src.cli draft このファイル で台本になる
+slot: japan
+date: "2026年9月7日"
+
+theme:
+  id: ""             # 短い識別子。重複の判定に使う（例: alvarez）
+  league: ""         # england/spain/germany/italy/france/netherlands/japan
+                     # 空にすると stats の「追えていないリーグ」から減らない
+  prefix: ""         # 速報 / 朗報 / 悲報。付けないなら空
+  title: ""          # 動画タイトル。続きが気になる書き方で
+  hook: ""           # 冒頭のつかみ。何が起きたかを一文で
+  question: ""       # この動画が答える問い。ここが深掘りの軸
+
+thumbnail:
+  line1: ""          # 主見出し。事実を短く言い切る。14文字くらいまで
+  line2: ""          # 副見出し。誰が何と言ったか。18文字くらいまで
+  tags: []           # 下部ティッカーのキーワード。選手名・論点を2つまで
+  photo: ""          # 顔写真。portrait で取ったパス（**顔は必須**）
+
+answer: ""           # まとめで問いにどう答えるか
+watch: ""            # 次に何を見ればよいか
+# follow_up: true    # 前の枠で扱ったテーマを掘り直すとき
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: ""        # 画面の見出し
+    say:             # 読み上げ文。人名・数字はひらがなに開く
+      - ""
+    official: false  # クラブ・当事者の発表なら true
+    sources:
+      - ""
+
+  - id: numbers
+    heading: 数字で見ると
+    tier: 確定
+    telop: ""        # 画面の見出し
+    say:             # 読み上げ文。人名・数字はひらがなに開く
+      - ""
+    official: false  # クラブ・当事者の発表なら true
+    sources:
+      - ""
+
+  - id: next
+    heading: これからどうなる
+    tier: 報道
+    telop: ""        # 画面の見出し
+    say:             # 読み上げ文。人名・数字はひらがなに開く
+      - ""
+    official: false  # クラブ・当事者の発表なら true
+    sources:
+      - ""

@@ -775,3 +775,22 @@ def test_実況は枠に入らない():
     chosen, fallbacks = assign(items, PICK_SCORING, ["premier_1"])
     assert chosen["premier_1"].id == "news"
     assert any("実況" in m for m in fallbacks["_"])
+
+def test_実況とスタメンの両方が外れる():
+    """**マージで片方が消えた**（2026-09-07）。
+
+    二人が同じ関数を別々に直し、取り込んだとき一方が落ちた。
+    両方が同時に効いていることを、ここで固定する。
+    """
+    from src.candidates import assign, score
+
+    items = score([
+        _cl("live", "Forest vs Tottenham LIVE!", "england", hours=0.1),
+        _cl("xi", "アーセナル対チェルシー、スタメン発表！", "england", hours=0.2),
+        _cl("news", "90+5! Maitland-Niles stuns Man Utd", "england", hours=3.0),
+    ], PICK_SCORING)
+    chosen, fallbacks = assign(items, PICK_SCORING, ["premier_1"])
+    assert chosen["premier_1"].id == "news"
+    notes = " ".join(fallbacks.get("_", []))
+    assert "実況" in notes, notes
+    assert "スタメン" in notes, notes

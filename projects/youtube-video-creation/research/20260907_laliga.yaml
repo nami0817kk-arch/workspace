@@ -1,0 +1,109 @@
+slot: laliga
+date: 2026年9月7日
+theme:
+  id: valencia_barca
+  league: spain
+  prefix: 朗報
+  title: バルサがメスタージャで5発 ヤマルが2得点、前後半に1本ずつ
+  hook: 前半6分と、後半84分。同じ選手が、試合の入口と出口で決めました。
+  question: 0-5という差は、どこで開いたのか
+thumbnail:
+  line1: バルサ、敵地で5-0
+  line2: ヤマルが2得点
+  tags:
+  - ヤマル
+  - バルセロナ
+  photo: assets/images/yamal/01.jpg
+answer: 前半のうちに2点。折り返した時点で、試合はほぼ決まっていた
+watch: 次節。この勢いが続くかどうか
+sections:
+- id: what
+  heading: 試合はどう動いたか
+  tier: 確定
+  telop: バレンシア 0-5 バルセロナ（第4節・メスタージャ）
+  say:
+  - voice: キャスター
+    text: ラ・リーガ第よんせつ、バレンシア対バルセロナは、ゼロたいごでバルセロナが勝ちました。
+  - voice: キャスター
+    text: 得点者はよにん。ラミン・ヤマルがにとくてん、あとはロペス、ラフィーニャ、ペドリです。
+    telop: 得点者は4人。ヤマルが2得点
+    card:
+      type: table
+      title: 得点の流れ
+      columns:
+      - 時間
+      - 得点者
+      - スコア
+      rows:
+      - - 6分
+        - ラミン・ヤマル
+        - 0-1
+      - - 22分
+        - ロペス
+        - 0-2
+      - - 50分
+        - ラフィーニャ
+        - 0-3
+      - - 79分
+        - ペドリ
+        - 0-4
+      - - 84分
+        - ラミン・ヤマル
+        - 0-5
+      highlight_row: 0
+  - voice: キャスター
+    text: 会場はメスタージャ。アウェイでの試合でした。
+  official: true
+  sources:
+  - https://www.fcbarcelona.com/en/matches/138319/valencia-cf-fc-barcelona-la-liga-2026-2027
+  - https://www.fotmob.com/matches/x/5868049
+- id: turn
+  heading: 分かれ目はどこか
+  tier: 確定
+  telop: 前半のうちに2点。折り返しで試合は決まっていた
+  say:
+  - voice: キャスター
+    text: 分かれ目は、前半でした。ろっぷんにヤマル、にじゅうにふんにロペス。
+    card:
+      type: bars
+      title: 前半と後半の得点
+      unit: 点
+      items:
+      - label: 前半
+        value: 2
+        highlight: true
+      - label: 後半
+        value: 3
+      note: '※ 出典: FCバルセロナ公式'
+  - voice: キャスター
+    text: ハーフタイムの時点で、ゼロたいに。アウェイのチームが早い時間に2点を取ると、相手は前に出ざるを得なくなります。
+  - voice: キャスター
+    text: 後半は、そこからさらにさんてん。ごじゅっぷんラフィーニャ、ななじゅうきゅうふんペドリ、はちじゅうよんぷんに再びヤマルでした。
+    telop: 後半は3点。突き放して終えた
+  official: true
+  sources:
+  - https://www.fcbarcelona.com/en/matches/138319/valencia-cf-fc-barcelona-la-liga-2026-2027
+  - https://www.fotmob.com/matches/x/5868049
+- id: numbers
+  heading: 数字で見ると
+  tier: 確定
+  telop: 18歳のヤマルが、試合の入口と出口で決めた
+  say:
+  - voice: キャスター
+    text: この試合を数字で見ると、ヤマルの位置がはっきりします。
+    card:
+      type: points
+      title: ヤマルの2得点
+      items:
+      - 6分 —— 試合の入口。バルサが先制
+      - 84分 —— 試合の出口。5点目でとどめ
+      - この2点のあいだに、3人が加点している
+  - voice: キャスター
+    text: ろっぷんの先制と、はちじゅうよんぷんのだめ押し。試合の入口と出口を、じゅうはっさいが決めています。
+  - voice: キャスター
+    text: つぎに見るべきは次節です。この勢いが続くかどうか。
+    telop: 次節、この勢いが続くか
+  official: true
+  sources:
+  - https://www.fcbarcelona.com/en/matches/138319/valencia-cf-fc-barcelona-la-liga-2026-2027
+  - https://www.fotmob.com/matches/x/5868049

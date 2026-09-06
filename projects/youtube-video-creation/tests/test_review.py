@@ -369,3 +369,62 @@ def test_サムネの写真もクレジットが要る(tmp_path):
         + "画像: File:x / 撮影者 / CC BY 3.0 / https://example.org" + nl,
         encoding="utf-8")
     assert _photo_credits(Script(), out).ok
+
+
+# ショートは冒頭で捨てられる。2026-09-07 の実測で、公開済みショートは
+# 「視聴を継続 9.4% / スワイプして消去 90.7%」。先頭フレームを抜くと
+# 最初の2.6秒が無音の静止タイトルカードだった。
+
+def test_ショートの冒頭に喋りが無ければ落とす():
+    from pathlib import Path
+
+    from src.review import check_short_opening
+
+    finding = check_short_opening(
+        Path("video.mp4"), measure=lambda video, seconds: (1080, 1920, -31.5, -18.7)
+    )
+    assert finding is not None
+    assert not finding.ok
+    assert "静か" in finding.detail
+
+
+def test_ショートの冒頭から喋っていれば通す():
+    from pathlib import Path
+
+    from src.review import check_short_opening
+
+    finding = check_short_opening(
+        Path("video.mp4"), measure=lambda video, seconds: (1080, 1920, -19.0, -18.7)
+    )
+    assert finding is not None and finding.ok
+
+
+def test_音量が読めなければ黙る():
+    """測れないものを×にはしない。誤検知は点検全体を信用されなくする。"""
+    from pathlib import Path
+
+    from src.review import check_short_opening
+
+    finding = check_short_opening(
+        Path("video.mp4"), measure=lambda video, seconds: (1080, 1920, None, -18.7)
+    )
+    assert finding is None
+
+
+def test_横型は冒頭が無音でも落とさない():
+    """本編は冒頭にタイトルカードを置く設計で、そこは無音でよい。"""
+    from pathlib import Path
+
+    from src.review import check_short_opening
+
+    assert check_short_opening(
+        Path("video.mp4"), measure=lambda video, seconds: (1920, 1080, -31.5, -18.7)
+    ) is None
+
+
+def test_測れなければ黙る():
+    from pathlib import Path
+
+    from src.review import check_short_opening
+
+    assert check_short_opening(Path("video.mp4"), measure=lambda video, seconds: None) is None

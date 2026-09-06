@@ -73,6 +73,9 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     loudness = _loudness(out_dir / "video.mp4")
     if loudness is not None:
         findings.append(loudness)
+    opening = check_short_opening(out_dir / "video.mp4")
+    if opening is not None:
+        findings.append(opening)
     if duration is not None:
         findings.append(_duration(duration))
     return findings
@@ -292,6 +295,92 @@ def _loudness(video: Path) -> Finding | None:
         return Finding(False, "音の大きさ",
                        f"{measured:.1f} LUFS（基準 -14 より{abs(gap):.1f} dB {way}）")
     return Finding(True, "音の大きさ", f"{measured:.1f} LUFS（基準 -14）")
+
+
+# ショートは冒頭で捨てられる。実測（2026-09-07）で、公開済みショートの
+# 視聴者エンゲージメントは「視聴を継続 9.4% / スワイプして消去 90.7%」だった。
+# 先頭フレームを抜いたところ、最初の2.6秒が**無音の静止タイトルカード**で、
+# 音も動きも被写体も無かった。本編では入口として要るカードでも、
+# ショートでは捨てられる時間になる。
+OPENING_SECONDS = 1.5
+# 冒頭が全体よりこれだけ静かなら、そこに喋りが無いとみなす。
+# **無音では判定できない。**カードの裏で BGM は鳴っているため。
+# 実測（2026-09-07、公開済みの messi ショート）:
+#   冒頭1.5秒 平均 -31.5 dB / 2.6秒以降 平均 -18.5 dB / 全体 -18.7 dB
+# ナレーションが入らないぶん約13dB低い。8dB は、その半分より少し広い側に取った値。
+QUIET_OPENING_DB = 8.0
+
+
+def check_short_opening(video: Path, *, measure=None) -> Finding | None:
+    """縦型（ショート）の冒頭に喋りが入っているか。
+
+    横型は対象外。本編は冒頭にタイトルカードを置く設計で、そこは喋らなくてよい。
+    見るのは設定ではなく**出来上がった動画**にする。原因が何であれ、
+    冒頭で喋っていなければ視聴者には同じことなので。
+    """
+    measure = measure or _opening_sound
+    found = measure(video, OPENING_SECONDS)
+    if not found:
+        return None
+    width, height, opening_db, overall_db = found
+    if height <= width:
+        return None  # 横型（本編）は冒頭カードがあってよい
+    if opening_db is None or overall_db is None:
+        return None
+
+    gap = overall_db - opening_db
+    if gap >= QUIET_OPENING_DB:
+        return Finding(
+            False,
+            "ショートの冒頭",
+            f"最初の{OPENING_SECONDS:.1f}秒が全体より{gap:.0f}dB静かです。"
+            "タイトルカードで始まっていないか確認してください。"
+            "ショートはここで判断されるので、1行目から喋らせます",
+        )
+    return Finding(True, "ショートの冒頭", f"最初の{OPENING_SECONDS:.1f}秒から喋っています")
+
+
+def _opening_sound(video: Path, seconds: float):
+    """(幅, 高さ, 冒頭の平均音量dB, 全体の平均音量dB) を返す。測れなければ None。"""
+    if not video.exists():
+        return None
+    try:
+        import imageio_ffmpeg
+
+        ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
+    except Exception:
+        return None
+
+    opening = _volume(ffmpeg, ["-t", f"{seconds}", "-i", str(video)])
+    overall = _volume(ffmpeg, ["-i", str(video)])
+    if not opening or not overall:
+        return None
+    size, opening_db = opening
+    if not size:
+        return None
+    return size[0], size[1], opening_db, overall[1]
+
+
+def _volume(ffmpeg: str, args: list[str]):
+    """((幅, 高さ) | None, 平均音量dB | None)。volumedetect の出力を読む。"""
+    import re
+    import subprocess
+
+    try:
+        result = subprocess.run(
+            [ffmpeg, *args, "-af", "volumedetect", "-f", "null", "-"],
+            capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=180,
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+
+    text = result.stderr or ""
+    size = re.search(r"(\d{2,5})x(\d{2,5})", text)
+    mean = re.search(r"mean_volume:\s*(-?\d+(?:\.\d+)?) dB", text)
+    return (
+        (int(size.group(1)), int(size.group(2))) if size else None,
+        float(mean.group(1)) if mean else None,
+    )
 
 
 def _tags(script: Script) -> Finding:

@@ -1,0 +1,107 @@
+slot: premier
+date: 2026年9月7日
+theme:
+  id: everton_manu
+  league: england
+  prefix: 速報
+  title: デビュー戦の90+6分 メイトランド＝ナイルズが遠目から決めた
+  hook: 八十八分に勝ち越されました。そこから、加入したばかりの選手が遠くから振り抜きます。
+  question: 移籍締切日に来た男は、初戦で何をしたのか
+thumbnail:
+  line1: 90+6分の同点弾
+  line2: デビュー戦の途中出場
+  tags:
+  - エヴァートン
+  - マンU
+  photo: assets/images/maitland/01.jpg
+answer: ベンチから出て、遠目から振り抜いた。エバートンにとって難しい一週間の終わりだった
+watch: 薄い陣容のまま戦うエバートンが、次節どうするか
+sections:
+- id: what
+  heading: 試合はどう動いたか
+  tier: 確定
+  telop: エバートン 2-2 マンU（第3節）
+  say:
+  - voice: キャスター
+    text: プレミアリーグ第さんせつ、エバートン対マンチェスター・ユナイテッドは、にたいにの引き分けでした。
+  - voice: キャスター
+    text: 点の入り方が、最後まで動き続けた試合です。
+    telop: 4点すべてが後半。46分から90+6分の間
+    card:
+      type: table
+      title: 得点の流れ
+      columns:
+      - 時間
+      - 得点者
+      - スコア
+      rows:
+      - - 46分
+        - ムベウモ（マンU）
+        - 0-1
+      - - 83分
+        - ジョージ（エバートン）
+        - 1-1
+      - - 88分
+        - シェシュコ（マンU）
+        - 1-2
+      - - 90+6分
+        - メイトランド＝ナイルズ（エバートン）
+        - 2-2
+      highlight_row: 3
+  - voice: キャスター
+    text: よんとくてんはすべて後半。しかも、はちじゅうさんぷん以降にみっつ入っています。
+  official: true
+  sources:
+  - https://www.espn.com/soccer/report/_/gameId/401879291
+  - https://www.fotmob.com/matches/x/5795438
+- id: turn
+  heading: 分かれ目はどこか
+  tier: 確定
+  telop: 88分に勝ち越され、90+6分に追いついた
+  say:
+  - voice: キャスター
+    text: はちじゅうさんぷん、ジョージの強烈な一撃で追いつきます。ところが、そのすぐあと。
+  - voice: キャスター
+    text: はちじゅうはちぷん、途中出場のシェシュコがヘディング。マンチェスター・ユナイテッドが勝ち越しました。
+    telop: 88分、シェシュコのヘディングで勝ち越し
+  - voice: キャスター
+    text: そこから、きゅうじゅっぷんプラスろくふん。ベンチから出ていたメイトランド＝ナイルズが、遠い位置から振り抜きます。
+    telop: 90+6分、遠目から振り抜いて同点
+    card:
+      type: points
+      title: この一本が決まるまで
+      items:
+      - 移籍市場の締切日に加入したばかり
+      - この試合が、エバートンでのデビュー戦
+      - 途中出場で、90+6分に遠目から一撃
+      - → 2-2。勝点1をもぎ取った
+  - voice: キャスター
+    text: この試合が、彼のエバートンでのデビュー戦でした。
+  official: true
+  sources:
+  - https://www.espn.com/soccer/report/_/gameId/401879291
+  - https://www.fotmob.com/matches/x/5795438
+- id: numbers
+  heading: 背景に何があったか
+  tier: 報道
+  telop: 締切日は不発。監督は「失望と付き合うしかない」
+  say:
+  - voice: キャスター
+    text: エバートンにとって、難しい一週間の終わりでした。移籍市場の締切日に動けず、陣容は薄いまま。
+  - voice: キャスター
+    text: デイビッド・モイーズ監督は、こう話していました。
+    card:
+      type: quote
+      source: David Moyes（ESPN）
+      color: '#003399'
+      text: to live with disappointments
+      translation: 失望とともに生きていくしかない
+  - voice: モイーズ監督
+    text: 失望とは、付き合っていくしかない。選手たちには、力を合わせてほしい。
+    telop: モイーズ「失望とは付き合っていくしかない」
+  - voice: キャスター
+    text: その締切日に加入した選手が、初戦の最後の最後で追いつきました。つぎに見るべきは、薄い陣容のまま戦う次節です。
+  official: false
+  sources:
+  - https://www.espn.com/soccer/report/_/gameId/401879291
+  - https://www.fotmob.com/matches/x/5795438
