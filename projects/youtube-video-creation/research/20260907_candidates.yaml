@@ -77,25 +77,6 @@ candidates:
     sources:
       - https://www.skysports.com/football/news/11661/13581444/cody-gakpo-outshines-new-liverpool-signing-bradley-barcola-as-elliot-anderson-gives-his-best-rodri-impression-pl-hits-and-misses
 
-  - id: hull_city_vs
-    title: "Villa take first point but rue missed chances in Hull stalemate"
-    topic: "アストン・ヴィラ"    # クラブ名の辞書から。同じ topic は1日1枠まで
-    league: england    # 取得元 or クラブ名の辞書から。違えば直す
-    kind: transfer           # transfer / match。見出しからの当たり。見て直す
-    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
-    en: "Hull City Aston Villa"            # URLから作った。合っているか見る
-    url: https://www.skysports.com/football/hull-city-vs-aston-villa/report/559469
-    hours_ago: 21.1   # フィードの時刻から
-    # 同じ話を 4媒体が報じている
-    sources:
-      - https://www.skysports.com/football/hull-city-vs-aston-villa/report/559469
-      - https://web.gekisaka.jp/news/world/detail/?458306-458306-fl
-      - https://www.bbc.co.uk/sport/football/videos/c9w48xp5g14o?at_medium=RSS&at_campaign=rss
-      - https://www.theguardian.com/football/2026/sep/05/hull-city-aston-villa-premier-league-match-report
-      # ↑ ハルvsアストン・ビラ 試合記録
-      # ↑ Aston Villa still winless after stalemate at Hull
-      # ↑ High-flying Hull stay unbeaten by holding off Aston Villa in
-
   - id: premier_league_predictions
     title: "PL Predictions: Arsenal to prove too strong for Chelsea"
     topic: "チェルシー"    # クラブ名の辞書から。同じ topic は1日1枠まで
@@ -1370,18 +1351,6 @@ candidates:
       # ↑ Málaga - Levante, en directo: LaLiga EA Sports, en vivo hoy
       # ↑ Alavés - Osasuna, en directo: LaLiga EA Sports, hoy en vivo
 
-  - id: anos_jamie_vardy
-    title: "A sus 39 años, Jamie Vardy seguirá jugando al fútbol: ficha por el Burnley"
-    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
-    league: ""         # england/spain/germany/italy/france/netherlands/japan
-    kind: transfer           # transfer / match。見出しからの当たり。見て直す
-    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
-    en: "Anos Jamie Vardy Seguira"            # URLから作った。合っているか見る
-    url: https://www.marca.com/futbol/premier-league/2026/09/06/39-anos-jamie-vardy-seguira-jugando-futbol-ficha-burnley.html
-    hours_ago: 1.3   # フィードの時刻から
-    sources:
-      - https://www.marca.com/futbol/premier-league/2026/09/06/39-anos-jamie-vardy-seguira-jugando-futbol-ficha-burnley.html
-
   - id: kiat_lim_llega
     title: "Kiat Lim llega a Mestalla camuflado en el autocar del Valencia en una tarde de protestas contra la propiedad"
     topic: "バレンシア"    # クラブ名の辞書から。同じ topic は1日1枠まで
@@ -2334,18 +2303,6 @@ candidates:
     hours_ago: 1.3   # フィードの時刻から
     sources:
       - https://www.vi.nl/nieuws/az-knokt-zich-terug-en-behoudt-foutloze-status-in-eredivisie
-
-  - id: vardy_verrast_met
-    title: "Vardy verrast met terugkeer op Engelse velden"
-    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
-    league: ""         # england/spain/germany/italy/france/netherlands/japan
-    kind: transfer           # transfer / match。見出しからの当たり。見て直す
-    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
-    en: "Vardy Verrast Met Terugkeer"            # URLから作った。合っているか見る
-    url: https://www.vi.nl/nieuws/vardy-verrast-met-terugkeer-op-engelse-velden
-    hours_ago: 1.8   # フィードの時刻から
-    sources:
-      - https://www.vi.nl/nieuws/vardy-verrast-met-terugkeer-op-engelse-velden
 
   - id: hakim_ziyech_is
     title: "Hakim Ziyech is transfervrij"
@@ -4715,23 +4672,6 @@ candidates:
     sources:
       - https://www.transfermarkt.co.uk/premier-league-exclusive-club-alex-iwobi-joins-icons-with-100th-fulham-league-appearance/view/news/486659
 
-  - id: jamie_vardy_returns
-    title: "Jamie Vardy returns to England! Striker and wife Rebekah to move back from Italy as he signs surprise deal at Burnley - who are rock bottom of the Championship"
-    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
-    league: ""         # england/spain/germany/italy/france/netherlands/japan
-    kind: transfer           # transfer / match。見出しからの当たり。見て直す
-    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
-    en: "Jamie Vardy Returns England"            # URLから作った。合っているか見る
-    url: https://www.dailymail.com/sport/football/article-16109563/Jamie-Vardy-returns-England-Striker-wife-Rebekah-Italy-signs-surprise-deal-Burnley-rock-bottom-Championship.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
-    hours_ago: 0.3   # フィードの時刻から
-    # 同じ話を 3媒体が報じている
-    sources:
-      - https://www.dailymail.com/sport/football/article-16109563/Jamie-Vardy-returns-England-Striker-wife-Rebekah-Italy-signs-surprise-deal-Burnley-rock-bottom-Championship.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
-      - https://www.bbc.co.uk/sport/football/articles/cdx5v3405k3o?at_medium=RSS&at_campaign=rss
-      - https://www.theguardian.com/football/2026/sep/06/jamie-vardy-signs-for-burnley-championship-football
-      # ↑ Ex-Leicester striker Vardy joins Burnley
-      # ↑ Jamie Vardy takes party to Burnley after signing deal with C
-
   - id: middlesbrough_fuming_burnley
     title: "Middlesbrough fuming as Burnley's Turf Moor pitch destroys their white kit by staining it GREEN... and the truth behind the BBC's failure to land Commonwealth Games - INSIDE SPORT"
     topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
@@ -5647,6 +5587,11 @@ candidates:
     hours_ago: 2.0
     sources:
     - https://x.com/FabrizioRomano/status/2096595770396844101
+    - https://www.dailymail.com/sport/football/article-16109563/Jamie-Vardy-returns-England-Striker-wife-Rebekah-Italy-signs-surprise-deal-Burnley-rock-bottom-Championship.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
+    - https://www.bbc.co.uk/sport/football/articles/cdx5v3405k3o?at_medium=RSS&at_campaign=rss
+    - https://www.theguardian.com/football/2026/sep/06/jamie-vardy-signs-for-burnley-championship-football
+    - https://www.marca.com/futbol/premier-league/2026/09/06/39-anos-jamie-vardy-seguira-jugando-futbol-ficha-burnley.html
+    - https://www.vi.nl/nieuws/vardy-verrast-met-terugkeer-op-engelse-velden
     # 投稿時刻 2026-09-06T13:45:59Z（日本時間 22:45）。本文は原文（英語）のまま。
     # ユーザーが見せてくれた日本語は X 上の Grok による機械翻訳なので、引用には使わない。
     # 本文に "here we go" の文字は無く、添付画像に HERE WE GO とある（本文は agreed / completed）。
@@ -5666,6 +5611,10 @@ candidates:
     sources:
     - https://news.yahoo.co.jp/articles/de632b0378779d3aa036e97754ba21263853fdad
     - https://nofootynolife.net/blog-entry-9329.html
+    - https://www.skysports.com/football/hull-city-vs-aston-villa/report/559469
+    - https://web.gekisaka.jp/news/world/detail/?458306-458306-fl
+    - https://www.bbc.co.uk/sport/football/videos/c9w48xp5g14o?at_medium=RSS&at_campaign=rss
+    - https://www.theguardian.com/football/2026/sep/05/hull-city-aston-villa-premier-league-match-report
     # ユーザー提供。ハル戦 0-0 ドローで鈴木が完封。英語側は hull_city_vs
     # （Villa take first point but rue missed chances in Hull stalemate）が同じ試合を報じている。
     #
