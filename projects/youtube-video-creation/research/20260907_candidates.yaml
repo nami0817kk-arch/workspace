@@ -5676,3 +5676,140 @@ candidates:
     #   クラブ公式まで辿って確定にすること。辿れないなら言わない。
     # ・まとめ側の「海外の反応」は匿名のファンの声なので未確認。画面に出さず、
     #   「〜という声が多い」と数を数えた言い方もしない（数えていないため）。
+
+  - id: anselmi_jugadores_vinieron
+    title: "Anselmi: “Los jugadores que vinieron tienen hambre y la pureza del perfil que necesitamos”"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Anselmi Jugadores Vinieron Hambre"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/elche/2026/09/06/anselmi-jugadores-vinieron-hambre-pureza-perfil-necesitamos.html
+    hours_ago: 0   # フィードの時刻から
+    sources:
+      - https://www.marca.com/futbol/elche/2026/09/06/anselmi-jugadores-vinieron-hambre-pureza-perfil-necesitamos.html
+
+  - id: oviedo_resiste_diez
+    title: "El Oviedo resiste con diez y sigue seco en el Tartiere"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Oviedo Resiste Diez Sigue"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/segunda-division/cronica/2026/09/06/oviedo-resiste-diez-sigue-seco-tartiere.html
+    hours_ago: 0.1   # フィードの時刻から
+    sources:
+      - https://www.marca.com/futbol/segunda-division/cronica/2026/09/06/oviedo-resiste-diez-sigue-seco-tartiere.html
+
+  - id: brutal_agresion_perla
+    title: "La brutal agresión a la perla de la cantera del Real Madrid... que quedó en amarilla"
+    topic: "レアル・マドリード"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: spain    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Brutal Agresion Perla Cantera"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/real-madrid/2026/09/06/brutal-agresion-perla-cantera-real-madrid-quedo-amarilla-video.html
+    hours_ago: 0.2   # フィードの時刻から
+    # 同じ話を 2媒体が報じている
+    sources:
+      - https://www.marca.com/futbol/real-madrid/2026/09/06/brutal-agresion-perla-cantera-real-madrid-quedo-amarilla-video.html
+      - https://www.marca.com/futbol/real-madrid/2026/09/06/real-madrid-c-atasca-debut.html
+      # ↑ El Real Madrid C se atasca en su debut
+
+  - id: elche_real_sociedad
+    title: "Elche - Real Sociedad | Con cosas por demostrar: previa, análisis, pronóstico y predicción"
+    topic: "レアル・ソシエダ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: spain    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Elche Real Sociedad Cosas"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/primera-division/2026/09/06/elche-real-sociedad-cosas-demostrar-previa-analisis-pronostico-prediccion.html
+    hours_ago: 0.6   # フィードの時刻から
+    sources:
+      - https://www.marca.com/futbol/primera-division/2026/09/06/elche-real-sociedad-cosas-demostrar-previa-analisis-pronostico-prediccion.html
+
+  - id: castell_n_albacete
+    title: "Castellón - Albacete, en directo"
+    topic: "アーセナル"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Castellon Albacete Balompie Directo"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/segunda-division/2026/09/06/01-0102-20260906-2500-950.html
+    hours_ago: 1.2   # フィードの時刻から
+    # 同じ話を 7媒体が報じている
+    sources:
+      - https://www.marca.com/futbol/segunda-division/2026/09/06/01-0102-20260906-2500-950.html
+      - https://www.marca.com/futbol/primera-division/2026/09/06/01-0101-20260906-173-450.html
+      - https://www.marca.com/futbol/primera-division/2026/09/06/01-0101-20260906-182-855.html
+      - https://www.marca.com/futbol/premier-league/2026/09/06/01-0106-20260906-3-8.html
+      - https://www.marca.com/futbol/primera-division/2026/09/06/01-0101-20260906-191-178.html
+      - https://www.marca.com/futbol/premier-league/2026/09/06/01-0106-20260906-11-1.html
+      - https://as.com/futbol/segunda/cd-castellon-albacete-balompie-en-directo-laliga-hypermotion-hoy-en-vivo-f202609-d/
+      # ↑ Alavés - Osasuna en directo | Última hora de LALIGA EA Sport
+      # ↑ Málaga - Levante en directo | Última hora de LALIGA EA Sport
+      # ↑ Arsenal - Chelsea en directo | Última hora de la Premier Lea
+      # ↑ Valencia - Barcelona en directo | Última hora de LALIGA EA S
+      # ↑ Everton - M. United, en directo
+      # ↑ CD Castellón - Albacete Balompié, en directo: LaLiga Hypermo
+
+  - id: valencia_continua_conmemorac
+    title: "El Valencia continua con la conmemoración de vídeos para despedir Mestalla, previo al partido ante Barcelona"
+    topic: "バレンシア"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: spain    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Valencia Continua Conmemoracion Videos"            # URLから作った。合っているか見る
+    url: https://www.marca.com/futbol/valencia/2026/09/06/valencia-continua-conmemoracion-videos-despedir-mestalla-previo-partido-barcelona-video.html
+    hours_ago: 5.9   # フィードの時刻から
+    # 同じ話を 4媒体が報じている
+    sources:
+      - https://www.marca.com/futbol/valencia/2026/09/06/valencia-continua-conmemoracion-videos-despedir-mestalla-previo-partido-barcelona-video.html
+      - https://www.marca.com/futbol/primera-division/2026/09/04/a-que-hora-es-el-valencia-barcelona-horario-y-donde-ver-hoy-en-tv-el-partido-de-laliga-ea-sports.html
+      - https://www.marca.com/futbol/barcelona/2026/09/05/alineaciones-probables-partido-laliga-valencia-vs-barca.html
+      - https://as.com/futbol/primera/valencia-barcelona-hoy-en-directo-laliga-ea-sports-en-vivo-ultima-hora-en-mestalla-f202609-d/
+      # ↑ A qué hora es el Valencia - Barcelona: horario y dónde ver h
+      # ↑ Alineación confirmada del Barcelona frente al Valencia: Lami
+      # ↑ Valencia - Barcelona hoy, en directo: última hora en Mestall
+
+  - id: malaga_levante_en
+    title: "Málaga - Levante, en directo: LaLiga EA Sports, en vivo hoy"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Malaga Levante Directo Laliga"            # URLから作った。合っているか見る
+    url: https://as.com/futbol/primera/malaga-levante-en-directo-laliga-ea-sports-en-vivo-hoy-f202609-d/
+    hours_ago: 0   # フィードの時刻から
+    # 同じ話を 3媒体が報じている
+    sources:
+      - https://as.com/futbol/primera/malaga-levante-en-directo-laliga-ea-sports-en-vivo-hoy-f202609-d/
+      - https://as.com/futbol/segunda/oviedo-burgos-en-directo-laliga-hypermotion-hoy-en-vivo-f202609-d/
+      - https://as.com/futbol/primera/alaves-osasuna-en-directo-laliga-ea-sports-hoy-en-vivo-f202609-d/
+      # ↑ Oviedo - Burgos en directo: LaLiga Hypermotion hoy, en vivo
+      # ↑ Alavés - Osasuna, en directo: LaLiga EA Sports, hoy en vivo
+
+  - id: flick_y_corberan
+    title: "En directo, Flick y Corberán hablan con el técnico del Valencia muy tocado"
+    topic: "バレンシア"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: spain    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Flick Corberan Toma Palabra"            # URLから作った。合っているか見る
+    url: https://as.com/futbol/videos/flick-y-corberan-toma-la-palabra-tras-el-poker-del-barca-en-mestalla-f202609-v/
+    hours_ago: 0.1   # フィードの時刻から
+    sources:
+      - https://as.com/futbol/videos/flick-y-corberan-toma-la-palabra-tras-el-poker-del-barca-en-mestalla-f202609-v/
+
+  - id: ceballos_se_estrena
+    title: "Ceballos se estrena en la Champions"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: ""         # england/spain/germany/italy/france/netherlands/japan
+    kind: transfer           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    en: "Ceballos Estrena Champions Futbol"            # URLから作った。合っているか見る
+    url: https://as.com/futbol/ceballos-se-estrena-en-la-champions-f202609-n/
+    hours_ago: 0.6   # フィードの時刻から
+    sources:
+      - https://as.com/futbol/ceballos-se-estrena-en-la-champions-f202609-n/
+
