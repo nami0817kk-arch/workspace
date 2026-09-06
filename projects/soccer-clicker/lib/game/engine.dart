@@ -174,7 +174,9 @@ class GameEngine {
     final name = '${_lastNames[random.nextInt(_lastNames.length)]} '
         '${_firstNames[random.nextInt(_firstNames.length)]}';
     return Player(
-      id: 'p$seedIndex-${random.nextInt(1 << 32)}',
+      // Web(JS) では nextInt の上限が 2^32 で、1 << 32 を渡すと RangeError になる。
+      // ID の重複回避には 2^30 で十分。
+      id: 'p$seedIndex-${random.nextInt(1 << 30)}',
       name: name,
       position: Position.values[random.nextInt(Position.values.length)],
       baseRating: 20 + random.nextInt(40),
