@@ -263,6 +263,13 @@ def main(argv: list[str] | None = None) -> int:
     p_portrait.add_argument("--file", default="", dest="only",
                             help="この File: だけを使う（現役/監督など、機械に選べない差を人が決める）")
 
+    p_redesc = sub.add_parser(
+        "redescribe", help="公開済み動画の概要欄に、写真のクレジットだけを足す")
+    p_redesc.add_argument("script", help="台本のパス")
+    p_redesc.add_argument("video_id", help="YouTube の動画ID（URLの v= のあと）")
+    p_redesc.add_argument("--dry-run", action="store_true",
+                          help="送らずに、いまと何が変わるかだけ見る")
+
     p_variety = sub.add_parser(
         "variety", help="その日の台本を横に並べて見る（1本ずつでは分からないこと）")
     p_variety.add_argument("scripts", nargs="+", help="台本のパス（複数）")
@@ -1406,6 +1413,57 @@ def _cmd_fetch(args, config) -> int:
     return 0 if seen else 1
 
 
+def _cmd_redescribe(args, config) -> int:
+    """公開済み動画の概要欄に、クレジットだけを足す。
+
+    **丸ごと差し替えない。**公開中の動画と手元の台本は尺が違うことがあり、
+    章の時刻がずれる（実測 2026-09-06）。足したいのはクレジットだけ。
+    """
+    from .script_model import parse_script
+    from .tts import image_credits, image_details
+    from .upload import (UploadError, add_credits, fetch_snippet, get_service,
+                         update_description)
+
+    script_path = Path(args.script)
+    if not script_path.exists():
+        print(f"台本がありません: {script_path}", file=sys.stderr)
+        return 1
+    script = parse_script(script_path.read_text(encoding="utf-8"))
+    top = image_credits(script)
+    tail = image_details(script)
+    if not top and not tail:
+        print("この台本は写真を使っていません")
+        return 0
+
+    try:
+        service = get_service()
+        now = fetch_snippet(service, args.video_id)
+    except UploadError as err:
+        print(f"取れません: {err}", file=sys.stderr)
+        return 1
+
+    before = str(now.get("description") or "")
+    after = add_credits(before, top, tail)
+    print(f"■ {now.get('title', '')[:40]}")
+    if after.strip() == before.strip():
+        print("  すでに入っています")
+        return 0
+    for line in after.split(chr(10)):
+        if line and line not in before:
+            print(f"    + {line[:88]}")
+    if args.dry_run:
+        print()
+        print("--dry-run なので送っていません")
+        return 0
+    try:
+        update_description(service, args.video_id, after)
+    except Exception as err:
+        print(f"更新できません: {err}", file=sys.stderr)
+        return 1
+    print(f"  足しました: https://youtu.be/{args.video_id}")
+    return 0
+
+
 def _cmd_variety(args, config) -> int:
     """その日ぶんを並べて見る。**review は1本ずつしか見ない。**"""
     from .script_model import parse_script
@@ -2106,6 +2164,7 @@ HANDLERS = {
     "fetch": _cmd_fetch,
     "subject": _cmd_subject,
     "variety": _cmd_variety,
+    "redescribe": _cmd_redescribe,
     "portrait": _cmd_portrait,
     "results": _cmd_results,
     "gather": _cmd_gather,

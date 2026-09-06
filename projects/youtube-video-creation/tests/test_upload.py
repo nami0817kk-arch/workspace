@@ -86,3 +86,94 @@ def test_送る前に一画面で見せる(tmp_path):
 def test_問題があるまま送ろうとすると止まる(tmp_path):
     with pytest.raises(upload_mod.UploadError):
         upload_mod.upload(tmp_path / "ない.mp4", "題", "本文")
+
+def test_概要欄の更新は題名とタグを消さない():
+    """**snippet は部分更新ができない。**渡さなかった項目は消える。
+
+    概要欄だけ差し替えるつもりで description だけ送ると、題名が空になる。
+    """
+    from src.upload import update_description
+
+    sent = {}
+
+    class Videos:
+        def list(self, part, id):
+            class R:
+                def execute(self_):
+                    return {"items": [{"snippet": {
+                        "title": "もとの題名", "description": "もとの概要",
+                        "tags": ["サッカー"], "categoryId": "17"}}]}
+            return R()
+
+        def update(self, part, body):
+            sent.update(body)
+
+            class R:
+                def execute(self_):
+                    return {}
+            return R()
+
+    class Service:
+        def videos(self):
+            return Videos()
+
+    update_description(Service(), "abc123", "新しい概要")
+    assert sent["snippet"]["description"] == "新しい概要"
+    assert sent["snippet"]["title"] == "もとの題名"      # 消さない
+    assert sent["snippet"]["tags"] == ["サッカー"]       # 消さない
+    assert sent["snippet"]["categoryId"] == "17"
+
+
+def test_見つからない動画は止める():
+    from src.upload import UploadError, fetch_snippet
+
+    class Videos:
+        def list(self, part, id):
+            class R:
+                def execute(self_):
+                    return {"items": []}
+            return R()
+
+    class Service:
+        def videos(self):
+            return Videos()
+
+    try:
+        fetch_snippet(Service(), "nope")
+    except UploadError as err:
+        assert "見つかりません" in str(err)
+    else:
+        raise AssertionError("無い動画を通した")
+
+def test_クレジットだけを足す():
+    """**丸ごと差し替えない。**公開中と手元で尺が違い、章の時刻がずれる
+    （実測 2026-09-06: 公開 2分03秒 / 手元 1分52秒）。
+    """
+    from src.upload import add_credits
+
+    nl = chr(10)
+    now = nl.join(["0:00 オープニング", "0:15 何が起きたか", "",
+                   "■ クレジット", "音声: VOICEVOX（…）", "",
+                   "#サッカー #海外サッカー"])
+    got = add_credits(now, ["画像: Wikimedia Commons"], ["※ 画像: File:X / CC BY 3.0"])
+
+    # 章はそのまま
+    assert "0:15 何が起きたか" in got
+    # 上の1行は「音声:」の直後
+    rows = got.split(nl)
+    assert rows[rows.index("音声: VOICEVOX（…）") + 1] == "画像: Wikimedia Commons"
+    # 詳細はハッシュタグより後ろ
+    assert got.index("#サッカー") < got.index("※ 画像: File:X")
+
+
+def test_何度足しても増えない():
+    """やり直しても同じ行が並ばない。**途中で止まっても、もう一度叩ける。**"""
+    from src.upload import add_credits
+
+    nl = chr(10)
+    now = nl.join(["■ クレジット", "音声: VOICEVOX", "", "#サッカー"])
+    once = add_credits(now, ["画像: Wikimedia Commons"], ["※ 画像: File:X"])
+    twice = add_credits(once, ["画像: Wikimedia Commons"], ["※ 画像: File:X"])
+    assert once == twice
+    assert once.count("画像: Wikimedia Commons") == 1
+    assert once.count("※ 画像: File:X") == 1
