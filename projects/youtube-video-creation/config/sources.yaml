@@ -107,7 +107,9 @@ domains:
            footballnet.2chblog.jp, sakasaka10.blog.jp,
            # 2026-09-04 にユーザーから。まとめサイトを横断する集約サイトと、
            # そこから辿れるまとめ。反応の取り出しは実測済み（下の注記）
-           www.footballtopic.com, football-2ch.com, worldfn.net]
+           www.footballtopic.com, football-2ch.com, worldfn.net,
+           # 2026-09-07 に追加。海外の反応まとめ。同種のブログに合わせて未確認どまり
+           nofootynolife.net]
 
   # 取得できないサイト。ここを検索しても結果は返らない。
   #

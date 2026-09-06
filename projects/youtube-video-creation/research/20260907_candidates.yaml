@@ -5636,3 +5636,40 @@ candidates:
     sources:
       - https://www.footmercato.net/a5903884501827806819-le-mans-le-premier-but-en-pro-splendide-dadil-bourabaa
 
+  - id: vardy_burnley_romano
+    title: "バーンリーがジェイミー・ヴァーディを1年契約で獲得することに合意しました！"
+    topic: "ヴァーディ"
+    league: england
+    kind: transfer
+    tier: 未確認           # accounts の FabrizioRomano は未確認が上限。単独では確定にしない
+    en: "Vardy Burnley Romano Here We Go"
+    url: ""                # スクリーンショット提供。投稿URLは未取得（romano-latest で取れる）
+    hours_ago: 1.0
+    sources: []
+    # 出どころ: @FabrizioRomano の投稿（here we go 付き）。ユーザーがスクリーンショットで提供。
+    # 画面に出ていた日本語は X 上の Grok による英語からの機械翻訳で、英語原文は未確認。
+    # 同じ話は jamie_vardy_returns（BBC / Guardian / Daily Mail）と anos_jamie_vardy（Marca）、
+    # vardy_verrast_met（VI）が既に報じている。合わせれば story としては「報道」。
+    # 「確定」にするならバーンリーかリーグの公式発表まで辿ること（ロマーノは合意と書いている）。
+  - id: suzuki_zion_clean_sheet
+    title: "鈴木彩艶が楔のグラウンダーパス、浮き球ロングフィードでは決定機の起点になる配球力発揮も…アストン・ビラはまたも無得点でドロー"
+    topic: "鈴木彩艶"
+    league: england
+    kind: match
+    tier: 報道             # ゲキサカ(japanese) / news.yahoo.co.jp(aggregator) はどちらも報道どまり
+    en: "Suzuki Zion Clean Sheet Villa Hull"
+    url: https://news.yahoo.co.jp/articles/de632b0378779d3aa036e97754ba21263853fdad
+    hours_ago: 24.0
+    sources:
+    - https://news.yahoo.co.jp/articles/de632b0378779d3aa036e97754ba21263853fdad
+    - https://nofootynolife.net/blog-entry-9329.html
+    # ユーザー提供。ハル戦 0-0 ドローで鈴木が完封。英語側は hull_city_vs
+    # （Villa take first point but rue missed chances in Hull stalemate）が同じ試合を報じている。
+    #
+    # 【確度を分けること】
+    # ・「0-0のドロー / 鈴木が完封」= 報道。ゲキサカの見出しに書いてある。
+    # ・「プレミア日本人GK初の完封」= この言い方は nofootynolife の見出しにしか無い。
+    #   ゲキサカの見出しは配球とドローにしか触れていない。記録として出すならリーグ公式か
+    #   クラブ公式まで辿って確定にすること。辿れないなら言わない。
+    # ・まとめ側の「海外の反応」は匿名のファンの声なので未確認。画面に出さず、
+    #   「〜という声が多い」と数を数えた言い方もしない（数えていないため）。
