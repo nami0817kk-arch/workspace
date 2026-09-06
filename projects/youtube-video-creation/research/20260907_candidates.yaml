@@ -4737,7 +4737,7 @@ candidates:
     topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
     league: ""         # england/spain/germany/italy/france/netherlands/japan
     kind: transfer           # transfer / match。見出しからの当たり。見て直す
-    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    tier: 未確認  # 見出しから判断できず。確定/報道/未確認 に直す
     en: "Middlesbrough Fuming Burnleys Turf"            # URLから作った。合っているか見る
     url: https://www.dailymail.com/sport/football/article-16109465/Middlesbrough-fuming-Burnleys-Turf-Moor-pitch-destroys-white-kit-staining-GREEN-truth-BBCs-failure-land-Commonwealth-Games-INSIDE-SPORT.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
     hours_ago: 0.3   # フィードの時刻から
@@ -4770,7 +4770,7 @@ candidates:
     topic: "マンチェスター・ユナイテッド"    # クラブ名の辞書から。同じ topic は1日1枠まで
     league: england    # 取得元 or クラブ名の辞書から。違えば直す
     kind: transfer           # transfer / match。見出しからの当たり。見て直す
-    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    tier: 未確認  # 見出しから判断できず。確定/報道/未確認 に直す
     en: "Fernandez Insists Rangers Bounce"            # URLから作った。合っているか見る
     url: https://www.dailymail.com/sport/football/article-16109389/Fernandez-insists-Rangers-bounce-Euro-heartache-win-TREBLE.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
     hours_ago: 1.3   # フィードの時刻から
@@ -4789,7 +4789,7 @@ candidates:
     topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
     league: ""         # england/spain/germany/italy/france/netherlands/japan
     kind: transfer           # transfer / match。見出しからの当たり。見て直す
-    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    tier: 未確認  # 見出しから判断できず。確定/報道/未確認 に直す
     en: "Road Triumph Loss Long"            # URLから作った。合っているか見る
     url: https://www.dailymail.com/sport/football/article-16109445/On-Road-Triumph-loss-long-long-journey-field-dreams-miracle-Gartcosh-United.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
     hours_ago: 1.3   # フィードの時刻から
@@ -4801,7 +4801,7 @@ candidates:
     topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
     league: england    # 取得元 or クラブ名の辞書から。違えば直す
     kind: match           # transfer / match。見出しからの当たり。見て直す
-    tier: 確定           # 見出しの言い回しからの当たり。見て直す
+    tier: 未確認  # 見出しの言い回しからの当たり。見て直す
     en: "Leicester City Fans Turn"            # URLから作った。合っているか見る
     url: https://www.dailymail.com/sport/football/article-16109259/Leicester-City-fans-turn-disgraceful-manager-Russell-Martin-throwing-bus-interview-lost-4-0-home-League-One-10-years-Premier-League-title.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
     hours_ago: 1.8   # フィードの時刻から
@@ -4816,7 +4816,7 @@ candidates:
     topic: "マンチェスター・シティ"    # クラブ名の辞書から。同じ topic は1日1枠まで
     league: england    # 取得元 or クラブ名の辞書から。違えば直す
     kind: transfer           # transfer / match。見出しからの当たり。見て直す
-    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    tier: 未確認  # 見出しから判断できず。確定/報道/未確認 に直す
     en: "Manchester City Spend Rule"            # URLから作った。合っているか見る
     url: https://www.dailymail.com/sport/football/article-16109157/manchester-city-transfer-spend-rule-breach.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
     hours_ago: 6.5   # フィードの時刻から
@@ -4840,7 +4840,7 @@ candidates:
     topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
     league: ""         # england/spain/germany/italy/france/netherlands/japan
     kind: transfer           # transfer / match。見出しからの当たり。見て直す
-    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    tier: 未確認  # 見出しから判断できず。確定/報道/未確認 に直す
     en: "Martin Oneill Sings Praises"            # URLから作った。合っているか見る
     url: https://www.dailymail.com/sport/football/article-16108541/Martin-ONeill-sings-praises-South-Korean-star-Yang-Celtic-make-five-wins-five.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
     hours_ago: 16.9   # フィードの時刻から
@@ -4852,7 +4852,7 @@ candidates:
     topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
     league: ""         # england/spain/germany/italy/france/netherlands/japan
     kind: transfer           # transfer / match。見出しからの当たり。見て直す
-    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    tier: 未確認  # 見出しから判断できず。確定/報道/未確認 に直す
     en: "Scottish Chief Executive Ian"            # URLから作った。合っているか見る
     url: https://www.dailymail.com/sport/football/article-16107693/Scottish-FA-chief-executive-Ian-Maxwell-says-operation-means-theres-no-need-return-reserve-league.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
     hours_ago: 18   # フィードの時刻から
@@ -4864,7 +4864,7 @@ candidates:
     topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
     league: ""         # england/spain/germany/italy/france/netherlands/japan
     kind: transfer           # transfer / match。見出しからの当たり。見て直す
-    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    tier: 未確認  # 見出しから判断できず。確定/報道/未確認 に直す
     en: "Sfa Panicked Handing Steve"            # URLから作った。合っているか見る
     url: https://www.dailymail.com/sport/football/article-16108229/SFA-panicked-handing-Steve-Clarke-new-deal-Scotland-boss-World-Cup.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
     hours_ago: 20.6   # フィードの時刻から
@@ -4876,7 +4876,7 @@ candidates:
     topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
     league: ""         # england/spain/germany/italy/france/netherlands/japan
     kind: transfer           # transfer / match。見出しからの当たり。見て直す
-    tier: 報道           # 見出しから判断できず。確定/報道/未確認 に直す
+    tier: 未確認  # 見出しから判断できず。確定/報道/未確認 に直す
     en: "Rangers Motherwell Ryan Naderi"            # URLから作った。合っているか見る
     url: https://www.dailymail.com/sport/football/article-16108041/RANGERS-1-MOTHERWELL-0-Ryan-Naderi-makes-difference-Ibrox-men-clinical-goal.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
     hours_ago: 22.1   # フィードの時刻から

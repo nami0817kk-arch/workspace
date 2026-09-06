@@ -103,7 +103,7 @@ domains:
   # の2つだけ。書き込みそのものを引くときは CLAUDE.md の決まりに従う:
   #   匿名の声は未確認 / ハンドルは画面に出さない / 数を数えた言い方をしない
   rumour: [caughtoffside.com, givemesport.com, tribalfootball.com,
-           bild.de, mirror.co.uk, dailymail.co.uk,
+           bild.de, mirror.co.uk, dailymail.co.uk, dailymail.com,
            footballnet.2chblog.jp, sakasaka10.blog.jp,
            # 2026-09-04 にユーザーから。まとめサイトを横断する集約サイトと、
            # そこから辿れるまとめ。反応の取り出しは実測済み（下の注記）
