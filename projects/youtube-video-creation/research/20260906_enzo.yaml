@@ -13,11 +13,12 @@ thumbnail:
   tags:
   - エンソ
   - マンチェスター・シティ
+  photo: assets/images/enzo/01.jpg
 answer: 決勝点の起点になった。監督の評価も高い
 watch: 次節。今度は準備のある状態で、どこまでやれるか
 sections:
 - id: what
-  heading: 何が起きたか
+  heading: 試合はどう動いたか
   tier: 報道
   telop: ベンチから一転、ウォームアップ中の負傷で先発
   say:
@@ -45,7 +46,7 @@ sections:
   - https://www.espn.com/soccer/report/_/gameId/401879287
   - https://x.com/FabrizioRomano/status/2096236342128566659
 - id: why
-  heading: 何をしたのか
+  heading: 分かれ目はどこか
   tier: 報道
   telop: 決勝点は、彼が動かした流れから
   say:
@@ -59,6 +60,7 @@ sections:
       - セメンヨのクロスをハーランドがヘディング
       - シェルキがポストに当てた場面にも絡む
       - 後半、ハーランドへの一本はオフサイドで取り消し
+    image: assets/images/enzo/01.jpg
   - voice: キャスター
     text: セメンヨのクロスを頭で合わせた形ですが、その流れを作ったのがフェルナンデスでした。
   - voice: キャスター
@@ -71,7 +73,7 @@ sections:
   - https://www.espn.com/soccer/report/_/gameId/401879287
   - https://x.com/FabrizioRomano/status/2096236342128566659
 - id: next
-  heading: これからどうなる
+  heading: 数字で見ると
   tier: 報道
   telop: シティは3連勝。コヴェントリーは3連敗で無得点
   say:
@@ -79,6 +81,24 @@ sections:
     text: シティはこれでさんれんしょう。開幕からさんしあい、すべて勝っています。
   - voice: キャスター
     text: いっぽうのコヴェントリーは、ボール保持がにじゅうにパーセント。さんれんぱいで、まだ無得点です。
+    card:
+      type: table
+      title: 開幕3試合
+      columns:
+      - ''
+      - シティ
+      - コヴェントリー
+      rows:
+      - - 勝点
+        - '9'
+        - '0'
+      - - 得点
+        - —
+        - '0'
+      - - この試合の保持率
+        - 78%
+        - 22%
+      highlight_row: 0
   - voice: キャスター
     text: つぎに見るべきは次節。今度は、準備のある状態でのフェルナンデスです。
     telop: 次は準備のある状態で

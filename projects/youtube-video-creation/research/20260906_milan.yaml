@@ -13,11 +13,12 @@ thumbnail:
   tags:
   - ミラン
   - アモリム
+  photo: assets/images/amorim/01.jpg
 answer: 大きい試合も小さい試合も同じ、という構え。重圧は感じていないと言っている
 watch: 今夜の結果。勝てば68年ぶりの記録になる
 sections:
 - id: what
-  heading: 何が起きているか
+  heading: 何がかかっているか
   tier: 報道
   telop: アモリムのミランは開幕2連勝
   say:
@@ -43,7 +44,7 @@ sections:
   - https://football-italia.net/amorim-milan-ready-for-juventus/
   - https://www.abola.pt/noticias/amorim-sem-medo-do-primeiro-grande-teste-ja-ganhei-a-juventus-com-o-benfica-2026090512574543842
 - id: why
-  heading: 監督は何と言ったか
+  heading: 当事者は何と言ったか
   tier: 報道
   telop: 「大きい試合も、小さい試合も同じだ」
   say:
@@ -57,6 +58,7 @@ sections:
       translation: 大きい試合も、小さい試合も、同じだ
   - voice: アモリム
     text: 大きい試合も、小さい試合も、同じだ。
+    image: assets/images/amorim/01.jpg
   - voice: キャスター
     text: オーナーのカルディナーレが訪ねてきた件についても、こう答えています。
     telop: オーナー来訪も「あなたたち記者にとっての話題だ」
@@ -70,7 +72,7 @@ sections:
   - https://football-italia.net/amorim-milan-ready-for-juventus/
   - https://www.abola.pt/noticias/amorim-sem-medo-do-primeiro-grande-teste-ja-ganhei-a-juventus-com-o-benfica-2026090512574543842
 - id: next
-  heading: もうひとつの変化
+  heading: どこを見るか
   tier: 報道
   telop: 戦力外だったトミオリを、トップチームに戻した
   say:

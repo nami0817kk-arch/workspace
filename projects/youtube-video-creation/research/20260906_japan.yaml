@@ -13,11 +13,12 @@ thumbnail:
   tags:
   - 中村敬斗
   - リヨン
+  photo: assets/images/nakamura/01.jpg
 answer: 登録が間に合わずメンバー外。中身は水だった
 watch: 次節。リヨンでのデビュー戦
 sections:
 - id: what
-  heading: 何が起きたか
+  heading: 何がかかっていたか
   tier: 報道
   telop: リヨン男子トップチーム初の日本人選手
   say:
@@ -50,6 +51,13 @@ sections:
   - voice: フォンセカ監督
     text: 登録する時間がなかったため、彼はプレーできない。
     telop: フォンセカ監督「登録する時間がなかった」
+    card:
+      type: points
+      title: ジョーカー制度とは
+      items:
+      - 移籍市場が閉まったあとでも使える仕組み
+      - 取れるのはフランス国内の選手だけ
+      - 中村はこれでランスからリヨンへ
   - voice: キャスター
     text: リヨンはこの試合、さんたいいちで勝っています。
   official: false
@@ -63,6 +71,7 @@ sections:
   say:
   - voice: キャスター
     text: 試合中、中継のカメラがスタンドにいる中村を捉えました。
+    image: assets/images/nakamura/01.jpg
   - voice: キャスター
     text: 関係者から飲み物を渡されます。手にしたのは、ワイングラスでした。
     telop: 中身は水だった

@@ -12,7 +12,8 @@ from .render import Renderer
 from . import audio_gen
 from .script_model import Script, load_script
 from .thumbnail import build_thumbnail, from_meta
-from .tts import create_backend, credits, image_credits, synthesize_script
+from .tts import (create_backend, credits, image_credits, image_details,
+                  synthesize_script)
 
 
 @dataclass
@@ -105,6 +106,8 @@ def build_script(
     outputs = subtitles.write_outputs(
         script, out_dir,
         credits=credits(script, config, backend) + image_credits(script),
+        # 表示義務のある写真の詳細は、ハッシュタグより下に畳む
+        footnotes=image_details(script),
     )
 
     if not keep_work:
