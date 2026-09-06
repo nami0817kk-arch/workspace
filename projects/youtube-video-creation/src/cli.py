@@ -489,6 +489,14 @@ def _cmd_short(args, config) -> int:
         short, shorts.portrait(config), out, use_tts=not args.no_tts
     )
     print(f"完成: {result.video}  ({result.duration:.0f}秒)")
+
+    # 冒頭で捨てられていないか、その場で見る。review は --out を渡さないと
+    # ショートの出力先を見ないので、作った直後に必ず出るようにしておく
+    from .review import check_short_opening
+
+    opening = check_short_opening(Path(result.video))
+    if opening is not None and not opening.ok:
+        print(f"! {opening.detail}", file=sys.stderr)
     if result.duration > shorts.MAX_SECONDS:
         print(
             f"! {result.duration:.0f}秒あります。ショートは60秒までなので、"

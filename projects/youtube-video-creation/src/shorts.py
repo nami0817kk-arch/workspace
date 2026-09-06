@@ -27,7 +27,15 @@ class ShortError(Exception):
 
 
 def portrait(config: ProjectConfig) -> ProjectConfig:
-    """縦向きの設定にする。文字は横幅が狭くなるぶん小さくする。"""
+    """縦向きの設定にする。文字は横幅が狭くなるぶん小さくする。
+
+    **タイトルカードと章タイトルは出さない。** 本編では話の入口として要るが、
+    ショートでは冒頭2.6秒が「無音の静止画」になり、そこで捨てられる。
+    実測（2026-09-07）で、公開済みショートの視聴維持は
+    「視聴を継続 9.4% / スワイプして消去 90.7%」だった。最初の2秒に
+    音も動きも被写体も無いのが効いている（先頭フレームを抜いて確認済み）。
+    尺の上限が58秒しかないショートでは、カードに使う4秒の価値も本編とは違う。
+    """
     video = replace(
         config.video,
         width=SIZE[0],
@@ -36,7 +44,8 @@ def portrait(config: ProjectConfig) -> ProjectConfig:
         headline_size=max(44, int(config.video.headline_size * 0.72)),
         title_size=max(56, int(config.video.title_size * 0.62)),
     )
-    return replace(config, video=video)
+    titles = replace(config.titles, intro=0.0, chapter=0.0)
+    return replace(config, video=video, titles=titles)
 
 
 def trim(script: Script, section: str = "", max_seconds: float = MAX_SECONDS) -> Script:
