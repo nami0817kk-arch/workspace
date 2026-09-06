@@ -67,6 +67,9 @@ class Section:
     # まったく変わらない。実測（2026-09-06）で33秒・47秒の静止が出た
     line_telops: list = field(default_factory=list)
     line_cards: list = field(default_factory=list)
+    # 行に差し込む写真。**本文に写真が1枚も入っていなかった**（実測 2026-09-06）。
+    # 使えるライセンスが広がったので、顔を本文にも出す
+    line_images: list = field(default_factory=list)
     bg: str = ""      # この節の背景。空なら既定の並びから割り当てる
 
 
@@ -141,17 +144,20 @@ def build_notes(raw: dict) -> Notes:
         voices: list[str] = []
         telops: list[str] = []
         cards: list = []
+        images: list[str] = []
         for item in raw_lines:
             if isinstance(item, dict):
                 lines.append(str(item.get("text", "")).strip())
                 voices.append(str(item.get("voice", "")).strip())
                 telops.append(str(item.get("telop", "")).strip())
                 cards.append(item.get("card"))
+                images.append(str(item.get("image", "")).strip())
             else:
                 lines.append(str(item).strip())
                 voices.append("")
                 telops.append("")
                 cards.append(None)
+                images.append("")
         keep = [i for i, s in enumerate(lines) if s]
         sections.append(
             Section(
@@ -163,6 +169,7 @@ def build_notes(raw: dict) -> Notes:
                 voices=[v for s, v in zip(lines, voices) if s],
                 line_telops=[telops[i] for i in keep],
                 line_cards=[cards[i] for i in keep],
+                line_images=[images[i] for i in keep],
                 sources=[str(u).strip() for u in (entry.get("sources") or []) if str(u).strip()],
                 official=bool(entry.get("official", False)),
                 card=entry.get("card"),
@@ -580,6 +587,11 @@ def to_script(notes: Notes, plan: Plan) -> str:
         "thumbnail_tags": [str(t) for t in (thumbnail.get("tags") or [])],
         # 案を書いてあれば台本に持ち越す。thumbnail --all で並べて比べる
         "thumbnail_alt": [dict(a or {}) for a in (thumbnail.get("alt") or [])],
+        # **顔写真は取材メモに持たせる。**台本にしか書けなかったので、
+        # 台本を作り直すたびに消えていた（2026-09-06 に2回やった）。
+        # 直すたびに手で書き戻すのは、必ずどこかで抜ける
+        **({"thumbnail_photo": str(thumbnail["photo"])} if thumbnail.get("photo") else {}),
+        **({"thumbnail_focus": thumbnail["focus"]} if thumbnail.get("focus") is not None else {}),
         # init-assets が必ず作るものを既定にする。動く背景にしたいときは
         # `make-clip` で mp4 を作ってから、台本の bg を差し替える
         "bg": "assets/backgrounds/stadium.png",
@@ -648,20 +660,47 @@ def to_script(notes: Notes, plan: Plan) -> str:
                          if number < len(section.line_telops) else "")
             own_card = (section.line_cards[number]
                         if number < len(section.line_cards) else None)
+            own_image = (section.line_images[number]
+                         if number < len(section.line_images) else "")
             if number == 0:
-                lines.append(f"  telop: {own_telop or section.telop}")
+                # **1行目が代弁なら、その人の言葉として出す。**節のテロップを
+                # そのまま被せると、別人の発言に他人の名前が乗る（実測 2026-09-06）
+                head = own_telop or section.telop
+                if not own_telop and voice and voice not in SPEAKERS:
+                    room = max(8, TELOP_LIMIT - len(voice) - 1)
+                    head = f"{voice}「{_telop(sentence, room)}」"
+                lines.append(f"  telop: {head}")
                 lines.append(f"  source: {section.tier}")
                 if own_card:
                     lines.append(f"  card: {section.id}_{number}_card")
                 elif section.card:
                     lines.append(f"  card: {section.id}_card")
+                # **カードが無い行にも写真は出す。**入れ子にしていたせいで、
+                # カードを持たない行の写真が消えていた（実測 2026-09-06）
+                if own_image:
+                    lines.append(f"  image: {own_image}")
             else:
-                # **途中の行にもテロップとカードを出せる。**節に1枚だけだと
-                # 画面が止まる。指定が無い行は、前の見た目のまま続く
-                if own_telop:
-                    lines.append(f"  telop: {own_telop}")
+                # **指定が無い行にも、読み上げ文からテロップを作る**
+                # （2026-09-06 ユーザーの指示）。指定が無いと前の見た目のまま
+                # 続き、画面が止まる。テレビのニュースは1発言ごとに字幕が変わる。
+                # **代弁の行は誰の言葉かを頭に付ける。**画面だけ見ても分かるように
+                shown = own_telop
+                if not shown and voice and voice not in SPEAKERS:
+                    # 代弁は誰の言葉かを頭に付ける。画面だけ見ても分かるように
+                    room = max(8, TELOP_LIMIT - len(voice) - 1)
+                    shown = f"{voice}「{_telop(sentence, room)}」"
+                elif not shown:
+                    # **地の文は読み上げをそのまま出さない。**字幕と同じものが
+                    # 二重に出て、画面が文字だらけになる（実測 2026-09-06）。
+                    # 名詞で言い切れる短さになるときだけ出す
+                    short = _telop(sentence, 16)
+                    shown = short if len(short) <= 16 and "…" not in short else ""
+                if shown:
+                    lines.append(f"  telop: {shown}")
                 if own_card:
                     lines.append(f"  card: {section.id}_{number}_card")
+                if own_image:
+                    lines.append(f"  image: {own_image}")
         lines.append("")
 
     lines += [

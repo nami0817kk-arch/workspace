@@ -13,6 +13,7 @@ thumbnail:
   tags:
   - レアル・マドリード
   - モウリーニョ
+  photo: assets/images/mourinho/01.jpg
 answer: 決定機は作った。決めきれず、終了間際のPKも止められた
 watch: 次節。xG で勝ち続けても、勝点は増えない
 sections:
@@ -73,6 +74,7 @@ sections:
       translation: ときに、なぜ負けたのか分からないことがある。我々は支配していたし、集中もしていた。すべてを掌握していた
   - voice: モウリーニョ
     text: ときどき、負けても、その理由が分からないことがある。説明のしようがない。
+    image: assets/images/mourinho/01.jpg
   official: false
   sources:
   - https://www.espn.com/soccer/story/_/id/49828781/jose-mourinho-real-madrid-betis-kylian-mbappe-penalty
@@ -89,6 +91,13 @@ sections:
   - voice: キャスター
     text: ただ、順位表に載るのは内容ではなく、勝点です。
     telop: xGでは勝てても、勝点は増えない
+    card:
+      type: points
+      title: この試合が残したもの
+      items:
+      - 開幕4試合での敗戦は2014-15以来
+      - 内容（xG 3.16）と結果（0得点）が真逆
+      - 順位表に載るのは勝点であって内容ではない
   - voice: キャスター
     text: つぎに見るべきは、次節。ここで決めきれるかどうかです。
   official: false

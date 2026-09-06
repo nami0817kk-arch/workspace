@@ -13,11 +13,12 @@ thumbnail:
   tags:
   - 鎌田大地
   - クリスタル・パレス
+  photo: assets/images/kamada/01.jpg
 answer: 同点弾の起点になった。得点は消えたが、勝ちには関わった
 watch: 新監督サージュのもとで、鎌田がどこまで使われるか
 sections:
 - id: what
-  heading: 何が起きたか
+  heading: 試合はどう動いたか
   tier: 報道
   telop: フラム 2-3 クリスタル・パレス
   say:
@@ -59,12 +60,13 @@ sections:
   - https://www.espn.com/soccer/report/_/gameId/401879289
   - https://www.fulhamfc.com/news/2026/september/05/fulham-2-3-crystal-palace/
 - id: why
-  heading: 鎌田は何をしたのか
+  heading: 分かれ目はどこか
   tier: 報道
   telop: 決めたと思った一本は、VARで取り消し
   say:
   - voice: キャスター
     text: 先制を許した直後、鎌田大地が決めたかに見えた場面がありました。
+    image: assets/images/kamada/01.jpg
   - voice: キャスター
     text: エンケティアとピノの連係から抜け出した形でしたが、ブイエーアールの確認でオフサイド。得点は認められませんでした。
   - voice: キャスター
@@ -85,7 +87,7 @@ sections:
   - https://www.espn.com/soccer/report/_/gameId/401879289
   - https://web.gekisaka.jp/news/world/detail/?458285-458285-fl
 - id: next
-  heading: これからどうなる
+  heading: この夏のパレス
   tier: 報道
   telop: 新監督サージュ、この夏11人を補強
   say:
@@ -93,6 +95,13 @@ sections:
     text: パレスはこの夏、じゅういちにんを補強しています。この試合でもディサシ、ハライリと、新加入が絡みました。
   - voice: キャスター
     text: 顔ぶれが大きく変わったなかで、鎌田は起点として使われています。
+    card:
+      type: points
+      title: この夏のパレス
+      items:
+      - 新監督ピエール・サージュが就任
+      - 11人を補強
+      - この試合でもディサシ、ハライリら新加入が絡んだ
   - voice: キャスター
     text: つぎに見るべきは、新監督のもとで鎌田がどこまで任されるかです。
     telop: 起点として、どこまで任されるか

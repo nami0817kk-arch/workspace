@@ -13,6 +13,7 @@ thumbnail:
   tags:
   - PSG
   - ルイス・エンリケ
+  photo: assets/images/luisenrique/01.jpg
 answer: 内容は勝っていた、という立場。xG が自分たちに有利だと言っている
 watch: 次節。ここで勝てなければ、内容の話は通らなくなる
 sections:
@@ -67,6 +68,7 @@ sections:
       translation: 見えたものには満足している。まだ最善ではないが、この試合は勝つに値した。xG は我々に有利だ
   - voice: ルイス・エンリケ
     text: 見えたものには満足している。まだ最高の状態ではないが、この試合は勝つに値した。
+    image: assets/images/luisenrique/01.jpg
   - voice: ルイス・エンリケ
     text: エックスジー、期待ゴール数は、我々のほうが上だ。
     telop: 「説明はできない。サッカーは時に不可解だ」

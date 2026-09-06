@@ -360,23 +360,32 @@ def _plain(text: str) -> str:
     return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", text)).strip()
 
 
-def image_credits(script, root=None) -> list[str]:
-    """台本が使っている画像のクレジット。
+# 出どころの表示名。**サイト名まで**で止める
+SITE_NAMES = {
+    "wikimedia": "Wikimedia Commons",
+    "commons": "Wikimedia Commons",
+    "pexels": "Pexels",
+    "pixabay": "Pixabay",
+}
 
-    CC BY 系は表示が必須で、書かないと利用条件を満たさない。素材を取ったときに
-    imagegen が credits.json を残しているので、実際に使った画像の分だけ拾う。
-    自前生成の背景（assets/backgrounds）は権利が無いので何も出さない。
+
+def _ledger_lines(script, root=None) -> tuple[list[str], list[str]]:
+    """使った画像の (詳細行, 出どころのサイト名)。
+
+    **サムネイルの写真も数える。**動画本体には出ないが、サムネイルも配布物で
+    表示義務は同じ。行の画像しか見ておらず、公開済みの5本が
+    クレジット無しで出ていた（2026-09-06 実測）。
     """
     import json
-    from pathlib import Path
+    from pathlib import Path as _Path
 
-    root = Path(root) if root else Path(".")
+    root = _Path(root) if root else _Path(".")
+
     def origin(path: str) -> str:
         """使った画像の在りか。クリップなら記録から元の名前を辿る。
 
         **フォルダを含めて返す。**どのフォルダも中身は 01.jpg なので、
-        ファイル名だけで突き合わせると、使っていない写真まで全部一致した
-        （2026-09-06 実測。1本の概要欄に6人ぶんのクレジットが並んだ）。
+        ファイル名だけで突き合わせると、使っていない写真まで全部一致した。
         """
         target = root / path
         sidecar = target.with_suffix(target.suffix + ".source.txt")
@@ -387,23 +396,16 @@ def image_credits(script, root=None) -> list[str]:
     used = {origin(scene.background) for scene in script.scenes if scene.background}
     if script.background:
         used.add(origin(script.background))
-    # 行に image: で差し込んだ写真も拾う。背景だけ見ていたので、選手の写真に
-    # クレジットが付いていなかった（2026-09-04 実測）。CC BY は表示が必須で、
-    # 出ていないと利用条件を満たさない。
     for scene in script.scenes:
         for line in scene.lines:
             if getattr(line, "image", None):
                 used.add(origin(line.image))
-    # **サムネイルの写真も拾う。**背景と行の画像しか見ておらず、
-    # サムネの顔写真にクレジットが付いていなかった（2026-09-06 実測）。
-    # 動画本体には出ないが、**サムネイルも配布物**なので表示義務は同じ。
-    # 公開済みの5本がこの状態だった
     thumb = str((getattr(script, "meta", None) or {}).get("thumbnail_photo") or "").strip()
     if thumb:
         used.add(origin(thumb))
 
-    lines: list[str] = []
-    # 背景（実写クリップ）のぶんも拾う。写真と同じ台帳の形にしてある
+    details: list[str] = []
+    sites: list[str] = []
     ledgers = sorted(root.glob("assets/images/**/credits.json"))
     ledgers += sorted(root.glob("assets/backgrounds/**/credits.json"))
     for ledger in ledgers:
@@ -415,25 +417,42 @@ def image_credits(script, root=None) -> list[str]:
             name = str(row.get("file") or row.get("filename") or "")
             if not name:
                 continue
-            # 台帳のある場所と合わせて、置き場所ごと突き合わせる。
-            # クリップ経由のときは元画像の名前が入っているので、そちらも見る
-            here = (ledger.parent / Path(name).name)
+            here = ledger.parent / _Path(name).name
             try:
                 spot = here.relative_to(root).as_posix()
             except ValueError:
                 spot = here.as_posix()
-            if spot not in used and Path(name).name not in {
+            if spot not in used and _Path(name).name not in {
                 x for x in used if "/" not in x
             }:
                 continue
             title = str(row.get("title", "")).strip()
-            author = str(row.get("author") or row.get("creator") or "").strip()
+            author = _plain(str(row.get("author") or row.get("creator") or "").strip())
             license_ = str(row.get("license", "")).strip()
-            # Commons の控えは配布元ページを page_url に持つ。source は
-            # "wikimedia" のような媒体名なので、URL としては使えない。
             url = str(row.get("page_url") or row.get("url") or "").strip()
-            author = _plain(author)
             part = " / ".join(x for x in (title, author, license_, url) if x)
-            if part and part not in lines:
-                lines.append(part)
-    return [f"画像: {line}" for line in lines]
+            if part and part not in details:
+                details.append(part)
+            where = SITE_NAMES.get(str(row.get("source", "")).strip().lower(), "")
+            if not where and url.count("/") > 2:
+                where = url.split("/")[2]
+            if where and where not in sites:
+                sites.append(where)
+    return details, sites
+
+
+def image_credits(script, root=None) -> list[str]:
+    """概要欄の上に出す1行。**出どころのサイト名までにする**
+
+    （2026-09-06 ユーザーの判断）。CC BY / BY-SA は表示が条件なので消せないが、
+    概要欄の頭に長い行が並ぶと読むところが埋まる。YouTube は最初の3行しか
+    初期表示しないので、**見える位置には1行、義務は末尾で果たす**。
+    """
+    _, sites = _ledger_lines(script, root)
+    return [f"画像: {' / '.join(sites)}"] if sites else []
+
+
+def image_details(script, root=None) -> list[str]:
+    """概要欄の末尾に畳む、写真1枚ごとの表示。**表示義務はここで果たす。**"""
+    details, _ = _ledger_lines(script, root)
+    return [f"※ 画像: {line}" for line in details]

@@ -13,6 +13,7 @@ thumbnail:
   tags:
   - モドリッチ
   - クロアチア代表
+  photo: assets/images/modric/01.jpg
 answer: 監督と会長に直接、参加を確約した。噂ではなく協会の発表で決着した
 watch: 今月26日のチェコ戦。41歳になって最初の代表戦
 sections:
@@ -23,6 +24,7 @@ sections:
   say:
   - voice: キャスター
     text: ミランのルカ・モドリッチが、クロアチア代表を続けることになりました。
+    image: assets/images/modric/01.jpg
   - voice: キャスター
     text: きゅうがついつか、クロアチアサッカー連盟が公式に発表しています。
   - voice: クロアチアサッカー連盟
@@ -92,6 +94,13 @@ sections:
   - voice: キャスター
     text: つぎに見るべきは、こんげつにじゅうろくにちのチェコ戦。
     telop: 次は今月26日のチェコ戦
+    card:
+      type: points
+      title: 次に見るところ
+      items:
+      - 9月26日 チェコ戦（41歳になって最初の代表戦）
+      - ネーションズリーグは今月下旬から
+      - 代表通算202試合は、ここからさらに伸びる
   - voice: キャスター
     text: よんじゅういっさいになって、最初の代表戦になります。
   official: false

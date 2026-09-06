@@ -162,10 +162,16 @@ def test_行に差し込んだ写真のクレジットも出す(tmp_path):
     script = parse_script(
         "## S\nキャスター: 遠藤選手です。\n  image: assets/images/endo/03.jpg\n"
     )
-    lines = image_credits(script, root=tmp_path)
+    # **2段になった**（2026-09-06 ユーザーの判断）。
+    # 概要欄の上には出どころの1行だけ。表示義務は末尾の詳細で果たす
+    from src.tts import image_details
 
-    assert len(lines) == 1
-    assert "CC BY 3.0" in lines[0]
-    assert "Jeollo" in lines[0]          # HTML のタグは落とす
-    assert "<a href" not in lines[0]
-    assert "commons.wikimedia.org" in lines[0]   # source ではなく page_url を使う
+    lines = image_credits(script, root=tmp_path)
+    assert lines == ["画像: Wikimedia Commons"]
+
+    details = image_details(script, root=tmp_path)
+    assert len(details) == 1
+    assert "CC BY 3.0" in details[0]
+    assert "Jeollo" in details[0]          # HTML のタグは落とす
+    assert "<a href" not in details[0]
+    assert "commons.wikimedia.org" in details[0]   # source ではなく page_url を使う

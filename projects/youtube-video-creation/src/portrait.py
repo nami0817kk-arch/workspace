@@ -62,17 +62,17 @@ def _plain(field) -> str:
 #   → 継承（SA）の条件は「同じ条件で公開する」こと。**表示義務も強くなる**ので、
 #     概要欄にライセンス名を必ず出す（tts.image_credits）
 # NC は商用不可、ND は改変不可（切り抜きができない）で、こちらは引き続き断る。
-ALLOWED = ("cc0", "public domain", "pd-", "cc by 1.0", "cc by 2.0",
-           "cc by 2.5", "cc by 3.0", "cc by 4.0", "attribution",
+# 使ってよいライセンス（2026-09-06 ユーザーの判断で確定）。
+# **BY / BY-SA も使う。**自由ライセンスのスポーツ写真はほぼ全部これで、
+# 外すと在庫が29枚中5枚まで落ちる（実測。アルテタは候補6枚すべて CC BY）。
+# 表示義務は果たすが、**概要欄の上には出さず末尾に畳む**（tts.image_credits）。
+#   NC … 収益化と両立しない
+#   ND … 切り取り・ズームをする用途では使えない（そのまま出すだけなら可）
+ALLOWED = ("cc0", "public domain", "pd-", "pd ", "attribution",
+           "cc by 1.0", "cc by 2.0", "cc by 2.5", "cc by 3.0", "cc by 4.0",
            "cc by-sa 1.0", "cc by-sa 2.0", "cc by-sa 2.5",
            "cc by-sa 3.0", "cc by-sa 4.0")
-# 非営利（NC）は収益化と両立しないので、どこでも使わない
 REFUSED = ("nc", "noncommercial", "non commercial")
-# 改変不可（ND）は**切らずにそのまま出すなら使える**（2026-09-06 ユーザーの案）。
-# CC 4.0 は「媒体や形式を変えるための技術的な変更は改変物を生まない」と
-# 明記しており、**縮小はこれに当たる**。本文に差し込む写真は min で縮めるだけで、
-# 切り取りもズームもしていないので条件を満たす。
-# サムネイル（16:9に切り、文字を重ねる）と背景（ズームをかける）では使えない。
 NO_DERIVS = ("nd", "noderivatives", "no derivatives", "noderivs")
 
 
@@ -92,9 +92,7 @@ def license_ok(name: str, modify: bool = True) -> tuple[bool, str]:
     if banned and modify:
         return False, (f"{name} は改変不可です。"
                        "切り取らずそのまま出す用途（本文の image:）でだけ使えます")
-    if banned:
-        return True, name
-    if any(a in low for a in ALLOWED):
+    if banned or any(a in low for a in ALLOWED):
         return True, name
     return False, f"{name} は許可した一覧にありません"
 

@@ -163,7 +163,8 @@ def chapters(script: Script) -> list[tuple[float, str]]:
     return result
 
 
-def description(script: Script, credits: list[str] | None = None) -> str:
+def description(script: Script, credits: list[str] | None = None,
+                footnotes: list[str] | None = None) -> str:
     """概要欄のたたき台（本文 + チャプター + クレジット + タグ）。"""
     parts = [script.description.strip()] if script.description.strip() else []
     marks = chapters(script)
@@ -176,10 +177,17 @@ def description(script: Script, credits: list[str] | None = None) -> str:
         parts.append("■ クレジット\n" + "\n".join(credits))
     if script.tags:
         parts.append(" ".join(f"#{tag}" for tag in script.tags))
+    # **ハッシュタグより下に畳む。**表示義務のある写真の詳細は、消せないが
+    # 上に並べると読むところが埋まる。YouTube は最初の3行しか初期表示しない
+    # （2026-09-06 ユーザーの判断）
+    if footnotes:
+        nl = chr(10)
+        parts.append("─" * 12 + nl + nl.join(footnotes))
     return "\n\n".join(parts).strip() + "\n"
 
 
-def write_outputs(script: Script, out_dir: Path, credits: list[str] | None = None) -> dict[str, Path]:
+def write_outputs(script: Script, out_dir: Path, credits: list[str] | None = None,
+                  footnotes: list[str] | None = None) -> dict[str, Path]:
     out_dir.mkdir(parents=True, exist_ok=True)
     files = {
         "srt": out_dir / "subtitles.srt",
@@ -188,7 +196,7 @@ def write_outputs(script: Script, out_dir: Path, credits: list[str] | None = Non
     }
     files["srt"].write_text(to_srt(script), encoding="utf-8")
     files["description"].write_text(
-        f"{script.title}\n\n{description(script, credits)}", encoding="utf-8"
+        f"{script.title}\n\n{description(script, credits, footnotes)}", encoding="utf-8"
     )
     files["script_json"].write_text(script.to_json(), encoding="utf-8")
     return files

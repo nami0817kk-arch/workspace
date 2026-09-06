@@ -13,6 +13,7 @@ thumbnail:
   tags:
   - マルティネッリ
   - アルテタ
+  photo: assets/images/arteta/01.jpg
 answer: 選手は監督に触れず、監督は選手を称えた。食い違いはあるが、片方向の不仲話ではない
 watch: アル・ヒラルでの初戦。7年いたクラブを離れて何を見せるか
 sections:
@@ -84,6 +85,7 @@ sections:
       translation: アーセナルでの不快な終わりのあと、マルティネッリがアルテタを辛辣に無視
   - voice: キャスター
     text: ところが翌日の会見で、アルテタ監督はこう話しました。
+    image: assets/images/arteta/01.jpg
   - voice: アルテタ
     text: 私が出会ったころのガビと、いま出ていくガビは、別人だ。クラブに欠かせない選手だった。
     telop: アルテタ「欠かせない選手だった」

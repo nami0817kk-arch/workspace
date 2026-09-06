@@ -132,3 +132,32 @@ def test_語の途中で字幕を割らない():
     for a, b in zip(chunks, chunks[1:]):
         assert not (kana(a[-1]) and kana(b[0]))
         assert not (kanji(a[-1]) and kanji(b[0]))
+
+def test_写真の詳細はハッシュタグより下に置く():
+    """**上は1行、義務は末尾**（2026-09-06 ユーザーの判断）。
+
+    CC BY は表示が条件なので消せないが、概要欄の頭に長い行が並ぶと
+    読むところが埋まる。YouTube は最初の3行しか初期表示しない。
+    """
+    from src.script_model import parse_script
+    from src.subtitles import description
+
+    nl = chr(10)
+    script = parse_script(nl.join(
+        ["---", "title: T", "tags: [サッカー]", "---", "", "## 章", "",
+         "キャスター: あ。"]))
+    body = description(script, ["画像: Wikimedia Commons"],
+                       ["※ 画像: File:X / 撮影者 / CC BY 3.0 / https://example.org"])
+    上 = body.index("画像: Wikimedia Commons")
+    タグ = body.index("#サッカー")
+    詳細 = body.index("※ 画像: File:X")
+    assert 上 < タグ < 詳細, "詳細がハッシュタグより上に出ている"
+
+
+def test_詳細が無ければ区切り線も出さない():
+    from src.script_model import parse_script
+    from src.subtitles import description
+
+    nl = chr(10)
+    script = parse_script(nl.join(["---", "title: T", "---", "", "## 章", "", "キャスター: あ。"]))
+    assert "─" not in description(script, ["音声: VOICEVOX"], [])

@@ -263,6 +263,10 @@ def main(argv: list[str] | None = None) -> int:
     p_portrait.add_argument("--file", default="", dest="only",
                             help="この File: だけを使う（現役/監督など、機械に選べない差を人が決める）")
 
+    p_variety = sub.add_parser(
+        "variety", help="その日の台本を横に並べて見る（1本ずつでは分からないこと）")
+    p_variety.add_argument("scripts", nargs="+", help="台本のパス（複数）")
+
     p_results = sub.add_parser("results", help="その日の試合結果を候補にする")
     p_results.add_argument("--date", default=None, help="YYYY-MM-DD（既定: 昨日）")
     p_results.add_argument("--league", default=None, help="england/spain/germany/italy/france など")
@@ -1402,6 +1406,29 @@ def _cmd_fetch(args, config) -> int:
     return 0 if seen else 1
 
 
+def _cmd_variety(args, config) -> int:
+    """その日ぶんを並べて見る。**review は1本ずつしか見ない。**"""
+    from .script_model import parse_script
+    from .variety import inspect_day
+
+    scripts = []
+    for path in args.scripts:
+        target = Path(path)
+        if not target.exists():
+            print(f"台本がありません: {target}", file=sys.stderr)
+            return 1
+        scripts.append(parse_script(target.read_text(encoding="utf-8")))
+    print(f"■ 並べて点検　{len(scripts)}本")
+    findings = inspect_day(scripts)
+    for finding in findings:
+        print(finding.line())
+    bad = [f for f in findings if not f.ok]
+    if bad:
+        print()
+        print("  1本ずつの点検では出ません。**似すぎていないか**を見ています")
+    return 1 if bad else 0
+
+
 def _cmd_portrait(args, config) -> int:
     """本人と確認できた顔写真を1枚落とす。**確かめられなければ落とさない。**"""
     from .portrait import PortraitError, save
@@ -2078,6 +2105,7 @@ HANDLERS = {
     "x": _cmd_x,
     "fetch": _cmd_fetch,
     "subject": _cmd_subject,
+    "variety": _cmd_variety,
     "portrait": _cmd_portrait,
     "results": _cmd_results,
     "gather": _cmd_gather,

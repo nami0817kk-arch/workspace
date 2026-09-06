@@ -13,6 +13,7 @@ thumbnail:
   tags:
   - ラフィーニャ
   - バルセロナ
+  photo: assets/images/yamal/01.jpg
 answer: 上の2人は監督が決め、下の3人は選手の投票で決まった
 watch: バレンシア戦。新しい主将で最初の試合
 sections:
@@ -90,8 +91,16 @@ sections:
   - voice: キャスター
     text: じゅうはっさいのヤマルが五番目に入り、序列そのものが若返っています。
     telop: 18歳のヤマルが序列に入る
+    image: assets/images/yamal/01.jpg
   - voice: キャスター
     text: つぎに見るべきは、バレンシア戦です。新しい主将で、最初の試合になります。
+    card:
+      type: points
+      title: この交代で変わったこと
+      items:
+      - 前主将テア・シュテーゲンはアヤックスへ期限付き移籍
+      - ブラジル人が主将になるのはクラブ史上初
+      - 18歳のヤマルが序列5番目に入った
   official: false
   sources:
   - https://www.vi.nl/nieuws/de-jong-zakt-in-aanvoerdershierarchie-bij-barcelona
