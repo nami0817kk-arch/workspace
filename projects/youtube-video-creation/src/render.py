@@ -48,6 +48,15 @@ class Layout:
         return (TELOP_MARGIN, top, self.width - TELOP_MARGIN, top + TELOP_HEIGHT)
 
     @property
+    def is_portrait(self) -> bool:
+        """縦型（ショート）か。**横型の割合をそのまま使うと文字が切れる。**
+
+        実測（2026-09-06）で、幅1080の縦型にカードを64%（691px）で作ったところ、
+        選手名が右端で切れた。横1920なら同じ64%で1228pxあり、収まっていた。
+        """
+        return self.height > self.width
+
+    @property
     def media_slot(self) -> tuple[int, int]:
         """画像やカードを置く縦の範囲。文字の上を使う。"""
         floor = (self.headline_box if not self.with_characters else self.telop_box)[1]
@@ -265,7 +274,10 @@ class Renderer:
         """
         slot_top, slot_bottom = self.layout.media_slot
         slot_height = max(80, slot_bottom - slot_top)
-        side_by_side = bool(image_path) and bool(card_name)
+        # **縦型は縦に積む。**横に並べると1つあたりの幅が半分になり、
+        # ただでさえ狭い1080がさらに割れる。上下は余っている
+        side_by_side = (bool(image_path) and bool(card_name)
+                        and not self.layout.is_portrait)
         items: list[Image.Image] = []
 
         if image_path:
@@ -363,7 +375,11 @@ class Renderer:
         spec = self.script_cards.get(name)
         if not spec:
             return None
-        if beside:  # 写真と横に並べるぶん、カードは幅を譲る
+        if self.layout.is_portrait:
+            # **縦型は幅をほぼ使い切る。**割合で決めると横型より狭くなり、
+            # 同じ文字量が入らない。上下は余っているので、幅を優先する
+            width = int(self.layout.width * 0.90)
+        elif beside:  # 写真と横に並べるぶん、カードは幅を譲る
             width = int(self.layout.width * (0.52 if not self.layout.with_characters else 0.40))
         else:
             width = int(self.layout.width * (0.64 if not self.layout.with_characters else 0.46))

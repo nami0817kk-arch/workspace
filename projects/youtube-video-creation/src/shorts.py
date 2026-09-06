@@ -54,19 +54,80 @@ def trim(script: Script, section: str = "", max_seconds: float = MAX_SECONDS) ->
     short = copy.deepcopy(script)
     short.scenes = [copy.deepcopy(opening), copy.deepcopy(body)]
     _fit(short, max_seconds)
+    _add_face(short)
     if not short.scenes[-1].lines:
         raise ShortError(f"『{body.title}』は冒頭だけで尺を使い切ります。節を選び直してください")
     return short
 
 
+# 語りを担当する声。ここに無い話者は「誰かの言葉を代弁している」
+NARRATORS = ("キャスター", "解説", "ナレーター")
+
+
+def strength(scene: Scene, cards: dict) -> int:
+    """その節の強さ。**いちばん強い場面をショートに使う**（2026-09-06 ユーザー）。
+
+    11本を振り返ると、残ったのは全部「誰かの言葉」だった
+    （アルテタ「欠かせない選手だった」／モウリーニョ「なぜ負けたのか分からない」）。
+    **事実の説明より、本人の口から出た一言が強い。**
+    数字も次点で効く（枠内8本・xG3.16のような、それ自体が語るもの）。
+    """
+    score = 0
+    for line in scene.lines:
+        who = (getattr(line, "speaker", "") or "").strip()
+        if who and who not in NARRATORS:
+            score += 3          # 代弁。いちばん強い
+        name = getattr(line, "card", None)
+        kind = str((cards.get(name) or {}).get("type", "")).lower() if name else ""
+        if kind == "quote":
+            score += 3          # 原文の引用が画面に出る
+        elif kind in ("bars", "table"):
+            score += 2          # 数字が語る
+        elif kind:
+            score += 1
+        if getattr(line, "image", None):
+            score += 1
+    return score
+
+
 def _pick(script: Script, section: str) -> Scene:
-    if not section:
+    if section:
+        for scene in script.scenes:
+            if section in (scene.title, getattr(scene, "key", "")):
+                return scene
+        known = " / ".join(scene.title for scene in script.scenes[1:])
+        raise ShortError(f"『{section}』という節がありません（{known}）")
+
+    # **冒頭の次を機械的に取らない。**そこは前置きであることが多い。
+    # まとめは答えを先に言ってしまうので外す
+    body = [s for s in script.scenes[1:] if s.title != "まとめ"]
+    if not body:
         return script.scenes[1]
-    for scene in script.scenes:
-        if section in (scene.title, getattr(scene, "key", "")):
-            return scene
-    known = " / ".join(scene.title for scene in script.scenes[1:])
-    raise ShortError(f"『{section}』という節がありません（{known}）")
+    cards = script.cards or {}
+    best = max(body, key=lambda s: (strength(s, cards), -body.index(s)))
+    return best
+
+
+def _add_face(script: Script) -> None:
+    """本編のサムネイル写真を、ショートの本文にも出す。
+
+    **縦型は画面が余る。**実測（2026-09-06）で、カードが出ているのは
+    22秒中5秒だけ、残りは背景だけだった。顔があるだけで持つ画面になる。
+    すでに写真を持つ行があれば、そのままにする。
+    """
+    if any(getattr(line, "image", None) for line in script.lines):
+        return
+    photo = str((script.meta or {}).get("thumbnail_photo") or "").strip()
+    if not photo:
+        return
+    body = script.scenes[-1]
+    for line in body.lines:
+        # カードのある行は避ける。縦に積めるが、1行に詰め込むと窮屈になる
+        if not line.card:
+            line.image = photo
+            return
+    if body.lines:
+        body.lines[0].image = photo
 
 
 def _fit(script: Script, max_seconds: float) -> None:
