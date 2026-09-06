@@ -109,6 +109,57 @@ void main() {
           reason: 'addDebugFunds を呼ぶ箇所が増えている: $callers');
     });
 
+    test('手順書が作らせる鍵ファイルが、すべて Git から除外されている', () {
+      // RELEASE_GUIDE は署名鍵や証明書を作らせ、CI へ渡すために Base64 化
+      // させる。**Base64 は鍵そのもので、テキストになっただけ。**
+      // 実際 keystore.base64.txt は除外されておらず、手順どおりに作ると
+      // リポジトリに入りうる状態だった。
+      //
+      // 手順書に出てくるファイル名が増えたら、ここにも足すこと。
+      const secretsFromGuide = [
+        'upload-keystore.jks',
+        'keystore.base64.txt',
+        'ios_distribution.key',
+        'ios_distribution.csr',
+        'distribution.cer',
+        'distribution.pem',
+        'ios_distribution.p12',
+        'ios_cert.base64.txt',
+        'ios_profile.base64.txt',
+        'AuthKey_XXXX.p8',
+      ];
+
+      final leaked = <String>[];
+      for (final name in secretsFromGuide) {
+        final result = Process.runSync('git', ['check-ignore', '-q', name]);
+        // 終了コード0が「除外されている」。1は除外されていない。
+        if (result.exitCode != 0) leaked.add(name);
+      }
+
+      expect(leaked, isEmpty,
+          reason: '手順どおりに作るとリポジトリに入る鍵ファイルがある: $leaked');
+    });
+
+    test('鍵ファイルが実際にコミットされていない', () {
+      // 除外設定より前に追加されていれば、除外は効かない。
+      final tracked = Process.runSync('git', ['ls-files']).stdout as String;
+      final suspicious = tracked
+          .split(String.fromCharCode(10))
+
+          .map((l) => l.trim())
+          .where((l) => l.isNotEmpty)
+          .where((l) =>
+              l.endsWith('.jks') ||
+              l.endsWith('.p12') ||
+              l.endsWith('.p8') ||
+              l.endsWith('.key') ||
+              l.endsWith('.cer') ||
+              l.endsWith('.base64.txt'))
+          .toList();
+
+      expect(suspicious, isEmpty, reason: '鍵ファイルがコミットされている: $suspicious');
+    });
+
     test('旧リポジトリを指すURLが残っていない', () {
       // このプロジェクトは kabu-agari-ranking から claude-code-dev へ移した。
       // 移行時に取り残されたURLが実際にアプリ内とストア掲載情報の両方に

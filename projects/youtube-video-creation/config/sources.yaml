@@ -103,11 +103,13 @@ domains:
   # の2つだけ。書き込みそのものを引くときは CLAUDE.md の決まりに従う:
   #   匿名の声は未確認 / ハンドルは画面に出さない / 数を数えた言い方をしない
   rumour: [caughtoffside.com, givemesport.com, tribalfootball.com,
-           bild.de, mirror.co.uk, dailymail.co.uk,
+           bild.de, mirror.co.uk, dailymail.co.uk, dailymail.com,
            footballnet.2chblog.jp, sakasaka10.blog.jp,
            # 2026-09-04 にユーザーから。まとめサイトを横断する集約サイトと、
            # そこから辿れるまとめ。反応の取り出しは実測済み（下の注記）
-           www.footballtopic.com, football-2ch.com, worldfn.net]
+           www.footballtopic.com, football-2ch.com, worldfn.net,
+           # 2026-09-07 に追加。海外の反応まとめ。同種のブログに合わせて未確認どまり
+           nofootynolife.net]
 
   # 取得できないサイト。ここを検索しても結果は返らない。
   #
@@ -299,7 +301,8 @@ domain_tiers:
 #   tier … その人の投稿だけで置ける最大の確度
 #   note … 何に強いか
 accounts:
-  - {handle: FabrizioRomano, name: Fabrizio Romano, tier: 未確認, note: 移籍全般。完了案件は here we go}
+  # 2026-09-07 のユーザー判断でロマーノだけ確定に上げた。x.com の群(social)は未確認どまりだが、Plan.account_ceiling がこのアカウントの tier を上限にする
+  - {handle: FabrizioRomano, name: Fabrizio Romano, tier: 確定, note: 移籍全般。完了案件は here we go}
   - {handle: David_Ornstein, name: David Ornstein, tier: 未確認, note: プレミア・The Athletic}
   - {handle: MatteMoretto, name: Matteo Moretto, tier: 未確認, note: スペイン・イタリア}
   - {handle: DiMarzio, name: Gianluca Di Marzio, tier: 未確認, note: セリエA}
@@ -351,7 +354,12 @@ scoring:
     # 移籍期限の話が同点で並んでいた。ここは自動で効く数少ない手がかり。
     outlets: 3
     reaction: 3       # 賛否が割れる・驚きがある。コメントが伸びる
-    big_club: 2       # ビッグクラブが絡む
+    big_club: 2
+    # 2026-09-07 のユーザー判断で日本人選手に2点。所属がビッグクラブ13球団に無く、
+    # 日本語媒体は1社しか書かないことが多いので、正攻法では下限5点に届かなかった。
+    # 2026-09-05 に japanese: 3 を入れて朝の枠が全部日本人になった件は、
+    # world_* の exclude_japanese で塞がれている（枠側で担保する形は維持）。
+    japanese: 2       # ビッグクラブが絡む
     numbers: 1        # 金額・記録など、数字が立つ
     goals: 2          # 試合結果むけ。点が多く動いた試合は見られる
     upset: 3          # 試合結果むけ。番狂わせ・格上撃破

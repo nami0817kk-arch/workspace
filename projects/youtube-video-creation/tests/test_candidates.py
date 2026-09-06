@@ -624,16 +624,27 @@ def test_話題順の枠に載っている候補が無ければ空ける():
     assert "まとめ集約サイト" in fallbacks["s"][0]
 
 
-def test_日本人には既定で点を付けない():
-    """枠で担保して、点では寄せない。
+def test_日本人の加点と他の枠を守る仕組みが揃っている():
+    """日本人選手に2点。ただし他の枠まで日本人で埋めない。
 
-    一度 japanese: 3 を入れたところ、朝の3枠が全部日本人選手になった
-    （2026-09-05 実測）。日本人は割り当ての制約で、傾向を寄せるものではない。
+    2026-09-05 に japanese: 3 を入れたら朝の3枠が全部日本人選手になったので、
+    一度0に戻した。2026-09-07 のユーザー判断で2点を入れ直している。
+    所属がビッグクラブ13球団に無く、日本語媒体は1社しか書かないことが多いため、
+    正攻法では日本人枠が下限5点に届かなかったのが理由。
+
+    当時の再発を防いでいるのは点の大きさではなく、world_* の exclude_japanese。
+    **加点と一緒にこのガードが外れていないこと**をここで固定する。
     """
     from src.plan import load_plan
 
-    weights = (load_plan().scoring.get("weights") or {})
-    assert not weights.get("japanese")
+    scoring = load_plan().scoring
+    assert int((scoring.get("weights") or {}).get("japanese", 0)) == 2
+
+    slots = scoring.get("slots") or {}
+    world = {k: v for k, v in slots.items() if k.startswith("world_")}
+    assert world, "world_* の枠が無い"
+    for name, slot in world.items():
+        assert slot.get("exclude_japanese"), f"{name} が日本人を弾かなくなっている"
 
 # ユーザーが枠を「日本人3・それ以外2・ロマーノ1・プレミア2・ラリーガ1」と
 # 指定した（2026-09-05）。群では表せない指定なので、枠の条件を3つ足した。

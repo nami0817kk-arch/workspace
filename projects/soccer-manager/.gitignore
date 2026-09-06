@@ -54,6 +54,20 @@ android/key.properties
 **/*.certSigningRequest
 **/*.mobileprovision
 **/*.provisionprofile
+# 秘密鍵そのもの。RELEASE_GUIDE の手順で作られる
+# ios_distribution.key / distribution.pem / ios_distribution.csr を含む。
+**/*.key
+**/*.pem
+**/*.csr
+
+# CI へ渡すために Base64 化したもの。
+# **中身は鍵そのもの**で、テキストになっただけ。手順書がこのファイル名で
+# 作らせるのに除外されておらず、リポジトリに入りうる状態だった。
+**/*.base64.txt
+keystore.base64.txt
+ios_cert.base64.txt
+ios_profile.base64.txt
+appstore_api_key.base64.txt
 ios/Runner/GoogleService-Info.plist
 # ストア API 資格情報
 **/play-store-service-account*.json
