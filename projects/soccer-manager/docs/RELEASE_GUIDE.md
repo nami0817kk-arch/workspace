@@ -110,7 +110,21 @@ keyPassword=<鍵のパスワード>
 ## 4. Apple の証明書・プロファイルを Mac なしで作る
 
 通常は Mac の Keychain Access で CSR（証明書署名要求）を作りますが、
-同じものは OpenSSL で作れます。以下はこの Linux 環境でそのまま実行できます。
+同じものは OpenSSL で作れます。
+
+> **Windows の PowerShell で作業する場合。**
+> `openssl` は PATH に入っていないので、そのまま打つと
+> 「用語 'openssl' は認識されません」で止まります(実際に詰まった)。
+> Git for Windows に同梱されているので、フルパスで呼びます。
+> スペースを含むパスなので、先頭の `&` が必要です。
+>
+> ```powershell
+> & "C:\Program Files\Git\usr\bin\openssl.exe" genrsa -out ios_distribution.key 2048
+> ```
+>
+> 以下のコマンドも同じ要領で、`openssl` を
+> `& "C:\Program Files\Git\usr\bin\openssl.exe"` に読み替えてください。
+> Git Bash を使う場合は、書いてあるとおりそのまま動きます。
 
 ### 4-1. 秘密鍵と CSR を作る
 
