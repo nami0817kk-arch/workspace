@@ -227,6 +227,9 @@ def main(argv: list[str] | None = None) -> int:
     )
     p_plan.add_argument("--date", default=None, help="基準日 YYYY-MM-DD（既定: 今日）")
     p_plan.add_argument("--write", action="store_true", help="取材メモの雛形を research/ に作る")
+    p_plan.add_argument("--shape", default="",
+                        help="話の型: transfer / match / quote / discipline / preview。"
+                             "**11本つづけて同じ骨格だったので分けた**（節の名前は書き換えてよい）")
     p_plan.add_argument(
         "--league", default=None,
         help="match ルーティンで、どのリーグの試合かを指定する（england / spain / germany など）",
@@ -720,7 +723,10 @@ def _cmd_plan(args, config) -> int:
             print(f"すでにあります: {target}", file=sys.stderr)
             return 1
         target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_text(worksheet(routine, today), encoding="utf-8")
+        target.write_text(
+            worksheet(routine, today, getattr(args, "shape", "") or "",
+                      plan.skeletons),
+            encoding="utf-8")
         print(f"取材メモ: {target}")
         print(f"埋めたら `python -m src.cli draft {target}` で台本になります")
     return 0

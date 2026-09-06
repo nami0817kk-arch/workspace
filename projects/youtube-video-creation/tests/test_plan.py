@@ -276,3 +276,50 @@ def test_取材メモの雛形にリーグの欄がある():
     assert "league:" in body
     # 何を書けばよいかまで書いていないと、結局空のままになる
     assert "germany" in body
+
+# 11本つづけて同じ骨格だった（2026-09-06 実測。9本が「何が起きたか」で始まり、
+# 7本が「これからどうなる」で終わっていた）。種類ごとに型を分けた。
+
+def test_話の型を選べる():
+    from datetime import date
+
+    from src.plan import worksheet
+
+    plan = load_plan()
+    routine = plan.routine("world_1")
+    shapes = plan.skeletons
+    assert {"transfer", "match", "quote", "discipline", "preview"} <= set(shapes)
+
+    sheet = worksheet(routine, date(2026, 9, 6), "discipline", shapes)
+    assert "誰にどんな処分が出たか" in sheet
+    assert "これからどうなる" not in sheet
+
+    # **試合前の型は「これからどうなる」で締めない。**まだ起きていないので
+    sheet = worksheet(routine, date(2026, 9, 6), "preview", shapes)
+    assert "何がかかっているか" in sheet
+    assert "これからどうなる" not in sheet
+
+
+def test_知らない型は弾く():
+    """黙って既定に落とすと、指定した気になったまま同じ骨格が出る。"""
+    from datetime import date
+
+    from src.plan import PlanError, worksheet
+
+    plan = load_plan()
+    try:
+        worksheet(plan.routine("world_1"), date(2026, 9, 6), "nonsense", plan.skeletons)
+    except PlanError as err:
+        assert "知らない型" in str(err)
+    else:
+        raise AssertionError("知らない型を通した")
+
+
+def test_型を指定しなければ既定に落ちる():
+    from datetime import date
+
+    from src.plan import worksheet
+
+    plan = load_plan()
+    sheet = worksheet(plan.routine("world_1"), date(2026, 9, 6), "", plan.skeletons)
+    assert "sections:" in sheet

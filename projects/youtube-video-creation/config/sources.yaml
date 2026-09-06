@@ -474,6 +474,39 @@ deep:
   - {q: "{en} player ratings analysis", domains: english, when: match, label: 試合（採点・分析）}
   - {q: "{en} xG shots possession", domains: stats, when: match, label: 試合（xG・スタッツ）}
 
+# 話の型。**11本つづけて同じ骨格だった**ので、種類ごとに分けた（2026-09-06）。
+#   実測: 9本が「何が起きたか」で始まり、7本が「これからどうなる」で終わっていた。
+#   1本ずつ見れば自然だが、**2本続けて見た人には同じ番組に見える。**
+# plan が候補の kind から選ぶ。合うものが無ければ transfer を使う。
+# **節の名前は書き換えてよい。**型は出発点であって、縛りではない
+skeletons:
+  # 移籍・契約・人事。何が動いたかを先に置く
+  transfer:
+    - {id: what, heading: 何が起きたか, tier: 報道}
+    - {id: why, heading: なぜ動いたのか, tier: 報道}
+    - {id: next, heading: これからどうなる, tier: 報道}
+  # 試合。結果より「試合の中で何が起きたか」を主にする。
+  # 結果だけならスコア速報で足りるので、動画にする意味が出ない
+  match:
+    - {id: what, heading: 試合はどう動いたか, tier: 報道}
+    - {id: turn, heading: 分かれ目はどこか, tier: 報道}
+    - {id: numbers, heading: 数字で見ると, tier: 確定}
+  # 発言・会見。**引用が主役**なので、言葉を先に出して背景をあとに回す
+  quote:
+    - {id: said, heading: 何を言ったのか, tier: 報道}
+    - {id: context, heading: どういう状況で出た言葉か, tier: 報道}
+    - {id: react, heading: どう受け止められたか, tier: 報道}
+  # 処分・規律。誰にどれだけ、が要点。理由と不服は分ける
+  discipline:
+    - {id: what, heading: 誰にどんな処分が出たか, tier: 報道}
+    - {id: why, heading: 何があったのか, tier: 報道}
+    - {id: next, heading: 覆る可能性はあるか, tier: 報道}
+  # 試合前。**まだ起きていない**ので「これからどうなる」で締めない
+  preview:
+    - {id: stake, heading: 何がかかっているか, tier: 報道}
+    - {id: said, heading: 当事者は何と言ったか, tier: 報道}
+    - {id: point, heading: どこを見るか, tier: 報道}
+
 # 1本の作り方。まとめではなく、1テーマを掘る
 policy:
   one_theme_per_video: true

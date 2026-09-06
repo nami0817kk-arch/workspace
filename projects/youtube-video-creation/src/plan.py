@@ -71,6 +71,9 @@ class Plan:
     tiers: dict[str, dict]
     domains: dict[str, list[str]]
     slots: list[str] = field(default_factory=list)
+    # 話の型（transfer / match / quote / discipline / preview）。
+    # 11本つづけて同じ骨格だったので分けた（2026-09-06）
+    skeletons: dict = field(default_factory=dict)
     coverage: dict = field(default_factory=dict)
     policy: dict = field(default_factory=dict)
     scan: dict = field(default_factory=dict)
@@ -229,6 +232,7 @@ def build_plan(raw: dict) -> Plan:
         tiers=tiers,
         domains=domains,
         slots=slots,
+        skeletons=dict(raw.get("skeletons") or {}),
         coverage=coverage,
         policy=policy,
         scan=scan,
@@ -312,8 +316,13 @@ def render(routine: Routine, today: date, covered: list | None = None) -> str:
     return "\n".join(lines).rstrip() + "\n"
 
 
-def worksheet(routine: Routine, today: date) -> str:
-    """取材メモの雛形（YAML）。1本＝1テーマの深掘りとして書く。"""
+def worksheet(routine: Routine, today: date, shape: str = "",
+              shapes: dict | None = None) -> str:
+    """取材メモの雛形（YAML）。1本＝1テーマの深掘りとして書く。
+
+    ``shape`` は話の型（transfer / match / quote / discipline / preview）。
+    **11本つづけて同じ骨格だった**ので、種類ごとに分けられるようにした。
+    """
     words = tokens(today, routine.cover_hours)
     lines = [
         f"# {routine.name} の取材メモ（{words['{date_ja}']}）",
@@ -343,7 +352,15 @@ def worksheet(routine: Routine, today: date) -> str:
         "sections:",
     ]
 
-    structure = routine.structure or [
+    # **話の型を選ぶ**（2026-09-06）。11本つづけて同じ骨格だったので、
+    # 種類ごとに分けた。`--shape` が最優先、無ければ routine の structure、
+    # それも無ければ config の skeletons から transfer を使う。
+    # **節の名前は書き換えてよい。**型は出発点であって縛りではない
+    known = dict(shapes or {})
+    picked = known.get(shape) if shape else None
+    if shape and not picked:
+        raise PlanError(f"知らない型です: {shape}（{' / '.join(known) or '未設定'}）")
+    structure = picked or routine.structure or known.get("transfer") or [
         {"id": "what", "heading": "何が起きたか", "tier": "報道"},
         {"id": "why", "heading": "なぜそうなったか", "tier": "背景"},
         {"id": "next", "heading": "これからどうなる", "tier": "報道"},
