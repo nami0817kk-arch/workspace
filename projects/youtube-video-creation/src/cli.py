@@ -270,6 +270,11 @@ def main(argv: list[str] | None = None) -> int:
     p_redesc.add_argument("--dry-run", action="store_true",
                           help="送らずに、いまと何が変わるかだけ見る")
 
+    p_thumb = sub.add_parser(
+        "setthumb", help="公開済み動画にサムネイルだけを設定する（投稿はやり直さない）")
+    p_thumb.add_argument("build_dir", help="build の出力ディレクトリ")
+    p_thumb.add_argument("video_id", help="YouTube の動画ID")
+
     p_variety = sub.add_parser(
         "variety", help="その日の台本を横に並べて見る（1本ずつでは分からないこと）")
     p_variety.add_argument("scripts", nargs="+", help="台本のパス（複数）")
@@ -1413,6 +1418,23 @@ def _cmd_fetch(args, config) -> int:
     return 0 if seen else 1
 
 
+def _cmd_setthumb(args, config) -> int:
+    """サムネイルだけを設定する。**投稿はやり直さない**（動画が二重になる）。"""
+    from .upload import UploadError, get_service, set_thumbnail
+
+    thumbnail = Path(args.build_dir) / "thumbnail.png"
+    try:
+        set_thumbnail(get_service(), args.video_id, thumbnail)
+    except UploadError as err:
+        print(f"設定できません: {err}", file=sys.stderr)
+        return 1
+    except Exception as err:
+        print(f"設定できません: {err}", file=sys.stderr)
+        return 1
+    print(f"■ サムネイルを設定: https://youtu.be/{args.video_id}")
+    return 0
+
+
 def _cmd_redescribe(args, config) -> int:
     """公開済み動画の概要欄に、クレジットだけを足す。
 
@@ -2165,6 +2187,7 @@ HANDLERS = {
     "subject": _cmd_subject,
     "variety": _cmd_variety,
     "redescribe": _cmd_redescribe,
+    "setthumb": _cmd_setthumb,
     "portrait": _cmd_portrait,
     "results": _cmd_results,
     "gather": _cmd_gather,
