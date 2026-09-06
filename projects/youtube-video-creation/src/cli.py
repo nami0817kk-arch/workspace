@@ -489,6 +489,9 @@ def _cmd_short(args, config) -> int:
         short, shorts.portrait(config), out, use_tts=not args.no_tts
     )
     print(f"完成: {result.video}  ({result.duration:.0f}秒)")
+    # **顔の出し方を点検する。**遅いと、その前に離脱される
+    for problem in shorts.face_problems(short):
+        print(f"  ! {problem}", file=sys.stderr)
     if result.duration > shorts.MAX_SECONDS:
         print(
             f"! {result.duration:.0f}秒あります。ショートは60秒までなので、"

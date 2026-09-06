@@ -137,3 +137,34 @@ def test_知らない節は弾く():
         assert "ありません" in str(err)
     else:
         raise AssertionError("知らない節を通した")
+
+def test_顔が遅いと知らせる():
+    """**ショートは数秒で見るか決められる。**実測で平均12秒目・全体の2割だった。"""
+    from src.script_model import parse_script
+    from src.shorts import face_problems
+
+    nl = chr(10)
+    late = parse_script(nl.join(
+        ["## 章", "", "キャスター: いちぎょうめ。ながいながいながい文章です。",
+         "キャスター: にぎょうめ。ながいながいながい文章です。",
+         "キャスター: さんぎょうめ。", "  image: assets/images/x/01.jpg", ""]))
+    problems = face_problems(late)
+    assert any("秒目です" in x for x in problems), problems
+
+    early = parse_script(nl.join(
+        ["## 章", "", "キャスター: いちぎょうめ。",
+         "  image: assets/images/x/01.jpg",
+         "キャスター: にぎょうめ。", "キャスター: さんぎょうめ。", ""]))
+    # render は指定した行以降そのまま残すので、先頭に置けば通しで出る
+    for line in early.lines[1:]:
+        line.image = "assets/images/x/01.jpg"
+    assert face_problems(early) == []
+
+
+def test_顔が無ければ知らせる():
+    from src.script_model import parse_script
+    from src.shorts import face_problems
+
+    nl = chr(10)
+    script = parse_script(nl.join(["## 章", "", "キャスター: あ。", ""]))
+    assert face_problems(script) == ["顔が1枚も出ていません"]
