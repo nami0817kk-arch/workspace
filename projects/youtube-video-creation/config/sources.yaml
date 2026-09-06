@@ -301,7 +301,8 @@ domain_tiers:
 #   tier … その人の投稿だけで置ける最大の確度
 #   note … 何に強いか
 accounts:
-  - {handle: FabrizioRomano, name: Fabrizio Romano, tier: 未確認, note: 移籍全般。完了案件は here we go}
+  # 2026-09-07 のユーザー判断でロマーノだけ確定に上げた。x.com の群(social)は未確認どまりだが、Plan.account_ceiling がこのアカウントの tier を上限にする
+  - {handle: FabrizioRomano, name: Fabrizio Romano, tier: 確定, note: 移籍全般。完了案件は here we go}
   - {handle: David_Ornstein, name: David Ornstein, tier: 未確認, note: プレミア・The Athletic}
   - {handle: MatteMoretto, name: Matteo Moretto, tier: 未確認, note: スペイン・イタリア}
   - {handle: DiMarzio, name: Gianluca Di Marzio, tier: 未確認, note: セリエA}

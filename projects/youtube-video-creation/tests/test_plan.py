@@ -202,6 +202,37 @@ def test_domains_map_to_their_confidence_ceiling():
     assert plan.ceiling("https://example.com/x") == ""
 
 
+def test_registered_accounts_set_their_own_ceiling():
+    """x.com はどのアカウントも同じ群に入るので、群だけ見ると記者ごとの差が出せない。
+
+    accounts に tier を書いたアカウントは、その値をそのアカウントの上限にする。
+    書いていないアカウントは従来どおり群（social）の上限のまま。
+    """
+    from src.plan import build_plan
+
+    plan = build_plan(RAW)
+    plan.domains = {"social": ["x.com"]}
+    plan.domain_tiers = {"social": "未確認"}
+    plan.accounts = [
+        {"handle": "FabrizioRomano", "tier": "確定"},
+        {"handle": "David_Ornstein", "tier": "未確認"},
+    ]
+
+    assert plan.ceiling("https://x.com/FabrizioRomano/status/123") == "確定"
+    assert plan.ceiling("https://x.com/David_Ornstein/status/123") == "未確認"
+    # 登録していないアカウントは群の上限に落ちる
+    assert plan.ceiling("https://x.com/someone_else/status/123") == "未確認"
+
+
+def test_account_ceiling_only_applies_to_social_urls():
+    from src.plan import build_plan
+
+    plan = build_plan(RAW)
+    plan.accounts = [{"handle": "FabrizioRomano", "tier": "確定"}]
+
+    assert plan.account_ceiling("https://www.skysports.com/football/news/1/2/x") == ""
+
+
 def test_blocked_domains_are_recognised_but_not_grouped():
     from src.plan import build_plan
 

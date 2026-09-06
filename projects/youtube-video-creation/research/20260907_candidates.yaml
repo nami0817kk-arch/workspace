@@ -5637,20 +5637,23 @@ candidates:
       - https://www.footmercato.net/a5903884501827806819-le-mans-le-premier-but-en-pro-splendide-dadil-bourabaa
 
   - id: vardy_burnley_romano
-    title: "バーンリーがジェイミー・ヴァーディを1年契約で獲得することに合意しました！"
+    title: "Burnley have agreed to sign Jamie Vardy on one year deal! Surprise signing completed and new chapter in England after one season at Cremonese for Vardy."
     topic: "ヴァーディ"
     league: england
     kind: transfer
-    tier: 未確認           # accounts の FabrizioRomano は未確認が上限。単独では確定にしない
-    en: "Vardy Burnley Romano Here We Go"
-    url: ""                # スクリーンショット提供。投稿URLは未取得（romano-latest で取れる）
-    hours_ago: 1.0
-    sources: []
-    # 出どころ: @FabrizioRomano の投稿（here we go 付き）。ユーザーがスクリーンショットで提供。
-    # 画面に出ていた日本語は X 上の Grok による英語からの機械翻訳で、英語原文は未確認。
-    # 同じ話は jamie_vardy_returns（BBC / Guardian / Daily Mail）と anos_jamie_vardy（Marca）、
-    # vardy_verrast_met（VI）が既に報じている。合わせれば story としては「報道」。
-    # 「確定」にするならバーンリーかリーグの公式発表まで辿ること（ロマーノは合意と書いている）。
+    tier: 確定             # 2026-09-07 のユーザー判断: ロマーノの情報は確定として扱う
+    en: "Vardy Burnley Romano"
+    url: https://x.com/FabrizioRomano/status/2096595770396844101
+    hours_ago: 2.0
+    sources:
+    - https://x.com/FabrizioRomano/status/2096595770396844101
+    # 投稿時刻 2026-09-06T13:45:59Z（日本時間 22:45）。本文は原文（英語）のまま。
+    # ユーザーが見せてくれた日本語は X 上の Grok による機械翻訳なので、引用には使わない。
+    # 本文に "here we go" の文字は無く、添付画像に HERE WE GO とある（本文は agreed / completed）。
+    # 規約の既定では accounts の FabrizioRomano は未確認どまりで、クラブの公式発表も未確認。
+    # それでも確定として扱うのは上記のユーザー判断による。
+    # 同じ話の報道: jamie_vardy_returns（BBC / Guardian / Daily Mail）、anos_jamie_vardy（Marca）、
+    # vardy_verrast_met（VI）。
   - id: suzuki_zion_clean_sheet
     title: "鈴木彩艶が楔のグラウンダーパス、浮き球ロングフィードでは決定機の起点になる配球力発揮も…アストン・ビラはまたも無得点でドロー"
     topic: "鈴木彩艶"

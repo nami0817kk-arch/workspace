@@ -139,9 +139,25 @@ class Plan:
         text = (url or "").lower()
         return any(str(host).lower() in text for host in (self.domains.get("blocked") or []))
 
+    def account_ceiling(self, url: str) -> str:
+        """投稿の主で決まる確度の上限。登録していないアカウントなら空。
+
+        x.com はどのアカウントでも同じ群（social）に入るので、群だけを見ていると
+        記者個人の信頼度を反映できない。`accounts` に tier を書いたアカウントは
+        その値を上限にする。書いていなければ従来どおり群の上限を使う。
+        """
+        text = (url or "").lower()
+        if "x.com/" not in text and "twitter.com/" not in text:
+            return ""
+        handle = text.split(".com/", 1)[1].split("/", 1)[0].split("?", 1)[0]
+        for entry in self.accounts or []:
+            if str(entry.get("handle", "")).lstrip("@").lower() == handle:
+                return str(entry.get("tier") or "")
+        return ""
+
     def ceiling(self, url: str) -> str:
         """そのURLだけを根拠に置ける最大の確度。分からなければ空。"""
-        return str(self.domain_tiers.get(self.group_of(url), ""))
+        return self.account_ceiling(url) or str(self.domain_tiers.get(self.group_of(url), ""))
 
     def routine(self, key: str) -> Routine:
         """枠の名前から取材計画を引く。
