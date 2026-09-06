@@ -1,0 +1,134 @@
+slot: world
+date: 2026年9月7日
+theme:
+  id: messi_retire
+  league: ''
+  prefix: 悲報
+  title: メッシ代表引退 「僕はすべてを出し切った。もう何も残っていない」
+  hook: 決勝から四十日。手書きのノートが一枚、投稿されました。
+  question: 共に戦った選手たちは、何を言葉にしたのか
+thumbnail:
+  line1: メッシ 代表引退
+  line2: 「もう何も残っていない」
+  tags:
+  - メッシ
+  - アルゼンチン代表
+  photo: assets/images/messi/01.jpg
+answer: 後輩は「あなたのおかげで一員になれた」、宿敵は「次は同じ大会にならない」と書いた
+watch: クラブでの現役は続く。インテル・マイアミとの契約は2028年まで
+sections:
+- id: said
+  heading: 何を書いたのか
+  tier: 報道
+  telop: 手書きのノートをSNSに投稿
+  say:
+  - voice: キャスター
+    text: リオネル・メッシが、アルゼンチン代表からの引退を発表しました。さんじゅうきゅうさいです。
+  - voice: キャスター
+    text: スペイン語の手書きのノートを写した一枚が、インスタグラムに上がりました。
+    telop: 125得点・207試合。ともに歴代1位
+    card:
+      type: bars
+      title: アルゼンチン代表での記録
+      unit: ''
+      items:
+      - label: 出場
+        value: 207
+        highlight: true
+      - label: 得点
+        value: 125
+      - label: 2位の得点（バウティスタ）
+        value: 56
+      note: '※ 出典: The Standard / ESPN'
+  - voice: メッシ
+    text: 決勝から時間が経ち、たくさん考えたうえで、みなさんに伝えたい。僕は代表から引退します。
+    card:
+      type: quote
+      source: Lionel Messi（Instagram）
+      color: '#75aadb'
+      text: It was a decision that hurt - and still hurts deep down - but I understand that the time has come.
+      translation: つらい決断だったし、いまも心の奥では痛む。それでも、その時が来たのだと分かっている
+  - voice: メッシ
+    text: つらい決断だったし、いまも心の奥では痛む。それでも、その時が来たのだと分かっている。
+    telop: 「もう何も残っていない」
+  - voice: メッシ
+    text: 僕はすべてを出し切った。もう何も残っていない。
+    telop: メッシ「すべてを出し切った」
+  - voice: メッシ
+    text: それに、後ろには機会を得るに値する、素晴らしい若い選手たちがいる。
+    telop: 「後ろには、素晴らしい若い選手たちがいる」
+  official: false
+  sources:
+  - https://www.espn.com/soccer/story/_/id/49266819/lionel-messi-argentina-international-retirement-world-cup-copa-america
+  - https://www.standard.co.uk/sport/football/messi-international-retirement-b1295260.html
+- id: context
+  heading: いつ書かれた言葉か
+  tier: 報道
+  telop: 決勝の2日後に書き、父の死を経て発表した
+  say:
+  - voice: キャスター
+    text: この文章には、注記が添えられていました。
+    card:
+      type: points
+      title: この40日に起きたこと
+      items:
+      - 7月19日ごろ ワールドカップ決勝でスペインに敗れる（延長でトーレスが決勝点）
+      - 7月21日 決勝の2日後、この文章を書く
+      - 8月8日 父ジョルジェさんがロサリオで死去（68歳）
+      - 8月31日 インスタグラムで発表
+  - voice: メッシ
+    text: この言葉を書いたのは、決勝のふつか後だ。父に起きたことを経て、さらに確信している。
+    telop: メッシ「父のことを経て、さらに確信した」
+  - voice: キャスター
+    text: 最後の試合となった決勝では、ひゃくにじゅっぷんを戦い、延長で決勝点を許しました。笛と同時に、彼は泣き崩れています。
+    telop: 最後の試合は120分。笛と同時に泣き崩れた
+  official: false
+  sources:
+  - https://www.standard.co.uk/sport/football/messi-international-retirement-b1295260.html
+  - https://www.espn.com/soccer/story/_/id/49266819/lionel-messi-argentina-international-retirement-world-cup-copa-america
+- id: react
+  heading: 選手たちは何を言ったか
+  tier: 報道
+  telop: エンソ「幸運だった、レオ」
+  say:
+  - voice: キャスター
+    text: ともに戦った選手たちが、言葉を寄せました。まずチェルシーのエンソ・フェルナンデス、にじゅうごさいです。
+    card:
+      type: quote
+      source: Enzo Fernández（Instagram）
+      color: '#034694'
+      text: I used to calculate the gap between your age and mine to see whether I would ever be able to play alongside you.
+      translation: あなたと自分の年齢差を計算していた。いつか一緒にプレーできるだろうか、と
+  - voice: エンソ・フェルナンデス
+    text: 少年だった僕は、あなたと自分の年齢差を計算していた。いつか一緒にプレーできるだろうか、と。
+  - voice: エンソ・フェルナンデス
+    text: ばかげて聞こえるかもしれないが、本当にやっていた。そして、あなたは戻ってきてくれた。
+    telop: エンソ「人生は、あの少年の想像よりずっと美しかった」
+  - voice: エンソ・フェルナンデス
+    text: 人生は、あの少年が想像できたよりも、ずっと美しかった。一緒に世界王者になったのだから。
+    telop: エンソ「人生は、あの少年の想像よりずっと美しかった」
+  - voice: キャスター
+    text: 現役時代から幾度も対戦してきたモウリーニョ監督も、投稿に直接返信しています。
+    telop: モウリーニョ「次のW杯は、同じではなくなる」
+    card:
+      type: quote
+      source: José Mourinho（Instagram）
+      color: '#febe10'
+      text: The next Copa America and the next World Cup won't be the same.
+      translation: 次のコパ・アメリカも、次のワールドカップも、同じものではなくなる
+  - voice: モウリーニョ
+    text: 素晴らしく、忘れられない代表キャリアに、おめでとう。
+    telop: モウリーニョ「忘れられないキャリアに、おめでとう」
+  - voice: モウリーニョ
+    text: 次のコパ・アメリカも、次のワールドカップも、同じものではなくなる。
+    telop: 「次のW杯は、同じものではなくなる」
+  - voice: キャスター
+    text: いま十代でアルゼンチン代表に入ったマスタントゥオーノは、こう話しました。
+    telop: マスタントゥオーノ「一緒にできたことは光栄だった」
+  - voice: マスタントゥオーノ
+    text: メッシは最高の選手だ。ともにプレーできたことは光栄だった。ただ、代表から引退してしまったのは、やはり寂しい。
+  official: false
+  sources:
+  - https://www.goal.com/en-us/lists/lionel-messi-enzo-fernandez-farewell-chelsea-argentina-retired/bltc2b8bbce7562fc2a
+  - https://www.goal.com/en/lists/jose-mourinho-lionel-messi-argentina-retirement-tribute/blt57705f0443f25d2a
+  - https://www.goal.com/en/news/mastantuono-i-m-sad-because-of-messi-and-mourinho-s-advice-is-behind-my-departure-from-real-madrid/blte51ea49bad6a1f50

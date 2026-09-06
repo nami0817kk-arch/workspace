@@ -165,9 +165,20 @@ def face_problems(script: Script) -> list[str]:
     return out
 
 
+# **見積りは実尺より短く出る。**章の切り替え・間・書き出しの処理が乗るため。
+# 実測（2026-09-07）で見積り56秒に対し実尺66秒。**1割以上ずれる。**
+# そのぶん手前で切らないと、60秒を超えてショートとして扱われなくなる
+ESTIMATE_SLACK = 0.80
+
+
 def _fit(script: Script, max_seconds: float) -> None:
-    """後ろのセリフから落として尺に収める。冒頭は削らない。"""
-    while _estimate(script) > max_seconds and len(script.scenes[-1].lines) > 1:
+    """後ろのセリフから落として尺に収める。冒頭は削らない。
+
+    **見積りの甘さを見込んで、手前で切る。**そのまま上限まで詰めると、
+    書き出したときに超える（実測で56秒の見積りが66秒になった）。
+    """
+    target = max_seconds * ESTIMATE_SLACK
+    while _estimate(script) > target and len(script.scenes[-1].lines) > 1:
         script.scenes[-1].lines.pop()
 
 

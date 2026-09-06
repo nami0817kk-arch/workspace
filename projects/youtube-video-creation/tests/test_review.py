@@ -75,8 +75,12 @@ def test_a_single_chapter_fails(tmp_path):
 
 @pytest.mark.parametrize(
     "seconds, ok",
-    # 1〜2分（2026-09-04 に 90〜240秒 から変更）。参考3チャンネルは 1:01〜1:59
-    [(50.0, False), (60.0, True), (95.0, True), (130.0, True), (150.0, False), (235.0, False)],
+    # 下限60秒・上限210秒。**上限は 2026-09-07 に 130秒 から緩めた**
+    # （ユーザー「長くても良い」）。1〜2分は参考チャンネルの実測から決めた
+    # 目安であって上限ではなかった。引用が主役の回は3分でも成立する。
+    # 短くするために発言を削るのは本末転倒
+    [(50.0, False), (60.0, True), (95.0, True), (130.0, True),
+     (150.0, True), (171.0, True), (211.0, False), (300.0, False)],
 )
 def test_the_length_has_a_floor_and_a_ceiling(tmp_path, seconds, ok):
     result = _by_label(inspect(parse_script(BODY), _built(tmp_path), seconds))
