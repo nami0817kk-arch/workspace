@@ -272,6 +272,13 @@ def main(argv: list[str] | None = None) -> int:
 
     p_thumb = sub.add_parser(
         "setthumb", help="公開済み動画にサムネイルだけを設定する（投稿はやり直さない）")
+    sub.add_parser("quota", help="APIの枠をあとどれだけ使えるか（自分で数えた分）")
+
+    p_priv = sub.add_parser("publish", help="公開済み動画の公開設定だけを変える")
+    p_priv.add_argument("video_id", help="YouTube の動画ID")
+    p_priv.add_argument("--privacy", default="public",
+                        choices=["private", "unlisted", "public"])
+
     p_thumb.add_argument("build_dir", help="build の出力ディレクトリ")
     p_thumb.add_argument("video_id", help="YouTube の動画ID")
 
@@ -1421,6 +1428,31 @@ def _cmd_fetch(args, config) -> int:
     return 0 if seen else 1
 
 
+def _cmd_quota(args, config) -> int:
+    """枠の残りを見る。**APIは残量を教えてくれない**ので、自分で数えたもの。"""
+    from . import quota
+
+    for line in quota.report():
+        print(line)
+    return 0
+
+
+def _cmd_publish(args, config) -> int:
+    """公開設定だけを変える。**投稿はやり直さない**（動画が二重になる）。"""
+    from .upload import UploadError, get_service, set_privacy
+
+    try:
+        set_privacy(get_service(), args.video_id, args.privacy)
+    except UploadError as err:
+        print(f"変えられません: {err}", file=sys.stderr)
+        return 1
+    except Exception as err:
+        print(f"変えられません: {err}", file=sys.stderr)
+        return 1
+    print(f"■ {args.privacy} にしました: https://youtu.be/{args.video_id}")
+    return 0
+
+
 def _cmd_setthumb(args, config) -> int:
     """サムネイルだけを設定する。**投稿はやり直さない**（動画が二重になる）。"""
     from .upload import UploadError, get_service, set_thumbnail
@@ -2191,6 +2223,8 @@ HANDLERS = {
     "variety": _cmd_variety,
     "redescribe": _cmd_redescribe,
     "setthumb": _cmd_setthumb,
+    "publish": _cmd_publish,
+    "quota": _cmd_quota,
     "portrait": _cmd_portrait,
     "results": _cmd_results,
     "gather": _cmd_gather,
