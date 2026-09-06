@@ -372,12 +372,17 @@ def image_credits(script, root=None) -> list[str]:
 
     root = Path(root) if root else Path(".")
     def origin(path: str) -> str:
-        """使った背景の元になった画像の名前。クリップなら記録から辿る。"""
+        """使った画像の在りか。クリップなら記録から元の名前を辿る。
+
+        **フォルダを含めて返す。**どのフォルダも中身は 01.jpg なので、
+        ファイル名だけで突き合わせると、使っていない写真まで全部一致した
+        （2026-09-06 実測。1本の概要欄に6人ぶんのクレジットが並んだ）。
+        """
         target = root / path
         sidecar = target.with_suffix(target.suffix + ".source.txt")
         if sidecar.exists():
             return sidecar.read_text(encoding="utf-8").strip()
-        return Path(path).name
+        return path.replace(chr(92), "/").strip("/")
 
     used = {origin(scene.background) for scene in script.scenes if scene.background}
     if script.background:
@@ -389,6 +394,13 @@ def image_credits(script, root=None) -> list[str]:
         for line in scene.lines:
             if getattr(line, "image", None):
                 used.add(origin(line.image))
+    # **サムネイルの写真も拾う。**背景と行の画像しか見ておらず、
+    # サムネの顔写真にクレジットが付いていなかった（2026-09-06 実測）。
+    # 動画本体には出ないが、**サムネイルも配布物**なので表示義務は同じ。
+    # 公開済みの5本がこの状態だった
+    thumb = str((getattr(script, "meta", None) or {}).get("thumbnail_photo") or "").strip()
+    if thumb:
+        used.add(origin(thumb))
 
     lines: list[str] = []
     # 背景（実写クリップ）のぶんも拾う。写真と同じ台帳の形にしてある
@@ -401,7 +413,18 @@ def image_credits(script, root=None) -> list[str]:
             continue
         for row in rows if isinstance(rows, list) else rows.get("items", []):
             name = str(row.get("file") or row.get("filename") or "")
-            if Path(name).name not in used:
+            if not name:
+                continue
+            # 台帳のある場所と合わせて、置き場所ごと突き合わせる。
+            # クリップ経由のときは元画像の名前が入っているので、そちらも見る
+            here = (ledger.parent / Path(name).name)
+            try:
+                spot = here.relative_to(root).as_posix()
+            except ValueError:
+                spot = here.as_posix()
+            if spot not in used and Path(name).name not in {
+                x for x in used if "/" not in x
+            }:
                 continue
             title = str(row.get("title", "")).strip()
             author = str(row.get("author") or row.get("creator") or "").strip()

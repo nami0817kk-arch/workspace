@@ -19,7 +19,10 @@ def _built(tmp_path, seconds=150.0):
     (tmp_path / "subtitles.srt").write_text(
         "1\n00:00:01,000 --> 00:00:03,000\n字幕\n", encoding="utf-8"
     )
-    (tmp_path / "description.txt").write_text("概要", encoding="utf-8")
+    # サムネの写真もクレジットが要る（2026-09-06）。見本にも1行入れておく
+    (tmp_path / "description.txt").write_text(
+        "概要" + chr(10) + "画像: File:x / 撮影者 / CC BY 3.0 / https://example.org",
+        encoding="utf-8")
     (tmp_path / "script.json").write_text(
         json.dumps({"scenes": [{"lines": [{"start": seconds - 10, "duration": 10}]}]}),
         encoding="utf-8",
@@ -334,3 +337,31 @@ def test_サムネに実在する写真があれば通る(tmp_path, monkeypatch)
 
     body = "---\ntitle: 見出し\nthumbnail_photo: assets/images/x/face.jpg\n---\n\n## S\nキャスター: あ。\n"
     assert review._thumbnail_face(parse_script(body)).ok
+
+def test_サムネの写真もクレジットが要る(tmp_path):
+    """**サムネイルも配布物。**動画本体に出ないからと数えていなかった。
+
+    2026-09-06 に、公開済みの5本がクレジット無しで出ていた。
+    """
+    from src.review import _photo_credits
+
+    nl = chr(10)
+
+    class Line:
+        image = None
+
+    class Script:
+        lines = [Line()]
+        meta = {"thumbnail_photo": "assets/images/arteta/01.jpg"}
+
+    out = tmp_path
+    (out / "description.txt").write_text(
+        "■ クレジット" + nl + "音声: VOICEVOX" + nl, encoding="utf-8")
+    finding = _photo_credits(Script(), out)
+    assert not finding.ok, "サムネの写真が数えられていない"
+
+    (out / "description.txt").write_text(
+        "■ クレジット" + nl
+        + "画像: File:x / 撮影者 / CC BY 3.0 / https://example.org" + nl,
+        encoding="utf-8")
+    assert _photo_credits(Script(), out).ok

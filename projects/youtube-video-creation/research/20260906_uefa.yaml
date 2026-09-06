@@ -1,0 +1,103 @@
+slot: world
+date: 2026年9月6日
+theme:
+  id: uefa_bans
+  league: ''
+  prefix: 速報
+  title: UEFAが処分 ゲンドゥージ4試合、グリーンウッドも 最も重いのはコーチ
+  hook: 騒ぎの当事者より重い処分を受けたのは、相手クラブのコーチでした。
+  question: この騒動で、誰がいちばん重い処分を受けたのか
+thumbnail:
+  line1: UEFAが処分を発表
+  line2: 最も重いのはGKコーチ
+  tags:
+  - ゲンドゥージ
+  - グリーンウッド
+answer: GKコーチの5試合。UEFAは「重大な暴行」と判断した
+watch: フェネルバフチェが不服を申し立てる。処分が変わるかどうか
+sections:
+- id: what
+  heading: 何が起きたか
+  tier: 報道
+  telop: CLプレーオフの騒動にUEFAが処分
+  say:
+  - voice: キャスター
+    text: ユーエフアーが、チャンピオンズリーグのプレーオフで起きた騒動に、処分を出しました。
+  - voice: キャスター
+    text: 舞台はリヨン。フェネルバフチェが、ふたしあい合計さんたいにで勝ち上がった、その直後です。
+    telop: リヨン戦のあと、ピッチとトンネルで騒ぎ
+    card:
+      type: table
+      title: UEFAが出した処分
+      columns:
+      - 対象
+      - 処分
+      - 罰金
+      rows:
+      - - ゲンドゥージ（フェネルバフチェ）
+        - 4試合停止（うち2試合は執行猶予）
+        - 5万ユーロ
+      - - グリーンウッド（同）
+        - 1試合停止（執行猶予・1年）
+        - 3万ユーロ
+      - - リヨンのGKコーチ
+        - 5試合停止（うち2試合は執行猶予）
+        - —
+      - - 両クラブ
+        - —
+        - 各5万ユーロ
+      highlight_row: 2
+  - voice: キャスター
+    text: いちばん重かったのは、選手ではありません。リヨンのゴールキーパーコーチ、アントニオ・フェレイラのごしあい停止です。
+  - voice: キャスター
+    text: ユーエフアーは、これを重大な暴行と判断しています。
+  official: false
+  sources:
+  - https://www.bbc.co.uk/sport/football/articles/cly7874vxzlo
+  - https://www.kicker.de/nach-tumulten-in-der-cl-quali-uefa-sperrt-guendouzi-1249867/artikel
+- id: why
+  heading: なぜそうなったのか
+  tier: 報道
+  telop: 元マルセイユのゲンドゥージが、リヨンのサポーターを煽った
+  say:
+  - voice: キャスター
+    text: ゲンドゥージは、にせんにじゅういちねんからにせんにじゅうよねんまで、マルセイユでプレーしていました。
+  - voice: キャスター
+    text: リヨンにとっては、最大のライバルのクラブです。試合中、彼はずっとブーイングを浴びていました。
+    telop: リヨンにとって最大のライバル、マルセイユの元選手
+  - voice: キャスター
+    text: 勝利のあと、彼はホームのサポーターを煽るような仕草を見せ、味方に引き離されています。
+    telop: カメラに向かって「アレ・ロム」
+  - voice: キャスター
+    text: そしてピッチ脇のカメラに向かって、アレ・ロム、マルセイユを称える言葉を叫びました。
+  - voice: キャスター
+    text: 処分の理由は、その場にいる人を侮辱したこと、観客を挑発したこと、品位ある行動の基本を破ったこと、とされています。
+    telop: 処分理由「観客の挑発」「品位ある行動の基本を破った」
+  official: false
+  sources:
+  - https://www.bbc.co.uk/sport/football/articles/cly7874vxzlo
+  - https://www.independent.co.uk/sport/football/matteo-guendouzi-champions-league-ban-fenerbahce-lyon-b3045173.html
+- id: next
+  heading: これからどうなる
+  tier: 報道
+  telop: フェネルバフチェは不服を申し立てる
+  say:
+  - voice: キャスター
+    text: フェネルバフチェは、処分を受け入れていません。
+    card:
+      type: quote
+      source: フェネルバフチェ（クラブ声明）
+      color: '#ffed00'
+      text: Our club is evaluating the decisions and reasoning behind them issued by Uefa through our legal departments, and will pursue the necessary arbitration and appeal processes.
+      translation: 当クラブは法務部門を通じてUEFAの決定と理由を精査しており、必要な仲裁と上訴の手続きを進める
+  - voice: キャスター
+    text: クラブは、法務部門で決定と理由を精査し、上訴の手続きを進めるとしています。
+  - voice: キャスター
+    text: なお、この停止処分によって、ゲンドゥージは古巣の仲間との再会も逃すことになりました。
+    telop: ローマのディバラとの再会も逃す
+  - voice: キャスター
+    text: つぎに見るべきは、上訴で処分が変わるかどうかです。
+  official: false
+  sources:
+  - https://www.bbc.co.uk/sport/football/articles/cly7874vxzlo
+  - https://football-italia.net/guendouzi-denied-dybala-reunion-suspended/

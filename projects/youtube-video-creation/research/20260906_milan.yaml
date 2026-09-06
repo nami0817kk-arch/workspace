@@ -1,0 +1,97 @@
+slot: world
+date: 2026年9月6日
+theme:
+  id: amorim_juve
+  league: italy
+  prefix: 速報
+  title: アモリムのミラン、勝てば1958年以来の記録 今夜ユヴェントス戦
+  hook: 新監督が開幕から3連勝すれば、ミランでは1958年以来のことになります。
+  question: 初めての大一番を前に、新監督は何を語ったのか
+thumbnail:
+  line1: 勝てば1958年以来
+  line2: アモリム、今夜ユーヴェ戦
+  tags:
+  - ミラン
+  - アモリム
+answer: 大きい試合も小さい試合も同じ、という構え。重圧は感じていないと言っている
+watch: 今夜の結果。勝てば68年ぶりの記録になる
+sections:
+- id: what
+  heading: 何が起きているか
+  tier: 報道
+  telop: アモリムのミランは開幕2連勝
+  say:
+  - voice: キャスター
+    text: ミランの新監督、ルベン・アモリムが、今夜ユヴェントスと対戦します。
+  - voice: キャスター
+    text: セリエAの開幕から、トリノ、ヴェネツィアと連勝。ここまでにれんしょうです。
+    telop: 勝てば1958年以来の記録
+    card:
+      type: points
+      title: アモリムのミラン、ここまで
+      items:
+      - 第1節 トリノに勝利
+      - 第2節 ヴェネツィアに勝利
+      - 第3節 ユヴェントス（アウェイ・今夜）
+      - → 勝てば、就任から3連勝はミランでは1958年以来
+  - voice: キャスター
+    text: ここで勝てば、ミランの監督として最初のさんしあいをすべて勝つのは、せんきゅうひゃくごじゅうはちねん以来になります。
+  - voice: キャスター
+    text: ろくじゅうはちねんぶり、ということです。相手のユヴェントスも、開幕かられんしょう中です。
+  official: false
+  sources:
+  - https://football-italia.net/amorim-milan-ready-for-juventus/
+  - https://www.abola.pt/noticias/amorim-sem-medo-do-primeiro-grande-teste-ja-ganhei-a-juventus-com-o-benfica-2026090512574543842
+- id: why
+  heading: 監督は何と言ったか
+  tier: 報道
+  telop: 「大きい試合も、小さい試合も同じだ」
+  say:
+  - voice: キャスター
+    text: アモリム監督は、前日の会見で重圧を否定しています。
+    card:
+      type: quote
+      source: Rúben Amorim（会見）
+      color: '#fb090b'
+      text: Big matches are the same as the small ones.
+      translation: 大きい試合も、小さい試合も、同じだ
+  - voice: アモリム
+    text: 大きい試合も、小さい試合も、同じだ。
+  - voice: キャスター
+    text: オーナーのカルディナーレが訪ねてきた件についても、こう答えています。
+    telop: オーナー来訪も「あなたたち記者にとっての話題だ」
+  - voice: アモリム
+    text: ジェリー・カルディナーレとも、カルヴェッリとも、毎日話している。私には普通のことだ。ニュースなのは、あなたたち記者にとってだろう。
+  - voice: アモリム
+    text: ベンフィカでユヴェントスに勝ったことがある。初めての大一番だが、恐れはない。
+    telop: 「ベンフィカでユーヴェに勝ったことがある」
+  official: false
+  sources:
+  - https://football-italia.net/amorim-milan-ready-for-juventus/
+  - https://www.abola.pt/noticias/amorim-sem-medo-do-primeiro-grande-teste-ja-ganhei-a-juventus-com-o-benfica-2026090512574543842
+- id: next
+  heading: もうひとつの変化
+  tier: 報道
+  telop: 戦力外だったトミオリを、トップチームに戻した
+  say:
+  - voice: キャスター
+    text: この夏、移籍先を探すよう告げられ、チームから外されていた選手がいます。フィカヨ・トミオリです。
+    card:
+      type: points
+      title: トミオリに起きたこと
+      items:
+      - 夏の移籍市場で「新しいクラブを探すように」と告げられる
+      - トップチームから外される
+      - 市場が閉まったあと、練習に復帰
+      - アモリムがトップチームに戻す
+  - voice: キャスター
+    text: その彼が練習に戻り、アモリム監督はトップチームに復帰させました。
+  - voice: キャスター
+    text: 補強についても、上位の選手を取れたと満足を示しています。
+  - voice: キャスター
+    text: つぎに見るべきは、今夜の結果です。
+    telop: 今夜、68年ぶりの記録がかかる
+  official: false
+  sources:
+  - https://football-italia.net/amorim-milan-ready-for-juventus/
+  - https://www.gazzetta.it/calcio/fantanews/05-09-2026/milan-le-ultime-da-amorim-su-tomori-camarda-rabiot-e-moreira-in-vista-della-juventus.shtml

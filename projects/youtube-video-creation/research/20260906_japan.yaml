@@ -1,0 +1,85 @@
+slot: japan
+date: 2026年9月6日
+theme:
+  id: nakamura_lyon
+  league: france
+  prefix: 朗報
+  title: 中村敬斗、リヨン初戦はスタンドで ワイングラス片手の姿が話題
+  hook: 移籍したばかりで、登録が間に合いませんでした。カメラが客席の彼を捉えます。
+  question: リヨン初の日本人選手は、デビュー前にどんな姿を見せたのか
+thumbnail:
+  line1: 中村敬斗、初戦はスタンド
+  line2: 手にはワイングラス
+  tags:
+  - 中村敬斗
+  - リヨン
+answer: 登録が間に合わずメンバー外。中身は水だった
+watch: 次節。リヨンでのデビュー戦
+sections:
+- id: what
+  heading: 何が起きたか
+  tier: 報道
+  telop: リヨン男子トップチーム初の日本人選手
+  say:
+  - voice: キャスター
+    text: 中村敬斗が、ランスからリヨンへ移籍しました。きゅうがつふつかのことです。
+  - voice: キャスター
+    text: 契約はにせんさんじゅうねんまでのよねん。リヨンの男子トップチームでは、初めての日本人選手になります。
+    telop: 2030年までの4年契約
+    card:
+      type: transfer
+      player: 中村敬斗（26）
+      from: スタッド・ランス
+      to: オリンピック・リヨン
+      fee: 2030年までの4年契約。ジョーカー制度での加入
+  - voice: キャスター
+    text: 使われたのは、ジョーカー制度。市場が閉まったあとでも、フランス国内から選手を取れる仕組みです。
+  official: false
+  sources:
+  - https://www.footballchannel.jp/2026/09/05/post1004655/
+  - https://football-tribe.com/japan/2026/09/05/358891/
+- id: why
+  heading: なぜ出られなかったのか
+  tier: 報道
+  telop: 加入から時間がなく、登録が間に合わなかった
+  say:
+  - voice: キャスター
+    text: ところが、加入から第さん節のオセール戦まで時間がありませんでした。
+  - voice: キャスター
+    text: 登録の手続きが間に合わず、メンバー外。フォンセカ監督も、試合前にこう説明しています。
+  - voice: フォンセカ監督
+    text: 登録する時間がなかったため、彼はプレーできない。
+    telop: フォンセカ監督「登録する時間がなかった」
+  - voice: キャスター
+    text: リヨンはこの試合、さんたいいちで勝っています。
+  official: false
+  sources:
+  - https://www.footballchannel.jp/2026/09/05/post1004655/
+  - https://web.gekisaka.jp/news/world/detail/?458216-458216-fl
+- id: next
+  heading: そこで何が映ったか
+  tier: 報道
+  telop: 中継カメラが客席の中村を捉えた
+  say:
+  - voice: キャスター
+    text: 試合中、中継のカメラがスタンドにいる中村を捉えました。
+  - voice: キャスター
+    text: 関係者から飲み物を渡されます。手にしたのは、ワイングラスでした。
+    telop: 中身は水だった
+    card:
+      type: points
+      title: この日の中村敬斗
+      items:
+      - 登録が間に合わずメンバー外
+      - スタンドで観戦。中継カメラに映る
+      - 渡されたのはワイングラス（中身は水）
+      - 落ち着いた様子で試合を見守る
+      - すでにチーム練習には参加している
+  - voice: キャスター
+    text: 中身は水でしたが、グラス片手に落ち着いて試合を見守る姿が、思わぬ形で注目を集めました。
+  - voice: キャスター
+    text: 本人はすでにチーム練習に参加しています。つぎに見るべきは、次節のデビューです。
+  official: false
+  sources:
+  - https://www.footballchannel.jp/2026/09/05/post1004655/
+  - https://football-tribe.com/japan/2026/09/05/358891/

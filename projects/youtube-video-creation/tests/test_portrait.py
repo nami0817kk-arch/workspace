@@ -13,14 +13,25 @@ def test_使ってよいライセンス():
         assert ok, f"{name} は使えるはず: {why}"
 
 
-def test_継承や非営利や改変不可は断る():
-    """**BY-SA を通すと、動画そのものに同じ条件が及ぶ。**"""
+def test_非営利と改変不可は断る():
+    """NC は商用不可、ND は切り抜きができない。どちらも使えない。"""
     from src.portrait import license_ok
 
-    for name in ["CC BY-SA 4.0", "CC BY-SA 2.0", "CC BY-NC 3.0", "CC BY-ND 4.0"]:
+    for name in ["CC BY-NC 3.0", "CC BY-ND 4.0", "CC BY-NC-SA 4.0"]:
         ok, why = license_ok(name)
         assert not ok, f"{name} を通してしまった"
-        assert "継承" in why or "許可した一覧" in why
+
+
+def test_継承つきは通す():
+    """**BY-SA を許可した（2026-09-06 ユーザーの判断）。**
+
+    日本人選手は CC BY で顔の写った写真が見つからず、
+    「サムネの顔は必須」と両立しなかった。継承条件を受け入れる側を選んだ。
+    """
+    from src.portrait import license_ok
+
+    for name in ["CC BY-SA 4.0", "CC BY-SA 3.0", "CC BY-SA 2.0"]:
+        assert license_ok(name)[0], f"{name} が通らない"
 
 
 def test_読めないライセンスは断る():
@@ -55,7 +66,7 @@ def test_被写体を確かめられなければ落とさない(monkeypatch):
 
 
 def test_ライセンスが駄目なら次の候補へ(monkeypatch, tmp_path):
-    """1枚目が BY-SA でも、諦めずに次を見る。"""
+    """1枚目が使えないライセンスでも、諦めずに次を見る。"""
     import src.portrait as mod
 
     seen = []
@@ -69,7 +80,7 @@ def test_ライセンスが駄目なら次の候補へ(monkeypatch, tmp_path):
 
     def fake_info(title, session=None):
         seen.append(title)
-        lic = "CC BY-SA 4.0" if title == "File:sa.jpg" else "CC BY 2.0"
+        lic = "CC BY-NC 4.0" if title == "File:sa.jpg" else "CC BY 2.0"
         return {"image_url": "http://x/y.jpg", "page_url": "http://x",
                 "license": lic, "author": "誰か"}
 
@@ -116,3 +127,46 @@ def test_切り出しは割合で指定する(tmp_path):
     path = tmp_path / "a.jpg"
     Image.new("RGB", (400, 200), "white").save(path)
     assert crop_to(path, "0.5,0.0,0.5,0.5") == (200, 100)
+
+def test_改変不可は切る用途では断り_そのまま出すなら通す():
+    """**ND は「改変しなければ使える」。**（2026-09-06 ユーザーの案）
+
+    CC 4.0 は、媒体や形式を変えるための技術的な変更は改変物を生まないと
+    明記している。本文の image: は min で縮めるだけで、切り取りもズームも
+    していないので条件を満たす。サムネイルは16:9に切って文字を重ねるので不可。
+    """
+    from src.portrait import license_ok
+
+    assert not license_ok("CC BY-ND 4.0", modify=True)[0]
+    assert license_ok("CC BY-ND 4.0", modify=False)[0]
+    # 非営利が付いたら、切らなくても使えない
+    assert not license_ok("CC BY-NC-ND 4.0", modify=False)[0]
+    assert not license_ok("CC BY-NC 3.0", modify=False)[0]
+
+
+def test_改変不可の写真はサムネに使えない(tmp_path, monkeypatch):
+    """取得時の印を review が見て止める。**印だけあっても見ていなければ意味がない。**"""
+    import json
+
+    from src import review as review_mod
+
+    folder = tmp_path / "someone"
+    folder.mkdir()
+    (folder / "01.jpg").write_bytes(b"x")
+    (folder / "credits.json").write_text(json.dumps(
+        [{"file": "01.jpg", "license": "CC BY-ND 4.0", "no_derivatives": True}]),
+        encoding="utf-8")
+    monkeypatch.setattr(review_mod, "_resolve", lambda value: folder / "01.jpg")
+
+    class Script:
+        meta = {"thumbnail_photo": "assets/images/someone/01.jpg"}
+
+    finding = review_mod._thumbnail_face(Script())
+    assert not finding.ok
+    assert "改変不可" in finding.detail
+
+    # 印が無ければ通る（外しすぎていないことも確かめる）
+    (folder / "credits.json").write_text(json.dumps(
+        [{"file": "01.jpg", "license": "CC BY 4.0", "no_derivatives": False}]),
+        encoding="utf-8")
+    assert review_mod._thumbnail_face(Script()).ok
