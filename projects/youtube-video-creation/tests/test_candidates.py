@@ -764,6 +764,36 @@ def test_普通の記事は外さない():
         assert not is_live_feed(Candidate(id="x", title=title)), title
 
 
+# スタメン発表は試合前の情報で、公開する頃には試合が終わっている。
+# 中身も選手名の並びだけ（2026-09-07 のユーザー判断で対象外）。
+
+def test_スタメン発表の見出しを外す():
+    from src.candidates import Candidate, is_lineup
+
+    for title in [
+        "アーセナル対チェルシー、スタメン発表！ 開幕2連勝同士の先発メンバー・フォーメーションを紹介",
+        "ハンブルガーSVvsマインツ スタメン発表",
+        "Já há onze do Sporting: Rui Borges conservador contra o Nacional",
+        "Valence - FC Barcelone : les compositions officielles",
+        "Frosinone-Venezia, le formazioni ufficiali: Alvini si affida a Kvernadze",
+        "Arsenal vs Chelsea: confirmed XI",
+    ]:
+        assert is_lineup(Candidate(id="x", title=title)), title
+
+
+def test_スタメン発表でない記事は外さない():
+    """外しすぎると本命が消える。残る側も必ず確かめる。"""
+    from src.candidates import Candidate, is_lineup
+
+    for title in [
+        "90+5! Maitland-Niles stuns Man Utd to earn Everton dramatic draw",
+        "De Zerbi: Winless Spurs making 'wrong' decisions",
+        "鈴木彩艶が楔のグラウンダーパス…アストン・ビラはまたも無得点でドロー",
+        "Burnley have agreed to sign Jamie Vardy on one year deal!",
+    ]:
+        assert not is_lineup(Candidate(id="x", title=title)), title
+
+
 def test_実況は枠に入らない():
     """点が高くても枠から外れる。理由も残す。"""
     from src.candidates import assign, score

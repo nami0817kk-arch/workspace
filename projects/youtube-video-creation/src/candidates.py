@@ -236,6 +236,19 @@ LIVE_MARKS = (
 )
 
 
+# スタメン発表の見出し。**試合前の情報なので、公開する頃には古い。**
+# 中身も選手名の並びだけで、2分の動画にする題材が無い（実況ブログと同じ理由）。
+# 2026-09-07 のユーザー判断で対象外にした。実測では 434件中11件が該当し、
+# すべて本物のスタメン発表だった（誤爆なし）。
+LINEUP_MARKS = (
+    "スタメン", "先発メンバー",
+    "starting xi", "starting line", "line-ups", "lineups", "predicted xi", "confirmed xi",
+    "alineaciones", "alineación", "once inicial", "onces",
+    "aufstellung", "formazioni", "les compositions", "compositions probables",
+    "opstelling", "onze do", "onze inicial",
+)
+
+
 # 種別を散らすために、これ以上の点差を捨てない。kind は見出しからの推測なので、
 # 札を信じて良い記事を落とすほうが損になる
 KIND_TOLERANCE = 2
@@ -262,6 +275,16 @@ def is_live_feed(item: "Candidate") -> bool:
     return ":" in low and "minute" in low and any(ch.isdigit() for ch in low)
 
 
+def is_lineup(item: "Candidate") -> bool:
+    """スタメン発表の見出しか。実況と同じく題材にならないので枠から外す。
+
+    実況ブログと分けてあるのは、外す理由が違うため。実況は「中身が無い」、
+    こちらは中身が無いことに加えて**公開する頃には試合が終わっている**。
+    """
+    low = item.title.lower()
+    return any(mark in low for mark in LINEUP_MARKS)
+
+
 def assign(
     items: list[Candidate], scoring: dict, slots: list[str]
 ) -> tuple[dict[str, Candidate], dict[str, list[str]]]:
@@ -282,6 +305,13 @@ def assign(
     dropped = len(items) - len(remaining)
     if dropped:
         fallbacks.setdefault("_", []).append(f"実況・速報の見出しを{dropped}件外しました")
+    # スタメン発表も題材にならない。**どの枠にも入れない**
+    before = len(remaining)
+    remaining = [c for c in remaining if not is_lineup(c)]
+    if before - len(remaining):
+        fallbacks.setdefault("_", []).append(
+            f"スタメン発表の見出しを{before - len(remaining)}件外しました"
+        )
     chosen: dict[str, Candidate] = {}
     used_topics: set[str] = set()
     used_kinds: list[str] = []
