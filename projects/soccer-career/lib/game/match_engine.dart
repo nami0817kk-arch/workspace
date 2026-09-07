@@ -124,7 +124,9 @@ class MatchInProgress {
       international: international,
     ));
     final condition = conditionModifier(player.condition);
-    return (base + trait + condition).clamp(0.05, 0.95);
+    // 自信は小さく効かせる。性格で試合が決まると能力を伸ばす意味が薄れる。
+    final personality = player.personality.chanceModifier;
+    return (base + trait + condition + personality).clamp(0.05, 0.95);
   }
 
   /// 選んだ手を解決して次の局面へ進める。
@@ -269,7 +271,14 @@ class MatchEngine {
   ///
   /// 実績が無いうち（デビュー前）は先発から始める。プレイヤーが最初の試合で
   /// いきなりベンチ外になると、何もしないまま数試合が過ぎてしまう。
-  static Appearance decideAppearance(List<MatchResult> recent) {
+  /// 直近の評価点と、監督の信頼から出場の仕方を決める。
+  ///
+  /// 信頼が厚いと多少調子を落としても使われ、構想外だと数字が良くても
+  /// ベンチに座る。評価点だけで決めると監督との関係が飾りになる。
+  static Appearance decideAppearance(
+    List<MatchResult> recent, {
+    double bonus = 0,
+  }) {
     final rated =
         recent.where((r) => r.rating != null).map((r) => r.rating!).toList();
     if (rated.isEmpty) return Appearance.start;
@@ -277,7 +286,8 @@ class MatchEngine {
     final window = rated.length <= Formulas.formWindow
         ? rated
         : rated.sublist(rated.length - Formulas.formWindow);
-    final average = window.reduce((a, b) => a + b) / window.length;
+    final average =
+        window.reduce((a, b) => a + b) / window.length + bonus;
 
     if (average < Formulas.squadThreshold) return Appearance.benched;
     if (average < Formulas.benchThreshold) return Appearance.sub;
@@ -343,7 +353,9 @@ class MatchEngine {
   }) {
     if (rating == null) return player.attributes;
 
-    final declineAge = Formulas.declineAge + player.traits.declineAgeOffset;
+    final declineAge = Formulas.declineAge +
+        player.traits.declineAgeOffset +
+        player.personality.declineAgeOffset;
     if (player.age >= declineAge && _random.nextDouble() < 0.25) {
       return player.attributes.bumpDetail(_randomDetail(), -1);
     }
@@ -432,7 +444,10 @@ class MatchEngine {
     } else {
       condition -= (Formulas.trainingConditionCost * costFactor).round();
       final canGrow = attributes.overallFor(player.position) < player.potential;
-      if (canGrow && _random.nextDouble() < Formulas.trainingGrowthChance) {
+      // プロ意識が高いほど、同じ練習でも身になる。
+      final chance =
+          Formulas.trainingGrowthChance * player.personality.trainingFactor;
+      if (canGrow && _random.nextDouble() < chance) {
         final ds = training.details;
         trained = ds[_random.nextInt(ds.length)];
         attributes = attributes.bumpDetail(trained, 1);

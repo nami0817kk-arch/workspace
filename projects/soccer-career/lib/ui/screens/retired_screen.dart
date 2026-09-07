@@ -87,6 +87,11 @@ class RetiredScreen extends StatelessWidget {
                     ],
                     const SizedBox(height: 12),
                     Text(
+                      '生涯の貯蓄 ${state.finances.savingsLabel}',
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
                       '通算年俸 ${state.totalEarnings >= 10000 ? '${(state.totalEarnings / 10000).toStringAsFixed(1)}億円' : '${state.totalEarnings}万円'}',
                       style: theme.textTheme.bodyMedium,
                     ),
@@ -103,6 +108,19 @@ class RetiredScreen extends StatelessWidget {
                 ),
               ),
             ),
+            if (state.reputation.awards.isNotEmpty) ...[
+              const SizedBox(height: 24),
+              Text('称号', style: theme.textTheme.titleSmall),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: [
+                  for (final a in state.reputation.awards)
+                    Chip(label: Text(a.label)),
+                ],
+              ),
+            ],
             const SizedBox(height: 24),
             Text('歩み', style: theme.textTheme.titleSmall),
             const SizedBox(height: 8),

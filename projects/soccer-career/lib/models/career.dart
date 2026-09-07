@@ -2,6 +2,7 @@ import 'agent.dart';
 import 'attributes.dart';
 import 'club.dart';
 import 'competition.dart';
+import 'reputation.dart';
 import 'injury.dart';
 import 'objective.dart';
 import 'player.dart';
@@ -100,6 +101,9 @@ class CareerState {
     this.continentalExperience = false,
     this.continentalStage = ContinentalStage.none,
     this.squadStatus = SquadStatus.registered,
+    this.reputation = const Reputation(),
+    this.relations = const Relations(),
+    this.finances = const Finances(),
     this.training,
     this.objective,
     this.injury,
@@ -156,6 +160,15 @@ class CareerState {
 
   /// 今季、登録メンバーに入れているか。外れると試合に出られない。
   SquadStatus squadStatus;
+
+  /// 市場価値・知名度・称号。
+  Reputation reputation;
+
+  /// 監督とチームメイトとの関係。
+  Relations relations;
+
+  /// お金。年俸から税・手数料・生活費を引いた残りが貯まる。
+  Finances finances;
 
   /// 監督から与えられた今季の目標。
   SeasonObjective? objective;
@@ -258,6 +271,9 @@ class CareerState {
         'continentalExperience': continentalExperience,
         'continentalStage': continentalStage.name,
         'squadStatus': squadStatus.name,
+        'reputation': reputation.toJson(),
+        'relations': relations.toJson(),
+        'finances': finances.toJson(),
         'objective': objective?.toJson(),
         'injury': injury?.toJson(),
         'caps': caps,
@@ -305,6 +321,10 @@ class CareerState {
           SquadStatus.values.any((v) => v.name == json['squadStatus'])
               ? SquadStatus.values.byName(json['squadStatus'] as String)
               : SquadStatus.registered,
+      reputation:
+          Reputation.fromJson(json['reputation'] as Map<String, dynamic>?),
+      relations: Relations.fromJson(json['relations'] as Map<String, dynamic>?),
+      finances: Finances.fromJson(json['finances'] as Map<String, dynamic>?),
       objective:
           SeasonObjective.fromJson(json['objective'] as Map<String, dynamic>?),
       injury: Injury.fromJson(json['injury'] as Map<String, dynamic>?),

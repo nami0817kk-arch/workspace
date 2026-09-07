@@ -4,6 +4,7 @@ import '../../models/attributes.dart';
 import '../../game/eligibility.dart';
 import '../../game/world.dart';
 import '../../models/career.dart';
+import '../../models/personality.dart';
 import '../../models/objective.dart';
 import '../../models/season.dart';
 import '../../state/career_controller.dart';
@@ -157,6 +158,8 @@ class _HomeTab extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       children: [
         _PlayerCard(state: state),
+        const SizedBox(height: 16),
+        _PersonCard(state: state),
         const SizedBox(height: 16),
         _LeagueCard(state: state),
         const SizedBox(height: 16),
@@ -361,6 +364,11 @@ class _PlayerCard extends StatelessWidget {
                       ),
                       Text(
                         '年俸 ${_yen(state.salary)}  ·  契約 残り${state.contractYears}年',
+                        style: muted,
+                      ),
+                      Text(
+                        '市場価値 ${state.reputation.valueLabel}  ·  '
+                        '知名度 ${state.reputation.fame}',
                         style: muted,
                       ),
                       Text(
@@ -981,6 +989,105 @@ class _OutOfSquadCard extends StatelessWidget {
               style: theme.textTheme.bodySmall
                   ?.copyWith(color: theme.colorScheme.onErrorContainer),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 選手を「人間」として見るカード。性格・関係・お金・称号。
+class _PersonCard extends StatelessWidget {
+  const _PersonCard({required this.state});
+
+  final CareerState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final p = state.player.personality;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text('人となり', style: theme.textTheme.titleSmall),
+                const SizedBox(width: 8),
+                Chip(
+                  label: Text(p.label),
+                  visualDensity: VisualDensity.compact,
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            for (final axis in PersonalityAxis.values)
+              Tooltip(
+                message: axis.description,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                          width: 76,
+                          child: Text(axis.label,
+                              style: theme.textTheme.bodySmall)),
+                      SizedBox(
+                          width: 24,
+                          child: Text('${p[axis]}',
+                              style: theme.textTheme.bodySmall)),
+                      Expanded(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(4),
+                          child: LinearProgressIndicator(
+                            value: p[axis] / Personality.max,
+                            minHeight: 4,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: Text('監督: ${state.relations.managerLabel}',
+                      style: theme.textTheme.bodySmall),
+                ),
+                Expanded(
+                  child: Text('ロッカールーム: ${state.relations.teammatesLabel}',
+                      style: theme.textTheme.bodySmall),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              '貯蓄 ${state.finances.savingsLabel}  ·  生活 ${state.finances.lifestyleLabel}',
+              style: muted,
+            ),
+            if (state.reputation.awards.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              Text('称号', style: theme.textTheme.labelMedium),
+              const SizedBox(height: 4),
+              Wrap(
+                spacing: 6,
+                runSpacing: 4,
+                children: [
+                  for (final a in state.reputation.awards)
+                    Chip(
+                      label: Text(a.label),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                ],
+              ),
+            ],
           ],
         ),
       ),

@@ -7,12 +7,14 @@ import '../models/club.dart';
 import '../models/competition.dart';
 import '../models/country.dart';
 import '../models/nationality.dart';
+import '../models/personality.dart';
 import '../models/player.dart';
 import '../models/season.dart';
 import '../models/traits.dart';
 import 'career_engine_extras.dart';
 import 'competitions.dart';
 import 'eligibility.dart';
+import 'person.dart';
 import 'formulas.dart';
 import 'world.dart';
 
@@ -98,6 +100,9 @@ class CareerEngine {
   /// 大陸カップ・昇格プレーオフ・移籍の窓・登録メンバー。
   late final Competitions competitions = Competitions(random: _random);
 
+  /// 性格・市場価値・評判・関係・お金。
+  late final Person person = Person(random: _random);
+
   /// 新しいキャリアを始める。2部の下位クラブから、無名の選手として始まる。
   CareerState startCareer({
     required String name,
@@ -123,6 +128,7 @@ class CareerEngine {
       attributes: attributes,
       potential: rollPotential(overall),
       nationality: _rollNationality(home),
+      personality: Personality.roll(_random),
       traits: Trait.roll(_random),
     );
     return CareerState(
@@ -462,7 +468,7 @@ class CareerEngine {
           origin: origin,
           caps: state.caps,
           professionalYears: state.professionalYears,
-          marketValue: state.salary,
+          marketValue: state.reputation.marketValue,
           continentalExperience: state.continentalExperience,
         );
         // 枠が空いていない、または許可が下りない移籍は成立しない。
@@ -533,9 +539,11 @@ class CareerEngine {
     final stats = state.seasonStats;
     final performance =
         stats.appearances == 0 ? -0.1 : (stats.averageRating - 6.8) * 0.3;
+    // 気性が荒いほど強気に出られる。代理人の腕とは別の要素。
     final chance = (Formulas.negotiationBase +
             state.agent.negotiation * Formulas.negotiationPerSkill +
-            performance)
+            performance +
+            state.player.personality.negotiationModifier)
         .clamp(0.05, 0.9);
 
     if (_random.nextDouble() < chance) {
@@ -590,8 +598,25 @@ class CareerEngine {
       age: state.player.age + 1,
       condition: Formulas.conditionMax,
       nationality: nationality,
+      personality: person.evolve(state),
     );
     final stayed = accepted.club.name == state.club.name;
+
+    // 称号・知名度・関係・お金は、シーズンを終えた時点で確定させる。
+    final promoted = fateOf(state) == ClubFate.promoted;
+    var reputation = state.reputation;
+    for (final award in person.awardsFor(state, promoted: promoted)) {
+      reputation = reputation.earn(award);
+    }
+    reputation = reputation.copyWith(
+      fame: person.fameFor(state),
+      marketValue: person.marketValueFor(state),
+    );
+    final finances = state.finances.afterSeason(
+      salary: state.salary,
+      agentFeePercent: state.agent.feePercent,
+    );
+    final relations = person.updateRelations(state);
 
     return CareerState(
       player: nextPlayer,
@@ -615,6 +640,9 @@ class CareerEngine {
           state.continentalStage.participated,
       objective: extras.objectiveFor(player: nextPlayer, club: resolved),
       continentalStage: ContinentalStage.none,
+      reputation: reputation,
+      relations: relations,
+      finances: finances,
       // 怪我はシーズンを跨いでも消えない。オフの間に少しは進む。
       injury: state.injury == null || state.injury!.matchesOut <= 4
           ? null
@@ -693,8 +721,15 @@ class CareerEngine {
       countryId: state.countryId,
       professionalYears: state.professionalYears,
       continentalExperience: state.continentalExperience,
+      continentalStage: state.continentalStage,
       caps: state.caps,
       internationalGoals: state.internationalGoals,
+      reputation: state.reputation,
+      relations: state.relations,
+      finances: state.finances.afterSeason(
+        salary: state.salary,
+        agentFeePercent: state.agent.feePercent,
+      ),
       retired: true,
     );
   }

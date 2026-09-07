@@ -5,6 +5,7 @@ import '../game/career_engine.dart';
 import '../game/formulas.dart';
 import '../game/match_engine.dart';
 import '../game/national.dart';
+import '../game/person.dart';
 import '../models/agent.dart';
 import '../models/attributes.dart';
 import '../models/career.dart';
@@ -157,7 +158,10 @@ class CareerController extends ChangeNotifier {
           // 登録メンバーから外れていると、そもそもベンチにも入れない。
           : !state.squadStatus.canPlay
               ? Appearance.benched
-              : MatchEngine.decideAppearance(state.leagueResults),
+              : MatchEngine.decideAppearance(
+                  state.leagueResults,
+                  bonus: Person.appearanceBonusFrom(state.relations),
+                ),
     );
     notifyListeners();
   }

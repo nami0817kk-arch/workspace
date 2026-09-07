@@ -1,6 +1,7 @@
 import '../game/formulas.dart';
 import 'attributes.dart';
 import 'nationality.dart';
+import 'personality.dart';
 import 'traits.dart';
 
 /// プレイヤーが操作する選手。
@@ -12,6 +13,8 @@ class Player {
     required this.attributes,
     required this.potential,
     this.nationality = Nationality.unknown,
+    this.personality = const Personality(
+        confidence: 10, ambition: 10, professionalism: 10, temper: 10),
     this.traits = const [],
     this.condition = Formulas.conditionMax,
   });
@@ -26,6 +29,9 @@ class Player {
 
   /// 国籍。外国人枠と労働許可、代表資格に効く。
   final Nationality nationality;
+
+  /// 性格。伸ばすものではなく、経験で少しずつ変わる。
+  final Personality personality;
 
   final List<Trait> traits;
 
@@ -52,6 +58,7 @@ class Player {
     Position? position,
     int? condition,
     Nationality? nationality,
+    Personality? personality,
   }) =>
       Player(
         name: name,
@@ -60,6 +67,7 @@ class Player {
         attributes: attributes ?? this.attributes,
         potential: potential,
         nationality: nationality ?? this.nationality,
+        personality: personality ?? this.personality,
         traits: traits,
         condition: (condition ?? this.condition)
             .clamp(0, Formulas.conditionMax)
@@ -82,6 +90,7 @@ class Player {
         attributes: attributes,
         potential: potential,
         nationality: from.nationality,
+        personality: from.personality,
         traits: from.traits,
         condition: from.condition,
       );
@@ -93,6 +102,7 @@ class Player {
         'attributes': attributes.toJson(),
         'potential': potential,
         'nationality': nationality.toJson(),
+        'personality': personality.toJson(),
         'traits': traits.map((t) => t.name).toList(),
         'condition': condition,
       };
@@ -112,6 +122,8 @@ class Player {
       // 国籍を持たせる前の保存データは、既定の国の選手として読む。
       nationality: Nationality.fromJson(
           json['nationality'] as Map<String, dynamic>?, 'yamato'),
+      personality:
+          Personality.fromJson(json['personality'] as Map<String, dynamic>?),
       traits: [
         for (final n in (json['traits'] as List? ?? const []))
           if (Trait.values.any((t) => t.name == n))
