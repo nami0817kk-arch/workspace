@@ -39,6 +39,17 @@ class _MatchScreenState extends State<MatchScreen> {
     });
   }
 
+  Future<void> _simulateRest() async {
+    if (_busy) return;
+    setState(() => _busy = true);
+    final result = await widget.controller.simulateMatch();
+    if (!mounted) return;
+    setState(() {
+      _result = result;
+      _busy = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final match = widget.controller.currentMatch;
@@ -78,6 +89,11 @@ class _MatchScreenState extends State<MatchScreen> {
                         onChoose: _choose,
                       ),
               ),
+              if (!match.isFinished)
+                TextButton(
+                  onPressed: _busy ? null : _simulateRest,
+                  child: Text('残りを自動で進める（${widget.controller.state!.simStyle.label}）'),
+                ),
             ],
           ),
         ),
@@ -160,7 +176,7 @@ class _ScenarioView extends StatelessWidget {
           for (var i = 0; i < scenario.options.length; i++) ...[
             _OptionButton(
               option: scenario.options[i],
-              attribute: match.player.attributes[scenario.options[i].key],
+              attribute: match.attributeFor(scenario.options[i]),
               chance: match.chanceFor(scenario.options[i]),
               onPressed: () => onChoose(i),
             ),
@@ -205,7 +221,7 @@ class _OptionButton extends StatelessWidget {
                 Text(option.label, style: theme.textTheme.titleSmall),
                 const SizedBox(height: 2),
                 Text(
-                  '${option.key.label} $attribute  ·  成功率 ${(chance * 100).round()}%',
+                  '${option.detail?.label ?? option.key.label} $attribute  ·  成功率 ${(chance * 100).round()}%',
                   style: theme.textTheme.bodySmall
                       ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
                 ),

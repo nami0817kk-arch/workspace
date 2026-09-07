@@ -31,7 +31,7 @@ CareerState stateAt({required int tier, required int position}) {
       name: 'T',
       age: 25,
       position: Position.cm,
-      attributes: const Attributes(
+      attributes: Attributes(
           pace: 60, shooting: 60, passing: 60, dribbling: 60, defending: 60, physical: 60),
       potential: 99,
     ),
@@ -195,19 +195,30 @@ void main() {
         name: 'G',
         age: 20,
         position: Position.cm,
-        attributes: const Attributes(
+        attributes: Attributes(
             pace: 50, shooting: 50, passing: 50, dribbling: 50, defending: 50, physical: 50),
         potential: 99,
       );
       for (var i = 0; i < 300; i++) {
         player = player.copyWith(
-          attributes: engine.grow(player, 8.0, used: const [AttributeKey.passing]),
+          attributes: engine.grow(player, 8.0, used: const [
+            ScenarioResolution(
+              success: true,
+              text: '',
+              outcome: Outcome.play,
+              ratingDelta: 0.4,
+              key: AttributeKey.passing,
+              detail: Detail.vision,
+            ),
+          ]),
         );
       }
       final a = player.attributes;
-      final others = [a.pace, a.shooting, a.dribbling, a.defending, a.physical];
-      final maxOther = others.reduce(max);
-      expect(a.passing, greaterThan(maxOther));
+      final others = Detail.values
+          .where((d) => d != Detail.vision)
+          .map(a.detail)
+          .reduce(max);
+      expect(a.detail(Detail.vision), greaterThan(others));
     });
 
     test('使った能力が無ければ無作為に伸びる（何も伸びないわけではない）', () {
@@ -216,7 +227,7 @@ void main() {
         name: 'G',
         age: 20,
         position: Position.cm,
-        attributes: const Attributes(
+        attributes: Attributes(
             pace: 50, shooting: 50, passing: 50, dribbling: 50, defending: 50, physical: 50),
         potential: 99,
       );
@@ -234,7 +245,7 @@ void main() {
       name: 'M',
       age: 20,
       position: Position.st,
-      attributes: const Attributes(
+      attributes: Attributes(
           pace: 50, shooting: 50, passing: 50, dribbling: 50, defending: 50, physical: 50),
       potential: 99,
     );
@@ -288,7 +299,7 @@ void main() {
         match.choose(match.current.options.first);
       }
       final successes = match.resolutions.where((r) => r.success).length;
-      expect(match.successfulKeys.length, successes);
+      expect(match.successes.length, successes);
     });
   });
 
@@ -304,7 +315,7 @@ void main() {
           name: 'P',
           age: 20,
           position: Position.cb,
-          attributes: const Attributes(
+          attributes: Attributes(
               pace: 50, shooting: 50, passing: 50, dribbling: 50, defending: 50, physical: 50),
           potential: 99,
         ),

@@ -16,8 +16,8 @@ import '../models/season.dart';
 class WeekReport {
   const WeekReport({this.trained, this.newInjury, this.recovered = false});
 
-  /// 練習で伸びた能力。
-  final AttributeKey? trained;
+  /// 練習で伸びた詳細能力。
+  final Detail? trained;
 
   /// 新たに負傷したらその内容。
   final Injury? newInjury;
@@ -26,6 +26,48 @@ class WeekReport {
   final bool recovered;
 
   bool get isEmpty => trained == null && newInjury == null && !recovered;
+}
+
+/// 自動で進めた区間のまとめ。
+class SimReport {
+  const SimReport({
+    required this.results,
+    required this.stoppedBy,
+    this.injury,
+  });
+
+  final List<MatchResult> results;
+
+  /// 何で止まったか。
+  final SimStop stoppedBy;
+
+  /// 負傷で止まったならその内容。
+  final Injury? injury;
+
+  int get played => results.length;
+  int get won => results.where((r) => r.won).length;
+  int get drawn => results.where((r) => r.drawn).length;
+  int get lost => played - won - drawn;
+  int get goals => results.fold(0, (s, r) => s + r.goals);
+  int get assists => results.fold(0, (s, r) => s + r.assists);
+
+  double? get averageRating {
+    final rated = results.where((r) => r.rating != null).toList();
+    if (rated.isEmpty) return null;
+    return rated.fold<double>(0, (s, r) => s + r.rating!) / rated.length;
+  }
+}
+
+/// 自動進行が止まる理由。
+enum SimStop {
+  seasonEnd('シーズン終了'),
+  injury('負傷'),
+  callUp('代表ウィーク'),
+  limit('区切り');
+
+  const SimStop(this.label);
+
+  final String label;
 }
 
 /// アプリ全体の状態。画面はこれを購読する。
@@ -85,6 +127,14 @@ class CareerController extends ChangeNotifier {
     await _persist();
   }
 
+  /// 自動で進めるときの選び方を決める。
+  Future<void> setSimStyle(SimStyle style) async {
+    final state = _state;
+    if (state == null) return;
+    state.simStyle = style;
+    await _persist();
+  }
+
   /// 次の試合を始める。
   ///
   /// 代表ウィークなら代表戦、負傷中なら試合には出ない。
@@ -139,6 +189,62 @@ class CareerController extends ChangeNotifier {
     return resolution;
   }
 
+  /// 今の試合を最後まで自動で進めて終える。
+  ///
+  /// 局面の途中からでも呼べる。残りをスタイルに沿って選ぶ。
+  Future<MatchResult?> simulateMatch() async {
+    final state = _state;
+    if (state == null) return null;
+    if (_inProgress == null) startNextMatch();
+    final match = _inProgress;
+    if (match == null) return null;
+    match.autoPlay(state.simStyle);
+    return finishMatch();
+  }
+
+  /// 止まる理由が出るまで自動で進める。
+  ///
+  /// 負傷・代表ウィーク・シーズン終了で止まる。何も起きなくても
+  /// [limit] 試合で一度止めて、状況を見せる。
+  Future<SimReport> simulateUntilEvent({int limit = 38}) async {
+    final results = <MatchResult>[];
+    var stop = SimStop.limit;
+    Injury? injury;
+
+    for (var i = 0; i < limit; i++) {
+      final state = _state;
+      if (state == null || state.retired) break;
+      if (state.seasonFinished) {
+        stop = SimStop.seasonEnd;
+        break;
+      }
+      if (state.pendingInternational) {
+        stop = SimStop.callUp;
+        break;
+      }
+      final wasInjured = state.injured;
+      final result = await simulateMatch();
+      if (result == null) break;
+      results.add(result);
+
+      if (!wasInjured && lastWeek.newInjury != null) {
+        stop = SimStop.injury;
+        injury = lastWeek.newInjury;
+        break;
+      }
+      if (_state!.seasonFinished) {
+        stop = SimStop.seasonEnd;
+        break;
+      }
+      if (_state!.pendingInternational) {
+        stop = SimStop.callUp;
+        break;
+      }
+    }
+
+    return SimReport(results: results, stoppedBy: stop, injury: injury);
+  }
+
   /// 試合を終えて結果を反映する。成長・練習・負傷もここでまとめて進める。
   Future<MatchResult?> finishMatch() async {
     final state = _state;
@@ -170,12 +276,13 @@ class CareerController extends ChangeNotifier {
       } else {
         state.injury = next;
       }
+      lastWeek = WeekReport(recovered: recovered);
     } else {
       player = player.copyWith(
         attributes: _match.grow(
           player,
           result.rating,
-          used: match.successfulKeys,
+          used: match.successes,
         ),
       );
       final week = _match.applyWeek(
@@ -198,7 +305,6 @@ class CareerController extends ChangeNotifier {
       lastWeek = WeekReport(trained: week.trained, newInjury: newInjury);
     }
 
-    if (recovered) lastWeek = const WeekReport(recovered: true);
     state.player = player;
 
     // 代表の招集は節が進むごとに見直す。

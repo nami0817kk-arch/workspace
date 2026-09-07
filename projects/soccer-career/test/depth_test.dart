@@ -13,7 +13,7 @@ import 'package:soccer_career/models/player.dart';
 import 'package:soccer_career/models/season.dart';
 import 'package:soccer_career/models/traits.dart';
 
-const flat50 = Attributes(
+final flat50 = Attributes(
   pace: 50,
   shooting: 50,
   passing: 50,
@@ -29,13 +29,13 @@ Player player({
   int potential = 99,
   List<Trait> traits = const [],
   int condition = 100,
-  Attributes attributes = flat50,
+  Attributes? attributes,
 }) =>
     Player(
       name: 'P',
       age: age,
       position: position,
-      attributes: attributes,
+      attributes: attributes ?? flat50,
       potential: potential,
       traits: traits,
       condition: condition,
@@ -67,7 +67,7 @@ void main() {
     });
 
     test('GK は GK 能力で総合力が決まる', () {
-      const keeper = Attributes(
+      final keeper = Attributes(
           pace: 40, shooting: 20, passing: 40, dribbling: 30,
           defending: 50, physical: 50, goalkeeping: 90);
       expect(keeper.overallFor(Position.gk), greaterThan(keeper.overallFor(Position.st)));
@@ -96,31 +96,39 @@ void main() {
   group('特性', () {
     test('2つ引き、矛盾する組み合わせは出ない', () {
       for (var seed = 0; seed < 200; seed++) {
-        final traits = Trait.rollTwo(Random(seed));
+        final traits = Trait.roll(Random(seed), flawChance: 0);
         expect(traits.length, 2);
         expect(Trait.compatible(traits[0], traits[1]), isTrue, reason: 'seed $seed');
       }
     });
 
     test('クラッチは終盤だけ効く', () {
-      double bonus(int minute) => Trait.clutch.chanceBonus(
-          minute: minute, home: true, outcome: Outcome.play, afterFailure: false);
+      double bonus(int minute) => Trait.clutch.chanceBonus(TraitContext(
+          minute: minute, home: true, outcome: Outcome.play, afterFailure: false,
+          afterSuccess: false, key: AttributeKey.passing, detail: null,
+          scenarioId: 'x', international: false));
       expect(bonus(30), 0);
       expect(bonus(80), greaterThan(0));
     });
 
     test('負けず嫌いは失敗直後だけ効く', () {
-      double bonus(bool after) => Trait.fighter.chanceBonus(
-          minute: 10, home: true, outcome: Outcome.play, afterFailure: after);
+      double bonus(bool after) => Trait.fighter.chanceBonus(TraitContext(
+          minute: 10, home: true, outcome: Outcome.play, afterFailure: after,
+          afterSuccess: false, key: AttributeKey.passing, detail: null,
+          scenarioId: 'x', international: false));
       expect(bonus(false), 0);
       expect(bonus(true), greaterThan(0));
     });
 
     test('勝負師と職人は逆向き', () {
-      double g(Outcome o) => Trait.gambler.chanceBonus(
-          minute: 10, home: true, outcome: o, afterFailure: false);
-      double c(Outcome o) => Trait.craftsman.chanceBonus(
-          minute: 10, home: true, outcome: o, afterFailure: false);
+      double g(Outcome o) => Trait.gambler.chanceBonus(TraitContext(
+          minute: 10, home: true, outcome: o, afterFailure: false,
+          afterSuccess: false, key: AttributeKey.passing, detail: null,
+          scenarioId: 'x', international: false));
+      double c(Outcome o) => Trait.craftsman.chanceBonus(TraitContext(
+          minute: 10, home: true, outcome: o, afterFailure: false,
+          afterSuccess: false, key: AttributeKey.passing, detail: null,
+          scenarioId: 'x', international: false));
       expect(g(Outcome.goal), greaterThan(0));
       expect(g(Outcome.play), lessThan(0));
       expect(c(Outcome.play), greaterThan(0));
@@ -209,13 +217,15 @@ void main() {
         final week = engine.applyWeek(player(attributes: attrs), training: AttributeKey.shooting, played: false);
         if (week.trained != null) {
           grew++;
-          expect(week.trained, AttributeKey.shooting);
+          expect(week.trained!.category, AttributeKey.shooting);
         }
         attrs = week.attributes;
       }
       expect(grew, greaterThan(0));
-      // 上限 99 で頭打ちになる。
-      expect(attrs.shooting, min(Formulas.maxAttribute, 50 + grew));
+      // 伸びるのはシュートの詳細のどれか。他のカテゴリは動かない。
+      final shootingTotal = AttributeKey.shooting.details
+          .fold(0, (sum, d) => sum + attrs.detail(d));
+      expect(shootingTotal, greaterThan(50 * AttributeKey.shooting.details.length));
       expect(attrs.pace, 50);
     });
 

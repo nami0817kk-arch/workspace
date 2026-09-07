@@ -54,19 +54,32 @@ void main() {
           greaterThan(a.overallFor(Position.cm)));
     });
 
-    test('bump は上下限で丸める', () {
+    test('bumpDetail は上下限で丸める', () {
       final low = attrs(all: Formulas.minAttribute);
-      expect(low.bump(AttributeKey.pace, -5).pace, Formulas.minAttribute);
+      expect(low.bumpDetail(Detail.acceleration, -5).detail(Detail.acceleration),
+          Formulas.minAttribute);
 
       final high = attrs(all: Formulas.maxAttribute);
-      expect(high.bump(AttributeKey.pace, 5).pace, Formulas.maxAttribute);
+      expect(high.bumpDetail(Detail.acceleration, 5).detail(Detail.acceleration),
+          Formulas.maxAttribute);
     });
 
-    test('bump は指定した項目だけ動かす', () {
-      final bumped = attrs(all: 50).bump(AttributeKey.shooting, 3);
-      expect(bumped.shooting, 53);
+    test('bumpDetail は指定した詳細だけ動かし、カテゴリは平均で追従する', () {
+      final bumped = attrs(all: 50).bumpDetail(Detail.finishing, 4);
+      expect(bumped.detail(Detail.finishing), 54);
+      expect(bumped.detail(Detail.shotPower), 50);
+      // シュートは4項目の平均: (54+50+50+50)/4 = 51
+      expect(bumped.shooting, 51);
       expect(bumped.pace, 50);
-      expect(bumped.passing, 50);
+    });
+
+    test('bump はカテゴリの中の詳細を1つだけ動かす', () {
+      final bumped = attrs(all: 50).bump(AttributeKey.passing, 2, random: Random(1));
+      final moved = AttributeKey.passing.details
+          .where((d) => bumped.detail(d) != 50)
+          .toList();
+      expect(moved.length, 1);
+      expect(bumped.detail(moved.first), 52);
     });
   });
 

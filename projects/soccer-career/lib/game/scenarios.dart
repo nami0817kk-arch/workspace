@@ -17,6 +17,7 @@ class ScenarioOption {
   const ScenarioOption({
     required this.label,
     required this.key,
+    this.detail,
     required this.difficulty,
     required this.outcome,
     required this.successText,
@@ -25,8 +26,11 @@ class ScenarioOption {
 
   final String label;
 
-  /// 成否を判定する能力値。
+  /// 成否を判定する能力のカテゴリ。
   final AttributeKey key;
+
+  /// 判定に使う詳細能力。無ければカテゴリの平均で判定する。
+  final Detail? detail;
 
   /// 判定の基準値。能力値がこれと同じでも五分にはならず、少し不利。
   final int difficulty;
@@ -78,6 +82,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '飛び出して距離を詰める',
           key: AttributeKey.goalkeeping,
+          detail: Detail.gkPositioning,
           difficulty: 70,
           outcome: Outcome.play,
           successText: '一気に間合いを詰め、足元でシュートを止めた。',
@@ -86,6 +91,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '構えてコースを消す',
           key: AttributeKey.goalkeeping,
+          detail: Detail.gkPositioning,
           difficulty: 58,
           outcome: Outcome.play,
           successText: '体を大きく見せてコースを消し、正面で止めた。',
@@ -94,6 +100,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '足を使って時間を稼ぐ',
           key: AttributeKey.pace,
+          detail: Detail.agility,
           difficulty: 50,
           outcome: Outcome.play,
           successText: '寄せる角度を変えて遅らせ、DFの帰陣を待てた。',
@@ -108,6 +115,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'パンチングで弾く',
           key: AttributeKey.physical,
+          detail: Detail.strength,
           difficulty: 62,
           outcome: Outcome.play,
           successText: '混戦を避けて遠くへ弾き出した。',
@@ -116,6 +124,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'キャッチに行く',
           key: AttributeKey.goalkeeping,
+          detail: Detail.handling,
           difficulty: 72,
           outcome: Outcome.play,
           successText: '最高点で掴み、そのまま速攻を始めた。',
@@ -124,6 +133,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'ラインに留まってDFに任せる',
           key: AttributeKey.defending,
+          detail: Detail.marking,
           difficulty: 46,
           outcome: Outcome.play,
           successText: 'DFがクリアしやすい位置を保ち、危険を消した。',
@@ -138,6 +148,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '読んで先に飛ぶ',
           key: AttributeKey.goalkeeping,
+          detail: Detail.reflexes,
           difficulty: 78,
           outcome: Outcome.play,
           successText: '読み勝った。両手で弾き出し、スタジアムが沸いた。',
@@ -146,6 +157,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'ぎりぎりまで待つ',
           key: AttributeKey.pace,
+          detail: Detail.agility,
           difficulty: 74,
           outcome: Outcome.play,
           successText: '最後まで待ち、反応でセーブした。',
@@ -154,6 +166,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '中央で構える',
           key: AttributeKey.physical,
+          detail: Detail.strength,
           difficulty: 66,
           outcome: Outcome.play,
           successText: 'キッカーが迷った。真ん中に蹴ったボールを止めた。',
@@ -168,6 +181,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '前線へロングスローを投げる',
           key: AttributeKey.passing,
+          detail: Detail.longPassing,
           difficulty: 68,
           outcome: Outcome.assist,
           successText: '一本のスローで前線へ。味方が抜け出して決めた。',
@@ -176,6 +190,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '大きく蹴り出す',
           key: AttributeKey.physical,
+          detail: Detail.strength,
           difficulty: 50,
           outcome: Outcome.play,
           successText: '陣地を大きく回復し、相手の圧力を逃した。',
@@ -184,6 +199,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '近くのDFに繋ぐ',
           key: AttributeKey.passing,
+          detail: Detail.shortPassing,
           difficulty: 42,
           outcome: Outcome.play,
           successText: '落ち着いて繋ぎ、ビルドアップを始めた。',
@@ -198,6 +214,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'キャッチする',
           key: AttributeKey.goalkeeping,
+          detail: Detail.handling,
           difficulty: 74,
           outcome: Outcome.play,
           successText: '揺れるボールを胸に収めた。',
@@ -206,6 +223,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '横に弾く',
           key: AttributeKey.goalkeeping,
+          detail: Detail.reflexes,
           difficulty: 58,
           outcome: Outcome.play,
           successText: '無理をせず、コーナーへ弾き出した。',
@@ -214,6 +232,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '体で受ける',
           key: AttributeKey.physical,
+          detail: Detail.strength,
           difficulty: 52,
           outcome: Outcome.play,
           successText: '体の正面で受け止め、こぼれ球も自分で抑えた。',
@@ -228,6 +247,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'エリアの外まで飛び出してクリア',
           key: AttributeKey.pace,
+          detail: Detail.acceleration,
           difficulty: 70,
           outcome: Outcome.play,
           successText: 'エリア外で先に触り、大きくクリアした。',
@@ -236,6 +256,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'エリア内で待って処理する',
           key: AttributeKey.goalkeeping,
+          detail: Detail.gkPositioning,
           difficulty: 56,
           outcome: Outcome.play,
           successText: '慌てず待ち、エリア内で確実に処理した。',
@@ -244,6 +265,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'DFに声をかけて任せる',
           key: AttributeKey.defending,
+          detail: Detail.marking,
           difficulty: 48,
           outcome: Outcome.play,
           successText: '声で味方を動かし、DFが先に触った。',
@@ -258,6 +280,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '飛び出してキャッチ',
           key: AttributeKey.goalkeeping,
+          detail: Detail.handling,
           difficulty: 72,
           outcome: Outcome.play,
           successText: '混戦の中で掴み切った。試合を締めた。',
@@ -266,6 +289,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'ライン上で待つ',
           key: AttributeKey.physical,
+          detail: Detail.strength,
           difficulty: 60,
           outcome: Outcome.play,
           successText: 'ライン上で反応し、至近距離を止めた。',
@@ -274,6 +298,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'クリア後に前へ投げて速攻',
           key: AttributeKey.passing,
+          detail: Detail.shortPassing,
           difficulty: 64,
           outcome: Outcome.assist,
           successText: 'クリアを拾って前へ投げ、無人のゴールに味方が決めた。',
@@ -291,6 +316,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '強引にシュートを打つ',
           key: AttributeKey.shooting,
+          detail: Detail.shotPower,
           difficulty: 72,
           outcome: Outcome.goal,
           successText: '寄せられる前に振り抜いた。ネットが揺れる。',
@@ -299,6 +325,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '横の味方に落とす',
           key: AttributeKey.passing,
+          detail: Detail.shortPassing,
           difficulty: 55,
           outcome: Outcome.assist,
           successText: '柔らかく落としたボールを味方が流し込んだ。',
@@ -307,6 +334,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'キープして味方を待つ',
           key: AttributeKey.physical,
+          detail: Detail.strength,
           difficulty: 48,
           outcome: Outcome.play,
           successText: '体を入れて時間を作り、攻撃を落ち着かせた。',
@@ -321,6 +349,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'ループシュートを狙う',
           key: AttributeKey.shooting,
+          detail: Detail.finishing,
           difficulty: 68,
           outcome: Outcome.goal,
           successText: 'GKの頭上を越えるループ。美しく決まった。',
@@ -329,6 +358,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'GKをかわして流し込む',
           key: AttributeKey.dribbling,
+          detail: Detail.dribbling,
           difficulty: 74,
           outcome: Outcome.goal,
           successText: '軽くかわして無人のゴールへ流し込んだ。',
@@ -337,6 +367,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '走り込む味方へ横パス',
           key: AttributeKey.passing,
+          detail: Detail.shortPassing,
           difficulty: 58,
           outcome: Outcome.assist,
           successText: '冷静な横パス。味方が無人のゴールへ押し込んだ。',
@@ -351,6 +382,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'ヘディングで叩きつける',
           key: AttributeKey.physical,
+          detail: Detail.jumping,
           difficulty: 70,
           outcome: Outcome.goal,
           successText: '競り合いに勝ち、ヘディングをゴール左隅へ。',
@@ -359,6 +391,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'ニアで潰れて味方を空ける',
           key: AttributeKey.physical,
+          detail: Detail.strength,
           difficulty: 45,
           outcome: Outcome.assist,
           successText: 'ニアでDFを引き付け、空いた味方が押し込んだ。',
@@ -367,6 +400,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '下がってこぼれ球を狙う',
           key: AttributeKey.pace,
+          detail: Detail.acceleration,
           difficulty: 60,
           outcome: Outcome.goal,
           successText: 'こぼれ球に誰よりも早く反応し、押し込んだ。',
@@ -381,6 +415,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '全力で駆け上がって受ける',
           key: AttributeKey.pace,
+          detail: Detail.sprintSpeed,
           difficulty: 66,
           outcome: Outcome.goal,
           successText: 'DFを置き去りにして受け、そのまま決めた。',
@@ -389,6 +424,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'DFを引き付けて味方に流す',
           key: AttributeKey.dribbling,
+          detail: Detail.dribbling,
           difficulty: 60,
           outcome: Outcome.assist,
           successText: 'DFを2人とも引き付けてから流し、味方がフリーで決めた。',
@@ -397,6 +433,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '無理せずポゼッションに切り替える',
           key: AttributeKey.passing,
+          detail: Detail.shortPassing,
           difficulty: 40,
           outcome: Outcome.play,
           successText: '速攻を捨てて確実に繋ぎ、押し込む形を作った。',
@@ -411,6 +448,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '隅を狙って強く蹴る',
           key: AttributeKey.shooting,
+          detail: Detail.shotPower,
           difficulty: 62,
           outcome: Outcome.goal,
           successText: 'GKの逆を突いた。隅に突き刺さる。',
@@ -419,6 +457,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'GKの動きを見て逆に蹴る',
           key: AttributeKey.dribbling,
+          detail: Detail.agility,
           difficulty: 58,
           outcome: Outcome.goal,
           successText: 'GKが先に動いた。ゆっくりと逆へ転がした。',
@@ -427,6 +466,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '味方に譲る',
           key: AttributeKey.passing,
+          detail: Detail.shortPassing,
           difficulty: 30,
           outcome: Outcome.play,
           successText: '調子の良い味方に譲った。チームは冷静に決めた。',
@@ -441,6 +481,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'GKに全力で寄せる',
           key: AttributeKey.pace,
+          detail: Detail.sprintSpeed,
           difficulty: 64,
           outcome: Outcome.goal,
           successText: 'GKのパスミスを誘い、無人のゴールへ蹴り込んだ。',
@@ -449,6 +490,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'パスコースを切って追い込む',
           key: AttributeKey.defending,
+          detail: Detail.interceptions,
           difficulty: 52,
           outcome: Outcome.play,
           successText: 'コースを限定し、相手は苦し紛れに蹴り出した。',
@@ -457,6 +499,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '守備ブロックに戻る',
           key: AttributeKey.physical,
+          detail: Detail.stamina,
           difficulty: 40,
           outcome: Outcome.play,
           successText: '無駄走りをせず、守備の形を整えた。',
@@ -471,6 +514,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'ボレーで叩く',
           key: AttributeKey.shooting,
+          detail: Detail.longShots,
           difficulty: 76,
           outcome: Outcome.goal,
           successText: '完璧なボレー。スタジアムが揺れた。',
@@ -479,6 +523,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'トラップしてから狙う',
           key: AttributeKey.dribbling,
+          detail: Detail.ballControl,
           difficulty: 64,
           outcome: Outcome.goal,
           successText: '一度収めて冷静に流し込んだ。',
@@ -487,6 +532,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'ファーの味方へ折り返す',
           key: AttributeKey.passing,
+          detail: Detail.crossing,
           difficulty: 56,
           outcome: Outcome.assist,
           successText: 'ファーへの折り返しを味方が押し込んだ。',
@@ -504,6 +550,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '縦にスルーパスを通す',
           key: AttributeKey.passing,
+          detail: Detail.vision,
           difficulty: 70,
           outcome: Outcome.assist,
           successText: '密集の間を通す一本。FWが抜け出して決めた。',
@@ -512,6 +559,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'サイドへ大きく展開する',
           key: AttributeKey.passing,
+          detail: Detail.longPassing,
           difficulty: 52,
           outcome: Outcome.play,
           successText: '逆サイドへ正確な展開。試合が動き出す。',
@@ -520,6 +568,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '自分で持ち上がる',
           key: AttributeKey.dribbling,
+          detail: Detail.dribbling,
           difficulty: 66,
           outcome: Outcome.play,
           successText: '2人剥がして前進。相手の守備が崩れた。',
@@ -534,6 +583,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'ミドルシュートを打つ',
           key: AttributeKey.shooting,
+          detail: Detail.longShots,
           difficulty: 74,
           outcome: Outcome.goal,
           successText: '鋭いミドルがゴール右上に突き刺さった。',
@@ -542,6 +592,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '中央へ持ち出してから叩く',
           key: AttributeKey.dribbling,
+          detail: Detail.ballControl,
           difficulty: 62,
           outcome: Outcome.assist,
           successText: '角度を作ってから横へ。味方が押し込んだ。',
@@ -550,6 +601,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '無理せず作り直す',
           key: AttributeKey.passing,
+          detail: Detail.shortPassing,
           difficulty: 42,
           outcome: Outcome.play,
           successText: '後ろに戻して作り直し。危なげない判断。',
@@ -564,6 +616,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '一気に寄せて奪いに行く',
           key: AttributeKey.defending,
+          detail: Detail.tackling,
           difficulty: 68,
           outcome: Outcome.play,
           successText: '寄せ切ってボールを奪取。ショートカウンターへ。',
@@ -572,6 +625,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'パスコースを切って待つ',
           key: AttributeKey.defending,
+          detail: Detail.interceptions,
           difficulty: 50,
           outcome: Outcome.play,
           successText: 'コースを消し続け、相手は後ろに戻すしかなかった。',
@@ -580,6 +634,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '走力で背後をカバーする',
           key: AttributeKey.pace,
+          detail: Detail.agility,
           difficulty: 58,
           outcome: Outcome.play,
           successText: '背後のスペースを消し切り、決定機を未然に潰した。',
@@ -594,6 +649,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '壁を越えて直接狙う',
           key: AttributeKey.shooting,
+          detail: Detail.longShots,
           difficulty: 78,
           outcome: Outcome.goal,
           successText: '壁を越えて落ちる軌道。GKは一歩も動けなかった。',
@@ -602,6 +658,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'ファーへ巻いたボールを入れる',
           key: AttributeKey.passing,
+          detail: Detail.crossing,
           difficulty: 60,
           outcome: Outcome.assist,
           successText: 'ファーへの巻いたボールを、味方が頭で合わせた。',
@@ -610,6 +667,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '横に出してリスタート',
           key: AttributeKey.passing,
+          detail: Detail.shortPassing,
           difficulty: 36,
           outcome: Outcome.play,
           successText: '意表を突く横パスから、攻撃を組み立て直した。',
@@ -624,6 +682,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '体を張って止める',
           key: AttributeKey.physical,
+          detail: Detail.strength,
           difficulty: 66,
           outcome: Outcome.play,
           successText: '正面から止め切った。相手の勢いを断った。',
@@ -632,6 +691,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'ファウルで止める',
           key: AttributeKey.defending,
+          detail: Detail.marking,
           difficulty: 44,
           outcome: Outcome.play,
           successText: 'カードは覚悟の上。戦術的ファウルで流れを切った。',
@@ -640,6 +700,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '遅らせて味方の帰陣を待つ',
           key: AttributeKey.pace,
+          detail: Detail.agility,
           difficulty: 56,
           outcome: Outcome.play,
           successText: '巧みに遅らせ、味方が戻る時間を作った。',
@@ -654,6 +715,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '40mのサイドチェンジを通す',
           key: AttributeKey.passing,
+          detail: Detail.vision,
           difficulty: 64,
           outcome: Outcome.assist,
           successText: '一本で逆サイドへ。フリーの味方が持ち込んで決めた。',
@@ -662,6 +724,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '近くの味方と繋いで運ぶ',
           key: AttributeKey.passing,
+          detail: Detail.shortPassing,
           difficulty: 46,
           outcome: Outcome.play,
           successText: 'テンポ良く繋ぎ、相手を走らせた。',
@@ -670,6 +733,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '密集を1人で突破する',
           key: AttributeKey.dribbling,
+          detail: Detail.dribbling,
           difficulty: 72,
           outcome: Outcome.goal,
           successText: '3人をかわして持ち込み、自ら決めた。',
@@ -684,6 +748,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'ペナルティエリアに飛び込む',
           key: AttributeKey.pace,
+          detail: Detail.acceleration,
           difficulty: 66,
           outcome: Outcome.goal,
           successText: '走り込んだところに折り返しが来た。同点弾。',
@@ -692,6 +757,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '早いクロスを上げる',
           key: AttributeKey.passing,
+          detail: Detail.crossing,
           difficulty: 58,
           outcome: Outcome.assist,
           successText: '早いクロスにFWが合わせた。',
@@ -700,6 +766,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'テンポを落として組み立てる',
           key: AttributeKey.dribbling,
+          detail: Detail.agility,
           difficulty: 44,
           outcome: Outcome.play,
           successText: '焦らず組み立て、良い形を作った。',
@@ -717,6 +784,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '飛び込んで奪いに行く',
           key: AttributeKey.defending,
+          detail: Detail.tackling,
           difficulty: 72,
           outcome: Outcome.play,
           successText: '足を伸ばして完璧なタックル。ボールだけを奪った。',
@@ -725,6 +793,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '間合いを保って遅らせる',
           key: AttributeKey.pace,
+          detail: Detail.agility,
           difficulty: 55,
           outcome: Outcome.play,
           successText: '距離を保って遅らせ、味方の帰陣を待った。',
@@ -733,6 +802,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '体を当てて外へ追い出す',
           key: AttributeKey.physical,
+          detail: Detail.strength,
           difficulty: 62,
           outcome: Outcome.play,
           successText: '体を当ててタッチラインの外へ追い出した。',
@@ -747,6 +817,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '競り勝ってクリアする',
           key: AttributeKey.physical,
+          detail: Detail.jumping,
           difficulty: 68,
           outcome: Outcome.play,
           successText: '高い打点で跳ね返し、危険を完全に排除した。',
@@ -755,6 +826,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'コースに入ってブロック',
           key: AttributeKey.defending,
+          detail: Detail.marking,
           difficulty: 60,
           outcome: Outcome.play,
           successText: '体を投げ出してシュートをブロックした。',
@@ -763,6 +835,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '前に出てインターセプト',
           key: AttributeKey.pace,
+          detail: Detail.acceleration,
           difficulty: 70,
           outcome: Outcome.play,
           successText: '読み切って前で断ち切り、そのまま攻撃に転じた。',
@@ -777,6 +850,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '縦に長いフィードを蹴る',
           key: AttributeKey.passing,
+          detail: Detail.longPassing,
           difficulty: 66,
           outcome: Outcome.assist,
           successText: '一本のフィードで前線へ。そのまま得点に繋がった。',
@@ -785,6 +859,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '運んでからパスを出す',
           key: AttributeKey.dribbling,
+          detail: Detail.dribbling,
           difficulty: 58,
           outcome: Outcome.play,
           successText: '数歩持ち上がって相手を外し、確実に繋いだ。',
@@ -793,6 +868,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '安全に大きく蹴り出す',
           key: AttributeKey.physical,
+          detail: Detail.strength,
           difficulty: 38,
           outcome: Outcome.play,
           successText: '無理をせずクリア。まずは危険を消した。',
@@ -807,6 +883,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'ニアに飛び込んでヘディング',
           key: AttributeKey.physical,
+          detail: Detail.jumping,
           difficulty: 70,
           outcome: Outcome.goal,
           successText: 'ニアで競り勝ち、頭で叩き込んだ。DFの得点。',
@@ -815,6 +892,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'ファーでこぼれ球を待つ',
           key: AttributeKey.defending,
+          detail: Detail.marking,
           difficulty: 56,
           outcome: Outcome.assist,
           successText: 'こぼれ球を折り返し、味方が押し込んだ。',
@@ -823,6 +901,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '上がらずリスク管理する',
           key: AttributeKey.pace,
+          detail: Detail.agility,
           difficulty: 40,
           outcome: Outcome.play,
           successText: '残っていたおかげでカウンターを未然に防いだ。',
@@ -837,6 +916,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'ラインを上げてオフサイドを取る',
           key: AttributeKey.defending,
+          detail: Detail.marking,
           difficulty: 68,
           outcome: Outcome.play,
           successText: '完璧なラインコントロール。旗が上がった。',
@@ -845,6 +925,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '走り合いで潰す',
           key: AttributeKey.pace,
+          detail: Detail.sprintSpeed,
           difficulty: 64,
           outcome: Outcome.play,
           successText: '走り負けせず、シュートコースを消した。',
@@ -853,6 +934,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'ラインを下げて守る',
           key: AttributeKey.physical,
+          detail: Detail.strength,
           difficulty: 42,
           outcome: Outcome.play,
           successText: '無理をせず下がって、ゴール前を固めた。',
@@ -867,6 +949,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'ゴールライン上でクリア',
           key: AttributeKey.defending,
+          detail: Detail.marking,
           difficulty: 74,
           outcome: Outcome.play,
           successText: 'ライン上で掻き出した。歓声が上がる。',
@@ -875,6 +958,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'スライディングでコースを消す',
           key: AttributeKey.pace,
+          detail: Detail.agility,
           difficulty: 66,
           outcome: Outcome.play,
           successText: '滑り込んでブロック。大きなファインプレー。',
@@ -883,6 +967,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'GKの位置に入って構える',
           key: AttributeKey.physical,
+          detail: Detail.strength,
           difficulty: 48,
           outcome: Outcome.play,
           successText: '体を大きく見せて、シュートを自分に当てさせた。',
@@ -897,6 +982,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '深くえぐってクロス',
           key: AttributeKey.pace,
+          detail: Detail.sprintSpeed,
           difficulty: 62,
           outcome: Outcome.assist,
           successText: 'ライン際までえぐったクロスを、FWが押し込んだ。',
@@ -905,6 +991,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '中に切れ込んでシュート',
           key: AttributeKey.shooting,
+          detail: Detail.finishing,
           difficulty: 76,
           outcome: Outcome.goal,
           successText: '切れ込んで放ったシュートが決まった。DFらしからぬ一撃。',
@@ -913,6 +1000,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '早めに味方へ預ける',
           key: AttributeKey.passing,
+          detail: Detail.shortPassing,
           difficulty: 44,
           outcome: Outcome.play,
           successText: '無理をせず預け、自分は守備位置へ戻った。',

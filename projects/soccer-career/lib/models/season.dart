@@ -1,3 +1,15 @@
+/// 試合を自動で進めるときの選び方。
+enum SimStyle {
+  safe('安全', '成功率が最も高い手を選ぶ'),
+  balanced('バランス', '評価点の期待値が最も高い手を選ぶ'),
+  aggressive('勝負', '得点に繋がる手の中で最も良い手を選ぶ');
+
+  const SimStyle(this.label, this.description);
+
+  final String label;
+  final String description;
+}
+
 /// 出場の仕方。評価点が低いと先発から外れ、さらに落ちると招集外になる。
 enum Appearance {
   start('先発'),
