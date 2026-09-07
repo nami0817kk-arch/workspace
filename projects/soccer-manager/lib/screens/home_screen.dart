@@ -10,6 +10,7 @@ import '../models/league.dart';
 import '../models/match_result.dart';
 import '../models/player.dart';
 import '../models/team.dart';
+import '../monetization/monetization_controller.dart';
 import '../state/game_state.dart';
 import '../services/feedback_service.dart';
 import '../theme/semantic_colors.dart';
@@ -1303,6 +1304,12 @@ class HomeScreen extends StatelessWidget {
     } catch (e) {
       if (context.mounted) _showProgressFailedSnackBar(context, e);
       return;
+    }
+    // 全画面広告はここだけ。シーズンの区切りは進行が一段落する場所で、
+    // 試合中やメニュー操作の途中に割り込むことがない。サポーターには
+    // 出ない(MonetizationController 側で判定している)。
+    if (context.mounted) {
+      await context.read<MonetizationController>().showSeasonInterstitial();
     }
     if (context.mounted) {
       await _showSeasonStartReport(context, gameState);

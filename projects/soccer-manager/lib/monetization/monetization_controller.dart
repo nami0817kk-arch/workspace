@@ -135,6 +135,21 @@ class MonetizationController extends ChangeNotifier {
     return ClaimResult.granted;
   }
 
+  /// シーズンの切り替わりで出る全画面広告。閉じられるまで待つ。
+  ///
+  /// サポーターには出さない。「買えば全画面広告が消える」ことが、この
+  /// 買い切りの主な値打ちになっている。
+  /// 在庫が無いときは [AdService] 側が何もせずに戻るので、広告のせいで
+  /// シーズンが進まなくなることはない。
+  Future<void> showSeasonInterstitial() async {
+    if (isSupporter) return;
+    await _ads.showInterstitialAd();
+  }
+
+  /// いま [showSeasonInterstitial] を呼んだら実際に広告が出るか。
+  bool get willShowSeasonInterstitial =>
+      !isSupporter && _ads.isInterstitialAdReady;
+
   Future<PurchaseOutcome> buySupporter() async {
     final outcome = await _purchases.buySupporter();
     if (outcome == PurchaseOutcome.purchased) await _markSupporter();
