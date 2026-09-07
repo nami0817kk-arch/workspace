@@ -161,8 +161,48 @@ def fetch(query: str, target: Path, seconds: float = 8.0) -> Clip:
     except requests.RequestException as error:
         raise StockError(f"落とせません: {error}") from error
     target.write_bytes(body)
+    trim(target, seconds)
     _record(target, clip)
     return clip
+
+
+# 落としたクリップを残す長さ。背景は節ごとに20秒ほどしか映らないので、
+# 元の尺（実測で30〜120秒）をそのまま置くと重いだけ。
+# 2026-09-07 に 120秒576MB の素材を掴み、書き出しが1分から4分21秒に伸びた。
+KEEP_SECONDS = 30.0
+
+
+def trim(target: Path, seconds: float) -> bool:
+    """頭から必要なぶんだけ残す。作り直さず、入れ物を詰め替えるだけ。
+
+    再エンコードすると時間がかかるうえ画質も落ちるので、ストリームは複製する。
+    失敗したら元のまま残す（背景が無くなるより重いほうがまし）。
+    """
+    keep = max(float(seconds), KEEP_SECONDS)
+    try:
+        import imageio_ffmpeg
+
+        ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
+    except Exception:
+        return False
+
+    import subprocess
+
+    short = target.with_suffix(".trim.mp4")
+    try:
+        result = subprocess.run(
+            [ffmpeg, "-y", "-loglevel", "error", "-t", str(keep), "-i", str(target),
+             "-c", "copy", "-movflags", "+faststart", str(short)],
+            capture_output=True, text=True, encoding="utf-8", errors="replace", timeout=300,
+        )
+    except (OSError, subprocess.SubprocessError):
+        short.unlink(missing_ok=True)
+        return False
+    if result.returncode != 0 or not short.exists() or short.stat().st_size == 0:
+        short.unlink(missing_ok=True)
+        return False
+    short.replace(target)
+    return True
 
 
 def _record(target: Path, clip: Clip) -> None:

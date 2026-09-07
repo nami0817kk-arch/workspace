@@ -42,7 +42,7 @@ def portrait(config: ProjectConfig) -> ProjectConfig:
         height=SIZE[1],
         telop_size=max(40, int(config.video.telop_size * 0.78)),
         # 見出しは縮めない。参考チャンネルは画面幅いっぱいの極太2行だった
-        headline_size=max(44, int(config.video.headline_size * 0.95)),
+        headline_size=max(44, int(config.video.headline_size * 0.70)),
         title_size=max(56, int(config.video.title_size * 0.62)),
     )
     titles = replace(config.titles, intro=0.0, chapter=0.0)

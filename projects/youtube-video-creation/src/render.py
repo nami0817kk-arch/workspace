@@ -15,6 +15,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 from . import cards, ffmpeg
+from .backgrounds import moving_background
 from .inserts import Inserts
 from .ffmpeg import is_video
 from .config import CastMember, ProjectConfig, _resolve
@@ -497,6 +498,18 @@ class Renderer:
         # 話者ではなく情報の確度で色を決める。会話が続くあいだ見出しを動かさないため
         accent = badge[1] if badge else _hex(self.config.video.accent)
 
+        # 文字の下に暗い帯を敷く。**縁取りだけでは背景に沈む**（2026-09-07 に
+        # 参考チャンネルと並べて確認）。63万回のチャンネルは白文字＋黒帯で、
+        # 実写の上でも見出しが読めていた。こちらは白文字＋細い縁だけだった。
+        band_right = left
+        for chunk in lines:
+            band_right = max(band_right, left + 34 + draw.textlength(chunk, font=self.font_headline))
+        draw.rounded_rectangle(
+            [left - 8, text_top - 18,
+             min(right, int(band_right + 34)), text_top + line_height * len(lines) - 4],
+            radius=10, fill=(8, 10, 16, 170),
+        )
+
         # 縦のアクセント帯
         draw.rounded_rectangle(
             [left, text_top - 6, left + 11, text_top + line_height * len(lines) - 12],
@@ -775,6 +788,8 @@ class Renderer:
         segments: list[tuple[Path, float]] = []
         for index, scene in enumerate(script.scenes):
             name = scene.background or script.background or self.config.video.background
+            # 既に書いた台本は .png を指している。書き出しのたびに実写を探す
+            name = moving_background(name)
             extra = inserts.before_scene(index)
             if index == 0:
                 extra += inserts.intro
