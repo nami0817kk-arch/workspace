@@ -50,7 +50,7 @@ class CareerController extends ChangeNotifier {
   /// 次の試合を始める。出場の仕方は直近の評価点で決まる。
   void startNextMatch() {
     final state = _state;
-    if (state == null || state.seasonFinished) return;
+    if (state == null || state.seasonFinished || state.retired) return;
 
     final matchday = state.matchday;
     _inProgress = _match.start(
@@ -81,7 +81,11 @@ class CareerController extends ChangeNotifier {
     final result = match.finish();
     _career.applyResult(state, result);
     state.player = state.player.copyWith(
-      attributes: _match.grow(state.player, result.rating),
+      attributes: _match.grow(
+        state.player,
+        result.rating,
+        used: match.successfulKeys,
+      ),
     );
     _inProgress = null;
     await _persist();
@@ -90,6 +94,20 @@ class CareerController extends ChangeNotifier {
 
   List<TransferOffer> get offers =>
       _state == null ? const [] : _career.offersFor(_state!);
+
+  ClubFate get fate =>
+      _state == null ? ClubFate.stay : _career.fateOf(_state!);
+
+  bool get canRetire => _state != null && _career.canRetire(_state!);
+  bool get mustRetire => _state != null && _career.mustRetire(_state!);
+
+  Future<void> retire() async {
+    final state = _state;
+    if (state == null) return;
+    _state = _career.retire(state);
+    _inProgress = null;
+    await _persist();
+  }
 
   Future<void> advanceSeason({Club? moveTo}) async {
     final state = _state;

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'state/career_controller.dart';
 import 'ui/screens/create_player_screen.dart';
 import 'ui/screens/hub_screen.dart';
+import 'ui/screens/retired_screen.dart';
 
 void main() {
   runApp(const SoccerCareerApp());
@@ -59,6 +60,9 @@ class _SoccerCareerAppState extends State<SoccerCareerApp> {
           }
           if (!_controller.hasCareer) {
             return CreatePlayerScreen(controller: _controller);
+          }
+          if (_controller.state!.retired) {
+            return RetiredScreen(controller: _controller);
           }
           return HubScreen(controller: _controller);
         },

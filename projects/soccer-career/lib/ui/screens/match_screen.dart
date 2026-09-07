@@ -134,8 +134,19 @@ class _ScenarioView extends StatelessWidget {
           Card(
             child: Padding(
               padding: const EdgeInsets.all(20),
-              child: Text(scenario.situation,
-                  style: theme.textTheme.titleMedium),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    MatchInProgress.minuteLabel(match.currentMinute),
+                    style: theme.textTheme.labelMedium
+                        ?.copyWith(color: theme.colorScheme.primary),
+                  ),
+                  const SizedBox(height: 6),
+                  Text(scenario.situation,
+                      style: theme.textTheme.titleMedium),
+                ],
+              ),
             ),
           ),
           const SizedBox(height: 16),

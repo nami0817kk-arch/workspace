@@ -27,6 +27,31 @@ class HubScreen extends StatelessWidget {
     ));
   }
 
+  Future<void> _confirmDelete(BuildContext context) async {
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('キャリアを削除しますか'),
+        content: const Text('この選手の記録はすべて消えます。元に戻せません。'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('やめる'),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.error,
+              foregroundColor: Theme.of(context).colorScheme.onError,
+            ),
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('削除する'),
+          ),
+        ],
+      ),
+    );
+    if (ok == true) await controller.deleteCareer();
+  }
+
   @override
   Widget build(BuildContext context) {
     final state = controller.state!;
@@ -37,6 +62,16 @@ class HubScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text('${state.player.name}  ${state.year}シーズン'),
+          actions: [
+            PopupMenuButton<String>(
+              onSelected: (value) {
+                if (value == 'delete') _confirmDelete(context);
+              },
+              itemBuilder: (context) => const [
+                PopupMenuItem(value: 'delete', child: Text('キャリアを削除')),
+              ],
+            ),
+          ],
           bottom: const TabBar(tabs: [
             Tab(text: 'ホーム'),
             Tab(text: '順位表'),

@@ -54,10 +54,14 @@ class CareerState {
     required this.results,
     required this.table,
     required this.history,
+    this.retired = false,
   });
 
   Player player;
   Club club;
+
+  /// 引退済みなら true。以後は試合をせず、通算成績だけを見せる。
+  bool retired;
 
   /// 所属リーグのクラブ一覧（自分のクラブを含む20チーム）。
   List<Club> league;
@@ -104,7 +108,26 @@ class CareerState {
   int get leaguePosition =>
       sortedTable.indexWhere((r) => r.clubId == club.id) + 1;
 
+  /// 通算成績。今シーズンぶんも含める。
+  SeasonStats get careerTotals {
+    final all = [...history.map((h) => h.stats), seasonStats];
+    final appearances = all.fold(0, (s, x) => s + x.appearances);
+    if (appearances == 0) {
+      return const SeasonStats(
+          appearances: 0, goals: 0, assists: 0, averageRating: 0);
+    }
+    final weighted =
+        all.fold<double>(0, (s, x) => s + x.averageRating * x.appearances);
+    return SeasonStats(
+      appearances: appearances,
+      goals: all.fold(0, (s, x) => s + x.goals),
+      assists: all.fold(0, (s, x) => s + x.assists),
+      averageRating: weighted / appearances,
+    );
+  }
+
   Map<String, dynamic> toJson() => {
+        'retired': retired,
         'player': player.toJson(),
         'club': club.toJson(),
         'league': league.map((c) => c.toJson()).toList(),
@@ -132,5 +155,7 @@ class CareerState {
         history: (json['history'] as List)
             .map((h) => SeasonRecord.fromJson(h as Map<String, dynamic>))
             .toList(),
+        // 引退フラグを足す前の保存データには無いので、無ければ現役扱い。
+        retired: json['retired'] as bool? ?? false,
       );
 }
