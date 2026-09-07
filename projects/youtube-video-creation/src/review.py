@@ -63,7 +63,9 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     findings.append(_caption_badges(out_dir / "subtitles.srt"))
     findings.append(_still_length(out_dir / "script.json"))
     findings.append(_screen_change(out_dir / "script.json"))
-    findings.append(check_card_hold(out_dir / "script.json"))
+    size = _dimensions(out_dir / "video.mp4")
+    portrait = bool(size and size[1] > size[0])
+    findings.append(check_card_hold(out_dir / "script.json", hold_limit(portrait)))
     reaction = check_reaction_layer(script)
     if reaction is not None:
         findings.append(reaction)
@@ -156,6 +158,9 @@ SAME_SCREEN_MAX = 20.0
 # 本編21.9〜26.5秒 / ショート17.7〜23.1秒 が同じカードのままだった。
 # ショートは尺の6〜7割。伸びている参考チャンネルは8秒で必ず変えている。
 CARD_HOLD_MAX = 12.0
+# ショートはこれより短く見る。31秒の動画で12秒動かないと、尺の4割が同じ絵になる
+# （2026-09-07 に書き出して確認）。参考チャンネルは3〜8秒で必ず変えていた。
+SHORT_CARD_HOLD_MAX = 8.0
 
 
 def _screen_change(script_json: Path) -> Finding:
@@ -346,6 +351,20 @@ def check_short_opening(video: Path, *, measure=None) -> Finding | None:
     return Finding(True, "ショートの冒頭", f"最初の{OPENING_SECONDS:.1f}秒から喋っています")
 
 
+def _dimensions(video: Path) -> tuple[int, int] | None:
+    """動画の幅と高さ。読めなければ None（点検を落とさない）。"""
+    if not video.exists():
+        return None
+    try:
+        import imageio_ffmpeg
+
+        ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
+    except Exception:
+        return None
+    found = _volume(ffmpeg, ["-t", "0.1", "-i", str(video)])
+    return found[0] if found else None
+
+
 def _opening_sound(video: Path, seconds: float):
     """(幅, 高さ, 冒頭の平均音量dB, 全体の平均音量dB) を返す。測れなければ None。"""
     if not video.exists():
@@ -418,6 +437,11 @@ def check_reaction_layer(script: Script) -> Finding | None:
         f"『{titles}』に反応カードがありません。"
         "reactions で数えてからカードにしてください（語りだけだと画面が持ちません）",
     )
+
+
+def hold_limit(portrait: bool) -> float:
+    """同じ絵を出しておいてよい秒数。縦型（ショート）は短い。"""
+    return SHORT_CARD_HOLD_MAX if portrait else CARD_HOLD_MAX
 
 
 def check_card_hold(script_json: Path, limit: float = CARD_HOLD_MAX) -> Finding:

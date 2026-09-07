@@ -662,7 +662,9 @@ def to_script(notes: Notes, plan: Plan) -> str:
         "  se: assets/audio/se_pon.wav",
         # 問いは「〜のか。」で終わることが多い。言い直さず、そのまま問いにする
         f"キャスター: {_ends_sentence(notes.question)}",
-        f"  telop: 今回の問い: {_telop(notes.question, 20)}",
+        # 画面は2〜3行に折り返せる。20字で切ると「…当の監督…」のように
+        # 途中で切れた文字がそのまま出ていた（2026-09-07 に書き出して確認）
+        f"  telop: 今回の問い: {_telop(notes.question, TELOP_LIMIT)}",
         "",
     ]
 

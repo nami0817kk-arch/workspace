@@ -461,3 +461,12 @@ def test_反応の節が無い回では黙る():
     from src.review import check_reaction_layer
 
     assert check_reaction_layer(_script_with("何が起きたか")) is None
+
+
+def test_ショートは同じ絵の上限が短い():
+    """31秒の動画で12秒動かないと尺の4割が同じ絵になる（2026-09-07 に確認）。"""
+    from src.review import CARD_HOLD_MAX, SHORT_CARD_HOLD_MAX, hold_limit
+
+    assert hold_limit(portrait=True) == SHORT_CARD_HOLD_MAX
+    assert hold_limit(portrait=False) == CARD_HOLD_MAX
+    assert SHORT_CARD_HOLD_MAX < CARD_HOLD_MAX

@@ -64,8 +64,12 @@ class Layout:
 
     @property
     def headline_box(self) -> tuple[int, int, int, int]:
-        """立ち絵なしのときの見出し領域。下寄せで、画面の幅をたっぷり使う。"""
-        left = int(self.width * 0.075)
+        """立ち絵なしのときの見出し領域。下寄せで、画面の幅をたっぷり使う。
+
+        **縦型は余白を削る。**伸びている参考チャンネルは見出しが画面幅いっぱいで、
+        こちらは幅1080に対して余白が左右75pxずつあった（2026-09-07 に並べて確認）。
+        """
+        left = int(self.width * (0.042 if self.is_portrait else 0.075))
         return (left, int(self.height * 0.58), self.width - left, int(self.height * 0.88))
 
     def character_anchor(self, position: str) -> tuple[int, int]:
@@ -509,9 +513,11 @@ class Renderer:
 
         y = text_top
         for chunk in lines:
+            # 縁取りは縦型で太くする。実写や模様の上でも輪郭が残るように
             draw.text(
                 (left + 34, y), chunk, font=self.font_headline, fill=(255, 255, 255, 255),
-                stroke_width=5, stroke_fill=(0, 0, 0, 225),
+                stroke_width=8 if self.layout.is_portrait else 5,
+                stroke_fill=(0, 0, 0, 235),
             )
             y += line_height
 

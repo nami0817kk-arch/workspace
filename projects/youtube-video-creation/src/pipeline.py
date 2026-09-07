@@ -64,8 +64,11 @@ def build_script(
     backend = create_backend(config, use_tts)
     synthesize_script(script, config, audio_dir, backend=backend)
 
-    # 尺が決まってから、長く止まる絵をほぐす。合成の前だと秒数が分からない
-    spread_long_cards(script)
+    # 尺が決まってから、長く止まる絵をほぐす。合成の前だと秒数が分からない。
+    # 縦型（ショート）は同じ絵を出しておける時間が短い
+    from .review import hold_limit
+
+    spread_long_cards(script, hold_limit(config.video.height > config.video.width))
 
     # タイトルカードのぶんの無音を挟み、各セリフの開始時刻を振り直す
     inserts = inserts_mod.plan(script, config)
