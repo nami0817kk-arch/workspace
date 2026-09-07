@@ -67,12 +67,31 @@ def _normalize_day(raw: dict) -> dict:
     return {"rec_date": raw["rec_date"], "gainers": legacy_rows, "losers": [], "active": []}
 
 
+# 日付が信用できないため公開しない分。ファイルは data/ に残してある。
+#
+# 2026-09-07 まで、as-of 日付をページ先頭の <time>（= NYダウの終値日）から
+# 採っていたため、平日に取得した分は「前営業日のラベル + 当日のデータ」に
+# なっていた（修正は libs/kabutan の extract_asof_date）。どの営業日の
+# ランキングなのかを外部から照合する手段が無い（kabutan は過去分を出さない）。
+#
+# 捨てずに除外にしてあるのは、後から日付を確定できたときに戻せるようにするため。
+# 復帰させるならこの集合から外すだけでよい。
+UNRELIABLE_DATES = frozenset({"2026-08-24", "2026-08-28", "2026-08-31", "2026-09-01"})
+
+
 def _load_all_days() -> list[dict]:
-    """data/YYYY-MM-DD.json を全て読み込み、rec_date 降順（新しい順）で返す。"""
+    """data/YYYY-MM-DD.json を全て読み込み、rec_date 降順（新しい順）で返す。
+
+    UNRELIABLE_DATES は読み飛ばす。日付の当てにならない回を混ぜると、
+    アーカイブ全体が「いつのランキングなのか分からないもの」になってしまう。
+    """
     days = []
     for path in _DATA_DIR.glob("????-??-??.json"):
         with open(path, encoding="utf-8") as f:
-            days.append(_normalize_day(json.load(f)))
+            day = _normalize_day(json.load(f))
+        if day["rec_date"] in UNRELIABLE_DATES:
+            continue
+        days.append(day)
     days.sort(key=lambda d: d["rec_date"], reverse=True)
     return days
 

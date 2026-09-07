@@ -222,3 +222,36 @@ def test_使わない声はプールに戻せない(tmp_path):
     broken.write_text(yaml.safe_dump(raw, allow_unicode=True), encoding="utf-8")
     with pytest.raises(ConfigError):
         load_config(broken)
+
+
+def test_匿名の反応は行ごとに声が変わる():
+    """20件つづけて同じ声だと、一人の独白に聞こえる（2026-09-07）。"""
+    from src.config import load_config
+
+    config = load_config()
+    assert "ネット民" in config.voice_crowd
+    lines = ["完全に別チームだった", "存在が戦術やん", "ラヤいいな", "これは強い"]
+    styles = {config.resolve_speaker("ネット民", t).style_id for t in lines}
+    assert len(styles) > 1, "全部同じ声になっている"
+    # **同じ発言はいつも同じ声。**作り直しても変わらない
+    assert (config.resolve_speaker("ネット民", lines[0]).style_id
+            == config.resolve_speaker("ネット民", lines[0]).style_id)
+
+
+def test_群衆には決め打ちの声を使わない():
+    """名前のある人と同じ声だと、その人が言ったように聞こえる。"""
+    from src.config import load_config
+
+    config = load_config()
+    taken = set(config.voice_fixed.values())
+    lines = [f"これは反応その{i}" for i in range(20)]
+    styles = {config.resolve_speaker("ネット民", t).style_id for t in lines}
+    assert not (styles & taken), f"決め打ちの声が混ざっている: {styles & taken}"
+
+
+def test_名前のある人は行ごとに変わらない():
+    from src.config import load_config
+
+    config = load_config()
+    assert (config.resolve_speaker("キャラガー", "あ").style_id
+            == config.resolve_speaker("キャラガー", "い").style_id)

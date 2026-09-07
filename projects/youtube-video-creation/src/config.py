@@ -186,9 +186,12 @@ class ProjectConfig:
     voice_female: tuple[str, ...] = ()
     # 使わないと決めた声。プールに混ざっていたら読み込みで止める
     voice_banned: tuple[int, ...] = ()
+    # **匿名の群衆は「同じ人」ではない**（2026-09-07）。ここに書いた名前は
+    # 行ごとに声が変わる。「ネット民」が20件つづけて同じ声だと、一人の独白に聞こえる
+    voice_crowd: tuple[str, ...] = ()
     path: Path = DEFAULT_CONFIG_PATH
 
-    def resolve_speaker(self, name: str) -> CastMember:
+    def resolve_speaker(self, name: str, variant: str = "") -> CastMember:
         """台本に書かれた話者名（表記ゆれ・別名を含む）を CastMember に解決する。"""
         wanted = name.strip()
         if wanted in self.cast:
@@ -203,11 +206,11 @@ class ProjectConfig:
         # のどちらか（2026-09-05 のユーザー判断）。代弁は人ごとに声が変わるので、
         # 出てくる人を全部 config に書くのは無理がある。**名前から声を決める。**
         if self.voice_pool:
-            return self.voiced(wanted)
+            return self.voiced(wanted, variant)
         known = "/ ".join(self.cast)
         raise ConfigError(f"話者『{wanted}』は config に定義されていません（定義済み: {known}）")
 
-    def voiced(self, name: str) -> CastMember:
+    def voiced(self, name: str, variant: str = "") -> CastMember:
         """代弁する人。**同じ名前なら、いつも同じ声になる。**
 
         名前から選ぶので、動画をまたいでも声が変わらない。乱数で選ぶと
@@ -216,6 +219,17 @@ class ProjectConfig:
         import hashlib
 
         wanted = name.strip()
+        # **匿名の群衆は行ごとに声を変える。**「ネット民」が20件つづけて同じ声だと
+        # 一人の独白に聞こえる（2026-09-07）。発言の文字から選ぶので、
+        # **同じ発言はいつも同じ声**になり、作り直しても変わらない
+        if wanted in self.voice_crowd and variant:
+            # **決め打ちされた声は群衆に使わない。**名前のある人と同じ声で
+            # 匿名の書き込みが読まれると、その人が言ったように聞こえる
+            taken = set(self.voice_fixed.values())
+            pool = [v for v in self.voice_pool if v not in taken] or list(self.voice_pool)
+            digest = hashlib.sha1(f"{wanted}/{variant}".encode("utf-8")).digest()
+            return self._member(wanted, pool[int.from_bytes(digest[:4], "big") % len(pool)])
+
         # **決め打ちが最優先。**ハッシュの衝突を人が手で解くための逃げ道
         # （メッシとモウリーニョがどちらも style 42 になっていた）
         if wanted in self.voice_fixed:
@@ -265,6 +279,7 @@ def build_config(raw: dict, path: Path = DEFAULT_CONFIG_PATH) -> ProjectConfig:
     pool_female = voice_raw.pop("voice_pool_female", ()) or ()
     female = voice_raw.pop("voice_female", ()) or ()
     banned = tuple(int(v) for v in (voice_raw.pop("voice_banned", ()) or ()))
+    crowd = voice_raw.pop("voice_crowd", ()) or ()
     # **使わないと決めた声が混ざっていたら止める。**外したはずの声が
     # プールに戻ってくるのを、人の注意で防ぐのは無理がある
     mixed = sorted({int(v) for v in list(pool or ()) + list(pool_female)} & set(banned))
@@ -303,6 +318,7 @@ def build_config(raw: dict, path: Path = DEFAULT_CONFIG_PATH) -> ProjectConfig:
         voice_pool_female=tuple(int(v) for v in pool_female),
         voice_female=tuple(str(v).strip() for v in female if str(v).strip()),
         voice_banned=banned,
+        voice_crowd=tuple(str(v).strip() for v in crowd if str(v).strip()),
         video=video,
         voicevox=voicevox,
         cast=cast,
