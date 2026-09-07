@@ -169,21 +169,6 @@ class CastMember:
 
 
 @dataclass
-class ChannelConfig:
-    """冒頭に出すチャンネルの名乗り。
-
-    伸びている参考チャンネルは、冒頭0.5〜2.5秒だけ画面の上に
-    チャンネル名と登録の誘導を出していた（2026-09-07 に実測）。
-    ずっと出すと本文の邪魔になるので、冒頭だけにする。
-    **name が空なら出さない。**
-    """
-
-    name: str = ""
-    handle: str = ""            # @から始まるハンドル。空なら出さない
-    banner_seconds: float = 2.5  # 0 にすると出さない
-
-
-@dataclass
 class ProjectConfig:
     video: VideoConfig
     voicevox: VoicevoxConfig
@@ -191,7 +176,6 @@ class ProjectConfig:
     audio: AudioConfig = field(default_factory=AudioConfig)
     motion: MotionConfig = field(default_factory=MotionConfig)
     titles: TitleConfig = field(default_factory=TitleConfig)
-    channel: ChannelConfig = field(default_factory=ChannelConfig)
     # 代弁に使う声の候補。空なら未登録の話者はエラーのまま
     voice_pool: tuple[int, ...] = ()
     path: Path = DEFAULT_CONFIG_PATH
@@ -262,7 +246,6 @@ def build_config(raw: dict, path: Path = DEFAULT_CONFIG_PATH) -> ProjectConfig:
     audio = AudioConfig(**(raw.get("audio") or {}))
     motion = MotionConfig(**(raw.get("motion") or {}))
     titles = TitleConfig(**(raw.get("titles") or {}))
-    channel = ChannelConfig(**(raw.get("channel") or {}))
 
     cast_raw = raw.get("cast") or {}
     if not cast_raw:
@@ -292,6 +275,5 @@ def build_config(raw: dict, path: Path = DEFAULT_CONFIG_PATH) -> ProjectConfig:
         audio=audio,
         motion=motion,
         titles=titles,
-        channel=channel,
         path=path,
     )
