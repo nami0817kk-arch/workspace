@@ -2365,6 +2365,16 @@ def _cmd_upload(args, config) -> int:
     # **同じ動画を二度上げない。**2026-09-07 に、投稿処理がまだ走っている
     # 最中に2本目を起こして本編4本を重複公開し、その分で本数の上限を
     # 使い切った。人の注意では防げないので、投稿する側に控えを持たせる。
+    # **投稿は時間で散らす**（2026-09-07）。参考チャンネルは1時間に1本ずつ、
+    # こちらは13時間前に4本と固めて出していた。止めはしない（まとめて出す日も
+    # ある）が、**気づかずに固めることは防ぐ**
+    gap = posted.since_last()
+    if gap is not None and gap < posted.SPREAD_MINUTES:
+        print(f"■ 前の投稿から{gap:.0f}分しかたっていません"
+              f"（目安 {posted.SPREAD_MINUTES}分）")
+        print("  参考チャンネルは1時間に1本ずつ出しています。"
+              "まとめて出すと自分の動画同士で枠を奪い合います")
+
     seen = posted.find(build_dir)
     if seen and not args.again:
         print("■ この出力先はすでに投稿しています　" + str(build_dir))

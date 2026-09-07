@@ -35,6 +35,22 @@ PACIFIC_SUMMER = timezone(timedelta(hours=-7))
 # 目安。これを超えたら弾かれても驚かない、という程度の数
 SOFT_MAX = 34
 
+# **投稿は時間で散らす**（2026-09-07 の実測）。参考にしている
+# 2chサッカーの噂話（登録10.3万）は直近24時間に 8/18/20/21/22/23 時間前と
+# **1時間に1本ずつ**出していた。こちらは13時間前に4本、14〜15時間前に4本と
+# **一度に固めて**出していた。まとめて出すと、同じ枠を自分の動画同士で
+# 奪い合い、登録者の新着も一度で埋まる。
+SPREAD_MINUTES = 45
+
+
+def since_last(path: Path = LEDGER, now: datetime | None = None) -> float | None:
+    """前に投稿してから何分たったか。控えが無ければ None。"""
+    times = _times(path)
+    if not times:
+        return None
+    now = now or datetime.now(timezone.utc)
+    return (now - max(times)).total_seconds() / 60.0
+
 
 def key(build_dir: Path | str) -> str:
     """出力先の名前を控えの見出しにする（例: 20260907_japan_short）。"""

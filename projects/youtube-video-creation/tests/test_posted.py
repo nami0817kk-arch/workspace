@@ -88,3 +88,24 @@ def test_転がる24時間の窓ではない(ledger: Path) -> None:
     old = datetime(2026, 9, 6, 8, 0, tzinfo=timezone.utc)       # 25時間以上前ではない
     posted.record("output/a", "v1", ledger, now=old)
     assert posted.today(ledger, hit) == posted.today(ledger, later)
+
+
+# 投稿を時間で散らす（2026-09-07）。参考チャンネルは1時間に1本ずつ、
+# こちらは13時間前に4本と固めて出していた。
+
+def test_前の投稿からの間隔が分かる(tmp_path):
+    from datetime import datetime, timedelta, timezone
+
+    from src import posted
+
+    book = tmp_path / "posted.json"
+    now = datetime(2026, 9, 8, 12, 0, tzinfo=timezone.utc)
+    assert posted.since_last(book, now) is None          # 控えが無ければ None
+    posted.record("out/a", "abc123", book, now=now - timedelta(minutes=20))
+    assert round(posted.since_last(book, now)) == 20
+
+
+def test_目安は45分():
+    from src import posted
+
+    assert posted.SPREAD_MINUTES == 45
