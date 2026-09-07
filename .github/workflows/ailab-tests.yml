@@ -2,7 +2,7 @@ name: tests
 
 on:
   push:
-    branches: ["**"]
+    branches: [master]
     paths:
       - "platform/ai-lab/**"
       - ".github/workflows/ailab-tests.yml"
@@ -13,6 +13,12 @@ on:
   workflow_dispatch: {}
 
 # 読むだけのジョブなので、トークンの権限は最小にしておく。
+# 同じブランチで新しい実行が始まったら、古い方は打ち切る。
+# 連続で push したとき、途中の版のテストに時間を使わないため。
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 

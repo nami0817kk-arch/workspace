@@ -23,6 +23,11 @@ on:
         required: false
         default: false
 
+# 途中で止めると害がある（公開・リリース・通知）。重複は避けるが打ち切らない。
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
 

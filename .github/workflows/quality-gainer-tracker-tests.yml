@@ -2,11 +2,17 @@ name: quality-gainer-tracker tests
 
 on:
   push:
-    branches: ["**"]
+    branches: [master]
     paths: ["projects/quality-gainer-tracker/**", "libs/kabutan/**", ".github/workflows/quality-gainer-tracker-tests.yml"]
   pull_request:
     paths: ["projects/quality-gainer-tracker/**", "libs/kabutan/**", ".github/workflows/quality-gainer-tracker-tests.yml"]
   workflow_dispatch: {}
+
+# 同じブランチで新しい実行が始まったら、古い方は打ち切る。
+# 連続で push したとき、途中の版のテストに時間を使わないため。
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   contents: read
