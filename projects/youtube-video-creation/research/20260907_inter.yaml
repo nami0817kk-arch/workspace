@@ -1,0 +1,76 @@
+slot: world
+date: 2026年9月7日
+theme:
+  id: inter_napoli
+  league: italy
+  prefix: 速報
+  title: インテルが2点差をひっくり返す ラウタロがアディショナルタイムに決勝点
+  hook: 後半、五分間で二失点。そこから、試合が終わるまでに三点returned。
+  question: 2点を追う展開から、何が変わったのか
+thumbnail:
+  line1: 2点差から逆転
+  line2: ラウタロがAT弾
+  tags:
+  - インテル
+  - ラウタロ
+  photo: assets/images/lautaro/01.jpg
+answer: アディショナルタイムのラウタロ。開幕からの全勝を守った
+watch: 次節。全勝がどこまで続くか
+sections:
+- id: what
+  heading: 試合はどう動いたか
+  tier: 報道
+  telop: インテル 3-2 ナポリ（サン・シーロ）
+  say:
+  - voice: キャスター
+    text: セリエA、インテル対ナポリは、さんたいにでインテルが勝ちました。
+  - voice: キャスター
+    text: ナポリの指揮を執るのは、ミランを率いていたマッシミリアーノ・アッレグリ。サン・シーロに戻ってきた形です。
+    telop: アッレグリがサン・シーロに帰還
+  - voice: キャスター
+    text: そのナポリが、後半の立ち上がりに主導権を握ります。ごふんの間にポリターノとホイルンドが決め、にてん差としました。
+    telop: 後半、5分間で2失点
+    card:
+      type: points
+      title: この試合の流れ
+      items:
+      - 後半立ち上がり、ポリターノが得点
+      - その5分後、ホイルンドが追加点 → 2点差
+      - そこからインテルが3点を返す
+      - アディショナルタイム、ラウタロが決勝点
+  official: false
+  sources:
+  - https://www.espn.com/soccer/story/_/id/49838122/lautaro-martinez-scores-stoppage-winner-inter-come-two-beat-napoli
+  - https://www.theguardian.com/football/2026/sep/05/european-football-ethan-nwaneri-dortmund-hoffenheim-athletic-bilbao-atletico-madrid-inter-napoli
+- id: turn
+  heading: 分かれ目はどこか
+  tier: 報道
+  telop: 2点差から、終了間際までに3点
+  say:
+  - voice: キャスター
+    text: 分かれ目は、にてん差になったあとの時間の使い方でした。
+  - voice: キャスター
+    text: インテルはそこから追い上げ、アディショナルタイムにラウタロ・マルティネスが決勝点を決めます。
+    telop: ラウタロがアディショナルタイムに決勝点
+  - voice: キャスター
+    text: 開幕からの全勝を守った形です。
+  official: false
+  sources:
+  - https://www.espn.com/soccer/story/_/id/49838122/lautaro-martinez-scores-stoppage-winner-inter-come-two-beat-napoli
+  - https://www.theguardian.com/football/2026/sep/05/european-football-ethan-nwaneri-dortmund-hoffenheim-athletic-bilbao-atletico-madrid-inter-napoli
+- id: numbers
+  heading: 数字で見ると
+  tier: 報道
+  telop: 開幕から全勝を維持
+  say:
+  - voice: キャスター
+    text: この勝利で、インテルは今季のセリエAで全勝を保っています。
+  - voice: キャスター
+    text: にてん差を追いかけて勝ち切るのは、勝点以上のものが残る試合です。
+    telop: 2点差を返して勝ち切った
+  - voice: キャスター
+    text: つぎに見るべきは次節。この全勝がどこまで続くかです。
+  official: false
+  sources:
+  - https://www.espn.com/soccer/story/_/id/49838122/lautaro-martinez-scores-stoppage-winner-inter-come-two-beat-napoli
+  - https://www.theguardian.com/football/2026/sep/05/european-football-ethan-nwaneri-dortmund-hoffenheim-athletic-bilbao-atletico-madrid-inter-napoli

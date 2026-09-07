@@ -241,6 +241,25 @@ LIVE_MARKS = (
 KIND_TOLERANCE = 2
 
 
+# スタメン発表の見出し。中身は選手名の並びだけで、動画にする題材が無い。
+# **実況ブログと分けてあるのは、外す理由が違うため。**実況は「中身が無い」、
+# こちらは中身が無いことに加えて**公開する頃には試合が終わっている**。
+# 2026-09-07 のユーザー判断。実測では434件中11件が該当し、誤爆はなかった
+LINEUP_MARKS = (
+    "スタメン", "先発メンバー",
+    "starting xi", "starting line", "line-ups", "lineups", "predicted xi", "confirmed xi",
+    "alineaciones", "alineación", "once inicial", "onces",
+    "aufstellung", "formazioni", "les compositions", "compositions probables",
+    "opstelling", "onze do", "onze inicial",
+)
+
+
+def is_lineup(item: "Candidate") -> bool:
+    """スタメン発表の見出しか。実況と同じく題材にならないので枠から外す。"""
+    low = item.title.lower()
+    return any(mark in low for mark in LINEUP_MARKS)
+
+
 def _best(pool: list["Candidate"]) -> int:
     return max((c.score for c in pool), default=0)
 
@@ -282,6 +301,12 @@ def assign(
     dropped = len(items) - len(remaining)
     if dropped:
         fallbacks.setdefault("_", []).append(f"実況・速報の見出しを{dropped}件外しました")
+    # スタメン発表も題材にならない。**どの枠にも入れない**
+    before = len(remaining)
+    remaining = [c for c in remaining if not is_lineup(c)]
+    if before - len(remaining):
+        fallbacks.setdefault("_", []).append(
+            f"スタメン発表の見出しを{before - len(remaining)}件外しました")
     chosen: dict[str, Candidate] = {}
     used_topics: set[str] = set()
     used_kinds: list[str] = []

@@ -1,0 +1,93 @@
+slot: japan
+date: 2026年9月7日
+theme:
+  id: kubo_sociedad
+  league: spain
+  prefix: 悲報
+  title: 久保建英、5季目の立ち上がりに苦戦 スペイン紙「切れ味に欠けている」
+  hook: ゴールもアシストも、まだありません。ただ、監督の見方は違いました。
+  question: 評価が割れているとき、どちらを見ればよいのか
+thumbnail:
+  line1: 久保建英、苦戦
+  line2: 監督「疑いはない」
+  tags:
+  - 久保建英
+  - ソシエダ
+  photo: assets/images/kubo/01.jpg
+answer: スペイン紙は切れ味を欠くと書き、監督は重要な役割を果たすと言っている
+watch: 次節。数字が動くかどうか
+sections:
+- id: said
+  heading: 何を言われているか
+  tier: 報道
+  telop: スペイン紙AS「最高の久保を待つソシエダ」
+  say:
+  - voice: キャスター
+    text: レアル・ソシエダの久保建英について、スペインのアスが記事を出しました。
+  - voice: キャスター
+    text: 見出しは「最高の久保建英を待つレアル・ソシエダ」。中身は、こうです。
+    card:
+      type: quote
+      source: AS（スペイン）
+      color: '#00539f'
+      text: 開幕からここまで、ゴールもアシストも記録できておらず、相手ディフェンスと対峙する際の1対1での切れ味に欠けている印象を与える
+      translation: ''
+  - voice: アス
+    text: 久保はソシエダでごシーズン目を迎えている。にじゅうごさいとなった彼は、再び違いを生み出すことが求められている。
+  - voice: アス
+    text: しかし今シーズンの立ち上がりは苦戦している。ゴールもアシストも無く、一対一での切れ味に欠けている。
+    telop: 「ゴールもアシストも記録できていない」
+  official: false
+  sources:
+  - https://football-tribe.com/japan/2026/09/06/358939/
+  - https://as.com/futbol/primera/
+- id: context
+  heading: どういう状況で出た評価か
+  tier: 報道
+  telop: W杯の初戦で負傷し、準備が積めなかった
+  say:
+  - voice: キャスター
+    text: この夏、久保は日本代表としてワールドカップに臨みました。
+    card:
+      type: points
+      title: この夏に起きたこと
+      items:
+      - W杯初戦で負傷。それ以上の出場機会を得られず
+      - プレシーズン合流の前も、十分な実戦を積めず
+      - ソシエダとの契約は2029年6月末まで
+      - 契約解除金は6000万ユーロ（約109億円）
+  - voice: キャスター
+    text: ところが初戦で負傷し、それ以上は出られませんでした。プレシーズンに合流する前も、十分な実戦を積めていません。
+  - voice: キャスター
+    text: つまり、評価が下がっている時期の背景には、準備が積めなかったという事情があります。
+    telop: 評価の背景に、準備不足がある
+  official: false
+  sources:
+  - https://football-tribe.com/japan/2026/09/06/358939/
+  - https://as.com/futbol/primera/
+- id: react
+  heading: 監督はどう見ているか
+  tier: 報道
+  telop: マタラッツォ監督「疑いはない」
+  say:
+  - voice: キャスター
+    text: いっぽう、指揮官の見方は違いました。ペジェグリーノ・マタラッツォ監督の会見です。
+    card:
+      type: quote
+      source: Pellegrino Matarazzo（会見）
+      color: '#0067b1'
+      text: タケは非常に特別な特徴を持っており、その質の高さは誰もが知るところだ
+      translation: ''
+  - voice: マタラッツォ監督
+    text: タケは非常に特別な特徴を持っている。その質の高さは、誰もが知るところだ。
+  - voice: マタラッツォ監督
+    text: だからこそ、今シーズン彼がチームで非常に重要な役割を果たすことに、疑いはない。
+    telop: 「重要な役割を果たすことに疑いはない」
+  - voice: マタラッツォ監督
+    text: 直近の数試合では持てる力をすべて発揮できたわけではないかもしれない。だが間違いなく、最高のレベルに戻ってくれると確信している。
+  - voice: キャスター
+    text: 評価が割れています。つぎに見るべきは、数字が動くかどうかです。
+  official: false
+  sources:
+  - https://football-tribe.com/japan/2026/09/06/358939/
+  - https://as.com/futbol/primera/

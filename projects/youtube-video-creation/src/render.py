@@ -162,7 +162,12 @@ class Renderer:
         if self.layout.with_characters:
             self._draw_characters(canvas, member, line.emotion, mouth_open, hop_t)
         self._draw_media(canvas, line.image, card, telop_t)
-        self._draw_scene_title(canvas, scene.title)
+        # **縦型では制作側の言葉を画面に出さない**（2026-09-07 の方針）。
+        # 「オープニング」「まとめ」は章の目印で、視聴者には意味が無い。
+        # 一等地の左上を、本編の作業用ラベルで埋めない。
+        # 中身のある節名（「監督は何と言ったか」など）は残す
+        if not (self.layout.is_portrait and scene.title in INTERNAL_LABELS):
+            self._draw_scene_title(canvas, scene.title)
         if self.layout.with_characters:
             self._draw_telop(canvas, member, text, telop_t, source)
         else:
@@ -369,7 +374,11 @@ class Renderer:
             max_h = int(slot_height * 0.98)
         else:
             max_w = int(self.layout.width * (0.62 if not self.layout.with_characters else 0.42))
-            max_h = int(slot_height * 0.72)
+            # **縦型は顔を大きく見せる。**縦1920では高さ側が先に頭打ちになり、
+            # 幅 0.62 を使い切っていなかった（実測で写真の幅が画面の3割）。
+            # 縦画面は顔が主役で、「サムネに顔を必ず入れる」方針とも揃う。
+            # **横型の値は触らない。**本編の画面設計は変えない
+            max_h = int(slot_height * (0.92 if self.layout.is_portrait else 0.72))
         scale = min(max_w / picture.width, max_h / picture.height)
         picture = picture.resize(
             (int(picture.width * scale), int(picture.height * scale)), Image.LANCZOS
@@ -1032,6 +1041,10 @@ def _layer(size: tuple[int, int]) -> tuple[Image.Image, ImageDraw.ImageDraw]:
     """合成用の透明レイヤーと描画ハンドルを返す。"""
     layer = Image.new("RGBA", size, (0, 0, 0, 0))
     return layer, ImageDraw.Draw(layer)
+
+
+# 制作の都合で付けている章の名前。視聴者に見せる意味が無い
+INTERNAL_LABELS = ("オープニング", "まとめ")
 
 
 def _cover(image: Image.Image, width: int, height: int, focus: float | None = None) -> Image.Image:

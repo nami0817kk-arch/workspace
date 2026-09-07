@@ -1,0 +1,93 @@
+slot: romano
+date: 2026年9月7日
+theme:
+  id: vardy_burnley
+  league: england
+  prefix: 速報
+  title: ヴァーディがバーンリーへ イタリア1年で、また英国に戻ってきた
+  hook: レスターで奇跡を起こした男が、イタリアを一年で切り上げて戻ってきました。
+  question: 39歳のストライカーは、なぜこのクラブを選んだのか
+thumbnail:
+  line1: ヴァーディ、英国復帰
+  line2: バーンリーと1年契約
+  tags:
+  - ヴァーディ
+  - バーンリー
+  photo: assets/images/vardy/01.jpg
+answer: クラブは公式に加入を発表。1年契約で、直近は下位に沈んでいる
+watch: デビュー戦。得点が止まっているチームで何ができるか
+sections:
+- id: what
+  heading: 何が起きたか
+  tier: 確定
+  telop: バーンリーが公式に加入を発表
+  say:
+  - voice: キャスター
+    text: ジェイミー・ヴァーディが、バーンリーに加入しました。クラブが公式に発表しています。
+  - voice: キャスター
+    text: 契約はいちねん。ニッキー・ハイエン監督のチームに加わります。
+    telop: 1年契約。クレモネーゼでの1季を経て英国へ
+    card:
+      type: transfer
+      player: ジェイミー・ヴァーディ
+      from: クレモネーゼ（イタリア）
+      to: バーンリー
+      fee: 1年契約。移籍金の発表なし
+  - voice: キャスター
+    text: イタリアのクレモネーゼでいちシーズンを過ごし、いちねんで英国に戻る形になりました。
+  official: true
+  sources:
+  - https://www.burnleyfootballclub.com/mens-news
+  - https://www.kicker.de/den-ton-gleich-gesetzt-vardy-soll-jetzt-burnley-neues-leben-einhauchen-1250250/artikel
+- id: why
+  heading: どんな状況のクラブか
+  tier: 確定
+  telop: 直近はブリストル・シティに1-2で敗戦
+  say:
+  - voice: キャスター
+    text: 迎え入れるバーンリーは、いま苦しい時期にあります。
+  - voice: キャスター
+    text: 直近のホーム、ブリストル・シティ戦はいちたいにで敗戦。その前のミドルズブラ戦もいちたいいちの引き分けでした。
+    telop: 直近3試合で勝ちなし
+    card:
+      type: table
+      title: バーンリー 直近の3試合
+      columns:
+      - 相手
+      - 結果
+      rows:
+      - - ブリストル・シティ（ホーム）
+        - 1-2 敗戦
+      - - ミドルズブラ（ホーム）
+        - 1-1 引き分け
+      - - ノリッジ（アウェイ）
+        - 1-4 敗戦
+      highlight_row: 0
+  - voice: キャスター
+    text: さらにその前は、ノリッジにいちたいよんで敗れています。さんしあい勝ちなし。得点も伸びていません。
+  official: true
+  sources:
+  - https://www.burnleyfootballclub.com/mens-news
+  - https://www.kicker.de/den-ton-gleich-gesetzt-vardy-soll-jetzt-burnley-neues-leben-einhauchen-1250250/artikel
+- id: next
+  heading: これからどうなる
+  tier: 報道
+  telop: ドイツ紙は「新しい命を吹き込む」と書いた
+  say:
+  - voice: キャスター
+    text: ドイツのキッカーは、この移籍をこう見出しにしました。
+    card:
+      type: quote
+      source: kicker
+      color: '#6c1d45'
+      text: Vardy soll jetzt Burnley neues Leben einhauchen
+      translation: ヴァーディが、いまバーンリーに新しい命を吹き込むことになる
+  - voice: キッカー
+    text: ヴァーディが、いまバーンリーに新しい命を吹き込むことになる。
+  - voice: キャスター
+    text: レスターでリーグ優勝を経験した選手が、勝てていないクラブに入ります。つぎに見るべきは、デビュー戦です。
+    telop: 次に見るのは、デビュー戦
+  official: false
+  sources:
+  - https://www.kicker.de/den-ton-gleich-gesetzt-vardy-soll-jetzt-burnley-neues-leben-einhauchen-1250250/artikel
+  - https://www.burnleyfootballclub.com/mens-news

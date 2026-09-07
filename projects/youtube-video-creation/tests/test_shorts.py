@@ -137,3 +137,64 @@ def test_知らない節は弾く():
         assert "ありません" in str(err)
     else:
         raise AssertionError("知らない節を通した")
+
+def test_顔が遅いと知らせる():
+    """**ショートは数秒で見るか決められる。**実測で平均12秒目・全体の2割だった。"""
+    from src.script_model import parse_script
+    from src.shorts import face_problems
+
+    nl = chr(10)
+    late = parse_script(nl.join(
+        ["## 章", "", "キャスター: いちぎょうめ。ながいながいながい文章です。",
+         "キャスター: にぎょうめ。ながいながいながい文章です。",
+         "キャスター: さんぎょうめ。", "  image: assets/images/x/01.jpg", ""]))
+    problems = face_problems(late)
+    assert any("秒目です" in x for x in problems), problems
+
+    early = parse_script(nl.join(
+        ["## 章", "", "キャスター: いちぎょうめ。",
+         "  image: assets/images/x/01.jpg",
+         "キャスター: にぎょうめ。", "キャスター: さんぎょうめ。", ""]))
+    # render は指定した行以降そのまま残すので、先頭に置けば通しで出る
+    for line in early.lines[1:]:
+        line.image = "assets/images/x/01.jpg"
+    assert face_problems(early) == []
+
+
+def test_顔が無ければ知らせる():
+    from src.script_model import parse_script
+    from src.shorts import face_problems
+
+    nl = chr(10)
+    script = parse_script(nl.join(["## 章", "", "キャスター: あ。", ""]))
+    assert face_problems(script) == ["顔が1枚も出ていません"]
+
+def test_見積りの甘さを見込んで手前で切る():
+    """**見積りは実尺より短く出る。**実測（2026-09-07）で56秒→66秒。
+
+    そのまま上限まで詰めると、書き出したとき60秒を超えて
+    ショートとして扱われなくなる。
+    """
+    from src.shorts import ESTIMATE_SLACK, MAX_SECONDS, _estimate, _fit
+    from src.script_model import parse_script
+
+    nl = chr(10)
+    long = ["## オープニング", "", "キャスター: つかみ。", "", "## 本編", ""]
+    long += [f"キャスター: {i}ぎょうめ。" + "あ" * 60 for i in range(12)]
+    script = parse_script(nl.join(long))
+    _fit(script, MAX_SECONDS)
+    assert _estimate(script) <= MAX_SECONDS * ESTIMATE_SLACK
+    assert ESTIMATE_SLACK < 1.0, "見積りをそのまま信じない"
+
+
+def test_冒頭は削らない():
+    from src.shorts import MAX_SECONDS, _fit
+    from src.script_model import parse_script
+
+    nl = chr(10)
+    body = ["## オープニング", "", "キャスター: つかみ。" + "あ" * 200, "", "## 本編", ""]
+    body += [f"キャスター: {i}。" + "あ" * 200 for i in range(8)]
+    script = parse_script(nl.join(body))
+    _fit(script, MAX_SECONDS)
+    assert len(script.scenes[0].lines) == 1, "冒頭が消えている"
+    assert len(script.scenes[-1].lines) >= 1, "本編が空になった"

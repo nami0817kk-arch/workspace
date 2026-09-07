@@ -24,6 +24,9 @@ TOKEN_PATH = Path("secrets/token.json")
 CLIENT_SECRET_PATH = Path("secrets/client_secret.json")
 
 
+from . import quota
+
+
 class UploadError(RuntimeError):
     pass
 
@@ -139,6 +142,7 @@ def get_service(client_secret: Path = CLIENT_SECRET_PATH, token: Path = TOKEN_PA
 
 def fetch_snippet(service, video_id: str) -> dict:
     """いまの題名・概要欄・タグを取る。**書き換える前に、現物を見る。**"""
+    quota.record("videos.list")
     got = service.videos().list(part="snippet", id=video_id).execute()
     items = got.get("items") or []
     if not items:
@@ -157,6 +161,27 @@ def set_thumbnail(service, video_id: str, thumbnail: Path) -> str:
     if not thumbnail.exists():
         raise UploadError(f"サムネイルがありません: {thumbnail}")
     service.thumbnails().set(videoId=video_id, media_body=str(thumbnail)).execute()
+    return video_id
+
+
+def set_privacy(service, video_id: str, privacy: str = "public") -> str:
+    """公開設定だけを変える。
+
+    **status も部分更新ができない。**渡さなかった項目は消えるので、
+    取ってきたものを詰め直す（snippet と同じ落とし穴）。
+    """
+    if privacy not in ("private", "unlisted", "public"):
+        raise UploadError(f"知らない公開設定です: {privacy}")
+    quota.record("videos.list")
+    got = service.videos().list(part="status", id=video_id).execute()
+    items = got.get("items") or []
+    if not items:
+        raise UploadError(f"動画が見つかりません: {video_id}")
+    status = dict(items[0]["status"])
+    status["privacyStatus"] = privacy
+    quota.record("videos.update")
+    service.videos().update(
+        part="status", body={"id": video_id, "status": status}).execute()
     return video_id
 
 
@@ -199,6 +224,7 @@ def update_description(service, video_id: str, description: str) -> str:
     """
     snippet = fetch_snippet(service, video_id)
     snippet["description"] = description[:5000]
+    quota.record("videos.update")
     service.videos().update(
         part="snippet", body={"id": video_id, "snippet": snippet}).execute()
     return video_id
@@ -233,6 +259,7 @@ def upload(
         "status": {"privacyStatus": privacy, "selfDeclaredMadeForKids": False},
     }
     media = MediaFileUpload(str(video_path), chunksize=-1, resumable=True)
+    quota.record("videos.insert")
     request = service.videos().insert(part="snippet,status", body=body, media_body=media)
 
     response = None
@@ -243,5 +270,6 @@ def upload(
     video_id = response["id"]
 
     if thumbnail and thumbnail.exists():
+        quota.record("thumbnails.set")
         service.thumbnails().set(videoId=video_id, media_body=str(thumbnail)).execute()
     return video_id

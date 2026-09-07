@@ -303,14 +303,27 @@ def main(argv: list[str] | None = None) -> int:
     p_redesc = sub.add_parser(
         "redescribe", help="公開済み動画の概要欄に、写真のクレジットだけを足す")
     p_redesc.add_argument("script", help="台本のパス")
-    p_redesc.add_argument("video_id", help="YouTube の動画ID（URLの v= のあと）")
+    p_redesc.add_argument("video_id",
+                          help="YouTube の動画ID（URLの v= のあと）。"
+                               "ハイフン始まりのときは `--` を挟む")
     p_redesc.add_argument("--dry-run", action="store_true",
                           help="送らずに、いまと何が変わるかだけ見る")
 
     p_thumb = sub.add_parser(
         "setthumb", help="公開済み動画にサムネイルだけを設定する（投稿はやり直さない）")
+    sub.add_parser("quota", help="APIの枠をあとどれだけ使えるか（自分で数えた分）")
+
+    p_priv = sub.add_parser("publish", help="公開済み動画の公開設定だけを変える")
+    p_priv.add_argument("video_id",
+                        help="YouTube の動画ID。ハイフン始まりのときは `--` を挟む")
+    p_priv.add_argument("--privacy", default="public",
+                        choices=["private", "unlisted", "public"])
+
     p_thumb.add_argument("build_dir", help="build の出力ディレクトリ")
-    p_thumb.add_argument("video_id", help="YouTube の動画ID")
+    p_thumb.add_argument("video_id",
+                         help="YouTube の動画ID。**ハイフンで始まるIDがある**"
+                              "（例: -gZ3P1gw8QU）。その場合は `--` を挟む: "
+                              "setthumb -- <出力先> -gZ3P1gw8QU")
 
     p_variety = sub.add_parser(
         "variety", help="その日の台本を横に並べて見る（1本ずつでは分からないこと）")
@@ -408,6 +421,9 @@ def main(argv: list[str] | None = None) -> int:
     p_upload = sub.add_parser("upload", help="ビルド結果を YouTube に投稿する")
     p_upload.add_argument("build_dir", help="build の出力ディレクトリ")
     p_upload.add_argument("--privacy", default="private", choices=["private", "unlisted", "public"])
+    p_upload.add_argument(
+        "--again", action="store_true",
+        help="同じ出力先をもう一度投稿する（既定では二重投稿を止める）")
     p_upload.add_argument("--dry-run", action="store_true",
                           help="送らずに、何が送られるかを見る（認証も通信もしない）")
 
@@ -526,6 +542,9 @@ def _cmd_short(args, config) -> int:
         short, shorts.portrait(config), out, use_tts=not args.no_tts
     )
     print(f"完成: {result.video}  ({result.duration:.0f}秒)")
+    # **どちらも要る点検。**顔が遅い／冒頭で喋っていない、は別の問題
+    for problem in shorts.face_problems(short):
+        print(f"  ! {problem}", file=sys.stderr)
 
     # 冒頭で捨てられていないか、その場で見る。review は --out を渡さないと
     # ショートの出力先を見ないので、作った直後に必ず出るようにしておく
@@ -1476,6 +1495,31 @@ def _cmd_fetch(args, config) -> int:
     return 0 if seen else 1
 
 
+def _cmd_quota(args, config) -> int:
+    """枠の残りを見る。**APIは残量を教えてくれない**ので、自分で数えたもの。"""
+    from . import quota
+
+    for line in quota.report():
+        print(line)
+    return 0
+
+
+def _cmd_publish(args, config) -> int:
+    """公開設定だけを変える。**投稿はやり直さない**（動画が二重になる）。"""
+    from .upload import UploadError, get_service, set_privacy
+
+    try:
+        set_privacy(get_service(), args.video_id, args.privacy)
+    except UploadError as err:
+        print(f"変えられません: {err}", file=sys.stderr)
+        return 1
+    except Exception as err:
+        print(f"変えられません: {err}", file=sys.stderr)
+        return 1
+    print(f"■ {args.privacy} にしました: https://youtu.be/{args.video_id}")
+    return 0
+
+
 def _cmd_setthumb(args, config) -> int:
     """サムネイルだけを設定する。**投稿はやり直さない**（動画が二重になる）。"""
     from .upload import UploadError, get_service, set_thumbnail
@@ -2274,9 +2318,28 @@ def _cmd_make_clip(args, config) -> int:
 
 
 def _cmd_upload(args, config) -> int:
+    from datetime import timedelta, timezone
+
+    from . import posted
     from . import upload as upload_mod
 
+    nl = chr(10)   # heredoc 経由だとバックスラッシュが化ける
+    JST = timezone(timedelta(hours=9))
+
     build_dir = Path(args.build_dir)
+
+    # **同じ動画を二度上げない。**2026-09-07 に、投稿処理がまだ走っている
+    # 最中に2本目を起こして本編4本を重複公開し、その分で本数の上限を
+    # 使い切った。人の注意では防げないので、投稿する側に控えを持たせる。
+    seen = posted.find(build_dir)
+    if seen and not args.again:
+        print("■ この出力先はすでに投稿しています　" + str(build_dir))
+        print("  https://youtu.be/" + seen["video_id"] + "　" + seen["at"])
+        print(nl + "二重投稿を止めました。別の投稿処理が走っていないか確かめてください。",
+              file=sys.stderr)
+        print("本当に上げ直すなら --again を付けます", file=sys.stderr)
+        return 1
+
     draft = upload_mod.prepare(build_dir, args.privacy)
 
     print(f"■ 投稿の中身　{build_dir}")
@@ -2304,7 +2367,14 @@ def _cmd_upload(args, config) -> int:
         privacy=draft.privacy,
         thumbnail=draft.thumbnail,
     )
+    posted.record(build_dir, video_id)
     print(f"\n投稿しました: https://youtu.be/{video_id} ({draft.privacy})")
+    # **上限の本数は分からない**ので、残りではなく「上げた本数」を出す。
+    n = posted.today()
+    if n >= posted.SOFT_MAX - 3:
+        back = posted.frees_at().astimezone(JST)
+        print(f"  枠が戻ってから {n} 本目。この辺りで弾かれることがある"
+              f"（次に枠が戻るのは {back:%m/%d %H:%M} JST）")
     return 0
 
 
@@ -2336,6 +2406,8 @@ HANDLERS = {
     "variety": _cmd_variety,
     "redescribe": _cmd_redescribe,
     "setthumb": _cmd_setthumb,
+    "publish": _cmd_publish,
+    "quota": _cmd_quota,
     "portrait": _cmd_portrait,
     "matchphoto": _cmd_matchphoto,
     "statboard": _cmd_statboard,

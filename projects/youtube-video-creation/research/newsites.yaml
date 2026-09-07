@@ -3,12 +3,13 @@
 #   python -m src.cli sources --new
 sites:
 - host: dailymail.com
-  seen: 17
+  seen: 18
   days:
   - '2026-09-02'
   - '2026-09-03'
   - '2026-09-04'
   - '2026-09-05'
+  - '2026-09-07'
   examples:
   - https://www.dailymail.com/sport/football/article-16097269/Tottenham-sign-Chelsea-winger-Mykhailo-Mudryk-season-long-loan.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
   - https://www.dailymail.com/sport/football/article-16098909/Chelsea-transfer-window-Enzo-Fernandez.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
@@ -25,12 +26,13 @@ sites:
   - https://www.transfermarkt.co.uk/barcola-4th-rodri-19th-cucurella-29th-top-50-most-expensive-transfers-this-summer-ranked/view/news/483667
   - https://www.transfermarkt.co.uk/club-record-sale-why-arsenal-were-right-to-sell-gabriel-martinelli-to-al-hilal/view/news/484606
 - host: derbyderbyderby.it
-  seen: 13
+  seen: 14
   days:
   - '2026-09-02'
   - '2026-09-03'
   - '2026-09-04'
   - '2026-09-05'
+  - '2026-09-07'
   examples:
   - https://www.derbyderbyderby.it/calcio-italiano/monza-juric-dopo-la-vittoria-sul-torino-se-ci-salviamo-sara-un-grande-risultato/?intcmp=gazzanet-derbyderbyderby
   - https://www.derbyderbyderby.it/calcio-estero/monza-ecco-zeballos-in-italia-per-il-mito-di-maradona-e-i-consigli-di-paredes/?intcmp=gazzanet-derbyderbyderby
@@ -129,12 +131,14 @@ sites:
   examples:
   - https://www.sportsmole.co.uk/football/barcelona/race-for-the-la-liga-title/predicted-lineups/any-changes-for-flick-how-barca-could-line-up-against-valencia_604504.html
 - host: mondoudinese.it
-  seen: 3
+  seen: 4
   days:
   - '2026-09-04'
   - '2026-09-05'
+  - '2026-09-07'
   examples:
   - https://www.mondoudinese.it/udinese/news-udinese/udinese-unai-gomez-voglio-migliorare-e-aumentare-i-miei-numeri/?intcmp=gazzanet-mondoudinese
+  - https://www.mondoudinese.it/udinese/news-udinese/conferenza-runjaic-bayo-puo-giocare-titolare-ma-non-vi-diro-lundici/?intcmp=gazzanet-mondoudinese
 - host: genoaoggi.it
   seen: 3
   days:
@@ -301,3 +305,15 @@ sites:
   - '2026-09-05'
   examples:
   - https://www.newcastleworld.com/sport/football/newcastle-united/-8961947
+- host: numericalcio.it
+  seen: 1
+  days:
+  - '2026-09-07'
+  examples:
+  - https://www.numericalcio.it/calendario-gare/serie-b-2019-20-risultati-e-classifica-aggiornata/?intcmp=gazzanet-numericalcio
+- host: cagliaricalcio-news.it
+  seen: 1
+  days:
+  - '2026-09-07'
+  examples:
+  - https://www.cagliaricalcio-news.it/notizie/interviste/cagliari-pisacane-coppa-italia-fiducia-ragazzi/?intcmp=gazzanet-cagliaricalcionews

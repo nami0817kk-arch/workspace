@@ -624,16 +624,27 @@ def test_話題順の枠に載っている候補が無ければ空ける():
     assert "まとめ集約サイト" in fallbacks["s"][0]
 
 
-def test_日本人には既定で点を付けない():
-    """枠で担保して、点では寄せない。
+def test_日本人の加点と他の枠を守る仕組みが揃っている():
+    """日本人選手に2点。ただし他の枠まで日本人で埋めない。
 
-    一度 japanese: 3 を入れたところ、朝の3枠が全部日本人選手になった
-    （2026-09-05 実測）。日本人は割り当ての制約で、傾向を寄せるものではない。
+    2026-09-05 に japanese: 3 を入れたら朝の3枠が全部日本人選手になったので、
+    一度0に戻した。2026-09-07 のユーザー判断で2点を入れ直している。
+    所属がビッグクラブ13球団に無く、日本語媒体は1社しか書かないことが多いため、
+    正攻法では日本人枠が下限5点に届かなかったのが理由。
+
+    当時の再発を防いでいるのは点の大きさではなく、world_* の exclude_japanese。
+    **加点と一緒にこのガードが外れていないこと**をここで固定する。
     """
     from src.plan import load_plan
 
-    weights = (load_plan().scoring.get("weights") or {})
-    assert not weights.get("japanese")
+    scoring = load_plan().scoring
+    assert int((scoring.get("weights") or {}).get("japanese", 0)) == 2
+
+    slots = scoring.get("slots") or {}
+    world = {k: v for k, v in slots.items() if k.startswith("world_")}
+    assert world, "world_* の枠が無い"
+    for name, slot in world.items():
+        assert slot.get("exclude_japanese"), f"{name} が日本人を弾かなくなっている"
 
 # ユーザーが枠を「日本人3・それ以外2・ロマーノ1・プレミア2・ラリーガ1」と
 # 指定した（2026-09-05）。群では表せない指定なので、枠の条件を3つ足した。
@@ -765,6 +776,24 @@ def test_実況は枠に入らない():
     assert chosen["premier_1"].id == "news"
     assert any("実況" in m for m in fallbacks["_"])
 
+def test_実況とスタメンの両方が外れる():
+    """**マージで片方が消えた**（2026-09-07）。
+
+    二人が同じ関数を別々に直し、取り込んだとき一方が落ちた。
+    両方が同時に効いていることを、ここで固定する。
+    """
+    from src.candidates import assign, score
+
+    items = score([
+        _cl("live", "Forest vs Tottenham LIVE!", "england", hours=0.1),
+        _cl("xi", "アーセナル対チェルシー、スタメン発表！", "england", hours=0.2),
+        _cl("news", "90+5! Maitland-Niles stuns Man Utd", "england", hours=3.0),
+    ], PICK_SCORING)
+    chosen, fallbacks = assign(items, PICK_SCORING, ["premier_1"])
+    assert chosen["premier_1"].id == "news"
+    notes = " ".join(fallbacks.get("_", []))
+    assert "実況" in notes, notes
+    assert "スタメン" in notes, notes
 
 # 試合結果の枠（2026-09-07）。2chサッカーの噂話は直近1日で、結果の動画が
 # 13万回×2、順位表が6.7万回。移籍の噂と同じかそれ以上に見られていた。

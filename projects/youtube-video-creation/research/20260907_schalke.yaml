@@ -1,0 +1,95 @@
+slot: world
+date: 2026年9月7日
+theme:
+  id: schalke_bayern
+  league: germany
+  prefix: 朗報
+  title: シャルケがバイエルンを完封 公式戦59試合ぶりの無得点に抑える
+  hook: 王者が、公式戦ごじゅうきゅうしあいぶりに一点も取れませんでした。田中聡が先発した試合です。
+  question: 猛攻を受け続けたチームは、どう耐えたのか
+thumbnail:
+  line1: バイエルンを完封
+  line2: 59試合ぶりの無得点
+  tags:
+  - シャルケ
+  - バイエルン
+  photo: assets/images/karius/01.jpg
+answer: GKカリウスを中心に守り切った。走行距離に全員の姿勢が出ている
+watch: 11日のウニオン・ベルリン戦。この守備が続くか
+sections:
+- id: what
+  heading: 何が起きたか
+  tier: 報道
+  telop: シャルケ 0-0 バイエルン（第2節・ホーム）
+  say:
+  - voice: キャスター
+    text: ブンデスリーガ第にせつ、シャルケがホームでバイエルンと対戦し、ゼロたいゼロで引き分けました。
+  - voice: キャスター
+    text: この夏シャルケに加入した田中聡が、先発出場しています。
+    telop: 田中聡が先発。バイエルンは59試合ぶりの無得点
+    card:
+      type: points
+      title: この試合で起きたこと
+      items:
+      - 終始バイエルンが主導権を握り、猛攻
+      - GKロリス・カリウスを中心に守り切る
+      - バイエルンは公式戦59試合ぶりの無得点
+      - 新加入の田中聡が先発、ゴセンスはデビュー戦
+  - voice: キャスター
+    text: バイエルンが公式戦で得点できなかったのは、ごじゅうきゅうしあいぶりです。
+  official: false
+  sources:
+  - https://www.soccer-king.jp/news/world/ger/20260906/2201410.html
+  - https://www.soccer-king.jp/news/world/ger/20260906/2201410.html
+- id: why
+  heading: 指揮官は何と言ったか
+  tier: 報道
+  telop: ムスリッチ監督「これ以上の褒め言葉はない」
+  say:
+  - voice: キャスター
+    text: ミロン・ムスリッチ監督は、こう振り返りました。
+    card:
+      type: quote
+      source: ミロン・ムスリッチ監督（スカイ独）
+      color: '#004d9d'
+      text: バイエルン相手に0-0で引き分けたこと以上に、選手たちを褒め称える言葉はないよ
+      translation: ''
+  - voice: ムスリッチ監督
+    text: 我々は良い作戦を立て、試合前にはある程度の苦痛を強いることを決意した。
+  - voice: ムスリッチ監督
+    text: バイエルン相手にゼロたいゼロで引き分けたこと以上に、選手たちを褒め称える言葉はないよ。
+    telop: 「これ以上、褒め称える言葉はない」
+  official: false
+  sources:
+  - https://www.soccer-king.jp/news/world/ger/20260906/2201410.html
+  - https://www.soccer-king.jp/news/world/ger/20260906/2201410.html
+- id: react
+  heading: 選手はどう受け止めたか
+  tier: 報道
+  telop: カリウス「チームの走行距離を見れば分かる」
+  say:
+  - voice: キャスター
+    text: 再三の好セーブを見せたゴールキーパーのカリウスは、選手たちを称えました。
+    card:
+      type: quote
+      source: ロリス・カリウス（スカイ独）
+      color: '#004d9d'
+      text: チームの走行距離を見れば、全員がお互いのためにどれだけ懸命にプレーしたかわかるはずだ
+      translation: ''
+  - voice: カリウス
+    text: 選手たちには脱帽するしかない。チームの走行距離を見れば、全員がお互いのためにどれだけ懸命にプレーしたか分かるはずだ。
+  - voice: キャスター
+    text: デビュー戦だったゴセンスは、そのカリウスをこう評しています。
+    telop: ゴセンス「彼がいなければ1、2回は入っていた」
+  - voice: ゴセンス
+    text: 彼がいなければ、いち、にかいは確実にゴールに入っていただろう。
+    telop: ゴセンス「彼がいなければ入っていた」
+  - voice: ゴセンス
+    text: 彼は自分の役割を完璧に果たした。
+    telop: 「役割を完璧に果たした」
+  - voice: キャスター
+    text: つぎに見るべきは、じゅういちにちのウニオン・ベルリン戦です。
+  official: false
+  sources:
+  - https://www.soccer-king.jp/news/world/ger/20260906/2201410.html
+  - https://www.soccer-king.jp/news/world/ger/20260906/2201410.html

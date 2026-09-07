@@ -171,6 +171,19 @@ def test_改変不可の写真はサムネに使えない(tmp_path, monkeypatch)
         encoding="utf-8")
     assert review_mod._thumbnail_face(Script()).ok
 
+def test_音声や動画は写真として選ばない():
+    """**Commons には音声も動画もある。**
+
+    実測（2026-09-07）で、久保建英の候補に .ogg（音声）が混ざり、
+    被写体もライセンスも通って選ばれてしまった。
+    """
+    from src.portrait import is_image
+
+    for bad in ["File:Takefusa kubo.ogg", "File:x.webm", "File:y.svg",
+                "File:z.pdf", "File:w.mp3", "File:拡張子なし"]:
+        assert not is_image(bad), bad
+    for good in ["File:Kubo 2024.jpg", "File:x.JPEG", "File:y.png"]:
+        assert is_image(good), good
 
 # 試合の場面の写真（2026-09-07）。放送映像は使えないので、Commons にある
 # 実際の試合の写真で置き換える。顔写真とは探し方も確かめ方も違う。

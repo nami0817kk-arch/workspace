@@ -25,24 +25,43 @@ from .plan import Plan
 
 # 節の中身に合う背景を選ぶ。順番に配るだけだと、緑の芝ばかりが続く
 # （実測: 17カット中13カットが緑系だった）。節の性格で下地を変える。
+#
+# **2026-09-07 に実写の動画へ変えた。**自作の静止イラストだと、30〜50秒のあいだ
+# 画面がほとんど動かない。ショートの競合は実際の試合映像で、権利の関係で
+# それは使えないが、「動いていない」ことは埋められる。
+# 素材は `stock` で取る（Pexels / Pixabay、クレジットは概要欄に出る）。
+# **無ければ静止画に落ちる**ので、素材が揃っていない環境でも動く
+STOCK = "assets/backgrounds/stock/"
 BACKGROUND_BY_SECTION = {
-    "what": "assets/backgrounds/stadium.png",       # 何が起きたか
-    "score": "assets/backgrounds/pitch.png",        # 試合そのもの
-    "turning": "assets/backgrounds/pitch.png",      # 試合が決まった場面
-    "numbers": "assets/backgrounds/studio.png",     # 数字・表は模様の無い下地に
-    "point": "assets/backgrounds/studio.png",       # 争点
-    "background": "assets/backgrounds/night.png",   # 経緯・背景は芝を出さない
-    "collapsed": "assets/backgrounds/night.png",    # 壊れた話
-    "voices": "assets/backgrounds/night.png",       # 世の中の声
-    "next": "assets/backgrounds/tactics.png",       # これからどうなる
+    # 何が起きたか / 発表 —— 場の空気
+    "what": STOCK + "stadium_night.mp4",
+    "said": STOCK + "stadium_night.mp4",
+    "stake": STOCK + "stadium_night.mp4",
+    # 試合そのもの —— ボールとピッチ
+    "score": STOCK + "soccer_ball.mp4",
+    "turn": STOCK + "soccer_ball.mp4",
+    "turning": STOCK + "soccer_ball.mp4",
+    # 数字・整理 —— 模様の無い下地のほうが読める
+    "numbers": "assets/backgrounds/studio.png",
+    "point": "assets/backgrounds/studio.png",
+    # 経緯・背景・反応 —— 観客側
+    "background": STOCK + "football_fans.mp4",
+    "context": STOCK + "football_fans.mp4",
+    "react": STOCK + "football_fans.mp4",
+    "voices": STOCK + "football_fans.mp4",
+    "collapsed": STOCK + "football_fans.mp4",
+    # これからどうなる / なぜ —— 練習・戦術
+    "next": STOCK + "soccer_training.mp4",
+    "why": STOCK + "soccer_training.mp4",
+    "message": STOCK + "soccer_training.mp4",
 }
-# 上に無い節に配る並び。緑が続かないよう交互にする
+# 上に無い節に配る並び。**実写を優先し、同じものが続かないようにする**
 BACKGROUNDS = (
-    "assets/backgrounds/stadium.png",
-    "assets/backgrounds/night.png",
-    "assets/backgrounds/tactics.png",
+    STOCK + "stadium_night.mp4",
+    STOCK + "football_fans.mp4",
+    STOCK + "soccer_training.mp4",
     "assets/backgrounds/studio.png",
-    "assets/backgrounds/pitch.png",
+    STOCK + "soccer_ball.mp4",
 )
 SPEAKERS = ("キャスター", "解説")
 
@@ -596,6 +615,13 @@ def check_repeats(notes: Notes, plan: Plan, now=None) -> list[str]:
 TELOP_LIMIT = 26
 
 
+def _resolve_bg(path: str):
+    """背景の実体。**取っていない素材を台本に書かないため。**"""
+    from pathlib import Path as _P
+
+    return _P(path)
+
+
 def _telop(text: str, limit: int = TELOP_LIMIT) -> str:
     """読み上げ文をそのままテロップにすると長すぎる。頭の一文だけ使う。"""
     head = str(text).strip().split("。")[0].strip("　 ")
@@ -720,6 +746,9 @@ def to_script(notes: Notes, plan: Plan) -> str:
     previous_background = ""
     for index, section in enumerate(notes.sections):
         background = section.bg or BACKGROUND_BY_SECTION.get(section.id, "")
+        # **素材が無ければ静止画に落とす。**stock を取っていない環境でも動く
+        if background.startswith(STOCK) and not _resolve_bg(background).exists():
+            background = ""
         if not background or background == previous_background:
             # 同じ下地が続くと、節が変わったことが画面から分からない。
             # 割り当てが無いときと、前の節と同じになったときは並びから選ぶ

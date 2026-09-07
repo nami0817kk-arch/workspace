@@ -119,30 +119,76 @@ def _pick(script: Script, section: str) -> Scene:
 
 
 def _add_face(script: Script) -> None:
-    """本編のサムネイル写真を、ショートの本文にも出す。
+    """顔写真を**最初の行から最後まで、全部の行に置く**。
 
-    **縦型は画面が余る。**実測（2026-09-06）で、カードが出ているのは
-    22秒中5秒だけ、残りは背景だけだった。顔があるだけで持つ画面になる。
-    すでに写真を持つ行があれば、そのままにする。
+    実測（2026-09-06）で、写真が出るのは平均12秒目、映っているのは全体の
+    2割だけだった（ミランは10%、レアルは23秒目から）。
+    **ショートは数秒で見るか決められる。**顔が12秒後では、その前に離脱される。
+
+    **写真は「指定した行以降そのまま残る」わけではない。**残るのは
+    カードとテロップで、写真は指定した行だけ。最初そう思い込んで先頭にだけ
+    置いたところ、5秒出て消えた（実測して分かった）。全部の行に置く。
     """
-    if any(getattr(line, "image", None) for line in script.lines):
-        return
     photo = str((script.meta or {}).get("thumbnail_photo") or "").strip()
     if not photo:
+        photo = next((str(line.image) for line in script.lines if line.image), "")
+    if not photo:
         return
-    body = script.scenes[-1]
-    for line in body.lines:
-        # カードのある行は避ける。縦に積めるが、1行に詰め込むと窮屈になる
-        if not line.card:
+    for line in script.lines:
+        if not line.image:
             line.image = photo
-            return
-    if body.lines:
-        body.lines[0].image = photo
+
+
+# ショートは数秒で見るか決められる。**顔が出るのが遅いと、その前に離脱する**
+FACE_BY_SECONDS = 3.0
+FACE_SHARE = 0.6
+
+
+def face_timing(script: Script) -> tuple[float | None, float]:
+    """(顔が最初に出る秒, 出ている割合)。顔が無ければ (None, 0)。"""
+    at = None
+    shown = 0.0
+    total = 0.0
+    for line in script.lines:
+        span = line.duration or line.estimated_duration()
+        if getattr(line, "image", None):
+            if at is None:
+                at = total
+            shown += span
+        total += span
+    return at, (shown / total if total else 0.0)
+
+
+def face_problems(script: Script) -> list[str]:
+    """顔の出し方の問題。**実測（2026-09-06）で平均12秒目・全体の2割だった。**
+
+    ミランは10%、レアルは23秒目からで、30秒の動画では終盤に一度出るだけ。
+    """
+    at, share = face_timing(script)
+    if at is None:
+        return ["顔が1枚も出ていません"]
+    out = []
+    if at > FACE_BY_SECONDS:
+        out.append(f"顔が出るのが{at:.0f}秒目です（{FACE_BY_SECONDS:.0f}秒までに出す）")
+    if share < FACE_SHARE:
+        out.append(f"顔が出ているのは{share * 100:.0f}%です（{FACE_SHARE * 100:.0f}%以上）")
+    return out
+
+
+# **見積りは実尺より短く出る。**章の切り替え・間・書き出しの処理が乗るため。
+# 実測（2026-09-07）で見積り56秒に対し実尺66秒。**1割以上ずれる。**
+# そのぶん手前で切らないと、60秒を超えてショートとして扱われなくなる
+ESTIMATE_SLACK = 0.80
 
 
 def _fit(script: Script, max_seconds: float) -> None:
-    """後ろのセリフから落として尺に収める。冒頭は削らない。"""
-    while _estimate(script) > max_seconds and len(script.scenes[-1].lines) > 1:
+    """後ろのセリフから落として尺に収める。冒頭は削らない。
+
+    **見積りの甘さを見込んで、手前で切る。**そのまま上限まで詰めると、
+    書き出したときに超える（実測で56秒の見積りが66秒になった）。
+    """
+    target = max_seconds * ESTIMATE_SLACK
+    while _estimate(script) > target and len(script.scenes[-1].lines) > 1:
         script.scenes[-1].lines.pop()
 
 

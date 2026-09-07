@@ -22,7 +22,11 @@ DESCRIPTION_LIMIT = 5000
 # 参考3チャンネルの実測は 1:01〜1:59。長尺のクロニカ（8〜19分）は
 # 登録者が近いのに再生が1桁少なかった。docs/news-sources.md 参照。
 MIN_SECONDS = 60
-MAX_SECONDS = 130
+# **話が持つなら長くてよい**（2026-09-07 ユーザー）。
+# 1〜2分は参考チャンネルの実測から決めた目安で、上限ではなかった。
+# メッシの代表引退のように、引用が主役で中身が濃い回は3分でも成立する。
+# 短く詰めるために発言を削るのは本末転倒
+MAX_SECONDS = 210
 
 
 @dataclass
@@ -79,6 +83,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
         findings.append(check_title_hook(script))
         findings.append(check_title_subject(script))
     findings.append(_thumbnail_face(script))
+    findings.append(_card_rule(script))
     findings.append(_photo_credits(script, out_dir))
     findings.append(_double_marks(script))
     loudness = _loudness(out_dir / "video.mp4")
@@ -203,6 +208,37 @@ def _screen_change(script_json: Path) -> Finding:
                        f"{worst:.0f}秒 変わらない場面があります"
                        f"（上限{SAME_SCREEN_MAX:.0f}秒）: {worst_telop[:24]}")
     return Finding(True, "見た目の変化", f"変わらない最長 {worst:.0f}秒")
+
+
+def _card_rule(script: Script) -> Finding:
+    """カードを出すべき行に出しているか（2026-09-07）。
+
+    **それまでは勘で決めていた。**回によって4〜7枚とばらつき、
+    「なぜここに表を出すのか」を言葉にできなかった。
+    文の役割で決まる型と、実際に付いているカードを突き合わせる。
+
+    **止めない。**基準は出発点で、書く人が別の型を選ぶ場面はある。
+    ただし「気づかずに落ちている」ことは防ぐ
+    """
+    from .cardrule import gaps, suggest
+
+    missing = []
+    for scene in script.scenes:
+        for line in scene.lines:
+            want = suggest(getattr(line, "text", ""), getattr(line, "speaker", ""))
+            if want and not getattr(line, "card", None):
+                missing.append((want, str(getattr(line, "text", ""))[:18]))
+    long_gaps = gaps(script)
+    if not missing and not long_gaps:
+        return Finding(True, "カードの基準", "外れている行はありません")
+    parts = []
+    if missing:
+        shown = "／".join(f"{w}:{s}…" for w, s in missing[:3])
+        parts.append(f"カードが要りそうな行が{len(missing)}件（{shown}）")
+    if long_gaps:
+        worst = max(long_gaps)
+        parts.append(f"見た目が{worst[0]:.0f}秒変わりません（{worst[1][:16]}）")
+    return Finding(True, "カードの基準", "／".join(parts))
 
 
 def _thumbnail_face(script: Script) -> Finding:
