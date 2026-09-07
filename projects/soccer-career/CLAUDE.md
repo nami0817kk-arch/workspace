@@ -31,6 +31,7 @@ lib/
   game/world.dart          11の国・3連盟・リーグのピラミッド・外国人ルール
   game/eligibility.dart    外国人枠と労働許可の判定
   game/competitions.dart   大陸カップ・昇格プレーオフ・移籍の窓・登録メンバー
+  game/person.dart         市場価値・知名度・称号・関係・性格の変化
   game/names.dart          旧API。World に委譲するだけ
   game/national.dart       架空の代表チームと代表ウィークの節
   game/career_engine_extras.dart  代表招集・監督の目標・契約年数
@@ -42,6 +43,8 @@ lib/
   models/country.dart      国・連盟・暦・外国人ルール・労働許可の型
   models/nationality.dart  主国籍＋ルーツ＋帰化＋自国育ち
   models/competition.dart  大陸カップの成績・移籍の窓・登録の可否
+  models/personality.dart  性格4軸（自信・野心・プロ意識・気性）
+  models/reputation.dart   市場価値・知名度・称号・監督との関係・お金
   state/career_controller.dart  画面が購読する状態
   ui/screens/              選手作成・拠点・試合・シーズン終了
 ```
@@ -83,6 +86,14 @@ lib/
   分かりにくいので、画面では理由まで書く。
 - **大陸カップ・プレーオフ・移籍の窓はシーズンの外側**（`Competitions`）。試合中の操作は
   増やさず、シーズンの区切りで結果として現れる形に保つ。
+- **性格は伸ばすものではない**（`Personality`）。経験で1シーズンに1〜2点だけ動く。
+  **自信が成功率に効くのは ±3% まで**。ここを大きくすると能力を伸ばす意味が薄れる。
+- **市場価値は年俸と別**（`Person.marketValueFor`）。年俸は「今もらっている額」、
+  市場価値は「今の値札」。移籍オファーの質と労働許可の審査はこちらを見る。
+- **知名度は出場が前提**（`Person.fameFor`）。リーグの格を無条件に足していたため、
+  1試合も出ずに在籍しているだけで知名度が伸びていた。代表と大陸カップだけは例外。
+- **監督の信頼は出場機会に下駄を履かせる**（`Person.appearanceBonusFrom`）。
+  評価点だけで決めると監督との関係が飾りになる。
 - **引退**は 33 歳から選べ、37 歳のシーズン終了で強制。引退後は `retired` フラグで
   試合をせず通算成績だけを見せる。古い保存データにはフラグが無いので、無ければ現役扱い。
 - 保存データが壊れていたら**捨てて新規扱いにする**（`SaveRepository.load`）。
