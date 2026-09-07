@@ -57,11 +57,18 @@ class Person {
   int fameFor(CareerState state) {
     final stats = state.seasonStats;
     var fame = state.reputation.fame - 2;
-    fame += (stats.goals + stats.assists) ~/ 3;
+
+    // 代表と大陸カップは、リーグに出ていなくても目に触れる。
     fame += state.seasonCaps * 2;
     fame += state.continentalStage.points * 2;
-    if (state.club.tier == 1) fame += 2;
-    fame += World.byId(state.club.countryId).prestige;
+
+    // リーグでの露出は「出場していること」が前提。試合に出ない選手は
+    // どんなに格の高いリーグに籍を置いていても忘れられていく。
+    if (stats.appearances > 0) {
+      fame += (stats.goals + stats.assists) ~/ 3;
+      if (state.club.tier == 1) fame += 2;
+      fame += World.byId(state.club.countryId).prestige;
+    }
     return fame.clamp(0, 100);
   }
 

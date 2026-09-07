@@ -182,7 +182,9 @@ void main() {
       final s = CareerEngine(random: Random(4)).startCareer(
         name: 'N', position: Position.wg, age: 17, agent: Agent.pool.first);
       expect(s.player.potential, greaterThan(s.player.overall));
-      expect(s.player.traits.length, 2);
+      // 長所2つ。3割で欠点が1つ付くので、合計は2か3。
+      expect(s.player.traits.where((t) => !t.flaw).length, 2);
+      expect(s.player.traits.length, inInclusiveRange(2, 3));
     });
 
     test('帯の表示は数値を出さない', () {
