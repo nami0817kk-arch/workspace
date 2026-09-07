@@ -602,7 +602,7 @@ class CareerEngine {
     }
 
     // オフの肉体改造。体重が動き、筋力と機動力が入れ替わる。
-    final nextPlayer = state.player.copyWith(
+    var nextPlayer = state.player.copyWith(
       age: state.player.age + 1,
       condition: Formulas.conditionMax,
       nationality: nationality,
@@ -610,6 +610,17 @@ class CareerEngine {
       physique: state.player.physique.afterOffseason(bodyPlan),
       attributes: _afterOffseason(state.player.attributes, bodyPlan),
     );
+    // 限界突破。頭打ちのまま腐らせない代わりに、条件は厳しくしてある。
+    var development = state.development;
+    if (breaksThrough(state)) {
+      nextPlayer = Player.rebuild(
+        nextPlayer,
+        attributes: nextPlayer.attributes,
+        potential: nextPlayer.potential + Formulas.breakthroughGain,
+      );
+      development =
+          development.copyWith(breakthroughs: development.breakthroughs + 1);
+    }
     final stayed = accepted.club.name == state.club.name;
 
     // 称号・知名度・関係・お金は、シーズンを終えた時点で確定させる。
@@ -647,6 +658,7 @@ class CareerEngine {
       drill: state.drill,
       staff: staff,
       habits: state.habits,
+      development: development,
       // 契約更改か移籍なら新しい年数。ただ残っただけなら1年減る。
       contractYears: stayed && !accepted.isRenewal
           ? max(1, state.contractYears - 1)
@@ -667,6 +679,20 @@ class CareerEngine {
       caps: state.caps,
       internationalGoals: state.internationalGoals,
     );
+  }
+
+  /// 限界を超えるか。
+  ///
+  /// ポテンシャルに届いた選手が、まだ若く、身体を作り込み、試合を重ねている
+  /// ときだけ起きる。ここを緩めると上限が飾りになる。
+  bool breaksThrough(CareerState state) {
+    final player = state.player;
+    if (!player.atPotential) return false;
+    if (player.age > Formulas.peakAge + 2) return false;
+    if (player.personality.professionalism < 14) return false;
+    if (state.development.experience < 300) return false;
+    if (player.potential >= Formulas.maxAttribute) return false;
+    return _random.nextDouble() < Formulas.breakthroughChance;
   }
 
   /// オフの肉体改造が能力に与える増減。
@@ -767,6 +793,7 @@ class CareerEngine {
       ),
       staff: state.staff,
       habits: state.habits,
+      development: state.development,
       retired: true,
     );
   }

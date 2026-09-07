@@ -2,7 +2,9 @@ import 'dart:math';
 
 import '../models/attributes.dart';
 import '../models/club.dart';
+import '../models/development.dart';
 import '../models/injury.dart';
+import '../models/physique.dart';
 import '../models/player.dart';
 import '../models/season.dart';
 import '../models/support.dart';
@@ -49,6 +51,8 @@ class MatchInProgress {
     required this.minutes,
     required this.player,
     required this.club,
+    this.development = const Development(),
+    this.weakFootMoments = const [],
     this.international = false,
     Random? random,
   })  : assert(scenarios.length == minutes.length),
@@ -65,6 +69,14 @@ class MatchInProgress {
 
   final Player player;
   final Club club;
+
+  /// 経験・選択の癖・相手への慣れ・個人技。
+  final Development development;
+
+  /// 逆足で対応することになる局面。試合開始時に決めておく。
+  ///
+  /// 呼ぶたびに引き直すと、画面に出した成功率と判定がずれる。
+  final List<bool> weakFootMoments;
 
   /// 代表戦か。リーグの順位表には影響しない。
   final bool international;
@@ -83,6 +95,19 @@ class MatchInProgress {
   /// 直前の手が失敗していたか。「負けず嫌い」「気分屋」の判定に使う。
   bool get afterFailure => resolutions.isNotEmpty && !resolutions.last.success;
   bool get afterSuccess => resolutions.isNotEmpty && resolutions.last.success;
+
+  /// 相手の戦い方。
+  ClubStyle get opponentStyle => ClubStyle.of(opponent);
+
+  /// 今の局面が逆足で対応するものか。
+  bool get weakFootMoment =>
+      !isFinished &&
+      _index < weakFootMoments.length &&
+      weakFootMoments[_index];
+
+  /// 大一番か。格上との対戦と代表戦は、それだけで重い。
+  bool get bigMatch =>
+      international || opponent.strength - club.strength >= 8;
 
   /// 「前半 23分」のような表示用の文字列。
   static String minuteLabel(int minute) =>
@@ -132,8 +157,44 @@ class MatchInProgress {
     final condition = conditionModifier(player.condition);
     // 自信は小さく効かせる。性格で試合が決まると能力を伸ばす意味が薄れる。
     final personality = player.personality.chanceModifier;
-    return (base + trait + condition + personality).clamp(0.05, 0.95);
+
+    // 積み上げてきたもの。型・個人技・相手への慣れ。
+    final identity = development.identityBonusFor(option.key);
+    final signature = development.signatureBonus(option.key, option.detail);
+    final matchup = opponentStyle.hardFor == option.key
+        ? -0.05 + development.adaptationFor(opponentStyle)
+        : 0.0;
+
+    // 大一番の重圧。経験と自信で薄まり、若く自信の無い選手ほど呑まれる。
+    final pressure = bigMatch
+        ? -0.05 +
+            development.composure +
+            (player.personality.confidence - 10) * 0.004
+        : 0.0;
+
+    // 逆足。利き足でないほうで対応する局面は、精度がそのまま出る。
+    final weakFoot = weakFootMoment && _usesFoot(option)
+        ? -(5 - player.physique.weakFoot) * 0.03
+        : 0.0;
+
+    return (base +
+            trait +
+            condition +
+            personality +
+            identity +
+            signature +
+            matchup +
+            pressure +
+            weakFoot)
+        .clamp(0.05, 0.95);
   }
+
+  /// 足で扱う手か。ヘディングと守備の局面に逆足は関係しない。
+  static bool _usesFoot(ScenarioOption option) =>
+      option.detail != Detail.heading &&
+      (option.key == AttributeKey.shooting ||
+          option.key == AttributeKey.passing ||
+          option.key == AttributeKey.dribbling);
 
   /// 選んだ手を解決して次の局面へ進める。
   ScenarioResolution choose(ScenarioOption option) {
@@ -294,8 +355,12 @@ class WeekOutcome {
     required this.condition,
     required this.trained,
     this.setPieces = const SetPieceSkills(),
+    this.physique = const Physique(
+        heightCm: Physique.baseHeight, weightKg: Physique.baseWeight),
     this.drilled,
+    this.learned,
     this.redirected = false,
+    this.weakFootAwakened = false,
     this.injury,
   });
 
@@ -310,6 +375,15 @@ class WeekOutcome {
 
   /// 居残りで伸びた種類。伸びなければ null。
   final SetPiece? drilled;
+
+  /// 逆足練習の後の身体データ。
+  final Physique physique;
+
+  /// その週に覚えた個人技。
+  final Signature? learned;
+
+  /// 逆足が形になったか。
+  final bool weakFootAwakened;
 
   /// 狙った能力が土台に阻まれ、土台のほうが伸びたか。
   final bool redirected;
@@ -358,6 +432,7 @@ class MatchEngine {
     required Club opponent,
     required bool home,
     required Appearance appearance,
+    Development development = const Development(),
     bool international = false,
   }) {
     final count = switch (appearance) {
@@ -369,6 +444,10 @@ class MatchEngine {
     final pool = [...ScenarioPool.forPosition(player.position)]..shuffle(_random);
     final picked = pool.take(count).toList();
 
+    // 逆足で対応することになる局面を先に決めておく。両利きなら起きない。
+    final weakFootChance =
+        player.physique.foot == Foot.both ? 0.0 : Formulas.weakFootMomentChance;
+
     return MatchInProgress(
       matchday: matchday,
       opponent: opponent,
@@ -378,6 +457,10 @@ class MatchEngine {
       minutes: _minutesFor(count, appearance),
       player: player,
       club: club,
+      development: development,
+      weakFootMoments: [
+        for (var i = 0; i < count; i++) _random.nextDouble() < weakFootChance,
+      ],
       international: international,
       random: _random,
     );
@@ -408,6 +491,7 @@ class MatchEngine {
     double? rating, {
     List<ScenarioResolution> used = const [],
     int declineOffset = 0,
+    bool plateau = false,
   }) {
     if (rating == null) return player.attributes;
 
@@ -425,8 +509,11 @@ class MatchEngine {
     final peakAge = Formulas.peakAge + player.traits.peakAgeOffset;
     final ageFactor = player.age <= peakAge ? 1.0 : 0.4;
     final margin = rating - Formulas.growthRatingThreshold;
-    final chance =
-        (0.18 + margin * 0.22) * ageFactor * player.traits.growthFactor(player.age);
+    // 停滞期はここを大きく削る。伸び続ける選手は居ない。
+    final chance = (0.18 + margin * 0.22) *
+        ageFactor *
+        player.traits.growthFactor(player.age) *
+        (plateau ? Formulas.plateauGrowthFactor : 1.0);
     if (_random.nextDouble() >= chance) return player.attributes;
 
     final focus =
@@ -503,6 +590,8 @@ class MatchEngine {
     SetPiece? drill,
     StaffTeam staff = const StaffTeam(),
     Habits habits = const Habits(),
+    Development development = const Development(),
+    bool plateau = false,
     required bool played,
   }) {
     final costFactor = player.traits.conditionCostFactor;
@@ -510,9 +599,12 @@ class MatchEngine {
         (played ? (Formulas.matchConditionCost * costFactor).round() : 0);
     var attributes = player.attributes;
     var setPieces = player.setPieces;
+    var physique = player.physique;
     Detail? trained;
     SetPiece? drilled;
+    Signature? learned;
     var redirected = false;
+    var awakened = false;
 
     if (menu.isRest) {
       condition += menu.recovery + staff.recoveryBonus + habits.recoveryBonus;
@@ -525,9 +617,10 @@ class MatchEngine {
           player.personality.trainingFactor *
           staff.growthFactor *
           habits.growthFactor;
+      final effective = plateau ? chance * Formulas.plateauGrowthFactor : chance;
       if (canGrow) {
         for (final key in menu.keys) {
-          if (_random.nextDouble() >= chance) continue;
+          if (_random.nextDouble() >= effective) continue;
           final ds = key.details;
           final wanted = ds[_random.nextInt(ds.length)];
           final target = Dependencies.resolve(wanted, attributes);
@@ -536,6 +629,24 @@ class MatchEngine {
           trained ??= target;
         }
       }
+
+      // 逆足はひたすら反復するしかない。伸びは遅く、4に届くと形になる。
+      if (menu.weakFoot && physique.weakFoot < 5) {
+        if (_random.nextDouble() <
+            Formulas.weakFootGrowthChance *
+                player.personality.trainingFactor *
+                staff.growthFactor) {
+          physique = physique.copyWith(weakFoot: physique.weakFoot + 1);
+          awakened = physique.weakFoot >= 4;
+        }
+      }
+
+      // 積み上げた能力が一定を超えると、その練習の中で技を覚えることがある。
+      learned = _rollSignature(
+        attributes: attributes,
+        menu: menu,
+        development: development,
+      );
     }
 
     // 居残り。全体練習の後にもう一段。上に行くほど1本の重みが軽くなる。
@@ -570,10 +681,35 @@ class MatchEngine {
       condition: settled,
       trained: trained,
       setPieces: setPieces,
+      physique: physique,
       drilled: drilled,
+      learned: learned,
       redirected: redirected,
+      weakFootAwakened: awakened,
       injury: injury,
     );
+  }
+
+  /// その週に個人技を覚えるか。
+  ///
+  /// 練習しているカテゴリの中で、必要な水準に達している技だけが候補になる。
+  /// 能力値が上がった結果として身に付くので、狙って取りには行けない。
+  Signature? _rollSignature({
+    required Attributes attributes,
+    required TrainingMenu menu,
+    required Development development,
+  }) {
+    if (development.signatures.length >= Signature.maxOwned) return null;
+    final candidates = [
+      for (final s in Signature.values)
+        if (menu.keys.contains(s.key) &&
+            !development.signatures.contains(s) &&
+            attributes.detail(s.detail) >= Signature.requirement)
+          s,
+    ];
+    if (candidates.isEmpty) return null;
+    if (_random.nextDouble() >= Formulas.signatureChance) return null;
+    return candidates[_random.nextInt(candidates.length)];
   }
 
   Detail _randomDetail() => Detail.values[_random.nextInt(Detail.values.length)];

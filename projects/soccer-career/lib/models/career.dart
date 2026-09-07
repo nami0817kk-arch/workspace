@@ -2,6 +2,7 @@ import 'agent.dart';
 import 'attributes.dart';
 import 'club.dart';
 import 'competition.dart';
+import 'development.dart';
 import 'reputation.dart';
 import 'support.dart';
 import 'training.dart';
@@ -110,6 +111,7 @@ class CareerState {
     this.drill,
     this.staff = const StaffTeam(),
     this.habits = const Habits(),
+    this.development = const Development(),
     this.objective,
     this.injury,
     this.caps = 0,
@@ -156,6 +158,9 @@ class CareerState {
 
   /// 生活習慣。睡眠と食事。
   Habits habits;
+
+  /// 経験・選択の癖・相手への慣れ・個人技・停滞期。
+  Development development;
 
   /// 契約の残り年数。0 になると必ず去就を決めることになる。
   int contractYears;
@@ -282,6 +287,7 @@ class CareerState {
         'drill': drill?.name,
         'staff': staff.toJson(),
         'habits': habits.toJson(),
+        'development': development.toJson(),
         'contractYears': contractYears,
         'countryId': countryId,
         'professionalYears': professionalYears,
@@ -336,6 +342,8 @@ class CareerState {
           : null,
       staff: StaffTeam.fromJson(json['staff'] as Map<String, dynamic>?),
       habits: Habits.fromJson(json['habits'] as Map<String, dynamic>?),
+      development:
+          Development.fromJson(json['development'] as Map<String, dynamic>?),
       contractYears: json['contractYears'] as int? ?? 2,
       countryId: json['countryId'] as String? ?? 'yamato',
       professionalYears: json['professionalYears'] as int? ?? 1,

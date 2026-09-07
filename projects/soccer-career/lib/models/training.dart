@@ -34,7 +34,9 @@ enum TrainingMenu {
       conditionCost: 14, growthFactor: 0.65),
   possession('ポゼッション', '運ぶ技術と配球を合わせて',
       [AttributeKey.dribbling, AttributeKey.passing],
-      conditionCost: 14, growthFactor: 0.65);
+      conditionCost: 14, growthFactor: 0.65),
+  weakFootWork('逆足', '利き足でないほうだけを使う', [],
+      conditionCost: 10, weakFoot: true);
 
   const TrainingMenu(
     this.label,
@@ -44,6 +46,7 @@ enum TrainingMenu {
     this.recovery = 0,
     this.growthFactor = 1.0,
     this.injuryFactor = 1.0,
+    this.weakFoot = false,
   });
 
   final String label;
@@ -64,7 +67,10 @@ enum TrainingMenu {
   /// 怪我のしやすさの倍率。
   final double injuryFactor;
 
-  bool get isRest => keys.isEmpty;
+  /// 逆足を鍛えるメニューか。能力値ではなく利き足の精度が動く。
+  final bool weakFoot;
+
+  bool get isRest => keys.isEmpty && !weakFoot;
   bool get isCompound => keys.length >= 2;
 
   /// GK の練習は GK だけに出す。

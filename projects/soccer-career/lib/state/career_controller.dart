@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/foundation.dart';
 
 import '../data/save_repository.dart';
@@ -10,6 +12,7 @@ import '../models/agent.dart';
 import '../models/attributes.dart';
 import '../models/career.dart';
 import '../models/competition.dart';
+import '../models/development.dart';
 import '../models/injury.dart';
 import '../models/physique.dart';
 import '../models/player.dart';
@@ -21,6 +24,9 @@ import '../models/training.dart';
 class WeekReport {
   const WeekReport({
     this.trained,
+    this.learned,
+    this.weakFootAwakened = false,
+    this.plateau = false,
     this.drilled,
     this.redirected = false,
     this.deadBall,
@@ -30,6 +36,15 @@ class WeekReport {
 
   /// 練習で伸びた詳細能力。
   final Detail? trained;
+
+  /// その週に覚えた個人技。
+  final Signature? learned;
+
+  /// 逆足が形になったか。
+  final bool weakFootAwakened;
+
+  /// 停滞期に入っているか。
+  final bool plateau;
 
   /// 居残りで伸びたセットプレー。
   final SetPiece? drilled;
@@ -48,6 +63,8 @@ class WeekReport {
 
   bool get isEmpty =>
       trained == null &&
+      learned == null &&
+      !weakFootAwakened &&
       drilled == null &&
       deadBall == null &&
       newInjury == null &&
@@ -109,6 +126,11 @@ class CareerController extends ChangeNotifier {
   final SaveRepository _repository;
   final CareerEngine _career;
   final MatchEngine _match;
+  final Random _random = Random();
+
+  /// 能力値の総量。伸びたかどうかの判定に使う。
+  static int _sumOf(Attributes attributes) =>
+      Detail.values.fold(0, (s, d) => s + attributes.detail(d));
 
   CareerState? _state;
   MatchInProgress? _inProgress;
@@ -207,6 +229,7 @@ class CareerController extends ChangeNotifier {
       club: state.club,
       opponent: state.opponentFor(matchday),
       home: state.isHome(matchday),
+      development: state.development,
       appearance: state.injured
           ? Appearance.injured
           // 登録メンバーから外れていると、そもそもベンチにも入れない。
@@ -238,6 +261,7 @@ class CareerController extends ChangeNotifier {
       opponent: _career.extras.pickOpponent(),
       home: true,
       appearance: Appearance.start,
+      development: state.development,
       international: true,
     );
     notifyListeners();
@@ -316,6 +340,14 @@ class CareerController extends ChangeNotifier {
     final result = match.finish();
     _career.applyResult(state, result);
 
+    // 経験・選択の癖・相手への慣れは、出た試合ぶんだけ積み上がる。
+    state.development = state.development.afterMatch(
+      appearance: result.appearance,
+      international: result.international,
+      style: ClubStyle.of(match.opponent),
+      used: match.resolutions.map((r) => r.key),
+    );
+
     if (result.international) {
       state.pendingInternational = false;
       _inProgress = null;
@@ -340,12 +372,14 @@ class CareerController extends ChangeNotifier {
       }
       lastWeek = WeekReport(recovered: recovered);
     } else {
+      final before = _sumOf(player.attributes);
       player = player.copyWith(
         attributes: _match.grow(
           player,
           result.rating,
           used: match.successes,
           declineOffset: state.staff.declineAgeOffset,
+          plateau: state.development.inPlateau,
         ),
       );
       final week = _match.applyWeek(
@@ -354,13 +388,24 @@ class CareerController extends ChangeNotifier {
         drill: state.drill,
         staff: state.staff,
         habits: state.habits,
+        development: state.development,
+        plateau: state.development.inPlateau,
         played: result.appearance != Appearance.benched,
       );
       player = player.copyWith(
         attributes: week.attributes,
         condition: week.condition,
         setPieces: week.setPieces,
+        physique: week.physique,
       );
+      // 伸びが続けば、どこかで足踏みが来る。
+      state.development = state.development.afterGrowth(
+        grew: _sumOf(week.attributes) > before,
+        random: _random,
+      );
+      if (week.learned != null) {
+        state.development = state.development.learn(week.learned!);
+      }
       newInjury = week.injury ??
           _match.rollInjury(
             player,
@@ -376,6 +421,9 @@ class CareerController extends ChangeNotifier {
       }
       lastWeek = WeekReport(
         trained: week.trained,
+        learned: week.learned,
+        weakFootAwakened: week.weakFootAwakened,
+        plateau: state.development.inPlateau,
         drilled: week.drilled,
         redirected: week.redirected,
         deadBall: match.deadBallText,

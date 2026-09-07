@@ -115,6 +115,22 @@ class Formulas {
   static const double deadBallChanceStart = 0.22;
   static const double deadBallChanceSub = 0.09;
 
+  /// 1試合のうち、逆足で対応することになる局面の割合。
+  static const double weakFootMomentChance = 0.25;
+
+  /// 逆足練習で精度が1段上がる確率。反復するしかない。
+  static const double weakFootGrowthChance = 0.12;
+
+  /// 個人技を覚える確率（条件を満たした週）。
+  static const double signatureChance = 0.06;
+
+  /// 停滞期のあいだ、成長の確率に掛かる倍率。
+  static const double plateauGrowthFactor = 0.25;
+
+  /// 限界突破が起きる確率と、上がるポテンシャル。
+  static const double breakthroughChance = 0.25;
+  static const int breakthroughGain = 3;
+
   /// 上乗せ要求が通る確率 = 基本 + 交渉力 × 係数 + 成績の補正。
   static const double negotiationBase = 0.25;
   static const double negotiationPerSkill = 0.09;

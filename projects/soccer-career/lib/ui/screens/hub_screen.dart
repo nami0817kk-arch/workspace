@@ -163,6 +163,8 @@ class _HomeTab extends StatelessWidget {
         const SizedBox(height: 16),
         _BodyCard(state: state),
         const SizedBox(height: 16),
+        _DevelopmentCard(state: state),
+        const SizedBox(height: 16),
         _PersonCard(state: state),
         const SizedBox(height: 16),
         _LeagueCard(state: state),
@@ -724,6 +726,74 @@ class _SupportCard extends StatelessWidget {
                   ),
               ],
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 積み上げてきたもの。経験・型・個人技・停滞期。
+class _DevelopmentCard extends StatelessWidget {
+  const _DevelopmentCard({required this.state});
+
+  final CareerState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final dev = state.development;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text('積み上げ', style: theme.textTheme.titleSmall),
+                const SizedBox(width: 8),
+                Chip(
+                  label: Text(dev.identityLabel),
+                  visualDensity: VisualDensity.compact,
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text('試合経験 ${dev.experience}'
+                '${dev.breakthroughs > 0 ? '  ·  限界突破 ${dev.breakthroughs}回' : ''}',
+                style: muted),
+            if (dev.signatures.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              Text('個人技', style: theme.textTheme.labelMedium),
+              const SizedBox(height: 4),
+              Wrap(
+                spacing: 6,
+                runSpacing: 4,
+                children: [
+                  for (final s in dev.signatures)
+                    Chip(
+                      label: Text(s.label),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                ],
+              ),
+            ],
+            if (dev.faced.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              Text(
+                '慣れてきた相手: ${dev.faced.entries.where((e) => e.value >= 10).map((e) => e.key.label).join('  ')}',
+                style: muted,
+              ),
+            ],
+            if (dev.inPlateau) ...[
+              const SizedBox(height: 10),
+              Text('停滞期。あと${dev.plateau}試合は伸びにくい。',
+                  style: theme.textTheme.bodySmall
+                      ?.copyWith(color: theme.colorScheme.error)),
+            ],
           ],
         ),
       ),
