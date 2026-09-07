@@ -622,21 +622,23 @@ def test_普通のカタカナ語は名前と数えない(tmp_path):
     assert result["タイトルの主語"].ok is False
 
 
-def test_代弁に使わない人が喋っていたら止まる(tmp_path):
-    """2026-09-07 ユーザーの指示。メッシとモウリーニョの声は使わない。"""
+def test_別人が同じ声だと止まる(tmp_path, monkeypatch):
+    """2026-09-07: メッシとモウリーニョがどちらも style 42 になっていた。"""
+    from src import review as review_mod
+    from src.config import CastMember
+
+    def same_voice(self, name):
+        return CastMember(name=name, key="voiced_42", style_id=42, speed=1.0,
+                          pitch=0.0, intonation=1.05, position="none", color="#fff")
+
+    monkeypatch.setattr("src.config.ProjectConfig.resolve_speaker", same_voice)
     body = GOOD_BODY.replace("ネット民: 完全に別チームだった。",
                              "メッシ: 完全に別チームだった。")
     result = _by_label(inspect(parse_script(body), _built(tmp_path)))
-    assert result["代弁の可否"].ok is False
-    assert "メッシ" in result["代弁の可否"].detail
+    assert result["声の重なり"].ok is False
+    assert "style 42" in result["声の重なり"].detail
 
 
-def test_縦型でも代弁の可否は見る(tmp_path, monkeypatch):
-    """ショートは本編から切り出すので、元に入っていれば残る。"""
-    from src import review as review_mod
-
-    monkeypatch.setattr(review_mod, "_dimensions", lambda path: (1080, 1920))
-    body = GOOD_BODY.replace("ネット民: 中盤の圧力がすごい。",
-                             "モウリーニョ: 中盤の圧力がすごい。")
-    result = _by_label(inspect(parse_script(body), _built(tmp_path)))
-    assert result["代弁の可否"].ok is False
+def test_別々の声なら通る(tmp_path):
+    result = _by_label(inspect(parse_script(GOOD_BODY), _built(tmp_path)))
+    assert result["声の重なり"].ok is True

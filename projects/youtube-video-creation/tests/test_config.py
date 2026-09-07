@@ -180,15 +180,15 @@ def test_声は候補の中から選ぶ():
         assert config.resolve_speaker(name).style_id in config.voice_pool
 
 
-def test_代弁に使わない人は声を持たない():
-    """2026-09-07 ユーザーの指示。書き出しの手前でも止める。"""
-    import pytest
-
-    from src.config import ConfigError, load_config
+def test_名前ごとに声を決め打ちできる():
+    """2026-09-07 ユーザーの指示。ハッシュの衝突を手で解くための逃げ道。"""
+    from src.config import load_config
 
     config = load_config()
-    assert "メッシ" in config.voice_deny and "モウリーニョ" in config.voice_deny
-    with pytest.raises(ConfigError):
-        config.resolve_speaker("メッシ")
-    # 指定していない人はこれまでどおり声が付く
-    assert config.resolve_speaker("キャラガー").name == "キャラガー"
+    assert config.voice_fixed["メッシ"] != config.voice_fixed["モウリーニョ"]
+    assert config.resolve_speaker("メッシ").style_id == config.voice_fixed["メッシ"]
+    assert (config.resolve_speaker("モウリーニョ").style_id
+            == config.voice_fixed["モウリーニョ"])
+    # 書いていない人は、これまでどおり名前から決まる（動画をまたいで変わらない）
+    assert (config.resolve_speaker("キャラガー").style_id
+            == config.resolve_speaker("キャラガー").style_id)

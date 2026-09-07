@@ -178,8 +178,9 @@ class ProjectConfig:
     titles: TitleConfig = field(default_factory=TitleConfig)
     # 代弁に使う声の候補。空なら未登録の話者はエラーのまま
     voice_pool: tuple[int, ...] = ()
-    # **代弁に使わない人**（2026-09-07 ユーザーの指示）。名前で拒む
-    voice_deny: tuple[str, ...] = ()
+    # **名前ごとの決め打ち**（2026-09-07 ユーザーの指示）。
+    # ハッシュだと別人が同じ声になることがある（メッシとモウリーニョで実際に起きた）
+    voice_fixed: dict[str, int] = field(default_factory=dict)
     path: Path = DEFAULT_CONFIG_PATH
 
     def resolve_speaker(self, name: str) -> CastMember:
@@ -201,11 +202,6 @@ class ProjectConfig:
         known = "/ ".join(self.cast)
         raise ConfigError(f"話者『{wanted}』は config に定義されていません（定義済み: {known}）")
 
-    def denied(self, name: str) -> bool:
-        """代弁に使わないと決めた人か。"""
-        wanted = name.strip()
-        return any(wanted == deny.strip() for deny in self.voice_deny)
-
     def voiced(self, name: str) -> CastMember:
         """代弁する人。**同じ名前なら、いつも同じ声になる。**
 
@@ -215,16 +211,18 @@ class ProjectConfig:
         import hashlib
 
         wanted = name.strip()
-        if self.denied(wanted):
-            raise ConfigError(
-                f"『{wanted}』は代弁に使わないと決まっています（voice_deny）。"
-                "キャスターが「〜と述べた」と地の文で伝えてください"
-            )
+        # **決め打ちが最優先。**ハッシュの衝突を人が手で解くための逃げ道
+        # （メッシとモウリーニョがどちらも style 42 になっていた）
+        if wanted in self.voice_fixed:
+            return self._member(wanted, self.voice_fixed[wanted])
+
         pool = list(self.voice_pool)
         digest = hashlib.sha1(wanted.encode("utf-8")).digest()
-        style = pool[int.from_bytes(digest[:4], "big") % len(pool)]
+        return self._member(wanted, pool[int.from_bytes(digest[:4], "big") % len(pool)])
+
+    def _member(self, name: str, style: int) -> CastMember:
         return CastMember(
-            name=wanted,
+            name=name,
             key=f"voiced_{style}",
             style_id=int(style),
             speed=1.0,
@@ -254,7 +252,7 @@ def build_config(raw: dict, path: Path = DEFAULT_CONFIG_PATH) -> ProjectConfig:
     voice_raw = dict(raw.get("voicevox") or {})
     # voice_pool は VoicevoxConfig の項目ではない（代弁の割り当てに使う）
     pool = voice_raw.pop("voice_pool", ())
-    deny = voice_raw.pop("voice_deny", ())
+    fixed = voice_raw.pop("voice_fixed", {}) or {}
     voicevox = VoicevoxConfig(**voice_raw)
     audio = AudioConfig(**(raw.get("audio") or {}))
     motion = MotionConfig(**(raw.get("motion") or {}))
@@ -282,7 +280,7 @@ def build_config(raw: dict, path: Path = DEFAULT_CONFIG_PATH) -> ProjectConfig:
         )
     return ProjectConfig(
         voice_pool=tuple(int(v) for v in pool or ()),
-        voice_deny=tuple(str(v).strip() for v in deny or () if str(v).strip()),
+        voice_fixed={str(k).strip(): int(v) for k, v in dict(fixed).items()},
         video=video,
         voicevox=voicevox,
         cast=cast,

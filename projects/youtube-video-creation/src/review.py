@@ -77,7 +77,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     # 割合を測っても元の台本の話にならない（2026-09-07）
     findings.append(check_voice_length(script))
     # **縦型にも当てる。**ショートは本編から切り出すので、元に入っていれば残る
-    findings.append(check_denied_voices(script))
+    findings.append(check_voice_clash(script))
     if not portrait:
         findings.append(check_voice_share(script))
         findings.append(check_opening_title(script))
@@ -673,30 +673,42 @@ def check_title_subject(script: Script) -> Finding:
     )
 
 
-def check_denied_voices(script: Script) -> Finding:
-    """代弁に使わないと決めた人が喋っていないか（2026-09-07 ユーザーの指示）。
+def check_voice_clash(script: Script) -> Finding:
+    """別人が同じ声で喋っていないか（2026-09-07）。
 
-    手で書いた台本は draft を通らないので、**書き出したものでも見る。**
+    代弁の声は名前のハッシュで選んでいるので、**まれに衝突する。**
+    実際にメッシとモウリーニョがどちらも style 42 に当たり、同じ声だった。
+    聞き分けられないと「別人だと分からない」——`config.voice_fixed` で
+    片方を別の声に変える。
     """
     try:
         from .config import load_config
 
-        deny = load_config().voice_deny
+        config = load_config()
     except Exception:
-        return Finding(True, "代弁の可否", "設定を読めないので見ていません")
-    if not deny:
-        return Finding(True, "代弁の可否", "使わない人の指定はありません")
+        return Finding(True, "声の重なり", "設定を読めないので見ていません")
 
-    found = sorted({(line.speaker or "").strip()
+    names = sorted({(line.speaker or "").strip()
                     for scene in script.scenes for line in scene.lines
-                    if (line.speaker or "").strip() in deny})
-    if found:
+                    if (line.speaker or "").strip()})
+    seen: dict[int, str] = {}
+    clashes: list[str] = []
+    for name in names:
+        try:
+            style = config.resolve_speaker(name).style_id
+        except Exception:
+            continue
+        if style in seen and seen[style] != name:
+            clashes.append(f"{seen[style]} と {name}（style {style}）")
+        else:
+            seen.setdefault(style, name)
+    if clashes:
         return Finding(
-            False, "代弁の可否",
-            f"『{' / '.join(found)}』は代弁に使わないと決まっています。"
-            "キャスターが「〜と述べた」と地の文で伝えてください",
+            False, "声の重なり",
+            f"{' / '.join(clashes)} が同じ声です。"
+            "config の voice_fixed で片方を別の声にしてください",
         )
-    return Finding(True, "代弁の可否", "使わない人は出ていません")
+    return Finding(True, "声の重なり", f"{len(seen)}人が別々の声です")
 
 
 def check_wrap_share(script: Script) -> Finding:

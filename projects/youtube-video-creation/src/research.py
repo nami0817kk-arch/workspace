@@ -279,34 +279,45 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
                 f"（いまは{len(section.sources)}本）"
             )
         problems += _check_reactions(section)
-        problems += _check_denied_voices(section)
 
         if rule.get("needs_official") and not section.official:
             problems.append(
                 f"{label}: 確度『{section.tier}』はクラブ・当事者の発表が条件です。"
                 "発表を確認できないなら tier を下げてください"
             )
+    problems += _check_voice_clash(notes)
     return problems
 
+def _check_voice_clash(notes: Notes) -> list[str]:
+    """別人が同じ声にならないか（2026-09-07）。
 
-def _check_denied_voices(section: Section) -> list[str]:
-    """代弁に使わないと決めた人が、話者になっていないか（2026-09-07）。
-
-    ユーザーの指示。合成音声でその人が喋る形にはしない。**引用そのものは
-    使ってよい**ので、キャスターが「〜と述べた」と地の文で伝える。
+    声は名前のハッシュで選ぶので、まれに衝突する。メッシとモウリーニョが
+    どちらも style 42 になっていた。**書き出す前に気づけるようにする。**
     """
     try:
         from .config import load_config
 
-        deny = load_config().voice_deny
+        config = load_config()
     except Exception:
         return []
-    found = {v.strip() for v in section.voices if v.strip() and v.strip() in deny}
-    return [
-        f"{section.id}: 『{name}』は代弁に使わないと決まっています。"
-        "キャスターが「〜と述べた」と地の文で伝えてください"
-        for name in sorted(found)
-    ]
+
+    names = sorted({v.strip() for section in notes.sections
+                    for v in section.voices if v.strip()})
+    seen: dict[int, str] = {}
+    problems: list[str] = []
+    for name in names:
+        try:
+            style = config.resolve_speaker(name).style_id
+        except Exception:
+            continue
+        if style in seen and seen[style] != name:
+            problems.append(
+                f"『{seen[style]}』と『{name}』が同じ声（style {style}）になります。"
+                "config の voice_fixed で片方を別の声にしてください"
+            )
+        else:
+            seen.setdefault(style, name)
+    return problems
 
 
 def _check_reactions(section: Section) -> list[str]:
