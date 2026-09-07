@@ -2178,12 +2178,13 @@ def _cmd_make_clip(args, config) -> int:
 
 
 def _cmd_upload(args, config) -> int:
-    from datetime import timedelta
+    from datetime import timedelta, timezone
 
     from . import posted
     from . import upload as upload_mod
 
     nl = chr(10)   # heredoc 経由だとバックスラッシュが化ける
+    JST = timezone(timedelta(hours=9))
 
     build_dir = Path(args.build_dir)
 
@@ -2228,15 +2229,12 @@ def _cmd_upload(args, config) -> int:
     )
     posted.record(build_dir, video_id)
     print(f"\n投稿しました: https://youtu.be/{video_id} ({draft.privacy})")
-    remain = posted.left()
-    if remain <= 3:
-        when = posted.frees_at()
-        tail = ""
-        if when is not None:
-            jst = when + timedelta(hours=9)
-            tail = f"　次に空くのは {jst:%H:%M} JST"
-        print(f"  投稿枠の残り {remain} 本"
-              f"（直近24時間で{posted.WINDOW_MAX}本まで）" + tail)
+    # **上限の本数は分からない**ので、残りではなく「上げた本数」を出す。
+    n = posted.today()
+    if n >= posted.SOFT_MAX - 3:
+        back = posted.frees_at().astimezone(JST)
+        print(f"  枠が戻ってから {n} 本目。この辺りで弾かれることがある"
+              f"（次に枠が戻るのは {back:%m/%d %H:%M} JST）")
     return 0
 
 

@@ -1,8 +1,8 @@
 {
   "2026-09-06": {
-    "videos.insert": 45,
-    "videos.list": 32,
-    "videos.update": 22,
+    "videos.insert": 51,
+    "videos.list": 34,
+    "videos.update": 23,
     "thumbnails.set": 16
   }
 }
