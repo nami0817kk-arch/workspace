@@ -458,3 +458,65 @@ def test_制作側の節名は画面に出さない():
     assert "オープニング" in INTERNAL_SCENE_TITLES
     assert "まとめ" in INTERNAL_SCENE_TITLES
     assert "監督は何と言ったか" not in INTERNAL_SCENE_TITLES
+
+
+# 反応を画面に積む（2026-09-07）。参考チャンネルは白い吹き出しを4〜5件残していて、
+# 途中から見た人も文脈を拾える。こちらは1行ずつ消えていた。
+
+def _stack_script():
+    from src.script_model import parse_script
+
+    return parse_script("""---
+title: T
+---
+
+## 何が起きたか
+
+キャスター: 何が起きたかです。
+  telop: 何が起きたか
+
+ネット民: 完全に別チームだった。
+
+ネット民: 中盤の圧力がすごい。
+
+ネット民: これは優勝を狙える。
+""")
+
+
+def test_前の反応が画面に残る(tmp_path):
+    from PIL import Image
+
+    from src.config import load_config
+    from src.render import Renderer
+
+    script = _stack_script()
+    renderer = Renderer(load_config(), tmp_path)
+    renderer.script_background = script.background
+    scene = script.scenes[0]
+    plain = renderer.frame(scene.lines[3], scene, mouth_open=False)
+    piled = renderer.frame(scene.lines[3], scene, mouth_open=False,
+                           stack=("完全に別チームだった。", "中盤の圧力がすごい。"))
+    assert plain != piled, "積んでも同じ絵になっている"
+
+    top, box_top = 0, renderer.layout.headline_box[1]
+    with Image.open(piled) as image:
+        area = image.convert("RGB").crop((0, box_top // 2, image.width, box_top))
+        white = sum(1 for r, g, b in area.getdata() if r > 200 and g > 200 and b > 200)
+    assert white > 2000, "見出しの上に白い吹き出しが無い"
+
+
+def test_積むのは匿名の反応だけ(tmp_path):
+    """語り（キャスター）が入ったら積み直す。"""
+    from src.config import load_config
+    from src.render import Renderer
+
+    script = _stack_script()
+    renderer = Renderer(load_config(), tmp_path)
+    renderer.script_background = script.background
+    entries = renderer.frame_entries(script)
+    assert entries, "フレームが作られていない"
+    # キャスターの行には積まない＝素の絵と同じものが使われる
+    scene = script.scenes[0]
+    bare = renderer.frame(scene.lines[0], scene, mouth_open=False,
+                          panel=("何が起きたか", None, None))
+    assert bare in [path for path, _ in entries]

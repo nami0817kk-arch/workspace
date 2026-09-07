@@ -122,6 +122,7 @@ class Renderer:
         telop_t: float = 1.0,
         hop_t: float = 1.0,
         panel: tuple[str, str | None, str | None] | None = None,
+        stack: tuple[str, ...] = (),
     ) -> Path:
         """1枚の画面を描いて PNG のパスを返す。
 
@@ -151,6 +152,7 @@ class Renderer:
                 ("open" if mouth_open else "close") if self.layout.with_characters else "-",
                 f"{telop_t:.2f}/{hop_t if self.layout.with_characters else 1.0:.2f}",
                 f"{self.layout.width}x{self.layout.height}",
+                "|".join(stack),
             ]
         )
         target = self.frame_dir / f"{hashlib.sha1(key.encode('utf-8')).hexdigest()[:16]}.png"
@@ -171,6 +173,10 @@ class Renderer:
         if self.layout.with_characters:
             self._draw_telop(canvas, member, text, telop_t, source)
         else:
+            # **前の反応を画面に残す**（2026-09-07）。参考チャンネルは白い吹き出しを
+            # 4〜5件積み上げていて、途中から見た人も文脈を拾える。こちらは1行ずつ
+            # 消えていた
+            self._draw_stack(canvas, stack)
             self._draw_headline(canvas, text, telop_t, source)
         # 動画背景のときは重ねる前提なのでアルファを残す
         canvas.save(target) if over_video else canvas.convert("RGB").save(target)
@@ -485,6 +491,43 @@ class Renderer:
             layer.putalpha(layer.getchannel("A").point(lambda a: int(a * _ease_out(telop_t))))
         canvas.alpha_composite(layer)
 
+    # 積み上げる反応の見た目。**白い吹き出しに黒文字**（参考チャンネルと同じ）。
+    # 何件残すかは、見出しの上に入る高さから決めた（実測で3件）
+    STACK_KEEP = 3
+    STACK_SIZE = 40
+
+    def _draw_stack(self, canvas: Image.Image, stack: tuple[str, ...]) -> None:
+        """直前までの反応を、見出しの上に白い吹き出しで積む。
+
+        参考チャンネルは反応を4〜5件そのまま画面に残していて、**途中から見た人も
+        文脈を拾える**（2026-09-07 に再生して確認）。こちらは1行ずつ消えていた。
+
+        古いものほど薄くする。新しいものが下（見出しのすぐ上）に来る。
+        """
+        if not stack:
+            return
+        from PIL import ImageFont
+
+        font = ImageFont.truetype(str(self.config.video.font_path()),
+                                  int(self.STACK_SIZE * self.layout.width / 1920))
+        layer, draw = _layer(canvas.size)
+        left, top, right, _bottom = self.layout.headline_box
+        pad = int(self.layout.width * 0.012)
+        line_height = font.size + pad * 2
+        y = top - pad - line_height * len(stack[-self.STACK_KEEP:])
+        for depth, text in enumerate(stack[-self.STACK_KEEP:]):
+            width = int(draw.textlength(text, font=font)) + pad * 3
+            width = min(width, right - left)
+            # 古いものほど薄い。いちばん下（新しい）がはっきり見える
+            fade = 150 + int(105 * (depth + 1) / len(stack[-self.STACK_KEEP:]))
+            draw.rounded_rectangle([left, y, left + width, y + line_height],
+                                   radius=int(line_height * 0.35),
+                                   fill=(255, 255, 255, fade))
+            draw.text((left + pad, y + pad - 2), text, font=font,
+                      fill=(18, 18, 22, min(255, fade + 60)))
+            y += line_height
+        canvas.alpha_composite(layer)
+
     def _draw_headline(
         self,
         canvas: Image.Image,
@@ -673,6 +716,9 @@ class Renderer:
                 previous = None  # 章タイトル直後は転換の溶かしを入れない
             headline: tuple[str, str | None] = ("", None)
             card: str | None = None
+            # **反応は画面に積む**（2026-09-07）。匿名の書き込みが続くあいだ、
+            # 前の行を見出しの上に残す。別の話者が入ったら積み直す
+            stack: list[str] = []
             for index, line in enumerate(scene.lines):
                 # 立ち絵なしのニュース風では、見出しは telop を書いた行でだけ差し替え、
                 # それ以外の行は直前の見出しを出したままにする（生のセリフは出さない）
@@ -691,8 +737,14 @@ class Renderer:
                     current = (headline[0], headline[1], card)
                     changed = (headline, card) != before
 
-                closed = self.frame(line, scene, mouth_open=False, panel=current)
-                opened = self.frame(line, scene, mouth_open=True, panel=current)
+                crowd = (line.speaker or "").strip() in self.config.voice_crowd
+                shown = tuple(stack) if crowd else ()
+                closed = self.frame(line, scene, mouth_open=False, panel=current,
+                                    stack=shown)
+                opened = self.frame(line, scene, mouth_open=True, panel=current,
+                                    stack=shown)
+                # 積むのは匿名の反応だけ。語りが入ったらいったん流す
+                stack = (stack + [line.telop_text() or line.text]) if crowd else []
                 pause = line.pause or 0.0
                 speaking = max(0.0, line.duration - pause)
                 is_scene_head = index == 0
