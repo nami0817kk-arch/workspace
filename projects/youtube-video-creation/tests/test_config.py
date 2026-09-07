@@ -192,3 +192,33 @@ def test_名前ごとに声を決め打ちできる():
     # 書いていない人は、これまでどおり名前から決まる（動画をまたいで変わらない）
     assert (config.resolve_speaker("キャラガー").style_id
             == config.resolve_speaker("キャラガー").style_id)
+
+
+def test_男の人には男性の声を当てる():
+    """2026-09-07 ユーザーの指示。全40キャラの基本周波数を実測して分けた。"""
+    from src.config import load_config
+
+    config = load_config()
+    # 既定は男性のプール（話者はほぼ全員が男性）
+    assert config.resolve_speaker("アルテタ").style_id in config.voice_pool
+    # 女性と分かっている人だけ、女性のプールから選ぶ
+    from dataclasses import replace
+
+    女性あり = replace(config, voice_female=("なでしこ選手",))
+    assert 女性あり.resolve_speaker("なでしこ選手").style_id in config.voice_pool_female
+
+
+def test_使わない声はプールに戻せない(tmp_path):
+    """42番（ちび式じい）。人の注意で防ぐのは無理があるので読み込みで止める。"""
+    import pytest
+    import yaml
+
+    from src.config import ConfigError, load_config
+
+    source = load_config().path
+    raw = yaml.safe_load(source.read_text(encoding="utf-8"))
+    raw["voicevox"]["voice_pool"] = list(raw["voicevox"]["voice_pool"]) + [42]
+    broken = tmp_path / "project.yaml"
+    broken.write_text(yaml.safe_dump(raw, allow_unicode=True), encoding="utf-8")
+    with pytest.raises(ConfigError):
+        load_config(broken)
