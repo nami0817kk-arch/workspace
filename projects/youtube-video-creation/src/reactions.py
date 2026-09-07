@@ -135,3 +135,35 @@ def tally(posts: list[Post], words: dict[str, tuple[str, ...]]) -> dict[str, int
             if any(key in post.text for key in keys):
                 counts[label] += 1
     return counts
+
+
+# 読み上げに回す1件の長さ（2026-09-07）。参考3チャンネルの実測は1件3.1秒で、
+# 日本語の読み上げは約5.5字/秒なので 17字前後。切りのいいところまで許して30字。
+SAY_MAX = 30
+# 参考チャンネルは「いいやつ」「ラヤいいな」のような4〜5字も読んでいた（実測）。
+# 拾い損ねの1〜2字だけを落とす
+SAY_MIN = 4
+
+
+def say_lines(posts: list[Post], want: int = 12, limit: int = SAY_MAX) -> list[Post]:
+    """**読み上げる**ぶんの反応を選ぶ。カードに載せる引用とは別。
+
+    伸びているチャンネルは1件2〜4秒でぶつ切りに読み上げていた（実測19.2件）。
+    長い書き込みは切らずに**落とす**。途中で切ると意味が変わり、
+    「…」で終わる引用を推測で補わないという決まりにも反する。
+    """
+    picked: list[Post] = []
+    for post in posts:
+        body = post.text.strip()
+        # 一文だけ取り出せるなら、そこまでを1件にする（長い連投を捨てないため）
+        for mark in ("。", "!", "！", "?", "？"):
+            head, sep, _ = body.partition(mark)
+            if sep and SAY_MIN <= len(head) <= limit:
+                body = head
+                break
+        if not SAY_MIN <= len(body) <= limit:
+            continue
+        picked.append(Post(no=post.no, text=body.rstrip("。")))
+        if len(picked) >= want:
+            break
+    return picked

@@ -13,6 +13,51 @@ BODY = (
 )
 
 
+# 2026-09-07 に構成の点検を足したので、「全部 ✓ になる見本」も新しい型に直した。
+#   1行目がタイトル / 他人の声が4割以上 / 1件30字以内 / 最後の節は1割まで
+# 伸びている3チャンネルの実測（他人の声58%・19件・1件3.1秒）に寄せた形
+GOOD_BODY = """---
+title: アーセナルが勝った理由
+sources: [https://example.com/a]
+tags: [サッカー, 海外サッカー]
+---
+
+## 何が起きたか
+
+キャスター: アーセナルが勝った理由。
+  source: 確定
+
+キャスター: 前半に2点が入りました。
+  source: 報道
+
+ネット民: 完全に別チームだった。
+  source: 未確認
+
+ネット民: 中盤の圧力がすごい。
+  source: 未確認
+
+ネット民: これは優勝を狙える。
+  source: 未確認
+
+ネット民: 見ていて楽しい。
+  source: 未確認
+
+ネット民: この調子で頼む。
+  source: 未確認
+
+ネット民: 来週も楽しみだ。
+  source: 未確認
+
+ネット民: 守備も良かった。
+  source: 未確認
+
+## まとめ
+
+解説: 中盤の改善が答えです。
+  source: 背景
+"""
+
+
 def _built(tmp_path, seconds=150.0):
     for name in ("video.mp4", "thumbnail.png"):
         (tmp_path / name).write_bytes(b"x")
@@ -41,8 +86,9 @@ def test_a_finished_build_passes_everything(tmp_path, monkeypatch):
     face = tmp_path / "face.jpg"
     face.write_bytes(b"x")
     monkeypatch.setattr(review_mod, "_resolve", lambda value: face)
-    body = BODY.replace("title: T\n",
-                       "title: T\nthumbnail_photo: assets/images/x/face.jpg\n")
+    body = GOOD_BODY.replace(
+        "title: アーセナルが勝った理由\n",
+        "title: アーセナルが勝った理由\nthumbnail_photo: assets/images/x/face.jpg\n")
     findings = inspect(parse_script(body), _built(tmp_path), 100.0)
     assert all(f.ok for f in findings), [f.line() for f in findings if not f.ok]
 
@@ -470,3 +516,60 @@ def test_ショートは同じ絵の上限が短い():
     assert hold_limit(portrait=True) == SHORT_CARD_HOLD_MAX
     assert hold_limit(portrait=False) == CARD_HOLD_MAX
     assert SHORT_CARD_HOLD_MAX < CARD_HOLD_MAX
+
+
+# 構成の点検（2026-09-07）。伸びている3チャンネルの直近4本を文字起こしで測ったら、
+# 他人の声が尺の58%・19.2件・1件3.1秒で、こちらは14%・2.2件・1件39字だった。
+# **✓ しか出ない点検は、壊れていても気づけない**ので、壊れた例を1つずつ食わせる。
+
+def test_語りだけの台本は他人の声で止まる(tmp_path):
+    body = GOOD_BODY.replace("ネット民:", "解説:")
+    result = _by_label(inspect(parse_script(body), _built(tmp_path)))
+    assert result["他人の声の量"].ok is False
+    assert "0%" in result["他人の声の量"].detail
+
+
+def test_長い引用は刻みで止まる(tmp_path):
+    body = GOOD_BODY.replace(
+        "ネット民: 完全に別チームだった。",
+        "ネット民: 完全に別のチームになっていて見ていて本当に気持ちがよかった一戦だった。")
+    result = _by_label(inspect(parse_script(body), _built(tmp_path)))
+    assert result["反応の刻み"].ok is False
+
+
+def test_1行目がタイトルと違うと止まる(tmp_path):
+    body = GOOD_BODY.replace(
+        "キャスター: アーセナルが勝った理由。", "キャスター: さて、今日の話題です。")
+    result = _by_label(inspect(parse_script(body), _built(tmp_path)))
+    assert result["1行目"].ok is False
+
+
+def test_タイトルの一部だけ読んでも通らない(tmp_path):
+    """「アーセナル」とだけ読んで本題に入らない形は通さない。"""
+    body = GOOD_BODY.replace(
+        "キャスター: アーセナルが勝った理由。", "キャスター: アーセナル。")
+    result = _by_label(inspect(parse_script(body), _built(tmp_path)))
+    assert result["1行目"].ok is False
+
+
+def test_長いまとめは止まる(tmp_path):
+    body = GOOD_BODY.replace(
+        "解説: 中盤の改善が答えです。",
+        """解説: 中盤の改善が答えです。
+
+解説: つまり今日の試合は中盤の入れ替えで決まったということになります。
+
+解説: 次の焦点は来週の一戦です。動きがあり次第またお伝えします。""")
+    result = _by_label(inspect(parse_script(body), _built(tmp_path)))
+    assert result["まとめの長さ"].ok is False
+
+
+def test_縦型には構成の点検を当てない(tmp_path, monkeypatch):
+    """ショートは本編から1節を切り出したもの。割合を測っても元の話にならない。"""
+    from src import review as review_mod
+
+    monkeypatch.setattr(review_mod, "_dimensions", lambda path: (1080, 1920))
+    body = GOOD_BODY.replace("ネット民:", "解説:")      # 他人の声をゼロにしても
+    labels = {f.label for f in inspect(parse_script(body), _built(tmp_path))}
+    assert "他人の声の量" not in labels
+    assert "1行目" not in labels

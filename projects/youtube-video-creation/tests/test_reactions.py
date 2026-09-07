@@ -91,3 +91,36 @@ def test_番号とIDの間に空行があっても読める():
     posts = parse(spaced)
 
     assert [p.no for p in posts] == [6, 8]
+
+
+# 読み上げに回す反応（2026-09-07）。カードに載せるだけでは画面が変わらない。
+# 伸びている3チャンネルは尺の58%を他人の声に使い、1件2〜4秒で刻んでいた。
+
+def test_読み上げに回すのは短いものだけ():
+    from src.reactions import Post, say_lines
+
+    posts = [
+        Post(no=1, text="完全に別チームだった"),
+        Post(no=2, text="あ"),                                   # 短すぎる
+        Post(no=3, text="長い" * 40),                            # 長すぎる
+        Post(no=4, text="中盤の圧力がすごい"),
+    ]
+    got = say_lines(posts)
+    assert [p.text for p in got] == ["完全に別チームだった", "中盤の圧力がすごい"]
+
+
+def test_長い書き込みでも一文で収まるなら使う():
+    from src.reactions import Post, say_lines
+
+    posts = [Post(no=7, text="これは強い。あとは怪我だけが心配で、"
+                             "去年の終盤のように失速しないかどうかだと思う")]
+    got = say_lines(posts)
+    assert [p.text for p in got] == ["これは強い"]
+    assert got[0].no == 7          # レス番号は残す（出典を辿れるように）
+
+
+def test_件数の上限を守る():
+    from src.reactions import Post, say_lines
+
+    posts = [Post(no=i, text=f"反応その{i}です") for i in range(30)]
+    assert len(say_lines(posts, want=5)) == 5

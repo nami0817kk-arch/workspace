@@ -198,7 +198,9 @@ def test_breaking_prefix_is_fine_with_a_confirmed_section():
     raw = _raw()
     raw["theme"] = {**raw["theme"], "prefix": "速報"}
     raw["thumbnail"] = {"line1": "短い見出し", "line2": "赤帯の文字"}
-    assert advise(build_notes(raw)) == []
+    # 2026-09-07: 他人の声が足りないヒントは、どの取材メモにも出るようになった
+    # （参考3チャンネルは尺の58%が他人の声、こちらは14%だった）。札の点検とは別の話
+    assert [h for h in advise(build_notes(raw)) if "他人の声" not in h] == []
 
 
 def test_unknown_prefix_is_flagged():
@@ -635,3 +637,61 @@ def test_別の名前の動画は拾わない(tmp_path, monkeypatch):
     monkeypatch.setattr(backgrounds, "_resolve", lambda p: tmp_path / p)
 
     assert backgrounds.moving_background("assets/backgrounds/stadium.png").endswith("stadium.png")
+
+
+# 構成を参考チャンネルに合わせた（2026-09-07）。直近4本を文字起こしで測ったら、
+# 4本とも1行目がタイトルの読み上げで、まとめの節は1つも無かった。
+
+def test_1行目はタイトルをそのまま読む():
+    from src.script_model import parse_script
+
+    notes = build_notes(_raw())
+    script = parse_script(to_script(notes, _plan()))
+    first = next(line for line in script.lines if (line.text or "").strip())
+    assert notes.title in first.text
+    assert first.telop_text() == notes.title
+
+
+def test_まとめは答えの1行だけにする():
+    from src.script_model import parse_script
+
+    script = parse_script(to_script(build_notes(_raw()), _plan()))
+    wrap = script.scenes[-1]
+    assert wrap.title == "まとめ"
+    assert len(wrap.lines) == 1, "まとめが増えている（尺の18%を占めていた）"
+
+
+def test_締めの挨拶を読み上げない():
+    """毎回同じ8秒。最後のカードと概要欄で足りる。"""
+    body = to_script(build_notes(_raw()), _plan())
+    assert "チャンネル登録してお待ちください" not in body
+    assert "次の焦点です" not in body
+
+
+def test_他人の声が足りないと助言する():
+    from src.research import advise
+
+    hints = advise(build_notes(_raw()))
+    assert any("他人の声" in h for h in hints)
+
+
+def test_反応を入れれば助言は出ない():
+    from src.research import advise
+
+    raw = _raw()
+    voices = [{"voice": "ネット民", "text": f"これは強い{i}"} for i in range(12)]
+    raw["sections"] = raw["sections"] + [{
+        "id": "voices", "heading": "どう受け止められたか", "tier": "未確認",
+        "telop": "ネットの反応", "say": voices,
+        "sources": ["https://footballnet.example/1"],
+    }]
+    assert not any("他人の声が" in h for h in advise(build_notes(raw)))
+
+
+def test_過去形の答えが壊れない():
+    """「判断した」が「判断したです」になっていた（2026-09-07、書き出して発見）。"""
+    from src.research import _spoken
+
+    assert _spoken("UEFAは重大な暴行と判断した") == "UEFAは重大な暴行と判断した、ということです。"
+    assert _spoken("移籍は決まりました") == "移籍は決まりました。"
+    assert _spoken("次の焦点は来週") == "次の焦点は来週です。"

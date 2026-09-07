@@ -69,6 +69,13 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     reaction = check_reaction_layer(script)
     if reaction is not None:
         findings.append(reaction)
+    # **構成の点検は本編だけに当てる。**縦型は本編から1節を切り出したもので、
+    # 割合を測っても元の台本の話にならない（2026-09-07）
+    findings.append(check_voice_length(script))
+    if not portrait:
+        findings.append(check_voice_share(script))
+        findings.append(check_opening_title(script))
+        findings.append(check_wrap_share(script))
     findings.append(_thumbnail_face(script))
     findings.append(_photo_credits(script, out_dir))
     findings.append(_double_marks(script))
@@ -437,6 +444,115 @@ def check_reaction_layer(script: Script) -> Finding | None:
         f"『{titles}』に反応カードがありません。"
         "reactions で数えてからカードにしてください（語りだけだと画面が持ちません）",
     )
+
+
+# 語り手。**「解説」も語り手であって、他人の声ではない。**
+# 一度ここを取り違えて、他人の声の割合を26%と数えた（実際は14%）。
+NARRATORS = ("キャスター", "解説", "ナレーター", "")
+
+# 参考3チャンネルの直近4本を文字起こしで測った値（2026-09-07、docs/video-quality.md）。
+#   他人の声が尺の58%（38〜67%）／19.2件／1件3.1秒
+# こちらは 14%・2.2件・1件39字だった。**これが再生数の差の中身**なので、
+# 書式ではなく構成の点検として置く。
+VOICE_SHARE_MIN = 40.0     # 他人の声が占める字数の下限（%）
+VOICE_LINE_MAX = 30        # 1件の長さ。3秒＝約16字なので、倍まで許して30字
+WRAP_SHARE_MAX = 12.0      # 最後の節（まとめ）が占めてよい割合
+
+
+def _voice_lines(script: Script) -> tuple[list[int], int]:
+    """他人の声の字数と、全体の字数。"""
+    other: list[int] = []
+    total = 0
+    for scene in script.scenes:
+        for line in scene.lines:
+            length = len(line.text or "")
+            total += length
+            if (line.speaker or "") not in NARRATORS:
+                other.append(length)
+    return other, total
+
+
+def check_voice_share(script: Script) -> Finding:
+    """他人の声が足りているか。語りだけの動画は最後まで見てもらえない。"""
+    other, total = _voice_lines(script)
+    if not total:
+        return Finding(False, "他人の声の量", "読み上げる文がありません")
+    share = sum(other) / total * 100
+    if share < VOICE_SHARE_MIN:
+        return Finding(
+            False, "他人の声の量",
+            f"{share:.0f}%（{len(other)}件）しかありません。"
+            f"伸びている3チャンネルは58%・19件です。反応を増やしてください",
+        )
+    return Finding(True, "他人の声の量", f"{share:.0f}%（{len(other)}件）")
+
+
+def check_voice_length(script: Script) -> Finding:
+    """1件が長すぎないか。長い引用は刻めず、画面も声も止まる。"""
+    other, _ = _voice_lines(script)
+    if not other:
+        return Finding(True, "反応の刻み", "他人の声がありません")
+    longest = max(other)
+    if longest > VOICE_LINE_MAX:
+        return Finding(
+            False, "反応の刻み",
+            f"1件が{longest}字あります（上限{VOICE_LINE_MAX}字）。"
+            "短く割ってください。参考は1件3秒＝16字前後です",
+        )
+    return Finding(True, "反応の刻み", f"最長 {longest}字")
+
+
+def _bare(text: str) -> str:
+    """比べるために、札と記号を落とす。"""
+    import re
+
+    return re.sub(r"[\s。、！？!?「」『』…・]", "", re.sub(r"【[^】]*】", "", text or ""))
+
+
+def check_opening_title(script: Script) -> Finding:
+    """1行目がタイトルを読んでいるか。
+
+    参考4本は全部、最初の2〜5秒でタイトルをそのまま読み上げていた。
+    クリックした人が「これで合っている」と確かめられる作りになっている。
+    """
+    first = ""
+    for scene in script.scenes:
+        for line in scene.lines:
+            if (line.text or "").strip():
+                first = line.text.strip()
+                break
+        if first:
+            break
+    if not first:
+        return Finding(False, "1行目", "読み上げる文がありません")
+
+    said, title = _bare(first), _bare(script.title)
+    # タイトルの一部を拾っただけ（「アーセナル」だけ読んで本題に入らない）を
+    # 通さないため、含まれる側には長さを求める
+    enough = len(said) >= max(4, len(title) * 0.6)
+    if said and title and (title in said or (said in title and enough)):
+        return Finding(True, "1行目", "タイトルを読んでいます")
+    return Finding(
+        False, "1行目",
+        f"タイトルと違います（1行目『{first[:20]}…』）。"
+        "クリックした人が来た場所を確かめられるよう、まずタイトルを読んでください",
+    )
+
+
+def check_wrap_share(script: Script) -> Finding:
+    """最後の節が長すぎないか。まとめは知っている話の言い直しになる。"""
+    sizes = [sum(len(l.text or "") for l in scene.lines) for scene in script.scenes]
+    total = sum(sizes)
+    if not total or len(sizes) < 2:
+        return Finding(True, "まとめの長さ", "節が1つです")
+    share = sizes[-1] / total * 100
+    if share > WRAP_SHARE_MAX:
+        return Finding(
+            False, "まとめの長さ",
+            f"最後の節が{share:.0f}%あります（上限{WRAP_SHARE_MAX:.0f}%）。"
+            "参考4本にまとめの節はありません。答えを1行にしてください",
+        )
+    return Finding(True, "まとめの長さ", f"最後の節は{share:.0f}%")
 
 
 def hold_limit(portrait: bool) -> float:

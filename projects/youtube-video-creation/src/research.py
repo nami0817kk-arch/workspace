@@ -403,9 +403,50 @@ CROWD_WORDS = (
 )
 
 
+# 他人の声の目安（2026-09-07、docs/video-quality.md の実測）。
+# 参考3チャンネルは尺の58%・19.2件・1件3.1秒。こちらは14%・2.2件・1件39字だった
+VOICE_SHARE_TARGET = 40      # %
+VOICE_COUNT_TARGET = 10      # 件
+VOICE_LINE_TARGET = 30       # 字。3秒＝約16字なので、倍まで
+
+
+def _advise_volume(notes: Notes) -> list[str]:
+    """他人の声が足りているか。**ここが再生数の差の中身**なので、書式より先に見る。"""
+    other: list[int] = []
+    total = 0
+    for section in notes.sections:
+        for number, sentence in enumerate(section.say):
+            total += len(sentence)
+            voice = section.voices[number] if number < len(section.voices) else ""
+            if voice and voice not in SPEAKERS:
+                other.append(len(sentence))
+    if not total:
+        return []
+
+    hints: list[str] = []
+    share = sum(other) / total * 100
+    if share < VOICE_SHARE_TARGET:
+        hints.append(
+            f"他人の声が{share:.0f}%（{len(other)}件）しかありません。"
+            f"伸びている3チャンネルは58%・19件です。"
+            "`reactions <スレURL> --say` で短い反応を取り出せます"
+        )
+    elif len(other) < VOICE_COUNT_TARGET:
+        hints.append(
+            f"他人の声は{len(other)}件です。参考は19件で、1件2〜4秒に刻んでいます"
+        )
+    long_lines = [n for n in other if n > VOICE_LINE_TARGET]
+    if long_lines:
+        hints.append(
+            f"長い引用が{len(long_lines)}件あります（最長{max(long_lines)}字）。"
+            "1件は30字までに割ってください。長いと画面も声も止まります"
+        )
+    return hints
+
+
 def _advise_voices(notes: Notes) -> list[str]:
     """反応の扱いで気をつける点。"""
-    hints: list[str] = []
+    hints: list[str] = _advise_volume(notes)
     for section in notes.sections:
         card = section.card or {}
         if str(card.get("type", "")).lower() != "reactions":
@@ -533,7 +574,8 @@ def _telop(text: str, limit: int = TELOP_LIMIT) -> str:
 
 
 # 動詞・形容詞の言い切りはこの音で終わる。名詞止めと区別するために使う
-PLAIN_ENDINGS = tuple("うくぐすつぬぶむるい")
+# 「た」「だ」（過去形）を入れていなかったせいで、「判断した」が「判断したです」に
+PLAIN_ENDINGS = tuple("うくぐすつぬぶむるいただ")
 POLITE_ENDINGS = ("です", "ます", "ました", "ません", "でした", "ましょう", "ください", "でしょう")
 
 
@@ -625,17 +667,19 @@ def to_script(notes: Notes, plan: Plan) -> str:
     lines = ["---", _front_matter(front), "---", "",
              "## オープニング",
              f"@bg: {moving_background('assets/backgrounds/night.png')}", ""]
-    hook = notes.hook or notes.title
-    # **冒頭から名乗らない。**「海外サッカーのニュースです」は毎回同じで
-    # 中身が無く、続く「〜ここを掘っていきます」も問いを言い直しているだけだった。
-    # 実測（2026-09-06）で、**開始18秒のうち前に進む情報はつかみ1つ**しかない。
-    # つかみを先に置き、問いはそのまま短く続ける（2026-09-06 ユーザーの指示 A）
+    # **1行目はタイトルをそのまま読む**（2026-09-07）。参考3チャンネルの直近4本は
+    # 全部、最初の2〜5秒でタイトルを読み上げていた。クリックした人が「これで
+    # 合っている」と確かめられる。こちらは別の導入文から入っていた。
+    #
+    # **冒頭から名乗らない。**「海外サッカーのニュースです」は毎回同じで中身が無く、
+    # 続く「〜ここを掘っていきます」も問いを言い直しているだけだった。
+    # **問いは読み上げず、画面に出す。**読むと、つかみと合わせて前置きが18秒になる
+    hook = notes.hook or _ends_sentence(notes.question)
     lines += [
-        f"キャスター: {hook}",
+        f"キャスター: {_ends_sentence(notes.title)}",
         f"  telop: {notes.title}",
         "  se: assets/audio/se_pon.wav",
-        # 問いは「〜のか。」で終わることが多い。言い直さず、そのまま問いにする
-        f"キャスター: {_ends_sentence(notes.question)}",
+        f"キャスター: {hook}",
         # 画面は2〜3行に折り返せる。20字で切ると「…当の監督…」のように
         # 途中で切れた文字がそのまま出ていた（2026-09-07 に書き出して確認）
         f"  telop: 今回の問い: {_telop(notes.question, TELOP_LIMIT)}",
@@ -709,26 +753,21 @@ def to_script(notes: Notes, plan: Plan) -> str:
                     lines.append(f"  image: {own_image}")
         lines.append("")
 
+    # **まとめは答えの1行だけにする**（2026-09-07）。参考3チャンネルの直近4本に
+    # まとめの節は1つも無く、最後は反応で終わっていた。こちらは最後の節が尺の
+    # 18%（4行20〜25秒）を占め、中身は冒頭で言ったことの言い直しだった。
+    #
+    # **答えそのものは残す。**このチャンネルは「なぜそうなったかを、2分で」を
+    # 名乗っていて、答えを出さないなら看板の方を降ろすことになる。
+    # 次の焦点は読み上げず、最後のカード（outro_title）と概要欄に置く。
+    # 締めの挨拶（続報は…チャンネル登録して…）は毎回同じで、8秒を使っていた
     lines += [
         "## まとめ",
         "@bg: assets/backgrounds/studio.png",
         "",
-        # **問いを繰り返さない。**冒頭で立てた問いを終わりでもう一度読むと、
-        # 2分の動画の5分の1が言い直しになる（実測 2026-09-06、まとめは4行20〜25秒）。
-        # 答えから入る（2026-09-06 ユーザーの指示 D）
         f"解説: {_spoken(notes.answer)}",
         f"  telop: {_telop(notes.answer)}",
         "  card: wrap",
-    ]
-    if notes.watch:
-        lines += [
-            f"解説: 次の焦点です。{_spoken(notes.watch)}",
-            f"  telop: 次の焦点: {_telop(notes.watch, 22)}",
-        ]
-    lines += [
-        "キャスター: 動きがあり次第、あらためてお伝えします。"
-        "続報はチャンネル登録してお待ちください。",
-        "  telop: 続報はチャンネル登録でチェック",
         "  se: assets/audio/se_jingle.wav",
         "  pause: 1.2",
         "",
