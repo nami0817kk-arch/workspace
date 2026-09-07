@@ -206,7 +206,7 @@ python -m src.cli short <台本> --section 何が起きたか   # 節を指定�
   出来上がった動画を見て止める（無音ではなく**全体との音量差**で見る。
   カードの裏で BGM が鳴っているため）
 - 残っている手当て（写真が小さい・内部の章ラベルが出ている）と、
-  見て確かめる手順は [`docs/shorts-quality.md`](docs/shorts-quality.md)
+  見て確かめる手順は [`docs/video-quality.md`](docs/video-quality.md)
 
 ## 質を保つ仕組み（2026-09-04）
 
