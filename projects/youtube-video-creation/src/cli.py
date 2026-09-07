@@ -391,6 +391,9 @@ def main(argv: list[str] | None = None) -> int:
     p_upload.add_argument("build_dir", help="build の出力ディレクトリ")
     p_upload.add_argument("--privacy", default="private", choices=["private", "unlisted", "public"])
     p_upload.add_argument(
+        "--anyway", action="store_true",
+        help="解除待ちでも投げる（**タイマーが延びることがある**）")
+    p_upload.add_argument(
         "--again", action="store_true",
         help="同じ出力先をもう一度投稿する（既定では二重投稿を止める）")
     p_upload.add_argument("--dry-run", action="store_true",
@@ -2219,6 +2222,15 @@ def _cmd_upload(args, config) -> int:
         print("本当に上げ直すなら --again を付けます", file=sys.stderr)
         return 1
 
+    # **弾かれている間は投げない。**再試行するとタイマーが延ばされる
+    until = posted.blocked_until()
+    if until is not None and not args.anyway:
+        back = until.astimezone(JST)
+        print(f"■ 投稿の枠が戻っていません。解除は {back:%m/%d %H:%M} JST ごろ")
+        print(nl + "弾かれている間に投げると、内部のタイマーが延ばされるとの報告があります。", file=sys.stderr)
+        print("待たずに試すなら --anyway", file=sys.stderr)
+        return 1
+
     draft = upload_mod.prepare(build_dir, args.privacy)
 
     print(f"■ 投稿の中身　{build_dir}")
@@ -2238,22 +2250,30 @@ def _cmd_upload(args, config) -> int:
               "この内容でよければ --dry-run を外してください")
         return 0
 
-    video_id = upload_mod.upload(
-        draft.video,
-        draft.title,
-        draft.description,
-        tags=draft.tags,
-        privacy=draft.privacy,
-        thumbnail=draft.thumbnail,
-    )
+    try:
+        video_id = upload_mod.upload(
+            draft.video,
+            draft.title,
+            draft.description,
+            tags=draft.tags,
+            privacy=draft.privacy,
+            thumbnail=draft.thumbnail,
+        )
+    except Exception as err:
+        # **弾かれた時刻を控える。**解除はここから24時間で、
+        # 間に投げるとタイマーが延ばされるとの報告がある
+        if "uploadLimitExceeded" in str(err):
+            until = posted.block() + timedelta(hours=posted.COOLDOWN_HOURS)
+            print(f"■ 投稿の枠を使い切りました。解除は {until.astimezone(JST):%m/%d %H:%M} JST ごろ")
+            print("それまで投げないでください（手作業でも弾かれます）",
+                  file=sys.stderr)
+            return 1
+        raise
     posted.record(build_dir, video_id)
     print(f"\n投稿しました: https://youtu.be/{video_id} ({draft.privacy})")
-    # **上限の本数は分からない**ので、残りではなく「上げた本数」を出す。
-    n = posted.today()
-    if n >= posted.SOFT_MAX - 3:
-        back = posted.frees_at().astimezone(JST)
-        print(f"  枠が戻ってから {n} 本目。この辺りで弾かれることがある"
-              f"（次に枠が戻るのは {back:%m/%d %H:%M} JST）")
+    n = posted.recent()
+    if n >= posted.SOFT_MAX:
+        print(f"  直近24時間で {n} 本目。開設まもないチャンネルは{posted.SOFT_MAX}本前後で弾かれる")
     return 0
 
 

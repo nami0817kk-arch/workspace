@@ -156,13 +156,41 @@
   },
   {
     "build": "20260907_japan",
+    "video_id": "-K7jidzI_ks",
+    "at": "2026-09-07T00:02:00+00:00",
+    "deleted": true,
+    "why": "二重投稿。枠は消費済み"
+  },
+  {
+    "build": "20260907_kubo",
+    "video_id": "LM6JRMUYPB8",
+    "at": "2026-09-07T00:18:00+00:00",
+    "deleted": true,
+    "why": "二重投稿。枠は消費済み"
+  },
+  {
+    "build": "20260907_japan",
     "video_id": "syFyKuOuDIs",
     "at": "2026-09-07T00:31:22+00:00"
+  },
+  {
+    "build": "20260907_spurs",
+    "video_id": "NfdtzK67FCI",
+    "at": "2026-09-07T00:34:00+00:00",
+    "deleted": true,
+    "why": "二重投稿。枠は消費済み"
   },
   {
     "build": "20260907_kubo",
     "video_id": "bIL369pbmMA",
     "at": "2026-09-07T00:46:50+00:00"
+  },
+  {
+    "build": "20260907_inter",
+    "video_id": "VHijI_vkryA",
+    "at": "2026-09-07T00:49:00+00:00",
+    "deleted": true,
+    "why": "二重投稿。枠は消費済み"
   },
   {
     "build": "20260907_spurs",

@@ -19,6 +19,9 @@ from . import tags as tags_mod
 SCOPES = [
     "https://www.googleapis.com/auth/youtube.upload",
     "https://www.googleapis.com/auth/youtube.force-ssl",
+    # 視聴維持率を読むための**読み取り専用**の権限
+    # （2026-09-07 ユーザーが同意画面に追加）。動画には触れない
+    "https://www.googleapis.com/auth/yt-analytics.readonly",
 ]
 TOKEN_PATH = Path("secrets/token.json")
 CLIENT_SECRET_PATH = Path("secrets/client_secret.json")

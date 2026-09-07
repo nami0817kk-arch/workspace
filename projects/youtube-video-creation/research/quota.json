@@ -6,6 +6,8 @@
     "thumbnails.set": 16
   },
   "2026-09-07": {
-    "videos.insert": 4
+    "videos.insert": 12,
+    "videos.list": 4,
+    "videos.update": 2
   }
 }
