@@ -193,6 +193,12 @@ def main(argv: list[str] | None = None) -> int:
     p_react = sub.add_parser("reactions", help="まとめスレから書き込みを取り出して数える")
     p_react.add_argument("url", help="まとめサイトの記事URL")
     p_react.add_argument("--limit", type=int, default=5, help="カードに載せる件数（既定5）")
+    p_react.add_argument("--say", action="store_true",
+                         help="読み上げに回す短い反応を、取材メモの say: の形で出す")
+    p_react.add_argument("--limit-say", type=int, default=12,
+                         help="読み上げに回す件数（既定12）")
+    p_react.add_argument("--voice", default="ネット民",
+                         help="読み上げる話者名（既定 ネット民）")
     p_react.add_argument("--word", action="append", default=[],
                          help="数える言葉。ラベル:語,語 の形。何度でも指定できる")
 
@@ -558,6 +564,19 @@ def _cmd_reactions(args, config) -> int:
         for label, count in reactions_mod.tally(posts, words).items():
             share = count / len(posts) * 100
             print(f"  {label}　{count}件 / {len(posts)}件（{share:.0f}%）")
+
+    if args.say:
+        # **読み上げに回す形**（2026-09-07）。カードに載せるだけでは画面が
+        # 変わらない。伸びている3チャンネルは尺の58%を他人の声に使い、
+        # 1件2〜4秒でぶつ切りに読ませていた（こちらは14%・2.2件だった）
+        picked = reactions_mod.say_lines(posts, want=args.limit_say)
+        print(f"\n読み上げに回す形（{len(picked)}件 / 母数{len(posts)}件）:")
+        print("    say:")
+        for post in picked:
+            print(f"      - {{voice: {args.voice}, text: {post.text}, telop: {post.text}}}")
+        print("    tier: 未確認")
+        print(f"    sources:\n      - {args.url}")
+        return 0
 
     print("\n取材メモに貼る形:")
     print("    card:")

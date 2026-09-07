@@ -15,6 +15,7 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 from . import cards, ffmpeg
+from .backgrounds import moving_background
 from .inserts import Inserts
 from .ffmpeg import is_video
 from .config import CastMember, ProjectConfig, _resolve
@@ -64,14 +65,22 @@ class Layout:
 
     @property
     def headline_box(self) -> tuple[int, int, int, int]:
-        """立ち絵なしのときの見出し領域。下寄せで、画面の幅をたっぷり使う。"""
-        left = int(self.width * 0.075)
+        """立ち絵なしのときの見出し領域。下寄せで、画面の幅をたっぷり使う。
+
+        **縦型は余白を削る。**伸びている参考チャンネルは見出しが画面幅いっぱいで、
+        こちらは幅1080に対して余白が左右75pxずつあった（2026-09-07 に並べて確認）。
+        """
+        left = int(self.width * (0.042 if self.is_portrait else 0.075))
         return (left, int(self.height * 0.58), self.width - left, int(self.height * 0.88))
 
     def character_anchor(self, position: str) -> tuple[int, int]:
         """立ち絵の中心 x と足元 y。"""
         x = int(self.width * (0.24 if position == "left" else 0.76))
         return x, self.telop_box[1] - 20
+
+
+# 台本の構造につけた名前で、視聴者には情報にならないもの。左上のラベルには出さない
+INTERNAL_SCENE_TITLES = ("オープニング", "イントロ", "まとめ", "エンディング", "締め")
 
 
 class Renderer:
@@ -407,11 +416,15 @@ class Renderer:
         # RGBA の canvas に直接半透明の図形を描くと下地を「置き換えて」しまうため、
         # 透明レイヤーに描いてから alpha_composite する。
         layer, draw = _layer(canvas.size)
-        text_w = draw.textlength(title, font=self.font_scene)
-        draw.rounded_rectangle(
-            [48, 42, 48 + text_w + 56, 42 + 68], radius=34, fill=(0, 0, 0, 150)
-        )
-        draw.text((76, 58), title, font=self.font_scene, fill=(240, 240, 240, 255))
+        # **制作側の言葉は画面に出さない**（2026-09-07）。「オープニング」は
+        # 台本の構造の名前で、視聴者には何の情報でもない。しかも冒頭の
+        # いちばん見られる位置に出ていた。日付は残す
+        if title.strip() not in INTERNAL_SCENE_TITLES:
+            text_w = draw.textlength(title, font=self.font_scene)
+            draw.rounded_rectangle(
+                [48, 42, 48 + text_w + 56, 42 + 68], radius=34, fill=(0, 0, 0, 150)
+            )
+            draw.text((76, 58), title, font=self.font_scene, fill=(240, 240, 240, 255))
 
         if self.script_date:
             date_w = draw.textlength(self.script_date, font=self.font_date)
@@ -494,6 +507,18 @@ class Renderer:
         # 話者ではなく情報の確度で色を決める。会話が続くあいだ見出しを動かさないため
         accent = badge[1] if badge else _hex(self.config.video.accent)
 
+        # 文字の下に暗い帯を敷く。**縁取りだけでは背景に沈む**（2026-09-07 に
+        # 参考チャンネルと並べて確認）。63万回のチャンネルは白文字＋黒帯で、
+        # 実写の上でも見出しが読めていた。こちらは白文字＋細い縁だけだった。
+        band_right = left
+        for chunk in lines:
+            band_right = max(band_right, left + 34 + draw.textlength(chunk, font=self.font_headline))
+        draw.rounded_rectangle(
+            [left - 8, text_top - 18,
+             min(right, int(band_right + 34)), text_top + line_height * len(lines) - 4],
+            radius=10, fill=(8, 10, 16, 170),
+        )
+
         # 縦のアクセント帯
         draw.rounded_rectangle(
             [left, text_top - 6, left + 11, text_top + line_height * len(lines) - 12],
@@ -510,9 +535,11 @@ class Renderer:
 
         y = text_top
         for chunk in lines:
+            # 縁取りは縦型で太くする。実写や模様の上でも輪郭が残るように
             draw.text(
                 (left + 34, y), chunk, font=self.font_headline, fill=(255, 255, 255, 255),
-                stroke_width=5, stroke_fill=(0, 0, 0, 225),
+                stroke_width=8 if self.layout.is_portrait else 5,
+                stroke_fill=(0, 0, 0, 235),
             )
             y += line_height
 
@@ -770,6 +797,8 @@ class Renderer:
         segments: list[tuple[Path, float]] = []
         for index, scene in enumerate(script.scenes):
             name = scene.background or script.background or self.config.video.background
+            # 既に書いた台本は .png を指している。書き出しのたびに実写を探す
+            name = moving_background(name)
             extra = inserts.before_scene(index)
             if index == 0:
                 extra += inserts.intro

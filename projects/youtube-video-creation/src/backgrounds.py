@@ -13,9 +13,37 @@ from pathlib import Path
 
 from PIL import Image, ImageChops, ImageDraw, ImageFilter
 
+from .config import _resolve
+
 TURF = (34, 110, 52)
 TURF_DARK = (26, 88, 42)
 LINE = (236, 244, 238)
+
+
+def moving_background(still: str) -> str:
+    """静止画の下地に対応する実写クリップがあれば、そちらを返す。
+
+    伸びている参考チャンネルは背景が常に動いている（2026-09-07 に実測）。
+    `stock` が実写クリップを取る仕組みも、動画背景を敷く仕組みも既にあったのに、
+    `draft` が .png を決め打ちしていたので一度も使われていなかった。
+
+    **規則は「同じ名前で始まる動画を使う」。** `stadium.png` に対して
+    `stock/stadium.mp4` があればそれを敷く。無ければ静止画のまま
+    （`background_zoom` でゆっくり寄る）。
+
+    **書き出しのたびに見る。**draft のときだけ見ると、既に書いた台本は
+    静止画のままになる（実際そうなっていた）。
+    """
+    path = Path(still)
+    stem = path.stem
+    for folder in (path.parent / "stock", path.parent):
+        directory = _resolve(str(folder))
+        if not directory.is_dir():
+            continue
+        found = sorted(clip for clip in directory.glob(f"{stem}*.mp4") if clip.is_file())
+        if found:
+            return str(folder / found[0].name).replace("\\", "/")
+    return still
 
 # 背景の種類。**緑のピッチ以外も要る。**
 # stadium / pitch / tactics は3枚とも緑が主役で、並べると同じ画に見える

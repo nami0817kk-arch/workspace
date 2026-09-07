@@ -31,10 +31,18 @@ def test_plan_puts_chapter_cards_after_the_first_scene():
     assert inserts.total == pytest.approx(2.6 + 1.4 * 2 + 3.0)
 
 
-def test_first_scene_gets_a_chapter_card_when_there_is_no_intro():
+def test_最初の章にはカードを入れない_冒頭タイトルの有無によらず():
+    """2026-09-07 に方針を変えた。
+
+    元は「冒頭タイトルが無いときは最初の章にカードを入れる」だった。
+    ところが冒頭タイトルを 0 にしたとたん、代わりに章タイトル（「オープニング 1/6」）が
+    1.4秒出るようになり、**静止したカードの種類が入れ替わっただけ**になった
+    （書き出して初めて気づいた）。狙いは0秒目から本編を始めることなので、
+    どちらのカードも冒頭には置かない。
+    """
     inserts = plan(_script(), _config(intro=0))
     assert inserts.intro == 0.0
-    assert set(inserts.chapters) == {0, 1, 2}
+    assert set(inserts.chapters) == {1, 2}
 
 
 def test_titles_can_be_switched_off():
@@ -93,3 +101,29 @@ def test_realize_audio_matches_the_voice_format(tmp_path):
         assert silence.getframerate() == 24000
         assert silence.getnchannels() == 1
         assert silence.getnframes() == 24000
+
+
+def test_最初の章にはカードを入れない():
+    """冒頭タイトルの有無に関係なく入れない。
+
+    以前は「冒頭タイトルがあるときだけ飛ばす」だったので、冒頭タイトルを 0 に
+    したら代わりに章タイトルが1.4秒出た（2026-09-07、書き出して気づいた）。
+    静止したカードの種類が入れ替わるだけで、0秒目から本編を始められない。
+    """
+    from dataclasses import replace
+
+    from src.config import load_config
+    from src.inserts import plan
+    from src.script_model import Line, Scene, Script
+
+    script = Script(
+        title="t",
+        scenes=[Scene(title=f"章{i}", lines=[Line(speaker="キャスター", text="本文")])
+                for i in range(3)],
+    )
+    config = load_config()
+    for intro in (0.0, 2.6):
+        tuned = replace(config, titles=replace(config.titles, intro=intro, chapter=1.4))
+        inserts = plan(script, tuned)
+        assert 0 not in inserts.chapters, f"intro={intro} で最初の章にカードが入っている"
+        assert inserts.chapters.get(1) == 1.4

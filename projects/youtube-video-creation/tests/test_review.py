@@ -13,6 +13,51 @@ BODY = (
 )
 
 
+# 2026-09-07 に構成の点検を足したので、「全部 ✓ になる見本」も新しい型に直した。
+#   1行目がタイトル / 他人の声が4割以上 / 1件30字以内 / 最後の節は1割まで
+# 伸びている3チャンネルの実測（他人の声58%・19件・1件3.1秒）に寄せた形
+GOOD_BODY = """---
+title: アーセナルが勝った理由
+sources: [https://example.com/a]
+tags: [サッカー, 海外サッカー]
+---
+
+## 何が起きたか
+
+キャスター: アーセナルが勝った理由。
+  source: 確定
+
+キャスター: 前半に2点が入りました。
+  source: 報道
+
+ネット民: 完全に別チームだった。
+  source: 未確認
+
+ネット民: 中盤の圧力がすごい。
+  source: 未確認
+
+ネット民: これは優勝を狙える。
+  source: 未確認
+
+ネット民: 見ていて楽しい。
+  source: 未確認
+
+ネット民: この調子で頼む。
+  source: 未確認
+
+ネット民: 来週も楽しみだ。
+  source: 未確認
+
+ネット民: 守備も良かった。
+  source: 未確認
+
+## まとめ
+
+解説: 中盤の改善が答えです。
+  source: 背景
+"""
+
+
 def _built(tmp_path, seconds=150.0):
     for name in ("video.mp4", "thumbnail.png"):
         (tmp_path / name).write_bytes(b"x")
@@ -41,8 +86,9 @@ def test_a_finished_build_passes_everything(tmp_path, monkeypatch):
     face = tmp_path / "face.jpg"
     face.write_bytes(b"x")
     monkeypatch.setattr(review_mod, "_resolve", lambda value: face)
-    body = BODY.replace("title: T\n",
-                       "title: T\nthumbnail_photo: assets/images/x/face.jpg\n")
+    body = GOOD_BODY.replace(
+        "title: アーセナルが勝った理由\n",
+        "title: アーセナルが勝った理由\nthumbnail_photo: assets/images/x/face.jpg\n")
     findings = inspect(parse_script(body), _built(tmp_path), 100.0)
     assert all(f.ok for f in findings), [f.line() for f in findings if not f.ok]
 
@@ -428,3 +474,106 @@ def test_測れなければ黙る():
     from src.review import check_short_opening
 
     assert check_short_opening(Path("video.mp4"), measure=lambda video, seconds: None) is None
+
+
+# 伸びている参考チャンネルはネット民のコメントを常に画面の層として出している。
+# こちらは reactions カードの型も数える道具もあるのに、出力8本で1枚も使われて
+# いなかった（2026-09-07 実測）。節があるのにカードが無いときだけ言う。
+
+def _script_with(title, card_type=None):
+    from src.script_model import Line, Scene, Script
+
+    line = Line(speaker="キャスター", text="本文", card="c1" if card_type else None)
+    return Script(
+        title="見出し",
+        scenes=[Scene(title=title, lines=[line])],
+        cards={"c1": {"type": card_type}} if card_type else {},
+    )
+
+
+def test_反応の節にカードが無ければ落とす():
+    from src.review import check_reaction_layer
+
+    finding = check_reaction_layer(_script_with("どう受け止められたか"))
+    assert finding is not None and not finding.ok
+    assert "reactions" in finding.detail
+
+
+def test_反応カードがあれば通す():
+    from src.review import check_reaction_layer
+
+    finding = check_reaction_layer(_script_with("どう受け止められたか", "reactions"))
+    assert finding is not None and finding.ok
+
+
+def test_反応の節が無い回では黙る():
+    """毎回うるさく言わない。移籍の回に反応を強要しない。"""
+    from src.review import check_reaction_layer
+
+    assert check_reaction_layer(_script_with("何が起きたか")) is None
+
+
+def test_ショートは同じ絵の上限が短い():
+    """31秒の動画で12秒動かないと尺の4割が同じ絵になる（2026-09-07 に確認）。"""
+    from src.review import CARD_HOLD_MAX, SHORT_CARD_HOLD_MAX, hold_limit
+
+    assert hold_limit(portrait=True) == SHORT_CARD_HOLD_MAX
+    assert hold_limit(portrait=False) == CARD_HOLD_MAX
+    assert SHORT_CARD_HOLD_MAX < CARD_HOLD_MAX
+
+
+# 構成の点検（2026-09-07）。伸びている3チャンネルの直近4本を文字起こしで測ったら、
+# 他人の声が尺の58%・19.2件・1件3.1秒で、こちらは14%・2.2件・1件39字だった。
+# **✓ しか出ない点検は、壊れていても気づけない**ので、壊れた例を1つずつ食わせる。
+
+def test_語りだけの台本は他人の声で止まる(tmp_path):
+    body = GOOD_BODY.replace("ネット民:", "解説:")
+    result = _by_label(inspect(parse_script(body), _built(tmp_path)))
+    assert result["他人の声の量"].ok is False
+    assert "0%" in result["他人の声の量"].detail
+
+
+def test_長い引用は刻みで止まる(tmp_path):
+    body = GOOD_BODY.replace(
+        "ネット民: 完全に別チームだった。",
+        "ネット民: 完全に別のチームになっていて見ていて本当に気持ちがよかった一戦だった。")
+    result = _by_label(inspect(parse_script(body), _built(tmp_path)))
+    assert result["反応の刻み"].ok is False
+
+
+def test_1行目がタイトルと違うと止まる(tmp_path):
+    body = GOOD_BODY.replace(
+        "キャスター: アーセナルが勝った理由。", "キャスター: さて、今日の話題です。")
+    result = _by_label(inspect(parse_script(body), _built(tmp_path)))
+    assert result["1行目"].ok is False
+
+
+def test_タイトルの一部だけ読んでも通らない(tmp_path):
+    """「アーセナル」とだけ読んで本題に入らない形は通さない。"""
+    body = GOOD_BODY.replace(
+        "キャスター: アーセナルが勝った理由。", "キャスター: アーセナル。")
+    result = _by_label(inspect(parse_script(body), _built(tmp_path)))
+    assert result["1行目"].ok is False
+
+
+def test_長いまとめは止まる(tmp_path):
+    body = GOOD_BODY.replace(
+        "解説: 中盤の改善が答えです。",
+        """解説: 中盤の改善が答えです。
+
+解説: つまり今日の試合は中盤の入れ替えで決まったということになります。
+
+解説: 次の焦点は来週の一戦です。動きがあり次第またお伝えします。""")
+    result = _by_label(inspect(parse_script(body), _built(tmp_path)))
+    assert result["まとめの長さ"].ok is False
+
+
+def test_縦型には構成の点検を当てない(tmp_path, monkeypatch):
+    """ショートは本編から1節を切り出したもの。割合を測っても元の話にならない。"""
+    from src import review as review_mod
+
+    monkeypatch.setattr(review_mod, "_dimensions", lambda path: (1080, 1920))
+    body = GOOD_BODY.replace("ネット民:", "解説:")      # 他人の声をゼロにしても
+    labels = {f.label for f in inspect(parse_script(body), _built(tmp_path))}
+    assert "他人の声の量" not in labels
+    assert "1行目" not in labels

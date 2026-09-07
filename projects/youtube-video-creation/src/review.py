@@ -67,6 +67,19 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     findings.append(_caption_badges(out_dir / "subtitles.srt"))
     findings.append(_still_length(out_dir / "script.json"))
     findings.append(_screen_change(out_dir / "script.json"))
+    size = _dimensions(out_dir / "video.mp4")
+    portrait = bool(size and size[1] > size[0])
+    findings.append(check_card_hold(out_dir / "script.json", hold_limit(portrait)))
+    reaction = check_reaction_layer(script)
+    if reaction is not None:
+        findings.append(reaction)
+    # **構成の点検は本編だけに当てる。**縦型は本編から1節を切り出したもので、
+    # 割合を測っても元の台本の話にならない（2026-09-07）
+    findings.append(check_voice_length(script))
+    if not portrait:
+        findings.append(check_voice_share(script))
+        findings.append(check_opening_title(script))
+        findings.append(check_wrap_share(script))
     findings.append(_thumbnail_face(script))
     findings.append(_card_rule(script))
     findings.append(_photo_credits(script, out_dir))
@@ -151,6 +164,15 @@ def _still_length(script_json: Path) -> Finding:
 
 
 SAME_SCREEN_MAX = 20.0
+# 画面の主役（カードと写真）が同じまま続いてよい時間。
+# _screen_change は「テロップ＋カード＋画像」の組で見るので、**テロップだけ
+# 変われば通る**。実測（2026-09-07、出力8本）では、その状態で
+# 本編21.9〜26.5秒 / ショート17.7〜23.1秒 が同じカードのままだった。
+# ショートは尺の6〜7割。伸びている参考チャンネルは8秒で必ず変えている。
+CARD_HOLD_MAX = 12.0
+# ショートはこれより短く見る。31秒の動画で12秒動かないと、尺の4割が同じ絵になる
+# （2026-09-07 に書き出して確認）。参考チャンネルは3〜8秒で必ず変えていた。
+SHORT_CARD_HOLD_MAX = 8.0
 
 
 def _screen_change(script_json: Path) -> Finding:
@@ -372,6 +394,20 @@ def check_short_opening(video: Path, *, measure=None) -> Finding | None:
     return Finding(True, "ショートの冒頭", f"最初の{OPENING_SECONDS:.1f}秒から喋っています")
 
 
+def _dimensions(video: Path) -> tuple[int, int] | None:
+    """動画の幅と高さ。読めなければ None（点検を落とさない）。"""
+    if not video.exists():
+        return None
+    try:
+        import imageio_ffmpeg
+
+        ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
+    except Exception:
+        return None
+    found = _volume(ffmpeg, ["-t", "0.1", "-i", str(video)])
+    return found[0] if found else None
+
+
 def _opening_sound(video: Path, seconds: float):
     """(幅, 高さ, 冒頭の平均音量dB, 全体の平均音量dB) を返す。測れなければ None。"""
     if not video.exists():
@@ -413,6 +449,184 @@ def _volume(ffmpeg: str, args: list[str]):
         (int(size.group(1)), int(size.group(2))) if size else None,
         float(mean.group(1)) if mean else None,
     )
+
+
+# 「どう受け止められたか」に類する節。ここは反応を見せる場所なのに、
+# カードが無いと語りだけになる。実測（2026-09-07）で、出力8本のどれにも
+# reactions カードが1枚も無かった。伸びている参考チャンネルは、
+# ネット民のコメントを常に画面の層として出している。
+REACTION_HEADINGS = ("受け止め", "反応", "声", "評価は")
+
+
+def check_reaction_layer(script: Script) -> Finding | None:
+    """反応の節があるのに、画面に反応が出ていないか。
+
+    節が無い回では黙る（毎回うるさく言わない）。カードの型も数える道具
+    （`reactions` コマンド）も既にあるので、足りていないのは画面に出す一手だけ。
+    """
+    scenes = [s for s in script.scenes if any(w in (s.title or "") for w in REACTION_HEADINGS)]
+    if not scenes:
+        return None
+
+    cards = script.cards or {}
+    kinds = {str((cards.get(line.card) or {}).get("type", "")).lower()
+             for scene in scenes for line in scene.lines if getattr(line, "card", None)}
+    if "reactions" in kinds:
+        return Finding(True, "反応の層", "反応カードが出ています")
+    titles = " / ".join(s.title for s in scenes)
+    return Finding(
+        False,
+        "反応の層",
+        f"『{titles}』に反応カードがありません。"
+        "reactions で数えてからカードにしてください（語りだけだと画面が持ちません）",
+    )
+
+
+# 語り手。**「解説」も語り手であって、他人の声ではない。**
+# 一度ここを取り違えて、他人の声の割合を26%と数えた（実際は14%）。
+NARRATORS = ("キャスター", "解説", "ナレーター", "")
+
+# 参考3チャンネルの直近4本を文字起こしで測った値（2026-09-07、docs/video-quality.md）。
+#   他人の声が尺の58%（38〜67%）／19.2件／1件3.1秒
+# こちらは 14%・2.2件・1件39字だった。**これが再生数の差の中身**なので、
+# 書式ではなく構成の点検として置く。
+VOICE_SHARE_MIN = 40.0     # 他人の声が占める字数の下限（%）
+VOICE_LINE_MAX = 30        # 1件の長さ。3秒＝約16字なので、倍まで許して30字
+WRAP_SHARE_MAX = 12.0      # 最後の節（まとめ）が占めてよい割合
+
+
+def _voice_lines(script: Script) -> tuple[list[int], int]:
+    """他人の声の字数と、全体の字数。"""
+    other: list[int] = []
+    total = 0
+    for scene in script.scenes:
+        for line in scene.lines:
+            length = len(line.text or "")
+            total += length
+            if (line.speaker or "") not in NARRATORS:
+                other.append(length)
+    return other, total
+
+
+def check_voice_share(script: Script) -> Finding:
+    """他人の声が足りているか。語りだけの動画は最後まで見てもらえない。"""
+    other, total = _voice_lines(script)
+    if not total:
+        return Finding(False, "他人の声の量", "読み上げる文がありません")
+    share = sum(other) / total * 100
+    if share < VOICE_SHARE_MIN:
+        return Finding(
+            False, "他人の声の量",
+            f"{share:.0f}%（{len(other)}件）しかありません。"
+            f"伸びている3チャンネルは58%・19件です。反応を増やしてください",
+        )
+    return Finding(True, "他人の声の量", f"{share:.0f}%（{len(other)}件）")
+
+
+def check_voice_length(script: Script) -> Finding:
+    """1件が長すぎないか。長い引用は刻めず、画面も声も止まる。"""
+    other, _ = _voice_lines(script)
+    if not other:
+        return Finding(True, "反応の刻み", "他人の声がありません")
+    longest = max(other)
+    if longest > VOICE_LINE_MAX:
+        return Finding(
+            False, "反応の刻み",
+            f"1件が{longest}字あります（上限{VOICE_LINE_MAX}字）。"
+            "短く割ってください。参考は1件3秒＝16字前後です",
+        )
+    return Finding(True, "反応の刻み", f"最長 {longest}字")
+
+
+def _bare(text: str) -> str:
+    """比べるために、札と記号を落とす。"""
+    import re
+
+    return re.sub(r"[\s。、！？!?「」『』…・]", "", re.sub(r"【[^】]*】", "", text or ""))
+
+
+def check_opening_title(script: Script) -> Finding:
+    """1行目がタイトルを読んでいるか。
+
+    参考4本は全部、最初の2〜5秒でタイトルをそのまま読み上げていた。
+    クリックした人が「これで合っている」と確かめられる作りになっている。
+    """
+    first = ""
+    for scene in script.scenes:
+        for line in scene.lines:
+            if (line.text or "").strip():
+                first = line.text.strip()
+                break
+        if first:
+            break
+    if not first:
+        return Finding(False, "1行目", "読み上げる文がありません")
+
+    said, title = _bare(first), _bare(script.title)
+    # タイトルの一部を拾っただけ（「アーセナル」だけ読んで本題に入らない）を
+    # 通さないため、含まれる側には長さを求める
+    enough = len(said) >= max(4, len(title) * 0.6)
+    if said and title and (title in said or (said in title and enough)):
+        return Finding(True, "1行目", "タイトルを読んでいます")
+    return Finding(
+        False, "1行目",
+        f"タイトルと違います（1行目『{first[:20]}…』）。"
+        "クリックした人が来た場所を確かめられるよう、まずタイトルを読んでください",
+    )
+
+
+def check_wrap_share(script: Script) -> Finding:
+    """最後の節が長すぎないか。まとめは知っている話の言い直しになる。"""
+    sizes = [sum(len(l.text or "") for l in scene.lines) for scene in script.scenes]
+    total = sum(sizes)
+    if not total or len(sizes) < 2:
+        return Finding(True, "まとめの長さ", "節が1つです")
+    share = sizes[-1] / total * 100
+    if share > WRAP_SHARE_MAX:
+        return Finding(
+            False, "まとめの長さ",
+            f"最後の節が{share:.0f}%あります（上限{WRAP_SHARE_MAX:.0f}%）。"
+            "参考4本にまとめの節はありません。答えを1行にしてください",
+        )
+    return Finding(True, "まとめの長さ", f"最後の節は{share:.0f}%")
+
+
+def hold_limit(portrait: bool) -> float:
+    """同じ絵を出しておいてよい秒数。縦型（ショート）は短い。"""
+    return SHORT_CARD_HOLD_MAX if portrait else CARD_HOLD_MAX
+
+
+def check_card_hold(script_json: Path, limit: float = CARD_HOLD_MAX) -> Finding:
+    """画面の主役が同じまま続く時間。テロップの変化は数えない。
+
+    下のテロップが変わっていても、カードと写真が同じなら画面はほぼ止まって見える。
+    見ているのは「読む文字」ではなく「絵が変わったか」。
+    """
+    import json
+
+    if not script_json.exists():
+        return Finding(False, "カードの持ち", "script.json がありません")
+    data = json.loads(script_json.read_text(encoding="utf-8"))
+
+    worst, span, current, label = 0.0, 0.0, None, ""
+    for scene in data.get("scenes", []):
+        for line in scene.get("lines", []):
+            look = (line.get("card") or "", line.get("image") or "")
+            if look == current:
+                span += float(line.get("duration") or 0)
+            else:
+                current, span = look, float(line.get("duration") or 0)
+            if span > worst:
+                worst, label = span, (look[0] or look[1] or "（カードも写真も無い）")
+
+    if worst > limit:
+        return Finding(
+            False,
+            "カードの持ち",
+            f"{worst:.0f}秒 同じ絵のままです（上限{limit:.0f}秒）: {label[:24]}。"
+            "カードを分けるか、写真を挟んでください",
+        )
+    return Finding(True, "カードの持ち", f"同じ絵の最長 {worst:.0f}秒")
 
 
 def _tags(script: Script) -> Finding:

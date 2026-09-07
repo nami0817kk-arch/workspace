@@ -446,3 +446,15 @@ def test_縦型では制作側のラベルを出さない():
     # 中身のある節名は隠さない
     for keep in ("監督は何と言ったか", "試合はどう動いたか", "何が起きたか"):
         assert keep not in INTERNAL_LABELS
+
+def test_制作側の節名は画面に出さない():
+    """「オープニング」は台本の構造の名前で、視聴者には情報にならない。
+
+    しかも冒頭のいちばん見られる位置に出ていた（2026-09-07 に書き出して確認）。
+    本文側の節名（「監督は何と言ったか」など）は残す。
+    """
+    from src.render import INTERNAL_SCENE_TITLES
+
+    assert "オープニング" in INTERNAL_SCENE_TITLES
+    assert "まとめ" in INTERNAL_SCENE_TITLES
+    assert "監督は何と言ったか" not in INTERNAL_SCENE_TITLES
