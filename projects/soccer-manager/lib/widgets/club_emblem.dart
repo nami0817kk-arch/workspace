@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import '../l10n/tr.dart';
+import '../theme/club_palette.dart';
 
 /// チームIDから決定論的に生成する、実際のロゴ画像を持たない代替のクラブエンブレム。
 /// 同じチームなら常に同じ形・色・イニシャルになる。
@@ -20,10 +21,11 @@ class ClubEmblem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final seed = teamId.hashCode;
-    final rng = Random(seed);
-    final hue = rng.nextDouble() * 360;
-    final base = HSLColor.fromAHSL(1, hue, 0.55, 0.42).toColor();
-    final accent = HSLColor.fromAHSL(1, (hue + 40) % 360, 0.6, 0.30).toColor();
+    // 色の導出は ClubPalette に置いてある。ピッチ上のユニフォームも
+    // 同じ値を引くので、ここで独自に計算すると画面ごとに色がずれる。
+    final palette = ClubPalette.of(teamId);
+    final base = palette.base;
+    final accent = palette.accent;
     final shapeIndex = seed.abs() % 3;
     final motifIndex = (seed.abs() ~/ 3) % 3;
     final initial =
