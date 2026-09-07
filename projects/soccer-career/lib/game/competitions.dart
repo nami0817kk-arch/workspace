@@ -73,7 +73,8 @@ class Competitions {
   WorldCupStage runWorldCup(CareerState state, {required bool calledUp}) {
     if (!calledUp) return WorldCupStage.none;
 
-    final country = World.byId(state.player.nationality.primary);
+    // 複数の国籍を持つ選手は、選んだ代表で戦う。
+    final country = World.byId(state.nationalTeam);
     final edge = (country.prestige - 3) / 10 + (state.player.overall - 75) / 60;
 
     var stage = WorldCupStage.group;

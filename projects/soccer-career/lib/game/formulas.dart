@@ -161,6 +161,9 @@ class Formulas {
   /// 復帰直後のコンディション。
   static const int conditionAfterInjury = 45;
 
+  /// キャプテンの試合ごとの評価点への上乗せ。
+  static const double captainRatingBonus = 0.1;
+
   /// 復帰してから、再発の危険が高い試合数。
   static const int rehabWatchMatches = 3;
 
@@ -172,6 +175,9 @@ class Formulas {
 
   /// 代表戦の前に必要な出場試合数（実績が無いと選ばれない）。
   static const int callUpMinAppearances = 5;
+
+  /// この年齢以下で始めると、育成年代（一番下の部）から始まる。
+  static const int youthAge = 17;
 
   /// ローンに出せる上限の年齢。伸びしろへの投資なので、若手だけ。
   static const int loanMaxAge = 23;

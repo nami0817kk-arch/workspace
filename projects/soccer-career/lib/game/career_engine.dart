@@ -8,6 +8,7 @@ import '../models/competition.dart';
 import '../models/aptitude.dart';
 import '../models/country.dart';
 import '../models/entourage.dart';
+import '../models/life.dart';
 import '../models/nationality.dart';
 import '../models/personality.dart';
 import '../models/physique.dart';
@@ -161,7 +162,12 @@ class CareerEngine {
         ? World.randomHome(_random)
         : World.byId(countryId);
     // 2部から始める。1部しか無い国なら1部の下位から。
-    final tier = home.tiers >= 2 ? 2 : 1;
+    //
+    // 16〜17歳で始めた選手は育成年代の扱いで、一番下の部から。
+    // 遠回りだが、その分だけ長く伸びる時間がある。
+    final tier = age <= Formulas.youthAge
+        ? home.tiers
+        : (home.tiers >= 2 ? 2 : 1);
     final league = World.buildLeague(home.id, tier);
     // 下位3クラブのどれかに所属。最初から強豪だと成り上がる余地がない。
     final club = league[league.length - 1 - _random.nextInt(3)];
@@ -193,6 +199,8 @@ class CareerEngine {
       contractYears: extras.rollContractYears(),
       countryId: home.id,
       objective: extras.objectiveFor(player: player, club: club),
+      squadNumber: squadNumberFor(position, _random),
+      nationalTeamId: home.id,
       manager: Manager.roll(_random),
       competitor: Teammate.roll(_random,
           kind: TeammateKind.rival, clubStrength: club.strength),
@@ -903,6 +911,24 @@ class CareerEngine {
                     kind: TeammateKind.mentor, clubStrength: resolved.strength),
           );
 
+    // スポンサー・疲労・キャプテン・愛称・代表。シーズンの切れ目で動く。
+    var sponsor = state.sponsor?.aged();
+    if (sponsor != null && sponsor.expired) sponsor = null;
+    final sponsorOffer = sponsor == null
+        ? Sponsor.offerFor(
+            fame: reputation.fame,
+            random: _random,
+            marketValue: reputation.marketValue,
+          )
+        : null;
+    // スポンサー料は年俸とは別に入る。
+    final withSponsor = sponsor == null
+        ? finances
+        : Finances(
+            savings: finances.savings + sponsor.annual,
+            lifestyle: finances.lifestyle,
+          );
+
     return CareerState(
       player: nextPlayer,
       club: resolved,
@@ -947,7 +973,26 @@ class CareerEngine {
       worldCupStage: WorldCupStage.none,
       reputation: reputation,
       relations: relations,
-      finances: finances,
+      finances: withSponsor,
+      morale: state.morale,
+      // 疲れはオフでだいたい抜けるが、歳を取るほど残る。
+      fatigue: state.fatigue
+          .afterOffseason(nextPlayer.age)
+          .add(state.preseason.fatigue),
+      preseason: state.preseason,
+      captain: movedClub ? false : state.captain,
+      // 腕章の話は、認められた選手にオフの間に来る。
+      captaincyOffered: !movedClub && offersCaptaincy(state),
+      squadNumber: movedClub
+          ? squadNumberFor(nextPlayer.position, _random,
+              senior: nextPlayer.overall >= 78)
+          : state.squadNumber,
+      nickname: state.nickname ?? nicknameFor(state, reputation.fame),
+      sponsor: sponsor,
+      sponsorOffer: sponsorOffer,
+      charity: state.charity,
+      nationalTeamId: state.nationalTeamId,
+      seenEvents: state.seenEvents,
       // 怪我はシーズンを跨いでも消えない。オフの間に少しは進む。
       injury: state.injury == null || state.injury!.matchesOut <= 4
           ? null
@@ -986,6 +1031,69 @@ class CareerEngine {
             .bumpDetail(Detail.strength, -1),
         BodyPlan.maintain => attributes,
       };
+
+  /// 背番号を決める。ポジションらしい番号から引く。
+  ///
+  /// 若いうちは大きい番号しか空いていない。エースナンバーは、
+  /// 実績を積んでクラブの中心になってから回ってくる。
+  static int squadNumberFor(Position position, Random random,
+      {bool senior = false}) {
+    final classic = switch (position) {
+      Position.gk => [1, 12, 21],
+      Position.cb => [4, 5, 15],
+      Position.sb => [2, 3, 26],
+      Position.dm => [6, 16, 24],
+      Position.cm => [8, 14, 18],
+      Position.am => [10, 20, 23],
+      Position.wg => [7, 11, 17],
+      Position.st => [9, 19, 29],
+    };
+    if (senior) return classic.first;
+    return classic[random.nextInt(classic.length)];
+  }
+
+  /// キャプテンの打診が来る条件。
+  ///
+  /// 監督にもロッカールームにも認められていて、若すぎないこと。
+  /// 数字だけでは腕章は回ってこない。
+  bool offersCaptaincy(CareerState state) =>
+      !state.captain &&
+      state.player.age >= 24 &&
+      state.relations.manager >= 70 &&
+      state.relations.teammates >= 65;
+
+  /// 愛称。知名度が上がってから付く。
+  ///
+  /// 呼ばれ方が変わることが、有名になったということの実感になる。
+  String? nicknameFor(CareerState state, int fame) {
+    if (fame < 50) return null;
+    final identity = state.development.identity;
+    final base = switch (identity) {
+      AttributeKey.pace => '弾丸',
+      AttributeKey.shooting => '点取り屋',
+      AttributeKey.passing => '司令塔',
+      AttributeKey.dribbling => '仕掛け人',
+      AttributeKey.defending => '壁',
+      AttributeKey.physical => '猛牛',
+      AttributeKey.goalkeeping => '門番',
+      null => '${state.club.name}の心臓',
+    };
+    return base;
+  }
+
+  /// 引退後の道を、やってきたことから見立てる。
+  SecondCareer secondCareerFor(CareerState state) {
+    final p = state.player.personality;
+    final totals = state.careerTotals;
+    if (state.finances.savings >= 30000 && p.ambition >= 14) {
+      return SecondCareer.entrepreneur;
+    }
+    if (state.captain && p.professionalism >= 13) return SecondCareer.manager;
+    if (state.reputation.fame >= 60) return SecondCareer.pundit;
+    if (p.professionalism >= 14) return SecondCareer.coach;
+    if (totals.appearances >= 300) return SecondCareer.director;
+    return SecondCareer.quiet;
+  }
 
   /// 監督が代わるか。
   ///
@@ -1120,6 +1228,16 @@ class CareerEngine {
       staff: state.staff,
       habits: state.habits,
       development: state.development,
+      morale: state.morale,
+      fatigue: state.fatigue,
+      captain: state.captain,
+      squadNumber: state.squadNumber,
+      nickname: state.nickname,
+      sponsor: state.sponsor,
+      charity: state.charity,
+      nationalTeamId: state.nationalTeamId,
+      secondCareer: state.secondCareer ?? secondCareerFor(state),
+      seenEvents: state.seenEvents,
       manager: state.manager,
       directive: state.directive,
       competitor: state.competitor,

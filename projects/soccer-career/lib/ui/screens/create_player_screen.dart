@@ -107,7 +107,13 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                     label: '$_age',
                     onChanged: (v) => setState(() => _age = v.round()),
                   ),
-                  Text('若く始めるほど伸びしろは長いが、初期能力は低い。', style: muted),
+                  Text(
+                    _age <= 17
+                        ? '育成年代からの出発。一番下の部で、無名のまま始まる。'
+                            '伸びしろは長い。'
+                        : '若く始めるほど伸びしろは長いが、初期能力は低い。',
+                    style: muted,
+                  ),
                   const SizedBox(height: 24),
                   Text('代理人', style: theme.textTheme.labelLarge),
                   const SizedBox(height: 4),

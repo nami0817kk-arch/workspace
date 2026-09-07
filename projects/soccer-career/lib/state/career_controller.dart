@@ -6,6 +6,7 @@ import '../data/save_repository.dart';
 import '../game/career_engine.dart';
 import '../game/formulas.dart';
 import '../game/match_engine.dart';
+import '../game/life_events.dart';
 import '../game/national.dart';
 import '../game/person.dart';
 import '../models/agent.dart';
@@ -15,6 +16,9 @@ import '../models/competition.dart';
 import '../models/development.dart';
 import '../models/entourage.dart';
 import '../models/injury.dart';
+import '../models/life.dart';
+import '../models/life_event.dart';
+import '../models/personality.dart';
 import '../models/physique.dart';
 import '../models/player.dart';
 import '../models/season.dart';
@@ -129,10 +133,152 @@ class CareerController extends ChangeNotifier {
   final CareerEngine _career;
   final MatchEngine _match;
   final Random _random = Random();
+  late final LifeEvents _life = LifeEvents(random: _random);
+
+  /// 決着を待っているピッチ外の出来事。画面はこれを見て問いかけを出す。
+  LifeEvent? pendingEvent;
 
   /// 能力値の総量。伸びたかどうかの判定に使う。
   static int _sumOf(Attributes attributes) =>
       Detail.values.fold(0, (s, d) => s + attributes.detail(d));
+
+  /// 試合を1つ終えるごとの、心と身体の積み上げ。
+  ///
+  /// 出れば気持ちが上がり、外れれば沈む。疲れは戻らずに溜まっていく。
+  /// 好不調の波はここで出入りする。
+  void _updateMood(CareerState state, MatchResult result) {
+    final played = result.appearance == Appearance.start ||
+        result.appearance == Appearance.sub;
+
+    var morale = state.morale.bump(switch (result.appearance) {
+      Appearance.start => 2,
+      Appearance.sub => 1,
+      Appearance.benched => -3,
+      Appearance.injured => -4,
+    });
+    if (played && result.won) morale = morale.bump(1);
+    if (played && (result.rating ?? 6) >= 7.5) morale = morale.bump(2);
+    state.morale = morale;
+
+    state.fatigue = state.fatigue.add(switch (result.appearance) {
+      Appearance.start => 3,
+      Appearance.sub => 2,
+      Appearance.benched || Appearance.injured => 0,
+    });
+
+    // 波。続いていれば1試合ぶん進め、切れていれば直近の出来から引き直す。
+    state.form = state.form.tick();
+    if (!state.form.isActive) {
+      state.form = Form.roll(
+        _random,
+        recent: [
+          for (final r in state.leagueResults)
+            if (r.rating != null) r.rating!,
+        ],
+      );
+    }
+
+    // ピッチの外の出来事。試合と試合の間に起きる。
+    if (pendingEvent == null && _life.fires()) {
+      pendingEvent = _life.pick(
+        LifeContext(
+          age: state.player.age,
+          fame: state.reputation.fame,
+          savings: state.finances.savings,
+          abroad: state.club.countryId != state.player.nationality.primary,
+          afterInjury: state.rehabWatch > 0,
+          sponsorOffered: state.sponsorOffer != null,
+          captaincyOffered: state.captaincyOffered,
+          lowMorale: state.morale.needsCare,
+        ),
+        seen: state.seenEvents.toSet(),
+      );
+    }
+  }
+
+  /// 出来事に答える。効きはすべて小さいが、選んだことは残る。
+  Future<void> resolveEvent(LifeChoice choice) async {
+    final state = _state;
+    final event = pendingEvent;
+    if (state == null || event == null) return;
+
+    final e = choice.effect;
+    state.morale = state.morale.bump(e.morale);
+    state.reputation =
+        state.reputation.copyWith(fame: state.reputation.fame + e.fame);
+    state.relations =
+        state.relations.bump(manager: e.manager, teammates: e.teammates);
+    // 入る金も出ていく金も、貯蓄の増減として同じ扱いにする。
+    if (e.money != 0) state.finances = state.finances.spend(-e.money);
+    state.fatigue = state.fatigue.add(e.fatigue);
+
+    var personality = state.player.personality;
+    personality = personality.bump(PersonalityAxis.confidence, e.confidence);
+    personality = personality.bump(PersonalityAxis.ambition, e.ambition);
+    personality =
+        personality.bump(PersonalityAxis.professionalism, e.professionalism);
+    personality = personality.bump(PersonalityAxis.temper, e.temper);
+    state.player = state.player.copyWith(
+      personality: personality,
+      condition: state.player.condition + e.condition,
+    );
+
+    switch (e.special) {
+      case LifeSpecial.acceptSponsor:
+        state.sponsor = state.sponsorOffer;
+        state.sponsorOffer = null;
+      case LifeSpecial.declineSponsor:
+        state.sponsorOffer = null;
+      case LifeSpecial.takeCaptain:
+        state.captain = true;
+        state.captaincyOffered = false;
+      case LifeSpecial.declineCaptain:
+        state.captaincyOffered = false;
+      case LifeSpecial.foundCharity:
+        state.charity = true;
+      case LifeSpecial.none:
+        break;
+    }
+
+    if (event.once && !state.seenEvents.contains(event.id)) {
+      state.seenEvents = [...state.seenEvents, event.id];
+    }
+    pendingEvent = null;
+    await _persist();
+  }
+
+  /// プレシーズンの過ごし方を決める。
+  Future<void> setPreseason(PreseasonPlan plan) async {
+    final state = _state;
+    if (state == null) return;
+    state.preseason = plan;
+    state.player = state.player.copyWith(condition: plan.condition);
+    state.reputation = state.reputation
+        .copyWith(fame: state.reputation.fame + plan.fame);
+    await _persist();
+  }
+
+  /// 代表を選ぶ。複数の国籍を持っているときだけ意味がある。
+  Future<void> chooseNationalTeam(String countryId) async {
+    final state = _state;
+    if (state == null) return;
+    if (!state.player.nationality.has(countryId)) return;
+    state.nationalTeamId = countryId;
+    await _persist();
+  }
+
+  /// 引退後の道を選ぶ。
+  Future<void> chooseSecondCareer(SecondCareer choice) async {
+    final state = _state;
+    if (state == null) return;
+    state.secondCareer = choice;
+    await _persist();
+  }
+
+  /// 引退後の道の見立て。
+  SecondCareer get suggestedSecondCareer => _state == null
+      ? SecondCareer.quiet
+      : _career.secondCareerFor(_state!);
 
   /// 出場機会の下駄。監督の信頼・戦術との相性・方針・序列を足し合わせる。
   ///
@@ -160,7 +306,9 @@ class CareerController extends ChangeNotifier {
         state.facilitiesWith(World.byId(state.club.countryId).prestige);
     return facilities.growthFactor *
         (state.mentor?.mentorFactor(state.player.age) ?? 1.0) *
-        state.directive.growthFactor;
+        state.directive.growthFactor *
+        state.morale.growthFactor *
+        state.preseason.growthFactor;
   }
 
   CareerState? _state;
@@ -295,6 +443,8 @@ class CareerController extends ChangeNotifier {
       home: state.isHome(matchday),
       development: state.development,
       allyBonus: state.partner?.synergyBonus ?? 0,
+      moodBonus: state.morale.chanceModifier + state.form.chanceModifier,
+      extraRating: state.captain ? Formulas.captainRatingBonus : 0,
       appearance: state.injured
           ? Appearance.injured
           // 登録メンバーから外れていると、そもそもベンチにも入れない。
@@ -406,6 +556,7 @@ class CareerController extends ChangeNotifier {
     _career.applyResult(state, result);
 
     if (state.rehabWatch > 0) state.rehabWatch--;
+    _updateMood(state, result);
 
     // 出たポジションの適性と、相方との呼吸が伸びる。
     if (result.appearance == Appearance.start ||
@@ -494,6 +645,7 @@ class CareerController extends ChangeNotifier {
             baseChance: Formulas.injuryBaseChance *
                 state.staff.injuryFactor *
                 state.habits.injuryFactor *
+                state.fatigue.injuryFactor *
                 // 復帰直後は無理が効かない。強行すればここで返ってくる。
                 (state.rehabWatch > 0 ? state.rehab.relapseFactor : 1.0),
           );

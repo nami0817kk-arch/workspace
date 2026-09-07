@@ -53,6 +53,8 @@ class MatchInProgress {
     required this.club,
     this.development = const Development(),
     this.allyBonus = 0,
+    this.moodBonus = 0,
+    this.extraRating = 0,
     this.weakFootMoments = const [],
     this.international = false,
     Random? random,
@@ -76,6 +78,12 @@ class MatchInProgress {
 
   /// 相方との呼吸。味方を活かす手にだけ効く。
   final double allyBonus;
+
+  /// 気持ちと波（ゾーン／スランプ）。すべての手に同じだけ効く。
+  final double moodBonus;
+
+  /// 評価点への上乗せ。腕章を巻いている試合など。
+  final double extraRating;
 
   /// 逆足で対応することになる局面。試合開始時に決めておく。
   ///
@@ -128,7 +136,8 @@ class MatchInProgress {
   double get rating {
     final total = resolutions.fold<double>(
             Formulas.baseRating, (sum, r) => sum + r.ratingDelta) +
-        player.traits.ratingBonus;
+        player.traits.ratingBonus +
+        extraRating;
     return total.clamp(Formulas.minRating, Formulas.maxRating);
   }
 
@@ -193,6 +202,7 @@ class MatchInProgress {
             matchup +
             pressure +
             ally +
+            moodBonus +
             weakFoot)
         .clamp(0.05, 0.95);
   }
@@ -442,6 +452,8 @@ class MatchEngine {
     required Appearance appearance,
     Development development = const Development(),
     double allyBonus = 0,
+    double moodBonus = 0,
+    double extraRating = 0,
     bool international = false,
   }) {
     final count = switch (appearance) {
@@ -468,6 +480,8 @@ class MatchEngine {
       club: club,
       development: development,
       allyBonus: allyBonus,
+      moodBonus: moodBonus,
+      extraRating: extraRating,
       weakFootMoments: [
         for (var i = 0; i < count; i++) _random.nextDouble() < weakFootChance,
       ],

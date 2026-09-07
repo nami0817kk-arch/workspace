@@ -160,6 +160,10 @@ class _HomeTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        if (controller.pendingEvent != null) ...[
+          _EventCard(controller: controller),
+          const SizedBox(height: 16),
+        ],
         _PlayerCard(state: state),
         const SizedBox(height: 16),
         _BodyCard(state: state),
@@ -168,7 +172,7 @@ class _HomeTab extends StatelessWidget {
         const SizedBox(height: 16),
         _ClubLifeCard(state: state, controller: controller),
         const SizedBox(height: 16),
-        _PersonCard(state: state),
+        _PersonCard(state: state, controller: controller),
         const SizedBox(height: 16),
         _LeagueCard(state: state),
         const SizedBox(height: 16),
@@ -362,9 +366,17 @@ class _PlayerCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(player.name, style: theme.textTheme.titleMedium),
                       Text(
-                        '${player.position.label}  ${player.age}歳  ·  '
+                        '${state.squadNumber > 0 ? '#${state.squadNumber}  ' : ''}'
+                        '${player.name}'
+                        '${state.captain ? '  （C）' : ''}',
+                        style: theme.textTheme.titleMedium,
+                      ),
+                      if (state.nickname != null)
+                        Text('「${state.nickname}」', style: muted),
+                      Text(
+                        '${player.position.label}  ${player.age}歳'
+                        '（${state.stage.label}）  ·  '
                         '${World.byId(player.nationality.primary).demonym}',
                         style: muted,
                       ),
@@ -936,6 +948,51 @@ class _ClubLifeCard extends StatelessWidget {
   }
 }
 
+/// ピッチの外で起きたこと。答えるまで居座る。
+class _EventCard extends StatelessWidget {
+  const _EventCard({required this.controller});
+
+  final CareerController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final event = controller.pendingEvent!;
+    return Card(
+      color: theme.colorScheme.secondaryContainer,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(event.title, style: theme.textTheme.titleMedium),
+            const SizedBox(height: 8),
+            Text(event.body, style: theme.textTheme.bodyMedium),
+            const SizedBox(height: 16),
+            for (final choice in event.choices) ...[
+              FilledButton.tonal(
+                onPressed: () async {
+                  final outcome = choice.outcome;
+                  await controller.resolveEvent(choice);
+                  if (!context.mounted) return;
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(SnackBar(content: Text(outcome)));
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  child: Text(choice.label),
+                ),
+              ),
+              const SizedBox(height: 8),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _AttributeBar extends StatelessWidget {
   const _AttributeBar({
     required this.label,
@@ -1407,9 +1464,10 @@ class _OutOfSquadCard extends StatelessWidget {
 
 /// 選手を「人間」として見るカード。性格・関係・お金・称号。
 class _PersonCard extends StatelessWidget {
-  const _PersonCard({required this.state});
+  const _PersonCard({required this.state, required this.controller});
 
   final CareerState state;
+  final CareerController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -1463,6 +1521,25 @@ class _PersonCard extends StatelessWidget {
                   ),
                 ),
               ),
+            if (state.player.nationality.all.length > 1) ...[
+              const SizedBox(height: 12),
+              Text('代表を選ぶ', style: theme.textTheme.labelMedium),
+              const SizedBox(height: 4),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final id in state.player.nationality.all)
+                    ChoiceChip(
+                      label: Text(World.byId(id).name),
+                      selected: (state.nationalTeamId ??
+                              state.player.nationality.primary) ==
+                          id,
+                      onSelected: (_) => controller.chooseNationalTeam(id),
+                    ),
+                ],
+              ),
+            ],
             const SizedBox(height: 12),
             Row(
               children: [
@@ -1478,7 +1555,19 @@ class _PersonCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              '貯蓄 ${state.finances.savingsLabel}  ·  生活 ${state.finances.lifestyleLabel}',
+              '気持ち ${state.morale.label}  ·  疲労 ${state.fatigue.label}'
+              '${state.form.isActive ? '  ·  ${state.form.state.label}' : ''}',
+              style: muted?.copyWith(
+                color: state.morale.needsCare
+                    ? theme.colorScheme.error
+                    : theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '貯蓄 ${state.finances.savingsLabel}  ·  生活 ${state.finances.lifestyleLabel}'
+              '${state.sponsor != null ? '  ·  ${state.sponsor!.name}と契約中' : ''}'
+              '${state.charity ? '  ·  財団' : ''}',
               style: muted,
             ),
             if (state.reputation.awards.isNotEmpty) ...[

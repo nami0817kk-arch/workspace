@@ -4,6 +4,7 @@ import '../../game/career_engine.dart';
 import '../../game/formulas.dart';
 import '../../game/world.dart';
 import '../../models/competition.dart';
+import '../../models/life.dart';
 import '../../models/physique.dart';
 import '../../state/career_controller.dart';
 
@@ -26,6 +27,9 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
 
   /// オフに身体をどうするか。移籍先を決めるのと同じ画面で選ぶ。
   BodyPlan _bodyPlan = BodyPlan.maintain;
+
+  /// プレシーズンの過ごし方。
+  PreseasonPlan _preseason = PreseasonPlan.camp;
 
   /// 代理人に一度売り込ませたか。1シーズンに1度だけ。
   bool _solicited = false;
@@ -63,6 +67,7 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
   Future<void> _accept(TransferOffer offer) async {
     if (_busy) return;
     setState(() => _busy = true);
+    await widget.controller.setPreseason(_preseason);
     await widget.controller
         .advanceSeason(accepted: offer, bodyPlan: _bodyPlan);
     if (!mounted) return;
@@ -251,6 +256,26 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                         onSelected: _busy
                             ? null
                             : (_) => setState(() => _bodyPlan = plan),
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Text('プレシーズン', style: theme.textTheme.labelLarge),
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final plan in PreseasonPlan.values)
+                    Tooltip(
+                      message: plan.description,
+                      child: ChoiceChip(
+                        label: Text(plan.label),
+                        selected: _preseason == plan,
+                        onSelected: _busy
+                            ? null
+                            : (_) => setState(() => _preseason = plan),
                       ),
                     ),
                 ],

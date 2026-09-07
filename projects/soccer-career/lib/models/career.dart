@@ -6,6 +6,7 @@ import 'club.dart';
 import 'competition.dart';
 import 'development.dart';
 import 'entourage.dart';
+import 'life.dart';
 import 'reputation.dart';
 import 'support.dart';
 import 'training.dart';
@@ -152,6 +153,20 @@ class CareerState {
     this.rehab = RehabPlan.standard,
     this.rehabWatch = 0,
     this.mentorManager,
+    this.morale = const Morale(),
+    this.fatigue = const Fatigue(),
+    this.form = const Form(),
+    this.preseason = PreseasonPlan.camp,
+    this.captain = false,
+    this.captaincyOffered = false,
+    this.squadNumber = 0,
+    this.nickname,
+    this.sponsor,
+    this.sponsorOffer,
+    this.charity = false,
+    this.nationalTeamId,
+    this.secondCareer,
+    this.seenEvents = const [],
     this.objective,
     this.injury,
     this.caps = 0,
@@ -228,6 +243,54 @@ class CareerState {
 
   /// 恩師（信頼の厚かった監督）の名前。よそのクラブから呼ぶことがある。
   String? mentorManager;
+
+  /// 心の状態。身体とは別に管理する。
+  Morale morale;
+
+  /// 抜けきらない疲れ。シーズンを通して溜まる。
+  Fatigue fatigue;
+
+  /// 数試合だけ続く波（ゾーン／スランプ）。
+  Form form;
+
+  /// 今季のプレシーズンの過ごし方。
+  PreseasonPlan preseason;
+
+  /// キャプテンか。
+  bool captain;
+
+  /// キャプテンの打診が来ているか。
+  bool captaincyOffered;
+
+  /// 背番号。0 なら未設定。
+  int squadNumber;
+
+  /// ついた愛称。知名度が上がると付く。
+  String? nickname;
+
+  /// スパイクのスポンサー契約。
+  Sponsor? sponsor;
+
+  /// 届いているスポンサーの打診。
+  Sponsor? sponsorOffer;
+
+  /// 財団を作ったか。
+  bool charity;
+
+  /// 選んだ代表。複数の国籍を持つときだけ意味がある。
+  String? nationalTeamId;
+
+  /// 実際に代表として戦う国。選んでいなければ主国籍。
+  String get nationalTeam => nationalTeamId ?? player.nationality.primary;
+
+  /// 引退後に選んだ道。
+  SecondCareer? secondCareer;
+
+  /// もう起きた出来事のID。一度きりの出来事を繰り返さないために持つ。
+  List<String> seenEvents;
+
+  /// 今の年齢のキャリア段階。
+  CareerStage get stage => CareerStage.of(player.age);
 
   /// クラブの環境。保存はせず、クラブの強さと国の格から決まる。
   Facilities facilitiesWith(int prestige) =>
@@ -386,6 +449,20 @@ class CareerState {
         'rehab': rehab.name,
         'rehabWatch': rehabWatch,
         'mentorManager': mentorManager,
+        'morale': morale.toJson(),
+        'fatigue': fatigue.toJson(),
+        'form': form.toJson(),
+        'preseason': preseason.name,
+        'captain': captain,
+        'captaincyOffered': captaincyOffered,
+        'squadNumber': squadNumber,
+        'nickname': nickname,
+        'sponsor': sponsor?.toJson(),
+        'sponsorOffer': sponsorOffer?.toJson(),
+        'charity': charity,
+        'nationalTeamId': nationalTeamId,
+        'secondCareer': secondCareer?.name,
+        'seenEvents': seenEvents,
         'contractYears': contractYears,
         'countryId': countryId,
         'professionalYears': professionalYears,
@@ -464,6 +541,27 @@ class CareerState {
           : RehabPlan.standard,
       rehabWatch: json['rehabWatch'] as int? ?? 0,
       mentorManager: json['mentorManager'] as String?,
+      morale: Morale.fromJson(json['morale'] as Map<String, dynamic>?),
+      fatigue: Fatigue.fromJson(json['fatigue'] as Map<String, dynamic>?),
+      form: Form.fromJson(json['form'] as Map<String, dynamic>?),
+      preseason: PreseasonPlan.values.any((p) => p.name == json['preseason'])
+          ? PreseasonPlan.values.byName(json['preseason'] as String)
+          : PreseasonPlan.camp,
+      captain: json['captain'] as bool? ?? false,
+      captaincyOffered: json['captaincyOffered'] as bool? ?? false,
+      squadNumber: json['squadNumber'] as int? ?? 0,
+      nickname: json['nickname'] as String?,
+      sponsor: Sponsor.fromJson(json['sponsor'] as Map<String, dynamic>?),
+      sponsorOffer:
+          Sponsor.fromJson(json['sponsorOffer'] as Map<String, dynamic>?),
+      charity: json['charity'] as bool? ?? false,
+      nationalTeamId: json['nationalTeamId'] as String?,
+      secondCareer:
+          SecondCareer.values.any((c) => c.name == json['secondCareer'])
+              ? SecondCareer.values.byName(json['secondCareer'] as String)
+              : null,
+      seenEvents:
+          (json['seenEvents'] as List? ?? const []).cast<String>().toList(),
       contractYears: json['contractYears'] as int? ?? 2,
       countryId: json['countryId'] as String? ?? 'yamato',
       professionalYears: json['professionalYears'] as int? ?? 1,
