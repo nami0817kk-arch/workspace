@@ -52,37 +52,39 @@ def test_壊れた控えでも止まらない(ledger: Path) -> None:
     assert posted.find("output/x", ledger)["video_id"] == "v1"
 
 
-def _at(hours_ago: float, now: datetime) -> datetime:
-    return now - timedelta(hours=hours_ago)
+def test_枠が戻る時刻は日本時間の16時(ledger: Path) -> None:
+    """**上限の本数は分からない。**確かなのは戻る時刻だけ。"""
+    now = datetime(2026, 9, 7, 3, 41, tzinfo=timezone.utc)   # 12:41 JST
+    back = posted.frees_at(ledger, now).astimezone(timezone(timedelta(hours=9)))
+    assert (back.month, back.day, back.hour) == (9, 7, 16)
 
 
-def test_直近24時間だけ数える(ledger: Path) -> None:
-    now = datetime(2026, 9, 7, 10, 0, tzinfo=timezone.utc)
-    posted.record("output/a", "v1", ledger, now=_at(25, now))   # 窓の外
-    posted.record("output/b", "v2", ledger, now=_at(23, now))
-    posted.record("output/c", "v3", ledger, now=_at(1, now))
-    assert posted.in_window(ledger, now) == 2
+def test_戻る時刻は上げた本数に左右されない(ledger: Path) -> None:
+    now = datetime(2026, 9, 7, 3, 41, tzinfo=timezone.utc)
+    empty = posted.frees_at(ledger, now)
+    for i in range(40):
+        posted.record(f"output/{i}", f"v{i}", ledger, now=now)
+    assert posted.frees_at(ledger, now) == empty
 
 
-def test_残りは上限から引いた数(ledger: Path) -> None:
-    now = datetime(2026, 9, 7, 10, 0, tzinfo=timezone.utc)
-    for i in range(5):
-        posted.record(f"output/{i}", f"v{i}", ledger, now=_at(1, now))
-    assert posted.left(ledger, now) == posted.WINDOW_MAX - 5
+def test_枠が戻ってからの本数を数える(ledger: Path) -> None:
+    now = datetime(2026, 9, 7, 3, 41, tzinfo=timezone.utc)      # 12:41 JST
+    before = datetime(2026, 9, 6, 6, 0, tzinfo=timezone.utc)    # 15:00 JST 前日
+    after = datetime(2026, 9, 6, 8, 0, tzinfo=timezone.utc)     # 17:00 JST 前日
+    posted.record("output/a", "v1", ledger, now=before)         # 戻る前なので数えない
+    posted.record("output/b", "v2", ledger, now=after)
+    posted.record("output/c", "v3", ledger, now=now)
+    assert posted.today(ledger, now) == 2
 
 
-def test_上限まで埋まっていなければ空き待ちは無い(ledger: Path) -> None:
-    now = datetime(2026, 9, 7, 10, 0, tzinfo=timezone.utc)
-    posted.record("output/a", "v1", ledger, now=_at(1, now))
-    assert posted.frees_at(ledger, now) is None
+def test_転がる24時間の窓ではない(ledger: Path) -> None:
+    """2026-09-07 に、弾かれてから2時間後も弾かれたままだった。
 
-
-def test_埋まっていたら次に空く時刻が出る(ledger: Path) -> None:
-    """**転がる24時間の窓**なので、いちばん古い1本が抜けた時に空く。"""
-    now = datetime(2026, 9, 7, 10, 0, tzinfo=timezone.utc)
-    oldest = _at(20, now)
-    posted.record("output/0", "v0", ledger, now=oldest)
-    for i in range(1, posted.WINDOW_MAX):
-        posted.record(f"output/{i}", f"v{i}", ledger, now=_at(1, now))
-    assert posted.left(ledger, now) == 0
-    assert posted.frees_at(ledger, now) == oldest + timedelta(hours=24)
+    24時間の窓なら数本ぶん空いていたはずで、そうならなかった。
+    **同じ日のうちは、何本抜けても戻らない。**
+    """
+    hit = datetime(2026, 9, 7, 1, 36, tzinfo=timezone.utc)      # 10:36 JST 弾かれた
+    later = datetime(2026, 9, 7, 3, 41, tzinfo=timezone.utc)    # 12:41 JST まだ弾かれる
+    old = datetime(2026, 9, 6, 8, 0, tzinfo=timezone.utc)       # 25時間以上前ではない
+    posted.record("output/a", "v1", ledger, now=old)
+    assert posted.today(ledger, hit) == posted.today(ledger, later)

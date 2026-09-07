@@ -9,10 +9,15 @@ inter が二重に公開され、その4本分で投稿本数の上限を使い�
 人の注意では防げない。**投稿する側が「これはもう上げた」と知っている**
 必要がある。だからここに控える。
 
-もうひとつ、**投稿できる本数は「1日100本」ではない。**同じ日に実測して、
-直近24時間で34本目に `uploadLimitExceeded` が返った。日付で戻る枠ではなく
-**転がる24時間の窓**なので、24時間前の投稿が抜けた分だけ空く。
-控えがあれば、上限に当たる前に知らせられる。
+もうひとつ、**投稿できる本数は「1日100本」ではない。**コンソールの
+「Video Uploads per day」が 49/100 でも `uploadLimitExceeded` が返る。
+**弾いているのはコンソールに出ていないチャンネル側の上限**で、残量を
+見る手段が無い。だから「何本まで」ではなく「いつ戻るか」で扱う。
+
+2026-09-07 に、10:36 に弾かれてから 12:41 に試しても弾かれたまま。
+**転がる24時間の窓ではない**（それなら2時間で数本ぶん空いていた）。
+枠は Queries と同じく太平洋時間の深夜0時＝日本時間16時に戻るとみて
+数え直す。数えるのはこちらが上げた本数で、上限そのものは分からない。
 """
 
 from __future__ import annotations
@@ -23,10 +28,12 @@ from pathlib import Path
 
 LEDGER = Path("research/posted.json")
 
-# 実測値。2026-09-07 に34本目で uploadLimitExceeded（開設3日目のチャンネル）。
-# チャンネルが育つと増えるらしいので、外したら測り直して入れ直す。
-WINDOW_HOURS = 24
-WINDOW_MAX = 34
+# **上限の本数は分からない。**2026-09-07 に34本目で弾かれたが、
+# それが上限だという確証はない（コンソールの Video Uploads per day は
+# 49/100 で余っていた）。ここでは「いつ戻るか」だけを確かなものとして扱う。
+PACIFIC_SUMMER = timezone(timedelta(hours=-7))
+# 目安。これを超えたら弾かれても驚かない、という程度の数
+SOFT_MAX = 34
 
 
 def key(build_dir: Path | str) -> str:
@@ -76,22 +83,18 @@ def _times(path: Path) -> list[datetime]:
     return sorted(out)
 
 
-def in_window(path: Path = LEDGER, now: datetime | None = None) -> int:
-    """直近24時間に投稿した本数。**控えた分だけ**なので目安。"""
-    now = now or datetime.now(timezone.utc)
-    edge = now - timedelta(hours=WINDOW_HOURS)
-    return len([t for t in _times(path) if t > edge])
+def day_start(now: datetime | None = None) -> datetime:
+    """枠が戻った時刻。太平洋時間の深夜0時＝日本時間の16時。"""
+    at = (now or datetime.now(timezone.utc)).astimezone(PACIFIC_SUMMER)
+    return at.replace(hour=0, minute=0, second=0, microsecond=0)
 
 
-def left(path: Path = LEDGER, now: datetime | None = None) -> int:
-    return max(0, WINDOW_MAX - in_window(path, now))
+def today(path: Path = LEDGER, now: datetime | None = None) -> int:
+    """枠が戻ってから上げた本数。**上限そのものは分からない。**"""
+    edge = day_start(now)
+    return len([t for t in _times(path) if t >= edge])
 
 
-def frees_at(path: Path = LEDGER, now: datetime | None = None) -> datetime | None:
-    """次に1枠空く時刻。空きがあるなら None。"""
-    now = now or datetime.now(timezone.utc)
-    edge = now - timedelta(hours=WINDOW_HOURS)
-    live = [t for t in _times(path) if t > edge]
-    if len(live) < WINDOW_MAX:
-        return None
-    return live[len(live) - WINDOW_MAX] + timedelta(hours=WINDOW_HOURS)
+def frees_at(path: Path = LEDGER, now: datetime | None = None) -> datetime:
+    """次に枠が戻る時刻。**本数に関係なく、必ず次の16時（JST）。**"""
+    return day_start(now) + timedelta(days=1)
