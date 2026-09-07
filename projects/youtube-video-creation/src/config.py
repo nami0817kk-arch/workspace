@@ -178,6 +178,8 @@ class ProjectConfig:
     titles: TitleConfig = field(default_factory=TitleConfig)
     # 代弁に使う声の候補。空なら未登録の話者はエラーのまま
     voice_pool: tuple[int, ...] = ()
+    # **代弁に使わない人**（2026-09-07 ユーザーの指示）。名前で拒む
+    voice_deny: tuple[str, ...] = ()
     path: Path = DEFAULT_CONFIG_PATH
 
     def resolve_speaker(self, name: str) -> CastMember:
@@ -199,6 +201,11 @@ class ProjectConfig:
         known = "/ ".join(self.cast)
         raise ConfigError(f"話者『{wanted}』は config に定義されていません（定義済み: {known}）")
 
+    def denied(self, name: str) -> bool:
+        """代弁に使わないと決めた人か。"""
+        wanted = name.strip()
+        return any(wanted == deny.strip() for deny in self.voice_deny)
+
     def voiced(self, name: str) -> CastMember:
         """代弁する人。**同じ名前なら、いつも同じ声になる。**
 
@@ -208,6 +215,11 @@ class ProjectConfig:
         import hashlib
 
         wanted = name.strip()
+        if self.denied(wanted):
+            raise ConfigError(
+                f"『{wanted}』は代弁に使わないと決まっています（voice_deny）。"
+                "キャスターが「〜と述べた」と地の文で伝えてください"
+            )
         pool = list(self.voice_pool)
         digest = hashlib.sha1(wanted.encode("utf-8")).digest()
         style = pool[int.from_bytes(digest[:4], "big") % len(pool)]
@@ -242,6 +254,7 @@ def build_config(raw: dict, path: Path = DEFAULT_CONFIG_PATH) -> ProjectConfig:
     voice_raw = dict(raw.get("voicevox") or {})
     # voice_pool は VoicevoxConfig の項目ではない（代弁の割り当てに使う）
     pool = voice_raw.pop("voice_pool", ())
+    deny = voice_raw.pop("voice_deny", ())
     voicevox = VoicevoxConfig(**voice_raw)
     audio = AudioConfig(**(raw.get("audio") or {}))
     motion = MotionConfig(**(raw.get("motion") or {}))
@@ -269,6 +282,7 @@ def build_config(raw: dict, path: Path = DEFAULT_CONFIG_PATH) -> ProjectConfig:
         )
     return ProjectConfig(
         voice_pool=tuple(int(v) for v in pool or ()),
+        voice_deny=tuple(str(v).strip() for v in deny or () if str(v).strip()),
         video=video,
         voicevox=voicevox,
         cast=cast,

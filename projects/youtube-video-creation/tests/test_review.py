@@ -620,3 +620,23 @@ def test_普通のカタカナ語は名前と数えない(tmp_path):
         "title: ウォームアップ中の出来事がこちらです")
     result = _by_label(inspect(parse_script(body), _built(tmp_path)))
     assert result["タイトルの主語"].ok is False
+
+
+def test_代弁に使わない人が喋っていたら止まる(tmp_path):
+    """2026-09-07 ユーザーの指示。メッシとモウリーニョの声は使わない。"""
+    body = GOOD_BODY.replace("ネット民: 完全に別チームだった。",
+                             "メッシ: 完全に別チームだった。")
+    result = _by_label(inspect(parse_script(body), _built(tmp_path)))
+    assert result["代弁の可否"].ok is False
+    assert "メッシ" in result["代弁の可否"].detail
+
+
+def test_縦型でも代弁の可否は見る(tmp_path, monkeypatch):
+    """ショートは本編から切り出すので、元に入っていれば残る。"""
+    from src import review as review_mod
+
+    monkeypatch.setattr(review_mod, "_dimensions", lambda path: (1080, 1920))
+    body = GOOD_BODY.replace("ネット民: 中盤の圧力がすごい。",
+                             "モウリーニョ: 中盤の圧力がすごい。")
+    result = _by_label(inspect(parse_script(body), _built(tmp_path)))
+    assert result["代弁の可否"].ok is False

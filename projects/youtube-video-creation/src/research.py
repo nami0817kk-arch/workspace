@@ -279,6 +279,7 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
                 f"（いまは{len(section.sources)}本）"
             )
         problems += _check_reactions(section)
+        problems += _check_denied_voices(section)
 
         if rule.get("needs_official") and not section.official:
             problems.append(
@@ -286,6 +287,26 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
                 "発表を確認できないなら tier を下げてください"
             )
     return problems
+
+
+def _check_denied_voices(section: Section) -> list[str]:
+    """代弁に使わないと決めた人が、話者になっていないか（2026-09-07）。
+
+    ユーザーの指示。合成音声でその人が喋る形にはしない。**引用そのものは
+    使ってよい**ので、キャスターが「〜と述べた」と地の文で伝える。
+    """
+    try:
+        from .config import load_config
+
+        deny = load_config().voice_deny
+    except Exception:
+        return []
+    found = {v.strip() for v in section.voices if v.strip() and v.strip() in deny}
+    return [
+        f"{section.id}: 『{name}』は代弁に使わないと決まっています。"
+        "キャスターが「〜と述べた」と地の文で伝えてください"
+        for name in sorted(found)
+    ]
 
 
 def _check_reactions(section: Section) -> list[str]:

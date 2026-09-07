@@ -76,6 +76,8 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     # **構成の点検は本編だけに当てる。**縦型は本編から1節を切り出したもので、
     # 割合を測っても元の台本の話にならない（2026-09-07）
     findings.append(check_voice_length(script))
+    # **縦型にも当てる。**ショートは本編から切り出すので、元に入っていれば残る
+    findings.append(check_denied_voices(script))
     if not portrait:
         findings.append(check_voice_share(script))
         findings.append(check_opening_title(script))
@@ -669,6 +671,32 @@ def check_title_subject(script: Script) -> Finding:
         f"頭{TITLE_HEAD}字に人名もクラブ名もありません（『{head}』）。"
         "伸びているチャンネルは54%が名前から始めます",
     )
+
+
+def check_denied_voices(script: Script) -> Finding:
+    """代弁に使わないと決めた人が喋っていないか（2026-09-07 ユーザーの指示）。
+
+    手で書いた台本は draft を通らないので、**書き出したものでも見る。**
+    """
+    try:
+        from .config import load_config
+
+        deny = load_config().voice_deny
+    except Exception:
+        return Finding(True, "代弁の可否", "設定を読めないので見ていません")
+    if not deny:
+        return Finding(True, "代弁の可否", "使わない人の指定はありません")
+
+    found = sorted({(line.speaker or "").strip()
+                    for scene in script.scenes for line in scene.lines
+                    if (line.speaker or "").strip() in deny})
+    if found:
+        return Finding(
+            False, "代弁の可否",
+            f"『{' / '.join(found)}』は代弁に使わないと決まっています。"
+            "キャスターが「〜と述べた」と地の文で伝えてください",
+        )
+    return Finding(True, "代弁の可否", "使わない人は出ていません")
 
 
 def check_wrap_share(script: Script) -> Finding:

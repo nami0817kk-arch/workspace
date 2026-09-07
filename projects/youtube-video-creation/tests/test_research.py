@@ -708,3 +708,17 @@ def test_過去形の答えが壊れない():
     assert _spoken("UEFAは重大な暴行と判断した") == "UEFAは重大な暴行と判断した、ということです。"
     assert _spoken("移籍は決まりました") == "移籍は決まりました。"
     assert _spoken("次の焦点は来週") == "次の焦点は来週です。"
+
+
+def test_代弁に使わない人は取材メモで止まる():
+    """2026-09-07 ユーザーの指示。引用そのものは地の文で使ってよい。"""
+    from src.research import verify
+
+    raw = _raw()
+    raw["sections"] = raw["sections"] + [{
+        "id": "voices", "heading": "何と言ったか", "tier": "報道",
+        "say": [{"voice": "モウリーニョ", "text": "説明のしようがない。"}],
+        "sources": ["https://example.com/1"],
+    }]
+    problems = verify(build_notes(raw), _plan())
+    assert any("モウリーニョ" in p for p in problems)
