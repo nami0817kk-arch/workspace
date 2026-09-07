@@ -185,6 +185,8 @@ lib/
   古い保存データは減点しない（`isUnknown`）。過去のキャリアの総合力が突然落ちるのを防ぐ。
 - **方針は「優先したぶん諦める」形にする**（`Directive`）。通る通らないの判定にしない。
 - **リハビリは早く戻るほど再発する**（`RehabPlan`）。復帰後3試合は再発の危険が高い。
+- **条件で選ばれない話は別枠で持つ**（`_marketOffers` の `special`）。恩師のラブコールと
+  古巣へのラストダンスは、年俸順に3件へ切る処理で必ず消えてしまうため、切った後に足す。
 
 ### 人生の周辺（段階④）
 
@@ -211,7 +213,10 @@ lib/
 ## 公開
 
 Web版は master への push で Cloudflare Pages に自動デプロイされる
-（`.github/workflows/soccer-career-pages.yml`）。公開URLは soccer-career.pages.dev。
+（`.github/workflows/soccer-career-pages.yml`）。
+**公開URLは https://soccer-career-49p.pages.dev/ **。
+`soccer-career.pages.dev` は別アカウントの別アプリが取っているので、そちらを見ても
+このアプリは出てこない（Pages のサブドメインは全体で先着）。
 検証は `soccer-career-ci.yml` に分けてあり、公開設定のミスでテストまで赤くならない。
 
 **セーブは端末ごとに独立**（localStorage）。PC で進めた内容とスマホの内容は別物になる。

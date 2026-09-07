@@ -290,6 +290,49 @@ void main() {
     });
   });
 
+  group('古巣へのラストダンス', () {
+    test('晩年になると、かつて居たクラブが最後の1年に呼ぶ', () {
+      var sawCall = false;
+      for (var seed = 0; seed < 40 && !sawCall; seed++) {
+        final engine = CareerEngine(random: Random(seed));
+        final state = career(seed: seed, age: 33);
+        fillSeason(state);
+        state.contractYears = 1;
+        state.history.add(SeasonRecord(
+          year: state.year - 5,
+          clubName: '古巣クラブ',
+          tier: state.club.tier,
+          leaguePosition: 8,
+          stats: const SeasonStats(
+              appearances: 30, goals: 8, assists: 5, averageRating: 7.0),
+          countryId: state.club.countryId,
+        ));
+        sawCall = engine
+            .offersFor(state)
+            .any((o) => o.reason.contains('古巣'));
+      }
+      expect(sawCall, isTrue);
+    });
+
+    test('若いうちは来ない', () {
+      final engine = CareerEngine(random: Random(2));
+      final state = career(age: 24);
+      fillSeason(state);
+      state.contractYears = 1;
+      state.history.add(SeasonRecord(
+        year: state.year - 2,
+        clubName: '古巣クラブ',
+        tier: state.club.tier,
+        leaguePosition: 8,
+        stats: const SeasonStats(
+            appearances: 30, goals: 8, assists: 5, averageRating: 7.0),
+        countryId: state.club.countryId,
+      ));
+      expect(engine.offersFor(state).any((o) => o.reason.contains('古巣')),
+          isFalse);
+    });
+  });
+
   group('代表の選択', () {
     test('複数の国籍があれば、選んだ国で戦う', () {
       final state = career();
