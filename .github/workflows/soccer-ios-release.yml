@@ -80,17 +80,19 @@ jobs:
         env:
           ADMOB_APP_ID: ${{ secrets.ADMOB_APP_ID_IOS }}
           ADMOB_REWARDED: ${{ secrets.ADMOB_REWARDED_IOS }}
+          ADMOB_INTERSTITIAL: ${{ secrets.ADMOB_INTERSTITIAL_IOS }}
         run: |
           set -euo pipefail
           missing=""
           [ -n "$ADMOB_APP_ID" ]   || missing="$missing ADMOB_APP_ID_IOS"
           [ -n "$ADMOB_REWARDED" ] || missing="$missing ADMOB_REWARDED_IOS"
+          [ -n "$ADMOB_INTERSTITIAL" ] || missing="$missing ADMOB_INTERSTITIAL_IOS"
           if [ -n "$missing" ]; then
             echo "::error::次の GitHub Secrets が未設定です:$missing"
             echo "::error::未設定のままだと Google のテスト用IDで公開され、広告収益が発生しません。"
             exit 1
           fi
-          case "$ADMOB_APP_ID$ADMOB_REWARDED" in
+          case "$ADMOB_APP_ID$ADMOB_REWARDED$ADMOB_INTERSTITIAL" in
             *ca-app-pub-3940256099942544*)
               echo "::error::Google のテスト用IDが登録されています。自分の AdMob のIDに置き換えてください。"
               exit 1 ;;
@@ -217,6 +219,7 @@ jobs:
       - name: Build IPA
         env:
           ADMOB_REWARDED: ${{ secrets.ADMOB_REWARDED_IOS }}
+          ADMOB_INTERSTITIAL: ${{ secrets.ADMOB_INTERSTITIAL_IOS }}
         run: |
           set -euo pipefail
           EXTRA=""
@@ -225,7 +228,8 @@ jobs:
           fi
           flutter build ipa --release \
             --export-options-plist=ios/ExportOptions.plist $EXTRA \
-            --dart-define=ADMOB_REWARDED_IOS="$ADMOB_REWARDED"
+            --dart-define=ADMOB_REWARDED_IOS="$ADMOB_REWARDED" \
+            --dart-define=ADMOB_INTERSTITIAL_IOS="$ADMOB_INTERSTITIAL"
           ls -la build/ios/ipa/
 
       - name: Upload to TestFlight

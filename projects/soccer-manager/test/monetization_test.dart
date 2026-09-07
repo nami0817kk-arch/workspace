@@ -14,6 +14,8 @@ class _FakeAdService implements AdService {
   bool ready;
   bool watchedToEnd;
   int showCount = 0;
+  bool interstitialReady = true;
+  int interstitialShowCount = 0;
 
   @override
   Future<void> initialize() async {}
@@ -25,6 +27,15 @@ class _FakeAdService implements AdService {
   Future<bool> showRewardedAd() async {
     showCount++;
     return watchedToEnd;
+  }
+
+  @override
+  bool get isInterstitialAdReady => interstitialReady;
+
+  @override
+  Future<void> showInterstitialAd() async {
+    if (!interstitialReady) return;
+    interstitialShowCount++;
   }
 
   @override
@@ -168,6 +179,39 @@ void main() {
       expect(gameState.save!.budget, before + amount);
       // 資金が増えた理由が追えないと、収支が読めなくなる。
       expect(gameState.save!.newsLog.first.text, contains('特別協賛金'));
+    });
+
+    test('シーズンの切り替わりでは全画面広告が出る', () async {
+      final ads = _FakeAdService();
+      final money = await _build(ads: ads);
+
+      expect(money.willShowSeasonInterstitial, isTrue);
+      await money.showSeasonInterstitial();
+      expect(ads.interstitialShowCount, 1);
+    });
+
+    test('サポーターには全画面広告を出さない', () async {
+      // 「買えば全画面広告が消える」ことがこの買い切りの主な値打ちで、
+      // ここが崩れると設定画面とストア掲載文の説明が嘘になる。
+      final ads = _FakeAdService();
+      final money = await _build(ads: ads);
+      await money.buySupporter();
+
+      expect(money.isSupporter, isTrue);
+      expect(money.willShowSeasonInterstitial, isFalse);
+      await money.showSeasonInterstitial();
+      expect(ads.interstitialShowCount, 0);
+    });
+
+    test('広告の在庫が無くてもシーズンの進行は止まらない', () async {
+      // 在庫切れは珍しくない(通信断・配信なし)。ここで待たされたり
+      // 例外になったりすると、次のシーズンへ進めなくなる。
+      final ads = _FakeAdService()..interstitialReady = false;
+      final money = await _build(ads: ads);
+
+      expect(money.willShowSeasonInterstitial, isFalse);
+      await money.showSeasonInterstitial();
+      expect(ads.interstitialShowCount, 0);
     });
   });
 }
