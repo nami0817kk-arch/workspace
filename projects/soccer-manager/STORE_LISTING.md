@@ -129,7 +129,7 @@
 ### App Store
 
 - [ ] App Store Connect でアプリレコードを作成した
-      （バンドルID `com.kabuagari.soccerManager`）
+      （バンドルID `com.namiki.soccermanager`）
 - [ ] IPA をアップロードし、TestFlight にビルドが出たことを確認した
 - [ ] App プライバシーで「識別子 > デバイス ID」を
       「サードパーティ広告」の目的で申告した
@@ -146,7 +146,7 @@
 
 ### 注意
 
-- Android の applicationId は `com.kabuagari.soccer_manager`、
-  iOS のバンドルIDは `com.kabuagari.soccerManager` で**意図的に異なる**。
-  iOS のバンドルIDはアンダースコアを使えないため。一致させる必要はない。
-- どちらのIDも**公開後は変更できない**。初回提出前に確定させること。
+- Android の applicationId と iOS のバンドルIDは、どちらも
+  `com.namiki.soccermanager` で揃えてある。iOS のバンドルIDはアンダースコアを
+  使えないため、それを含まない名前にした。
+- このIDは**公開後は変更できない**。初回提出前に確定させること。

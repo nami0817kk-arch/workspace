@@ -362,3 +362,33 @@ def test_バッジはタイトルの接頭辞から取る():
     assert _prefix_of("【朗報】モドリッチが代表続行") == "朗報"
     assert _prefix_of("接頭辞のないタイトル") == ""
     assert _prefix_of("") == ""
+
+
+def test_正方形に近い写真は右に置く(tmp_path):
+    """891×935 の写真が全面に敷かれ、16:9 で額と目しか残らなかった（2026-09-07）。"""
+    photo = tmp_path / "square.png"
+    Image.new("RGB", (900, 950), (200, 60, 60)).save(photo)
+    path = build_thumbnail(
+        _config(), "", tmp_path / "square_thumb.png", style="band",
+        lines=("上の行", "下の行"), background=str(photo),
+    )
+    with Image.open(path) as image:
+        left = image.getpixel((80, 120))          # 文字を置く側
+        right = image.getpixel((SIZE[0] - 80, 120))
+    assert right[0] > 150 and right[1] < 110      # 写真は右にある
+    assert left[0] < 60                            # 左は下地（写真を敷かない）
+
+
+def test_帯の2行は同じ大きさで1行ずつに収める(tmp_path):
+    """1行目だけで字の大きさを決めていて、2行目が泣き別れた（2026-09-07）。"""
+    from PIL import ImageDraw
+
+    from src.thumbnail import _fit_one_line
+
+    draw = ImageDraw.Draw(Image.new("RGB", (10, 10)))
+    font_path = str(_config().video.font_path())
+    texts = ["UEFAが処分を発表", "最も重いのはGKコーチ"]
+    font = _fit_one_line(draw, texts, font_path, 712)
+    assert font is not None
+    for text in texts:
+        assert draw.textlength(text, font=font) <= 712, text

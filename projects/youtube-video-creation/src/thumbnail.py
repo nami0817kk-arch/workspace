@@ -26,12 +26,14 @@ BAND_YELLOW = (222, 255, 0)
 # 反応の小窓。白地に赤、黒の枠。帯の上に置く（「変な声出た」「一番強くて草」）
 CHIP_BG = (255, 255, 255)
 CHIP_INK = (222, 20, 30)
+# 帯のぶんだけ、写真を切る位置を上へ（0.0=上端 / 1.0=下端）
+BAND_FOCUS = 0.38
 BAND_INK_RED = (222, 20, 30)
 BAND_RED = (222, 20, 30)
 BAND_TEXT_DARK = (12, 12, 14)
 BAND_TEXT_LIGHT = (255, 255, 255)
 TAG_RED = (214, 26, 38)
-BAND_SIZES = (104, 94, 86, 78, 70, 62, 56, 50)
+BAND_SIZES = (104, 94, 86, 78, 70, 62, 56, 50, 44, 40)
 BADGE_HEIGHT = 62
 SUBTITLE_HEIGHT = 70
 DATE_HEIGHT = 40
@@ -252,12 +254,17 @@ def _band_thumbnail(
     時点で顔が残らない。
     """
     font_path = str(config.video.font_path())
-    portrait = _is_portrait(background)
+    # **正方形に近い写真も右に置く。**全面に敷くと顔が帯に隠れる
+    portrait = _is_portrait(background, ratio=0.95)
     if portrait:
         canvas = Image.new("RGBA", SIZE, (14, 20, 32, 255))
         _paste_side(canvas, background)
     else:
-        canvas = _base(config, background, out_path, focus)
+        # **帯が下の4割を覆うので、顔を上に寄せる。**真ん中で切ると、
+        # 額と目だけが残って口から下が帯に隠れた（2026-09-07 に書き出して発見）。
+        # 指定があればそちらを優先する
+        canvas = _base(config, background, out_path,
+                       BAND_FOCUS if focus is None else focus)
 
     # 写真をそのまま活かすので、暗幕は下側だけ薄くかける
     scrim, draw = _layer(SIZE)
@@ -273,15 +280,20 @@ def _band_thumbnail(
     bottom_text = lines[1] or ""
     # 縦長の写真を右に置いた回は、帯を左だけにして顔を隠さない
     right = int(SIZE[0] * 0.60) if portrait else SIZE[0] - 16
+    # **2行は同じ大きさで描く。**入る字の大きさは行ごとに違うので、
+    # 小さいほうに合わせる。1行目だけで決めていたら、2行目が枠を超えて
+    # 「GKコーチ」が「G / Kコーチ」に泣き別れた（2026-09-07 に書き出して発見）
+    texts = [(t, ink) for t, ink in
+             ((top_text, BAND_TEXT_DARK), (bottom_text, BAND_INK_RED)) if t]
+    font = _fit_one_line(draw, [t for t, _ in texts], font_path, right - 56)
+
     rows: list[tuple[str, tuple[int, int, int]]] = []
-    for text, ink in ((top_text, BAND_TEXT_DARK), (bottom_text, BAND_INK_RED)):
-        if not text:
-            continue
-        font, wrapped = _fit_band(draw, text, font_path, right - 16)
-        rows += [(row, ink) for row in wrapped]
+    if font is not None:
+        for text, ink in texts:
+            for row in wrap_text(draw, text, font, right - 56):
+                rows.append((row, ink))
 
     if rows:
-        font, _ = _fit_band(draw, top_text or bottom_text, font_path, right - 16)
         line_height = font.size + 10
         height = line_height * len(rows) + 20
         bottom = SIZE[1] - 22
@@ -316,8 +328,14 @@ def _draw_chip(draw: ImageDraw.ImageDraw, text: str, font_path: str, bottom: int
     draw.text((56, top + 6), text, font=font, fill=CHIP_INK + (255,))
 
 
-def _is_portrait(background: str | None) -> bool:
-    """下地の写真が縦長か。全面に敷くか、右に置くかの分かれ目。"""
+def _is_portrait(background: str | None, ratio: float = 1.1) -> bool:
+    """下地の写真が縦長か。全面に敷くか、右に置くかの分かれ目。
+
+    `ratio` は「縦が横の何倍から縦長とみなすか」。**帯のスタイルでは 0.95**、
+    つまり正方形に近いものも縦長として扱う。891×935 の写真（比 1.05）が
+    1.1 に届かず全面に敷かれ、**16:9 に切った時点で額と目しか残らなかった**
+    （2026-09-07 に書き出して発見）。
+    """
     if not background:
         return False
     path = _resolve(background)
@@ -325,7 +343,7 @@ def _is_portrait(background: str | None) -> bool:
         return False
     try:
         with Image.open(path) as image:
-            return image.height > image.width * 1.1
+            return image.height > image.width * ratio
     except OSError:
         return False
 
@@ -369,7 +387,8 @@ def _news_thumbnail(
     煽り帯と違い、行ごとに必要な幅だけ下敷きを敷くので写真が残る。
     """
     font_path = str(config.video.font_path())
-    portrait = _is_portrait(background)
+    # **正方形に近い写真も右に置く。**全面に敷くと顔が帯に隠れる
+    portrait = _is_portrait(background, ratio=0.95)
     if portrait:
         # **縦長の写真は全面に敷けない。**16:9 に切ると顔が残らず、
         # 下の見出しとぶつかる（2026-09-05 実測。切る位置を変えても解けなかった）。
@@ -505,6 +524,24 @@ def _fit_news(draw: ImageDraw.ImageDraw, text: str, font_path: str, sizes):
         return fallback
     font = ImageFont.truetype(font_path, sizes[-1])
     return font, wrap_text(draw, text, font, width)[:2]
+
+
+def _fit_one_line(draw: ImageDraw.ImageDraw, texts: list[str], font_path: str,
+                  width: int) -> ImageFont.FreeTypeFont | None:
+    """**どの行も1行に収まる**いちばん大きい字を返す。
+
+    行ごとに大きさを変えると帯が不ぞろいになるので、そろえる。
+    2行に折り返すと「チ」だけが3行目に残った（2026-09-07 に書き出して発見）。
+    どうしても収まらないときは、いちばん小さい字で折り返す。
+    """
+    texts = [t for t in texts if t]
+    if not texts:
+        return None
+    for size in BAND_SIZES:
+        font = ImageFont.truetype(font_path, size)
+        if all(draw.textlength(text, font=font) <= width for text in texts):
+            return font
+    return ImageFont.truetype(font_path, BAND_SIZES[-1])
 
 
 def _fit_band(draw: ImageDraw.ImageDraw, text: str, font_path: str, room: int = 0):

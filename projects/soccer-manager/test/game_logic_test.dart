@@ -3719,11 +3719,15 @@ void main() {
   test(
       'AiTransferEngine.maybeGenerate biases the destination toward a club '
       "whose strength fits the departing player's overall", () {
+    // 標本は100件取る。20件で打ち切ると、たまたま弱いクラブに5件流れた
+    // だけで movesToWeak * 3 の境界にちょうど乗って落ちる(実際にCIで
+    // 15対5になって落ちた)。実測すると行き先の偏りは95%(強い側1902/弱い側98)
+    // あり、実装は充分に偏っている。足りなかったのは標本数の方。
     final rng = Random(11);
     var movesToStrong = 0;
     var movesToWeak = 0;
     var trials = 0;
-    while (movesToStrong + movesToWeak < 20 && trials < 500) {
+    while (movesToStrong + movesToWeak < 100 && trials < 2000) {
       trials++;
       final fromTeam = PlayerGenerator.generateSquad(
           id: 'from', name: 'From FC', strengthTier: 60);
@@ -3746,7 +3750,8 @@ void main() {
       if (weakTeam.players.length > 16) movesToWeak++;
     }
 
-    expect(movesToStrong, greaterThan(0));
+    expect(movesToStrong + movesToWeak, greaterThanOrEqualTo(100),
+        reason: '標本が集まらなかった(移籍がほとんど発生していない)');
     expect(movesToStrong, greaterThan(movesToWeak * 3));
   });
 

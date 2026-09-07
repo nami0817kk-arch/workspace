@@ -282,6 +282,44 @@ void main() {
           reason: 'シーズンの切り替わり以外から全画面広告を出している');
     });
 
+    test('バンドルIDが実装・手順書・掲載情報で一致している', () {
+      // 手順書は「Apple のフォームにこの文字列を入力する」と指示している。
+      // 実装だけ変えて手順書が古いままだと、あとから変更できない App ID を
+      // 間違った値で登録してしまう。気付くのは提出の直前になる。
+      const marker = 'PRODUCT_BUNDLE_IDENTIFIER = ';
+      final pbx = File('ios/Runner.xcodeproj/project.pbxproj').readAsStringSync();
+      final ids = <String>{};
+      var at = pbx.indexOf(marker);
+      while (at >= 0) {
+        final end = pbx.indexOf(';', at);
+        ids.add(pbx.substring(at + marker.length, end));
+        at = pbx.indexOf(marker, end);
+      }
+      final appIds = ids.where((id) => !id.endsWith('.RunnerTests')).toSet();
+      expect(appIds.length, 1, reason: 'iOS のバンドルIDが1つに定まっていない: $appIds');
+      final bundleId = appIds.single;
+
+      // Android 側もこの値で揃えてある(アンダースコアを含まない名前にした)。
+      final gradle = File('android/app/build.gradle').readAsStringSync();
+      expect(gradle, contains('applicationId = "$bundleId"'),
+          reason: 'Android の applicationId が iOS のバンドルIDと違う');
+      expect(gradle, contains('namespace = "$bundleId"'),
+          reason: 'Android の namespace が applicationId と違う');
+
+      // Kotlin の package 宣言とディレクトリ階層がずれるとビルドが通らない。
+      final activity = File(
+          'android/app/src/main/kotlin/${bundleId.replaceAll('.', '/')}'
+          '/MainActivity.kt');
+      expect(activity.existsSync(), isTrue,
+          reason: '${activity.path} が無い(パッケージの移動漏れ)');
+      expect(activity.readAsStringSync(), contains('package $bundleId'));
+
+      for (final path in const ['docs/RELEASE_GUIDE.md', 'STORE_LISTING.md']) {
+        expect(File(path).readAsStringSync(), contains(bundleId),
+            reason: '$path が古いバンドルIDのままになっている');
+      }
+    });
+
     test('Androidが広告に必要なインターネット権限を宣言している', () {
       // 権限が無いと広告SDKは通信できず、リワード広告が永久に
       // 読み込まれない (押せないボタンだけが残る)。

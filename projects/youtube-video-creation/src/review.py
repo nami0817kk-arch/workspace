@@ -703,10 +703,11 @@ def check_voice_clash(script: Script) -> Finding:
         else:
             seen.setdefault(style, name)
     if clashes:
+        free = next((v for v in config.voice_pool if v not in seen), None)
+        hint = (f"空いているのは style {free}（voicevox.voice_fixed に書く）"
+                if free else "プールに空きがありません")
         return Finding(
-            False, "声の重なり",
-            f"{' / '.join(clashes)} が同じ声です。"
-            "config の voice_fixed で片方を別の声にしてください",
+            False, "声の重なり", f"{' / '.join(clashes)} が同じ声です。{hint}",
         )
     return Finding(True, "声の重なり", f"{len(seen)}人が別々の声です")
 

@@ -311,9 +311,19 @@ def _check_voice_clash(notes: Notes) -> list[str]:
         except Exception:
             continue
         if style in seen and seen[style] != name:
+            # **空いている声を出す。**止めるだけだと、config を開いて
+            # 20個の番号から空きを探すことになる
+            # **決め打ちしていない方を動かす。**すでに決めた人の声を
+            # 変えると、その人の声が動画をまたいで変わる
+            move = name if name not in config.voice_fixed else seen[style]
+            pool = (config.voice_pool_female
+                    if move in config.voice_female else config.voice_pool)
+            free = next((v for v in pool if v not in seen), None)
+            hint = (f"（config の voicevox.voice_fixed に「{move}: {free}」を足す）"
+                    if free else "（プールに空きがありません。声を増やしてください）")
             problems.append(
                 f"『{seen[style]}』と『{name}』が同じ声（style {style}）になります。"
-                "config の voice_fixed で片方を別の声にしてください"
+                + hint
             )
         else:
             seen.setdefault(style, name)
