@@ -40,6 +40,8 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
   MatchResult? _finalResult;
   late PitchGame _game;
   late final String _userTeamId;
+  String? _homeTeamId;
+  String? _awayTeamId;
   MatchEvent? _goalFlash;
   Timer? _goalFlashTimer;
   bool _decisionDialogShowing = false;
@@ -60,6 +62,12 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
     final gameState = context.read<GameState>();
     _userTeamId = gameState.userTeam.id;
     _competitionTitle = gameState.liveCupDescriptor?.competitionLabel;
+    // ピッチ上のユニフォーム色をエンブレムと揃えるために持っておく。
+    // build() と同じ順で解決する(カップ戦はリーグの日程に無い)。
+    _homeTeamId = gameState.liveFixture?.homeTeamId ??
+        gameState.liveCupDescriptor?.homeTeamId;
+    _awayTeamId = gameState.liveFixture?.awayTeamId ??
+        gameState.liveCupDescriptor?.awayTeamId;
     _segmentStartMinute = 0;
     _game = _buildSegmentGame(gameState, isSecondHalf: false);
   }
@@ -89,6 +97,8 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
       onEvent: _handleEvent,
       onFinished: () => _handleSegmentFinished(isSecondHalf: isSecondHalf),
       onMinuteTick: (m) => setState(() => _currentMinute = m),
+      homeTeamId: _homeTeamId,
+      awayTeamId: _awayTeamId,
     );
   }
 
@@ -230,6 +240,8 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
           onEvent: _handleEvent,
           onFinished: _handleFullTime,
           onMinuteTick: (m) => setState(() => _currentMinute = m),
+          homeTeamId: _homeTeamId,
+          awayTeamId: _awayTeamId,
         );
       });
       return;
@@ -720,6 +732,8 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
           onEvent: _handleEvent,
           onFinished: _handleFullTime,
           onMinuteTick: (m) => setState(() => _currentMinute = m),
+          homeTeamId: _homeTeamId,
+          awayTeamId: _awayTeamId,
         );
       });
       return;

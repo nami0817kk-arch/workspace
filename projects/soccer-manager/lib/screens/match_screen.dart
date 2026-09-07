@@ -44,6 +44,8 @@ class _MatchScreenState extends State<MatchScreen> {
       onEvent: (e) => setState(() => _revealed.add(e)),
       onFinished: _handleFinished,
       onMinuteTick: (m) => setState(() => _currentMinute = m),
+      homeTeamId: widget.result.homeTeamId,
+      awayTeamId: widget.result.awayTeamId,
     );
   }
 
