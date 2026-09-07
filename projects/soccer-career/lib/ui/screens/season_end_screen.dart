@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../game/career_engine.dart';
+import '../../game/formulas.dart';
 import '../../state/career_controller.dart';
 
-/// シーズン終了。成績を振り返り、移籍するか残留するかを決める。
+/// シーズン終了。成績を振り返り、移籍・残留・引退を決める。
 class SeasonEndScreen extends StatefulWidget {
   const SeasonEndScreen({super.key, required this.controller});
 
@@ -24,12 +25,42 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
     Navigator.of(context).pop();
   }
 
+  Future<void> _retire() async {
+    if (_busy) return;
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('引退しますか'),
+        content: const Text('引退すると試合はできなくなり、通算成績だけが残ります。'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('やめる'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: const Text('引退する'),
+          ),
+        ],
+      ),
+    );
+    if (ok != true || !mounted) return;
+    setState(() => _busy = true);
+    await widget.controller.retire();
+    if (!mounted) return;
+    Navigator.of(context).pop();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final state = widget.controller.state!;
+    final controller = widget.controller;
+    final state = controller.state!;
     final stats = state.seasonStats;
-    final offers = widget.controller.offers;
+    final offers = controller.offers;
+    final fate = controller.fate;
+    final mustRetire = controller.mustRetire;
+    final canRetire = controller.canRetire;
 
     return Scaffold(
       appBar: AppBar(
@@ -48,6 +79,10 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                   children: [
                     Text('${state.club.name}  ${state.leaguePosition}位',
                         style: theme.textTheme.titleLarge),
+                    if (fate != ClubFate.stay) ...[
+                      const SizedBox(height: 6),
+                      _FateChip(fate: fate),
+                    ],
                     const SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -68,62 +103,99 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
               ),
             ),
             const SizedBox(height: 24),
-            if (offers.isEmpty) ...[
+            if (mustRetire) ...[
               Text(
-                'オファーは届かなかった。来季も${state.club.name}で戦う。',
+                '${state.player.age}歳。体は限界を迎えた。',
                 style: theme.textTheme.bodyMedium
                     ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
               ),
               const SizedBox(height: 20),
               FilledButton(
-                onPressed: _busy ? null : () => _advance(),
+                onPressed: _busy ? null : _retire,
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 12),
-                  child: Text('次のシーズンへ'),
+                  child: Text('引退する'),
                 ),
               ),
             ] else ...[
-              Text('移籍オファー', style: theme.textTheme.titleMedium),
-              const SizedBox(height: 12),
-              for (final offer in offers) ...[
-                Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text('${offer.club.name}（${offer.club.tier}部）',
-                            style: theme.textTheme.titleSmall),
-                        const SizedBox(height: 4),
-                        Text(offer.reason,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant)),
-                        const SizedBox(height: 12),
-                        FilledButton.tonal(
-                          onPressed:
-                              _busy ? null : () => _advance(offer: offer),
-                          child: const Text('移籍する'),
-                        ),
-                      ],
+              if (offers.isEmpty)
+                Text(
+                  _stayText(state.club.name, fate),
+                  style: theme.textTheme.bodyMedium
+                      ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                )
+              else ...[
+                Text('移籍オファー', style: theme.textTheme.titleMedium),
+                const SizedBox(height: 12),
+                for (final offer in offers) ...[
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text('${offer.club.name}（${offer.club.tier}部）',
+                              style: theme.textTheme.titleSmall),
+                          const SizedBox(height: 4),
+                          Text(offer.reason,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant)),
+                          const SizedBox(height: 12),
+                          FilledButton.tonal(
+                            onPressed:
+                                _busy ? null : () => _advance(offer: offer),
+                            child: const Text('移籍する'),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 12),
+                  const SizedBox(height: 12),
+                ],
               ],
               const SizedBox(height: 8),
-              OutlinedButton(
+              FilledButton(
                 onPressed: _busy ? null : () => _advance(),
-                child: const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12),
-                  child: Text('残留する'),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  child: Text(_stayLabel(fate)),
                 ),
               ),
+              if (canRetire) ...[
+                const SizedBox(height: 12),
+                OutlinedButton(
+                  onPressed: _busy ? null : _retire,
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    child: Text('引退する'),
+                  ),
+                ),
+                const SizedBox(height: 6),
+                Text(
+                  '${Formulas.retirementForcedAge}歳のシーズンを終えると引退になる。',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodySmall
+                      ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                ),
+              ],
             ],
           ],
         ),
       ),
     );
   }
+
+  String _stayText(String clubName, ClubFate fate) => switch (fate) {
+        ClubFate.promoted => 'オファーは無かったが、$clubNameは1部へ昇格する。',
+        ClubFate.relegated => 'オファーは届かなかった。$clubNameは2部へ降格する。',
+        ClubFate.stay => 'オファーは届かなかった。来季も$clubNameで戦う。',
+      };
+
+  String _stayLabel(ClubFate fate) => switch (fate) {
+        ClubFate.promoted => '昇格して次のシーズンへ',
+        ClubFate.relegated => '降格して次のシーズンへ',
+        ClubFate.stay => '残留して次のシーズンへ',
+      };
 
   Widget _stat(ThemeData theme, String label, String value) => Column(
         children: [
@@ -133,4 +205,28 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
           Text(value, style: theme.textTheme.titleLarge),
         ],
       );
+}
+
+class _FateChip extends StatelessWidget {
+  const _FateChip({required this.fate});
+
+  final ClubFate fate;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final promoted = fate == ClubFate.promoted;
+    return Chip(
+      label: Text(promoted ? '1部昇格' : '2部降格'),
+      backgroundColor: promoted
+          ? theme.colorScheme.primaryContainer
+          : theme.colorScheme.errorContainer,
+      labelStyle: TextStyle(
+        color: promoted
+            ? theme.colorScheme.onPrimaryContainer
+            : theme.colorScheme.onErrorContainer,
+      ),
+      visualDensity: VisualDensity.compact,
+    );
+  }
 }

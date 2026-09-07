@@ -16,7 +16,18 @@ class TransferOffer {
   final String reason;
 }
 
-/// キャリアの進行（シーズンの組み立て・結果の反映・移籍）を受け持つ。
+/// シーズン終了時に、所属クラブがどう動くか。
+enum ClubFate {
+  stay('残留'),
+  promoted('昇格'),
+  relegated('降格');
+
+  const ClubFate(this.label);
+
+  final String label;
+}
+
+/// キャリアの進行（シーズンの組み立て・結果の反映・移籍・引退）を受け持つ。
 class CareerEngine {
   CareerEngine({Random? random}) : _random = random ?? Random();
 
@@ -36,7 +47,7 @@ class CareerEngine {
         name: name,
         age: age,
         position: position,
-        attributes: _startingAttributes(position),
+        attributes: _startingAttributes(position, age),
       ),
       club: club,
       league: league,
@@ -49,8 +60,10 @@ class CareerEngine {
   }
 
   /// 初期能力。ポジションの主要能力を少し高くして、役割の違いを出す。
-  Attributes _startingAttributes(Position position) {
-    int roll(int base) => base + _random.nextInt(9) - 4;
+  /// 年齢が高いほど初期値は上がるが、その分ピークまでの時間は短い。
+  Attributes _startingAttributes(Position position, int age) {
+    final ageBonus = (age - 17) * 2;
+    int roll(int base) => base + ageBonus + _random.nextInt(9) - 4;
     return switch (position) {
       Position.fw => Attributes(
           pace: roll(58),
@@ -132,6 +145,26 @@ class CareerEngine {
   TableRow _row(CareerState state, String clubId) =>
       state.table.firstWhere((r) => r.clubId == clubId);
 
+  /// 今シーズンの順位から、所属クラブの去就を決める。
+  ClubFate fateOf(CareerState state) {
+    final position = state.leaguePosition;
+    if (state.club.tier == 2 && position <= Formulas.promotionPlaces) {
+      return ClubFate.promoted;
+    }
+    if (state.club.tier == 1 && position >= Formulas.relegationFrom) {
+      return ClubFate.relegated;
+    }
+    return ClubFate.stay;
+  }
+
+  /// この年齢で引退を選べるか。
+  bool canRetire(CareerState state) =>
+      state.player.age >= Formulas.retirementOptionalAge;
+
+  /// この年齢なら引退するしかない。
+  bool mustRetire(CareerState state) =>
+      state.player.age >= Formulas.retirementForcedAge;
+
   /// シーズン終了時の移籍オファー。
   ///
   /// 良いシーズンを送るほど、強いクラブから声がかかる。
@@ -147,7 +180,7 @@ class CareerEngine {
 
     for (final tier in [1, 2]) {
       final clubs = Names.buildLeague(tier)
-          .where((c) => c.id != state.club.id && c.strength <= reach)
+          .where((c) => c.name != state.club.name && c.strength <= reach)
           .toList()
         ..sort((a, b) => b.strength.compareTo(a.strength));
       if (clubs.isEmpty) continue;
@@ -162,22 +195,39 @@ class CareerEngine {
     return candidates;
   }
 
-  /// 次のシーズンへ進む。移籍先が null なら残留。
+  /// 次のシーズンへ進む。移籍先が null なら残留（昇降格は自動で反映）。
   CareerState advanceSeason(CareerState state, {Club? moveTo}) {
-    final stats = state.seasonStats;
     final record = SeasonRecord(
       year: state.year,
       clubName: state.club.name,
       tier: state.club.tier,
       leaguePosition: state.leaguePosition,
-      stats: stats,
+      stats: state.seasonStats,
     );
 
-    final club = moveTo ?? state.club;
-    final league = Names.buildLeague(club.tier);
-    // 移籍先リストは毎回組み直すので、同名クラブの実体を差し替えておく。
-    final resolved = league.firstWhere((c) => c.name == club.name,
-        orElse: () => club);
+    final Club club;
+    if (moveTo != null) {
+      club = moveTo;
+    } else {
+      club = switch (fateOf(state)) {
+        ClubFate.promoted => Club(
+            id: state.club.id,
+            name: state.club.name,
+            strength: state.club.strength + Formulas.promotionStrengthBonus,
+            tier: 1,
+          ),
+        ClubFate.relegated => Club(
+            id: state.club.id,
+            name: state.club.name,
+            strength: state.club.strength - Formulas.promotionStrengthBonus,
+            tier: 2,
+          ),
+        ClubFate.stay => state.club,
+      };
+    }
+
+    final league = _leagueContaining(club);
+    final resolved = league.firstWhere((c) => c.name == club.name);
 
     return CareerState(
       player: state.player.copyWith(age: state.player.age + 1),
@@ -188,6 +238,54 @@ class CareerEngine {
       results: [],
       table: _emptyTable(league),
       history: [...state.history, record],
+    );
+  }
+
+  /// そのクラブが入るリーグを組む。
+  ///
+  /// 名簿はリーグごとに固定なので、昇降格で移ってきたクラブは
+  /// 元々の名簿の1クラブと入れ替える（昇格なら一番弱いクラブ、降格なら一番強いクラブ）。
+  /// これで20クラブが保たれ、自分のクラブは必ずリーグに存在する。
+  List<Club> _leagueContaining(Club club) {
+    final league = Names.buildLeague(club.tier);
+    if (league.any((c) => c.name == club.name)) return league;
+
+    final replaced = club.tier == 1
+        ? league.reduce((a, b) => a.strength <= b.strength ? a : b)
+        : league.reduce((a, b) => a.strength >= b.strength ? a : b);
+    return [
+      for (final c in league)
+        if (c.id == replaced.id)
+          Club(
+            id: replaced.id,
+            name: club.name,
+            strength: club.strength,
+            tier: club.tier,
+          )
+        else
+          c,
+    ];
+  }
+
+  /// 引退する。今シーズンの記録を残して、以後は試合をしない。
+  CareerState retire(CareerState state) {
+    final record = SeasonRecord(
+      year: state.year,
+      clubName: state.club.name,
+      tier: state.club.tier,
+      leaguePosition: state.leaguePosition,
+      stats: state.seasonStats,
+    );
+    return CareerState(
+      player: state.player,
+      club: state.club,
+      league: state.league,
+      year: state.year,
+      fixtures: state.fixtures,
+      results: [],
+      table: state.table,
+      history: [...state.history, record],
+      retired: true,
     );
   }
 }

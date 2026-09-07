@@ -14,12 +14,16 @@ class ScenarioResolution {
     required this.text,
     required this.outcome,
     required this.ratingDelta,
+    required this.key,
   });
 
   final bool success;
   final String text;
   final Outcome outcome;
   final double ratingDelta;
+
+  /// 判定に使った能力値。成長の偏りに使う。
+  final AttributeKey key;
 
   bool get isGoal => success && outcome == Outcome.goal;
   bool get isAssist => success && outcome == Outcome.assist;
@@ -33,16 +37,21 @@ class MatchInProgress {
     required this.home,
     required this.appearance,
     required this.scenarios,
+    required this.minutes,
     required this.player,
     required this.club,
     Random? random,
-  }) : _random = random ?? Random();
+  })  : assert(scenarios.length == minutes.length),
+        _random = random ?? Random();
 
   final int matchday;
   final Club opponent;
   final bool home;
   final Appearance appearance;
   final List<Scenario> scenarios;
+
+  /// 各局面が起きる時間（分）。雰囲気のためのもので、判定には使わない。
+  final List<int> minutes;
 
   final Player player;
   final Club club;
@@ -55,9 +64,18 @@ class MatchInProgress {
   bool get isFinished => _index >= scenarios.length;
   int get currentIndex => _index;
   Scenario get current => scenarios[_index];
+  int get currentMinute => minutes[_index];
+
+  /// 「前半 23分」のような表示用の文字列。
+  static String minuteLabel(int minute) =>
+      minute <= 45 ? '前半 $minute分' : '後半 ${minute - 45}分';
 
   int get goals => resolutions.where((r) => r.isGoal).length;
   int get assists => resolutions.where((r) => r.isAssist).length;
+
+  /// 成功した手で使った能力値。成長判定の偏りに使う。
+  List<AttributeKey> get successfulKeys =>
+      resolutions.where((r) => r.success).map((r) => r.key).toList();
 
   /// 現時点の評価点。基準値から増減を積み上げる。
   double get rating {
@@ -83,6 +101,7 @@ class MatchInProgress {
       text: success ? option.successText : option.failureText,
       outcome: option.outcome,
       ratingDelta: delta,
+      key: option.key,
     );
     resolutions.add(resolution);
     _index++;
@@ -180,22 +199,42 @@ class MatchEngine {
       home: home,
       appearance: appearance,
       scenarios: picked,
+      minutes: _minutesFor(count, appearance),
       player: player,
       club: club,
       random: _random,
     );
   }
 
+  /// 局面の時間を散らす。途中出場なら後半だけ。
+  List<int> _minutesFor(int count, Appearance appearance) {
+    if (count == 0) return const [];
+    final from = appearance == Appearance.sub ? 60 : 5;
+    final to = 90;
+    final span = (to - from) ~/ count;
+    return [
+      for (var i = 0; i < count; i++)
+        from + span * i + _random.nextInt(max(1, span - 4)) + 2,
+    ];
+  }
+
   /// 成長判定。評価点が良かった試合だけ、1項目が伸びる可能性がある。
+  ///
+  /// 伸びる項目は、その試合で成功した手の能力に偏らせる。
+  /// 選び方が選手を形作るのがキャリアものの面白さで、
+  /// ただの乱数だと何を選んでも同じ選手になる。
   ///
   /// ピークを過ぎると伸びにくくなり、さらに歳を取ると落ちる。
   /// 現役の終わりが来ることが、キャリアものの緊張感になる。
-  Attributes grow(Player player, double? rating) {
+  Attributes grow(
+    Player player,
+    double? rating, {
+    List<AttributeKey> used = const [],
+  }) {
     if (rating == null) return player.attributes;
 
     if (player.age >= Formulas.declineAge && _random.nextDouble() < 0.25) {
-      final key = AttributeKey.values[_random.nextInt(AttributeKey.values.length)];
-      return player.attributes.bump(key, -1);
+      return player.attributes.bump(_randomKey(), -1);
     }
 
     if (rating < Formulas.growthRatingThreshold) return player.attributes;
@@ -205,7 +244,12 @@ class MatchEngine {
     final chance = (0.18 + margin * 0.22) * ageFactor;
     if (_random.nextDouble() >= chance) return player.attributes;
 
-    final key = AttributeKey.values[_random.nextInt(AttributeKey.values.length)];
+    final focus =
+        used.isNotEmpty && _random.nextDouble() < Formulas.growthFocusChance;
+    final key = focus ? used[_random.nextInt(used.length)] : _randomKey();
     return player.attributes.bump(key, 1);
   }
+
+  AttributeKey _randomKey() =>
+      AttributeKey.values[_random.nextInt(AttributeKey.values.length)];
 }
