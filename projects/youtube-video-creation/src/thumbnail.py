@@ -20,7 +20,13 @@ SIZE = (1280, 720)
 MARGIN = 64
 
 # 帯スタイル。まとめ系チャンネルで定番の、黄色帯＋赤帯の2段組み
-BAND_YELLOW = (255, 232, 0)
+# 2026-09-07: 最高再生の2本（64万回・25万回）を実際に見て合わせた色。
+# 帯は**蛍光イエロー1枚**で、その中に黒の1行目と赤の2行目。別々の帯ではない
+BAND_YELLOW = (222, 255, 0)
+# 反応の小窓。白地に赤、黒の枠。帯の上に置く（「変な声出た」「一番強くて草」）
+CHIP_BG = (255, 255, 255)
+CHIP_INK = (222, 20, 30)
+BAND_INK_RED = (222, 20, 30)
 BAND_RED = (222, 20, 30)
 BAND_TEXT_DARK = (12, 12, 14)
 BAND_TEXT_LIGHT = (255, 255, 255)
@@ -81,7 +87,32 @@ def from_meta(meta: dict, title: str) -> dict:
         "photo": str(meta.get("thumbnail_photo") or ""),
         # 写真のどこを残すか（0.0=上端 / 1.0=下端）。顔が中央にある写真で使う
         "focus": meta.get("thumbnail_focus"),
+        # 帯の上に出す反応のひとこと（2026-09-07）。最高再生の2本はどちらも
+        # 「変な声出た」「一番強くて草」のような**書き込みの断片**を小窓で出して
+        # いた。反応を集めたチャンネルであることが、一覧の時点で分かる
+        "reaction": str(meta.get("thumbnail_reaction") or ""),
     }
+
+
+# 小窓に入る長さ。実測で、これ以上は帯より横に長くなる
+CHIP_MAX = 12
+NARRATORS = ("キャスター", "解説", "ナレーター", "")
+
+
+def reaction_line(script, limit: int = CHIP_MAX) -> str:
+    """台本から、小窓に出せる反応をひとつ選ぶ。
+
+    `thumbnail_reaction` の指定が無いときに使う。**短いものだけ**。
+    長い引用を縮めると意味が変わるので、入らなければ何も出さない。
+    """
+    for scene in script.scenes:
+        for line in scene.lines:
+            if (line.speaker or "") in NARRATORS:
+                continue
+            text = (line.text or "").strip().rstrip("。")
+            if 3 <= len(text) <= limit:
+                return text
+    return ""
 
 
 def contact_sheet(paths: list[Path], out_path: Path) -> Path:
@@ -141,6 +172,7 @@ def build_thumbnail(
     lines: tuple[str, str] | None = None,
     tags: list[str] | None = None,
     focus: float | None = None,
+    reaction: str = "",
 ) -> Path:
     """サムネイルを1枚作る。
 
@@ -156,7 +188,7 @@ def build_thumbnail(
     if chosen == "band":
         return _band_thumbnail(
             config, out_path, background,
-            lines or (title, subtitle), tags or [], focus,
+            lines or (title, subtitle), tags or [], focus, reaction,
         )
 
     font_path = str(config.video.font_path())
@@ -207,10 +239,25 @@ def _band_thumbnail(
     lines: tuple[str, str],
     tags: list[str],
     focus: float | None = None,
+    reaction: str = "",
 ) -> Path:
-    """写真の上に帯を重ねるスタイル。一覧で目を引くことだけを狙う。"""
+    """写真の上に蛍光イエローの帯を重ねる。**最高再生の型に合わせてある。**
+
+    2026-09-07 に、参考チャンネルの最高再生2本（64万回・25万回）を実際に
+    見て作り直した。前は黄色帯と赤帯を別々に積んでいたが、向こうは
+    **1枚の蛍光イエローの中に黒の行と赤の行**を入れている。文字は画面幅
+    いっぱいで、帯の上に**書き込みの断片**が白い小窓で乗る。
+
+    縦長の写真は右に置く（`news` と同じ扱い）。全面に敷くと 16:9 に切った
+    時点で顔が残らない。
+    """
     font_path = str(config.video.font_path())
-    canvas = _base(config, background, out_path, focus)
+    portrait = _is_portrait(background)
+    if portrait:
+        canvas = Image.new("RGBA", SIZE, (14, 20, 32, 255))
+        _paste_side(canvas, background)
+    else:
+        canvas = _base(config, background, out_path, focus)
 
     # 写真をそのまま活かすので、暗幕は下側だけ薄くかける
     scrim, draw = _layer(SIZE)
@@ -222,33 +269,51 @@ def _band_thumbnail(
     layer, draw = _layer(SIZE)
     _draw_tags(draw, tags, font_path)
 
-    top_text, bottom_text = (lines[0] or "").replace("\\n", " "), (lines[1] or "")
-    bands = [(top_text, BAND_YELLOW, BAND_TEXT_DARK)]
-    if bottom_text:
-        bands.append((bottom_text, BAND_RED, BAND_TEXT_LIGHT))
+    top_text = (lines[0] or "").replace(chr(92) + "n", " ")
+    bottom_text = lines[1] or ""
+    # 縦長の写真を右に置いた回は、帯を左だけにして顔を隠さない
+    right = int(SIZE[0] * 0.60) if portrait else SIZE[0] - 16
+    rows: list[tuple[str, tuple[int, int, int]]] = []
+    for text, ink in ((top_text, BAND_TEXT_DARK), (bottom_text, BAND_INK_RED)):
+        if not text:
+            continue
+        font, wrapped = _fit_band(draw, text, font_path, right - 16)
+        rows += [(row, ink) for row in wrapped]
 
-    # 下から積む。帯は詰めて、写真をなるべく残す
-    bottom = SIZE[1] - 22
-    for text, fill, ink in reversed(bands):
-        font, rows = _fit_band(draw, text, font_path)
+    if rows:
+        font, _ = _fit_band(draw, top_text or bottom_text, font_path, right - 16)
         line_height = font.size + 10
-        height = line_height * len(rows) + 18
+        height = line_height * len(rows) + 20
+        bottom = SIZE[1] - 22
         top = bottom - height
-        draw.rectangle([16, top, SIZE[0] - 16, bottom], fill=fill + (255,))
-        y = top + 6
-        for row in rows:
-            draw.text(
-                (34, y), row, font=font, fill=ink + (255,),
-                stroke_width=0 if ink == BAND_TEXT_DARK else 5,
-                stroke_fill=(0, 0, 0, 225),
-            )
+        draw.rectangle([16, top, right, bottom], fill=BAND_YELLOW + (255,))
+        y = top + 8
+        for row, ink in rows:
+            draw.text((34, y), row, font=font, fill=ink + (255,))
             y += line_height
-        bottom = top - 10
+        if reaction:
+            _draw_chip(draw, reaction, font_path, top - 12)
 
     canvas.alpha_composite(layer)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     canvas.convert("RGB").save(out_path, quality=95)
     return out_path
+
+
+def _draw_chip(draw: ImageDraw.ImageDraw, text: str, font_path: str, bottom: int) -> None:
+    """書き込みの断片を、白い小窓で帯の上に出す。
+
+    向こうは1〜2枚だが、長い文は入らないので1枚だけにする。
+    """
+    text = text.strip()
+    if not text:
+        return
+    font = ImageFont.truetype(font_path, 56)
+    width = int(draw.textlength(text, font=font))
+    top = bottom - 78
+    draw.rectangle([34, top, 34 + width + 44, bottom], fill=CHIP_BG + (255,))
+    draw.rectangle([34, top, 34 + width + 44, bottom], outline=(10, 10, 12, 255), width=4)
+    draw.text((56, top + 6), text, font=font, fill=CHIP_INK + (255,))
 
 
 def _is_portrait(background: str | None) -> bool:
@@ -442,13 +507,14 @@ def _fit_news(draw: ImageDraw.ImageDraw, text: str, font_path: str, sizes):
     return font, wrap_text(draw, text, font, width)[:2]
 
 
-def _fit_band(draw: ImageDraw.ImageDraw, text: str, font_path: str):
+def _fit_band(draw: ImageDraw.ImageDraw, text: str, font_path: str, room: int = 0):
     """帯に入る中でいちばん大きい字を選ぶ。
 
     帯は1行に収めるのが基本。入らないときだけ2行にするが、
     2行目が数文字だけになる（泣き別れ）ときはさらに字を詰める。
     """
-    width = SIZE[0] - 80
+    # 縦長の写真を右に置いた回は、帯が画面幅より狭い（顔を隠さないため）
+    width = (room - 40) if room else SIZE[0] - 80
     fallback = None
     for size in BAND_SIZES:
         font = ImageFont.truetype(font_path, size)

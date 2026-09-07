@@ -410,6 +410,24 @@ VOICE_COUNT_TARGET = 10      # 件
 VOICE_LINE_TARGET = 30       # 字。3秒＝約16字なので、倍まで
 
 
+def _advise_title(notes: Notes) -> list[str]:
+    """タイトルが答えを言い切っていないか（2026-09-07）。
+
+    各チャンネルの最高再生を並べたら、上位はほぼ全部が答えを隠していた。
+    こちらの直近14本は全部が言い切りで、タイトルで用が足りてしまっていた。
+    """
+    from .review import TITLE_HOOKS
+
+    title = notes.video_title
+    if any(word in title for word in TITLE_HOOKS):
+        return []
+    return [
+        f"タイトル『{title[:24]}…』が答えを言い切っています。"
+        "伸びている3チャンネルの上位は「〜がこちらです」「〜が話題に」"
+        "「〜してしまう」のように**答えを隠して**います（中身では必ず答える）"
+    ]
+
+
 def _advise_volume(notes: Notes) -> list[str]:
     """他人の声が足りているか。**ここが再生数の差の中身**なので、書式より先に見る。"""
     other: list[int] = []
@@ -446,7 +464,7 @@ def _advise_volume(notes: Notes) -> list[str]:
 
 def _advise_voices(notes: Notes) -> list[str]:
     """反応の扱いで気をつける点。"""
-    hints: list[str] = _advise_volume(notes)
+    hints: list[str] = _advise_volume(notes) + _advise_title(notes)
     for section in notes.sections:
         card = section.card or {}
         if str(card.get("type", "")).lower() != "reactions":

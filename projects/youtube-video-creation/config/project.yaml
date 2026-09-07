@@ -19,7 +19,10 @@ video:
   accent: "#3ea6ff"          # 見出し左のアクセント帯の色
   # news=報道テロップ風（速報フラグ＋見出しプレート＋ティッカー）
   # band=写真＋黄色帯＋赤帯 / clean=文字組みだけ
-  thumbnail_style: "news"
+  # 2026-09-07: news → band。参考チャンネルの**最高再生2本**（64万回・25万回）を
+  # 実際に見たら、どちらも蛍光イエローの帯1枚に黒＋赤の2行で、上に書き込みの
+  # 断片が白い小窓で乗っていた。news（報道番組ふうの下帯）は一覧で沈む
+  thumbnail_style: "band"
   telop_size: 58
   name_size: 40
   title_size: 72

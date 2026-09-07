@@ -6,7 +6,7 @@
 #   python -m src.cli draft research/xxx.yaml    取材メモ→台本（確度と重複を検証）
 
 cadence:
-  # 1日9本。**日本人枠は2本**（1日のうち2件くらいが日本人、という制約）。
+  # 1日9本。**日本人枠は5本**（2026-09-07 に3本から増やした）。
   # 当日いちばん人気の枠1本。残り6本は国籍で寄せずに選ぶ。
   # 参考3チャンネルの実測（docs/news-sources.md）が根拠:
   #   さっかー情報館は直近30本のほぼ全部が日本人選手で、登録1.73万に対し54万回。
@@ -21,9 +21,17 @@ cadence:
   # premier を先にすると三笘のような候補をプレミア枠が取り、日本人枠が痩せる
   # 9本は**下限**。良い候補がある日は足す（2026-09-06 ユーザー）。
   # 足した枠も min_score で守られるので、無い日は空くだけで害はない
-  slots: [japan_1, japan_2, japan_3,
-          romano_1, laliga_1, premier_1, premier_2,
-          world_1, world_2, world_3, world_4]
+  # 2026-09-07 に日本人枠を3→5、試合結果の枠を2つ新設した（ユーザー判断）。
+  # 各チャンネルの**最高再生**を並べて分かったこと（docs/video-quality.md）:
+  #   サッカー知恵袋の人気上位15本のうち11本（73%）が日本人・日本代表。
+  #   さっかー情報館の直近はほぼ全部が日本人選手。
+  #   2chサッカーの噂話は直近1日で、試合結果が13万回×2、順位表が6.7万回。
+  #     「結果がこちらです」型が、移籍の噂と同じかそれ以上に見られている。
+  # 結果の枠は require_kind: match で、移籍の話では埋まらない（無ければ空く）
+  slots: [japan_1, japan_2, japan_3, japan_4, japan_5,
+          romano_1, match_1, match_2,
+          laliga_1, premier_1, premier_2,
+          world_1, world_2]
   # morning_1 と morning_2 は同じ morning の取材計画を使う（plan.routine が
   # 末尾の _1 / _2 を落として引く）。枠ごとに計画を書き写すと片方だけ古くなる
 
@@ -422,6 +430,8 @@ scoring:
     japan_1: {prefer: total, require_japanese: true}
     japan_2: {prefer: total, require_japanese: true}
     japan_3: {prefer: total, require_japanese: true}
+    japan_4: {prefer: total, require_japanese: true}
+    japan_5: {prefer: total, require_japanese: true}
     # --- ロマーノ 1本。記者名は情報源の群では表せないので語で絞る。
     #     見出しに出ないことが多く（「ロマーノ氏によると」は本文側）、
     #     注記と出典も見る
@@ -430,11 +440,13 @@ scoring:
     laliga_1: {prefer: total, require_league: spain}
     premier_1: {prefer: total, require_league: england}
     premier_2: {prefer: total, require_league: england}
+    # --- 試合結果 2本（2026-09-07 新設）。`results --write` で候補に入る。
+    #     kind が match のものだけ。移籍の話で埋めない
+    match_1: {prefer: total, require_kind: match}
+    match_2: {prefer: total, require_kind: match}
     # --- 日本人以外 2本。日本人枠と対にして、寄りすぎを防ぐ
     world_1: {prefer: total, exclude_japanese: true}
     world_2: {prefer: total, exclude_japanese: true}
-    world_3: {prefer: total, exclude_japanese: true}
-    world_4: {prefer: total, exclude_japanese: true}
 
 # テーマが決まったあとの深掘り検索。{theme} に選んだテーマが入る
 # {theme} には候補の見出し、{en} には候補の en（英語の語）が入る。

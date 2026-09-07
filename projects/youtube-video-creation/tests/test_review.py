@@ -17,14 +17,14 @@ BODY = (
 #   1行目がタイトル / 他人の声が4割以上 / 1件30字以内 / 最後の節は1割まで
 # 伸びている3チャンネルの実測（他人の声58%・19件・1件3.1秒）に寄せた形
 GOOD_BODY = """---
-title: アーセナルが勝った理由
+title: アーセナルが勝った理由がこちらです
 sources: [https://example.com/a]
 tags: [サッカー, 海外サッカー]
 ---
 
 ## 何が起きたか
 
-キャスター: アーセナルが勝った理由。
+キャスター: アーセナルが勝った理由がこちらです。
   source: 確定
 
 キャスター: 前半に2点が入りました。
@@ -87,8 +87,8 @@ def test_a_finished_build_passes_everything(tmp_path, monkeypatch):
     face.write_bytes(b"x")
     monkeypatch.setattr(review_mod, "_resolve", lambda value: face)
     body = GOOD_BODY.replace(
-        "title: アーセナルが勝った理由\n",
-        "title: アーセナルが勝った理由\nthumbnail_photo: assets/images/x/face.jpg\n")
+        "title: アーセナルが勝った理由がこちらです\n",
+        "title: アーセナルが勝った理由がこちらです\nthumbnail_photo: assets/images/x/face.jpg\n")
     findings = inspect(parse_script(body), _built(tmp_path), 100.0)
     assert all(f.ok for f in findings), [f.line() for f in findings if not f.ok]
 
@@ -539,7 +539,7 @@ def test_長い引用は刻みで止まる(tmp_path):
 
 def test_1行目がタイトルと違うと止まる(tmp_path):
     body = GOOD_BODY.replace(
-        "キャスター: アーセナルが勝った理由。", "キャスター: さて、今日の話題です。")
+        "キャスター: アーセナルが勝った理由がこちらです。", "キャスター: さて、今日の話題です。")
     result = _by_label(inspect(parse_script(body), _built(tmp_path)))
     assert result["1行目"].ok is False
 
@@ -547,7 +547,7 @@ def test_1行目がタイトルと違うと止まる(tmp_path):
 def test_タイトルの一部だけ読んでも通らない(tmp_path):
     """「アーセナル」とだけ読んで本題に入らない形は通さない。"""
     body = GOOD_BODY.replace(
-        "キャスター: アーセナルが勝った理由。", "キャスター: アーセナル。")
+        "キャスター: アーセナルが勝った理由がこちらです。", "キャスター: アーセナル。")
     result = _by_label(inspect(parse_script(body), _built(tmp_path)))
     assert result["1行目"].ok is False
 
@@ -573,3 +573,12 @@ def test_縦型には構成の点検を当てない(tmp_path, monkeypatch):
     labels = {f.label for f in inspect(parse_script(body), _built(tmp_path))}
     assert "他人の声の量" not in labels
     assert "1行目" not in labels
+
+
+def test_答えを言い切ったタイトルは止まる(tmp_path):
+    """2026-09-07: 最高再生の上位は、ほぼ全部が答えを隠していた。"""
+    body = GOOD_BODY.replace(
+        "title: アーセナルが勝った理由がこちらです",
+        "title: アーセナルが3対0でチェルシーに勝利")
+    result = _by_label(inspect(parse_script(body), _built(tmp_path)))
+    assert result["タイトルの型"].ok is False

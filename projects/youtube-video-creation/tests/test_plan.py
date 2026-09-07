@@ -160,7 +160,11 @@ def test_枠は9本以上で狭い条件の枠が先頭寄り():
         assert name in rules, f"{name} に条件がありません"
     assert len([s for s in plan.slots if s.startswith("world_")]) >= 2
     # 日本人3枠・日本人以外2枠。対にして、寄りすぎを防ぐ
-    assert len([s for s, r in rules.items() if (r or {}).get("require_japanese")]) == 3
+    # 2026-09-07: 日本人3枠 → **5枠**（ユーザー判断）。各チャンネルの最高再生を
+    # 並べたら、サッカー知恵袋の人気上位15本のうち11本が日本人・日本代表だった。
+    # 試合結果の枠も2つ新設した（噂話の直近1日で13万回×2）
+    assert len([s for s, r in rules.items() if (r or {}).get("require_japanese")]) == 5
+    assert len([s for s, r in rules.items() if (r or {}).get("require_kind")]) == 2
     assert len([s for s, r in rules.items() if (r or {}).get("exclude_japanese")]) >= 2
     # 同じ枠に両方を書くと必ず空になる
     for name, rule in rules.items():

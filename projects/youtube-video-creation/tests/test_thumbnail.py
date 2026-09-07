@@ -19,16 +19,79 @@ def test_band_style_renders(tmp_path):
         assert image.size == SIZE and image.mode == "RGB"
 
 
-def test_band_style_paints_the_two_bands(tmp_path):
-    """下段に黄色帯と赤帯が乗っていること。"""
+def _yellow(pixel) -> bool:
+    r, g, b = pixel[:3]
+    return r > 200 and g > 190 and b < 90
+
+
+def test_band_style_paints_one_yellow_plate(tmp_path):
+    """2026-09-07: 黄色帯＋赤帯の2枚から、**蛍光イエロー1枚**に変えた。
+
+    参考チャンネルの最高再生2本（64万回・25万回）がこの形で、赤は帯ではなく
+    2行目の**文字の色**として入っている。
+    """
     path = build_thumbnail(
         _config(), "", tmp_path / "band.png", style="band",
-        lines=("黄色帯", "赤帯"),
+        lines=("上の行", "下の行"),
     )
     with Image.open(path) as image:
-        colours = {image.getpixel((30, y)) for y in range(int(SIZE[1] * 0.6), SIZE[1] - 30)}
-    assert any(r > 200 and g > 190 and b < 90 for r, g, b in colours)   # 黄色
-    assert any(r > 180 and g < 80 and b < 90 for r, g, b in colours)    # 赤
+        plate = {image.getpixel((24, y)) for y in range(int(SIZE[1] * 0.75), SIZE[1] - 30)}
+        inside = [image.getpixel((x, y))
+                  for y in range(int(SIZE[1] * 0.75), SIZE[1] - 30)
+                  for x in range(34, 420, 3)]
+    assert any(r > 200 and g > 190 and b < 90 for r, g, b in plate)      # 帯は黄色
+    assert any(r > 180 and g < 80 and b < 90 for r, g, b in inside)      # 赤い文字
+    assert not any(r > 180 and g < 80 and b < 90 for r, g, b in plate)   # 赤い帯は無い
+
+
+def test_反応の小窓が帯の上に出る(tmp_path):
+    """一覧の時点で「反応を集めた動画」だと分かるようにする。"""
+    path = build_thumbnail(
+        _config(), "", tmp_path / "chip.png", style="band",
+        lines=("上の行", "下の行"), reaction="変な声出た",
+    )
+    with Image.open(path) as image:
+        # 帯の上端を探してから、その上を見る（帯の高さは文字数で変わる）
+        band_top = min(y for y in range(SIZE[1])
+                       if _yellow(image.getpixel((24, y))))
+        above = [image.getpixel((x, y))
+                 for y in range(band_top - 90, band_top)
+                 for x in range(40, 500, 3)]
+    assert any(r > 240 and g > 240 and b > 240 for r, g, b in above)     # 白い小窓
+    assert any(r > 180 and g < 80 and b < 90 for r, g, b in above)       # 赤い文字
+
+
+def test_指定が無ければ台本から反応を拾う():
+    from src.script_model import parse_script
+    from src.thumbnail import reaction_line
+
+    body = """---
+title: T
+---
+
+## 章
+
+キャスター: これはナレーションなので拾わない。
+
+ネット民: 変な声出た。
+"""
+    assert reaction_line(parse_script(body)) == "変な声出た"
+
+
+def test_長い反応は小窓に出さない():
+    """縮めると意味が変わる。入らないなら出さない。"""
+    from src.script_model import parse_script
+    from src.thumbnail import reaction_line
+
+    body = """---
+title: T
+---
+
+## 章
+
+ネット民: これは小窓には長すぎるので出せない書き込みです。
+"""
+    assert reaction_line(parse_script(body)) == ""
 
 
 def test_clean_style_still_works(tmp_path):

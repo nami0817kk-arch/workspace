@@ -764,3 +764,33 @@ def test_実況は枠に入らない():
     chosen, fallbacks = assign(items, PICK_SCORING, ["premier_1"])
     assert chosen["premier_1"].id == "news"
     assert any("実況" in m for m in fallbacks["_"])
+
+
+# 試合結果の枠（2026-09-07）。2chサッカーの噂話は直近1日で、結果の動画が
+# 13万回×2、順位表が6.7万回。移籍の噂と同じかそれ以上に見られていた。
+
+def test_試合結果の枠は移籍の話で埋めない():
+    from src.candidates import Candidate, assign
+
+    items = [
+        Candidate(id="a", title="移籍の話", url="https://a.example/1", score=9,
+                  kind="transfer"),
+        Candidate(id="b", title="試合の話", url="https://b.example/2", score=4,
+                  kind="match"),
+    ]
+    picked, _ = assign(
+        items, {"slots": {"match_1": {"require_kind": "match"}}}, ["match_1"]
+    )
+    assert [c.title for c in picked.values()] == ["試合の話"]
+
+
+def test_試合が無い日は枠を空ける():
+    from src.candidates import Candidate, assign
+
+    items = [Candidate(id="a", title="移籍の話", url="https://a.example/1",
+                       score=9, kind="transfer")]
+    picked, fallbacks = assign(
+        items, {"slots": {"match_1": {"require_kind": "match"}}}, ["match_1"]
+    )
+    assert picked == {}
+    assert any("枠を空けます" in m for m in fallbacks.get("match_1", []))

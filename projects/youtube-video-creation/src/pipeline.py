@@ -11,7 +11,7 @@ from .config import ProjectConfig, _resolve
 from .render import Renderer
 from . import audio_gen
 from .script_model import Script, load_script
-from .thumbnail import build_thumbnail, from_meta
+from .thumbnail import build_thumbnail, from_meta, reaction_line
 from .tts import (create_backend, credits, image_credits, image_details,
                   synthesize_script)
 
@@ -96,6 +96,8 @@ def build_script(
     )
 
     look = from_meta(script.meta, script.title)
+    # 帯の上に出す反応。指定が無ければ台本から短いものを拾う（2026-09-07）
+    reaction = look.get("reaction") or reaction_line(script)
     thumbnail = build_thumbnail(
         config,
         look["title"],
@@ -107,6 +109,7 @@ def build_script(
         date=script.date,
         lines=look["lines"],
         tags=look["tags"],
+        reaction=reaction,
     )
     # 画像のクレジットも概要欄に出す。CC BY 系は表示しないと利用条件を満たさない
     outputs = subtitles.write_outputs(

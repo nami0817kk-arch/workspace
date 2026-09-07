@@ -76,6 +76,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
         findings.append(check_voice_share(script))
         findings.append(check_opening_title(script))
         findings.append(check_wrap_share(script))
+        findings.append(check_title_hook(script))
     findings.append(_thumbnail_face(script))
     findings.append(_photo_credits(script, out_dir))
     findings.append(_double_marks(script))
@@ -536,6 +537,37 @@ def check_opening_title(script: Script) -> Finding:
         False, "1行目",
         f"タイトルと違います（1行目『{first[:20]}…』）。"
         "クリックした人が来た場所を確かめられるよう、まずタイトルを読んでください",
+    )
+
+
+# タイトルの型（2026-09-07）。各チャンネルの**最高再生**を並べて分かったこと。
+# 上位15本（サッカー知恵袋）はほぼ全部が答えを隠していた:
+#   「解説南さん『鈴木彩艶に関しては・・・』」25万 / 「新監督を迎えたリヴァプール、朗報」35万
+#   「守田所属ハル・シティ、誰も予想できなかった事態が話題に・・・」22万
+# こちらの直近14本は全部が言い切りで、**タイトルで用が足りてしまっていた**。
+# **隠すことと嘘をつくことは別。**中身では必ず答える（answer は残してある）
+TITLE_HOOKS = (
+    "こちら", "話題", "・・・", "…", "ざわ", "騒然", "衝撃", "異変", "波紋",
+    "してしまう", "が判明", "口を開", "反応", "の理由", "なぜ", "どうなる",
+    "とは", "か？", "か?", "事態", "まさか", "驚",
+)
+
+
+def check_title_hook(script: Script) -> Finding:
+    """タイトルが答えを言い切っていないか。
+
+    札（【速報】など）を外した本文で見る。引く型の言葉が1つも無ければ、
+    たいてい事実を書き切っている。
+    """
+    bare = _bare(script.title)
+    if not bare:
+        return Finding(False, "タイトルの型", "タイトルがありません")
+    if any(word in script.title for word in TITLE_HOOKS):
+        return Finding(True, "タイトルの型", "続きを見たくなる形です")
+    return Finding(
+        False, "タイトルの型",
+        "答えを言い切っています。伸びている3チャンネルの上位は"
+        "「〜がこちらです」「〜が話題に」のように**答えを隠して**います",
     )
 
 
