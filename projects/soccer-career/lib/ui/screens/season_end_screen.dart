@@ -4,6 +4,8 @@ import '../../game/career_engine.dart';
 import '../../game/formulas.dart';
 import '../../game/world.dart';
 import '../../models/competition.dart';
+import '../../models/life.dart';
+import '../../models/physique.dart';
 import '../../state/career_controller.dart';
 
 /// シーズン終了。成績を振り返り、契約更改・移籍・引退を決める。
@@ -23,6 +25,33 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
   late List<TransferOffer> _offers;
   bool _busy = false;
 
+  /// オフに身体をどうするか。移籍先を決めるのと同じ画面で選ぶ。
+  BodyPlan _bodyPlan = BodyPlan.maintain;
+
+  /// プレシーズンの過ごし方。
+  PreseasonPlan _preseason = PreseasonPlan.camp;
+
+  /// 代理人に一度売り込ませたか。1シーズンに1度だけ。
+  bool _solicited = false;
+
+  /// 代理人に売り込ませる。前金を払い、取れれば選択肢が増える。
+  Future<void> _solicit() async {
+    if (_busy || _solicited) return;
+    final (found, offers) = widget.controller.solicitOffers();
+    setState(() {
+      _solicited = true;
+      _offers.addAll(offers);
+    });
+    if (!mounted) return;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+        content: Text(found
+            ? '代理人が${offers.length}件の話を取ってきた。'
+            : '代理人は動いたが、今回は何も取れなかった。'),
+      ));
+  }
+
   @override
   void initState() {
     super.initState();
@@ -38,7 +67,9 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
   Future<void> _accept(TransferOffer offer) async {
     if (_busy) return;
     setState(() => _busy = true);
-    await widget.controller.advanceSeason(accepted: offer);
+    await widget.controller.setPreseason(_preseason);
+    await widget.controller
+        .advanceSeason(accepted: offer, bodyPlan: _bodyPlan);
     if (!mounted) return;
     Navigator.of(context).pop();
   }
@@ -141,6 +172,26 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                       const SizedBox(height: 4),
                       Text('代表 ${state.seasonCaps}試合', style: muted),
                     ],
+                    if (state.cupStage.participated) ...[
+                      const SizedBox(height: 6),
+                      Chip(
+                        label: Text('国内カップ ${state.cupStage.label}'),
+                        backgroundColor: state.cupStage == CupStage.winner
+                            ? theme.colorScheme.primaryContainer
+                            : null,
+                        visualDensity: VisualDensity.compact,
+                      ),
+                    ],
+                    if (state.worldCupStage.participated) ...[
+                      const SizedBox(height: 6),
+                      Chip(
+                        label:
+                            Text('ワールドカップ ${state.worldCupStage.label}'),
+                        backgroundColor:
+                            theme.colorScheme.tertiaryContainer,
+                        visualDensity: VisualDensity.compact,
+                      ),
+                    ],
                     if (state.continentalStage.participated) ...[
                       const SizedBox(height: 6),
                       Chip(
@@ -184,6 +235,52 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                 ),
               ),
             ] else ...[
+              Text('オフの過ごし方', style: theme.textTheme.titleMedium),
+              const SizedBox(height: 4),
+              Text(
+                '${state.player.physique.label}。'
+                '体重の増減は、当たりの強さと足元のキレを入れ替える。',
+                style: muted,
+              ),
+              const SizedBox(height: 10),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final plan in BodyPlan.values)
+                    Tooltip(
+                      message: plan.description,
+                      child: ChoiceChip(
+                        label: Text(plan.label),
+                        selected: _bodyPlan == plan,
+                        onSelected: _busy
+                            ? null
+                            : (_) => setState(() => _bodyPlan = plan),
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Text('プレシーズン', style: theme.textTheme.labelLarge),
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final plan in PreseasonPlan.values)
+                    Tooltip(
+                      message: plan.description,
+                      child: ChoiceChip(
+                        label: Text(plan.label),
+                        selected: _preseason == plan,
+                        onSelected: _busy
+                            ? null
+                            : (_) => setState(() => _preseason = plan),
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 24),
               Row(
                 children: [
                   Text('契約', style: theme.textTheme.titleMedium),
@@ -198,6 +295,17 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                 ],
               ),
               const SizedBox(height: 12),
+              if (!_solicited) ...[
+                OutlinedButton(
+                  onPressed: _busy ? null : _solicit,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Text(
+                        '代理人に売り込ませる（前金 ${controller.solicitCost}万円）'),
+                  ),
+                ),
+                const SizedBox(height: 12),
+              ],
               for (var i = 0; i < _offers.length; i++) ...[
                 _OfferCard(
                   offer: _offers[i],
@@ -285,13 +393,23 @@ class _OfferCard extends StatelessWidget {
                   ),
                 ),
                 Chip(
-                  label: Text(offer.isRenewal ? '契約更改' : '移籍'),
+                  label: Text(offer.loan
+                      ? 'ローン'
+                      : offer.returning
+                          ? '復帰'
+                          : offer.isRenewal
+                              ? '契約更改'
+                              : '移籍'),
                   visualDensity: VisualDensity.compact,
                 ),
               ],
             ),
             const SizedBox(height: 4),
             Text(offer.reason, style: muted),
+            if (offer.terms.isNotEmpty) ...[
+              const SizedBox(height: 4),
+              Text(offer.terms, style: muted),
+            ],
             if (offer.eligibility != null && offer.eligibility!.foreign) ...[
               const SizedBox(height: 6),
               Wrap(
@@ -346,7 +464,13 @@ class _OfferCard extends StatelessWidget {
                 Expanded(
                   child: FilledButton(
                     onPressed: busy ? null : onAccept,
-                    child: Text(offer.isRenewal ? '残留する' : '移籍する'),
+                    child: Text(offer.loan
+                        ? 'ローンに出る'
+                        : offer.returning
+                            ? '戻る'
+                            : offer.isRenewal
+                                ? '残留する'
+                                : '移籍する'),
                   ),
                 ),
               ],

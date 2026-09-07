@@ -146,8 +146,7 @@ void main() {
     test('休養の週には練習中の負傷が起きない', () {
       final engine = MatchEngine(random: Random(2));
       for (var i = 0; i < 200; i++) {
-        final week = engine.applyWeek(player(condition: 5),
-            training: null, played: true);
+        final week = engine.applyWeek(player(condition: 5), played: true);
         expect(week.injury, isNull);
       }
     });

@@ -275,8 +275,9 @@ void main() {
 
   group('CareerEngine', () {
     test('キャリアは2部のクラブから始まる', () {
+      // 18歳以上での開始。17歳以下は育成年代（最下部）から始まる。
       final state = CareerEngine(random: Random(1))
-          .startCareer(name: 'A', position: Position.cm, age: 17, agent: agent);
+          .startCareer(name: 'A', position: Position.cm, age: 19, agent: agent);
       expect(state.club.tier, 2);
       // クラブ数と試合数は国ごとに違う。
       final country = World.byId(state.club.countryId);
@@ -317,11 +318,12 @@ void main() {
       expect(mine.points, Formulas.pointsWin);
     });
 
-    test('成績が振るわないとオファーは来ない', () {
+    test('成績が振るわないと移籍のオファーは来ない', () {
       final engine = CareerEngine(random: Random(4));
       final state =
           engine.startCareer(name: 'A', position: Position.st, age: 20, agent: agent);
-      expect(engine.offersFor(state), isEmpty);
+      // 出番の無い若手にローンの話が来るのは別（試合に出るための移籍）。
+      expect(engine.offersFor(state).where((o) => !o.loan), isEmpty);
     });
 
     test('シーズンを進めると年齢と年が上がり、記録が残る', () {

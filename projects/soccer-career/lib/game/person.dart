@@ -61,6 +61,9 @@ class Person {
     // 代表と大陸カップは、リーグに出ていなくても目に触れる。
     fame += state.seasonCaps * 2;
     fame += state.continentalStage.points * 2;
+    fame += state.cupStage.points;
+    // ワールドカップは桁が違う。1度出るだけで名前が知れ渡る。
+    fame += state.worldCupStage.points * 4;
 
     // リーグでの露出は「出場していること」が前提。試合に出ない選手は
     // どんなに格の高いリーグに籍を置いていても忘れられていく。
@@ -106,6 +109,11 @@ class Person {
     if (promoted) earned.add(Award.promotion);
     if (state.continentalStage == ContinentalStage.winner) {
       earned.add(Award.continentalTitle);
+    }
+    if (state.cupStage == CupStage.winner) earned.add(Award.domesticCup);
+    if (state.worldCupStage.participated) earned.add(Award.worldCup);
+    if (state.worldCupStage == WorldCupStage.winner) {
+      earned.add(Award.worldCupTitle);
     }
     return earned;
   }
@@ -164,6 +172,17 @@ class Person {
     // 格上に移ると野心が満たされ、燻ると強くなる。
     if (state.relations.manager < 30) {
       personality = personality.bump(PersonalityAxis.ambition, 1);
+    }
+
+    // 同期に先を行かれると発奮する。比べる相手が居ないと、
+    // 自分の成績が良いのか悪いのかも分からない。
+    if (state.rival?.leads(state.player.overall) ?? false) {
+      personality = personality.bump(PersonalityAxis.ambition, 1);
+    }
+
+    // メンターの居るロッカールームで育つと、姿勢が身に付く。
+    if (state.mentor != null && state.player.age <= 23) {
+      personality = personality.bump(PersonalityAxis.professionalism, 1);
     }
     return personality;
   }

@@ -41,6 +41,60 @@ class Competitions {
     return stage;
   }
 
+  /// 国内カップの成績。
+  ///
+  /// 一発勝負なので、リーグでは届かない相手にも勝ちうる。弱いクラブに
+  /// 居ても上の舞台に手が届く道を1本残しておく。
+  CupStage runDomesticCup(CareerState state) {
+    final country = World.byId(state.club.countryId);
+    final field = 55 + country.prestige * 2;
+    final edge = (state.club.strength - field) / 30;
+
+    var stage = CupStage.early;
+    for (final next in [
+      CupStage.round16,
+      CupStage.quarter,
+      CupStage.semi,
+      CupStage.runnerUp,
+      CupStage.winner,
+    ]) {
+      // 一発勝負は5分に近い。格差がそのまま出るなら、カップの意味が無い。
+      final chance = (0.5 + edge).clamp(0.15, 0.8);
+      if (_random.nextDouble() >= chance) break;
+      stage = next;
+    }
+    return stage;
+  }
+
+  /// ワールドカップの成績。招集されている選手だけ。
+  ///
+  /// 4年に1度しか回ってこないので、キャリアで出られるのは多くて3回か4回。
+  /// だから1回が重い。
+  WorldCupStage runWorldCup(CareerState state, {required bool calledUp}) {
+    if (!calledUp) return WorldCupStage.none;
+
+    // 複数の国籍を持つ選手は、選んだ代表で戦う。
+    final country = World.byId(state.nationalTeam);
+    final edge = (country.prestige - 3) / 10 + (state.player.overall - 75) / 60;
+
+    var stage = WorldCupStage.group;
+    for (final next in [
+      WorldCupStage.round16,
+      WorldCupStage.quarter,
+      WorldCupStage.semi,
+      WorldCupStage.runnerUp,
+      WorldCupStage.winner,
+    ]) {
+      final chance = (0.42 + edge).clamp(0.05, 0.8);
+      if (_random.nextDouble() >= chance) break;
+      stage = next;
+    }
+    return stage;
+  }
+
+  /// その年にワールドカップがあるか。4年に1度。
+  static bool isWorldCupYear(int year) => year % 4 == 0;
+
   /// 移籍市場の窓。シーズンの節の位置で決まる。
   ///
   /// 冬の窓は中盤の数節だけ。ここを逃すとシーズン終了まで動けない。

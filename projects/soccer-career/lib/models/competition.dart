@@ -18,6 +18,51 @@ enum ContinentalStage {
   bool get participated => this != ContinentalStage.none;
 }
 
+/// 国内カップ戦の成績。
+///
+/// リーグと違って一発勝負なので、格下でも決勝まで行くことがある。
+/// 優勝すれば翌季の大陸カップ出場権が付く。弱いクラブに居ても
+/// 上の舞台に届く道を1本残しておくための仕組み。
+enum CupStage {
+  none('不出場'),
+  early('初戦敗退'),
+  round16('ベスト16'),
+  quarter('ベスト8'),
+  semi('ベスト4'),
+  runnerUp('準優勝'),
+  winner('優勝');
+
+  const CupStage(this.label);
+
+  final String label;
+
+  int get points => index;
+
+  bool get participated => this != CupStage.none;
+
+  /// 優勝すれば翌季の大陸カップに出られる。
+  bool get qualifiesContinental => this == CupStage.winner;
+}
+
+/// ワールドカップの成績。4年に1度だけ動く。
+enum WorldCupStage {
+  none('不出場'),
+  group('グループ敗退'),
+  round16('ベスト16'),
+  quarter('ベスト8'),
+  semi('ベスト4'),
+  runnerUp('準優勝'),
+  winner('優勝');
+
+  const WorldCupStage(this.label);
+
+  final String label;
+
+  int get points => index;
+
+  bool get participated => this != WorldCupStage.none;
+}
+
 /// 移籍市場が開いている期間。
 ///
 /// 現実の移籍は年中できるわけではない。窓の外ではオファーが届かず、

@@ -1,0 +1,255 @@
+import 'dart:math';
+
+import 'attributes.dart';
+import 'club.dart';
+import 'season.dart';
+
+/// 相手クラブの戦い方。
+///
+/// クラブごとに保存はしない。IDから決めることで、同じクラブとは毎回
+/// 同じ噛み合わせになり、「あそこは苦手だ」という記憶が成立する。
+enum ClubStyle {
+  pressing('ハイプレス', 'パスを出す余裕が無い', AttributeKey.passing),
+  defensive('堅守速攻', 'ゴール前を固めてくる', AttributeKey.shooting),
+  technical('技巧派', 'ボールを持たれる', AttributeKey.defending),
+  physical('肉弾戦', '当たりが強く、仕掛けが潰される', AttributeKey.dribbling);
+
+  const ClubStyle(this.label, this.description, this.hardFor);
+
+  final String label;
+  final String description;
+
+  /// この相手に対して難しくなる能力。
+  final AttributeKey hardFor;
+
+  /// クラブIDから決める。ハッシュではなく符号の和で出すのは、
+  /// 実行ごとに変わらないようにするため。
+  static ClubStyle of(Club club) {
+    final sum = club.id.codeUnits.fold<int>(0, (a, b) => a + b);
+    return ClubStyle.values[sum % ClubStyle.values.length];
+  }
+}
+
+/// 積み上げると身に付く個人技。
+///
+/// 能力値が一定に達した選手が、その練習を続けているうちに覚える。
+/// 覚えると、その技が出る局面だけ確率が上がる。
+enum Signature {
+  turn('切り返し', Detail.ballControl),
+  noLook('ノールックパス', Detail.vision),
+  knuckle('無回転シュート', Detail.shotPower),
+  burst('初速の一歩', Detail.acceleration),
+  shoulder('体の入れ方', Detail.strength),
+  read('読み', Detail.interceptions),
+  spread('展開力', Detail.longPassing),
+  handsUp('1対1の間合い', Detail.reflexes);
+
+  const Signature(this.label, this.detail);
+
+  final String label;
+
+  /// 元になる詳細能力。
+  final Detail detail;
+
+  AttributeKey get key => detail.category;
+
+  /// 覚えるのに必要な能力値。
+  static const int requirement = 72;
+
+  /// 同時に持てる数。何でも出来る選手にしない。
+  static const int maxOwned = 3;
+}
+
+/// キャリアを通じて積み上がるもの。
+///
+/// 能力値とは別に、「何試合を戦い」「どんな手を選び」「誰と当たってきたか」を
+/// 覚えておく。同じ能力値でも、10年やってきた選手と新人は同じではない。
+class Development {
+  const Development({
+    this.experience = 0,
+    this.choices = const {},
+    this.faced = const {},
+    this.signatures = const [],
+    this.growthStreak = 0,
+    this.plateau = 0,
+    this.breakthroughs = 0,
+  });
+
+  /// 試合経験値。出場のたびに積む。
+  final int experience;
+
+  /// どの能力の手を選んできたか。プレイング・アイデンティティの元。
+  final Map<AttributeKey, int> choices;
+
+  /// どの戦い方の相手と当たってきたか。
+  final Map<ClubStyle, int> faced;
+
+  /// 覚えた個人技。
+  final List<Signature> signatures;
+
+  /// 連続で伸びた回数。溜まると停滞期に入る。
+  final int growthStreak;
+
+  /// 停滞期の残り試合数。0 なら平常。
+  final int plateau;
+
+  /// 限界突破した回数。
+  final int breakthroughs;
+
+  /// アイデンティティが決まるのに要る選択の数。
+  static const int identityThreshold = 30;
+
+  /// 停滞期に入る連続成長回数。
+  static const int plateauStreak = 12;
+
+  bool get inPlateau => plateau > 0;
+
+  /// 選択の癖から決まる自分の型。まだ足りなければ null。
+  AttributeKey? get identity {
+    final total = choices.values.fold(0, (a, b) => a + b);
+    if (total < identityThreshold) return null;
+    final top = choices.entries.reduce((a, b) => a.value >= b.value ? a : b);
+    // 突出していなければ型は無い。何でも選ぶ選手は何者でもない。
+    return top.value * 3 >= total ? top.key : null;
+  }
+
+  String get identityLabel => switch (identity) {
+        AttributeKey.pace => '走る選手',
+        AttributeKey.shooting => '仕留める選手',
+        AttributeKey.passing => '組み立てる選手',
+        AttributeKey.dribbling => '仕掛ける選手',
+        AttributeKey.defending => '潰す選手',
+        AttributeKey.physical => '身体で戦う選手',
+        AttributeKey.goalkeeping => '守る選手',
+        null => 'まだ型が無い',
+      };
+
+  /// 自分の型に沿った手の成功率への上乗せ。
+  double identityBonusFor(AttributeKey key) =>
+      identity == null ? 0 : (identity == key ? 0.03 : -0.01);
+
+  /// その戦い方に慣れているぶんの上乗せ。当たるほど苦手ではなくなる。
+  double adaptationFor(ClubStyle style) =>
+      min(0.04, (faced[style] ?? 0) * 0.002);
+
+  /// 経験からくる落ち着き。大一番の重圧を薄める。
+  double get composure => min(0.05, experience / 2000);
+
+  /// 覚えた個人技による上乗せ。
+  double signatureBonus(AttributeKey key, Detail? detail) {
+    var bonus = 0.0;
+    for (final s in signatures) {
+      if (detail != null && s.detail == detail) {
+        bonus += 0.05;
+      } else if (s.key == key) {
+        bonus += 0.02;
+      }
+    }
+    return bonus;
+  }
+
+  /// 1試合ぶんの積み上げ。
+  Development afterMatch({
+    required Appearance appearance,
+    required bool international,
+    ClubStyle? style,
+    Iterable<AttributeKey> used = const [],
+  }) {
+    final gained = switch (appearance) {
+      Appearance.start => 3,
+      Appearance.sub => 1,
+      Appearance.benched || Appearance.injured => 0,
+    };
+    if (gained == 0) {
+      return copyWith(plateau: max(0, plateau - 1));
+    }
+
+    final nextChoices = {...choices};
+    for (final key in used) {
+      nextChoices[key] = (nextChoices[key] ?? 0) + 1;
+    }
+    final nextFaced = {...faced};
+    if (style != null) nextFaced[style] = (nextFaced[style] ?? 0) + 1;
+
+    return copyWith(
+      experience: experience + gained + (international ? 2 : 0),
+      choices: nextChoices,
+      faced: nextFaced,
+      plateau: max(0, plateau - 1),
+    );
+  }
+
+  /// 伸びた/伸びなかったを受けて、停滞期の出入りを決める。
+  ///
+  /// 伸び続けた選手はどこかで足踏みする。ここが無いと、上手くいっている
+  /// 間はひたすら右肩上がりで、キャリアの起伏が消える。
+  Development afterGrowth({required bool grew, required Random random}) {
+    if (!grew) return this;
+    final streak = growthStreak + 1;
+    if (streak < plateauStreak) return copyWith(growthStreak: streak);
+    return copyWith(growthStreak: 0, plateau: 4 + random.nextInt(6));
+  }
+
+  Development learn(Signature signature) => signatures.contains(signature) ||
+          signatures.length >= Signature.maxOwned
+      ? this
+      : copyWith(signatures: [...signatures, signature]);
+
+  Development copyWith({
+    int? experience,
+    Map<AttributeKey, int>? choices,
+    Map<ClubStyle, int>? faced,
+    List<Signature>? signatures,
+    int? growthStreak,
+    int? plateau,
+    int? breakthroughs,
+  }) =>
+      Development(
+        experience: experience ?? this.experience,
+        choices: choices ?? this.choices,
+        faced: faced ?? this.faced,
+        signatures: signatures ?? this.signatures,
+        growthStreak: growthStreak ?? this.growthStreak,
+        plateau: plateau ?? this.plateau,
+        breakthroughs: breakthroughs ?? this.breakthroughs,
+      );
+
+  Map<String, dynamic> toJson() => {
+        'experience': experience,
+        'choices': {for (final e in choices.entries) e.key.name: e.value},
+        'faced': {for (final e in faced.entries) e.key.name: e.value},
+        'signatures': signatures.map((s) => s.name).toList(),
+        'growthStreak': growthStreak,
+        'plateau': plateau,
+        'breakthroughs': breakthroughs,
+      };
+
+  factory Development.fromJson(Map<String, dynamic>? json) {
+    if (json == null) return const Development();
+    final choices = <AttributeKey, int>{};
+    for (final e in (json['choices'] as Map? ?? const {}).entries) {
+      if (AttributeKey.values.any((k) => k.name == e.key)) {
+        choices[AttributeKey.values.byName(e.key as String)] = e.value as int;
+      }
+    }
+    final faced = <ClubStyle, int>{};
+    for (final e in (json['faced'] as Map? ?? const {}).entries) {
+      if (ClubStyle.values.any((s) => s.name == e.key)) {
+        faced[ClubStyle.values.byName(e.key as String)] = e.value as int;
+      }
+    }
+    return Development(
+      experience: json['experience'] as int? ?? 0,
+      choices: choices,
+      faced: faced,
+      signatures: [
+        for (final n in (json['signatures'] as List? ?? const []))
+          if (Signature.values.any((s) => s.name == n))
+            Signature.values.byName(n as String),
+      ],
+      growthStreak: json['growthStreak'] as int? ?? 0,
+      plateau: json['plateau'] as int? ?? 0,
+      breakthroughs: json['breakthroughs'] as int? ?? 0,
+    );
+  }
+}

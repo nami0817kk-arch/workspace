@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/data/save_repository.dart';
+import 'package:soccer_career/models/training.dart';
 import 'package:soccer_career/game/career_engine.dart';
 import 'package:soccer_career/game/formulas.dart';
 import 'package:soccer_career/game/match_engine.dart';
@@ -94,7 +95,7 @@ void main() {
       final c = controller(seed: 11);
       await c.startCareer(
           name: 'F', position: Position.cb, age: 30, agent: Agent.pool.first);
-      await c.setTraining(AttributeKey.physical);
+      await c.setMenu(TrainingMenu.strengthWork);
 
       var sawInjury = false;
       var sawRecovery = false;
@@ -116,7 +117,7 @@ void main() {
       final c = controller(seed: 11);
       await c.startCareer(
           name: 'F', position: Position.cb, age: 30, agent: Agent.pool.first);
-      await c.setTraining(AttributeKey.physical);
+      await c.setMenu(TrainingMenu.strengthWork);
 
       var guard = 0;
       while (!c.state!.injured && guard < 200) {

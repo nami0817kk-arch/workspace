@@ -105,6 +105,32 @@ class Formulas {
   /// 練習で能力が1伸びる確率（ポテンシャルに達していなければ）。
   static const double trainingGrowthChance = 0.3;
 
+  /// 居残り練習で余分に減るコンディション。
+  static const int drillConditionCost = 6;
+
+  /// 居残り練習でセットプレーの精度が1上がる確率（上に行くほど鈍る）。
+  static const double drillGrowthChance = 0.55;
+
+  /// キッカーを任されている選手に、1試合でセットプレーの好機が回る確率。
+  static const double deadBallChanceStart = 0.22;
+  static const double deadBallChanceSub = 0.09;
+
+  /// 1試合のうち、逆足で対応することになる局面の割合。
+  static const double weakFootMomentChance = 0.25;
+
+  /// 逆足練習で精度が1段上がる確率。反復するしかない。
+  static const double weakFootGrowthChance = 0.12;
+
+  /// 個人技を覚える確率（条件を満たした週）。
+  static const double signatureChance = 0.06;
+
+  /// 停滞期のあいだ、成長の確率に掛かる倍率。
+  static const double plateauGrowthFactor = 0.25;
+
+  /// 限界突破が起きる確率と、上がるポテンシャル。
+  static const double breakthroughChance = 0.25;
+  static const int breakthroughGain = 3;
+
   /// 上乗せ要求が通る確率 = 基本 + 交渉力 × 係数 + 成績の補正。
   static const double negotiationBase = 0.25;
   static const double negotiationPerSkill = 0.09;
@@ -135,6 +161,12 @@ class Formulas {
   /// 復帰直後のコンディション。
   static const int conditionAfterInjury = 45;
 
+  /// キャプテンの試合ごとの評価点への上乗せ。
+  static const double captainRatingBonus = 0.1;
+
+  /// 復帰してから、再発の危険が高い試合数。
+  static const int rehabWatchMatches = 3;
+
   /// 代表に招集される最低総合力。
   static const int callUpOverall = 72;
 
@@ -143,6 +175,12 @@ class Formulas {
 
   /// 代表戦の前に必要な出場試合数（実績が無いと選ばれない）。
   static const int callUpMinAppearances = 5;
+
+  /// この年齢以下で始めると、育成年代（一番下の部）から始まる。
+  static const int youthAge = 17;
+
+  /// ローンに出せる上限の年齢。伸びしろへの投資なので、若手だけ。
+  static const int loanMaxAge = 23;
 
   /// 契約年数の範囲。
   static const int contractYearsMin = 2;

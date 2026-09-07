@@ -15,7 +15,10 @@ enum Award {
   seasonBest('年間ベストイレブン'),
   leagueTitle('リーグ優勝'),
   promotion('昇格'),
-  continentalTitle('大陸カップ優勝');
+  continentalTitle('大陸カップ優勝'),
+  domesticCup('国内カップ優勝'),
+  worldCup('ワールドカップ出場'),
+  worldCupTitle('ワールドカップ優勝');
 
   const Award(this.label);
 
@@ -144,13 +147,26 @@ class Finances {
       (salary * (0.08 + lifestyle * 0.07)).round();
 
   /// そのシーズンの手取りを貯蓄に足す。
-  Finances afterSeason({required int salary, required int agentFeePercent}) {
+  ///
+  /// 専属スタッフの人件費と、こだわった食事の費用もここで引く。
+  /// 身体への投資は年俸から出ていく。稼ぎの使い道に選択が生まれる。
+  Finances afterSeason({
+    required int salary,
+    required int agentFeePercent,
+    int staffCost = 0,
+    double extraLivingRate = 0,
+  }) {
     final agentFee = (salary * agentFeePercent / 100).round();
     final tax = (salary * taxRateFor(salary)).round();
-    final living = livingCostFor(salary);
-    final net = salary - agentFee - tax - living;
+    final living =
+        livingCostFor(salary) + (salary * extraLivingRate).round();
+    final net = salary - agentFee - tax - living - staffCost;
     return Finances(savings: savings + net, lifestyle: lifestyle);
   }
+
+  /// 貯蓄から支払う。
+  Finances spend(int amount) =>
+      Finances(savings: savings - amount, lifestyle: lifestyle);
 
   Finances withLifestyle(int level) =>
       Finances(savings: savings, lifestyle: level.clamp(0, 3));

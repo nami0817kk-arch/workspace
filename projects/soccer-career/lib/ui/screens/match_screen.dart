@@ -168,6 +168,29 @@ class _ScenarioView extends StatelessWidget {
                   const SizedBox(height: 6),
                   Text(scenario.situation,
                       style: theme.textTheme.titleMedium),
+                  const SizedBox(height: 10),
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 6,
+                    children: [
+                      Chip(
+                        label: Text(match.opponentStyle.label),
+                        visualDensity: VisualDensity.compact,
+                      ),
+                      if (match.bigMatch)
+                        Chip(
+                          label: const Text('大一番'),
+                          backgroundColor: theme.colorScheme.tertiaryContainer,
+                          visualDensity: VisualDensity.compact,
+                        ),
+                      if (match.weakFootMoment)
+                        Chip(
+                          label: const Text('逆足で対応'),
+                          backgroundColor: theme.colorScheme.errorContainer,
+                          visualDensity: VisualDensity.compact,
+                        ),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -392,13 +415,59 @@ class _MatchSummary extends StatelessWidget {
                   _stat(theme, 'アシスト', '${result.assists}'),
                 ],
               ),
+              if (week.deadBall != null) ...[
+                const SizedBox(height: 20),
+                Text(
+                  week.deadBall!,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyMedium,
+                ),
+              ],
               if (week.trained != null) ...[
                 const SizedBox(height: 20),
                 Text(
-                  '練習の成果: ${week.trained!.label} が 1 伸びた',
+                  week.redirected
+                      ? '土台から鍛え直した: ${week.trained!.label} が 1 伸びた'
+                      : '練習の成果: ${week.trained!.label} が 1 伸びた',
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyMedium
                       ?.copyWith(color: theme.colorScheme.primary),
+                ),
+              ],
+              if (week.drilled != null) ...[
+                const SizedBox(height: 12),
+                Text(
+                  '居残りの成果: ${week.drilled!.label} の精度が上がった',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyMedium
+                      ?.copyWith(color: theme.colorScheme.primary),
+                ),
+              ],
+              if (week.learned != null) ...[
+                const SizedBox(height: 12),
+                Text(
+                  '個人技を覚えた: ${week.learned!.label}',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.titleSmall
+                      ?.copyWith(color: theme.colorScheme.primary),
+                ),
+              ],
+              if (week.weakFootAwakened) ...[
+                const SizedBox(height: 12),
+                Text(
+                  '逆足が形になってきた。両足で持てる選手になりつつある。',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyMedium
+                      ?.copyWith(color: theme.colorScheme.primary),
+                ),
+              ],
+              if (week.plateau) ...[
+                const SizedBox(height: 12),
+                Text(
+                  '伸び悩んでいる。しばらくは積み上がらない。',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodySmall
+                      ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
                 ),
               ],
               if (week.recovered) ...[
