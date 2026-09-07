@@ -269,6 +269,29 @@ def main(argv: list[str] | None = None) -> int:
     p_portrait.add_argument("--file", default="", dest="only",
                             help="この File: だけを使う（現役/監督など、機械に選べない差を人が決める）")
 
+    # 2026-09-07: 放送映像は使えないが、実際の試合の写真は Commons にある。
+    # 顔写真と探し方も確かめ方も違うので、別のコマンドにする
+    p_scene = sub.add_parser(
+        "matchphoto", help="試合の場面の写真を Commons から取る（顔写真ではない）")
+    p_scene.add_argument("dir", help="置き先のフォルダ（例: assets/images/arsenal_chelsea）")
+    p_scene.add_argument("words", nargs="+",
+                         help="クラブ名・大会名・スタジアム名（英語表記が当たりやすい）")
+    p_scene.add_argument("--whole", action="store_true",
+                         help="切らずにそのまま本文へ出す用途。改変不可(ND)の写真も使える")
+    p_scene.add_argument("--file", default="", dest="only",
+                         help="この File: だけを使う")
+
+    # 数字の図。**試合映像の代わりになる下地**（2026-09-07）
+    p_stat = sub.add_parser(
+        "statboard", help="数字を横棒の図にして、サムネの下地に使える1枚を書き出す")
+    p_stat.add_argument("out", help="書き出し先の PNG")
+    p_stat.add_argument("--row", action="append", default=[], dest="rows",
+                        help="名前=値。何度でも指定できる（例: --row ヴィルツ=12.3）")
+    p_stat.add_argument("--title", default="", help="図の見出し（例: 走行距離）")
+    p_stat.add_argument("--unit", default="", help="単位（例: km）")
+    p_stat.add_argument("--note", default="", help="数字の出どころ（概要欄に書く用）")
+    p_stat.add_argument("--bg", default="", help="下地の画像。既定は自分で描いた芝")
+
     p_redesc = sub.add_parser(
         "redescribe", help="公開済み動画の概要欄に、写真のクレジットだけを足す")
     p_redesc.add_argument("script", help="台本のパス")
@@ -1462,6 +1485,55 @@ def _cmd_setthumb(args, config) -> int:
     return 0
 
 
+def _cmd_matchphoto(args, config) -> int:
+    """試合の場面の写真を取る。**顔写真とは別物。**
+
+    誰が写っているかは確かめない（確かめられない）。指定した言葉が写真の
+    説明に出てくることと、ライセンスだけを見る。台本でも「その試合の写真」
+    とは書かない。
+    """
+    from . import portrait as portrait_mod
+    from .config import _resolve
+
+    folder = _resolve(args.dir)
+    try:
+        entry = portrait_mod.save_scene(
+            args.words, folder, only=args.only, modify=not args.whole
+        )
+    except portrait_mod.PortraitError as error:
+        print(str(error), file=sys.stderr)
+        return 1
+    print(f"写真: {folder / entry['file']}")
+    print(f"  {entry['title']}")
+    print(f"  {entry['license']} / {entry['author']}")
+    print("  **人物は特定していません。**その試合の写真だとは書かないでください")
+    return 0
+
+
+def _cmd_statboard(args, config) -> int:
+    """数字の図を1枚書き出す。**試合映像の代わりの下地。**"""
+    from . import statboard as statboard_mod
+    from .config import _resolve
+
+    try:
+        rows = statboard_mod.parse_rows(args.rows)
+        out = statboard_mod.build(
+            rows, Path(args.out), config, title=args.title, unit=args.unit,
+            background=args.bg, note=args.note,
+        )
+    except statboard_mod.StatboardError as error:
+        print(str(error), file=sys.stderr)
+        return 1
+    print(f"数字の図: {out}")
+    try:
+        hint = out.resolve().relative_to(Path.cwd().resolve()).as_posix()
+    except ValueError:
+        hint = str(out)
+    print(f"台本の frontmatter に  thumbnail_photo: {hint}  と書けます")
+    print("（review の「サムネの顔」は、この図を顔の代わりに認めます）")
+    return 0
+
+
 def _cmd_redescribe(args, config) -> int:
     """公開済み動画の概要欄に、クレジットだけを足す。
 
@@ -2216,6 +2288,8 @@ HANDLERS = {
     "redescribe": _cmd_redescribe,
     "setthumb": _cmd_setthumb,
     "portrait": _cmd_portrait,
+    "matchphoto": _cmd_matchphoto,
+    "statboard": _cmd_statboard,
     "results": _cmd_results,
     "gather": _cmd_gather,
     "collect": _cmd_collect,

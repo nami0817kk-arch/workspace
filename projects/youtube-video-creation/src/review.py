@@ -221,6 +221,13 @@ def _thumbnail_face(script: Script) -> Finding:
     target = _resolve(photo)
     if not target.exists():
         return Finding(False, "サムネの顔", f"写真が見つかりません: {photo}")
+    # **数字の図は顔の代わりに認める**（2026-09-07 ユーザー判断）。参考チャンネルの
+    # 最高再生（64万回）の中身は試合映像ではなく走行距離のスタッツ画面だった。
+    # 放送映像は使えないが、数字の図は自分で作れて、一覧では「試合の画面」に見える
+    from .statboard import is_statboard
+
+    if is_statboard(target):
+        return Finding(True, "サムネの顔", f"数字の図: {target.name}")
     # **改変不可(ND)の写真をサムネに使わない。**サムネは16:9に切って文字を重ねる。
     # 本文にそのまま出すぶんには使えるので、取得時に印を残してある
     import json as _json

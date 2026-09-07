@@ -582,3 +582,19 @@ def test_答えを言い切ったタイトルは止まる(tmp_path):
         "title: アーセナルが3対0でチェルシーに勝利")
     result = _by_label(inspect(parse_script(body), _built(tmp_path)))
     assert result["タイトルの型"].ok is False
+
+
+def test_数字の図は顔の代わりに認める(tmp_path, monkeypatch):
+    """2026-09-07: 参考の最高再生（64万回）の中身は走行距離のスタッツ画面だった。"""
+    from src import review as review_mod
+
+    board = tmp_path / "board.png"
+    board.write_bytes(b"x")
+    board.with_suffix(".png.statboard.txt").write_text("title: 走行距離", encoding="utf-8")
+    monkeypatch.setattr(review_mod, "_resolve", lambda value: board)
+    body = GOOD_BODY.replace(
+        "title: アーセナルが勝った理由がこちらです",
+        "title: アーセナルが勝った理由がこちらです\nthumbnail_photo: assets/stats/board.png")
+    result = _by_label(inspect(parse_script(body), _built(tmp_path)))
+    assert result["サムネの顔"].ok is True
+    assert "数字の図" in result["サムネの顔"].detail
