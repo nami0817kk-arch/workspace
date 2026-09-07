@@ -266,7 +266,9 @@ def main(argv: list[str] | None = None) -> int:
     p_redesc = sub.add_parser(
         "redescribe", help="公開済み動画の概要欄に、写真のクレジットだけを足す")
     p_redesc.add_argument("script", help="台本のパス")
-    p_redesc.add_argument("video_id", help="YouTube の動画ID（URLの v= のあと）")
+    p_redesc.add_argument("video_id",
+                          help="YouTube の動画ID（URLの v= のあと）。"
+                               "ハイフン始まりのときは `--` を挟む")
     p_redesc.add_argument("--dry-run", action="store_true",
                           help="送らずに、いまと何が変わるかだけ見る")
 
@@ -275,12 +277,16 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("quota", help="APIの枠をあとどれだけ使えるか（自分で数えた分）")
 
     p_priv = sub.add_parser("publish", help="公開済み動画の公開設定だけを変える")
-    p_priv.add_argument("video_id", help="YouTube の動画ID")
+    p_priv.add_argument("video_id",
+                        help="YouTube の動画ID。ハイフン始まりのときは `--` を挟む")
     p_priv.add_argument("--privacy", default="public",
                         choices=["private", "unlisted", "public"])
 
     p_thumb.add_argument("build_dir", help="build の出力ディレクトリ")
-    p_thumb.add_argument("video_id", help="YouTube の動画ID")
+    p_thumb.add_argument("video_id",
+                         help="YouTube の動画ID。**ハイフンで始まるIDがある**"
+                              "（例: -gZ3P1gw8QU）。その場合は `--` を挟む: "
+                              "setthumb -- <出力先> -gZ3P1gw8QU")
 
     p_variety = sub.add_parser(
         "variety", help="その日の台本を横に並べて見る（1本ずつでは分からないこと）")
