@@ -128,3 +128,31 @@ def test_days_without_rows_are_skipped_in_the_archive(site):
     # losers が空の日は losers アーカイブに出さない
     assert not (out_dir / "archive" / "losers" / "2026-01-06.html").exists()
     assert (out_dir / "archive" / "gainers" / "2026-01-06.html").exists()
+
+
+def test_canonical_url_matches_what_pages_serves():
+    """Cloudflare Pages は .html を拡張子なしへ 308 する。配信される側の形を返す。"""
+    assert render.canonical_url("index.html") == f"{render.SITE_URL}/"
+    assert render.canonical_url("guide.html") == f"{render.SITE_URL}/guide"
+    assert render.canonical_url("archive/gainers/index.html") == f"{render.SITE_URL}/archive/gainers/"
+    assert (
+        render.canonical_url("archive/gainers/2026-01-05.html")
+        == f"{render.SITE_URL}/archive/gainers/2026-01-05"
+    )
+
+
+def test_sitemap_and_canonical_have_no_html_suffix(site):
+    """sitemap と canonical に .html が残っていると、毎回リダイレクトを挟むことになる。"""
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-01-05")
+    render.build_all()
+
+    sitemap = (out_dir / "sitemap.xml").read_text(encoding="utf-8")
+    assert ".html</loc>" not in sitemap
+    assert f"<loc>{render.SITE_URL}/</loc>" in sitemap
+    assert f"<loc>{render.SITE_URL}/guide</loc>" in sitemap
+
+    index = (out_dir / "index.html").read_text(encoding="utf-8")
+    assert f'<link rel="canonical" href="{render.SITE_URL}/">' in index
+    guide = (out_dir / "guide.html").read_text(encoding="utf-8")
+    assert f'<link rel="canonical" href="{render.SITE_URL}/guide">' in guide
