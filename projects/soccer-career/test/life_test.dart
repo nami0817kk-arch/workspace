@@ -16,7 +16,7 @@ import 'package:soccer_career/models/objective.dart';
 import 'package:soccer_career/models/player.dart';
 import 'package:soccer_career/models/season.dart';
 
-const flat = Attributes(
+final flat = Attributes(
   pace: 50,
   shooting: 50,
   passing: 50,
@@ -31,13 +31,13 @@ Player player({
   int condition = 100,
   int potential = 99,
   Position position = Position.cm,
-  Attributes attributes = flat,
+  Attributes? attributes,
 }) =>
     Player(
       name: 'P',
       age: age,
       position: position,
-      attributes: attributes,
+      attributes: attributes ?? flat,
       potential: potential,
       condition: condition,
     );
@@ -130,7 +130,11 @@ void main() {
           matchesOut: 15);
       final (attrs, potential) = engine.applySevereInjury(p, severe);
       expect(potential, 90 - Formulas.severeInjuryPotentialLoss);
-      expect(attrs.pace, flat.pace - Formulas.severeInjuryAttributeLoss);
+      // スピードの詳細のどれかが削られている。
+      final lost = AttributeKey.pace.details
+          .map((d) => 50 - attrs.detail(d))
+          .reduce(max);
+      expect(lost, Formulas.severeInjuryAttributeLoss);
 
       const light = Injury(
           name: '打撲', severity: InjurySeverity.light, matchesOut: 1);
@@ -212,7 +216,7 @@ void main() {
       final s = freshCareer();
       s.player = Player.rebuild(
         s.player,
-        attributes: const Attributes(
+        attributes: Attributes(
             pace: 85, shooting: 85, passing: 85, dribbling: 85,
             defending: 85, physical: 85),
         potential: 99,
@@ -224,7 +228,7 @@ void main() {
       final s = freshCareer();
       s.player = Player.rebuild(
         s.player,
-        attributes: const Attributes(
+        attributes: Attributes(
             pace: 85, shooting: 85, passing: 85, dribbling: 85,
             defending: 85, physical: 85),
         potential: 99,

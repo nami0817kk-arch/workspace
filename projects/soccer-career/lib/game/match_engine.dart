@@ -17,6 +17,7 @@ class ScenarioResolution {
     required this.outcome,
     required this.ratingDelta,
     required this.key,
+    this.detail,
   });
 
   final bool success;
@@ -24,8 +25,11 @@ class ScenarioResolution {
   final Outcome outcome;
   final double ratingDelta;
 
-  /// 判定に使った能力値。成長の偏りに使う。
+  /// 判定に使った能力のカテゴリ。成長の偏りに使う。
   final AttributeKey key;
+
+  /// 判定に使った詳細能力。あればこちらが伸びる。
+  final Detail? detail;
 
   bool get isGoal => success && outcome == Outcome.goal;
   bool get isAssist => success && outcome == Outcome.assist;
@@ -73,8 +77,9 @@ class MatchInProgress {
   Scenario get current => scenarios[_index];
   int get currentMinute => minutes[_index];
 
-  /// 直前の手が失敗していたか。「負けず嫌い」の判定に使う。
+  /// 直前の手が失敗していたか。「負けず嫌い」「気分屋」の判定に使う。
   bool get afterFailure => resolutions.isNotEmpty && !resolutions.last.success;
+  bool get afterSuccess => resolutions.isNotEmpty && resolutions.last.success;
 
   /// 「前半 23分」のような表示用の文字列。
   static String minuteLabel(int minute) =>
@@ -83,16 +88,22 @@ class MatchInProgress {
   int get goals => resolutions.where((r) => r.isGoal).length;
   int get assists => resolutions.where((r) => r.isAssist).length;
 
-  /// 成功した手で使った能力値。成長判定の偏りに使う。
-  List<AttributeKey> get successfulKeys =>
-      resolutions.where((r) => r.success).map((r) => r.key).toList();
+  /// 成功した手で使った能力。成長判定の偏りに使う。
+  List<ScenarioResolution> get successes =>
+      resolutions.where((r) => r.success).toList();
 
-  /// 現時点の評価点。基準値から増減を積み上げる。
+  /// 現時点の評価点。基準値から増減を積み上げ、特性の補正を足す。
   double get rating {
     final total = resolutions.fold<double>(
-        Formulas.baseRating, (sum, r) => sum + r.ratingDelta);
+            Formulas.baseRating, (sum, r) => sum + r.ratingDelta) +
+        player.traits.ratingBonus;
     return total.clamp(Formulas.minRating, Formulas.maxRating);
   }
+
+  /// この選択肢の判定に使う能力値。詳細があればそれ、無ければカテゴリ平均。
+  int attributeFor(ScenarioOption option) => option.detail != null
+      ? player.attributes.detail(option.detail!)
+      : player.attributes[option.key];
 
   /// この局面でその手を選んだときの成功率。特性とコンディションを含む。
   ///
@@ -100,13 +111,18 @@ class MatchInProgress {
   /// 「70%と書いてあったのに」という不信感になる。
   double chanceFor(ScenarioOption option) {
     if (isFinished) return 0;
-    final base = successChance(player.attributes[option.key], option.difficulty);
-    final trait = player.traits.chanceBonus(
+    final base = successChance(attributeFor(option), option.difficulty);
+    final trait = player.traits.chanceBonus(TraitContext(
       minute: currentMinute,
       home: home,
       outcome: option.outcome,
       afterFailure: afterFailure,
-    );
+      afterSuccess: afterSuccess,
+      key: option.key,
+      detail: option.detail,
+      scenarioId: current.id,
+      international: international,
+    ));
     final condition = conditionModifier(player.condition);
     return (base + trait + condition).clamp(0.05, 0.95);
   }
@@ -128,10 +144,47 @@ class MatchInProgress {
       outcome: option.outcome,
       ratingDelta: delta,
       key: option.key,
+      detail: option.detail,
     );
     resolutions.add(resolution);
     _index++;
     return resolution;
+  }
+
+  /// 期待される評価点の増減。自動で選ぶときの物差し。
+  double expectedDelta(ScenarioOption option) {
+    final p = chanceFor(option);
+    var gain = Formulas.ratingPerSuccess;
+    if (option.outcome == Outcome.goal) gain += Formulas.ratingPerGoal;
+    if (option.outcome == Outcome.assist) gain += Formulas.ratingPerAssist;
+    return p * gain + (1 - p) * Formulas.ratingPerFailure;
+  }
+
+  /// スタイルに沿って手を1つ選ぶ。
+  ///
+  /// 「安全」は成功率、「バランス」は期待値、「勝負」は得点に繋がる手の中で
+  /// 期待値が最も高いもの。人が選ぶときの癖を3つに絞った。
+  ScenarioOption pickFor(SimStyle style) {
+    final options = current.options;
+    ScenarioOption best(Iterable<ScenarioOption> from, double Function(ScenarioOption) score) =>
+        from.reduce((a, b) => score(a) >= score(b) ? a : b);
+
+    switch (style) {
+      case SimStyle.safe:
+        return best(options, chanceFor);
+      case SimStyle.balanced:
+        return best(options, expectedDelta);
+      case SimStyle.aggressive:
+        final scoring = options.where((o) => o.outcome != Outcome.play);
+        return best(scoring.isEmpty ? options : scoring, expectedDelta);
+    }
+  }
+
+  /// 残りの局面を自動で解決する。
+  void autoPlay(SimStyle style) {
+    while (!isFinished) {
+      choose(pickFor(style));
+    }
   }
 
   /// 能力値と難易度から成功率を出す（特性・コンディション抜きの素の値）。
@@ -199,8 +252,8 @@ class WeekOutcome {
   final Attributes attributes;
   final int condition;
 
-  /// 練習で伸びた能力。伸びなければ null。
-  final AttributeKey? trained;
+  /// 練習で伸びた詳細能力。伸びなければ null。
+  final Detail? trained;
 
   /// 練習中に負傷したらその内容。
   final Injury? injury;
@@ -278,21 +331,21 @@ class MatchEngine {
   /// 成長判定。評価点が良かった試合だけ、1項目が伸びる可能性がある。
   ///
   /// 伸びる項目は、その試合で成功した手の能力に偏らせる。
-  /// 選び方が選手を形作るのがキャリアものの面白さで、
-  /// ただの乱数だと何を選んでも同じ選手になる。
+  /// 詳細能力まで分かっていればそれが伸びる。決定力で決めた選手は
+  /// 決定力が伸びる。選び方が選手を形作るのがキャリアものの面白さ。
   ///
   /// ポテンシャルに達したら伸びない。ピークを過ぎると伸びにくくなり、
   /// さらに歳を取ると落ちる。特性で前後する。
   Attributes grow(
     Player player,
     double? rating, {
-    List<AttributeKey> used = const [],
+    List<ScenarioResolution> used = const [],
   }) {
     if (rating == null) return player.attributes;
 
     final declineAge = Formulas.declineAge + player.traits.declineAgeOffset;
     if (player.age >= declineAge && _random.nextDouble() < 0.25) {
-      return player.attributes.bump(_randomKey(), -1);
+      return player.attributes.bumpDetail(_randomDetail(), -1);
     }
 
     if (rating < Formulas.growthRatingThreshold) return player.attributes;
@@ -307,8 +360,12 @@ class MatchEngine {
 
     final focus =
         used.isNotEmpty && _random.nextDouble() < Formulas.growthFocusChance;
-    final key = focus ? used[_random.nextInt(used.length)] : _randomKey();
-    return player.attributes.bump(key, 1);
+    if (!focus) return player.attributes.bumpDetail(_randomDetail(), 1);
+
+    final pick = used[_random.nextInt(used.length)];
+    return pick.detail != null
+        ? player.attributes.bumpDetail(pick.detail!, 1)
+        : player.attributes.bump(pick.key, 1, random: _random);
   }
 
   /// 負傷するかどうかを判定する。
@@ -320,9 +377,10 @@ class MatchEngine {
         .clamp(0, Formulas.conditionMax)
         .toDouble();
     final age = (player.age - Formulas.injuryAgeFrom).clamp(0, 20).toDouble();
-    final chance = baseChance +
-        fatigue * Formulas.injuryConditionSlope +
-        age * Formulas.injuryPerAgeYear;
+    final chance = (baseChance +
+            fatigue * Formulas.injuryConditionSlope +
+            age * Formulas.injuryPerAgeYear) *
+        player.traits.injuryFactor;
 
     if (_random.nextDouble() >= chance) return null;
 
@@ -352,29 +410,32 @@ class MatchEngine {
     final kind = InjuryKind.all.firstWhere((k) => k.name == injury.name,
         orElse: () => InjuryKind.all.last);
     return (
-      player.attributes.bump(kind.affects, -Formulas.severeInjuryAttributeLoss),
+      player.attributes.bump(kind.affects, -Formulas.severeInjuryAttributeLoss,
+          random: _random),
       player.potential - Formulas.severeInjuryPotentialLoss,
     );
   }
 
   /// 試合後の1週間。試合の消耗と、練習または休養を反映する。
   ///
-  /// 練習はポテンシャルに達していなければ一定確率で1伸びる。
-  /// 休養は伸びない代わりにコンディションが戻る。疲れたまま練習を続けると
-  /// 試合の成功率で払うことになる。
+  /// 練習はポテンシャルに達していなければ一定確率で、そのカテゴリの
+  /// 詳細能力が1つ伸びる。休養は伸びない代わりにコンディションが戻る。
   WeekOutcome applyWeek(Player player, {required AttributeKey? training, required bool played}) {
-    var condition = player.condition - (played ? Formulas.matchConditionCost : 0);
+    final costFactor = player.traits.conditionCostFactor;
+    var condition = player.condition -
+        (played ? (Formulas.matchConditionCost * costFactor).round() : 0);
     var attributes = player.attributes;
-    AttributeKey? trained;
+    Detail? trained;
 
     if (training == null) {
       condition += Formulas.restRecovery;
     } else {
-      condition -= Formulas.trainingConditionCost;
+      condition -= (Formulas.trainingConditionCost * costFactor).round();
       final canGrow = attributes.overallFor(player.position) < player.potential;
       if (canGrow && _random.nextDouble() < Formulas.trainingGrowthChance) {
-        attributes = attributes.bump(training, 1);
-        trained = training;
+        final ds = training.details;
+        trained = ds[_random.nextInt(ds.length)];
+        attributes = attributes.bumpDetail(trained, 1);
       }
     }
 
@@ -395,6 +456,5 @@ class MatchEngine {
     );
   }
 
-  AttributeKey _randomKey() =>
-      AttributeKey.values[_random.nextInt(AttributeKey.values.length)];
+  Detail _randomDetail() => Detail.values[_random.nextInt(Detail.values.length)];
 }

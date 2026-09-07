@@ -86,6 +86,7 @@ class CareerState {
     this.internationalGoals = 0,
     this.pendingInternational = false,
     this.calledUp = false,
+    this.simStyle = SimStyle.balanced,
     this.retired = false,
   });
 
@@ -135,6 +136,9 @@ class CareerState {
 
   /// 今季、代表に招集されているか。
   bool calledUp;
+
+  /// 自動で進めるときの選び方。
+  SimStyle simStyle;
 
   /// 引退済みなら true。以後は試合をせず、通算成績だけを見せる。
   bool retired;
@@ -219,6 +223,7 @@ class CareerState {
         'internationalGoals': internationalGoals,
         'pendingInternational': pendingInternational,
         'calledUp': calledUp,
+        'simStyle': simStyle.name,
       };
 
   factory CareerState.fromJson(Map<String, dynamic> json) {
@@ -255,6 +260,9 @@ class CareerState {
       internationalGoals: json['internationalGoals'] as int? ?? 0,
       pendingInternational: json['pendingInternational'] as bool? ?? false,
       calledUp: json['calledUp'] as bool? ?? false,
+      simStyle: SimStyle.values.any((s) => s.name == json['simStyle'])
+          ? SimStyle.values.byName(json['simStyle'] as String)
+          : SimStyle.balanced,
       retired: json['retired'] as bool? ?? false,
     );
   }

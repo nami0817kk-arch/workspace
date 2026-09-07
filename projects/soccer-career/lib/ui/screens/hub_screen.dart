@@ -22,6 +22,31 @@ class HubScreen extends StatelessWidget {
     ));
   }
 
+  Future<void> _simulateOne(BuildContext context) async {
+    final result = await controller.simulateMatch();
+    if (result == null || !context.mounted) return;
+    final week = controller.lastWeek;
+    final label = result.won ? '勝利' : (result.drawn ? '引き分け' : '敗戦');
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+        content: Text(
+          '$label ${result.scoreLine} vs ${result.opponentName}'
+          '${result.rating != null ? '  評価 ${result.rating!.toStringAsFixed(1)}' : ''}'
+          '${week.newInjury != null ? '  負傷: ${week.newInjury!.name}' : ''}',
+        ),
+      ));
+  }
+
+  Future<void> _simulateUntilEvent(BuildContext context) async {
+    final report = await controller.simulateUntilEvent();
+    if (!context.mounted) return;
+    await showDialog<void>(
+      context: context,
+      builder: (context) => _SimReportDialog(report: report),
+    );
+  }
+
   Future<void> _endSeason(BuildContext context) async {
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (_) => SeasonEndScreen(controller: controller),
@@ -85,6 +110,9 @@ class HubScreen extends StatelessWidget {
               state: state,
               stats: stats,
               onPlay: () => _playNext(context),
+              onSimulate: () => _simulateOne(context),
+              onSimulateUntilEvent: () => _simulateUntilEvent(context),
+              onSimStyle: controller.setSimStyle,
               onEndSeason: () => _endSeason(context),
               onTraining: controller.setTraining,
             ),
@@ -102,6 +130,9 @@ class _HomeTab extends StatelessWidget {
     required this.state,
     required this.stats,
     required this.onPlay,
+    required this.onSimulate,
+    required this.onSimulateUntilEvent,
+    required this.onSimStyle,
     required this.onEndSeason,
     required this.onTraining,
   });
@@ -109,6 +140,9 @@ class _HomeTab extends StatelessWidget {
   final CareerState state;
   final SeasonStats stats;
   final VoidCallback onPlay;
+  final VoidCallback onSimulate;
+  final VoidCallback onSimulateUntilEvent;
+  final Future<void> Function(SimStyle) onSimStyle;
   final VoidCallback onEndSeason;
   final Future<void> Function(AttributeKey?) onTraining;
 
@@ -205,6 +239,49 @@ class _HomeTab extends StatelessWidget {
                               ? '欠場する'
                               : '試合へ'),
                     ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text('自動で進める',
+                      style: theme.textTheme.labelMedium?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant)),
+                  const SizedBox(height: 6),
+                  Wrap(
+                    spacing: 8,
+                    children: [
+                      for (final s in SimStyle.values)
+                        Tooltip(
+                          message: s.description,
+                          child: ChoiceChip(
+                            label: Text(s.label),
+                            selected: state.simStyle == s,
+                            onSelected: (_) => onSimStyle(s),
+                          ),
+                        ),
+                    ],
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: onSimulate,
+                          child: const Text('この試合'),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: onSimulateUntilEvent,
+                          child: const Text('区切りまで'),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '負傷・代表ウィーク・シーズン終了で止まる。',
+                    style: theme.textTheme.bodySmall
+                        ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
                   ),
                 ],
               ),
@@ -315,6 +392,25 @@ class _PlayerCard extends StatelessWidget {
               if (key != AttributeKey.goalkeeping ||
                   player.position == Position.gk)
                 _AttributeBar(label: key.label, value: player.attributes[key]),
+            Theme(
+              data: theme.copyWith(dividerColor: Colors.transparent),
+              child: ExpansionTile(
+                tilePadding: EdgeInsets.zero,
+                childrenPadding: const EdgeInsets.only(bottom: 8),
+                title: Text('詳細能力', style: theme.textTheme.bodySmall),
+                children: [
+                  for (final key in AttributeKey.values)
+                    if (key != AttributeKey.goalkeeping ||
+                        player.position == Position.gk)
+                      for (final d in key.details)
+                        _AttributeBar(
+                          label: '  ${d.label}',
+                          value: player.attributes.detail(d),
+                          thin: true,
+                        ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -418,16 +514,23 @@ class _TrainingCard extends StatelessWidget {
 }
 
 class _AttributeBar extends StatelessWidget {
-  const _AttributeBar({required this.label, required this.value});
+  const _AttributeBar({
+    required this.label,
+    required this.value,
+    this.thin = false,
+  });
 
   final String label;
   final int value;
+
+  /// 詳細能力の行。少し細く、詰めて並べる。
+  final bool thin;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 3),
+      padding: EdgeInsets.symmetric(vertical: thin ? 1 : 3),
       child: Row(
         children: [
           SizedBox(
@@ -443,7 +546,7 @@ class _AttributeBar extends StatelessWidget {
               borderRadius: BorderRadius.circular(4),
               child: LinearProgressIndicator(
                 value: value / 99,
-                minHeight: 6,
+                minHeight: thin ? 4 : 6,
               ),
             ),
           ),
@@ -694,4 +797,51 @@ class _ObjectiveCard extends StatelessWidget {
           ],
         ),
       );
+}
+
+/// 自動で進めた区間のまとめ。
+class _SimReportDialog extends StatelessWidget {
+  const _SimReportDialog({required this.report});
+
+  final SimReport report;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    return AlertDialog(
+      title: Text('${report.played}試合を消化'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('${report.won}勝 ${report.drawn}分 ${report.lost}敗',
+              style: theme.textTheme.titleMedium),
+          const SizedBox(height: 4),
+          Text(
+            '${report.goals}ゴール ${report.assists}アシスト'
+            '${report.averageRating != null ? '  平均評価 ${report.averageRating!.toStringAsFixed(2)}' : ''}',
+          ),
+          const SizedBox(height: 12),
+          Text('止まった理由: ${report.stoppedBy.label}', style: muted),
+          if (report.injury != null) ...[
+            const SizedBox(height: 4),
+            Text(
+              '${report.injury!.name}（${report.injury!.severity.label}、'
+              '${report.injury!.matchesOut}試合の離脱）',
+              style: theme.textTheme.bodyMedium
+                  ?.copyWith(color: theme.colorScheme.error),
+            ),
+          ],
+        ],
+      ),
+      actions: [
+        FilledButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: const Text('閉じる'),
+        ),
+      ],
+    );
+  }
 }

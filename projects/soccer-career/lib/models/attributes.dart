@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import '../game/formulas.dart';
 
 /// 局面プールの種類。細かいポジションはこのどれかに属する。
@@ -35,7 +37,7 @@ enum Position {
       };
 }
 
-/// 能力値の項目。局面がどの能力で判定されるかを指すのに使う。
+/// 能力のカテゴリ。画面の上段と、練習の単位。
 enum AttributeKey {
   pace('スピード'),
   shooting('シュート'),
@@ -48,27 +50,137 @@ enum AttributeKey {
   const AttributeKey(this.label);
 
   final String label;
+
+  List<Detail> get details =>
+      Detail.values.where((d) => d.category == this).toList();
 }
 
-/// 能力値。0〜99 の7項目。
-class Attributes {
-  const Attributes({
-    required this.pace,
-    required this.shooting,
-    required this.passing,
-    required this.dribbling,
-    required this.defending,
-    required this.physical,
-    this.goalkeeping = Formulas.defaultGoalkeeping,
-  });
+/// 詳細能力。局面の判定はこの単位で行う。
+///
+/// 「パスが上手い」で一括りにすると、スルーパスの名手とクロスの名手の
+/// 違いが出ない。カテゴリはあくまで見せ方と練習の単位で、判定はこちら。
+enum Detail {
+  acceleration('加速', AttributeKey.pace),
+  sprintSpeed('最高速', AttributeKey.pace),
 
-  final int pace;
-  final int shooting;
-  final int passing;
-  final int dribbling;
-  final int defending;
-  final int physical;
-  final int goalkeeping;
+  finishing('決定力', AttributeKey.shooting),
+  shotPower('シュート力', AttributeKey.shooting),
+  longShots('ロングシュート', AttributeKey.shooting),
+  heading('ヘディング', AttributeKey.shooting),
+
+  shortPassing('ショートパス', AttributeKey.passing),
+  longPassing('ロングパス', AttributeKey.passing),
+  vision('視野', AttributeKey.passing),
+  crossing('クロス', AttributeKey.passing),
+
+  ballControl('ボールコントロール', AttributeKey.dribbling),
+  dribbling('ドリブル', AttributeKey.dribbling),
+  agility('敏捷性', AttributeKey.dribbling),
+
+  tackling('タックル', AttributeKey.defending),
+  marking('マーク', AttributeKey.defending),
+  interceptions('インターセプト', AttributeKey.defending),
+
+  strength('筋力', AttributeKey.physical),
+  stamina('スタミナ', AttributeKey.physical),
+  jumping('ジャンプ', AttributeKey.physical),
+
+  reflexes('セービング', AttributeKey.goalkeeping),
+  gkPositioning('ポジショニング', AttributeKey.goalkeeping),
+  handling('ハンドリング', AttributeKey.goalkeeping);
+
+  const Detail(this.label, this.category);
+
+  final String label;
+  final AttributeKey category;
+}
+
+/// 能力値。22の詳細能力を持ち、7カテゴリはその平均。
+class Attributes {
+  Attributes._(List<int> values) : _values = List.unmodifiable(values);
+
+  /// 詳細能力を直接指定して作る。
+  factory Attributes.fromDetails(Map<Detail, int> details) => Attributes._([
+        for (final d in Detail.values) _clamp(details[d] ?? Formulas.defaultGoalkeeping),
+      ]);
+
+  /// カテゴリの値から作る。各カテゴリの詳細はすべて同じ値になる。
+  ///
+  /// 初期能力の定義とテスト、7項目だった頃の保存データの読み込みに使う。
+  factory Attributes({
+    required int pace,
+    required int shooting,
+    required int passing,
+    required int dribbling,
+    required int defending,
+    required int physical,
+    int goalkeeping = Formulas.defaultGoalkeeping,
+  }) {
+    final byCategory = {
+      AttributeKey.pace: pace,
+      AttributeKey.shooting: shooting,
+      AttributeKey.passing: passing,
+      AttributeKey.dribbling: dribbling,
+      AttributeKey.defending: defending,
+      AttributeKey.physical: physical,
+      AttributeKey.goalkeeping: goalkeeping,
+    };
+    return Attributes._([
+      for (final d in Detail.values) _clamp(byCategory[d.category]!),
+    ]);
+  }
+
+  /// カテゴリの値に、詳細ごとのばらつきを足して作る。
+  ///
+  /// 新規キャリアで使う。全部同じ値だと「決定力だけ高いFW」のような
+  /// 個性が最初から無い。
+  factory Attributes.scattered({
+    required int pace,
+    required int shooting,
+    required int passing,
+    required int dribbling,
+    required int defending,
+    required int physical,
+    int goalkeeping = Formulas.defaultGoalkeeping,
+    required Random random,
+    int spread = 6,
+  }) {
+    final base = Attributes(
+      pace: pace,
+      shooting: shooting,
+      passing: passing,
+      dribbling: dribbling,
+      defending: defending,
+      physical: physical,
+      goalkeeping: goalkeeping,
+    );
+    return Attributes._([
+      for (final d in Detail.values)
+        _clamp(base.detail(d) + random.nextInt(spread * 2 + 1) - spread),
+    ]);
+  }
+
+  final List<int> _values;
+
+  static int _clamp(int v) =>
+      v.clamp(Formulas.minAttribute, Formulas.maxAttribute).toInt();
+
+  int detail(Detail d) => _values[d.index];
+
+  /// カテゴリの値（そのカテゴリの詳細の平均）。
+  int operator [](AttributeKey key) {
+    final ds = key.details;
+    final sum = ds.fold(0, (s, d) => s + _values[d.index]);
+    return (sum / ds.length).round();
+  }
+
+  int get pace => this[AttributeKey.pace];
+  int get shooting => this[AttributeKey.shooting];
+  int get passing => this[AttributeKey.passing];
+  int get dribbling => this[AttributeKey.dribbling];
+  int get defending => this[AttributeKey.defending];
+  int get physical => this[AttributeKey.physical];
+  int get goalkeeping => this[AttributeKey.goalkeeping];
 
   /// ポジションごとの重み付き総合力。同じ能力でも ST と CB で評価が変わる。
   int overallFor(Position position) {
@@ -95,50 +207,41 @@ class Attributes {
     Position.st: [3, 6, 2, 3, 0, 4, 0],
   };
 
-  int operator [](AttributeKey key) => switch (key) {
-        AttributeKey.pace => pace,
-        AttributeKey.shooting => shooting,
-        AttributeKey.passing => passing,
-        AttributeKey.dribbling => dribbling,
-        AttributeKey.defending => defending,
-        AttributeKey.physical => physical,
-        AttributeKey.goalkeeping => goalkeeping,
-      };
+  /// 詳細能力を1つ増減させた新しい能力値を返す。上下限で丸める。
+  Attributes bumpDetail(Detail d, int delta) {
+    final next = [..._values];
+    next[d.index] = _clamp(next[d.index] + delta);
+    return Attributes._(next);
+  }
 
-  /// 1項目だけ増減させた新しい能力値を返す。上下限で丸める。
-  Attributes bump(AttributeKey key, int delta) {
-    int c(int v) => v.clamp(Formulas.minAttribute, Formulas.maxAttribute).toInt();
-    int at(AttributeKey k, int v) => c(v + (key == k ? delta : 0));
-    return Attributes(
-      pace: at(AttributeKey.pace, pace),
-      shooting: at(AttributeKey.shooting, shooting),
-      passing: at(AttributeKey.passing, passing),
-      dribbling: at(AttributeKey.dribbling, dribbling),
-      defending: at(AttributeKey.defending, defending),
-      physical: at(AttributeKey.physical, physical),
-      goalkeeping: at(AttributeKey.goalkeeping, goalkeeping),
-    );
+  /// カテゴリの中の詳細を1つ選んで増減させる。練習と試合の成長で使う。
+  Attributes bump(AttributeKey key, int delta, {Random? random}) {
+    final ds = key.details;
+    final d = ds[(random ?? Random()).nextInt(ds.length)];
+    return bumpDetail(d, delta);
   }
 
   Map<String, dynamic> toJson() => {
-        'pace': pace,
-        'shooting': shooting,
-        'passing': passing,
-        'dribbling': dribbling,
-        'defending': defending,
-        'physical': physical,
-        'goalkeeping': goalkeeping,
+        'details': {for (final d in Detail.values) d.name: _values[d.index]},
       };
 
-  factory Attributes.fromJson(Map<String, dynamic> json) => Attributes(
-        pace: json['pace'] as int,
-        shooting: json['shooting'] as int,
-        passing: json['passing'] as int,
-        dribbling: json['dribbling'] as int,
-        defending: json['defending'] as int,
-        physical: json['physical'] as int,
-        // GK 能力を足す前の保存データには無い。
-        goalkeeping:
-            json['goalkeeping'] as int? ?? Formulas.defaultGoalkeeping,
-      );
+  factory Attributes.fromJson(Map<String, dynamic> json) {
+    final details = json['details'] as Map<String, dynamic>?;
+    if (details != null) {
+      return Attributes.fromDetails({
+        for (final d in Detail.values)
+          if (details[d.name] is int) d: details[d.name] as int,
+      });
+    }
+    // 7項目だった頃の保存データ。カテゴリの値を詳細に展開する。
+    return Attributes(
+      pace: json['pace'] as int,
+      shooting: json['shooting'] as int,
+      passing: json['passing'] as int,
+      dribbling: json['dribbling'] as int,
+      defending: json['defending'] as int,
+      physical: json['physical'] as int,
+      goalkeeping: json['goalkeeping'] as int? ?? Formulas.defaultGoalkeeping,
+    );
+  }
 }

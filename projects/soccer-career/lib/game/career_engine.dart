@@ -103,7 +103,7 @@ class CareerEngine {
       position: position,
       attributes: attributes,
       potential: rollPotential(overall),
-      traits: Trait.rollTwo(_random),
+      traits: Trait.roll(_random),
     );
     return CareerState(
       player: player,
@@ -142,8 +142,10 @@ class CareerEngine {
   Attributes _startingAttributes(Position position, int age) {
     final ageBonus = (age - 17) * 2;
     int roll(int base) => base + ageBonus + _random.nextInt(9) - 4;
+    final random = _random;
     return switch (position) {
-      Position.gk => Attributes(
+      Position.gk => Attributes.scattered(
+          random: random,
           pace: roll(42),
           shooting: roll(22),
           passing: roll(46),
@@ -152,7 +154,8 @@ class CareerEngine {
           physical: roll(56),
           goalkeeping: roll(58),
         ),
-      Position.cb => Attributes(
+      Position.cb => Attributes.scattered(
+          random: random,
           pace: roll(50),
           shooting: roll(30),
           passing: roll(47),
@@ -160,7 +163,8 @@ class CareerEngine {
           defending: roll(59),
           physical: roll(58),
         ),
-      Position.sb => Attributes(
+      Position.sb => Attributes.scattered(
+          random: random,
           pace: roll(58),
           shooting: roll(36),
           passing: roll(52),
@@ -168,7 +172,8 @@ class CareerEngine {
           defending: roll(54),
           physical: roll(50),
         ),
-      Position.dm => Attributes(
+      Position.dm => Attributes.scattered(
+          random: random,
           pace: roll(48),
           shooting: roll(40),
           passing: roll(56),
@@ -176,7 +181,8 @@ class CareerEngine {
           defending: roll(56),
           physical: roll(54),
         ),
-      Position.cm => Attributes(
+      Position.cm => Attributes.scattered(
+          random: random,
           pace: roll(52),
           shooting: roll(48),
           passing: roll(58),
@@ -184,7 +190,8 @@ class CareerEngine {
           defending: roll(48),
           physical: roll(50),
         ),
-      Position.am => Attributes(
+      Position.am => Attributes.scattered(
+          random: random,
           pace: roll(54),
           shooting: roll(54),
           passing: roll(58),
@@ -192,7 +199,8 @@ class CareerEngine {
           defending: roll(36),
           physical: roll(44),
         ),
-      Position.wg => Attributes(
+      Position.wg => Attributes.scattered(
+          random: random,
           pace: roll(62),
           shooting: roll(52),
           passing: roll(50),
@@ -200,7 +208,8 @@ class CareerEngine {
           defending: roll(32),
           physical: roll(46),
         ),
-      Position.st => Attributes(
+      Position.st => Attributes.scattered(
+          random: random,
           pace: roll(58),
           shooting: roll(58),
           passing: roll(46),
