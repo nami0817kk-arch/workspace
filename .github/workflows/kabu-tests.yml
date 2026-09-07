@@ -2,7 +2,7 @@ name: kabu tests
 
 on:
   push:
-    branches: [master]
+    branches: ["**"]
     paths: ["projects/kabu-agari-ranking/**", "libs/kabutan/**", ".github/workflows/kabu-tests.yml", ".github/workflows/python-tests.yml"]
   pull_request:
     paths: ["projects/kabu-agari-ranking/**", "libs/kabutan/**", ".github/workflows/kabu-tests.yml", ".github/workflows/python-tests.yml"]

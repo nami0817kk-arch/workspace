@@ -2,7 +2,7 @@ name: ai-side-business tests
 
 on:
   push:
-    branches: [master]
+    branches: ["**"]
     paths: ["projects/ai-side-business/**", ".github/workflows/ai-side-business-tests.yml"]
   pull_request:
     paths: ["projects/ai-side-business/**", ".github/workflows/ai-side-business-tests.yml"]

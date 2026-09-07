@@ -2,7 +2,7 @@ name: price-tracker tests
 
 on:
   push:
-    branches: [master]
+    branches: ["**"]
     paths: ["projects/price-tracker/**", ".github/workflows/price-tracker-tests.yml"]
   pull_request:
     paths: ["projects/price-tracker/**", ".github/workflows/price-tracker-tests.yml"]

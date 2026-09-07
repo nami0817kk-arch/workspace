@@ -2,7 +2,7 @@ name: tests
 
 on:
   push:
-    branches: [master]
+    branches: ["**"]
     paths:
       - "platform/ai-lab/**"
       - ".github/workflows/ailab-tests.yml"

@@ -2,7 +2,7 @@ name: youtube tests
 
 on:
   push:
-    branches: [master]
+    branches: ["**"]
     paths: ["projects/youtube-video-creation/**", ".github/workflows/youtube-tests.yml"]
   pull_request:
     paths: ["projects/youtube-video-creation/**", ".github/workflows/youtube-tests.yml"]

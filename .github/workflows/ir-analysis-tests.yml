@@ -2,7 +2,7 @@ name: ir-analysis tests
 
 on:
   push:
-    branches: [master]
+    branches: ["**"]
     paths: ["projects/ir-analysis/**", ".github/workflows/ir-analysis-tests.yml"]
   pull_request:
     paths: ["projects/ir-analysis/**", ".github/workflows/ir-analysis-tests.yml"]

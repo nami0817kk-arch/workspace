@@ -2,7 +2,7 @@ name: quality-gainer-tracker tests
 
 on:
   push:
-    branches: [master]
+    branches: ["**"]
     paths: ["projects/quality-gainer-tracker/**", "libs/kabutan/**", ".github/workflows/quality-gainer-tracker-tests.yml"]
   pull_request:
     paths: ["projects/quality-gainer-tracker/**", "libs/kabutan/**", ".github/workflows/quality-gainer-tracker-tests.yml"]

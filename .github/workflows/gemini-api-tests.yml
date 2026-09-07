@@ -2,7 +2,7 @@ name: gemini-api tests
 
 on:
   push:
-    branches: [master]
+    branches: ["**"]
     paths: ["projects/gemini-api/**", ".github/workflows/gemini-api-tests.yml"]
   pull_request:
     paths: ["projects/gemini-api/**", ".github/workflows/gemini-api-tests.yml"]

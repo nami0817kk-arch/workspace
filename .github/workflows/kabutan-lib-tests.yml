@@ -2,7 +2,7 @@ name: kabutan-lib tests
 
 on:
   push:
-    branches: [master]
+    branches: ["**"]
     paths: ["libs/kabutan/**", ".github/workflows/kabutan-lib-tests.yml"]
   pull_request:
     paths: ["libs/kabutan/**", ".github/workflows/kabutan-lib-tests.yml"]
