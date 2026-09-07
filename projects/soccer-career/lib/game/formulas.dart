@@ -75,6 +75,9 @@ class Formulas {
   /// 昇格・降格したクラブの強さの補正。同じクラブでも上のリーグでは相対的に弱い。
   static const int promotionStrengthBonus = 6;
 
+  /// この年齢から、古巣が「最後の1年」に呼ぶことがある。
+  static const int lastDanceAge = 31;
+
   /// この年齢からシーズン終了時に引退を選べる。
   static const int retirementOptionalAge = 33;
 

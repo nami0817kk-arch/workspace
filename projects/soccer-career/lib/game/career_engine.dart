@@ -678,11 +678,40 @@ class CareerEngine {
       }
     }
 
+    // 晩年になると、古巣が最後の1年を過ごさないかと声をかけてくる。
+    // 条件は良くないが、始まった場所で終われる。
+    // 条件では選ばれない特別な話は、別に持っておく。年俸順に切ると
+    // 「古巣からの薄給の誘い」が必ず消えてしまう。
+    final special = <TransferOffer>[];
+    final formerNames = {
+      for (final h in state.history)
+        if (h.clubName != state.club.name) h.clubName,
+    };
+    if (state.player.age >= Formulas.lastDanceAge &&
+        formerNames.isNotEmpty &&
+        _random.nextDouble() < 0.4) {
+      final name = formerNames.first;
+      final home = World.byId(state.history
+          .lastWhere((h) => h.clubName == name)
+          .countryId);
+      final league = World.buildLeague(
+          home.id, min(home.tiers, state.club.tier + 1));
+      final club = league.firstWhere((c) => c.name == name,
+          orElse: () => league.first);
+      special.add(TransferOffer(
+        club: club,
+        reason: '古巣の$nameが、最後の1年をここで過ごさないかと言っている。',
+        salary: _round(state.salary * 0.7),
+        role: '経験を買われての加入',
+        years: 1,
+      ));
+    }
+
     // 恩師が別のクラブで待っていることがある。条件は良く、起用も約束される。
     final mentorName = state.mentorManager;
     if (mentorName != null && candidates.isNotEmpty && _random.nextDouble() < 0.3) {
       final base = candidates.first;
-      candidates.add(TransferOffer(
+      special.add(TransferOffer(
         club: base.club,
         reason: '${base.club.name}の監督に就任した恩師・$mentorNameが、'
             'あなたを呼んでいる。',
@@ -697,7 +726,7 @@ class CareerEngine {
 
     // 良い条件の順に3件まで。並べすぎると選ぶのが作業になる。
     candidates.sort((a, b) => b.salary.compareTo(a.salary));
-    return candidates.take(3).toList();
+    return [...candidates.take(3), ...special];
   }
 
   /// 声がかかる国を決める。
