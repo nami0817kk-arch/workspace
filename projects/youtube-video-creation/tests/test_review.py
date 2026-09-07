@@ -642,3 +642,38 @@ def test_別人が同じ声だと止まる(tmp_path, monkeypatch):
 def test_別々の声なら通る(tmp_path):
     result = _by_label(inspect(parse_script(GOOD_BODY), _built(tmp_path)))
     assert result["声の重なり"].ok is True
+
+
+# 有名人の投稿を画像で使えるようになった（2026-09-08 ユーザー判断）。
+# **引用として使う**以上、出どころを示すのは条件のうち。
+
+def _with_post(tmp_path, monkeypatch, url="https://x.com/FabrizioRomano/status/1"):
+    import json
+
+    from src import review as review_mod
+
+    folder = tmp_path / "posts"
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / "post.png").write_bytes(b"x")
+    (folder / "credits.json").write_text(json.dumps([
+        {"file": "post.png", "source": "x", "page_url": url,
+         "author": "@FabrizioRomano", "license": "引用（出典明記）"}
+    ], ensure_ascii=False), encoding="utf-8")
+    monkeypatch.setattr(review_mod, "_resolve", lambda value: folder / "post.png")
+    return GOOD_BODY.replace(
+        "ネット民: 完全に別チームだった。",
+        "ネット民: 完全に別チームだった。\n  image: assets/posts/post.png")
+
+
+def test_投稿を使ったのに出典が無いと止まる(tmp_path, monkeypatch):
+    body = _with_post(tmp_path, monkeypatch)
+    result = _by_label(inspect(parse_script(body), _built(tmp_path)))
+    assert result["投稿の出典"].ok is False
+
+
+def test_投稿URLが出典にあれば通る(tmp_path, monkeypatch):
+    url = "https://x.com/FabrizioRomano/status/1"
+    body = _with_post(tmp_path, monkeypatch, url).replace(
+        "sources: [https://example.com/a]", f"sources: [https://example.com/a, {url}]")
+    result = _by_label(inspect(parse_script(body), _built(tmp_path)))
+    assert result["投稿の出典"].ok is True

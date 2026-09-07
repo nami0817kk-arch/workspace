@@ -87,6 +87,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     findings.append(_thumbnail_face(script))
     findings.append(_card_rule(script))
     findings.append(_photo_credits(script, out_dir))
+    findings.append(check_post_sources(script))
     findings.append(_double_marks(script))
     loudness = _loudness(out_dir / "video.mp4")
     if loudness is not None:
@@ -283,6 +284,45 @@ def _thumbnail_face(script: Script) -> Finding:
                                f"{row.get('license', '')} は改変不可です。"
                                "サムネは切り取って文字を重ねるので使えません")
     return Finding(True, "サムネの顔", Path(photo).name)
+
+
+def check_post_sources(script: Script) -> Finding:
+    """Xの投稿を画像で使ったなら、その投稿URLが出典に入っているか（2026-09-08）。
+
+    有名人の投稿を画像で使えるようになった（ユーザー判断）。**引用として使う**
+    以上、出どころを示すのは条件のうち。概要欄は `sources:` から作られるので、
+    ここが抜けると出典の無い引用になる。
+    """
+    import json as _json
+
+    posts: list[tuple[str, str]] = []
+    for line in script.lines:
+        image = getattr(line, "image", None)
+        if not image:
+            continue
+        target = _resolve(str(image))
+        ledger = target.parent / "credits.json"
+        if not ledger.exists():
+            continue
+        try:
+            rows = _json.loads(ledger.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        for row in rows if isinstance(rows, list) else []:
+            if row.get("file") == target.name and row.get("source") == "x":
+                posts.append((target.name, str(row.get("page_url") or "")))
+
+    if not posts:
+        return Finding(True, "投稿の出典", "投稿の画像は使っていません")
+    listed = set(script.sources or [])
+    missing = [name for name, url in posts if url and url not in listed]
+    if missing:
+        return Finding(
+            False, "投稿の出典",
+            f"{' / '.join(missing)} の投稿URLが sources: にありません。"
+            "引用は出どころを示すのが条件です",
+        )
+    return Finding(True, "投稿の出典", f"投稿{len(posts)}件すべてに出典があります")
 
 
 def _photo_credits(script: Script, out_dir: Path) -> Finding:

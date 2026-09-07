@@ -302,6 +302,12 @@ def main(argv: list[str] | None = None) -> int:
     p_stat.add_argument("--note", default="", help="数字の出どころ（概要欄に書く用）")
     p_stat.add_argument("--bg", default="", help="下地の画像。既定は自分で描いた芝")
 
+    # 2026-09-08: 有名人の投稿だけ、画像として使えるようになった（ユーザー判断）
+    p_xshot = sub.add_parser(
+        "xshot", help="X の投稿を1枚の画像にする（accounts: に載っている人だけ）")
+    p_xshot.add_argument("url", help="投稿のURL（https://x.com/<handle>/status/…）")
+    p_xshot.add_argument("dir", help="置き先のフォルダ（例: assets/posts/romano）")
+
     p_redesc = sub.add_parser(
         "redescribe", help="公開済み動画の概要欄に、写真のクレジットだけを足す")
     p_redesc.add_argument("script", help="台本のパス")
@@ -1637,6 +1643,28 @@ def _cmd_standings(args, config) -> int:
     return 0
 
 
+def _cmd_xshot(args, config) -> int:
+    """X の投稿を画像にする。**有名人だけ。**
+
+    誰が有名人かは、こちらの判断ではなく `accounts:` の一覧で決める。
+    載っていない人は止める（人が足す）。
+    """
+    from . import xshot as xshot_mod
+    from .config import _resolve
+    from .plan import load_plan
+
+    try:
+        entry = xshot_mod.capture(args.url, _resolve(args.dir), load_plan().accounts)
+    except xshot_mod.ShotError as error:
+        print(str(error), file=sys.stderr)
+        return 1
+    print(f"投稿の画像: {_resolve(args.dir) / entry['file']}")
+    print(f"  {entry['author']}　{entry['license']}")
+    print("  台本の image: に指定し、sources: に投稿URLを入れてください")
+    print("  **サムネイルには使えません**（切って文字を重ねるため）")
+    return 0
+
+
 def _cmd_statboard(args, config) -> int:
     """数字の図を1枚書き出す。**試合映像の代わりの下地。**"""
     from . import statboard as statboard_mod
@@ -2454,6 +2482,7 @@ HANDLERS = {
     "quota": _cmd_quota,
     "portrait": _cmd_portrait,
     "matchphoto": _cmd_matchphoto,
+    "xshot": _cmd_xshot,
     "statboard": _cmd_statboard,
     "standings": _cmd_standings,
     "results": _cmd_results,
