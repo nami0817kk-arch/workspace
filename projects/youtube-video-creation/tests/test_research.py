@@ -726,15 +726,22 @@ def test_過去形の答えが壊れない():
     assert _spoken("次の焦点は来週") == "次の焦点は来週です。"
 
 
-def test_代弁に使わない人は取材メモで止まる():
-    """2026-09-07 ユーザーの指示。引用そのものは地の文で使ってよい。"""
+def test_同じ声になる2人は取材メモで止まる(monkeypatch):
+    """書き出す前に気づけるようにする（2026-09-07）。"""
+    from src.config import CastMember
     from src.research import verify
 
+    def same_voice(self, name):
+        return CastMember(name=name, key="voiced_42", style_id=42, speed=1.0,
+                          pitch=0.0, intonation=1.05, position="none", color="#fff")
+
+    monkeypatch.setattr("src.config.ProjectConfig.resolve_speaker", same_voice)
     raw = _raw()
     raw["sections"] = raw["sections"] + [{
         "id": "voices", "heading": "何と言ったか", "tier": "報道",
-        "say": [{"voice": "モウリーニョ", "text": "説明のしようがない。"}],
+        "say": [{"voice": "メッシ", "text": "引退します。"},
+                {"voice": "モウリーニョ", "text": "おめでとう。"}],
         "sources": ["https://example.com/1"],
     }]
     problems = verify(build_notes(raw), _plan())
-    assert any("モウリーニョ" in p for p in problems)
+    assert any("同じ声" in p for p in problems)

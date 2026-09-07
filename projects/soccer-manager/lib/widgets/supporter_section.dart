@@ -54,17 +54,18 @@ class _SupporterSectionState extends State<SupporterSection> {
                 const SizedBox(height: 8),
                 _PointRow(
                   icon: Icons.ondemand_video,
-                  title: Tr.pick('動画広告（無料・任意）',
-                      'Video ads (free, optional)'),
+                  title: Tr.pick('広告', 'Ads'),
                   body: Tr.pick(
-                      'クラブ経営の画面で、自分から選んだときだけ再生されます。'
-                          '1日${RewardOffer.dailyLimitFree}回まで、見ると特別協賛金を受け取れます。'
-                          '進行を止める全画面広告やバナーはありません。'
-                          '**一度も見なくても最後まで遊べます。**',
-                      'They play only when you choose to watch, from the club finance screen. '
-                          'Up to ${RewardOffer.dailyLimitFree} a day, each one pays sponsorship money. '
-                          'There are no interstitials or banners. '
-                          '**You can finish the game without ever watching one.**'),
+                      '資金を受け取れる動画広告は、クラブ経営の画面で自分から選んだときだけ'
+                          '再生されます。1日${RewardOffer.dailyLimitFree}回まで、見ると特別協賛金を'
+                          '受け取れます。**一度も見なくても最後まで遊べます。**'
+                          'このほか、シーズンの切り替わりで全画面広告が1回だけ出ます。'
+                          '試合中やメニュー操作に割り込むことはなく、バナー広告もありません。',
+                      'The video ads that pay you play only when you choose to watch them, from the '
+                          'club finance screen. Up to ${RewardOffer.dailyLimitFree} a day, each one pays '
+                          'sponsorship money. **You can finish the game without ever watching one.** '
+                          'Separately, one full-screen ad appears when a season rolls over. '
+                          'Nothing interrupts a match or a menu, and there are no banners.'),
                 ),
                 const SizedBox(height: 8),
                 _PointRow(
@@ -74,9 +75,11 @@ class _SupporterSectionState extends State<SupporterSection> {
                   body: Tr.pick(
                       '広告を見ずに同じ協賛金を受け取れるようになり、1日の回数が'
                           '${RewardOffer.dailyLimitFree}回から${RewardOffer.dailyLimitSupporter}回に増えます。'
+                          'シーズンの切り替わりの全画面広告も出なくなります。'
                           '月額ではありません。**選手の成長や試合の勝率は変わりません。**',
-                      'You take the same money without ads, and your daily limit rises from '
-                          '${RewardOffer.dailyLimitFree} to ${RewardOffer.dailyLimitSupporter}. '
+                      'You take the same money without ads, your daily limit rises from '
+                          '${RewardOffer.dailyLimitFree} to ${RewardOffer.dailyLimitSupporter}, and the '
+                          'full-screen ad between seasons stops appearing. '
                           'It is not a subscription. '
                           '**It does not change player growth or your chances in a match.**'),
                 ),
@@ -169,7 +172,8 @@ class _SupporterSectionState extends State<SupporterSection> {
         .showSnackBar(SnackBar(content: Text(message)));
   }
 }
-
+
+
 
 /// 課金要素の説明1件ぶん。
 class _PointRow extends StatelessWidget {
