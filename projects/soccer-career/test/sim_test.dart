@@ -88,8 +88,8 @@ TraitContext ctx({
 
 void main() {
   group('詳細能力', () {
-    test('21項目あり、7カテゴリに漏れなく属する', () {
-      expect(Detail.values.length, 21);
+    test('22項目あり、7カテゴリに漏れなく属する', () {
+      expect(Detail.values.length, 22);
       for (final key in AttributeKey.values) {
         expect(key.details, isNotEmpty, reason: key.label);
       }
@@ -117,7 +117,7 @@ void main() {
     test('ばらつき付きで作ると詳細が揃わないが、範囲内に収まる', () {
       final a = Attributes.scattered(
         pace: 50, shooting: 50, passing: 50, dribbling: 50,
-        defending: 50, physical: 50, random: Random(3), spread: 6,
+        defending: 50, physical: 50, goalkeeping: 50, random: Random(3), spread: 6,
       );
       final values = Detail.values.map(a.detail).toSet();
       expect(values.length, greaterThan(1));
@@ -278,10 +278,11 @@ void main() {
     });
 
     test('無尽蔵は試合の消耗が少ない', () {
-      final engine = MatchEngine(random: Random(6));
-      final normal = engine.applyWeek(player(), training: null, played: true);
-      final tireless =
-          engine.applyWeek(player(traits: const [Trait.engine]), training: null, played: true);
+      // 休養だと上限で頭打ちになって差が見えないので、練習した週で比べる。
+      final normal = MatchEngine(random: Random(6))
+          .applyWeek(player(), training: AttributeKey.pace, played: true);
+      final tireless = MatchEngine(random: Random(6)).applyWeek(
+          player(traits: const [Trait.engine]), training: AttributeKey.pace, played: true);
       expect(tireless.condition, greaterThan(normal.condition));
     });
 

@@ -95,7 +95,7 @@ enum Detail {
   final AttributeKey category;
 }
 
-/// 能力値。21の詳細能力を持ち、7カテゴリはその平均。
+/// 能力値。22の詳細能力を持ち、7カテゴリはその平均。
 class Attributes {
   Attributes._(List<int> values) : _values = List.unmodifiable(values);
 

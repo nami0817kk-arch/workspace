@@ -100,7 +100,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '足を使って時間を稼ぐ',
           key: AttributeKey.pace,
-          detail: Detail.agility,
+          detail: Detail.acceleration,
           difficulty: 50,
           outcome: Outcome.play,
           successText: '寄せる角度を変えて遅らせ、DFの帰陣を待てた。',
@@ -157,7 +157,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'ぎりぎりまで待つ',
           key: AttributeKey.pace,
-          detail: Detail.agility,
+          detail: Detail.acceleration,
           difficulty: 74,
           outcome: Outcome.play,
           successText: '最後まで待ち、反応でセーブした。',
@@ -634,7 +634,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '走力で背後をカバーする',
           key: AttributeKey.pace,
-          detail: Detail.agility,
+          detail: Detail.acceleration,
           difficulty: 58,
           outcome: Outcome.play,
           successText: '背後のスペースを消し切り、決定機を未然に潰した。',
@@ -700,7 +700,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '遅らせて味方の帰陣を待つ',
           key: AttributeKey.pace,
-          detail: Detail.agility,
+          detail: Detail.acceleration,
           difficulty: 56,
           outcome: Outcome.play,
           successText: '巧みに遅らせ、味方が戻る時間を作った。',
@@ -793,7 +793,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '間合いを保って遅らせる',
           key: AttributeKey.pace,
-          detail: Detail.agility,
+          detail: Detail.acceleration,
           difficulty: 55,
           outcome: Outcome.play,
           successText: '距離を保って遅らせ、味方の帰陣を待った。',
@@ -901,7 +901,7 @@ class ScenarioPool {
         ScenarioOption(
           label: '上がらずリスク管理する',
           key: AttributeKey.pace,
-          detail: Detail.agility,
+          detail: Detail.acceleration,
           difficulty: 40,
           outcome: Outcome.play,
           successText: '残っていたおかげでカウンターを未然に防いだ。',
@@ -958,7 +958,7 @@ class ScenarioPool {
         ScenarioOption(
           label: 'スライディングでコースを消す',
           key: AttributeKey.pace,
-          detail: Detail.agility,
+          detail: Detail.acceleration,
           difficulty: 66,
           outcome: Outcome.play,
           successText: '滑り込んでブロック。大きなファインプレー。',
