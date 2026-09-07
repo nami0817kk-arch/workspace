@@ -173,11 +173,10 @@ base64 -w 0 ios_distribution.p12 > ios_cert.base64.txt
 
 1. https://developer.apple.com/account/resources/identifiers/list
 2. **＋** → **App IDs** → **App**
-3. Bundle ID に **`com.kabuagari.soccerManager`** を入力（Explicit）
-   - このアプリの iOS 側バンドル ID です。
-   - Android 側の applicationId は `com.kabuagari.soccer_manager` で、
-     わざと違います。iOS のバンドル ID はアンダースコアを使えないためです。
-     両者が一致している必要はありません。
+3. Bundle ID に **`com.namiki.soccermanager`** を入力（Explicit）
+   - このアプリの iOS 側バンドル ID です。Android 側の applicationId も
+     同じ値にしてあります（アンダースコアを使わない名前にしたため、
+     両プラットフォームで揃えられる）。
 4. Capabilities は何も追加しなくて構いません（このアプリは
    ネットワーク通信も通知も課金も使いません）
 
@@ -185,7 +184,7 @@ base64 -w 0 ios_distribution.p12 > ios_cert.base64.txt
 
 1. https://developer.apple.com/account/resources/profiles/list
 2. **＋** → Distribution の **App Store Connect** を選ぶ
-3. App ID に `com.kabuagari.soccerManager` を選択
+3. App ID に `com.namiki.soccermanager` を選択
 4. 証明書に 4-2 で作った Apple Distribution 証明書を選択
 5. プロファイル名を付けて生成し、`.mobileprovision` をダウンロード
 
@@ -406,6 +405,6 @@ Android の `versionCode` も iOS の `CFBundleVersion` も、
 | Android ビルドが「Secrets が未設定です」で落ちる | 5. の AdMob 系 6 つの Secret 名を確認。名前の綴りが 1 文字でも違うと空になる |
 | 「AAB がデバッグ鍵で署名されています」で落ちる | `ANDROID_KEYSTORE_BASE64` の中身が壊れている。`base64 -w 0`（改行なし）で作り直す |
 | iOS の `security import` が失敗する | .p12 を `-legacy` なしで作った可能性。4-3 をやり直す |
-| iOS ビルドが provisioning profile で落ちる | プロファイルの App ID と `com.kabuagari.soccerManager` が一致しているか確認 |
+| iOS ビルドが provisioning profile で落ちる | プロファイルの App ID と `com.namiki.soccermanager` が一致しているか確認 |
 | Play に上げたら versionCode が既に使われていると言われる | `build_number` に前回より大きい数を指定して再実行 |
 | App Store Connect で輸出コンプライアンスを聞かれる | `Info.plist` に `ITSAppUsesNonExemptEncryption=false` を入れてあるので通常は出ません。出た場合は「いいえ」を選択 |
