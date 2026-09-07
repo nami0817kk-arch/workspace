@@ -7,6 +7,7 @@ import '../models/club.dart';
 import '../models/player.dart';
 import '../models/season.dart';
 import '../models/traits.dart';
+import 'career_engine_extras.dart';
 import 'formulas.dart';
 import 'names.dart';
 
@@ -17,6 +18,7 @@ class TransferOffer {
     required this.reason,
     required this.salary,
     required this.role,
+    required this.years,
     this.isRenewal = false,
     this.negotiated = false,
   });
@@ -30,6 +32,9 @@ class TransferOffer {
   /// 起用の約束。
   final String role;
 
+  /// 契約年数。
+  final int years;
+
   /// 今のクラブとの契約更改なら true。
   final bool isRenewal;
 
@@ -41,6 +46,7 @@ class TransferOffer {
         reason: reason,
         salary: salary ?? this.salary,
         role: role,
+        years: years,
         isRenewal: isRenewal,
         negotiated: negotiated ?? this.negotiated,
       );
@@ -70,9 +76,14 @@ enum ClubFate {
 
 /// キャリアの進行（シーズンの組み立て・結果の反映・移籍・引退）を受け持つ。
 class CareerEngine {
-  CareerEngine({Random? random}) : _random = random ?? Random();
+  CareerEngine({Random? random})
+      : _random = random ?? Random(),
+        extras = CareerExtras(random: random);
 
   final Random _random;
+
+  /// 代表招集と監督の目標。
+  final CareerExtras extras;
 
   /// 新しいキャリアを始める。2部の下位クラブから、無名の選手として始まる。
   CareerState startCareer({
@@ -105,6 +116,8 @@ class CareerEngine {
       history: [],
       agent: agent,
       salary: salaryFor(overall: overall, tier: club.tier),
+      contractYears: extras.rollContractYears(),
+      objective: extras.objectiveFor(player: player, club: club),
     );
   }
 
@@ -216,6 +229,13 @@ class CareerEngine {
   void applyResult(CareerState state, MatchResult result) {
     state.results.add(result);
 
+    // 代表戦はリーグの順位表に影響しない。キャップだけ増える。
+    if (result.international) {
+      state.caps++;
+      state.internationalGoals += result.goals;
+      return;
+    }
+
     final opponent = state.opponentFor(result.matchday);
     _row(state, state.club.id)
         .record(scored: result.scored, conceded: result.conceded);
@@ -296,12 +316,20 @@ class CareerEngine {
     final performance = stats.appearances == 0
         ? 0.85
         : (0.85 + (stats.averageRating - 6.0) * 0.25).clamp(0.7, 1.4);
-    final salary = _round(max(base, state.salary) * performance);
+    // 監督の目標を達成したかどうかも年俸に効く。
+    final objectiveFactor = state.objective == null
+        ? 1.0
+        : (state.objective!.achieved(stats)
+            ? Formulas.objectiveMetSalaryFactor
+            : Formulas.objectiveMissedSalaryFactor);
+    final salary =
+        _round(max(base, state.salary) * performance * objectiveFactor);
     return TransferOffer(
       club: club,
       reason: '${club.name}が契約更改を提示した。',
       salary: salary,
       role: _roleFor(state.player.overall, club),
+      years: extras.rollContractYears(),
       isRenewal: true,
     );
   }
@@ -311,6 +339,9 @@ class CareerEngine {
   /// 良いシーズンを送るほど、強いクラブから声がかかる。代理人の人脈で
   /// 上限が伸びる。何もしなくても残留できるので、常に選択肢として提示する。
   List<TransferOffer> offersFor(CareerState state) {
+    // 契約が残っている間は動けない。残り1年になって初めて話が来る。
+    if (state.contractYears > 1) return const [];
+
     final stats = state.seasonStats;
     if (stats.appearances < 10) return const [];
     if (stats.averageRating < Formulas.transferOfferRating) return const [];
@@ -338,6 +369,7 @@ class CareerEngine {
             : '${club.name}が、主力としての起用を約束している。',
         salary: salary,
         role: _roleFor(state.player.overall, club),
+        years: extras.rollContractYears(),
       ));
     }
     return candidates;
@@ -402,16 +434,20 @@ class CareerEngine {
       leaguePosition: state.leaguePosition,
       stats: state.seasonStats,
       salary: state.salary,
+      caps: state.seasonCaps,
+      objectiveMet: state.objective?.achieved(state.seasonStats) ?? false,
     );
 
     final league = _leagueContaining(accepted.club);
     final resolved = league.firstWhere((c) => c.name == accepted.club.name);
+    final nextPlayer = state.player.copyWith(
+      age: state.player.age + 1,
+      condition: Formulas.conditionMax,
+    );
+    final stayed = accepted.club.name == state.club.name;
 
     return CareerState(
-      player: state.player.copyWith(
-        age: state.player.age + 1,
-        condition: Formulas.conditionMax,
-      ),
+      player: nextPlayer,
       club: resolved,
       league: league,
       year: state.year + 1,
@@ -422,6 +458,17 @@ class CareerEngine {
       agent: state.agent,
       salary: accepted.salary,
       training: state.training,
+      // 契約更改か移籍なら新しい年数。ただ残っただけなら1年減る。
+      contractYears: stayed && !accepted.isRenewal
+          ? max(1, state.contractYears - 1)
+          : accepted.years,
+      objective: extras.objectiveFor(player: nextPlayer, club: resolved),
+      // 怪我はシーズンを跨いでも消えない。オフの間に少しは進む。
+      injury: state.injury == null || state.injury!.matchesOut <= 4
+          ? null
+          : state.injury,
+      caps: state.caps,
+      internationalGoals: state.internationalGoals,
     );
   }
 
@@ -460,6 +507,8 @@ class CareerEngine {
       leaguePosition: state.leaguePosition,
       stats: state.seasonStats,
       salary: state.salary,
+      caps: state.seasonCaps,
+      objectiveMet: state.objective?.achieved(state.seasonStats) ?? false,
     );
     return CareerState(
       player: state.player,
@@ -472,6 +521,9 @@ class CareerEngine {
       history: [...state.history, record],
       agent: state.agent,
       salary: state.salary,
+      contractYears: state.contractYears,
+      caps: state.caps,
+      internationalGoals: state.internationalGoals,
       retired: true,
     );
   }

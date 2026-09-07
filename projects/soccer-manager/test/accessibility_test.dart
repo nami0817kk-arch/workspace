@@ -45,7 +45,7 @@ void main() {
       const MethodChannel('dev.fluttercommunity.plus/package_info'),
       (call) async => <String, dynamic>{
         'appName': 'soccer_manager',
-        'packageName': 'com.kabuagari.soccer_manager',
+        'packageName': 'com.namiki.soccermanager',
         'version': '1.0.0',
         'buildNumber': '1',
       },

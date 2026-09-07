@@ -1,4 +1,4 @@
-package com.kabuagari.soccer_manager
+package com.namiki.soccermanager
 
 import io.flutter.embedding.android.FlutterActivity
 

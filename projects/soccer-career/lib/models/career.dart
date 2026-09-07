@@ -1,6 +1,8 @@
 import 'agent.dart';
 import 'attributes.dart';
 import 'club.dart';
+import 'injury.dart';
+import 'objective.dart';
 import 'player.dart';
 import 'season.dart';
 
@@ -13,6 +15,8 @@ class SeasonRecord {
     required this.leaguePosition,
     required this.stats,
     this.salary = 0,
+    this.caps = 0,
+    this.objectiveMet = false,
   });
 
   final int year;
@@ -24,6 +28,12 @@ class SeasonRecord {
   /// そのシーズンの年俸（万円）。
   final int salary;
 
+  /// そのシーズンに出た代表戦の数。
+  final int caps;
+
+  /// 監督の目標を達成したか。
+  final bool objectiveMet;
+
   Map<String, dynamic> toJson() => {
         'year': year,
         'clubName': clubName,
@@ -34,6 +44,8 @@ class SeasonRecord {
         'assists': stats.assists,
         'averageRating': stats.averageRating,
         'salary': salary,
+        'caps': caps,
+        'objectiveMet': objectiveMet,
       };
 
   factory SeasonRecord.fromJson(Map<String, dynamic> json) => SeasonRecord(
@@ -48,6 +60,8 @@ class SeasonRecord {
           averageRating: (json['averageRating'] as num).toDouble(),
         ),
         salary: json['salary'] as int? ?? 0,
+        caps: json['caps'] as int? ?? 0,
+        objectiveMet: json['objectiveMet'] as bool? ?? false,
       );
 }
 
@@ -64,7 +78,14 @@ class CareerState {
     required this.history,
     required this.agent,
     required this.salary,
+    required this.contractYears,
     this.training,
+    this.objective,
+    this.injury,
+    this.caps = 0,
+    this.internationalGoals = 0,
+    this.pendingInternational = false,
+    this.calledUp = false,
     this.retired = false,
   });
 
@@ -96,13 +117,43 @@ class CareerState {
   /// 今週の練習。null なら休養。
   AttributeKey? training;
 
+  /// 契約の残り年数。0 になると必ず去就を決めることになる。
+  int contractYears;
+
+  /// 監督から与えられた今季の目標。
+  SeasonObjective? objective;
+
+  /// 負傷中ならその内容。
+  Injury? injury;
+
+  /// 通算の代表キャップ数と代表ゴール。
+  int caps;
+  int internationalGoals;
+
+  /// 次に代表戦が待っているか（代表ウィーク）。
+  bool pendingInternational;
+
+  /// 今季、代表に招集されているか。
+  bool calledUp;
+
   /// 引退済みなら true。以後は試合をせず、通算成績だけを見せる。
   bool retired;
 
-  int get matchday => results.length + 1;
-  bool get seasonFinished => results.length >= fixtures.length;
+  /// リーグ戦の結果だけ。代表戦は節に数えない。
+  List<MatchResult> get leagueResults =>
+      results.where((r) => !r.international).toList();
 
-  SeasonStats get seasonStats => SeasonStats.from(results);
+  int get matchday => leagueResults.length + 1;
+  bool get seasonFinished => leagueResults.length >= fixtures.length;
+
+  /// 負傷離脱中か。
+  bool get injured => injury != null;
+
+  /// リーグ戦の個人成績。代表戦は含めない（監督の目標もこちらで見る）。
+  SeasonStats get seasonStats => SeasonStats.from(leagueResults);
+
+  /// 今季の代表戦の数。
+  int get seasonCaps => results.where((r) => r.international).length;
 
   /// 通算の稼ぎ（万円）。終えたシーズンの分だけ数える。
   int get totalEarnings => history.fold(0, (s, h) => s + h.salary);
@@ -161,6 +212,13 @@ class CareerState {
         'agent': agent.toJson(),
         'salary': salary,
         'training': training?.name,
+        'contractYears': contractYears,
+        'objective': objective?.toJson(),
+        'injury': injury?.toJson(),
+        'caps': caps,
+        'internationalGoals': internationalGoals,
+        'pendingInternational': pendingInternational,
+        'calledUp': calledUp,
       };
 
   factory CareerState.fromJson(Map<String, dynamic> json) {
@@ -189,6 +247,14 @@ class CareerState {
               !AttributeKey.values.any((k) => k.name == trainingName)
           ? null
           : AttributeKey.values.byName(trainingName),
+      contractYears: json['contractYears'] as int? ?? 2,
+      objective:
+          SeasonObjective.fromJson(json['objective'] as Map<String, dynamic>?),
+      injury: Injury.fromJson(json['injury'] as Map<String, dynamic>?),
+      caps: json['caps'] as int? ?? 0,
+      internationalGoals: json['internationalGoals'] as int? ?? 0,
+      pendingInternational: json['pendingInternational'] as bool? ?? false,
+      calledUp: json['calledUp'] as bool? ?? false,
       retired: json['retired'] as bool? ?? false,
     );
   }

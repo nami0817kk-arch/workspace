@@ -2,7 +2,8 @@
 enum Appearance {
   start('先発'),
   sub('途中出場'),
-  benched('ベンチ外');
+  benched('ベンチ外'),
+  injured('負傷離脱');
 
   const Appearance(this.label);
 
@@ -21,7 +22,11 @@ class MatchResult {
     required this.rating,
     required this.goals,
     required this.assists,
+    this.international = false,
   });
+
+  /// 代表戦なら true。リーグ戦とは別に数える。
+  final bool international;
 
   final int matchday;
   final String opponentName;
@@ -49,6 +54,7 @@ class MatchResult {
         'rating': rating,
         'goals': goals,
         'assists': assists,
+        'international': international,
       };
 
   factory MatchResult.fromJson(Map<String, dynamic> json) => MatchResult(
@@ -61,6 +67,7 @@ class MatchResult {
         rating: (json['rating'] as num?)?.toDouble(),
         goals: json['goals'] as int,
         assists: json['assists'] as int,
+        international: json['international'] as bool? ?? false,
       );
 }
 

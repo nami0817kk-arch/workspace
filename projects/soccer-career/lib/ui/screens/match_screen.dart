@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../game/match_engine.dart';
 import '../../game/scenarios.dart';
-import '../../models/attributes.dart';
+import '../../models/injury.dart';
 import '../../models/season.dart';
 import '../../state/career_controller.dart';
 
@@ -47,7 +47,7 @@ class _MatchScreenState extends State<MatchScreen> {
     if (result != null) {
       return _MatchSummary(
         result: result,
-        trained: widget.controller.lastTrained,
+        week: widget.controller.lastWeek,
       );
     }
     if (match == null) return const SizedBox.shrink();
@@ -339,12 +339,12 @@ class _BenchedView extends StatelessWidget {
 }
 
 class _MatchSummary extends StatelessWidget {
-  const _MatchSummary({required this.result, required this.trained});
+  const _MatchSummary({required this.result, required this.week});
 
   final MatchResult result;
 
-  /// 練習で伸びた能力。無ければ null。
-  final AttributeKey? trained;
+  /// その1週間で起きたこと（練習の成果・負傷・復帰）。
+  final WeekReport week;
 
   @override
   Widget build(BuildContext context) {
@@ -376,14 +376,27 @@ class _MatchSummary extends StatelessWidget {
                   _stat(theme, 'アシスト', '${result.assists}'),
                 ],
               ),
-              if (trained != null) ...[
+              if (week.trained != null) ...[
                 const SizedBox(height: 20),
                 Text(
-                  '練習の成果: ${trained!.label} が 1 伸びた',
+                  '練習の成果: ${week.trained!.label} が 1 伸びた',
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyMedium
                       ?.copyWith(color: theme.colorScheme.primary),
                 ),
+              ],
+              if (week.recovered) ...[
+                const SizedBox(height: 20),
+                Text(
+                  '離脱から復帰した。コンディションはまだ戻っていない。',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyMedium
+                      ?.copyWith(color: theme.colorScheme.primary),
+                ),
+              ],
+              if (week.newInjury != null) ...[
+                const SizedBox(height: 20),
+                _InjuryNotice(injury: week.newInjury!),
               ],
               const SizedBox(height: 36),
               FilledButton(
@@ -408,4 +421,47 @@ class _MatchSummary extends StatelessWidget {
           Text(value, style: theme.textTheme.headlineSmall),
         ],
       );
+}
+
+/// 負傷を伝えるカード。重傷は後遺症まで書く。
+class _InjuryNotice extends StatelessWidget {
+  const _InjuryNotice({required this.injury});
+
+  final Injury injury;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final severe = injury.severity == InjurySeverity.severe;
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.errorContainer,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          Text(
+            '負傷: ${injury.name}（${injury.severity.label}）',
+            style: theme.textTheme.titleSmall
+                ?.copyWith(color: theme.colorScheme.onErrorContainer),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '${injury.matchesOut}試合の離脱',
+            style: theme.textTheme.bodyMedium
+                ?.copyWith(color: theme.colorScheme.onErrorContainer),
+          ),
+          if (severe) ...[
+            const SizedBox(height: 4),
+            Text(
+              '長期離脱。体は元どおりにはならない。',
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: theme.colorScheme.onErrorContainer),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
 }

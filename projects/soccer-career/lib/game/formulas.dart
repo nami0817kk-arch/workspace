@@ -114,4 +114,41 @@ class Formulas {
 
   /// 上乗せに失敗したとき、オファーが撤回される確率。
   static const double withdrawChanceOnFail = 0.5;
+
+  /// 1試合あたりの負傷確率の基準。コンディションと年齢で増減する。
+  static const double injuryBaseChance = 0.045;
+
+  /// 練習1回あたりの負傷確率。試合より低いが、疲れていると効いてくる。
+  static const double injuryTrainingChance = 0.02;
+
+  /// コンディションが基準を下回るほど怪我しやすくなる傾き。
+  static const double injuryConditionSlope = 0.0009;
+
+  /// この年齢を超えると、1歳ごとに怪我しやすくなる。
+  static const int injuryAgeFrom = 29;
+  static const double injuryPerAgeYear = 0.004;
+
+  /// 重傷で落ちる能力値とポテンシャル。
+  static const int severeInjuryAttributeLoss = 3;
+  static const int severeInjuryPotentialLoss = 2;
+
+  /// 復帰直後のコンディション。
+  static const int conditionAfterInjury = 45;
+
+  /// 代表に招集される最低総合力。
+  static const int callUpOverall = 72;
+
+  /// 代表に招集される最低の直近平均評価点。
+  static const double callUpRating = 6.6;
+
+  /// 代表戦の前に必要な出場試合数（実績が無いと選ばれない）。
+  static const int callUpMinAppearances = 5;
+
+  /// 契約年数の範囲。
+  static const int contractYearsMin = 2;
+  static const int contractYearsMax = 4;
+
+  /// 目標を達成したときの年俸倍率。達成できなかったときの倍率。
+  static const double objectiveMetSalaryFactor = 1.15;
+  static const double objectiveMissedSalaryFactor = 0.9;
 }

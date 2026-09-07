@@ -120,6 +120,23 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                       const SizedBox(height: 6),
                       _FateChip(fate: fate),
                     ],
+                    if (state.objective != null) ...[
+                      const SizedBox(height: 8),
+                      Text(
+                        state.objective!.achieved(stats)
+                            ? '監督の期待に応えた（${state.objective!.achievedCount(stats)}/3）'
+                            : '監督の期待には届かなかった（${state.objective!.achievedCount(stats)}/3）',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: state.objective!.achieved(stats)
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.error,
+                        ),
+                      ),
+                    ],
+                    if (state.seasonCaps > 0) ...[
+                      const SizedBox(height: 4),
+                      Text('代表 ${state.seasonCaps}試合', style: muted),
+                    ],
                     const SizedBox(height: 16),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -176,7 +193,12 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                 const SizedBox(height: 12),
               ],
               if (_offers.length == 1)
-                Text('他クラブからのオファーは無かった。', style: muted),
+                Text(
+                  state.contractYears > 1
+                      ? '契約はあと${state.contractYears}年残っている。今は動けない。'
+                      : '他クラブからのオファーは無かった。',
+                  style: muted,
+                ),
               if (canRetire) ...[
                 const SizedBox(height: 16),
                 OutlinedButton(
@@ -260,7 +282,7 @@ class _OfferCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('年俸 ${offer.salary}万円',
+                      Text('年俸 ${offer.salary}万円  ·  ${offer.years}年契約',
                           style: theme.textTheme.titleMedium),
                       Text('手取り $takeHome万円（手数料差引後）', style: muted),
                     ],

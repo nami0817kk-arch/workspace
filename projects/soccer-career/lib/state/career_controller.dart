@@ -2,11 +2,31 @@ import 'package:flutter/foundation.dart';
 
 import '../data/save_repository.dart';
 import '../game/career_engine.dart';
+import '../game/formulas.dart';
 import '../game/match_engine.dart';
+import '../game/national.dart';
 import '../models/agent.dart';
 import '../models/attributes.dart';
 import '../models/career.dart';
+import '../models/injury.dart';
+import '../models/player.dart';
 import '../models/season.dart';
+
+/// 試合を終えた1週間で起きたこと。画面で一度見せる。
+class WeekReport {
+  const WeekReport({this.trained, this.newInjury, this.recovered = false});
+
+  /// 練習で伸びた能力。
+  final AttributeKey? trained;
+
+  /// 新たに負傷したらその内容。
+  final Injury? newInjury;
+
+  /// 離脱から復帰したか。
+  final bool recovered;
+
+  bool get isEmpty => trained == null && newInjury == null && !recovered;
+}
 
 /// アプリ全体の状態。画面はこれを購読する。
 class CareerController extends ChangeNotifier {
@@ -26,8 +46,8 @@ class CareerController extends ChangeNotifier {
   MatchInProgress? _inProgress;
   bool _loading = true;
 
-  /// 直近の1週間で練習により伸びた能力。画面で一度見せたら消す。
-  AttributeKey? lastTrained;
+  /// 直近の1週間で起きたこと。試合結果の画面で見せる。
+  WeekReport lastWeek = const WeekReport();
 
   CareerState? get state => _state;
   MatchInProgress? get currentMatch => _inProgress;
@@ -53,6 +73,7 @@ class CareerController extends ChangeNotifier {
       agent: agent,
     );
     _inProgress = null;
+    lastWeek = const WeekReport();
     await _persist();
   }
 
@@ -64,10 +85,14 @@ class CareerController extends ChangeNotifier {
     await _persist();
   }
 
-  /// 次の試合を始める。出場の仕方は直近の評価点で決まる。
+  /// 次の試合を始める。
+  ///
+  /// 代表ウィークなら代表戦、負傷中なら試合には出ない。
   void startNextMatch() {
     final state = _state;
-    if (state == null || state.seasonFinished || state.retired) return;
+    if (state == null || state.retired) return;
+    if (state.pendingInternational) return startInternational();
+    if (state.seasonFinished) return;
 
     final matchday = state.matchday;
     _inProgress = _match.start(
@@ -76,7 +101,32 @@ class CareerController extends ChangeNotifier {
       club: state.club,
       opponent: state.opponentFor(matchday),
       home: state.isHome(matchday),
-      appearance: MatchEngine.decideAppearance(state.results),
+      appearance: state.injured
+          ? Appearance.injured
+          : MatchEngine.decideAppearance(state.leagueResults),
+    );
+    notifyListeners();
+  }
+
+  /// 代表戦を始める。招集されていなければ何も起きない（週だけ消える）。
+  void startInternational() {
+    final state = _state;
+    if (state == null || !state.pendingInternational) return;
+
+    if (!state.calledUp || state.injured) {
+      state.pendingInternational = false;
+      _persist();
+      return;
+    }
+
+    _inProgress = _match.start(
+      matchday: state.matchday,
+      player: state.player,
+      club: National.home,
+      opponent: _career.extras.pickOpponent(),
+      home: true,
+      appearance: Appearance.start,
+      international: true,
     );
     notifyListeners();
   }
@@ -89,7 +139,7 @@ class CareerController extends ChangeNotifier {
     return resolution;
   }
 
-  /// 試合を終えて結果を反映する。成長判定と1週間の練習・消耗もここで行う。
+  /// 試合を終えて結果を反映する。成長・練習・負傷もここでまとめて進める。
   Future<MatchResult?> finishMatch() async {
     final state = _state;
     final match = _inProgress;
@@ -98,24 +148,64 @@ class CareerController extends ChangeNotifier {
     final result = match.finish();
     _career.applyResult(state, result);
 
-    var player = state.player.copyWith(
-      attributes: _match.grow(
-        state.player,
-        result.rating,
-        used: match.successfulKeys,
-      ),
-    );
-    final week = _match.applyWeek(
-      player,
-      training: state.training,
-      played: result.appearance != Appearance.benched,
-    );
-    player = player.copyWith(
-      attributes: week.attributes,
-      condition: week.condition,
-    );
-    lastTrained = week.trained;
+    if (result.international) {
+      state.pendingInternational = false;
+      _inProgress = null;
+      lastWeek = const WeekReport();
+      await _persist();
+      return result;
+    }
+
+    var player = state.player;
+    Injury? newInjury;
+    var recovered = false;
+
+    if (state.injured) {
+      // 離脱中は成長も練習もしない。試合数だけ消化する。
+      final next = state.injury!.tick();
+      if (next.healed) {
+        state.injury = null;
+        recovered = true;
+        player = player.copyWith(condition: Formulas.conditionAfterInjury);
+      } else {
+        state.injury = next;
+      }
+    } else {
+      player = player.copyWith(
+        attributes: _match.grow(
+          player,
+          result.rating,
+          used: match.successfulKeys,
+        ),
+      );
+      final week = _match.applyWeek(
+        player,
+        training: state.training,
+        played: result.appearance != Appearance.benched,
+      );
+      player = player.copyWith(
+        attributes: week.attributes,
+        condition: week.condition,
+      );
+      newInjury = week.injury ??
+          _match.rollInjury(player, baseChance: Formulas.injuryBaseChance);
+      if (newInjury != null) {
+        final (attributes, potential) =
+            _match.applySevereInjury(player, newInjury);
+        player = Player.rebuild(player, attributes: attributes, potential: potential);
+        state.injury = newInjury;
+      }
+      lastWeek = WeekReport(trained: week.trained, newInjury: newInjury);
+    }
+
+    if (recovered) lastWeek = const WeekReport(recovered: true);
     state.player = player;
+
+    // 代表の招集は節が進むごとに見直す。
+    state.calledUp = _career.extras.shouldCallUp(state);
+    if (_career.extras.isBreakAfter(result.matchday) && !state.seasonFinished) {
+      state.pendingInternational = true;
+    }
 
     _inProgress = null;
     await _persist();
@@ -148,6 +238,7 @@ class CareerController extends ChangeNotifier {
     if (state == null) return;
     _state = _career.advanceSeason(state, accepted: accepted);
     _inProgress = null;
+    lastWeek = const WeekReport();
     await _persist();
   }
 
