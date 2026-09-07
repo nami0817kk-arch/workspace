@@ -156,3 +156,26 @@ def test_sitemap_and_canonical_have_no_html_suffix(site):
     assert f'<link rel="canonical" href="{render.SITE_URL}/">' in index
     guide = (out_dir / "guide.html").read_text(encoding="utf-8")
     assert f'<link rel="canonical" href="{render.SITE_URL}/guide">' in guide
+
+
+def test_unreliable_dates_are_kept_on_disk_but_not_published(site):
+    """日付が当てにならない回は、ファイルは残したままサイトには出さない。"""
+    data_dir, out_dir = site
+    bad = sorted(render.UNRELIABLE_DATES)[0]
+    _write_day(data_dir, bad)
+    _write_day(data_dir, "2026-09-04")
+    render.build_all()
+
+    assert (data_dir / f"{bad}.json").exists(), "生データは消さない"
+    assert not (out_dir / "archive" / "gainers" / f"{bad}.html").exists()
+    assert (out_dir / "archive" / "gainers" / "2026-09-04.html").exists()
+    assert bad not in (out_dir / "sitemap.xml").read_text(encoding="utf-8")
+
+
+def test_build_still_refuses_when_every_day_is_unreliable(site):
+    """除外した結果ゼロ件になったら、空のサイトを出さずに止まる。"""
+    data_dir, _ = site
+    for d in render.UNRELIABLE_DATES:
+        _write_day(data_dir, d)
+    with pytest.raises(RuntimeError):
+        render.build_all()
