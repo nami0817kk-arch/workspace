@@ -2,6 +2,7 @@ import 'dart:math';
 
 import '../models/attributes.dart';
 import '../models/club.dart';
+import '../models/injury.dart';
 import '../models/player.dart';
 import '../models/season.dart';
 import '../models/traits.dart';
@@ -41,6 +42,7 @@ class MatchInProgress {
     required this.minutes,
     required this.player,
     required this.club,
+    this.international = false,
     Random? random,
   })  : assert(scenarios.length == minutes.length),
         _random = random ?? Random();
@@ -56,6 +58,10 @@ class MatchInProgress {
 
   final Player player;
   final Club club;
+
+  /// 代表戦か。リーグの順位表には影響しない。
+  final bool international;
+
   final Random _random;
 
   final List<ScenarioResolution> resolutions = [];
@@ -161,6 +167,7 @@ class MatchInProgress {
       rating: appearance == Appearance.benched ? null : rating,
       goals: goals,
       assists: assists,
+      international: international,
     );
   }
 
@@ -177,13 +184,21 @@ class MatchInProgress {
 
 /// 練習と試合の消耗をまとめた1週間の結果。
 class WeekOutcome {
-  const WeekOutcome({required this.attributes, required this.condition, required this.trained});
+  const WeekOutcome({
+    required this.attributes,
+    required this.condition,
+    required this.trained,
+    this.injury,
+  });
 
   final Attributes attributes;
   final int condition;
 
   /// 練習で伸びた能力。伸びなければ null。
   final AttributeKey? trained;
+
+  /// 練習中に負傷したらその内容。
+  final Injury? injury;
 }
 
 /// 試合を組み立てる。
@@ -218,11 +233,12 @@ class MatchEngine {
     required Club opponent,
     required bool home,
     required Appearance appearance,
+    bool international = false,
   }) {
     final count = switch (appearance) {
       Appearance.start => Formulas.scenariosPerStart,
       Appearance.sub => Formulas.scenariosPerSub,
-      Appearance.benched => 0,
+      Appearance.benched || Appearance.injured => 0,
     };
 
     final pool = [...ScenarioPool.forPosition(player.position)]..shuffle(_random);
@@ -237,6 +253,7 @@ class MatchEngine {
       minutes: _minutesFor(count, appearance),
       player: player,
       club: club,
+      international: international,
       random: _random,
     );
   }
@@ -289,6 +306,52 @@ class MatchEngine {
     return player.attributes.bump(key, 1);
   }
 
+  /// 負傷するかどうかを判定する。
+  ///
+  /// 疲れているほど、歳を取っているほど起きやすい。ここが練習と休養の
+  /// 選択に重みを与えている。休養を「伸びないから無駄」にしないための仕掛け。
+  Injury? rollInjury(Player player, {required double baseChance}) {
+    final fatigue = (Formulas.conditionBaseline - player.condition)
+        .clamp(0, Formulas.conditionMax)
+        .toDouble();
+    final age = (player.age - Formulas.injuryAgeFrom).clamp(0, 20).toDouble();
+    final chance = baseChance +
+        fatigue * Formulas.injuryConditionSlope +
+        age * Formulas.injuryPerAgeYear;
+
+    if (_random.nextDouble() >= chance) return null;
+
+    // 重い怪我ほど出にくくする。軽傷が大半で、たまに長期離脱。
+    final roll = _random.nextDouble();
+    final severity = roll < 0.6
+        ? InjurySeverity.light
+        : roll < 0.92
+            ? InjurySeverity.moderate
+            : InjurySeverity.severe;
+    final kinds =
+        InjuryKind.all.where((k) => k.severity == severity).toList();
+    final kind = kinds[_random.nextInt(kinds.length)];
+    final span = kind.maxMatches - kind.minMatches + 1;
+    return Injury(
+      name: kind.name,
+      severity: kind.severity,
+      matchesOut: kind.minMatches + _random.nextInt(span),
+    );
+  }
+
+  /// 重傷の後遺症。能力とポテンシャルを削る。
+  (Attributes, int) applySevereInjury(Player player, Injury injury) {
+    if (injury.severity != InjurySeverity.severe) {
+      return (player.attributes, player.potential);
+    }
+    final kind = InjuryKind.all.firstWhere((k) => k.name == injury.name,
+        orElse: () => InjuryKind.all.last);
+    return (
+      player.attributes.bump(kind.affects, -Formulas.severeInjuryAttributeLoss),
+      player.potential - Formulas.severeInjuryPotentialLoss,
+    );
+  }
+
   /// 試合後の1週間。試合の消耗と、練習または休養を反映する。
   ///
   /// 練習はポテンシャルに達していなければ一定確率で1伸びる。
@@ -310,10 +373,20 @@ class MatchEngine {
       }
     }
 
+    final settled = condition.clamp(0, Formulas.conditionMax).toInt();
+    // 練習した週だけ、練習中の負傷を判定する。休養に怪我のリスクは無い。
+    final injury = training == null
+        ? null
+        : rollInjury(
+            player.copyWith(condition: settled),
+            baseChance: Formulas.injuryTrainingChance,
+          );
+
     return WeekOutcome(
       attributes: attributes,
-      condition: condition.clamp(0, Formulas.conditionMax).toInt(),
+      condition: settled,
       trained: trained,
+      injury: injury,
     );
   }
 

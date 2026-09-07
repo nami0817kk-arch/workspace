@@ -330,7 +330,11 @@ void main() {
       final weak = Agent.pool.firstWhere((a) => a.negotiation == 2);
       final s = ce.startCareer(name: 'W', position: Position.st, age: 20, agent: weak);
       final offer = TransferOffer(
-        club: Names.buildLeague(2).first, reason: '', salary: 500, role: '主力');
+        club: Names.buildLeague(2).first,
+        reason: '',
+        salary: 500,
+        role: '主力',
+        years: 3);
       var withdrawn = 0;
       for (var i = 0; i < 100; i++) {
         final (result, _) = ce.negotiate(s, offer);
@@ -343,6 +347,7 @@ void main() {
       CareerState build(Agent agent) {
         final ce = CareerEngine(random: Random(13));
         final s = ce.startCareer(name: 'A', position: Position.st, age: 22, agent: agent);
+        s.contractYears = 1;
         for (var i = 0; i < 12; i++) {
           s.results.add(played(8.0));
         }
@@ -362,7 +367,8 @@ void main() {
       final before = s.salary;
       final next = ce.advanceSeason(
         s,
-        accepted: TransferOffer(club: s.club, reason: '', salary: 1234, role: '主力'),
+        accepted: TransferOffer(
+            club: s.club, reason: '', salary: 1234, role: '主力', years: 3),
       );
       expect(next.salary, 1234);
       expect(next.history.last.salary, before);
@@ -385,6 +391,11 @@ void main() {
       json.remove('agent');
       json.remove('salary');
       json.remove('training');
+      json.remove('contractYears');
+      json.remove('objective');
+      json.remove('injury');
+      json.remove('caps');
+      json.remove('internationalGoals');
       (json['player'] as Map<String, dynamic>)
         ..remove('potential')
         ..remove('traits')
@@ -399,6 +410,10 @@ void main() {
       expect(restored.player.potential, greaterThan(restored.player.overall));
       expect(restored.player.traits, isEmpty);
       expect(restored.player.condition, Formulas.conditionMax);
+      expect(restored.contractYears, greaterThan(0));
+      expect(restored.objective, isNull);
+      expect(restored.injury, isNull);
+      expect(restored.caps, 0);
     });
 
     test('新しい項目は往復しても保たれる', () {

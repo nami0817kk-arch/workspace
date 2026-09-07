@@ -44,6 +44,7 @@ CareerState stateAt({required int tier, required int position}) {
     history: [],
     agent: Agent.pool.first,
     salary: 300,
+    contractYears: 1,
   );
 }
 
@@ -108,7 +109,8 @@ void main() {
       final target = Names.buildLeague(2).last;
       final next = engine.advanceSeason(
         s,
-        accepted: TransferOffer(club: target, reason: '', salary: 500, role: '主力'),
+        accepted: TransferOffer(
+          club: target, reason: '', salary: 500, role: '主力', years: 3),
       );
       expect(next.club.name, target.name);
       expect(next.club.tier, 2);

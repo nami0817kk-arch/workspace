@@ -59,6 +59,25 @@ class Player {
             .toInt(),
       );
 
+  /// ポテンシャルまで含めて作り直す。重傷の後遺症で使う。
+  ///
+  /// copyWith にポテンシャルを足さないのは、通常の成長で誤って
+  /// 上限をいじれてしまうのを防ぐため。ここを通るのは怪我だけ。
+  static Player rebuild(
+    Player from, {
+    required Attributes attributes,
+    required int potential,
+  }) =>
+      Player(
+        name: from.name,
+        age: from.age,
+        position: from.position,
+        attributes: attributes,
+        potential: potential,
+        traits: from.traits,
+        condition: from.condition,
+      );
+
   Map<String, dynamic> toJson() => {
         'name': name,
         'age': age,

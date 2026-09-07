@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/attributes.dart';
 import '../../models/career.dart';
+import '../../models/objective.dart';
 import '../../models/season.dart';
 import '../../state/career_controller.dart';
 import 'match_screen.dart';
@@ -121,7 +122,15 @@ class _HomeTab extends StatelessWidget {
       children: [
         _PlayerCard(state: state),
         const SizedBox(height: 16),
-        if (!finished) ...[
+        if (state.injured) ...[
+          _InjuryCard(state: state),
+          const SizedBox(height: 16),
+        ],
+        if (state.objective != null) ...[
+          _ObjectiveCard(objective: state.objective!, stats: stats),
+          const SizedBox(height: 16),
+        ],
+        if (!finished && !state.injured) ...[
           _TrainingCard(state: state, onTraining: onTraining),
           const SizedBox(height: 16),
         ],
@@ -167,21 +176,34 @@ class _HomeTab extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Text('第${state.matchday}節 / ${state.fixtures.length}',
+                  Text(
+                      state.pendingInternational
+                          ? '代表ウィーク'
+                          : '第${state.matchday}節 / ${state.fixtures.length}',
                       style: theme.textTheme.labelMedium?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant)),
                   const SizedBox(height: 4),
                   Text(
-                    '${state.isHome(state.matchday) ? "H" : "A"}  '
-                    'vs ${state.opponentFor(state.matchday).name}',
+                    state.pendingInternational
+                        ? (state.calledUp && !state.injured
+                            ? '代表に招集された'
+                            : '招集は無かった')
+                        : '${state.isHome(state.matchday) ? "H" : "A"}  '
+                            'vs ${state.opponentFor(state.matchday).name}',
                     style: theme.textTheme.titleLarge,
                   ),
                   const SizedBox(height: 16),
                   FilledButton(
                     onPressed: onPlay,
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                      child: Text('試合へ'),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Text(state.pendingInternational
+                          ? (state.calledUp && !state.injured
+                              ? '代表戦へ'
+                              : '代表ウィークを飛ばす')
+                          : state.injured
+                              ? '欠場する'
+                              : '試合へ'),
                     ),
                   ),
                 ],
@@ -248,7 +270,12 @@ class _PlayerCard extends StatelessWidget {
                         style: muted,
                       ),
                       Text(
-                        '年俸 ${_yen(state.salary)}  ·  代理人 ${state.agent.name}',
+                        '年俸 ${_yen(state.salary)}  ·  契約 残り${state.contractYears}年',
+                        style: muted,
+                      ),
+                      Text(
+                        '代理人 ${state.agent.name}'
+                        '${state.caps > 0 ? '  ·  代表 ${state.caps}キャップ ${state.internationalGoals}ゴール' : ''}',
                         style: muted,
                       ),
                     ],
@@ -265,6 +292,12 @@ class _PlayerCard extends StatelessWidget {
                   label: Text('ポテンシャル ${player.potentialBand}'),
                   visualDensity: VisualDensity.compact,
                 ),
+                if (state.calledUp)
+                  Chip(
+                    label: const Text('代表招集'),
+                    backgroundColor: theme.colorScheme.primaryContainer,
+                    visualDensity: VisualDensity.compact,
+                  ),
                 for (final t in player.traits)
                   Tooltip(
                     message: t.description,
@@ -441,7 +474,9 @@ class _ResultRow extends StatelessWidget {
         child: Text(result.scoreLine,
             style: theme.textTheme.titleSmall?.copyWith(color: color)),
       ),
-      title: Text('${result.home ? "H" : "A"}  ${result.opponentName}'),
+      title: Text(result.international
+          ? '代表  ${result.opponentName}'
+          : '${result.home ? "H" : "A"}  ${result.opponentName}'),
       subtitle: Text(result.appearance.label),
       trailing: Text(
         result.rating?.toStringAsFixed(1) ?? '—',
@@ -536,7 +571,9 @@ class _CareerTab extends StatelessWidget {
                 '${record.tier}部 ${record.leaguePosition}位  ·  '
                 '${record.stats.appearances}試合 '
                 '${record.stats.goals}G ${record.stats.assists}A  ·  '
-                '年俸 ${record.salary}万円',
+                '年俸 ${record.salary}万円'
+                '${record.caps > 0 ? '  ·  代表${record.caps}' : ''}'
+                '${record.objectiveMet ? '  ·  目標達成' : ''}',
               ),
               trailing: Text(
                 record.stats.appearances == 0
@@ -549,4 +586,112 @@ class _CareerTab extends StatelessWidget {
       ],
     );
   }
+}
+
+/// 負傷中であることを伝えるカード。
+class _InjuryCard extends StatelessWidget {
+  const _InjuryCard({required this.state});
+
+  final CareerState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final injury = state.injury!;
+    return Card(
+      color: theme.colorScheme.errorContainer,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${injury.name}（${injury.severity.label}）',
+              style: theme.textTheme.titleSmall
+                  ?.copyWith(color: theme.colorScheme.onErrorContainer),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '残り${injury.matchesOut}試合の離脱。'
+              '試合には出られないが、節は進む。',
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: theme.colorScheme.onErrorContainer),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 監督から与えられた今季の目標。達成状況を並べて見せる。
+class _ObjectiveCard extends StatelessWidget {
+  const _ObjectiveCard({required this.objective, required this.stats});
+
+  final SeasonObjective objective;
+  final SeasonStats stats;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text('監督の期待', style: theme.textTheme.titleSmall),
+                const Spacer(),
+                Text(
+                  '${objective.achievedCount(stats)} / 3',
+                  style: theme.textTheme.titleSmall?.copyWith(
+                      color: objective.achieved(stats)
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.onSurfaceVariant),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            _row(theme, '出場', stats.appearances, objective.appearances),
+            _row(theme, '得点関与', stats.goals + stats.assists,
+                objective.contributions),
+            _rowDouble(theme, '平均評価', stats.averageRating, objective.rating),
+            const SizedBox(height: 6),
+            Text(
+              '2つ以上で達成。契約更改の年俸に効く。',
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _row(ThemeData theme, String label, int now, int target) =>
+      _line(theme, label, '$now / $target', now >= target);
+
+  Widget _rowDouble(ThemeData theme, String label, double now, double target) =>
+      _line(theme, label, '${now.toStringAsFixed(2)} / ${target.toStringAsFixed(2)}',
+          now >= target);
+
+  Widget _line(ThemeData theme, String label, String value, bool met) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 2),
+        child: Row(
+          children: [
+            Icon(
+              met ? Icons.check_circle : Icons.circle_outlined,
+              size: 16,
+              color: met
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.outlineVariant,
+            ),
+            const SizedBox(width: 8),
+            SizedBox(width: 76, child: Text(label, style: theme.textTheme.bodySmall)),
+            Text(value, style: theme.textTheme.bodySmall),
+          ],
+        ),
+      );
 }
