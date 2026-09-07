@@ -396,7 +396,7 @@ void main() {
         guard++;
       }
       expect(c.state!.seasonFinished, isTrue);
-      expect(c.state!.leagueResults.length, Formulas.matchesPerSeason);
+      expect(c.state!.leagueResults.length, c.state!.fixtures.length);
     });
 
     test('スタイルは保存を往復しても残る', () {

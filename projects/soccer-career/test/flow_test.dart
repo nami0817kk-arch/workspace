@@ -57,7 +57,7 @@ void main() {
 
       final state = c.state!;
       expect(state.seasonFinished, isTrue, reason: '38節を消化しきれていない');
-      expect(state.leagueResults.length, Formulas.matchesPerSeason);
+      expect(state.leagueResults.length, state.fixtures.length);
       // 節番号が飛んでいないこと。
       for (var i = 0; i < state.leagueResults.length; i++) {
         expect(state.leagueResults[i].matchday, i + 1);
@@ -65,7 +65,7 @@ void main() {
       // 順位表は全クラブが同じ試合数を消化している。
       final played = state.table.map((r) => r.played).toSet();
       expect(played.length, 1, reason: 'クラブ間で消化数がずれている');
-      expect(played.first, Formulas.matchesPerSeason);
+      expect(played.first, state.fixtures.length);
     });
 
     test('通しで回しても評価点は 4.0〜10.0 に収まり、出ていない試合には付かない', () async {

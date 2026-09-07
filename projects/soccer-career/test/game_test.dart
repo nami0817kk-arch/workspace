@@ -5,6 +5,7 @@ import 'package:soccer_career/game/career_engine.dart';
 import 'package:soccer_career/game/formulas.dart';
 import 'package:soccer_career/game/match_engine.dart';
 import 'package:soccer_career/game/names.dart';
+import 'package:soccer_career/game/world.dart';
 import 'package:soccer_career/game/scenarios.dart';
 import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/attributes.dart';
@@ -277,8 +278,10 @@ void main() {
       final state = CareerEngine(random: Random(1))
           .startCareer(name: 'A', position: Position.cm, age: 17, agent: agent);
       expect(state.club.tier, 2);
-      expect(state.league.length, Formulas.clubsPerLeague);
-      expect(state.fixtures.length, Formulas.matchesPerSeason);
+      // クラブ数と試合数は国ごとに違う。
+      final country = World.byId(state.club.countryId);
+      expect(state.league.length, country.clubsInTier(2));
+      expect(state.fixtures.length, (country.clubsInTier(2) - 1) * 2);
       expect(state.results, isEmpty);
     });
 
@@ -410,6 +413,16 @@ void main() {
       final first = Names.buildLeague(1).map((c) => c.name).toSet();
       final second = Names.buildLeague(2).map((c) => c.name).toSet();
       expect(first.intersection(second), isEmpty);
+    });
+
+    test('全ての国で、全ての部のクラブ名が重複しない', () {
+      for (final country in World.countries) {
+        final all = <String>[];
+        for (var tier = 1; tier <= country.tiers; tier++) {
+          all.addAll(World.buildLeague(country.id, tier).map((c) => c.name));
+        }
+        expect(all.toSet().length, all.length, reason: country.name);
+      }
     });
 
     test('1部の方が平均的に強い', () {

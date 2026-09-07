@@ -32,6 +32,7 @@ class World {
       clubStems: [
         'ブラッド', 'ケンブ', 'ノーサム', 'ウェスト', 'ハル', 'ダン',
         'ソール', 'エヴァー', 'プレス', 'ミッド', 'オーク', 'レイン',
+        'サウス', 'グレイ', 'ストーン', 'ベル', 'アッシュ', 'クリフ',
       ],
       clubPatterns: ['{}シティ', '{}ユナイテッド', '{}ローヴァーズ', '{}タウン'],
     ),
@@ -48,6 +49,7 @@ class World {
       clubStems: [
         'バリ', 'メリ', 'カステ', 'セビ', 'グラナ', 'アル',
         'サラ', 'ヒホ', 'コル', 'バダ', 'ムル', 'レガ',
+        'トレ', 'ヘレ', 'カディ', 'ラコ', 'エル', 'ビゴ',
       ],
       clubPatterns: ['{}CF', 'デポルティーボ{}', '{}バロンピエ', 'CD {}'],
     ),
@@ -64,6 +66,7 @@ class World {
       clubStems: [
         'ローテン', 'シュヴァル', 'グリュー', 'ハイデ', 'エルベ', 'ノイ',
         'アルト', 'ヴァルト', 'シュタイン', 'ブルク', 'リンデ', 'フェルト',
+        'グラウ', 'ホーエン', 'タール', 'バッハ', 'ケーニヒ', 'ゾンネ',
       ],
       clubPatterns: ['FC {}', '{}04', '{}ベルク', 'SV {}'],
     ),
@@ -80,6 +83,7 @@ class World {
       clubStems: [
         'ヴェロ', 'モンテ', 'サレル', 'ペルー', 'カリア', 'ウディ',
         'パルマ', 'ブレシ', 'アンコ', 'レッチ', 'ピサ', 'コモ',
+        'クレモ', 'テルニ', 'アヴェ', 'カタン', 'メッシ', 'ノヴァ',
       ],
       clubPatterns: ['{}カルチョ', 'AC {}', '{}FC', 'US {}'],
     ),
@@ -95,6 +99,7 @@ class World {
       clubStems: [
         'リヨ', 'ナン', 'レン', 'ブレ', 'モンペ', 'トゥル',
         'アンジェ', 'ロリ', 'クレル', 'メス', 'ニム', 'カン',
+        'トゥー', 'ディジョ', 'アミ', 'ラヴァ', 'ポー', 'グルノ',
       ],
       clubPatterns: ['{}オランピック', 'AS {}', '{}FC', 'スタッド{}'],
     ),
@@ -111,6 +116,7 @@ class World {
       clubStems: [
         'アムス', 'ロッテ', 'ユト', 'ズヴォ', 'ヘー', 'アル',
         'ブレダ', 'ナイメ', 'ティル', 'フロー', 'デン', 'エメン',
+        'ハー', 'ライ', 'ドル', 'ヘル', 'ワー', 'ズウォ',
       ],
       clubPatterns: ['{}EC', 'フォルトゥナ{}', '{}FC', 'SC {}'],
     ),
@@ -126,6 +132,7 @@ class World {
       clubStems: [
         'ヴェス', 'オス', 'ベル', 'トロン', 'ウプ', 'マル',
         'ヨン', 'リン', 'オー', 'ハル', 'スン', 'ボー',
+        'ヴィボ', 'エス', 'ラン', 'ヘル', 'サン', 'ノル',
       ],
       clubPatterns: ['{}IF', '{}BK', '{}FF', 'IK {}'],
     ),
@@ -148,6 +155,7 @@ class World {
       clubStems: [
         'アオ', 'ミナ', 'ヒガシ', 'カワ', 'シラ', 'トヨ',
         'ハヤ', 'ミヤ', 'ナガ', 'クロ', 'アカ', 'ソラ',
+        'シオ', 'モリ', 'ウミ', 'カゼ', 'ホシ', 'ツキ',
       ],
       clubPatterns: ['{}FC', '{}ユナイテッド', '{}レイズ', '{}ヴィエント'],
     ),
@@ -164,6 +172,7 @@ class World {
       clubStems: [
         'ナス', 'ヒラ', 'ワス', 'カリ', 'ザフ', 'ミス',
         'ラヤ', 'サフ', 'ドゥ', 'アイン', 'バハ', 'ヌール',
+        'サラ', 'ジャジ', 'ファ', 'カウ', 'マジ', 'タイ',
       ],
       clubPatterns: ['アル＝{}', '{}SC', 'アル＝{}クラブ', '{}FC'],
     ),
@@ -181,6 +190,7 @@ class World {
       clubStems: [
         'ロサ', 'コルド', 'メンド', 'サル', 'トゥク', 'ラプ',
         'キル', 'アヴェ', 'バン', 'ヌエ', 'エス', 'ベル',
+        'サンタ', 'パラ', 'エント', 'チャコ', 'フフ', 'リオ',
       ],
       clubPatterns: ['CA {}', '{}アトレティコ', 'CD {}', '{}FC'],
     ),
@@ -196,6 +206,7 @@ class World {
       clubStems: [
         'パウ', 'ミナ', 'バイ', 'ゴイ', 'セア', 'パラ',
         'フォル', 'クリ', 'ヴィト', 'レシ', 'ナタ', 'クイ',
+        'マナ', 'ベレ', 'サン', 'ジョア', 'カン', 'アラ',
       ],
       clubPatterns: ['{}SC', '{}FC', 'EC {}', 'CR {}'],
     ),
@@ -233,22 +244,30 @@ class World {
     ];
   }
 
-  /// 国の命名規則からクラブ名を作る。同じ国・同じ部なら常に同じ並び。
+  /// 国の命名規則からクラブ名を作る。
+  ///
+  /// 地名 × 命名の型で全組み合わせを作り、部ごとに**重ならないように切り出す**。
+  /// 部ごとに開始位置をずらすだけだと、組み合わせが一周して上の部と名前が被る。
   static List<String> _clubNames(Country country, int tier, int size) {
-    final names = <String>[];
-    final seen = <String>{};
-    // 部ごとに開始位置をずらして、上の部と下の部で名前が被らないようにする。
-    var i = tier * 7;
-    while (names.length < size) {
-      final stem = country.clubStems[i % country.clubStems.length];
-      final pattern = country.clubPatterns[
-          (i ~/ country.clubStems.length) % country.clubPatterns.length];
-      final name = pattern.replaceFirst('{}', stem);
-      if (seen.add(name)) names.add(name);
-      i++;
-      if (i > tier * 7 + 400) break; // 念のための打ち切り
+    final pool = <String>[];
+    // 型を外側に回すと、同じ地名が別の型で近くに並ばない。
+    for (final pattern in country.clubPatterns) {
+      for (final stem in country.clubStems) {
+        pool.add(pattern.replaceFirst('{}', stem));
+      }
     }
-    return names;
+
+    // その部より上の部が使った分だけ飛ばす。
+    var offset = 0;
+    for (var t = 1; t < tier; t++) {
+      offset += country.clubsInTier(t);
+    }
+
+    assert(offset + size <= pool.length,
+        '${country.name}: クラブ名が足りない（${pool.length} 件で ${offset + size} 件必要）');
+    return [
+      for (var i = 0; i < size; i++) pool[(offset + i) % pool.length],
+    ];
   }
 
   /// キャリアを始める国の候補。強豪国だけに偏らないよう全部から選ぶ。
