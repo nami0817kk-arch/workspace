@@ -233,6 +233,8 @@ def main(argv: list[str] | None = None) -> int:
     )
     p_plan.add_argument("--date", default=None, help="基準日 YYYY-MM-DD（既定: 今日）")
     p_plan.add_argument("--write", action="store_true", help="取材メモの雛形を research/ に作る")
+    p_plan.add_argument("--reactions", default="",
+                        help="まとめのURL。雛形の反応の節に、読み上げる形で12件入れる")
     p_plan.add_argument("--shape", default="",
                         help="話の型: transfer / match / quote / discipline / preview。"
                              "**11本つづけて同じ骨格だったので分けた**（節の名前は書き換えてよい）")
@@ -816,13 +818,45 @@ def _cmd_plan(args, config) -> int:
             print(f"すでにあります: {target}", file=sys.stderr)
             return 1
         target.parent.mkdir(parents=True, exist_ok=True)
+        # **反応は雛形の時点で入れる**（2026-09-07）。点検で「他人の声が4割以上」を
+        # 求めているのに、雛形には空の say が1つしか無く、手で10件書くことに
+        # なっていた。まとめのURLを渡せば、そのまま読める形で12件入る
+        gathered, thread = _fetch_reactions(getattr(args, "reactions", ""))
         target.write_text(
             worksheet(routine, today, getattr(args, "shape", "") or "",
-                      plan.skeletons),
+                      plan.skeletons, reactions=gathered, thread=thread),
             encoding="utf-8")
         print(f"取材メモ: {target}")
+        if gathered:
+            print(f"  反応を{len(gathered)}件入れました（母数 "
+                  f"{max(int(r.get('total') or 0) for r in gathered)}件）")
+        else:
+            print("  反応は空です。`--reactions <まとめのURL>` を付けると"
+                  "読み上げる形で入ります（他人の声は尺の4割が目安）")
         print(f"埋めたら `python -m src.cli draft {target}` で台本になります")
     return 0
+
+
+def _fetch_reactions(url: str, want: int = 12) -> tuple[list[dict], str]:
+    """まとめのスレから、読み上げに回す反応を取ってくる。
+
+    取れなくても**止めない**。雛形は書けたほうがよく、反応は後から
+    `reactions --say` で足せる。取れなかったことは画面に出す。
+    """
+    url = (url or "").strip()
+    if not url:
+        return [], ""
+    from . import reactions as reactions_mod
+
+    try:
+        posts = reactions_mod.fetch(url)
+    except reactions_mod.ReactionError as error:
+        print(f"反応を取れませんでした（{error}）。雛形だけ書きます", file=sys.stderr)
+        return [], url
+    picked = reactions_mod.say_lines(posts, want=want)
+    if not picked:
+        print("読み上げに回せる長さの書き込みがありませんでした", file=sys.stderr)
+    return ([{"text": p.text, "no": p.no, "total": len(posts)} for p in picked], url)
 
 
 def _cmd_scan(args, config) -> int:
