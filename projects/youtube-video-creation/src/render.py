@@ -132,7 +132,7 @@ class Renderer:
         ではなくそちらを描く。ニュース風レイアウトで見出しやカードを次の行にも
         残すために使う。
         """
-        member = self.config.resolve_speaker(line.speaker)
+        member = self.config.resolve_speaker(line.speaker, line.text or '')
         text, source, card = (
             (line.telop_text(), line.source, line.card) if panel is None else panel
         )

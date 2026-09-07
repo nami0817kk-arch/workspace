@@ -481,7 +481,7 @@ CROWD_WORDS = (
 # 参考3チャンネルは尺の58%・19.2件・1件3.1秒。こちらは14%・2.2件・1件39字だった
 VOICE_SHARE_TARGET = 40      # %
 VOICE_COUNT_TARGET = 10      # 件
-VOICE_LINE_TARGET = 30       # 字。3秒＝約16字なので、倍まで
+VOICE_LINE_TARGET = 20       # 字。**実測1件3.1秒＝約16字**。2026-09-07 に30字から締めた
 
 
 def _advise_title(notes: Notes) -> list[str]:

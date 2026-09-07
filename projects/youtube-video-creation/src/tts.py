@@ -275,7 +275,7 @@ def synthesize_script(
 
     cursor = 0.0
     for index, line in enumerate(script.lines):
-        member = config.resolve_speaker(line.speaker)
+        member = config.resolve_speaker(line.speaker, line.text or '')
         pause = config.voicevox.pause if line.pause is None else line.pause
         target = out_dir / f"{index:04d}_{member.key}_{_digest(line, member, pause, backend.name)}.wav"
 
@@ -296,7 +296,7 @@ def credits(script: Script, config: ProjectConfig, backend) -> list[str]:
 
     config に定義してあっても、その動画で使っていない話者はクレジットしない。
     """
-    used = {config.resolve_speaker(line.speaker).style_id for line in script.lines}
+    used = {config.resolve_speaker(line.speaker, line.text or '').style_id for line in script.lines}
     names: list[str] = []
     for style_id in sorted(used):
         name = backend.speaker_name(style_id)
