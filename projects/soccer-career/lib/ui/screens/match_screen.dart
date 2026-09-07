@@ -229,34 +229,64 @@ class _OptionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final percent = (chance * 100).round();
+    // 数字だけだと、3つの手を見比べるのに毎回読む必要がある。
+    // 帯があれば、どれが堅くてどれが賭けかが一目で分かる。
+    final color = chance >= 0.6
+        ? theme.colorScheme.primary
+        : chance >= 0.4
+            ? theme.colorScheme.tertiary
+            : theme.colorScheme.error;
+
     return OutlinedButton(
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
         alignment: Alignment.centerLeft,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       ),
-      child: Row(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(option.label, style: theme.textTheme.titleSmall),
-                const SizedBox(height: 2),
-                Text(
-                  '${option.detail?.label ?? option.key.label} $attribute  ·  成功率 ${(chance * 100).round()}%',
-                  style: theme.textTheme.bodySmall
-                      ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+          Row(
+            children: [
+              Expanded(
+                child: Text(option.label, style: theme.textTheme.titleSmall),
+              ),
+              if (option.outcome != Outcome.play)
+                Chip(
+                  label: Text(
+                      option.outcome == Outcome.goal ? 'ゴール' : 'アシスト'),
+                  visualDensity: VisualDensity.compact,
+                  backgroundColor: theme.colorScheme.secondaryContainer,
                 ),
-              ],
-            ),
+            ],
           ),
-          if (option.outcome != Outcome.play)
-            Chip(
-              label:
-                  Text(option.outcome == Outcome.goal ? 'ゴール' : 'アシスト'),
-              visualDensity: VisualDensity.compact,
-            ),
+          const SizedBox(height: 6),
+          Row(
+            children: [
+              SizedBox(
+                width: 42,
+                child: Text('$percent%',
+                    style: theme.textTheme.titleSmall?.copyWith(color: color)),
+              ),
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(3),
+                  child: LinearProgressIndicator(
+                    value: chance,
+                    minHeight: 6,
+                    color: color,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Text(
+                '${option.detail?.label ?? option.key.label} $attribute',
+                style: theme.textTheme.bodySmall
+                    ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+              ),
+            ],
+          ),
         ],
       ),
     );

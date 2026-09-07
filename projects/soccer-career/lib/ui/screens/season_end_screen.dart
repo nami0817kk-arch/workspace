@@ -260,6 +260,9 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                     ),
                 ],
               ),
+              const SizedBox(height: 6),
+              // 説明はツールチップに隠さない。スマホでは長押ししないと読めない。
+              Text(_bodyPlan.description, style: muted),
               const SizedBox(height: 16),
               Text('プレシーズン', style: theme.textTheme.labelLarge),
               const SizedBox(height: 6),
@@ -280,7 +283,9 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                     ),
                 ],
               ),
-              const SizedBox(height: 24),
+              const SizedBox(height: 6),
+              Text(_preseason.description, style: muted),
+              const Divider(height: 32),
               Row(
                 children: [
                   Text('契約', style: theme.textTheme.titleMedium),
