@@ -384,6 +384,9 @@ def main(argv: list[str] | None = None) -> int:
     p_upload = sub.add_parser("upload", help="ビルド結果を YouTube に投稿する")
     p_upload.add_argument("build_dir", help="build の出力ディレクトリ")
     p_upload.add_argument("--privacy", default="private", choices=["private", "unlisted", "public"])
+    p_upload.add_argument(
+        "--again", action="store_true",
+        help="同じ出力先をもう一度投稿する（既定では二重投稿を止める）")
     p_upload.add_argument("--dry-run", action="store_true",
                           help="送らずに、何が送られるかを見る（認証も通信もしない）")
 
@@ -2175,9 +2178,27 @@ def _cmd_make_clip(args, config) -> int:
 
 
 def _cmd_upload(args, config) -> int:
+    from datetime import timedelta
+
+    from . import posted
     from . import upload as upload_mod
 
+    nl = chr(10)   # heredoc 経由だとバックスラッシュが化ける
+
     build_dir = Path(args.build_dir)
+
+    # **同じ動画を二度上げない。**2026-09-07 に、投稿処理がまだ走っている
+    # 最中に2本目を起こして本編4本を重複公開し、その分で本数の上限を
+    # 使い切った。人の注意では防げないので、投稿する側に控えを持たせる。
+    seen = posted.find(build_dir)
+    if seen and not args.again:
+        print("■ この出力先はすでに投稿しています　" + str(build_dir))
+        print("  https://youtu.be/" + seen["video_id"] + "　" + seen["at"])
+        print(nl + "二重投稿を止めました。別の投稿処理が走っていないか確かめてください。",
+              file=sys.stderr)
+        print("本当に上げ直すなら --again を付けます", file=sys.stderr)
+        return 1
+
     draft = upload_mod.prepare(build_dir, args.privacy)
 
     print(f"■ 投稿の中身　{build_dir}")
@@ -2205,7 +2226,17 @@ def _cmd_upload(args, config) -> int:
         privacy=draft.privacy,
         thumbnail=draft.thumbnail,
     )
+    posted.record(build_dir, video_id)
     print(f"\n投稿しました: https://youtu.be/{video_id} ({draft.privacy})")
+    remain = posted.left()
+    if remain <= 3:
+        when = posted.frees_at()
+        tail = ""
+        if when is not None:
+            jst = when + timedelta(hours=9)
+            tail = f"　次に空くのは {jst:%H:%M} JST"
+        print(f"  投稿枠の残り {remain} 本"
+              f"（直近24時間で{posted.WINDOW_MAX}本まで）" + tail)
     return 0
 
 
