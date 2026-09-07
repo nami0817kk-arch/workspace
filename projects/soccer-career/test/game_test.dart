@@ -424,10 +424,10 @@ void main() {
       }
     });
 
-    test('局面IDが重複していない', () {
+    test('局面IDが重複していない（ファミリー単位。複数ポジションが同じ局面を共有する）', () {
       final ids = [
-        for (final position in Position.values)
-          ...ScenarioPool.forPosition(position).map((s) => s.id),
+        for (final family in ScenarioFamily.values)
+          ...ScenarioPool.forFamily(family).map((s) => s.id),
       ];
       expect(ids.toSet().length, ids.length);
     });

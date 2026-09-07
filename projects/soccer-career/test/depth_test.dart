@@ -214,7 +214,8 @@ void main() {
         attrs = week.attributes;
       }
       expect(grew, greaterThan(0));
-      expect(attrs.shooting, 50 + grew);
+      // 上限 99 で頭打ちになる。
+      expect(attrs.shooting, min(Formulas.maxAttribute, 50 + grew));
       expect(attrs.pace, 50);
     });
 
