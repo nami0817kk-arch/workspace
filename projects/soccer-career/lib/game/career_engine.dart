@@ -31,6 +31,11 @@ class TransferOffer {
     this.eligibility,
     this.isRenewal = false,
     this.negotiated = false,
+    this.fee = 0,
+    this.releaseClause,
+    this.loan = false,
+    this.buyOption,
+    this.returning = false,
   });
 
   final Club club;
@@ -54,6 +59,22 @@ class TransferOffer {
   /// 上乗せ交渉を済ませた（もう要求できない）。
   final bool negotiated;
 
+  /// クラブ間で動く移籍金（万円）。自分の懐には入らないが、
+  /// 高く買われるほど期待も重くなる。
+  final int fee;
+
+  /// 新しい契約に付く違約金（万円）。
+  final int? releaseClause;
+
+  /// ローン（期限付き移籍）か。1シーズンで戻る。
+  final bool loan;
+
+  /// ローンに付いた買い取り option の金額。無ければ null。
+  final int? buyOption;
+
+  /// ローンから保有元へ戻る契約か。
+  final bool returning;
+
   TransferOffer copyWith({int? salary, bool? negotiated}) => TransferOffer(
         club: club,
         reason: reason,
@@ -63,7 +84,27 @@ class TransferOffer {
         eligibility: eligibility,
         isRenewal: isRenewal,
         negotiated: negotiated ?? this.negotiated,
+        fee: fee,
+        releaseClause: releaseClause,
+        loan: loan,
+        buyOption: buyOption,
+        returning: returning,
       );
+
+  /// 画面に出す但し書き。
+  String get terms {
+    final parts = <String>[
+      if (loan) 'ローン（1年）',
+      if (buyOption != null) '買い取りオプション ${_money(buyOption!)}',
+      if (fee > 0) '移籍金 ${_money(fee)}',
+      if (releaseClause != null) '違約金 ${_money(releaseClause!)}',
+    ];
+    return parts.join('  ·  ');
+  }
+
+  static String _money(int value) => value >= 10000
+      ? '${(value / 10000).toStringAsFixed(1)}億円'
+      : '$value万円';
 }
 
 /// 上乗せ要求の結果。
@@ -371,6 +412,11 @@ class CareerEngine {
   /// 大陸カップに出られる順位か。
   bool inContinental(CareerState state) {
     final country = World.byId(state.club.countryId);
+    // 前年に国内カップを獲っていれば、順位に関係なく出られる。
+    final viaCup = state.history.isNotEmpty &&
+        state.history.last.cupStage.qualifiesContinental &&
+        state.history.last.clubName == state.club.name;
+    if (viaCup) return true;
     return state.club.tier == 1 &&
         state.leaguePosition <= country.continentalSlots;
   }
@@ -403,7 +449,22 @@ class CareerEngine {
       };
 
   /// 今のクラブとの契約更改。良いシーズンなら上がり、悪ければ下がる。
+  ///
+  /// ローンに出ている間は「保有元に戻る」契約がこの位置に来る。
+  /// 残留の選択肢は常に1つ提示する（無いと、失敗した瞬間に無所属になる）。
   TransferOffer renewalOffer(CareerState state) {
+    if (state.onLoan) {
+      final parent = state.parentClub!;
+      return TransferOffer(
+        club: parent,
+        reason: 'ローンが明ける。${parent.name}に戻る。',
+        salary: state.salary,
+        role: _roleFor(state.player.overall, parent),
+        years: max(1, state.contractYears),
+        isRenewal: true,
+        returning: true,
+      );
+    }
     final club = nextClubIfStaying(state);
     final stats = state.seasonStats;
     final base = salaryFor(
@@ -433,7 +494,21 @@ class CareerEngine {
       role: _roleFor(state.player.overall, club),
       years: extras.rollContractYears(),
       isRenewal: true,
+      releaseClause: releaseClauseFor(salary),
     );
+  }
+
+  /// 契約に付く違約金。年俸から決まる。
+  ///
+  /// 安い違約金は、クラブにとっては安く囲う手段で、選手にとっては
+  /// 出口になる。伸びた選手ほど、この額を早く追い越す。
+  int releaseClauseFor(int salary) => _round(salary * 8);
+
+  /// 違約金を超える評価になったか。ここを超えると契約が残っていても話が動く。
+  bool clauseTriggered(CareerState state) {
+    final clause = state.releaseClause;
+    if (clause == null) return false;
+    return state.reputation.marketValue >= clause;
   }
 
   /// シーズン終了時の移籍オファー。
@@ -441,18 +516,97 @@ class CareerEngine {
   /// 良いシーズンを送るほど、強いクラブから声がかかる。代理人の人脈で
   /// 上限が伸びる。何もしなくても残留できるので、常に選択肢として提示する。
   List<TransferOffer> offersFor(CareerState state) {
-    // 契約が残っている間は動けない。残り1年になって初めて話が来る。
-    if (state.contractYears > 1) return const [];
+    // ローン中は、買い取りの話が出るかどうかだけ。戻る契約は renewalOffer 側。
+    if (state.onLoan) return _buyOutOffers(state);
+
+    final offers = <TransferOffer>[];
+    // 出番の無い若手には、試合に出るためのローンの話が来る。
+    offers.addAll(_loanOffers(state));
+
+    final clause = clauseTriggered(state);
+    // 契約が残っている間は動けない。ただし違約金を追い越したときは別。
+    if (state.contractYears > 1 && !clause) return offers;
 
     final stats = state.seasonStats;
-    if (stats.appearances < 10) return const [];
-    if (stats.averageRating < Formulas.transferOfferRating) return const [];
+    if (!clause) {
+      if (stats.appearances < 10) return offers;
+      if (stats.averageRating < Formulas.transferOfferRating) return offers;
+    }
+    return [...offers, ..._marketOffers(state)];
+  }
 
+  /// ローン先が買い取りに動くか。
+  ///
+  /// 買い取りオプションが付いていて、そのシーズンに結果を出したときだけ。
+  /// 出せなければ、黙って保有元に戻ることになる。
+  List<TransferOffer> _buyOutOffers(CareerState state) {
+    final option = state.loanBuyOption;
+    if (option == null) return const [];
+    final stats = state.seasonStats;
+    if (stats.appearances < 15 || stats.averageRating < 6.6) return const [];
+
+    final salary = _round(state.salary * 1.15);
+    return [
+      TransferOffer(
+        club: state.club,
+        reason: '${state.club.name}が買い取りオプションを行使する構えを見せている。',
+        salary: salary,
+        role: _roleFor(state.player.overall, state.club),
+        years: extras.rollContractYears(),
+        fee: option,
+        releaseClause: releaseClauseFor(salary),
+      ),
+    ];
+  }
+
+  /// 出番の無い若手に届くローンの話。
+  ///
+  /// 登録から外れている、力が足りない、出場が少ない。どれかに当てはまる
+  /// 若手だけに来る。移籍と違って成績は問わない。出られないことが理由だから。
+  List<TransferOffer> _loanOffers(CareerState state) {
+    if (state.player.age > Formulas.loanMaxAge) return const [];
+    final stats = state.seasonStats;
+    final stuck = !state.squadStatus.canPlay ||
+        state.player.overall - state.club.strength < -6 ||
+        stats.appearances < 8;
+    if (!stuck) return const [];
+
+    final country = World.byId(state.club.countryId);
+    final tier = min(country.tiers, state.club.tier + 1);
+    final clubs = World.buildLeague(country.id, tier)
+        .where((c) => c.name != state.club.name)
+        .toList()
+      ..sort((a, b) => b.strength.compareTo(a.strength));
+    if (clubs.isEmpty) return const [];
+
+    final club = clubs[_random.nextInt(min(4, clubs.length))];
+    // 買い取りオプションは半々。付いていると、出れば道が開ける。
+    final option = _random.nextBool()
+        ? _round(max(state.reputation.marketValue * 1.2, 300))
+        : null;
+    return [
+      TransferOffer(
+        club: club,
+        reason: '${club.name}が期限付きでの獲得を打診してきた。試合に出られる。',
+        salary: _round(state.salary * 0.85),
+        role: '主力として使う',
+        years: 1,
+        loan: true,
+        buyOption: option,
+      ),
+    ];
+  }
+
+  /// 移籍市場から届くオファー。
+  List<TransferOffer> _marketOffers(CareerState state) {
     final reach =
         (state.player.overall * Formulas.transferReachFactor).round() +
             state.agent.reach;
     final origin = World.byId(state.club.countryId);
     final candidates = <TransferOffer>[];
+    // 移籍金は値札そのもの。契約が短いほど安く買われる。
+    final fee = _round(
+        state.reputation.marketValue * (0.7 + state.contractYears * 0.2));
 
     // 声がかかる国。今の国と、代理人の人脈で届く範囲の国。
     for (final country in _reachableCountries(state)) {
@@ -496,6 +650,8 @@ class CareerEngine {
           role: _roleFor(state.player.overall, club),
           years: extras.rollContractYears(),
           eligibility: eligibility,
+          fee: fee,
+          releaseClause: releaseClauseFor(salary),
         ));
       }
     }
@@ -566,6 +722,35 @@ class CareerEngine {
     return (NegotiationResult.refused, offer.copyWith(negotiated: true));
   }
 
+  /// 代理人に売り込ませる。
+  ///
+  /// 待っていても声がかからない選手のための道。前金を払って動いてもらい、
+  /// 人脈と交渉力で決まる確率で話を取ってくる。空振りなら金だけが減る。
+  /// 失敗しうるからこそ、雇う代理人の選択に意味が出る。
+  (bool, List<TransferOffer>) solicitOffers(CareerState state) {
+    final cost = solicitCostFor(state);
+    if (state.finances.savings < cost) return (false, const []);
+
+    state.finances = state.finances.spend(cost);
+    final chance = (0.15 +
+            state.agent.reach * 0.04 +
+            state.agent.negotiation * 0.05 +
+            (state.seasonStats.averageRating - 6.4) * 0.1)
+        .clamp(0.05, 0.85);
+    if (_random.nextDouble() >= chance) return (false, const []);
+
+    // 売り込みで取れるのは、待っていれば来た話より1段落ちる条件。
+    final found = _marketOffers(state)
+        .map((o) => o.copyWith(salary: _round(o.salary * 0.92)))
+        .take(2)
+        .toList();
+    return (found.isNotEmpty, found);
+  }
+
+  /// 売り込みの前金（万円）。
+  int solicitCostFor(CareerState state) =>
+      max(100, _round(state.salary * 0.1));
+
   /// 代理人の手取り差し引き後の年俸。
   int takeHome(CareerState state, int salary) =>
       _round(salary * (1 - state.agent.feePercent / 100));
@@ -589,6 +774,9 @@ class CareerEngine {
       objectiveMet: state.objective?.achieved(state.seasonStats) ?? false,
       countryId: state.club.countryId,
       continentalStage: state.continentalStage,
+      cupStage: state.cupStage,
+      worldCupStage: state.worldCupStage,
+      onLoan: state.onLoan,
     );
 
     final league = _leagueContaining(accepted.club);
@@ -623,6 +811,11 @@ class CareerEngine {
     }
     final stayed = accepted.club.name == state.club.name;
 
+    // ローンの扱い。保有元はローンの間だけ持ち、戻るか買われるかで消える。
+    final parentClub = accepted.loan ? (state.parentClub ?? state.club) : null;
+    final releaseClause =
+        accepted.returning ? state.releaseClause : accepted.releaseClause;
+
     // 称号・知名度・関係・お金は、シーズンを終えた時点で確定させる。
     final promoted = fateOf(state) == ClubFate.promoted;
     var reputation = state.reputation;
@@ -641,7 +834,12 @@ class CareerEngine {
     );
     // 払えない専属は契約を切る。金の裏付けの無い環境は続かない。
     final staff = finances.savings < 0 ? const StaffTeam() : state.staff;
-    final relations = person.updateRelations(state);
+    var relations = person.updateRelations(state);
+    // 高く買われた選手には、それだけの期待が乗る。信頼は最初から厚い。
+    if (accepted.fee >= state.reputation.marketValue * 1.3 &&
+        accepted.fee > 0) {
+      relations = relations.bump(manager: 8);
+    }
 
     return CareerState(
       player: nextPlayer,
@@ -660,15 +858,23 @@ class CareerEngine {
       habits: state.habits,
       development: development,
       // 契約更改か移籍なら新しい年数。ただ残っただけなら1年減る。
-      contractYears: stayed && !accepted.isRenewal
-          ? max(1, state.contractYears - 1)
-          : accepted.years,
+      // ローンの間は保有元との契約が凍る。戻ってきた年から再び減り始める。
+      contractYears: accepted.loan
+          ? max(1, state.contractYears)
+          : stayed && !accepted.isRenewal
+              ? max(1, state.contractYears - 1)
+              : accepted.years,
+      parentClub: parentClub,
+      releaseClause: releaseClause,
+      loanBuyOption: accepted.loan ? accepted.buyOption : null,
       countryId: resolved.countryId,
       professionalYears: state.professionalYears + 1,
       continentalExperience: state.continentalExperience ||
           state.continentalStage.participated,
       objective: extras.objectiveFor(player: nextPlayer, club: resolved),
       continentalStage: ContinentalStage.none,
+      cupStage: CupStage.none,
+      worldCupStage: WorldCupStage.none,
       reputation: reputation,
       relations: relations,
       finances: finances,
@@ -749,6 +955,16 @@ class CareerEngine {
     if (state.continentalStage.participated) {
       state.continentalExperience = true;
     }
+    // 国内カップは毎年ある。順位に関係なく全クラブが出る。
+    state.cupStage = competitions.runDomesticCup(state);
+    // ワールドカップは4年に1度。代表に呼ばれている選手だけ。
+    state.worldCupStage = Competitions.isWorldCupYear(state.year)
+        ? competitions.runWorldCup(state, calledUp: state.calledUp)
+        : WorldCupStage.none;
+    if (state.worldCupStage.participated) {
+      // 本大会は代表の試合として数える。
+      state.caps += 3 + state.worldCupStage.points;
+    }
   }
 
   /// 引退する。今シーズンの記録を残して、以後は試合をしない。
@@ -764,7 +980,11 @@ class CareerEngine {
       objectiveMet: state.objective?.achieved(state.seasonStats) ?? false,
       countryId: state.club.countryId,
       continentalStage: state.continentalStage,
+      cupStage: state.cupStage,
+      worldCupStage: state.worldCupStage,
+      onLoan: state.onLoan,
     );
+
     return CareerState(
       player: state.player,
       club: state.club,

@@ -170,6 +170,9 @@ class Formulas {
   /// 代表戦の前に必要な出場試合数（実績が無いと選ばれない）。
   static const int callUpMinAppearances = 5;
 
+  /// ローンに出せる上限の年齢。伸びしろへの投資なので、若手だけ。
+  static const int loanMaxAge = 23;
+
   /// 契約年数の範囲。
   static const int contractYearsMin = 2;
   static const int contractYearsMax = 4;

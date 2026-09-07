@@ -24,6 +24,9 @@ class SeasonRecord {
     this.objectiveMet = false,
     this.countryId = 'yamato',
     this.continentalStage = ContinentalStage.none,
+    this.cupStage = CupStage.none,
+    this.worldCupStage = WorldCupStage.none,
+    this.onLoan = false,
   });
 
   final int year;
@@ -47,6 +50,15 @@ class SeasonRecord {
   /// そのシーズンの大陸カップの成績。
   final ContinentalStage continentalStage;
 
+  /// そのシーズンの国内カップの成績。
+  final CupStage cupStage;
+
+  /// そのシーズンのワールドカップの成績。
+  final WorldCupStage worldCupStage;
+
+  /// ローンで戦ったシーズンか。
+  final bool onLoan;
+
   Map<String, dynamic> toJson() => {
         'year': year,
         'clubName': clubName,
@@ -61,6 +73,9 @@ class SeasonRecord {
         'objectiveMet': objectiveMet,
         'countryId': countryId,
         'continentalStage': continentalStage.name,
+        'cupStage': cupStage.name,
+        'worldCupStage': worldCupStage.name,
+        'onLoan': onLoan,
       };
 
   factory SeasonRecord.fromJson(Map<String, dynamic> json) => SeasonRecord(
@@ -82,6 +97,14 @@ class SeasonRecord {
                 .any((v) => v.name == json['continentalStage'])
             ? ContinentalStage.values.byName(json['continentalStage'] as String)
             : ContinentalStage.none,
+        cupStage: CupStage.values.any((v) => v.name == json['cupStage'])
+            ? CupStage.values.byName(json['cupStage'] as String)
+            : CupStage.none,
+        worldCupStage:
+            WorldCupStage.values.any((v) => v.name == json['worldCupStage'])
+                ? WorldCupStage.values.byName(json['worldCupStage'] as String)
+                : WorldCupStage.none,
+        onLoan: json['onLoan'] as bool? ?? false,
       );
 }
 
@@ -103,7 +126,12 @@ class CareerState {
     this.professionalYears = 1,
     this.continentalExperience = false,
     this.continentalStage = ContinentalStage.none,
+    this.cupStage = CupStage.none,
+    this.worldCupStage = WorldCupStage.none,
     this.squadStatus = SquadStatus.registered,
+    this.parentClub,
+    this.releaseClause,
+    this.loanBuyOption,
     this.reputation = const Reputation(),
     this.relations = const Relations(),
     this.finances = const Finances(),
@@ -176,6 +204,24 @@ class CareerState {
 
   /// 今季の大陸カップの成績。
   ContinentalStage continentalStage;
+
+  /// 今季の国内カップの成績。
+  CupStage cupStage;
+
+  /// 今季のワールドカップの成績。4年に1度だけ動く。
+  WorldCupStage worldCupStage;
+
+  /// ローン中なら、保有元のクラブ。
+  Club? parentClub;
+
+  /// ローンで他クラブに出ているか。
+  bool get onLoan => parentClub != null;
+
+  /// 契約に付いている違約金（万円）。これを超える評価になると話が動く。
+  int? releaseClause;
+
+  /// ローンに付いている買い取りオプションの金額（万円）。
+  int? loanBuyOption;
 
   /// 今季、登録メンバーに入れているか。外れると試合に出られない。
   SquadStatus squadStatus;
@@ -293,6 +339,11 @@ class CareerState {
         'professionalYears': professionalYears,
         'continentalExperience': continentalExperience,
         'continentalStage': continentalStage.name,
+        'cupStage': cupStage.name,
+        'worldCupStage': worldCupStage.name,
+        'parentClub': parentClub?.toJson(),
+        'releaseClause': releaseClause,
+        'loanBuyOption': loanBuyOption,
         'squadStatus': squadStatus.name,
         'reputation': reputation.toJson(),
         'relations': relations.toJson(),
@@ -352,6 +403,18 @@ class CareerState {
               .any((v) => v.name == json['continentalStage'])
           ? ContinentalStage.values.byName(json['continentalStage'] as String)
           : ContinentalStage.none,
+      cupStage: CupStage.values.any((v) => v.name == json['cupStage'])
+          ? CupStage.values.byName(json['cupStage'] as String)
+          : CupStage.none,
+      worldCupStage:
+          WorldCupStage.values.any((v) => v.name == json['worldCupStage'])
+              ? WorldCupStage.values.byName(json['worldCupStage'] as String)
+              : WorldCupStage.none,
+      parentClub: json['parentClub'] == null
+          ? null
+          : Club.fromJson(json['parentClub'] as Map<String, dynamic>),
+      releaseClause: json['releaseClause'] as int?,
+      loanBuyOption: json['loanBuyOption'] as int?,
       squadStatus:
           SquadStatus.values.any((v) => v.name == json['squadStatus'])
               ? SquadStatus.values.byName(json['squadStatus'] as String)

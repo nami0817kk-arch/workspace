@@ -462,6 +462,19 @@ class CareerController extends ChangeNotifier {
     return _career.negotiate(state, offer);
   }
 
+  /// 代理人に売り込ませる前金（万円）。
+  int get solicitCost =>
+      _state == null ? 0 : _career.solicitCostFor(_state!);
+
+  /// 代理人に売り込ませる。前金は貯蓄から引かれる。
+  (bool, List<TransferOffer>) solicitOffers() {
+    final state = _state;
+    if (state == null) return (false, const []);
+    final result = _career.solicitOffers(state);
+    _persist();
+    return result;
+  }
+
   int takeHome(int salary) =>
       _state == null ? salary : _career.takeHome(_state!, salary);
 

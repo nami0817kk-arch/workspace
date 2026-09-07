@@ -15,7 +15,10 @@ enum Award {
   seasonBest('年間ベストイレブン'),
   leagueTitle('リーグ優勝'),
   promotion('昇格'),
-  continentalTitle('大陸カップ優勝');
+  continentalTitle('大陸カップ優勝'),
+  domesticCup('国内カップ優勝'),
+  worldCup('ワールドカップ出場'),
+  worldCupTitle('ワールドカップ優勝');
 
   const Award(this.label);
 
@@ -160,6 +163,10 @@ class Finances {
     final net = salary - agentFee - tax - living - staffCost;
     return Finances(savings: savings + net, lifestyle: lifestyle);
   }
+
+  /// 貯蓄から支払う。
+  Finances spend(int amount) =>
+      Finances(savings: savings - amount, lifestyle: lifestyle);
 
   Finances withLifestyle(int level) =>
       Finances(savings: savings, lifestyle: level.clamp(0, 3));

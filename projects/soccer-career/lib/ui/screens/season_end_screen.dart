@@ -27,6 +27,27 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
   /// オフに身体をどうするか。移籍先を決めるのと同じ画面で選ぶ。
   BodyPlan _bodyPlan = BodyPlan.maintain;
 
+  /// 代理人に一度売り込ませたか。1シーズンに1度だけ。
+  bool _solicited = false;
+
+  /// 代理人に売り込ませる。前金を払い、取れれば選択肢が増える。
+  Future<void> _solicit() async {
+    if (_busy || _solicited) return;
+    final (found, offers) = widget.controller.solicitOffers();
+    setState(() {
+      _solicited = true;
+      _offers.addAll(offers);
+    });
+    if (!mounted) return;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+        content: Text(found
+            ? '代理人が${offers.length}件の話を取ってきた。'
+            : '代理人は動いたが、今回は何も取れなかった。'),
+      ));
+  }
+
   @override
   void initState() {
     super.initState();
@@ -146,6 +167,26 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                       const SizedBox(height: 4),
                       Text('代表 ${state.seasonCaps}試合', style: muted),
                     ],
+                    if (state.cupStage.participated) ...[
+                      const SizedBox(height: 6),
+                      Chip(
+                        label: Text('国内カップ ${state.cupStage.label}'),
+                        backgroundColor: state.cupStage == CupStage.winner
+                            ? theme.colorScheme.primaryContainer
+                            : null,
+                        visualDensity: VisualDensity.compact,
+                      ),
+                    ],
+                    if (state.worldCupStage.participated) ...[
+                      const SizedBox(height: 6),
+                      Chip(
+                        label:
+                            Text('ワールドカップ ${state.worldCupStage.label}'),
+                        backgroundColor:
+                            theme.colorScheme.tertiaryContainer,
+                        visualDensity: VisualDensity.compact,
+                      ),
+                    ],
                     if (state.continentalStage.participated) ...[
                       const SizedBox(height: 6),
                       Chip(
@@ -229,6 +270,17 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                 ],
               ),
               const SizedBox(height: 12),
+              if (!_solicited) ...[
+                OutlinedButton(
+                  onPressed: _busy ? null : _solicit,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    child: Text(
+                        '代理人に売り込ませる（前金 ${controller.solicitCost}万円）'),
+                  ),
+                ),
+                const SizedBox(height: 12),
+              ],
               for (var i = 0; i < _offers.length; i++) ...[
                 _OfferCard(
                   offer: _offers[i],
@@ -316,13 +368,23 @@ class _OfferCard extends StatelessWidget {
                   ),
                 ),
                 Chip(
-                  label: Text(offer.isRenewal ? '契約更改' : '移籍'),
+                  label: Text(offer.loan
+                      ? 'ローン'
+                      : offer.returning
+                          ? '復帰'
+                          : offer.isRenewal
+                              ? '契約更改'
+                              : '移籍'),
                   visualDensity: VisualDensity.compact,
                 ),
               ],
             ),
             const SizedBox(height: 4),
             Text(offer.reason, style: muted),
+            if (offer.terms.isNotEmpty) ...[
+              const SizedBox(height: 4),
+              Text(offer.terms, style: muted),
+            ],
             if (offer.eligibility != null && offer.eligibility!.foreign) ...[
               const SizedBox(height: 6),
               Wrap(
@@ -377,7 +439,13 @@ class _OfferCard extends StatelessWidget {
                 Expanded(
                   child: FilledButton(
                     onPressed: busy ? null : onAccept,
-                    child: Text(offer.isRenewal ? '残留する' : '移籍する'),
+                    child: Text(offer.loan
+                        ? 'ローンに出る'
+                        : offer.returning
+                            ? '戻る'
+                            : offer.isRenewal
+                                ? '残留する'
+                                : '移籍する'),
                   ),
                 ),
               ],

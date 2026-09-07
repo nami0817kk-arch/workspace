@@ -317,11 +317,12 @@ void main() {
       expect(mine.points, Formulas.pointsWin);
     });
 
-    test('成績が振るわないとオファーは来ない', () {
+    test('成績が振るわないと移籍のオファーは来ない', () {
       final engine = CareerEngine(random: Random(4));
       final state =
           engine.startCareer(name: 'A', position: Position.st, age: 20, agent: agent);
-      expect(engine.offersFor(state), isEmpty);
+      // 出番の無い若手にローンの話が来るのは別（試合に出るための移籍）。
+      expect(engine.offersFor(state).where((o) => !o.loan), isEmpty);
     });
 
     test('シーズンを進めると年齢と年が上がり、記録が残る', () {

@@ -379,6 +379,16 @@ class _PlayerCard extends StatelessWidget {
                         '知名度 ${state.reputation.fame}',
                         style: muted,
                       ),
+                      if (state.onLoan)
+                        Text(
+                          '${state.parentClub!.name}からのローン',
+                          style: muted,
+                        ),
+                      if (state.releaseClause != null)
+                        Text(
+                          '違約金 ${state.releaseClause}万円',
+                          style: muted,
+                        ),
                       Text(
                         '代理人 ${state.agent.name}'
                         '${state.caps > 0 ? '  ·  代表 ${state.caps}キャップ ${state.internationalGoals}ゴール' : ''}',
