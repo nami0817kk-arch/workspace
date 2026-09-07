@@ -19,6 +19,8 @@ updates:
     schedule: { interval: weekly, day: monday }
     open-pull-requests-limit: 6
   - package-ecosystem: pub
-    directory: "/projects/soccer-manager"
+    directories:
+      - "/projects/soccer-manager"
+      - "/projects/soccer-career"
     schedule: { interval: weekly, day: monday }
     open-pull-requests-limit: 3
