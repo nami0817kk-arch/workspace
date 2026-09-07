@@ -71,6 +71,28 @@
         "workspace/projects/tool-factory": 100,
         "workspace/projects/youtube-video-creation": 100
       }
+    },
+    {
+      "average": 93,
+      "date": "2026-09-07",
+      "open": 9,
+      "resolved_total": 114,
+      "scores": {
+        "workspace": 100,
+        "workspace/libs/kabutan": 95,
+        "workspace/projects/ai-side-business": 100,
+        "workspace/projects/cohabitation-budget": 15,
+        "workspace/projects/gemini-api": 100,
+        "workspace/projects/ir-analysis": 100,
+        "workspace/projects/kabu-agari-ranking": 100,
+        "workspace/projects/price-tracker": 100,
+        "workspace/projects/quality-gainer-tracker": 100,
+        "workspace/projects/soccer-clicker": 95,
+        "workspace/projects/soccer-manager": 95,
+        "workspace/projects/stock-investment": 100,
+        "workspace/projects/tool-factory": 100,
+        "workspace/projects/youtube-video-creation": 100
+      }
     }
   ],
   "proposals": {
@@ -93,12 +115,12 @@
       "exemplar": null,
       "first_seen": "2026-09-01T04:44:27+00:00",
       "issue_url": null,
-      "last_seen": "2026-09-01T05:06:34+00:00",
-      "last_seen_date": "2026-09-01",
+      "last_seen": "2026-09-07T04:29:35+00:00",
+      "last_seen_date": "2026-09-07",
       "note": "再利用ワークフロー呼び出し（uses:）のジョブには timeout-minutes を指定できない。実行時間の上限は共通の .github/workflows/python-tests.yml が timeout-minutes: 15 で一括適用済み。検出側が呼び出し側だけを見ているための誤検知",
       "project": "workspace",
       "rule_id": "ci.no-timeout",
-      "seen_count": 1,
+      "seen_count": 2,
       "status": "dismissed",
       "status_changed_at": "2026-09-01T04:53:05+00:00",
       "title": "ワークフローに実行時間の上限が無い",
@@ -139,9 +161,10 @@
       "last_seen": "2026-09-01T05:06:34+00:00",
       "last_seen_date": "2026-09-01",
       "project": "workspace/libs/kabutan",
+      "resolved_at": "2026-09-07T04:29:35+00:00",
       "rule_id": "xpol.env-example",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": ".env.example で必要な設定を明示する（開発モノレポ（全PJT） で既に実践中）",
       "topic": "env"
     },
@@ -194,9 +217,10 @@
       "last_seen": "2026-09-01T05:06:34+00:00",
       "last_seen_date": "2026-09-01",
       "project": "workspace/projects/quality-gainer-tracker",
+      "resolved_at": "2026-09-07T04:29:35+00:00",
       "rule_id": "quality.swallowed-exception",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "例外を握りつぶしている箇所がある",
       "topic": "error-handling"
     },
@@ -218,11 +242,11 @@
       "exemplar": null,
       "first_seen": "2026-09-01T04:44:27+00:00",
       "issue_url": null,
-      "last_seen": "2026-09-01T05:06:34+00:00",
-      "last_seen_date": "2026-09-01",
+      "last_seen": "2026-09-07T04:29:35+00:00",
+      "last_seen_date": "2026-09-07",
       "project": "workspace/projects/stock-investment",
       "rule_id": "quality.swallowed-exception",
-      "seen_count": 1,
+      "seen_count": 2,
       "status": "open",
       "title": "例外を握りつぶしている箇所がある",
       "topic": "error-handling"
@@ -330,11 +354,11 @@
       "exemplar": "workspace/projects/ai-side-business",
       "first_seen": "2026-09-01T04:44:27+00:00",
       "issue_url": null,
-      "last_seen": "2026-09-01T05:06:34+00:00",
-      "last_seen_date": "2026-09-01",
+      "last_seen": "2026-09-07T04:29:35+00:00",
+      "last_seen_date": "2026-09-07",
       "project": "workspace/projects/stock-investment",
       "rule_id": "deps.unpinned",
-      "seen_count": 1,
+      "seen_count": 2,
       "status": "open",
       "title": "依存バージョンが固定されていない",
       "topic": "deps"
@@ -364,6 +388,19 @@
       "rule_id": "quality.oversized-file",
       "seen_count": 1,
       "status": "resolved",
+      "title": "1ファイルが大きくなりすぎている",
+      "topic": "structure"
+    },
+    "281d71410223": {
+      "exemplar": null,
+      "first_seen": "2026-09-07T04:29:35+00:00",
+      "issue_url": null,
+      "last_seen": "2026-09-07T04:29:35+00:00",
+      "last_seen_date": "2026-09-07",
+      "project": "workspace/projects/soccer-clicker",
+      "rule_id": "quality.oversized-file",
+      "seen_count": 1,
+      "status": "open",
       "title": "1ファイルが大きくなりすぎている",
       "topic": "structure"
     },
@@ -501,11 +538,11 @@
       "exemplar": null,
       "first_seen": "2026-09-01T04:44:27+00:00",
       "issue_url": null,
-      "last_seen": "2026-09-01T05:06:34+00:00",
-      "last_seen_date": "2026-09-01",
+      "last_seen": "2026-09-07T04:29:35+00:00",
+      "last_seen_date": "2026-09-07",
       "project": "workspace",
       "rule_id": "quality.long-function",
-      "seen_count": 1,
+      "seen_count": 2,
       "status": "open",
       "title": "1つの関数が長くなりすぎている",
       "topic": "structure"
@@ -700,11 +737,11 @@
       "exemplar": null,
       "first_seen": "2026-09-01T04:44:27+00:00",
       "issue_url": null,
-      "last_seen": "2026-09-01T05:06:34+00:00",
-      "last_seen_date": "2026-09-01",
+      "last_seen": "2026-09-07T04:29:35+00:00",
+      "last_seen_date": "2026-09-07",
       "project": "workspace/projects/stock-investment",
       "rule_id": "quality.long-function",
-      "seen_count": 1,
+      "seen_count": 2,
       "status": "open",
       "title": "1つの関数が長くなりすぎている",
       "topic": "structure"
@@ -730,9 +767,10 @@
       "last_seen": "2026-09-01T05:06:34+00:00",
       "last_seen_date": "2026-09-01",
       "project": "workspace/projects/kabu-agari-ranking",
+      "resolved_at": "2026-09-07T04:29:35+00:00",
       "rule_id": "docs.stale-reference",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "ドキュメントが存在しないファイルを載せている",
       "topic": "doc-accuracy"
     },
@@ -759,9 +797,10 @@
       "last_seen": "2026-09-01T05:06:34+00:00",
       "last_seen_date": "2026-09-01",
       "project": "workspace/projects/tool-factory",
+      "resolved_at": "2026-09-07T04:29:35+00:00",
       "rule_id": "docs.stale-reference",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "ドキュメントが存在しないファイルを載せている",
       "topic": "doc-accuracy"
     },
@@ -783,15 +822,15 @@
       "exemplar": "workspace/projects/ai-side-business",
       "first_seen": "2026-09-01T04:44:27+00:00",
       "issue_url": null,
-      "last_seen": "2026-09-01T05:06:34+00:00",
-      "last_seen_date": "2026-09-01",
+      "last_seen": "2026-09-07T04:29:35+00:00",
+      "last_seen_date": "2026-09-07",
       "note": "requirements.txt に「意図的に標準ライブラリだけで動かしている。追加するときは == で固定し理由を書く」と明記済み。固定すべき依存が存在しない",
       "project": "workspace/projects/price-tracker",
       "rule_id": "xpol.pinned-deps",
-      "seen_count": 1,
+      "seen_count": 2,
       "status": "dismissed",
       "status_changed_at": "2026-09-01T04:58:19+00:00",
-      "title": "依存バージョンを固定する（ai-side-business で既に実践中）",
+      "title": "依存バージョンを固定する（youtube-video-creation で既に実践中）",
       "topic": "deps"
     },
     "6b8cfaa5b99a": {
@@ -842,12 +881,12 @@
       "exemplar": null,
       "first_seen": "2026-09-01T04:44:27+00:00",
       "issue_url": null,
-      "last_seen": "2026-09-01T05:06:34+00:00",
-      "last_seen_date": "2026-09-01",
+      "last_seen": "2026-09-07T04:29:35+00:00",
+      "last_seen_date": "2026-09-07",
       "note": "index.html 1枚で完結させることが価値の完成品。README に「完成・運用中／構成を分割しない」と明記済み",
       "project": "workspace/projects/cohabitation-budget",
       "rule_id": "scaffold.dormant",
-      "seen_count": 1,
+      "seen_count": 2,
       "status": "snoozed",
       "status_changed_at": "2026-09-01T04:48:15+00:00",
       "title": "雛形だけ作られて中身が無い",
@@ -1077,9 +1116,10 @@
       "last_seen": "2026-09-01T05:06:34+00:00",
       "last_seen_date": "2026-09-01",
       "project": "workspace/projects/tool-factory",
+      "resolved_at": "2026-09-07T04:29:35+00:00",
       "rule_id": "xpol.env-example",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": ".env.example で必要な設定を明示する（開発モノレポ（全PJT） で既に実践中）",
       "topic": "env"
     },
@@ -1158,11 +1198,11 @@
       "exemplar": null,
       "first_seen": "2026-09-01T04:44:27+00:00",
       "issue_url": null,
-      "last_seen": "2026-09-01T05:06:34+00:00",
-      "last_seen_date": "2026-09-01",
+      "last_seen": "2026-09-07T04:29:35+00:00",
+      "last_seen_date": "2026-09-07",
       "project": "workspace/projects/ai-side-business",
       "rule_id": "quality.long-function",
-      "seen_count": 1,
+      "seen_count": 2,
       "status": "open",
       "title": "1つの関数が長くなりすぎている",
       "topic": "structure"
@@ -1174,9 +1214,10 @@
       "last_seen": "2026-09-01T05:06:34+00:00",
       "last_seen_date": "2026-09-01",
       "project": "workspace/projects/youtube-video-creation",
+      "resolved_at": "2026-09-07T04:29:35+00:00",
       "rule_id": "env.no-example",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "必要な環境変数の一覧が無い",
       "topic": "env"
     },
@@ -1201,9 +1242,10 @@
       "last_seen": "2026-09-01T05:06:34+00:00",
       "last_seen_date": "2026-09-01",
       "project": "workspace/projects/youtube-video-creation",
+      "resolved_at": "2026-09-07T04:29:35+00:00",
       "rule_id": "deps.unpinned",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "依存バージョンが固定されていない",
       "topic": "deps"
     },
@@ -1286,9 +1328,10 @@
       "last_seen": "2026-09-01T05:06:34+00:00",
       "last_seen_date": "2026-09-01",
       "project": "workspace/projects/gemini-api",
+      "resolved_at": "2026-09-07T04:29:35+00:00",
       "rule_id": "xpol.claude-md",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "CLAUDE.md で AI に前提を渡す（soccer-manager で既に実践中）",
       "topic": "claude-md"
     },
@@ -1410,11 +1453,11 @@
       "exemplar": null,
       "first_seen": "2026-09-01T04:44:27+00:00",
       "issue_url": null,
-      "last_seen": "2026-09-01T05:06:34+00:00",
-      "last_seen_date": "2026-09-01",
+      "last_seen": "2026-09-07T04:29:35+00:00",
+      "last_seen_date": "2026-09-07",
       "project": "workspace/projects/youtube-video-creation",
       "rule_id": "quality.long-function",
-      "seen_count": 1,
+      "seen_count": 2,
       "status": "open",
       "title": "1つの関数が長くなりすぎている",
       "topic": "structure"
@@ -1484,9 +1527,10 @@
       "last_seen": "2026-09-01T05:06:34+00:00",
       "last_seen_date": "2026-09-01",
       "project": "workspace/projects/soccer-manager",
+      "resolved_at": "2026-09-07T04:29:35+00:00",
       "rule_id": "docs.stale-reference",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "ドキュメントが存在しないファイルを載せている",
       "topic": "doc-accuracy"
     },
@@ -1554,15 +1598,15 @@
       "exemplar": "workspace/projects/ai-side-business",
       "first_seen": "2026-09-01T04:44:27+00:00",
       "issue_url": null,
-      "last_seen": "2026-09-01T05:06:34+00:00",
-      "last_seen_date": "2026-09-01",
+      "last_seen": "2026-09-07T04:29:35+00:00",
+      "last_seen_date": "2026-09-07",
       "note": "requirements.txt に「意図的に標準ライブラリだけで動かしている。追加するときは == で固定し理由を書く」と明記済み。固定すべき依存が存在しない",
       "project": "workspace/projects/tool-factory",
       "rule_id": "xpol.pinned-deps",
-      "seen_count": 1,
+      "seen_count": 2,
       "status": "dismissed",
       "status_changed_at": "2026-09-01T04:58:19+00:00",
-      "title": "依存バージョンを固定する（ai-side-business で既に実践中）",
+      "title": "依存バージョンを固定する（youtube-video-creation で既に実践中）",
       "topic": "deps"
     },
     "c86d1b0d78c9": {
@@ -1597,12 +1641,12 @@
       "exemplar": null,
       "first_seen": "2026-09-01T04:44:27+00:00",
       "issue_url": null,
-      "last_seen": "2026-09-01T05:06:34+00:00",
-      "last_seen_date": "2026-09-01",
+      "last_seen": "2026-09-07T04:29:35+00:00",
+      "last_seen_date": "2026-09-07",
       "note": "指摘の index.html は cohabitation-budget の実在ファイルを正しく説明している行。記述は実在物と一致",
       "project": "workspace",
       "rule_id": "docs.stale-reference",
-      "seen_count": 1,
+      "seen_count": 2,
       "status": "dismissed",
       "status_changed_at": "2026-09-01T04:58:20+00:00",
       "title": "ドキュメントが存在しないファイルを載せている",
@@ -1668,12 +1712,12 @@
       "exemplar": null,
       "first_seen": "2026-09-01T04:44:27+00:00",
       "issue_url": null,
-      "last_seen": "2026-09-01T05:06:34+00:00",
-      "last_seen_date": "2026-09-01",
+      "last_seen": "2026-09-07T04:29:35+00:00",
+      "last_seen_date": "2026-09-07",
       "note": "指摘された video.mp4 / subtitles.srt / script.json 等は出力物の説明。scripts/setup_voicevox_core.py も実在。記述は実在物と一致",
       "project": "workspace/projects/youtube-video-creation",
       "rule_id": "docs.stale-reference",
-      "seen_count": 1,
+      "seen_count": 2,
       "status": "dismissed",
       "status_changed_at": "2026-09-01T04:58:20+00:00",
       "title": "ドキュメントが存在しないファイルを載せている",
@@ -1683,11 +1727,11 @@
       "exemplar": null,
       "first_seen": "2026-09-01T04:44:27+00:00",
       "issue_url": null,
-      "last_seen": "2026-09-01T05:06:34+00:00",
-      "last_seen_date": "2026-09-01",
+      "last_seen": "2026-09-07T04:29:35+00:00",
+      "last_seen_date": "2026-09-07",
       "project": "workspace/projects/soccer-manager",
       "rule_id": "quality.oversized-file",
-      "seen_count": 1,
+      "seen_count": 2,
       "status": "open",
       "title": "1ファイルが大きくなりすぎている",
       "topic": "structure"
@@ -1726,12 +1770,12 @@
       "exemplar": null,
       "first_seen": "2026-09-01T04:44:27+00:00",
       "issue_url": null,
-      "last_seen": "2026-09-01T05:06:34+00:00",
-      "last_seen_date": "2026-09-01",
+      "last_seen": "2026-09-07T04:29:35+00:00",
+      "last_seen_date": "2026-09-07",
       "note": "検出された47件は全て platform/ai-lab/site/content/guides/*.md の /tools/... /guides/... で、adsite が生成する公開サイトのURLパス。ファイルパスとして解決できる性質のものではない",
       "project": "workspace",
       "rule_id": "docs.broken-link",
-      "seen_count": 1,
+      "seen_count": 2,
       "status": "dismissed",
       "status_changed_at": "2026-09-01T05:07:04+00:00",
       "title": "ドキュメント内のリンク先が存在しない",
@@ -1857,9 +1901,10 @@
       "last_seen": "2026-09-01T05:06:34+00:00",
       "last_seen_date": "2026-09-01",
       "project": "workspace/projects/quality-gainer-tracker",
+      "resolved_at": "2026-09-07T04:29:35+00:00",
       "rule_id": "quality.long-function",
       "seen_count": 1,
-      "status": "open",
+      "status": "resolved",
       "title": "1つの関数が長くなりすぎている",
       "topic": "structure"
     },
@@ -1943,7 +1988,7 @@
     "deps.unpinned": {
       "dismissed": 0,
       "emitted": 10,
-      "resolved": 10
+      "resolved": 11
     },
     "docs.bom": {
       "dismissed": 0,
@@ -1968,12 +2013,12 @@
     "docs.stale-reference": {
       "dismissed": 0,
       "emitted": 11,
-      "resolved": 6
+      "resolved": 9
     },
     "env.no-example": {
       "dismissed": 0,
       "emitted": 3,
-      "resolved": 3
+      "resolved": 4
     },
     "legal.no-license": {
       "dismissed": 0,
@@ -1983,17 +2028,17 @@
     "quality.long-function": {
       "dismissed": 0,
       "emitted": 9,
-      "resolved": 4
+      "resolved": 5
     },
     "quality.oversized-file": {
       "dismissed": 0,
-      "emitted": 5,
+      "emitted": 6,
       "resolved": 7
     },
     "quality.swallowed-exception": {
       "dismissed": 0,
       "emitted": 7,
-      "resolved": 10
+      "resolved": 11
     },
     "scaffold.dormant": {
       "dismissed": 0,
@@ -2018,12 +2063,12 @@
     "xpol.claude-md": {
       "dismissed": 0,
       "emitted": 12,
-      "resolved": 13
+      "resolved": 14
     },
     "xpol.env-example": {
       "dismissed": 0,
       "emitted": 4,
-      "resolved": 2
+      "resolved": 4
     },
     "xpol.pinned-deps": {
       "dismissed": 0,
@@ -2032,8 +2077,9 @@
     }
   },
   "summary_issues": {
-    "2026-08-29": "https://github.com/nami0817kk-arch/ai-lab/issues/1"
+    "2026-08-29": "https://github.com/nami0817kk-arch/ai-lab/issues/1",
+    "2026-09-07": "https://github.com/nami0817kk-arch/workspace/issues/74"
   },
-  "updated_at": "2026-09-01T05:07:04+00:00",
+  "updated_at": "2026-09-07T04:29:37+00:00",
   "version": 1
 }
