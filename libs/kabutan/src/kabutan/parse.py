@@ -12,15 +12,32 @@ from bs4 import BeautifulSoup
 
 _ASOF_DATE_RE = re.compile(r'<time datetime="(\d{4}-\d{2}-\d{2})">終値</time>')
 
+# ランキング表そのものが持つ日付（「2026年09月07日 / 16:00現在」の並び）。
+_PAGE_DATE_RE = re.compile(r"meigara_count.{0,300}?(\d{4})年(\d{1,2})月(\d{1,2})日", re.S)
+
 
 def extract_asof_date(html: str) -> str | None:
-    """ページ内の「終値」日付から、実際にどの営業日の終値かを取得する。
+    """ページ内の日付から、実際にどの営業日の終値かを取得する。
 
     kabutan は休場日にアクセスしても直近営業日のデータをそのまま表示するため、
     取得日をそのままラベルにすると休日実行時に日付がずれる。
+
+    **最初の ``<time>`` を採ってはいけない。** ページ冒頭の指数ヘッダは
+    NYダウ → 国内指数の順に並んでおり、先頭は米国市場の終値日になる。
+    日本時間の夕方はまだ前営業日を指しているため、国内ランキングを
+    1営業日古い日付で保存してしまう（2026-09-07 に実際に発生し、
+    月曜のデータが金曜のファイルを上書きした）。
+
+    そこでランキング表自身が持つ日付を最優先で読む。取れないときだけ
+    ``<time>`` に落とすが、そのときも**最も新しい日付**を採る。
     """
-    m = _ASOF_DATE_RE.search(html)
-    return m.group(1) if m else None
+    m = _PAGE_DATE_RE.search(html)
+    if m:
+        year, month, day = m.groups()
+        return f"{year}-{int(month):02d}-{int(day):02d}"
+
+    dates = _ASOF_DATE_RE.findall(html)
+    return max(dates) if dates else None
 
 
 def parse_ranking_table(html: str) -> pd.DataFrame:
