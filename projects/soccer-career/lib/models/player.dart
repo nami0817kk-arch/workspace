@@ -1,5 +1,6 @@
 import '../game/formulas.dart';
 import 'attributes.dart';
+import 'nationality.dart';
 import 'traits.dart';
 
 /// プレイヤーが操作する選手。
@@ -10,6 +11,7 @@ class Player {
     required this.position,
     required this.attributes,
     required this.potential,
+    this.nationality = Nationality.unknown,
     this.traits = const [],
     this.condition = Formulas.conditionMax,
   });
@@ -21,6 +23,9 @@ class Player {
 
   /// 総合力の上限。ここまでしか伸びない。画面には帯でしか見せない。
   final int potential;
+
+  /// 国籍。外国人枠と労働許可、代表資格に効く。
+  final Nationality nationality;
 
   final List<Trait> traits;
 
@@ -46,6 +51,7 @@ class Player {
     Attributes? attributes,
     Position? position,
     int? condition,
+    Nationality? nationality,
   }) =>
       Player(
         name: name,
@@ -53,6 +59,7 @@ class Player {
         position: position ?? this.position,
         attributes: attributes ?? this.attributes,
         potential: potential,
+        nationality: nationality ?? this.nationality,
         traits: traits,
         condition: (condition ?? this.condition)
             .clamp(0, Formulas.conditionMax)
@@ -74,6 +81,7 @@ class Player {
         position: from.position,
         attributes: attributes,
         potential: potential,
+        nationality: from.nationality,
         traits: from.traits,
         condition: from.condition,
       );
@@ -84,6 +92,7 @@ class Player {
         'position': position.name,
         'attributes': attributes.toJson(),
         'potential': potential,
+        'nationality': nationality.toJson(),
         'traits': traits.map((t) => t.name).toList(),
         'condition': condition,
       };
@@ -100,6 +109,9 @@ class Player {
       // ポテンシャルを足す前の保存データには無い。今の総合力に少し上乗せする。
       potential: json['potential'] as int? ??
           (attributes.overallFor(position) + 8),
+      // 国籍を持たせる前の保存データは、既定の国の選手として読む。
+      nationality: Nationality.fromJson(
+          json['nationality'] as Map<String, dynamic>?, 'yamato'),
       traits: [
         for (final n in (json['traits'] as List? ?? const []))
           if (Trait.values.any((t) => t.name == n))

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../models/attributes.dart';
+import '../../game/eligibility.dart';
+import '../../game/world.dart';
 import '../../models/career.dart';
 import '../../models/objective.dart';
 import '../../models/season.dart';
@@ -155,6 +157,8 @@ class _HomeTab extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       children: [
         _PlayerCard(state: state),
+        const SizedBox(height: 16),
+        _LeagueCard(state: state),
         const SizedBox(height: 16),
         if (state.injured) ...[
           _InjuryCard(state: state),
@@ -343,7 +347,12 @@ class _PlayerCard extends StatelessWidget {
                       Text(player.name, style: theme.textTheme.titleMedium),
                       Text(
                         '${player.position.label}  ${player.age}歳  ·  '
-                        '${state.club.name}（${state.club.tier}部）',
+                        '${World.byId(player.nationality.primary).demonym}',
+                        style: muted,
+                      ),
+                      Text(
+                        '${state.club.name}'
+                        '（${World.byId(state.club.countryId).name} ${state.club.tier}部）',
                         style: muted,
                       ),
                       Text(
@@ -373,6 +382,18 @@ class _PlayerCard extends StatelessWidget {
                   Chip(
                     label: const Text('代表招集'),
                     backgroundColor: theme.colorScheme.primaryContainer,
+                    visualDensity: VisualDensity.compact,
+                  ),
+                if (player.nationality.roots != null)
+                  Chip(
+                    label: Text(
+                        '${World.byId(player.nationality.roots!).name}のルーツ'),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                if (player.nationality.naturalized.isNotEmpty)
+                  Chip(
+                    label: Text(
+                        '${World.byId(player.nationality.naturalized.last).name}に帰化'),
                     visualDensity: VisualDensity.compact,
                   ),
                 for (final t in player.traits)
@@ -842,6 +863,73 @@ class _SimReportDialog extends StatelessWidget {
           child: const Text('閉じる'),
         ),
       ],
+    );
+  }
+}
+
+/// 今いるリーグと、その国の外国人ルール。
+///
+/// 制度そのものを画面の主役にはしない。「自分がどう扱われるか」が分かれば十分。
+class _LeagueCard extends StatelessWidget {
+  const _LeagueCard({required this.state});
+
+  final CareerState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final country = World.byId(state.club.countryId);
+    final foreign =
+        Eligibility.isForeignIn(state.player.nationality, country);
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text('${country.name} ${state.club.tier}部',
+                    style: theme.textTheme.titleSmall),
+                const Spacer(),
+                Text('格 ${'★' * country.prestige}', style: muted),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              '${country.confederation.label}  ·  ${country.calendar.label}  ·  '
+              '${country.clubsInTier(state.club.tier)}クラブ',
+              style: muted,
+            ),
+            const SizedBox(height: 8),
+            Text('外国人ルール: ${country.foreignRule.summary}', style: muted),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                Icon(
+                  foreign ? Icons.flight_takeoff : Icons.home,
+                  size: 16,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    foreign
+                        ? 'この国では外国人として扱われる'
+                        : state.player.nationality.isHomegrownIn(country.id)
+                            ? 'この国の自国育ちとして扱われる'
+                            : 'この国では自国民として扱われる',
+                    style: theme.textTheme.bodySmall,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

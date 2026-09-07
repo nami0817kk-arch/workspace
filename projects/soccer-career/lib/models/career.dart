@@ -17,6 +17,7 @@ class SeasonRecord {
     this.salary = 0,
     this.caps = 0,
     this.objectiveMet = false,
+    this.countryId = 'yamato',
   });
 
   final int year;
@@ -34,6 +35,9 @@ class SeasonRecord {
   /// 監督の目標を達成したか。
   final bool objectiveMet;
 
+  /// そのシーズンを戦った国。
+  final String countryId;
+
   Map<String, dynamic> toJson() => {
         'year': year,
         'clubName': clubName,
@@ -46,6 +50,7 @@ class SeasonRecord {
         'salary': salary,
         'caps': caps,
         'objectiveMet': objectiveMet,
+        'countryId': countryId,
       };
 
   factory SeasonRecord.fromJson(Map<String, dynamic> json) => SeasonRecord(
@@ -62,6 +67,7 @@ class SeasonRecord {
         salary: json['salary'] as int? ?? 0,
         caps: json['caps'] as int? ?? 0,
         objectiveMet: json['objectiveMet'] as bool? ?? false,
+        countryId: json['countryId'] as String? ?? 'yamato',
       );
 }
 
@@ -79,6 +85,9 @@ class CareerState {
     required this.agent,
     required this.salary,
     required this.contractYears,
+    this.countryId = 'yamato',
+    this.professionalYears = 1,
+    this.continentalExperience = false,
     this.training,
     this.objective,
     this.injury,
@@ -120,6 +129,15 @@ class CareerState {
 
   /// 契約の残り年数。0 になると必ず去就を決めることになる。
   int contractYears;
+
+  /// 今いる国。所属クラブの国と同じだが、リーグの組み立てで使うので持つ。
+  String countryId;
+
+  /// プロになってからの年数。労働許可の審査に使う。
+  int professionalYears;
+
+  /// 大陸カップに出た経験があるか。労働許可の加点になる。
+  bool continentalExperience;
 
   /// 監督から与えられた今季の目標。
   SeasonObjective? objective;
@@ -217,6 +235,9 @@ class CareerState {
         'salary': salary,
         'training': training?.name,
         'contractYears': contractYears,
+        'countryId': countryId,
+        'professionalYears': professionalYears,
+        'continentalExperience': continentalExperience,
         'objective': objective?.toJson(),
         'injury': injury?.toJson(),
         'caps': caps,
@@ -253,6 +274,9 @@ class CareerState {
           ? null
           : AttributeKey.values.byName(trainingName),
       contractYears: json['contractYears'] as int? ?? 2,
+      countryId: json['countryId'] as String? ?? 'yamato',
+      professionalYears: json['professionalYears'] as int? ?? 1,
+      continentalExperience: json['continentalExperience'] as bool? ?? false,
       objective:
           SeasonObjective.fromJson(json['objective'] as Map<String, dynamic>?),
       injury: Injury.fromJson(json['injury'] as Map<String, dynamic>?),

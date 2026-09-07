@@ -4,12 +4,15 @@ import '../models/agent.dart';
 import '../models/attributes.dart';
 import '../models/career.dart';
 import '../models/club.dart';
+import '../models/country.dart';
+import '../models/nationality.dart';
 import '../models/player.dart';
 import '../models/season.dart';
 import '../models/traits.dart';
 import 'career_engine_extras.dart';
+import 'eligibility.dart';
 import 'formulas.dart';
-import 'names.dart';
+import 'world.dart';
 
 /// シーズン終了時に届くオファー。残留の契約更改もこの形で扱う。
 class TransferOffer {
@@ -19,6 +22,7 @@ class TransferOffer {
     required this.salary,
     required this.role,
     required this.years,
+    this.eligibility,
     this.isRenewal = false,
     this.negotiated = false,
   });
@@ -35,6 +39,9 @@ class TransferOffer {
   /// 契約年数。
   final int years;
 
+  /// 外国人枠と労働許可の判定。国内の移籍や契約更改なら null。
+  final EligibilityReport? eligibility;
+
   /// 今のクラブとの契約更改なら true。
   final bool isRenewal;
 
@@ -47,6 +54,7 @@ class TransferOffer {
         salary: salary ?? this.salary,
         role: role,
         years: years,
+        eligibility: eligibility,
         isRenewal: isRenewal,
         negotiated: negotiated ?? this.negotiated,
       );
@@ -91,8 +99,14 @@ class CareerEngine {
     required Position position,
     required int age,
     required Agent agent,
+    String? countryId,
   }) {
-    final league = Names.buildLeague(2);
+    final home = countryId == null
+        ? World.randomHome(_random)
+        : World.byId(countryId);
+    // 2部から始める。1部しか無い国なら1部の下位から。
+    final tier = home.tiers >= 2 ? 2 : 1;
+    final league = World.buildLeague(home.id, tier);
     // 下位3クラブのどれかに所属。最初から強豪だと成り上がる余地がない。
     final club = league[league.length - 1 - _random.nextInt(3)];
     final attributes = _startingAttributes(position, age);
@@ -103,6 +117,7 @@ class CareerEngine {
       position: position,
       attributes: attributes,
       potential: rollPotential(overall),
+      nationality: _rollNationality(home),
       traits: Trait.roll(_random),
     );
     return CareerState(
@@ -115,9 +130,28 @@ class CareerEngine {
       table: _emptyTable(league),
       history: [],
       agent: agent,
-      salary: salaryFor(overall: overall, tier: club.tier),
+      salary: salaryFor(overall: overall, tier: club.tier, prestige: home.prestige),
       contractYears: extras.rollContractYears(),
+      countryId: home.id,
       objective: extras.objectiveFor(player: player, club: club),
+    );
+  }
+
+  /// 国籍を決める。2割でルーツの国籍が付き、代表を選ぶ余地が生まれる。
+  ///
+  /// ホームグロウンは最初のクラブで育った扱いにする。母国の登録枠で有利になり、
+  /// 「出てきたクラブ」という設定にもなる。
+  Nationality _rollNationality(Country home) {
+    String? roots;
+    if (_random.nextDouble() < 0.2) {
+      final others =
+          World.countries.where((c) => c.id != home.id).toList();
+      roots = others[_random.nextInt(others.length)].id;
+    }
+    return Nationality(
+      primary: home.id,
+      roots: roots,
+      homegrownCountryId: home.id,
     );
   }
 
@@ -131,10 +165,16 @@ class CareerEngine {
   }
 
   /// 年俸（万円）。総合力とリーグで決まる。
-  static int salaryFor({required int overall, required int tier}) {
+  static int salaryFor({
+    required int overall,
+    required int tier,
+    int prestige = 3,
+  }) {
     final base = pow(max(0, overall - 40), 2).toDouble();
-    final factor = tier == 1 ? 4.0 : 1.2;
-    return max(120, (base * factor / 10).round() * 10);
+    final tierFactor = tier == 1 ? 4.0 : 1.2;
+    // 国の格で水準が変わる。同じ実力でも行き先で年俸が跳ねる。
+    final countryFactor = 0.5 + prestige * 0.25;
+    return max(120, (base * tierFactor * countryFactor / 10).round() * 10);
   }
 
   /// 初期能力。ポジションの主要能力を少し高くして、役割の違いを出す。
@@ -221,10 +261,12 @@ class CareerEngine {
   }
 
   /// 対戦相手を並べる。同じ相手とホームとアウェイで2回ずつ当たる。
+  ///
+  /// 試合数は国とクラブ数で決まる。16クラブの国は30試合、20クラブなら38試合。
   List<String> _buildFixtures(List<Club> league, Club club) {
     final opponents = league.where((c) => c.id != club.id).map((c) => c.id);
     final fixtures = [...opponents, ...opponents]..shuffle(_random);
-    return fixtures.take(Formulas.matchesPerSeason).toList();
+    return fixtures.take((league.length - 1) * 2).toList();
   }
 
   List<TableRow> _emptyTable(List<Club> league) =>
@@ -282,14 +324,41 @@ class CareerEngine {
 
   /// 今シーズンの順位から、所属クラブの去就を決める。
   ClubFate fateOf(CareerState state) {
+    final country = World.byId(state.club.countryId);
     final position = state.leaguePosition;
-    if (state.club.tier == 2 && position <= Formulas.promotionPlaces) {
+    final size = country.clubsInTier(state.club.tier);
+
+    if (state.club.tier > 1 && position <= Formulas.promotionPlaces) {
       return ClubFate.promoted;
     }
-    if (state.club.tier == 1 && position >= Formulas.relegationFrom) {
+    // 降格は下から3クラブ。クラブ数が国ごとに違うので相対で決める。
+    if (state.club.tier < country.tiers && position > size - 3) {
       return ClubFate.relegated;
     }
     return ClubFate.stay;
+  }
+
+  /// 昇格プレーオフに回ったか（3〜6位）。
+  bool inPromotionPlayoff(CareerState state) {
+    final country = World.byId(state.club.countryId);
+    if (state.club.tier <= 1) return false;
+    final position = state.leaguePosition;
+    return position > Formulas.promotionPlaces && position <= 6 &&
+        country.tiers > 1;
+  }
+
+  /// プレーオフの結果。順位が上ほど勝ち上がりやすい。
+  bool winsPlayoff(CareerState state) {
+    if (!inPromotionPlayoff(state)) return false;
+    final chance = 0.45 - (state.leaguePosition - 3) * 0.08;
+    return _random.nextDouble() < chance;
+  }
+
+  /// 大陸カップに出られる順位か。
+  bool inContinental(CareerState state) {
+    final country = World.byId(state.club.countryId);
+    return state.club.tier == 1 &&
+        state.leaguePosition <= country.continentalSlots;
   }
 
   /// この年齢で引退を選べるか。
@@ -306,13 +375,15 @@ class CareerEngine {
             id: state.club.id,
             name: state.club.name,
             strength: state.club.strength + Formulas.promotionStrengthBonus,
-            tier: 1,
+            tier: state.club.tier - 1,
+            countryId: state.club.countryId,
           ),
         ClubFate.relegated => Club(
             id: state.club.id,
             name: state.club.name,
             strength: state.club.strength - Formulas.promotionStrengthBonus,
-            tier: 2,
+            tier: state.club.tier + 1,
+            countryId: state.club.countryId,
           ),
         ClubFate.stay => state.club,
       };
@@ -321,7 +392,11 @@ class CareerEngine {
   TransferOffer renewalOffer(CareerState state) {
     final club = nextClubIfStaying(state);
     final stats = state.seasonStats;
-    final base = salaryFor(overall: state.player.overall, tier: club.tier);
+    final base = salaryFor(
+      overall: state.player.overall,
+      tier: club.tier,
+      prestige: World.byId(club.countryId).prestige,
+    );
     final performance = stats.appearances == 0
         ? 0.85
         : (0.85 + (stats.averageRating - 6.0) * 0.25).clamp(0.7, 1.4);
@@ -358,30 +433,73 @@ class CareerEngine {
     final reach =
         (state.player.overall * Formulas.transferReachFactor).round() +
             state.agent.reach;
+    final origin = World.byId(state.club.countryId);
     final candidates = <TransferOffer>[];
 
-    for (final tier in [1, 2]) {
-      final clubs = Names.buildLeague(tier)
-          .where((c) => c.name != state.club.name && c.strength <= reach)
-          .toList()
-        ..sort((a, b) => b.strength.compareTo(a.strength));
-      if (clubs.isEmpty) continue;
-      final club = clubs.first;
-      final salary = _round(
-        salaryFor(overall: state.player.overall, tier: tier) *
-            (1 + state.agent.negotiation * 0.03),
-      );
-      candidates.add(TransferOffer(
-        club: club,
-        reason: tier == 1
-            ? '1部の${club.name}が、昨季の活躍を評価して獲得に動いた。'
-            : '${club.name}が、主力としての起用を約束している。',
-        salary: salary,
-        role: _roleFor(state.player.overall, club),
-        years: extras.rollContractYears(),
-      ));
+    // 声がかかる国。今の国と、代理人の人脈で届く範囲の国。
+    for (final country in _reachableCountries(state)) {
+      for (final tier in [1, 2]) {
+        if (tier > country.tiers) continue;
+        final clubs = World.buildLeague(country.id, tier)
+            .where((c) => c.name != state.club.name && c.strength <= reach)
+            .toList()
+          ..sort((a, b) => b.strength.compareTo(a.strength));
+        if (clubs.isEmpty) continue;
+        final club = clubs.first;
+
+        final eligibility = Eligibility.report(
+          nationality: state.player.nationality,
+          club: club,
+          origin: origin,
+          caps: state.caps,
+          professionalYears: state.professionalYears,
+          marketValue: state.salary,
+          continentalExperience: state.continentalExperience,
+        );
+        // 枠が空いていない、または許可が下りない移籍は成立しない。
+        if (!eligibility.canJoin) continue;
+
+        final salary = _round(
+          salaryFor(
+                overall: state.player.overall,
+                tier: tier,
+                prestige: country.prestige,
+              ) *
+              (1 + state.agent.negotiation * 0.03),
+        );
+        candidates.add(TransferOffer(
+          club: club,
+          reason: country.id == state.club.countryId
+              ? (tier == 1
+                  ? '1部の${club.name}が、昨季の活躍を評価して獲得に動いた。'
+                  : '${club.name}が、主力としての起用を約束している。')
+              : '${country.name}の${club.name}から国外移籍の打診が届いた。',
+          salary: salary,
+          role: _roleFor(state.player.overall, club),
+          years: extras.rollContractYears(),
+          eligibility: eligibility,
+        ));
+      }
     }
-    return candidates;
+
+    // 良い条件の順に3件まで。並べすぎると選ぶのが作業になる。
+    candidates.sort((a, b) => b.salary.compareTo(a.salary));
+    return candidates.take(3).toList();
+  }
+
+  /// 声がかかる国を決める。
+  ///
+  /// 今の国は常に対象。国外は「自分の格」と「代理人の人脈」で決まり、
+  /// いきなり最上位リーグから声はかからない。
+  List<Country> _reachableCountries(CareerState state) {
+    final here = World.byId(state.club.countryId);
+    final reachPrestige =
+        (state.player.overall - 55) ~/ 8 + state.agent.reach ~/ 3;
+    return [
+      here,
+      ...World.countries.where((c) =>
+          c.id != here.id && c.prestige <= here.prestige + reachPrestige),
+    ];
   }
 
   /// 起用の見込み。クラブの強さと自分の力の差で決まる。
@@ -445,13 +563,23 @@ class CareerEngine {
       salary: state.salary,
       caps: state.seasonCaps,
       objectiveMet: state.objective?.achieved(state.seasonStats) ?? false,
+      countryId: state.club.countryId,
     );
 
     final league = _leagueContaining(accepted.club);
     final resolved = league.firstWhere((c) => c.name == accepted.club.name);
+    // 同じ国に5年いると帰化できる。外国人枠から外れ、行ける先が広がる。
+    final yearsHere = 1 +
+        state.history.where((h) => h.countryId == state.club.countryId).length;
+    var nationality = state.player.nationality;
+    if (yearsHere >= 5 && !nationality.has(state.club.countryId)) {
+      nationality = nationality.naturalize(state.club.countryId);
+    }
+
     final nextPlayer = state.player.copyWith(
       age: state.player.age + 1,
       condition: Formulas.conditionMax,
+      nationality: nationality,
     );
     final stayed = accepted.club.name == state.club.name;
 
@@ -471,6 +599,10 @@ class CareerEngine {
       contractYears: stayed && !accepted.isRenewal
           ? max(1, state.contractYears - 1)
           : accepted.years,
+      countryId: resolved.countryId,
+      professionalYears: state.professionalYears + 1,
+      continentalExperience:
+          state.continentalExperience || inContinental(state),
       objective: extras.objectiveFor(player: nextPlayer, club: resolved),
       // 怪我はシーズンを跨いでも消えない。オフの間に少しは進む。
       injury: state.injury == null || state.injury!.matchesOut <= 4
@@ -487,7 +619,7 @@ class CareerEngine {
   /// 元々の名簿の1クラブと入れ替える（昇格なら一番弱いクラブ、降格なら一番強いクラブ）。
   /// これで20クラブが保たれ、自分のクラブは必ずリーグに存在する。
   List<Club> _leagueContaining(Club club) {
-    final league = Names.buildLeague(club.tier);
+    final league = World.buildLeague(club.countryId, club.tier);
     if (league.any((c) => c.name == club.name)) return league;
 
     final replaced = club.tier == 1
@@ -501,6 +633,7 @@ class CareerEngine {
             name: club.name,
             strength: club.strength,
             tier: club.tier,
+            countryId: club.countryId,
           )
         else
           c,
@@ -518,6 +651,7 @@ class CareerEngine {
       salary: state.salary,
       caps: state.seasonCaps,
       objectiveMet: state.objective?.achieved(state.seasonStats) ?? false,
+      countryId: state.club.countryId,
     );
     return CareerState(
       player: state.player,
@@ -531,6 +665,9 @@ class CareerEngine {
       agent: state.agent,
       salary: state.salary,
       contractYears: state.contractYears,
+      countryId: state.countryId,
+      professionalYears: state.professionalYears,
+      continentalExperience: state.continentalExperience,
       caps: state.caps,
       internationalGoals: state.internationalGoals,
       retired: true,

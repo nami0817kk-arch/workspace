@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../game/career_engine.dart';
 import '../../game/formulas.dart';
+import '../../game/world.dart';
 import '../../state/career_controller.dart';
 
 /// シーズン終了。成績を振り返り、契約更改・移籍・引退を決める。
@@ -263,7 +264,8 @@ class _OfferCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    '${offer.club.name}（${offer.club.tier}部）',
+                    '${offer.club.name}'
+                    '（${World.byId(offer.club.countryId).name} ${offer.club.tier}部）',
                     style: theme.textTheme.titleSmall,
                   ),
                 ),
@@ -275,6 +277,25 @@ class _OfferCard extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(offer.reason, style: muted),
+            if (offer.eligibility != null && offer.eligibility!.foreign) ...[
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 6,
+                runSpacing: 4,
+                children: [
+                  Chip(
+                    label: Text(offer.eligibility!.slotSummary),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  if (offer.eligibility!.permit.required)
+                    Chip(
+                      label: Text(offer.eligibility!.permit.summary),
+                      visualDensity: VisualDensity.compact,
+                      backgroundColor: theme.colorScheme.primaryContainer,
+                    ),
+                ],
+              ),
+            ],
             const SizedBox(height: 10),
             Row(
               children: [
