@@ -1,0 +1,448 @@
+import 'dart:math';
+
+import 'package:flutter_test/flutter_test.dart';
+import 'package:soccer_career/game/career_engine.dart';
+import 'package:soccer_career/game/formulas.dart';
+import 'package:soccer_career/game/match_engine.dart';
+import 'package:soccer_career/game/names.dart';
+import 'package:soccer_career/game/scenarios.dart';
+import 'package:soccer_career/models/attributes.dart';
+import 'package:soccer_career/models/career.dart';
+import 'package:soccer_career/models/player.dart';
+import 'package:soccer_career/models/season.dart';
+
+Attributes attrs({int all = 50, int shooting = 50}) => Attributes(
+      pace: all,
+      shooting: shooting,
+      passing: all,
+      dribbling: all,
+      defending: all,
+      physical: all,
+    );
+
+Player playerWith({
+  Position position = Position.fw,
+  int age = 20,
+  Attributes? attributes,
+}) =>
+    Player(
+      name: 'テスト選手',
+      age: age,
+      position: position,
+      attributes: attributes ?? attrs(),
+    );
+
+void main() {
+  group('Attributes', () {
+    test('ポジションで総合力の重みが変わる', () {
+      final a = Attributes(
+        pace: 50,
+        shooting: 90,
+        passing: 50,
+        dribbling: 50,
+        defending: 20,
+        physical: 50,
+      );
+      // シュートが高い選手は FW で最も高く評価される。
+      expect(a.overallFor(Position.fw),
+          greaterThan(a.overallFor(Position.df)));
+      expect(a.overallFor(Position.fw),
+          greaterThan(a.overallFor(Position.mf)));
+    });
+
+    test('bump は上下限で丸める', () {
+      final low = attrs(all: Formulas.minAttribute);
+      expect(low.bump(AttributeKey.pace, -5).pace, Formulas.minAttribute);
+
+      final high = attrs(all: Formulas.maxAttribute);
+      expect(high.bump(AttributeKey.pace, 5).pace, Formulas.maxAttribute);
+    });
+
+    test('bump は指定した項目だけ動かす', () {
+      final bumped = attrs(all: 50).bump(AttributeKey.shooting, 3);
+      expect(bumped.shooting, 53);
+      expect(bumped.pace, 50);
+      expect(bumped.passing, 50);
+    });
+  });
+
+  group('successChance', () {
+    test('能力が難易度と同じでも五分より低い', () {
+      expect(MatchInProgress.successChance(60, 60), lessThan(0.5));
+    });
+
+    test('能力が高いほど成功率が上がる', () {
+      final low = MatchInProgress.successChance(40, 60);
+      final high = MatchInProgress.successChance(80, 60);
+      expect(high, greaterThan(low));
+    });
+
+    test('極端な差でも 0.05〜0.92 に収まる', () {
+      expect(MatchInProgress.successChance(1, 99), greaterThanOrEqualTo(0.05));
+      expect(MatchInProgress.successChance(99, 1), lessThanOrEqualTo(0.92));
+    });
+  });
+
+  group('出場の判断', () {
+    MatchResult rated(double rating) => MatchResult(
+          matchday: 1,
+          opponentName: '相手',
+          home: true,
+          scored: 1,
+          conceded: 1,
+          appearance: Appearance.start,
+          rating: rating,
+          goals: 0,
+          assists: 0,
+        );
+
+    test('実績が無ければ先発から始まる', () {
+      expect(MatchEngine.decideAppearance([]), Appearance.start);
+    });
+
+    test('評価が高ければ先発を維持する', () {
+      final recent = List.generate(5, (_) => rated(7.0));
+      expect(MatchEngine.decideAppearance(recent), Appearance.start);
+    });
+
+    test('評価が落ちると途中出場になる', () {
+      final recent = List.generate(5, (_) => rated(5.9));
+      expect(MatchEngine.decideAppearance(recent), Appearance.sub);
+    });
+
+    test('さらに落ちるとベンチ外になる', () {
+      final recent = List.generate(5, (_) => rated(5.0));
+      expect(MatchEngine.decideAppearance(recent), Appearance.benched);
+    });
+
+    test('直近5試合だけを見る（古い不調は引きずらない）', () {
+      final recent = [
+        ...List.generate(5, (_) => rated(4.5)),
+        ...List.generate(5, (_) => rated(7.5)),
+      ];
+      expect(MatchEngine.decideAppearance(recent), Appearance.start);
+    });
+  });
+
+  group('MatchInProgress', () {
+    MatchInProgress build({int seed = 1, Attributes? attributes}) {
+      final engine = MatchEngine(random: Random(seed));
+      final league = Names.buildLeague(2);
+      return engine.start(
+        matchday: 1,
+        player: playerWith(attributes: attributes),
+        club: league.first,
+        opponent: league.last,
+        home: true,
+        appearance: Appearance.start,
+      );
+    }
+
+    test('先発は規定数の局面を持つ', () {
+      expect(build().scenarios.length, Formulas.scenariosPerStart);
+    });
+
+    test('途中出場は局面が少ない', () {
+      final engine = MatchEngine(random: Random(1));
+      final league = Names.buildLeague(2);
+      final match = engine.start(
+        matchday: 1,
+        player: playerWith(),
+        club: league.first,
+        opponent: league.last,
+        home: true,
+        appearance: Appearance.sub,
+      );
+      expect(match.scenarios.length, Formulas.scenariosPerSub);
+    });
+
+    test('局面を選ぶと進み、全部消化すると終わる', () {
+      final match = build();
+      expect(match.isFinished, isFalse);
+      while (!match.isFinished) {
+        match.choose(match.current.options.first);
+      }
+      expect(match.isFinished, isTrue);
+      expect(match.resolutions.length, Formulas.scenariosPerStart);
+    });
+
+    test('能力が極端に高ければゴールが記録される', () {
+      final match = build(seed: 7, attributes: attrs(all: 99, shooting: 99));
+      while (!match.isFinished) {
+        // ゴールに繋がる手を優先して選ぶ。
+        final goalOption = match.current.options
+            .where((o) => o.outcome == Outcome.goal)
+            .toList();
+        match.choose(
+            goalOption.isEmpty ? match.current.options.first : goalOption.first);
+      }
+      expect(match.goals + match.assists, greaterThan(0));
+      expect(match.rating, greaterThan(Formulas.baseRating));
+    });
+
+    test('評価点は上下限に収まる', () {
+      final match = build(seed: 3, attributes: attrs(all: 1, shooting: 1));
+      while (!match.isFinished) {
+        match.choose(match.current.options.first);
+      }
+      expect(match.rating, greaterThanOrEqualTo(Formulas.minRating));
+      expect(match.rating, lessThanOrEqualTo(Formulas.maxRating));
+    });
+
+    test('ベンチ外の試合は評価点が付かない', () {
+      final engine = MatchEngine(random: Random(1));
+      final league = Names.buildLeague(2);
+      final match = engine.start(
+        matchday: 1,
+        player: playerWith(),
+        club: league.first,
+        opponent: league.last,
+        home: true,
+        appearance: Appearance.benched,
+      );
+      expect(match.scenarios, isEmpty);
+      expect(match.finish().rating, isNull);
+    });
+
+    test('自分の得点は必ずチームの得点に含まれる', () {
+      final match = build(seed: 11, attributes: attrs(all: 99, shooting: 99));
+      while (!match.isFinished) {
+        final goalOption = match.current.options
+            .where((o) => o.outcome == Outcome.goal)
+            .toList();
+        match.choose(
+            goalOption.isEmpty ? match.current.options.first : goalOption.first);
+      }
+      final result = match.finish();
+      expect(result.scored, greaterThanOrEqualTo(result.goals));
+    });
+  });
+
+  group('成長', () {
+    test('評価が低い試合では伸びない', () {
+      final engine = MatchEngine(random: Random(1));
+      final player = playerWith();
+      final grown = engine.grow(player, 5.0);
+      expect(grown.pace, player.attributes.pace);
+      expect(grown.shooting, player.attributes.shooting);
+    });
+
+    test('出場しなかった試合では伸びない', () {
+      final engine = MatchEngine(random: Random(1));
+      final player = playerWith();
+      expect(engine.grow(player, null).overallFor(Position.fw),
+          player.overall);
+    });
+
+    test('良い評価を重ねれば伸びる', () {
+      final engine = MatchEngine(random: Random(5));
+      var player = playerWith(age: 20);
+      final before = player.overall;
+      for (var i = 0; i < 60; i++) {
+        player = player.copyWith(attributes: engine.grow(player, 8.5));
+      }
+      expect(player.overall, greaterThan(before));
+    });
+
+    test('ピークを過ぎた選手は衰える', () {
+      final engine = MatchEngine(random: Random(9));
+      var player = playerWith(age: Formulas.declineAge + 3);
+      final before = player.overall;
+      for (var i = 0; i < 80; i++) {
+        player = player.copyWith(attributes: engine.grow(player, 6.0));
+      }
+      expect(player.overall, lessThan(before));
+    });
+  });
+
+  group('CareerEngine', () {
+    test('キャリアは2部のクラブから始まる', () {
+      final state = CareerEngine(random: Random(1))
+          .startCareer(name: 'A', position: Position.mf, age: 17);
+      expect(state.club.tier, 2);
+      expect(state.league.length, Formulas.clubsPerLeague);
+      expect(state.fixtures.length, Formulas.matchesPerSeason);
+      expect(state.results, isEmpty);
+    });
+
+    test('日程に自分のクラブは入らない', () {
+      final state = CareerEngine(random: Random(2))
+          .startCareer(name: 'A', position: Position.fw, age: 18);
+      expect(state.fixtures.contains(state.club.id), isFalse);
+    });
+
+    test('結果を反映すると順位表が全クラブ進む', () {
+      final engine = CareerEngine(random: Random(3));
+      final state =
+          engine.startCareer(name: 'A', position: Position.df, age: 19);
+      engine.applyResult(
+        state,
+        MatchResult(
+          matchday: 1,
+          opponentName: state.opponentFor(1).name,
+          home: true,
+          scored: 2,
+          conceded: 1,
+          appearance: Appearance.start,
+          rating: 7.0,
+          goals: 1,
+          assists: 0,
+        ),
+      );
+      expect(state.results.length, 1);
+      for (final row in state.table) {
+        expect(row.played, 1, reason: '${row.clubName} が消化していない');
+      }
+      final mine = state.table.firstWhere((r) => r.clubId == state.club.id);
+      expect(mine.points, Formulas.pointsWin);
+    });
+
+    test('成績が振るわないとオファーは来ない', () {
+      final engine = CareerEngine(random: Random(4));
+      final state =
+          engine.startCareer(name: 'A', position: Position.fw, age: 20);
+      expect(engine.offersFor(state), isEmpty);
+    });
+
+    test('シーズンを進めると年齢と年が上がり、記録が残る', () {
+      final engine = CareerEngine(random: Random(6));
+      final state =
+          engine.startCareer(name: 'A', position: Position.mf, age: 18);
+      final next = engine.advanceSeason(state);
+      expect(next.year, state.year + 1);
+      expect(next.player.age, state.player.age + 1);
+      expect(next.history.length, 1);
+      expect(next.results, isEmpty);
+      expect(next.fixtures.length, Formulas.matchesPerSeason);
+    });
+  });
+
+  group('保存', () {
+    test('JSON を往復しても状態が保たれる', () {
+      final engine = CareerEngine(random: Random(8));
+      final state =
+          engine.startCareer(name: '往復テスト', position: Position.df, age: 17);
+      engine.applyResult(
+        state,
+        MatchResult(
+          matchday: 1,
+          opponentName: state.opponentFor(1).name,
+          home: false,
+          scored: 0,
+          conceded: 3,
+          appearance: Appearance.sub,
+          rating: 5.2,
+          goals: 0,
+          assists: 0,
+        ),
+      );
+
+      final restored = CareerState.fromJson(state.toJson());
+      expect(restored.player.name, state.player.name);
+      expect(restored.player.position, state.player.position);
+      expect(restored.club.id, state.club.id);
+      expect(restored.year, state.year);
+      expect(restored.fixtures, state.fixtures);
+      expect(restored.results.length, 1);
+      expect(restored.results.first.rating, 5.2);
+      expect(restored.table.length, state.table.length);
+      expect(restored.leaguePosition, state.leaguePosition);
+    });
+  });
+
+  group('SeasonStats', () {
+    test('出場しなかった試合は平均に含めない', () {
+      final results = [
+        MatchResult(
+          matchday: 1,
+          opponentName: 'X',
+          home: true,
+          scored: 1,
+          conceded: 0,
+          appearance: Appearance.start,
+          rating: 8.0,
+          goals: 1,
+          assists: 0,
+        ),
+        MatchResult(
+          matchday: 2,
+          opponentName: 'Y',
+          home: false,
+          scored: 0,
+          conceded: 2,
+          appearance: Appearance.benched,
+          rating: null,
+          goals: 0,
+          assists: 0,
+        ),
+      ];
+      final stats = SeasonStats.from(results);
+      expect(stats.appearances, 1);
+      expect(stats.averageRating, 8.0);
+      expect(stats.goals, 1);
+    });
+
+    test('1試合も出ていなければ 0 を返す', () {
+      expect(SeasonStats.from(const []).appearances, 0);
+      expect(SeasonStats.from(const []).averageRating, 0);
+    });
+  });
+
+  group('リーグ', () {
+    test('1部と2部でクラブ名が重複しない', () {
+      final first = Names.buildLeague(1).map((c) => c.name).toSet();
+      final second = Names.buildLeague(2).map((c) => c.name).toSet();
+      expect(first.intersection(second), isEmpty);
+    });
+
+    test('1部の方が平均的に強い', () {
+      double avg(int tier) {
+        final clubs = Names.buildLeague(tier);
+        return clubs.fold<int>(0, (s, c) => s + c.strength) / clubs.length;
+      }
+
+      expect(avg(1), greaterThan(avg(2)));
+    });
+  });
+
+  group('局面データ', () {
+    test('全ポジションに局面がある', () {
+      for (final position in Position.values) {
+        expect(ScenarioPool.forPosition(position), isNotEmpty);
+      }
+    });
+
+    test('どの局面も選択肢が3つある', () {
+      for (final position in Position.values) {
+        for (final scenario in ScenarioPool.forPosition(position)) {
+          expect(scenario.options.length, 3, reason: scenario.id);
+        }
+      }
+    });
+
+    test('局面IDが重複していない', () {
+      final ids = [
+        for (final position in Position.values)
+          ...ScenarioPool.forPosition(position).map((s) => s.id),
+      ];
+      expect(ids.toSet().length, ids.length);
+    });
+
+    test('得点に直結する手ほど難易度が高い', () {
+      for (final position in Position.values) {
+        for (final scenario in ScenarioPool.forPosition(position)) {
+          final goals =
+              scenario.options.where((o) => o.outcome == Outcome.goal);
+          final plays =
+              scenario.options.where((o) => o.outcome == Outcome.play);
+          if (goals.isEmpty || plays.isEmpty) continue;
+          final easiestGoal =
+              goals.map((o) => o.difficulty).reduce((a, b) => a < b ? a : b);
+          final easiestPlay =
+              plays.map((o) => o.difficulty).reduce((a, b) => a < b ? a : b);
+          expect(easiestGoal, greaterThan(easiestPlay), reason: scenario.id);
+        }
+      }
+    });
+  });
+}

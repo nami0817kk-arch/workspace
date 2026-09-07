@@ -9,7 +9,6 @@
 |---|---|
 | [CLAUDE.md](CLAUDE.md) | セッション運用ルール（**作業前に必読**）・収益/運用上の注意 |
 | [docs/session-faq.md](docs/session-faq.md) | 「これはなぜこうなっている?」の答え。疑問はまずここ |
-| [docs/coordinator.txt](docs/coordinator.txt) | FAQ で解けないときの相談先（調整役セッション） |
 | [docs/sessions.md](docs/sessions.md) | セッション台帳。誰がどのPJTを持っているか・PCが落ちると何が止まるか |
 | [platform/ai-lab/GROWTH.md](platform/ai-lab/GROWTH.md) | 全PJTの成熟度と「次にやること」（自動生成） |
 
