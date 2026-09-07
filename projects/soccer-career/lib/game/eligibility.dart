@@ -145,7 +145,9 @@ class Eligibility {
     final limit = country.foreignRule.squadLimit;
     if (limit == null) return 0;
     final ratio = (club.strength - 30) / 62; // 0..1
-    return (limit * ratio.clamp(0, 1) * 0.9).round().clamp(0, limit);
+    // 余裕を持たせすぎると枠が塞がらず、制度が意味を成さなくなる。
+    // 上位クラブは枠を使い切っている前提で見積もる。
+    return (limit * ratio.clamp(0, 1)).round().clamp(0, limit);
   }
 
   /// 加入できるかをまとめて判定する。
