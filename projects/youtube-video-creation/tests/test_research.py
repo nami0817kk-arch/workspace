@@ -604,6 +604,22 @@ def test_同じ背景が連続しない():
         assert a != b, f"{a} が連続している"
 
 
+def test_まとめの下地も直前の節と同じにしない():
+    """まとめだけ下地を決め打ちしていて、最後の節と重なることがあった。
+
+    2026-09-07、CI が「studio.png が連続している」で落ちて分かった。
+    直前が studio に落ちる並びを作って、まとめが別の絵に逃げることを固定する。
+    """
+    import re
+
+    from src import research
+
+    notes = research.load_notes("research/20260903_japan.yaml")
+    body = research.to_script(notes, __import__("src.plan", fromlist=["load_plan"]).load_plan())
+    backgrounds = re.findall(r"^@bg: (\S+)", body, flags=re.M)
+    assert backgrounds[-1] != backgrounds[-2], "まとめが直前の節と同じ下地になっている"
+
+
 def test_問いが句点で終わっていても二重にしない():
     """「〜のか。」に機械がもう1つ足して「。。」になっていた。"""
     from src.research import _ends_sentence

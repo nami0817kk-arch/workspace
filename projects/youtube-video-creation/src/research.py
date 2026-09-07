@@ -842,9 +842,15 @@ def to_script(notes: Notes, plan: Plan) -> str:
     # 名乗っていて、答えを出さないなら看板の方を降ろすことになる。
     # 次の焦点は読み上げず、最後のカード（outro_title）と概要欄に置く。
     # 締めの挨拶（続報は…チャンネル登録して…）は毎回同じで、8秒を使っていた
+    # **まとめの下地も、直前の節と同じにしない。**決め打ちにしていたため、
+    # 最後の節がたまたま studio に落ちると2節続けて同じ絵になっていた
+    # （2026-09-07 に CI が検出）。本文の節と同じ選び方に揃える。
+    wrap_background = "assets/backgrounds/studio.png"
+    if wrap_background == previous_background:
+        wrap_background = next(c for c in BACKGROUNDS if c != previous_background)
     lines += [
         "## まとめ",
-        "@bg: assets/backgrounds/studio.png",
+        f"@bg: {moving_background(wrap_background)}",
         "",
         f"解説: {_spoken(notes.answer)}",
         f"  telop: {_telop(notes.answer)}",

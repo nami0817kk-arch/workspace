@@ -48,7 +48,14 @@ lib/
 
 - 収益化（広告・課金）。ストア申請も未着手。`soccer-manager` の `STORE_LISTING.md` が先例。
 - 代表招集、カップ戦、負傷、契約交渉。
-- Web版の公開。足すなら `soccer-pages.yml` に倣って**別ワークフロー**にする。
+
+## 公開
+
+Web版は master への push で Cloudflare Pages に自動デプロイされる
+（`.github/workflows/soccer-career-pages.yml`）。公開URLは soccer-career.pages.dev。
+検証は `soccer-career-ci.yml` に分けてあり、公開設定のミスでテストまで赤くならない。
+
+**セーブは端末ごとに独立**（localStorage）。PC で進めた内容とスマホの内容は別物になる。
 
 ## テスト
 
