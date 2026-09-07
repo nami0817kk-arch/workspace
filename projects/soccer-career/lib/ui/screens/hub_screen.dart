@@ -160,6 +160,10 @@ class _HomeTab extends StatelessWidget {
         const SizedBox(height: 16),
         _LeagueCard(state: state),
         const SizedBox(height: 16),
+        if (!state.squadStatus.canPlay) ...[
+          _OutOfSquadCard(state: state),
+          const SizedBox(height: 16),
+        ],
         if (state.injured) ...[
           _InjuryCard(state: state),
           const SizedBox(height: 16),
@@ -697,6 +701,7 @@ class _CareerTab extends StatelessWidget {
                 '${record.stats.goals}G ${record.stats.assists}A  ·  '
                 '年俸 ${record.salary}万円'
                 '${record.caps > 0 ? '  ·  代表${record.caps}' : ''}'
+                '${record.continentalStage.participated ? '  ·  大陸${record.continentalStage.label}' : ''}'
                 '${record.objectiveMet ? '  ·  目標達成' : ''}',
               ),
               trailing: Text(
@@ -907,6 +912,13 @@ class _LeagueCard extends StatelessWidget {
             const SizedBox(height: 8),
             Text('外国人ルール: ${country.foreignRule.summary}', style: muted),
             const SizedBox(height: 4),
+            Text(
+              state.club.tier == 1
+                  ? '上位${country.continentalSlots}クラブが大陸カップへ'
+                  : '上位2クラブが昇格、3〜6位はプレーオフ',
+              style: muted,
+            ),
+            const SizedBox(height: 4),
             Row(
               children: [
                 Icon(
@@ -926,6 +938,48 @@ class _LeagueCard extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 登録メンバーから外れていることを伝えるカード。
+///
+/// 怪我でもないのに出られないのは分かりにくいので、理由まで書く。
+class _OutOfSquadCard extends StatelessWidget {
+  const _OutOfSquadCard({required this.state});
+
+  final CareerState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final country = World.byId(state.club.countryId);
+    final foreign =
+        Eligibility.isForeignIn(state.player.nationality, country);
+    final reason = foreign
+        ? '外国人枠が埋まっている'
+        : 'クラブの中で力が足りず、25人に入れなかった';
+
+    return Card(
+      color: theme.colorScheme.errorContainer,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('登録メンバー外',
+                style: theme.textTheme.titleSmall
+                    ?.copyWith(color: theme.colorScheme.onErrorContainer)),
+            const SizedBox(height: 4),
+            Text(
+              '$reason。今季は試合に出られない。'
+              'ローンで出場機会を探すか、移籍市場が開くのを待つことになる。',
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: theme.colorScheme.onErrorContainer),
             ),
           ],
         ),

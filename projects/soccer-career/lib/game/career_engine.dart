@@ -4,12 +4,14 @@ import '../models/agent.dart';
 import '../models/attributes.dart';
 import '../models/career.dart';
 import '../models/club.dart';
+import '../models/competition.dart';
 import '../models/country.dart';
 import '../models/nationality.dart';
 import '../models/player.dart';
 import '../models/season.dart';
 import '../models/traits.dart';
 import 'career_engine_extras.dart';
+import 'competitions.dart';
 import 'eligibility.dart';
 import 'formulas.dart';
 import 'world.dart';
@@ -92,6 +94,9 @@ class CareerEngine {
 
   /// 代表招集と監督の目標。
   final CareerExtras extras;
+
+  /// 大陸カップ・昇格プレーオフ・移籍の窓・登録メンバー。
+  late final Competitions competitions = Competitions(random: _random);
 
   /// 新しいキャリアを始める。2部の下位クラブから、無名の選手として始まる。
   CareerState startCareer({
@@ -331,6 +336,11 @@ class CareerEngine {
     if (state.club.tier > 1 && position <= Formulas.promotionPlaces) {
       return ClubFate.promoted;
     }
+    // 3〜6位はプレーオフ。勝てば昇格、負ければ残留。
+    if (inPromotionPlayoff(state) &&
+        competitions.winsPromotionPlayoff(position)) {
+      return ClubFate.promoted;
+    }
     // 降格は下から3クラブ。クラブ数が国ごとに違うので相対で決める。
     if (state.club.tier < country.tiers && position > size - 3) {
       return ClubFate.relegated;
@@ -347,12 +357,7 @@ class CareerEngine {
         country.tiers > 1;
   }
 
-  /// プレーオフの結果。順位が上ほど勝ち上がりやすい。
-  bool winsPlayoff(CareerState state) {
-    if (!inPromotionPlayoff(state)) return false;
-    final chance = 0.45 - (state.leaguePosition - 3) * 0.08;
-    return _random.nextDouble() < chance;
-  }
+
 
   /// 大陸カップに出られる順位か。
   bool inContinental(CareerState state) {
@@ -406,8 +411,12 @@ class CareerEngine {
         : (state.objective!.achieved(stats)
             ? Formulas.objectiveMetSalaryFactor
             : Formulas.objectiveMissedSalaryFactor);
-    final salary =
-        _round(max(base, state.salary) * performance * objectiveFactor);
+    // 大陸カップに出たシーズンは評価が上がる。
+    final continentalFactor = state.continentalStage.participated
+        ? Formulas.continentalSalaryBonus
+        : 1.0;
+    final salary = _round(
+        max(base, state.salary) * performance * objectiveFactor * continentalFactor);
     return TransferOffer(
       club: club,
       reason: '${club.name}が契約更改を提示した。',
@@ -564,6 +573,7 @@ class CareerEngine {
       caps: state.seasonCaps,
       objectiveMet: state.objective?.achieved(state.seasonStats) ?? false,
       countryId: state.club.countryId,
+      continentalStage: state.continentalStage,
     );
 
     final league = _leagueContaining(accepted.club);
@@ -601,9 +611,10 @@ class CareerEngine {
           : accepted.years,
       countryId: resolved.countryId,
       professionalYears: state.professionalYears + 1,
-      continentalExperience:
-          state.continentalExperience || inContinental(state),
+      continentalExperience: state.continentalExperience ||
+          state.continentalStage.participated,
       objective: extras.objectiveFor(player: nextPlayer, club: resolved),
+      continentalStage: ContinentalStage.none,
       // 怪我はシーズンを跨いでも消えない。オフの間に少しは進む。
       injury: state.injury == null || state.injury!.matchesOut <= 4
           ? null
@@ -640,6 +651,19 @@ class CareerEngine {
     ];
   }
 
+  /// シーズン終了時に、大陸カップの結果と来季の登録状況を確定させる。
+  ///
+  /// リーグ戦を戦い終えてから呼ぶ。出場していなければ none のまま。
+  void resolveSeasonEnd(CareerState state) {
+    state.continentalStage = competitions.runContinental(
+      state,
+      qualified: inContinental(state),
+    );
+    if (state.continentalStage.participated) {
+      state.continentalExperience = true;
+    }
+  }
+
   /// 引退する。今シーズンの記録を残して、以後は試合をしない。
   CareerState retire(CareerState state) {
     final record = SeasonRecord(
@@ -652,6 +676,7 @@ class CareerEngine {
       caps: state.seasonCaps,
       objectiveMet: state.objective?.achieved(state.seasonStats) ?? false,
       countryId: state.club.countryId,
+      continentalStage: state.continentalStage,
     );
     return CareerState(
       player: state.player,

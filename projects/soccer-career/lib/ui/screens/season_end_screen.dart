@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../game/career_engine.dart';
 import '../../game/formulas.dart';
 import '../../game/world.dart';
+import '../../models/competition.dart';
 import '../../state/career_controller.dart';
 
 /// シーズン終了。成績を振り返り、契約更改・移籍・引退を決める。
@@ -25,6 +26,8 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
   @override
   void initState() {
     super.initState();
+    // 大陸カップの結果をここで確定させる。
+    widget.controller.finishSeason();
     final renewal = widget.controller.renewalOffer;
     _offers = [
       ?renewal,
@@ -137,6 +140,18 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                     if (state.seasonCaps > 0) ...[
                       const SizedBox(height: 4),
                       Text('代表 ${state.seasonCaps}試合', style: muted),
+                    ],
+                    if (state.continentalStage.participated) ...[
+                      const SizedBox(height: 6),
+                      Chip(
+                        label: Text(
+                            '大陸カップ ${state.continentalStage.label}'),
+                        backgroundColor:
+                            state.continentalStage == ContinentalStage.winner
+                                ? theme.colorScheme.primaryContainer
+                                : null,
+                        visualDensity: VisualDensity.compact,
+                      ),
                     ],
                     const SizedBox(height: 16),
                     Row(

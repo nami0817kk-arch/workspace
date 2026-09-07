@@ -8,6 +8,7 @@ import '../game/national.dart';
 import '../models/agent.dart';
 import '../models/attributes.dart';
 import '../models/career.dart';
+import '../models/competition.dart';
 import '../models/injury.dart';
 import '../models/player.dart';
 import '../models/season.dart';
@@ -153,7 +154,10 @@ class CareerController extends ChangeNotifier {
       home: state.isHome(matchday),
       appearance: state.injured
           ? Appearance.injured
-          : MatchEngine.decideAppearance(state.leagueResults),
+          // 登録メンバーから外れていると、そもそもベンチにも入れない。
+          : !state.squadStatus.canPlay
+              ? Appearance.benched
+              : MatchEngine.decideAppearance(state.leagueResults),
     );
     notifyListeners();
   }
@@ -339,10 +343,24 @@ class CareerController extends ChangeNotifier {
   int takeHome(int salary) =>
       _state == null ? salary : _career.takeHome(_state!, salary);
 
+  /// シーズン終了時の処理（大陸カップの結果を確定させる）。
+  Future<void> finishSeason() async {
+    final state = _state;
+    if (state == null || !state.seasonFinished) return;
+    _career.resolveSeasonEnd(state);
+    await _persist();
+  }
+
+  /// 今の移籍市場の状態。
+  TransferWindow get transferWindow =>
+      _state == null ? TransferWindow.closed : _career.competitions.windowAt(_state!);
+
   Future<void> advanceSeason({required TransferOffer accepted}) async {
     final state = _state;
     if (state == null) return;
     _state = _career.advanceSeason(state, accepted: accepted);
+    // 新しいクラブで登録メンバーに入れるかを決める。
+    _state!.squadStatus = _career.competitions.registrationFor(_state!);
     _inProgress = null;
     lastWeek = const WeekReport();
     await _persist();

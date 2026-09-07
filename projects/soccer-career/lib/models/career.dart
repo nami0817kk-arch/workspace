@@ -1,6 +1,7 @@
 import 'agent.dart';
 import 'attributes.dart';
 import 'club.dart';
+import 'competition.dart';
 import 'injury.dart';
 import 'objective.dart';
 import 'player.dart';
@@ -18,6 +19,7 @@ class SeasonRecord {
     this.caps = 0,
     this.objectiveMet = false,
     this.countryId = 'yamato',
+    this.continentalStage = ContinentalStage.none,
   });
 
   final int year;
@@ -38,6 +40,9 @@ class SeasonRecord {
   /// そのシーズンを戦った国。
   final String countryId;
 
+  /// そのシーズンの大陸カップの成績。
+  final ContinentalStage continentalStage;
+
   Map<String, dynamic> toJson() => {
         'year': year,
         'clubName': clubName,
@@ -51,6 +56,7 @@ class SeasonRecord {
         'caps': caps,
         'objectiveMet': objectiveMet,
         'countryId': countryId,
+        'continentalStage': continentalStage.name,
       };
 
   factory SeasonRecord.fromJson(Map<String, dynamic> json) => SeasonRecord(
@@ -68,6 +74,10 @@ class SeasonRecord {
         caps: json['caps'] as int? ?? 0,
         objectiveMet: json['objectiveMet'] as bool? ?? false,
         countryId: json['countryId'] as String? ?? 'yamato',
+        continentalStage: ContinentalStage.values
+                .any((v) => v.name == json['continentalStage'])
+            ? ContinentalStage.values.byName(json['continentalStage'] as String)
+            : ContinentalStage.none,
       );
 }
 
@@ -88,6 +98,8 @@ class CareerState {
     this.countryId = 'yamato',
     this.professionalYears = 1,
     this.continentalExperience = false,
+    this.continentalStage = ContinentalStage.none,
+    this.squadStatus = SquadStatus.registered,
     this.training,
     this.objective,
     this.injury,
@@ -138,6 +150,12 @@ class CareerState {
 
   /// 大陸カップに出た経験があるか。労働許可の加点になる。
   bool continentalExperience;
+
+  /// 今季の大陸カップの成績。
+  ContinentalStage continentalStage;
+
+  /// 今季、登録メンバーに入れているか。外れると試合に出られない。
+  SquadStatus squadStatus;
 
   /// 監督から与えられた今季の目標。
   SeasonObjective? objective;
@@ -238,6 +256,8 @@ class CareerState {
         'countryId': countryId,
         'professionalYears': professionalYears,
         'continentalExperience': continentalExperience,
+        'continentalStage': continentalStage.name,
+        'squadStatus': squadStatus.name,
         'objective': objective?.toJson(),
         'injury': injury?.toJson(),
         'caps': caps,
@@ -277,6 +297,14 @@ class CareerState {
       countryId: json['countryId'] as String? ?? 'yamato',
       professionalYears: json['professionalYears'] as int? ?? 1,
       continentalExperience: json['continentalExperience'] as bool? ?? false,
+      continentalStage: ContinentalStage.values
+              .any((v) => v.name == json['continentalStage'])
+          ? ContinentalStage.values.byName(json['continentalStage'] as String)
+          : ContinentalStage.none,
+      squadStatus:
+          SquadStatus.values.any((v) => v.name == json['squadStatus'])
+              ? SquadStatus.values.byName(json['squadStatus'] as String)
+              : SquadStatus.registered,
       objective:
           SeasonObjective.fromJson(json['objective'] as Map<String, dynamic>?),
       injury: Injury.fromJson(json['injury'] as Map<String, dynamic>?),

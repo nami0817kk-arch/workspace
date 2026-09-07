@@ -148,6 +148,13 @@ class Formulas {
   static const int contractYearsMin = 2;
   static const int contractYearsMax = 4;
 
+  /// 登録メンバーに入るのに必要な、クラブの強さとの差。
+  /// これより大きく劣ると25人枠に入れない。
+  static const int squadRegistrationGap = -18;
+
+  /// 大陸カップに出た年の年俸倍率。
+  static const double continentalSalaryBonus = 1.1;
+
   /// 目標を達成したときの年俸倍率。達成できなかったときの倍率。
   static const double objectiveMetSalaryFactor = 1.15;
   static const double objectiveMissedSalaryFactor = 0.9;
