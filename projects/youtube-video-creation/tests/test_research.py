@@ -204,12 +204,25 @@ def test_breaking_prefix_is_fine_with_a_confirmed_section():
 
 
 def test_unknown_prefix_is_flagged():
+    """2026-09-07: 札を12種類に増やしたので、見本を本当に無い札に変えた。
+
+    向こうは動画ごとに強い言葉を作っていた（【激ヤバ】【緊急事態】【崩壊】）。
+    こちらも増やしたが、**定番の外は止める**という決まりはそのまま。
+    """
+    from src.research import advise
+
+    raw = _raw()
+    raw["theme"] = {**raw["theme"], "prefix": "大爆笑"}
+    raw["thumbnail"] = {"line1": "短い見出し", "line2": "赤帯の文字"}
+    assert any("定番ではありません" in w for w in advise(build_notes(raw)))
+
+
+def test_増やした札は通る():
     from src.research import advise
 
     raw = _raw()
     raw["theme"] = {**raw["theme"], "prefix": "衝撃"}
-    raw["thumbnail"] = {"line1": "短い見出し", "line2": "赤帯の文字"}
-    assert any("定番ではありません" in w for w in advise(build_notes(raw)))
+    assert not any("定番ではありません" in w for w in advise(build_notes(raw)))
 
 
 def test_long_thumbnail_lines_are_flagged():

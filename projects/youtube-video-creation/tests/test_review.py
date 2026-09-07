@@ -598,3 +598,21 @@ def test_数字の図は顔の代わりに認める(tmp_path, monkeypatch):
     result = _by_label(inspect(parse_script(body), _built(tmp_path)))
     assert result["サムネの顔"].ok is True
     assert "数字の図" in result["サムネの顔"].detail
+
+
+def test_タイトルの頭に名前が無いと止まる(tmp_path):
+    """2026-09-07: 参考24本の54%が人名・クラブ名から始まっていた。"""
+    body = GOOD_BODY.replace(
+        "title: アーセナルが勝った理由がこちらです",
+        "title: そのとき何が起きたのかがこちらです")
+    result = _by_label(inspect(parse_script(body), _built(tmp_path)))
+    assert result["タイトルの主語"].ok is False
+
+
+def test_普通のカタカナ語は名前と数えない(tmp_path):
+    """「ウォームアップ中の負傷」で通っていた。"""
+    body = GOOD_BODY.replace(
+        "title: アーセナルが勝った理由がこちらです",
+        "title: ウォームアップ中の出来事がこちらです")
+    result = _by_label(inspect(parse_script(body), _built(tmp_path)))
+    assert result["タイトルの主語"].ok is False

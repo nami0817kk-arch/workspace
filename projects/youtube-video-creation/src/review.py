@@ -77,6 +77,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
         findings.append(check_opening_title(script))
         findings.append(check_wrap_share(script))
         findings.append(check_title_hook(script))
+        findings.append(check_title_subject(script))
     findings.append(_thumbnail_face(script))
     findings.append(_photo_credits(script, out_dir))
     findings.append(_double_marks(script))
@@ -575,6 +576,62 @@ def check_title_hook(script: Script) -> Finding:
         False, "タイトルの型",
         "答えを言い切っています。伸びている3チャンネルの上位は"
         "「〜がこちらです」「〜が話題に」のように**答えを隠して**います",
+    )
+
+
+# タイトルの主語（2026-09-07）。分野を横断して24本を並べたら、**54%が人名・
+# クラブ名から始まっていた**。こちらの直近7本は86%が【札】から始まり、
+# 名前が後ろに来ていた。検索にも推薦にも、最初の数文字が効く。
+TITLE_HEAD = 14        # 「先頭」とみなす字数。【速報】＋名前が収まる長さ
+# カタカナだが名前ではない語。ここを見ていなかったので
+# 「180億円の新加入、ウォームアップ中の負傷で…」が名前ありとして通っていた
+COMMON_KATAKANA = (
+    "ウォームアップ", "デビュー", "ゴール", "アシスト", "サッカー", "ニュース",
+    "シーズン", "リーグ", "クラブ", "チーム", "ファン", "サポーター", "コメント",
+    "インタビュー", "ランキング", "スタメン", "ベンチ", "オファー", "ポジション",
+    "プレー", "パフォーマンス", "トレーニング", "メンバー", "スタジアム",
+)
+
+
+def _japanese_names() -> tuple[str, ...]:
+    """設定に書いてある日本人選手の名前。無ければ空で通す。"""
+    try:
+        from .plan import load_plan
+
+        return tuple(str(n) for n in (load_plan().scoring.get("japanese") or []))
+    except Exception:
+        return ()
+
+
+def check_title_subject(script: Script) -> Finding:
+    """タイトルの頭に、クラブ名か人名が出てくるか。
+
+    クラブは `config/clubs.yaml`（61クラブの別名辞書）で見る。人名は辞書を
+    持っていないので、**カタカナか漢字の連なり**があれば名前とみなす。
+    """
+    import re
+
+    from . import clubs as clubs_mod
+
+    title = (script.title or "").strip()
+    if not title:
+        return Finding(False, "タイトルの主語", "タイトルがありません")
+
+    head = re.sub(r"^【[^】]*】", "", title)[:TITLE_HEAD]
+    if clubs_mod.find(head):
+        return Finding(True, "タイトルの主語", f"頭にクラブ名: {head[:10]}")
+    if any(name and name in head for name in _japanese_names()):
+        return Finding(True, "タイトルの主語", f"頭に選手名: {head[:10]}")
+    # カタカナの連なりは人名のことが多い。**ただし普通名詞も同じ形**なので、
+    # よく出るものは名前として数えない（「ウォームアップ中の負傷」で通っていた）
+    for run in re.findall(r"[ァ-ヶー・]{4,}", head):
+        # 頭で切れた語も落とす（「ウォームア」は「ウォームアップ」の途中）
+        if not any(word in run or run in word for word in COMMON_KATAKANA):
+            return Finding(True, "タイトルの主語", f"頭に名前: {run[:10]}")
+    return Finding(
+        False, "タイトルの主語",
+        f"頭{TITLE_HEAD}字に人名もクラブ名もありません（『{head}』）。"
+        "伸びているチャンネルは54%が名前から始めます",
     )
 
 

@@ -56,6 +56,16 @@ def build(
     }
     if note:
         spec["source"] = note
+    build_spec(spec, out_path, config, background=background)
+    _write_mark(out_path, title, unit, rows, note)
+    return out_path
+
+
+def build_spec(spec: dict, out_path: Path, config: ProjectConfig,
+               background: str = "") -> Path:
+    """カード1枚を芝の下地に置いた画像にする。**順位表もここを通る。**"""
+    out_path = Path(out_path)
+    canvas = _base(background)
 
     work = out_path.parent / f"{out_path.stem}_card.png"
     work.parent.mkdir(parents=True, exist_ok=True)
@@ -75,15 +85,21 @@ def build(
     canvas.alpha_composite(plate, ((SIZE[0] - plate.width) // 2, top))
     canvas.convert("RGB").save(out_path, quality=95)
     work.unlink(missing_ok=True)
+    return out_path
 
-    # **これは自分で作った図だという印。**顔写真ではないので、review の
-    # 「サムネの顔」がこの印を見て通す。数字の出どころもここに残す
+
+def _write_mark(out_path: Path, title: str, unit: str,
+                rows: list[tuple[str, float]], note: str) -> None:
+    """**これは自分で作った図だという印。**
+
+    顔写真ではないので、review の「サムネの顔」がこの印を見て通す。
+    数字の出どころもここに残す。
+    """
     lines = [f"title: {title}", f"unit: {unit}"]
     lines += [f"{label}={value}" for label, value in rows]
     if note:
         lines.append(f"source: {note}")
     _mark(out_path).write_text(chr(10).join(lines), encoding="utf-8")
-    return out_path
 
 
 def _mark(out_path: Path) -> Path:

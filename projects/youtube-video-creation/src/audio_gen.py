@@ -82,8 +82,12 @@ MOODS = {
 
 # 台本の【】から曲調を選ぶ。書いていなければ news
 # 台本の【】から曲調を選ぶ。**悲報と速報を同じ曲にしない。**
+# 札ごとの曲調。**札を増やしたら、ここも増やす**（2026-09-07）。
+# 抜けていると既定の news に落ちて、悲報と朗報が同じ温度で鳴る
 PREFIX_MOOD = {"速報": "breaking", "悲報": "somber", "朗報": "victory",
-               "詳報": "calm", "衝撃": "breaking", "現地反応": "news"}
+               "詳報": "calm", "衝撃": "breaking", "現地反応": "news",
+               "緊急": "breaking", "独占": "breaking", "神試合": "victory",
+               "異変": "somber", "決着": "calm", "波紋": "somber"}
 
 PROGRESSION = MOODS["news"]["progression"]
 CHORD_SECONDS = BEAT * BEATS_PER_BAR * BARS_PER_CHORD

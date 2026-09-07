@@ -281,6 +281,14 @@ def main(argv: list[str] | None = None) -> int:
     p_scene.add_argument("--file", default="", dest="only",
                          help="この File: だけを使う")
 
+    # 順位表。**定型シリーズの材料**（2026-09-07）。どのチャンネルも節ごとに
+    # 出していて毎回伸びている（トリベラ10万・6.1万、噂話6.7万）
+    p_table = sub.add_parser(
+        "standings", help="リーグの順位表を取る（定型シリーズ用。画像も書き出す）")
+    p_table.add_argument("league", help="england / spain / germany / italy / france / netherlands")
+    p_table.add_argument("--top", type=int, default=10, help="載せる順位（既定10）")
+    p_table.add_argument("--out", default="", help="画像の書き出し先（省略すると書かない）")
+
     # 数字の図。**試合映像の代わりになる下地**（2026-09-07）
     p_stat = sub.add_parser(
         "statboard", help="数字を横棒の図にして、サムネの下地に使える1枚を書き出す")
@@ -1510,6 +1518,47 @@ def _cmd_matchphoto(args, config) -> int:
     return 0
 
 
+def _cmd_standings(args, config) -> int:
+    """順位表を取って、台本に貼る形と画像を出す。**定型シリーズの材料。**
+
+    節が終わるたびに1本。取材も写真も要らないので、ニュースが薄い日の
+    埋め合わせにもなる。
+    """
+    from . import standings as standings_mod
+    from .config import _resolve
+
+    try:
+        table = standings_mod.fetch(args.league)
+    except standings_mod.StandingsError as error:
+        print(str(error), file=sys.stderr)
+        return 1
+
+    print(f"■ {table.name_ja}　第{table.matchweek}節終了時点")
+    for row in table.rows[: args.top]:
+        print(f"  {row.rank:>2}  {_fit(row.team, 22):<22}"
+              f"{row.played:>3}試合 {row.win}勝{row.draw}分{row.lose}敗"
+              f"  得失{row.diff:+d}  勝点{row.points}")
+
+    print(f"\nタイトル案: {table.title()}")
+    print("\n取材メモに貼る形:")
+    spec = standings_mod.card(table, args.top)
+    print(f"    card:")
+    print(f"      type: table")
+    print(f"      title: {spec['title']}")
+    print(f"      columns: [{', '.join(spec['columns'])}]")
+    print("      rows:")
+    for row in spec["rows"]:
+        print(f"        - [{', '.join(row)}]")
+    print("    tier: 確定    # リーグの記録なので確定でよい")
+    print("    sources:\n      - https://www.fotmob.com/")
+
+    if args.out:
+        out = standings_mod.board(table, _resolve(args.out), config, args.top)
+        print(f"\n画像: {out}")
+        print("台本の frontmatter に thumbnail_photo: として指定できます")
+    return 0
+
+
 def _cmd_statboard(args, config) -> int:
     """数字の図を1枚書き出す。**試合映像の代わりの下地。**"""
     from . import statboard as statboard_mod
@@ -2290,6 +2339,7 @@ HANDLERS = {
     "portrait": _cmd_portrait,
     "matchphoto": _cmd_matchphoto,
     "statboard": _cmd_statboard,
+    "standings": _cmd_standings,
     "results": _cmd_results,
     "gather": _cmd_gather,
     "collect": _cmd_collect,
