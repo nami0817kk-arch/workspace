@@ -597,3 +597,41 @@ def test_問いが句点で終わっていても二重にしない():
     assert _ends_sentence("なぜ外れたのか") == "なぜ外れたのか。"
     assert _ends_sentence("本当か？") == "本当か？"
     assert _ends_sentence("") == ""
+
+
+# stock で実写クリップを取る仕組みも、動画背景を敷く仕組みも既にあったのに、
+# draft が .png を決め打ちしていたので一度も使われていなかった（2026-09-07）。
+
+def test_同じ名前で始まる動画があればそれを敷く(tmp_path, monkeypatch):
+    from src import research
+
+    root = tmp_path / "assets" / "backgrounds"
+    (root / "stock").mkdir(parents=True)
+    (root / "stock" / "stadium_night.mp4").write_bytes(b"x")
+    monkeypatch.setattr(research, "_resolve", lambda p: tmp_path / p)
+
+    got = research.moving_background("assets/backgrounds/stadium.png")
+    assert got.endswith("stock/stadium_night.mp4")
+
+
+def test_動画が無ければ静止画のまま(tmp_path, monkeypatch):
+    from src import research
+
+    (tmp_path / "assets" / "backgrounds").mkdir(parents=True)
+    monkeypatch.setattr(research, "_resolve", lambda p: tmp_path / p)
+
+    assert research.moving_background("assets/backgrounds/night.png") == (
+        "assets/backgrounds/night.png"
+    )
+
+
+def test_別の名前の動画は拾わない(tmp_path, monkeypatch):
+    """規則は「同じ名前で始まる」。関係ないクリップを敷かない。"""
+    from src import research
+
+    root = tmp_path / "assets" / "backgrounds"
+    root.mkdir(parents=True)
+    (root / "tactics_board.mp4").write_bytes(b"x")
+    monkeypatch.setattr(research, "_resolve", lambda p: tmp_path / p)
+
+    assert research.moving_background("assets/backgrounds/stadium.png").endswith("stadium.png")

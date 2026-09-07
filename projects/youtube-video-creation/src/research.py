@@ -17,6 +17,8 @@ from pathlib import Path
 
 import yaml
 
+from .config import _resolve
+
 from . import coverage, xposts
 from .plan import Plan
 
@@ -42,6 +44,33 @@ BACKGROUNDS = (
     "assets/backgrounds/pitch.png",
 )
 SPEAKERS = ("キャスター", "解説")
+
+
+def moving_background(still: str) -> str:
+    """静止画の下地に対応する実写クリップがあれば、そちらを返す。
+
+    伸びている参考チャンネルは背景が常に動いている（2026-09-07 に実測）。
+    `stock` が実写クリップを取る仕組みも、動画背景を敷く仕組みも既にあったのに、
+    `draft` が .png を決め打ちしていたので一度も使われていなかった
+    （台本56本の @bg が全部 .png だった）。
+
+    **規則は「同じ名前で始まる動画を使う」。** `stadium.png` に対して
+    `stock/stadium_night.mp4` や `stadium_night.mp4` があればそれを敷く。
+    無ければ静止画のまま（`background_zoom` でゆっくり寄る）。
+    """
+    path = Path(still)
+    stem = path.stem
+    for folder in (path.parent / "stock", path.parent):
+        directory = _resolve(str(folder))
+        if not directory.is_dir():
+            continue
+        found = sorted(
+            clip for clip in directory.glob(f"{stem}*.mp4") if clip.is_file()
+        )
+        if found:
+            return str(folder / found[0].name).replace("\\", "/")
+    return still
+
 
 
 class ResearchError(Exception):
@@ -620,7 +649,8 @@ def to_script(notes: Notes, plan: Plan) -> str:
     # オープニングとまとめにも下地を指定する。指定が無いと frontmatter の既定に
     # 落ちて、どちらも同じ緑になっていた（実測でまとめの3カットが緑だった）
     lines = ["---", _front_matter(front), "---", "",
-             "## オープニング", "@bg: assets/backgrounds/night.png", ""]
+             "## オープニング",
+             f"@bg: {moving_background('assets/backgrounds/night.png')}", ""]
     hook = notes.hook or notes.title
     # **冒頭から名乗らない。**「海外サッカーのニュースです」は毎回同じで
     # 中身が無く、続く「〜ここを掘っていきます」も問いを言い直しているだけだった。
@@ -645,7 +675,7 @@ def to_script(notes: Notes, plan: Plan) -> str:
             order = list(BACKGROUNDS[index % len(BACKGROUNDS):]) + list(BACKGROUNDS)
             background = next(c for c in order if c != previous_background)
         previous_background = background
-        lines += [f"## {section.heading}", f"@bg: {background}", ""]
+        lines += [f"## {section.heading}", f"@bg: {moving_background(background)}", ""]
         for number, sentence in enumerate(section.say):
             # 掛け合いにする。1文目は事実をキャスターが読み、
             # 2文目以降は解説が受ける。交互に振ると同じ文体の読み分けになり、

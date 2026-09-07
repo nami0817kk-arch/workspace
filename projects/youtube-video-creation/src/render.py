@@ -74,6 +74,10 @@ class Layout:
         return x, self.telop_box[1] - 20
 
 
+# 台本の構造につけた名前で、視聴者には情報にならないもの。左上のラベルには出さない
+INTERNAL_SCENE_TITLES = ("オープニング", "イントロ", "まとめ", "エンディング", "締め")
+
+
 class Renderer:
     def __init__(self, config: ProjectConfig, work_dir: Path):
         self.config = config
@@ -398,11 +402,15 @@ class Renderer:
         # RGBA の canvas に直接半透明の図形を描くと下地を「置き換えて」しまうため、
         # 透明レイヤーに描いてから alpha_composite する。
         layer, draw = _layer(canvas.size)
-        text_w = draw.textlength(title, font=self.font_scene)
-        draw.rounded_rectangle(
-            [48, 42, 48 + text_w + 56, 42 + 68], radius=34, fill=(0, 0, 0, 150)
-        )
-        draw.text((76, 58), title, font=self.font_scene, fill=(240, 240, 240, 255))
+        # **制作側の言葉は画面に出さない**（2026-09-07）。「オープニング」は
+        # 台本の構造の名前で、視聴者には何の情報でもない。しかも冒頭の
+        # いちばん見られる位置に出ていた。日付は残す
+        if title.strip() not in INTERNAL_SCENE_TITLES:
+            text_w = draw.textlength(title, font=self.font_scene)
+            draw.rounded_rectangle(
+                [48, 42, 48 + text_w + 56, 42 + 68], radius=34, fill=(0, 0, 0, 150)
+            )
+            draw.text((76, 58), title, font=self.font_scene, fill=(240, 240, 240, 255))
 
         if self.script_date:
             date_w = draw.textlength(self.script_date, font=self.font_date)

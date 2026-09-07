@@ -64,6 +64,9 @@ def build_script(
     backend = create_backend(config, use_tts)
     synthesize_script(script, config, audio_dir, backend=backend)
 
+    # 尺が決まってから、長く止まる絵をほぐす。合成の前だと秒数が分からない
+    spread_long_cards(script)
+
     # タイトルカードのぶんの無音を挟み、各セリフの開始時刻を振り直す
     inserts = inserts_mod.plan(script, config)
     inserts_mod.apply_timing(script, inserts)
@@ -120,3 +123,50 @@ def build_script(
         duration=script.duration + inserts.total,
         backend=backend.name,
     )
+
+
+def spread_long_cards(script: Script, limit: float | None = None) -> int:
+    """同じ絵が続きすぎるところに、サムネイルの写真を挟む。
+
+    カードは指定した行で差し替わり、それ以外の行では出たまま残る。そのため
+    下のテロップだけが変わり、**画面は20秒以上動かない**ことがあった
+    （2026-09-07 実測で、本編22〜27秒・ショート17〜21秒）。伸びている
+    参考チャンネルは8秒で必ず変えている。
+
+    写真を持たない台本では何もしない。その場合は `review` の「カードの持ち」が
+    × を出すので、人が節を分けるなり写真を足すなりする。**黙って直さない。**
+    """
+    from .review import CARD_HOLD_MAX
+
+    limit = CARD_HOLD_MAX if limit is None else limit
+    photo = str((script.meta or {}).get("thumbnail_photo") or "").strip()
+    if not photo:
+        return 0
+
+    inserted = 0
+    look = None
+    span = 0.0
+    showing = None      # いま画面に出ているカード
+    for scene in script.scenes:
+        showing = None  # カードは節をまたいで引き継がない
+        for line in scene.lines:
+            seconds = float(line.duration or 0)
+            # **カードは書かれた行で切り替わり、次の行からは引き継がれて残る。**
+            # 生の line.card を見ると、引き継いでいる行が「カード無し」に見えて
+            # 区間が分断され、判定が効かなかった（2026-09-07 実測。23秒の区間を
+            # 9.1秒と14秒に割って数えていた）。script_model._scene_lines と同じ扱いにする。
+            if line.card is not None:
+                showing = None if line.card in ("none", "なし") else line.card
+            now = (showing or "", line.image or "")
+            if now != look:
+                look, span = now, seconds
+                continue
+            # **超えてから挟むと手遅れ。**超える行に先回りして画面を変える
+            # （後追いにしたら 23秒→16秒 までしか縮まなかった。2026-09-07 実測）
+            if span + seconds > limit and not line.image:
+                line.image = photo
+                inserted += 1
+                look, span = (showing or "", photo), seconds
+                continue
+            span += seconds
+    return inserted
