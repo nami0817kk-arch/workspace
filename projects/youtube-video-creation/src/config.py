@@ -181,6 +181,11 @@ class ProjectConfig:
     # **名前ごとの決め打ち**（2026-09-07 ユーザーの指示）。
     # ハッシュだと別人が同じ声になることがある（メッシとモウリーニョで実際に起きた）
     voice_fixed: dict[str, int] = field(default_factory=dict)
+    # 女性の声のプールと、女性だと分かっている話者の名前（2026-09-07）
+    voice_pool_female: tuple[int, ...] = ()
+    voice_female: tuple[str, ...] = ()
+    # 使わないと決めた声。プールに混ざっていたら読み込みで止める
+    voice_banned: tuple[int, ...] = ()
     path: Path = DEFAULT_CONFIG_PATH
 
     def resolve_speaker(self, name: str) -> CastMember:
@@ -216,7 +221,11 @@ class ProjectConfig:
         if wanted in self.voice_fixed:
             return self._member(wanted, self.voice_fixed[wanted])
 
+        # **男の人には男性の声。**話者はほぼ全員が男性（選手・監督・解説者）なので、
+        # 既定は男性のプール。女性と分かっている人だけ config に名前を書く
         pool = list(self.voice_pool)
+        if wanted in self.voice_female and self.voice_pool_female:
+            pool = list(self.voice_pool_female)
         digest = hashlib.sha1(wanted.encode("utf-8")).digest()
         return self._member(wanted, pool[int.from_bytes(digest[:4], "big") % len(pool)])
 
@@ -253,6 +262,16 @@ def build_config(raw: dict, path: Path = DEFAULT_CONFIG_PATH) -> ProjectConfig:
     # voice_pool は VoicevoxConfig の項目ではない（代弁の割り当てに使う）
     pool = voice_raw.pop("voice_pool", ())
     fixed = voice_raw.pop("voice_fixed", {}) or {}
+    pool_female = voice_raw.pop("voice_pool_female", ()) or ()
+    female = voice_raw.pop("voice_female", ()) or ()
+    banned = tuple(int(v) for v in (voice_raw.pop("voice_banned", ()) or ()))
+    # **使わないと決めた声が混ざっていたら止める。**外したはずの声が
+    # プールに戻ってくるのを、人の注意で防ぐのは無理がある
+    mixed = sorted({int(v) for v in list(pool or ()) + list(pool_female)} & set(banned))
+    if mixed:
+        raise ConfigError(
+            f"使わないと決めた声がプールに入っています: {mixed}（voice_banned）"
+        )
     voicevox = VoicevoxConfig(**voice_raw)
     audio = AudioConfig(**(raw.get("audio") or {}))
     motion = MotionConfig(**(raw.get("motion") or {}))
@@ -281,6 +300,9 @@ def build_config(raw: dict, path: Path = DEFAULT_CONFIG_PATH) -> ProjectConfig:
     return ProjectConfig(
         voice_pool=tuple(int(v) for v in pool or ()),
         voice_fixed={str(k).strip(): int(v) for k, v in dict(fixed).items()},
+        voice_pool_female=tuple(int(v) for v in pool_female),
+        voice_female=tuple(str(v).strip() for v in female if str(v).strip()),
+        voice_banned=banned,
         video=video,
         voicevox=voicevox,
         cast=cast,
