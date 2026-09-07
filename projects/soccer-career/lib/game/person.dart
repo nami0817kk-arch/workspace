@@ -173,6 +173,17 @@ class Person {
     if (state.relations.manager < 30) {
       personality = personality.bump(PersonalityAxis.ambition, 1);
     }
+
+    // 同期に先を行かれると発奮する。比べる相手が居ないと、
+    // 自分の成績が良いのか悪いのかも分からない。
+    if (state.rival?.leads(state.player.overall) ?? false) {
+      personality = personality.bump(PersonalityAxis.ambition, 1);
+    }
+
+    // メンターの居るロッカールームで育つと、姿勢が身に付く。
+    if (state.mentor != null && state.player.age <= 23) {
+      personality = personality.bump(PersonalityAxis.professionalism, 1);
+    }
     return personality;
   }
 

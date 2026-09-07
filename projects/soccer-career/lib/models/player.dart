@@ -1,4 +1,5 @@
 import '../game/formulas.dart';
+import 'aptitude.dart';
 import 'attributes.dart';
 import 'nationality.dart';
 import 'personality.dart';
@@ -17,12 +18,13 @@ class Player {
     this.nationality = Nationality.unknown,
     this.personality = const Personality(
         confidence: 10, ambition: 10, professionalism: 10, temper: 10),
+    Aptitude? aptitude,
     this.physique = const Physique(
         heightCm: Physique.baseHeight, weightKg: Physique.baseWeight),
     this.setPieces = const SetPieceSkills(),
     this.traits = const [],
     this.condition = Formulas.conditionMax,
-  });
+  }) : aptitude = aptitude ?? const Aptitude({});
 
   final String name;
   final int age;
@@ -44,12 +46,24 @@ class Player {
   /// セットプレーの精度。居残り練習で伸ばす。
   final SetPieceSkills setPieces;
 
+  /// ポジション適性。本職以外で出ると、その分だけ力を出せない。
+  final Aptitude aptitude;
+
   final List<Trait> traits;
 
   /// 0〜100。試合と練習で減り、休養で戻る。低いと試合の成功率が落ちる。
   final int condition;
 
-  int get overall => attributes.overallFor(position);
+  /// 総合力。今のポジションの適性ぶんを引く。
+  ///
+  /// 本職なら引かれない。慣れないポジションで出ている選手は、
+  /// 同じ能力値でも同じようには働けない。
+  int get overall =>
+      attributes.overallFor(position) - aptitude.penaltyFor(position);
+
+  /// 本来の（適性を引く前の）そのポジションでの力。
+  int overallAt(Position position) =>
+      attributes.overallFor(position) - aptitude.penaltyFor(position);
 
   /// カテゴリ単位の、身体の補正まで含めた能力値。
   int effectiveFor(AttributeKey key) {
@@ -87,6 +101,7 @@ class Player {
     Personality? personality,
     Physique? physique,
     SetPieceSkills? setPieces,
+    Aptitude? aptitude,
   }) =>
       Player(
         name: name,
@@ -98,6 +113,7 @@ class Player {
         personality: personality ?? this.personality,
         physique: physique ?? this.physique,
         setPieces: setPieces ?? this.setPieces,
+        aptitude: aptitude ?? this.aptitude,
         traits: traits,
         condition: (condition ?? this.condition)
             .clamp(0, Formulas.conditionMax)
@@ -123,6 +139,7 @@ class Player {
         personality: from.personality,
         physique: from.physique,
         setPieces: from.setPieces,
+        aptitude: from.aptitude,
         traits: from.traits,
         condition: from.condition,
       );
@@ -137,6 +154,7 @@ class Player {
         'personality': personality.toJson(),
         'physique': physique.toJson(),
         'setPieces': setPieces.toJson(),
+        'aptitude': aptitude.toJson(),
         'traits': traits.map((t) => t.name).toList(),
         'condition': condition,
       };
@@ -162,6 +180,9 @@ class Player {
       physique: Physique.fromJson(json['physique'] as Map<String, dynamic>?),
       setPieces:
           SetPieceSkills.fromJson(json['setPieces'] as Map<String, dynamic>?),
+      // 適性を持たせる前の保存データは、今のポジションを本職として読む。
+      aptitude: Aptitude.fromJson(
+          json['aptitude'] as Map<String, dynamic>?, position),
       traits: [
         for (final n in (json['traits'] as List? ?? const []))
           if (Trait.values.any((t) => t.name == n))

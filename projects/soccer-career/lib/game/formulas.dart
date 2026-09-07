@@ -161,6 +161,9 @@ class Formulas {
   /// 復帰直後のコンディション。
   static const int conditionAfterInjury = 45;
 
+  /// 復帰してから、再発の危険が高い試合数。
+  static const int rehabWatchMatches = 3;
+
   /// 代表に招集される最低総合力。
   static const int callUpOverall = 72;
 

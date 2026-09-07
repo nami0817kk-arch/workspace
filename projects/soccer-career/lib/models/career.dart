@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'agent.dart';
 import 'attributes.dart';
 import 'club.dart';
 import 'competition.dart';
 import 'development.dart';
+import 'entourage.dart';
 import 'reputation.dart';
 import 'support.dart';
 import 'training.dart';
@@ -140,6 +143,15 @@ class CareerState {
     this.staff = const StaffTeam(),
     this.habits = const Habits(),
     this.development = const Development(),
+    this.manager,
+    this.directive = Directive.none,
+    this.competitor,
+    this.partner,
+    this.mentor,
+    this.rival,
+    this.rehab = RehabPlan.standard,
+    this.rehabWatch = 0,
+    this.mentorManager,
     this.objective,
     this.injury,
     this.caps = 0,
@@ -189,6 +201,37 @@ class CareerState {
 
   /// 経験・選択の癖・相手への慣れ・個人技・停滞期。
   Development development;
+
+  /// 今の監督。戦術との相性が出場機会に効く。
+  Manager? manager;
+
+  /// クラブに伝えている方針。
+  Directive directive;
+
+  /// 同ポジションの競争相手。
+  Teammate? competitor;
+
+  /// 相方。呼吸が合うほど味方を活かす手が通る。
+  Teammate? partner;
+
+  /// メンター。若いうちだけ、練習の効きを上げる。
+  Teammate? mentor;
+
+  /// 同期のライバル。別のクラブで別のキャリアを歩む。
+  Rival? rival;
+
+  /// 復帰の進め方。
+  RehabPlan rehab;
+
+  /// 復帰してから何試合、再発の危険が高い状態か。
+  int rehabWatch;
+
+  /// 恩師（信頼の厚かった監督）の名前。よそのクラブから呼ぶことがある。
+  String? mentorManager;
+
+  /// クラブの環境。保存はせず、クラブの強さと国の格から決まる。
+  Facilities facilitiesWith(int prestige) =>
+      Facilities.of(club, prestige: prestige);
 
   /// 契約の残り年数。0 になると必ず去就を決めることになる。
   int contractYears;
@@ -334,6 +377,15 @@ class CareerState {
         'staff': staff.toJson(),
         'habits': habits.toJson(),
         'development': development.toJson(),
+        'manager': manager?.toJson(),
+        'directive': directive.name,
+        'competitor': competitor?.toJson(),
+        'partner': partner?.toJson(),
+        'mentor': mentor?.toJson(),
+        'rival': rival?.toJson(),
+        'rehab': rehab.name,
+        'rehabWatch': rehabWatch,
+        'mentorManager': mentorManager,
         'contractYears': contractYears,
         'countryId': countryId,
         'professionalYears': professionalYears,
@@ -395,6 +447,23 @@ class CareerState {
       habits: Habits.fromJson(json['habits'] as Map<String, dynamic>?),
       development:
           Development.fromJson(json['development'] as Map<String, dynamic>?),
+      // 監督を持たせる前の保存データには居ない。次のシーズンから付く。
+      manager: json['manager'] == null
+          ? null
+          : Manager.fromJson(json['manager'] as Map<String, dynamic>?, Random()),
+      directive: Directive.values.any((d) => d.name == json['directive'])
+          ? Directive.values.byName(json['directive'] as String)
+          : Directive.none,
+      competitor:
+          Teammate.fromJson(json['competitor'] as Map<String, dynamic>?),
+      partner: Teammate.fromJson(json['partner'] as Map<String, dynamic>?),
+      mentor: Teammate.fromJson(json['mentor'] as Map<String, dynamic>?),
+      rival: Rival.fromJson(json['rival'] as Map<String, dynamic>?),
+      rehab: RehabPlan.values.any((r) => r.name == json['rehab'])
+          ? RehabPlan.values.byName(json['rehab'] as String)
+          : RehabPlan.standard,
+      rehabWatch: json['rehabWatch'] as int? ?? 0,
+      mentorManager: json['mentorManager'] as String?,
       contractYears: json['contractYears'] as int? ?? 2,
       countryId: json['countryId'] as String? ?? 'yamato',
       professionalYears: json['professionalYears'] as int? ?? 1,

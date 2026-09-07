@@ -5,11 +5,14 @@ import '../models/attributes.dart';
 import '../models/career.dart';
 import '../models/club.dart';
 import '../models/competition.dart';
+import '../models/aptitude.dart';
 import '../models/country.dart';
+import '../models/entourage.dart';
 import '../models/nationality.dart';
 import '../models/personality.dart';
 import '../models/physique.dart';
 import '../models/player.dart';
+import '../models/reputation.dart';
 import '../models/season.dart';
 import '../models/support.dart';
 import '../models/traits.dart';
@@ -173,6 +176,7 @@ class CareerEngine {
       nationality: _rollNationality(home),
       personality: Personality.roll(_random),
       physique: Physique.roll(_random, position),
+      aptitude: Aptitude.initial(position),
       traits: Trait.roll(_random),
     );
     return CareerState(
@@ -189,6 +193,16 @@ class CareerEngine {
       contractYears: extras.rollContractYears(),
       countryId: home.id,
       objective: extras.objectiveFor(player: player, club: club),
+      manager: Manager.roll(_random),
+      competitor: Teammate.roll(_random,
+          kind: TeammateKind.rival, clubStrength: club.strength),
+      partner: Teammate.roll(_random,
+          kind: TeammateKind.partner, clubStrength: club.strength),
+      mentor: Teammate.roll(_random,
+          kind: TeammateKind.mentor, clubStrength: club.strength),
+      // 同期のライバル。別のクラブで、同じ年に出てきた選手。
+      rival: Rival.roll(_random,
+          overall: overall, clubName: league[_random.nextInt(league.length)].name),
     );
   }
 
@@ -656,6 +670,23 @@ class CareerEngine {
       }
     }
 
+    // 恩師が別のクラブで待っていることがある。条件は良く、起用も約束される。
+    final mentorName = state.mentorManager;
+    if (mentorName != null && candidates.isNotEmpty && _random.nextDouble() < 0.3) {
+      final base = candidates.first;
+      candidates.add(TransferOffer(
+        club: base.club,
+        reason: '${base.club.name}の監督に就任した恩師・$mentorNameが、'
+            'あなたを呼んでいる。',
+        salary: _round(base.salary * 1.15),
+        role: '絶対的な主力',
+        years: base.years,
+        eligibility: base.eligibility,
+        fee: base.fee,
+        releaseClause: base.releaseClause,
+      ));
+    }
+
     // 良い条件の順に3件まで。並べすぎると選ぶのが作業になる。
     candidates.sort((a, b) => b.salary.compareTo(a.salary));
     return candidates.take(3).toList();
@@ -841,6 +872,37 @@ class CareerEngine {
       relations = relations.bump(manager: 8);
     }
 
+    // 監督。飛べば戦術が変わり、信頼は白紙に戻る。
+    // 信頼の厚かった監督は「恩師」として覚えておく。
+    var manager = state.manager ?? Manager.roll(_random);
+    var mentorManager = state.mentorManager;
+    final movedClub = resolved.name != state.club.name;
+    if (movedClub || managerLeaves(state)) {
+      if (state.relations.manager >= 75) mentorManager = manager.name;
+      manager = Manager.roll(_random);
+      relations = Relations(
+        manager: 50,
+        teammates: movedClub ? 45 : relations.teammates,
+      );
+    } else {
+      manager = manager.aged();
+    }
+
+    // 同僚。移籍すれば総入れ替えで、呼吸も一から。
+    final mates = movedClub
+        ? rollTeammates(resolved)
+        : (
+            competitor: state.competitor ??
+                Teammate.roll(_random,
+                    kind: TeammateKind.rival, clubStrength: resolved.strength),
+            partner: state.partner ??
+                Teammate.roll(_random,
+                    kind: TeammateKind.partner, clubStrength: resolved.strength),
+            mentor: state.mentor ??
+                Teammate.roll(_random,
+                    kind: TeammateKind.mentor, clubStrength: resolved.strength),
+          );
+
     return CareerState(
       player: nextPlayer,
       club: resolved,
@@ -857,6 +919,14 @@ class CareerEngine {
       staff: staff,
       habits: state.habits,
       development: development,
+      manager: manager,
+      directive: state.directive,
+      competitor: mates.competitor,
+      partner: mates.partner,
+      mentor: mates.mentor,
+      rival: state.rival?.advanced(_random, clubName: state.rival!.clubName),
+      rehab: state.rehab,
+      mentorManager: mentorManager,
       // 契約更改か移籍なら新しい年数。ただ残っただけなら1年減る。
       // ローンの間は保有元との契約が凍る。戻ってきた年から再び減り始める。
       contractYears: accepted.loan
@@ -916,6 +986,42 @@ class CareerEngine {
             .bumpDetail(Detail.strength, -1),
         BodyPlan.maintain => attributes,
       };
+
+  /// 監督が代わるか。
+  ///
+  /// 成績が期待を下回ると飛ぶ。長くやっている監督ほど、次の1年で切られる。
+  /// 代われば戦術が変わり、自分の立ち位置も変わる。
+  bool managerLeaves(CareerState state) {
+    final manager = state.manager;
+    if (manager == null) return true;
+    final expected = _expectedPosition(state);
+    final under = state.leaguePosition - expected;
+    final chance =
+        (0.12 + under * 0.035 + manager.tenure * 0.05).clamp(0.05, 0.85);
+    return _random.nextDouble() < chance;
+  }
+
+  /// そのクラブが本来居るべき順位。クラブの強さをリーグの中で見る。
+  int _expectedPosition(CareerState state) {
+    final sorted = [...state.league]
+      ..sort((a, b) => b.strength.compareTo(a.strength));
+    return sorted.indexWhere((c) => c.id == state.club.id) + 1;
+  }
+
+  /// 新しいクラブでの同僚を引き直す。
+  ///
+  /// 相方との呼吸は移籍で失われる。積み上げたものが移籍で消えるのは
+  /// 現実の通りで、だから移籍が「良い話」だけではなくなる。
+  ({Teammate competitor, Teammate partner, Teammate mentor}) rollTeammates(
+          Club club) =>
+      (
+        competitor: Teammate.roll(_random,
+            kind: TeammateKind.rival, clubStrength: club.strength),
+        partner: Teammate.roll(_random,
+            kind: TeammateKind.partner, clubStrength: club.strength),
+        mentor: Teammate.roll(_random,
+            kind: TeammateKind.mentor, clubStrength: club.strength),
+      );
 
   /// そのクラブが入るリーグを組む。
   ///
@@ -1014,6 +1120,12 @@ class CareerEngine {
       staff: state.staff,
       habits: state.habits,
       development: state.development,
+      manager: state.manager,
+      directive: state.directive,
+      competitor: state.competitor,
+      partner: state.partner,
+      mentor: state.mentor,
+      rival: state.rival,
       retired: true,
     );
   }

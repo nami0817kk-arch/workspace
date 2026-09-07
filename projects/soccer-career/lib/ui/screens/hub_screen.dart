@@ -6,6 +6,7 @@ import '../../game/world.dart';
 import '../../models/career.dart';
 import '../../models/personality.dart';
 import '../../models/objective.dart';
+import '../../models/entourage.dart';
 import '../../models/support.dart';
 import '../../models/training.dart';
 import '../../models/season.dart';
@@ -165,6 +166,8 @@ class _HomeTab extends StatelessWidget {
         const SizedBox(height: 16),
         _DevelopmentCard(state: state),
         const SizedBox(height: 16),
+        _ClubLifeCard(state: state, controller: controller),
+        const SizedBox(height: 16),
         _PersonCard(state: state),
         const SizedBox(height: 16),
         _LeagueCard(state: state),
@@ -174,7 +177,7 @@ class _HomeTab extends StatelessWidget {
           const SizedBox(height: 16),
         ],
         if (state.injured) ...[
-          _InjuryCard(state: state),
+          _InjuryCard(state: state, controller: controller),
           const SizedBox(height: 16),
         ],
         if (state.objective != null) ...[
@@ -811,6 +814,128 @@ class _DevelopmentCard extends StatelessWidget {
   }
 }
 
+/// クラブでの立ち位置。監督・方針・同僚・環境・同期。
+class _ClubLifeCard extends StatelessWidget {
+  const _ClubLifeCard({required this.state, required this.controller});
+
+  final CareerState state;
+  final CareerController controller;
+
+  Future<void> _convert(BuildContext context) async {
+    final options = state.player.aptitude.usable
+        .where((p) => p != state.player.position)
+        .toList();
+    if (options.isEmpty) {
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(const SnackBar(content: Text('今できるコンバートは無い')));
+      return;
+    }
+    final picked = await showDialog<Position>(
+      context: context,
+      builder: (context) => SimpleDialog(
+        title: const Text('どのポジションで戦うか'),
+        children: [
+          for (final p in options)
+            SimpleDialogOption(
+              onPressed: () => Navigator.of(context).pop(p),
+              child: Text('${p.fullName}'
+                  '（適性 ${state.player.aptitude[p]}  '
+                  '想定 ${state.player.overallAt(p)}）'),
+            ),
+        ],
+      ),
+    );
+    if (picked != null) controller.convertPosition(picked);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final manager = state.manager;
+    final facilities =
+        state.facilitiesWith(World.byId(state.club.countryId).prestige);
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('クラブでの立ち位置', style: theme.textTheme.titleSmall),
+            if (manager != null) ...[
+              const SizedBox(height: 8),
+              Text('監督 ${manager.name}（${manager.tactic.label}）',
+                  style: theme.textTheme.bodyMedium),
+              Text(
+                '${manager.fitLabel(state.player.attributes, state.player.position)}'
+                '  ·  在任${manager.tenure + 1}年目',
+                style: muted,
+              ),
+            ],
+            const SizedBox(height: 8),
+            Text(facilities.label, style: muted),
+            if (state.competitor != null) ...[
+              const SizedBox(height: 10),
+              Text(
+                '同ポジション: ${state.competitor!.name}'
+                '（${state.competitor!.overall}）'
+                '${state.player.overall >= state.competitor!.overall ? '  自分が上' : '  向こうが上'}',
+                style: muted,
+              ),
+            ],
+            if (state.partner != null)
+              Text(
+                '相方: ${state.partner!.name}  ${state.partner!.synergyLabel}',
+                style: muted,
+              ),
+            if (state.mentor != null && state.player.age <= 23)
+              Text('メンター: ${state.mentor!.name}（練習が身になる）',
+                  style: muted),
+            if (state.rival != null) ...[
+              const SizedBox(height: 10),
+              Text(
+                '同期 ${state.rival!.name}（${state.rival!.clubName}）'
+                '  通算${state.rival!.goals}ゴール / ${state.rival!.caps}キャップ',
+                style: muted?.copyWith(
+                  color: state.rival!.leads(state.player.overall)
+                      ? theme.colorScheme.error
+                      : theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+            const Divider(height: 24),
+            Text('クラブへの方針', style: theme.textTheme.labelMedium),
+            const SizedBox(height: 6),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final d in Directive.values)
+                  Tooltip(
+                    message: d.effect,
+                    child: ChoiceChip(
+                      label: Text(d.label),
+                      selected: state.directive == d,
+                      onSelected: (_) => controller.setDirective(d),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            OutlinedButton(
+              onPressed: () => _convert(context),
+              child: Text('ポジションを変える（今 ${state.player.position.fullName}）'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _AttributeBar extends StatelessWidget {
   const _AttributeBar({
     required this.label,
@@ -992,9 +1117,10 @@ class _CareerTab extends StatelessWidget {
 
 /// 負傷中であることを伝えるカード。
 class _InjuryCard extends StatelessWidget {
-  const _InjuryCard({required this.state});
+  const _InjuryCard({required this.state, required this.controller});
 
   final CareerState state;
+  final CareerController controller;
 
   @override
   Widget build(BuildContext context) {
@@ -1018,6 +1144,24 @@ class _InjuryCard extends StatelessWidget {
               '試合には出られないが、節は進む。',
               style: theme.textTheme.bodySmall
                   ?.copyWith(color: theme.colorScheme.onErrorContainer),
+            ),
+            const SizedBox(height: 12),
+            Text('復帰の進め方', style: Theme.of(context).textTheme.labelMedium),
+            const SizedBox(height: 6),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (final plan in RehabPlan.values)
+                  Tooltip(
+                    message: plan.effect,
+                    child: ChoiceChip(
+                      label: Text(plan.label),
+                      selected: state.rehab == plan,
+                      onSelected: (_) => controller.setRehab(plan),
+                    ),
+                  ),
+              ],
             ),
           ],
         ),

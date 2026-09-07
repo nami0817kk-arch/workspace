@@ -52,6 +52,7 @@ class MatchInProgress {
     required this.player,
     required this.club,
     this.development = const Development(),
+    this.allyBonus = 0,
     this.weakFootMoments = const [],
     this.international = false,
     Random? random,
@@ -72,6 +73,9 @@ class MatchInProgress {
 
   /// 経験・選択の癖・相手への慣れ・個人技。
   final Development development;
+
+  /// 相方との呼吸。味方を活かす手にだけ効く。
+  final double allyBonus;
 
   /// 逆足で対応することになる局面。試合開始時に決めておく。
   ///
@@ -172,6 +176,9 @@ class MatchInProgress {
             (player.personality.confidence - 10) * 0.004
         : 0.0;
 
+    // 相方との呼吸。パスを受ける側が動いてくれるかどうか。
+    final ally = option.outcome == Outcome.assist ? allyBonus : 0.0;
+
     // 逆足。利き足でないほうで対応する局面は、精度がそのまま出る。
     final weakFoot = weakFootMoment && _usesFoot(option)
         ? -(5 - player.physique.weakFoot) * 0.03
@@ -185,6 +192,7 @@ class MatchInProgress {
             signature +
             matchup +
             pressure +
+            ally +
             weakFoot)
         .clamp(0.05, 0.95);
   }
@@ -433,6 +441,7 @@ class MatchEngine {
     required bool home,
     required Appearance appearance,
     Development development = const Development(),
+    double allyBonus = 0,
     bool international = false,
   }) {
     final count = switch (appearance) {
@@ -458,6 +467,7 @@ class MatchEngine {
       player: player,
       club: club,
       development: development,
+      allyBonus: allyBonus,
       weakFootMoments: [
         for (var i = 0; i < count; i++) _random.nextDouble() < weakFootChance,
       ],
@@ -492,6 +502,7 @@ class MatchEngine {
     List<ScenarioResolution> used = const [],
     int declineOffset = 0,
     bool plateau = false,
+    double environment = 1.0,
   }) {
     if (rating == null) return player.attributes;
 
@@ -513,6 +524,7 @@ class MatchEngine {
     final chance = (0.18 + margin * 0.22) *
         ageFactor *
         player.traits.growthFactor(player.age) *
+        environment *
         (plateau ? Formulas.plateauGrowthFactor : 1.0);
     if (_random.nextDouble() >= chance) return player.attributes;
 
@@ -592,6 +604,7 @@ class MatchEngine {
     Habits habits = const Habits(),
     Development development = const Development(),
     bool plateau = false,
+    double environment = 1.0,
     required bool played,
   }) {
     final costFactor = player.traits.conditionCostFactor;
@@ -616,7 +629,8 @@ class MatchEngine {
           menu.growthFactor *
           player.personality.trainingFactor *
           staff.growthFactor *
-          habits.growthFactor;
+          habits.growthFactor *
+          environment;
       final effective = plateau ? chance * Formulas.plateauGrowthFactor : chance;
       if (canGrow) {
         for (final key in menu.keys) {

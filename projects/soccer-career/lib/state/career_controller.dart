@@ -13,10 +13,12 @@ import '../models/attributes.dart';
 import '../models/career.dart';
 import '../models/competition.dart';
 import '../models/development.dart';
+import '../models/entourage.dart';
 import '../models/injury.dart';
 import '../models/physique.dart';
 import '../models/player.dart';
 import '../models/season.dart';
+import '../game/world.dart';
 import '../models/support.dart';
 import '../models/training.dart';
 
@@ -132,6 +134,35 @@ class CareerController extends ChangeNotifier {
   static int _sumOf(Attributes attributes) =>
       Detail.values.fold(0, (s, d) => s + attributes.detail(d));
 
+  /// 出場機会の下駄。監督の信頼・戦術との相性・方針・序列を足し合わせる。
+  ///
+  /// 評価点だけで決めると、監督も方針も競争相手も飾りになる。
+  static double _appearanceBonus(CareerState state) {
+    var bonus = Person.appearanceBonusFrom(state.relations);
+    final manager = state.manager;
+    if (manager != null) {
+      bonus += manager.appearanceBonus(
+          state.player.attributes, state.player.position);
+    }
+    bonus += state.directive.appearanceBonus;
+    // 同ポジションの競争相手との力の差。序列はここで決まる。
+    final competitor = state.competitor;
+    if (competitor != null) {
+      bonus +=
+          ((state.player.overall - competitor.overall) * 0.02).clamp(-0.15, 0.15);
+    }
+    return bonus;
+  }
+
+  /// 練習の効きに掛かる環境の倍率。クラブの設備・メンター・方針。
+  static double _environmentFactor(CareerState state) {
+    final facilities =
+        state.facilitiesWith(World.byId(state.club.countryId).prestige);
+    return facilities.growthFactor *
+        (state.mentor?.mentorFactor(state.player.age) ?? 1.0) *
+        state.directive.growthFactor;
+  }
+
   CareerState? _state;
   MatchInProgress? _inProgress;
   bool _loading = true;
@@ -183,6 +214,39 @@ class CareerController extends ChangeNotifier {
     await _persist();
   }
 
+  /// クラブに方針を伝える。
+  Future<void> setDirective(Directive directive) async {
+    final state = _state;
+    if (state == null) return;
+    state.directive = directive;
+    state.relations = state.relations.bump(
+      manager: directive.managerDrift,
+      teammates: directive.teammatesDrift,
+    );
+    await _persist();
+  }
+
+  /// 復帰の進め方を決める。
+  Future<void> setRehab(RehabPlan plan) async {
+    final state = _state;
+    if (state == null) return;
+    state.rehab = plan;
+    await _persist();
+  }
+
+  /// ポジションを変える。適性が足りなければ何も起きない。
+  ///
+  /// 本職を離れると総合力が落ちるが、出続ければ適性は上がっていく。
+  /// 衰えた選手が生き延びる道であり、序列争いから逃げる道でもある。
+  bool convertPosition(Position position) {
+    final state = _state;
+    if (state == null) return false;
+    if (!state.player.aptitude.canConvert(position)) return false;
+    state.player = state.player.copyWith(position: position);
+    _persist();
+    return true;
+  }
+
   /// 生活習慣を変える。
   Future<void> setHabits(Habits habits) async {
     final state = _state;
@@ -230,6 +294,7 @@ class CareerController extends ChangeNotifier {
       opponent: state.opponentFor(matchday),
       home: state.isHome(matchday),
       development: state.development,
+      allyBonus: state.partner?.synergyBonus ?? 0,
       appearance: state.injured
           ? Appearance.injured
           // 登録メンバーから外れていると、そもそもベンチにも入れない。
@@ -237,7 +302,7 @@ class CareerController extends ChangeNotifier {
               ? Appearance.benched
               : MatchEngine.decideAppearance(
                   state.leagueResults,
-                  bonus: Person.appearanceBonusFrom(state.relations),
+                  bonus: _appearanceBonus(state),
                 ),
     );
     notifyListeners();
@@ -340,6 +405,20 @@ class CareerController extends ChangeNotifier {
     final result = match.finish();
     _career.applyResult(state, result);
 
+    if (state.rehabWatch > 0) state.rehabWatch--;
+
+    // 出たポジションの適性と、相方との呼吸が伸びる。
+    if (result.appearance == Appearance.start ||
+        result.appearance == Appearance.sub) {
+      state.player = state.player.copyWith(
+        aptitude: state.player.aptitude.playedAt(state.player.position),
+      );
+      final partner = state.partner;
+      if (partner != null) {
+        state.partner = partner.withSynergy(partner.synergy + 2);
+      }
+    }
+
     // 経験・選択の癖・相手への慣れは、出た試合ぶんだけ積み上がる。
     state.development = state.development.afterMatch(
       appearance: result.appearance,
@@ -366,7 +445,8 @@ class CareerController extends ChangeNotifier {
       if (next.healed) {
         state.injury = null;
         recovered = true;
-        player = player.copyWith(condition: Formulas.conditionAfterInjury);
+        state.rehabWatch = Formulas.rehabWatchMatches;
+        player = player.copyWith(condition: state.rehab.conditionOnReturn);
       } else {
         state.injury = next;
       }
@@ -380,6 +460,7 @@ class CareerController extends ChangeNotifier {
           used: match.successes,
           declineOffset: state.staff.declineAgeOffset,
           plateau: state.development.inPlateau,
+          environment: _environmentFactor(state),
         ),
       );
       final week = _match.applyWeek(
@@ -390,6 +471,7 @@ class CareerController extends ChangeNotifier {
         habits: state.habits,
         development: state.development,
         plateau: state.development.inPlateau,
+        environment: _environmentFactor(state),
         played: result.appearance != Appearance.benched,
       );
       player = player.copyWith(
@@ -411,9 +493,17 @@ class CareerController extends ChangeNotifier {
             player,
             baseChance: Formulas.injuryBaseChance *
                 state.staff.injuryFactor *
-                state.habits.injuryFactor,
+                state.habits.injuryFactor *
+                // 復帰直後は無理が効かない。強行すればここで返ってくる。
+                (state.rehabWatch > 0 ? state.rehab.relapseFactor : 1.0),
           );
       if (newInjury != null) {
+        // 復帰の進め方で離脱の長さが変わる。
+        newInjury = Injury(
+          name: newInjury.name,
+          severity: newInjury.severity,
+          matchesOut: state.rehab.lengthFor(newInjury),
+        );
         final (attributes, potential) =
             _match.applySevereInjury(player, newInjury);
         player = Player.rebuild(player, attributes: attributes, potential: potential);
