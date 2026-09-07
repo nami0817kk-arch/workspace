@@ -67,7 +67,27 @@ foreach ($required in @("RAKUTEN_APP_ID", "RAKUTEN_ACCESS_KEY")) {
 }
 
 if ((Run "git pull --ff-only origin master") -ne 0) {
-    Add-Content $log "FAILED: git pull"; exit 1
+    Add-Content $log "FAILED: git pull"
+    Notify "楽天の価格取得が失敗しました" "git pull に失敗しました。今日の価格はまだ記録されていません。"
+    exit 1
+}
+
+# 1日1回だけ記録する。10:10 に失敗したとき用に 14:10 / 18:10 にも起動するため、
+# 既に取れている日は何もせず終わる（無駄なリクエストを投げない）。
+$today = Get-Date -Format 'yyyy-MM-dd'
+if (Test-Path (Join-Path $repo "data\snapshots\$today.csv.gz")) {
+    Add-Content $log "SKIP: $today は取得済み"
+    exit 0
+}
+
+# グローバルIPを毎回記録する。ISPが少数のIPを回しているだけなら、それらを
+# すべて許可IPに列挙すればエラーはほぼ起きなくなる（範囲指定と違い、個別IPの
+# 列挙ならセキュリティは緩まない）。その判断材料を貯めるための記録。
+$ip = ""
+try { $ip = Invoke-RestMethod https://api.ipify.org -TimeoutSec 10 } catch { }
+if ($ip -ne "") {
+    Add-Content (Join-Path $repo "ip-history.log") "$(Get-Date -Format 'yyyy-MM-dd HH:mm') $ip"
+    Add-Content $log "global IP: $ip"
 }
 
 $python = Join-Path $repo ".venv\Scripts\python.exe"
@@ -79,13 +99,12 @@ if ((Run "`"$python`" fetch.py") -ne 0) {
     # 貼り替えるだけで直るので、通知に現在のIPを載せて手数を減らす。
     $tail = (Get-Content $log -Tail 80 -Encoding UTF8) -join "`n"
     if ($tail -match "CLIENT_IP_NOT_ALLOWED") {
-        $ip = "（取得できませんでした）"
-        try { $ip = Invoke-RestMethod https://api.ipify.org -TimeoutSec 10 } catch { }
+        $shown = if ($ip -ne "") { $ip } else { "（取得できませんでした）" }
         Notify "楽天の価格取得が止まりました（IP変更）" `
-               "許可IPを $ip に更新してください。webservice.rakuten.co.jp/app/list の Edit から。"
+               "許可IPを $shown に更新してください。直せば今日の 14:10 / 18:10 に取り直します。"
     } else {
         Notify "楽天の価格取得が失敗しました" `
-               "今日の価格は記録されていません。run-daily.log を確認してください。"
+               "今日の価格はまだ記録されていません。run-daily.log を確認してください。"
     }
     exit 1
 }
