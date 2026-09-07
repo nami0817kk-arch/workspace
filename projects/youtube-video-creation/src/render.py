@@ -857,6 +857,67 @@ class Renderer:
             )
         return target
 
+    def _banner(self) -> Image.Image | None:
+        """冒頭に出すチャンネルの名乗り。設定が空なら作らない。"""
+        channel = self.config.channel
+        if not channel.name.strip() or channel.banner_seconds <= 0:
+            return None
+        if getattr(self, "_banner_image", None) is not None:
+            return self._banner_image
+
+        name = channel.name.strip()
+        handle = channel.handle.strip()
+        pad = int(self.layout.width * 0.022)
+        font_name = self.font_label
+        font_sub = self.font_date
+
+        ruler = ImageDraw.Draw(Image.new("RGBA", (10, 10)))
+        width = int(max(ruler.textlength(name, font=font_name),
+                        ruler.textlength(handle, font=font_sub)) + pad * 2 + 92)
+        height = pad * 2 + 74
+
+        layer, draw = _layer((self.layout.width, self.layout.height))
+        left = (self.layout.width - width) // 2
+        top = int(self.layout.height * 0.045)
+        draw.rounded_rectangle([left, top, left + width, top + height], radius=18,
+                               fill=(250, 250, 252, 236))
+        # 登録を促す赤いしるし。文字だけだと「名乗り」で終わる
+        mark = [left + pad, top + pad + 6, left + pad + 62, top + pad + 44]
+        draw.rounded_rectangle(mark, radius=10, fill=(200, 32, 42, 255))
+        draw.polygon([(mark[0] + 24, mark[1] + 9), (mark[0] + 24, mark[3] - 9),
+                      (mark[0] + 44, (mark[1] + mark[3]) // 2)], fill=(255, 255, 255, 255))
+        draw.text((left + pad + 78, top + pad - 2), name, font=font_name, fill=(18, 20, 26, 255))
+        if handle:
+            draw.text((left + pad + 78, top + pad + 36), handle, font=font_sub,
+                      fill=(96, 102, 112, 255))
+        self._banner_image = layer
+        return layer
+
+    def _with_banner(self, path: Path) -> Path:
+        """フレームにバナーを重ねた版を返す（同じ絵は作り直さない）。"""
+        banner = self._banner()
+        if banner is None:
+            return path
+        target = self.frame_dir / f"b_{path.stem}.png"
+        if target.exists():
+            return target
+        base = Image.open(path).convert("RGBA")
+        base.alpha_composite(banner)
+        base.save(target) if self.over_video else base.convert("RGB").save(target)
+        return target
+
+    def _apply_banner(self, entries: list[tuple[Path, float]]) -> list[tuple[Path, float]]:
+        """冒頭のぶんだけバナーを重ねる。**尺は変えない。**"""
+        seconds = self.config.channel.banner_seconds
+        if self._banner() is None:
+            return entries
+        out: list[tuple[Path, float]] = []
+        elapsed = 0.0
+        for path, span in entries:
+            out.append((self._with_banner(path) if elapsed < seconds else path, span))
+            elapsed += span
+        return out
+
     def build_video(
         self,
         script: Script,
@@ -865,7 +926,7 @@ class Renderer:
         work_dir: Path,
         inserts: Inserts | None = None,
     ) -> Path:
-        entries = self.frame_entries(script, inserts)
+        entries = self._apply_banner(self.frame_entries(script, inserts))
         list_path = ffmpeg.write_concat_list(entries, work_dir / "frames.txt")
         out_path.parent.mkdir(parents=True, exist_ok=True)
         size = (self.layout.width, self.layout.height)

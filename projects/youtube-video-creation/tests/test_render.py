@@ -428,3 +428,50 @@ def test_制作側の節名は画面に出さない():
     assert "オープニング" in INTERNAL_SCENE_TITLES
     assert "まとめ" in INTERNAL_SCENE_TITLES
     assert "監督は何と言ったか" not in INTERNAL_SCENE_TITLES
+
+
+# 伸びている参考チャンネルは、冒頭0.5〜2.5秒だけ画面の上にチャンネル名と
+# 登録の誘導を出していた（2026-09-07 に実測）。ずっと出すと本文の邪魔になる。
+
+def _renderer_with_channel(tmp_path, name="", seconds=2.5):
+    from dataclasses import replace
+
+    from src.config import load_config
+    from src.render import Renderer
+
+    config = load_config()
+    config = replace(config, channel=replace(config.channel, name=name, banner_seconds=seconds))
+    return Renderer(config, tmp_path)
+
+
+def test_チャンネル名が空ならバナーを出さない(tmp_path):
+    renderer = _renderer_with_channel(tmp_path)
+    assert renderer._banner() is None
+
+
+def test_秒数が0ならバナーを出さない(tmp_path):
+    renderer = _renderer_with_channel(tmp_path, name="テスト", seconds=0)
+    assert renderer._banner() is None
+
+
+def test_冒頭だけバナーを重ねる(tmp_path):
+    """尺は変えない。冒頭を過ぎた絵はそのまま。"""
+    from PIL import Image
+
+    renderer = _renderer_with_channel(tmp_path, name="テスト", seconds=2.5)
+    plain = tmp_path / "frames" / "plain.png"
+    plain.parent.mkdir(parents=True, exist_ok=True)
+    Image.new("RGB", (renderer.layout.width, renderer.layout.height), (10, 10, 20)).save(plain)
+
+    entries = [(plain, 1.0), (plain, 1.0), (plain, 1.0), (plain, 1.0)]
+    got = renderer._apply_banner(entries)
+
+    assert [span for _, span in got] == [1.0, 1.0, 1.0, 1.0]   # 尺は変わらない
+    assert got[0][0] != plain and got[1][0] != plain            # 0〜2秒には出る
+    assert got[3][0] == plain                                   # 3秒目には出ない
+
+
+def test_バナーが無いときは並びをそのまま返す(tmp_path):
+    renderer = _renderer_with_channel(tmp_path)
+    entries = [(tmp_path / "a.png", 1.0)]
+    assert renderer._apply_banner(entries) == entries
