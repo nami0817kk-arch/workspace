@@ -1,3 +1,5 @@
+import 'agent.dart';
+import 'attributes.dart';
 import 'club.dart';
 import 'player.dart';
 import 'season.dart';
@@ -10,6 +12,7 @@ class SeasonRecord {
     required this.tier,
     required this.leaguePosition,
     required this.stats,
+    this.salary = 0,
   });
 
   final int year;
@@ -17,6 +20,9 @@ class SeasonRecord {
   final int tier;
   final int leaguePosition;
   final SeasonStats stats;
+
+  /// そのシーズンの年俸（万円）。
+  final int salary;
 
   Map<String, dynamic> toJson() => {
         'year': year,
@@ -27,6 +33,7 @@ class SeasonRecord {
         'goals': stats.goals,
         'assists': stats.assists,
         'averageRating': stats.averageRating,
+        'salary': salary,
       };
 
   factory SeasonRecord.fromJson(Map<String, dynamic> json) => SeasonRecord(
@@ -40,6 +47,7 @@ class SeasonRecord {
           assists: json['assists'] as int,
           averageRating: (json['averageRating'] as num).toDouble(),
         ),
+        salary: json['salary'] as int? ?? 0,
       );
 }
 
@@ -54,14 +62,14 @@ class CareerState {
     required this.results,
     required this.table,
     required this.history,
+    required this.agent,
+    required this.salary,
+    this.training,
     this.retired = false,
   });
 
   Player player;
   Club club;
-
-  /// 引退済みなら true。以後は試合をせず、通算成績だけを見せる。
-  bool retired;
 
   /// 所属リーグのクラブ一覧（自分のクラブを含む20チーム）。
   List<Club> league;
@@ -80,10 +88,24 @@ class CareerState {
   /// 過去シーズンの記録。
   List<SeasonRecord> history;
 
+  Agent agent;
+
+  /// 今の年俸（万円）。
+  int salary;
+
+  /// 今週の練習。null なら休養。
+  AttributeKey? training;
+
+  /// 引退済みなら true。以後は試合をせず、通算成績だけを見せる。
+  bool retired;
+
   int get matchday => results.length + 1;
   bool get seasonFinished => results.length >= fixtures.length;
 
   SeasonStats get seasonStats => SeasonStats.from(results);
+
+  /// 通算の稼ぎ（万円）。終えたシーズンの分だけ数える。
+  int get totalEarnings => history.fold(0, (s, h) => s + h.salary);
 
   Club opponentFor(int matchday) {
     final id = fixtures[matchday - 1];
@@ -136,26 +158,38 @@ class CareerState {
         'results': results.map((r) => r.toJson()).toList(),
         'table': table.map((r) => r.toJson()).toList(),
         'history': history.map((h) => h.toJson()).toList(),
+        'agent': agent.toJson(),
+        'salary': salary,
+        'training': training?.name,
       };
 
-  factory CareerState.fromJson(Map<String, dynamic> json) => CareerState(
-        player: Player.fromJson(json['player'] as Map<String, dynamic>),
-        club: Club.fromJson(json['club'] as Map<String, dynamic>),
-        league: (json['league'] as List)
-            .map((c) => Club.fromJson(c as Map<String, dynamic>))
-            .toList(),
-        year: json['year'] as int,
-        fixtures: (json['fixtures'] as List).cast<String>(),
-        results: (json['results'] as List)
-            .map((r) => MatchResult.fromJson(r as Map<String, dynamic>))
-            .toList(),
-        table: (json['table'] as List)
-            .map((r) => TableRow.fromJson(r as Map<String, dynamic>))
-            .toList(),
-        history: (json['history'] as List)
-            .map((h) => SeasonRecord.fromJson(h as Map<String, dynamic>))
-            .toList(),
-        // 引退フラグを足す前の保存データには無いので、無ければ現役扱い。
-        retired: json['retired'] as bool? ?? false,
-      );
+  factory CareerState.fromJson(Map<String, dynamic> json) {
+    final trainingName = json['training'] as String?;
+    return CareerState(
+      player: Player.fromJson(json['player'] as Map<String, dynamic>),
+      club: Club.fromJson(json['club'] as Map<String, dynamic>),
+      league: (json['league'] as List)
+          .map((c) => Club.fromJson(c as Map<String, dynamic>))
+          .toList(),
+      year: json['year'] as int,
+      fixtures: (json['fixtures'] as List).cast<String>(),
+      results: (json['results'] as List)
+          .map((r) => MatchResult.fromJson(r as Map<String, dynamic>))
+          .toList(),
+      table: (json['table'] as List)
+          .map((r) => TableRow.fromJson(r as Map<String, dynamic>))
+          .toList(),
+      history: (json['history'] as List)
+          .map((h) => SeasonRecord.fromJson(h as Map<String, dynamic>))
+          .toList(),
+      // 以下は後から足した項目。古い保存データには無い。
+      agent: Agent.fromJson(json['agent'] as Map<String, dynamic>?),
+      salary: json['salary'] as int? ?? 300,
+      training: trainingName == null ||
+              !AttributeKey.values.any((k) => k.name == trainingName)
+          ? null
+          : AttributeKey.values.byName(trainingName),
+      retired: json['retired'] as bool? ?? false,
+    );
+  }
 }
