@@ -164,7 +164,12 @@ class MatchInProgress {
       scored: scored,
       conceded: max(0, concededGoals),
       appearance: appearance,
-      rating: appearance == Appearance.benched ? null : rating,
+      // 出ていない試合に評価点を付けない。付けると平均評価と出場数に
+      // 混ざり、出場機会の判断（decideAppearance）まで狂う。
+      rating: appearance == Appearance.benched ||
+              appearance == Appearance.injured
+          ? null
+          : rating,
       goals: goals,
       assists: assists,
       international: international,
