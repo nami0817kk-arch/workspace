@@ -86,8 +86,8 @@ void main() {
     test('良い試合が続くとゾーンに入ることがある', () {
       var sawZone = false;
       for (var seed = 0; seed < 40 && !sawZone; seed++) {
-        final form = Form.roll(Random(seed), recent: [7.8, 7.5, 7.9]);
-        sawZone = form.state == FormState.zone;
+        final form = Momentum.roll(Random(seed), recent: [7.8, 7.5, 7.9]);
+        sawZone = form.state == MomentumState.zone;
       }
       expect(sawZone, isTrue);
     });
@@ -95,18 +95,18 @@ void main() {
     test('悪い試合が続くとスランプに落ちることがある', () {
       var sawSlump = false;
       for (var seed = 0; seed < 40 && !sawSlump; seed++) {
-        final form = Form.roll(Random(seed), recent: [5.4, 5.6, 5.5]);
-        sawSlump = form.state == FormState.slump;
+        final form = Momentum.roll(Random(seed), recent: [5.4, 5.6, 5.5]);
+        sawSlump = form.state == MomentumState.slump;
       }
       expect(sawSlump, isTrue);
     });
 
     test('試合数が足りないうちは波に入らない', () {
-      expect(Form.roll(Random(1), recent: [8.0, 8.0]).isActive, isFalse);
+      expect(Momentum.roll(Random(1), recent: [8.0, 8.0]).isActive, isFalse);
     });
 
     test('波は試合ごとに明ける', () {
-      var form = const Form(state: FormState.zone, matches: 2);
+      var form = const Momentum(state: MomentumState.zone, matches: 2);
       expect(form.chanceModifier, greaterThan(0));
       form = form.tick();
       expect(form.isActive, isTrue);
@@ -357,7 +357,7 @@ void main() {
     final state = career();
     state.morale = const Morale(value: 88);
     state.fatigue = const Fatigue(value: 33);
-    state.form = const Form(state: FormState.zone, matches: 2);
+    state.form = const Momentum(state: MomentumState.zone, matches: 2);
     state.preseason = PreseasonPlan.tour;
     state.captain = true;
     state.squadNumber = 10;
@@ -369,7 +369,7 @@ void main() {
     final r = CareerState.fromJson(state.toJson());
     expect(r.morale.value, 88);
     expect(r.fatigue.value, 33);
-    expect(r.form.state, FormState.zone);
+    expect(r.form.state, MomentumState.zone);
     expect(r.preseason, PreseasonPlan.tour);
     expect(r.captain, isTrue);
     expect(r.squadNumber, 10);

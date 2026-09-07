@@ -155,7 +155,7 @@ class CareerState {
     this.mentorManager,
     this.morale = const Morale(),
     this.fatigue = const Fatigue(),
-    this.form = const Form(),
+    this.form = const Momentum(),
     this.preseason = PreseasonPlan.camp,
     this.captain = false,
     this.captaincyOffered = false,
@@ -251,7 +251,7 @@ class CareerState {
   Fatigue fatigue;
 
   /// 数試合だけ続く波（ゾーン／スランプ）。
-  Form form;
+  Momentum form;
 
   /// 今季のプレシーズンの過ごし方。
   PreseasonPlan preseason;
@@ -543,7 +543,7 @@ class CareerState {
       mentorManager: json['mentorManager'] as String?,
       morale: Morale.fromJson(json['morale'] as Map<String, dynamic>?),
       fatigue: Fatigue.fromJson(json['fatigue'] as Map<String, dynamic>?),
-      form: Form.fromJson(json['form'] as Map<String, dynamic>?),
+      form: Momentum.fromJson(json['form'] as Map<String, dynamic>?),
       preseason: PreseasonPlan.values.any((p) => p.name == json['preseason'])
           ? PreseasonPlan.values.byName(json['preseason'] as String)
           : PreseasonPlan.camp,

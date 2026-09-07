@@ -169,7 +169,7 @@ class CareerController extends ChangeNotifier {
     // 波。続いていれば1試合ぶん進め、切れていれば直近の出来から引き直す。
     state.form = state.form.tick();
     if (!state.form.isActive) {
-      state.form = Form.roll(
+      state.form = Momentum.roll(
         _random,
         recent: [
           for (final r in state.leagueResults)

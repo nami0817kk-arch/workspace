@@ -78,58 +78,58 @@ class Fatigue {
 ///
 /// 実力とは別に、数試合だけ続く波。良いときは何をやっても入り、
 /// 悪いときは何をやっても外れる。シーズンに起伏を作るための仕組み。
-enum FormState {
+enum MomentumState {
   zone('ゾーン', 0.07),
   normal('平常', 0),
   slump('スランプ', -0.06);
 
-  const FormState(this.label, this.chanceModifier);
+  const MomentumState(this.label, this.chanceModifier);
 
   final String label;
   final double chanceModifier;
 }
 
 /// 波の状態と残り試合数。
-class Form {
-  const Form({this.state = FormState.normal, this.matches = 0});
+class Momentum {
+  const Momentum({this.state = MomentumState.normal, this.matches = 0});
 
-  final FormState state;
+  final MomentumState state;
   final int matches;
 
-  bool get isActive => state != FormState.normal && matches > 0;
+  bool get isActive => state != MomentumState.normal && matches > 0;
 
   double get chanceModifier => isActive ? state.chanceModifier : 0;
 
   /// 1試合ぶん進める。
-  Form tick() => matches <= 1
-      ? const Form()
-      : Form(state: state, matches: matches - 1);
+  Momentum tick() => matches <= 1
+      ? const Momentum()
+      : Momentum(state: state, matches: matches - 1);
 
   /// 直近の出来から、波に入るかを決める。
   ///
   /// 良い試合が続いた後に入り、悪い試合が続いた後に落ちる。実力どおりの
   /// 成績が延々と続くより、波があるほうが1シーズンを追う気になる。
-  static Form roll(Random random, {required List<double> recent}) {
-    if (recent.length < 3) return const Form();
+  static Momentum roll(Random random, {required List<double> recent}) {
+    if (recent.length < 3) return const Momentum();
     final window = recent.sublist(max(0, recent.length - 3));
     final average = window.reduce((a, b) => a + b) / window.length;
     if (average >= 7.3 && random.nextDouble() < 0.25) {
-      return Form(state: FormState.zone, matches: 3 + random.nextInt(3));
+      return Momentum(state: MomentumState.zone, matches: 3 + random.nextInt(3));
     }
     if (average <= 5.8 && random.nextDouble() < 0.25) {
-      return Form(state: FormState.slump, matches: 3 + random.nextInt(4));
+      return Momentum(state: MomentumState.slump, matches: 3 + random.nextInt(4));
     }
-    return const Form();
+    return const Momentum();
   }
 
   Map<String, dynamic> toJson() => {'state': state.name, 'matches': matches};
 
-  factory Form.fromJson(Map<String, dynamic>? json) {
-    if (json == null) return const Form();
-    return Form(
-      state: FormState.values.any((s) => s.name == json['state'])
-          ? FormState.values.byName(json['state'] as String)
-          : FormState.normal,
+  factory Momentum.fromJson(Map<String, dynamic>? json) {
+    if (json == null) return const Momentum();
+    return Momentum(
+      state: MomentumState.values.any((s) => s.name == json['state'])
+          ? MomentumState.values.byName(json['state'] as String)
+          : MomentumState.normal,
       matches: json['matches'] as int? ?? 0,
     );
   }
