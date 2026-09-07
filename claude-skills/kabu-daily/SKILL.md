@@ -17,8 +17,8 @@ description: 日本株の日次ルーチン。quality-gainer-tracker で値上�
 git -C C:/Users/なみ/dev/workspace worktree add C:/Users/なみ/dev/wt-<topic> -b claude/<topic> origin/master
 ```
 
-疑問が出たら、ユーザーに聞く前に `docs/session-faq.md` → `docs/coordinator.txt` の
-調整役セッションへ SendMessage（規約5）。
+疑問が出たら、まず `docs/session-faq.md` を読む。載っていなければ自分で判断し、
+判断できないものはユーザーに直接聞く（調整役は 2026-09-07 に廃止）。
 
 | 対象 | パス | Python |
 |---|---|---|
