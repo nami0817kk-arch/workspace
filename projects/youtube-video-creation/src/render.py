@@ -874,7 +874,7 @@ class Renderer:
         ruler = ImageDraw.Draw(Image.new("RGBA", (10, 10)))
         width = int(max(ruler.textlength(name, font=font_name),
                         ruler.textlength(handle, font=font_sub)) + pad * 2 + 92)
-        height = pad * 2 + 74
+        height = pad * 2 + 82
 
         layer, draw = _layer((self.layout.width, self.layout.height))
         left = (self.layout.width - width) // 2
@@ -886,9 +886,14 @@ class Renderer:
         draw.rounded_rectangle(mark, radius=10, fill=(200, 32, 42, 255))
         draw.polygon([(mark[0] + 24, mark[1] + 9), (mark[0] + 24, mark[3] - 9),
                       (mark[0] + 44, (mark[1] + mark[3]) // 2)], fill=(255, 255, 255, 255))
-        draw.text((left + pad + 78, top + pad - 2), name, font=font_name, fill=(18, 20, 26, 255))
+        text_left = left + pad + 78
+        draw.text((text_left, top + pad - 2), name, font=font_name, fill=(18, 20, 26, 255))
+        # チャンネルアートと同じ黄色の下線。動画とチャンネルページで見た目をそろえる
+        rule = top + pad + 32
+        draw.rectangle([text_left, rule, text_left + int(ruler.textlength(name, font=font_name)),
+                        rule + 4], fill=(235, 165, 40, 255))
         if handle:
-            draw.text((left + pad + 78, top + pad + 36), handle, font=font_sub,
+            draw.text((text_left, top + pad + 40), handle, font=font_sub,
                       fill=(96, 102, 112, 255))
         self._banner_image = layer
         return layer

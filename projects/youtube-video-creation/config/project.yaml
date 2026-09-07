@@ -68,8 +68,8 @@ motion:
 # 参考チャンネルは冒頭0.5〜2.5秒だけ、画面の上にチャンネル名と登録の誘導を出す。
 # **name を書くまで出さない。**ずっと出すと本文の邪魔になるので冒頭だけ。
 channel:
-  name: ""            # 例: 海外サッカーニュース
-  handle: ""          # 例: @your_handle
+  name: "海外サッカーの理由"
+  handle: "@kaigai-soccer-riyuu"
   banner_seconds: 2.5
 
 # 冒頭と章の変わり目に出すタイトルカード。0 にすると出さない
