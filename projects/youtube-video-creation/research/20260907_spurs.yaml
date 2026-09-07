@@ -1,0 +1,102 @@
+slot: world
+date: 2026年9月7日
+theme:
+  id: spurs_goalless
+  league: england
+  prefix: 悲報
+  title: 600億円使って3試合無得点 デ・ゼルビ「書類だけでは足りない」
+  hook: 夏に六百億円。それでも、まだ一点も取れていません。
+  question: 金額と結果が結びつかないとき、監督は何を語るのか
+thumbnail:
+  line1: 3試合で0得点
+  line2: デ・ゼルビ「書類では足りない」
+  tags:
+  - トッテナム
+  - デ・ゼルビ
+  photo: assets/images/dezerbi/01.jpg
+answer: 選択の質だと言っている。チームとして働き始めたのは先週木曜から
+watch: 次節。初得点が出るかどうか
+sections:
+- id: said
+  heading: 何を言ったのか
+  tier: 報道
+  telop: デ・ゼルビ「心配していない」
+  say:
+  - voice: キャスター
+    text: トッテナムが、フォレストとの一戦をゼロたいゼロで終えました。今季初の勝点です。
+  - voice: キャスター
+    text: 心配していないか、と問われたデ・ゼルビ監督は、こう答えました。
+    card:
+      type: quote
+      source: Roberto De Zerbi（ESPN）
+      color: '#132257'
+      text: No. We could have scored three or four goals today, because if you take the wrong decision, you don't score.
+      translation: いや。今日は3点でも4点でも取れた。間違った選択をすれば、点は入らないというだけだ
+  - voice: デ・ゼルビ監督
+    text: いや。今日はさんてんでもよんてんでも取れた。間違った選択をすれば、点は入らないというだけだ。
+  - voice: デ・ゼルビ監督
+    text: よく戦えたと思う。ただ、最後の三分の一を良くしないといけない。より良い選択をし、落ち着かなければならない。
+    telop: 「最後の三分の一を良くしないといけない」
+  official: false
+  sources:
+  - https://www.espn.com/soccer/story/_/id/49837481/roberto-de-zerbi-spurs-nottingham-forest-premier-league-transfers
+  - https://www.theguardian.com/football/2026/sep/05/european-football-ethan-nwaneri-dortmund-hoffenheim-athletic-bilbao-atletico-madrid-inter-napoli
+- id: context
+  heading: どういう状況で出た言葉か
+  tier: 報道
+  telop: 夏に約4億ポンド。それでも3試合無得点
+  say:
+  - voice: キャスター
+    text: 背景の数字が、この発言を重くしています。
+    card:
+      type: bars
+      title: トッテナムのこの夏と開幕3試合
+      unit: ''
+      items:
+      - label: 夏の補強費（百万ポンド）
+        value: 400
+        highlight: true
+      - label: 3試合の得点
+        value: 0
+      - label: この試合の枠内シュート
+        value: 0
+      note: '※ 出典: ESPN'
+  - voice: キャスター
+    text: この夏の補強費は、およそよんおくポンド。日本円でろくひゃくおく円ほどです。
+  - voice: キャスター
+    text: それでも開幕からさんしあい無得点。リーグの最初のさんしあいで得点が無いのは、せんきゅうひゃくななじゅうよねん以来です。
+    telop: 開幕3試合無得点は1974年以来
+  - voice: キャスター
+    text: この試合では、枠内シュートを一本も打てていません。
+  official: false
+  sources:
+  - https://www.espn.com/soccer/story/_/id/49837481/roberto-de-zerbi-spurs-nottingham-forest-premier-league-transfers
+  - https://www.theguardian.com/football/2026/sep/05/european-football-ethan-nwaneri-dortmund-hoffenheim-athletic-bilbao-atletico-madrid-inter-napoli
+- id: react
+  heading: どう受け止められたか
+  tier: 報道
+  telop: 「移籍市場の書類だけでは足りない」
+  say:
+  - voice: キャスター
+    text: 監督は、具体的な場面まで挙げて説明しました。
+  - voice: デ・ゼルビ監督
+    text: マルムーシュが撃った場面。ロバートソンが外を回っていた。正しい選択をしてロバートソンを使えば、ファーにクドゥスがいた。
+  - voice: デ・ゼルビ監督
+    text: ファーを越えたクロスが何本あったか。テルがにほん、サビオがいっぽん。
+  - voice: キャスター
+    text: そして、こう締めています。
+    telop: 「移籍市場の書類だけでは足りない」
+    card:
+      type: quote
+      source: Roberto De Zerbi（ESPN）
+      color: '#132257'
+      text: It's not enough the paper, the transfer market.
+      translation: 移籍市場の書類だけでは、足りない
+  - voice: デ・ゼルビ監督
+    text: 我々が全員そろって取り組み始めたのは、先週の木曜からだ。移籍市場の書類だけでは、足りない。
+  - voice: キャスター
+    text: つぎに見るべきは次節。初得点が出るかどうかです。
+  official: false
+  sources:
+  - https://www.espn.com/soccer/story/_/id/49837481/roberto-de-zerbi-spurs-nottingham-forest-premier-league-transfers
+  - https://www.theguardian.com/football/2026/sep/05/european-football-ethan-nwaneri-dortmund-hoffenheim-athletic-bilbao-atletico-madrid-inter-napoli

@@ -68,6 +68,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     findings.append(_still_length(out_dir / "script.json"))
     findings.append(_screen_change(out_dir / "script.json"))
     findings.append(_thumbnail_face(script))
+    findings.append(_card_rule(script))
     findings.append(_photo_credits(script, out_dir))
     findings.append(_double_marks(script))
     loudness = _loudness(out_dir / "video.mp4")
@@ -183,6 +184,37 @@ def _screen_change(script_json: Path) -> Finding:
                        f"{worst:.0f}秒 変わらない場面があります"
                        f"（上限{SAME_SCREEN_MAX:.0f}秒）: {worst_telop[:24]}")
     return Finding(True, "見た目の変化", f"変わらない最長 {worst:.0f}秒")
+
+
+def _card_rule(script: Script) -> Finding:
+    """カードを出すべき行に出しているか（2026-09-07）。
+
+    **それまでは勘で決めていた。**回によって4〜7枚とばらつき、
+    「なぜここに表を出すのか」を言葉にできなかった。
+    文の役割で決まる型と、実際に付いているカードを突き合わせる。
+
+    **止めない。**基準は出発点で、書く人が別の型を選ぶ場面はある。
+    ただし「気づかずに落ちている」ことは防ぐ
+    """
+    from .cardrule import gaps, suggest
+
+    missing = []
+    for scene in script.scenes:
+        for line in scene.lines:
+            want = suggest(getattr(line, "text", ""), getattr(line, "speaker", ""))
+            if want and not getattr(line, "card", None):
+                missing.append((want, str(getattr(line, "text", ""))[:18]))
+    long_gaps = gaps(script)
+    if not missing and not long_gaps:
+        return Finding(True, "カードの基準", "外れている行はありません")
+    parts = []
+    if missing:
+        shown = "／".join(f"{w}:{s}…" for w, s in missing[:3])
+        parts.append(f"カードが要りそうな行が{len(missing)}件（{shown}）")
+    if long_gaps:
+        worst = max(long_gaps)
+        parts.append(f"見た目が{worst[0]:.0f}秒変わりません（{worst[1][:16]}）")
+    return Finding(True, "カードの基準", "／".join(parts))
 
 
 def _thumbnail_face(script: Script) -> Finding:

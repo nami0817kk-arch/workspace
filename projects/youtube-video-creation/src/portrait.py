@@ -131,6 +131,20 @@ SCENE_WORDS = (" vs ", " v ", " x ", "match", "training", "warm", "cup final",
 SCENE_SUBJECTS = 4
 
 
+# 画像でない添付。**Commons には音声も動画もある。**
+# 実測（2026-09-07）で、久保建英の候補に .ogg（音声）が混ざって選ばれた
+NOT_IMAGES = (".ogg", ".oga", ".ogv", ".mp3", ".wav", ".flac", ".webm",
+              ".mid", ".pdf", ".djvu", ".svg", ".gif", ".tif", ".tiff", ".stl")
+
+
+def is_image(title: str) -> bool:
+    """写真として使える拡張子か。**音声や動画を掴まない。**"""
+    low = title.lower().rsplit(".", 1)
+    if len(low) != 2:
+        return False
+    return ("." + low[1]) not in NOT_IMAGES
+
+
 def rank(title: str) -> int:
     """小さいほど顔写真らしい。ファイル名だけで決まるぶんの並べ替え。"""
     low = title.lower()
@@ -176,7 +190,9 @@ def save(names: list[str], folder: Path, session=None, only: str = "",
     それでも被写体とライセンスの確認は同じように通す。
     """
     reasons: list[str] = []
-    pool = [only] if only else sorted(candidates(names, session=session), key=rank)
+    pool = ([only] if only
+            else sorted([c for c in candidates(names, session=session) if is_image(c)],
+                        key=rank))
     for title in pool:
         ok, reason = verify(title, *names, session=session)
         if not ok:

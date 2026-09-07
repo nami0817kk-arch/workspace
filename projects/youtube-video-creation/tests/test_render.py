@@ -415,3 +415,34 @@ def test_1枚の絵を見せ続ける上限():
     from src.render import Renderer
 
     assert Renderer.MAX_STILL_SECONDS <= 8.0
+
+# ショートの質（2026-09-07）。公開済みの維持率は
+# 「視聴を継続 9.4% / スワイプして消去 90.7%」だった。
+
+def test_縦型では写真を大きく出す():
+    """**縦1920では高さ側が先に頭打ちになり、幅を使い切っていなかった。**
+
+    実測で写真の幅が画面の3割。縦画面は顔が主役で、
+    「サムネに顔を必ず入れる」方針とも揃う。**横型の値は変えない。**
+    """
+    from src.render import Layout
+
+    tall = Layout(width=1080, height=1920)
+    wide = Layout(width=1920, height=1080)
+    assert tall.is_portrait
+    assert not wide.is_portrait
+
+
+def test_縦型では制作側のラベルを出さない():
+    """「オープニング」「まとめ」は章の目印で、視聴者には意味が無い。
+
+    一等地の左上を、本編の作業用ラベルで埋めない。
+    **中身のある節名は残す。**
+    """
+    from src.render import INTERNAL_LABELS
+
+    assert "オープニング" in INTERNAL_LABELS
+    assert "まとめ" in INTERNAL_LABELS
+    # 中身のある節名は隠さない
+    for keep in ("監督は何と言ったか", "試合はどう動いたか", "何が起きたか"):
+        assert keep not in INTERNAL_LABELS

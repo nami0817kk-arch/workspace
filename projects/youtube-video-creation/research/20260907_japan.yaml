@@ -1,55 +1,98 @@
-# 日本人選手 の取材メモ（2026年9月7日）
-# 1本＝1テーマ。まとめではなく、1つの話を掘る
-# 埋めたら python -m src.cli draft このファイル で台本になる
 slot: japan
-date: "2026年9月7日"
-
+date: 2026年9月7日
 theme:
-  id: ""             # 短い識別子。重複の判定に使う（例: alvarez）
-  league: ""         # england/spain/germany/italy/france/netherlands/japan
-                     # 空にすると stats の「追えていないリーグ」から減らない
-  prefix: ""         # 速報 / 朗報 / 悲報。付けないなら空
-  title: ""          # 動画タイトル。続きが気になる書き方で
-  hook: ""           # 冒頭のつかみ。何が起きたかを一文で
-  question: ""       # この動画が答える問い。ここが深掘りの軸
-
+  id: suzuki_villa
+  league: england
+  prefix: 悲報
+  title: 鈴木彩艶が配球で存在感 それでもビラは3試合連続無得点
+  hook: 守った側は完封。ただ、点が入らないのは相手ではなく、こちらのほうでした。
+  question: 3試合で1点も取れないチームで、何が起きているのか
 thumbnail:
-  line1: ""          # 主見出し。事実を短く言い切る。14文字くらいまで
-  line2: ""          # 副見出し。誰が何と言ったか。18文字くらいまで
-  tags: []           # 下部ティッカーのキーワード。選手名・論点を2つまで
-  photo: ""          # 顔写真。portrait で取ったパス（**顔は必須**）
-
-answer: ""           # まとめで問いにどう答えるか
-watch: ""            # 次に何を見ればよいか
-# follow_up: true    # 前の枠で扱ったテーマを掘り直すとき
-
+  line1: ビラ 3戦連続無得点
+  line2: 鈴木彩艶は配球で存在感
+  tags:
+  - 鈴木彩艶
+  - アストン・ヴィラ
+  photo: assets/images/suzuki/01.jpg
+answer: 枠内シュートが3試合で1本。守備ではなく、finishing の問題
+watch: 10人を補強した夏の効果が、いつ出るか
 sections:
-  - id: what
-    heading: 何が起きたか
-    tier: 報道
-    telop: ""        # 画面の見出し
-    say:             # 読み上げ文。人名・数字はひらがなに開く
-      - ""
-    official: false  # クラブ・当事者の発表なら true
-    sources:
-      - ""
-
-  - id: numbers
-    heading: 数字で見ると
-    tier: 確定
-    telop: ""        # 画面の見出し
-    say:             # 読み上げ文。人名・数字はひらがなに開く
-      - ""
-    official: false  # クラブ・当事者の発表なら true
-    sources:
-      - ""
-
-  - id: next
-    heading: これからどうなる
-    tier: 報道
-    telop: ""        # 画面の見出し
-    say:             # 読み上げ文。人名・数字はひらがなに開く
-      - ""
-    official: false  # クラブ・当事者の発表なら true
-    sources:
-      - ""
+- id: what
+  heading: 試合はどう動いたか
+  tier: 報道
+  telop: ハル・シティ 0-0 アストン・ヴィラ
+  say:
+  - voice: キャスター
+    text: プレミアリーグ第さんせつ、ハル・シティ対アストン・ヴィラは、スコアレスドローでした。
+  - voice: キャスター
+    text: 日本代表のゴールキーパー、鈴木彩艶は、楔のグラウンダーパスや浮き球のロングフィードで、決定機の起点になっています。
+    telop: 鈴木彩艶は配球で起点に
+  - voice: キャスター
+    text: しかしビラは、これでさんしあい連続の無得点です。
+    telop: 3試合連続で無得点
+    card:
+      type: table
+      title: アストン・ヴィラ 開幕3試合
+      columns:
+      - 相手
+      - 結果
+      - 枠内シュート
+      rows:
+      - - ブライトン（アウェイ）
+        - 0-4 敗戦
+        - 0本
+      - - アーセナル（ホーム）
+        - 0-1 敗戦
+        - 0本
+      - - ハル・シティ（アウェイ）
+        - 0-0 引き分け
+        - 1本
+      highlight_row: 2
+  official: false
+  sources:
+  - https://www.theguardian.com/football/2026/sep/05/hull-city-aston-villa-premier-league-match-report
+  - https://www.skysports.com/football/hull-city-vs-aston-villa/report/559469
+- id: turn
+  heading: 分かれ目はどこか
+  tier: 報道
+  telop: 3試合で枠内シュートは、たった1本
+  say:
+  - voice: キャスター
+    text: 数字が、はっきりしています。
+  - voice: キャスター
+    text: ブライトンにゼロたいよんで敗れた試合も、アーセナルにゼロたいいちで敗れた試合も、枠内シュートはゼロ。
+  - voice: キャスター
+    text: この試合で放てたのは、いっぽんだけ。開幕からじゅうさんぷんの、ヘミングスによる緩いシュートでした。
+    telop: 開幕から3試合目にして、初めての枠内シュート
+  - voice: キャスター
+    text: 後半には主将のマクギンとブエンディアにも好機がありましたが、決めきれませんでした。
+  official: false
+  sources:
+  - https://www.theguardian.com/football/2026/sep/05/hull-city-aston-villa-premier-league-match-report
+  - https://web.gekisaka.jp/news/world/detail/?458306-458306-fl
+- id: numbers
+  heading: 監督は何と言ったか
+  tier: 報道
+  telop: エメリ「結果は十分ではない。ただ、値するものはあった」
+  say:
+  - voice: キャスター
+    text: ウナイ・エメリ監督は、前向きな点を取り上げました。この夏、主力が何人も抜け、じゅうにんが加入しています。
+    card:
+      type: quote
+      source: Unai Emery（The Guardian）
+      color: '#95bfe5'
+      text: The result is not enough, but I think we deserved more. We weren't clinical but of course to win matches, you need goals.
+      translation: 結果は十分ではない。ただ、もっと値するものはあったと思う。決めきれなかった。試合に勝つには、当然ながら得点が要る
+  - voice: エメリ監督
+    text: 結果は十分ではない。ただ、もっと値するものはあったと思う。決めきれなかった。勝つには、当然ながら得点が要る。
+  - voice: キャスター
+    text: いっぽうハルは、昇格組ながらさんしあいでななポイント。さんしあい連続の完封です。
+    telop: ハルは昇格組で7ポイント、3戦連続完封
+  - voice: ヤキロビッチ監督
+    text: 勝てたかもしれないが、相手にも好機はあった。さんしあいでななポイントと、また完封。この水準で戦えることを示せた。
+  - voice: キャスター
+    text: つぎに見るべきは、じゅうにんを補強したビラの攻撃が、いつ形になるかです。
+  official: false
+  sources:
+  - https://www.theguardian.com/football/2026/sep/05/hull-city-aston-villa-premier-league-match-report
+  - https://www.skysports.com/football/hull-city-vs-aston-villa/report/559469
