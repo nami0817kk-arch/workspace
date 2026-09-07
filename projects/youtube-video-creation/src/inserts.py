@@ -36,8 +36,12 @@ def plan(script: Script, config: ProjectConfig) -> Inserts:
     titles = config.titles
     inserts = Inserts(intro=max(0.0, titles.intro), outro=max(0.0, titles.outro))
     if titles.chapter > 0:
-        start = 1 if inserts.intro > 0 else 0
-        for index in range(start, len(script.scenes)):
+        # **最初の章にはカードを入れない。**冒頭タイトルの有無に関係なく入れない。
+        # 以前は「冒頭タイトルがあるときだけ飛ばす」だったため、冒頭タイトルを 0 に
+        # した瞬間、代わりに章タイトル（「オープニング 1/6」）が1.4秒出るようになった
+        # （2026-09-07、書き出して初めて気づいた）。**0秒目から本編を始める**のが狙いで、
+        # 静止したカードの種類を入れ替えても意味がない。
+        for index in range(1, len(script.scenes)):
             inserts.chapters[index] = titles.chapter
     return inserts
 

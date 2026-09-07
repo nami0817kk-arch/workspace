@@ -328,3 +328,32 @@ def test_引用カードの名前が英語でも出る(tmp_path):
            1000, str(cfg.video.font_path()), out, str(cfg.video.latin_font_path()))
 
     assert out.exists() and out.stat().st_size > 0
+
+
+# 日本語話者に向けた動画なのに、引用カードのいちばん大きい文字が英語の長文に
+# なっていた（2026-09-07 実測。本編の画面の6割を占めていた）。訳を主役にする。
+
+def test_引用カードは訳を主役にする(fonts):
+    from src.cards import _quote
+
+    font, latin = fonts
+
+    blocks = _quote(
+        {"type": "quote", "text": "It was a decision that hurt.", "translation": "つらい決断だった。"},
+        900, font, latin,
+    )
+    # 先頭が訳、末尾が原文。訳のほうが大きい＝高さも大きい
+    assert blocks[0]["height"] > blocks[-1]["height"]
+
+
+def test_訳が無ければ原文がそのまま主役(fonts):
+    from src.cards import _quote
+
+    font, latin = fonts
+
+    only = _quote({"type": "quote", "text": "Here we go!"}, 900, font, latin)
+    withtr = _quote(
+        {"type": "quote", "text": "Here we go!", "translation": "決まりました"}, 900, font, latin
+    )
+    # 訳が無いときの原文は、訳があるときの原文より大きい（46 と 32）
+    assert only[-1]["height"] > withtr[-1]["height"]

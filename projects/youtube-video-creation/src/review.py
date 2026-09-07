@@ -63,6 +63,10 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     findings.append(_caption_badges(out_dir / "subtitles.srt"))
     findings.append(_still_length(out_dir / "script.json"))
     findings.append(_screen_change(out_dir / "script.json"))
+    findings.append(check_card_hold(out_dir / "script.json"))
+    reaction = check_reaction_layer(script)
+    if reaction is not None:
+        findings.append(reaction)
     findings.append(_thumbnail_face(script))
     findings.append(_photo_credits(script, out_dir))
     findings.append(_double_marks(script))
@@ -146,6 +150,12 @@ def _still_length(script_json: Path) -> Finding:
 
 
 SAME_SCREEN_MAX = 20.0
+# 画面の主役（カードと写真）が同じまま続いてよい時間。
+# _screen_change は「テロップ＋カード＋画像」の組で見るので、**テロップだけ
+# 変われば通る**。実測（2026-09-07、出力8本）では、その状態で
+# 本編21.9〜26.5秒 / ショート17.7〜23.1秒 が同じカードのままだった。
+# ショートは尺の6〜7割。伸びている参考チャンネルは8秒で必ず変えている。
+CARD_HOLD_MAX = 12.0
 
 
 def _screen_change(script_json: Path) -> Finding:
@@ -377,6 +387,70 @@ def _volume(ffmpeg: str, args: list[str]):
         (int(size.group(1)), int(size.group(2))) if size else None,
         float(mean.group(1)) if mean else None,
     )
+
+
+# 「どう受け止められたか」に類する節。ここは反応を見せる場所なのに、
+# カードが無いと語りだけになる。実測（2026-09-07）で、出力8本のどれにも
+# reactions カードが1枚も無かった。伸びている参考チャンネルは、
+# ネット民のコメントを常に画面の層として出している。
+REACTION_HEADINGS = ("受け止め", "反応", "声", "評価は")
+
+
+def check_reaction_layer(script: Script) -> Finding | None:
+    """反応の節があるのに、画面に反応が出ていないか。
+
+    節が無い回では黙る（毎回うるさく言わない）。カードの型も数える道具
+    （`reactions` コマンド）も既にあるので、足りていないのは画面に出す一手だけ。
+    """
+    scenes = [s for s in script.scenes if any(w in (s.title or "") for w in REACTION_HEADINGS)]
+    if not scenes:
+        return None
+
+    cards = script.cards or {}
+    kinds = {str((cards.get(line.card) or {}).get("type", "")).lower()
+             for scene in scenes for line in scene.lines if getattr(line, "card", None)}
+    if "reactions" in kinds:
+        return Finding(True, "反応の層", "反応カードが出ています")
+    titles = " / ".join(s.title for s in scenes)
+    return Finding(
+        False,
+        "反応の層",
+        f"『{titles}』に反応カードがありません。"
+        "reactions で数えてからカードにしてください（語りだけだと画面が持ちません）",
+    )
+
+
+def check_card_hold(script_json: Path, limit: float = CARD_HOLD_MAX) -> Finding:
+    """画面の主役が同じまま続く時間。テロップの変化は数えない。
+
+    下のテロップが変わっていても、カードと写真が同じなら画面はほぼ止まって見える。
+    見ているのは「読む文字」ではなく「絵が変わったか」。
+    """
+    import json
+
+    if not script_json.exists():
+        return Finding(False, "カードの持ち", "script.json がありません")
+    data = json.loads(script_json.read_text(encoding="utf-8"))
+
+    worst, span, current, label = 0.0, 0.0, None, ""
+    for scene in data.get("scenes", []):
+        for line in scene.get("lines", []):
+            look = (line.get("card") or "", line.get("image") or "")
+            if look == current:
+                span += float(line.get("duration") or 0)
+            else:
+                current, span = look, float(line.get("duration") or 0)
+            if span > worst:
+                worst, label = span, (look[0] or look[1] or "（カードも写真も無い）")
+
+    if worst > limit:
+        return Finding(
+            False,
+            "カードの持ち",
+            f"{worst:.0f}秒 同じ絵のままです（上限{limit:.0f}秒）: {label[:24]}。"
+            "カードを分けるか、写真を挟んでください",
+        )
+    return Finding(True, "カードの持ち", f"同じ絵の最長 {worst:.0f}秒")
 
 
 def _tags(script: Script) -> Finding:

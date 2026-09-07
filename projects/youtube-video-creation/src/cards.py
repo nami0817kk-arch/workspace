@@ -97,7 +97,6 @@ def _quote(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict
         _font_for(str(spec.get("label") or ""), font_path, latin_path), 30
     )
     text_font = ImageFont.truetype(_font_for(str(spec.get("text") or ""), font_path, latin_path), 46)
-    sub_font = ImageFont.truetype(font_path, 34)
 
     blocks: list[dict] = []
     # 出典は概要欄に書く運用なので、label を明示したときだけチップを出す
@@ -117,12 +116,22 @@ def _quote(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict
     text = str(spec.get("text") or "").strip()
     if not text:
         raise CardError("quote カードには text が必要です")
-    blocks.append(_text_block(text, text_font, inner, TEXT, 14))
 
     translation = str(spec.get("translation") or "").strip()
     if translation:
+        # **訳を主役にする**（2026-09-07）。日本語話者に向けた動画なのに、
+        # 画面のいちばん大きい文字が英語の長文になっていた（実測で画面の6割）。
+        # 原文は消さない。事実の扱いとして原文は残す決まりなので、小さく添える。
+        primary_font = ImageFont.truetype(
+            _font_for(translation, font_path, latin_path), 46
+        )
+        blocks.append(_text_block(translation, primary_font, inner, TEXT, 14))
         blocks.append({"height": 16, "draw": lambda draw, y: None})
-        blocks.append(_text_block(translation, sub_font, inner, SUB, 10))
+        original_font = ImageFont.truetype(_font_for(text, font_path, latin_path), 32)
+        blocks.append(_text_block(text, original_font, inner, SUB, 10))
+        return blocks
+
+    blocks.append(_text_block(text, text_font, inner, TEXT, 14))
     return blocks
 
 

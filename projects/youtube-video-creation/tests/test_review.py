@@ -424,3 +424,40 @@ def test_測れなければ黙る():
     from src.review import check_short_opening
 
     assert check_short_opening(Path("video.mp4"), measure=lambda video, seconds: None) is None
+
+
+# 伸びている参考チャンネルはネット民のコメントを常に画面の層として出している。
+# こちらは reactions カードの型も数える道具もあるのに、出力8本で1枚も使われて
+# いなかった（2026-09-07 実測）。節があるのにカードが無いときだけ言う。
+
+def _script_with(title, card_type=None):
+    from src.script_model import Line, Scene, Script
+
+    line = Line(speaker="キャスター", text="本文", card="c1" if card_type else None)
+    return Script(
+        title="見出し",
+        scenes=[Scene(title=title, lines=[line])],
+        cards={"c1": {"type": card_type}} if card_type else {},
+    )
+
+
+def test_反応の節にカードが無ければ落とす():
+    from src.review import check_reaction_layer
+
+    finding = check_reaction_layer(_script_with("どう受け止められたか"))
+    assert finding is not None and not finding.ok
+    assert "reactions" in finding.detail
+
+
+def test_反応カードがあれば通す():
+    from src.review import check_reaction_layer
+
+    finding = check_reaction_layer(_script_with("どう受け止められたか", "reactions"))
+    assert finding is not None and finding.ok
+
+
+def test_反応の節が無い回では黙る():
+    """毎回うるさく言わない。移籍の回に反応を強要しない。"""
+    from src.review import check_reaction_layer
+
+    assert check_reaction_layer(_script_with("何が起きたか")) is None
