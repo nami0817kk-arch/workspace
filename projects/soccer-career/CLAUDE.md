@@ -30,6 +30,7 @@ lib/
   game/career_engine.dart  シーズンの組み立て・順位表・移籍
   game/world.dart          11の国・3連盟・リーグのピラミッド・外国人ルール
   game/eligibility.dart    外国人枠と労働許可の判定
+  game/competitions.dart   大陸カップ・昇格プレーオフ・移籍の窓・登録メンバー
   game/names.dart          旧API。World に委譲するだけ
   game/national.dart       架空の代表チームと代表ウィークの節
   game/career_engine_extras.dart  代表招集・監督の目標・契約年数
@@ -40,6 +41,7 @@ lib/
   models/objective.dart    監督の目標
   models/country.dart      国・連盟・暦・外国人ルール・労働許可の型
   models/nationality.dart  主国籍＋ルーツ＋帰化＋自国育ち
+  models/competition.dart  大陸カップの成績・移籍の窓・登録の可否
   state/career_controller.dart  画面が購読する状態
   ui/screens/              選手作成・拠点・試合・シーズン終了
 ```
@@ -73,6 +75,14 @@ lib/
   直接行けないことで、「規制の緩い国を経由して実績を積む」という現実のキャリア設計が
   自然に生まれる。ここを緩めると世界が平坦になる。
 - **同じ国に5年で帰化する**（`advanceSeason`）。外国人枠から外れ、行ける先が広がる。
+- **外国人枠の使用数は見積もりで出す**（`Eligibility.usedSlots`）。他クラブの選手を1人ずつ
+  持つとデータが重くなるため、クラブの強さから逆算する。**余裕を持たせすぎると枠が
+  塞がらず制度が死ぬ**（0.9 を掛けていて実際に死んでいた）。上位クラブは使い切っている前提。
+- **登録メンバー25人枠**（`Competitions.registrationFor`）。外国人枠が埋まっているか、
+  クラブの中で力が足りないと登録外になり、1試合も出られない。怪我と違って理由が
+  分かりにくいので、画面では理由まで書く。
+- **大陸カップ・プレーオフ・移籍の窓はシーズンの外側**（`Competitions`）。試合中の操作は
+  増やさず、シーズンの区切りで結果として現れる形に保つ。
 - **引退**は 33 歳から選べ、37 歳のシーズン終了で強制。引退後は `retired` フラグで
   試合をせず通算成績だけを見せる。古い保存データにはフラグが無いので、無ければ現役扱い。
 - 保存データが壊れていたら**捨てて新規扱いにする**（`SaveRepository.load`）。
