@@ -58,4 +58,23 @@ class Formulas {
 
   /// 選手の総合力と評価点から、移籍先クラブの強さの上限を決める係数。
   static const double transferReachFactor = 1.08;
+
+  /// 2部でこの順位以内なら昇格。
+  static const int promotionPlaces = 2;
+
+  /// 1部でこの順位以下なら降格（20クラブ中）。
+  static const int relegationFrom = 18;
+
+  /// 昇格・降格したクラブの強さの補正。同じクラブでも上のリーグでは相対的に弱い。
+  static const int promotionStrengthBonus = 6;
+
+  /// この年齢からシーズン終了時に引退を選べる。
+  static const int retirementOptionalAge = 33;
+
+  /// この年齢でシーズンを終えたら引退する。
+  static const int retirementForcedAge = 37;
+
+  /// 成長判定で、その試合に成功した手の能力が選ばれる確率。
+  /// 残りは無作為。プレースタイルが選手を形作るが、偏りすぎない。
+  static const double growthFocusChance = 0.7;
 }
