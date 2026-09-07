@@ -4,6 +4,7 @@ import '../models/attributes.dart';
 import '../models/club.dart';
 import '../models/player.dart';
 import '../models/season.dart';
+import '../models/traits.dart';
 import 'formulas.dart';
 import 'scenarios.dart';
 
@@ -50,7 +51,7 @@ class MatchInProgress {
   final Appearance appearance;
   final List<Scenario> scenarios;
 
-  /// 各局面が起きる時間（分）。雰囲気のためのもので、判定には使わない。
+  /// 各局面が起きる時間（分）。特性の判定と表示に使う。
   final List<int> minutes;
 
   final Player player;
@@ -65,6 +66,9 @@ class MatchInProgress {
   int get currentIndex => _index;
   Scenario get current => scenarios[_index];
   int get currentMinute => minutes[_index];
+
+  /// 直前の手が失敗していたか。「負けず嫌い」の判定に使う。
+  bool get afterFailure => resolutions.isNotEmpty && !resolutions.last.success;
 
   /// 「前半 23分」のような表示用の文字列。
   static String minuteLabel(int minute) =>
@@ -84,10 +88,26 @@ class MatchInProgress {
     return total.clamp(Formulas.minRating, Formulas.maxRating);
   }
 
+  /// この局面でその手を選んだときの成功率。特性とコンディションを含む。
+  ///
+  /// 画面に出す数字もこれを使う。表示と判定がずれると、
+  /// 「70%と書いてあったのに」という不信感になる。
+  double chanceFor(ScenarioOption option) {
+    if (isFinished) return 0;
+    final base = successChance(player.attributes[option.key], option.difficulty);
+    final trait = player.traits.chanceBonus(
+      minute: currentMinute,
+      home: home,
+      outcome: option.outcome,
+      afterFailure: afterFailure,
+    );
+    final condition = conditionModifier(player.condition);
+    return (base + trait + condition).clamp(0.05, 0.95);
+  }
+
   /// 選んだ手を解決して次の局面へ進める。
   ScenarioResolution choose(ScenarioOption option) {
-    final attribute = player.attributes[option.key];
-    final chance = successChance(attribute, option.difficulty);
+    final chance = chanceFor(option);
     final success = _random.nextDouble() < chance;
 
     var delta = success ? Formulas.ratingPerSuccess : Formulas.ratingPerFailure;
@@ -108,7 +128,7 @@ class MatchInProgress {
     return resolution;
   }
 
-  /// 能力値と難易度から成功率を出す。
+  /// 能力値と難易度から成功率を出す（特性・コンディション抜きの素の値）。
   ///
   /// 能力値が難易度ちょうどでも五分にはしない。難しい手を選ぶことに
   /// リスクを残さないと、常に一番おいしい選択肢を押すだけのゲームになる。
@@ -116,6 +136,10 @@ class MatchInProgress {
     final chance = 0.42 + (attribute - difficulty) * 0.011;
     return chance.clamp(0.05, 0.92);
   }
+
+  /// コンディションが成功率に与える増減。
+  static double conditionModifier(int condition) =>
+      (condition - Formulas.conditionBaseline) * Formulas.conditionChanceSlope;
 
   /// 試合結果を確定させる。
   ///
@@ -149,6 +173,17 @@ class MatchInProgress {
     }
     return goals;
   }
+}
+
+/// 練習と試合の消耗をまとめた1週間の結果。
+class WeekOutcome {
+  const WeekOutcome({required this.attributes, required this.condition, required this.trained});
+
+  final Attributes attributes;
+  final int condition;
+
+  /// 練習で伸びた能力。伸びなければ null。
+  final AttributeKey? trained;
 }
 
 /// 試合を組み立てる。
@@ -210,7 +245,7 @@ class MatchEngine {
   List<int> _minutesFor(int count, Appearance appearance) {
     if (count == 0) return const [];
     final from = appearance == Appearance.sub ? 60 : 5;
-    final to = 90;
+    const to = 90;
     final span = (to - from) ~/ count;
     return [
       for (var i = 0; i < count; i++)
@@ -224,8 +259,8 @@ class MatchEngine {
   /// 選び方が選手を形作るのがキャリアものの面白さで、
   /// ただの乱数だと何を選んでも同じ選手になる。
   ///
-  /// ピークを過ぎると伸びにくくなり、さらに歳を取ると落ちる。
-  /// 現役の終わりが来ることが、キャリアものの緊張感になる。
+  /// ポテンシャルに達したら伸びない。ピークを過ぎると伸びにくくなり、
+  /// さらに歳を取ると落ちる。特性で前後する。
   Attributes grow(
     Player player,
     double? rating, {
@@ -233,21 +268,53 @@ class MatchEngine {
   }) {
     if (rating == null) return player.attributes;
 
-    if (player.age >= Formulas.declineAge && _random.nextDouble() < 0.25) {
+    final declineAge = Formulas.declineAge + player.traits.declineAgeOffset;
+    if (player.age >= declineAge && _random.nextDouble() < 0.25) {
       return player.attributes.bump(_randomKey(), -1);
     }
 
     if (rating < Formulas.growthRatingThreshold) return player.attributes;
+    if (player.atPotential) return player.attributes;
 
-    final ageFactor = player.age <= Formulas.peakAge ? 1.0 : 0.4;
+    final peakAge = Formulas.peakAge + player.traits.peakAgeOffset;
+    final ageFactor = player.age <= peakAge ? 1.0 : 0.4;
     final margin = rating - Formulas.growthRatingThreshold;
-    final chance = (0.18 + margin * 0.22) * ageFactor;
+    final chance =
+        (0.18 + margin * 0.22) * ageFactor * player.traits.growthFactor(player.age);
     if (_random.nextDouble() >= chance) return player.attributes;
 
     final focus =
         used.isNotEmpty && _random.nextDouble() < Formulas.growthFocusChance;
     final key = focus ? used[_random.nextInt(used.length)] : _randomKey();
     return player.attributes.bump(key, 1);
+  }
+
+  /// 試合後の1週間。試合の消耗と、練習または休養を反映する。
+  ///
+  /// 練習はポテンシャルに達していなければ一定確率で1伸びる。
+  /// 休養は伸びない代わりにコンディションが戻る。疲れたまま練習を続けると
+  /// 試合の成功率で払うことになる。
+  WeekOutcome applyWeek(Player player, {required AttributeKey? training, required bool played}) {
+    var condition = player.condition - (played ? Formulas.matchConditionCost : 0);
+    var attributes = player.attributes;
+    AttributeKey? trained;
+
+    if (training == null) {
+      condition += Formulas.restRecovery;
+    } else {
+      condition -= Formulas.trainingConditionCost;
+      final canGrow = attributes.overallFor(player.position) < player.potential;
+      if (canGrow && _random.nextDouble() < Formulas.trainingGrowthChance) {
+        attributes = attributes.bump(training, 1);
+        trained = training;
+      }
+    }
+
+    return WeekOutcome(
+      attributes: attributes,
+      condition: condition.clamp(0, Formulas.conditionMax).toInt(),
+      trained: trained,
+    );
   }
 
   AttributeKey _randomKey() =>

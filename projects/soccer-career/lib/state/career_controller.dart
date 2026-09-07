@@ -3,9 +3,9 @@ import 'package:flutter/foundation.dart';
 import '../data/save_repository.dart';
 import '../game/career_engine.dart';
 import '../game/match_engine.dart';
+import '../models/agent.dart';
 import '../models/attributes.dart';
 import '../models/career.dart';
-import '../models/club.dart';
 import '../models/season.dart';
 
 /// アプリ全体の状態。画面はこれを購読する。
@@ -26,6 +26,9 @@ class CareerController extends ChangeNotifier {
   MatchInProgress? _inProgress;
   bool _loading = true;
 
+  /// 直近の1週間で練習により伸びた能力。画面で一度見せたら消す。
+  AttributeKey? lastTrained;
+
   CareerState? get state => _state;
   MatchInProgress? get currentMatch => _inProgress;
   bool get loading => _loading;
@@ -41,9 +44,23 @@ class CareerController extends ChangeNotifier {
     required String name,
     required Position position,
     required int age,
+    required Agent agent,
   }) async {
-    _state = _career.startCareer(name: name, position: position, age: age);
+    _state = _career.startCareer(
+      name: name,
+      position: position,
+      age: age,
+      agent: agent,
+    );
     _inProgress = null;
+    await _persist();
+  }
+
+  /// 今週の練習を決める。null は休養。
+  Future<void> setTraining(AttributeKey? focus) async {
+    final state = _state;
+    if (state == null) return;
+    state.training = focus;
     await _persist();
   }
 
@@ -72,7 +89,7 @@ class CareerController extends ChangeNotifier {
     return resolution;
   }
 
-  /// 試合を終えて結果を反映する。成長判定もここで行う。
+  /// 試合を終えて結果を反映する。成長判定と1週間の練習・消耗もここで行う。
   Future<MatchResult?> finishMatch() async {
     final state = _state;
     final match = _inProgress;
@@ -80,13 +97,26 @@ class CareerController extends ChangeNotifier {
 
     final result = match.finish();
     _career.applyResult(state, result);
-    state.player = state.player.copyWith(
+
+    var player = state.player.copyWith(
       attributes: _match.grow(
         state.player,
         result.rating,
         used: match.successfulKeys,
       ),
     );
+    final week = _match.applyWeek(
+      player,
+      training: state.training,
+      played: result.appearance != Appearance.benched,
+    );
+    player = player.copyWith(
+      attributes: week.attributes,
+      condition: week.condition,
+    );
+    lastTrained = week.trained;
+    state.player = player;
+
     _inProgress = null;
     await _persist();
     return result;
@@ -95,24 +125,36 @@ class CareerController extends ChangeNotifier {
   List<TransferOffer> get offers =>
       _state == null ? const [] : _career.offersFor(_state!);
 
+  TransferOffer? get renewalOffer =>
+      _state == null ? null : _career.renewalOffer(_state!);
+
   ClubFate get fate =>
       _state == null ? ClubFate.stay : _career.fateOf(_state!);
 
   bool get canRetire => _state != null && _career.canRetire(_state!);
   bool get mustRetire => _state != null && _career.mustRetire(_state!);
 
-  Future<void> retire() async {
+  (NegotiationResult, TransferOffer?) negotiate(TransferOffer offer) {
+    final state = _state;
+    if (state == null) return (NegotiationResult.refused, offer);
+    return _career.negotiate(state, offer);
+  }
+
+  int takeHome(int salary) =>
+      _state == null ? salary : _career.takeHome(_state!, salary);
+
+  Future<void> advanceSeason({required TransferOffer accepted}) async {
     final state = _state;
     if (state == null) return;
-    _state = _career.retire(state);
+    _state = _career.advanceSeason(state, accepted: accepted);
     _inProgress = null;
     await _persist();
   }
 
-  Future<void> advanceSeason({Club? moveTo}) async {
+  Future<void> retire() async {
     final state = _state;
     if (state == null) return;
-    _state = _career.advanceSeason(state, moveTo: moveTo);
+    _state = _career.retire(state);
     _inProgress = null;
     await _persist();
   }

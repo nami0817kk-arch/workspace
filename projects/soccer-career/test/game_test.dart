@@ -6,6 +6,7 @@ import 'package:soccer_career/game/formulas.dart';
 import 'package:soccer_career/game/match_engine.dart';
 import 'package:soccer_career/game/names.dart';
 import 'package:soccer_career/game/scenarios.dart';
+import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/attributes.dart';
 import 'package:soccer_career/models/career.dart';
 import 'package:soccer_career/models/player.dart';
@@ -21,7 +22,7 @@ Attributes attrs({int all = 50, int shooting = 50}) => Attributes(
     );
 
 Player playerWith({
-  Position position = Position.fw,
+  Position position = Position.st,
   int age = 20,
   Attributes? attributes,
 }) =>
@@ -30,7 +31,10 @@ Player playerWith({
       age: age,
       position: position,
       attributes: attributes ?? attrs(),
+      potential: 99,
     );
+
+final agent = Agent.pool.first;
 
 void main() {
   group('Attributes', () {
@@ -44,10 +48,10 @@ void main() {
         physical: 50,
       );
       // シュートが高い選手は FW で最も高く評価される。
-      expect(a.overallFor(Position.fw),
-          greaterThan(a.overallFor(Position.df)));
-      expect(a.overallFor(Position.fw),
-          greaterThan(a.overallFor(Position.mf)));
+      expect(a.overallFor(Position.st),
+          greaterThan(a.overallFor(Position.cb)));
+      expect(a.overallFor(Position.st),
+          greaterThan(a.overallFor(Position.cm)));
     });
 
     test('bump は上下限で丸める', () {
@@ -230,7 +234,7 @@ void main() {
     test('出場しなかった試合では伸びない', () {
       final engine = MatchEngine(random: Random(1));
       final player = playerWith();
-      expect(engine.grow(player, null).overallFor(Position.fw),
+      expect(engine.grow(player, null).overallFor(Position.st),
           player.overall);
     });
 
@@ -258,7 +262,7 @@ void main() {
   group('CareerEngine', () {
     test('キャリアは2部のクラブから始まる', () {
       final state = CareerEngine(random: Random(1))
-          .startCareer(name: 'A', position: Position.mf, age: 17);
+          .startCareer(name: 'A', position: Position.cm, age: 17, agent: agent);
       expect(state.club.tier, 2);
       expect(state.league.length, Formulas.clubsPerLeague);
       expect(state.fixtures.length, Formulas.matchesPerSeason);
@@ -267,14 +271,14 @@ void main() {
 
     test('日程に自分のクラブは入らない', () {
       final state = CareerEngine(random: Random(2))
-          .startCareer(name: 'A', position: Position.fw, age: 18);
+          .startCareer(name: 'A', position: Position.st, age: 18, agent: agent);
       expect(state.fixtures.contains(state.club.id), isFalse);
     });
 
     test('結果を反映すると順位表が全クラブ進む', () {
       final engine = CareerEngine(random: Random(3));
       final state =
-          engine.startCareer(name: 'A', position: Position.df, age: 19);
+          engine.startCareer(name: 'A', position: Position.cb, age: 19, agent: agent);
       engine.applyResult(
         state,
         MatchResult(
@@ -300,15 +304,15 @@ void main() {
     test('成績が振るわないとオファーは来ない', () {
       final engine = CareerEngine(random: Random(4));
       final state =
-          engine.startCareer(name: 'A', position: Position.fw, age: 20);
+          engine.startCareer(name: 'A', position: Position.st, age: 20, agent: agent);
       expect(engine.offersFor(state), isEmpty);
     });
 
     test('シーズンを進めると年齢と年が上がり、記録が残る', () {
       final engine = CareerEngine(random: Random(6));
       final state =
-          engine.startCareer(name: 'A', position: Position.mf, age: 18);
-      final next = engine.advanceSeason(state);
+          engine.startCareer(name: 'A', position: Position.cm, age: 18, agent: agent);
+      final next = engine.advanceSeason(state, accepted: engine.renewalOffer(state));
       expect(next.year, state.year + 1);
       expect(next.player.age, state.player.age + 1);
       expect(next.history.length, 1);
@@ -321,7 +325,7 @@ void main() {
     test('JSON を往復しても状態が保たれる', () {
       final engine = CareerEngine(random: Random(8));
       final state =
-          engine.startCareer(name: '往復テスト', position: Position.df, age: 17);
+          engine.startCareer(name: '往復テスト', position: Position.cb, age: 17, agent: agent);
       engine.applyResult(
         state,
         MatchResult(
@@ -420,10 +424,10 @@ void main() {
       }
     });
 
-    test('局面IDが重複していない', () {
+    test('局面IDが重複していない（ファミリー単位。複数ポジションが同じ局面を共有する）', () {
       final ids = [
-        for (final position in Position.values)
-          ...ScenarioPool.forPosition(position).map((s) => s.id),
+        for (final family in ScenarioFamily.values)
+          ...ScenarioPool.forFamily(family).map((s) => s.id),
       ];
       expect(ids.toSet().length, ids.length);
     });

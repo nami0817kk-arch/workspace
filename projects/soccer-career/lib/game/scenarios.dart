@@ -60,11 +60,228 @@ class Scenario {
 class ScenarioPool {
   const ScenarioPool._();
 
-  static List<Scenario> forPosition(Position position) => switch (position) {
-        Position.fw => forward,
-        Position.mf => midfield,
-        Position.df => defence,
+  static List<Scenario> forPosition(Position position) =>
+      forFamily(position.family);
+
+  static List<Scenario> forFamily(ScenarioFamily family) => switch (family) {
+        ScenarioFamily.goalkeeper => goalkeeper,
+        ScenarioFamily.defence => defence,
+        ScenarioFamily.midfield => midfield,
+        ScenarioFamily.forward => forward,
       };
+
+  static const List<Scenario> goalkeeper = [
+    Scenario(
+      id: 'gk-oneonone',
+      situation: '相手FWが抜け出した。1対1。距離を詰めるか、構えて待つか。',
+      options: [
+        ScenarioOption(
+          label: '飛び出して距離を詰める',
+          key: AttributeKey.goalkeeping,
+          difficulty: 70,
+          outcome: Outcome.play,
+          successText: '一気に間合いを詰め、足元でシュートを止めた。',
+          failureText: '飛び出しが早く、ループで頭上を抜かれた。',
+        ),
+        ScenarioOption(
+          label: '構えてコースを消す',
+          key: AttributeKey.goalkeeping,
+          difficulty: 58,
+          outcome: Outcome.play,
+          successText: '体を大きく見せてコースを消し、正面で止めた。',
+          failureText: '読みが外れ、逆を突かれた。',
+        ),
+        ScenarioOption(
+          label: '足を使って時間を稼ぐ',
+          key: AttributeKey.pace,
+          difficulty: 50,
+          outcome: Outcome.play,
+          successText: '寄せる角度を変えて遅らせ、DFの帰陣を待てた。',
+          failureText: '中途半端な位置取りで、簡単に決められた。',
+        ),
+      ],
+    ),
+    Scenario(
+      id: 'gk-cross',
+      situation: 'ゴール前に高いクロス。相手FWと自分のDFが競っている。',
+      options: [
+        ScenarioOption(
+          label: 'パンチングで弾く',
+          key: AttributeKey.physical,
+          difficulty: 62,
+          outcome: Outcome.play,
+          successText: '混戦を避けて遠くへ弾き出した。',
+          failureText: 'パンチングが弱く、こぼれ球を押し込まれかけた。',
+        ),
+        ScenarioOption(
+          label: 'キャッチに行く',
+          key: AttributeKey.goalkeeping,
+          difficulty: 72,
+          outcome: Outcome.play,
+          successText: '最高点で掴み、そのまま速攻を始めた。',
+          failureText: '手から弾き、目の前に落としてしまった。',
+        ),
+        ScenarioOption(
+          label: 'ラインに留まってDFに任せる',
+          key: AttributeKey.defending,
+          difficulty: 46,
+          outcome: Outcome.play,
+          successText: 'DFがクリアしやすい位置を保ち、危険を消した。',
+          failureText: 'DFと譲り合い、誰も触れなかった。',
+        ),
+      ],
+    ),
+    Scenario(
+      id: 'gk-pk',
+      situation: 'PKを与えてしまった。キッカーが助走に入る。',
+      options: [
+        ScenarioOption(
+          label: '読んで先に飛ぶ',
+          key: AttributeKey.goalkeeping,
+          difficulty: 78,
+          outcome: Outcome.play,
+          successText: '読み勝った。両手で弾き出し、スタジアムが沸いた。',
+          failureText: '逆に飛んだ。ボールは反対側へ。',
+        ),
+        ScenarioOption(
+          label: 'ぎりぎりまで待つ',
+          key: AttributeKey.pace,
+          difficulty: 74,
+          outcome: Outcome.play,
+          successText: '最後まで待ち、反応でセーブした。',
+          failureText: '待ちすぎて、隅への強いボールに届かなかった。',
+        ),
+        ScenarioOption(
+          label: '中央で構える',
+          key: AttributeKey.physical,
+          difficulty: 66,
+          outcome: Outcome.play,
+          successText: 'キッカーが迷った。真ん中に蹴ったボールを止めた。',
+          failureText: 'キッカーは迷わず隅へ蹴った。',
+        ),
+      ],
+    ),
+    Scenario(
+      id: 'gk-distribution',
+      situation: 'ボールをキャッチした。相手は前掛かりで、前線に味方が1人残っている。',
+      options: [
+        ScenarioOption(
+          label: '前線へロングスローを投げる',
+          key: AttributeKey.passing,
+          difficulty: 68,
+          outcome: Outcome.assist,
+          successText: '一本のスローで前線へ。味方が抜け出して決めた。',
+          failureText: '距離が足りず、相手に拾われた。',
+        ),
+        ScenarioOption(
+          label: '大きく蹴り出す',
+          key: AttributeKey.physical,
+          difficulty: 50,
+          outcome: Outcome.play,
+          successText: '陣地を大きく回復し、相手の圧力を逃した。',
+          failureText: 'キックが流れ、相手のスローインになった。',
+        ),
+        ScenarioOption(
+          label: '近くのDFに繋ぐ',
+          key: AttributeKey.passing,
+          difficulty: 42,
+          outcome: Outcome.play,
+          successText: '落ち着いて繋ぎ、ビルドアップを始めた。',
+          failureText: 'DFへのパスが弱く、相手FWに狙われた。',
+        ),
+      ],
+    ),
+    Scenario(
+      id: 'gk-longshot',
+      situation: '25mからのミドルシュート。ボールが揺れながら飛んでくる。',
+      options: [
+        ScenarioOption(
+          label: 'キャッチする',
+          key: AttributeKey.goalkeeping,
+          difficulty: 74,
+          outcome: Outcome.play,
+          successText: '揺れるボールを胸に収めた。',
+          failureText: '手から弾き、こぼれ球を詰められた。',
+        ),
+        ScenarioOption(
+          label: '横に弾く',
+          key: AttributeKey.goalkeeping,
+          difficulty: 58,
+          outcome: Outcome.play,
+          successText: '無理をせず、コーナーへ弾き出した。',
+          failureText: '弾いた先に相手がいた。',
+        ),
+        ScenarioOption(
+          label: '体で受ける',
+          key: AttributeKey.physical,
+          difficulty: 52,
+          outcome: Outcome.play,
+          successText: '体の正面で受け止め、こぼれ球も自分で抑えた。',
+          failureText: '当たったボールが股を抜けた。',
+        ),
+      ],
+    ),
+    Scenario(
+      id: 'gk-sweeper',
+      situation: 'DFの背後に長いボール。相手FWと自分、どちらが先に触るか。',
+      options: [
+        ScenarioOption(
+          label: 'エリアの外まで飛び出してクリア',
+          key: AttributeKey.pace,
+          difficulty: 70,
+          outcome: Outcome.play,
+          successText: 'エリア外で先に触り、大きくクリアした。',
+          failureText: '間に合わず、無人のゴールへ蹴り込まれた。',
+        ),
+        ScenarioOption(
+          label: 'エリア内で待って処理する',
+          key: AttributeKey.goalkeeping,
+          difficulty: 56,
+          outcome: Outcome.play,
+          successText: '慌てず待ち、エリア内で確実に処理した。',
+          failureText: '待ちすぎて、FWにボールを収められた。',
+        ),
+        ScenarioOption(
+          label: 'DFに声をかけて任せる',
+          key: AttributeKey.defending,
+          difficulty: 48,
+          outcome: Outcome.play,
+          successText: '声で味方を動かし、DFが先に触った。',
+          failureText: '指示が伝わらず、DFとぶつかった。',
+        ),
+      ],
+    ),
+    Scenario(
+      id: 'gk-lastminute',
+      situation: '後半アディショナルタイム、1点リード。相手GKまで上がってきたコーナー。',
+      options: [
+        ScenarioOption(
+          label: '飛び出してキャッチ',
+          key: AttributeKey.goalkeeping,
+          difficulty: 72,
+          outcome: Outcome.play,
+          successText: '混戦の中で掴み切った。試合を締めた。',
+          failureText: '触れず、こぼれ球を押し込まれた。',
+        ),
+        ScenarioOption(
+          label: 'ライン上で待つ',
+          key: AttributeKey.physical,
+          difficulty: 60,
+          outcome: Outcome.play,
+          successText: 'ライン上で反応し、至近距離を止めた。',
+          failureText: '密集で視界を塞がれ、反応できなかった。',
+        ),
+        ScenarioOption(
+          label: 'クリア後に前へ投げて速攻',
+          key: AttributeKey.passing,
+          difficulty: 64,
+          outcome: Outcome.assist,
+          successText: 'クリアを拾って前へ投げ、無人のゴールに味方が決めた。',
+          failureText: '投げたボールが弱く、相手に渡った。',
+        ),
+      ],
+    ),
+  ];
 
   static const List<Scenario> forward = [
     Scenario(

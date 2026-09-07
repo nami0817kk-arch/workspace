@@ -7,7 +7,7 @@ import '../../state/career_controller.dart';
 import 'match_screen.dart';
 import 'season_end_screen.dart';
 
-/// キャリアの拠点。次の試合・成績・順位表・これまでの記録をここから見る。
+/// キャリアの拠点。次の試合・練習・成績・順位表・これまでの記録をここから見る。
 class HubScreen extends StatelessWidget {
   const HubScreen({super.key, required this.controller});
 
@@ -85,6 +85,7 @@ class HubScreen extends StatelessWidget {
               stats: stats,
               onPlay: () => _playNext(context),
               onEndSeason: () => _endSeason(context),
+              onTraining: controller.setTraining,
             ),
             _TableTab(state: state),
             _CareerTab(state: state),
@@ -101,12 +102,14 @@ class _HomeTab extends StatelessWidget {
     required this.stats,
     required this.onPlay,
     required this.onEndSeason,
+    required this.onTraining,
   });
 
   final CareerState state;
   final SeasonStats stats;
   final VoidCallback onPlay;
   final VoidCallback onEndSeason;
+  final Future<void> Function(AttributeKey?) onTraining;
 
   @override
   Widget build(BuildContext context) {
@@ -118,6 +121,10 @@ class _HomeTab extends StatelessWidget {
       children: [
         _PlayerCard(state: state),
         const SizedBox(height: 16),
+        if (!finished) ...[
+          _TrainingCard(state: state, onTraining: onTraining),
+          const SizedBox(height: 16),
+        ],
         Card(
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -214,6 +221,8 @@ class _PlayerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final player = state.player;
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -236,18 +245,138 @@ class _PlayerCard extends StatelessWidget {
                       Text(
                         '${player.position.label}  ${player.age}歳  ·  '
                         '${state.club.name}（${state.club.tier}部）',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant),
+                        style: muted,
+                      ),
+                      Text(
+                        '年俸 ${_yen(state.salary)}  ·  代理人 ${state.agent.name}',
+                        style: muted,
                       ),
                     ],
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
+            Wrap(
+              spacing: 6,
+              runSpacing: 6,
+              children: [
+                Chip(
+                  label: Text('ポテンシャル ${player.potentialBand}'),
+                  visualDensity: VisualDensity.compact,
+                ),
+                for (final t in player.traits)
+                  Tooltip(
+                    message: t.description,
+                    child: Chip(
+                      label: Text(t.label),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            _ConditionBar(condition: player.condition),
+            const SizedBox(height: 12),
             for (final key in AttributeKey.values)
-              _AttributeBar(
-                  label: key.label, value: player.attributes[key]),
+              if (key != AttributeKey.goalkeeping ||
+                  player.position == Position.gk)
+                _AttributeBar(label: key.label, value: player.attributes[key]),
+          ],
+        ),
+      ),
+    );
+  }
+
+  static String _yen(int man) =>
+      man >= 10000 ? '${(man / 10000).toStringAsFixed(1)}億円' : '$man万円';
+}
+
+class _ConditionBar extends StatelessWidget {
+  const _ConditionBar({required this.condition});
+
+  final int condition;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final color = condition >= 70
+        ? theme.colorScheme.primary
+        : condition >= 40
+            ? theme.colorScheme.tertiary
+            : theme.colorScheme.error;
+    return Row(
+      children: [
+        SizedBox(
+          width: 100,
+          child: Text('コンディション', style: theme.textTheme.bodySmall),
+        ),
+        SizedBox(
+          width: 28,
+          child: Text('$condition', style: theme.textTheme.bodySmall),
+        ),
+        Expanded(
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(
+              value: condition / 100,
+              minHeight: 8,
+              color: color,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _TrainingCard extends StatelessWidget {
+  const _TrainingCard({required this.state, required this.onTraining});
+
+  final CareerState state;
+  final Future<void> Function(AttributeKey?) onTraining;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final keys = [
+      for (final k in AttributeKey.values)
+        if (k != AttributeKey.goalkeeping || state.player.position == Position.gk)
+          k,
+    ];
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('今週の練習', style: theme.textTheme.titleSmall),
+            const SizedBox(height: 4),
+            Text(
+              state.player.atPotential
+                  ? 'ポテンシャルに達している。練習では伸びない。休養で試合に備える。'
+                  : '練習は疲れる代わりに伸びる可能性がある。休養は戻すだけ。',
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            ),
+            const SizedBox(height: 10),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                ChoiceChip(
+                  label: const Text('休養'),
+                  selected: state.training == null,
+                  onSelected: (_) => onTraining(null),
+                ),
+                for (final k in keys)
+                  ChoiceChip(
+                    label: Text(k.label),
+                    selected: state.training == k,
+                    onSelected: (_) => onTraining(k),
+                  ),
+              ],
+            ),
           ],
         ),
       ),
@@ -269,7 +398,7 @@ class _AttributeBar extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(
-            width: 72,
+            width: 100,
             child: Text(label, style: theme.textTheme.bodySmall),
           ),
           SizedBox(
@@ -406,10 +535,13 @@ class _CareerTab extends StatelessWidget {
               subtitle: Text(
                 '${record.tier}部 ${record.leaguePosition}位  ·  '
                 '${record.stats.appearances}試合 '
-                '${record.stats.goals}G ${record.stats.assists}A',
+                '${record.stats.goals}G ${record.stats.assists}A  ·  '
+                '年俸 ${record.salary}万円',
               ),
               trailing: Text(
-                record.stats.averageRating.toStringAsFixed(2),
+                record.stats.appearances == 0
+                    ? '—'
+                    : record.stats.averageRating.toStringAsFixed(2),
                 style: theme.textTheme.titleMedium,
               ),
             ),

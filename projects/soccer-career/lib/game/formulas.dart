@@ -33,6 +33,13 @@ class Formulas {
   static const int minAttribute = 1;
   static const int maxAttribute = 99;
 
+  /// GK 以外の選手の GK 能力。保存データに無いときの既定値でもある。
+  static const int defaultGoalkeeping = 25;
+
+  /// ポテンシャル（総合力の上限）の範囲。
+  static const int potentialMin = 62;
+  static const int potentialMax = 94;
+
   /// 成長判定のしきい値。この評価点を超えた試合だけ伸びる可能性がある。
   static const double growthRatingThreshold = 6.5;
 
@@ -77,4 +84,34 @@ class Formulas {
   /// 成長判定で、その試合に成功した手の能力が選ばれる確率。
   /// 残りは無作為。プレースタイルが選手を形作るが、偏りすぎない。
   static const double growthFocusChance = 0.7;
+
+  /// コンディション（0〜100）。
+  static const int conditionMax = 100;
+
+  /// 1試合で消耗するコンディション。
+  static const int matchConditionCost = 12;
+
+  /// 練習で消耗するコンディション。
+  static const int trainingConditionCost = 10;
+
+  /// 休養で回復するコンディション。
+  static const int restRecovery = 30;
+
+  /// コンディションが成功率に効く傾き。基準値からの差 × 傾き。
+  /// 100 なら +6%、20 なら −6%。疲れたまま練習し続けると試合で払う。
+  static const int conditionBaseline = 60;
+  static const double conditionChanceSlope = 0.0015;
+
+  /// 練習で能力が1伸びる確率（ポテンシャルに達していなければ）。
+  static const double trainingGrowthChance = 0.3;
+
+  /// 上乗せ要求が通る確率 = 基本 + 交渉力 × 係数 + 成績の補正。
+  static const double negotiationBase = 0.25;
+  static const double negotiationPerSkill = 0.09;
+
+  /// 上乗せの倍率。
+  static const double negotiationRaise = 1.2;
+
+  /// 上乗せに失敗したとき、オファーが撤回される確率。
+  static const double withdrawChanceOnFail = 0.5;
 }

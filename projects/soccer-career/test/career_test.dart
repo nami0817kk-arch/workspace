@@ -6,6 +6,7 @@ import 'package:soccer_career/game/formulas.dart';
 import 'package:soccer_career/game/match_engine.dart';
 import 'package:soccer_career/game/names.dart';
 import 'package:soccer_career/game/scenarios.dart';
+import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/attributes.dart';
 import 'package:soccer_career/models/career.dart';
 import 'package:soccer_career/models/club.dart';
@@ -29,9 +30,10 @@ CareerState stateAt({required int tier, required int position}) {
     player: Player(
       name: 'T',
       age: 25,
-      position: Position.mf,
+      position: Position.cm,
       attributes: const Attributes(
           pace: 60, shooting: 60, passing: 60, dribbling: 60, defending: 60, physical: 60),
+      potential: 99,
     ),
     club: club,
     league: league,
@@ -40,6 +42,8 @@ CareerState stateAt({required int tier, required int position}) {
     results: [],
     table: table,
     history: [],
+    agent: Agent.pool.first,
+    salary: 300,
   );
 }
 
@@ -82,7 +86,7 @@ void main() {
 
     test('昇格すると1部リーグに自分のクラブが入り、20クラブが保たれる', () {
       final s = stateAt(tier: 2, position: 1);
-      final next = engine.advanceSeason(s);
+      final next = engine.advanceSeason(s, accepted: engine.renewalOffer(s));
       expect(next.club.tier, 1);
       expect(next.club.name, s.club.name);
       expect(next.league.length, Formulas.clubsPerLeague);
@@ -93,7 +97,7 @@ void main() {
 
     test('降格すると2部リーグへ移る', () {
       final s = stateAt(tier: 1, position: 20);
-      final next = engine.advanceSeason(s);
+      final next = engine.advanceSeason(s, accepted: engine.renewalOffer(s));
       expect(next.club.tier, 2);
       expect(next.league.every((c) => c.tier == 2), isTrue);
       expect(next.league.where((c) => c.name == s.club.name).length, 1);
@@ -102,7 +106,10 @@ void main() {
     test('移籍を選べば昇降格より移籍先が優先される', () {
       final s = stateAt(tier: 2, position: 1);
       final target = Names.buildLeague(2).last;
-      final next = engine.advanceSeason(s, moveTo: target);
+      final next = engine.advanceSeason(
+        s,
+        accepted: TransferOffer(club: target, reason: '', salary: 500, role: '主力'),
+      );
       expect(next.club.name, target.name);
       expect(next.club.tier, 2);
     });
@@ -185,9 +192,10 @@ void main() {
       var player = Player(
         name: 'G',
         age: 20,
-        position: Position.mf,
+        position: Position.cm,
         attributes: const Attributes(
             pace: 50, shooting: 50, passing: 50, dribbling: 50, defending: 50, physical: 50),
+        potential: 99,
       );
       for (var i = 0; i < 300; i++) {
         player = player.copyWith(
@@ -205,9 +213,10 @@ void main() {
       var player = Player(
         name: 'G',
         age: 20,
-        position: Position.mf,
+        position: Position.cm,
         attributes: const Attributes(
             pace: 50, shooting: 50, passing: 50, dribbling: 50, defending: 50, physical: 50),
+        potential: 99,
       );
       final before = player.overall;
       for (var i = 0; i < 100; i++) {
@@ -222,9 +231,10 @@ void main() {
     final player = Player(
       name: 'M',
       age: 20,
-      position: Position.fw,
+      position: Position.st,
       attributes: const Attributes(
           pace: 50, shooting: 50, passing: 50, dribbling: 50, defending: 50, physical: 50),
+      potential: 99,
     );
 
     test('局面と同じ数の時間が、昇順で 1〜90 分に収まる', () {
@@ -291,9 +301,10 @@ void main() {
         player: Player(
           name: 'P',
           age: 20,
-          position: Position.df,
+          position: Position.cb,
           attributes: const Attributes(
               pace: 50, shooting: 50, passing: 50, dribbling: 50, defending: 50, physical: 50),
+          potential: 99,
         ),
         club: Names.buildLeague(2).first,
         opponent: Names.buildLeague(2).last,

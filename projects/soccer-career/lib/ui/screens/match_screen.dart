@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../game/match_engine.dart';
 import '../../game/scenarios.dart';
+import '../../models/attributes.dart';
 import '../../models/season.dart';
 import '../../state/career_controller.dart';
 
@@ -43,7 +44,12 @@ class _MatchScreenState extends State<MatchScreen> {
     final match = widget.controller.currentMatch;
     final result = _result;
 
-    if (result != null) return _MatchSummary(result: result);
+    if (result != null) {
+      return _MatchSummary(
+        result: result,
+        trained: widget.controller.lastTrained,
+      );
+    }
     if (match == null) return const SizedBox.shrink();
 
     if (match.appearance == Appearance.benched) {
@@ -95,6 +101,7 @@ class _MatchHeader extends StatelessWidget {
         _stat(theme, '局面', '${match.currentIndex}/${match.scenarios.length}'),
         _stat(theme, '評価点', match.rating.toStringAsFixed(1)),
         _stat(theme, 'G / A', '${match.goals} / ${match.assists}'),
+        _stat(theme, '調子', '${match.player.condition}'),
       ],
     );
   }
@@ -154,6 +161,7 @@ class _ScenarioView extends StatelessWidget {
             _OptionButton(
               option: scenario.options[i],
               attribute: match.player.attributes[scenario.options[i].key],
+              chance: match.chanceFor(scenario.options[i]),
               onPressed: () => onChoose(i),
             ),
             const SizedBox(height: 10),
@@ -168,17 +176,20 @@ class _OptionButton extends StatelessWidget {
   const _OptionButton({
     required this.option,
     required this.attribute,
+    required this.chance,
     required this.onPressed,
   });
 
   final ScenarioOption option;
   final int attribute;
+
+  /// 特性とコンディションを含んだ成功率。判定と同じ値。
+  final double chance;
   final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final chance = MatchInProgress.successChance(attribute, option.difficulty);
     return OutlinedButton(
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
@@ -328,9 +339,12 @@ class _BenchedView extends StatelessWidget {
 }
 
 class _MatchSummary extends StatelessWidget {
-  const _MatchSummary({required this.result});
+  const _MatchSummary({required this.result, required this.trained});
 
   final MatchResult result;
+
+  /// 練習で伸びた能力。無ければ null。
+  final AttributeKey? trained;
 
   @override
   Widget build(BuildContext context) {
@@ -362,6 +376,15 @@ class _MatchSummary extends StatelessWidget {
                   _stat(theme, 'アシスト', '${result.assists}'),
                 ],
               ),
+              if (trained != null) ...[
+                const SizedBox(height: 20),
+                Text(
+                  '練習の成果: ${trained!.label} が 1 伸びた',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyMedium
+                      ?.copyWith(color: theme.colorScheme.primary),
+                ),
+              ],
               const SizedBox(height: 36),
               FilledButton(
                 onPressed: () => Navigator.of(context).pop(),

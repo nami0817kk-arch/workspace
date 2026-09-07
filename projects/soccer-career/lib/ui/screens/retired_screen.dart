@@ -78,8 +78,13 @@ class RetiredScreen extends StatelessWidget {
                                 : totals.averageRating.toStringAsFixed(2)),
                       ],
                     ),
+                    const SizedBox(height: 12),
+                    Text(
+                      '通算年俸 ${state.totalEarnings >= 10000 ? '${(state.totalEarnings / 10000).toStringAsFixed(1)}億円' : '${state.totalEarnings}万円'}',
+                      style: theme.textTheme.bodyMedium,
+                    ),
                     if (best != null) ...[
-                      const SizedBox(height: 16),
+                      const SizedBox(height: 8),
                       Text(
                         '最高成績: ${best.year}  ${best.clubName}  '
                         '${best.tier}部 ${best.leaguePosition}位',
