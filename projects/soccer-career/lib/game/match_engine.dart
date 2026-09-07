@@ -5,7 +5,10 @@ import '../models/club.dart';
 import '../models/injury.dart';
 import '../models/player.dart';
 import '../models/season.dart';
+import '../models/support.dart';
 import '../models/traits.dart';
+import '../models/training.dart';
+import 'dependencies.dart';
 import 'formulas.dart';
 import 'scenarios.dart';
 
@@ -101,9 +104,12 @@ class MatchInProgress {
   }
 
   /// この選択肢の判定に使う能力値。詳細があればそれ、無ければカテゴリ平均。
+  ///
+  /// 身体の補正込みで見る。同じ「ヘディング60」でも、190cm と 170cm では
+  /// 競り合いの結果が変わってほしい。
   int attributeFor(ScenarioOption option) => option.detail != null
-      ? player.attributes.detail(option.detail!)
-      : player.attributes[option.key];
+      ? player.effective(option.detail!)
+      : player.effectiveFor(option.key);
 
   /// この局面でその手を選んだときの成功率。特性とコンディションを含む。
   ///
@@ -202,6 +208,40 @@ class MatchInProgress {
   static double conditionModifier(int condition) =>
       (condition - Formulas.conditionBaseline) * Formulas.conditionChanceSlope;
 
+  /// この試合で回ってきたセットプレーの機会。finish() で確定する。
+  String? deadBallText;
+
+  /// セットプレーの好機を1度だけ判定する。
+  ///
+  /// キッカーを任される水準（[SetPieceSkills.isTaker]）に達している選手にだけ
+  /// 回ってくる。居残り練習が試合の数字に出る唯一の道。
+  (int, int) _resolveDeadBall() {
+    if (!player.setPieces.isTaker) return (0, 0);
+    final chance = switch (appearance) {
+      Appearance.start => Formulas.deadBallChanceStart,
+      Appearance.sub => Formulas.deadBallChanceSub,
+      Appearance.benched || Appearance.injured => 0.0,
+    };
+    if (_random.nextDouble() >= chance) return (0, 0);
+
+    final piece = player.setPieces.best;
+    final skill = player.setPieces[piece];
+    switch (piece) {
+      case SetPiece.freeKick:
+        final hit = _random.nextDouble() < (skill - 40) / 220;
+        deadBallText = hit ? '直接FKを沈めた' : '直接FKは壁に当たった';
+        return (hit ? 1 : 0, 0);
+      case SetPiece.penalty:
+        final hit = _random.nextDouble() < (0.55 + skill / 260).clamp(0.5, 0.95);
+        deadBallText = hit ? 'PKを決めた' : 'PKを止められた';
+        return (hit ? 1 : 0, 0);
+      case SetPiece.corner:
+        final hit = _random.nextDouble() < (skill - 30) / 200;
+        deadBallText = hit ? 'CKから味方の頭に合わせた' : 'CKは跳ね返された';
+        return (0, hit ? 1 : 0);
+    }
+  }
+
   /// 試合結果を確定させる。
   ///
   /// スコアはクラブ間の力量差から作り、そこに自分の得点を足す。
@@ -211,7 +251,9 @@ class MatchInProgress {
     final teamGoals = _poissonish(1.25 + advantage / 40);
     final concededGoals = _poissonish(1.25 - advantage / 40);
 
-    final scored = max(teamGoals, goals);
+    final (extraGoals, extraAssists) = _resolveDeadBall();
+    final myGoals = goals + extraGoals;
+    final scored = max(teamGoals, myGoals);
     return MatchResult(
       matchday: matchday,
       opponentName: opponent.name,
@@ -224,9 +266,12 @@ class MatchInProgress {
       rating: appearance == Appearance.benched ||
               appearance == Appearance.injured
           ? null
-          : rating,
-      goals: goals,
-      assists: assists,
+          : (rating +
+                  extraGoals * Formulas.ratingPerGoal +
+                  extraAssists * Formulas.ratingPerAssist)
+              .clamp(Formulas.minRating, Formulas.maxRating),
+      goals: myGoals,
+      assists: assists + extraAssists,
       international: international,
     );
   }
@@ -248,6 +293,9 @@ class WeekOutcome {
     required this.attributes,
     required this.condition,
     required this.trained,
+    this.setPieces = const SetPieceSkills(),
+    this.drilled,
+    this.redirected = false,
     this.injury,
   });
 
@@ -256,6 +304,15 @@ class WeekOutcome {
 
   /// 練習で伸びた詳細能力。伸びなければ null。
   final Detail? trained;
+
+  /// 居残り練習の後のセットプレー精度。
+  final SetPieceSkills setPieces;
+
+  /// 居残りで伸びた種類。伸びなければ null。
+  final SetPiece? drilled;
+
+  /// 狙った能力が土台に阻まれ、土台のほうが伸びたか。
+  final bool redirected;
 
   /// 練習中に負傷したらその内容。
   final Injury? injury;
@@ -350,12 +407,14 @@ class MatchEngine {
     Player player,
     double? rating, {
     List<ScenarioResolution> used = const [],
+    int declineOffset = 0,
   }) {
     if (rating == null) return player.attributes;
 
     final declineAge = Formulas.declineAge +
         player.traits.declineAgeOffset +
-        player.personality.declineAgeOffset;
+        player.personality.declineAgeOffset +
+        declineOffset;
     if (player.age >= declineAge && _random.nextDouble() < 0.25) {
       return player.attributes.bumpDetail(_randomDetail(), -1);
     }
@@ -372,12 +431,17 @@ class MatchEngine {
 
     final focus =
         used.isNotEmpty && _random.nextDouble() < Formulas.growthFocusChance;
-    if (!focus) return player.attributes.bumpDetail(_randomDetail(), 1);
-
-    final pick = used[_random.nextInt(used.length)];
-    return pick.detail != null
-        ? player.attributes.bumpDetail(pick.detail!, 1)
-        : player.attributes.bump(pick.key, 1, random: _random);
+    // 伸ばす先は土台の許す範囲まで。届かなければ土台のほうが伸びる。
+    Detail wanted;
+    if (!focus) {
+      wanted = _randomDetail();
+    } else {
+      final pick = used[_random.nextInt(used.length)];
+      wanted = pick.detail ??
+          pick.key.details[_random.nextInt(pick.key.details.length)];
+    }
+    return player.attributes
+        .bumpDetail(Dependencies.resolve(wanted, player.attributes), 1);
   }
 
   /// 負傷するかどうかを判定する。
@@ -430,43 +494,84 @@ class MatchEngine {
 
   /// 試合後の1週間。試合の消耗と、練習または休養を反映する。
   ///
-  /// 練習はポテンシャルに達していなければ一定確率で、そのカテゴリの
-  /// 詳細能力が1つ伸びる。休養は伸びない代わりにコンディションが戻る。
-  WeekOutcome applyWeek(Player player, {required AttributeKey? training, required bool played}) {
+  /// 練習メニューは扱うカテゴリの数だけ伸びる枠を持つ。複合メニューは
+  /// 1枠あたりの確率が下がる代わりに2か所に触れ、その分だけ疲れる。
+  /// 居残りはその上に積む。専属スタッフと生活習慣は、どちらの効きも底上げする。
+  WeekOutcome applyWeek(
+    Player player, {
+    TrainingMenu menu = TrainingMenu.rest,
+    SetPiece? drill,
+    StaffTeam staff = const StaffTeam(),
+    Habits habits = const Habits(),
+    required bool played,
+  }) {
     final costFactor = player.traits.conditionCostFactor;
     var condition = player.condition -
         (played ? (Formulas.matchConditionCost * costFactor).round() : 0);
     var attributes = player.attributes;
+    var setPieces = player.setPieces;
     Detail? trained;
+    SetPiece? drilled;
+    var redirected = false;
 
-    if (training == null) {
-      condition += Formulas.restRecovery;
+    if (menu.isRest) {
+      condition += menu.recovery + staff.recoveryBonus + habits.recoveryBonus;
     } else {
-      condition -= (Formulas.trainingConditionCost * costFactor).round();
+      condition -= (menu.conditionCost * costFactor).round();
       final canGrow = attributes.overallFor(player.position) < player.potential;
-      // プロ意識が高いほど、同じ練習でも身になる。
-      final chance =
-          Formulas.trainingGrowthChance * player.personality.trainingFactor;
-      if (canGrow && _random.nextDouble() < chance) {
-        final ds = training.details;
-        trained = ds[_random.nextInt(ds.length)];
-        attributes = attributes.bumpDetail(trained, 1);
+      // プロ意識・専属コーチ・生活習慣が、同じ練習の身になり方を変える。
+      final chance = Formulas.trainingGrowthChance *
+          menu.growthFactor *
+          player.personality.trainingFactor *
+          staff.growthFactor *
+          habits.growthFactor;
+      if (canGrow) {
+        for (final key in menu.keys) {
+          if (_random.nextDouble() >= chance) continue;
+          final ds = key.details;
+          final wanted = ds[_random.nextInt(ds.length)];
+          final target = Dependencies.resolve(wanted, attributes);
+          if (target != wanted) redirected = true;
+          attributes = attributes.bumpDetail(target, 1);
+          trained ??= target;
+        }
+      }
+    }
+
+    // 居残り。全体練習の後にもう一段。上に行くほど1本の重みが軽くなる。
+    if (drill != null) {
+      condition -= Formulas.drillConditionCost;
+      final current = setPieces[drill];
+      final chance = Formulas.drillGrowthChance *
+          player.personality.trainingFactor *
+          staff.growthFactor *
+          (1 - current / 130);
+      if (current < SetPieceSkills.max && _random.nextDouble() < chance) {
+        setPieces = setPieces.bump(drill, 1);
+        drilled = drill;
       }
     }
 
     final settled = condition.clamp(0, Formulas.conditionMax).toInt();
-    // 練習した週だけ、練習中の負傷を判定する。休養に怪我のリスクは無い。
-    final injury = training == null
+    // 身体を動かした週だけ、練習中の負傷を判定する。休養だけの週にリスクは無い。
+    final worked = !menu.isRest || drill != null;
+    final injury = !worked
         ? null
         : rollInjury(
             player.copyWith(condition: settled),
-            baseChance: Formulas.injuryTrainingChance,
+            baseChance: Formulas.injuryTrainingChance *
+                menu.injuryFactor *
+                staff.injuryFactor *
+                habits.injuryFactor,
           );
 
     return WeekOutcome(
       attributes: attributes,
       condition: settled,
       trained: trained,
+      setPieces: setPieces,
+      drilled: drilled,
+      redirected: redirected,
       injury: injury,
     );
   }

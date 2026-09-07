@@ -4,6 +4,7 @@ import '../../game/career_engine.dart';
 import '../../game/formulas.dart';
 import '../../game/world.dart';
 import '../../models/competition.dart';
+import '../../models/physique.dart';
 import '../../state/career_controller.dart';
 
 /// シーズン終了。成績を振り返り、契約更改・移籍・引退を決める。
@@ -23,6 +24,9 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
   late List<TransferOffer> _offers;
   bool _busy = false;
 
+  /// オフに身体をどうするか。移籍先を決めるのと同じ画面で選ぶ。
+  BodyPlan _bodyPlan = BodyPlan.maintain;
+
   @override
   void initState() {
     super.initState();
@@ -38,7 +42,8 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
   Future<void> _accept(TransferOffer offer) async {
     if (_busy) return;
     setState(() => _busy = true);
-    await widget.controller.advanceSeason(accepted: offer);
+    await widget.controller
+        .advanceSeason(accepted: offer, bodyPlan: _bodyPlan);
     if (!mounted) return;
     Navigator.of(context).pop();
   }
@@ -184,6 +189,32 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                 ),
               ),
             ] else ...[
+              Text('オフの過ごし方', style: theme.textTheme.titleMedium),
+              const SizedBox(height: 4),
+              Text(
+                '${state.player.physique.label}。'
+                '体重の増減は、当たりの強さと足元のキレを入れ替える。',
+                style: muted,
+              ),
+              const SizedBox(height: 10),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final plan in BodyPlan.values)
+                    Tooltip(
+                      message: plan.description,
+                      child: ChoiceChip(
+                        label: Text(plan.label),
+                        selected: _bodyPlan == plan,
+                        onSelected: _busy
+                            ? null
+                            : (_) => setState(() => _bodyPlan = plan),
+                      ),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 24),
               Row(
                 children: [
                   Text('契約', style: theme.textTheme.titleMedium),

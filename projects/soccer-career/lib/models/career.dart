@@ -3,6 +3,8 @@ import 'attributes.dart';
 import 'club.dart';
 import 'competition.dart';
 import 'reputation.dart';
+import 'support.dart';
+import 'training.dart';
 import 'injury.dart';
 import 'objective.dart';
 import 'player.dart';
@@ -104,7 +106,10 @@ class CareerState {
     this.reputation = const Reputation(),
     this.relations = const Relations(),
     this.finances = const Finances(),
-    this.training,
+    this.menu = TrainingMenu.rest,
+    this.drill,
+    this.staff = const StaffTeam(),
+    this.habits = const Habits(),
     this.objective,
     this.injury,
     this.caps = 0,
@@ -140,8 +145,17 @@ class CareerState {
   /// 今の年俸（万円）。
   int salary;
 
-  /// 今週の練習。null なら休養。
-  AttributeKey? training;
+  /// 今週の練習メニュー。
+  TrainingMenu menu;
+
+  /// 今週の居残り練習。null ならやらない。
+  SetPiece? drill;
+
+  /// 自腹で雇っているスタッフ。
+  StaffTeam staff;
+
+  /// 生活習慣。睡眠と食事。
+  Habits habits;
 
   /// 契約の残り年数。0 になると必ず去就を決めることになる。
   int contractYears;
@@ -264,7 +278,10 @@ class CareerState {
         'history': history.map((h) => h.toJson()).toList(),
         'agent': agent.toJson(),
         'salary': salary,
-        'training': training?.name,
+        'menu': menu.name,
+        'drill': drill?.name,
+        'staff': staff.toJson(),
+        'habits': habits.toJson(),
         'contractYears': contractYears,
         'countryId': countryId,
         'professionalYears': professionalYears,
@@ -284,7 +301,15 @@ class CareerState {
       };
 
   factory CareerState.fromJson(Map<String, dynamic> json) {
-    final trainingName = json['training'] as String?;
+    // 練習はカテゴリ1つを選ぶ方式だった。古い保存データはその対応表で読む。
+    final menuName = json['menu'] as String?;
+    final legacyKey = json['training'] as String?;
+    final menu = menuName != null &&
+            TrainingMenu.values.any((m) => m.name == menuName)
+        ? TrainingMenu.values.byName(menuName)
+        : legacyKey != null && AttributeKey.values.any((k) => k.name == legacyKey)
+            ? TrainingMenu.forKey(AttributeKey.values.byName(legacyKey))
+            : TrainingMenu.rest;
     return CareerState(
       player: Player.fromJson(json['player'] as Map<String, dynamic>),
       club: Club.fromJson(json['club'] as Map<String, dynamic>),
@@ -305,10 +330,12 @@ class CareerState {
       // 以下は後から足した項目。古い保存データには無い。
       agent: Agent.fromJson(json['agent'] as Map<String, dynamic>?),
       salary: json['salary'] as int? ?? 300,
-      training: trainingName == null ||
-              !AttributeKey.values.any((k) => k.name == trainingName)
-          ? null
-          : AttributeKey.values.byName(trainingName),
+      menu: menu,
+      drill: SetPiece.values.any((p) => p.name == json['drill'])
+          ? SetPiece.values.byName(json['drill'] as String)
+          : null,
+      staff: StaffTeam.fromJson(json['staff'] as Map<String, dynamic>?),
+      habits: Habits.fromJson(json['habits'] as Map<String, dynamic>?),
       contractYears: json['contractYears'] as int? ?? 2,
       countryId: json['countryId'] as String? ?? 'yamato',
       professionalYears: json['professionalYears'] as int? ?? 1,

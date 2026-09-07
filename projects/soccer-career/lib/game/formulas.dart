@@ -105,6 +105,16 @@ class Formulas {
   /// 練習で能力が1伸びる確率（ポテンシャルに達していなければ）。
   static const double trainingGrowthChance = 0.3;
 
+  /// 居残り練習で余分に減るコンディション。
+  static const int drillConditionCost = 6;
+
+  /// 居残り練習でセットプレーの精度が1上がる確率（上に行くほど鈍る）。
+  static const double drillGrowthChance = 0.55;
+
+  /// キッカーを任されている選手に、1試合でセットプレーの好機が回る確率。
+  static const double deadBallChanceStart = 0.22;
+  static const double deadBallChanceSub = 0.09;
+
   /// 上乗せ要求が通る確率 = 基本 + 交渉力 × 係数 + 成績の補正。
   static const double negotiationBase = 0.25;
   static const double negotiationPerSkill = 0.09;

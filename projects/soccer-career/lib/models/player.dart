@@ -2,7 +2,9 @@ import '../game/formulas.dart';
 import 'attributes.dart';
 import 'nationality.dart';
 import 'personality.dart';
+import 'physique.dart';
 import 'traits.dart';
+import 'training.dart';
 
 /// プレイヤーが操作する選手。
 class Player {
@@ -15,6 +17,9 @@ class Player {
     this.nationality = Nationality.unknown,
     this.personality = const Personality(
         confidence: 10, ambition: 10, professionalism: 10, temper: 10),
+    this.physique = const Physique(
+        heightCm: Physique.baseHeight, weightKg: Physique.baseWeight),
+    this.setPieces = const SetPieceSkills(),
     this.traits = const [],
     this.condition = Formulas.conditionMax,
   });
@@ -33,12 +38,33 @@ class Player {
   /// 性格。伸ばすものではなく、経験で少しずつ変わる。
   final Personality personality;
 
+  /// 身体データ。練習では動かず、オフの肉体改造でだけ変わる。
+  final Physique physique;
+
+  /// セットプレーの精度。居残り練習で伸ばす。
+  final SetPieceSkills setPieces;
+
   final List<Trait> traits;
 
   /// 0〜100。試合と練習で減り、休養で戻る。低いと試合の成功率が落ちる。
   final int condition;
 
   int get overall => attributes.overallFor(position);
+
+  /// カテゴリ単位の、身体の補正まで含めた能力値。
+  int effectiveFor(AttributeKey key) {
+    final ds = key.details;
+    return (ds.fold(0, (s, d) => s + effective(d)) / ds.length).round();
+  }
+
+  /// 身体の補正まで含めた、試合で実際に出る能力値。
+  ///
+  /// 蓄えた能力値そのものは書き換えない。増量した週に「伸びた」ように
+  /// 見えてしまうと、練習で積み上げた数字の意味が濁る。
+  int effective(Detail detail) => (attributes.detail(detail) +
+          physique.bonusFor(detail))
+      .clamp(Formulas.minAttribute, Formulas.maxAttribute)
+      .toInt();
 
   bool get atPotential => overall >= potential;
 
@@ -59,6 +85,8 @@ class Player {
     int? condition,
     Nationality? nationality,
     Personality? personality,
+    Physique? physique,
+    SetPieceSkills? setPieces,
   }) =>
       Player(
         name: name,
@@ -68,6 +96,8 @@ class Player {
         potential: potential,
         nationality: nationality ?? this.nationality,
         personality: personality ?? this.personality,
+        physique: physique ?? this.physique,
+        setPieces: setPieces ?? this.setPieces,
         traits: traits,
         condition: (condition ?? this.condition)
             .clamp(0, Formulas.conditionMax)
@@ -91,6 +121,8 @@ class Player {
         potential: potential,
         nationality: from.nationality,
         personality: from.personality,
+        physique: from.physique,
+        setPieces: from.setPieces,
         traits: from.traits,
         condition: from.condition,
       );
@@ -103,6 +135,8 @@ class Player {
         'potential': potential,
         'nationality': nationality.toJson(),
         'personality': personality.toJson(),
+        'physique': physique.toJson(),
+        'setPieces': setPieces.toJson(),
         'traits': traits.map((t) => t.name).toList(),
         'condition': condition,
       };
@@ -124,6 +158,10 @@ class Player {
           json['nationality'] as Map<String, dynamic>?, 'yamato'),
       personality:
           Personality.fromJson(json['personality'] as Map<String, dynamic>?),
+      // 身体データを持たせる前の保存データは標準体型として読む。
+      physique: Physique.fromJson(json['physique'] as Map<String, dynamic>?),
+      setPieces:
+          SetPieceSkills.fromJson(json['setPieces'] as Map<String, dynamic>?),
       traits: [
         for (final n in (json['traits'] as List? ?? const []))
           if (Trait.values.any((t) => t.name == n))

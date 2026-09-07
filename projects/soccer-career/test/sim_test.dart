@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/data/save_repository.dart';
+import 'package:soccer_career/models/training.dart';
 import 'package:soccer_career/game/career_engine.dart';
 import 'package:soccer_career/game/formulas.dart';
 import 'package:soccer_career/game/match_engine.dart';
@@ -280,9 +281,11 @@ void main() {
     test('無尽蔵は試合の消耗が少ない', () {
       // 休養だと上限で頭打ちになって差が見えないので、練習した週で比べる。
       final normal = MatchEngine(random: Random(6))
-          .applyWeek(player(), training: AttributeKey.pace, played: true);
+          .applyWeek(player(), menu: TrainingMenu.sprint, played: true);
       final tireless = MatchEngine(random: Random(6)).applyWeek(
-          player(traits: const [Trait.engine]), training: AttributeKey.pace, played: true);
+          player(traits: const [Trait.engine]),
+          menu: TrainingMenu.sprint,
+          played: true);
       expect(tireless.condition, greaterThan(normal.condition));
     });
 

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/game/career_engine.dart';
+import 'package:soccer_career/models/training.dart';
 import 'package:soccer_career/game/formulas.dart';
 import 'package:soccer_career/game/match_engine.dart';
 import 'package:soccer_career/game/names.dart';
@@ -198,17 +199,20 @@ void main() {
 
     test('休養で戻り、練習で減る', () {
       final base = player(condition: 50);
-      final rested = engine.applyWeek(base, training: null, played: false);
-      expect(rested.condition, 50 + Formulas.restRecovery);
+      final rested = engine.applyWeek(base, played: false);
+      expect(rested.condition, 50 + TrainingMenu.rest.recovery);
 
-      final trained = engine.applyWeek(base, training: AttributeKey.passing, played: false);
-      expect(trained.condition, 50 - Formulas.trainingConditionCost);
+      final trained = engine.applyWeek(base,
+          menu: TrainingMenu.passingWork, played: false);
+      expect(
+          trained.condition, 50 - TrainingMenu.passingWork.conditionCost);
     });
 
     test('試合に出た週はその分も減り、0〜100 に収まる', () {
-      final low = engine.applyWeek(player(condition: 5), training: AttributeKey.pace, played: true);
+      final low = engine.applyWeek(player(condition: 5),
+          menu: TrainingMenu.sprint, played: true);
       expect(low.condition, 0);
-      final high = engine.applyWeek(player(condition: 95), training: null, played: false);
+      final high = engine.applyWeek(player(condition: 95), played: false);
       expect(high.condition, Formulas.conditionMax);
     });
 
@@ -216,10 +220,15 @@ void main() {
       var attrs = flat50;
       var grew = 0;
       for (var i = 0; i < 200; i++) {
-        final week = engine.applyWeek(player(attributes: attrs), training: AttributeKey.shooting, played: false);
+        final week = engine.applyWeek(player(attributes: attrs),
+            menu: TrainingMenu.finishingWork, played: false);
         if (week.trained != null) {
           grew++;
-          expect(week.trained!.category, AttributeKey.shooting);
+          // 土台に阻まれた週は、土台のほうが伸びる。
+          expect(
+            week.redirected || week.trained!.category == AttributeKey.shooting,
+            isTrue,
+          );
         }
         attrs = week.attributes;
       }
@@ -228,13 +237,13 @@ void main() {
       final shootingTotal = AttributeKey.shooting.details
           .fold(0, (sum, d) => sum + attrs.detail(d));
       expect(shootingTotal, greaterThan(50 * AttributeKey.shooting.details.length));
-      expect(attrs.pace, 50);
     });
 
     test('ポテンシャルに達していれば練習でも伸びない', () {
       final capped = player(potential: 50);
       for (var i = 0; i < 100; i++) {
-        final week = engine.applyWeek(capped, training: AttributeKey.passing, played: false);
+        final week = engine.applyWeek(capped,
+            menu: TrainingMenu.passingWork, played: false);
         expect(week.trained, isNull);
       }
     });
@@ -402,7 +411,7 @@ void main() {
       final json = s.toJson();
       json.remove('agent');
       json.remove('salary');
-      json.remove('training');
+      json.remove('menu');
       json.remove('contractYears');
       json.remove('objective');
       json.remove('injury');
@@ -417,7 +426,7 @@ void main() {
       final restored = CareerState.fromJson(json);
       expect(restored.agent, Agent.pool.first);
       expect(restored.salary, greaterThan(0));
-      expect(restored.training, isNull);
+      expect(restored.menu, TrainingMenu.rest);
       expect(restored.player.position, Position.cm);
       expect(restored.player.potential, greaterThan(restored.player.overall));
       expect(restored.player.traits, isEmpty);
@@ -431,12 +440,14 @@ void main() {
     test('新しい項目は往復しても保たれる', () {
       final ce = CareerEngine(random: Random(17));
       final s = ce.startCareer(name: 'O', position: Position.gk, age: 19, agent: Agent.pool[2]);
-      s.training = AttributeKey.goalkeeping;
+      s.menu = TrainingMenu.keeperWork;
+      s.drill = SetPiece.freeKick;
       s.player = s.player.copyWith(condition: 42);
       final r = CareerState.fromJson(s.toJson());
       expect(r.agent, Agent.pool[2]);
       expect(r.salary, s.salary);
-      expect(r.training, AttributeKey.goalkeeping);
+      expect(r.menu, TrainingMenu.keeperWork);
+      expect(r.drill, SetPiece.freeKick);
       expect(r.player.potential, s.player.potential);
       expect(r.player.traits, s.player.traits);
       expect(r.player.condition, 42);

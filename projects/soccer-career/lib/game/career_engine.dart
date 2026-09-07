@@ -8,8 +8,10 @@ import '../models/competition.dart';
 import '../models/country.dart';
 import '../models/nationality.dart';
 import '../models/personality.dart';
+import '../models/physique.dart';
 import '../models/player.dart';
 import '../models/season.dart';
+import '../models/support.dart';
 import '../models/traits.dart';
 import 'career_engine_extras.dart';
 import 'competitions.dart';
@@ -129,6 +131,7 @@ class CareerEngine {
       potential: rollPotential(overall),
       nationality: _rollNationality(home),
       personality: Personality.roll(_random),
+      physique: Physique.roll(_random, position),
       traits: Trait.roll(_random),
     );
     return CareerState(
@@ -570,7 +573,11 @@ class CareerEngine {
   int _round(num value) => (value / 10).round() * 10;
 
   /// 次のシーズンへ進む。受けたオファーのクラブと年俸で始める。
-  CareerState advanceSeason(CareerState state, {required TransferOffer accepted}) {
+  CareerState advanceSeason(
+    CareerState state, {
+    required TransferOffer accepted,
+    BodyPlan bodyPlan = BodyPlan.maintain,
+  }) {
     final record = SeasonRecord(
       year: state.year,
       clubName: state.club.name,
@@ -594,11 +601,14 @@ class CareerEngine {
       nationality = nationality.naturalize(state.club.countryId);
     }
 
+    // オフの肉体改造。体重が動き、筋力と機動力が入れ替わる。
     final nextPlayer = state.player.copyWith(
       age: state.player.age + 1,
       condition: Formulas.conditionMax,
       nationality: nationality,
       personality: person.evolve(state),
+      physique: state.player.physique.afterOffseason(bodyPlan),
+      attributes: _afterOffseason(state.player.attributes, bodyPlan),
     );
     final stayed = accepted.club.name == state.club.name;
 
@@ -615,7 +625,11 @@ class CareerEngine {
     final finances = state.finances.afterSeason(
       salary: state.salary,
       agentFeePercent: state.agent.feePercent,
+      staffCost: state.staff.costPerSeason,
+      extraLivingRate: state.habits.livingCostExtra,
     );
+    // 払えない専属は契約を切る。金の裏付けの無い環境は続かない。
+    final staff = finances.savings < 0 ? const StaffTeam() : state.staff;
     final relations = person.updateRelations(state);
 
     return CareerState(
@@ -629,7 +643,10 @@ class CareerEngine {
       history: [...state.history, record],
       agent: state.agent,
       salary: accepted.salary,
-      training: state.training,
+      menu: state.menu,
+      drill: state.drill,
+      staff: staff,
+      habits: state.habits,
       // 契約更改か移籍なら新しい年数。ただ残っただけなら1年減る。
       contractYears: stayed && !accepted.isRenewal
           ? max(1, state.contractYears - 1)
@@ -651,6 +668,22 @@ class CareerEngine {
       internationalGoals: state.internationalGoals,
     );
   }
+
+  /// オフの肉体改造が能力に与える増減。
+  ///
+  /// 体重そのものは [Physique] が持つ。ここで動かすのは、増やした身体を
+  /// 使えるようにする筋力と、絞って戻ってくるキレのほう。
+  Attributes _afterOffseason(Attributes attributes, BodyPlan plan) =>
+      switch (plan) {
+        BodyPlan.bulk => attributes
+            .bumpDetail(Detail.strength, 2)
+            .bumpDetail(Detail.stamina, -1),
+        BodyPlan.cut => attributes
+            .bumpDetail(Detail.acceleration, 1)
+            .bumpDetail(Detail.stamina, 1)
+            .bumpDetail(Detail.strength, -1),
+        BodyPlan.maintain => attributes,
+      };
 
   /// そのクラブが入るリーグを組む。
   ///
@@ -729,7 +762,11 @@ class CareerEngine {
       finances: state.finances.afterSeason(
         salary: state.salary,
         agentFeePercent: state.agent.feePercent,
+        staffCost: state.staff.costPerSeason,
+        extraLivingRate: state.habits.livingCostExtra,
       ),
+      staff: state.staff,
+      habits: state.habits,
       retired: true,
     );
   }

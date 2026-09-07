@@ -11,15 +11,34 @@ import '../models/attributes.dart';
 import '../models/career.dart';
 import '../models/competition.dart';
 import '../models/injury.dart';
+import '../models/physique.dart';
 import '../models/player.dart';
 import '../models/season.dart';
+import '../models/support.dart';
+import '../models/training.dart';
 
 /// 試合を終えた1週間で起きたこと。画面で一度見せる。
 class WeekReport {
-  const WeekReport({this.trained, this.newInjury, this.recovered = false});
+  const WeekReport({
+    this.trained,
+    this.drilled,
+    this.redirected = false,
+    this.deadBall,
+    this.newInjury,
+    this.recovered = false,
+  });
 
   /// 練習で伸びた詳細能力。
   final Detail? trained;
+
+  /// 居残りで伸びたセットプレー。
+  final SetPiece? drilled;
+
+  /// 狙った能力が土台に阻まれ、土台のほうが伸びたか。
+  final bool redirected;
+
+  /// 試合で回ってきたセットプレーの結果。
+  final String? deadBall;
 
   /// 新たに負傷したらその内容。
   final Injury? newInjury;
@@ -27,7 +46,12 @@ class WeekReport {
   /// 離脱から復帰したか。
   final bool recovered;
 
-  bool get isEmpty => trained == null && newInjury == null && !recovered;
+  bool get isEmpty =>
+      trained == null &&
+      drilled == null &&
+      deadBall == null &&
+      newInjury == null &&
+      !recovered;
 }
 
 /// 自動で進めた区間のまとめ。
@@ -121,12 +145,42 @@ class CareerController extends ChangeNotifier {
     await _persist();
   }
 
-  /// 今週の練習を決める。null は休養。
-  Future<void> setTraining(AttributeKey? focus) async {
+  /// 今週の練習メニューを決める。
+  Future<void> setMenu(TrainingMenu menu) async {
     final state = _state;
     if (state == null) return;
-    state.training = focus;
+    state.menu = menu;
     await _persist();
+  }
+
+  /// 今週の居残り練習を決める。null ならやらない。
+  Future<void> setDrill(SetPiece? drill) async {
+    final state = _state;
+    if (state == null) return;
+    state.drill = drill;
+    await _persist();
+  }
+
+  /// 生活習慣を変える。
+  Future<void> setHabits(Habits habits) async {
+    final state = _state;
+    if (state == null) return;
+    state.habits = habits;
+    await _persist();
+  }
+
+  /// 専属スタッフを雇う（level 0 で解雇）。
+  ///
+  /// 契約金は貯蓄から前払いする。払えないなら雇えない。
+  bool hireStaff(StaffKind kind, int level) {
+    final state = _state;
+    if (state == null) return false;
+    final next = state.staff.withLevel(kind, level);
+    final delta = next.costPerSeason - state.staff.costPerSeason;
+    if (delta > state.finances.savings) return false;
+    state.staff = next;
+    _persist();
+    return true;
   }
 
   /// 自動で進めるときの選び方を決める。
@@ -291,26 +345,42 @@ class CareerController extends ChangeNotifier {
           player,
           result.rating,
           used: match.successes,
+          declineOffset: state.staff.declineAgeOffset,
         ),
       );
       final week = _match.applyWeek(
         player,
-        training: state.training,
+        menu: state.menu,
+        drill: state.drill,
+        staff: state.staff,
+        habits: state.habits,
         played: result.appearance != Appearance.benched,
       );
       player = player.copyWith(
         attributes: week.attributes,
         condition: week.condition,
+        setPieces: week.setPieces,
       );
       newInjury = week.injury ??
-          _match.rollInjury(player, baseChance: Formulas.injuryBaseChance);
+          _match.rollInjury(
+            player,
+            baseChance: Formulas.injuryBaseChance *
+                state.staff.injuryFactor *
+                state.habits.injuryFactor,
+          );
       if (newInjury != null) {
         final (attributes, potential) =
             _match.applySevereInjury(player, newInjury);
         player = Player.rebuild(player, attributes: attributes, potential: potential);
         state.injury = newInjury;
       }
-      lastWeek = WeekReport(trained: week.trained, newInjury: newInjury);
+      lastWeek = WeekReport(
+        trained: week.trained,
+        drilled: week.drilled,
+        redirected: week.redirected,
+        deadBall: match.deadBallText,
+        newInjury: newInjury,
+      );
     }
 
     state.player = player;
@@ -359,10 +429,14 @@ class CareerController extends ChangeNotifier {
   TransferWindow get transferWindow =>
       _state == null ? TransferWindow.closed : _career.competitions.windowAt(_state!);
 
-  Future<void> advanceSeason({required TransferOffer accepted}) async {
+  Future<void> advanceSeason({
+    required TransferOffer accepted,
+    BodyPlan bodyPlan = BodyPlan.maintain,
+  }) async {
     final state = _state;
     if (state == null) return;
-    _state = _career.advanceSeason(state, accepted: accepted);
+    _state =
+        _career.advanceSeason(state, accepted: accepted, bodyPlan: bodyPlan);
     // 新しいクラブで登録メンバーに入れるかを決める。
     _state!.squadStatus = _career.competitions.registrationFor(_state!);
     _inProgress = null;
