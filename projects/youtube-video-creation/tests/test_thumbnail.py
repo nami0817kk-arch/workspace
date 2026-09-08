@@ -455,3 +455,22 @@ def test_横長の写真には積まない(tmp_path):
         ).read_bytes()
 
     assert draw("w", ["ひとつ"]) == draw("wo", [])
+
+
+def test_写真を並べると全面が写真になる(tmp_path):
+    """**縦長1枚だと左がぼかしで埋まる**（2026-09-08 ユーザー指摘）。
+
+    参考チャンネルは全面が写真で、顔を2〜3枚並べた回もあった。
+    """
+    a = tmp_path / "a.png"; b = tmp_path / "b.png"
+    Image.new("RGB", (600, 1200), (200, 60, 60)).save(a)
+    Image.new("RGB", (600, 1200), (60, 60, 200)).save(b)
+    path = build_thumbnail(
+        _config(), "", tmp_path / "tiled.png", style="band",
+        lines=("見出し", "副見出し"), background=str(a), photos=[str(a), str(b)],
+    )
+    with Image.open(path) as image:
+        left = image.getpixel((120, 120))
+        right = image.getpixel((SIZE[0] - 120, 120))
+    assert left[0] > 150 and left[2] < 110      # 左は1枚目
+    assert right[2] > 150 and right[0] < 110    # 右は2枚目

@@ -770,6 +770,7 @@ def _cmd_thumbnail(args, config) -> int:
             lines=look["lines"], tags=look["tags"],
             reaction=look.get("reaction") or "",
             points=look.get("points") or [],
+            photos=look.get("photos") or [],
         )
         made.append((look.get("name") or "", target, look["lines"]))
 

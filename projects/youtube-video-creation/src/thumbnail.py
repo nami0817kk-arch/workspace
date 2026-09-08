@@ -97,6 +97,9 @@ def from_meta(meta: dict, title: str) -> dict:
         # 左がぼかしだけになり「ただのぼかし」に見えた（ユーザー指摘）。
         # **中身を置けば余白が情報になる。**3つまで、1つ10字くらい
         "points": [str(x) for x in (meta.get("thumbnail_points") or [])][:3],
+        # 顔を並べる（2026-09-08）。2〜3枚あれば全面が写真になり、
+        # ぼかしの下地が要らない。参考チャンネルは全面が写真だった
+        "photos": [str(x) for x in (meta.get("thumbnail_photos") or [])][:3],
     }
 
 
@@ -180,6 +183,7 @@ def build_thumbnail(
     focus: float | None = None,
     reaction: str = "",
     points: list[str] | None = None,
+    photos: list[str] | None = None,
 ) -> Path:
     """サムネイルを1枚作る。
 
@@ -195,7 +199,7 @@ def build_thumbnail(
     if chosen == "band":
         return _band_thumbnail(
             config, out_path, background,
-            lines or (title, subtitle), tags or [], focus, reaction, points or [],
+            lines or (title, subtitle), tags or [], focus, reaction, points or [], photos or [],
         )
 
     font_path = str(config.video.font_path())
@@ -248,6 +252,7 @@ def _band_thumbnail(
     focus: float | None = None,
     reaction: str = "",
     points: list[str] | None = None,
+    photos: list[str] | None = None,
 ) -> Path:
     """写真の上に蛍光イエローの帯を重ねる。**最高再生の型に合わせてある。**
 
@@ -261,11 +266,17 @@ def _band_thumbnail(
     """
     font_path = str(config.video.font_path())
     # **正方形に近い写真も右に置く。**全面に敷くと顔が帯に隠れる
-    portrait = _is_portrait(background, ratio=0.95)
+    tiles = [q for q in (photos or []) if _resolve(q).exists()]
+    if len(tiles) >= 2:
+        # **並べれば全面が写真になる。**ぼかしの下地が要らない
+        canvas = _tile_photos(tiles)
+        portrait = False
+    else:
+        portrait = _is_portrait(background, ratio=0.95)
     if portrait:
         canvas = _blur_bed(background)
         _paste_side(canvas, background)
-    else:
+    elif len(tiles) < 2:
         # **帯が下の4割を覆うので、顔を上に寄せる。**真ん中で切ると、
         # 額と目だけが残って口から下が帯に隠れた（2026-09-07 に書き出して発見）。
         # 指定があればそちらを優先する
@@ -354,6 +365,28 @@ def _is_portrait(background: str | None, ratio: float = 1.1) -> bool:
             return image.height > image.width * ratio
     except OSError:
         return False
+
+
+def _tile_photos(paths: list[str]) -> Image.Image:
+    """顔写真を横に並べて、画面いっぱいにする（2026-09-08）。
+
+    縦長の写真を1枚だけ右に置くと、左がぼかしで埋まる。参考チャンネル
+    （2chサッカーの噂話・10.3万）は**全面が写真**で、顔を2〜3枚
+    並べた回もあった。**縦長の写真は、並べれば縦のまま活きる。**
+    """
+    canvas = Image.new("RGBA", SIZE, (14, 20, 32, 255))
+    cell = SIZE[0] // len(paths)
+    for index, name in enumerate(paths):
+        with Image.open(_resolve(name)) as source:
+            photo = source.convert("RGBA")
+        scale = max(cell / photo.width, SIZE[1] / photo.height)
+        photo = photo.resize((max(1, int(photo.width * scale)) + 1,
+                              max(1, int(photo.height * scale)) + 1), Image.LANCZOS)
+        left = max(0, (photo.width - cell) // 2)
+        top = max(0, min(photo.height - SIZE[1], int(photo.height * 0.04)))
+        canvas.alpha_composite(photo.crop((left, top, left + cell, top + SIZE[1])),
+                               (index * cell, 0))
+    return canvas
 
 
 def _blur_bed(background: str | None) -> Image.Image:
