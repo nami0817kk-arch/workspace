@@ -6,6 +6,8 @@ import 'dart:math';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/data/save_repository.dart';
 import 'package:soccer_career/game/career_engine.dart';
+import 'package:soccer_career/game/dependencies.dart';
+import 'package:soccer_career/game/formulas.dart';
 import 'package:soccer_career/game/match_engine.dart';
 import 'package:soccer_career/game/person.dart';
 import 'package:soccer_career/game/scenarios.dart';
@@ -353,6 +355,163 @@ void main() {
     test('大一番の申し子は終盤と大一番で効き、それ以外は平常', () {
       expect(Trait.bigMoment.chanceBonus(ctx(minute: 80)), greaterThan(0));
       expect(Trait.bigMoment.chanceBonus(ctx(minute: 40)), 0);
+    });
+  });
+
+  group('超越', () {
+    test('対象の能力だけ上限が 109 になり、他は 99 のまま', () {
+      const traits = [Trait.eagleEye];
+      expect(traits.ceilingFor(Detail.vision), Formulas.absoluteMax);
+      expect(traits.ceilingFor(Detail.shortPassing), Formulas.maxAttribute);
+      expect(const <Trait>[].ceilingFor(Detail.vision), Formulas.maxAttribute);
+      expect(Trait.eagleEye.effects.single, contains('視野'));
+      expect(Trait.eagleEye.effects.single, contains('109'));
+    });
+
+    test('超越は1人に1つしか付かない', () {
+      for (var seed = 0; seed < 2000; seed++) {
+        final traits = Trait.roll(Random(seed), position: Position.cm);
+        expect(traits.where((t) => t.transcendDetail != null).length,
+            lessThanOrEqualTo(1),
+            reason: 'seed $seed');
+      }
+      expect(Trait.catReflex.fitsPosition(Position.st), isFalse);
+      expect(Trait.eagleEye.fitsPosition(Position.gk), isFalse);
+      expect(Trait.ironLungs.fitsPosition(Position.gk), isTrue);
+    });
+
+    test('99 で止まらず、109 で止まる', () {
+      final at99 = Attributes.fromDetails(
+          {for (final d in Detail.values) d: 99});
+      expect(at99.bumpDetail(Detail.vision, 2).detail(Detail.vision), 99);
+      expect(
+          at99
+              .bumpDetail(Detail.vision, 2, max: Formulas.absoluteMax)
+              .detail(Detail.vision),
+          101);
+      final at109 = at99.bumpDetail(Detail.vision, 20,
+          max: Formulas.absoluteMax);
+      expect(at109.detail(Detail.vision), 109);
+      // 土台を持たない能力の上限は、そのまま渡した ceiling になる。
+      expect(Dependencies.supports[Detail.shortPassing], isNull);
+      expect(Dependencies.blocked(Detail.shortPassing, at99), isTrue);
+      expect(
+          Dependencies.blocked(Detail.shortPassing, at99,
+              ceiling: Formulas.absoluteMax),
+          isFalse);
+      // 土台を持つ能力は、土台の平均 + 18 のまま（ここでは 99 で丸めない）。
+      expect(Dependencies.capFor(Detail.vision, at99), greaterThan(99));
+    });
+
+    test('上限を超えた値は、保存を往復しても潰れない', () {
+      final a = Attributes.fromDetails(
+          {for (final d in Detail.values) d: 80, Detail.vision: 105});
+      final back = Attributes.fromJson(a.toJson());
+      expect(back.detail(Detail.vision), 105);
+      // ただし 109 までしか読まない。
+      final json = a.toJson();
+      (json['details'] as Map<String, dynamic>)['vision'] = 150;
+      expect(Attributes.fromJson(json).detail(Detail.vision),
+          Formulas.absoluteMax);
+    });
+
+    test('判定に使う値も上限を超える', () {
+      final p = Player(
+        name: 'P',
+        age: 26,
+        position: Position.cm,
+        attributes: Attributes.fromDetails(
+            {for (final d in Detail.values) d: 80, Detail.vision: 105}),
+        potential: 90,
+        traits: const [Trait.eagleEye],
+      );
+      expect(p.effective(Detail.vision), greaterThanOrEqualTo(105));
+      final plain = Player(
+        name: 'P',
+        age: 26,
+        position: Position.cm,
+        attributes: p.attributes,
+        potential: 90,
+      );
+      expect(plain.effective(Detail.vision), 99);
+    });
+
+    test('ポテンシャルに達しても、超越の1項目だけは練習で伸び続ける', () {
+      Player at(List<Trait> traits) => Player(
+            name: 'P',
+            age: 22,
+            position: Position.cm,
+            attributes: Attributes.fromDetails(
+                {for (final d in Detail.values) d: 88, Detail.vision: 99}),
+            potential: 60,
+            traits: traits,
+          );
+      var grew = 0;
+      var others = 0;
+      for (var seed = 0; seed < 200; seed++) {
+        final week = MatchEngine(random: Random(seed)).applyWeek(
+          at(const [Trait.eagleEye]),
+          menu: TrainingMenu.forKey(AttributeKey.passing),
+          played: false,
+        );
+        if (week.attributes.detail(Detail.vision) > 99) grew++;
+        for (final d in Detail.values) {
+          if (d != Detail.vision && week.attributes.detail(d) != 88) others++;
+        }
+      }
+      expect(grew, greaterThan(0), reason: '200週で一度も伸びない');
+      expect(others, 0, reason: '超越以外が伸びた');
+
+      // 助走の手前（89未満）なら、ポテンシャルで止まる。
+      final early = Player(
+        name: 'P',
+        age: 22,
+        position: Position.cm,
+        attributes: Attributes.fromDetails(
+            {for (final d in Detail.values) d: 80}),
+        potential: 60,
+        traits: const [Trait.eagleEye],
+      );
+      for (var seed = 0; seed < 50; seed++) {
+        final week = MatchEngine(random: Random(seed)).applyWeek(
+          early,
+          menu: TrainingMenu.forKey(AttributeKey.passing),
+          played: false,
+        );
+        expect(week.attributes.detail(Detail.vision), 80);
+      }
+
+      // 特性が無ければ、ポテンシャルで止まる。
+      for (var seed = 0; seed < 50; seed++) {
+        final week = MatchEngine(random: Random(seed)).applyWeek(
+          at(const []),
+          menu: TrainingMenu.forKey(AttributeKey.passing),
+          played: false,
+        );
+        expect(week.attributes.detail(Detail.vision), 99);
+      }
+    });
+
+    test('試合の成長も同じ', () {
+      final p = Player(
+        name: 'P',
+        age: 22,
+        position: Position.cm,
+        attributes: Attributes.fromDetails(
+            {for (final d in Detail.values) d: 88, Detail.vision: 99}),
+        potential: 60,
+        traits: const [Trait.eagleEye],
+      );
+      var grew = 0;
+      for (var seed = 0; seed < 200; seed++) {
+        final next = MatchEngine(random: Random(seed))
+            .grow(p, 8.5);
+        if (next.detail(Detail.vision) > 99) grew++;
+        for (final d in Detail.values) {
+          if (d != Detail.vision) expect(next.detail(d), 88);
+        }
+      }
+      expect(grew, greaterThan(0));
     });
   });
 

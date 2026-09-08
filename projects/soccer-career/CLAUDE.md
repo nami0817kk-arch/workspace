@@ -49,7 +49,7 @@ lib/
   game/national.dart       架空の代表チームと代表ウィークの節
   game/career_engine_extras.dart  代表招集・監督の目標・契約年数
   models/                  Attributes / Player / Club / Season / CareerState
-  models/traits.dart       特性（67種。長所2つ＋3割で欠点1つ＋稀に置き換わる5種。効き方は条件＋数値のデータで持つ）
+  models/traits.dart       特性（75種。長所2つ＋3割で欠点1つ＋稀に置き換わる5種。効き方は条件＋数値のデータで持つ）
   models/agent.dart        代理人（6人のプール、架空）
   models/injury.dart       負傷（7種、重さ3段階）
   models/objective.dart    監督の目標
@@ -202,6 +202,17 @@ lib/
   稀が外れた選手まで別の特性になる（種で再現している既存テストが全部動く）。
   天才のポテンシャル上乗せは生まれたときにだけ効くので、特性をポテンシャルより先に引く。
   `strengths` / `flaws` に稀なものは入れない（ガイドの一覧と普通の引きの両方に効く）。
+- **超越の特性は、1つの詳細能力だけ上限を 99 → 109 にする**（`Trait.transcendDetail` /
+  `Formulas.ceilingBreak` / `Player.ceilingFor`）。イーグルアイ（視野）ほか8種、1人に1つ。
+  ユーザーの指示（2026-09-08「視野の能力値が上限を10超えることが可能」）。
+  **ポテンシャルに達しても、その1つだけは伸び続ける**——ただし助走が要る
+  （`transcendRunway` 89 以上）。無条件に伸び続けると、4人に1人の選手で
+  ポテンシャルの意味が消える。**上限を超えた値は保存にも乗る**ので、
+  `Attributes.fromDetails` の丸めは `absoluteMax`（109）で行う（99 で丸めると
+  読み込んだ瞬間に消える）。判定に使う `effective` も同じ上限で丸める。
+  `Dependencies.capFor` は土台を持つ能力を 99 で丸めない（丸めると 99 に達した
+  能力の成長が土台へ流れ、実測で代表経験が 57%→63% に膨らんだ。99 で止めるのは
+  `bumpDetail` の側で、これは以前からそう）。
 - **特性はポジションに合うものからだけ引く**（`Trait.fitsPosition` / `roll(position:)`）。
   ストライカーに「反応の鬼」が付くと、2つしか無い長所の片方が死ぬ。
   GK 専用・フィールド専用・守備の選手専用の3つの集合で絞る。

@@ -87,6 +87,17 @@ class Formulas {
   static const int minAttribute = 1;
   static const int maxAttribute = 99;
 
+  /// 「超越」の特性が、1つの詳細能力の上限をどれだけ持ち上げるか。
+  ///
+  /// 上限を超えた値は保存にも乗るので、読むときの丸めは [absoluteMax] で行う。
+  static const int ceilingBreak = 10;
+  static const int absoluteMax = maxAttribute + ceilingBreak;
+
+  /// ポテンシャルに達したあとも超越の能力が伸び続けるには、ここまで
+  /// 来ている必要がある。誰でも無条件に伸び続けると、ポテンシャルの
+  /// 意味が4人に1人で消える（実測で代表経験が 57%→64% に膨らんだ）。
+  static const int transcendRunway = maxAttribute - ceilingBreak;
+
   /// GK 以外の選手の GK 能力。保存データに無いときの既定値でもある。
   static const int defaultGoalkeeping = 25;
 
