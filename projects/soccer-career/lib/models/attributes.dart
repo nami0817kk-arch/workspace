@@ -207,6 +207,17 @@ class Attributes {
     Position.st: [3, 6, 2, 3, 0, 4, 0],
   };
 
+  /// そのポジションの総合力に占める、あるカテゴリの重み（0〜1）。
+  ///
+  /// GK は総合力の6割が GK 能力で、しかも詳細が3つしかない。同じ1回の
+  /// 練習でも総合力の動き方がポジションで倍近く違い、GK だけが
+  /// 9割ポテンシャルに到達していた。成長の側で割り戻すために使う。
+  static double weightShare(Position position, AttributeKey key) {
+    final w = _weights[position]!;
+    final total = w.reduce((a, b) => a + b);
+    return w[AttributeKey.values.indexOf(key)] / total;
+  }
+
   /// 詳細能力を1つ増減させた新しい能力値を返す。上下限で丸める。
   Attributes bumpDetail(Detail d, int delta) {
     final next = [..._values];

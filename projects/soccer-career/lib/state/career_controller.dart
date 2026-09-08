@@ -151,7 +151,7 @@ class CareerController extends ChangeNotifier {
         result.appearance == Appearance.sub;
 
     var morale = state.morale.bump(switch (result.appearance) {
-      Appearance.start => 2,
+      Appearance.start => 1,
       Appearance.sub => 1,
       Appearance.benched => -3,
       Appearance.injured => -4,

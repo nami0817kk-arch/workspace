@@ -51,13 +51,19 @@ class Fatigue {
   Fatigue add(int amount) => Fatigue(value: (value + amount).clamp(0, max));
 
   /// オフで抜ける分。歳を取るほど抜けにくい。
+  ///
+  /// 1シーズンで100前後まで溜まるので、若いうちはほぼ抜け、
+  /// 30を過ぎると残りが翌シーズンに乗る形にしてある。
   Fatigue afterOffseason(int age) =>
-      Fatigue(value: max0(value - (age >= 30 ? 45 : 70)));
+      Fatigue(value: max0(value - (age >= 30 ? 60 : 90)));
 
   static int max0(int v) => v < 0 ? 0 : v;
 
   /// 怪我のしやすさへの倍率。
-  double get injuryFactor => 1 + value * 0.006;
+  ///
+  /// 溜まっていると2倍近くまで上がっていた。疲労は「無理をすると痛い目を見る」
+  /// ための仕掛けで、常時の重しではない。
+  double get injuryFactor => 1 + value * 0.003;
 
   /// 回復量への倍率。溜まっているほど戻りが悪い。
   double get recoveryFactor => 1 - value * 0.003;

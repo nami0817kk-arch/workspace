@@ -125,10 +125,13 @@ void main() {
         await playOne(c);
         guard++;
       }
-      if (!c.state!.injured) return; // 怪我が起きなければこのテストは対象外
+      // 怪我が起きないままシーズンが終わったら、このテストは対象外。
+      if (!c.state!.injured || c.state!.seasonFinished) return;
 
       final before = c.state!.matchday;
-      final result = await playOne(c);
+      // 代表ウィークは節を消費しないので、当たったらもう一度進める。
+      var result = await playOne(c);
+      result ??= await playOne(c);
       expect(result, isNotNull);
       expect(result!.appearance, Appearance.injured);
       expect(result.rating, isNull);

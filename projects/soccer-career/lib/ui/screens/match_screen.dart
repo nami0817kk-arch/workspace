@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../game/formulas.dart';
 import '../../game/match_engine.dart';
 import '../../game/scenarios.dart';
 import '../../models/injury.dart';
@@ -253,9 +254,12 @@ class _OptionButton extends StatelessWidget {
                 child: Text(option.label, style: theme.textTheme.titleSmall),
               ),
               if (option.outcome != Outcome.play)
+                // 手が通る確率と、それが点になる確率は別。
+                // 「決まるのは半分ほど」を数字で見せておく。
                 Chip(
-                  label: Text(
-                      option.outcome == Outcome.goal ? 'ゴール' : 'アシスト'),
+                  label: Text(option.outcome == Outcome.goal
+                      ? 'ゴール ${(chance * Formulas.goalConversion * 100).round()}%'
+                      : 'アシスト ${(chance * Formulas.assistConversion * 100).round()}%'),
                   visualDensity: VisualDensity.compact,
                   backgroundColor: theme.colorScheme.secondaryContainer,
                 ),

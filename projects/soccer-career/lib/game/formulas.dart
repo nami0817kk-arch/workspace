@@ -23,11 +23,35 @@ class Formulas {
   static const double minRating = 4.0;
   static const double maxRating = 10.0;
 
+  /// 決定機を作ったあと、実際に決まる確率。
+  ///
+  /// 「良い判断ができた」ことと「点が入った」ことを分けている。
+  /// 分けないと、3つの局面すべてで強気に行くだけで1試合1.5点になり、
+  /// 通算600ゴールのような数字が出る。枠に飛んでも止められるのが
+  /// サッカーで、そこが分かれているほうが1点の重みも出る。
+  static const double goalConversion = 0.5;
+  static const double assistConversion = 0.6;
+
   /// 局面の成否が評価点に与える増減。
-  static const double ratingPerSuccess = 0.4;
-  static const double ratingPerFailure = -0.35;
-  static const double ratingPerGoal = 1.1;
+  ///
+  /// 成功のほうを小さく、失敗のほうを大きくしてある。ここが逆だと、
+  /// 手が通るようになった選手の評価点が青天井に上がり、
+  /// キャリア平均7.5のような数字になる（実際になっていた）。
+  static const double ratingPerSuccess = 0.32;
+  static const double ratingPerFailure = -0.4;
+  static const double ratingPerGoal = 0.95;
   static const double ratingPerAssist = 0.7;
+
+  /// 守る側の評価。失点の少なさがそのまま点数になる。
+  ///
+  /// 得点とアシストしか評価点に乗らなかった頃は、GK のキャリア平均が
+  /// 6.39、ストライカーが7.33 だった。評価点は移籍・代表・出場機会の
+  /// すべての入口なので、この差はそのまま「GK は上に行けない」になる。
+  /// 無失点は守備者にとってのゴールとして扱う。
+  static const double cleanSheetBase = 2.4;
+  static const double cleanSheetSlope = 0.42;
+  static const double cleanSheetMin = -0.6;
+  static const double cleanSheetMax = 1.0;
 
   /// 能力値の下限・上限。
   static const int minAttribute = 1;
@@ -47,6 +71,42 @@ class Formulas {
   static const int peakAge = 27;
   static const int declineAge = 31;
 
+  /// 年齢ごとの伸びやすさ。
+  ///
+  /// 一律だと、10代でも30代でも同じ速さで伸びる。100シーズン回すと
+  /// 25歳で総合力63、引退時でもポテンシャルに届かない選手ばかりになり、
+  /// 「若いうちに伸ばす」という判断そのものが無くなっていた。
+  static double growthByAge(int age) {
+    if (age <= 18) return 2.6;
+    if (age <= 21) return 2.2;
+    if (age <= 24) return 1.6;
+    if (age <= peakAge) return 1.0;
+    if (age <= 30) return 0.5;
+    return 0.25;
+  }
+
+  /// 成長を割り戻すときの基準の重み。
+  ///
+  /// だいたいのポジションで、1カテゴリが総合力に占める割合。
+  /// これより集中しているポジション（GK）は伸びを抑え、
+  /// 分散しているポジション（CM）は少し上げて、体感を揃える。
+  static const double growthShareBaseline = 0.26;
+
+  /// 割り戻しの上下限。ここを外すと、極端なポジションで成長が壊れる。
+  static const double growthShareMin = 0.45;
+  static const double growthShareMax = 1.3;
+
+  /// ポジションの重みから、成長の倍率を出す。
+  static double growthShareFactor(double share) => share <= 0
+      ? 1.0
+      : (growthShareBaseline / share).clamp(growthShareMin, growthShareMax);
+
+  /// この年齢までは、1回の成長で2つぶん伸びる。
+  ///
+  /// 確率を上げるだけでは足りず、かといって確率を1に張り付かせると
+  /// 練習の選択が意味を失う。若いうちだけ「伸び方が違う」形にする。
+  static const int rapidGrowthAge = 21;
+
   /// 出場評価。直近の平均評価点がこれ未満だと先発から外れる。
   static const double benchThreshold = 6.2;
 
@@ -61,7 +121,14 @@ class Formulas {
   static const int pointsDraw = 1;
 
   /// 移籍オファーが届く最低シーズン平均評価点。
-  static const double transferOfferRating = 6.8;
+  static const double transferOfferRating = 6.7;
+
+  /// 相手の強さが成功率に与える傾き。
+  ///
+  /// これが無いと、3部でも1部でも同じ手が同じ確率で通り、
+  /// 上のリーグへ移る意味が「年俸が上がる」だけになる。
+  static const int opponentBaseline = 60;
+  static const double opponentChanceSlope = 0.004;
 
   /// 選手の総合力と評価点から、移籍先クラブの強さの上限を決める係数。
   static const double transferReachFactor = 1.08;
@@ -145,10 +212,17 @@ class Formulas {
   static const double withdrawChanceOnFail = 0.5;
 
   /// 1試合あたりの負傷確率の基準。コンディションと年齢で増減する。
-  static const double injuryBaseChance = 0.045;
+  ///
+  /// 100シーズン回して決めた値。0.045 だと1シーズンに2.7回離脱し、
+  /// 38節のうち14節を棒に振っていた。実際の選手は年1〜2回で、
+  /// 休むのは5〜8試合ぶん。
+  static const double injuryBaseChance = 0.011;
 
   /// 練習1回あたりの負傷確率。試合より低いが、疲れていると効いてくる。
-  static const double injuryTrainingChance = 0.02;
+  static const double injuryTrainingChance = 0.008;
+
+  /// 重傷になる確率。能力とポテンシャルを恒久的に削るので、稀に保つ。
+  static const double severeInjuryShare = 0.05;
 
   /// コンディションが基準を下回るほど怪我しやすくなる傾き。
   static const double injuryConditionSlope = 0.0009;
@@ -171,10 +245,13 @@ class Formulas {
   static const int rehabWatchMatches = 3;
 
   /// 代表に招集される最低総合力。
-  static const int callUpOverall = 72;
+  ///
+  /// 72 だと、普通に育てた選手のほぼ全員（94%）が代表に入っていた。
+  /// 代表は「選ばれること自体が到達点」なので、ここは上位だけに保つ。
+  static const int callUpOverall = 77;
 
   /// 代表に招集される最低の直近平均評価点。
-  static const double callUpRating = 6.6;
+  static const double callUpRating = 6.9;
 
   /// 代表戦の前に必要な出場試合数（実績が無いと選ばれない）。
   static const int callUpMinAppearances = 5;

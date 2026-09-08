@@ -69,16 +69,18 @@ void main() {
 
     test('疲労は溜まる一方で、オフで抜ける', () {
       var f = const Fatigue();
-      for (var i = 0; i < 20; i++) {
+      // 1シーズン38節ぶん。先発なら1試合3。
+      for (var i = 0; i < 38; i++) {
         f = f.add(3);
       }
-      expect(f.value, 60);
+      expect(f.value, Fatigue.max);
       expect(f.injuryFactor, greaterThan(1.0));
       expect(f.recoveryFactor, lessThan(1.0));
 
-      // 若いほうがよく抜ける。
+      // 若いほうがよく抜ける。歳を取ると残りが翌シーズンに乗る。
       expect(f.afterOffseason(22).value, lessThan(f.afterOffseason(33).value));
-      expect(f.afterOffseason(22).value, 0);
+      expect(f.afterOffseason(22).value, 10);
+      expect(f.afterOffseason(33).value, 40);
     });
   });
 

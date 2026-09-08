@@ -236,7 +236,9 @@ class CareerEngine {
   int rollPotential(int overall) {
     // 3つ引いて最大を取ると、高い方に少し寄る。凡庸な選手が多すぎると
     // キャリアが伸びず、逆に全員が大器だと差が出ない。
-    final rolls = [for (var i = 0; i < 3; i++) _random.nextInt(33)];
+    // 3つ引いて最大を取ると高いほうに寄る。幅を広く取りすぎると、
+    // 到達しようのない上限が付いて「頭打ち」がただの飾りになる。
+    final rolls = [for (var i = 0; i < 3; i++) _random.nextInt(24)];
     final bonus = rolls.reduce(max);
     return (overall + 8 + bonus).clamp(Formulas.potentialMin, Formulas.potentialMax);
   }
@@ -488,6 +490,24 @@ class CareerEngine {
       );
     }
     final club = nextClubIfStaying(state);
+
+    // 契約が残っているうちは、残留しても条件は動かない。1年減るだけ。
+    //
+    // 以前はここで毎年新しい契約年数を配っていたため、残留し続けると
+    // 契約が永久に残り1年より短くならず、移籍の話が一度も来なかった
+    // （100キャリアで平均0.13件）。契約は減るものとして扱う。
+    if (state.contractYears > 1) {
+      return TransferOffer(
+        club: club,
+        reason: '${club.name}との契約はあと${state.contractYears - 1}年ある。',
+        salary: state.salary,
+        role: _roleFor(state.player.overall, club),
+        years: state.contractYears - 1,
+        isRenewal: true,
+        releaseClause: state.releaseClause,
+      );
+    }
+
     final stats = state.seasonStats;
     final base = salaryFor(
       overall: state.player.overall,
@@ -507,8 +527,15 @@ class CareerEngine {
     final continentalFactor = state.continentalStage.participated
         ? Formulas.continentalSalaryBonus
         : 1.0;
-    final salary = _round(
-        max(base, state.salary) * performance * objectiveFactor * continentalFactor);
+    // 実力に見合う額（base）を軸にする。前の年俸に倍率を掛け続けると、
+    // 良いシーズンが続くだけで年俸が指数で伸びる（100シーズン回して
+    // 平均11億円、最大200億円になっていた）。
+    // 下げ幅も緩めて、1年の不調で半減しないようにする。
+    final target = base * performance * objectiveFactor * continentalFactor;
+    final salary = _round(target.clamp(
+      max(base * 0.6, state.salary * 0.7),
+      max(base * 1.8, state.salary * 1.1),
+    ));
     return TransferOffer(
       club: club,
       reason: '${club.name}が契約更改を提示した。',
@@ -516,15 +543,16 @@ class CareerEngine {
       role: _roleFor(state.player.overall, club),
       years: extras.rollContractYears(),
       isRenewal: true,
-      releaseClause: releaseClauseFor(salary),
+      releaseClause: releaseClauseFor(state.reputation.marketValue),
     );
   }
 
-  /// 契約に付く違約金。年俸から決まる。
+  /// 契約に付く違約金。今の値札から決まる。
   ///
-  /// 安い違約金は、クラブにとっては安く囲う手段で、選手にとっては
-  /// 出口になる。伸びた選手ほど、この額を早く追い越す。
-  int releaseClauseFor(int salary) => _round(salary * 8);
+  /// 年俸を基準にしていた頃は、年俸の8倍＝市場価値の10倍以上になり、
+  /// どれだけ伸びても一度も発動しなかった。値札の2.5倍なら、
+  /// 伸びた選手は数年で追い越す。
+  int releaseClauseFor(int marketValue) => _round(max(400, marketValue * 4));
 
   /// 違約金を超える評価になったか。ここを超えると契約が残っていても話が動く。
   bool clauseTriggered(CareerState state) {
@@ -576,7 +604,7 @@ class CareerEngine {
         role: _roleFor(state.player.overall, state.club),
         years: extras.rollContractYears(),
         fee: option,
-        releaseClause: releaseClauseFor(salary),
+        releaseClause: releaseClauseFor(state.reputation.marketValue),
       ),
     ];
   }
@@ -634,12 +662,20 @@ class CareerEngine {
     for (final country in _reachableCountries(state)) {
       for (final tier in [1, 2]) {
         if (tier > country.tiers) continue;
+        // 手の届く範囲の中から、格の近いクラブを選ぶ。
+        //
+        // 常に「届く中で一番強いクラブ」を出していた頃は、誰もが最短で
+        // 強豪に行き着き、キャリアで平均2回リーグ優勝していた。
+        // 大きく格下のクラブは声をかけてこないので、下も切る。
         final clubs = World.buildLeague(country.id, tier)
-            .where((c) => c.name != state.club.name && c.strength <= reach)
+            .where((c) =>
+                c.name != state.club.name &&
+                c.strength <= reach &&
+                c.strength >= state.player.overall - 14)
             .toList()
           ..sort((a, b) => b.strength.compareTo(a.strength));
         if (clubs.isEmpty) continue;
-        final club = clubs.first;
+        final club = clubs[_random.nextInt(min(4, clubs.length))];
 
         final eligibility = Eligibility.report(
           nationality: state.player.nationality,
@@ -673,7 +709,7 @@ class CareerEngine {
           years: extras.rollContractYears(),
           eligibility: eligibility,
           fee: fee,
-          releaseClause: releaseClauseFor(salary),
+          releaseClause: releaseClauseFor(state.reputation.marketValue),
         ));
       }
     }
@@ -735,8 +771,14 @@ class CareerEngine {
   /// いきなり最上位リーグから声はかからない。
   List<Country> _reachableCountries(CareerState state) {
     final here = World.byId(state.club.countryId);
-    final reachPrestige =
-        (state.player.overall - 55) ~/ 8 + state.agent.reach ~/ 3;
+    // 上の国へ行くには、実力に加えて「名前が知られていること」が要る。
+    //
+    // 以前は総合力55から1段ずつ届いたので、普通に育てた選手の半数以上が
+    // 最上位の国の1部に流れ着いていた。代表歴を条件に足して、
+    // 格上の国は一段ハードルを上げる。
+    final reachPrestige = (state.player.overall - 66) ~/ 7 +
+        state.agent.reach ~/ 4 +
+        (state.caps >= 10 ? 1 : 0);
     return [
       here,
       ...World.countries.where((c) =>

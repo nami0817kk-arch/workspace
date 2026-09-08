@@ -168,6 +168,9 @@ class MatchInProgress {
       international: international,
     ));
     final condition = conditionModifier(player.condition);
+    // 相手の格。上のリーグほど同じ手が通らなくなる。
+    final level = (Formulas.opponentBaseline - opponent.strength) *
+        Formulas.opponentChanceSlope;
     // 自信は小さく効かせる。性格で試合が決まると能力を伸ばす意味が薄れる。
     final personality = player.personality.chanceModifier;
 
@@ -197,6 +200,7 @@ class MatchInProgress {
             trait +
             condition +
             personality +
+            level +
             identity +
             signature +
             matchup +
@@ -214,21 +218,41 @@ class MatchInProgress {
           option.key == AttributeKey.passing ||
           option.key == AttributeKey.dribbling);
 
+  /// 決めきれなかったときの文。
+  static const String missedGoal = 'シュートは枠を捉えたが、GKが弾いた。';
+  static const String missedAssist = '良いボールが入ったが、味方が決めきれなかった。';
+
   /// 選んだ手を解決して次の局面へ進める。
+  ///
+  /// 手そのものの成否と、それが得点になるかは別に扱う。
+  /// 良い判断でも点にならない試合があるほうが、決まった1点が重くなる。
   ScenarioResolution choose(ScenarioOption option) {
     final chance = chanceFor(option);
     final success = _random.nextDouble() < chance;
 
     var delta = success ? Formulas.ratingPerSuccess : Formulas.ratingPerFailure;
-    if (success) {
-      if (option.outcome == Outcome.goal) delta += Formulas.ratingPerGoal;
-      if (option.outcome == Outcome.assist) delta += Formulas.ratingPerAssist;
+    var outcome = option.outcome;
+    var text = success ? option.successText : option.failureText;
+
+    if (success && outcome != Outcome.play) {
+      final converts = _random.nextDouble() <
+          (outcome == Outcome.goal
+              ? Formulas.goalConversion
+              : Formulas.assistConversion);
+      if (converts) {
+        delta += outcome == Outcome.goal
+            ? Formulas.ratingPerGoal
+            : Formulas.ratingPerAssist;
+      } else {
+        text = outcome == Outcome.goal ? missedGoal : missedAssist;
+        outcome = Outcome.play;
+      }
     }
 
     final resolution = ScenarioResolution(
       success: success,
-      text: success ? option.successText : option.failureText,
-      outcome: option.outcome,
+      text: text,
+      outcome: outcome,
       ratingDelta: delta,
       key: option.key,
       detail: option.detail,
@@ -239,11 +263,18 @@ class MatchInProgress {
   }
 
   /// 期待される評価点の増減。自動で選ぶときの物差し。
+  ///
+  /// 決まる確率まで含めて見る。含めないと、自動進行が得点の手を
+  /// 実際の価値より高く買ってしまう。
   double expectedDelta(ScenarioOption option) {
     final p = chanceFor(option);
     var gain = Formulas.ratingPerSuccess;
-    if (option.outcome == Outcome.goal) gain += Formulas.ratingPerGoal;
-    if (option.outcome == Outcome.assist) gain += Formulas.ratingPerAssist;
+    if (option.outcome == Outcome.goal) {
+      gain += Formulas.ratingPerGoal * Formulas.goalConversion;
+    }
+    if (option.outcome == Outcome.assist) {
+      gain += Formulas.ratingPerAssist * Formulas.assistConversion;
+    }
     return p * gain + (1 - p) * Formulas.ratingPerFailure;
   }
 
@@ -279,8 +310,8 @@ class MatchInProgress {
   /// 能力値が難易度ちょうどでも五分にはしない。難しい手を選ぶことに
   /// リスクを残さないと、常に一番おいしい選択肢を押すだけのゲームになる。
   static double successChance(int attribute, int difficulty) {
-    final chance = 0.42 + (attribute - difficulty) * 0.011;
-    return chance.clamp(0.05, 0.92);
+    final chance = 0.40 + (attribute - difficulty) * 0.009;
+    return chance.clamp(0.05, 0.90);
   }
 
   /// コンディションが成功率に与える増減。
@@ -330,6 +361,15 @@ class MatchInProgress {
     final teamGoals = _poissonish(1.25 + advantage / 40);
     final concededGoals = _poissonish(1.25 - advantage / 40);
 
+    // 守備の選手は、失点の少なさで評価される。
+    final defensive = _defensiveWeight(player.position);
+    final defence = defensive == 0
+        ? 0.0
+        : defensive *
+            ((Formulas.cleanSheetBase - max(0, concededGoals)) *
+                    Formulas.cleanSheetSlope)
+                .clamp(Formulas.cleanSheetMin, Formulas.cleanSheetMax);
+
     final (extraGoals, extraAssists) = _resolveDeadBall();
     final myGoals = goals + extraGoals;
     final scored = max(teamGoals, myGoals);
@@ -346,6 +386,7 @@ class MatchInProgress {
               appearance == Appearance.injured
           ? null
           : (rating +
+                  defence +
                   extraGoals * Formulas.ratingPerGoal +
                   extraAssists * Formulas.ratingPerAssist)
               .clamp(Formulas.minRating, Formulas.maxRating),
@@ -354,6 +395,15 @@ class MatchInProgress {
       international: international,
     );
   }
+
+  /// 失点の少なさをどれだけ自分の評価に乗せるか。
+  ///
+  /// GK と最終ラインは丸ごと、守備的MFは半分。前の選手は乗らない。
+  static double _defensiveWeight(Position position) => switch (position) {
+        Position.gk || Position.cb || Position.sb => 1.0,
+        Position.dm => 0.5,
+        _ => 0.0,
+      };
 
   /// 得点数のばらつき。厳密なポアソンではないが、0〜5点の分布として十分。
   int _poissonish(double mean) {
@@ -531,20 +581,22 @@ class MatchEngine {
     if (rating < Formulas.growthRatingThreshold) return player.attributes;
     if (player.atPotential) return player.attributes;
 
-    final peakAge = Formulas.peakAge + player.traits.peakAgeOffset;
-    final ageFactor = player.age <= peakAge ? 1.0 : 0.4;
+    // 若いほど伸びる。特性のピーク年齢のぶんだけ、曲線を後ろにずらす。
+    final ageFactor =
+        Formulas.growthByAge(player.age - player.traits.peakAgeOffset);
     final margin = rating - Formulas.growthRatingThreshold;
     // 停滞期はここを大きく削る。伸び続ける選手は居ない。
-    final chance = (0.18 + margin * 0.22) *
+    final base = (0.18 + margin * 0.22) *
         ageFactor *
         player.traits.growthFactor(player.age) *
         environment *
         (plateau ? Formulas.plateauGrowthFactor : 1.0);
-    if (_random.nextDouble() >= chance) return player.attributes;
+    final step = player.age <= Formulas.rapidGrowthAge ? 2 : 1;
 
+    // 伸ばす先を先に決める。ポジションの重みで割り戻すために、
+    // どのカテゴリが伸びるのかが分かってから確率を出す。
     final focus =
         used.isNotEmpty && _random.nextDouble() < Formulas.growthFocusChance;
-    // 伸ばす先は土台の許す範囲まで。届かなければ土台のほうが伸びる。
     Detail wanted;
     if (!focus) {
       wanted = _randomDetail();
@@ -553,8 +605,15 @@ class MatchEngine {
       wanted = pick.detail ??
           pick.key.details[_random.nextInt(pick.key.details.length)];
     }
+
+    final chance = base *
+        Formulas.growthShareFactor(
+            Attributes.weightShare(player.position, wanted.category));
+    if (_random.nextDouble() >= chance) return player.attributes;
+
+    // 土台の許す範囲まで。届かなければ土台のほうが伸びる。
     return player.attributes
-        .bumpDetail(Dependencies.resolve(wanted, player.attributes), 1);
+        .bumpDetail(Dependencies.resolve(wanted, player.attributes), step);
   }
 
   /// 負傷するかどうかを判定する。
@@ -577,7 +636,7 @@ class MatchEngine {
     final roll = _random.nextDouble();
     final severity = roll < 0.6
         ? InjurySeverity.light
-        : roll < 0.92
+        : roll < 1 - Formulas.severeInjuryShare
             ? InjurySeverity.moderate
             : InjurySeverity.severe;
     final kinds =
@@ -639,21 +698,28 @@ class MatchEngine {
       condition -= (menu.conditionCost * costFactor).round();
       final canGrow = attributes.overallFor(player.position) < player.potential;
       // プロ意識・専属コーチ・生活習慣が、同じ練習の身になり方を変える。
-      final chance = Formulas.trainingGrowthChance *
+      final base = Formulas.trainingGrowthChance *
+          Formulas.growthByAge(player.age - player.traits.peakAgeOffset) *
           menu.growthFactor *
           player.personality.trainingFactor *
           staff.growthFactor *
           habits.growthFactor *
           environment;
-      final effective = plateau ? chance * Formulas.plateauGrowthFactor : chance;
+      final step = player.age <= Formulas.rapidGrowthAge ? 2 : 1;
+      final effective = plateau ? base * Formulas.plateauGrowthFactor : base;
       if (canGrow) {
         for (final key in menu.keys) {
-          if (_random.nextDouble() >= effective) continue;
+          // ポジションの重みで割り戻す。同じ練習が、どのポジションでも
+          // 同じくらい総合力を動かすようにする。
+          final chance = effective *
+              Formulas.growthShareFactor(
+                  Attributes.weightShare(player.position, key));
+          if (_random.nextDouble() >= chance) continue;
           final ds = key.details;
           final wanted = ds[_random.nextInt(ds.length)];
           final target = Dependencies.resolve(wanted, attributes);
           if (target != wanted) redirected = true;
-          attributes = attributes.bumpDetail(target, 1);
+          attributes = attributes.bumpDetail(target, step);
           trained ??= target;
         }
       }
