@@ -124,3 +124,26 @@ def test_件数の上限を守る():
 
     posts = [Post(no=i, text=f"反応その{i}です") for i in range(30)]
     assert len(say_lines(posts, want=5)) == 5
+
+
+def test_題材名でまとめサイトの記事を探す():
+    """URL を人が見つけた回しか反応が入らなかった（2026-09-08）。検索ページから探す。"""
+    from src import reactions
+
+    class _Resp:
+        def __init__(self, text):
+            self.text = text
+
+    class _Session:
+        def get(self, url, **kw):
+            host = url.split("/")[2]
+            return _Resp(
+                f'<a href="https://{host}/archives/111.html">久保建英が90分ベンチ</a>'
+                f'<a href="https://{host}/archives/222.html">関係ない記事</a>'
+                f'<a href="https://{host}/archives/111.html">久保建英が90分ベンチ</a>'
+            )
+
+    hits = reactions.find("久保建英", _Session())
+    assert len(hits) == len(reactions.SEARCH_SITES)        # サイトごとに1件（重複は落ちる）
+    assert all("久保建英" in title for _, title in hits)
+    assert all(url.endswith("/archives/111.html") for url, _ in hits)

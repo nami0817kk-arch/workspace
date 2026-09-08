@@ -663,9 +663,39 @@ def _advise_volume(notes: Notes) -> list[str]:
     return hints
 
 
+# 中身のボリューム（2026-09-08 ユーザー「中身のボリュームで負けている」）。
+# 今日の18本の中央値は 他人の声4件・数字の行7・出典4本/3媒体。
+# 参考（サッカーラボ 25.5万回）は反応約15件、冒頭30秒に数字4つ
+VOLUME_VOICES = 10       # 件
+VOLUME_NUMBERS = 8       # 数字を含む行
+VOLUME_SOURCES = 5       # 出典の本数
+VOLUME_OUTLETS = 3       # 媒体の数
+
+
+def _advise_material(notes: Notes) -> list[str]:
+    """中身の量が参考に届いているか。届かなければ、どこが薄いかを言う。"""
+    from urllib.parse import urlparse
+
+    voices = sum(1 for s in notes.sections for v in s.voices if v and v not in SPEAKERS)
+    numbers = sum(1 for s in notes.sections for line in s.say if any(ch.isdigit() for ch in line))
+    sources = notes.sources
+    outlets = {urlparse(u).netloc for u in sources}
+    hints: list[str] = []
+    if voices < VOLUME_VOICES:
+        hints.append(f"他人の声が{voices}件です（目安{VOLUME_VOICES}件）。"
+                     "`reactions --find <題材>` でスレを探して足せます")
+    if numbers < VOLUME_NUMBERS:
+        hints.append(f"数字を含む行が{numbers}行です（目安{VOLUME_NUMBERS}行）。"
+                     "`material` の数字の行から拾えます")
+    if len(sources) < VOLUME_SOURCES or len(outlets) < VOLUME_OUTLETS:
+        hints.append(f"出典が{len(sources)}本・{len(outlets)}媒体です"
+                     f"（目安{VOLUME_SOURCES}本・{VOLUME_OUTLETS}媒体）")
+    return hints
+
+
 def _advise_voices(notes: Notes) -> list[str]:
     """反応の扱いで気をつける点。"""
-    hints: list[str] = _advise_volume(notes) + _advise_title(notes)
+    hints: list[str] = _advise_volume(notes) + _advise_material(notes) + _advise_title(notes)
     for section in notes.sections:
         card = section.card or {}
         if str(card.get("type", "")).lower() != "reactions":

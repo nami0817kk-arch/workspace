@@ -14,8 +14,8 @@
   "2026-09-08": {
     "videos.insert": 41,
     "thumbnails.set": 38,
-    "videos.list": 48,
-    "videos.update": 32,
+    "videos.list": 50,
+    "videos.update": 33,
     "commentThreads.insert": 12
   }
 }
