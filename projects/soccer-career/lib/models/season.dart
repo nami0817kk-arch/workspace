@@ -34,6 +34,8 @@ class MatchResult {
     required this.rating,
     required this.goals,
     required this.assists,
+    this.goalMinutes = const [],
+    this.assistMinutes = const [],
     this.international = false,
   });
 
@@ -52,6 +54,13 @@ class MatchResult {
   final int goals;
   final int assists;
 
+  /// 自分が決めた時間とアシストした時間。
+  ///
+  /// 「78分に決めて追いついた」が残ると、38試合が数字の羅列でなくなる。
+  /// セットプレーぶんは時間が分からないので入っていない（数だけ goals に乗る）。
+  final List<int> goalMinutes;
+  final List<int> assistMinutes;
+
   bool get won => scored > conceded;
   bool get drawn => scored == conceded;
   String get scoreLine => '$scored - $conceded';
@@ -66,6 +75,8 @@ class MatchResult {
         'rating': rating,
         'goals': goals,
         'assists': assists,
+        if (goalMinutes.isNotEmpty) 'goalMinutes': goalMinutes,
+        if (assistMinutes.isNotEmpty) 'assistMinutes': assistMinutes,
         'international': international,
       };
 
@@ -79,6 +90,10 @@ class MatchResult {
         rating: (json['rating'] as num?)?.toDouble(),
         goals: json['goals'] as int,
         assists: json['assists'] as int,
+        goalMinutes:
+            (json['goalMinutes'] as List? ?? const []).cast<int>().toList(),
+        assistMinutes:
+            (json['assistMinutes'] as List? ?? const []).cast<int>().toList(),
         international: json['international'] as bool? ?? false,
       );
 }

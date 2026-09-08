@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import '../../models/attributes.dart';
 import '../../game/eligibility.dart';
@@ -9,6 +8,7 @@ import '../../models/career.dart';
 import '../../models/personality.dart';
 import '../../models/objective.dart';
 import '../../models/competition.dart';
+import '../../game/match_engine.dart';
 import '../../game/newsroom.dart';
 import '../../game/ranking.dart';
 import '../../models/development.dart';
@@ -21,6 +21,7 @@ import '../../models/season.dart';
 import '../../state/career_controller.dart';
 import '../club_identity.dart';
 import '../readable_width.dart';
+import '../transfer_code.dart';
 import 'guide_screen.dart';
 import 'match_screen.dart';
 import 'season_end_screen.dart';
@@ -77,112 +78,6 @@ class HubScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _showExport(BuildContext context) async {
-    final code = controller.exportCode();
-    if (code == null) return;
-    await showDialog<void>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('引き継ぎコード'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'このコードをコピーして、別の端末で「セーブを読み込む」に貼り付けると、'
-              '続きから遊べる。長いので、メモアプリなどに保存しておくとよい。',
-            ),
-            const SizedBox(height: 12),
-            Container(
-              height: 120,
-              width: double.infinity,
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: SingleChildScrollView(
-                child: SelectableText(
-                  code,
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('閉じる'),
-          ),
-          FilledButton.icon(
-            onPressed: () async {
-              await Clipboard.setData(ClipboardData(text: code));
-              if (!context.mounted) return;
-              Navigator.of(context).pop();
-              ScaffoldMessenger.of(context)
-                ..hideCurrentSnackBar()
-                ..showSnackBar(
-                    const SnackBar(content: Text('引き継ぎコードをコピーした')));
-            },
-            icon: const Icon(Icons.copy),
-            label: const Text('コピー'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// 引き継ぎコードから復元する。今のキャリアは上書きされる。
-  Future<void> _showImport(BuildContext context) async {
-    final input = TextEditingController();
-    final code = await showDialog<String>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('セーブを読み込む'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              '別の端末で作った引き継ぎコードを貼り付ける。'
-              '今のキャリアは上書きされる。',
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.error),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: input,
-              maxLines: 4,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'SC1:...',
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('やめる'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(input.text),
-            child: const Text('読み込む'),
-          ),
-        ],
-      ),
-    );
-    if (code == null || code.trim().isEmpty) return;
-    final ok = await controller.importCode(code);
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(SnackBar(
-        content: Text(ok ? 'キャリアを読み込んだ' : 'コードを読めなかった。今のキャリアはそのまま。'),
-      ));
-  }
-
   Future<void> _confirmDelete(BuildContext context) async {
     final ok = await showDialog<bool>(
       context: context,
@@ -228,9 +123,9 @@ class HubScreen extends StatelessWidget {
               onSelected: (value) {
                 switch (value) {
                   case 'export':
-                    _showExport(context);
+                    TransferCode.show(context, controller);
                   case 'import':
-                    _showImport(context);
+                    TransferCode.import(context, controller);
                   case 'delete':
                     _confirmDelete(context);
                 }
@@ -474,7 +369,7 @@ class _MatchTab extends StatelessWidget {
                   ?.copyWith(color: theme.colorScheme.onSurfaceVariant))
         else
           for (final r in state.results.reversed.take(8))
-            _ResultRow(result: r),
+            _ResultRow(result: r, state: state),
       ],
     );
   }
@@ -2358,10 +2253,12 @@ class _AttributeBar extends StatelessWidget {
   }
 }
 
+/// 1試合ぶんの行。押すと、その試合で何があったかを開く。
 class _ResultRow extends StatelessWidget {
-  const _ResultRow({required this.result});
+  const _ResultRow({required this.result, required this.state});
 
   final MatchResult result;
+  final CareerState state;
 
   @override
   Widget build(BuildContext context) {
@@ -2374,6 +2271,11 @@ class _ResultRow extends StatelessWidget {
     return ListTile(
       dense: true,
       contentPadding: EdgeInsets.zero,
+      onTap: () => showModalBottomSheet<void>(
+        context: context,
+        showDragHandle: true,
+        builder: (_) => _MatchDetail(result: result, state: state),
+      ),
       leading: SizedBox(
         width: 44,
         child: Text(result.scoreLine,
@@ -2392,6 +2294,118 @@ class _ResultRow extends StatelessWidget {
 }
 
 /// 順位表。クラブのタブの中に置く。
+/// 終わった試合の中身。
+///
+/// 結果画面を閉じると、その試合で何があったかは二度と見られなかった。
+/// 38試合ぶんの数字が並ぶだけでは、どれも思い出せない。
+class _MatchDetail extends StatelessWidget {
+  const _MatchDetail({required this.result, required this.state});
+
+  final MatchResult result;
+  final CareerState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    // その節に出た見出し。試合の意味づけはここに残っている。
+    final headlines = state.news
+        .where((n) => n.year == state.year && n.matchday == result.matchday)
+        .toList();
+
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              result.international
+                  ? '代表戦  vs ${result.opponentName}'
+                  : '第${result.matchday}節  '
+                      '${result.home ? 'ホーム' : 'アウェイ'}  '
+                      'vs ${result.opponentName}',
+              style: theme.textTheme.titleMedium,
+            ),
+            const SizedBox(height: 2),
+            Text(
+              '${result.scoreLine}  '
+              '${result.won ? '勝ち' : result.drawn ? '引き分け' : '負け'}'
+              '  ・  ${result.appearance.label}',
+              style: muted,
+            ),
+            const SizedBox(height: 14),
+            Row(
+              children: [
+                _DetailStat(
+                  label: '評価点',
+                  value: result.rating == null
+                      ? '—'
+                      : result.rating!.toStringAsFixed(2),
+                ),
+                _DetailStat(label: 'ゴール', value: '${result.goals}'),
+                _DetailStat(label: 'アシスト', value: '${result.assists}'),
+              ],
+            ),
+            if (result.goalMinutes.isNotEmpty ||
+                result.assistMinutes.isNotEmpty) ...[
+              const SizedBox(height: 14),
+              Text('この試合の自分', style: theme.textTheme.labelMedium),
+              const SizedBox(height: 4),
+              for (final minute in result.goalMinutes)
+                Text('${MatchInProgress.minuteLabel(minute)}  ゴール',
+                    style: theme.textTheme.bodyMedium),
+              for (final minute in result.assistMinutes)
+                Text('${MatchInProgress.minuteLabel(minute)}  アシスト',
+                    style: theme.textTheme.bodyMedium),
+            ],
+            if (headlines.isNotEmpty) ...[
+              const SizedBox(height: 14),
+              Text('この節の話題', style: theme.textTheme.labelMedium),
+              const SizedBox(height: 4),
+              for (final item in headlines) ...[
+                Text(item.headline, style: theme.textTheme.bodyMedium),
+                if (item.body.isNotEmpty) Text(item.body, style: muted),
+                const SizedBox(height: 6),
+              ],
+            ],
+            if (result.appearance == Appearance.benched)
+              Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: Text('出番は無かった。', style: muted),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DetailStat extends StatelessWidget {
+  const _DetailStat({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label,
+              style: theme.textTheme.labelSmall
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+          Text(value, style: theme.textTheme.titleMedium),
+        ],
+      ),
+    );
+  }
+}
+
 class _TableCard extends StatelessWidget {
   const _TableCard({required this.state});
 

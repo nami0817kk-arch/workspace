@@ -126,6 +126,77 @@ void main() {
     });
   });
 
+  group('セーブの持ち出し', () {
+    test('控えた年を覚え、シーズンを跨いでも残る', () async {
+      final c = controller(seed: 21);
+      await c.startCareer(
+          name: '控える選手',
+          position: Position.cm,
+          age: 22,
+          agent: Agent.pool.first);
+      expect(c.state!.backedUpYear, 0);
+      // 一度も控えていないなら、プロ入りからの年数がそのまま危険な年数。
+      expect(c.state!.yearsSinceBackup, c.state!.professionalYears);
+
+      await c.markBackedUp();
+      expect(c.state!.backedUpYear, c.state!.year);
+      expect(c.state!.yearsSinceBackup, 0);
+
+      final restored = CareerState.fromJson(c.state!.toJson());
+      expect(restored.backedUpYear, c.state!.backedUpYear);
+      expect(CareerState.fromJson(c.state!.toJson()..remove('backedUpYear'))
+          .backedUpYear, 0);
+
+      while (!c.state!.seasonFinished) {
+        await c.simulateMatch();
+      }
+      await c.finishSeason();
+      final before = c.state!.backedUpYear;
+      await c.advanceSeason(accepted: c.renewalOffer!);
+      expect(c.state!.backedUpYear, before, reason: 'シーズンを跨いで消えた');
+      expect(c.state!.yearsSinceBackup, 1);
+    });
+  });
+
+  group('試合の中身', () {
+    test('決めた時間が残り、保存を往復しても消えない', () async {
+      final c = controller(seed: 22);
+      await c.startCareer(
+          name: '決める選手',
+          position: Position.st,
+          age: 24,
+          agent: Agent.pool.first);
+      while (!c.state!.seasonFinished) {
+        await c.simulateMatch();
+      }
+      final scored =
+          c.state!.results.where((r) => r.goals > 0).toList();
+      expect(scored, isNotEmpty, reason: '1シーズンで1点も取っていない');
+      // セットプレーぶんは時間が分からないので、数以下であればよい。
+      for (final r in c.state!.results) {
+        expect(r.goalMinutes.length, lessThanOrEqualTo(r.goals));
+        expect(r.assistMinutes.length, lessThanOrEqualTo(r.assists));
+        for (final minute in [...r.goalMinutes, ...r.assistMinutes]) {
+          expect(minute, inInclusiveRange(1, 90));
+        }
+      }
+
+      final restored = CareerState.fromJson(c.state!.toJson());
+      expect(
+        restored.results.map((r) => r.goalMinutes).toList(),
+        c.state!.results.map((r) => r.goalMinutes).toList(),
+      );
+
+      // 古い保存データ（時間を持っていない）でも落ちない。
+      final legacy = c.state!.toJson();
+      for (final r in (legacy['results'] as List)) {
+        (r as Map).remove('goalMinutes');
+        r.remove('assistMinutes');
+      }
+      expect(CareerState.fromJson(legacy).results.first.goalMinutes, isEmpty);
+    });
+  });
+
   group('練習の成果', () {
     test('開幕時が控えられ、伸びた分が差として出る', () async {
       final c = controller();

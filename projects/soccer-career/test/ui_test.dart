@@ -225,6 +225,54 @@ void main() {
     expect(find.textContaining('回勝負して'), findsWidgets);
   });
 
+  testWidgets('終わった試合を開くと、その中身が読める', (tester) async {
+    // 結果画面を閉じると二度と見られなかった。
+    final controller = await newCareer();
+    for (var i = 0; i < 4; i++) {
+      await controller.simulateMatch();
+    }
+    await pumpHub(tester, controller, height: 2400);
+
+    final result = controller.state!.results.last;
+    await tester.dragUntilVisible(
+      find.text('直近の試合'),
+      find.byType(ListView).first,
+      const Offset(0, -200),
+    );
+    await tester.tap(find.text(result.scoreLine).first);
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('vs ${result.opponentName}'), findsWidgets);
+    expect(find.text('評価点'), findsOneWidget);
+    expect(find.text('ゴール'), findsWidgets);
+  });
+
+  testWidgets('シーズン終了で、セーブの持ち出しを促す', (tester) async {
+    final controller = await newCareer();
+    while (!controller.state!.seasonFinished) {
+      await controller.simulateMatch();
+    }
+    await controller.finishSeason();
+
+    tester.view.physicalSize = const Size(390, 2400);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(MaterialApp(
+      theme: ThemeData(useMaterial3: true),
+      home: SeasonEndScreen(controller: controller),
+    ));
+    await tester.pumpAndSettle();
+
+    await tester.dragUntilVisible(
+      find.text('セーブの持ち出し'),
+      find.byType(ListView).first,
+      const Offset(0, -200),
+    );
+    expect(find.text('引き継ぎコードを出す'), findsOneWidget);
+    // まだ一度も控えていないので、その旨が書いてある。
+    expect(find.textContaining('この端末の中にしか無い'), findsOneWidget);
+  });
+
   testWidgets('広い画面でも、本文が読める幅で止まる', (tester) async {
     // PC のブラウザで開くと、カードが画面幅いっぱいまで伸びて読めなかった。
     final controller = await newCareer();
