@@ -17,6 +17,7 @@ import '../models/player.dart';
 import '../models/reputation.dart';
 import '../models/season.dart';
 import '../models/support.dart';
+import '../models/training.dart';
 import '../models/traits.dart';
 import 'career_engine_extras.dart';
 import 'competitions.dart';
@@ -213,6 +214,9 @@ class CareerEngine {
       countryId: home.id,
       objective: extras.objectiveFor(player: player, club: club),
       squadNumber: squadNumber ?? squadNumberFor(position, _random),
+      // 最初から練習している状態で始める。休養が既定だと、育成タブを
+      // 開かない人は何も伸びないまま1年が過ぎる。
+      menu: TrainingMenu.defaultFor(position),
       nationalTeamId: home.id,
       manager: Manager.roll(_random),
       competitor: Teammate.roll(_random,

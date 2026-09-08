@@ -80,6 +80,18 @@ enum TrainingMenu {
       !keys.contains(AttributeKey.goalkeeping) || position == Position.gk;
 
   /// カテゴリだけを持っていた頃の保存データを読むための対応表。
+  /// 新しいキャリアの最初の練習。ポジションに合った単科。
+  ///
+  /// 既定を「休養」にしていたため、育成タブを開かない人は1年間なにも
+  /// 練習していなかった（シミュレーションで平均評価 5.9 の選手が出た）。
+  static TrainingMenu defaultFor(Position position) => switch (position) {
+        Position.gk => TrainingMenu.keeperWork,
+        Position.cb || Position.sb => TrainingMenu.defenceWork,
+        Position.dm || Position.cm => TrainingMenu.tactical,
+        Position.am || Position.wg => TrainingMenu.possession,
+        Position.st => TrainingMenu.attacking,
+      };
+
   static TrainingMenu forKey(AttributeKey key) => switch (key) {
         AttributeKey.pace => TrainingMenu.sprint,
         AttributeKey.shooting => TrainingMenu.finishingWork,

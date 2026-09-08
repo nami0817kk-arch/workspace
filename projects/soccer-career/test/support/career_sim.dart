@@ -352,6 +352,7 @@ void report(String title, List<Career> careers) {
   final retire = Stat();
   final apps = Stat();
   final goals = Stat();
+  final assists = Stat();
   final rating = Stat();
   final injuries = Stat();
   final severe = Stat();
@@ -381,6 +382,7 @@ void report(String title, List<Career> careers) {
     retire.add(c.retireAge);
     apps.add(c.appearances);
     goals.add(c.goals);
+    assists.add(c.assists);
     rating.add(c.averageRating);
     injuries.add(c.seasons == 0 ? 0 : c.injuries / c.seasons);
     severe.add(c.severeInjuries);
@@ -432,6 +434,7 @@ void report(String title, List<Career> careers) {
   print(_row('引退年齢', retire));
   print(_row('通算出場', apps));
   print(_row('通算ゴール', goals));
+  print(_row('通算アシスト', assists));
   print(_row('平均評価', rating, digits: 2));
   print(_row('怪我/シーズン', injuries, digits: 2));
   print(_row('重傷/キャリア', severe, digits: 2));

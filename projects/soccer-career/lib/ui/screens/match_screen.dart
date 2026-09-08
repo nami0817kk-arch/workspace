@@ -335,6 +335,7 @@ class _ScenarioView extends StatelessWidget {
               focused: scenario.options[i].detail != null &&
                   focus.contains(scenario.options[i].detail),
               chance: match.chanceFor(scenario.options[i]),
+              assistConversion: match.assistConversionAt(match.currentMinute),
               factors: match.distinctFactorsFor(scenario.options[i]),
               onPressed: () => onChoose(i),
             ),
@@ -353,6 +354,7 @@ class _OptionButton extends StatelessWidget {
     required this.growth,
     required this.focused,
     required this.chance,
+    required this.assistConversion,
     required this.factors,
     required this.onPressed,
   });
@@ -369,6 +371,10 @@ class _OptionButton extends StatelessWidget {
 
   /// 特性とコンディションを含んだ成功率。判定と同じ値。
   final double chance;
+
+  /// アシストの手が通ったとき、実際にアシストになる見込み。
+  /// 終盤ほど低く、弱いクラブほど低い。
+  final double assistConversion;
 
   /// その数字を作っているもの。積み上げたものが試合のどこで効いているかを、
   /// 選ぶその場で見せる。
@@ -414,7 +420,7 @@ class _OptionButton extends StatelessWidget {
                 Chip(
                   label: Text(option.outcome == Outcome.goal
                       ? 'ゴール ${(chance * Formulas.goalConversion * 100).round()}%'
-                      : 'アシスト ${(chance * Formulas.assistConversion * 100).round()}%'),
+                      : 'アシスト ${(chance * assistConversion * 100).round()}%'),
                   visualDensity: VisualDensity.compact,
                   backgroundColor: theme.colorScheme.secondaryContainer,
                 ),

@@ -87,15 +87,20 @@ void main() {
     final controller = await newCareer();
     await pumpHub(tester, controller);
 
-    // 試合に入る動作は、どのタブに居ても画面に出ている。
-    final fab = find.byType(FloatingActionButton);
-    expect(fab, findsOneWidget);
-    expect(find.descendant(of: fab, matching: find.text('試合へ')),
-        findsOneWidget);
+    // 試合タブでは、カードの中のボタンが主役。FAB は出さない
+    // （出すと「区切りまで」など下の操作に被さる）。
+    expect(find.byType(FloatingActionButton), findsNothing);
+    expect(find.widgetWithText(FilledButton, '試合へ'), findsOneWidget);
 
-    await tester.tap(find.widgetWithText(Tab, '記録'));
-    await tester.pumpAndSettle();
-    expect(find.byType(FloatingActionButton), findsOneWidget);
+    // 他のタブでは、どこに居ても FAB から試合に入れる。
+    for (final tab in ['選手', '育成', 'クラブ', '記録']) {
+      await tester.tap(find.widgetWithText(Tab, tab));
+      await tester.pumpAndSettle();
+      final fab = find.byType(FloatingActionButton);
+      expect(fab, findsOneWidget, reason: tab);
+      expect(find.descendant(of: fab, matching: find.text('試合へ')),
+          findsOneWidget);
+    }
   });
 
   testWidgets('開いてすぐ、次の相手と今の状態が見える', (tester) async {
@@ -179,8 +184,9 @@ void main() {
 
   testWidgets('世の中の反応が画面に出る', (tester) async {
     final controller = await newCareer();
-    // 何試合か進めれば、デビューなどの見出しが出る。
-    for (var i = 0; i < 6; i++) {
+    // デビューの見出しは初戦で出る。話題は新しい順に数件しか出さないので、
+    // 何試合も進めると押し出される。
+    for (var i = 0; i < 2; i++) {
       await controller.simulateMatch();
     }
     await pumpHub(tester, controller, height: 2000);
