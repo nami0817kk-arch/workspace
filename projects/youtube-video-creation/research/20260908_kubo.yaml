@@ -90,6 +90,25 @@ sections:
       - "https://www.soccerdigestweb.com/news/detail/id=196646"
       - "https://news.yahoo.co.jp/articles/397d6c6af1c867dc444243fc898a61d42288bb00"
 
+  - id: react
+    heading: ネットではどう見られているか
+    tier: 未確認
+    telop: "24件の書き込みから"
+    say:
+      - "掲示板の書き込みを24件、そのまま拾いました"
+      - {voice: ネット民, text: "まさかソシエダでスタメンすら怪しいレベルになるとは"}
+      - {voice: ネット民, text: "もうここから世界のクボタケになるのは無理なんかなー"}
+      - {voice: ネット民, text: "お茶会でしばらくベンチ宣言されたくさいな"}
+      - {voice: ネット民, text: "マタララッツォは大変だな"}
+      - {voice: ネット民, text: "でもオチエンさん左ウイングに変えられてたんよな"}
+      - {voice: ネット民, text: "下部では右だったんだろ"}
+      - {voice: ネット民, text: "その下部でも左だぞ"}
+      - {voice: ネット民, text: "アンチってエルチェがどんなチームなのか知らなさそうw"}
+      - {voice: ネット民, text: "まあまだ序盤やしな"}
+    official: false
+    sources:
+      - "https://sakarabo.blog.jp/archives/1084487395.html"
+
   - id: next
     heading: これから何を見るか
     tier: 未確認

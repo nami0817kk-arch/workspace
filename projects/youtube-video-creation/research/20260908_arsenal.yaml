@@ -1,55 +1,104 @@
-# プレミアリーグ の取材メモ（2026年9月8日）
-# 1本＝1テーマ。まとめではなく、1つの話を掘る
-# 埋めたら python -m src.cli draft このファイル で台本になる
+# アーセナル対チェルシー の取材メモ（2026年9月8日）
 slot: premier
 date: "2026年9月8日"
 
 theme:
-  id: ""             # 短い識別子。重複の判定に使う（例: alvarez）
-  league: ""         # england/spain/germany/italy/france/netherlands/japan
-                     # 空にすると stats の「追えていないリーグ」から減らない
-  prefix: ""         # 速報 / 朗報 / 悲報。付けないなら空
-  title: ""          # 動画タイトル。続きが気になる書き方で
-  hook: ""           # 冒頭のつかみ。何が起きたかを一文で
-  question: ""       # この動画が答える問い。ここが深掘りの軸
+  id: arsenal_chelsea
+  league: england
+  prefix: ""
+  title: "アーセナルがチェルシー戦でやったことがこちらです"
+  hook: "2分で失点したアーセナルが、そこからどう勝ったか"
+  question: "3試合ぶりに失点したアーセナルは、なぜ勝てたのか"
 
 thumbnail:
-  line1: ""          # 主見出し。事実を短く言い切る。14文字くらいまで
-  line2: ""          # 副見出し。誰が何と言ったか。18文字くらいまで
-  tags: []           # 下部ティッカーのキーワード。選手名・論点を2つまで
-  photo: ""          # 顔写真。portrait で取ったパス（**顔は必須**）
+  line1: "2分の失点から逆転"
+  line2: "ウーデゴーアが決勝点"
+  tags: ["アーセナル", "チェルシー"]
+  photo: "assets/photos/20260908_arsenal/01.jpg"
 
-answer: ""           # まとめで問いにどう答えるか
-watch: ""            # 次に何を見ればよいか
-# follow_up: true    # 前の枠で扱ったテーマを掘り直すとき
+answer: "先に取られてから25分と50分に取り返しました。守りが崩れたのではなく、取り返す形を持っていたということです"
+watch: "サリバがまだ1分も出ていません。戻ってきたときの守備"
 
 sections:
   - id: what
-    heading: 試合はどう動いたか
+    heading: 何が起きたのか
     tier: 報道
-    telop: ""        # 画面の見出し
-    say:             # 読み上げ文。人名・数字はひらがなに開く
-      - ""
-    official: false  # クラブ・当事者の発表なら true
+    telop: "アーセナル 2-1 チェルシー"
+    say:
+      - "プレミアリーグ第3節、アーセナル対チェルシー"
+      - "アーセナルが2対1で勝ちました"
+      - "これで開幕から3連勝です"
+    official: false
     sources:
-      - ""
+      - "https://www.soccer-king.jp/news/world/eng/20260907/2201563.html"
+      - "https://web.gekisaka.jp/news/world/detail/?458395-458395-fl="
+
+  - id: score
+    heading: 得点の流れ
+    tier: 報道
+    telop: "2分・25分・50分"
+    say:
+      - "先に取ったのはチェルシーでした。2分、モーガン・ロジャーズです"
+      - "25分にカイ・ハヴァーツが追いつきます"
+      - "そして50分、マルティン・ウーデゴーアが決めました"
+      - "アーセナルは公式戦3試合つづけて無失点でしたが、この日が今季初失点です"
+    official: false
+    sources:
+      - "https://www.soccer-king.jp/news/world/eng/20260907/2201563.html"
+      - "https://www.goal.com/jp/%E3%83%AA%E3%82%B9%E3%83%88/blta88f5a96742af3a8"
+
+  - id: said
+    heading: 解説者はどう見たか
+    tier: 報道
+    telop: "「全体がバラバラのように見える」"
+    say:
+      - "試合後、ギャリー・ネビルとジェイミー・キャラガーが見解を示しています"
+      - {voice: ギャリー・ネビル, text: "3バックは脚が腰につながっていない感じだ"}
+      - {voice: ギャリー・ネビル, text: "まるで全体がバラバラのように見える"}
+      - {voice: ジェイミー・キャラガー, text: "心配なのはサリバが今季まだ1分も出ていないこと"}
+      - {voice: ジェイミー・キャラガー, text: "しかも誰も彼ら相手に得点できそうに見えない"}
+    official: false
+    sources:
+      - "https://www.goal.com/jp/%E3%83%AA%E3%82%B9%E3%83%88/blt7256c62009df2513"
+      - "https://www.soccer-king.jp/news/world/eng/20260907/2201563.html"
 
   - id: turn
-    heading: 分かれ目はどこか
+    heading: 物議になった場面
     tier: 報道
-    telop: ""        # 画面の見出し
-    say:             # 読み上げ文。人名・数字はひらがなに開く
-      - ""
-    official: false  # クラブ・当事者の発表なら true
+    telop: "顔面へのキックにお咎めなし"
+    say:
+      - "ゴール前の混戦で、ガブリエウの足がチェルシーのGKの顔に当たりました"
+      - "ボールに触ろうとした両者が、同時に飛び込んだ形です"
+      - {voice: ザ・サン, text: "顔を押さえて倒れ込んだ"}
+      - "VARは介入せず、カードも出ませんでした"
+    official: false
     sources:
-      - ""
+      - "https://www.football-zone.net/archives/672186"
+      - "https://news.yahoo.co.jp/articles/db70e225533e19202a841ef27c2a6f238797c95a"
 
-  - id: numbers
-    heading: 数字で見ると
-    tier: 確定
-    telop: ""        # 画面の見出し
-    say:             # 読み上げ文。人名・数字はひらがなに開く
-      - ""
-    official: false  # クラブ・当事者の発表なら true
+  - id: react
+    heading: 判定はどう受け止められたか
+    tier: 報道
+    telop: "元審判「暴力行為ではない」"
+    say:
+      - "元プレミアリーグ審判のマーク・ハルシー氏が見解を出しています"
+      - {voice: ハルシー, text: "疑いの余地なく暴力行為ではない"}
+      - {voice: ハルシー, text: "VARが介入しなかったのは正しい"}
+      - "一方で現地からは、軽率な行動だという指摘も出ました"
+    official: false
     sources:
-      - ""
+      - "https://www.football-zone.net/archives/672186"
+      - "https://news.yahoo.co.jp/articles/db70e225533e19202a841ef27c2a6f238797c95a"
+
+  - id: next
+    heading: これから何を見るか
+    tier: 報道
+    telop: "次節は9月12日"
+    say:
+      - "アーセナルは9月12日、アウェイでサンダーランドと当たります"
+      - "チェルシーはホームでハル・シティです"
+      - "見るべきは、キャラガーが挙げたサリバがいつ戻るかです"
+    official: false
+    sources:
+      - "https://www.soccer-king.jp/news/world/eng/20260907/2201563.html"
+      - "https://www.goal.com/jp/%E3%83%AA%E3%82%B9%E3%83%88/blta88f5a96742af3a8"
