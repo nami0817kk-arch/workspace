@@ -46,9 +46,10 @@ h2 { font-size: 18px; margin: 28px 0 8px; }
 
 h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--muted); }
 
+/* 広告表記。ステマ規制で明示が必須なので文言も位置も変えない。
+   枠を外して主張だけ弱める（読めることが要件で、目立つことは要件ではない）。 */
 .ad-notice {
-  margin: 0 0 20px; padding: 8px 12px; font-size: 13px; color: var(--muted);
-  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+  margin: 0 0 20px; padding: 0; font-size: 13px; color: var(--muted);
 }
 
 .cards { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
@@ -69,6 +70,7 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 .card .meta { margin: 0; font-size: 13px; color: var(--muted); }
 .was { color: var(--muted); text-decoration: line-through; margin-right: 4px; }
 .down { color: var(--down); font-weight: 700; margin-right: 8px; }
+.up { color: var(--near); font-weight: 700; margin-right: 8px; }
 .empty { padding: 24px; text-align: center; color: var(--muted); list-style: none;
   border: 1px dashed var(--line); border-radius: var(--radius); }
 
@@ -76,6 +78,9 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
   font-size: 12px; border: 1px solid currentColor; white-space: nowrap; }
 .badge.low { color: var(--low); } .badge.near { color: var(--near); }
 .badge.drop { color: var(--down); } .badge.flat { color: var(--flat); }
+
+/* いまの価格が履歴のどこにあるかを一文で。高いときは高いと書く。 */
+.verdict { margin: 0 0 14px; font-size: 15px; color: var(--ink); }
 
 .item .headline { font-size: 15px; margin: 12px 0; }
 .item .headline strong { font-size: 28px; }

@@ -84,6 +84,17 @@ def lows(rows: list[dict], limit: int = 100) -> list[dict]:
     return hit[:limit]
 
 
+def rises(rows: list[dict], threshold: float, limit: int = 100) -> list[dict]:
+    """前回より高くなったものを、上げ幅の大きい順に。
+
+    値下がりだけを並べると「安いから買え」としか言わないサイトになる。
+    高くなったものを同じ基準で出すことが、価格を追う道具としての値打ちになる。
+    """
+    hit = [r for r in rows if r.get("rise_pct", 0) >= threshold]
+    hit.sort(key=lambda r: (-r["rise_pct"], r["price"]))
+    return hit[:limit]
+
+
 def by_genre(rows: list[dict], genre_id: str, limit: int = 100) -> list[dict]:
     """取得元ジャンルで絞り、注目すべき順に並べる。
 

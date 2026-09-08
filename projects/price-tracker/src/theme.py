@@ -5,6 +5,8 @@ import json
 import re
 from datetime import datetime
 
+from .analyze import MIN_DAYS_FOR_LOW
+
 SAFE = re.compile(r"[^a-z0-9]+")
 
 
@@ -66,8 +68,8 @@ FAVICON = ("data:image/svg+xml,"
 AD_NOTICE = ('<p class="ad-notice">本サイトは楽天アフィリエイトを利用しており、'
              'リンク経由の購入により収益を得ています。</p>')
 
-NAV = [("./", "今日の値下がり"), ("lows/", "最安値圏"), ("genre/", "ジャンル別"),
-       ("about/", "このサイトについて")]
+NAV = [("./", "今日の値下がり"), ("rises/", "値上がり"), ("lows/", "最安値圏"),
+       ("genre/", "ジャンル別"), ("about/", "このサイトについて")]
 
 
 def _verification(site: dict) -> str:
@@ -141,6 +143,29 @@ def buy_link(row: dict) -> str:
             f'rel="sponsored nofollow noopener" target="_blank">楽天市場で見る</a>')
 
 
+def verdict_note(row: dict) -> str:
+    """いまの価格が履歴のどこにあるかを一文で述べる。
+
+    高いときは高いと書く。買い時でないことを言わないサイトは、価格を追う
+    道具ではなく売るための導線になってしまう。推奨はせず、事実だけを書く
+    （判断の根拠を後から説明できる形を保つ、という analyze.py と同じ方針）。
+    """
+    days = int(row.get("days") or 0)
+    if not row.get("trustworthy"):
+        return (f"記録は{days}日分です。最安値かどうかを言うには"
+                f"{MIN_DAYS_FOR_LOW}日分必要なため、まだ判断できません。")
+    if row.get("at_low"):
+        return "記録した中で最も安い価格です。"
+    if row.get("near_low"):
+        return f'記録した中の最安値 {yen(row["low"])} に近い価格です。'
+    if row.get("rise_pct"):
+        return f'前回より {pct(row["rise_pct"])} 高くなっています。'
+    if row.get("dropped"):
+        return (f'前回より {pct(row["drop_pct"])} 安くなりましたが、'
+                f'最安値 {yen(row["low"])} には届いていません。')
+    return f'記録した中の最安値は {yen(row["low"])}、最高値は {yen(row["high"])} です。'
+
+
 def badge(row: dict) -> str:
     if row["at_low"]:
         cls = "low"
@@ -170,6 +195,11 @@ def card(row: dict, prefix: str = "") -> str:
     change = ""
     if row["dropped"]:
         change = (f'<span class="down">▼{pct(row["drop_pct"])}</span>'
+                  f'<span class="was">{yen(row["prev"])} → </span>')
+    elif row.get("rise_pct"):
+        # 値上がりも同じ形で出す。下がったときだけ変化を見せると、
+        # 都合のいい情報だけを並べるサイトになる。
+        change = (f'<span class="up">▲{pct(row["rise_pct"])}</span>'
                   f'<span class="was">{yen(row["prev"])} → </span>')
     img = (f'<img src="{esc(row["image"])}" alt="" loading="lazy" width="120" height="120">'
            if row.get("image") else '<span class="noimg"></span>')
@@ -261,6 +291,7 @@ def item_page(row: dict, site: dict, updated: str) -> str:
             + f'<article class="item"><h1>{esc(row["name"])}</h1>'
             + AD_NOTICE
             + f'<p class="headline"><strong>{yen(row["price"])}</strong> {badge(row)}</p>'
+            + f'<p class="verdict">{esc(verdict_note(row))}</p>'
             + f'<div class="chart">{sparkline(row.get("tail") or [])}</div>'
             + f'<table class="facts">{table}</table>'
             + f'<p class="cta">{buy_link(row)}</p>'

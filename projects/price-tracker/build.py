@@ -69,6 +69,14 @@ def build(root: Path, out: Path) -> dict:
         empty="今日の記録では、判定できるほどの値下がりはありませんでした。",
         stats=stats))
 
+    write(out / "rises" / "index.html", theme.listing(
+        "値上がりした商品",
+        "前回の記録より高くなった商品です。買い時ではないことも同じ基準で出しています。",
+        analyze.rises(rows, site.get("drop_threshold", 0.05)), site,
+        base + "/rises/", updated, prefix="../",
+        empty="今日の記録では、目立った値上がりはありませんでした。",
+        stats=stats))
+
     write(out / "lows" / "index.html", theme.listing(
         "最安値圏の商品",
         "当サイトが記録している期間の最安値と同じか、それに近い価格の商品です。",
@@ -76,7 +84,7 @@ def build(root: Path, out: Path) -> dict:
         empty="価格の記録日数がまだ足りません。判定には最低7日分が必要です。",
         stats=stats))
 
-    urls = ["/", "/lows/"]
+    urls = ["/", "/rises/", "/lows/"]
     for page in pages.PAGES:
         write(out / page["slug"] / "index.html", pages.render(page, site, updated))
         urls.append(f'/{page["slug"]}/')
