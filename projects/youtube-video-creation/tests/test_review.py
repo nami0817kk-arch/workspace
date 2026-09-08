@@ -773,3 +773,32 @@ def test_台本に出てくる人なら2枚でも通す(tmp_path):
     script = _script_with_photos("デンベレが挙げた3人に、ヤマルの名前はなかった",
                                  "デンベレはヤマルの名前を出しませんでした。", photos)
     assert check_thumbnail_photos(script).ok
+
+
+def test_タグに人名が入っていなければ止める():
+    """サンチョの回にサンチョが入っていなかった（2026-09-08 実測）。"""
+    from src.review import check_tag_names
+    from src.script_model import parse_script
+
+    nl = chr(10)
+    script = parse_script(nl.join([
+        "---", "title: サンチョの移籍先、報道がバラバラ",
+        "thumbnail_tags:", "- サンチョ", "- 移籍",
+        "tags:", "- サッカー", "- 海外サッカー", "- 移籍市場",
+        "---", "", "## 本編", "", "キャスター: 本文。", ""]))
+    finding = check_tag_names(script)
+    assert not finding.ok
+    assert "サンチョ" in finding.detail
+
+
+def test_タグに人名が入っていれば通る():
+    from src.review import check_tag_names
+    from src.script_model import parse_script
+
+    nl = chr(10)
+    script = parse_script(nl.join([
+        "---", "title: サンチョの移籍先、報道がバラバラ",
+        "thumbnail_tags:", "- サンチョ", "- 移籍",
+        "tags:", "- サッカー", "- サンチョ", "- 移籍",
+        "---", "", "## 本編", "", "キャスター: 本文。", ""]))
+    assert check_tag_names(script).ok

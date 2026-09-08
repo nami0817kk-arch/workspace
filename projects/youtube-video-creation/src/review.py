@@ -90,6 +90,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     findings.append(_card_rule(script))
     findings.append(_photo_credits(script, out_dir))
     findings.append(check_thumbnail_photos(script))
+    findings.append(check_tag_names(script))
     findings.append(check_post_sources(script))
     findings.append(_double_marks(script))
     loudness = _loudness(out_dir / "video.mp4")
@@ -434,6 +435,26 @@ def check_thumbnail_photos(script: Script) -> Finding:
                        "／".join(strangers) + " が台本に出てきません。"
                        "関係ない人はサムネに載せない")
     return Finding(True, "サムネの人物", f"{len(paths)}人とも台本に出ています")
+
+
+def check_tag_names(script: Script) -> Finding:
+    """タグに人名・クラブ名が入っているか（2026-09-08）。
+
+    参考4チャンネルのハッシュタグはほぼ全部が選手名とクラブ名だった。
+    こちらは「サッカー」「海外サッカー」「移籍市場」のような分類語ばかりで、
+    **サンチョの回にサンチョが入っていなかった**。検索で見つけてもらう
+    手がかりが無い。サムネの札には人名を書いているので、そこと突き合わせる。
+    """
+    wanted = [str(t).strip() for t in ((script.meta or {}).get("thumbnail_tags") or [])]
+    wanted = [t for t in wanted if t]
+    if not wanted:
+        return Finding(True, "タグの固有名", "サムネの札がありません")
+    missing = [t for t in wanted if t not in script.tags]
+    if missing:
+        return Finding(False, "タグの固有名",
+                       "／".join(missing) + " がタグに入っていません。"
+                       "分類語だけでは検索に掛からない")
+    return Finding(True, "タグの固有名", f"{len(script.tags)}個中に {'／'.join(wanted)}")
 
 
 def _photo_subject(path: Path) -> str:

@@ -783,6 +783,12 @@ def to_script(notes: Notes, plan: Plan) -> str:
             f"{notes.title} {notes.topic}",
             league_name=plan.league_name(notes.league) if notes.league else "",
             kind=notes.kind,
+            # **選手名を入れる**（2026-09-08）。辞書が無いので推測はしないが、
+            # サムネの札には人名を書いているので、そこから持ってくる。
+            # 参考4チャンネルのハッシュタグはほぼ全部が選手名とクラブ名で、
+            # こちらは「サッカー」「移籍市場」のような分類語しか無かった。
+            # サンチョの回にサンチョが入っていない状態だった
+            extra=[str(t) for t in (thumbnail.get("tags") or [])],
         ),
         "sources": notes.sources,
         "cards": _cards(notes),
