@@ -52,6 +52,8 @@ class MatchInProgress {
     required this.player,
     required this.club,
     this.development = const Development(),
+    this.teammateGoalMinutes = const [],
+    this.concededMinutes = const [],
     this.allyBonus = 0,
     this.moodBonus = 0,
     this.extraRating = 0,
@@ -75,6 +77,16 @@ class MatchInProgress {
 
   /// 経験・選択の癖・相手への慣れ・個人技。
   final Development development;
+
+  /// 味方が決める時間。試合が始まる前に決めておく。
+  ///
+  /// 終わってからスコアを作ると、試合中に「今どうなっているか」が
+  /// 存在しない。1点負けている終盤の1本と、3点リードでの1本が
+  /// 同じ重さになってしまう。
+  final List<int> teammateGoalMinutes;
+
+  /// 相手が決める時間。
+  final List<int> concededMinutes;
 
   /// 相方との呼吸。味方を活かす手にだけ効く。
   final double allyBonus;
@@ -107,6 +119,42 @@ class MatchInProgress {
   /// 直前の手が失敗していたか。「負けず嫌い」「気分屋」の判定に使う。
   bool get afterFailure => resolutions.isNotEmpty && !resolutions.last.success;
   bool get afterSuccess => resolutions.isNotEmpty && resolutions.last.success;
+
+  /// 自分が決めた得点の時間。
+  final List<int> ownGoalMinutes = [];
+
+  /// その時点での自分たちの得点。
+  int scoredBy(int minute) =>
+      teammateGoalMinutes.where((m) => m <= minute).length +
+      ownGoalMinutes.where((m) => m <= minute).length;
+
+  /// その時点での失点。
+  int concededBy(int minute) =>
+      concededMinutes.where((m) => m <= minute).length;
+
+  /// 今の局面の時点でのスコア表示（例: 1 - 2）。
+  String get scoreLine {
+    final minute = isFinished ? 90 : currentMinute;
+    return '${scoredBy(minute)} - ${concededBy(minute)}';
+  }
+
+  /// 今の局面の時点での得失点差。負けていれば負の数。
+  int get margin {
+    final minute = isFinished ? 90 : currentMinute;
+    return scoredBy(minute) - concededBy(minute);
+  }
+
+  /// 終盤か。ここでの1点は重い。
+  bool get lateGame => !isFinished && currentMinute >= Formulas.lateGameMinute;
+
+  /// 今の状況を一言で。画面に出す。
+  String? get situationLabel {
+    if (isFinished) return null;
+    if (!lateGame) return null;
+    if (margin < 0) return '${-margin}点ビハインド・終盤';
+    if (margin == 0) return '同点・終盤';
+    return '$margin点リード・終盤';
+  }
 
   /// 相手の戦い方。
   ClubStyle get opponentStyle => ClubStyle.of(opponent);
@@ -240,9 +288,16 @@ class MatchInProgress {
               ? Formulas.goalConversion
               : Formulas.assistConversion);
       if (converts) {
-        delta += outcome == Outcome.goal
-            ? Formulas.ratingPerGoal
-            : Formulas.ratingPerAssist;
+        if (outcome == Outcome.goal) {
+          // 追いついた・突き放した1点は重く見る。
+          final before = margin;
+          ownGoalMinutes.add(currentMinute);
+          final decisive = lateGame && before <= 0;
+          delta += Formulas.ratingPerGoal *
+              (decisive ? Formulas.decisiveGoalFactor : 1.0);
+        } else {
+          delta += Formulas.ratingPerAssist;
+        }
       } else {
         text = outcome == Outcome.goal ? missedGoal : missedAssist;
         outcome = Outcome.play;
@@ -357,9 +412,8 @@ class MatchInProgress {
   /// スコアはクラブ間の力量差から作り、そこに自分の得点を足す。
   /// 自分が決めた分は必ずチームの得点に反映される。
   MatchResult finish() {
-    final advantage = club.strength - opponent.strength + (home ? 6 : -2);
-    final teamGoals = _poissonish(1.25 + advantage / 40);
-    final concededGoals = _poissonish(1.25 - advantage / 40);
+    final teamGoals = teammateGoalMinutes.length;
+    final concededGoals = concededMinutes.length;
 
     // 守備の選手は、失点の少なさで評価される。
     final defensive = _defensiveWeight(player.position);
@@ -372,7 +426,8 @@ class MatchInProgress {
 
     final (extraGoals, extraAssists) = _resolveDeadBall();
     final myGoals = goals + extraGoals;
-    final scored = max(teamGoals, myGoals);
+    // 自分の得点は味方の得点に上乗せする。自分が決めた分は必ずスコアに出る。
+    final scored = teamGoals + myGoals;
     return MatchResult(
       matchday: matchday,
       opponentName: opponent.name,
@@ -405,15 +460,6 @@ class MatchInProgress {
         _ => 0.0,
       };
 
-  /// 得点数のばらつき。厳密なポアソンではないが、0〜5点の分布として十分。
-  int _poissonish(double mean) {
-    final m = mean.clamp(0.2, 4.0);
-    var goals = 0;
-    for (var i = 0; i < 6; i++) {
-      if (_random.nextDouble() < m / 6) goals++;
-    }
-    return goals;
-  }
 }
 
 /// 練習と試合の消耗をまとめた1週間の結果。
@@ -519,6 +565,12 @@ class MatchEngine {
     final weakFootChance =
         player.physique.foot == Foot.both ? 0.0 : Formulas.weakFootMomentChance;
 
+    // 味方と相手の得点を、時間まで含めて先に決めておく。
+    final advantage = club.strength - opponent.strength + (home ? 6 : -2);
+    final teammateGoals = _poissonish((1.25 + advantage / 40) *
+        Formulas.teammateGoalShareFor(player.position.family));
+    final conceded = _poissonish(1.25 - advantage / 40);
+
     return MatchInProgress(
       matchday: matchday,
       opponent: opponent,
@@ -529,6 +581,8 @@ class MatchEngine {
       player: player,
       club: club,
       development: development,
+      teammateGoalMinutes: _goalMinutes(teammateGoals),
+      concededMinutes: _goalMinutes(conceded),
       allyBonus: allyBonus,
       moodBonus: moodBonus,
       extraRating: extraRating,
@@ -538,6 +592,13 @@ class MatchEngine {
       international: international,
       random: _random,
     );
+  }
+
+  /// 得点の時間を散らす。1分と90分に固まらないようにする。
+  List<int> _goalMinutes(int count) {
+    final minutes = [for (var i = 0; i < count; i++) 3 + _random.nextInt(88)];
+    minutes.sort();
+    return minutes;
   }
 
   /// 局面の時間を散らす。途中出場なら後半だけ。
@@ -807,4 +868,14 @@ class MatchEngine {
   }
 
   Detail _randomDetail() => Detail.values[_random.nextInt(Detail.values.length)];
+
+  /// 得点数のばらつき。厳密なポアソンではないが、0〜5点の分布として十分。
+  int _poissonish(double mean) {
+    final m = mean.clamp(0.2, 4.0);
+    var goals = 0;
+    for (var i = 0; i < 6; i++) {
+      if (_random.nextDouble() < m / 6) goals++;
+    }
+    return goals;
+  }
 }
