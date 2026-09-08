@@ -7,6 +7,7 @@ import '../../models/competition.dart';
 import '../../models/life.dart';
 import '../../models/physique.dart';
 import '../../state/career_controller.dart';
+import '../club_identity.dart';
 
 /// シーズン終了。成績を振り返り、契約更改・移籍・引退を決める。
 ///
@@ -390,6 +391,8 @@ class _OfferCard extends StatelessWidget {
           children: [
             Row(
               children: [
+                ClubCrest(club: offer.club, size: 30),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Text(
                     '${offer.club.name}'

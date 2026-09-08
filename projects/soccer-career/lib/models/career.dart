@@ -31,6 +31,7 @@ class SeasonRecord {
     this.cupStage = CupStage.none,
     this.worldCupStage = WorldCupStage.none,
     this.onLoan = false,
+    this.overall = 0,
   });
 
   final int year;
@@ -63,6 +64,9 @@ class SeasonRecord {
   /// ローンで戦ったシーズンか。
   final bool onLoan;
 
+  /// そのシーズンを終えた時点の総合力。0 は記録が無い（古い保存データ）。
+  final int overall;
+
   Map<String, dynamic> toJson() => {
         'year': year,
         'clubName': clubName,
@@ -80,6 +84,7 @@ class SeasonRecord {
         'cupStage': cupStage.name,
         'worldCupStage': worldCupStage.name,
         'onLoan': onLoan,
+        'overall': overall,
       };
 
   factory SeasonRecord.fromJson(Map<String, dynamic> json) => SeasonRecord(
@@ -109,6 +114,7 @@ class SeasonRecord {
                 ? WorldCupStage.values.byName(json['worldCupStage'] as String)
                 : WorldCupStage.none,
         onLoan: json['onLoan'] as bool? ?? false,
+        overall: json['overall'] as int? ?? 0,
       );
 }
 

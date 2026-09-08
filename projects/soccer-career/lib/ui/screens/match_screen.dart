@@ -6,6 +6,7 @@ import '../../game/scenarios.dart';
 import '../../models/injury.dart';
 import '../../models/season.dart';
 import '../../state/career_controller.dart';
+import '../club_identity.dart';
 
 /// 1試合を進める画面。局面 → 結果 → 次の局面、を繰り返す。
 class MatchScreen extends StatefulWidget {
@@ -121,11 +122,21 @@ class _MatchHeader extends StatelessWidget {
         Row(
           children: [
             Expanded(
-              child: Text(
-                match.home ? match.club.name : match.opponent.name,
-                style: theme.textTheme.bodyMedium,
-                overflow: TextOverflow.ellipsis,
-                textAlign: TextAlign.end,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Flexible(
+                    child: Text(
+                      match.home ? match.club.name : match.opponent.name,
+                      style: theme.textTheme.bodyMedium,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.end,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  ClubCrest(
+                      club: match.home ? match.club : match.opponent, size: 26),
+                ],
               ),
             ),
             Padding(
@@ -139,10 +150,19 @@ class _MatchHeader extends StatelessWidget {
               ),
             ),
             Expanded(
-              child: Text(
-                match.home ? match.opponent.name : match.club.name,
-                style: theme.textTheme.bodyMedium,
-                overflow: TextOverflow.ellipsis,
+              child: Row(
+                children: [
+                  ClubCrest(
+                      club: match.home ? match.opponent : match.club, size: 26),
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Text(
+                      match.home ? match.opponent.name : match.club.name,
+                      style: theme.textTheme.bodyMedium,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -502,6 +522,10 @@ class _MatchSummary extends StatelessWidget {
                   _stat(theme, 'アシスト', '${result.assists}'),
                 ],
               ),
+              if (week.timeline.isNotEmpty) ...[
+                const SizedBox(height: 24),
+                _Timeline(events: week.timeline),
+              ],
               if (week.deadBall != null) ...[
                 const SizedBox(height: 20),
                 Text(
@@ -634,6 +658,67 @@ class _InjuryNotice extends StatelessWidget {
           ],
         ],
       ),
+    );
+  }
+}
+
+/// 試合で起きたことを時間順に並べる。
+///
+/// 数字だけの結果は、38試合ぶん並べても記憶に残らない。
+/// 「78分に決めて追いついた」が残ると、シーズンが物語になる。
+class _Timeline extends StatelessWidget {
+  const _Timeline({required this.events});
+
+  final List<MatchEvent> events;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text('試合の流れ',
+            style: theme.textTheme.labelMedium
+                ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+        const SizedBox(height: 8),
+        for (final event in events)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 3),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 52,
+                  child: Text('${event.minute}分',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant)),
+                ),
+                Icon(
+                  event.kind == MatchEventKind.conceded
+                      ? Icons.remove_circle_outline
+                      : event.kind == MatchEventKind.ownGoal
+                          ? Icons.sports_soccer
+                          : event.kind == MatchEventKind.ownAssist
+                              ? Icons.trending_up
+                              : Icons.check_circle_outline,
+                  size: 16,
+                  color: event.kind.isOurs
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.error,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  event.kind.label,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: event.kind == MatchEventKind.ownGoal ||
+                            event.kind == MatchEventKind.ownAssist
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
     );
   }
 }

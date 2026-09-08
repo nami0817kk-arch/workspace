@@ -14,6 +14,28 @@ import 'dependencies.dart';
 import 'formulas.dart';
 import 'scenarios.dart';
 
+/// 試合で起きたことの種類。
+enum MatchEventKind {
+  ownGoal('あなたのゴール'),
+  ownAssist('あなたのアシスト'),
+  teammateGoal('味方のゴール'),
+  conceded('失点');
+
+  const MatchEventKind(this.label);
+
+  final String label;
+
+  bool get isOurs => this != MatchEventKind.conceded;
+}
+
+/// 試合で起きたこと1つ。
+class MatchEvent {
+  const MatchEvent({required this.minute, required this.kind});
+
+  final int minute;
+  final MatchEventKind kind;
+}
+
 /// 1つの局面を解決した結果。
 class ScenarioResolution {
   const ScenarioResolution({
@@ -123,6 +145,9 @@ class MatchInProgress {
   /// 自分が決めた得点の時間。
   final List<int> ownGoalMinutes = [];
 
+  /// 自分のアシストの時間。
+  final List<int> ownAssistMinutes = [];
+
   /// その時点での自分たちの得点。
   int scoredBy(int minute) =>
       teammateGoalMinutes.where((m) => m <= minute).length +
@@ -154,6 +179,24 @@ class MatchInProgress {
     if (margin < 0) return '${-margin}点ビハインド・終盤';
     if (margin == 0) return '同点・終盤';
     return '$margin点リード・終盤';
+  }
+
+  /// 試合で起きたことを、時間順に並べたもの。
+  ///
+  /// 終わったあとに「どんな試合だったか」を思い出せるようにする。
+  /// 数字だけの結果画面は、38試合ぶん並べても記憶に残らない。
+  List<MatchEvent> get timeline {
+    final events = <MatchEvent>[
+      for (final m in teammateGoalMinutes)
+        MatchEvent(minute: m, kind: MatchEventKind.teammateGoal),
+      for (final m in concededMinutes)
+        MatchEvent(minute: m, kind: MatchEventKind.conceded),
+      for (final m in ownGoalMinutes)
+        MatchEvent(minute: m, kind: MatchEventKind.ownGoal),
+      for (final m in ownAssistMinutes)
+        MatchEvent(minute: m, kind: MatchEventKind.ownAssist),
+    ]..sort((a, b) => a.minute.compareTo(b.minute));
+    return events;
   }
 
   /// 相手の戦い方。
@@ -288,6 +331,7 @@ class MatchInProgress {
               ? Formulas.goalConversion
               : Formulas.assistConversion);
       if (converts) {
+        if (outcome == Outcome.assist) ownAssistMinutes.add(currentMinute);
         if (outcome == Outcome.goal) {
           // 追いついた・突き放した1点は重く見る。
           final before = margin;
@@ -391,18 +435,23 @@ class MatchInProgress {
 
     final piece = player.setPieces.best;
     final skill = player.setPieces[piece];
+    // セットプレーの時間。試合の中のどこかで起きたことにする。
+    final minute = 15 + _random.nextInt(70);
     switch (piece) {
       case SetPiece.freeKick:
         final hit = _random.nextDouble() < (skill - 40) / 220;
         deadBallText = hit ? '直接FKを沈めた' : '直接FKは壁に当たった';
+        if (hit) ownGoalMinutes.add(minute);
         return (hit ? 1 : 0, 0);
       case SetPiece.penalty:
         final hit = _random.nextDouble() < (0.55 + skill / 260).clamp(0.5, 0.95);
         deadBallText = hit ? 'PKを決めた' : 'PKを止められた';
+        if (hit) ownGoalMinutes.add(minute);
         return (hit ? 1 : 0, 0);
       case SetPiece.corner:
         final hit = _random.nextDouble() < (skill - 30) / 200;
         deadBallText = hit ? 'CKから味方の頭に合わせた' : 'CKは跳ね返された';
+        if (hit) ownAssistMinutes.add(minute);
         return (0, hit ? 1 : 0);
     }
   }

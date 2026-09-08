@@ -16,6 +16,7 @@ import '../../models/support.dart';
 import '../../models/training.dart';
 import '../../models/season.dart';
 import '../../state/career_controller.dart';
+import '../club_identity.dart';
 import 'match_screen.dart';
 import 'season_end_screen.dart';
 
@@ -784,10 +785,13 @@ class _PlayerCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                CircleAvatar(
-                  radius: 24,
-                  child: Text('${player.overall}',
-                      style: theme.textTheme.titleMedium),
+                Column(
+                  children: [
+                    ClubCrest(club: state.club, size: 40),
+                    const SizedBox(height: 4),
+                    Text('${player.overall}',
+                        style: theme.textTheme.titleMedium),
+                  ],
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -1666,6 +1670,141 @@ class _TotalsCard extends StatelessWidget {
       );
 }
 
+/// キャリアの推移。数字の羅列より、線1本のほうが形が分かる。
+class _CareerChartCard extends StatelessWidget {
+  const _CareerChartCard({required this.state});
+
+  final CareerState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final history = state.history;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('推移', style: theme.textTheme.titleSmall),
+            const SizedBox(height: 4),
+            Text('棒＝シーズンの平均評価　線＝総合力', style: muted),
+            const SizedBox(height: 12),
+            SizedBox(
+              height: 120,
+              child: CustomPaint(
+                painter: _CareerChartPainter(
+                  history: history,
+                  bar: theme.colorScheme.primaryContainer,
+                  line: theme.colorScheme.primary,
+                  grid: theme.colorScheme.outlineVariant,
+                ),
+                child: const SizedBox.expand(),
+              ),
+            ),
+            const SizedBox(height: 6),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('${history.first.year}', style: muted),
+                Text('${history.last.year}', style: muted),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CareerChartPainter extends CustomPainter {
+  const _CareerChartPainter({
+    required this.history,
+    required this.bar,
+    required this.line,
+    required this.grid,
+  });
+
+  final List<SeasonRecord> history;
+  final Color bar;
+  final Color line;
+  final Color grid;
+
+  /// 評価点の見せる範囲。全域（4〜10）を映すと、差が潰れて読めない。
+  static const double minRating = 5.5;
+  static const double maxRating = 8.0;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (history.isEmpty) return;
+    final slot = size.width / history.length;
+
+    // 6.0 の目安線。ここが「普通の出来」。
+    final basis = size.height * (1 - (6.0 - minRating) / (maxRating - minRating));
+    canvas.drawLine(
+      Offset(0, basis),
+      Offset(size.width, basis),
+      Paint()
+        ..color = grid
+        ..strokeWidth = 1,
+    );
+
+    final barPaint = Paint()..color = bar;
+    for (var i = 0; i < history.length; i++) {
+      final record = history[i];
+      if (record.stats.appearances == 0) continue;
+      final value =
+          ((record.stats.averageRating - minRating) / (maxRating - minRating))
+              .clamp(0.0, 1.0);
+      final height = size.height * value;
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromLTWH(
+            slot * i + slot * 0.2,
+            size.height - height,
+            slot * 0.6,
+            height,
+          ),
+          const Radius.circular(2),
+        ),
+        barPaint,
+      );
+    }
+
+    // 総合力の線。記録が無いシーズン（古い保存データ）は飛ばす。
+    final points = <Offset>[];
+    for (var i = 0; i < history.length; i++) {
+      final overall = history[i].overall;
+      if (overall <= 0) continue;
+      final value = ((overall - 45) / 50).clamp(0.0, 1.0);
+      points.add(Offset(slot * i + slot / 2, size.height * (1 - value)));
+    }
+    if (points.length >= 2) {
+      final path = Path()..moveTo(points.first.dx, points.first.dy);
+      for (final point in points.skip(1)) {
+        path.lineTo(point.dx, point.dy);
+      }
+      canvas.drawPath(
+        path,
+        Paint()
+          ..color = line
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2,
+      );
+      for (final point in points) {
+        canvas.drawCircle(point, 2.5, Paint()..color = line);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(_CareerChartPainter oldDelegate) =>
+      oldDelegate.history.length != history.length;
+}
+
 class _AttributeBar extends StatelessWidget {
   const _AttributeBar({
     required this.label,
@@ -1803,7 +1942,13 @@ class _TableRowTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
-          SizedBox(width: 28, child: Text('$position')),
+          SizedBox(width: 24, child: Text('$position')),
+          ClubCrest(
+            club: state.league.firstWhere((c) => c.id == row.clubId,
+                orElse: () => state.club),
+            size: 20,
+          ),
+          const SizedBox(width: 8),
           Expanded(
             child: Text(row.clubName,
                 overflow: TextOverflow.ellipsis,
@@ -1847,6 +1992,10 @@ class _CareerTab extends StatelessWidget {
       children: [
         _TotalsCard(state: state),
         const SizedBox(height: 16),
+        if (state.history.length >= 2) ...[
+          _CareerChartCard(state: state),
+          const SizedBox(height: 16),
+        ],
         if (state.history.isEmpty)
           Padding(
             padding: const EdgeInsets.all(16),
