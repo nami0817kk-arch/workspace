@@ -1,90 +1,101 @@
-# 鈴木彩艶 の取材メモ（2026年9月8日）
-slot: japan
-date: "2026年9月8日"
+# 鈴木彩艶 の取材メモ（2026年9月9日）。材料は research/material/dig_鈴木彩艶.md
+# **ネットの反応は入れない**（2026-09-09 ユーザー「スズキはネットの声はなしでOK」）。
+# 代わりに**試合の評価を詳しく**。現地紙の採点・止めた場面・本人の言葉で組む
+format: news
+# 試合の経過を詳しく伝える回なので、地の文が増える。他人の声の下限を下げる
+voice_min: 28
+slot: japan_3
+date: "2026年9月9日"
 
 theme:
-  id: zion_liverpool
+  id: zion_cl_debut
   league: england
-  prefix: ""
-  title: "リバプールOBが鈴木彩艶について漏らした本音"
-  hook: "元イングランド代表が、古巣について率直に語りました"
-  question: "なぜ「取り逃がした」と言われているのか"
+  kind: match
+  topic: 鈴木彩艶
+  title: 日本人GKとして史上初のCL、現地紙は何点を付けたか
+  hook: アストン・ヴィラでの初めてのチャンピオンズリーグでした。
+  question: 2失点しながら、なぜチーム最高タイの評価だったのか
 
 thumbnail:
-  line1: "「取り逃がしたな」"
-  line2: "パス成功率95%"
-  tags: ["鈴木彩艶", "アストン・ヴィラ"]
-  points: ["パス成功率 ●●%", "古巣が漏らした本音"]
+  line1: 日本人GK史上初のCL
+  line2: 現地紙の採点は ●点
   photo: "assets/photos/20260909_zion/01.jpg"
-  photos: ["assets/photos/20260909_zion/01.jpg", "assets/photos/20260909_alisson/01.jpg"]
-
-answer: "ハル戦でパス成功率95%を記録し、移籍2戦目で無失点に抑えたからです"
-watch: "この出来が続くか。パリSGも逃した側として名前が挙がっています"
+  tags: [鈴木彩艶, アストン・ヴィラ]
+  points:
+    - 3本のシュートをセーブ
+    - 現地紙の採点は ●点
 
 sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: 日本人GKとして史上初のCL出場
+    say:
+      - チャンピオンズリーグ第1節、アストン・ヴィラは敵地でクラブ・ブルッヘと戦いました。
+      - すずきざいおんは先発フル出場です。
+      - 日本人ゴールキーパーとして、史上はつのチャンピオンズリーグ出場になりました。
+      - 試合は3対2でヴィラの勝ち。ヴィラは今季の公式戦はつ勝利です。
+      - すずきは2失点しましたが、3本のシュートをセーブしています。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/cl/20260909/2202631.html
+      - https://web.gekisaka.jp/news/ucl/detail/?458507-458507-fl
+      - https://www.footballchannel.jp/2026/09/09/post1006971/
+
+  - id: match
+    heading: 試合はどう動いたか
+    tier: 報道
+    telop: 9分・68分に見せ場
+    say:
+      - 9分、ヤン・ヴィルジリが鋭いカットインからシュートを放ちます。
+      - すずきはこれをパンチングで防ぎました。相手のはつのシュートです。
+      - 11分にジョン・マッギンが先制、19分にヴィルジリのクロスからヴェトレセンに決められて同点。
+      - 22分にブエンディア、43分にトーレスのロングパスからジャクソンが決めて、前半は3対1です。
+      - ジャクソンはこれがヴィラでの公式戦はつゴールでした。
+      - 後半、61分にペナルティーキックをトレソルディに沈められて1点差。
+      - 68分、ヴェトレセンの強烈なミドルシュートを、すずきがセーブしました。
+      - 3対2のまま、ヴィラが逃げ切っています。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/09/post1006971/
+      - https://www.footballchannel.jp/2026/09/09/post1006896/
+
+  - id: rating
+    heading: 現地はどう採点したか
+    tier: 報道
+    telop: 8点。チーム最高タイの評価
+    say:
+      - 現地メディア、アストン・ヴィラ・レビューはすずきに8点を付けました。
+      - パウ・トーレス、ジョアン・ゴメスと並ぶ、チーム最高タイの評価です。
+      - 2失点しながら、なぜこの点数だったのか。同紙はこう書いています。
+      - {voice: 現地メディア, text: 鈴木がアウェイゴールに壁を築いた}
+      - {voice: 現地メディア, text: ブルッヘが攻め、鈴木が止め、アストン・ヴィラが耐えた}
+      - {voice: 現地メディア, text: 後半は鈴木に頼らざるを得なかった}
+      - {voice: 現地メディア, text: その期待に応えた}
+      - {voice: 現地メディア, text: パスはいつも通り、レンジの広さと質の両面で素晴らしかった}
+      - {voice: 現地メディア, text: ストライカーやウインガーへの良いロングボールもあった}
+      - {voice: 現地メディア, text: ボール保持で存在感を示した}
+      - {voice: 現地メディア, text: 我々が辛抱強くプレーする助けになった}
+      - {voice: 現地メディア, text: 素晴らしい補強になったように見える}
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/09/post1006896/
+      - https://football-tribe.com/japan/2026/09/08/359027/
+
   - id: said
-    heading: 誰が何と言ったのか
+    heading: 本人は何と言っているか
     tier: 報道
-    telop: "「取り逃がしたな」"
+    telop: 「彼が求めていることはとても興味深い」
     say:
-      - "元イングランド代表のスティーブン・ウォーノックです"
-      - "リバプールでプレーした選手が、古巣についてこう述べました"
-      - {voice: ウォーノック, text: "取り逃がしたなと思う"}
-      - {voice: ウォーノック, text: "率直に言えばね"}
-      - {voice: ウォーノック, text: "その試合で、彼は素晴らしかった"}
+      - すずきは今夏、パルマからヴィラへ移りました。
+      - プレミアリーグ第2節のアーセナル戦ではつの先発。そこから2試合連続で先発しています。
+      - 本人は新しいチームについて、こう話しています。
+      - {voice: 鈴木彩艶, text: エメリ監督の下でプレーするのは楽しい}
+      - {voice: 鈴木彩艶, text: 彼が求めていることはとても興味深い}
+      - {voice: 鈴木彩艶, text: それは僕のスタイルでもある}
+      - {voice: 鈴木彩艶, text: アーセナル戦では足でチャンスを作ろうとした}
+      - {voice: 鈴木彩艶, text: ゴールにはつながらなかったがそれを続けたい}
     official: false
     sources:
-      - "https://news.yahoo.co.jp/articles/3ca1551d5244aed0a283bec041407eded8193bf2"
-      - "https://sports.yahoo.co.jp/column/detail/2026082200003-spnavi"
-
-  - id: numbers
-    heading: 何が評価されたのか
-    tier: 報道
-    telop: "パス成功率95%"
-    say:
-      - "ハル戦でのことです"
-      - "鈴木彩艶のパス成功率は95パーセントでした"
-      - "移籍して2試合目で、無失点に抑えています"
-      - "止める力だけでなく、足元の技術が評価されました"
-    official: false
-    sources:
-      - "https://news.yahoo.co.jp/articles/3ca1551d5244aed0a283bec041407eded8193bf2"
-      - "https://sports.yahoo.co.jp/column/detail/2026082200003-spnavi"
-
-  - id: background
-    heading: どうやってヴィラに来たのか
-    tier: 背景
-    telop: "総額3500万ユーロの5年契約"
-    say:
-      - "鈴木はこの夏、パルマからアストン・ヴィラへ移りました"
-      - "出来高を含めて総額3500万ユーロ。日本円でおよそ64億6000万円です"
-      - "契約は5年。複数のクラブが水面下で争っていました"
-    official: false
-    sources:
-      - "https://sports.yahoo.co.jp/column/detail/2026082200003-spnavi"
-      - "https://news.yahoo.co.jp/articles/14830332b9dc0e5789187a0be69533495ba8e80d"
-
-  - id: react
-    heading: 逃したのはリバプールだけではない
-    tier: 報道
-    telop: "パリSGにも逆風"
-    say:
-      - "パリSGにも同じ話が出ています"
-      - "鈴木の獲得が消えたあと、現地では補強しなかった判断が問われました"
-      - {voice: 現地の声, text: "補強しなかったのは間違い"}
-      - {voice: 現地の声, text: "疑問を抱かざるを得ない"}
-    official: false
-    sources:
-      - "https://news.yahoo.co.jp/articles/14830332b9dc0e5789187a0be69533495ba8e80d"
-      - "https://sports.yahoo.co.jp/column/detail/2026082200003-spnavi"
-
-  - id: next
-    heading: これから何を見るか
-    tier: 未確認
-    telop: "この出来が続くか"
-    say:
-      - "見るべきは、この出来が続くかどうかです"
-      - "ヴィラは開幕から得点に苦しんでいるので、守る側の負担は大きくなります"
-    official: false
-    sources:
-      - "https://sports.yahoo.co.jp/column/detail/2026082200003-spnavi"
+      - https://www.footballchannel.jp/2026/09/07/post1005393/
+      - https://www.footballchannel.jp/2026/09/06/post1004895/

@@ -170,6 +170,7 @@ class Notes:
     title: str
     question: str                    # この動画が答える問い
     format: str = "news"             # news / voices / quote。FORMATS 参照
+    voice_min: float | None = None   # 他人の声の下限を回ごとに下げるとき
     slot: str = ""
     theme_id: str = ""
     prefix: str = ""                 # 【速報】【朗報】【悲報】
@@ -272,6 +273,7 @@ def build_notes(raw: dict) -> Notes:
         date=str(raw.get("date", "")).strip(),
         slot=str(raw.get("slot", "")).strip(),
         format=chosen,
+        voice_min=(float(raw["voice_min"]) if raw.get("voice_min") is not None else None),
         title=str(theme.get("title", "")).strip(),
         theme_id=str(theme.get("id", "")).strip(),
         question=str(theme.get("question", "")).strip(),
@@ -911,6 +913,9 @@ def to_script(notes: Notes, plan: Plan) -> str:
         "title": notes.video_title,
         # 型は台本に残す。review が型ごとにしきい値を変える
         "format": notes.format,
+        # 他人の声の下限を回ごとに下げられる（2026-09-09）。試合の経過を詳しく
+        # 伝える回は地の文が増える。**下げるときは取材メモに理由を書く**
+        **({"voice_min": notes.voice_min} if notes.voice_min is not None else {}),
         "thumbnail_line1": str(thumbnail.get("line1") or notes.title),
         "thumbnail_line2": str(thumbnail.get("line2") or notes.question),
         "thumbnail_tags": [str(t) for t in (thumbnail.get("tags") or [])],

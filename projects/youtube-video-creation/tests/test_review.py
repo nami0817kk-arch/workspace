@@ -832,3 +832,24 @@ def test_反応の型ではまとめの長さを見ない():
         "現地サポ: もう前線で使っちゃえよ", "現地サポ: 補強は大成功だ", ""]))
     labels = {f.label for f in inspect(script, Path("does-not-exist"))}
     assert "まとめの長さ" not in labels
+
+
+def test_台本ごとに他人の声の下限を下げられる():
+    """試合の経過を詳しく伝える回は地の文が増える（2026-09-09 ユーザー指示）。"""
+    from pathlib import Path
+
+    from src.review import inspect
+    from src.script_model import parse_script
+
+    nl = chr(10)
+    rows = ["---", "title: T", "format: news", "sources: [https://example.com/a]",
+            "tags: [サッカー]", "---", "", "## オープニング", "",
+            "キャスター: タイトルを読みます。", "", "## 試合はどう動いたか", ""]
+    rows += ["キャスター: 実況のような地の文がここに七行ならびます。"] * 7
+    rows += ["現地メディア: 壁を築いた", ""]
+    strict = _by_label(inspect(parse_script(nl.join(rows)), Path("no-such-dir")))
+    assert strict["他人の声の量"].ok is False            # news の下限40%では止まる
+
+    loose = rows[:3] + ["voice_min: 2"] + rows[3:]
+    got = _by_label(inspect(parse_script(nl.join(loose)), Path("no-such-dir")))
+    assert got["他人の声の量"].ok is True                # 台本が下げた下限では通る

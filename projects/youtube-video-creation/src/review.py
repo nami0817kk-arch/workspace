@@ -83,7 +83,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
         # 型になっていない。まとめの節があるのは news だけなので、他の型では
         # 「最後の節が長い」は見ない（最後の節が反応の本体になる）
         shape = _format_of(script)
-        findings.append(check_voice_share(script, shape["voice_min"]))
+        findings.append(check_voice_share(script, _voice_floor(script, shape)))
         findings.append(check_opening_title(script))
         if shape["wrap"]:
             findings.append(check_wrap_share(script))
@@ -739,6 +739,23 @@ def _format_of(script: Script) -> dict:
 
     name = str((script.meta or {}).get("format") or "news").strip().lower()
     return FORMATS.get(name, FORMATS["news"])
+
+
+def _voice_floor(script: Script, shape: dict) -> float:
+    """他人の声の下限。台本が `voice_min` を書いていればそちらを使う（2026-09-09）。
+
+    ユーザー「スズキはネットの声はなしでOK。試合の評価を詳しく伝えましょう」。
+    試合の経過を詳しく伝える回は、実況のような地の文が増えて他人の声の割合が
+    下がる。**型の下限は目安であって、回ごとの判断を潰すものではない。**
+    下げるときは取材メモに理由を書く。
+    """
+    written = (script.meta or {}).get("voice_min")
+    if written is None:
+        return float(shape["voice_min"])
+    try:
+        return max(0.0, min(100.0, float(written)))
+    except (TypeError, ValueError):
+        return float(shape["voice_min"])
 
 
 def _voice_lines(script: Script) -> tuple[list[int], int]:

@@ -1,0 +1,88 @@
+# バロンドール候補30人（2026年9月9日）。材料は research/material/dig_バロンドール.md
+# 選手本人が自分の3人を挙げた発言があるので、そこを中心に置く
+format: news
+slot: world_1
+date: "2026年9月9日"
+
+theme:
+  id: ballondor_2026_nominees
+  league: france
+  kind: other
+  topic: バロンドール
+  title: バロンドール候補30人、1つのクラブから何人入ったか
+  hook: フランス誌が候補を出しました。並びに偏りがあります。
+  question: なぜ1つのクラブから9人も入ったのか
+
+thumbnail:
+  line1: 候補30人が発表
+  line2: 1クラブから ●人
+  photo: "assets/photos/20260909_ballondor/01.jpg"
+  tags: [バロンドール, パリ・サンジェルマン]
+  points:
+    - 1つのクラブから ●人
+    - メッシは通算 ●●回目
+
+sections:
+  - id: what
+    heading: 誰が候補に入ったか
+    tier: 報道
+    telop: 候補30人のうちPSGが9人
+    say:
+      - フランス誌フランス・フットボールが8日、今年のバロンドール候補30人を発表しました。
+      - チャンピオンズリーグを連覇したパリ・サンジェルマンから、9人が選ばれています。
+      - デンベレ、ハキミ、クヴァラツヘリア、マルキーニョス、ヌーノ・メンデス。
+      - ジョアン・ネヴェス、ファビアン・ルイス、パチョ、ヴィティーニャ。
+      - 去年の受賞者であるデンベレも候補に入り、2年連続の可能性があります。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/09/post1006851/
+      - https://www.footballchannel.jp/2026/09/08/post1006815/
+
+  - id: numbers
+    heading: 数字で見るとどうなるか
+    tier: 報道
+    telop: スペイン6人・フランス5人
+    say:
+      - 国別ではスペインが6人でいちばん多く、フランスが5人です。
+      - ポルトガルが3人、ブラジルが3人と続きます。
+      - 2024年の受賞者ロドリと、リオネル・メッシも名を連ねました。
+      - メッシの候補入りは、これで17回目です。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/08/post1006806/
+      - https://www.footballchannel.jp/2026/09/09/post1006851/
+
+  - id: said
+    heading: 選手は誰を挙げたか
+    tier: 報道
+    telop: 「自分には投票しない」
+    say:
+      - 候補のひとりは、自分が選ぶ3人をこう挙げました。
+      - {voice: 候補選手, text: 僕のトップ3は、全部混ざっているよ}
+      - {voice: 候補選手, text: クヴァラ、とても良いシーズンを過ごしたハリー・ケイン}
+      - {voice: 候補選手, text: それからキリアン・エムバペだと思う}
+      - {voice: 候補選手, text: 僕？ ああ、いや}
+      - {voice: 候補選手, text: 僕はこういうものに自分を入れることは絶対にない}
+      - {voice: 候補選手, text: 自分には投票しないよ}
+      - {voice: 候補選手, text: このトロフィーが迷っているとは思わない}
+      - {voice: 候補選手, text: パリ・サンジェルマンの選手の手に残ると思う}
+    official: false
+    sources:
+      - https://web.ultra-soccer.jp/news/all/35622/
+      - https://www.footballchannel.jp/2026/09/08/post1006575/
+
+  - id: reactions
+    heading: ネットではどう見られているか
+    tier: 未確認
+    telop: 15件の書き込みから
+    say:
+      - これに対して、日本のネットではどう見られているのか。
+      - {voice: ネット民, text: ヤマルはバロンドール投票2位でしたね}
+      - {voice: ネット民, text: 久保の名前ないよぅ…}
+      - {voice: ネット民, text: 今までで候補に入った日本人って誰おる}
+      - {voice: ネット民, text: 今年のバロンドールはライスがいいな}
+      - {voice: ネット民, text: クチダケフサ}
+      - {voice: ネット民, text: 今季1ゴール1アシストなう}
+    official: false
+    sources:
+      - https://sakarabo.blog.jp/archives/1084467134.html
