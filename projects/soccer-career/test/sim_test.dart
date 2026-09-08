@@ -236,7 +236,8 @@ void main() {
             trait.breakthroughFactor != 1.0 ||
             trait.plateauFactor != 1.0 ||
             trait.relationGainFactor != 1.0 ||
-            trait.relationLossFactor != 1.0;
+            trait.relationLossFactor != 1.0 ||
+            trait.potentialBonus != 0;
         expect(affectsMatch || _affectsPlay(trait), isTrue,
             reason: '${trait.label} は何も効いていない');
       }
