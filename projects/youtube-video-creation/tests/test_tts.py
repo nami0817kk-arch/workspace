@@ -207,3 +207,21 @@ def test_無音でよいと言われたときは通す(monkeypatch):
     monkeypatch.setattr(tts.EngineBackend, "available", lambda self: False)
     monkeypatch.setattr(tts.CoreBackend, "available", lambda self: False)
     assert tts.create_backend(load_config(), use_tts=False).name == "silent"
+
+
+def test_反応の行は無音を詰める():
+    """参考は反応1件3秒台（2026-09-08）。匿名の反応だけ行間を短くする。"""
+    from src.config import load_config
+    from src.script_model import parse_script
+    from src.tts import pause_for
+
+    config = load_config()
+    nl = chr(10)
+    script = parse_script(nl.join([
+        "## S", "キャスター: 事実です。", "ネット民: 草", "ネット民: 指定あり",
+        "  pause: 0.9", ""]))
+    caster, crowd, fixed = script.lines
+    assert pause_for(config, caster) == config.voicevox.pause
+    assert pause_for(config, crowd) == config.voicevox.pause_crowd
+    assert pause_for(config, crowd) < pause_for(config, caster)
+    assert pause_for(config, fixed) == 0.9

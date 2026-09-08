@@ -284,7 +284,7 @@ def synthesize_script(
     cursor = 0.0
     for index, line in enumerate(script.lines):
         member = config.resolve_speaker(line.speaker, line.text or '')
-        pause = config.voicevox.pause if line.pause is None else line.pause
+        pause = pause_for(config, line)
         target = out_dir / f"{index:04d}_{member.key}_{_digest(line, member, pause, backend.name)}.wav"
 
         if not target.exists():
@@ -318,6 +318,19 @@ def credits(script: Script, config: ProjectConfig, backend) -> list[str]:
 def wav_duration(path: Path) -> float:
     with wave.open(str(path), "rb") as handle:
         return handle.getnframes() / float(handle.getframerate())
+
+
+def pause_for(config: ProjectConfig, line: Line) -> float:
+    """その行の末尾に入れる無音。台本の指定 > 反応の短い無音 > 既定。
+
+    匿名の反応（voice_crowd）は詰めて読む（2026-09-08）。参考チャンネルは
+    反応1件3秒台で言葉が詰まっていて、こちらは行ごとに0.35秒空いていた。
+    """
+    if line.pause is not None:
+        return line.pause
+    if (line.speaker or "").strip() in config.voice_crowd:
+        return config.voicevox.pause_crowd
+    return config.voicevox.pause
 
 
 def _write_padded(raw: bytes, pause: float, target: Path) -> None:

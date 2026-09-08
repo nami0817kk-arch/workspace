@@ -197,7 +197,10 @@ def main(argv: list[str] | None = None) -> int:
     p_short.add_argument("--no-tts", action="store_true", help="音声なしで尺だけ確認する")
 
     p_react = sub.add_parser("reactions", help="まとめスレから書き込みを取り出して数える")
-    p_react.add_argument("url", help="まとめサイトの記事URL")
+    p_react.add_argument("url", nargs="?", default=None,
+                         help="まとめサイトの記事URL。省略して --find で探せる")
+    p_react.add_argument("--find", default=None, metavar="題材",
+                         help="題材名でまとめサイト4つを検索し、見つかった記事を使う（2026-09-08）")
     p_react.add_argument("--limit", type=int, default=5, help="カードに載せる件数（既定5）")
     p_react.add_argument("--say", action="store_true",
                          help="読み上げに回す短い反応を、取材メモの say: の形で出す")
@@ -338,6 +341,27 @@ def main(argv: list[str] | None = None) -> int:
                          help="YouTube の動画ID。**ハイフンで始まるIDがある**"
                               "（例: -gZ3P1gw8QU）。その場合は `--` を挟む: "
                               "setthumb -- <出力先> -gZ3P1gw8QU")
+
+    # 公開と同時に最初のコメント（問い＋高評価・コメントへの誘い）を書く（2026-09-08）
+    p_comment = sub.add_parser(
+        "comment", help="公開した動画に最初のコメント（問い＋誘い）を書く。固定は Studio で")
+    p_comment.add_argument("build_dir", help="build の出力ディレクトリ")
+    p_comment.add_argument("video_id", help="YouTube の動画ID。ハイフン始まりは `--` を挟む")
+    p_comment.add_argument("--text", default=None, help="文面を自分で決めるとき")
+    p_comment.add_argument("--dry-run", action="store_true", help="文面だけ見て書き込まない")
+
+    # 取材メモの出典から、本文の発言と数字を抜いて材料にする（2026-09-08）
+    p_material = sub.add_parser(
+        "material", help="取材メモの出典（許可サイト）の本文から発言・数字を抜き出す")
+    p_material.add_argument("note", help="取材メモ（YAML）。URL を直接並べてもよい", nargs="+")
+    p_material.add_argument("--out", default=None, help="書き出し先（既定 research/material/<名前>.md）")
+
+    # 選手・クラブのページの表を数字の材料にする（2026-09-08）。
+    # `stats` は「これまで何を出したか」の振り返りに使っているので、こちらは numbers
+    p_numbers = sub.add_parser(
+        "numbers", help="transfermarkt.jp などのページの表を、行ごとの文字に起こして材料に足す")
+    p_numbers.add_argument("url", help="選手・クラブのページのURL（transfermarkt.jp / fotmob）")
+    p_numbers.add_argument("--out", default=None, help="追記先（既定 research/material/numbers.md）")
 
     p_variety = sub.add_parser(
         "variety", help="その日の台本を横に並べて見る（1本ずつでは分からないこと）")
@@ -588,6 +612,32 @@ def _cmd_reactions(args, config) -> int:
     """
     from . import reactions as reactions_mod
 
+    if args.find:
+        # **スレを人が探さなくてよいようにする**（2026-09-08）。今日の新6本のうち
+        # 4本で反応が0件だったのは、URLを見つけた回しか反応が入らなかったから
+        hits = reactions_mod.find(args.find)
+        if not hits:
+            print(f"「{args.find}」の記事はまとめサイトに見つかりません", file=sys.stderr)
+            return 1
+        print(f"■ 「{args.find}」の記事　{len(hits)}件")
+        for url, title in hits:
+            print(f"  {_fit(title, 48)}　{url}")
+        if not args.url:
+            # **書き込みの多い記事を選ぶ。**1件目は古い小さなスレのことがある
+            # （実測: 1件目は3件、同じ検索の別記事は24件）
+            best, best_n = hits[0][0], -1
+            for url, _ in hits[:8]:
+                try:
+                    n = len(reactions_mod.fetch(url))
+                except Exception:  # noqa: BLE001
+                    n = -1
+                if n > best_n:
+                    best, best_n = url, n
+            args.url = best
+            print(f"→ 書き込みが最も多い記事（{best_n}件）を使います: {best}")
+    if not args.url:
+        print("記事URLか --find <題材> を渡してください", file=sys.stderr)
+        return 1
     try:
         posts = reactions_mod.fetch(args.url)
     except reactions_mod.ReactionError as error:
@@ -1572,6 +1622,103 @@ def _cmd_publish(args, config) -> int:
     return 0
 
 
+def _cmd_numbers(args, config) -> int:
+    """ページの表を行ごとの文字に起こす（2026-09-08）。数字の材料。"""
+    from . import numbers as stats_mod
+
+    try:
+        page = stats_mod.fetch(args.url)
+    except stats_mod.NumbersError as err:
+        print(str(err), file=sys.stderr)
+        return 1
+    except Exception as err:
+        print(f"読めません: {str(err)[:120]}", file=sys.stderr)
+        return 1
+    tables = stats_mod.parse(page)
+    text = stats_mod.render(args.url, tables)
+    out = Path(args.out) if args.out else Path("research/material/numbers.md")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    with out.open("a", encoding="utf-8") as fh:
+        fh.write(text + chr(10))
+    print(f"■ 表 {len(tables)}個　行 {sum(len(t.rows) for t in tables)}")
+    for table in tables[:8]:
+        print(f"  {_fit(table.caption, 40)}　{len(table.rows)}行")
+    print(f"追記: {out}")
+    return 0
+
+
+def _cmd_material(args, config) -> int:
+    """出典の本文から発言と数字を抜き、取材メモの横に置く（2026-09-08）。
+
+    ユーザー「中身のボリュームで負けている」。検索は見出ししか取っておらず、
+    本文は人が開いた分しか入らなかった。許可サイトだけ読む。要約はしない。
+    """
+    from . import material as material_mod
+    from .plan import load_plan
+
+    plan = load_plan()
+    hosts = material_mod.allowed_hosts(getattr(plan, "domains", {}) or {})
+    urls: list[str] = []
+    heading = ""
+    stem = "material"
+    for item in args.note:
+        if item.startswith("http"):
+            urls.append(item)
+            continue
+        path = Path(item)
+        if not path.exists():
+            print(f"見つかりません: {item}", file=sys.stderr)
+            return 1
+        title, found = material_mod.note_sources(path)
+        heading = heading or title
+        stem = path.stem
+        urls += [u for u in found if u not in urls]
+    if not urls:
+        print("出典URLがありません", file=sys.stderr)
+        return 1
+    print(f"■ 出典 {len(urls)}本を読みます（許可サイトのみ）")
+    items = material_mod.gather(urls, hosts)
+    out = Path(args.out) if args.out else Path("research/material") / f"{stem}.md"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(material_mod.render(items, heading), encoding="utf-8")
+    quotes = sum(len(i.quotes) for i in items)
+    numbers = sum(len(i.numbers) for i in items)
+    skipped = [i for i in items if i.note]
+    for i in items:
+        mark = "×" if i.note else "✓"
+        print(f"  {mark} {i.outlet:28} 発言{len(i.quotes):>2} 数字{len(i.numbers):>2}  {i.note}")
+    print(f"材料: {out}　（発言{quotes}件・数字{numbers}文・読めず{len(skipped)}本）")
+    return 0
+
+
+def _cmd_comment(args, config) -> int:
+    """公開した動画に、最初のコメント（問い＋高評価・コメントへの誘い）を書く。
+
+    Gemini（2026-09-08）の答え1。**固定は API にできない**ので Studio で行う。
+    文面は build の出力から作り、同じ動画には同じ文になる。
+    """
+    from . import comments
+    from .upload import get_service
+
+    build_dir = Path(args.build_dir)
+    try:
+        text = args.text or comments.compose(build_dir)
+    except comments.CommentError as err:
+        print(str(err), file=sys.stderr)
+        return 1
+    print(f"■ コメント（{len(text)}字）　{text}")
+    if args.dry_run:
+        print("--dry-run なので書き込んでいません")
+        return 0
+    try:
+        comment_id = comments.post(get_service(), args.video_id, text)
+    except Exception as err:
+        print(f"書き込めません: {str(err)[:160]}", file=sys.stderr)
+        return 1
+    print(f"書きました: https://youtu.be/{args.video_id}　（固定は Studio で）　{comment_id}")
+    return 0
+
+
 def _cmd_setthumb(args, config) -> int:
     """サムネイルだけを設定する。**投稿はやり直さない**（動画が二重になる）。"""
     from .upload import UploadError, get_service, set_thumbnail
@@ -2518,6 +2665,9 @@ HANDLERS = {
     "variety": _cmd_variety,
     "redescribe": _cmd_redescribe,
     "setthumb": _cmd_setthumb,
+    "comment": _cmd_comment,
+    "material": _cmd_material,
+    "numbers": _cmd_numbers,
     "publish": _cmd_publish,
     "quota": _cmd_quota,
     "portrait": _cmd_portrait,

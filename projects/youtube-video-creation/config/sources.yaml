@@ -48,6 +48,23 @@ domains:
              liverpoolfc.com, juventus.com,
              acmilan.com, bvb.de, fcbayern.com, psg.fr, slbenfica.pt,
              tottenhamhotspur.com, newcastleunited.co.uk,
+             # 2026-09-08 に追加。日本人選手の所属クラブ（日本人枠が1日5本ある）。
+             # 到達は同日に実測。bolognafc.it は 403 で入れていない
+             www.realsociedad.eus, www.brightonandhovealbion.com, www.avfc.co.uk,
+             www.cpfc.co.uk, www.celticfc.com, www.ol.fr, www.borussia.de,
+             www.scfreiburg.com, www.vfb.de, www.sporting.pt,
+             www.parmacalcio1913.com, www.stvv.com,
+             # 2026-09-09 未明に追加。日本人選手の所属（バレンシア=佐藤、フランクフルト=堂安、
+             # マインツ=佐野・川崎、リーズ=田中、サウサンプトン=菅原、バーミンガム=岩田、
+             # ランス=伊東、ホッフェンハイム=町田、ヘント=渡辺、ラツィオ、ボーフム、
+             # ウニオン、ザンクトパウリ、AZ、スパルタ）とリーグ・連盟。到達を実測。
+             # werder.de は 429、nec-nijmegen.nl は中身が返らず見送り
+             www.valenciacf.com, www.eintracht.de, www.mainz05.de, www.leedsunited.com,
+             www.southamptonfc.com, www.bcfc.com, www.stade-de-reims.com,
+             www.sparta-rotterdam.nl, www.az.nl, www.tsg-hoffenheim.de, www.kaagent.be,
+             www.fcstpauli.com, www.sslazio.it, www.fcunion.de, www.vfl-bochum.de,
+             ligue1.com, www.ligaportugal.pt, www.the-afc.com, www.fifa.com,
+             spfl.co.uk, eredivisie.nl,
              losc.fr, asmonaco.com, feyenoord.nl,
              premierleague.com, laliga.com, bundesliga.com, legaseriea.it,
              mlssoccer.com, uefa.com]
@@ -62,6 +79,17 @@ domains:
             si.com, cbssports.com, bleacherreport.com,
             bbc.com, theguardian.com, independent.co.uk, standard.co.uk,
             football.london, theathletic.com, nytimes.com,
+            # 2026-09-08 に追加。選手の一人称の文章と、数字の解説記事
+            www.theplayerstribune.com, theanalyst.com,
+            # 2026-09-09 未明に追加。**地元紙は監督・選手の発言が全文近く載る**
+            # （MEN=シティ・ユナイテッド、Echo=リヴァプール、Chronicle=ニューカッスル、
+            # Birmingham Mail=ヴィラ）。FourFourTwo はインタビュー。GFFN/GFFG/bulinews は
+            # 仏・独の英語版。football-espana はスペイン。onefootball は引用の集約
+            www.manchestereveningnews.co.uk, www.liverpoolecho.co.uk,
+            www.chroniclelive.co.uk, www.birminghammail.co.uk,
+            www.fourfourtwo.com, www.planetfootball.com, www.football-espana.net,
+            www.getfootballnewsfrance.com, www.getfootballnewsgermany.com,
+            bulinews.com, onefootball.com,
             # 2026-09-06 に追加。どちらもブラウザで直接開いて本文が読めることを
             # 確認した。フィードに載らない話（会見の発言、退団メッセージの全文）が
             # ここにしか無く、網に無いせいで確度を決められない候補が毎日出ていた
@@ -70,6 +98,7 @@ domains:
   # 記録・数字。「数字で見ると」の節で使う。順位・得点・出場数はここ
   stats: [fbref.com, understat.com, worldfootball.net, sofascore.com,
           besoccer.com, flashscore.com, transfermarkt.com, transfermarkt.de,
+          www.whoscored.com,   # 2026-09-08 に追加。採点と出場データ
           # 2026-09-05 に追加。co.uk はフィードを登録しているのに群に無く、
           # lint が毎回「網に無いサイト」と警告していた。
           # jp は日本語で移籍金・市場価値・契約年数が読める（**数字の裏取り用**）。
@@ -80,7 +109,16 @@ domains:
   # 日本語の報道機関。訳す手間が要らないぶん速い
   japanese: [soccer-king.jp, footballchannel.jp, web.ultra-soccer.jp, web.gekisaka.jp,
              theworldmagazine.jp, football-tribe.com, sportiva.shueisha.co.jp,
-             hochi.news, nikkansports.com, sponichi.co.jp]
+             hochi.news, nikkansports.com, sponichi.co.jp,
+             # 2026-09-08 に追加（ユーザー「許可サイトは増やしていきたい」）。
+             # 本人の言葉・インタビューが厚い日本語媒体。到達は同日に実測（200）
+             soccerdigestweb.com, www.football-zone.net, number.bunshun.jp,
+             sports.yahoo.co.jp, qoly.jp, www.footballista.jp, www.daily.co.jp,
+             www.dazn.com,
+             # 2026-09-09 未明に追加（ユーザー「さらなる補充」）。到達を実測（200）。
+             # kanzen / soccermagazine / jp.onefootball は名前が引けず見送り
+             www.sanspo.com, www.jiji.com, sportsbull.jp, mainichi.jp,
+             www.chunichi.co.jp, www.jsports.co.jp]
 
   # 複数媒体を横断できる。見出しに媒体名が入る
   aggregator: [news.yahoo.co.jp]
@@ -113,6 +151,12 @@ domains:
   rumour: [caughtoffside.com, givemesport.com, tribalfootball.com,
            bild.de, mirror.co.uk, dailymail.co.uk, dailymail.com,
            footballnet.2chblog.jp, sakasaka10.blog.jp,
+           # 2026-09-08 に追加。反応の本体。どちらも /search?q= で記事を探せる（実測）
+           sakarabo.blog.jp, samuraigoal.doorblog.jp,
+           # 2026-09-09 未明に追加。タブロイドと移籍の集約。確度は未確認のまま。
+           # football-2ch.com は 404 になっていた（残してあるが当たらない）
+           www.tokyo-sports.co.jp, www.express.co.uk, www.thesun.co.uk,
+           www.footballtransfers.com, www.sportskeeda.com,
            # 2026-09-04 にユーザーから。まとめサイトを横断する集約サイトと、
            # そこから辿れるまとめ。反応の取り出しは実測済み（下の注記）
            www.footballtopic.com, football-2ch.com, worldfn.net,
@@ -468,6 +512,10 @@ deep:
   #   識者・当事者 … 名前を出して引用できる（報道）
   #   一般の反応   … 名前を出さない。数の話もしない（未確認）
   - {q: "{en} said OR quotes reaction", domains: english, label: 識者・当事者の発言}
+  # **本人の言葉**（2026-09-08）。KOALA SOCCER は選手が語った言葉だけで30秒・21万回。
+  # こちらの取材メモは本人の発言がほぼ無かった
+  - {q: "{theme} インタビュー 語った OR 明かした", domains: japanese, label: 本人の言葉（日本語）}
+  - {q: "{en} interview quotes \"said\"", domains: english, label: 本人の言葉（英語）}
   - {q: "{theme} 反応 OR 声 OR 批判", domains: japanese, label: 反応（日本語）}
   - {q: "{en} fans reaction", domains: social, label: 反応（SNS）}
   - {q: "{en} stats goals assists", domains: stats, label: 数字（成績）}

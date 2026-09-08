@@ -41,6 +41,45 @@ class ReactionError(Exception):
     pass
 
 
+# 題材名でスレを探せるまとめサイト（2026-09-08）。livedoor 系は /search?q= が
+# 素の HTML で返る（4サイトとも実測で 200・記事リンク 11〜31 件）。
+# 今日の新6本のうち4本で反応が0件だったのは、スレのURLを人が見つけた回しか
+# 反応が入らない仕組みだったから
+SEARCH_SITES = ("sakarabo.blog.jp", "sakasaka10.blog.jp",
+                "footballnet.2chblog.jp", "samuraigoal.doorblog.jp")
+_ARCHIVE = r'https?://{host}/archives/\d+\.html'
+
+
+def find(query: str, session=None, per_site: int = 3) -> list[tuple[str, str]]:
+    """題材名でまとめサイトを検索し、(記事URL, 題名) を新しい順に近い並びで返す。
+
+    見出しに題材の語が入っているものを優先する。検索結果ページはサイトごとに
+    作りが違うので、記事URLと同じ <a> の中の文字を題名として取る。
+    """
+    client = session or requests
+    found: list[tuple[str, str]] = []
+    words = [w for w in re.split(r"[\s　]+", query) if w]
+    for host in SEARCH_SITES:
+        try:
+            resp = client.get(f"https://{host}/search?q={requests.utils.quote(query)}",
+                              headers={"User-Agent": UA}, timeout=TIMEOUT)
+            page = resp.text
+        except Exception:  # noqa: BLE001 - 1サイト落ちても他を続ける
+            continue
+        pattern = re.compile(r'<a[^>]+href="(' + _ARCHIVE.format(host=re.escape(host))
+                             + r')"[^>]*>([^<]{6,120})</a>')
+        seen: set[str] = set()
+        hits: list[tuple[str, str]] = []
+        for url, title in pattern.findall(page):
+            title = title.strip()
+            if url in seen or not any(w in title for w in words):
+                continue
+            seen.add(url)
+            hits.append((url, title))
+        found += hits[:per_site]
+    return found
+
+
 def fetch(url: str, session=None) -> list[Post]:
     """スレのまとめページから書き込みを取り出す。"""
     client = session or requests

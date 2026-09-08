@@ -202,7 +202,9 @@ def test_breaking_prefix_is_fine_with_a_confirmed_section():
     raw["thumbnail"] = {"line1": "短い見出し", "line2": "赤帯の文字"}
     # 2026-09-07: 他人の声が足りないヒントは、どの取材メモにも出るようになった
     # （参考3チャンネルは尺の58%が他人の声、こちらは14%だった）。札の点検とは別の話
-    assert [h for h in advise(build_notes(raw)) if "他人の声" not in h] == []
+    # 2026-09-08: 中身の量（数字・出典）のヒントも同様にどのメモにも出る
+    volume = ("他人の声", "数字を含む行", "出典が")
+    assert [h for h in advise(build_notes(raw)) if not any(v in h for v in volume)] == []
 
 
 def test_unknown_prefix_is_flagged():
