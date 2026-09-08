@@ -62,7 +62,7 @@ class Person {
     fame += state.seasonCaps * 2;
     fame += state.continentalStage.points * 2;
     fame += state.cupStage.points;
-    // ワールドカップは桁が違う。1度出るだけで名前が知れ渡る。
+    // 世界大会は桁が違う。1度出るだけで名前が知れ渡る。
     fame += state.worldCupStage.points * 4;
 
     // リーグでの露出は「出場していること」が前提。試合に出ない選手は

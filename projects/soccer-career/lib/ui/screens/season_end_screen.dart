@@ -191,7 +191,7 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                       const SizedBox(height: 6),
                       Chip(
                         label:
-                            Text('ワールドカップ ${state.worldCupStage.label}'),
+                            Text('世界大会 ${state.worldCupStage.label}'),
                         backgroundColor:
                             theme.colorScheme.tertiaryContainer,
                         visualDensity: VisualDensity.compact,

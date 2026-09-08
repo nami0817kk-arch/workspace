@@ -17,8 +17,8 @@ enum Award {
   promotion('昇格'),
   continentalTitle('大陸カップ優勝'),
   domesticCup('国内カップ優勝'),
-  worldCup('ワールドカップ出場'),
-  worldCupTitle('ワールドカップ優勝');
+  worldCup('世界大会出場'),
+  worldCupTitle('世界大会優勝');
 
   const Award(this.label);
 

@@ -1048,6 +1048,7 @@ class CareerEngine {
       news: state.news,
       backedUpYear: state.backedUpYear,
       autoRestBelow: state.autoRestBelow,
+      focus: state.focus,
       // 怪我はシーズンを跨いでも消えない。オフの間に少しは進む。
       injury: state.injury == null || state.injury!.matchesOut <= 4
           ? null
@@ -1226,7 +1227,7 @@ class CareerEngine {
     }
     // 国内カップは毎年ある。順位に関係なく全クラブが出る。
     state.cupStage = competitions.runDomesticCup(state);
-    // ワールドカップは4年に1度。代表に呼ばれている選手だけ。
+    // 世界大会は4年に1度。代表に呼ばれている選手だけ。
     state.worldCupStage = Competitions.isWorldCupYear(state.year)
         ? competitions.runWorldCup(state, calledUp: state.calledUp)
         : WorldCupStage.none;
@@ -1296,6 +1297,7 @@ class CareerEngine {
       news: state.news,
       backedUpYear: state.backedUpYear,
       autoRestBelow: state.autoRestBelow,
+      focus: state.focus,
       manager: state.manager,
       directive: state.directive,
       competitor: state.competitor,

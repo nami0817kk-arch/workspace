@@ -59,7 +59,7 @@ class SeasonRecord {
   /// そのシーズンの国内カップの成績。
   final CupStage cupStage;
 
-  /// そのシーズンのワールドカップの成績。
+  /// そのシーズンの世界大会の成績。
   final WorldCupStage worldCupStage;
 
   /// ローンで戦ったシーズンか。
@@ -178,6 +178,7 @@ class CareerState {
     this.seasonStart,
     this.backedUpYear = 0,
     this.autoRestBelow = defaultAutoRestBelow,
+    this.focus = const [],
     this.momentAttempts = const {},
     this.momentSuccesses = const {},
     this.objective,
@@ -305,6 +306,21 @@ class CareerState {
   /// 世の中に出た見出し。新しいものが先頭。
   List<NewsItem> news;
 
+  /// 育てる方向。伸ばしたい詳細能力を選んでおく。
+  ///
+  /// 練習でも試合の成長でも、伸びる先が無作為だったので、何を選んでも
+  /// 同じような選手になっていた。ここを決めておくと、練習の中で伸びる
+  /// 項目と、試合の成長の無作為ぶんが、選んだ方向に寄る。
+  /// **伸びる量は変わらない**——どこに乗るかだけが変わる。
+  List<Detail> focus;
+
+  /// 同時に選べる数。全部を伸ばすのは方向とは言わない。
+  static const int maxFocus = 3;
+
+  /// そのカテゴリの中で、方向に入っている詳細。
+  List<Detail> focusIn(AttributeKey key) =>
+      [for (final d in focus) if (d.category == key) d];
+
   /// このコンディションを下回ったら、その週は自動で休養にする。
   ///
   /// 0 なら自動では休まない。疲れたまま練習を続けると、伸びないうえに
@@ -422,7 +438,7 @@ class CareerState {
   /// 今季の国内カップの成績。
   CupStage cupStage;
 
-  /// 今季のワールドカップの成績。4年に1度だけ動く。
+  /// 今季の世界大会の成績。4年に1度だけ動く。
   WorldCupStage worldCupStage;
 
   /// ローン中なら、保有元のクラブ。
@@ -586,6 +602,7 @@ class CareerState {
         'seasonStart': seasonStart?.toJson(),
         'backedUpYear': backedUpYear,
         'autoRestBelow': autoRestBelow,
+        'focus': focus.map((d) => d.name).toList(),
         'momentAttempts': {
           for (final e in momentAttempts.entries) e.key.name: e.value,
         },
@@ -698,6 +715,11 @@ class CareerState {
       backedUpYear: json['backedUpYear'] as int? ?? 0,
       autoRestBelow:
           json['autoRestBelow'] as int? ?? defaultAutoRestBelow,
+      focus: [
+        for (final n in (json['focus'] as List? ?? const []))
+          if (Detail.values.any((d) => d.name == n))
+            Detail.values.byName(n as String),
+      ],
       seasonStart: json['seasonStart'] is Map<String, dynamic>
           ? Attributes.fromJson(json['seasonStart'] as Map<String, dynamic>)
           : null,

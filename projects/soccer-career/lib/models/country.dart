@@ -1,8 +1,9 @@
 /// 連盟。大陸カップと、外国人ルールの「連盟内自由移動」の単位。
 enum Confederation {
-  vesta('ヴェスタ連盟'),
-  oriens('オリエンス連盟'),
-  austral('アウストラル連盟');
+  // 実在の連盟の名前と略称は商標なので使わない。地域名で足りる。
+  vesta('欧州'),
+  oriens('アジア'),
+  austral('南米');
 
   const Confederation(this.label);
 
@@ -115,7 +116,7 @@ class Country {
   final String id;
   final String name;
 
-  /// 「アルビオン人」のような呼び方。
+  /// 「イングランド人」のような呼び方。
   final String demonym;
 
   final Confederation confederation;
