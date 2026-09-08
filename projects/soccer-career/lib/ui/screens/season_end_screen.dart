@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../readable_width.dart';
 import '../../game/career_engine.dart';
 import '../../game/formulas.dart';
 import '../../game/world.dart';
@@ -141,7 +142,8 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
         automaticallyImplyLeading: false,
       ),
       body: SafeArea(
-        child: ListView(
+        child: ReadableWidth(
+          child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
             Card(
@@ -347,6 +349,7 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
               ],
             ],
           ],
+          ),
         ),
       ),
     );
@@ -444,7 +447,7 @@ class _OfferCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('年俸 ${offer.salary}万円  ·  ${offer.years}年契約',
+                      Text('年俸 ${offer.salary}万円 ・ ${offer.years}年契約',
                           style: theme.textTheme.titleMedium),
                       Text('手取り $takeHome万円（手数料差引後）', style: muted),
                     ],

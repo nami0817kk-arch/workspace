@@ -139,7 +139,7 @@ class Physique {
         weakFoot: (weakFoot ?? this.weakFoot).clamp(1, 5),
       );
 
-  String get label => '$heightCm cm  ·  $weightKg kg  ·  ${foot.label}';
+  String get label => '$heightCm cm ・ $weightKg kg ・ ${foot.label}';
 
   Map<String, dynamic> toJson() => {
         'heightCm': heightCm,

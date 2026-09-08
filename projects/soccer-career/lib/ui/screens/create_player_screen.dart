@@ -6,6 +6,7 @@ import 'guide_screen.dart';
 import '../../models/agent.dart';
 import '../../models/attributes.dart';
 import '../../state/career_controller.dart';
+import '../readable_width.dart';
 
 /// キャリアの最初の画面。名前・ポジション・年齢・代理人を決める。
 ///
@@ -58,7 +59,8 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(24),
             child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 460),
+              constraints: const BoxConstraints(
+                  maxWidth: ReadableWidth.maxContentWidth),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -188,7 +190,7 @@ class _AgentCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('${agent.name}  ·  ${agent.style}',
+                    Text('${agent.name} ・ ${agent.style}',
                         style: theme.textTheme.titleSmall),
                     const SizedBox(height: 2),
                     Text(agent.description,

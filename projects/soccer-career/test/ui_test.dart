@@ -13,6 +13,7 @@ import 'package:soccer_career/models/career.dart';
 import 'package:soccer_career/models/training.dart';
 import 'package:soccer_career/main.dart';
 import 'package:soccer_career/state/career_controller.dart';
+import 'package:soccer_career/ui/readable_width.dart';
 import 'package:soccer_career/ui/screens/hub_screen.dart';
 import 'package:soccer_career/ui/screens/match_screen.dart';
 import 'package:soccer_career/ui/screens/season_end_screen.dart';
@@ -222,6 +223,31 @@ void main() {
     // 今週の練習の対象は、まだ動いていなくても必ず出す。
     expect(find.text(AttributeKey.passing.label), findsOneWidget);
     expect(find.textContaining('回勝負して'), findsWidgets);
+  });
+
+  testWidgets('広い画面でも、本文が読める幅で止まる', (tester) async {
+    // PC のブラウザで開くと、カードが画面幅いっぱいまで伸びて読めなかった。
+    final controller = await newCareer();
+    tester.view.physicalSize = const Size(1400, 900);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(MaterialApp(
+      theme: ThemeData(useMaterial3: true),
+      home: HubScreen(controller: controller),
+    ));
+    await tester.pumpAndSettle();
+
+    for (final label in ['試合', '選手', '育成', 'クラブ', '記録']) {
+      await tester.tap(find.widgetWithText(Tab, label));
+      await tester.pumpAndSettle();
+      final list = tester.getSize(find.byType(ListView).first);
+      expect(list.width, lessThanOrEqualTo(ReadableWidth.maxContentWidth),
+          reason: '$label タブが画面幅いっぱいに広がっている');
+    }
+    // タブそのものも同じ幅に収まっている。
+    expect(tester.getSize(find.byType(TabBar)).width,
+        lessThanOrEqualTo(ReadableWidth.maxContentWidth));
   });
 
   testWidgets('日本語フォントを同梱して使っている', (tester) async {

@@ -20,6 +20,7 @@ import '../../models/training.dart';
 import '../../models/season.dart';
 import '../../state/career_controller.dart';
 import '../club_identity.dart';
+import '../readable_width.dart';
 import 'guide_screen.dart';
 import 'match_screen.dart';
 import 'season_end_screen.dart';
@@ -241,15 +242,22 @@ class HubScreen extends StatelessWidget {
               ],
             ),
           ],
-          bottom: const TabBar(
-            labelPadding: EdgeInsets.symmetric(horizontal: 2),
-            tabs: [
-              Tab(text: '試合'),
-              Tab(text: '選手'),
-              Tab(text: '育成'),
-              Tab(text: 'クラブ'),
-              Tab(text: '記録'),
-            ],
+          // タブも本文と同じ幅に収める。広い画面で5つが端まで散ると、
+          // 隣のタブへ移るのに画面を横断することになる。
+          bottom: const PreferredSize(
+            preferredSize: Size.fromHeight(48),
+            child: ReadableWidth(
+              child: TabBar(
+                labelPadding: EdgeInsets.symmetric(horizontal: 2),
+                tabs: [
+                  Tab(text: '試合'),
+                  Tab(text: '選手'),
+                  Tab(text: '育成'),
+                  Tab(text: 'クラブ'),
+                  Tab(text: '記録'),
+                ],
+              ),
+            ),
           ),
         ),
         // 一番よく押すものは、どのタブに居ても手の届く場所に置く。
@@ -259,23 +267,26 @@ class HubScreen extends StatelessWidget {
           onPlay: () => _playNext(context),
           onEndSeason: () => _endSeason(context),
         ),
-        body: TabBarView(
-          children: [
-            _MatchTab(
-              controller: controller,
-              state: state,
-              stats: stats,
-              onPlay: () => _playNext(context),
-              onSimulate: () => _simulateOne(context),
-              onSimulateUntilEvent: () => _simulateUntilEvent(context),
-              onSimStyle: controller.setSimStyle,
-              onEndSeason: () => _endSeason(context),
-            ),
-            _PlayerTab(state: state),
-            _TrainingTab(state: state, controller: controller),
-            _ClubTab(state: state, controller: controller),
-            _CareerTab(state: state),
-          ],
+        // 5つのタブをまとめて読める幅に収める。
+        body: ReadableWidth(
+          child: TabBarView(
+            children: [
+              _MatchTab(
+                controller: controller,
+                state: state,
+                stats: stats,
+                onPlay: () => _playNext(context),
+                onSimulate: () => _simulateOne(context),
+                onSimulateUntilEvent: () => _simulateUntilEvent(context),
+                onSimStyle: controller.setSimStyle,
+                onEndSeason: () => _endSeason(context),
+              ),
+              _PlayerTab(state: state),
+              _TrainingTab(state: state, controller: controller),
+              _ClubTab(state: state, controller: controller),
+              _CareerTab(state: state),
+            ],
+          ),
         ),
       ),
     );
@@ -817,7 +828,7 @@ class _PlayerCard extends StatelessWidget {
                         Text('「${state.nickname}」', style: muted),
                       Text(
                         '${player.position.label}  ${player.age}歳'
-                        '（${state.stage.label}）  ·  '
+                        '（${state.stage.label}） ・ '
                         '${World.byId(player.nationality.primary).demonym}',
                         style: muted,
                       ),
@@ -827,11 +838,11 @@ class _PlayerCard extends StatelessWidget {
                         style: muted,
                       ),
                       Text(
-                        '年俸 ${_yen(state.salary)}  ·  契約 残り${state.contractYears}年',
+                        '年俸 ${_yen(state.salary)} ・ 契約 残り${state.contractYears}年',
                         style: muted,
                       ),
                       Text(
-                        '市場価値 ${state.reputation.valueLabel}  ·  '
+                        '市場価値 ${state.reputation.valueLabel} ・ '
                         '知名度 ${state.reputation.fame}',
                         style: muted,
                       ),
@@ -847,7 +858,7 @@ class _PlayerCard extends StatelessWidget {
                         ),
                       Text(
                         '代理人 ${state.agent.name}'
-                        '${state.caps > 0 ? '  ·  代表 ${state.caps}キャップ ${state.internationalGoals}ゴール' : ''}',
+                        '${state.caps > 0 ? ' ・ 代表 ${state.caps}キャップ ${state.internationalGoals}ゴール' : ''}',
                         style: muted,
                       ),
                     ],
@@ -1011,8 +1022,8 @@ class _TrainingCard extends StatelessWidget {
                     menu.isRest
                         ? 'コンディション +${menu.recovery}'
                         : '消耗 ${menu.conditionCost}'
-                            '${menu.isCompound ? '  ·  2か所に触れるが、1か所あたりは伸びにくい' : ''}'
-                            '${menu.injuryFactor > 1 ? '  ·  怪我をしやすい' : ''}',
+                            '${menu.isCompound ? ' ・ 2か所に触れるが、1か所あたりは伸びにくい' : ''}'
+                            '${menu.injuryFactor > 1 ? ' ・ 怪我をしやすい' : ''}',
                     style: muted,
                   ),
                   if (state.player.atPotential) ...[
@@ -1201,7 +1212,7 @@ class _SupportCard extends StatelessWidget {
                 Text('自分への投資', style: theme.textTheme.titleSmall),
                 const SizedBox(height: 4),
                 Text(
-                  '貯蓄 ${state.finances.savingsLabel}  ·  '
+                  '貯蓄 ${state.finances.savingsLabel} ・ '
                   '専属の年間費用 ${staff.costPerSeason}万円',
                   style: muted,
                 ),
@@ -1219,7 +1230,7 @@ class _SupportCard extends StatelessWidget {
                       for (final kind in StaffKind.values)
                         if (staff[kind] > 0)
                           '${kind.label} ${StaffTeam.levelLabels[staff[kind]]}',
-                    ].join('  ·  '),
+                    ].join(' ・ '),
               style: muted,
             ),
             childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -1258,7 +1269,7 @@ class _SupportCard extends StatelessWidget {
           ExpansionTile(
             title: const Text('生活習慣'),
             subtitle: Text(
-              '睡眠 ${habits.sleepLabel}  ·  食事 ${habits.dietLabel}',
+              '睡眠 ${habits.sleepLabel} ・ 食事 ${habits.dietLabel}',
               style: muted,
             ),
             childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -1351,7 +1362,7 @@ class _DevelopmentCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text('試合経験 ${dev.experience}'
-                '${dev.breakthroughs > 0 ? '  ·  限界突破 ${dev.breakthroughs}回' : ''}',
+                '${dev.breakthroughs > 0 ? ' ・ 限界突破 ${dev.breakthroughs}回' : ''}',
                 style: muted),
             if (dev.signatures.isNotEmpty) ...[
               const SizedBox(height: 10),
@@ -1446,7 +1457,7 @@ class _ClubLifeCard extends StatelessWidget {
                   style: theme.textTheme.bodyMedium),
               Text(
                 '${manager.fitLabel(state.player.attributes, state.player.position)}'
-                '  ·  在任${manager.tenure + 1}年目',
+                ' ・ 在任${manager.tenure + 1}年目',
                 style: muted,
               ),
             ],
@@ -1611,9 +1622,9 @@ class _TotalsCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              '${state.history.length + 1}シーズン目  ·  '
-              '${clubs.length}クラブ  ·  ${countries.length}か国'
-              '${state.caps > 0 ? '  ·  代表${state.caps}キャップ' : ''}',
+              '${state.history.length + 1}シーズン目 ・ '
+              '${clubs.length}クラブ ・ ${countries.length}か国'
+              '${state.caps > 0 ? ' ・ 代表${state.caps}キャップ' : ''}',
               style: muted,
             ),
             if (leagueTitles + cups + continental + worldCups > 0) ...[
@@ -1861,7 +1872,7 @@ class _NewsCard extends StatelessWidget {
                                 ?.copyWith(fontWeight: FontWeight.w600)),
                         if (item.body.isNotEmpty)
                           Text(item.body, style: muted),
-                        Text('${item.dateLabel}  ·  ${item.kind.label}',
+                        Text('${item.dateLabel} ・ ${item.kind.label}',
                             style: theme.textTheme.labelSmall?.copyWith(
                                 color: theme.colorScheme.onSurfaceVariant)),
                       ],
@@ -2119,11 +2130,11 @@ class _WorldLeagueCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('${mine.name}  ·  ${mine.gradeLabel}',
+                      Text('${mine.name} ・ ${mine.gradeLabel}',
                           style: theme.textTheme.bodyMedium),
                       Text(
-                        '世界${mine.rank}位 / ${mine.total}リーグ  ·  '
-                        '平均の強さ ${mine.average.round()}  ·  '
+                        '世界${mine.rank}位 / ${mine.total}リーグ ・ '
+                        '平均の強さ ${mine.average.round()} ・ '
                         '首位級 ${mine.top}',
                         style: muted,
                       ),
@@ -2514,16 +2525,16 @@ class _CareerTab extends StatelessWidget {
             child: ListTile(
               title: Text('${record.year}  ${record.clubName}'),
               subtitle: Text(
-                '${record.tier}部 ${record.leaguePosition}位  ·  '
+                '${record.tier}部 ${record.leaguePosition}位 ・ '
                 '${record.stats.appearances}試合 '
-                '${record.stats.goals}G ${record.stats.assists}A  ·  '
+                '${record.stats.goals}G ${record.stats.assists}A ・ '
                 '年俸 ${record.salary}万円'
-                '${record.onLoan ? '  ·  ローン' : ''}'
-                '${record.caps > 0 ? '  ·  代表${record.caps}' : ''}'
-                '${record.continentalStage.participated ? '  ·  大陸${record.continentalStage.label}' : ''}'
-                '${record.cupStage.participated ? '  ·  国内杯${record.cupStage.label}' : ''}'
-                '${record.worldCupStage.participated ? '  ·  W杯${record.worldCupStage.label}' : ''}'
-                '${record.objectiveMet ? '  ·  目標達成' : ''}',
+                '${record.onLoan ? ' ・ ローン' : ''}'
+                '${record.caps > 0 ? ' ・ 代表${record.caps}' : ''}'
+                '${record.continentalStage.participated ? ' ・ 大陸${record.continentalStage.label}' : ''}'
+                '${record.cupStage.participated ? ' ・ 国内杯${record.cupStage.label}' : ''}'
+                '${record.worldCupStage.participated ? ' ・ W杯${record.worldCupStage.label}' : ''}'
+                '${record.objectiveMet ? ' ・ 目標達成' : ''}',
               ),
               trailing: Text(
                 record.stats.appearances == 0
@@ -2745,7 +2756,7 @@ class _LeagueCard extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              '${country.confederation.label}  ·  ${country.calendar.label}  ·  '
+              '${country.confederation.label} ・ ${country.calendar.label} ・ '
               '${country.clubsInTier(state.club.tier)}クラブ',
               style: muted,
             ),
@@ -2921,8 +2932,8 @@ class _PersonCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              '気持ち ${state.morale.label}  ·  疲労 ${state.fatigue.label}'
-              '${state.form.isActive ? '  ·  ${state.form.state.label}' : ''}',
+              '気持ち ${state.morale.label} ・ 疲労 ${state.fatigue.label}'
+              '${state.form.isActive ? ' ・ ${state.form.state.label}' : ''}',
               style: muted?.copyWith(
                 color: state.morale.needsCare
                     ? theme.colorScheme.error
@@ -2931,9 +2942,9 @@ class _PersonCard extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              '貯蓄 ${state.finances.savingsLabel}  ·  生活 ${state.finances.lifestyleLabel}'
-              '${state.sponsor != null ? '  ·  ${state.sponsor!.name}と契約中' : ''}'
-              '${state.charity ? '  ·  財団' : ''}',
+              '貯蓄 ${state.finances.savingsLabel} ・ 生活 ${state.finances.lifestyleLabel}'
+              '${state.sponsor != null ? ' ・ ${state.sponsor!.name}と契約中' : ''}'
+              '${state.charity ? ' ・ 財団' : ''}',
               style: muted,
             ),
             if (state.reputation.awards.isNotEmpty) ...[

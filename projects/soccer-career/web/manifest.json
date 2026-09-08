@@ -1,11 +1,12 @@
 {
-    "name": "soccer_career",
-    "short_name": "soccer_career",
+    "name": "選手キャリア",
+    "short_name": "選手キャリア",
+    "lang": "ja",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#1B5E3F",
+    "theme_color": "#1B5E3F",
+    "description": "1人の選手を作って、引退までのキャリアを進めるサッカーゲーム。1シーズン38試合すべてを、試合中の判断で戦い抜く。",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
