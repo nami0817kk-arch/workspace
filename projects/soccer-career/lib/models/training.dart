@@ -6,8 +6,10 @@ import 'attributes.dart';
 /// 単科は狙った所が確実に伸び、複合は2か所に触れる代わりに疲れる。
 /// どちらが得かが状況で変わるから、毎週の選択に意味が出る。
 enum TrainingMenu {
-  rest('休養', 'コンディションを戻す。伸びはしない', [], conditionCost: 0, recovery: 30),
-  lightWork('リカバリー', '軽く流す。しっかり戻して怪我も遠ざける', [],
+  rest('休養', '完全に休む。コンディションが戻り、溜まった疲労も抜ける', [],
+      conditionCost: 0, recovery: 30),
+  lightWork('リカバリー', '軽く流す。しっかり戻して怪我も遠ざけるが、疲労は抜けない',
+      [],
       conditionCost: 0, recovery: 38, injuryFactor: 0.6),
   sprint('スプリント', 'スピードを上げる', [AttributeKey.pace],
       conditionCost: 12, growthFactor: 1.1),
