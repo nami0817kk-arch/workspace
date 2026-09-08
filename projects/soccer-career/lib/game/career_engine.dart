@@ -179,6 +179,9 @@ class CareerEngine {
     final club = league[league.length - 1 - _random.nextInt(3)];
     final attributes = _startingAttributes(position, age, tweaks: tweaks);
     final overall = attributes.overallFor(position);
+    // そのポジションで意味を持つ特性からだけ引く。
+    // 天才はポテンシャルに乗るので、ポテンシャルより先に引く。
+    final traits = Trait.roll(_random, position: position);
     final player = Player(
       name: name,
       age: age,
@@ -186,14 +189,14 @@ class CareerEngine {
       // 左右のある役割でなければ、指定されていても中央に倒す。
       side: position.hasSide ? side : Side.center,
       attributes: attributes,
-      potential: rollPotential(overall),
+      potential: (rollPotential(overall) + traits.potentialBonus)
+          .clamp(Formulas.potentialMin, Formulas.maxAttribute),
       nationality: _rollNationality(home),
       personality: Personality.roll(_random),
       physique: physique ?? Physique.roll(_random, position),
       look: look ?? PlayerLook.roll(_random),
       aptitude: Aptitude.initial(position),
-      // そのポジションで意味を持つ特性からだけ引く。
-      traits: Trait.roll(_random, position: position),
+      traits: traits,
     );
     return CareerState(
       player: player,
