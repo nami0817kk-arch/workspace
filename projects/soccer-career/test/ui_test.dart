@@ -139,6 +139,28 @@ void main() {
     expect(find.text('積み上げ'), findsOneWidget);
   });
 
+  testWidgets('選手のタブで、特性がどこで効くかと今季の回数が読める', (tester) async {
+    final controller = await newCareer();
+    await pumpHub(tester, controller, height: 2400);
+
+    await tester.tap(find.widgetWithText(Tab, '選手'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('特性の効き'), findsOneWidget);
+    final traits = controller.state!.player.traits;
+    expect(traits, isNotEmpty);
+    for (final trait in traits) {
+      // 名前のチップと、効きの行の両方に出る。
+      expect(find.text(trait.label), findsWidgets);
+      for (final effect in trait.effects) {
+        expect(find.text(effect), findsOneWidget, reason: effect);
+      }
+    }
+    // 回数か「試合の外」かのどちらかが書いてある。
+    expect(
+        find.textContaining(RegExp('今季|試合の外で効く')), findsAtLeastNWidgets(1));
+  });
+
   testWidgets('クラブのタブに順位表がある', (tester) async {
     final controller = await newCareer();
     await pumpHub(tester, controller);

@@ -11,6 +11,7 @@ import 'news.dart';
 import 'reputation.dart';
 import 'support.dart';
 import 'training.dart';
+import 'traits.dart';
 import 'injury.dart';
 import 'objective.dart';
 import 'player.dart';
@@ -183,6 +184,7 @@ class CareerState {
     this.suspension = 0,
     this.momentAttempts = const {},
     this.momentSuccesses = const {},
+    this.traitHits = const {},
     this.objective,
     this.injury,
     this.caps = 0,
@@ -406,6 +408,21 @@ class CareerState {
     ];
   }
 
+  /// 今季、それぞれの特性が成功率を動かした局面の数。
+  ///
+  /// 特性は名前だけ見ても効いたかどうか分からない。
+  /// 「今季12回の局面で効いた」が出て初めて、付いている意味が分かる。
+  Map<Trait, int> traitHits;
+
+  /// 1試合ぶんの特性の効きを足す。
+  void recordTraitHits(Map<Trait, int> hits) {
+    if (hits.isEmpty) return;
+    traitHits = {
+      ...traitHits,
+      for (final e in hits.entries) e.key: (traitHits[e.key] ?? 0) + e.value,
+    };
+  }
+
   /// 今季の局面を1つ記録する。
   void recordMoment(AttributeKey key, {required bool success}) {
     momentAttempts = {...momentAttempts, key: (momentAttempts[key] ?? 0) + 1};
@@ -422,6 +439,7 @@ class CareerState {
     seasonStart = player.attributes;
     momentAttempts = const {};
     momentSuccesses = const {};
+    traitHits = const {};
   }
 
   /// 今の年齢のキャリア段階。
@@ -518,6 +536,17 @@ class CareerState {
   int get totalEarnings => history.fold(0, (s, h) => s + h.salary);
 
   /// 保存データからカテゴリ別の集計を読む。知らないキーは捨てる。
+  /// 知らない特性名（古い版で消したもの）は読み飛ばす。
+  static Map<Trait, int> _traitCountsFrom(Object? json) {
+    final result = <Trait, int>{};
+    for (final e in (json as Map? ?? const {}).entries) {
+      if (Trait.values.any((t) => t.name == e.key) && e.value is int) {
+        result[Trait.values.byName(e.key as String)] = e.value as int;
+      }
+    }
+    return result;
+  }
+
   static Map<AttributeKey, int> _countsFrom(Object? json) {
     final result = <AttributeKey, int>{};
     for (final e in (json as Map? ?? const {}).entries) {
@@ -616,6 +645,9 @@ class CareerState {
         'focus': focus.map((d) => d.name).toList(),
         'yellowCards': yellowCards,
         'suspension': suspension,
+        'traitHits': {
+          for (final e in traitHits.entries) e.key.name: e.value,
+        },
         'momentAttempts': {
           for (final e in momentAttempts.entries) e.key.name: e.value,
         },
@@ -740,6 +772,7 @@ class CareerState {
           : null,
       momentAttempts: _countsFrom(json['momentAttempts']),
       momentSuccesses: _countsFrom(json['momentSuccesses']),
+      traitHits: _traitCountsFrom(json['traitHits']),
       contractYears: json['contractYears'] as int? ?? 2,
       countryId: json['countryId'] as String? ?? 'yamato',
       professionalYears: json['professionalYears'] as int? ?? 1,

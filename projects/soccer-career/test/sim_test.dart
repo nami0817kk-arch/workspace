@@ -74,6 +74,7 @@ TraitContext ctx({
   Detail? detail,
   String scenarioId = 'x',
   bool international = false,
+  bool substitute = false,
 }) =>
     TraitContext(
       minute: minute,
@@ -85,6 +86,7 @@ TraitContext ctx({
       detail: detail,
       scenarioId: scenarioId,
       international: international,
+      substitute: substitute,
     );
 
 void main() {
@@ -223,7 +225,18 @@ void main() {
             trait.formFactor != 1.0 ||
             trait.deadBallThresholdOffset != 0 ||
             trait.growthFactor(20) != 1.0 ||
-            trait.growthFactor(30) != 1.0;
+            trait.growthFactor(30) != 1.0 ||
+            trait.restFactor != 1.0 ||
+            trait.moraleGainFactor != 1.0 ||
+            trait.cleanSheetFactor != 1.0 ||
+            trait.cardFactor != 1.0 ||
+            trait.fameFactor != 1.0 ||
+            trait.aptitudeFactor != 1.0 ||
+            trait.adaptationFactor != 1.0 ||
+            trait.breakthroughFactor != 1.0 ||
+            trait.plateauFactor != 1.0 ||
+            trait.relationGainFactor != 1.0 ||
+            trait.relationLossFactor != 1.0;
         expect(affectsMatch || _affectsPlay(trait), isTrue,
             reason: '${trait.label} は何も効いていない');
       }
@@ -474,6 +487,7 @@ bool _affectsPlay(Trait trait) {
               margin: flags[1] ? -1 : 1,
               weakFoot: flags[2],
               abroad: flags[3],
+              substitute: flags[0],
             );
             if (trait.chanceBonus(context) != 0) return true;
           }

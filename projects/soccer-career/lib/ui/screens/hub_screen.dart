@@ -19,6 +19,7 @@ import '../../models/entourage.dart';
 import '../../models/life.dart';
 import '../../models/support.dart';
 import '../../models/training.dart';
+import '../../models/traits.dart';
 import '../../models/season.dart';
 import '../../state/career_controller.dart';
 import '../club_identity.dart';
@@ -740,6 +741,8 @@ class _PlayerTab extends StatelessWidget {
           const SizedBox(height: 16),
           _PlayerCard(state: state),
           const SizedBox(height: 16),
+          _TraitsCard(state: state),
+          const SizedBox(height: 16),
           _BodyCard(state: state),
           const SizedBox(height: 16),
           _DevelopmentCard(state: state),
@@ -1210,6 +1213,108 @@ class _TrainingCard extends StatelessWidget {
 }
 
 /// 身体データ。伸ばせないが、試合の判定には効いている。
+/// 特性が「どこで・いくつ」効くかと、今季に実際に効いた回数。
+///
+/// 名前のチップだけでは、付いている意味が分からなかった。
+/// 文は判定と同じ `Trait.rules` / 各倍率から作るので、数字を変えれば
+/// ここも変わる。試合の外で効くものは回数を数えられないので、その旨を書く。
+class _TraitsCard extends StatelessWidget {
+  const _TraitsCard({required this.state});
+
+  final CareerState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final traits = state.player.traits;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('特性の効き', style: theme.textTheme.titleSmall),
+            const SizedBox(height: 4),
+            Text('生まれ持ったもの。伸ばせないが、効く場面は決まっている。',
+                style: muted),
+            if (traits.isEmpty) ...[
+              const SizedBox(height: 8),
+              Text('特性は付いていない。', style: theme.textTheme.bodyMedium),
+            ],
+            for (final trait in traits) ...[
+              const SizedBox(height: 12),
+              _TraitRow(trait: trait, hits: state.traitHits[trait] ?? 0),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TraitRow extends StatelessWidget {
+  const _TraitRow({required this.trait, required this.hits});
+
+  final Trait trait;
+
+  /// 今季、局面の成功率を動かした回数。
+  final int hits;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final accent = trait.flaw ? theme.colorScheme.error : theme.colorScheme.primary;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(trait.label,
+                style: theme.textTheme.bodyMedium
+                    ?.copyWith(fontWeight: FontWeight.w600)),
+            const SizedBox(width: 8),
+            if (trait.flaw)
+              Text('欠点',
+                  style: theme.textTheme.labelSmall?.copyWith(color: accent)),
+          ],
+        ),
+        const SizedBox(height: 2),
+        Text(trait.description, style: muted),
+        const SizedBox(height: 4),
+        Wrap(
+          spacing: 6,
+          runSpacing: 4,
+          children: [
+            for (final effect in trait.effects)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: accent.withValues(alpha: 0.10),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text(effect,
+                    style: theme.textTheme.labelSmall?.copyWith(color: accent)),
+              ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Text(
+          trait.affectsPlay
+              ? (hits > 0
+                  ? '今季 $hits回の局面で効いた'
+                  : '今季はまだ効く局面が来ていない')
+              : '試合の外で効く（回数は数えない）',
+          style: muted,
+        ),
+      ],
+    );
+  }
+}
+
 class _BodyCard extends StatelessWidget {
   const _BodyCard({required this.state});
 

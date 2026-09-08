@@ -167,6 +167,12 @@ class MatchInProgress {
   /// 受けた警告の時間。2枚目で退場になる。
   final List<int> yellowMinutes = [];
 
+  /// この試合で、局面の成功率を動かした特性とその回数。
+  ///
+  /// 「クラッチ」と書いてあるだけでは、効いたのかどうか分からない。
+  /// 手を選んだ瞬間に効いていた特性を数えて、シーズンの集計に回す。
+  final Map<Trait, int> traitHits = {};
+
   /// 一発退場した時間。2枚目の警告なら、そちらの時間が入る。
   int? sentOffMinute;
 
@@ -338,6 +344,24 @@ class MatchInProgress {
     return total.clamp(0.05, 0.95);
   }
 
+  /// その手を特性から見たときの文脈。判定と記録で同じものを使う。
+  TraitContext traitContextFor(ScenarioOption option) => TraitContext(
+        minute: currentMinute,
+        home: home,
+        outcome: option.outcome,
+        afterFailure: afterFailure,
+        afterSuccess: afterSuccess,
+        key: option.key,
+        detail: option.detail,
+        scenarioId: current.id,
+        international: international,
+        bigMatch: bigMatch,
+        margin: margin,
+        weakFoot: weakFootMoment && _usesFoot(option),
+        abroad: club.countryId != player.nationality.primary,
+        substitute: appearance == Appearance.sub,
+      );
+
   /// 能力と難度だけで決まる地力。ここに増減が乗る。
   double baseChanceFor(ScenarioOption option) =>
       successChance(attributeFor(option), option.difficulty);
@@ -352,21 +376,7 @@ class MatchInProgress {
     final factors = <ChanceFactor>[];
 
     // 生まれ持った特性。効いている特性だけを名前で出す。
-    final context = TraitContext(
-      minute: currentMinute,
-      home: home,
-      outcome: option.outcome,
-      afterFailure: afterFailure,
-      afterSuccess: afterSuccess,
-      key: option.key,
-      detail: option.detail,
-      scenarioId: current.id,
-      international: international,
-      bigMatch: bigMatch,
-      margin: margin,
-      weakFoot: weakFootMoment && _usesFoot(option),
-      abroad: club.countryId != player.nationality.primary,
-    );
+    final context = traitContextFor(option);
     for (final trait in player.traits) {
       final value = trait.chanceBonus(context);
       if (value != 0) factors.add(ChanceFactor(trait.label, value));
@@ -396,7 +406,10 @@ class MatchInProgress {
     }
     if (opponentStyle.hardFor == option.key) {
       factors.add(ChanceFactor(
-          opponentStyle.label, -0.05 + development.adaptationFor(opponentStyle)));
+          opponentStyle.label,
+          -0.05 +
+              development.adaptationFor(opponentStyle,
+                  factor: player.traits.adaptationFactor)));
     }
 
     // 大一番の重圧。経験と自信で薄まり、若く自信の無い選手ほど呑まれる。
@@ -480,7 +493,9 @@ class MatchInProgress {
     if (option.foul <= 0) return 0;
     if (option.isTacticalFoul) return 1;
     final temper = (player.personality.temper - 10) * Formulas.cardPerTemper;
-    return (option.foul * (Formulas.cardChanceBase + temper))
+    return (option.foul *
+            (Formulas.cardChanceBase + temper) *
+            player.traits.cardFactor)
         .clamp(0.0, 0.95);
   }
 
@@ -497,6 +512,13 @@ class MatchInProgress {
   ScenarioResolution choose(ScenarioOption option) {
     final chance = chanceFor(option);
     final success = _random.nextDouble() < chance;
+
+    final context = traitContextFor(option);
+    for (final trait in player.traits) {
+      if (trait.chanceBonus(context) != 0) {
+        traitHits[trait] = (traitHits[trait] ?? 0) + 1;
+      }
+    }
 
     var delta = success ? Formulas.ratingPerSuccess : Formulas.ratingPerFailure;
     var outcome = option.outcome;
@@ -684,12 +706,14 @@ class MatchInProgress {
 
     // 守備の選手は、失点の少なさで評価される。
     final defensive = _defensiveWeight(player.position);
+    // 統率者は無失点のときだけ上乗せされる。失点した試合は同じ。
     final defence = defensive == 0
         ? 0.0
         : defensive *
             ((Formulas.cleanSheetBase - max(0, concededGoals)) *
                     Formulas.cleanSheetSlope)
-                .clamp(Formulas.cleanSheetMin, Formulas.cleanSheetMax);
+                .clamp(Formulas.cleanSheetMin, Formulas.cleanSheetMax) *
+            (concededGoals == 0 ? player.traits.cleanSheetFactor : 1.0);
 
     final (extraGoals, extraAssists) = _resolveDeadBall();
     final myGoals = goals + extraGoals;
@@ -1096,7 +1120,9 @@ class MatchEngine {
     var awakened = false;
 
     if (menu.isRest) {
-      condition += menu.recovery + staff.recoveryBonus + habits.recoveryBonus;
+      condition += (menu.recovery * player.traits.restFactor).round() +
+          staff.recoveryBonus +
+          habits.recoveryBonus;
     } else {
       condition -= (menu.conditionCost * costFactor).round();
       final canGrow = attributes.overallFor(player.position) < player.potential;
