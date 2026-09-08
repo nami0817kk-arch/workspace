@@ -4,7 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/data/save_repository.dart';
 import 'package:soccer_career/game/career_engine.dart';
+import 'package:soccer_career/game/formulas.dart';
 import 'package:soccer_career/game/match_engine.dart';
+import 'package:soccer_career/game/ranking.dart';
 import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/attributes.dart';
 import 'package:soccer_career/models/career.dart';
@@ -161,6 +163,64 @@ void main() {
     await tester.tap(find.widgetWithText(Tab, 'クラブ'));
     await tester.pumpAndSettle();
     expect(find.text('得点ランキング'), findsOneWidget);
+  });
+
+  testWidgets('選手のタブで、自分が世界のどのあたりかが分かる', (tester) async {
+    final controller = await newCareer();
+    await pumpHub(tester, controller, height: 2000);
+
+    await tester.tap(find.widgetWithText(Tab, '選手'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('選手としての水準'), findsOneWidget);
+    // 総合力が言葉になっていること。
+    final grade = Ranking.gradeFor(controller.state!.player.overall);
+    expect(find.text(grade.label), findsOneWidget);
+    expect(find.textContaining('クラブの主力を上回っている'), findsOneWidget);
+    expect(
+        find.textContaining('代表に呼ばれる総合力（${Formulas.callUpOverall}）'),
+        findsOneWidget);
+  });
+
+  testWidgets('クラブのタブで、リーグが世界の何位か分かる', (tester) async {
+    final controller = await newCareer();
+    await pumpHub(tester, controller, height: 2400);
+
+    await tester.tap(find.widgetWithText(Tab, 'クラブ'));
+    await tester.pumpAndSettle();
+
+    await tester.dragUntilVisible(
+      find.text('リーグの格付け'),
+      find.byType(ListView).first,
+      const Offset(0, -200),
+    );
+    final mine = Ranking.of(
+        controller.state!.club.countryId, controller.state!.club.tier);
+    expect(
+        find.textContaining('世界${mine.rank}位 / ${mine.total}リーグ'),
+        findsOneWidget);
+    expect(find.text('世界のリーグ一覧'), findsOneWidget);
+  });
+
+  testWidgets('育成のタブに、練習が試合に出たかが載る', (tester) async {
+    final controller = await newCareer();
+    await controller.setMenu(TrainingMenu.passingWork);
+    for (var i = 0; i < 8; i++) {
+      await controller.simulateMatch();
+    }
+    await pumpHub(tester, controller, height: 3000);
+
+    await tester.tap(find.widgetWithText(Tab, '育成'));
+    await tester.pumpAndSettle();
+
+    await tester.dragUntilVisible(
+      find.text('練習の成果（今季）'),
+      find.byType(ListView).first,
+      const Offset(0, -200),
+    );
+    // 今週の練習の対象は、まだ動いていなくても必ず出す。
+    expect(find.text(AttributeKey.passing.label), findsOneWidget);
+    expect(find.textContaining('回勝負して'), findsWidgets);
   });
 
   testWidgets('記録のタブに通算がまとまっている', (tester) async {

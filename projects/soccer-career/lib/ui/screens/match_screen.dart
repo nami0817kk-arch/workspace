@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../game/formulas.dart';
 import '../../game/match_engine.dart';
 import '../../game/scenarios.dart';
+import '../../models/attributes.dart';
 import '../../models/injury.dart';
 import '../../models/news.dart';
 import '../../models/season.dart';
@@ -99,6 +100,7 @@ class _MatchScreenState extends State<MatchScreen> {
                     : _ScenarioView(
                         match: match,
                         last: _last,
+                        seasonStart: widget.controller.state!.seasonStart,
                         onChoose: _choose,
                       ),
               ),
@@ -213,12 +215,27 @@ class _ScenarioView extends StatelessWidget {
   const _ScenarioView({
     required this.match,
     required this.last,
+    required this.seasonStart,
     required this.onChoose,
   });
 
   final MatchInProgress match;
   final ScenarioResolution? last;
+
+  /// 今季の開幕時の能力値。局面のたびに、練習ぶんの伸びを添える。
+  final Attributes? seasonStart;
+
   final void Function(int) onChoose;
+
+  /// その手に使う能力が、今季どれだけ伸びたか。記録が無ければ 0。
+  int _growthOf(ScenarioOption option) {
+    final before = seasonStart;
+    if (before == null) return 0;
+    final was = option.detail != null
+        ? before.detail(option.detail!)
+        : before[option.key];
+    return match.attributeFor(option) - was;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -285,6 +302,7 @@ class _ScenarioView extends StatelessWidget {
             _OptionButton(
               option: scenario.options[i],
               attribute: match.attributeFor(scenario.options[i]),
+              growth: _growthOf(scenario.options[i]),
               chance: match.chanceFor(scenario.options[i]),
               onPressed: () => onChoose(i),
             ),
@@ -300,12 +318,17 @@ class _OptionButton extends StatelessWidget {
   const _OptionButton({
     required this.option,
     required this.attribute,
+    required this.growth,
     required this.chance,
     required this.onPressed,
   });
 
   final ScenarioOption option;
   final int attribute;
+
+  /// 今季の開幕からの伸び。練習がこの局面に効いていることを、
+  /// 選ぶその場で見せるためのもの。0 なら何も出さない。
+  final int growth;
 
   /// 特性とコンディションを含んだ成功率。判定と同じ値。
   final double chance;
@@ -373,6 +396,13 @@ class _OptionButton extends StatelessWidget {
                 style: theme.textTheme.bodySmall
                     ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
               ),
+              if (growth > 0)
+                Padding(
+                  padding: const EdgeInsets.only(left: 4),
+                  child: Text('↑$growth',
+                      style: theme.textTheme.labelSmall
+                          ?.copyWith(color: theme.colorScheme.primary)),
+                ),
             ],
           ),
         ],
