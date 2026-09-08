@@ -54,7 +54,10 @@ enum Signature {
   AttributeKey get key => detail.category;
 
   /// 覚えるのに必要な能力値。
-  static const int requirement = 72;
+  ///
+  /// 72 だと、育てた選手のほぼ全員が3つとも覚えていた。
+  /// 「その選手にしか無いもの」であってほしいので、上に置く。
+  static const int requirement = 78;
 
   /// 同時に持てる数。何でも出来る選手にしない。
   static const int maxOwned = 3;

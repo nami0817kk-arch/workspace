@@ -291,6 +291,8 @@ void main() {
           s.results.add(played(matchday: i + 1));
         }
         if (continental) s.continentalStage = ContinentalStage.quarter;
+        // 契約が残っているうちは条件が動かない。更改の年で見る。
+        s.contractYears = 1;
         return engine.renewalOffer(s).salary;
       }
 
