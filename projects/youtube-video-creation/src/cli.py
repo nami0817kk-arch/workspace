@@ -358,6 +358,16 @@ def main(argv: list[str] | None = None) -> int:
     p_material.add_argument("note", help="取材メモ（YAML）。URL を直接並べてもよい", nargs="+")
     p_material.add_argument("--out", default=None, help="書き出し先（既定 research/material/<名前>.md）")
 
+    # 題材から材料まで一本で（2026-09-09）。検索→本文→反応
+    p_dig = sub.add_parser(
+        "dig", help="題材から、記事の本文（発言・数字）と反応をまとめて集める")
+    p_dig.add_argument("topic", help="題材。選手名・クラブ名など")
+    p_dig.add_argument("--en", default="", help="英語の語（Google ニュースの英語検索に使う）")
+    p_dig.add_argument("--limit", type=int, default=8, help="本文を読む記事の数（既定8）")
+    p_dig.add_argument("--say", type=int, default=12, help="反応を何件まで拾うか（既定12）")
+    p_dig.add_argument("--no-reactions", action="store_true", help="反応を集めない")
+    p_dig.add_argument("--out", default=None, help="書き出し先")
+
     # 選手・クラブのページの表を数字の材料にする（2026-09-08）。
     # `stats` は「これまで何を出したか」の振り返りに使っているので、こちらは numbers
     p_numbers = sub.add_parser(
@@ -1655,6 +1665,54 @@ def _cmd_numbers(args, config) -> int:
     return 0
 
 
+def _cmd_dig(args, config) -> int:
+    """題材から材料までを一本で（2026-09-09）。
+
+    ユーザー「掘るの仕組みが弱いと思わない？」。検索フィードで記事を見つけ、
+    本文から発言と数字を抜き、反応まで1枚にまとめる。
+    """
+    from . import dig as dig_mod
+    from . import material as material_mod
+    from . import reactions as reactions_mod
+    from .plan import load_plan
+
+    hosts = material_mod.allowed_hosts(getattr(load_plan(), "domains", {}) or {})
+    print(f"■ 「{args.topic}」を掘ります")
+    got, hits, material_text = dig_mod.run(args.topic, hosts, args.en, limit=args.limit)
+    print(f"  話の大きさ　記事{got.total}件 / 媒体{len(got.outlets)}")
+    print(f"  本文を読んだ記事　{len(hits)}本")
+    for hit in hits:
+        print(f"    {_fit(hit.title, 44)}　{hit.outlet}")
+
+    reactions_text = ""
+    if not args.no_reactions:
+        found = reactions_mod.find(args.topic)
+        best, best_n = "", 0
+        for url, _ in found[:6]:
+            try:
+                posts = reactions_mod.fetch(url)
+            except Exception:  # noqa: BLE001
+                continue
+            if len(posts) > best_n:
+                best, best_n = url, len(posts)
+        if best:
+            posts = reactions_mod.fetch(best)
+            picked = reactions_mod.say_lines(posts, want=args.say)
+            rows = [f"- {{voice: ネット民, text: {p.text}}}" for p in picked]
+            reactions_text = (f"- スレ（母数{len(posts)}件）: {best}" + chr(10)
+                              + chr(10).join(rows))
+            print(f"  反応　{len(picked)}件 / 母数{len(posts)}件　{best}")
+        else:
+            print("  反応　まとめサイトに読める記事がありません（節ごと落とす）")
+
+    out = Path(args.out) if args.out else Path("research/material") / f"dig_{args.topic[:20]}.md"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(dig_mod.render(args.topic, got, hits, material_text, reactions_text),
+                   encoding="utf-8")
+    print(f"材料: {out}")
+    return 0
+
+
 def _cmd_material(args, config) -> int:
     """出典の本文から発言と数字を抜き、取材メモの横に置く（2026-09-08）。
 
@@ -2686,6 +2744,7 @@ HANDLERS = {
     "setthumb": _cmd_setthumb,
     "comment": _cmd_comment,
     "material": _cmd_material,
+    "dig": _cmd_dig,
     "numbers": _cmd_numbers,
     "publish": _cmd_publish,
     "quota": _cmd_quota,
