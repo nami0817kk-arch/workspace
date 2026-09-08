@@ -7,6 +7,7 @@ google-auth-oauthlib が必要なので、requirements-upload.txt を入れて�
 from __future__ import annotations
 
 import json
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -311,5 +312,15 @@ def upload(
 
     if thumbnail and thumbnail.exists():
         quota.record("thumbnails.set")
-        service.thumbnails().set(videoId=video_id, media_body=str(thumbnail)).execute()
+        # **サムネで落ちても、動画はもう上がっている。**ここで例外を投げると
+        # 呼ぶ側は「投稿に失敗した」と見て掛け直し、同じ動画が2本になる。
+        # 2026-09-08 に thumbnails.set の 429（サムネの送りすぎ）でそれが起き、
+        # サンチョのショートが2本、CLの本編が2本公開された。
+        # サムネは後から setthumb で付け直せるので、ここは警告だけにして id を返す
+        try:
+            service.thumbnails().set(videoId=video_id, media_body=str(thumbnail)).execute()
+        except Exception as err:  # noqa: BLE001 - 何が来ても動画の id は返す
+            print(f"! サムネイルは付きませんでした（{str(err)[:80]}）。"
+                  f"動画は上がっています: {video_id}。あとで setthumb で付けてください",
+                  file=sys.stderr)
     return video_id

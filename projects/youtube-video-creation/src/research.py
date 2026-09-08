@@ -130,13 +130,15 @@ PREFIXES = {
 # 全員同じだった（docs/news-sources.md）。他所で回っている作りは、こちらでも
 # 作れるようにしておく。どれを使うかは取材メモの format: で決める。
 #
-#   news   … キャスターと解説が事実を掘る。問い→節→答え。確度の札を出す（従来）
+#   news   … キャスターと解説が事実を掘る。問い→節→反応。確度の札を出す
+#            **まとめは無い**（2026-09-08 ユーザー「まとめはいらない」）。
+#            反応の節を最後に置き、最後の1件で終わる。参考の動画はどれもそう終わる
 #   voices … 事実は最初の30秒だけ。残りは反応を1件ずつ読む（2ch系5チャンネルの型）
 #   quote  … 選手・監督が自分で語った言葉を切り出す（KOALA SOCCER の型・30秒前後）
 FORMATS = {
     "news": {
         "label": "海外サッカー ニュース",
-        "needs_question": True, "needs_answer": True, "wrap": True,
+        "needs_question": True, "needs_answer": False, "wrap": False,
         "min_sections": 3,
         "voice_min": 40.0,
         "note": "※各社の報道をもとにしています。クラブが発表した「確定」、\n"
@@ -314,6 +316,11 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
             f"節が{len(notes.sections)}つしかありません。{what}{minimum}つ以上必要です"
             + ("（何が起きたか／なぜ／争点／これから）" if notes.format == "news" else "")
         )
+    # **反応で終わる**（2026-09-08 ユーザー「他人の声のところは他のチャンネルを参考に」）。
+    # 参考の動画は、事実のあとに反応を1件ずつ読んで、最後の1件で切れる。
+    # こちらは反応のあとに「これから何を見るか」と「まとめ」を語っていた。
+    # 反応の節より後ろに、語りだけの節があれば止める
+    problems += _check_voices_last(notes)
     if notes.format == "voices" and not _has_crowd(notes):
         problems.append(
             "型『voices』なのに、反応の行（voice: ネット民 など）がありません。"
@@ -363,6 +370,29 @@ def _has_crowd(notes: Notes) -> bool:
 
 def _has_named_voice(notes: Notes) -> bool:
     return _has_crowd(notes)
+
+
+def _voice_heavy(section: Section) -> bool:
+    """他人の声が半分以上の節。反応の節はここに当たる。"""
+    if not section.say:
+        return False
+    other = sum(1 for v in section.voices if v and v not in SPEAKERS)
+    return other * 2 >= len(section.say)
+
+
+def _check_voices_last(notes: Notes) -> list[str]:
+    """反応の節のあとに、語りだけの節が続いていないか。"""
+    heavy = [i for i, s in enumerate(notes.sections) if _voice_heavy(s)]
+    if not heavy:
+        return []
+    trailing = [s.heading or s.id for s in notes.sections[heavy[-1] + 1:]]
+    if not trailing:
+        return []
+    return [
+        "反応の節のあとに語りの節があります（" + "／".join(trailing) + "）。"
+        "参考チャンネルは反応の最後の1件で終わります。"
+        "見通しは反応の前に置いてください"
+    ]
 
 
 def _check_voice_clash(notes: Notes) -> list[str]:
@@ -571,7 +601,10 @@ CROWD_WORDS = (
 # 参考3チャンネルは尺の58%・19.2件・1件3.1秒。こちらは14%・2.2件・1件39字だった
 VOICE_SHARE_TARGET = 40      # %
 VOICE_COUNT_TARGET = 10      # 件
-VOICE_LINE_TARGET = 20       # 字。**実測1件3.1秒＝約16字**。2026-09-07 に30字から締めた
+# 字。2026-09-07 に実測（1件3.1秒＝約16字）で20字に締めたが、2026-09-08 に
+# サッカーラボ（25.5万回）の文字起こしを取ると1件30〜45字だった。参考が割れて
+# いるので目安は30字、review の上限は45字にする
+VOICE_LINE_TARGET = 30
 
 
 def _advise_title(notes: Notes) -> list[str]:
