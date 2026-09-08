@@ -329,6 +329,36 @@ void main() {
       expect(manifest, contains('com.google.android.gms.ads.APPLICATION_ID'));
     });
 
+    test('リリース用ワークフローのシェル変数が、非ASCIIと地続きになっていない', () {
+      // `echo "プロファイル「$NAME」"` のように $VAR の直後が非ASCII文字だと、
+      // macOS ランナーのロケールではそのバイトが識別子の一部と見なされ、
+      // 存在しない変数を参照して set -u で落ちる。実際に iOS のリリースが
+      // ここで止まり、macOS ランナーの分数(通常の10倍)を1回無駄にした。
+      // ログ出力の行なので、ローカルの検査では踏めない。
+      final pattern = RegExp(r'\$[A-Za-z_][A-Za-z0-9_]*');
+      for (final path in const [
+        '../../.github/workflows/soccer-ios-release.yml',
+        '../../.github/workflows/soccer-android-release.yml',
+      ]) {
+        final file = File(path);
+        expect(file.existsSync(), isTrue, reason: '$path が無い');
+        final lines = file.readAsLinesSync();
+        for (var i = 0; i < lines.length; i++) {
+          for (final m in pattern.allMatches(lines[i])) {
+            if (m.end >= lines[i].length) continue;
+            final next = lines[i].codeUnitAt(m.end);
+            expect(
+              next < 128,
+              isTrue,
+              reason: '$path:${i + 1} の ${m.group(0)} が非ASCII文字と'
+                  '地続きになっている。\${...} で囲むこと: '
+                  '${lines[i].trim()}',
+            );
+          }
+        }
+      }
+    });
+
     test('iOSが輸出コンプライアンスを申告している', () {
       final plist = File('ios/Runner/Info.plist').readAsStringSync();
       // これがないと App Store Connect へのアップロードのたびに
