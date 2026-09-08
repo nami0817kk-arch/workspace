@@ -57,8 +57,14 @@ def _use_utf8(*streams) -> None:
 
     `fetch | collect` は本来つないで使う流れなので、ここでそろえておく。
     実運用のPCで、`fetch --check` をパイプに渡して落ちたのが見つかった。
+
+    **読む側もそろえる。**書き出す側だけ直していたので、`collect` が
+    標準入力を cp932 で読み、449件のうち90件の見出しが化けた
+    （Mbappé → Mbappﾃｩ）。しかも一部は単独のサロゲートになって
+    UnicodeEncodeError で収集ごと落ちた（2026-09-08 実測）。
+    **つないで使う道具は、両端をそろえないと意味がない。**
     """
-    for stream in streams or (sys.stdout, sys.stderr):
+    for stream in streams or (sys.stdout, sys.stderr, sys.stdin):
         encoding = (getattr(stream, "encoding", "") or "").lower().replace("-", "")
         if encoding == "utf8":
             continue
@@ -2038,6 +2044,17 @@ def _cmd_gather(args, config) -> int:
     return 0
 
 
+def _readable(text: str) -> str:
+    """書き出せない文字を落とす。
+
+    見出しを標準入力から受けると、**環境によっては壊れた文字が混じる**。
+    Windows で読み違えたバイトが単独のサロゲート（例 U+DC83）になり、
+    UTF-8 で書けずに `UnicodeEncodeError` で落ちる（2026-09-08 実測）。
+    見出しを1つ取りこぼしても、631件の収集を落とすよりよい。
+    """
+    return text.encode("utf-8", "replace").decode("utf-8")
+
+
 def _cmd_collect(args, config) -> int:
     from datetime import date as _date
 
@@ -2047,7 +2064,7 @@ def _cmd_collect(args, config) -> int:
     from .plan import load_plan, tokens
 
     plan = load_plan()   # 確度の当たりを、情報源の群で置ける上限までに抑えるため
-    text = sys.stdin.read()
+    text = _readable(sys.stdin.read())
     hits = collect_mod.enrich(collect_mod.parse(text), freshness.read)
     if not hits:
         print(
