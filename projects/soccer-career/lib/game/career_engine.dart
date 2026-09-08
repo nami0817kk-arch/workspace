@@ -887,6 +887,7 @@ class CareerEngine {
       cupStage: state.cupStage,
       worldCupStage: state.worldCupStage,
       onLoan: state.onLoan,
+      overall: state.player.overall,
     );
 
     final league = _leagueContaining(accepted.club);
@@ -1268,8 +1269,8 @@ class CareerEngine {
       cupStage: state.cupStage,
       worldCupStage: state.worldCupStage,
       onLoan: state.onLoan,
+      overall: state.player.overall,
     );
-
     return CareerState(
       player: state.player,
       club: state.club,

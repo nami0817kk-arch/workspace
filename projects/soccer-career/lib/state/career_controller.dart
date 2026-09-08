@@ -29,6 +29,7 @@ import '../models/training.dart';
 /// 試合を終えた1週間で起きたこと。画面で一度見せる。
 class WeekReport {
   const WeekReport({
+    this.timeline = const [],
     this.trained,
     this.learned,
     this.weakFootAwakened = false,
@@ -39,6 +40,9 @@ class WeekReport {
     this.newInjury,
     this.recovered = false,
   });
+
+  /// その試合で起きたこと（得点・失点の時間）。
+  final List<MatchEvent> timeline;
 
   /// 練習で伸びた詳細能力。
   final Detail? trained;
@@ -585,7 +589,7 @@ class CareerController extends ChangeNotifier {
     if (result.international) {
       state.pendingInternational = false;
       _inProgress = null;
-      lastWeek = const WeekReport();
+      lastWeek = WeekReport(timeline: match.timeline);
       await _persist();
       return result;
     }
@@ -605,7 +609,8 @@ class CareerController extends ChangeNotifier {
       } else {
         state.injury = next;
       }
-      lastWeek = WeekReport(recovered: recovered);
+      lastWeek =
+          WeekReport(timeline: match.timeline, recovered: recovered);
     } else {
       final before = _sumOf(player.attributes);
       player = player.copyWith(
@@ -666,6 +671,7 @@ class CareerController extends ChangeNotifier {
         state.injury = newInjury;
       }
       lastWeek = WeekReport(
+        timeline: match.timeline,
         trained: week.trained,
         learned: week.learned,
         weakFootAwakened: week.weakFootAwakened,

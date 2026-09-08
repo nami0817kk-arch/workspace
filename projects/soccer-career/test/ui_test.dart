@@ -159,6 +159,28 @@ void main() {
     expect(find.textContaining('1シーズン目'), findsOneWidget);
   });
 
+  testWidgets('推移のグラフは、2シーズン目から出る', (tester) async {
+    final controller = await newCareer(age: 24);
+    // 1シーズン目は出さない（点が1つでは形が分からない）。
+    await pumpHub(tester, controller, height: 2000);
+    await tester.tap(find.widgetWithText(Tab, '記録'));
+    await tester.pumpAndSettle();
+    expect(find.text('推移'), findsNothing);
+
+    // 2シーズン分積むと出る。
+    for (var i = 0; i < 2; i++) {
+      while (!controller.state!.seasonFinished) {
+        await controller.simulateMatch();
+      }
+      await controller.finishSeason();
+      await controller.advanceSeason(accepted: controller.renewalOffer!);
+    }
+    await pumpHub(tester, controller, height: 2000);
+    await tester.tap(find.widgetWithText(Tab, '記録'));
+    await tester.pumpAndSettle();
+    expect(find.text('推移'), findsOneWidget);
+  });
+
   testWidgets('引き継ぎコードを出せる', (tester) async {
     final controller = await newCareer();
     await pumpHub(tester, controller);
