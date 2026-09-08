@@ -65,7 +65,7 @@ class _RetiredScreenState extends State<RetiredScreen> {
               style: theme.textTheme.headlineSmall,
             ),
             Text(
-              '${state.player.position.label}  ${seasons.length}シーズン  '
+              '${state.player.positionLabel}  ${seasons.length}シーズン  '
               '${state.player.age}歳で引退',
               style: theme.textTheme.bodyMedium
                   ?.copyWith(color: theme.colorScheme.onSurfaceVariant),

@@ -25,6 +25,12 @@ enum Position {
   final String fullName;
   final ScenarioFamily family;
 
+  /// 左右のある役割か。サイドバックとウイングだけ。
+  ///
+  /// センターバックやボランチにも左右はあるが、求められるものが
+  /// ほとんど変わらない。効きの無い選択肢を増やさない。
+  bool get hasSide => this == Position.sb || this == Position.wg;
+
   /// 保存データから復元する。
   ///
   /// 3ポジションだった頃の保存データ（fw / mf / df）も読めるようにしてある。

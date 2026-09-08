@@ -240,7 +240,18 @@ class Formulas {
   static const double deadBallChanceSub = 0.09;
 
   /// 1試合のうち、逆足で対応することになる局面の割合。
+  ///
+  /// 中央の役割はこの値。サイドに立つ選手は、利き足と同じ側なら
+  /// 外を向いたまま蹴れるので減り、逆サイドなら増える。
   static const double weakFootMomentChance = 0.25;
+  static const double weakFootMomentOnSide = 0.16;
+  static const double weakFootMomentInverted = 0.38;
+
+  /// 逆サイドに立つ選手が、内へ切り込んで利き足で打てるぶんの上乗せ。
+  ///
+  /// 逆足の局面が増えるだけだと、逆サイドはただの罰になる。
+  /// 実際のサッカーで逆足のウイングが置かれる理由をそのまま効かせる。
+  static const double invertedShootingBonus = 0.04;
 
   /// 逆足練習で精度が1段上がる確率。反復するしかない。
   static const double weakFootGrowthChance = 0.12;

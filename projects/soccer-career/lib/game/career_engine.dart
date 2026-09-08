@@ -157,6 +157,9 @@ class CareerEngine {
     required int age,
     required Agent agent,
     String? countryId,
+    Side side = Side.center,
+    Physique? physique,
+    Map<AttributeKey, int> tweaks = const {},
   }) {
     final home = countryId == null
         ? World.randomHome(_random)
@@ -171,17 +174,19 @@ class CareerEngine {
     final league = World.buildLeague(home.id, tier);
     // 下位3クラブのどれかに所属。最初から強豪だと成り上がる余地がない。
     final club = league[league.length - 1 - _random.nextInt(3)];
-    final attributes = _startingAttributes(position, age);
+    final attributes = _startingAttributes(position, age, tweaks: tweaks);
     final overall = attributes.overallFor(position);
     final player = Player(
       name: name,
       age: age,
       position: position,
+      // 左右のある役割でなければ、指定されていても中央に倒す。
+      side: position.hasSide ? side : Side.center,
       attributes: attributes,
       potential: rollPotential(overall),
       nationality: _rollNationality(home),
       personality: Personality.roll(_random),
-      physique: Physique.roll(_random, position),
+      physique: physique ?? Physique.roll(_random, position),
       aptitude: Aptitude.initial(position),
       traits: Trait.roll(_random),
     );
@@ -256,87 +261,52 @@ class CareerEngine {
     return max(120, (base * tierFactor * countryFactor / 10).round() * 10);
   }
 
+  /// ポジションごとの初期能力の基準値。
+  ///
+  /// 選手作成画面の割り振りもここを起点にする。数字を2か所に持つと、
+  /// 画面に見せている基準と実際に配られる能力がずれる。
+  static Map<AttributeKey, int> startingBaseFor(Position position) =>
+      switch (position) {
+        Position.gk => const {AttributeKey.pace: 42, AttributeKey.shooting: 22, AttributeKey.passing: 46, AttributeKey.dribbling: 30, AttributeKey.defending: 50, AttributeKey.physical: 56, AttributeKey.goalkeeping: 58},
+        Position.cb => const {AttributeKey.pace: 50, AttributeKey.shooting: 30, AttributeKey.passing: 47, AttributeKey.dribbling: 40, AttributeKey.defending: 59, AttributeKey.physical: 58},
+        Position.sb => const {AttributeKey.pace: 58, AttributeKey.shooting: 36, AttributeKey.passing: 52, AttributeKey.dribbling: 50, AttributeKey.defending: 54, AttributeKey.physical: 50},
+        Position.dm => const {AttributeKey.pace: 48, AttributeKey.shooting: 40, AttributeKey.passing: 56, AttributeKey.dribbling: 46, AttributeKey.defending: 56, AttributeKey.physical: 54},
+        Position.cm => const {AttributeKey.pace: 52, AttributeKey.shooting: 48, AttributeKey.passing: 58, AttributeKey.dribbling: 55, AttributeKey.defending: 48, AttributeKey.physical: 50},
+        Position.am => const {AttributeKey.pace: 54, AttributeKey.shooting: 54, AttributeKey.passing: 58, AttributeKey.dribbling: 58, AttributeKey.defending: 36, AttributeKey.physical: 44},
+        Position.wg => const {AttributeKey.pace: 62, AttributeKey.shooting: 52, AttributeKey.passing: 50, AttributeKey.dribbling: 60, AttributeKey.defending: 32, AttributeKey.physical: 46},
+        Position.st => const {AttributeKey.pace: 58, AttributeKey.shooting: 58, AttributeKey.passing: 46, AttributeKey.dribbling: 54, AttributeKey.defending: 30, AttributeKey.physical: 54},
+      };
+
   /// 初期能力。ポジションの主要能力を少し高くして、役割の違いを出す。
   /// 年齢が高いほど初期値は上がるが、その分ピークまでの時間は短い。
-  Attributes _startingAttributes(Position position, int age) {
+  ///
+  /// [tweaks] は選手作成画面での割り振り。合計0で渡ってくるので、
+  /// 平均の総合力は振らない場合と変わらない。
+  Attributes _startingAttributes(
+    Position position,
+    int age, {
+    Map<AttributeKey, int> tweaks = const {},
+  }) {
     final ageBonus = (age - 17) * 2;
-    int roll(int base) => base + ageBonus + _random.nextInt(9) - 4;
-    final random = _random;
-    return switch (position) {
-      Position.gk => Attributes.scattered(
-          random: random,
-          pace: roll(42),
-          shooting: roll(22),
-          passing: roll(46),
-          dribbling: roll(30),
-          defending: roll(50),
-          physical: roll(56),
-          goalkeeping: roll(58),
-        ),
-      Position.cb => Attributes.scattered(
-          random: random,
-          pace: roll(50),
-          shooting: roll(30),
-          passing: roll(47),
-          dribbling: roll(40),
-          defending: roll(59),
-          physical: roll(58),
-        ),
-      Position.sb => Attributes.scattered(
-          random: random,
-          pace: roll(58),
-          shooting: roll(36),
-          passing: roll(52),
-          dribbling: roll(50),
-          defending: roll(54),
-          physical: roll(50),
-        ),
-      Position.dm => Attributes.scattered(
-          random: random,
-          pace: roll(48),
-          shooting: roll(40),
-          passing: roll(56),
-          dribbling: roll(46),
-          defending: roll(56),
-          physical: roll(54),
-        ),
-      Position.cm => Attributes.scattered(
-          random: random,
-          pace: roll(52),
-          shooting: roll(48),
-          passing: roll(58),
-          dribbling: roll(55),
-          defending: roll(48),
-          physical: roll(50),
-        ),
-      Position.am => Attributes.scattered(
-          random: random,
-          pace: roll(54),
-          shooting: roll(54),
-          passing: roll(58),
-          dribbling: roll(58),
-          defending: roll(36),
-          physical: roll(44),
-        ),
-      Position.wg => Attributes.scattered(
-          random: random,
-          pace: roll(62),
-          shooting: roll(52),
-          passing: roll(50),
-          dribbling: roll(60),
-          defending: roll(32),
-          physical: roll(46),
-        ),
-      Position.st => Attributes.scattered(
-          random: random,
-          pace: roll(58),
-          shooting: roll(58),
-          passing: roll(46),
-          dribbling: roll(54),
-          defending: roll(30),
-          physical: roll(54),
-        ),
-    };
+    final base = startingBaseFor(position);
+    int roll(AttributeKey key) =>
+        (base[key] ?? Formulas.defaultGoalkeeping) +
+        ageBonus +
+        (tweaks[key] ?? 0) +
+        _random.nextInt(9) -
+        4;
+    return Attributes.scattered(
+      random: _random,
+      pace: roll(AttributeKey.pace),
+      shooting: roll(AttributeKey.shooting),
+      passing: roll(AttributeKey.passing),
+      dribbling: roll(AttributeKey.dribbling),
+      defending: roll(AttributeKey.defending),
+      physical: roll(AttributeKey.physical),
+      goalkeeping: position == Position.gk
+          ? roll(AttributeKey.goalkeeping)
+          : Formulas.defaultGoalkeeping,
+    );
   }
 
   /// 対戦相手を並べる。同じ相手とホームとアウェイで2回ずつ当たる。

@@ -15,6 +15,8 @@ import 'package:soccer_career/models/training.dart';
 import 'package:soccer_career/main.dart';
 import 'package:soccer_career/state/career_controller.dart';
 import 'package:soccer_career/ui/readable_width.dart';
+import 'package:soccer_career/models/physique.dart';
+import 'package:soccer_career/ui/screens/create_player_screen.dart';
 import 'package:soccer_career/ui/screens/hub_screen.dart';
 import 'package:soccer_career/ui/screens/match_screen.dart';
 import 'package:soccer_career/ui/screens/season_end_screen.dart';
@@ -241,6 +243,43 @@ void main() {
     // 次の相手の名前が、育成のタブから読める。
     expect(plan.headline,
         contains(state.opponentFor(state.matchday).name));
+  });
+
+  testWidgets('選手作成で、左右と割り振りを決められる', (tester) async {
+    final controller = CareerController(
+      repository: _MemoryRepository(),
+      careerEngine: CareerEngine(random: Random(1)),
+      matchEngine: MatchEngine(random: Random(1)),
+    );
+    tester.view.physicalSize = const Size(390, 3000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(MaterialApp(
+      theme: ThemeData(useMaterial3: true),
+      home: CreatePlayerScreen(controller: controller),
+    ));
+    await tester.pumpAndSettle();
+
+    // 中央の役割では、立つ側は聞かれない。
+    expect(find.text('立つ側'), findsNothing);
+
+    await tester.tap(find.widgetWithText(ChoiceChip, Position.sb.label));
+    await tester.pumpAndSettle();
+    expect(find.text('立つ側'), findsOneWidget);
+    expect(find.widgetWithText(ChoiceChip, Side.left.label), findsOneWidget);
+
+    // 身体も決められる。
+    expect(find.textContaining('身長'), findsWidgets);
+    expect(find.textContaining('体重'), findsWidgets);
+
+    // 割り振りは、増やしたぶんを削らないと釣り合わない。
+    expect(find.text('割り振りは釣り合っている。'), findsOneWidget);
+    await tester.tap(find.byIcon(Icons.add_circle_outline).first);
+    await tester.pumpAndSettle();
+    expect(find.textContaining('合計 +1'), findsOneWidget);
+    await tester.tap(find.byIcon(Icons.remove_circle_outline).last);
+    await tester.pumpAndSettle();
+    expect(find.text('割り振りは釣り合っている。'), findsOneWidget);
   });
 
   testWidgets('今週の練習が、試合に入る直前に見える', (tester) async {
