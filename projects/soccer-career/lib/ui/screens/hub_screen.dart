@@ -9,7 +9,9 @@ import '../../models/career.dart';
 import '../../models/personality.dart';
 import '../../models/objective.dart';
 import '../../models/competition.dart';
+import '../../game/newsroom.dart';
 import '../../models/development.dart';
+import '../../models/news.dart';
 import '../../models/entourage.dart';
 import '../../models/life.dart';
 import '../../models/support.dart';
@@ -408,12 +410,17 @@ class _MatchTab extends StatelessWidget {
         else
           _NextMatchCard(
             state: state,
+            stake: controller.stake,
             onPlay: onPlay,
             onSimulate: onSimulate,
             onSimulateUntilEvent: onSimulateUntilEvent,
             onSimStyle: onSimStyle,
           ),
         const SizedBox(height: 16),
+        if (controller.news.isNotEmpty) ...[
+          _NewsCard(news: controller.news.take(3).toList()),
+          const SizedBox(height: 16),
+        ],
         _StatusCard(state: state),
         const SizedBox(height: 16),
         if (state.objective != null) ...[
@@ -474,6 +481,7 @@ class _MatchTab extends StatelessWidget {
 class _NextMatchCard extends StatelessWidget {
   const _NextMatchCard({
     required this.state,
+    required this.stake,
     required this.onPlay,
     required this.onSimulate,
     required this.onSimulateUntilEvent,
@@ -481,6 +489,10 @@ class _NextMatchCard extends StatelessWidget {
   });
 
   final CareerState state;
+
+  /// その試合が持つ意味（ダービー・首位攻防など）。
+  final FixtureStake stake;
+
   final VoidCallback onPlay;
   final VoidCallback onSimulate;
   final VoidCallback onSimulateUntilEvent;
@@ -525,6 +537,28 @@ class _NextMatchCard extends StatelessWidget {
                       'vs ${state.opponentFor(state.matchday).name}',
               style: theme.textTheme.titleLarge,
             ),
+            if (!state.pendingInternational && stake.isSpecial) ...[
+              const SizedBox(height: 8),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.tertiaryContainer,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(stake.label,
+                        style: theme.textTheme.titleSmall?.copyWith(
+                            color: theme.colorScheme.onTertiaryContainer)),
+                    Text(stake.description,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onTertiaryContainer)),
+                  ],
+                ),
+              ),
+            ],
             if (!state.pendingInternational) ...[
               const SizedBox(height: 4),
               Text(
@@ -726,6 +760,8 @@ class _ClubTab extends StatelessWidget {
           _PersonCard(state: state, controller: controller),
           const SizedBox(height: 16),
           _LeagueCard(state: state),
+          const SizedBox(height: 16),
+          _ScorerCard(state: state),
           const SizedBox(height: 16),
           _TableCard(state: state),
         ],
@@ -1771,6 +1807,141 @@ class _CareerChartPainter extends CustomPainter {
       oldDelegate.history.length != history.length;
 }
 
+/// 世の中に出た見出し。
+class _NewsCard extends StatelessWidget {
+  const _NewsCard({
+    required this.news,
+    this.title = '最近の話題',
+    this.limit = 3,
+  });
+
+  final List<NewsItem> news;
+  final String title;
+  final int limit;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title, style: theme.textTheme.titleSmall),
+            const SizedBox(height: 10),
+            for (final item in news.take(limit)) ...[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 5, right: 8),
+                    width: 6,
+                    height: 6,
+                    decoration: BoxDecoration(
+                      color: _colorOf(theme, item.kind),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(item.headline,
+                            style: theme.textTheme.bodyMedium
+                                ?.copyWith(fontWeight: FontWeight.w600)),
+                        if (item.body.isNotEmpty)
+                          Text(item.body, style: muted),
+                        Text('${item.dateLabel}  ·  ${item.kind.label}',
+                            style: theme.textTheme.labelSmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Color _colorOf(ThemeData theme, NewsKind kind) => switch (kind) {
+        NewsKind.milestone => theme.colorScheme.primary,
+        NewsKind.transfer => theme.colorScheme.tertiary,
+        NewsKind.national => theme.colorScheme.secondary,
+        _ => theme.colorScheme.outline,
+      };
+}
+
+/// リーグの得点ランキング。自分がどのあたりに居るのかを見せる。
+class _ScorerCard extends StatelessWidget {
+  const _ScorerCard({required this.state});
+
+  final CareerState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scorers = ScorerRace.table(state);
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('得点ランキング', style: theme.textTheme.titleSmall),
+            const SizedBox(height: 10),
+            for (var i = 0; i < scorers.length; i++)
+              Container(
+                color: scorers[i].isPlayer
+                    ? theme.colorScheme.primaryContainer
+                    : null,
+                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+                child: Row(
+                  children: [
+                    SizedBox(
+                        width: 26,
+                        child: Text('${i + 1}',
+                            style: theme.textTheme.bodySmall)),
+                    Expanded(
+                      child: Text(
+                        scorers[i].name,
+                        overflow: TextOverflow.ellipsis,
+                        style: scorers[i].isPlayer
+                            ? theme.textTheme.bodyMedium
+                                ?.copyWith(fontWeight: FontWeight.bold)
+                            : theme.textTheme.bodyMedium,
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        scorers[i].clubName,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 32,
+                      child: Text('${scorers[i].goals}',
+                          textAlign: TextAlign.end,
+                          style: theme.textTheme.titleSmall),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _AttributeBar extends StatelessWidget {
   const _AttributeBar({
     required this.label,
@@ -1958,6 +2129,10 @@ class _CareerTab extends StatelessWidget {
       children: [
         _TotalsCard(state: state),
         const SizedBox(height: 16),
+        if (state.news.isNotEmpty) ...[
+          _NewsCard(news: state.news, title: 'これまでの話題', limit: 12),
+          const SizedBox(height: 16),
+        ],
         if (state.history.length >= 2) ...[
           _CareerChartCard(state: state),
           const SizedBox(height: 16),

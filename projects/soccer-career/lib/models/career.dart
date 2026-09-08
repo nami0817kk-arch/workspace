@@ -7,6 +7,7 @@ import 'competition.dart';
 import 'development.dart';
 import 'entourage.dart';
 import 'life.dart';
+import 'news.dart';
 import 'reputation.dart';
 import 'support.dart';
 import 'training.dart';
@@ -173,6 +174,7 @@ class CareerState {
     this.nationalTeamId,
     this.secondCareer,
     this.seenEvents = const [],
+    this.news = const [],
     this.objective,
     this.injury,
     this.caps = 0,
@@ -294,6 +296,9 @@ class CareerState {
 
   /// もう起きた出来事のID。一度きりの出来事を繰り返さないために持つ。
   List<String> seenEvents;
+
+  /// 世の中に出た見出し。新しいものが先頭。
+  List<NewsItem> news;
 
   /// 今の年齢のキャリア段階。
   CareerStage get stage => CareerStage.of(player.age);
@@ -469,6 +474,7 @@ class CareerState {
         'nationalTeamId': nationalTeamId,
         'secondCareer': secondCareer?.name,
         'seenEvents': seenEvents,
+        'news': news.map((n) => n.toJson()).toList(),
         'contractYears': contractYears,
         'countryId': countryId,
         'professionalYears': professionalYears,
@@ -568,6 +574,10 @@ class CareerState {
               : null,
       seenEvents:
           (json['seenEvents'] as List? ?? const []).cast<String>().toList(),
+      news: [
+        for (final n in (json['news'] as List? ?? const []))
+          NewsItem.fromJson(n as Map<String, dynamic>),
+      ],
       contractYears: json['contractYears'] as int? ?? 2,
       countryId: json['countryId'] as String? ?? 'yamato',
       professionalYears: json['professionalYears'] as int? ?? 1,

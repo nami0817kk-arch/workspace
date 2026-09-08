@@ -8,6 +8,7 @@ import '../game/formulas.dart';
 import '../game/match_engine.dart';
 import '../game/life_events.dart';
 import '../game/national.dart';
+import '../game/newsroom.dart';
 import '../game/person.dart';
 import '../models/agent.dart';
 import '../models/attributes.dart';
@@ -18,6 +19,7 @@ import '../models/entourage.dart';
 import '../models/injury.dart';
 import '../models/life.dart';
 import '../models/life_event.dart';
+import '../models/news.dart';
 import '../models/personality.dart';
 import '../models/traits.dart';
 import '../models/physique.dart';
@@ -150,6 +152,19 @@ class CareerController extends ChangeNotifier {
   /// 能力値の総量。伸びたかどうかの判定に使う。
   static int _sumOf(Attributes attributes) =>
       Detail.values.fold(0, (s, d) => s + attributes.detail(d));
+
+  /// 見出しを積む。古いものから落として、直近だけを持つ。
+  void _publish(CareerState state, List<NewsItem> items) {
+    if (items.isEmpty) return;
+    state.news = [...items, ...state.news].take(Newsroom.keep).toList();
+  }
+
+  /// 直近の見出し。
+  List<NewsItem> get news => _state?.news ?? const [];
+
+  /// 次の試合が持つ意味。
+  FixtureStake get stake =>
+      _state == null ? FixtureStake.none : Newsroom.stakeFor(_state!);
 
   /// 試合を1つ終えるごとの、心と身体の積み上げ。
   ///
@@ -587,6 +602,7 @@ class CareerController extends ChangeNotifier {
 
     if (state.rehabWatch > 0) state.rehabWatch--;
     _updateMood(state, result);
+    _publish(state, Newsroom.afterMatch(state, result));
 
     // 出たポジションの適性と、相方との呼吸が伸びる。
     if (result.appearance == Appearance.start ||
@@ -762,6 +778,16 @@ class CareerController extends ChangeNotifier {
     final state = _state;
     if (state == null || !state.seasonFinished) return;
     _career.resolveSeasonEnd(state);
+    final fate = _career.fateOf(state);
+    _publish(
+      state,
+      Newsroom.afterSeason(
+        state,
+        promoted: fate == ClubFate.promoted,
+        relegated: fate == ClubFate.relegated,
+        champion: state.leaguePosition == 1 && state.club.tier == 1,
+      ),
+    );
     await _persist();
   }
 
@@ -775,8 +801,20 @@ class CareerController extends ChangeNotifier {
   }) async {
     final state = _state;
     if (state == null) return;
+    final moved = accepted.club.name != state.club.name;
     _state =
         _career.advanceSeason(state, accepted: accepted, bodyPlan: bodyPlan);
+    if (moved || accepted.isRenewal) {
+      _publish(_state!, [
+        Newsroom.transfer(
+          _state!,
+          toClub: accepted.club.name,
+          fee: accepted.fee,
+          loan: accepted.loan,
+          renewal: accepted.isRenewal && !moved,
+        ),
+      ]);
+    }
     // 新しいクラブで登録メンバーに入れるかを決める。
     _state!.squadStatus = _career.competitions.registrationFor(_state!);
     _inProgress = null;
