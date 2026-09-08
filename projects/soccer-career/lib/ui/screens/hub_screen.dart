@@ -17,6 +17,7 @@ import '../../models/training.dart';
 import '../../models/season.dart';
 import '../../state/career_controller.dart';
 import '../club_identity.dart';
+import 'guide_screen.dart';
 import 'match_screen.dart';
 import 'season_end_screen.dart';
 
@@ -65,48 +66,13 @@ class HubScreen extends StatelessWidget {
     ));
   }
 
-  /// 遊び方。タブが5つある画面で、どこに何があるかだけ先に伝える。
-  Future<void> _showHelp(BuildContext context) async {
-    await showDialog<void>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('遊び方'),
-        content: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              _HelpLine('1週間の流れ',
-                  '「育成」で今週の練習を決めて、「試合」から試合に入る。'
-                      '試合では3つの局面で手を選ぶ。それだけを38節くり返す。'),
-              _HelpLine('評価点が全て',
-                  '局面の成否で評価点が動く。良い試合が続けば先発を続けられ、'
-                      '悪ければ途中出場やベンチ外になる。'),
-              _HelpLine('伸ばす',
-                  '能力は練習と、試合で成功した手に偏って伸びる。'
-                      '何を選ぶかが、そのまま選手の形になる。'),
-              _HelpLine('シーズンの終わり',
-                  '契約更改と移籍を決める。オフの過ごし方もここで選ぶ。'),
-              _HelpLine('タブ',
-                  '試合＝次の相手と今の状態／選手＝能力と身体／'
-                      '育成＝練習と投資／クラブ＝監督・仲間・順位表／記録＝過去のシーズン。'),
-            ],
-          ),
-        ),
-        actions: [
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('分かった'),
-          ),
-        ],
-      ),
+  /// 遊び方のガイドを開く。仕組みが多いので、1か所にまとめてある。
+  void _openGuide(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const GuideScreen()),
     );
   }
 
-  /// 引き継ぎコードを見せる。
-  ///
-  /// セーブは端末ごとに独立しているので、機種変更やPC↔スマホの
-  /// 行き来で続きが遊べない。コピーして持ち運べる形にしておく。
   Future<void> _showExport(BuildContext context) async {
     final code = controller.exportCode();
     if (code == null) return;
@@ -250,7 +216,7 @@ class HubScreen extends StatelessWidget {
           title: Text('${state.player.name}  ${state.year}シーズン'),
           actions: [
             IconButton(
-              onPressed: () => _showHelp(context),
+              onPressed: () => _openGuide(context),
               icon: const Icon(Icons.help_outline),
               tooltip: '遊び方',
             ),
@@ -2456,26 +2422,3 @@ class _PersonCard extends StatelessWidget {
   }
 }
 
-/// 遊び方のダイアログの1項目。
-class _HelpLine extends StatelessWidget {
-  const _HelpLine(this.title, this.body);
-
-  final String title;
-  final String body;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: theme.textTheme.titleSmall),
-          const SizedBox(height: 2),
-          Text(body, style: theme.textTheme.bodySmall),
-        ],
-      ),
-    );
-  }
-}
