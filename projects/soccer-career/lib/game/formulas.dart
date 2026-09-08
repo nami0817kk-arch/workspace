@@ -135,6 +135,30 @@ class Formulas {
   /// 直近何試合の評価点で出場可否を判断するか。
   static const int formWindow = 5;
 
+  /// 何試合外れ続けたら、まず途中出場で戻すか。
+  ///
+  /// 外れた試合には評価点が付かないので、これが無いと窓の中身が
+  /// 一生変わらず、一度ベンチに落ちた選手が永久に出られなくなる。
+  static const int benchPatience = 3;
+
+  /// 外れている1試合ごとに、評価が甘く見られる量。
+  /// 監督の記憶が薄れ、練習での様子が効いてくるぶん。
+  static const double benchRecoveryPerMatch = 0.12;
+
+  /// その上限。ここを外すと、干され続けるほど有利になる。
+  static const double benchRecoveryMax = 0.7;
+
+  /// 好調でも休まされることがある確率の下限。
+  ///
+  /// 毎試合フル出場では連戦の重みが出ず、「途中出場」という状態が
+  /// ほとんど現れない。疲れているほど休まされやすくする。
+  /// 100シーズン回して決めた値。0.04 + 傾き大では、先発が7割を切って
+  /// 「たまに先発する選手」になっていた。主力の実感は8割の先発から。
+  static const double rotationBase = 0.03;
+  static const double rotationPerCondition = 0.003;
+  static const double rotationPerFatigue = 0.001;
+  static const double rotationMax = 0.22;
+
   /// 勝点。
   static const int pointsWin = 3;
   static const int pointsDraw = 1;
@@ -280,6 +304,12 @@ class Formulas {
 
   /// ローンに出せる上限の年齢。伸びしろへの投資なので、若手だけ。
   static const int loanMaxAge = 23;
+
+  /// この先発回数に届かない若手には、ローンの話が来る。
+  ///
+  /// 「出場が少ない」で見ていた頃は、途中出場でも数だけは並ぶので、
+  /// ベンチ要員がローンの対象から外れていた。見るべきは先発の数。
+  static const int loanStartsThreshold = 12;
 
   /// 契約年数の範囲。
   static const int contractYearsMin = 2;

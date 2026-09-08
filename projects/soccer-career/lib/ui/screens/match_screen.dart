@@ -66,7 +66,12 @@ class _MatchScreenState extends State<MatchScreen> {
     if (match == null) return const SizedBox.shrink();
 
     if (match.appearance == Appearance.benched) {
-      return _BenchedView(onDone: _finish, busy: _busy);
+      return _BenchedView(
+        onDone: _finish,
+        busy: _busy,
+        // 何試合続けて外れているか。戻り道を数字で見せる。
+        idle: MatchEngine.idleRun(widget.controller.state!.leagueResults),
+      );
     }
 
     return Scaffold(
@@ -444,14 +449,23 @@ class _ReadyToFinish extends StatelessWidget {
 }
 
 class _BenchedView extends StatelessWidget {
-  const _BenchedView({required this.onDone, required this.busy});
+  const _BenchedView({
+    required this.onDone,
+    required this.busy,
+    this.idle = 0,
+  });
 
   final VoidCallback onDone;
   final bool busy;
 
+  /// 何試合続けて外れているか。
+  final int idle;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // 次に外れると何試合連続になるか。そこで必ず一度は声がかかる。
+    final remaining = Formulas.benchPatience - (idle + 1);
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -463,10 +477,18 @@ class _BenchedView extends StatelessWidget {
               Text('ベンチ外', style: theme.textTheme.headlineSmall),
               const SizedBox(height: 8),
               Text(
-                '直近の評価点が低く、今節は招集されなかった。'
-                '出場すれば評価は上げ直せる。',
+                '直近の評価点が低く、今節は招集されなかった。',
                 style: theme.textTheme.bodyMedium
                     ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                remaining <= 0
+                    ? '外れ続けている。次節は途中出場から声がかかる。'
+                    : 'あと$remaining試合外れると、まずは途中出場から戻ることになる。'
+                        '練習で調子を戻しておく。',
+                style: theme.textTheme.bodyMedium
+                    ?.copyWith(color: theme.colorScheme.primary),
               ),
               const SizedBox(height: 32),
               FilledButton(

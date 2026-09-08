@@ -565,10 +565,14 @@ class MatchEngine {
   ///
   /// 実績が無いうち（デビュー前）は先発から始める。プレイヤーが最初の試合で
   /// いきなりベンチ外になると、何もしないまま数試合が過ぎてしまう。
-  /// 直近の評価点と、監督の信頼から出場の仕方を決める。
   ///
   /// 信頼が厚いと多少調子を落としても使われ、構想外だと数字が良くても
   /// ベンチに座る。評価点だけで決めると監督との関係が飾りになる。
+  ///
+  /// **外れた試合には評価点が付かない。** そのため、外れている間は窓の中身が
+  /// 変わらず、一度ベンチに落ちた選手が永久に出られなかった。外れ続けるほど
+  /// 評価を甘く見て、[Formulas.benchPatience] 試合外れたら必ず一度は
+  /// ベンチに入れる。戻り道が無いと、そこでキャリアが終わってしまう。
   static Appearance decideAppearance(
     List<MatchResult> recent, {
     double bonus = 0,
@@ -580,12 +584,46 @@ class MatchEngine {
     final window = rated.length <= Formulas.formWindow
         ? rated
         : rated.sublist(rated.length - Formulas.formWindow);
-    final average =
-        window.reduce((a, b) => a + b) / window.length + bonus;
 
-    if (average < Formulas.squadThreshold) return Appearance.benched;
-    if (average < Formulas.benchThreshold) return Appearance.sub;
-    return Appearance.start;
+    final idle = idleRun(recent);
+    final forgiveness = min(
+      idle * Formulas.benchRecoveryPerMatch,
+      Formulas.benchRecoveryMax,
+    );
+    final average =
+        window.reduce((a, b) => a + b) / window.length + bonus + forgiveness;
+
+    if (average >= Formulas.benchThreshold) return Appearance.start;
+    if (average >= Formulas.squadThreshold ||
+        idle >= Formulas.benchPatience) {
+      return Appearance.sub;
+    }
+    return Appearance.benched;
+  }
+
+  /// 最後にピッチに立ってから、何試合続けて外れているか。
+  ///
+  /// 怪我での離脱も同じに数える。長く離れた選手が、戻った初戦から
+  /// 先発に収まるほうが不自然なので、まずベンチから戻す。
+  static int idleRun(List<MatchResult> recent) {
+    var count = 0;
+    for (final result in recent.reversed) {
+      if (result.rating != null) break;
+      count++;
+    }
+    return count;
+  }
+
+  /// 疲れているときに、監督が休ませるかどうか。
+  ///
+  /// 好調なら毎試合フル出場、では連戦の重みが出ない。ここがあると
+  /// 「途中出場から入る試合」が生まれ、コンディションの管理に意味が出る。
+  bool rotates({required int condition, required int fatigue}) {
+    final chance = Formulas.rotationBase +
+        max(0, Formulas.conditionBaseline - condition) *
+            Formulas.rotationPerCondition +
+        fatigue * Formulas.rotationPerFatigue;
+    return _random.nextDouble() < chance.clamp(0.0, Formulas.rotationMax);
   }
 
   MatchInProgress start({
