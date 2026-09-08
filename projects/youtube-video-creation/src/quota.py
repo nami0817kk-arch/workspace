@@ -28,6 +28,7 @@ COSTS = {
     "videos.update": 50,
     "videos.list": 1,
     "thumbnails.set": 0,   # 上の COST_PER_UPLOAD に含めて数えている
+    "commentThreads.insert": 50,   # 最初のコメント（2026-09-08）。公式の表の値
     "search.list": 100,
 }
 # 1日に使えるリクエストの合計

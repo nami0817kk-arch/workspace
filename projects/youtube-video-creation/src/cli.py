@@ -339,6 +339,14 @@ def main(argv: list[str] | None = None) -> int:
                               "（例: -gZ3P1gw8QU）。その場合は `--` を挟む: "
                               "setthumb -- <出力先> -gZ3P1gw8QU")
 
+    # 公開と同時に最初のコメント（問い＋高評価・コメントへの誘い）を書く（2026-09-08）
+    p_comment = sub.add_parser(
+        "comment", help="公開した動画に最初のコメント（問い＋誘い）を書く。固定は Studio で")
+    p_comment.add_argument("build_dir", help="build の出力ディレクトリ")
+    p_comment.add_argument("video_id", help="YouTube の動画ID。ハイフン始まりは `--` を挟む")
+    p_comment.add_argument("--text", default=None, help="文面を自分で決めるとき")
+    p_comment.add_argument("--dry-run", action="store_true", help="文面だけ見て書き込まない")
+
     p_variety = sub.add_parser(
         "variety", help="その日の台本を横に並べて見る（1本ずつでは分からないこと）")
     p_variety.add_argument("scripts", nargs="+", help="台本のパス（複数）")
@@ -1572,6 +1580,34 @@ def _cmd_publish(args, config) -> int:
     return 0
 
 
+def _cmd_comment(args, config) -> int:
+    """公開した動画に、最初のコメント（問い＋高評価・コメントへの誘い）を書く。
+
+    Gemini（2026-09-08）の答え1。**固定は API にできない**ので Studio で行う。
+    文面は build の出力から作り、同じ動画には同じ文になる。
+    """
+    from . import comments
+    from .upload import get_service
+
+    build_dir = Path(args.build_dir)
+    try:
+        text = args.text or comments.compose(build_dir)
+    except comments.CommentError as err:
+        print(str(err), file=sys.stderr)
+        return 1
+    print(f"■ コメント（{len(text)}字）　{text}")
+    if args.dry_run:
+        print("--dry-run なので書き込んでいません")
+        return 0
+    try:
+        comment_id = comments.post(get_service(), args.video_id, text)
+    except Exception as err:
+        print(f"書き込めません: {str(err)[:160]}", file=sys.stderr)
+        return 1
+    print(f"書きました: https://youtu.be/{args.video_id}　（固定は Studio で）　{comment_id}")
+    return 0
+
+
 def _cmd_setthumb(args, config) -> int:
     """サムネイルだけを設定する。**投稿はやり直さない**（動画が二重になる）。"""
     from .upload import UploadError, get_service, set_thumbnail
@@ -2518,6 +2554,7 @@ HANDLERS = {
     "variety": _cmd_variety,
     "redescribe": _cmd_redescribe,
     "setthumb": _cmd_setthumb,
+    "comment": _cmd_comment,
     "publish": _cmd_publish,
     "quota": _cmd_quota,
     "portrait": _cmd_portrait,
