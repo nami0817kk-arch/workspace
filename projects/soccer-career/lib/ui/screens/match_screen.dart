@@ -4,6 +4,7 @@ import '../../game/formulas.dart';
 import '../../game/match_engine.dart';
 import '../../game/scenarios.dart';
 import '../../models/injury.dart';
+import '../../models/news.dart';
 import '../../models/season.dart';
 import '../../state/career_controller.dart';
 import '../club_identity.dart';
@@ -61,6 +62,11 @@ class _MatchScreenState extends State<MatchScreen> {
       return _MatchSummary(
         result: result,
         week: widget.controller.lastWeek,
+        // その試合について書かれた見出しがあれば、結果と一緒に見せる。
+        headline: widget.controller.news
+            .where((n) => n.matchday == result.matchday)
+            .take(1)
+            .toList(),
       );
     }
     if (match == null) return const SizedBox.shrink();
@@ -507,12 +513,19 @@ class _BenchedView extends StatelessWidget {
 }
 
 class _MatchSummary extends StatelessWidget {
-  const _MatchSummary({required this.result, required this.week});
+  const _MatchSummary({
+    required this.result,
+    required this.week,
+    this.headline = const [],
+  });
 
   final MatchResult result;
 
   /// その1週間で起きたこと（練習の成果・負傷・復帰）。
   final WeekReport week;
+
+  /// その試合について世に出た見出し。
+  final List<NewsItem> headline;
 
   @override
   Widget build(BuildContext context) {
@@ -544,6 +557,30 @@ class _MatchSummary extends StatelessWidget {
                   _stat(theme, 'アシスト', '${result.assists}'),
                 ],
               ),
+              if (headline.isNotEmpty) ...[
+                const SizedBox(height: 20),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.secondaryContainer,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    children: [
+                      Text(headline.first.headline,
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.titleSmall),
+                      if (headline.first.body.isNotEmpty) ...[
+                        const SizedBox(height: 4),
+                        Text(headline.first.body,
+                            textAlign: TextAlign.center,
+                            style: theme.textTheme.bodySmall),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
               if (week.timeline.isNotEmpty) ...[
                 const SizedBox(height: 24),
                 _Timeline(events: week.timeline),

@@ -1069,6 +1069,8 @@ class CareerEngine {
       charity: state.charity,
       nationalTeamId: state.nationalTeamId,
       seenEvents: state.seenEvents,
+      // 見出しはキャリアの記録。シーズンを跨いでも消さない。
+      news: state.news,
       // 怪我はシーズンを跨いでも消えない。オフの間に少しは進む。
       injury: state.injury == null || state.injury!.matchesOut <= 4
           ? null
@@ -1314,6 +1316,7 @@ class CareerEngine {
       nationalTeamId: state.nationalTeamId,
       secondCareer: state.secondCareer ?? secondCareerFor(state),
       seenEvents: state.seenEvents,
+      news: state.news,
       manager: state.manager,
       directive: state.directive,
       competitor: state.competitor,

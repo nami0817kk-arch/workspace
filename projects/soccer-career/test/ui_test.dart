@@ -146,6 +146,23 @@ void main() {
     expect(find.text('順位表'), findsOneWidget);
   });
 
+  testWidgets('世の中の反応が画面に出る', (tester) async {
+    final controller = await newCareer();
+    // 何試合か進めれば、デビューなどの見出しが出る。
+    for (var i = 0; i < 6; i++) {
+      await controller.simulateMatch();
+    }
+    await pumpHub(tester, controller, height: 2000);
+
+    expect(find.text('最近の話題'), findsOneWidget);
+    expect(find.textContaining('デビュー'), findsWidgets);
+
+    // クラブのタブには得点ランキング。
+    await tester.tap(find.widgetWithText(Tab, 'クラブ'));
+    await tester.pumpAndSettle();
+    expect(find.text('得点ランキング'), findsOneWidget);
+  });
+
   testWidgets('記録のタブに通算がまとまっている', (tester) async {
     final controller = await newCareer();
     await pumpHub(tester, controller);
