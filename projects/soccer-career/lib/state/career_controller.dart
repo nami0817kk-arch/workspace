@@ -759,6 +759,24 @@ class CareerController extends ChangeNotifier {
     await _persist();
   }
 
+  /// 引き継ぎコードを作る。キャリアが無ければ null。
+  String? exportCode() {
+    final state = _state;
+    return state == null ? null : SaveRepository.encode(state);
+  }
+
+  /// 引き継ぎコードから復元する。読めなければ false を返し、今のキャリアは触らない。
+  Future<bool> importCode(String code) async {
+    final restored = SaveRepository.decode(code);
+    if (restored == null) return false;
+    _state = restored;
+    _inProgress = null;
+    pendingEvent = null;
+    lastWeek = const WeekReport();
+    await _persist();
+    return true;
+  }
+
   Future<void> deleteCareer() async {
     await _repository.clear();
     _state = null;

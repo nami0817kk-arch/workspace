@@ -278,6 +278,9 @@ Web版は master への push で Cloudflare Pages に自動デプロイされる
 検証は `soccer-career-ci.yml` に分けてあり、公開設定のミスでテストまで赤くならない。
 
 **セーブは端末ごとに独立**（localStorage）。PC で進めた内容とスマホの内容は別物になる。
+持ち運ぶときは、右上のメニューの**引き継ぎコード**（`SaveRepository.encode` / `decode`）を使う。
+クラウド同期は置かない代わりに、自分でコピーして移せる形にしてある。
+**読めないコードで今のキャリアを消さない**（復元できたときだけ上書きする）。
 
 ## テスト
 
@@ -288,3 +291,5 @@ Web版は master への push で Cloudflare Pages に自動デプロイされる
 - `test/balance_sim.dart` … 200人ぶんの長期シミュレーション。**手動実行**（`_test.dart` で終わらないので CI では走らない）
 - `test/balance_test.dart` … 数人ぶんの見張り。CI で走る
 - `test/ui_test.dart` … スマホ幅で画面が崩れないこと、主要な動作が常に出ていること
+- `test/scoreline_test.dart` … 試合中のスコア・決勝点・局面の数と中身
+- `test/transfer_code_test.dart` … 引き継ぎコードの往復と、壊れたコードで消えないこと

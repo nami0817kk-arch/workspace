@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../models/attributes.dart';
 import '../../game/eligibility.dart';
@@ -7,6 +8,7 @@ import '../../game/world.dart';
 import '../../models/career.dart';
 import '../../models/personality.dart';
 import '../../models/objective.dart';
+import '../../models/competition.dart';
 import '../../models/development.dart';
 import '../../models/entourage.dart';
 import '../../models/life.dart';
@@ -100,6 +102,116 @@ class HubScreen extends StatelessWidget {
     );
   }
 
+  /// 引き継ぎコードを見せる。
+  ///
+  /// セーブは端末ごとに独立しているので、機種変更やPC↔スマホの
+  /// 行き来で続きが遊べない。コピーして持ち運べる形にしておく。
+  Future<void> _showExport(BuildContext context) async {
+    final code = controller.exportCode();
+    if (code == null) return;
+    await showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('引き継ぎコード'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'このコードをコピーして、別の端末で「セーブを読み込む」に貼り付けると、'
+              '続きから遊べる。長いので、メモアプリなどに保存しておくとよい。',
+            ),
+            const SizedBox(height: 12),
+            Container(
+              height: 120,
+              width: double.infinity,
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: SingleChildScrollView(
+                child: SelectableText(
+                  code,
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('閉じる'),
+          ),
+          FilledButton.icon(
+            onPressed: () async {
+              await Clipboard.setData(ClipboardData(text: code));
+              if (!context.mounted) return;
+              Navigator.of(context).pop();
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                    const SnackBar(content: Text('引き継ぎコードをコピーした')));
+            },
+            icon: const Icon(Icons.copy),
+            label: const Text('コピー'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// 引き継ぎコードから復元する。今のキャリアは上書きされる。
+  Future<void> _showImport(BuildContext context) async {
+    final input = TextEditingController();
+    final code = await showDialog<String>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('セーブを読み込む'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '別の端末で作った引き継ぎコードを貼り付ける。'
+              '今のキャリアは上書きされる。',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.error),
+            ),
+            const SizedBox(height: 12),
+            TextField(
+              controller: input,
+              maxLines: 4,
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(),
+                hintText: 'SC1:...',
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('やめる'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.of(context).pop(input.text),
+            child: const Text('読み込む'),
+          ),
+        ],
+      ),
+    );
+    if (code == null || code.trim().isEmpty) return;
+    final ok = await controller.importCode(code);
+    if (!context.mounted) return;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+        content: Text(ok ? 'キャリアを読み込んだ' : 'コードを読めなかった。今のキャリアはそのまま。'),
+      ));
+  }
+
   Future<void> _confirmDelete(BuildContext context) async {
     final ok = await showDialog<bool>(
       context: context,
@@ -143,9 +255,18 @@ class HubScreen extends StatelessWidget {
             ),
             PopupMenuButton<String>(
               onSelected: (value) {
-                if (value == 'delete') _confirmDelete(context);
+                switch (value) {
+                  case 'export':
+                    _showExport(context);
+                  case 'import':
+                    _showImport(context);
+                  case 'delete':
+                    _confirmDelete(context);
+                }
               },
               itemBuilder: (context) => const [
+                PopupMenuItem(value: 'export', child: Text('引き継ぎコードを出す')),
+                PopupMenuItem(value: 'import', child: Text('セーブを読み込む')),
                 PopupMenuItem(value: 'delete', child: Text('キャリアを削除')),
               ],
             ),
@@ -1422,6 +1543,129 @@ class _EventCard extends StatelessWidget {
   }
 }
 
+/// 通算の記録。1年ずつの積み上げの前に、全体を1枚で見せる。
+class _TotalsCard extends StatelessWidget {
+  const _TotalsCard({required this.state});
+
+  final CareerState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final totals = state.careerTotals;
+    final clubs = {
+      state.club.name,
+      for (final h in state.history) h.clubName,
+    };
+    final countries = {
+      state.club.countryId,
+      for (final h in state.history) h.countryId,
+    };
+    final leagueTitles = state.history
+        .where((h) => h.tier == 1 && h.leaguePosition == 1)
+        .length;
+    final cups =
+        state.history.where((h) => h.cupStage == CupStage.winner).length;
+    final continental = state.history
+        .where((h) => h.continentalStage == ContinentalStage.winner)
+        .length;
+    final worldCups =
+        state.history.where((h) => h.worldCupStage.participated).length;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('通算', style: theme.textTheme.titleSmall),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _total(theme, '試合', '${totals.appearances}'),
+                _total(theme, 'ゴール', '${totals.goals}'),
+                _total(theme, 'アシスト', '${totals.assists}'),
+                _total(
+                    theme,
+                    '平均評価',
+                    totals.appearances == 0
+                        ? '—'
+                        : totals.averageRating.toStringAsFixed(2)),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(
+              '${state.history.length + 1}シーズン目  ·  '
+              '${clubs.length}クラブ  ·  ${countries.length}か国'
+              '${state.caps > 0 ? '  ·  代表${state.caps}キャップ' : ''}',
+              style: muted,
+            ),
+            if (leagueTitles + cups + continental + worldCups > 0) ...[
+              const SizedBox(height: 12),
+              Text('タイトル', style: theme.textTheme.labelMedium),
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: [
+                  if (leagueTitles > 0)
+                    Chip(
+                      label: Text('リーグ優勝 $leagueTitles'),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                  if (cups > 0)
+                    Chip(
+                      label: Text('国内カップ $cups'),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                  if (continental > 0)
+                    Chip(
+                      label: Text('大陸カップ $continental'),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                  if (worldCups > 0)
+                    Chip(
+                      label: Text('W杯出場 $worldCups'),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                ],
+              ),
+            ],
+            if (state.reputation.awards.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Text('称号', style: theme.textTheme.labelMedium),
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: [
+                  for (final a in state.reputation.awards)
+                    Chip(
+                      label: Text(a.label),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                ],
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _total(ThemeData theme, String label, String value) => Column(
+        children: [
+          Text(label,
+              style: theme.textTheme.labelSmall
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+          Text(value, style: theme.textTheme.titleLarge),
+        ],
+      );
+}
+
 class _AttributeBar extends StatelessWidget {
   const _AttributeBar({
     required this.label,
@@ -1598,22 +1842,21 @@ class _CareerTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    if (state.history.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Text(
-            'シーズンを終えると、ここに記録が積み上がる。',
-            textAlign: TextAlign.center,
-            style: theme.textTheme.bodyMedium
-                ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
-          ),
-        ),
-      );
-    }
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
       children: [
+        _TotalsCard(state: state),
+        const SizedBox(height: 16),
+        if (state.history.isEmpty)
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text(
+              'シーズンを終えると、ここに1年ずつ積み上がる。',
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyMedium
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            ),
+          ),
         for (final record in state.history.reversed)
           Card(
             child: ListTile(
