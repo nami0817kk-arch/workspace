@@ -125,14 +125,18 @@ class CareerController extends ChangeNotifier {
     SaveRepository? repository,
     CareerEngine? careerEngine,
     MatchEngine? matchEngine,
+    Random? random,
   })  : _repository = repository ?? SaveRepository(),
         _career = careerEngine ?? CareerEngine(),
-        _match = matchEngine ?? MatchEngine();
+        _match = matchEngine ?? MatchEngine(),
+        _random = random ?? Random();
 
   final SaveRepository _repository;
   final CareerEngine _career;
   final MatchEngine _match;
-  final Random _random = Random();
+  /// 波・停滞・出来事の抽選に使う。差し込めるようにしてあるのは、
+  /// バランスのシミュレーションを同じ種で再現できるようにするため。
+  final Random _random;
   late final LifeEvents _life = LifeEvents(random: _random);
 
   /// 決着を待っているピッチ外の出来事。画面はこれを見て問いかけを出す。
