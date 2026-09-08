@@ -100,3 +100,23 @@ def test_1本では比べられない():
 
     found = inspect_day([_script("A", ["い", "ろ", "は"])])
     assert all(f.ok for f in found)
+
+
+def test_札が半分を超えたら知らせる():
+    """**毎回付けない**（2026-09-08 ユーザー指示）。並ぶと一覧で効かなくなる。"""
+    from src.variety import inspect_day
+
+    scripts = [_script(f"【速報】話{i}", ["何が", f"論点{i}", "これから"])
+               for i in range(4)]
+    found = {f.label: f for f in inspect_day(scripts)}
+    assert not found["札の数"].ok
+
+
+def test_札が少なければ通す():
+    from src.variety import inspect_day
+
+    scripts = [_script("【速報】話0", ["何が", "論点0", "これから"])]
+    scripts += [_script(f"話{i}", ["何が", f"論点{i}", "これから"])
+                for i in range(1, 4)]
+    found = {f.label: f for f in inspect_day(scripts)}
+    assert found["札の数"].ok

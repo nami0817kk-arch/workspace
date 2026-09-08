@@ -20,6 +20,8 @@ from .script_model import Script
 # （型が5つあるので、11本なら2〜3本ずつ同じ形になるのが自然）
 SAME_SHAPE = 0.34
 # 同じ接頭辞（【速報】など）がこの割合を超えたら知らせる
+# 札が付いている本数の上限。半分を超えたら知らせる
+BADGE_SHARE = 0.5
 SAME_PREFIX = 0.5
 
 
@@ -121,6 +123,17 @@ def inspect_day(scripts: list[Script]) -> list[Finding]:
             f"{int(share * total)}本が同じ書き出しです（「{top}…」）"))
     else:
         findings.append(Finding(True, "出だし", "書き出しは散らばっています"))
+
+    # **札は毎回付けない**（2026-09-08 ユーザー指示）。付いている本数そのものを見る
+    with_badge = [s for s in scripts if _prefix(s)]
+    if total and len(with_badge) / total > BADGE_SHARE:
+        findings.append(Finding(
+            False, "札の数",
+            f"{len(with_badge)}/{total}本に【】が付いています。"
+            "毎回付けると一覧で効かなくなります"))
+    else:
+        findings.append(Finding(
+            True, "札の数", f"【】は{len(with_badge)}/{total}本です"))
 
     prefixes = Counter(p for p in (_prefix(s) for s in scripts) if p)
     top, share = _share(prefixes, total)
