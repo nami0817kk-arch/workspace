@@ -37,7 +37,6 @@ sources:
 - https://www.soccer-king.jp/news/world/eng/20260908/2202017.html
 - https://www.footballwebpages.co.uk/leicester-city/league-table
 - https://www.soccerdigestweb.com/news/detail/id=189795
-- https://news.yahoo.co.jp/articles/5027a28fbcff7010bd84cf5bea34c6010008ece2
 - https://news.yahoo.co.jp/articles/90b39469990a7765ea07c4a84c074787767498db
 - https://news.yahoo.co.jp/articles/050db77278df7a0a912ebcdf0bf2079637812ee3
 cards:

@@ -745,3 +745,22 @@ def test_同じ声になる2人は取材メモで止まる(monkeypatch):
     }]
     problems = verify(build_notes(raw), _plan())
     assert any("同じ声" in p for p in problems)
+
+
+def test_まとめの答えが長いと知らせる():
+    """**書き出してから気づくと、音声から作り直しになる**（2026-09-08 に3回）。
+
+    45字でおよそ12秒。review の「カードの持ち」に当たる長さ。
+    """
+    from src.research import ANSWER_MAX, Notes, advise
+
+    notes = Notes(date="2026年9月8日", title="題", question="問い",
+                  answer="あ" * (ANSWER_MAX + 1))
+    assert any("answer が" in w for w in advise(notes))
+
+
+def test_短い答えなら知らせない():
+    from src.research import Notes, advise
+
+    notes = Notes(date="2026年9月8日", title="題", question="問い", answer="短い答え")
+    assert not any("answer が" in w for w in advise(notes))

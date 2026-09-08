@@ -95,6 +95,12 @@ class Section:
     bg: str = ""      # この節の背景。空なら既定の並びから割り当てる
 
 
+# まとめの答えの上限。**実測で決めた**（2026-09-08）。
+# 止まったのは 66 / 67 / 73 / 76 字。通ったのは 48 / 50 / 54 字。
+# 境目は54と66のあいだなので、少し余裕を見て 58 にする。
+# **厳しくしすぎると鳴りっぱなしになり、警告が無いのと同じになる**
+ANSWER_MAX = 58
+
 # タイトルの頭に付ける札。まとめ系で定番の使い分け。
 # **2026-09-07 に増やした。**分野を横断して24本を並べたら、向こうは動画ごとに
 # 強い言葉を作っていた（【激ヤバ】【緊急事態】【崩壊】【魔境】【神試合】
@@ -409,6 +415,14 @@ def advise(notes: Notes, plan: Plan | None = None, now=None) -> list[str]:
         )
     if len(str(notes.thumbnail.get("line1", ""))) > 14:
         notes_warnings.append("thumbnail.line1 が長めです。14文字くらいまでが読みやすい")
+
+    # **まとめの答えが長いと、カードが12秒以上そのままになる**（2026-09-08 実測）。
+    # 書き出してから review の「カードの持ち」で気づくと、音声から作り直しになる。
+    # 45字で約12秒。ここで知らせれば、作り直さずに済む
+    if len(notes.answer) > ANSWER_MAX:
+        notes_warnings.append(
+            f"answer が{len(notes.answer)}字あります（{ANSWER_MAX}字まで）。"
+            "まとめのカードが12秒以上そのままになり、review が止めます")
     if len(str(notes.thumbnail.get("line2", ""))) > 18:
         notes_warnings.append("thumbnail.line2 が長めです。18文字くらいまでが読みやすい")
 

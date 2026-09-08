@@ -1,0 +1,145 @@
+# プレミアリーグの移籍事情 の取材メモ（2026年9月8日）
+slot: premier
+date: "2026年9月8日"
+
+theme:
+  id: pl_window_2026
+  league: england
+  prefix: ""
+  title: "プレミア20クラブが今夏に入れ替えた顔ぶれがこちらです"
+  hook: "移籍市場が閉まりました。20クラブの出入りを、全部並べます"
+  question: "どのクラブが、誰を入れて誰を出したのか"
+
+thumbnail:
+  line1: "20クラブの出入り"
+  line2: "支出41億ユーロ 収支マイナス15億"
+  tags: ["プレミアリーグ", "移籍市場"]
+  photo: "assets/photos/20260908_transfer/01.png"
+
+answer: "支出は41億3000万ユーロ。入ってきたのが319人、出ていったのが289人です"
+watch: "収支がプラスのクラブが、そのまま順位で上に来るかどうか"
+
+sections:
+  - id: what
+    heading: 全体でいくら動いたか
+    tier: 報道
+    telop: "支出41億3000万ユーロ"
+    say:
+      - "イングランド時間9月1日の23時に、移籍市場が閉まりました"
+      - "プレミアリーグ20クラブの支出は、41億3000万ユーロ"
+      - "収入が25億9000万ユーロなので、収支は15億4000万ユーロのマイナスです"
+      - "入ってきた選手が319人、出ていった選手が289人でした"
+    official: false
+    sources:
+      - "https://www.transfermarkt.jp/puremiarigu/transfers/wettbewerb/GB1"
+      - "https://www.soccerdigestweb.com/news/detail/id=196649"
+
+  - id: turn
+    heading: いちばん使ったのはどこか
+    tier: 報道
+    telop: "マンC 5億2620万ユーロ"
+    say:
+      - "支出のいちばんはマンチェスター・シティ。5億2620万ユーロです"
+      - "2位がチェルシーで4億670万ユーロ"
+      - "トッテナム3億6635万、ニューカッスル3億1300万と続きます"
+      - "アストン・ヴィラも3億20万ユーロを使いました"
+    official: false
+    sources:
+      - "https://www.transfermarkt.jp/puremiarigu/transfers/wettbewerb/GB1"
+      - "https://www.soccerdigestweb.com/news/detail/id=196649"
+
+  - id: score
+    heading: 高かった移籍
+    tier: 報道
+    telop: "エンソに1億4500万ユーロ"
+    say:
+      - "最高額はエンソ・フェルナンデス。チェルシーからマンチェスター・シティへ1億4500万ユーロ"
+      - "次がモーガン・ロジャーズ。アストン・ヴィラからチェルシーへ1億3800万"
+      - "エリオット・アンダーソンがフォレストからシティへ1億3500万"
+      - "ブラッドリー・バルコラがパリからリバプールへ1億2500万"
+      - "サンドロ・トナーリがニューカッスルからトッテナムへ1億800万です"
+    official: false
+    sources:
+      - "https://www.transfermarkt.jp/puremiarigu/transfers/wettbewerb/GB1"
+      - "https://www.footballchannel.jp/2026/09/02/post1002537/"
+
+  - id: numbers
+    heading: 20クラブの出入り 前半
+    tier: 報道
+    telop: "上位10クラブ"
+    say:
+      - "ここからは、クラブごとに1件ずつ見ていきます"
+      - "アーセナルはギマランイスを入れて、マルティネッリをアル・ヒラルへ"
+      - "アストン・ヴィラはジャクソンを入れて、ロジャーズをチェルシーへ"
+      - "チェルシーはロジャーズを入れて、エンソをシティへ"
+      - "リバプールはバルコラを入れて、サラーがトラブゾンスポルへ移りました"
+      - "マンチェスター・シティはエンソを入れて、ロドリをバルセロナへ"
+      - "マンチェスター・ユナイテッドはバレバを入れて、ホイルンドをナポリへ"
+      - "トッテナムはトナーリを入れて、ロメロをアトレティコへ"
+      - "ニューカッスルはフェルナンデス＝パルドを入れて、トナーリを手放しました"
+      - "ノッティンガム・フォレストはデラップを入れて、アンダーソンをシティへ"
+      - "エヴァートンはジョンソンを入れて、ンディアイをシティへ出しています"
+    official: false
+    sources:
+      - "https://www.transfermarkt.jp/puremiarigu/transfers/wettbewerb/GB1"
+      - "https://web.ultra-soccer.jp/news/all/30500/"
+
+  - id: numbers2
+    heading: 20クラブの出入り 後半
+    tier: 報道
+    telop: "残り10クラブ"
+    say:
+      - "ブライトンはヴシュコヴィッチを入れて、バレバをユナイテッドへ"
+      - "クリスタル・パレスはマクニールを入れて、ラクロワをチェルシーへ"
+      - "ブレントフォードはサンガレを入れて、オニェカをコヴェントリーへ"
+      - "フラムはゴンサロ・ガルシアを入れて、ルキッチをイプスウィッチへ"
+      - "ボーンマスはアントニオ・シウヴァを入れて、トラオレをマルセイユへ"
+      - "リーズはトラッフォードを入れて、ストライクをブライトンへ"
+      - "サンダーランドはフォファナを入れて、マイエンダをレンヌへ"
+      - "ハル・シティはメンディを入れて、パンドゥルをレンジャーズへ"
+      - "イプスウィッチはエンシソを入れて、ムリッチをサッスオーロへ"
+      - "コヴェントリーはイレンキーを入れて、マルケロを中東へ出しました"
+    official: false
+    sources:
+      - "https://www.transfermarkt.jp/puremiarigu/transfers/wettbewerb/GB1"
+      - "https://web.ultra-soccer.jp/news/all/30500/"
+
+  - id: react
+    heading: もうけたクラブ、使ったクラブ
+    tier: 報道
+    telop: "ヴィラは6505万ユーロの黒字"
+    say:
+      - "収支がプラスだったのは6クラブです"
+      - "アストン・ヴィラが6505万ユーロで最大の黒字"
+      - "クリスタル・パレス4400万、チェルシー4110万と続きます"
+      - "逆にいちばん出たのはリバプールで、2億3840万ユーロのマイナス"
+      - "トッテナムが2億210万、イプスウィッチが2億129万のマイナスでした"
+    official: false
+    sources:
+      - "https://www.transfermarkt.jp/puremiarigu/transfers/wettbewerb/GB1"
+      - "https://www.soccerdigestweb.com/news/detail/id=196649"
+
+  - id: why
+    heading: なぜここまで動くのか
+    tier: 報道
+    telop: "「移籍金にもう意味はない」"
+    say:
+      - "英紙は、この夏の市場をこう伝えています"
+      - {voice: 英紙, text: "移籍金にもう意味はない"}
+      - {voice: 英紙, text: "史上空前の狂騒だ"}
+      - "リーグの中でお金が回り続ける形が、そのまま金額を押し上げています"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/796419d415ec67103b62ce5d739736a91f6b38b3"
+      - "https://www.soccerdigestweb.com/news/detail/id=196649"
+
+  - id: next
+    heading: これから何を見るか
+    tier: 未確認
+    telop: "使った額と順位が合うか"
+    say:
+      - "見るべきは、使った額と順位が合うかどうかです"
+      - "次に市場が開くのは1月になります"
+    official: false
+    sources:
+      - "https://www.transfermarkt.jp/puremiarigu/transfers/wettbewerb/GB1"
