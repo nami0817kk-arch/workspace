@@ -689,6 +689,7 @@ class CareerController extends ChangeNotifier {
           player,
           result.rating,
           used: match.successes,
+          focus: state.focus,
           declineOffset: state.staff.declineAgeOffset,
           plateau: state.development.inPlateau,
           environment: _environmentFactor(state),
@@ -707,6 +708,7 @@ class CareerController extends ChangeNotifier {
         staff: state.staff,
         habits: state.habits,
         development: state.development,
+        focus: state.focus,
         plateau: state.development.inPlateau,
         environment: _environmentFactor(state),
         played: result.appearance != Appearance.benched,
@@ -879,6 +881,23 @@ class CareerController extends ChangeNotifier {
   }
 
   /// 生活水準を変える。金の使い道は、毎週ではなく気が向いたときに決める。
+  /// 育てる方向を切り替える。すでに入っていれば外す。
+  ///
+  /// 上限まで入っているときに新しく足そうとしても、何も起きない。
+  /// 黙って古いものを落とすと、何が外れたのか分からない。
+  Future<void> toggleFocus(Detail detail) async {
+    final state = _state;
+    if (state == null) return;
+    final next = [...state.focus];
+    if (next.remove(detail)) {
+      state.focus = next;
+    } else {
+      if (next.length >= CareerState.maxFocus) return;
+      state.focus = [...next, detail];
+    }
+    await _persist();
+  }
+
   /// 自動で休養にするしきい値を決める。0 なら自動では休まない。
   Future<void> setAutoRestBelow(int condition) async {
     final state = _state;

@@ -103,6 +103,7 @@ class _MatchScreenState extends State<MatchScreen> {
                         match: match,
                         last: _last,
                         seasonStart: widget.controller.state!.seasonStart,
+                        focus: widget.controller.state!.focus,
                         onChoose: _choose,
                       ),
               ),
@@ -219,6 +220,7 @@ class _ScenarioView extends StatelessWidget {
     required this.match,
     required this.last,
     required this.seasonStart,
+    required this.focus,
     required this.onChoose,
   });
 
@@ -227,6 +229,9 @@ class _ScenarioView extends StatelessWidget {
 
   /// 今季の開幕時の能力値。局面のたびに、練習ぶんの伸びを添える。
   final Attributes? seasonStart;
+
+  /// 育てる方向。その手が方向に乗っているかを、選ぶその場で見せる。
+  final List<Detail> focus;
 
   final void Function(int) onChoose;
 
@@ -327,6 +332,8 @@ class _ScenarioView extends StatelessWidget {
               option: scenario.options[i],
               attribute: match.attributeFor(scenario.options[i]),
               growth: _growthOf(scenario.options[i]),
+              focused: scenario.options[i].detail != null &&
+                  focus.contains(scenario.options[i].detail),
               chance: match.chanceFor(scenario.options[i]),
               factors: match.distinctFactorsFor(scenario.options[i]),
               onPressed: () => onChoose(i),
@@ -344,6 +351,7 @@ class _OptionButton extends StatelessWidget {
     required this.option,
     required this.attribute,
     required this.growth,
+    required this.focused,
     required this.chance,
     required this.factors,
     required this.onPressed,
@@ -355,6 +363,9 @@ class _OptionButton extends StatelessWidget {
   /// 今季の開幕からの伸び。練習がこの局面に効いていることを、
   /// 選ぶその場で見せるためのもの。0 なら何も出さない。
   final int growth;
+
+  /// 育てる方向に入っている手か。選ぶほど、その方向に伸びる。
+  final bool focused;
 
   /// 特性とコンディションを含んだ成功率。判定と同じ値。
   final double chance;
@@ -439,6 +450,13 @@ class _OptionButton extends StatelessWidget {
                   child: Text('↑$growth',
                       style: theme.textTheme.labelSmall
                           ?.copyWith(color: theme.colorScheme.primary)),
+                ),
+              if (focused)
+                Padding(
+                  padding: const EdgeInsets.only(left: 6),
+                  child: Text('重点',
+                      style: theme.textTheme.labelSmall
+                          ?.copyWith(color: theme.colorScheme.tertiary)),
                 ),
             ],
           ),

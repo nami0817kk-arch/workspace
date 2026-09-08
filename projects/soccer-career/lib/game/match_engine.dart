@@ -881,6 +881,7 @@ class MatchEngine {
     Player player,
     double? rating, {
     List<ScenarioResolution> used = const [],
+    List<Detail> focus = const [],
     int declineOffset = 0,
     bool plateau = false,
     double environment = 1.0,
@@ -912,15 +913,19 @@ class MatchEngine {
 
     // 伸ばす先を先に決める。ポジションの重みで割り戻すために、
     // どのカテゴリが伸びるのかが分かってから確率を出す。
-    final focus =
+    final fromPlay =
         used.isNotEmpty && _random.nextDouble() < Formulas.growthFocusChance;
     Detail wanted;
-    if (!focus) {
-      wanted = _randomDetail();
-    } else {
+    if (fromPlay) {
       final pick = used[_random.nextInt(used.length)];
       wanted = pick.detail ??
           pick.key.details[_random.nextInt(pick.key.details.length)];
+    } else if (focus.isNotEmpty) {
+      // 無作為だったぶんは、選んだ方向に乗せる。
+      // 伸びる量は変わらず、どこに乗るかだけが変わる。
+      wanted = focus[_random.nextInt(focus.length)];
+    } else {
+      wanted = _randomDetail();
     }
 
     final chance = base *
@@ -1004,6 +1009,7 @@ class MatchEngine {
     StaffTeam staff = const StaffTeam(),
     Habits habits = const Habits(),
     Development development = const Development(),
+    List<Detail> focus = const [],
     bool plateau = false,
     double environment = 1.0,
     required bool played,
@@ -1043,7 +1049,10 @@ class MatchEngine {
               Formulas.growthShareFactor(
                   Attributes.weightShare(player.position, key));
           if (_random.nextDouble() >= chance) continue;
-          final ds = key.details;
+          // 同じカテゴリの中に方向があれば、そこから選ぶ。
+          // 練習が「カテゴリのどれか」ではなく「決めた項目」になる。
+          final inFocus = [for (final d in focus) if (d.category == key) d];
+          final ds = inFocus.isEmpty ? key.details : inFocus;
           final wanted = ds[_random.nextInt(ds.length)];
           final target = Dependencies.resolve(wanted, attributes);
           if (target != wanted) redirected = true;

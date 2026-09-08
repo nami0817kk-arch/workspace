@@ -744,6 +744,8 @@ class _TrainingTab extends StatelessWidget {
         else
           _TrainingCard(state: state, controller: controller),
         const SizedBox(height: 16),
+        _FocusCard(state: state, controller: controller),
+        const SizedBox(height: 16),
         _TrainingEffectCard(state: state),
         const SizedBox(height: 16),
         _SupportCard(state: state, controller: controller),
@@ -1788,7 +1790,7 @@ class _TotalsCard extends StatelessWidget {
                     ),
                   if (worldCups > 0)
                     Chip(
-                      label: Text('W杯出場 $worldCups'),
+                      label: Text('世界大会出場 $worldCups'),
                       visualDensity: VisualDensity.compact,
                     ),
                 ],
@@ -2349,6 +2351,174 @@ class _LeagueRankRow extends StatelessWidget {
 /// 能力値は毎週1ずつしか動かないので、画面を見ているだけでは
 /// 伸びたことに気付けない。開幕からの差と、その能力で実際に
 /// 勝負した局面の成否を並べて、練習の答え合わせにする。
+/// 育てる方向。伸ばしたい項目を決めておく。
+///
+/// 練習も試合の成長も、伸びる先が無作為だったので、何を選んでも
+/// 似た選手になっていた。ここを決めると、伸びる先がそこに寄る。
+/// **伸びる量は変わらない**——どこに乗るかだけが変わる。
+class _FocusCard extends StatelessWidget {
+  const _FocusCard({required this.state, required this.controller});
+
+  final CareerState state;
+  final CareerController controller;
+
+  /// その項目を極めると覚えられる個人技。無ければ null。
+  static Signature? _signatureFor(Detail detail) {
+    for (final s in Signature.values) {
+      if (s.detail == detail) return s;
+    }
+    return null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final player = state.player;
+    final full = state.focus.length >= CareerState.maxFocus;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text('育てる方向', style: theme.textTheme.titleSmall),
+                const Spacer(),
+                Text('${state.focus.length} / ${CareerState.maxFocus}',
+                    style: muted),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              state.focus.isEmpty
+                  ? '選ぶと、練習も試合の成長もそこに寄る。'
+                      '伸びる量は変わらず、どこに乗るかだけが変わる。'
+                  : '練習ではこの項目が優先して伸び、試合の成長も'
+                      'ここに寄る。試合の選択肢にも印が付く。',
+              style: muted,
+            ),
+            if (state.focus.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              for (final detail in state.focus)
+                _FocusProgress(
+                  detail: detail,
+                  value: player.attributes.detail(detail),
+                  signature: _signatureFor(detail),
+                  learned: state.development.signatures
+                      .contains(_signatureFor(detail)),
+                ),
+            ],
+            const SizedBox(height: 4),
+            Theme(
+              data: theme.copyWith(dividerColor: Colors.transparent),
+              child: ExpansionTile(
+                tilePadding: EdgeInsets.zero,
+                childrenPadding: const EdgeInsets.only(bottom: 8),
+                title: Text('項目を選ぶ', style: theme.textTheme.bodySmall),
+                children: [
+                  for (final key in AttributeKey.values)
+                    if (key != AttributeKey.goalkeeping ||
+                        player.position == Position.gk) ...[
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(key.label,
+                            style: theme.textTheme.labelMedium),
+                      ),
+                      const SizedBox(height: 4),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          for (final detail in key.details)
+                            FilterChip(
+                              label: Text('${detail.label} '
+                                  '${player.attributes.detail(detail)}'),
+                              selected: state.focus.contains(detail),
+                              // 上限まで入っていたら、外すことしかできない。
+                              onSelected:
+                                  full && !state.focus.contains(detail)
+                                      ? null
+                                      : (_) => controller.toggleFocus(detail),
+                              visualDensity: VisualDensity.compact,
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                    ],
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 方向に入れた項目1つぶん。個人技まであといくつかを出す。
+class _FocusProgress extends StatelessWidget {
+  const _FocusProgress({
+    required this.detail,
+    required this.value,
+    required this.signature,
+    required this.learned,
+  });
+
+  final Detail detail;
+  final int value;
+  final Signature? signature;
+  final bool learned;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final remaining = Signature.requirement - value;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              SizedBox(
+                width: 120,
+                child: Text(detail.label, style: theme.textTheme.bodyMedium),
+              ),
+              Text('$value', style: theme.textTheme.titleSmall),
+              const SizedBox(width: 10),
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(3),
+                  child: LinearProgressIndicator(
+                    value: (value / Signature.requirement).clamp(0.0, 1.0),
+                    minHeight: 6,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          if (signature != null)
+            Text(
+              learned
+                  ? '「${signature!.label}」を覚えている'
+                  : remaining > 0
+                      ? '${Signature.requirement}で「${signature!.label}」を'
+                          '覚える見込み（あと$remaining）'
+                      : '「${signature!.label}」を覚える水準に達している',
+              style: muted,
+            ),
+        ],
+      ),
+    );
+  }
+}
+
 class _TrainingEffectCard extends StatelessWidget {
   const _TrainingEffectCard({required this.state});
 
@@ -2788,7 +2958,7 @@ class _CareerTab extends StatelessWidget {
                 '${record.caps > 0 ? ' ・ 代表${record.caps}' : ''}'
                 '${record.continentalStage.participated ? ' ・ 大陸${record.continentalStage.label}' : ''}'
                 '${record.cupStage.participated ? ' ・ 国内杯${record.cupStage.label}' : ''}'
-                '${record.worldCupStage.participated ? ' ・ W杯${record.worldCupStage.label}' : ''}'
+                '${record.worldCupStage.participated ? ' ・ 世界大会${record.worldCupStage.label}' : ''}'
                 '${record.objectiveMet ? ' ・ 目標達成' : ''}',
               ),
               trailing: Text(

@@ -209,6 +209,29 @@ void main() {
     expect(find.text('世界のリーグ一覧'), findsOneWidget);
   });
 
+  testWidgets('育成のタブで、育てる方向を選べる', (tester) async {
+    final controller = await newCareer();
+    await pumpHub(tester, controller, height: 3200);
+
+    await tester.tap(find.widgetWithText(Tab, '育成'));
+    await tester.pumpAndSettle();
+    await tester.dragUntilVisible(
+      find.text('育てる方向'),
+      find.byType(ListView).first,
+      const Offset(0, -200),
+    );
+    expect(find.text('0 / ${CareerState.maxFocus}'), findsOneWidget);
+
+    await tester.tap(find.text('項目を選ぶ'));
+    await tester.pumpAndSettle();
+    // 項目は今の値つきで並ぶ。
+    final value = controller.state!.player.attributes.detail(Detail.finishing);
+    await tester.tap(find.widgetWithText(
+        FilterChip, '${Detail.finishing.label} $value'));
+    await tester.pumpAndSettle();
+    expect(controller.state!.focus, [Detail.finishing]);
+  });
+
   testWidgets('育成のタブに、練習が試合に出たかが載る', (tester) async {
     final controller = await newCareer();
     await controller.setMenu(TrainingMenu.passingWork);
