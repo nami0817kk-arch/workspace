@@ -818,7 +818,7 @@ class _PlayerCard extends StatelessWidget {
                       if (state.nickname != null)
                         Text('「${state.nickname}」', style: muted),
                       Text(
-                        '${player.position.label}  ${player.age}歳'
+                        '${player.positionLabel}  ${player.age}歳'
                         '（${state.stage.label}） ・ '
                         '${World.byId(player.nationality.primary).demonym}',
                         style: muted,
@@ -866,6 +866,15 @@ class _PlayerCard extends StatelessWidget {
                   label: Text('ポテンシャル ${player.potentialBand}'),
                   visualDensity: VisualDensity.compact,
                 ),
+                if (player.isInverted)
+                  Tooltip(
+                    message: '逆足のサイド。逆足の局面が増える代わりに、'
+                        '内へ切り込んで利き足で打てる。',
+                    child: const Chip(
+                      label: Text('逆サイド'),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                  ),
                 if (state.calledUp)
                   Chip(
                     label: const Text('代表招集'),
@@ -1627,7 +1636,7 @@ class _ClubLifeCard extends StatelessWidget {
             const SizedBox(height: 12),
             OutlinedButton(
               onPressed: () => _convert(context),
-              child: Text('ポジションを変える（今 ${state.player.position.fullName}）'),
+              child: Text('ポジションを変える（今 ${state.player.positionName}）'),
             ),
           ],
         ),

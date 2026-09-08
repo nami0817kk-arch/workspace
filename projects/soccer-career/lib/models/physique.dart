@@ -13,6 +13,38 @@ enum Foot {
   final String label;
 }
 
+/// ピッチのどちら側に立つか。
+///
+/// ポジションそのものを左右に割ると、局面プールも能力の重みも適性も
+/// 倍に増える。役割は8つのままにして、立つ側だけを別に持つ。
+/// 効くのは利き足との噛み合わせで、そこは実際のサッカーと同じ。
+enum Side {
+  center('中央', ''),
+  left('左', 'L'),
+  right('右', 'R');
+
+  const Side(this.label, this.mark);
+
+  final String label;
+
+  /// 表示の頭に付く記号。中央は付かない。
+  final String mark;
+
+  /// 利き足に合った側か。両利きはどちらでも合う。
+  bool matches(Foot foot) =>
+      this == Side.center ||
+      foot == Foot.both ||
+      (this == Side.left && foot == Foot.left) ||
+      (this == Side.right && foot == Foot.right);
+
+  /// 逆足のサイドか。中央と両利きは該当しない。
+  bool inverted(Foot foot) => this != Side.center && !matches(foot);
+
+  static Side parse(String? name) => Side.values.any((s) => s.name == name)
+      ? Side.values.byName(name!)
+      : Side.center;
+}
+
 /// オフの肉体改造の方針。
 enum BodyPlan {
   bulk('増量', '筋力は増すが、キレは落ちる'),

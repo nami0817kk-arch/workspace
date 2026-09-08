@@ -408,6 +408,12 @@ class MatchInProgress {
       factors.add(ChanceFactor('逆足', -(5 - player.physique.weakFoot) * 0.03));
     }
 
+    // 逆サイドの選手は、内へ切り込んで利き足で打てる。
+    if (player.isInverted && option.key == AttributeKey.shooting) {
+      factors.add(
+          const ChanceFactor('内へ切り込む', Formulas.invertedShootingBonus));
+    }
+
     factors.sort((a, b) => b.value.abs().compareTo(a.value.abs()));
     return factors;
   }
@@ -804,8 +810,15 @@ class MatchEngine {
           ]..shuffle(_random));
 
     // 逆足で対応することになる局面を先に決めておく。両利きなら起きない。
-    final weakFootChance =
-        player.physique.foot == Foot.both ? 0.0 : Formulas.weakFootMomentChance;
+    // 立つ側と利き足の噛み合わせで頻度が変わる。
+    final weakFootChance = player.physique.foot == Foot.both
+        ? 0.0
+        : switch (player.side) {
+            Side.center => Formulas.weakFootMomentChance,
+            _ => player.side.matches(player.physique.foot)
+                ? Formulas.weakFootMomentOnSide
+                : Formulas.weakFootMomentInverted,
+          };
 
     // 味方と相手の得点を、時間まで含めて先に決めておく。
     final advantage = club.strength - opponent.strength + (home ? 6 : -2);

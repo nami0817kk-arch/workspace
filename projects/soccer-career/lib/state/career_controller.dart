@@ -396,12 +396,18 @@ class CareerController extends ChangeNotifier {
     required Position position,
     required int age,
     required Agent agent,
+    Side side = Side.center,
+    Physique? physique,
+    Map<AttributeKey, int> tweaks = const {},
   }) async {
     _state = _career.startCareer(
       name: name,
       position: position,
       age: age,
       agent: agent,
+      side: side,
+      physique: physique,
+      tweaks: tweaks,
     );
     _state!.beginSeasonRecord();
     _inProgress = null;

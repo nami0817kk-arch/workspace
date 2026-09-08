@@ -13,6 +13,7 @@ class Player {
     required this.name,
     required this.age,
     required this.position,
+    this.side = Side.center,
     required this.attributes,
     required this.potential,
     this.nationality = Nationality.unknown,
@@ -29,6 +30,24 @@ class Player {
   final String name;
   final int age;
   final Position position;
+
+  /// 立つ側。左右のある役割（SB / WG）だけが持つ。
+  ///
+  /// 利き足と合っていれば逆足の局面が減り、逆サイドなら増える代わりに
+  /// 内へ切り込んでシュートを打てる。どちらが得かは選手による。
+  final Side side;
+
+  /// 「LSB」のような表示。中央の役割では記号が付かない。
+  String get positionLabel => '${side.mark}${position.label}';
+
+  /// 「左サイドバック」のような表示。
+  String get positionName => side == Side.center
+      ? position.fullName
+      : '${side.label}${position.fullName}';
+
+  /// 利き足と逆のサイドに立っているか。
+  bool get isInverted => side.inverted(physique.foot);
+
   final Attributes attributes;
 
   /// 総合力の上限。ここまでしか伸びない。画面には帯でしか見せない。
@@ -96,6 +115,8 @@ class Player {
     int? age,
     Attributes? attributes,
     Position? position,
+    Side? side,
+   
     int? condition,
     Nationality? nationality,
     Personality? personality,
@@ -107,6 +128,7 @@ class Player {
         name: name,
         age: age ?? this.age,
         position: position ?? this.position,
+        side: side ?? this.side,
         attributes: attributes ?? this.attributes,
         potential: potential,
         nationality: nationality ?? this.nationality,
@@ -148,6 +170,7 @@ class Player {
         'name': name,
         'age': age,
         'position': position.name,
+        'side': side.name,
         'attributes': attributes.toJson(),
         'potential': potential,
         'nationality': nationality.toJson(),
@@ -163,10 +186,18 @@ class Player {
     final attributes =
         Attributes.fromJson(json['attributes'] as Map<String, dynamic>);
     final position = Position.parse(json['position'] as String);
+    final physique = Physique.fromJson(json['physique'] as Map<String, dynamic>?);
     return Player(
       name: json['name'] as String,
       age: json['age'] as int,
       position: position,
+      // 左右を持たせる前の保存データは、利き足に合う側として読む。
+      // 既定で右に寄せると、左利きのサイドバックが急に不利になる。
+      side: json['side'] == null
+          ? (position.hasSide
+              ? (physique.foot == Foot.left ? Side.left : Side.right)
+              : Side.center)
+          : Side.parse(json['side'] as String?),
       attributes: attributes,
       // ポテンシャルを足す前の保存データには無い。今の総合力に少し上乗せする。
       potential: json['potential'] as int? ??
@@ -177,7 +208,7 @@ class Player {
       personality:
           Personality.fromJson(json['personality'] as Map<String, dynamic>?),
       // 身体データを持たせる前の保存データは標準体型として読む。
-      physique: Physique.fromJson(json['physique'] as Map<String, dynamic>?),
+      physique: physique,
       setPieces:
           SetPieceSkills.fromJson(json['setPieces'] as Map<String, dynamic>?),
       // 適性を持たせる前の保存データは、今のポジションを本職として読む。
