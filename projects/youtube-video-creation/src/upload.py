@@ -44,6 +44,7 @@ class Draft:
     tags: list[str] = field(default_factory=list)
     thumbnail: Path | None = None
     privacy: str = "private"
+    source: Path | None = None
 
     @property
     def problems(self) -> list[str]:
@@ -53,6 +54,16 @@ class Draft:
             found.append(f"動画がありません: {self.video}")
         if not self.title.strip():
             found.append("タイトルが空です")
+        # **書き出しの途中を掴んでいないか。**video.mp4 は先に書かれ、
+        # description.txt と thumbnail.png は後から書かれる。その隙に投稿へ入ると
+        # タイトルがフォルダ名・概要欄が空のまま公開される（2026-09-08 に発生）
+        if self.source is not None and self.title.strip() == self.source.name:
+            found.append("タイトルがフォルダ名のままです。"
+                         "description.txt がまだ書かれていません")
+        if not self.description.strip():
+            found.append("概要欄が空です。書き出しの途中かもしれません")
+        # サムネイルは**無くても止めない**。投稿のあとに setthumb で
+        # 付ける流れが先にあり、そちらは今も使っている
         if self.thumbnail is not None and not self.thumbnail.exists():
             found.append(f"サムネイルがありません: {self.thumbnail}")
         if self.privacy not in ("private", "unlisted", "public"):
@@ -104,6 +115,7 @@ def prepare(build_dir: Path, privacy: str = "private") -> Draft:
         tags=tags_mod.fit(found),
         thumbnail=thumbnail if thumbnail.exists() else None,
         privacy=privacy,
+        source=build_dir,
     )
 
 

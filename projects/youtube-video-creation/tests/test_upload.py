@@ -177,3 +177,17 @@ def test_何度足しても増えない():
     assert once == twice
     assert once.count("画像: Wikimedia Commons") == 1
     assert once.count("※ 画像: File:X") == 1
+
+
+def test_書き出しの途中を掴んだら止める(tmp_path):
+    """video.mp4 だけ先にあって description.txt がまだ、という隙がある。
+
+    2026-09-08、作り直しの最中に投稿処理が入り、タイトルがフォルダ名・
+    概要欄が空のまま送られかけた。通信が切れて事なきを得ただけだった。
+    """
+    built = _built(tmp_path)
+    (built / "description.txt").write_text("", encoding="utf-8")
+    draft = upload_mod.prepare(built)
+    notes = draft.problems
+    assert any("フォルダ名" in note for note in notes)
+    assert any("概要欄が空" in note for note in notes)
