@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """記録済みのデータから静的サイトを生成する。ネットワークへは一切アクセスしない。"""
 import argparse
+import json
 import shutil
 import sys
 from datetime import datetime, timezone, timedelta
@@ -115,6 +116,14 @@ def build(root: Path, out: Path) -> dict:
         s = theme.slug(row["item_code"])
         write(out / "item" / s / "index.html", theme.item_page(row, site, updated))
         urls.append(f"/item/{s}/")
+
+    # 検索用の索引。数百KBあるので、検索ページで必要になったときだけ読ませる。
+    write(out / "search-index.json", json.dumps(
+        [[theme.slug(r["item_code"]), r["name"], r["price"]] for r in rows],
+        ensure_ascii=False, separators=(",", ":")))
+    write(out / "search" / "index.html",
+          theme.search_page(site, base + "/search/", updated, stats))
+    urls.append("/search/")
 
     write(out / "sitemap.xml", sitemap(site, urls, updated))
     write(out / "robots.txt", robots(site))

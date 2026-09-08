@@ -69,7 +69,7 @@ AD_NOTICE = ('<p class="ad-notice">本サイトは楽天アフィリエイトを
              'リンク経由の購入により収益を得ています。</p>')
 
 NAV = [("./", "今日の値下がり"), ("rises/", "値上がり"), ("lows/", "最安値圏"),
-       ("genre/", "ジャンル別"), ("about/", "このサイトについて")]
+       ("genre/", "ジャンル別"), ("search/", "商品を探す"), ("about/", "このサイトについて")]
 
 
 def _verification(site: dict) -> str:
@@ -190,6 +190,18 @@ def history_note(row: dict) -> str:
     return f'<span class="sep">/</span>記録{days}日'
 
 
+def card_spark(row: dict) -> str:
+    """一覧に出す小さな価格推移。
+
+    このサイトの値打ちは履歴なので、一覧の時点で形が見えるほうがよい。
+    点が2つ未満のときは何も出さない（「記録が足りません」を並べても邪魔になる）。
+    """
+    points = [p for _, p in (row.get("tail") or []) if p]
+    if len(points) < 2:
+        return ""
+    return f'<div class="card-spark">{sparkline(row.get("tail") or [], width=140, height=30)}</div>'
+
+
 def card(row: dict, prefix: str = "") -> str:
     href = f'{prefix}item/{slug(row["item_code"])}/'
     change = ""
@@ -209,8 +221,88 @@ def card(row: dict, prefix: str = "") -> str:
     <a class="name" href="{href}">{esc(row["name"])}</a>
     <p class="price">{change}<strong>{yen(row["price"])}</strong> {badge(row)}</p>
     <p class="meta">{esc(row.get("shop", ""))}{history_note(row)}</p>
+    {card_spark(row)}
   </div>
 </li>"""
+
+
+SEARCH_JS = """
+(function () {
+  var input = document.getElementById('q');
+  var out = document.getElementById('results');
+  var note = document.getElementById('note');
+  var index = null, loading = false, LIMIT = 60, MAX_SCAN = 400;
+
+  function norm(s) { return s.normalize('NFKC').toLowerCase().replace(/\\s+/g, ''); }
+
+  function terms() {
+    return input.value.trim().split(/\\s+/).map(norm).filter(Boolean);
+  }
+
+  function render() {
+    var t = terms();
+    if (!t.length) { out.textContent = ''; note.textContent = ''; return; }
+    var hits = [];
+    for (var i = 0; i < index.length && hits.length < MAX_SCAN; i++) {
+      var name = index[i][3], ok = true;
+      for (var k = 0; k < t.length; k++) { if (name.indexOf(t[k]) < 0) { ok = false; break; } }
+      if (ok) { hits.push(index[i]); }
+    }
+    note.textContent = hits.length
+      ? hits.length + '件' + (hits.length > LIMIT ? '以上（' + LIMIT + '件を表示）' : '')
+      : '見つかりませんでした。';
+    // 商品名は楽天から来る文字列なので、DOM API で入れる（HTMLとして解釈させない）
+    out.textContent = '';
+    hits.slice(0, LIMIT).forEach(function (r) {
+      var li = document.createElement('li');
+      li.className = 'hit';
+      var a = document.createElement('a');
+      a.href = '../item/' + r[0] + '/';
+      a.textContent = r[1];
+      var p = document.createElement('span');
+      p.className = 'price';
+      p.textContent = r[2].toLocaleString() + '円';
+      li.appendChild(a);
+      li.appendChild(p);
+      out.appendChild(li);
+    });
+  }
+
+  function load() {
+    if (index || loading) { return; }
+    loading = true;
+    note.textContent = '商品一覧を読み込んでいます…';
+    fetch('../search-index.json').then(function (r) { return r.json(); }).then(function (data) {
+      // 正規化した名前を持たせておく（入力のたびに作り直さない）
+      index = data.map(function (r) { return [r[0], r[1], r[2], norm(r[1])]; });
+      loading = false;
+      render();
+    }).catch(function () {
+      note.textContent = '一覧を読み込めませんでした。時間をおいて試してください。';
+      loading = false;
+    });
+  }
+
+  // 一覧は数百KBある。検索する人だけが読み込むよう、触られるまで取りに行かない。
+  input.addEventListener('focus', load);
+  input.addEventListener('input', function () { if (index) { render(); } else { load(); } });
+})();
+"""
+
+
+def search_page(site: dict, canonical: str, updated: str, stats: dict) -> str:
+    """商品名で絞り込む。通信は検索用データの取得だけで、サーバは要らない。"""
+    title = "商品を探す"
+    lead = "記録している商品を名前で絞り込めます。空白で区切ると、すべてを含むものを探します。"
+    return (head(f"{title}｜{site['name']}", lead, canonical, site, "../")
+            + f'<h1>{esc(title)}</h1><p class="lead">{esc(lead)}</p>'
+            + stats_bar(stats)
+            + AD_NOTICE
+            + '<input id="q" type="search" class="q" placeholder="例: モニター 27インチ" '
+              'autocomplete="off" aria-label="商品名で検索">'
+            + '<p id="note" class="note"></p><ul id="results" class="hits"></ul>'
+            + f'<script>{SEARCH_JS}</script>'
+            + foot(site, "../", updated))
 
 
 def stats_bar(stats: dict) -> str:

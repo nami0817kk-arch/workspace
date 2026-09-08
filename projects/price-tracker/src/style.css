@@ -88,6 +88,22 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 .spark { width: 100%; max-width: 320px; height: auto; }
 .spark-none { color: var(--muted); font-size: 13px; }
 
+/* 一覧に出す小さな推移。履歴がこのサイトの値打ちなので、開く前に形を見せる。 */
+.card-spark { margin-top: 6px; color: var(--accent); opacity: .8; }
+.card-spark .spark { max-width: 140px; }
+
+/* 商品を探す */
+.q { width: 100%; padding: 11px 14px; font-size: 16px; color: var(--ink);
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }
+.q:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.note { margin: 10px 0; font-size: 13px; color: var(--muted); }
+.hits { list-style: none; margin: 0; padding: 0; }
+.hit { display: flex; gap: 12px; justify-content: space-between; align-items: baseline;
+  padding: 10px 0; border-bottom: 1px solid var(--line); }
+.hit a { color: var(--ink); text-decoration: none; }
+.hit a:hover { color: var(--accent); }
+.hit .price { white-space: nowrap; font-weight: 600; }
+
 .facts { border-collapse: collapse; width: 100%; margin: 0 0 20px;
   background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }
 .facts th, .facts td { padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--line);
