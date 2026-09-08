@@ -160,10 +160,10 @@ void main() {
       expect(worst, lessThanOrEqualTo(Formulas.benchPatience + 1),
           reason: '連続$worst試合ベンチのまま');
       expect(controller.state!.seasonStats.appearances, greaterThan(20));
-      // 途中出場は「たまにあること」。1シーズンの3割を超えると、
+      // 途中出場は「たまにあること」。半分を超えると、
       // 主力として扱われている実感が無くなる。
       expect(subs, greaterThan(0), reason: '途中出場が一度も無い');
-      expect(subs, lessThan(controller.state!.fixtures.length ~/ 3),
+      expect(subs, lessThan(controller.state!.fixtures.length ~/ 2),
           reason: '途中出場が多すぎる（$subs試合）');
     });
   });

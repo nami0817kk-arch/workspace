@@ -19,6 +19,7 @@ import '../models/injury.dart';
 import '../models/life.dart';
 import '../models/life_event.dart';
 import '../models/personality.dart';
+import '../models/traits.dart';
 import '../models/physique.dart';
 import '../models/player.dart';
 import '../models/season.dart';
@@ -158,21 +159,28 @@ class CareerController extends ChangeNotifier {
     final played = result.appearance == Appearance.start ||
         result.appearance == Appearance.sub;
 
-    var morale = state.morale.bump(switch (result.appearance) {
+    // 落ち込みだけは特性で和らぐ。上がるほうは誰でも同じ。
+    final swing = switch (result.appearance) {
       Appearance.start => 1,
       Appearance.sub => 1,
       Appearance.benched => -3,
       Appearance.injured => -4,
-    });
+    };
+    var morale = state.morale.bump(swing < 0
+        ? (swing * state.player.traits.moraleFactor).round()
+        : swing);
     if (played && result.won) morale = morale.bump(1);
     if (played && (result.rating ?? 6) >= 7.5) morale = morale.bump(2);
     state.morale = morale;
 
-    state.fatigue = state.fatigue.add(switch (result.appearance) {
+    // 疲れの溜まり方は特性で変わる。
+    final gained = switch (result.appearance) {
       Appearance.start => 3,
       Appearance.sub => 2,
       Appearance.benched || Appearance.injured => 0,
-    });
+    };
+    state.fatigue =
+        state.fatigue.add((gained * state.player.traits.fatigueFactor).round());
 
     // 波。続いていれば1試合ぶん進め、切れていれば直近の出来から引き直す。
     state.form = state.form.tick();
@@ -183,6 +191,8 @@ class CareerController extends ChangeNotifier {
           for (final r in state.leagueResults)
             if (r.rating != null) r.rating!,
         ],
+        // 波に乗りやすい選手は、良いほうにも悪いほうにも振れやすい。
+        factor: state.player.traits.formFactor,
       );
     }
 
@@ -675,7 +685,12 @@ class CareerController extends ChangeNotifier {
         newInjury = Injury(
           name: newInjury.name,
           severity: newInjury.severity,
-          matchesOut: state.rehab.lengthFor(newInjury),
+          matchesOut: max(
+            1,
+            (state.rehab.lengthFor(newInjury) *
+                    state.player.traits.rehabFactor)
+                .round(),
+          ),
         );
         final (attributes, potential) =
             _match.applySevereInjury(player, newInjury);

@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+import 'guide_screen.dart';
 import '../../models/agent.dart';
 import '../../models/attributes.dart';
 import '../../state/career_controller.dart';
@@ -70,7 +71,19 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                     style: theme.textTheme.bodyMedium
                         ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
                   ),
-                  const SizedBox(height: 28),
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton.icon(
+                      onPressed: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                            builder: (_) => const GuideScreen()),
+                      ),
+                      icon: const Icon(Icons.help_outline, size: 18),
+                      label: const Text('遊び方ガイドを読む'),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
                   TextField(
                     controller: _name,
                     decoration: const InputDecoration(

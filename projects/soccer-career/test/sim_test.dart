@@ -190,9 +190,43 @@ void main() {
   });
 
   group('特性の拡充', () {
-    test('22種あり、欠点が3つ', () {
-      expect(Trait.values.length, 22);
-      expect(Trait.flaws.length, 3);
+    test('十分な数があり、欠点も一通り揃っている', () {
+      // 引ける長所が少ないと、同じ能力値の選手ばかりになる。
+      expect(Trait.values.length, greaterThanOrEqualTo(40));
+      expect(Trait.strengths.length, greaterThanOrEqualTo(30));
+      expect(Trait.flaws.length, greaterThanOrEqualTo(5));
+    });
+
+    test('どの特性にも、名前と説明がある', () {
+      final labels = <String>{};
+      for (final trait in Trait.values) {
+        expect(trait.label, isNotEmpty);
+        expect(trait.description, isNotEmpty);
+        expect(labels.add(trait.label), isTrue, reason: '${trait.label} が重複');
+      }
+    });
+
+    test('上位互換を作らない（何かしら効き、噛み合わない組み合わせは避ける）', () {
+      for (final trait in Trait.values) {
+        // 試合の中か外か、どこかには効いていること。
+        final affectsMatch = Trait.values.any((_) => false) ||
+            trait.ratingBonus != 0 ||
+            trait.peakAgeOffset != 0 ||
+            trait.declineAgeOffset != 0 ||
+            trait.injuryFactor != 1.0 ||
+            trait.conditionCostFactor != 1.0 ||
+            trait.fatigueFactor != 1.0 ||
+            trait.trainingFactor != 1.0 ||
+            trait.setPieceFactor != 1.0 ||
+            trait.rehabFactor != 1.0 ||
+            trait.moraleFactor != 1.0 ||
+            trait.formFactor != 1.0 ||
+            trait.deadBallThresholdOffset != 0 ||
+            trait.growthFactor(20) != 1.0 ||
+            trait.growthFactor(30) != 1.0;
+        expect(affectsMatch || _affectsPlay(trait), isTrue,
+            reason: '${trait.label} は何も効いていない');
+      }
     });
 
     test('長所2つに、3割で欠点が付く', () {
@@ -411,4 +445,39 @@ void main() {
       expect(CareerState.fromJson(json).simStyle, SimStyle.balanced);
     });
   });
+}
+
+
+/// 局面の中で効く特性かどうか。文脈を振って、どこかで動けば効いている。
+bool _affectsPlay(Trait trait) {
+  for (final minute in [10, 40, 80]) {
+    for (final outcome in Outcome.values) {
+      for (final key in AttributeKey.values) {
+        for (final detail in [null, ...Detail.values]) {
+          for (final flags in const [
+            [true, true, true, true],
+            [false, false, false, false],
+          ]) {
+            final context = TraitContext(
+              minute: minute,
+              home: flags[0],
+              outcome: outcome,
+              afterFailure: flags[1],
+              afterSuccess: flags[2],
+              key: key,
+              detail: detail,
+              scenarioId: 'fw-pk',
+              international: flags[3],
+              bigMatch: flags[0],
+              margin: flags[1] ? -1 : 1,
+              weakFoot: flags[2],
+              abroad: flags[3],
+            );
+            if (trait.chanceBonus(context) != 0) return true;
+          }
+        }
+      }
+    }
+  }
+  return false;
 }

@@ -257,6 +257,10 @@ class MatchInProgress {
       detail: option.detail,
       scenarioId: current.id,
       international: international,
+      bigMatch: bigMatch,
+      margin: margin,
+      weakFoot: weakFootMoment && _usesFoot(option),
+      abroad: club.countryId != player.nationality.primary,
     ));
     final condition = conditionModifier(player.condition);
     // 相手の格。上のリーグほど同じ手が通らなくなる。
@@ -425,7 +429,10 @@ class MatchInProgress {
   /// キッカーを任される水準（[SetPieceSkills.isTaker]）に達している選手にだけ
   /// 回ってくる。居残り練習が試合の数字に出る唯一の道。
   (int, int) _resolveDeadBall() {
-    if (!player.setPieces.isTaker) return (0, 0);
+    // セットプレーの名手は、少し早くキッカーを任される。
+    final threshold = SetPieceSkills.takerThreshold +
+        player.traits.deadBallThresholdOffset;
+    if (player.setPieces[player.setPieces.best] < threshold) return (0, 0);
     final chance = switch (appearance) {
       Appearance.start => Formulas.deadBallChanceStart,
       Appearance.sub => Formulas.deadBallChanceSub,
@@ -850,6 +857,7 @@ class MatchEngine {
           Formulas.growthByAge(player.age - player.traits.peakAgeOffset) *
           menu.growthFactor *
           player.personality.trainingFactor *
+          player.traits.trainingFactor *
           staff.growthFactor *
           habits.growthFactor *
           environment;
@@ -897,6 +905,7 @@ class MatchEngine {
       final current = setPieces[drill];
       final chance = Formulas.drillGrowthChance *
           player.personality.trainingFactor *
+          player.traits.setPieceFactor *
           staff.growthFactor *
           (1 - current / 130);
       if (current < SetPieceSkills.max && _random.nextDouble() < chance) {

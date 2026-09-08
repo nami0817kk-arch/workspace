@@ -194,14 +194,20 @@ void main() {
     expect(find.textContaining('SC1:'), findsOneWidget);
   });
 
-  testWidgets('遊び方はいつでも開ける', (tester) async {
+  testWidgets('遊び方ガイドはいつでも開ける', (tester) async {
     final controller = await newCareer();
     await pumpHub(tester, controller);
 
     await tester.tap(find.byIcon(Icons.help_outline));
     await tester.pumpAndSettle();
-    expect(find.text('遊び方'), findsOneWidget);
+    expect(find.text('遊び方ガイド'), findsOneWidget);
+
+    // 見出しが並んでいて、開くと中身が読める。
     expect(find.text('1週間の流れ'), findsOneWidget);
+    await tester.tap(find.text('生まれ持った特性'));
+    await tester.pumpAndSettle();
+    expect(find.textContaining('長所（'), findsOneWidget);
+    expect(find.text('クラッチ'), findsOneWidget);
   });
 
   testWidgets('シーズンを終えると、主要な動作が切り替わる', (tester) async {

@@ -115,14 +115,19 @@ class Momentum {
   ///
   /// 良い試合が続いた後に入り、悪い試合が続いた後に落ちる。実力どおりの
   /// 成績が延々と続くより、波があるほうが1シーズンを追う気になる。
-  static Momentum roll(Random random, {required List<double> recent}) {
+  static Momentum roll(
+    Random random, {
+    required List<double> recent,
+    double factor = 1.0,
+  }) {
     if (recent.length < 3) return const Momentum();
     final window = recent.sublist(max(0, recent.length - 3));
     final average = window.reduce((a, b) => a + b) / window.length;
-    if (average >= 7.3 && random.nextDouble() < 0.25) {
+    final chance = (0.25 * factor).clamp(0.0, 0.6);
+    if (average >= 7.3 && random.nextDouble() < chance) {
       return Momentum(state: MomentumState.zone, matches: 3 + random.nextInt(3));
     }
-    if (average <= 5.8 && random.nextDouble() < 0.25) {
+    if (average <= 5.8 && random.nextDouble() < chance) {
       return Momentum(state: MomentumState.slump, matches: 3 + random.nextInt(4));
     }
     return const Momentum();
