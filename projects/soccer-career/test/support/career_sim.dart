@@ -144,6 +144,7 @@ Future<Career> runCareer(Playstyle style, int seed) async {
     repository: MemoryRepository(),
     careerEngine: CareerEngine(random: Random(seed)),
     matchEngine: MatchEngine(random: Random(seed * 7919 + 13)),
+    random: Random(seed * 104729 + 7),
   );
   final random = Random(seed * 31 + 5);
   await controller.startCareer(
@@ -164,7 +165,8 @@ Future<Career> runCareer(Playstyle style, int seed) async {
   var guard = 0;
   while (!controller.state!.retired && guard++ < 30) {
     final state = controller.state!;
-    career.potential = state.player.potential;
+    // 重傷でポテンシャルは下がる。伸びの上限として見るのは最大値。
+    career.potential = max(career.potential, state.player.potential);
 
     // --- シーズンを戦う ---
     var matches = 0;
