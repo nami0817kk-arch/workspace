@@ -11,6 +11,7 @@ import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/attributes.dart';
 import 'package:soccer_career/models/career.dart';
 import 'package:soccer_career/models/training.dart';
+import 'package:soccer_career/main.dart';
 import 'package:soccer_career/state/career_controller.dart';
 import 'package:soccer_career/ui/screens/hub_screen.dart';
 import 'package:soccer_career/ui/screens/match_screen.dart';
@@ -221,6 +222,16 @@ void main() {
     // 今週の練習の対象は、まだ動いていなくても必ず出す。
     expect(find.text(AttributeKey.passing.label), findsOneWidget);
     expect(find.textContaining('回勝負して'), findsWidgets);
+  });
+
+  testWidgets('日本語フォントを同梱して使っている', (tester) async {
+    // 指定を外すと Web 版が外部からフォントを取りに行き、取りきれない字が
+    // 豆腐（□）で残る。公開中の画面で実際に起きていた。
+    await tester.pumpWidget(const SoccerCareerApp());
+    await tester.pump();
+    final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
+    expect(app.theme?.textTheme.bodyMedium?.fontFamily, 'NotoSansJP');
+    expect(app.darkTheme?.textTheme.bodyMedium?.fontFamily, 'NotoSansJP');
   });
 
   testWidgets('記録のタブに通算がまとまっている', (tester) async {

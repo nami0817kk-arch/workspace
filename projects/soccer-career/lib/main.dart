@@ -9,6 +9,12 @@ void main() {
   runApp(const SoccerCareerApp());
 }
 
+/// 同梱している日本語フォント。
+///
+/// 指定しないと Web 版が不足分を外部から取りに行き、取りきれなかった字が
+/// 豆腐（□）で残る。詳しくは assets/fonts/README.md。
+const String _fontFamily = 'NotoSansJP';
+
 class SoccerCareerApp extends StatefulWidget {
   const SoccerCareerApp({super.key});
 
@@ -42,6 +48,7 @@ class _SoccerCareerAppState extends State<SoccerCareerApp> {
           brightness: Brightness.light,
         ),
         useMaterial3: true,
+        fontFamily: _fontFamily,
       ),
       darkTheme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
@@ -49,6 +56,7 @@ class _SoccerCareerAppState extends State<SoccerCareerApp> {
           brightness: Brightness.dark,
         ),
         useMaterial3: true,
+        fontFamily: _fontFamily,
       ),
       home: AnimatedBuilder(
         animation: _controller,
