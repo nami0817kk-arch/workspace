@@ -6,6 +6,7 @@ import '../data/save_repository.dart';
 import '../game/career_engine.dart';
 import '../game/formulas.dart';
 import '../game/match_engine.dart';
+import '../game/dependencies.dart';
 import '../game/life_events.dart';
 import '../game/national.dart';
 import '../game/newsroom.dart';
@@ -221,6 +222,16 @@ class CareerController extends ChangeNotifier {
 
     // ピッチの外の出来事。試合と試合の間に起きる。
     if (pendingEvent == null && _life.fires()) {
+      // 名前のある人は、出来事に出てきて初めて人になる。
+      final people = <PersonKind, String>{
+        if (state.manager != null) PersonKind.manager: state.manager!.name,
+        if (state.competitor != null)
+          PersonKind.competitor: state.competitor!.name,
+        if (state.partner != null) PersonKind.partner: state.partner!.name,
+        if (state.mentor != null) PersonKind.mentor: state.mentor!.name,
+        if (state.rival != null) PersonKind.rival: state.rival!.name,
+        PersonKind.agent: state.agent.name,
+      };
       pendingEvent = _life.pick(
         LifeContext(
           age: state.player.age,
@@ -231,9 +242,11 @@ class CareerController extends ChangeNotifier {
           sponsorOffered: state.sponsorOffer != null,
           captaincyOffered: state.captaincyOffered,
           lowMorale: state.morale.needsCare,
+          people: people,
+          overall: state.player.overall,
         ),
         seen: state.seenEvents.toSet(),
-      );
+      )?.withNames(people);
     }
   }
 
@@ -259,10 +272,24 @@ class CareerController extends ChangeNotifier {
     personality =
         personality.bump(PersonalityAxis.professionalism, e.professionalism);
     personality = personality.bump(PersonalityAxis.temper, e.temper);
+    // 練習の外で身に付くもの。土台が足りなければ土台のほうが伸びる。
+    //
+    // **ポテンシャルに達していたら伸びない。** 練習も試合の成長も上限で
+    // 止まるのに、出来事だけが突き抜けると、上限そのものが意味を失う。
+    var attributes = state.player.attributes;
+    if (e.train != null && !state.player.atPotential) {
+      attributes = attributes.bumpDetail(
+          Dependencies.resolve(e.train!, attributes), e.trainAmount);
+    }
     state.player = state.player.copyWith(
       personality: personality,
+      attributes: attributes,
       condition: state.player.condition + e.condition,
     );
+    // 閃き。すでに3つ持っていれば何も起きない（learn が弾く）。
+    if (e.insight != null) {
+      state.development = state.development.learn(e.insight!);
+    }
 
     switch (e.special) {
       case LifeSpecial.acceptSponsor:
