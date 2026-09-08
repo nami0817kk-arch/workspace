@@ -175,6 +175,9 @@ class CareerState {
     this.secondCareer,
     this.seenEvents = const [],
     this.news = const [],
+    this.seasonStart,
+    this.momentAttempts = const {},
+    this.momentSuccesses = const {},
     this.objective,
     this.injury,
     this.caps = 0,
@@ -300,6 +303,52 @@ class CareerState {
   /// 世の中に出た見出し。新しいものが先頭。
   List<NewsItem> news;
 
+  /// 今季の開幕時点の能力値。今季どれだけ伸びたかを出すために持つ。
+  ///
+  /// 能力値は毎週すこしずつ動くので、見ているだけでは伸びたことに
+  /// 気付けない。開幕時を覚えておいて差を見せる。古い保存データには
+  /// 無いので null を許す。
+  Attributes? seasonStart;
+
+  /// 今季、そのカテゴリで判定した局面の数。
+  Map<AttributeKey, int> momentAttempts;
+
+  /// そのうち成功した数。練習した能力が実際に通っているかを見る。
+  Map<AttributeKey, int> momentSuccesses;
+
+  /// 今季の伸びと、その能力が試合で通った割合。
+  List<CategoryGrowth> get seasonGrowth {
+    final before = seasonStart;
+    return [
+      for (final key in AttributeKey.values)
+        CategoryGrowth(
+          key: key,
+          before: before?[key] ?? player.attributes[key],
+          now: player.attributes[key],
+          attempts: momentAttempts[key] ?? 0,
+          successes: momentSuccesses[key] ?? 0,
+        ),
+    ];
+  }
+
+  /// 今季の局面を1つ記録する。
+  void recordMoment(AttributeKey key, {required bool success}) {
+    momentAttempts = {...momentAttempts, key: (momentAttempts[key] ?? 0) + 1};
+    if (success) {
+      momentSuccesses = {
+        ...momentSuccesses,
+        key: (momentSuccesses[key] ?? 0) + 1,
+      };
+    }
+  }
+
+  /// 新しいシーズンの起点にする。開幕時の能力を控え、局面の集計を空にする。
+  void beginSeasonRecord() {
+    seasonStart = player.attributes;
+    momentAttempts = const {};
+    momentSuccesses = const {};
+  }
+
   /// 今の年齢のキャリア段階。
   CareerStage get stage => CareerStage.of(player.age);
 
@@ -393,6 +442,17 @@ class CareerState {
   /// 通算の稼ぎ（万円）。終えたシーズンの分だけ数える。
   int get totalEarnings => history.fold(0, (s, h) => s + h.salary);
 
+  /// 保存データからカテゴリ別の集計を読む。知らないキーは捨てる。
+  static Map<AttributeKey, int> _countsFrom(Object? json) {
+    final result = <AttributeKey, int>{};
+    for (final e in (json as Map? ?? const {}).entries) {
+      if (AttributeKey.values.any((k) => k.name == e.key) && e.value is int) {
+        result[AttributeKey.values.byName(e.key as String)] = e.value as int;
+      }
+    }
+    return result;
+  }
+
   Club opponentFor(int matchday) {
     final id = fixtures[matchday - 1];
     return league.firstWhere((c) => c.id == id);
@@ -475,6 +535,13 @@ class CareerState {
         'secondCareer': secondCareer?.name,
         'seenEvents': seenEvents,
         'news': news.map((n) => n.toJson()).toList(),
+        'seasonStart': seasonStart?.toJson(),
+        'momentAttempts': {
+          for (final e in momentAttempts.entries) e.key.name: e.value,
+        },
+        'momentSuccesses': {
+          for (final e in momentSuccesses.entries) e.key.name: e.value,
+        },
         'contractYears': contractYears,
         'countryId': countryId,
         'professionalYears': professionalYears,
@@ -578,6 +645,11 @@ class CareerState {
         for (final n in (json['news'] as List? ?? const []))
           NewsItem.fromJson(n as Map<String, dynamic>),
       ],
+      seasonStart: json['seasonStart'] is Map<String, dynamic>
+          ? Attributes.fromJson(json['seasonStart'] as Map<String, dynamic>)
+          : null,
+      momentAttempts: _countsFrom(json['momentAttempts']),
+      momentSuccesses: _countsFrom(json['momentSuccesses']),
       contractYears: json['contractYears'] as int? ?? 2,
       countryId: json['countryId'] as String? ?? 'yamato',
       professionalYears: json['professionalYears'] as int? ?? 1,

@@ -389,6 +389,7 @@ class CareerController extends ChangeNotifier {
       age: age,
       agent: agent,
     );
+    _state!.beginSeasonRecord();
     _inProgress = null;
     lastWeek = const WeekReport();
     await _persist();
@@ -624,6 +625,11 @@ class CareerController extends ChangeNotifier {
       used: match.resolutions.map((r) => r.key),
     );
 
+    // どの能力で、何回勝負して、何回通ったか。練習の答え合わせに使う。
+    for (final resolution in match.resolutions) {
+      state.recordMoment(resolution.key, success: resolution.success);
+    }
+
     if (result.international) {
       state.pendingInternational = false;
       _inProgress = null;
@@ -817,6 +823,8 @@ class CareerController extends ChangeNotifier {
     }
     // 新しいクラブで登録メンバーに入れるかを決める。
     _state!.squadStatus = _career.competitions.registrationFor(_state!);
+    // 今季の伸びは、このシーズンの開幕からの差で見る。
+    _state!.beginSeasonRecord();
     _inProgress = null;
     lastWeek = const WeekReport();
     await _persist();

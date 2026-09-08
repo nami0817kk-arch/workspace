@@ -256,3 +256,31 @@ class Development {
     );
   }
 }
+
+/// 能力カテゴリの今季の伸び。
+class CategoryGrowth {
+  const CategoryGrowth({
+    required this.key,
+    required this.before,
+    required this.now,
+    required this.attempts,
+    required this.successes,
+  });
+
+  final AttributeKey key;
+
+  /// 今季の開幕時の値と、今の値。
+  final int before;
+  final int now;
+
+  /// 今季、その能力で判定した局面の数と、成功した数。
+  final int attempts;
+  final int successes;
+
+  int get growth => now - before;
+
+  bool get hasMoments => attempts > 0;
+
+  /// 成功率（0〜1）。局面が無ければ null。
+  double? get successRate => attempts == 0 ? null : successes / attempts;
+}
