@@ -376,7 +376,11 @@ def test_正方形に近い写真は右に置く(tmp_path):
         left = image.getpixel((80, 120))          # 文字を置く側
         right = image.getpixel((SIZE[0] - 80, 120))
     assert right[0] > 150 and right[1] < 110      # 写真は右にある
-    assert left[0] < 60                            # 左は下地（写真を敷かない）
+    # **左は同じ写真をぼかして暗くした下地**（2026-09-08 に塗りつぶしから変更）。
+    # 塗りつぶしだと顔の段の72%が黒くなり、一覧で沈んで見えた。
+    # 右よりはっきり暗く、かつ真っ黒ではないこと
+    assert left[0] < right[0] - 30
+    assert sum(left[:3]) > 60
 
 
 def test_帯の2行は同じ大きさで1行ずつに収める(tmp_path):
