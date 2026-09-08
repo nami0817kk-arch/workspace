@@ -11,6 +11,7 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -672,6 +673,29 @@ VOLUME_SOURCES = 5       # 出典の本数
 VOLUME_OUTLETS = 3       # 媒体の数
 
 
+def _bare_text(text: str) -> str:
+    """比べるための素の文。句読点と記号を落とす。"""
+    return re.sub(r"[。、．，\s　？?！!「」『』]", "", str(text or ""))
+
+
+def _advise_hook(notes: Notes) -> list[str]:
+    """つかみの一言が、問いの言い直しになっていないか（2026-09-09）。
+
+    視聴維持の曲線で、捨てられているのは4〜9秒だった。タイトルを読むところまでは
+    残り、そのあとの一言で半分以上が消える。**言い直しなら、無いほうがよい。**
+    """
+    if notes.format != "news":
+        return []
+    if not notes.hook:
+        return ["theme.hook が空です。**その行は出しません**"
+                "（問いの言い直しは4〜9秒で半分が離脱した実測があります）。"
+                "入れるなら、問いとは別の一言を書いてください"]
+    if _bare_text(notes.hook) == _bare_text(notes.question):
+        return ["theme.hook が問いと同じです。**その行は出しません。**"
+                "別の一言にするか、空のままにしてください"]
+    return []
+
+
 def _advise_material(notes: Notes) -> list[str]:
     """中身の量が参考に届いているか。届かなければ、どこが薄いかを言う。"""
     from urllib.parse import urlparse
@@ -695,7 +719,8 @@ def _advise_material(notes: Notes) -> list[str]:
 
 def _advise_voices(notes: Notes) -> list[str]:
     """反応の扱いで気をつける点。"""
-    hints: list[str] = _advise_volume(notes) + _advise_material(notes) + _advise_title(notes)
+    hints: list[str] = (_advise_volume(notes) + _advise_material(notes)
+                        + _advise_hook(notes) + _advise_title(notes))
     for section in notes.sections:
         card = section.card or {}
         if str(card.get("type", "")).lower() != "reactions":
@@ -947,13 +972,18 @@ def to_script(notes: Notes, plan: Plan) -> str:
         "  se: assets/audio/se_pon.wav",
     ]
     if notes.format == "news":
-        hook = notes.hook or _ends_sentence(notes.question)
-        lines += [
-            f"キャスター: {hook}",
-            # 画面は2〜3行に折り返せる。20字で切ると「…当の監督…」のように
-            # 途中で切れた文字がそのまま出ていた（2026-09-07 に書き出して確認）
-            f"  telop: 今回の問い: {_telop(notes.question, TELOP_LIMIT)}",
-        ]
+        # **問いを読み上げない**（2026-09-09）。視聴維持の曲線を読んだら、
+        # 捨てられているのは0〜3秒ではなく**4〜9秒**だった（4秒100% → 8秒39.7%）。
+        # タイトルを読むところまでは残り、そのあとの一言で半分以上が消える。
+        # hook が空のときは question をそのまま読んでいた＝クリックした人が
+        # もう知っている話の言い直し。**書いていなければ、その行ごと出さない。**
+        if notes.hook and _bare_text(notes.hook) != _bare_text(notes.question):
+            lines += [
+                f"キャスター: {_ends_sentence(notes.hook)}",
+                # 画面は2〜3行に折り返せる。20字で切ると「…当の監督…」のように
+                # 途中で切れた文字がそのまま出ていた（2026-09-07 に書き出して確認）
+                f"  telop: 今回の問い: {_telop(notes.question, TELOP_LIMIT)}",
+            ]
     elif notes.hook:
         # 反応・本人の言葉の型は、つかみが書いてあれば1行だけ。問いは立てない。
         # 参考（サッカーラボ 25.5万回）は 0:02 でタイトル、0:11 から事実だった

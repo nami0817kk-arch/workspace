@@ -762,3 +762,40 @@ def test_ニュースの型は今まで通り問いが要る():
     raw["theme"].pop("question")
     problems = verify(build_notes(raw), _plan())
     assert any("question" in p for p in problems)
+
+
+def test_つかみが空なら冒頭はタイトルの1行だけ():
+    """視聴維持の曲線（2026-09-09 実測）で捨てられるのは4〜9秒だった。
+
+    hook が空のときは question をそのまま読んでいた＝クリックした人が
+    もう知っている話の言い直し。その行ごと出さない。
+    """
+    from src.script_model import parse_script
+
+    raw = _raw()
+    raw["theme"] = {**raw["theme"], "hook": ""}
+    script = parse_script(to_script(build_notes(raw), _plan()))
+    opening = script.scenes[0]
+    assert len(opening.lines) == 1
+    assert raw["theme"]["title"] in opening.lines[0].text
+    assert not any("今回の問い" in line.telop_text() for line in script.lines)
+
+
+def test_つかみが問いの言い直しなら出さない():
+    from src.research import advise
+    from src.script_model import parse_script
+
+    raw = _raw()
+    raw["theme"] = {**raw["theme"], "hook": "なぜ金の問題ではないのか。"}
+    script = parse_script(to_script(build_notes(raw), _plan()))
+    assert len(script.scenes[0].lines) == 1
+    hints = advise(build_notes(raw), _plan())
+    assert any("問いと同じ" in h for h in hints)
+
+
+def test_つかみが別の一言なら残る():
+    from src.script_model import parse_script
+
+    script = parse_script(to_script(build_notes(_raw()), _plan()))   # hook は別の文
+    assert len(script.scenes[0].lines) == 2
+    assert any("今回の問い" in line.telop_text() for line in script.lines)
