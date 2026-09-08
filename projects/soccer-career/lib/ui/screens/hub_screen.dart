@@ -14,6 +14,7 @@ import '../../game/ranking.dart';
 import '../../game/weekly_plan.dart';
 import '../../models/development.dart';
 import '../../models/news.dart';
+import '../../models/reputation.dart';
 import '../../models/entourage.dart';
 import '../../models/life.dart';
 import '../../models/support.dart';
@@ -21,6 +22,7 @@ import '../../models/training.dart';
 import '../../models/season.dart';
 import '../../state/career_controller.dart';
 import '../club_identity.dart';
+import '../budget_lines.dart';
 import '../readable_width.dart';
 import '../transfer_code.dart';
 import 'guide_screen.dart';
@@ -320,6 +322,7 @@ class _MatchTab extends StatelessWidget {
             state: state,
             stake: controller.stake,
             outlook: controller.outlook,
+            onOpenTraining: () => DefaultTabController.of(context).animateTo(2),
             onPlay: onPlay,
             onSimulate: onSimulate,
             onSimulateUntilEvent: onSimulateUntilEvent,
@@ -392,6 +395,7 @@ class _NextMatchCard extends StatelessWidget {
     required this.state,
     required this.stake,
     required this.outlook,
+    required this.onOpenTraining,
     required this.onPlay,
     required this.onSimulate,
     required this.onSimulateUntilEvent,
@@ -405,6 +409,9 @@ class _NextMatchCard extends StatelessWidget {
 
   /// 次節の起用の見通し。落ちた理由が分からないまま数試合過ぎるのが一番きつい。
   final SelectionOutlook? outlook;
+
+  /// 育成タブを開く。今週の練習を変えるため。
+  final VoidCallback onOpenTraining;
 
   final VoidCallback onPlay;
   final VoidCallback onSimulate;
@@ -518,7 +525,43 @@ class _NextMatchCard extends StatelessWidget {
                 style: muted,
               ),
             ],
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
+            // 練習は毎週決めるものなのに、育成タブを開かないと今の設定が
+            // 見えなかった。試合に入る直前に置けば、忘れようがない。
+            InkWell(
+              onTap: onOpenTraining,
+              borderRadius: BorderRadius.circular(8),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                child: Row(
+                  children: [
+                    Icon(Icons.fitness_center,
+                        size: 16, color: theme.colorScheme.onSurfaceVariant),
+                    const SizedBox(width: 6),
+                    Text('今週の練習',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant)),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        state.menu.label +
+                            (state.drill != null
+                                ? '（居残り ${state.drill!.label}）'
+                                : ''),
+                        style: theme.textTheme.bodyMedium,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Text('変える',
+                        style: theme.textTheme.labelMedium
+                            ?.copyWith(color: theme.colorScheme.primary)),
+                    Icon(Icons.chevron_right,
+                        size: 18, color: theme.colorScheme.primary),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
             FilledButton(
               onPressed: onPlay,
               child: Padding(
@@ -1150,12 +1193,8 @@ class _SupportCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('自分への投資', style: theme.textTheme.titleSmall),
-                const SizedBox(height: 4),
-                Text(
-                  '貯蓄 ${state.finances.savingsLabel} ・ '
-                  '専属の年間費用 ${staff.costPerSeason}万円',
-                  style: muted,
-                ),
+                const SizedBox(height: 6),
+                BudgetLines(state: state),
               ],
             ),
           ),
@@ -1204,11 +1243,14 @@ class _SupportCard extends StatelessWidget {
                 '払えなければ契約は切れる。',
                 style: muted,
               ),
+              const SizedBox(height: 8),
+              BudgetLines(state: state),
             ],
           ),
           ExpansionTile(
             title: const Text('生活習慣'),
             subtitle: Text(
+              '暮らし ${state.finances.lifestyleLabel} ・ '
               '睡眠 ${habits.sleepLabel} ・ 食事 ${habits.dietLabel}',
               style: muted,
             ),
@@ -1218,6 +1260,33 @@ class _SupportCard extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Text('毎日の積み重ね。効きは小さいが、10年で別の身体になる。',
                     style: muted),
+              ),
+              const SizedBox(height: 12),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text('暮らし方', style: theme.textTheme.labelMedium),
+              ),
+              const SizedBox(height: 2),
+              Align(
+                alignment: Alignment.centerLeft,
+                // 生活費は年俸に比例するので、額まで出さないと選べない。
+                child: Text('生活費は年俸から出ていく。'
+                    '下げれば手取りが増え、上げれば気持ちが少し上向く。',
+                    style: muted),
+              ),
+              const SizedBox(height: 4),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (var i = 0; i < Finances.lifestyleLabels.length; i++)
+                    ChoiceChip(
+                      label: Text('${Finances.lifestyleLabels[i]} '
+                          '${state.finances.withLifestyle(i).livingCostFor(state.salary)}万'),
+                      selected: state.finances.lifestyle == i,
+                      onSelected: (_) => controller.setLifestyle(i),
+                    ),
+                ],
               ),
               const SizedBox(height: 12),
               Align(

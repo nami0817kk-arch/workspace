@@ -284,6 +284,18 @@ class Newsroom {
           headline: headline,
           body: body);
 
+  /// 貯蓄が尽きて専属スタッフが離れたことを知らせる。
+  ///
+  /// これまで黙って全員が消えていた。次のシーズンから練習の効きが
+  /// 落ちるのに、理由がどこにも出ていなかった。
+  static NewsItem staffDismissed(CareerState state) => NewsItem(
+        year: state.year,
+        matchday: 0,
+        kind: NewsKind.life,
+        headline: '${state.player.name}、専属スタッフとの契約を打ち切り',
+        body: '貯蓄が尽きた。練習の効きは元に戻る。',
+      );
+
   static NewsItem _national(
           CareerState s, int matchday, String headline, String body) =>
       NewsItem(

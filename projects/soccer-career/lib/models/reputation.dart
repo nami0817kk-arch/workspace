@@ -124,6 +124,46 @@ class Relations {
 }
 
 /// お金。年俸から税と手数料を引いた手取りが積み上がる。
+/// 1シーズンの収支。
+///
+/// これまで内訳はどこにも出ていなかった。年俸だけを見て世界的なコーチを
+/// 雇い、シーズンの終わりに貯蓄が尽きて**黙って全員が離れていく**、
+/// という壊れ方をしていた。雇う前に足りるかどうかが分かるようにする。
+class SeasonBudget {
+  const SeasonBudget({
+    required this.salary,
+    required this.agentFee,
+    required this.tax,
+    required this.living,
+    required this.staff,
+    required this.sponsor,
+  });
+
+  /// 年俸（万円）。
+  final int salary;
+
+  /// 代理人の手数料。
+  final int agentFee;
+
+  /// 税。
+  final int tax;
+
+  /// 生活費（生活水準と食事のこだわりを含む）。
+  final int living;
+
+  /// 専属スタッフの人件費。
+  final int staff;
+
+  /// スポンサー収入。
+  final int sponsor;
+
+  /// 手取り。マイナスなら貯蓄を削る。
+  int get net => salary + sponsor - agentFee - tax - living - staff;
+
+  /// 出ていくもの。
+  int get outgoing => agentFee + tax + living + staff;
+}
+
 class Finances {
   const Finances({this.savings = 0, this.lifestyle = 1});
 
@@ -146,22 +186,45 @@ class Finances {
   int livingCostFor(int salary) =>
       (salary * (0.08 + lifestyle * 0.07)).round();
 
+  /// 1シーズンの収支を出す。
+  ///
+  /// [afterSeason] はこの結果を貯蓄に足すだけ。画面に出す見込みも
+  /// これを使う。別に計算すると、見込みと実際がずれる。
+  SeasonBudget budgetFor({
+    required int salary,
+    required int agentFeePercent,
+    int staffCost = 0,
+    double extraLivingRate = 0,
+    int sponsor = 0,
+  }) =>
+      SeasonBudget(
+        salary: salary,
+        agentFee: (salary * agentFeePercent / 100).round(),
+        tax: (salary * taxRateFor(salary)).round(),
+        living: livingCostFor(salary) + (salary * extraLivingRate).round(),
+        staff: staffCost,
+        sponsor: sponsor,
+      );
+
   /// そのシーズンの手取りを貯蓄に足す。
   ///
   /// 専属スタッフの人件費と、こだわった食事の費用もここで引く。
   /// 身体への投資は年俸から出ていく。稼ぎの使い道に選択が生まれる。
+  ///
+  /// スポンサー収入はここには入らない（呼び出し側が別に足している）。
   Finances afterSeason({
     required int salary,
     required int agentFeePercent,
     int staffCost = 0,
     double extraLivingRate = 0,
   }) {
-    final agentFee = (salary * agentFeePercent / 100).round();
-    final tax = (salary * taxRateFor(salary)).round();
-    final living =
-        livingCostFor(salary) + (salary * extraLivingRate).round();
-    final net = salary - agentFee - tax - living - staffCost;
-    return Finances(savings: savings + net, lifestyle: lifestyle);
+    final budget = budgetFor(
+      salary: salary,
+      agentFeePercent: agentFeePercent,
+      staffCost: staffCost,
+      extraLivingRate: extraLivingRate,
+    );
+    return Finances(savings: savings + budget.net, lifestyle: lifestyle);
   }
 
   /// 貯蓄から支払う。
@@ -170,6 +233,13 @@ class Finances {
 
   Finances withLifestyle(int level) =>
       Finances(savings: savings, lifestyle: level.clamp(0, 3));
+
+  /// 1シーズンぶんの、生活水準からくる気持ちの動き。
+  ///
+  /// 質素は少し削り、派手なら少し上向く。ここが無いと「質素」が
+  /// ただの正解になり、稼ぎの使い道という選択が消える。
+  /// 既定（普通）は 0 なので、これまでの数字は動かない。
+  int get moraleShift => lifestyle - 1;
 
   String get savingsLabel => savings >= 10000
       ? '${(savings / 10000).toStringAsFixed(1)}億円'
