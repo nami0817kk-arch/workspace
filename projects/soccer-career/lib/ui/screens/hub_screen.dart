@@ -1280,6 +1280,12 @@ class _TraitRow extends StatelessWidget {
             if (trait.flaw)
               Text('欠点',
                   style: theme.textTheme.labelSmall?.copyWith(color: accent)),
+            if (trait.rare) ...[
+              if (trait.flaw) const SizedBox(width: 6),
+              Text('稀',
+                  style: theme.textTheme.labelSmall
+                      ?.copyWith(color: theme.colorScheme.tertiary)),
+            ],
           ],
         ),
         const SizedBox(height: 2),

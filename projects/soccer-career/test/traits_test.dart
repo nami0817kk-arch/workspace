@@ -293,6 +293,69 @@ void main() {
     });
   });
 
+  group('稀な特性', () {
+    test('20人に1人ほどにしか付かず、付いても長所は2つのまま', () {
+      var rareCount = 0;
+      var rareFlawCount = 0;
+      for (var seed = 0; seed < 2000; seed++) {
+        final traits = Trait.roll(Random(seed), position: Position.cm);
+        final rares = traits.where((t) => t.rare && !t.flaw).length;
+        final rareFlaws = traits.where((t) => t.rare && t.flaw).length;
+        expect(rares, lessThanOrEqualTo(1));
+        expect(traits.where((t) => !t.flaw).length, 2, reason: 'seed $seed');
+        expect(traits.where((t) => t.flaw).length, lessThanOrEqualTo(1));
+        if (rares == 1) rareCount++;
+        if (rareFlaws == 1) rareFlawCount++;
+        for (var i = 0; i < traits.length; i++) {
+          for (var j = i + 1; j < traits.length; j++) {
+            expect(Trait.compatible(traits[i], traits[j]), isTrue,
+                reason: '${traits[i].label} と ${traits[j].label}');
+          }
+        }
+      }
+      // 5% と 2% の前後。
+      expect(rareCount, inInclusiveRange(60, 140));
+      expect(rareFlawCount, inInclusiveRange(15, 65));
+    });
+
+    test('稀なものは普通の引きには入らない', () {
+      expect(Trait.strengths.any((t) => t.rare), isFalse);
+      expect(Trait.flaws.any((t) => t.rare), isFalse);
+      expect(Trait.rares.length, greaterThanOrEqualTo(5));
+      expect(Trait.rares.any((t) => t.flaw), isTrue);
+    });
+
+    test('稀なものが外れた種では、これまでと同じ選手が出る', () {
+      // 稀の判定を普通の引きの後ろに置いたことの確認。
+      for (var seed = 0; seed < 200; seed++) {
+        final traits = Trait.roll(Random(seed), position: Position.cm);
+        if (traits.any((t) => t.rare)) continue;
+        final again = Trait.roll(Random(seed), position: Position.cm);
+        expect(again, traits);
+      }
+    });
+
+    test('天才はポテンシャルに乗り、上限は超えない', () async {
+      var found = false;
+      for (var seed = 0; seed < 400 && !found; seed++) {
+        final c = await started(seed: seed, position: Position.cm);
+        final player = c.state!.player;
+        if (!player.traits.contains(Trait.genius)) continue;
+        found = true;
+        expect(player.potential, lessThanOrEqualTo(99));
+        expect(player.potential, greaterThan(player.overall));
+      }
+      expect(found, isTrue, reason: '400人に天才が1人も居ない');
+      expect(const [Trait.genius].potentialBonus, greaterThan(0));
+      expect(Trait.genius.effects.any((e) => e.contains('ポテンシャル')), isTrue);
+    });
+
+    test('大一番の申し子は終盤と大一番で効き、それ以外は平常', () {
+      expect(Trait.bigMoment.chanceBonus(ctx(minute: 80)), greaterThan(0));
+      expect(Trait.bigMoment.chanceBonus(ctx(minute: 40)), 0);
+    });
+  });
+
   group('ポジションに合った特性', () {
     test('GK に得意技のフィールド特性は付かず、FW に GK の特性は付かない', () {
       for (var seed = 0; seed < 300; seed++) {

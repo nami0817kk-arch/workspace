@@ -326,6 +326,24 @@ Widget _traitList(BuildContext context) {
         for (final trait in Trait.flaws)
           (trait.label, '${trait.description}（${trait.effects.join('、')}）'),
       ]),
+      const SizedBox(height: 8),
+      Text('稀（${Trait.rares.length}種）', style: theme.textTheme.labelLarge),
+      const SizedBox(height: 4),
+      Text(
+        '長所は${(Trait.rareChance * 100).round()}%、'
+        '欠点は${(Trait.rareFlawChance * 100).round()}%の確率で、'
+        '普通の特性の1つと置き換わる。',
+        style: theme.textTheme.bodySmall
+            ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+      ),
+      const SizedBox(height: 8),
+      _list(context, [
+        for (final trait in Trait.rares)
+          (
+            trait.flaw ? '${trait.label}（欠点）' : trait.label,
+            '${trait.description}（${trait.effects.join('、')}）',
+          ),
+      ]),
     ],
   );
 }

@@ -142,15 +142,39 @@ enum Trait {
   lazy('練習嫌い', '練習の効きが下がる', flaw: true),
   hothead('瞬間湯沸かし器', '荒い手で警告を受けやすい', flaw: true),
   benchCold('途中出場が苦手', '途中出場のとき、成功率が下がる', flaw: true),
-  difficult('扱いにくい', '監督の信頼が下がりやすい', flaw: true);
+  difficult('扱いにくい', '監督の信頼が下がりやすい', flaw: true),
 
-  const Trait(this.label, this.description, {this.flaw = false});
+  // ---- 稀 ----
+  // 滅多に付かない代わりに、付けばキャリアの形が変わる。
+  genius('天才', '滅多に生まれない。伸びが速く、上限も高い', rare: true),
+  ironBody('鋼の身体', '滅多に生まれない。ほとんど怪我をせず、しても早い', rare: true),
+  bornStar('生まれながらの主役', '滅多に生まれない。名が広まり、評価も高くつく',
+      rare: true),
+  bigMoment('大一番の申し子', '滅多に生まれない。終盤と大一番で別人になる',
+      rare: true),
+  glassBody('ガラスの身体', '滅多に無い。怪我が多く、治りも遅い',
+      flaw: true, rare: true);
+
+  const Trait(this.label, this.description,
+      {this.flaw = false, this.rare = false});
 
   final String label;
   final String description;
 
   /// 欠点なら true。長所と同じ引き方はしない。
   final bool flaw;
+
+  /// 稀な特性なら true。普通の引き方には入らず、低い確率で置き換わる。
+  ///
+  /// 効きは強いが、それでも「一長一短」の線は残す（天才と大器晩成は排他、
+  /// 鋼の身体は頑丈系と排他）。強さの釣り合いは確率で取る。
+  final bool rare;
+
+  /// 稀な長所が付く確率。20人に1人。
+  static const double rareChance = 0.05;
+
+  /// 稀な欠点が付く確率。50人に1人。
+  static const double rareFlawChance = 0.02;
 
   /// 同時には付かない組み合わせ。
   static const List<Set<Trait>> _exclusive = [
@@ -173,13 +197,31 @@ enum Trait {
     {Trait.hotHand, Trait.moody},
     {Trait.cleanPlayer, Trait.hothead},
     {Trait.coachable, Trait.difficult},
+    {Trait.genius, Trait.lateBloomer},
+    {Trait.genius, Trait.lazy},
+    {Trait.ironBody, Trait.robust},
+    {Trait.ironBody, Trait.fragile},
+    {Trait.ironBody, Trait.glassBody},
+    {Trait.ironBody, Trait.fastHealer},
+    {Trait.bornStar, Trait.showman},
+    {Trait.bigMoment, Trait.clutch},
+    {Trait.bigMoment, Trait.ironNerve},
+    {Trait.bigMoment, Trait.slowStarter},
+    {Trait.bigMoment, Trait.bigGameShy},
+    {Trait.glassBody, Trait.robust},
+    {Trait.glassBody, Trait.fragile},
+    {Trait.glassBody, Trait.tireless},
+    {Trait.glassBody, Trait.fastHealer},
   ];
 
   static bool compatible(Trait a, Trait b) =>
       a != b && !_exclusive.any((s) => s.contains(a) && s.contains(b));
 
-  static List<Trait> get strengths => values.where((t) => !t.flaw).toList();
-  static List<Trait> get flaws => values.where((t) => t.flaw).toList();
+  static List<Trait> get strengths =>
+      values.where((t) => !t.flaw && !t.rare).toList();
+  static List<Trait> get flaws =>
+      values.where((t) => t.flaw && !t.rare).toList();
+  static List<Trait> get rares => values.where((t) => t.rare).toList();
 
   /// GK にしか意味の無い特性。
   static const Set<Trait> _keeperOnly = {
@@ -241,6 +283,34 @@ enum Trait {
           .where((f) =>
               (position == null || f.fitsPosition(position)) &&
               picked.every((p) => compatible(p, f)))
+          .toList();
+      if (candidates.isNotEmpty) {
+        picked.add(candidates[random.nextInt(candidates.length)]);
+      }
+    }
+
+    // 稀なもの。普通の引きが終わったあとに判定するので、外れた選手は
+    // これまでと同じ結果になる（同じ種で同じ選手が出る）。
+    if (random.nextDouble() < rareChance) {
+      final candidates = rares
+          .where((r) =>
+              !r.flaw &&
+              (position == null || r.fitsPosition(position)) &&
+              picked.where((p) => p != picked[1]).every((p) => compatible(p, r)))
+          .toList();
+      if (candidates.isNotEmpty) {
+        picked[1] = candidates[random.nextInt(candidates.length)];
+      }
+    }
+    // 欠点を引かない呼び方（flawChance 0）では、稀な欠点も付けない。
+    if (flawChance > 0 &&
+        picked.every((p) => !p.flaw) &&
+        random.nextDouble() < rareFlawChance) {
+      final candidates = rares
+          .where((r) =>
+              r.flaw &&
+              (position == null || r.fitsPosition(position)) &&
+              picked.every((p) => compatible(p, r)))
           .toList();
       if (candidates.isNotEmpty) {
         picked.add(candidates[random.nextInt(candidates.length)]);
@@ -407,6 +477,11 @@ enum Trait {
         return [TraitRule('国外のクラブ', -0.06, (c) => c.abroad)];
       case Trait.benchCold:
         return [TraitRule('途中出場', -0.06, (c) => c.substitute)];
+      case Trait.bigMoment:
+        return [
+          TraitRule('後半30分以降', 0.10, (c) => c.minute >= 75),
+          TraitRule('格上との対戦・代表戦', 0.08, (c) => c.bigMatch),
+        ];
 
       // ---- 試合の外でだけ効くもの ----
       case Trait.captain:
@@ -436,6 +511,10 @@ enum Trait {
       case Trait.lazy:
       case Trait.hothead:
       case Trait.difficult:
+      case Trait.genius:
+      case Trait.ironBody:
+      case Trait.bornStar:
+      case Trait.glassBody:
         return const [];
     }
   }
@@ -451,6 +530,7 @@ enum Trait {
   ///
   /// 各 getter から作るので、数字を変えれば画面も変わる。
   List<String> get offPitchEffects => [
+        if (potentialBonus != 0) '生まれたときのポテンシャル +$potentialBonus',
         if (peakAgeOffset != 0) 'ピーク ${_years(peakAgeOffset)}',
         if (declineAgeOffset != 0) '衰え始め ${_years(declineAgeOffset)}',
         if (growthFactor(20) != 1.0) '22歳までの成長 ${_times(growthFactor(20))}',
@@ -506,13 +586,22 @@ enum Trait {
   double growthFactor(int age) => switch (this) {
         Trait.earlyBloomer => age <= 22 ? 1.4 : 0.85,
         Trait.lateBloomer => age <= 22 ? 0.7 : 1.25,
+        Trait.genius => 1.3,
         _ => 1.0,
+      };
+
+  /// 生まれたときのポテンシャルへの上乗せ。キャリア開始時にだけ効く。
+  int get potentialBonus => switch (this) {
+        Trait.genius => 6,
+        _ => 0,
       };
 
   /// 負傷確率の倍率。
   double get injuryFactor => switch (this) {
         Trait.robust => 0.6,
         Trait.fragile => 1.7,
+        Trait.ironBody => 0.3,
+        Trait.glassBody => 2.5,
         _ => 1.0,
       };
 
@@ -525,6 +614,7 @@ enum Trait {
   /// 累積疲労の溜まりやすさ。
   double get fatigueFactor => switch (this) {
         Trait.tireless => 0.6,
+        Trait.ironBody => 0.7,
         _ => 1.0,
       };
 
@@ -538,6 +628,7 @@ enum Trait {
   double get trainingFactor => switch (this) {
         Trait.quickLearner => 1.25,
         Trait.lazy => 0.75,
+        Trait.genius => 1.2,
         _ => 1.0,
       };
 
@@ -551,6 +642,8 @@ enum Trait {
   double get rehabFactor => switch (this) {
         Trait.fastHealer => 0.7,
         Trait.slowHealer => 1.4,
+        Trait.ironBody => 0.6,
+        Trait.glassBody => 1.5,
         _ => 1.0,
       };
 
@@ -575,6 +668,7 @@ enum Trait {
   /// 試合ごとの評価点への加算。
   double get ratingBonus => switch (this) {
         Trait.captain => 0.15,
+        Trait.bornStar => 0.1,
         _ => 0,
       };
 
@@ -600,6 +694,7 @@ enum Trait {
   /// 知名度の伸びの倍率。
   double get fameFactor => switch (this) {
         Trait.showman => 1.4,
+        Trait.bornStar => 2.0,
         _ => 1.0,
       };
 
@@ -618,6 +713,7 @@ enum Trait {
   /// 限界突破が起きる確率の倍率。
   double get breakthroughFactor => switch (this) {
         Trait.breaker => 1.6,
+        Trait.genius => 2.0,
         _ => 1.0,
       };
 
@@ -674,4 +770,5 @@ extension TraitList on List<Trait> {
       fold(1.0, (f, t) => f * t.relationGainFactor);
   double get relationLossFactor =>
       fold(1.0, (f, t) => f * t.relationLossFactor);
+  int get potentialBonus => fold(0, (s, t) => s + t.potentialBonus);
 }
