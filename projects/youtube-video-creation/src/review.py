@@ -86,6 +86,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
         findings.append(check_title_subject(script))
     findings.append(_thumbnail_face(script))
     findings.append(check_thumbnail_dark(out_dir))
+    findings.append(check_narration(out_dir))
     findings.append(_card_rule(script))
     findings.append(_photo_credits(script, out_dir))
     findings.append(check_post_sources(script))
@@ -396,6 +397,63 @@ def _double_marks(script: Script) -> Finding:
     if bad:
         return Finding(False, "読み上げの文", f"句読点が二重です: {bad[0][:30]}…")
     return Finding(True, "読み上げの文", "句読点の重なりなし")
+
+
+SILENT_DB = -60.0          # これより静かなら、鳴っていないとみなす
+
+
+def check_narration(out_dir: Path) -> Finding:
+    """**読み上げが本当に鳴っているか**（2026-09-08）。
+
+    この日、VOICEVOX が起動しておらず `backend: auto` が無音に落ちた。
+    **長さだけ正しい無音のwav**が並び、動画も書き出せてしまう。
+    音の大きさの点検は**BGMを見て-15dBで合格**にしていたので、
+    25本を公開するまで誰も気づかなかった（ユーザーが耳で気づいた）。
+
+    だから、BGM込みの動画ではなく**読み上げのファイルそのもの**を見る。
+    """
+    folder = out_dir / "audio"
+    if not folder.exists():
+        return Finding(True, "読み上げ", "音声のフォルダがありません")
+    waves = sorted(folder.glob("*.wav"))
+    if not waves:
+        return Finding(True, "読み上げ", "音声がありません")
+    quiet = []
+    for wav in waves:
+        level = _mean_db(wav)
+        if level is None:
+            continue
+        if level < SILENT_DB:
+            quiet.append(wav.name)
+    if len(quiet) == len(waves):
+        return Finding(
+            False, "読み上げ",
+            f"{len(waves)}本すべてが無音です。VOICEVOX が起動しているか確かめてください")
+    if quiet:
+        return Finding(False, "読み上げ", f"{len(quiet)}/{len(waves)}本が無音です: {quiet[0]}")
+    return Finding(True, "読み上げ", f"{len(waves)}本とも鳴っています")
+
+
+def _mean_db(path: Path) -> float | None:
+    """その音声の平均音量。測れなければ None。"""
+    import re
+    import subprocess
+
+    try:
+        import imageio_ffmpeg
+    except ImportError:
+        return None
+    try:
+        err = subprocess.run(
+            [imageio_ffmpeg.get_ffmpeg_exe(), "-i", str(path), "-af", "volumedetect",
+             "-f", "null", "-"], capture_output=True, text=True,
+            encoding="utf-8", errors="replace", timeout=60).stderr
+    except Exception:
+        return None
+    found = re.search(r"mean_volume: (-?\d+(?:\.\d+)?|-inf) dB", err or "")
+    if not found:
+        return None
+    return -120.0 if found.group(1) == "-inf" else float(found.group(1))
 
 
 def _loudness(video: Path) -> Finding | None:

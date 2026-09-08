@@ -56,11 +56,18 @@ def test_engine_backend_required_but_missing(monkeypatch):
         create_backend(_config(backend="engine"))
 
 
-def test_auto_falls_back_to_silent(monkeypatch):
+def test_autoでつながらなければ止まる(monkeypatch):
+    """**黙って無音に落ちない**（2026-09-08 に方針変更）。
+
+    この日、VOICEVOX が起動しておらず、長さだけ正しい無音のwavが並んだまま
+    25本を公開した。音量の点検はBGMを見て合格するので気づけない。
+    """
+    import pytest
+
     monkeypatch.setattr(EngineBackend, "available", lambda self: False)
     monkeypatch.setattr(CoreBackend, "available", lambda self: False)
-    assert create_backend(_config(backend="auto")).name == "silent"
-
+    with pytest.raises(TtsError):
+        create_backend(_config(backend="auto"))
 
 def test_auto_prefers_engine(monkeypatch):
     monkeypatch.setattr(EngineBackend, "available", lambda self: True)
@@ -175,3 +182,28 @@ def test_行に差し込んだ写真のクレジットも出す(tmp_path):
     assert "Jeollo" in details[0]          # HTML のタグは落とす
     assert "<a href" not in details[0]
     assert "commons.wikimedia.org" in details[0]   # source ではなく page_url を使う
+
+
+def test_つながらないときは黙って無音に落ちない(monkeypatch):
+    """**25本を無音で公開した**（2026-09-08）。長さだけ正しい無音が並び、
+    音量の点検はBGMを見て合格していた。無音でよいのは、そう言われたときだけ。
+    """
+    import pytest
+
+    from src import tts
+    from src.config import load_config
+
+    monkeypatch.setattr(tts.EngineBackend, "available", lambda self: False)
+    monkeypatch.setattr(tts.CoreBackend, "available", lambda self: False)
+    with pytest.raises(tts.TtsError) as caught:
+        tts.create_backend(load_config(), use_tts=True)
+    assert "VOICEVOX" in str(caught.value)
+
+
+def test_無音でよいと言われたときは通す(monkeypatch):
+    from src import tts
+    from src.config import load_config
+
+    monkeypatch.setattr(tts.EngineBackend, "available", lambda self: False)
+    monkeypatch.setattr(tts.CoreBackend, "available", lambda self: False)
+    assert tts.create_backend(load_config(), use_tts=False).name == "silent"
