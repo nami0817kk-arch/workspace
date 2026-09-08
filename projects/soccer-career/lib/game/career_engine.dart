@@ -1049,6 +1049,9 @@ class CareerEngine {
       backedUpYear: state.backedUpYear,
       autoRestBelow: state.autoRestBelow,
       focus: state.focus,
+      // 累積警告はシーズンをまたぐと消える。出場停止は持ち越す。
+      yellowCards: 0,
+      suspension: state.suspension,
       // 怪我はシーズンを跨いでも消えない。オフの間に少しは進む。
       injury: state.injury == null || state.injury!.matchesOut <= 4
           ? null

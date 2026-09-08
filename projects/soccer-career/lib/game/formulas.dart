@@ -276,6 +276,35 @@ class Formulas {
   /// 上乗せに失敗したとき、オファーが撤回される確率。
   static const double withdrawChanceOnFail = 0.5;
 
+  /// 警告が溜まって出場停止になる枚数。
+  ///
+  /// 実際のリーグと同じで、シーズンをまたぐと消える。
+  static const int yellowCardsForBan = 5;
+
+  /// 累積警告での出場停止の試合数。
+  static const int banForYellows = 1;
+
+  /// 退場での出場停止の試合数。
+  static const int banForRedCard = 2;
+
+  /// 荒い手が失敗したときに、カードが出る確率の基準。
+  ///
+  /// 選択肢ごとの `foul` に掛かる。気性が荒いほど上がる。
+  static const double cardChanceBase = 1.0;
+
+  /// 気性（10が普通）がカードの出やすさに効く傾き。
+  static const double cardPerTemper = 0.05;
+
+  /// 失点を1つ止めたときの評価点。守備の選手ほど、無失点が効く。
+  ///
+  /// 自動で進めるときに、止めるための反則を「安いだけの手」とも
+  /// 「損なだけの手」とも見ないようにするための重み。
+  static const double ratingPerGoalPrevented = 0.6;
+
+  /// 警告を受けた試合の評価点への響き。退場はその倍。
+  static const double ratingPerYellow = -0.35;
+  static const double ratingPerRedCard = -1.2;
+
   /// 1試合あたりの負傷確率の基準。コンディションと年齢で増減する。
   ///
   /// 100シーズン回して決めた値。0.045 だと1シーズンに2.7回離脱し、

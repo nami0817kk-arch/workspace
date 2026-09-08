@@ -189,6 +189,8 @@ class CareerController extends ChangeNotifier {
       Appearance.sub => 1,
       Appearance.benched => -3,
       Appearance.injured => -4,
+      // 自分のせいで出られないのが一番こたえる。
+      Appearance.suspended => -5,
     };
     var morale = state.morale.bump(swing < 0
         ? (swing * state.player.traits.moraleFactor).round()
@@ -201,7 +203,7 @@ class CareerController extends ChangeNotifier {
     final gained = switch (result.appearance) {
       Appearance.start => 3,
       Appearance.sub => 2,
-      Appearance.benched || Appearance.injured => 0,
+      Appearance.benched || Appearance.injured || Appearance.suspended => 0,
     };
     state.fatigue =
         state.fatigue.add((gained * state.player.traits.fatigueFactor).round());
@@ -548,12 +550,14 @@ class CareerController extends ChangeNotifier {
       allyBonus: state.partner?.synergyBonus ?? 0,
       moodBonus: state.morale.chanceModifier + state.form.chanceModifier,
       extraRating: state.captain ? Formulas.captainRatingBonus : 0,
-      appearance: state.injured
-          ? Appearance.injured
-          // 登録メンバーから外れていると、そもそもベンチにも入れない。
-          : !state.squadStatus.canPlay
-              ? Appearance.benched
-              : _selectionFor(state),
+      appearance: state.suspended
+          ? Appearance.suspended
+          : state.injured
+              ? Appearance.injured
+              // 登録メンバーから外れていると、そもそもベンチにも入れない。
+              : !state.squadStatus.canPlay
+                  ? Appearance.benched
+                  : _selectionFor(state),
     );
     notifyListeners();
   }
@@ -656,6 +660,7 @@ class CareerController extends ChangeNotifier {
     _career.applyResult(state, result);
 
     if (state.rehabWatch > 0) state.rehabWatch--;
+    _applyCards(state, result);
     _updateMood(state, result);
     _publish(state, Newsroom.afterMatch(state, result));
 
@@ -908,6 +913,29 @@ class CareerController extends ChangeNotifier {
   }
 
   /// 生活水準を変える。金の使い道は、毎週ではなく気が向いたときに決める。
+  /// カードと出場停止。リーグ戦だけが累積の対象。
+  ///
+  /// 出場停止は「その試合に出られなかった」ことで1つ減る。試合を消化して
+  /// いないのに減らすと、停止が空振りする。
+  void _applyCards(CareerState state, MatchResult result) {
+    if (result.international) return;
+    if (result.appearance == Appearance.suspended) {
+      state.suspension = max(0, state.suspension - 1);
+      return;
+    }
+    if (result.sentOff) {
+      state.suspension += Formulas.banForRedCard;
+      // 退場のぶんの警告は累積に数えない（実際の運用と同じ）。
+      _publish(state, [Newsroom.sentOff(state, result)]);
+      return;
+    }
+    state.yellowCards += result.yellowCards;
+    if (state.yellowCards >= Formulas.yellowCardsForBan) {
+      state.yellowCards -= Formulas.yellowCardsForBan;
+      state.suspension += Formulas.banForYellows;
+    }
+  }
+
   /// 育てる方向を切り替える。すでに入っていれば外す。
   ///
   /// 上限まで入っているときに新しく足そうとしても、何も起きない。

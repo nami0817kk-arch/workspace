@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'formulas.dart';
 import '../models/career.dart';
 import '../models/club.dart';
 import '../models/news.dart';
@@ -283,6 +284,16 @@ class Newsroom {
           kind: NewsKind.club,
           headline: headline,
           body: body);
+
+  /// 退場。次の試合に出られないことまで書く。
+  static NewsItem sentOff(CareerState state, MatchResult result) => NewsItem(
+        year: state.year,
+        matchday: result.matchday,
+        kind: NewsKind.match,
+        headline: '${state.player.name}が退場',
+        body: '${result.opponentName}戦で退場を命じられた。'
+            '次の${Formulas.banForRedCard}試合は出られない。',
+      );
 
   /// 貯蓄が尽きて専属スタッフが離れたことを知らせる。
   ///

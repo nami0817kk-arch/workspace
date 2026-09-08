@@ -139,6 +139,8 @@ class MatchInProgress {
   final List<int> teammateGoalMinutes;
 
   /// 相手が決める時間。
+  ///
+  /// 止めるための反則が通ると、ここから1つ消える。
   final List<int> concededMinutes;
 
   /// 相方との呼吸。味方を活かす手にだけ効く。
@@ -162,9 +164,20 @@ class MatchInProgress {
 
   final List<ScenarioResolution> resolutions = [];
 
+  /// 受けた警告の時間。2枚目で退場になる。
+  final List<int> yellowMinutes = [];
+
+  /// 一発退場した時間。2枚目の警告なら、そちらの時間が入る。
+  int? sentOffMinute;
+
+  bool get sentOff => sentOffMinute != null;
+
+  int get yellowCards => yellowMinutes.length;
+
   int _index = 0;
 
-  bool get isFinished => _index >= scenarios.length;
+  /// 退場したらそこで終わり。残りの局面は来ない。
+  bool get isFinished => sentOff || _index >= scenarios.length;
   int get currentIndex => _index;
   Scenario get current => scenarios[_index];
   int get currentMinute => minutes[_index];
@@ -460,6 +473,23 @@ class MatchInProgress {
   static const String missedGoal = 'シュートは枠を捉えたが、GKが弾いた。';
   static const String missedAssist = '良いボールが入ったが、味方が決めきれなかった。';
 
+  /// その手がカードを招く確率。画面にも出すので、判定と同じ式から出す。
+  ///
+  /// 気性が荒いほど、際どい場面で足が出る。
+  double cardChanceFor(ScenarioOption option) {
+    if (option.foul <= 0) return 0;
+    if (option.isTacticalFoul) return 1;
+    final temper = (player.personality.temper - 10) * Formulas.cardPerTemper;
+    return (option.foul * (Formulas.cardChanceBase + temper))
+        .clamp(0.0, 0.95);
+  }
+
+  /// カードを1枚受ける。2枚目なら退場。
+  void _book(int minute) {
+    yellowMinutes.add(minute);
+    if (yellowMinutes.length >= 2) sentOffMinute = minute;
+  }
+
   /// 選んだ手を解決して次の局面へ進める。
   ///
   /// 手そのものの成否と、それが得点になるかは別に扱う。
@@ -495,6 +525,33 @@ class MatchInProgress {
       }
     }
 
+    // 止めた。これから入るはずだった失点が1つ消える。
+    if (success && option.preventsGoal) {
+      final index =
+          concededMinutes.indexWhere((m) => m > currentMinute);
+      if (index >= 0) {
+        concededMinutes.removeAt(index);
+        delta += Formulas.ratingPerGoalPrevented;
+      }
+    }
+
+    // 審判。止めるための反則は選んだ時点で、荒い手は失敗したときに。
+    final minute = currentMinute;
+    var booked = false;
+    if (option.isTacticalFoul) {
+      booked = true;
+    } else if (!success && option.foul > 0) {
+      booked = _random.nextDouble() < cardChanceFor(option);
+    }
+    if (booked) {
+      delta += Formulas.ratingPerYellow;
+      _book(minute);
+      if (sentOff) delta += Formulas.ratingPerRedCard;
+      text = sentOff
+          ? '$text 2枚目の警告。退場を命じられた。'
+          : '$text 審判が笛を吹き、警告を受けた。';
+    }
+
     final resolution = ScenarioResolution(
       success: success,
       text: text,
@@ -522,7 +579,16 @@ class MatchInProgress {
     if (option.outcome == Outcome.assist) {
       gain += Formulas.ratingPerAssist * Formulas.assistConversion;
     }
-    return p * gain + (1 - p) * Formulas.ratingPerFailure;
+    // カードのぶんを引く。ここを入れないと、自動進行が「止めるための反則」を
+    // 代償なしの安い手として選び続ける。
+    final card = option.isTacticalFoul
+        ? Formulas.ratingPerYellow
+        : (1 - p) * cardChanceFor(option) * Formulas.ratingPerYellow;
+    // 止めたぶんも数える。片方だけ入れると、ただ損な手に見える。
+    final prevented = option.preventsGoal
+        ? p * Formulas.ratingPerGoalPrevented
+        : 0.0;
+    return p * gain + (1 - p) * Formulas.ratingPerFailure + card + prevented;
   }
 
   /// スタイルに沿って手を1つ選ぶ。
@@ -580,7 +646,8 @@ class MatchInProgress {
     final chance = switch (appearance) {
       Appearance.start => Formulas.deadBallChanceStart,
       Appearance.sub => Formulas.deadBallChanceSub,
-      Appearance.benched || Appearance.injured => 0.0,
+      Appearance.benched || Appearance.injured || Appearance.suspended =>
+        0.0,
     };
     if (_random.nextDouble() >= chance) return (0, 0);
 
@@ -638,7 +705,8 @@ class MatchInProgress {
       // 出ていない試合に評価点を付けない。付けると平均評価と出場数に
       // 混ざり、出場機会の判断（decideAppearance）まで狂う。
       rating: appearance == Appearance.benched ||
-              appearance == Appearance.injured
+              appearance == Appearance.injured ||
+              appearance == Appearance.suspended
           ? null
           : (rating +
                   defence +
@@ -647,6 +715,8 @@ class MatchInProgress {
               .clamp(Formulas.minRating, Formulas.maxRating),
       goals: myGoals,
       assists: assists + extraAssists,
+      yellowCards: yellowCards,
+      sentOff: sentOff,
       goalMinutes: [...ownGoalMinutes]..sort(),
       assistMinutes: [...ownAssistMinutes]..sort(),
       international: international,
@@ -795,7 +865,7 @@ class MatchEngine {
     final count = switch (appearance) {
       Appearance.start => Formulas.scenariosPerStart,
       Appearance.sub => Formulas.scenariosPerSub,
-      Appearance.benched || Appearance.injured => 0,
+      Appearance.benched || Appearance.injured || Appearance.suspended => 0,
     };
 
     // 試合の骨格は展開に依らない局面から引き、終盤に効く局面は控えに回す。

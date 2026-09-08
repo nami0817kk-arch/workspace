@@ -85,7 +85,8 @@ void main() {
 
       for (final r in c.state!.results) {
         if (r.appearance == Appearance.benched ||
-            r.appearance == Appearance.injured) {
+            r.appearance == Appearance.injured ||
+            r.appearance == Appearance.suspended) {
           expect(r.rating, isNull, reason: '${r.appearance.label}に評価点が付いている');
         } else {
           expect(r.rating, inInclusiveRange(Formulas.minRating, Formulas.maxRating));
@@ -94,25 +95,27 @@ void main() {
     });
 
     test('負傷したら離脱し、離脱が明ければ復帰する', () async {
-      // 疲れやすい条件で回して、必ず1度は怪我を起こす。
-      final c = controller(seed: 11);
-      await c.startCareer(
-          name: 'F', position: Position.cb, age: 30, agent: Agent.pool.first);
-      await c.setMenu(TrainingMenu.strengthWork);
-
+      // 疲れやすい条件で回す。怪我は確率なので、1つの種に賭けると
+      // 乱数の並びが変わっただけで落ちる。何人か回して見る。
       var sawInjury = false;
       var sawRecovery = false;
-      var guard = 0;
-      while (guard < 200 && !(sawInjury && sawRecovery)) {
-        if (c.state!.seasonFinished) break;
-        final before = c.state!.injured;
-        await playOne(c);
-        if (!before && c.state!.injured) sawInjury = true;
-        if (before && !c.state!.injured) sawRecovery = true;
-        guard++;
+      for (var seed = 11; seed < 21 && !(sawInjury && sawRecovery); seed++) {
+        final c = controller(seed: seed);
+        await c.startCareer(
+            name: 'F', position: Position.cb, age: 30, agent: Agent.pool.first);
+        await c.setMenu(TrainingMenu.strengthWork);
+
+        var guard = 0;
+        while (guard < 200 && !c.state!.seasonFinished) {
+          final before = c.state!.injured;
+          await playOne(c);
+          if (!before && c.state!.injured) sawInjury = true;
+          if (before && !c.state!.injured) sawRecovery = true;
+          guard++;
+        }
       }
 
-      expect(sawInjury, isTrue, reason: '1シーズン怪我が一度も起きなかった');
+      expect(sawInjury, isTrue, reason: '10人回して怪我が一度も起きなかった');
       expect(sawRecovery, isTrue, reason: '離脱から復帰しなかった');
     });
 

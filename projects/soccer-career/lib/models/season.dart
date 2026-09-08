@@ -15,7 +15,8 @@ enum Appearance {
   start('先発'),
   sub('途中出場'),
   benched('ベンチ外'),
-  injured('負傷離脱');
+  injured('負傷離脱'),
+  suspended('出場停止');
 
   const Appearance(this.label);
 
@@ -34,6 +35,8 @@ class MatchResult {
     required this.rating,
     required this.goals,
     required this.assists,
+    this.yellowCards = 0,
+    this.sentOff = false,
     this.goalMinutes = const [],
     this.assistMinutes = const [],
     this.international = false,
@@ -53,6 +56,12 @@ class MatchResult {
   final double? rating;
   final int goals;
   final int assists;
+
+  /// その試合で受けた警告の数（0〜2）。
+  final int yellowCards;
+
+  /// 退場したか。2枚目の警告でも、一発でも同じ。
+  final bool sentOff;
 
   /// 自分が決めた時間とアシストした時間。
   ///
@@ -75,6 +84,8 @@ class MatchResult {
         'rating': rating,
         'goals': goals,
         'assists': assists,
+        if (yellowCards > 0) 'yellowCards': yellowCards,
+        if (sentOff) 'sentOff': true,
         if (goalMinutes.isNotEmpty) 'goalMinutes': goalMinutes,
         if (assistMinutes.isNotEmpty) 'assistMinutes': assistMinutes,
         'international': international,
@@ -90,6 +101,8 @@ class MatchResult {
         rating: (json['rating'] as num?)?.toDouble(),
         goals: json['goals'] as int,
         assists: json['assists'] as int,
+        yellowCards: json['yellowCards'] as int? ?? 0,
+        sentOff: json['sentOff'] as bool? ?? false,
         goalMinutes:
             (json['goalMinutes'] as List? ?? const []).cast<int>().toList(),
         assistMinutes:

@@ -179,6 +179,8 @@ class CareerState {
     this.backedUpYear = 0,
     this.autoRestBelow = defaultAutoRestBelow,
     this.focus = const [],
+    this.yellowCards = 0,
+    this.suspension = 0,
     this.momentAttempts = const {},
     this.momentSuccesses = const {},
     this.objective,
@@ -305,6 +307,15 @@ class CareerState {
 
   /// 世の中に出た見出し。新しいものが先頭。
   List<NewsItem> news;
+
+  /// 今季の累積警告。シーズンをまたぐと消える（実際のリーグと同じ）。
+  int yellowCards;
+
+  /// 出場停止の残り試合数。0 なら出られる。
+  int suspension;
+
+  /// 出場停止か。
+  bool get suspended => suspension > 0;
 
   /// 育てる方向。伸ばしたい詳細能力を選んでおく。
   ///
@@ -603,6 +614,8 @@ class CareerState {
         'backedUpYear': backedUpYear,
         'autoRestBelow': autoRestBelow,
         'focus': focus.map((d) => d.name).toList(),
+        'yellowCards': yellowCards,
+        'suspension': suspension,
         'momentAttempts': {
           for (final e in momentAttempts.entries) e.key.name: e.value,
         },
@@ -720,6 +733,8 @@ class CareerState {
           if (Detail.values.any((d) => d.name == n))
             Detail.values.byName(n as String),
       ],
+      yellowCards: json['yellowCards'] as int? ?? 0,
+      suspension: json['suspension'] as int? ?? 0,
       seasonStart: json['seasonStart'] is Map<String, dynamic>
           ? Attributes.fromJson(json['seasonStart'] as Map<String, dynamic>)
           : null,

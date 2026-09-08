@@ -214,16 +214,21 @@ class _PrimaryAction extends StatelessWidget {
         label: const Text('シーズンを終える'),
       );
     }
+    final out = state.injured || state.suspended;
     final label = state.pendingInternational
-        ? (state.calledUp && !state.injured ? '代表戦へ' : '代表ウィークを飛ばす')
-        : state.injured
-            ? '欠場する'
-            : '試合へ';
+        ? (state.calledUp && !out ? '代表戦へ' : '代表ウィークを飛ばす')
+        : state.suspended
+            ? '出場停止で欠場'
+            : state.injured
+                ? '欠場する'
+                : '試合へ';
     return FloatingActionButton.extended(
       onPressed: onPlay,
-      icon: Icon(state.injured
-          ? Icons.healing_outlined
-          : Icons.sports_soccer_outlined),
+      icon: Icon(state.suspended
+          ? Icons.block
+          : state.injured
+              ? Icons.healing_outlined
+              : Icons.sports_soccer_outlined),
       label: Text(label),
     );
   }
@@ -459,6 +464,34 @@ class _NextMatchCard extends StatelessWidget {
                       'vs ${state.opponentFor(state.matchday).name}',
               style: theme.textTheme.titleLarge,
             ),
+            if (state.suspended || state.yellowCards > 0) ...[
+              const SizedBox(height: 8),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2, right: 6),
+                    child: Icon(Icons.style,
+                        size: 16,
+                        color: state.suspended
+                            ? theme.colorScheme.error
+                            : theme.colorScheme.onSurfaceVariant),
+                  ),
+                  Expanded(
+                    child: Text(
+                      state.suspended
+                          ? '出場停止。あと${state.suspension}試合は出られない。'
+                          : '今季の警告 ${state.yellowCards}枚。'
+                              '${Formulas.yellowCardsForBan}枚で1試合の出場停止。',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                          color: state.suspended
+                              ? theme.colorScheme.error
+                              : theme.colorScheme.onSurfaceVariant),
+                    ),
+                  ),
+                ],
+              ),
+            ],
             if (!state.pendingInternational && outlook != null) ...[
               const SizedBox(height: 8),
               Row(
@@ -2760,6 +2793,16 @@ class _MatchDetail extends StatelessWidget {
                 _DetailStat(label: 'アシスト', value: '${result.assists}'),
               ],
             ),
+            if (result.yellowCards > 0 || result.sentOff) ...[
+              const SizedBox(height: 10),
+              Text(
+                result.sentOff
+                    ? '退場（警告${result.yellowCards}枚）'
+                    : '警告${result.yellowCards}枚',
+                style: theme.textTheme.bodyMedium
+                    ?.copyWith(color: theme.colorScheme.error),
+              ),
+            ],
             if (result.goalMinutes.isNotEmpty ||
                 result.assistMinutes.isNotEmpty) ...[
               const SizedBox(height: 14),
