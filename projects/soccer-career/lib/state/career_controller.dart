@@ -838,6 +838,17 @@ class CareerController extends ChangeNotifier {
     await _persist();
   }
 
+  /// 引き継ぎコードを見せたことを記録する。
+  ///
+  /// 保存は端末の中にしか無いので、控えを取っていない年数が
+  /// そのまま失う年数になる。
+  Future<void> markBackedUp() async {
+    final state = _state;
+    if (state == null) return;
+    state.backedUpYear = state.year;
+    await _persist();
+  }
+
   /// 引き継ぎコードを作る。キャリアが無ければ null。
   String? exportCode() {
     final state = _state;

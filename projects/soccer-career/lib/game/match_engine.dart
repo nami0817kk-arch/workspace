@@ -558,6 +558,8 @@ class MatchInProgress {
               .clamp(Formulas.minRating, Formulas.maxRating),
       goals: myGoals,
       assists: assists + extraAssists,
+      goalMinutes: [...ownGoalMinutes]..sort(),
+      assistMinutes: [...ownAssistMinutes]..sort(),
       international: international,
     );
   }

@@ -176,6 +176,7 @@ class CareerState {
     this.seenEvents = const [],
     this.news = const [],
     this.seasonStart,
+    this.backedUpYear = 0,
     this.momentAttempts = const {},
     this.momentSuccesses = const {},
     this.objective,
@@ -302,6 +303,16 @@ class CareerState {
 
   /// 世の中に出た見出し。新しいものが先頭。
   List<NewsItem> news;
+
+  /// 最後に引き継ぎコードを出した年。0 なら一度も出していない。
+  ///
+  /// 保存は端末の中だけにあるので、ブラウザのデータを消すと消える。
+  /// 何年ぶんか控えていないなら、シーズンの区切りで知らせる。
+  int backedUpYear;
+
+  /// 控えを取ってから何年経ったか。一度も取っていなければ、プロ入りからの年数。
+  int get yearsSinceBackup =>
+      backedUpYear == 0 ? professionalYears : year - backedUpYear;
 
   /// 今季の開幕時点の能力値。今季どれだけ伸びたかを出すために持つ。
   ///
@@ -536,6 +547,7 @@ class CareerState {
         'seenEvents': seenEvents,
         'news': news.map((n) => n.toJson()).toList(),
         'seasonStart': seasonStart?.toJson(),
+        'backedUpYear': backedUpYear,
         'momentAttempts': {
           for (final e in momentAttempts.entries) e.key.name: e.value,
         },
@@ -645,6 +657,7 @@ class CareerState {
         for (final n in (json['news'] as List? ?? const []))
           NewsItem.fromJson(n as Map<String, dynamic>),
       ],
+      backedUpYear: json['backedUpYear'] as int? ?? 0,
       seasonStart: json['seasonStart'] is Map<String, dynamic>
           ? Attributes.fromJson(json['seasonStart'] as Map<String, dynamic>)
           : null,
