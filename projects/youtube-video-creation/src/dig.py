@@ -22,10 +22,10 @@ from __future__ import annotations
 
 import re
 import urllib.parse
+import xml.etree.ElementTree as ET
 from dataclasses import dataclass, field
 from urllib.parse import urlparse
 
-import feedparser
 import requests
 
 UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) youtube-video-creation/1.0"
@@ -62,13 +62,37 @@ class Coverage:
     headlines: list[tuple[str, str]] = field(default_factory=list)   # (媒体, 見出し)
 
 
-def _feed(url: str, session=None) -> list:
+@dataclass
+class Entry:
+    title: str = ""
+    link: str = ""
+    source: str = ""      # Google ニュースだけが持つ「どの媒体か」
+    published: str = ""
+
+
+def _feed(url: str, session=None) -> list[Entry]:
+    """RSS 2.0 を読む。**新しい依存を足さない**（2026-09-09）。
+
+    最初 feedparser で書いたが、あれはローカルに偶然入っていただけで
+    requirements に無く、CI が ModuleNotFoundError で落ちた。
+    src/feeds.py と同じく標準ライブラリで読む。Google ニュースも媒体の
+    検索フィードも RSS 2.0 なので、これで足りる。
+    """
     client = session or requests
     try:
         resp = client.get(url, headers={"User-Agent": UA}, timeout=TIMEOUT)
-        return feedparser.parse(resp.text).entries
+        root = ET.fromstring(resp.text.strip())
     except Exception:  # noqa: BLE001 - 1本落ちても他の経路は続ける
         return []
+    entries: list[Entry] = []
+    for node in root.iter("item"):
+        def text(tag: str) -> str:
+            found = node.find(tag)
+            return (found.text or "").strip() if found is not None else ""
+
+        entries.append(Entry(title=text("title"), link=text("link"),
+                             source=text("source"), published=text("pubDate")))
+    return entries
 
 
 def search(topic: str, hosts: set[str], session=None) -> list[Hit]:
@@ -85,8 +109,7 @@ def search(topic: str, hosts: set[str], session=None) -> list[Hit]:
     for pattern in SEARCH_FEEDS:
         url = pattern.format(q=urllib.parse.quote(topic))
         for entry in _feed(url, session):
-            link = str(entry.get("link") or "")
-            title = str(entry.get("title") or "").strip()
+            link, title = entry.link, entry.title
             if not link or link in seen or not is_allowed(link, hosts):
                 continue
             if words and not any(w in title for w in words):
@@ -94,7 +117,7 @@ def search(topic: str, hosts: set[str], session=None) -> list[Hit]:
             seen.add(link)
             found.append(Hit(title=title, url=link.split("?")[0],
                              outlet=urlparse(link).netloc,
-                             published=str(entry.get("published") or "")))
+                             published=entry.published))
     return found
 
 
@@ -108,12 +131,11 @@ def coverage(topic: str, english: str = "", session=None) -> Coverage:
         if not query:
             continue
         for entry in _feed(template.format(q=urllib.parse.quote(query)), session):
-            outlet = str((entry.get("source") or {}).get("title") or "")
             got.total += 1
-            if outlet:
-                names[outlet] += 1
+            if entry.source:
+                names[entry.source] += 1
             if len(got.headlines) < 12:
-                got.headlines.append((outlet, str(entry.get("title") or "").strip()))
+                got.headlines.append((entry.source, entry.title))
     got.outlets = names.most_common(12)
     return got
 
