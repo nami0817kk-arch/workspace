@@ -177,6 +177,7 @@ class CareerState {
     this.news = const [],
     this.seasonStart,
     this.backedUpYear = 0,
+    this.autoRestBelow = defaultAutoRestBelow,
     this.momentAttempts = const {},
     this.momentSuccesses = const {},
     this.objective,
@@ -304,6 +305,19 @@ class CareerState {
   /// 世の中に出た見出し。新しいものが先頭。
   List<NewsItem> news;
 
+  /// このコンディションを下回ったら、その週は自動で休養にする。
+  ///
+  /// 0 なら自動では休まない。疲れたまま練習を続けると、伸びないうえに
+  /// 怪我をして、その週の操作を忘れていただけで数試合を失う。
+  int autoRestBelow;
+
+  /// 自動休養の既定値。助言（[WeekPlan.tiredCondition]）より少し下に置く。
+  /// 助言が先に出て、それでも放っておいたときにだけ効く。
+  static const int defaultAutoRestBelow = 40;
+
+  /// 選べるしきい値。0 は「しない」。
+  static const List<int> autoRestChoices = [0, 30, 40, 50, 60];
+
   /// 最後に引き継ぎコードを出した年。0 なら一度も出していない。
   ///
   /// 保存は端末の中だけにあるので、ブラウザのデータを消すと消える。
@@ -326,6 +340,10 @@ class CareerState {
 
   /// そのうち成功した数。練習した能力が実際に通っているかを見る。
   Map<AttributeKey, int> momentSuccesses;
+
+  /// そのコンディションなら、自動で休むか。
+  bool shouldAutoRest(int condition) =>
+      autoRestBelow > 0 && condition < autoRestBelow;
 
   /// 今季の収支の見込み。雇う前に足りるかどうかを見るためのもの。
   ///
@@ -567,6 +585,7 @@ class CareerState {
         'news': news.map((n) => n.toJson()).toList(),
         'seasonStart': seasonStart?.toJson(),
         'backedUpYear': backedUpYear,
+        'autoRestBelow': autoRestBelow,
         'momentAttempts': {
           for (final e in momentAttempts.entries) e.key.name: e.value,
         },
@@ -677,6 +696,8 @@ class CareerState {
           NewsItem.fromJson(n as Map<String, dynamic>),
       ],
       backedUpYear: json['backedUpYear'] as int? ?? 0,
+      autoRestBelow:
+          json['autoRestBelow'] as int? ?? defaultAutoRestBelow,
       seasonStart: json['seasonStart'] is Map<String, dynamic>
           ? Attributes.fromJson(json['seasonStart'] as Map<String, dynamic>)
           : null,

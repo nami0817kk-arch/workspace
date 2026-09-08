@@ -34,6 +34,7 @@ import '../models/training.dart';
 class WeekReport {
   const WeekReport({
     this.timeline = const [],
+    this.autoRested = false,
     this.trained,
     this.learned,
     this.weakFootAwakened = false,
@@ -49,6 +50,11 @@ class WeekReport {
   final List<MatchEvent> timeline;
 
   /// 練習で伸びた詳細能力。
+  /// 疲れていたので、自動で休養にした週か。
+  ///
+  /// 黙って差し替えると「練習したのに伸びない」と見える。
+  final bool autoRested;
+
   final Detail? trained;
 
   /// その週に覚えた個人技。
@@ -675,10 +681,16 @@ class CareerController extends ChangeNotifier {
           environment: _environmentFactor(state),
         ),
       );
+      // 疲れているなら、その週は自動で休む。居残りも止める
+      // （居残りだけ残すと、休んだつもりで怪我をする）。
+      final tired = state.shouldAutoRest(
+        MatchEngine.conditionAfterMatch(player,
+            played: result.appearance != Appearance.benched),
+      );
       final week = _match.applyWeek(
         player,
-        menu: state.menu,
-        drill: state.drill,
+        menu: tired ? TrainingMenu.rest : state.menu,
+        drill: tired ? null : state.drill,
         staff: state.staff,
         habits: state.habits,
         development: state.development,
@@ -729,6 +741,7 @@ class CareerController extends ChangeNotifier {
       }
       lastWeek = WeekReport(
         timeline: match.timeline,
+        autoRested: tired,
         trained: week.trained,
         learned: week.learned,
         weakFootAwakened: week.weakFootAwakened,
@@ -853,6 +866,14 @@ class CareerController extends ChangeNotifier {
   }
 
   /// 生活水準を変える。金の使い道は、毎週ではなく気が向いたときに決める。
+  /// 自動で休養にするしきい値を決める。0 なら自動では休まない。
+  Future<void> setAutoRestBelow(int condition) async {
+    final state = _state;
+    if (state == null) return;
+    state.autoRestBelow = condition.clamp(0, 100);
+    await _persist();
+  }
+
   Future<void> setLifestyle(int level) async {
     final state = _state;
     if (state == null) return;

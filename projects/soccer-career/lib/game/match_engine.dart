@@ -968,6 +968,17 @@ class MatchEngine {
     );
   }
 
+  /// 試合ぶんの消耗を引いたあとのコンディション。
+  ///
+  /// 自動で休ませるかどうかは、練習に入る時点の値で決める。
+  /// 判定と別に計算すると、しきい値と実際の挙動がずれる。
+  static int conditionAfterMatch(Player player, {required bool played}) =>
+      player.condition -
+      (played
+          ? (Formulas.matchConditionCost * player.traits.conditionCostFactor)
+              .round()
+          : 0);
+
   /// 試合後の1週間。試合の消耗と、練習または休養を反映する。
   ///
   /// 練習メニューは扱うカテゴリの数だけ伸びる枠を持つ。複合メニューは
@@ -985,8 +996,7 @@ class MatchEngine {
     required bool played,
   }) {
     final costFactor = player.traits.conditionCostFactor;
-    var condition = player.condition -
-        (played ? (Formulas.matchConditionCost * costFactor).round() : 0);
+    var condition = conditionAfterMatch(player, played: played);
     var attributes = player.attributes;
     var setPieces = player.setPieces;
     var physique = player.physique;

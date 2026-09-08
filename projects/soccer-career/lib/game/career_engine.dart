@@ -1073,6 +1073,7 @@ class CareerEngine {
       // 見出しはキャリアの記録。シーズンを跨いでも消さない。
       news: state.news,
       backedUpYear: state.backedUpYear,
+      autoRestBelow: state.autoRestBelow,
       // 怪我はシーズンを跨いでも消えない。オフの間に少しは進む。
       injury: state.injury == null || state.injury!.matchesOut <= 4
           ? null
@@ -1320,6 +1321,7 @@ class CareerEngine {
       seenEvents: state.seenEvents,
       news: state.news,
       backedUpYear: state.backedUpYear,
+      autoRestBelow: state.autoRestBelow,
       manager: state.manager,
       directive: state.directive,
       competitor: state.competitor,

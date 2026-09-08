@@ -678,6 +678,14 @@ class _MatchSummary extends StatelessWidget {
                   style: theme.textTheme.bodyMedium,
                 ),
               ],
+              if (week.autoRested) ...[
+                const SizedBox(height: 8),
+                Text(
+                  '疲れが残っていたので、今週は自動で休養にした。',
+                  style: theme.textTheme.bodyMedium
+                      ?.copyWith(color: theme.colorScheme.error),
+                ),
+              ],
               if (week.trained != null) ...[
                 const SizedBox(height: 20),
                 Text(

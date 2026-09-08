@@ -24,6 +24,7 @@ import '../../state/career_controller.dart';
 import '../club_identity.dart';
 import '../budget_lines.dart';
 import '../readable_width.dart';
+import '../training_sheet.dart';
 import '../transfer_code.dart';
 import 'guide_screen.dart';
 import 'match_screen.dart';
@@ -322,7 +323,7 @@ class _MatchTab extends StatelessWidget {
             state: state,
             stake: controller.stake,
             outlook: controller.outlook,
-            onOpenTraining: () => DefaultTabController.of(context).animateTo(2),
+            onOpenTraining: () => TrainingSheet.show(context, controller),
             onPlay: onPlay,
             onSimulate: onSimulate,
             onSimulateUntilEvent: onSimulateUntilEvent,
@@ -552,6 +553,13 @@ class _NextMatchCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
+                    if (state.shouldAutoRest(state.player.condition))
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: Text('自動で休養',
+                            style: theme.textTheme.labelSmall
+                                ?.copyWith(color: theme.colorScheme.error)),
+                      ),
                     Text('変える',
                         style: theme.textTheme.labelMedium
                             ?.copyWith(color: theme.colorScheme.primary)),
@@ -984,7 +992,36 @@ class _TrainingCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('今週の練習', style: theme.textTheme.titleSmall),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
+            // 疲れたまま練習を続けると、伸びないうえに怪我をする。
+            // 毎週の操作を忘れても、そこだけは踏み外さないようにする。
+            Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 8,
+              runSpacing: 4,
+              children: [
+                Text('自動で休養',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant)),
+                for (final value in CareerState.autoRestChoices)
+                  ChoiceChip(
+                    label: Text(value == 0 ? 'しない' : '$value未満'),
+                    selected: state.autoRestBelow == value,
+                    visualDensity: VisualDensity.compact,
+                    onSelected: (_) => controller.setAutoRestBelow(value),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              state.autoRestBelow == 0
+                  ? 'コンディションが落ちても、選んだ練習をそのまま続ける。'
+                  : 'コンディションが${state.autoRestBelow}を下回った週は、'
+                      '練習も居残りも止めて休む。',
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            ),
+            const SizedBox(height: 10),
             // 選んでいるものが何をするメニューなのかを、常に文字で出す。
             // 説明をツールチップに隠すと、スマホでは長押ししないと読めない。
             Container(
