@@ -117,6 +117,9 @@ class VoicevoxConfig:
     core_dir: str = "vendor/voicevox"
     timeout: int = 60
     pause: float = 0.35
+    # 匿名の反応（voice_crowd）の行だけ短くする無音（2026-09-08）。参考は反応1件
+    # 3秒台で詰まっていて、Gemini の答えでも「行間の無音を削る」が4番目だった
+    pause_crowd: float = 0.15
 
 
 @dataclass

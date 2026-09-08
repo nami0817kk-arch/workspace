@@ -79,6 +79,8 @@ voicevox:
   timeout: 60
   # 行と行のあいだに入る既定の無音（秒）
   pause: 0.35
+  # 匿名の反応（voice_crowd の話者）だけ詰める（2026-09-08）。参考は反応1件3秒台
+  pause_crowd: 0.15
 
 # BGM・効果音。assets/audio/ の音源は init-assets で生成される仮素材。
 audio:
