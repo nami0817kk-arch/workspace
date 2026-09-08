@@ -1,0 +1,86 @@
+# バレンシアの12年 の取材メモ（2026年9月8日）
+slot: laliga
+date: "2026年9月8日"
+
+theme:
+  id: valencia_meriton
+  league: spain
+  prefix: ""
+  title: "バレンシアの12年を数字で見るとどうなるか"
+  hook: "0対5で負けた翌日、地元紙がこの12年を数え上げました"
+  question: "なぜバレンシアは立て直せないのか"
+
+thumbnail:
+  line1: "12年で監督12人"
+  line2: "会長5人 レンタル58人"
+  tags: ["バレンシア", "ラ・リーガ"]
+  photo: "assets/photos/20260909_valencia/01.png"
+
+answer: "12年で監督が12人、会長が5人。1年に1人ずつ替わってきた計算になります"
+watch: "この体制のまま、19歳の佐藤龍之介がどう扱われるか"
+
+sections:
+  - id: what
+    heading: 何が数えられたのか
+    tier: 報道
+    telop: "12年 会長5人 監督12人"
+    say:
+      - "スペインのマルカ紙が、いまの経営体制の12年を数えました"
+      - "会長は5人、強化の責任者は7人"
+      - "監督は12人、レンタルに出した選手は58人です"
+      - "見出しに使われた言葉は「統治不能」でした"
+    official: false
+    sources:
+      - "https://www.marca.com/futbol/valencia/2026/09/08/valencia-meriton-ingobernable-12-anos-cinco-presidentes-siete-directores-deportivos-12-entrenadores-58-jugadores-cedidos.html"
+      - "https://sports.yahoo.co.jp/column/detail/201702100004-spnavi?p=2"
+
+  - id: numbers
+    heading: どういう割合なのか
+    tier: 報道
+    telop: "1年に監督1人"
+    say:
+      - "12年で監督12人ということは、1年に1人替わっている計算です"
+      - "会長も2年半に1人のペースで替わりました"
+      - "レンタルに出した58人は、5チーム分にあたります"
+    official: false
+    sources:
+      - "https://www.marca.com/futbol/valencia/2026/09/08/valencia-meriton-ingobernable-12-anos-cinco-presidentes-siete-directores-deportivos-12-entrenadores-58-jugadores-cedidos.html"
+      - "https://sports.yahoo.co.jp/column/detail/201702100004-spnavi?p=2"
+
+  - id: background
+    heading: 誰が持っているクラブなのか
+    tier: 背景
+    telop: "2014年からメリトン体制"
+    say:
+      - "2014年から、シンガポールの実業家ピーター・リム氏が実質的に所有しています"
+      - "投資会社メリトン・ホールディングスを通じた形です"
+      - "2025年3月からは、リム氏の息子が会長を務めています"
+      - "ファンの団体は、以前から売却を求めて抗議してきました"
+    official: false
+    sources:
+      - "https://sports.yahoo.co.jp/column/detail/201702100004-spnavi?p=2"
+      - "https://number.bunshun.jp/articles/-/845473"
+
+  - id: turn
+    heading: いま何が起きているか
+    tier: 報道
+    telop: "0-5のあとにこの記事"
+    say:
+      - "この記事が出たのは、バルセロナに0対5で負けた翌日です"
+      - "本拠地では、オーナーの退陣を求める声が上がりました"
+      - "多くのファンが、試合終了を待たずにスタジアムを出ています"
+    official: false
+    sources:
+      - "https://www.football-zone.net/archives/672133"
+      - "https://www.marca.com/futbol/valencia/2026/09/08/valencia-meriton-ingobernable-12-anos-cinco-presidentes-siete-directores-deportivos-12-entrenadores-58-jugadores-cedidos.html"
+
+  - id: next
+    heading: これから何を見るか
+    tier: 未確認
+    telop: "19歳の扱い"
+    say:
+      - "見るべきは、19歳の佐藤龍之介がこの体制でどう扱われるかです"
+      - "監督が1年で替わるクラブでは、若い選手の立場は変わりやすくなります"
+    official: false
+    sources:
+      - "https://www.marca.com/futbol/valencia/2026/09/08/valencia-meriton-ingobernable-12-anos-cinco-presidentes-siete-directores-deportivos-12-entrenadores-58-jugadores-cedidos.html"

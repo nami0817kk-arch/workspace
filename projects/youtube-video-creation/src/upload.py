@@ -7,6 +7,7 @@ google-auth-oauthlib が必要なので、requirements-upload.txt を入れて�
 from __future__ import annotations
 
 import json
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -19,6 +20,9 @@ from . import tags as tags_mod
 SCOPES = [
     "https://www.googleapis.com/auth/youtube.upload",
     "https://www.googleapis.com/auth/youtube.force-ssl",
+    # 視聴維持率を読むための**読み取り専用**の権限
+    # （2026-09-07 ユーザーが同意画面に追加）。動画には触れない
+    "https://www.googleapis.com/auth/yt-analytics.readonly",
 ]
 TOKEN_PATH = Path("secrets/token.json")
 CLIENT_SECRET_PATH = Path("secrets/client_secret.json")
@@ -41,6 +45,7 @@ class Draft:
     tags: list[str] = field(default_factory=list)
     thumbnail: Path | None = None
     privacy: str = "private"
+    source: Path | None = None
 
     @property
     def problems(self) -> list[str]:
@@ -50,11 +55,46 @@ class Draft:
             found.append(f"動画がありません: {self.video}")
         if not self.title.strip():
             found.append("タイトルが空です")
+        # **書き出しの途中を掴んでいないか。**video.mp4 は先に書かれ、
+        # description.txt と thumbnail.png は後から書かれる。その隙に投稿へ入ると
+        # タイトルがフォルダ名・概要欄が空のまま公開される（2026-09-08 に発生）
+        if self.source is not None and self.title.strip() == self.source.name:
+            found.append("タイトルがフォルダ名のままです。"
+                         "description.txt がまだ書かれていません")
+        if not self.description.strip():
+            found.append("概要欄が空です。書き出しの途中かもしれません")
+        found += self._stale_meta()
+        # サムネイルは**無くても止めない**。投稿のあとに setthumb で
+        # 付ける流れが先にあり、そちらは今も使っている
         if self.thumbnail is not None and not self.thumbnail.exists():
             found.append(f"サムネイルがありません: {self.thumbnail}")
         if self.privacy not in ("private", "unlisted", "public"):
             found.append(f"privacy は private/unlisted/public のいずれか: {self.privacy}")
         return found
+
+    def _stale_meta(self) -> list[str]:
+        """動画より古い説明・タグを掴んでいないか（2026-09-08）。
+
+        バレンシアの回で、**動画は作り直したもの、タグは前の作り直しのもの**を
+        送ってしまった。動画が書き上がった時点で投稿側の合図が立ち、
+        description.txt と script.json はそのあとに書かれるので、
+        1本ぶんずれる隙がある。「動画があること」だけを合図にしていたのが穴。
+
+        揃っていれば同じ書き出しの産物なので、動画より古い説明は前の回のもの。
+        """
+        if self.source is None or not self.video.exists():
+            return []
+        video_at = self.video.stat().st_mtime
+        late = []
+        for name in ("description.txt", "script.json"):
+            path = self.source / name
+            if not path.exists():
+                late.append(f"{name} がありません")
+            elif path.stat().st_mtime < video_at - 1:
+                late.append(f"{name} が動画より古いです")
+        if late:
+            return ["／".join(late) + "。前の書き出しの説明やタグを送ろうとしています"]
+        return []
 
     def lines(self) -> list[str]:
         """何が送られるかを1画面で見せる。"""
@@ -101,6 +141,7 @@ def prepare(build_dir: Path, privacy: str = "private") -> Draft:
         tags=tags_mod.fit(found),
         thumbnail=thumbnail if thumbnail.exists() else None,
         privacy=privacy,
+        source=build_dir,
     )
 
 
@@ -271,5 +312,15 @@ def upload(
 
     if thumbnail and thumbnail.exists():
         quota.record("thumbnails.set")
-        service.thumbnails().set(videoId=video_id, media_body=str(thumbnail)).execute()
+        # **サムネで落ちても、動画はもう上がっている。**ここで例外を投げると
+        # 呼ぶ側は「投稿に失敗した」と見て掛け直し、同じ動画が2本になる。
+        # 2026-09-08 に thumbnails.set の 429（サムネの送りすぎ）でそれが起き、
+        # サンチョのショートが2本、CLの本編が2本公開された。
+        # サムネは後から setthumb で付け直せるので、ここは警告だけにして id を返す
+        try:
+            service.thumbnails().set(videoId=video_id, media_body=str(thumbnail)).execute()
+        except Exception as err:  # noqa: BLE001 - 何が来ても動画の id は返す
+            print(f"! サムネイルは付きませんでした（{str(err)[:80]}）。"
+                  f"動画は上がっています: {video_id}。あとで setthumb で付けてください",
+                  file=sys.stderr)
     return video_id

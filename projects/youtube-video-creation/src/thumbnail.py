@@ -32,7 +32,6 @@ BAND_INK_RED = (222, 20, 30)
 BAND_RED = (222, 20, 30)
 BAND_TEXT_DARK = (12, 12, 14)
 BAND_TEXT_LIGHT = (255, 255, 255)
-TAG_RED = (214, 26, 38)
 BAND_SIZES = (104, 94, 86, 78, 70, 62, 56, 50, 44, 40)
 BADGE_HEIGHT = 62
 SUBTITLE_HEIGHT = 70
@@ -93,6 +92,13 @@ def from_meta(meta: dict, title: str) -> dict:
         # 「変な声出た」「一番強くて草」のような**書き込みの断片**を小窓で出して
         # いた。反応を集めたチャンネルであることが、一覧の時点で分かる
         "reaction": str(meta.get("thumbnail_reaction") or ""),
+        # 左の余白に積む短い言葉（2026-09-08）。縦長の写真を右に置くと
+        # 左がぼかしだけになり「ただのぼかし」に見えた（ユーザー指摘）。
+        # **中身を置けば余白が情報になる。**3つまで、1つ10字くらい
+        "points": [str(x) for x in (meta.get("thumbnail_points") or [])][:3],
+        # 顔を並べる（2026-09-08）。2〜3枚あれば全面が写真になり、
+        # ぼかしの下地が要らない。参考チャンネルは全面が写真だった
+        "photos": [str(x) for x in (meta.get("thumbnail_photos") or [])][:3],
     }
 
 
@@ -175,6 +181,8 @@ def build_thumbnail(
     tags: list[str] | None = None,
     focus: float | None = None,
     reaction: str = "",
+    points: list[str] | None = None,
+    photos: list[str] | None = None,
 ) -> Path:
     """サムネイルを1枚作る。
 
@@ -190,7 +198,7 @@ def build_thumbnail(
     if chosen == "band":
         return _band_thumbnail(
             config, out_path, background,
-            lines or (title, subtitle), tags or [], focus, reaction,
+            lines or (title, subtitle), tags or [], focus, reaction, points or [], photos or [],
         )
 
     font_path = str(config.video.font_path())
@@ -242,6 +250,8 @@ def _band_thumbnail(
     tags: list[str],
     focus: float | None = None,
     reaction: str = "",
+    points: list[str] | None = None,
+    photos: list[str] | None = None,
 ) -> Path:
     """写真の上に蛍光イエローの帯を重ねる。**最高再生の型に合わせてある。**
 
@@ -255,11 +265,17 @@ def _band_thumbnail(
     """
     font_path = str(config.video.font_path())
     # **正方形に近い写真も右に置く。**全面に敷くと顔が帯に隠れる
-    portrait = _is_portrait(background, ratio=0.95)
-    if portrait:
-        canvas = Image.new("RGBA", SIZE, (14, 20, 32, 255))
-        _paste_side(canvas, background)
+    tiles = [q for q in (photos or []) if _resolve(q).exists()]
+    if len(tiles) >= 2:
+        # **並べれば全面が写真になる。**ぼかしの下地が要らない
+        canvas = _tile_photos(tiles)
+        portrait = False
     else:
+        portrait = _is_portrait(background, ratio=0.95)
+    if portrait:
+        canvas = _blur_bed(background)
+        _paste_side(canvas, background)
+    elif len(tiles) < 2:
         # **帯が下の4割を覆うので、顔を上に寄せる。**真ん中で切ると、
         # 額と目だけが残って口から下が帯に隠れた（2026-09-07 に書き出して発見）。
         # 指定があればそちらを優先する
@@ -274,12 +290,14 @@ def _band_thumbnail(
     canvas.alpha_composite(scrim)
 
     layer, draw = _layer(SIZE)
-    _draw_tags(draw, tags, font_path)
+    _draw_tags(layer, draw, tags, font_path)
+    if portrait and points:
+        _draw_points(draw, points, font_path)
 
     top_text = (lines[0] or "").replace(chr(92) + "n", " ")
     bottom_text = lines[1] or ""
     # 縦長の写真を右に置いた回は、帯を左だけにして顔を隠さない
-    right = int(SIZE[0] * 0.60) if portrait else SIZE[0] - 16
+    right = int(SIZE[0] * 0.52) if portrait else SIZE[0] - 16
     # **2行は同じ大きさで描く。**入る字の大きさは行ごとに違うので、
     # 小さいほうに合わせる。1行目だけで決めていたら、2行目が枠を超えて
     # 「GKコーチ」が「G / Kコーチ」に泣き別れた（2026-09-07 に書き出して発見）
@@ -348,6 +366,58 @@ def _is_portrait(background: str | None, ratio: float = 1.1) -> bool:
         return False
 
 
+def _tile_photos(paths: list[str]) -> Image.Image:
+    """顔写真を横に並べて、画面いっぱいにする（2026-09-08）。
+
+    縦長の写真を1枚だけ右に置くと、左がぼかしで埋まる。参考チャンネル
+    （2chサッカーの噂話・10.3万）は**全面が写真**で、顔を2〜3枚
+    並べた回もあった。**縦長の写真は、並べれば縦のまま活きる。**
+    """
+    canvas = Image.new("RGBA", SIZE, (14, 20, 32, 255))
+    cell = SIZE[0] // len(paths)
+    for index, name in enumerate(paths):
+        with Image.open(_resolve(name)) as source:
+            photo = source.convert("RGBA")
+        scale = max(cell / photo.width, SIZE[1] / photo.height)
+        photo = photo.resize((max(1, int(photo.width * scale)) + 1,
+                              max(1, int(photo.height * scale)) + 1), Image.LANCZOS)
+        left = max(0, (photo.width - cell) // 2)
+        top = max(0, min(photo.height - SIZE[1], int(photo.height * 0.04)))
+        canvas.alpha_composite(photo.crop((left, top, left + cell, top + SIZE[1])),
+                               (index * cell, 0))
+    return canvas
+
+
+def _blur_bed(background: str | None) -> Image.Image:
+    """縦長の写真を右に置くとき、**左に敷く下地**を作る。
+
+    2026-09-08 まで、左は塗りつぶしの濃紺だった。実測すると顔の段の
+    **72%が真っ黒**で、一覧に並べると沈んで見えた（ユーザー指摘）。
+    同じ写真を大きく引き伸ばしてぼかし、暗くして敷く。
+    別の写真を持ってこないので、権利の扱いは変わらない。
+    """
+    from PIL import ImageEnhance, ImageFilter
+
+    base = Image.new("RGBA", SIZE, (14, 20, 32, 255))
+    path = _resolve(background or "")
+    if not path.exists():
+        return base
+    with Image.open(path) as source:
+        photo = source.convert("RGB")
+    # 画面を埋める大きさまで拡大してから、真ん中を切る
+    scale = max(SIZE[0] / photo.width, SIZE[1] / photo.height) * 1.35
+    photo = photo.resize((max(1, int(photo.width * scale)),
+                          max(1, int(photo.height * scale))), Image.LANCZOS)
+    left = max(0, (photo.width - SIZE[0]) // 2)
+    top = max(0, (photo.height - SIZE[1]) // 3)
+    photo = photo.crop((left, top, left + SIZE[0], top + SIZE[1]))
+    photo = photo.filter(ImageFilter.GaussianBlur(28))
+    photo = ImageEnhance.Brightness(photo).enhance(0.60)
+    photo = ImageEnhance.Color(photo).enhance(0.85)
+    base.alpha_composite(photo.convert("RGBA"))
+    return base
+
+
 def _paste_side(canvas: Image.Image, background: str | None) -> None:
     """縦長の写真を、画面の右側に置く。高さいっぱいに使う。"""
     path = _resolve(background or "")
@@ -355,10 +425,16 @@ def _paste_side(canvas: Image.Image, background: str | None) -> None:
         return
     with Image.open(path) as source:
         photo = source.convert("RGBA")
-    scale = SIZE[1] / photo.height
-    photo = photo.resize((max(1, int(photo.width * scale)), SIZE[1]), Image.LANCZOS)
-    width = min(photo.width, int(SIZE[0] * 0.46))
-    photo = photo.crop(((photo.width - width) // 2, 0, (photo.width + width) // 2, SIZE[1]))
+    # **枠を埋めるまで拡大する。**高さだけ合わせていたので、細い縦写真だと
+    # 幅が足りず、左半分がぼかしのまま残った（2026-09-08 ユーザー指摘）。
+    # 顔は上にあるので、縦は上寄りに切る
+    width = int(SIZE[0] * 0.58)
+    scale = max(width / photo.width, SIZE[1] / photo.height)
+    photo = photo.resize((max(1, int(photo.width * scale)) + 1,
+                          max(1, int(photo.height * scale)) + 1), Image.LANCZOS)
+    left = max(0, (photo.width - width) // 2)
+    top = max(0, min(photo.height - SIZE[1], int(photo.height * 0.04)))
+    photo = photo.crop((left, top, left + width, top + SIZE[1]))
     canvas.alpha_composite(photo, (SIZE[0] - width, 0))
 
     # 写真の左端をぼかして地になじませる（切り貼りに見せない）
@@ -575,18 +651,70 @@ def _fit_band(draw: ImageDraw.ImageDraw, text: str, font_path: str, room: int = 
     return font, wrap_text(draw, text, font, width)[:2]
 
 
-def _draw_tags(draw: ImageDraw.ImageDraw, tags: list[str], font_path: str) -> None:
-    """右上に小さな赤タグ。反応の引用を置く場所。"""
+def _draw_tags(layer: Image.Image, draw: ImageDraw.ImageDraw,
+               tags: list[str], font_path: str) -> None:
+    """右上にエンブレムだけを並べる。
+
+    前は赤い札にクラブ名を書き、その左にエンブレムを添えていた。
+    **その文字は要らない**（2026-09-08 ユーザー指摘）。クラブ名は
+    タイトルにも帯にも出ているので、右上でもう一度書くと画面が混むだけだった。
+    残すのはエンブレムだけで、無いクラブは何も出ない。
+    """
     if not tags:
         return
-    font = ImageFont.truetype(font_path, 34)
     y = 28
     for tag in tags[:2]:
-        text_w = draw.textlength(tag, font=font)
-        left = SIZE[0] - 28 - text_w - 32
-        draw.rectangle([left, y, SIZE[0] - 28, y + 52], fill=TAG_RED + (255,))
-        draw.text((left + 16, y + 6), tag, font=font, fill=(255, 255, 255, 255))
-        y += 62
+        if _paste_crest(layer, tag, SIZE[0] - 28, y):
+            y += _crest_px() + 18
+
+
+def _draw_points(draw: ImageDraw.ImageDraw, points: list[str], font_path: str) -> None:
+    """左の余白に短い言葉を積む（2026-09-08）。
+
+    縦長の写真を右に置くと左がぼかしだけになり、「ただのぼかし」に見えた
+    （ユーザー指摘）。余白を埋めるのではなく、言葉を置く。
+
+    **ただし答えは置かない**（同日、ユーザーの指摘で作り直した）。
+    最初は「挙げられた3人の名前」をそのまま並べたが、それでは
+    タイトルで答えを隠している意味が消える。参考チャンネル
+    （2chサッカーの噂話・10.3万）の実物を見ると、答えの位置は
+    **●● で伏せてある**（「唯一やりたくないポジションは●●です」）。
+    ここに置くのは、**引きになる断片**であって答えではない。
+    """
+    font = ImageFont.truetype(font_path, 62)
+    y = 96
+    for text in points[:3]:
+        draw.text((60 + 3, y + 3), text, font=font, fill=(0, 0, 0, 190))
+        draw.text((60, y), text, font=font, fill=(255, 255, 255, 255))
+        draw.line([(60, y + 82), (60 + draw.textlength(text, font=font), y + 82)],
+                  fill=(232, 210, 31, 255), width=5)
+        y += 108
+
+
+def _crest_px() -> int:
+    from . import crest as crest_mod
+    return crest_mod.CREST_PX
+
+
+def _paste_crest(layer: Image.Image, tag: str, right: int, y: int) -> bool:
+    """右上にエンブレムを小さく置く（2026-09-08）。
+
+    **小さく添えるだけ。**権利が晴れていないので、主役にしない
+    （src/crest.py に経緯）。置けたときだけ True を返す。
+    """
+    from . import crest as crest_mod
+
+    path = crest_mod.find(tag)
+    if path is None:
+        return False
+    with Image.open(path) as source:
+        mark = source.convert("RGBA")
+    size = crest_mod.CREST_PX
+    ratio = size / max(mark.width, mark.height)
+    mark = mark.resize((max(1, int(mark.width * ratio)),
+                        max(1, int(mark.height * ratio))), Image.LANCZOS)
+    layer.alpha_composite(mark, (int(right - mark.width), int(y)))
+    return True
 
 
 # ------------------------------------------------------------------ パーツ

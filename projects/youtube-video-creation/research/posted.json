@@ -156,13 +156,41 @@
   },
   {
     "build": "20260907_japan",
+    "video_id": "-K7jidzI_ks",
+    "at": "2026-09-07T00:02:00+00:00",
+    "deleted": true,
+    "why": "二重投稿。枠は消費済み"
+  },
+  {
+    "build": "20260907_kubo",
+    "video_id": "LM6JRMUYPB8",
+    "at": "2026-09-07T00:18:00+00:00",
+    "deleted": true,
+    "why": "二重投稿。枠は消費済み"
+  },
+  {
+    "build": "20260907_japan",
     "video_id": "syFyKuOuDIs",
     "at": "2026-09-07T00:31:22+00:00"
+  },
+  {
+    "build": "20260907_spurs",
+    "video_id": "NfdtzK67FCI",
+    "at": "2026-09-07T00:34:00+00:00",
+    "deleted": true,
+    "why": "二重投稿。枠は消費済み"
   },
   {
     "build": "20260907_kubo",
     "video_id": "bIL369pbmMA",
     "at": "2026-09-07T00:46:50+00:00"
+  },
+  {
+    "build": "20260907_inter",
+    "video_id": "VHijI_vkryA",
+    "at": "2026-09-07T00:49:00+00:00",
+    "deleted": true,
+    "why": "二重投稿。枠は消費済み"
   },
   {
     "build": "20260907_spurs",
@@ -188,5 +216,292 @@
     "build": "20260907_inter",
     "video_id": "DY7JVHaaAYg",
     "at": "2026-09-07T01:22:36+00:00"
+  },
+  {
+    "build": "20260907_romano_short",
+    "video_id": "pf94a57wPRw",
+    "at": "2026-09-07T23:29:37+00:00"
+  },
+  {
+    "build": "20260907_japan_short",
+    "video_id": "TseK59bSjNY",
+    "at": "2026-09-07T23:45:55+00:00"
+  },
+  {
+    "build": "20260907_kubo_short",
+    "video_id": "eVPfSwB9yng",
+    "at": "2026-09-08T00:01:17+00:00"
+  },
+  {
+    "build": "20260907_spurs_short",
+    "video_id": "ybtiOH1-3OI",
+    "at": "2026-09-08T00:16:37+00:00"
+  },
+  {
+    "build": "20260907_inter_short",
+    "video_id": "YTpjisJ7UdI",
+    "at": "2026-09-08T00:31:56+00:00"
+  },
+  {
+    "build": "20260907_schalke_short",
+    "video_id": "OdvY6PsCh7g",
+    "at": "2026-09-08T00:47:13+00:00"
+  },
+  {
+    "build": "20260908_mbappe",
+    "video_id": "p6NDMOwrAQs",
+    "at": "2026-09-08T03:21:11+00:00",
+    "deleted": true,
+    "why": "読み上げが入っていなかったので非公開。音声入りで上げ直す（2026-09-08）"
+  },
+  {
+    "build": "20260908_kubo",
+    "video_id": "xBGmhbB23qk",
+    "at": "2026-09-08T03:43:43+00:00",
+    "deleted": true,
+    "why": "読み上げが入っていなかったので非公開。音声入りで上げ直す（2026-09-08）"
+  },
+  {
+    "build": "20260908_ueda",
+    "video_id": "DJTIfZDEKAM",
+    "at": "2026-09-08T04:05:10+00:00",
+    "deleted": true,
+    "why": "読み上げが入っていなかったので非公開。音声入りで上げ直す（2026-09-08）"
+  },
+  {
+    "build": "20260908_mbappe_short",
+    "video_id": "pLUSpkU5sC4",
+    "at": "2026-09-08T04:16:16+00:00",
+    "deleted": true,
+    "why": "読み上げが入っていなかったので非公開。音声入りで上げ直す（2026-09-08）"
+  },
+  {
+    "build": "20260908_ueda_short",
+    "video_id": "-US_KZJbF6Y",
+    "at": "2026-09-08T04:56:53+00:00",
+    "deleted": true,
+    "why": "読み上げが入っていなかったので非公開。音声入りで上げ直す（2026-09-08）"
+  },
+  {
+    "build": "20260908_sato",
+    "video_id": "MvgiLCZ1-Os",
+    "at": "2026-09-08T05:18:10+00:00",
+    "deleted": true,
+    "why": "読み上げが入っていなかったので非公開。音声入りで上げ直す（2026-09-08）"
+  },
+  {
+    "build": "20260908_sato_short",
+    "video_id": "x6xS2xXbOSs",
+    "at": "2026-09-08T05:38:37+00:00",
+    "deleted": true,
+    "why": "読み上げが入っていなかったので非公開。音声入りで上げ直す（2026-09-08）"
+  },
+  {
+    "build": "20260908_kubo_short",
+    "video_id": "HPdVtMQB4qQ",
+    "at": "2026-09-08T05:59:07+00:00",
+    "deleted": true,
+    "why": "読み上げが入っていなかったので非公開。音声入りで上げ直す（2026-09-08）"
+  },
+  {
+    "build": "20260908_leicester",
+    "video_id": "bNekFHuBQwY",
+    "at": "2026-09-08T06:20:44+00:00",
+    "deleted": true,
+    "why": "読み上げが入っていなかったので非公開。音声入りで上げ直す（2026-09-08）"
+  },
+  {
+    "build": "20260908_leicester_short",
+    "video_id": "MNQr70vsack",
+    "at": "2026-09-08T06:54:15+00:00",
+    "deleted": true,
+    "why": "読み上げが入っていなかったので非公開。音声入りで上げ直す（2026-09-08）"
+  },
+  {
+    "build": "20260908_arsenal",
+    "video_id": "okTFGuy-cb8",
+    "at": "2026-09-08T07:15:37+00:00",
+    "deleted": true,
+    "why": "読み上げが入っていなかったので非公開。音声入りで上げ直す（2026-09-08）"
+  },
+  {
+    "build": "20260908_arsenal_short",
+    "video_id": "hGIH6hFas7s",
+    "at": "2026-09-08T07:36:35+00:00",
+    "deleted": true,
+    "why": "読み上げが入っていなかったので非公開。音声入りで上げ直す（2026-09-08）"
+  },
+  {
+    "build": "20260908_mourinho",
+    "video_id": "fKAKoOVhtIw",
+    "at": "2026-09-08T07:58:28+00:00",
+    "deleted": true,
+    "why": "読み上げが入っていなかったので非公開。音声入りで上げ直す（2026-09-08）"
+  },
+  {
+    "build": "20260908_mourinho_short",
+    "video_id": "Fmn5DydMUcE",
+    "at": "2026-09-08T08:19:03+00:00",
+    "deleted": true,
+    "why": "読み上げが入っていなかったので非公開。音声入りで上げ直す（2026-09-08）"
+  },
+  {
+    "build": "20260908_barca19",
+    "video_id": "1JiPXohLC1Q",
+    "at": "2026-09-08T08:21:00+00:00",
+    "deleted": true,
+    "why": "読み上げが入っていなかったので非公開。音声入りで上げ直す（2026-09-08）"
+  },
+  {
+    "build": "20260908_barca19_short",
+    "video_id": "Dkz-X8LK-dw",
+    "at": "2026-09-08T08:41:29+00:00",
+    "deleted": true,
+    "why": "読み上げが入っていなかったので非公開。音声入りで上げ直す（2026-09-08）"
+  },
+  {
+    "build": "20260908_mbappe",
+    "video_id": "sWMBMT0XfqM",
+    "at": "2026-09-08T09:20:34+00:00"
+  },
+  {
+    "build": "20260908_mbappe_short",
+    "video_id": "NcYW5c-LkoU",
+    "at": "2026-09-08T09:32:16+00:00"
+  },
+  {
+    "build": "20260908_kubo",
+    "video_id": "Ym8DQpXEYp0",
+    "at": "2026-09-08T09:39:23+00:00"
+  },
+  {
+    "build": "20260908_kubo_short",
+    "video_id": "m4d45qqBQAo",
+    "at": "2026-09-08T09:45:13+00:00"
+  },
+  {
+    "build": "20260908_ueda",
+    "video_id": "NQzGvHGP8A8",
+    "at": "2026-09-08T09:51:25+00:00"
+  },
+  {
+    "build": "20260908_ueda_short",
+    "video_id": "4-tfgfyktvw",
+    "at": "2026-09-08T09:57:20+00:00"
+  },
+  {
+    "build": "20260908_sato",
+    "video_id": "VVSfQKXyfJk",
+    "at": "2026-09-08T10:04:03+00:00"
+  },
+  {
+    "build": "20260908_sato_short",
+    "video_id": "cGk0coDHlEY",
+    "at": "2026-09-08T10:09:58+00:00"
+  },
+  {
+    "build": "20260908_leicester",
+    "video_id": "AYvkru-3R5A",
+    "at": "2026-09-08T10:17:14+00:00"
+  },
+  {
+    "build": "20260908_leicester_short",
+    "video_id": "lj1XGbyQaYU",
+    "at": "2026-09-08T10:23:06+00:00"
+  },
+  {
+    "build": "20260908_arsenal",
+    "video_id": "HKfgPMRBjN4",
+    "at": "2026-09-08T10:29:13+00:00"
+  },
+  {
+    "build": "20260908_arsenal_short",
+    "video_id": "BiQy3715dIM",
+    "at": "2026-09-08T10:34:46+00:00"
+  },
+  {
+    "build": "20260908_mourinho",
+    "video_id": "uiEvpHQ2zwg",
+    "at": "2026-09-08T10:41:30+00:00"
+  },
+  {
+    "build": "20260908_mourinho_short",
+    "video_id": "-8qEJlxlMqI",
+    "at": "2026-09-08T10:47:35+00:00"
+  },
+  {
+    "build": "20260908_barca19",
+    "video_id": "_pUpoxf0k_I",
+    "at": "2026-09-08T10:54:46+00:00"
+  },
+  {
+    "build": "20260908_barca19_short",
+    "video_id": "8L8qfCFVUtM",
+    "at": "2026-09-08T11:00:34+00:00"
+  },
+  {
+    "build": "20260909_fukuda",
+    "video_id": "I6zorCdBDaM",
+    "at": "2026-09-08T11:22:47+00:00"
+  },
+  {
+    "build": "20260909_fukuda_short",
+    "video_id": "mSTG5uTj-hM",
+    "at": "2026-09-08T11:31:39+00:00"
+  },
+  {
+    "build": "20260908_transfer",
+    "video_id": "KgFjbPd-Ppg",
+    "at": "2026-09-08T11:36:52+00:00"
+  },
+  {
+    "build": "20260909_zion",
+    "video_id": "J1heKAKlutc",
+    "at": "2026-09-08T11:37:53+00:00"
+  },
+  {
+    "build": "20260908_transfer_short",
+    "video_id": "nFOYFJlqynY",
+    "at": "2026-09-08T11:42:24+00:00"
+  },
+  {
+    "build": "20260909_zion_short",
+    "video_id": "-xwMnjU1enE",
+    "at": "2026-09-08T11:43:22+00:00"
+  },
+  {
+    "build": "20260909_dembele",
+    "video_id": "s5hhzK7n18w",
+    "at": "2026-09-08T11:49:18+00:00"
+  },
+  {
+    "build": "20260909_dembele_short",
+    "video_id": "NKv-hxlT0BY",
+    "at": "2026-09-08T11:54:44+00:00"
+  },
+  {
+    "build": "20260909_valencia",
+    "video_id": "59DPl_qf1f8",
+    "at": "2026-09-08T12:09:23+00:00"
+  },
+  {
+    "build": "20260909_valencia_short",
+    "video_id": "iu2NtYSSfi0",
+    "at": "2026-09-08T12:23:06+00:00"
+  },
+  {
+    "build": "20260909_sancho",
+    "video_id": "WyE6wEamDCo",
+    "at": "2026-09-08T12:29:10+00:00"
+  },
+  {
+    "build": "20260909_sancho_short",
+    "video_id": "UqkXo0AaMWk",
+    "at": "2026-09-08T12:45:04+00:00"
+  },
+  {
+    "build": "20260909_cl",
+    "video_id": "nPVWqO8dtSc",
+    "at": "2026-09-08T13:01:12+00:00"
   }
 ]

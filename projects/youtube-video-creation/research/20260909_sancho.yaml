@@ -1,0 +1,86 @@
+# サンチョの去就 の取材メモ（2026年9月8日）
+slot: premier
+date: "2026年9月8日"
+
+theme:
+  id: sancho_free
+  league: england
+  prefix: ""
+  title: "サンチョの行き先について、報道が3つに割れている"
+  hook: "所属クラブが無いまま、名前だけが3つの国を行き来しています"
+  question: "どこへ行くのか。なぜ決まらないのか"
+
+thumbnail:
+  line1: "行き先が3つに割れる"
+  line2: "プレミア・ドイツ・ブラジル"
+  tags: ["サンチョ", "移籍"]
+  points: ["行き先の候補 3つ", "本人が望むのは ●●"]
+  photo: "assets/photos/20260909_sancho/01.jpg"
+
+answer: "本人はイングランド国外を望んでいると伝えられています。争奪戦にならなかったことが、決まらない理由です"
+watch: "登録の期限。無所属のままだと出場できない期間が延びます"
+
+sections:
+  - id: what
+    heading: いまどうなっているのか
+    tier: 報道
+    telop: "マンU退団後、無所属"
+    say:
+      - "ジェイドン・サンチョはこの夏、マンチェスター・ユナイテッドを離れました"
+      - "移籍金の発生しないフリーの状態です"
+      - "9月に入っても、所属先は決まっていません"
+    official: false
+    sources:
+      - "https://www.transfermarkt.jp/puremiarigu/transfers/wettbewerb/GB1"
+      - "https://news.yahoo.co.jp/articles/ce8ab7ef7b1840189634e5938254ffcfb2896843"
+
+  - id: turn
+    heading: 報道はどう割れているか
+    tier: 未確認
+    telop: "プレミア・ドイツ・ブラジル"
+    say:
+      - "ひとつは、プレミアリーグの2クラブと交渉しているという話です"
+      - "もうひとつは、ドルトムントが接触したものの条件が厳しいという話"
+      - "そしてブラジルのパルメイラスと、すでに合意しているという報道もあります"
+      - "2年契約に1年の延長条項が付く形だと伝えられました"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/ba9e1f2979412413e26564f25618395b7cfe2c42"
+      - "https://football.fanpiece.com/jp/%E3%83%95%E3%83%AA%E3%83%BC%E7%A7%BB%E7%B1%8D%E3%81%AE%E3%82%B5%E3%83%B3%E3%83%81%E3%83%A7%E3%81%AB%E3%83%89%E3%83%AB%E3%83%88%E3%83%A0%E3%83%B3%E3%83%88%E3%81%8C%E6%8E%A5%E8%A7%A6%E3%82%82-%E6%9D%A1%E4%BB%B6%E3%81%AF-%E5%8E%B3%E3%81%97%E3%81%84-%E3%81%8B-c1501920.html"
+
+  - id: said
+    heading: 本人はどうしたいのか
+    tier: 報道
+    telop: "イングランド国外を希望"
+    say:
+      - "プレミアのクラブから打診はあると伝えられています"
+      - "ただ本人は、イングランドの外を望んでいるとされます"
+      - "戻るより、離れる側を選ぼうとしている形です"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/ce8ab7ef7b1840189634e5938254ffcfb2896843"
+      - "https://www.soccer-king.jp/news/world/eng/20260815/2192702.html"
+
+  - id: why
+    heading: なぜ決まらないのか
+    tier: 背景
+    telop: "争奪戦にならなかった"
+    say:
+      - "フリーであれば移籍金は要りません"
+      - "それでも、期待されたような争奪戦は起きませんでした"
+      - "給与の条件が折り合わないことが、繰り返し伝えられています"
+    official: false
+    sources:
+      - "https://football.fanpiece.com/jp/%E3%83%95%E3%83%AA%E3%83%BC%E7%A7%BB%E7%B1%8D%E3%81%AE%E3%82%B5%E3%83%B3%E3%83%81%E3%83%A7%E3%81%AB%E3%83%89%E3%83%AB%E3%83%88%E3%83%A0%E3%83%B3%E3%83%88%E3%81%8C%E6%8E%A5%E8%A7%A6%E3%82%82-%E6%9D%A1%E4%BB%B6%E3%81%AF-%E5%8E%B3%E3%81%97%E3%81%84-%E3%81%8B-c1501920.html"
+      - "https://news.yahoo.co.jp/articles/ce8ab7ef7b1840189634e5938254ffcfb2896843"
+
+  - id: next
+    heading: これから何を見るか
+    tier: 未確認
+    telop: "登録の期限"
+    say:
+      - "見るべきは、どのリーグの登録期限に間に合わせるかです"
+      - "無所属のままだと、出られない期間がそのまま延びます"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/ba9e1f2979412413e26564f25618395b7cfe2c42"

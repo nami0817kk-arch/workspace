@@ -1,0 +1,90 @@
+# 鈴木彩艶 の取材メモ（2026年9月8日）
+slot: japan
+date: "2026年9月8日"
+
+theme:
+  id: zion_liverpool
+  league: england
+  prefix: ""
+  title: "リバプールOBが鈴木彩艶について漏らした本音"
+  hook: "元イングランド代表が、古巣について率直に語りました"
+  question: "なぜ「取り逃がした」と言われているのか"
+
+thumbnail:
+  line1: "「取り逃がしたな」"
+  line2: "パス成功率95%"
+  tags: ["鈴木彩艶", "アストン・ヴィラ"]
+  points: ["パス成功率 ●●%", "古巣が漏らした本音"]
+  photo: "assets/photos/20260909_zion/01.jpg"
+  photos: ["assets/photos/20260909_zion/01.jpg", "assets/photos/20260909_alisson/01.jpg"]
+
+answer: "ハル戦でパス成功率95%を記録し、移籍2戦目で無失点に抑えたからです"
+watch: "この出来が続くか。パリSGも逃した側として名前が挙がっています"
+
+sections:
+  - id: said
+    heading: 誰が何と言ったのか
+    tier: 報道
+    telop: "「取り逃がしたな」"
+    say:
+      - "元イングランド代表のスティーブン・ウォーノックです"
+      - "リバプールでプレーした選手が、古巣についてこう述べました"
+      - {voice: ウォーノック, text: "取り逃がしたなと思う"}
+      - {voice: ウォーノック, text: "率直に言えばね"}
+      - {voice: ウォーノック, text: "その試合で、彼は素晴らしかった"}
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/3ca1551d5244aed0a283bec041407eded8193bf2"
+      - "https://sports.yahoo.co.jp/column/detail/2026082200003-spnavi"
+
+  - id: numbers
+    heading: 何が評価されたのか
+    tier: 報道
+    telop: "パス成功率95%"
+    say:
+      - "ハル戦でのことです"
+      - "鈴木彩艶のパス成功率は95パーセントでした"
+      - "移籍して2試合目で、無失点に抑えています"
+      - "止める力だけでなく、足元の技術が評価されました"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/3ca1551d5244aed0a283bec041407eded8193bf2"
+      - "https://sports.yahoo.co.jp/column/detail/2026082200003-spnavi"
+
+  - id: background
+    heading: どうやってヴィラに来たのか
+    tier: 背景
+    telop: "総額3500万ユーロの5年契約"
+    say:
+      - "鈴木はこの夏、パルマからアストン・ヴィラへ移りました"
+      - "出来高を含めて総額3500万ユーロ。日本円でおよそ64億6000万円です"
+      - "契約は5年。複数のクラブが水面下で争っていました"
+    official: false
+    sources:
+      - "https://sports.yahoo.co.jp/column/detail/2026082200003-spnavi"
+      - "https://news.yahoo.co.jp/articles/14830332b9dc0e5789187a0be69533495ba8e80d"
+
+  - id: react
+    heading: 逃したのはリバプールだけではない
+    tier: 報道
+    telop: "パリSGにも逆風"
+    say:
+      - "パリSGにも同じ話が出ています"
+      - "鈴木の獲得が消えたあと、現地では補強しなかった判断が問われました"
+      - {voice: 現地の声, text: "補強しなかったのは間違い"}
+      - {voice: 現地の声, text: "疑問を抱かざるを得ない"}
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/14830332b9dc0e5789187a0be69533495ba8e80d"
+      - "https://sports.yahoo.co.jp/column/detail/2026082200003-spnavi"
+
+  - id: next
+    heading: これから何を見るか
+    tier: 未確認
+    telop: "この出来が続くか"
+    say:
+      - "見るべきは、この出来が続くかどうかです"
+      - "ヴィラは開幕から得点に苦しんでいるので、守る側の負担は大きくなります"
+    official: false
+    sources:
+      - "https://sports.yahoo.co.jp/column/detail/2026082200003-spnavi"

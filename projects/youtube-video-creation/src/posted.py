@@ -31,9 +31,12 @@ LEDGER = Path("research/posted.json")
 # **上限の本数は分からない。**2026-09-07 に34本目で弾かれたが、
 # それが上限だという確証はない（コンソールの Video Uploads per day は
 # 49/100 で余っていた）。ここでは「いつ戻るか」だけを確かなものとして扱う。
-PACIFIC_SUMMER = timezone(timedelta(hours=-7))
-# 目安。これを超えたら弾かれても驚かない、という程度の数
-SOFT_MAX = 34
+# 解除は「エラーが返った時刻から24時間」（2026-09-07 実測）
+COOLDOWN_HOURS = 24
+# 開設まもないチャンネルの安全圏。これを超えたら弾かれても驚かない
+SOFT_MAX = 15
+# 弾かれた時刻を控える先
+BLOCKS = Path("research/blocked.json")
 
 # **投稿は時間で散らす**（2026-09-07 の実測）。参考にしている
 # 2chサッカーの噂話（登録10.3万）は直近24時間に 8/18/20/21/22/23 時間前と
@@ -68,10 +71,14 @@ def _load(path: Path) -> list[dict]:
 
 
 def find(build_dir: Path | str, path: Path = LEDGER) -> dict | None:
-    """この出力先をすでに投稿していれば、そのときの控えを返す。"""
+    """この出力先をすでに投稿していれば、そのときの控えを返す。
+
+    **消された動画は返さない。**消えたURLを出して止めても紛らわしいだけで、
+    上げ直したいから消したのかもしれない。ただし本数には数える（下）。
+    """
     name = key(build_dir)
     for row in reversed(_load(path)):
-        if row.get("build") == name:
+        if row.get("build") == name and not row.get("deleted"):
             return row
     return None
 
@@ -99,18 +106,42 @@ def _times(path: Path) -> list[datetime]:
     return sorted(out)
 
 
-def day_start(now: datetime | None = None) -> datetime:
-    """枠が戻った時刻。太平洋時間の深夜0時＝日本時間の16時。"""
-    at = (now or datetime.now(timezone.utc)).astimezone(PACIFIC_SUMMER)
-    return at.replace(hour=0, minute=0, second=0, microsecond=0)
+def recent(path: Path = LEDGER, now: datetime | None = None,
+           hours: int = 24) -> int:
+    """直近24時間に上げた本数。**上限が何本かは分からないので目安。**
+
+    **消した動画も数える。**上げた時点で枠は消費されていて、消しても戻らない
+    （2026-09-07、二重投稿した4本を消しても解除は早まらなかった）。
+    """
+    now = now or datetime.now(timezone.utc)
+    edge = now - timedelta(hours=hours)
+    return len([t for t in _times(path) if t > edge])
 
 
-def today(path: Path = LEDGER, now: datetime | None = None) -> int:
-    """枠が戻ってから上げた本数。**上限そのものは分からない。**"""
-    edge = day_start(now)
-    return len([t for t in _times(path) if t >= edge])
+def block(path: Path = BLOCKS, now: datetime | None = None) -> datetime:
+    """`uploadLimitExceeded` を食らった時刻を控える。
+
+    **解除はここから24時間。**固定時刻でも、1本ずつ空く方式でもない
+    （2026-09-07 実測。10:36 に弾かれ、12:41 も 16:02 も弾かれたまま）。
+    """
+    now = now or datetime.now(timezone.utc)
+    rows = _load(path)
+    rows.append({"at": now.astimezone(timezone.utc).isoformat(timespec="seconds")})
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(rows, ensure_ascii=False, indent=2) + chr(10),
+                    encoding="utf-8")
+    return now
 
 
-def frees_at(path: Path = LEDGER, now: datetime | None = None) -> datetime:
-    """次に枠が戻る時刻。**本数に関係なく、必ず次の16時（JST）。**"""
-    return day_start(now) + timedelta(days=1)
+def blocked_until(path: Path = BLOCKS, now: datetime | None = None) -> datetime | None:
+    """いつ解除されるか。弾かれた記録が無ければ None。
+
+    **弾かれている間は投げないこと。**再試行を繰り返すと内部のタイマーが
+    延ばされるとの報告がある。測る行為が解除を遅らせる。
+    """
+    times = _times(path)
+    if not times:
+        return None
+    until = times[-1] + timedelta(hours=COOLDOWN_HOURS)
+    now = now or datetime.now(timezone.utc)
+    return until if until > now else None

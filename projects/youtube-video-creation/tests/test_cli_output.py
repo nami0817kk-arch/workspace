@@ -81,3 +81,30 @@ def test_全角の途中で半端に切らない():
     """1桁だけ残して全角を入れると、幅をはみ出す。"""
     fitted = cli._fit("あ" * 10, 7)
     assert cli._columns(fitted) <= 7
+
+
+def test_壊れた文字が混じっても書き出せる():
+    """Windows で読み違えたバイトが単独のサロゲートになることがある。
+
+    2026-09-08、631件の見出しのうち1文字のせいで収集ごと落ちた。
+    """
+    from src.cli import _readable
+
+    broken = "久保建英" + chr(0xDC83) + "が移籍"
+    out = _readable(broken)
+    out.encode("utf-8")          # ここで落ちなければよい
+    assert "久保建英" in out and "が移籍" in out
+
+
+def test_読む側の文字コードもそろえる():
+    """**書き出す側だけ直しても、つないだら壊れる。**
+
+    2026-09-08、collect が標準入力を cp932 で読み、449件のうち
+    90件の見出しが化けた（Mbappé → Mbappﾃｩ）。
+    """
+    import io
+    from src.cli import _use_utf8
+
+    stream = io.TextIOWrapper(io.BytesIO(), encoding="cp932")
+    _use_utf8(stream)
+    assert stream.encoding.lower().replace("-", "") == "utf8"

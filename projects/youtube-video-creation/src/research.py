@@ -95,6 +95,12 @@ class Section:
     bg: str = ""      # この節の背景。空なら既定の並びから割り当てる
 
 
+# まとめの答えの上限。**実測で決めた**（2026-09-08）。
+# 止まったのは 66 / 67 / 73 / 76 字。通ったのは 48 / 50 / 54 字。
+# 境目は54と66のあいだなので、少し余裕を見て 58 にする。
+# **厳しくしすぎると鳴りっぱなしになり、警告が無いのと同じになる**
+ANSWER_MAX = 58
+
 # タイトルの頭に付ける札。まとめ系で定番の使い分け。
 # **2026-09-07 に増やした。**分野を横断して24本を並べたら、向こうは動画ごとに
 # 強い言葉を作っていた（【激ヤバ】【緊急事態】【崩壊】【魔境】【神試合】
@@ -117,11 +123,52 @@ PREFIXES = {
 }
 
 
+# 動画の型（2026-09-08）。**題材ごとに選ぶ。**
+#
+# 14チャンネルを同じ物差しで測ったら、ニュース番組の形をしているのは
+# こちらだけで、伸びている側は形式も尺もバラバラなのに「誰かの声がある」点だけ
+# 全員同じだった（docs/news-sources.md）。他所で回っている作りは、こちらでも
+# 作れるようにしておく。どれを使うかは取材メモの format: で決める。
+#
+#   news   … キャスターと解説が事実を掘る。問い→節→反応。確度の札を出す
+#            **まとめは無い**（2026-09-08 ユーザー「まとめはいらない」）。
+#            反応の節を最後に置き、最後の1件で終わる。参考の動画はどれもそう終わる
+#   voices … 事実は最初の30秒だけ。残りは反応を1件ずつ読む（2ch系5チャンネルの型）
+#   quote  … 選手・監督が自分で語った言葉を切り出す（KOALA SOCCER の型・30秒前後）
+FORMATS = {
+    "news": {
+        "label": "海外サッカー ニュース",
+        "needs_question": True, "needs_answer": False, "wrap": False,
+        "min_sections": 3,
+        "voice_min": 40.0,
+        "note": "※各社の報道をもとにしています。クラブが発表した「確定」、\n"
+                "報道機関が伝える「報道」、SNS段階の「未確認」、\n"
+                "経緯の説明である「背景」を画面上で分けています。\n",
+    },
+    "voices": {
+        "label": "みんなの反応",
+        "needs_question": False, "needs_answer": False, "wrap": False,
+        "min_sections": 2,
+        "voice_min": 70.0,
+        "note": "※反応は実在する投稿・記事から引いています。出典は下にあります。\n"
+                "個人が特定できる形では出していません。\n",
+    },
+    "quote": {
+        "label": "本人の言葉",
+        "needs_question": False, "needs_answer": False, "wrap": False,
+        "min_sections": 1,
+        "voice_min": 60.0,
+        "note": "※発言は下の記事から引いています。\n",
+    },
+}
+
+
 @dataclass
 class Notes:
     date: str
     title: str
     question: str                    # この動画が答える問い
+    format: str = "news"             # news / voices / quote。FORMATS 参照
     slot: str = ""
     theme_id: str = ""
     prefix: str = ""                 # 【速報】【朗報】【悲報】
@@ -214,9 +261,16 @@ def build_notes(raw: dict) -> Notes:
     if not sections:
         raise ResearchError("sections が空です。節を立てて掘ってください")
 
+    chosen = str(raw.get("format") or theme.get("format") or "news").strip().lower()
+    if chosen not in FORMATS:
+        raise ResearchError(
+            f"format『{chosen}』は知らない型です（{' / '.join(FORMATS)}）"
+        )
+
     return Notes(
         date=str(raw.get("date", "")).strip(),
         slot=str(raw.get("slot", "")).strip(),
+        format=chosen,
         title=str(theme.get("title", "")).strip(),
         theme_id=str(theme.get("id", "")).strip(),
         question=str(theme.get("question", "")).strip(),
@@ -242,19 +296,39 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
         problems.append("theme.title が空です")
     if not notes.date:
         problems.append("date が空です")
-    if policy.get("require_question", True) and not notes.question:
+    shape = FORMATS[notes.format]
+    # 問いと答えは news の型だけに求める。反応や本人の言葉を並べる型に
+    # 「問い」を立てさせると、無理に作った問いが冒頭に乗る
+    if shape["needs_question"] and policy.get("require_question", True) and not notes.question:
         problems.append(
             "theme.question が空です。この動画が答える問いを1つ立ててください"
             "（例: なぜ金の問題ではないのか）"
         )
-    if not notes.answer:
+    if shape["needs_answer"] and not notes.answer:
         problems.append("answer が空です。まとめで問いにどう答えるかを書いてください")
 
-    minimum = int(policy.get("min_sections", 3))
+    minimum = int(shape["min_sections"])
+    if notes.format == "news":
+        minimum = int(policy.get("min_sections", minimum))
     if len(notes.sections) < minimum:
+        what = "深掘りには" if notes.format == "news" else f"型『{notes.format}』には"
         problems.append(
-            f"節が{len(notes.sections)}つしかありません。深掘りには{minimum}つ以上必要です"
-            "（何が起きたか／なぜ／争点／これから）"
+            f"節が{len(notes.sections)}つしかありません。{what}{minimum}つ以上必要です"
+            + ("（何が起きたか／なぜ／争点／これから）" if notes.format == "news" else "")
+        )
+    # **反応で終わる**（2026-09-08 ユーザー「他人の声のところは他のチャンネルを参考に」）。
+    # 参考の動画は、事実のあとに反応を1件ずつ読んで、最後の1件で切れる。
+    # こちらは反応のあとに「これから何を見るか」と「まとめ」を語っていた。
+    # 反応の節より後ろに、語りだけの節があれば止める
+    problems += _check_voices_last(notes)
+    if notes.format == "voices" and not _has_crowd(notes):
+        problems.append(
+            "型『voices』なのに、反応の行（voice: ネット民 など）がありません。"
+            "事実の節のあとに、反応を1件ずつ voice 付きで並べてください"
+        )
+    if notes.format == "quote" and not _has_named_voice(notes):
+        problems.append(
+            "型『quote』なのに、本人の発言の行（voice: 選手名）がありません"
         )
 
     for section in notes.sections:
@@ -287,6 +361,39 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
             )
     problems += _check_voice_clash(notes)
     return problems
+
+def _has_crowd(notes: Notes) -> bool:
+    """匿名の反応の行があるか。voice が付いていてキャスター・解説ではないもの。"""
+    return any(v and v not in SPEAKERS
+               for section in notes.sections for v in section.voices)
+
+
+def _has_named_voice(notes: Notes) -> bool:
+    return _has_crowd(notes)
+
+
+def _voice_heavy(section: Section) -> bool:
+    """他人の声が半分以上の節。反応の節はここに当たる。"""
+    if not section.say:
+        return False
+    other = sum(1 for v in section.voices if v and v not in SPEAKERS)
+    return other * 2 >= len(section.say)
+
+
+def _check_voices_last(notes: Notes) -> list[str]:
+    """反応の節のあとに、語りだけの節が続いていないか。"""
+    heavy = [i for i, s in enumerate(notes.sections) if _voice_heavy(s)]
+    if not heavy:
+        return []
+    trailing = [s.heading or s.id for s in notes.sections[heavy[-1] + 1:]]
+    if not trailing:
+        return []
+    return [
+        "反応の節のあとに語りの節があります（" + "／".join(trailing) + "）。"
+        "参考チャンネルは反応の最後の1件で終わります。"
+        "見通しは反応の前に置いてください"
+    ]
+
 
 def _check_voice_clash(notes: Notes) -> list[str]:
     """別人が同じ声にならないか（2026-09-07）。
@@ -386,16 +493,10 @@ def advise(notes: Notes, plan: Plan | None = None, now=None) -> list[str]:
             "未確認だけの回に速報と書くと、内容と釣り合いません"
         )
 
-    # 参考3チャンネルの実測（2026-09-04）。**例外なく**先頭にラベルが付く。
-    #   2chサッカーの噂話(10.3万)  【悲報】【速報】【朗報】【衝撃】【現地反応】
-    #   さっかー情報館(1.73万)      【速報】＋「〜してしまうww」
-    #   クロニカ(1.11万)            【海外の反応】
-    if not notes.prefix:
-        notes_warnings.append(
-            "prefix が空です。参考3チャンネルは例外なく先頭にラベルを付けています"
-            "（速報 / 悲報 / 朗報 …）。付けないと一覧で埋もれます"
-        )
-
+    # **札は毎回付けない**（2026-09-08 ユーザー指示）。
+    # 参考3チャンネルは例外なく先頭にラベルを付けているが、
+    # こちらは同じ札が並ぶと一覧が単調になる。**空でよい。**
+    # 付けるなら、その回に釣り合うものだけ。数の偏りは variety が見る。
     # 同じく3チャンネルとも、タイトルに人名かクラブ名が入る
     if notes.title and not _has_name(notes.title, notes.sections):
         notes_warnings.append(
@@ -415,6 +516,25 @@ def advise(notes: Notes, plan: Plan | None = None, now=None) -> list[str]:
         )
     if len(str(notes.thumbnail.get("line1", ""))) > 14:
         notes_warnings.append("thumbnail.line1 が長めです。14文字くらいまでが読みやすい")
+
+    # **サムネに答えを書かない**（2026-09-08 ユーザー指摘）。
+    # タイトルでは答えを隠しているのに、サムネの左に「挙げられた3人の名前」を
+    # そのまま並べていた。それでは隠している意味が消える。
+    # 参考チャンネルは答えの位置を ●● で伏せている
+    for point in (notes.thumbnail.get("points") or [])[:3]:
+        bare = point.replace("●", "").strip()
+        if len(bare) >= 4 and bare in notes.answer:
+            notes_warnings.append(
+                f"サムネの『{point}』が、まとめの答えにそのまま入っています。"
+                "タイトルで隠しているのに、サムネで答えては意味がありません")
+
+    # **まとめの答えが長いと、カードが12秒以上そのままになる**（2026-09-08 実測）。
+    # 書き出してから review の「カードの持ち」で気づくと、音声から作り直しになる。
+    # 45字で約12秒。ここで知らせれば、作り直さずに済む
+    if len(notes.answer) > ANSWER_MAX:
+        notes_warnings.append(
+            f"answer が{len(notes.answer)}字あります（{ANSWER_MAX}字まで）。"
+            "まとめのカードが12秒以上そのままになり、review が止めます")
     if len(str(notes.thumbnail.get("line2", ""))) > 18:
         notes_warnings.append("thumbnail.line2 が長めです。18文字くらいまでが読みやすい")
 
@@ -481,7 +601,10 @@ CROWD_WORDS = (
 # 参考3チャンネルは尺の58%・19.2件・1件3.1秒。こちらは14%・2.2件・1件39字だった
 VOICE_SHARE_TARGET = 40      # %
 VOICE_COUNT_TARGET = 10      # 件
-VOICE_LINE_TARGET = 20       # 字。**実測1件3.1秒＝約16字**。2026-09-07 に30字から締めた
+# 字。2026-09-07 に実測（1件3.1秒＝約16字）で20字に締めたが、2026-09-08 に
+# サッカーラボ（25.5万回）の文字起こしを取ると1件30〜45字だった。参考が割れて
+# いるので目安は30字、review の上限は45字にする
+VOICE_LINE_TARGET = 30
 
 
 def _advise_title(notes: Notes) -> list[str]:
@@ -490,10 +613,14 @@ def _advise_title(notes: Notes) -> list[str]:
     各チャンネルの最高再生を並べたら、上位はほぼ全部が答えを隠していた。
     こちらの直近14本は全部が言い切りで、タイトルで用が足りてしまっていた。
     """
-    from .review import TITLE_HOOKS
+    from .review import TITLE_HOOKS, TITLE_QUESTION_TAILS
 
     title = notes.video_title
     if any(word in title for word in TITLE_HOOKS):
+        return []
+    if title.rstrip("。！!").endswith(TITLE_QUESTION_TAILS):
+        return []
+    if title.rstrip("。！!").endswith(("」", "』")):
         return []
     return [
         f"タイトル『{title[:24]}…』が答えを言い切っています。"
@@ -724,13 +851,20 @@ def to_script(notes: Notes, plan: Plan) -> str:
         raise ResearchError("取材メモに不備があります:\n  - " + "\n  - ".join(problems))
 
     thumbnail = notes.thumbnail or {}
+    shape = FORMATS[notes.format]
     front = {
         "title": notes.video_title,
+        # 型は台本に残す。review が型ごとにしきい値を変える
+        "format": notes.format,
         "thumbnail_line1": str(thumbnail.get("line1") or notes.title),
         "thumbnail_line2": str(thumbnail.get("line2") or notes.question),
         "thumbnail_tags": [str(t) for t in (thumbnail.get("tags") or [])],
         # 案を書いてあれば台本に持ち越す。thumbnail --all で並べて比べる
         "thumbnail_alt": [dict(a or {}) for a in (thumbnail.get("alt") or [])],
+        # 左の余白に積む短い言葉（2026-09-08）。3つまで
+        "thumbnail_points": [str(x) for x in (thumbnail.get("points") or [])][:3],
+        # 顔を並べる（2026-09-08）。2〜3枚で全面が写真になる
+        "thumbnail_photos": [str(x) for x in (thumbnail.get("photos") or [])][:3],
         # **顔写真は取材メモに持たせる。**台本にしか書けなかったので、
         # 台本を作り直すたびに消えていた（2026-09-06 に2回やった）。
         # 直すたびに手で書き戻すのは、必ずどこかで抜ける
@@ -741,21 +875,25 @@ def to_script(notes: Notes, plan: Plan) -> str:
         "bg": "assets/backgrounds/stadium.png",
         "date": notes.date,
         "intro_title": notes.title,
-        "intro_label": "海外サッカー ニュース",
+        "intro_label": shape["label"],
         "outro_title": _telop(notes.watch, 20) or "続報は次回お伝えします",
         "outro_sub": "チャンネル登録でお待ちください",
         "description": (
             f"{notes.title}\n\n"
-            f"この動画が答える問い: {notes.question}\n\n"
-            "※各社の報道をもとにしています。クラブが発表した「確定」、\n"
-            "報道機関が伝える「報道」、SNS段階の「未確認」、\n"
-            "経緯の説明である「背景」を画面上で分けています。\n"
+            + (f"この動画が答える問い: {notes.question}\n\n" if notes.question else "")
+            + shape["note"]
         ),
         # タグは話の中身から作る。どの動画にも同じ4つでは検索に掛からない
         "tags": tags_mod.build(
             f"{notes.title} {notes.topic}",
             league_name=plan.league_name(notes.league) if notes.league else "",
             kind=notes.kind,
+            # **選手名を入れる**（2026-09-08）。辞書が無いので推測はしないが、
+            # サムネの札には人名を書いているので、そこから持ってくる。
+            # 参考4チャンネルのハッシュタグはほぼ全部が選手名とクラブ名で、
+            # こちらは「サッカー」「移籍市場」のような分類語しか無かった。
+            # サンチョの回にサンチョが入っていない状態だった
+            extra=[str(t) for t in (thumbnail.get("tags") or [])],
         ),
         "sources": notes.sources,
         "cards": _cards(notes),
@@ -773,17 +911,24 @@ def to_script(notes: Notes, plan: Plan) -> str:
     # **冒頭から名乗らない。**「海外サッカーのニュースです」は毎回同じで中身が無く、
     # 続く「〜ここを掘っていきます」も問いを言い直しているだけだった。
     # **問いは読み上げず、画面に出す。**読むと、つかみと合わせて前置きが18秒になる
-    hook = notes.hook or _ends_sentence(notes.question)
     lines += [
         f"キャスター: {_ends_sentence(notes.title)}",
         f"  telop: {notes.title}",
         "  se: assets/audio/se_pon.wav",
-        f"キャスター: {hook}",
-        # 画面は2〜3行に折り返せる。20字で切ると「…当の監督…」のように
-        # 途中で切れた文字がそのまま出ていた（2026-09-07 に書き出して確認）
-        f"  telop: 今回の問い: {_telop(notes.question, TELOP_LIMIT)}",
-        "",
     ]
+    if notes.format == "news":
+        hook = notes.hook or _ends_sentence(notes.question)
+        lines += [
+            f"キャスター: {hook}",
+            # 画面は2〜3行に折り返せる。20字で切ると「…当の監督…」のように
+            # 途中で切れた文字がそのまま出ていた（2026-09-07 に書き出して確認）
+            f"  telop: 今回の問い: {_telop(notes.question, TELOP_LIMIT)}",
+        ]
+    elif notes.hook:
+        # 反応・本人の言葉の型は、つかみが書いてあれば1行だけ。問いは立てない。
+        # 参考（サッカーラボ 25.5万回）は 0:02 でタイトル、0:11 から事実だった
+        lines.append(f"キャスター: {_ends_sentence(notes.hook)}")
+    lines.append("")
 
     previous_background = ""
     for index, section in enumerate(notes.sections):
@@ -866,20 +1011,24 @@ def to_script(notes: Notes, plan: Plan) -> str:
     # **まとめの下地も、直前の節と同じにしない。**決め打ちにしていたため、
     # 最後の節がたまたま studio に落ちると2節続けて同じ絵になっていた
     # （2026-09-07 に CI が検出）。本文の節と同じ選び方に揃える。
-    wrap_background = "assets/backgrounds/studio.png"
-    if wrap_background == previous_background:
-        wrap_background = next(c for c in BACKGROUNDS if c != previous_background)
-    lines += [
-        "## まとめ",
-        f"@bg: {moving_background(wrap_background)}",
-        "",
-        f"解説: {_spoken(notes.answer)}",
-        f"  telop: {_telop(notes.answer)}",
-        "  card: wrap",
-        "  se: assets/audio/se_jingle.wav",
-        "  pause: 1.2",
-        "",
-    ]
+    #
+    # **まとめがあるのは news の型だけ。**反応や本人の言葉の型は、最後の1件で
+    # 終わる。参考の動画はどれも反応で切れていて、締めの語りが無い
+    if shape["wrap"]:
+        wrap_background = "assets/backgrounds/studio.png"
+        if wrap_background == previous_background:
+            wrap_background = next(c for c in BACKGROUNDS if c != previous_background)
+        lines += [
+            "## まとめ",
+            f"@bg: {moving_background(wrap_background)}",
+            "",
+            f"解説: {_spoken(notes.answer)}",
+            f"  telop: {_telop(notes.answer)}",
+            "  card: wrap",
+            "  se: assets/audio/se_jingle.wav",
+            "  pause: 1.2",
+            "",
+        ]
     return "\n".join(lines)
 
 
@@ -895,11 +1044,12 @@ def _cards(notes: Notes) -> dict:
     # 問い・答え・次の焦点を3つ並べたら、2分の動画の締めには字が細かすぎ、
     # 下のテロップとも重なっていた（作った動画を目視して発見）。
     # 問いは冒頭で、次の焦点は読み上げで言うので、画面で繰り返す必要はない。
-    cards["wrap"] = {
-        "type": "points",
-        "title": "この動画の答え",
-        "items": [notes.answer],
-    }
+    if FORMATS[notes.format]["wrap"]:
+        cards["wrap"] = {
+            "type": "points",
+            "title": "この動画の答え",
+            "items": [notes.answer],
+        }
     return cards
 
 

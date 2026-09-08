@@ -79,9 +79,9 @@ def test_question_is_required():
     assert any("question" in p for p in problems)
 
 
-def test_answer_is_required():
-    problems = verify(build_notes(_raw(answer="")), _plan())
-    assert any("answer" in p for p in problems)
+def test_answer_is_not_required_anymore():
+    """2026-09-08 ユーザー「まとめはいらない」。答えの節が無いので answer は求めない。"""
+    assert verify(build_notes(_raw(answer="")), _plan()) == []
 
 
 def test_too_few_sections_is_not_a_deep_dive():
@@ -124,21 +124,23 @@ def test_sources_are_collected_without_duplicates():
 
 
 def test_to_script_refuses_notes_that_fail_verification():
+    raw = _raw()
+    raw["theme"]["question"] = ""
     with pytest.raises(ResearchError, match="不備"):
-        to_script(build_notes(_raw(answer="")), _plan())
+        to_script(build_notes(raw), _plan())
 
 
 def test_generated_script_opens_with_the_question():
     from src.script_model import parse_script
 
     script = parse_script(to_script(build_notes(_raw()), _plan()))
+    # **まとめは無い**（2026-09-08 ユーザー「まとめはいらない」）。最後の節で終わる
     assert [s.title for s in script.scenes] == [
-        "オープニング", "何が起きたか", "なぜそうなったか", "これからどうなる", "まとめ"
+        "オープニング", "何が起きたか", "なぜそうなったか", "これからどうなる"
     ]
-    # 冒頭で問いを立て、まとめで答える
+    # 冒頭で問いを立てる。答えの節は読まない
     assert any("なぜ金の問題ではないのか" in line.telop_text() for line in script.lines)
-    assert any("ライバルに売りたくないから" in line.telop_text() for line in script.lines)
-    assert "wrap" in script.cards
+    assert "wrap" not in script.cards
 
 
 def test_generated_script_carries_the_context_tier():
@@ -549,126 +551,14 @@ def test_official_sources_are_not_counted_as_leaning():
 # しては字が細かく、下のテロップとも重なっていた（作った動画を目視して発見）。
 
 
-def test_まとめのカードは答えだけにする():
+def test_まとめのカードは作らない():
+    """2026-09-08 ユーザー「まとめはいらない」。答えのカードも出さない。"""
     from src.research import _cards, load_notes
 
     notes = load_notes("research/20260903_evening.yaml")
-    card = _cards(notes)["wrap"]
-    assert card["items"] == [notes.answer]
-    assert notes.question not in card["items"]   # 問いは冒頭で出している
-    assert notes.watch not in card["items"]      # 次の焦点は読み上げで言う
+    assert "wrap" not in _cards(notes)
 
 
-# 背景を3枚から順番に配るだけだったので、緑の芝ばかりが続いていた
-# （実測: 1本17カット中13カットが緑系）。節の性格で下地を変える。
-
-
-def test_数字の節は模様の無い下地にする():
-    from src.research import BACKGROUND_BY_SECTION
-
-    assert "studio" in BACKGROUND_BY_SECTION["numbers"]
-
-
-def test_経緯や反応の節は芝を出さない():
-    """移籍やクラブの話で芝が映ると、試合の映像に見えてしまう。"""
-    from src.research import BACKGROUND_BY_SECTION
-
-    for sid in ("background", "voices", "collapsed"):
-        assert "pitch" not in BACKGROUND_BY_SECTION[sid]
-        assert "stadium" not in BACKGROUND_BY_SECTION[sid]
-
-
-def test_割り当ての無い節でも緑が連続しない():
-    from src.research import BACKGROUNDS
-
-    greens = {"pitch.png", "stadium.png"}
-    for a, b in zip(BACKGROUNDS, BACKGROUNDS[1:]):
-        assert not (a.split("/")[-1] in greens and b.split("/")[-1] in greens)
-
-
-def test_同じ背景が連続しない():
-    """節が変わったことが画面から分かるように、下地を変える。
-
-    実測で studio が2節続き、絵が変わらなかった。
-    """
-    import re
-
-    from src.plan import load_plan
-    from src.research import load_notes, to_script
-
-    notes = load_notes("research/20260903_japan.yaml")
-    body = to_script(notes, load_plan())
-    backgrounds = re.findall(r"^@bg: (\S+)", body, flags=re.M)
-    assert len(backgrounds) >= 3
-    for a, b in zip(backgrounds, backgrounds[1:]):
-        assert a != b, f"{a} が連続している"
-
-
-def test_まとめの下地も直前の節と同じにしない():
-    """まとめだけ下地を決め打ちしていて、最後の節と重なることがあった。
-
-    2026-09-07、CI が「studio.png が連続している」で落ちて分かった。
-    直前が studio に落ちる並びを作って、まとめが別の絵に逃げることを固定する。
-    """
-    import re
-
-    from src import research
-
-    notes = research.load_notes("research/20260903_japan.yaml")
-    body = research.to_script(notes, __import__("src.plan", fromlist=["load_plan"]).load_plan())
-    backgrounds = re.findall(r"^@bg: (\S+)", body, flags=re.M)
-    assert backgrounds[-1] != backgrounds[-2], "まとめが直前の節と同じ下地になっている"
-
-
-def test_問いが句点で終わっていても二重にしない():
-    """「〜のか。」に機械がもう1つ足して「。。」になっていた。"""
-    from src.research import _ends_sentence
-
-    assert _ends_sentence("なぜ外れたのか。") == "なぜ外れたのか。"
-    assert _ends_sentence("なぜ外れたのか") == "なぜ外れたのか。"
-    assert _ends_sentence("本当か？") == "本当か？"
-    assert _ends_sentence("") == ""
-
-
-# stock で実写クリップを取る仕組みも、動画背景を敷く仕組みも既にあったのに、
-# draft が .png を決め打ちしていたので一度も使われていなかった（2026-09-07）。
-
-def test_同じ名前で始まる動画があればそれを敷く(tmp_path, monkeypatch):
-    from src import backgrounds
-
-    root = tmp_path / "assets" / "backgrounds"
-    (root / "stock").mkdir(parents=True)
-    (root / "stock" / "stadium_night.mp4").write_bytes(b"x")
-    monkeypatch.setattr(backgrounds, "_resolve", lambda p: tmp_path / p)
-
-    got = backgrounds.moving_background("assets/backgrounds/stadium.png")
-    assert got.endswith("stock/stadium_night.mp4")
-
-
-def test_動画が無ければ静止画のまま(tmp_path, monkeypatch):
-    from src import backgrounds
-
-    (tmp_path / "assets" / "backgrounds").mkdir(parents=True)
-    monkeypatch.setattr(backgrounds, "_resolve", lambda p: tmp_path / p)
-
-    assert backgrounds.moving_background("assets/backgrounds/night.png") == (
-        "assets/backgrounds/night.png"
-    )
-
-
-def test_別の名前の動画は拾わない(tmp_path, monkeypatch):
-    """規則は「同じ名前で始まる」。関係ないクリップを敷かない。"""
-    from src import backgrounds
-
-    root = tmp_path / "assets" / "backgrounds"
-    root.mkdir(parents=True)
-    (root / "tactics_board.mp4").write_bytes(b"x")
-    monkeypatch.setattr(backgrounds, "_resolve", lambda p: tmp_path / p)
-
-    assert backgrounds.moving_background("assets/backgrounds/stadium.png").endswith("stadium.png")
-
-
-# 構成を参考チャンネルに合わせた（2026-09-07）。直近4本を文字起こしで測ったら、
 # 4本とも1行目がタイトルの読み上げで、まとめの節は1つも無かった。
 
 def test_1行目はタイトルをそのまま読む():
@@ -681,13 +571,33 @@ def test_1行目はタイトルをそのまま読む():
     assert first.telop_text() == notes.title
 
 
-def test_まとめは答えの1行だけにする():
-    from src.script_model import parse_script
+def test_反応の節のあとに語りの節があれば止める():
+    """参考の動画は反応の最後の1件で終わる（2026-09-08 サッカーラボの文字起こし）。
 
-    script = parse_script(to_script(build_notes(_raw()), _plan()))
-    wrap = script.scenes[-1]
-    assert wrap.title == "まとめ"
-    assert len(wrap.lines) == 1, "まとめが増えている（尺の18%を占めていた）"
+    こちらは反応のあと「これから何を見るか」と「まとめ」を語っていた。
+    """
+    raw = _raw()
+    raw["sections"] = [
+        _section(),
+        _section(id="net", heading="ネットの声", tier="未確認", official=False,
+                 say=[{"voice": "ネット民", "text": "まだ序盤やしな"},
+                      {"voice": "ネット民", "text": "お茶会で干されたか"}]),
+        _section(id="next", heading="これから何を見るか", tier="未確認", official=False),
+    ]
+    problems = verify(build_notes(raw), _plan())
+    assert any("反応の節のあとに" in p and "これから何を見るか" in p for p in problems)
+
+
+def test_反応で終わる並びは通る():
+    raw = _raw()
+    raw["sections"] = [
+        _section(),
+        _section(id="next", heading="これから何を見るか", tier="未確認", official=False),
+        _section(id="net", heading="ネットの声", tier="未確認", official=False,
+                 say=[{"voice": "ネット民", "text": "まだ序盤やしな"},
+                      {"voice": "ネット民", "text": "お茶会で干されたか"}]),
+    ]
+    assert verify(build_notes(raw), _plan()) == []
 
 
 def test_締めの挨拶を読み上げない():
@@ -745,3 +655,108 @@ def test_同じ声になる2人は取材メモで止まる(monkeypatch):
     }]
     problems = verify(build_notes(raw), _plan())
     assert any("同じ声" in p for p in problems)
+
+
+def test_まとめの答えが長いと知らせる():
+    """**書き出してから気づくと、音声から作り直しになる**（2026-09-08 に3回）。
+
+    45字でおよそ12秒。review の「カードの持ち」に当たる長さ。
+    """
+    from src.research import ANSWER_MAX, Notes, advise
+
+    notes = Notes(date="2026年9月8日", title="題", question="問い",
+                  answer="あ" * (ANSWER_MAX + 1))
+    assert any("answer が" in w for w in advise(notes))
+
+
+def test_短い答えなら知らせない():
+    from src.research import Notes, advise
+
+    notes = Notes(date="2026年9月8日", title="題", question="問い", answer="短い答え")
+    assert not any("answer が" in w for w in advise(notes))
+
+
+def test_サムネに答えを書いたら知らせる():
+    """**タイトルで隠しているのに、サムネで答えていた**（2026-09-08 指摘）。
+
+    参考チャンネルは答えの位置を ●● で伏せている。
+    """
+    from src.research import Notes, advise
+
+    notes = Notes(date="2026年9月8日", title="題", question="問い",
+                  answer="クヴァラツヘリア、ハリー・ケイン、ムバッペの3人です",
+                  thumbnail={"line1": "見出し",
+                             "points": ["ハリー・ケイン", "1人目 ●●●"]})
+    said = [w for w in advise(notes) if "サムネの" in w]
+    assert len(said) == 1 and "ハリー・ケイン" in said[0]
+
+
+def test_伏せ字なら知らせない():
+    from src.research import Notes, advise
+
+    notes = Notes(date="2026年9月8日", title="題", question="問い",
+                  answer="クヴァラツヘリア、ハリー・ケイン、ムバッペの3人です",
+                  thumbnail={"line1": "見出し", "points": ["1人目 ●●●●", "2人目 ●●●"]})
+    assert not [w for w in advise(notes) if "サムネの" in w]
+
+
+# ---- 型（format）2026-09-08 ------------------------------------------------
+
+def _voices_raw():
+    """反応の型の取材メモ。問いも答えも無く、事実1節＋反応1節。"""
+    raw = _raw()
+    raw["format"] = "voices"
+    raw["theme"] = {"id": "zion_reaction", "title": "ハル戦の鈴木彩艶を見た現地サポの反応"}
+    raw.pop("answer")
+    raw["sections"] = [
+        _section(id="facts", heading="何があったか", tier="報道", official=False,
+                 sources=["https://example.com/1", "https://example.com/2"],
+                 say=["ハル戦で無失点でした。"]),
+        _section(id="reactions", heading="現地の声", tier="未確認", official=False,
+                 sources=["https://example.com/thread"],
+                 say=[{"voice": "現地サポ", "text": "本物のGKを手に入れたぞ"},
+                      {"voice": "現地サポ", "text": "中盤より前にボールを出せる"},
+                      {"voice": "現地サポ", "text": "もう前線で使っちゃえよ"}]),
+    ]
+    return raw
+
+
+def test_反応の型は問いと答えが無くても通る():
+    assert verify(build_notes(_voices_raw()), _plan()) == []
+
+
+def test_反応の型に反応の行が無ければ止める():
+    raw = _voices_raw()
+    raw["sections"][1]["say"] = ["反応を紹介します。"]
+    problems = verify(build_notes(raw), _plan())
+    assert any("voices" in p for p in problems)
+
+
+def test_知らない型は止める():
+    import pytest
+
+    raw = _raw()
+    raw["format"] = "podcast"
+    with pytest.raises(ResearchError):
+        build_notes(raw)
+
+
+def test_反応の型の台本にまとめは無い():
+    from src.script_model import parse_script
+
+    script = parse_script(to_script(build_notes(_voices_raw()), _plan()))
+    assert [s.title for s in script.scenes] == ["オープニング", "何があったか", "現地の声"]
+    assert "wrap" not in script.cards
+    assert script.meta.get("format") == "voices"
+    assert script.meta.get("intro_label") == "みんなの反応"
+    # 1行目はタイトルを読む。問いのテロップは出さない
+    assert "ハル戦の鈴木彩艶を見た現地サポの反応" in script.lines[0].text
+    assert not any("今回の問い" in line.telop_text() for line in script.lines)
+
+
+def test_ニュースの型は今まで通り問いが要る():
+    raw = _raw()
+    raw["format"] = "news"
+    raw["theme"].pop("question")
+    problems = verify(build_notes(raw), _plan())
+    assert any("question" in p for p in problems)

@@ -1,0 +1,100 @@
+# 上田綺世 の取材メモ（2026年9月8日）
+slot: japan
+date: "2026年9月8日"
+
+theme:
+  id: ueda_lille
+  league: france
+  prefix: ""
+  title: "上田綺世が語ったリール移籍の理由がこちらです"
+  hook: "移籍を決めた瞬間について、上田綺世が自分の言葉で話しました"
+  question: "なぜ得点王がオランダを離れ、フランスを選んだのか"
+
+thumbnail:
+  line1: "移籍の決め手を語る"
+  line2: "「大敗した時に知りたいと思った」"
+  tags: ["上田綺世", "リール"]
+  photo: "assets/photos/20260908_ueda/01.jpg"
+
+answer: "2025年1月、CLでリールに大敗したことです。負けた相手のリーグで戦いたいと思った、と話しています"
+watch: "デビュー戦で決勝点。この先も点を取り続けられるか"
+
+sections:
+  - id: what
+    heading: 何があったのか
+    tier: 報道
+    telop: "1500万ユーロで完全移籍"
+    say:
+      - "上田綺世が、フェイエノールトからフランスのリールへ移籍しました"
+      - "完全移籍で、移籍金は1500万ユーロ。日本円でおよそ25億円です"
+      - "リールは今シーズン、チャンピオンズリーグに出ます"
+    official: false
+    sources:
+      - "https://www.soccer-king.jp/news/world/ned/20260831/2198732.html"
+      - "https://football-tribe.com/japan/2026/09/08/359006/"
+
+  - id: said
+    heading: 本人は何と言ったか
+    tier: 確定
+    telop: "「大敗した時に知りたいと思った」"
+    say:
+      - "リールの公式チャンネルで、上田本人がこう話しています"
+      - {voice: 上田綺世, text: "CLでリールと対戦した時、大敗しました"}
+      - {voice: 上田綺世, text: "その日のリールは、フェイエノールトよりも優れたチームでした"}
+      - {voice: 上田綺世, text: "このクラブとこのリーグを知りたいと思った瞬間でした"}
+      - {voice: 上田綺世, text: "リーグアンのトップチームでプレーする挑戦をしたかった"}
+    official: true
+    sources:
+      - "https://football-tribe.com/japan/2026/09/08/359006/"
+
+  - id: background
+    heading: どういう試合だったのか
+    tier: 背景
+    telop: "2025年1月のCL"
+    say:
+      - "対戦は2025年1月、チャンピオンズリーグでのことです"
+      - "上田はこのシーズン、オランダ1部で得点王になりました"
+      - "その得点王が、負けた相手のリーグを選んだことになります"
+    official: false
+    sources:
+      - "https://football-tribe.com/japan/2026/09/08/359006/"
+      - "https://news.yahoo.co.jp/articles/b24efa3df7512cd6881b43eb60e83ecb2c5b5624"
+
+  - id: turn
+    heading: 移籍の裏で何があったか
+    tier: 報道
+    telop: "トルコから高額オファーも"
+    say:
+      - "フェイエノールトの幹部が、移籍の背景を明かしています"
+      - "トルコのクラブから高額のオファーが届いていました"
+      - "それでもクラブは、5大リーグに挑みたいという本人の意思を尊重したと話しています"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/b24efa3df7512cd6881b43eb60e83ecb2c5b5624"
+      - "https://www.soccer-king.jp/news/world/ned/20260831/2198732.html"
+
+  - id: score
+    heading: 移籍後はどうなったか
+    tier: 報道
+    telop: "デビュー戦で決勝ゴール"
+    say:
+      - "上田はトゥールーズ戦でデビューし、決勝ゴールを決めました"
+      - "そのゴールについても、本人が触れています"
+      - {voice: 上田綺世, text: "正直に言うと、このゴールはホッとしました"}
+    official: false
+    sources:
+      - "https://football-tribe.com/japan/2026/09/08/359006/"
+      - "https://news.mynavi.jp/article/20260831-4893623/"
+
+  - id: next
+    heading: これから何を見るか
+    tier: 確定
+    telop: "「もう一段階ギアを上げる」"
+    say:
+      - "上田は、これからについてこう話しています"
+      - {voice: 上田綺世, text: "これからは、もっと多くのことを期待されると思います"}
+      - {voice: 上田綺世, text: "自分に寄せられている信頼に応えられるよう全力を尽くします"}
+      - {voice: 上田綺世, text: "これからの数週間は、もう一段階ギアを上げなければならない"}
+    official: true
+    sources:
+      - "https://football-tribe.com/japan/2026/09/08/359006/"

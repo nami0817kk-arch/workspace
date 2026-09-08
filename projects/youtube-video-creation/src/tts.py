@@ -253,7 +253,15 @@ def create_backend(config: ProjectConfig, use_tts: bool = True):
         return engine
     if core.available():
         return core
-    return SilentBackend()
+    # **黙って無音に落ちない**（2026-09-08）。この日、VOICEVOX が起動して
+    # おらず、長さだけ正しい無音のwavが並んだまま25本を公開した。
+    # 音の大きさの点検はBGMを見て合格するので、誰も気づかない。
+    # **無音でよいのは、そう言われたときだけ**（--no-tts / backend: silent）
+    raise TtsError(
+        f"VOICEVOX に接続できません（{config.voicevox.url}）。"
+        "起動してから作り直してください。"
+        "読み上げ無しで書き出すなら --no-tts、または backend を silent に。"
+    )
 
 
 # ----------------------------------------------------------------- 台本まるごと

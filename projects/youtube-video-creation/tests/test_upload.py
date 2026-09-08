@@ -177,3 +177,82 @@ def test_何度足しても増えない():
     assert once == twice
     assert once.count("画像: Wikimedia Commons") == 1
     assert once.count("※ 画像: File:X") == 1
+
+
+def test_書き出しの途中を掴んだら止める(tmp_path):
+    """video.mp4 だけ先にあって description.txt がまだ、という隙がある。
+
+    2026-09-08、作り直しの最中に投稿処理が入り、タイトルがフォルダ名・
+    概要欄が空のまま送られかけた。通信が切れて事なきを得ただけだった。
+    """
+    built = _built(tmp_path)
+    (built / "description.txt").write_text("", encoding="utf-8")
+    draft = upload_mod.prepare(built)
+    notes = draft.problems
+    assert any("フォルダ名" in note for note in notes)
+    assert any("概要欄が空" in note for note in notes)
+
+
+def test_動画より古い説明を掴んだら止める(tmp_path):
+    """バレンシアの回で、動画は新しく、タグだけ前の書き出しのものを送った。
+
+    2026-09-08。動画が書き上がった時点で投稿側の合図が立ち、
+    description.txt と script.json はそのあとに書かれる。
+    """
+    import os
+
+    built = _built(tmp_path)
+    video_at = (built / "video.mp4").stat().st_mtime
+    for name in ("description.txt", "script.json"):
+        path = built / name
+        if path.exists():
+            os.utime(path, (video_at - 600, video_at - 600))
+    notes = upload_mod.prepare(built).problems
+    assert any("動画より古い" in note for note in notes)
+
+
+def test_同じ書き出しなら通る(tmp_path):
+    built = _built(tmp_path)
+    assert upload_mod.prepare(built).problems == []
+
+
+class _Req:
+    def __init__(self, response):
+        self._response = response
+
+    def next_chunk(self):
+        return None, self._response
+
+    def execute(self):
+        return self._response
+
+
+class _Boom:
+    def execute(self):
+        raise RuntimeError("HttpError 429: The user has uploaded too many thumbnails recently")
+
+
+class _FakeService:
+    """videos.insert は通り、thumbnails.set だけ落ちるサービス。"""
+
+    def videos(self):
+        return type("V", (), {"insert": lambda self, **kw: _Req({"id": "vid_ok"})})()
+
+    def thumbnails(self):
+        return type("T", (), {"set": lambda self, **kw: _Boom()})()
+
+
+def test_サムネで落ちても動画のidは返す(tmp_path, monkeypatch, capsys):
+    """2026-09-08、thumbnails.set の 429 で例外になり、呼ぶ側が掛け直して
+    サンチョのショートとCLの本編が2本ずつ公開された。動画はもう上がっている。"""
+    from src import quota
+
+    built = _built(tmp_path)
+    monkeypatch.setattr(upload_mod, "get_service", lambda: _FakeService())
+    monkeypatch.setattr(upload_mod, "_load_deps",
+                        lambda: (None, None, None, None, lambda *a, **k: object()))
+    monkeypatch.setattr(quota, "record", lambda *a, **k: None)
+    video_id = upload_mod.upload(built / "video.mp4", "T", "本文",
+                                 thumbnail=built / "thumbnail.png")
+    assert video_id == "vid_ok"
+    assert "サムネイルは付きませんでした" in capsys.readouterr().err

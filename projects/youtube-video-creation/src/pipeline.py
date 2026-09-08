@@ -110,6 +110,8 @@ def build_script(
         lines=look["lines"],
         tags=look["tags"],
         reaction=reaction,
+        points=look.get("points") or [],
+        photos=look.get("photos") or [],
     )
     # 画像のクレジットも概要欄に出す。CC BY 系は表示しないと利用条件を満たさない
     outputs = subtitles.write_outputs(

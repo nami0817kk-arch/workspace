@@ -1,0 +1,90 @@
+# デンベレのバロンドール発言 の取材メモ（2026年9月8日）
+slot: world
+date: "2026年9月8日"
+
+theme:
+  id: dembele_ballondor
+  league: france
+  prefix: ""
+  title: "デンベレが挙げた3人に、ヤマルの名前はなかった"
+  hook: "去年の受賞者が、自分を除いた3人を挙げました"
+  question: "なぜ去年2位のヤマルが入っていないのか"
+
+thumbnail:
+  line1: "挙げた3人がこれ"
+  line2: "去年2位のヤマルは不在"
+  tags: ["デンベレ", "バロンドール"]
+  points: ["1人目 ●●●●", "2人目 ●●●", "3人目 ●●●"]
+  photo: "assets/photos/20260909_dembele/01.jpg"
+  photos: ["assets/photos/20260909_dembele/01.jpg", "assets/photos/20260908_lamine_yamal/01.jpg"]
+
+answer: "クヴァラツヘリア、ムバッペ、ハリー・ケインの3人です。同僚と代表の仲間が並びました"
+watch: "候補の発表は明日。受賞者が決まるのは10月26日です"
+
+sections:
+  - id: said
+    heading: 誰の名前を挙げたのか
+    tier: 報道
+    telop: "クヴァラツヘリア・ムバッペ・ケイン"
+    say:
+      - "フランス・フットボール誌のインタビューでのことです"
+      - "デンベレは、自分を除いた3人にこの名前を挙げました"
+      - {voice: デンベレ, text: "クヴァラツヘリア"}
+      - {voice: デンベレ, text: "ハリー・ケイン"}
+      - {voice: デンベレ, text: "キリアン・ムバッペ"}
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/6a9b95487290fe29cec14bd831914259de475e39"
+      - "https://news.mynavi.jp/article/20260908-4935751/"
+
+  - id: turn
+    heading: 入っていない名前
+    tier: 報道
+    telop: "去年2位のヤマルが不在"
+    say:
+      - "この3人に、ラミン・ヤマルは入っていません"
+      - "去年のバロンドールで、ヤマルは2位でした"
+      - "1位がデンベレで1380点、2位のヤマルが1059点です"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/4505a904285ffa0d95053c8b59cdee1769e81334"
+      - "https://news.yahoo.co.jp/articles/6a9b95487290fe29cec14bd831914259de475e39"
+
+  - id: background
+    heading: 挙げた3人はどういう関係か
+    tier: 背景
+    telop: "同僚と代表の仲間"
+    say:
+      - "クヴァラツヘリアはパリSGでの同僚です"
+      - "ムバッペはフランス代表でともに戦ってきた相手です"
+      - "ハリー・ケインだけが、どちらでもありません"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/6a9b95487290fe29cec14bd831914259de475e39"
+      - "https://news.mynavi.jp/article/20260908-4935751/"
+
+  - id: react
+    heading: 下馬評ではどう見られているか
+    tier: 報道
+    telop: "英メディアの順位ではヤマル4位"
+    say:
+      - "英メディアが出した今年の順位表では、ヤマルが4位です"
+      - "デンベレ本人は10位に置かれていました"
+      - "本人の見立てと、外の見立ては一致していません"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/4505a904285ffa0d95053c8b59cdee1769e81334"
+      - "https://www.soccerdigestweb.com/news/detail/id=196840"
+
+  - id: next
+    heading: これから何があるか
+    tier: 報道
+    telop: "候補は明日 受賞は10月26日"
+    say:
+      - "候補者の顔ぶれは、明日発表されます"
+      - "受賞者が決まるのは10月26日です"
+      - "ムバッペは自分に投票すると言い切っています"
+    official: false
+    sources:
+      - "https://www.soccerdigestweb.com/news/detail/id=196840"
+      - "https://news.yahoo.co.jp/articles/4505a904285ffa0d95053c8b59cdee1769e81334"

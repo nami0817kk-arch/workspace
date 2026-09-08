@@ -1,0 +1,102 @@
+# モウリーニョ の取材メモ（2026年9月8日）
+slot: world
+date: "2026年9月8日"
+
+theme:
+  id: mourinho_var
+  league: spain
+  prefix: ""
+  title: "モウリーニョ、VARに「ルールを知らないなら」"
+  hook: "レアル・マドリーの監督が、判定についてはっきり口にしました"
+  question: "なぜモウリーニョは、あのPKが蹴り直しにならなかったことにこだわるのか"
+
+thumbnail:
+  line1: "「ルールを知らないなら」"
+  line2: "VARの判定に公然と疑問"
+  tags: ["モウリーニョ", "レアル・マドリー"]
+  photo: "assets/photos/20260908_mourinho/01.jpg"
+
+answer: "エムバペのPKが止められたとき、相手DFがエリア内に入っていた疑いがあったからです"
+watch: "インテル戦の入り方。会見の矛先が選手に向くのかどうか"
+
+sections:
+  - id: what
+    heading: いつ、どこで言ったのか
+    tier: 報道
+    telop: "インテル戦の前日会見"
+    say:
+      - "9月8日、チャンピオンズリーグの初戦を控えた会見でのことです"
+      - "相手はインテル。レアル・マドリーを率いるモウリーニョが応じました"
+      - "話は、直前のベティス戦に及びます"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/eb3b3d79baa35d6b0ac417a9642c6d0c0204a976"
+      - "https://www.football-zone.net/archives/671835"
+
+  - id: background
+    heading: 何があった試合か
+    tier: 報道
+    telop: "ベティスに0-1"
+    say:
+      - "レアル・マドリーはベティスに0対1で負けています"
+      - "エムバペが蹴ったPKは、止められました"
+      - "このとき、ベティスのバルトラがペナルティーエリアに入っていた疑いがありました"
+      - "ただ、地面を踏んでいなかったとして、蹴り直しにはなりませんでした"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/eb3b3d79baa35d6b0ac417a9642c6d0c0204a976"
+      - "https://news.yahoo.co.jp/articles/78eca0523831606b43896284347728ac8488d7e2"
+
+  - id: said
+    heading: 判定について何と言ったか
+    tier: 報道
+    telop: "「ルールを知らないなら」"
+    say:
+      - "モウリーニョは、この場面についてこう述べました"
+      - {voice: モウリーニョ, text: "なぜやり直しにならなかったのか"}
+      - {voice: モウリーニョ, text: "VARがルールを知らなかったのか"}
+      - {voice: モウリーニョ, text: "それともやり直したくなかったのか"}
+      - {voice: モウリーニョ, text: "ルールを知らないなら、VARを担当してはならない"}
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/eb3b3d79baa35d6b0ac417a9642c6d0c0204a976"
+      - "https://www.football-zone.net/archives/671835"
+
+  - id: react
+    heading: 敗戦の直後には何と言ったか
+    tier: 報道
+    telop: "「おめでとう」という皮肉"
+    say:
+      - "ベティス戦のあとには、こう話しています"
+      - {voice: モウリーニョ, text: "なぜ負けたかわからない"}
+      - {voice: モウリーニョ, text: "引き分けを目指して運が良かったベティスにおめでとう"}
+      - "現地では、この言い方が注目されました"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/78eca0523831606b43896284347728ac8488d7e2"
+      - "https://www.football-zone.net/archives/671835"
+
+  - id: turn
+    heading: もうひとつ引っかかっていること
+    tier: 報道
+    telop: "ヴィニシウスへのイエロー"
+    say:
+      - "モウリーニョは、ヴィニシウスが受けた警告にも疑問を示しています"
+      - "審判への近づき方をめぐる判定です"
+      - "選手たちの振る舞いについては、こう表現しました"
+      - {voice: モウリーニョ, text: "うちの選手はピュアで、ナイーブだ"}
+    official: false
+    sources:
+      - "https://jp.headtopics.com/news/125141245412522528141-87423975"
+      - "https://news.yahoo.co.jp/articles/eb3b3d79baa35d6b0ac417a9642c6d0c0204a976"
+
+  - id: next
+    heading: これから何を見るか
+    tier: 未確認
+    telop: "インテル戦の入り方"
+    say:
+      - "見るべきは、この会見のあとチームがどう入るかです"
+      - "モウリーニョの言葉は、審判に向くときと、選手に向くときがあります"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/eb3b3d79baa35d6b0ac417a9642c6d0c0204a976"

@@ -1,0 +1,121 @@
+# 久保建英 の取材メモ（2026年9月8日）
+slot: match
+date: "2026年9月8日"
+
+theme:
+  id: kubo_benched
+  league: spain
+  prefix: ""
+  title: "久保建英に起きたことがこちらです ソシエダは10人で勝利"
+  hook: "ソシエダが敵地で勝ちました。ただ、久保建英はピッチに立っていません"
+  question: "久保建英は、なぜ90分ベンチに座ったままだったのか"
+
+thumbnail:
+  line1: "今季初の出番なし"
+  line2: "代役が1ゴール2アシスト"
+  tags: ["久保建英", "ソシエダ"]
+  photo: "assets/photos/20260908_kubo/01.jpg"
+
+answer: "代わりに右サイドへ入ったオチエンが1ゴール2アシスト。監督が選んだ形が、そのまま結果になりました"
+watch: "次節も同じ11人で始まるかどうか"
+
+sections:
+  - id: what
+    heading: 何が起きたのか
+    tier: 報道
+    telop: "今季初の出番なし"
+    say:
+      - "ラ・リーガ第4節、エルチェ対レアル・ソシエダ"
+      - "ソシエダが3対2で勝ちました"
+      - "久保建英は、今シーズン初めて出番がありませんでした"
+      - "先発から外れただけでなく、交代でも呼ばれていません"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/cae18739a7d24cfb23d3b4dc1a1c096e18f8287d"
+      - "https://news.yahoo.co.jp/articles/5ea0650c1d07d8f0ebcf439d493b0f3360136896"
+
+  - id: turn
+    heading: 代わりに出たのは誰か
+    tier: 報道
+    telop: "ケニア代表 ジョブ・オチエン"
+    say:
+      - "久保の右サイドに入ったのは、ケニア代表のジョブ・オチエン、23歳です"
+      - "前半11分、右足でリーガ初ゴールを決めました"
+      - "この試合、オチエンは1ゴール2アシストを記録しています"
+    official: false
+    sources:
+      - "https://www.soccerdigestweb.com/news/detail/id=196646"
+      - "https://news.yahoo.co.jp/articles/397d6c6af1c867dc444243fc898a61d42288bb00"
+
+  - id: score
+    heading: 試合はどう動いたか
+    tier: 報道
+    telop: "2-0から2-2、そして90分"
+    say:
+      - "11分にオチエン、32分にヤンヘル・エレーラで、ソシエダが2点リード"
+      - "ところが61分、ジョン・マルティンがハンドで一発退場になります"
+      - "10人になったソシエダは、67分にレマル、74分にフェル・ニーニョで追いつかれました"
+      - "決めたのは90分、ルカ・スチッチです"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/cb468fb1d5aecc0b8ddf1df42b0a1eb9cdbde236"
+      - "https://news.yahoo.co.jp/articles/1f3e00056e00ea107e835f1dd1ec4e3e234adca3"
+
+  - id: numbers
+    heading: チームの位置
+    tier: 報道
+    telop: "5試合で2勝1分2敗 暫定9位"
+    say:
+      - "ソシエダはこれで2試合ぶりの、今季2勝目です"
+      - "開幕から5試合で2勝1分け2敗。暫定9位につけています"
+      - "エルチェは3連敗となりました"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/1f3e00056e00ea107e835f1dd1ec4e3e234adca3"
+      - "https://news.yahoo.co.jp/articles/5ea0650c1d07d8f0ebcf439d493b0f3360136896"
+
+  - id: said
+    heading: 各紙はどう書いたか
+    tier: 報道
+    telop: "「苦しい立場に」"
+    say:
+      - "日本の各紙は、この一戦をこう伝えています"
+      - {voice: 地元紙, text: "不調の久保が今季初の出番なし"}
+      - {voice: 地元紙, text: "ライバルが1G2Aで苦しい立場に"}
+      - {voice: 地元紙, text: "ライバルの活躍で状況は悪化か"}
+      - {voice: 地元紙, text: "久保に代わった選手が結果を残した"}
+      - {voice: 地元紙, text: "23歳ケニア代表が躍動"}
+    official: false
+    sources:
+      - "https://www.soccerdigestweb.com/news/detail/id=196646"
+      - "https://news.yahoo.co.jp/articles/397d6c6af1c867dc444243fc898a61d42288bb00"
+
+  - id: react
+    heading: ネットではどう見られているか
+    tier: 未確認
+    telop: "24件の書き込みから"
+    say:
+      - "掲示板の書き込みを24件、そのまま拾いました"
+      - {voice: ネット民, text: "まさかソシエダでスタメンすら怪しいレベルになるとは"}
+      - {voice: ネット民, text: "もうここから世界のクボタケになるのは無理なんかなー"}
+      - {voice: ネット民, text: "お茶会でしばらくベンチ宣言されたくさいな"}
+      - {voice: ネット民, text: "マタララッツォは大変だな"}
+      - {voice: ネット民, text: "でもオチエンさん左ウイングに変えられてたんよな"}
+      - {voice: ネット民, text: "下部では右だったんだろ"}
+      - {voice: ネット民, text: "その下部でも左だぞ"}
+      - {voice: ネット民, text: "アンチってエルチェがどんなチームなのか知らなさそうw"}
+      - {voice: ネット民, text: "まあまだ序盤やしな"}
+    official: false
+    sources:
+      - "https://sakarabo.blog.jp/archives/1084487395.html"
+
+  - id: next
+    heading: これから何を見るか
+    tier: 未確認
+    telop: "次節の先発"
+    say:
+      - "見るべきは、次節も同じ11人で始まるかどうかです"
+      - "オチエンがこの日の出来を続けられるかも、あわせて見たいところです"
+    official: false
+    sources:
+      - "https://www.soccerdigestweb.com/news/detail/id=196646"

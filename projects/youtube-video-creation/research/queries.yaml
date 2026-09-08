@@ -1,0 +1,8 @@
+# どの検索が候補につながったかの記録
+runs:
+- label: fetch
+  at: 2026-09-08T09:50
+  hits: 449
+- label: fetch
+  at: 2026-09-08T09:52
+  hits: 454

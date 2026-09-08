@@ -139,6 +139,14 @@ sites:
   examples:
   - https://www.mondoudinese.it/udinese/news-udinese/udinese-unai-gomez-voglio-migliorare-e-aumentare-i-miei-numeri/?intcmp=gazzanet-mondoudinese
   - https://www.mondoudinese.it/udinese/news-udinese/conferenza-runjaic-bayo-puo-giocare-titolare-ma-non-vi-diro-lundici/?intcmp=gazzanet-mondoudinese
+- host: tuttobolognaweb.it
+  seen: 4
+  days:
+  - '2026-09-05'
+  - '2026-09-08'
+  examples:
+  - https://www.tuttobolognaweb.it/mercato/tedesco/?intcmp=gazzanet-tuttobolognaweb
+  - https://www.tuttobolognaweb.it/news/dovbyk-emozionato-per-il-gol-ma-dobbiamo-migliorare/?intcmp=gazzanet-tuttobolognaweb
 - host: genoaoggi.it
   seen: 3
   days:
@@ -152,6 +160,14 @@ sites:
   - '2026-09-05'
   examples:
   - https://www.leedsunited.com/en/news/history-dcl-and-a-perfect-away-start-opta-facts-ahead-of-brighton
+- host: mediagol.it
+  seen: 3
+  days:
+  - '2026-09-04'
+  - '2026-09-08'
+  examples:
+  - https://www.mediagol.it/palermo/palermo-inzaghi-non-mi-e-piaciuto-assolutamente-quel-black-out-peda-vi-dico-come-sta/?intcmp=gazzanet-mediagol
+  - https://www.mediagol.it/palermo/ex-palermo-brunori-subito-in-gol-ho-sentito-unenergia-che-mi-serviva-e-racconta-la-trattativa/?intcmp=gazzanet-mediagol
 - host: today.rtl.lu
   seen: 2
   days:
@@ -185,18 +201,18 @@ sites:
   examples:
   - https://www.leeds-live.co.uk/sport/leeds-united/how-joe-rodons-injury-impact-34569429
   - https://www.leeds-live.co.uk/sport/leeds-united/brighton-hove-albion-vs-34571891
-- host: tuttobolognaweb.it
+- host: fantamagazine.com
   seen: 2
   days:
-  - '2026-09-05'
+  - '2026-09-08'
   examples:
-  - https://www.tuttobolognaweb.it/mercato/tedesco/?intcmp=gazzanet-tuttobolognaweb
-- host: mediagol.it
-  seen: 1
+  - https://www.fantamagazine.com/news/cagliari-lecce-1-0-di-francesco-poco-cattivi-e-determinati-cosi-non-possiamo-permettercelo/
+- host: pianetamilan.it
+  seen: 2
   days:
-  - '2026-09-04'
+  - '2026-09-08'
   examples:
-  - https://www.mediagol.it/palermo/palermo-inzaghi-non-mi-e-piaciuto-assolutamente-quel-black-out-peda-vi-dico-come-sta/?intcmp=gazzanet-mediagol
+  - https://www.pianetamilan.it/news-milan/interviste/fofana-qui-per-riportare-il-siviglia-ad-alti-livelli-spero-di-ritrovare-il-piacere-di-giocare-a-calcio/?intcmp=gazzanet-pianetamilan
 - host: guardian.ng
   seen: 1
   days:

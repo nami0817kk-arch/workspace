@@ -20,6 +20,10 @@ from .script_model import Script
 # （型が5つあるので、11本なら2〜3本ずつ同じ形になるのが自然）
 SAME_SHAPE = 0.34
 # 同じ接頭辞（【速報】など）がこの割合を超えたら知らせる
+# 札が付いている本数の上限。半分を超えたら知らせる
+BADGE_SHARE = 0.5
+# タイトルの結び方が揃ってよい上限
+SAME_TAIL = 0.5
 SAME_PREFIX = 0.5
 
 
@@ -29,6 +33,13 @@ def _skeleton(script: Script) -> tuple:
         s.title for s in script.scenes
         if s.title not in ("オープニング", "まとめ")
     )
+
+
+def _bare(title: str) -> str:
+    """札と記号を落とす。結び方を比べるため。"""
+    import re
+
+    return re.sub(r"[\s。！!？?]", "", re.sub(r"【[^】]*】", "", title or ""))
 
 
 def _prefix(script: Script) -> str:
@@ -121,6 +132,30 @@ def inspect_day(scripts: list[Script]) -> list[Finding]:
             f"{int(share * total)}本が同じ書き出しです（「{top}…」）"))
     else:
         findings.append(Finding(True, "出だし", "書き出しは散らばっています"))
+
+    # **タイトルの結び方が揃っていないか**（2026-09-08 ユーザー指摘）。
+    # 9本中7本が「〜がこちらです」で終わっていた。1本ずつの点検は
+    # 「答えを隠しているか」しか見ないので、**並べないと気づけない**
+    tails = Counter(_bare(s.title)[-6:] for s in scripts if _bare(s.title))
+    top_tail, tail_share = _share(tails, total)
+    if tail_share > SAME_TAIL:
+        findings.append(Finding(
+            False, "結び方",
+            f"{int(tail_share * total)}本が『…{top_tail}』で終わっています。"
+            "毎回同じ結び方だと、一覧で見分けが付きません"))
+    else:
+        findings.append(Finding(True, "結び方", "結び方は散らばっています"))
+
+    # **札は毎回付けない**（2026-09-08 ユーザー指示）。付いている本数そのものを見る
+    with_badge = [s for s in scripts if _prefix(s)]
+    if total and len(with_badge) / total > BADGE_SHARE:
+        findings.append(Finding(
+            False, "札の数",
+            f"{len(with_badge)}/{total}本に【】が付いています。"
+            "毎回付けると一覧で効かなくなります"))
+    else:
+        findings.append(Finding(
+            True, "札の数", f"【】は{len(with_badge)}/{total}本です"))
 
     prefixes = Counter(p for p in (_prefix(s) for s in scripts) if p)
     top, share = _share(prefixes, total)

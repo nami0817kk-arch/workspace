@@ -1,0 +1,104 @@
+# アーセナル対チェルシー の取材メモ（2026年9月8日）
+slot: premier
+date: "2026年9月8日"
+
+theme:
+  id: arsenal_chelsea
+  league: england
+  prefix: ""
+  title: "アーセナル、2分で失点してから何をしたのか"
+  hook: "2分で失点したアーセナルが、そこからどう勝ったか"
+  question: "3試合ぶりに失点したアーセナルは、なぜ勝てたのか"
+
+thumbnail:
+  line1: "2分の失点から逆転"
+  line2: "ウーデゴーアが決勝点"
+  tags: ["アーセナル", "チェルシー"]
+  photo: "assets/photos/20260908_arsenal/01.jpg"
+
+answer: "先に取られてから25分と50分に取り返しました。守りが崩れたのではなく、取り返す形を持っていたということです"
+watch: "サリバがまだ1分も出ていません。戻ってきたときの守備"
+
+sections:
+  - id: what
+    heading: 何が起きたのか
+    tier: 報道
+    telop: "アーセナル 2-1 チェルシー"
+    say:
+      - "プレミアリーグ第3節、アーセナル対チェルシー"
+      - "アーセナルが2対1で勝ちました"
+      - "これで開幕から3連勝です"
+    official: false
+    sources:
+      - "https://www.soccer-king.jp/news/world/eng/20260907/2201563.html"
+      - "https://web.gekisaka.jp/news/world/detail/?458395-458395-fl="
+
+  - id: score
+    heading: 得点の流れ
+    tier: 報道
+    telop: "2分・25分・50分"
+    say:
+      - "先に取ったのはチェルシーでした。2分、モーガン・ロジャーズです"
+      - "25分にカイ・ハヴァーツが追いつきます"
+      - "そして50分、マルティン・ウーデゴーアが決めました"
+      - "アーセナルは公式戦3試合つづけて無失点でしたが、この日が今季初失点です"
+    official: false
+    sources:
+      - "https://www.soccer-king.jp/news/world/eng/20260907/2201563.html"
+      - "https://www.goal.com/jp/%E3%83%AA%E3%82%B9%E3%83%88/%E3%82%A6%E3%83%BC%E3%83%86%E3%82%99%E3%82%B3%E3%82%99%E3%83%BC%E3%83%AB%E3%81%A8%E3%83%8F%E3%83%95%E3%82%A7%E3%83%AB%E3%83%84%E3%81%8B%E3%82%99%E5%BE%97%E7%82%B9-%E3%82%A2%E3%83%BC%E3%82%BB%E3%83%8A%E3%83%AB%E3%81%8B%E3%82%99%E9%80%86%E8%BB%A2%E3%81%A6%E3%82%99%E3%83%81%E3%82%A7%E3%83%AB%E3%82%B7%E3%83%BC%E3%82%92%E4%B8%8B%E3%81%97%E3%83%AD%E3%83%B3%E3%83%88%E3%82%99%E3%83%B3-%E3%82%BF%E3%82%99%E3%83%BC%E3%83%92%E3%82%99%E3%83%BC%E5%88%B6%E3%81%99/blta88f5a96742af3a8"
+
+  - id: said
+    heading: 解説者はどう見たか
+    tier: 報道
+    telop: "「全体がバラバラのように見える」"
+    say:
+      - "試合後、ギャリー・ネビルとジェイミー・キャラガーが見解を示しています"
+      - {voice: ギャリー・ネビル, text: "3バックは脚が腰につながっていない感じだ"}
+      - {voice: ギャリー・ネビル, text: "まるで全体がバラバラのように見える"}
+      - {voice: ジェイミー・キャラガー, text: "心配なのはサリバが今季まだ1分も出ていないこと"}
+      - {voice: ジェイミー・キャラガー, text: "しかも誰も彼ら相手に得点できそうに見えない"}
+    official: false
+    sources:
+      - "https://www.goal.com/jp/%E3%83%AA%E3%82%B9%E3%83%88/%E3%81%82%E3%81%A1%E3%81%93%E3%81%A1%E3%81%A6%E3%82%99%E5%95%8F%E9%A1%8C%E3%81%8B%E3%82%99%E3%81%82%E3%81%A3%E3%81%9F-%E3%82%A2%E3%83%BC%E3%82%BB%E3%83%8A%E3%83%AB%E3%81%8B%E3%82%99%E3%82%B7%E3%83%A3%E3%83%92%E3%82%99-%E3%82%A2%E3%83%AD%E3%83%B3%E3%82%BD%E3%81%AE%E3%83%81%E3%82%A7%E3%83%AB%E3%82%B7%E3%83%BC%E3%82%92%E7%A0%B4%E3%82%8A-%E3%82%AD%E3%82%99%E3%83%A3%E3%83%AA%E3%83%BC-%E3%83%8D%E3%83%92%E3%82%99%E3%83%AB%E3%81%A8%E3%82%B7%E3%82%99%E3%82%A7%E3%82%A4%E3%83%9F%E3%83%BC-%E3%82%AD%E3%83%A3%E3%83%A9%E3%82%AB%E3%82%99%E3%83%BC%E3%81%8B%E3%82%99%E8%A6%8B%E8%A7%A3%E3%82%92%E7%A4%BA%E3%81%99/blt7256c62009df2513"
+      - "https://www.soccer-king.jp/news/world/eng/20260907/2201563.html"
+
+  - id: turn
+    heading: 物議になった場面
+    tier: 報道
+    telop: "顔面へのキックにお咎めなし"
+    say:
+      - "ゴール前の混戦で、ガブリエウの足がチェルシーのGKの顔に当たりました"
+      - "ボールに触ろうとした両者が、同時に飛び込んだ形です"
+      - {voice: ザ・サン, text: "顔を押さえて倒れ込んだ"}
+      - "VARは介入せず、カードも出ませんでした"
+    official: false
+    sources:
+      - "https://www.football-zone.net/archives/672186"
+      - "https://news.yahoo.co.jp/articles/db70e225533e19202a841ef27c2a6f238797c95a"
+
+  - id: react
+    heading: 判定はどう受け止められたか
+    tier: 報道
+    telop: "元審判「暴力行為ではない」"
+    say:
+      - "元プレミアリーグ審判のマーク・ハルシー氏が見解を出しています"
+      - {voice: ハルシー, text: "疑いの余地なく暴力行為ではない"}
+      - {voice: ハルシー, text: "VARが介入しなかったのは正しい"}
+      - "一方で現地からは、軽率な行動だという指摘も出ました"
+    official: false
+    sources:
+      - "https://www.football-zone.net/archives/672186"
+      - "https://news.yahoo.co.jp/articles/db70e225533e19202a841ef27c2a6f238797c95a"
+
+  - id: next
+    heading: これから何を見るか
+    tier: 報道
+    telop: "次節は9月12日"
+    say:
+      - "アーセナルは9月12日、アウェイでサンダーランドと当たります"
+      - "チェルシーはホームでハル・シティです"
+      - "見るべきは、キャラガーが挙げたサリバがいつ戻るかです"
+    official: false
+    sources:
+      - "https://www.soccer-king.jp/news/world/eng/20260907/2201563.html"
+      - "https://www.goal.com/jp/%E3%83%AA%E3%82%B9%E3%83%88/%E3%82%A6%E3%83%BC%E3%83%86%E3%82%99%E3%82%B3%E3%82%99%E3%83%BC%E3%83%AB%E3%81%A8%E3%83%8F%E3%83%95%E3%82%A7%E3%83%AB%E3%83%84%E3%81%8B%E3%82%99%E5%BE%97%E7%82%B9-%E3%82%A2%E3%83%BC%E3%82%BB%E3%83%8A%E3%83%AB%E3%81%8B%E3%82%99%E9%80%86%E8%BB%A2%E3%81%A6%E3%82%99%E3%83%81%E3%82%A7%E3%83%AB%E3%82%B7%E3%83%BC%E3%82%92%E4%B8%8B%E3%81%97%E3%83%AD%E3%83%B3%E3%83%88%E3%82%99%E3%83%B3-%E3%82%BF%E3%82%99%E3%83%BC%E3%83%92%E3%82%99%E3%83%BC%E5%88%B6%E3%81%99/blta88f5a96742af3a8"

@@ -536,7 +536,9 @@ def test_語りだけの台本は他人の声で止まる(tmp_path):
 def test_長い引用は刻みで止まる(tmp_path):
     body = GOOD_BODY.replace(
         "ネット民: 完全に別チームだった。",
-        "ネット民: 完全に別のチームになっていて見ていて本当に気持ちがよかった一戦だった。")
+        "ネット民: 完全に別のチームになっていて見ていて本当に気持ちがよかった一戦だったし"
+        "これが続くなら今季は本気で優勝を狙えると思う。")
+    # 上限は45字（2026-09-08 サッカーラボの実測 30〜45字に合わせた）
     result = _by_label(inspect(parse_script(body), _built(tmp_path)))
     assert result["反応の刻み"].ok is False
 
@@ -556,17 +558,10 @@ def test_タイトルの一部だけ読んでも通らない(tmp_path):
     assert result["1行目"].ok is False
 
 
-def test_長いまとめは止まる(tmp_path):
-    body = GOOD_BODY.replace(
-        "解説: 中盤の改善が答えです。",
-        """解説: 中盤の改善が答えです。
-
-解説: つまり今日の試合は中盤の入れ替えで決まったということになります。
-
-解説: 次の焦点は来週の一戦です。動きがあり次第またお伝えします。""")
-    result = _by_label(inspect(parse_script(body), _built(tmp_path)))
-    assert result["まとめの長さ"].ok is False
-
+def test_まとめの長さはもう見ない(tmp_path):
+    """2026-09-08 ユーザー「まとめはいらない」。news にもまとめの節が無いので点検しない。"""
+    result = _by_label(inspect(parse_script(GOOD_BODY), _built(tmp_path)))
+    assert "まとめの長さ" not in result
 
 def test_縦型には構成の点検を当てない(tmp_path, monkeypatch):
     """ショートは本編から1節を切り出したもの。割合を測っても元の話にならない。"""
@@ -677,3 +672,163 @@ def test_投稿URLが出典にあれば通る(tmp_path, monkeypatch):
         "sources: [https://example.com/a]", f"sources: [https://example.com/a, {url}]")
     result = _by_label(inspect(parse_script(body), _built(tmp_path)))
     assert result["投稿の出典"].ok is True
+
+
+def test_問いかけで終わるタイトルを通す():
+    """**検査が定型化を招いていた**（2026-09-08）。
+
+    「〜か？」しか認めず、疑問符の無い問いかけを弾いていたため、
+    9本中7本が「〜がこちらです」で揃った。
+    """
+    from src.review import check_title_hook
+    from src.script_model import parse_script
+
+    nl = chr(10)
+    for title in ("アーセナル、2分で失点してから何をしたのか",
+                  "レスター、優勝から10年でどこまで落ちたか",
+                  "バルサの19歳組、4人目が誰か分かりますか"):
+        script = parse_script(nl.join(["---", f"title: {title}", "---", "",
+                                       "## 本編", "", "キャスター: 本文。", ""]))
+        assert check_title_hook(script).ok, title
+
+
+def test_言い切りのタイトルは止める():
+    from src.review import check_title_hook
+    from src.script_model import parse_script
+
+    nl = chr(10)
+    script = parse_script(nl.join(["---", "title: レスターが3部リーグで18位に転落した",
+                                   "---", "", "## 本編", "", "キャスター: 本文。", ""]))
+    assert not check_title_hook(script).ok
+
+
+def test_黒いサムネを止める(tmp_path):
+    """**顔の段の72%が黒**だった（2026-09-08 ユーザー指摘）。機械は何も言わなかった。"""
+    from PIL import Image
+
+    from src.review import check_thumbnail_dark
+
+    Image.new("RGB", (1280, 720), (8, 10, 12)).save(tmp_path / "thumbnail.png")
+    assert not check_thumbnail_dark(tmp_path).ok
+
+
+def test_明るいサムネは通す(tmp_path):
+    from PIL import Image
+
+    from src.review import check_thumbnail_dark
+
+    Image.new("RGB", (1280, 720), (150, 160, 150)).save(tmp_path / "thumbnail.png")
+    assert check_thumbnail_dark(tmp_path).ok
+
+
+def _photo_dir(tmp_path, name, subject):
+    """写真フォルダを1つ作る。credits.json の被写体名だけが要る。"""
+    folder = tmp_path / name
+    folder.mkdir(parents=True)
+    (folder / "01.jpg").write_bytes(b"")
+    (folder / "credits.json").write_text(json.dumps([{
+        "file": "01.jpg",
+        "subject_check": f"被写体に {subject} が明記されています",
+    }], ensure_ascii=False), encoding="utf-8")
+    return (folder / "01.jpg").as_posix()
+
+
+def _script_with_photos(title, body_line, photos):
+    from src.script_model import parse_script
+
+    nl = chr(10)
+    head = ["---", f"title: {title}", "thumbnail_photos:"]
+    head += [f"- {p}" for p in photos]
+    head += ["---", "", "## 本編", "", f"キャスター: {body_line}", ""]
+    return parse_script(nl.join(head))
+
+
+def test_台本に出てこない人をサムネに載せない(tmp_path):
+    """モウリーニョの回にムバッペを並べていた（2026-09-08 ユーザー指摘）。
+
+    左のぼかしを埋めたいだけで足した写真で、台本には一度も出てこない。
+    """
+    from src.review import check_thumbnail_photos
+
+    photos = [_photo_dir(tmp_path, "mourinho", "ジョゼ・モウリーニョ"),
+              _photo_dir(tmp_path, "mbappe", "キリアン・エムバペ")]
+    script = _script_with_photos("モウリーニョ、VARに「ルールを知らないなら」",
+                                 "モウリーニョが試合後に話しました。", photos)
+    finding = check_thumbnail_photos(script)
+    assert not finding.ok
+    assert "エムバペ" in finding.detail
+
+
+def test_台本に出てくる人なら2枚でも通す(tmp_path):
+    """デンベレの回のヤマルは、タイトルにも本文にも出てくるので関係がある。"""
+    from src.review import check_thumbnail_photos
+
+    photos = [_photo_dir(tmp_path, "dembele", "ウスマン・デンベレ / Ousmane Dembélé"),
+              _photo_dir(tmp_path, "yamal", "ラミン・ヤマル")]
+    script = _script_with_photos("デンベレが挙げた3人に、ヤマルの名前はなかった",
+                                 "デンベレはヤマルの名前を出しませんでした。", photos)
+    assert check_thumbnail_photos(script).ok
+
+
+def test_タグに人名が入っていなければ止める():
+    """サンチョの回にサンチョが入っていなかった（2026-09-08 実測）。"""
+    from src.review import check_tag_names
+    from src.script_model import parse_script
+
+    nl = chr(10)
+    script = parse_script(nl.join([
+        "---", "title: サンチョの移籍先、報道がバラバラ",
+        "thumbnail_tags:", "- サンチョ", "- 移籍",
+        "tags:", "- サッカー", "- 海外サッカー", "- 移籍市場",
+        "---", "", "## 本編", "", "キャスター: 本文。", ""]))
+    finding = check_tag_names(script)
+    assert not finding.ok
+    assert "サンチョ" in finding.detail
+
+
+def test_タグに人名が入っていれば通る():
+    from src.review import check_tag_names
+    from src.script_model import parse_script
+
+    nl = chr(10)
+    script = parse_script(nl.join([
+        "---", "title: サンチョの移籍先、報道がバラバラ",
+        "thumbnail_tags:", "- サンチョ", "- 移籍",
+        "tags:", "- サッカー", "- サンチョ", "- 移籍",
+        "---", "", "## 本編", "", "キャスター: 本文。", ""]))
+    assert check_tag_names(script).ok
+
+
+def test_反応の型は他人の声7割が下限():
+    """型でしきい値が変わる（2026-09-08）。news の40%を通る台本でも voices では止まる。"""
+    from src.review import check_voice_share
+    from src.script_model import parse_script
+
+    nl = chr(10)
+    script = parse_script(nl.join([
+        "---", "title: T", "format: voices", "---", "",
+        "## 本編", "",
+        "キャスター: 事実を三十字ほど読みます。事実を三十字ほど読みます。",
+        "現地サポ: 本物のGKを手に入れたぞ",
+        "現地サポ: 前にボールを出せるじゃん", ""]))
+    assert check_voice_share(script, 40.0).ok
+    assert not check_voice_share(script, 70.0).ok
+
+
+def test_反応の型ではまとめの長さを見ない():
+    """最後の節が反応の本体なので、「最後の節が長い」は型として正しい。"""
+    from pathlib import Path
+
+    from src.review import inspect
+    from src.script_model import parse_script
+
+    nl = chr(10)
+    script = parse_script(nl.join([
+        "---", "title: ハル戦の鈴木彩艶を見た現地サポの反応", "format: voices",
+        "sources: [https://example.com/a]", "tags: [サッカー]", "---", "",
+        "## オープニング", "", "キャスター: ハル戦の鈴木彩艶を見た現地サポの反応。", "",
+        "## 現地の声", "",
+        "現地サポ: 本物のGKを手に入れたぞ", "現地サポ: 前にボールを出せるじゃん",
+        "現地サポ: もう前線で使っちゃえよ", "現地サポ: 補強は大成功だ", ""]))
+    labels = {f.label for f in inspect(script, Path("does-not-exist"))}
+    assert "まとめの長さ" not in labels

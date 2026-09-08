@@ -376,7 +376,11 @@ def test_正方形に近い写真は右に置く(tmp_path):
         left = image.getpixel((80, 120))          # 文字を置く側
         right = image.getpixel((SIZE[0] - 80, 120))
     assert right[0] > 150 and right[1] < 110      # 写真は右にある
-    assert left[0] < 60                            # 左は下地（写真を敷かない）
+    # **左は同じ写真をぼかして暗くした下地**（2026-09-08 に塗りつぶしから変更）。
+    # 塗りつぶしだと顔の段の72%が黒くなり、一覧で沈んで見えた。
+    # 右よりはっきり暗く、かつ真っ黒ではないこと
+    assert left[0] < right[0] - 30
+    assert sum(left[:3]) > 60
 
 
 def test_帯の2行は同じ大きさで1行ずつに収める(tmp_path):
@@ -392,3 +396,81 @@ def test_帯の2行は同じ大きさで1行ずつに収める(tmp_path):
     assert font is not None
     for text in texts:
         assert draw.textlength(text, font=font) <= 712, text
+
+
+def test_エンブレムがあると絵が変わる(tmp_path, monkeypatch):
+    """**小さく添えるだけ**（2026-09-08 ユーザー判断）。権利は晴れていない。
+
+    置き場に絵があるときだけ、札のまわりが変わることを見る。
+    座標で当てにいくと、札の位置が変わるたびに壊れる。
+    """
+    from src import crest as crest_mod
+
+    photo = tmp_path / "wide.png"
+    Image.new("RGB", (1600, 900), (40, 120, 60)).save(photo)
+    monkeypatch.chdir(tmp_path)
+
+    def draw(name: str):
+        return build_thumbnail(
+            _config(), "", tmp_path / f"{name}.png", style="band",
+            lines=("見出し", "副見出し"), background=str(photo), tags=["レスター"],
+        ).read_bytes()
+
+    before = draw("before")
+    crests = tmp_path / "assets" / "crests"
+    crests.mkdir(parents=True)
+    Image.new("RGBA", (120, 120), (255, 0, 0, 255)).save(crests / "レスター.png")
+    assert crest_mod.find("レスター") is not None
+    assert draw("after") != before
+    assert crest_mod.CREST_PX <= 48        # **大きくしない**
+
+
+def test_左の余白に言葉を積む(tmp_path):
+    """**「ただのぼかし」に見えた**（2026-09-08 ユーザー指摘）。
+
+    縦長の写真を右に置くと左がぼかしだけになる。余白を埋めるのではなく、
+    動画の答えにあたる言葉を置く。
+    """
+    photo = tmp_path / "tall.png"
+    Image.new("RGB", (600, 1200), (200, 60, 60)).save(photo)
+
+    def draw(name: str, points):
+        return build_thumbnail(
+            _config(), "", tmp_path / f"{name}.png", style="band",
+            lines=("見出し", "副見出し"), background=str(photo), points=points,
+        ).read_bytes()
+
+    assert draw("with", ["ひとつ", "ふたつ"]) != draw("without", [])
+
+
+def test_横長の写真には積まない(tmp_path):
+    """全面に敷く回は余白が無いので、重ねると顔にかぶる。"""
+    photo = tmp_path / "wide.png"
+    Image.new("RGB", (1600, 900), (40, 120, 60)).save(photo)
+
+    def draw(name: str, points):
+        return build_thumbnail(
+            _config(), "", tmp_path / f"{name}.png", style="band",
+            lines=("見出し", "副見出し"), background=str(photo), points=points,
+        ).read_bytes()
+
+    assert draw("w", ["ひとつ"]) == draw("wo", [])
+
+
+def test_写真を並べると全面が写真になる(tmp_path):
+    """**縦長1枚だと左がぼかしで埋まる**（2026-09-08 ユーザー指摘）。
+
+    参考チャンネルは全面が写真で、顔を2〜3枚並べた回もあった。
+    """
+    a = tmp_path / "a.png"; b = tmp_path / "b.png"
+    Image.new("RGB", (600, 1200), (200, 60, 60)).save(a)
+    Image.new("RGB", (600, 1200), (60, 60, 200)).save(b)
+    path = build_thumbnail(
+        _config(), "", tmp_path / "tiled.png", style="band",
+        lines=("見出し", "副見出し"), background=str(a), photos=[str(a), str(b)],
+    )
+    with Image.open(path) as image:
+        left = image.getpixel((120, 120))
+        right = image.getpixel((SIZE[0] - 120, 120))
+    assert left[0] > 150 and left[2] < 110      # 左は1枚目
+    assert right[2] > 150 and right[0] < 110    # 右は2枚目

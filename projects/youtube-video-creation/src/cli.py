@@ -57,8 +57,14 @@ def _use_utf8(*streams) -> None:
 
     `fetch | collect` は本来つないで使う流れなので、ここでそろえておく。
     実運用のPCで、`fetch --check` をパイプに渡して落ちたのが見つかった。
+
+    **読む側もそろえる。**書き出す側だけ直していたので、`collect` が
+    標準入力を cp932 で読み、449件のうち90件の見出しが化けた
+    （Mbappé → Mbappﾃｩ）。しかも一部は単独のサロゲートになって
+    UnicodeEncodeError で収集ごと落ちた（2026-09-08 実測）。
+    **つないで使う道具は、両端をそろえないと意味がない。**
     """
-    for stream in streams or (sys.stdout, sys.stderr):
+    for stream in streams or (sys.stdout, sys.stderr, sys.stdin):
         encoding = (getattr(stream, "encoding", "") or "").lower().replace("-", "")
         if encoding == "utf8":
             continue
@@ -430,6 +436,9 @@ def main(argv: list[str] | None = None) -> int:
     p_upload.add_argument("build_dir", help="build の出力ディレクトリ")
     p_upload.add_argument("--privacy", default="private", choices=["private", "unlisted", "public"])
     p_upload.add_argument(
+        "--anyway", action="store_true",
+        help="解除待ちでも投げる（**タイマーが延びることがある**）")
+    p_upload.add_argument(
         "--again", action="store_true",
         help="同じ出力先をもう一度投稿する（既定では二重投稿を止める）")
     p_upload.add_argument("--dry-run", action="store_true",
@@ -759,6 +768,9 @@ def _cmd_thumbnail(args, config) -> int:
             focus=look.get("focus"),
             badge=look["badge"], date=look["date"],
             lines=look["lines"], tags=look["tags"],
+            reaction=look.get("reaction") or "",
+            points=look.get("points") or [],
+            photos=look.get("photos") or [],
         )
         made.append((look.get("name") or "", target, look["lines"]))
 
@@ -2035,6 +2047,17 @@ def _cmd_gather(args, config) -> int:
     return 0
 
 
+def _readable(text: str) -> str:
+    """書き出せない文字を落とす。
+
+    見出しを標準入力から受けると、**環境によっては壊れた文字が混じる**。
+    Windows で読み違えたバイトが単独のサロゲート（例 U+DC83）になり、
+    UTF-8 で書けずに `UnicodeEncodeError` で落ちる（2026-09-08 実測）。
+    見出しを1つ取りこぼしても、631件の収集を落とすよりよい。
+    """
+    return text.encode("utf-8", "replace").decode("utf-8")
+
+
 def _cmd_collect(args, config) -> int:
     from datetime import date as _date
 
@@ -2044,7 +2067,7 @@ def _cmd_collect(args, config) -> int:
     from .plan import load_plan, tokens
 
     plan = load_plan()   # 確度の当たりを、情報源の群で置ける上限までに抑えるため
-    text = sys.stdin.read()
+    text = _readable(sys.stdin.read())
     hits = collect_mod.enrich(collect_mod.parse(text), freshness.read)
     if not hits:
         print(
@@ -2412,6 +2435,15 @@ def _cmd_upload(args, config) -> int:
         print("本当に上げ直すなら --again を付けます", file=sys.stderr)
         return 1
 
+    # **弾かれている間は投げない。**再試行するとタイマーが延ばされる
+    until = posted.blocked_until()
+    if until is not None and not args.anyway:
+        back = until.astimezone(JST)
+        print(f"■ 投稿の枠が戻っていません。解除は {back:%m/%d %H:%M} JST ごろ")
+        print(nl + "弾かれている間に投げると、内部のタイマーが延ばされるとの報告があります。", file=sys.stderr)
+        print("待たずに試すなら --anyway", file=sys.stderr)
+        return 1
+
     draft = upload_mod.prepare(build_dir, args.privacy)
 
     print(f"■ 投稿の中身　{build_dir}")
@@ -2431,22 +2463,30 @@ def _cmd_upload(args, config) -> int:
               "この内容でよければ --dry-run を外してください")
         return 0
 
-    video_id = upload_mod.upload(
-        draft.video,
-        draft.title,
-        draft.description,
-        tags=draft.tags,
-        privacy=draft.privacy,
-        thumbnail=draft.thumbnail,
-    )
+    try:
+        video_id = upload_mod.upload(
+            draft.video,
+            draft.title,
+            draft.description,
+            tags=draft.tags,
+            privacy=draft.privacy,
+            thumbnail=draft.thumbnail,
+        )
+    except Exception as err:
+        # **弾かれた時刻を控える。**解除はここから24時間で、
+        # 間に投げるとタイマーが延ばされるとの報告がある
+        if "uploadLimitExceeded" in str(err):
+            until = posted.block() + timedelta(hours=posted.COOLDOWN_HOURS)
+            print(f"■ 投稿の枠を使い切りました。解除は {until.astimezone(JST):%m/%d %H:%M} JST ごろ")
+            print("それまで投げないでください（手作業でも弾かれます）",
+                  file=sys.stderr)
+            return 1
+        raise
     posted.record(build_dir, video_id)
     print(f"\n投稿しました: https://youtu.be/{video_id} ({draft.privacy})")
-    # **上限の本数は分からない**ので、残りではなく「上げた本数」を出す。
-    n = posted.today()
-    if n >= posted.SOFT_MAX - 3:
-        back = posted.frees_at().astimezone(JST)
-        print(f"  枠が戻ってから {n} 本目。この辺りで弾かれることがある"
-              f"（次に枠が戻るのは {back:%m/%d %H:%M} JST）")
+    n = posted.recent()
+    if n >= posted.SOFT_MAX:
+        print(f"  直近24時間で {n} 本目。開設まもないチャンネルは{posted.SOFT_MAX}本前後で弾かれる")
     return 0
 
 

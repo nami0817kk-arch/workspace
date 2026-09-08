@@ -1,0 +1,120 @@
+# バルセロナの19歳組 の取材メモ（2026年9月8日）
+slot: world
+date: "2026年9月8日"
+
+theme:
+  id: barca_2007
+  league: spain
+  prefix: ""
+  title: "バルサの19歳組、4人目が誰か分かりますか"
+  hook: "2007年生まれが4人。そのうち1人が、今シーズン急に出てきました"
+  question: "ヤマルの同学年に、いま何人いて、誰が伸びているのか"
+
+thumbnail:
+  line1: "19歳組は4人いる"
+  line2: "4人目を知っていますか"
+  tags: ["バルセロナ", "ラ・マシア"]
+  photo: "assets/photos/20260908_barca4/01.jpg"
+
+answer: "シャビ・エスパルトです。8試合で右サイドバック5回、左2回、中盤1回をこなしています"
+watch: "本職ではない左サイドバックで、この先も先発が続くかどうか"
+
+sections:
+  - id: what
+    heading: 19歳組とは誰のことか
+    tier: 背景
+    telop: "2007年生まれが4人"
+    say:
+      - "バルセロナには、2007年生まれの選手が4人います"
+      - "ラミン・ヤマル、パウ・クバルシ、マルク・ベルナル"
+      - "そしてシャビ・エスパルトです"
+      - "全員が下部組織ラ・マシアの出身になります"
+    official: false
+    sources:
+      - "https://ja.wikipedia.org/wiki/%E3%82%B7%E3%83%A3%E3%83%93%E3%83%BB%E3%82%A8%E3%82%B9%E3%83%91%E3%83%AB%E3%83%88"
+      - "https://www.footballchannel.jp/2026/08/28/post999894/"
+
+  - id: turn
+    heading: いま出てきたのは誰か
+    tier: 報道
+    telop: "背番号12 シャビ・エスパルト"
+    say:
+      - "この夏から急に出てきたのが、シャビ・エスパルトです"
+      - "トップチームでの背番号は12"
+      - "ラ・リーガは開幕から2試合つづけて先発しています"
+      - "しかも、本職ではない左サイドバックでの起用です"
+    official: false
+    sources:
+      - "https://www.footballchannel.jp/2026/08/28/post999894/"
+      - "https://news.yahoo.co.jp/articles/9ff5465aa7e58166e8331f6dd05aa09d973ddf0b"
+
+  - id: numbers
+    heading: どこで使われているのか
+    tier: 報道
+    telop: "8試合で3つのポジション"
+    say:
+      - "これまでの出場は8試合です"
+      - "右サイドバックで5試合、左サイドバックで2試合"
+      - "そして守備的ミッドフィールダーで1試合"
+      - "3つのポジションを、19歳がこなしています"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/9ff5465aa7e58166e8331f6dd05aa09d973ddf0b"
+      - "https://www.flashscore.co.jp/player/espart-xavi/WKtYvkb7/"
+
+  - id: said
+    heading: 監督は何と言っているか
+    tier: 報道
+    telop: "「本物のトッププレーヤー」"
+    say:
+      - "ハンジ・フリック監督は、こう話しています"
+      - {voice: ハンジ・フリック, text: "彼のプレーには本当に感心している"}
+      - {voice: ハンジ・フリック, text: "左サイドバックでもこれだけできることに驚いている"}
+      - {voice: ハンジ・フリック, text: "戦術的に非常に優れている"}
+      - {voice: ハンジ・フリック, text: "本物のトッププレーヤーだ"}
+      - {voice: ハンジ・フリック, text: "技術的にも高いレベルにある"}
+    official: false
+    sources:
+      - "https://www.footballchannel.jp/2026/08/28/post999894/"
+      - "https://news.yahoo.co.jp/articles/9ff5465aa7e58166e8331f6dd05aa09d973ddf0b"
+
+  - id: react
+    heading: チームメイトはどう見ているか
+    tier: 報道
+    telop: "クバルシ「常に完璧にこなす」"
+    say:
+      - "同学年のパウ・クバルシは、こう話しました"
+      - {voice: パウ・クバルシ, text: "ボールを持てば壮観だ"}
+      - {voice: パウ・クバルシ, text: "サイドバックでも中盤でもプレーできる"}
+      - {voice: パウ・クバルシ, text: "そして常に完璧にこなす"}
+      - "ゴールキーパーのジョアン・ガルシアも短く言い切っています"
+      - {voice: ジョアン・ガルシア, text: "シャビ・エスパルトは信じられない"}
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/9ff5465aa7e58166e8331f6dd05aa09d973ddf0b"
+      - "https://www.footballchannel.jp/2026/08/28/post999894/"
+
+  - id: background
+    heading: どこと比べられているか
+    tier: 背景
+    telop: "「ラームを思い出させる」"
+    say:
+      - "フリック監督は3月の時点で、ドイツの元選手の名前を挙げていました"
+      - {voice: ハンジ・フリック, text: "ラームを思い出させる"}
+      - {voice: ハンジ・フリック, text: "6番でも右サイドバックでもプレーできる"}
+      - "エスパルトはこの夏、スペインのU-19欧州選手権優勝にも加わっています"
+    official: false
+    sources:
+      - "https://www.footballchannel.jp/2026/08/28/post999894/"
+      - "https://ja.wikipedia.org/wiki/%E3%82%B7%E3%83%A3%E3%83%93%E3%83%BB%E3%82%A8%E3%82%B9%E3%83%91%E3%83%AB%E3%83%88"
+
+  - id: next
+    heading: これから何を見るか
+    tier: 未確認
+    telop: "本職でない左で続くか"
+    say:
+      - "見るべきは、左サイドバックでの起用が続くかどうかです"
+      - "本職は右か中盤なので、そこに戻るのかもあわせて見たいところです"
+    official: false
+    sources:
+      - "https://www.footballchannel.jp/2026/08/28/post999894/"

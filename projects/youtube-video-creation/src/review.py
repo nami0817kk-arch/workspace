@@ -79,14 +79,23 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     # **縦型にも当てる。**ショートは本編から切り出すので、元に入っていれば残る
     findings.append(check_voice_clash(script))
     if not portrait:
-        findings.append(check_voice_share(script))
+        # **型でしきい値を変える**（2026-09-08）。反応の型は他人の声が7割ないと
+        # 型になっていない。まとめの節があるのは news だけなので、他の型では
+        # 「最後の節が長い」は見ない（最後の節が反応の本体になる）
+        shape = _format_of(script)
+        findings.append(check_voice_share(script, shape["voice_min"]))
         findings.append(check_opening_title(script))
-        findings.append(check_wrap_share(script))
+        if shape["wrap"]:
+            findings.append(check_wrap_share(script))
         findings.append(check_title_hook(script))
         findings.append(check_title_subject(script))
     findings.append(_thumbnail_face(script))
+    findings.append(check_thumbnail_dark(out_dir))
+    findings.append(check_narration(out_dir))
     findings.append(_card_rule(script))
     findings.append(_photo_credits(script, out_dir))
+    findings.append(check_thumbnail_photos(script))
+    findings.append(check_tag_names(script))
     findings.append(check_post_sources(script))
     findings.append(_double_marks(script))
     loudness = _loudness(out_dir / "video.mp4")
@@ -244,6 +253,41 @@ def _card_rule(script: Script) -> Finding:
     return Finding(True, "カードの基準", "／".join(parts))
 
 
+# サムネの上半分（顔が出る段）が黒すぎないか。**一覧に並べると沈む**
+DARK_LEVEL = 42        # これより暗い画素を「黒」と数える
+DARK_SHARE = 0.55      # 顔の段のうち黒がこの割合を超えたら知らせる
+
+
+def check_thumbnail_dark(build_dir: Path) -> Finding:
+    """サムネの黒い面積を見る（2026-09-08 ユーザー指摘）。
+
+    縦長の写真を右に置くと、左が塗りつぶしの濃紺になっていた。実測すると
+    **顔の段の72%が黒**で、一覧で沈んで見えた。いまは同じ写真をぼかして
+    敷いているが、**気づいたのは目で見たからで、機械は何も言わなかった。**
+    """
+    path = build_dir / "thumbnail.png"
+    if not path.exists():
+        return Finding(True, "サムネの黒", "サムネがまだありません")
+    try:
+        from PIL import Image
+    except ImportError:
+        return Finding(True, "サムネの黒", "Pillow がありません")
+    try:
+        with Image.open(path) as im:
+            small = im.convert("L").resize((320, 180))
+    except Exception:
+        # テストの仮ファイルなど、画像として読めないもの。**ここで止めない**
+        return Finding(True, "サムネの黒", "サムネを読めませんでした")
+    top = list(small.crop((0, 0, 320, 108)).getdata())
+    share = sum(1 for v in top if v < DARK_LEVEL) / len(top)
+    if share > DARK_SHARE:
+        return Finding(
+            False, "サムネの黒",
+            f"顔の段の{share * 100:.0f}%が黒です（{DARK_SHARE * 100:.0f}%まで）。"
+            "写真を大きくするか、下地を敷いてください")
+    return Finding(True, "サムネの黒", f"顔の段の黒は{share * 100:.0f}%です")
+
+
 def _thumbnail_face(script: Script) -> Finding:
     """サムネイルに人の顔が入っているか。
 
@@ -337,9 +381,14 @@ def _photo_credits(script: Script, out_dir: Path) -> Finding:
     # **サムネイルの写真も数える。**動画本体には出ないが、サムネイルも配布物で、
     # 表示義務は同じ。行の画像しか見ておらず、公開済みの5本が
     # クレジット無しで出ていた（2026-09-06 実測）
-    thumb = str((script.meta or {}).get("thumbnail_photo") or "").strip()
-    if thumb:
-        used = sorted(set(used) | {Path(thumb).name})
+    meta = script.meta or {}
+    thumbs = [str(meta.get("thumbnail_photo") or "")]
+    # 並べて敷く写真も配布物。1枚目しか数えておらず、2枚目の表示義務が
+    # 抜けていた（2026-09-08）
+    thumbs += [str(x) for x in (meta.get("thumbnail_photos") or [])]
+    names = {Path(t).name for t in thumbs if t.strip()}
+    if names:
+        used = sorted(set(used) | names)
     if not used:
         return Finding(True, "写真のクレジット", "写真を使っていません")
     description = out_dir / "description.txt"
@@ -354,12 +403,146 @@ def _photo_credits(script: Script, out_dir: Path) -> Finding:
     return Finding(True, "写真のクレジット", f"写真{len(used)}枚 / クレジット{len(credits)}件")
 
 
+def check_thumbnail_photos(script: Script) -> Finding:
+    """サムネイルに、話に出てこない人を載せていないか（2026-09-08）。
+
+    モウリーニョの回にムバッペを、鈴木彩艶の回にアリソンを並べていた。
+    左のぼかしを埋めたいだけで足した写真で、**台本に一度も出てこない**。
+    ユーザーの指摘は「サムネに関連しない人は載せないでください」。
+
+    判定は写真フォルダの credits.json にある被写体名で行う。名前が
+    台本に一度も出てこなければ×。表記ゆれで鳴ったときは、**台本の表記に
+    合わせるか、その写真を外す**。どちらでも直る。
+    """
+    meta = script.meta or {}
+    paths = [str(x) for x in (meta.get("thumbnail_photos") or [])]
+    if len(paths) < 2:
+        return Finding(True, "サムネの人物", "1枚だけです")
+    body = " ".join(
+        [script.title] + [getattr(line, "text", "") or "" for line in script.lines]
+    )
+    strangers = []
+    for path in paths:
+        name = _photo_subject(Path(path))
+        if not name:
+            continue
+        # 被写体名は「ウスマン・デンベレ / Ousmane Dembélé」のように
+        # 別表記が併記されることがある。区切りを全部ばらして、
+        # **どれか1つでも台本に出ていれば通す**
+        flat = name
+        for mark in ("=", "/", "／", "（", "）", "(", ")", "、", ",", " ", "　"):
+            flat = flat.replace(mark, "・")
+        parts = [x for x in flat.split("・") if len(x) >= 2]
+        if parts and not any(part in body for part in parts):
+            strangers.append(name)
+    if strangers:
+        return Finding(False, "サムネの人物",
+                       "／".join(strangers) + " が台本に出てきません。"
+                       "関係ない人はサムネに載せない")
+    return Finding(True, "サムネの人物", f"{len(paths)}人とも台本に出ています")
+
+
+def check_tag_names(script: Script) -> Finding:
+    """タグに人名・クラブ名が入っているか（2026-09-08）。
+
+    参考4チャンネルのハッシュタグはほぼ全部が選手名とクラブ名だった。
+    こちらは「サッカー」「海外サッカー」「移籍市場」のような分類語ばかりで、
+    **サンチョの回にサンチョが入っていなかった**。検索で見つけてもらう
+    手がかりが無い。サムネの札には人名を書いているので、そこと突き合わせる。
+    """
+    wanted = [str(t).strip() for t in ((script.meta or {}).get("thumbnail_tags") or [])]
+    wanted = [t for t in wanted if t]
+    if not wanted:
+        return Finding(True, "タグの固有名", "サムネの札がありません")
+    missing = [t for t in wanted if t not in script.tags]
+    if missing:
+        return Finding(False, "タグの固有名",
+                       "／".join(missing) + " がタグに入っていません。"
+                       "分類語だけでは検索に掛からない")
+    return Finding(True, "タグの固有名", f"{len(script.tags)}個中に {'／'.join(wanted)}")
+
+
+def _photo_subject(path: Path) -> str:
+    """写真の credits.json から被写体名を取り出す。無ければ空。"""
+    credits = _resolve(str(path.parent / "credits.json"))
+    if credits is None or not Path(credits).exists():
+        return ""
+    try:
+        rows = json.loads(Path(credits).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return ""
+    for row in rows if isinstance(rows, list) else []:
+        if row.get("file") != path.name:
+            continue
+        note = str(row.get("subject_check") or "")
+        head, _, tail = note.partition("被写体に ")
+        return tail.partition(" が")[0].strip()
+    return ""
+
+
 def _double_marks(script: Script) -> Finding:
     """句読点が二重になっていないか。合成音声が不自然に間を空ける。"""
     bad = [line.text for line in script.lines if line.text and ("。。" in line.text or "、、" in line.text)]
     if bad:
         return Finding(False, "読み上げの文", f"句読点が二重です: {bad[0][:30]}…")
     return Finding(True, "読み上げの文", "句読点の重なりなし")
+
+
+SILENT_DB = -60.0          # これより静かなら、鳴っていないとみなす
+
+
+def check_narration(out_dir: Path) -> Finding:
+    """**読み上げが本当に鳴っているか**（2026-09-08）。
+
+    この日、VOICEVOX が起動しておらず `backend: auto` が無音に落ちた。
+    **長さだけ正しい無音のwav**が並び、動画も書き出せてしまう。
+    音の大きさの点検は**BGMを見て-15dBで合格**にしていたので、
+    25本を公開するまで誰も気づかなかった（ユーザーが耳で気づいた）。
+
+    だから、BGM込みの動画ではなく**読み上げのファイルそのもの**を見る。
+    """
+    folder = out_dir / "audio"
+    if not folder.exists():
+        return Finding(True, "読み上げ", "音声のフォルダがありません")
+    waves = sorted(folder.glob("*.wav"))
+    if not waves:
+        return Finding(True, "読み上げ", "音声がありません")
+    quiet = []
+    for wav in waves:
+        level = _mean_db(wav)
+        if level is None:
+            continue
+        if level < SILENT_DB:
+            quiet.append(wav.name)
+    if len(quiet) == len(waves):
+        return Finding(
+            False, "読み上げ",
+            f"{len(waves)}本すべてが無音です。VOICEVOX が起動しているか確かめてください")
+    if quiet:
+        return Finding(False, "読み上げ", f"{len(quiet)}/{len(waves)}本が無音です: {quiet[0]}")
+    return Finding(True, "読み上げ", f"{len(waves)}本とも鳴っています")
+
+
+def _mean_db(path: Path) -> float | None:
+    """その音声の平均音量。測れなければ None。"""
+    import re
+    import subprocess
+
+    try:
+        import imageio_ffmpeg
+    except ImportError:
+        return None
+    try:
+        err = subprocess.run(
+            [imageio_ffmpeg.get_ffmpeg_exe(), "-i", str(path), "-af", "volumedetect",
+             "-f", "null", "-"], capture_output=True, text=True,
+            encoding="utf-8", errors="replace", timeout=60).stderr
+    except Exception:
+        return None
+    found = re.search(r"mean_volume: (-?\d+(?:\.\d+)?|-inf) dB", err or "")
+    if not found:
+        return None
+    return -120.0 if found.group(1) == "-inf" else float(found.group(1))
 
 
 def _loudness(video: Path) -> Finding | None:
@@ -542,9 +725,20 @@ NARRATORS = ("キャスター", "解説", "ナレーター", "")
 # こちらは 14%・2.2件・1件39字だった。**これが再生数の差の中身**なので、
 # 書式ではなく構成の点検として置く。
 VOICE_SHARE_MIN = 40.0     # 他人の声が占める字数の下限（%）
-VOICE_LINE_MAX = 20        # 1件の長さ。**実測1件3.1秒＝約16字**なので、少しだけ余裕を見る
+# 1件の長さ。2026-09-07 の実測（1件3.1秒＝約16字）で20字にしたが、
+# 2026-09-08 にサッカーラボ（25.5万回）の文字起こしを取ると1件30〜45字だった。
+# 参考どうしで割れているので、上限は長いほうに合わせる
+VOICE_LINE_MAX = 45
                            # （2026-09-07 に30字から締めた。5.5秒ぶんは長すぎた）
 WRAP_SHARE_MAX = 12.0      # 最後の節（まとめ）が占めてよい割合
+
+
+def _format_of(script: Script) -> dict:
+    """台本の型。frontmatter の format から引く。無ければ news。"""
+    from .research import FORMATS
+
+    name = str((script.meta or {}).get("format") or "news").strip().lower()
+    return FORMATS.get(name, FORMATS["news"])
 
 
 def _voice_lines(script: Script) -> tuple[list[int], int]:
@@ -560,17 +754,22 @@ def _voice_lines(script: Script) -> tuple[list[int], int]:
     return other, total
 
 
-def check_voice_share(script: Script) -> Finding:
-    """他人の声が足りているか。語りだけの動画は最後まで見てもらえない。"""
+def check_voice_share(script: Script, minimum: float | None = None) -> Finding:
+    """他人の声が足りているか。語りだけの動画は最後まで見てもらえない。
+
+    下限は型で変わる（2026-09-08）。news は40%、voices は70%、quote は60%。
+    サッカーラボ（25.5万回）は 0:36 以降がすべて反応で、他人の声が約83%だった。
+    """
     other, total = _voice_lines(script)
     if not total:
         return Finding(False, "他人の声の量", "読み上げる文がありません")
+    floor = VOICE_SHARE_MIN if minimum is None else minimum
     share = sum(other) / total * 100
-    if share < VOICE_SHARE_MIN:
+    if share < floor:
         return Finding(
             False, "他人の声の量",
-            f"{share:.0f}%（{len(other)}件）しかありません。"
-            f"伸びている3チャンネルは58%・19件です。反応を増やしてください",
+            f"{share:.0f}%（{len(other)}件）しかありません（下限{floor:.0f}%）。"
+            f"伸びているチャンネルは58〜83%です。反応を増やしてください",
         )
     return Finding(True, "他人の声の量", f"{share:.0f}%（{len(other)}件）")
 
@@ -637,7 +836,14 @@ TITLE_HOOKS = (
     "こちら", "話題", "・・・", "…", "ざわ", "騒然", "衝撃", "異変", "波紋",
     "してしまう", "が判明", "口を開", "反応", "の理由", "なぜ", "どうなる",
     "とは", "か？", "か?", "事態", "まさか", "驚",
+    # **問いの形も答えを隠している**（2026-09-08）。
+    # 「〜か？」しか認めていなかったので、疑問符の無い問いかけが弾かれ、
+    # 結果として9本中7本が「〜がこちらです」で揃った。**検査が定型化を招いていた**
+    "どこまで", "どうやって", "誰が", "誰か", "何を", "何が", "いくら", "いつ",
 )
+
+# 疑問符が無くても、この形で終わっていれば問いかけ
+TITLE_QUESTION_TAILS = ("か", "かも", "のか", "ますか", "だろうか", "でしょうか")
 
 
 def check_title_hook(script: Script) -> Finding:
@@ -645,12 +851,20 @@ def check_title_hook(script: Script) -> Finding:
 
     札（【速報】など）を外した本文で見る。引く型の言葉が1つも無ければ、
     たいてい事実を書き切っている。
+
+    **語尾が「か」なら問いかけ**として通す（2026-09-08）。疑問符を
+    付けない書き方があり、それを弾いていた。
     """
     bare = _bare(script.title)
     if not bare:
         return Finding(False, "タイトルの型", "タイトルがありません")
     if any(word in script.title for word in TITLE_HOOKS):
         return Finding(True, "タイトルの型", "続きを見たくなる形です")
+    if bare.rstrip("。！!").endswith(TITLE_QUESTION_TAILS):
+        return Finding(True, "タイトルの型", "問いかけで終わっています")
+    if bare.rstrip("。！!").endswith(("」", "』")):
+        # 「解説南さん『鈴木彩艶に関しては・・・』」が25万回。**引用で切ると続きが気になる**
+        return Finding(True, "タイトルの型", "引用で終わっています")
     return Finding(
         False, "タイトルの型",
         "答えを言い切っています。伸びている3チャンネルの上位は"
