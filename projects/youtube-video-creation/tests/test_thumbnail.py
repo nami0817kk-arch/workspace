@@ -423,3 +423,35 @@ def test_エンブレムがあると絵が変わる(tmp_path, monkeypatch):
     assert crest_mod.find("レスター") is not None
     assert draw("after") != before
     assert crest_mod.CREST_PX <= 48        # **大きくしない**
+
+
+def test_左の余白に言葉を積む(tmp_path):
+    """**「ただのぼかし」に見えた**（2026-09-08 ユーザー指摘）。
+
+    縦長の写真を右に置くと左がぼかしだけになる。余白を埋めるのではなく、
+    動画の答えにあたる言葉を置く。
+    """
+    photo = tmp_path / "tall.png"
+    Image.new("RGB", (600, 1200), (200, 60, 60)).save(photo)
+
+    def draw(name: str, points):
+        return build_thumbnail(
+            _config(), "", tmp_path / f"{name}.png", style="band",
+            lines=("見出し", "副見出し"), background=str(photo), points=points,
+        ).read_bytes()
+
+    assert draw("with", ["ひとつ", "ふたつ"]) != draw("without", [])
+
+
+def test_横長の写真には積まない(tmp_path):
+    """全面に敷く回は余白が無いので、重ねると顔にかぶる。"""
+    photo = tmp_path / "wide.png"
+    Image.new("RGB", (1600, 900), (40, 120, 60)).save(photo)
+
+    def draw(name: str, points):
+        return build_thumbnail(
+            _config(), "", tmp_path / f"{name}.png", style="band",
+            lines=("見出し", "副見出し"), background=str(photo), points=points,
+        ).read_bytes()
+
+    assert draw("w", ["ひとつ"]) == draw("wo", [])

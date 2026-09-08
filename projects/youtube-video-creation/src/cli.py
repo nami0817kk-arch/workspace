@@ -768,6 +768,8 @@ def _cmd_thumbnail(args, config) -> int:
             focus=look.get("focus"),
             badge=look["badge"], date=look["date"],
             lines=look["lines"], tags=look["tags"],
+            reaction=look.get("reaction") or "",
+            points=look.get("points") or [],
         )
         made.append((look.get("name") or "", target, look["lines"]))
 

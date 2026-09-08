@@ -1,0 +1,85 @@
+# 福田師王 の取材メモ（2026年9月8日）
+slot: japan
+date: "2026年9月8日"
+
+theme:
+  id: fukuda_streak
+  league: germany
+  prefix: ""
+  title: "福田師王が独2部で続けている記録を知っていますか"
+  hook: "22歳のストライカーが、出場したリーグ戦で止まっていません"
+  question: "カールスルーエの福田師王は、どこまで続けているのか"
+
+thumbnail:
+  line1: "5試合連続ゴール"
+  line2: "昨季からつながっている"
+  tags: ["福田師王", "ドイツ2部"]
+  photo: "assets/photos/20260909_fukuda/01.png"
+
+answer: "出場したリーグ戦で5試合連続です。昨季の最後3試合と、今季の2試合がつながっています"
+watch: "先発で使われ続けるかどうか。今季は初のフル出場を果たしたところです"
+
+sections:
+  - id: what
+    heading: 何が起きたのか
+    tier: 報道
+    telop: "2戦連発 今季2点目"
+    say:
+      - "ドイツ2部、カールスルーエ対ハノーバー"
+      - "22歳の福田師王が、2試合つづけて得点しました"
+      - "今シーズン2点目です"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/295215359e4503182b2dc2dde4e6dda691085491"
+      - "https://jp.soccerway.com/player/fukuda-shio/bJr1yMZu"
+
+  - id: score
+    heading: どんなゴールだったか
+    tier: 報道
+    telop: "前半28分 奪ってそのまま"
+    say:
+      - "前半28分でした"
+      - "こぼれ球を拾った相手ディフェンダーに、猛然とプレスをかけます"
+      - "奪ったあと、右足でゴールキーパーの右を抜きました"
+      - "試合は2対2の引き分けです"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/295215359e4503182b2dc2dde4e6dda691085491"
+      - "https://jp.soccerway.com/player/fukuda-shio/bJr1yMZu"
+
+  - id: numbers
+    heading: どこまで続いているのか
+    tier: 報道
+    telop: "出場したリーグ戦で5試合連続"
+    say:
+      - "福田は昨シーズンを、3試合連続ゴールで終えていました"
+      - "今シーズンの2試合を足すと、5試合連続になります"
+      - "出場したリーグ戦では、止まっていません"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/295215359e4503182b2dc2dde4e6dda691085491"
+      - "https://jp.soccerway.com/player/fukuda-shio/bJr1yMZu"
+
+  - id: background
+    heading: どういう経緯の選手か
+    tier: 背景
+    telop: "期限付きから完全移籍へ"
+    say:
+      - "福田はボルシアMGからカールスルーエへ、期限付きで移った選手です"
+      - "そこで結果を出し、今シーズンから完全移籍になりました"
+      - "この試合が、今季初めてのフル出場でした"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/295215359e4503182b2dc2dde4e6dda691085491"
+      - "https://jp.soccerway.com/player/fukuda-shio/bJr1yMZu"
+
+  - id: next
+    heading: これから何を見るか
+    tier: 未確認
+    telop: "先発が続くか"
+    say:
+      - "見るべきは、先発で使われ続けるかどうかです"
+      - "フル出場が続けば、点の数はもっと伸びます"
+    official: false
+    sources:
+      - "https://jp.soccerway.com/player/fukuda-shio/bJr1yMZu"

@@ -93,6 +93,10 @@ def from_meta(meta: dict, title: str) -> dict:
         # 「変な声出た」「一番強くて草」のような**書き込みの断片**を小窓で出して
         # いた。反応を集めたチャンネルであることが、一覧の時点で分かる
         "reaction": str(meta.get("thumbnail_reaction") or ""),
+        # 左の余白に積む短い言葉（2026-09-08）。縦長の写真を右に置くと
+        # 左がぼかしだけになり「ただのぼかし」に見えた（ユーザー指摘）。
+        # **中身を置けば余白が情報になる。**3つまで、1つ10字くらい
+        "points": [str(x) for x in (meta.get("thumbnail_points") or [])][:3],
     }
 
 
@@ -175,6 +179,7 @@ def build_thumbnail(
     tags: list[str] | None = None,
     focus: float | None = None,
     reaction: str = "",
+    points: list[str] | None = None,
 ) -> Path:
     """サムネイルを1枚作る。
 
@@ -190,7 +195,7 @@ def build_thumbnail(
     if chosen == "band":
         return _band_thumbnail(
             config, out_path, background,
-            lines or (title, subtitle), tags or [], focus, reaction,
+            lines or (title, subtitle), tags or [], focus, reaction, points or [],
         )
 
     font_path = str(config.video.font_path())
@@ -242,6 +247,7 @@ def _band_thumbnail(
     tags: list[str],
     focus: float | None = None,
     reaction: str = "",
+    points: list[str] | None = None,
 ) -> Path:
     """写真の上に蛍光イエローの帯を重ねる。**最高再生の型に合わせてある。**
 
@@ -275,11 +281,13 @@ def _band_thumbnail(
 
     layer, draw = _layer(SIZE)
     _draw_tags(layer, draw, tags, font_path)
+    if portrait and points:
+        _draw_points(draw, points, font_path)
 
     top_text = (lines[0] or "").replace(chr(92) + "n", " ")
     bottom_text = lines[1] or ""
     # 縦長の写真を右に置いた回は、帯を左だけにして顔を隠さない
-    right = int(SIZE[0] * 0.60) if portrait else SIZE[0] - 16
+    right = int(SIZE[0] * 0.52) if portrait else SIZE[0] - 16
     # **2行は同じ大きさで描く。**入る字の大きさは行ごとに違うので、
     # 小さいほうに合わせる。1行目だけで決めていたら、2行目が枠を超えて
     # 「GKコーチ」が「G / Kコーチ」に泣き別れた（2026-09-07 に書き出して発見）
@@ -385,10 +393,16 @@ def _paste_side(canvas: Image.Image, background: str | None) -> None:
         return
     with Image.open(path) as source:
         photo = source.convert("RGBA")
-    scale = SIZE[1] / photo.height
-    photo = photo.resize((max(1, int(photo.width * scale)), SIZE[1]), Image.LANCZOS)
-    width = min(photo.width, int(SIZE[0] * 0.46))
-    photo = photo.crop(((photo.width - width) // 2, 0, (photo.width + width) // 2, SIZE[1]))
+    # **枠を埋めるまで拡大する。**高さだけ合わせていたので、細い縦写真だと
+    # 幅が足りず、左半分がぼかしのまま残った（2026-09-08 ユーザー指摘）。
+    # 顔は上にあるので、縦は上寄りに切る
+    width = int(SIZE[0] * 0.58)
+    scale = max(width / photo.width, SIZE[1] / photo.height)
+    photo = photo.resize((max(1, int(photo.width * scale)) + 1,
+                          max(1, int(photo.height * scale)) + 1), Image.LANCZOS)
+    left = max(0, (photo.width - width) // 2)
+    top = max(0, min(photo.height - SIZE[1], int(photo.height * 0.04)))
+    photo = photo.crop((left, top, left + width, top + SIZE[1]))
     canvas.alpha_composite(photo, (SIZE[0] - width, 0))
 
     # 写真の左端をぼかして地になじませる（切り貼りに見せない）
@@ -619,6 +633,23 @@ def _draw_tags(layer: Image.Image, draw: ImageDraw.ImageDraw,
         draw.text((left + 16, y + 6), tag, font=font, fill=(255, 255, 255, 255))
         _paste_crest(layer, tag, left, y)
         y += 62
+
+
+def _draw_points(draw: ImageDraw.ImageDraw, points: list[str], font_path: str) -> None:
+    """左の余白に短い言葉を積む（2026-09-08）。
+
+    縦長の写真を右に置くと左がぼかしだけになり、「ただのぼかし」に見えた
+    （ユーザー指摘）。**余白を埋めるのではなく、中身を置く。**
+    動画の答えにあたる言葉（挙げられた3人の名前など）を並べる。
+    """
+    font = ImageFont.truetype(font_path, 62)
+    y = 96
+    for text in points[:3]:
+        draw.text((60 + 3, y + 3), text, font=font, fill=(0, 0, 0, 190))
+        draw.text((60, y), text, font=font, fill=(255, 255, 255, 255))
+        draw.line([(60, y + 82), (60 + draw.textlength(text, font=font), y + 82)],
+                  fill=(232, 210, 31, 255), width=5)
+        y += 108
 
 
 def _paste_crest(layer: Image.Image, tag: str, left: float, y: int) -> None:

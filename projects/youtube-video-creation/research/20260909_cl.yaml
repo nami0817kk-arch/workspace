@@ -1,0 +1,86 @@
+# CLの優勝候補 の取材メモ（2026年9月8日）
+slot: world
+date: "2026年9月8日"
+
+theme:
+  id: cl_odds_2026
+  league: england
+  prefix: ""
+  title: "スパコンが1万回試したCLの優勝候補、筆頭はどこか"
+  hook: "チャンピオンズリーグが開幕します。機械の見立てを先に見ておきます"
+  question: "連覇中のパリSGは、なぜ筆頭ではないのか"
+
+thumbnail:
+  line1: "優勝候補の筆頭は"
+  line2: "PSGの3連覇は7.1%"
+  tags: ["チャンピオンズリーグ", "優勝予想"]
+  photo: "assets/photos/20260909_cl/01.png"
+
+answer: "アーセナルです。20.9パーセントで、バイエルンの19.4パーセントをわずかに上回りました"
+watch: "アーセナルはリーグフェーズで難敵が続きます。それでも16強進出は93.8パーセントです"
+
+sections:
+  - id: what
+    heading: 誰が何をしたのか
+    tier: 報道
+    telop: "Optaが1万回シミュレーション"
+    say:
+      - "データ会社Optaのスーパーコンピューターです"
+      - "1万回のシミュレーションを回して、優勝の確率を出しました"
+      - "チャンピオンズリーグの開幕に合わせた発表です"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/6b78fa4616d5fc2f8d98748675c7e8dff383bdde"
+      - "https://news.mynavi.jp/article/20260908-4935494/"
+
+  - id: numbers
+    heading: 数字はどうなったか
+    tier: 報道
+    telop: "アーセナル20.9% バイエルン19.4%"
+    say:
+      - "筆頭はアーセナルで、20.9パーセントです"
+      - "対抗はバイエルンの19.4パーセント。差は1.5ポイントしかありません"
+      - "3番手以降にマンチェスター・シティ、バルセロナが続きます"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/6b78fa4616d5fc2f8d98748675c7e8dff383bdde"
+      - "https://news.mynavi.jp/article/20260908-4935494/"
+
+  - id: turn
+    heading: 連覇中のパリSGは
+    tier: 報道
+    telop: "3連覇は7.1%"
+    say:
+      - "パリSGが3連覇する確率は7.1パーセントでした"
+      - "3年つづけて決勝へ行く確率でも14.4パーセントです"
+      - "連覇している側が、筆頭に置かれていません"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/6b78fa4616d5fc2f8d98748675c7e8dff383bdde"
+      - "https://news.mynavi.jp/article/20260908-4935494/"
+
+  - id: why
+    heading: アーセナルはなぜ高いのか
+    tier: 報道
+    telop: "16強進出は93.8%"
+    say:
+      - "アーセナルは昨シーズンの決勝進出クラブで、いまのプレミア王者です"
+      - "リーグフェーズでは難しい相手が続きます"
+      - "それでも、16強へ進む確率は93.8パーセントと出ました"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/6b78fa4616d5fc2f8d98748675c7e8dff383bdde"
+      - "https://jp.headtopics.com/news/856970651248112699629-87410645"
+
+  - id: next
+    heading: 数字をどう受け取るか
+    tier: 背景
+    telop: "20%は「5回に1回」"
+    say:
+      - "20.9パーセントは、5回に1回という意味です"
+      - "つまり機械の見立てでも、優勝しないほうが多いことになります"
+      - "別の媒体は違う数字を出しており、置く前提で結果は動きます"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/16240b30978a7be7cdcc73b5ecc85a071f591a2c"
+      - "https://news.yahoo.co.jp/articles/6b78fa4616d5fc2f8d98748675c7e8dff383bdde"

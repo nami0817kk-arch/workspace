@@ -161,6 +161,33 @@ def look_up(page: str, session=None) -> list[str]:
     return [n for _, n in scored]
 
 
+def guess_names(page: str) -> list[str]:
+    """ありそうなファイル名を並べる。
+
+    記事の画像一覧から選ぶやり方は、**クラブによって当たらない**
+    （2026-09-08 実測で18クラブ中10クラブが空振り）。
+    ファイル名は「クラブ名＋FC/logo/crest」の形が多いので、
+    直接あるかどうか聞きにいく。
+    """
+    base = page.replace("F.C.", "").replace("A.F.C.", "").replace("C.F.", "")
+    base = base.replace("FC ", "").strip().rstrip(".").strip()
+    short = base.replace(" & ", " and ")
+    out = []
+    for stem in {base, short}:
+        for suffix in ("FC.svg", "FC crest.svg", "crest.svg", "logo.svg",
+                       "FC logo.svg", "badge.svg", ".svg",
+                       "FC.png", "crest.png", "logo.png"):
+            sep = "" if suffix.startswith(".") else " "
+            out.append(f"File:{stem}{sep}{suffix}")
+    return out
+
+
+def exists(title: str, session=None) -> bool:
+    r = _api(session or _session(), {"action": "query", "titles": title})
+    pages = r.get("query", {}).get("pages", {})
+    return any("missing" not in pg for pg in pages.values())
+
+
 def image_url(title: str, session=None, width: int = 256) -> tuple[str, str]:
     """ファイル名から、画像のURLと権利表示を取る。"""
     s = session or _session()
@@ -180,7 +207,10 @@ def fetch(club: str, page: str, root: Path | None = None,
     s = session or _session()
     hits = look_up(page, s)
     if not hits:
-        return None, f"{page} の記事にエンブレムらしい画像がありません"
+        # 記事の一覧で当たらないクラブは、ファイル名を直接当てにいく
+        hits = [n for n in guess_names(page) if exists(n, s)]
+    if not hits:
+        return None, f"{page} のエンブレムを見つけられません"
     url, license_name = image_url(hits[0], s)
     if not url:
         return None, f"{hits[0]} の画像URLを取れません"

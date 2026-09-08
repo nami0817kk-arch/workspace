@@ -743,6 +743,8 @@ def to_script(notes: Notes, plan: Plan) -> str:
         "thumbnail_tags": [str(t) for t in (thumbnail.get("tags") or [])],
         # 案を書いてあれば台本に持ち越す。thumbnail --all で並べて比べる
         "thumbnail_alt": [dict(a or {}) for a in (thumbnail.get("alt") or [])],
+        # 左の余白に積む短い言葉（2026-09-08）。3つまで
+        "thumbnail_points": [str(x) for x in (thumbnail.get("points") or [])][:3],
         # **顔写真は取材メモに持たせる。**台本にしか書けなかったので、
         # 台本を作り直すたびに消えていた（2026-09-06 に2回やった）。
         # 直すたびに手で書き戻すのは、必ずどこかで抜ける

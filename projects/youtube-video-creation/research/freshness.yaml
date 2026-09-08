@@ -198,3 +198,15 @@ observed:
   max: 49852959
   at: 2026-09-08T09:56
   exact: true
+- site: espn.com
+  max: 49817274
+  at: 2026-09-08T10:46
+  exact: true
+- site: kicker.de
+  max: 1250730
+  at: 2026-09-08T15:45
+  exact: true
+- site: skysports.com
+  max: 13582771
+  at: 2026-09-08T16:00
+  exact: true
