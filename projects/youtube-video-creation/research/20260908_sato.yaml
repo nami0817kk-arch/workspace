@@ -1,0 +1,102 @@
+# 佐藤龍之介 の取材メモ（2026年9月8日）
+slot: japan
+date: "2026年9月8日"
+
+theme:
+  id: sato_dropped
+  league: spain
+  prefix: ""
+  title: "19歳の佐藤龍之介に起きた変化がこちらです バレンシアは0-5"
+  hook: "3試合つづけて先発していた19歳が、この日はベンチから始まりました"
+  question: "先週まで「攻撃陣で唯一の光」と書かれた19歳に、何が起きたのか"
+
+thumbnail:
+  line1: "今季初の先発落ち"
+  line2: "0-5で最下位転落"
+  tags: ["佐藤龍之介", "バレンシア"]
+  photo: "assets/photos/20260908_sato/01.png"
+
+answer: "相手がバルセロナだったこと、そしてチームが立て直しを迫られていたことが重なりました。ただ19歳の評価そのものは、前節まで高いままです"
+watch: "次節に先発へ戻るかどうか。監督は前線の補強を口にしています"
+
+sections:
+  - id: what
+    heading: 何が起きたのか
+    tier: 報道
+    telop: "今季初の先発落ち"
+    say:
+      - "ラ・リーガ第4節、バレンシア対バルセロナ"
+      - "19歳の佐藤龍之介は、今シーズン初めて先発から外れました"
+      - "開幕から3試合は、すべて先発だった選手です"
+      - "0対3となった後半17分から、ピッチに入りました"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/88b1079ad3b631364b34a2661c7c9420c482d29d"
+      - "https://www.footballchannel.jp/2026/09/07/post1005174/"
+
+  - id: background
+    heading: 先週までどう見られていたか
+    tier: 背景
+    telop: "「攻撃陣における唯一の光」"
+    say:
+      - "佐藤はこの夏、FC東京からバレンシアへ完全移籍しました"
+      - "クラブの男子トップチームで、史上初の日本人選手です"
+      - "前節までは2試合つづけて先発し、現地から8点の高い評価を受けています"
+      - {voice: 地元紙, text: "バレンシア攻撃陣における唯一の光"}
+    official: false
+    sources:
+      - "https://www.tokyo-sports.co.jp/articles/-/400770"
+      - "https://news.yahoo.co.jp/articles/88b1079ad3b631364b34a2661c7c9420c482d29d"
+
+  - id: score
+    heading: 試合はどうなったか
+    tier: 報道
+    telop: "0-5 最下位に転落"
+    say:
+      - "バレンシアは前半を0対2で折り返しました"
+      - "後半にさらに3点を失い、0対5です"
+      - "この結果、バレンシアは最下位に落ちました"
+      - "開幕から4試合、まだ勝ちがありません"
+    official: false
+    sources:
+      - "https://www.football-zone.net/archives/672133"
+      - "https://news.yahoo.co.jp/articles/95c4d7852989731523d00078dd60f0936f70d852"
+
+  - id: voices
+    heading: スタジアムで何が起きたか
+    tier: 報道
+    telop: "「今すぐ出ていけ」"
+    say:
+      - "本拠地メスタージャでは、オーナーの退陣を求める声が響きました"
+      - {voice: サポーター, text: "今すぐ出ていけ"}
+      - "多くのファンは、試合終了の笛を待たずにスタジアムを出ています"
+    official: false
+    sources:
+      - "https://www.football-zone.net/archives/672133"
+      - "https://news.yahoo.co.jp/articles/5ab3d3a10bc4d73d137b20cc8bb4a1dd3cbc5446"
+
+  - id: said
+    heading: 佐藤への評価はどうだったか
+    tier: 報道
+    telop: "現地は辛口"
+    say:
+      - "途中出場した佐藤について、現地の評価は厳しいものでした"
+      - {voice: 地元紙, text: "攻撃で何ももたらさなかった"}
+      - {voice: 地元紙, text: "流れを変えることはできなかった"}
+      - "0対3から入る展開だったことは、差し引いて見る必要があります"
+    official: false
+    sources:
+      - "https://www.footballchannel.jp/2026/09/07/post1005174/"
+      - "https://www.football-zone.net/archives/672133"
+
+  - id: next
+    heading: これから何を見るか
+    tier: 未確認
+    telop: "監督は前線の補強を口に"
+    say:
+      - "指揮官は、補強の焦点を攻撃のポジションに置くと話しています"
+      - "見るべきは、次節に佐藤が先発へ戻るかどうかです"
+    official: false
+    sources:
+      - "https://www.soccerdigestweb.com/news/detail/id=196288"
+      - "https://www.footballchannel.jp/2026/09/07/post1005174/"

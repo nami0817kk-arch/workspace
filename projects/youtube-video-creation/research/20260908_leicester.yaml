@@ -1,0 +1,141 @@
+# レスターの現状 の取材メモ（2026年9月8日）
+slot: world
+date: "2026年9月8日"
+
+theme:
+  id: leicester_fall
+  league: england
+  prefix: ""
+  title: "奇跡のプレミア優勝から10年 いまレスターがいる場所がこちらです"
+  hook: "5001倍のオッズをひっくり返したクラブが、10年後にどこにいるか"
+  question: "奇跡を起こしたクラブは、なぜ10年でここまで落ちたのか"
+
+thumbnail:
+  line1: "優勝から10年でここ"
+  line2: "5試合1勝 クラブ史上最低の順位"
+  tags: ["レスター", "3部リーグ"]
+  photo: "assets/photos/20260908_leicester/01.png"
+
+answer: "2年つづけての降格が効いています。落ちるたびに主力が抜け、立て直す前に次の降格が来ました。きっかけをたどると2018年のヘリコプター事故に行き着きます"
+watch: "マーティン監督が続けられるか。クラブは売りに出されています"
+
+sections:
+  - id: what
+    heading: いまどこにいるのか
+    tier: 報道
+    telop: "3部で18位 勝ち点5"
+    say:
+      - "レスターは今シーズン、3部にあたるEFLリーグワンにいます"
+      - "開幕から5試合で1勝。勝ち点5の18位です"
+      - "クラブの歴史で、もっとも低い順位になりました"
+    official: false
+    sources:
+      - "https://www.soccer-king.jp/news/world/eng/20260908/2202017.html"
+      - "https://www.footballwebpages.co.uk/leicester-city/league-table"
+
+  - id: turn
+    heading: 10年前に何があったか
+    tier: 背景
+    telop: "5001倍のオッズをひっくり返した"
+    say:
+      - "2015-16シーズン、レスターはプレミアリーグで優勝しました"
+      - "開幕前の優勝オッズは5001倍。誰も予想していませんでした"
+      - "その10年後が、いまの3部18位です"
+    official: false
+    sources:
+      - "https://www.soccer-king.jp/news/world/eng/20260908/2202017.html"
+      - "https://www.soccerdigestweb.com/news/detail/id=189795"
+
+  - id: numbers
+    heading: 落ち方の順番
+    tier: 報道
+    telop: "2年つづけて降格"
+    say:
+      - "2022-23シーズン、プレミアで18位となり2部へ降格しました"
+      - "翌シーズンは2部で優勝し、1年でプレミアに戻ります"
+      - "ところが24-25シーズンは最下位。ふたたび2部へ落ちました"
+      - "そして昨シーズン、2部で23位。2年つづけての降格です"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/5027a28fbcff7010bd84cf5bea34c6010008ece2"
+      - "https://www.soccer-king.jp/news/world/eng/20260908/2202017.html"
+
+  - id: why
+    heading: なぜ止まらなかったのか
+    tier: 背景
+    telop: "2018年のヘリコプター事故"
+    say:
+      - "2018年、オーナーのヴィチャイ氏がヘリコプターの事故で亡くなりました"
+      - "スタジアムの上空で墜落した事故です"
+      - "現地では、ここからクラブが傾き始めたと語られています"
+      - "そして長年の財政面の問題が、降格のたびに重くのしかかりました"
+    official: false
+    sources:
+      - "https://www.soccerdigestweb.com/news/detail/id=189795"
+      - "https://news.yahoo.co.jp/articles/90b39469990a7765ea07c4a84c074787767498db"
+
+  - id: voices
+    heading: サポーターは何と言ったか
+    tier: 報道
+    telop: "「明日の朝にはクビだ」"
+    say:
+      - "オックスフォード戦に0対4で負けたあとのことです"
+      - "本拠地キング・パワー・スタジアムに集まったサポーターから、こんな声が上がりました"
+      - {voice: サポーター, text: "明日の朝にはクビだ"}
+      - "矛先はラッセル・マーティン監督に向いています"
+    official: false
+    sources:
+      - "https://www.soccer-king.jp/news/world/eng/20260908/2202017.html"
+      - "https://news.yahoo.co.jp/articles/90b39469990a7765ea07c4a84c074787767498db"
+
+  - id: said
+    heading: 監督は何と言ったか
+    tier: 報道
+    telop: "「チームが若すぎる」"
+    say:
+      - {voice: マーティン監督, text: "本当に辛い。とても辛い"}
+      - {voice: マーティン監督, text: "今日の我々は正反対のチームに見えた"}
+      - {voice: マーティン監督, text: "チームが若すぎて、経験不足だ"}
+      - {voice: マーティン監督, text: "我々は未熟で、甘すぎる"}
+      - "地元紙レスター・マーキュリーは、こう書いています"
+      - {voice: 地元紙, text: "またしても失望の午後となった"}
+      - {voice: 地元紙, text: "痛烈な敗北だった"}
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/050db77278df7a0a912ebcdf0bf2079637812ee3"
+      - "https://news.yahoo.co.jp/articles/90b39469990a7765ea07c4a84c074787767498db"
+
+  - id: react
+    heading: どう受け止められているか
+    tier: 報道
+    telop: "現地とファンの声"
+    say:
+      - {voice: ネット民, text: "リコプターの事故がすべてを壊してしまった"}
+      - {voice: ネット民, text: "ィチャイが亡くなってから落ちぶれた"}
+      - {voice: ネット民, text: "年の財政的な不正行為が跳ね返ってきた"}
+      - {voice: ネット民, text: "イのオーナー家もついに匙を投げたか"}
+      - {voice: ネット民, text: "の丈に合わない練習場を持つ3部クラブ"}
+      - {voice: ネット民, text: "金力勝負についていけなくなった典型例"}
+      - {voice: ネット民, text: "勝から10年足らずで3部降格して売却"}
+      - {voice: ネット民, text: "の物語はもう映画化できるんじゃないか"}
+      - {voice: ネット民, text: "のレスターを買うのは毒まんじゅうだ"}
+      - {voice: ネット民, text: "下げしたところで誰が買うんだよ"}
+      - {voice: ネット民, text: "東の金持ちがポケットマネーで買いそう"}
+      - {voice: ネット民, text: "リマで売れ残りを叩き売りするノリだ"}
+      - {voice: ネット民, text: "きはどこへ行ったんだ"}
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/90b39469990a7765ea07c4a84c074787767498db"
+      - "https://news.yahoo.co.jp/articles/050db77278df7a0a912ebcdf0bf2079637812ee3"
+
+  - id: next
+    heading: これからどうなるか
+    tier: 未確認
+    telop: "クラブは売りに出ている"
+    say:
+      - "クラブは売却先を探している段階です"
+      - "サポーターはすでに監督の解任を求めています"
+      - "そしてリーグワンの下には、4部リーグがあります"
+    official: false
+    sources:
+      - "https://news.yahoo.co.jp/articles/90b39469990a7765ea07c4a84c074787767498db"

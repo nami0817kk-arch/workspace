@@ -1,0 +1,91 @@
+# ムバッペ の取材メモ（2026年9月8日）
+slot: laliga
+date: "2026年9月8日"
+
+theme:
+  id: mbappe_ballondor
+  league: spain
+  prefix: ""
+  title: "ムバッペがバロンドールについて言い切った言葉がこちらです"
+  hook: "誰に投票するか聞かれたムバッペが、迷わず答えました"
+  question: "なぜ本人は、自分が受賞して当然だと言い切れるのか"
+
+thumbnail:
+  line1: "「自分に投票する」"
+  line2: "W杯通算22得点は歴代最多"
+  tags: ["ムバッペ", "バロンドール"]
+  photo: "assets/photos/20260908_mbappe/01.jpg"
+
+answer: "W杯でもチャンピオンズリーグでも得点王になった選手は他にいない、というのが本人の根拠です"
+watch: "受賞者の発表は10月26日。インタビュー全文は9月11日に出ます"
+
+sections:
+  - id: said
+    heading: 何と言ったのか
+    tier: 報道
+    telop: "「バロンドールには自分に投票する」"
+    say:
+      - "フランスのレキップ紙のインタビューでのことです"
+      - "誰に投票するか聞かれて、ムバッペはこう答えました"
+      - {voice: ムバッペ, text: "バロンドールには、自分に投票する"}
+      - {voice: ムバッペ, text: "個人の賞だ。個人として何をしたかを見る"}
+      - {voice: ムバッペ, text: "盗んだ賞にはならないと思う"}
+    official: false
+    sources:
+      - "https://sports.yahoo.com/articles/mbappe-makes-huge-ballon-d-143000823.html"
+      - "https://madriduniversal.com/mbappe-makes-huge-ballon-dor-claim-id-vote-for-myself-making-history-should-always-be-rewarded/"
+
+  - id: numbers
+    heading: 根拠になっている数字
+    tier: 報道
+    telop: "W杯22得点は歴代最多"
+    say:
+      - "ムバッペは27歳です"
+      - "直近のワールドカップでは10得点で得点王になりました"
+      - "ワールドカップの通算得点は22。歴代でもっとも多い数字です"
+      - "フランス代表では主将を務めています"
+    official: false
+    sources:
+      - "https://www.footmercato.net/a5140971345741599241-kylian-mbappe-repond-a-france-football-quil-merite-de-gagner-le-ballon-dor"
+      - "https://worldsoccertalk.com/news/kylian-mbappe-shows-confidence-and-asserts-himself-as-frontrunner-for-2026-ballon-dor/"
+
+  - id: why
+    heading: 本人の言い分
+    tier: 報道
+    telop: "「歴史を作ることは報われるべき」"
+    say:
+      - {voice: ムバッペ, text: "いちばん大きな大会で得点王になった"}
+      - {voice: ムバッペ, text: "チャンピオンズリーグでも、ワールドカップでも"}
+      - {voice: ムバッペ, text: "誰かが先にやったかは分からない"}
+      - {voice: ムバッペ, text: "歴史を作ることは、常に報われるべきだ"}
+    official: false
+    sources:
+      - "https://sports.yahoo.com/articles/mbappe-makes-huge-ballon-d-143000823.html"
+      - "https://ca.sports.yahoo.com/news/kylian-mbapp-reveals-vote-ballon-175500278.html"
+
+  - id: context
+    heading: 決めるのは誰か
+    tier: 報道
+    telop: "投票するのは記者"
+    say:
+      - "本人も、決めるのは自分ではないと分かっています"
+      - {voice: ムバッペ, text: "この夏、いちばん名誉ある大会で歴史を作った"}
+      - {voice: ムバッペ, text: "ただ、まだ先は長い"}
+      - {voice: ムバッペ, text: "投票するのは記者だ。僕は最善を尽くすことに集中する"}
+    official: false
+    sources:
+      - "https://ca.sports.yahoo.com/news/kylian-mbapp-reveals-vote-ballon-175500278.html"
+      - "https://www.footmercato.net/a5140971345741599241-kylian-mbappe-repond-a-france-football-quil-merite-de-gagner-le-ballon-dor"
+
+  - id: next
+    heading: これから何があるか
+    tier: 報道
+    telop: "9月11日に全文 10月26日に発表"
+    say:
+      - "インタビューの全文は、9月11日にレキップのサイトに出ます"
+      - "翌日にはフランス・フットボール誌にも載る予定です"
+      - "バロンドールの発表は10月26日です"
+    official: false
+    sources:
+      - "https://www.footmercato.net/a5140971345741599241-kylian-mbappe-repond-a-france-football-quil-merite-de-gagner-le-ballon-dor"
+      - "https://worldsoccertalk.com/news/kylian-mbappe-shows-confidence-and-asserts-himself-as-frontrunner-for-2026-ballon-dor/"
