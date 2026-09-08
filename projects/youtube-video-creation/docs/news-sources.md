@@ -825,3 +825,19 @@ YouTube Data API で自分と参考5チャンネルを同じ物差しで読ん�
 回っている側は **数字20〜33%・引っぱる語37〜93%** に収まる。
 こちらとサポーター反応まとめだけが裏返しで、その2つが下にいる。
 **相関であって因果ではない**が、並べると同じ向きを指している。
+
+## 許可サイトの補充（2026-09-08 夜〜09 未明）
+
+ユーザー「許可サイトは増やしていきたい」「さらなる補充を実施」。候補は全部
+素の GET で到達を測ってから入れた（200 で本文が2KB超のものだけ）。
+
+| 群 | 入れたもの | 見送り（理由） |
+|---|---|---|
+| japanese | サッカーダイジェスト、Football ZONE、Number Web、スポナビ、Qoly、footballista、デイリー、DAZN、サンスポ、時事、スポーツブル、毎日、中日、J SPORTS | kanzen / soccermagazine / jp.onefootball（名前が引けない） |
+| english | The Players' Tribune、The Analyst、MEN、Liverpool Echo、Chronicle、Birmingham Mail、FourFourTwo、Planet Football、Football España、GFFN、GFFG、bulinews、onefootball | squawka（403） |
+| stats | WhoScored | fbref / sofascore / worldfootball は素の取得で 403（ブラウザなら読める） |
+| official | 日本人選手の所属24クラブ＋ Ligue1 / Liga Portugal / AFC / FIFA / SPFL / Eredivisie | bolognafc.it（403）、werder.de（429）、nec-nijmegen.nl（中身が返らない） |
+| rumour | サカラボ、サムライGOAL、東スポ、Express、The Sun、footballtransfers、Sportskeeda | football-2ch.com は 404 になっていた |
+
+**地元紙を入れた理由。**監督・選手の会見はナショナル紙より地元紙（MEN・Echo・
+Chronicle・Birmingham Mail）のほうが全文に近く載る。「本人の言葉」の型の材料になる。
