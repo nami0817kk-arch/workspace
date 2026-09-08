@@ -991,7 +991,9 @@ class MatchEngine {
     }
 
     if (rating < Formulas.growthRatingThreshold) return player.attributes;
-    if (player.atPotential) return player.attributes;
+    // ポテンシャルに達したら止まる。超越の1項目だけは、上限まで伸び続ける。
+    final transcending = player.atPotential && player.canTranscend;
+    if (player.atPotential && !transcending) return player.attributes;
 
     // 若いほど伸びる。特性のピーク年齢のぶんだけ、曲線を後ろにずらす。
     final ageFactor =
@@ -1010,7 +1012,9 @@ class MatchEngine {
     final fromPlay =
         used.isNotEmpty && _random.nextDouble() < Formulas.growthFocusChance;
     Detail wanted;
-    if (fromPlay) {
+    if (transcending) {
+      wanted = player.transcendDetail!;
+    } else if (fromPlay) {
       final pick = used[_random.nextInt(used.length)];
       wanted = pick.detail ??
           pick.key.details[_random.nextInt(pick.key.details.length)];
@@ -1028,8 +1032,10 @@ class MatchEngine {
     if (_random.nextDouble() >= chance) return player.attributes;
 
     // 土台の許す範囲まで。届かなければ土台のほうが伸びる。
+    final target = Dependencies.resolve(wanted, player.attributes,
+        ceilingOf: player.ceilingFor);
     return player.attributes
-        .bumpDetail(Dependencies.resolve(wanted, player.attributes), step);
+        .bumpDetail(target, step, max: player.ceilingFor(target));
   }
 
   /// 負傷するかどうかを判定する。
@@ -1126,6 +1132,12 @@ class MatchEngine {
     } else {
       condition -= (menu.conditionCost * costFactor).round();
       final canGrow = attributes.overallFor(player.position) < player.potential;
+      // ポテンシャルに達しても、超越の1項目だけはそのカテゴリの練習で伸びる。
+      final transcend = player.transcendDetail;
+      final onlyTranscend = !canGrow &&
+          transcend != null &&
+          Player.transcending(player, attributes) &&
+          menu.keys.contains(transcend.category);
       // プロ意識・専属コーチ・生活習慣が、同じ練習の身になり方を変える。
       final base = Formulas.trainingGrowthChance *
           Formulas.growthByAge(player.age - player.traits.peakAgeOffset) *
@@ -1137,8 +1149,9 @@ class MatchEngine {
           environment;
       final step = player.age <= Formulas.rapidGrowthAge ? 2 : 1;
       final effective = plateau ? base * Formulas.plateauGrowthFactor : base;
-      if (canGrow) {
+      if (canGrow || onlyTranscend) {
         for (final key in menu.keys) {
+          if (onlyTranscend && key != transcend.category) continue;
           // ポジションの重みで割り戻す。同じ練習が、どのポジションでも
           // 同じくらい総合力を動かすようにする。
           final chance = effective *
@@ -1149,10 +1162,13 @@ class MatchEngine {
           // 練習が「カテゴリのどれか」ではなく「決めた項目」になる。
           final inFocus = [for (final d in focus) if (d.category == key) d];
           final ds = inFocus.isEmpty ? key.details : inFocus;
-          final wanted = ds[_random.nextInt(ds.length)];
-          final target = Dependencies.resolve(wanted, attributes);
+          final wanted =
+              onlyTranscend ? transcend : ds[_random.nextInt(ds.length)];
+          final target = Dependencies.resolve(wanted, attributes,
+              ceilingOf: player.ceilingFor);
           if (target != wanted) redirected = true;
-          attributes = attributes.bumpDetail(target, step);
+          attributes = attributes.bumpDetail(target, step,
+              max: player.ceilingFor(target));
           trained ??= target;
         }
       }

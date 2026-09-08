@@ -103,8 +103,27 @@ class Player {
   /// 見えてしまうと、練習で積み上げた数字の意味が濁る。
   int effective(Detail detail) => (attributes.detail(detail) +
           physique.bonusFor(detail))
-      .clamp(Formulas.minAttribute, Formulas.maxAttribute)
+      .clamp(Formulas.minAttribute, ceilingFor(detail))
       .toInt();
+
+  /// その詳細能力の上限。超越の特性を持っていれば 99 を超える。
+  int ceilingFor(Detail detail) => traits.ceilingFor(detail);
+
+  /// 上限を超えて伸ばせる詳細能力。無ければ null。
+  Detail? get transcendDetail => traits.transcendDetail;
+
+  /// 超越の能力が、ポテンシャルに達したあとも伸び続けられる状態か。
+  ///
+  /// 助走（[Formulas.transcendRunway]）まで来ていて、まだ上限に届いていないこと。
+  bool get canTranscend => Player.transcending(this, attributes);
+
+  /// [attributes] の時点で、超越の能力が伸び続けられるか。練習の途中でも見る。
+  static bool transcending(Player player, Attributes attributes) {
+    final d = player.transcendDetail;
+    if (d == null) return false;
+    final value = attributes.detail(d);
+    return value >= Formulas.transcendRunway && value < player.ceilingFor(d);
+  }
 
   bool get atPotential => overall >= potential;
 
