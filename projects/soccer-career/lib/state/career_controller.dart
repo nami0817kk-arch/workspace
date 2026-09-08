@@ -288,6 +288,21 @@ class CareerController extends ChangeNotifier {
       ? SecondCareer.quiet
       : _career.secondCareerFor(_state!);
 
+  /// 今節の起用。評価点で決めたうえで、疲れていれば休まされることがある。
+  Appearance _selectionFor(CareerState state) {
+    final decided = MatchEngine.decideAppearance(
+      state.leagueResults,
+      bonus: _appearanceBonus(state),
+    );
+    if (decided != Appearance.start) return decided;
+    return _match.rotates(
+      condition: state.player.condition,
+      fatigue: state.fatigue.value,
+    )
+        ? Appearance.sub
+        : Appearance.start;
+  }
+
   /// 出場機会の下駄。監督の信頼・戦術との相性・方針・序列を足し合わせる。
   ///
   /// 評価点だけで決めると、監督も方針も競争相手も飾りになる。
@@ -458,10 +473,7 @@ class CareerController extends ChangeNotifier {
           // 登録メンバーから外れていると、そもそもベンチにも入れない。
           : !state.squadStatus.canPlay
               ? Appearance.benched
-              : MatchEngine.decideAppearance(
-                  state.leagueResults,
-                  bonus: _appearanceBonus(state),
-                ),
+              : _selectionFor(state),
     );
     notifyListeners();
   }

@@ -615,10 +615,14 @@ class CareerEngine {
   /// 若手だけに来る。移籍と違って成績は問わない。出られないことが理由だから。
   List<TransferOffer> _loanOffers(CareerState state) {
     if (state.player.age > Formulas.loanMaxAge) return const [];
-    final stats = state.seasonStats;
+    // 先発で見る。途中出場だけを積み重ねている選手こそ、
+    // 「出られる場所」を探す動機がある。
+    final starts = state.leagueResults
+        .where((r) => r.appearance == Appearance.start)
+        .length;
     final stuck = !state.squadStatus.canPlay ||
         state.player.overall - state.club.strength < -6 ||
-        stats.appearances < 8;
+        starts < Formulas.loanStartsThreshold;
     if (!stuck) return const [];
 
     final country = World.byId(state.club.countryId);
