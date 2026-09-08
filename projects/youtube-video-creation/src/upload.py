@@ -145,6 +145,28 @@ def prepare(build_dir: Path, privacy: str = "private") -> Draft:
     )
 
 
+def when_to_publish(clock: str, now=None) -> str:
+    """`07:30` のような時刻を、次に来るその時刻の RFC3339（UTC）にする。
+
+    参考チャンネルは1時間に1本ずつ出している。こちらは6分間隔で12本を投げていた。
+    朝・夕・夜に散らすための道具（2026-09-09）。
+    """
+    from datetime import datetime, timedelta, timezone
+
+    jst = timezone(timedelta(hours=9))
+    now = now or datetime.now(jst)
+    if now.tzinfo is None:
+        now = now.replace(tzinfo=jst)
+    try:
+        hour, minute = (int(x) for x in clock.split(":"))
+    except ValueError as exc:
+        raise UploadError(f"時刻は 07:30 の形で渡してください: {clock}") from exc
+    target = now.astimezone(jst).replace(hour=hour, minute=minute, second=0, microsecond=0)
+    if target <= now.astimezone(jst) + timedelta(minutes=1):
+        target += timedelta(days=1)
+    return target.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
 def _load_deps():
     try:
         from google.auth.transport.requests import Request
@@ -279,6 +301,7 @@ def upload(
     privacy: str = "private",
     category_id: str = "22",
     thumbnail: Path | None = None,
+    publish_at: str = "",
 ) -> str:
     """動画を投稿して videoId を返す。既定は限定公開ではなく非公開(private)。"""
     draft = Draft(
@@ -299,6 +322,13 @@ def upload(
         },
         "status": {"privacyStatus": privacy, "selfDeclaredMadeForKids": False},
     }
+    if publish_at:
+        # **予約公開**（2026-09-09）。昨夜は12本を86分で投げ、間隔の中央値が6分
+        # だった（こちらのコード自身が45分と警告していた）。朝に出した6本は
+        # 435〜993回、夜に出した6本は0〜35回。時刻を選べるようにする。
+        # YouTube の決まりで、予約するあいだは private でなければならない
+        body["status"]["privacyStatus"] = "private"
+        body["status"]["publishAt"] = publish_at
     media = MediaFileUpload(str(video_path), chunksize=-1, resumable=True)
     quota.record("videos.insert")
     request = service.videos().insert(part="snippet,status", body=body, media_body=media)

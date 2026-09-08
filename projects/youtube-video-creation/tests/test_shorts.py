@@ -211,3 +211,57 @@ def test_ショートは話速を1割上げる():
         assert portrait.cast[key].speed == round(member.speed * shorts.SHORT_SPEED, 3)
     # 元の設定は触らない
     assert all(m.speed <= 1.1 for m in config.cast.values())
+
+
+def test_ショートの冒頭はタイトルの1行だけ():
+    """視聴維持の曲線（2026-09-09 実測）で、捨てられるのは4〜9秒だった。
+
+    4秒で100% → 8秒で39.7%。タイトルを読むところまでは残り、そのあとの
+    「今回の問いは〜」で半分以上が消える。読み上げから落とす。
+    """
+    from src import shorts
+    from src.script_model import parse_script
+
+    nl = chr(10)
+    script = parse_script(nl.join([
+        "---", "title: T", "---", "",
+        "## オープニング", "",
+        "キャスター: タイトルをそのまま読みます。", "  telop: T",
+        "キャスター: 今回の問いは、なぜそうなったのかです。", "  telop: 今回の問い: なぜ",
+        "", "## 本編", "",
+        "ネット民: 完全に別チームだった。", "ネット民: 中盤の圧力がすごい。", ""]))
+    for line in script.lines:
+        line.duration, line.pause = 2.0, 0.3
+    short = shorts.trim(script)
+    opening = short.scenes[0]
+    assert len(opening.lines) == 1
+    assert "タイトルをそのまま読みます" in opening.lines[0].text
+    assert not any("今回の問い" in (l.text or "") for l in short.lines)
+    # 元の台本は触らない（本編は今までどおり）
+    assert len(script.scenes[0].lines) == 2
+
+
+def test_ショートは本編と別のタイトルになる():
+    """昨夜の12本は本編とショートが同じ題名で並んでいた（2026-09-09）。"""
+    from src import shorts
+    from src.script_model import parse_script
+
+    nl = chr(10)
+    base = [
+        "---", "title: 久保建英に起きたことがこちらです", "---", "",
+        "## オープニング", "", "キャスター: タイトルを読みます。", "  telop: T",
+        "", "## 本編", "",
+        "ネット民: 完全に別チームだった。", "  telop: パス成功率95%",
+        "ネット民: 中盤の圧力がすごい。", ""]
+    script = parse_script(nl.join(base))
+    for line in script.lines:
+        line.duration, line.pause = 2.0, 0.3
+    short = shorts.trim(script)
+    assert short.title != script.title
+    assert "パス成功率95%" in short.title
+
+    # 台本が short_title を持っていればそれが勝つ
+    named = parse_script(nl.join(base[:2] + ["short_title: 95%という数字の意味"] + base[2:]))
+    for line in named.lines:
+        line.duration, line.pause = 2.0, 0.3
+    assert shorts.trim(named).title == "95%という数字の意味"

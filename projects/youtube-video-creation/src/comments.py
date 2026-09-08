@@ -61,7 +61,7 @@ def _title(build_dir: Path) -> str:
     return ""
 
 
-def compose(build_dir: Path) -> str:
+def compose(build_dir: Path, choices: tuple[str, str] | None = None) -> str:
     """その動画の最初のコメント。問い＋誘い。
 
     問いがあれば「〜、皆さんはどう見ますか？」と投げ、無ければタイトルから作る。
@@ -78,7 +78,14 @@ def compose(build_dir: Path) -> str:
         ask = re.sub(r"[。？?]+$", "", title)
         lead = f"「{ask}」、皆さんはどう思いますか？"
     pick = int(hashlib.sha1((title or question).encode("utf-8")).hexdigest(), 16)
-    text = lead + " " + INVITES[pick % len(INVITES)]
+    if choices and all(str(c).strip() for c in choices):
+        # **具体的な二択にする**（2026-09-09）。12本に書いて返信ゼロだったのは、
+        # 「納得なら高評価」が動画ごとに同じで、答えようが無かったから。
+        left, right = (str(c).strip() for c in choices)
+        tail = f"「{left}」なら高評価、「{right}」ならコメントで教えてください。"
+    else:
+        tail = INVITES[pick % len(INVITES)]
+    text = lead + " " + tail
     if len(text) > MAX_LENGTH:
         text = text[:MAX_LENGTH - 1] + "…"
     return text

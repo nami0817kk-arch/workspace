@@ -350,6 +350,9 @@ def main(argv: list[str] | None = None) -> int:
     p_comment.add_argument("build_dir", help="build の出力ディレクトリ")
     p_comment.add_argument("video_id", help="YouTube の動画ID。ハイフン始まりは `--` を挟む")
     p_comment.add_argument("--text", default=None, help="文面を自分で決めるとき")
+    p_comment.add_argument("--choices", nargs=2, metavar=("賛", "否"), default=None,
+                           help="具体的な二択（例: --choices 妥当 忖度）。"
+                                "**動画ごとに変える**（2026-09-09）")
     p_comment.add_argument("--dry-run", action="store_true", help="文面だけ見て書き込まない")
 
     # 取材メモの出典から、本文の発言と数字を抜いて材料にする（2026-09-08）
@@ -367,6 +370,12 @@ def main(argv: list[str] | None = None) -> int:
     p_dig.add_argument("--say", type=int, default=12, help="反応を何件まで拾うか（既定12）")
     p_dig.add_argument("--no-reactions", action="store_true", help="反応を集めない")
     p_dig.add_argument("--out", default=None, help="書き出し先")
+
+    # 視聴維持率（2026-09-09）。**読むだけ**
+    p_ins = sub.add_parser(
+        "insights", help="視聴維持率と動画ごとの成績を読む（読み取りのみ）")
+    p_ins.add_argument("--days", type=int, default=7, help="何日ぶんを見るか（既定7）")
+    p_ins.add_argument("--video", default="", help="1本の視聴維持の曲線を見る")
 
     # 選手・クラブのページの表を数字の材料にする（2026-09-08）。
     # `stats` は「これまで何を出したか」の振り返りに使っているので、こちらは numbers
@@ -477,6 +486,9 @@ def main(argv: list[str] | None = None) -> int:
     p_upload.add_argument(
         "--again", action="store_true",
         help="同じ出力先をもう一度投稿する（既定では二重投稿を止める）")
+    p_upload.add_argument("--at", default="",
+                          help="予約公開の時刻（例 07:30）。次に来るその時刻に公開される。"
+                               "**間隔を空けて出すための道具**（2026-09-09）")
     p_upload.add_argument("--dry-run", action="store_true",
                           help="送らずに、何が送られるかを見る（認証も通信もしない）")
 
@@ -1665,6 +1677,63 @@ def _cmd_numbers(args, config) -> int:
     return 0
 
 
+def _cmd_insights(args, config) -> int:
+    """視聴維持率と動画ごとの成績を読む（2026-09-09）。
+
+    9/7 に読み取り権限を足したのに使うコードが無く、どこで捨てられているかを
+    測らずに冒頭やテンポを直していた。**読むだけ。動画には触らない。**
+    """
+    from . import insights as insights_mod
+    from .upload import get_service
+
+    try:
+        api = insights_mod.service()
+    except Exception as err:
+        print(f"分析APIに繋がりません: {str(err)[:140]}", file=sys.stderr)
+        return 1
+
+    if args.video:
+        service = get_service()
+        got = service.videos().list(part="snippet,contentDetails", id=args.video).execute()
+        items = got.get("items") or []
+        title = items[0]["snippet"]["title"] if items else args.video
+        seconds = 0.0
+        if items:
+            import re as _re
+
+            m = _re.match(r"PT(?:(\d+)M)?(?:(\d+)S)?", items[0]["contentDetails"]["duration"])
+            if m:
+                seconds = int(m.group(1) or 0) * 60 + int(m.group(2) or 0)
+        curve = insights_mod.retention(api, args.video, args.days)
+        print(f"■ 視聴維持　{title}（{seconds:.0f}秒）")
+        for line in insights_mod.curve_lines(curve, seconds):
+            print(line)
+        return 0
+
+    rows = insights_mod.per_video(api, args.days)
+    if not rows:
+        print("まだ数字が出ていません。集計に数日かかります")
+        return 0
+    service = get_service()
+    ids = [r.video_id for r in rows]
+    titles = {}
+    for i in range(0, len(ids), 50):
+        for v in service.videos().list(part="snippet", id=",".join(ids[i:i + 50])).execute()["items"]:
+            titles[v["id"]] = v["snippet"]["title"]
+    print(f"■ 直近{args.days}日　再生の多い順")
+    for row in rows:
+        row.title = titles.get(row.video_id, row.video_id)
+        print(row.line())
+    keep = [r.avg_percent for r in rows if r.views >= 3]
+    if keep:
+        import statistics as _st
+
+        print(f"\n視聴維持の中央値: {_st.median(keep):.1f}%"
+              "（参考: 見られている短尺は50%前後、1分超は30%前後が目安）")
+    print("1本の曲線を見る: insights --video <videoId>")
+    return 0
+
+
 def _cmd_dig(args, config) -> int:
     """題材から材料までを一本で（2026-09-09）。
 
@@ -1768,7 +1837,8 @@ def _cmd_comment(args, config) -> int:
 
     build_dir = Path(args.build_dir)
     try:
-        text = args.text or comments.compose(build_dir)
+        choices = tuple(args.choices) if args.choices else None
+        text = args.text or comments.compose(build_dir, choices)
     except comments.CommentError as err:
         print(str(err), file=sys.stderr)
         return 1
@@ -2627,7 +2697,7 @@ def _cmd_make_clip(args, config) -> int:
 
 
 def _cmd_upload(args, config) -> int:
-    from datetime import timedelta, timezone
+    from datetime import datetime, timedelta, timezone
 
     from . import posted
     from . import upload as upload_mod
@@ -2682,6 +2752,12 @@ def _cmd_upload(args, config) -> int:
         print("\n直してから投稿してください", file=sys.stderr)
         return 1
 
+    publish_at = ""
+    if getattr(args, "at", ""):
+        publish_at = upload_mod.when_to_publish(args.at)
+        local = datetime.fromisoformat(publish_at.replace("Z", "+00:00")).astimezone(JST)
+        print(f"■ 予約公開　{local:%m/%d %H:%M} JST（それまでは非公開）")
+
     if args.dry_run:
         print("\n--dry-run なので送っていません。"
               "この内容でよければ --dry-run を外してください")
@@ -2695,6 +2771,7 @@ def _cmd_upload(args, config) -> int:
             tags=draft.tags,
             privacy=draft.privacy,
             thumbnail=draft.thumbnail,
+            publish_at=publish_at,
         )
     except Exception as err:
         # **弾かれた時刻を控える。**解除はここから24時間で、
@@ -2745,6 +2822,7 @@ HANDLERS = {
     "comment": _cmd_comment,
     "material": _cmd_material,
     "dig": _cmd_dig,
+    "insights": _cmd_insights,
     "numbers": _cmd_numbers,
     "publish": _cmd_publish,
     "quota": _cmd_quota,

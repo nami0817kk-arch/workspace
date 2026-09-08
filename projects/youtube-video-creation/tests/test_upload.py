@@ -256,3 +256,44 @@ def test_サムネで落ちても動画のidは返す(tmp_path, monkeypatch, cap
                                  thumbnail=built / "thumbnail.png")
     assert video_id == "vid_ok"
     assert "サムネイルは付きませんでした" in capsys.readouterr().err
+
+
+def test_予約公開の時刻は次に来るその時刻():
+    """昨夜は12本を86分で投げ、間隔の中央値が6分だった（2026-09-09）。"""
+    from datetime import datetime, timedelta, timezone
+
+    jst = timezone(timedelta(hours=9))
+    now = datetime(2026, 9, 9, 4, 0, tzinfo=jst)
+    assert upload_mod.when_to_publish("07:30", now) == "2026-09-08T22:30:00Z"   # 同日の朝
+    now = datetime(2026, 9, 9, 9, 0, tzinfo=jst)
+    assert upload_mod.when_to_publish("07:30", now) == "2026-09-09T22:30:00Z"   # 過ぎたら翌日
+
+
+def test_予約すると非公開で送られる(tmp_path, monkeypatch):
+    """YouTube の決まりで、予約するあいだは private でなければならない。"""
+    from src import quota
+
+    sent = {}
+
+    class _Req:
+        def next_chunk(self):
+            return None, {"id": "vid"}
+
+    class _Videos:
+        def insert(self, **kw):
+            sent.update(kw["body"]["status"])
+            return _Req()
+
+    class _Service:
+        def videos(self):
+            return _Videos()
+
+    built = _built(tmp_path)
+    monkeypatch.setattr(upload_mod, "get_service", lambda: _Service())
+    monkeypatch.setattr(upload_mod, "_load_deps",
+                        lambda: (None, None, None, None, lambda *a, **k: object()))
+    monkeypatch.setattr(quota, "record", lambda *a, **k: None)
+    upload_mod.upload(built / "video.mp4", "T", "本文", privacy="public",
+                      publish_at="2026-09-09T22:30:00Z")
+    assert sent["privacyStatus"] == "private"
+    assert sent["publishAt"] == "2026-09-09T22:30:00Z"

@@ -48,3 +48,10 @@ def test_同じ動画には同じ文(tmp_path):
 def test_何も無ければ止まる(tmp_path):
     with pytest.raises(comments.CommentError):
         comments.compose(tmp_path)
+
+
+def test_具体的な二択にできる(tmp_path):
+    """12本に書いて返信ゼロ。「納得なら高評価」が動画ごとに同じだった（2026-09-09）。"""
+    text = comments.compose(_built(tmp_path), ("妥当", "忖度"))
+    assert "「妥当」なら高評価" in text and "「忖度」ならコメント" in text
+    assert len(text) <= comments.MAX_LENGTH

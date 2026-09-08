@@ -69,11 +69,53 @@ def trim(script: Script, section: str = "", max_seconds: float = MAX_SECONDS) ->
 
     short = copy.deepcopy(script)
     short.scenes = [copy.deepcopy(opening), copy.deepcopy(body)]
+    _retitle(short, body)
+    _drop_hook(short.scenes[0])
     _fit(short, max_seconds)
     _add_face(short)
     if not short.scenes[-1].lines:
         raise ShortError(f"『{body.title}』は冒頭だけで尺を使い切ります。節を選び直してください")
     return short
+
+
+def _retitle(short: Script, body: Scene) -> None:
+    """ショートに別のタイトルを付ける（2026-09-09）。
+
+    昨夜の12本は、本編とショートが**同じ題名**で並んでいた。チャンネルの画面では
+    重複に見え、検索でも自分同士でぶつかる。台本に `short_title` があればそれを使い、
+    無ければ使った節の見出し（telop）を添えて、少なくとも別の題名にする。
+    """
+    meta = short.meta or {}
+    chosen = str(meta.get("short_title") or "").strip()
+    if not chosen:
+        head = ""
+        for line in body.lines:
+            head = (line.telop or "").strip()
+            if head:
+                break
+        chosen = f"{head}　{short.title}" if head else short.title
+    short.title = chosen[:100]
+    # 冒頭の読み上げとテロップも、その題名に合わせる
+    if short.scenes and short.scenes[0].lines:
+        first = short.scenes[0].lines[0]
+        if first.telop is not None:
+            first.telop = chosen
+    meta = dict(meta)
+    meta["intro_title"] = chosen
+    short.meta = meta
+
+
+def _drop_hook(opening: Scene) -> None:
+    """冒頭は**タイトルの読み上げ1行だけ**にする（2026-09-09）。
+
+    視聴維持の曲線を初めて読んだら、捨てられているのは0〜3秒ではなく
+    **4〜9秒**だった（実測: 4秒で100% → 8秒で39.7%、3秒で105% → 9秒で39.6%）。
+    タイトルを読むところまでは残っていて、そのあとの「今回の問いは〜」で
+    半分以上が消える。問いの言い直しは、クリックした人がもう知っている話。
+    画面のテロップには残るので、読み上げだけ落とす。
+    """
+    if len(opening.lines) > 1:
+        del opening.lines[1:]
 
 
 # 語りを担当する声。ここに無い話者は「誰かの言葉を代弁している」
