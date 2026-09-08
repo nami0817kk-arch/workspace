@@ -90,6 +90,10 @@ class Renderer:
             config.video.width, config.video.height, config.video.show_characters
         )
         self.frame_dir = work_dir / "frames"
+        self._stages: dict[str, Image.Image | None] = {}
+        # 冒頭の節で敷く写真（frame_entries が台本から入れる）
+        self.opening_photo: str = ""
+        self.opening_scene: str = ""
         self.frame_dir.mkdir(parents=True, exist_ok=True)
 
         font_path = str(config.video.font_path())
@@ -148,6 +152,12 @@ class Renderer:
                 source or "",
                 card or "",
                 line.image or "",
+                (self.opening_photo if scene.title == self.opening_scene else ""),
+                # チャンネル名が空なら絵は変わらないので、鍵にも入れない
+                ("card:" + self.config.video.channel_name
+                 if self.config.video.channel_name.strip()
+                 and scene.title == self.opening_scene and scene.lines
+                 and line is scene.lines[0] else ""),
                 # 立ち絵を出さないなら口パクも跳ねも絵に影響しない
                 ("open" if mouth_open else "close") if self.layout.with_characters else "-",
                 f"{telop_t:.2f}/{hop_t if self.layout.with_characters else 1.0:.2f}",
@@ -160,16 +170,28 @@ class Renderer:
             return target
 
         over_video = self.over_video
-        canvas = self._transparent() if over_video else self._background(background).copy()
+        # **冒頭の節はサムネの写真を敷く**（2026-09-08）。ぼかした夜景に黒い板では、
+        # 最初の3秒が止まって見えた。参考は0秒目からその人の実写が出ている
+        opening = scene.title == self.opening_scene and self.opening_photo
+        stage = self._photo_stage(line.image or (self.opening_photo if opening else None))
+        if stage is not None:
+            # 写真を主役にした下地。動画背景の上でも不透明に敷く
+            canvas = stage.copy()
+        else:
+            canvas = self._transparent() if over_video else self._background(background).copy()
         if self.layout.with_characters:
             self._draw_characters(canvas, member, line.emotion, mouth_open, hop_t)
-        self._draw_media(canvas, line.image, card, telop_t)
+        # 写真を下地にしたときは小さなカードを重ねない。図表だけ左半分に置く
+        self._draw_media(canvas, None if stage is not None else line.image, card, telop_t,
+                         left_half=stage is not None)
         # **縦型では制作側の言葉を画面に出さない**（2026-09-07 の方針）。
         # 「オープニング」「まとめ」は章の目印で、視聴者には意味が無い。
         # 一等地の左上を、本編の作業用ラベルで埋めない。
         # 中身のある節名（「監督は何と言ったか」など）は残す
         if not (self.layout.is_portrait and scene.title in INTERNAL_LABELS):
             self._draw_scene_title(canvas, scene.title)
+        if scene.title == self.opening_scene and scene.lines and line is scene.lines[0]:
+            self._draw_channel_card(canvas)
         if self.layout.with_characters:
             self._draw_telop(canvas, member, text, telop_t, source)
         else:
@@ -212,6 +234,49 @@ class Renderer:
             draw.line([(0, y), (self.layout.width, y)], fill=(4, 8, 14, int(215 * ratio**1.3)))
         canvas.alpha_composite(scrim)
         return canvas
+
+    def _photo_stage(self, image_path: str | None) -> Image.Image | None:
+        """写真を画面の主役にした下地（2026-09-08）。
+
+        参考チャンネルは人物の実写が画面いっぱいで、こちらは枠付きの小さな
+        カード（画面の1割強）だった。サムネと同じ作りにする: 同じ写真をぼかして
+        暗くした敷き布の上に、右半分いっぱいに写真を立てる（縦長は上寄りに切る）。
+        下側は見出しが乗るぶんだけ暗く落とす。横型のニュース風だけで使う。
+        """
+        if not image_path or self.layout.is_portrait or self.layout.with_characters:
+            return None
+        if image_path in self._stages:
+            return self._stages[image_path]
+        path = _resolve(image_path)
+        if not path.exists():
+            self._stages[image_path] = None
+            return None
+        from PIL import ImageEnhance, ImageFilter
+
+        width, height = self.layout.width, self.layout.height
+        photo = Image.open(path).convert("RGBA")
+        bed = _cover(photo, width, height).filter(ImageFilter.GaussianBlur(30))
+        bed = ImageEnhance.Brightness(bed).enhance(0.55)
+        column_w = int(width * 0.5)
+        column = _cover(photo, column_w, height)
+        # 左端をなじませる。切り口が立つと貼り付けたように見える
+        mask = Image.new("L", (column_w, height), 255)
+        edge = 90
+        mask_draw = ImageDraw.Draw(mask)
+        for x in range(edge):
+            mask_draw.line([(x, 0), (x, height)], fill=int(255 * x / edge))
+        column.putalpha(mask)
+        bed.alpha_composite(column, (width - column_w, 0))
+        # 見出しの乗る下側を落とす
+        shade = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+        shade_draw = ImageDraw.Draw(shade)
+        start = int(height * 0.56)
+        for y in range(start, height):
+            alpha = int(150 * (y - start) / (height - start))
+            shade_draw.line([(0, y), (width, y)], fill=(0, 0, 0, alpha))
+        bed.alpha_composite(shade)
+        self._stages[image_path] = bed
+        return bed
 
     def _background(self, name: str) -> Image.Image:
         if name not in self._backgrounds:
@@ -285,8 +350,11 @@ class Renderer:
         image_path: str | None,
         card_name: str | None,
         progress: float = 1.0,
+        left_half: bool = False,
     ) -> None:
         """画像とカードを文字の上のスペースに置く。両方あれば左右に並べる。
+
+        left_half は写真を右半分に敷いたときに、図表を左半分の中央に置く。
 
         以前は縦に積んでいたが、カードが高いぶん写真が潰れた。実測
         （2026-09-04）で、顔が判別できない大きさ（横120px）になっていた。
@@ -327,13 +395,18 @@ class Renderer:
             total = sum(item.height for item in items) + gap * (len(items) - 1)
 
         y = slot_top + (slot_height - total) // 2
+        span = self.layout.width // 2 if left_half else self.layout.width
         for item in items:
+            if item.width > span - 60 and left_half:
+                ratio = (span - 60) / item.width
+                item = item.resize((int(item.width * ratio), int(item.height * ratio)),
+                                   Image.LANCZOS)
             if progress < 1.0:
                 item = item.copy()
                 item.putalpha(
                     item.getchannel("A").point(lambda a: int(a * _ease_out(progress)))
                 )
-            canvas.alpha_composite(item, ((self.layout.width - item.width) // 2, y))
+            canvas.alpha_composite(item, ((span - item.width) // 2, y))
             y += item.height + gap
 
     def _place_beside(
@@ -417,6 +490,32 @@ class Renderer:
                 str(self.config.video.latin_font_path()),
             )
         return Image.open(target).convert("RGBA")
+
+    def _draw_channel_card(self, canvas: Image.Image) -> None:
+        """左上にチャンネル名と登録ボタンの小さなカード（2026-09-08）。
+
+        参考チャンネルは冒頭0.5〜2.5秒だけこれを出す。読み上げで「登録して」とは
+        言わない。冒頭の節はタイトルを読んでいて左上が空いているので、そこに置く。
+        """
+        name = (self.config.video.channel_name or "").strip()
+        if not name:
+            return
+        layer, draw = _layer(canvas.size)
+        font = self.font_scene
+        name_w = draw.textlength(name, font=font)
+        button = "チャンネル登録"
+        button_w = draw.textlength(button, font=font)
+        left, top = 48, 42
+        height = 68
+        total = 24 + name_w + 22 + button_w + 40 + 24
+        draw.rounded_rectangle([left, top, left + total, top + height],
+                               radius=34, fill=(0, 0, 0, 165))
+        draw.text((left + 24, top + 16), name, font=font, fill=(240, 240, 240, 255))
+        bx = left + 24 + name_w + 22
+        draw.rounded_rectangle([bx, top + 10, bx + button_w + 40, top + height - 10],
+                               radius=24, fill=(204, 0, 0, 255))
+        draw.text((bx + 20, top + 16), button, font=font, fill=(255, 255, 255, 255))
+        canvas.alpha_composite(layer)
 
     def _draw_scene_title(self, canvas: Image.Image, title: str) -> None:
         # RGBA の canvas に直接半透明の図形を描くと下地を「置き換えて」しまうため、
@@ -605,11 +704,17 @@ class Renderer:
         if target.exists():
             return target
 
-        base = self._transparent() if self.over_video else self._background(background).copy()
+        stage = self._photo_stage(background) if kind == "intro" else None
+        if stage is not None:
+            base = stage.copy()
+        else:
+            base = self._transparent() if self.over_video else self._background(background).copy()
         layer, draw = _layer(base.size)
 
-        # 背景を落として文字を主役にする。落としすぎると背景が死ぬので控えめに
-        draw.rectangle([0, 0, base.width, base.height], fill=(6, 10, 18, 178))
+        # 背景を落として文字を主役にする。落としすぎると背景が死ぬので控えめに。
+        # 写真を舞台にしたときは人物が見えるよう、落とし方を弱める
+        draw.rectangle([0, 0, base.width, base.height],
+                       fill=(6, 10, 18, 70 if stage is not None else 178))
 
         accent = _hex(self.config.video.accent)
         font = self.font_title_big if kind == "intro" else self.font_title
@@ -690,9 +795,16 @@ class Renderer:
         inserts = inserts or Inserts()
         entries: list[tuple[Path, float]] = []
         previous: Path | None = None
+        self.opening_photo = str(script.meta.get("thumbnail_photo") or "")
+        self.opening_scene = script.scenes[0].title if script.scenes else ""
 
         if inserts.intro > 0 and script.scenes:
             first_bg = script.scenes[0].background or script.background or self.config.video.background
+            # **冒頭からその人の写真**（2026-09-08）。ぼかした夜景に黒い板では、
+            # 最初の3秒が止まって見えた。サムネの写真があればそれを舞台にする
+            photo = str(script.meta.get("thumbnail_photo") or "")
+            if self._photo_stage(photo) is not None:
+                first_bg = photo
             entries += self._title_entries(
                 first_bg,
                 script.intro_title(),

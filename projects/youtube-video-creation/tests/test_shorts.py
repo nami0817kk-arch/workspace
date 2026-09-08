@@ -198,3 +198,16 @@ def test_冒頭は削らない():
     _fit(script, MAX_SECONDS)
     assert len(script.scenes[0].lines) == 1, "冒頭が消えている"
     assert len(script.scenes[-1].lines) >= 1, "本編が空になった"
+
+
+def test_ショートは話速を1割上げる():
+    """参考は反応1件3秒台（2026-09-08）。本編の設定は変えず、縦型だけ速くする。"""
+    from src.config import load_config
+    from src import shorts
+
+    config = load_config()
+    portrait = shorts.portrait(config)
+    for key, member in config.cast.items():
+        assert portrait.cast[key].speed == round(member.speed * shorts.SHORT_SPEED, 3)
+    # 元の設定は触らない
+    assert all(m.speed <= 1.1 for m in config.cast.values())
