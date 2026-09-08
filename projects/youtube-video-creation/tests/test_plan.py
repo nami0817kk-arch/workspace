@@ -160,7 +160,11 @@ def test_枠は9本以上で狭い条件の枠が先頭寄り():
         assert name in rules, f"{name} に条件がありません"
     assert len([s for s in plan.slots if s.startswith("world_")]) >= 2
     # 日本人3枠・日本人以外2枠。対にして、寄りすぎを防ぐ
-    assert len([s for s, r in rules.items() if (r or {}).get("require_japanese")]) == 3
+    # 2026-09-07: 日本人3枠 → **5枠**（ユーザー判断）。各チャンネルの最高再生を
+    # 並べたら、サッカー知恵袋の人気上位15本のうち11本が日本人・日本代表だった。
+    # 試合結果の枠も2つ新設した（噂話の直近1日で13万回×2）
+    assert len([s for s, r in rules.items() if (r or {}).get("require_japanese")]) == 5
+    assert len([s for s, r in rules.items() if (r or {}).get("require_kind")]) == 2
     assert len([s for s, r in rules.items() if (r or {}).get("exclude_japanese")]) >= 2
     # 同じ枠に両方を書くと必ず空になる
     for name, rule in rules.items():
@@ -354,3 +358,61 @@ def test_型を指定しなければ既定に落ちる():
     plan = load_plan()
     sheet = worksheet(plan.routine("world_1"), date(2026, 9, 6), "", plan.skeletons)
     assert "sections:" in sheet
+
+
+# 反応を雛形の時点で入れる（2026-09-07）。点検は「他人の声が尺の4割以上」を
+# 求めているのに、雛形には空の say が1つしか無く、手で10件書くことになっていた。
+
+def _posts(count=12):
+    return [{"text": f"これは反応その{i}", "no": 100 + i, "total": 47}
+            for i in range(count)]
+
+
+def test_雛形に反応が入る():
+    from datetime import date
+
+    import yaml
+
+    from src.plan import load_plan, worksheet
+
+    plan = load_plan()
+    body = worksheet(plan.routine("japan"), date(2026, 9, 8), "", plan.skeletons,
+                     reactions=_posts(), thread="https://example.com/t")
+    notes = yaml.safe_load(body)
+    voices = notes["sections"][-1]
+    assert len(voices["say"]) == 12
+    assert all(line["voice"] == "ネット民" for line in voices["say"])
+    assert voices["tier"] == "未確認"                      # 匿名の書き込み
+    assert voices["card"]["type"] == "reactions"
+    assert "47件から" in voices["card"]["title"]           # 母数を出す
+    assert voices["sources"] == ["https://example.com/t"]  # 出どころを残す
+
+
+def test_反応の節が無い型には足す():
+    from datetime import date
+
+    import yaml
+
+    from src.plan import load_plan, worksheet
+
+    plan = load_plan()
+    plain = yaml.safe_load(
+        worksheet(plan.routine("japan"), date(2026, 9, 8), "", plan.skeletons))
+    with_voices = yaml.safe_load(
+        worksheet(plan.routine("japan"), date(2026, 9, 8), "", plan.skeletons,
+                  reactions=_posts(3), thread="https://example.com/t"))
+    assert len(with_voices["sections"]) == len(plain["sections"]) + 1
+    assert "受け止め" in with_voices["sections"][-1]["heading"]
+
+
+def test_反応が無ければ今までどおり():
+    from datetime import date
+
+    import yaml
+
+    from src.plan import load_plan, worksheet
+
+    plan = load_plan()
+    notes = yaml.safe_load(
+        worksheet(plan.routine("japan"), date(2026, 9, 8), "", plan.skeletons))
+    assert notes["sections"][0]["say"] == [""]

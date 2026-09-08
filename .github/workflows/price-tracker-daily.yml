@@ -16,6 +16,11 @@ on:
     - cron: "0 4 * * *"
   workflow_dispatch: {}
 
+# 途中で止めると害がある（公開・リリース・通知）。重複は避けるが打ち切らない。
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: read
   # 失敗を Issue で知らせるために必要
@@ -62,8 +67,11 @@ jobs:
           latest = snaps[-1].name.removesuffix(".csv.gz")
           age = (date.today() - datetime.strptime(latest, "%Y-%m-%d").date()).days
           print(f"最新の記録 {latest}（{age}日前） / 通算 {len(snaps)}日分")
-          if age > 3:
-              print("::error::価格履歴が3日以上更新されていません。"
+          # 毎日走る前提なので、1日空いた時点で異常。3日猶予にしていた間に
+          # IP変更で2日分を静かに取り逃した（2026-09-06, 09-07）。価格は
+          # 後から取り直せないため、猶予を置く意味がない。
+          if age > 1:
+              print(f"::error::価格履歴が{age}日前で止まっています。"
                     "手元PCの取得タスク(run-daily.ps1)と、楽天アプリの許可IPを確認してください。"
                     "自宅のグローバルIPが変わると 403 で止まります。")
               sys.exit(1)

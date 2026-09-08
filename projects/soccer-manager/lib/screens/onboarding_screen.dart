@@ -1,14 +1,17 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import '../l10n/l10n_ext.dart';
 import '../l10n/tr.dart';
+import '../widgets/onboarding_art.dart';
 
 class _OnboardingSlide {
-  final IconData icon;
+  final OnboardingArtKind art;
   final String title;
   final String description;
 
   const _OnboardingSlide({
-    required this.icon,
+    required this.art,
     required this.title,
     required this.description,
   });
@@ -19,33 +22,33 @@ class _OnboardingSlide {
 // 反映されなくなるので、参照のたびに組み立てるゲッターにしている。
 List<_OnboardingSlide> get _slides => [
       _OnboardingSlide(
-        icon: Icons.sports_soccer,
+        art: OnboardingArtKind.climb,
         title: Tr.pick('クラブを率いて頂点へ', 'Take a club to the top'),
         description: Tr.pick('クラブを創設し、監督としてリーグ優勝・カップ制覇・昇格を目指しましょう。',
             'Found a club and manage it towards the title, the cup and promotion.'),
       ),
       _OnboardingSlide(
-        icon: Icons.groups,
+        art: OnboardingArtKind.squad,
         title: Tr.pick('スカッドと戦術を作り込む', 'Build your squad and your tactics'),
         description: Tr.pick('選手の役割・デューティ、フォーメーション、幅とテンポを調整して自分だけの戦術を組み立てられます。',
             "Set each player's role and duty, choose a formation, and tune width and tempo into a shape of your own."),
       ),
       _OnboardingSlide(
-        icon: Icons.swap_horiz,
+        art: OnboardingArtKind.market,
         title:
             Tr.pick('移籍市場とクラブ経営', 'The transfer market and the balance sheet'),
         description: Tr.pick('選手の獲得・放出、契約交渉、スタッフ・施設への投資でクラブを長期的に強化していきます。',
             'Sign and sell, negotiate contracts, and invest in staff and facilities to build the club for the long run.'),
       ),
       _OnboardingSlide(
-        icon: Icons.live_tv,
+        art: OnboardingArtKind.live,
         title: Tr.pick('試合をライブで観戦・采配', 'Watch matches live and manage them'),
         description: Tr.pick(
             'ライブ観戦では決定機の判断・交代・試合中の指示を自分で下せます。カップ戦のPK戦も1本ずつ見届けられます。おまかせのクイック消化も選べます。',
             'Watching live, you decide what happens at each big chance, make the changes and give the instructions. You can follow a cup shootout kick by kick, or just let the game settle the result for you.'),
       ),
       _OnboardingSlide(
-        icon: Icons.emoji_events,
+        art: OnboardingArtKind.career,
         title: Tr.pick('通算成績を積み重ねよう', 'Build a career record'),
         description: Tr.pick(
             '監督キャリア画面で通算成績やトロフィーを確認できます。この設定はいつでも「設定」からもう一度見返せます。',
@@ -99,12 +102,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(
-                          slide.icon,
-                          size: 96,
-                          color: Theme.of(context).colorScheme.primary,
+                        // アイコン1つだと画面の大半が余白だった。
+                        // 幅は画面に合わせて縮める(小型端末で溢れさせない)。
+                        OnboardingArt(
+                          kind: slide.art,
+                          width: min(
+                              260.0, MediaQuery.of(context).size.width * 0.68),
                         ),
-                        const SizedBox(height: 32),
+                        const SizedBox(height: 28),
                         Text(
                           slide.title,
                           style: Theme.of(context).textTheme.headlineSmall,

@@ -237,17 +237,86 @@ void main() {
       final privacy = File('legal/privacy.html').readAsStringSync();
       expect(privacy, contains('AdMob'), reason: 'プライバシーポリシーが広告配信に触れていない');
       expect(privacy, contains('広告識別子'), reason: '広告識別子の取得を開示していない');
+      // リワード広告に加えて全画面広告を出すようになった。種類ごとに
+      // 開示していないと、実装より狭い申告になる。
+      expect(privacy, contains('インタースティシャル'),
+          reason: 'プライバシーポリシーが全画面広告に触れていない');
 
       for (final path in const [
         'STORE_LISTING.md',
         'marketing/landing/index.html',
         'marketing/ANNOUNCEMENT.md',
+        'legal/privacy.html',
+        'lib/widgets/supporter_section.dart',
       ]) {
         final text = File(path).readAsStringSync();
         expect(text, isNot(contains('広告なし・課金なし')),
             reason: '$path に「広告なし・課金なし」が残っている');
         expect(text, isNot(contains('広告も課金も')),
             reason: '$path に広告・課金が無いという記述が残っている');
+        // シーズンの切り替わりで全画面広告を出す実装になったので、
+        // 「全画面広告は無い」という売り文句はどれも虚偽になる。
+        expect(text, isNot(contains('全画面広告なし')),
+            reason: '$path に「全画面広告なし」が残っている');
+        expect(text, isNot(contains(RegExp(r'全画面広告やバナー(広告)?はありません'))),
+            reason: '$path に全画面広告が無いという記述が残っている');
+      }
+    });
+
+    test('全画面広告はシーズンの切り替わりからしか出ない', () {
+      // 試合中やメニュー操作の途中に割り込む全画面広告は、掲載文の説明とも
+      // AdMob のポリシー(利用者の操作を遮らない自然な区切りで出す)とも
+      // 合わない。呼び出し口が増えていないことをここで固定する。
+      final callers = <String>[];
+      for (final entity in Directory('lib').listSync(recursive: true)) {
+        if (entity is! File || !entity.path.endsWith('.dart')) continue;
+        // 定義側(AdService とその仲介役)は対象外。
+        if (entity.path.contains('monetization')) continue;
+        final text = entity.readAsStringSync();
+        expect(text, isNot(contains('showInterstitialAd(')),
+            reason: '${entity.path} が広告サービスを直接呼んでいる');
+        if (text.contains('showSeasonInterstitial()')) callers.add(entity.path);
+      }
+      expect(callers.length, 1, reason: '全画面広告の呼び出し口が1箇所でない: $callers');
+      expect(callers.single, contains('home_screen'),
+          reason: 'シーズンの切り替わり以外から全画面広告を出している');
+    });
+
+    test('バンドルIDが実装・手順書・掲載情報で一致している', () {
+      // 手順書は「Apple のフォームにこの文字列を入力する」と指示している。
+      // 実装だけ変えて手順書が古いままだと、あとから変更できない App ID を
+      // 間違った値で登録してしまう。気付くのは提出の直前になる。
+      const marker = 'PRODUCT_BUNDLE_IDENTIFIER = ';
+      final pbx = File('ios/Runner.xcodeproj/project.pbxproj').readAsStringSync();
+      final ids = <String>{};
+      var at = pbx.indexOf(marker);
+      while (at >= 0) {
+        final end = pbx.indexOf(';', at);
+        ids.add(pbx.substring(at + marker.length, end));
+        at = pbx.indexOf(marker, end);
+      }
+      final appIds = ids.where((id) => !id.endsWith('.RunnerTests')).toSet();
+      expect(appIds.length, 1, reason: 'iOS のバンドルIDが1つに定まっていない: $appIds');
+      final bundleId = appIds.single;
+
+      // Android 側もこの値で揃えてある(アンダースコアを含まない名前にした)。
+      final gradle = File('android/app/build.gradle').readAsStringSync();
+      expect(gradle, contains('applicationId = "$bundleId"'),
+          reason: 'Android の applicationId が iOS のバンドルIDと違う');
+      expect(gradle, contains('namespace = "$bundleId"'),
+          reason: 'Android の namespace が applicationId と違う');
+
+      // Kotlin の package 宣言とディレクトリ階層がずれるとビルドが通らない。
+      final activity = File(
+          'android/app/src/main/kotlin/${bundleId.replaceAll('.', '/')}'
+          '/MainActivity.kt');
+      expect(activity.existsSync(), isTrue,
+          reason: '${activity.path} が無い(パッケージの移動漏れ)');
+      expect(activity.readAsStringSync(), contains('package $bundleId'));
+
+      for (final path in const ['docs/RELEASE_GUIDE.md', 'STORE_LISTING.md']) {
+        expect(File(path).readAsStringSync(), contains(bundleId),
+            reason: '$path が古いバンドルIDのままになっている');
       }
     });
 

@@ -95,11 +95,24 @@ class Section:
     bg: str = ""      # この節の背景。空なら既定の並びから割り当てる
 
 
-# タイトルの頭に付ける札。まとめ系で定番の使い分け
+# タイトルの頭に付ける札。まとめ系で定番の使い分け。
+# **2026-09-07 に増やした。**分野を横断して24本を並べたら、向こうは動画ごとに
+# 強い言葉を作っていた（【激ヤバ】【緊急事態】【崩壊】【魔境】【神試合】
+# 【現地評価ぶっ壊れ】【お笑い】）。こちらは4つ固定で、毎回同じ顔になっていた。
+# **数を増やしても中身と食い違わせない。**札は内容の要約であって煽りではない
 PREFIXES = {
     "速報": "いま入った確定・報道",
     "朗報": "良いニュース",
     "悲報": "悪いニュース",
+    "詳報": "続報・掘り下げ",
+    "衝撃": "予想を外れた出来事",
+    "緊急": "いま動いている・時間が迫っている",
+    "独占": "一次情報に直接あたったもの",
+    "現地反応": "現地のサポーター・媒体の受け止め",
+    "神試合": "内容が突出した試合",
+    "異変": "いつもと様子が違う",
+    "決着": "長かった話が終わった",
+    "波紋": "反応が割れている",
     "": "",
 }
 
@@ -272,6 +285,48 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
                 f"{label}: 確度『{section.tier}』はクラブ・当事者の発表が条件です。"
                 "発表を確認できないなら tier を下げてください"
             )
+    problems += _check_voice_clash(notes)
+    return problems
+
+def _check_voice_clash(notes: Notes) -> list[str]:
+    """別人が同じ声にならないか（2026-09-07）。
+
+    声は名前のハッシュで選ぶので、まれに衝突する。メッシとモウリーニョが
+    どちらも style 42 になっていた。**書き出す前に気づけるようにする。**
+    """
+    try:
+        from .config import load_config
+
+        config = load_config()
+    except Exception:
+        return []
+
+    names = sorted({v.strip() for section in notes.sections
+                    for v in section.voices if v.strip()})
+    seen: dict[int, str] = {}
+    problems: list[str] = []
+    for name in names:
+        try:
+            style = config.resolve_speaker(name).style_id
+        except Exception:
+            continue
+        if style in seen and seen[style] != name:
+            # **空いている声を出す。**止めるだけだと、config を開いて
+            # 20個の番号から空きを探すことになる
+            # **決め打ちしていない方を動かす。**すでに決めた人の声を
+            # 変えると、その人の声が動画をまたいで変わる
+            move = name if name not in config.voice_fixed else seen[style]
+            pool = (config.voice_pool_female
+                    if move in config.voice_female else config.voice_pool)
+            free = next((v for v in pool if v not in seen), None)
+            hint = (f"（config の voicevox.voice_fixed に「{move}: {free}」を足す）"
+                    if free else "（プールに空きがありません。声を増やしてください）")
+            problems.append(
+                f"『{seen[style]}』と『{name}』が同じ声（style {style}）になります。"
+                + hint
+            )
+        else:
+            seen.setdefault(style, name)
     return problems
 
 
@@ -420,7 +475,25 @@ CROWD_WORDS = (
 # 参考3チャンネルは尺の58%・19.2件・1件3.1秒。こちらは14%・2.2件・1件39字だった
 VOICE_SHARE_TARGET = 40      # %
 VOICE_COUNT_TARGET = 10      # 件
-VOICE_LINE_TARGET = 30       # 字。3秒＝約16字なので、倍まで
+VOICE_LINE_TARGET = 20       # 字。**実測1件3.1秒＝約16字**。2026-09-07 に30字から締めた
+
+
+def _advise_title(notes: Notes) -> list[str]:
+    """タイトルが答えを言い切っていないか（2026-09-07）。
+
+    各チャンネルの最高再生を並べたら、上位はほぼ全部が答えを隠していた。
+    こちらの直近14本は全部が言い切りで、タイトルで用が足りてしまっていた。
+    """
+    from .review import TITLE_HOOKS
+
+    title = notes.video_title
+    if any(word in title for word in TITLE_HOOKS):
+        return []
+    return [
+        f"タイトル『{title[:24]}…』が答えを言い切っています。"
+        "伸びている3チャンネルの上位は「〜がこちらです」「〜が話題に」"
+        "「〜してしまう」のように**答えを隠して**います（中身では必ず答える）"
+    ]
 
 
 def _advise_volume(notes: Notes) -> list[str]:
@@ -459,7 +532,7 @@ def _advise_volume(notes: Notes) -> list[str]:
 
 def _advise_voices(notes: Notes) -> list[str]:
     """反応の扱いで気をつける点。"""
-    hints: list[str] = _advise_volume(notes)
+    hints: list[str] = _advise_volume(notes) + _advise_title(notes)
     for section in notes.sections:
         card = section.card or {}
         if str(card.get("type", "")).lower() != "reactions":
@@ -784,9 +857,15 @@ def to_script(notes: Notes, plan: Plan) -> str:
     # 名乗っていて、答えを出さないなら看板の方を降ろすことになる。
     # 次の焦点は読み上げず、最後のカード（outro_title）と概要欄に置く。
     # 締めの挨拶（続報は…チャンネル登録して…）は毎回同じで、8秒を使っていた
+    # **まとめの下地も、直前の節と同じにしない。**決め打ちにしていたため、
+    # 最後の節がたまたま studio に落ちると2節続けて同じ絵になっていた
+    # （2026-09-07 に CI が検出）。本文の節と同じ選び方に揃える。
+    wrap_background = "assets/backgrounds/studio.png"
+    if wrap_background == previous_background:
+        wrap_background = next(c for c in BACKGROUNDS if c != previous_background)
     lines += [
         "## まとめ",
-        "@bg: assets/backgrounds/studio.png",
+        f"@bg: {moving_background(wrap_background)}",
         "",
         f"解説: {_spoken(notes.answer)}",
         f"  telop: {_telop(notes.answer)}",

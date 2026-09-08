@@ -103,3 +103,23 @@ def test_消した動画は二重投稿の判定に出さない(ledger: Path) ->
     rows[0]["deleted"] = True
     ledger.write_text(json.dumps(rows), encoding="utf-8")
     assert posted.find("output/a", ledger) is None
+
+# 投稿を時間で散らす（2026-09-07）。参考チャンネルは1時間に1本ずつ、
+# こちらは13時間前に4本と固めて出していた。
+
+def test_前の投稿からの間隔が分かる(tmp_path):
+    from datetime import datetime, timedelta, timezone
+
+    from src import posted
+
+    book = tmp_path / "posted.json"
+    now = datetime(2026, 9, 8, 12, 0, tzinfo=timezone.utc)
+    assert posted.since_last(book, now) is None          # 控えが無ければ None
+    posted.record("out/a", "abc123", book, now=now - timedelta(minutes=20))
+    assert round(posted.since_last(book, now)) == 20
+
+
+def test_目安は45分():
+    from src import posted
+
+    assert posted.SPREAD_MINUTES == 45

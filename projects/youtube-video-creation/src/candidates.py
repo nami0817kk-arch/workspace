@@ -393,6 +393,20 @@ def assign(
                 continue
             pool = hit
 
+        # 種別で絞る枠（2026-09-07）。試合結果の枠を移籍の話で埋めない。
+        # **該当が無ければ枠を空ける。**埋めるための枠ではない
+        kinds = rule.get("require_kind")
+        if kinds and pool:
+            want = [str(k).strip().lower() for k in
+                    ([kinds] if isinstance(kinds, str) else kinds)]
+            hit = [c for c in pool if c.kind in want]
+            if not hit:
+                fallbacks.setdefault(slot, []).append(
+                    f"種別が{' か '.join(want)}の候補がありません。枠を空けます"
+                )
+                continue
+            pool = hit
+
         tiers = rule.get("require_tier")
         if tiers:
             filtered = [c for c in pool if c.tier in tiers]

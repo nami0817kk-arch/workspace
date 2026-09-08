@@ -173,11 +173,10 @@ base64 -w 0 ios_distribution.p12 > ios_cert.base64.txt
 
 1. https://developer.apple.com/account/resources/identifiers/list
 2. **＋** → **App IDs** → **App**
-3. Bundle ID に **`com.kabuagari.soccerManager`** を入力（Explicit）
-   - このアプリの iOS 側バンドル ID です。
-   - Android 側の applicationId は `com.kabuagari.soccer_manager` で、
-     わざと違います。iOS のバンドル ID はアンダースコアを使えないためです。
-     両者が一致している必要はありません。
+3. Bundle ID に **`com.namiki.soccermanager`** を入力（Explicit）
+   - このアプリの iOS 側バンドル ID です。Android 側の applicationId も
+     同じ値にしてあります（アンダースコアを使わない名前にしたため、
+     両プラットフォームで揃えられる）。
 4. Capabilities は何も追加しなくて構いません（このアプリは
    ネットワーク通信も通知も課金も使いません）
 
@@ -185,7 +184,7 @@ base64 -w 0 ios_distribution.p12 > ios_cert.base64.txt
 
 1. https://developer.apple.com/account/resources/profiles/list
 2. **＋** → Distribution の **App Store Connect** を選ぶ
-3. App ID に `com.kabuagari.soccerManager` を選択
+3. App ID に `com.namiki.soccermanager` を選択
 4. 証明書に 4-2 で作った Apple Distribution 証明書を選択
 5. プロファイル名を付けて生成し、`.mobileprovision` をダウンロード
 
@@ -245,7 +244,9 @@ base64 -w 0 AuthKey_XXXXXXXX.p8 > appstore_key.base64.txt
 扱っています。
 
 AdMob の管理画面（https://apps.admob.com/）でアプリを2つ（Android用・iOS用）
-登録し、それぞれに「リワード」広告ユニットを1つ作って、以下を控えます。
+登録し、それぞれに「リワード」と「インタースティシャル」の広告ユニットを
+1つずつ作って、以下を控えます。リワードはクラブ経営画面の任意視聴、
+インタースティシャルはシーズンの切り替わりで出る全画面広告に使います。
 
 | Secret 名 | 中身 | どこで取るか |
 |---|---|---|
@@ -253,6 +254,8 @@ AdMob の管理画面（https://apps.admob.com/）でアプリを2つ（Android�
 | `ADMOB_APP_ID_IOS` | `ca-app-pub-XXXX~ZZZZ` | 同上（iOS 用アプリ） |
 | `ADMOB_REWARDED_ANDROID` | `ca-app-pub-XXXX/AAAA` | 広告ユニット → リワード |
 | `ADMOB_REWARDED_IOS` | `ca-app-pub-XXXX/BBBB` | 同上（iOS 用） |
+| `ADMOB_INTERSTITIAL_ANDROID` | `ca-app-pub-XXXX/CCCC` | 広告ユニット → インタースティシャル |
+| `ADMOB_INTERSTITIAL_IOS` | `ca-app-pub-XXXX/DDDD` | 同上（iOS 用） |
 
 アプリIDは `~`（チルダ）、広告ユニットIDは `/`（スラッシュ）で区切られています。
 取り違えると動きません。
@@ -325,14 +328,16 @@ Android / iOS 両方のワークフローが起動します。
    （Android と iOS は別々のアプリとして登録する）
 2. アプリごとに「リワード」広告ユニットを1つ作る
 3. 控えるもの: **アプリID**（`ca-app-pub-xxx~yyy`、`~` 区切り）と
-   **広告ユニットID**（`ca-app-pub-xxx/zzz`、`/` 区切り）
+   **広告ユニットID**（`ca-app-pub-xxx/zzz`、`/` 区切り）。広告ユニットは
+   リワードとインタースティシャルの2種類ぶん必要。
 
 **Android** — アプリIDは Gradle 経由でマニフェストに入る。
 
 ```bash
 flutter build appbundle --release \
   -PADMOB_APP_ID=ca-app-pub-xxxx~yyyy \
-  --dart-define=ADMOB_REWARDED_ANDROID=ca-app-pub-xxxx/zzzz
+  --dart-define=ADMOB_REWARDED_ANDROID=ca-app-pub-xxxx/zzzz \
+  --dart-define=ADMOB_INTERSTITIAL_ANDROID=ca-app-pub-xxxx/wwww
 ```
 
 **iOS** — アプリIDは `ios/Runner/Info.plist` の `GADApplicationIdentifier` を
@@ -341,6 +346,7 @@ flutter build appbundle --release \
 ```bash
 flutter build ipa --release \
   --dart-define=ADMOB_REWARDED_IOS=ca-app-pub-xxxx/zzzz \
+  --dart-define=ADMOB_INTERSTITIAL_IOS=ca-app-pub-xxxx/wwww \
   --export-options-plist=ios/ExportOptions.plist
 ```
 
@@ -396,9 +402,9 @@ Android の `versionCode` も iOS の `CFBundleVersion` も、
 
 | 症状 | 原因と対処 |
 |---|---|
-| Android ビルドが「Secrets が未設定です」で落ちる | 5. の 4 つの Secret 名を確認。名前の綴りが 1 文字でも違うと空になる |
+| Android ビルドが「Secrets が未設定です」で落ちる | 5. の AdMob 系 6 つの Secret 名を確認。名前の綴りが 1 文字でも違うと空になる |
 | 「AAB がデバッグ鍵で署名されています」で落ちる | `ANDROID_KEYSTORE_BASE64` の中身が壊れている。`base64 -w 0`（改行なし）で作り直す |
 | iOS の `security import` が失敗する | .p12 を `-legacy` なしで作った可能性。4-3 をやり直す |
-| iOS ビルドが provisioning profile で落ちる | プロファイルの App ID と `com.kabuagari.soccerManager` が一致しているか確認 |
+| iOS ビルドが provisioning profile で落ちる | プロファイルの App ID と `com.namiki.soccermanager` が一致しているか確認 |
 | Play に上げたら versionCode が既に使われていると言われる | `build_number` に前回より大きい数を指定して再実行 |
 | App Store Connect で輸出コンプライアンスを聞かれる | `Info.plist` に `ITSAppUsesNonExemptEncryption=false` を入れてあるので通常は出ません。出た場合は「いいえ」を選択 |

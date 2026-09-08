@@ -128,3 +128,54 @@ def test_days_without_rows_are_skipped_in_the_archive(site):
     # losers が空の日は losers アーカイブに出さない
     assert not (out_dir / "archive" / "losers" / "2026-01-06.html").exists()
     assert (out_dir / "archive" / "gainers" / "2026-01-06.html").exists()
+
+
+def test_canonical_url_matches_what_pages_serves():
+    """Cloudflare Pages は .html を拡張子なしへ 308 する。配信される側の形を返す。"""
+    assert render.canonical_url("index.html") == f"{render.SITE_URL}/"
+    assert render.canonical_url("guide.html") == f"{render.SITE_URL}/guide"
+    assert render.canonical_url("archive/gainers/index.html") == f"{render.SITE_URL}/archive/gainers/"
+    assert (
+        render.canonical_url("archive/gainers/2026-01-05.html")
+        == f"{render.SITE_URL}/archive/gainers/2026-01-05"
+    )
+
+
+def test_sitemap_and_canonical_have_no_html_suffix(site):
+    """sitemap と canonical に .html が残っていると、毎回リダイレクトを挟むことになる。"""
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-01-05")
+    render.build_all()
+
+    sitemap = (out_dir / "sitemap.xml").read_text(encoding="utf-8")
+    assert ".html</loc>" not in sitemap
+    assert f"<loc>{render.SITE_URL}/</loc>" in sitemap
+    assert f"<loc>{render.SITE_URL}/guide</loc>" in sitemap
+
+    index = (out_dir / "index.html").read_text(encoding="utf-8")
+    assert f'<link rel="canonical" href="{render.SITE_URL}/">' in index
+    guide = (out_dir / "guide.html").read_text(encoding="utf-8")
+    assert f'<link rel="canonical" href="{render.SITE_URL}/guide">' in guide
+
+
+def test_unreliable_dates_are_kept_on_disk_but_not_published(site):
+    """日付が当てにならない回は、ファイルは残したままサイトには出さない。"""
+    data_dir, out_dir = site
+    bad = sorted(render.UNRELIABLE_DATES)[0]
+    _write_day(data_dir, bad)
+    _write_day(data_dir, "2026-09-04")
+    render.build_all()
+
+    assert (data_dir / f"{bad}.json").exists(), "生データは消さない"
+    assert not (out_dir / "archive" / "gainers" / f"{bad}.html").exists()
+    assert (out_dir / "archive" / "gainers" / "2026-09-04.html").exists()
+    assert bad not in (out_dir / "sitemap.xml").read_text(encoding="utf-8")
+
+
+def test_build_still_refuses_when_every_day_is_unreliable(site):
+    """除外した結果ゼロ件になったら、空のサイトを出さずに止まる。"""
+    data_dir, _ = site
+    for d in render.UNRELIABLE_DATES:
+        _write_day(data_dir, d)
+    with pytest.raises(RuntimeError):
+        render.build_all()

@@ -244,3 +244,112 @@ def save(names: list[str], folder: Path, session=None, only: str = "",
     existing = [e for e in existing if e.get("file") != name] + [entry]
     path.write_text(json.dumps(existing, ensure_ascii=False, indent=2), encoding="utf-8")
     return entry
+
+
+# 試合の写真を探すときの手がかり（2026-09-07）。顔写真とは逆に、
+# **場面が写っているほうを上に**する。
+MATCH_WORDS = (" vs ", " v ", " x ", "match", "cup", "league", "final",
+               "kick", "goal", "celebrat", "derby", "friendly", "fc ")
+# 試合の場面ではないもの。**建物・物・記章はいくら CC でも使えない。**
+# 実測（2026-09-07）で、"Arsenal Chelsea" の1件目がロッカールームの写真だった
+SCENE_REJECT = ("dressing room", "logo", "badge", "shirt", "kit ", "museum",
+                "sign", "map", "exterior", "aerial", "seat", "ticket", "statue",
+                "poster", "scarf", "flag", "programme", "trophy cabinet",
+                "construction", "entrance", "concourse", "pitch invasion")
+
+
+def scene_rank(title: str) -> int:
+    """小さいほど試合の場面らしい。顔写真の `rank` と反対に並べる。"""
+    low = title.lower()
+    score = 0
+    if any(w in low for w in MATCH_WORDS):
+        score -= 4
+    if any(w in low for w in PORTRAIT_WORDS):
+        score += 3
+    if any(w in low for w in SCENE_REJECT):
+        score += 20        # 建物・物の写真。並べ替えの下に落とす
+    return score
+
+
+def scene_ok(title: str) -> bool:
+    """試合の場面として使える名前か。**物と建物は落とす。**"""
+    low = title.lower()
+    return not any(w in low for w in SCENE_REJECT)
+
+
+def save_scene(words: list[str], folder: Path, session=None, only: str = "",
+               modify: bool = True) -> dict:
+    """試合の場面を写した1枚を落として控える。
+
+    **顔写真ではない。**参考チャンネルの最高再生は下地が試合のワンシーンで、
+    顔は写っていない（2026-09-07 に実物を確認）。放送映像は使えないので、
+    Commons にある**実際の試合の写真**（CC BY / CC BY-SA）で置き換える。
+
+    被写体の確認の仕方が顔写真とは違う。人物を特定する必要はなく、
+    **指定した言葉がその写真の説明に出てくるか**だけを見る。
+    誰が写っているかを言い切らないので、台本でも「その試合の写真」とは書かない。
+    """
+    keys = [w.strip().lower() for w in words if str(w).strip()]
+    if not keys:
+        raise PortraitError("探す言葉がありません（クラブ名・大会名・スタジアム名）")
+
+    reasons: list[str] = []
+    if only:
+        pool = [only]
+    else:
+        # **言葉をまとめて1つの検索にする。**別々に引くと、クラブの記章や
+        # 建物の写真が上に来る（2026-09-07 実測）。football を足して場面に寄せる
+        found = _get(COMMONS_API, {
+            "action": "query", "format": "json", "list": "search",
+            "srsearch": " ".join(keys) + " football match",
+            "srnamespace": 6, "srlimit": 20,
+        }, session).get("query", {}).get("search", [])
+        pool = sorted(
+            [h["title"] for h in found if scene_ok(h["title"])], key=scene_rank
+        )
+    meta = None
+    chosen = ""
+    for title in pool:
+        try:
+            found = info(title, session)
+        except PortraitError as error:
+            reasons.append(str(error))
+            continue
+        haystack = f"{title} {found.get('author', '')}".lower()
+        if not only and not any(key in haystack for key in keys):
+            reasons.append(f"{title}: 指定した言葉が出てきません")
+            continue
+        fine, note = license_ok(found["license"], modify=modify)
+        if not fine:
+            reasons.append(f"{title}: {note}")
+            continue
+        meta, chosen = found, title
+        break
+    if meta is None:
+        nl = chr(10) + "  "
+        raise PortraitError("使える試合写真がありません:" + nl + nl.join(reasons[:6]))
+
+    import requests
+
+    folder.mkdir(parents=True, exist_ok=True)
+    body = (session or requests).get(
+        meta["image_url"], timeout=30,
+        headers={"User-Agent": "youtube-video-creation/1.0 (scene)"},
+    )
+    body.raise_for_status()
+    name = "scene.jpg"
+    (folder / name).write_bytes(body.content)
+
+    banned = any(w in NO_DERIVS for w in
+                 meta["license"].lower().replace("-", " ").split())
+    entry = {"file": name, "source": "wikimedia", "title": chosen,
+             "no_derivatives": banned,
+             "page_url": meta["page_url"], "image_url": meta["image_url"],
+             "license": meta["license"], "author": meta["author"],
+             # 誰が写っているかは確かめていない。**場面として使う写真**
+             "subject_check": "場面（人物は特定していない）"}
+    path = folder / "credits.json"
+    existing = json.loads(path.read_text(encoding="utf-8")) if path.exists() else []
+    existing = [e for e in existing if e.get("file") != name] + [entry]
+    path.write_text(json.dumps(existing, ensure_ascii=False, indent=2), encoding="utf-8")
+    return entry

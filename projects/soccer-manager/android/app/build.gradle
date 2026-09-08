@@ -17,7 +17,7 @@ if (hasKeystore) {
 }
 
 android {
-    namespace = "com.kabuagari.soccer_manager"
+    namespace = "com.namiki.soccermanager"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -32,7 +32,7 @@ android {
 
     defaultConfig {
         // Google Play 上のアプリを一意に識別する ID。公開後は変更できない。
-        applicationId = "com.kabuagari.soccer_manager"
+        applicationId = "com.namiki.soccermanager"
         // AdMob のアプリID。リリース時は gradle.properties か
         // -PADMOB_APP_ID=... で自分のIDを渡す。既定は Google のテスト用ID。
         manifestPlaceholders["admobAppId"] =

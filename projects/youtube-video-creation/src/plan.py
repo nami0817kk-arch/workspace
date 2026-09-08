@@ -332,8 +332,13 @@ def render(routine: Routine, today: date, covered: list | None = None) -> str:
     return "\n".join(lines).rstrip() + "\n"
 
 
+# 反応の節だと分かる言葉。ここに読み上げる反応を流し込む
+REACTION_HEADINGS = ("反応", "受け止め", "声", "評価")
+
+
 def worksheet(routine: Routine, today: date, shape: str = "",
-              shapes: dict | None = None) -> str:
+              shapes: dict | None = None,
+              reactions: list[dict] | None = None, thread: str = "") -> str:
     """取材メモの雛形（YAML）。1本＝1テーマの深掘りとして書く。
 
     ``shape`` は話の型（transfer / match / quote / discipline / preview）。
@@ -382,20 +387,62 @@ def worksheet(routine: Routine, today: date, shape: str = "",
         {"id": "why", "heading": "なぜそうなったか", "tier": "背景"},
         {"id": "next", "heading": "これからどうなる", "tier": "報道"},
     ]
+    # **反応を取ってきたなら、反応の節に流し込む**（2026-09-07）。
+    # 点検で「他人の声が4割以上」を求めているのに、雛形には空の say が1つしか
+    # 無く、手で10件書くことになっていた。**材料を先に入れておく**
+    structure = list(structure)
+    if reactions and not any(
+        any(word in str(b.get("heading", "")) for word in REACTION_HEADINGS)
+        for b in structure
+    ):
+        structure.append({"id": "voices", "heading": "どう受け止められたか",
+                          "tier": "未確認"})
+
     for block in structure:
+        heading = str(block.get("heading", ""))
+        voices = bool(reactions) and any(w in heading for w in REACTION_HEADINGS)
         lines += [
             f'  - id: {block.get("id", "s")}',
-            f'    heading: {block.get("heading", "")}',
-            f'    tier: {block.get("tier", "報道")}',
+            f'    heading: {heading}',
+            f'    tier: {"未確認" if voices else block.get("tier", "報道")}',
             '    telop: ""        # 画面の見出し',
-            "    say:             # 読み上げ文。人名・数字はひらがなに開く",
-            '      - ""',
-            "    official: false  # クラブ・当事者の発表なら true",
-            "    sources:",
-            '      - ""',
-            "",
         ]
+        if voices:
+            lines += _reaction_lines(reactions, thread)
+        else:
+            lines += [
+                "    say:             # 読み上げ文。人名・数字はひらがなに開く",
+                '      - ""',
+                "    official: false  # クラブ・当事者の発表なら true",
+                "    sources:",
+                '      - ""',
+            ]
+        lines.append("")
     return "\n".join(lines)
+
+
+def _reaction_lines(reactions: list[dict], thread: str) -> list[str]:
+    """取ってきた反応を、そのまま読み上げられる形で並べる。
+
+    **1件2〜4秒で刻む。**伸びている3チャンネルは尺の58%を他人の声に使い、
+    1件3.1秒だった（こちらは14%・1件7秒）。カードは上位5件だけ載せる。
+    """
+    total = max((int(r.get("total") or 0) for r in reactions), default=len(reactions))
+    lines = ["    say:             # reactions が入れた。要らない行は消す"]
+    for item in reactions:
+        text = str(item.get("text", "")).replace(chr(34), "'")
+        lines.append(f'      - {{voice: ネット民, text: "{text}", telop: "{text}"}}')
+    lines += [
+        "    card:",
+        "      type: reactions",
+        f'      title: "ネットの反応（{total}件から）"',
+        "      items:",
+    ]
+    for item in reactions[:5]:
+        text = str(item.get("text", "")).replace(chr(34), "'")
+        lines.append(f'        - {{text: "{text}", label: ">>{item.get("no", "")}"}}')
+    lines += ["    official: false", "    sources:", f"      - {thread}"]
+    return lines
 
 
 def _fill(text: str, words: dict[str, str]) -> str:

@@ -36,6 +36,10 @@ clubs:
      aka: [Aston Villa, Villa, AVFC, アストンビラ, アストン・ビラ]}
   - {canonical: ウェストハム, league: england, big: false,
      aka: [West Ham United, West Ham, ウェスト・ハム]}
+  # 2026-09-07 に追加。守田が所属していて参考チャンネルの見出しに何度も出るのに
+  # 辞書に無く、順位表で英語表記のまま残っていた
+  - {canonical: ハル・シティ, league: england, big: false,
+     aka: [Hull City, Hull, ハルシティ, ハル]}
   - {canonical: ブライトン, league: england, big: false,
      aka: [Brighton, Brighton & Hove Albion]}
   - {canonical: エヴァートン, league: england, big: false,

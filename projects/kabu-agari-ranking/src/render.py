@@ -34,6 +34,21 @@ _RANKING_TYPES = [
 ]
 
 
+def canonical_url(rel_path: str) -> str:
+    """output/ 内の相対パスから、実際に配信される URL を組み立てる。
+
+    Cloudflare Pages は `/foo.html` を `/foo` へ、`/dir/index.html` を `/dir/` へ
+    308 で飛ばす。sitemap や canonical に .html 付きを書くと毎回リダイレクトを
+    挟むことになるので、配信される側の形に揃える。
+    """
+    rel = rel_path.removeprefix("/")
+    if rel == "index.html":
+        return f"{SITE_URL}/"
+    if rel.endswith("/index.html"):
+        return f"{SITE_URL}/{rel[: -len('index.html')]}"
+    return f"{SITE_URL}/{rel.removesuffix('.html')}"
+
+
 def _normalize_day(raw: dict) -> dict:
     """旧形式（値上がりランキングのみ・rows/gain_pct/volumeキー）を新形式に変換する。"""
     if "gainers" in raw:
@@ -52,12 +67,31 @@ def _normalize_day(raw: dict) -> dict:
     return {"rec_date": raw["rec_date"], "gainers": legacy_rows, "losers": [], "active": []}
 
 
+# 日付が信用できないため公開しない分。ファイルは data/ に残してある。
+#
+# 2026-09-07 まで、as-of 日付をページ先頭の <time>（= NYダウの終値日）から
+# 採っていたため、平日に取得した分は「前営業日のラベル + 当日のデータ」に
+# なっていた（修正は libs/kabutan の extract_asof_date）。どの営業日の
+# ランキングなのかを外部から照合する手段が無い（kabutan は過去分を出さない）。
+#
+# 捨てずに除外にしてあるのは、後から日付を確定できたときに戻せるようにするため。
+# 復帰させるならこの集合から外すだけでよい。
+UNRELIABLE_DATES = frozenset({"2026-08-24", "2026-08-28", "2026-08-31", "2026-09-01"})
+
+
 def _load_all_days() -> list[dict]:
-    """data/YYYY-MM-DD.json を全て読み込み、rec_date 降順（新しい順）で返す。"""
+    """data/YYYY-MM-DD.json を全て読み込み、rec_date 降順（新しい順）で返す。
+
+    UNRELIABLE_DATES は読み飛ばす。日付の当てにならない回を混ぜると、
+    アーカイブ全体が「いつのランキングなのか分からないもの」になってしまう。
+    """
     days = []
     for path in _DATA_DIR.glob("????-??-??.json"):
         with open(path, encoding="utf-8") as f:
-            days.append(_normalize_day(json.load(f)))
+            day = _normalize_day(json.load(f))
+        if day["rec_date"] in UNRELIABLE_DATES:
+            continue
+        days.append(day)
     days.sort(key=lambda d: d["rec_date"], reverse=True)
     return days
 
@@ -79,6 +113,7 @@ def _build_ranking_pages(days: list[dict]) -> None:
             _OUTPUT_DIR / out_name,
             today_tmpl.render(
                 base_url="",
+                canonical=canonical_url(out_name),
                 rec_date=latest["rec_date"],
                 rows=rows,
                 heading=heading,
@@ -98,6 +133,7 @@ def _build_ranking_pages(days: list[dict]) -> None:
                 _OUTPUT_DIR / "archive" / dirname / f"{day['rec_date']}.html",
                 day_tmpl.render(
                     base_url="../../",
+                    canonical=canonical_url(f"archive/{dirname}/{day['rec_date']}.html"),
                     rec_date=day["rec_date"],
                     rows=day_rows,
                     heading=heading,
@@ -107,7 +143,12 @@ def _build_ranking_pages(days: list[dict]) -> None:
 
         _write(
             _OUTPUT_DIR / "archive" / dirname / "index.html",
-            archive_index_tmpl.render(base_url="../../", heading=heading, dates=dates_with_data),
+            archive_index_tmpl.render(
+                base_url="../../",
+                canonical=canonical_url(f"archive/{dirname}/index.html"),
+                heading=heading,
+                dates=dates_with_data,
+            ),
         )
 
 
@@ -125,19 +166,19 @@ _ADS_TXT = """# Google AdSense 審査通過後、下記のコメントを解除�
 def _write_sitemap(days: list[dict]) -> None:
     latest_date = days[0]["rec_date"]
     urls = [
-        (f"{SITE_URL}/index.html", latest_date),
-        (f"{SITE_URL}/losers.html", latest_date),
-        (f"{SITE_URL}/active.html", latest_date),
-        (f"{SITE_URL}/about.html", latest_date),
-        (f"{SITE_URL}/privacy.html", latest_date),
-        (f"{SITE_URL}/guide.html", latest_date),
-        (f"{SITE_URL}/glossary.html", latest_date),
+        (canonical_url(name), latest_date)
+        for name in (
+            "index.html", "losers.html", "active.html",
+            "about.html", "privacy.html", "guide.html", "glossary.html",
+        )
     ]
     for json_key, dirname, *_rest in _RANKING_TYPES:
-        urls.append((f"{SITE_URL}/archive/{dirname}/index.html", latest_date))
+        urls.append((canonical_url(f"archive/{dirname}/index.html"), latest_date))
         for day in days:
             if day.get(json_key):
-                urls.append((f"{SITE_URL}/archive/{dirname}/{day['rec_date']}.html", day["rec_date"]))
+                urls.append(
+                    (canonical_url(f"archive/{dirname}/{day['rec_date']}.html"), day["rec_date"])
+                )
 
     entries = "\n".join(
         f"  <url><loc>{loc}</loc><lastmod>{lastmod}</lastmod></url>" for loc, lastmod in urls
@@ -170,7 +211,7 @@ def build_all() -> None:
 
     for name in ("about.html", "privacy.html", "guide.html", "glossary.html"):
         tmpl = _env.get_template(name)
-        _write(_OUTPUT_DIR / name, tmpl.render(base_url=""))
+        _write(_OUTPUT_DIR / name, tmpl.render(base_url="", canonical=canonical_url(name)))
 
     (_OUTPUT_DIR / "robots.txt").write_text(_ROBOTS_TXT, encoding="utf-8")
     (_OUTPUT_DIR / "ads.txt").write_text(_ADS_TXT, encoding="utf-8")

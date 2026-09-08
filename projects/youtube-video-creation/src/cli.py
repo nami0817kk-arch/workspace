@@ -233,6 +233,8 @@ def main(argv: list[str] | None = None) -> int:
     )
     p_plan.add_argument("--date", default=None, help="基準日 YYYY-MM-DD（既定: 今日）")
     p_plan.add_argument("--write", action="store_true", help="取材メモの雛形を research/ に作る")
+    p_plan.add_argument("--reactions", default="",
+                        help="まとめのURL。雛形の反応の節に、読み上げる形で12件入れる")
     p_plan.add_argument("--shape", default="",
                         help="話の型: transfer / match / quote / discipline / preview。"
                              "**11本つづけて同じ骨格だったので分けた**（節の名前は書き換えてよい）")
@@ -268,6 +270,43 @@ def main(argv: list[str] | None = None) -> int:
                             help="顔だけ切り出す x,y,w,h（画像に対する割合。例: 0.55,0.05,0.4,0.3）")
     p_portrait.add_argument("--file", default="", dest="only",
                             help="この File: だけを使う（現役/監督など、機械に選べない差を人が決める）")
+
+    # 2026-09-07: 放送映像は使えないが、実際の試合の写真は Commons にある。
+    # 顔写真と探し方も確かめ方も違うので、別のコマンドにする
+    p_scene = sub.add_parser(
+        "matchphoto", help="試合の場面の写真を Commons から取る（顔写真ではない）")
+    p_scene.add_argument("dir", help="置き先のフォルダ（例: assets/images/arsenal_chelsea）")
+    p_scene.add_argument("words", nargs="+",
+                         help="クラブ名・大会名・スタジアム名（英語表記が当たりやすい）")
+    p_scene.add_argument("--whole", action="store_true",
+                         help="切らずにそのまま本文へ出す用途。改変不可(ND)の写真も使える")
+    p_scene.add_argument("--file", default="", dest="only",
+                         help="この File: だけを使う")
+
+    # 順位表。**定型シリーズの材料**（2026-09-07）。どのチャンネルも節ごとに
+    # 出していて毎回伸びている（トリベラ10万・6.1万、噂話6.7万）
+    p_table = sub.add_parser(
+        "standings", help="リーグの順位表を取る（定型シリーズ用。画像も書き出す）")
+    p_table.add_argument("league", help="england / spain / germany / italy / france / netherlands")
+    p_table.add_argument("--top", type=int, default=10, help="載せる順位（既定10）")
+    p_table.add_argument("--out", default="", help="画像の書き出し先（省略すると書かない）")
+
+    # 数字の図。**試合映像の代わりになる下地**（2026-09-07）
+    p_stat = sub.add_parser(
+        "statboard", help="数字を横棒の図にして、サムネの下地に使える1枚を書き出す")
+    p_stat.add_argument("out", help="書き出し先の PNG")
+    p_stat.add_argument("--row", action="append", default=[], dest="rows",
+                        help="名前=値。何度でも指定できる（例: --row ヴィルツ=12.3）")
+    p_stat.add_argument("--title", default="", help="図の見出し（例: 走行距離）")
+    p_stat.add_argument("--unit", default="", help="単位（例: km）")
+    p_stat.add_argument("--note", default="", help="数字の出どころ（概要欄に書く用）")
+    p_stat.add_argument("--bg", default="", help="下地の画像。既定は自分で描いた芝")
+
+    # 2026-09-08: 有名人の投稿だけ、画像として使えるようになった（ユーザー判断）
+    p_xshot = sub.add_parser(
+        "xshot", help="X の投稿を1枚の画像にする（accounts: に載っている人だけ）")
+    p_xshot.add_argument("url", help="投稿のURL（https://x.com/<handle>/status/…）")
+    p_xshot.add_argument("dir", help="置き先のフォルダ（例: assets/posts/romano）")
 
     p_redesc = sub.add_parser(
         "redescribe", help="公開済み動画の概要欄に、写真のクレジットだけを足す")
@@ -788,13 +827,45 @@ def _cmd_plan(args, config) -> int:
             print(f"すでにあります: {target}", file=sys.stderr)
             return 1
         target.parent.mkdir(parents=True, exist_ok=True)
+        # **反応は雛形の時点で入れる**（2026-09-07）。点検で「他人の声が4割以上」を
+        # 求めているのに、雛形には空の say が1つしか無く、手で10件書くことに
+        # なっていた。まとめのURLを渡せば、そのまま読める形で12件入る
+        gathered, thread = _fetch_reactions(getattr(args, "reactions", ""))
         target.write_text(
             worksheet(routine, today, getattr(args, "shape", "") or "",
-                      plan.skeletons),
+                      plan.skeletons, reactions=gathered, thread=thread),
             encoding="utf-8")
         print(f"取材メモ: {target}")
+        if gathered:
+            print(f"  反応を{len(gathered)}件入れました（母数 "
+                  f"{max(int(r.get('total') or 0) for r in gathered)}件）")
+        else:
+            print("  反応は空です。`--reactions <まとめのURL>` を付けると"
+                  "読み上げる形で入ります（他人の声は尺の4割が目安）")
         print(f"埋めたら `python -m src.cli draft {target}` で台本になります")
     return 0
+
+
+def _fetch_reactions(url: str, want: int = 12) -> tuple[list[dict], str]:
+    """まとめのスレから、読み上げに回す反応を取ってくる。
+
+    取れなくても**止めない**。雛形は書けたほうがよく、反応は後から
+    `reactions --say` で足せる。取れなかったことは画面に出す。
+    """
+    url = (url or "").strip()
+    if not url:
+        return [], ""
+    from . import reactions as reactions_mod
+
+    try:
+        posts = reactions_mod.fetch(url)
+    except reactions_mod.ReactionError as error:
+        print(f"反応を取れませんでした（{error}）。雛形だけ書きます", file=sys.stderr)
+        return [], url
+    picked = reactions_mod.say_lines(posts, want=want)
+    if not picked:
+        print("読み上げに回せる長さの書き込みがありませんでした", file=sys.stderr)
+    return ([{"text": p.text, "no": p.no, "total": len(posts)} for p in picked], url)
 
 
 def _cmd_scan(args, config) -> int:
@@ -1509,6 +1580,118 @@ def _cmd_setthumb(args, config) -> int:
     return 0
 
 
+def _cmd_matchphoto(args, config) -> int:
+    """試合の場面の写真を取る。**顔写真とは別物。**
+
+    誰が写っているかは確かめない（確かめられない）。指定した言葉が写真の
+    説明に出てくることと、ライセンスだけを見る。台本でも「その試合の写真」
+    とは書かない。
+    """
+    from . import portrait as portrait_mod
+    from .config import _resolve
+
+    folder = _resolve(args.dir)
+    try:
+        entry = portrait_mod.save_scene(
+            args.words, folder, only=args.only, modify=not args.whole
+        )
+    except portrait_mod.PortraitError as error:
+        print(str(error), file=sys.stderr)
+        return 1
+    print(f"写真: {folder / entry['file']}")
+    print(f"  {entry['title']}")
+    print(f"  {entry['license']} / {entry['author']}")
+    print("  **人物は特定していません。**その試合の写真だとは書かないでください")
+    return 0
+
+
+def _cmd_standings(args, config) -> int:
+    """順位表を取って、台本に貼る形と画像を出す。**定型シリーズの材料。**
+
+    節が終わるたびに1本。取材も写真も要らないので、ニュースが薄い日の
+    埋め合わせにもなる。
+    """
+    from . import standings as standings_mod
+    from .config import _resolve
+
+    try:
+        table = standings_mod.fetch(args.league)
+    except standings_mod.StandingsError as error:
+        print(str(error), file=sys.stderr)
+        return 1
+
+    print(f"■ {table.name_ja}　第{table.matchweek}節終了時点")
+    for row in table.rows[: args.top]:
+        print(f"  {row.rank:>2}  {_fit(row.team, 22):<22}"
+              f"{row.played:>3}試合 {row.win}勝{row.draw}分{row.lose}敗"
+              f"  得失{row.diff:+d}  勝点{row.points}")
+
+    print(f"\nタイトル案: {table.title()}")
+    print("\n取材メモに貼る形:")
+    spec = standings_mod.card(table, args.top)
+    print(f"    card:")
+    print(f"      type: table")
+    print(f"      title: {spec['title']}")
+    print(f"      columns: [{', '.join(spec['columns'])}]")
+    print("      rows:")
+    for row in spec["rows"]:
+        print(f"        - [{', '.join(row)}]")
+    print("    tier: 確定    # リーグの記録なので確定でよい")
+    print("    sources:\n      - https://www.fotmob.com/")
+
+    if args.out:
+        out = standings_mod.board(table, _resolve(args.out), config, args.top)
+        print(f"\n画像: {out}")
+        print("台本の frontmatter に thumbnail_photo: として指定できます")
+    return 0
+
+
+def _cmd_xshot(args, config) -> int:
+    """X の投稿を画像にする。**有名人だけ。**
+
+    誰が有名人かは、こちらの判断ではなく `accounts:` の一覧で決める。
+    載っていない人は止める（人が足す）。
+    """
+    from . import xshot as xshot_mod
+    from .config import _resolve
+    from .plan import load_plan
+
+    try:
+        entry = xshot_mod.capture(args.url, _resolve(args.dir), load_plan().accounts)
+    except xshot_mod.ShotError as error:
+        print(str(error), file=sys.stderr)
+        return 1
+    print(f"投稿の画像: {_resolve(args.dir) / entry['file']}")
+    print(f"  {entry['author']}　{entry['license']}")
+    print("  台本の image: に指定し、sources: に投稿URLを入れてください")
+    print("  **サムネイルには使えません**（切って文字を重ねるため）")
+    return 0
+
+
+def _cmd_statboard(args, config) -> int:
+    """数字の図を1枚書き出す。**試合映像の代わりの下地。**"""
+    from . import statboard as statboard_mod
+    from .config import _resolve
+
+    try:
+        rows = statboard_mod.parse_rows(args.rows)
+        out = statboard_mod.build(
+            rows, Path(args.out), config, title=args.title, unit=args.unit,
+            background=args.bg, note=args.note,
+        )
+    except statboard_mod.StatboardError as error:
+        print(str(error), file=sys.stderr)
+        return 1
+    print(f"数字の図: {out}")
+    try:
+        hint = out.resolve().relative_to(Path.cwd().resolve()).as_posix()
+    except ValueError:
+        hint = str(out)
+    print(f"台本の frontmatter に  thumbnail_photo: {hint}  と書けます")
+    print("（review の「サムネの顔」は、この図を顔の代わりに認めます）")
+    return 0
+
+
 def _cmd_redescribe(args, config) -> int:
     """公開済み動画の概要欄に、クレジットだけを足す。
 
@@ -2213,6 +2396,16 @@ def _cmd_upload(args, config) -> int:
     # **同じ動画を二度上げない。**2026-09-07 に、投稿処理がまだ走っている
     # 最中に2本目を起こして本編4本を重複公開し、その分で本数の上限を
     # 使い切った。人の注意では防げないので、投稿する側に控えを持たせる。
+    # **投稿は時間で散らす**（2026-09-07）。参考チャンネルは1時間に1本ずつ、
+    # こちらは13時間前に4本と固めて出していた。止めはしない（まとめて出す日も
+    # ある）が、**気づかずに固めることは防ぐ**
+    gap = posted.since_last()
+    if gap is not None and gap < posted.SPREAD_MINUTES:
+        print(f"■ 前の投稿から{gap:.0f}分しかたっていません"
+              f"（目安 {posted.SPREAD_MINUTES}分）")
+        print("  参考チャンネルは1時間に1本ずつ出しています。"
+              "まとめて出すと自分の動画同士で枠を奪い合います")
+
     seen = posted.find(build_dir)
     if seen and not args.again:
         print("■ この出力先はすでに投稿しています　" + str(build_dir))
@@ -2308,6 +2501,10 @@ HANDLERS = {
     "publish": _cmd_publish,
     "quota": _cmd_quota,
     "portrait": _cmd_portrait,
+    "matchphoto": _cmd_matchphoto,
+    "xshot": _cmd_xshot,
+    "statboard": _cmd_statboard,
+    "standings": _cmd_standings,
     "results": _cmd_results,
     "gather": _cmd_gather,
     "collect": _cmd_collect,

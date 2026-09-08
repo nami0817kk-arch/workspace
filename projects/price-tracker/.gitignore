@@ -7,3 +7,8 @@ __pycache__/
 # うっかりコミットしないようにする。
 .env
 explore.log
+
+# 実行ログ。ip-history.log は自宅のグローバルIPの履歴なので、
+# private リポジトリであっても置かない。
+run-daily.log
+ip-history.log

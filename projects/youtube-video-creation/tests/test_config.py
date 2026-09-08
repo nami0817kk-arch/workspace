@@ -178,3 +178,80 @@ def test_声は候補の中から選ぶ():
 
     for name in ("A", "B", "C", "D", "E", "F", "G"):
         assert config.resolve_speaker(name).style_id in config.voice_pool
+
+
+def test_名前ごとに声を決め打ちできる():
+    """2026-09-07 ユーザーの指示。ハッシュの衝突を手で解くための逃げ道。"""
+    from src.config import load_config
+
+    config = load_config()
+    assert config.voice_fixed["メッシ"] != config.voice_fixed["モウリーニョ"]
+    assert config.resolve_speaker("メッシ").style_id == config.voice_fixed["メッシ"]
+    assert (config.resolve_speaker("モウリーニョ").style_id
+            == config.voice_fixed["モウリーニョ"])
+    # 書いていない人は、これまでどおり名前から決まる（動画をまたいで変わらない）
+    assert (config.resolve_speaker("キャラガー").style_id
+            == config.resolve_speaker("キャラガー").style_id)
+
+
+def test_男の人には男性の声を当てる():
+    """2026-09-07 ユーザーの指示。全40キャラの基本周波数を実測して分けた。"""
+    from src.config import load_config
+
+    config = load_config()
+    # 既定は男性のプール（話者はほぼ全員が男性）
+    assert config.resolve_speaker("アルテタ").style_id in config.voice_pool
+    # 女性と分かっている人だけ、女性のプールから選ぶ
+    from dataclasses import replace
+
+    女性あり = replace(config, voice_female=("なでしこ選手",))
+    assert 女性あり.resolve_speaker("なでしこ選手").style_id in config.voice_pool_female
+
+
+def test_使わない声はプールに戻せない(tmp_path):
+    """42番（ちび式じい）。人の注意で防ぐのは無理があるので読み込みで止める。"""
+    import pytest
+    import yaml
+
+    from src.config import ConfigError, load_config
+
+    source = load_config().path
+    raw = yaml.safe_load(source.read_text(encoding="utf-8"))
+    raw["voicevox"]["voice_pool"] = list(raw["voicevox"]["voice_pool"]) + [42]
+    broken = tmp_path / "project.yaml"
+    broken.write_text(yaml.safe_dump(raw, allow_unicode=True), encoding="utf-8")
+    with pytest.raises(ConfigError):
+        load_config(broken)
+
+
+def test_匿名の反応は行ごとに声が変わる():
+    """20件つづけて同じ声だと、一人の独白に聞こえる（2026-09-07）。"""
+    from src.config import load_config
+
+    config = load_config()
+    assert "ネット民" in config.voice_crowd
+    lines = ["完全に別チームだった", "存在が戦術やん", "ラヤいいな", "これは強い"]
+    styles = {config.resolve_speaker("ネット民", t).style_id for t in lines}
+    assert len(styles) > 1, "全部同じ声になっている"
+    # **同じ発言はいつも同じ声。**作り直しても変わらない
+    assert (config.resolve_speaker("ネット民", lines[0]).style_id
+            == config.resolve_speaker("ネット民", lines[0]).style_id)
+
+
+def test_群衆には決め打ちの声を使わない():
+    """名前のある人と同じ声だと、その人が言ったように聞こえる。"""
+    from src.config import load_config
+
+    config = load_config()
+    taken = set(config.voice_fixed.values())
+    lines = [f"これは反応その{i}" for i in range(20)]
+    styles = {config.resolve_speaker("ネット民", t).style_id for t in lines}
+    assert not (styles & taken), f"決め打ちの声が混ざっている: {styles & taken}"
+
+
+def test_名前のある人は行ごとに変わらない():
+    from src.config import load_config
+
+    config = load_config()
+    assert (config.resolve_speaker("キャラガー", "あ").style_id
+            == config.resolve_speaker("キャラガー", "い").style_id)

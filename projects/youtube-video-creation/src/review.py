@@ -76,13 +76,18 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     # **構成の点検は本編だけに当てる。**縦型は本編から1節を切り出したもので、
     # 割合を測っても元の台本の話にならない（2026-09-07）
     findings.append(check_voice_length(script))
+    # **縦型にも当てる。**ショートは本編から切り出すので、元に入っていれば残る
+    findings.append(check_voice_clash(script))
     if not portrait:
         findings.append(check_voice_share(script))
         findings.append(check_opening_title(script))
         findings.append(check_wrap_share(script))
+        findings.append(check_title_hook(script))
+        findings.append(check_title_subject(script))
     findings.append(_thumbnail_face(script))
     findings.append(_card_rule(script))
     findings.append(_photo_credits(script, out_dir))
+    findings.append(check_post_sources(script))
     findings.append(_double_marks(script))
     loudness = _loudness(out_dir / "video.mp4")
     if loudness is not None:
@@ -256,6 +261,13 @@ def _thumbnail_face(script: Script) -> Finding:
     target = _resolve(photo)
     if not target.exists():
         return Finding(False, "サムネの顔", f"写真が見つかりません: {photo}")
+    # **数字の図は顔の代わりに認める**（2026-09-07 ユーザー判断）。参考チャンネルの
+    # 最高再生（64万回）の中身は試合映像ではなく走行距離のスタッツ画面だった。
+    # 放送映像は使えないが、数字の図は自分で作れて、一覧では「試合の画面」に見える
+    from .statboard import is_statboard
+
+    if is_statboard(target):
+        return Finding(True, "サムネの顔", f"数字の図: {target.name}")
     # **改変不可(ND)の写真をサムネに使わない。**サムネは16:9に切って文字を重ねる。
     # 本文にそのまま出すぶんには使えるので、取得時に印を残してある
     import json as _json
@@ -272,6 +284,45 @@ def _thumbnail_face(script: Script) -> Finding:
                                f"{row.get('license', '')} は改変不可です。"
                                "サムネは切り取って文字を重ねるので使えません")
     return Finding(True, "サムネの顔", Path(photo).name)
+
+
+def check_post_sources(script: Script) -> Finding:
+    """Xの投稿を画像で使ったなら、その投稿URLが出典に入っているか（2026-09-08）。
+
+    有名人の投稿を画像で使えるようになった（ユーザー判断）。**引用として使う**
+    以上、出どころを示すのは条件のうち。概要欄は `sources:` から作られるので、
+    ここが抜けると出典の無い引用になる。
+    """
+    import json as _json
+
+    posts: list[tuple[str, str]] = []
+    for line in script.lines:
+        image = getattr(line, "image", None)
+        if not image:
+            continue
+        target = _resolve(str(image))
+        ledger = target.parent / "credits.json"
+        if not ledger.exists():
+            continue
+        try:
+            rows = _json.loads(ledger.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        for row in rows if isinstance(rows, list) else []:
+            if row.get("file") == target.name and row.get("source") == "x":
+                posts.append((target.name, str(row.get("page_url") or "")))
+
+    if not posts:
+        return Finding(True, "投稿の出典", "投稿の画像は使っていません")
+    listed = set(script.sources or [])
+    missing = [name for name, url in posts if url and url not in listed]
+    if missing:
+        return Finding(
+            False, "投稿の出典",
+            f"{' / '.join(missing)} の投稿URLが sources: にありません。"
+            "引用は出どころを示すのが条件です",
+        )
+    return Finding(True, "投稿の出典", f"投稿{len(posts)}件すべてに出典があります")
 
 
 def _photo_credits(script: Script, out_dir: Path) -> Finding:
@@ -491,7 +542,8 @@ NARRATORS = ("キャスター", "解説", "ナレーター", "")
 # こちらは 14%・2.2件・1件39字だった。**これが再生数の差の中身**なので、
 # 書式ではなく構成の点検として置く。
 VOICE_SHARE_MIN = 40.0     # 他人の声が占める字数の下限（%）
-VOICE_LINE_MAX = 30        # 1件の長さ。3秒＝約16字なので、倍まで許して30字
+VOICE_LINE_MAX = 20        # 1件の長さ。**実測1件3.1秒＝約16字**なので、少しだけ余裕を見る
+                           # （2026-09-07 に30字から締めた。5.5秒ぶんは長すぎた）
 WRAP_SHARE_MAX = 12.0      # 最後の節（まとめ）が占めてよい割合
 
 
@@ -573,6 +625,132 @@ def check_opening_title(script: Script) -> Finding:
         f"タイトルと違います（1行目『{first[:20]}…』）。"
         "クリックした人が来た場所を確かめられるよう、まずタイトルを読んでください",
     )
+
+
+# タイトルの型（2026-09-07）。各チャンネルの**最高再生**を並べて分かったこと。
+# 上位15本（サッカー知恵袋）はほぼ全部が答えを隠していた:
+#   「解説南さん『鈴木彩艶に関しては・・・』」25万 / 「新監督を迎えたリヴァプール、朗報」35万
+#   「守田所属ハル・シティ、誰も予想できなかった事態が話題に・・・」22万
+# こちらの直近14本は全部が言い切りで、**タイトルで用が足りてしまっていた**。
+# **隠すことと嘘をつくことは別。**中身では必ず答える（answer は残してある）
+TITLE_HOOKS = (
+    "こちら", "話題", "・・・", "…", "ざわ", "騒然", "衝撃", "異変", "波紋",
+    "してしまう", "が判明", "口を開", "反応", "の理由", "なぜ", "どうなる",
+    "とは", "か？", "か?", "事態", "まさか", "驚",
+)
+
+
+def check_title_hook(script: Script) -> Finding:
+    """タイトルが答えを言い切っていないか。
+
+    札（【速報】など）を外した本文で見る。引く型の言葉が1つも無ければ、
+    たいてい事実を書き切っている。
+    """
+    bare = _bare(script.title)
+    if not bare:
+        return Finding(False, "タイトルの型", "タイトルがありません")
+    if any(word in script.title for word in TITLE_HOOKS):
+        return Finding(True, "タイトルの型", "続きを見たくなる形です")
+    return Finding(
+        False, "タイトルの型",
+        "答えを言い切っています。伸びている3チャンネルの上位は"
+        "「〜がこちらです」「〜が話題に」のように**答えを隠して**います",
+    )
+
+
+# タイトルの主語（2026-09-07）。分野を横断して24本を並べたら、**54%が人名・
+# クラブ名から始まっていた**。こちらの直近7本は86%が【札】から始まり、
+# 名前が後ろに来ていた。検索にも推薦にも、最初の数文字が効く。
+TITLE_HEAD = 14        # 「先頭」とみなす字数。【速報】＋名前が収まる長さ
+# カタカナだが名前ではない語。ここを見ていなかったので
+# 「180億円の新加入、ウォームアップ中の負傷で…」が名前ありとして通っていた
+COMMON_KATAKANA = (
+    "ウォームアップ", "デビュー", "ゴール", "アシスト", "サッカー", "ニュース",
+    "シーズン", "リーグ", "クラブ", "チーム", "ファン", "サポーター", "コメント",
+    "インタビュー", "ランキング", "スタメン", "ベンチ", "オファー", "ポジション",
+    "プレー", "パフォーマンス", "トレーニング", "メンバー", "スタジアム",
+)
+
+
+def _japanese_names() -> tuple[str, ...]:
+    """設定に書いてある日本人選手の名前。無ければ空で通す。"""
+    try:
+        from .plan import load_plan
+
+        return tuple(str(n) for n in (load_plan().scoring.get("japanese") or []))
+    except Exception:
+        return ()
+
+
+def check_title_subject(script: Script) -> Finding:
+    """タイトルの頭に、クラブ名か人名が出てくるか。
+
+    クラブは `config/clubs.yaml`（61クラブの別名辞書）で見る。人名は辞書を
+    持っていないので、**カタカナか漢字の連なり**があれば名前とみなす。
+    """
+    import re
+
+    from . import clubs as clubs_mod
+
+    title = (script.title or "").strip()
+    if not title:
+        return Finding(False, "タイトルの主語", "タイトルがありません")
+
+    head = re.sub(r"^【[^】]*】", "", title)[:TITLE_HEAD]
+    if clubs_mod.find(head):
+        return Finding(True, "タイトルの主語", f"頭にクラブ名: {head[:10]}")
+    if any(name and name in head for name in _japanese_names()):
+        return Finding(True, "タイトルの主語", f"頭に選手名: {head[:10]}")
+    # カタカナの連なりは人名のことが多い。**ただし普通名詞も同じ形**なので、
+    # よく出るものは名前として数えない（「ウォームアップ中の負傷」で通っていた）
+    for run in re.findall(r"[ァ-ヶー・]{4,}", head):
+        # 頭で切れた語も落とす（「ウォームア」は「ウォームアップ」の途中）
+        if not any(word in run or run in word for word in COMMON_KATAKANA):
+            return Finding(True, "タイトルの主語", f"頭に名前: {run[:10]}")
+    return Finding(
+        False, "タイトルの主語",
+        f"頭{TITLE_HEAD}字に人名もクラブ名もありません（『{head}』）。"
+        "伸びているチャンネルは54%が名前から始めます",
+    )
+
+
+def check_voice_clash(script: Script) -> Finding:
+    """別人が同じ声で喋っていないか（2026-09-07）。
+
+    代弁の声は名前のハッシュで選んでいるので、**まれに衝突する。**
+    実際にメッシとモウリーニョがどちらも style 42 に当たり、同じ声だった。
+    聞き分けられないと「別人だと分からない」——`config.voice_fixed` で
+    片方を別の声に変える。
+    """
+    try:
+        from .config import load_config
+
+        config = load_config()
+    except Exception:
+        return Finding(True, "声の重なり", "設定を読めないので見ていません")
+
+    names = sorted({(line.speaker or "").strip()
+                    for scene in script.scenes for line in scene.lines
+                    if (line.speaker or "").strip()})
+    seen: dict[int, str] = {}
+    clashes: list[str] = []
+    for name in names:
+        try:
+            style = config.resolve_speaker(name).style_id
+        except Exception:
+            continue
+        if style in seen and seen[style] != name:
+            clashes.append(f"{seen[style]} と {name}（style {style}）")
+        else:
+            seen.setdefault(style, name)
+    if clashes:
+        free = next((v for v in config.voice_pool if v not in seen), None)
+        hint = (f"空いているのは style {free}（voicevox.voice_fixed に書く）"
+                if free else "プールに空きがありません")
+        return Finding(
+            False, "声の重なり", f"{' / '.join(clashes)} が同じ声です。{hint}",
+        )
+    return Finding(True, "声の重なり", f"{len(seen)}人が別々の声です")
 
 
 def check_wrap_share(script: Script) -> Finding:

@@ -204,12 +204,25 @@ def test_breaking_prefix_is_fine_with_a_confirmed_section():
 
 
 def test_unknown_prefix_is_flagged():
+    """2026-09-07: 札を12種類に増やしたので、見本を本当に無い札に変えた。
+
+    向こうは動画ごとに強い言葉を作っていた（【激ヤバ】【緊急事態】【崩壊】）。
+    こちらも増やしたが、**定番の外は止める**という決まりはそのまま。
+    """
+    from src.research import advise
+
+    raw = _raw()
+    raw["theme"] = {**raw["theme"], "prefix": "大爆笑"}
+    raw["thumbnail"] = {"line1": "短い見出し", "line2": "赤帯の文字"}
+    assert any("定番ではありません" in w for w in advise(build_notes(raw)))
+
+
+def test_増やした札は通る():
     from src.research import advise
 
     raw = _raw()
     raw["theme"] = {**raw["theme"], "prefix": "衝撃"}
-    raw["thumbnail"] = {"line1": "短い見出し", "line2": "赤帯の文字"}
-    assert any("定番ではありません" in w for w in advise(build_notes(raw)))
+    assert not any("定番ではありません" in w for w in advise(build_notes(raw)))
 
 
 def test_long_thumbnail_lines_are_flagged():
@@ -591,6 +604,22 @@ def test_同じ背景が連続しない():
         assert a != b, f"{a} が連続している"
 
 
+def test_まとめの下地も直前の節と同じにしない():
+    """まとめだけ下地を決め打ちしていて、最後の節と重なることがあった。
+
+    2026-09-07、CI が「studio.png が連続している」で落ちて分かった。
+    直前が studio に落ちる並びを作って、まとめが別の絵に逃げることを固定する。
+    """
+    import re
+
+    from src import research
+
+    notes = research.load_notes("research/20260903_japan.yaml")
+    body = research.to_script(notes, __import__("src.plan", fromlist=["load_plan"]).load_plan())
+    backgrounds = re.findall(r"^@bg: (\S+)", body, flags=re.M)
+    assert backgrounds[-1] != backgrounds[-2], "まとめが直前の節と同じ下地になっている"
+
+
 def test_問いが句点で終わっていても二重にしない():
     """「〜のか。」に機械がもう1つ足して「。。」になっていた。"""
     from src.research import _ends_sentence
@@ -695,3 +724,24 @@ def test_過去形の答えが壊れない():
     assert _spoken("UEFAは重大な暴行と判断した") == "UEFAは重大な暴行と判断した、ということです。"
     assert _spoken("移籍は決まりました") == "移籍は決まりました。"
     assert _spoken("次の焦点は来週") == "次の焦点は来週です。"
+
+
+def test_同じ声になる2人は取材メモで止まる(monkeypatch):
+    """書き出す前に気づけるようにする（2026-09-07）。"""
+    from src.config import CastMember
+    from src.research import verify
+
+    def same_voice(self, name):
+        return CastMember(name=name, key="voiced_42", style_id=42, speed=1.0,
+                          pitch=0.0, intonation=1.05, position="none", color="#fff")
+
+    monkeypatch.setattr("src.config.ProjectConfig.resolve_speaker", same_voice)
+    raw = _raw()
+    raw["sections"] = raw["sections"] + [{
+        "id": "voices", "heading": "何と言ったか", "tier": "報道",
+        "say": [{"voice": "メッシ", "text": "引退します。"},
+                {"voice": "モウリーニョ", "text": "おめでとう。"}],
+        "sources": ["https://example.com/1"],
+    }]
+    problems = verify(build_notes(raw), _plan())
+    assert any("同じ声" in p for p in problems)

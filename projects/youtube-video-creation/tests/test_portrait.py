@@ -184,3 +184,32 @@ def test_音声や動画は写真として選ばない():
         assert not is_image(bad), bad
     for good in ["File:Kubo 2024.jpg", "File:x.JPEG", "File:y.png"]:
         assert is_image(good), good
+
+# 試合の場面の写真（2026-09-07）。放送映像は使えないので、Commons にある
+# 実際の試合の写真で置き換える。顔写真とは探し方も確かめ方も違う。
+
+def test_試合の場面を上に並べる():
+    from src.portrait import scene_rank
+
+    assert scene_rank("File:Arsenal vs Chelsea 2024 goal.jpg") < scene_rank(
+        "File:Bukayo Saka portrait cropped.jpg")
+
+
+def test_建物や物の写真は落とす():
+    """実測: Arsenal Chelsea の1件目がロッカールームの写真だった。"""
+    from src.portrait import scene_ok
+
+    assert scene_ok("File:Arsenal dressing room Emirates Stadium.jpg") is False
+    assert scene_ok("File:Chelsea badge.jpg") is False
+    assert scene_ok("File:Chelsea players training before the final.jpg") is True
+
+
+def test_探す言葉が無ければ止まる(tmp_path):
+    from src.portrait import PortraitError, save_scene
+
+    try:
+        save_scene([], tmp_path)
+    except PortraitError as error:
+        assert "探す言葉" in str(error)
+        return
+    raise AssertionError("止まっていない")

@@ -80,3 +80,31 @@ def test_extracts_the_closing_date_from_the_page():
     """休場日に実行しても、取得日ではなく終値の営業日をラベルにできる。"""
     assert extract_asof_date(_table([], asof="2026-08-28")) == "2026-08-28"
     assert extract_asof_date(_table([], asof=None)) is None
+
+
+# --- as-of 日付の取り違え防止 ---------------------------------------------
+
+_INDEX_HEADER = (
+    '<a href="/stock/?code=0800">NYダウ</a><time datetime="2026-09-04">終値</time>'
+    '<a href="/stock/?code=0823">東証グロース</a><time datetime="2026-09-07">終値</time>'
+)
+
+
+def test_asof_date_comes_from_the_ranking_not_the_dow_header():
+    """先頭の <time> は NYダウ。これを採ると国内ランキングが1営業日ずれる。"""
+    html = (
+        f"<html>{_INDEX_HEADER}"
+        '<div class="meigara_count"><ul><li>2026年09月07日</li><li>16:00現在</li></ul></div>'
+        "</html>"
+    )
+    assert extract_asof_date(html) == "2026-09-07"
+
+
+def test_asof_date_falls_back_to_the_newest_time_tag():
+    """表の日付が取れないときも、古い方（米国市場）を掴まない。"""
+    assert extract_asof_date(f"<html>{_INDEX_HEADER}</html>") == "2026-09-07"
+
+
+def test_asof_date_pads_single_digit_month_and_day():
+    html = '<div class="meigara_count"><ul><li>2026年1月5日</li></ul></div>'
+    assert extract_asof_date(html) == "2026-01-05"
