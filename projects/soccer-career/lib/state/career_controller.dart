@@ -10,6 +10,7 @@ import '../game/life_events.dart';
 import '../game/national.dart';
 import '../game/newsroom.dart';
 import '../game/person.dart';
+import '../game/weekly_plan.dart';
 import '../models/agent.dart';
 import '../models/attributes.dart';
 import '../models/career.dart';
@@ -331,6 +332,13 @@ class CareerController extends ChangeNotifier {
   /// 出場機会の下駄。監督の信頼・戦術との相性・方針・序列を足し合わせる。
   ///
   /// 評価点だけで決めると、監督も方針も競争相手も飾りになる。
+  /// 次節の起用の見通し。判定と同じ式から出す。
+  SelectionOutlook? get outlook {
+    final state = _state;
+    if (state == null || state.retired) return null;
+    return SelectionOutlook.of(state, bonus: _appearanceBonus(state));
+  }
+
   static double _appearanceBonus(CareerState state) {
     var bonus = Person.appearanceBonusFrom(state.relations);
     final manager = state.manager;

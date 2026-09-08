@@ -138,18 +138,26 @@ class Development {
   /// 経験からくる落ち着き。大一番の重圧を薄める。
   double get composure => min(0.05, experience / 2000);
 
-  /// 覚えた個人技による上乗せ。
-  double signatureBonus(AttributeKey key, Detail? detail) {
-    var bonus = 0.0;
+  /// 覚えた個人技による上乗せを、技ごとに分けて返す。
+  ///
+  /// 合計だけを返していた頃は、画面に「なぜこの数字なのか」を出せなかった。
+  /// 覚えた技が試合のどこで効いているのかが見えないと、
+  /// 積み上げと試合が別のものに見える。
+  Map<Signature, double> signatureFactors(AttributeKey key, Detail? detail) {
+    final result = <Signature, double>{};
     for (final s in signatures) {
       if (detail != null && s.detail == detail) {
-        bonus += 0.05;
+        result[s] = 0.05;
       } else if (s.key == key) {
-        bonus += 0.02;
+        result[s] = 0.02;
       }
     }
-    return bonus;
+    return result;
   }
+
+  /// 覚えた個人技による上乗せ。
+  double signatureBonus(AttributeKey key, Detail? detail) =>
+      signatureFactors(key, detail).values.fold(0.0, (a, b) => a + b);
 
   /// 1試合ぶんの積み上げ。
   Development afterMatch({

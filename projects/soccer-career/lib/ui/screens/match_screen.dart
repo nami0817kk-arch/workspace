@@ -244,6 +244,8 @@ class _ScenarioView extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scenario = match.current;
+    // 今日の自分と相手。どの手を選んでも同じだけ効く。
+    final shared = match.sharedFactors.where((f) => f.notable).toList();
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -296,6 +298,25 @@ class _ScenarioView extends StatelessWidget {
                         ),
                     ],
                   ),
+                  // どの手にも同じだけ効いているもの。手ごとには出さない。
+                  if (shared.isNotEmpty) ...[
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 10,
+                      runSpacing: 2,
+                      children: [
+                        for (final f in shared)
+                          Text(
+                            '${f.label} ${f.percent > 0 ? '+' : ''}${f.percent}%',
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              color: f.value > 0
+                                  ? theme.colorScheme.primary
+                                  : theme.colorScheme.error,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -307,6 +328,7 @@ class _ScenarioView extends StatelessWidget {
               attribute: match.attributeFor(scenario.options[i]),
               growth: _growthOf(scenario.options[i]),
               chance: match.chanceFor(scenario.options[i]),
+              factors: match.distinctFactorsFor(scenario.options[i]),
               onPressed: () => onChoose(i),
             ),
             const SizedBox(height: 10),
@@ -323,6 +345,7 @@ class _OptionButton extends StatelessWidget {
     required this.attribute,
     required this.growth,
     required this.chance,
+    required this.factors,
     required this.onPressed,
   });
 
@@ -335,12 +358,23 @@ class _OptionButton extends StatelessWidget {
 
   /// 特性とコンディションを含んだ成功率。判定と同じ値。
   final double chance;
+
+  /// その数字を作っているもの。積み上げたものが試合のどこで効いているかを、
+  /// 選ぶその場で見せる。
+  final List<ChanceFactor> factors;
+
   final VoidCallback onPressed;
+
+  /// 画面に出す数。並べすぎると、どれが効いているのか分からなくなる。
+  static const int shownFactors = 4;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final percent = (chance * 100).round();
+    // 効いているものだけを、大きい順に少しだけ。
+    final shown =
+        factors.where((f) => f.notable).take(shownFactors).toList();
     // 数字だけだと、3つの手を見比べるのに毎回読む必要がある。
     // 帯があれば、どれが堅くてどれが賭けかが一目で分かる。
     final color = chance >= 0.6
@@ -408,6 +442,24 @@ class _OptionButton extends StatelessWidget {
                 ),
             ],
           ),
+          if (shown.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Wrap(
+              spacing: 10,
+              runSpacing: 2,
+              children: [
+                for (final f in shown)
+                  Text(
+                    '${f.label} ${f.percent > 0 ? '+' : ''}${f.percent}%',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: f.value > 0
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.error,
+                    ),
+                  ),
+              ],
+            ),
+          ],
         ],
       ),
     );
