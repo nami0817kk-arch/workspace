@@ -177,8 +177,12 @@ base64 -w 0 ios_distribution.p12 > ios_cert.base64.txt
    - このアプリの iOS 側バンドル ID です。Android 側の applicationId も
      同じ値にしてあります（アンダースコアを使わない名前にしたため、
      両プラットフォームで揃えられる）。
-4. Capabilities は何も追加しなくて構いません（このアプリは
-   ネットワーク通信も通知も課金も使いません）
+4. Capabilities は何も追加しなくて構いません
+   - このアプリは広告(AdMob)で通信し、アプリ内課金(サポーター)も持って
+     いますが、**どちらも App ID の Capabilities で有効化する項目では
+     ありません**。In-App Purchase は全 App ID で既定で使えます。
+   - プッシュ通知・Sign in with Apple・iCloud などは使っていないので、
+     追加すると「使っていない権限がある」と指摘される側になります。
 
 ### 4-5. プロビジョニングプロファイルを作る
 
