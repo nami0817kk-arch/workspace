@@ -257,7 +257,7 @@ def _band_thumbnail(
     # **正方形に近い写真も右に置く。**全面に敷くと顔が帯に隠れる
     portrait = _is_portrait(background, ratio=0.95)
     if portrait:
-        canvas = Image.new("RGBA", SIZE, (14, 20, 32, 255))
+        canvas = _blur_bed(background)
         _paste_side(canvas, background)
     else:
         # **帯が下の4割を覆うので、顔を上に寄せる。**真ん中で切ると、
@@ -346,6 +346,36 @@ def _is_portrait(background: str | None, ratio: float = 1.1) -> bool:
             return image.height > image.width * ratio
     except OSError:
         return False
+
+
+def _blur_bed(background: str | None) -> Image.Image:
+    """縦長の写真を右に置くとき、**左に敷く下地**を作る。
+
+    2026-09-08 まで、左は塗りつぶしの濃紺だった。実測すると顔の段の
+    **72%が真っ黒**で、一覧に並べると沈んで見えた（ユーザー指摘）。
+    同じ写真を大きく引き伸ばしてぼかし、暗くして敷く。
+    別の写真を持ってこないので、権利の扱いは変わらない。
+    """
+    from PIL import ImageEnhance, ImageFilter
+
+    base = Image.new("RGBA", SIZE, (14, 20, 32, 255))
+    path = _resolve(background or "")
+    if not path.exists():
+        return base
+    with Image.open(path) as source:
+        photo = source.convert("RGB")
+    # 画面を埋める大きさまで拡大してから、真ん中を切る
+    scale = max(SIZE[0] / photo.width, SIZE[1] / photo.height) * 1.35
+    photo = photo.resize((max(1, int(photo.width * scale)),
+                          max(1, int(photo.height * scale))), Image.LANCZOS)
+    left = max(0, (photo.width - SIZE[0]) // 2)
+    top = max(0, (photo.height - SIZE[1]) // 3)
+    photo = photo.crop((left, top, left + SIZE[0], top + SIZE[1]))
+    photo = photo.filter(ImageFilter.GaussianBlur(28))
+    photo = ImageEnhance.Brightness(photo).enhance(0.60)
+    photo = ImageEnhance.Color(photo).enhance(0.85)
+    base.alpha_composite(photo.convert("RGBA"))
+    return base
 
 
 def _paste_side(canvas: Image.Image, background: str | None) -> None:

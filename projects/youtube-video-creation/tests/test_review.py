@@ -705,3 +705,22 @@ def test_言い切りのタイトルは止める():
     script = parse_script(nl.join(["---", "title: レスターが3部リーグで18位に転落した",
                                    "---", "", "## 本編", "", "キャスター: 本文。", ""]))
     assert not check_title_hook(script).ok
+
+
+def test_黒いサムネを止める(tmp_path):
+    """**顔の段の72%が黒**だった（2026-09-08 ユーザー指摘）。機械は何も言わなかった。"""
+    from PIL import Image
+
+    from src.review import check_thumbnail_dark
+
+    Image.new("RGB", (1280, 720), (8, 10, 12)).save(tmp_path / "thumbnail.png")
+    assert not check_thumbnail_dark(tmp_path).ok
+
+
+def test_明るいサムネは通す(tmp_path):
+    from PIL import Image
+
+    from src.review import check_thumbnail_dark
+
+    Image.new("RGB", (1280, 720), (150, 160, 150)).save(tmp_path / "thumbnail.png")
+    assert check_thumbnail_dark(tmp_path).ok

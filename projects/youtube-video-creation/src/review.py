@@ -85,6 +85,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
         findings.append(check_title_hook(script))
         findings.append(check_title_subject(script))
     findings.append(_thumbnail_face(script))
+    findings.append(check_thumbnail_dark(out_dir))
     findings.append(_card_rule(script))
     findings.append(_photo_credits(script, out_dir))
     findings.append(check_post_sources(script))
@@ -242,6 +243,41 @@ def _card_rule(script: Script) -> Finding:
         worst = max(long_gaps)
         parts.append(f"見た目が{worst[0]:.0f}秒変わりません（{worst[1][:16]}）")
     return Finding(True, "カードの基準", "／".join(parts))
+
+
+# サムネの上半分（顔が出る段）が黒すぎないか。**一覧に並べると沈む**
+DARK_LEVEL = 42        # これより暗い画素を「黒」と数える
+DARK_SHARE = 0.55      # 顔の段のうち黒がこの割合を超えたら知らせる
+
+
+def check_thumbnail_dark(build_dir: Path) -> Finding:
+    """サムネの黒い面積を見る（2026-09-08 ユーザー指摘）。
+
+    縦長の写真を右に置くと、左が塗りつぶしの濃紺になっていた。実測すると
+    **顔の段の72%が黒**で、一覧で沈んで見えた。いまは同じ写真をぼかして
+    敷いているが、**気づいたのは目で見たからで、機械は何も言わなかった。**
+    """
+    path = build_dir / "thumbnail.png"
+    if not path.exists():
+        return Finding(True, "サムネの黒", "サムネがまだありません")
+    try:
+        from PIL import Image
+    except ImportError:
+        return Finding(True, "サムネの黒", "Pillow がありません")
+    try:
+        with Image.open(path) as im:
+            small = im.convert("L").resize((320, 180))
+    except Exception:
+        # テストの仮ファイルなど、画像として読めないもの。**ここで止めない**
+        return Finding(True, "サムネの黒", "サムネを読めませんでした")
+    top = list(small.crop((0, 0, 320, 108)).getdata())
+    share = sum(1 for v in top if v < DARK_LEVEL) / len(top)
+    if share > DARK_SHARE:
+        return Finding(
+            False, "サムネの黒",
+            f"顔の段の{share * 100:.0f}%が黒です（{DARK_SHARE * 100:.0f}%まで）。"
+            "写真を大きくするか、下地を敷いてください")
+    return Finding(True, "サムネの黒", f"顔の段の黒は{share * 100:.0f}%です")
 
 
 def _thumbnail_face(script: Script) -> Finding:
