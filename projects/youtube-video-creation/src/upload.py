@@ -62,6 +62,7 @@ class Draft:
                          "description.txt がまだ書かれていません")
         if not self.description.strip():
             found.append("概要欄が空です。書き出しの途中かもしれません")
+        found += self._stale_meta()
         # サムネイルは**無くても止めない**。投稿のあとに setthumb で
         # 付ける流れが先にあり、そちらは今も使っている
         if self.thumbnail is not None and not self.thumbnail.exists():
@@ -69,6 +70,30 @@ class Draft:
         if self.privacy not in ("private", "unlisted", "public"):
             found.append(f"privacy は private/unlisted/public のいずれか: {self.privacy}")
         return found
+
+    def _stale_meta(self) -> list[str]:
+        """動画より古い説明・タグを掴んでいないか（2026-09-08）。
+
+        バレンシアの回で、**動画は作り直したもの、タグは前の作り直しのもの**を
+        送ってしまった。動画が書き上がった時点で投稿側の合図が立ち、
+        description.txt と script.json はそのあとに書かれるので、
+        1本ぶんずれる隙がある。「動画があること」だけを合図にしていたのが穴。
+
+        揃っていれば同じ書き出しの産物なので、動画より古い説明は前の回のもの。
+        """
+        if self.source is None or not self.video.exists():
+            return []
+        video_at = self.video.stat().st_mtime
+        late = []
+        for name in ("description.txt", "script.json"):
+            path = self.source / name
+            if not path.exists():
+                late.append(f"{name} がありません")
+            elif path.stat().st_mtime < video_at - 1:
+                late.append(f"{name} が動画より古いです")
+        if late:
+            return ["／".join(late) + "。前の書き出しの説明やタグを送ろうとしています"]
+        return []
 
     def lines(self) -> list[str]:
         """何が送られるかを1画面で見せる。"""

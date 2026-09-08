@@ -191,3 +191,26 @@ def test_書き出しの途中を掴んだら止める(tmp_path):
     notes = draft.problems
     assert any("フォルダ名" in note for note in notes)
     assert any("概要欄が空" in note for note in notes)
+
+
+def test_動画より古い説明を掴んだら止める(tmp_path):
+    """バレンシアの回で、動画は新しく、タグだけ前の書き出しのものを送った。
+
+    2026-09-08。動画が書き上がった時点で投稿側の合図が立ち、
+    description.txt と script.json はそのあとに書かれる。
+    """
+    import os
+
+    built = _built(tmp_path)
+    video_at = (built / "video.mp4").stat().st_mtime
+    for name in ("description.txt", "script.json"):
+        path = built / name
+        if path.exists():
+            os.utime(path, (video_at - 600, video_at - 600))
+    notes = upload_mod.prepare(built).problems
+    assert any("動画より古い" in note for note in notes)
+
+
+def test_同じ書き出しなら通る(tmp_path):
+    built = _built(tmp_path)
+    assert upload_mod.prepare(built).problems == []
