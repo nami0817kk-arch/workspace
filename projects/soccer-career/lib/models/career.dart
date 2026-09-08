@@ -327,6 +327,25 @@ class CareerState {
   /// そのうち成功した数。練習した能力が実際に通っているかを見る。
   Map<AttributeKey, int> momentSuccesses;
 
+  /// 今季の収支の見込み。雇う前に足りるかどうかを見るためのもの。
+  ///
+  /// 実際に引かれるのと同じ式（[Finances.budgetFor]）から出す。
+  SeasonBudget get budget => finances.budgetFor(
+        salary: salary,
+        agentFeePercent: agent.feePercent,
+        staffCost: staff.costPerSeason,
+        extraLivingRate: habits.livingCostExtra,
+        sponsor: sponsor?.annual ?? 0,
+      );
+
+  /// このシーズンを終えたときの貯蓄の見込み。
+  int get projectedSavings => finances.savings + budget.net;
+
+  /// 今の使い方だと、シーズン末に貯蓄が尽きるか。
+  ///
+  /// 尽きると専属スタッフは全員離れる（`advanceSeason`）。
+  bool get willRunOut => projectedSavings < 0;
+
   /// 今季の伸びと、その能力が試合で通った割合。
   List<CategoryGrowth> get seasonGrowth {
     final before = seasonStart;

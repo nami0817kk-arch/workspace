@@ -1050,7 +1050,8 @@ class CareerEngine {
       reputation: reputation,
       relations: relations,
       finances: withSponsor,
-      morale: state.morale,
+      // 稼ぎの使い道は、気持ちに小さく返ってくる。
+      morale: state.morale.bump(state.finances.moraleShift),
       // 疲れはオフでだいたい抜けるが、歳を取るほど残る。
       fatigue: state.fatigue
           .afterOffseason(nextPlayer.age)

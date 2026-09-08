@@ -243,6 +243,37 @@ void main() {
         contains(state.opponentFor(state.matchday).name));
   });
 
+  testWidgets('今週の練習が、試合に入る直前に見える', (tester) async {
+    // 育成タブを開かないと今の設定が見えず、設定したことを忘れていた。
+    final controller = await newCareer();
+    await controller.setMenu(TrainingMenu.athletic);
+    await pumpHub(tester, controller);
+
+    expect(find.text('今週の練習'), findsOneWidget);
+    expect(find.text(TrainingMenu.athletic.label), findsOneWidget);
+
+    // 押すと育成タブへ移る。
+    await tester.tap(find.text('変える'));
+    await tester.pumpAndSettle();
+    // 育成タブに移っていること（メニューの説明はこのタブにしか無い）。
+    expect(find.text(TrainingMenu.athletic.description), findsOneWidget);
+  });
+
+  testWidgets('お金の見通しが、雇う画面に出る', (tester) async {
+    final controller = await newCareer();
+    await pumpHub(tester, controller, height: 2600);
+
+    await tester.tap(find.widgetWithText(Tab, '育成'));
+    await tester.pumpAndSettle();
+    await tester.dragUntilVisible(
+      find.text('自分への投資'),
+      find.byType(ListView).first,
+      const Offset(0, -200),
+    );
+    expect(find.textContaining('今季の見込み'), findsOneWidget);
+    expect(find.textContaining('シーズン末の貯蓄'), findsOneWidget);
+  });
+
   testWidgets('次の試合に、出場の見通しが出る', (tester) async {
     final controller = await newCareer();
     for (var i = 0; i < 6; i++) {
@@ -492,6 +523,20 @@ void main() {
       const Offset(0, -200),
     );
     expect(find.text('オフの過ごし方'), findsOneWidget);
+
+    // 契約を選ぶ前に、今季のお金が見えていること。
+    await tester.dragUntilVisible(
+      find.text('今季のお金'),
+      find.byType(ListView).first,
+      const Offset(0, 200),
+    );
+    expect(find.textContaining('今季の見込み'), findsOneWidget);
+
+    await tester.dragUntilVisible(
+      find.text('契約'),
+      find.byType(ListView).first,
+      const Offset(0, -200),
+    );
     expect(find.text('契約'), findsOneWidget);
   });
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../budget_lines.dart';
 import '../readable_width.dart';
 import '../transfer_code.dart';
 import '../../game/career_engine.dart';
@@ -223,6 +224,21 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                                 : stats.averageRating.toStringAsFixed(2)),
                       ],
                     ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('今季のお金', style: theme.textTheme.titleSmall),
+                    const SizedBox(height: 6),
+                    // 契約を選ぶ前に見えていないと、来季も同じことになる。
+                    BudgetLines(state: state),
                   ],
                 ),
               ),

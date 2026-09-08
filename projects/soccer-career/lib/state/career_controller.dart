@@ -816,8 +816,14 @@ class CareerController extends ChangeNotifier {
     final state = _state;
     if (state == null) return;
     final moved = accepted.club.name != state.club.name;
+    // 貯蓄が尽きると専属スタッフは全員離れる。黙って消えると、
+    // 翌季から練習が効かなくなった理由が分からない。
+    final hadStaff = !state.staff.isEmpty;
     _state =
         _career.advanceSeason(state, accepted: accepted, bodyPlan: bodyPlan);
+    if (hadStaff && _state!.staff.isEmpty) {
+      _publish(_state!, [Newsroom.staffDismissed(_state!)]);
+    }
     if (moved || accepted.isRenewal) {
       _publish(_state!, [
         Newsroom.transfer(
@@ -843,6 +849,14 @@ class CareerController extends ChangeNotifier {
     if (state == null) return;
     _state = _career.retire(state);
     _inProgress = null;
+    await _persist();
+  }
+
+  /// 生活水準を変える。金の使い道は、毎週ではなく気が向いたときに決める。
+  Future<void> setLifestyle(int level) async {
+    final state = _state;
+    if (state == null) return;
+    state.finances = state.finances.withLifestyle(level);
     await _persist();
   }
 
