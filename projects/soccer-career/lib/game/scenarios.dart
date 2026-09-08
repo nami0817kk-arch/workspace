@@ -22,6 +22,8 @@ class ScenarioOption {
     required this.outcome,
     required this.successText,
     required this.failureText,
+    this.foul = 0,
+    this.preventsGoal = false,
   });
 
   final String label;
@@ -38,6 +40,21 @@ class ScenarioOption {
   final Outcome outcome;
   final String successText;
   final String failureText;
+
+  /// その手の荒さ。0 なら審判は出てこない。
+  ///
+  /// 1.0 なら選んだ時点で必ず警告（止めるための反則）。
+  /// 0〜1 の間なら、失敗したときにその確率で警告。
+  final double foul;
+
+  /// 選べば必ず警告になる手か。
+  bool get isTacticalFoul => foul >= 1.0;
+
+  /// 通れば、これから入るはずだった失点を1つ消す手か。
+  ///
+  /// 止めるための反則が「警告を受けるだけの損な手」にならないように、
+  /// 実際に防いでいるものを効かせる。
+  final bool preventsGoal;
 }
 
 /// その局面が出てくる展開。
@@ -1307,6 +1324,7 @@ class ScenarioPool {
           outcome: Outcome.goal,
           successText: '足を伸ばして奪い、そのまま持ち込んで決めた。',
           failureText: 'かわされ、一気に背後を突かれた。',
+          foul: 0.45,
         ),
       ],
     ),
@@ -1391,6 +1409,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '寄せ切ってボールを奪取。ショートカウンターへ。',
           failureText: 'かわされ、間延びした中盤を使われた。',
+          foul: 0.45,
         ),
         ScenarioOption(
           label: 'パスコースを切って待つ',
@@ -1589,6 +1608,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '振り向く前に潰し、そのまま攻撃に転じた。',
           failureText: 'かわされ、前を向かれた。',
+          foul: 0.45,
         ),
         ScenarioOption(
           label: 'パスコースに立つ',
@@ -1791,6 +1811,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '出どころを読んで奪った。一気に押し込む。',
           failureText: '外され、背後に広大な空間を残した。',
+          foul: 0.45,
         ),
         ScenarioOption(
           label: '奪った勢いのまま運ぶ',
@@ -1860,6 +1881,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '一度かわされてから追い直し、奪い返した。',
           failureText: '二度目も届かず、前を向かれた。',
+          foul: 0.45,
         ),
         ScenarioOption(
           label: '位置を取って通させない',
@@ -1915,6 +1937,43 @@ class ScenarioPool {
         ),
       ],
     ),
+    Scenario(
+      id: 'mid-hold-stop',
+      situation: '1点リードの終盤。中盤で引っ掛けられ、相手が前を向いた。',
+      tempo: ScenarioTempo.hold,
+      options: [
+        ScenarioOption(
+          label: '後ろから引っ掛けて止める',
+          key: AttributeKey.defending,
+          detail: Detail.tackling,
+          difficulty: 32,
+          outcome: Outcome.play,
+          foul: 1,
+          preventsGoal: true,
+          successText: '前を向かせなかった。警告と引き換えに、失点を防いだ。',
+          failureText: '止めきれず、警告だけを受けた。',
+        ),
+        ScenarioOption(
+          label: '正面から奪い返す',
+          key: AttributeKey.defending,
+          detail: Detail.tackling,
+          difficulty: 70,
+          outcome: Outcome.play,
+          foul: 0.4,
+          successText: '足を伸ばして奪い返した。歓声が上がる。',
+          failureText: '足だけが出た。かわされる。',
+        ),
+        ScenarioOption(
+          label: '下がって陣形を整える',
+          key: AttributeKey.defending,
+          detail: Detail.marking,
+          difficulty: 48,
+          outcome: Outcome.play,
+          successText: '引いて構え直した。無理はしない。',
+          failureText: '下がりすぎて、外から放り込まれた。',
+        ),
+      ],
+    ),
   ];
 
   static const List<Scenario> defence = [
@@ -1930,6 +1989,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '足を伸ばして完璧なタックル。ボールだけを奪った。',
           failureText: '簡単にかわされ、決定機を作られた。',
+          foul: 0.45,
         ),
         ScenarioOption(
           label: '間合いを保って遅らせる',
@@ -1948,6 +2008,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '体を当ててタッチラインの外へ追い出した。',
           failureText: '倒してしまい、危険な位置でFKを与えた。',
+          foul: 0.45,
         ),
       ],
     ),
@@ -2483,6 +2544,7 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '完璧なタックル。ボールだけを奪った。',
           failureText: '足に引っ掛けた。危険な位置でのファウル。',
+          foul: 0.45,
         ),
       ],
     ),
@@ -2517,6 +2579,42 @@ class ScenarioPool {
           outcome: Outcome.play,
           successText: '寄せてきた相手を外し、味方を前に進ませた。',
           failureText: '自陣で失った。肝を冷やす場面になった。',
+        ),
+      ],
+    ),
+    Scenario(
+      id: 'def-hold-stop',
+      situation: 'リードして終盤。相手のカウンター。前は無人だ。',
+      tempo: ScenarioTempo.hold,
+      options: [
+        ScenarioOption(
+          label: 'ユニフォームを掴んで止める',
+          key: AttributeKey.defending,
+          detail: Detail.marking,
+          difficulty: 30,
+          outcome: Outcome.play,
+          foul: 1,
+          preventsGoal: true,
+          successText: '掴んで止めた。警告は覚悟の上。失点は防いだ。',
+          failureText: '掴んだが振り切られた。警告だけが残った。',
+        ),
+        ScenarioOption(
+          label: '並走して食らいつく',
+          key: AttributeKey.pace,
+          detail: Detail.sprintSpeed,
+          difficulty: 72,
+          outcome: Outcome.play,
+          successText: '走り切って追いついた。最後は体を入れて止める。',
+          failureText: '離された。数的不利のまま運ばれる。',
+        ),
+        ScenarioOption(
+          label: '中を切って遅らせる',
+          key: AttributeKey.defending,
+          detail: Detail.interceptions,
+          difficulty: 56,
+          outcome: Outcome.play,
+          successText: '外へ追い出した。味方が戻る時間を作れた。',
+          failureText: '中を通された。危ない場面になった。',
         ),
       ],
     ),

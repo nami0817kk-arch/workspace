@@ -169,7 +169,7 @@ class Development {
     final gained = switch (appearance) {
       Appearance.start => 3,
       Appearance.sub => 1,
-      Appearance.benched || Appearance.injured => 0,
+      Appearance.benched || Appearance.injured || Appearance.suspended => 0,
     };
     if (gained == 0) {
       return copyWith(plateau: max(0, plateau - 1));

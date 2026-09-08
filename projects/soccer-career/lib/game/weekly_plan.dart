@@ -54,6 +54,14 @@ class WeekPlan {
   static const int tiredCondition = 48;
 
   static WeekPlan of(CareerState state) {
+    if (state.suspended) {
+      return WeekPlan(
+        focus: WeekFocus.injured,
+        headline: '出場停止',
+        reason: 'あと${state.suspension}試合は出られない。'
+            '練習はできるので、戻ったときのために積んでおく。',
+      );
+    }
     if (state.injured) {
       final injury = state.injury!;
       return WeekPlan(
@@ -198,6 +206,7 @@ class SelectionOutlook {
         Appearance.sub => '途中出場の見込み',
         Appearance.benched => 'ベンチ外の見込み',
         Appearance.injured => '出られない',
+        Appearance.suspended => '出場停止',
       };
 
   /// なぜそうなるのか。数字で書く。
