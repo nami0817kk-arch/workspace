@@ -19,6 +19,7 @@ from .script_model import Scene, Script
 
 # ショートの上限。ぎりぎりを狙うと音声の長さのぶれで超える
 MAX_SECONDS = 58.0
+SHORT_SPEED = 1.1      # ショートの話速の倍率。本編は変えない
 SIZE = (1080, 1920)
 
 
@@ -46,7 +47,12 @@ def portrait(config: ProjectConfig) -> ProjectConfig:
         title_size=max(56, int(config.video.title_size * 0.62)),
     )
     titles = replace(config.titles, intro=0.0, chapter=0.0)
-    return replace(config, video=video, titles=titles)
+    # **ショートは少し速く読む**（2026-09-08）。参考は反応1件3秒台で、
+    # 9/7 に Gemini に聞いた答えでも「1件3〜4秒に詰める」が2番目だった。
+    # 本編の話速（1.0〜1.05）は参考と同じなので触らず、ショートだけ上げる
+    cast = {key: replace(member, speed=round(member.speed * SHORT_SPEED, 3))
+            for key, member in config.cast.items()}
+    return replace(config, video=video, titles=titles, cast=cast)
 
 
 def trim(script: Script, section: str = "", max_seconds: float = MAX_SECONDS) -> Script:
