@@ -147,3 +147,24 @@ def test_題材名でまとめサイトの記事を探す():
     assert len(hits) == len(reactions.SEARCH_SITES)        # サイトごとに1件（重複は落ちる）
     assert all("久保建英" in title for _, title in hits)
     assert all(url.endswith("/archives/111.html") for url, _ in hits)
+
+
+def test_語が全部当たる記事を優先する():
+    """「プレミア 順位」で「プレミア」だけ当たる遠藤航のスレを選んでいた（2026-09-09）。"""
+    from src import reactions
+
+    class _Resp:
+        def __init__(self, text):
+            self.text = text
+
+    class _Session:
+        def get(self, url, **kw):
+            host = url.split("/")[2]
+            return _Resp(
+                f'<a href="https://{host}/archives/900.html">遠藤航、プレミアのCL登録から外れる</a>'
+                f'<a href="https://{host}/archives/100.html">プレミア第3節の順位表がこちら</a>'
+            )
+
+    hits = reactions.find("プレミア 順位", _Session())
+    assert hits and all("順位" in title for _, title in hits)
+    assert all(url.endswith("/archives/100.html") for url, _ in hits)

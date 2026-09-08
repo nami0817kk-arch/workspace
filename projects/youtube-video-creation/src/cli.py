@@ -299,6 +299,8 @@ def main(argv: list[str] | None = None) -> int:
     p_table.add_argument("league", help="england / spain / germany / italy / france / netherlands")
     p_table.add_argument("--top", type=int, default=10, help="載せる順位（既定10）")
     p_table.add_argument("--out", default="", help="画像の書き出し先（省略すると書かない）")
+    p_table.add_argument("--note", default="",
+                         help="定型シリーズの取材メモ（YAML）をこのパスに書く（2026-09-09）")
 
     # 数字の図。**試合映像の代わりになる下地**（2026-09-07）
     p_stat = sub.add_parser(
@@ -633,6 +635,12 @@ def _cmd_reactions(args, config) -> int:
                     n = -1
                 if n > best_n:
                     best, best_n = url, n
+            if best_n <= 0:
+                # 見つかっても書き込みが読めない（画像だけの記事や古い作り）。
+                # **無理に埋めない。**反応が取れなければ節ごと落とす（docs/research.md）
+                print("見つかった記事はどれも書き込みが読めません。"
+                      "反応の節は落とすか、別の題材語で探してください", file=sys.stderr)
+                return 1
             args.url = best
             print(f"→ 書き込みが最も多い記事（{best_n}件）を使います: {best}")
     if not args.url:
@@ -1799,6 +1807,17 @@ def _cmd_standings(args, config) -> int:
         out = standings_mod.board(table, _resolve(args.out), config, args.top)
         print(f"\n画像: {out}")
         print("台本の frontmatter に thumbnail_photo: として指定できます")
+    if args.note:
+        # 定型シリーズの取材メモ。反応の節は空なので、reactions --find で埋めてから draft
+        from datetime import date as _date
+
+        today = _date.today()
+        stamp = f"{today.year}年{today.month}月{today.day}日"
+        note_path = Path(args.note)
+        note_path.parent.mkdir(parents=True, exist_ok=True)
+        note_path.write_text(standings_mod.note(table, stamp, args.top), encoding="utf-8")
+        print(f"\n取材メモ: {note_path}")
+        print(f"次: reactions --find \"{table.name_ja} 順位表\" --say で反応の節を埋める")
     return 0
 
 

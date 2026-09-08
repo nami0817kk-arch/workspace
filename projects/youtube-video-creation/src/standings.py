@@ -178,3 +178,117 @@ def board(table: Table, out_path: Path, config: ProjectConfig, top: int = 10) ->
         "勝点", [(r.team, float(r.points)) for r in table.rows[:top]], "FotMob",
     )
     return out_path
+
+
+# リーグ公式の順位表。確定の出典（official: true）に使う（2026-09-09）
+OFFICIAL_TABLES = {
+    "england": "https://www.premierleague.com/tables",
+    "spain": "https://www.laliga.com/en-GB/laliga-easports/standing",
+    "germany": "https://www.bundesliga.com/en/bundesliga/table",
+    "italy": "https://www.legaseriea.it/en/serie-a/classifica",
+    "france": "https://ligue1.com/ranking",
+    "netherlands": "https://eredivisie.nl/en-us/standings",
+}
+FOTMOB_LEAGUE = "https://www.fotmob.com/leagues/{id}/table"
+
+
+def note(table: Table, date: str, top: int = 10) -> str:
+    """定型シリーズ「順位表」の取材メモ（YAML）を組む（2026-09-09）。
+
+    9/7 に「毎節この動画がある」型を持つと決めたが、1本も作っていなかった。
+    Gemini（2026-09-08）の答えでも定型シリーズが最優先だった。
+    数字は表からそのまま。**反応の節は空で、`reactions --find` で埋める。**
+    タイトルは答え（首位）を書かず、動きを問う形にする（数字入り64%の反省）。
+    """
+    import yaml
+
+    rows = table.rows
+    first, second = rows[0], rows[1]
+    gap = first.points - second.points
+    bottom = rows[-3:]
+    league_ja = table.name_ja
+    mw = table.matchweek
+    official = OFFICIAL_TABLES.get(table.league, "")
+    fotmob = FOTMOB_LEAGUE.format(id=LEAGUE_IDS.get(table.league, ""))
+    sources = [u for u in (official, fotmob) if u]
+
+    def say_top(n: int) -> list[str]:
+        lines = []
+        for r in rows[:n]:
+            lines.append(f"{r.rank}位は{japanese(r.team)}、{r.played}試合で勝点{r.points}です。")
+        return lines
+
+    data = {
+        "format": "news",
+        "slot": f"standings_{table.league}",
+        "date": date,
+        "theme": {
+            "id": f"standings_{table.league}_{mw}",
+            "league": table.league,
+            "kind": "match",
+            "topic": f"{league_ja}順位表",
+            "title": f"{league_ja}第{mw}節の順位表、順位が動いたのはどこか",
+            "hook": f"第{mw}節が終わりました。上位と下位の並びを、数字で見ておきます。",
+            "question": f"第{mw}節を終えて、{league_ja}の上位と下位はどう並んだのか",
+        },
+        "thumbnail": {
+            "line1": f"第{mw}節終了時点",
+            "line2": f"首位 {japanese(first.team)} 勝点{first.points}",
+            "tags": [league_ja, "順位表"],
+            "points": [f"首位との差 ●点", f"降格圏に ●●●"],
+        },
+        "sections": [
+            {
+                "id": "table",
+                "heading": "順位表はこうなった",
+                "tier": "確定",
+                "telop": f"{league_ja} 第{mw}節終了時点",
+                "say": [
+                    f"第{mw}節を終えた{league_ja}の順位表です。",
+                    f"首位は{japanese(first.team)}で勝点{first.points}。"
+                    f"2位の{japanese(second.team)}との差は{gap}点です。",
+                ],
+                "official": True,
+                "sources": sources,
+                "card": card(table, top),
+            },
+            {
+                "id": "top",
+                "heading": "上位はどう動いたか",
+                "tier": "確定",
+                "telop": f"上位{min(5, len(rows))}チーム",
+                "say": say_top(5),
+                "official": True,
+                "sources": sources,
+            },
+            {
+                "id": "bottom",
+                "heading": "下位はどこか",
+                "tier": "確定",
+                "telop": "降格圏",
+                "say": [
+                    f"降格圏は{'、'.join(japanese(r.team) for r in bottom)}。",
+                    f"{len(rows)}位の{japanese(bottom[-1].team)}は{bottom[-1].played}試合で"
+                    f"勝点{bottom[-1].points}、得失点差は{bottom[-1].diff:+d}です。",
+                ],
+                "official": True,
+                "sources": sources,
+            },
+            {
+                "id": "reactions",
+                "heading": "順位表を見た声",
+                "tier": "未確認",
+                "telop": "ネットの反応",
+                "say": [
+                    "この順位表に、ネットではこんな声が出ています。",
+                    # ここから下は `reactions --find "<リーグ名> 順位表"` の出力で埋める
+                ],
+                "official": False,
+                "sources": [],
+            },
+        ],
+    }
+    head = (f"# {league_ja} 第{mw}節の順位表（定型シリーズ）。数字は {', '.join(sources)} から。"
+            + chr(10) + "# 反応の節は `reactions --find` の出力で埋めてから draft する。"
+            + chr(10))
+    return head + yaml.safe_dump(data, allow_unicode=True, sort_keys=False, width=100)
