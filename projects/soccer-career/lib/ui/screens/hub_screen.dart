@@ -11,6 +11,7 @@ import '../../models/competition.dart';
 import '../../game/match_engine.dart';
 import '../../game/newsroom.dart';
 import '../../game/ranking.dart';
+import '../../game/weekly_plan.dart';
 import '../../models/development.dart';
 import '../../models/news.dart';
 import '../../models/entourage.dart';
@@ -318,6 +319,7 @@ class _MatchTab extends StatelessWidget {
           _NextMatchCard(
             state: state,
             stake: controller.stake,
+            outlook: controller.outlook,
             onPlay: onPlay,
             onSimulate: onSimulate,
             onSimulateUntilEvent: onSimulateUntilEvent,
@@ -389,6 +391,7 @@ class _NextMatchCard extends StatelessWidget {
   const _NextMatchCard({
     required this.state,
     required this.stake,
+    required this.outlook,
     required this.onPlay,
     required this.onSimulate,
     required this.onSimulateUntilEvent,
@@ -399,6 +402,9 @@ class _NextMatchCard extends StatelessWidget {
 
   /// その試合が持つ意味（ダービー・首位攻防など）。
   final FixtureStake stake;
+
+  /// 次節の起用の見通し。落ちた理由が分からないまま数試合過ぎるのが一番きつい。
+  final SelectionOutlook? outlook;
 
   final VoidCallback onPlay;
   final VoidCallback onSimulate;
@@ -444,6 +450,43 @@ class _NextMatchCard extends StatelessWidget {
                       'vs ${state.opponentFor(state.matchday).name}',
               style: theme.textTheme.titleLarge,
             ),
+            if (!state.pendingInternational && outlook != null) ...[
+              const SizedBox(height: 8),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2, right: 6),
+                    child: Icon(
+                      switch (outlook!.likely) {
+                        Appearance.start => Icons.check_circle_outline,
+                        Appearance.sub => Icons.timelapse,
+                        _ => Icons.remove_circle_outline,
+                      },
+                      size: 16,
+                      color: outlook!.likely == Appearance.start
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(outlook!.headline,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                                color: outlook!.likely == Appearance.start
+                                    ? theme.colorScheme.primary
+                                    : theme.colorScheme.onSurface)),
+                        Text(outlook!.reason,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
             if (!state.pendingInternational && stake.isSpecial) ...[
               const SizedBox(height: 8),
               Container(
@@ -632,6 +675,8 @@ class _TrainingTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
       children: [
+        _WeekPlanCard(state: state, controller: controller),
+        const SizedBox(height: 16),
         if (state.injured)
           Card(
             color: theme.colorScheme.errorContainer,
@@ -1293,6 +1338,74 @@ class _DevelopmentCard extends StatelessWidget {
       ),
     );
   }
+}
+
+/// 今週なにをするか。次の相手・監督の期待・体の状態を1か所に集める。
+///
+/// 練習を決めるのは育成タブなのに、相手はクラブタブ、監督の期待は試合タブに
+/// 出ていた。決めるのは1つなので、決める場所に材料を持ってくる。
+class _WeekPlanCard extends StatelessWidget {
+  const _WeekPlanCard({required this.state, required this.controller});
+
+  final CareerState state;
+  final CareerController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final plan = WeekPlan.of(state);
+    final warn = plan.focus == WeekFocus.rest ||
+        plan.focus == WeekFocus.injured;
+    final onColor =
+        warn ? theme.colorScheme.onErrorContainer : theme.colorScheme.onSurface;
+    final muted = theme.textTheme.bodySmall?.copyWith(
+        color: warn
+            ? theme.colorScheme.onErrorContainer
+            : theme.colorScheme.onSurfaceVariant);
+
+    return Card(
+      color: warn ? theme.colorScheme.errorContainer : null,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(_iconOf(plan.focus), size: 18, color: onColor),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text('今週  ${plan.headline}',
+                      style: theme.textTheme.titleSmall
+                          ?.copyWith(color: onColor)),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Text(plan.reason, style: muted),
+            if (plan.suggested != null && plan.suggested != state.menu) ...[
+              const SizedBox(height: 10),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: OutlinedButton(
+                  onPressed: () => controller.setMenu(plan.suggested!),
+                  child: Text('${plan.suggested!.label}にする'),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  static IconData _iconOf(WeekFocus focus) => switch (focus) {
+        WeekFocus.injured => Icons.healing,
+        WeekFocus.rest => Icons.bedtime,
+        WeekFocus.matchup => Icons.sports_soccer,
+        WeekFocus.objective => Icons.flag,
+        WeekFocus.steady => Icons.fitness_center,
+      };
 }
 
 /// クラブでの立ち位置。監督・方針・同僚・環境・同期。

@@ -7,6 +7,7 @@ import 'package:soccer_career/game/career_engine.dart';
 import 'package:soccer_career/game/formulas.dart';
 import 'package:soccer_career/game/match_engine.dart';
 import 'package:soccer_career/game/ranking.dart';
+import 'package:soccer_career/game/weekly_plan.dart';
 import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/attributes.dart';
 import 'package:soccer_career/models/career.dart';
@@ -223,6 +224,63 @@ void main() {
     // 今週の練習の対象は、まだ動いていなくても必ず出す。
     expect(find.text(AttributeKey.passing.label), findsOneWidget);
     expect(find.textContaining('回勝負して'), findsWidgets);
+  });
+
+  testWidgets('育成のタブの一番上に、今週の手がかりが出る', (tester) async {
+    // 練習を決める場所に、相手と体の状態を持ってくる。
+    final controller = await newCareer();
+    await pumpHub(tester, controller, height: 2400);
+
+    await tester.tap(find.widgetWithText(Tab, '育成'));
+    await tester.pumpAndSettle();
+
+    final state = controller.state!;
+    final plan = WeekPlan.of(state);
+    expect(find.textContaining(plan.headline), findsOneWidget);
+    expect(find.text(plan.reason), findsOneWidget);
+    // 次の相手の名前が、育成のタブから読める。
+    expect(plan.headline,
+        contains(state.opponentFor(state.matchday).name));
+  });
+
+  testWidgets('次の試合に、出場の見通しが出る', (tester) async {
+    final controller = await newCareer();
+    for (var i = 0; i < 6; i++) {
+      await controller.simulateMatch();
+    }
+    await pumpHub(tester, controller, height: 2400);
+
+    final outlook = controller.outlook!;
+    expect(find.text(outlook.headline), findsOneWidget);
+    expect(find.text(outlook.reason), findsOneWidget);
+    // 判定に使う線が書いてある。
+    expect(outlook.reason, contains('先発の線'));
+  });
+
+  testWidgets('試合の画面で、成功率の内訳が読める', (tester) async {
+    final controller = await newCareer();
+    controller.startNextMatch();
+    final match = controller.currentMatch!;
+
+    tester.view.physicalSize = const Size(390, 1400);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(MaterialApp(
+      theme: ThemeData(useMaterial3: true),
+      home: MatchScreen(controller: controller),
+    ));
+    await tester.pumpAndSettle();
+
+    // どの手にも同じだけ効くものは、局面の側に1度だけ。
+    final shared = match.sharedFactors.where((f) => f.notable).toList();
+    expect(shared, isNotEmpty);
+    for (final f in shared.take(2)) {
+      expect(
+        find.textContaining(f.label),
+        findsWidgets,
+        reason: '${f.label} が局面に出ていない',
+      );
+    }
   });
 
   testWidgets('終わった試合を開くと、その中身が読める', (tester) async {

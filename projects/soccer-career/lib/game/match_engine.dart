@@ -62,6 +62,26 @@ class ScenarioResolution {
   bool get isAssist => success && outcome == Outcome.assist;
 }
 
+/// 成功率を作っている要素ひとつ。
+///
+/// 画面に出すためだけの飾りではない。[MatchInProgress.chanceFor] は
+/// 地力とこれらの合計で出す。別々に書くと、片方を触ったときに
+/// 表示と判定がずれる（このゲームで一番やってはいけないこと）。
+class ChanceFactor {
+  const ChanceFactor(this.label, this.value);
+
+  /// 何が効いているのか。特性名・個人技名・相手の戦い方など。
+  final String label;
+
+  /// 成功率への増減。0.05 なら +5%。
+  final double value;
+
+  int get percent => (value * 100).round();
+
+  /// 表示に値する大きさか。1%未満は並べても読めない。
+  bool get notable => percent.abs() >= 1;
+}
+
 /// 試合1つぶんの進行状態。UI はこれを介して局面を1つずつ進める。
 class MatchInProgress {
   MatchInProgress({
@@ -300,8 +320,26 @@ class MatchInProgress {
   /// 「70%と書いてあったのに」という不信感になる。
   double chanceFor(ScenarioOption option) {
     if (isFinished) return 0;
-    final base = successChance(attributeFor(option), option.difficulty);
-    final trait = player.traits.chanceBonus(TraitContext(
+    final total = factorsFor(option)
+        .fold<double>(baseChanceFor(option), (sum, f) => sum + f.value);
+    return total.clamp(0.05, 0.95);
+  }
+
+  /// 能力と難度だけで決まる地力。ここに増減が乗る。
+  double baseChanceFor(ScenarioOption option) =>
+      successChance(attributeFor(option), option.difficulty);
+
+  /// その手の成功率を動かしているもの。大きい順に並べて返す。
+  ///
+  /// 特性・個人技・型・相手の戦い方・相方・気持ち・逆足は、これまで
+  /// 数字の中に溶けていて画面に出ていなかった。育てたものが試合の
+  /// どこで効いているのかが見えないと、育成と試合が別のゲームに見える。
+  List<ChanceFactor> factorsFor(ScenarioOption option) {
+    if (isFinished) return const [];
+    final factors = <ChanceFactor>[];
+
+    // 生まれ持った特性。効いている特性だけを名前で出す。
+    final context = TraitContext(
       minute: currentMinute,
       home: home,
       outcome: option.outcome,
@@ -315,50 +353,95 @@ class MatchInProgress {
       margin: margin,
       weakFoot: weakFootMoment && _usesFoot(option),
       abroad: club.countryId != player.nationality.primary,
-    ));
-    final condition = conditionModifier(player.condition);
+    );
+    for (final trait in player.traits) {
+      final value = trait.chanceBonus(context);
+      if (value != 0) factors.add(ChanceFactor(trait.label, value));
+    }
+
+    factors.add(
+        ChanceFactor('コンディション', conditionModifier(player.condition)));
+
     // 相手の格。上のリーグほど同じ手が通らなくなる。
-    final level = (Formulas.opponentBaseline - opponent.strength) *
-        Formulas.opponentChanceSlope;
+    factors.add(ChanceFactor(
+      opponent.strength >= club.strength ? '格上の相手' : '格下の相手',
+      (Formulas.opponentBaseline - opponent.strength) *
+          Formulas.opponentChanceSlope,
+    ));
+
     // 自信は小さく効かせる。性格で試合が決まると能力を伸ばす意味が薄れる。
-    final personality = player.personality.chanceModifier;
+    factors.add(ChanceFactor('自信', player.personality.chanceModifier));
 
     // 積み上げてきたもの。型・個人技・相手への慣れ。
-    final identity = development.identityBonusFor(option.key);
-    final signature = development.signatureBonus(option.key, option.detail);
-    final matchup = opponentStyle.hardFor == option.key
-        ? -0.05 + development.adaptationFor(opponentStyle)
-        : 0.0;
+    if (development.identity != null) {
+      factors.add(ChanceFactor(development.identityLabel,
+          development.identityBonusFor(option.key)));
+    }
+    for (final entry
+        in development.signatureFactors(option.key, option.detail).entries) {
+      factors.add(ChanceFactor(entry.key.label, entry.value));
+    }
+    if (opponentStyle.hardFor == option.key) {
+      factors.add(ChanceFactor(
+          opponentStyle.label, -0.05 + development.adaptationFor(opponentStyle)));
+    }
 
     // 大一番の重圧。経験と自信で薄まり、若く自信の無い選手ほど呑まれる。
-    final pressure = bigMatch
-        ? -0.05 +
+    if (bigMatch) {
+      factors.add(ChanceFactor(
+        '大一番',
+        -0.05 +
             development.composure +
-            (player.personality.confidence - 10) * 0.004
-        : 0.0;
+            (player.personality.confidence - 10) * 0.004,
+      ));
+    }
 
     // 相方との呼吸。パスを受ける側が動いてくれるかどうか。
-    final ally = option.outcome == Outcome.assist ? allyBonus : 0.0;
+    if (option.outcome == Outcome.assist && allyBonus != 0) {
+      factors.add(ChanceFactor('相方との呼吸', allyBonus));
+    }
+
+    factors.add(ChanceFactor('気持ち・波', moodBonus));
 
     // 逆足。利き足でないほうで対応する局面は、精度がそのまま出る。
-    final weakFoot = weakFootMoment && _usesFoot(option)
-        ? -(5 - player.physique.weakFoot) * 0.03
-        : 0.0;
+    if (weakFootMoment && _usesFoot(option)) {
+      factors.add(ChanceFactor('逆足', -(5 - player.physique.weakFoot) * 0.03));
+    }
 
-    return (base +
-            trait +
-            condition +
-            personality +
-            level +
-            identity +
-            signature +
-            matchup +
-            pressure +
-            ally +
-            moodBonus +
-            weakFoot)
-        .clamp(0.05, 0.95);
+    factors.sort((a, b) => b.value.abs().compareTo(a.value.abs()));
+    return factors;
   }
+
+  /// どの手にも同じだけ効いているもの。相手の格・コンディション・気持ちなど。
+  ///
+  /// 手を選ぶときの材料にはならないので、選択肢の側には出さない。
+  /// 「今日はこういう日だ」として1度だけ見せる。
+  List<ChanceFactor> get sharedFactors {
+    if (isFinished) return const [];
+    final options = current.options;
+    final byOption = [for (final o in options) _factorMap(o)];
+    final result = <ChanceFactor>[];
+    for (final factor in factorsFor(options.first)) {
+      if (byOption.every((m) => m[factor.label] == factor.value)) {
+        result.add(factor);
+      }
+    }
+    return result;
+  }
+
+  /// その手にだけ効いているもの。手を選ぶときに見るのはこちら。
+  List<ChanceFactor> distinctFactorsFor(ScenarioOption option) {
+    if (isFinished) return const [];
+    final shared = sharedFactors.map((f) => f.label).toSet();
+    return [
+      for (final f in factorsFor(option))
+        if (!shared.contains(f.label)) f,
+    ];
+  }
+
+  Map<String, double> _factorMap(ScenarioOption option) => {
+        for (final f in factorsFor(option)) f.label: f.value,
+      };
 
   /// 足で扱う手か。ヘディングと守備の局面に逆足は関係しない。
   static bool _usesFoot(ScenarioOption option) =>
