@@ -125,6 +125,19 @@ keyPassword=<鍵のパスワード>
 > 以下のコマンドも同じ要領で、`openssl` を
 > `& "C:\Program Files\Git\usr\bin\openssl.exe"` に読み替えてください。
 > Git Bash を使う場合は、書いてあるとおりそのまま動きます。
+> 
+> **ただし `-legacy` を使う 4-3 の pkcs12 だけは `mingw64\bin` の方を使うこと。**
+> `usr\bin\openssl.exe` は legacy プロバイダの置き場所を POSIX パス
+> (`/usr/lib/openssl/ossl-modules`)で探すため、PowerShell から呼ぶと
+> `unable to load provider legacy` で止まります(実際に詰まった)。
+> `mingw64\bin\openssl.exe` なら Windows 側の
+> `C:\Program Files\Git\mingw64\lib\ossl-modules` を見るので通ります。
+> 
+> ```powershell
+> & "C:\Program Files\Git\mingw64\bin\openssl.exe" list -providers -provider legacy
+> ```
+> 
+> `status: active` が出れば、その openssl で 4-3 を実行できます。
 
 ### 4-1. 秘密鍵と CSR を作る
 
@@ -165,6 +178,13 @@ openssl pkcs12 -export \
 base64 -w 0 ios_distribution.p12 > ios_cert.base64.txt
 ```
 
+> PowerShell では `base64` コマンドが無いので、Base64 化はこう書く。
+> 
+> ```powershell
+> [Convert]::ToBase64String([IO.File]::ReadAllBytes("ios_distribution.p12")) |
+>   Set-Content -NoNewline ios_cert.base64.txt
+> ```
+
 > `-legacy` は OpenSSL 3.x で必要です。これを付けないと、macOS の
 > `security import` が読めない暗号化方式（AES-256-CBC）で書き出され、
 > CI の証明書インポートが失敗します。
@@ -177,8 +197,12 @@ base64 -w 0 ios_distribution.p12 > ios_cert.base64.txt
    - このアプリの iOS 側バンドル ID です。Android 側の applicationId も
      同じ値にしてあります（アンダースコアを使わない名前にしたため、
      両プラットフォームで揃えられる）。
-4. Capabilities は何も追加しなくて構いません（このアプリは
-   ネットワーク通信も通知も課金も使いません）
+4. Capabilities は何も追加しなくて構いません
+   - このアプリは広告(AdMob)で通信し、アプリ内課金(サポーター)も持って
+     いますが、**どちらも App ID の Capabilities で有効化する項目では
+     ありません**。In-App Purchase は全 App ID で既定で使えます。
+   - プッシュ通知・Sign in with Apple・iCloud などは使っていないので、
+     追加すると「使っていない権限がある」と指摘される側になります。
 
 ### 4-5. プロビジョニングプロファイルを作る
 
