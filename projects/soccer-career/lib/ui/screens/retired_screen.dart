@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../player_portrait.dart';
 import '../readable_width.dart';
 import '../../models/life.dart';
 import '../../state/career_controller.dart';
@@ -64,6 +65,15 @@ class _RetiredScreenState extends State<RetiredScreen> {
                   : '${state.player.name}「${state.nickname}」',
               style: theme.textTheme.headlineSmall,
             ),
+            Center(
+              child: PlayerPortrait(
+                look: state.player.look,
+                club: state.club,
+                squadNumber: state.squadNumber,
+                size: 96,
+              ),
+            ),
+            const SizedBox(height: 12),
             Text(
               '${state.player.positionLabel}  ${seasons.length}シーズン  '
               '${state.player.age}歳で引退',

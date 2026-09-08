@@ -23,6 +23,7 @@ import '../models/life_event.dart';
 import '../models/news.dart';
 import '../models/personality.dart';
 import '../models/traits.dart';
+import '../models/look.dart';
 import '../models/physique.dart';
 import '../models/player.dart';
 import '../models/season.dart';
@@ -398,6 +399,9 @@ class CareerController extends ChangeNotifier {
     required Agent agent,
     Side side = Side.center,
     Physique? physique,
+    PlayerLook? look,
+    int? squadNumber,
+    String? countryId,
     Map<AttributeKey, int> tweaks = const {},
   }) async {
     _state = _career.startCareer(
@@ -407,6 +411,9 @@ class CareerController extends ChangeNotifier {
       agent: agent,
       side: side,
       physique: physique,
+      look: look,
+      squadNumber: squadNumber,
+      countryId: countryId,
       tweaks: tweaks,
     );
     _state!.beginSeasonRecord();

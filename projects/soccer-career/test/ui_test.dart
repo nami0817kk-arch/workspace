@@ -15,6 +15,7 @@ import 'package:soccer_career/models/training.dart';
 import 'package:soccer_career/main.dart';
 import 'package:soccer_career/state/career_controller.dart';
 import 'package:soccer_career/ui/readable_width.dart';
+import 'package:soccer_career/models/look.dart';
 import 'package:soccer_career/models/physique.dart';
 import 'package:soccer_career/ui/screens/create_player_screen.dart';
 import 'package:soccer_career/ui/screens/hub_screen.dart';
@@ -40,6 +41,7 @@ Future<CareerController> newCareer({int seed = 1, int age = 20}) async {
     repository: _MemoryRepository(),
     careerEngine: CareerEngine(random: Random(seed)),
     matchEngine: MatchEngine(random: Random(seed)),
+    random: Random(seed),
   );
   await controller.startCareer(
     name: 'テスト',
@@ -250,6 +252,7 @@ void main() {
       repository: _MemoryRepository(),
       careerEngine: CareerEngine(random: Random(1)),
       matchEngine: MatchEngine(random: Random(1)),
+      random: Random(1),
     );
     tester.view.physicalSize = const Size(390, 3000);
     tester.view.devicePixelRatio = 1.0;
@@ -271,6 +274,17 @@ void main() {
     // 身体も決められる。
     expect(find.textContaining('身長'), findsWidgets);
     expect(find.textContaining('体重'), findsWidgets);
+
+    // 見た目と背番号は畳んである。
+    expect(find.text('見た目と背番号'), findsOneWidget);
+    await tester.tap(find.text('見た目と背番号'));
+    await tester.pumpAndSettle();
+    expect(find.text('髪型'), findsOneWidget);
+    expect(find.widgetWithText(ChoiceChip, HairStyle.curly.label),
+        findsOneWidget);
+
+    // 出身国も選べる。
+    expect(find.text('出身国'), findsOneWidget);
 
     // 割り振りは、増やしたぶんを削らないと釣り合わない。
     expect(find.text('割り振りは釣り合っている。'), findsOneWidget);

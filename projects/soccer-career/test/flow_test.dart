@@ -30,6 +30,9 @@ CareerController controller({int seed = 1}) => CareerController(
       repository: _MemoryRepository(),
       careerEngine: CareerEngine(random: Random(seed)),
       matchEngine: MatchEngine(random: Random(seed)),
+      // 種を渡さないと、出場機会の判断と出来事だけが実行ごとに変わる。
+      // 同じ種で違う結果が出るので、たまに落ちるテストになっていた。
+      random: Random(seed),
     );
 
 /// 1試合を最後まで進める。局面は常に最初の選択肢を選ぶ。

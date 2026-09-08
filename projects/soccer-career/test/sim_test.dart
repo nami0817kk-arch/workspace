@@ -379,6 +379,7 @@ void main() {
         repository: _MemoryRepository(),
         careerEngine: CareerEngine(random: Random(11)),
         matchEngine: MatchEngine(random: Random(11)),
+        random: Random(11),
       );
       await c.startCareer(
           name: 'S', position: Position.st, age: 19, agent: Agent.pool.first);
@@ -394,6 +395,7 @@ void main() {
         repository: _MemoryRepository(),
         careerEngine: CareerEngine(random: Random(12)),
         matchEngine: MatchEngine(random: Random(12)),
+        random: Random(12),
       );
       await c.startCareer(
           name: 'S', position: Position.cm, age: 19, agent: Agent.pool.first);
