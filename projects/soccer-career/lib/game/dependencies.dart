@@ -31,6 +31,10 @@ class Dependencies {
 
     Detail.jumping: [Detail.strength],
 
+    // セービングにも土台を置く。無いと GK だけ、総合力の6割を占める
+    // 能力が何にも縛られず伸び、ピークが他より3〜4高くなっていた
+    // （200キャリアで GK のポテンシャル到達が90%、他は20〜45%）。
+    Detail.reflexes: [Detail.agility, Detail.jumping],
     Detail.handling: [Detail.reflexes, Detail.strength],
     Detail.gkPositioning: [Detail.reflexes, Detail.vision],
   };

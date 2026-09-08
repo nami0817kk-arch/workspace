@@ -758,6 +758,10 @@ class CareerController extends ChangeNotifier {
         setPieces: week.setPieces,
         physique: week.physique,
       );
+      // 完全に休んだ週だけ、溜まった疲労が抜ける。リカバリーでは抜けない。
+      if ((tired ? TrainingMenu.rest : state.menu) == TrainingMenu.rest) {
+        state.fatigue = state.fatigue.add(-Formulas.restFatigueRelief);
+      }
       // 伸びが続けば、どこかで足踏みが来る。
       state.development = state.development.afterGrowth(
         grew: _sumOf(week.attributes) > before,

@@ -525,6 +525,8 @@ class MatchInProgress {
     var text = success ? option.successText : option.failureText;
 
     if (success && outcome != Outcome.play) {
+      // 決定機を作った。決まらなくても、無難な手とは違う。
+      delta += Formulas.ratingPerChance;
       final converts = _random.nextDouble() <
           (outcome == Outcome.goal
               ? Formulas.goalConversion
@@ -595,6 +597,7 @@ class MatchInProgress {
   double expectedDelta(ScenarioOption option) {
     final p = chanceFor(option);
     var gain = Formulas.ratingPerSuccess;
+    if (option.outcome != Outcome.play) gain += Formulas.ratingPerChance;
     if (option.outcome == Outcome.goal) {
       gain += Formulas.ratingPerGoal * Formulas.goalConversion;
     }

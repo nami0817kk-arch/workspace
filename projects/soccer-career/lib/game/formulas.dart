@@ -72,6 +72,13 @@ class Formulas {
   static const double ratingPerGoal = 0.95;
   static const double ratingPerAssist = 0.7;
 
+  /// 決定機を作ったぶん。ゴール・アシストの手が通れば、決まらなくても付く。
+  ///
+  /// これが無いと、枠内シュートを GK に止められた手と、無難な横パスが
+  /// 同じ +0.32 になり、攻撃の選手だけ評価点が 6.8〜6.9 に沈んでいた
+  /// （守備の選手には無失点の項があるのに、攻撃の選手には得点しか無かった）。
+  static const double ratingPerChance = 0.06;
+
   /// 守る側の評価。失点の少なさがそのまま点数になる。
   ///
   /// 得点とアシストしか評価点に乗らなかった頃は、GK のキャリア平均が
@@ -225,6 +232,12 @@ class Formulas {
 
   /// 1試合で消耗するコンディション。
   static const int matchConditionCost = 12;
+
+  /// 休養（完全オフ）で抜ける累積疲労。リカバリーでは抜けない。
+  ///
+  /// 無いと、休養はリカバリー（戻りが大きく怪我も減る）の下位互換だった。
+  /// コンディションを戻すならリカバリー、溜まった疲労を抜くなら休養、と分ける。
+  static const int restFatigueRelief = 3;
 
   /// 練習で消耗するコンディション。
   static const int trainingConditionCost = 10;
