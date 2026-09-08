@@ -445,9 +445,12 @@ python -m src.cli reactions --find "久保建英" --say         # まとめサ�
 - `reactions --find` は サカラボ／サカサカ10／footballnet／サムライGOAL の
   `/search?q=` を引き、**書き込みの多い記事**を選んで `say:` の形で出す。
   URL を人が見つけた回しか反応が入らない、をやめた
-- `numbers <URL>` は transfermarkt.jp（素の取得で200・表32個を実測）などの表を
-  行ごとの文字に起こして `research/material/numbers.md` に追記する。fbref・sofascore・
-  worldfootball は 403 なので読まない
+- `numbers <URL>` は transfermarkt.jp などの表を行ごとの文字に起こして
+  `research/material/numbers.md` に追記する。fbref・sofascore・worldfootball は 403 なので
+  読まない。**限界（2026-09-08 実測）**: transfermarkt.jp の選手の成績表は素の HTML に
+  入っておらず（サイドバーの市場価値ランキングなど2表だけ）、`/leistungsdaten` も
+  `?saison=` も同じだった。成績はいまのところブラウザで開いて写す（今日のプレミア
+  移籍はそうした）。クラブの加入・退団の一覧のように HTML に載っている表は取れる
 - `draft` は量のヒントを出す: 他人の声10件・数字8行・出典5本3媒体が目安
 
 ### 型を選ぶ（format）

@@ -29,3 +29,20 @@ def test_読めないサイトは止める():
     assert not numbers.readable("https://fbref.com/en/players/x")   # 実測 403
     with pytest.raises(numbers.NumbersError):
         numbers.fetch("https://fbref.com/en/players/x")
+
+
+def test_セルの中の入れ子の表で外の表が切れない():
+    """transfermarkt は選手のセルに小さな表を入れる。外の表が2行で切れていた。"""
+    page = (
+        "<table class=\"items\"><tr><th>#</th><th>選手</th><th>市場価値</th></tr>"
+        "<tr><td>1</td><td><table class=\"inline-table\"><tr><td>ハーランド</td></tr>"
+        "<tr><td>CF</td></tr></table></td><td>220m</td></tr>"
+        "<tr><td>2</td><td><table class=\"inline-table\"><tr><td>ヤマル</td></tr>"
+        "<tr><td>RW</td></tr></table></td><td>200m</td></tr>"
+        "<tr><td>3</td><td>ムバッペ</td><td>180m</td></tr></table>"
+    )
+    tables = numbers.parse(page)
+    assert len(tables) == 1
+    assert len(tables[0].rows) == 4
+    assert tables[0].rows[1] == ["1", "ハーランド CF", "220m"]
+    assert tables[0].rows[3] == ["3", "ムバッペ", "180m"]

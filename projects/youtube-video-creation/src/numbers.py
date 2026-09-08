@@ -65,8 +65,21 @@ def fetch(url: str, session=None) -> str:
     return resp.text
 
 
+_INLINE = re.compile(r"<table[^>]*class=\"[^\"]*inline-table[^\"]*\"[^>]*>(.*?)</table>", re.S | re.I)
+
+
+def _flatten(page: str) -> str:
+    """セルの中の入れ子の表（選手名＋ポジション）を、その文字だけにする。
+
+    transfermarkt は選手のセルに小さな表を入れる。非貪欲の `</table>` で切ると
+    外の表が最初の入れ子で閉じてしまい、どの表も2行しか取れなかった（2026-09-08 実測）。
+    """
+    return _INLINE.sub(lambda m: " " + _clean(m.group(1)) + " ", page)
+
+
 def parse(page: str) -> list[Table]:
     """ページの表を全部、行と列の文字に起こす。空の表と1行の表は落とす。"""
+    page = _flatten(page)
     tables: list[Table] = []
     for found in _TABLE.finditer(page):
         body = found.group(1)
