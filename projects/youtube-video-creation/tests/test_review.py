@@ -536,7 +536,9 @@ def test_語りだけの台本は他人の声で止まる(tmp_path):
 def test_長い引用は刻みで止まる(tmp_path):
     body = GOOD_BODY.replace(
         "ネット民: 完全に別チームだった。",
-        "ネット民: 完全に別のチームになっていて見ていて本当に気持ちがよかった一戦だった。")
+        "ネット民: 完全に別のチームになっていて見ていて本当に気持ちがよかった一戦だったし"
+        "これが続くなら今季は本気で優勝を狙えると思う。")
+    # 上限は45字（2026-09-08 サッカーラボの実測 30〜45字に合わせた）
     result = _by_label(inspect(parse_script(body), _built(tmp_path)))
     assert result["反応の刻み"].ok is False
 
@@ -556,17 +558,10 @@ def test_タイトルの一部だけ読んでも通らない(tmp_path):
     assert result["1行目"].ok is False
 
 
-def test_長いまとめは止まる(tmp_path):
-    body = GOOD_BODY.replace(
-        "解説: 中盤の改善が答えです。",
-        """解説: 中盤の改善が答えです。
-
-解説: つまり今日の試合は中盤の入れ替えで決まったということになります。
-
-解説: 次の焦点は来週の一戦です。動きがあり次第またお伝えします。""")
-    result = _by_label(inspect(parse_script(body), _built(tmp_path)))
-    assert result["まとめの長さ"].ok is False
-
+def test_まとめの長さはもう見ない(tmp_path):
+    """2026-09-08 ユーザー「まとめはいらない」。news にもまとめの節が無いので点検しない。"""
+    result = _by_label(inspect(parse_script(GOOD_BODY), _built(tmp_path)))
+    assert "まとめの長さ" not in result
 
 def test_縦型には構成の点検を当てない(tmp_path, monkeypatch):
     """ショートは本編から1節を切り出したもの。割合を測っても元の話にならない。"""
