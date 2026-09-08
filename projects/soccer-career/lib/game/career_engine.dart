@@ -192,7 +192,8 @@ class CareerEngine {
       physique: physique ?? Physique.roll(_random, position),
       look: look ?? PlayerLook.roll(_random),
       aptitude: Aptitude.initial(position),
-      traits: Trait.roll(_random),
+      // そのポジションで意味を持つ特性からだけ引く。
+      traits: Trait.roll(_random, position: position),
     );
     return CareerState(
       player: player,
@@ -1072,7 +1073,8 @@ class CareerEngine {
     if (player.personality.professionalism < 14) return false;
     if (state.development.experience < 300) return false;
     if (player.potential >= Formulas.maxAttribute) return false;
-    return _random.nextDouble() < Formulas.breakthroughChance;
+    return _random.nextDouble() <
+        Formulas.breakthroughChance * player.traits.breakthroughFactor;
   }
 
   /// オフの肉体改造が能力に与える増減。

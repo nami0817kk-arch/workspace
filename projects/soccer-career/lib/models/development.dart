@@ -132,8 +132,8 @@ class Development {
       identity == null ? 0 : (identity == key ? 0.03 : -0.01);
 
   /// その戦い方に慣れているぶんの上乗せ。当たるほど苦手ではなくなる。
-  double adaptationFor(ClubStyle style) =>
-      min(0.04, (faced[style] ?? 0) * 0.002);
+  double adaptationFor(ClubStyle style, {double factor = 1.0}) =>
+      min(0.04, (faced[style] ?? 0) * 0.002 * factor);
 
   /// 経験からくる落ち着き。大一番の重圧を薄める。
   double get composure => min(0.05, experience / 2000);
@@ -194,11 +194,16 @@ class Development {
   ///
   /// 伸び続けた選手はどこかで足踏みする。ここが無いと、上手くいっている
   /// 間はひたすら右肩上がりで、キャリアの起伏が消える。
-  Development afterGrowth({required bool grew, required Random random}) {
+  Development afterGrowth({
+    required bool grew,
+    required Random random,
+    double plateauFactor = 1.0,
+  }) {
     if (!grew) return this;
     final streak = growthStreak + 1;
     if (streak < plateauStreak) return copyWith(growthStreak: streak);
-    return copyWith(growthStreak: 0, plateau: 4 + random.nextInt(6));
+    final length = ((4 + random.nextInt(6)) * plateauFactor).round();
+    return copyWith(growthStreak: 0, plateau: max(1, length));
   }
 
   Development learn(Signature signature) => signatures.contains(signature) ||

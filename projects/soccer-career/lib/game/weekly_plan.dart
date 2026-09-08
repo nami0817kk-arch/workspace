@@ -5,6 +5,7 @@ import '../models/development.dart';
 import '../models/objective.dart';
 import '../models/season.dart';
 import '../models/training.dart';
+import '../models/traits.dart';
 import 'formulas.dart';
 import 'match_engine.dart';
 
@@ -89,8 +90,10 @@ class WeekPlan {
     if (!state.seasonFinished) {
       final opponent = state.opponentFor(state.matchday);
       final style = ClubStyle.of(opponent);
-      final penalty =
-          (-0.05 + state.development.adaptationFor(style)) * 100;
+      final penalty = (-0.05 +
+              state.development.adaptationFor(style,
+                  factor: state.player.traits.adaptationFactor)) *
+          100;
       final menu = TrainingMenu.forKey(style.hardFor);
       return WeekPlan(
         focus: WeekFocus.matchup,

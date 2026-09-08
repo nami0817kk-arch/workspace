@@ -83,11 +83,13 @@ class Player {
   /// 本職なら引かれない。慣れないポジションで出ている選手は、
   /// 同じ能力値でも同じようには働けない。
   int get overall =>
-      attributes.overallFor(position) - aptitude.penaltyFor(position);
+      attributes.overallFor(position) -
+      aptitude.penaltyFor(position, factor: traits.aptitudeFactor);
 
   /// 本来の（適性を引く前の）そのポジションでの力。
   int overallAt(Position position) =>
-      attributes.overallFor(position) - aptitude.penaltyFor(position);
+      attributes.overallFor(position) -
+      aptitude.penaltyFor(position, factor: traits.aptitudeFactor);
 
   /// カテゴリ単位の、身体の補正まで含めた能力値。
   int effectiveFor(AttributeKey key) {
@@ -122,8 +124,7 @@ class Player {
     Position? position,
     Side? side,
     PlayerLook? look,
-   
-   
+    List<Trait>? traits,
     int? condition,
     Nationality? nationality,
     Personality? personality,
@@ -144,7 +145,7 @@ class Player {
         physique: physique ?? this.physique,
         setPieces: setPieces ?? this.setPieces,
         aptitude: aptitude ?? this.aptitude,
-        traits: traits,
+        traits: traits ?? this.traits,
         condition: (condition ?? this.condition)
             .clamp(0, Formulas.conditionMax)
             .toInt(),

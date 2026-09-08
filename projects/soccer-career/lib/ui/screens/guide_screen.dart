@@ -314,7 +314,8 @@ Widget _traitList(BuildContext context) {
           style: theme.textTheme.labelLarge),
       const SizedBox(height: 8),
       _list(context, [
-        for (final trait in Trait.strengths) (trait.label, trait.description),
+        for (final trait in Trait.strengths)
+          (trait.label, '${trait.description}（${trait.effects.join('、')}）'),
       ]),
       const SizedBox(height: 8),
       Text('欠点（${Trait.flaws.length}種）',
@@ -322,7 +323,8 @@ Widget _traitList(BuildContext context) {
               ?.copyWith(color: theme.colorScheme.error)),
       const SizedBox(height: 8),
       _list(context, [
-        for (final trait in Trait.flaws) (trait.label, trait.description),
+        for (final trait in Trait.flaws)
+          (trait.label, '${trait.description}（${trait.effects.join('、')}）'),
       ]),
     ],
   );

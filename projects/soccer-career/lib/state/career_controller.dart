@@ -192,11 +192,16 @@ class CareerController extends ChangeNotifier {
       // 自分のせいで出られないのが一番こたえる。
       Appearance.suspended => -5,
     };
+    final traits = state.player.traits;
     var morale = state.morale.bump(swing < 0
-        ? (swing * state.player.traits.moraleFactor).round()
-        : swing);
-    if (played && result.won) morale = morale.bump(1);
-    if (played && (result.rating ?? 6) >= 7.5) morale = morale.bump(2);
+        ? (swing * traits.moraleFactor).round()
+        : (swing * traits.moraleGainFactor).round());
+    if (played && result.won) {
+      morale = morale.bump((1 * traits.moraleGainFactor).round());
+    }
+    if (played && (result.rating ?? 6) >= 7.5) {
+      morale = morale.bump((2 * traits.moraleGainFactor).round());
+    }
     state.morale = morale;
 
     // 疲れの溜まり方は特性で変わる。
@@ -688,6 +693,8 @@ class CareerController extends ChangeNotifier {
     for (final resolution in match.resolutions) {
       state.recordMoment(resolution.key, success: resolution.success);
     }
+    // どの特性が、何回の局面で効いたか。特性の答え合わせに使う。
+    state.recordTraitHits(match.traitHits);
 
     if (result.international) {
       state.pendingInternational = false;
@@ -755,6 +762,7 @@ class CareerController extends ChangeNotifier {
       state.development = state.development.afterGrowth(
         grew: _sumOf(week.attributes) > before,
         random: _random,
+        plateauFactor: state.player.traits.plateauFactor,
       );
       if (week.learned != null) {
         state.development = state.development.learn(week.learned!);
