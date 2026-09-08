@@ -146,6 +146,32 @@ void main() {
     expect(find.text('順位表'), findsOneWidget);
   });
 
+  testWidgets('記録のタブに通算がまとまっている', (tester) async {
+    final controller = await newCareer();
+    await pumpHub(tester, controller);
+
+    await tester.tap(find.widgetWithText(Tab, '記録'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('通算'), findsOneWidget);
+    expect(find.text('試合'), findsWidgets);
+    // 1シーズン目でも空にしない。
+    expect(find.textContaining('1シーズン目'), findsOneWidget);
+  });
+
+  testWidgets('引き継ぎコードを出せる', (tester) async {
+    final controller = await newCareer();
+    await pumpHub(tester, controller);
+
+    await tester.tap(find.byIcon(Icons.more_vert));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('引き継ぎコードを出す'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('引き継ぎコード'), findsOneWidget);
+    expect(find.textContaining('SC1:'), findsOneWidget);
+  });
+
   testWidgets('遊び方はいつでも開ける', (tester) async {
     final controller = await newCareer();
     await pumpHub(tester, controller);
