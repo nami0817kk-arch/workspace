@@ -153,6 +153,18 @@ def badge(row: dict) -> str:
     return f'<span class="badge {cls}">{esc(row["label"])}</span>'
 
 
+def history_note(row: dict) -> str:
+    """その商品を何日ぶん記録できているか。
+
+    「最安値」と言えるかは記録の厚みで決まる（analyze.MIN_DAYS_FOR_LOW）。
+    日数を出しておけば、判定が付いていない商品でも理由が読み手に分かる。
+    """
+    days = int(row.get("days") or 0)
+    if days <= 0:
+        return ""
+    return f'<span class="sep">/</span>記録{days}日'
+
+
 def card(row: dict, prefix: str = "") -> str:
     href = f'{prefix}item/{slug(row["item_code"])}/'
     change = ""
@@ -166,17 +178,36 @@ def card(row: dict, prefix: str = "") -> str:
   <div class="body">
     <a class="name" href="{href}">{esc(row["name"])}</a>
     <p class="price">{change}<strong>{yen(row["price"])}</strong> {badge(row)}</p>
-    <p class="meta">{esc(row.get("shop", ""))}</p>
+    <p class="meta">{esc(row.get("shop", ""))}{history_note(row)}</p>
   </div>
 </li>"""
 
 
+def stats_bar(stats: dict) -> str:
+    """このサイトが何を持っているかを最初に示す。
+
+    価格履歴は後から買えないことが唯一の強みなのに、一覧に並ぶ商品だけを見ても
+    それが伝わらない。値下がりが数件しかない日でもページが空疎に見えないよう、
+    追跡している規模と記録の厚みを先に出す。
+    """
+    if not stats:
+        return ""
+    parts = [f'<strong>{stats["items"]:,}</strong>商品を追跡',
+             f'記録<strong>{stats["days"]}</strong>日目']
+    if stats.get("updated"):
+        parts.append(f'最終更新 {esc(stats["updated"])}')
+    return '<p class="stats">' + '<span class="sep">/</span>'.join(parts) + '</p>'
+
+
 def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
-            updated: str, prefix: str = "", empty: str = "該当する商品がありません。") -> str:
+            updated: str, prefix: str = "", empty: str = "該当する商品がありません。",
+            stats: dict | None = None) -> str:
     body = ("".join(card(r, prefix) for r in rows) if rows
             else f'<li class="empty">{esc(empty)}</li>')
+    count = f'<span class="count">{len(rows):,}件</span>' if rows else ""
     return (head(f"{title}｜{site['name']}", lead, canonical, site, prefix)
-            + f'<h1>{esc(title)}</h1><p class="lead">{esc(lead)}</p>'
+            + f'<h1>{esc(title)}{count}</h1><p class="lead">{esc(lead)}</p>'
+            + stats_bar(stats or {})
             + AD_NOTICE
             + f'<ul class="cards">{body}</ul>'
             + foot(site, prefix, updated))

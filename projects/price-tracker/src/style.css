@@ -38,6 +38,14 @@ h1 { font-size: 24px; line-height: 1.4; margin: 0 0 8px; }
 h2 { font-size: 18px; margin: 28px 0 8px; }
 .lead { color: var(--muted); margin: 0 0 16px; }
 
+/* サイトの規模と記録の厚み。値下がりが少ない日でも、何を持っているサイトなのか
+   最初に伝わるようにする。数字だけ地の文より濃くして拾いやすくする。 */
+.stats { margin: 0 0 16px; font-size: 14px; color: var(--muted); }
+.stats strong { color: var(--ink); font-size: 16px; }
+.sep { margin: 0 8px; opacity: .5; }
+
+h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--muted); }
+
 .ad-notice {
   margin: 0 0 20px; padding: 8px 12px; font-size: 13px; color: var(--muted);
   background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
@@ -99,4 +107,6 @@ h2 { font-size: 18px; margin: 28px 0 8px; }
   .card .thumb { flex-basis: 72px; }
   .card img, .card .noimg { width: 72px; height: 72px; }
   h1 { font-size: 21px; }
+  .sep { margin: 0 5px; }
+  .stats { font-size: 13px; }
 }

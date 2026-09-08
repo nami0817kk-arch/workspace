@@ -54,6 +54,11 @@ def build(root: Path, out: Path) -> dict:
     shutil.copy(ROOT / "src" / "style.css", out / "style.css")
 
     base = site["base_url"].rstrip("/")
+    # サイトの規模と記録の厚み。値下がりが数件しかない日でも、
+    # 何を持っているサイトなのかが一覧の先頭で伝わるようにする。
+    stats = {"items": len(rows),
+             "days": len(sorted((data / "snapshots").glob("*.csv.gz"))),
+             "updated": updated}
     dropped = analyze.drops(rows)
     low = analyze.lows(rows)
 
@@ -61,13 +66,15 @@ def build(root: Path, out: Path) -> dict:
         "今日の値下がり",
         "毎日記録している楽天市場の価格から、前回より安くなった商品を並べています。",
         dropped, site, base + "/", updated, prefix="",
-        empty="今日の記録では、判定できるほどの値下がりはありませんでした。"))
+        empty="今日の記録では、判定できるほどの値下がりはありませんでした。",
+        stats=stats))
 
     write(out / "lows" / "index.html", theme.listing(
         "最安値圏の商品",
         "当サイトが記録している期間の最安値と同じか、それに近い価格の商品です。",
         low, site, base + "/lows/", updated, prefix="../",
-        empty="価格の記録日数がまだ足りません。判定には最低7日分が必要です。"))
+        empty="価格の記録日数がまだ足りません。判定には最低7日分が必要です。",
+        stats=stats))
 
     urls = ["/", "/lows/"]
     for page in pages.PAGES:
@@ -87,7 +94,8 @@ def build(root: Path, out: Path) -> dict:
             f'{g["name"]}の値下がり',
             f'{g["name"]}の商品を毎日記録し、値下がりの大きい順に並べています。',
             hit, site, f"{base}/genre/{gid}/", updated, prefix="../../",
-            empty="このジャンルはまだ記録が始まったばかりです。"))
+            empty="このジャンルはまだ記録が始まったばかりです。",
+            stats=stats))
         urls.append(f"/genre/{gid}/")
         listed.append({**g, "count": len(hit)})
 
