@@ -32,7 +32,6 @@ BAND_INK_RED = (222, 20, 30)
 BAND_RED = (222, 20, 30)
 BAND_TEXT_DARK = (12, 12, 14)
 BAND_TEXT_LIGHT = (255, 255, 255)
-TAG_RED = (214, 26, 38)
 BAND_SIZES = (104, 94, 86, 78, 70, 62, 56, 50, 44, 40)
 BADGE_HEIGHT = 62
 SUBTITLE_HEIGHT = 70
@@ -654,18 +653,19 @@ def _fit_band(draw: ImageDraw.ImageDraw, text: str, font_path: str, room: int = 
 
 def _draw_tags(layer: Image.Image, draw: ImageDraw.ImageDraw,
                tags: list[str], font_path: str) -> None:
-    """右上に小さな赤タグ。反応の引用を置く場所。"""
+    """右上にエンブレムだけを並べる。
+
+    前は赤い札にクラブ名を書き、その左にエンブレムを添えていた。
+    **その文字は要らない**（2026-09-08 ユーザー指摘）。クラブ名は
+    タイトルにも帯にも出ているので、右上でもう一度書くと画面が混むだけだった。
+    残すのはエンブレムだけで、無いクラブは何も出ない。
+    """
     if not tags:
         return
-    font = ImageFont.truetype(font_path, 34)
     y = 28
     for tag in tags[:2]:
-        text_w = draw.textlength(tag, font=font)
-        left = SIZE[0] - 28 - text_w - 32
-        draw.rectangle([left, y, SIZE[0] - 28, y + 52], fill=TAG_RED + (255,))
-        draw.text((left + 16, y + 6), tag, font=font, fill=(255, 255, 255, 255))
-        _paste_crest(layer, tag, left, y)
-        y += 62
+        if _paste_crest(layer, tag, SIZE[0] - 28, y):
+            y += _crest_px() + 18
 
 
 def _draw_points(draw: ImageDraw.ImageDraw, points: list[str], font_path: str) -> None:
@@ -691,25 +691,30 @@ def _draw_points(draw: ImageDraw.ImageDraw, points: list[str], font_path: str) -
         y += 108
 
 
-def _paste_crest(layer: Image.Image, tag: str, left: float, y: int) -> None:
-    """札の左にエンブレムを添える（2026-09-08）。
+def _crest_px() -> int:
+    from . import crest as crest_mod
+    return crest_mod.CREST_PX
+
+
+def _paste_crest(layer: Image.Image, tag: str, right: int, y: int) -> bool:
+    """右上にエンブレムを小さく置く（2026-09-08）。
 
     **小さく添えるだけ。**権利が晴れていないので、主役にしない
-    （src/crest.py に経緯）。エンブレムが無いクラブは、札だけで出る。
+    （src/crest.py に経緯）。置けたときだけ True を返す。
     """
     from . import crest as crest_mod
 
     path = crest_mod.find(tag)
     if path is None:
-        return
+        return False
     with Image.open(path) as source:
         mark = source.convert("RGBA")
     size = crest_mod.CREST_PX
     ratio = size / max(mark.width, mark.height)
     mark = mark.resize((max(1, int(mark.width * ratio)),
                         max(1, int(mark.height * ratio))), Image.LANCZOS)
-    box = (max(0, int(left - mark.width - 12)), int(y + (52 - mark.height) / 2))
-    layer.alpha_composite(mark, box)
+    layer.alpha_composite(mark, (int(right - mark.width), int(y)))
+    return True
 
 
 # ------------------------------------------------------------------ パーツ

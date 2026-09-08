@@ -724,3 +724,52 @@ def test_明るいサムネは通す(tmp_path):
 
     Image.new("RGB", (1280, 720), (150, 160, 150)).save(tmp_path / "thumbnail.png")
     assert check_thumbnail_dark(tmp_path).ok
+
+
+def _photo_dir(tmp_path, name, subject):
+    """写真フォルダを1つ作る。credits.json の被写体名だけが要る。"""
+    folder = tmp_path / name
+    folder.mkdir(parents=True)
+    (folder / "01.jpg").write_bytes(b"")
+    (folder / "credits.json").write_text(json.dumps([{
+        "file": "01.jpg",
+        "subject_check": f"被写体に {subject} が明記されています",
+    }], ensure_ascii=False), encoding="utf-8")
+    return (folder / "01.jpg").as_posix()
+
+
+def _script_with_photos(title, body_line, photos):
+    from src.script_model import parse_script
+
+    nl = chr(10)
+    head = ["---", f"title: {title}", "thumbnail_photos:"]
+    head += [f"- {p}" for p in photos]
+    head += ["---", "", "## 本編", "", f"キャスター: {body_line}", ""]
+    return parse_script(nl.join(head))
+
+
+def test_台本に出てこない人をサムネに載せない(tmp_path):
+    """モウリーニョの回にムバッペを並べていた（2026-09-08 ユーザー指摘）。
+
+    左のぼかしを埋めたいだけで足した写真で、台本には一度も出てこない。
+    """
+    from src.review import check_thumbnail_photos
+
+    photos = [_photo_dir(tmp_path, "mourinho", "ジョゼ・モウリーニョ"),
+              _photo_dir(tmp_path, "mbappe", "キリアン・エムバペ")]
+    script = _script_with_photos("モウリーニョ、VARに「ルールを知らないなら」",
+                                 "モウリーニョが試合後に話しました。", photos)
+    finding = check_thumbnail_photos(script)
+    assert not finding.ok
+    assert "エムバペ" in finding.detail
+
+
+def test_台本に出てくる人なら2枚でも通す(tmp_path):
+    """デンベレの回のヤマルは、タイトルにも本文にも出てくるので関係がある。"""
+    from src.review import check_thumbnail_photos
+
+    photos = [_photo_dir(tmp_path, "dembele", "ウスマン・デンベレ / Ousmane Dembélé"),
+              _photo_dir(tmp_path, "yamal", "ラミン・ヤマル")]
+    script = _script_with_photos("デンベレが挙げた3人に、ヤマルの名前はなかった",
+                                 "デンベレはヤマルの名前を出しませんでした。", photos)
+    assert check_thumbnail_photos(script).ok

@@ -89,6 +89,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     findings.append(check_narration(out_dir))
     findings.append(_card_rule(script))
     findings.append(_photo_credits(script, out_dir))
+    findings.append(check_thumbnail_photos(script))
     findings.append(check_post_sources(script))
     findings.append(_double_marks(script))
     loudness = _loudness(out_dir / "video.mp4")
@@ -374,9 +375,14 @@ def _photo_credits(script: Script, out_dir: Path) -> Finding:
     # **サムネイルの写真も数える。**動画本体には出ないが、サムネイルも配布物で、
     # 表示義務は同じ。行の画像しか見ておらず、公開済みの5本が
     # クレジット無しで出ていた（2026-09-06 実測）
-    thumb = str((script.meta or {}).get("thumbnail_photo") or "").strip()
-    if thumb:
-        used = sorted(set(used) | {Path(thumb).name})
+    meta = script.meta or {}
+    thumbs = [str(meta.get("thumbnail_photo") or "")]
+    # 並べて敷く写真も配布物。1枚目しか数えておらず、2枚目の表示義務が
+    # 抜けていた（2026-09-08）
+    thumbs += [str(x) for x in (meta.get("thumbnail_photos") or [])]
+    names = {Path(t).name for t in thumbs if t.strip()}
+    if names:
+        used = sorted(set(used) | names)
     if not used:
         return Finding(True, "写真のクレジット", "写真を使っていません")
     description = out_dir / "description.txt"
@@ -389,6 +395,63 @@ def _photo_credits(script: Script, out_dir: Path) -> Finding:
                        f"写真{len(used)}枚に対しクレジット{len(credits)}件。"
                        "CC BY 系は表示が必須です")
     return Finding(True, "写真のクレジット", f"写真{len(used)}枚 / クレジット{len(credits)}件")
+
+
+def check_thumbnail_photos(script: Script) -> Finding:
+    """サムネイルに、話に出てこない人を載せていないか（2026-09-08）。
+
+    モウリーニョの回にムバッペを、鈴木彩艶の回にアリソンを並べていた。
+    左のぼかしを埋めたいだけで足した写真で、**台本に一度も出てこない**。
+    ユーザーの指摘は「サムネに関連しない人は載せないでください」。
+
+    判定は写真フォルダの credits.json にある被写体名で行う。名前が
+    台本に一度も出てこなければ×。表記ゆれで鳴ったときは、**台本の表記に
+    合わせるか、その写真を外す**。どちらでも直る。
+    """
+    meta = script.meta or {}
+    paths = [str(x) for x in (meta.get("thumbnail_photos") or [])]
+    if len(paths) < 2:
+        return Finding(True, "サムネの人物", "1枚だけです")
+    body = " ".join(
+        [script.title] + [getattr(line, "text", "") or "" for line in script.lines]
+    )
+    strangers = []
+    for path in paths:
+        name = _photo_subject(Path(path))
+        if not name:
+            continue
+        # 被写体名は「ウスマン・デンベレ / Ousmane Dembélé」のように
+        # 別表記が併記されることがある。区切りを全部ばらして、
+        # **どれか1つでも台本に出ていれば通す**
+        flat = name
+        for mark in ("=", "/", "／", "（", "）", "(", ")", "、", ",", " ", "　"):
+            flat = flat.replace(mark, "・")
+        parts = [x for x in flat.split("・") if len(x) >= 2]
+        if parts and not any(part in body for part in parts):
+            strangers.append(name)
+    if strangers:
+        return Finding(False, "サムネの人物",
+                       "／".join(strangers) + " が台本に出てきません。"
+                       "関係ない人はサムネに載せない")
+    return Finding(True, "サムネの人物", f"{len(paths)}人とも台本に出ています")
+
+
+def _photo_subject(path: Path) -> str:
+    """写真の credits.json から被写体名を取り出す。無ければ空。"""
+    credits = _resolve(str(path.parent / "credits.json"))
+    if credits is None or not Path(credits).exists():
+        return ""
+    try:
+        rows = json.loads(Path(credits).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return ""
+    for row in rows if isinstance(rows, list) else []:
+        if row.get("file") != path.name:
+            continue
+        note = str(row.get("subject_check") or "")
+        head, _, tail = note.partition("被写体に ")
+        return tail.partition(" が")[0].strip()
+    return ""
 
 
 def _double_marks(script: Script) -> Finding:
