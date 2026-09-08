@@ -396,3 +396,30 @@ def test_帯の2行は同じ大きさで1行ずつに収める(tmp_path):
     assert font is not None
     for text in texts:
         assert draw.textlength(text, font=font) <= 712, text
+
+
+def test_エンブレムがあると絵が変わる(tmp_path, monkeypatch):
+    """**小さく添えるだけ**（2026-09-08 ユーザー判断）。権利は晴れていない。
+
+    置き場に絵があるときだけ、札のまわりが変わることを見る。
+    座標で当てにいくと、札の位置が変わるたびに壊れる。
+    """
+    from src import crest as crest_mod
+
+    photo = tmp_path / "wide.png"
+    Image.new("RGB", (1600, 900), (40, 120, 60)).save(photo)
+    monkeypatch.chdir(tmp_path)
+
+    def draw(name: str):
+        return build_thumbnail(
+            _config(), "", tmp_path / f"{name}.png", style="band",
+            lines=("見出し", "副見出し"), background=str(photo), tags=["レスター"],
+        ).read_bytes()
+
+    before = draw("before")
+    crests = tmp_path / "assets" / "crests"
+    crests.mkdir(parents=True)
+    Image.new("RGBA", (120, 120), (255, 0, 0, 255)).save(crests / "レスター.png")
+    assert crest_mod.find("レスター") is not None
+    assert draw("after") != before
+    assert crest_mod.CREST_PX <= 48        # **大きくしない**

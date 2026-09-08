@@ -274,7 +274,7 @@ def _band_thumbnail(
     canvas.alpha_composite(scrim)
 
     layer, draw = _layer(SIZE)
-    _draw_tags(draw, tags, font_path)
+    _draw_tags(layer, draw, tags, font_path)
 
     top_text = (lines[0] or "").replace(chr(92) + "n", " ")
     bottom_text = lines[1] or ""
@@ -605,7 +605,8 @@ def _fit_band(draw: ImageDraw.ImageDraw, text: str, font_path: str, room: int = 
     return font, wrap_text(draw, text, font, width)[:2]
 
 
-def _draw_tags(draw: ImageDraw.ImageDraw, tags: list[str], font_path: str) -> None:
+def _draw_tags(layer: Image.Image, draw: ImageDraw.ImageDraw,
+               tags: list[str], font_path: str) -> None:
     """右上に小さな赤タグ。反応の引用を置く場所。"""
     if not tags:
         return
@@ -616,7 +617,29 @@ def _draw_tags(draw: ImageDraw.ImageDraw, tags: list[str], font_path: str) -> No
         left = SIZE[0] - 28 - text_w - 32
         draw.rectangle([left, y, SIZE[0] - 28, y + 52], fill=TAG_RED + (255,))
         draw.text((left + 16, y + 6), tag, font=font, fill=(255, 255, 255, 255))
+        _paste_crest(layer, tag, left, y)
         y += 62
+
+
+def _paste_crest(layer: Image.Image, tag: str, left: float, y: int) -> None:
+    """札の左にエンブレムを添える（2026-09-08）。
+
+    **小さく添えるだけ。**権利が晴れていないので、主役にしない
+    （src/crest.py に経緯）。エンブレムが無いクラブは、札だけで出る。
+    """
+    from . import crest as crest_mod
+
+    path = crest_mod.find(tag)
+    if path is None:
+        return
+    with Image.open(path) as source:
+        mark = source.convert("RGBA")
+    size = crest_mod.CREST_PX
+    ratio = size / max(mark.width, mark.height)
+    mark = mark.resize((max(1, int(mark.width * ratio)),
+                        max(1, int(mark.height * ratio))), Image.LANCZOS)
+    box = (max(0, int(left - mark.width - 12)), int(y + (52 - mark.height) / 2))
+    layer.alpha_composite(mark, box)
 
 
 # ------------------------------------------------------------------ パーツ

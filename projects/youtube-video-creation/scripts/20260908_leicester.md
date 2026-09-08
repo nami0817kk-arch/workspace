@@ -4,7 +4,6 @@ thumbnail_line1: 優勝から10年でここ
 thumbnail_line2: 5試合1勝 クラブ史上最低の順位
 thumbnail_tags:
 - レスター
-- 3部リーグ
 thumbnail_alt: []
 thumbnail_photo: assets/photos/20260908_leicester/01.png
 bg: assets/backgrounds/stadium.png
