@@ -268,10 +268,12 @@ jobs:
           rm -rf ~/.appstoreconnect/private_keys
           rm -f ios/ExportOptions.plist
 
+      # upload-artifact は defaults.run.working-directory に従わない。
+      # パスはリポジトリのルートから書く必要がある。
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:
           name: soccer-manager-ios
-          path: build/ios/ipa/*.ipa
+          path: projects/soccer-manager/build/ios/ipa/*.ipa
           if-no-files-found: error
           retention-days: 14

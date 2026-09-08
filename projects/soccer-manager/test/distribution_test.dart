@@ -359,6 +359,32 @@ void main() {
       }
     });
 
+    test('成果物のパスが、リポジトリのルートから書かれている', () {
+      // ワークフローは defaults.run.working-directory を
+      // projects/soccer-manager にしているが、これが効くのは run: の
+      // ステップだけで、actions/upload-artifact はリポジトリのルートから
+      // パスを解決する。ルート起点で書かないと
+      // 「No files were found with the provided path」で落ちる。
+      // 実際に iOS のリリースで踏み、TestFlight への送信は成功したのに
+      // ワークフローは赤くなった。
+      const prefix = 'projects/soccer-manager/';
+      for (final path in const [
+        '../../.github/workflows/soccer-ios-release.yml',
+        '../../.github/workflows/soccer-android-release.yml',
+      ]) {
+        final lines = File(path).readAsLinesSync();
+        for (var i = 0; i < lines.length; i++) {
+          final line = lines[i].trim();
+          // upload-artifact に渡すパスは build/ で始まる行として現れる。
+          if (!line.startsWith('build/') && !line.startsWith('path: build/')) {
+            continue;
+          }
+          fail('$path:${i + 1} の成果物パスが working-directory 起点になっている。'
+              '$prefix を付けること: $line');
+        }
+      }
+    });
+
     test('iOSが輸出コンプライアンスを申告している', () {
       final plist = File('ios/Runner/Info.plist').readAsStringSync();
       // これがないと App Store Connect へのアップロードのたびに
