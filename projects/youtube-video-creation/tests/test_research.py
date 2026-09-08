@@ -799,3 +799,41 @@ def test_つかみが別の一言なら残る():
     script = parse_script(to_script(build_notes(_raw()), _plan()))   # hook は別の文
     assert len(script.scenes[0].lines) == 2
     assert any("今回の問い" in line.telop_text() for line in script.lines)
+
+
+def test_節ごとに地の文の読み手を決められる():
+    """2026-09-09 ユーザー「何が起きたかはキャスターが伝えて良い」。
+
+    交互は既定であって決まりではない。節に narrator を書けばその人が読む。
+    """
+    from src.script_model import parse_script
+
+    raw = _raw()
+    raw["sections"][0]["narrator"] = "キャスター"
+    raw["sections"][1]["narrator"] = "解説"
+    raw["sections"][0]["say"] = ["いちぎょうめ。", "にぎょうめ。", "さんぎょうめ。"]
+    raw["sections"][1]["say"] = ["いちぎょうめ。", "にぎょうめ。"]
+    script = parse_script(to_script(build_notes(raw), _plan()))
+    first, second = script.scenes[1], script.scenes[2]
+    assert {l.speaker for l in first.lines} == {"キャスター"}
+    assert {l.speaker for l in second.lines} == {"解説"}
+    # narrator が無い節は今までどおり交互
+    assert len({l.speaker for l in script.scenes[3].lines}) >= 1
+
+
+def test_サムネの帯と伏せ字が同じなら知らせる():
+    """3本とも line2 と points の1つが同じ文だった（2026-09-09 ユーザー指摘）。"""
+    from src.research import advise
+
+    raw = _raw(thumbnail={"line1": "短い見出し", "line2": "ベンチにいたのは ●●●●",
+                          "points": ["ベンチにいたのは ●●●●", "初先発は9日目"]})
+    hints = advise(build_notes(raw))
+    assert any("line2 と同じ" in h for h in hints)
+
+
+def test_サムネに重複が無ければ黙っている():
+    from src.research import advise
+
+    raw = _raw(thumbnail={"line1": "短い見出し", "line2": "ベンチにいたのは ●●●●",
+                          "points": ["初先発は9日目", "現地紙の採点は ●点"]})
+    assert not any("同じ" in h and "サムネ" in h for h in advise(build_notes(raw)))

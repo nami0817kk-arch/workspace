@@ -94,6 +94,10 @@ class Section:
     # 使えるライセンスが広がったので、顔を本文にも出す
     line_images: list = field(default_factory=list)
     bg: str = ""      # この節の背景。空なら既定の並びから割り当てる
+    # **その節の地の文を誰が読むか**（2026-09-09 ユーザー指示）。
+    # 空なら今までどおりキャスターと解説の交互。「何が起きたか」は事実なので
+    # キャスターだけ、「試合はどう動いたか」は解説だけ、のように節で決められる
+    narrator: str = ""
 
 
 # まとめの答えの上限。**実測で決めた**（2026-09-08）。
@@ -258,6 +262,7 @@ def build_notes(raw: dict) -> Notes:
                 official=bool(entry.get("official", False)),
                 card=entry.get("card"),
                 bg=str(entry.get("bg", "")).strip(),
+                narrator=str(entry.get("narrator", "")).strip(),
             )
         )
     if not sections:
@@ -698,6 +703,30 @@ def _advise_hook(notes: Notes) -> list[str]:
     return []
 
 
+def _advise_thumbnail_repeat(notes: Notes) -> list[str]:
+    """サムネの帯と伏せ字が同じことを言っていないか（2026-09-09 ユーザー指摘）。
+
+    3本とも `line2` と `points` の1つが同じ文だった。狭い1枚に同じ言葉を
+    2回置くと、**そのぶん言えることが減る**。
+    """
+    thumbnail = notes.thumbnail or {}
+    said = [str(thumbnail.get("line1") or ""), str(thumbnail.get("line2") or "")]
+    points = [str(p) for p in (thumbnail.get("points") or [])]
+    hints: list[str] = []
+    for point in points:
+        for index, line in enumerate(said, start=1):
+            if not point or not line:
+                continue
+            if _bare_text(point) == _bare_text(line):
+                hints.append(f"サムネの points『{point}』が line{index} と同じです。"
+                             "1枚に同じことを2回書くと、そのぶん言えることが減ります")
+    for index, point in enumerate(points):
+        for other in points[index + 1:]:
+            if _bare_text(point) == _bare_text(other):
+                hints.append(f"サムネの points に同じ文が2つあります: 『{point}』")
+    return hints
+
+
 def _advise_material(notes: Notes) -> list[str]:
     """中身の量が参考に届いているか。届かなければ、どこが薄いかを言う。"""
     from urllib.parse import urlparse
@@ -722,7 +751,8 @@ def _advise_material(notes: Notes) -> list[str]:
 def _advise_voices(notes: Notes) -> list[str]:
     """反応の扱いで気をつける点。"""
     hints: list[str] = (_advise_volume(notes) + _advise_material(notes)
-                        + _advise_hook(notes) + _advise_title(notes))
+                        + _advise_hook(notes) + _advise_thumbnail_repeat(notes)
+                        + _advise_title(notes))
     for section in notes.sections:
         card = section.card or {}
         if str(card.get("type", "")).lower() != "reactions":
@@ -1014,7 +1044,9 @@ def to_script(notes: Notes, plan: Plan) -> str:
             # 会話に聞こえない（実測）
             # 誰かの発言なら、その人の名前を話者にする。**代弁は人ごとに声が変わる。**
             voice = section.voices[number] if number < len(section.voices) else ""
-            speaker = voice or (
+            # 節が読み手を決めていれば、そのまま。**交互は既定であって決まりではない**
+            # （2026-09-09 ユーザー「何が起きたかはキャスターが伝えて良い」）
+            speaker = voice or section.narrator or (
                 SPEAKERS[0] if number == 0 else SPEAKERS[1 if number % 2 else 0]
             )
             lines.append(f"{speaker}: {sentence}")
