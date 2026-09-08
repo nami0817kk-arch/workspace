@@ -103,7 +103,7 @@ class TransferOffer {
       if (fee > 0) '移籍金 ${_money(fee)}',
       if (releaseClause != null) '違約金 ${_money(releaseClause!)}',
     ];
-    return parts.join('  ·  ');
+    return parts.join(' ・ ');
   }
 
   static String _money(int value) => value >= 10000

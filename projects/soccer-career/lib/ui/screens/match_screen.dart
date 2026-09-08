@@ -9,6 +9,7 @@ import '../../models/news.dart';
 import '../../models/season.dart';
 import '../../state/career_controller.dart';
 import '../club_identity.dart';
+import '../readable_width.dart';
 
 /// 1試合を進める画面。局面 → 結果 → 次の局面、を繰り返す。
 class MatchScreen extends StatefulWidget {
@@ -87,7 +88,8 @@ class _MatchScreenState extends State<MatchScreen> {
         automaticallyImplyLeading: false,
       ),
       body: SafeArea(
-        child: Padding(
+        child: ReadableWidth(
+          child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -110,6 +112,7 @@ class _MatchScreenState extends State<MatchScreen> {
                   child: Text('残りを自動で進める（${widget.controller.state!.simStyle.label}）'),
                 ),
             ],
+          ),
           ),
         ),
       ),
@@ -182,7 +185,7 @@ class _MatchHeader extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          match.home ? 'ホーム · ${match.appearance.label}' : 'アウェイ · ${match.appearance.label}',
+          match.home ? 'ホーム・${match.appearance.label}' : 'アウェイ・${match.appearance.label}',
           style: muted,
           textAlign: TextAlign.center,
         ),
@@ -255,7 +258,7 @@ class _ScenarioView extends StatelessWidget {
                 children: [
                   Text(
                     '${MatchInProgress.minuteLabel(match.currentMinute)}'
-                    '  ·  ${match.scoreLine}',
+                    ' ・ ${match.scoreLine}',
                     style: theme.textTheme.labelMedium
                         ?.copyWith(color: theme.colorScheme.primary),
                   ),

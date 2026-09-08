@@ -63,6 +63,7 @@ lib/
   models/news.dart         見出しと、その試合が持つ意味の型
   state/career_controller.dart  画面が購読する状態
   ui/club_identity.dart    クラブの色とエンブレム（IDから決める）
+  ui/readable_width.dart   本文を読める幅で中央に置く（広い画面用）
   ui/screens/              選手作成・拠点・試合・シーズン終了・遊び方ガイド
 ```
 
@@ -368,6 +369,22 @@ lib/
   出ていた（督・点・与・改・俸・効・悪が欠けていた）。**ほとんどの字は出るので、
   テストでは気付けない**——実際に公開ページを開いて初めて分かった。
   選手名は自由入力なので、ソースに出てくる文字だけに絞る形にはしない。
+- **広い画面では本文の幅を止める**（`ui/readable_width.dart`、520px）。スマホの縦画面を
+  前提に組んであるので、PC のブラウザでは1行が画面幅いっぱいまで伸びて読めなかった。
+  タブバーも同じ幅に収める（5つが端まで散ると、隣のタブへ移るのに画面を横断する）。
+  ウィジェットテストで 1400px 幅を開いて縛ってある。
+- **画面に出す文字は、必ず同梱フォントの中から選ぶ**（`test/font_test.dart`）。
+  ソースの文字列リテラルに出てくる全文字が `NotoSansJP` の cmap にあることを検査する。
+  これを入れた初回に `·`（U+00B7）と `◯`（U+25EF）が引っ掛かった——どちらも cp932 に
+  無いので、外部フォントに頼って表示されていた。`・` と `○` に置き換えてある。
+  **区切り記号を足すときは、まず cp932 にあるかを疑う。**
+- **公開まわりのメタ情報は雛形のままにしない**（`web/index.html` / `web/manifest.json`）。
+  `description` が "A new Flutter project."、`name` が `soccer_career`、`theme_color` が
+  Flutter の水色のまま公開していた。検索結果とリンク共有に出るのはここ。
+  アイコンは `tool/make_icons.py` で作る（web / Android / iOS を一度に書き出す）。
+- **起動を待つ間の画面を置く**（`web/index.html` の `#boot`）。Flutter は本体と
+  フォントを読み終えるまで何も描かない。初回は圧縮後で約5.7MB あるので、
+  置かないと数秒間まっ白なページを見せることになる。`flutter-first-frame` で消す。
 - **遊び方ガイドは実装から作る**（`ui/screens/guide_screen.dart`）。特性・練習メニュー・
   方針・スタッフの一覧は enum をそのまま並べ、しきい値は `Formulas` から引く。
   手で書き写すと、仕様を足したときに黙って古くなる。
@@ -409,4 +426,5 @@ Web版は master への push で Cloudflare Pages に自動デプロイされる
 - `test/selection_test.dart` … ベンチからの戻り道、途中出場が起きること
 - `test/newsroom_test.dart` … 見出しが出すぎないこと、その試合の意味、得点ランキング
 - `test/ranking_test.dart` … リーグの序列と同着、選手の水準、今季の伸びの記録と保存互換
+- `test/font_test.dart` … 画面に出す文字が同梱フォントに全部あるか（豆腐の見張り）
 - `test/scoreline_test.dart` の「展開に合わせた局面」… 終盤の差し替えと、差し替えない条件

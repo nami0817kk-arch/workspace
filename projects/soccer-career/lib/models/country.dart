@@ -58,7 +58,7 @@ class ForeignRule {
     if (pitchLimit != null) parts.add('同時出場 $pitchLimit');
     if (homegrownRequired > 0) parts.add('自国育ち $homegrownRequired人以上');
     if (partnerCountries.isNotEmpty) parts.add('提携国は枠外');
-    return parts.isEmpty ? '制限なし' : parts.join(' · ');
+    return parts.isEmpty ? '制限なし' : parts.join('・');
   }
 }
 
