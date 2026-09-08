@@ -1,5 +1,5 @@
 ---
-title: 奇跡のプレミア優勝から10年 いまレスターがいる場所がこちらです
+title: レスター、優勝から10年でどこまで落ちたか
 thumbnail_line1: 優勝から10年でここ
 thumbnail_line2: 5試合1勝 クラブ史上最低の順位
 thumbnail_tags:
@@ -9,11 +9,11 @@ thumbnail_alt: []
 thumbnail_photo: assets/photos/20260908_leicester/01.png
 bg: assets/backgrounds/stadium.png
 date: 2026年9月8日
-intro_title: 奇跡のプレミア優勝から10年 いまレスターがいる場所がこちらです
+intro_title: レスター、優勝から10年でどこまで落ちたか
 intro_label: 海外サッカー ニュース
 outro_title: マーティン監督が続けられるか
 outro_sub: チャンネル登録でお待ちください
-description: '奇跡のプレミア優勝から10年 いまレスターがいる場所がこちらです
+description: 'レスター、優勝から10年でどこまで落ちたか
 
 
   この動画が答える問い: 奇跡を起こしたクラブは、なぜ10年でここまで落ちたのか
@@ -50,8 +50,8 @@ cards:
 ## オープニング
 @bg: assets/backgrounds/night.png
 
-キャスター: 奇跡のプレミア優勝から10年 いまレスターがいる場所がこちらです。
-  telop: 奇跡のプレミア優勝から10年 いまレスターがいる場所がこちらです
+キャスター: レスター、優勝から10年でどこまで落ちたか。
+  telop: レスター、優勝から10年でどこまで落ちたか
   se: assets/audio/se_pon.wav
 キャスター: 5001倍のオッズをひっくり返したクラブが、10年後にどこにいるか
   telop: 今回の問い: 奇跡を起こしたクラブは、なぜ10年でここまで落ちた…

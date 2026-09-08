@@ -6,7 +6,7 @@ theme:
   id: arsenal_chelsea
   league: england
   prefix: ""
-  title: "アーセナルがチェルシー戦でやったことがこちらです"
+  title: "アーセナル、2分で失点してから何をしたのか"
   hook: "2分で失点したアーセナルが、そこからどう勝ったか"
   question: "3試合ぶりに失点したアーセナルは、なぜ勝てたのか"
 

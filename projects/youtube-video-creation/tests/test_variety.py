@@ -120,3 +120,26 @@ def test_札が少なければ通す():
                 for i in range(1, 4)]
     found = {f.label: f for f in inspect_day(scripts)}
     assert found["札の数"].ok
+
+
+def test_結び方が揃っていたら知らせる():
+    """**9本中7本が「〜がこちらです」だった**（2026-09-08 ユーザー指摘）。
+
+    1本ずつの点検は「答えを隠しているか」しか見ない。並べないと気づけない。
+    """
+    from src.variety import inspect_day
+
+    scripts = [_script(f"話{i}がこちらです", ["何が", f"論点{i}", "これから"])
+               for i in range(4)]
+    found = {f.label: f for f in inspect_day(scripts)}
+    assert not found["結び方"].ok
+
+
+def test_結び方が散っていれば通す():
+    from src.variety import inspect_day
+
+    titles = ["レスター、どこまで落ちたか", "上田が語った移籍の理由",
+              "ムバッペの言葉が話題に", "久保に何が起きたのか"]
+    scripts = [_script(t, ["何が", t[:3], "これから"]) for t in titles]
+    found = {f.label: f for f in inspect_day(scripts)}
+    assert found["結び方"].ok

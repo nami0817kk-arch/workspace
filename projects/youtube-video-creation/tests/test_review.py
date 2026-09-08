@@ -677,3 +677,31 @@ def test_投稿URLが出典にあれば通る(tmp_path, monkeypatch):
         "sources: [https://example.com/a]", f"sources: [https://example.com/a, {url}]")
     result = _by_label(inspect(parse_script(body), _built(tmp_path)))
     assert result["投稿の出典"].ok is True
+
+
+def test_問いかけで終わるタイトルを通す():
+    """**検査が定型化を招いていた**（2026-09-08）。
+
+    「〜か？」しか認めず、疑問符の無い問いかけを弾いていたため、
+    9本中7本が「〜がこちらです」で揃った。
+    """
+    from src.review import check_title_hook
+    from src.script_model import parse_script
+
+    nl = chr(10)
+    for title in ("アーセナル、2分で失点してから何をしたのか",
+                  "レスター、優勝から10年でどこまで落ちたか",
+                  "バルサの19歳組、4人目が誰か分かりますか"):
+        script = parse_script(nl.join(["---", f"title: {title}", "---", "",
+                                       "## 本編", "", "キャスター: 本文。", ""]))
+        assert check_title_hook(script).ok, title
+
+
+def test_言い切りのタイトルは止める():
+    from src.review import check_title_hook
+    from src.script_model import parse_script
+
+    nl = chr(10)
+    script = parse_script(nl.join(["---", "title: レスターが3部リーグで18位に転落した",
+                                   "---", "", "## 本編", "", "キャスター: 本文。", ""]))
+    assert not check_title_hook(script).ok

@@ -498,10 +498,14 @@ def _advise_title(notes: Notes) -> list[str]:
     各チャンネルの最高再生を並べたら、上位はほぼ全部が答えを隠していた。
     こちらの直近14本は全部が言い切りで、タイトルで用が足りてしまっていた。
     """
-    from .review import TITLE_HOOKS
+    from .review import TITLE_HOOKS, TITLE_QUESTION_TAILS
 
     title = notes.video_title
     if any(word in title for word in TITLE_HOOKS):
+        return []
+    if title.rstrip("。！!").endswith(TITLE_QUESTION_TAILS):
+        return []
+    if title.rstrip("。！!").endswith(("」", "』")):
         return []
     return [
         f"タイトル『{title[:24]}…』が答えを言い切っています。"
