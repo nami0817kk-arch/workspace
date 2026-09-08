@@ -31,7 +31,8 @@ class _MemoryRepository implements SaveRepository {
   Future<void> clear() async => _saved = null;
 }
 
-Future<CareerController> started({int seed = 3}) async {
+Future<CareerController> started(
+    {int seed = 3, Position position = Position.st}) async {
   final c = CareerController(
     repository: _MemoryRepository(),
     careerEngine: CareerEngine(random: Random(seed)),
@@ -39,11 +40,26 @@ Future<CareerController> started({int seed = 3}) async {
     random: Random(seed),
   );
   await c.startCareer(
-      name: '検証', position: Position.st, age: 24, agent: Agent.pool.first);
+      name: '検証', position: position, age: 24, agent: Agent.pool.first);
   return c;
 }
 
 void main() {
+  test('新しいキャリアは、そのポジションの練習をした状態で始まる', () async {
+    // 既定が休養だと、育成タブを開かない人は1年間なにも伸びない。
+    for (final position in Position.values) {
+      final c = await started(position: position);
+      final menu = c.state!.menu;
+      expect(menu.isRest, isFalse, reason: position.label);
+      expect(menu, TrainingMenu.defaultFor(position));
+      if (position == Position.gk) {
+        expect(menu.keys, contains(AttributeKey.goalkeeping));
+      } else {
+        expect(menu.keys, isNot(contains(AttributeKey.goalkeeping)));
+      }
+    }
+  });
+
   group('しきい値', () {
     test('既定では効いている', () async {
       final c = await started();

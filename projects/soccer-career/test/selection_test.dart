@@ -45,6 +45,16 @@ MatchResult benched() =>
 
 void main() {
   group('ベンチからの戻り道', () {
+    test('デビュー戦の1試合だけでは干されない', () {
+      // 4.9 の1試合だけで翌節ベンチ外になっていた。足りないぶんは基準点で埋める。
+      expect(MatchEngine.decideAppearance([played(4.9)]), Appearance.sub);
+      expect(MatchEngine.formAverage([4.9]),
+          closeTo((4.9 + 4 * Formulas.baseRating) / 5, 1e-9));
+      // 5試合そろえば埋めない。
+      expect(MatchEngine.formAverage([4.9, 4.9, 4.9, 4.9, 4.9]),
+          closeTo(4.9, 1e-9));
+    });
+
     test('評価点が低いとベンチ外になる', () {
       final recent = [for (var i = 0; i < 5; i++) played(4.6)];
       expect(MatchEngine.decideAppearance(recent), Appearance.benched);

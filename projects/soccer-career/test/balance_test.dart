@@ -118,7 +118,9 @@ void main() {
     test('決定機は必ず点になるわけではない', () {
       expect(Formulas.goalConversion, lessThan(1.0));
       expect(Formulas.goalConversion, greaterThan(0.3));
-      expect(Formulas.assistConversion, lessThan(1.0));
+      // アシストは「この後に味方が決める」ことが条件なので、実際の確率は
+      // assistConversionAt で必ず 1 を切る（scoreline_test で見ている）。
+      expect(Formulas.assistConversion, lessThanOrEqualTo(1.0));
     });
 
     test('成功より失敗のほうが評価点を動かす', () {

@@ -163,10 +163,22 @@ class HubScreen extends StatelessWidget {
         ),
         // 一番よく押すものは、どのタブに居ても手の届く場所に置く。
         // 以前は画面を6つ分スクロールしないと試合に入れなかった。
-        floatingActionButton: _PrimaryAction(
-          state: state,
-          onPlay: () => _playNext(context),
-          onEndSeason: () => _endSeason(context),
+        // ただし試合タブには同じボタンがカードの中にあるので、そこでは出さない。
+        // 出すと「区切りまで」など下の操作に被さる。
+        floatingActionButton: Builder(
+          builder: (context) {
+            final tabs = DefaultTabController.of(context);
+            return AnimatedBuilder(
+              animation: tabs,
+              builder: (context, _) => tabs.index == 0 && !state.seasonFinished
+                  ? const SizedBox.shrink()
+                  : _PrimaryAction(
+                      state: state,
+                      onPlay: () => _playNext(context),
+                      onEndSeason: () => _endSeason(context),
+                    ),
+            );
+          },
         ),
         // 5つのタブをまとめて読める幅に収める。
         body: ReadableWidth(
@@ -1826,7 +1838,14 @@ class _EventCard extends StatelessWidget {
             Text(event.body, style: theme.textTheme.bodyMedium),
             const SizedBox(height: 16),
             for (final choice in event.choices) ...[
-              FilledButton.tonal(
+              // 同系色の塗りだと、地の文と見分けが付かず押せると分からなかった。
+              OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(
+                  alignment: Alignment.centerLeft,
+                  side: BorderSide(color: theme.colorScheme.primary),
+                ),
+                icon: const Icon(Icons.chevron_right, size: 18),
+                iconAlignment: IconAlignment.end,
                 onPressed: () async {
                   final outcome = choice.outcome;
                   await controller.resolveEvent(choice);
@@ -1835,7 +1854,7 @@ class _EventCard extends StatelessWidget {
                     ..hideCurrentSnackBar()
                     ..showSnackBar(SnackBar(content: Text(outcome)));
                 },
-                child: Padding(
+                label: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Text(choice.label),
                 ),
@@ -2848,9 +2867,18 @@ class _ResultRow extends StatelessWidget {
           ? '代表  ${result.opponentName}'
           : '${result.home ? "H" : "A"}  ${result.opponentName}'),
       subtitle: Text(result.appearance.label),
-      trailing: Text(
-        result.rating?.toStringAsFixed(1) ?? '—',
-        style: theme.textTheme.titleSmall,
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            result.rating?.toStringAsFixed(1) ?? '—',
+            style: theme.textTheme.titleSmall,
+          ),
+          const SizedBox(width: 4),
+          // 開けることが見た目で分かるように。
+          Icon(Icons.chevron_right,
+              size: 18, color: theme.colorScheme.onSurfaceVariant),
+        ],
       ),
     );
   }

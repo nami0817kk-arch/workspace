@@ -132,8 +132,93 @@ void main() {
       );
       m.autoPlay(SimStyle.safe);
       final result = m.finish();
+      // アシストは、後に入る予定の味方の得点を引き寄せるだけ。点は増えない。
       expect(result.scored, 2 + result.goals);
       expect(result.conceded, 1);
+    });
+
+    test('アシストが決まれば、その時点でスコアに乗る', () {
+      // 「味方が決めた」と書いてあるのに 0-0 のままだった。
+      var found = false;
+      for (var seed = 0; seed < 60 && !found; seed++) {
+        final m = match(
+          minutes: const [10, 50, 80],
+          teammateGoals: const [70],
+          seed: seed,
+        );
+        final assist = m.current.options
+            .where((o) => o.outcome == Outcome.assist)
+            .toList();
+        if (assist.isEmpty) continue;
+        final before = m.scoredBy(10);
+        m.choose(assist.first);
+        if (m.assists != 1) continue;
+        found = true;
+        expect(m.scoredBy(10), before + 1);
+        // 流れの中では「アシスト」の1行になり、味方の得点と二重に出ない。
+        final at10 = m.timeline.where((e) => e.minute == 10).toList();
+        expect(at10.length, 1);
+        expect(at10.single.kind, MatchEventKind.ownAssist);
+      }
+      expect(found, isTrue, reason: '60回試してアシストが決まらなかった');
+    });
+
+    test('後に味方の得点が予定されていれば、アシストはそれを引き寄せる', () {
+      var found = false;
+      for (var seed = 0; seed < 60 && !found; seed++) {
+        final m = match(
+          minutes: const [10, 50, 80],
+          teammateGoals: const [70],
+          seed: seed,
+        );
+        final assist = m.current.options
+            .where((o) => o.outcome == Outcome.assist)
+            .toList();
+        if (assist.isEmpty) continue;
+        m.choose(assist.first);
+        if (m.assists != 1) continue;
+        found = true;
+        expect(m.scoredBy(10), 1);
+        expect(m.scoredBy(90), 1, reason: '点が増えてはいけない');
+      }
+      expect(found, isTrue);
+    });
+
+    test('アシストの見込みは終盤ほど低く、必ず 1 を切る', () {
+      final m = match(minutes: const [10, 50, 80], teammateGoals: const [30]);
+      final early = m.assistConversionAt(10);
+      final late = m.assistConversionAt(85);
+      expect(early, lessThan(1.0));
+      expect(early, greaterThan(0));
+      expect(late, lessThan(early));
+      expect(m.assistConversionAt(90), 0);
+      // 自動進行の物差しも同じ見込みを使う。
+      final assist = m.current.options
+          .where((o) => o.outcome == Outcome.assist)
+          .toList();
+      if (assist.isNotEmpty) {
+        final p = m.chanceFor(assist.first);
+        final expected = p *
+                (Formulas.ratingPerSuccess +
+                    Formulas.ratingPerChance +
+                    Formulas.ratingPerAssist * m.assistConversionAt(10)) +
+            (1 - p) * Formulas.ratingPerFailure;
+        expect(m.expectedDelta(assist.first), closeTo(expected, 1e-9));
+      }
+    });
+
+    test('この後に味方が決める予定が無ければ、アシストは決まらない', () {
+      // 予定が無いのに点を足すと、自分のクラブだけが強くなる。
+      for (var seed = 0; seed < 60; seed++) {
+        final m = match(minutes: const [10, 50, 80], seed: seed);
+        final assist = m.current.options
+            .where((o) => o.outcome == Outcome.assist)
+            .toList();
+        if (assist.isEmpty) continue;
+        m.choose(assist.first);
+        expect(m.assists, 0, reason: 'seed $seed');
+        expect(m.scoredBy(90), 0);
+      }
     });
   });
 

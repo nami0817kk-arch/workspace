@@ -186,10 +186,8 @@ class SelectionOutlook {
         debut: true,
       );
     }
-    final window = rated.length <= Formulas.formWindow
-        ? rated
-        : rated.sublist(rated.length - Formulas.formWindow);
-    final average = window.reduce((a, b) => a + b) / window.length;
+    // 判定と同じ式。試合数が足りないぶんは基準点で埋まっている。
+    final average = MatchEngine.formAverage(rated);
     final forgiveness = min(
       MatchEngine.idleRun(state.leagueResults) * Formulas.benchRecoveryPerMatch,
       Formulas.benchRecoveryMax,

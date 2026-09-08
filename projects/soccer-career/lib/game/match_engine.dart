@@ -95,7 +95,8 @@ class MatchInProgress {
     required this.player,
     required this.club,
     this.development = const Development(),
-    this.teammateGoalMinutes = const [],
+    List<int> teammateGoalMinutes = const [],
+    double? expectedTeammateGoals,
     this.concededMinutes = const [],
     this.allyBonus = 0,
     this.moodBonus = 0,
@@ -104,6 +105,9 @@ class MatchInProgress {
     this.international = false,
     Random? random,
   })  : assert(scenarios.length == minutes.length),
+        teammateGoalMinutes = [...teammateGoalMinutes],
+        expectedTeammateGoals =
+            expectedTeammateGoals ?? teammateGoalMinutes.length.toDouble(),
         _random = random ?? Random() {
     _adapt();
   }
@@ -137,6 +141,13 @@ class MatchInProgress {
   /// 存在しない。1点負けている終盤の1本と、3点リードでの1本が
   /// 同じ重さになってしまう。
   final List<int> teammateGoalMinutes;
+
+  /// 味方が決める得点の見込み（試合開始時の期待値）。
+  ///
+  /// アシストが決まるには「この後に味方が決める予定」が要る。その予定は
+  /// 隠されているので、画面と自動進行には予定そのものではなく、
+  /// 力関係と残り時間から出るこの見込みを使う（[assistConversionAt]）。
+  final double expectedTeammateGoals;
 
   /// 相手が決める時間。
   ///
@@ -235,6 +246,32 @@ class MatchInProgress {
   /// 自分のアシストの時間。
   final List<int> ownAssistMinutes = [];
 
+  /// この後に味方が決める予定があるか。
+  bool _hasTeammateGoalAfter(int minute) =>
+      teammateGoalMinutes.any((m) => m > minute);
+
+  /// その時間に通したアシストの手が、実際にアシストになる見込み。
+  ///
+  /// 「この後に味方が決める」確率 × 決まる確率。終盤ほど低く、弱いクラブほど
+  /// 低い。予定そのものを見ると未来が漏れるので、期待値から出す。
+  /// 画面の「アシスト N%」と自動進行の物差しはこれを使う。
+  double assistConversionAt(int minute) {
+    final remaining = ((90 - minute) / 90).clamp(0.0, 1.0);
+    final chance = 1 - exp(-expectedTeammateGoals * remaining);
+    return Formulas.assistConversion * chance;
+  }
+
+  /// アシストが決まった。この後に入る予定だった味方の得点を今に引き寄せる。
+  ///
+  /// 以前は「抜け出した味方が決めた」と書いてあるのにスコアが 0-0 のままだった。
+  /// 引き寄せるだけで足さないのは、足すと自分のクラブだけ点が増えるため。
+  void _claimTeammateGoal(int minute) {
+    final index = teammateGoalMinutes.indexWhere((m) => m > minute);
+    if (index < 0) return;
+    teammateGoalMinutes[index] = minute;
+    teammateGoalMinutes.sort();
+  }
+
   /// その時点での自分たちの得点。
   int scoredBy(int minute) =>
       teammateGoalMinutes.where((m) => m <= minute).length +
@@ -280,8 +317,10 @@ class MatchInProgress {
   /// 数字だけの結果画面は、38試合ぶん並べても記憶に残らない。
   List<MatchEvent> get timeline {
     final events = <MatchEvent>[
+      // アシストで引き寄せた味方の得点は、アシストの行として1つにまとめる。
       for (final m in teammateGoalMinutes)
-        MatchEvent(minute: m, kind: MatchEventKind.teammateGoal),
+        if (!ownAssistMinutes.contains(m))
+          MatchEvent(minute: m, kind: MatchEventKind.teammateGoal),
       for (final m in concededMinutes)
         MatchEvent(minute: m, kind: MatchEventKind.conceded),
       for (final m in ownGoalMinutes)
@@ -527,12 +566,20 @@ class MatchInProgress {
     if (success && outcome != Outcome.play) {
       // 決定機を作った。決まらなくても、無難な手とは違う。
       delta += Formulas.ratingPerChance;
-      final converts = _random.nextDouble() <
+      final rolled = _random.nextDouble() <
           (outcome == Outcome.goal
               ? Formulas.goalConversion
               : Formulas.assistConversion);
+      // アシストは、この後に味方が決める予定があるときだけ決まる。
+      // 決まった瞬間にその得点を今に引き寄せてスコアに乗せる。
+      // 予定が無いのに点を足すと、自分のクラブだけが強くなる。
+      final converts = rolled &&
+          (outcome != Outcome.assist || _hasTeammateGoalAfter(currentMinute));
       if (converts) {
-        if (outcome == Outcome.assist) ownAssistMinutes.add(currentMinute);
+        if (outcome == Outcome.assist) {
+          ownAssistMinutes.add(currentMinute);
+          _claimTeammateGoal(currentMinute);
+        }
         if (outcome == Outcome.goal) {
           // 追いついた・突き放した1点は重く見る。
           final before = margin;
@@ -602,7 +649,7 @@ class MatchInProgress {
       gain += Formulas.ratingPerGoal * Formulas.goalConversion;
     }
     if (option.outcome == Outcome.assist) {
-      gain += Formulas.ratingPerAssist * Formulas.assistConversion;
+      gain += Formulas.ratingPerAssist * assistConversionAt(currentMinute);
     }
     // カードのぶんを引く。ここを入れないと、自動進行が「止めるための反則」を
     // 代償なしの安い手として選び続ける。
@@ -831,17 +878,12 @@ class MatchEngine {
         recent.where((r) => r.rating != null).map((r) => r.rating!).toList();
     if (rated.isEmpty) return Appearance.start;
 
-    final window = rated.length <= Formulas.formWindow
-        ? rated
-        : rated.sublist(rated.length - Formulas.formWindow);
-
     final idle = idleRun(recent);
     final forgiveness = min(
       idle * Formulas.benchRecoveryPerMatch,
       Formulas.benchRecoveryMax,
     );
-    final average =
-        window.reduce((a, b) => a + b) / window.length + bonus + forgiveness;
+    final average = formAverage(rated) + bonus + forgiveness;
 
     if (average >= Formulas.benchThreshold) return Appearance.start;
     if (average >= Formulas.squadThreshold ||
@@ -849,6 +891,22 @@ class MatchEngine {
       return Appearance.sub;
     }
     return Appearance.benched;
+  }
+
+  /// 直近の出来。最新 [Formulas.formWindow] 試合の平均。
+  ///
+  /// 試合数が足りないぶんは基準点（[Formulas.baseRating]）で埋める。
+  /// 埋めないと、デビュー戦の 4.9 だけで翌節ベンチ外になっていた。
+  /// 1試合の出来で判断されるのは、キャリアの始まりとして厳しすぎる。
+  /// 出場の見通し（[SelectionOutlook]）も同じ式を使う。
+  static double formAverage(List<double> rated) {
+    if (rated.isEmpty) return Formulas.baseRating;
+    final window = rated.length <= Formulas.formWindow
+        ? rated
+        : rated.sublist(rated.length - Formulas.formWindow);
+    final padded = Formulas.formWindow - window.length;
+    return (window.reduce((a, b) => a + b) + padded * Formulas.baseRating) /
+        Formulas.formWindow;
   }
 
   /// 最後にピッチに立ってから、何試合続けて外れているか。
@@ -935,6 +993,8 @@ class MatchEngine {
       club: club,
       development: development,
       teammateGoalMinutes: _goalMinutes(teammateGoals),
+      expectedTeammateGoals: (1.25 + advantage / 40) *
+          Formulas.teammateGoalShareFor(player.position.family),
       concededMinutes: _goalMinutes(conceded),
       allyBonus: allyBonus,
       moodBonus: moodBonus,

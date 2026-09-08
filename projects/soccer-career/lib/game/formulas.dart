@@ -32,7 +32,11 @@ class Formulas {
   /// 通算600ゴールのような数字が出る。枠に飛んでも止められるのが
   /// サッカーで、そこが分かれているほうが1点の重みも出る。
   static const double goalConversion = 0.5;
-  static const double assistConversion = 0.6;
+  /// アシストは「この後に味方が決める予定」があるときだけ決まる（スコアに
+  /// 乗せるため）。予定が無いときは決まらないので、そのぶん高めにしてある。
+  /// 予定が無くても点を足す形にすると、自分のクラブだけ点が増えて
+  /// リーグ優勝が3倍に膨らんだ（3743シーズンで 244回 → 842回）。
+  static const double assistConversion = 1.0;
 
   /// 終盤とみなす時間。ここからの1点は重い。
   static const int lateGameMinute = 75;
@@ -70,14 +74,14 @@ class Formulas {
   static const double ratingPerSuccess = 0.32;
   static const double ratingPerFailure = -0.4;
   static const double ratingPerGoal = 0.95;
-  static const double ratingPerAssist = 0.7;
+  static const double ratingPerAssist = 1.1;
 
   /// 決定機を作ったぶん。ゴール・アシストの手が通れば、決まらなくても付く。
   ///
   /// これが無いと、枠内シュートを GK に止められた手と、無難な横パスが
   /// 同じ +0.32 になり、攻撃の選手だけ評価点が 6.8〜6.9 に沈んでいた
   /// （守備の選手には無失点の項があるのに、攻撃の選手には得点しか無かった）。
-  static const double ratingPerChance = 0.06;
+  static const double ratingPerChance = 0.08;
 
   /// 守る側の評価。失点の少なさがそのまま点数になる。
   ///
