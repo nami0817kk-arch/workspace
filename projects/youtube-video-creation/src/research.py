@@ -416,6 +416,17 @@ def advise(notes: Notes, plan: Plan | None = None, now=None) -> list[str]:
     if len(str(notes.thumbnail.get("line1", ""))) > 14:
         notes_warnings.append("thumbnail.line1 が長めです。14文字くらいまでが読みやすい")
 
+    # **サムネに答えを書かない**（2026-09-08 ユーザー指摘）。
+    # タイトルでは答えを隠しているのに、サムネの左に「挙げられた3人の名前」を
+    # そのまま並べていた。それでは隠している意味が消える。
+    # 参考チャンネルは答えの位置を ●● で伏せている
+    for point in (notes.thumbnail.get("points") or [])[:3]:
+        bare = point.replace("●", "").strip()
+        if len(bare) >= 4 and bare in notes.answer:
+            notes_warnings.append(
+                f"サムネの『{point}』が、まとめの答えにそのまま入っています。"
+                "タイトルで隠しているのに、サムネで答えては意味がありません")
+
     # **まとめの答えが長いと、カードが12秒以上そのままになる**（2026-09-08 実測）。
     # 書き出してから review の「カードの持ち」で気づくと、音声から作り直しになる。
     # 45字で約12秒。ここで知らせれば、作り直さずに済む

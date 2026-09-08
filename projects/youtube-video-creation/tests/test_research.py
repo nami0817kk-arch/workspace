@@ -764,3 +764,27 @@ def test_短い答えなら知らせない():
 
     notes = Notes(date="2026年9月8日", title="題", question="問い", answer="短い答え")
     assert not any("answer が" in w for w in advise(notes))
+
+
+def test_サムネに答えを書いたら知らせる():
+    """**タイトルで隠しているのに、サムネで答えていた**（2026-09-08 指摘）。
+
+    参考チャンネルは答えの位置を ●● で伏せている。
+    """
+    from src.research import Notes, advise
+
+    notes = Notes(date="2026年9月8日", title="題", question="問い",
+                  answer="クヴァラツヘリア、ハリー・ケイン、ムバッペの3人です",
+                  thumbnail={"line1": "見出し",
+                             "points": ["ハリー・ケイン", "1人目 ●●●"]})
+    said = [w for w in advise(notes) if "サムネの" in w]
+    assert len(said) == 1 and "ハリー・ケイン" in said[0]
+
+
+def test_伏せ字なら知らせない():
+    from src.research import Notes, advise
+
+    notes = Notes(date="2026年9月8日", title="題", question="問い",
+                  answer="クヴァラツヘリア、ハリー・ケイン、ムバッペの3人です",
+                  thumbnail={"line1": "見出し", "points": ["1人目 ●●●●", "2人目 ●●●"]})
+    assert not [w for w in advise(notes) if "サムネの" in w]
