@@ -788,3 +788,65 @@ def test_伏せ字なら知らせない():
                   answer="クヴァラツヘリア、ハリー・ケイン、ムバッペの3人です",
                   thumbnail={"line1": "見出し", "points": ["1人目 ●●●●", "2人目 ●●●"]})
     assert not [w for w in advise(notes) if "サムネの" in w]
+
+
+# ---- 型（format）2026-09-08 ------------------------------------------------
+
+def _voices_raw():
+    """反応の型の取材メモ。問いも答えも無く、事実1節＋反応1節。"""
+    raw = _raw()
+    raw["format"] = "voices"
+    raw["theme"] = {"id": "zion_reaction", "title": "ハル戦の鈴木彩艶を見た現地サポの反応"}
+    raw.pop("answer")
+    raw["sections"] = [
+        _section(id="facts", heading="何があったか", tier="報道", official=False,
+                 sources=["https://example.com/1", "https://example.com/2"],
+                 say=["ハル戦で無失点でした。"]),
+        _section(id="reactions", heading="現地の声", tier="未確認", official=False,
+                 sources=["https://example.com/thread"],
+                 say=[{"voice": "現地サポ", "text": "本物のGKを手に入れたぞ"},
+                      {"voice": "現地サポ", "text": "中盤より前にボールを出せる"},
+                      {"voice": "現地サポ", "text": "もう前線で使っちゃえよ"}]),
+    ]
+    return raw
+
+
+def test_反応の型は問いと答えが無くても通る():
+    assert verify(build_notes(_voices_raw()), _plan()) == []
+
+
+def test_反応の型に反応の行が無ければ止める():
+    raw = _voices_raw()
+    raw["sections"][1]["say"] = ["反応を紹介します。"]
+    problems = verify(build_notes(raw), _plan())
+    assert any("voices" in p for p in problems)
+
+
+def test_知らない型は止める():
+    import pytest
+
+    raw = _raw()
+    raw["format"] = "podcast"
+    with pytest.raises(ResearchError):
+        build_notes(raw)
+
+
+def test_反応の型の台本にまとめは無い():
+    from src.script_model import parse_script
+
+    script = parse_script(to_script(build_notes(_voices_raw()), _plan()))
+    assert [s.title for s in script.scenes] == ["オープニング", "何があったか", "現地の声"]
+    assert "wrap" not in script.cards
+    assert script.meta.get("format") == "voices"
+    assert script.meta.get("intro_label") == "みんなの反応"
+    # 1行目はタイトルを読む。問いのテロップは出さない
+    assert "ハル戦の鈴木彩艶を見た現地サポの反応" in script.lines[0].text
+    assert not any("今回の問い" in line.telop_text() for line in script.lines)
+
+
+def test_ニュースの型は今まで通り問いが要る():
+    raw = _raw()
+    raw["format"] = "news"
+    raw["theme"].pop("question")
+    problems = verify(build_notes(raw), _plan())
+    assert any("question" in p for p in problems)

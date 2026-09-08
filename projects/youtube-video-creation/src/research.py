@@ -123,11 +123,50 @@ PREFIXES = {
 }
 
 
+# 動画の型（2026-09-08）。**題材ごとに選ぶ。**
+#
+# 14チャンネルを同じ物差しで測ったら、ニュース番組の形をしているのは
+# こちらだけで、伸びている側は形式も尺もバラバラなのに「誰かの声がある」点だけ
+# 全員同じだった（docs/news-sources.md）。他所で回っている作りは、こちらでも
+# 作れるようにしておく。どれを使うかは取材メモの format: で決める。
+#
+#   news   … キャスターと解説が事実を掘る。問い→節→答え。確度の札を出す（従来）
+#   voices … 事実は最初の30秒だけ。残りは反応を1件ずつ読む（2ch系5チャンネルの型）
+#   quote  … 選手・監督が自分で語った言葉を切り出す（KOALA SOCCER の型・30秒前後）
+FORMATS = {
+    "news": {
+        "label": "海外サッカー ニュース",
+        "needs_question": True, "needs_answer": True, "wrap": True,
+        "min_sections": 3,
+        "voice_min": 40.0,
+        "note": "※各社の報道をもとにしています。クラブが発表した「確定」、\n"
+                "報道機関が伝える「報道」、SNS段階の「未確認」、\n"
+                "経緯の説明である「背景」を画面上で分けています。\n",
+    },
+    "voices": {
+        "label": "みんなの反応",
+        "needs_question": False, "needs_answer": False, "wrap": False,
+        "min_sections": 2,
+        "voice_min": 70.0,
+        "note": "※反応は実在する投稿・記事から引いています。出典は下にあります。\n"
+                "個人が特定できる形では出していません。\n",
+    },
+    "quote": {
+        "label": "本人の言葉",
+        "needs_question": False, "needs_answer": False, "wrap": False,
+        "min_sections": 1,
+        "voice_min": 60.0,
+        "note": "※発言は下の記事から引いています。\n",
+    },
+}
+
+
 @dataclass
 class Notes:
     date: str
     title: str
     question: str                    # この動画が答える問い
+    format: str = "news"             # news / voices / quote。FORMATS 参照
     slot: str = ""
     theme_id: str = ""
     prefix: str = ""                 # 【速報】【朗報】【悲報】
@@ -220,9 +259,16 @@ def build_notes(raw: dict) -> Notes:
     if not sections:
         raise ResearchError("sections が空です。節を立てて掘ってください")
 
+    chosen = str(raw.get("format") or theme.get("format") or "news").strip().lower()
+    if chosen not in FORMATS:
+        raise ResearchError(
+            f"format『{chosen}』は知らない型です（{' / '.join(FORMATS)}）"
+        )
+
     return Notes(
         date=str(raw.get("date", "")).strip(),
         slot=str(raw.get("slot", "")).strip(),
+        format=chosen,
         title=str(theme.get("title", "")).strip(),
         theme_id=str(theme.get("id", "")).strip(),
         question=str(theme.get("question", "")).strip(),
@@ -248,19 +294,34 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
         problems.append("theme.title が空です")
     if not notes.date:
         problems.append("date が空です")
-    if policy.get("require_question", True) and not notes.question:
+    shape = FORMATS[notes.format]
+    # 問いと答えは news の型だけに求める。反応や本人の言葉を並べる型に
+    # 「問い」を立てさせると、無理に作った問いが冒頭に乗る
+    if shape["needs_question"] and policy.get("require_question", True) and not notes.question:
         problems.append(
             "theme.question が空です。この動画が答える問いを1つ立ててください"
             "（例: なぜ金の問題ではないのか）"
         )
-    if not notes.answer:
+    if shape["needs_answer"] and not notes.answer:
         problems.append("answer が空です。まとめで問いにどう答えるかを書いてください")
 
-    minimum = int(policy.get("min_sections", 3))
+    minimum = int(shape["min_sections"])
+    if notes.format == "news":
+        minimum = int(policy.get("min_sections", minimum))
     if len(notes.sections) < minimum:
+        what = "深掘りには" if notes.format == "news" else f"型『{notes.format}』には"
         problems.append(
-            f"節が{len(notes.sections)}つしかありません。深掘りには{minimum}つ以上必要です"
-            "（何が起きたか／なぜ／争点／これから）"
+            f"節が{len(notes.sections)}つしかありません。{what}{minimum}つ以上必要です"
+            + ("（何が起きたか／なぜ／争点／これから）" if notes.format == "news" else "")
+        )
+    if notes.format == "voices" and not _has_crowd(notes):
+        problems.append(
+            "型『voices』なのに、反応の行（voice: ネット民 など）がありません。"
+            "事実の節のあとに、反応を1件ずつ voice 付きで並べてください"
+        )
+    if notes.format == "quote" and not _has_named_voice(notes):
+        problems.append(
+            "型『quote』なのに、本人の発言の行（voice: 選手名）がありません"
         )
 
     for section in notes.sections:
@@ -293,6 +354,16 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
             )
     problems += _check_voice_clash(notes)
     return problems
+
+def _has_crowd(notes: Notes) -> bool:
+    """匿名の反応の行があるか。voice が付いていてキャスター・解説ではないもの。"""
+    return any(v and v not in SPEAKERS
+               for section in notes.sections for v in section.voices)
+
+
+def _has_named_voice(notes: Notes) -> bool:
+    return _has_crowd(notes)
+
 
 def _check_voice_clash(notes: Notes) -> list[str]:
     """別人が同じ声にならないか（2026-09-07）。
@@ -747,8 +818,11 @@ def to_script(notes: Notes, plan: Plan) -> str:
         raise ResearchError("取材メモに不備があります:\n  - " + "\n  - ".join(problems))
 
     thumbnail = notes.thumbnail or {}
+    shape = FORMATS[notes.format]
     front = {
         "title": notes.video_title,
+        # 型は台本に残す。review が型ごとにしきい値を変える
+        "format": notes.format,
         "thumbnail_line1": str(thumbnail.get("line1") or notes.title),
         "thumbnail_line2": str(thumbnail.get("line2") or notes.question),
         "thumbnail_tags": [str(t) for t in (thumbnail.get("tags") or [])],
@@ -768,15 +842,13 @@ def to_script(notes: Notes, plan: Plan) -> str:
         "bg": "assets/backgrounds/stadium.png",
         "date": notes.date,
         "intro_title": notes.title,
-        "intro_label": "海外サッカー ニュース",
+        "intro_label": shape["label"],
         "outro_title": _telop(notes.watch, 20) or "続報は次回お伝えします",
         "outro_sub": "チャンネル登録でお待ちください",
         "description": (
             f"{notes.title}\n\n"
-            f"この動画が答える問い: {notes.question}\n\n"
-            "※各社の報道をもとにしています。クラブが発表した「確定」、\n"
-            "報道機関が伝える「報道」、SNS段階の「未確認」、\n"
-            "経緯の説明である「背景」を画面上で分けています。\n"
+            + (f"この動画が答える問い: {notes.question}\n\n" if notes.question else "")
+            + shape["note"]
         ),
         # タグは話の中身から作る。どの動画にも同じ4つでは検索に掛からない
         "tags": tags_mod.build(
@@ -806,17 +878,24 @@ def to_script(notes: Notes, plan: Plan) -> str:
     # **冒頭から名乗らない。**「海外サッカーのニュースです」は毎回同じで中身が無く、
     # 続く「〜ここを掘っていきます」も問いを言い直しているだけだった。
     # **問いは読み上げず、画面に出す。**読むと、つかみと合わせて前置きが18秒になる
-    hook = notes.hook or _ends_sentence(notes.question)
     lines += [
         f"キャスター: {_ends_sentence(notes.title)}",
         f"  telop: {notes.title}",
         "  se: assets/audio/se_pon.wav",
-        f"キャスター: {hook}",
-        # 画面は2〜3行に折り返せる。20字で切ると「…当の監督…」のように
-        # 途中で切れた文字がそのまま出ていた（2026-09-07 に書き出して確認）
-        f"  telop: 今回の問い: {_telop(notes.question, TELOP_LIMIT)}",
-        "",
     ]
+    if notes.format == "news":
+        hook = notes.hook or _ends_sentence(notes.question)
+        lines += [
+            f"キャスター: {hook}",
+            # 画面は2〜3行に折り返せる。20字で切ると「…当の監督…」のように
+            # 途中で切れた文字がそのまま出ていた（2026-09-07 に書き出して確認）
+            f"  telop: 今回の問い: {_telop(notes.question, TELOP_LIMIT)}",
+        ]
+    elif notes.hook:
+        # 反応・本人の言葉の型は、つかみが書いてあれば1行だけ。問いは立てない。
+        # 参考（サッカーラボ 25.5万回）は 0:02 でタイトル、0:11 から事実だった
+        lines.append(f"キャスター: {_ends_sentence(notes.hook)}")
+    lines.append("")
 
     previous_background = ""
     for index, section in enumerate(notes.sections):
@@ -899,20 +978,24 @@ def to_script(notes: Notes, plan: Plan) -> str:
     # **まとめの下地も、直前の節と同じにしない。**決め打ちにしていたため、
     # 最後の節がたまたま studio に落ちると2節続けて同じ絵になっていた
     # （2026-09-07 に CI が検出）。本文の節と同じ選び方に揃える。
-    wrap_background = "assets/backgrounds/studio.png"
-    if wrap_background == previous_background:
-        wrap_background = next(c for c in BACKGROUNDS if c != previous_background)
-    lines += [
-        "## まとめ",
-        f"@bg: {moving_background(wrap_background)}",
-        "",
-        f"解説: {_spoken(notes.answer)}",
-        f"  telop: {_telop(notes.answer)}",
-        "  card: wrap",
-        "  se: assets/audio/se_jingle.wav",
-        "  pause: 1.2",
-        "",
-    ]
+    #
+    # **まとめがあるのは news の型だけ。**反応や本人の言葉の型は、最後の1件で
+    # 終わる。参考の動画はどれも反応で切れていて、締めの語りが無い
+    if shape["wrap"]:
+        wrap_background = "assets/backgrounds/studio.png"
+        if wrap_background == previous_background:
+            wrap_background = next(c for c in BACKGROUNDS if c != previous_background)
+        lines += [
+            "## まとめ",
+            f"@bg: {moving_background(wrap_background)}",
+            "",
+            f"解説: {_spoken(notes.answer)}",
+            f"  telop: {_telop(notes.answer)}",
+            "  card: wrap",
+            "  se: assets/audio/se_jingle.wav",
+            "  pause: 1.2",
+            "",
+        ]
     return "\n".join(lines)
 
 
@@ -928,11 +1011,12 @@ def _cards(notes: Notes) -> dict:
     # 問い・答え・次の焦点を3つ並べたら、2分の動画の締めには字が細かすぎ、
     # 下のテロップとも重なっていた（作った動画を目視して発見）。
     # 問いは冒頭で、次の焦点は読み上げで言うので、画面で繰り返す必要はない。
-    cards["wrap"] = {
-        "type": "points",
-        "title": "この動画の答え",
-        "items": [notes.answer],
-    }
+    if FORMATS[notes.format]["wrap"]:
+        cards["wrap"] = {
+            "type": "points",
+            "title": "この動画の答え",
+            "items": [notes.answer],
+        }
     return cards
 
 

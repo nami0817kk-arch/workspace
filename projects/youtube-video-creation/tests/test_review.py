@@ -802,3 +802,38 @@ def test_タグに人名が入っていれば通る():
         "tags:", "- サッカー", "- サンチョ", "- 移籍",
         "---", "", "## 本編", "", "キャスター: 本文。", ""]))
     assert check_tag_names(script).ok
+
+
+def test_反応の型は他人の声7割が下限():
+    """型でしきい値が変わる（2026-09-08）。news の40%を通る台本でも voices では止まる。"""
+    from src.review import check_voice_share
+    from src.script_model import parse_script
+
+    nl = chr(10)
+    script = parse_script(nl.join([
+        "---", "title: T", "format: voices", "---", "",
+        "## 本編", "",
+        "キャスター: 事実を三十字ほど読みます。事実を三十字ほど読みます。",
+        "現地サポ: 本物のGKを手に入れたぞ",
+        "現地サポ: 前にボールを出せるじゃん", ""]))
+    assert check_voice_share(script, 40.0).ok
+    assert not check_voice_share(script, 70.0).ok
+
+
+def test_反応の型ではまとめの長さを見ない():
+    """最後の節が反応の本体なので、「最後の節が長い」は型として正しい。"""
+    from pathlib import Path
+
+    from src.review import inspect
+    from src.script_model import parse_script
+
+    nl = chr(10)
+    script = parse_script(nl.join([
+        "---", "title: ハル戦の鈴木彩艶を見た現地サポの反応", "format: voices",
+        "sources: [https://example.com/a]", "tags: [サッカー]", "---", "",
+        "## オープニング", "", "キャスター: ハル戦の鈴木彩艶を見た現地サポの反応。", "",
+        "## 現地の声", "",
+        "現地サポ: 本物のGKを手に入れたぞ", "現地サポ: 前にボールを出せるじゃん",
+        "現地サポ: もう前線で使っちゃえよ", "現地サポ: 補強は大成功だ", ""]))
+    labels = {f.label for f in inspect(script, Path("does-not-exist"))}
+    assert "まとめの長さ" not in labels

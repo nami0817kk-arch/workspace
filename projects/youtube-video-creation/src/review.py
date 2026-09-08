@@ -79,9 +79,14 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     # **縦型にも当てる。**ショートは本編から切り出すので、元に入っていれば残る
     findings.append(check_voice_clash(script))
     if not portrait:
-        findings.append(check_voice_share(script))
+        # **型でしきい値を変える**（2026-09-08）。反応の型は他人の声が7割ないと
+        # 型になっていない。まとめの節があるのは news だけなので、他の型では
+        # 「最後の節が長い」は見ない（最後の節が反応の本体になる）
+        shape = _format_of(script)
+        findings.append(check_voice_share(script, shape["voice_min"]))
         findings.append(check_opening_title(script))
-        findings.append(check_wrap_share(script))
+        if shape["wrap"]:
+            findings.append(check_wrap_share(script))
         findings.append(check_title_hook(script))
         findings.append(check_title_subject(script))
     findings.append(_thumbnail_face(script))
@@ -725,6 +730,14 @@ VOICE_LINE_MAX = 20        # 1件の長さ。**実測1件3.1秒＝約16字**な�
 WRAP_SHARE_MAX = 12.0      # 最後の節（まとめ）が占めてよい割合
 
 
+def _format_of(script: Script) -> dict:
+    """台本の型。frontmatter の format から引く。無ければ news。"""
+    from .research import FORMATS
+
+    name = str((script.meta or {}).get("format") or "news").strip().lower()
+    return FORMATS.get(name, FORMATS["news"])
+
+
 def _voice_lines(script: Script) -> tuple[list[int], int]:
     """他人の声の字数と、全体の字数。"""
     other: list[int] = []
@@ -738,17 +751,22 @@ def _voice_lines(script: Script) -> tuple[list[int], int]:
     return other, total
 
 
-def check_voice_share(script: Script) -> Finding:
-    """他人の声が足りているか。語りだけの動画は最後まで見てもらえない。"""
+def check_voice_share(script: Script, minimum: float | None = None) -> Finding:
+    """他人の声が足りているか。語りだけの動画は最後まで見てもらえない。
+
+    下限は型で変わる（2026-09-08）。news は40%、voices は70%、quote は60%。
+    サッカーラボ（25.5万回）は 0:36 以降がすべて反応で、他人の声が約83%だった。
+    """
     other, total = _voice_lines(script)
     if not total:
         return Finding(False, "他人の声の量", "読み上げる文がありません")
+    floor = VOICE_SHARE_MIN if minimum is None else minimum
     share = sum(other) / total * 100
-    if share < VOICE_SHARE_MIN:
+    if share < floor:
         return Finding(
             False, "他人の声の量",
-            f"{share:.0f}%（{len(other)}件）しかありません。"
-            f"伸びている3チャンネルは58%・19件です。反応を増やしてください",
+            f"{share:.0f}%（{len(other)}件）しかありません（下限{floor:.0f}%）。"
+            f"伸びているチャンネルは58〜83%です。反応を増やしてください",
         )
     return Finding(True, "他人の声の量", f"{share:.0f}%（{len(other)}件）")
 
