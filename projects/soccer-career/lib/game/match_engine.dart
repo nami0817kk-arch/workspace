@@ -70,6 +70,7 @@ class MatchInProgress {
     required this.home,
     required this.appearance,
     required this.scenarios,
+    this.reserves = const [],
     required this.minutes,
     required this.player,
     required this.club,
@@ -83,13 +84,23 @@ class MatchInProgress {
     this.international = false,
     Random? random,
   })  : assert(scenarios.length == minutes.length),
-        _random = random ?? Random();
+        _random = random ?? Random() {
+    _adapt();
+  }
 
   final int matchday;
   final Club opponent;
   final bool home;
   final Appearance appearance;
+  /// 引いた局面。展開に合う控えがあれば、その場で差し替わる。
   final List<Scenario> scenarios;
+
+  /// 展開が傾いたときに差し替える控えの局面。
+  ///
+  /// 終盤に2点を追っているのに「無難につないで作り直す」局面しか
+  /// 来ないと、試合の中身と状況が噛み合わない。骨格は展開に依らない
+  /// 局面で組み、終盤だけをここから入れ替える。
+  final List<Scenario> reserves;
 
   /// 各局面が起きる時間（分）。特性の判定と表示に使う。
   final List<int> minutes;
@@ -138,6 +149,43 @@ class MatchInProgress {
   Scenario get current => scenarios[_index];
   int get currentMinute => minutes[_index];
 
+  /// 今の局面を、そのときの展開に合ったものへ差し替える。
+  ///
+  /// 局面に入った時点で1度だけ動かす。表示のたびに引き直すと、
+  /// 画面を開き直すだけで局面が変わってしまう。
+  void _adapt() {
+    if (isFinished || reserves.isEmpty) return;
+    final want = tempoNow;
+    if (want == ScenarioTempo.any || scenarios[_index].tempo == want) return;
+    final used = scenarios.map((s) => s.id).toSet();
+    for (final candidate in reserves) {
+      if (candidate.tempo == want && !used.contains(candidate.id)) {
+        scenarios[_index] = candidate;
+        return;
+      }
+    }
+  }
+
+  /// 今の局面が、どういう展開のものか。
+  ///
+  /// 得点の時間は試合開始時に決まっているので、その局面の時間での
+  /// スコアがそのまま使える。
+  ScenarioTempo get tempoNow {
+    if (isFinished) return ScenarioTempo.any;
+    final minute = currentMinute;
+    final gap = margin;
+    if (gap < 0) {
+      final from = gap <= -2
+          ? Formulas.bigDeficitMinute
+          : Formulas.situationalMinute;
+      return minute >= from ? ScenarioTempo.chase : ScenarioTempo.any;
+    }
+    if (gap > 0 && minute >= Formulas.situationalMinute) {
+      return ScenarioTempo.hold;
+    }
+    return ScenarioTempo.any;
+  }
+
   /// 直前の手が失敗していたか。「負けず嫌い」「気分屋」の判定に使う。
   bool get afterFailure => resolutions.isNotEmpty && !resolutions.last.success;
   bool get afterSuccess => resolutions.isNotEmpty && resolutions.last.success;
@@ -173,12 +221,18 @@ class MatchInProgress {
   bool get lateGame => !isFinished && currentMinute >= Formulas.lateGameMinute;
 
   /// 今の状況を一言で。画面に出す。
+  ///
+  /// 局面が展開に合わせて差し替わる時間帯（[tempoNow]）は、終盤より前でも
+  /// 出す。「なぜ急に勝負を迫る局面が来たのか」が分からないと、
+  /// 差し替えがただの気まぐれに見える。
   String? get situationLabel {
     if (isFinished) return null;
-    if (!lateGame) return null;
-    if (margin < 0) return '${-margin}点ビハインド・終盤';
-    if (margin == 0) return '同点・終盤';
-    return '$margin点リード・終盤';
+    final late = lateGame;
+    if (!late && tempoNow == ScenarioTempo.any) return null;
+    final when = late ? '終盤' : '残り30分';
+    if (margin < 0) return '${-margin}点ビハインド・$when';
+    if (margin == 0) return '同点・$when';
+    return '$margin点リード・$when';
   }
 
   /// 試合で起きたことを、時間順に並べたもの。
@@ -362,6 +416,7 @@ class MatchInProgress {
     );
     resolutions.add(resolution);
     _index++;
+    _adapt();
     return resolution;
   }
 
@@ -652,8 +707,16 @@ class MatchEngine {
       Appearance.benched || Appearance.injured => 0,
     };
 
-    final pool = [...ScenarioPool.forPosition(player.position)]..shuffle(_random);
+    // 試合の骨格は展開に依らない局面から引き、終盤に効く局面は控えに回す。
+    final family = player.position.family;
+    final pool = [...ScenarioPool.neutralFor(family)]..shuffle(_random);
     final picked = pool.take(count).toList();
+    final reserves = count == 0
+        ? const <Scenario>[]
+        : ([
+            ...ScenarioPool.tempoFor(family, ScenarioTempo.chase),
+            ...ScenarioPool.tempoFor(family, ScenarioTempo.hold),
+          ]..shuffle(_random));
 
     // 逆足で対応することになる局面を先に決めておく。両利きなら起きない。
     final weakFootChance =
@@ -671,6 +734,7 @@ class MatchEngine {
       home: home,
       appearance: appearance,
       scenarios: picked,
+      reserves: reserves,
       minutes: _minutesFor(count, appearance),
       player: player,
       club: club,

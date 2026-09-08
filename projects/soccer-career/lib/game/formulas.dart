@@ -37,6 +37,17 @@ class Formulas {
   /// 終盤とみなす時間。ここからの1点は重い。
   static const int lateGameMinute = 75;
 
+  /// 展開に合わせた局面に差し替える時間。
+  ///
+  /// これより後の局面は、勝っていれば守り切る局面、負けていれば
+  /// 追いかける局面に入れ替える。全部を状況で決めると試合が
+  /// 型どおりになるので、差し替わるのは終盤の1つだけになるよう
+  /// 遅めに置いてある。
+  static const int situationalMinute = 70;
+
+  /// 2点差以上を追う展開は、もう少し早くから勝負に出る。
+  static const int bigDeficitMinute = 58;
+
   /// 追いついた・突き放した得点の評価点の倍率。
   static const double decisiveGoalFactor = 1.4;
 

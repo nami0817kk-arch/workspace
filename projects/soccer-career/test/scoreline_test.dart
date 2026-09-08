@@ -36,15 +36,22 @@ MatchInProgress match({
   List<int> conceded = const [],
   int seed = 1,
   Position position = Position.st,
+  bool withReserves = false,
 }) {
   final scenarios =
-      ScenarioPool.forPosition(position).take(minutes.length).toList();
+      ScenarioPool.neutralFor(position.family).take(minutes.length).toList();
   return MatchInProgress(
     matchday: 1,
     opponent: club('rival'),
     home: true,
     appearance: Appearance.start,
     scenarios: scenarios,
+    reserves: withReserves
+        ? [
+            ...ScenarioPool.tempoFor(position.family, ScenarioTempo.chase),
+            ...ScenarioPool.tempoFor(position.family, ScenarioTempo.hold),
+          ]
+        : const [],
     minutes: minutes,
     player: player(position: position),
     club: club('mine'),
@@ -161,6 +168,93 @@ void main() {
     });
   });
 
+  group('展開に合わせた局面', () {
+    test('終盤にビハインドなら、追いかける局面に差し替わる', () {
+      final m = match(
+        minutes: [20, 50, 82],
+        conceded: [30],
+        withReserves: true,
+      );
+      // 序盤は展開に依らない局面のまま。
+      expect(m.current.tempo, ScenarioTempo.any);
+      m.choose(m.current.options.first);
+      m.choose(m.current.options.first);
+      expect(m.tempoNow, ScenarioTempo.chase);
+      expect(m.current.tempo, ScenarioTempo.chase,
+          reason: '終盤にビハインドなのに、追いかける局面が来ない');
+    });
+
+    test('終盤にリードしていれば、守り切る局面に差し替わる', () {
+      final m = match(
+        minutes: [20, 50, 82],
+        teammateGoals: [30],
+        withReserves: true,
+      );
+      m.choose(m.current.options.first);
+      m.choose(m.current.options.first);
+      expect(m.tempoNow, ScenarioTempo.hold);
+      expect(m.current.tempo, ScenarioTempo.hold);
+    });
+
+    test('2点差を追う展開は、もう少し早くから勝負になる', () {
+      final m = match(
+        minutes: [20, 62, 82],
+        conceded: [10, 15],
+        withReserves: true,
+      );
+      m.choose(m.current.options.first);
+      expect(m.currentMinute, 62);
+      expect(m.currentMinute, lessThan(Formulas.situationalMinute));
+      expect(m.current.tempo, ScenarioTempo.chase,
+          reason: '2点ビハインドでも普通の局面のまま');
+    });
+
+    test('同点なら差し替わらない', () {
+      final m = match(
+        minutes: [20, 50, 82],
+        teammateGoals: [30],
+        conceded: [40],
+        withReserves: true,
+      );
+      m.choose(m.current.options.first);
+      m.choose(m.current.options.first);
+      expect(m.tempoNow, ScenarioTempo.any);
+      expect(m.current.tempo, ScenarioTempo.any);
+    });
+
+    test('控えが無ければ何も起きない', () {
+      final m = match(minutes: [20, 50, 82], conceded: [30]);
+      m.choose(m.current.options.first);
+      m.choose(m.current.options.first);
+      expect(m.tempoNow, ScenarioTempo.chase);
+      expect(m.current.tempo, ScenarioTempo.any, reason: '控えが無いのに差し替わった');
+    });
+
+    test('差し替えても、同じ局面が1試合に二度出ない', () {
+      final m = match(
+        minutes: [20, 50, 82],
+        conceded: [30],
+        withReserves: true,
+      );
+      while (!m.isFinished) {
+        m.choose(m.current.options.first);
+      }
+      final ids = m.scenarios.map((s) => s.id).toList();
+      expect(ids.toSet().length, ids.length);
+    });
+
+    test('差し替わる時間帯は、画面にも状況が出る', () {
+      // 局面だけが変わって理由が出ないと、ただの気まぐれに見える。
+      final m = match(
+        minutes: [20, 62, 82],
+        conceded: [10, 15],
+        withReserves: true,
+      );
+      m.choose(m.current.options.first);
+      expect(m.situationLabel, contains('2点ビハインド'));
+    });
+  });
+
   group('局面の数', () {
     test('どのポジションも12以上の局面から引く', () {
       for (final family in ScenarioFamily.values) {
@@ -169,6 +263,19 @@ void main() {
             reason: '$family の局面が少ない');
         // IDが重複していない。
         expect(pool.map((s) => s.id).toSet().length, pool.length);
+      }
+    });
+
+    test('骨格だけで1試合ぶんを賄え、どの展開にも控えがある', () {
+      for (final family in ScenarioFamily.values) {
+        expect(ScenarioPool.neutralFor(family).length,
+            greaterThanOrEqualTo(12),
+            reason: '$family の骨格が少ない');
+        for (final tempo in [ScenarioTempo.chase, ScenarioTempo.hold]) {
+          expect(ScenarioPool.tempoFor(family, tempo).length,
+              greaterThanOrEqualTo(3),
+              reason: '$family に $tempo の局面が足りない');
+        }
       }
     });
 

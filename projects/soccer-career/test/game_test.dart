@@ -185,17 +185,26 @@ void main() {
     });
 
     test('能力が極端に高ければゴールが記録される', () {
-      final match = build(seed: 7, attributes: attrs(all: 99, shooting: 99));
-      while (!match.isFinished) {
-        // ゴールに繋がる手を優先して選ぶ。
-        final goalOption = match.current.options
-            .where((o) => o.outcome == Outcome.goal)
-            .toList();
-        match.choose(
-            goalOption.isEmpty ? match.current.options.first : goalOption.first);
+      // 1試合では、手が通っても決まらないことがある（goalConversion）。
+      // 1つの seed に賭けると、たまたま入らなかっただけで赤くなる。
+      var scored = 0;
+      var goodRatings = 0;
+      for (var seed = 1; seed <= 10; seed++) {
+        final match = build(seed: seed, attributes: attrs(all: 99, shooting: 99));
+        while (!match.isFinished) {
+          // ゴールに繋がる手を優先して選ぶ。
+          final goalOption = match.current.options
+              .where((o) => o.outcome == Outcome.goal)
+              .toList();
+          match.choose(goalOption.isEmpty
+              ? match.current.options.first
+              : goalOption.first);
+        }
+        if (match.goals + match.assists > 0) scored++;
+        if (match.rating > Formulas.baseRating) goodRatings++;
       }
-      expect(match.goals + match.assists, greaterThan(0));
-      expect(match.rating, greaterThan(Formulas.baseRating));
+      expect(scored, greaterThan(4), reason: '10試合でほとんど点が入らない');
+      expect(goodRatings, 10, reason: '手が通っているのに評価点が上がらない');
     });
 
     test('評価点は上下限に収まる', () {
