@@ -105,9 +105,14 @@ enum Detail {
 class Attributes {
   Attributes._(List<int> values) : _values = List.unmodifiable(values);
 
-  /// 詳細能力を直接指定して作る。
+  /// 詳細能力を直接指定して作る。保存データの読み込みもここを通る。
+  ///
+  /// 上限を超えた値（超越の特性で伸ばしたぶん）を潰さないよう、
+  /// 丸めは [Formulas.absoluteMax] で行う。
   factory Attributes.fromDetails(Map<Detail, int> details) => Attributes._([
-        for (final d in Detail.values) _clamp(details[d] ?? Formulas.defaultGoalkeeping),
+        for (final d in Detail.values)
+          _clamp(details[d] ?? Formulas.defaultGoalkeeping,
+              max: Formulas.absoluteMax),
       ]);
 
   /// カテゴリの値から作る。各カテゴリの詳細はすべて同じ値になる。
@@ -168,8 +173,8 @@ class Attributes {
 
   final List<int> _values;
 
-  static int _clamp(int v) =>
-      v.clamp(Formulas.minAttribute, Formulas.maxAttribute).toInt();
+  static int _clamp(int v, {int max = Formulas.maxAttribute}) =>
+      v.clamp(Formulas.minAttribute, max).toInt();
 
   int detail(Detail d) => _values[d.index];
 
@@ -225,9 +230,12 @@ class Attributes {
   }
 
   /// 詳細能力を1つ増減させた新しい能力値を返す。上下限で丸める。
-  Attributes bumpDetail(Detail d, int delta) {
+  ///
+  /// [max] はその詳細能力の上限。超越の特性を持つ選手はここが 99 を超える。
+  Attributes bumpDetail(Detail d, int delta,
+      {int max = Formulas.maxAttribute}) {
     final next = [..._values];
-    next[d.index] = _clamp(next[d.index] + delta);
+    next[d.index] = _clamp(next[d.index] + delta, max: max);
     return Attributes._(next);
   }
 

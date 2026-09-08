@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import '../game/formulas.dart';
 import '../game/scenarios.dart';
 import 'attributes.dart';
 
@@ -132,6 +133,18 @@ enum Trait {
   utility('ユーティリティ', '慣れないポジションでも力が落ちにくい'),
   showman('華がある', '知名度が伸びやすい'),
 
+  // ---- 超越 ----
+  // 1つの詳細能力だけ、上限（99）を超えて伸ばせる。ポテンシャルに達しても
+  // その1つは伸び続ける。付いた瞬間には何も変わらず、上に行って初めて効く。
+  eagleEye('イーグルアイ', '視野だけ、上限を10超えて伸ばせる'),
+  cannon('大砲', 'シュート力だけ、上限を10超えて伸ばせる'),
+  lightning('韋駄天', '最高速だけ、上限を10超えて伸ばせる'),
+  glue('吸い付くボール', 'ボールコントロールだけ、上限を10超えて伸ばせる'),
+  sniper('狙撃手', '決定力だけ、上限を10超えて伸ばせる'),
+  hawk('鷹の読み', 'インターセプトだけ、上限を10超えて伸ばせる'),
+  ironLungs('鉄の肺', 'スタミナだけ、上限を10超えて伸ばせる'),
+  catReflex('猫の反射', 'セービングだけ、上限を10超えて伸ばせる'),
+
   // ---- 欠点 ----
   fragile('怪我がち', '怪我をしやすい', flaw: true),
   moody('気分屋', '直前の結果に引きずられる。成功の後は強く、失敗の後は弱い', flaw: true),
@@ -197,6 +210,17 @@ enum Trait {
     {Trait.hotHand, Trait.moody},
     {Trait.cleanPlayer, Trait.hothead},
     {Trait.coachable, Trait.difficult},
+    // 超越は1人に1つ。2つ持てると「上限の無い選手」になる。
+    {
+      Trait.eagleEye,
+      Trait.cannon,
+      Trait.lightning,
+      Trait.glue,
+      Trait.sniper,
+      Trait.hawk,
+      Trait.ironLungs,
+      Trait.catReflex,
+    },
     {Trait.genius, Trait.lateBloomer},
     {Trait.genius, Trait.lazy},
     {Trait.ironBody, Trait.robust},
@@ -227,6 +251,7 @@ enum Trait {
   static const Set<Trait> _keeperOnly = {
     Trait.sweeperKeeper,
     Trait.reflexKeeper,
+    Trait.catReflex,
   };
 
   /// GK には意味の無い特性。
@@ -243,6 +268,12 @@ enum Trait {
     Trait.assistKing,
     Trait.composed,
     Trait.twoFooted,
+    Trait.eagleEye,
+    Trait.cannon,
+    Trait.lightning,
+    Trait.glue,
+    Trait.sniper,
+    Trait.hawk,
   };
 
   /// 守備の選手にしか効かない特性（無失点の評価が乗るポジション）。
@@ -515,6 +546,14 @@ enum Trait {
       case Trait.ironBody:
       case Trait.bornStar:
       case Trait.glassBody:
+      case Trait.eagleEye:
+      case Trait.cannon:
+      case Trait.lightning:
+      case Trait.glue:
+      case Trait.sniper:
+      case Trait.hawk:
+      case Trait.ironLungs:
+      case Trait.catReflex:
         return const [];
     }
   }
@@ -530,6 +569,10 @@ enum Trait {
   ///
   /// 各 getter から作るので、数字を変えれば画面も変わる。
   List<String> get offPitchEffects => [
+        if (transcendDetail != null)
+          '${transcendDetail!.label}の上限 +${Formulas.ceilingBreak}'
+              '（${Formulas.absoluteMax}まで。${Formulas.transcendRunway}以上なら'
+              'ポテンシャルに達しても伸びる）',
         if (potentialBonus != 0) '生まれたときのポテンシャル +$potentialBonus',
         if (peakAgeOffset != 0) 'ピーク ${_years(peakAgeOffset)}',
         if (declineAgeOffset != 0) '衰え始め ${_years(declineAgeOffset)}',
@@ -588,6 +631,19 @@ enum Trait {
         Trait.lateBloomer => age <= 22 ? 0.7 : 1.25,
         Trait.genius => 1.3,
         _ => 1.0,
+      };
+
+  /// 上限を超えて伸ばせる詳細能力。超越の特性だけが持つ。
+  Detail? get transcendDetail => switch (this) {
+        Trait.eagleEye => Detail.vision,
+        Trait.cannon => Detail.shotPower,
+        Trait.lightning => Detail.sprintSpeed,
+        Trait.glue => Detail.ballControl,
+        Trait.sniper => Detail.finishing,
+        Trait.hawk => Detail.interceptions,
+        Trait.ironLungs => Detail.stamina,
+        Trait.catReflex => Detail.reflexes,
+        _ => null,
       };
 
   /// 生まれたときのポテンシャルへの上乗せ。キャリア開始時にだけ効く。
@@ -771,4 +827,17 @@ extension TraitList on List<Trait> {
   double get relationLossFactor =>
       fold(1.0, (f, t) => f * t.relationLossFactor);
   int get potentialBonus => fold(0, (s, t) => s + t.potentialBonus);
+
+  /// 上限を超えて伸ばせる詳細能力。超越は1人に1つなので、最初の1つ。
+  Detail? get transcendDetail {
+    for (final t in this) {
+      if (t.transcendDetail != null) return t.transcendDetail;
+    }
+    return null;
+  }
+
+  /// その詳細能力の上限。超越の対象なら 99 を超える。
+  int ceilingFor(Detail detail) => transcendDetail == detail
+      ? Formulas.absoluteMax
+      : Formulas.maxAttribute;
 }

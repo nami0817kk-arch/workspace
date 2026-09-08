@@ -2791,13 +2791,21 @@ class _AttributeBar extends StatelessWidget {
           ),
           SizedBox(
             width: 28,
-            child: Text('$value', style: theme.textTheme.bodySmall),
+            child: Text('$value',
+                style: theme.textTheme.bodySmall?.copyWith(
+                    // 上限を超えた値は、超えていることが一目で分かるように。
+                    color: value > Formulas.maxAttribute
+                        ? theme.colorScheme.tertiary
+                        : null,
+                    fontWeight: value > Formulas.maxAttribute
+                        ? FontWeight.w700
+                        : null)),
           ),
           Expanded(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(4),
               child: LinearProgressIndicator(
-                value: value / 99,
+                value: (value / Formulas.maxAttribute).clamp(0.0, 1.0),
                 minHeight: thin ? 4 : 6,
               ),
             ),
