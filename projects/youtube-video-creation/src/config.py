@@ -73,6 +73,8 @@ class VideoConfig:
     # news=報道テロップ風 / band=黄色帯＋赤帯 / clean=文字組みだけ
     thumbnail_style: str = "news"
     background: str = "assets/backgrounds/default.png"
+    # 冒頭に出す登録カードのチャンネル名。空なら出さない（2026-09-08）
+    channel_name: str = ""
 
     def font_path(self) -> Path:
         if self.font:

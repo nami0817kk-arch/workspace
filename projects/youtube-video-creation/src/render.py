@@ -153,6 +153,11 @@ class Renderer:
                 card or "",
                 line.image or "",
                 (self.opening_photo if scene.title == self.opening_scene else ""),
+                # チャンネル名が空なら絵は変わらないので、鍵にも入れない
+                ("card:" + self.config.video.channel_name
+                 if self.config.video.channel_name.strip()
+                 and scene.title == self.opening_scene and scene.lines
+                 and line is scene.lines[0] else ""),
                 # 立ち絵を出さないなら口パクも跳ねも絵に影響しない
                 ("open" if mouth_open else "close") if self.layout.with_characters else "-",
                 f"{telop_t:.2f}/{hop_t if self.layout.with_characters else 1.0:.2f}",
@@ -185,6 +190,8 @@ class Renderer:
         # 中身のある節名（「監督は何と言ったか」など）は残す
         if not (self.layout.is_portrait and scene.title in INTERNAL_LABELS):
             self._draw_scene_title(canvas, scene.title)
+        if scene.title == self.opening_scene and scene.lines and line is scene.lines[0]:
+            self._draw_channel_card(canvas)
         if self.layout.with_characters:
             self._draw_telop(canvas, member, text, telop_t, source)
         else:
@@ -483,6 +490,32 @@ class Renderer:
                 str(self.config.video.latin_font_path()),
             )
         return Image.open(target).convert("RGBA")
+
+    def _draw_channel_card(self, canvas: Image.Image) -> None:
+        """左上にチャンネル名と登録ボタンの小さなカード（2026-09-08）。
+
+        参考チャンネルは冒頭0.5〜2.5秒だけこれを出す。読み上げで「登録して」とは
+        言わない。冒頭の節はタイトルを読んでいて左上が空いているので、そこに置く。
+        """
+        name = (self.config.video.channel_name or "").strip()
+        if not name:
+            return
+        layer, draw = _layer(canvas.size)
+        font = self.font_scene
+        name_w = draw.textlength(name, font=font)
+        button = "チャンネル登録"
+        button_w = draw.textlength(button, font=font)
+        left, top = 48, 42
+        height = 68
+        total = 24 + name_w + 22 + button_w + 40 + 24
+        draw.rounded_rectangle([left, top, left + total, top + height],
+                               radius=34, fill=(0, 0, 0, 165))
+        draw.text((left + 24, top + 16), name, font=font, fill=(240, 240, 240, 255))
+        bx = left + 24 + name_w + 22
+        draw.rounded_rectangle([bx, top + 10, bx + button_w + 40, top + height - 10],
+                               radius=24, fill=(204, 0, 0, 255))
+        draw.text((bx + 20, top + 16), button, font=font, fill=(255, 255, 255, 255))
+        canvas.alpha_composite(layer)
 
     def _draw_scene_title(self, canvas: Image.Image, title: str) -> None:
         # RGBA の canvas に直接半透明の図形を描くと下地を「置き換えて」しまうため、

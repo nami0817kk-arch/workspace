@@ -78,6 +78,7 @@ def test_news_layout_keeps_previous_headline(tmp_path):
     config = load_config()
     config.motion.enabled = False
     config.video.show_characters = False
+    config.video.channel_name = ""   # 冒頭の登録カードは1行目だけ変える。ここでは見ない
     script = parse_script(
         "## S\n霊夢: 見出しを出す行。\n  telop: 大きな見出し\n魔理沙: あいづちの行。\n"
     )
@@ -172,6 +173,7 @@ def test_news_headline_keeps_its_source_badge(tmp_path):
     config = load_config()
     config.motion.enabled = False
     config.video.show_characters = False
+    config.video.channel_name = ""   # 冒頭の登録カードは1行目だけ変える。ここでは見ない
     script = parse_script(
         "## S\n霊夢: 報道の話。\n  telop: 見出し\n  source: 報道\n魔理沙: あいづち。\n"
     )
@@ -199,6 +201,7 @@ def test_card_persists_to_following_lines(tmp_path):
     config = load_config()
     config.motion.enabled = False
     config.video.show_characters = False
+    config.video.channel_name = ""   # 冒頭の登録カードは1行目だけ変える。ここでは見ない
     renderer = Renderer(config, tmp_path)
     entries = renderer.frame_entries(_card_script())
     assert len({path for path, _ in entries}) == 1
@@ -520,3 +523,24 @@ def test_積むのは匿名の反応だけ(tmp_path):
     bare = renderer.frame(scene.lines[0], scene, mouth_open=False,
                           panel=("何が起きたか", None, None))
     assert bare in [path for path, _ in entries]
+
+
+def test_冒頭の1行目にだけ登録カードが乗る(tmp_path):
+    """参考チャンネルは冒頭0.5〜2.5秒にチャンネル名と登録ボタンを出す（2026-09-08）。"""
+    config = load_config()
+    config.motion.enabled = False
+    config.video.show_characters = False
+    config.video.channel_name = "海外サッカーの理由"
+    script = parse_script(
+        "## S" + chr(10) + "霊夢: 見出しを出す行。" + chr(10) + "  telop: 大きな見出し"
+        + chr(10) + "魔理沙: あいづちの行。" + chr(10)
+    )
+    for line in script.lines:
+        line.duration, line.pause = 2.0, 0.4
+    entries = Renderer(config, tmp_path).frame_entries(script)
+    # 1行目（カード付き）と2行目（カード無し）で絵が分かれる
+    assert len({path for path, _ in entries}) == 2
+
+    config.video.channel_name = ""
+    entries = Renderer(config, tmp_path / "plain").frame_entries(script)
+    assert len({path for path, _ in entries}) == 1
