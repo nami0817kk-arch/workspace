@@ -3,6 +3,7 @@ import 'aptitude.dart';
 import 'attributes.dart';
 import 'nationality.dart';
 import 'personality.dart';
+import 'look.dart';
 import 'physique.dart';
 import 'traits.dart';
 import 'training.dart';
@@ -23,6 +24,7 @@ class Player {
     this.physique = const Physique(
         heightCm: Physique.baseHeight, weightKg: Physique.baseWeight),
     this.setPieces = const SetPieceSkills(),
+    this.look = const PlayerLook(),
     this.traits = const [],
     this.condition = Formulas.conditionMax,
   }) : aptitude = aptitude ?? const Aptitude({});
@@ -67,6 +69,9 @@ class Player {
 
   /// ポジション適性。本職以外で出ると、その分だけ力を出せない。
   final Aptitude aptitude;
+
+  /// 見た目。試合の判定には効かない。
+  final PlayerLook look;
 
   final List<Trait> traits;
 
@@ -116,6 +121,8 @@ class Player {
     Attributes? attributes,
     Position? position,
     Side? side,
+    PlayerLook? look,
+   
    
     int? condition,
     Nationality? nationality,
@@ -129,6 +136,7 @@ class Player {
         age: age ?? this.age,
         position: position ?? this.position,
         side: side ?? this.side,
+        look: look ?? this.look,
         attributes: attributes ?? this.attributes,
         potential: potential,
         nationality: nationality ?? this.nationality,
@@ -170,6 +178,7 @@ class Player {
         'name': name,
         'age': age,
         'position': position.name,
+        'look': look.toJson(),
         'side': side.name,
         'attributes': attributes.toJson(),
         'potential': potential,
@@ -211,6 +220,8 @@ class Player {
       physique: physique,
       setPieces:
           SetPieceSkills.fromJson(json['setPieces'] as Map<String, dynamic>?),
+      // 見た目を持たせる前の保存データは、既定の見た目で読む。
+      look: PlayerLook.fromJson(json['look'] as Map<String, dynamic>?),
       // 適性を持たせる前の保存データは、今のポジションを本職として読む。
       aptitude: Aptitude.fromJson(
           json['aptitude'] as Map<String, dynamic>?, position),

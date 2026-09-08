@@ -23,6 +23,7 @@ import '../../models/season.dart';
 import '../../state/career_controller.dart';
 import '../club_identity.dart';
 import '../budget_lines.dart';
+import '../player_portrait.dart';
 import '../readable_width.dart';
 import '../training_sheet.dart';
 import '../transfer_code.dart';
@@ -798,10 +799,22 @@ class _PlayerCard extends StatelessWidget {
               children: [
                 Column(
                   children: [
-                    ClubCrest(club: state.club, size: 40),
+                    PlayerPortrait(
+                      look: player.look,
+                      club: state.club,
+                      squadNumber: state.squadNumber,
+                      size: 64,
+                    ),
                     const SizedBox(height: 4),
-                    Text('${player.overall}',
-                        style: theme.textTheme.titleMedium),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ClubCrest(club: state.club, size: 16),
+                        const SizedBox(width: 4),
+                        Text('${player.overall}',
+                            style: theme.textTheme.titleMedium),
+                      ],
+                    ),
                   ],
                 ),
                 const SizedBox(width: 12),

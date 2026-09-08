@@ -11,6 +11,7 @@ import 'package:soccer_career/game/match_engine.dart';
 import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/attributes.dart';
 import 'package:soccer_career/models/career.dart';
+import 'package:soccer_career/models/look.dart';
 import 'package:soccer_career/models/physique.dart';
 import 'package:soccer_career/models/season.dart';
 import 'package:soccer_career/state/career_controller.dart';
@@ -177,6 +178,63 @@ void main() {
         await c.finishMatch();
       }
       expect(seen, isTrue, reason: 'シュートの手に何も乗っていない');
+    });
+  });
+
+  group('見た目', () {
+    test('選んだ見た目が残る', () async {
+      final c = controller(seed: 61);
+      await c.startCareer(
+        name: '見た目',
+        position: Position.st,
+        age: 20,
+        agent: Agent.pool.first,
+        look: const PlayerLook(skin: 4, hair: HairStyle.curly, hairColor: 3),
+        squadNumber: 27,
+      );
+      final player = c.state!.player;
+      expect(player.look.skin, 4);
+      expect(player.look.hair, HairStyle.curly);
+      expect(c.state!.squadNumber, 27);
+
+      final restored = CareerState.fromJson(c.state!.toJson());
+      expect(restored.player.look.hair, HairStyle.curly);
+      expect(restored.player.look.hairColor, 3);
+    });
+
+    test('見た目を持たせる前の保存データでも落ちない', () async {
+      final c = controller(seed: 62);
+      await c.startCareer(
+          name: '古い保存',
+          position: Position.cb,
+          age: 22,
+          agent: Agent.pool.first);
+      final json = c.state!.toJson();
+      (json['player'] as Map<String, dynamic>).remove('look');
+      final restored = CareerState.fromJson(json);
+      expect(restored.player.look.hair, HairStyle.short);
+      expect(restored.player.look.skin, 1);
+    });
+
+    test('範囲の外の番号が入っていても丸める', () {
+      final look = PlayerLook.fromJson(
+          const {'skin': 99, 'hair': 'なにか', 'hairColor': -3});
+      expect(look.skin, PlayerLook.skinTones.length - 1);
+      expect(look.hairColor, 0);
+      expect(look.hair, HairStyle.short);
+    });
+
+    test('出身国を選べる', () async {
+      final c = controller(seed: 63);
+      await c.startCareer(
+        name: '国選び',
+        position: Position.cm,
+        age: 20,
+        agent: Agent.pool.first,
+        countryId: 'germania',
+      );
+      expect(c.state!.countryId, 'germania');
+      expect(c.state!.club.countryId, 'germania');
     });
   });
 

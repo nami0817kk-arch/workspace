@@ -11,6 +11,7 @@ import '../models/entourage.dart';
 import '../models/life.dart';
 import '../models/nationality.dart';
 import '../models/personality.dart';
+import '../models/look.dart';
 import '../models/physique.dart';
 import '../models/player.dart';
 import '../models/reputation.dart';
@@ -159,6 +160,8 @@ class CareerEngine {
     String? countryId,
     Side side = Side.center,
     Physique? physique,
+    PlayerLook? look,
+    int? squadNumber,
     Map<AttributeKey, int> tweaks = const {},
   }) {
     final home = countryId == null
@@ -187,6 +190,7 @@ class CareerEngine {
       nationality: _rollNationality(home),
       personality: Personality.roll(_random),
       physique: physique ?? Physique.roll(_random, position),
+      look: look ?? PlayerLook.roll(_random),
       aptitude: Aptitude.initial(position),
       traits: Trait.roll(_random),
     );
@@ -204,7 +208,7 @@ class CareerEngine {
       contractYears: extras.rollContractYears(),
       countryId: home.id,
       objective: extras.objectiveFor(player: player, club: club),
-      squadNumber: squadNumberFor(position, _random),
+      squadNumber: squadNumber ?? squadNumberFor(position, _random),
       nationalTeamId: home.id,
       manager: Manager.roll(_random),
       competitor: Teammate.roll(_random,

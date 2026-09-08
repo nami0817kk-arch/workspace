@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 
 import 'guide_screen.dart';
 import '../../game/career_engine.dart';
+import '../../game/world.dart';
+import '../../models/look.dart';
 import '../../models/agent.dart';
 import '../../models/attributes.dart';
 import '../../models/physique.dart';
 import '../../state/career_controller.dart';
+import '../player_portrait.dart';
 import '../readable_width.dart';
 
 /// キャリアの最初の画面。名前・ポジション・年齢・代理人を決める。
@@ -31,6 +34,9 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
   int _height = Physique.baseHeight;
   int _weight = Physique.baseWeight;
   final Map<AttributeKey, int> _tweaks = {};
+  PlayerLook _look = const PlayerLook();
+  int _number = 10;
+  String? _countryId;
   late final List<Agent> _agents = Agent.candidates(Random());
   Agent? _agent;
   bool _busy = false;
@@ -96,6 +102,9 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
       age: _age,
       agent: _agent!,
       side: _side,
+      look: _look,
+      squadNumber: _number,
+      countryId: _countryId,
       physique: Physique(
         heightCm: _height,
         weightKg: _weight,
@@ -154,6 +163,21 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                     ),
                     textInputAction: TextInputAction.done,
                     onChanged: (_) => setState(() {}),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      PlayerPortrait(look: _look, squadNumber: _number, size: 88),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Text(
+                          '顔は描かない。髪と肌と、着ているもので「自分の選手」にする。'
+                          'クラブに入ると、そのクラブの色を着る。',
+                          style: muted,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 24),
                   Text('ポジション', style: theme.textTheme.labelLarge),
@@ -222,6 +246,43 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                     style: muted,
                   ),
                   const SizedBox(height: 24),
+                  Text('出身国', style: theme.textTheme.labelLarge),
+                  const SizedBox(height: 4),
+                  Text(
+                    '始めるリーグと、代表と、外国人としての扱いが決まる。'
+                    '格の高い国は水準も高いぶん、上がるのは難しい。',
+                    style: muted,
+                  ),
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: [
+                      ChoiceChip(
+                        label: const Text('おまかせ'),
+                        selected: _countryId == null,
+                        onSelected: (_) => setState(() => _countryId = null),
+                      ),
+                      for (final country in World.countries)
+                        ChoiceChip(
+                          label: Text('${country.name} '
+                              '${'★' * country.prestige}'),
+                          selected: _countryId == country.id,
+                          onSelected: (_) =>
+                              setState(() => _countryId = country.id),
+                        ),
+                    ],
+                  ),
+                  if (_countryId != null) ...[
+                    const SizedBox(height: 6),
+                    Text(
+                      '${World.byId(_countryId!).confederation.label}  ・  '
+                      '${World.byId(_countryId!).tiers}部制  ・  '
+                      '外国人ルール ${World.byId(_countryId!).foreignRule.summary}',
+                      style: muted,
+                    ),
+                  ],
+                  const SizedBox(height: 24),
                   Text('身体', style: theme.textTheme.labelLarge),
                   const SizedBox(height: 4),
                   Text(
@@ -270,7 +331,85 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                         .buildLabel,
                     style: muted,
                   ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
+                  Theme(
+                    data: theme.copyWith(dividerColor: Colors.transparent),
+                    child: ExpansionTile(
+                      tilePadding: EdgeInsets.zero,
+                      childrenPadding: const EdgeInsets.only(bottom: 8),
+                      title: Text('見た目と背番号',
+                          style: theme.textTheme.labelLarge),
+                      subtitle: Text(
+                        '${_look.hair.label}  ・  '
+                        '${PlayerLook.hairColorLabels[_look.hairColor]}  ・  '
+                        '背番号 $_number',
+                        style: muted,
+                      ),
+                      children: [
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text('試合の判定には効かない。', style: muted),
+                        ),
+                        const SizedBox(height: 10),
+                        _LookRow(
+                          label: '肌',
+                          children: [
+                            for (var i = 0;
+                                i < PlayerLook.skinTones.length;
+                                i++)
+                              _Swatch(
+                                color: Color(PlayerLook.skinTones[i]),
+                                selected: _look.skin == i,
+                                onTap: () => setState(
+                                    () => _look = _look.copyWith(skin: i)),
+                              ),
+                          ],
+                        ),
+                        _LookRow(
+                          label: '髪の色',
+                          children: [
+                            for (var i = 0;
+                                i < PlayerLook.hairColors.length;
+                                i++)
+                              _Swatch(
+                                color: Color(PlayerLook.hairColors[i]),
+                                selected: _look.hairColor == i,
+                                onTap: () => setState(() =>
+                                    _look = _look.copyWith(hairColor: i)),
+                              ),
+                          ],
+                        ),
+                        _LookRow(
+                          label: '髪型',
+                          children: [
+                            for (final style in HairStyle.values)
+                              ChoiceChip(
+                                label: Text(style.label),
+                                selected: _look.hair == style,
+                                onSelected: (_) => setState(
+                                    () => _look = _look.copyWith(hair: style)),
+                              ),
+                          ],
+                        ),
+                        const SizedBox(height: 8),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Text('背番号  $_number',
+                              style: theme.textTheme.bodyMedium),
+                        ),
+                        Slider(
+                          value: _number.toDouble(),
+                          min: 1,
+                          max: 99,
+                          divisions: 98,
+                          label: '$_number',
+                          onChanged: (v) =>
+                              setState(() => _number = v.round()),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
                   Text('能力の割り振り', style: theme.textTheme.labelLarge),
                   const SizedBox(height: 4),
                   Text(
@@ -327,6 +466,73 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                 ],
               ),
             ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// 見た目の1行。ラベルと、選ぶものを並べる。
+class _LookRow extends StatelessWidget {
+  const _LookRow({required this.label, required this.children});
+
+  final String label;
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 56,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(label, style: theme.textTheme.bodySmall),
+            ),
+          ),
+          Expanded(
+            child: Wrap(spacing: 8, runSpacing: 8, children: children),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// 色を選ぶ丸。
+class _Swatch extends StatelessWidget {
+  const _Swatch({
+    required this.color,
+    required this.selected,
+    required this.onTap,
+  });
+
+  final Color color;
+  final bool selected;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return InkWell(
+      onTap: onTap,
+      customBorder: const CircleBorder(),
+      child: Container(
+        width: 34,
+        height: 34,
+        decoration: BoxDecoration(
+          color: color,
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: selected
+                ? theme.colorScheme.primary
+                : theme.colorScheme.outlineVariant,
+            width: selected ? 3 : 1,
           ),
         ),
       ),
