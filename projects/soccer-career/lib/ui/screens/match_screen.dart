@@ -111,14 +111,58 @@ class _MatchHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    final muted = theme.textTheme.labelSmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _stat(theme, match.home ? 'ホーム' : 'アウェイ', match.appearance.label),
-        _stat(theme, '局面', '${match.currentIndex}/${match.scenarios.length}'),
-        _stat(theme, '評価点', match.rating.toStringAsFixed(1)),
-        _stat(theme, 'G / A', '${match.goals} / ${match.assists}'),
-        _stat(theme, '調子', '${match.player.condition}'),
+        // 今どうなっているか。1点負けている終盤の1本と、
+        // 3点リードでの1本は、同じ手でも意味が違う。
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                match.home ? match.club.name : match.opponent.name,
+                style: theme.textTheme.bodyMedium,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.end,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Text(
+                match.home
+                    ? match.scoreLine
+                    : '${match.concededBy(match.isFinished ? 90 : match.currentMinute)} - '
+                        '${match.scoredBy(match.isFinished ? 90 : match.currentMinute)}',
+                style: theme.textTheme.headlineSmall,
+              ),
+            ),
+            Expanded(
+              child: Text(
+                match.home ? match.opponent.name : match.club.name,
+                style: theme.textTheme.bodyMedium,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Text(
+          match.home ? 'ホーム · ${match.appearance.label}' : 'アウェイ · ${match.appearance.label}',
+          style: muted,
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 12),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _stat(theme, '局面', '${match.currentIndex}/${match.scenarios.length}'),
+            _stat(theme, '評価点', match.rating.toStringAsFixed(1)),
+            _stat(theme, 'G / A', '${match.goals} / ${match.assists}'),
+            _stat(theme, '調子', '${match.player.condition}'),
+          ],
+        ),
       ],
     );
   }
@@ -162,7 +206,8 @@ class _ScenarioView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    MatchInProgress.minuteLabel(match.currentMinute),
+                    '${MatchInProgress.minuteLabel(match.currentMinute)}'
+                    '  ·  ${match.scoreLine}',
                     style: theme.textTheme.labelMedium
                         ?.copyWith(color: theme.colorScheme.primary),
                   ),
@@ -178,6 +223,14 @@ class _ScenarioView extends StatelessWidget {
                         label: Text(match.opponentStyle.label),
                         visualDensity: VisualDensity.compact,
                       ),
+                      if (match.situationLabel != null)
+                        Chip(
+                          label: Text(match.situationLabel!),
+                          backgroundColor: match.margin < 0
+                              ? theme.colorScheme.errorContainer
+                              : theme.colorScheme.secondaryContainer,
+                          visualDensity: VisualDensity.compact,
+                        ),
                       if (match.bigMatch)
                         Chip(
                           label: const Text('大一番'),

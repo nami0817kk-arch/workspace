@@ -1,3 +1,5 @@
+import '../models/attributes.dart';
+
 /// ゲームの数値定義を1か所に集めたもの。
 ///
 /// バランス調整はここだけを触る。各所に散らすと、1つ変えたときに
@@ -31,6 +33,23 @@ class Formulas {
   /// サッカーで、そこが分かれているほうが1点の重みも出る。
   static const double goalConversion = 0.5;
   static const double assistConversion = 0.6;
+
+  /// 終盤とみなす時間。ここからの1点は重い。
+  static const int lateGameMinute = 75;
+
+  /// 追いついた・突き放した得点の評価点の倍率。
+  static const double decisiveGoalFactor = 1.4;
+
+  /// 味方が決める得点の量。自分の得点を上乗せするので、その分を差し引く。
+  ///
+  /// 差し引く量はポジションで変える。一律にすると、点を取らない選手の
+  /// チームだけが弱くなり、GK や CB のクラブが勝てなくなる。
+  static double teammateGoalShareFor(ScenarioFamily family) =>
+      switch (family) {
+        ScenarioFamily.forward => 0.65,
+        ScenarioFamily.midfield => 0.85,
+        ScenarioFamily.defence || ScenarioFamily.goalkeeper => 1.0,
+      };
 
   /// 局面の成否が評価点に与える増減。
   ///
