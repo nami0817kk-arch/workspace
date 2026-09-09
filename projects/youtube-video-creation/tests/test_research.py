@@ -324,13 +324,41 @@ def test_recording_the_same_slot_twice_replaces_rather_than_piles_up(tmp_path):
 
 
 def test_long_notes_are_shortened_for_the_screen():
+    """**収まるなら丸ごと出す**（2026-09-10 に変更）。
+
+    前は「。」で切って1文目だけにしていた。2文目以降は必ず落ちるので、
+    19本513行を数えたら**読み上げの46%しか画面に出ていなかった**
+    （ユーザー指摘）。上限も1行ぶん（26字）から2行ぶん（54字）へ広げた。
+    """
+    from src.research import TELOP_LIMIT, _telop
+
+    two = "問題は金額ではなく「誰に売るか」。ライバルに主力を渡すこと自体を拒んでいる"
+    assert len(two) <= TELOP_LIMIT
+    assert _telop(two) == two                       # 2文とも出す
+    assert _telop("あ" * 100).endswith("…")
+    assert len(_telop("あ" * 100)) == TELOP_LIMIT
+    assert _telop("") == ""
+    # 末尾の。は付けない（枠が狭く見える）
+    assert _telop("短い一文です。") == "短い一文です"
+
+
+def test_収まらないときは文の切れ目で切る():
+    """**途中でぶつ切りにしない。**限度の中に「。」や「、」があればそこで切る。"""
     from src.research import _telop
 
-    long_answer = "問題は金額ではなく「誰に売るか」。ライバルに主力を渡すこと自体を拒んでいる"
-    assert _telop(long_answer) == "問題は金額ではなく「誰に売るか」"      # 1文目だけ
-    assert len(_telop("あ" * 40)) == 26                                  # 上限で切って…を付ける
-    assert _telop("あ" * 40).endswith("…")
-    assert _telop("") == ""
+    text = "9月4日のプレミアリーグ第3節、イプスウィッチ戦。途中出場でのデビューでした"
+    got = _telop(text, 30)
+    assert got == "9月4日のプレミアリーグ第3節、イプスウィッチ戦"
+    assert "…" not in got
+
+
+def test_地の文もテロップにする():
+    """**16字に収まる行だけ出していた**ので、513行のうち198行で画面が止まっていた。"""
+    from src.research import _telop
+
+    long_line = "一方のレアル・マドリードは同じ節でベティスに0対1で敗れ、今季初黒星"
+    assert len(long_line) > 16
+    assert _telop(long_line) == long_line          # 前は "" だった
 
 
 def test_written_notes_are_turned_into_spoken_lines():

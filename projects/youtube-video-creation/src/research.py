@@ -907,7 +907,10 @@ def check_repeats(notes: Notes, plan: Plan, now=None) -> list[str]:
 
 
 # テロップに入る目安。これを超えると読みきれないうちに次へ行く
-TELOP_LIMIT = 26
+# **画面に出る字の上限**。1920幅・58pxで1行に約27.8字、枠には3行入る。
+# 26 は1行ぶんで、**読み上げの半分しか画面に出ていなかった**
+# （2026-09-10 に19本513行を数えて 46%。ユーザー指摘）。2行ぶんに広げた
+TELOP_LIMIT = 54
 
 
 def _resolve_bg(path: str):
@@ -918,11 +921,25 @@ def _resolve_bg(path: str):
 
 
 def _telop(text: str, limit: int = TELOP_LIMIT) -> str:
-    """読み上げ文をそのままテロップにすると長すぎる。頭の一文だけ使う。"""
-    head = str(text).strip().split("。")[0].strip("　 ")
-    if len(head) > limit:
-        head = head[: limit - 1] + "…"
-    return head
+    """読み上げ文を画面に出す形にする。
+
+    **前は「。」で切って頭の一文だけにしていた。**2文目以降は必ず落ちるので、
+    「6分、ヤマルのゴールで先制します。2試合続けての得点でした」の後半が
+    画面に出ないまま読まれていた（2026-09-10 実測）。
+    いまは**収まるなら丸ごと出す**。収まらないときだけ、限度の中で
+    文の切れ目を探して切る。切れ目が無ければ … を付ける。
+    """
+    body = str(text).strip().strip("　 ")
+    if not body:
+        return ""
+    if len(body) <= limit:
+        return body.rstrip("。")
+    head = body[:limit]
+    for mark in ("。", "、"):
+        cut = head.rfind(mark)
+        if cut >= limit // 2:          # 半分より前で切ると言葉が足りない
+            return body[:cut]
+    return body[: limit - 1] + "…"
 
 
 # 動詞・形容詞の言い切りはこの音で終わる。名詞止めと区別するために使う
@@ -1133,11 +1150,15 @@ def to_script(notes: Notes, plan: Plan) -> str:
                     room = max(8, TELOP_LIMIT - len(voice) - 1)
                     shown = f"{voice}「{_telop(sentence, room)}」"
                 elif not shown:
-                    # **地の文は読み上げをそのまま出さない。**字幕と同じものが
-                    # 二重に出て、画面が文字だらけになる（実測 2026-09-06）。
-                    # 名詞で言い切れる短さになるときだけ出す
-                    short = _telop(sentence, 16)
-                    shown = short if len(short) <= 16 and "…" not in short else ""
+                    # **地の文も画面に出す**（2026-09-10 ユーザー指摘で変更）。
+                    # それまでは「最初の一文が16字に収まるときだけ」出していた。
+                    # 収まらない行は**何も出ず、前の画面が残る**ので、
+                    # 513行のうち198行（39%）で画面が読み上げとずれていた。
+                    # 実例: 「アルバレスを獲れませんでした」と読んでいるあいだ、
+                    # 画面はフリックの発言のままだった。
+                    # 元の理由（字幕と二重になる）は、字幕が焼き込みではなく
+                    # 別ファイルの CC なので、そもそも二重にならない
+                    shown = _telop(sentence)
                 if shown:
                     lines.append(f"  telop: {shown}")
                 if own_card:

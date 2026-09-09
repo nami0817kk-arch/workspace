@@ -68,6 +68,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     findings.append(_caption_badges(out_dir / "subtitles.srt"))
     findings.append(_still_length(out_dir / "script.json"))
     findings.append(_screen_change(out_dir / "script.json"))
+    findings.append(_telop_coverage(out_dir / "script.json"))
     size = _dimensions(out_dir / "video.mp4")
     portrait = bool(size and size[1] > size[0])
     findings.append(check_card_hold(out_dir / "script.json", hold_limit(portrait)))
@@ -188,6 +189,9 @@ CARD_HOLD_MAX = 12.0
 # ショートはこれより短く見る。31秒の動画で12秒動かないと、尺の4割が同じ絵になる
 # （2026-09-07 に書き出して確認）。参考チャンネルは3〜8秒で必ず変えていた。
 SHORT_CARD_HOLD_MAX = 8.0
+# 読み上げた字のうち、画面にも出ていてほしい割合。
+# 2026-09-10 の実測は本編46%・ショート89%。**本編だけが落ちていた**
+TELOP_SHARE_MIN = 0.70
 
 
 def _screen_change(script_json: Path) -> Finding:
@@ -221,6 +225,47 @@ def _screen_change(script_json: Path) -> Finding:
                        f"{worst:.0f}秒 変わらない場面があります"
                        f"（上限{SAME_SCREEN_MAX:.0f}秒）: {worst_telop[:24]}")
     return Finding(True, "見た目の変化", f"変わらない最長 {worst:.0f}秒")
+
+
+def _telop_coverage(script_json: Path) -> Finding:
+    """**読み上げた字のうち、画面にも出た字の割合**（2026-09-10）。
+
+    ユーザーの指摘で 19本513行を数えたら 46% しかなかった。
+    半分は声だけで流れていて、しかも**画面が読み上げとずれる**。
+    実例（バルサ回）: 「アルバレスを獲れませんでした」と読んでいるあいだ、
+    画面はフリックの発言のままだった。
+
+    原因は3つとも仕組みの側にあった（地の文は16字まで／引用は26字で切る／
+    「。」で切って1文目だけ）。**直したので、戻っていないかここで見る。**
+    ショートは同じ数え方で89%だったので、下限はそこを目指す。
+    """
+    import json
+
+    if not script_json.exists():
+        return Finding(False, "画面に出る字", "script.json がありません")
+    data = json.loads(script_json.read_text(encoding="utf-8"))
+    said = shown = 0
+    stale = 0
+    previous = None
+    for scene in data.get("scenes", []):
+        for line in scene.get("lines", []):
+            said += len(line.get("text") or "")
+            telop = line.get("telop") or ""
+            if not telop or telop == previous:
+                stale += 1
+                continue
+            previous = telop
+            shown += len(telop)
+    if not said:
+        return Finding(True, "画面に出る字", "読み上げがありません")
+    share = shown / said
+    detail = (f"読み上げ{said}字のうち画面に{shown}字＝{share * 100:.0f}%"
+              f"／前の画面のままの行 {stale}")
+    if share < TELOP_SHARE_MIN:
+        return Finding(False, "画面に出る字",
+                       f"{detail}。下限{TELOP_SHARE_MIN * 100:.0f}%。"
+                       "読み上げの半分が声だけで流れています")
+    return Finding(True, "画面に出る字", detail)
 
 
 def _card_rule(script: Script) -> Finding:
