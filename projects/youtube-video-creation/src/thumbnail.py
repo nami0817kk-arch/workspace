@@ -519,10 +519,16 @@ def _band_thumbnail(
     canvas.alpha_composite(scrim)
 
     layer, draw = _layer(SIZE)
+    # **エンブレムと言葉は、どちらも左側に置く。**同じ場所を取り合う。
+    # 2026-09-10 にバルコラの回で、速度ランキングの3行の真上に
+    # リヴァプールのエンブレムが重なり、**数字が読めなくなった**（実物で発見）。
+    # 左は1つぶんしか無いので、**言葉があるほうを採る**
+    # （言葉は伏せ字の引きで、エンブレムは誰の話かを示すだけ。写真が既に示している）
+    stack_points = bool(portrait and points)
     # **主役にしたときは、右上の小さいほうを出さない。**同じ絵が2つ並ぶ
-    if stage is None:
+    if stage is None and not stack_points:
         _draw_tags(layer, draw, tags if crests is None else crests, font_path)
-    if portrait and points:
+    if stack_points:
         _draw_points(draw, points, font_path)
 
     top_text = (lines[0] or "").replace(chr(92) + "n", " ")

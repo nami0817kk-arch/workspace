@@ -581,3 +581,37 @@ def test_エンブレムだけ止められる(tmp_path, monkeypatch):
     assert from_meta({}, "題")["crests"] is None
     assert from_meta({"thumbnail_crests": []}, "題")["crests"] == []
     assert from_meta({"thumbnail_crests": ["バルセロナ"]}, "題")["crests"] == ["バルセロナ"]
+
+
+def test_左の言葉とエンブレムを重ねない(tmp_path, monkeypatch):
+    """**同じ場所を取り合う**（2026-09-10 実物で発見）。
+
+    バルコラの回で、速度ランキング3行の真上にリヴァプールのエンブレムが
+    重なり、数字が読めなくなった。どちらも左側に置く決まりで、
+    帯域の計算だけを別々にしていたので気づけなかった。
+    言葉があるときは、エンブレムを出さない。
+    """
+    from PIL import Image
+
+    from src import thumbnail as mod
+
+    called = []
+    monkeypatch.setattr(mod, "_draw_tags",
+                        lambda *a, **k: called.append("tags"))
+    monkeypatch.setattr(mod, "_draw_points",
+                        lambda *a, **k: called.append("points"))
+
+    photo = tmp_path / "tate.jpg"
+    Image.new("RGB", (600, 1000), "white").save(photo)     # 縦長
+    mod.build_thumbnail(_config(), "", tmp_path / "a.png", style="band",
+                        background=str(photo), lines=("上", "下"),
+                        tags=["リバプール"],
+                        points=["1位 ●●●●", "2位 ●●●●"])
+    assert called == ["points"], called
+
+    # 言葉が無ければエンブレムは出る（外しすぎていないことも確かめる）
+    called.clear()
+    mod.build_thumbnail(_config(), "", tmp_path / "b.png", style="band",
+                        background=str(photo), lines=("上", "下"),
+                        tags=["リバプール"], points=[])
+    assert called == ["tags"], called

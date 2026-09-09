@@ -129,8 +129,13 @@ def look_up(page: str, session=None) -> list[str]:
     import re
 
     s = session or _session()
+    # **80 では足りない**（2026-09-10 実測）。記事の画像一覧はアルファベット順で、
+    # 代表選手の国旗（File:Flag of …）が数十枚並ぶ。PSG は 93 枚あって、
+    # 現行エンブレム `File:Paris Saint-Germain F.C..svg` が 80 番目より後ろにあり、
+    # **切り落とされて「見つけられません」になっていた。**
+    # 上限は API の最大（500）まで引く。国旗の多いクラブほど当たらなくなる
     r = _api(s, {"action": "query", "titles": page, "prop": "images",
-                 "imlimit": "80"})
+                 "imlimit": "500", "redirects": "1"})
     names = [i["title"] for pg in r.get("query", {}).get("pages", {}).values()
              for i in pg.get("images", [])]
 
