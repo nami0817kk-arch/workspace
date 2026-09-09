@@ -26,9 +26,10 @@ theme:
 thumbnail:
   line1: 開幕4試合で17得点
   line2: 監督は ●●●●●● が必要だ
-  photos:
-    - "assets/photos/20260909_flick/01.jpg"
-    - "assets/photos/20260909_yamal/01.jpg"
+  # **フリック1枚＋バルサのエンブレム**（2026-09-09 ユーザー指示）。
+  # ヤマルはバルサ姿で顔の使える写真が Commons に無かった
+  # （引きで顔が小さいものと、スーツの白黒しかない）
+  photo: "assets/photos/20260909_flick/01.jpg"
   tags: [バルセロナ, ラ・リーガ]
   points:
     - 勝ち点12で単独首位
