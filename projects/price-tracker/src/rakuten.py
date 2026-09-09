@@ -89,6 +89,15 @@ def _first_image(item: dict) -> str:
     return ""
 
 
+def _point_rate(item: dict) -> int:
+    """ポイント倍率。取れない・不正なら通常倍率の1として扱う。"""
+    try:
+        rate = int(item.get("pointRate") or 1)
+    except (TypeError, ValueError):
+        return 1
+    return rate if 1 <= rate <= 100 else 1
+
+
 def parse_items(payload: dict) -> list[dict]:
     """検索レスポンスを、こちらで扱う形に正規化する。
 
@@ -126,6 +135,10 @@ def parse_items(payload: dict) -> list[dict]:
             "review_count": review_count,
             "review_average": review_average,
             "genre_id": str(item.get("genreId") or "").strip(),
+            # 楽天の値引きは価格より「ポイント倍率」で動く。実測では価格が
+            # 動く商品は1日0.31%しかない一方、ポイント2倍以上の商品は27%あった。
+            # 実質いくらかを出すために倍率も記録する。
+            "point_rate": _point_rate(item),
         })
     return out
 

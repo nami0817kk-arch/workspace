@@ -179,3 +179,45 @@ class SearchIndexTest(unittest.TestCase):
         self.assertIn('id="q"', page)
         # 索引はページに埋め込まず、必要になってから取りに行く
         self.assertNotIn(idx[0][1], page)
+
+
+class PointRateTest(unittest.TestCase):
+    """ポイント倍率。楽天の値引きは価格ではなくここで動く。"""
+
+    def setUp(self):
+        from src import rakuten
+        self.rakuten = rakuten
+
+    def payload(self, **kw):
+        item = {"itemCode": "shop:1", "itemPrice": 10000, "itemName": "テレビ"}
+        item.update(kw)
+        return {"Items": [item]}
+
+    def test_倍率を取り込む(self):
+        row = self.rakuten.parse_items(self.payload(pointRate=10))[0]
+
+        self.assertEqual(row["point_rate"], 10)
+
+    def test_無ければ通常の1倍として扱う(self):
+        self.assertEqual(self.rakuten.parse_items(self.payload())[0]["point_rate"], 1)
+
+    def test_壊れた値は1倍に倒す(self):
+        # 判定に使う値なので、変な数字が入ると実質価格が狂う
+        for bad in ("", None, "abc", 0, -5, 999):
+            row = self.rakuten.parse_items(self.payload(pointRate=bad))[0]
+            self.assertEqual(row["point_rate"], 1, f"pointRate={bad!r}")
+
+    def test_日次の記録に列として残る(self):
+        import gzip
+        import csv
+        import tempfile
+        from pathlib import Path
+        from src import store
+
+        with tempfile.TemporaryDirectory() as tmp:
+            store.write_snapshot(Path(tmp), "2026-09-10",
+                                 [{"item_code": "a", "price": 100, "point_rate": 10}])
+            path = store.snapshot_path(Path(tmp), "2026-09-10")
+            rows = list(csv.DictReader(gzip.open(path, "rt", encoding="utf-8")))
+
+        self.assertEqual(rows[0]["point_rate"], "10")

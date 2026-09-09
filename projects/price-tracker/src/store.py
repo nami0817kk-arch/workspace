@@ -9,7 +9,8 @@ import gzip
 import json
 from pathlib import Path
 
-SNAPSHOT_FIELDS = ["date", "item_code", "price", "review_count", "review_average"]
+SNAPSHOT_FIELDS = ["date", "item_code", "price", "point_rate",
+                   "review_count", "review_average"]
 
 
 def snapshot_path(data_dir: Path, day: str) -> Path:
@@ -28,6 +29,7 @@ def write_snapshot(data_dir: Path, day: str, items: list[dict]) -> Path:
                 "date": day,
                 "item_code": item["item_code"],
                 "price": item["price"],
+                "point_rate": item.get("point_rate", 1),
                 "review_count": item.get("review_count", 0),
                 "review_average": item.get("review_average", 0),
             })
