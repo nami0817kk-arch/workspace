@@ -880,3 +880,37 @@ def test_tableカードにcolumnsが無いと取材メモの段階で止まる()
     assert not _check_card(make({"type": "table", "columns": ["a", "b"],
                                  "rows": [["1", "2"]]}))
     assert not _check_card(make(None))
+
+
+def test_short_titleが台本に書き出される():
+    """**書いても効いていなかった**（2026-09-09）。
+
+    取材メモに short_title を書いても Notes が受け取らず、to_script も
+    書き出していなかった。shorts._retitle は台本の front matter を見るので、
+    いつも空になり、節のテロップが題名になっていた
+    （「試合登録は20人。2人が外れる」という題名のショートが3本並んだ）。
+    """
+    from src.plan import load_plan
+    from src.research import build_notes, to_script
+
+    raw = {
+        "date": "2026年9月9日",
+        "short_title": "南野拓実、9か月ぶりの招集メンバー",
+        "theme": {"id": "t", "title": "南野拓実が戻った日、なぜ出番が無かったのか",
+                  "question": "なぜ外れたのか", "topic": "南野拓実",
+                  "league": "france", "kind": "other"},
+        "thumbnail": {"line1": "a", "line2": "b", "tags": ["南野拓実"],
+                      "photo": "assets/photos/x/01.jpg"},
+        "sections": [
+            {"id": f"s{n}", "heading": f"見出し{n}", "tier": "報道",
+             "telop": f"テロップ{n}", "say": ["ひとこと。"],
+             "sources": ["https://example.com/1", "https://example.com/2"]}
+            for n in range(3)
+        ],
+    }
+    notes = build_notes(raw)
+    assert notes.short_title == "南野拓実、9か月ぶりの招集メンバー"
+    assert "short_title: 南野拓実、9か月ぶりの招集メンバー" in to_script(notes, load_plan())
+
+    del raw["short_title"]
+    assert "short_title:" not in to_script(build_notes(raw), load_plan())

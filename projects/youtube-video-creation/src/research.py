@@ -175,6 +175,11 @@ class Notes:
     question: str                    # この動画が答える問い
     format: str = "news"             # news / voices / quote。FORMATS 参照
     voice_min: float | None = None   # 他人の声の下限を回ごとに下げるとき
+    # ショートに付ける別の題名（2026-09-09）。**書いても効いていなかった。**
+    # shorts._retitle は台本の front matter を見るのに、to_script が書き出して
+    # いなかったので、節のテロップが題名になっていた（「試合登録は20人。2人が
+    # 外れる」が題名で並んでいた）
+    short_title: str = ""
     slot: str = ""
     theme_id: str = ""
     prefix: str = ""                 # 【速報】【朗報】【悲報】
@@ -279,6 +284,7 @@ def build_notes(raw: dict) -> Notes:
         slot=str(raw.get("slot", "")).strip(),
         format=chosen,
         voice_min=(float(raw["voice_min"]) if raw.get("voice_min") is not None else None),
+        short_title=str(raw.get("short_title", "")).strip(),
         title=str(theme.get("title", "")).strip(),
         theme_id=str(theme.get("id", "")).strip(),
         question=str(theme.get("question", "")).strip(),
@@ -979,6 +985,8 @@ def to_script(notes: Notes, plan: Plan) -> str:
         # 他人の声の下限を回ごとに下げられる（2026-09-09）。試合の経過を詳しく
         # 伝える回は地の文が増える。**下げるときは取材メモに理由を書く**
         **({"voice_min": notes.voice_min} if notes.voice_min is not None else {}),
+        # ショートだけ別の題名にする（2026-09-09）。shorts._retitle がここを見る
+        **({"short_title": notes.short_title} if notes.short_title else {}),
         "thumbnail_line1": str(thumbnail.get("line1") or notes.title),
         "thumbnail_line2": str(thumbnail.get("line2") or notes.question),
         "thumbnail_tags": [str(t) for t in (thumbnail.get("tags") or [])],
