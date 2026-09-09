@@ -858,3 +858,25 @@ def test_名前のある人の発言は反応ではない():
         say=[{"voice": "ネット民", "text": "まだ序盤やしな"},
              {"voice": "ネット民", "text": "お茶会で干されたか"}])
     assert any("反応の節のあとに" in p for p in verify(build_notes(raw), _plan()))
+
+
+def test_tableカードにcolumnsが無いと取材メモの段階で止まる():
+    """**書き出しまで気づけなかった**（2026-09-09）。
+
+    columns を書き忘れた台本が draft を通り、音声を合成し終えたあとの
+    render で落ちた。落ちる条件はカードの側が知っているので、
+    取材メモの検証で同じことを見る。
+    """
+    from src.research import Section, _check_card
+
+    def make(card):
+        return Section(id="s", heading="h", tier="報道", telop="t",
+                       say=["a"], sources=["https://example.com/1"], card=card)
+
+    assert _check_card(make({"type": "table", "rows": [["1", "2"]]}))
+    assert _check_card(make({"type": "table", "columns": ["a", "b"],
+                             "rows": [["1"]]}))
+    assert _check_card(make({"type": "bars", "title": "x"}))
+    assert not _check_card(make({"type": "table", "columns": ["a", "b"],
+                                 "rows": [["1", "2"]]}))
+    assert not _check_card(make(None))

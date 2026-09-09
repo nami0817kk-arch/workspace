@@ -361,6 +361,7 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
                 f"（いまは{len(section.sources)}本）"
             )
         problems += _check_reactions(section)
+        problems += _check_card(section)
 
         if rule.get("needs_official") and not section.official:
             problems.append(
@@ -448,6 +449,32 @@ def _check_voice_clash(notes: Notes) -> list[str]:
             )
         else:
             seen.setdefault(style, name)
+    return problems
+
+
+def _check_card(section: Section) -> list[str]:
+    """カードの中身が、書き出しに耐える形かを取材メモの段階で見る。
+
+    **書き出しまで気づけなかった**（2026-09-09）。`table` に columns を
+    書き忘れた台本が `draft` を通り、音声を合成し終えたあとの
+    `render` で「table カードには columns と rows が必要です」で落ちた。
+    落ちる条件はカードの側が知っているので、ここで先に同じことを見る。
+    """
+    card = section.card or {}
+    kind = str(card.get("type", "")).lower()
+    problems: list[str] = []
+    if kind == "table":
+        columns = card.get("columns") or []
+        rows = card.get("rows") or []
+        if not columns or not rows:
+            problems.append(f"{section.id}: table カードには columns と rows が必要です")
+        elif any(len(row) != len(columns) for row in rows):
+            problems.append(
+                f"{section.id}: table の各行は columns と同じ数（{len(columns)}）にしてください"
+            )
+    elif kind == "bars":
+        if not (card.get("items") or []):
+            problems.append(f"{section.id}: bars カードには items が必要です")
     return problems
 
 
