@@ -183,6 +183,10 @@ class Player {
         name: from.name,
         age: from.age,
         position: from.position,
+        // 立つ側と見た目を引き継ぐ。落としていたので、重傷を負うたびに
+        // 逆サイドの選手が中央に戻り、似顔まで別人になっていた。
+        side: from.side,
+        look: from.look,
         attributes: attributes,
         potential: potential,
         nationality: from.nationality,

@@ -1060,6 +1060,8 @@ class CareerEngine {
       // 累積警告はシーズンをまたぐと消える。出場停止は持ち越す。
       yellowCards: 0,
       suspension: state.suspension,
+      // 改変の印は消さない。消すと、1年跨いだだけで普通の記録に見える。
+      tampered: state.tampered,
       // 怪我はシーズンを跨いでも消えない。オフの間に少しは進む。
       injury: state.injury == null || state.injury!.matchesOut <= 4
           ? null
@@ -1285,6 +1287,8 @@ class CareerEngine {
       continentalStage: state.continentalStage,
       caps: state.caps,
       internationalGoals: state.internationalGoals,
+      // 改変の印は引退しても消さない。
+      tampered: state.tampered,
       reputation: state.reputation,
       relations: state.relations,
       finances: state.finances.afterSeason(

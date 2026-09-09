@@ -946,6 +946,7 @@ class MatchEngine {
     double moodBonus = 0,
     double extraRating = 0,
     bool international = false,
+    List<Scenario>? forcedScenarios,
   }) {
     final count = switch (appearance) {
       Appearance.start => Formulas.scenariosPerStart,
@@ -956,7 +957,10 @@ class MatchEngine {
     // 試合の骨格は展開に依らない局面から引き、終盤に効く局面は控えに回す。
     final family = player.position.family;
     final pool = [...ScenarioPool.neutralFor(family)]..shuffle(_random);
-    final picked = pool.take(count).toList();
+    // 管理画面（開発用）から局面を指定して入ることがある。
+    final picked = forcedScenarios != null
+        ? forcedScenarios.take(count).toList()
+        : pool.take(count).toList();
     final reserves = count == 0
         ? const <Scenario>[]
         : ([

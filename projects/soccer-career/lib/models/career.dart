@@ -185,6 +185,7 @@ class CareerState {
     this.momentAttempts = const {},
     this.momentSuccesses = const {},
     this.traitHits = const {},
+    this.tampered = false,
     this.objective,
     this.injury,
     this.caps = 0,
@@ -407,6 +408,12 @@ class CareerState {
         ),
     ];
   }
+
+  /// 管理画面（開発用）で書き換えたキャリアか。
+  ///
+  /// 記録として信用できないことを画面に出すためだけに持つ。判定には使わない。
+  /// 引き継ぎコードで持ち出せてしまうので、印は保存にも乗せる。
+  bool tampered;
 
   /// 今季、それぞれの特性が成功率を動かした局面の数。
   ///
@@ -645,6 +652,7 @@ class CareerState {
         'focus': focus.map((d) => d.name).toList(),
         'yellowCards': yellowCards,
         'suspension': suspension,
+        'tampered': tampered,
         'traitHits': {
           for (final e in traitHits.entries) e.key.name: e.value,
         },
@@ -773,6 +781,7 @@ class CareerState {
       momentAttempts: _countsFrom(json['momentAttempts']),
       momentSuccesses: _countsFrom(json['momentSuccesses']),
       traitHits: _traitCountsFrom(json['traitHits']),
+      tampered: json['tampered'] as bool? ?? false,
       contractYears: json['contractYears'] as int? ?? 2,
       countryId: json['countryId'] as String? ?? 'yamato',
       professionalYears: json['professionalYears'] as int? ?? 1,

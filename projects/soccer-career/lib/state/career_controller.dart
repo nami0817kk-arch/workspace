@@ -10,6 +10,7 @@ import '../game/dependencies.dart';
 import '../game/life_events.dart';
 import '../game/national.dart';
 import '../game/newsroom.dart';
+import '../game/scenarios.dart';
 import '../game/person.dart';
 import '../game/weekly_plan.dart';
 import '../models/agent.dart';
@@ -538,7 +539,9 @@ class CareerController extends ChangeNotifier {
   /// 次の試合を始める。
   ///
   /// 代表ウィークなら代表戦、負傷中なら試合には出ない。
-  void startNextMatch() {
+  ///
+  /// [forcedScenarios] は管理画面（開発用）から局面を指定して入るときだけ使う。
+  void startNextMatch({List<Scenario>? forcedScenarios}) {
     final state = _state;
     if (state == null || state.retired) return;
     if (state.pendingInternational) return startInternational();
@@ -546,6 +549,7 @@ class CareerController extends ChangeNotifier {
 
     final matchday = state.matchday;
     _inProgress = _match.start(
+      forcedScenarios: forcedScenarios,
       matchday: matchday,
       player: state.player,
       club: state.club,
@@ -1013,6 +1017,19 @@ class CareerController extends ChangeNotifier {
     await _repository.clear();
     _state = null;
     _inProgress = null;
+    notifyListeners();
+  }
+
+  /// 管理画面（開発用）から状態を書き換える。
+  ///
+  /// 口を1つに絞って、必ず「改変済み」の印を付ける。印が無いと、
+  /// 引き継ぎコードで持ち出した壊れた記録が普通のキャリアに紛れる。
+  Future<void> applyAdmin(void Function(CareerState state) change) async {
+    final state = _state;
+    if (state == null) return;
+    change(state);
+    state.tampered = true;
+    await _persist();
     notifyListeners();
   }
 

@@ -28,6 +28,8 @@ import '../player_portrait.dart';
 import '../readable_width.dart';
 import '../training_sheet.dart';
 import '../transfer_code.dart';
+import '../../dev/admin.dart';
+import 'admin_screen.dart';
 import 'guide_screen.dart';
 import 'match_screen.dart';
 import 'season_end_screen.dart';
@@ -134,12 +136,24 @@ class HubScreen extends StatelessWidget {
                     TransferCode.import(context, controller);
                   case 'delete':
                     _confirmDelete(context);
+                  // 参照そのものを kAdmin で囲む。メニュー項目だけを囲んでも、
+                  // ここが AdminScreen を名指ししているぶん画面が残ってしまう
+                  // （公開ビルドに管理画面の文字列が入っていた）。
+                  case 'admin' when kAdmin:
+                    Navigator.of(context).push(MaterialPageRoute<void>(
+                      builder: (_) => AdminScreen(controller: controller),
+                    ));
                 }
               },
-              itemBuilder: (context) => const [
-                PopupMenuItem(value: 'export', child: Text('引き継ぎコードを出す')),
-                PopupMenuItem(value: 'import', child: Text('セーブを読み込む')),
-                PopupMenuItem(value: 'delete', child: Text('キャリアを削除')),
+              itemBuilder: (context) => [
+                const PopupMenuItem(
+                    value: 'export', child: Text('引き継ぎコードを出す')),
+                const PopupMenuItem(
+                    value: 'import', child: Text('セーブを読み込む')),
+                const PopupMenuItem(value: 'delete', child: Text('キャリアを削除')),
+                // 管理画面は公開ビルドに入らない（kAdmin は const false）。
+                if (kAdmin)
+                  const PopupMenuItem(value: 'admin', child: Text('管理')),
               ],
             ),
           ],
@@ -929,6 +943,12 @@ class _PlayerCard extends StatelessWidget {
                   label: Text('ポテンシャル ${player.potentialBand}'),
                   visualDensity: VisualDensity.compact,
                 ),
+                if (state.tampered)
+                  Chip(
+                    label: const Text('管理画面で変更済み'),
+                    backgroundColor: theme.colorScheme.errorContainer,
+                    visualDensity: VisualDensity.compact,
+                  ),
                 if (player.isInverted)
                   Tooltip(
                     message: '逆足のサイド。逆足の局面が増える代わりに、'
