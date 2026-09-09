@@ -19,7 +19,10 @@ from pathlib import Path
 
 CREST_DIR = Path("assets/crests")
 # 札の高さに合わせる。**これ以上大きくしない**（主役にしないため）
-CREST_PX = 44
+# **大きくした**（2026-09-09 ユーザー指示「クラブロゴは大きく」）。
+# 44px は一覧に並べたとき何のクラブか判別できなかった。
+# 「小さく添えるだけ」の決まりは同じ日に取り消してある
+CREST_PX = 112
 
 
 def slug(club: str) -> str:
