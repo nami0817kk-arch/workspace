@@ -95,15 +95,21 @@ def _feed(url: str, session=None) -> list[Entry]:
     return entries
 
 
-def search(topic: str, hosts: set[str], session=None) -> list[Hit]:
+def search(topic: str, hosts: set[str], session=None, must: str = "") -> list[Hit]:
     """媒体の検索フィードから、題材の記事を実URL付きで集める。
 
     許可サイト以外は捨てる。見出しに題材の語が1つも無いものも捨てる
     （`?s=` が効かず新着をそのまま返す媒体がある）。
+
+    ``must`` を渡すと、**その語のどれかが見出しに無い記事も捨てる**（2026-09-09）。
+    人名だけで引くと、その選手の別の日の話が並ぶ。実際にハーランドで
+    コベントリー戦と主将の話、アーセナルでSD人事が返ってきて、今日の話が
+    1本も入らなかった。枠の見出しの言葉を渡して絞る。
     """
     from .material import is_allowed
 
     words = [w for w in re.split(r"[\s　]+", topic) if w]
+    narrow = [w for w in re.split(r"[\s　]+", must) if w]
     found: list[Hit] = []
     seen: set[str] = set()
     for pattern in SEARCH_FEEDS:
@@ -113,6 +119,8 @@ def search(topic: str, hosts: set[str], session=None) -> list[Hit]:
             if not link or link in seen or not is_allowed(link, hosts):
                 continue
             if words and not any(w in title for w in words):
+                continue
+            if narrow and not any(w in title for w in narrow):
                 continue
             seen.add(link)
             found.append(Hit(title=title, url=link.split("?")[0],
@@ -159,11 +167,11 @@ def render(topic: str, got: Coverage, hits: list[Hit], material_text: str,
 
 
 def run(topic: str, hosts: set[str], english: str = "", session=None,
-        limit: int = MAX_ARTICLES) -> tuple[Coverage, list[Hit], str]:
+        limit: int = MAX_ARTICLES, must: str = "") -> tuple[Coverage, list[Hit], str]:
     """検索 → 本文 → 材料。反応は呼ぶ側で足す（時間がかかるので別建て）。"""
     from . import material as material_mod
 
     got = coverage(topic, english, session)
-    hits = search(topic, hosts, session)[:limit]
+    hits = search(topic, hosts, session, must)[:limit]
     items = material_mod.gather([h.url for h in hits], hosts, session)
     return got, hits, material_mod.render(items)

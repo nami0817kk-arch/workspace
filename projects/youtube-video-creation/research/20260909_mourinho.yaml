@@ -24,7 +24,10 @@ thumbnail:
   line1: 師弟対決はレアルに軍配
   line2: ベルナベウで ●●年続くもの
   photo: "assets/photos/20260909_mourinho/01.jpg"
-  tags: [モウリーニョ, レアル・マドリード]
+  photos:
+    - assets/photos/20260909_mourinho/01.jpg
+    - assets/photos/20260909_chivu/01.jpg
+  tags: [モウリーニョ, インテル]
   points:
     - 教え子が率いるインテルと対戦
     - 決勝で掲げたのも このスタジアム

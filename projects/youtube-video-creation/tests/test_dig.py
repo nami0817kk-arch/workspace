@@ -76,3 +76,24 @@ def test_材料の1枚に大きさと記事と反応が並ぶ():
     text = dig.render("久保建英", got, hits, "## 発言", "- {voice: ネット民, text: まだ序盤}")
     assert "# 材料: 久保建英" in text
     assert "話の大きさ" in text and "本文を読んだ記事" in text and "## 反応" in text
+
+
+def test_見出しを絞れる():
+    """人名だけで引くと別の日の話が並んだ（2026-09-09 実測）。
+
+    ハーランドでコベントリー戦と主将の話、アーセナルでSD人事が返ってきた。
+    """
+    class _S(_Session):
+        def get(self, url, **kw):
+            self.asked.append(url)
+            if "footballchannel" in url:
+                return _Resp(_rss([
+                    ("久保建英、CLで初ゴール", "https://www.footballchannel.jp/a/", "fc"),
+                    ("久保建英、前節は出番なし", "https://www.footballchannel.jp/b/", "fc"),
+                ]))
+            return _Resp(_rss([]))
+
+    hosts = {"www.footballchannel.jp"}
+    assert len(dig.search("久保建英", hosts, _S())) == 2
+    narrowed = dig.search("久保建英", hosts, _S(), must="CL ゴール")
+    assert [h.url for h in narrowed] == ["https://www.footballchannel.jp/a/"]

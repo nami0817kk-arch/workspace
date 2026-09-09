@@ -366,6 +366,9 @@ def main(argv: list[str] | None = None) -> int:
         "dig", help="題材から、記事の本文（発言・数字）と反応をまとめて集める")
     p_dig.add_argument("topic", help="題材。選手名・クラブ名など")
     p_dig.add_argument("--en", default="", help="英語の語（Google ニュースの英語検索に使う）")
+    p_dig.add_argument("--with", dest="must", default="", metavar="語",
+                       help="見出しにこの語のどれかを含む記事だけ読む（2026-09-09）。"
+                            "人名だけだと別の日の話が並ぶ")
     p_dig.add_argument("--limit", type=int, default=8, help="本文を読む記事の数（既定8）")
     p_dig.add_argument("--say", type=int, default=12, help="反応を何件まで拾うか（既定12）")
     p_dig.add_argument("--no-reactions", action="store_true", help="反応を集めない")
@@ -1747,7 +1750,8 @@ def _cmd_dig(args, config) -> int:
 
     hosts = material_mod.allowed_hosts(getattr(load_plan(), "domains", {}) or {})
     print(f"■ 「{args.topic}」を掘ります")
-    got, hits, material_text = dig_mod.run(args.topic, hosts, args.en, limit=args.limit)
+    got, hits, material_text = dig_mod.run(args.topic, hosts, args.en,
+                                          limit=args.limit, must=args.must)
     print(f"  話の大きさ　記事{got.total}件 / 媒体{len(got.outlets)}")
     print(f"  本文を読んだ記事　{len(hits)}本")
     for hit in hits:
