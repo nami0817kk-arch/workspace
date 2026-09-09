@@ -52,13 +52,40 @@ DAILY = 10000
 # 記録していなかったが、コンソールに出ている。ふつうは Queries が先に尽きる
 DAILY_UPLOADS = 100
 LEDGER = Path("research/quota.json")
-# 枠は太平洋時間の深夜0時に戻る。夏時間は UTC-7、冬は UTC-8
+# 枠は太平洋時間の深夜0時に戻る。**夏と冬で1時間ずれる**
+#   夏（PDT / UTC-7、3月第2日曜〜11月第1日曜）… 日本時間 16:00
+#   冬（PST / UTC-8）                          … 日本時間 17:00
+# 2026-09-09 に Gemini にも確認した。それまで UTC-7 を決め打ちしていたので、
+# **11月に入ると枠の切り替わる日付を1時間ぶん間違える**ところだった
 PACIFIC_SUMMER = timezone(timedelta(hours=-7))
+PACIFIC_WINTER = timezone(timedelta(hours=-8))
+
+
+def _second_sunday_march(year: int) -> datetime:
+    at = datetime(year, 3, 8, tzinfo=timezone.utc)
+    while at.weekday() != 6:
+        at += timedelta(days=1)
+    return at
+
+
+def _first_sunday_november(year: int) -> datetime:
+    at = datetime(year, 11, 1, tzinfo=timezone.utc)
+    while at.weekday() != 6:
+        at += timedelta(days=1)
+    return at
+
+
+def pacific(now: datetime | None = None) -> timezone:
+    """そのときの太平洋時間。夏時間なら UTC-7、冬なら UTC-8。"""
+    at = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
+    start = _second_sunday_march(at.year) + timedelta(hours=10)   # 現地 2:00
+    end = _first_sunday_november(at.year) + timedelta(hours=9)    # 現地 2:00
+    return PACIFIC_SUMMER if start <= at < end else PACIFIC_WINTER
 
 
 def _today(now: datetime | None = None) -> str:
     """いまが太平洋時間で何日か。**枠はこの日付で切り替わる。**"""
-    at = (now or datetime.now(timezone.utc)).astimezone(PACIFIC_SUMMER)
+    at = (now or datetime.now(timezone.utc)).astimezone(pacific(now))
     return at.strftime("%Y-%m-%d")
 
 
@@ -110,19 +137,22 @@ def uploads_left(path: Path = LEDGER, now: datetime | None = None) -> int:
 
 def resets_at(now: datetime | None = None) -> datetime:
     """次に枠が戻る時刻（そのまま日本時間で表示できる）。"""
-    at = (now or datetime.now(timezone.utc)).astimezone(PACIFIC_SUMMER)
+    at = (now or datetime.now(timezone.utc)).astimezone(pacific(now))
     return (at + timedelta(days=1)).replace(hour=0, minute=0, second=0, microsecond=0)
 
 
 def report(path: Path = LEDGER, now: datetime | None = None) -> list[str]:
     today = _load(path).get(_today(now)) or {}
     jst = timezone(timedelta(hours=9))
-    lines = [f"■ APIの枠　{used(path, now)} / {DAILY} 使用"]
+    lines = [f"■ APIの枠　{used(path, now)} 使用（上限は不明。{DAILY} は未確認の目安）"]
     for name, count in sorted(today.items()):
         lines.append(f"  {name:<16} {count:>3}回 × {COSTS.get(name, 0)} = "
                      f"{COSTS.get(name, 0) * count}")
     lines.append(f"  投稿 {uploads_today(path, now)} / {DAILY_UPLOADS} 本")
-    lines.append(f"  残り {left(path, now)}　→ **あと{uploads_left(path, now)}本**")
+    # **「あと何本」を鵜呑みにしない**（2026-09-09）。DAILY が実際と桁違いなので、
+    # 0 と出ていても出せることがある。確かなのは quotaExceeded が返るかどうかだけ
+    lines.append(f"  投稿数から見た残り **{DAILY_UPLOADS - uploads_today(path, now)}本**"
+                 "（枠の上限は Cloud コンソールでしか見えない）")
     lines.append(f"  次のリセット: 日本時間 "
                  f"{resets_at(now).astimezone(jst).strftime('%m-%d %H:%M')}")
     if not today:

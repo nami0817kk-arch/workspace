@@ -58,3 +58,37 @@ def test_知らない呼び出しは弾く(tmp_path):
         assert "費用の分からない" in str(err)
     else:
         raise AssertionError("知らない呼び出しを通した")
+
+
+def test_太平洋時間の夏と冬で枠の戻る時刻が1時間ずれる():
+    """**UTC-7 を決め打ちしていた**（2026-09-09 に Gemini にも確認）。
+
+    夏（PDT）は日本時間16時、冬（PST）は17時に枠が戻る。
+    決め打ちのままだと11月に入ってから枠の日付を1時間ぶん間違える。
+    """
+    from datetime import datetime, timedelta, timezone
+
+    from src.quota import PACIFIC_SUMMER, PACIFIC_WINTER, pacific, resets_at
+
+    summer = datetime(2026, 7, 1, 4, tzinfo=timezone.utc)
+    winter = datetime(2026, 12, 15, 4, tzinfo=timezone.utc)
+    assert pacific(summer) == PACIFIC_SUMMER
+    assert pacific(winter) == PACIFIC_WINTER
+    # 切り替わりの前後（現地2:00）
+    assert pacific(datetime(2026, 3, 8, 9, tzinfo=timezone.utc)) == PACIFIC_WINTER
+    assert pacific(datetime(2026, 3, 8, 11, tzinfo=timezone.utc)) == PACIFIC_SUMMER
+    assert pacific(datetime(2026, 11, 1, 8, tzinfo=timezone.utc)) == PACIFIC_SUMMER
+    assert pacific(datetime(2026, 11, 1, 10, tzinfo=timezone.utc)) == PACIFIC_WINTER
+
+    jst = timezone(timedelta(hours=9))
+    assert resets_at(summer).astimezone(jst).hour == 16
+    assert resets_at(winter).astimezone(jst).hour == 17
+
+
+def test_枠の表示は上限を断定しない():
+    """DAILY は未確認の目安。**「あと0本」で止まらせない**（2026-09-09）。"""
+    from src.quota import report
+
+    text = "\n".join(report())
+    assert "未確認" in text
+    assert "→ **あと" not in text
