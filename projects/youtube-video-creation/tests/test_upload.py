@@ -314,3 +314,41 @@ def test_予約すると非公開で送られる(tmp_path, monkeypatch):
                       publish_at="2026-09-09T22:30:00Z")
     assert sent["privacyStatus"] == "private"
     assert sent["publishAt"] == "2026-09-09T22:30:00Z"
+
+
+def test_さっき上がった同じ題名を見つける():
+    """投稿は成功したのに控えを残す前に処理が終わり、掛け直しで二重に上がった。
+
+    2026-09-09、上田の本編が2本・バロンドールのショートが3本。
+    """
+    from datetime import datetime, timedelta, timezone
+
+    now = datetime.now(timezone.utc)
+
+    def item(title, minutes, vid):
+        at = (now - timedelta(minutes=minutes)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        return {"snippet": {"title": title, "publishedAt": at,
+                            "resourceId": {"videoId": vid}}}
+
+    class _Service:
+        def channels(self):
+            return type("C", (), {"list": lambda self, **k: type("R", (), {
+                "execute": lambda self: {"items": [{"contentDetails": {
+                    "relatedPlaylists": {"uploads": "UU"}}}]}})()})()
+
+        def playlistItems(self):
+            return type("P", (), {"list": lambda self, **k: type("R", (), {
+                "execute": lambda self: {"items": [
+                    item("上田綺世が初先発で決めた日", 3, "new1"),
+                    item("ずっと前に出した動画", 500, "old1"),
+                ]}})()})()
+
+    from src import quota
+
+    original, quota.record = quota.record, lambda *a, **k: None
+    try:
+        assert upload_mod.recently_uploaded(_Service(), "上田綺世が初先発で決めた日") == "new1"
+        assert upload_mod.recently_uploaded(_Service(), "ずっと前に出した動画") is None
+        assert upload_mod.recently_uploaded(_Service(), "まだ無い題名") is None
+    finally:
+        quota.record = original

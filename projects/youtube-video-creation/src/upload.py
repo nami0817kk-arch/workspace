@@ -145,6 +145,35 @@ def prepare(build_dir: Path, privacy: str = "private") -> Draft:
     )
 
 
+def recently_uploaded(service, title: str, minutes: int = 90) -> str | None:
+    """同じ題名の動画が、この少し前に上がっていないか（2026-09-09）。
+
+    **投稿は成功したのに、その控えを残す前に処理が終わることがある。**
+    実際に起きた: 投稿中の python を止めたら、呼び出し側が「失敗した」と見て
+    掛け直し、上田の本編が2本・バロンドールのショートが3本上がった。
+    掛け直す前にここを見れば、二度目を投げずに済む。
+    """
+    from datetime import datetime, timedelta, timezone
+
+    quota.record("playlistItems.list")
+    channel = service.channels().list(part="contentDetails", mine=True).execute()
+    uploads = channel["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
+    got = service.playlistItems().list(part="snippet", playlistId=uploads,
+                                       maxResults=15).execute()
+    edge = datetime.now(timezone.utc) - timedelta(minutes=minutes)
+    wanted = title.strip()
+    for item in got.get("items") or []:
+        snippet = item["snippet"]
+        when = snippet.get("publishedAt") or ""
+        try:
+            at = datetime.fromisoformat(when.replace("Z", "+00:00"))
+        except ValueError:
+            continue
+        if at >= edge and snippet.get("title", "").strip() == wanted:
+            return str(snippet["resourceId"]["videoId"])
+    return None
+
+
 def when_to_publish(clock: str, now=None) -> str:
     """公開時刻を RFC3339（UTC）にする。2つの書き方を受ける。
 

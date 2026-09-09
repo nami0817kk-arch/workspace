@@ -2740,6 +2740,23 @@ def _cmd_upload(args, config) -> int:
 
     draft = upload_mod.prepare(build_dir, args.privacy)
 
+    # **投げる前に、同じ題名がもう上がっていないか見る**（2026-09-09）。
+    # 投稿が成功したのに控えを残す前に処理が終わると、呼ぶ側は「失敗」と見て
+    # 掛け直す。実際に上田の本編が2本・バロンドールのショートが3本上がった。
+    # 台帳（posted.find）は控えが残ったときしか効かないので、その手前を塞ぐ
+    if not args.again and draft.title.strip():
+        try:
+            already = upload_mod.recently_uploaded(upload_mod.get_service(), draft.title)
+        except Exception:  # noqa: BLE001 - 見に行けなくても投稿は続けられる
+            already = None
+        if already:
+            print(f"■ 同じ題名の動画が、さっき上がっています　https://youtu.be/{already}")
+            print("  題名　" + draft.title)
+            print(nl + "掛け直しで二重に上げるのを止めました。"
+                  "本当に別の動画なら --again を付けます。", file=sys.stderr)
+            posted.record(build_dir, already)
+            return 1
+
     print(f"■ 投稿の中身　{build_dir}")
     for line in draft.lines():
         print(f"  {line}")
