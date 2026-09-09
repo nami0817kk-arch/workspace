@@ -54,6 +54,163 @@ NEWS_HEAD_SIZES = (96, 88, 80, 72, 64, 58, 52)
 NEWS_SUB_SIZES = (64, 58, 52, 48, 44, 40, 36)
 NEWS_LABEL = "海外サッカーニュース"
 
+# 縦型（ショート）のサムネイル（2026-09-09 ユーザー「他のチャンネルを参考にして」）。
+# **参考4チャンネルのショートは全部が縦（9:16）だった。**こちらだけが本編と
+# 同じ 16:9 の画像を使い回していて、縦のタイルでは左半分の文字が切られていた。
+# KOALA SOCCER / 熱狂サッカーSAMURAIブルー / R Football / ブラボーまとめch の
+# 直近15本を落として並べたところ、共通していたのは次の4つ:
+#   1. 写真が全面。人物が画面の主役で、帯で画面を割らない
+#   2. 見出しは**上端**に小さめの2〜3行。16:9 のときのような極太1行ではない
+#   3. 下端に**動画の中の一言**を置く（「シュートは自分の武器」「ボールを受けた瞬間」）
+#   4. 色は1色だけ強く差す
+SHORT_SIZE = (1080, 1920)
+SHORT_MARGIN = 56
+SHORT_HEAD_SIZES = (86, 78, 72, 66, 60, 54, 48, 44)
+SHORT_QUOTE_SIZES = (60, 54, 48, 44, 40, 36)
+SHORT_EYEBROW_SIZE = 40
+SHORT_HEAD_LINES = 3          # 上に置く見出しの最大行数
+SHORT_QUOTE_MAX = 24          # 下の一言。長いと縦でも2行になって写真を潰す
+
+
+def _short_scrim(canvas: Image.Image) -> None:
+    """上下だけ沈める。**真ん中は触らない**（顔が主役なので）。"""
+    width, height = SHORT_SIZE
+    scrim, draw = _layer(SHORT_SIZE)
+    top = int(height * 0.34)
+    for y in range(top):
+        alpha = int(238 * (1 - y / top) ** 1.5)
+        draw.line([(0, y), (width, y)], fill=(6, 9, 16, alpha))
+    bottom = int(height * 0.26)
+    for y in range(bottom):
+        alpha = int(226 * (y / bottom) ** 1.6)
+        draw.line([(0, height - bottom + y), (width, height - bottom + y)],
+                  fill=(6, 9, 16, alpha))
+    canvas.alpha_composite(scrim)
+
+
+def _fit_short(draw: ImageDraw.ImageDraw, text: str, font_path: str,
+               sizes, room: int, max_lines: int):
+    """縦幅ではなく**行数**で字の大きさを決める。
+
+    **まず1行に収める。**大きさを先に決めて折り返すと
+    「行き先が土壇場で変わっ／た」のように1文字だけの行ができる
+    （2026-09-09 実測）。字を小さくしてでも1行のほうが読める。
+    """
+    for want in range(1, max_lines + 1):
+        for size in sizes:
+            font = ImageFont.truetype(font_path, size)
+            lines = wrap_text(draw, text, font, room)
+            if len(lines) <= want:
+                return font, lines
+    font = ImageFont.truetype(font_path, sizes[-1])
+    return font, wrap_text(draw, text, font, room)[:max_lines]
+
+
+def _short_thumbnail(
+    config: ProjectConfig,
+    out_path: Path,
+    background: str | None,
+    lines: tuple[str, str],
+    tags: list[str],
+    focus: float | None,
+    quote: str,
+    photos: list[str],
+) -> Path:
+    """1080x1920 のサムネイル。ショート専用。"""
+    font_path = str(config.video.font_path())
+    accent = _hex(config.video.accent)
+    width, height = SHORT_SIZE
+
+    source = None
+    for candidate in [*(photos or []), background]:
+        if not candidate:
+            continue
+        path = _resolve(candidate)
+        if path.exists() and is_video(path.name):
+            still = out_path.parent / "thumbnail_bg.png"
+            still.parent.mkdir(parents=True, exist_ok=True)
+            path = ffmpeg.grab_frame(path, still)
+        if path.exists():
+            source = path
+            break
+    if source is not None:
+        with Image.open(source) as image:
+            canvas = _cover(image.convert("RGBA"), width, height,
+                            focus=focus if focus is not None else 0.18)
+    else:
+        canvas = Image.new("RGBA", SHORT_SIZE, (14, 20, 32, 255))
+    _short_scrim(canvas)
+
+    layer, draw = _layer(SHORT_SIZE)
+    room = width - SHORT_MARGIN * 2
+    y = SHORT_MARGIN
+
+    # 眉。クラブ名や選手名の札を1つだけ、アクセント色で小さく
+    eyebrow = next((str(t).strip() for t in (tags or []) if str(t).strip()), "")
+    if eyebrow:
+        font = ImageFont.truetype(font_path, SHORT_EYEBROW_SIZE)
+        text_width = draw.textlength(eyebrow, font=font)
+        draw.rounded_rectangle(
+            [SHORT_MARGIN, y, SHORT_MARGIN + text_width + 40, y + SHORT_EYEBROW_SIZE + 22],
+            radius=8, fill=accent + (255,),
+        )
+        draw.text((SHORT_MARGIN + 20, y + 9), eyebrow, font=font,
+                  fill=BAND_TEXT_DARK + (255,))
+        y += SHORT_EYEBROW_SIZE + 22 + 20
+
+    # 見出し。**上端に置く。**参考はどれも上で、真ん中を空けて顔を見せていた。
+    # **1行目と2行目は別々に組む。**つなげて折り返すと
+    # 「行き先が土壇場で変わっ／た 合流寸前だったのは」のように
+    # 2つの文が1行の中で混ざる（2026-09-09 実測）
+    drew_head = False
+    for index, part in enumerate([str(x or "").strip() for x in lines]):
+        if not part:
+            continue
+        rest = SHORT_HEAD_LINES - (1 if drew_head else 0)
+        font, rows = _fit_short(draw, part, font_path, SHORT_HEAD_SIZES,
+                                room, max(1, rest))
+        for row in rows:
+            draw.text((SHORT_MARGIN, y), row, font=font,
+                      fill=(BAND_YELLOW + (255,)) if index else (255, 255, 255, 255),
+                      stroke_width=max(5, font.size // 10),
+                      stroke_fill=(8, 10, 16, 255))
+            y += int(font.size * 1.26)
+        drew_head = True
+    if drew_head:
+        # 見出しの下の短い罫。**行送りより下に置く。**y+8 だと2行目の
+        # 文字の足に重なっていた（2026-09-09 実測）
+        draw.rectangle([SHORT_MARGIN, y + 22, SHORT_MARGIN + 190, y + 32],
+                       fill=BAND_YELLOW + (255,))
+
+    # 下の一言。動画の中で実際に読み上げる文から取る。
+    # **見出しの繰り返しは置かない**（2026-09-09 実測。反応が無い回で
+    # 2行目がそのまま下にも出て、同じ文が画面に2つ並んだ）
+    quote = (quote or "").strip()
+    if quote and any(quote == str(x or "").strip() for x in lines):
+        quote = ""
+    if quote:
+        if len(quote) > SHORT_QUOTE_MAX:
+            quote = quote[:SHORT_QUOTE_MAX]
+        font, rows = _fit_short(draw, quote, font_path, SHORT_QUOTE_SIZES, room, 2)
+        rows = rows[:2]
+        block = int(font.size * 1.3) * len(rows)
+        top = height - SHORT_MARGIN - block
+        draw.rounded_rectangle(
+            [SHORT_MARGIN - 18, top - 24, width - SHORT_MARGIN + 18, height - SHORT_MARGIN + 16],
+            radius=14, fill=(8, 10, 16, 214),
+        )
+        for row in rows:
+            text_width = draw.textlength(row, font=font)
+            draw.text(((width - text_width) / 2, top), row, font=font,
+                      fill=(255, 255, 255, 255))
+            top += int(font.size * 1.3)
+
+    canvas.alpha_composite(layer)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    canvas.convert("RGB").save(out_path, quality=95)
+    return out_path
+
+
 
 def _prefix_of(title: str) -> str:
     """タイトル先頭の【…】を返す。無ければ空。"""
@@ -123,6 +280,36 @@ def reaction_line(script, limit: int = CHIP_MAX) -> str:
     return ""
 
 
+def short_quote(script, limit: int = SHORT_QUOTE_MAX) -> str:
+    """縦サムネの下に置く一言を台本から選ぶ（2026-09-09）。
+
+    順に、匿名の反応 → 誰かの発言 → 節のテロップ。**地の文は使わない。**
+    参考チャンネルが下に置いていたのは、どれも動画の中の「声」だった。
+    """
+    said = reaction_line(script, limit)
+    if said:
+        return said
+    for scene in getattr(script, "scenes", []) or []:
+        for line in getattr(scene, "lines", []) or []:
+            who = (getattr(line, "speaker", "") or "").strip()
+            text = (getattr(line, "text", "") or "").strip()
+            if who and who not in NARRATORS and 0 < len(text) <= limit:
+                return text
+    # テロップは最後の逃げ道。**冒頭の1行は飛ばす。**そこは本編の題名を
+    # そのまま読む行なので、下に置くと題名が2回出る（2026-09-09 実測。
+    # ハーランドの回で「ハーランドがCLで並んだ相手、誰か分かりますか」が出た）
+    skip = 1
+    for scene in getattr(script, "scenes", []) or []:
+        for line in getattr(scene, "lines", []) or []:
+            if skip > 0:
+                skip -= 1
+                continue
+            telop = (getattr(line, "telop", "") or "").strip()
+            if 0 < len(telop) <= limit:
+                return telop
+    return ""
+
+
 def contact_sheet(paths: list[Path], out_path: Path) -> Path:
     """案を縦に並べた1枚を作る。実際に並ぶのは一覧なので、並べて比べる。"""
     images = [Image.open(path).convert("RGB") for path in paths]
@@ -183,6 +370,7 @@ def build_thumbnail(
     reaction: str = "",
     points: list[str] | None = None,
     photos: list[str] | None = None,
+    quote: str = "",
 ) -> Path:
     """サムネイルを1枚作る。
 
@@ -190,6 +378,14 @@ def build_thumbnail(
     lines は (黄色帯の文字, 赤帯の文字)。省略時は title / subtitle を使う。
     """
     chosen = style or config.video.thumbnail_style
+    # **縦の動画には縦のサムネ**（2026-09-09）。ショートは portrait() で
+    # width < height の設定になるので、そこで切り替える
+    if config.video.height > config.video.width:
+        return _short_thumbnail(
+            config, out_path, (photos or [None])[0] or background,
+            lines or (title, subtitle), tags or [], focus,
+            quote or reaction, photos or [],
+        )
     if chosen == "news":
         return _news_thumbnail(
             config, out_path, background,

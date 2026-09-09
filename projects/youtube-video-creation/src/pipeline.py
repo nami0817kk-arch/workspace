@@ -11,7 +11,7 @@ from .config import ProjectConfig, _resolve
 from .render import Renderer
 from . import audio_gen
 from .script_model import Script, load_script
-from .thumbnail import build_thumbnail, from_meta, reaction_line
+from .thumbnail import build_thumbnail, from_meta, reaction_line, short_quote
 from .tts import (create_backend, credits, image_credits, image_details,
                   synthesize_script)
 
@@ -112,6 +112,8 @@ def build_script(
         reaction=reaction,
         points=look.get("points") or [],
         photos=look.get("photos") or [],
+        # 縦サムネの下に置く一言。横型では使わない
+        quote=short_quote(script),
     )
     # 画像のクレジットも概要欄に出す。CC BY 系は表示しないと利用条件を満たさない
     outputs = subtitles.write_outputs(
