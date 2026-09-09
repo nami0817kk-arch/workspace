@@ -544,3 +544,33 @@ def test_冒頭の1行目にだけ登録カードが乗る(tmp_path):
     config.video.channel_name = ""
     entries = Renderer(config, tmp_path / "plain").frame_entries(script)
     assert len({path for path, _ in entries}) == 1
+
+
+def test_縦型の冒頭は写真を画面いっぱいに敷く(tmp_path):
+    """**ショートの一覧が出しているのは `oar2.jpg`**（2026-09-09 に判明）。
+
+    こちらが設定したサムネイルではなく、YouTube が動画から自動で作る
+    縦の1コマ。一覧の img の src を読んで確かめた。つまり
+    **冒頭の絵がそのまま一覧の絵になる。**それまで `_photo_stage` は
+    `is_portrait` を素通ししていて、冒頭は枠付きの小さな写真カードだった。
+    """
+    from PIL import Image
+
+    from src.config import load_config
+    from src.render import Renderer
+    from src.shorts import portrait
+
+    photo = tmp_path / "p.png"
+    Image.new("RGB", (900, 1400), (200, 30, 30)).save(photo)
+
+    tall = Renderer(portrait(load_config()), tmp_path)
+    stage = tall._photo_stage(str(photo))
+    assert stage is not None, "縦型で下地が作られていない"
+    assert stage.size == (1080, 1920)
+    # 画面の上半分は写真そのもの（ぼかした敷き布ではない）＝彩度が残る
+    middle = stage.convert("RGB").getpixel((540, 400))
+    assert middle[0] > 120 and middle[1] < 90, f"上半分が写真でない: {middle}"
+
+    wide = Renderer(load_config(), tmp_path)
+    wide_stage = wide._photo_stage(str(photo))
+    assert wide_stage.width > wide_stage.height, "横型はこれまでどおり横長"
