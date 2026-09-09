@@ -258,15 +258,32 @@ def test_サムネで落ちても動画のidは返す(tmp_path, monkeypatch, cap
     assert "サムネイルは付きませんでした" in capsys.readouterr().err
 
 
-def test_予約公開の時刻は次に来るその時刻():
-    """昨夜は12本を86分で投げ、間隔の中央値が6分だった（2026-09-09）。"""
+def test_過ぎた時刻は止める():
+    """09:00 を指定したのが 09:11 で、黙って翌日に回り6本が1日ずれかけた（2026-09-09）。"""
     from datetime import datetime, timedelta, timezone
 
+    import pytest
+
     jst = timezone(timedelta(hours=9))
-    now = datetime(2026, 9, 9, 4, 0, tzinfo=jst)
-    assert upload_mod.when_to_publish("07:30", now) == "2026-09-08T22:30:00Z"   # 同日の朝
-    now = datetime(2026, 9, 9, 9, 0, tzinfo=jst)
-    assert upload_mod.when_to_publish("07:30", now) == "2026-09-09T22:30:00Z"   # 過ぎたら翌日
+    now = datetime(2026, 9, 9, 9, 11, tzinfo=jst)
+    with pytest.raises(upload_mod.UploadError, match="過ぎています"):
+        upload_mod.when_to_publish("09:00", now)
+    # まだ先の時刻なら今日のその時刻
+    assert upload_mod.when_to_publish("10:30", now) == "2026-09-09T01:30:00Z"
+
+
+def test_分で渡せる():
+    """並べて予約するときは時計の時刻より確実。"""
+    from datetime import datetime, timedelta, timezone
+
+    import pytest
+
+    jst = timezone(timedelta(hours=9))
+    now = datetime(2026, 9, 9, 9, 11, tzinfo=jst)
+    assert upload_mod.when_to_publish("+45", now) == "2026-09-09T00:56:00Z"
+    assert upload_mod.when_to_publish("+90", now) == "2026-09-09T01:41:00Z"
+    with pytest.raises(upload_mod.UploadError):
+        upload_mod.when_to_publish("+5", now)
 
 
 def test_予約すると非公開で送られる(tmp_path, monkeypatch):

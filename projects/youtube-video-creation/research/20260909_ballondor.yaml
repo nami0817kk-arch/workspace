@@ -10,6 +10,7 @@ voice_min: 15
 slot: world_1
 date: "2026年9月9日"
 
+short_title: "デンベレが挙げた3人に、誰の名前があったか"
 theme:
   id: ballondor_2026_nominees
   league: france

@@ -146,10 +146,13 @@ def prepare(build_dir: Path, privacy: str = "private") -> Draft:
 
 
 def when_to_publish(clock: str, now=None) -> str:
-    """`07:30` のような時刻を、次に来るその時刻の RFC3339（UTC）にする。
+    """公開時刻を RFC3339（UTC）にする。2つの書き方を受ける。
 
-    参考チャンネルは1時間に1本ずつ出している。こちらは6分間隔で12本を投げていた。
-    朝・夕・夜に散らすための道具（2026-09-09）。
+    ``07:30``  … 今日のその時刻。**過ぎていたら止める**（2026-09-09）。
+                 09:00 を指定したのが 09:11 で、黙って翌日の09:00に回り、
+                 6本ぜんぶ1日ずれるところだった。黙って明日に回さない。
+    ``+45``    … いまから45分後。**並べて予約するときはこちら。**
+                 時計の時刻だと、書き出しに手間取ったぶんだけ過ぎてしまう。
     """
     from datetime import datetime, timedelta, timezone
 
@@ -157,13 +160,27 @@ def when_to_publish(clock: str, now=None) -> str:
     now = now or datetime.now(jst)
     if now.tzinfo is None:
         now = now.replace(tzinfo=jst)
-    try:
-        hour, minute = (int(x) for x in clock.split(":"))
-    except ValueError as exc:
-        raise UploadError(f"時刻は 07:30 の形で渡してください: {clock}") from exc
-    target = now.astimezone(jst).replace(hour=hour, minute=minute, second=0, microsecond=0)
-    if target <= now.astimezone(jst) + timedelta(minutes=1):
-        target += timedelta(days=1)
+    now = now.astimezone(jst)
+
+    text = str(clock).strip()
+    if text.startswith("+"):
+        try:
+            minutes = int(text[1:])
+        except ValueError as exc:
+            raise UploadError(f"+のあとは分の数で渡してください: {clock}") from exc
+        if minutes < 15:
+            raise UploadError("予約は15分より先にしてください（それより近いなら --at を外す）")
+        target = now + timedelta(minutes=minutes)
+    else:
+        try:
+            hour, minute = (int(x) for x in text.split(":"))
+        except ValueError as exc:
+            raise UploadError(f"時刻は 07:30 か +45 の形で渡してください: {clock}") from exc
+        target = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
+        if target <= now + timedelta(minutes=1):
+            raise UploadError(
+                f"{text} はもう過ぎています（いま {now:%H:%M}）。"
+                "**黙って明日に回しません。**先の時刻にするか、+45 のように分で渡してください")
     return target.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 

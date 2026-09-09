@@ -251,14 +251,14 @@ def test_ショートは本編と別のタイトルになる():
         "---", "title: 久保建英に起きたことがこちらです", "---", "",
         "## オープニング", "", "キャスター: タイトルを読みます。", "  telop: T",
         "", "## 本編", "",
-        "ネット民: 完全に別チームだった。", "  telop: パス成功率95%",
+        "ネット民: 完全に別チームだった。", "  telop: パス成功率95%を出したのは誰か",
         "ネット民: 中盤の圧力がすごい。", ""]
     script = parse_script(nl.join(base))
     for line in script.lines:
         line.duration, line.pause = 2.0, 0.3
     short = shorts.trim(script)
     assert short.title != script.title
-    assert "パス成功率95%" in short.title
+    assert short.title == "パス成功率95%を出したのは誰か"
 
     # 台本が short_title を持っていればそれが勝つ
     named = parse_script(nl.join(base[:2] + ["short_title: 95%という数字の意味"] + base[2:]))

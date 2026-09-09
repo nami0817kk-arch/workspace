@@ -88,21 +88,19 @@ def _retitle(short: Script, body: Scene) -> None:
     meta = short.meta or {}
     chosen = str(meta.get("short_title") or "").strip()
     if not chosen:
+        # **節の見出しをそのまま題名にする。**本編の題名を頭に足していたら
+        # 「22件の書き込みから　上田綺世が初先発で…」になり、意味を成さなかった
+        # （2026-09-09、予約したあとに気づいた）。見出しが弱ければ本編の題名のまま
         head = ""
         for line in body.lines:
             head = (line.telop or "").strip()
             if head:
                 break
-        chosen = f"{head}　{short.title}" if head else short.title
+        chosen = head if len(head) >= 10 else short.title
     short.title = chosen[:100]
-    # 冒頭の読み上げとテロップも、その題名に合わせる
-    if short.scenes and short.scenes[0].lines:
-        first = short.scenes[0].lines[0]
-        if first.telop is not None:
-            first.telop = chosen
-    meta = dict(meta)
-    meta["intro_title"] = chosen
-    short.meta = meta
+    # **画面と読み上げは本編のまま。**題名だけ分ける。ここを書き換えると
+    # 「読み上げている文」と「画面に出ている文」がずれる
+    short.meta = dict(meta)
 
 
 def _drop_hook(opening: Scene) -> None:
