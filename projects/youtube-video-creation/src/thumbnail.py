@@ -928,19 +928,26 @@ def _fit_band(draw: ImageDraw.ImageDraw, text: str, font_path: str, room: int = 
 
 def _draw_tags(layer: Image.Image, draw: ImageDraw.ImageDraw,
                tags: list[str], font_path: str) -> None:
-    """右上にエンブレムだけを並べる。
+    """**左側にエンブレムを並べる**（2026-09-09 ユーザー「もっと大きくして左に置く」）。
 
     前は赤い札にクラブ名を書き、その左にエンブレムを添えていた。
     **その文字は要らない**（2026-09-08 ユーザー指摘）。クラブ名は
-    タイトルにも帯にも出ているので、右上でもう一度書くと画面が混むだけだった。
+    タイトルにも帯にも出ているので、もう一度書くと画面が混むだけだった。
     残すのはエンブレムだけで、無いクラブは何も出ない。
+
+    置き場所は**左の、言葉の下と帯の上のあいだ**。右上に小さく置いていた頃は、
+    一覧に並べたときに何のクラブか判別できなかった。左は縦長の写真を右に置いた
+    ときに空くところで、ちょうど余っている
     """
     if not tags:
         return
-    y = 28
+    size = _crest_px()
+    # 上の言葉（thumbnail_points）と、下の帯を避けた帯域に置く
+    top = int(SIZE[1] * 0.30)
+    x = 56
     for tag in tags[:2]:
-        if _paste_crest(layer, tag, SIZE[0] - 28, y):
-            y += _crest_px() + 18
+        if _paste_crest(layer, tag, x + size, top):
+            x += size + 26
 
 
 def _draw_points(draw: ImageDraw.ImageDraw, points: list[str], font_path: str) -> None:
