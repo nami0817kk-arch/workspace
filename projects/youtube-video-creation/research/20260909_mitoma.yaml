@@ -1,0 +1,94 @@
+# 三笘薫（2026年9月9日）。材料は research/material/dig_三笘薫.md
+# **枠の見立て（契約延長）と中身が違った。**実際は昨季終盤の負傷から復帰できておらず、
+# 復帰は10月10日のサンダーランド戦が最有力、という話。ユーザーに断ったうえで書いている
+format: news
+# 復帰時期と日程を伝える回。地の文が増えるので他人の声の下限を下げる
+voice_min: 22
+slot: japan_5
+date: "2026年9月9日"
+
+short_title: "三笘薫の復帰はいつになるのか"
+
+theme:
+  id: mitoma_return_october
+  league: england
+  kind: other
+  topic: 三笘薫
+  title: 三笘薫の復帰、いつになるか監督が口にした日
+  hook: 昨季の終わりから、まだピッチに戻れていません。
+  question: いつ戻ってくるのか。チームはどうしのぐのか
+
+thumbnail:
+  line1: 復帰はいつになるのか
+  line2: 監督は ●●●● 後と明言
+  photo: "assets/photos/20260909_mitoma/01.jpg"
+  tags: [三笘薫, ブライトン]
+  points:
+    - 昨季終盤から離脱が続く
+    - ECLの登録メンバーからも外れた
+
+sections:
+  - id: what
+    heading: いま何が起きているか
+    tier: 報道
+    telop: 復帰は10月10日が最有力
+    narrator: キャスター
+    say:
+      - ブライトンの三笘薫は、昨季の終わりに負ったケガから、まだ復帰できていません。
+      - イギリスの媒体サセックス・エクスプレスが8日、復帰時期を報じました。
+      - もっとも可能性が高いのは、10月10日のサンダーランド戦。アウェイの試合です。
+      - 代表ウィークの前に戻るのは難しい、という見方でした。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/07/post1005180/
+      - https://web.ultra-soccer.jp/news/all/35159/
+
+  - id: said
+    heading: 監督は何と言ったか
+    tier: 報道
+    telop: 「間違いなくインターナショナルブレイク後」
+    narrator: 解説
+    say:
+      - ブライトンの指揮官は、会見でこう話しています。
+      - {voice: ブライトン監督, text: 我々は辛抱強くならなければならない}
+      - {voice: ブライトン監督, text: ウインガーたちが早く戻ってくることを願っている}
+      - {voice: ブライトン監督, text: もちろん、我々のゲームはこうしたタイプのウインガーに依存している}
+      - {voice: ブライトン監督, text: しかし今は適応し、ゲームを調整しなければならない}
+      - {voice: ブライトン監督, text: できるだけ早く戻ってくることを望んでいる}
+      - {voice: ブライトン監督, text: 間違いなくインターナショナルブレイク後になる}
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/07/post1005180/
+      - https://www.footballchannel.jp/2026/09/05/post1004478/
+
+  - id: squad
+    heading: 登録メンバーからも外れた
+    tier: 報道
+    telop: ECLの登録から外れる
+    narrator: キャスター
+    say:
+      - ブライトンは今季、ヨーロッパ・カンファレンスリーグに出ます。
+      - その登録メンバーに、三笘の名前はありませんでした。
+      - 日本人選手は16人が登録されていて、復帰が近い南野拓実も入っています。
+      - 三笘が戻ったあとの日程も見ておきます。
+      - 10月15日にカンファレンスリーグの初戦、カウノ・ジャルギリス戦。
+      - 10月18日にはプレミアリーグでクリスタル・パレスと当たります。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/05/post1004478/
+      - https://web.ultra-soccer.jp/news/all/35159/
+
+  - id: without
+    heading: いないあいだ、チームはどうか
+    tier: 報道
+    telop: 3試合で8ゴール
+    narrator: 解説
+    say:
+      - 三笘のいないブライトンは、ここまで3試合で8ゴールを挙げています。
+      - ただし、三笘とヤンクバ・ミンテがそろって離脱中です。
+      - 昨季の主力だったダニー・ウェルベックも、チェルシーへ売却しました。
+      - 監督が「適応しなければならない」と言ったのは、この状況のことです。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/07/post1005180/
+      - https://www.footballchannel.jp/2026/09/05/post1004478/

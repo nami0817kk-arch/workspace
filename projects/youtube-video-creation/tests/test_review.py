@@ -832,3 +832,45 @@ def test_反応の型ではまとめの長さを見ない():
         "現地サポ: もう前線で使っちゃえよ", "現地サポ: 補強は大成功だ", ""]))
     labels = {f.label for f in inspect(script, Path("does-not-exist"))}
     assert "まとめの長さ" not in labels
+
+
+def test_台本ごとに他人の声の下限を下げられる():
+    """試合の経過を詳しく伝える回は地の文が増える（2026-09-09 ユーザー指示）。"""
+    from pathlib import Path
+
+    from src.review import inspect
+    from src.script_model import parse_script
+
+    nl = chr(10)
+    rows = ["---", "title: T", "format: news", "sources: [https://example.com/a]",
+            "tags: [サッカー]", "---", "", "## オープニング", "",
+            "キャスター: タイトルを読みます。", "", "## 試合はどう動いたか", ""]
+    rows += ["キャスター: 実況のような地の文がここに七行ならびます。"] * 7
+    rows += ["現地メディア: 壁を築いた", ""]
+    strict = _by_label(inspect(parse_script(nl.join(rows)), Path("no-such-dir")))
+    assert strict["他人の声の量"].ok is False            # news の下限40%では止まる
+
+    loose = rows[:3] + ["voice_min: 2"] + rows[3:]
+    got = _by_label(inspect(parse_script(nl.join(loose)), Path("no-such-dir")))
+    assert got["他人の声の量"].ok is True                # 台本が下げた下限では通る
+
+
+def test_漢字の名前で始まるタイトルも主語として通す():
+    """**説明と中身が食い違っていた**（2026-09-09）。
+
+    docstring には「漢字の連なりも名前とみなす」と書いてあったのに、
+    実際に見ていたのはカタカナと、設定に並べた21人だけだった。
+    そのため「南野拓実が…」「旗手怜央、…」「福田師王が…」が、
+    名前で始まっているのに × になっていた。
+    """
+    from src.review import Script, check_title_subject
+
+    def title(text):
+        return check_title_subject(Script(title=text))
+
+    assert title("南野拓実が9か月ぶりに戻った日、なぜ出番が無かったのか").ok
+    assert title("旗手怜央、まさかの行き先変更。合流寸前だったのは別のクラブ").ok
+    assert title("福田師王が独2部で続けている記録を知っていますか").ok
+    # 名前ではない漢字語で始まるものは、これまでどおり落とす
+    assert not title("移籍市場が閉まったあとに何が残ったか").ok
+    assert not title("順位表を見ると分かることがある").ok

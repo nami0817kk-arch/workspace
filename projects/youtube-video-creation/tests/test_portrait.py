@@ -128,6 +128,25 @@ def test_切り出しは割合で指定する(tmp_path):
     Image.new("RGB", (400, 200), "white").save(path)
     assert crop_to(path, "0.5,0.0,0.5,0.5") == (200, 100)
 
+
+def test_透過つきの写真も切り出せる(tmp_path):
+    """**Commons の PNG は透過を持っていることがある。**
+
+    落とした中身は拡張子に関わらず 01.jpg に書くので、RGBA のままだと
+    JPEG で保存できずに落ちる。2026-09-09 に南野拓実のモナコ時代の写真
+    （CC0 の PNG）で実際に「cannot write mode RGBA as JPEG」が出た。
+    """
+    from PIL import Image
+
+    from src.portrait import crop_to
+
+    path = tmp_path / "a.jpg"
+    Image.new("RGBA", (400, 200), (255, 255, 255, 128)).save(path, "PNG")
+    assert crop_to(path, "0.0,0.0,0.5,1.0") == (200, 200)
+    with Image.open(path) as saved:
+        assert saved.mode == "RGB"
+
+
 def test_改変不可は切る用途では断り_そのまま出すなら通す():
     """**ND は「改変しなければ使える」。**（2026-09-06 ユーザーの案）
 

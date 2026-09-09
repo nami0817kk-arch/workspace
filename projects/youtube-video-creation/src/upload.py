@@ -145,6 +145,73 @@ def prepare(build_dir: Path, privacy: str = "private") -> Draft:
     )
 
 
+def recently_uploaded(service, title: str, minutes: int = 90) -> str | None:
+    """同じ題名の動画が、この少し前に上がっていないか（2026-09-09）。
+
+    **投稿は成功したのに、その控えを残す前に処理が終わることがある。**
+    実際に起きた: 投稿中の python を止めたら、呼び出し側が「失敗した」と見て
+    掛け直し、上田の本編が2本・バロンドールのショートが3本上がった。
+    掛け直す前にここを見れば、二度目を投げずに済む。
+    """
+    from datetime import datetime, timedelta, timezone
+
+    channel = service.channels().list(part="contentDetails", mine=True).execute()
+    uploads = channel["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
+    got = service.playlistItems().list(part="snippet", playlistId=uploads,
+                                       maxResults=15).execute()
+    edge = datetime.now(timezone.utc) - timedelta(minutes=minutes)
+    wanted = title.strip()
+    for item in got.get("items") or []:
+        snippet = item["snippet"]
+        when = snippet.get("publishedAt") or ""
+        try:
+            at = datetime.fromisoformat(when.replace("Z", "+00:00"))
+        except ValueError:
+            continue
+        if at >= edge and snippet.get("title", "").strip() == wanted:
+            return str(snippet["resourceId"]["videoId"])
+    return None
+
+
+def when_to_publish(clock: str, now=None) -> str:
+    """公開時刻を RFC3339（UTC）にする。2つの書き方を受ける。
+
+    ``07:30``  … 今日のその時刻。**過ぎていたら止める**（2026-09-09）。
+                 09:00 を指定したのが 09:11 で、黙って翌日の09:00に回り、
+                 6本ぜんぶ1日ずれるところだった。黙って明日に回さない。
+    ``+45``    … いまから45分後。**並べて予約するときはこちら。**
+                 時計の時刻だと、書き出しに手間取ったぶんだけ過ぎてしまう。
+    """
+    from datetime import datetime, timedelta, timezone
+
+    jst = timezone(timedelta(hours=9))
+    now = now or datetime.now(jst)
+    if now.tzinfo is None:
+        now = now.replace(tzinfo=jst)
+    now = now.astimezone(jst)
+
+    text = str(clock).strip()
+    if text.startswith("+"):
+        try:
+            minutes = int(text[1:])
+        except ValueError as exc:
+            raise UploadError(f"+のあとは分の数で渡してください: {clock}") from exc
+        if minutes < 15:
+            raise UploadError("予約は15分より先にしてください（それより近いなら --at を外す）")
+        target = now + timedelta(minutes=minutes)
+    else:
+        try:
+            hour, minute = (int(x) for x in text.split(":"))
+        except ValueError as exc:
+            raise UploadError(f"時刻は 07:30 か +45 の形で渡してください: {clock}") from exc
+        target = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
+        if target <= now + timedelta(minutes=1):
+            raise UploadError(
+                f"{text} はもう過ぎています（いま {now:%H:%M}）。"
+                "**黙って明日に回しません。**先の時刻にするか、+45 のように分で渡してください")
+    return target.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
 def _load_deps():
     try:
         from google.auth.transport.requests import Request
@@ -178,12 +245,13 @@ def get_service(client_secret: Path = CLIENT_SECRET_PATH, token: Path = TOKEN_PA
             credentials = flow.run_local_server(port=0)
         token.parent.mkdir(parents=True, exist_ok=True)
         token.write_text(credentials.to_json(), encoding="utf-8")
-    return build("youtube", "v3", credentials=credentials)
+    # **包んで返す。**呼ぶ側の書き忘れに頼らず、叩いたぶんを自動で数える
+    # （2026-09-09。使い捨てスクリプトの search.list 900 が台帳の外にあった）
+    return quota.counted(build("youtube", "v3", credentials=credentials))
 
 
 def fetch_snippet(service, video_id: str) -> dict:
     """いまの題名・概要欄・タグを取る。**書き換える前に、現物を見る。**"""
-    quota.record("videos.list")
     got = service.videos().list(part="snippet", id=video_id).execute()
     items = got.get("items") or []
     if not items:
@@ -213,14 +281,12 @@ def set_privacy(service, video_id: str, privacy: str = "public") -> str:
     """
     if privacy not in ("private", "unlisted", "public"):
         raise UploadError(f"知らない公開設定です: {privacy}")
-    quota.record("videos.list")
     got = service.videos().list(part="status", id=video_id).execute()
     items = got.get("items") or []
     if not items:
         raise UploadError(f"動画が見つかりません: {video_id}")
     status = dict(items[0]["status"])
     status["privacyStatus"] = privacy
-    quota.record("videos.update")
     service.videos().update(
         part="status", body={"id": video_id, "status": status}).execute()
     return video_id
@@ -265,7 +331,6 @@ def update_description(service, video_id: str, description: str) -> str:
     """
     snippet = fetch_snippet(service, video_id)
     snippet["description"] = description[:5000]
-    quota.record("videos.update")
     service.videos().update(
         part="snippet", body={"id": video_id, "snippet": snippet}).execute()
     return video_id
@@ -279,6 +344,7 @@ def upload(
     privacy: str = "private",
     category_id: str = "22",
     thumbnail: Path | None = None,
+    publish_at: str = "",
 ) -> str:
     """動画を投稿して videoId を返す。既定は限定公開ではなく非公開(private)。"""
     draft = Draft(
@@ -299,8 +365,14 @@ def upload(
         },
         "status": {"privacyStatus": privacy, "selfDeclaredMadeForKids": False},
     }
+    if publish_at:
+        # **予約公開**（2026-09-09）。昨夜は12本を86分で投げ、間隔の中央値が6分
+        # だった（こちらのコード自身が45分と警告していた）。朝に出した6本は
+        # 435〜993回、夜に出した6本は0〜35回。時刻を選べるようにする。
+        # YouTube の決まりで、予約するあいだは private でなければならない
+        body["status"]["privacyStatus"] = "private"
+        body["status"]["publishAt"] = publish_at
     media = MediaFileUpload(str(video_path), chunksize=-1, resumable=True)
-    quota.record("videos.insert")
     request = service.videos().insert(part="snippet,status", body=body, media_body=media)
 
     response = None
@@ -311,7 +383,6 @@ def upload(
     video_id = response["id"]
 
     if thumbnail and thumbnail.exists():
-        quota.record("thumbnails.set")
         # **サムネで落ちても、動画はもう上がっている。**ここで例外を投げると
         # 呼ぶ側は「投稿に失敗した」と見て掛け直し、同じ動画が2本になる。
         # 2026-09-08 に thumbnails.set の 429（サムネの送りすぎ）でそれが起き、

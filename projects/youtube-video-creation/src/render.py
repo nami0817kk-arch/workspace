@@ -94,6 +94,7 @@ class Renderer:
         # 冒頭の節で敷く写真（frame_entries が台本から入れる）
         self.opening_photo: str = ""
         self.opening_scene: str = ""
+        self.opening_points: list[str] = []
         self.frame_dir.mkdir(parents=True, exist_ok=True)
 
         font_path = str(config.video.font_path())
@@ -158,6 +159,9 @@ class Renderer:
                  if self.config.video.channel_name.strip()
                  and scene.title == self.opening_scene and scene.lines
                  and line is scene.lines[0] else ""),
+                ("hook:" + "/".join(self.opening_points)
+                 if self.opening_points and scene.title == self.opening_scene
+                 and scene.lines and line is scene.lines[0] else ""),
                 # 立ち絵を出さないなら口パクも跳ねも絵に影響しない
                 ("open" if mouth_open else "close") if self.layout.with_characters else "-",
                 f"{telop_t:.2f}/{hop_t if self.layout.with_characters else 1.0:.2f}",
@@ -192,6 +196,7 @@ class Renderer:
             self._draw_scene_title(canvas, scene.title)
         if scene.title == self.opening_scene and scene.lines and line is scene.lines[0]:
             self._draw_channel_card(canvas)
+            self._draw_hook_points(canvas, self.opening_points)
         if self.layout.with_characters:
             self._draw_telop(canvas, member, text, telop_t, source)
         else:
@@ -490,6 +495,32 @@ class Renderer:
                 str(self.config.video.latin_font_path()),
             )
         return Image.open(target).convert("RGBA")
+
+    def _draw_hook_points(self, canvas: Image.Image, points: list[str]) -> None:
+        """冒頭の1行目に、サムネと同じ伏せ字の一言を左側に積む（2026-09-09）。
+
+        Gemini（2026-09-08）の答え3: タイトルで伏せた答えを、動画の最初の3秒の
+        絵にも同期させる。サムネの thumbnail_points をそのまま使うので、クリック
+        した人が同じ言葉を見て「合っている」と確かめられる。登録カードの下に置く。
+        """
+        points = [str(x).strip() for x in points if str(x).strip()][:3]
+        if not points:
+            return
+        from PIL import ImageFont
+
+        layer, draw = _layer(canvas.size)
+        size = 72 if not self.layout.is_portrait else 60
+        font = ImageFont.truetype(str(self.config.video.font_path()), size)
+        x, y = 64, 150
+        for text in points:
+            draw.text((x + 4, y + 4), text, font=font, fill=(0, 0, 0, 200))
+            draw.text((x, y), text, font=font, fill=(255, 255, 255, 255),
+                      stroke_width=6, stroke_fill=(0, 0, 0, 220))
+            width = draw.textlength(text, font=font)
+            draw.line([(x, y + size + 14), (x + width, y + size + 14)],
+                      fill=(232, 210, 31, 255), width=6)
+            y += size + 46
+        canvas.alpha_composite(layer)
 
     def _draw_channel_card(self, canvas: Image.Image) -> None:
         """左上にチャンネル名と登録ボタンの小さなカード（2026-09-08）。
@@ -797,6 +828,7 @@ class Renderer:
         previous: Path | None = None
         self.opening_photo = str(script.meta.get("thumbnail_photo") or "")
         self.opening_scene = script.scenes[0].title if script.scenes else ""
+        self.opening_points = [str(x) for x in (script.meta.get("thumbnail_points") or [])]
 
         if inserts.intro > 0 and script.scenes:
             first_bg = script.scenes[0].background or script.background or self.config.video.background

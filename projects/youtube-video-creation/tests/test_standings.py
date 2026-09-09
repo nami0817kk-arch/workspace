@@ -82,3 +82,25 @@ def test_カードは5列に収める():
 
 def test_タイトルは定型にそろえる():
     assert _table().title() == "【速報】プレミアリーグ第3節が終了、最新の順位表がこちらです"
+
+
+def test_順位表の取材メモを組む():
+    """定型シリーズ（2026-09-09）。9/7 に決めたが1本も作っていなかった。"""
+    import yaml
+
+    from src import standings
+    from src.research import build_notes
+
+    rows = [standings.Row(rank=n, team=f"Team{n}", played=3, win=3 - n % 3, draw=0,
+                          lose=n % 3, diff=10 - n, points=9 - n) for n in range(1, 21)]
+    table = standings.Table(league="england", name="Premier League", rows=rows)
+    text = standings.note(table, "2026年9月9日")
+    raw = yaml.safe_load(text)
+    assert raw["format"] == "news"
+    assert "順位が動いたのはどこか" in raw["theme"]["title"]     # 答え（首位）は書かない
+    assert raw["sections"][0]["card"]["type"] == "table"
+    assert raw["sections"][0]["official"] is True
+    assert "premierleague.com" in raw["sections"][0]["sources"][0]
+    notes = build_notes(raw)                                     # 取材メモとして読める
+    assert notes.format == "news" and len(notes.sections) == 4
+    assert notes.sections[-1].id == "reactions"                  # 反応は最後（反応で終わる）

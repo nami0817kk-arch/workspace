@@ -1,0 +1,106 @@
+# モウリーニョ対キヴ（2026年9月9日）。材料は research/material/dig_モウリーニョ.md
+# **拾えた材料は試合前のキヴ会見と、別の試合（ベティス戦）が混ざっていた。**
+# 試合そのものの記事は候補ファイルから取り直した。
+# **ネットの反応は入れない。**この試合のスレが立っていない（拾えたのは久保や
+# 香川の話だった）。docs/research.md「反応が取れないことは普通にある」
+format: news
+# 試合と会見の言葉で組む回。地の文が増えるので他人の声の下限を下げる
+voice_min: 25
+slot: world_2
+date: "2026年9月9日"
+
+short_title: "キヴがモウリーニョについて語ったこと"
+
+theme:
+  id: real_inter_cl1
+  league: spain
+  kind: match
+  topic: レアル・マドリード
+  title: モウリーニョと教え子の対決、ベルナベウで59年続いているものとは
+  hook: チャンピオンズリーグの初戦で、師匠と教え子が向き合いました。
+  question: なぜインテルはこのスタジアムで勝てないのか
+
+thumbnail:
+  line1: 師弟対決はレアルに軍配
+  line2: ベルナベウで ●●年続くもの
+  photo: "assets/photos/20260909_mourinho/01.jpg"
+  photos:
+    - assets/photos/20260909_mourinho/01.jpg
+    - assets/photos/20260909_chivu/01.jpg
+  tags: [モウリーニョ, インテル]
+  points:
+    - 教え子が率いるインテルと対戦
+    - 決勝で掲げたのも このスタジアム
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: レアル 2対1 インテル
+    narrator: キャスター
+    say:
+      - チャンピオンズリーグ第1節、レアル・マドリードはインテルと戦いました。
+      - 場所はサンティアゴ・ベルナベウ。ホームのレアルが2対1で勝っています。
+      - レアルを率いるのはジョゼ・モウリーニョ。
+      - インテルを率いるのは、クリスティアン・キヴです。
+      - キヴは現役時代、モウリーニョのもとでプレーしていました。師弟の対決になります。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/cl/20260909/2202649.html
+      - https://www.footballchannel.jp/2026/09/09/post1006929/
+
+  - id: match
+    heading: 試合はどう動いたか
+    tier: 報道
+    telop: 14分、エムバペのプレスから
+    narrator: 解説
+    say:
+      - 立ち上がりはインテルが押し込みました。
+      - 3分、テュラムの強烈なシュートをクルトワが止めます。
+      - 12分にはラウタロ・マルティネスにもミドルシュートを打たれました。
+      - 流れが変わったのは14分です。
+      - インテルが自陣でつなごうとしたところへ、エムバペが素早く寄せます。
+      - ビセックのコントロールが乱れ、レアルがそのまま奪いました。
+      - この日はエムバペとバルベルデが決めています。
+      - モウリーニョは出場停止の3人を欠き、アレクサンダー＝アーノルドを中盤に置きました。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/09/post1006929/
+      - https://web.gekisaka.jp/news/ucl/detail/?458510-458510-fl
+
+  - id: before
+    heading: 教え子は試合前に何と言っていたか
+    tier: 報道
+    telop: 「モウリーニョは特別な人」
+    narrator: 解説
+    say:
+      - 試合の前日、キヴ監督は会見でこう話していました。
+      - {voice: キヴ, text: ここでプレーするのは決して簡単ではない}
+      - {voice: キヴ, text: インテルは59年間、ベルナベウでレアルに勝てていないのだから}
+      - {voice: キヴ, text: ここで主導権を握るため、我々は勇気と気概を見せなければならない}
+      - {voice: キヴ, text: レアル・マドリードに対処する完璧な方法などない}
+      - {voice: キヴ, text: いつでも試合の流れを変えることができる選手が数多くいる}
+    official: false
+    sources:
+      - https://web.ultra-soccer.jp/news/all/35539/
+      - https://www.soccer-king.jp/news/world/cl/20260909/2202649.html
+
+  - id: bond
+    heading: ふたりの関係
+    tier: 背景
+    telop: 2010年の決勝もこのスタジアム
+    narrator: キャスター
+    say:
+      - キヴがベルナベウについて話すとき、思い出すのは2010年です。
+      - {voice: キヴ, text: 2010年の決勝戦は素晴らしかった}
+      - {voice: キヴ, text: モウリーニョ監督との出会いは本当に幸運だったよ}
+      - {voice: キヴ, text: 彼は僕にとって特別な人物だからね}
+      - {voice: キヴ, text: 彼は私の人生の困難な時期に助けてくれた}
+      - {voice: キヴ, text: そのことは決して忘れない}
+      - あの決勝でインテルが優勝したのも、このサンティアゴ・ベルナベウでした。
+      - インテルがこのスタジアムでレアルに勝ったのは、1966-67シーズンが最後です。
+      - 以降7度対戦して、すべて負けています。
+    official: false
+    sources:
+      - https://web.ultra-soccer.jp/news/all/35539/
+      - https://www.soccer-king.jp/news/world/cl/20260909/2202649.html

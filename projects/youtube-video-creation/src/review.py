@@ -83,7 +83,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
         # 型になっていない。まとめの節があるのは news だけなので、他の型では
         # 「最後の節が長い」は見ない（最後の節が反応の本体になる）
         shape = _format_of(script)
-        findings.append(check_voice_share(script, shape["voice_min"]))
+        findings.append(check_voice_share(script, _voice_floor(script, shape)))
         findings.append(check_opening_title(script))
         if shape["wrap"]:
             findings.append(check_wrap_share(script))
@@ -741,6 +741,23 @@ def _format_of(script: Script) -> dict:
     return FORMATS.get(name, FORMATS["news"])
 
 
+def _voice_floor(script: Script, shape: dict) -> float:
+    """他人の声の下限。台本が `voice_min` を書いていればそちらを使う（2026-09-09）。
+
+    ユーザー「スズキはネットの声はなしでOK。試合の評価を詳しく伝えましょう」。
+    試合の経過を詳しく伝える回は、実況のような地の文が増えて他人の声の割合が
+    下がる。**型の下限は目安であって、回ごとの判断を潰すものではない。**
+    下げるときは取材メモに理由を書く。
+    """
+    written = (script.meta or {}).get("voice_min")
+    if written is None:
+        return float(shape["voice_min"])
+    try:
+        return max(0.0, min(100.0, float(written)))
+    except (TypeError, ValueError):
+        return float(shape["voice_min"])
+
+
 def _voice_lines(script: Script) -> tuple[list[int], int]:
     """他人の声の字数と、全体の字数。"""
     other: list[int] = []
@@ -885,6 +902,14 @@ COMMON_KATAKANA = (
     "プレー", "パフォーマンス", "トレーニング", "メンバー", "スタジアム",
 )
 
+# 文頭に立つが名前ではない漢字語。**ここを増やしすぎない。**
+# 名前でないものを1つ通すより、名前を1つ落とすほうが害が大きい
+COMMON_KANJI_HEADS = (
+    "移籍", "移籍市場", "順位表", "今季", "昨季", "現地", "欧州", "海外", "世界",
+    "開幕", "試合", "大会", "記録", "得点", "監督", "選手", "契約", "今夏", "今冬",
+    "地元", "英国", "現在", "先発", "後半", "前半", "初戦", "本人", "全員",
+)
+
 
 def _japanese_names() -> tuple[str, ...]:
     """設定に書いてある日本人選手の名前。無ければ空で通す。"""
@@ -899,8 +924,14 @@ def _japanese_names() -> tuple[str, ...]:
 def check_title_subject(script: Script) -> Finding:
     """タイトルの頭に、クラブ名か人名が出てくるか。
 
-    クラブは `config/clubs.yaml`（61クラブの別名辞書）で見る。人名は辞書を
-    持っていないので、**カタカナか漢字の連なり**があれば名前とみなす。
+    クラブは `config/clubs.yaml`（61クラブの別名辞書）で見る。人名は
+    `sources.yaml` の `scoring.japanese` と、カタカナ・漢字の連なりで見る。
+
+    **説明と中身が食い違っていた**（2026-09-09）。ここには「漢字の連なりも
+    名前とみなす」と書いてあったのに、実際に見ていたのはカタカナだけだった。
+    そのため「南野拓実が…」「旗手怜央、…」「福田師王が…」が
+    **名前で始まっているのに × になっていた**（一覧に載っている21人だけが通っていた）。
+    漢字は普通名詞と同じ形なので、**文頭にあって助詞か読点が続くもの**に絞る。
     """
     import re
 
@@ -921,6 +952,11 @@ def check_title_subject(script: Script) -> Finding:
         # 頭で切れた語も落とす（「ウォームア」は「ウォームアップ」の途中）
         if not any(word in run or run in word for word in COMMON_KATAKANA):
             return Finding(True, "タイトルの主語", f"頭に名前: {run[:10]}")
+    # 漢字の名前。**文頭にあって助詞か読点が続くもの**だけを見る。
+    # 「南野拓実が」「旗手怜央、」は名前、「移籍市場が」は名前ではない
+    kanji = re.match(r"^([一-龥々ヶ]{2,5})(?=[がはのをにへとも、。])", head)
+    if kanji and kanji.group(1) not in COMMON_KANJI_HEADS:
+        return Finding(True, "タイトルの主語", f"頭に名前: {kanji.group(1)}")
     return Finding(
         False, "タイトルの主語",
         f"頭{TITLE_HEAD}字に人名もクラブ名もありません（『{head}』）。"

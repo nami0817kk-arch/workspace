@@ -1,0 +1,104 @@
+# 鎌田大地 の取材メモ（2026年9月9日）。材料は research/material/dig_鎌田大地.md
+# 冨安の縦パスが起点で鎌田がループ、という「日本人コンビ」が話の芯。
+# 反応は「超絶ループのゴラッソ」のスレ（母数37件）から。差別的な書き込みと
+# 個人攻撃が混ざっていたので、ゴールと冨安についての声だけを選んだ
+format: news
+slot: japan_2
+date: "2026年9月9日"
+
+short_title: "クリスタル・パレスの3点目は、どう生まれたか"
+theme:
+  id: kamada_carabao_goal
+  league: england
+  kind: match
+  topic: クリスタル・パレス
+  title: クリスタル・パレスの日本人ふたり、この夜に何をやったのか
+  hook: カラバオ杯の3回戦。冨安と鎌田が、同じ場面に出てきます。
+  question: 日本人ふたりは、この試合で何をしたのか
+
+thumbnail:
+  line1: 日本人コンビで3点目
+  line2: 冨安の縦パスから ●●●●
+  photo: "assets/photos/20260909_kamada/01.jpg"
+  photos:
+    - assets/photos/20260909_tomiyasu/01.jpg
+    - assets/photos/20260909_kamada/01.jpg
+  tags: [冨安健洋, 鎌田大地]
+  points:
+    - 冨安は加入後はじめてのフル出場
+    - 鎌田は2試合連続で得点に関与
+
+sections:
+  - id: what
+    heading: 日本人ふたりが揃って出た
+    tier: 報道
+    telop: 冨安フル出場、鎌田が3点目
+    narrator: キャスター
+    say:
+      - イングランドのカラバオカップ3回戦、クリスタル・パレスはミドルズブラと戦いました。
+      - ホームのパレスが3対0で勝ち、4回戦に進んでいます。
+      - この試合、日本代表がふたり出ています。
+      - 冨安健洋は先発フル出場。加入してからはつのフル出場です。
+      - かまだだいちは59分から途中出場し、72分に3点目を決めました。
+      - かまだにとって、今季はつのゴールです。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20260909/2202635.html
+      - https://www.footballchannel.jp/2026/09/09/post1006956/
+
+  - id: goal
+    heading: ふたりでつくった3点目
+    tier: 報道
+    telop: 冨安の縦パスから鎌田のループ
+    narrator: 解説
+    say:
+      - 72分の場面です。攻撃の起点をつくったのは冨安の縦パスでした。
+      - そこから運んで、最後はかまだが鮮やかなループシュート。
+      - 日本人コンビで、試合を決める3点目が生まれました。
+      - かまだは前節のフラム戦で今季はつのアシストを記録しています。
+      - 公式戦2試合続けて、得点に関わったことになります。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/09/post1006956/
+      - https://www.soccer-king.jp/news/world/eng/20260909/2202635.html
+
+  - id: match
+    heading: 試合はどう動いたか
+    tier: 報道
+    telop: 前半37分に先制
+    narrator: 解説
+    say:
+      - プレミアリーグ第3節のフラム戦から中2日でのカップ戦でした。
+      - サージュ監督はメンバーを入れ替え、冨安が先発。かまだはベンチスタートです。
+      - 37分、ミンゲサのパスからストランド・ラーセンが先制。前半は1対0で折り返します。
+      - 53分、今度はチルウェルのお膳立てから、ストランド・ラーセンがこの日2点目。
+      - 2点差になった59分に、かまだがピッチへ送り出されました。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/09/post1006956/
+      - https://web.ultra-soccer.jp/news/all/35322/
+
+  - id: reactions
+    heading: ネットではどう見られているか
+    tier: 未確認
+    telop: 37件の書き込みから
+    narrator: キャスター
+    say:
+      - これに対して、日本のネットではどう見られているのか。
+      - {voice: ネット民, text: 冨安の縦パスを起点に鎌田が香川のようなループシュート}
+      - {voice: ネット民, text: 美しいな GKが一歩も動けない}
+      - {voice: ネット民, text: まじで天才がやるやつだ}
+      - {voice: ネット民, text: 超上手かった！ キーパー動けなかったな}
+      - {voice: ネット民, text: ふわっとしたシュートに 圧巻はおかしいだろw}
+      - {voice: ネット民, text: キーパー一歩も動けないシュートなら圧巻だよ}
+      - {voice: ネット民, text: 相手は2部のミドルズブラじゃん}
+      - {voice: ネット民, text: プレミアでは2年以上ノーゴールだよな}
+      - {voice: ネット民, text: 鎌田はカップ戦で決めること多くないか}
+      - {voice: ネット民, text: 鎌田は二代目カラバ王か}
+      - {voice: ネット民, text: 冨安がフル出場できる日だったか}
+      - {voice: ネット民, text: 壊れそうで壊れない冨安 信用していいの？}
+      - {voice: ネット民, text: 鎌田のゴールより冨安が大丈夫だったことに目が行くw}
+      - {voice: ネット民, text: 冨安フルのほうがビッグニュース}
+    official: false
+    sources:
+      - https://sakarabo.blog.jp/archives/1084489446.html

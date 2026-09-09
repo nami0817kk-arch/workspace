@@ -453,6 +453,23 @@ python -m src.cli reactions --find "久保建英" --say         # まとめサ�
   移籍はそうした）。クラブの加入・退団の一覧のように HTML に載っている表は取れる
 - `draft` は量のヒントを出す: 他人の声10件・数字8行・出典5本3媒体が目安
 
+### 定型シリーズ「順位表」（2026-09-09）
+
+9/7 に「毎節この動画がある」型を持つと決め、Gemini（9/8）の答えでも最優先だったが、
+1本も作っていなかった。節が終わった翌朝に、この3手で1本になる。
+
+```bash
+python -m src.cli standings england --note research/20260913_standings_england.yaml
+python -m src.cli reactions --find "プレミア 順位" --say      # 反応の節に貼る
+python -m src.cli draft research/20260913_standings_england.yaml
+```
+
+- 数字は FotMob とリーグ公式の順位表から。節は 順位表（カード）→ 上位 → 降格圏 → 反応。
+  **反応で終わる**ので、反応の節を埋めないと `draft` が止まる（出典が要る）
+- タイトルは首位を書かず「順位が動いたのはどこか」の形。サムネの伏せ字（`points`）は
+  「首位との差 ●点」「降格圏に ●●●」を雛形で入れてあるので、数字を見て直す
+- リーグは england / spain / germany / italy / france / netherlands
+
 ### 型を選ぶ（format）
 
 上の書き方は `news` の型。**型は3つあり、題材ごとに選ぶ**（2026-09-08 ユーザー指示）。

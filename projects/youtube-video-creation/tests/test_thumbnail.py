@@ -474,3 +474,45 @@ def test_写真を並べると全面が写真になる(tmp_path):
         right = image.getpixel((SIZE[0] - 120, 120))
     assert left[0] > 150 and left[2] < 110      # 左は1枚目
     assert right[2] > 150 and right[0] < 110    # 右は2枚目
+
+
+def test_縦の動画には縦のサムネを作る(tmp_path):
+    """**参考4チャンネルのショートは全部が縦だった**（2026-09-09）。
+
+    こちらだけ本編と同じ 16:9 を使い回していて、縦のタイルでは
+    左半分の文字が切られていた。portrait() の設定（width < height）で
+    呼ばれたら 1080x1920 を返す。
+    """
+    from PIL import Image
+
+    from src.config import load_config
+    from src.shorts import portrait
+    from src.thumbnail import build_thumbnail
+
+    out = build_thumbnail(
+        portrait(load_config()), "題名", tmp_path / "t.png",
+        lines=("1行目", "2行目"), tags=["三笘薫"], quote="ひとこと",
+    )
+    with Image.open(out) as image:
+        assert image.size == (1080, 1920)
+
+    wide = build_thumbnail(
+        load_config(), "題名", tmp_path / "w.png",
+        lines=("1行目", "2行目"), tags=["三笘薫"],
+    )
+    with Image.open(wide) as image:
+        assert image.size == (1280, 720)
+
+
+def test_縦サムネの下に見出しの繰り返しは置かない(tmp_path):
+    """反応が無い回で、2行目がそのまま下にも出て同じ文が2つ並んだ。"""
+    from src.config import load_config
+    from src.shorts import portrait
+    from src.thumbnail import _short_thumbnail
+
+    config = portrait(load_config())
+    same = _short_thumbnail(config, tmp_path / "a.png", None,
+                            ("上", "下の行"), [], None, "下の行", [])
+    other = _short_thumbnail(config, tmp_path / "b.png", None,
+                             ("上", "下の行"), [], None, "別のひとこと", [])
+    assert same.read_bytes() != other.read_bytes()

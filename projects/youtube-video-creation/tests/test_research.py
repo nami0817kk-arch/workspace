@@ -762,3 +762,155 @@ def test_ニュースの型は今まで通り問いが要る():
     raw["theme"].pop("question")
     problems = verify(build_notes(raw), _plan())
     assert any("question" in p for p in problems)
+
+
+def test_つかみが空なら冒頭はタイトルの1行だけ():
+    """視聴維持の曲線（2026-09-09 実測）で捨てられるのは4〜9秒だった。
+
+    hook が空のときは question をそのまま読んでいた＝クリックした人が
+    もう知っている話の言い直し。その行ごと出さない。
+    """
+    from src.script_model import parse_script
+
+    raw = _raw()
+    raw["theme"] = {**raw["theme"], "hook": ""}
+    script = parse_script(to_script(build_notes(raw), _plan()))
+    opening = script.scenes[0]
+    assert len(opening.lines) == 1
+    assert raw["theme"]["title"] in opening.lines[0].text
+    assert not any("今回の問い" in line.telop_text() for line in script.lines)
+
+
+def test_つかみが問いの言い直しなら出さない():
+    from src.research import advise
+    from src.script_model import parse_script
+
+    raw = _raw()
+    raw["theme"] = {**raw["theme"], "hook": "なぜ金の問題ではないのか。"}
+    script = parse_script(to_script(build_notes(raw), _plan()))
+    assert len(script.scenes[0].lines) == 1
+    hints = advise(build_notes(raw), _plan())
+    assert any("問いと同じ" in h for h in hints)
+
+
+def test_つかみが別の一言なら残る():
+    from src.script_model import parse_script
+
+    script = parse_script(to_script(build_notes(_raw()), _plan()))   # hook は別の文
+    assert len(script.scenes[0].lines) == 2
+    assert any("今回の問い" in line.telop_text() for line in script.lines)
+
+
+def test_節ごとに地の文の読み手を決められる():
+    """2026-09-09 ユーザー「何が起きたかはキャスターが伝えて良い」。
+
+    交互は既定であって決まりではない。節に narrator を書けばその人が読む。
+    """
+    from src.script_model import parse_script
+
+    raw = _raw()
+    raw["sections"][0]["narrator"] = "キャスター"
+    raw["sections"][1]["narrator"] = "解説"
+    raw["sections"][0]["say"] = ["いちぎょうめ。", "にぎょうめ。", "さんぎょうめ。"]
+    raw["sections"][1]["say"] = ["いちぎょうめ。", "にぎょうめ。"]
+    script = parse_script(to_script(build_notes(raw), _plan()))
+    first, second = script.scenes[1], script.scenes[2]
+    assert {l.speaker for l in first.lines} == {"キャスター"}
+    assert {l.speaker for l in second.lines} == {"解説"}
+    # narrator が無い節は今までどおり交互
+    assert len({l.speaker for l in script.scenes[3].lines}) >= 1
+
+
+def test_サムネの帯と伏せ字が同じなら知らせる():
+    """3本とも line2 と points の1つが同じ文だった（2026-09-09 ユーザー指摘）。"""
+    from src.research import advise
+
+    raw = _raw(thumbnail={"line1": "短い見出し", "line2": "ベンチにいたのは ●●●●",
+                          "points": ["ベンチにいたのは ●●●●", "初先発は9日目"]})
+    hints = advise(build_notes(raw))
+    assert any("line2 と同じ" in h for h in hints)
+
+
+def test_サムネに重複が無ければ黙っている():
+    from src.research import advise
+
+    raw = _raw(thumbnail={"line1": "短い見出し", "line2": "ベンチにいたのは ●●●●",
+                          "points": ["初先発は9日目", "現地紙の採点は ●点"]})
+    assert not any("同じ" in h and "サムネ" in h for h in advise(build_notes(raw)))
+
+
+def test_名前のある人の発言は反応ではない():
+    """監督の会見を反応と見て「反応で終わる」の点検が誤って鳴った（2026-09-09）。"""
+    raw = _raw()
+    raw["sections"] = [
+        _section(),
+        _section(id="said", heading="監督は何と言ったか", tier="報道", official=False,
+                 sources=["https://example.com/1", "https://example.com/2"],
+                 say=[{"voice": "ブライトン監督", "text": "辛抱強くならなければならない"},
+                      {"voice": "ブライトン監督", "text": "適応しなければならない"}]),
+        _section(id="next", heading="これからどうなる", tier="未確認", official=False),
+    ]
+    assert verify(build_notes(raw), _plan()) == []      # 監督の発言のあとに節が来てよい
+
+    # 匿名の反応のあとなら、今までどおり止まる
+    raw["sections"][1] = _section(
+        id="net", heading="ネットの声", tier="未確認", official=False,
+        say=[{"voice": "ネット民", "text": "まだ序盤やしな"},
+             {"voice": "ネット民", "text": "お茶会で干されたか"}])
+    assert any("反応の節のあとに" in p for p in verify(build_notes(raw), _plan()))
+
+
+def test_tableカードにcolumnsが無いと取材メモの段階で止まる():
+    """**書き出しまで気づけなかった**（2026-09-09）。
+
+    columns を書き忘れた台本が draft を通り、音声を合成し終えたあとの
+    render で落ちた。落ちる条件はカードの側が知っているので、
+    取材メモの検証で同じことを見る。
+    """
+    from src.research import Section, _check_card
+
+    def make(card):
+        return Section(id="s", heading="h", tier="報道", telop="t",
+                       say=["a"], sources=["https://example.com/1"], card=card)
+
+    assert _check_card(make({"type": "table", "rows": [["1", "2"]]}))
+    assert _check_card(make({"type": "table", "columns": ["a", "b"],
+                             "rows": [["1"]]}))
+    assert _check_card(make({"type": "bars", "title": "x"}))
+    assert not _check_card(make({"type": "table", "columns": ["a", "b"],
+                                 "rows": [["1", "2"]]}))
+    assert not _check_card(make(None))
+
+
+def test_short_titleが台本に書き出される():
+    """**書いても効いていなかった**（2026-09-09）。
+
+    取材メモに short_title を書いても Notes が受け取らず、to_script も
+    書き出していなかった。shorts._retitle は台本の front matter を見るので、
+    いつも空になり、節のテロップが題名になっていた
+    （「試合登録は20人。2人が外れる」という題名のショートが3本並んだ）。
+    """
+    from src.plan import load_plan
+    from src.research import build_notes, to_script
+
+    raw = {
+        "date": "2026年9月9日",
+        "short_title": "南野拓実、9か月ぶりの招集メンバー",
+        "theme": {"id": "t", "title": "南野拓実が戻った日、なぜ出番が無かったのか",
+                  "question": "なぜ外れたのか", "topic": "南野拓実",
+                  "league": "france", "kind": "other"},
+        "thumbnail": {"line1": "a", "line2": "b", "tags": ["南野拓実"],
+                      "photo": "assets/photos/x/01.jpg"},
+        "sections": [
+            {"id": f"s{n}", "heading": f"見出し{n}", "tier": "報道",
+             "telop": f"テロップ{n}", "say": ["ひとこと。"],
+             "sources": ["https://example.com/1", "https://example.com/2"]}
+            for n in range(3)
+        ],
+    }
+    notes = build_notes(raw)
+    assert notes.short_title == "南野拓実、9か月ぶりの招集メンバー"
+    assert "short_title: 南野拓実、9か月ぶりの招集メンバー" in to_script(notes, load_plan())
+
+    del raw["short_title"]
+    assert "short_title:" not in to_script(build_notes(raw), load_plan())

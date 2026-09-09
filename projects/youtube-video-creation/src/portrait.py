@@ -177,6 +177,11 @@ def crop_to(path: Path, box: str) -> tuple[int, int]:
         x0, y0 = int(w * parts[0]), int(h * parts[1])
         x1, y1 = x0 + int(w * parts[2]), y0 + int(h * parts[3])
         cut = im.crop((max(0, x0), max(0, y0), min(w, x1), min(h, y1)))
+        # **Commons の PNG は透過を持っていることがある。**落とした中身は
+        # 拡張子に関係なく 01.jpg に書くので、RGBA のままだと JPEG で保存できず
+        # 「cannot write mode RGBA as JPEG」で落ちる（2026-09-09 実測）
+        if cut.mode not in ("RGB", "L"):
+            cut = cut.convert("RGB")
         cut.save(path, quality=92)
         return cut.size
 

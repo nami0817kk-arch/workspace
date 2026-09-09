@@ -33,6 +33,7 @@
 from __future__ import annotations
 
 import argparse
+import datetime
 import sys
 import unicodedata
 from pathlib import Path
@@ -299,6 +300,8 @@ def main(argv: list[str] | None = None) -> int:
     p_table.add_argument("league", help="england / spain / germany / italy / france / netherlands")
     p_table.add_argument("--top", type=int, default=10, help="載せる順位（既定10）")
     p_table.add_argument("--out", default="", help="画像の書き出し先（省略すると書かない）")
+    p_table.add_argument("--note", default="",
+                         help="定型シリーズの取材メモ（YAML）をこのパスに書く（2026-09-09）")
 
     # 数字の図。**試合映像の代わりになる下地**（2026-09-07）
     p_stat = sub.add_parser(
@@ -348,6 +351,9 @@ def main(argv: list[str] | None = None) -> int:
     p_comment.add_argument("build_dir", help="build の出力ディレクトリ")
     p_comment.add_argument("video_id", help="YouTube の動画ID。ハイフン始まりは `--` を挟む")
     p_comment.add_argument("--text", default=None, help="文面を自分で決めるとき")
+    p_comment.add_argument("--choices", nargs=2, metavar=("賛", "否"), default=None,
+                           help="具体的な二択（例: --choices 妥当 忖度）。"
+                                "**動画ごとに変える**（2026-09-09）")
     p_comment.add_argument("--dry-run", action="store_true", help="文面だけ見て書き込まない")
 
     # 取材メモの出典から、本文の発言と数字を抜いて材料にする（2026-09-08）
@@ -355,6 +361,25 @@ def main(argv: list[str] | None = None) -> int:
         "material", help="取材メモの出典（許可サイト）の本文から発言・数字を抜き出す")
     p_material.add_argument("note", help="取材メモ（YAML）。URL を直接並べてもよい", nargs="+")
     p_material.add_argument("--out", default=None, help="書き出し先（既定 research/material/<名前>.md）")
+
+    # 題材から材料まで一本で（2026-09-09）。検索→本文→反応
+    p_dig = sub.add_parser(
+        "dig", help="題材から、記事の本文（発言・数字）と反応をまとめて集める")
+    p_dig.add_argument("topic", help="題材。選手名・クラブ名など")
+    p_dig.add_argument("--en", default="", help="英語の語（Google ニュースの英語検索に使う）")
+    p_dig.add_argument("--with", dest="must", default="", metavar="語",
+                       help="見出しにこの語のどれかを含む記事だけ読む（2026-09-09）。"
+                            "人名だけだと別の日の話が並ぶ")
+    p_dig.add_argument("--limit", type=int, default=8, help="本文を読む記事の数（既定8）")
+    p_dig.add_argument("--say", type=int, default=12, help="反応を何件まで拾うか（既定12）")
+    p_dig.add_argument("--no-reactions", action="store_true", help="反応を集めない")
+    p_dig.add_argument("--out", default=None, help="書き出し先")
+
+    # 視聴維持率（2026-09-09）。**読むだけ**
+    p_ins = sub.add_parser(
+        "insights", help="視聴維持率と動画ごとの成績を読む（読み取りのみ）")
+    p_ins.add_argument("--days", type=int, default=7, help="何日ぶんを見るか（既定7）")
+    p_ins.add_argument("--video", default="", help="1本の視聴維持の曲線を見る")
 
     # 選手・クラブのページの表を数字の材料にする（2026-09-08）。
     # `stats` は「これまで何を出したか」の振り返りに使っているので、こちらは numbers
@@ -465,6 +490,9 @@ def main(argv: list[str] | None = None) -> int:
     p_upload.add_argument(
         "--again", action="store_true",
         help="同じ出力先をもう一度投稿する（既定では二重投稿を止める）")
+    p_upload.add_argument("--at", default="",
+                          help="予約公開の時刻（例 07:30）。次に来るその時刻に公開される。"
+                               "**間隔を空けて出すための道具**（2026-09-09）")
     p_upload.add_argument("--dry-run", action="store_true",
                           help="送らずに、何が送られるかを見る（認証も通信もしない）")
 
@@ -633,6 +661,12 @@ def _cmd_reactions(args, config) -> int:
                     n = -1
                 if n > best_n:
                     best, best_n = url, n
+            if best_n <= 0:
+                # 見つかっても書き込みが読めない（画像だけの記事や古い作り）。
+                # **無理に埋めない。**反応が取れなければ節ごと落とす（docs/research.md）
+                print("見つかった記事はどれも書き込みが読めません。"
+                      "反応の節は落とすか、別の題材語で探してください", file=sys.stderr)
+                return 1
             args.url = best
             print(f"→ 書き込みが最も多い記事（{best_n}件）を使います: {best}")
     if not args.url:
@@ -1647,6 +1681,112 @@ def _cmd_numbers(args, config) -> int:
     return 0
 
 
+def _cmd_insights(args, config) -> int:
+    """視聴維持率と動画ごとの成績を読む（2026-09-09）。
+
+    9/7 に読み取り権限を足したのに使うコードが無く、どこで捨てられているかを
+    測らずに冒頭やテンポを直していた。**読むだけ。動画には触らない。**
+    """
+    from . import insights as insights_mod
+    from .upload import get_service
+
+    try:
+        api = insights_mod.service()
+    except Exception as err:
+        print(f"分析APIに繋がりません: {str(err)[:140]}", file=sys.stderr)
+        return 1
+
+    if args.video:
+        service = get_service()
+        got = service.videos().list(part="snippet,contentDetails", id=args.video).execute()
+        items = got.get("items") or []
+        title = items[0]["snippet"]["title"] if items else args.video
+        seconds = 0.0
+        if items:
+            import re as _re
+
+            m = _re.match(r"PT(?:(\d+)M)?(?:(\d+)S)?", items[0]["contentDetails"]["duration"])
+            if m:
+                seconds = int(m.group(1) or 0) * 60 + int(m.group(2) or 0)
+        curve = insights_mod.retention(api, args.video, args.days)
+        print(f"■ 視聴維持　{title}（{seconds:.0f}秒）")
+        for line in insights_mod.curve_lines(curve, seconds):
+            print(line)
+        return 0
+
+    rows = insights_mod.per_video(api, args.days)
+    if not rows:
+        print("まだ数字が出ていません。集計に数日かかります")
+        return 0
+    service = get_service()
+    ids = [r.video_id for r in rows]
+    titles = {}
+    for i in range(0, len(ids), 50):
+        for v in service.videos().list(part="snippet", id=",".join(ids[i:i + 50])).execute()["items"]:
+            titles[v["id"]] = v["snippet"]["title"]
+    print(f"■ 直近{args.days}日　再生の多い順")
+    for row in rows:
+        row.title = titles.get(row.video_id, row.video_id)
+        print(row.line())
+    keep = [r.avg_percent for r in rows if r.views >= 3]
+    if keep:
+        import statistics as _st
+
+        print(f"\n視聴維持の中央値: {_st.median(keep):.1f}%"
+              "（参考: 見られている短尺は50%前後、1分超は30%前後が目安）")
+    print("1本の曲線を見る: insights --video <videoId>")
+    return 0
+
+
+def _cmd_dig(args, config) -> int:
+    """題材から材料までを一本で（2026-09-09）。
+
+    ユーザー「掘るの仕組みが弱いと思わない？」。検索フィードで記事を見つけ、
+    本文から発言と数字を抜き、反応まで1枚にまとめる。
+    """
+    from . import dig as dig_mod
+    from . import material as material_mod
+    from . import reactions as reactions_mod
+    from .plan import load_plan
+
+    hosts = material_mod.allowed_hosts(getattr(load_plan(), "domains", {}) or {})
+    print(f"■ 「{args.topic}」を掘ります")
+    got, hits, material_text = dig_mod.run(args.topic, hosts, args.en,
+                                          limit=args.limit, must=args.must)
+    print(f"  話の大きさ　記事{got.total}件 / 媒体{len(got.outlets)}")
+    print(f"  本文を読んだ記事　{len(hits)}本")
+    for hit in hits:
+        print(f"    {_fit(hit.title, 44)}　{hit.outlet}")
+
+    reactions_text = ""
+    if not args.no_reactions:
+        found = reactions_mod.find(args.topic)
+        best, best_n = "", 0
+        for url, _ in found[:6]:
+            try:
+                posts = reactions_mod.fetch(url)
+            except Exception:  # noqa: BLE001
+                continue
+            if len(posts) > best_n:
+                best, best_n = url, len(posts)
+        if best:
+            posts = reactions_mod.fetch(best)
+            picked = reactions_mod.say_lines(posts, want=args.say)
+            rows = [f"- {{voice: ネット民, text: {p.text}}}" for p in picked]
+            reactions_text = (f"- スレ（母数{len(posts)}件）: {best}" + chr(10)
+                              + chr(10).join(rows))
+            print(f"  反応　{len(picked)}件 / 母数{len(posts)}件　{best}")
+        else:
+            print("  反応　まとめサイトに読める記事がありません（節ごと落とす）")
+
+    out = Path(args.out) if args.out else Path("research/material") / f"dig_{args.topic[:20]}.md"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(dig_mod.render(args.topic, got, hits, material_text, reactions_text),
+                   encoding="utf-8")
+    print(f"材料: {out}")
+    return 0
+
+
 def _cmd_material(args, config) -> int:
     """出典の本文から発言と数字を抜き、取材メモの横に置く（2026-09-08）。
 
@@ -1702,7 +1842,8 @@ def _cmd_comment(args, config) -> int:
 
     build_dir = Path(args.build_dir)
     try:
-        text = args.text or comments.compose(build_dir)
+        choices = tuple(args.choices) if args.choices else None
+        text = args.text or comments.compose(build_dir, choices)
     except comments.CommentError as err:
         print(str(err), file=sys.stderr)
         return 1
@@ -1723,6 +1864,8 @@ def _cmd_setthumb(args, config) -> int:
     """サムネイルだけを設定する。**投稿はやり直さない**（動画が二重になる）。"""
     from .upload import UploadError, get_service, set_thumbnail
 
+    from . import quota as quota_mod
+
     thumbnail = Path(args.build_dir) / "thumbnail.png"
     try:
         set_thumbnail(get_service(), args.video_id, thumbnail)
@@ -1730,6 +1873,16 @@ def _cmd_setthumb(args, config) -> int:
         print(f"設定できません: {err}", file=sys.stderr)
         return 1
     except Exception as err:
+        # **枠切れとサムネの連投制限を取り違えない**（2026-09-09）。
+        # 429 は待てば解けるが、quotaExceeded は日をまたぐまで戻らない。
+        # 取り違えて叩き続けると、次の日の枠まで削る
+        if quota_mod.is_exhausted(err):
+            reset = quota_mod.resets_at().astimezone(
+                datetime.timezone(datetime.timedelta(hours=9)))
+            print("APIの枠を使い切っています。**待っても直りません**"
+                  f"（戻るのは日本時間 {reset:%m-%d %H:%M}）。"
+                  "再試行せず、日をまたいでからにしてください", file=sys.stderr)
+            return 2
         print(f"設定できません: {err}", file=sys.stderr)
         return 1
     print(f"■ サムネイルを設定: https://youtu.be/{args.video_id}")
@@ -1799,6 +1952,17 @@ def _cmd_standings(args, config) -> int:
         out = standings_mod.board(table, _resolve(args.out), config, args.top)
         print(f"\n画像: {out}")
         print("台本の frontmatter に thumbnail_photo: として指定できます")
+    if args.note:
+        # 定型シリーズの取材メモ。反応の節は空なので、reactions --find で埋めてから draft
+        from datetime import date as _date
+
+        today = _date.today()
+        stamp = f"{today.year}年{today.month}月{today.day}日"
+        note_path = Path(args.note)
+        note_path.parent.mkdir(parents=True, exist_ok=True)
+        note_path.write_text(standings_mod.note(table, stamp, args.top), encoding="utf-8")
+        print(f"\n取材メモ: {note_path}")
+        print(f"次: reactions --find \"{table.name_ja} 順位表\" --say で反応の節を埋める")
     return 0
 
 
@@ -2550,7 +2714,7 @@ def _cmd_make_clip(args, config) -> int:
 
 
 def _cmd_upload(args, config) -> int:
-    from datetime import timedelta, timezone
+    from datetime import datetime, timedelta, timezone
 
     from . import posted
     from . import upload as upload_mod
@@ -2566,6 +2730,12 @@ def _cmd_upload(args, config) -> int:
     # **投稿は時間で散らす**（2026-09-07）。参考チャンネルは1時間に1本ずつ、
     # こちらは13時間前に4本と固めて出していた。止めはしない（まとめて出す日も
     # ある）が、**気づかずに固めることは防ぐ**
+    # **始めるときに勝手に出す**（2026-09-09）。`quota` を見に行く仕組みは
+    # あったのに、35本の一括作業を枠を見ずに始めて途中で落ちた
+    from . import quota as quota_mod
+    for line in quota_mod.preflight({"videos.insert": 1, "thumbnails.set": 1}):
+        print(line)
+
     gap = posted.since_last()
     if gap is not None and gap < posted.SPREAD_MINUTES:
         print(f"■ 前の投稿から{gap:.0f}分しかたっていません"
@@ -2593,6 +2763,23 @@ def _cmd_upload(args, config) -> int:
 
     draft = upload_mod.prepare(build_dir, args.privacy)
 
+    # **投げる前に、同じ題名がもう上がっていないか見る**（2026-09-09）。
+    # 投稿が成功したのに控えを残す前に処理が終わると、呼ぶ側は「失敗」と見て
+    # 掛け直す。実際に上田の本編が2本・バロンドールのショートが3本上がった。
+    # 台帳（posted.find）は控えが残ったときしか効かないので、その手前を塞ぐ
+    if not args.again and draft.title.strip():
+        try:
+            already = upload_mod.recently_uploaded(upload_mod.get_service(), draft.title)
+        except Exception:  # noqa: BLE001 - 見に行けなくても投稿は続けられる
+            already = None
+        if already:
+            print(f"■ 同じ題名の動画が、さっき上がっています　https://youtu.be/{already}")
+            print("  題名　" + draft.title)
+            print(nl + "掛け直しで二重に上げるのを止めました。"
+                  "本当に別の動画なら --again を付けます。", file=sys.stderr)
+            posted.record(build_dir, already)
+            return 1
+
     print(f"■ 投稿の中身　{build_dir}")
     for line in draft.lines():
         print(f"  {line}")
@@ -2604,6 +2791,12 @@ def _cmd_upload(args, config) -> int:
             print(f"  × {note}")
         print("\n直してから投稿してください", file=sys.stderr)
         return 1
+
+    publish_at = ""
+    if getattr(args, "at", ""):
+        publish_at = upload_mod.when_to_publish(args.at)
+        local = datetime.fromisoformat(publish_at.replace("Z", "+00:00")).astimezone(JST)
+        print(f"■ 予約公開　{local:%m/%d %H:%M} JST（それまでは非公開）")
 
     if args.dry_run:
         print("\n--dry-run なので送っていません。"
@@ -2618,6 +2811,7 @@ def _cmd_upload(args, config) -> int:
             tags=draft.tags,
             privacy=draft.privacy,
             thumbnail=draft.thumbnail,
+            publish_at=publish_at,
         )
     except Exception as err:
         # **弾かれた時刻を控える。**解除はここから24時間で、
@@ -2667,6 +2861,8 @@ HANDLERS = {
     "setthumb": _cmd_setthumb,
     "comment": _cmd_comment,
     "material": _cmd_material,
+    "dig": _cmd_dig,
+    "insights": _cmd_insights,
     "numbers": _cmd_numbers,
     "publish": _cmd_publish,
     "quota": _cmd_quota,

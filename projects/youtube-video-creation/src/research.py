@@ -11,6 +11,7 @@
 
 from __future__ import annotations
 
+import re
 from dataclasses import dataclass, field
 from datetime import datetime
 from pathlib import Path
@@ -93,6 +94,10 @@ class Section:
     # 使えるライセンスが広がったので、顔を本文にも出す
     line_images: list = field(default_factory=list)
     bg: str = ""      # この節の背景。空なら既定の並びから割り当てる
+    # **その節の地の文を誰が読むか**（2026-09-09 ユーザー指示）。
+    # 空なら今までどおりキャスターと解説の交互。「何が起きたか」は事実なので
+    # キャスターだけ、「試合はどう動いたか」は解説だけ、のように節で決められる
+    narrator: str = ""
 
 
 # まとめの答えの上限。**実測で決めた**（2026-09-08）。
@@ -169,6 +174,12 @@ class Notes:
     title: str
     question: str                    # この動画が答える問い
     format: str = "news"             # news / voices / quote。FORMATS 参照
+    voice_min: float | None = None   # 他人の声の下限を回ごとに下げるとき
+    # ショートに付ける別の題名（2026-09-09）。**書いても効いていなかった。**
+    # shorts._retitle は台本の front matter を見るのに、to_script が書き出して
+    # いなかったので、節のテロップが題名になっていた（「試合登録は20人。2人が
+    # 外れる」が題名で並んでいた）
+    short_title: str = ""
     slot: str = ""
     theme_id: str = ""
     prefix: str = ""                 # 【速報】【朗報】【悲報】
@@ -256,6 +267,7 @@ def build_notes(raw: dict) -> Notes:
                 official=bool(entry.get("official", False)),
                 card=entry.get("card"),
                 bg=str(entry.get("bg", "")).strip(),
+                narrator=str(entry.get("narrator", "")).strip(),
             )
         )
     if not sections:
@@ -271,6 +283,8 @@ def build_notes(raw: dict) -> Notes:
         date=str(raw.get("date", "")).strip(),
         slot=str(raw.get("slot", "")).strip(),
         format=chosen,
+        voice_min=(float(raw["voice_min"]) if raw.get("voice_min") is not None else None),
+        short_title=str(raw.get("short_title", "")).strip(),
         title=str(theme.get("title", "")).strip(),
         theme_id=str(theme.get("id", "")).strip(),
         question=str(theme.get("question", "")).strip(),
@@ -353,6 +367,7 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
                 f"（いまは{len(section.sources)}本）"
             )
         problems += _check_reactions(section)
+        problems += _check_card(section)
 
         if rule.get("needs_official") and not section.official:
             problems.append(
@@ -372,12 +387,18 @@ def _has_named_voice(notes: Notes) -> bool:
     return _has_crowd(notes)
 
 
+# 匿名の群衆の名前。config/project.yaml の voicevox.voice_crowd と同じ顔ぶれ。
+# **ここに載っている声だけが「反応」。**名前のある人の発言は反応ではない
+# （2026-09-09、監督の会見を反応と見て「反応で終わる」の点検が誤って鳴った）
+CROWD_VOICES = ("ネット民", "現地サポ", "海外のファン")
+
+
 def _voice_heavy(section: Section) -> bool:
-    """他人の声が半分以上の節。反応の節はここに当たる。"""
+    """匿名の反応が半分以上の節。**名前のある人の発言は数えない。**"""
     if not section.say:
         return False
-    other = sum(1 for v in section.voices if v and v not in SPEAKERS)
-    return other * 2 >= len(section.say)
+    crowd = sum(1 for v in section.voices if v in CROWD_VOICES)
+    return crowd * 2 >= len(section.say)
 
 
 def _check_voices_last(notes: Notes) -> list[str]:
@@ -434,6 +455,32 @@ def _check_voice_clash(notes: Notes) -> list[str]:
             )
         else:
             seen.setdefault(style, name)
+    return problems
+
+
+def _check_card(section: Section) -> list[str]:
+    """カードの中身が、書き出しに耐える形かを取材メモの段階で見る。
+
+    **書き出しまで気づけなかった**（2026-09-09）。`table` に columns を
+    書き忘れた台本が `draft` を通り、音声を合成し終えたあとの
+    `render` で「table カードには columns と rows が必要です」で落ちた。
+    落ちる条件はカードの側が知っているので、ここで先に同じことを見る。
+    """
+    card = section.card or {}
+    kind = str(card.get("type", "")).lower()
+    problems: list[str] = []
+    if kind == "table":
+        columns = card.get("columns") or []
+        rows = card.get("rows") or []
+        if not columns or not rows:
+            problems.append(f"{section.id}: table カードには columns と rows が必要です")
+        elif any(len(row) != len(columns) for row in rows):
+            problems.append(
+                f"{section.id}: table の各行は columns と同じ数（{len(columns)}）にしてください"
+            )
+    elif kind == "bars":
+        if not (card.get("items") or []):
+            problems.append(f"{section.id}: bars カードには items が必要です")
     return problems
 
 
@@ -672,6 +719,53 @@ VOLUME_SOURCES = 5       # 出典の本数
 VOLUME_OUTLETS = 3       # 媒体の数
 
 
+def _bare_text(text: str) -> str:
+    """比べるための素の文。句読点と記号を落とす。"""
+    return re.sub(r"[。、．，\s　？?！!「」『』]", "", str(text or ""))
+
+
+def _advise_hook(notes: Notes) -> list[str]:
+    """つかみの一言が、問いの言い直しになっていないか（2026-09-09）。
+
+    視聴維持の曲線で、捨てられているのは4〜9秒だった。タイトルを読むところまでは
+    残り、そのあとの一言で半分以上が消える。**言い直しなら、無いほうがよい。**
+    """
+    if notes.format != "news":
+        return []
+    if not notes.hook:
+        return ["theme.hook が空です。**その行は出しません**"
+                "（問いの言い直しは4〜9秒で半分が離脱した実測があります）。"
+                "入れるなら、問いとは別の一言を書いてください"]
+    if _bare_text(notes.hook) == _bare_text(notes.question):
+        return ["theme.hook が問いと同じです。**その行は出しません。**"
+                "別の一言にするか、空のままにしてください"]
+    return []
+
+
+def _advise_thumbnail_repeat(notes: Notes) -> list[str]:
+    """サムネの帯と伏せ字が同じことを言っていないか（2026-09-09 ユーザー指摘）。
+
+    3本とも `line2` と `points` の1つが同じ文だった。狭い1枚に同じ言葉を
+    2回置くと、**そのぶん言えることが減る**。
+    """
+    thumbnail = notes.thumbnail or {}
+    said = [str(thumbnail.get("line1") or ""), str(thumbnail.get("line2") or "")]
+    points = [str(p) for p in (thumbnail.get("points") or [])]
+    hints: list[str] = []
+    for point in points:
+        for index, line in enumerate(said, start=1):
+            if not point or not line:
+                continue
+            if _bare_text(point) == _bare_text(line):
+                hints.append(f"サムネの points『{point}』が line{index} と同じです。"
+                             "1枚に同じことを2回書くと、そのぶん言えることが減ります")
+    for index, point in enumerate(points):
+        for other in points[index + 1:]:
+            if _bare_text(point) == _bare_text(other):
+                hints.append(f"サムネの points に同じ文が2つあります: 『{point}』")
+    return hints
+
+
 def _advise_material(notes: Notes) -> list[str]:
     """中身の量が参考に届いているか。届かなければ、どこが薄いかを言う。"""
     from urllib.parse import urlparse
@@ -695,7 +789,9 @@ def _advise_material(notes: Notes) -> list[str]:
 
 def _advise_voices(notes: Notes) -> list[str]:
     """反応の扱いで気をつける点。"""
-    hints: list[str] = _advise_volume(notes) + _advise_material(notes) + _advise_title(notes)
+    hints: list[str] = (_advise_volume(notes) + _advise_material(notes)
+                        + _advise_hook(notes) + _advise_thumbnail_repeat(notes)
+                        + _advise_title(notes))
     for section in notes.sections:
         card = section.card or {}
         if str(card.get("type", "")).lower() != "reactions":
@@ -886,6 +982,11 @@ def to_script(notes: Notes, plan: Plan) -> str:
         "title": notes.video_title,
         # 型は台本に残す。review が型ごとにしきい値を変える
         "format": notes.format,
+        # 他人の声の下限を回ごとに下げられる（2026-09-09）。試合の経過を詳しく
+        # 伝える回は地の文が増える。**下げるときは取材メモに理由を書く**
+        **({"voice_min": notes.voice_min} if notes.voice_min is not None else {}),
+        # ショートだけ別の題名にする（2026-09-09）。shorts._retitle がここを見る
+        **({"short_title": notes.short_title} if notes.short_title else {}),
         "thumbnail_line1": str(thumbnail.get("line1") or notes.title),
         "thumbnail_line2": str(thumbnail.get("line2") or notes.question),
         "thumbnail_tags": [str(t) for t in (thumbnail.get("tags") or [])],
@@ -947,13 +1048,18 @@ def to_script(notes: Notes, plan: Plan) -> str:
         "  se: assets/audio/se_pon.wav",
     ]
     if notes.format == "news":
-        hook = notes.hook or _ends_sentence(notes.question)
-        lines += [
-            f"キャスター: {hook}",
-            # 画面は2〜3行に折り返せる。20字で切ると「…当の監督…」のように
-            # 途中で切れた文字がそのまま出ていた（2026-09-07 に書き出して確認）
-            f"  telop: 今回の問い: {_telop(notes.question, TELOP_LIMIT)}",
-        ]
+        # **問いを読み上げない**（2026-09-09）。視聴維持の曲線を読んだら、
+        # 捨てられているのは0〜3秒ではなく**4〜9秒**だった（4秒100% → 8秒39.7%）。
+        # タイトルを読むところまでは残り、そのあとの一言で半分以上が消える。
+        # hook が空のときは question をそのまま読んでいた＝クリックした人が
+        # もう知っている話の言い直し。**書いていなければ、その行ごと出さない。**
+        if notes.hook and _bare_text(notes.hook) != _bare_text(notes.question):
+            lines += [
+                f"キャスター: {_ends_sentence(notes.hook)}",
+                # 画面は2〜3行に折り返せる。20字で切ると「…当の監督…」のように
+                # 途中で切れた文字がそのまま出ていた（2026-09-07 に書き出して確認）
+                f"  telop: 今回の問い: {_telop(notes.question, TELOP_LIMIT)}",
+            ]
     elif notes.hook:
         # 反応・本人の言葉の型は、つかみが書いてあれば1行だけ。問いは立てない。
         # 参考（サッカーラボ 25.5万回）は 0:02 でタイトル、0:11 から事実だった
@@ -979,7 +1085,9 @@ def to_script(notes: Notes, plan: Plan) -> str:
             # 会話に聞こえない（実測）
             # 誰かの発言なら、その人の名前を話者にする。**代弁は人ごとに声が変わる。**
             voice = section.voices[number] if number < len(section.voices) else ""
-            speaker = voice or (
+            # 節が読み手を決めていれば、そのまま。**交互は既定であって決まりではない**
+            # （2026-09-09 ユーザー「何が起きたかはキャスターが伝えて良い」）
+            speaker = voice or section.narrator or (
                 SPEAKERS[0] if number == 0 else SPEAKERS[1 if number % 2 else 0]
             )
             lines.append(f"{speaker}: {sentence}")

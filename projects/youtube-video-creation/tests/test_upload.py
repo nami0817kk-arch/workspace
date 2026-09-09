@@ -256,3 +256,99 @@ def test_サムネで落ちても動画のidは返す(tmp_path, monkeypatch, cap
                                  thumbnail=built / "thumbnail.png")
     assert video_id == "vid_ok"
     assert "サムネイルは付きませんでした" in capsys.readouterr().err
+
+
+def test_過ぎた時刻は止める():
+    """09:00 を指定したのが 09:11 で、黙って翌日に回り6本が1日ずれかけた（2026-09-09）。"""
+    from datetime import datetime, timedelta, timezone
+
+    import pytest
+
+    jst = timezone(timedelta(hours=9))
+    now = datetime(2026, 9, 9, 9, 11, tzinfo=jst)
+    with pytest.raises(upload_mod.UploadError, match="過ぎています"):
+        upload_mod.when_to_publish("09:00", now)
+    # まだ先の時刻なら今日のその時刻
+    assert upload_mod.when_to_publish("10:30", now) == "2026-09-09T01:30:00Z"
+
+
+def test_分で渡せる():
+    """並べて予約するときは時計の時刻より確実。"""
+    from datetime import datetime, timedelta, timezone
+
+    import pytest
+
+    jst = timezone(timedelta(hours=9))
+    now = datetime(2026, 9, 9, 9, 11, tzinfo=jst)
+    assert upload_mod.when_to_publish("+45", now) == "2026-09-09T00:56:00Z"
+    assert upload_mod.when_to_publish("+90", now) == "2026-09-09T01:41:00Z"
+    with pytest.raises(upload_mod.UploadError):
+        upload_mod.when_to_publish("+5", now)
+
+
+def test_予約すると非公開で送られる(tmp_path, monkeypatch):
+    """YouTube の決まりで、予約するあいだは private でなければならない。"""
+    from src import quota
+
+    sent = {}
+
+    class _Req:
+        def next_chunk(self):
+            return None, {"id": "vid"}
+
+    class _Videos:
+        def insert(self, **kw):
+            sent.update(kw["body"]["status"])
+            return _Req()
+
+    class _Service:
+        def videos(self):
+            return _Videos()
+
+    built = _built(tmp_path)
+    monkeypatch.setattr(upload_mod, "get_service", lambda: _Service())
+    monkeypatch.setattr(upload_mod, "_load_deps",
+                        lambda: (None, None, None, None, lambda *a, **k: object()))
+    monkeypatch.setattr(quota, "record", lambda *a, **k: None)
+    upload_mod.upload(built / "video.mp4", "T", "本文", privacy="public",
+                      publish_at="2026-09-09T22:30:00Z")
+    assert sent["privacyStatus"] == "private"
+    assert sent["publishAt"] == "2026-09-09T22:30:00Z"
+
+
+def test_さっき上がった同じ題名を見つける():
+    """投稿は成功したのに控えを残す前に処理が終わり、掛け直しで二重に上がった。
+
+    2026-09-09、上田の本編が2本・バロンドールのショートが3本。
+    """
+    from datetime import datetime, timedelta, timezone
+
+    now = datetime.now(timezone.utc)
+
+    def item(title, minutes, vid):
+        at = (now - timedelta(minutes=minutes)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        return {"snippet": {"title": title, "publishedAt": at,
+                            "resourceId": {"videoId": vid}}}
+
+    class _Service:
+        def channels(self):
+            return type("C", (), {"list": lambda self, **k: type("R", (), {
+                "execute": lambda self: {"items": [{"contentDetails": {
+                    "relatedPlaylists": {"uploads": "UU"}}}]}})()})()
+
+        def playlistItems(self):
+            return type("P", (), {"list": lambda self, **k: type("R", (), {
+                "execute": lambda self: {"items": [
+                    item("上田綺世が初先発で決めた日", 3, "new1"),
+                    item("ずっと前に出した動画", 500, "old1"),
+                ]}})()})()
+
+    from src import quota
+
+    original, quota.record = quota.record, lambda *a, **k: None
+    try:
+        assert upload_mod.recently_uploaded(_Service(), "上田綺世が初先発で決めた日") == "new1"
+        assert upload_mod.recently_uploaded(_Service(), "ずっと前に出した動画") is None
+        assert upload_mod.recently_uploaded(_Service(), "まだ無い題名") is None
+    finally:
+        quota.record = original

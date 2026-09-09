@@ -69,15 +69,24 @@ def find(query: str, session=None, per_site: int = 3) -> list[tuple[str, str]]:
         pattern = re.compile(r'<a[^>]+href="(' + _ARCHIVE.format(host=re.escape(host))
                              + r')"[^>]*>([^<]{6,120})</a>')
         seen: set[str] = set()
-        hits: list[tuple[str, str]] = []
+        scored: list[tuple[int, int, str, str]] = []
         for url, title in pattern.findall(page):
             title = title.strip()
-            if url in seen or not any(w in title for w in words):
+            if url in seen:
                 continue
             seen.add(url)
-            hits.append((url, title))
-        found += hits[:per_site]
-    return found
+            matched = sum(1 for w in words if w in title)
+            if matched == 0:
+                continue
+            # 記事番号は新しいほど大きい。語が多く当たる順、同点なら新しい順
+            number = int(re.search(r"/archives/(\d+)", url).group(1))
+            scored.append((matched, number, url, title))
+        scored.sort(key=lambda x: (x[0], x[1]), reverse=True)
+        found += [(url, title) for _, _, url, title in scored[:per_site]]
+    # **語が全部当たる記事があれば、それだけにする。**「プレミア 順位」で
+    # 「プレミア」だけ当たる遠藤航のスレを選んでいた（2026-09-09 実測）
+    full = [(u, t) for u, t in found if all(w in t for w in words)]
+    return full if full else found
 
 
 def fetch(url: str, session=None) -> list[Post]:
