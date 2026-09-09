@@ -837,3 +837,24 @@ def test_サムネに重複が無ければ黙っている():
     raw = _raw(thumbnail={"line1": "短い見出し", "line2": "ベンチにいたのは ●●●●",
                           "points": ["初先発は9日目", "現地紙の採点は ●点"]})
     assert not any("同じ" in h and "サムネ" in h for h in advise(build_notes(raw)))
+
+
+def test_名前のある人の発言は反応ではない():
+    """監督の会見を反応と見て「反応で終わる」の点検が誤って鳴った（2026-09-09）。"""
+    raw = _raw()
+    raw["sections"] = [
+        _section(),
+        _section(id="said", heading="監督は何と言ったか", tier="報道", official=False,
+                 sources=["https://example.com/1", "https://example.com/2"],
+                 say=[{"voice": "ブライトン監督", "text": "辛抱強くならなければならない"},
+                      {"voice": "ブライトン監督", "text": "適応しなければならない"}]),
+        _section(id="next", heading="これからどうなる", tier="未確認", official=False),
+    ]
+    assert verify(build_notes(raw), _plan()) == []      # 監督の発言のあとに節が来てよい
+
+    # 匿名の反応のあとなら、今までどおり止まる
+    raw["sections"][1] = _section(
+        id="net", heading="ネットの声", tier="未確認", official=False,
+        say=[{"voice": "ネット民", "text": "まだ序盤やしな"},
+             {"voice": "ネット民", "text": "お茶会で干されたか"}])
+    assert any("反応の節のあとに" in p for p in verify(build_notes(raw), _plan()))

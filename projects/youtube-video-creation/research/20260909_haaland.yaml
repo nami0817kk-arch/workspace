@@ -1,0 +1,86 @@
+# ハーランド（2026年9月9日）。材料は research/material/dig_ハーランド.md
+# **題材名だけで引いたら別の日の話（コベントリー戦・主将）が並んだ。**
+# `--with "CL 記録 アグエロ 並 ポルト"` で絞って取り直した。
+# **ネットの反応は入れない。**この試合のスレが無く、拾えたのは髪型の話だった
+format: news
+# 数字で見せる回。地の文が増えるので他人の声の下限を下げる
+voice_min: 10
+slot: premier_1
+date: "2026年9月9日"
+
+short_title: "ハーランドが40試合で並んだ記録"
+
+theme:
+  id: haaland_city_cl_record
+  league: england
+  kind: match
+  topic: ハーランド
+  title: ハーランドがCLで並んだ相手、誰か分かりますか
+  hook: チャンピオンズリーグの初戦で2点。ある記録に追いつきました。
+  question: シティのCL最多得点記録を持っていたのは誰か
+
+thumbnail:
+  line1: CL初戦で2ゴール
+  line2: 並んだのは ●●●●
+  photo: "assets/photos/20260909_haaland/01.jpg"
+  tags: [ハーランド, マンチェスター・シティ]
+  points:
+    - シティで通算36点に到達
+    - 相手より24試合も少ない
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: ポルトに2対0で勝利
+    narrator: キャスター
+    say:
+      - チャンピオンズリーグ第1節、マンチェスター・シティは敵地でポルトと戦いました。
+      - 前半はゴールが生まれず、0対0で折り返します。
+      - 47分、エンソ・フェルナンデスのクロスをハーランドが頭で決めました。
+      - 後半アディショナルタイムには、アイト・ヌーリの折り返しを右足でねじ込みます。
+      - 2対0。ハーランドの2ゴールで、シティが白星スタートです。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/cl/20260909/2202672.html
+      - https://web.ultra-soccer.jp/news/all/35643/
+
+  - id: record
+    heading: 並んだのは誰か
+    tier: 報道
+    telop: アグエロの36ゴールに並ぶ
+    narrator: 解説
+    say:
+      - この2点で、ハーランドのチャンピオンズリーグでの得点は36になりました。
+      - シティの選手としては、これが歴代最多タイです。
+      - 記録を持っていたのは、セルヒオ・アグエロ。
+      - アグエロはシティで公式戦390試合に出て260ゴール。
+      - チャンピオンズリーグに限ると、64試合で36ゴールでした。
+      - ハーランドは40試合で36ゴール。24試合も少ない出場数で並んでいます。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/cl/20260909/2202672.html
+      - https://web.ultra-soccer.jp/news/all/35643/
+
+  - id: pace
+    heading: どれくらいのペースなのか
+    tier: 背景
+    telop: CL通算59試合で59ゴール
+    narrator: 解説
+    card:
+      type: bars
+      title: CLでの得点（シティでの記録）
+      items:
+        - {label: "アグエロ 64試合", value: 36}
+        - {label: "ハーランド 40試合", value: 36}
+      unit: ゴール
+    say:
+      - ドルトムントとザルツブルクにいたころも入れると、どうなるか。
+      - チャンピオンズリーグ通算で59試合、59ゴールです。
+      - 1試合あたり1ゴール。そのペースで積み上げてきました。
+      - 記録を抜くとすれば、早ければ10月14日。
+      - リーグフェーズ第2節、パリ・サンジェルマン戦になります。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/cl/20260909/2202672.html
+      - https://web.ultra-soccer.jp/news/all/35643/

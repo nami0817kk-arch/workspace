@@ -380,12 +380,18 @@ def _has_named_voice(notes: Notes) -> bool:
     return _has_crowd(notes)
 
 
+# 匿名の群衆の名前。config/project.yaml の voicevox.voice_crowd と同じ顔ぶれ。
+# **ここに載っている声だけが「反応」。**名前のある人の発言は反応ではない
+# （2026-09-09、監督の会見を反応と見て「反応で終わる」の点検が誤って鳴った）
+CROWD_VOICES = ("ネット民", "現地サポ", "海外のファン")
+
+
 def _voice_heavy(section: Section) -> bool:
-    """他人の声が半分以上の節。反応の節はここに当たる。"""
+    """匿名の反応が半分以上の節。**名前のある人の発言は数えない。**"""
     if not section.say:
         return False
-    other = sum(1 for v in section.voices if v and v not in SPEAKERS)
-    return other * 2 >= len(section.say)
+    crowd = sum(1 for v in section.voices if v in CROWD_VOICES)
+    return crowd * 2 >= len(section.say)
 
 
 def _check_voices_last(notes: Notes) -> list[str]:
