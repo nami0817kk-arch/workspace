@@ -129,12 +129,27 @@ SCENE_WORDS = (" vs ", " v ", " x ", "match", "training", "warm", "cup final",
                "stadium", "celebrat", "trophy", "team")
 # 写っているものがこれより多い写真は、人物ではなく場面を写したもの
 SCENE_SUBJECTS = 4
+# **同じ名前の、人ではないもの**（2026-09-09 実測）。
+# 「メッシ」で引いたら `File:Messi (dog) (28045247387) (cropped).jpg` が
+# 1位に来て、被写体の照合も「メッシ / Lionel Messi が明記されています」と
+# 通した。犬の写真である。**照合は名前しか見ておらず、種類を見ていない。**
+# 名前は人にも犬にも銅像にも壁画にも付く
+NOT_A_PERSON = ("(dog)", "(cat)", "(horse)", "dog)", "statue", "mural",
+                "graffiti", "street art", "waxwork", "madame tussauds",
+                "mosaic", "sculpture", "bust of", "monument", "plaque",
+                "postage stamp", "banknote", "coin", "mural of")
 
 
 # 画像でない添付。**Commons には音声も動画もある。**
 # 実測（2026-09-07）で、久保建英の候補に .ogg（音声）が混ざって選ばれた
 NOT_IMAGES = (".ogg", ".oga", ".ogv", ".mp3", ".wav", ".flac", ".webm",
               ".mid", ".pdf", ".djvu", ".svg", ".gif", ".tif", ".tiff", ".stl")
+
+
+def looks_like_person(title: str) -> bool:
+    """人の写真として使える名前か。**同名の犬・銅像・壁画を落とす。**"""
+    low = title.lower()
+    return not any(word in low for word in NOT_A_PERSON)
 
 
 def is_image(title: str) -> bool:
@@ -196,7 +211,8 @@ def save(names: list[str], folder: Path, session=None, only: str = "",
     """
     reasons: list[str] = []
     pool = ([only] if only
-            else sorted([c for c in candidates(names, session=session) if is_image(c)],
+            else sorted([c for c in candidates(names, session=session)
+                         if is_image(c) and looks_like_person(c)],
                         key=rank))
     for title in pool:
         ok, reason = verify(title, *names, session=session)

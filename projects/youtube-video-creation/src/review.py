@@ -298,7 +298,17 @@ def _thumbnail_face(script: Script) -> Finding:
 
     ここで見るのは「指定があるか」まで。誰が写っているかは `subject` が見る。
     """
-    photo = str((script.meta or {}).get("thumbnail_photo") or "").strip()
+    # **顔を並べた回も見る**（2026-09-09）。`thumbnail_photos`（2〜3枚）だけを
+    # 書いた台本は `thumbnail_photo` が空で、顔が入っているのに × になっていた。
+    # 冒頭の写真が抜けていたのと同じ型の見落とし
+    meta = script.meta or {}
+    photo = str(meta.get("thumbnail_photo") or "").strip()
+    if not photo:
+        tiles = [str(x).strip() for x in (meta.get("thumbnail_photos") or [])]
+        photo = next((x for x in tiles if x), "")
+    # エンブレムを主役にした回は、顔の代わりにそれを認める（2026-09-09 ユーザー指示）
+    if not photo and [x for x in (meta.get("thumbnail_crest_main") or []) if x]:
+        return Finding(True, "サムネの顔", "エンブレムを主役にしています")
     if not photo:
         return Finding(False, "サムネの顔",
                        "thumbnail_photo がありません。**顔を必ず入れる**"

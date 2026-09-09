@@ -847,7 +847,7 @@ class Renderer:
         inserts = inserts or Inserts()
         entries: list[tuple[Path, float]] = []
         previous: Path | None = None
-        self.opening_photo = str(script.meta.get("thumbnail_photo") or "")
+        self.opening_photo = opening_photo(script.meta)
         self.opening_scene = script.scenes[0].title if script.scenes else ""
         self.opening_points = [str(x) for x in (script.meta.get("thumbnail_points") or [])]
 
@@ -1262,6 +1262,22 @@ def _layer(size: tuple[int, int]) -> tuple[Image.Image, ImageDraw.ImageDraw]:
 
 # 制作の都合で付けている章の名前。視聴者に見せる意味が無い
 INTERNAL_LABELS = ("オープニング", "まとめ")
+
+
+def opening_photo(meta: dict) -> str:
+    """冒頭に敷く写真を決める。
+
+    **顔を並べた回で抜けていた**（2026-09-09 実測）。`thumbnail_photos`
+    （2〜3枚）だけを書いた台本は `thumbnail_photo` が空になり、
+    冒頭が写真の無いぼかしだけになっていた。ショートの一覧は動画から作った
+    1コマ（`oar2.jpg`）を出すので、ここが空だと一覧の絵まで抜ける。
+    """
+    single = str((meta or {}).get("thumbnail_photo") or "").strip()
+    if single:
+        return single
+    tiles = [str(x).strip() for x in ((meta or {}).get("thumbnail_photos") or [])]
+    tiles = [x for x in tiles if x]
+    return tiles[0] if tiles else ""
 
 
 def _cover(image: Image.Image, width: int, height: int, focus: float | None = None) -> Image.Image:

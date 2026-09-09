@@ -574,3 +574,20 @@ def test_縦型の冒頭は写真を画面いっぱいに敷く(tmp_path):
     wide = Renderer(load_config(), tmp_path)
     wide_stage = wide._photo_stage(str(photo))
     assert wide_stage.width > wide_stage.height, "横型はこれまでどおり横長"
+
+
+def test_顔を並べた回でも冒頭に写真が出る():
+    """**冒頭が写真の無いぼかしだけになっていた**（2026-09-09 実測）。
+
+    `thumbnail_photos`（2〜3枚）だけを書いた台本は `thumbnail_photo` が
+    空になり、冒頭の写真が抜けた。ショートの一覧は動画から作った1コマを
+    出すので、ここが空だと一覧の絵まで抜ける。
+    """
+    from src.render import opening_photo
+
+    assert opening_photo({"thumbnail_photos": ["a.jpg", "b.jpg"]}) == "a.jpg"
+    # 単数の指定があれば、そちらが優先される
+    assert opening_photo({"thumbnail_photo": "c.jpg",
+                          "thumbnail_photos": ["a.jpg"]}) == "c.jpg"
+    assert opening_photo({}) == ""
+    assert opening_photo({"thumbnail_photos": []}) == ""

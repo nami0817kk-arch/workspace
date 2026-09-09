@@ -232,3 +232,20 @@ def test_探す言葉が無ければ止まる(tmp_path):
         assert "探す言葉" in str(error)
         return
     raise AssertionError("止まっていない")
+
+
+def test_同じ名前の犬や銅像を人の写真として掴まない():
+    """**犬を掴んだ**（2026-09-09 実測）。
+
+    「メッシ」で引いたら `File:Messi (dog) (28045247387) (cropped).jpg` が
+    1位に来て、被写体の照合も「メッシ / Lionel Messi が明記されています」と
+    通した。**照合は名前しか見ておらず、種類を見ていない。**
+    名前は人にも犬にも銅像にも壁画にも付く。
+    """
+    from src.portrait import looks_like_person
+
+    assert not looks_like_person("File:Messi (dog) (28045247387) (cropped).jpg")
+    assert not looks_like_person("File:Statue of Lionel Messi.jpg")
+    assert not looks_like_person("File:Mural of Marcus Rashford.jpg")
+    assert looks_like_person("File:Lionel Messi NYCFC Miami 24 Sep 2025-079.jpg")
+    assert looks_like_person("File:Takumi Minamino Stefan Lainer.JPG")
