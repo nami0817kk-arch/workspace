@@ -15,6 +15,7 @@
 from __future__ import annotations
 
 import json
+import sys as _sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
@@ -41,7 +42,19 @@ COSTS = {
     # **いちばん高い。**参考チャンネルを探すのに8回叩いて800使った（2026-09-09）。
     # 調べもので気軽に使うと、投稿の枠をそこで削ることになる
     "search.list": 100,
+    # 読み取りは軒並み1。**包んで自動で数えるようにしたら、表に無い呼び出しで
+    # 落ちた**（2026-09-09、`channels.list` で貼り替え処理が止まった）
+    "channels.list": 1,
+    "playlists.list": 1,
+    "commentThreads.list": 1,
+    "comments.list": 1,
+    "videoCategories.list": 1,
+    "captions.list": 1,
 }
+# 表に無い呼び出しの見立て。**読み取りは1、書き込みは50。**
+# 公式の表もおおむねこの2つに寄っている
+UNKNOWN_READ = 1
+UNKNOWN_WRITE = 50
 # 1日に使えるリクエストの合計。
 # **この数字は確かめていない。**Google の既定値をそのまま書いただけで、
 # 2026-09-09 に実測と 食い違った:
@@ -62,6 +75,7 @@ SAFE_UPLOADS_PER_DAY = 60
 # 正確な上限はコンソールにしか無いので、**通った/落ちたの境目**を目安にする
 OBSERVED_CEILING = 110000
 LEDGER = Path("research/quota.json")
+_WARNED: set[str] = set()
 # 枠は太平洋時間の深夜0時に戻る。**夏と冬で1時間ずれる**
 #   夏（PDT / UTC-7、3月第2日曜〜11月第1日曜）… 日本時間 16:00
 #   冬（PST / UTC-8）                          … 日本時間 17:00
@@ -108,11 +122,27 @@ def _load(path: Path) -> dict:
         return {}
 
 
+def cost_of(call: str) -> int:
+    """1回ぶんの費用。表に無ければ、読み取りか書き込みかで見立てる。
+
+    **計測が本体を止めてはいけない**（2026-09-09）。表に無い呼び出しで
+    例外を投げていたため、サムネの貼り替えが `channels.list` で落ちた。
+    数えるための仕組みが、数えられる側を壊していた。
+    """
+    if call in COSTS:
+        return COSTS[call]
+    method = call.rsplit(".", 1)[-1]
+    return UNKNOWN_READ if method in ("list", "get") else UNKNOWN_WRITE
+
+
 def record(call: str, path: Path = LEDGER, now: datetime | None = None) -> int:
-    """叩いたぶんを足して、その日の合計を返す。"""
-    cost = COSTS.get(call)
-    if cost is None:
-        raise KeyError(f"費用の分からない呼び出しです: {call}")
+    """叩いたぶんを足して、その日の合計を返す。**知らない呼び出しでも止めない。**"""
+    if call not in COSTS:
+        # 黙って見立てると表が古いまま残る。1度だけ言う
+        if call not in _WARNED:
+            _WARNED.add(call)
+            print(f"  （枠の表に {call} がありません。"
+                  f"{cost_of(call)} と見立てて数えます）", file=_sys.stderr)
     day = _today(now)
     book = _load(path)
     today = dict(book.get(day) or {})
@@ -126,7 +156,7 @@ def record(call: str, path: Path = LEDGER, now: datetime | None = None) -> int:
 
 def used(path: Path = LEDGER, now: datetime | None = None) -> int:
     today = _load(path).get(_today(now)) or {}
-    return sum(COSTS.get(name, 0) * int(count) for name, count in today.items())
+    return sum(cost_of(name) * int(count) for name, count in today.items())
 
 
 def left(path: Path = LEDGER, now: datetime | None = None) -> int:
@@ -156,8 +186,8 @@ def report(path: Path = LEDGER, now: datetime | None = None) -> list[str]:
     jst = timezone(timedelta(hours=9))
     lines = [f"■ APIの枠　{used(path, now)} 使用（上限は不明。{DAILY} は未確認の目安）"]
     for name, count in sorted(today.items()):
-        lines.append(f"  {name:<16} {count:>3}回 × {COSTS.get(name, 0)} = "
-                     f"{COSTS.get(name, 0) * count}")
+        lines.append(f"  {name:<16} {count:>3}回 × {cost_of(name)} = "
+                     f"{cost_of(name) * count}")
     lines.append(f"  投稿 {uploads_today(path, now)} / {DAILY_UPLOADS} 本")
     # **「あと何本」を鵜呑みにしない**（2026-09-09）。DAILY が実際と桁違いなので、
     # 0 と出ていても出せることがある。確かなのは quotaExceeded が返るかどうかだけ
@@ -249,7 +279,7 @@ def is_exhausted(error) -> bool:
 
 def estimate(plan: dict[str, int]) -> int:
     """これから叩くぶんの見積り。`{"videos.insert": 9, "thumbnails.set": 9}`。"""
-    return sum(COSTS.get(name, 0) * int(count) for name, count in plan.items())
+    return sum(cost_of(name) * int(count) for name, count in plan.items())
 
 
 def preflight(plan: dict[str, int], path: Path = LEDGER,
@@ -265,8 +295,8 @@ def preflight(plan: dict[str, int], path: Path = LEDGER,
     spent = used(path, now)
     lines = [f"■ これから {want:,} 使います（今日ここまで {spent:,}）"]
     for name, count in sorted(plan.items()):
-        lines.append(f"    {name:<24} {count:>4}回 × {COSTS.get(name, 0):>5}"
-                     f" = {COSTS.get(name, 0) * int(count):>8,}")
+        lines.append(f"    {name:<24} {count:>4}回 × {cost_of(name):>5}"
+                     f" = {cost_of(name) * int(count):>8,}")
     # **実測でぶつかった線**（2026-09-09、110,602 で quotaExceeded）。
     # DAILY は当てにならないので、こちらを目安にする
     if spent + want > OBSERVED_CEILING:
