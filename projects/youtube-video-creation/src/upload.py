@@ -155,7 +155,6 @@ def recently_uploaded(service, title: str, minutes: int = 90) -> str | None:
     """
     from datetime import datetime, timedelta, timezone
 
-    quota.record("playlistItems.list")
     channel = service.channels().list(part="contentDetails", mine=True).execute()
     uploads = channel["items"][0]["contentDetails"]["relatedPlaylists"]["uploads"]
     got = service.playlistItems().list(part="snippet", playlistId=uploads,
@@ -246,12 +245,13 @@ def get_service(client_secret: Path = CLIENT_SECRET_PATH, token: Path = TOKEN_PA
             credentials = flow.run_local_server(port=0)
         token.parent.mkdir(parents=True, exist_ok=True)
         token.write_text(credentials.to_json(), encoding="utf-8")
-    return build("youtube", "v3", credentials=credentials)
+    # **包んで返す。**呼ぶ側の書き忘れに頼らず、叩いたぶんを自動で数える
+    # （2026-09-09。使い捨てスクリプトの search.list 900 が台帳の外にあった）
+    return quota.counted(build("youtube", "v3", credentials=credentials))
 
 
 def fetch_snippet(service, video_id: str) -> dict:
     """いまの題名・概要欄・タグを取る。**書き換える前に、現物を見る。**"""
-    quota.record("videos.list")
     got = service.videos().list(part="snippet", id=video_id).execute()
     items = got.get("items") or []
     if not items:
@@ -281,14 +281,12 @@ def set_privacy(service, video_id: str, privacy: str = "public") -> str:
     """
     if privacy not in ("private", "unlisted", "public"):
         raise UploadError(f"知らない公開設定です: {privacy}")
-    quota.record("videos.list")
     got = service.videos().list(part="status", id=video_id).execute()
     items = got.get("items") or []
     if not items:
         raise UploadError(f"動画が見つかりません: {video_id}")
     status = dict(items[0]["status"])
     status["privacyStatus"] = privacy
-    quota.record("videos.update")
     service.videos().update(
         part="status", body={"id": video_id, "status": status}).execute()
     return video_id
@@ -333,7 +331,6 @@ def update_description(service, video_id: str, description: str) -> str:
     """
     snippet = fetch_snippet(service, video_id)
     snippet["description"] = description[:5000]
-    quota.record("videos.update")
     service.videos().update(
         part="snippet", body={"id": video_id, "snippet": snippet}).execute()
     return video_id
@@ -376,7 +373,6 @@ def upload(
         body["status"]["privacyStatus"] = "private"
         body["status"]["publishAt"] = publish_at
     media = MediaFileUpload(str(video_path), chunksize=-1, resumable=True)
-    quota.record("videos.insert")
     request = service.videos().insert(part="snippet,status", body=body, media_body=media)
 
     response = None
@@ -387,7 +383,6 @@ def upload(
     video_id = response["id"]
 
     if thumbnail and thumbnail.exists():
-        quota.record("thumbnails.set")
         # **サムネで落ちても、動画はもう上がっている。**ここで例外を投げると
         # 呼ぶ側は「投稿に失敗した」と見て掛け直し、同じ動画が2本になる。
         # 2026-09-08 に thumbnails.set の 429（サムネの送りすぎ）でそれが起き、

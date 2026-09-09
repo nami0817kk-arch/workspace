@@ -95,7 +95,6 @@ def post(service, video_id: str, text: str) -> str:
     """動画にチャンネルのコメントを1件書く。コメントの id を返す。"""
     if not text.strip():
         raise CommentError("コメントが空です")
-    quota.record("commentThreads.insert")
     body = {
         "snippet": {
             "videoId": video_id,

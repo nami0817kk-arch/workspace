@@ -33,6 +33,7 @@
 from __future__ import annotations
 
 import argparse
+import datetime
 import sys
 import unicodedata
 from pathlib import Path
@@ -1863,6 +1864,8 @@ def _cmd_setthumb(args, config) -> int:
     """サムネイルだけを設定する。**投稿はやり直さない**（動画が二重になる）。"""
     from .upload import UploadError, get_service, set_thumbnail
 
+    from . import quota as quota_mod
+
     thumbnail = Path(args.build_dir) / "thumbnail.png"
     try:
         set_thumbnail(get_service(), args.video_id, thumbnail)
@@ -1870,6 +1873,16 @@ def _cmd_setthumb(args, config) -> int:
         print(f"設定できません: {err}", file=sys.stderr)
         return 1
     except Exception as err:
+        # **枠切れとサムネの連投制限を取り違えない**（2026-09-09）。
+        # 429 は待てば解けるが、quotaExceeded は日をまたぐまで戻らない。
+        # 取り違えて叩き続けると、次の日の枠まで削る
+        if quota_mod.is_exhausted(err):
+            reset = quota_mod.resets_at().astimezone(
+                datetime.timezone(datetime.timedelta(hours=9)))
+            print("APIの枠を使い切っています。**待っても直りません**"
+                  f"（戻るのは日本時間 {reset:%m-%d %H:%M}）。"
+                  "再試行せず、日をまたいでからにしてください", file=sys.stderr)
+            return 2
         print(f"設定できません: {err}", file=sys.stderr)
         return 1
     print(f"■ サムネイルを設定: https://youtu.be/{args.video_id}")
@@ -2717,6 +2730,12 @@ def _cmd_upload(args, config) -> int:
     # **投稿は時間で散らす**（2026-09-07）。参考チャンネルは1時間に1本ずつ、
     # こちらは13時間前に4本と固めて出していた。止めはしない（まとめて出す日も
     # ある）が、**気づかずに固めることは防ぐ**
+    # **始めるときに勝手に出す**（2026-09-09）。`quota` を見に行く仕組みは
+    # あったのに、35本の一括作業を枠を見ずに始めて途中で落ちた
+    from . import quota as quota_mod
+    for line in quota_mod.preflight({"videos.insert": 1, "thumbnails.set": 1}):
+        print(line)
+
     gap = posted.since_last()
     if gap is not None and gap < posted.SPREAD_MINUTES:
         print(f"■ 前の投稿から{gap:.0f}分しかたっていません"
