@@ -996,6 +996,10 @@ def to_script(notes: Notes, plan: Plan) -> str:
         "thumbnail_points": [str(x) for x in (thumbnail.get("points") or [])][:3],
         # 顔を並べる（2026-09-08）。2〜3枚で全面が写真になる
         "thumbnail_photos": [str(x) for x in (thumbnail.get("photos") or [])][:3],
+        # **エンブレムを主役にする**（2026-09-09 ユーザー指示）。
+        # 「小さく添えるだけ」の決まりを変えた。出てくる人のクラブ姿の写真が
+        # 無いときに使う。写真より優先される
+        "thumbnail_crest_main": [str(x) for x in (thumbnail.get("crest_main") or [])][:3],
         # **顔写真は取材メモに持たせる。**台本にしか書けなかったので、
         # 台本を作り直すたびに消えていた（2026-09-06 に2回やった）。
         # 直すたびに手で書き戻すのは、必ずどこかで抜ける

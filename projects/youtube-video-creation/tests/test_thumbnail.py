@@ -516,3 +516,34 @@ def test_縦サムネの下に見出しの繰り返しは置かない(tmp_path):
     other = _short_thumbnail(config, tmp_path / "b.png", None,
                              ("上", "下の行"), [], None, "別のひとこと", [])
     assert same.read_bytes() != other.read_bytes()
+
+
+def test_エンブレムを主役にできる(tmp_path):
+    """**「小さく添えるだけ」の決まりを変えた**（2026-09-09 ユーザー指示）。
+
+    アーセナル対ヴィラの誤審の回で、話に出てくる誰にも使える
+    クラブユニフォーム姿の写真が無かった。エンブレムを大きく出す道を作る。
+    右上の小さいほうは、主役にしたときは出さない（同じ絵が2つ並ぶ）。
+    """
+    from PIL import Image
+
+    from src.config import load_config
+    from src.thumbnail import _crest_stage, build_thumbnail
+
+    config = load_config()
+    font = str(config.video.font_path())
+    assert _crest_stage(["アーセナル", "アストン・ヴィラ"], font) is not None
+    assert _crest_stage(["まったく知らないクラブ"], font) is None
+
+    with_crest = build_thumbnail(
+        config, "題", tmp_path / "a.png", lines=("1", "2"),
+        tags=["アーセナル", "アストン・ヴィラ"],
+        crest_main=["アーセナル", "アストン・ヴィラ"],
+    )
+    without = build_thumbnail(
+        config, "題", tmp_path / "b.png", lines=("1", "2"),
+        tags=["アーセナル", "アストン・ヴィラ"],
+    )
+    assert with_crest.read_bytes() != without.read_bytes()
+    with Image.open(with_crest) as image:
+        assert image.size == (1280, 720)

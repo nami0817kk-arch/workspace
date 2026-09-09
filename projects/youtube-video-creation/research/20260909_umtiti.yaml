@@ -24,7 +24,10 @@ theme:
 thumbnail:
   line1: 自分に投票すると言った
   line2: 同胞が ●●● を呈した
-  photo: "assets/photos/20260908_mbappe/01.jpg"
+  # **二人を並べる**（2026-09-09 ユーザー指示）。言った側と、苦言を呈した側
+  photos:
+    - "assets/photos/20260908_mbappe/01.jpg"
+    - "assets/photos/20260909_umtiti/01.jpg"
   tags: [エムバペ, レアル・マドリード]
   points:
     - 苦言を呈したのは元フランス代表
