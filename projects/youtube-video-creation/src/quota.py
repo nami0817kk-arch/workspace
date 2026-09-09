@@ -27,9 +27,15 @@ COSTS = {
     "videos.insert": COST_PER_UPLOAD,
     "videos.update": 50,
     "videos.list": 1,
-    "thumbnails.set": 0,   # 上の COST_PER_UPLOAD に含めて数えている
+    # **単独で叩くと50かかる**（2026-09-09 実測）。公開済み35本のサムネを
+    # 貼り替えようとして、10本で quotaExceeded に落ちた。投稿に付いてくるぶんは
+    # COST_PER_UPLOAD に入っているので少し重複して数えるが、
+    # **足りないと思って止まるより、多めに見て確かめるほうが安い**
+    "thumbnails.set": 50,
     "commentThreads.insert": 50,   # 最初のコメント（2026-09-08）。公式の表の値
     "playlistItems.list": 1,       # 掛け直す前の確認（2026-09-09）。読み取りは1
+    # **いちばん高い。**参考チャンネルを探すのに8回叩いて800使った（2026-09-09）。
+    # 調べもので気軽に使うと、投稿の枠をそこで削ることになる
     "search.list": 100,
 }
 # 1日に使えるリクエストの合計
