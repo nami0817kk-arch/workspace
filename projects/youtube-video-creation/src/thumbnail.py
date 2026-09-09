@@ -33,6 +33,10 @@ BAND_RED = (222, 20, 30)
 BAND_TEXT_DARK = (12, 12, 14)
 BAND_TEXT_LIGHT = (255, 255, 255)
 BAND_SIZES = (104, 94, 86, 78, 70, 62, 56, 50, 44, 40)
+# 左に積む言葉（thumbnail_points）。右の写真に食い込まない幅で縮める
+POINTS_SIZE = 62
+POINTS_MIN_SIZE = 34
+POINTS_WIDTH = 600
 BADGE_HEIGHT = 62
 SUBTITLE_HEIGHT = 70
 DATE_HEIGHT = 40
@@ -519,16 +523,7 @@ def _band_thumbnail(
     canvas.alpha_composite(scrim)
 
     layer, draw = _layer(SIZE)
-    # **エンブレムと言葉は、どちらも左側に置く。**同じ場所を取り合う。
-    # 2026-09-10 にバルコラの回で、速度ランキングの3行の真上に
-    # リヴァプールのエンブレムが重なり、**数字が読めなくなった**（実物で発見）。
-    # 左は1つぶんしか無いので、**言葉があるほうを採る**
-    # （言葉は伏せ字の引きで、エンブレムは誰の話かを示すだけ。写真が既に示している）
-    stack_points = bool(portrait and points)
-    # **主役にしたときは、右上の小さいほうを出さない。**同じ絵が2つ並ぶ
-    if stage is None and not stack_points:
-        _draw_tags(layer, draw, tags if crests is None else crests, font_path)
-    if stack_points:
+    if portrait and points:
         _draw_points(draw, points, font_path)
 
     top_text = (lines[0] or "").replace(chr(92) + "n", " ")
@@ -538,6 +533,7 @@ def _band_thumbnail(
     # **2行は同じ大きさで描く。**入る字の大きさは行ごとに違うので、
     # 小さいほうに合わせる。1行目だけで決めていたら、2行目が枠を超えて
     # 「GKコーチ」が「G / Kコーチ」に泣き別れた（2026-09-07 に書き出して発見）
+    band_top = None
     texts = [(t, ink) for t, ink in
              ((top_text, BAND_TEXT_DARK), (bottom_text, BAND_INK_RED)) if t]
     font = _fit_one_line(draw, [t for t, _ in texts], font_path, right - 56)
@@ -560,6 +556,19 @@ def _band_thumbnail(
             y += line_height
         if reaction:
             _draw_chip(draw, reaction, font_path, top - 12)
+        band_top = top
+
+    # **エンブレムは右下**（2026-09-10 ユーザー指示）。左に置いていた頃は、
+    # 同じ左側の `thumbnail.points` と場所を取り合い、バルコラの回で
+    # 速度ランキングの真上に重なって数字が読めなくなった。
+    # 帯を描いたあとに置くので、**帯に隠れない位置**を自分で選べる
+    # （縦長の回は帯が左半分だけなので床まで使える。横長は帯の上に載せる）
+    # **主役にしたときは、小さいほうを出さない。**同じ絵が2つ並ぶ
+    if stage is None:
+        floor = SIZE[1] - 28
+        if band_top is not None and not portrait:
+            floor = band_top - 16
+        _draw_tags(layer, tags if crests is None else crests, floor)
 
     canvas.alpha_composite(layer)
     out_path.parent.mkdir(parents=True, exist_ok=True)
@@ -939,28 +948,29 @@ def _fit_band(draw: ImageDraw.ImageDraw, text: str, font_path: str, room: int = 
     return font, wrap_text(draw, text, font, width)[:2]
 
 
-def _draw_tags(layer: Image.Image, draw: ImageDraw.ImageDraw,
-               tags: list[str], font_path: str) -> None:
-    """**左側にエンブレムを並べる**（2026-09-09 ユーザー「もっと大きくして左に置く」）。
+def _draw_tags(layer: Image.Image, tags: list[str], floor: int) -> None:
+    """**右下にエンブレムを並べる**（2026-09-10 ユーザー「ロゴは右下にして」）。
 
     前は赤い札にクラブ名を書き、その左にエンブレムを添えていた。
     **その文字は要らない**（2026-09-08 ユーザー指摘）。クラブ名は
     タイトルにも帯にも出ているので、もう一度書くと画面が混むだけだった。
     残すのはエンブレムだけで、無いクラブは何も出ない。
 
-    置き場所は**左の、言葉の下と帯の上のあいだ**。右上に小さく置いていた頃は、
-    一覧に並べたときに何のクラブか判別できなかった。左は縦長の写真を右に置いた
-    ときに空くところで、ちょうど余っている
+    置き場所は左上（44px）→ 左の中ほど（300px、2026-09-09）→ **右下**と動いた。
+    左に置いていた頃は `thumbnail.points` と同じ場所を取り合い、バルコラの回で
+    速度ランキングの真上に重なって数字が読めなくなった。右下は、縦長の写真を
+    右に置いても顔より下、帯より右で、**どの型でも空いている**。
+
+    `floor` は下端。帯が全幅にかかる回は、呼ぶ側が帯の上を渡してくる
     """
     if not tags:
         return
     size = _crest_px()
-    # 上の言葉（thumbnail_points）と、下の帯を避けた帯域に置く
-    top = int(SIZE[1] * 0.30)
-    x = 56
+    right = SIZE[0] - 28
     for tag in tags[:2]:
-        if _paste_crest(layer, tag, x + size, top):
-            x += size + 26
+        width = _paste_crest(layer, tag, right, floor)
+        if width:
+            right -= width + 26
 
 
 def _draw_points(draw: ImageDraw.ImageDraw, points: list[str], font_path: str) -> None:
@@ -976,14 +986,24 @@ def _draw_points(draw: ImageDraw.ImageDraw, points: list[str], font_path: str) -
     **●● で伏せてある**（「唯一やりたくないポジションは●●です」）。
     ここに置くのは、**引きになる断片**であって答えではない。
     """
-    font = ImageFont.truetype(font_path, 62)
+    rows = points[:3]
+    # **入る大きさまで縮める**（2026-09-10）。62 の決め打ちだったので、
+    # 「時速」と「キロ」を足したとたん右の写真に食い込んだ
+    size = POINTS_SIZE
+    font = ImageFont.truetype(font_path, size)
+    while size > POINTS_MIN_SIZE and max(
+            draw.textlength(t, font=font) for t in rows) > POINTS_WIDTH:
+        size -= 4
+        font = ImageFont.truetype(font_path, size)
+    step = int(size * 1.74)
+    rule = int(size * 1.32)
     y = 96
-    for text in points[:3]:
+    for text in rows:
         draw.text((60 + 3, y + 3), text, font=font, fill=(0, 0, 0, 190))
         draw.text((60, y), text, font=font, fill=(255, 255, 255, 255))
-        draw.line([(60, y + 82), (60 + draw.textlength(text, font=font), y + 82)],
+        draw.line([(60, y + rule), (60 + draw.textlength(text, font=font), y + rule)],
                   fill=(232, 210, 31, 255), width=5)
-        y += 108
+        y += step
 
 
 def _crest_px() -> int:
@@ -991,25 +1011,28 @@ def _crest_px() -> int:
     return crest_mod.CREST_PX
 
 
-def _paste_crest(layer: Image.Image, tag: str, right: int, y: int) -> bool:
-    """右上にエンブレムを小さく置く（2026-09-08）。
+def _paste_crest(layer: Image.Image, tag: str, right: int, bottom: int) -> int:
+    """エンブレムを1つ置く。**右下を合わせる**（2026-09-10）。
 
-    **小さく添えるだけ。**権利が晴れていないので、主役にしない
-    （src/crest.py に経緯）。置けたときだけ True を返す。
+    上端で合わせていた頃は、**横長のエンブレムだけ浮いて見えた**。
+    高さは元の縦横比で決まるので、上を揃えると下が揃わない。
+    置けたときだけ、使った幅を返す（置けなければ 0）。
+
+    権利は晴れていない（src/crest.py に経緯）。
     """
     from . import crest as crest_mod
 
     path = crest_mod.find(tag)
     if path is None:
-        return False
+        return 0
     with Image.open(path) as source:
         mark = source.convert("RGBA")
     size = crest_mod.CREST_PX
     ratio = size / max(mark.width, mark.height)
     mark = mark.resize((max(1, int(mark.width * ratio)),
                         max(1, int(mark.height * ratio))), Image.LANCZOS)
-    layer.alpha_composite(mark, (int(right - mark.width), int(y)))
-    return True
+    layer.alpha_composite(mark, (int(right - mark.width), int(bottom - mark.height)))
+    return mark.width
 
 
 # ------------------------------------------------------------------ パーツ

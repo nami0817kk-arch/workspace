@@ -583,35 +583,61 @@ def test_エンブレムだけ止められる(tmp_path, monkeypatch):
     assert from_meta({"thumbnail_crests": ["バルセロナ"]}, "題")["crests"] == ["バルセロナ"]
 
 
-def test_左の言葉とエンブレムを重ねない(tmp_path, monkeypatch):
-    """**同じ場所を取り合う**（2026-09-10 実物で発見）。
+def test_エンブレムは右下に置く(tmp_path, monkeypatch):
+    """**左に置くと言葉と場所を取り合う**（2026-09-10 実物で発見）。
 
     バルコラの回で、速度ランキング3行の真上にリヴァプールのエンブレムが
-    重なり、数字が読めなくなった。どちらも左側に置く決まりで、
-    帯域の計算だけを別々にしていたので気づけなかった。
-    言葉があるときは、エンブレムを出さない。
+    重なり、数字が読めなくなった。ユーザーの指示で右下へ移した。
+    言葉（左）とエンブレム（右下）は、**両方出る**のが正しい。
     """
     from PIL import Image
 
     from src import thumbnail as mod
 
-    called = []
-    monkeypatch.setattr(mod, "_draw_tags",
-                        lambda *a, **k: called.append("tags"))
-    monkeypatch.setattr(mod, "_draw_points",
-                        lambda *a, **k: called.append("points"))
+    placed = []
+    monkeypatch.setattr(mod, "_paste_crest",
+                        lambda layer, tag, right, bottom: placed.append((right, bottom)) or 300)
 
     photo = tmp_path / "tate.jpg"
     Image.new("RGB", (600, 1000), "white").save(photo)     # 縦長
     mod.build_thumbnail(_config(), "", tmp_path / "a.png", style="band",
                         background=str(photo), lines=("上", "下"),
                         tags=["リバプール"],
-                        points=["1位 ●●●●", "2位 ●●●●"])
-    assert called == ["points"], called
+                        points=["1位 ●●●● 時速35.93キロ"])
+    assert placed, "エンブレムを置いていない"
+    right, bottom = placed[0]
+    assert right > SIZE[0] * 0.7, f"右に寄っていない: {right}"
+    assert bottom > SIZE[1] * 0.7, f"下に寄っていない: {bottom}"
 
-    # 言葉が無ければエンブレムは出る（外しすぎていないことも確かめる）
-    called.clear()
+
+def test_横長の回はエンブレムを帯の上に載せる(tmp_path, monkeypatch):
+    """帯は全幅にかかる。**床まで下げると帯に隠れる。**"""
+    from PIL import Image
+
+    from src import thumbnail as mod
+
+    placed = []
+    monkeypatch.setattr(mod, "_paste_crest",
+                        lambda layer, tag, right, bottom: placed.append((right, bottom)) or 300)
+
+    photo = tmp_path / "yoko.jpg"
+    Image.new("RGB", (1600, 900), "white").save(photo)     # 横長
     mod.build_thumbnail(_config(), "", tmp_path / "b.png", style="band",
-                        background=str(photo), lines=("上", "下"),
-                        tags=["リバプール"], points=[])
-    assert called == ["tags"], called
+                        background=str(photo), lines=("上", "下"), tags=["リバプール"])
+    assert placed
+    assert placed[0][1] < SIZE[1] - 60, "帯に隠れる位置に置いている"
+
+
+def test_言葉が長ければ縮めて写真に食い込ませない():
+    """「時速」「キロ」を足したとたん右の写真に食い込んだ（2026-09-10）。"""
+    from PIL import Image, ImageDraw, ImageFont
+
+    from src import thumbnail as mod
+
+    draw = ImageDraw.Draw(Image.new("RGBA", mod.SIZE))
+    long_rows = ["1位 ●●●● 時速35.93キロ", "2位 ●●●● 時速35.36キロ"]
+    font_path = str(_config().video.font_path())
+    mod._draw_points(draw, long_rows, font_path)
+    font = ImageFont.truetype(font_path, mod.POINTS_SIZE)
+    assert max(draw.textlength(t, font=font) for t in long_rows) > mod.POINTS_WIDTH, (
+        "この文字列では縮める必要が出ない。テストの前提が崩れている")
