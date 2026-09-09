@@ -181,6 +181,9 @@ def when_to_publish(clock: str, now=None) -> str:
                  6本ぜんぶ1日ずれるところだった。黙って明日に回さない。
     ``+45``    … いまから45分後。**並べて予約するときはこちら。**
                  時計の時刻だと、書き出しに手間取ったぶんだけ過ぎてしまう。
+    ``明日07:30`` … 翌日のその時刻（2026-09-09）。**夜に書き出して朝に出す**
+                 ときに要る。実測で、朝に出した回は435〜993回、夜は0〜35回だった。
+                 `+750` のような分数での指定は、書き出しに手間取ると狙いが狂う。
     """
     from datetime import datetime, timedelta, timezone
 
@@ -191,6 +194,12 @@ def when_to_publish(clock: str, now=None) -> str:
     now = now.astimezone(jst)
 
     text = str(clock).strip()
+    plus_day = 0
+    for head in ("明日", "翌日", "翌"):
+        if text.startswith(head):
+            plus_day = 1
+            text = text[len(head):].strip()
+            break
     if text.startswith("+"):
         try:
             minutes = int(text[1:])
@@ -205,6 +214,8 @@ def when_to_publish(clock: str, now=None) -> str:
         except ValueError as exc:
             raise UploadError(f"時刻は 07:30 か +45 の形で渡してください: {clock}") from exc
         target = now.replace(hour=hour, minute=minute, second=0, microsecond=0)
+        if plus_day:
+            target += timedelta(days=1)
         if target <= now + timedelta(minutes=1):
             raise UploadError(
                 f"{text} はもう過ぎています（いま {now:%H:%M}）。"
