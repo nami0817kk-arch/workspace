@@ -22,10 +22,10 @@
   "2026-09-09": {
     "channels.list": 14,
     "playlistItems.list": 14,
-    "videos.list": 12,
+    "videos.list": 13,
     "thumbnails.set": 89,
     "videos.insert": 12,
     "commentThreads.list": 31,
-    "commentThreads.insert": 16
+    "commentThreads.insert": 18
   }
 }
