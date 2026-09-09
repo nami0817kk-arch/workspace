@@ -273,6 +273,11 @@ def from_meta(meta: dict, title: str) -> dict:
         # **エンブレムを主役にする**（2026-09-09 ユーザー指示）。
         # 出てくる人のクラブ姿の写真が無いときの逃げ道。写真より優先する
         "crest_main": [str(x) for x in (meta.get("thumbnail_crest_main") or [])][:3],
+        # **エンブレムだけ止めたいことがある**（2026-09-09 ユーザー「レアルは不要」）。
+        # tags を削ると YouTube のタグからも消えるので、絵のほうだけ別に持つ。
+        # 書いていなければ tags をそのまま使う
+        "crests": ([str(x) for x in meta["thumbnail_crests"]]
+                   if "thumbnail_crests" in meta else None),
     }
 
 
@@ -389,6 +394,7 @@ def build_thumbnail(
     photos: list[str] | None = None,
     quote: str = "",
     crest_main: list[str] | None = None,
+    crests: list[str] | None = None,
 ) -> Path:
     """サムネイルを1枚作る。
 
@@ -413,7 +419,7 @@ def build_thumbnail(
         return _band_thumbnail(
             config, out_path, background,
             lines or (title, subtitle), tags or [], focus, reaction, points or [],
-            photos or [], crest_main or [],
+            photos or [], crest_main or [], crests,
         )
 
     font_path = str(config.video.font_path())
@@ -468,6 +474,7 @@ def _band_thumbnail(
     points: list[str] | None = None,
     photos: list[str] | None = None,
     crest_main: list[str] | None = None,
+    crests: list[str] | None = None,
 ) -> Path:
     """写真の上に蛍光イエローの帯を重ねる。**最高再生の型に合わせてある。**
 
@@ -514,7 +521,7 @@ def _band_thumbnail(
     layer, draw = _layer(SIZE)
     # **主役にしたときは、右上の小さいほうを出さない。**同じ絵が2つ並ぶ
     if stage is None:
-        _draw_tags(layer, draw, tags, font_path)
+        _draw_tags(layer, draw, tags if crests is None else crests, font_path)
     if portrait and points:
         _draw_points(draw, points, font_path)
 

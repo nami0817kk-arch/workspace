@@ -1000,6 +1000,10 @@ def to_script(notes: Notes, plan: Plan) -> str:
         # 「小さく添えるだけ」の決まりを変えた。出てくる人のクラブ姿の写真が
         # 無いときに使う。写真より優先される
         "thumbnail_crest_main": [str(x) for x in (thumbnail.get("crest_main") or [])][:3],
+        # **エンブレムだけ止める**（2026-09-09 ユーザー「レアルは不要」）。
+        # tags を削ると YouTube のタグからも消えるので、絵のほうだけ別に持つ
+        **({"thumbnail_crests": [str(x) for x in (thumbnail.get("crests") or [])]}
+           if "crests" in thumbnail else {}),
         # **顔写真は取材メモに持たせる。**台本にしか書けなかったので、
         # 台本を作り直すたびに消えていた（2026-09-06 に2回やった）。
         # 直すたびに手で書き戻すのは、必ずどこかで抜ける

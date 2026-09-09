@@ -551,3 +551,33 @@ def test_エンブレムを主役にできる(tmp_path):
     assert with_crest.read_bytes() != without.read_bytes()
     with Image.open(with_crest) as image:
         assert image.size == (1280, 720)
+
+
+def test_エンブレムだけ止められる(tmp_path, monkeypatch):
+    """**tags を削るとYouTubeのタグからも消える**（2026-09-09 ユーザー「レアルは不要」）。
+
+    顔を2枚並べた回は左が空いておらず、大きくしたエンブレムが写真に重なる。
+    絵だけ止めたいので、`thumbnail.crests` を別に持つ。
+    書いていなければ、これまでどおり tags をそのまま使う。
+    """
+    from PIL import Image
+
+    from src.config import load_config
+    from src.thumbnail import build_thumbnail, from_meta
+
+    config = load_config()
+    photo = tmp_path / "p.png"
+    Image.new("RGB", (600, 900), (30, 90, 160)).save(photo)
+
+    def draw(name, **kw):
+        return build_thumbnail(
+            config, "題", tmp_path / f"{name}.png", style="band",
+            lines=("見出し", "副見出し"), background=str(photo),
+            tags=["バルセロナ"], **kw).read_bytes()
+
+    assert draw("with") != draw("without", crests=[])
+
+    # from_meta は、書いていなければ None（＝tags を使う）
+    assert from_meta({}, "題")["crests"] is None
+    assert from_meta({"thumbnail_crests": []}, "題")["crests"] == []
+    assert from_meta({"thumbnail_crests": ["バルセロナ"]}, "題")["crests"] == ["バルセロナ"]
