@@ -7,9 +7,11 @@ import 'competition.dart';
 import 'development.dart';
 import 'entourage.dart';
 import 'life.dart';
+import 'news.dart';
 import 'reputation.dart';
 import 'support.dart';
 import 'training.dart';
+import 'traits.dart';
 import 'injury.dart';
 import 'objective.dart';
 import 'player.dart';
@@ -31,6 +33,7 @@ class SeasonRecord {
     this.cupStage = CupStage.none,
     this.worldCupStage = WorldCupStage.none,
     this.onLoan = false,
+    this.overall = 0,
   });
 
   final int year;
@@ -57,11 +60,14 @@ class SeasonRecord {
   /// そのシーズンの国内カップの成績。
   final CupStage cupStage;
 
-  /// そのシーズンのワールドカップの成績。
+  /// そのシーズンの世界大会の成績。
   final WorldCupStage worldCupStage;
 
   /// ローンで戦ったシーズンか。
   final bool onLoan;
+
+  /// そのシーズンを終えた時点の総合力。0 は記録が無い（古い保存データ）。
+  final int overall;
 
   Map<String, dynamic> toJson() => {
         'year': year,
@@ -80,6 +86,7 @@ class SeasonRecord {
         'cupStage': cupStage.name,
         'worldCupStage': worldCupStage.name,
         'onLoan': onLoan,
+        'overall': overall,
       };
 
   factory SeasonRecord.fromJson(Map<String, dynamic> json) => SeasonRecord(
@@ -109,6 +116,7 @@ class SeasonRecord {
                 ? WorldCupStage.values.byName(json['worldCupStage'] as String)
                 : WorldCupStage.none,
         onLoan: json['onLoan'] as bool? ?? false,
+        overall: json['overall'] as int? ?? 0,
       );
 }
 
@@ -167,6 +175,16 @@ class CareerState {
     this.nationalTeamId,
     this.secondCareer,
     this.seenEvents = const [],
+    this.news = const [],
+    this.seasonStart,
+    this.backedUpYear = 0,
+    this.autoRestBelow = defaultAutoRestBelow,
+    this.focus = const [],
+    this.yellowCards = 0,
+    this.suspension = 0,
+    this.momentAttempts = const {},
+    this.momentSuccesses = const {},
+    this.traitHits = const {},
     this.objective,
     this.injury,
     this.caps = 0,
@@ -289,6 +307,141 @@ class CareerState {
   /// もう起きた出来事のID。一度きりの出来事を繰り返さないために持つ。
   List<String> seenEvents;
 
+  /// 世の中に出た見出し。新しいものが先頭。
+  List<NewsItem> news;
+
+  /// 今季の累積警告。シーズンをまたぐと消える（実際のリーグと同じ）。
+  int yellowCards;
+
+  /// 出場停止の残り試合数。0 なら出られる。
+  int suspension;
+
+  /// 出場停止か。
+  bool get suspended => suspension > 0;
+
+  /// 育てる方向。伸ばしたい詳細能力を選んでおく。
+  ///
+  /// 練習でも試合の成長でも、伸びる先が無作為だったので、何を選んでも
+  /// 同じような選手になっていた。ここを決めておくと、練習の中で伸びる
+  /// 項目と、試合の成長の無作為ぶんが、選んだ方向に寄る。
+  /// **伸びる量は変わらない**——どこに乗るかだけが変わる。
+  List<Detail> focus;
+
+  /// 同時に選べる数。全部を伸ばすのは方向とは言わない。
+  static const int maxFocus = 3;
+
+  /// そのカテゴリの中で、方向に入っている詳細。
+  List<Detail> focusIn(AttributeKey key) =>
+      [for (final d in focus) if (d.category == key) d];
+
+  /// このコンディションを下回ったら、その週は自動で休養にする。
+  ///
+  /// 0 なら自動では休まない。疲れたまま練習を続けると、伸びないうえに
+  /// 怪我をして、その週の操作を忘れていただけで数試合を失う。
+  int autoRestBelow;
+
+  /// 自動休養の既定値。助言（[WeekPlan.tiredCondition]）より少し下に置く。
+  /// 助言が先に出て、それでも放っておいたときにだけ効く。
+  static const int defaultAutoRestBelow = 40;
+
+  /// 選べるしきい値。0 は「しない」。
+  static const List<int> autoRestChoices = [0, 30, 40, 50, 60];
+
+  /// 最後に引き継ぎコードを出した年。0 なら一度も出していない。
+  ///
+  /// 保存は端末の中だけにあるので、ブラウザのデータを消すと消える。
+  /// 何年ぶんか控えていないなら、シーズンの区切りで知らせる。
+  int backedUpYear;
+
+  /// 控えを取ってから何年経ったか。一度も取っていなければ、プロ入りからの年数。
+  int get yearsSinceBackup =>
+      backedUpYear == 0 ? professionalYears : year - backedUpYear;
+
+  /// 今季の開幕時点の能力値。今季どれだけ伸びたかを出すために持つ。
+  ///
+  /// 能力値は毎週すこしずつ動くので、見ているだけでは伸びたことに
+  /// 気付けない。開幕時を覚えておいて差を見せる。古い保存データには
+  /// 無いので null を許す。
+  Attributes? seasonStart;
+
+  /// 今季、そのカテゴリで判定した局面の数。
+  Map<AttributeKey, int> momentAttempts;
+
+  /// そのうち成功した数。練習した能力が実際に通っているかを見る。
+  Map<AttributeKey, int> momentSuccesses;
+
+  /// そのコンディションなら、自動で休むか。
+  bool shouldAutoRest(int condition) =>
+      autoRestBelow > 0 && condition < autoRestBelow;
+
+  /// 今季の収支の見込み。雇う前に足りるかどうかを見るためのもの。
+  ///
+  /// 実際に引かれるのと同じ式（[Finances.budgetFor]）から出す。
+  SeasonBudget get budget => finances.budgetFor(
+        salary: salary,
+        agentFeePercent: agent.feePercent,
+        staffCost: staff.costPerSeason,
+        extraLivingRate: habits.livingCostExtra,
+        sponsor: sponsor?.annual ?? 0,
+      );
+
+  /// このシーズンを終えたときの貯蓄の見込み。
+  int get projectedSavings => finances.savings + budget.net;
+
+  /// 今の使い方だと、シーズン末に貯蓄が尽きるか。
+  ///
+  /// 尽きると専属スタッフは全員離れる（`advanceSeason`）。
+  bool get willRunOut => projectedSavings < 0;
+
+  /// 今季の伸びと、その能力が試合で通った割合。
+  List<CategoryGrowth> get seasonGrowth {
+    final before = seasonStart;
+    return [
+      for (final key in AttributeKey.values)
+        CategoryGrowth(
+          key: key,
+          before: before?[key] ?? player.attributes[key],
+          now: player.attributes[key],
+          attempts: momentAttempts[key] ?? 0,
+          successes: momentSuccesses[key] ?? 0,
+        ),
+    ];
+  }
+
+  /// 今季、それぞれの特性が成功率を動かした局面の数。
+  ///
+  /// 特性は名前だけ見ても効いたかどうか分からない。
+  /// 「今季12回の局面で効いた」が出て初めて、付いている意味が分かる。
+  Map<Trait, int> traitHits;
+
+  /// 1試合ぶんの特性の効きを足す。
+  void recordTraitHits(Map<Trait, int> hits) {
+    if (hits.isEmpty) return;
+    traitHits = {
+      ...traitHits,
+      for (final e in hits.entries) e.key: (traitHits[e.key] ?? 0) + e.value,
+    };
+  }
+
+  /// 今季の局面を1つ記録する。
+  void recordMoment(AttributeKey key, {required bool success}) {
+    momentAttempts = {...momentAttempts, key: (momentAttempts[key] ?? 0) + 1};
+    if (success) {
+      momentSuccesses = {
+        ...momentSuccesses,
+        key: (momentSuccesses[key] ?? 0) + 1,
+      };
+    }
+  }
+
+  /// 新しいシーズンの起点にする。開幕時の能力を控え、局面の集計を空にする。
+  void beginSeasonRecord() {
+    seasonStart = player.attributes;
+    momentAttempts = const {};
+    momentSuccesses = const {};
+    traitHits = const {};
+  }
+
   /// 今の年齢のキャリア段階。
   CareerStage get stage => CareerStage.of(player.age);
 
@@ -314,7 +467,7 @@ class CareerState {
   /// 今季の国内カップの成績。
   CupStage cupStage;
 
-  /// 今季のワールドカップの成績。4年に1度だけ動く。
+  /// 今季の世界大会の成績。4年に1度だけ動く。
   WorldCupStage worldCupStage;
 
   /// ローン中なら、保有元のクラブ。
@@ -381,6 +534,28 @@ class CareerState {
 
   /// 通算の稼ぎ（万円）。終えたシーズンの分だけ数える。
   int get totalEarnings => history.fold(0, (s, h) => s + h.salary);
+
+  /// 保存データからカテゴリ別の集計を読む。知らないキーは捨てる。
+  /// 知らない特性名（古い版で消したもの）は読み飛ばす。
+  static Map<Trait, int> _traitCountsFrom(Object? json) {
+    final result = <Trait, int>{};
+    for (final e in (json as Map? ?? const {}).entries) {
+      if (Trait.values.any((t) => t.name == e.key) && e.value is int) {
+        result[Trait.values.byName(e.key as String)] = e.value as int;
+      }
+    }
+    return result;
+  }
+
+  static Map<AttributeKey, int> _countsFrom(Object? json) {
+    final result = <AttributeKey, int>{};
+    for (final e in (json as Map? ?? const {}).entries) {
+      if (AttributeKey.values.any((k) => k.name == e.key) && e.value is int) {
+        result[AttributeKey.values.byName(e.key as String)] = e.value as int;
+      }
+    }
+    return result;
+  }
 
   Club opponentFor(int matchday) {
     final id = fixtures[matchday - 1];
@@ -463,6 +638,22 @@ class CareerState {
         'nationalTeamId': nationalTeamId,
         'secondCareer': secondCareer?.name,
         'seenEvents': seenEvents,
+        'news': news.map((n) => n.toJson()).toList(),
+        'seasonStart': seasonStart?.toJson(),
+        'backedUpYear': backedUpYear,
+        'autoRestBelow': autoRestBelow,
+        'focus': focus.map((d) => d.name).toList(),
+        'yellowCards': yellowCards,
+        'suspension': suspension,
+        'traitHits': {
+          for (final e in traitHits.entries) e.key.name: e.value,
+        },
+        'momentAttempts': {
+          for (final e in momentAttempts.entries) e.key.name: e.value,
+        },
+        'momentSuccesses': {
+          for (final e in momentSuccesses.entries) e.key.name: e.value,
+        },
         'contractYears': contractYears,
         'countryId': countryId,
         'professionalYears': professionalYears,
@@ -562,6 +753,26 @@ class CareerState {
               : null,
       seenEvents:
           (json['seenEvents'] as List? ?? const []).cast<String>().toList(),
+      news: [
+        for (final n in (json['news'] as List? ?? const []))
+          NewsItem.fromJson(n as Map<String, dynamic>),
+      ],
+      backedUpYear: json['backedUpYear'] as int? ?? 0,
+      autoRestBelow:
+          json['autoRestBelow'] as int? ?? defaultAutoRestBelow,
+      focus: [
+        for (final n in (json['focus'] as List? ?? const []))
+          if (Detail.values.any((d) => d.name == n))
+            Detail.values.byName(n as String),
+      ],
+      yellowCards: json['yellowCards'] as int? ?? 0,
+      suspension: json['suspension'] as int? ?? 0,
+      seasonStart: json['seasonStart'] is Map<String, dynamic>
+          ? Attributes.fromJson(json['seasonStart'] as Map<String, dynamic>)
+          : null,
+      momentAttempts: _countsFrom(json['momentAttempts']),
+      momentSuccesses: _countsFrom(json['momentSuccesses']),
+      traitHits: _traitCountsFrom(json['traitHits']),
       contractYears: json['contractYears'] as int? ?? 2,
       countryId: json['countryId'] as String? ?? 'yamato',
       professionalYears: json['professionalYears'] as int? ?? 1,

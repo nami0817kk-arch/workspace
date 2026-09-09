@@ -5,6 +5,8 @@ import json
 import re
 from datetime import datetime
 
+from .analyze import MIN_DAYS_FOR_LOW
+
 SAFE = re.compile(r"[^a-z0-9]+")
 
 
@@ -66,8 +68,8 @@ FAVICON = ("data:image/svg+xml,"
 AD_NOTICE = ('<p class="ad-notice">本サイトは楽天アフィリエイトを利用しており、'
              'リンク経由の購入により収益を得ています。</p>')
 
-NAV = [("./", "今日の値下がり"), ("lows/", "最安値圏"), ("genre/", "ジャンル別"),
-       ("about/", "このサイトについて")]
+NAV = [("./", "今日の値下がり"), ("rises/", "値上がり"), ("lows/", "最安値圏"),
+       ("genre/", "ジャンル別"), ("search/", "商品を探す"), ("about/", "このサイトについて")]
 
 
 def _verification(site: dict) -> str:
@@ -141,6 +143,29 @@ def buy_link(row: dict) -> str:
             f'rel="sponsored nofollow noopener" target="_blank">楽天市場で見る</a>')
 
 
+def verdict_note(row: dict) -> str:
+    """いまの価格が履歴のどこにあるかを一文で述べる。
+
+    高いときは高いと書く。買い時でないことを言わないサイトは、価格を追う
+    道具ではなく売るための導線になってしまう。推奨はせず、事実だけを書く
+    （判断の根拠を後から説明できる形を保つ、という analyze.py と同じ方針）。
+    """
+    days = int(row.get("days") or 0)
+    if not row.get("trustworthy"):
+        return (f"記録は{days}日分です。最安値かどうかを言うには"
+                f"{MIN_DAYS_FOR_LOW}日分必要なため、まだ判断できません。")
+    if row.get("at_low"):
+        return "記録した中で最も安い価格です。"
+    if row.get("near_low"):
+        return f'記録した中の最安値 {yen(row["low"])} に近い価格です。'
+    if row.get("rise_pct"):
+        return f'前回より {pct(row["rise_pct"])} 高くなっています。'
+    if row.get("dropped"):
+        return (f'前回より {pct(row["drop_pct"])} 安くなりましたが、'
+                f'最安値 {yen(row["low"])} には届いていません。')
+    return f'記録した中の最安値は {yen(row["low"])}、最高値は {yen(row["high"])} です。'
+
+
 def badge(row: dict) -> str:
     if row["at_low"]:
         cls = "low"
@@ -153,11 +178,40 @@ def badge(row: dict) -> str:
     return f'<span class="badge {cls}">{esc(row["label"])}</span>'
 
 
+def history_note(row: dict) -> str:
+    """その商品を何日ぶん記録できているか。
+
+    「最安値」と言えるかは記録の厚みで決まる（analyze.MIN_DAYS_FOR_LOW）。
+    日数を出しておけば、判定が付いていない商品でも理由が読み手に分かる。
+    """
+    days = int(row.get("days") or 0)
+    if days <= 0:
+        return ""
+    return f'<span class="sep">/</span>記録{days}日'
+
+
+def card_spark(row: dict) -> str:
+    """一覧に出す小さな価格推移。
+
+    このサイトの値打ちは履歴なので、一覧の時点で形が見えるほうがよい。
+    点が2つ未満のときは何も出さない（「記録が足りません」を並べても邪魔になる）。
+    """
+    points = [p for _, p in (row.get("tail") or []) if p]
+    if len(points) < 2:
+        return ""
+    return f'<div class="card-spark">{sparkline(row.get("tail") or [], width=140, height=30)}</div>'
+
+
 def card(row: dict, prefix: str = "") -> str:
     href = f'{prefix}item/{slug(row["item_code"])}/'
     change = ""
     if row["dropped"]:
         change = (f'<span class="down">▼{pct(row["drop_pct"])}</span>'
+                  f'<span class="was">{yen(row["prev"])} → </span>')
+    elif row.get("rise_pct"):
+        # 値上がりも同じ形で出す。下がったときだけ変化を見せると、
+        # 都合のいい情報だけを並べるサイトになる。
+        change = (f'<span class="up">▲{pct(row["rise_pct"])}</span>'
                   f'<span class="was">{yen(row["prev"])} → </span>')
     img = (f'<img src="{esc(row["image"])}" alt="" loading="lazy" width="120" height="120">'
            if row.get("image") else '<span class="noimg"></span>')
@@ -166,17 +220,116 @@ def card(row: dict, prefix: str = "") -> str:
   <div class="body">
     <a class="name" href="{href}">{esc(row["name"])}</a>
     <p class="price">{change}<strong>{yen(row["price"])}</strong> {badge(row)}</p>
-    <p class="meta">{esc(row.get("shop", ""))}</p>
+    <p class="meta">{esc(row.get("shop", ""))}{history_note(row)}</p>
+    {card_spark(row)}
   </div>
 </li>"""
 
 
+SEARCH_JS = """
+(function () {
+  var input = document.getElementById('q');
+  var out = document.getElementById('results');
+  var note = document.getElementById('note');
+  var index = null, loading = false, LIMIT = 60, MAX_SCAN = 400;
+
+  function norm(s) { return s.normalize('NFKC').toLowerCase().replace(/\\s+/g, ''); }
+
+  function terms() {
+    return input.value.trim().split(/\\s+/).map(norm).filter(Boolean);
+  }
+
+  function render() {
+    var t = terms();
+    if (!t.length) { out.textContent = ''; note.textContent = ''; return; }
+    var hits = [];
+    for (var i = 0; i < index.length && hits.length < MAX_SCAN; i++) {
+      var name = index[i][3], ok = true;
+      for (var k = 0; k < t.length; k++) { if (name.indexOf(t[k]) < 0) { ok = false; break; } }
+      if (ok) { hits.push(index[i]); }
+    }
+    note.textContent = hits.length
+      ? hits.length + '件' + (hits.length > LIMIT ? '以上（' + LIMIT + '件を表示）' : '')
+      : '見つかりませんでした。';
+    // 商品名は楽天から来る文字列なので、DOM API で入れる（HTMLとして解釈させない）
+    out.textContent = '';
+    hits.slice(0, LIMIT).forEach(function (r) {
+      var li = document.createElement('li');
+      li.className = 'hit';
+      var a = document.createElement('a');
+      a.href = '../item/' + r[0] + '/';
+      a.textContent = r[1];
+      var p = document.createElement('span');
+      p.className = 'price';
+      p.textContent = r[2].toLocaleString() + '円';
+      li.appendChild(a);
+      li.appendChild(p);
+      out.appendChild(li);
+    });
+  }
+
+  function load() {
+    if (index || loading) { return; }
+    loading = true;
+    note.textContent = '商品一覧を読み込んでいます…';
+    fetch('../search-index.json').then(function (r) { return r.json(); }).then(function (data) {
+      // 正規化した名前を持たせておく（入力のたびに作り直さない）
+      index = data.map(function (r) { return [r[0], r[1], r[2], norm(r[1])]; });
+      loading = false;
+      render();
+    }).catch(function () {
+      note.textContent = '一覧を読み込めませんでした。時間をおいて試してください。';
+      loading = false;
+    });
+  }
+
+  // 一覧は数百KBある。検索する人だけが読み込むよう、触られるまで取りに行かない。
+  input.addEventListener('focus', load);
+  input.addEventListener('input', function () { if (index) { render(); } else { load(); } });
+})();
+"""
+
+
+def search_page(site: dict, canonical: str, updated: str, stats: dict) -> str:
+    """商品名で絞り込む。通信は検索用データの取得だけで、サーバは要らない。"""
+    title = "商品を探す"
+    lead = "記録している商品を名前で絞り込めます。空白で区切ると、すべてを含むものを探します。"
+    return (head(f"{title}｜{site['name']}", lead, canonical, site, "../")
+            + f'<h1>{esc(title)}</h1><p class="lead">{esc(lead)}</p>'
+            + stats_bar(stats)
+            + AD_NOTICE
+            + '<input id="q" type="search" class="q" placeholder="例: モニター 27インチ" '
+              'autocomplete="off" aria-label="商品名で検索">'
+            + '<p id="note" class="note"></p><ul id="results" class="hits"></ul>'
+            + f'<script>{SEARCH_JS}</script>'
+            + foot(site, "../", updated))
+
+
+def stats_bar(stats: dict) -> str:
+    """このサイトが何を持っているかを最初に示す。
+
+    価格履歴は後から買えないことが唯一の強みなのに、一覧に並ぶ商品だけを見ても
+    それが伝わらない。値下がりが数件しかない日でもページが空疎に見えないよう、
+    追跡している規模と記録の厚みを先に出す。
+    """
+    if not stats:
+        return ""
+    parts = [f'<strong>{stats["items"]:,}</strong>商品を追跡',
+             f'記録<strong>{stats["days"]}</strong>日目']
+    if stats.get("updated"):
+        parts.append(f'最終更新 {esc(stats["updated"])}')
+    return '<p class="stats">' + '<span class="sep">/</span>'.join(parts) + '</p>'
+
+
 def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
-            updated: str, prefix: str = "", empty: str = "該当する商品がありません。") -> str:
+            updated: str, prefix: str = "", empty: str = "該当する商品がありません。",
+            stats: dict | None = None) -> str:
     body = ("".join(card(r, prefix) for r in rows) if rows
             else f'<li class="empty">{esc(empty)}</li>')
+    count = f'<span class="count">{len(rows):,}件</span>' if rows else ""
     return (head(f"{title}｜{site['name']}", lead, canonical, site, prefix)
-            + f'<h1>{esc(title)}</h1><p class="lead">{esc(lead)}</p>'
+            + f'<h1>{esc(title)}{count}</h1><p class="lead">{esc(lead)}</p>'
+            + stats_bar(stats or {})
             + AD_NOTICE
             + f'<ul class="cards">{body}</ul>'
             + foot(site, prefix, updated))
@@ -230,6 +383,7 @@ def item_page(row: dict, site: dict, updated: str) -> str:
             + f'<article class="item"><h1>{esc(row["name"])}</h1>'
             + AD_NOTICE
             + f'<p class="headline"><strong>{yen(row["price"])}</strong> {badge(row)}</p>'
+            + f'<p class="verdict">{esc(verdict_note(row))}</p>'
             + f'<div class="chart">{sparkline(row.get("tail") or [])}</div>'
             + f'<table class="facts">{table}</table>'
             + f'<p class="cta">{buy_link(row)}</p>'

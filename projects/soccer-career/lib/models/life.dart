@@ -51,13 +51,19 @@ class Fatigue {
   Fatigue add(int amount) => Fatigue(value: (value + amount).clamp(0, max));
 
   /// オフで抜ける分。歳を取るほど抜けにくい。
+  ///
+  /// 1シーズンで100前後まで溜まるので、若いうちはほぼ抜け、
+  /// 30を過ぎると残りが翌シーズンに乗る形にしてある。
   Fatigue afterOffseason(int age) =>
-      Fatigue(value: max0(value - (age >= 30 ? 45 : 70)));
+      Fatigue(value: max0(value - (age >= 30 ? 60 : 90)));
 
   static int max0(int v) => v < 0 ? 0 : v;
 
   /// 怪我のしやすさへの倍率。
-  double get injuryFactor => 1 + value * 0.006;
+  ///
+  /// 溜まっていると2倍近くまで上がっていた。疲労は「無理をすると痛い目を見る」
+  /// ための仕掛けで、常時の重しではない。
+  double get injuryFactor => 1 + value * 0.003;
 
   /// 回復量への倍率。溜まっているほど戻りが悪い。
   double get recoveryFactor => 1 - value * 0.003;
@@ -109,14 +115,19 @@ class Momentum {
   ///
   /// 良い試合が続いた後に入り、悪い試合が続いた後に落ちる。実力どおりの
   /// 成績が延々と続くより、波があるほうが1シーズンを追う気になる。
-  static Momentum roll(Random random, {required List<double> recent}) {
+  static Momentum roll(
+    Random random, {
+    required List<double> recent,
+    double factor = 1.0,
+  }) {
     if (recent.length < 3) return const Momentum();
     final window = recent.sublist(max(0, recent.length - 3));
     final average = window.reduce((a, b) => a + b) / window.length;
-    if (average >= 7.3 && random.nextDouble() < 0.25) {
+    final chance = (0.25 * factor).clamp(0.0, 0.6);
+    if (average >= 7.3 && random.nextDouble() < chance) {
       return Momentum(state: MomentumState.zone, matches: 3 + random.nextInt(3));
     }
-    if (average <= 5.8 && random.nextDouble() < 0.25) {
+    if (average <= 5.8 && random.nextDouble() < chance) {
       return Momentum(state: MomentumState.slump, matches: 3 + random.nextInt(4));
     }
     return const Momentum();

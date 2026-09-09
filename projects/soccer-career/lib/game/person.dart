@@ -4,6 +4,7 @@ import '../models/career.dart';
 import '../models/competition.dart';
 import '../models/personality.dart';
 import '../models/reputation.dart';
+import '../models/traits.dart';
 import 'world.dart';
 
 /// 選手を「一人の人間」として扱う部分。
@@ -56,22 +57,26 @@ class Person {
   /// 知名度。活躍と代表と大陸カップで上がり、何もしないと少し落ちる。
   int fameFor(CareerState state) {
     final stats = state.seasonStats;
-    var fame = state.reputation.fame - 2;
+    var gained = 0;
 
     // 代表と大陸カップは、リーグに出ていなくても目に触れる。
-    fame += state.seasonCaps * 2;
-    fame += state.continentalStage.points * 2;
-    fame += state.cupStage.points;
-    // ワールドカップは桁が違う。1度出るだけで名前が知れ渡る。
-    fame += state.worldCupStage.points * 4;
+    gained += state.seasonCaps * 2;
+    gained += state.continentalStage.points * 2;
+    gained += state.cupStage.points;
+    // 世界大会は桁が違う。1度出るだけで名前が知れ渡る。
+    gained += state.worldCupStage.points * 4;
 
     // リーグでの露出は「出場していること」が前提。試合に出ない選手は
     // どんなに格の高いリーグに籍を置いていても忘れられていく。
     if (stats.appearances > 0) {
-      fame += (stats.goals + stats.assists) ~/ 3;
-      if (state.club.tier == 1) fame += 2;
-      fame += World.byId(state.club.countryId).prestige;
+      gained += (stats.goals + stats.assists) ~/ 3;
+      if (state.club.tier == 1) gained += 2;
+      gained += World.byId(state.club.countryId).prestige;
     }
+    // 華のある選手は同じ働きでも名前が広まる。忘れられる速さは同じ。
+    final fame = state.reputation.fame -
+        2 +
+        (gained * state.player.traits.fameFactor).round();
     return fame.clamp(0, 100);
   }
 
@@ -137,6 +142,12 @@ class Person {
     final personality = state.player.personality;
     manager += (personality.professionalism - 10) ~/ 3;
     manager -= max(0, personality.temper - 14) ~/ 2;
+
+    // 監督受けの良し悪し。上がるときと下がるときで別に効く。
+    final traits = state.player.traits;
+    manager = manager > 0
+        ? (manager * traits.relationGainFactor).round()
+        : (manager * traits.relationLossFactor).round();
 
     // ロッカールームは在籍年数と出場、そして気性で決まる。
     teammates += stats.appearances ~/ 6;

@@ -5,19 +5,23 @@ import '../models/country.dart';
 
 /// 世界の定義。国・リーグ・外国人ルールはすべてここに集まる。
 ///
-/// 実在のリーグ名・クラブ名は使わない。写しているのは名前ではなく
-/// 「制度」で、そちらが現実感の正体。
+/// **国名は実在のもの**（2026-09-08 に架空から変更）。国名は地名であって
+/// 商標ではないので、そのまま使える。**リーグ名とクラブ名は架空のまま**
+/// にする。ここは商標があり、公開と収益化の前提と衝突する。
+///
+/// **国のIDは変えない。** `club.id` が "albion-t1-c0" のようにIDを含んでいて、
+/// 変えると既存の保存データが読めなくなる。表示名だけを差し替えてある。
 class World {
   const World._();
 
   static const String defaultCountryId = 'yamato';
 
   static const List<Country> countries = [
-    // ---- ヴェスタ連盟（欧州型）----
+    // ---- 欧州 ----
     Country(
       id: 'albion',
-      name: 'アルビオン',
-      demonym: 'アルビオン人',
+      name: 'イングランド',
+      demonym: 'イングランド人',
       confederation: Confederation.vesta,
       prestige: 5,
       calendar: LeagueCalendar.autumnSpring,
@@ -38,8 +42,8 @@ class World {
     ),
     Country(
       id: 'iberica',
-      name: 'イベリカ',
-      demonym: 'イベリカ人',
+      name: 'スペイン',
+      demonym: 'スペイン人',
       confederation: Confederation.vesta,
       prestige: 5,
       calendar: LeagueCalendar.autumnSpring,
@@ -55,8 +59,8 @@ class World {
     ),
     Country(
       id: 'germania',
-      name: 'ゲルマニア',
-      demonym: 'ゲルマニア人',
+      name: 'ドイツ',
+      demonym: 'ドイツ人',
       confederation: Confederation.vesta,
       prestige: 5,
       calendar: LeagueCalendar.autumnSpring,
@@ -65,15 +69,15 @@ class World {
       foreignRule: ForeignRule(confederationFree: true, homegrownRequired: 4),
       clubStems: [
         'ローテン', 'シュヴァル', 'グリュー', 'ハイデ', 'エルベ', 'ノイ',
-        'アルト', 'ヴァルト', 'シュタイン', 'ブルク', 'リンデ', 'フェルト',
+        'アルト', 'ヴァルト', 'ボーフ', 'ブルク', 'リンデ', 'フェルト',
         'グラウ', 'ホーエン', 'タール', 'バッハ', 'ケーニヒ', 'ゾンネ',
       ],
       clubPatterns: ['FC {}', '{}04', '{}ベルク', 'SV {}'],
     ),
     Country(
       id: 'latium',
-      name: 'ラティウム',
-      demonym: 'ラティウム人',
+      name: 'イタリア',
+      demonym: 'イタリア人',
       confederation: Confederation.vesta,
       prestige: 4,
       calendar: LeagueCalendar.autumnSpring,
@@ -89,8 +93,8 @@ class World {
     ),
     Country(
       id: 'gallia',
-      name: 'ガリア',
-      demonym: 'ガリア人',
+      name: 'フランス',
+      demonym: 'フランス人',
       confederation: Confederation.vesta,
       prestige: 4,
       calendar: LeagueCalendar.autumnSpring,
@@ -99,14 +103,14 @@ class World {
       clubStems: [
         'リヨ', 'ナン', 'レン', 'ブレ', 'モンペ', 'トゥル',
         'アンジェ', 'ロリ', 'クレル', 'メス', 'ニム', 'カン',
-        'トゥー', 'ディジョ', 'アミ', 'ラヴァ', 'ポー', 'グルノ',
+        'ナンシ', 'ディジョ', 'アミ', 'ラヴァ', 'ポー', 'グルノ',
       ],
       clubPatterns: ['{}オランピック', 'AS {}', '{}FC', 'スタッド{}'],
     ),
     Country(
       id: 'batavia',
-      name: 'バタヴィア',
-      demonym: 'バタヴィア人',
+      name: 'オランダ',
+      demonym: 'オランダ人',
       confederation: Confederation.vesta,
       prestige: 3,
       calendar: LeagueCalendar.autumnSpring,
@@ -116,14 +120,14 @@ class World {
       clubStems: [
         'アムス', 'ロッテ', 'ユト', 'ズヴォ', 'ヘー', 'アル',
         'ブレダ', 'ナイメ', 'ティル', 'フロー', 'デン', 'エメン',
-        'ハー', 'ライ', 'ドル', 'ヘル', 'ワー', 'ズウォ',
+        'ハー', 'ライ', 'ドル', 'ヘル', 'ワー', 'アペル',
       ],
       clubPatterns: ['{}EC', 'フォルトゥナ{}', '{}FC', 'SC {}'],
     ),
     Country(
       id: 'norden',
-      name: 'ノルデン',
-      demonym: 'ノルデン人',
+      name: 'スウェーデン',
+      demonym: 'スウェーデン人',
       confederation: Confederation.vesta,
       prestige: 2,
       calendar: LeagueCalendar.springAutumn,
@@ -137,11 +141,11 @@ class World {
       clubPatterns: ['{}IF', '{}BK', '{}FF', 'IK {}'],
     ),
 
-    // ---- オリエンス連盟（アジア型）----
+    // ---- アジア ----
     Country(
       id: 'yamato',
-      name: 'ヤマト',
-      demonym: 'ヤマト人',
+      name: '日本',
+      demonym: '日本人',
       confederation: Confederation.oriens,
       prestige: 3,
       calendar: LeagueCalendar.springAutumn,
@@ -161,8 +165,8 @@ class World {
     ),
     Country(
       id: 'shams',
-      name: 'シャムス',
-      demonym: 'シャムス人',
+      name: 'サウジアラビア',
+      demonym: 'サウジアラビア人',
       confederation: Confederation.oriens,
       prestige: 3,
       calendar: LeagueCalendar.autumnSpring,
@@ -177,11 +181,11 @@ class World {
       clubPatterns: ['アル＝{}', '{}SC', 'アル＝{}クラブ', '{}FC'],
     ),
 
-    // ---- アウストラル連盟（南米型）----
+    // ---- 南米 ----
     Country(
       id: 'pampa',
-      name: 'パンパ',
-      demonym: 'パンパ人',
+      name: 'アルゼンチン',
+      demonym: 'アルゼンチン人',
       confederation: Confederation.austral,
       prestige: 4,
       calendar: LeagueCalendar.springAutumn,
@@ -196,8 +200,8 @@ class World {
     ),
     Country(
       id: 'serena',
-      name: 'セリーナ',
-      demonym: 'セリーナ人',
+      name: 'ブラジル',
+      demonym: 'ブラジル人',
       confederation: Confederation.austral,
       prestige: 3,
       calendar: LeagueCalendar.springAutumn,

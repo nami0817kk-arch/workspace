@@ -7,13 +7,28 @@ import '../../game/world.dart';
 import '../../models/career.dart';
 import '../../models/personality.dart';
 import '../../models/objective.dart';
+import '../../models/competition.dart';
+import '../../game/match_engine.dart';
+import '../../game/newsroom.dart';
+import '../../game/ranking.dart';
+import '../../game/weekly_plan.dart';
 import '../../models/development.dart';
+import '../../models/news.dart';
+import '../../models/reputation.dart';
 import '../../models/entourage.dart';
 import '../../models/life.dart';
 import '../../models/support.dart';
 import '../../models/training.dart';
+import '../../models/traits.dart';
 import '../../models/season.dart';
 import '../../state/career_controller.dart';
+import '../club_identity.dart';
+import '../budget_lines.dart';
+import '../player_portrait.dart';
+import '../readable_width.dart';
+import '../training_sheet.dart';
+import '../transfer_code.dart';
+import 'guide_screen.dart';
 import 'match_screen.dart';
 import 'season_end_screen.dart';
 
@@ -62,41 +77,10 @@ class HubScreen extends StatelessWidget {
     ));
   }
 
-  /// 遊び方。タブが5つある画面で、どこに何があるかだけ先に伝える。
-  Future<void> _showHelp(BuildContext context) async {
-    await showDialog<void>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('遊び方'),
-        content: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: const [
-              _HelpLine('1週間の流れ',
-                  '「育成」で今週の練習を決めて、「試合」から試合に入る。'
-                      '試合では3つの局面で手を選ぶ。それだけを38節くり返す。'),
-              _HelpLine('評価点が全て',
-                  '局面の成否で評価点が動く。良い試合が続けば先発を続けられ、'
-                      '悪ければ途中出場やベンチ外になる。'),
-              _HelpLine('伸ばす',
-                  '能力は練習と、試合で成功した手に偏って伸びる。'
-                      '何を選ぶかが、そのまま選手の形になる。'),
-              _HelpLine('シーズンの終わり',
-                  '契約更改と移籍を決める。オフの過ごし方もここで選ぶ。'),
-              _HelpLine('タブ',
-                  '試合＝次の相手と今の状態／選手＝能力と身体／'
-                      '育成＝練習と投資／クラブ＝監督・仲間・順位表／記録＝過去のシーズン。'),
-            ],
-          ),
-        ),
-        actions: [
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('分かった'),
-          ),
-        ],
-      ),
+  /// 遊び方のガイドを開く。仕組みが多いので、1か所にまとめてある。
+  void _openGuide(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const GuideScreen()),
     );
   }
 
@@ -137,54 +121,85 @@ class HubScreen extends StatelessWidget {
           title: Text('${state.player.name}  ${state.year}シーズン'),
           actions: [
             IconButton(
-              onPressed: () => _showHelp(context),
+              onPressed: () => _openGuide(context),
               icon: const Icon(Icons.help_outline),
               tooltip: '遊び方',
             ),
             PopupMenuButton<String>(
               onSelected: (value) {
-                if (value == 'delete') _confirmDelete(context);
+                switch (value) {
+                  case 'export':
+                    TransferCode.show(context, controller);
+                  case 'import':
+                    TransferCode.import(context, controller);
+                  case 'delete':
+                    _confirmDelete(context);
+                }
               },
               itemBuilder: (context) => const [
+                PopupMenuItem(value: 'export', child: Text('引き継ぎコードを出す')),
+                PopupMenuItem(value: 'import', child: Text('セーブを読み込む')),
                 PopupMenuItem(value: 'delete', child: Text('キャリアを削除')),
               ],
             ),
           ],
-          bottom: const TabBar(
-            labelPadding: EdgeInsets.symmetric(horizontal: 2),
-            tabs: [
-              Tab(text: '試合'),
-              Tab(text: '選手'),
-              Tab(text: '育成'),
-              Tab(text: 'クラブ'),
-              Tab(text: '記録'),
-            ],
+          // タブも本文と同じ幅に収める。広い画面で5つが端まで散ると、
+          // 隣のタブへ移るのに画面を横断することになる。
+          bottom: const PreferredSize(
+            preferredSize: Size.fromHeight(48),
+            child: ReadableWidth(
+              child: TabBar(
+                labelPadding: EdgeInsets.symmetric(horizontal: 2),
+                tabs: [
+                  Tab(text: '試合'),
+                  Tab(text: '選手'),
+                  Tab(text: '育成'),
+                  Tab(text: 'クラブ'),
+                  Tab(text: '記録'),
+                ],
+              ),
+            ),
           ),
         ),
         // 一番よく押すものは、どのタブに居ても手の届く場所に置く。
         // 以前は画面を6つ分スクロールしないと試合に入れなかった。
-        floatingActionButton: _PrimaryAction(
-          state: state,
-          onPlay: () => _playNext(context),
-          onEndSeason: () => _endSeason(context),
+        // ただし試合タブには同じボタンがカードの中にあるので、そこでは出さない。
+        // 出すと「区切りまで」など下の操作に被さる。
+        floatingActionButton: Builder(
+          builder: (context) {
+            final tabs = DefaultTabController.of(context);
+            return AnimatedBuilder(
+              animation: tabs,
+              builder: (context, _) => tabs.index == 0 && !state.seasonFinished
+                  ? const SizedBox.shrink()
+                  : _PrimaryAction(
+                      state: state,
+                      onPlay: () => _playNext(context),
+                      onEndSeason: () => _endSeason(context),
+                    ),
+            );
+          },
         ),
-        body: TabBarView(
-          children: [
-            _MatchTab(
-              controller: controller,
-              state: state,
-              stats: stats,
-              onPlay: () => _playNext(context),
-              onSimulate: () => _simulateOne(context),
-              onSimulateUntilEvent: () => _simulateUntilEvent(context),
-              onSimStyle: controller.setSimStyle,
-              onEndSeason: () => _endSeason(context),
-            ),
-            _PlayerTab(state: state),
-            _TrainingTab(state: state, controller: controller),
-            _ClubTab(state: state, controller: controller),
-            _CareerTab(state: state),
-          ],
+        // 5つのタブをまとめて読める幅に収める。
+        body: ReadableWidth(
+          child: TabBarView(
+            children: [
+              _MatchTab(
+                controller: controller,
+                state: state,
+                stats: stats,
+                onPlay: () => _playNext(context),
+                onSimulate: () => _simulateOne(context),
+                onSimulateUntilEvent: () => _simulateUntilEvent(context),
+                onSimStyle: controller.setSimStyle,
+                onEndSeason: () => _endSeason(context),
+              ),
+              _PlayerTab(state: state),
+              _TrainingTab(state: state, controller: controller),
+              _ClubTab(state: state, controller: controller),
+              _CareerTab(state: state),
+            ],
+          ),
         ),
       ),
     );
@@ -212,16 +227,21 @@ class _PrimaryAction extends StatelessWidget {
         label: const Text('シーズンを終える'),
       );
     }
+    final out = state.injured || state.suspended;
     final label = state.pendingInternational
-        ? (state.calledUp && !state.injured ? '代表戦へ' : '代表ウィークを飛ばす')
-        : state.injured
-            ? '欠場する'
-            : '試合へ';
+        ? (state.calledUp && !out ? '代表戦へ' : '代表ウィークを飛ばす')
+        : state.suspended
+            ? '出場停止で欠場'
+            : state.injured
+                ? '欠場する'
+                : '試合へ';
     return FloatingActionButton.extended(
       onPressed: onPlay,
-      icon: Icon(state.injured
-          ? Icons.healing_outlined
-          : Icons.sports_soccer_outlined),
+      icon: Icon(state.suspended
+          ? Icons.block
+          : state.injured
+              ? Icons.healing_outlined
+              : Icons.sports_soccer_outlined),
       label: Text(label),
     );
   }
@@ -320,12 +340,19 @@ class _MatchTab extends StatelessWidget {
         else
           _NextMatchCard(
             state: state,
+            stake: controller.stake,
+            outlook: controller.outlook,
+            onOpenTraining: () => TrainingSheet.show(context, controller),
             onPlay: onPlay,
             onSimulate: onSimulate,
             onSimulateUntilEvent: onSimulateUntilEvent,
             onSimStyle: onSimStyle,
           ),
         const SizedBox(height: 16),
+        if (controller.news.isNotEmpty) ...[
+          _NewsCard(news: controller.news.take(3).toList()),
+          const SizedBox(height: 16),
+        ],
         _StatusCard(state: state),
         const SizedBox(height: 16),
         if (state.objective != null) ...[
@@ -367,7 +394,7 @@ class _MatchTab extends StatelessWidget {
                   ?.copyWith(color: theme.colorScheme.onSurfaceVariant))
         else
           for (final r in state.results.reversed.take(8))
-            _ResultRow(result: r),
+            _ResultRow(result: r, state: state),
       ],
     );
   }
@@ -386,6 +413,9 @@ class _MatchTab extends StatelessWidget {
 class _NextMatchCard extends StatelessWidget {
   const _NextMatchCard({
     required this.state,
+    required this.stake,
+    required this.outlook,
+    required this.onOpenTraining,
     required this.onPlay,
     required this.onSimulate,
     required this.onSimulateUntilEvent,
@@ -393,6 +423,16 @@ class _NextMatchCard extends StatelessWidget {
   });
 
   final CareerState state;
+
+  /// その試合が持つ意味（ダービー・首位攻防など）。
+  final FixtureStake stake;
+
+  /// 次節の起用の見通し。落ちた理由が分からないまま数試合過ぎるのが一番きつい。
+  final SelectionOutlook? outlook;
+
+  /// 育成タブを開く。今週の練習を変えるため。
+  final VoidCallback onOpenTraining;
+
   final VoidCallback onPlay;
   final VoidCallback onSimulate;
   final VoidCallback onSimulateUntilEvent;
@@ -437,6 +477,93 @@ class _NextMatchCard extends StatelessWidget {
                       'vs ${state.opponentFor(state.matchday).name}',
               style: theme.textTheme.titleLarge,
             ),
+            if (state.suspended || state.yellowCards > 0) ...[
+              const SizedBox(height: 8),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2, right: 6),
+                    child: Icon(Icons.style,
+                        size: 16,
+                        color: state.suspended
+                            ? theme.colorScheme.error
+                            : theme.colorScheme.onSurfaceVariant),
+                  ),
+                  Expanded(
+                    child: Text(
+                      state.suspended
+                          ? '出場停止。あと${state.suspension}試合は出られない。'
+                          : '今季の警告 ${state.yellowCards}枚。'
+                              '${Formulas.yellowCardsForBan}枚で1試合の出場停止。',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                          color: state.suspended
+                              ? theme.colorScheme.error
+                              : theme.colorScheme.onSurfaceVariant),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+            if (!state.pendingInternational && outlook != null) ...[
+              const SizedBox(height: 8),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2, right: 6),
+                    child: Icon(
+                      switch (outlook!.likely) {
+                        Appearance.start => Icons.check_circle_outline,
+                        Appearance.sub => Icons.timelapse,
+                        _ => Icons.remove_circle_outline,
+                      },
+                      size: 16,
+                      color: outlook!.likely == Appearance.start
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(outlook!.headline,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                                color: outlook!.likely == Appearance.start
+                                    ? theme.colorScheme.primary
+                                    : theme.colorScheme.onSurface)),
+                        Text(outlook!.reason,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+            if (!state.pendingInternational && stake.isSpecial) ...[
+              const SizedBox(height: 8),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.tertiaryContainer,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(stake.label,
+                        style: theme.textTheme.titleSmall?.copyWith(
+                            color: theme.colorScheme.onTertiaryContainer)),
+                    Text(stake.description,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onTertiaryContainer)),
+                  ],
+                ),
+              ),
+            ],
             if (!state.pendingInternational) ...[
               const SizedBox(height: 4),
               Text(
@@ -446,7 +573,50 @@ class _NextMatchCard extends StatelessWidget {
                 style: muted,
               ),
             ],
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
+            // 練習は毎週決めるものなのに、育成タブを開かないと今の設定が
+            // 見えなかった。試合に入る直前に置けば、忘れようがない。
+            InkWell(
+              onTap: onOpenTraining,
+              borderRadius: BorderRadius.circular(8),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                child: Row(
+                  children: [
+                    Icon(Icons.fitness_center,
+                        size: 16, color: theme.colorScheme.onSurfaceVariant),
+                    const SizedBox(width: 6),
+                    Text('今週の練習',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant)),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        state.menu.label +
+                            (state.drill != null
+                                ? '（居残り ${state.drill!.label}）'
+                                : ''),
+                        style: theme.textTheme.bodyMedium,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    if (state.shouldAutoRest(state.player.condition))
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: Text('自動で休養',
+                            style: theme.textTheme.labelSmall
+                                ?.copyWith(color: theme.colorScheme.error)),
+                      ),
+                    Text('変える',
+                        style: theme.textTheme.labelMedium
+                            ?.copyWith(color: theme.colorScheme.primary)),
+                    Icon(Icons.chevron_right,
+                        size: 18, color: theme.colorScheme.primary),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
             FilledButton(
               onPressed: onPlay,
               child: Padding(
@@ -579,7 +749,11 @@ class _PlayerTab extends StatelessWidget {
   Widget build(BuildContext context) => ListView(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
         children: [
+          _LevelCard(state: state),
+          const SizedBox(height: 16),
           _PlayerCard(state: state),
+          const SizedBox(height: 16),
+          _TraitsCard(state: state),
           const SizedBox(height: 16),
           _BodyCard(state: state),
           const SizedBox(height: 16),
@@ -601,6 +775,8 @@ class _TrainingTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
       children: [
+        _WeekPlanCard(state: state, controller: controller),
+        const SizedBox(height: 16),
         if (state.injured)
           Card(
             color: theme.colorScheme.errorContainer,
@@ -615,6 +791,10 @@ class _TrainingTab extends StatelessWidget {
           )
         else
           _TrainingCard(state: state, controller: controller),
+        const SizedBox(height: 16),
+        _FocusCard(state: state, controller: controller),
+        const SizedBox(height: 16),
+        _TrainingEffectCard(state: state),
         const SizedBox(height: 16),
         _SupportCard(state: state, controller: controller),
       ],
@@ -638,6 +818,10 @@ class _ClubTab extends StatelessWidget {
           _PersonCard(state: state, controller: controller),
           const SizedBox(height: 16),
           _LeagueCard(state: state),
+          const SizedBox(height: 16),
+          _WorldLeagueCard(state: state),
+          const SizedBox(height: 16),
+          _ScorerCard(state: state),
           const SizedBox(height: 16),
           _TableCard(state: state),
         ],
@@ -663,10 +847,25 @@ class _PlayerCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                CircleAvatar(
-                  radius: 24,
-                  child: Text('${player.overall}',
-                      style: theme.textTheme.titleMedium),
+                Column(
+                  children: [
+                    PlayerPortrait(
+                      look: player.look,
+                      club: state.club,
+                      squadNumber: state.squadNumber,
+                      size: 64,
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ClubCrest(club: state.club, size: 16),
+                        const SizedBox(width: 4),
+                        Text('${player.overall}',
+                            style: theme.textTheme.titleMedium),
+                      ],
+                    ),
+                  ],
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -682,8 +881,8 @@ class _PlayerCard extends StatelessWidget {
                       if (state.nickname != null)
                         Text('「${state.nickname}」', style: muted),
                       Text(
-                        '${player.position.label}  ${player.age}歳'
-                        '（${state.stage.label}）  ·  '
+                        '${player.positionLabel}  ${player.age}歳'
+                        '（${state.stage.label}） ・ '
                         '${World.byId(player.nationality.primary).demonym}',
                         style: muted,
                       ),
@@ -693,11 +892,11 @@ class _PlayerCard extends StatelessWidget {
                         style: muted,
                       ),
                       Text(
-                        '年俸 ${_yen(state.salary)}  ·  契約 残り${state.contractYears}年',
+                        '年俸 ${_yen(state.salary)} ・ 契約 残り${state.contractYears}年',
                         style: muted,
                       ),
                       Text(
-                        '市場価値 ${state.reputation.valueLabel}  ·  '
+                        '市場価値 ${state.reputation.valueLabel} ・ '
                         '知名度 ${state.reputation.fame}',
                         style: muted,
                       ),
@@ -713,7 +912,7 @@ class _PlayerCard extends StatelessWidget {
                         ),
                       Text(
                         '代理人 ${state.agent.name}'
-                        '${state.caps > 0 ? '  ·  代表 ${state.caps}キャップ ${state.internationalGoals}ゴール' : ''}',
+                        '${state.caps > 0 ? ' ・ 代表 ${state.caps}キャップ ${state.internationalGoals}ゴール' : ''}',
                         style: muted,
                       ),
                     ],
@@ -730,6 +929,15 @@ class _PlayerCard extends StatelessWidget {
                   label: Text('ポテンシャル ${player.potentialBand}'),
                   visualDensity: VisualDensity.compact,
                 ),
+                if (player.isInverted)
+                  Tooltip(
+                    message: '逆足のサイド。逆足の局面が増える代わりに、'
+                        '内へ切り込んで利き足で打てる。',
+                    child: const Chip(
+                      label: Text('逆サイド'),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                  ),
                 if (state.calledUp)
                   Chip(
                     label: const Text('代表招集'),
@@ -856,7 +1064,36 @@ class _TrainingCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('今週の練習', style: theme.textTheme.titleSmall),
-            const SizedBox(height: 8),
+            const SizedBox(height: 6),
+            // 疲れたまま練習を続けると、伸びないうえに怪我をする。
+            // 毎週の操作を忘れても、そこだけは踏み外さないようにする。
+            Wrap(
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 8,
+              runSpacing: 4,
+              children: [
+                Text('自動で休養',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant)),
+                for (final value in CareerState.autoRestChoices)
+                  ChoiceChip(
+                    label: Text(value == 0 ? 'しない' : '$value未満'),
+                    selected: state.autoRestBelow == value,
+                    visualDensity: VisualDensity.compact,
+                    onSelected: (_) => controller.setAutoRestBelow(value),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              state.autoRestBelow == 0
+                  ? 'コンディションが落ちても、選んだ練習をそのまま続ける。'
+                  : 'コンディションが${state.autoRestBelow}を下回った週は、'
+                      '練習も居残りも止めて休む。',
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            ),
+            const SizedBox(height: 10),
             // 選んでいるものが何をするメニューなのかを、常に文字で出す。
             // 説明をツールチップに隠すと、スマホでは長押ししないと読めない。
             Container(
@@ -877,8 +1114,8 @@ class _TrainingCard extends StatelessWidget {
                     menu.isRest
                         ? 'コンディション +${menu.recovery}'
                         : '消耗 ${menu.conditionCost}'
-                            '${menu.isCompound ? '  ·  2か所に触れるが、1か所あたりは伸びにくい' : ''}'
-                            '${menu.injuryFactor > 1 ? '  ·  怪我をしやすい' : ''}',
+                            '${menu.isCompound ? ' ・ 2か所に触れるが、1か所あたりは伸びにくい' : ''}'
+                            '${menu.injuryFactor > 1 ? ' ・ 怪我をしやすい' : ''}',
                     style: muted,
                   ),
                   if (state.player.atPotential) ...[
@@ -988,6 +1225,114 @@ class _TrainingCard extends StatelessWidget {
 }
 
 /// 身体データ。伸ばせないが、試合の判定には効いている。
+/// 特性が「どこで・いくつ」効くかと、今季に実際に効いた回数。
+///
+/// 名前のチップだけでは、付いている意味が分からなかった。
+/// 文は判定と同じ `Trait.rules` / 各倍率から作るので、数字を変えれば
+/// ここも変わる。試合の外で効くものは回数を数えられないので、その旨を書く。
+class _TraitsCard extends StatelessWidget {
+  const _TraitsCard({required this.state});
+
+  final CareerState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final traits = state.player.traits;
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('特性の効き', style: theme.textTheme.titleSmall),
+            const SizedBox(height: 4),
+            Text('生まれ持ったもの。伸ばせないが、効く場面は決まっている。',
+                style: muted),
+            if (traits.isEmpty) ...[
+              const SizedBox(height: 8),
+              Text('特性は付いていない。', style: theme.textTheme.bodyMedium),
+            ],
+            for (final trait in traits) ...[
+              const SizedBox(height: 12),
+              _TraitRow(trait: trait, hits: state.traitHits[trait] ?? 0),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TraitRow extends StatelessWidget {
+  const _TraitRow({required this.trait, required this.hits});
+
+  final Trait trait;
+
+  /// 今季、局面の成功率を動かした回数。
+  final int hits;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final accent = trait.flaw ? theme.colorScheme.error : theme.colorScheme.primary;
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Text(trait.label,
+                style: theme.textTheme.bodyMedium
+                    ?.copyWith(fontWeight: FontWeight.w600)),
+            const SizedBox(width: 8),
+            if (trait.flaw)
+              Text('欠点',
+                  style: theme.textTheme.labelSmall?.copyWith(color: accent)),
+            if (trait.rare) ...[
+              if (trait.flaw) const SizedBox(width: 6),
+              Text('稀',
+                  style: theme.textTheme.labelSmall
+                      ?.copyWith(color: theme.colorScheme.tertiary)),
+            ],
+          ],
+        ),
+        const SizedBox(height: 2),
+        Text(trait.description, style: muted),
+        const SizedBox(height: 4),
+        Wrap(
+          spacing: 6,
+          runSpacing: 4,
+          children: [
+            for (final effect in trait.effects)
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: accent.withValues(alpha: 0.10),
+                  borderRadius: BorderRadius.circular(999),
+                ),
+                child: Text(effect,
+                    style: theme.textTheme.labelSmall?.copyWith(color: accent)),
+              ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Text(
+          trait.affectsPlay
+              ? (hits > 0
+                  ? '今季 $hits回の局面で効いた'
+                  : '今季はまだ効く局面が来ていない')
+              : '試合の外で効く（回数は数えない）',
+          style: muted,
+        ),
+      ],
+    );
+  }
+}
+
 class _BodyCard extends StatelessWidget {
   const _BodyCard({required this.state});
 
@@ -1065,12 +1410,8 @@ class _SupportCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text('自分への投資', style: theme.textTheme.titleSmall),
-                const SizedBox(height: 4),
-                Text(
-                  '貯蓄 ${state.finances.savingsLabel}  ·  '
-                  '専属の年間費用 ${staff.costPerSeason}万円',
-                  style: muted,
-                ),
+                const SizedBox(height: 6),
+                BudgetLines(state: state),
               ],
             ),
           ),
@@ -1085,7 +1426,7 @@ class _SupportCard extends StatelessWidget {
                       for (final kind in StaffKind.values)
                         if (staff[kind] > 0)
                           '${kind.label} ${StaffTeam.levelLabels[staff[kind]]}',
-                    ].join('  ·  '),
+                    ].join(' ・ '),
               style: muted,
             ),
             childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -1119,12 +1460,15 @@ class _SupportCard extends StatelessWidget {
                 '払えなければ契約は切れる。',
                 style: muted,
               ),
+              const SizedBox(height: 8),
+              BudgetLines(state: state),
             ],
           ),
           ExpansionTile(
             title: const Text('生活習慣'),
             subtitle: Text(
-              '睡眠 ${habits.sleepLabel}  ·  食事 ${habits.dietLabel}',
+              '暮らし ${state.finances.lifestyleLabel} ・ '
+              '睡眠 ${habits.sleepLabel} ・ 食事 ${habits.dietLabel}',
               style: muted,
             ),
             childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -1133,6 +1477,33 @@ class _SupportCard extends StatelessWidget {
                 alignment: Alignment.centerLeft,
                 child: Text('毎日の積み重ね。効きは小さいが、10年で別の身体になる。',
                     style: muted),
+              ),
+              const SizedBox(height: 12),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text('暮らし方', style: theme.textTheme.labelMedium),
+              ),
+              const SizedBox(height: 2),
+              Align(
+                alignment: Alignment.centerLeft,
+                // 生活費は年俸に比例するので、額まで出さないと選べない。
+                child: Text('生活費は年俸から出ていく。'
+                    '下げれば手取りが増え、上げれば気持ちが少し上向く。',
+                    style: muted),
+              ),
+              const SizedBox(height: 4),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (var i = 0; i < Finances.lifestyleLabels.length; i++)
+                    ChoiceChip(
+                      label: Text('${Finances.lifestyleLabels[i]} '
+                          '${state.finances.withLifestyle(i).livingCostFor(state.salary)}万'),
+                      selected: state.finances.lifestyle == i,
+                      onSelected: (_) => controller.setLifestyle(i),
+                    ),
+                ],
               ),
               const SizedBox(height: 12),
               Align(
@@ -1217,7 +1588,7 @@ class _DevelopmentCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text('試合経験 ${dev.experience}'
-                '${dev.breakthroughs > 0 ? '  ·  限界突破 ${dev.breakthroughs}回' : ''}',
+                '${dev.breakthroughs > 0 ? ' ・ 限界突破 ${dev.breakthroughs}回' : ''}',
                 style: muted),
             if (dev.signatures.isNotEmpty) ...[
               const SizedBox(height: 10),
@@ -1253,6 +1624,74 @@ class _DevelopmentCard extends StatelessWidget {
       ),
     );
   }
+}
+
+/// 今週なにをするか。次の相手・監督の期待・体の状態を1か所に集める。
+///
+/// 練習を決めるのは育成タブなのに、相手はクラブタブ、監督の期待は試合タブに
+/// 出ていた。決めるのは1つなので、決める場所に材料を持ってくる。
+class _WeekPlanCard extends StatelessWidget {
+  const _WeekPlanCard({required this.state, required this.controller});
+
+  final CareerState state;
+  final CareerController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final plan = WeekPlan.of(state);
+    final warn = plan.focus == WeekFocus.rest ||
+        plan.focus == WeekFocus.injured;
+    final onColor =
+        warn ? theme.colorScheme.onErrorContainer : theme.colorScheme.onSurface;
+    final muted = theme.textTheme.bodySmall?.copyWith(
+        color: warn
+            ? theme.colorScheme.onErrorContainer
+            : theme.colorScheme.onSurfaceVariant);
+
+    return Card(
+      color: warn ? theme.colorScheme.errorContainer : null,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(_iconOf(plan.focus), size: 18, color: onColor),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text('今週  ${plan.headline}',
+                      style: theme.textTheme.titleSmall
+                          ?.copyWith(color: onColor)),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            Text(plan.reason, style: muted),
+            if (plan.suggested != null && plan.suggested != state.menu) ...[
+              const SizedBox(height: 10),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: OutlinedButton(
+                  onPressed: () => controller.setMenu(plan.suggested!),
+                  child: Text('${plan.suggested!.label}にする'),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  static IconData _iconOf(WeekFocus focus) => switch (focus) {
+        WeekFocus.injured => Icons.healing,
+        WeekFocus.rest => Icons.bedtime,
+        WeekFocus.matchup => Icons.sports_soccer,
+        WeekFocus.objective => Icons.flag,
+        WeekFocus.steady => Icons.fitness_center,
+      };
 }
 
 /// クラブでの立ち位置。監督・方針・同僚・環境・同期。
@@ -1312,7 +1751,7 @@ class _ClubLifeCard extends StatelessWidget {
                   style: theme.textTheme.bodyMedium),
               Text(
                 '${manager.fitLabel(state.player.attributes, state.player.position)}'
-                '  ·  在任${manager.tenure + 1}年目',
+                ' ・ 在任${manager.tenure + 1}年目',
                 style: muted,
               ),
             ],
@@ -1368,7 +1807,7 @@ class _ClubLifeCard extends StatelessWidget {
             const SizedBox(height: 12),
             OutlinedButton(
               onPressed: () => _convert(context),
-              child: Text('ポジションを変える（今 ${state.player.position.fullName}）'),
+              child: Text('ポジションを変える（今 ${state.player.positionName}）'),
             ),
           ],
         ),
@@ -1399,7 +1838,14 @@ class _EventCard extends StatelessWidget {
             Text(event.body, style: theme.textTheme.bodyMedium),
             const SizedBox(height: 16),
             for (final choice in event.choices) ...[
-              FilledButton.tonal(
+              // 同系色の塗りだと、地の文と見分けが付かず押せると分からなかった。
+              OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(
+                  alignment: Alignment.centerLeft,
+                  side: BorderSide(color: theme.colorScheme.primary),
+                ),
+                icon: const Icon(Icons.chevron_right, size: 18),
+                iconAlignment: IconAlignment.end,
                 onPressed: () async {
                   final outcome = choice.outcome;
                   await controller.resolveEvent(choice);
@@ -1408,7 +1854,7 @@ class _EventCard extends StatelessWidget {
                     ..hideCurrentSnackBar()
                     ..showSnackBar(SnackBar(content: Text(outcome)));
                 },
-                child: Padding(
+                label: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Text(choice.label),
                 ),
@@ -1417,6 +1863,922 @@ class _EventCard extends StatelessWidget {
             ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// 通算の記録。1年ずつの積み上げの前に、全体を1枚で見せる。
+class _TotalsCard extends StatelessWidget {
+  const _TotalsCard({required this.state});
+
+  final CareerState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final totals = state.careerTotals;
+    final clubs = {
+      state.club.name,
+      for (final h in state.history) h.clubName,
+    };
+    final countries = {
+      state.club.countryId,
+      for (final h in state.history) h.countryId,
+    };
+    final leagueTitles = state.history
+        .where((h) => h.tier == 1 && h.leaguePosition == 1)
+        .length;
+    final cups =
+        state.history.where((h) => h.cupStage == CupStage.winner).length;
+    final continental = state.history
+        .where((h) => h.continentalStage == ContinentalStage.winner)
+        .length;
+    final worldCups =
+        state.history.where((h) => h.worldCupStage.participated).length;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('通算', style: theme.textTheme.titleSmall),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                _total(theme, '試合', '${totals.appearances}'),
+                _total(theme, 'ゴール', '${totals.goals}'),
+                _total(theme, 'アシスト', '${totals.assists}'),
+                _total(
+                    theme,
+                    '平均評価',
+                    totals.appearances == 0
+                        ? '—'
+                        : totals.averageRating.toStringAsFixed(2)),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Text(
+              '${state.history.length + 1}シーズン目 ・ '
+              '${clubs.length}クラブ ・ ${countries.length}か国'
+              '${state.caps > 0 ? ' ・ 代表${state.caps}キャップ' : ''}',
+              style: muted,
+            ),
+            if (leagueTitles + cups + continental + worldCups > 0) ...[
+              const SizedBox(height: 12),
+              Text('タイトル', style: theme.textTheme.labelMedium),
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: [
+                  if (leagueTitles > 0)
+                    Chip(
+                      label: Text('リーグ優勝 $leagueTitles'),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                  if (cups > 0)
+                    Chip(
+                      label: Text('国内カップ $cups'),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                  if (continental > 0)
+                    Chip(
+                      label: Text('大陸カップ $continental'),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                  if (worldCups > 0)
+                    Chip(
+                      label: Text('世界大会出場 $worldCups'),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                ],
+              ),
+            ],
+            if (state.reputation.awards.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Text('称号', style: theme.textTheme.labelMedium),
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: [
+                  for (final a in state.reputation.awards)
+                    Chip(
+                      label: Text(a.label),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                ],
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _total(ThemeData theme, String label, String value) => Column(
+        children: [
+          Text(label,
+              style: theme.textTheme.labelSmall
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+          Text(value, style: theme.textTheme.titleLarge),
+        ],
+      );
+}
+
+/// キャリアの推移。数字の羅列より、線1本のほうが形が分かる。
+class _CareerChartCard extends StatelessWidget {
+  const _CareerChartCard({required this.state});
+
+  final CareerState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final history = state.history;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('推移', style: theme.textTheme.titleSmall),
+            const SizedBox(height: 4),
+            Text('棒＝シーズンの平均評価　線＝総合力', style: muted),
+            const SizedBox(height: 12),
+            SizedBox(
+              height: 120,
+              child: CustomPaint(
+                painter: _CareerChartPainter(
+                  history: history,
+                  bar: theme.colorScheme.primaryContainer,
+                  line: theme.colorScheme.primary,
+                  grid: theme.colorScheme.outlineVariant,
+                ),
+                child: const SizedBox.expand(),
+              ),
+            ),
+            const SizedBox(height: 6),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text('${history.first.year}', style: muted),
+                Text('${history.last.year}', style: muted),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _CareerChartPainter extends CustomPainter {
+  const _CareerChartPainter({
+    required this.history,
+    required this.bar,
+    required this.line,
+    required this.grid,
+  });
+
+  final List<SeasonRecord> history;
+  final Color bar;
+  final Color line;
+  final Color grid;
+
+  /// 評価点の見せる範囲。全域（4〜10）を映すと、差が潰れて読めない。
+  static const double minRating = 5.5;
+  static const double maxRating = 8.0;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    if (history.isEmpty) return;
+    final slot = size.width / history.length;
+
+    // 6.0 の目安線。ここが「普通の出来」。
+    final basis = size.height * (1 - (6.0 - minRating) / (maxRating - minRating));
+    canvas.drawLine(
+      Offset(0, basis),
+      Offset(size.width, basis),
+      Paint()
+        ..color = grid
+        ..strokeWidth = 1,
+    );
+
+    final barPaint = Paint()..color = bar;
+    for (var i = 0; i < history.length; i++) {
+      final record = history[i];
+      if (record.stats.appearances == 0) continue;
+      final value =
+          ((record.stats.averageRating - minRating) / (maxRating - minRating))
+              .clamp(0.0, 1.0);
+      final height = size.height * value;
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(
+          Rect.fromLTWH(
+            slot * i + slot * 0.2,
+            size.height - height,
+            slot * 0.6,
+            height,
+          ),
+          const Radius.circular(2),
+        ),
+        barPaint,
+      );
+    }
+
+    // 総合力の線。記録が無いシーズン（古い保存データ）は飛ばす。
+    final points = <Offset>[];
+    for (var i = 0; i < history.length; i++) {
+      final overall = history[i].overall;
+      if (overall <= 0) continue;
+      final value = ((overall - 45) / 50).clamp(0.0, 1.0);
+      points.add(Offset(slot * i + slot / 2, size.height * (1 - value)));
+    }
+    if (points.length >= 2) {
+      final path = Path()..moveTo(points.first.dx, points.first.dy);
+      for (final point in points.skip(1)) {
+        path.lineTo(point.dx, point.dy);
+      }
+      canvas.drawPath(
+        path,
+        Paint()
+          ..color = line
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 2,
+      );
+      for (final point in points) {
+        canvas.drawCircle(point, 2.5, Paint()..color = line);
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(_CareerChartPainter oldDelegate) =>
+      oldDelegate.history.length != history.length;
+}
+
+/// 世の中に出た見出し。
+class _NewsCard extends StatelessWidget {
+  const _NewsCard({
+    required this.news,
+    this.title = '最近の話題',
+    this.limit = 3,
+  });
+
+  final List<NewsItem> news;
+  final String title;
+  final int limit;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(title, style: theme.textTheme.titleSmall),
+            const SizedBox(height: 10),
+            for (final item in news.take(limit)) ...[
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(top: 5, right: 8),
+                    width: 6,
+                    height: 6,
+                    decoration: BoxDecoration(
+                      color: _colorOf(theme, item.kind),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(item.headline,
+                            style: theme.textTheme.bodyMedium
+                                ?.copyWith(fontWeight: FontWeight.w600)),
+                        if (item.body.isNotEmpty)
+                          Text(item.body, style: muted),
+                        Text('${item.dateLabel} ・ ${item.kind.label}',
+                            style: theme.textTheme.labelSmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Color _colorOf(ThemeData theme, NewsKind kind) => switch (kind) {
+        NewsKind.milestone => theme.colorScheme.primary,
+        NewsKind.transfer => theme.colorScheme.tertiary,
+        NewsKind.national => theme.colorScheme.secondary,
+        _ => theme.colorScheme.outline,
+      };
+}
+
+/// リーグの得点ランキング。自分がどのあたりに居るのかを見せる。
+class _ScorerCard extends StatelessWidget {
+  const _ScorerCard({required this.state});
+
+  final CareerState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scorers = ScorerRace.table(state);
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('得点ランキング', style: theme.textTheme.titleSmall),
+            const SizedBox(height: 10),
+            for (var i = 0; i < scorers.length; i++)
+              Container(
+                color: scorers[i].isPlayer
+                    ? theme.colorScheme.primaryContainer
+                    : null,
+                padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+                child: Row(
+                  children: [
+                    SizedBox(
+                        width: 26,
+                        child: Text('${i + 1}',
+                            style: theme.textTheme.bodySmall)),
+                    Expanded(
+                      child: Text(
+                        scorers[i].name,
+                        overflow: TextOverflow.ellipsis,
+                        style: scorers[i].isPlayer
+                            ? theme.textTheme.bodyMedium
+                                ?.copyWith(fontWeight: FontWeight.bold)
+                            : theme.textTheme.bodyMedium,
+                      ),
+                    ),
+                    Expanded(
+                      child: Text(
+                        scorers[i].clubName,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant),
+                      ),
+                    ),
+                    SizedBox(
+                      width: 32,
+                      child: Text('${scorers[i].goals}',
+                          textAlign: TextAlign.end,
+                          style: theme.textTheme.titleSmall),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 選手としての水準。総合力が世界のどのあたりに当たるのかを言葉にする。
+///
+/// 数字だけを出しても「78 が高いのか低いのか」は分からない。
+/// 世界のクラブと突き合わせて、行ける場所として見せる。
+class _LevelCard extends StatelessWidget {
+  const _LevelCard({required this.state});
+
+  final CareerState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final player = state.player;
+    final grade = Ranking.gradeFor(player.overall);
+    final peak = Ranking.gradeFor(player.potential);
+    final toCallUp = Ranking.toCallUp(player.overall);
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('選手としての水準', style: theme.textTheme.titleSmall),
+            const SizedBox(height: 10),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.primaryContainer,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    children: [
+                      Text('${player.overall}',
+                          style: theme.textTheme.headlineSmall?.copyWith(
+                              color: theme.colorScheme.onPrimaryContainer)),
+                      Text('総合力',
+                          style: theme.textTheme.labelSmall?.copyWith(
+                              color: theme.colorScheme.onPrimaryContainer)),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(grade.label, style: theme.textTheme.titleMedium),
+                      Text(grade.description, style: muted),
+                      Text(
+                        '${Ranking.of(state.club.countryId, state.club.tier).name}'
+                        'の平均は '
+                        '${Ranking.of(state.club.countryId, state.club.tier).average.round()}',
+                        style: muted,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            _LevelLine(
+              icon: Icons.groups,
+              text: '世界${grade.totalClubs}クラブのうち'
+                  '${grade.starterClubs}クラブの主力を上回っている',
+            ),
+            _LevelLine(
+              icon: Icons.badge,
+              text: '${state.club.name}（強さ ${state.club.strength}）では'
+                  '${Ranking.standingIn(player.overall, state.club)}',
+            ),
+            _LevelLine(
+              icon: Icons.public,
+              text: grade.bestLeague == null
+                  ? '今はまだ、どのリーグでも平均には届かない'
+                  : '平均以上でいられる一番上のリーグ: '
+                      '${grade.bestLeague!.name}（世界${grade.bestLeague!.rank}位）',
+            ),
+            _LevelLine(
+              icon: Icons.flag,
+              text: toCallUp == 0
+                  ? '代表に呼ばれる総合力（${Formulas.callUpOverall}）には届いている'
+                  : '代表に呼ばれる総合力（${Formulas.callUpOverall}）まで あと$toCallUp',
+            ),
+            _LevelLine(
+              icon: Icons.trending_up,
+              text: player.overall >= player.potential
+                  ? '伸びしろは使い切った。ここからは維持する戦い'
+                  : '伸び切れば ${player.potential} = ${peak.label}',
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LevelLine extends StatelessWidget {
+  const _LevelLine({required this.icon, required this.text});
+
+  final IconData icon;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 2, right: 8),
+            child: Icon(icon,
+                size: 16, color: theme.colorScheme.onSurfaceVariant),
+          ),
+          Expanded(child: Text(text, style: theme.textTheme.bodySmall)),
+        ],
+      ),
+    );
+  }
+}
+
+/// 世界のリーグの序列。自分のリーグがどのレベルなのかを示す。
+class _WorldLeagueCard extends StatelessWidget {
+  const _WorldLeagueCard({required this.state});
+
+  final CareerState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final mine = Ranking.of(state.club.countryId, state.club.tier);
+    final all = Ranking.leagues();
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('リーグの格付け', style: theme.textTheme.titleSmall),
+            const SizedBox(height: 10),
+            Row(
+              children: [
+                Container(
+                  width: 36,
+                  height: 36,
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.tertiaryContainer,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(mine.grade,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                          color: theme.colorScheme.onTertiaryContainer)),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('${mine.name} ・ ${mine.gradeLabel}',
+                          style: theme.textTheme.bodyMedium),
+                      Text(
+                        '世界${mine.rank}位 / ${mine.total}リーグ ・ '
+                        '平均の強さ ${mine.average.round()} ・ '
+                        '首位級 ${mine.top}',
+                        style: muted,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Theme(
+              data: theme.copyWith(dividerColor: Colors.transparent),
+              child: ExpansionTile(
+                tilePadding: EdgeInsets.zero,
+                childrenPadding: const EdgeInsets.only(bottom: 8),
+                title: Text('世界のリーグ一覧', style: theme.textTheme.bodySmall),
+                children: [
+                  for (final league in all)
+                    _LeagueRankRow(
+                      league: league,
+                      mine: league.countryId == mine.countryId &&
+                          league.tier == mine.tier,
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _LeagueRankRow extends StatelessWidget {
+  const _LeagueRankRow({required this.league, required this.mine});
+
+  final LeagueRank league;
+  final bool mine;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      color: mine ? theme.colorScheme.primaryContainer : null,
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+      child: Row(
+        children: [
+          SizedBox(
+              width: 26,
+              child: Text('${league.rank}', style: theme.textTheme.bodySmall)),
+          SizedBox(
+              width: 20,
+              child: Text(league.grade, style: theme.textTheme.bodySmall)),
+          Expanded(
+            child: Text(
+              league.name,
+              overflow: TextOverflow.ellipsis,
+              style: mine
+                  ? theme.textTheme.bodyMedium
+                      ?.copyWith(fontWeight: FontWeight.bold)
+                  : theme.textTheme.bodyMedium,
+            ),
+          ),
+          SizedBox(
+            width: 34,
+            child: Text('${league.average.round()}',
+                textAlign: TextAlign.end, style: theme.textTheme.bodySmall),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// 練習が試合に出ているかを見せる。
+///
+/// 能力値は毎週1ずつしか動かないので、画面を見ているだけでは
+/// 伸びたことに気付けない。開幕からの差と、その能力で実際に
+/// 勝負した局面の成否を並べて、練習の答え合わせにする。
+/// 育てる方向。伸ばしたい項目を決めておく。
+///
+/// 練習も試合の成長も、伸びる先が無作為だったので、何を選んでも
+/// 似た選手になっていた。ここを決めると、伸びる先がそこに寄る。
+/// **伸びる量は変わらない**——どこに乗るかだけが変わる。
+class _FocusCard extends StatelessWidget {
+  const _FocusCard({required this.state, required this.controller});
+
+  final CareerState state;
+  final CareerController controller;
+
+  /// その項目を極めると覚えられる個人技。無ければ null。
+  static Signature? _signatureFor(Detail detail) {
+    for (final s in Signature.values) {
+      if (s.detail == detail) return s;
+    }
+    return null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final player = state.player;
+    final full = state.focus.length >= CareerState.maxFocus;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text('育てる方向', style: theme.textTheme.titleSmall),
+                const Spacer(),
+                Text('${state.focus.length} / ${CareerState.maxFocus}',
+                    style: muted),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              state.focus.isEmpty
+                  ? '選ぶと、練習も試合の成長もそこに寄る。'
+                      '伸びる量は変わらず、どこに乗るかだけが変わる。'
+                  : '練習ではこの項目が優先して伸び、試合の成長も'
+                      'ここに寄る。試合の選択肢にも印が付く。',
+              style: muted,
+            ),
+            if (state.focus.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              for (final detail in state.focus)
+                _FocusProgress(
+                  detail: detail,
+                  value: player.attributes.detail(detail),
+                  signature: _signatureFor(detail),
+                  learned: state.development.signatures
+                      .contains(_signatureFor(detail)),
+                ),
+            ],
+            const SizedBox(height: 4),
+            Theme(
+              data: theme.copyWith(dividerColor: Colors.transparent),
+              child: ExpansionTile(
+                tilePadding: EdgeInsets.zero,
+                childrenPadding: const EdgeInsets.only(bottom: 8),
+                title: Text('項目を選ぶ', style: theme.textTheme.bodySmall),
+                children: [
+                  for (final key in AttributeKey.values)
+                    if (key != AttributeKey.goalkeeping ||
+                        player.position == Position.gk) ...[
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(key.label,
+                            style: theme.textTheme.labelMedium),
+                      ),
+                      const SizedBox(height: 4),
+                      Wrap(
+                        spacing: 8,
+                        runSpacing: 8,
+                        children: [
+                          for (final detail in key.details)
+                            FilterChip(
+                              label: Text('${detail.label} '
+                                  '${player.attributes.detail(detail)}'),
+                              selected: state.focus.contains(detail),
+                              // 上限まで入っていたら、外すことしかできない。
+                              onSelected:
+                                  full && !state.focus.contains(detail)
+                                      ? null
+                                      : (_) => controller.toggleFocus(detail),
+                              visualDensity: VisualDensity.compact,
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                    ],
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 方向に入れた項目1つぶん。個人技まであといくつかを出す。
+class _FocusProgress extends StatelessWidget {
+  const _FocusProgress({
+    required this.detail,
+    required this.value,
+    required this.signature,
+    required this.learned,
+  });
+
+  final Detail detail;
+  final int value;
+  final Signature? signature;
+  final bool learned;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final remaining = Signature.requirement - value;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              SizedBox(
+                width: 120,
+                child: Text(detail.label, style: theme.textTheme.bodyMedium),
+              ),
+              Text('$value', style: theme.textTheme.titleSmall),
+              const SizedBox(width: 10),
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(3),
+                  child: LinearProgressIndicator(
+                    value: (value / Signature.requirement).clamp(0.0, 1.0),
+                    minHeight: 6,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          if (signature != null)
+            Text(
+              learned
+                  ? '「${signature!.label}」を覚えている'
+                  : remaining > 0
+                      ? '${Signature.requirement}で「${signature!.label}」を'
+                          '覚える見込み（あと$remaining）'
+                      : '「${signature!.label}」を覚える水準に達している',
+              style: muted,
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TrainingEffectCard extends StatelessWidget {
+  const _TrainingEffectCard({required this.state});
+
+  final CareerState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final rows = [
+      for (final g in state.seasonGrowth)
+        if ((g.key != AttributeKey.goalkeeping ||
+                state.player.position == Position.gk) &&
+            // 今週やっている練習の対象は、まだ動いていなくても出す。
+            // 「効いていないのか、記録が無いのか」が分からないのが一番困る。
+            (g.growth != 0 || g.hasMoments || state.menu.keys.contains(g.key)))
+          g,
+    ]..sort((a, b) => b.growth.compareTo(a.growth));
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('練習の成果（今季）', style: theme.textTheme.titleSmall),
+            const SizedBox(height: 4),
+            Text('開幕からの伸びと、その能力で勝負した局面。', style: muted),
+            const SizedBox(height: 10),
+            if (rows.isEmpty)
+              Text('まだ記録が無い。試合に出て、練習を積んだぶんがここに出る。',
+                  style: theme.textTheme.bodySmall)
+            else
+              for (final g in rows) _GrowthRow(growth: g),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _GrowthRow extends StatelessWidget {
+  const _GrowthRow({required this.growth});
+
+  final CategoryGrowth growth;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final rate = growth.successRate;
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              SizedBox(
+                width: 96,
+                child:
+                    Text(growth.key.label, style: theme.textTheme.bodyMedium),
+              ),
+              Text(
+                growth.growth == 0
+                    ? '${growth.now}'
+                    : '${growth.before} → ${growth.now}',
+                style: theme.textTheme.bodyMedium,
+              ),
+              const SizedBox(width: 8),
+              if (growth.growth > 0)
+                Text('+${growth.growth}',
+                    style: theme.textTheme.labelLarge
+                        ?.copyWith(color: theme.colorScheme.primary))
+              else if (growth.growth < 0)
+                Text('${growth.growth}',
+                    style: theme.textTheme.labelLarge
+                        ?.copyWith(color: theme.colorScheme.error)),
+              const Spacer(),
+              if (rate != null)
+                Text('${growth.successes}/${growth.attempts}',
+                    style: theme.textTheme.bodySmall),
+            ],
+          ),
+          if (growth.growth > 0)
+            Text(
+              'この能力の局面が '
+              '+${Ranking.chanceGainPercent(growth.growth).toStringAsFixed(1)}% '
+              '通りやすくなった',
+              style: muted,
+            ),
+          if (rate != null)
+            Text('今季 ${growth.attempts}回勝負して ${(rate * 100).round()}% 成功',
+                style: muted),
+        ],
       ),
     );
   }
@@ -1448,13 +2810,21 @@ class _AttributeBar extends StatelessWidget {
           ),
           SizedBox(
             width: 28,
-            child: Text('$value', style: theme.textTheme.bodySmall),
+            child: Text('$value',
+                style: theme.textTheme.bodySmall?.copyWith(
+                    // 上限を超えた値は、超えていることが一目で分かるように。
+                    color: value > Formulas.maxAttribute
+                        ? theme.colorScheme.tertiary
+                        : null,
+                    fontWeight: value > Formulas.maxAttribute
+                        ? FontWeight.w700
+                        : null)),
           ),
           Expanded(
             child: ClipRRect(
               borderRadius: BorderRadius.circular(4),
               child: LinearProgressIndicator(
-                value: value / 99,
+                value: (value / Formulas.maxAttribute).clamp(0.0, 1.0),
                 minHeight: thin ? 4 : 6,
               ),
             ),
@@ -1465,10 +2835,12 @@ class _AttributeBar extends StatelessWidget {
   }
 }
 
+/// 1試合ぶんの行。押すと、その試合で何があったかを開く。
 class _ResultRow extends StatelessWidget {
-  const _ResultRow({required this.result});
+  const _ResultRow({required this.result, required this.state});
 
   final MatchResult result;
+  final CareerState state;
 
   @override
   Widget build(BuildContext context) {
@@ -1481,6 +2853,11 @@ class _ResultRow extends StatelessWidget {
     return ListTile(
       dense: true,
       contentPadding: EdgeInsets.zero,
+      onTap: () => showModalBottomSheet<void>(
+        context: context,
+        showDragHandle: true,
+        builder: (_) => _MatchDetail(result: result, state: state),
+      ),
       leading: SizedBox(
         width: 44,
         child: Text(result.scoreLine,
@@ -1490,15 +2867,146 @@ class _ResultRow extends StatelessWidget {
           ? '代表  ${result.opponentName}'
           : '${result.home ? "H" : "A"}  ${result.opponentName}'),
       subtitle: Text(result.appearance.label),
-      trailing: Text(
-        result.rating?.toStringAsFixed(1) ?? '—',
-        style: theme.textTheme.titleSmall,
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            result.rating?.toStringAsFixed(1) ?? '—',
+            style: theme.textTheme.titleSmall,
+          ),
+          const SizedBox(width: 4),
+          // 開けることが見た目で分かるように。
+          Icon(Icons.chevron_right,
+              size: 18, color: theme.colorScheme.onSurfaceVariant),
+        ],
       ),
     );
   }
 }
 
 /// 順位表。クラブのタブの中に置く。
+/// 終わった試合の中身。
+///
+/// 結果画面を閉じると、その試合で何があったかは二度と見られなかった。
+/// 38試合ぶんの数字が並ぶだけでは、どれも思い出せない。
+class _MatchDetail extends StatelessWidget {
+  const _MatchDetail({required this.result, required this.state});
+
+  final MatchResult result;
+  final CareerState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    // その節に出た見出し。試合の意味づけはここに残っている。
+    final headlines = state.news
+        .where((n) => n.year == state.year && n.matchday == result.matchday)
+        .toList();
+
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              result.international
+                  ? '代表戦  vs ${result.opponentName}'
+                  : '第${result.matchday}節  '
+                      '${result.home ? 'ホーム' : 'アウェイ'}  '
+                      'vs ${result.opponentName}',
+              style: theme.textTheme.titleMedium,
+            ),
+            const SizedBox(height: 2),
+            Text(
+              '${result.scoreLine}  '
+              '${result.won ? '勝ち' : result.drawn ? '引き分け' : '負け'}'
+              '  ・  ${result.appearance.label}',
+              style: muted,
+            ),
+            const SizedBox(height: 14),
+            Row(
+              children: [
+                _DetailStat(
+                  label: '評価点',
+                  value: result.rating == null
+                      ? '—'
+                      : result.rating!.toStringAsFixed(2),
+                ),
+                _DetailStat(label: 'ゴール', value: '${result.goals}'),
+                _DetailStat(label: 'アシスト', value: '${result.assists}'),
+              ],
+            ),
+            if (result.yellowCards > 0 || result.sentOff) ...[
+              const SizedBox(height: 10),
+              Text(
+                result.sentOff
+                    ? '退場（警告${result.yellowCards}枚）'
+                    : '警告${result.yellowCards}枚',
+                style: theme.textTheme.bodyMedium
+                    ?.copyWith(color: theme.colorScheme.error),
+              ),
+            ],
+            if (result.goalMinutes.isNotEmpty ||
+                result.assistMinutes.isNotEmpty) ...[
+              const SizedBox(height: 14),
+              Text('この試合の自分', style: theme.textTheme.labelMedium),
+              const SizedBox(height: 4),
+              for (final minute in result.goalMinutes)
+                Text('${MatchInProgress.minuteLabel(minute)}  ゴール',
+                    style: theme.textTheme.bodyMedium),
+              for (final minute in result.assistMinutes)
+                Text('${MatchInProgress.minuteLabel(minute)}  アシスト',
+                    style: theme.textTheme.bodyMedium),
+            ],
+            if (headlines.isNotEmpty) ...[
+              const SizedBox(height: 14),
+              Text('この節の話題', style: theme.textTheme.labelMedium),
+              const SizedBox(height: 4),
+              for (final item in headlines) ...[
+                Text(item.headline, style: theme.textTheme.bodyMedium),
+                if (item.body.isNotEmpty) Text(item.body, style: muted),
+                const SizedBox(height: 6),
+              ],
+            ],
+            if (result.appearance == Appearance.benched)
+              Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: Text('出番は無かった。', style: muted),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DetailStat extends StatelessWidget {
+  const _DetailStat({required this.label, required this.value});
+
+  final String label;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label,
+              style: theme.textTheme.labelSmall
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+          Text(value, style: theme.textTheme.titleMedium),
+        ],
+      ),
+    );
+  }
+}
+
 class _TableCard extends StatelessWidget {
   const _TableCard({required this.state});
 
@@ -1559,7 +3067,13 @@ class _TableRowTile extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
-          SizedBox(width: 28, child: Text('$position')),
+          SizedBox(width: 24, child: Text('$position')),
+          ClubCrest(
+            club: state.league.firstWhere((c) => c.id == row.clubId,
+                orElse: () => state.club),
+            size: 20,
+          ),
+          const SizedBox(width: 8),
           Expanded(
             child: Text(row.clubName,
                 overflow: TextOverflow.ellipsis,
@@ -1598,37 +3112,44 @@ class _CareerTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    if (state.history.isEmpty) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(32),
-          child: Text(
-            'シーズンを終えると、ここに記録が積み上がる。',
-            textAlign: TextAlign.center,
-            style: theme.textTheme.bodyMedium
-                ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
-          ),
-        ),
-      );
-    }
     return ListView(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
       children: [
+        _TotalsCard(state: state),
+        const SizedBox(height: 16),
+        if (state.news.isNotEmpty) ...[
+          _NewsCard(news: state.news, title: 'これまでの話題', limit: 12),
+          const SizedBox(height: 16),
+        ],
+        if (state.history.length >= 2) ...[
+          _CareerChartCard(state: state),
+          const SizedBox(height: 16),
+        ],
+        if (state.history.isEmpty)
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Text(
+              'シーズンを終えると、ここに1年ずつ積み上がる。',
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyMedium
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            ),
+          ),
         for (final record in state.history.reversed)
           Card(
             child: ListTile(
               title: Text('${record.year}  ${record.clubName}'),
               subtitle: Text(
-                '${record.tier}部 ${record.leaguePosition}位  ·  '
+                '${record.tier}部 ${record.leaguePosition}位 ・ '
                 '${record.stats.appearances}試合 '
-                '${record.stats.goals}G ${record.stats.assists}A  ·  '
+                '${record.stats.goals}G ${record.stats.assists}A ・ '
                 '年俸 ${record.salary}万円'
-                '${record.onLoan ? '  ·  ローン' : ''}'
-                '${record.caps > 0 ? '  ·  代表${record.caps}' : ''}'
-                '${record.continentalStage.participated ? '  ·  大陸${record.continentalStage.label}' : ''}'
-                '${record.cupStage.participated ? '  ·  国内杯${record.cupStage.label}' : ''}'
-                '${record.worldCupStage.participated ? '  ·  W杯${record.worldCupStage.label}' : ''}'
-                '${record.objectiveMet ? '  ·  目標達成' : ''}',
+                '${record.onLoan ? ' ・ ローン' : ''}'
+                '${record.caps > 0 ? ' ・ 代表${record.caps}' : ''}'
+                '${record.continentalStage.participated ? ' ・ 大陸${record.continentalStage.label}' : ''}'
+                '${record.cupStage.participated ? ' ・ 国内杯${record.cupStage.label}' : ''}'
+                '${record.worldCupStage.participated ? ' ・ 世界大会${record.worldCupStage.label}' : ''}'
+                '${record.objectiveMet ? ' ・ 目標達成' : ''}',
               ),
               trailing: Text(
                 record.stats.appearances == 0
@@ -1850,7 +3371,7 @@ class _LeagueCard extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              '${country.confederation.label}  ·  ${country.calendar.label}  ·  '
+              '${country.confederation.label} ・ ${country.calendar.label} ・ '
               '${country.clubsInTier(state.club.tier)}クラブ',
               style: muted,
             ),
@@ -2026,8 +3547,8 @@ class _PersonCard extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              '気持ち ${state.morale.label}  ·  疲労 ${state.fatigue.label}'
-              '${state.form.isActive ? '  ·  ${state.form.state.label}' : ''}',
+              '気持ち ${state.morale.label} ・ 疲労 ${state.fatigue.label}'
+              '${state.form.isActive ? ' ・ ${state.form.state.label}' : ''}',
               style: muted?.copyWith(
                 color: state.morale.needsCare
                     ? theme.colorScheme.error
@@ -2036,9 +3557,9 @@ class _PersonCard extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(
-              '貯蓄 ${state.finances.savingsLabel}  ·  生活 ${state.finances.lifestyleLabel}'
-              '${state.sponsor != null ? '  ·  ${state.sponsor!.name}と契約中' : ''}'
-              '${state.charity ? '  ·  財団' : ''}',
+              '貯蓄 ${state.finances.savingsLabel} ・ 生活 ${state.finances.lifestyleLabel}'
+              '${state.sponsor != null ? ' ・ ${state.sponsor!.name}と契約中' : ''}'
+              '${state.charity ? ' ・ 財団' : ''}',
               style: muted,
             ),
             if (state.reputation.awards.isNotEmpty) ...[
@@ -2064,26 +3585,3 @@ class _PersonCard extends StatelessWidget {
   }
 }
 
-/// 遊び方のダイアログの1項目。
-class _HelpLine extends StatelessWidget {
-  const _HelpLine(this.title, this.body);
-
-  final String title;
-  final String body;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(title, style: theme.textTheme.titleSmall),
-          const SizedBox(height: 2),
-          Text(body, style: theme.textTheme.bodySmall),
-        ],
-      ),
-    );
-  }
-}

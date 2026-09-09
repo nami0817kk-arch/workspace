@@ -31,6 +31,10 @@ class Dependencies {
 
     Detail.jumping: [Detail.strength],
 
+    // セービングにも土台を置く。無いと GK だけ、総合力の6割を占める
+    // 能力が何にも縛られず伸び、ピークが他より3〜4高くなっていた
+    // （200キャリアで GK のポテンシャル到達が90%、他は20〜45%）。
+    Detail.reflexes: [Detail.agility, Detail.jumping],
     Detail.handling: [Detail.reflexes, Detail.strength],
     Detail.gkPositioning: [Detail.reflexes, Detail.vision],
   };
@@ -39,16 +43,24 @@ class Dependencies {
   static const int headroom = 18;
 
   /// その能力の当面の上限。土台の平均 + [headroom]。
-  static int capFor(Detail detail, Attributes attributes) {
+  ///
+  /// [ceiling] はその能力そのものの上限（普通は 99、超越の特性なら 109）で、
+  /// 土台を持たない能力にだけ効く。土台を持つ能力は、土台の平均 + headroom が
+  /// 99 を超えていても**ここでは丸めない**。丸めると 99 に達した能力の成長が
+  /// 土台へ流れて全体が膨らむ（実測で代表経験 57%→63%）。99 で止まるのは
+  /// [Attributes.bumpDetail] の側。
+  static int capFor(Detail detail, Attributes attributes,
+      {int ceiling = Formulas.maxAttribute}) {
     final base = supports[detail];
-    if (base == null || base.isEmpty) return Formulas.maxAttribute;
+    if (base == null || base.isEmpty) return ceiling;
     final sum = base.fold(0, (s, d) => s + attributes.detail(d));
     return (sum / base.length).round() + headroom;
   }
 
   /// 今それ以上伸ばせないか。
-  static bool blocked(Detail detail, Attributes attributes) =>
-      attributes.detail(detail) >= capFor(detail, attributes);
+  static bool blocked(Detail detail, Attributes attributes,
+          {int ceiling = Formulas.maxAttribute}) =>
+      attributes.detail(detail) >= capFor(detail, attributes, ceiling: ceiling);
 
   /// 頭打ちのとき、代わりに伸ばすべき土台。一番低いところから鍛える。
   static Detail? weakestSupport(Detail detail, Attributes attributes) {
@@ -62,10 +74,12 @@ class Dependencies {
   ///
   /// 返すのは実際に伸ばす詳細能力。土台も頭打ちなら、そこからさらに
   /// 下の土台へ回す（最大3段）。
-  static Detail resolve(Detail wanted, Attributes attributes) {
+  static Detail resolve(Detail wanted, Attributes attributes,
+      {int Function(Detail)? ceilingOf}) {
     var target = wanted;
     for (var i = 0; i < 3; i++) {
-      if (!blocked(target, attributes)) return target;
+      final ceiling = ceilingOf?.call(target) ?? Formulas.maxAttribute;
+      if (!blocked(target, attributes, ceiling: ceiling)) return target;
       final next = weakestSupport(target, attributes);
       if (next == null) return target;
       target = next;

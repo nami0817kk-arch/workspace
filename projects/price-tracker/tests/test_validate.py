@@ -134,3 +134,48 @@ class VerificationTagTest(unittest.TestCase):
         html = self.render(google_site_verification='a"><script>x</script>')
 
         self.assertNotIn("<script>", html)
+
+
+class CardSparkTest(unittest.TestCase):
+    """一覧の小さな価格推移。記録が薄いうちは何も出さない。"""
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def test_点が2つ未満なら何も出さない(self):
+        # 「記録が足りません」を一覧に並べても邪魔になるだけ
+        self.assertEqual(self.theme.card_spark({"tail": []}), "")
+        self.assertEqual(self.theme.card_spark({"tail": [("2026-09-08", 100)]}), "")
+
+    def test_点が揃えば線を描く(self):
+        html = self.theme.card_spark({"tail": [("2026-09-07", 100), ("2026-09-08", 90)]})
+
+        self.assertIn("<svg", html)
+        self.assertIn("card-spark", html)
+
+
+class SearchIndexTest(unittest.TestCase):
+    """商品名で探すための索引。5,000件あると一覧を辿るだけでは見つけられない。"""
+
+    def test_1商品1件で_slugと名前と価格を持つ(self):
+        import json
+        import subprocess
+        import sys
+        import tempfile
+        from pathlib import Path
+
+        root = Path(__file__).resolve().parent.parent
+        with tempfile.TemporaryDirectory() as tmp:
+            subprocess.run([sys.executable, str(root / "build.py"), "--out", tmp],
+                           cwd=root, check=True, capture_output=True)
+            idx = json.loads((Path(tmp) / "search-index.json").read_text(encoding="utf-8"))
+            page = (Path(tmp) / "search" / "index.html").read_text(encoding="utf-8")
+
+        self.assertTrue(idx, "索引が空")
+        for slug, name, price in idx[:5]:
+            self.assertTrue(slug and name)
+            self.assertIsInstance(price, int)
+        self.assertIn('id="q"', page)
+        # 索引はページに埋め込まず、必要になってから取りに行く
+        self.assertNotIn(idx[0][1], page)

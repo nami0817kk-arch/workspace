@@ -44,7 +44,7 @@ enum CupStage {
   bool get qualifiesContinental => this == CupStage.winner;
 }
 
-/// ワールドカップの成績。4年に1度だけ動く。
+/// 世界大会の成績。4年に1度だけ動く。
 enum WorldCupStage {
   none('不出場'),
   group('グループ敗退'),

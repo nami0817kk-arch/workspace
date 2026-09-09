@@ -54,7 +54,10 @@ enum Signature {
   AttributeKey get key => detail.category;
 
   /// 覚えるのに必要な能力値。
-  static const int requirement = 72;
+  ///
+  /// 72 だと、育てた選手のほぼ全員が3つとも覚えていた。
+  /// 「その選手にしか無いもの」であってほしいので、上に置く。
+  static const int requirement = 78;
 
   /// 同時に持てる数。何でも出来る選手にしない。
   static const int maxOwned = 3;
@@ -129,24 +132,32 @@ class Development {
       identity == null ? 0 : (identity == key ? 0.03 : -0.01);
 
   /// その戦い方に慣れているぶんの上乗せ。当たるほど苦手ではなくなる。
-  double adaptationFor(ClubStyle style) =>
-      min(0.04, (faced[style] ?? 0) * 0.002);
+  double adaptationFor(ClubStyle style, {double factor = 1.0}) =>
+      min(0.04, (faced[style] ?? 0) * 0.002 * factor);
 
   /// 経験からくる落ち着き。大一番の重圧を薄める。
   double get composure => min(0.05, experience / 2000);
 
-  /// 覚えた個人技による上乗せ。
-  double signatureBonus(AttributeKey key, Detail? detail) {
-    var bonus = 0.0;
+  /// 覚えた個人技による上乗せを、技ごとに分けて返す。
+  ///
+  /// 合計だけを返していた頃は、画面に「なぜこの数字なのか」を出せなかった。
+  /// 覚えた技が試合のどこで効いているのかが見えないと、
+  /// 積み上げと試合が別のものに見える。
+  Map<Signature, double> signatureFactors(AttributeKey key, Detail? detail) {
+    final result = <Signature, double>{};
     for (final s in signatures) {
       if (detail != null && s.detail == detail) {
-        bonus += 0.05;
+        result[s] = 0.05;
       } else if (s.key == key) {
-        bonus += 0.02;
+        result[s] = 0.02;
       }
     }
-    return bonus;
+    return result;
   }
+
+  /// 覚えた個人技による上乗せ。
+  double signatureBonus(AttributeKey key, Detail? detail) =>
+      signatureFactors(key, detail).values.fold(0.0, (a, b) => a + b);
 
   /// 1試合ぶんの積み上げ。
   Development afterMatch({
@@ -158,7 +169,7 @@ class Development {
     final gained = switch (appearance) {
       Appearance.start => 3,
       Appearance.sub => 1,
-      Appearance.benched || Appearance.injured => 0,
+      Appearance.benched || Appearance.injured || Appearance.suspended => 0,
     };
     if (gained == 0) {
       return copyWith(plateau: max(0, plateau - 1));
@@ -183,11 +194,16 @@ class Development {
   ///
   /// 伸び続けた選手はどこかで足踏みする。ここが無いと、上手くいっている
   /// 間はひたすら右肩上がりで、キャリアの起伏が消える。
-  Development afterGrowth({required bool grew, required Random random}) {
+  Development afterGrowth({
+    required bool grew,
+    required Random random,
+    double plateauFactor = 1.0,
+  }) {
     if (!grew) return this;
     final streak = growthStreak + 1;
     if (streak < plateauStreak) return copyWith(growthStreak: streak);
-    return copyWith(growthStreak: 0, plateau: 4 + random.nextInt(6));
+    final length = ((4 + random.nextInt(6)) * plateauFactor).round();
+    return copyWith(growthStreak: 0, plateau: max(1, length));
   }
 
   Development learn(Signature signature) => signatures.contains(signature) ||
@@ -252,4 +268,32 @@ class Development {
       breakthroughs: json['breakthroughs'] as int? ?? 0,
     );
   }
+}
+
+/// 能力カテゴリの今季の伸び。
+class CategoryGrowth {
+  const CategoryGrowth({
+    required this.key,
+    required this.before,
+    required this.now,
+    required this.attempts,
+    required this.successes,
+  });
+
+  final AttributeKey key;
+
+  /// 今季の開幕時の値と、今の値。
+  final int before;
+  final int now;
+
+  /// 今季、その能力で判定した局面の数と、成功した数。
+  final int attempts;
+  final int successes;
+
+  int get growth => now - before;
+
+  bool get hasMoments => attempts > 0;
+
+  /// 成功率（0〜1）。局面が無ければ null。
+  double? get successRate => attempts == 0 ? null : successes / attempts;
 }

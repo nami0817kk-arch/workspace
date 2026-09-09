@@ -58,15 +58,17 @@ class Competitions {
       CupStage.runnerUp,
       CupStage.winner,
     ]) {
-      // 一発勝負は5分に近い。格差がそのまま出るなら、カップの意味が無い。
-      final chance = (0.5 + edge).clamp(0.15, 0.8);
+      // 一発勝負は5分に近い。ただし5回勝ち抜く必要があるので、
+      // 1回戦ごとの確率を上げすぎると優勝が日常になる
+      // （0.5+edge のときは強豪で毎季3割が優勝していた）。
+      final chance = (0.45 + edge * 0.6).clamp(0.15, 0.62);
       if (_random.nextDouble() >= chance) break;
       stage = next;
     }
     return stage;
   }
 
-  /// ワールドカップの成績。招集されている選手だけ。
+  /// 世界大会の成績。招集されている選手だけ。
   ///
   /// 4年に1度しか回ってこないので、キャリアで出られるのは多くて3回か4回。
   /// だから1回が重い。
@@ -92,7 +94,7 @@ class Competitions {
     return stage;
   }
 
-  /// その年にワールドカップがあるか。4年に1度。
+  /// その年に世界大会があるか。4年に1度。
   static bool isWorldCupYear(int year) => year % 4 == 0;
 
   /// 移籍市場の窓。シーズンの節の位置で決まる。

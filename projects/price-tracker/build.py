@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """記録済みのデータから静的サイトを生成する。ネットワークへは一切アクセスしない。"""
 import argparse
+import json
 import shutil
 import sys
 from datetime import datetime, timezone, timedelta
@@ -54,6 +55,11 @@ def build(root: Path, out: Path) -> dict:
     shutil.copy(ROOT / "src" / "style.css", out / "style.css")
 
     base = site["base_url"].rstrip("/")
+    # サイトの規模と記録の厚み。値下がりが数件しかない日でも、
+    # 何を持っているサイトなのかが一覧の先頭で伝わるようにする。
+    stats = {"items": len(rows),
+             "days": len(sorted((data / "snapshots").glob("*.csv.gz"))),
+             "updated": updated}
     dropped = analyze.drops(rows)
     low = analyze.lows(rows)
 
@@ -61,15 +67,25 @@ def build(root: Path, out: Path) -> dict:
         "今日の値下がり",
         "毎日記録している楽天市場の価格から、前回より安くなった商品を並べています。",
         dropped, site, base + "/", updated, prefix="",
-        empty="今日の記録では、判定できるほどの値下がりはありませんでした。"))
+        empty="今日の記録では、判定できるほどの値下がりはありませんでした。",
+        stats=stats))
+
+    write(out / "rises" / "index.html", theme.listing(
+        "値上がりした商品",
+        "前回の記録より高くなった商品です。買い時ではないことも同じ基準で出しています。",
+        analyze.rises(rows, site.get("drop_threshold", 0.05)), site,
+        base + "/rises/", updated, prefix="../",
+        empty="今日の記録では、目立った値上がりはありませんでした。",
+        stats=stats))
 
     write(out / "lows" / "index.html", theme.listing(
         "最安値圏の商品",
         "当サイトが記録している期間の最安値と同じか、それに近い価格の商品です。",
         low, site, base + "/lows/", updated, prefix="../",
-        empty="価格の記録日数がまだ足りません。判定には最低7日分が必要です。"))
+        empty="価格の記録日数がまだ足りません。判定には最低7日分が必要です。",
+        stats=stats))
 
-    urls = ["/", "/lows/"]
+    urls = ["/", "/rises/", "/lows/"]
     for page in pages.PAGES:
         write(out / page["slug"] / "index.html", pages.render(page, site, updated))
         urls.append(f'/{page["slug"]}/')
@@ -87,7 +103,8 @@ def build(root: Path, out: Path) -> dict:
             f'{g["name"]}の値下がり',
             f'{g["name"]}の商品を毎日記録し、値下がりの大きい順に並べています。',
             hit, site, f"{base}/genre/{gid}/", updated, prefix="../../",
-            empty="このジャンルはまだ記録が始まったばかりです。"))
+            empty="このジャンルはまだ記録が始まったばかりです。",
+            stats=stats))
         urls.append(f"/genre/{gid}/")
         listed.append({**g, "count": len(hit)})
 
@@ -99,6 +116,14 @@ def build(root: Path, out: Path) -> dict:
         s = theme.slug(row["item_code"])
         write(out / "item" / s / "index.html", theme.item_page(row, site, updated))
         urls.append(f"/item/{s}/")
+
+    # 検索用の索引。数百KBあるので、検索ページで必要になったときだけ読ませる。
+    write(out / "search-index.json", json.dumps(
+        [[theme.slug(r["item_code"]), r["name"], r["price"]] for r in rows],
+        ensure_ascii=False, separators=(",", ":")))
+    write(out / "search" / "index.html",
+          theme.search_page(site, base + "/search/", updated, stats))
+    urls.append("/search/")
 
     write(out / "sitemap.xml", sitemap(site, urls, updated))
     write(out / "robots.txt", robots(site))

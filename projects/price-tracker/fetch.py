@@ -40,9 +40,12 @@ def main() -> int:
         return 1
 
     if args.dry_run:
-        print(f"対象ジャンル {len(genres)}件 / 1ジャンルあたり{site.get('hits_per_genre', 90)}件")
-        print(f"想定リクエスト数: 約{len(genres) * (site.get('hits_per_genre', 90) // 30 + 1)}回"
-              f"（1秒1回の制限のため所要 約{len(genres) * 4}秒）")
+        hits = site.get("hits_per_genre", 90)
+        # 1リクエストで取れるのは rakuten.MAX_HITS 件。端数も1回に数える。
+        reqs = len(genres) * -(-hits // rakuten.MAX_HITS)
+        print(f"対象ジャンル {len(genres)}件 / 1ジャンルあたり{hits}件 = {len(genres) * hits:,}件")
+        print(f"想定リクエスト数: 約{reqs}回"
+              f"（{rakuten.MIN_INTERVAL}秒間隔のため所要 約{reqs * rakuten.MIN_INTERVAL / 60:.1f}分）")
         print(f"保存先: {store.snapshot_path(data, args.day)}")
         return 0
 
@@ -81,7 +84,10 @@ def main() -> int:
     # 保存の前に検査する。壊れた1日を履歴に混ぜると、最安値・値下がりの判定が
     # 恒久的に歪み、取り直しもできない。疑わしいときは記録しない方を選ぶ。
     errors, warnings = validate.check_snapshot(
-        rows, expected=len(genres) * site.get("hits_per_genre", 90))
+        # 期待件数は「取得できたジャンル数」から出す。全ジャンル数で見ると、
+        # 1ジャンル落ちただけで8割を割り、無事だった残りごと捨てることになる。
+        # 落ちたジャンル自体は下の「失敗:」行で残す。
+        rows, expected=(len(genres) - len(failed)) * site.get("hits_per_genre", 90))
     for w in warnings:
         print(f"  警告: {w}")
     if errors and not args.no_verify:

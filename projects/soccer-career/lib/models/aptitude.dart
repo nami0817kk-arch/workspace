@@ -49,8 +49,8 @@ class Aptitude {
       values[position] ?? (isUnknown ? max : 25);
 
   /// そのポジションで出たときに総合力から引かれる量。
-  int penaltyFor(Position position) =>
-      ((max - this[position]) * penaltyPerPoint).round();
+  int penaltyFor(Position position, {double factor = 1.0}) =>
+      ((max - this[position]) * penaltyPerPoint * factor).round();
 
   bool canConvert(Position position) =>
       !isUnknown && this[position] >= convertible;

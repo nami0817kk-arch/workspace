@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../budget_lines.dart';
+import '../readable_width.dart';
+import '../transfer_code.dart';
 import '../../game/career_engine.dart';
 import '../../game/formulas.dart';
 import '../../game/world.dart';
@@ -7,6 +10,7 @@ import '../../models/competition.dart';
 import '../../models/life.dart';
 import '../../models/physique.dart';
 import '../../state/career_controller.dart';
+import '../club_identity.dart';
 
 /// シーズン終了。成績を振り返り、契約更改・移籍・引退を決める。
 ///
@@ -140,7 +144,8 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
         automaticallyImplyLeading: false,
       ),
       body: SafeArea(
-        child: ListView(
+        child: ReadableWidth(
+          child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
             Card(
@@ -186,7 +191,7 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                       const SizedBox(height: 6),
                       Chip(
                         label:
-                            Text('ワールドカップ ${state.worldCupStage.label}'),
+                            Text('世界大会 ${state.worldCupStage.label}'),
                         backgroundColor:
                             theme.colorScheme.tertiaryContainer,
                         visualDensity: VisualDensity.compact,
@@ -222,6 +227,28 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                   ],
                 ),
               ),
+            ),
+            const SizedBox(height: 16),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('今季のお金', style: theme.textTheme.titleSmall),
+                    const SizedBox(height: 6),
+                    // 契約を選ぶ前に見えていないと、来季も同じことになる。
+                    BudgetLines(state: state),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 16),
+            _BackupCard(
+              years: state.yearsSinceBackup,
+              everBackedUp: state.backedUpYear > 0,
+              onBackup: () =>
+                  TransferCode.show(context, widget.controller),
             ),
             const SizedBox(height: 24),
             if (mustRetire) ...[
@@ -346,6 +373,7 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
               ],
             ],
           ],
+          ),
         ),
       ),
     );
@@ -390,6 +418,8 @@ class _OfferCard extends StatelessWidget {
           children: [
             Row(
               children: [
+                ClubCrest(club: offer.club, size: 30),
+                const SizedBox(width: 10),
                 Expanded(
                   child: Text(
                     '${offer.club.name}'
@@ -441,7 +471,7 @@ class _OfferCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('年俸 ${offer.salary}万円  ·  ${offer.years}年契約',
+                      Text('年俸 ${offer.salary}万円 ・ ${offer.years}年契約',
                           style: theme.textTheme.titleMedium),
                       Text('手取り $takeHome万円（手数料差引後）', style: muted),
                     ],
@@ -479,6 +509,66 @@ class _OfferCard extends StatelessWidget {
                   ),
                 ),
               ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// セーブの持ち出しを促す。
+///
+/// 保存は端末の中にしか無い。ブラウザのデータを消せば消えるし、
+/// iOS はしばらく開かないサイトの保存領域を自分で消す。
+/// 「⋮」の奥に置いてあるだけでは、気付かないまま何年も進んでしまう。
+class _BackupCard extends StatelessWidget {
+  const _BackupCard({
+    required this.years,
+    required this.everBackedUp,
+    required this.onBackup,
+  });
+
+  final int years;
+  final bool everBackedUp;
+  final VoidCallback onBackup;
+
+  /// これだけ控えていなければ、色を変えて促す。
+  static const int warnAfterYears = 3;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final warn = years >= warnAfterYears;
+    return Card(
+      color: warn ? theme.colorScheme.errorContainer : null,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('セーブの持ち出し',
+                style: theme.textTheme.titleSmall?.copyWith(
+                    color: warn ? theme.colorScheme.onErrorContainer : null)),
+            const SizedBox(height: 6),
+            Text(
+              everBackedUp
+                  ? '前に控えてから$years年。ブラウザのデータを消すと、'
+                      'そこから先のキャリアは戻せない。'
+                  : 'この記録は、この端末の中にしか無い。'
+                      'ブラウザのデータを消すと消える。1度だけ控えておけば、'
+                      '別の端末でも続きから遊べる。',
+              style: theme.textTheme.bodySmall?.copyWith(
+                  color: warn ? theme.colorScheme.onErrorContainer : null),
+            ),
+            const SizedBox(height: 10),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: OutlinedButton.icon(
+                onPressed: onBackup,
+                icon: const Icon(Icons.save_alt, size: 18),
+                label: const Text('引き継ぎコードを出す'),
+              ),
             ),
           ],
         ),

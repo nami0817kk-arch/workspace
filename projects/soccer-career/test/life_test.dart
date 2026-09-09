@@ -343,6 +343,7 @@ void main() {
           s.objective = const SeasonObjective(
               appearances: 99, contributions: 99, rating: 9.9);
         }
+        s.contractYears = 1;
         return engine.renewalOffer(s).salary;
       }
 
@@ -396,8 +397,14 @@ void main() {
     test('オファーには契約年数が付く', () {
       final engine = CareerEngine(random: Random(11));
       final s = freshCareer(seed: 11);
+      // 残り1年になって初めて、新しい契約年数が提示される。
+      s.contractYears = 1;
       expect(engine.renewalOffer(s).years,
           inInclusiveRange(Formulas.contractYearsMin, Formulas.contractYearsMax));
+
+      // 残っている間は、残り年数がそのまま1つ減る。
+      s.contractYears = 4;
+      expect(engine.renewalOffer(s).years, 3);
     });
 
     test('契約年数は保存を往復しても残る', () {

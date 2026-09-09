@@ -23,7 +23,7 @@
       "name": "テレビゲーム"
     }
   ],
-  "hits_per_genre": 300,
+  "hits_per_genre": 1250,
   "drop_threshold": 0.05,
   "near_low_threshold": 0.02,
   "history_tail_days": 90,

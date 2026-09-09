@@ -242,7 +242,7 @@ void main() {
 
     test('外国人枠が埋まっているクラブでは登録外になる', () {
       final s = career(countryId: 'yamato');
-      // イベリカは登録枠3。強豪クラブは埋まっている。
+      // スペインは登録枠3。強豪クラブは埋まっている。
       final club = World.buildLeague('iberica', 1).first;
       s.club = club;
       s.player = s.player.copyWith(
@@ -253,7 +253,7 @@ void main() {
       );
       final country = World.byId('iberica');
       expect(country.foreignRule.squadLimit, 3);
-      // セリーナはアウストラル連盟。イベリカでは外国人。
+      // ブラジルは南米。スペインでは外国人。
       expect(c.registrationFor(s), SquadStatus.outOfSquad);
     });
 
@@ -291,6 +291,8 @@ void main() {
           s.results.add(played(matchday: i + 1));
         }
         if (continental) s.continentalStage = ContinentalStage.quarter;
+        // 契約が残っているうちは条件が動かない。更改の年で見る。
+        s.contractYears = 1;
         return engine.renewalOffer(s).salary;
       }
 

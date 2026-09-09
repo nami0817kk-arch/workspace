@@ -38,9 +38,18 @@ h1 { font-size: 24px; line-height: 1.4; margin: 0 0 8px; }
 h2 { font-size: 18px; margin: 28px 0 8px; }
 .lead { color: var(--muted); margin: 0 0 16px; }
 
+/* サイトの規模と記録の厚み。値下がりが少ない日でも、何を持っているサイトなのか
+   最初に伝わるようにする。数字だけ地の文より濃くして拾いやすくする。 */
+.stats { margin: 0 0 16px; font-size: 14px; color: var(--muted); }
+.stats strong { color: var(--ink); font-size: 16px; }
+.sep { margin: 0 8px; opacity: .5; }
+
+h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--muted); }
+
+/* 広告表記。ステマ規制で明示が必須なので文言も位置も変えない。
+   枠を外して主張だけ弱める（読めることが要件で、目立つことは要件ではない）。 */
 .ad-notice {
-  margin: 0 0 20px; padding: 8px 12px; font-size: 13px; color: var(--muted);
-  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+  margin: 0 0 20px; padding: 0; font-size: 13px; color: var(--muted);
 }
 
 .cards { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
@@ -61,6 +70,7 @@ h2 { font-size: 18px; margin: 28px 0 8px; }
 .card .meta { margin: 0; font-size: 13px; color: var(--muted); }
 .was { color: var(--muted); text-decoration: line-through; margin-right: 4px; }
 .down { color: var(--down); font-weight: 700; margin-right: 8px; }
+.up { color: var(--near); font-weight: 700; margin-right: 8px; }
 .empty { padding: 24px; text-align: center; color: var(--muted); list-style: none;
   border: 1px dashed var(--line); border-radius: var(--radius); }
 
@@ -69,11 +79,30 @@ h2 { font-size: 18px; margin: 28px 0 8px; }
 .badge.low { color: var(--low); } .badge.near { color: var(--near); }
 .badge.drop { color: var(--down); } .badge.flat { color: var(--flat); }
 
+/* いまの価格が履歴のどこにあるかを一文で。高いときは高いと書く。 */
+.verdict { margin: 0 0 14px; font-size: 15px; color: var(--ink); }
+
 .item .headline { font-size: 15px; margin: 12px 0; }
 .item .headline strong { font-size: 28px; }
 .chart { color: var(--accent); margin: 8px 0 20px; }
 .spark { width: 100%; max-width: 320px; height: auto; }
 .spark-none { color: var(--muted); font-size: 13px; }
+
+/* 一覧に出す小さな推移。履歴がこのサイトの値打ちなので、開く前に形を見せる。 */
+.card-spark { margin-top: 6px; color: var(--accent); opacity: .8; }
+.card-spark .spark { max-width: 140px; }
+
+/* 商品を探す */
+.q { width: 100%; padding: 11px 14px; font-size: 16px; color: var(--ink);
+  background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }
+.q:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+.note { margin: 10px 0; font-size: 13px; color: var(--muted); }
+.hits { list-style: none; margin: 0; padding: 0; }
+.hit { display: flex; gap: 12px; justify-content: space-between; align-items: baseline;
+  padding: 10px 0; border-bottom: 1px solid var(--line); }
+.hit a { color: var(--ink); text-decoration: none; }
+.hit a:hover { color: var(--accent); }
+.hit .price { white-space: nowrap; font-weight: 600; }
 
 .facts { border-collapse: collapse; width: 100%; margin: 0 0 20px;
   background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }
@@ -99,4 +128,6 @@ h2 { font-size: 18px; margin: 28px 0 8px; }
   .card .thumb { flex-basis: 72px; }
   .card img, .card .noimg { width: 72px; height: 72px; }
   h1 { font-size: 21px; }
+  .sep { margin: 0 5px; }
+  .stats { font-size: 13px; }
 }

@@ -159,7 +159,10 @@ jobs:
           rm -f "$RUNNER_TEMP/profile.mobileprovision"
 
           echo "PROVISIONING_PROFILE_NAME=$NAME" >> "$GITHUB_ENV"
-          echo "プロファイル「$NAME」($UUID) を配置しました"
+          # 変数は必ず {} で囲むこと。囲まずに直後へ非ASCII文字(鉤括弧など)を
+          # 続けると、macOS ランナーのロケールではそのバイトが識別子の一部と
+          # 見なされ、存在しない変数名になって set -u で落ちる(実際に落ちた)。
+          echo "プロファイル「${NAME}」(${UUID}) を配置しました"
 
       - name: Configure manual code signing
         env:
@@ -265,10 +268,12 @@ jobs:
           rm -rf ~/.appstoreconnect/private_keys
           rm -f ios/ExportOptions.plist
 
+      # upload-artifact は defaults.run.working-directory に従わない。
+      # パスはリポジトリのルートから書く必要がある。
       - name: Upload artifact
         uses: actions/upload-artifact@v7
         with:
           name: soccer-manager-ios
-          path: build/ios/ipa/*.ipa
+          path: projects/soccer-manager/build/ios/ipa/*.ipa
           if-no-files-found: error
           retention-days: 14

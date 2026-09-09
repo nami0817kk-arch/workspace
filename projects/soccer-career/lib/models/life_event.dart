@@ -1,3 +1,26 @@
+import 'attributes.dart';
+import 'development.dart';
+
+/// 出来事に出てくる人。
+///
+/// 名前のある他人は既に居る（監督・競争相手・相方・メンター・同期・代理人）。
+/// 出来事に出てこなければ、ただの数字のままになる。
+enum PersonKind {
+  manager('監督'),
+  competitor('競争相手'),
+  partner('相方'),
+  mentor('メンター'),
+  rival('同期'),
+  agent('代理人');
+
+  const PersonKind(this.label);
+
+  final String label;
+
+  /// 文中に置くしるし。表示するときに名前へ差し替える。
+  String get token => '<$name>';
+}
+
 /// ピッチの外で起きたことの効き方。
 ///
 /// 数字はすべて小さい。ここが大きいと、試合でも練習でもなく
@@ -15,6 +38,9 @@ class LifeEffect {
     this.ambition = 0,
     this.professionalism = 0,
     this.temper = 0,
+    this.train,
+    this.trainAmount = 1,
+    this.insight,
     this.special = LifeSpecial.none,
   });
 
@@ -33,6 +59,16 @@ class LifeEffect {
   final int ambition;
   final int professionalism;
   final int temper;
+
+  /// 伸びる能力。練習の外で身に付くもの。
+  ///
+  /// **1回の伸びは小さく保つ。** ここが大きいと、練習でも試合でもなく
+  /// 出来事の引きでキャリアが決まる。
+  final Detail? train;
+  final int trainAmount;
+
+  /// 閃く個人技。すでに3つ持っていれば何も起きない。
+  final Signature? insight;
 
   /// 数字では表せない結果。
   final LifeSpecial special;
@@ -76,6 +112,8 @@ class LifeRequirement {
     this.needsSponsorOffer = false,
     this.needsCaptaincy = false,
     this.lowMorale = false,
+    this.needsPerson,
+    this.minOverall = 0,
   });
 
   final int minAge;
@@ -98,6 +136,12 @@ class LifeRequirement {
   /// 気持ちが落ちていること。
   final bool lowMorale;
 
+  /// その人が居ること。居ない相手の話は出せない。
+  final PersonKind? needsPerson;
+
+  /// 総合力の下限。若いうちに大物の話が来ないようにする。
+  final int minOverall;
+
   bool matches(LifeContext c) {
     if (c.age < minAge || c.age > maxAge) return false;
     if (c.fame < minFame) return false;
@@ -107,6 +151,8 @@ class LifeRequirement {
     if (needsSponsorOffer && !c.sponsorOffered) return false;
     if (needsCaptaincy && !c.captaincyOffered) return false;
     if (lowMorale && !c.lowMorale) return false;
+    if (needsPerson != null && !c.people.containsKey(needsPerson)) return false;
+    if (c.overall < minOverall) return false;
     return true;
   }
 }
@@ -122,6 +168,8 @@ class LifeContext {
     required this.sponsorOffered,
     required this.captaincyOffered,
     required this.lowMorale,
+    this.people = const {},
+    this.overall = 0,
   });
 
   final int age;
@@ -132,6 +180,11 @@ class LifeContext {
   final bool sponsorOffered;
   final bool captaincyOffered;
   final bool lowMorale;
+
+  /// 今そばに居る人と、その名前。
+  final Map<PersonKind, String> people;
+
+  final int overall;
 }
 
 /// ピッチの外で起きること。
@@ -156,4 +209,34 @@ class LifeEvent {
 
   /// キャリアで一度きりか。
   final bool once;
+
+  /// 文中のしるしを、実際の名前に差し替えた出来事を返す。
+  ///
+  /// 画面側で置換すると、選択肢の文と結果の文で書き分けが要る。
+  /// 出す前に1度だけ埋める。
+  LifeEvent withNames(Map<PersonKind, String> names) {
+    String fill(String text) {
+      var result = text;
+      for (final entry in names.entries) {
+        result = result.replaceAll(entry.key.token, entry.value);
+      }
+      return result;
+    }
+
+    return LifeEvent(
+      id: id,
+      title: fill(title),
+      body: fill(body),
+      choices: [
+        for (final c in choices)
+          LifeChoice(
+            label: fill(c.label),
+            outcome: fill(c.outcome),
+            effect: c.effect,
+          ),
+      ],
+      requirement: requirement,
+      once: once,
+    );
+  }
 }

@@ -30,6 +30,9 @@ CareerController controller({int seed = 1}) => CareerController(
       repository: _MemoryRepository(),
       careerEngine: CareerEngine(random: Random(seed)),
       matchEngine: MatchEngine(random: Random(seed)),
+      // 種を渡さないと、出場機会の判断と出来事だけが実行ごとに変わる。
+      // 同じ種で違う結果が出るので、たまに落ちるテストになっていた。
+      random: Random(seed),
     );
 
 /// 1試合を最後まで進める。局面は常に最初の選択肢を選ぶ。
@@ -82,7 +85,8 @@ void main() {
 
       for (final r in c.state!.results) {
         if (r.appearance == Appearance.benched ||
-            r.appearance == Appearance.injured) {
+            r.appearance == Appearance.injured ||
+            r.appearance == Appearance.suspended) {
           expect(r.rating, isNull, reason: '${r.appearance.label}に評価点が付いている');
         } else {
           expect(r.rating, inInclusiveRange(Formulas.minRating, Formulas.maxRating));
@@ -91,25 +95,27 @@ void main() {
     });
 
     test('負傷したら離脱し、離脱が明ければ復帰する', () async {
-      // 疲れやすい条件で回して、必ず1度は怪我を起こす。
-      final c = controller(seed: 11);
-      await c.startCareer(
-          name: 'F', position: Position.cb, age: 30, agent: Agent.pool.first);
-      await c.setMenu(TrainingMenu.strengthWork);
-
+      // 疲れやすい条件で回す。怪我は確率なので、1つの種に賭けると
+      // 乱数の並びが変わっただけで落ちる。何人か回して見る。
       var sawInjury = false;
       var sawRecovery = false;
-      var guard = 0;
-      while (guard < 200 && !(sawInjury && sawRecovery)) {
-        if (c.state!.seasonFinished) break;
-        final before = c.state!.injured;
-        await playOne(c);
-        if (!before && c.state!.injured) sawInjury = true;
-        if (before && !c.state!.injured) sawRecovery = true;
-        guard++;
+      for (var seed = 11; seed < 21 && !(sawInjury && sawRecovery); seed++) {
+        final c = controller(seed: seed);
+        await c.startCareer(
+            name: 'F', position: Position.cb, age: 30, agent: Agent.pool.first);
+        await c.setMenu(TrainingMenu.strengthWork);
+
+        var guard = 0;
+        while (guard < 200 && !c.state!.seasonFinished) {
+          final before = c.state!.injured;
+          await playOne(c);
+          if (!before && c.state!.injured) sawInjury = true;
+          if (before && !c.state!.injured) sawRecovery = true;
+          guard++;
+        }
       }
 
-      expect(sawInjury, isTrue, reason: '1シーズン怪我が一度も起きなかった');
+      expect(sawInjury, isTrue, reason: '10人回して怪我が一度も起きなかった');
       expect(sawRecovery, isTrue, reason: '離脱から復帰しなかった');
     });
 
@@ -125,10 +131,13 @@ void main() {
         await playOne(c);
         guard++;
       }
-      if (!c.state!.injured) return; // 怪我が起きなければこのテストは対象外
+      // 怪我が起きないままシーズンが終わったら、このテストは対象外。
+      if (!c.state!.injured || c.state!.seasonFinished) return;
 
       final before = c.state!.matchday;
-      final result = await playOne(c);
+      // 代表ウィークは節を消費しないので、当たったらもう一度進める。
+      var result = await playOne(c);
+      result ??= await playOne(c);
       expect(result, isNotNull);
       expect(result!.appearance, Appearance.injured);
       expect(result.rating, isNull);

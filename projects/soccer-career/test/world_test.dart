@@ -118,22 +118,22 @@ void main() {
     });
 
     test('連盟内自由の国では、同じ連盟の選手は外国人にならない', () {
-      // ゲルマニアは連盟内自由。アルビオンも同じヴェスタ連盟。
+      // ドイツは連盟内自由。イングランドも同じ欧州。
       expect(Eligibility.isForeignIn(albionPlayer, World.byId('germania')),
           isFalse);
-      // ヤマトはオリエンス。ゲルマニアでは外国人。
+      // 日本はアジア。ドイツでは外国人。
       expect(Eligibility.isForeignIn(yamatoPlayer, World.byId('germania')),
           isTrue);
     });
 
     test('連盟内自由でない国では、同じ連盟でも外国人', () {
-      // アルビオンは連盟内自由ではない。
+      // イングランドは連盟内自由ではない。
       expect(Eligibility.isForeignIn(germaniaPlayer, World.byId('albion')),
           isTrue);
     });
 
     test('提携国の選手は外国人枠の外に置かれる', () {
-      // ヤマトはシャムスとパンパを提携国にしている。
+      // 日本はサウジアラビアとアルゼンチンを提携国にしている。
       const pampa = Nationality(primary: 'pampa');
       expect(Eligibility.isForeignIn(pampa, World.byId('yamato')), isFalse);
       const serena = Nationality(primary: 'serena');
@@ -203,7 +203,7 @@ void main() {
       expect(c.granted, isTrue);
     });
 
-    test('無名の若手はアルビオンに入れない', () {
+    test('無名の若手はイングランドに入れない', () {
       final c = check(destination: 'albion', origin: 'pampa');
       expect(c.required, isTrue);
       expect(c.granted, isFalse);
@@ -330,7 +330,7 @@ void main() {
     test('降格は国のクラブ数に合わせて下から3クラブ', () {
       final engine = CareerEngine(random: Random(4));
       final s = career(seed: 4, countryId: 'norden');
-      // ノルデンは16クラブ。1部の14位以下が降格。
+      // スウェーデンは16クラブ。1部の14位以下が降格。
       final country = World.byId('norden');
       expect(country.clubsInTier(1), 16);
       final club = Club(

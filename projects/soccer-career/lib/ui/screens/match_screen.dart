@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 
+import '../../game/formulas.dart';
 import '../../game/match_engine.dart';
 import '../../game/scenarios.dart';
+import '../../models/attributes.dart';
 import '../../models/injury.dart';
+import '../../models/news.dart';
 import '../../models/season.dart';
 import '../../state/career_controller.dart';
+import '../club_identity.dart';
+import '../readable_width.dart';
 
 /// 1試合を進める画面。局面 → 結果 → 次の局面、を繰り返す。
 class MatchScreen extends StatefulWidget {
@@ -59,12 +64,22 @@ class _MatchScreenState extends State<MatchScreen> {
       return _MatchSummary(
         result: result,
         week: widget.controller.lastWeek,
+        // その試合について書かれた見出しがあれば、結果と一緒に見せる。
+        headline: widget.controller.news
+            .where((n) => n.matchday == result.matchday)
+            .take(1)
+            .toList(),
       );
     }
     if (match == null) return const SizedBox.shrink();
 
     if (match.appearance == Appearance.benched) {
-      return _BenchedView(onDone: _finish, busy: _busy);
+      return _BenchedView(
+        onDone: _finish,
+        busy: _busy,
+        // 何試合続けて外れているか。戻り道を数字で見せる。
+        idle: MatchEngine.idleRun(widget.controller.state!.leagueResults),
+      );
     }
 
     return Scaffold(
@@ -73,7 +88,8 @@ class _MatchScreenState extends State<MatchScreen> {
         automaticallyImplyLeading: false,
       ),
       body: SafeArea(
-        child: Padding(
+        child: ReadableWidth(
+          child: Padding(
           padding: const EdgeInsets.all(20),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -86,6 +102,8 @@ class _MatchScreenState extends State<MatchScreen> {
                     : _ScenarioView(
                         match: match,
                         last: _last,
+                        seasonStart: widget.controller.state!.seasonStart,
+                        focus: widget.controller.state!.focus,
                         onChoose: _choose,
                       ),
               ),
@@ -95,6 +113,7 @@ class _MatchScreenState extends State<MatchScreen> {
                   child: Text('残りを自動で進める（${widget.controller.state!.simStyle.label}）'),
                 ),
             ],
+          ),
           ),
         ),
       ),
@@ -110,14 +129,77 @@ class _MatchHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    final muted = theme.textTheme.labelSmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _stat(theme, match.home ? 'ホーム' : 'アウェイ', match.appearance.label),
-        _stat(theme, '局面', '${match.currentIndex}/${match.scenarios.length}'),
-        _stat(theme, '評価点', match.rating.toStringAsFixed(1)),
-        _stat(theme, 'G / A', '${match.goals} / ${match.assists}'),
-        _stat(theme, '調子', '${match.player.condition}'),
+        // 今どうなっているか。1点負けている終盤の1本と、
+        // 3点リードでの1本は、同じ手でも意味が違う。
+        Row(
+          children: [
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Flexible(
+                    child: Text(
+                      match.home ? match.club.name : match.opponent.name,
+                      style: theme.textTheme.bodyMedium,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.end,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  ClubCrest(
+                      club: match.home ? match.club : match.opponent, size: 26),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              child: Text(
+                match.home
+                    ? match.scoreLine
+                    : '${match.concededBy(match.isFinished ? 90 : match.currentMinute)} - '
+                        '${match.scoredBy(match.isFinished ? 90 : match.currentMinute)}',
+                style: theme.textTheme.headlineSmall,
+              ),
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  ClubCrest(
+                      club: match.home ? match.opponent : match.club, size: 26),
+                  const SizedBox(width: 8),
+                  Flexible(
+                    child: Text(
+                      match.home ? match.opponent.name : match.club.name,
+                      style: theme.textTheme.bodyMedium,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 4),
+        Text(
+          match.home ? 'ホーム・${match.appearance.label}' : 'アウェイ・${match.appearance.label}',
+          style: muted,
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 12),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _stat(theme, '局面', '${match.currentIndex}/${match.scenarios.length}'),
+            _stat(theme, '評価点', match.rating.toStringAsFixed(1)),
+            _stat(theme, 'G / A', '${match.goals} / ${match.assists}'),
+            _stat(theme, '調子', '${match.player.condition}'),
+          ],
+        ),
       ],
     );
   }
@@ -137,17 +219,38 @@ class _ScenarioView extends StatelessWidget {
   const _ScenarioView({
     required this.match,
     required this.last,
+    required this.seasonStart,
+    required this.focus,
     required this.onChoose,
   });
 
   final MatchInProgress match;
   final ScenarioResolution? last;
+
+  /// 今季の開幕時の能力値。局面のたびに、練習ぶんの伸びを添える。
+  final Attributes? seasonStart;
+
+  /// 育てる方向。その手が方向に乗っているかを、選ぶその場で見せる。
+  final List<Detail> focus;
+
   final void Function(int) onChoose;
+
+  /// その手に使う能力が、今季どれだけ伸びたか。記録が無ければ 0。
+  int _growthOf(ScenarioOption option) {
+    final before = seasonStart;
+    if (before == null) return 0;
+    final was = option.detail != null
+        ? before.detail(option.detail!)
+        : before[option.key];
+    return match.attributeFor(option) - was;
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scenario = match.current;
+    // 今日の自分と相手。どの手を選んでも同じだけ効く。
+    final shared = match.sharedFactors.where((f) => f.notable).toList();
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -161,7 +264,8 @@ class _ScenarioView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    MatchInProgress.minuteLabel(match.currentMinute),
+                    '${MatchInProgress.minuteLabel(match.currentMinute)}'
+                    ' ・ ${match.scoreLine}',
                     style: theme.textTheme.labelMedium
                         ?.copyWith(color: theme.colorScheme.primary),
                   ),
@@ -177,6 +281,14 @@ class _ScenarioView extends StatelessWidget {
                         label: Text(match.opponentStyle.label),
                         visualDensity: VisualDensity.compact,
                       ),
+                      if (match.situationLabel != null)
+                        Chip(
+                          label: Text(match.situationLabel!),
+                          backgroundColor: match.margin < 0
+                              ? theme.colorScheme.errorContainer
+                              : theme.colorScheme.secondaryContainer,
+                          visualDensity: VisualDensity.compact,
+                        ),
                       if (match.bigMatch)
                         Chip(
                           label: const Text('大一番'),
@@ -191,6 +303,25 @@ class _ScenarioView extends StatelessWidget {
                         ),
                     ],
                   ),
+                  // どの手にも同じだけ効いているもの。手ごとには出さない。
+                  if (shared.isNotEmpty) ...[
+                    const SizedBox(height: 8),
+                    Wrap(
+                      spacing: 10,
+                      runSpacing: 2,
+                      children: [
+                        for (final f in shared)
+                          Text(
+                            '${f.label} ${f.percent > 0 ? '+' : ''}${f.percent}%',
+                            style: theme.textTheme.labelSmall?.copyWith(
+                              color: f.value > 0
+                                  ? theme.colorScheme.primary
+                                  : theme.colorScheme.error,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -200,7 +331,12 @@ class _ScenarioView extends StatelessWidget {
             _OptionButton(
               option: scenario.options[i],
               attribute: match.attributeFor(scenario.options[i]),
+              growth: _growthOf(scenario.options[i]),
+              focused: scenario.options[i].detail != null &&
+                  focus.contains(scenario.options[i].detail),
               chance: match.chanceFor(scenario.options[i]),
+              assistConversion: match.assistConversionAt(match.currentMinute),
+              factors: match.distinctFactorsFor(scenario.options[i]),
               onPressed: () => onChoose(i),
             ),
             const SizedBox(height: 10),
@@ -215,21 +351,47 @@ class _OptionButton extends StatelessWidget {
   const _OptionButton({
     required this.option,
     required this.attribute,
+    required this.growth,
+    required this.focused,
     required this.chance,
+    required this.assistConversion,
+    required this.factors,
     required this.onPressed,
   });
 
   final ScenarioOption option;
   final int attribute;
 
+  /// 今季の開幕からの伸び。練習がこの局面に効いていることを、
+  /// 選ぶその場で見せるためのもの。0 なら何も出さない。
+  final int growth;
+
+  /// 育てる方向に入っている手か。選ぶほど、その方向に伸びる。
+  final bool focused;
+
   /// 特性とコンディションを含んだ成功率。判定と同じ値。
   final double chance;
+
+  /// アシストの手が通ったとき、実際にアシストになる見込み。
+  /// 終盤ほど低く、弱いクラブほど低い。
+  final double assistConversion;
+
+  /// その数字を作っているもの。積み上げたものが試合のどこで効いているかを、
+  /// 選ぶその場で見せる。
+  final List<ChanceFactor> factors;
+
   final VoidCallback onPressed;
+
+  /// 画面に出す数。並べすぎると、どれが効いているのか分からなくなる。
+  static const int shownFactors = 4;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final percent = (chance * 100).round();
+    // 効いているものだけを、大きい順に少しだけ。
+    final shown =
+        factors.where((f) => f.notable).take(shownFactors).toList();
     // 数字だけだと、3つの手を見比べるのに毎回読む必要がある。
     // 帯があれば、どれが堅くてどれが賭けかが一目で分かる。
     final color = chance >= 0.6
@@ -253,9 +415,12 @@ class _OptionButton extends StatelessWidget {
                 child: Text(option.label, style: theme.textTheme.titleSmall),
               ),
               if (option.outcome != Outcome.play)
+                // 手が通る確率と、それが点になる確率は別。
+                // 「決まるのは半分ほど」を数字で見せておく。
                 Chip(
-                  label: Text(
-                      option.outcome == Outcome.goal ? 'ゴール' : 'アシスト'),
+                  label: Text(option.outcome == Outcome.goal
+                      ? 'ゴール ${(chance * Formulas.goalConversion * 100).round()}%'
+                      : 'アシスト ${(chance * assistConversion * 100).round()}%'),
                   visualDensity: VisualDensity.compact,
                   backgroundColor: theme.colorScheme.secondaryContainer,
                 ),
@@ -285,8 +450,40 @@ class _OptionButton extends StatelessWidget {
                 style: theme.textTheme.bodySmall
                     ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
               ),
+              if (growth > 0)
+                Padding(
+                  padding: const EdgeInsets.only(left: 4),
+                  child: Text('↑$growth',
+                      style: theme.textTheme.labelSmall
+                          ?.copyWith(color: theme.colorScheme.primary)),
+                ),
+              if (focused)
+                Padding(
+                  padding: const EdgeInsets.only(left: 6),
+                  child: Text('重点',
+                      style: theme.textTheme.labelSmall
+                          ?.copyWith(color: theme.colorScheme.tertiary)),
+                ),
             ],
           ),
+          if (shown.isNotEmpty) ...[
+            const SizedBox(height: 6),
+            Wrap(
+              spacing: 10,
+              runSpacing: 2,
+              children: [
+                for (final f in shown)
+                  Text(
+                    '${f.label} ${f.percent > 0 ? '+' : ''}${f.percent}%',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: f.value > 0
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.error,
+                    ),
+                  ),
+              ],
+            ),
+          ],
         ],
       ),
     );
@@ -367,14 +564,23 @@ class _ReadyToFinish extends StatelessWidget {
 }
 
 class _BenchedView extends StatelessWidget {
-  const _BenchedView({required this.onDone, required this.busy});
+  const _BenchedView({
+    required this.onDone,
+    required this.busy,
+    this.idle = 0,
+  });
 
   final VoidCallback onDone;
   final bool busy;
 
+  /// 何試合続けて外れているか。
+  final int idle;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    // 次に外れると何試合連続になるか。そこで必ず一度は声がかかる。
+    final remaining = Formulas.benchPatience - (idle + 1);
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -386,10 +592,18 @@ class _BenchedView extends StatelessWidget {
               Text('ベンチ外', style: theme.textTheme.headlineSmall),
               const SizedBox(height: 8),
               Text(
-                '直近の評価点が低く、今節は招集されなかった。'
-                '出場すれば評価は上げ直せる。',
+                '直近の評価点が低く、今節は招集されなかった。',
                 style: theme.textTheme.bodyMedium
                     ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                remaining <= 0
+                    ? '外れ続けている。次節は途中出場から声がかかる。'
+                    : 'あと$remaining試合外れると、まずは途中出場から戻ることになる。'
+                        '練習で調子を戻しておく。',
+                style: theme.textTheme.bodyMedium
+                    ?.copyWith(color: theme.colorScheme.primary),
               ),
               const SizedBox(height: 32),
               FilledButton(
@@ -408,12 +622,19 @@ class _BenchedView extends StatelessWidget {
 }
 
 class _MatchSummary extends StatelessWidget {
-  const _MatchSummary({required this.result, required this.week});
+  const _MatchSummary({
+    required this.result,
+    required this.week,
+    this.headline = const [],
+  });
 
   final MatchResult result;
 
   /// その1週間で起きたこと（練習の成果・負傷・復帰）。
   final WeekReport week;
+
+  /// その試合について世に出た見出し。
+  final List<NewsItem> headline;
 
   @override
   Widget build(BuildContext context) {
@@ -445,12 +666,48 @@ class _MatchSummary extends StatelessWidget {
                   _stat(theme, 'アシスト', '${result.assists}'),
                 ],
               ),
+              if (headline.isNotEmpty) ...[
+                const SizedBox(height: 20),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(14),
+                  decoration: BoxDecoration(
+                    color: theme.colorScheme.secondaryContainer,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Column(
+                    children: [
+                      Text(headline.first.headline,
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.titleSmall),
+                      if (headline.first.body.isNotEmpty) ...[
+                        const SizedBox(height: 4),
+                        Text(headline.first.body,
+                            textAlign: TextAlign.center,
+                            style: theme.textTheme.bodySmall),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+              if (week.timeline.isNotEmpty) ...[
+                const SizedBox(height: 24),
+                _Timeline(events: week.timeline),
+              ],
               if (week.deadBall != null) ...[
                 const SizedBox(height: 20),
                 Text(
                   week.deadBall!,
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyMedium,
+                ),
+              ],
+              if (week.autoRested) ...[
+                const SizedBox(height: 8),
+                Text(
+                  '疲れが残っていたので、今週は自動で休養にした。',
+                  style: theme.textTheme.bodyMedium
+                      ?.copyWith(color: theme.colorScheme.error),
                 ),
               ],
               if (week.trained != null) ...[
@@ -577,6 +834,67 @@ class _InjuryNotice extends StatelessWidget {
           ],
         ],
       ),
+    );
+  }
+}
+
+/// 試合で起きたことを時間順に並べる。
+///
+/// 数字だけの結果は、38試合ぶん並べても記憶に残らない。
+/// 「78分に決めて追いついた」が残ると、シーズンが物語になる。
+class _Timeline extends StatelessWidget {
+  const _Timeline({required this.events});
+
+  final List<MatchEvent> events;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text('試合の流れ',
+            style: theme.textTheme.labelMedium
+                ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+        const SizedBox(height: 8),
+        for (final event in events)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 3),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 52,
+                  child: Text('${event.minute}分',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant)),
+                ),
+                Icon(
+                  event.kind == MatchEventKind.conceded
+                      ? Icons.remove_circle_outline
+                      : event.kind == MatchEventKind.ownGoal
+                          ? Icons.sports_soccer
+                          : event.kind == MatchEventKind.ownAssist
+                              ? Icons.trending_up
+                              : Icons.check_circle_outline,
+                  size: 16,
+                  color: event.kind.isOurs
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.error,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  event.kind.label,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: event.kind == MatchEventKind.ownGoal ||
+                            event.kind == MatchEventKind.ownAssist
+                        ? FontWeight.bold
+                        : FontWeight.normal,
+                  ),
+                ),
+              ],
+            ),
+          ),
+      ],
     );
   }
 }

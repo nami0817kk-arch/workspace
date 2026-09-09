@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../player_portrait.dart';
+import '../readable_width.dart';
 import '../../models/life.dart';
 import '../../state/career_controller.dart';
 
@@ -53,7 +55,8 @@ class _RetiredScreenState extends State<RetiredScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('引退')),
       body: SafeArea(
-        child: ListView(
+        child: ReadableWidth(
+          child: ListView(
           padding: const EdgeInsets.all(20),
           children: [
             Text(
@@ -62,8 +65,17 @@ class _RetiredScreenState extends State<RetiredScreen> {
                   : '${state.player.name}「${state.nickname}」',
               style: theme.textTheme.headlineSmall,
             ),
+            Center(
+              child: PlayerPortrait(
+                look: state.player.look,
+                club: state.club,
+                squadNumber: state.squadNumber,
+                size: 96,
+              ),
+            ),
+            const SizedBox(height: 12),
             Text(
-              '${state.player.position.label}  ${seasons.length}シーズン  '
+              '${state.player.positionLabel}  ${seasons.length}シーズン  '
               '${state.player.age}歳で引退',
               style: theme.textTheme.bodyMedium
                   ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
@@ -177,7 +189,7 @@ class _RetiredScreenState extends State<RetiredScreen> {
                 contentPadding: EdgeInsets.zero,
                 title: Text('${record.year}  ${record.clubName}'),
                 subtitle: Text(
-                  '${record.tier}部 ${record.leaguePosition}位  ·  '
+                  '${record.tier}部 ${record.leaguePosition}位 ・ '
                   '${record.stats.appearances}試合 '
                   '${record.stats.goals}G ${record.stats.assists}A',
                 ),
@@ -197,6 +209,7 @@ class _RetiredScreenState extends State<RetiredScreen> {
               ),
             ),
           ],
+          ),
         ),
       ),
     );

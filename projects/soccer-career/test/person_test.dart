@@ -354,7 +354,10 @@ void main() {
       expect(next.reputation.awards, contains(Award.debut));
       expect(next.reputation.marketValue, isNot(s.reputation.marketValue));
       expect(next.finances.savings, greaterThan(0));
-      expect(next.relations.manager, isNot(50));
+      // 監督が代わった年は信頼が白紙に戻る。どちらかが動いていればよい。
+      final managerChanged = next.manager!.name != s.manager!.name;
+      expect(managerChanged || next.relations.manager != s.relations.manager,
+          isTrue);
       // 性格も動く。
       expect(next.player.personality.confidence,
           greaterThanOrEqualTo(s.player.personality.confidence));

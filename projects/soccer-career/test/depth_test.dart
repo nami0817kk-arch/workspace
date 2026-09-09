@@ -287,6 +287,14 @@ void main() {
     test('契約更改は常に提示され、好成績なら上がる', () {
       final ce = CareerEngine(random: Random(8));
       final s = ce.startCareer(name: 'R', position: Position.st, age: 20, agent: Agent.pool.first);
+      // 契約が残っている間は、残留しても条件は動かない（1年減るだけ）。
+      s.contractYears = 3;
+      final holding = ce.renewalOffer(s);
+      expect(holding.isRenewal, isTrue);
+      expect(holding.salary, s.salary);
+      expect(holding.years, 2);
+
+      s.contractYears = 1;
       final poor = ce.renewalOffer(s);
       expect(poor.isRenewal, isTrue);
 

@@ -329,6 +329,62 @@ void main() {
       expect(manifest, contains('com.google.android.gms.ads.APPLICATION_ID'));
     });
 
+    test('リリース用ワークフローのシェル変数が、非ASCIIと地続きになっていない', () {
+      // `echo "プロファイル「$NAME」"` のように $VAR の直後が非ASCII文字だと、
+      // macOS ランナーのロケールではそのバイトが識別子の一部と見なされ、
+      // 存在しない変数を参照して set -u で落ちる。実際に iOS のリリースが
+      // ここで止まり、macOS ランナーの分数(通常の10倍)を1回無駄にした。
+      // ログ出力の行なので、ローカルの検査では踏めない。
+      final pattern = RegExp(r'\$[A-Za-z_][A-Za-z0-9_]*');
+      for (final path in const [
+        '../../.github/workflows/soccer-ios-release.yml',
+        '../../.github/workflows/soccer-android-release.yml',
+      ]) {
+        final file = File(path);
+        expect(file.existsSync(), isTrue, reason: '$path が無い');
+        final lines = file.readAsLinesSync();
+        for (var i = 0; i < lines.length; i++) {
+          for (final m in pattern.allMatches(lines[i])) {
+            if (m.end >= lines[i].length) continue;
+            final next = lines[i].codeUnitAt(m.end);
+            expect(
+              next < 128,
+              isTrue,
+              reason: '$path:${i + 1} の ${m.group(0)} が非ASCII文字と'
+                  '地続きになっている。\${...} で囲むこと: '
+                  '${lines[i].trim()}',
+            );
+          }
+        }
+      }
+    });
+
+    test('成果物のパスが、リポジトリのルートから書かれている', () {
+      // ワークフローは defaults.run.working-directory を
+      // projects/soccer-manager にしているが、これが効くのは run: の
+      // ステップだけで、actions/upload-artifact はリポジトリのルートから
+      // パスを解決する。ルート起点で書かないと
+      // 「No files were found with the provided path」で落ちる。
+      // 実際に iOS のリリースで踏み、TestFlight への送信は成功したのに
+      // ワークフローは赤くなった。
+      const prefix = 'projects/soccer-manager/';
+      for (final path in const [
+        '../../.github/workflows/soccer-ios-release.yml',
+        '../../.github/workflows/soccer-android-release.yml',
+      ]) {
+        final lines = File(path).readAsLinesSync();
+        for (var i = 0; i < lines.length; i++) {
+          final line = lines[i].trim();
+          // upload-artifact に渡すパスは build/ で始まる行として現れる。
+          if (!line.startsWith('build/') && !line.startsWith('path: build/')) {
+            continue;
+          }
+          fail('$path:${i + 1} の成果物パスが working-directory 起点になっている。'
+              '$prefix を付けること: $line');
+        }
+      }
+    });
+
     test('iOSが輸出コンプライアンスを申告している', () {
       final plist = File('ios/Runner/Info.plist').readAsStringSync();
       // これがないと App Store Connect へのアップロードのたびに
