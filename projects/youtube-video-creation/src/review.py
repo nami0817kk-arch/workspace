@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -879,8 +880,12 @@ def check_title_hook(script: Script) -> Finding:
         return Finding(True, "タイトルの型", "続きを見たくなる形です")
     if bare.rstrip("。！!").endswith(TITLE_QUESTION_TAILS):
         return Finding(True, "タイトルの型", "問いかけで終わっています")
-    if bare.rstrip("。！!").endswith(("」", "』")):
-        # 「解説南さん『鈴木彩艶に関しては・・・』」が25万回。**引用で切ると続きが気になる**
+    # 「解説南さん『鈴木彩艶に関しては・・・』」が25万回。**引用で切ると続きが気になる**。
+    # **`_bare` で見てはいけない**（2026-09-09）。`_bare` は鉤括弧ごと落とすので、
+    # この枝は一度も通らない死んだコードだった。docstring は「引用で切る形も通す」と
+    # 書いてあるのに、実際は弾いていた。札だけ外した文字列で見る
+    quoted = re.sub(r"【[^】]*】", "", script.title or "").strip()
+    if quoted.rstrip("。！!").endswith(("」", "』")):
         return Finding(True, "タイトルの型", "引用で終わっています")
     return Finding(
         False, "タイトルの型",

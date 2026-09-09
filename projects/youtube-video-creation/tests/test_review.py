@@ -874,3 +874,23 @@ def test_漢字の名前で始まるタイトルも主語として通す():
     # 名前ではない漢字語で始まるものは、これまでどおり落とす
     assert not title("移籍市場が閉まったあとに何が残ったか").ok
     assert not title("順位表を見ると分かることがある").ok
+
+
+def test_引用で終わるタイトルを通す():
+    """**死んだコードだった**（2026-09-09）。
+
+    `check_title_hook` は「引用で終わる形も通す」と書いてあるのに、
+    判定に使う `_bare` が鉤括弧ごと落としていたため、この枝は
+    一度も通らなかった。実際に「モウリーニョ、今季初黒星の会見で
+    『救急車は来なかったね』」が × になった。
+    """
+    from src.review import Script, check_title_hook
+
+    def hook(text):
+        return check_title_hook(Script(title=text))
+
+    assert hook("モウリーニョ、今季初黒星の会見で「救急車は来なかったね」").ok
+    assert hook("解説南さん『鈴木彩艶に関しては・・・』").ok
+    assert hook("【悲報】モウリーニョ、会見で「救急車は来なかったね」").ok
+    # 引用で終わっていないものは、これまでどおり弾く
+    assert not hook("レアルがベティスに0対1で敗れた").ok
