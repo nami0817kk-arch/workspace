@@ -114,6 +114,8 @@ def build_script(
         photos=look.get("photos") or [],
         # 縦サムネの下に置く一言。横型では使わない
         quote=short_quote(script),
+        crest_main=look.get("crest_main") or [],
+        crests=look.get("crests"),
     )
     # 画像のクレジットも概要欄に出す。CC BY 系は表示しないと利用条件を満たさない
     outputs = subtitles.write_outputs(

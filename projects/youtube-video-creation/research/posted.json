@@ -541,18 +541,8 @@
   },
   {
     "build": "20260909_ballondor_short",
-    "video_id": "aJ5wu41-p7I",
-    "at": "2026-09-09T00:16:53+00:00"
-  },
-  {
-    "build": "20260909_ballondor_short",
     "video_id": "Vuc_s1TUygg",
     "at": "2026-09-09T00:16:58+00:00"
-  },
-  {
-    "build": "20260909_ballondor_short",
-    "video_id": "6ZPZ7I4GSOQ",
-    "at": "2026-09-09T00:17:12+00:00"
   },
   {
     "build": "20260909_kamada",
@@ -618,5 +608,55 @@
     "build": "20260909_minamino_short",
     "video_id": "ZSRPSoRS6wM",
     "at": "2026-09-09T02:56:28+00:00"
+  },
+  {
+    "build": "20260909_var",
+    "video_id": "jt7GcGKpSnU",
+    "at": "2026-09-09T13:11:06+00:00"
+  },
+  {
+    "build": "20260909_var_short",
+    "video_id": "JKIxxrEf034",
+    "at": "2026-09-09T13:13:56+00:00"
+  },
+  {
+    "build": "20260909_umtiti",
+    "video_id": "3m5u9ZwNdqg",
+    "at": "2026-09-09T13:17:32+00:00"
+  },
+  {
+    "build": "20260909_umtiti_short",
+    "video_id": "t5BqwEVT2aY",
+    "at": "2026-09-09T13:20:26+00:00"
+  },
+  {
+    "build": "20260909_yaya",
+    "video_id": "3EcM2t3Ef4c",
+    "at": "2026-09-09T13:24:00+00:00"
+  },
+  {
+    "build": "20260909_yaya_short",
+    "video_id": "cM7UQng3rac",
+    "at": "2026-09-09T13:29:23+00:00"
+  },
+  {
+    "build": "20260909_barca",
+    "video_id": "2JUKhP6kKZc",
+    "at": "2026-09-09T14:34:50+00:00"
+  },
+  {
+    "build": "20260909_barca_short",
+    "video_id": "zYQde5BILQA",
+    "at": "2026-09-09T14:37:41+00:00"
+  },
+  {
+    "build": "20260909_messi",
+    "video_id": "zl146IIyOOE",
+    "at": "2026-09-09T14:53:36+00:00"
+  },
+  {
+    "build": "20260909_messi_short",
+    "video_id": "mP2m2wlXJIU",
+    "at": "2026-09-09T14:53:56+00:00"
   }
 ]

@@ -185,9 +185,11 @@ class Renderer:
             canvas = self._transparent() if over_video else self._background(background).copy()
         if self.layout.with_characters:
             self._draw_characters(canvas, member, line.emotion, mouth_open, hop_t)
-        # 写真を下地にしたときは小さなカードを重ねない。図表だけ左半分に置く
+        # 写真を下地にしたときは小さなカードを重ねない。図表だけ左半分に置く。
+        # **縦型は左半分に寄せない。**写真が画面いっぱいなので、寄せる相手がいない
+        # （2026-09-09。1080の幅をさらに半分にすると図表が読めなくなる）
         self._draw_media(canvas, None if stage is not None else line.image, card, telop_t,
-                         left_half=stage is not None)
+                         left_half=stage is not None and not self.layout.is_portrait)
         # **縦型では制作側の言葉を画面に出さない**（2026-09-07 の方針）。
         # 「オープニング」「まとめ」は章の目印で、視聴者には意味が無い。
         # 一等地の左上を、本編の作業用ラベルで埋めない。
@@ -246,9 +248,16 @@ class Renderer:
         参考チャンネルは人物の実写が画面いっぱいで、こちらは枠付きの小さな
         カード（画面の1割強）だった。サムネと同じ作りにする: 同じ写真をぼかして
         暗くした敷き布の上に、右半分いっぱいに写真を立てる（縦長は上寄りに切る）。
-        下側は見出しが乗るぶんだけ暗く落とす。横型のニュース風だけで使う。
+        下側は見出しが乗るぶんだけ暗く落とす。
+
+        **縦型では画面いっぱいに敷く**（2026-09-09 ユーザー指示）。それまでは
+        縦型を素通ししていて、冒頭は枠付きの小さな写真カードだった。
+        ショートの一覧が出しているのは `oar2.jpg` ——
+        **こちらが設定したサムネイルではなく、YouTube が動画から自動で作る
+        縦の1コマ**（一覧の img の src を読んで確かめた）。つまり
+        **冒頭の絵がそのまま一覧の絵になる。**サムネだけ直しても届かない。
         """
-        if not image_path or self.layout.is_portrait or self.layout.with_characters:
+        if not image_path or self.layout.with_characters:
             return None
         if image_path in self._stages:
             return self._stages[image_path]
@@ -262,6 +271,18 @@ class Renderer:
         photo = Image.open(path).convert("RGBA")
         bed = _cover(photo, width, height).filter(ImageFilter.GaussianBlur(30))
         bed = ImageEnhance.Brightness(bed).enhance(0.55)
+        if self.layout.is_portrait:
+            # 縦型は横に並べる余地が無い。**写真で画面を埋める**
+            bed.alpha_composite(_cover(photo, width, height, focus=0.18))
+            shade = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+            shade_draw = ImageDraw.Draw(shade)
+            start = int(height * 0.60)
+            for y in range(start, height):
+                alpha = int(196 * (y - start) / (height - start))
+                shade_draw.line([(0, y), (width, y)], fill=(0, 0, 0, alpha))
+            bed.alpha_composite(shade)
+            self._stages[image_path] = bed
+            return bed
         column_w = int(width * 0.5)
         column = _cover(photo, column_w, height)
         # 左端をなじませる。切り口が立つと貼り付けたように見える
@@ -826,7 +847,7 @@ class Renderer:
         inserts = inserts or Inserts()
         entries: list[tuple[Path, float]] = []
         previous: Path | None = None
-        self.opening_photo = str(script.meta.get("thumbnail_photo") or "")
+        self.opening_photo = opening_photo(script.meta)
         self.opening_scene = script.scenes[0].title if script.scenes else ""
         self.opening_points = [str(x) for x in (script.meta.get("thumbnail_points") or [])]
 
@@ -1241,6 +1262,22 @@ def _layer(size: tuple[int, int]) -> tuple[Image.Image, ImageDraw.ImageDraw]:
 
 # 制作の都合で付けている章の名前。視聴者に見せる意味が無い
 INTERNAL_LABELS = ("オープニング", "まとめ")
+
+
+def opening_photo(meta: dict) -> str:
+    """冒頭に敷く写真を決める。
+
+    **顔を並べた回で抜けていた**（2026-09-09 実測）。`thumbnail_photos`
+    （2〜3枚）だけを書いた台本は `thumbnail_photo` が空になり、
+    冒頭が写真の無いぼかしだけになっていた。ショートの一覧は動画から作った
+    1コマ（`oar2.jpg`）を出すので、ここが空だと一覧の絵まで抜ける。
+    """
+    single = str((meta or {}).get("thumbnail_photo") or "").strip()
+    if single:
+        return single
+    tiles = [str(x).strip() for x in ((meta or {}).get("thumbnail_photos") or [])]
+    tiles = [x for x in tiles if x]
+    return tiles[0] if tiles else ""
 
 
 def _cover(image: Image.Image, width: int, height: int, focus: float | None = None) -> Image.Image:

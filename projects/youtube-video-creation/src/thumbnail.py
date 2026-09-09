@@ -63,6 +63,20 @@ NEWS_LABEL = "海外サッカーニュース"
 #   2. 見出しは**上端**に小さめの2〜3行。16:9 のときのような極太1行ではない
 #   3. 下端に**動画の中の一言**を置く（「シュートは自分の武器」「ボールを受けた瞬間」）
 #   4. 色は1色だけ強く差す
+# **エンブレムを主役にする**（2026-09-09 ユーザー指示「一にして」）。
+# それまでは「小さく添えるだけ。サムネの主役にしない」と決めていた
+# （2026-09-08 ユーザー判断）。**その決まりをユーザーが変えた。**
+# 権利の見立ては変わっていない——CC の表示は当てにならず、なぞって上げた人に
+# クラブの商標を解放する権利は無い。**引き受ける危険が一段増える。**
+#
+# 使うのは、その話に出てくる人のクラブ姿の写真が無いとき。
+# 実際、アーセナル対ヴィラの誤審の回で、関係者の誰にも使える
+# クラブユニフォーム姿の写真が無かった
+CREST_MAIN_HEIGHT = 410      # 1280x720 の中での高さ
+# **暗すぎると `サムネの黒` の点検が止める**（実測で顔の段の75%が黒だった）。
+# 一覧で沈まない明るさにする
+CREST_MAIN_GROUND = (34, 58, 96, 255)
+
 SHORT_SIZE = (1080, 1920)
 SHORT_MARGIN = 56
 SHORT_HEAD_SIZES = (86, 78, 72, 66, 60, 54, 48, 44)
@@ -256,6 +270,14 @@ def from_meta(meta: dict, title: str) -> dict:
         # 顔を並べる（2026-09-08）。2〜3枚あれば全面が写真になり、
         # ぼかしの下地が要らない。参考チャンネルは全面が写真だった
         "photos": [str(x) for x in (meta.get("thumbnail_photos") or [])][:3],
+        # **エンブレムを主役にする**（2026-09-09 ユーザー指示）。
+        # 出てくる人のクラブ姿の写真が無いときの逃げ道。写真より優先する
+        "crest_main": [str(x) for x in (meta.get("thumbnail_crest_main") or [])][:3],
+        # **エンブレムだけ止めたいことがある**（2026-09-09 ユーザー「レアルは不要」）。
+        # tags を削ると YouTube のタグからも消えるので、絵のほうだけ別に持つ。
+        # 書いていなければ tags をそのまま使う
+        "crests": ([str(x) for x in meta["thumbnail_crests"]]
+                   if "thumbnail_crests" in meta else None),
     }
 
 
@@ -371,6 +393,8 @@ def build_thumbnail(
     points: list[str] | None = None,
     photos: list[str] | None = None,
     quote: str = "",
+    crest_main: list[str] | None = None,
+    crests: list[str] | None = None,
 ) -> Path:
     """サムネイルを1枚作る。
 
@@ -394,7 +418,8 @@ def build_thumbnail(
     if chosen == "band":
         return _band_thumbnail(
             config, out_path, background,
-            lines or (title, subtitle), tags or [], focus, reaction, points or [], photos or [],
+            lines or (title, subtitle), tags or [], focus, reaction, points or [],
+            photos or [], crest_main or [], crests,
         )
 
     font_path = str(config.video.font_path())
@@ -448,6 +473,8 @@ def _band_thumbnail(
     reaction: str = "",
     points: list[str] | None = None,
     photos: list[str] | None = None,
+    crest_main: list[str] | None = None,
+    crests: list[str] | None = None,
 ) -> Path:
     """写真の上に蛍光イエローの帯を重ねる。**最高再生の型に合わせてある。**
 
@@ -461,14 +488,20 @@ def _band_thumbnail(
     """
     font_path = str(config.video.font_path())
     # **正方形に近い写真も右に置く。**全面に敷くと顔が帯に隠れる
-    tiles = [q for q in (photos or []) if _resolve(q).exists()]
-    if len(tiles) >= 2:
+    stage = _crest_stage(crest_main or [], font_path)
+    tiles = [] if stage is not None else [q for q in (photos or []) if _resolve(q).exists()]
+    if stage is not None:
+        canvas = stage
+        portrait = False
+    elif len(tiles) >= 2:
         # **並べれば全面が写真になる。**ぼかしの下地が要らない
         canvas = _tile_photos(tiles)
         portrait = False
     else:
         portrait = _is_portrait(background, ratio=0.95)
-    if portrait:
+    if stage is not None:
+        pass
+    elif portrait:
         canvas = _blur_bed(background)
         _paste_side(canvas, background)
     elif len(tiles) < 2:
@@ -486,7 +519,9 @@ def _band_thumbnail(
     canvas.alpha_composite(scrim)
 
     layer, draw = _layer(SIZE)
-    _draw_tags(layer, draw, tags, font_path)
+    # **主役にしたときは、右上の小さいほうを出さない。**同じ絵が2つ並ぶ
+    if stage is None:
+        _draw_tags(layer, draw, tags if crests is None else crests, font_path)
     if portrait and points:
         _draw_points(draw, points, font_path)
 
@@ -524,6 +559,57 @@ def _band_thumbnail(
     out_path.parent.mkdir(parents=True, exist_ok=True)
     canvas.convert("RGB").save(out_path, quality=95)
     return out_path
+
+
+def _crest_stage(names: list[str], font_path: str) -> Image.Image | None:
+    """エンブレムを大きく並べた下地。写真の代わりに使う。
+
+    **元の画像が小さい**（実測で 112x132 など）。拡大するとどうしても
+    眠くなるので、暗い地に置いてコントラストで見せる。
+    """
+    from . import crest as crest_mod
+
+    found = [(n, crest_mod.find(n)) for n in names]
+    found = [(n, p) for n, p in found if p is not None]
+    if not found:
+        return None
+    canvas = Image.new("RGBA", SIZE, CREST_MAIN_GROUND)
+    # 中央をうっすら明るく。**平らな一色は一覧で沈む**
+    glow, glow_draw = _layer(SIZE)
+    for step in range(14):
+        radius = int(SIZE[0] * (0.62 - step * 0.04))
+        glow_draw.ellipse(
+            [SIZE[0] // 2 - radius, int(SIZE[1] * 0.32) - radius // 2,
+             SIZE[0] // 2 + radius, int(SIZE[1] * 0.32) + radius // 2],
+            fill=(96, 132, 186, 16),
+        )
+    canvas.alpha_composite(glow)
+    marks = []
+    for _, path in found[:3]:
+        with Image.open(path) as source:
+            mark = source.convert("RGBA")
+        ratio = CREST_MAIN_HEIGHT / mark.height
+        marks.append(mark.resize((max(1, int(mark.width * ratio)), CREST_MAIN_HEIGHT),
+                                 Image.LANCZOS))
+    gap = 96
+    total = sum(m.width for m in marks) + gap * (len(marks) - 1)
+    x = (SIZE[0] - total) // 2
+    # 帯が下を覆うので、少し上に置く
+    top = int(SIZE[1] * 0.30) - CREST_MAIN_HEIGHT // 2
+    middles = []
+    for mark in marks:
+        canvas.alpha_composite(mark, (x, top))
+        middles.append(x + mark.width // 2)
+        x += mark.width + gap
+    if len(marks) == 2:
+        font = ImageFont.truetype(font_path, 72)
+        draw = ImageDraw.Draw(canvas)
+        text = "対"
+        width = draw.textlength(text, font=font)
+        draw.text(((middles[0] + middles[1] - width) / 2,
+                   top + CREST_MAIN_HEIGHT / 2 - 44),
+                  text, font=font, fill=(255, 255, 255, 235))
+    return canvas
 
 
 def _draw_chip(draw: ImageDraw.ImageDraw, text: str, font_path: str, bottom: int) -> None:
@@ -849,19 +935,26 @@ def _fit_band(draw: ImageDraw.ImageDraw, text: str, font_path: str, room: int = 
 
 def _draw_tags(layer: Image.Image, draw: ImageDraw.ImageDraw,
                tags: list[str], font_path: str) -> None:
-    """右上にエンブレムだけを並べる。
+    """**左側にエンブレムを並べる**（2026-09-09 ユーザー「もっと大きくして左に置く」）。
 
     前は赤い札にクラブ名を書き、その左にエンブレムを添えていた。
     **その文字は要らない**（2026-09-08 ユーザー指摘）。クラブ名は
-    タイトルにも帯にも出ているので、右上でもう一度書くと画面が混むだけだった。
+    タイトルにも帯にも出ているので、もう一度書くと画面が混むだけだった。
     残すのはエンブレムだけで、無いクラブは何も出ない。
+
+    置き場所は**左の、言葉の下と帯の上のあいだ**。右上に小さく置いていた頃は、
+    一覧に並べたときに何のクラブか判別できなかった。左は縦長の写真を右に置いた
+    ときに空くところで、ちょうど余っている
     """
     if not tags:
         return
-    y = 28
+    size = _crest_px()
+    # 上の言葉（thumbnail_points）と、下の帯を避けた帯域に置く
+    top = int(SIZE[1] * 0.30)
+    x = 56
     for tag in tags[:2]:
-        if _paste_crest(layer, tag, SIZE[0] - 28, y):
-            y += _crest_px() + 18
+        if _paste_crest(layer, tag, x + size, top):
+            x += size + 26
 
 
 def _draw_points(draw: ImageDraw.ImageDraw, points: list[str], font_path: str) -> None:

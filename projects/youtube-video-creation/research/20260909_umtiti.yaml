@@ -1,0 +1,95 @@
+# エムバペへの苦言（2026年9月9日）。候補B
+#
+# Gemini の型③「超有名監督・スターの極端な発言」。レアルはこちらの実測でも
+# いちばん伸びているクラブ（直近7日の1位1,071回はモドリッチの回）。
+#
+# **反応は入れない。**`reactions --find` で出るのは古い記事のスレだった
+format: news
+# 引用が主役の回
+voice_min: 32
+slot: world
+date: "2026年9月9日"
+
+short_title: "エムバペの一言に、同胞が苦言を呈した"
+
+theme:
+  id: umtiti_on_mbappe
+  league: spain
+  kind: other
+  topic: エムバペ
+  title: エムバペが自分に投票すると言った。同胞が「彼が決めることではない」
+  hook: バロンドールを誰に入れるか、と聞かれた場面でした。
+  question: 何がそこまで引っかかったのか
+
+thumbnail:
+  line1: 自分に投票すると言った
+  line2: 同胞が ●●● を呈した
+  # **二人を並べる**（2026-09-09 ユーザー指示）。言った側と、苦言を呈した側
+  photos:
+    - "assets/photos/20260908_mbappe/01.jpg"
+    - "assets/photos/20260909_umtiti/01.jpg"
+  tags: [エムバペ, レアル・マドリード]
+  # エンブレムは出さない（2026-09-09 ユーザー「レアルは不要」）。
+  # 顔を2枚並べていて左が空いていないため、写真に重なる
+  crests: []
+  points:
+    - 苦言を呈したのは元フランス代表
+    - 授賞式そのものにも疑問
+
+sections:
+  - id: what
+    heading: 何を言ったのか
+    tier: 報道
+    telop: 「自分自身に投票する」
+    narrator: キャスター
+    say:
+      - キリアン・エムバペの発言が波紋を広げています。スペイン紙『マルカ』が9日に伝えました。
+      - エムバペは先日、自分が投票するとしたら、バロンドールの受賞者として自分自身に入れる、と話しました。
+      - これに、元フランス代表のDFサミュエル・ウムティティが反応します。
+      - フランスのラジオ番組『アフター・フット』での発言です。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/09/post1007760/
+      - https://www.footballchannel.jp/2026/09/09/post1007112/
+
+  - id: said
+    heading: 同胞はこう言った
+    tier: 報道
+    telop: 「彼が決めることではない」
+    narrator: 解説
+    say:
+      - {voice: ウムティティ, text: エムバペは自信家だ}
+      - {voice: ウムティティ, text: この賞を誰が受賞する資格があるのかについて話すのは}
+      - {voice: ウムティティ, text: 彼が決めることではない}
+      - {voice: ウムティティ, text: ピッチで起きていることに集中すべきだ}
+      - 実力そのものは認めています。
+      - {voice: ウムティティ, text: 誰もが彼が多くのゴールを決めたことは理解している}
+      - {voice: ウムティティ, text: 良いパフォーマンスを見せたことも}
+      - {voice: ウムティティ, text: しかし、受賞者を決めるのは彼ではない}
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/09/post1007760/
+      - https://www.footballchannel.jp/2026/09/09/post1007112/
+
+  - id: award
+    heading: 矛先は賞そのものにも向いた
+    tier: 報道
+    telop: 「意味をすべて失ってしまった」
+    narrator: 解説
+    say:
+      - ウムティティは、バロンドールという賞そのものにも疑問を投げました。
+      - {voice: ウムティティ, text: 私はこの授賞式すら見ていない}
+      - {voice: ウムティティ, text: アタッカーにとって}
+      - {voice: ウムティティ, text: バロンドールを獲得することは素晴らしいことだ}
+      - {voice: ウムティティ, text: しかし、この授賞式はその意味をすべて失ってしまった}
+      - {voice: ウムティティ, text: チームスポーツであるサッカーにとって、とても有害だ}
+      - {voice: ウムティティ, text: 人々は集団でのタイトルよりも}
+      - {voice: ウムティティ, text: バロンドールの獲得をずっと意識するようになっている}
+      - 数字についても、こう続けました。
+      - {voice: ウムティティ, text: チームでチャンピオンズリーグを優勝しても}
+      - {voice: ウムティティ, text: 自分自身のことだけを考えていることがある}
+      - {voice: ウムティティ, text: サッカーは数字だけで決まるものではない}
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/09/post1007760/
+      - https://www.footballchannel.jp/2026/09/09/post1007112/

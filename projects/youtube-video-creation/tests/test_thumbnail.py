@@ -422,7 +422,11 @@ def test_エンブレムがあると絵が変わる(tmp_path, monkeypatch):
     Image.new("RGBA", (120, 120), (255, 0, 0, 255)).save(crests / "レスター.png")
     assert crest_mod.find("レスター") is not None
     assert draw("after") != before
-    assert crest_mod.CREST_PX <= 48        # **大きくしない**
+    # **2026-09-09 に「大きくしない」を取り消した**（ユーザー「クラブロゴは大きく」
+    # → 「もっと大きくして左に置く」→「さらに大きく」の3段階）。
+    # 44px では一覧に並べたとき何のクラブか判別できなかった。
+    # 上限は画面の高さの半分。それを超えると左の言葉か下の帯に食い込む
+    assert 200 <= crest_mod.CREST_PX <= 360
 
 
 def test_左の余白に言葉を積む(tmp_path):
@@ -516,3 +520,64 @@ def test_縦サムネの下に見出しの繰り返しは置かない(tmp_path):
     other = _short_thumbnail(config, tmp_path / "b.png", None,
                              ("上", "下の行"), [], None, "別のひとこと", [])
     assert same.read_bytes() != other.read_bytes()
+
+
+def test_エンブレムを主役にできる(tmp_path):
+    """**「小さく添えるだけ」の決まりを変えた**（2026-09-09 ユーザー指示）。
+
+    アーセナル対ヴィラの誤審の回で、話に出てくる誰にも使える
+    クラブユニフォーム姿の写真が無かった。エンブレムを大きく出す道を作る。
+    右上の小さいほうは、主役にしたときは出さない（同じ絵が2つ並ぶ）。
+    """
+    from PIL import Image
+
+    from src.config import load_config
+    from src.thumbnail import _crest_stage, build_thumbnail
+
+    config = load_config()
+    font = str(config.video.font_path())
+    assert _crest_stage(["アーセナル", "アストン・ヴィラ"], font) is not None
+    assert _crest_stage(["まったく知らないクラブ"], font) is None
+
+    with_crest = build_thumbnail(
+        config, "題", tmp_path / "a.png", lines=("1", "2"),
+        tags=["アーセナル", "アストン・ヴィラ"],
+        crest_main=["アーセナル", "アストン・ヴィラ"],
+    )
+    without = build_thumbnail(
+        config, "題", tmp_path / "b.png", lines=("1", "2"),
+        tags=["アーセナル", "アストン・ヴィラ"],
+    )
+    assert with_crest.read_bytes() != without.read_bytes()
+    with Image.open(with_crest) as image:
+        assert image.size == (1280, 720)
+
+
+def test_エンブレムだけ止められる(tmp_path, monkeypatch):
+    """**tags を削るとYouTubeのタグからも消える**（2026-09-09 ユーザー「レアルは不要」）。
+
+    顔を2枚並べた回は左が空いておらず、大きくしたエンブレムが写真に重なる。
+    絵だけ止めたいので、`thumbnail.crests` を別に持つ。
+    書いていなければ、これまでどおり tags をそのまま使う。
+    """
+    from PIL import Image
+
+    from src.config import load_config
+    from src.thumbnail import build_thumbnail, from_meta
+
+    config = load_config()
+    photo = tmp_path / "p.png"
+    Image.new("RGB", (600, 900), (30, 90, 160)).save(photo)
+
+    def draw(name, **kw):
+        return build_thumbnail(
+            config, "題", tmp_path / f"{name}.png", style="band",
+            lines=("見出し", "副見出し"), background=str(photo),
+            tags=["バルセロナ"], **kw).read_bytes()
+
+    assert draw("with") != draw("without", crests=[])
+
+    # from_meta は、書いていなければ None（＝tags を使う）
+    assert from_meta({}, "題")["crests"] is None
+    assert from_meta({"thumbnail_crests": []}, "題")["crests"] == []
+    assert from_meta({"thumbnail_crests": ["バルセロナ"]}, "題")["crests"] == ["バルセロナ"]

@@ -352,3 +352,29 @@ def test_さっき上がった同じ題名を見つける():
         assert upload_mod.recently_uploaded(_Service(), "まだ無い題名") is None
     finally:
         quota.record = original
+
+
+def test_明日の時刻で予約できる():
+    """**夜に書き出して朝に出す**ときに要る（2026-09-09）。
+
+    実測で、朝に出した回は435〜993回、夜に出した回は0〜35回だった。
+    `+750` のような分数での指定は、書き出しに手間取ると狙いが狂う。
+    """
+    from datetime import datetime, timedelta, timezone
+
+    from src.upload import UploadError, when_to_publish
+
+    jst = timezone(timedelta(hours=9))
+    now = datetime(2026, 9, 9, 19, 30, tzinfo=jst)
+
+    got = when_to_publish("明日07:30", now)
+    assert got == "2026-09-09T22:30:00Z"          # 翌日07:30 JST = 当日22:30 UTC
+    assert when_to_publish("翌 08:15", now) == "2026-09-09T23:15:00Z"
+
+    # 今日の指定は、過ぎていればこれまでどおり止める
+    try:
+        when_to_publish("07:30", now)
+    except UploadError as err:
+        assert "過ぎています" in str(err)
+    else:
+        raise AssertionError("過ぎた時刻を通した")

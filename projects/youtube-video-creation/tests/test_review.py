@@ -874,3 +874,58 @@ def test_漢字の名前で始まるタイトルも主語として通す():
     # 名前ではない漢字語で始まるものは、これまでどおり落とす
     assert not title("移籍市場が閉まったあとに何が残ったか").ok
     assert not title("順位表を見ると分かることがある").ok
+
+
+def test_引用で終わるタイトルを通す():
+    """**死んだコードだった**（2026-09-09）。
+
+    `check_title_hook` は「引用で終わる形も通す」と書いてあるのに、
+    判定に使う `_bare` が鉤括弧ごと落としていたため、この枝は
+    一度も通らなかった。実際に「モウリーニョ、今季初黒星の会見で
+    『救急車は来なかったね』」が × になった。
+    """
+    from src.review import Script, check_title_hook
+
+    def hook(text):
+        return check_title_hook(Script(title=text))
+
+    assert hook("モウリーニョ、今季初黒星の会見で「救急車は来なかったね」").ok
+    assert hook("解説南さん『鈴木彩艶に関しては・・・』").ok
+    assert hook("【悲報】モウリーニョ、会見で「救急車は来なかったね」").ok
+    # 引用で終わっていないものは、これまでどおり弾く
+    assert not hook("レアルがベティスに0対1で敗れた").ok
+
+
+def test_顔を並べた回もサムネの顔として認める(tmp_path, monkeypatch):
+    """**冒頭写真と同じ型の見落とし**（2026-09-09）。
+
+    `thumbnail_photos`（2〜3枚）だけを書いた台本は `thumbnail_photo` が空で、
+    顔が入っているのに × になっていた。エンブレムを主役にした回も認める。
+    """
+    import json
+
+    from src import review as review_mod
+
+    folder = tmp_path / "p"
+    folder.mkdir()
+    (folder / "01.jpg").write_bytes(b"x")
+    (folder / "credits.json").write_text(json.dumps(
+        [{"file": "01.jpg", "license": "CC BY 4.0", "no_derivatives": False}]),
+        encoding="utf-8")
+    monkeypatch.setattr(review_mod, "_resolve", lambda value: folder / "01.jpg")
+
+    class Tiled:
+        meta = {"thumbnail_photos": ["assets/photos/a/01.jpg",
+                                     "assets/photos/b/01.jpg"]}
+
+    assert review_mod._thumbnail_face(Tiled()).ok
+
+    class Crests:
+        meta = {"thumbnail_crest_main": ["アーセナル", "アストン・ヴィラ"]}
+
+    assert review_mod._thumbnail_face(Crests()).ok
+
+    class Nothing:
+        meta = {}
+
+    assert not review_mod._thumbnail_face(Nothing()).ok

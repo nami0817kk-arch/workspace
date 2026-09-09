@@ -544,3 +544,50 @@ def test_冒頭の1行目にだけ登録カードが乗る(tmp_path):
     config.video.channel_name = ""
     entries = Renderer(config, tmp_path / "plain").frame_entries(script)
     assert len({path for path, _ in entries}) == 1
+
+
+def test_縦型の冒頭は写真を画面いっぱいに敷く(tmp_path):
+    """**ショートの一覧が出しているのは `oar2.jpg`**（2026-09-09 に判明）。
+
+    こちらが設定したサムネイルではなく、YouTube が動画から自動で作る
+    縦の1コマ。一覧の img の src を読んで確かめた。つまり
+    **冒頭の絵がそのまま一覧の絵になる。**それまで `_photo_stage` は
+    `is_portrait` を素通ししていて、冒頭は枠付きの小さな写真カードだった。
+    """
+    from PIL import Image
+
+    from src.config import load_config
+    from src.render import Renderer
+    from src.shorts import portrait
+
+    photo = tmp_path / "p.png"
+    Image.new("RGB", (900, 1400), (200, 30, 30)).save(photo)
+
+    tall = Renderer(portrait(load_config()), tmp_path)
+    stage = tall._photo_stage(str(photo))
+    assert stage is not None, "縦型で下地が作られていない"
+    assert stage.size == (1080, 1920)
+    # 画面の上半分は写真そのもの（ぼかした敷き布ではない）＝彩度が残る
+    middle = stage.convert("RGB").getpixel((540, 400))
+    assert middle[0] > 120 and middle[1] < 90, f"上半分が写真でない: {middle}"
+
+    wide = Renderer(load_config(), tmp_path)
+    wide_stage = wide._photo_stage(str(photo))
+    assert wide_stage.width > wide_stage.height, "横型はこれまでどおり横長"
+
+
+def test_顔を並べた回でも冒頭に写真が出る():
+    """**冒頭が写真の無いぼかしだけになっていた**（2026-09-09 実測）。
+
+    `thumbnail_photos`（2〜3枚）だけを書いた台本は `thumbnail_photo` が
+    空になり、冒頭の写真が抜けた。ショートの一覧は動画から作った1コマを
+    出すので、ここが空だと一覧の絵まで抜ける。
+    """
+    from src.render import opening_photo
+
+    assert opening_photo({"thumbnail_photos": ["a.jpg", "b.jpg"]}) == "a.jpg"
+    # 単数の指定があれば、そちらが優先される
+    assert opening_photo({"thumbnail_photo": "c.jpg",
+                          "thumbnail_photos": ["a.jpg"]}) == "c.jpg"
+    assert opening_photo({}) == ""
+    assert opening_photo({"thumbnail_photos": []}) == ""

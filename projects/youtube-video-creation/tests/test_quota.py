@@ -61,16 +61,19 @@ def test_日付は太平洋時間で切り替わる():
     assert _today(datetime(2026, 9, 7, 16, 1, tzinfo=jst)) == "2026-09-07"
 
 
-def test_知らない呼び出しは弾く(tmp_path):
-    """**費用の分からないものを黙って0で数えない。**残量がずれる"""
+def test_知らない呼び出しを0で数えない(tmp_path, capsys):
+    """**費用の分からないものを黙って0で数えない。**残量がずれる。
+
+    2026-09-09 までは例外を投げていたが、包んで自動で数えるようにしたら
+    **計測が本体を止めた**（`channels.list` で貼り替えが落ちた）。
+    いまは見立てて数え、表が古いことを1度だけ知らせる。
+    """
     from src import quota
 
-    try:
-        quota.record("videos.somethingNew", tmp_path / "q.json")
-    except KeyError as err:
-        assert "費用の分からない" in str(err)
-    else:
-        raise AssertionError("知らない呼び出しを通した")
+    book = tmp_path / "q.json"
+    got = quota.record("videos.somethingNew", book)
+    assert got == 50, "0 で数えていない"
+    assert "枠の表に" in capsys.readouterr().err
 
 
 def test_太平洋時間の夏と冬で枠の戻る時刻が1時間ずれる():
@@ -204,3 +207,24 @@ def test_まとめて叩く前に見積りが出る():
     assert "実測でぶつかった線" in lines        # 超えるので警告が出る
     assert "128,000" in lines                  # 80 × 1600
     assert "超えます" in lines
+
+
+def test_表に無い呼び出しでも止めない(tmp_path):
+    """**計測が本体を止めてはいけない**（2026-09-09）。
+
+    包んで自動で数えるようにしたら、表に無い `channels.list` で
+    KeyError を投げ、サムネの貼り替えが1本も進まないまま落ちた。
+    数えるための仕組みが、数えられる側を壊していた。
+    """
+    import json
+
+    from src.quota import cost_of, record
+
+    assert cost_of("channels.list") == 1
+    assert cost_of("まったく知らない.list") == 1     # 読み取りは1
+    assert cost_of("まったく知らない.insert") == 50  # 書き込みは50
+
+    ledger = tmp_path / "q.json"
+    record("まったく知らない.list", ledger)          # 例外を投げない
+    book = json.loads(ledger.read_text(encoding="utf-8"))
+    assert list(book.values())[0]["まったく知らない.list"] == 1
