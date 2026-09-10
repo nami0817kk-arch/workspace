@@ -85,7 +85,90 @@ MatchInProgress match({
   );
 }
 
+/// スタミナと累積疲労を指定した試合。
+MatchInProgress staminaMatch({
+  required int stamina,
+  int fatigue = 0,
+  List<int> minutes = const [20, 50, 88],
+}) {
+  final scenario = ScenarioPool.midfield.first;
+  return MatchInProgress(
+    matchday: 1,
+    opponent: const Club(
+        id: 'x', name: 'X', strength: 60, tier: 1, countryId: 'yamato'),
+    home: true,
+    appearance: Appearance.start,
+    scenarios: [for (final _ in minutes) scenario],
+    minutes: minutes,
+    player: Player(
+      name: 'P',
+      age: 26,
+      position: Position.cm,
+      attributes: Attributes.fromDetails({
+        for (final d in Detail.values) d: 60,
+        Detail.stamina: stamina,
+      }),
+      potential: 90,
+    ),
+    club: const Club(
+        id: 'm', name: 'M', strength: 60, tier: 1, countryId: 'yamato'),
+    fatigue: fatigue,
+    random: Random(1),
+  );
+}
+
 void main() {
+  group('終盤の消耗', () {
+    test('序盤は落ちず、終盤に効いてくる', () {
+      final m = staminaMatch(stamina: 60, minutes: const [20, 65, 88]);
+      expect(m.lateFatigue, 0, reason: '20分で落ちている');
+      m.choose(m.current.options.first);
+      expect(m.lateFatigue, 0, reason: '65分はまだ落ちない');
+      m.choose(m.current.options.first);
+      expect(m.lateFatigue, lessThan(0), reason: '88分で落ちていない');
+    });
+
+    test('スタミナが高いほど落ちない', () {
+      double lateAt(int stamina) {
+        final m = staminaMatch(stamina: stamina, minutes: const [88]);
+        return m.lateFatigue;
+      }
+
+      expect(lateAt(90), greaterThan(lateAt(60)));
+      expect(lateAt(60), greaterThan(lateAt(35)));
+      // 上げすぎても得にはならない。0 が上限。
+      expect(lateAt(99), lessThanOrEqualTo(0));
+    });
+
+    test('累積疲労が溜まっているほど深く落ちる', () {
+      double lateAt(int fatigue) =>
+          staminaMatch(stamina: 60, fatigue: fatigue, minutes: const [88])
+              .lateFatigue;
+
+      expect(lateAt(0), greaterThan(lateAt(50)));
+      expect(lateAt(50), greaterThan(lateAt(100)));
+    });
+
+    test('理不尽にはならない（上限がある）', () {
+      final m = staminaMatch(stamina: 1, fatigue: 100, minutes: const [90]);
+      expect(m.lateFatigue, greaterThanOrEqualTo(-Formulas.lateFatigueMax));
+    });
+
+    test('画面に出す内訳と、判定が一致する', () {
+      // 表示用に別の式を書かない。
+      final m = staminaMatch(stamina: 45, fatigue: 60, minutes: const [88]);
+      for (final option in m.current.options) {
+        final sum = m
+            .factorsFor(option)
+            .fold<double>(m.baseChanceFor(option), (a, f) => a + f.value);
+        expect(m.chanceFor(option), closeTo(sum.clamp(0.05, 0.95), 1e-9));
+      }
+      // どの手にも同じだけ効くので、局面の側に出る。
+      expect(m.sharedFactors.any((f) => f.label == '終盤の消耗'), isTrue);
+    });
+  });
+
+
   group('監督が「何を選んだか」を見る', () {
     test('沿った手と逆らった手を数える', () {
       final m = match(favoured: const [AttributeKey.passing]);
