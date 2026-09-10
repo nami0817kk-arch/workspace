@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'ad_service.dart';
+import 'funds_pack.dart';
 import 'purchase_service.dart';
 import 'reward_offer.dart';
 
@@ -89,7 +90,13 @@ class MonetizationController extends ChangeNotifier {
     await _ads.initialize();
     await _purchases.initialize();
     storeAvailable = await _purchases.isAvailable();
-    if (storeAvailable) priceLabel = await _purchases.priceLabel();
+    if (storeAvailable) {
+      priceLabel = await _purchases.priceLabel();
+      for (final pack in FundsPack.values) {
+        final price = await _purchases.priceLabelFor(pack);
+        if (price != null) fundsPackPrices[pack] = price;
+      }
+    }
 
     initialized = true;
     notifyListeners();
@@ -149,6 +156,19 @@ class MonetizationController extends ChangeNotifier {
   /// いま [showSeasonInterstitial] を呼んだら実際に広告が出るか。
   bool get willShowSeasonInterstitial =>
       !isSupporter && _ads.isInterstitialAdReady;
+
+  /// 資金パックの表示用の価格。取得できていなければ null。
+  final Map<FundsPack, String> fundsPackPrices = {};
+
+  /// 資金パックを買う。成立したら true。
+  ///
+  /// 資金の加算はここでは行わない。ゲームの状態を触るのは GameState の
+  /// 責務で、この層はストアだけを見る(特典の受け取りと同じ切り分け)。
+  ///
+  /// リワード広告と違い1日の回数制限は無い。制限を付けると、広告の
+  /// 代わりに買うだけの商品になってサポーターとの違いが消えるため。
+  Future<PurchaseOutcome> buyFundsPack(FundsPack pack) =>
+      _purchases.buyFundsPack(pack);
 
   Future<PurchaseOutcome> buySupporter() async {
     final outcome = await _purchases.buySupporter();
