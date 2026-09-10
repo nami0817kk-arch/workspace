@@ -120,6 +120,16 @@ def _drop_hook(opening: Scene) -> None:
 NARRATORS = ("キャスター", "解説", "ナレーター")
 
 
+# 代弁で稼げる上限。これが無いと、発言の多い節が必ず勝つ
+VOICE_CAP = 12
+# 取材メモの決まりで、答えを出す節はこの言葉で始まる
+MAIN_MARK = "ここからが本題"
+MAIN_BONUS = 14
+# 試合の前の話だと分かる見出し
+BEFORE_WORDS = ("試合の前", "前日", "試合前")
+BEFORE_PENALTY = 8
+
+
 def strength(scene: Scene, cards: dict) -> int:
     """その節の強さ。**いちばん強い場面をショートに使う**（2026-09-06 ユーザー）。
 
@@ -128,11 +138,12 @@ def strength(scene: Scene, cards: dict) -> int:
     **事実の説明より、本人の口から出た一言が強い。**
     数字も次点で効く（枠内8本・xG3.16のような、それ自体が語るもの）。
     """
+    voices = 0
     score = 0
     for line in scene.lines:
         who = (getattr(line, "speaker", "") or "").strip()
         if who and who not in NARRATORS:
-            score += 3          # 代弁。いちばん強い
+            voices += 3         # 代弁。いちばん強い
         name = getattr(line, "card", None)
         kind = str((cards.get(name) or {}).get("type", "")).lower() if name else ""
         if kind == "quote":
@@ -143,6 +154,24 @@ def strength(scene: Scene, cards: dict) -> int:
             score += 1
         if getattr(line, "image", None):
             score += 1
+
+    # **代弁だけで勝たせない**（2026-09-10 ユーザー指摘）。1行3点で
+    # 上限が無かったので、**発言が10行ある「試合の前に何を言っていたか」が
+    # 必ず勝っていた**。アーセナル回は27点で選ばれ、タイトルが
+    # 「5試合で4点目の決勝弾」なのに**決勝弾が1秒も入っていなかった**。
+    # PSG回も同じで、6得点が入っていなかった。いちばんニュース性の低い節が
+    # 選ばれる作りになっていた
+    score += min(voices, VOICE_CAP)
+
+    text = " ".join((getattr(l, "text", "") or "") for l in scene.lines)
+    # **書いた人が「ここが山場」と印を付けている。**取材メモの決まりで、
+    # 答えを出す節は「ここからが本題です」で始める。機械の点より、その印を採る
+    if MAIN_MARK in text:
+        score += MAIN_BONUS
+    # **試合の前の話は速報性が低い。**結果が出たあとに配るものなので、
+    # 「前日はこう言っていた」だけのショートは中身が古い
+    if any(word in (scene.title or "") for word in BEFORE_WORDS):
+        score -= BEFORE_PENALTY
     return score
 
 

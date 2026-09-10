@@ -265,3 +265,48 @@ def test_ショートは本編と別のタイトルになる():
     for line in named.lines:
         line.duration, line.pause = 2.0, 0.3
     assert shorts.trim(named).title == "95%という数字の意味"
+
+
+def _scene(title, voices=0, narrator_lines=1, text=""):
+    from src.script_model import Line, Scene
+
+    lines = [Line(speaker="キャスター", text=text or "説明の行です。")
+             for _ in range(narrator_lines)]
+    lines += [Line(speaker="監督", text=f"発言{i}") for i in range(voices)]
+    return Scene(title=title, lines=lines)
+
+
+def test_代弁だけで勝たせない():
+    """**発言の多い節が必ず勝っていた**（2026-09-10 ユーザー指摘）。
+
+    1行3点で上限が無かったので、発言が10行ある「試合の前に何を言っていたか」が
+    27点で選ばれ、タイトルが「5試合で4点目の決勝弾」なのに
+    **決勝弾が1秒も入っていなかった**。PSG回も6得点が入っていなかった。
+    """
+    from src.shorts import VOICE_CAP, strength
+
+    many = _scene("試合の前に何を言っていたか", voices=10)
+    assert strength(many, {}) <= VOICE_CAP, "上限が効いていない"
+
+
+def test_試合の前の話は下げる():
+    """結果が出たあとに配るのに、中身が前日の話では古い。"""
+    from src.shorts import strength
+
+    before = _scene("試合の前に何を言っていたか", voices=4)
+    after = _scene("何が起きたか", voices=4)
+    assert strength(before, {}) < strength(after, {})
+
+
+def test_本題の印がいちばん強い():
+    """**書いた人が「ここが山場」と印を付けている。**
+
+    取材メモの決まりで、答えを出す節は「ここからが本題です」で始まる。
+    機械の点より、その印を採る。
+    """
+    from src.shorts import strength
+
+    marked = _scene("数字がおかしい", voices=0,
+                    text="ここからが本題です。50得点に届いたのは49試合目でした。")
+    talky = _scene("同僚はどう見ているか", voices=4)
+    assert strength(marked, {}) > strength(talky, {})
