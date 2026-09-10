@@ -3,6 +3,7 @@ import 'dart:math';
 import 'formulas.dart';
 import '../models/career.dart';
 import '../models/club.dart';
+import '../models/life_event.dart';
 import '../models/news.dart';
 import '../models/season.dart';
 import '../models/attributes.dart';
@@ -293,6 +294,46 @@ class Newsroom {
         headline: '${state.player.name}が退場',
         body: '${result.opponentName}戦で退場を命じられた。'
             '次の${Formulas.banForRedCard}試合は出られない。',
+      );
+
+  /// ピッチの外の出来事のうち、世の中に出るもの。
+  ///
+  /// 出来事は33種あって毎季何度も起きるのに、**見出しには一度も残らなかった**
+  /// （`NewsKind.life` を使っていたのはスタッフ解散だけ）。
+  /// このゲームの肝は「自分のしたことが世界に映り返ってくる」ことなので、
+  /// 腕章・スポンサー・財団のような**外から見える節目だけ**を記事にする。
+  /// 全部の出来事に見出しを付けると、どれも記事に見えなくなる。
+  static NewsItem? lifeMoment(CareerState state, LifeSpecial special) {
+    final name = state.player.name;
+    return switch (special) {
+      LifeSpecial.takeCaptain => _life(
+          state,
+          '$nameが${state.club.name}のキャプテンに',
+          '監督とロッカールームの両方に認められた。腕章は移籍すれば外れる。'),
+      LifeSpecial.acceptSponsor => state.sponsor == null
+          ? null
+          : _life(
+              state,
+              '$nameが${state.sponsor!.name}と契約',
+              '年${state.sponsor!.annual}万円。'
+                  '${state.sponsor!.years}年の契約になる。'),
+      LifeSpecial.foundCharity => _life(
+          state, '$nameが財団を立ち上げる', 'ピッチの外での顔ができた。'),
+      // 断った話は世の中に出ない。
+      LifeSpecial.declineSponsor ||
+      LifeSpecial.declineCaptain ||
+      LifeSpecial.none =>
+        null,
+    };
+  }
+
+  static NewsItem _life(CareerState s, String headline, String body) =>
+      NewsItem(
+        year: s.year,
+        matchday: s.matchday,
+        kind: NewsKind.life,
+        headline: headline,
+        body: body,
       );
 
   /// 貯蓄が尽きて専属スタッフが離れたことを知らせる。
