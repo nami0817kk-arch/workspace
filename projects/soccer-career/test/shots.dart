@@ -25,6 +25,7 @@ import 'package:soccer_career/models/career.dart';
 import 'package:soccer_career/state/career_controller.dart';
 import 'package:soccer_career/ui/club_identity.dart';
 import 'package:soccer_career/ui/screens/create_player_screen.dart';
+import 'package:soccer_career/ui/screens/hall_screen.dart';
 import 'package:soccer_career/ui/screens/hub_screen.dart';
 import 'package:soccer_career/ui/screens/match_screen.dart';
 
@@ -42,19 +43,21 @@ class _Repo implements SaveRepository {
 }
 
 ThemeData themeFor(dynamic club) => ThemeData(
-      fontFamily: 'NotoSansJP',
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: ClubIdentity.of(club).primary,
-        brightness: Brightness.light,
-      ),
-      useMaterial3: true,
-    );
+  fontFamily: 'NotoSansJP',
+  colorScheme: ColorScheme.fromSeed(
+    seedColor: ClubIdentity.of(club).primary,
+    brightness: Brightness.light,
+  ),
+  useMaterial3: true,
+);
 
 Future<void> pump(WidgetTester tester, Widget home, ThemeData theme) async {
-  await tester.pumpWidget(RepaintBoundary(
-    key: shotKey,
-    child: MaterialApp(theme: theme, home: home),
-  ));
+  await tester.pumpWidget(
+    RepaintBoundary(
+      key: shotKey,
+      child: MaterialApp(theme: theme, home: home),
+    ),
+  );
   await tester.pumpAndSettle();
 }
 
@@ -77,7 +80,8 @@ Future<void> loadFont() async {
     'assets/fonts/NotoSansJP-Bold.ttf',
   ]) {
     loader.addFont(
-        Future.value(File(path).readAsBytesSync().buffer.asByteData()));
+      Future.value(File(path).readAsBytesSync().buffer.asByteData()),
+    );
   }
   await loader.load();
 }
@@ -85,7 +89,10 @@ Future<void> loadFont() async {
 void main() {
   testWidgets('screens', (tester) async {
     await loadFont();
-    final controller = await ui_test.newCareer(age: 24);
+    final controller = await ui_test.newCareer(
+      age: 24,
+      hallRepository: ui_test.MemoryHall(),
+    );
     for (var i = 0; i < 9; i++) {
       if (controller.pendingEvent != null) {
         await controller.resolveEvent(controller.pendingEvent!.choices.first);
@@ -117,14 +124,22 @@ void main() {
     await pump(tester, MatchScreen(controller: controller), theme);
     await dump(tester, '06-match');
 
+    // 殿堂。引退させて、記録として残ったところを見る。
+    await controller.retire();
+    await pump(tester, HallScreen(controller: controller), theme);
+    await dump(tester, '08-hall');
+
     final fresh = CareerController(
       repository: _Repo(),
       careerEngine: CareerEngine(random: Random(2)),
       matchEngine: MatchEngine(random: Random(2)),
       random: Random(2),
     );
-    await pump(tester, CreatePlayerScreen(controller: fresh),
-        ThemeData(useMaterial3: true, fontFamily: 'NotoSansJP'));
+    await pump(
+      tester,
+      CreatePlayerScreen(controller: fresh),
+      ThemeData(useMaterial3: true, fontFamily: 'NotoSansJP'),
+    );
     await dump(tester, '07-create');
   });
 }

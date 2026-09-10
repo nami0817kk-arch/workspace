@@ -1,4 +1,5 @@
 import '../models/attributes.dart';
+import '../models/pitch.dart';
 
 /// 局面の選択がうまくいったときに何が起きるか。
 enum Outcome {
@@ -78,12 +79,20 @@ class Scenario {
   const Scenario({
     required this.id,
     required this.situation,
+    required this.spot,
     required this.options,
     this.tempo = ScenarioTempo.any,
   });
 
   final String id;
   final String situation;
+
+  /// この局面が起きているピッチ上の場所。
+  ///
+  /// 既定値は置かない。場所の無い局面は絵にできないので、
+  /// 局面を足すときに必ず決めることになる。
+  final PitchSpot spot;
+
   final List<ScenarioOption> options;
 
   /// この局面が出てくる展開。
@@ -105,11 +114,11 @@ class ScenarioPool {
       forFamily(position.family);
 
   static List<Scenario> forFamily(ScenarioFamily family) => switch (family) {
-        ScenarioFamily.goalkeeper => goalkeeper,
-        ScenarioFamily.defence => defence,
-        ScenarioFamily.midfield => midfield,
-        ScenarioFamily.forward => forward,
-      };
+    ScenarioFamily.goalkeeper => goalkeeper,
+    ScenarioFamily.defence => defence,
+    ScenarioFamily.midfield => midfield,
+    ScenarioFamily.forward => forward,
+  };
 
   /// 展開に関係なく引ける局面。試合の骨格はこちらから引く。
   static List<Scenario> neutralFor(ScenarioFamily family) =>
@@ -122,6 +131,7 @@ class ScenarioPool {
   static const List<Scenario> goalkeeper = [
     Scenario(
       id: 'gk-oneonone',
+      spot: PitchSpot.ownBox,
       situation: '相手FWが抜け出した。1対1。距離を詰めるか、構えて待つか。',
       options: [
         ScenarioOption(
@@ -155,6 +165,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'gk-cross',
+      spot: PitchSpot.ownBox,
       situation: 'ゴール前に高いクロス。相手FWと自分のDFが競っている。',
       options: [
         ScenarioOption(
@@ -188,6 +199,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'gk-pk',
+      spot: PitchSpot.ownGoalLine,
       situation: 'PKを与えてしまった。キッカーが助走に入る。',
       options: [
         ScenarioOption(
@@ -221,6 +233,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'gk-distribution',
+      spot: PitchSpot.ownBox,
       situation: 'ボールをキャッチした。相手は前掛かりで、前線に味方が1人残っている。',
       options: [
         ScenarioOption(
@@ -254,6 +267,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'gk-longshot',
+      spot: PitchSpot.ownGoalLine,
       situation: '25mからのミドルシュート。ボールが揺れながら飛んでくる。',
       options: [
         ScenarioOption(
@@ -287,6 +301,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'gk-sweeper',
+      spot: PitchSpot.ownEdge,
       situation: 'DFの背後に長いボール。相手FWと自分、どちらが先に触るか。',
       options: [
         ScenarioOption(
@@ -320,6 +335,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'gk-lastminute',
+      spot: PitchSpot.ownBox,
       situation: '後半アディショナルタイム、1点リード。相手GKまで上がってきたコーナー。',
       options: [
         ScenarioOption(
@@ -353,6 +369,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'gk-corner',
+      spot: PitchSpot.ownGoalLine,
       situation: '相手のコーナーキック。ゴール前は人で埋まっている。',
       options: [
         ScenarioOption(
@@ -386,6 +403,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'gk-backpass',
+      spot: PitchSpot.ownBox,
       situation: '味方から苦しいバックパス。相手FWが全力で寄せてくる。',
       options: [
         ScenarioOption(
@@ -419,6 +437,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'gk-rebound',
+      spot: PitchSpot.ownGoalLine,
       situation: '一度は弾いた。こぼれ球に相手が詰めてくる。',
       options: [
         ScenarioOption(
@@ -452,6 +471,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'gk-rain',
+      spot: PitchSpot.ownBox,
       situation: '雨脚が強い。ゴール前に浮き球が落ちてくる。手が滑る。',
       options: [
         ScenarioOption(
@@ -485,6 +505,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'gk-line',
+      spot: PitchSpot.ownEdge,
       situation: '押し込まれている。最終ラインがずるずる下がってきた。',
       options: [
         ScenarioOption(
@@ -519,6 +540,7 @@ class ScenarioPool {
     // ---- 追いかける展開 ----
     Scenario(
       id: 'gk-chase-quick',
+      spot: PitchSpot.ownBox,
       situation: '1点を追う終盤。キャッチした。すぐに攻撃を始めたい。',
       tempo: ScenarioTempo.chase,
       options: [
@@ -553,6 +575,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'gk-chase-corner',
+      spot: PitchSpot.box,
       situation: 'ロスタイムのコーナー。GKも上がれと言われた。',
       tempo: ScenarioTempo.chase,
       options: [
@@ -587,6 +610,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'gk-chase-line',
+      spot: PitchSpot.ownEdge,
       situation: '攻めるためにラインが高い。背後は広く空いている。',
       tempo: ScenarioTempo.chase,
       options: [
@@ -622,6 +646,7 @@ class ScenarioPool {
     // ---- 守り切る展開 ----
     Scenario(
       id: 'gk-hold-cross',
+      spot: PitchSpot.ownBox,
       situation: '1点リードの終盤。放り込みが続く。',
       tempo: ScenarioTempo.hold,
       options: [
@@ -656,6 +681,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'gk-hold-clock',
+      spot: PitchSpot.ownBox,
       situation: 'ロスタイム。ゴールキック。時間を使いたい。',
       tempo: ScenarioTempo.hold,
       options: [
@@ -690,6 +716,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'gk-hold-wall',
+      spot: PitchSpot.ownEdge,
       situation: '終盤、危険な位置でフリーキックを与えた。壁を作る。',
       tempo: ScenarioTempo.hold,
       options: [
@@ -727,6 +754,7 @@ class ScenarioPool {
   static const List<Scenario> forward = [
     Scenario(
       id: 'fw-box',
+      spot: PitchSpot.box,
       situation: 'ペナルティエリア内でボールを受けた。DFが2枚寄せてくる。',
       options: [
         ScenarioOption(
@@ -760,6 +788,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'fw-through',
+      spot: PitchSpot.box,
       situation: '最終ラインの裏へスルーパスが出た。GKが飛び出してくる。',
       options: [
         ScenarioOption(
@@ -793,6 +822,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'fw-cross',
+      spot: PitchSpot.box,
       situation: 'サイドからクロスが上がる。DFとの空中戦になる。',
       options: [
         ScenarioOption(
@@ -826,6 +856,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'fw-counter',
+      spot: PitchSpot.ownThird,
       situation: '自陣でボールを奪った。相手DFは2人だけ、こちらは自分と味方の2人。',
       options: [
         ScenarioOption(
@@ -859,6 +890,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'fw-pk',
+      spot: PitchSpot.penaltySpot,
       situation: 'PKを獲得した。キッカーは自分。GKがラインで揺さぶってくる。',
       options: [
         ScenarioOption(
@@ -892,6 +924,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'fw-press',
+      spot: PitchSpot.opponentGoal,
       situation: '相手GKがビルドアップを始める。前線からプレスに行くか。',
       options: [
         ScenarioOption(
@@ -925,6 +958,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'fw-lastminute',
+      spot: PitchSpot.box,
       situation: '後半アディショナルタイム。コーナーキックがこぼれてきた。',
       options: [
         ScenarioOption(
@@ -958,6 +992,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'fw-header',
+      spot: PitchSpot.farPost,
       situation: 'ファーサイドへのクロス。DFと並んで走り込んだ。',
       options: [
         ScenarioOption(
@@ -991,6 +1026,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'fw-offside',
+      spot: PitchSpot.finalThird,
       situation: '最終ラインぎりぎりでの駆け引き。出し手が顔を上げた。',
       options: [
         ScenarioOption(
@@ -1024,6 +1060,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'fw-hold',
+      spot: PitchSpot.edgeOfBox,
       situation: '背負って受けた。DFが背中から強く当たってくる。',
       options: [
         ScenarioOption(
@@ -1057,6 +1094,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'fw-rebound',
+      spot: PitchSpot.box,
       situation: 'GKが弾いた。こぼれ球が目の前に転がってくる。',
       options: [
         ScenarioOption(
@@ -1090,6 +1128,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'fw-solo',
+      spot: PitchSpot.middle,
       situation: '中盤で前を向いた。相手は3人、味方が追い越そうとしている。',
       options: [
         ScenarioOption(
@@ -1124,6 +1163,7 @@ class ScenarioPool {
     // ---- 追いかける展開 ----
     Scenario(
       id: 'fw-chase-narrow',
+      spot: PitchSpot.edgeOfBox,
       situation: '1点を追う終盤。相手は全員が引いた。狭い場所しか空いていない。',
       tempo: ScenarioTempo.chase,
       options: [
@@ -1158,6 +1198,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'fw-chase-corner',
+      spot: PitchSpot.box,
       situation: '1点ビハインドでコーナーキック。GKまで上がってきた。',
       tempo: ScenarioTempo.chase,
       options: [
@@ -1192,6 +1233,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'fw-chase-press',
+      spot: PitchSpot.opponentGoal,
       situation: 'ロスタイム。相手GKが足元に持っている。前から追うか。',
       tempo: ScenarioTempo.chase,
       options: [
@@ -1227,6 +1269,7 @@ class ScenarioPool {
     // ---- 守り切る展開 ----
     Scenario(
       id: 'fw-hold-corner',
+      spot: PitchSpot.cornerFlag,
       situation: '1点リードの終盤。相手コーナー付近でボールを持てた。',
       tempo: ScenarioTempo.hold,
       options: [
@@ -1261,6 +1304,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'fw-hold-counter',
+      spot: PitchSpot.finalThird,
       situation: '1点リードの終盤。前残りしていたところへボールが出た。',
       tempo: ScenarioTempo.hold,
       options: [
@@ -1295,6 +1339,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'fw-hold-alone',
+      spot: PitchSpot.finalThird,
       situation: '守り切りたい終盤。前線は自分ひとり。相手の最終ラインが持ち上がる。',
       tempo: ScenarioTempo.hold,
       options: [
@@ -1333,6 +1378,7 @@ class ScenarioPool {
   static const List<Scenario> midfield = [
     Scenario(
       id: 'mf-build',
+      spot: PitchSpot.middle,
       situation: '中盤でボールを持った。前線は密集、サイドは空いている。',
       options: [
         ScenarioOption(
@@ -1366,6 +1412,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'mf-shot',
+      spot: PitchSpot.edgeOfBox,
       situation: 'ペナルティエリア手前にこぼれ球。前は空いている。',
       options: [
         ScenarioOption(
@@ -1399,6 +1446,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'mf-press',
+      spot: PitchSpot.middle,
       situation: '相手のビルドアップ。プレスに行くか、ブロックを作るか。',
       options: [
         ScenarioOption(
@@ -1433,6 +1481,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'mf-freekick',
+      spot: PitchSpot.edgeOfBox,
       situation: 'ゴール正面25mでFKを得た。壁は5枚。',
       options: [
         ScenarioOption(
@@ -1466,6 +1515,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'mf-transition',
+      spot: PitchSpot.middle,
       situation: '相手のカウンター。自分の前にボール保持者、後ろは手薄。',
       options: [
         ScenarioOption(
@@ -1499,6 +1549,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'mf-switch',
+      spot: PitchSpot.middleFlank,
       situation: '相手が片側に寄っている。逆サイドに味方がフリーで待っている。',
       options: [
         ScenarioOption(
@@ -1532,6 +1583,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'mf-late',
+      spot: PitchSpot.betweenLines,
       situation: '後半40分、1点ビハインド。ボールは自分の足元、前に空きはない。',
       options: [
         ScenarioOption(
@@ -1565,6 +1617,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'mf-halfspace',
+      spot: PitchSpot.betweenLines,
       situation: 'ライン間で前を向いて受けた。中央は密集、外は空いている。',
       options: [
         ScenarioOption(
@@ -1598,6 +1651,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'mf-recover',
+      spot: PitchSpot.middle,
       situation: 'ボールを失った直後。5秒以内に取り返したい。',
       options: [
         ScenarioOption(
@@ -1632,6 +1686,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'mf-longshot',
+      spot: PitchSpot.edgeOfBox,
       situation: '相手のブロックが下がった。ミドルのコースが空いている。',
       options: [
         ScenarioOption(
@@ -1665,6 +1720,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'mf-tempo',
+      spot: PitchSpot.ownThird,
       situation: '押し込まれている時間帯。味方の足が止まってきた。',
       options: [
         ScenarioOption(
@@ -1698,6 +1754,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'mf-corner',
+      spot: PitchSpot.cornerFlag,
       situation: '自分がコーナーキックを蹴る。中の枚数は五分。',
       options: [
         ScenarioOption(
@@ -1732,6 +1789,7 @@ class ScenarioPool {
     // ---- 追いかける展開 ----
     Scenario(
       id: 'mid-chase-jam',
+      spot: PitchSpot.betweenLines,
       situation: '1点を追う終盤。ボールは持てるが、前が渋滞している。',
       tempo: ScenarioTempo.chase,
       options: [
@@ -1766,6 +1824,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'mid-chase-second',
+      spot: PitchSpot.edgeOfBox,
       situation: '押し込んでいる。こぼれ球がペナルティエリアの外へ落ちてくる。',
       tempo: ScenarioTempo.chase,
       options: [
@@ -1800,6 +1859,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'mid-chase-high',
+      spot: PitchSpot.finalThird,
       situation: '時間が無い。ラインを上げて前から奪いに行く指示が出た。',
       tempo: ScenarioTempo.chase,
       options: [
@@ -1836,6 +1896,7 @@ class ScenarioPool {
     // ---- 守り切る展開 ----
     Scenario(
       id: 'mid-hold-keep',
+      spot: PitchSpot.middle,
       situation: '1点リードの終盤。まずは安全にボールを持っておきたい。',
       tempo: ScenarioTempo.hold,
       options: [
@@ -1870,6 +1931,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'mid-hold-block',
+      spot: PitchSpot.middle,
       situation: '相手が前がかりになってきた。中央を締めろと指示が飛ぶ。',
       tempo: ScenarioTempo.hold,
       options: [
@@ -1905,6 +1967,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'mid-hold-clock',
+      spot: PitchSpot.finalFlank,
       situation: 'ロスタイム。相手陣の深い位置でボールを持っている。',
       tempo: ScenarioTempo.hold,
       options: [
@@ -1939,6 +2002,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'mid-hold-stop',
+      spot: PitchSpot.middle,
       situation: '1点リードの終盤。中盤で引っ掛けられ、相手が前を向いた。',
       tempo: ScenarioTempo.hold,
       options: [
@@ -1979,6 +2043,7 @@ class ScenarioPool {
   static const List<Scenario> defence = [
     Scenario(
       id: 'df-duel',
+      spot: PitchSpot.ownFlank,
       situation: '快足のウイングと1対1。背後にはスペースがある。',
       options: [
         ScenarioOption(
@@ -2014,6 +2079,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'df-cross',
+      spot: PitchSpot.ownBox,
       situation: '相手のクロスがゴール前へ。中には長身のFWがいる。',
       options: [
         ScenarioOption(
@@ -2047,6 +2113,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'df-buildup',
+      spot: PitchSpot.ownEdge,
       situation: '最終ラインでボールを持つ。相手FWがプレスに来る。',
       options: [
         ScenarioOption(
@@ -2080,6 +2147,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'df-setpiece',
+      spot: PitchSpot.box,
       situation: '味方のコーナーキック。自分もゴール前に上がっている。',
       options: [
         ScenarioOption(
@@ -2113,6 +2181,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'df-offside',
+      spot: PitchSpot.ownThird,
       situation: '相手FWが裏を狙って動き出した。ラインの判断を任されている。',
       options: [
         ScenarioOption(
@@ -2146,6 +2215,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'df-goalline',
+      spot: PitchSpot.ownGoalLine,
       situation: 'GKがかわされた。無人のゴールに向かってシュートが飛んでくる。',
       options: [
         ScenarioOption(
@@ -2179,6 +2249,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'df-overlap',
+      spot: PitchSpot.finalFlank,
       situation: '攻撃の流れで自分がサイドを駆け上がった。前にはスペース。',
       options: [
         ScenarioOption(
@@ -2212,6 +2283,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'df-transition',
+      spot: PitchSpot.ownThird,
       situation: '数的不利のカウンター。自分ひとりで2人を見ている。',
       options: [
         ScenarioOption(
@@ -2245,6 +2317,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'df-longball',
+      spot: PitchSpot.middle,
       situation: '前線へ長いボール。相手FWと並んで落下点に入る。',
       options: [
         ScenarioOption(
@@ -2278,6 +2351,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'df-star',
+      spot: PitchSpot.ownEdge,
       situation: '相手のエースに付く。背番号10が下がって受けたがっている。',
       options: [
         ScenarioOption(
@@ -2311,6 +2385,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'df-scramble',
+      spot: PitchSpot.ownGoalLine,
       situation: 'ゴール前の混戦。ボールがどこにあるか分からない。',
       options: [
         ScenarioOption(
@@ -2344,6 +2419,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'df-penaltybox',
+      spot: PitchSpot.ownBox,
       situation: 'PA内で背後を取られた。足を出せばPKになる。',
       options: [
         ScenarioOption(
@@ -2378,6 +2454,7 @@ class ScenarioPool {
     // ---- 追いかける展開 ----
     Scenario(
       id: 'def-chase-up',
+      spot: PitchSpot.middle,
       situation: '1点を追う終盤。センターバックも前に出ろと言われた。',
       tempo: ScenarioTempo.chase,
       options: [
@@ -2412,6 +2489,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'def-chase-overlap',
+      spot: PitchSpot.finalFlank,
       situation: 'サイドで数的優位。上がっていいと言われている。',
       tempo: ScenarioTempo.chase,
       options: [
@@ -2446,6 +2524,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'def-chase-line',
+      spot: PitchSpot.middle,
       situation: 'ラインを高く保って押し込む。裏のリスクは承知の上。',
       tempo: ScenarioTempo.chase,
       options: [
@@ -2481,6 +2560,7 @@ class ScenarioPool {
     // ---- 守り切る展開 ----
     Scenario(
       id: 'def-hold-box',
+      spot: PitchSpot.ownBox,
       situation: '1点リード。ゴール前に人が集まる。またクロスが上がる。',
       tempo: ScenarioTempo.hold,
       options: [
@@ -2515,6 +2595,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'def-hold-duel',
+      spot: PitchSpot.ownFlank,
       situation: '守り切りたい終盤。目の前で1対1を仕掛けられた。',
       tempo: ScenarioTempo.hold,
       options: [
@@ -2550,6 +2631,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'def-hold-clock',
+      spot: PitchSpot.ownThird,
       situation: 'ロスタイム。自陣でボールを持っている。時間を使いたい。',
       tempo: ScenarioTempo.hold,
       options: [
@@ -2584,6 +2666,7 @@ class ScenarioPool {
     ),
     Scenario(
       id: 'def-hold-stop',
+      spot: PitchSpot.ownThird,
       situation: 'リードして終盤。相手のカウンター。前は無人だ。',
       tempo: ScenarioTempo.hold,
       options: [

@@ -56,7 +56,11 @@ Future<CareerController> started({int seed = 3, int age = 34}) async {
     random: Random(seed),
   );
   await c.startCareer(
-      name: '検証', position: Position.cm, age: age, agent: Agent.pool.first);
+    name: '検証',
+    position: Position.cm,
+    age: age,
+    agent: Agent.pool.first,
+  );
   return c;
 }
 
@@ -68,18 +72,21 @@ SeasonRecord record({
   CupStage cup = CupStage.none,
   ContinentalStage continental = ContinentalStage.none,
   int overall = 70,
-}) =>
-    SeasonRecord(
-      year: year,
-      clubName: clubName,
-      tier: tier,
-      leaguePosition: position,
-      stats: const SeasonStats(
-          appearances: 30, goals: 8, assists: 5, averageRating: 7.1),
-      cupStage: cup,
-      continentalStage: continental,
-      overall: overall,
-    );
+}) => SeasonRecord(
+  year: year,
+  clubName: clubName,
+  tier: tier,
+  leaguePosition: position,
+  stats: const SeasonStats(
+    appearances: 30,
+    goals: 8,
+    assists: 5,
+    averageRating: 7.1,
+  ),
+  cupStage: cup,
+  continentalStage: continental,
+  overall: overall,
+);
 
 void main() {
   group('引退した選手が残る', () {
@@ -113,10 +120,11 @@ void main() {
       await c.deleteCareer();
 
       await c.startCareer(
-          name: '2人目',
-          position: Position.st,
-          age: 34,
-          agent: Agent.pool.first);
+        name: '2人目',
+        position: Position.st,
+        age: 34,
+        agent: Agent.pool.first,
+      );
       c.state!.history.add(record(year: 2031, clubName: 'B'));
       await c.retire();
 
@@ -188,10 +196,7 @@ void main() {
       state.history.addAll([
         record(year: 2030, clubName: 'A', position: 1),
         record(year: 2031, clubName: 'A', cup: CupStage.winner),
-        record(
-            year: 2032,
-            clubName: 'A',
-            continental: ContinentalStage.winner),
+        record(year: 2032, clubName: 'A', continental: ContinentalStage.winner),
         record(year: 2033, clubName: 'A', position: 3),
       ]);
       await c.retire();
@@ -215,8 +220,9 @@ void main() {
     test('保存を往復しても中身が残る', () async {
       final c = await started();
       final state = c.state!;
-      state.reputation =
-          state.reputation.copyWith(awards: [Award.debut, Award.topScorer]);
+      state.reputation = state.reputation.copyWith(
+        awards: [Award.debut, Award.topScorer],
+      );
       state.history.add(record(year: 2030, clubName: 'A'));
       await c.retire();
 
@@ -243,6 +249,35 @@ void main() {
       await tester.pumpWidget(MaterialApp(home: HallScreen(controller: c)));
       await tester.pumpAndSettle();
       expect(find.textContaining('まだ居ない'), findsOneWidget);
+    });
+
+    test('額の格は、獲ったタイトルだけで決まる', () {
+      // 見た目のためだけの数字は作らない。カードに書いてあるものと同じ。
+      Legend with_({int league = 0, int cup = 0, int continental = 0}) =>
+          Legend.fromJson({
+            'name': 'x',
+            'leagueTitles': league,
+            'cupTitles': cup,
+            'continentalTitles': continental,
+          });
+      expect(HallPlaque.of(with_()), HallPlaque.bronze);
+      expect(HallPlaque.of(with_(cup: 1)), HallPlaque.silver);
+      expect(HallPlaque.of(with_(league: 1)), HallPlaque.silver);
+      expect(HallPlaque.of(with_(continental: 1)), HallPlaque.gold);
+      // 大陸を獲っていれば、他が無くても金。
+      expect(HallPlaque.of(with_(league: 3, continental: 1)), HallPlaque.gold);
+    });
+
+    testWidgets('ピーク総合力が額に出る', (tester) async {
+      final c = await started();
+      c.state!.history.add(record(year: 2030, clubName: 'A', overall: 84));
+      await c.retire();
+
+      await tester.pumpWidget(MaterialApp(home: HallScreen(controller: c)));
+      await tester.pumpAndSettle();
+      final peak = c.hall.legends.first.peakOverall;
+      expect(find.text('$peak'), findsOneWidget);
+      expect(find.text('ピーク'), findsOneWidget);
     });
 
     testWidgets('引退した選手が並ぶ', (tester) async {
