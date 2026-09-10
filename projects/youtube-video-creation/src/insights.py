@@ -98,6 +98,74 @@ def per_video(api, days: int = 7, today: date | None = None, limit: int = 25) ->
     return rows
 
 
+# 語りを担当する声。ここに無い話者は「誰かの言葉」
+NARRATORS = ("キャスター", "解説", "ナレーター")
+
+
+def per_video_all(api, start: str, end: str, limit: int = 200) -> list[VideoRow]:
+    """期間中に数字のある動画を**全部**返す（2026-09-10）。
+
+    `per_video` は再生の多い順に25本しか返さない。**その25本で結論を出していた。**
+    ユーザーの指摘「この分析は全動画で実施している」で気づいた。
+    実際に測れるのは全126本のうち44本で、残りは
+    再生が少なすぎるか（本編は中央値3回）、公開が新しすぎる（分析は2〜3日遅れ）。
+    **測れなかった本数も一緒に見せる。**
+    """
+    got = api.reports().query(
+        ids="channel==MINE", startDate=start, endDate=end,
+        metrics="views,estimatedMinutesWatched,averageViewDuration,"
+                "averageViewPercentage",
+        dimensions="video", sort="-views", maxResults=limit,
+    ).execute()
+    rows = []
+    for row in got.get("rows") or []:
+        rows.append(VideoRow(
+            video_id=str(row[0]), views=int(row[1]), minutes=float(row[2]),
+            avg_seconds=float(row[3]), avg_percent=float(row[4]),
+        ))
+    return rows
+
+
+def quote_start(script: dict) -> float | None:
+    """最初の「誰かの言葉」が始まる秒。語りだけなら None。
+
+    **早いほど残る**（2026-09-10 の実測）。ショート20本で、
+    発言が19.4秒までに出る9本は平均維持50.4%、遅い8本は33.7%だった。
+    本編では差が出ない（25.1% と 22.7%）。ショートだけの効き方。
+    """
+    elapsed = 0.0
+    for scene in script.get("scenes") or []:
+        for line in scene.get("lines") or []:
+            if (line.get("speaker") or "") not in NARRATORS:
+                return elapsed
+            elapsed += line.get("duration") or 0.0
+    return None
+
+
+def split_by_quote(pairs: list[tuple[float | None, float]]) -> dict:
+    """(発言が出る秒, 維持率) を 早い/遅い/無し に分けて中央値を出す。"""
+    import statistics
+
+    have = [(q, k) for q, k in pairs if q is not None]
+    none = [k for q, k in pairs if q is None]
+    out = {"early": None, "late": None, "none": None, "edge": None,
+           "n_early": 0, "n_late": 0, "n_none": len(none)}
+    if none:
+        out["none"] = statistics.median(none)
+    if len(have) >= 4:
+        edge = statistics.median([q for q, _ in have])
+        early = [k for q, k in have if q <= edge]
+        late = [k for q, k in have if q > edge]
+        out["edge"] = edge
+        if early:
+            out["early"] = statistics.median(early)
+            out["n_early"] = len(early)
+        if late:
+            out["late"] = statistics.median(late)
+            out["n_late"] = len(late)
+    return out
+
+
 def retention(api, video_id: str, days: int = 30, today: date | None = None) -> Curve:
     """1本の視聴維持の曲線。**どこで捨てられたかを見る。**"""
     today = today or date.today()
