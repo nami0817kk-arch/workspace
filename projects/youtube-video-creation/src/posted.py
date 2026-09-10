@@ -43,7 +43,13 @@ BLOCKS = Path("research/blocked.json")
 # **1時間に1本ずつ**出していた。こちらは13時間前に4本、14〜15時間前に4本と
 # **一度に固めて**出していた。まとめて出すと、同じ枠を自分の動画同士で
 # 奪い合い、登録者の新着も一度で埋まる。
-SPREAD_MINUTES = 45
+#
+# **45 → 30 に変えた**（2026-09-10 ユーザー判断）。同じチャンネルを測り直したら、
+# 間隔の中央値は70分だが、**CLの試合が終わった直後は 12〜28分**で出していた
+# （03:44 → 03:56 → 04:24 → 05:55 → 06:08 → 06:32 → 06:57）。
+# 「1時間に1本」は静かな日をならした平均で、固めて出す日もある。
+# **45分に強い根拠は無かった。**
+SPREAD_MINUTES = 30
 
 
 def since_last(path: Path = LEDGER, now: datetime | None = None) -> float | None:
@@ -80,6 +86,20 @@ def find(build_dir: Path | str, path: Path = LEDGER) -> dict | None:
     for row in reversed(_load(path)):
         if row.get("build") == name and not row.get("deleted"):
             return row
+    return None
+
+
+def folder_of(video_id: str, root: Path | str = "output",
+              path: Path = LEDGER) -> Path | None:
+    """動画IDから、書き出したフォルダを引く（2026-09-10）。
+
+    **控えは `output/` を含まない名前で持っている**（`key()` がフォルダ名だけにする）。
+    そのまま `comment` に渡すと「出力先が分かりません」になり、
+    7本ぶん手で `output/` を足して回した。**引く側に置いておく。**
+    """
+    for row in reversed(_load(path)):
+        if row.get("video_id") == video_id and row.get("build"):
+            return Path(root) / row["build"]
     return None
 
 

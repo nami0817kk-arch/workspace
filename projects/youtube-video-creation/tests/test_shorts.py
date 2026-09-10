@@ -265,3 +265,135 @@ def test_ショートは本編と別のタイトルになる():
     for line in named.lines:
         line.duration, line.pause = 2.0, 0.3
     assert shorts.trim(named).title == "95%という数字の意味"
+
+
+def _scene(title, voices=0, narrator_lines=1, text=""):
+    from src.script_model import Line, Scene
+
+    lines = [Line(speaker="キャスター", text=text or "説明の行です。")
+             for _ in range(narrator_lines)]
+    lines += [Line(speaker="監督", text=f"発言{i}") for i in range(voices)]
+    return Scene(title=title, lines=lines)
+
+
+def test_代弁だけで勝たせない():
+    """**発言の多い節が必ず勝っていた**（2026-09-10 ユーザー指摘）。
+
+    1行3点で上限が無かったので、発言が10行ある「試合の前に何を言っていたか」が
+    27点で選ばれ、タイトルが「5試合で4点目の決勝弾」なのに
+    **決勝弾が1秒も入っていなかった**。PSG回も6得点が入っていなかった。
+    """
+    from src.shorts import VOICE_CAP, strength
+
+    many = _scene("試合の前に何を言っていたか", voices=10)
+    assert strength(many, {}) <= VOICE_CAP, "上限が効いていない"
+
+
+def test_試合の前の話は下げる():
+    """結果が出たあとに配るのに、中身が前日の話では古い。"""
+    from src.shorts import strength
+
+    before = _scene("試合の前に何を言っていたか", voices=4)
+    after = _scene("何が起きたか", voices=4)
+    assert strength(before, {}) < strength(after, {})
+
+
+def test_本題の印がいちばん強い():
+    """**書いた人が「ここが山場」と印を付けている。**
+
+    取材メモの決まりで、答えを出す節は「ここからが本題です」で始まる。
+    機械の点より、その印を採る。
+    """
+    from src.shorts import strength
+
+    marked = _scene("数字がおかしい", voices=0,
+                    text="ここからが本題です。50得点に届いたのは49試合目でした。")
+    talky = _scene("同僚はどう見ているか", voices=4)
+    assert strength(marked, {}) > strength(talky, {})
+
+
+def test_ショートでは本題の印を読み上げない():
+    """**ショートには「前」が無い**（2026-09-10）。
+
+    本編では前の節と対比させる言葉だが、いきなり「ここからが本題です」で
+    始まると、何かを見落としたように聞こえる。読み上げの文だけ削る。
+    """
+    from src.script_model import Line, Scene
+    from src.shorts import _drop_main_mark
+
+    scene = Scene(title="x", lines=[
+        Line(speaker="解説", text="ここからが本題です。監督が世代交代を進めようとしていました。"),
+        Line(speaker="解説", text="ここからが本題です。2行目は触らない。"),
+    ])
+    _drop_main_mark(scene)
+    assert scene.lines[0].text == "監督が世代交代を進めようとしていました。"
+    assert scene.lines[1].text.startswith("ここからが本題です")   # 1行目だけ
+
+    # 印が無ければ何もしない
+    plain = Scene(title="x", lines=[Line(speaker="解説", text="ふつうの行です。")])
+    _drop_main_mark(plain)
+    assert plain.lines[0].text == "ふつうの行です。"
+
+
+def test_締めの一言を残して手前から落とす():
+    """**いちばん強い一言がいつも先に消えていた**（2026-09-10）。
+
+    ブラジル代表の回で実際に起きた。チアゴ・シウヴァの発言は
+    年齢の話 → 進め方の話 → 「賛成しない」と積み上がっているのに、
+    尺に収める処理が後ろから1行ずつ削るので、締めの「賛成しない」が落ち、
+    途中の一言で終わっていた。**視聴者が最後に聞くのは締めであるべき。**
+    """
+    from src.script_model import parse_script
+    from src.shorts import _fit
+
+    nl = chr(10)
+    body = ["## オープニング", "", "キャスター: つかみ。", "", "## 本編", ""]
+    body += ["解説: まず状況です。" + "あ" * 40, ""]
+    body += ["チアゴ: 年齢の話です。" + "あ" * 40, ""]
+    body += ["解説: そして進め方に踏み込みます。" + "あ" * 40, ""]
+    body += ["チアゴ: 途中の話です。" + "あ" * 40, ""]
+    body += ["解説: 最後にはっきり否定しました。", ""]
+    body += ["チアゴ: 賛成しない", ""]
+    script = parse_script(nl.join(body))
+    _fit(script, 20.0)
+    texts = [line.text for line in script.scenes[-1].lines]
+    assert texts[-1] == "賛成しない", texts
+    assert texts[-2] == "最後にはっきり否定しました。", texts
+
+
+def test_振りだけを残さない():
+    """代弁を落としたあとに「こう話しています。」だけが残らない（2026-09-10）。
+
+    鎌田の回で、締めが**振りの語り**で終わっていた。
+    """
+    from src.script_model import parse_script
+    from src.shorts import _fit
+
+    nl = chr(10)
+    body = ["## オープニング", "", "キャスター: つかみ。", "", "## 本編", ""]
+    body += ["解説: まず状況です。" + "あ" * 40, ""]
+    body += ["ラーセン: 最初の発言です。" + "あ" * 40, ""]
+    body += ["解説: 本人についてもこう話しています。" + "あ" * 40, ""]
+    body += ["ラーセン: 途中の発言です。" + "あ" * 40, ""]
+    body += ["解説: 最後にこう続けました。", ""]
+    body += ["ラーセン: 締めの発言です。", ""]
+    script = parse_script(nl.join(body))
+    _fit(script, 22.0)
+    texts = [line.text for line in script.scenes[-1].lines]
+    assert texts[-1] == "締めの発言です。", texts
+    # 代弁を落とした「本人についてもこう話しています。」は残さない
+    assert not any(text.startswith("本人についても") for text in texts), texts
+
+
+def test_締めに代弁が無ければ今までどおり後ろから落とす():
+    """語りだけの節では、真ん中を抜くと文が飛ぶ。守る値打ちも無い。"""
+    from src.script_model import parse_script
+    from src.shorts import _fit
+
+    nl = chr(10)
+    body = ["## オープニング", "", "キャスター: つかみ。", "", "## 本編", ""]
+    body += [f"解説: {i}ぎょうめ。" + "あ" * 40 + nl for i in range(6)]
+    script = parse_script(nl.join(body))
+    _fit(script, 20.0)
+    texts = [line.text for line in script.scenes[-1].lines]
+    assert texts[0].startswith("0ぎょうめ"), texts

@@ -87,6 +87,7 @@ def test_ライセンスが駄目なら次の候補へ(monkeypatch, tmp_path):
     monkeypatch.setattr(mod, "info", fake_info)
 
     class Res:
+        status_code = 200        # _download が見る（2026-09-10 に足した）
         content = b"body"
 
         def raise_for_status(self):
@@ -249,3 +250,99 @@ def test_同じ名前の犬や銅像を人の写真として掴まない():
     assert not looks_like_person("File:Mural of Marcus Rashford.jpg")
     assert looks_like_person("File:Lionel Messi NYCFC Miami 24 Sep 2025-079.jpg")
     assert looks_like_person("File:Takumi Minamino Stefan Lainer.JPG")
+
+
+def test_画像URLの計測用パラメータを落とす():
+    """控えに残すURLを短くするためだけ。**429 の原因ではない**（2026-09-10）。
+
+    最初「utm を外したら通った」と書いたが、同じURLが少しあとに
+    utm 付きでも200で返った。User-Agent の違いでもなかった。
+    **正体は本物の速度制限で、数秒〜1分で解ける。**
+    """
+    from src.portrait import _plain_url
+
+    dirty = ("https://upload.wikimedia.org/wikipedia/commons/3/3f/x.jpg"
+             "?utm_source=commons.wikimedia.org&utm_campaign=imageinfo")
+    assert _plain_url(dirty) == "https://upload.wikimedia.org/wikipedia/commons/3/3f/x.jpg"
+    assert _plain_url("https://x/y.jpg") == "https://x/y.jpg"
+    assert _plain_url("") == ""
+    assert _plain_url(None) == ""
+
+
+
+def test_429は待って試し直す(monkeypatch):
+    """**1回で諦めると「写真が無い」ように見える**（2026-09-10）。
+
+    鎌田・ハーランド・アラウホ・ロジャースで4回引っかかり、そのたびに
+    別の原因（utm・User-Agent）を疑って回り道した。正体は速度制限で、
+    数秒〜1分で解ける。**待って試し直すのが正しい直し方。**
+    """
+    import src.portrait as mod
+
+    monkeypatch.setattr(mod, "DOWNLOAD_WAIT", 0)
+    calls = []
+
+    class Res:
+        def __init__(self, code, body=b""):
+            self.status_code = code
+            self.content = body
+
+        def raise_for_status(self):
+            raise AssertionError("200 で返るはずなのに呼ばれた")
+
+    class Client:
+        def get(self, url, **k):
+            calls.append(k.get("headers", {}).get("User-Agent"))
+            return Res(429) if len(calls) < 3 else Res(200, b"gazou")
+
+    assert mod._download("http://x/y.jpg", Client()) == b"gazou"
+    assert len(calls) == 3
+    # **連絡先を入れた User-Agent で名乗る**（Wikimedia の求め）。
+    # 公開リポジトリなのでメールアドレスは書かない
+    assert "+https://" in calls[0]
+
+
+def test_429が続いたら諦める(monkeypatch):
+    """待っても解けないときに、無言で空の画像を書かない。"""
+    import src.portrait as mod
+
+    monkeypatch.setattr(mod, "DOWNLOAD_WAIT", 0)
+
+    class Res:
+        status_code = 429
+        content = b""
+
+        def raise_for_status(self):
+            raise RuntimeError("429")
+
+    class Client:
+        def get(self, url, **k):
+            return Res()
+
+    try:
+        mod._download("http://x/y.jpg", Client(), tries=2)
+    except Exception as err:
+        assert "429" in str(err) or "取れません" in str(err)
+    else:
+        raise AssertionError("止まっていない")
+
+
+def test_逮捕写真と紋章を人として掴まない():
+    """**逮捕写真を掴んだ**（2026-09-10 実測）。
+
+    「チアゴ・シウヴァ」で引いたら、1位が
+    `File:Thiago-Silva-mug-shot.jpg`（同名のUFC選手が逮捕されたときのもの）。
+    候補に2枚あり、**被写体の照合もライセンスも通っていた。**
+    サッカー選手の回に、無関係な人の逮捕写真を出すところだった。
+    犬のメッシ・Deb Haaland と同じ「名前は誰にでも付く」問題。
+    """
+    from src.portrait import looks_like_person
+
+    assert not looks_like_person("File:Thiago-Silva-mug-shot.jpg")
+    assert not looks_like_person("File:Thiago Silva (Fighter) Mugshot.jpg")
+    assert not looks_like_person("File:The First Araujo Coat Of Arms.jpg")
+    assert not looks_like_person(
+        "File:20180610 FIFA Friendly Match Austria vs. Brazil Gruppenfoto Brasilien.jpg")
+    # 本人の写真は通る（外しすぎていないことも確かめる）
+    assert looks_like_person("File:Thiago Silva (cropped).jpg")
+    assert looks_like_person("File:Thiago Silva & Marquinhos.jpg")

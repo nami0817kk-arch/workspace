@@ -34,6 +34,7 @@ from __future__ import annotations
 
 import argparse
 import datetime
+import time
 import sys
 import unicodedata
 from pathlib import Path
@@ -857,6 +858,8 @@ def _cmd_thumbnail(args, config) -> int:
             photos=look.get("photos") or [],
             crest_main=look.get("crest_main") or [],
             crests=look.get("crests"),
+            crest_link=look.get("crest_link", "対"),
+            face_link=look.get("face_link", ""),
         )
         made.append((look.get("name") or "", target, look["lines"]))
 
@@ -1840,9 +1843,17 @@ def _cmd_comment(args, config) -> int:
     文面は build の出力から作り、同じ動画には同じ文になる。
     """
     from . import comments
+    from . import posted
     from .upload import get_service
 
     build_dir = Path(args.build_dir)
+    if not build_dir.exists():
+        # **控えは `output/` を含まない名前で持っている**（2026-09-10）。
+        # 控えのまま渡されても通るようにする
+        found = posted.folder_of(args.video_id)
+        if found is not None and found.exists():
+            print(f"  出力先を控えから引きました: {found}")
+            build_dir = found
     try:
         choices = tuple(args.choices) if args.choices else None
         text = args.text or comments.compose(build_dir, choices)
@@ -1869,8 +1880,42 @@ def _cmd_setthumb(args, config) -> int:
     from . import quota as quota_mod
 
     thumbnail = Path(args.build_dir) / "thumbnail.png"
+    # **再試行はここで数える**（2026-09-10）。それまで外の shell が
+    # 「150秒待って6回まで」を回していて、**37本の動画に139回**送っていた。
+    # 1回50なので、102回の空振りで **5,100＝1日の枠の半分**を捨てていた。
+    # 429 は分あたりの制限なので、**回数ではなく間隔をあける**
+    tries = max(1, int(getattr(args, "tries", quota_mod.THUMB_TRIES)))
+    service = get_service()
+    last = None
+    for attempt in range(tries):
+        try:
+            set_thumbnail(service, args.video_id, thumbnail)
+            break
+        except UploadError as err:
+            print(f"設定できません: {err}", file=sys.stderr)
+            return 1
+        except Exception as err:
+            last = err
+            if quota_mod.is_exhausted(err) or "429" not in str(err):
+                break
+            if attempt == tries - 1:
+                break
+            wait = quota_mod.THUMB_WAIT * (attempt + 1)
+            print(f"  連投の制限（429）。{wait}秒待って試し直します"
+                  f"（{attempt + 1}/{tries - 1}回目）")
+            time.sleep(wait)
+    else:
+        last = last or RuntimeError("429")
+    if last is not None and "429" in str(last) and not quota_mod.is_exhausted(last):
+        print(f"設定できません（連投の制限が {tries} 回続きました）: {last}",
+              file=sys.stderr)
+        print("  **叩き直さないでください。**1回50ユニット使うので、"
+              "再試行そのものが枠を削ります。時間をおいて setthumb だけやり直します",
+              file=sys.stderr)
+        return 1
     try:
-        set_thumbnail(get_service(), args.video_id, thumbnail)
+        if last is not None:
+            raise last
     except UploadError as err:
         print(f"設定できません: {err}", file=sys.stderr)
         return 1
@@ -2737,6 +2782,21 @@ def _cmd_upload(args, config) -> int:
     from . import quota as quota_mod
     for line in quota_mod.preflight({"videos.insert": 1, "thumbnails.set": 1}):
         print(line)
+
+    # **止めるのは Queries の残りで見る**（2026-09-10 にコンソールを見て直した）。
+    # 一度「本数」で止めるようにしたが、**投稿は Queries を食っていなかった**。
+    # 尽きるのはサムネイル・コメント・貼り替えのほうで、そこが尽きると
+    # **予約の付け替えもコメントも打てなくなる**（37本目で実際にそうなった）
+    left = quota_mod.left()
+    if left < quota_mod.COST_PER_VIDEO and not args.anyway:
+        print(f"■ 今日の枠の残りが {left} しかありません"
+              f"（1本にサムネとコメントで {quota_mod.COST_PER_VIDEO} 使います）",
+              file=sys.stderr)
+        print(f"  枠は太平洋時間の0時に戻ります。次は {quota_mod.reset_text()}",
+              file=sys.stderr)
+        print("  投稿だけ通してもサムネが付きません。本当に続けるなら --anyway",
+              file=sys.stderr)
+        return 1
 
     gap = posted.since_last()
     if gap is not None and gap < posted.SPREAD_MINUTES:

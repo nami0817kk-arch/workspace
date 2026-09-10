@@ -30,12 +30,60 @@ def info(title: str, session=None) -> dict:
         for item in page.get("imageinfo") or []:
             meta = item.get("extmetadata") or {}
             return {
-                "image_url": item.get("thumburl") or item.get("url") or "",
+                # **?utm_source= を落とす**。付いたまま取りにいくと 429 になる
+                "image_url": _plain_url(item.get("thumburl") or item.get("url") or ""),
                 "page_url": item.get("descriptionurl") or "",
                 "license": _plain(meta.get("LicenseShortName")),
                 "author": _plain(meta.get("Artist")),
             }
     raise PortraitError(f"Commons に見つかりません: {title}")
+
+
+def _plain_url(url: str) -> str:
+    """画像URLから計測用の問い合わせ（`?utm_source=…`）を落とす。
+
+    **これは 429 の原因ではない**（2026-09-10 に切り分けた）。
+    最初「utm を外したら通った」と書いたが、**同じURLが少しあとに
+    utm 付きでも200で返った。**User-Agent の違いでもなかった
+    （連絡先を足した版と素の版で、どちらも200になる瞬間がある）。
+    **正体は本物の速度制限で、数秒〜1分で解ける。**
+    2度も別の原因だと決めつけた。**直し方は待って試し直すこと**（`_download`）。
+    問い合わせを落とすのは、控えに残すURLを短くするためだけ。
+    """
+    return str(url or "").split("?")[0]
+
+
+# Wikimedia は連絡先の無い User-Agent を嫌う。**公開リポジトリなので
+# メールアドレスは書かない。**チャンネルのURLを連絡先にする
+UA_IMAGE = "youtube-video-creation/1.0 (+https://youtube.com/@kaigai-soccer-riyuu)"
+DOWNLOAD_TRIES = 5
+DOWNLOAD_WAIT = 8
+
+
+def _download(url: str, session=None, tries: int = DOWNLOAD_TRIES) -> bytes:
+    """画像を取る。**429 は待って試し直す**（2026-09-10）。
+
+    upload.wikimedia.org は続けて叩くと Too Many Requests を返すが、
+    数秒〜1分で解ける。**1回で諦めると「写真が無い」ように見える。**
+    実際、鎌田・ハーランド・アラウホ・ロジャースで4回引っかかり、
+    そのたびに別の原因（utm・UA）を疑って回り道した。
+    """
+    import time
+
+    import requests
+
+    client = session or requests
+    last = None
+    for attempt in range(tries):
+        got = client.get(url, timeout=30, headers={"User-Agent": UA_IMAGE})
+        if got.status_code == 200:
+            return got.content
+        last = got
+        if got.status_code != 429:
+            break
+        time.sleep(DOWNLOAD_WAIT * (attempt + 1))
+    last.raise_for_status()
+    raise PortraitError(f"画像を取れません（HTTP {last.status_code}）: {url}")
 
 
 def _plain(field) -> str:
@@ -137,7 +185,17 @@ SCENE_SUBJECTS = 4
 NOT_A_PERSON = ("(dog)", "(cat)", "(horse)", "dog)", "statue", "mural",
                 "graffiti", "street art", "waxwork", "madame tussauds",
                 "mosaic", "sculpture", "bust of", "monument", "plaque",
-                "postage stamp", "banknote", "coin", "mural of")
+                "postage stamp", "banknote", "coin", "mural of",
+                # **逮捕写真を掴んだ**（2026-09-10 実測）。「チアゴ・シウヴァ」で
+                # 引いたら、1位が `File:Thiago-Silva-mug-shot.jpg`（同名の
+                # UFC選手が SWAT との対峙のあと逮捕されたときのもの）だった。
+                # 候補に2枚あり、**被写体の照合もライセンスも通っている。**
+                # サッカー選手の回に無関係な人の逮捕写真を出すところだった
+                "mug-shot", "mug shot", "mugshot", "booking photo", "arrest",
+                # 紋章・盾も人ではない（アラウホの候補に混ざっていた）
+                "coat of arms", "crest of", "escudo de",
+                # 集合写真は顔が小さい（ブラジル代表の候補に混ざっていた）
+                "gruppenfoto", "team photo", "squad photo")
 
 
 # 画像でない添付。**Commons には音声も動画もある。**
@@ -243,13 +301,8 @@ def save(names: list[str], folder: Path, session=None, only: str = "",
     import requests
 
     folder.mkdir(parents=True, exist_ok=True)
-    body = (session or requests).get(
-        meta["image_url"], timeout=30,
-        headers={"User-Agent": "youtube-video-creation/1.0 (subject-checked)"},
-    )
-    body.raise_for_status()
     name = "01.jpg"
-    (folder / name).write_bytes(body.content)
+    (folder / name).write_bytes(_download(meta["image_url"], session))
 
     banned = any(w in NO_DERIVS for w in
                  meta["license"].lower().replace("-", " ").split())
@@ -353,13 +406,8 @@ def save_scene(words: list[str], folder: Path, session=None, only: str = "",
     import requests
 
     folder.mkdir(parents=True, exist_ok=True)
-    body = (session or requests).get(
-        meta["image_url"], timeout=30,
-        headers={"User-Agent": "youtube-video-creation/1.0 (scene)"},
-    )
-    body.raise_for_status()
     name = "scene.jpg"
-    (folder / name).write_bytes(body.content)
+    (folder / name).write_bytes(_download(meta["image_url"], session))
 
     banned = any(w in NO_DERIVS for w in
                  meta["license"].lower().replace("-", " ").split())

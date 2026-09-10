@@ -180,6 +180,10 @@ class Notes:
     # いなかったので、節のテロップが題名になっていた（「試合登録は20人。2人が
     # 外れる」が題名で並んでいた）
     short_title: str = ""
+    # **この回に出てくる人の名前**（2026-09-10）。ハッシュタグに使う。
+    # 参考4チャンネルは10〜34個貼っていて中身はほぼ選手名、こちらは7〜8個で
+    # 選手名が1つも無い回があった。**本文から機械で拾わない**（辞書が無いので）
+    people: list = field(default_factory=list)
     slot: str = ""
     theme_id: str = ""
     prefix: str = ""                 # 【速報】【朗報】【悲報】
@@ -285,6 +289,7 @@ def build_notes(raw: dict) -> Notes:
         format=chosen,
         voice_min=(float(raw["voice_min"]) if raw.get("voice_min") is not None else None),
         short_title=str(raw.get("short_title", "")).strip(),
+        people=[str(x).strip() for x in (raw.get("people") or []) if str(x).strip()],
         title=str(theme.get("title", "")).strip(),
         theme_id=str(theme.get("id", "")).strip(),
         question=str(theme.get("question", "")).strip(),
@@ -907,7 +912,10 @@ def check_repeats(notes: Notes, plan: Plan, now=None) -> list[str]:
 
 
 # テロップに入る目安。これを超えると読みきれないうちに次へ行く
-TELOP_LIMIT = 26
+# **画面に出る字の上限**。1920幅・58pxで1行に約27.8字、枠には3行入る。
+# 26 は1行ぶんで、**読み上げの半分しか画面に出ていなかった**
+# （2026-09-10 に19本513行を数えて 46%。ユーザー指摘）。2行ぶんに広げた
+TELOP_LIMIT = 54
 
 
 def _resolve_bg(path: str):
@@ -918,11 +926,25 @@ def _resolve_bg(path: str):
 
 
 def _telop(text: str, limit: int = TELOP_LIMIT) -> str:
-    """読み上げ文をそのままテロップにすると長すぎる。頭の一文だけ使う。"""
-    head = str(text).strip().split("。")[0].strip("　 ")
-    if len(head) > limit:
-        head = head[: limit - 1] + "…"
-    return head
+    """読み上げ文を画面に出す形にする。
+
+    **前は「。」で切って頭の一文だけにしていた。**2文目以降は必ず落ちるので、
+    「6分、ヤマルのゴールで先制します。2試合続けての得点でした」の後半が
+    画面に出ないまま読まれていた（2026-09-10 実測）。
+    いまは**収まるなら丸ごと出す**。収まらないときだけ、限度の中で
+    文の切れ目を探して切る。切れ目が無ければ … を付ける。
+    """
+    body = str(text).strip().strip("　 ")
+    if not body:
+        return ""
+    if len(body) <= limit:
+        return body.rstrip("。")
+    head = body[:limit]
+    for mark in ("。", "、"):
+        cut = head.rfind(mark)
+        if cut >= limit // 2:          # 半分より前で切ると言葉が足りない
+            return body[:cut]
+    return body[: limit - 1] + "…"
 
 
 # 動詞・形容詞の言い切りはこの音で終わる。名詞止めと区別するために使う
@@ -1000,6 +1022,12 @@ def to_script(notes: Notes, plan: Plan) -> str:
         # 「小さく添えるだけ」の決まりを変えた。出てくる人のクラブ姿の写真が
         # 無いときに使う。写真より優先される
         "thumbnail_crest_main": [str(x) for x in (thumbnail.get("crest_main") or [])][:3],
+        # エンブレム2つの間に置く字。対戦以外の回で「対」だと誤解を招く
+        **({"thumbnail_crest_link": str(thumbnail["crest_link"])}
+           if thumbnail.get("crest_link") is not None else {}),
+        # 並べた顔の継ぎ目に置く印。対立の回だけ
+        **({"thumbnail_face_link": str(thumbnail["face_link"])}
+           if thumbnail.get("face_link") is not None else {}),
         # **エンブレムだけ止める**（2026-09-09 ユーザー「レアルは不要」）。
         # tags を削ると YouTube のタグからも消えるので、絵のほうだけ別に持つ
         **({"thumbnail_crests": [str(x) for x in (thumbnail.get("crests") or [])]}
@@ -1033,6 +1061,10 @@ def to_script(notes: Notes, plan: Plan) -> str:
             # こちらは「サッカー」「移籍市場」のような分類語しか無かった。
             # サンチョの回にサンチョが入っていない状態だった
             extra=[str(t) for t in (thumbnail.get("tags") or [])],
+            # **この回に出てくる人**（2026-09-10）。取材メモの `people:` に書く。
+            # 辞書が無いので本文からは拾わない（推測で人名を作らない）
+            people=list(notes.people),
+            topic=notes.topic,
         ),
         "sources": notes.sources,
         "cards": _cards(notes),
@@ -1133,11 +1165,15 @@ def to_script(notes: Notes, plan: Plan) -> str:
                     room = max(8, TELOP_LIMIT - len(voice) - 1)
                     shown = f"{voice}「{_telop(sentence, room)}」"
                 elif not shown:
-                    # **地の文は読み上げをそのまま出さない。**字幕と同じものが
-                    # 二重に出て、画面が文字だらけになる（実測 2026-09-06）。
-                    # 名詞で言い切れる短さになるときだけ出す
-                    short = _telop(sentence, 16)
-                    shown = short if len(short) <= 16 and "…" not in short else ""
+                    # **地の文も画面に出す**（2026-09-10 ユーザー指摘で変更）。
+                    # それまでは「最初の一文が16字に収まるときだけ」出していた。
+                    # 収まらない行は**何も出ず、前の画面が残る**ので、
+                    # 513行のうち198行（39%）で画面が読み上げとずれていた。
+                    # 実例: 「アルバレスを獲れませんでした」と読んでいるあいだ、
+                    # 画面はフリックの発言のままだった。
+                    # 元の理由（字幕と二重になる）は、字幕が焼き込みではなく
+                    # 別ファイルの CC なので、そもそも二重にならない
+                    shown = _telop(sentence)
                 if shown:
                     lines.append(f"  telop: {shown}")
                 if own_card:

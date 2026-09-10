@@ -581,3 +581,190 @@ def test_エンブレムだけ止められる(tmp_path, monkeypatch):
     assert from_meta({}, "題")["crests"] is None
     assert from_meta({"thumbnail_crests": []}, "題")["crests"] == []
     assert from_meta({"thumbnail_crests": ["バルセロナ"]}, "題")["crests"] == ["バルセロナ"]
+
+
+def test_エンブレムは右下に置く(tmp_path, monkeypatch):
+    """**左に置くと言葉と場所を取り合う**（2026-09-10 実物で発見）。
+
+    バルコラの回で、速度ランキング3行の真上にリヴァプールのエンブレムが
+    重なり、数字が読めなくなった。ユーザーの指示で右下へ移した。
+    言葉（左）とエンブレム（右下）は、**両方出る**のが正しい。
+    """
+    from PIL import Image
+
+    from src import thumbnail as mod
+
+    placed = []
+    monkeypatch.setattr(mod, "_paste_crest",
+                        lambda layer, tag, right, bottom: placed.append((right, bottom)) or 300)
+
+    photo = tmp_path / "tate.jpg"
+    Image.new("RGB", (600, 1000), "white").save(photo)     # 縦長
+    mod.build_thumbnail(_config(), "", tmp_path / "a.png", style="band",
+                        background=str(photo), lines=("上", "下"),
+                        tags=["リバプール"],
+                        points=["1位 ●●●● 時速35.93キロ"])
+    assert placed, "エンブレムを置いていない"
+    right, bottom = placed[0]
+    assert right > SIZE[0] * 0.7, f"右に寄っていない: {right}"
+    assert bottom > SIZE[1] * 0.7, f"下に寄っていない: {bottom}"
+
+
+def test_横長の回はエンブレムを帯の上に載せる(tmp_path, monkeypatch):
+    """帯は全幅にかかる。**床まで下げると帯に隠れる。**"""
+    from PIL import Image
+
+    from src import thumbnail as mod
+
+    placed = []
+    monkeypatch.setattr(mod, "_paste_crest",
+                        lambda layer, tag, right, bottom: placed.append((right, bottom)) or 300)
+
+    photo = tmp_path / "yoko.jpg"
+    Image.new("RGB", (1600, 900), "white").save(photo)     # 横長
+    mod.build_thumbnail(_config(), "", tmp_path / "b.png", style="band",
+                        background=str(photo), lines=("上", "下"), tags=["リバプール"])
+    assert placed
+    assert placed[0][1] < SIZE[1] - 60, "帯に隠れる位置に置いている"
+
+
+def test_言葉が長ければ縮めて写真に食い込ませない():
+    """「時速」「キロ」を足したとたん右の写真に食い込んだ（2026-09-10）。"""
+    from PIL import Image, ImageDraw, ImageFont
+
+    from src import thumbnail as mod
+
+    draw = ImageDraw.Draw(Image.new("RGBA", mod.SIZE))
+    long_rows = ["1位 ●●●● 時速35.93キロ", "2位 ●●●● 時速35.36キロ"]
+    font_path = str(_config().video.font_path())
+    mod._draw_points(draw, long_rows, font_path)
+    font = ImageFont.truetype(font_path, mod.POINTS_SIZE)
+    assert max(draw.textlength(t, font=font) for t in long_rows) > mod.POINTS_WIDTH, (
+        "この文字列では縮める必要が出ない。テストの前提が崩れている")
+
+
+def test_エンブレムの間の字を変えられる(tmp_path, monkeypatch):
+    """**「対」だけではない**（2026-09-10 実物で発見）。
+
+    アラウホの回は対戦ではなく、バルセロナからリヴァプールへのレンタルの
+    話なのに、サムネが「リヴァプール 対 バルセロナ」に見えていた。
+    """
+    from PIL import Image
+
+    from src import thumbnail as mod
+
+    drawn = []
+
+    real_draw = mod.ImageDraw.Draw
+
+    class Spy:
+        """本物に流しつつ、text の呼び出しだけ控える。"""
+
+        def __init__(self, image, *a, **k):
+            self._inner = real_draw(image, *a, **k)
+
+        def __getattr__(self, name):
+            return getattr(self._inner, name)
+
+        def text(self, xy, text, *a, **k):
+            drawn.append(("text", text))
+            return self._inner.text(xy, text, *a, **k)
+
+    def fake_find(name, root=None):
+        path = tmp_path / f"{name}.png"
+        Image.new("RGBA", (100, 100), (255, 0, 0, 255)).save(path)
+        return path
+
+    import src.crest as crest_mod
+
+    monkeypatch.setattr(crest_mod, "find", fake_find)
+    monkeypatch.setattr(mod.ImageDraw, "Draw", Spy)
+    font_path = str(_config().video.font_path())
+
+    mod._crest_stage(["A", "B"], font_path)
+    assert ("text", "対") in drawn
+
+    drawn.clear()
+    mod._crest_stage(["A", "B"], font_path, "→")
+    assert ("text", "→") in drawn
+    assert ("text", "対") not in drawn
+
+    # 空文字なら何も描かない
+    drawn.clear()
+    mod._crest_stage(["A", "B"], font_path, "")
+    assert not any(kind == "text" for kind, _ in drawn)
+
+
+def test_2枚並べたら間にぶつかる印を置ける(tmp_path):
+    """**顔を並べただけだと「共演」に見える**（2026-09-10 ユーザー指示
+    「喧嘩している感出して」）。言い分が食い違う回は、間に印を1つ入れる。
+    """
+    from PIL import Image
+
+    from src import thumbnail as mod
+
+    a = tmp_path / "a.jpg"
+    b = tmp_path / "b.jpg"
+    Image.new("RGB", (600, 900), "white").save(a)
+    Image.new("RGB", (600, 900), "white").save(b)
+
+    def build(link):
+        out = tmp_path / f"{link or 'none'}.png"
+        mod.build_thumbnail(_config(), "", out, style="band",
+                            lines=("上", "下"), photos=[str(a), str(b)],
+                            face_link=link)
+        with Image.open(out) as im:
+            return im.convert("RGB")
+
+    plain = build("")
+    clash = build("VS")
+    # 印を置いたほうだけ、継ぎ目に色が入る
+    mid = mod.SIZE[0] // 2
+    y = int(mod.SIZE[1] * 0.30)
+    assert plain.getpixel((mid, y)) != clash.getpixel((mid, y))
+
+
+def test_印を書かなければ何も置かない(tmp_path):
+    """対立でない回にまで「VS」を出さない。"""
+    from PIL import Image
+
+    from src import thumbnail as mod
+
+    canvas = Image.new("RGBA", mod.SIZE, (255, 255, 255, 255))
+    before = canvas.copy()
+    mod._face_clash(canvas, "", str(_config().video.font_path()))
+    assert canvas.tobytes() == before.tobytes()
+
+
+def test_国旗はVSの上に置く(tmp_path, monkeypatch):
+    """**右下だと顔にかかる**（2026-09-10 ユーザー「vsの上において」）。
+
+    真ん中の上なら「この2人が属しているもの」として読める。
+    上に置いた回は、右下の枠には出さない（同じ絵が2つ並ぶ）。
+    """
+    from PIL import Image
+
+    from src import thumbnail as mod
+
+    flag = tmp_path / "flag.png"
+    Image.new("RGBA", (300, 210), (0, 155, 58, 255)).save(flag)
+    monkeypatch.setattr("src.crest.find", lambda name, root=None: flag)
+
+    a = tmp_path / "a.jpg"
+    b = tmp_path / "b.jpg"
+    Image.new("RGB", (600, 900), "white").save(a)
+    Image.new("RGB", (600, 900), "white").save(b)
+
+    placed = []
+    monkeypatch.setattr(mod, "_paste_crest",
+                        lambda layer, tag, right, bottom: placed.append(tag) or 300)
+
+    out = tmp_path / "th.png"
+    mod.build_thumbnail(_config(), "", out, style="band", lines=("上", "下"),
+                        photos=[str(a), str(b)], tags=["ブラジル"], face_link="VS")
+    assert not placed, "上に置いたのに、右下にも出している"
+
+    with Image.open(out) as im:
+        px = im.convert("RGB")
+    # 真ん中の上（VSの帯より上）に、国旗の緑が乗っている
+    assert px.getpixel((mod.SIZE[0] // 2, 60))[1] > 100

@@ -929,3 +929,47 @@ def test_顔を並べた回もサムネの顔として認める(tmp_path, monkey
         meta = {}
 
     assert not review_mod._thumbnail_face(Nothing()).ok
+
+
+def test_読み上げの半分が声だけで流れていたら止める(tmp_path):
+    """**19本513行を数えたら46%だった**（2026-09-10 ユーザー指摘）。
+
+    地の文は16字まで、引用は26字で切る、「。」で1文目だけ、の3つが
+    重なって、読み上げの半分が画面に出ていなかった。しかも画面が
+    読み上げとずれる（「アルバレスを獲れませんでした」と読むあいだ、
+    画面はフリックの発言のまま）。直したので、戻っていないかを見る。
+    """
+    import json
+
+    from src.review import _telop_coverage
+
+    def build(lines):
+        path = tmp_path / f"{len(lines)}_{hash(str(lines)) & 0xffff}.json"
+        path.write_text(json.dumps({"scenes": [{"lines": lines}]}, ensure_ascii=False),
+                        encoding="utf-8")
+        return path
+
+    # 前の作り: 長い行にはテロップが付かず、前の画面が残る
+    thin = build([
+        {"text": "あ" * 30, "telop": "見出し"},
+        {"text": "い" * 30, "telop": "見出し"},      # 据え置き
+        {"text": "う" * 30, "telop": ""},            # 何も出ない
+    ])
+    finding = _telop_coverage(thin)
+    assert not finding.ok
+    assert "46" not in finding.detail          # 実測値を焼き込んでいないこと
+    assert "前の画面のままの行 2" in finding.detail
+
+    # 直したあと: どの行にも読み上げに見合う字が出る
+    thick = build([
+        {"text": "あ" * 30, "telop": "あ" * 28},
+        {"text": "い" * 30, "telop": "い" * 28},
+        {"text": "う" * 30, "telop": "う" * 28},
+    ])
+    assert _telop_coverage(thick).ok
+
+
+def test_画面に出る字の点検はscript_jsonが無ければ止める(tmp_path):
+    from src.review import _telop_coverage
+
+    assert not _telop_coverage(tmp_path / "ない.json").ok

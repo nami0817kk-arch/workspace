@@ -34,6 +34,7 @@ SOURCE_BADGES = {
 SPEAKER_HOP = 24       # 話し始めに立ち絵が跳ねる高さ(px)
 TELOP_MARGIN = 110
 TELOP_HEIGHT = 250
+TELOP_MAX_SHARE = 0.42   # 字が多いとき、テロップ枠が使ってよい画面の高さ
 TELOP_BOTTOM = 58
 
 
@@ -607,6 +608,16 @@ class Renderer:
         # せり上がりながらフェードインする
         rise = int(TELOP_RISE * (1.0 - _ease_out(telop_t)))
         top, bottom = top + rise, bottom + rise
+
+        # **枠は字の量に合わせて上へ伸ばす**（2026-09-10）。
+        # テロップを2行ぶんに広げたので、高さ250pxの決め打ちだと3行目から
+        # はみ出す。縦型は1行13.3字しか入らないので、とくに効く
+        lines = wrap_text(draw, text, self.font_telop, right - left - 88)
+        line_height = self.config.video.telop_size + 16
+        need = line_height * len(lines) + 44
+        if need > bottom - top:
+            top = bottom - min(need, int(self.layout.height * TELOP_MAX_SHARE))
+
         draw.rounded_rectangle([left, top, right, bottom], radius=28, fill=(12, 14, 22, 205))
         draw.rounded_rectangle([left, top, right, bottom], radius=28, outline=(255, 255, 255, 60), width=3)
 
@@ -625,8 +636,6 @@ class Renderer:
             draw.rounded_rectangle(box, radius=22, fill=color + (255,))
             draw.text((box[0] + 22, box[1] + 8), label, font=self.font_name, fill=(16, 16, 20, 255))
 
-        lines = wrap_text(draw, text, self.font_telop, right - left - 88)
-        line_height = self.config.video.telop_size + 16
         y = top + (bottom - top - line_height * len(lines)) // 2 + 12
         for chunk in lines:
             draw.text(
