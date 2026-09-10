@@ -16,7 +16,9 @@ def test_1本あたりの費用は公表値の1600():
     """
     from src.quota import COST_PER_UPLOAD
 
-    assert COST_PER_UPLOAD == 1600
+    # **0 に直した**（2026-09-10、コンソールで確認）。
+    # 投稿は Video Uploads per day（100本）で数えられ、Queries per day は食わない
+    assert COST_PER_UPLOAD == 0
 
 
 def test_9月9日に枠が尽きた日の合計を再現できる(tmp_path):
@@ -35,7 +37,9 @@ def test_9月9日に枠が尽きた日の合計を再現できる(tmp_path):
         for _ in range(times):
             quota.record(name, book)
     got = quota.used(book)
-    assert 108000 <= got <= 112000, f"合計 {got}（実際に落ちたのは 110,602 付近）"
+    # **投稿を除いた合計で見る**（2026-09-10）。台帳から投稿を抜くと 10,080 で、
+    # コンソールの 9,980 とほぼ一致した。**尽きたのはサムネイルだった**
+    assert got < 10000, f"投稿を除けば枠に収まるはず: {got}"
 
 
 def test_投稿数の上限でも止まる(tmp_path):
@@ -106,7 +110,7 @@ def test_枠の表示は上限を断定しない():
     from src.quota import report
 
     text = "\n".join(report())
-    assert "未確認" in text
+    assert "コンソールで確認済み" in text     # 2026-09-10 に確かめた
     assert "→ **あと" not in text
 
 
@@ -205,7 +209,7 @@ def test_まとめて叩く前に見積りが出る():
 
     lines = "\n".join(preflight({"videos.insert": 80}))
     assert "実測でぶつかった線" in lines        # 超えるので警告が出る
-    assert "128,000" in lines                  # 80 × 1600
+    assert "0 =" in lines or "× 0" in lines    # 投稿は Queries を食わない
     assert "超えます" in lines
 
 
@@ -230,11 +234,15 @@ def test_表に無い呼び出しでも止めない(tmp_path):
     assert list(book.values())[0]["まったく知らない.list"] == 1
 
 
-def test_本数で止める(tmp_path):
-    """**数えているのに止めていなかった**（2026-09-10）。
+def test_投稿はQueriesを食わない(tmp_path):
+    """**コンソールで確認した**（2026-09-10）。
 
-    37本上げたところで枠が尽き、予約の付け替えもコメントも打てなくなった。
-    警告だけでは、走っている一括処理は止まらない。
+      Queries per day        上限 10,000  使用 9,980（99.8%）
+      Video Uploads per day  上限    100  使用    37（37%）
+
+    1本1,600が正しければ37本で59,200になり、6本目で止まっているはずだった。
+    実際は37本通っている。**投稿は別枠で数えられている。**
+    台帳から投稿を除くと10,080で、コンソールの9,980とほぼ一致した。
     """
     import json
     from datetime import datetime, timezone
@@ -247,11 +255,14 @@ def test_本数で止める(tmp_path):
     ledger.write_text(json.dumps({day: {"videos.insert": quota.SAFE_UPLOADS_PER_DAY}}),
                       encoding="utf-8")
     assert quota.uploads_today(ledger, now) == quota.SAFE_UPLOADS_PER_DAY
-    # 目安は 33 本。110,000 ではなく 70,000 に見えたので下げた
-    assert quota.SAFE_UPLOADS_PER_DAY == 33
-    assert quota.OBSERVED_CEILING == 70000
-    # 1本 1,650（投稿＋サムネ）で 33本 = 54,450。読み取りと更新のぶんが残る
-    assert quota.SAFE_UPLOADS_PER_DAY * 1650 < quota.OBSERVED_CEILING
+    # **投稿は Queries per day に乗らない**
+    assert quota.cost_of("videos.insert") == 0
+    assert quota.used(ledger, now) == 0, "投稿だけの日は Queries を使っていない"
+    # 枠は既定の 10,000 のまま。引き上げられていない
+    assert quota.DAILY == 10000
+    # 1本 サムネ50＋コメント50。10,000 ÷ 100 = 100本で、投稿の別枠と釣り合う
+    assert quota.COST_PER_VIDEO == 100
+    assert quota.DAILY // quota.COST_PER_VIDEO == quota.DAILY_UPLOADS
 
 
 def test_次に枠が戻る時刻を出せる():
@@ -262,3 +273,17 @@ def test_次に枠が戻る時刻を出せる():
 
     text = quota.reset_text(datetime(2026, 9, 10, 3, 0, tzinfo=timezone.utc))
     assert "-" in text and ":" in text
+
+
+
+def test_サムネの再試行そのものが枠を削る():
+    """**37本の動画に139回送っていた**（2026-09-10）。
+
+    外の shell が「150秒待って6回まで」を回していて、102回の空振りで
+    5,100＝1日の枠の半分を捨てた。**再試行は回数ではなく間隔であける。**
+    """
+    from src import quota
+
+    assert quota.THUMB_TRIES <= 3, "回数を増やすほど枠が減る"
+    # 全部の投稿でサムネを1回ずつ送っても、枠の半分より下に収まること
+    assert quota.DAILY_UPLOADS * quota.cost_of("thumbnails.set") <= quota.DAILY // 2 + 1

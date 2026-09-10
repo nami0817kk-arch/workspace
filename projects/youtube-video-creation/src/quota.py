@@ -27,7 +27,20 @@ from pathlib import Path
 #   投稿64回×1600 = 102,400 ＋ その他 8,202 ＝ 110,602
 # となり、**落ちた地点とぴったり合う。**270だと 25,482 にしかならず、
 # 枠が尽きた説明が付かない。**公表値のほうが実態に合っている。**
-COST_PER_UPLOAD = 1600     # videos.insert 1回。公表値であり、9/9 の実測とも合う
+# **投稿は Queries per day を食わない**（2026-09-10、Cloud コンソールで確認）。
+#
+#   Queries per day        上限 10,000  使用 9,980（99.8%）  ← ここが尽きた
+#   Video Uploads per day  上限    100  使用    37（37%）    ← まだ余裕
+#
+# 1本1,600が正しければ、37本で59,200になり**6本目で止まっているはず**だった。
+# 実際は37本通っている。投稿は**別枠（Video Uploads per day）**で数えられている。
+#
+# 台帳から投稿を除くと 10,080 で、コンソールの 9,980 とほぼ一致した。
+# **尽きたのは投稿ではなく、サムネイル（139回×50＝6,950）だった。**
+#
+# 1,600 は公表値だが、このプロジェクトの Queries per day には乗らない。
+# **推測でカーブを合わせず、コンソールの数字だけを使う**
+COST_PER_UPLOAD = 0
 COSTS = {
     "videos.insert": COST_PER_UPLOAD,
     "videos.update": 50,
@@ -64,29 +77,26 @@ UNKNOWN_WRITE = 50
 # 正しい数はGoogle Cloud のコンソール（APIとサービス → YouTube Data API v3 →
 # 割り当て）にしか出ない。**ここの数字で「もう出せない」と判断しない。**
 # 実際に叩いて quotaExceeded が返るかどうかだけが確かな合図
+# **コンソールで確認した**（2026-09-10）。既定のままで、引き上げられていない。
+# 「64本上げられたから引き上げ済みのはず」という推論が間違っていた。
+# 投稿が別枠だったので、Queries を食わずに何本でも上げられていただけ
 DAILY = 10000
 # **投稿数そのものにも上限がある**（Video Uploads per day）。
 # 記録していなかったが、コンソールに出ている。ふつうは Queries が先に尽きる
 DAILY_UPLOADS = 100
-# **先に尽きるのはこちら**。枠を1600×本数で使い切るので、投稿数の100本より前に止まる。
-#
-# **60 → 33 に下げた**（2026-09-10）。台帳の4日ぶんを並べたら、上限は
-# 110,000 ではなく **70,000** に見える:
-#
-#   09-06  83,636 / 51本   落ちていない
-#   09-07  27,550 / 16本   余裕
-#   09-08 108,903 / 64本   落ちた
-#   09-09  69,280 / 37本   落ちた   ← **70,000 の 720 手前**
-#
-# 台帳は「投げた時点で数える」ので、**手元で失敗してGoogleに届かなかったぶんも
-# 足し込んでいる**。失敗の少なかった 09-09 だけ台帳と実際がほぼ一致し、
-# 70,000 の直前で落ちた、と見ると4日とも説明がつく。
-# **コンソールは別アカウントの持ち物で開けない**（2026-09-10 に確認）。
-# 数字が分かったら差し替える
-SAFE_UPLOADS_PER_DAY = 33
-# **実際にぶつかった線**。09-09 は 69,280 で quotaExceeded。
-# 正確な上限はコンソールにしか無いので、**通った/落ちたの境目**を目安にする
-OBSERVED_CEILING = 70000
+# **投稿本数は制約ではなかった**（2026-09-10 に撤回）。
+# 一度 33 に下げたが、それは**間違った台帳から作った推測**だった。
+# 実際に効くのは Video Uploads per day の 100 本で、そこは `DAILY_UPLOADS` が見る
+SAFE_UPLOADS_PER_DAY = DAILY_UPLOADS
+# **1本あたり、Queries をいくつ使うか。**サムネ1回（50）＋最初のコメント1回（50）。
+# 10,000 ÷ 100 = 100本ぶんで、Video Uploads per day の 100 本とちょうど釣り合う。
+# **これを超える使い方（再試行・貼り替え）が、そのまま本数を削る**
+COST_PER_VIDEO = 100
+# サムネイルの連投制限（429）に当たったときの試し直し。
+# **1回50ユニット使うので、回数を増やすほど枠が減る。**間隔で待つ
+THUMB_TRIES = 3
+THUMB_WAIT = 90
+OBSERVED_CEILING = DAILY
 LEDGER = Path("research/quota.json")
 _WARNED: set[str] = set()
 # 枠は太平洋時間の深夜0時に戻る。**夏と冬で1時間ずれる**
@@ -190,8 +200,13 @@ def uploads_today(path: Path = LEDGER, now: datetime | None = None) -> int:
 
 
 def uploads_left(path: Path = LEDGER, now: datetime | None = None) -> int:
-    """あと何本上げられるか。**2つの上限のうち、先に尽きるほうで決まる。**"""
-    by_cost = left(path, now) // COST_PER_UPLOAD
+    """あと何本出せるか。**2つの上限のうち、先に尽きるほうで決まる。**
+
+    投稿そのものは Queries per day を食わない（2026-09-10 にコンソールで確認）。
+    だが**サムネイルと最初のコメントで1本 100 使う**ので、実際に「出せる本数」は
+    そちらでも決まる。投稿だけ通してサムネが付かない状態にしない
+    """
+    by_cost = left(path, now) // COST_PER_VIDEO
     by_count = DAILY_UPLOADS - uploads_today(path, now)
     return max(0, min(by_cost, by_count))
 
@@ -205,15 +220,18 @@ def resets_at(now: datetime | None = None) -> datetime:
 def report(path: Path = LEDGER, now: datetime | None = None) -> list[str]:
     today = _load(path).get(_today(now)) or {}
     jst = timezone(timedelta(hours=9))
-    lines = [f"■ APIの枠　{used(path, now)} 使用（上限は不明。{DAILY} は未確認の目安）"]
+    spent = used(path, now)
+    lines = [f"■ Queries per day　{spent:,} / {DAILY:,}"
+             f"（{spent / DAILY * 100:.0f}%）　※コンソールで確認済み"]
     for name, count in sorted(today.items()):
         lines.append(f"  {name:<16} {count:>3}回 × {cost_of(name)} = "
                      f"{cost_of(name) * count}")
     lines.append(f"  投稿 {uploads_today(path, now)} / {DAILY_UPLOADS} 本")
-    # **「あと何本」を鵜呑みにしない**（2026-09-09）。DAILY が実際と桁違いなので、
-    # 0 と出ていても出せることがある。確かなのは quotaExceeded が返るかどうかだけ
-    lines.append(f"  投稿数から見た残り **{DAILY_UPLOADS - uploads_today(path, now)}本**"
-                 "（枠の上限は Cloud コンソールでしか見えない）")
+    # **投稿は別枠**（2026-09-10 にコンソールで確認）。Queries per day は食わない
+    ups = uploads_today(path, now)
+    lines.append(f"  Video Uploads per day　{ups} / {DAILY_UPLOADS}（投稿は別枠）")
+    lines.append(f"  枠から見た残り **{max(0, DAILY - spent) // COST_PER_VIDEO}本**"
+                 f"（1本 サムネ50＋コメント50＝{COST_PER_VIDEO}）")
     lines.append(f"  次のリセット: 日本時間 "
                  f"{resets_at(now).astimezone(jst).strftime('%m-%d %H:%M')}")
     if not today:
