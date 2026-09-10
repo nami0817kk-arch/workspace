@@ -1,3 +1,5 @@
+import 'cup.dart';
+
 /// 試合を自動で進めるときの選び方。
 enum SimStyle {
   safe('安全', '成功率が最も高い手を選ぶ'),
@@ -40,6 +42,7 @@ class MatchResult {
     this.goalMinutes = const [],
     this.assistMinutes = const [],
     this.international = false,
+    this.cup,
     this.followedTactic = 0,
     this.againstTactic = 0,
     this.assistAttempts = 0,
@@ -47,6 +50,16 @@ class MatchResult {
 
   /// 代表戦なら true。リーグ戦とは別に数える。
   final bool international;
+
+  /// カップ戦なら、その大会。リーグ戦なら null。
+  ///
+  /// 順位表にも平均評価にも入れない。目標も約束もリーグ戦で数える
+  /// （カップの試合数はクラブの勝ち上がりで変わるので、
+  /// そこに目標を乗せると年ごとに難しさが変わってしまう）。
+  final CupKind? cup;
+
+  /// リーグ戦か。順位表と成績に入るのはこれだけ。
+  bool get isLeague => !international && cup == null;
 
   final int matchday;
   final String opponentName;
@@ -101,6 +114,7 @@ class MatchResult {
         if (goalMinutes.isNotEmpty) 'goalMinutes': goalMinutes,
         if (assistMinutes.isNotEmpty) 'assistMinutes': assistMinutes,
         'international': international,
+        'cup': cup?.name,
       };
 
   factory MatchResult.fromJson(Map<String, dynamic> json) => MatchResult(
@@ -120,6 +134,9 @@ class MatchResult {
         assistMinutes:
             (json['assistMinutes'] as List? ?? const []).cast<int>().toList(),
         international: json['international'] as bool? ?? false,
+        cup: CupKind.values.any((k) => k.name == json['cup'])
+            ? CupKind.values.byName(json['cup'] as String)
+            : null,
       );
 }
 

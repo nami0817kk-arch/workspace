@@ -309,6 +309,26 @@ class Formulas {
   static const double trainingGreatMax = 0.72;
   static const double trainingFlatMax = 0.70;
 
+  /// PK戦で勝つ確率。
+  ///
+  /// **能力ではほとんど決まらない**のが現実に近い。ここを実力差で決めると、
+  /// 一発勝負の意味が消える（格上が必ず勝つなら、それはリーグ戦と同じ）。
+  static const double shootoutBase = 0.5;
+
+  /// カップ戦の早いラウンドで、起用に乗る下駄。
+  ///
+  /// 現実の早いラウンドは控えと若手が出る場。普段出られない選手にも回る。
+  static const double cupRotationBonus = 0.45;
+
+  /// 主力がカップの早いラウンドで休まされる確率。
+  ///
+  /// 0 にするとカップが「主力の試合数が増えるだけ」の装置になり、
+  /// 若手が出る場という現実の構図が消える。
+  static const double cupRestChance = 0.35;
+
+  /// 休まされる線。これより上の見込みなら主力とみなす。
+  static const double cupRestFrom = 0.4;
+
   /// 監督の信頼がこれを下回ると「構想外」。ベンチにも入れなくなる。
   ///
   /// **取り返しのつかないところが、このゲームには怪我しか無かった。**

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import '../models/attributes.dart';
+import '../models/cup.dart';
 import '../models/club.dart';
 import '../models/development.dart';
 import '../models/injury.dart';
@@ -105,6 +106,7 @@ class MatchInProgress {
     this.extraRating = 0,
     this.weakFootMoments = const [],
     this.international = false,
+    this.cup,
     Random? random,
   })  : assert(scenarios.length == minutes.length),
         teammateGoalMinutes = [...teammateGoalMinutes],
@@ -213,6 +215,9 @@ class MatchInProgress {
 
   /// 代表戦か。リーグの順位表には影響しない。
   final bool international;
+
+  /// カップ戦なら、その大会。リーグ戦なら null。
+  final CupKind? cup;
 
   final Random _random;
 
@@ -860,6 +865,7 @@ class MatchInProgress {
       goalMinutes: [...ownGoalMinutes]..sort(),
       assistMinutes: [...ownAssistMinutes]..sort(),
       international: international,
+      cup: cup,
       followedTactic: followedTactic,
       againstTactic: againstTactic,
       assistAttempts: assistAttempts,
@@ -1019,6 +1025,7 @@ class MatchEngine {
     double moodBonus = 0,
     double extraRating = 0,
     bool international = false,
+    CupKind? cup,
     List<AttributeKey> favoured = const [],
     int fatigue = 0,
     List<Scenario>? forcedScenarios,
@@ -1084,6 +1091,7 @@ class MatchEngine {
         for (var i = 0; i < count; i++) _random.nextDouble() < weakFootChance,
       ],
       international: international,
+      cup: cup,
       random: _random,
     );
   }

@@ -192,7 +192,8 @@ Future<Career> runCareer(Playstyle style, int seed) async {
 
     // --- シーズンを戦う ---
     var matches = 0;
-    while (!state.seasonFinished && matches++ < 60) {
+    // リーグ38節 + カップ最大18 + 代表3。上限で切らないように余裕を持たせる。
+    while (!state.seasonFinished && matches++ < 90) {
       // 練習を決める。疲れていたら休む。
       await controller.setMenu(_menuFor(state, style));
       // 組む相手は移籍で入れ替わる。毎週その時点の顔ぶれで選び直す。

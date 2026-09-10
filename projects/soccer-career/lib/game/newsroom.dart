@@ -5,6 +5,7 @@ import '../models/career.dart';
 import '../models/club.dart';
 import '../models/life_event.dart';
 import '../models/news.dart';
+import '../models/cup.dart';
 import '../models/promise.dart';
 import '../models/season.dart';
 import '../models/attributes.dart';
@@ -413,6 +414,46 @@ class Newsroom {
         headline: headline,
         body: body,
       );
+
+  /// カップ戦の1試合を記事にする。
+  ///
+  /// **毎試合は書かない。** 勝ち上がりが決まった試合と、敗れた試合だけ。
+  /// グループの1試合ごとに見出しを出すと、記録タブがカップで埋まる。
+  static List<NewsItem> afterCup(
+    CareerState state,
+    CupRun run,
+    CupTie tie,
+    MatchResult result,
+  ) {
+    final name = state.player.name;
+    if (run.won) {
+      return [
+        NewsItem(
+          year: state.year,
+          matchday: state.matchday,
+          kind: NewsKind.club,
+          headline: '${state.club.name}、${tie.kind.label}優勝',
+          body: '${tie.opponentName}を破った。'
+              '${result.goals > 0 ? '$nameが決勝の舞台で${result.goals}点。' : ''}',
+        ),
+      ];
+    }
+    if (run.eliminated) {
+      return [
+        NewsItem(
+          year: state.year,
+          matchday: state.matchday,
+          kind: NewsKind.club,
+          headline: tie.round == CupRound.finalRound
+              ? '${state.club.name}、${tie.kind.label}決勝で敗れる'
+              : '${state.club.name}、${tie.kind.label}${tie.round.label}で敗退',
+          body: '${tie.opponentName}に屈した。'
+              '${result.appearance == Appearance.benched ? '$nameはベンチから見ていた。' : ''}',
+        ),
+      ];
+    }
+    return const [];
+  }
 
   /// 監督に約束したことを世に出す。
   ///

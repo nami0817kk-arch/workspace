@@ -23,6 +23,9 @@ import '../models/injury.dart';
 import '../models/life.dart';
 import '../models/life_event.dart';
 import '../models/news.dart';
+import '../models/club.dart';
+import '../models/cup.dart';
+import '../game/cups.dart';
 import '../models/personality.dart';
 import '../models/promise.dart';
 import '../game/promises.dart';
@@ -41,6 +44,7 @@ class WeekReport {
     this.timeline = const [],
     this.autoRested = false,
     this.outcome,
+    this.cup,
     this.companion = TrainingCompanion.alone,
     this.trained,
     this.learned,
@@ -61,6 +65,9 @@ class WeekReport {
   ///
   /// 黙って差し替えると「練習したのに伸びない」と見える。
   final bool autoRested;
+
+  /// その週に戦ったカップ戦。リーグ戦の週は null。
+  final CupTie? cup;
 
   /// その週の手応え。休養の週は null。
   ///
@@ -123,7 +130,14 @@ class SimReport {
   /// 負傷で止まったならその内容。
   final Injury? injury;
 
+  /// 消化した試合。カップ戦も入る。
   int get played => results.length;
+
+  /// そのうちリーグ戦。節の進みはこちら。
+  int get leaguePlayed => results.where((r) => r.isLeague).length;
+
+  /// そのうちカップ戦。
+  int get cupPlayed => results.where((r) => r.cup != null).length;
   int get won => results.where((r) => r.won).length;
   int get drawn => results.where((r) => r.drawn).length;
   int get lost => played - won - drawn;
@@ -168,6 +182,7 @@ class CareerController extends ChangeNotifier {
   /// バランスのシミュレーションを同じ種で再現できるようにするため。
   final Random _random;
   late final LifeEvents _life = LifeEvents(random: _random);
+  late final Cups _cups = Cups(random: _random);
 
   /// 決着を待っているピッチ外の出来事。画面はこれを見て問いかけを出す。
   LifeEvent? pendingEvent;
@@ -753,6 +768,87 @@ class CareerController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// カップ戦の週が来ていれば、その1試合を組む。
+  ///
+  /// 節を消化した後にだけ呼ぶ。同じ週に2試合は入れない
+  /// （代表ウィークが先に立っていれば、カップはその次の週に回る）。
+  void _scheduleCup(CareerState state) {
+    if (state.pendingCup != null || state.pendingInternational) return;
+    if (state.seasonFinished) return;
+    final matchday = state.leagueResults.length;
+    for (final run in state.liveCups) {
+      final weeks = run.kind == CupKind.domestic
+          ? state.domesticCupWeeks
+          : state.continentalCupWeeks;
+      final played = state.cupResults.where((r) => r.cup == run.kind).length;
+      if (played >= weeks.length) continue;
+      // 予定を1つでも取りこぼすと、その大会はそこで止まったままになる
+      // （`played` が増えないので、次の週も同じ予定を待ち続ける）。
+      // 過ぎた予定は、次のリーグ戦の後に拾う。
+      if (weeks[played] > matchday) continue;
+      state.pendingCup = run.next ?? _cups.drawTie(state, run);
+      run.next = null;
+      return;
+    }
+  }
+
+  /// カップ戦を始める。
+  void startCupMatch() {
+    final state = _state;
+    final tie = state?.pendingCup;
+    if (state == null || tie == null) return;
+
+    // 出られない理由はリーグ戦と同じ順で見る。
+    final blocked = state.suspended
+        ? Appearance.suspended
+        : state.injured
+            ? Appearance.injured
+            : !state.squadStatus.canPlay || state.frozenOut
+                ? Appearance.benched
+                : null;
+    _inProgress = _match.start(
+      matchday: state.matchday,
+      player: state.player,
+      club: state.club,
+      opponent: Club(
+        id: 'cup-${tie.opponentName}',
+        name: tie.opponentName,
+        strength: tie.opponentStrength,
+        tier: 1,
+        countryId: state.club.countryId,
+      ),
+      home: tie.home,
+      development: state.development,
+      allyBonus: state.partner?.synergyBonus ?? 0,
+      moodBonus: state.morale.chanceModifier + state.form.chanceModifier,
+      extraRating: state.captain ? Formulas.captainRatingBonus : 0,
+      favoured: state.manager?.tactic.favours ?? const [],
+      fatigue: state.fatigue.value,
+      cup: tie.kind,
+      appearance: blocked ?? _cupSelectionFor(state, tie),
+    );
+    notifyListeners();
+  }
+
+  /// カップ戦での起用。
+  ///
+  /// 早いラウンドは控えと若手が出る場。序列が上の選手ほど休まされる。
+  /// ここを素通しにすると、カップは「主力の試合数が増えるだけ」の装置になり、
+  /// 若手が出番を掴むという現実の構図が消える。
+  Appearance _cupSelectionFor(CareerState state, CupTie tie) {
+    final bonus = _appearanceBonus(state) + Cups.selectionBonus(tie.round);
+    final likely = MatchEngine.decideAppearance(state.leagueResults,
+        bonus: bonus);
+    if (Cups.rotatesIn(tie.round) &&
+        likely == Appearance.start &&
+        _appearanceBonus(state) > Formulas.cupRestFrom &&
+        _random.nextDouble() < Formulas.cupRestChance) {
+      // 主力は休ませる。
+      return Appearance.benched;
+    }
+    return likely;
+  }
+
   /// 代表戦を始める。招集されていなければ何も起きない（週だけ消える）。
   void startInternational() {
     final state = _state;
@@ -791,7 +887,13 @@ class CareerController extends ChangeNotifier {
   Future<MatchResult?> simulateMatch() async {
     final state = _state;
     if (state == null) return null;
-    if (_inProgress == null) startNextMatch();
+    if (_inProgress == null) {
+      if (state.pendingCup != null) {
+        startCupMatch();
+      } else {
+        startNextMatch();
+      }
+    }
     final match = _inProgress;
     if (match == null) return null;
     match.autoPlay(state.simStyle);
@@ -802,7 +904,7 @@ class CareerController extends ChangeNotifier {
   ///
   /// 負傷・代表ウィーク・シーズン終了で止まる。何も起きなくても
   /// [limit] 試合で一度止めて、状況を見せる。
-  Future<SimReport> simulateUntilEvent({int limit = 38}) async {
+  Future<SimReport> simulateUntilEvent({int limit = 60}) async {
     final results = <MatchResult>[];
     var stop = SimStop.limit;
     Injury? injury;
@@ -822,6 +924,8 @@ class CareerController extends ChangeNotifier {
       final result = await simulateMatch();
       if (result == null) break;
       results.add(result);
+      // カップ戦は週を1つ使うが、節は進まない。
+      // 上限を節の数で切ると、カップ戦のぶんだけ手前で止まる。
 
       if (!wasInjured && lastWeek.newInjury != null) {
         stop = SimStop.injury;
@@ -890,6 +994,32 @@ class CareerController extends ChangeNotifier {
       state.pendingInternational = false;
       _inProgress = null;
       lastWeek = WeekReport(timeline: match.timeline);
+      await _persist();
+      return result;
+    }
+
+    // カップ戦。勝ち上がりを進めて、その週は終わり。
+    //
+    // **連戦の週は練習ができない。** リーグ戦のぶんに足して練習まで積めると、
+    // カップ戦は「試合数が増えて強くなるだけ」の装置になる。
+    // 現実でも中2日で練習はできない。
+    final tie = state.pendingCup;
+    if (tie != null && result.cup != null) {
+      final run = tie.kind == CupKind.domestic
+          ? state.domesticCup
+          : state.continentalCup;
+      if (run != null) {
+        run.next = _cups.applyResult(run, tie, result);
+        _publish(state, Newsroom.afterCup(state, run, tie, result));
+      }
+      state.pendingCup = null;
+      // 試合ぶんの消耗と累積疲労だけは乗る。
+      state.player = state.player.copyWith(
+        condition: MatchEngine.conditionAfterMatch(state.player,
+            played: result.appearance != Appearance.benched),
+      );
+      _inProgress = null;
+      lastWeek = WeekReport(timeline: match.timeline, cup: tie);
       await _persist();
       return result;
     }
@@ -1026,6 +1156,8 @@ class CareerController extends ChangeNotifier {
     if (_career.extras.isBreakAfter(result.matchday) && !state.seasonFinished) {
       state.pendingInternational = true;
     }
+    // カップ戦の週が来たか。代表ウィークとは別枠で、こちらが後に来る。
+    _scheduleCup(state);
 
     _inProgress = null;
     await _persist();

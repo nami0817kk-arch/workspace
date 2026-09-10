@@ -5,6 +5,9 @@ import 'agent.dart';
 import 'attributes.dart';
 import 'club.dart';
 import 'competition.dart';
+import 'cup.dart';
+import '../game/cups.dart';
+import '../game/national.dart';
 import 'development.dart';
 import 'entourage.dart';
 import 'life.dart';
@@ -165,6 +168,9 @@ class CareerState {
     this.effort = TrainingEffort.normal,
     this.companion = TrainingCompanion.alone,
     this.autoSpend = true,
+    this.domesticCup,
+    this.continentalCup,
+    this.pendingCup,
     this.drill,
     this.staff = const StaffTeam(),
     this.habits = const Habits(),
@@ -249,6 +255,46 @@ class CareerState {
   /// 週の選択が「どのメニューか」だけだった頃は、毎週同じ画面で同じものを
   /// 選ぶだけで、練習の週に手応えが無かった。
   TrainingEffort effort;
+
+  /// 今シーズンの国内カップと大陸カップ。出ていなければ null。
+  ///
+  /// 到達ラウンドは**戦った結果として決まる**。シーズン末に振り直さない。
+  CupRun? domesticCup;
+  CupRun? continentalCup;
+
+  /// これから戦うカップ戦の1試合。無ければ null。
+  ///
+  /// 代表ウィークと同じ扱いで、リーグの節を進めない**別枠の週**に入る。
+  CupTie? pendingCup;
+
+  /// 国内カップが入る節。この節を終えた後の週に戦う。
+  ///
+  /// 節を決め打ちにすると、16クラブの国（30試合）で日程がはみ出す。
+  /// 代表ウィークとぶつけない。**1週1試合の刻みは変えない**。
+  List<int> get domesticCupWeeks => Cups.weeksFor(
+        matches: fixtures.length,
+        count: Cups.domesticMatches,
+        taken: National.breakAfterMatchday.toSet(),
+      );
+
+  /// 大陸カップが入る節。国内カップとも代表ウィークともぶつけない。
+  List<int> get continentalCupWeeks => Cups.weeksFor(
+        matches: fixtures.length,
+        count: Cups.continentalMatches,
+        taken: {
+          ...National.breakAfterMatchday,
+          ...domesticCupWeeks,
+        },
+      );
+
+  /// 今シーズンのカップ戦のうち、まだ戦っているもの。
+  List<CupRun> get liveCups => [
+        for (final run in [domesticCup, continentalCup])
+          if (run != null && run.running) run,
+      ];
+
+  /// カップ戦の週か（リーグ戦の代わりに、その週はカップを戦う）。
+  bool get isCupWeek => pendingCup != null;
 
   /// 伸びるはずだったぶんを、自動でその場に振るか。
   ///
@@ -672,8 +718,16 @@ class CareerState {
   bool retired;
 
   /// リーグ戦の結果だけ。代表戦は節に数えない。
+  /// リーグ戦だけ。順位表・平均評価・目標・約束はここで数える。
+  ///
+  /// カップ戦を混ぜると、勝ち上がったクラブほど目標が達成しやすくなる
+  /// （試合数がクラブの成績で変わってしまう）。
   List<MatchResult> get leagueResults =>
-      results.where((r) => !r.international).toList();
+      results.where((r) => r.isLeague).toList();
+
+  /// そのシーズンのカップ戦の記録。
+  List<MatchResult> get cupResults =>
+      results.where((r) => r.cup != null).toList();
 
   int get matchday => leagueResults.length + 1;
   bool get seasonFinished => leagueResults.length >= fixtures.length;
@@ -769,6 +823,9 @@ class CareerState {
         'effort': effort.name,
         'companion': companion.name,
         'autoSpend': autoSpend,
+        'domesticCup': domesticCup?.toJson(),
+        'continentalCup': continentalCup?.toJson(),
+        'pendingCup': pendingCup?.toJson(),
         'drill': drill?.name,
         'staff': staff.toJson(),
         'habits': habits.toJson(),
@@ -878,6 +935,11 @@ class CareerState {
               ? TrainingCompanion.values.byName(json['companion'] as String)
               : TrainingCompanion.alone,
       autoSpend: json['autoSpend'] as bool? ?? true,
+      domesticCup:
+          CupRun.fromJson(json['domesticCup'] as Map<String, dynamic>?),
+      continentalCup:
+          CupRun.fromJson(json['continentalCup'] as Map<String, dynamic>?),
+      pendingCup: CupTie.fromJson(json['pendingCup'] as Map<String, dynamic>?),
       drill: SetPiece.values.any((p) => p.name == json['drill'])
           ? SetPiece.values.byName(json['drill'] as String)
           : null,
