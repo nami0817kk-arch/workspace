@@ -108,11 +108,11 @@ class MatchInProgress {
     this.international = false,
     this.cup,
     Random? random,
-  })  : assert(scenarios.length == minutes.length),
-        teammateGoalMinutes = [...teammateGoalMinutes],
-        expectedTeammateGoals =
-            expectedTeammateGoals ?? teammateGoalMinutes.length.toDouble(),
-        _random = random ?? Random() {
+  }) : assert(scenarios.length == minutes.length),
+       teammateGoalMinutes = [...teammateGoalMinutes],
+       expectedTeammateGoals =
+           expectedTeammateGoals ?? teammateGoalMinutes.length.toDouble(),
+       _random = random ?? Random() {
     _adapt();
   }
 
@@ -120,6 +120,7 @@ class MatchInProgress {
   final Club opponent;
   final bool home;
   final Appearance appearance;
+
   /// 引いた局面。展開に合う控えがあれば、その場で差し替わる。
   final List<Scenario> scenarios;
 
@@ -170,8 +171,10 @@ class MatchInProgress {
         ((minute - Formulas.lateFatigueFrom) / (90 - Formulas.lateFatigueFrom))
             .clamp(0.0, 1.0);
     final stamina = player.effective(Detail.stamina);
-    final drop = Formulas.lateFatigueBase -
-        (stamina - Formulas.conditionBaseline) * Formulas.lateFatiguePerStamina +
+    final drop =
+        Formulas.lateFatigueBase -
+        (stamina - Formulas.conditionBaseline) *
+            Formulas.lateFatiguePerStamina +
         fatigue * Formulas.lateFatiguePerFatigue;
     return -drop.clamp(0.0, Formulas.lateFatigueMax) * progress;
   }
@@ -184,6 +187,43 @@ class MatchInProgress {
   /// 監督の求める形に沿った手・逆らった手の数。
   int followedTactic = 0;
   int againstTactic = 0;
+
+  /// 今の局面で構えている切り札。局面が変われば外れる。
+  ///
+  /// 個人技は身に付くと常に少しだけ効くだけの飾りだった。
+  /// 1試合に1回、「この局面で出す」と決められるようにする。
+  Signature? armed;
+
+  /// この試合でもう切り札を使ったか。
+  bool signatureSpent = false;
+
+  /// 構えて外したか。力んだぶんが、その試合の残りに残る。
+  bool signatureMissed = false;
+
+  /// 今の局面で構えられる切り札。
+  ///
+  /// **その局面に出せる手が無ければ構えられない。** 覚えた技と、
+  /// 目の前の局面が噛み合ったときだけ選択肢になる。
+  List<Signature> get armable {
+    if (isFinished || signatureSpent) return const [];
+    return [
+      for (final s in development.signatures)
+        if (current.options.any((o) => o.detail == s.detail)) s,
+    ];
+  }
+
+  /// その手に、構えた切り札が乗るか。
+  bool signatureLands(ScenarioOption option) =>
+      armed != null && !signatureSpent && option.detail == armed!.detail;
+
+  /// 切り札を構える（null で外す）。乗らない技は構えられない。
+  void arm(Signature? signature) {
+    if (signature == null) {
+      armed = null;
+      return;
+    }
+    if (armable.contains(signature)) armed = signature;
+  }
 
   /// 味方を活かす手を選んだ回数。相方との呼吸はここから伸びる。
   ///
@@ -384,13 +424,10 @@ class MatchInProgress {
 
   /// 今の局面が逆足で対応するものか。
   bool get weakFootMoment =>
-      !isFinished &&
-      _index < weakFootMoments.length &&
-      weakFootMoments[_index];
+      !isFinished && _index < weakFootMoments.length && weakFootMoments[_index];
 
   /// 大一番か。格上との対戦と代表戦は、それだけで重い。
-  bool get bigMatch =>
-      international || opponent.strength - club.strength >= 8;
+  bool get bigMatch => international || opponent.strength - club.strength >= 8;
 
   /// 「前半 23分」のような表示用の文字列。
   static String minuteLabel(int minute) =>
@@ -405,8 +442,11 @@ class MatchInProgress {
 
   /// 現時点の評価点。基準値から増減を積み上げ、特性の補正を足す。
   double get rating {
-    final total = resolutions.fold<double>(
-            Formulas.baseRating, (sum, r) => sum + r.ratingDelta) +
+    final total =
+        resolutions.fold<double>(
+          Formulas.baseRating,
+          (sum, r) => sum + r.ratingDelta,
+        ) +
         player.traits.ratingBonus +
         extraRating;
     return total.clamp(Formulas.minRating, Formulas.maxRating);
@@ -433,21 +473,21 @@ class MatchInProgress {
 
   /// その手を特性から見たときの文脈。判定と記録で同じものを使う。
   TraitContext traitContextFor(ScenarioOption option) => TraitContext(
-        minute: currentMinute,
-        home: home,
-        outcome: option.outcome,
-        afterFailure: afterFailure,
-        afterSuccess: afterSuccess,
-        key: option.key,
-        detail: option.detail,
-        scenarioId: current.id,
-        international: international,
-        bigMatch: bigMatch,
-        margin: margin,
-        weakFoot: weakFootMoment && _usesFoot(option),
-        abroad: club.countryId != player.nationality.primary,
-        substitute: appearance == Appearance.sub,
-      );
+    minute: currentMinute,
+    home: home,
+    outcome: option.outcome,
+    afterFailure: afterFailure,
+    afterSuccess: afterSuccess,
+    key: option.key,
+    detail: option.detail,
+    scenarioId: current.id,
+    international: international,
+    bigMatch: bigMatch,
+    margin: margin,
+    weakFoot: weakFootMoment && _usesFoot(option),
+    abroad: club.countryId != player.nationality.primary,
+    substitute: appearance == Appearance.sub,
+  );
 
   /// 能力と難度だけで決まる地力。ここに増減が乗る。
   double baseChanceFor(ScenarioOption option) =>
@@ -469,48 +509,70 @@ class MatchInProgress {
       if (value != 0) factors.add(ChanceFactor(trait.label, value));
     }
 
-    factors.add(
-        ChanceFactor('コンディション', conditionModifier(player.condition)));
+    factors.add(ChanceFactor('コンディション', conditionModifier(player.condition)));
 
     // 終盤の消耗。スタミナで薄まり、累積疲労で深くなる。
     final late = lateFatigue;
     if (late != 0) factors.add(ChanceFactor('終盤の消耗', late));
 
     // 相手の格。上のリーグほど同じ手が通らなくなる。
-    factors.add(ChanceFactor(
-      opponent.strength >= club.strength ? '格上の相手' : '格下の相手',
-      (Formulas.opponentBaseline - opponent.strength) *
-          Formulas.opponentChanceSlope,
-    ));
+    factors.add(
+      ChanceFactor(
+        opponent.strength >= club.strength ? '格上の相手' : '格下の相手',
+        (Formulas.opponentBaseline - opponent.strength) *
+            Formulas.opponentChanceSlope,
+      ),
+    );
 
     // 自信は小さく効かせる。性格で試合が決まると能力を伸ばす意味が薄れる。
     factors.add(ChanceFactor('自信', player.personality.chanceModifier));
 
     // 積み上げてきたもの。型・個人技・相手への慣れ。
     if (development.identity != null) {
-      factors.add(ChanceFactor(development.identityLabel,
-          development.identityBonusFor(option.key)));
+      factors.add(
+        ChanceFactor(
+          development.identityLabel,
+          development.identityBonusFor(option.key),
+        ),
+      );
     }
     for (final entry
         in development.signatureFactors(option.key, option.detail).entries) {
       factors.add(ChanceFactor(entry.key.label, entry.value));
     }
+    // 構えた切り札。判定にも画面にも、同じここから出る。
+    if (signatureLands(option)) {
+      factors.add(
+        ChanceFactor('${armed!.label}（切り札）', Formulas.signatureArmedBonus),
+      );
+    }
+    // 外したぶんの力み。その試合の残り全部に効く。
+    if (signatureMissed) {
+      factors.add(const ChanceFactor('力んだ', -Formulas.signatureMissPenalty));
+    }
     if (opponentStyle.hardFor == option.key) {
-      factors.add(ChanceFactor(
+      factors.add(
+        ChanceFactor(
           opponentStyle.label,
-          -0.05 +
-              development.adaptationFor(opponentStyle,
-                  factor: player.traits.adaptationFactor)));
+          -Formulas.styleMismatch +
+              development.adaptationFor(
+                opponentStyle,
+                factor: player.traits.adaptationFactor,
+              ),
+        ),
+      );
     }
 
     // 大一番の重圧。経験と自信で薄まり、若く自信の無い選手ほど呑まれる。
     if (bigMatch) {
-      factors.add(ChanceFactor(
-        '大一番',
-        -0.05 +
-            development.composure +
-            (player.personality.confidence - 10) * 0.004,
-      ));
+      factors.add(
+        ChanceFactor(
+          '大一番',
+          -Formulas.bigMatchPressure +
+              development.composure +
+              (player.personality.confidence - 10) * 0.004,
+        ),
+      );
     }
 
     // 相方との呼吸。パスを受ける側が動いてくれるかどうか。
@@ -527,8 +589,7 @@ class MatchInProgress {
 
     // 逆サイドの選手は、内へ切り込んで利き足で打てる。
     if (player.isInverted && option.key == AttributeKey.shooting) {
-      factors.add(
-          const ChanceFactor('内へ切り込む', Formulas.invertedShootingBonus));
+      factors.add(const ChanceFactor('内へ切り込む', Formulas.invertedShootingBonus));
     }
 
     factors.sort((a, b) => b.value.abs().compareTo(a.value.abs()));
@@ -563,8 +624,8 @@ class MatchInProgress {
   }
 
   Map<String, double> _factorMap(ScenarioOption option) => {
-        for (final f in factorsFor(option)) f.label: f.value,
-      };
+    for (final f in factorsFor(option)) f.label: f.value,
+  };
 
   /// 足で扱う手か。ヘディングと守備の局面に逆足は関係しない。
   static bool _usesFoot(ScenarioOption option) =>
@@ -629,14 +690,16 @@ class MatchInProgress {
     if (success && outcome != Outcome.play) {
       // 決定機を作った。決まらなくても、無難な手とは違う。
       delta += Formulas.ratingPerChance;
-      final rolled = _random.nextDouble() <
+      final rolled =
+          _random.nextDouble() <
           (outcome == Outcome.goal
               ? Formulas.goalConversion
               : Formulas.assistConversion);
       // アシストは、この後に味方が決める予定があるときだけ決まる。
       // 決まった瞬間にその得点を今に引き寄せてスコアに乗せる。
       // 予定が無いのに点を足すと、自分のクラブだけが強くなる。
-      final converts = rolled &&
+      final converts =
+          rolled &&
           (outcome != Outcome.assist || _hasTeammateGoalAfter(currentMinute));
       if (converts) {
         if (outcome == Outcome.assist) {
@@ -648,7 +711,8 @@ class MatchInProgress {
           final before = margin;
           ownGoalMinutes.add(currentMinute);
           final decisive = lateGame && before <= 0;
-          delta += Formulas.ratingPerGoal *
+          delta +=
+              Formulas.ratingPerGoal *
               (decisive ? Formulas.decisiveGoalFactor : 1.0);
         } else {
           delta += Formulas.ratingPerAssist;
@@ -661,8 +725,7 @@ class MatchInProgress {
 
     // 止めた。これから入るはずだった失点が1つ消える。
     if (success && option.preventsGoal) {
-      final index =
-          concededMinutes.indexWhere((m) => m > currentMinute);
+      final index = concededMinutes.indexWhere((m) => m > currentMinute);
       if (index >= 0) {
         concededMinutes.removeAt(index);
         delta += Formulas.ratingPerGoalPrevented;
@@ -681,10 +744,21 @@ class MatchInProgress {
       delta += Formulas.ratingPerYellow;
       _book(minute);
       if (sentOff) delta += Formulas.ratingPerRedCard;
-      text = sentOff
-          ? '$text 2枚目の警告。退場を命じられた。'
-          : '$text 審判が笛を吹き、警告を受けた。';
+      text = sentOff ? '$text 2枚目の警告。退場を命じられた。' : '$text 審判が笛を吹き、警告を受けた。';
     }
+
+    // 構えた切り札は、乗った手を選んだ時点で使い切る。
+    // 外したら力みが残る（構えるだけならただ得、では判断にならない）。
+    if (signatureLands(option)) {
+      signatureSpent = true;
+      if (success) {
+        text = '$text ${armed!.label}が出た。';
+      } else {
+        signatureMissed = true;
+        text = '$text ${armed!.label}を狙って、力んだ。';
+      }
+    }
+    armed = null;
 
     final resolution = ScenarioResolution(
       success: success,
@@ -732,8 +806,10 @@ class MatchInProgress {
   /// 期待値が最も高いもの。人が選ぶときの癖を3つに絞った。
   ScenarioOption pickFor(SimStyle style) {
     final options = current.options;
-    ScenarioOption best(Iterable<ScenarioOption> from, double Function(ScenarioOption) score) =>
-        from.reduce((a, b) => score(a) >= score(b) ? a : b);
+    ScenarioOption best(
+      Iterable<ScenarioOption> from,
+      double Function(ScenarioOption) score,
+    ) => from.reduce((a, b) => score(a) >= score(b) ? a : b);
 
     // 監督の求める形は、評価点には乗らないが信頼に乗る。
     // 見ないと自動進行が監督を無視し続け、出場機会をじわじわ失う。
@@ -754,9 +830,25 @@ class MatchInProgress {
     }
   }
 
+  /// 自動で進めるときに、切り札を構えるか決める。
+  ///
+  /// **選ぶはずの手に乗るなら構える。** 見ないと、自動で進めるだけで
+  /// 切り札が一度も使われず、個人技が飾りに戻る（監督の求める形と同じ理屈）。
+  void autoArm(SimStyle style) {
+    if (signatureSpent || armed != null || isFinished) return;
+    final pick = pickFor(style);
+    for (final signature in armable) {
+      if (pick.detail == signature.detail) {
+        arm(signature);
+        return;
+      }
+    }
+  }
+
   /// 残りの局面を自動で解決する。
   void autoPlay(SimStyle style) {
     while (!isFinished) {
+      autoArm(style);
       choose(pickFor(style));
     }
   }
@@ -783,14 +875,13 @@ class MatchInProgress {
   /// 回ってくる。居残り練習が試合の数字に出る唯一の道。
   (int, int) _resolveDeadBall() {
     // セットプレーの名手は、少し早くキッカーを任される。
-    final threshold = SetPieceSkills.takerThreshold +
-        player.traits.deadBallThresholdOffset;
+    final threshold =
+        SetPieceSkills.takerThreshold + player.traits.deadBallThresholdOffset;
     if (player.setPieces[player.setPieces.best] < threshold) return (0, 0);
     final chance = switch (appearance) {
       Appearance.start => Formulas.deadBallChanceStart,
       Appearance.sub => Formulas.deadBallChanceSub,
-      Appearance.benched || Appearance.injured || Appearance.suspended =>
-        0.0,
+      Appearance.benched || Appearance.injured || Appearance.suspended => 0.0,
     };
     if (_random.nextDouble() >= chance) return (0, 0);
 
@@ -805,7 +896,8 @@ class MatchInProgress {
         if (hit) ownGoalMinutes.add(minute);
         return (hit ? 1 : 0, 0);
       case SetPiece.penalty:
-        final hit = _random.nextDouble() < (0.55 + skill / 260).clamp(0.5, 0.95);
+        final hit =
+            _random.nextDouble() < (0.55 + skill / 260).clamp(0.5, 0.95);
         deadBallText = hit ? 'PKを決めた' : 'PKを止められた';
         if (hit) ownGoalMinutes.add(minute);
         return (hit ? 1 : 0, 0);
@@ -831,10 +923,10 @@ class MatchInProgress {
     final defence = defensive == 0
         ? 0.0
         : defensive *
-            ((Formulas.cleanSheetBase - max(0, concededGoals)) *
-                    Formulas.cleanSheetSlope)
-                .clamp(Formulas.cleanSheetMin, Formulas.cleanSheetMax) *
-            (concededGoals == 0 ? player.traits.cleanSheetFactor : 1.0);
+              ((Formulas.cleanSheetBase - max(0, concededGoals)) *
+                      Formulas.cleanSheetSlope)
+                  .clamp(Formulas.cleanSheetMin, Formulas.cleanSheetMax) *
+              (concededGoals == 0 ? player.traits.cleanSheetFactor : 1.0);
 
     final (extraGoals, extraAssists) = _resolveDeadBall();
     final myGoals = goals + extraGoals;
@@ -849,15 +941,16 @@ class MatchInProgress {
       appearance: appearance,
       // 出ていない試合に評価点を付けない。付けると平均評価と出場数に
       // 混ざり、出場機会の判断（decideAppearance）まで狂う。
-      rating: appearance == Appearance.benched ||
+      rating:
+          appearance == Appearance.benched ||
               appearance == Appearance.injured ||
               appearance == Appearance.suspended
           ? null
           : (rating +
-                  defence +
-                  extraGoals * Formulas.ratingPerGoal +
-                  extraAssists * Formulas.ratingPerAssist)
-              .clamp(Formulas.minRating, Formulas.maxRating),
+                    defence +
+                    extraGoals * Formulas.ratingPerGoal +
+                    extraAssists * Formulas.ratingPerAssist)
+                .clamp(Formulas.minRating, Formulas.maxRating),
       goals: myGoals,
       assists: assists + extraAssists,
       yellowCards: yellowCards,
@@ -876,11 +969,10 @@ class MatchInProgress {
   ///
   /// GK と最終ラインは丸ごと、守備的MFは半分。前の選手は乗らない。
   static double _defensiveWeight(Position position) => switch (position) {
-        Position.gk || Position.cb || Position.sb => 1.0,
-        Position.dm => 0.5,
-        _ => 0.0,
-      };
-
+    Position.gk || Position.cb || Position.sb => 1.0,
+    Position.dm => 0.5,
+    _ => 0.0,
+  };
 }
 
 /// 練習と試合の消耗をまとめた1週間の結果。
@@ -891,7 +983,9 @@ class WeekOutcome {
     required this.trained,
     this.setPieces = const SetPieceSkills(),
     this.physique = const Physique(
-        heightCm: Physique.baseHeight, weightKg: Physique.baseWeight),
+      heightCm: Physique.baseHeight,
+      weightKg: Physique.baseWeight,
+    ),
     this.drilled,
     this.learned,
     this.redirected = false,
@@ -953,8 +1047,10 @@ class MatchEngine {
     List<MatchResult> recent, {
     double bonus = 0,
   }) {
-    final rated =
-        recent.where((r) => r.rating != null).map((r) => r.rating!).toList();
+    final rated = recent
+        .where((r) => r.rating != null)
+        .map((r) => r.rating!)
+        .toList();
     if (rated.isEmpty) return Appearance.start;
 
     final idle = idleRun(recent);
@@ -965,8 +1061,7 @@ class MatchEngine {
     final average = formAverage(rated) + bonus + forgiveness;
 
     if (average >= Formulas.benchThreshold) return Appearance.start;
-    if (average >= Formulas.squadThreshold ||
-        idle >= Formulas.benchPatience) {
+    if (average >= Formulas.squadThreshold || idle >= Formulas.benchPatience) {
       return Appearance.sub;
     }
     return Appearance.benched;
@@ -1006,7 +1101,8 @@ class MatchEngine {
   /// 好調なら毎試合フル出場、では連戦の重みが出ない。ここがあると
   /// 「途中出場から入る試合」が生まれ、コンディションの管理に意味が出る。
   bool rotates({required int condition, required int fatigue}) {
-    final chance = Formulas.rotationBase +
+    final chance =
+        Formulas.rotationBase +
         max(0, Formulas.conditionBaseline - condition) *
             Formulas.rotationPerCondition +
         fatigue * Formulas.rotationPerFatigue;
@@ -1056,15 +1152,18 @@ class MatchEngine {
         ? 0.0
         : switch (player.side) {
             Side.center => Formulas.weakFootMomentChance,
-            _ => player.side.matches(player.physique.foot)
-                ? Formulas.weakFootMomentOnSide
-                : Formulas.weakFootMomentInverted,
+            _ =>
+              player.side.matches(player.physique.foot)
+                  ? Formulas.weakFootMomentOnSide
+                  : Formulas.weakFootMomentInverted,
           };
 
     // 味方と相手の得点を、時間まで含めて先に決めておく。
     final advantage = club.strength - opponent.strength + (home ? 6 : -2);
-    final teammateGoals = _poissonish((1.25 + advantage / 40) *
-        Formulas.teammateGoalShareFor(player.position.family));
+    final teammateGoals = _poissonish(
+      (1.25 + advantage / 40) *
+          Formulas.teammateGoalShareFor(player.position.family),
+    );
     final conceded = _poissonish(1.25 - advantage / 40);
 
     return MatchInProgress(
@@ -1081,7 +1180,8 @@ class MatchEngine {
       favoured: favoured,
       fatigue: fatigue,
       teammateGoalMinutes: _goalMinutes(teammateGoals),
-      expectedTeammateGoals: (1.25 + advantage / 40) *
+      expectedTeammateGoals:
+          (1.25 + advantage / 40) *
           Formulas.teammateGoalShareFor(player.position.family),
       concededMinutes: _goalMinutes(conceded),
       allyBonus: allyBonus,
@@ -1135,7 +1235,8 @@ class MatchEngine {
   }) {
     if (rating == null) return player.attributes;
 
-    final declineAge = Formulas.declineAge +
+    final declineAge =
+        Formulas.declineAge +
         player.traits.declineAgeOffset +
         player.personality.declineAgeOffset +
         declineOffset;
@@ -1149,11 +1250,13 @@ class MatchEngine {
     if (player.atPotential && !transcending) return player.attributes;
 
     // 若いほど伸びる。特性のピーク年齢のぶんだけ、曲線を後ろにずらす。
-    final ageFactor =
-        Formulas.growthByAge(player.age - player.traits.peakAgeOffset);
+    final ageFactor = Formulas.growthByAge(
+      player.age - player.traits.peakAgeOffset,
+    );
     final margin = rating - Formulas.growthRatingThreshold;
     // 停滞期はここを大きく削る。伸び続ける選手は居ない。
-    final base = (0.18 + margin * 0.22) *
+    final base =
+        (0.18 + margin * 0.22) *
         ageFactor *
         player.traits.growthFactor(player.age) *
         environment *
@@ -1169,7 +1272,8 @@ class MatchEngine {
       wanted = player.transcendDetail!;
     } else if (fromPlay) {
       final pick = used[_random.nextInt(used.length)];
-      wanted = pick.detail ??
+      wanted =
+          pick.detail ??
           pick.key.details[_random.nextInt(pick.key.details.length)];
     } else if (focus.isNotEmpty) {
       // 無作為だったぶんは、選んだ方向に乗せる。
@@ -1179,9 +1283,11 @@ class MatchEngine {
       wanted = _randomDetail();
     }
 
-    final chance = base *
+    final chance =
+        base *
         Formulas.growthShareFactor(
-            Attributes.weightShare(player.position, wanted.category));
+          Attributes.weightShare(player.position, wanted.category),
+        );
     if (_random.nextDouble() >= chance) return player.attributes;
 
     // 自分で振るなら、伸びるはずだったぶんを経験点にして持ち越す。
@@ -1191,10 +1297,16 @@ class MatchEngine {
       return player.attributes;
     }
     // 土台の許す範囲まで。届かなければ土台のほうが伸びる。
-    final target = Dependencies.resolve(wanted, player.attributes,
-        ceilingOf: player.ceilingFor);
-    return player.attributes
-        .bumpDetail(target, step, max: player.ceilingFor(target));
+    final target = Dependencies.resolve(
+      wanted,
+      player.attributes,
+      ceilingOf: player.ceilingFor,
+    );
+    return player.attributes.bumpDetail(
+      target,
+      step,
+      max: player.ceilingFor(target),
+    );
   }
 
   /// 負傷するかどうかを判定する。
@@ -1222,8 +1334,10 @@ class MatchEngine {
   /// 溜まった疲労と、身体の消耗で、重傷の割合がどこまで上がるか。
   ///
   /// 追い込み続けた身体は、同じ怪我でも重いほうを引く。
-  static double severeShareFor(int fatigue,
-          {double strain = Formulas.strainNeutral}) =>
+  static double severeShareFor(
+    int fatigue, {
+    double strain = Formulas.strainNeutral,
+  }) =>
       ((Formulas.severeInjuryShare + fatigue * Formulas.severePerFatigue) *
               Formulas.severeFactorForStrain(strain))
           .clamp(0.0, Formulas.severeShareMax);
@@ -1245,10 +1359,9 @@ class MatchEngine {
     final severity = roll < 0.6 * (1 - severeShare)
         ? InjurySeverity.light
         : roll < 1 - severeShare
-            ? InjurySeverity.moderate
-            : InjurySeverity.severe;
-    final kinds =
-        InjuryKind.all.where((k) => k.severity == severity).toList();
+        ? InjurySeverity.moderate
+        : InjurySeverity.severe;
+    final kinds = InjuryKind.all.where((k) => k.severity == severity).toList();
     final kind = kinds[_random.nextInt(kinds.length)];
     final span = kind.maxMatches - kind.minMatches + 1;
     return Injury(
@@ -1263,11 +1376,16 @@ class MatchEngine {
     if (injury.severity != InjurySeverity.severe) {
       return (player.attributes, player.potential);
     }
-    final kind = InjuryKind.all.firstWhere((k) => k.name == injury.name,
-        orElse: () => InjuryKind.all.last);
+    final kind = InjuryKind.all.firstWhere(
+      (k) => k.name == injury.name,
+      orElse: () => InjuryKind.all.last,
+    );
     return (
-      player.attributes.bump(kind.affects, -Formulas.severeInjuryAttributeLoss,
-          random: _random),
+      player.attributes.bump(
+        kind.affects,
+        -Formulas.severeInjuryAttributeLoss,
+        random: _random,
+      ),
       player.potential - Formulas.severeInjuryPotentialLoss,
     );
   }
@@ -1280,7 +1398,7 @@ class MatchEngine {
       player.condition -
       (played
           ? (Formulas.matchConditionCost * player.traits.conditionCostFactor)
-              .round()
+                .round()
           : 0);
 
   /// 試合後の1週間。試合の消耗と、練習または休養を反映する。
@@ -1327,7 +1445,8 @@ class MatchEngine {
           );
 
     if (menu.isRest) {
-      condition += (menu.recovery * player.traits.restFactor).round() +
+      condition +=
+          (menu.recovery * player.traits.restFactor).round() +
           staff.recoveryBonus +
           habits.recoveryBonus;
     } else {
@@ -1337,12 +1456,14 @@ class MatchEngine {
       final canGrow = attributes.overallFor(player.position) < player.potential;
       // ポテンシャルに達しても、超越の1項目だけはそのカテゴリの練習で伸びる。
       final transcend = player.transcendDetail;
-      final onlyTranscend = !canGrow &&
+      final onlyTranscend =
+          !canGrow &&
           transcend != null &&
           Player.transcending(player, attributes) &&
           menu.keys.contains(transcend.category);
       // プロ意識・専属コーチ・生活習慣が、同じ練習の身になり方を変える。
-      final base = Formulas.trainingGrowthChance *
+      final base =
+          Formulas.trainingGrowthChance *
           Formulas.growthByAge(player.age - player.traits.peakAgeOffset) *
           menu.growthFactor *
           player.personality.trainingFactor *
@@ -1360,9 +1481,11 @@ class MatchEngine {
             if (onlyTranscend && key != transcend.category) continue;
             // ポジションの重みで割り戻す。同じ練習が、どのポジションでも
             // 同じくらい総合力を動かすようにする。
-            final chance = effective *
+            final chance =
+                effective *
                 Formulas.growthShareFactor(
-                    Attributes.weightShare(player.position, key));
+                  Attributes.weightShare(player.position, key),
+                );
             if (_random.nextDouble() >= chance) continue;
             // 自分で振るなら、伸びるはずだったぶんを経験点にする。
             if (toPoints != null) {
@@ -1371,15 +1494,25 @@ class MatchEngine {
             }
             // 同じカテゴリの中に方向があれば、そこから選ぶ。
             // 練習が「カテゴリのどれか」ではなく「決めた項目」になる。
-            final inFocus = [for (final d in focus) if (d.category == key) d];
+            final inFocus = [
+              for (final d in focus)
+                if (d.category == key) d,
+            ];
             final ds = inFocus.isEmpty ? key.details : inFocus;
-            final wanted =
-                onlyTranscend ? transcend : ds[_random.nextInt(ds.length)];
-            final target = Dependencies.resolve(wanted, attributes,
-                ceilingOf: player.ceilingFor);
+            final wanted = onlyTranscend
+                ? transcend
+                : ds[_random.nextInt(ds.length)];
+            final target = Dependencies.resolve(
+              wanted,
+              attributes,
+              ceilingOf: player.ceilingFor,
+            );
             if (target != wanted) redirected = true;
-            attributes = attributes.bumpDetail(target, step,
-                max: player.ceilingFor(target));
+            attributes = attributes.bumpDetail(
+              target,
+              step,
+              max: player.ceilingFor(target),
+            );
             trained ??= target;
           }
         }
@@ -1408,7 +1541,8 @@ class MatchEngine {
     if (drill != null) {
       condition -= Formulas.drillConditionCost;
       final current = setPieces[drill];
-      final chance = Formulas.drillGrowthChance *
+      final chance =
+          Formulas.drillGrowthChance *
           player.personality.trainingFactor *
           player.traits.setPieceFactor *
           staff.growthFactor *
@@ -1426,7 +1560,8 @@ class MatchEngine {
         ? null
         : rollInjury(
             player.copyWith(condition: settled),
-            baseChance: Formulas.injuryTrainingChance *
+            baseChance:
+                Formulas.injuryTrainingChance *
                 menu.injuryFactor *
                 effort.injury *
                 companion.injury *
@@ -1483,15 +1618,17 @@ class MatchEngine {
     required int professionalism,
   }) {
     final gap = condition - Formulas.conditionBaseline;
-    final great = (effort.great +
-            companion.greatBonus +
-            gap * Formulas.trainingGreatPerCondition +
-            (professionalism - 10) * Formulas.trainingGreatPerPro)
-        .clamp(0.0, Formulas.trainingGreatMax);
-    final flat = (effort.flat -
-            companion.flatRelief -
-            gap * Formulas.trainingFlatPerCondition)
-        .clamp(0.0, Formulas.trainingFlatMax);
+    final great =
+        (effort.great +
+                companion.greatBonus +
+                gap * Formulas.trainingGreatPerCondition +
+                (professionalism - 10) * Formulas.trainingGreatPerPro)
+            .clamp(0.0, Formulas.trainingGreatMax);
+    final flat =
+        (effort.flat -
+                companion.flatRelief -
+                gap * Formulas.trainingFlatPerCondition)
+            .clamp(0.0, Formulas.trainingFlatMax);
     return (great: great, flat: flat);
   }
 
@@ -1517,7 +1654,8 @@ class MatchEngine {
     return candidates[_random.nextInt(candidates.length)];
   }
 
-  Detail _randomDetail() => Detail.values[_random.nextInt(Detail.values.length)];
+  Detail _randomDetail() =>
+      Detail.values[_random.nextInt(Detail.values.length)];
 
   /// 得点数のばらつき。厳密なポアソンではないが、0〜5点の分布として十分。
   int _poissonish(double mean) {

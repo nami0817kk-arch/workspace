@@ -970,6 +970,15 @@ class CareerController extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// 切り札を構える（null で外す）。
+  ///
+  /// 個人技は身に付くと常に少しだけ効くだけで、**使いどころの判断が
+  /// どこにも無かった**。1試合に1回、ここで出すと決められるようにする。
+  void armSignature(Signature? signature) {
+    _inProgress?.arm(signature);
+    notifyListeners();
+  }
+
   ScenarioResolution? choose(int optionIndex) {
     final match = _inProgress;
     if (match == null || match.isFinished) return null;

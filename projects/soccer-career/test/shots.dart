@@ -22,6 +22,7 @@ import 'package:soccer_career/data/save_repository.dart';
 import 'package:soccer_career/game/career_engine.dart';
 import 'package:soccer_career/game/match_engine.dart';
 import 'package:soccer_career/models/career.dart';
+import 'package:soccer_career/models/development.dart';
 import 'package:soccer_career/state/career_controller.dart';
 import 'package:soccer_career/ui/club_identity.dart';
 import 'package:soccer_career/ui/screens/create_player_screen.dart';
@@ -129,7 +130,16 @@ void main() {
     await tester.tapAt(const Offset(195, 40));
     await tester.pumpAndSettle();
 
+    // 切り札は個人技を覚えてから出る。普通に9節では届かないので、
+    // 見た目を確かめるためにここで持たせる（撮るためだけの細工）。
+    controller.state!.development = controller.state!.development.copyWith(
+      signatures: Signature.values.toList(),
+    );
     controller.startNextMatch();
+    final started = controller.currentMatch;
+    while (started != null && !started.isFinished && started.armable.isEmpty) {
+      controller.choose(0);
+    }
     await pump(tester, MatchScreen(controller: controller), theme);
     await dump(tester, '06-match');
 
