@@ -89,6 +89,20 @@ def find(build_dir: Path | str, path: Path = LEDGER) -> dict | None:
     return None
 
 
+def folder_of(video_id: str, root: Path | str = "output",
+              path: Path = LEDGER) -> Path | None:
+    """動画IDから、書き出したフォルダを引く（2026-09-10）。
+
+    **控えは `output/` を含まない名前で持っている**（`key()` がフォルダ名だけにする）。
+    そのまま `comment` に渡すと「出力先が分かりません」になり、
+    7本ぶん手で `output/` を足して回した。**引く側に置いておく。**
+    """
+    for row in reversed(_load(path)):
+        if row.get("video_id") == video_id and row.get("build"):
+            return Path(root) / row["build"]
+    return None
+
+
 def record(build_dir: Path | str, video_id: str, path: Path = LEDGER,
            now: datetime | None = None) -> dict:
     now = now or datetime.now(timezone.utc)

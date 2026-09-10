@@ -1842,9 +1842,17 @@ def _cmd_comment(args, config) -> int:
     文面は build の出力から作り、同じ動画には同じ文になる。
     """
     from . import comments
+    from . import posted
     from .upload import get_service
 
     build_dir = Path(args.build_dir)
+    if not build_dir.exists():
+        # **控えは `output/` を含まない名前で持っている**（2026-09-10）。
+        # 控えのまま渡されても通るようにする
+        found = posted.folder_of(args.video_id)
+        if found is not None and found.exists():
+            print(f"  出力先を控えから引きました: {found}")
+            build_dir = found
     try:
         choices = tuple(args.choices) if args.choices else None
         text = args.text or comments.compose(build_dir, choices)

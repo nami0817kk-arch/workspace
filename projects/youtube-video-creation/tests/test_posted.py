@@ -123,3 +123,22 @@ def test_目安は30分():
     from src import posted
 
     assert posted.SPREAD_MINUTES == 30
+
+
+def test_動画IDから出力先を引ける(tmp_path):
+    """**控えは `output/` を含まない名前で持っている**（2026-09-10）。
+
+    そのまま `comment` に渡すと「出力先が分かりません」になり、
+    公開済み7本ぶん手で `output/` を足して回した。引く側に置いておく。
+    """
+    import json
+
+    from src import posted
+
+    book = tmp_path / "posted.json"
+    book.write_text(json.dumps([
+        {"build": "20260910_haaland", "video_id": "abc123", "at": "2026-09-10T00:00:00+00:00"},
+    ]), encoding="utf-8")
+    got = posted.folder_of("abc123", root=tmp_path / "output", path=book)
+    assert got is not None and got.name == "20260910_haaland"
+    assert posted.folder_of("ない", root=tmp_path / "output", path=book) is None

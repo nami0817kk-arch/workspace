@@ -28,5 +28,15 @@
     "commentThreads.list": 37,
     "commentThreads.insert": 24,
     "videos.update": 34
+  },
+  "2026-09-10": {
+    "videos.list": 5,
+    "videos.update": 10,
+    "channels.list": 5,
+    "playlistItems.list": 5,
+    "commentThreads.list": 14,
+    "commentThreads.insert": 7,
+    "videos.insert": 2,
+    "thumbnails.set": 4
   }
 }
