@@ -53,6 +53,41 @@ void placeAt(CareerState state, int position) {
 }
 
 void main() {
+  group('登録メンバーの線が、届く範囲にある', () {
+    test('オファーで来る強さの差の範囲に、線が入っている', () {
+      // 線を -18 に置いていた頃、この制度は**一度も起きなかった**。
+      // オファーはクラブの強さが「総合力 -14」までしか来ないので、
+      // 加入した時点の差は -14 より下にならず、その後も基本は縮む。
+      // 実測でキャリア中の最悪が -11、下位1割が -8 だった。
+      expect(Formulas.squadRegistrationGap, greaterThan(-14),
+          reason: 'オファーの範囲より下だと、制度が死ぬ');
+      expect(Formulas.squadRegistrationGap, lessThan(0),
+          reason: '格上のクラブに移れなくなる');
+    });
+
+    test('大きく劣ると登録外、見合っていれば登録される', () {
+      final state = career();
+      final competitions = Competitions(random: Random(1));
+
+      // クラブの強さぴったりなら入れる。
+      state.player = state.player.copyWith(
+        attributes: Attributes.fromDetails({
+          for (final d in Detail.values) d: state.club.strength,
+        }),
+      );
+      expect(competitions.registrationFor(state), SquadStatus.registered);
+
+      // 線を割ると外れる。
+      state.player = state.player.copyWith(
+        attributes: Attributes.fromDetails({
+          for (final d in Detail.values)
+            d: state.club.strength + Formulas.squadRegistrationGap - 6,
+        }),
+      );
+      expect(competitions.registrationFor(state), SquadStatus.outOfSquad);
+    });
+  });
+
   group('大陸カップ', () {
     test('出場していなければ不出場のまま', () {
       final c = Competitions(random: Random(1));

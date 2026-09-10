@@ -14,6 +14,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/data/save_repository.dart';
 import 'package:soccer_career/game/career_engine.dart';
 import 'package:soccer_career/game/match_engine.dart';
+import 'package:soccer_career/game/newsroom.dart';
 import 'package:soccer_career/game/world.dart';
 import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/attributes.dart';
@@ -120,6 +121,12 @@ class Career {
   int signatures = 0;
   int plateaus = 0;
   int events = 0;
+
+  /// 実際に起きた状態。「作ってあるのに起きない」を探すために数える。
+  final Set<String> seenStates = {};
+
+  /// クラブの強さとの差の、いちばん厳しかったところ。
+  int minGap = 99;
   int offersSeen = 0;
   int topTierOffers = 0;
   int overallAt21 = 0;
@@ -181,11 +188,22 @@ Future<Career> runCareer(Playstyle style, int seed) async {
       // 「無傷 → 負傷」の瞬間だけ数える。離脱中は毎試合 Injury が作り直される
       // ので、単に別物かどうかで見ると離脱の長さを数えてしまう。
       final wasInjured = state.injured;
-      await controller.simulateMatch();
+      final result = await controller.simulateMatch();
       final after = controller.state!.injury;
       if (!wasInjured && after != null) {
         career.injuries++;
+        career.seenStates.add('InjurySeverity.${after.severity.name}');
         if (after.severity.index >= 2) career.severeInjuries++;
+      }
+      if (result != null) {
+        career.seenStates.add('Appearance.${result.appearance.name}');
+        final stake = Newsroom.stakeFor(controller.state!);
+        if (stake != null) career.seenStates.add('FixtureStake.${stake.name}');
+      }
+      career.seenStates
+          .add('MomentumState.${controller.state!.form.state.name}');
+      for (final item in controller.state!.news.take(3)) {
+        career.seenStates.add('NewsKind.${item.kind.name}');
       }
       if (controller.state!.injured) career.missedMatches++;
       career.moraleSum += controller.state!.morale.value;
@@ -212,6 +230,31 @@ Future<Career> runCareer(Playstyle style, int seed) async {
     career.peakSalary = max(career.peakSalary, done.salary);
     career.caps = done.caps;
     career.awards = done.reputation.awards.length;
+    career.seenStates.add('SquadStatus.${done.squadStatus.name}');
+    career.minGap = min(career.minGap, done.player.overall - done.club.strength);
+    career.seenStates.add('ContinentalStage.${done.continentalStage.name}');
+    career.seenStates.add('CupStage.${done.cupStage.name}');
+    career.seenStates.add('WorldCupStage.${done.worldCupStage.name}');
+    career.seenStates.add('CareerStage.${done.stage.name}');
+    for (final award in done.reputation.awards) {
+      career.seenStates.add('Award.${award.name}');
+    }
+    for (final trait in done.player.traits) {
+      career.seenStates.add('Trait.${trait.name}');
+    }
+    for (final signature in done.development.signatures) {
+      career.seenStates.add('Signature.${signature.name}');
+    }
+    if (done.development.identity != null) {
+      career.seenStates.add('AttributeKey.${done.development.identity!.name}');
+    }
+    if (done.manager != null) {
+      career.seenStates.add('Tactic.${done.manager!.tactic.name}');
+    }
+    if (done.retired) {
+      career.seenStates
+          .add('SecondCareer.${controller.suggestedSecondCareer.name}');
+    }
     career.savings = done.finances.savings;
     career.signatures = done.development.signatures.length;
     career.breakthroughs = done.development.breakthroughs;
