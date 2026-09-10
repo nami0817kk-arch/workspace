@@ -1,0 +1,129 @@
+# ポチェッティーノが9年前のプレミア優勝に異議（2026年9月10日）。ユーザー指示「2.3.4もお願い」
+#
+# **記事を開いて読んだ**（見出しだけで書かない）。スカイスポーツの単独インタビューと、
+# UKメディアとの会見をPA経由でESPNが伝えたもの。発言はそちらから引いている。
+#
+# 引きは**「どのシーズンの話か」**。9年前の順位が今になって動くかもしれない、
+# という筋で、賛否が真っ二つに割れる。
+#
+# **反応は入れない。**読める形のスレが無かった
+format: news
+voice_min: 40
+slot: premier
+date: "2026年9月10日"
+
+# ハッシュタグに使う人の名前
+people:
+  - ポチェッティーノ
+  - コンテ
+  - ダニエル・レヴィ
+  - トッド・ベーリー
+
+short_title: "ポチェッティーノ「あの優勝は2位のものだ」"
+
+theme:
+  id: poch_2016_title
+  league: england
+  kind: other
+  topic: トッテナム
+  title: ポチェッティーノが9年前のプレミア優勝に異議。どのシーズンの話か
+  hook: 「僕たちは1つ、優勝しているはずだった」。
+  question: 9年前の順位が、いま動くかもしれないのはなぜか
+
+thumbnail:
+  line1: 9年前の優勝について
+  line2: 「あれは ●●●● のものだ」
+  # トッテナム時代の写真しか無いが、**この回はまさにその時代の話**なので噛み合う
+  photo: "assets/photos/20260911_poch/01.jpg"
+  tags: [トッテナム, チェルシー]
+  points:
+    - 勝点差は7
+    - 罰金1075万ポンド
+
+sections:
+  - id: said
+    heading: 何を言ったか
+    tier: 報道
+    telop: 「僕たちは1つ、優勝しているはずだった」
+    narrator: キャスター
+    say:
+      - アメリカ代表を率いるマウリシオ・ポチェッティーノが、9年前のプレミアについて口を開きました。
+      - {voice: ポチェッティーノ, text: 僕たちは1つ、優勝しているはずだった}
+      - {voice: ポチェッティーノ, text: あのタイトルは与えられるべきだった}
+      - 指しているのは、2016-17シーズンです。
+      - この年、ポチェッティーノのトッテナムは2位。優勝したのはアントニオ・コンテ率いるチェルシーで、勝ち点差は7でした。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49889093/mauricio-pochettino-strip-chelsea-2016-17-premier-league-title
+      - https://www.skysports.com/football/news/11661/13583564/mauricio-pochettino-ex-tottenham-and-chelsea-boss-hopes
+
+  - id: why
+    heading: なぜ、いまその話になるのか
+    tier: 報道
+    telop: 2011年から2018年の未申告の支払い
+    narrator: 解説
+    card:
+      type: table
+      title: チェルシーへの処分
+      columns: ["いつ", "何があったか"]
+      rows:
+        - ["2011-2018", "第三者による未申告の支払い"]
+        - ["2022年", "ベーリーの買収後に情報が共有される"]
+        - ["2026年3月", "罰金1075万ポンドと9か月の獲得禁止"]
+    say:
+      - チェルシーは、過去の競技規則違反でプレミアリーグから処分を受けています。
+      - 今年3月に罰金1075万ポンド、育成年代の獲得を9か月禁じる処分が出ています。
+      - 2011年から2018年にかけて、クラブに関係する第三者から、選手や未登録の代理人へ申告のない支払いがありました。
+      - 違反とされたのは申告しなかった点で、リーグは、申告していれば財務規則には触れなかっただろうとも結論づけています。
+      - チェルシーはイングランドサッカー協会からも、74件の規則違反の疑いで告発されています。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49889093/mauricio-pochettino-strip-chelsea-2016-17-premier-league-title
+      - https://www.skysports.com/football/news/11661/13583564/mauricio-pochettino-ex-tottenham-and-chelsea-boss-hopes
+
+  - id: words
+    heading: 本人はどう言っているか
+    tier: 報道
+    telop: 「同じカードで戦っていなかった」
+    narrator: 解説
+    say:
+      - ここからが本題です。ポチェッティーノは会見でこう続けました。
+      - {voice: ポチェッティーノ, text: 彼らは処分を受け、認めた。それで終わりなのか}
+      - {voice: ポチェッティーノ, text: タイトルは2位だったチームのものだ}
+      - {voice: ポチェッティーノ, text: 僕たちが同じ規則で競っていなかったのは事実だ}
+      - 相手の実績は否定していません。
+      - {voice: ポチェッティーノ, text: 彼らが得点し、試合に勝ったことは認める}
+      - {voice: ポチェッティーノ, text: それでも、開幕の時点で同じカードを持っていなかった}
+      - {voice: ポチェッティーノ, text: 同じ規則なら、もっと良い選手を獲れていたかもしれない}
+      - {voice: ポチェッティーノ, text: もっと点を取れていたかもしれない}
+      - 最後は、反発を承知のうえで言い切りました。
+      - {voice: ポチェッティーノ, text: 不満を言っているのではない。これが事実だ}
+      - {voice: ポチェッティーノ, text: 真実を言うことを、僕は恐れない}
+      - {voice: ポチェッティーノ, text: チェルシーのファンは怒るだろう}
+      - {voice: ポチェッティーノ, text: だが逆の立場なら、僕も同じように認める}
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49889093/mauricio-pochettino-strip-chelsea-2016-17-premier-league-title
+      - https://www.skysports.com/football/news/11661/13583564/mauricio-pochettino-ex-tottenham-and-chelsea-boss-hopes
+
+  - id: now
+    heading: いま、どこにいるのか
+    tier: 報道
+    telop: アメリカ代表と4年の契約
+    narrator: キャスター
+    say:
+      - ポチェッティーノはトッテナムを5年率い、2019年にCL決勝へ導いた5か月後に解任されました。
+      - 先月、アメリカ代表と4年の契約を結んでいます。それでも戻る先は口にしました。
+      - {voice: ポチェッティーノ, text: 野心はある}
+      - {voice: ポチェッティーノ, text: いまの夢はアメリカで4年やることだ}
+      - {voice: ポチェッティーノ, text: その先は、なぜやらないと言える}
+      - {voice: ポチェッティーノ, text: プレミアで優勝すること。それがいつも僕の目標だ}
+      - {voice: ポチェッティーノ, text: 優勝を狙える計画を、もう一度つくりたい}
+      - 古巣に戻る話も、否定していません。
+      - {voice: ポチェッティーノ, text: いつも言っている。いつか、なぜやらないと}
+      - {voice: ポチェッティーノ, text: 話は出るし、打診を受けることもある}
+      - {voice: ポチェッティーノ, text: だが今回は、近いところまでいっていない}
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13583564/mauricio-pochettino-ex-tottenham-and-chelsea-boss-hopes
+      - https://www.espn.com/soccer/story/_/id/49889093/mauricio-pochettino-strip-chelsea-2016-17-premier-league-title

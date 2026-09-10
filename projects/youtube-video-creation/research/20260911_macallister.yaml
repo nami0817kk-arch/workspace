@@ -1,0 +1,117 @@
+# マック・アリスターが契約を嘆いた翌日に決勝点（2026年9月10日）。ユーザー指示「2.3.4もお願い」
+#
+# **記事を開いて読んだ。**サッカーキングが本人・ジェラード・ウォーノックの
+# コメントをまとめており、ESPN が試合後のコメントを別に伝えている。
+#
+# 引きは**「前日に何を言っていたか」と「翌日に何をしたか」の落差**。
+# 10媒体が同じ話を扱っている。
+#
+# 今日リヴァプールの試合そのものを2本出しているが、**こちらは契約の話**で、
+# 同じ試合の別の面。日付が変わるので枠はぶつからない
+#
+# **反応は入れない。**読める形のスレが無かった
+format: news
+voice_min: 40
+slot: premier
+date: "2026年9月10日"
+
+# ハッシュタグに使う人の名前
+people:
+  - マック・アリスター
+  - ソボスライ
+  - ジェラード
+  - ロレンテ
+  - オブラク
+
+short_title: "「本当に悲しい」と言った翌日に決めた"
+
+theme:
+  id: macallister_contract
+  league: england
+  kind: other
+  topic: リヴァプール
+  title: マック・アリスターが「本当に悲しい」と言った翌日、アンフィールドで何をしたか
+  hook: 契約更新の話が、まだ来ていません。
+  question: 前日に嘆いた選手が、次の日に何をしたか
+
+thumbnail:
+  line1: 前日に「本当に悲しい」
+  line2: その翌日に ●●●●
+  photo: "assets/photos/20260911_macallister/01.jpg"
+  tags: [リバプール]
+  points:
+    - 契約は2028年まで
+    - 新契約の提示は無し
+
+sections:
+  - id: before
+    heading: 前日に何を言っていたか
+    tier: 報道
+    telop: 「本当に悲しい」
+    narrator: キャスター
+    say:
+      - リヴァプールのアレクシス・マック・アリスターが、試合の前日会見で契約について聞かれました。
+      - {voice: マック・アリスター, text: 代理人から聞いた話では}
+      - {voice: マック・アリスター, text: 僕は契約更新できる立場にはいないということだ}
+      - {voice: マック・アリスター, text: 本当に悲しい}
+      - {voice: マック・アリスター, text: 僕たちはともにリーグ制覇を果たし、困難な時期も乗り越えてきた}
+      - {voice: マック・アリスター, text: 僕は常にベストを尽くしてきた}
+      - {voice: マック・アリスター, text: これからどうなるかは見守るしかない}
+      - そのうえで、ファンにはこう言い添えています。
+      - {voice: マック・アリスター, text: でも、時間はまだある。心配しないでほしい}
+      - {voice: マック・アリスター, text: 僕がここにいる最後の日まで、100パーセントの力を尽くす}
+      - 契約は2028年まで残っているため、クラブが急いで更新する理由はありません。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/cl/20260910/2203198.html
+      - https://www.espn.com/soccer/story/_/id/49884948/alexis-mac-allister-liverpool-contract-atletico-madrid
+
+  - id: after
+    heading: その翌日に起きたこと
+    tier: 報道
+    telop: 後半開始早々、ボックス手前から左足
+    narrator: 解説
+    card:
+      type: table
+      title: CLリーグフェーズ第1節 リヴァプール 2-1 アトレティコ・マドリード
+      columns: ["時間", "得点者"]
+      rows:
+        - ["17分", "ロレンテ（アトレティコ）"]
+        - ["40分", "ソボスライ（リヴァプール）"]
+        - ["50分", "マック・アリスター（リヴァプール）"]
+    say:
+      - ここからが本題です。翌日、アンフィールドでアトレティコに17分に先制されます。
+      - 40分にソボスライが同点。そして後半の開始早々でした。
+      - こぼれ球に反応したマック・アリスターが、ボックス手前から左足で突き刺します。利き足ではありません。
+      - {voice: マック・アリスター, text: 正直でいようとしただけだ}
+      - {voice: マック・アリスター, text: 少し自分を解放できた気がする}
+      - {voice: マック・アリスター, text: 2年でも、もっと長くでも、早く出ることになっても}
+      - {voice: マック・アリスター, text: 最後の日まで、僕は同じ人間でいる}
+      - ゴールそのものについては、こう話しました。
+      - {voice: マック・アリスター, text: 良いシュートだったと思う}
+      - {voice: マック・アリスター, text: 普段からあの位置ではシュートを打つのが好きなんだ}
+      - {voice: マック・アリスター, text: あまりないことだけど、ゴールを決めるのは大好きだ}
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/cl/20260910/2203198.html
+      - https://www.espn.com/soccer/story/_/id/49884948/alexis-mac-allister-liverpool-contract-atletico-madrid
+
+  - id: around
+    heading: 周りは何と言ったか
+    tier: 報道
+    telop: 「サッカーで語るんだ」
+    narrator: 解説
+    say:
+      - クラブのレジェンド、スティーヴン・ジェラードが助言を送っています。
+      - {voice: ジェラード, text: サッカーで語るんだ}
+      - {voice: ジェラード, text: 安定したプレー、最高のパフォーマンス、経験を示すこと}
+      - {voice: ジェラード, text: トップレベルだと証明すれば、このクラブは必ず報いてくれる}
+      - 元イングランド代表のスティーヴン・ウォーノックも、こう続けました。
+      - {voice: ウォーノック, text: 試合前に契約について話し、それをプレーで証明できたのは重要だ}
+      - {voice: ウォーノック, text: ただ、最も重要なのはシーズンを通してのパフォーマンスだ}
+      - {voice: ウォーノック, text: 更新を望み、その資格があると考えているなら}
+      - {voice: ウォーノック, text: 良いパフォーマンスを見せるべきだ。そうすれば実現する}
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/cl/20260910/2203198.html
+      - https://www.espn.com/soccer/story/_/id/49884948/alexis-mac-allister-liverpool-contract-atletico-madrid

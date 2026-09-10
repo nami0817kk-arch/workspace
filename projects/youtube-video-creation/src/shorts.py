@@ -398,8 +398,11 @@ def _drop_middle(scene: Scene, script: Script, target: float) -> None:
     while _estimate(script) > target and keep > 1:
         del scene.lines[keep - 1]
         keep -= 1
-        # 代弁を全部落としたあとの「こう話しました。」だけを残さない
-        while keep > 1 and _is_narrator(scene.lines[keep - 1]):
+        # 代弁を全部落としたあとの「こう話しました。」だけを残さない。
+        # **落とすのは振りだけ。**語りをまとめて消していたので、
+        # マック・アリスターの回で決勝点の描写ごと消えて27秒になっていた
+        # （2026-09-10 に書き出して発見）。尺に収まっていても削っていた
+        while keep > 1 and _is_lead_in(scene.lines[keep - 1]):
             del scene.lines[keep - 1]
             keep -= 1
 

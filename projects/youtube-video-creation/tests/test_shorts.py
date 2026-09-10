@@ -448,3 +448,27 @@ def test_発言が遅ければ知らせる():
     fast += ["解説: 短い説明。", ""]
     fast += ["チアゴ: 賛成しない", ""]
     assert quote_problems(trim(parse_script(nl.join(fast)))) == []
+
+
+def test_落とすのは振りだけで語りはまとめて消さない():
+    """**尺に収まっていても削っていた**（2026-09-10 に書き出して発見）。
+
+    マック・アリスターの回で、決勝点の描写がまとめて消えてショートが27秒に
+    なっていた。振り（「こう話しました。」）を落とす処理が、
+    その手前の語りまで連続して消していたため。
+    """
+    from src.script_model import parse_script
+    from src.shorts import _fit
+
+    nl = chr(10)
+    body = ["## オープニング", "", "キャスター: タイトルです。", "", "## 本編", ""]
+    body += ["解説: まず状況です。" + "あ" * 30, ""]
+    body += ["解説: 17分に先制されました。" + "あ" * 30, ""]
+    body += ["解説: 決勝点はボックス手前からでした。" + "あ" * 30, ""]
+    body += ["解説: ゴールについては、こう話しました。", ""]
+    body += ["本人: 良いシュートだった", ""]
+    script = parse_script(nl.join(body))
+    _fit(script, 58.0)
+    texts = [line.text for line in script.scenes[-1].lines]
+    assert any("決勝点は" in text for text in texts), texts
+    assert any("17分に" in text for text in texts), texts
