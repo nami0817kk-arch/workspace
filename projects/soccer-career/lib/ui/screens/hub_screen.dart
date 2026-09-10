@@ -37,6 +37,7 @@ import '../transfer_code.dart';
 import '../../dev/admin.dart';
 import 'admin_screen.dart';
 import 'guide_screen.dart';
+import 'hall_screen.dart';
 import 'match_screen.dart';
 import 'season_end_screen.dart';
 
@@ -145,6 +146,10 @@ class HubScreen extends StatelessWidget {
                     TransferCode.show(context, controller);
                   case 'import':
                     TransferCode.import(context, controller);
+                  case 'hall':
+                    Navigator.of(context).push(MaterialPageRoute<void>(
+                      builder: (_) => HallScreen(controller: controller),
+                    ));
                   case 'delete':
                     _confirmDelete(context);
                   // 参照そのものを kAdmin で囲む。メニュー項目だけを囲んでも、
@@ -161,6 +166,8 @@ class HubScreen extends StatelessWidget {
                     value: 'export', child: Text('引き継ぎコードを出す')),
                 const PopupMenuItem(
                     value: 'import', child: Text('セーブを読み込む')),
+                const PopupMenuItem(
+                    value: 'hall', child: Text('これまでの選手')),
                 const PopupMenuItem(value: 'delete', child: Text('キャリアを削除')),
                 // 管理画面は公開ビルドに入らない（kAdmin は const false）。
                 if (kAdmin)

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'guide_screen.dart';
+import 'hall_screen.dart';
 import '../../game/career_engine.dart';
 import '../../game/world.dart';
 import '../../models/look.dart';
@@ -178,6 +179,24 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                       label: const Text('遊び方ガイドを読む'),
                     ),
                   ),
+                  // 前の選手をここから見に行ける。始める前に眺めるのが
+                  // 一番自然な場所（引退画面は一度閉じたら戻れない）。
+                  if (widget.controller.hall.legends.isNotEmpty)
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextButton.icon(
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) =>
+                                HallScreen(controller: widget.controller),
+                          ),
+                        ),
+                        icon: const Icon(Icons.workspace_premium_outlined,
+                            size: 18),
+                        label: Text(
+                            'これまでの選手（${widget.controller.hall.legends.length}人）'),
+                      ),
+                    ),
                   const SizedBox(height: 20),
                   TextField(
                     controller: _name,
