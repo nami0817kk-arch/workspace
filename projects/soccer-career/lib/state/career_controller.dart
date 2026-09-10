@@ -894,6 +894,24 @@ class CareerController extends ChangeNotifier {
   }
 
   /// 今の移籍市場の状態。
+  /// 移籍市場の窓と、いま話が動くかどうか。
+  ///
+  /// 窓は計算していたのに**どこにも出ていなかった**ので、「契約が残っている
+  /// から来ないのか、時期ではないのか」が分からなかった。理由まで書く。
+  String get transferWindowLabel {
+    final state = _state;
+    if (state == null) return '';
+    final window = transferWindow;
+    if (!window.isOpen) {
+      return '${window.label}。話が動くのはシーズンの終わり。';
+    }
+    if (state.contractYears > 1) {
+      return '${window.label}。ただし契約があと${state.contractYears}年ある——'
+          '残り1年になるまで、よそからは動かせない。';
+    }
+    return '${window.label}。契約は残り${state.contractYears}年、話が来る。';
+  }
+
   TransferWindow get transferWindow =>
       _state == null ? TransferWindow.closed : _career.competitions.windowAt(_state!);
 
