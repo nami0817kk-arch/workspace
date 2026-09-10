@@ -514,6 +514,28 @@ class ScorerRace {
     return all.indexWhere((s) => s.isPlayer) + 1;
   }
 
+  /// シーズンの終盤で、得点王に手が届くならその一言。
+  ///
+  /// これまで得点ランキングは**他人の数字を眺めるだけ**で、
+  /// 自分がどこにいるかも、届くかどうかも出ていなかった
+  /// （`rankOf` はどこからも呼ばれていなかった）。
+  /// 終盤の1本が「得点王への1本」になる。
+  static String? chaseFor(CareerState state) {
+    // 序盤に出しても意味が無い。残り10節を切ってから。
+    final left = state.fixtures.length - state.leagueResults.length;
+    if (left > 10 || left <= 0) return null;
+
+    final all = table(state, take: 999);
+    final me = all.firstWhere((s) => s.isPlayer);
+    if (me.goals == 0) return null;
+    final rank = all.indexWhere((s) => s.isPlayer) + 1;
+    if (rank == 1) return '得点王を走っている（${me.goals}点）';
+    final gap = all.first.goals - me.goals;
+    // 残り試合で届かない差なら、煽らない。
+    if (gap > left) return null;
+    return '得点王まであと$gap点（いま$rank位）';
+  }
+
   static String _nameFor(Club club) =>
       _names[_seed(club.id) % _names.length];
 
