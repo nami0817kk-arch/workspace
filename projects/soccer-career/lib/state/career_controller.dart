@@ -527,6 +527,71 @@ class CareerController extends ChangeNotifier {
     await _persist();
   }
 
+  /// 伸びるはずだったぶんを、経験点として貯める先。
+  void Function(AttributeKey, int) _awardTo(CareerState state) =>
+      (key, step) {
+        final points = {...state.development.points};
+        points[key] = (points[key] ?? 0) + step * Formulas.pointsPerGrowth;
+        state.development = state.development.copyWith(points: points);
+      };
+
+  /// 自動で振るかどうかを切り替える。
+  Future<void> setAutoSpend(bool value) async {
+    final state = _state;
+    if (state == null) return;
+    state.autoSpend = value;
+    await _persist();
+  }
+
+  /// その項目を1上げるのに要る経験点。画面にも判定にも同じ式を使う。
+  int costOf(Detail detail) {
+    final state = _state;
+    if (state == null) return 0;
+    return Formulas.experienceCost(state.player.attributes.detail(detail));
+  }
+
+  /// その項目に振れるか。
+  ///
+  /// 足りない・上限・ポテンシャル、どれも同じ「振れない」で潰さない。
+  /// 理由は画面に出す（`reasonNotToSpend`）。
+  bool canSpend(Detail detail) => reasonNotToSpend(detail) == null;
+
+  /// 振れない理由。振れるなら null。
+  String? reasonNotToSpend(Detail detail) {
+    final state = _state;
+    if (state == null) return '記録が無い';
+    final have = state.development.points[detail.category] ?? 0;
+    final cost = costOf(detail);
+    if (have < cost) return '${detail.category.label}の経験点が足りない（$have / $cost）';
+    if (state.player.atPotential) return 'ポテンシャルに届いている';
+    final value = state.player.attributes.detail(detail);
+    if (value >= state.player.ceilingFor(detail)) return 'これ以上は上がらない';
+    return null;
+  }
+
+  /// 経験点を1つ振る。
+  ///
+  /// 土台が足りなければ、土台のほうが伸びる（練習と同じ扱い）。
+  /// 別の式にすると、自分で振ったときだけ土台を無視できてしまう。
+  Future<Detail?> spendPoint(Detail detail) async {
+    final state = _state;
+    if (state == null || !canSpend(detail)) return null;
+    final cost = costOf(detail);
+    final points = {...state.development.points};
+    points[detail.category] = (points[detail.category] ?? 0) - cost;
+    state.development = state.development.copyWith(points: points);
+
+    final target = Dependencies.resolve(detail, state.player.attributes,
+        ceilingOf: state.player.ceilingFor);
+    state.player = state.player.copyWith(
+      attributes: state.player.attributes
+          .bumpDetail(target, 1, max: state.player.ceilingFor(target)),
+    );
+    await _persist();
+    notifyListeners();
+    return target;
+  }
+
   /// 今週どこまで踏み込むか。
   Future<void> setEffort(TrainingEffort effort) async {
     final state = _state;
@@ -850,6 +915,7 @@ class CareerController extends ChangeNotifier {
       final before = _sumOf(player.attributes);
       player = player.copyWith(
         attributes: _match.grow(
+          toPoints: state.autoSpend ? null : _awardTo(state),
           player,
           result.rating,
           used: match.successes,
@@ -885,6 +951,7 @@ class CareerController extends ChangeNotifier {
         plateau: state.development.inPlateau,
         environment: _environmentFactor(state),
         fatigue: state.fatigue.value,
+        toPoints: state.autoSpend ? null : _awardTo(state),
         played: result.appearance != Appearance.benched,
       );
       player = player.copyWith(

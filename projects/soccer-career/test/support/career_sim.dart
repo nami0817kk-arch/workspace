@@ -59,6 +59,7 @@ class Playstyle {
     this.preseason = PreseasonPlan.camp,
     this.effort = TrainingEffort.normal,
     this.companion = TrainingCompanion.alone,
+    this.spendsPoints = false,
   });
 
   final String name;
@@ -76,6 +77,9 @@ class Playstyle {
   /// 週の踏み込み方と、組む相手。
   final TrainingEffort effort;
   final TrainingCompanion companion;
+
+  /// 自分で経験点を振るか。false なら今までどおり自動。
+  final bool spendsPoints;
 
   /// 居残りでセットプレーを磨く。
   final bool drills;
@@ -178,6 +182,7 @@ Future<Career> runCareer(Playstyle style, int seed) async {
   }
   if (style.drills) await controller.setDrill(SetPiece.freeKick);
   await controller.setEffort(style.effort);
+  if (style.spendsPoints) await controller.setAutoSpend(false);
 
   var guard = 0;
   while (!controller.state!.retired && guard++ < 30) {
@@ -203,6 +208,7 @@ Future<Career> runCareer(Playstyle style, int seed) async {
       // ので、単に別物かどうかで見ると離脱の長さを数えてしまう。
       final wasInjured = state.injured;
       await controller.simulateMatch();
+      if (style.spendsPoints) await _spendPoints(controller);
       final after = controller.state!.injury;
       if (!wasInjured && after != null) {
         career.injuries++;
@@ -334,6 +340,31 @@ Future<Career> runCareer(Playstyle style, int seed) async {
 
   career.retireAge = controller.state!.player.age;
   return career;
+}
+
+/// 溜まった経験点を振る。
+///
+/// 「そのポジションで重い能力から、安いものを順に」という、
+/// 平均的な遊び方に近い振り方。強い最適化はしない。
+Future<void> _spendPoints(CareerController controller) async {
+  final state = controller.state!;
+  var guard = 0;
+  while (guard++ < 40) {
+    final candidates = <Detail>[
+      for (final key in AttributeKey.values)
+        if ((state.development.points[key] ?? 0) > 0)
+          for (final d in key.details)
+            if (controller.canSpend(d)) d,
+    ];
+    if (candidates.isEmpty) return;
+    candidates.sort((a, b) {
+      final byWeight = Attributes.weightShare(state.player.position, b.category)
+          .compareTo(Attributes.weightShare(state.player.position, a.category));
+      if (byWeight != 0) return byWeight;
+      return controller.costOf(a).compareTo(controller.costOf(b));
+    });
+    if (await controller.spendPoint(candidates.first) == null) return;
+  }
 }
 
 /// 練習の決め方。
