@@ -668,5 +668,25 @@
     "build": "20260910_barcola_short",
     "video_id": "7B9Te7xs8ZU",
     "at": "2026-09-09T16:10:50+00:00"
+  },
+  {
+    "build": "20260910_cl_barca",
+    "video_id": "tXyauyvab4c",
+    "at": "2026-09-09T23:58:58+00:00"
+  },
+  {
+    "build": "20260910_cl_barca_short",
+    "video_id": "hjV13yv2NMw",
+    "at": "2026-09-09T23:59:22+00:00"
+  },
+  {
+    "build": "20260910_cl_liverpool",
+    "video_id": "5pNmdyQubB0",
+    "at": "2026-09-10T00:11:42+00:00"
+  },
+  {
+    "build": "20260910_cl_liverpool_short",
+    "video_id": "EN2iNSGfx1o",
+    "at": "2026-09-10T00:12:04+00:00"
   }
 ]

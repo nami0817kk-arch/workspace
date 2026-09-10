@@ -8,8 +8,15 @@ from src import tags
 
 
 def test_土台は毎回入る():
+    """**並びを変えた**（2026-09-10）。土台の3語を先頭に固めていたが、
+    参考4チャンネルのハッシュタグを実測したら中身はほぼ選手名だった。
+    あふれたら後ろから落ちるので、名前を前・分類語を後ろにした。
+    ただし「サッカー」だけは先頭に残す（うわさのフットボールも先頭がこれ）。
+    """
     found = tags.build("何かのニュース")
-    assert found[:3] == list(tags.BASE)
+    assert found[0] == tags.BASE[0]
+    for word in tags.BASE:
+        assert word in found
 
 
 def test_リーグと話の種類から足す():
@@ -66,3 +73,54 @@ def test_公開前に引っかかるところを挙げる():
 
 def test_問題が無ければ何も言わない():
     assert tags.problems("題", "本文", ["サッカー"]) == []
+
+
+def test_人の名前を先に置く():
+    """**参考4チャンネルのハッシュタグはほぼ選手名だった**（2026-09-10 実測）。
+
+    向こうは10〜34個。こちらは7〜8個で、リヴァプール対アトレティコの回は
+    「リバプール／アトレティコマドリード」だけで**選手名が1つも無かった**。
+    人は選手名で検索する。あふれたら後ろから落ちるので、名前を前に置く。
+    """
+    from src.tags import build
+
+    got = build("リヴァプールが逆転でCL初戦を制す", league_name="プレミアリーグ",
+                kind="match", extra=["リバプール"],
+                people=["マクアリスター", "ソボスライ"])
+    # **先頭の3つは動画の上に丸いボタンとして出る**（2026-09-10 に Chrome で確認）。
+    # 「サッカー ／ クラブ ／ 人」の順。分類語で3枠を埋めない
+    assert got[:2] == ["サッカー", "リバプール"]
+    assert got[2] == "マクアリスター"
+    assert got.index("マクアリスター") < got.index("海外サッカー")
+    assert got.index("マクアリスター") < got.index("試合結果")
+
+
+def test_表記ゆれを両方入れる():
+    """サッカー知恵袋は同じ動画に #リバプール と #リヴァプール を貼っていた。"""
+    from src.tags import build
+
+    got = build("リヴァプール", extra=["リバプール"], kind="match")
+    assert "リバプール" in got and "リヴァプール" in got
+
+
+def test_ハイライトとは書かない():
+    """試合映像は使えないので、こちらの動画はハイライトではない。"""
+    from src.tags import build
+
+    assert "ハイライト" not in build("バルセロナ", kind="match")
+
+
+def test_クラブにいる日本人選手を足す(tmp_path):
+    """**話に出てこなくても入れる**（2026-09-10 実測）。
+
+    サッカー知恵袋はアラウホ（ウルグアイ人）の回に #遠藤航 を貼っていた。
+    日本語圏の検索は選手名で起きる。表に無いクラブでは何も足さない。
+    """
+    from src.tags import japanese_players
+
+    book = tmp_path / "players.yaml"
+    book.write_text("players:\n  フェイエノールト: [渡辺剛]\n", encoding="utf-8")
+    assert japanese_players(["フェイエノールト"], str(book)) == ["渡辺剛"]
+    assert japanese_players(["バルセロナ"], str(book)) == []
+    # 表が無くても壊れない
+    assert japanese_players(["バルセロナ"], str(tmp_path / "ない.yaml")) == []

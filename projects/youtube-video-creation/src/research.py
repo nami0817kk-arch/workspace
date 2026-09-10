@@ -180,6 +180,10 @@ class Notes:
     # いなかったので、節のテロップが題名になっていた（「試合登録は20人。2人が
     # 外れる」が題名で並んでいた）
     short_title: str = ""
+    # **この回に出てくる人の名前**（2026-09-10）。ハッシュタグに使う。
+    # 参考4チャンネルは10〜34個貼っていて中身はほぼ選手名、こちらは7〜8個で
+    # 選手名が1つも無い回があった。**本文から機械で拾わない**（辞書が無いので）
+    people: list = field(default_factory=list)
     slot: str = ""
     theme_id: str = ""
     prefix: str = ""                 # 【速報】【朗報】【悲報】
@@ -285,6 +289,7 @@ def build_notes(raw: dict) -> Notes:
         format=chosen,
         voice_min=(float(raw["voice_min"]) if raw.get("voice_min") is not None else None),
         short_title=str(raw.get("short_title", "")).strip(),
+        people=[str(x).strip() for x in (raw.get("people") or []) if str(x).strip()],
         title=str(theme.get("title", "")).strip(),
         theme_id=str(theme.get("id", "")).strip(),
         question=str(theme.get("question", "")).strip(),
@@ -1050,6 +1055,9 @@ def to_script(notes: Notes, plan: Plan) -> str:
             # こちらは「サッカー」「移籍市場」のような分類語しか無かった。
             # サンチョの回にサンチョが入っていない状態だった
             extra=[str(t) for t in (thumbnail.get("tags") or [])],
+            # **この回に出てくる人**（2026-09-10）。取材メモの `people:` に書く。
+            # 辞書が無いので本文からは拾わない（推測で人名を作らない）
+            people=list(notes.people),
         ),
         "sources": notes.sources,
         "cards": _cards(notes),

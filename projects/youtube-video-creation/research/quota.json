@@ -20,11 +20,11 @@
     "playlistItems.list": 10
   },
   "2026-09-09": {
-    "channels.list": 14,
-    "playlistItems.list": 14,
-    "videos.list": 13,
-    "thumbnails.set": 89,
-    "videos.insert": 12,
+    "channels.list": 29,
+    "playlistItems.list": 29,
+    "videos.list": 22,
+    "thumbnails.set": 97,
+    "videos.insert": 16,
     "commentThreads.list": 31,
     "commentThreads.insert": 18
   }
