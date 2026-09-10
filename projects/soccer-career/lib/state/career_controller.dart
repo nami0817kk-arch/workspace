@@ -26,6 +26,7 @@ import '../models/news.dart';
 import '../models/club.dart';
 import '../models/cup.dart';
 import '../game/cups.dart';
+import '../models/legend.dart';
 import '../models/personality.dart';
 import '../models/promise.dart';
 import '../game/promises.dart';
@@ -167,15 +168,24 @@ enum SimStop {
 class CareerController extends ChangeNotifier {
   CareerController({
     SaveRepository? repository,
+    HallRepository? hallRepository,
     CareerEngine? careerEngine,
     MatchEngine? matchEngine,
     Random? random,
   })  : _repository = repository ?? SaveRepository(),
+        _hallRepository = hallRepository ?? HallRepository(),
         _career = careerEngine ?? CareerEngine(),
         _match = matchEngine ?? MatchEngine(),
         _random = random ?? Random();
 
   final SaveRepository _repository;
+  final HallRepository _hallRepository;
+
+  /// 引退した選手たち。**新しいキャリアを始めても消えない。**
+  ///
+  /// 引退画面に「この選手の記録は消えます」と書いてあって、本当に消えていた。
+  /// 20年ぶんの選択の結果が、次の選手を作るために捨てられていた。
+  Hall hall = const Hall();
   final CareerEngine _career;
   final MatchEngine _match;
   /// 波・停滞・出来事の抽選に使う。差し込めるようにしてあるのは、
@@ -492,6 +502,7 @@ class CareerController extends ChangeNotifier {
 
   Future<void> init() async {
     _state = await _repository.load();
+    hall = await _hallRepository.load();
     _loading = false;
     notifyListeners();
   }
@@ -1286,9 +1297,25 @@ class CareerController extends ChangeNotifier {
   Future<void> retire() async {
     final state = _state;
     if (state == null) return;
-    _state = _career.retire(state);
+    final retired = _career.retire(state);
+    _state = retired;
     _inProgress = null;
+    // **引退した時点で殿堂に写す。**
+    // 引退画面のボタンを押したときにすると、押さずに終える人の記録が消える。
+    hall = hall.add(Legend.from(
+      retired,
+      secondCareer: retired.secondCareer ?? _career.secondCareerFor(retired),
+    ));
+    await _hallRepository.save(hall);
     await _persist();
+  }
+
+  /// 殿堂から1人消す。**消したものは戻らない**ので、画面側で確認を取る。
+  Future<void> removeLegend(int index) async {
+    if (index < 0 || index >= hall.legends.length) return;
+    hall = hall.removeAt(index);
+    await _hallRepository.save(hall);
+    notifyListeners();
   }
 
   /// 生活水準を変える。金の使い道は、毎週ではなく気が向いたときに決める。

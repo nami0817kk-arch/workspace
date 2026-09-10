@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../player_portrait.dart';
 import '../readable_width.dart';
+import 'hall_screen.dart';
 import '../../models/life.dart';
 import '../../state/career_controller.dart';
 
@@ -22,7 +23,8 @@ class _RetiredScreenState extends State<RetiredScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('新しいキャリアを始めますか'),
-        content: const Text('この選手の記録は消えます。'),
+        // 消えなくなった。ここは前の文言のままにしておくと嘘になる。
+        content: const Text('この選手は「これまでの選手」に残ります。'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(false),
@@ -201,6 +203,21 @@ class _RetiredScreenState extends State<RetiredScreen> {
                 ),
               ),
             const SizedBox(height: 32),
+            // 引退した時点で殿堂に入っている。ここから見に行ける。
+            OutlinedButton.icon(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => HallScreen(controller: controller),
+                ),
+              ),
+              icon: const Icon(Icons.workspace_premium_outlined, size: 18),
+              label: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                child: Text(
+                    'これまでの選手（${controller.hall.legends.length}人）'),
+              ),
+            ),
+            const SizedBox(height: 12),
             FilledButton(
               onPressed: () => _newCareer(context),
               child: const Padding(
