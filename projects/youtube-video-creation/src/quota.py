@@ -336,9 +336,20 @@ def preflight(plan: dict[str, int], path: Path = LEDGER,
     for name, count in sorted(plan.items()):
         lines.append(f"    {name:<24} {count:>4}回 × {cost_of(name):>5}"
                      f" = {cost_of(name) * int(count):>8,}")
-    # **実測でぶつかった線**（2026-09-09、110,602 で quotaExceeded）。
-    # DAILY は当てにならないので、こちらを目安にする
-    if spent + want > OBSERVED_CEILING:
-        lines.append(f"  ! 実測でぶつかった線（{OBSERVED_CEILING:,}）を超えます。"
+    if spent + want > DAILY:
+        lines.append(f"  ! 1日の枠（{DAILY:,}）を超えます。"
                      "**枠切れになる見込みです。**分けて回すか、日をまたいでください")
+    # **投稿は別枠**（2026-09-10 にコンソールで確認）。Queries を食わないので
+    # 上の行では引っかからない。**こちらでも見ないと素通りする**
+    ups = int(plan.get("videos.insert", 0))
+    if ups:
+        done = uploads_today(path, now)
+        if done + ups > DAILY_UPLOADS:
+            lines.append(f"  ! 投稿が {done}＋{ups} = {done + ups} 本になり、"
+                         f"1日の上限（Video Uploads per day {DAILY_UPLOADS}）を超えます")
+        # サムネと最初のコメントは Queries を食う。**そこが本当の制約**
+        need = ups * COST_PER_VIDEO
+        if spent + need > DAILY:
+            lines.append(f"  ! {ups}本ぶんのサムネとコメントで {need:,} 要ります"
+                         f"（1本 {COST_PER_VIDEO}）。残りは {max(0, DAILY - spent):,} です")
     return lines

@@ -203,14 +203,24 @@ def test_枠切れとサムネの連投制限を取り違えない():
     assert not is_exhausted("HttpError 403 ... uploadLimitExceeded")
 
 
-def test_まとめて叩く前に見積りが出る():
-    """9/9 は35本の貼り替えを、枠を一度も見ずに始めて10本目で落ちた。"""
-    from src.quota import preflight
+def test_まとめて叩く前に見積りが出る(tmp_path):
+    """9/9 は35本の貼り替えを、枠を一度も見ずに始めて10本目で落ちた。
 
-    lines = "\n".join(preflight({"videos.insert": 80}))
-    assert "実測でぶつかった線" in lines        # 超えるので警告が出る
-    assert "0 =" in lines or "× 0" in lines    # 投稿は Queries を食わない
-    assert "超えます" in lines
+    **投稿は Queries を食わない**（2026-09-10 にコンソールで確認）ので、
+    使用量だけ見ていると素通りする。**サムネとコメントのぶんでも見る。**
+    """
+    from src import quota
+
+    book = tmp_path / "quota.json"        # まっさらな台帳で見る
+    ok = chr(10).join(quota.preflight({"videos.insert": 80}, path=book))
+    assert "videos.insert" in ok
+    assert quota.cost_of("videos.insert") == 0   # 投稿は Queries を食わない
+    # 80本なら 8,000 で収まる。**収まるときに警告を出さない**
+    assert "超えます" not in ok and "要ります" not in ok
+
+    over = chr(10).join(quota.preflight({"videos.insert": 200}, path=book))
+    assert "Video Uploads per day" in over        # 100本の別枠を超える
+    assert "20,000" in over                       # 200 × 100（サムネ＋コメント）
 
 
 def test_表に無い呼び出しでも止めない(tmp_path):
