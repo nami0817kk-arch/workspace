@@ -315,6 +315,9 @@ class CareerController extends ChangeNotifier {
       case LifeSpecial.none:
         break;
     }
+    // 外から見える節目は、見出しにも残す。
+    final headline = Newsroom.lifeMoment(state, e.special);
+    if (headline != null) _publish(state, [headline]);
 
     if (event.once && !state.seenEvents.contains(event.id)) {
       state.seenEvents = [...state.seenEvents, event.id];

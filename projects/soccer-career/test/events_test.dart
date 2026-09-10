@@ -7,7 +7,41 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/game/life_events.dart';
 import 'package:soccer_career/models/attributes.dart';
 import 'package:soccer_career/models/development.dart';
+import 'package:soccer_career/data/save_repository.dart';
+import 'package:soccer_career/game/career_engine.dart';
+import 'package:soccer_career/game/match_engine.dart';
+import 'package:soccer_career/game/newsroom.dart';
+import 'package:soccer_career/models/agent.dart';
+import 'package:soccer_career/models/career.dart';
+import 'package:soccer_career/models/life.dart';
 import 'package:soccer_career/models/life_event.dart';
+import 'package:soccer_career/models/news.dart';
+import 'package:soccer_career/state/career_controller.dart';
+
+class _MemoryRepository implements SaveRepository {
+  CareerState? _saved;
+
+  @override
+  Future<CareerState?> load() async => _saved;
+
+  @override
+  Future<void> save(CareerState state) async => _saved = state;
+
+  @override
+  Future<void> clear() async => _saved = null;
+}
+
+Future<CareerController> started({int seed = 3}) async {
+  final c = CareerController(
+    repository: _MemoryRepository(),
+    careerEngine: CareerEngine(random: Random(seed)),
+    matchEngine: MatchEngine(random: Random(seed)),
+    random: Random(seed),
+  );
+  await c.startCareer(
+      name: '検証', position: Position.cm, age: 24, agent: Agent.pool.first);
+  return c;
+}
 
 LifeContext context({
   int age = 24,
@@ -29,6 +63,61 @@ LifeContext context({
     );
 
 void main() {
+  group('外から見える節目は見出しに残る', () {
+    test('腕章・スポンサー・財団は記事になり、断った話はならない', () async {
+      // 出来事は33種あって毎季何度も起きるのに、見出しには一度も
+      // 残っていなかった（NewsKind.life はスタッフ解散だけが使っていた）。
+      final c = await started();
+      final state = c.state!;
+      state.sponsor = const Sponsor(name: 'アストレア', annual: 500);
+
+      expect(Newsroom.lifeMoment(state, LifeSpecial.takeCaptain), isNotNull);
+      expect(Newsroom.lifeMoment(state, LifeSpecial.acceptSponsor), isNotNull);
+      expect(Newsroom.lifeMoment(state, LifeSpecial.foundCharity), isNotNull);
+
+      // 断った話は世の中に出ない。
+      expect(Newsroom.lifeMoment(state, LifeSpecial.declineCaptain), isNull);
+      expect(Newsroom.lifeMoment(state, LifeSpecial.declineSponsor), isNull);
+      expect(Newsroom.lifeMoment(state, LifeSpecial.none), isNull);
+
+      // 中身は数字まで書く。
+      final sponsor =
+          Newsroom.lifeMoment(state, LifeSpecial.acceptSponsor)!;
+      expect(sponsor.kind, NewsKind.life);
+      expect(sponsor.headline, contains('アストレア'));
+      expect(sponsor.body, contains('500'));
+    });
+
+    test('スポンサーが決まっていなければ、記事にしない', () async {
+      final c = await started();
+      c.state!.sponsor = null;
+      expect(
+          Newsroom.lifeMoment(c.state!, LifeSpecial.acceptSponsor), isNull);
+    });
+
+    test('腕章を受けると、実際に見出しへ積まれる', () async {
+      final c = await started();
+      final state = c.state!;
+      final before = state.news.length;
+      c.pendingEvent = LifeEvent(
+        id: 'test-captain',
+        title: '腕章',
+        body: '任せたい',
+        choices: const [
+          LifeChoice(
+            label: '引き受ける',
+            outcome: '引き受けた',
+            effect: LifeEffect(special: LifeSpecial.takeCaptain),
+          ),
+        ],
+      );
+      await c.resolveEvent(c.pendingEvent!.choices.first);
+      expect(state.captain, isTrue);
+      expect(state.news.length, before + 1);
+      expect(state.news.first.kind, NewsKind.life);
+    });
+  });
+
   group('人が出てくる', () {
     test('しるしを使う出来事は、その人が居ることを条件にしている', () {
       // 条件を付け忘れると、画面に <mentor> がそのまま出る。
