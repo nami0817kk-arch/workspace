@@ -374,6 +374,26 @@ class CareerController extends ChangeNotifier {
   /// 出場機会の下駄。監督の信頼・戦術との相性・方針・序列を足し合わせる。
   ///
   /// 評価点だけで決めると、監督も方針も競争相手も飾りになる。
+  /// 練習した週の負傷判定に使う土台の確率。
+  ///
+  /// 専属スタッフ・生活習慣・累積疲労・復帰直後かどうかで変わる。
+  /// 判定（`rollInjury`）と管理画面の「効き」が同じ式を読むために切り出してある。
+  static double injuryBaseChanceFor(CareerState state) =>
+      Formulas.injuryBaseChance *
+      state.staff.injuryFactor *
+      state.habits.injuryFactor *
+      state.fatigue.injuryFactor *
+      // 復帰直後は無理が効かない。強行すればここで返ってくる。
+      (state.rehabWatch > 0 ? state.rehab.relapseFactor : 1.0);
+
+  /// 今のまま練習した週に怪我をする確率。
+  double get injuryChanceNow {
+    final state = _state;
+    if (state == null) return 0;
+    return MatchEngine.injuryChance(state.player,
+        baseChance: injuryBaseChanceFor(state));
+  }
+
   /// 次節の起用の見通し。判定と同じ式から出す。
   SelectionOutlook? get outlook {
     final state = _state;
@@ -776,15 +796,7 @@ class CareerController extends ChangeNotifier {
         state.development = state.development.learn(week.learned!);
       }
       newInjury = week.injury ??
-          _match.rollInjury(
-            player,
-            baseChance: Formulas.injuryBaseChance *
-                state.staff.injuryFactor *
-                state.habits.injuryFactor *
-                state.fatigue.injuryFactor *
-                // 復帰直後は無理が効かない。強行すればここで返ってくる。
-                (state.rehabWatch > 0 ? state.rehab.relapseFactor : 1.0),
-          );
+          _match.rollInjury(player, baseChance: injuryBaseChanceFor(state));
       if (newInjury != null) {
         // 復帰の進め方で離脱の長さが変わる。
         newInjury = Injury(

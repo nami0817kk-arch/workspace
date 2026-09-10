@@ -1109,15 +1109,23 @@ class MatchEngine {
   ///
   /// 疲れているほど、歳を取っているほど起きやすい。ここが練習と休養の
   /// 選択に重みを与えている。休養を「伸びないから無駄」にしないための仕掛け。
-  Injury? rollInjury(Player player, {required double baseChance}) {
+  /// その週に怪我をする確率。振らずに値だけ出す。
+  ///
+  /// 画面（管理画面の「効き」）と判定が同じ式を読むために切り出してある。
+  /// 別に書くと、数字を触ったときに画面が嘘をつく。
+  static double injuryChance(Player player, {required double baseChance}) {
     final fatigue = (Formulas.conditionBaseline - player.condition)
         .clamp(0, Formulas.conditionMax)
         .toDouble();
     final age = (player.age - Formulas.injuryAgeFrom).clamp(0, 20).toDouble();
-    final chance = (baseChance +
+    return (baseChance +
             fatigue * Formulas.injuryConditionSlope +
             age * Formulas.injuryPerAgeYear) *
         player.traits.injuryFactor;
+  }
+
+  Injury? rollInjury(Player player, {required double baseChance}) {
+    final chance = injuryChance(player, baseChance: baseChance);
 
     if (_random.nextDouble() >= chance) return null;
 
