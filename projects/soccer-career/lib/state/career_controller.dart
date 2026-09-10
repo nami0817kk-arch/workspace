@@ -584,6 +584,8 @@ class CareerController extends ChangeNotifier {
       extraRating: state.captain ? Formulas.captainRatingBonus : 0,
       // 監督が重く見る能力。試合で選んだことが監督に届く唯一の経路。
       favoured: state.manager?.tactic.favours ?? const [],
+      // 累積疲労は終盤の落ち込みに効く。ここまで試合の中では何も起きなかった。
+      fatigue: state.fatigue.value,
       appearance: state.suspended
           ? Appearance.suspended
           : state.injured

@@ -96,6 +96,7 @@ class MatchInProgress {
     required this.club,
     this.development = const Development(),
     this.favoured = const [],
+    this.fatigue = 0,
     List<int> teammateGoalMinutes = const [],
     double? expectedTeammateGoals,
     this.concededMinutes = const [],
@@ -149,6 +150,29 @@ class MatchInProgress {
   /// 隠されているので、画面と自動進行には予定そのものではなく、
   /// 力関係と残り時間から出るこの見込みを使う（[assistConversionAt]）。
   final double expectedTeammateGoals;
+
+  /// 累積疲労 0〜100。終盤の落ち込みに効く。
+  ///
+  /// これまで疲労はローテーションと怪我にしか効いていなかった。
+  final int fatigue;
+
+  /// 終盤の消耗。後半に入ってから、時間とともに効いてくる。
+  ///
+  /// スタミナが高ければほとんど落ちず、累積疲労が溜まっていれば深く落ちる。
+  /// 判定にも画面にもこの1つを使う。
+  double get lateFatigue {
+    if (isFinished) return 0;
+    final minute = currentMinute;
+    if (minute <= Formulas.lateFatigueFrom) return 0;
+    final progress =
+        ((minute - Formulas.lateFatigueFrom) / (90 - Formulas.lateFatigueFrom))
+            .clamp(0.0, 1.0);
+    final stamina = player.effective(Detail.stamina);
+    final drop = Formulas.lateFatigueBase -
+        (stamina - Formulas.conditionBaseline) * Formulas.lateFatiguePerStamina +
+        fatigue * Formulas.lateFatiguePerFatigue;
+    return -drop.clamp(0.0, Formulas.lateFatigueMax) * progress;
+  }
 
   /// 監督が重く見る能力。空なら何も求めていない（バランス型）。
   ///
@@ -442,6 +466,10 @@ class MatchInProgress {
 
     factors.add(
         ChanceFactor('コンディション', conditionModifier(player.condition)));
+
+    // 終盤の消耗。スタミナで薄まり、累積疲労で深くなる。
+    final late = lateFatigue;
+    if (late != 0) factors.add(ChanceFactor('終盤の消耗', late));
 
     // 相手の格。上のリーグほど同じ手が通らなくなる。
     factors.add(ChanceFactor(
@@ -988,6 +1016,7 @@ class MatchEngine {
     double extraRating = 0,
     bool international = false,
     List<AttributeKey> favoured = const [],
+    int fatigue = 0,
     List<Scenario>? forcedScenarios,
   }) {
     final count = switch (appearance) {
@@ -1039,6 +1068,7 @@ class MatchEngine {
       club: club,
       development: development,
       favoured: favoured,
+      fatigue: fatigue,
       teammateGoalMinutes: _goalMinutes(teammateGoals),
       expectedTeammateGoals: (1.25 + advantage / 40) *
           Formulas.teammateGoalShareFor(player.position.family),

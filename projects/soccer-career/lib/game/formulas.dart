@@ -254,6 +254,30 @@ class Formulas {
   static const int conditionBaseline = 60;
   static const double conditionChanceSlope = 0.0015;
 
+  /// 終盤の消耗。ここから足が止まりはじめる（分）。
+  ///
+  /// 局面の時間は表示・特性・展開の差し替えには効いていたのに、
+  /// **成功率そのものには入っていなかった**。累積疲労もローテーションと
+  /// 怪我にしか効いておらず、試合の中では何も起きなかった。
+  static const int lateFatigueFrom = 70;
+
+  /// 90分時点の落ち込み（スタミナが基準どおりのとき）。
+  static const double lateFatigueBase = 0.05;
+
+  /// スタミナ1あたり、落ち込みがどれだけ小さくなるか。
+  ///
+  /// スタミナはこれまで「フィジカルの平均に混ざる数字」でしかなかった。
+  /// ここで初めて、鍛える理由が試合の中に出る。
+  static const double lateFatiguePerStamina = 0.0015;
+
+  /// 累積疲労1あたり、落ち込みがどれだけ大きくなるか。
+  ///
+  /// 休養・リカバリー・ローテーションが、試合の終盤で初めて手触りになる。
+  static const double lateFatiguePerFatigue = 0.0006;
+
+  /// 落ち込みの上限。ここを超えると終盤が理不尽になる。
+  static const double lateFatigueMax = 0.20;
+
   /// 練習で能力が1伸びる確率（ポテンシャルに達していなければ）。
   static const double trainingGrowthChance = 0.3;
 
