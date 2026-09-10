@@ -812,3 +812,28 @@ def test_エンブレムが2つなら左上と右上に置く(tmp_path):
     middle = canvas.crop((520, 0, 760, 200)).convert("RGB")
     assert not any(px[0] > 150 and px[1] < 90 for px in middle.getdata()), "真ん中に残っている"
     assert FACE_CLASH_EDGE < 60 and 0.4 < FACE_CLASH_Y < 0.6
+
+
+def test_3枚並べたら札は真ん中の顔を避ける():
+    """**3枚並べると真ん中に顔が来る**（2026-09-10 ユーザー「フリアンも
+    サムネに載せたい」）。札を画面の中央に置くとその顔を隠すので、下げる。
+    継ぎ目の帯も、1本ではなく2本引く。
+    """
+    from PIL import Image
+
+    from src.config import load_config
+    from src import thumbnail as th
+
+    font = str(load_config().video.font_path())
+    canvas = Image.new("RGBA", (1280, 720), (250, 250, 250, 255))
+    th._face_clash(canvas, "交渉", font, [], tiles=3)
+
+    # 継ぎ目の帯が 1/3 と 2/3 に立っている（真ん中には無い）
+    row = canvas.crop((0, 300, 1280, 301)).convert("RGB")
+    dark = [x for x in range(1280) if sum(row.getpixel((x, 0))) < 200]
+    assert any(400 < x < 460 for x in dark), dark[:20]
+    assert any(830 < x < 890 for x in dark), dark[:20]
+    assert not any(600 < x < 680 for x in dark), "真ん中に帯が立っている"
+
+    # 札は真ん中の顔より下（画面の6割より下）
+    assert th.FACE_CLASH_Y_TRIO > th.FACE_CLASH_Y
