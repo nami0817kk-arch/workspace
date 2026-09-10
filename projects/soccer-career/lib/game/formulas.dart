@@ -394,6 +394,25 @@ class Formulas {
   static const int contractYearsMin = 2;
   static const int contractYearsMax = 4;
 
+  /// 監督の求める形に沿った手・逆らった手が、1試合で信頼を動かす量。
+  ///
+  /// 監督は `fitFor` で**能力値だけ**を見ていた。つまり「あなたの数字」を
+  /// 採点する装置で、あなたが何を選んだかは見ていなかった。
+  /// 1試合3局面なので、全部沿えば +1、全部逆らえば -1 くらいに収める。
+  /// 大きくすると、型（identity）を通す遊び方が単に損になる。
+  static const double trustPerTacticFit = 0.34;
+
+  /// 要求の厳しい監督ほど、選択の善し悪しが強く響く。
+  static const double trustPerDemand = 0.12;
+
+  /// 自動で進めるとき、監督の求める形をどれだけ重く見るか。
+  ///
+  /// 入れないと、自動進行は監督を無視し続けて信頼を失う（実測で
+  /// 代表経験が 58%→51% に落ちた）。人が押す「区切りまで」も同じ道を通るので、
+  /// これが無いと自動進行そのものが罠になる。
+  /// 明らかに良い手を覆すほどではない重さにする。
+  static const double tacticPickBonus = 0.06;
+
   /// 登録メンバーに入るのに必要な、クラブの強さとの差。
   /// これより大きく劣ると25人枠に入れない。
   static const int squadRegistrationGap = -8;

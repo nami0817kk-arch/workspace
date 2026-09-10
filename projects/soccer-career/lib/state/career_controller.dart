@@ -582,6 +582,8 @@ class CareerController extends ChangeNotifier {
       allyBonus: state.partner?.synergyBonus ?? 0,
       moodBonus: state.morale.chanceModifier + state.form.chanceModifier,
       extraRating: state.captain ? Formulas.captainRatingBonus : 0,
+      // 監督が重く見る能力。試合で選んだことが監督に届く唯一の経路。
+      favoured: state.manager?.tactic.favours ?? const [],
       appearance: state.suspended
           ? Appearance.suspended
           : state.injured
@@ -704,8 +706,12 @@ class CareerController extends ChangeNotifier {
       );
       final partner = state.partner;
       if (partner != null) {
-        state.partner = partner.withSynergy(partner.synergy + 2);
+        // 出ただけで +2 だった頃は、プレイヤーの関与がゼロだった。
+        // 味方を活かす手を選んだぶんが、そのまま呼吸になる。
+        state.partner = partner.withSynergy(
+            partner.synergy + 1 + result.assistAttempts * 2);
       }
+      _applyTacticFit(state, result);
     }
 
     // 経験・選択の癖・相手への慣れは、出た試合ぶんだけ積み上がる。
@@ -962,6 +968,27 @@ class CareerController extends ChangeNotifier {
   }
 
   /// 生活水準を変える。金の使い道は、毎週ではなく気が向いたときに決める。
+  /// 監督の求める形に沿ったか。信頼をその場で動かす。
+  ///
+  /// 監督は `fitFor` で能力値だけを見ていた——「あなたの数字」を採点する
+  /// 装置で、あなたが何を選んだかは見ていなかった。ここで初めて、
+  /// 試合の選択が監督に届く。**監督に合わせるか、自分の型を通すか**。
+  void _applyTacticFit(CareerState state, MatchResult result) {
+    final manager = state.manager;
+    if (manager == null) return;
+    final shift = manager.trustShift(
+      followed: result.followedTactic,
+      against: result.againstTactic,
+    );
+    if (shift == 0) return;
+    state.tacticCredit += shift;
+    // 端数を持ち越す。1試合で1未満しか動かないので、切り捨てると何も起きない。
+    final whole = state.tacticCredit.truncate();
+    if (whole == 0) return;
+    state.tacticCredit -= whole;
+    state.relations = state.relations.bump(manager: whole);
+  }
+
   /// カードと出場停止。リーグ戦だけが累積の対象。
   ///
   /// 出場停止は「その試合に出られなかった」ことで1つ減る。試合を消化して
