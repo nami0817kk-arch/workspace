@@ -165,6 +165,7 @@ class CareerEngine {
     PlayerLook? look,
     int? squadNumber,
     Map<AttributeKey, int> tweaks = const {},
+    List<Trait>? traits,
   }) {
     final home = countryId == null
         ? World.randomHome(_random)
@@ -183,7 +184,10 @@ class CareerEngine {
     final overall = attributes.overallFor(position);
     // そのポジションで意味を持つ特性からだけ引く。
     // 天才はポテンシャルに乗るので、ポテンシャルより先に引く。
-    final traits = Trait.roll(_random, position: position);
+    //
+    // 選手作成画面は**先に引いて見せてから**ここへ渡す。渡されなければ
+    // これまでどおりここで引く（テストとシミュレーションのため）。
+    final rolled = traits ?? Trait.roll(_random, position: position);
     final player = Player(
       name: name,
       age: age,
@@ -191,14 +195,14 @@ class CareerEngine {
       // 左右のある役割でなければ、指定されていても中央に倒す。
       side: position.hasSide ? side : Side.center,
       attributes: attributes,
-      potential: (rollPotential(overall) + traits.potentialBonus)
+      potential: (rollPotential(overall) + rolled.potentialBonus)
           .clamp(Formulas.potentialMin, Formulas.maxAttribute),
       nationality: _rollNationality(home),
       personality: Personality.roll(_random),
       physique: physique ?? Physique.roll(_random, position),
       look: look ?? PlayerLook.roll(_random),
       aptitude: Aptitude.initial(position),
-      traits: traits,
+      traits: rolled,
     );
     return CareerState(
       player: player,

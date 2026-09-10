@@ -23,13 +23,13 @@ import '../../models/entourage.dart';
 import '../../models/life.dart';
 import '../../models/support.dart';
 import '../../models/training.dart';
-import '../../models/traits.dart';
 import '../../models/season.dart';
 import '../../state/career_controller.dart';
 import '../club_identity.dart';
 import '../budget_lines.dart';
 import '../player_portrait.dart';
 import '../readable_width.dart';
+import '../trait_row.dart';
 import '../training_sheet.dart';
 import '../transfer_code.dart';
 import '../../dev/admin.dart';
@@ -1395,78 +1395,11 @@ class _TraitsCard extends StatelessWidget {
             ],
             for (final trait in traits) ...[
               const SizedBox(height: 12),
-              _TraitRow(trait: trait, hits: state.traitHits[trait] ?? 0),
+              TraitRow(trait: trait, hits: state.traitHits[trait] ?? 0),
             ],
           ],
         ),
       ),
-    );
-  }
-}
-
-class _TraitRow extends StatelessWidget {
-  const _TraitRow({required this.trait, required this.hits});
-
-  final Trait trait;
-
-  /// 今季、局面の成功率を動かした回数。
-  final int hits;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final muted = theme.textTheme.bodySmall
-        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
-    final accent = trait.flaw ? theme.colorScheme.error : theme.colorScheme.primary;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Text(trait.label,
-                style: theme.textTheme.bodyMedium
-                    ?.copyWith(fontWeight: FontWeight.w600)),
-            const SizedBox(width: 8),
-            if (trait.flaw)
-              Text('欠点',
-                  style: theme.textTheme.labelSmall?.copyWith(color: accent)),
-            if (trait.rare) ...[
-              if (trait.flaw) const SizedBox(width: 6),
-              Text('稀',
-                  style: theme.textTheme.labelSmall
-                      ?.copyWith(color: theme.colorScheme.tertiary)),
-            ],
-          ],
-        ),
-        const SizedBox(height: 2),
-        Text(trait.description, style: muted),
-        const SizedBox(height: 4),
-        Wrap(
-          spacing: 6,
-          runSpacing: 4,
-          children: [
-            for (final effect in trait.effects)
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                decoration: BoxDecoration(
-                  color: accent.withValues(alpha: 0.10),
-                  borderRadius: BorderRadius.circular(999),
-                ),
-                child: Text(effect,
-                    style: theme.textTheme.labelSmall?.copyWith(color: accent)),
-              ),
-          ],
-        ),
-        const SizedBox(height: 4),
-        Text(
-          trait.affectsPlay
-              ? (hits > 0
-                  ? '今季 $hits回の局面で効いた'
-                  : '今季はまだ効く局面が来ていない')
-              : '試合の外で効く（回数は数えない）',
-          style: muted,
-        ),
-      ],
     );
   }
 }
