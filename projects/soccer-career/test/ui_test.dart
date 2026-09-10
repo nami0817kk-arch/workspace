@@ -9,6 +9,9 @@ import 'package:soccer_career/game/match_engine.dart';
 import 'package:soccer_career/game/ranking.dart';
 import 'package:soccer_career/game/weekly_plan.dart';
 import 'package:soccer_career/models/traits.dart';
+import 'package:soccer_career/ui/attribute_shape.dart';
+import 'package:soccer_career/ui/club_identity.dart';
+import 'package:soccer_career/ui/player_banner.dart';
 import 'package:soccer_career/ui/trait_row.dart';
 import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/attributes.dart';
@@ -298,6 +301,65 @@ void main() {
     // 次の相手の名前が、育成のタブから読める。
     expect(plan.headline,
         contains(state.opponentFor(state.matchday).name));
+  });
+
+  testWidgets('選手タブは、選手証と能力の形で始まる', (tester) async {
+    // 白いカードに文字が並ぶだけで、唯一手で描いているもの（似顔）は
+    // 64px の丸で隅に居た。
+    final controller = await newCareer();
+    await pumpHub(tester, controller, height: 2600);
+    await tester.tap(find.widgetWithText(Tab, '選手'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PlayerBanner), findsOneWidget);
+    // 名前・総合力は帯の中に大きく出る。
+    expect(find.descendant(
+        of: find.byType(PlayerBanner),
+        matching: find.text(controller.state!.player.name)),
+        findsOneWidget);
+    expect(find.descendant(
+        of: find.byType(PlayerBanner),
+        matching: find.text('${controller.state!.player.overall}')),
+        findsOneWidget);
+
+    // 能力の形。棒は残す（正確な値はそちらで読む）。
+    final shape = tester.widget<AttributeShape>(find.byType(AttributeShape));
+    expect(shape.keys, isNotEmpty);
+    expect(shape.keys.contains(AttributeKey.goalkeeping), isFalse,
+        reason: 'GK 以外に GK 能力の頂点が出ている');
+    expect(find.text(AttributeKey.pace.label), findsWidgets);
+  });
+
+  testWidgets('GK の能力の形には GK 能力が入る', (tester) async {
+    final controller = CareerController(
+      repository: _MemoryRepository(),
+      careerEngine: CareerEngine(random: Random(5)),
+      matchEngine: MatchEngine(random: Random(5)),
+      random: Random(5),
+    );
+    await controller.startCareer(
+      name: 'GK',
+      position: Position.gk,
+      age: 20,
+      agent: Agent.pool.first,
+    );
+    await pumpHub(tester, controller, height: 2600);
+    await tester.tap(find.widgetWithText(Tab, '選手'));
+    await tester.pumpAndSettle();
+
+    final shape = tester.widget<AttributeShape>(find.byType(AttributeShape));
+    expect(shape.keys.contains(AttributeKey.goalkeeping), isTrue);
+  });
+
+  testWidgets('次の試合は、両クラブのエンブレムで出る', (tester) async {
+    // 一番よく見るカードなのに、相手が文字でしか出ていなかった。
+    final controller = await newCareer();
+    await pumpHub(tester, controller);
+    final state = controller.state!;
+    expect(find.text(state.club.name), findsWidgets);
+    expect(find.text(state.opponentFor(state.matchday).name), findsWidgets);
+    // 自分と相手で2つ。
+    expect(find.byType(ClubCrest), findsWidgets);
   });
 
   testWidgets('選手作成で、付く特性を見て引き直せる', (tester) async {
