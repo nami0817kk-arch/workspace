@@ -29,11 +29,6 @@ void main() {
   test('起きない状態を探す', () async {
     final seen = <String, int>{};
     final gaps = <int>[];
-    void mark(String kind, Object value) {
-      final key = '$kind.${(value as dynamic).name}';
-      seen[key] = (seen[key] ?? 0) + 1;
-    }
-
     final styles = <Playstyle>[
       Playstyle(
         name: 'CM',

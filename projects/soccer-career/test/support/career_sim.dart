@@ -188,18 +188,21 @@ Future<Career> runCareer(Playstyle style, int seed) async {
       // 「無傷 → 負傷」の瞬間だけ数える。離脱中は毎試合 Injury が作り直される
       // ので、単に別物かどうかで見ると離脱の長さを数えてしまう。
       final wasInjured = state.injured;
-      final result = await controller.simulateMatch();
+      await controller.simulateMatch();
       final after = controller.state!.injury;
       if (!wasInjured && after != null) {
         career.injuries++;
         career.seenStates.add('InjurySeverity.${after.severity.name}');
         if (after.severity.index >= 2) career.severeInjuries++;
       }
-      if (result != null) {
-        career.seenStates.add('Appearance.${result.appearance.name}');
-        final stake = Newsroom.stakeFor(controller.state!);
-        if (stake != null) career.seenStates.add('FixtureStake.${stake.name}');
+      // 直前の試合の結果は状態から読む。simulateMatch の戻り値は
+      // analyzer の版によって null 許容の見立てが変わり、CI だけ落ちた。
+      final results = controller.state!.results;
+      if (results.isNotEmpty) {
+        career.seenStates.add('Appearance.${results.last.appearance.name}');
       }
+      career.seenStates
+          .add('FixtureStake.${Newsroom.stakeFor(controller.state!).name}');
       career.seenStates
           .add('MomentumState.${controller.state!.form.state.name}');
       for (final item in controller.state!.news.take(3)) {
