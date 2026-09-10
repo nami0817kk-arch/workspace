@@ -295,6 +295,32 @@ class Formulas {
   static const double trainingGreatMax = 0.72;
   static const double trainingFlatMax = 0.70;
 
+  /// 監督の信頼がこれを下回ると「構想外」。ベンチにも入れなくなる。
+  ///
+  /// **取り返しのつかないところが、このゲームには怪我しか無かった。**
+  /// 信頼は下がっても、出れば評価点で戻せる。出られなくなって初めて、
+  /// 積み上げてきた選択に値段が付く。
+  /// 戻る道はある（監督が代わる・移籍する・出来事で歩み寄る）が、
+  /// 「評価点で戻す」道だけは閉じている。出られないのだから。
+  static const int frozenOutTrust = 12;
+
+  /// これを下回ったら、構想外が近いことを画面で知らせる。
+  ///
+  /// 予告なしに落とすと、理不尽になる。落ちる前に必ず見えていること。
+  static const int trustWarning = 28;
+
+  /// ここを超えたら、疲労を警告として出す。`Fatigue.label` の段と揃える。
+  static const int fatigueWarning = 70;
+
+  /// 溜まった疲労が、重傷の割合に与える傾き。
+  ///
+  /// 数だけ増えて軽傷ばかりなら、無理を通すのはまだ得な賭けになる。
+  /// 限界で走り続けた選手が壊れるのは、重いほうの怪我。
+  static const double severePerFatigue = 0.0008;
+
+  /// 疲労で増えた重傷の割合の上限。
+  static const double severeShareMax = 0.13;
+
   /// ピッチの外で能力が伸びる出来事に、必ず乗る疲労。
   ///
   /// これが無いと、出来事の頻度がそのまま「強さ」になる。

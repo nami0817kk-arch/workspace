@@ -1,4 +1,5 @@
 import 'dart:math';
+import '../game/formulas.dart';
 
 import 'agent.dart';
 import 'attributes.dart';
@@ -518,6 +519,20 @@ class CareerState {
       PromiseKind.rating => null,
     };
   }
+
+  /// 監督の構想から外れているか。
+  ///
+  /// 登録メンバーには入っているが、**この監督の下では使われない**。
+  /// 出られないので評価点も付かず、評価点では戻せない。
+  /// 監督が代わるか、移籍するか、ピッチの外で歩み寄るしかない。
+  bool get frozenOut =>
+      manager != null && relations.manager < Formulas.frozenOutTrust;
+
+  /// 構想外が近いか。落ちる前に必ず画面に出す。
+  bool get trustAtRisk =>
+      manager != null &&
+      !frozenOut &&
+      relations.manager < Formulas.trustWarning;
 
   /// 監督の求める形に沿ったぶんの、まだ信頼に乗っていない端数。
   ///

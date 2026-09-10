@@ -1191,26 +1191,39 @@ class MatchEngine {
   /// 画面（管理画面の「効き」）と判定が同じ式を読むために切り出してある。
   /// 別に書くと、数字を触ったときに画面が嘘をつく。
   static double injuryChance(Player player, {required double baseChance}) {
-    final fatigue = (Formulas.conditionBaseline - player.condition)
+    final worn = (Formulas.conditionBaseline - player.condition)
         .clamp(0, Formulas.conditionMax)
         .toDouble();
     final age = (player.age - Formulas.injuryAgeFrom).clamp(0, 20).toDouble();
     return (baseChance +
-            fatigue * Formulas.injuryConditionSlope +
+            worn * Formulas.injuryConditionSlope +
             age * Formulas.injuryPerAgeYear) *
         player.traits.injuryFactor;
   }
 
-  Injury? rollInjury(Player player, {required double baseChance}) {
+  /// 溜まった疲労で、重傷の割合がどこまで上がるか。
+  ///
+  /// 数だけ増えて軽傷ばかりなら、無理を通すのはまだ得な賭けになる。
+  static double severeShareFor(int fatigue) =>
+      (Formulas.severeInjuryShare + fatigue * Formulas.severePerFatigue)
+          .clamp(Formulas.severeInjuryShare, Formulas.severeShareMax);
+
+  Injury? rollInjury(
+    Player player, {
+    required double baseChance,
+    int fatigue = 0,
+  }) {
     final chance = injuryChance(player, baseChance: baseChance);
 
     if (_random.nextDouble() >= chance) return null;
 
     // 重い怪我ほど出にくくする。軽傷が大半で、たまに長期離脱。
+    // 疲れ切った身体ほど、重いほうを引く。
+    final severeShare = severeShareFor(fatigue);
     final roll = _random.nextDouble();
-    final severity = roll < 0.6
+    final severity = roll < 0.6 * (1 - severeShare)
         ? InjurySeverity.light
-        : roll < 1 - Formulas.severeInjuryShare
+        : roll < 1 - severeShare
             ? InjurySeverity.moderate
             : InjurySeverity.severe;
     final kinds =
@@ -1266,6 +1279,7 @@ class MatchEngine {
     List<Detail> focus = const [],
     bool plateau = false,
     double environment = 1.0,
+    int fatigue = 0,
     required bool played,
   }) {
     final costFactor = player.traits.conditionCostFactor;
@@ -1391,6 +1405,7 @@ class MatchEngine {
                 companion.injury *
                 staff.injuryFactor *
                 habits.injuryFactor,
+            fatigue: fatigue,
           );
 
     return WeekOutcome(
