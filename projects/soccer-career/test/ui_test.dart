@@ -8,6 +8,8 @@ import 'package:soccer_career/game/formulas.dart';
 import 'package:soccer_career/game/match_engine.dart';
 import 'package:soccer_career/game/ranking.dart';
 import 'package:soccer_career/game/weekly_plan.dart';
+import 'package:soccer_career/models/traits.dart';
+import 'package:soccer_career/ui/trait_row.dart';
 import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/attributes.dart';
 import 'package:soccer_career/models/career.dart';
@@ -296,6 +298,73 @@ void main() {
     // 次の相手の名前が、育成のタブから読める。
     expect(plan.headline,
         contains(state.opponentFor(state.matchday).name));
+  });
+
+  testWidgets('選手作成で、付く特性を見て引き直せる', (tester) async {
+    // 特性は「始めてから分かるもの」にしていたが、2つの長所で選手の性格が
+    // ほとんど決まるのに、見えないまま20年ぶんの選択をすることになっていた。
+    final controller = CareerController(
+      repository: _MemoryRepository(),
+      careerEngine: CareerEngine(random: Random(1)),
+      matchEngine: MatchEngine(random: Random(1)),
+      random: Random(1),
+    );
+    tester.view.physicalSize = const Size(390, 3000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(MaterialApp(
+      theme: ThemeData(useMaterial3: true),
+      home: CreatePlayerScreen(controller: controller),
+    ));
+    await tester.pumpAndSettle();
+
+    expect(find.text('生まれ持った特性'), findsOneWidget);
+    // 効き方まで出ている（名前だけでは何が変わるのか分からない）。
+    expect(find.byType(TraitRow), findsWidgets);
+
+    List<String> shown() => tester
+        .widgetList<TraitRow>(find.byType(TraitRow))
+        .map((row) => row.trait.label)
+        .toList();
+
+    final before = shown();
+    expect(before, isNotEmpty);
+
+    // 引き直せる。同じ引きが続くこともあるので、何度か押して変化を見る。
+    var changed = false;
+    for (var i = 0; i < 12 && !changed; i++) {
+      await tester.tap(find.widgetWithText(TextButton, '引き直す'));
+      await tester.pumpAndSettle();
+      changed = shown().join() != before.join();
+    }
+    expect(changed, isTrue, reason: '引き直しても同じ特性のまま');
+    expect(find.textContaining('引き直した'), findsOneWidget);
+
+    // ポジションを変えると引き直す（そのポジションで意味を持つものから引く）。
+    await tester.tap(find.widgetWithText(ChoiceChip, Position.gk.label));
+    await tester.pumpAndSettle();
+    for (final row in tester.widgetList<TraitRow>(find.byType(TraitRow))) {
+      expect(row.trait.fitsPosition(Position.gk), isTrue,
+          reason: '${row.trait.label} は GK に付かないはず');
+    }
+  });
+
+  testWidgets('引いた特性が、そのまま始めた選手に付く', (tester) async {
+    final controller = CareerController(
+      repository: _MemoryRepository(),
+      careerEngine: CareerEngine(random: Random(1)),
+      matchEngine: MatchEngine(random: Random(1)),
+      random: Random(1),
+    );
+    const picked = [Trait.clutch, Trait.fighter];
+    await controller.startCareer(
+      name: '検証',
+      position: Position.st,
+      age: 20,
+      agent: Agent.pool.first,
+      traits: picked,
+    );
+    expect(controller.state!.player.traits, picked);
   });
 
   testWidgets('選手作成で、左右と割り振りを決められる', (tester) async {

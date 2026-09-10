@@ -507,6 +507,7 @@ class CareerController extends ChangeNotifier {
     int? squadNumber,
     String? countryId,
     Map<AttributeKey, int> tweaks = const {},
+    List<Trait>? traits,
   }) async {
     _state = _career.startCareer(
       name: name,
@@ -519,6 +520,7 @@ class CareerController extends ChangeNotifier {
       squadNumber: squadNumber,
       countryId: countryId,
       tweaks: tweaks,
+      traits: traits,
     );
     _state!.beginSeasonRecord();
     _inProgress = null;
