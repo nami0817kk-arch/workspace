@@ -43,8 +43,8 @@ thumbnail:
   photo: "assets/photos/20260910_araujo/01.jpg"
   tags: [リバプール, バルセロナ]
   points:
-    - 買い取り額は約101億円
     - 空中戦は6戦全勝
+    - デュエルは10回中9回勝利
 
 sections:
   - id: join

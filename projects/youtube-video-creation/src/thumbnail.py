@@ -34,9 +34,12 @@ BAND_TEXT_DARK = (12, 12, 14)
 BAND_TEXT_LIGHT = (255, 255, 255)
 BAND_SIZES = (104, 94, 86, 78, 70, 62, 56, 50, 44, 40)
 # 左に積む言葉（thumbnail_points）。右の写真に食い込まない幅で縮める
-POINTS_SIZE = 62
-POINTS_MIN_SIZE = 34
-POINTS_WIDTH = 600
+# **もっと目立たせる**（2026-09-10 ユーザー指示）。62px・柔らかい影だと、
+# 写真の明るいところに乗ったときに沈んでいた。太くして黒で縁取る
+POINTS_SIZE = 74
+POINTS_MIN_SIZE = 40
+POINTS_WIDTH = 620
+POINTS_STROKE = 6
 BADGE_HEIGHT = 62
 SUBTITLE_HEIGHT = 70
 DATE_HEIGHT = 40
@@ -1007,10 +1010,11 @@ def _draw_points(draw: ImageDraw.ImageDraw, points: list[str], font_path: str) -
     rule = int(size * 1.32)
     y = 96
     for text in rows:
-        draw.text((60 + 3, y + 3), text, font=font, fill=(0, 0, 0, 190))
-        draw.text((60, y), text, font=font, fill=(255, 255, 255, 255))
+        # **影ではなく縁取り**。影は明るい写真の上で効かない
+        draw.text((60, y), text, font=font, fill=(255, 255, 255, 255),
+                  stroke_width=POINTS_STROKE, stroke_fill=(0, 0, 0, 235))
         draw.line([(60, y + rule), (60 + draw.textlength(text, font=font), y + rule)],
-                  fill=(232, 210, 31, 255), width=5)
+                  fill=(232, 210, 31, 255), width=7)
         y += step
 
 
