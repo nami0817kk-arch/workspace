@@ -472,3 +472,44 @@ def test_落とすのは振りだけで語りはまとめて消さない():
     texts = [line.text for line in script.scenes[-1].lines]
     assert any("決勝点は" in text for text in texts), texts
     assert any("17分に" in text for text in texts), texts
+
+
+def test_山場の印は指定で付ける():
+    """**「ここからが本題です」は読み上げから外した**（2026-09-10 ユーザー指示
+    「台本のここからが本題ですはいらない」）。
+
+    印は `@main: true`。聞く人には要らない言葉だが、
+    ショートがどの節を切り出すかを決めるのには要る。
+    """
+    from src.script_model import parse_script
+    from src.shorts import MAIN_BONUS, strength, trim
+
+    nl = chr(10)
+    body = ["## オープニング", "", "キャスター: タイトルです。", ""]
+    body += ["## ふつうの節", "", "解説: ここは前置きです。", "", "本人: ひとこと", ""]
+    body += ["## 答えの節", "@main: true", "", "解説: ここが答えです。", "", "本人: ふたこと", ""]
+    script = parse_script(nl.join(body))
+    plain, marked = script.scenes[1], script.scenes[2]
+    assert marked.main is True and plain.main is False
+    assert strength(marked, {}) - strength(plain, {}) == MAIN_BONUS
+
+    # 印の付いた節がショートに選ばれる
+    short = trim(script)
+    assert short.scenes[-1].title == "答えの節"
+
+    # 読み上げに「ここからが本題です」は残っていない
+    assert "ここからが本題" not in " ".join(line.text for line in script.lines)
+
+
+def test_古い台本の文字の印も当分は見る():
+    """2026-09-10 より前に書いた台本は、セリフに印が入っている。"""
+    from src.script_model import parse_script
+    from src.shorts import MAIN_BONUS, strength
+
+    nl = chr(10)
+    body = ["## オープニング", "", "キャスター: タイトル。", ""]
+    body += ["## 古い節", "", "解説: ここからが本題です。答えはこれです。", "", "本人: ひとこと", ""]
+    body += ["## ふつうの節", "", "解説: 前置きです。", "", "本人: ひとこと", ""]
+    script = parse_script(nl.join(body))
+    old, plain = script.scenes[1], script.scenes[2]
+    assert strength(old, {}) - strength(plain, {}) == MAIN_BONUS

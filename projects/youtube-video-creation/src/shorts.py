@@ -183,10 +183,13 @@ def strength(scene: Scene, cards: dict) -> int:
     # 選ばれる作りになっていた
     score += min(voices, VOICE_CAP)
 
+    # **書いた人が「ここが山場」と印を付けている。**機械の点より、その印を採る。
+    # 印は取材メモの `main: true`（台本では `@main: true`）。
+    # **2026-09-10 まではセリフの「ここからが本題です」が印だった**が、
+    # ユーザー指示「台本のここからが本題ですはいらない」で読み上げから外した。
+    # 文字のほうも見るのは、それ以前に書いた台本のため
     text = " ".join((getattr(l, "text", "") or "") for l in scene.lines)
-    # **書いた人が「ここが山場」と印を付けている。**取材メモの決まりで、
-    # 答えを出す節は「ここからが本題です」で始める。機械の点より、その印を採る
-    if MAIN_MARK in text:
+    if getattr(scene, "main", False) or MAIN_MARK in text:
         score += MAIN_BONUS
     # **試合の前の話は速報性が低い。**結果が出たあとに配るものなので、
     # 「前日はこう言っていた」だけのショートは中身が古い

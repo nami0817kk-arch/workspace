@@ -82,12 +82,14 @@ sections:
       - https://www.skysports.com/football/news/11661/13583564/mauricio-pochettino-ex-tottenham-and-chelsea-boss-hopes
 
   - id: words
+    # 答えを出す節。ショートはここを選ぶ
+    main: true
     heading: 本人はどう言っているか
     tier: 報道
     telop: 「同じカードで戦っていなかった」
     narrator: 解説
     say:
-      - ここからが本題です。ポチェッティーノは会見でこう続けました。
+      - ポチェッティーノは会見でこう続けました。
       - {voice: ポチェッティーノ, text: 彼らは処分を受け、認めた。それで終わりなのか}
       - {voice: ポチェッティーノ, text: タイトルは2位だったチームのものだ}
       - {voice: ポチェッティーノ, text: 僕たちが同じ規則で競っていなかったのは事実だ}

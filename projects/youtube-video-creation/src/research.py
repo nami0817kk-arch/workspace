@@ -98,6 +98,11 @@ class Section:
     # 空なら今までどおりキャスターと解説の交互。「何が起きたか」は事実なので
     # キャスターだけ、「試合はどう動いたか」は解説だけ、のように節で決められる
     narrator: str = ""
+    # **答えを出す節の印**（2026-09-10 ユーザー「台本のここからが本題ですはいらない」）。
+    # それまではセリフの頭に「ここからが本題です。」と書いて印にしていたが、
+    # **聞く人には要らない言葉**だった。読み上げから外し、指定だけを残す。
+    # ショートはこの印の付いた節を優先して選ぶ（`shorts.MAIN_BONUS`）
+    main: bool = False
 
 
 # まとめの答えの上限。**実測で決めた**（2026-09-08）。
@@ -260,6 +265,7 @@ def build_notes(raw: dict) -> Notes:
             Section(
                 id=str(entry.get("id") or f"s{index}"),
                 heading=str(entry.get("heading", "")).strip(),
+                main=bool(entry.get("main", False)),
                 tier=str(entry.get("tier", "")).strip(),
                 telop=str(entry.get("telop", "")).strip(),
                 say=[s for s in lines if s],
@@ -1118,7 +1124,10 @@ def to_script(notes: Notes, plan: Plan) -> str:
             order = list(BACKGROUNDS[index % len(BACKGROUNDS):]) + list(BACKGROUNDS)
             background = next(c for c in order if c != previous_background)
         previous_background = background
-        lines += [f"## {section.heading}", f"@bg: {moving_background(background)}", ""]
+        lines += [f"## {section.heading}", f"@bg: {moving_background(background)}"]
+        if section.main:
+            lines.append("@main: true")
+        lines.append("")
         for number, sentence in enumerate(section.say):
             # 掛け合いにする。1文目は事実をキャスターが読み、
             # 2文目以降は解説が受ける。交互に振ると同じ文体の読み分けになり、

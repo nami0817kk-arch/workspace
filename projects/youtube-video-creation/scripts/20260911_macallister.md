@@ -103,8 +103,9 @@ cards:
 
 ## その翌日に起きたこと
 @bg: assets/backgrounds/stock/football_fans.mp4
+@main: true
 
-解説: ここからが本題です。翌日、アンフィールドでアトレティコに17分に先制されます。
+解説: 翌日、アンフィールドでアトレティコに17分に先制されます。
   telop: 後半開始早々、ボックス手前から左足
   source: 報道
   card: after_card
