@@ -7,6 +7,7 @@ import '../models/life_event.dart';
 import '../models/news.dart';
 import '../models/cup.dart';
 import '../models/promise.dart';
+import '../models/traits.dart';
 import '../models/season.dart';
 import '../models/attributes.dart';
 
@@ -454,6 +455,18 @@ class Newsroom {
     }
     return const [];
   }
+
+  /// コツを掴んだことを世に出す。
+  ///
+  /// 20年やってきたことが、最後に1つだけ性質になった瞬間。
+  static NewsItem knackLearned(CareerState state, Trait trait) => NewsItem(
+        year: state.year,
+        matchday: state.matchday,
+        kind: NewsKind.milestone,
+        headline: '${state.player.name}、${trait.label}の域に',
+        body: '${trait.description}。'
+            '長く同じ場面で勝負してきたことが、形になった。',
+      );
 
   /// 監督に約束したことを世に出す。
   ///

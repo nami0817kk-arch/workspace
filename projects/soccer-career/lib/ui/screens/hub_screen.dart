@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/attributes.dart';
 import '../../game/eligibility.dart';
 import '../../game/formulas.dart';
+import '../../game/knacks.dart';
 import '../../game/match_brief.dart';
 import '../../game/promises.dart';
 import '../../models/promise.dart';
@@ -31,6 +32,7 @@ import '../budget_lines.dart';
 import '../attribute_shape.dart';
 import '../player_banner.dart';
 import '../readable_width.dart';
+import '../../models/traits.dart';
 import '../trait_row.dart';
 import '../training_sheet.dart';
 import '../transfer_code.dart';
@@ -917,6 +919,8 @@ class _TrainingTab extends StatelessWidget {
         _WeekPlanCard(state: state, controller: controller),
         const SizedBox(height: 16),
         _ExperienceCard(state: state, controller: controller),
+        const SizedBox(height: 16),
+        _KnackCard(state: state, controller: controller),
         const SizedBox(height: 16),
         if (state.injured)
           Card(
@@ -2271,6 +2275,118 @@ class _Side extends StatelessWidget {
           ? [name, const SizedBox(width: 8), crest]
           : [crest, const SizedBox(width: 8), name],
     );
+  }
+}
+
+/// コツ。20年やってきたことが、最後に1つだけ性質になる。
+///
+/// 特性は生まれ持ったもの、という前提はそのまま。ここで開けるのは
+/// **1つだけ**で、しかも自分が何度も勝負してきた場面からしか出ない。
+class _KnackCard extends StatelessWidget {
+  const _KnackCard({required this.state, required this.controller});
+
+  final CareerState state;
+  final CareerController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final missing = Knacks.missing(state);
+    final ready = missing == null;
+    return Card(
+      color: ready ? theme.colorScheme.secondaryContainer : null,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('コツ',
+                style: theme.textTheme.titleSmall?.copyWith(
+                    color: ready
+                        ? theme.colorScheme.onSecondaryContainer
+                        : null)),
+            const SizedBox(height: 4),
+            Text(
+              'キャリアで1つだけ、やってきたことが特性になる。'
+              '何度も勝負してきた場面からしか出ない。',
+              style: ready
+                  ? theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSecondaryContainer)
+                  : muted,
+            ),
+            if (!ready) ...[
+              const SizedBox(height: 8),
+              // 「まだ出ない」のか「もう掴んだ」のかが分からないのが一番困る。
+              Text(missing, style: muted),
+            ] else ...[
+              const SizedBox(height: 12),
+              Align(
+                alignment: Alignment.centerRight,
+                child: FilledButton.tonal(
+                  onPressed: () => _choose(context),
+                  child: const Text('コツを掴む'),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _choose(BuildContext context) async {
+    final offer = Knacks.offer(state);
+    final picked = await showModalBottomSheet<Trait>(
+      context: context,
+      showDragHandle: true,
+      isScrollControlled: true,
+      builder: (sheetContext) {
+        final theme = Theme.of(sheetContext);
+        return SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text('どのコツを掴むか', style: theme.textTheme.titleMedium),
+                const SizedBox(height: 4),
+                Text(
+                  'キャリアで1つだけ。取り消せない。'
+                  'ここに出るものは、あなたが選び続けてきた場面から決まっている。',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant),
+                ),
+                const SizedBox(height: 12),
+                for (final trait in offer)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(sheetContext, trait),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: TraitRow(trait: trait),
+                      ),
+                    ),
+                  ),
+                TextButton(
+                  onPressed: () => Navigator.pop(sheetContext),
+                  child: const Text('今は掴まない'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    if (picked == null) return;
+    final ok = await controller.learnKnack(picked);
+    if (!context.mounted || !ok) return;
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text('${picked.label} を身に付けた')));
   }
 }
 
