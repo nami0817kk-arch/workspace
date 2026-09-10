@@ -32,6 +32,7 @@ class Formulas {
   /// 通算600ゴールのような数字が出る。枠に飛んでも止められるのが
   /// サッカーで、そこが分かれているほうが1点の重みも出る。
   static const double goalConversion = 0.5;
+
   /// アシストは「この後に味方が決める予定」があるときだけ決まる（スコアに
   /// 乗せるため）。予定が無いときは決まらないので、そのぶん高めにしてある。
   /// 予定が無くても点を足す形にすると、自分のクラブだけ点が増えて
@@ -59,12 +60,11 @@ class Formulas {
   ///
   /// 差し引く量はポジションで変える。一律にすると、点を取らない選手の
   /// チームだけが弱くなり、GK や CB のクラブが勝てなくなる。
-  static double teammateGoalShareFor(ScenarioFamily family) =>
-      switch (family) {
-        ScenarioFamily.forward => 0.65,
-        ScenarioFamily.midfield => 0.85,
-        ScenarioFamily.defence || ScenarioFamily.goalkeeper => 1.0,
-      };
+  static double teammateGoalShareFor(ScenarioFamily family) => switch (family) {
+    ScenarioFamily.forward => 0.65,
+    ScenarioFamily.midfield => 0.85,
+    ScenarioFamily.defence || ScenarioFamily.goalkeeper => 1.0,
+  };
 
   /// 局面の成否が評価点に与える増減。
   ///
@@ -122,6 +122,69 @@ class Formulas {
   /// 成長のピーク年齢。これを過ぎると伸びにくくなり、衰え始める。
   static const int peakAge = 27;
   static const int declineAge = 31;
+
+  /// 身体の消耗 0〜100。**最近どう踏み込んできたか**を映す。
+  ///
+  /// 実測（40キャリア×3条件）で、「流す」に上振れが一つも無かった——
+  /// ピーク 73.0/74.7/75.1、平均評価 6.91/6.99/6.99、コツ 3%/88%/98%。
+  /// 見返りは怪我が年 0.22回減ることだけで、**リスクを避けたことに
+  /// 固有の勝ち筋が無かった**。760回ある週の選択が「追い込む」を
+  /// 押し続ける作業になっていた。
+  ///
+  /// 消耗は累積ではなく、その踏み込み方の落ち着き先へ**寄っていく**。
+  /// 累積にすると若い頃の1年で残りが決まってしまい、30歳で流し始めても
+  /// 何も起きない。寄せる形にすると「若いうちは追い込み、歳を取ったら流す」
+  /// がキャリアの形として成立する。
+  /// 「普通」で来た選手が実際に落ち着く値。ここが真ん中で、
+  /// 衰え始めも重傷の割合も、ここで増減 0 になる。
+  ///
+  /// 落ち着き先（50）より低いのは、疲れた週に自動休養が踏み込み方を
+  /// 「流す」に落とすため。**書いてある落ち着き先ではなく、実際に着く値**で
+  /// 真ん中を取らないと、普通に遊んだ選手に代償が付く。
+  static const double strainNeutral = 38;
+
+  /// 週ごとに落ち着き先へ寄る速さ。1シーズン（38週）でほぼ着く。
+  static const double strainDrift = 0.045;
+
+  /// 性格が、その季に落ち着き先へ1歩寄る確率。
+  /// 毎季きっちり動くと、同じ立場の選手が同じ速さで同じ値に着く。
+  static const double personalitySettleChance = 0.7;
+
+  /// 消耗が衰え始めを動かす境目。
+  ///
+  /// **落ち着き先（22/50/86）ではなく、実際に着く値で切る。**
+  /// 疲れた週は自動休養が踏み込み方を「流す」に落とすので、
+  /// 追い込み続けても消耗は 86 には行かない（実測 56）。
+  /// 落ち着き先で境目を引くと、追い込んだ選手に何の代償も付かなかった。
+  /// 実測: 流す 22 / 普通 37 / 追い込む 56。
+  static const double strainFresh = 26;
+  static const double strainEased = 32;
+  static const double strainWorn = 46;
+  static const double strainBurnt = 54;
+
+  /// 消耗が重傷の割合を動かす傾き。実測の幅（22〜56）で 0.82〜1.20 になる。
+  static const double strainSevereSlope = 0.011;
+
+  /// 今週ぶんだけ、落ち着き先へ寄せる。
+  static double driftStrain(double now, double target) =>
+      (now + (target - now) * strainDrift).clamp(0.0, 100.0);
+
+  /// 消耗が衰え始めの年齢をどれだけ前後させるか。
+  ///
+  /// 現役年数は 33〜37 で固定なので、**長く走れること**ではなく
+  /// **落ちるのが遅いこと**が見返りになる。通算記録とタイトルの機会が増え、
+  /// それは殿堂に残る。
+  static int declineOffsetForStrain(double strain) {
+    if (strain <= strainFresh) return 2;
+    if (strain <= strainEased) return 1;
+    if (strain >= strainBurnt) return -2;
+    if (strain >= strainWorn) return -1;
+    return 0;
+  }
+
+  /// 消耗が重傷の引きやすさを何倍にするか。
+  static double severeFactorForStrain(double strain) =>
+      (1 + (strain - strainNeutral) * strainSevereSlope).clamp(0.6, 1.5);
 
   /// 年齢ごとの伸びやすさ。
   ///

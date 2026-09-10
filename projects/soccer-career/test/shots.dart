@@ -120,6 +120,15 @@ void main() {
       await dump(tester, '0${i + 2}-${tabs[i]}');
     }
 
+    // 今週の練習のシート。毎週触る画面なので、必ず目で見る。
+    await tester.tap(find.widgetWithText(Tab, '試合'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('変える'));
+    await tester.pumpAndSettle();
+    await dump(tester, '09-week');
+    await tester.tapAt(const Offset(195, 40));
+    await tester.pumpAndSettle();
+
     controller.startNextMatch();
     await pump(tester, MatchScreen(controller: controller), theme);
     await dump(tester, '06-match');

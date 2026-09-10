@@ -9,11 +9,13 @@ import 'entourage.dart';
 /// 伸びの倍率は持たせない。**手応えの出方（大成功・空回り）そのものを動かす**。
 /// 倍率と確率の両方を動かすと、どちらが効いているのか画面から追えなくなる。
 enum TrainingEffort {
-  easy('流す', '軽く。伸びは薄いが、身体は残る',
-      great: 0.02, flat: 0.45, cost: 0.5, injury: 0.5),
-  normal('普通', 'いつもどおり', great: 0.15, flat: 0.15, cost: 1.0, injury: 1.0),
-  hard('追い込む', '限界まで。大きく伸びるが、消耗も怪我も跳ね上がる',
-      great: 0.45, flat: 0.10, cost: 1.9, injury: 1.8);
+  easy('流す', '軽く。伸びは薄いが、身体が残る。衰え始めが遅くなる',
+      great: 0.02, flat: 0.45, cost: 0.5, injury: 0.5, strain: 22),
+  normal('普通', 'いつもどおり',
+      great: 0.15, flat: 0.15, cost: 1.0, injury: 1.0, strain: 50),
+  hard('追い込む', '限界まで。大きく伸びるが、消耗も怪我も跳ね上がる。'
+      '続ければ衰えが早く来る',
+      great: 0.45, flat: 0.10, cost: 1.9, injury: 1.8, strain: 86);
 
   const TrainingEffort(
     this.label,
@@ -22,6 +24,7 @@ enum TrainingEffort {
     required this.flat,
     required this.cost,
     required this.injury,
+    required this.strain,
   });
 
   final String label;
@@ -34,6 +37,12 @@ enum TrainingEffort {
   /// コンディションの減り方と、怪我のしやすさ。
   final double cost;
   final double injury;
+
+  /// この踏み込み方を続けたときに、身体の消耗が落ち着く先（0〜100）。
+  ///
+  /// コンディション（週ごとに上下する）とは別のもの。こちらは
+  /// **何年その踏み込み方で来たか**を映し、衰え始めと重傷の重さを動かす。
+  final double strain;
 }
 
 /// その週、誰と組むか。
@@ -41,9 +50,9 @@ enum TrainingEffort {
 /// 相方・メンター・競争相手は**試合の外で勝手に動く飾り**だった。
 /// 週の選択に乗せて初めて、その人がクラブに居ることに意味が出る。
 enum TrainingCompanion {
-  alone('一人でやる', '誰とも組まない'),
+  alone('一人でやる', '自分の型で黙々と。大成功は出ないが、空回りもしない'),
   partner('相方と組む', '呼吸が合う。手応えが出やすく、呼吸も深まる'),
-  mentor('メンターに付く', '年長者から盗む。手応えが出やすく、無理をしない'),
+  mentor('メンターに付く', '年長者から盗む。手応えが出やすく、身体も残る'),
   rival('競争相手と張り合う', '一番手応えが出る。そのぶん消耗し、怪我もしやすい');
 
   const TrainingCompanion(this.label, this.description);
@@ -60,8 +69,25 @@ enum TrainingCompanion {
         TrainingCompanion.rival => 0.14,
       };
 
-  /// 空回りの減り方。組んでいれば手は抜けない。
-  double get flatRelief => this == TrainingCompanion.alone ? 0 : 0.04;
+  /// 空回りの減り方（引く値）。
+  ///
+  /// **「一人でやる」は全指標で最下位だった**（実測ピーク 74.7 / 大成功 40 で、
+  /// 組む3つはどれも上）。誰とも組まない週に固有の見返りが無かった。
+  /// 大成功は出ないが崩れもしない——振れ幅の小さいほうを選ぶ手にする。
+  double get flatRelief => switch (this) {
+        TrainingCompanion.alone => 0.05,
+        TrainingCompanion.partner => 0.025,
+        TrainingCompanion.mentor => 0.025,
+        TrainingCompanion.rival => 0.015,
+      };
+
+  /// 身体の消耗の落ち着き先を、どれだけ動かすか。
+  double get strainShift => switch (this) {
+        TrainingCompanion.alone => 0,
+        TrainingCompanion.partner => 0,
+        TrainingCompanion.mentor => -8,
+        TrainingCompanion.rival => 10,
+      };
 
   /// 消耗の増え方。誰かと組めば、その人の時間にも付き合うことになる。
   ///

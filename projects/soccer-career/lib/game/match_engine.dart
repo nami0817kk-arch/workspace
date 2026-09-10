@@ -1219,14 +1219,20 @@ class MatchEngine {
   /// 溜まった疲労で、重傷の割合がどこまで上がるか。
   ///
   /// 数だけ増えて軽傷ばかりなら、無理を通すのはまだ得な賭けになる。
-  static double severeShareFor(int fatigue) =>
-      (Formulas.severeInjuryShare + fatigue * Formulas.severePerFatigue)
-          .clamp(Formulas.severeInjuryShare, Formulas.severeShareMax);
+  /// 溜まった疲労と、身体の消耗で、重傷の割合がどこまで上がるか。
+  ///
+  /// 追い込み続けた身体は、同じ怪我でも重いほうを引く。
+  static double severeShareFor(int fatigue,
+          {double strain = Formulas.strainNeutral}) =>
+      ((Formulas.severeInjuryShare + fatigue * Formulas.severePerFatigue) *
+              Formulas.severeFactorForStrain(strain))
+          .clamp(0.0, Formulas.severeShareMax);
 
   Injury? rollInjury(
     Player player, {
     required double baseChance,
     int fatigue = 0,
+    double strain = Formulas.strainNeutral,
   }) {
     final chance = injuryChance(player, baseChance: baseChance);
 
@@ -1234,7 +1240,7 @@ class MatchEngine {
 
     // 重い怪我ほど出にくくする。軽傷が大半で、たまに長期離脱。
     // 疲れ切った身体ほど、重いほうを引く。
-    final severeShare = severeShareFor(fatigue);
+    final severeShare = severeShareFor(fatigue, strain: strain);
     final roll = _random.nextDouble();
     final severity = roll < 0.6 * (1 - severeShare)
         ? InjurySeverity.light
@@ -1427,6 +1433,7 @@ class MatchEngine {
                 staff.injuryFactor *
                 habits.injuryFactor,
             fatigue: fatigue,
+            strain: development.strain,
           );
 
     return WeekOutcome(

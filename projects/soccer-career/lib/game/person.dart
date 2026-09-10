@@ -5,6 +5,7 @@ import '../models/competition.dart';
 import '../models/personality.dart';
 import '../models/reputation.dart';
 import '../models/traits.dart';
+import 'formulas.dart';
 import 'world.dart';
 
 /// 選手を「一人の人間」として扱う部分。
@@ -29,12 +30,12 @@ class Person {
     final ageFactor = age <= 21
         ? 1.35
         : age <= 27
-            ? 1.2
-            : age <= 30
-                ? 0.9
-                : age <= 33
-                    ? 0.5
-                    : 0.2;
+        ? 1.2
+        : age <= 30
+        ? 0.9
+        : age <= 33
+        ? 0.5
+        : 0.2;
 
     // 契約が短いほど安く買える＝値札は下がる。
     final contractFactor = 0.6 + state.contractYears * 0.15;
@@ -49,8 +50,7 @@ class Person {
     final prestige = World.byId(state.club.countryId).prestige;
     final leagueFactor = 0.6 + prestige * 0.18;
 
-    final value =
-        base * ageFactor * contractFactor * form * leagueFactor * 1.6;
+    final value = base * ageFactor * contractFactor * form * leagueFactor * 1.6;
     return max(50, (value / 50).round() * 50);
   }
 
@@ -74,7 +74,8 @@ class Person {
       gained += World.byId(state.club.countryId).prestige;
     }
     // 華のある選手は同じ働きでも名前が広まる。忘れられる速さは同じ。
-    final fame = state.reputation.fame -
+    final fame =
+        state.reputation.fame -
         2 +
         (gained * state.player.traits.fameFactor).round();
     return fame.clamp(0, 100);
@@ -168,59 +169,51 @@ class Person {
 
   /// 経験で性格が少しずつ変わる。
   ///
-  /// 上手くいけば自信が付き、干されれば削られる。歳を取るとプロ意識が上がり、
-  /// 気性は丸くなる。1シーズンで動くのは1〜2点まで。
+  /// **足し算をやめて、落ち着き先へ1歩ずつ寄せる。**
+  /// 条件が続く限り足し続ける形だったので、40キャリアを回すと
+  /// 全員がプロ意識 20（上限）・自信 15.8・野心 15.4 で引退していた。
+  /// 性格で選手が違ってくるはずの部分（練習の効き・衰え始めの年齢）が、
+  /// 20年やれば誰でも同じになっていた。
+  ///
+  /// 落ち着き先は**生まれ持った値＋今の立場**。立場が変われば戻る。
   Personality evolve(CareerState state) {
     var personality = state.player.personality;
-    final stats = state.seasonStats;
-
-    if (stats.appearances >= 15 && stats.averageRating >= 7.0) {
-      personality = personality.bump(PersonalityAxis.confidence, 1);
-    } else if (stats.appearances <= 5) {
-      personality = personality.bump(PersonalityAxis.confidence, -1);
-    }
-
-    if (state.player.age >= 28) {
-      if (_random.nextDouble() < 0.5) {
-        personality = personality.bump(PersonalityAxis.professionalism, 1);
-      }
-      if (_random.nextDouble() < 0.4) {
-        personality = personality.bump(PersonalityAxis.temper, -1);
-      }
-    }
-
-    // 格上に移ると野心が満たされ、燻ると強くなる。
-    if (state.relations.manager < 30) {
-      personality = personality.bump(PersonalityAxis.ambition, 1);
-    }
-
-    // 同期に先を行かれると発奮する。比べる相手が居ないと、
-    // 自分の成績が良いのか悪いのかも分からない。
-    if (state.rival?.leads(state.player.overall) ?? false) {
-      personality = personality.bump(PersonalityAxis.ambition, 1);
-    }
-
-    // メンターの居るロッカールームで育つと、姿勢が身に付く。
-    if (state.mentor != null && state.player.age <= 23) {
-      personality = personality.bump(PersonalityAxis.professionalism, 1);
-    }
-
-    // 整えた生活はプロ意識になり、崩した生活は削る。
-    //
-    // `Habits.disciplined` / `reckless` は「プロ意識が上がりやすいか」と
-    // 書いてあるのに、**どこからも読まれていなかった**。生活習慣は
-    // 練習の効き・怪我・回復にしか効いておらず、「整えた生活が人を作る」
-    // という肝心のところが死んでいた。
-    //
-    // 毎季必ず動かすと、プロ意識が練習の効きを押し上げて総合力が膨らむ
-    // （出来事のときに実際に膨らんだ）。半分の確率にして、年齢のぶんと
-    // 同じ重さに揃える。
-    if (state.habits.disciplined && _random.nextDouble() < 0.5) {
-      personality = personality.bump(PersonalityAxis.professionalism, 1);
-    } else if (state.habits.reckless && _random.nextDouble() < 0.5) {
-      personality = personality.bump(PersonalityAxis.professionalism, -1);
+    final born = personality.born;
+    for (final axis in PersonalityAxis.values) {
+      // 毎季きっちり1歩動くと、同じ立場の選手が同じ速さで同じ値に着く。
+      if (_random.nextDouble() >= Formulas.personalitySettleChance) continue;
+      personality = personality.settleToward(
+        axis,
+        born[axis] + _shiftFor(axis, state),
+      );
     }
     return personality;
+  }
+
+  /// 今の立場が、生まれ持った値からどれだけ動かすか。
+  int _shiftFor(PersonalityAxis axis, CareerState state) {
+    final stats = state.seasonStats;
+    return switch (axis) {
+      // 上手くいけば自信が付き、干されれば削られる。
+      PersonalityAxis.confidence =>
+        (stats.appearances >= 15 && stats.averageRating >= 7.0 ? 3 : 0) +
+            (stats.appearances >= 25 && stats.averageRating >= 7.3 ? 2 : 0) +
+            (stats.appearances <= 5 ? -4 : 0),
+      // 燻ると強くなり、満たされると落ち着く。
+      PersonalityAxis.ambition =>
+        (state.relations.manager < 30 ? 3 : 0) +
+            ((state.rival?.leads(state.player.overall) ?? false) ? 2 : 0) +
+            (state.club.tier == 1 && state.leaguePosition <= 3 ? -2 : 0),
+      // 整えた生活と、年齢と、若いうちに見た背中。
+      PersonalityAxis.professionalism =>
+        (state.habits.disciplined ? 4 : 0) +
+            (state.habits.reckless ? -4 : 0) +
+            (state.player.age >= 28 ? 2 : 0) +
+            (state.mentor != null && state.player.age <= 23 ? 2 : 0),
+      // 歳を取ると丸くなる。崩した生活は荒くする。
+      PersonalityAxis.temper =>
+        (state.player.age >= 28 ? -3 : 0) + (state.habits.reckless ? 2 : 0),
+    };
   }
 
   /// 監督の信頼が出場機会に与える下駄。

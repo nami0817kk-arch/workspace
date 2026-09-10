@@ -1085,7 +1085,9 @@ class CareerController extends ChangeNotifier {
           result.rating,
           used: match.successes,
           focus: state.focus,
-          declineOffset: state.staff.declineAgeOffset,
+          // 追い込み続けた身体は早く落ちる。流してきた身体は遅く落ちる。
+          declineOffset: state.staff.declineAgeOffset +
+              Formulas.declineOffsetForStrain(state.development.strain),
           plateau: state.development.inPlateau,
           environment: _environmentFactor(state),
         ),
@@ -1103,10 +1105,19 @@ class CareerController extends ChangeNotifier {
       }
       final companion =
           tired ? TrainingCompanion.alone : state.companion;
+      final effort = tired ? TrainingEffort.easy : state.effort;
+      // 身体の消耗は、その週の踏み込み方の落ち着き先へ少しだけ寄る。
+      // 自動で休んだ週も「流した週」として身体が戻る（実際に休んでいる）。
+      state.development = state.development.copyWith(
+        strain: Formulas.driftStrain(
+          state.development.strain,
+          (effort.strain + companion.strainShift).clamp(0.0, 100.0),
+        ),
+      );
       final week = _match.applyWeek(
         player,
         menu: tired ? TrainingMenu.rest : state.menu,
-        effort: tired ? TrainingEffort.easy : state.effort,
+        effort: effort,
         companion: companion,
         drill: tired ? null : state.drill,
         staff: state.staff,
@@ -1146,7 +1157,8 @@ class CareerController extends ChangeNotifier {
       newInjury = week.injury ??
           _match.rollInjury(player,
               baseChance: injuryBaseChanceFor(state),
-              fatigue: state.fatigue.value);
+              fatigue: state.fatigue.value,
+              strain: state.development.strain);
       if (newInjury != null) {
         // 復帰の進め方で離脱の長さが変わる。
         newInjury = Injury(
