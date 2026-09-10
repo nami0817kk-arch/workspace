@@ -30,14 +30,14 @@ people:
   - イサク
   - シメオネ
 
-short_title: "バルコラ、初先発の60分に起きたこと"
+short_title: "マクアリスターの逆転弾でリヴァプールが逆転勝ち"
 
 theme:
   id: cl_liverpool_atletico
   league: england
   kind: match
   topic: リヴァプール
-  title: リヴァプールが逆転でCL初戦を制す。しかし60分に何が起きたか
+  title: マクアリスターの逆転弾でリヴァプールがCL白星発進。しかし60分に何が起きたか
   hook: アンフィールドで、先に失点しての勝利でした。
   question: 勝った側に何が起きていたのか
 

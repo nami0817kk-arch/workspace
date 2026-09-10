@@ -24,14 +24,14 @@ people:
   - 渡辺剛
   - スタイン
 
-short_title: "渡辺剛フル出場、バルサに5発された夜"
+short_title: "ヤマルのバルサに、敗れた監督が言ったこと"
 
 theme:
   id: cl_barca_feyenoord
   league: spain
   kind: match
   topic: バルセロナ
-  title: バルセロナ、CL初戦で5得点。敗れた監督が試合後に認めたこととは
+  title: ヤマルが1ゴール2アシスト。バルセロナの5得点に、敗れた監督が認めたこととは
   hook: 日本代表の渡辺剛がフル出場した一戦です。
   question: 5点を取られた側は、何を認めたのか
 

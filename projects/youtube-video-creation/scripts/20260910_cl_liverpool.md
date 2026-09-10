@@ -1,8 +1,8 @@
 ---
-title: リヴァプールが逆転でCL初戦を制す。しかし60分に何が起きたか
+title: マクアリスターの逆転弾でリヴァプールがCL白星発進。しかし60分に何が起きたか
 format: news
 voice_min: 18.0
-short_title: バルコラ、初先発の60分に起きたこと
+short_title: マクアリスターの逆転弾でリヴァプールが逆転勝ち
 thumbnail_line1: 逆転でCL白星スタート
 thumbnail_line2: だが60分に ●●●●●●
 thumbnail_tags:
@@ -17,11 +17,11 @@ thumbnail_crest_main: []
 thumbnail_photo: assets/photos/20260910_cl_liverpool/01.jpg
 bg: assets/backgrounds/stadium.png
 date: 2026年9月10日
-intro_title: リヴァプールが逆転でCL初戦を制す。しかし60分に何が起きたか
+intro_title: マクアリスターの逆転弾でリヴァプールがCL白星発進。しかし60分に何が起きたか
 intro_label: 海外サッカー ニュース
 outro_title: 続報は次回お伝えします
 outro_sub: チャンネル登録でお待ちください
-description: 'リヴァプールが逆転でCL初戦を制す。しかし60分に何が起きたか
+description: 'マクアリスターの逆転弾でリヴァプールがCL白星発進。しかし60分に何が起きたか
 
 
   この動画が答える問い: 勝った側に何が起きていたのか
@@ -81,8 +81,8 @@ cards:
 ## オープニング
 @bg: assets/backgrounds/night.png
 
-キャスター: リヴァプールが逆転でCL初戦を制す。しかし60分に何が起きたか。
-  telop: リヴァプールが逆転でCL初戦を制す。しかし60分に何が起きたか
+キャスター: マクアリスターの逆転弾でリヴァプールがCL白星発進。しかし60分に何が起きたか。
+  telop: マクアリスターの逆転弾でリヴァプールがCL白星発進。しかし60分に何が起きたか
   se: assets/audio/se_pon.wav
 キャスター: アンフィールドで、先に失点しての勝利でした。
   telop: 今回の問い: 勝った側に何が起きていたのか
