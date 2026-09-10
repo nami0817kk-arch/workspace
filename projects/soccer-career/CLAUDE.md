@@ -27,6 +27,11 @@
 - **保存データの互換性は必ず保つ。** 項目を足すときは `fromJson` に既定値を置く
   （`Position.parse` の fw/mf/df、`potential`、`agent`、`salary` などが先例）。
   更新した途端にキャリアが消えるのが一番のがっかり。
+  **これは `test/save_guard_test.dart` が機械で見張る**。保存データの鍵を
+  1つずつ消して `fromJson` にかけ、投げたら落ちる。初版からある骨格41件だけを
+  `structural` に並べてあり、**そこに無い項目は既定値が要る**。
+  既定値を忘れると `fromJson` が投げ、`SaveRepository.load` はそれを握り潰して
+  新規扱いにする——つまり**黙ってキャリアが消える**。エラーも出ない。
 
 ## 構成
 
@@ -720,6 +725,7 @@ Web版は master への push で Cloudflare Pages に自動デプロイされる
 - `test/discipline_test.dart` … カードの出方、退場で試合が終わること、出場停止の消化と保存互換
 - `test/selection_test.dart` の「デビュー戦の1試合だけでは干されない」… 直近の出来の埋め方
 - `test/rating_test.dart` … 決定機の評価点と自動進行の物差しの一致、休養だけが疲労を抜くこと
+- `test/save_guard_test.dart` … 保存データの鍵を1つずつ消して読めることを見る（既定値の忘れ物の見張り）
 - `test/dormant_test.dart` … 「作ってあるのに効いていない」の見張り。生活習慣がプロ意識に効くこと、移籍の窓が画面に出ること、`Habits` の判断がどれも読まれていること
 - `test/admin_test.dart` … 管理画面の入口が `kAdmin` の外に無いこと、改変の印、特性と能力の書き換え
 - `test/admin_impact_test.dart` … 「ゲームへの効き」が判定と同じ関数を読んでいること、前後の差分
