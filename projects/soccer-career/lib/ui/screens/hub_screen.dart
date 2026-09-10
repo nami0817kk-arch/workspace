@@ -11,6 +11,7 @@ import '../../models/career.dart';
 import '../../models/personality.dart';
 import '../../models/objective.dart';
 import '../../models/competition.dart';
+import '../../models/cup.dart';
 import '../../game/match_engine.dart';
 import '../../game/newsroom.dart';
 import '../../game/ranking.dart';
@@ -44,7 +45,12 @@ class HubScreen extends StatelessWidget {
   final CareerController controller;
 
   Future<void> _playNext(BuildContext context) async {
-    controller.startNextMatch();
+    // カップ戦の週なら、そちらへ。1週1試合の刻みは変えない。
+    if (controller.state?.pendingCup != null) {
+      controller.startCupMatch();
+    } else {
+      controller.startNextMatch();
+    }
     if (controller.currentMatch == null) return;
     await Navigator.of(context).push(MaterialPageRoute(
       builder: (_) => MatchScreen(controller: controller),
@@ -245,7 +251,10 @@ class _PrimaryAction extends StatelessWidget {
       );
     }
     final out = state.injured || state.suspended;
-    final label = state.pendingInternational
+    final cup = state.pendingCup;
+    final label = cup != null
+        ? (out ? '${cup.kind.label}を欠場' : '${cup.kind.label}へ')
+        : state.pendingInternational
         ? (state.calledUp && !out ? '代表戦へ' : '代表ウィークを飛ばす')
         : state.suspended
             ? '出場停止で欠場'
@@ -524,9 +533,11 @@ class _NextMatchCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-                state.pendingInternational
-                    ? '代表ウィーク'
-                    : '第${state.matchday}節 / $total',
+                state.pendingCup != null
+                    ? state.pendingCup!.label
+                    : state.pendingInternational
+                        ? '代表ウィーク'
+                        : '第${state.matchday}節 / $total',
                 style: theme.textTheme.labelMedium
                     ?.copyWith(color: theme.colorScheme.primary)),
             const SizedBox(height: 6),
@@ -541,14 +552,36 @@ class _NextMatchCard extends StatelessWidget {
               const SizedBox(height: 10),
             ],
             Text(
-              state.pendingInternational
-                  ? (state.calledUp && !state.injured
-                      ? '代表に招集された'
-                      : '招集は無かった')
-                  : '${state.isHome(state.matchday) ? "ホーム" : "アウェイ"}  '
-                      'vs ${state.opponentFor(state.matchday).name}',
+              state.pendingCup != null
+                  ? '${state.pendingCup!.round.neutral ? "中立地" : state.pendingCup!.home ? "ホーム" : "アウェイ"}  '
+                      'vs ${state.pendingCup!.opponentName}'
+                  : state.pendingInternational
+                      ? (state.calledUp && !state.injured
+                          ? '代表に招集された'
+                          : '招集は無かった')
+                      : '${state.isHome(state.matchday) ? "ホーム" : "アウェイ"}  '
+                          'vs ${state.opponentFor(state.matchday).name}',
               style: theme.textTheme.titleLarge,
             ),
+            // 2戦合計の第2戦は、第1戦の結果を背負っている。
+            if (state.pendingCup?.carriesAggregate ?? false)
+              Text(
+                '第1戦は ${state.pendingCup!.aggregateFor}-'
+                '${state.pendingCup!.aggregateAgainst}。'
+                '${state.pendingCup!.aggregateMargin > 0 ? "リードして迎える" : state.pendingCup!.aggregateMargin < 0 ? "追いかける" : "五分"}',
+                style: theme.textTheme.bodySmall
+                    ?.copyWith(color: theme.colorScheme.primary),
+              ),
+            // 一発勝負。負ければそこで終わる。
+            if (state.pendingCup != null &&
+                state.pendingCup!.round != CupRound.group)
+              Text(
+                state.pendingCup!.round.twoLegged
+                    ? '2戦合計で決まる。'
+                    : '負ければそこで終わり。引き分けならPK戦。',
+                style: theme.textTheme.bodySmall
+                    ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+              ),
             if (state.suspended || state.yellowCards > 0) ...[
               const SizedBox(height: 8),
               Row(
@@ -916,6 +949,10 @@ class _ClubTab extends StatelessWidget {
           const SizedBox(height: 16),
           _WorldLeagueCard(state: state),
           const SizedBox(height: 16),
+          if (state.domesticCup != null || state.continentalCup != null) ...[
+            _CupCard(state: state),
+            const SizedBox(height: 16),
+          ],
           _ScorerCard(state: state),
           const SizedBox(height: 16),
           _TableCard(state: state),
@@ -2484,6 +2521,88 @@ class _NewsCard extends StatelessWidget {
 }
 
 /// リーグの得点ランキング。自分がどのあたりに居るのかを見せる。
+/// 今シーズンのカップ戦。どこまで来ていて、次は誰と当たるか。
+class _CupCard extends StatelessWidget {
+  const _CupCard({required this.state});
+
+  final CareerState state;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final runs = [
+      for (final run in [state.domesticCup, state.continentalCup]) ?run,
+    ];
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('カップ戦', style: theme.textTheme.titleSmall),
+            const SizedBox(height: 8),
+            for (final run in runs) ...[
+              Row(
+                children: [
+                  Icon(
+                    run.won
+                        ? Icons.emoji_events
+                        : run.eliminated
+                            ? Icons.do_not_disturb_on_outlined
+                            : Icons.sports_soccer_outlined,
+                    size: 18,
+                    color: run.won
+                        ? theme.colorScheme.primary
+                        : run.eliminated
+                            ? theme.colorScheme.outlineVariant
+                            : theme.colorScheme.onSurfaceVariant,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(run.label,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                            color: run.won
+                                ? theme.colorScheme.primary
+                                : run.eliminated
+                                    ? theme.colorScheme.onSurfaceVariant
+                                    : null)),
+                  ),
+                ],
+              ),
+              // グループは勝ち点で突破が決まる。線をそのまま出す。
+              if (run.running && run.round == CupRound.group)
+                Padding(
+                  padding: const EdgeInsets.only(left: 26, bottom: 4),
+                  child: Text(
+                    '突破の目安は勝点${CupRun.groupQualifyPoints}',
+                    style: muted,
+                  ),
+                ),
+              if (run.running && run.round != CupRound.group)
+                Padding(
+                  padding: const EdgeInsets.only(left: 26, bottom: 4),
+                  child: Text(
+                    run.next != null
+                        ? '次は ${run.next!.opponentName}'
+                        : '次の相手はまだ決まっていない',
+                    style: muted,
+                  ),
+                ),
+            ],
+            const SizedBox(height: 4),
+            Text(
+              'カップ戦の週は練習ができない。連戦のぶんだけ消耗する。',
+              style: muted,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _ScorerCard extends StatelessWidget {
   const _ScorerCard({required this.state});
 

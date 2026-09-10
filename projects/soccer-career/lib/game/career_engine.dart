@@ -5,6 +5,7 @@ import '../models/attributes.dart';
 import '../models/career.dart';
 import '../models/club.dart';
 import '../models/competition.dart';
+import '../models/cup.dart';
 import '../models/aptitude.dart';
 import '../models/country.dart';
 import '../models/entourage.dart';
@@ -217,6 +218,8 @@ class CareerEngine {
       // 最初から練習している状態で始める。休養が既定だと、育成タブを
       // 開かない人は何も伸びないまま1年が過ぎる。
       menu: TrainingMenu.defaultFor(position),
+      // 国内カップは毎年、順位に関係なく全クラブが出る。
+      domesticCup: CupRun(kind: CupKind.domestic, round: CupRound.round32),
       nationalTeamId: home.id,
       manager: Manager.roll(_random),
       competitor: Teammate.roll(_random,
@@ -347,6 +350,8 @@ class CareerEngine {
       state.internationalGoals += result.goals;
       return;
     }
+    // カップ戦も順位表には影響しない。勝ち上がりは `Cups` が持つ。
+    if (result.cup != null) return;
 
     final opponent = state.opponentFor(result.matchday);
     _row(state, state.club.id)
@@ -1013,6 +1018,11 @@ class CareerEngine {
       agent: state.agent,
       salary: accepted.salary,
       menu: state.menu,
+      // 国内カップは毎年ある。大陸カップは前季の順位か、国内カップ優勝で。
+      domesticCup: CupRun(kind: CupKind.domestic, round: CupRound.round32),
+      continentalCup: inContinental(state)
+          ? CupRun(kind: CupKind.continental, round: CupRound.group)
+          : null,
       // 週の設定はシーズンを跨いで残す。ここを渡し忘れると、
       // 毎年こっそり「普通・一人」に戻る（実測で、追い込むを選び続けても
       // 大成功が 46回 にしかならなかった）。
@@ -1255,15 +1265,28 @@ class CareerEngine {
   ///
   /// リーグ戦を戦い終えてから呼ぶ。出場していなければ none のまま。
   void resolveSeasonEnd(CareerState state) {
-    state.continentalStage = competitions.runContinental(
-      state,
-      qualified: inContinental(state),
-    );
+    // 到達ラウンドは**戦った結果**から決まる。
+    //
+    // かつては `runContinental` / `runDomesticCup` がここで振っていた。
+    // 年俸にも評判にも記録にも効く数字なのに、プレイヤーは1分もプレーしない
+    // ——「優勝した」と書かれるだけで、そこに試合が無かった。
+    // まだ戦い終えていない大会は、残りをその場で消化する（引退・強制終了用）。
+    // カップ戦を持たない保存データ（この仕組みより前のもの）は、
+    // これまでどおりその場で振って埋める。黙って不出場にすると、
+    // 続きから遊ぶ人のシーズンから大会が1つ消える。
+    final continental = state.continentalCup;
+    state.continentalStage = continental == null
+        ? competitions.runContinental(state, qualified: inContinental(state))
+        : continental.running
+            ? competitions.runContinental(state, qualified: true)
+            : continental.continentalStage;
     if (state.continentalStage.participated) {
       state.continentalExperience = true;
     }
-    // 国内カップは毎年ある。順位に関係なく全クラブが出る。
-    state.cupStage = competitions.runDomesticCup(state);
+    final domestic = state.domesticCup;
+    state.cupStage = domestic == null || domestic.running
+        ? competitions.runDomesticCup(state)
+        : domestic.domesticStage;
     // 世界大会は4年に1度。代表に呼ばれている選手だけ。
     state.worldCupStage = Competitions.isWorldCupYear(state.year)
         ? competitions.runWorldCup(state, calledUp: state.calledUp)
