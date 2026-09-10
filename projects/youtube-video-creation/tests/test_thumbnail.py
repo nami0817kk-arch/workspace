@@ -734,3 +734,37 @@ def test_印を書かなければ何も置かない(tmp_path):
     before = canvas.copy()
     mod._face_clash(canvas, "", str(_config().video.font_path()))
     assert canvas.tobytes() == before.tobytes()
+
+
+def test_国旗はVSの上に置く(tmp_path, monkeypatch):
+    """**右下だと顔にかかる**（2026-09-10 ユーザー「vsの上において」）。
+
+    真ん中の上なら「この2人が属しているもの」として読める。
+    上に置いた回は、右下の枠には出さない（同じ絵が2つ並ぶ）。
+    """
+    from PIL import Image
+
+    from src import thumbnail as mod
+
+    flag = tmp_path / "flag.png"
+    Image.new("RGBA", (300, 210), (0, 155, 58, 255)).save(flag)
+    monkeypatch.setattr("src.crest.find", lambda name, root=None: flag)
+
+    a = tmp_path / "a.jpg"
+    b = tmp_path / "b.jpg"
+    Image.new("RGB", (600, 900), "white").save(a)
+    Image.new("RGB", (600, 900), "white").save(b)
+
+    placed = []
+    monkeypatch.setattr(mod, "_paste_crest",
+                        lambda layer, tag, right, bottom: placed.append(tag) or 300)
+
+    out = tmp_path / "th.png"
+    mod.build_thumbnail(_config(), "", out, style="band", lines=("上", "下"),
+                        photos=[str(a), str(b)], tags=["ブラジル"], face_link="VS")
+    assert not placed, "上に置いたのに、右下にも出している"
+
+    with Image.open(out) as im:
+        px = im.convert("RGB")
+    # 真ん中の上（VSの帯より上）に、国旗の緑が乗っている
+    assert px.getpixel((mod.SIZE[0] // 2, 60))[1] > 100

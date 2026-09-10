@@ -43,6 +43,9 @@ POINTS_STROKE = 6
 # 並べた顔の継ぎ目に置く印（`thumbnail.face_link`）。対立の回だけ出す
 FACE_CLASH_SIZE = 96
 FACE_CLASH_GROUND = (200, 22, 34)
+# 印の上に置く国旗・エンブレムの高さと、印との間
+FACE_CLASH_FLAG_H = 118
+FACE_CLASH_GAP = 18
 BADGE_HEIGHT = 62
 SUBTITLE_HEIGHT = 70
 DATE_HEIGHT = 40
@@ -515,7 +518,9 @@ def _band_thumbnail(
         # **並べれば全面が写真になる。**ぼかしの下地が要らない
         canvas = _tile_photos(tiles)
         if len(tiles) == 2 and face_link:
-            _face_clash(canvas, face_link, font_path)
+            _face_clash(canvas, face_link, font_path,
+                        tags if crests is None else crests)
+            crests = []          # 上に置いたので、右下には出さない
         portrait = False
     else:
         portrait = _is_portrait(background, ratio=0.95)
@@ -683,7 +688,8 @@ def _is_portrait(background: str | None, ratio: float = 1.1) -> bool:
         return False
 
 
-def _face_clash(canvas: Image.Image, text: str, font_path: str) -> None:
+def _face_clash(canvas: Image.Image, text: str, font_path: str,
+                crests: list[str] | None = None) -> None:
     """並べた2枚の**継ぎ目に、ぶつかっている印を置く**（2026-09-10 ユーザー指示
     「喧嘩している感出して」）。
 
@@ -706,6 +712,16 @@ def _face_clash(canvas: Image.Image, text: str, font_path: str) -> None:
     draw.text((cx - width / 2, cy - FACE_CLASH_SIZE * 0.60), text, font=font,
               fill=(255, 255, 255, 255), stroke_width=5, stroke_fill=(0, 0, 0, 235))
     canvas.alpha_composite(layer)
+
+    # **印の上に置く**（2026-09-10 ユーザー「ブラジル国旗はvsの上において」）。
+    # 右下だと顔にかかるうえ、2人のどちらの持ち物かが曖昧になる。
+    # 真ん中の上なら「この2人が属しているもの」として読める
+    for name in (crests or [])[:1]:
+        mark = _crest_image(name, FACE_CLASH_FLAG_H)
+        if mark is None:
+            continue
+        top = int(box[1]) - mark.height - FACE_CLASH_GAP
+        canvas.alpha_composite(mark, (cx - mark.width // 2, max(8, top)))
 
 
 def _tile_photos(paths: list[str]) -> Image.Image:
@@ -1055,6 +1071,19 @@ def _draw_points(draw: ImageDraw.ImageDraw, points: list[str], font_path: str) -
 def _crest_px() -> int:
     from . import crest as crest_mod
     return crest_mod.CREST_PX
+
+
+def _crest_image(tag: str, height: int) -> Image.Image | None:
+    """エンブレム・国旗を、指定の高さで読み込む。無ければ None。"""
+    from . import crest as crest_mod
+
+    path = crest_mod.find(tag)
+    if path is None:
+        return None
+    with Image.open(path) as source:
+        mark = source.convert("RGBA")
+    ratio = height / mark.height
+    return mark.resize((max(1, int(mark.width * ratio)), height), Image.LANCZOS)
 
 
 def _paste_crest(layer: Image.Image, tag: str, right: int, bottom: int) -> int:
