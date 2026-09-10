@@ -42,8 +42,15 @@ jobs:
         run: flutter pub get
 
       # Cloudflare Pages はプロジェクトのルートで配信するため base-href は "/"。
+      #
+      # SOCCER_ADMIN=true の間は、公開サイトにも管理画面（右上の ⋮ → 管理）が入る。
+      # **公開サイトを開いた誰でも触れる**ので、本来は入れない前提の機能。
+      # 2026-09-10 にユーザーの指示で一時的に有効化した（実機で確認するため）。
+      # **戻すときはこの1行から `--dart-define` を消すだけ**。
+      # 入っているかどうかは `python tool/check_release.py` で確かめられる
+      # （有効な間は「入っています」と出るのが正しい）。
       - name: Build web
-        run: flutter build web --release --base-href "/"
+        run: flutter build web --release --base-href "/" --dart-define=SOCCER_ADMIN=true
 
       # 無ければ作る。既にあれば重複エラーが返るだけで、後続には影響しない。
       # production_branch を master に固定するのが要点。デプロイ時の --branch と
