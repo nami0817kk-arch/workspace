@@ -146,6 +146,12 @@ class Formulas {
   /// 週ごとに落ち着き先へ寄る速さ。1シーズン（38週）でほぼ着く。
   static const double strainDrift = 0.045;
 
+  /// 引退させた選手が、次のキャリアの監督・メンターとして現れる確率。
+  ///
+  /// 1.0 にすると毎回同じ顔が出て、世界が自分の過去だけで埋まる。
+  /// 0.1 だと20年遊んで一度も会わない。
+  static const double legendCastChance = 0.4;
+
   /// 性格が、その季に落ち着き先へ1歩寄る確率。
   /// 毎季きっちり動くと、同じ立場の選手が同じ速さで同じ値に着く。
   static const double personalitySettleChance = 0.7;

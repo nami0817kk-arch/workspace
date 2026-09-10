@@ -69,14 +69,29 @@ class _HallScreenState extends State<HallScreen> {
                 )
               : ListView.builder(
                   padding: const EdgeInsets.all(16),
-                  itemCount: legends.length,
-                  itemBuilder: (context, i) => Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: _LegendCard(
-                      legend: legends[i],
-                      onRemove: () => _remove(i, legends[i]),
-                    ),
-                  ),
+                  itemCount: legends.length + 1,
+                  itemBuilder: (context, i) {
+                    // 一番上に歴代の記録。次の選手が追う的が無いと、
+                    // 殿堂は過去を眺めるだけの場所になる。
+                    if (i == 0) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: _RecordsCard(hall: widget.controller.hall),
+                      );
+                    }
+                    final legend = legends[i - 1];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: _LegendCard(
+                        legend: legend,
+                        // 1人しか居ないうちは「歴代1位」に意味が無い。
+                        records: legends.length >= 2
+                            ? widget.controller.hall.recordsHeldBy(legend)
+                            : const [],
+                        onRemove: () => _remove(i - 1, legend),
+                      ),
+                    );
+                  },
                 ),
         ),
       ),
@@ -110,10 +125,74 @@ enum HallPlaque {
   }
 }
 
+/// 歴代の記録。次のキャリアが追う的。
+class _RecordsCard extends StatelessWidget {
+  const _RecordsCard({required this.hall});
+
+  final Hall hall;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final records = hall.records;
+    if (records.isEmpty) return const SizedBox.shrink();
+    return Card(
+      color: theme.colorScheme.surfaceContainerHighest,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('歴代の記録', style: theme.textTheme.titleSmall),
+            const SizedBox(height: 8),
+            for (final r in records)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Row(
+                  children: [
+                    SizedBox(
+                      width: 96,
+                      child: Text(
+                        r.label,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      '${r.value}${r.unit}',
+                      style: theme.textTheme.titleSmall,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        r.holder,
+                        style: theme.textTheme.bodySmall,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
 class _LegendCard extends StatelessWidget {
-  const _LegendCard({required this.legend, required this.onRemove});
+  const _LegendCard({
+    required this.legend,
+    required this.records,
+    required this.onRemove,
+  });
 
   final Legend legend;
+
+  /// この選手が持っている歴代の記録。
+  final List<HallRecord> records;
+
   final VoidCallback onRemove;
 
   @override
@@ -234,6 +313,21 @@ class _LegendCard extends StatelessWidget {
                     style: muted,
                   ),
                 Text('引退後: ${legend.secondCareer.label}', style: muted),
+                if (records.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 6,
+                    children: [
+                      for (final r in records)
+                        Chip(
+                          label: Text('歴代1位 ${r.label}'),
+                          backgroundColor: theme.colorScheme.tertiaryContainer,
+                          visualDensity: VisualDensity.compact,
+                        ),
+                    ],
+                  ),
+                ],
                 if (legend.titles > 0 || legend.worldCupBest.participated) ...[
                   const SizedBox(height: 10),
                   Wrap(
