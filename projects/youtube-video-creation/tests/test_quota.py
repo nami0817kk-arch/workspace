@@ -228,3 +228,37 @@ def test_表に無い呼び出しでも止めない(tmp_path):
     record("まったく知らない.list", ledger)          # 例外を投げない
     book = json.loads(ledger.read_text(encoding="utf-8"))
     assert list(book.values())[0]["まったく知らない.list"] == 1
+
+
+def test_本数で止める(tmp_path):
+    """**数えているのに止めていなかった**（2026-09-10）。
+
+    37本上げたところで枠が尽き、予約の付け替えもコメントも打てなくなった。
+    警告だけでは、走っている一括処理は止まらない。
+    """
+    import json
+    from datetime import datetime, timezone
+
+    from src import quota
+
+    now = datetime(2026, 9, 10, 3, 0, tzinfo=timezone.utc)
+    day = now.astimezone(quota.pacific(now)).strftime("%Y-%m-%d")
+    ledger = tmp_path / "quota.json"
+    ledger.write_text(json.dumps({day: {"videos.insert": quota.SAFE_UPLOADS_PER_DAY}}),
+                      encoding="utf-8")
+    assert quota.uploads_today(ledger, now) == quota.SAFE_UPLOADS_PER_DAY
+    # 目安は 33 本。110,000 ではなく 70,000 に見えたので下げた
+    assert quota.SAFE_UPLOADS_PER_DAY == 33
+    assert quota.OBSERVED_CEILING == 70000
+    # 1本 1,650（投稿＋サムネ）で 33本 = 54,450。読み取りと更新のぶんが残る
+    assert quota.SAFE_UPLOADS_PER_DAY * 1650 < quota.OBSERVED_CEILING
+
+
+def test_次に枠が戻る時刻を出せる():
+    """止めるときは「いつ戻るか」まで言う。"""
+    from datetime import datetime, timezone
+
+    from src import quota
+
+    text = quota.reset_text(datetime(2026, 9, 10, 3, 0, tzinfo=timezone.utc))
+    assert "-" in text and ":" in text

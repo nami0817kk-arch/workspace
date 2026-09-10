@@ -68,12 +68,25 @@ DAILY = 10000
 # **投稿数そのものにも上限がある**（Video Uploads per day）。
 # 記録していなかったが、コンソールに出ている。ふつうは Queries が先に尽きる
 DAILY_UPLOADS = 100
-# **先に尽きるのはこちら**（2026-09-09 実測）。枠を1600×本数で使い切るので、
-# 投稿数の100本より前に止まる。64本目の投稿は通り、その直後に落ちた
-SAFE_UPLOADS_PER_DAY = 60
-# **実際にぶつかった線**（2026-09-09）。110,602 使ったところで quotaExceeded。
+# **先に尽きるのはこちら**。枠を1600×本数で使い切るので、投稿数の100本より前に止まる。
+#
+# **60 → 33 に下げた**（2026-09-10）。台帳の4日ぶんを並べたら、上限は
+# 110,000 ではなく **70,000** に見える:
+#
+#   09-06  83,636 / 51本   落ちていない
+#   09-07  27,550 / 16本   余裕
+#   09-08 108,903 / 64本   落ちた
+#   09-09  69,280 / 37本   落ちた   ← **70,000 の 720 手前**
+#
+# 台帳は「投げた時点で数える」ので、**手元で失敗してGoogleに届かなかったぶんも
+# 足し込んでいる**。失敗の少なかった 09-09 だけ台帳と実際がほぼ一致し、
+# 70,000 の直前で落ちた、と見ると4日とも説明がつく。
+# **コンソールは別アカウントの持ち物で開けない**（2026-09-10 に確認）。
+# 数字が分かったら差し替える
+SAFE_UPLOADS_PER_DAY = 33
+# **実際にぶつかった線**。09-09 は 69,280 で quotaExceeded。
 # 正確な上限はコンソールにしか無いので、**通った/落ちたの境目**を目安にする
-OBSERVED_CEILING = 110000
+OBSERVED_CEILING = 70000
 LEDGER = Path("research/quota.json")
 _WARNED: set[str] = set()
 # 枠は太平洋時間の深夜0時に戻る。**夏と冬で1時間ずれる**
@@ -161,6 +174,14 @@ def used(path: Path = LEDGER, now: datetime | None = None) -> int:
 
 def left(path: Path = LEDGER, now: datetime | None = None) -> int:
     return max(0, DAILY - used(path, now))
+
+
+def reset_text(now: datetime | None = None) -> str:
+    """次に枠が戻る時刻（日本時間）。止めるときに一緒に出す。"""
+    from datetime import timedelta, timezone
+
+    jst = timezone(timedelta(hours=9))
+    return resets_at(now).astimezone(jst).strftime("%m-%d %H:%M")
 
 
 def uploads_today(path: Path = LEDGER, now: datetime | None = None) -> int:

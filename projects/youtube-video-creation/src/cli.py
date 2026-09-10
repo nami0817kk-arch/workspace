@@ -2739,6 +2739,19 @@ def _cmd_upload(args, config) -> int:
     for line in quota_mod.preflight({"videos.insert": 1, "thumbnails.set": 1}):
         print(line)
 
+    # **本数で止める**（2026-09-10）。それまで警告だけで、止めていなかった。
+    # 37本上げたところで枠が尽き、**予約の付け替えもコメントも打てなくなった**。
+    # 数えているのに止めないなら、数えている意味がない
+    done = quota_mod.uploads_today()
+    if done >= quota_mod.SAFE_UPLOADS_PER_DAY and not args.anyway:
+        print(f"■ 今日はもう {done} 本上げています"
+              f"（目安 {quota_mod.SAFE_UPLOADS_PER_DAY} 本）", file=sys.stderr)
+        print(f"  枠は太平洋時間の0時に戻ります。次は {quota_mod.reset_text()}",
+              file=sys.stderr)
+        print("  ここで止めないと、予約の付け替えもコメントも打てなくなります。"
+              "本当に続けるなら --anyway", file=sys.stderr)
+        return 1
+
     gap = posted.since_last()
     if gap is not None and gap < posted.SPREAD_MINUTES:
         print(f"■ 前の投稿から{gap:.0f}分しかたっていません"
