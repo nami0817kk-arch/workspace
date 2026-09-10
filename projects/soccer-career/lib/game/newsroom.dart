@@ -46,22 +46,36 @@ class Newsroom {
         result.scored - result.conceded == 1) {
       items.add(_match(state, day, '$nameの1点が決勝点',
           '${result.opponentName}戦、${result.scoreLine}。'));
-    } else if (rating != null && rating >= 8.2) {
-      items.add(_match(state, day, _praise(day, name),
+    } else if (rating != null &&
+        rating >= 8.2 &&
+        !_recentlySaid(state, day, _praises, (v) => '$name$v')) {
+      items.add(_match(state, day, _praise(state, day, name),
           '${result.opponentName}戦で評価点${rating.toStringAsFixed(1)}。'));
-    } else if (rating != null && rating <= 5.2) {
-      items.add(_match(state, day, _criticism(day, name),
+    } else if (rating != null &&
+        rating <= 5.2 &&
+        !_recentlySaid(state, day, _criticisms, (v) => '$name$v')) {
+      items.add(_match(state, day, _criticism(state, day, name),
           '${result.opponentName}戦は評価点${rating.toStringAsFixed(1)}に終わった。'));
     } else if (result.conceded == 0 &&
         result.appearance != Appearance.benched &&
         _isDefender(state.player.position)) {
       items.add(_match(state, day, '$nameを軸に完封',
           '${result.opponentName}戦を無失点で終えた。'));
-    } else if (result.conceded >= 4) {
-      items.add(_match(state, day, '${state.club.name}、守備が崩壊',
+    } else if (result.conceded >= 4 &&
+        !_recentlySaid(
+            state, day, _collapses, (v) => '${state.club.name}$v')) {
+      items.add(_match(
+          state,
+          day,
+          _vary(state, day, _collapses, (v) => '${state.club.name}$v'),
           '${result.opponentName}に${result.conceded}失点。'));
-    } else if (result.won && result.scored - result.conceded >= 3) {
-      items.add(_match(state, day, '${state.club.name}が快勝',
+    } else if (result.won &&
+        result.scored - result.conceded >= 3 &&
+        !_recentlySaid(state, day, _routs, (v) => '${state.club.name}$v')) {
+      items.add(_match(
+          state,
+          day,
+          _vary(state, day, _routs, (v) => '${state.club.name}$v'),
           '${result.opponentName}を${result.scoreLine}で退けた。'));
     }
 
@@ -75,6 +89,10 @@ class Newsroom {
     'が試合を支配した',
     'に称賛の声',
     'の一挙手一投足に沸いた',
+    'が違いを見せた',
+    'に地元紙も最高点',
+    'の一日だった',
+    'を止められる者がいなかった',
   ];
 
   static const List<String> _criticisms = [
@@ -82,14 +100,73 @@ class Newsroom {
     'は最後まで流れに入れず',
     'に厳しい採点',
     'の不調が続く',
+    'は影が薄かった',
+    'に立て直しを求める声',
+    'は何も起こせず',
+    'に地元紙が苦言',
   ];
 
-  /// 見出しの言い回しを節で選ぶ。乱数を持たずに、同じ試合なら同じ文になる。
-  static String _praise(int matchday, String name) =>
-      '$name${_praises[matchday % _praises.length]}';
+  static const List<String> _collapses = [
+    '、守備が崩壊',
+    'の守りが持たなかった',
+    '、後ろから崩される',
+    'の最終ラインが機能せず',
+  ];
 
-  static String _criticism(int matchday, String name) =>
-      '$name${_criticisms[matchday % _criticisms.length]}';
+  static const List<String> _routs = [
+    'が快勝',
+    'が押し切った',
+    'が力の差を見せた',
+    'が危なげなく勝ち切る',
+  ];
+
+  /// 同じ種類の見出しを、続けて出さないための間隔（節）。
+  ///
+  /// 新聞は不調を11回書かない。**1シーズンに酷評が11本**出ていて、
+  /// 記録タブが「また悪かった」の羅列になっていた。
+  static const int sameKindGap = 6;
+
+  /// この種類の見出しを、最近書いたか。
+  ///
+  /// 言い回しの一覧をそのまま使って照合するので、種類を別に持たなくてよい。
+  static bool _recentlySaid(
+    CareerState state,
+    int matchday,
+    List<String> variants,
+    String Function(String) build,
+  ) {
+    final lines = {for (final v in variants) build(v)};
+    return state.news.any((n) =>
+        n.year == state.year &&
+        matchday - n.matchday < sameKindGap &&
+        lines.contains(n.headline));
+  }
+
+  /// 見出しの言い回しを選ぶ。**すでに出ている見出しは避ける。**
+  ///
+  /// 節番号だけで選んでいた頃は、4節ごとに同じ文が回ってきて、
+  /// 記録タブに「◯◯に称賛の声」が並んだ（13本中7本が重複していた）。
+  /// 乱数は持たない——同じ状態からは必ず同じ文が出る、という性質は残す。
+  static String _vary(
+    CareerState state,
+    int matchday,
+    List<String> variants,
+    String Function(String) build,
+  ) {
+    final used = state.news.map((n) => n.headline).toSet();
+    for (var i = 0; i < variants.length; i++) {
+      final line = build(variants[(matchday + i) % variants.length]);
+      if (!used.contains(line)) return line;
+    }
+    // 全部出尽くしたら、節で選んだものに戻る。
+    return build(variants[matchday % variants.length]);
+  }
+
+  static String _praise(CareerState state, int matchday, String name) =>
+      _vary(state, matchday, _praises, (v) => '$name$v');
+
+  static String _criticism(CareerState state, int matchday, String name) =>
+      _vary(state, matchday, _criticisms, (v) => '$name$v');
 
   /// 通算の数字が節目を跨いだかを見る。
   ///
