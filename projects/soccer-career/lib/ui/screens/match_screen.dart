@@ -109,6 +109,8 @@ class _MatchScreenState extends State<MatchScreen> {
                             widget.controller.state!.objectiveReach,
                         scorerChase:
                             ScorerRace.chaseFor(widget.controller.state!),
+                        promiseReach:
+                            widget.controller.state!.promiseReach,
                         onChoose: _choose,
                       ),
               ),
@@ -228,6 +230,7 @@ class _ScenarioView extends StatelessWidget {
     required this.focus,
     required this.objectiveReach,
     required this.scorerChase,
+    required this.promiseReach,
     required this.onChoose,
   });
 
@@ -251,6 +254,11 @@ class _ScenarioView extends StatelessWidget {
   /// 得点ランキングは他人の数字を眺めるだけの表で、試合の中には無かった。
   /// 終盤の1本が「得点王への1本」になる。
   final String? scorerChase;
+
+  /// 自分から口にした約束に、あと1で届くなら、その一言。
+  ///
+  /// 監督に言われた数字より、自分で言った数字のほうが重い。
+  final String? promiseReach;
 
   final void Function(int) onChoose;
 
@@ -320,6 +328,12 @@ class _ScenarioView extends StatelessWidget {
                         Chip(
                           label: Text(scorerChase!),
                           backgroundColor: theme.colorScheme.primaryContainer,
+                          visualDensity: VisualDensity.compact,
+                        ),
+                      if (promiseReach != null)
+                        Chip(
+                          label: Text(promiseReach!),
+                          backgroundColor: theme.colorScheme.tertiaryContainer,
                           visualDensity: VisualDensity.compact,
                         ),
                       if (match.bigMatch)

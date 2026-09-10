@@ -24,6 +24,8 @@ import '../models/life.dart';
 import '../models/life_event.dart';
 import '../models/news.dart';
 import '../models/personality.dart';
+import '../models/promise.dart';
+import '../game/promises.dart';
 import '../models/traits.dart';
 import '../models/look.dart';
 import '../models/physique.dart';
@@ -496,6 +498,20 @@ class CareerController extends ChangeNotifier {
     await _persist();
   }
 
+  /// 監督に約束する。1シーズンに1つだけ。取り消せない。
+  ///
+  /// 与えられた目標と違って、これは**自分で選んだ数字**。
+  /// 果たせば信頼と年俸が乗り、届かなければ両方を失う。
+  Future<void> makePromise(ManagerPromise promise) async {
+    final state = _state;
+    if (state == null) return;
+    if (!PromiseOffers.canPromise(state)) return;
+    state.promise = promise;
+    // 口にしたことは記事になる。逃げ道を消すのがこの機能の要。
+    _publish(state, [Newsroom.promiseMade(state, promise)]);
+    await _persist();
+  }
+
   /// クラブに方針を伝える。
   Future<void> setDirective(Directive directive) async {
     final state = _state;
@@ -891,6 +907,14 @@ class CareerController extends ChangeNotifier {
     final state = _state;
     if (state == null || !state.seasonFinished) return;
     _career.resolveSeasonEnd(state);
+    // 口にした約束の結末を、記事として残す。
+    if (state.promise != null &&
+        !state.news.any((n) =>
+            n.year == state.year &&
+            n.matchday == state.fixtures.length &&
+            n.headline.contains(state.promise!.label))) {
+      _publish(state, [Newsroom.promiseSettled(state)]);
+    }
     final fate = _career.fateOf(state);
     _publish(
       state,

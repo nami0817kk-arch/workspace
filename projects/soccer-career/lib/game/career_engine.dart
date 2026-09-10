@@ -505,6 +505,14 @@ class CareerEngine {
         : (state.objective!.achieved(stats)
             ? Formulas.objectiveMetSalaryFactor
             : Formulas.objectiveMissedSalaryFactor);
+    // 自分から口にした約束も年俸に効く。大きく出たぶんだけ振れる。
+    // 信頼は監督が代われば白紙に戻るので、効き目の中心はこちらに置く。
+    final promise = state.promise;
+    final promiseFactor = promise == null
+        ? 1.0
+        : (promise.achievedBy(stats)
+            ? promise.weight.salaryKept
+            : promise.weight.salaryBroken);
     // 大陸カップに出たシーズンは評価が上がる。
     final continentalFactor = state.continentalStage.participated
         ? Formulas.continentalSalaryBonus
@@ -513,10 +521,14 @@ class CareerEngine {
     // 良いシーズンが続くだけで年俸が指数で伸びる（100シーズン回して
     // 平均11億円、最大200億円になっていた）。
     // 下げ幅も緩めて、1年の不調で半減しないようにする。
-    final target = base * performance * objectiveFactor * continentalFactor;
+    final target =
+        base * performance * objectiveFactor * promiseFactor * continentalFactor;
+    // 約束は交渉の枠ごと動かす。上限・下限に丸めた後で掛けると、
+    // 良いシーズンで上限に張り付いた瞬間に約束の効き目が消える
+    // （実測で、果たしても破っても同じ 1350万円になっていた）。
     final salary = _round(target.clamp(
-      max(base * 0.6, state.salary * 0.7),
-      max(base * 1.8, state.salary * 1.1),
+      max(base * 0.6, state.salary * 0.7) * promiseFactor,
+      max(base * 1.8, state.salary * 1.1) * promiseFactor,
     ));
     return TransferOffer(
       club: club,
@@ -874,6 +886,8 @@ class CareerEngine {
       worldCupStage: state.worldCupStage,
       onLoan: state.onLoan,
       overall: state.player.overall,
+      promiseLabel: state.promise?.label,
+      promiseKept: state.promiseKept ?? false,
     );
 
     final league = _leagueContaining(accepted.club);
@@ -1268,6 +1282,8 @@ class CareerEngine {
       worldCupStage: state.worldCupStage,
       onLoan: state.onLoan,
       overall: state.player.overall,
+      promiseLabel: state.promise?.label,
+      promiseKept: state.promiseKept ?? false,
     );
     return CareerState(
       player: state.player,

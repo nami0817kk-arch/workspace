@@ -173,6 +173,20 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                         ),
                       ),
                     ],
+                    if (state.promise != null) ...[
+                      const SizedBox(height: 4),
+                      Text(
+                        state.promiseKept!
+                            ? '約束を果たした（${state.promise!.label}）'
+                            : '約束に届かなかった（${state.promise!.label}）',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: state.promiseKept!
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.error,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
                     if (state.seasonCaps > 0) ...[
                       const SizedBox(height: 4),
                       Text('代表 ${state.seasonCaps}試合', style: muted),

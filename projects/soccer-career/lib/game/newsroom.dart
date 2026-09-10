@@ -5,6 +5,7 @@ import '../models/career.dart';
 import '../models/club.dart';
 import '../models/life_event.dart';
 import '../models/news.dart';
+import '../models/promise.dart';
 import '../models/season.dart';
 import '../models/attributes.dart';
 
@@ -412,6 +413,40 @@ class Newsroom {
         headline: headline,
         body: body,
       );
+
+  /// 監督に約束したことを世に出す。
+  ///
+  /// 口にした瞬間に逃げ道が消えるのが、この機能の要。
+  /// 胸の内に留めておけるなら、それは約束ではない。
+  static NewsItem promiseMade(CareerState state, ManagerPromise promise) =>
+      NewsItem(
+        year: state.year,
+        matchday: state.matchday,
+        kind: NewsKind.club,
+        headline: '${state.player.name}、${promise.label}を公言',
+        body: '「${promise.label}。それが自分の仕事だ」'
+            '${state.manager?.name ?? '監督'}の前で言い切った。',
+      );
+
+  /// シーズンの終わりに、その約束がどうなったかを書く。
+  static NewsItem promiseSettled(CareerState state) {
+    final promise = state.promise!;
+    final kept = promise.achievedBy(state.seasonStats);
+    final reached = promise.kind == PromiseKind.rating
+        ? promise.reached(state.seasonStats).toStringAsFixed(2)
+        : promise.reached(state.seasonStats).round().toString();
+    return NewsItem(
+      year: state.year,
+      matchday: state.fixtures.length,
+      kind: NewsKind.club,
+      headline: kept
+          ? '${state.player.name}、公言どおり${promise.label}を達成'
+          : '${state.player.name}、${promise.label}に届かず',
+      body: kept
+          ? '$reached。言ったことをやってみせた。'
+          : '$reached で終えた。言葉の重さだけが残る。',
+    );
+  }
 
   /// 貯蓄が尽きて専属スタッフが離れたことを知らせる。
   ///

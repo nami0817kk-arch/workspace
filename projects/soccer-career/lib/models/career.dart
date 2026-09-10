@@ -14,6 +14,7 @@ import 'training.dart';
 import 'traits.dart';
 import 'injury.dart';
 import 'objective.dart';
+import 'promise.dart';
 import 'player.dart';
 import 'season.dart';
 
@@ -34,6 +35,8 @@ class SeasonRecord {
     this.worldCupStage = WorldCupStage.none,
     this.onLoan = false,
     this.overall = 0,
+    this.promiseLabel,
+    this.promiseKept = false,
   });
 
   final int year;
@@ -69,6 +72,12 @@ class SeasonRecord {
   /// そのシーズンを終えた時点の総合力。0 は記録が無い（古い保存データ）。
   final int overall;
 
+  /// そのシーズンに口にした約束。していなければ null。
+  final String? promiseLabel;
+
+  /// その約束を果たしたか。
+  final bool promiseKept;
+
   Map<String, dynamic> toJson() => {
         'year': year,
         'clubName': clubName,
@@ -87,6 +96,8 @@ class SeasonRecord {
         'worldCupStage': worldCupStage.name,
         'onLoan': onLoan,
         'overall': overall,
+        'promiseLabel': promiseLabel,
+        'promiseKept': promiseKept,
       };
 
   factory SeasonRecord.fromJson(Map<String, dynamic> json) => SeasonRecord(
@@ -117,6 +128,8 @@ class SeasonRecord {
                 : WorldCupStage.none,
         onLoan: json['onLoan'] as bool? ?? false,
         overall: json['overall'] as int? ?? 0,
+        promiseLabel: json['promiseLabel'] as String?,
+        promiseKept: json['promiseKept'] as bool? ?? false,
       );
 }
 
@@ -188,6 +201,7 @@ class CareerState {
     this.tampered = false,
     this.tacticCredit = 0,
     this.objective,
+    this.promise,
     this.injury,
     this.caps = 0,
     this.internationalGoals = 0,
@@ -447,6 +461,24 @@ class CareerState {
     return null;
   }
 
+  /// 口にした約束に、あと1で届くか。届くなら、その一言。
+  ///
+  /// 局面を選ぶ画面に出す。「この1本で約束が果たされる」という重みは、
+  /// クラブタブのカードでは伝わらない。
+  String? get promiseReach {
+    final promise = this.promise;
+    if (promise == null) return null;
+    if (promise.kind == PromiseKind.rating) return null;
+    final left = promise.target - promise.reached(seasonStats);
+    if (left != 1) return null;
+    return switch (promise.kind) {
+      PromiseKind.goals => 'この1点で、約束を果たす',
+      PromiseKind.contributions => '得点かアシストで、約束を果たす',
+      PromiseKind.appearances => 'この試合に出れば、約束を果たす',
+      PromiseKind.rating => null,
+    };
+  }
+
   /// 監督の求める形に沿ったぶんの、まだ信頼に乗っていない端数。
   ///
   /// 1試合で動くのは1未満なので、切り捨てると永遠に何も起きない。
@@ -547,6 +579,15 @@ class CareerState {
 
   /// 監督から与えられた今季の目標。
   SeasonObjective? objective;
+
+  /// 自分から口にした約束。1シーズンに1つだけ。取り消せない。
+  ///
+  /// `objective` が**向こうから降ってくる数字**なのに対して、こちらは
+  /// 自分で選んだ数字。果たせば信頼と年俸が乗り、届かなければ両方を失う。
+  ManagerPromise? promise;
+
+  /// 約束を果たしたか。約束していなければ null。
+  bool? get promiseKept => promise?.achievedBy(seasonStats);
 
   /// 負傷中ならその内容。
   Injury? injury;
@@ -722,6 +763,7 @@ class CareerState {
         'relations': relations.toJson(),
         'finances': finances.toJson(),
         'objective': objective?.toJson(),
+        'promise': promise?.toJson(),
         'injury': injury?.toJson(),
         'caps': caps,
         'internationalGoals': internationalGoals,
@@ -858,6 +900,8 @@ class CareerState {
       finances: Finances.fromJson(json['finances'] as Map<String, dynamic>?),
       objective:
           SeasonObjective.fromJson(json['objective'] as Map<String, dynamic>?),
+      promise:
+          ManagerPromise.fromJson(json['promise'] as Map<String, dynamic>?),
       injury: Injury.fromJson(json['injury'] as Map<String, dynamic>?),
       caps: json['caps'] as int? ?? 0,
       internationalGoals: json['internationalGoals'] as int? ?? 0,

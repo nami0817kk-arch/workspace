@@ -138,6 +138,15 @@ class Person {
     }
     if (state.objective?.achieved(stats) ?? false) manager += 12;
 
+    // 自分から口にした約束。果たせば厚く、破れば重い。
+    // 与えられた目標より重く扱う（自分で選んだ数字なので）。
+    final promise = state.promise;
+    if (promise != null) {
+      manager += promise.achievedBy(stats)
+          ? promise.weight.trustKept
+          : -promise.weight.trustBroken;
+    }
+
     // 気性が荒いと衝突する。プロ意識が高いと信頼される。
     final personality = state.player.personality;
     manager += (personality.professionalism - 10) ~/ 3;

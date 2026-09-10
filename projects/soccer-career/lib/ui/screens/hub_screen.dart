@@ -4,6 +4,8 @@ import '../../models/attributes.dart';
 import '../../game/eligibility.dart';
 import '../../game/formulas.dart';
 import '../../game/match_brief.dart';
+import '../../game/promises.dart';
+import '../../models/promise.dart';
 import '../../game/world.dart';
 import '../../models/career.dart';
 import '../../models/personality.dart';
@@ -372,6 +374,11 @@ class _MatchTab extends StatelessWidget {
         const SizedBox(height: 16),
         if (state.objective != null) ...[
           _ObjectiveCard(objective: state.objective!, stats: stats),
+          const SizedBox(height: 16),
+        ],
+        // 監督の期待は向こうから降ってくる数字。約束は自分で口にする数字。
+        if (state.promise != null || PromiseOffers.canPromise(state)) ...[
+          _PromiseCard(controller: controller),
           const SizedBox(height: 16),
         ],
         Card(
@@ -3237,7 +3244,9 @@ class _CareerTab extends StatelessWidget {
                 '${record.continentalStage.participated ? ' ・ 大陸${record.continentalStage.label}' : ''}'
                 '${record.cupStage.participated ? ' ・ 国内杯${record.cupStage.label}' : ''}'
                 '${record.worldCupStage.participated ? ' ・ 世界大会${record.worldCupStage.label}' : ''}'
-                '${record.objectiveMet ? ' ・ 目標達成' : ''}',
+                '${record.objectiveMet ? ' ・ 目標達成' : ''}'
+                // 口にした約束は、果たしても破っても記録に残る。
+                '${record.promiseLabel == null ? '' : record.promiseKept ? ' ・ 約束を果たした' : ' ・ 約束を破った'}',
               ),
               trailing: Text(
                 record.stats.appearances == 0
@@ -3377,6 +3386,174 @@ class _ObjectiveCard extends StatelessWidget {
           ],
         ),
       );
+}
+
+/// 監督との約束。自分から数字を口にして、シーズンの意味を変える。
+///
+/// 監督の与える目標（`_ObjectiveCard`）が**向こうから降ってくる数字**なのに対し、
+/// こちらは自分で選んだ数字。大きく出るほど、果たしたときの見返りも
+/// 届かなかったときの罰も大きい。取り消せない。
+class _PromiseCard extends StatelessWidget {
+  const _PromiseCard({required this.controller});
+
+  final CareerController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final state = controller.state!;
+    final promise = state.promise;
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+
+    if (promise != null) {
+      final stats = state.seasonStats;
+      final kept = promise.achievedBy(stats);
+      final short = promise.shortfall(stats);
+      return Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Text('監督との約束', style: theme.textTheme.titleSmall),
+                  const Spacer(),
+                  Text(promise.weight.label, style: muted),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Icon(kept ? Icons.check_circle : Icons.circle_outlined,
+                      size: 18,
+                      color: kept
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.outlineVariant),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(promise.label,
+                        style: theme.textTheme.titleMedium?.copyWith(
+                            color: kept ? theme.colorScheme.primary : null)),
+                  ),
+                  Text(short ?? '達成', style: theme.textTheme.bodyMedium),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Text(_effectText(promise), style: muted),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return Card(
+      color: theme.colorScheme.secondaryContainer,
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('監督に約束するか',
+                style: theme.textTheme.titleSmall?.copyWith(
+                    color: theme.colorScheme.onSecondaryContainer)),
+            const SizedBox(height: 6),
+            Text(
+              '自分から数字を口にすれば、果たしたときに信頼と年俸が乗る。'
+              '届かなければ両方を失う。第${PromiseOffers.window}節まで。',
+              style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSecondaryContainer),
+            ),
+            const SizedBox(height: 10),
+            Align(
+              alignment: Alignment.centerRight,
+              child: FilledButton.tonal(
+                onPressed: () => _choose(context),
+                child: const Text('約束する'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  static String _effectText(ManagerPromise promise) {
+    final w = promise.weight;
+    final kept = ((w.salaryKept - 1) * 100).round();
+    final broken = ((1 - w.salaryBroken) * 100).round();
+    // 年俸が動くのは契約更改の年だけ（契約が残っていれば条件は動かない）。
+    // 「+17%」とだけ書くと、動かない年に嘘になる。
+    return '果たせば 信頼 +${w.trustKept}・契約更改 +$kept%　'
+        '届かなければ 信頼 -${w.trustBroken}・契約更改 -$broken%';
+  }
+
+  Future<void> _choose(BuildContext context) async {
+    final state = controller.state!;
+    final offers = PromiseOffers.forState(state);
+    final picked = await showModalBottomSheet<ManagerPromise>(
+      context: context,
+      showDragHandle: true,
+      isScrollControlled: true,
+      builder: (context) {
+        final theme = Theme.of(context);
+        return SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text('監督に何を約束するか',
+                    style: theme.textTheme.titleMedium),
+                const SizedBox(height: 4),
+                Text('一度言えば取り消せない。シーズンの終わりに清算される。',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant)),
+                const SizedBox(height: 12),
+                for (final offer in offers)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.pop(context, offer),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(offer.label,
+                                      style: theme.textTheme.titleSmall),
+                                ),
+                                Text(offer.weight.label,
+                                    style: theme.textTheme.labelSmall),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            Text(_effectText(offer),
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                    color:
+                                        theme.colorScheme.onSurfaceVariant)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('今は言わない'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    if (picked != null) await controller.makePromise(picked);
+  }
 }
 
 /// 自動で進めた区間のまとめ。

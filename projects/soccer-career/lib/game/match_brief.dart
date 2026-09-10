@@ -71,6 +71,18 @@ class MatchBrief {
       ));
     }
 
+    // 自分から口にした約束。局面を選ぶ手前に必ず置く。
+    // ここに出ないと、口にしたことをシーズンの途中で忘れられてしまう。
+    final promise = state.promise;
+    if (promise != null) {
+      final short = promise.shortfall(state.seasonStats);
+      lines.add(BriefLine(
+        '約束',
+        short == null ? '${promise.label} — 果たした' : '${promise.label}（$short）',
+        urgent: state.promiseReach != null,
+      ));
+    }
+
     if (!state.pendingInternational) {
       // 順位。クラブの去就も自分の契約も、最後はここで決まる。
       // 開幕直後の順位表は中身が無いので出さない（1枚に詰め込みすぎない）。
