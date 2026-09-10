@@ -30,7 +30,16 @@ CONTROL = ["ポテンシャル", "今週の練習"]
 
 
 def escaped(text):
-    return "".join(BACKSLASH + "u{:04x}".format(ord(ch)) for ch in text)
+    """dart2js が出す形にする。
+
+    **ASCII はそのまま**残る。全部をエスケープすると、英数字を含む文字列が
+    永久に当たらなくなる——つまり「入っていない」と誤って報告する。
+    実際に "今season の残りを消化する" と "…1試合に入る。" の2つが
+    死んだ needle になっていた。
+    """
+    return "".join(
+        ch if ord(ch) < 128 else BACKSLASH + "u{:04x}".format(ord(ch))
+        for ch in text)
 
 
 def main():
@@ -40,6 +49,13 @@ def main():
         return 2
 
     js = io.open(path, encoding="utf-8", errors="replace").read()
+    # needle が壊れていないかを先に見る。ASCII を含む文字列を全部
+    # エスケープしていた頃は、何を入れても「入っていない」と出ていた。
+    broken = [t for t in ADMIN_ONLY if escaped(t) == t or BACKSLASH not in escaped(t)]
+    if broken:
+        print("needle が日本語を含んでいません（検査になりません）:", broken)
+        return 2
+
     leaked = [t for t in ADMIN_ONLY if escaped(t) in js]
     missing = [t for t in CONTROL if escaped(t) not in js]
 
