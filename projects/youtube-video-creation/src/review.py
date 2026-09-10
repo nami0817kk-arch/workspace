@@ -86,6 +86,10 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
         # 「最後の節が長い」は見ない（最後の節が反応の本体になる）
         shape = _format_of(script)
         findings.append(check_voice_share(script, _voice_floor(script, shape)))
+        # **どこで読んだかと埋め草は落とす**（2026-09-10 ユーザー指示）
+        findings.append(check_board_mention(script))
+        findings.append(check_outlet_talk(script))
+        findings.append(check_filler(script))
         findings.append(check_opening_title(script))
         if shape["wrap"]:
             findings.append(check_wrap_share(script))
@@ -825,6 +829,105 @@ def _voice_lines(script: Script) -> tuple[list[int], int]:
             if (line.speaker or "") not in NARRATORS:
                 other.append(length)
     return other, total
+
+
+# **どこで読んだかは要らない**（2026-09-10 ユーザー指摘
+# 「不要な情報も入れている気がする。まとめサイトではとか入らない」）。
+# まとめ・掲示板の言及は全部落とす。母数（「47件中12件」）は残してよいが、
+# **どのサイトかは言わない**
+BOARD = re.compile(r"掲示板|まとめサイト|まとめには|スレッド|スレでは|なんJ|[25]ch")
+
+# 報道機関の名前は「発言を引くとき」だけ。**事実に付けると冗長になる**
+OUTLET = re.compile(
+    r"によると|が伝えました|と伝えています|が報じました|と報じています"
+    r"|メディア|現地紙|[ぁ-んァ-ヶ一-龥]紙『")
+
+# **一次情報の出どころは別**（UEFA・リーグ・連盟・クラブの公式）。
+# 「プレミアリーグによると35.93キロ」は、どこが測った数字かが中身の一部で、
+# 報道機関の名前とは働きが違う。落とすと確度が下がる
+PRIMARY = re.compile(
+    r"(?:UEFA|FIFA|プレミアリーグ|ラ・リーガ|ブンデスリーガ|セリエA|リーグ"
+    r"|連盟|協会|クラブ|公式(?:サイト)?)(?:に)?(?:よると|よれば|の(?:発表|計測|集計))")
+
+# 埋め草。背番号・レンタル料・この先の日程・言い換え
+FILLER = (
+    (re.compile(r"背番号は"), "背番号"),
+    (re.compile(r"レンタル料|給与は|給与を"), "契約の細目"),
+    (re.compile(r"次は[^。]*(?:対戦|試合)します|次節は"), "この先の日程"),
+    (re.compile(r"^(?:なお|ちなみに)[、，]"), "「なお、」"),
+    (re.compile(r"ということになります"), "言い換え"),
+)
+
+
+def _narrator_lines(script: Script) -> list:
+    out = []
+    for scene in script.scenes:
+        for line in scene.lines:
+            if (line.speaker or "") in NARRATORS:
+                out.append(line)
+    return out
+
+
+def check_board_mention(script: Script) -> Finding:
+    """**まとめサイト・掲示板の名指しは読み上げない**（2026-09-10 ユーザー指示）。
+
+    「掲示板のまとめには15件の書き込みがありました」と言う必要はない。
+    反応そのものを読めば足りる。**数えた母数は残してよい**（「47件中12件」）が、
+    どこで数えたかは概要欄に置く。出典を消すわけではない。
+    """
+    bad = [line.text for line in _narrator_lines(script) if BOARD.search(line.text or "")]
+    if bad:
+        return Finding(False, "まとめの言及",
+                       f"{len(bad)}行で掲示板・まとめに触れています（{bad[0][:24]}…）。"
+                       "反応そのものだけ読んでください")
+    return Finding(True, "まとめの言及", "触れていません")
+
+
+def check_outlet_talk(script: Script) -> Finding:
+    """**媒体名は、発言を引くときだけ**（2026-09-10 ユーザー指示）。
+
+    確度の「報道」は誰が言ったかを示すためのものなので、**引用の前置きは残す**
+    （「スペイン紙『AS』は見出しでこう書きました」→ 引用）。
+    事実を述べる行に「イギリスメディア『スカイスポーツ』によると」と付けると、
+    そのぶん尺を食うだけで中身が増えない。出どころは概要欄にある。
+
+    次の行が代弁なら前置きとして通す。そうでなければ知らせる。
+    """
+    flat = [line for scene in script.scenes for line in scene.lines]
+    bad = []
+    for index, line in enumerate(flat):
+        if (line.speaker or "") not in NARRATORS:
+            continue
+        if not OUTLET.search(line.text or ""):
+            continue
+        if PRIMARY.search(line.text or ""):
+            continue        # 一次情報の出どころ。残す
+        nxt = flat[index + 1] if index + 1 < len(flat) else None
+        if nxt is not None and (nxt.speaker or "") not in NARRATORS:
+            continue        # 引用の前置き。残す
+        bad.append(line.text)
+    if bad:
+        return Finding(False, "出どころの説明",
+                       f"{len(bad)}行が、引用でないのに媒体名を言っています"
+                       f"（{bad[0][:26]}…）。概要欄に任せてください")
+    return Finding(True, "出どころの説明", "引用の前置きだけです")
+
+
+def check_filler(script: Script) -> Finding:
+    """埋め草（2026-09-10 ユーザー指摘）。**背番号は誰も知りたくない。**"""
+    hits = []
+    for line in _narrator_lines(script):
+        text = (line.text or "").strip()
+        for pattern, name in FILLER:
+            if pattern.search(text):
+                hits.append((name, text))
+                break
+    if hits:
+        names = "／".join(sorted({name for name, _ in hits}))
+        return Finding(False, "埋め草",
+                       f"{len(hits)}行あります（{names}）。"
+                       f"例: {hits[0][1][:28]}…")
+    return Finding(True, "埋め草", "見当たりません")
 
 
 def check_voice_share(script: Script, minimum: float | None = None) -> Finding:
