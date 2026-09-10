@@ -151,7 +151,8 @@ class SelectionOutlook {
     required this.average,
     required this.bonus,
     required this.forgiveness,
-    required this.debut,
+    this.debut = false,
+    this.outOfSquad = false,
   });
 
   /// 見込み。ローテーションで前後するので「必ず」ではない。
@@ -169,10 +170,35 @@ class SelectionOutlook {
   /// まだ評価点が付いていないか。
   final bool debut;
 
+  /// 登録メンバーから外れているか。評価点とは別の理由で出られない。
+  final bool outOfSquad;
+
   /// 判定に使われる値。
   double get effective => average + bonus + forgiveness;
 
   static SelectionOutlook of(CareerState state, {required double bonus}) {
+    // 出られない理由は評価点より先に来る。`startNextMatch` と同じ順で見る。
+    // ここを飛ばしていたので、離脱中でも「先発の見込み」と出ていた
+    // （headline の injured / suspended にそもそも到達しなかった）。
+    if (state.suspended || state.injured) {
+      return SelectionOutlook(
+        likely:
+            state.suspended ? Appearance.suspended : Appearance.injured,
+        average: 0,
+        bonus: 0,
+        forgiveness: 0,
+        outOfSquad: false,
+      );
+    }
+    if (!state.squadStatus.canPlay) {
+      return const SelectionOutlook(
+        likely: Appearance.benched,
+        average: 0,
+        bonus: 0,
+        forgiveness: 0,
+        outOfSquad: true,
+      );
+    }
     final rated = state.leagueResults
         .where((r) => r.rating != null)
         .map((r) => r.rating!)
@@ -212,6 +238,9 @@ class SelectionOutlook {
 
   /// なぜそうなるのか。数字で書く。
   String get reason {
+    if (likely == Appearance.suspended) return '出場停止が明けるまで出られない。';
+    if (likely == Appearance.injured) return '離脱中。治るまで出られない。';
+    if (outOfSquad) return '登録メンバーから外れている。評価点では戻せない。';
     if (debut) return 'まだ評価点が付いていない。デビュー戦は必ず先発する。';
     final parts = <String>[
       '直近${Formulas.formWindow}試合の平均 ${average.toStringAsFixed(2)}',
