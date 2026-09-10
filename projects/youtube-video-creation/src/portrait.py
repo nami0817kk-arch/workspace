@@ -38,6 +38,18 @@ def info(title: str, session=None) -> dict:
     raise PortraitError(f"Commons に見つかりません: {title}")
 
 
+def _plain_url(url: str) -> str:
+    """画像URLから計測用の問い合わせを落とす。
+
+    **429 の正体だった**（2026-09-10）。Commons の API が返す thumburl には
+    `?utm_source=commons.wikimedia.org&…` が付いている。そのまま取りにいくと
+    upload.wikimedia.org が Too Many Requests を返し、20秒待っても解けない。
+    問い合わせを外したら、同じ画像がその場で200で返った。
+    **待てば解けるアクセス制限だと3回誤認した。**
+    """
+    return str(url or "").split("?")[0]
+
+
 def _plain(field) -> str:
     """extmetadata の値から中身だけ取り出す。HTML が混ざることがある。"""
     raw = (field or {}).get("value", "") if isinstance(field, dict) else str(field or "")

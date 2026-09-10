@@ -249,3 +249,22 @@ def test_同じ名前の犬や銅像を人の写真として掴まない():
     assert not looks_like_person("File:Mural of Marcus Rashford.jpg")
     assert looks_like_person("File:Lionel Messi NYCFC Miami 24 Sep 2025-079.jpg")
     assert looks_like_person("File:Takumi Minamino Stefan Lainer.JPG")
+
+
+def test_画像URLの計測用パラメータを落とす():
+    """**429 の正体だった**（2026-09-10）。
+
+    Commons の API が返す thumburl には `?utm_source=commons.wikimedia.org&…`
+    が付いている。そのまま取りにいくと upload.wikimedia.org が
+    Too Many Requests を返し、20秒待っても解けなかった。
+    問い合わせを外したら、同じ画像がその場で200で返った。
+    **待てば解ける制限だと3回誤認した。**
+    """
+    from src.portrait import _plain_url
+
+    dirty = ("https://upload.wikimedia.org/wikipedia/commons/3/3f/x.jpg"
+             "?utm_source=commons.wikimedia.org&utm_campaign=imageinfo")
+    assert _plain_url(dirty) == "https://upload.wikimedia.org/wikipedia/commons/3/3f/x.jpg"
+    assert _plain_url("https://x/y.jpg") == "https://x/y.jpg"
+    assert _plain_url("") == ""
+    assert _plain_url(None) == ""
