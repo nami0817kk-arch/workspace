@@ -891,6 +891,7 @@ class WeekOutcome {
     this.redirected = false,
     this.weakFootAwakened = false,
     this.injury,
+    this.outcome,
   });
 
   final Attributes attributes;
@@ -913,6 +914,9 @@ class WeekOutcome {
 
   /// 逆足が形になったか。
   final bool weakFootAwakened;
+
+  /// その週の手応え。休養の週は null。
+  final TrainingOutcome? outcome;
 
   /// 狙った能力が土台に阻まれ、土台のほうが伸びたか。
   final bool redirected;
@@ -1253,6 +1257,8 @@ class MatchEngine {
   WeekOutcome applyWeek(
     Player player, {
     TrainingMenu menu = TrainingMenu.rest,
+    TrainingEffort effort = TrainingEffort.normal,
+    TrainingCompanion companion = TrainingCompanion.alone,
     SetPiece? drill,
     StaffTeam staff = const StaffTeam(),
     Habits habits = const Habits(),
@@ -1273,12 +1279,25 @@ class MatchEngine {
     var redirected = false;
     var awakened = false;
 
+    // その週の手応え。休養の週には出さない。
+    final outcome = menu.isRest
+        ? TrainingOutcome.good
+        : rollOutcome(
+            random: _random,
+            effort: effort,
+            companion: companion,
+            condition: condition,
+            professionalism: player.personality.professionalism,
+          );
+
     if (menu.isRest) {
       condition += (menu.recovery * player.traits.restFactor).round() +
           staff.recoveryBonus +
           habits.recoveryBonus;
     } else {
-      condition -= (menu.conditionCost * costFactor).round();
+      condition -=
+          (menu.conditionCost * costFactor * effort.cost * companion.cost)
+              .round();
       final canGrow = attributes.overallFor(player.position) < player.potential;
       // ポテンシャルに達しても、超越の1項目だけはそのカテゴリの練習で伸びる。
       final transcend = player.transcendDetail;
@@ -1298,26 +1317,30 @@ class MatchEngine {
       final step = player.age <= Formulas.rapidGrowthAge ? 2 : 1;
       final effective = plateau ? base * Formulas.plateauGrowthFactor : base;
       if (canGrow || onlyTranscend) {
-        for (final key in menu.keys) {
-          if (onlyTranscend && key != transcend.category) continue;
-          // ポジションの重みで割り戻す。同じ練習が、どのポジションでも
-          // 同じくらい総合力を動かすようにする。
-          final chance = effective *
-              Formulas.growthShareFactor(
-                  Attributes.weightShare(player.position, key));
-          if (_random.nextDouble() >= chance) continue;
-          // 同じカテゴリの中に方向があれば、そこから選ぶ。
-          // 練習が「カテゴリのどれか」ではなく「決めた項目」になる。
-          final inFocus = [for (final d in focus) if (d.category == key) d];
-          final ds = inFocus.isEmpty ? key.details : inFocus;
-          final wanted =
-              onlyTranscend ? transcend : ds[_random.nextInt(ds.length)];
-          final target = Dependencies.resolve(wanted, attributes,
-              ceilingOf: player.ceilingFor);
-          if (target != wanted) redirected = true;
-          attributes = attributes.bumpDetail(target, step,
-              max: player.ceilingFor(target));
-          trained ??= target;
+        // 大成功なら2回、空回りなら0回。倍率ではなく**引く回数**で効かせる。
+        // 「大成功で2つ伸びた」と画面で数えられるようにするため。
+        for (var draw = 0; draw < outcome.rolls; draw++) {
+          for (final key in menu.keys) {
+            if (onlyTranscend && key != transcend.category) continue;
+            // ポジションの重みで割り戻す。同じ練習が、どのポジションでも
+            // 同じくらい総合力を動かすようにする。
+            final chance = effective *
+                Formulas.growthShareFactor(
+                    Attributes.weightShare(player.position, key));
+            if (_random.nextDouble() >= chance) continue;
+            // 同じカテゴリの中に方向があれば、そこから選ぶ。
+            // 練習が「カテゴリのどれか」ではなく「決めた項目」になる。
+            final inFocus = [for (final d in focus) if (d.category == key) d];
+            final ds = inFocus.isEmpty ? key.details : inFocus;
+            final wanted =
+                onlyTranscend ? transcend : ds[_random.nextInt(ds.length)];
+            final target = Dependencies.resolve(wanted, attributes,
+                ceilingOf: player.ceilingFor);
+            if (target != wanted) redirected = true;
+            attributes = attributes.bumpDetail(target, step,
+                max: player.ceilingFor(target));
+            trained ??= target;
+          }
         }
       }
 
@@ -1364,6 +1387,8 @@ class MatchEngine {
             player.copyWith(condition: settled),
             baseChance: Formulas.injuryTrainingChance *
                 menu.injuryFactor *
+                effort.injury *
+                companion.injury *
                 staff.injuryFactor *
                 habits.injuryFactor,
           );
@@ -1379,7 +1404,52 @@ class MatchEngine {
       redirected: redirected,
       weakFootAwakened: awakened,
       injury: injury,
+      outcome: menu.isRest ? null : outcome,
     );
+  }
+
+  /// その週の手応えを引く。
+  ///
+  /// 画面に出す確率と、実際に引く確率を別に書かない。
+  /// 「追い込む」を毎週押すのが最適解にならないように、
+  /// **コンディションが低いほど空回りしやすい**のがここの要。
+  static TrainingOutcome rollOutcome({
+    required Random random,
+    required TrainingEffort effort,
+    required TrainingCompanion companion,
+    required int condition,
+    required int professionalism,
+  }) {
+    final odds = outcomeOdds(
+      effort: effort,
+      companion: companion,
+      condition: condition,
+      professionalism: professionalism,
+    );
+    final roll = random.nextDouble();
+    if (roll < odds.great) return TrainingOutcome.great;
+    if (roll < odds.great + odds.flat) return TrainingOutcome.flat;
+    return TrainingOutcome.good;
+  }
+
+  /// 大成功・空回りの出やすさ。画面にもこの数字を出す。
+  static ({double great, double flat}) outcomeOdds({
+    required TrainingEffort effort,
+    required TrainingCompanion companion,
+    required int condition,
+    required int professionalism,
+  }) {
+    final gap = condition - Formulas.conditionBaseline;
+    final great = (effort.great +
+            companion.greatBonus +
+            gap * Formulas.trainingGreatPerCondition +
+            (professionalism - 10) * Formulas.trainingGreatPerPro)
+        .clamp(0.0, Formulas.trainingGreatMax);
+    final flat = (effort.flat -
+            companion.flatRelief -
+            gap * Formulas.trainingFlatPerCondition)
+        .clamp(0.0, Formulas.trainingFlatMax);
+    return (great: great, flat: flat);
   }
 
   /// その週に個人技を覚えるか。

@@ -1013,6 +1013,11 @@ class CareerEngine {
       agent: state.agent,
       salary: accepted.salary,
       menu: state.menu,
+      // 週の設定はシーズンを跨いで残す。ここを渡し忘れると、
+      // 毎年こっそり「普通・一人」に戻る（実測で、追い込むを選び続けても
+      // 大成功が 46回 にしかならなかった）。
+      effort: state.effort,
+      companion: state.companion,
       drill: state.drill,
       staff: staff,
       habits: state.habits,
@@ -1094,7 +1099,11 @@ class CareerEngine {
     if (!player.atPotential) return false;
     if (player.age > Formulas.peakAge + 2) return false;
     if (player.personality.professionalism < 14) return false;
-    if (state.development.experience < 300) return false;
+    // 追い込んだ週の積み上げ。ここが週の選択と上限を繋ぐ唯一の線。
+    if (state.development.greatWeeks < Formulas.breakthroughGreatWeeks) {
+      return false;
+    }
+    if (state.development.experience < 150) return false;
     if (player.potential >= Formulas.maxAttribute) return false;
     return _random.nextDouble() <
         Formulas.breakthroughChance * player.traits.breakthroughFactor;

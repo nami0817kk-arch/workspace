@@ -161,6 +161,8 @@ class CareerState {
     this.relations = const Relations(),
     this.finances = const Finances(),
     this.menu = TrainingMenu.rest,
+    this.effort = TrainingEffort.normal,
+    this.companion = TrainingCompanion.alone,
     this.drill,
     this.staff = const StaffTeam(),
     this.habits = const Habits(),
@@ -238,6 +240,34 @@ class CareerState {
 
   /// 今週の練習メニュー。
   TrainingMenu menu;
+
+  /// 今週どこまで踏み込むか。
+  ///
+  /// 週の選択が「どのメニューか」だけだった頃は、毎週同じ画面で同じものを
+  /// 選ぶだけで、練習の週に手応えが無かった。
+  TrainingEffort effort;
+
+  /// 今週、誰と組むか。
+  ///
+  /// 相方・メンター・競争相手は試合の外で勝手に動く飾りだった。
+  TrainingCompanion companion;
+
+  /// 今の顔ぶれで、実際に組める相手。
+  List<TrainingCompanion> get companionChoices => [
+        TrainingCompanion.alone,
+        for (final c in TrainingCompanion.values)
+          if (c.needs != null && teammateOf(c.needs!) != null) c,
+      ];
+
+  /// その役回りの選手。居なければ null。
+  ///
+  /// `rival` は別クラブで別のキャリアを歩む同期なので、練習の相手は
+  /// クラブの中に居る `competitor`（同ポジションの競争相手）のほう。
+  Teammate? teammateOf(TeammateKind kind) => switch (kind) {
+        TeammateKind.partner => partner,
+        TeammateKind.mentor => mentor,
+        TeammateKind.rival => competitor,
+      };
 
   /// 今週の居残り練習。null ならやらない。
   SetPiece? drill;
@@ -703,6 +733,8 @@ class CareerState {
         'agent': agent.toJson(),
         'salary': salary,
         'menu': menu.name,
+        'effort': effort.name,
+        'companion': companion.name,
         'drill': drill?.name,
         'staff': staff.toJson(),
         'habits': habits.toJson(),
@@ -803,6 +835,13 @@ class CareerState {
       agent: Agent.fromJson(json['agent'] as Map<String, dynamic>?),
       salary: json['salary'] as int? ?? 300,
       menu: menu,
+      effort: TrainingEffort.values.any((e) => e.name == json['effort'])
+          ? TrainingEffort.values.byName(json['effort'] as String)
+          : TrainingEffort.normal,
+      companion:
+          TrainingCompanion.values.any((c) => c.name == json['companion'])
+              ? TrainingCompanion.values.byName(json['companion'] as String)
+              : TrainingCompanion.alone,
       drill: SetPiece.values.any((p) => p.name == json['drill'])
           ? SetPiece.values.byName(json['drill'] as String)
           : null,

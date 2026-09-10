@@ -370,7 +370,8 @@ void main() {
     await pumpHub(tester, controller);
 
     expect(find.text('今週の練習'), findsOneWidget);
-    expect(find.text(TrainingMenu.athletic.label), findsOneWidget);
+    // 1行にメニュー・踏み込み方・組む相手が並ぶ。
+    expect(find.textContaining(TrainingMenu.athletic.label), findsOneWidget);
 
     // 押すとその場で選び直せる（画面を移らない）。
     await tester.tap(find.text('変える'));
@@ -382,7 +383,7 @@ void main() {
     expect(controller.state!.menu, TrainingMenu.sprint);
     // 試合タブに残っていて、表示も入れ替わっている。
     expect(find.text('今週の練習'), findsOneWidget);
-    expect(find.text(TrainingMenu.sprint.label), findsOneWidget);
+    expect(find.textContaining(TrainingMenu.sprint.label), findsOneWidget);
   });
 
   testWidgets('お金の見通しが、雇う画面に出る', (tester) async {

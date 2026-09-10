@@ -8,6 +8,7 @@ import '../../models/attributes.dart';
 import '../../models/injury.dart';
 import '../../models/news.dart';
 import '../../models/season.dart';
+import '../../models/training.dart';
 import '../../state/career_controller.dart';
 import '../club_identity.dart';
 import '../readable_width.dart';
@@ -772,8 +773,32 @@ class _MatchSummary extends StatelessWidget {
                       ?.copyWith(color: theme.colorScheme.error),
                 ),
               ],
-              if (week.trained != null) ...[
+              // その週の手応え。伸びなかった週が、運が悪かったのか
+              // 踏み込みが足りなかったのかを分かるようにする。
+              if (week.outcome != null) ...[
                 const SizedBox(height: 20),
+                Text(
+                  week.companion == TrainingCompanion.alone
+                      ? '練習: ${week.outcome!.label}'
+                      : '練習: ${week.outcome!.label}（${week.companion.label}）',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    color: switch (week.outcome!) {
+                      TrainingOutcome.great => theme.colorScheme.primary,
+                      TrainingOutcome.good => theme.colorScheme.onSurface,
+                      TrainingOutcome.flat => theme.colorScheme.error,
+                    },
+                  ),
+                ),
+                Text(
+                  week.outcome!.description,
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodySmall
+                      ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                ),
+              ],
+              if (week.trained != null) ...[
+                const SizedBox(height: 12),
                 Text(
                   week.redirected
                       ? '土台から鍛え直した: ${week.trained!.label} が 1 伸びた'
