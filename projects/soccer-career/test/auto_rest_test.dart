@@ -45,6 +45,38 @@ Future<CareerController> started(
 }
 
 void main() {
+  group('元気なのに休んでいる', () {
+    test('コンディションが高いまま休養だと、伸びないと分かる', () async {
+      final c = await started();
+      final state = c.state!;
+      state.autoRestBelow = 0;
+
+      await c.setMenu(TrainingMenu.rest);
+      state.player = state.player.copyWith(condition: 100);
+      expect(state.restingWhileFresh, isTrue);
+
+      // 疲れているときの休養は、休養として正しいので出さない。
+      state.player = state.player.copyWith(condition: 40);
+      expect(state.restingWhileFresh, isFalse);
+
+      // 練習しているなら出さない。
+      state.player = state.player.copyWith(condition: 100);
+      await c.setMenu(TrainingMenu.defaultFor(state.player.position));
+      expect(state.restingWhileFresh, isFalse);
+    });
+
+    test('自動休養が効いている週とは、区別が付く', () async {
+      final c = await started();
+      final state = c.state!;
+      state.autoRestBelow = 40;
+      await c.setMenu(TrainingMenu.rest);
+      state.player = state.player.copyWith(condition: 20);
+      // 自動休養のほうが先。両方が同時に出ることはない。
+      expect(state.shouldAutoRest(state.player.condition), isTrue);
+      expect(state.restingWhileFresh, isFalse);
+    });
+  });
+
   test('新しいキャリアは、そのポジションの練習をした状態で始まる', () async {
     // 既定が休養だと、育成タブを開かない人は1年間なにも伸びない。
     for (final position in Position.values) {
