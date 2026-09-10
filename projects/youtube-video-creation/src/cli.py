@@ -617,6 +617,9 @@ def _cmd_short(args, config) -> int:
     # **どちらも要る点検。**顔が遅い／冒頭で喋っていない、は別の問題
     for problem in shorts.face_problems(short):
         print(f"  ! {problem}", file=sys.stderr)
+    # **発言までの秒数がそのまま維持に効く**（2026-09-10 の実測）
+    for problem in shorts.quote_problems(short):
+        print(f"  ! {problem}", file=sys.stderr)
 
     # 冒頭で捨てられていないか、その場で見る。review は --out を渡さないと
     # ショートの出力先を見ないので、作った直後に必ず出るようにしておく

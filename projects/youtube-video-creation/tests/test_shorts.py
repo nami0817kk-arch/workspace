@@ -397,3 +397,54 @@ def test_締めに代弁が無ければ今までどおり後ろから落とす()
     _fit(script, 20.0)
     texts = [line.text for line in script.scenes[-1].lines]
     assert texts[0].startswith("0ぎょうめ"), texts
+
+
+def test_振りの1行を落として発言を早く出す():
+    """**発言までの秒数がそのまま維持に効く**（2026-09-10 の実測）。
+
+    44本で、誰かの言葉が19秒までに出る9本は平均維持50.4%、
+    遅い8本は33.7%だった。「こう話しました。」は次に発言が来ることを
+    予告するだけで情報を持たないのに、2〜4秒かかる。
+    """
+    from src.script_model import parse_script
+    from src.shorts import trim
+
+    nl = chr(10)
+    body = ["## オープニング", "", "キャスター: タイトルです。", "", "## 本編", ""]
+    body += ["解説: 状況の説明です。", ""]
+    body += ["解説: 異を唱えたのは、チアゴ・シウヴァです。", ""]
+    body += ["解説: メンバー発表を前に、こう話しました。", ""]
+    body += ["チアゴ: 賛成しない", ""]
+    short = trim(parse_script(nl.join(body)))
+    texts = [line.text for line in short.scenes[-1].lines]
+    assert "メンバー発表を前に、こう話しました。" not in texts, texts
+    # 話者を名乗る行は残す（ショート単体で分かるようにするため）
+    assert "異を唱えたのは、チアゴ・シウヴァです。" in texts, texts
+    assert texts[-1] == "賛成しない"
+
+
+def test_発言が遅ければ知らせる():
+    """止めはしない。**書き方の問題なので、書き出したところで知らせる。**"""
+    from src.script_model import parse_script
+    from src.shorts import quote_problems, trim
+
+    nl = chr(10)
+    late = ["## オープニング", "", "キャスター: タイトルです。", "", "## 本編", ""]
+    late += ["解説: 長い説明です。" + "あ" * 60, ""]
+    late += ["解説: まだ説明が続きます。" + "あ" * 60, ""]
+    late += ["チアゴ: 賛成しない", ""]
+    problems = quote_problems(trim(parse_script(nl.join(late))))
+    assert problems and "最初の発言" in problems[0], problems
+
+    # 語りだけの節は、そもそも言葉が無いと知らせる
+    only = ["## オープニング", "", "キャスター: タイトルです。", "", "## 本編", ""]
+    only += ["解説: 説明だけです。", ""]
+    only += ["解説: もう1行。", ""]
+    problems = quote_problems(trim(parse_script(nl.join(only))))
+    assert problems and "1つも" in problems[0], problems
+
+    # 早ければ何も言わない
+    fast = ["## オープニング", "", "キャスター: タイトル。", "", "## 本編", ""]
+    fast += ["解説: 短い説明。", ""]
+    fast += ["チアゴ: 賛成しない", ""]
+    assert quote_problems(trim(parse_script(nl.join(fast)))) == []
