@@ -286,6 +286,38 @@ def test_分で渡せる():
         upload_mod.when_to_publish("+5", now)
 
 
+def test_投稿の枠は7時から24時():
+    """**深夜に出さない**（2026-09-10 ユーザー決定「動画投稿は7時から24時」）。
+
+    126本を公開時刻で並べたら、深夜0〜4時のショートは中央値10回で、
+    朝1,035回・夕1,078回と2桁ちがった。**書き出しが押すと、
+    気づいたら深夜の枠に落ちる。**ここで止める。
+    """
+    from datetime import datetime, timedelta, timezone
+
+    import pytest
+
+    jst = timezone(timedelta(hours=9))
+    now = datetime(2026, 9, 10, 23, 0, tzinfo=jst)
+
+    # 枠の中はそのまま通る
+    assert upload_mod.when_to_publish("23:30", now) == "2026-09-10T14:30:00Z"
+    assert upload_mod.when_to_publish("明日07:00", now) == "2026-09-10T22:00:00Z"
+
+    # 深夜は止める（時計でも、分での指定でも）
+    with pytest.raises(upload_mod.UploadError, match="枠の外"):
+        upload_mod.when_to_publish("明日02:00", now)
+    with pytest.raises(upload_mod.UploadError, match="枠の外"):
+        upload_mod.when_to_publish("+120", now)      # 翌 01:00
+    with pytest.raises(upload_mod.UploadError, match="枠の外"):
+        upload_mod.when_to_publish("明日06:59", now)
+
+    # 7時ちょうどは通る。24時（＝0時）は枠の外
+    assert upload_mod.when_to_publish("明日07:00", now)
+    with pytest.raises(upload_mod.UploadError, match="枠の外"):
+        upload_mod.when_to_publish("明日00:00", now)
+
+
 def test_予約すると非公開で送られる(tmp_path, monkeypatch):
     """YouTube の決まりで、予約するあいだは private でなければならない。"""
     from src import quota

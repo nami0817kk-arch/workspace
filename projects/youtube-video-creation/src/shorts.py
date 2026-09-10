@@ -11,6 +11,7 @@
 from __future__ import annotations
 
 import copy
+import re
 from dataclasses import replace
 from pathlib import Path
 
@@ -72,6 +73,7 @@ def trim(script: Script, section: str = "", max_seconds: float = MAX_SECONDS) ->
     _retitle(short, body)
     _drop_hook(short.scenes[0])
     _drop_main_mark(short.scenes[1])
+    _drop_lead_in(short.scenes[1])
     _fit(short, max_seconds)
     _add_face(short)
     if not short.scenes[-1].lines:
@@ -252,6 +254,23 @@ def face_timing(script: Script) -> tuple[float | None, float]:
     return at, (shown / total if total else 0.0)
 
 
+def quote_problems(script: Script) -> list[str]:
+    """発言が出るのが遅くないか（2026-09-10）。
+
+    44本を測ったら、ショートは**誰かの言葉が19秒までに出る9本が平均維持50.4%、
+    遅い8本が33.7%**だった（本編では 25.1% と 22.7% で差が出ない）。
+    振りは機械で落とすが、そこから先は**台本の書き方**なので、
+    書き出したところで知らせる。
+    """
+    at = quote_at(script)
+    if at is None:
+        return ["誰かの言葉が1つも入っていません（節を選び直すか、台本に発言を足す）"]
+    if at > QUOTE_BY:
+        return [f"最初の発言が{at:.0f}秒目です（{QUOTE_BY:.0f}秒までに出す。"
+                "状況の説明を短くするか、発言のある節を選ぶ）"]
+    return []
+
+
 def face_problems(script: Script) -> list[str]:
     """顔の出し方の問題。**実測（2026-09-06）で平均12秒目・全体の2割だった。**
 
@@ -276,6 +295,49 @@ def face_problems(script: Script) -> list[str]:
 # 見積りのずれは回によって +5%〜+18%（実測）なので、0.86 で目標50秒、
 # 最悪でも59秒に収まる
 ESTIMATE_SLACK = 0.86
+
+
+# 情報を持たない「振り」。**発言の直前に置かれ、2〜4秒を使う**
+LEAD_IN = re.compile(r"こう[^。]{0,8}(?:まし|ていま|いま|ま)す?[た。]?。?$")
+# 最初の発言はここまでに出したい（秒）。実測の境目は19秒
+QUOTE_BY = 15.0
+
+
+def _is_lead_in(line) -> bool:
+    text = (getattr(line, "text", "") or "").strip()
+    return bool(text) and bool(LEAD_IN.search(text))
+
+
+def _drop_lead_in(scene: Scene) -> None:
+    """**最初の発言までの「振り」を落とす**（2026-09-10）。
+
+    「こう話しました。」のような行は、次に発言が来ることを予告するだけで
+    情報を持たない。**それでも2〜4秒かかる。**
+
+    ショート44本を測ったら、誰かの言葉が19秒までに出る9本は平均維持50.4%、
+    それより遅い8本は33.7%だった（本編では差が出ない）。**ショートでは
+    発言までの秒数がそのまま維持に効く。**話者を名乗る行は残す
+    （「ショート単体で分かるように」の決まりと衝突するため）。
+    """
+    out = []
+    for index, line in enumerate(scene.lines):
+        who = (getattr(line, "speaker", "") or "").strip()
+        if who not in NARRATORS:
+            break
+        if _is_lead_in(line):
+            out.append(index)
+    for index in reversed(out):
+        del scene.lines[index]
+
+
+def quote_at(script: Script) -> float | None:
+    """最初の「誰かの言葉」が始まる秒。語りだけなら None。"""
+    elapsed = 0.0
+    for line in script.lines:
+        if (getattr(line, "speaker", "") or "").strip() not in NARRATORS:
+            return elapsed
+        elapsed += line.duration or line.estimated_duration()
+    return None
 
 
 def _blocks(scene: Scene) -> list[list[int]]:

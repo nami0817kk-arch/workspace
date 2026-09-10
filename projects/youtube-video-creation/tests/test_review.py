@@ -973,3 +973,61 @@ def test_画面に出る字の点検はscript_jsonが無ければ止める(tmp_p
     from src.review import _telop_coverage
 
     assert not _telop_coverage(tmp_path / "ない.json").ok
+
+
+def _said(*rows):
+    from src.script_model import Line, Scene, Script
+
+    scenes = [Scene(title="本編", lines=[Line(speaker=w, text=t) for w, t in rows])]
+    return Script(title="T", scenes=scenes)
+
+
+def test_まとめサイトの言及は落とす():
+    """**どこで読んだかは要らない**（2026-09-10 ユーザー「まとめサイトではとか入らない」）。
+
+    反応そのものを読めば足りる。母数（「47件中12件」）は残してよいが、
+    どこで数えたかは概要欄に置く。
+    """
+    from src.review import check_board_mention
+
+    bad = _said(("キャスター", "掲示板のまとめには、この買収について15件の書き込みがありました。"))
+    assert not check_board_mention(bad).ok
+
+    # 母数だけなら通る
+    good = _said(("キャスター", "47件のうち12件が、この移籍に反対していました。"))
+    assert check_board_mention(good).ok
+
+
+def test_媒体名は引用の前置きだけ通す():
+    """確度の「報道」は誰が言ったかを示すもの。**引用の前置きは残す。**"""
+    from src.review import check_outlet_talk
+
+    intro = _said(
+        ("キャスター", "スペイン紙『AS』は、見出しでこう書きました。"),
+        ("スペイン紙AS", "相手を屈服させる"),
+    )
+    assert check_outlet_talk(intro).ok
+
+    fact = _said(
+        ("キャスター", "イギリスメディア『スカイスポーツ』によると、5500万ユーロの買い取りオプションが付いています。"),
+        ("キャスター", "背番号は33です。"),
+    )
+    assert not check_outlet_talk(fact).ok
+
+    # **一次情報の出どころは別。**どこが測った数字かは中身の一部
+    primary = _said(("キャスター", "プレミアリーグによると、35.93キロが今季の最高です。"))
+    assert check_outlet_talk(primary).ok
+
+
+def test_埋め草を知らせる():
+    """**背番号は誰も知りたくない**（2026-09-10 ユーザー指摘）。"""
+    from src.review import check_filler
+
+    for text in ("バルセロナからの期限付き移籍で、背番号は33です。",
+                 "次は9月25日にオーストラリアと対戦します。",
+                 "なお、このブラジルはW杯で日本と当たっています。",
+                 "つまり、あと1シーズン分ということになります。"):
+        assert not check_filler(_said(("キャスター", text))).ok, text
+
+    clean = _said(("キャスター", "17人が入れ替わりました。"))
+    assert check_filler(clean).ok

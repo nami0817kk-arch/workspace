@@ -381,6 +381,8 @@ def main(argv: list[str] | None = None) -> int:
         "insights", help="視聴維持率と動画ごとの成績を読む（読み取りのみ）")
     p_ins.add_argument("--days", type=int, default=7, help="何日ぶんを見るか（既定7）")
     p_ins.add_argument("--video", default="", help="1本の視聴維持の曲線を見る")
+    p_ins.add_argument("--hold", action="store_true",
+                       help="**全動画**で維持率を見る（測れなかった本数も出す）")
 
     # 選手・クラブのページの表を数字の材料にする（2026-09-08）。
     # `stats` は「これまで何を出したか」の振り返りに使っているので、こちらは numbers
@@ -614,6 +616,9 @@ def _cmd_short(args, config) -> int:
     print(f"完成: {result.video}  ({result.duration:.0f}秒)")
     # **どちらも要る点検。**顔が遅い／冒頭で喋っていない、は別の問題
     for problem in shorts.face_problems(short):
+        print(f"  ! {problem}", file=sys.stderr)
+    # **発言までの秒数がそのまま維持に効く**（2026-09-10 の実測）
+    for problem in shorts.quote_problems(short):
         print(f"  ! {problem}", file=sys.stderr)
 
     # 冒頭で捨てられていないか、その場で見る。review は --out を渡さないと
@@ -1686,6 +1691,88 @@ def _cmd_numbers(args, config) -> int:
     return 0
 
 
+def _hold(api, args) -> int:
+    """**全動画**で維持率を見る（2026-09-10 ユーザー指摘「この分析は全動画で実施している」）。
+
+    それまで再生の多い上位25本しか見ずに結論を出していた。**測れた本数と
+    測れなかった本数を必ず一緒に出す。**測れないのは、再生が少なすぎるもの
+    （本編は中央値3回）と、公開が新しすぎるもの（分析は2〜3日遅れ）。
+    """
+    import json as _json
+    import re as _re
+    import statistics as _st
+    from datetime import date, timedelta
+
+    from . import insights as insights_mod
+    from . import posted as posted_mod
+    from .upload import get_service
+
+    today = date.today()
+    rows = insights_mod.per_video_all(api, str(today - timedelta(days=args.days)), str(today))
+    if not rows:
+        print("まだ数字が出ていません。集計に2〜3日かかります")
+        return 0
+
+    service = get_service()
+    ids = [row.video_id for row in rows]
+    meta = {}
+    for start in range(0, len(ids), 50):
+        got = service.videos().list(
+            part="snippet,contentDetails", id=",".join(ids[start:start + 50])).execute()
+        for item in got["items"]:
+            found = _re.match(r"PT(?:(\d+)M)?(?:(\d+)S)?",
+                             item["contentDetails"]["duration"])
+            length = (int(found.group(1) or 0) * 60 + int(found.group(2) or 0)) if found else 0
+            meta[item["id"]] = (item["snippet"]["title"], length)
+
+    total = _channel_video_count(service)
+    print(f"■ 直近{args.days}日　維持率が読めた {len(rows)}本"
+          + (f" / チャンネルの動画 {total}本" if total else ""))
+    if total > len(rows):
+        print(f"　残り{total - len(rows)}本は測れません"
+              "（再生が少なすぎるか、公開が新しすぎる。分析は2〜3日遅れ）")
+
+    groups: dict[bool, list] = {True: [], False: []}
+    for row in rows:
+        title, length = meta.get(row.video_id, (row.video_id, 0))
+        folder = posted_mod.folder_of(row.video_id)
+        path = Path(folder or "x") / "script.json"
+        at = None
+        if path.exists():
+            at = insights_mod.quote_start(_json.loads(path.read_text(encoding="utf-8")))
+        groups[0 < length <= 61].append((at, row.avg_percent, title, path.exists()))
+
+    for short, name in ((True, "ショート"), (False, "本編")):
+        sel = groups[short]
+        if not sel:
+            continue
+        print("")
+        print(f"■ {name}　{len(sel)}本　平均維持率の中央値 "
+              f"{_st.median([item[1] for item in sel]):.1f}%")
+        missing = sum(1 for item in sel if not item[3])
+        if missing:
+            print(f"　うち{missing}本は台本が手元に無いので、言葉の出る時刻は見ていません")
+        pairs = [(item[0], item[1]) for item in sel if item[3]]
+        split = insights_mod.split_by_quote(pairs)
+        if split["edge"] is not None:
+            print(f"　誰かの言葉が{split['edge']:.0f}秒までに出る{split['n_early']}本"
+                  f"　維持 {split['early']:.1f}%")
+            print(f"　それより遅い{split['n_late']}本"
+                  f"　　　　　　　維持 {split['late']:.1f}%")
+        if split["none"] is not None:
+            print(f"　言葉が1つも無い{split['n_none']}本"
+                  f"　　　　　維持 {split['none']:.1f}%")
+    return 0
+
+
+def _channel_video_count(service) -> int:
+    try:
+        got = service.channels().list(part="statistics", mine=True).execute()
+        return int(got["items"][0]["statistics"].get("videoCount", 0))
+    except Exception:
+        return 0
+
+
 def _cmd_insights(args, config) -> int:
     """視聴維持率と動画ごとの成績を読む（2026-09-09）。
 
@@ -1718,6 +1805,9 @@ def _cmd_insights(args, config) -> int:
         for line in insights_mod.curve_lines(curve, seconds):
             print(line)
         return 0
+
+    if args.hold:
+        return _hold(api, args)
 
     rows = insights_mod.per_video(api, args.days)
     if not rows:

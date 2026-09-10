@@ -46,6 +46,14 @@ FACE_CLASH_GROUND = (200, 22, 34)
 # 印の上に置く国旗・エンブレムの高さと、印との間
 FACE_CLASH_FLAG_H = 118
 FACE_CLASH_GAP = 18
+# 札を置く高さ（画像に対する割合）。**真ん中**（2026-09-10 ユーザー指示）
+FACE_CLASH_Y = 0.50
+# エンブレムを札の上に載せる回（1つだけ）は、上に詰めたまま
+FACE_CLASH_Y_TOP = 0.30
+# 3枚並べた回。真ん中の顔を避けて、帯のすぐ上まで下げる
+FACE_CLASH_Y_TRIO = 0.62
+# 角に寄せたエンブレムの余白
+FACE_CLASH_EDGE = 24
 BADGE_HEIGHT = 62
 SUBTITLE_HEIGHT = 70
 DATE_HEIGHT = 40
@@ -517,9 +525,9 @@ def _band_thumbnail(
     elif len(tiles) >= 2:
         # **並べれば全面が写真になる。**ぼかしの下地が要らない
         canvas = _tile_photos(tiles)
-        if len(tiles) == 2 and face_link:
+        if face_link:
             _face_clash(canvas, face_link, font_path,
-                        tags if crests is None else crests)
+                        tags if crests is None else crests, tiles=len(tiles))
             crests = []          # 上に置いたので、右下には出さない
         portrait = False
     else:
@@ -689,7 +697,7 @@ def _is_portrait(background: str | None, ratio: float = 1.1) -> bool:
 
 
 def _face_clash(canvas: Image.Image, text: str, font_path: str,
-                crests: list[str] | None = None) -> None:
+                crests: list[str] | None = None, tiles: int = 2) -> None:
     """並べた2枚の**継ぎ目に、ぶつかっている印を置く**（2026-09-10 ユーザー指示
     「喧嘩している感出して」）。
 
@@ -700,14 +708,31 @@ def _face_clash(canvas: Image.Image, text: str, font_path: str,
         return
     layer, draw = _layer(canvas.size)
     font = ImageFont.truetype(font_path, FACE_CLASH_SIZE)
-    cx, cy = canvas.width // 2, int(canvas.height * 0.30)
+    marks = [_crest_image(name, FACE_CLASH_FLAG_H) for name in (crests or [])]
+    marks = [mark for mark in marks if mark is not None]
+    # **札の高さは、エンブレムの置き場所で決まる。**2つあるときは角へ逃がすので
+    # 札を真ん中に置ける（2026-09-10 ユーザー「ロゴは左上と右上にして、交渉は真ん中に」）。
+    # 1つのときは札の上に載せるため、上に詰めたまま（ブラジル国旗の回）
+    cx = canvas.width // 2
+    if tiles >= 3:
+        # **3枚並べると、真ん中に顔が来る**（2026-09-10 ユーザー「フリアンも
+        # サムネに載せたい」）。札を画面の中央に置くとその顔を隠すので、
+        # 帯のすぐ上まで下げる
+        cy = int(canvas.height * FACE_CLASH_Y_TRIO)
+    elif len(marks) >= 2:
+        cy = int(canvas.height * FACE_CLASH_Y)
+    else:
+        cy = int(canvas.height * FACE_CLASH_Y_TOP)
     width = draw.textlength(text, font=font)
     pad = 34
     box = [cx - width / 2 - pad, cy - FACE_CLASH_SIZE * 0.72,
            cx + width / 2 + pad, cy + FACE_CLASH_SIZE * 0.78]
     # 継ぎ目を割るように、上下へ伸びる帯
-    draw.polygon([(cx - 26, 0), (cx + 26, 0), (cx + 26, canvas.height),
-                  (cx - 26, canvas.height)], fill=(12, 14, 20, 210))
+    # 継ぎ目の数だけ帯を引く（3枚なら1/3と2/3の2本）
+    for index in range(1, max(2, tiles)):
+        seam = int(canvas.width * index / max(2, tiles))
+        draw.polygon([(seam - 26, 0), (seam + 26, 0), (seam + 26, canvas.height),
+                      (seam - 26, canvas.height)], fill=(12, 14, 20, 210))
     draw.rounded_rectangle(box, radius=14, fill=FACE_CLASH_GROUND + (255,))
     draw.text((cx - width / 2, cy - FACE_CLASH_SIZE * 0.60), text, font=font,
               fill=(255, 255, 255, 255), stroke_width=5, stroke_fill=(0, 0, 0, 235))
@@ -716,10 +741,16 @@ def _face_clash(canvas: Image.Image, text: str, font_path: str,
     # **印の上に置く**（2026-09-10 ユーザー「ブラジル国旗はvsの上において」）。
     # 右下だと顔にかかるうえ、2人のどちらの持ち物かが曖昧になる。
     # 真ん中の上なら「この2人が属しているもの」として読める
-    for name in (crests or [])[:1]:
-        mark = _crest_image(name, FACE_CLASH_FLAG_H)
-        if mark is None:
-            continue
+    if len(marks) >= 2:
+        # **2つあるときは左上と右上**（2026-09-10 ユーザー「ロゴは左上と右上にして」）。
+        # 移籍の話は「どちらのクラブの人か」が分からないと絵にならない。
+        # 顔の上に重ねると髪や額に食い込むので、角まで逃がす
+        canvas.alpha_composite(marks[0], (FACE_CLASH_EDGE, FACE_CLASH_EDGE))
+        canvas.alpha_composite(
+            marks[1],
+            (canvas.width - marks[1].width - FACE_CLASH_EDGE, FACE_CLASH_EDGE))
+        return
+    for mark in marks[:1]:
         top = int(box[1]) - mark.height - FACE_CLASH_GAP
         canvas.alpha_composite(mark, (cx - mark.width // 2, max(8, top)))
 
