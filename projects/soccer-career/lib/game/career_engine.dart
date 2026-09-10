@@ -666,7 +666,7 @@ class CareerEngine {
         state.reputation.marketValue * (0.7 + state.contractYears * 0.2));
 
     // 声がかかる国。今の国と、代理人の人脈で届く範囲の国。
-    for (final country in _reachableCountries(state)) {
+    for (final country in reachableCountries(state)) {
       for (final tier in [1, 2]) {
         if (tier > country.tiers) continue;
         // 手の届く範囲の中から、格の近いクラブを選ぶ。
@@ -776,16 +776,17 @@ class CareerEngine {
   ///
   /// 今の国は常に対象。国外は「自分の格」と「代理人の人脈」で決まり、
   /// いきなり最上位リーグから声はかからない。
-  List<Country> _reachableCountries(CareerState state) {
+  List<Country> reachableCountries(CareerState state) {
     final here = World.byId(state.club.countryId);
     // 上の国へ行くには、実力に加えて「名前が知られていること」が要る。
     //
     // 以前は総合力55から1段ずつ届いたので、普通に育てた選手の半数以上が
     // 最上位の国の1部に流れ着いていた。代表歴を条件に足して、
     // 格上の国は一段ハードルを上げる。
-    final reachPrestige = (state.player.overall - 66) ~/ 7 +
-        state.agent.reach ~/ 4 +
-        (state.caps >= 10 ? 1 : 0);
+    final reachPrestige = ((state.player.overall - 66) ~/ 7 +
+            state.agent.reach ~/ 4 +
+            (state.caps >= 10 ? 1 : 0))
+        .clamp(0, 1);
     return [
       here,
       ...World.countries.where((c) =>

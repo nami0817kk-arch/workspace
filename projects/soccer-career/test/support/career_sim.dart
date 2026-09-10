@@ -60,6 +60,7 @@ class Playstyle {
     this.effort = TrainingEffort.normal,
     this.companion = TrainingCompanion.alone,
     this.spendsPoints = false,
+    this.autoRestBelow,
   });
 
   final String name;
@@ -80,6 +81,9 @@ class Playstyle {
 
   /// 自分で経験点を振るか。false なら今までどおり自動。
   final bool spendsPoints;
+
+  /// 自動休養のしきい値。null なら既定のまま。
+  final int? autoRestBelow;
 
   /// 居残りでセットプレーを磨く。
   final bool drills;
@@ -113,6 +117,8 @@ class Career {
   int severeInjuries = 0;
   int missedMatches = 0;
   int transfers = 0;
+  int lastTier = 9;
+  bool reachedTopByPromotion = false;
   int loans = 0;
   int bestTier = 9;
   int bestPrestige = 0;
@@ -182,6 +188,9 @@ Future<Career> runCareer(Playstyle style, int seed) async {
   }
   if (style.drills) await controller.setDrill(SetPiece.freeKick);
   await controller.setEffort(style.effort);
+  if (style.autoRestBelow != null) {
+    await controller.setAutoRestBelow(style.autoRestBelow!);
+  }
   if (style.spendsPoints) await controller.setAutoSpend(false);
 
   var guard = 0;
@@ -248,6 +257,11 @@ Future<Career> runCareer(Playstyle style, int seed) async {
     career.goals += stats.goals;
     career.assists += stats.assists;
     career.ratingSum += stats.averageRating * stats.appearances;
+    // 1部にどうやって届いたか。昇格か、移籍か。
+    if (done.club.tier == 1 && career.bestTier > 1) {
+      career.reachedTopByPromotion = career.lastTier == 1;
+    }
+    career.lastTier = done.club.tier;
     career.bestTier = min(career.bestTier, done.club.tier);
     if (done.club.tier == 1) {
       career.bestPrestige =
