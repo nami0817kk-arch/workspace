@@ -310,3 +310,26 @@ def test_本題の印がいちばん強い():
                     text="ここからが本題です。50得点に届いたのは49試合目でした。")
     talky = _scene("同僚はどう見ているか", voices=4)
     assert strength(marked, {}) > strength(talky, {})
+
+
+def test_ショートでは本題の印を読み上げない():
+    """**ショートには「前」が無い**（2026-09-10）。
+
+    本編では前の節と対比させる言葉だが、いきなり「ここからが本題です」で
+    始まると、何かを見落としたように聞こえる。読み上げの文だけ削る。
+    """
+    from src.script_model import Line, Scene
+    from src.shorts import _drop_main_mark
+
+    scene = Scene(title="x", lines=[
+        Line(speaker="解説", text="ここからが本題です。監督が世代交代を進めようとしていました。"),
+        Line(speaker="解説", text="ここからが本題です。2行目は触らない。"),
+    ])
+    _drop_main_mark(scene)
+    assert scene.lines[0].text == "監督が世代交代を進めようとしていました。"
+    assert scene.lines[1].text.startswith("ここからが本題です")   # 1行目だけ
+
+    # 印が無ければ何もしない
+    plain = Scene(title="x", lines=[Line(speaker="解説", text="ふつうの行です。")])
+    _drop_main_mark(plain)
+    assert plain.lines[0].text == "ふつうの行です。"

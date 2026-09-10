@@ -71,6 +71,7 @@ def trim(script: Script, section: str = "", max_seconds: float = MAX_SECONDS) ->
     short.scenes = [copy.deepcopy(opening), copy.deepcopy(body)]
     _retitle(short, body)
     _drop_hook(short.scenes[0])
+    _drop_main_mark(short.scenes[1])
     _fit(short, max_seconds)
     _add_face(short)
     if not short.scenes[-1].lines:
@@ -114,6 +115,23 @@ def _drop_hook(opening: Scene) -> None:
     """
     if len(opening.lines) > 1:
         del opening.lines[1:]
+
+
+def _drop_main_mark(scene: Scene) -> None:
+    """**「ここからが本題です。」を落とす**（2026-09-10）。
+
+    本編では前の節と対比させる言葉だが、**ショートにはその「前」が無い。**
+    いきなり「ここからが本題です」で始まると、何かを見落としたように聞こえる。
+    画面のテロップには影響しない（読み上げの文だけ削る）。
+    """
+    for line in scene.lines:
+        text = (getattr(line, "text", "") or "").lstrip()
+        for mark in ("ここからが本題です。", "ここからが本題です", "ここからが本題。"):
+            if text.startswith(mark):
+                line.text = text[len(mark):].lstrip() or text
+                return
+        if text:
+            return
 
 
 # 語りを担当する声。ここに無い話者は「誰かの言葉を代弁している」
@@ -253,7 +271,11 @@ def face_problems(script: Script) -> list[str]:
 # **見積りは実尺より短く出る。**章の切り替え・間・書き出しの処理が乗るため。
 # 実測（2026-09-07）で見積り56秒に対し実尺66秒。**1割以上ずれる。**
 # そのぶん手前で切らないと、60秒を超えてショートとして扱われなくなる
-ESTIMATE_SLACK = 0.80
+# **60秒まで使う**（2026-09-10 ユーザー「60秒で良いよ」）。0.80 だと
+# 目標が46秒で、実尺は38〜45秒に収まっていた。**上限まで2割空けていた。**
+# 見積りのずれは回によって +5%〜+18%（実測）なので、0.86 で目標50秒、
+# 最悪でも59秒に収まる
+ESTIMATE_SLACK = 0.86
 
 
 def _fit(script: Script, max_seconds: float) -> None:
