@@ -5,6 +5,7 @@ import '../../game/match_engine.dart';
 import '../../game/newsroom.dart';
 import '../../game/scenarios.dart';
 import '../../models/attributes.dart';
+import '../../models/development.dart';
 import '../../models/injury.dart';
 import '../../models/news.dart';
 import '../../models/season.dart';
@@ -118,6 +119,7 @@ class _MatchScreenState extends State<MatchScreen> {
                           ),
                           promiseReach: widget.controller.state!.promiseReach,
                           onChoose: _choose,
+                          onArm: widget.controller.armSignature,
                         ),
                 ),
                 if (!match.isFinished)
@@ -254,6 +256,7 @@ class _ScenarioView extends StatelessWidget {
     required this.scorerChase,
     required this.promiseReach,
     required this.onChoose,
+    required this.onArm,
   });
 
   final MatchInProgress match;
@@ -283,6 +286,9 @@ class _ScenarioView extends StatelessWidget {
   final String? promiseReach;
 
   final void Function(int) onChoose;
+
+  /// 切り札を構える／外す。
+  final void Function(Signature?) onArm;
 
   /// その手に使う能力が、今季どれだけ伸びたか。記録が無ければ 0。
   int _growthOf(ScenarioOption option) {
@@ -422,6 +428,11 @@ class _ScenarioView extends StatelessWidget {
               ],
             ),
           ),
+          // 切り札。積み上げた個人技を、ここで出すと決める手。
+          if (match.armable.isNotEmpty) ...[
+            const SizedBox(height: 16),
+            _TrumpCard(match: match, onArm: onArm),
+          ],
           const SizedBox(height: 16),
           for (var i = 0; i < scenario.options.length; i++) ...[
             _OptionButton(
@@ -439,6 +450,67 @@ class _ScenarioView extends StatelessWidget {
             ),
             const SizedBox(height: 10),
           ],
+        ],
+      ),
+    );
+  }
+}
+
+/// 切り札。1試合に1回だけ、覚えた個人技を「ここで出す」と決める。
+///
+/// 個人技はこれまで、身に付くと**常に少しだけ効く**だけだった
+/// （実測: 1人あたり2.83個・局面の70%に乗って平均 +3.1%）。
+/// 誰でも3つ揃い、選ぶ余地も使いどころの判断も無い。
+class _TrumpCard extends StatelessWidget {
+  const _TrumpCard({required this.match, required this.onArm});
+
+  final MatchInProgress match;
+  final void Function(Signature?) onArm;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final armed = match.armed;
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: armed != null
+            ? theme.colorScheme.tertiaryContainer
+            : theme.colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('切り札（この試合に1回）', style: theme.textTheme.labelMedium),
+          const SizedBox(height: 6),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final signature in match.armable)
+                ChoiceChip(
+                  label: Text(signature.label),
+                  selected: armed == signature,
+                  visualDensity: VisualDensity.compact,
+                  onSelected: (on) => onArm(on ? signature : null),
+                ),
+            ],
+          ),
+          const SizedBox(height: 6),
+          Text(
+            armed == null
+                ? '構えると、その技が出る手に'
+                      ' +${(Formulas.signatureArmedBonus * 100).round()}%。'
+                      '外すと、その試合の残りが'
+                      ' -${(Formulas.signatureMissPenalty * 100).round()}%。'
+                : '${armed.label}を構えた。'
+                      '${armed.detail.label}の手に乗る。',
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
         ],
       ),
     );

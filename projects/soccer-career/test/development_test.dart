@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soccer_career/game/formulas.dart';
 import 'package:soccer_career/game/career_engine.dart';
 import 'package:soccer_career/game/match_engine.dart';
 import 'package:soccer_career/models/agent.dart';
@@ -31,23 +32,25 @@ Player player({
   Attributes? attributes,
   Physique? physique,
   int confidence = 10,
-}) =>
-    Player(
-      name: 'P',
-      age: age,
-      position: position,
-      attributes: attributes ?? flat,
-      potential: potential,
-      physique: physique ??
-          const Physique(
-              heightCm: Physique.baseHeight, weightKg: Physique.baseWeight),
-      personality: Personality(
-        confidence: confidence,
-        ambition: 10,
-        professionalism: 10,
-        temper: 10,
+}) => Player(
+  name: 'P',
+  age: age,
+  position: position,
+  attributes: attributes ?? flat,
+  potential: potential,
+  physique:
+      physique ??
+      const Physique(
+        heightCm: Physique.baseHeight,
+        weightKg: Physique.baseWeight,
       ),
-    );
+  personality: Personality(
+    confidence: confidence,
+    ambition: 10,
+    professionalism: 10,
+    temper: 10,
+  ),
+);
 
 Club club(String id, {int strength = 60}) =>
     Club(id: id, name: id, strength: strength, tier: 1, countryId: 'yamato');
@@ -56,12 +59,18 @@ void main() {
   group('試合経験値', () {
     test('先発は途中出場より積み、出ない試合では積まない', () {
       const base = Development();
-      final started =
-          base.afterMatch(appearance: Appearance.start, international: false);
-      final sub =
-          base.afterMatch(appearance: Appearance.sub, international: false);
+      final started = base.afterMatch(
+        appearance: Appearance.start,
+        international: false,
+      );
+      final sub = base.afterMatch(
+        appearance: Appearance.sub,
+        international: false,
+      );
       final benched = base.afterMatch(
-          appearance: Appearance.benched, international: false);
+        appearance: Appearance.benched,
+        international: false,
+      );
 
       expect(started.experience, greaterThan(sub.experience));
       expect(sub.experience, greaterThan(0));
@@ -70,16 +79,25 @@ void main() {
 
     test('代表戦は余分に積む', () {
       const base = Development();
-      final league =
-          base.afterMatch(appearance: Appearance.start, international: false);
-      final national =
-          base.afterMatch(appearance: Appearance.start, international: true);
+      final league = base.afterMatch(
+        appearance: Appearance.start,
+        international: false,
+      );
+      final national = base.afterMatch(
+        appearance: Appearance.start,
+        international: true,
+      );
       expect(national.experience, greaterThan(league.experience));
     });
 
     test('経験は落ち着きになるが、上限がある', () {
       expect(const Development().composure, 0);
-      expect(const Development(experience: 5000).composure, 0.05);
+      // 上限 0.05 では、大一番の重圧がキャリア中盤で完全に消えていた
+      // （実測で平均 −0.10% ＝ 実質ゼロ）。重圧と揃えて 0.10 に。
+      expect(
+        const Development(experience: 5000).composure,
+        Formulas.bigMatchPressure,
+      );
     });
   });
 
@@ -131,15 +149,18 @@ void main() {
     test('当たるほど苦手ではなくなるが、頭打ちになる', () {
       const dev = Development(faced: {ClubStyle.pressing: 5});
       const veteran = Development(faced: {ClubStyle.pressing: 200});
-      expect(veteran.adaptationFor(ClubStyle.pressing),
-          greaterThan(dev.adaptationFor(ClubStyle.pressing)));
-      expect(veteran.adaptationFor(ClubStyle.pressing), 0.04);
+      expect(
+        veteran.adaptationFor(ClubStyle.pressing),
+        greaterThan(dev.adaptationFor(ClubStyle.pressing)),
+      );
+      // 苦手（styleMismatch）を消しきれるところまで慣れる。
+      expect(veteran.adaptationFor(ClubStyle.pressing), Formulas.styleMismatch);
       expect(dev.adaptationFor(ClubStyle.defensive), 0);
     });
 
     test('相手の得意な形は難しくなり、慣れるとその差が縮む', () {
-      MatchInProgress start(Development dev) => MatchEngine(random: Random(3))
-              .start(
+      MatchInProgress start(Development dev) =>
+          MatchEngine(random: Random(3)).start(
             matchday: 1,
             player: player(),
             club: club('home'),
@@ -150,10 +171,14 @@ void main() {
           );
 
       final green = start(const Development());
-      final used = start(Development(faced: {ClubStyle.of(club('alpha')): 200}));
+      final used = start(
+        Development(faced: {ClubStyle.of(club('alpha')): 200}),
+      );
       final hard = green.opponentStyle.hardFor;
-      final option = green.current.options
-          .firstWhere((o) => o.key == hard, orElse: () => green.current.options.first);
+      final option = green.current.options.firstWhere(
+        (o) => o.key == hard,
+        orElse: () => green.current.options.first,
+      );
       if (option.key != hard) return;
       expect(used.chanceFor(option), greaterThan(green.chanceFor(option)));
     });
@@ -164,16 +189,15 @@ void main() {
       required int opponentStrength,
       int confidence = 10,
       Development dev = const Development(),
-    }) =>
-        MatchEngine(random: Random(8)).start(
-          matchday: 1,
-          player: player(confidence: confidence),
-          club: club('home', strength: 60),
-          opponent: club('rival', strength: opponentStrength),
-          home: true,
-          appearance: Appearance.start,
-          development: dev,
-        );
+    }) => MatchEngine(random: Random(8)).start(
+      matchday: 1,
+      player: player(confidence: confidence),
+      club: club('home', strength: 60),
+      opponent: club('rival', strength: opponentStrength),
+      home: true,
+      appearance: Appearance.start,
+      development: dev,
+    );
 
     test('格上との対戦は大一番になる', () {
       expect(start(opponentStrength: 60).bigMatch, isFalse);
@@ -197,8 +221,13 @@ void main() {
       final match = MatchEngine(random: Random(2)).start(
         matchday: 1,
         player: player(
-            physique: const Physique(
-                heightCm: 180, weightKg: 75, foot: Foot.both, weakFoot: 5)),
+          physique: const Physique(
+            heightCm: 180,
+            weightKg: 75,
+            foot: Foot.both,
+            weakFoot: 5,
+          ),
+        ),
         club: club('a'),
         opponent: club('b'),
         home: true,
@@ -209,28 +238,28 @@ void main() {
 
     test('逆足の局面では精度の低い選手ほど落ちる', () {
       MatchInProgress matchWith(int weakFoot) => MatchInProgress(
-            matchday: 1,
-            opponent: club('b'),
-            home: true,
-            appearance: Appearance.start,
-            scenarios: MatchEngine(random: Random(1))
-                .start(
-                  matchday: 1,
-                  player: player(),
-                  club: club('a'),
-                  opponent: club('b'),
-                  home: true,
-                  appearance: Appearance.start,
-                )
-                .scenarios,
-            minutes: const [10, 40, 70],
-            player: player(
-                physique: Physique(
-                    heightCm: 180, weightKg: 75, weakFoot: weakFoot)),
-            club: club('a'),
-            weakFootMoments: const [true, true, true],
-            random: Random(1),
-          );
+        matchday: 1,
+        opponent: club('b'),
+        home: true,
+        appearance: Appearance.start,
+        scenarios: MatchEngine(random: Random(1))
+            .start(
+              matchday: 1,
+              player: player(),
+              club: club('a'),
+              opponent: club('b'),
+              home: true,
+              appearance: Appearance.start,
+            )
+            .scenarios,
+        minutes: const [10, 40, 70],
+        player: player(
+          physique: Physique(heightCm: 180, weightKg: 75, weakFoot: weakFoot),
+        ),
+        club: club('a'),
+        weakFootMoments: const [true, true, true],
+        random: Random(1),
+      );
 
       final poor = matchWith(1);
       final good = matchWith(5);
@@ -250,12 +279,15 @@ void main() {
     test('逆足の練習で精度が上がり、形になると知らせる', () {
       final engine = MatchEngine(random: Random(7));
       var p = player(
-          physique:
-              const Physique(heightCm: 180, weightKg: 75, weakFoot: 1));
+        physique: const Physique(heightCm: 180, weightKg: 75, weakFoot: 1),
+      );
       var awakened = false;
       for (var i = 0; i < 200; i++) {
-        final week = engine.applyWeek(p,
-            menu: TrainingMenu.weakFootWork, played: false);
+        final week = engine.applyWeek(
+          p,
+          menu: TrainingMenu.weakFootWork,
+          played: false,
+        );
         awakened = awakened || week.weakFootAwakened;
         p = p.copyWith(physique: week.physique, condition: 100);
       }
@@ -266,9 +298,10 @@ void main() {
     test('逆足の練習は休養ではない', () {
       expect(TrainingMenu.weakFootWork.isRest, isFalse);
       final week = MatchEngine(random: Random(1)).applyWeek(
-          player().copyWith(condition: 60),
-          menu: TrainingMenu.weakFootWork,
-          played: false);
+        player().copyWith(condition: 60),
+        menu: TrainingMenu.weakFootWork,
+        played: false,
+      );
       expect(week.condition, lessThan(60));
     });
   });
@@ -279,21 +312,29 @@ void main() {
       final low = player();
       var learned = false;
       for (var i = 0; i < 200; i++) {
-        final week = engine.applyWeek(low,
-            menu: TrainingMenu.passingWork, played: false);
+        final week = engine.applyWeek(
+          low,
+          menu: TrainingMenu.passingWork,
+          played: false,
+        );
         learned = learned || week.learned != null;
       }
       expect(learned, isFalse);
 
       final skilled = player(
-        attributes: Attributes.fromDetails(
-            {for (final d in Detail.values) d: Signature.requirement + 5}),
+        attributes: Attributes.fromDetails({
+          for (final d in Detail.values) d: Signature.requirement + 5,
+        }),
         potential: 99,
       );
       var dev = const Development();
       for (var i = 0; i < 300 && dev.signatures.isEmpty; i++) {
-        final week = engine.applyWeek(skilled,
-            menu: TrainingMenu.passingWork, development: dev, played: false);
+        final week = engine.applyWeek(
+          skilled,
+          menu: TrainingMenu.passingWork,
+          development: dev,
+          played: false,
+        );
         if (week.learned != null) dev = dev.learn(week.learned!);
       }
       expect(dev.signatures, isNotEmpty);
@@ -310,8 +351,10 @@ void main() {
 
     test('覚えた技はその局面の確率を上げる', () {
       const dev = Development(signatures: [Signature.noLook]);
-      expect(dev.signatureBonus(AttributeKey.passing, Detail.vision),
-          greaterThan(dev.signatureBonus(AttributeKey.passing, null)));
+      expect(
+        dev.signatureBonus(AttributeKey.passing, Detail.vision),
+        greaterThan(dev.signatureBonus(AttributeKey.passing, null)),
+      );
       expect(dev.signatureBonus(AttributeKey.defending, null), 0);
     });
   });
@@ -331,7 +374,10 @@ void main() {
       var dev = const Development(plateau: 2);
       dev = dev.afterMatch(appearance: Appearance.start, international: false);
       expect(dev.plateau, 1);
-      dev = dev.afterMatch(appearance: Appearance.benched, international: false);
+      dev = dev.afterMatch(
+        appearance: Appearance.benched,
+        international: false,
+      );
       expect(dev.plateau, 0);
       expect(dev.inPlateau, isFalse);
     });
@@ -342,8 +388,12 @@ void main() {
         var attrs = flat;
         var count = 0;
         for (var i = 0; i < 300; i++) {
-          final week = engine.applyWeek(player(attributes: attrs),
-              menu: TrainingMenu.passingWork, plateau: plateau, played: false);
+          final week = engine.applyWeek(
+            player(attributes: attrs),
+            menu: TrainingMenu.passingWork,
+            plateau: plateau,
+            played: false,
+          );
           if (week.trained != null) count++;
           attrs = week.attributes;
         }
@@ -363,7 +413,11 @@ void main() {
       int greatWeeks = 99,
     }) {
       final s = CareerEngine(random: Random(2)).startCareer(
-          name: 'B', position: Position.cm, age: age, agent: Agent.pool.first);
+        name: 'B',
+        position: Position.cm,
+        age: age,
+        agent: Agent.pool.first,
+      );
       s.player = Player(
         name: 'B',
         age: age,
@@ -377,48 +431,74 @@ void main() {
           temper: 10,
         ),
       );
-      s.development =
-          Development(experience: experience, greatWeeks: greatWeeks);
+      s.development = Development(
+        experience: experience,
+        greatWeeks: greatWeeks,
+      );
       return s;
     }
 
     test('頭打ちで、若く、積み上げた選手にだけ起きる', () {
       final engine = CareerEngine(random: Random(1));
       expect(
-        engine.breaksThrough(stateAt(
+        engine.breaksThrough(
+          stateAt(
             age: 23,
             professionalism: 18,
             experience: 20,
-            atPotential: true)),
+            atPotential: true,
+          ),
+        ),
         isFalse,
         reason: '経験が足りない',
       );
       expect(
-        engine.breaksThrough(stateAt(
-            age: 23, professionalism: 5, experience: 900, atPotential: true)),
+        engine.breaksThrough(
+          stateAt(
+            age: 23,
+            professionalism: 5,
+            experience: 900,
+            atPotential: true,
+          ),
+        ),
         isFalse,
         reason: 'プロ意識が足りない',
       );
       expect(
-        engine.breaksThrough(stateAt(
-            age: 34, professionalism: 18, experience: 900, atPotential: true)),
+        engine.breaksThrough(
+          stateAt(
+            age: 34,
+            professionalism: 18,
+            experience: 900,
+            atPotential: true,
+          ),
+        ),
         isFalse,
         reason: '歳を取りすぎている',
       );
       expect(
-        engine.breaksThrough(stateAt(
-            age: 23, professionalism: 18, experience: 900, atPotential: false)),
+        engine.breaksThrough(
+          stateAt(
+            age: 23,
+            professionalism: 18,
+            experience: 900,
+            atPotential: false,
+          ),
+        ),
         isFalse,
         reason: 'まだ頭打ちではない',
       );
 
       expect(
-        engine.breaksThrough(stateAt(
+        engine.breaksThrough(
+          stateAt(
             age: 23,
             professionalism: 18,
             experience: 900,
             atPotential: true,
-            greatWeeks: 0)),
+            greatWeeks: 0,
+          ),
+        ),
         isFalse,
         reason: '追い込んでいない選手が限界を超えている',
       );
@@ -426,8 +506,14 @@ void main() {
       // 条件を満たせば、確率で起きる。
       var happened = false;
       for (var i = 0; i < 60 && !happened; i++) {
-        happened = CareerEngine(random: Random(i)).breaksThrough(stateAt(
-            age: 23, professionalism: 18, experience: 900, atPotential: true));
+        happened = CareerEngine(random: Random(i)).breaksThrough(
+          stateAt(
+            age: 23,
+            professionalism: 18,
+            experience: 900,
+            atPotential: true,
+          ),
+        );
       }
       expect(happened, isTrue);
     });
@@ -436,7 +522,11 @@ void main() {
   test('積み上げは保存を往復しても残り、無い保存データも読める', () {
     final ce = CareerEngine(random: Random(19));
     final s = ce.startCareer(
-        name: 'D', position: Position.wg, age: 20, agent: Agent.pool[1]);
+      name: 'D',
+      position: Position.wg,
+      age: 20,
+      agent: Agent.pool[1],
+    );
     s.development = const Development(
       experience: 420,
       choices: {AttributeKey.dribbling: 80},
