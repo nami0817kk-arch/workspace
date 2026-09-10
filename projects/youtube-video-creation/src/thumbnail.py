@@ -46,6 +46,12 @@ FACE_CLASH_GROUND = (200, 22, 34)
 # 印の上に置く国旗・エンブレムの高さと、印との間
 FACE_CLASH_FLAG_H = 118
 FACE_CLASH_GAP = 18
+# 札を置く高さ（画像に対する割合）。**真ん中**（2026-09-10 ユーザー指示）
+FACE_CLASH_Y = 0.50
+# エンブレムを札の上に載せる回（1つだけ）は、上に詰めたまま
+FACE_CLASH_Y_TOP = 0.30
+# 角に寄せたエンブレムの余白
+FACE_CLASH_EDGE = 24
 BADGE_HEIGHT = 62
 SUBTITLE_HEIGHT = 70
 DATE_HEIGHT = 40
@@ -700,7 +706,13 @@ def _face_clash(canvas: Image.Image, text: str, font_path: str,
         return
     layer, draw = _layer(canvas.size)
     font = ImageFont.truetype(font_path, FACE_CLASH_SIZE)
-    cx, cy = canvas.width // 2, int(canvas.height * 0.30)
+    marks = [_crest_image(name, FACE_CLASH_FLAG_H) for name in (crests or [])]
+    marks = [mark for mark in marks if mark is not None]
+    # **札の高さは、エンブレムの置き場所で決まる。**2つあるときは角へ逃がすので
+    # 札を真ん中に置ける（2026-09-10 ユーザー「ロゴは左上と右上にして、交渉は真ん中に」）。
+    # 1つのときは札の上に載せるため、上に詰めたまま（ブラジル国旗の回）
+    cx = canvas.width // 2
+    cy = int(canvas.height * (FACE_CLASH_Y if len(marks) >= 2 else FACE_CLASH_Y_TOP))
     width = draw.textlength(text, font=font)
     pad = 34
     box = [cx - width / 2 - pad, cy - FACE_CLASH_SIZE * 0.72,
@@ -716,19 +728,16 @@ def _face_clash(canvas: Image.Image, text: str, font_path: str,
     # **印の上に置く**（2026-09-10 ユーザー「ブラジル国旗はvsの上において」）。
     # 右下だと顔にかかるうえ、2人のどちらの持ち物かが曖昧になる。
     # 真ん中の上なら「この2人が属しているもの」として読める
-    marks = [(name, _crest_image(name, FACE_CLASH_FLAG_H)) for name in (crests or [])]
-    marks = [(name, mark) for name, mark in marks if mark is not None]
     if len(marks) >= 2:
-        # **2つあるときは、それぞれの顔の上に置く**（2026-09-10 ユーザー指示
-        # 「デコと、フリアン、アトレティコ、バルサで移籍交渉の裏側的なものに」）。
+        # **2つあるときは左上と右上**（2026-09-10 ユーザー「ロゴは左上と右上にして」）。
         # 移籍の話は「どちらのクラブの人か」が分からないと絵にならない。
-        # 真ん中に1つだけ置くと、2人の共通の持ち物に見える
-        for index, (_, mark) in enumerate(marks[:2]):
-            spot = int(canvas.width * (0.25 if index == 0 else 0.75))
-            top = int(box[1]) - mark.height - FACE_CLASH_GAP
-            canvas.alpha_composite(mark, (spot - mark.width // 2, max(8, top)))
+        # 顔の上に重ねると髪や額に食い込むので、角まで逃がす
+        canvas.alpha_composite(marks[0], (FACE_CLASH_EDGE, FACE_CLASH_EDGE))
+        canvas.alpha_composite(
+            marks[1],
+            (canvas.width - marks[1].width - FACE_CLASH_EDGE, FACE_CLASH_EDGE))
         return
-    for _, mark in marks[:1]:
+    for mark in marks[:1]:
         top = int(box[1]) - mark.height - FACE_CLASH_GAP
         canvas.alpha_composite(mark, (cx - mark.width // 2, max(8, top)))
 

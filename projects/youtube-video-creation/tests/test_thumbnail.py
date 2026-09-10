@@ -770,10 +770,13 @@ def test_国旗はVSの上に置く(tmp_path, monkeypatch):
     assert px.getpixel((mod.SIZE[0] // 2, 60))[1] > 100
 
 
-def test_エンブレムが2つならそれぞれの顔の上に置く(tmp_path):
+def test_エンブレムが2つなら左上と右上に置く(tmp_path):
     """**移籍の話は、どちらのクラブの人かが分からないと絵にならない**
     （2026-09-10 ユーザー指示「デコと、フリアン、アトレティコ、バルサで
     移籍交渉の裏側的なものに」）。真ん中に1つだけだと共通の持ち物に見える。
+
+    置き場所は**左上と右上**（同日「ロゴは左上と右上にして、交渉は真ん中に」）。
+    顔の上に重ねると髪や額に食い込む。
     """
     from PIL import Image
 
@@ -802,3 +805,10 @@ def test_エンブレムが2つならそれぞれの顔の上に置く(tmp_path)
     right = canvas.crop((640, 0, 1280, 240)).convert("RGB")
     assert any(px[0] > 150 and px[1] < 90 for px in left.getdata()), "左に無い"
     assert any(px[0] > 150 and px[1] < 90 for px in right.getdata()), "右に無い"
+
+    # 角に寄っている（真ん中の札とぶつかっていない）
+    from src.thumbnail import FACE_CLASH_EDGE, FACE_CLASH_Y
+
+    middle = canvas.crop((520, 0, 760, 200)).convert("RGB")
+    assert not any(px[0] > 150 and px[1] < 90 for px in middle.getdata()), "真ん中に残っている"
+    assert FACE_CLASH_EDGE < 60 and 0.4 < FACE_CLASH_Y < 0.6
