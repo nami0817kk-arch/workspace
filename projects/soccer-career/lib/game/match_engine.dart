@@ -95,6 +95,7 @@ class MatchInProgress {
     required this.player,
     required this.club,
     this.development = const Development(),
+    this.favoured = const [],
     List<int> teammateGoalMinutes = const [],
     double? expectedTeammateGoals,
     this.concededMinutes = const [],
@@ -148,6 +149,24 @@ class MatchInProgress {
   /// 隠されているので、画面と自動進行には予定そのものではなく、
   /// 力関係と残り時間から出るこの見込みを使う（[assistConversionAt]）。
   final double expectedTeammateGoals;
+
+  /// 監督が重く見る能力。空なら何も求めていない（バランス型）。
+  ///
+  /// 試合で選んだことが監督に届くのは、ここを通ってだけ。
+  final List<AttributeKey> favoured;
+
+  /// 監督の求める形に沿った手・逆らった手の数。
+  int followedTactic = 0;
+  int againstTactic = 0;
+
+  /// 味方を活かす手を選んだ回数。相方との呼吸はここから伸びる。
+  ///
+  /// これまでは出場するだけで +2 で、プレイヤーの関与がゼロだった。
+  int assistAttempts = 0;
+
+  /// その手が監督の求める形か。画面にも判定にも同じものを使う。
+  bool isFavoured(ScenarioOption option) =>
+      favoured.isNotEmpty && favoured.contains(option.key);
 
   /// 相手が決める時間。
   ///
@@ -552,6 +571,17 @@ class MatchInProgress {
     final chance = chanceFor(option);
     final success = _random.nextDouble() < chance;
 
+    // 監督は「何を選んだか」を見ている。
+    if (favoured.isNotEmpty) {
+      if (favoured.contains(option.key)) {
+        followedTactic++;
+      } else {
+        againstTactic++;
+      }
+    }
+    // 味方を活かす手を選んだこと自体が、相方との呼吸を育てる。
+    if (option.outcome == Outcome.assist) assistAttempts++;
+
     final context = traitContextFor(option);
     for (final trait in player.traits) {
       if (trait.chanceBonus(context) != 0) {
@@ -672,14 +702,22 @@ class MatchInProgress {
     ScenarioOption best(Iterable<ScenarioOption> from, double Function(ScenarioOption) score) =>
         from.reduce((a, b) => score(a) >= score(b) ? a : b);
 
+    // 監督の求める形は、評価点には乗らないが信頼に乗る。
+    // 見ないと自動進行が監督を無視し続け、出場機会をじわじわ失う。
+    // 明らかに良い手を覆さない重さで、迷ったときだけ効かせる。
+    double safeScore(ScenarioOption o) =>
+        chanceFor(o) + (isFavoured(o) ? Formulas.tacticPickBonus : 0);
+    double valueScore(ScenarioOption o) =>
+        expectedDelta(o) + (isFavoured(o) ? Formulas.tacticPickBonus : 0);
+
     switch (style) {
       case SimStyle.safe:
-        return best(options, chanceFor);
+        return best(options, safeScore);
       case SimStyle.balanced:
-        return best(options, expectedDelta);
+        return best(options, valueScore);
       case SimStyle.aggressive:
         final scoring = options.where((o) => o.outcome != Outcome.play);
-        return best(scoring.isEmpty ? options : scoring, expectedDelta);
+        return best(scoring.isEmpty ? options : scoring, valueScore);
     }
   }
 
@@ -794,6 +832,9 @@ class MatchInProgress {
       goalMinutes: [...ownGoalMinutes]..sort(),
       assistMinutes: [...ownAssistMinutes]..sort(),
       international: international,
+      followedTactic: followedTactic,
+      againstTactic: againstTactic,
+      assistAttempts: assistAttempts,
     );
   }
 
@@ -946,6 +987,7 @@ class MatchEngine {
     double moodBonus = 0,
     double extraRating = 0,
     bool international = false,
+    List<AttributeKey> favoured = const [],
     List<Scenario>? forcedScenarios,
   }) {
     final count = switch (appearance) {
@@ -996,6 +1038,7 @@ class MatchEngine {
       player: player,
       club: club,
       development: development,
+      favoured: favoured,
       teammateGoalMinutes: _goalMinutes(teammateGoals),
       expectedTeammateGoals: (1.25 + advantage / 40) *
           Formulas.teammateGoalShareFor(player.position.family),

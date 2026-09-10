@@ -186,6 +186,7 @@ class CareerState {
     this.momentSuccesses = const {},
     this.traitHits = const {},
     this.tampered = false,
+    this.tacticCredit = 0,
     this.objective,
     this.injury,
     this.caps = 0,
@@ -421,6 +422,36 @@ class CareerState {
         ),
     ];
   }
+
+  /// 監督の期待に、あと一歩で届くか。届くなら、その一言。
+  ///
+  /// 「得点関与 あと1」はクラブタブのカードにあるだけで、**局面を選ぶ画面には
+  /// 無かった**。同じ局面が、シーズンのどこにいるかで意味を変えるようにする。
+  /// 3つのうち2つで達成なので、「これで2つ目に届く」ときだけ出す。
+  String? get objectiveReach {
+    final objective = this.objective;
+    if (objective == null) return null;
+    final stats = seasonStats;
+    final achieved = objective.achievedCount(stats);
+    // すでに達成しているか、2つ以上足りないなら、今日の1本では届かない。
+    if (achieved >= 2) return null;
+
+    final goalsShort = objective.contributions - stats.goals - stats.assists;
+    if (goalsShort == 1 && achieved == 1) {
+      return '得点かアシストで、監督の期待に届く';
+    }
+    final appearancesShort = objective.appearances - stats.appearances;
+    if (appearancesShort == 1 && achieved == 1) {
+      return 'この試合に出れば、監督の期待に届く';
+    }
+    return null;
+  }
+
+  /// 監督の求める形に沿ったぶんの、まだ信頼に乗っていない端数。
+  ///
+  /// 1試合で動くのは1未満なので、切り捨てると永遠に何も起きない。
+  /// 持ち越して、溜まったら信頼に乗せる。
+  double tacticCredit;
 
   /// 管理画面（開発用）で書き換えたキャリアか。
   ///
@@ -666,6 +697,7 @@ class CareerState {
         'yellowCards': yellowCards,
         'suspension': suspension,
         'tampered': tampered,
+        'tacticCredit': tacticCredit,
         'traitHits': {
           for (final e in traitHits.entries) e.key.name: e.value,
         },
@@ -795,6 +827,7 @@ class CareerState {
       momentSuccesses: _countsFrom(json['momentSuccesses']),
       traitHits: _traitCountsFrom(json['traitHits']),
       tampered: json['tampered'] as bool? ?? false,
+      tacticCredit: (json['tacticCredit'] as num?)?.toDouble() ?? 0,
       contractYears: json['contractYears'] as int? ?? 2,
       countryId: json['countryId'] as String? ?? 'yamato',
       professionalYears: json['professionalYears'] as int? ?? 1,

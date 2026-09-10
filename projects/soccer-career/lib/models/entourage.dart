@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import '../game/formulas.dart';
 import 'attributes.dart';
 import 'club.dart';
 import 'injury.dart';
@@ -75,6 +76,24 @@ class Manager {
   /// 相性が出場機会に与える下駄。
   double appearanceBonus(Attributes attributes, Position position) =>
       fitFor(attributes, position) * 0.18;
+
+  /// その手が、監督の求める形に沿っているか。
+  ///
+  /// バランス型は何も求めないので、どの手も中立。
+  bool favours(AttributeKey key) => tactic.favours.contains(key);
+
+  /// 1試合ぶんの選択が、信頼をどれだけ動かすか。
+  ///
+  /// 沿った手と逆らった手の差で見る。要求の厳しい監督ほど強く響く。
+  double trustShift({required int followed, required int against}) {
+    if (tactic.favours.isEmpty) return 0;
+    final moments = followed + against;
+    if (moments == 0) return 0;
+    return (followed - against) /
+        moments *
+        Formulas.trustPerTacticFit *
+        (1 + (demand - 3) * Formulas.trustPerDemand);
+  }
 
   String fitLabel(Attributes attributes, Position position) {
     final fit = fitFor(attributes, position);

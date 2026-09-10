@@ -104,6 +104,8 @@ class _MatchScreenState extends State<MatchScreen> {
                         last: _last,
                         seasonStart: widget.controller.state!.seasonStart,
                         focus: widget.controller.state!.focus,
+                        objectiveReach:
+                            widget.controller.state!.objectiveReach,
                         onChoose: _choose,
                       ),
               ),
@@ -221,6 +223,7 @@ class _ScenarioView extends StatelessWidget {
     required this.last,
     required this.seasonStart,
     required this.focus,
+    required this.objectiveReach,
     required this.onChoose,
   });
 
@@ -232,6 +235,12 @@ class _ScenarioView extends StatelessWidget {
 
   /// 育てる方向。その手が方向に乗っているかを、選ぶその場で見せる。
   final List<Detail> focus;
+
+  /// 監督の期待に、あと一歩で届くなら、その一言。
+  ///
+  /// 「得点関与 あと1」はクラブタブにあるだけで、局面を選ぶ画面には無かった。
+  /// 同じ局面が、シーズンのどこにいるかで意味を変える。
+  final String? objectiveReach;
 
   final void Function(int) onChoose;
 
@@ -289,6 +298,14 @@ class _ScenarioView extends StatelessWidget {
                               : theme.colorScheme.secondaryContainer,
                           visualDensity: VisualDensity.compact,
                         ),
+                      // 監督の期待にあと一歩なら、局面の側に出す。
+                      // 終盤の1本が「シーズンの1本」になる。
+                      if (objectiveReach != null)
+                        Chip(
+                          label: Text(objectiveReach!),
+                          backgroundColor: theme.colorScheme.primaryContainer,
+                          visualDensity: VisualDensity.compact,
+                        ),
                       if (match.bigMatch)
                         Chip(
                           label: const Text('大一番'),
@@ -334,6 +351,7 @@ class _ScenarioView extends StatelessWidget {
               growth: _growthOf(scenario.options[i]),
               focused: scenario.options[i].detail != null &&
                   focus.contains(scenario.options[i].detail),
+              favoured: match.isFavoured(scenario.options[i]),
               chance: match.chanceFor(scenario.options[i]),
               assistConversion: match.assistConversionAt(match.currentMinute),
               factors: match.distinctFactorsFor(scenario.options[i]),
@@ -353,6 +371,7 @@ class _OptionButton extends StatelessWidget {
     required this.attribute,
     required this.growth,
     required this.focused,
+    required this.favoured,
     required this.chance,
     required this.assistConversion,
     required this.factors,
@@ -368,6 +387,12 @@ class _OptionButton extends StatelessWidget {
 
   /// 育てる方向に入っている手か。選ぶほど、その方向に伸びる。
   final bool focused;
+
+  /// 監督の求める形に沿った手か。沿えば信頼が上がり、逆らえば下がる。
+  ///
+  /// 監督はこれまで能力値だけを見ていて、**何を選んだかは見ていなかった**。
+  /// 印を出さないと、信頼が動いた理由が分からない。
+  final bool favoured;
 
   /// 特性とコンディションを含んだ成功率。判定と同じ値。
   final double chance;
@@ -463,6 +488,13 @@ class _OptionButton extends StatelessWidget {
                   child: Text('重点',
                       style: theme.textTheme.labelSmall
                           ?.copyWith(color: theme.colorScheme.tertiary)),
+                ),
+              if (favoured)
+                Padding(
+                  padding: const EdgeInsets.only(left: 6),
+                  child: Text('監督好み',
+                      style: theme.textTheme.labelSmall
+                          ?.copyWith(color: theme.colorScheme.primary)),
                 ),
             ],
           ),

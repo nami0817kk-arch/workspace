@@ -40,6 +40,9 @@ class MatchResult {
     this.goalMinutes = const [],
     this.assistMinutes = const [],
     this.international = false,
+    this.followedTactic = 0,
+    this.againstTactic = 0,
+    this.assistAttempts = 0,
   });
 
   /// 代表戦なら true。リーグ戦とは別に数える。
@@ -69,6 +72,15 @@ class MatchResult {
   /// セットプレーぶんは時間が分からないので入っていない（数だけ goals に乗る）。
   final List<int> goalMinutes;
   final List<int> assistMinutes;
+
+  /// 監督の求める形に沿った手・逆らった手の数。
+  ///
+  /// 試合で選んだことが監督に届くのは、ここを通ってだけ。
+  final int followedTactic;
+  final int againstTactic;
+
+  /// 味方を活かす手を選んだ回数。相方との呼吸がここから伸びる。
+  final int assistAttempts;
 
   bool get won => scored > conceded;
   bool get drawn => scored == conceded;
