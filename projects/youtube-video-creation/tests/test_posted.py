@@ -119,7 +119,7 @@ def test_前の投稿からの間隔が分かる(tmp_path):
     assert round(posted.since_last(book, now)) == 20
 
 
-def test_目安は45分():
+def test_目安は30分():
     from src import posted
 
-    assert posted.SPREAD_MINUTES == 45
+    assert posted.SPREAD_MINUTES == 30
