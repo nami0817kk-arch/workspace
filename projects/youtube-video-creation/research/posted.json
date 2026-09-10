@@ -688,5 +688,25 @@
     "build": "20260910_cl_liverpool_short",
     "video_id": "EN2iNSGfx1o",
     "at": "2026-09-10T00:12:04+00:00"
+  },
+  {
+    "build": "20260910_cl_psg",
+    "video_id": "9x5zv4yRxeo",
+    "at": "2026-09-10T00:24:21+00:00"
+  },
+  {
+    "build": "20260910_cl_psg_short",
+    "video_id": "mwbrxHjUZtY",
+    "at": "2026-09-10T00:24:41+00:00"
+  },
+  {
+    "build": "20260910_cl_arsenal",
+    "video_id": "ZgP00o8Pt7Y",
+    "at": "2026-09-10T00:36:18+00:00"
+  },
+  {
+    "build": "20260910_cl_arsenal_short",
+    "video_id": "65ypk-GzLDs",
+    "at": "2026-09-10T00:36:43+00:00"
   }
 ]

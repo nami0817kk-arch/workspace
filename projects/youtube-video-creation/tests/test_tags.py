@@ -124,3 +124,31 @@ def test_クラブにいる日本人選手を足す(tmp_path):
     assert japanese_players(["バルセロナ"], str(book)) == []
     # 表が無くても壊れない
     assert japanese_players(["バルセロナ"], str(tmp_path / "ない.yaml")) == []
+
+
+def test_主役のクラブを2枠目に置く():
+    """**見出しに出てくる順ではない**（2026-09-10 実測）。
+
+    アーセナルの回の見出しが「ウーデゴールが敵地ナポリで決勝弾」で、
+    2枠目（動画の上に出る2つめのボタン）が #ナポリ になっていた。
+    """
+    from src.tags import build
+
+    got = build("ウーデゴールが敵地ナポリで決勝弾", topic="アーセナル", kind="match")
+    assert got[:2] == ["サッカー", "アーセナル"]
+    assert "ナポリ" in got
+
+
+def test_相手クラブの日本人も拾う(tmp_path):
+    """**相手クラブはサムネの札にしか出ないことがある**（2026-09-10 実測）。
+
+    バルサ対フェイエノールトの見出しに「フェイエノールト」が無く、
+    渡辺剛が日本人枠から漏れていた。
+    """
+    from src.tags import build
+
+    book = tmp_path / "players.yaml"
+    book.write_text("players:\n  フェイエノールト: [渡辺剛]\n", encoding="utf-8")
+    got = build("バルセロナ、CL初戦で5得点", topic="バルセロナ", kind="match",
+                extra=["バルセロナ", "フェイエノールト"], players_path=str(book))
+    assert got[:3] == ["サッカー", "バルセロナ", "渡辺剛"]

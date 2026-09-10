@@ -70,7 +70,8 @@ def japanese_players(clubs: list[str], path: str | None = None) -> list[str]:
 
 def build(title: str, league_name: str = "", kind: str = "transfer",
           extra: list[str] | None = None, book=None,
-          people: list[str] | None = None, players_path: str | None = None) -> list[str]:
+          people: list[str] | None = None, players_path: str | None = None,
+          topic: str = "") -> list[str]:
     """その動画のタグ。前から順に大事なものを並べる。
 
     **人の名前をいちばん前に置く**（2026-09-10 に順番を変えた）。
@@ -84,7 +85,16 @@ def build(title: str, league_name: str = "", kind: str = "transfer",
     # こちらは「#サッカー ／ #海外サッカー ／ #サッカーニュース」で、
     # **いちばん目立つ3枠を分類語で埋めていた**。そこを名前に明け渡す
     clubs = club_book.canonical(title, book)
-    japanese = japanese_players(clubs, players_path)
+    # **2枠目はこの回の主役のクラブ。**見出しに出てくる順ではない
+    # （2026-09-10 実測: アーセナルの回の見出しが「…敵地ナポリで決勝弾」で、
+    #  2枠目が #ナポリ になっていた）。`topic` が分かっていればそれを先頭へ
+    lead = club_book.canonical(topic, book) if topic else []
+    if lead:
+        clubs = lead[:1] + [c for c in clubs if c != lead[0]]
+    # **相手クラブは `extra`（サムネの札）にしか出ないことがある。**
+    # 日本人選手を引くときは、そちらも一緒に見る
+    others = club_book.canonical(" ".join(str(x) for x in (extra or [])), book)
+    japanese = japanese_players(clubs + [c for c in others if c not in clubs], players_path)
 
     found: list[str] = [BASE[0]]
     if clubs:

@@ -1058,6 +1058,7 @@ def to_script(notes: Notes, plan: Plan) -> str:
             # **この回に出てくる人**（2026-09-10）。取材メモの `people:` に書く。
             # 辞書が無いので本文からは拾わない（推測で人名を作らない）
             people=list(notes.people),
+            topic=notes.topic,
         ),
         "sources": notes.sources,
         "cards": _cards(notes),
