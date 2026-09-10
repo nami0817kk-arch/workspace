@@ -3,7 +3,11 @@ import 'dart:math';
 import 'formulas.dart';
 import '../models/career.dart';
 import '../models/club.dart';
+import '../models/life_event.dart';
 import '../models/news.dart';
+import '../models/cup.dart';
+import '../models/promise.dart';
+import '../models/traits.dart';
 import '../models/season.dart';
 import '../models/attributes.dart';
 
@@ -45,22 +49,36 @@ class Newsroom {
         result.scored - result.conceded == 1) {
       items.add(_match(state, day, '$nameの1点が決勝点',
           '${result.opponentName}戦、${result.scoreLine}。'));
-    } else if (rating != null && rating >= 8.2) {
-      items.add(_match(state, day, _praise(day, name),
+    } else if (rating != null &&
+        rating >= 8.2 &&
+        !_recentlySaid(state, day, _praises, (v) => '$name$v')) {
+      items.add(_match(state, day, _praise(state, day, name),
           '${result.opponentName}戦で評価点${rating.toStringAsFixed(1)}。'));
-    } else if (rating != null && rating <= 5.2) {
-      items.add(_match(state, day, _criticism(day, name),
+    } else if (rating != null &&
+        rating <= 5.2 &&
+        !_recentlySaid(state, day, _criticisms, (v) => '$name$v')) {
+      items.add(_match(state, day, _criticism(state, day, name),
           '${result.opponentName}戦は評価点${rating.toStringAsFixed(1)}に終わった。'));
     } else if (result.conceded == 0 &&
         result.appearance != Appearance.benched &&
         _isDefender(state.player.position)) {
       items.add(_match(state, day, '$nameを軸に完封',
           '${result.opponentName}戦を無失点で終えた。'));
-    } else if (result.conceded >= 4) {
-      items.add(_match(state, day, '${state.club.name}、守備が崩壊',
+    } else if (result.conceded >= 4 &&
+        !_recentlySaid(
+            state, day, _collapses, (v) => '${state.club.name}$v')) {
+      items.add(_match(
+          state,
+          day,
+          _vary(state, day, _collapses, (v) => '${state.club.name}$v'),
           '${result.opponentName}に${result.conceded}失点。'));
-    } else if (result.won && result.scored - result.conceded >= 3) {
-      items.add(_match(state, day, '${state.club.name}が快勝',
+    } else if (result.won &&
+        result.scored - result.conceded >= 3 &&
+        !_recentlySaid(state, day, _routs, (v) => '${state.club.name}$v')) {
+      items.add(_match(
+          state,
+          day,
+          _vary(state, day, _routs, (v) => '${state.club.name}$v'),
           '${result.opponentName}を${result.scoreLine}で退けた。'));
     }
 
@@ -74,6 +92,10 @@ class Newsroom {
     'が試合を支配した',
     'に称賛の声',
     'の一挙手一投足に沸いた',
+    'が違いを見せた',
+    'に地元紙も最高点',
+    'の一日だった',
+    'を止められる者がいなかった',
   ];
 
   static const List<String> _criticisms = [
@@ -81,14 +103,73 @@ class Newsroom {
     'は最後まで流れに入れず',
     'に厳しい採点',
     'の不調が続く',
+    'は影が薄かった',
+    'に立て直しを求める声',
+    'は何も起こせず',
+    'に地元紙が苦言',
   ];
 
-  /// 見出しの言い回しを節で選ぶ。乱数を持たずに、同じ試合なら同じ文になる。
-  static String _praise(int matchday, String name) =>
-      '$name${_praises[matchday % _praises.length]}';
+  static const List<String> _collapses = [
+    '、守備が崩壊',
+    'の守りが持たなかった',
+    '、後ろから崩される',
+    'の最終ラインが機能せず',
+  ];
 
-  static String _criticism(int matchday, String name) =>
-      '$name${_criticisms[matchday % _criticisms.length]}';
+  static const List<String> _routs = [
+    'が快勝',
+    'が押し切った',
+    'が力の差を見せた',
+    'が危なげなく勝ち切る',
+  ];
+
+  /// 同じ種類の見出しを、続けて出さないための間隔（節）。
+  ///
+  /// 新聞は不調を11回書かない。**1シーズンに酷評が11本**出ていて、
+  /// 記録タブが「また悪かった」の羅列になっていた。
+  static const int sameKindGap = 6;
+
+  /// この種類の見出しを、最近書いたか。
+  ///
+  /// 言い回しの一覧をそのまま使って照合するので、種類を別に持たなくてよい。
+  static bool _recentlySaid(
+    CareerState state,
+    int matchday,
+    List<String> variants,
+    String Function(String) build,
+  ) {
+    final lines = {for (final v in variants) build(v)};
+    return state.news.any((n) =>
+        n.year == state.year &&
+        matchday - n.matchday < sameKindGap &&
+        lines.contains(n.headline));
+  }
+
+  /// 見出しの言い回しを選ぶ。**すでに出ている見出しは避ける。**
+  ///
+  /// 節番号だけで選んでいた頃は、4節ごとに同じ文が回ってきて、
+  /// 記録タブに「◯◯に称賛の声」が並んだ（13本中7本が重複していた）。
+  /// 乱数は持たない——同じ状態からは必ず同じ文が出る、という性質は残す。
+  static String _vary(
+    CareerState state,
+    int matchday,
+    List<String> variants,
+    String Function(String) build,
+  ) {
+    final used = state.news.map((n) => n.headline).toSet();
+    for (var i = 0; i < variants.length; i++) {
+      final line = build(variants[(matchday + i) % variants.length]);
+      if (!used.contains(line)) return line;
+    }
+    // 全部出尽くしたら、節で選んだものに戻る。
+    return build(variants[matchday % variants.length]);
+  }
+
+  static String _praise(CareerState state, int matchday, String name) =>
+      _vary(state, matchday, _praises, (v) => '$name$v');
+
+  static String _criticism(CareerState state, int matchday, String name) =>
+      _vary(state, matchday, _criticisms, (v) => '$name$v');
 
   /// 通算の数字が節目を跨いだかを見る。
   ///
@@ -295,6 +376,132 @@ class Newsroom {
             '次の${Formulas.banForRedCard}試合は出られない。',
       );
 
+  /// ピッチの外の出来事のうち、世の中に出るもの。
+  ///
+  /// 出来事は33種あって毎季何度も起きるのに、**見出しには一度も残らなかった**
+  /// （`NewsKind.life` を使っていたのはスタッフ解散だけ）。
+  /// このゲームの肝は「自分のしたことが世界に映り返ってくる」ことなので、
+  /// 腕章・スポンサー・財団のような**外から見える節目だけ**を記事にする。
+  /// 全部の出来事に見出しを付けると、どれも記事に見えなくなる。
+  static NewsItem? lifeMoment(CareerState state, LifeSpecial special) {
+    final name = state.player.name;
+    return switch (special) {
+      LifeSpecial.takeCaptain => _life(
+          state,
+          '$nameが${state.club.name}のキャプテンに',
+          '監督とロッカールームの両方に認められた。腕章は移籍すれば外れる。'),
+      LifeSpecial.acceptSponsor => state.sponsor == null
+          ? null
+          : _life(
+              state,
+              '$nameが${state.sponsor!.name}と契約',
+              '年${state.sponsor!.annual}万円。'
+                  '${state.sponsor!.years}年の契約になる。'),
+      LifeSpecial.foundCharity => _life(
+          state, '$nameが財団を立ち上げる', 'ピッチの外での顔ができた。'),
+      // 断った話は世の中に出ない。
+      LifeSpecial.declineSponsor ||
+      LifeSpecial.declineCaptain ||
+      LifeSpecial.none =>
+        null,
+    };
+  }
+
+  static NewsItem _life(CareerState s, String headline, String body) =>
+      NewsItem(
+        year: s.year,
+        matchday: s.matchday,
+        kind: NewsKind.life,
+        headline: headline,
+        body: body,
+      );
+
+  /// カップ戦の1試合を記事にする。
+  ///
+  /// **毎試合は書かない。** 勝ち上がりが決まった試合と、敗れた試合だけ。
+  /// グループの1試合ごとに見出しを出すと、記録タブがカップで埋まる。
+  static List<NewsItem> afterCup(
+    CareerState state,
+    CupRun run,
+    CupTie tie,
+    MatchResult result,
+  ) {
+    final name = state.player.name;
+    if (run.won) {
+      return [
+        NewsItem(
+          year: state.year,
+          matchday: state.matchday,
+          kind: NewsKind.club,
+          headline: '${state.club.name}、${tie.kind.label}優勝',
+          body: '${tie.opponentName}を破った。'
+              '${result.goals > 0 ? '$nameが決勝の舞台で${result.goals}点。' : ''}',
+        ),
+      ];
+    }
+    if (run.eliminated) {
+      return [
+        NewsItem(
+          year: state.year,
+          matchday: state.matchday,
+          kind: NewsKind.club,
+          headline: tie.round == CupRound.finalRound
+              ? '${state.club.name}、${tie.kind.label}決勝で敗れる'
+              : '${state.club.name}、${tie.kind.label}${tie.round.label}で敗退',
+          body: '${tie.opponentName}に屈した。'
+              '${result.appearance == Appearance.benched ? '$nameはベンチから見ていた。' : ''}',
+        ),
+      ];
+    }
+    return const [];
+  }
+
+  /// コツを掴んだことを世に出す。
+  ///
+  /// 20年やってきたことが、最後に1つだけ性質になった瞬間。
+  static NewsItem knackLearned(CareerState state, Trait trait) => NewsItem(
+        year: state.year,
+        matchday: state.matchday,
+        kind: NewsKind.milestone,
+        headline: '${state.player.name}、${trait.label}の域に',
+        body: '${trait.description}。'
+            '長く同じ場面で勝負してきたことが、形になった。',
+      );
+
+  /// 監督に約束したことを世に出す。
+  ///
+  /// 口にした瞬間に逃げ道が消えるのが、この機能の要。
+  /// 胸の内に留めておけるなら、それは約束ではない。
+  static NewsItem promiseMade(CareerState state, ManagerPromise promise) =>
+      NewsItem(
+        year: state.year,
+        matchday: state.matchday,
+        kind: NewsKind.club,
+        headline: '${state.player.name}、${promise.label}を公言',
+        body: '「${promise.label}。それが自分の仕事だ」'
+            '${state.manager?.name ?? '監督'}の前で言い切った。',
+      );
+
+  /// シーズンの終わりに、その約束がどうなったかを書く。
+  static NewsItem promiseSettled(CareerState state) {
+    final promise = state.promise!;
+    final kept = promise.achievedBy(state.seasonStats);
+    final reached = promise.kind == PromiseKind.rating
+        ? promise.reached(state.seasonStats).toStringAsFixed(2)
+        : promise.reached(state.seasonStats).round().toString();
+    return NewsItem(
+      year: state.year,
+      matchday: state.fixtures.length,
+      kind: NewsKind.club,
+      headline: kept
+          ? '${state.player.name}、公言どおり${promise.label}を達成'
+          : '${state.player.name}、${promise.label}に届かず',
+      body: kept
+          ? '$reached。言ったことをやってみせた。'
+          : '$reached で終えた。言葉の重さだけが残る。',
+    );
+  }
+
   /// 貯蓄が尽きて専属スタッフが離れたことを知らせる。
   ///
   /// これまで黙って全員が消えていた。次のシーズンから練習の効きが
@@ -394,6 +601,28 @@ class ScorerRace {
   static int rankOf(CareerState state) {
     final all = table(state, take: 999);
     return all.indexWhere((s) => s.isPlayer) + 1;
+  }
+
+  /// シーズンの終盤で、得点王に手が届くならその一言。
+  ///
+  /// これまで得点ランキングは**他人の数字を眺めるだけ**で、
+  /// 自分がどこにいるかも、届くかどうかも出ていなかった
+  /// （`rankOf` はどこからも呼ばれていなかった）。
+  /// 終盤の1本が「得点王への1本」になる。
+  static String? chaseFor(CareerState state) {
+    // 序盤に出しても意味が無い。残り10節を切ってから。
+    final left = state.fixtures.length - state.leagueResults.length;
+    if (left > 10 || left <= 0) return null;
+
+    final all = table(state, take: 999);
+    final me = all.firstWhere((s) => s.isPlayer);
+    if (me.goals == 0) return null;
+    final rank = all.indexWhere((s) => s.isPlayer) + 1;
+    if (rank == 1) return '得点王を走っている（${me.goals}点）';
+    final gap = all.first.goals - me.goals;
+    // 残り試合で届かない差なら、煽らない。
+    if (gap > left) return null;
+    return '得点王まであと$gap点（いま$rank位）';
   }
 
   static String _nameFor(Club club) =>

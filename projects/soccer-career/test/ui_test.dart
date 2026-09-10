@@ -8,6 +8,11 @@ import 'package:soccer_career/game/formulas.dart';
 import 'package:soccer_career/game/match_engine.dart';
 import 'package:soccer_career/game/ranking.dart';
 import 'package:soccer_career/game/weekly_plan.dart';
+import 'package:soccer_career/models/traits.dart';
+import 'package:soccer_career/ui/attribute_shape.dart';
+import 'package:soccer_career/ui/club_identity.dart';
+import 'package:soccer_career/ui/player_banner.dart';
+import 'package:soccer_career/ui/trait_row.dart';
 import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/attributes.dart';
 import 'package:soccer_career/models/career.dart';
@@ -298,6 +303,132 @@ void main() {
         contains(state.opponentFor(state.matchday).name));
   });
 
+  testWidgets('選手タブは、選手証と能力の形で始まる', (tester) async {
+    // 白いカードに文字が並ぶだけで、唯一手で描いているもの（似顔）は
+    // 64px の丸で隅に居た。
+    final controller = await newCareer();
+    await pumpHub(tester, controller, height: 2600);
+    await tester.tap(find.widgetWithText(Tab, '選手'));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(PlayerBanner), findsOneWidget);
+    // 名前・総合力は帯の中に大きく出る。
+    expect(find.descendant(
+        of: find.byType(PlayerBanner),
+        matching: find.text(controller.state!.player.name)),
+        findsOneWidget);
+    expect(find.descendant(
+        of: find.byType(PlayerBanner),
+        matching: find.text('${controller.state!.player.overall}')),
+        findsOneWidget);
+
+    // 能力の形。棒は残す（正確な値はそちらで読む）。
+    final shape = tester.widget<AttributeShape>(find.byType(AttributeShape));
+    expect(shape.keys, isNotEmpty);
+    expect(shape.keys.contains(AttributeKey.goalkeeping), isFalse,
+        reason: 'GK 以外に GK 能力の頂点が出ている');
+    expect(find.text(AttributeKey.pace.label), findsWidgets);
+  });
+
+  testWidgets('GK の能力の形には GK 能力が入る', (tester) async {
+    final controller = CareerController(
+      repository: _MemoryRepository(),
+      careerEngine: CareerEngine(random: Random(5)),
+      matchEngine: MatchEngine(random: Random(5)),
+      random: Random(5),
+    );
+    await controller.startCareer(
+      name: 'GK',
+      position: Position.gk,
+      age: 20,
+      agent: Agent.pool.first,
+    );
+    await pumpHub(tester, controller, height: 2600);
+    await tester.tap(find.widgetWithText(Tab, '選手'));
+    await tester.pumpAndSettle();
+
+    final shape = tester.widget<AttributeShape>(find.byType(AttributeShape));
+    expect(shape.keys.contains(AttributeKey.goalkeeping), isTrue);
+  });
+
+  testWidgets('次の試合は、両クラブのエンブレムで出る', (tester) async {
+    // 一番よく見るカードなのに、相手が文字でしか出ていなかった。
+    final controller = await newCareer();
+    await pumpHub(tester, controller);
+    final state = controller.state!;
+    expect(find.text(state.club.name), findsWidgets);
+    expect(find.text(state.opponentFor(state.matchday).name), findsWidgets);
+    // 自分と相手で2つ。
+    expect(find.byType(ClubCrest), findsWidgets);
+  });
+
+  testWidgets('選手作成で、付く特性を見て引き直せる', (tester) async {
+    // 特性は「始めてから分かるもの」にしていたが、2つの長所で選手の性格が
+    // ほとんど決まるのに、見えないまま20年ぶんの選択をすることになっていた。
+    final controller = CareerController(
+      repository: _MemoryRepository(),
+      careerEngine: CareerEngine(random: Random(1)),
+      matchEngine: MatchEngine(random: Random(1)),
+      random: Random(1),
+    );
+    tester.view.physicalSize = const Size(390, 3000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(MaterialApp(
+      theme: ThemeData(useMaterial3: true),
+      home: CreatePlayerScreen(controller: controller),
+    ));
+    await tester.pumpAndSettle();
+
+    expect(find.text('生まれ持った特性'), findsOneWidget);
+    // 効き方まで出ている（名前だけでは何が変わるのか分からない）。
+    expect(find.byType(TraitRow), findsWidgets);
+
+    List<String> shown() => tester
+        .widgetList<TraitRow>(find.byType(TraitRow))
+        .map((row) => row.trait.label)
+        .toList();
+
+    final before = shown();
+    expect(before, isNotEmpty);
+
+    // 引き直せる。同じ引きが続くこともあるので、何度か押して変化を見る。
+    var changed = false;
+    for (var i = 0; i < 12 && !changed; i++) {
+      await tester.tap(find.widgetWithText(TextButton, '引き直す'));
+      await tester.pumpAndSettle();
+      changed = shown().join() != before.join();
+    }
+    expect(changed, isTrue, reason: '引き直しても同じ特性のまま');
+    expect(find.textContaining('引き直した'), findsOneWidget);
+
+    // ポジションを変えると引き直す（そのポジションで意味を持つものから引く）。
+    await tester.tap(find.widgetWithText(ChoiceChip, Position.gk.label));
+    await tester.pumpAndSettle();
+    for (final row in tester.widgetList<TraitRow>(find.byType(TraitRow))) {
+      expect(row.trait.fitsPosition(Position.gk), isTrue,
+          reason: '${row.trait.label} は GK に付かないはず');
+    }
+  });
+
+  testWidgets('引いた特性が、そのまま始めた選手に付く', (tester) async {
+    final controller = CareerController(
+      repository: _MemoryRepository(),
+      careerEngine: CareerEngine(random: Random(1)),
+      matchEngine: MatchEngine(random: Random(1)),
+      random: Random(1),
+    );
+    const picked = [Trait.clutch, Trait.fighter];
+    await controller.startCareer(
+      name: '検証',
+      position: Position.st,
+      age: 20,
+      agent: Agent.pool.first,
+      traits: picked,
+    );
+    expect(controller.state!.player.traits, picked);
+  });
+
   testWidgets('選手作成で、左右と割り振りを決められる', (tester) async {
     final controller = CareerController(
       repository: _MemoryRepository(),
@@ -347,6 +478,22 @@ void main() {
     expect(find.text('割り振りは釣り合っている。'), findsOneWidget);
   });
 
+  testWidgets('元気なのに休んでいると、伸びないと画面に出る', (tester) async {
+    final controller = await newCareer();
+    controller.state!.autoRestBelow = 0;
+    await controller.setMenu(TrainingMenu.rest);
+    controller.state!.player =
+        controller.state!.player.copyWith(condition: 100);
+    await pumpHub(tester, controller);
+    expect(find.text('伸びない'), findsOneWidget);
+
+    // 練習していれば出ない。
+    await controller
+        .setMenu(TrainingMenu.defaultFor(controller.state!.player.position));
+    await tester.pumpAndSettle();
+    expect(find.text('伸びない'), findsNothing);
+  });
+
   testWidgets('今週の練習が、試合に入る直前に見える', (tester) async {
     // 育成タブを開かないと今の設定が見えず、設定したことを忘れていた。
     final controller = await newCareer();
@@ -354,7 +501,8 @@ void main() {
     await pumpHub(tester, controller);
 
     expect(find.text('今週の練習'), findsOneWidget);
-    expect(find.text(TrainingMenu.athletic.label), findsOneWidget);
+    // 1行にメニュー・踏み込み方・組む相手が並ぶ。
+    expect(find.textContaining(TrainingMenu.athletic.label), findsOneWidget);
 
     // 押すとその場で選び直せる（画面を移らない）。
     await tester.tap(find.text('変える'));
@@ -366,7 +514,7 @@ void main() {
     expect(controller.state!.menu, TrainingMenu.sprint);
     // 試合タブに残っていて、表示も入れ替わっている。
     expect(find.text('今週の練習'), findsOneWidget);
-    expect(find.text(TrainingMenu.sprint.label), findsOneWidget);
+    expect(find.textContaining(TrainingMenu.sprint.label), findsOneWidget);
   });
 
   testWidgets('お金の見通しが、雇う画面に出る', (tester) async {

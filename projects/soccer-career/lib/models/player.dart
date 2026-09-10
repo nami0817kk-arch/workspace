@@ -178,6 +178,7 @@ class Player {
     Player from, {
     required Attributes attributes,
     required int potential,
+    List<Trait>? traits,
   }) =>
       Player(
         name: from.name,
@@ -194,7 +195,7 @@ class Player {
         physique: from.physique,
         setPieces: from.setPieces,
         aptitude: from.aptitude,
-        traits: from.traits,
+        traits: traits ?? from.traits,
         condition: from.condition,
       );
 

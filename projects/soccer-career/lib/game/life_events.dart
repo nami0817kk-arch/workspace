@@ -17,20 +17,47 @@ class LifeEvents {
   /// 1試合ごとに出来事が起きる確率。
   ///
   /// 0.12 だと1シーズンに4回ほどで、間が空きすぎて「たまに何か出る画面」に
-  /// なっていた。0.16 なら6回前後。毎試合だと邪魔になるので、この辺り。
-  static const double chancePerMatch = 0.16;
+  /// なっていた。0.16 で6回前後。**それでも週の主役にはならない**
+  /// （6節に1回しか判断が無い）。0.34 で12回前後、3節に1回。
+  /// ここを上げるなら、出来事の数と「何に効くか」の表示が要る。
+  /// 同じ話が続けて出ると、頻度そのものが安っぽく見える。
+  static const double chancePerMatch = 0.24;
+
+  /// 一緒に練習している相手の話が、何倍出やすいか。
+  ///
+  /// 週の選択（誰と組むか）が、ピッチの外にも返ってくる。
+  static const int companionWeight = 3;
 
   /// 今の状況で起こりうる出来事から1つ引く。
   ///
   /// [seen] に入っている一度きりの出来事は除く。
-  LifeEvent? pick(LifeContext context, {Set<String> seen = const {}}) {
+  /// [recent] に入っている出来事は、続けて出さない。
+  /// [with_] と一緒に練習している相手の話は出やすい。
+  LifeEvent? pick(
+    LifeContext context, {
+    Set<String> seen = const {},
+    List<String> recent = const [],
+    PersonKind? with_,
+  }) {
     final candidates = [
       for (final e in catalogue)
         if (e.requirement.matches(context) && !(e.once && seen.contains(e.id)))
           e,
     ];
     if (candidates.isEmpty) return null;
-    return candidates[_random.nextInt(candidates.length)];
+    // 直前に出た話は避ける。避けた結果ゼロになるなら、そのまま出す。
+    final fresh = [
+      for (final e in candidates)
+        if (!recent.contains(e.id)) e,
+    ];
+    final pool = fresh.isEmpty ? candidates : fresh;
+    // 組んでいる相手の話を厚くする。
+    final weighted = [
+      for (final e in pool)
+        ...List.filled(
+            with_ != null && e.person == with_ ? companionWeight : 1, e),
+    ];
+    return weighted[_random.nextInt(weighted.length)];
   }
 
   /// 出来事が起きるかどうか。
@@ -744,6 +771,314 @@ class LifeEvents {
           outcome: '監督は頷いた。プレーで引っ張れ、と言われた。',
           effect: LifeEffect(
               teammates: 4, special: LifeSpecial.declineCaptain),
+        ),
+      ],
+    ),
+    // ---- 自分が選んだことが返ってくる ----
+    LifeEvent(
+      id: 'push-body',
+      title: '身体が重い',
+      body: '追い込んだ翌朝、階段を降りるのに手すりを掴んだ。'
+          'まだやれる、とも思う。',
+      once: false,
+      requirement: LifeRequirement(pushingHard: true),
+      choices: [
+        LifeChoice(
+          label: '構わず追い込む',
+          outcome: '振り切った。身体は正直に軋んだ。',
+          effect: LifeEffect(
+              train: Detail.stamina, fatigue: 8, condition: -6, ambition: 1),
+        ),
+        LifeChoice(
+          label: '一日だけ落とす',
+          outcome: '落とした日の翌日、身体が軽かった。',
+          effect: LifeEffect(condition: 10, fatigue: -6),
+        ),
+        LifeChoice(
+          label: 'トレーナーに診てもらう',
+          outcome: '悪いところは無い、と言われた。それだけで少し楽になった。',
+          effect: LifeEffect(condition: 5, morale: 4, professionalism: 1),
+        ),
+      ],
+    ),
+    LifeEvent(
+      id: 'push-notice',
+      title: '見ている人がいる',
+      body: '誰も居ないはずの時間に走っていたら、'
+          'クラブの職員が黙って水を置いていった。',
+      once: false,
+      requirement: LifeRequirement(pushingHard: true),
+      choices: [
+        LifeChoice(
+          label: '礼を言って続ける',
+          outcome: '見られていることが、少しだけ背中を押した。',
+          effect: LifeEffect(morale: 6, professionalism: 1, fatigue: 3),
+        ),
+        LifeChoice(
+          label: '切り上げる',
+          outcome: '今日はここまで。明日も来る。',
+          effect: LifeEffect(condition: 6),
+        ),
+      ],
+    ),
+    LifeEvent(
+      id: 'promise-weight',
+      title: '言葉の重さ',
+      body: '記者に約束のことを蒸し返された。'
+          '「あれ、本気ですか」と笑いを含んだ声で聞かれる。',
+      once: false,
+      requirement: LifeRequirement(promised: true),
+      choices: [
+        LifeChoice(
+          label: 'もう一度言い切る',
+          outcome: '逃げ道はもう無い。それでいい。',
+          effect: LifeEffect(fame: 4, confidence: 1, morale: 4, manager: 2),
+        ),
+        LifeChoice(
+          label: '笑ってかわす',
+          outcome: '言葉を薄めた。少しだけ楽になった。',
+          effect: LifeEffect(morale: 3, confidence: -1),
+        ),
+        LifeChoice(
+          label: '結果で見せると答える',
+          outcome: '余計なことは言わなかった。',
+          effect: LifeEffect(professionalism: 1, teammates: 3),
+        ),
+      ],
+    ),
+    LifeEvent(
+      id: 'promise-doubt',
+      title: '眠れない夜',
+      body: '口にした数字が、天井のあたりに浮かんでいる。'
+          '取り消せないことだけは分かっている。',
+      once: false,
+      requirement: LifeRequirement(promised: true, lowCondition: true),
+      choices: [
+        LifeChoice(
+          label: '映像を見返す',
+          outcome: '止められた場面を数えた。眠るのは遅くなった。',
+          effect: LifeEffect(train: Detail.vision, condition: -4),
+        ),
+        LifeChoice(
+          label: '寝る',
+          outcome: '考えても点は入らない。',
+          effect: LifeEffect(condition: 8, morale: 3),
+        ),
+      ],
+    ),
+    LifeEvent(
+      id: 'tired-choice',
+      title: '出たいと言うか',
+      body: '身体は限界に近い。次の試合、監督は使うつもりでいる。',
+      once: false,
+      requirement: LifeRequirement(lowCondition: true),
+      choices: [
+        LifeChoice(
+          label: '出ると言う',
+          outcome: '無理を通した。監督は頷いた。',
+          effect:
+              LifeEffect(manager: 5, teammates: 3, fatigue: 6, condition: -4),
+        ),
+        LifeChoice(
+          label: '正直に伝える',
+          outcome: '外された。身体は少し戻った。',
+          effect: LifeEffect(manager: -4, condition: 12, fatigue: -6),
+        ),
+      ],
+    ),
+    // ---- 人との時間 ----
+    LifeEvent(
+      id: 'partner-dinner',
+      title: '<partner>と飯を食う',
+      body: '練習の帰り、<partner>が「行くか」と顎で示した。'
+          '大した話はしない相手だが、居心地は悪くない。',
+      once: false,
+      requirement: LifeRequirement(needsPerson: PersonKind.partner),
+      choices: [
+        LifeChoice(
+          label: '付き合う',
+          outcome: 'サッカーの話は半分もしなかった。',
+          effect: LifeEffect(morale: 8, teammates: 5, condition: -3),
+        ),
+        LifeChoice(
+          label: '映像を見たいと断る',
+          outcome: '一人で画面に向かった。<partner>は何も言わなかった。',
+          effect: LifeEffect(train: Detail.vision, teammates: -2),
+        ),
+      ],
+    ),
+    LifeEvent(
+      id: 'competitor-advice',
+      title: '<competitor>の一言',
+      body: '自分が外れた試合の後、<competitor>が'
+          '「あそこ、俺なら逆を向く」と言ってきた。悪意は無いらしい。',
+      once: false,
+      requirement: LifeRequirement(needsPerson: PersonKind.competitor),
+      choices: [
+        LifeChoice(
+          label: '素直に聞く',
+          outcome: '確かに逆だった。悔しさは後から来た。',
+          effect: LifeEffect(train: Detail.ballControl, temper: -1),
+        ),
+        LifeChoice(
+          label: '言い返す',
+          outcome: '譲らなかった。次で見せるしかない。',
+          effect: LifeEffect(confidence: 1, teammates: -3),
+        ),
+        LifeChoice(
+          label: '黙って練習に戻る',
+          outcome: '言葉より、足を動かした。',
+          effect: LifeEffect(train: Detail.stamina, professionalism: 1),
+        ),
+      ],
+    ),
+    LifeEvent(
+      id: 'mentor-limit',
+      title: '<mentor>の身体',
+      body: '<mentor>がアイシングをしながら「もう戻らないところがある」と言った。'
+          '笑っていたが、目は笑っていなかった。',
+      requirement: LifeRequirement(needsPerson: PersonKind.mentor),
+      choices: [
+        LifeChoice(
+          label: '自分の身体の使い方を聞く',
+          outcome: '壊れる前にやることがある、と教わった。',
+          effect: LifeEffect(professionalism: 2, condition: 5),
+        ),
+        LifeChoice(
+          label: '何も言わずに隣に座る',
+          outcome: 'しばらく黙っていた。それで十分だった。',
+          effect: LifeEffect(morale: 6, teammates: 4),
+        ),
+      ],
+    ),
+    LifeEvent(
+      id: 'manager-clash',
+      title: '<manager>と噛み合わない',
+      body: 'ミーティングで名指しされた。'
+          '言っていることは分かる。ただ、自分のやり方とは違う。',
+      once: false,
+      requirement: LifeRequirement(needsPerson: PersonKind.manager),
+      choices: [
+        LifeChoice(
+          label: '飲み込んで合わせる',
+          outcome: '違和感は残ったが、使われるほうを取った。',
+          effect: LifeEffect(manager: 7, confidence: -1),
+        ),
+        LifeChoice(
+          label: 'その場で反論する',
+          outcome: '空気が固まった。何人かは、こちらを見ていた。',
+          effect: LifeEffect(manager: -8, teammates: 5, temper: 1),
+        ),
+        LifeChoice(
+          label: '後で二人で話す',
+          outcome: '納得はしていないが、話は通じた。',
+          effect: LifeEffect(manager: 3, professionalism: 1),
+        ),
+      ],
+    ),
+    LifeEvent(
+      id: 'agent-offer-talk',
+      title: '<agent>からの電話',
+      body: '「動いている話がある」とだけ言われた。'
+          '詳しくは言わない。今は言えない、ということらしい。',
+      once: false,
+      requirement: LifeRequirement(needsPerson: PersonKind.agent, minAge: 21),
+      choices: [
+        LifeChoice(
+          label: '任せると答える',
+          outcome: '考えることが一つ減った。',
+          effect: LifeEffect(morale: 5, ambition: 1),
+        ),
+        LifeChoice(
+          label: '今は聞きたくないと言う',
+          outcome: '目の前の試合に戻った。',
+          effect: LifeEffect(professionalism: 1, condition: 3),
+        ),
+      ],
+    ),
+    // ---- 生活 ----
+    LifeEvent(
+      id: 'sleep',
+      title: '眠れていない',
+      body: '寝つきが悪い日が続いている。'
+          '朝の重さは、練習の重さとは違う種類のものだ。',
+      once: false,
+      requirement: LifeRequirement(lowCondition: true),
+      choices: [
+        LifeChoice(
+          label: '専門家に相談する（-40万円）',
+          outcome: '寝る前の手順を変えただけで、驚くほど変わった。',
+          effect: LifeEffect(money: -40, condition: 12, professionalism: 1),
+        ),
+        LifeChoice(
+          label: '自分でどうにかする',
+          outcome: '少しずつ戻ってきた。時間はかかった。',
+          effect: LifeEffect(condition: 5),
+        ),
+      ],
+    ),
+    LifeEvent(
+      id: 'hometown',
+      title: '地元に帰る',
+      body: 'オフの数日、育った街に戻った。'
+          '通っていたグラウンドは、記憶より狭かった。',
+      once: false,
+      requirement: LifeRequirement(minAge: 22),
+      choices: [
+        LifeChoice(
+          label: '子どもたちに混ざる',
+          outcome: '本気で相手をしたら、息が上がった。',
+          effect: LifeEffect(morale: 10, fame: 2, condition: -4),
+        ),
+        LifeChoice(
+          label: '一人で歩く',
+          outcome: 'ここから始まったのだと、静かに思い出した。',
+          effect: LifeEffect(morale: 6, confidence: 1),
+        ),
+      ],
+    ),
+    LifeEvent(
+      id: 'boots',
+      title: '道具を見直す',
+      body: '同じモデルを何年も履いている。'
+          '新しいものを試してみないか、と用具担当に言われた。',
+      once: false,
+      requirement: LifeRequirement(),
+      choices: [
+        LifeChoice(
+          label: '試す（-20万円）',
+          outcome: '足の感覚が変わった。慣れるまで少しかかりそうだ。',
+          effect: LifeEffect(money: -20, train: Detail.agility),
+        ),
+        LifeChoice(
+          label: '慣れたものを履く',
+          outcome: '迷いは無い。それも一つの強さだ。',
+          effect: LifeEffect(confidence: 1),
+        ),
+      ],
+    ),
+    LifeEvent(
+      id: 'video-night',
+      title: '相手の映像',
+      body: '次の相手の映像が配られた。'
+          '見なくても試合はできる。見れば、何か見つかるかもしれない。',
+      once: false,
+      requirement: LifeRequirement(),
+      choices: [
+        LifeChoice(
+          label: '遅くまで見る',
+          outcome: '癖が一つ見つかった。眠いのは仕方がない。',
+          effect: LifeEffect(train: Detail.vision, condition: -5, fatigue: 3),
+        ),
+        LifeChoice(
+          label: '要点だけ確認する',
+          outcome: '必要なことは頭に入れた。',
+          effect: LifeEffect(train: Detail.marking, condition: -1),
+        ),
+        LifeChoice(
+          label: '見ない',
+          outcome: '自分のプレーに集中した。',
+          effect: LifeEffect(condition: 4, confidence: 1),
         ),
       ],
     ),

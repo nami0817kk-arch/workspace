@@ -1,9 +1,13 @@
 import 'dart:math';
+import '../game/formulas.dart';
 
 import 'agent.dart';
 import 'attributes.dart';
 import 'club.dart';
 import 'competition.dart';
+import 'cup.dart';
+import '../game/cups.dart';
+import '../game/national.dart';
 import 'development.dart';
 import 'entourage.dart';
 import 'life.dart';
@@ -14,6 +18,7 @@ import 'training.dart';
 import 'traits.dart';
 import 'injury.dart';
 import 'objective.dart';
+import 'promise.dart';
 import 'player.dart';
 import 'season.dart';
 
@@ -34,6 +39,8 @@ class SeasonRecord {
     this.worldCupStage = WorldCupStage.none,
     this.onLoan = false,
     this.overall = 0,
+    this.promiseLabel,
+    this.promiseKept = false,
   });
 
   final int year;
@@ -69,6 +76,12 @@ class SeasonRecord {
   /// そのシーズンを終えた時点の総合力。0 は記録が無い（古い保存データ）。
   final int overall;
 
+  /// そのシーズンに口にした約束。していなければ null。
+  final String? promiseLabel;
+
+  /// その約束を果たしたか。
+  final bool promiseKept;
+
   Map<String, dynamic> toJson() => {
         'year': year,
         'clubName': clubName,
@@ -87,6 +100,8 @@ class SeasonRecord {
         'worldCupStage': worldCupStage.name,
         'onLoan': onLoan,
         'overall': overall,
+        'promiseLabel': promiseLabel,
+        'promiseKept': promiseKept,
       };
 
   factory SeasonRecord.fromJson(Map<String, dynamic> json) => SeasonRecord(
@@ -117,6 +132,8 @@ class SeasonRecord {
                 : WorldCupStage.none,
         onLoan: json['onLoan'] as bool? ?? false,
         overall: json['overall'] as int? ?? 0,
+        promiseLabel: json['promiseLabel'] as String?,
+        promiseKept: json['promiseKept'] as bool? ?? false,
       );
 }
 
@@ -148,6 +165,13 @@ class CareerState {
     this.relations = const Relations(),
     this.finances = const Finances(),
     this.menu = TrainingMenu.rest,
+    this.effort = TrainingEffort.normal,
+    this.companion = TrainingCompanion.alone,
+    this.autoSpend = true,
+    this.learnedKnack = false,
+    this.domesticCup,
+    this.continentalCup,
+    this.pendingCup,
     this.drill,
     this.staff = const StaffTeam(),
     this.habits = const Habits(),
@@ -175,6 +199,7 @@ class CareerState {
     this.nationalTeamId,
     this.secondCareer,
     this.seenEvents = const [],
+    this.recentEvents = const [],
     this.news = const [],
     this.seasonStart,
     this.backedUpYear = 0,
@@ -186,7 +211,9 @@ class CareerState {
     this.momentSuccesses = const {},
     this.traitHits = const {},
     this.tampered = false,
+    this.tacticCredit = 0,
     this.objective,
+    this.promise,
     this.injury,
     this.caps = 0,
     this.internationalGoals = 0,
@@ -223,6 +250,87 @@ class CareerState {
 
   /// 今週の練習メニュー。
   TrainingMenu menu;
+
+  /// 今週どこまで踏み込むか。
+  ///
+  /// 週の選択が「どのメニューか」だけだった頃は、毎週同じ画面で同じものを
+  /// 選ぶだけで、練習の週に手応えが無かった。
+  TrainingEffort effort;
+
+  /// コツを掴んだか。**1キャリアに1つだけ。**
+  ///
+  /// 特性は生まれ持ったもの、という前提はそのまま。ここで開けるのは
+  /// 「20年やってきたことが、最後に1つだけ性質になる」という道だけ。
+  bool learnedKnack;
+
+  /// 今シーズンの国内カップと大陸カップ。出ていなければ null。
+  ///
+  /// 到達ラウンドは**戦った結果として決まる**。シーズン末に振り直さない。
+  CupRun? domesticCup;
+  CupRun? continentalCup;
+
+  /// これから戦うカップ戦の1試合。無ければ null。
+  ///
+  /// 代表ウィークと同じ扱いで、リーグの節を進めない**別枠の週**に入る。
+  CupTie? pendingCup;
+
+  /// 国内カップが入る節。この節を終えた後の週に戦う。
+  ///
+  /// 節を決め打ちにすると、16クラブの国（30試合）で日程がはみ出す。
+  /// 代表ウィークとぶつけない。**1週1試合の刻みは変えない**。
+  List<int> get domesticCupWeeks => Cups.weeksFor(
+        matches: fixtures.length,
+        count: Cups.domesticMatches,
+        taken: National.breakAfterMatchday.toSet(),
+      );
+
+  /// 大陸カップが入る節。国内カップとも代表ウィークともぶつけない。
+  List<int> get continentalCupWeeks => Cups.weeksFor(
+        matches: fixtures.length,
+        count: Cups.continentalMatches,
+        taken: {
+          ...National.breakAfterMatchday,
+          ...domesticCupWeeks,
+        },
+      );
+
+  /// 今シーズンのカップ戦のうち、まだ戦っているもの。
+  List<CupRun> get liveCups => [
+        for (final run in [domesticCup, continentalCup])
+          if (run != null && run.running) run,
+      ];
+
+  /// カップ戦の週か（リーグ戦の代わりに、その週はカップを戦う）。
+  bool get isCupWeek => pendingCup != null;
+
+  /// 伸びるはずだったぶんを、自動でその場に振るか。
+  ///
+  /// **既定は自動**。今まで自動で伸びていたものが、ある日から自分で振らないと
+  /// 伸びなくなるのは、続きから遊ぶ人にとって不意打ちでしかない。
+  /// 自分で振りたい人が1タップで切り替えられる、という形にしてある。
+  bool autoSpend;
+
+  /// 今週、誰と組むか。
+  ///
+  /// 相方・メンター・競争相手は試合の外で勝手に動く飾りだった。
+  TrainingCompanion companion;
+
+  /// 今の顔ぶれで、実際に組める相手。
+  List<TrainingCompanion> get companionChoices => [
+        TrainingCompanion.alone,
+        for (final c in TrainingCompanion.values)
+          if (c.needs != null && teammateOf(c.needs!) != null) c,
+      ];
+
+  /// その役回りの選手。居なければ null。
+  ///
+  /// `rival` は別クラブで別のキャリアを歩む同期なので、練習の相手は
+  /// クラブの中に居る `competitor`（同ポジションの競争相手）のほう。
+  Teammate? teammateOf(TeammateKind kind) => switch (kind) {
+        TeammateKind.partner => partner,
+        TeammateKind.mentor => mentor,
+        TeammateKind.rival => competitor,
+      };
 
   /// 今週の居残り練習。null ならやらない。
   SetPiece? drill;
@@ -308,6 +416,15 @@ class CareerState {
   /// もう起きた出来事のID。一度きりの出来事を繰り返さないために持つ。
   List<String> seenEvents;
 
+  /// 直近に出た出来事。続けて同じ話を出さないためだけに持つ。
+  ///
+  /// 頻度を上げた（6節に1回 → 3節に1回）ぶん、同じ話が近くで繰り返されると
+  /// 出来事そのものが安っぽく見える。
+  List<String> recentEvents;
+
+  /// 覚えておく直近の数。
+  static const int recentEventsKept = 6;
+
   /// 世の中に出た見出し。新しいものが先頭。
   List<NewsItem> news;
 
@@ -372,6 +489,19 @@ class CareerState {
   Map<AttributeKey, int> momentSuccesses;
 
   /// そのコンディションなら、自動で休むか。
+  /// 元気なのに休んでいるか。その週は何も伸びない。
+  ///
+  /// 休養が既定だった頃の保存データは、育成タブを開かない限り
+  /// ずっと休養のまま。コンディション100で9節進んでいても、
+  /// どこにもそう書いていなかった。
+  bool get restingWhileFresh =>
+      menu.isRest &&
+      !shouldAutoRest(player.condition) &&
+      player.condition >= restingWasteCondition;
+
+  /// これ以上のコンディションで休むと、ほぼ何も戻らない。
+  static const int restingWasteCondition = 85;
+
   bool shouldAutoRest(int condition) =>
       autoRestBelow > 0 && condition < autoRestBelow;
 
@@ -408,6 +538,68 @@ class CareerState {
         ),
     ];
   }
+
+  /// 監督の期待に、あと一歩で届くか。届くなら、その一言。
+  ///
+  /// 「得点関与 あと1」はクラブタブのカードにあるだけで、**局面を選ぶ画面には
+  /// 無かった**。同じ局面が、シーズンのどこにいるかで意味を変えるようにする。
+  /// 3つのうち2つで達成なので、「これで2つ目に届く」ときだけ出す。
+  String? get objectiveReach {
+    final objective = this.objective;
+    if (objective == null) return null;
+    final stats = seasonStats;
+    final achieved = objective.achievedCount(stats);
+    // すでに達成しているか、2つ以上足りないなら、今日の1本では届かない。
+    if (achieved >= 2) return null;
+
+    final goalsShort = objective.contributions - stats.goals - stats.assists;
+    if (goalsShort == 1 && achieved == 1) {
+      return '得点かアシストで、監督の期待に届く';
+    }
+    final appearancesShort = objective.appearances - stats.appearances;
+    if (appearancesShort == 1 && achieved == 1) {
+      return 'この試合に出れば、監督の期待に届く';
+    }
+    return null;
+  }
+
+  /// 口にした約束に、あと1で届くか。届くなら、その一言。
+  ///
+  /// 局面を選ぶ画面に出す。「この1本で約束が果たされる」という重みは、
+  /// クラブタブのカードでは伝わらない。
+  String? get promiseReach {
+    final promise = this.promise;
+    if (promise == null) return null;
+    if (promise.kind == PromiseKind.rating) return null;
+    final left = promise.target - promise.reached(seasonStats);
+    if (left != 1) return null;
+    return switch (promise.kind) {
+      PromiseKind.goals => 'この1点で、約束を果たす',
+      PromiseKind.contributions => '得点かアシストで、約束を果たす',
+      PromiseKind.appearances => 'この試合に出れば、約束を果たす',
+      PromiseKind.rating => null,
+    };
+  }
+
+  /// 監督の構想から外れているか。
+  ///
+  /// 登録メンバーには入っているが、**この監督の下では使われない**。
+  /// 出られないので評価点も付かず、評価点では戻せない。
+  /// 監督が代わるか、移籍するか、ピッチの外で歩み寄るしかない。
+  bool get frozenOut =>
+      manager != null && relations.manager < Formulas.frozenOutTrust;
+
+  /// 構想外が近いか。落ちる前に必ず画面に出す。
+  bool get trustAtRisk =>
+      manager != null &&
+      !frozenOut &&
+      relations.manager < Formulas.trustWarning;
+
+  /// 監督の求める形に沿ったぶんの、まだ信頼に乗っていない端数。
+  ///
+  /// 1試合で動くのは1未満なので、切り捨てると永遠に何も起きない。
+  /// 持ち越して、溜まったら信頼に乗せる。
+  double tacticCredit;
 
   /// 管理画面（開発用）で書き換えたキャリアか。
   ///
@@ -504,6 +696,15 @@ class CareerState {
   /// 監督から与えられた今季の目標。
   SeasonObjective? objective;
 
+  /// 自分から口にした約束。1シーズンに1つだけ。取り消せない。
+  ///
+  /// `objective` が**向こうから降ってくる数字**なのに対して、こちらは
+  /// 自分で選んだ数字。果たせば信頼と年俸が乗り、届かなければ両方を失う。
+  ManagerPromise? promise;
+
+  /// 約束を果たしたか。約束していなければ null。
+  bool? get promiseKept => promise?.achievedBy(seasonStats);
+
   /// 負傷中ならその内容。
   Injury? injury;
 
@@ -524,8 +725,16 @@ class CareerState {
   bool retired;
 
   /// リーグ戦の結果だけ。代表戦は節に数えない。
+  /// リーグ戦だけ。順位表・平均評価・目標・約束はここで数える。
+  ///
+  /// カップ戦を混ぜると、勝ち上がったクラブほど目標が達成しやすくなる
+  /// （試合数がクラブの成績で変わってしまう）。
   List<MatchResult> get leagueResults =>
-      results.where((r) => !r.international).toList();
+      results.where((r) => r.isLeague).toList();
+
+  /// そのシーズンのカップ戦の記録。
+  List<MatchResult> get cupResults =>
+      results.where((r) => r.cup != null).toList();
 
   int get matchday => leagueResults.length + 1;
   bool get seasonFinished => leagueResults.length >= fixtures.length;
@@ -618,6 +827,13 @@ class CareerState {
         'agent': agent.toJson(),
         'salary': salary,
         'menu': menu.name,
+        'effort': effort.name,
+        'companion': companion.name,
+        'autoSpend': autoSpend,
+        'learnedKnack': learnedKnack,
+        'domesticCup': domesticCup?.toJson(),
+        'continentalCup': continentalCup?.toJson(),
+        'pendingCup': pendingCup?.toJson(),
         'drill': drill?.name,
         'staff': staff.toJson(),
         'habits': habits.toJson(),
@@ -645,6 +861,7 @@ class CareerState {
         'nationalTeamId': nationalTeamId,
         'secondCareer': secondCareer?.name,
         'seenEvents': seenEvents,
+        'recentEvents': recentEvents,
         'news': news.map((n) => n.toJson()).toList(),
         'seasonStart': seasonStart?.toJson(),
         'backedUpYear': backedUpYear,
@@ -653,6 +870,7 @@ class CareerState {
         'yellowCards': yellowCards,
         'suspension': suspension,
         'tampered': tampered,
+        'tacticCredit': tacticCredit,
         'traitHits': {
           for (final e in traitHits.entries) e.key.name: e.value,
         },
@@ -677,6 +895,7 @@ class CareerState {
         'relations': relations.toJson(),
         'finances': finances.toJson(),
         'objective': objective?.toJson(),
+        'promise': promise?.toJson(),
         'injury': injury?.toJson(),
         'caps': caps,
         'internationalGoals': internationalGoals,
@@ -716,6 +935,20 @@ class CareerState {
       agent: Agent.fromJson(json['agent'] as Map<String, dynamic>?),
       salary: json['salary'] as int? ?? 300,
       menu: menu,
+      effort: TrainingEffort.values.any((e) => e.name == json['effort'])
+          ? TrainingEffort.values.byName(json['effort'] as String)
+          : TrainingEffort.normal,
+      companion:
+          TrainingCompanion.values.any((c) => c.name == json['companion'])
+              ? TrainingCompanion.values.byName(json['companion'] as String)
+              : TrainingCompanion.alone,
+      autoSpend: json['autoSpend'] as bool? ?? true,
+      learnedKnack: json['learnedKnack'] as bool? ?? false,
+      domesticCup:
+          CupRun.fromJson(json['domesticCup'] as Map<String, dynamic>?),
+      continentalCup:
+          CupRun.fromJson(json['continentalCup'] as Map<String, dynamic>?),
+      pendingCup: CupTie.fromJson(json['pendingCup'] as Map<String, dynamic>?),
       drill: SetPiece.values.any((p) => p.name == json['drill'])
           ? SetPiece.values.byName(json['drill'] as String)
           : null,
@@ -761,6 +994,8 @@ class CareerState {
               : null,
       seenEvents:
           (json['seenEvents'] as List? ?? const []).cast<String>().toList(),
+      recentEvents:
+          (json['recentEvents'] as List? ?? const []).cast<String>().toList(),
       news: [
         for (final n in (json['news'] as List? ?? const []))
           NewsItem.fromJson(n as Map<String, dynamic>),
@@ -782,6 +1017,7 @@ class CareerState {
       momentSuccesses: _countsFrom(json['momentSuccesses']),
       traitHits: _traitCountsFrom(json['traitHits']),
       tampered: json['tampered'] as bool? ?? false,
+      tacticCredit: (json['tacticCredit'] as num?)?.toDouble() ?? 0,
       contractYears: json['contractYears'] as int? ?? 2,
       countryId: json['countryId'] as String? ?? 'yamato',
       professionalYears: json['professionalYears'] as int? ?? 1,
@@ -812,6 +1048,8 @@ class CareerState {
       finances: Finances.fromJson(json['finances'] as Map<String, dynamic>?),
       objective:
           SeasonObjective.fromJson(json['objective'] as Map<String, dynamic>?),
+      promise:
+          ManagerPromise.fromJson(json['promise'] as Map<String, dynamic>?),
       injury: Injury.fromJson(json['injury'] as Map<String, dynamic>?),
       caps: json['caps'] as int? ?? 0,
       internationalGoals: json['internationalGoals'] as int? ?? 0,

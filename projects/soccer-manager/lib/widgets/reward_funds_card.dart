@@ -113,10 +113,14 @@ class _RewardFundsCardState extends State<RewardFundsCard> {
     if (!mounted) return;
     setState(() => _busy = false);
 
+    // Tr.pick は日本語と英語を「両方とも引数として」受け取るため、どちらの
+    // 文字列も評価される。受け取り処理を文字列の中に書くと2回実行され、
+    // 特典が二重に支払われる。必ず外で1回だけ呼ぶこと。
+    final granted =
+        result == ClaimResult.granted ? gameState.claimRewardFunds() : 0;
     final message = switch (result) {
-      ClaimResult.granted => Tr.pick(
-          '特別協賛金${gameState.claimRewardFunds()}万円を受け取りました',
-          'You received ${gameState.claimRewardFunds()} in sponsorship'),
+      ClaimResult.granted => Tr.pick('特別協賛金$granted万円を受け取りました',
+          'You received $granted in sponsorship'),
       ClaimResult.limitReached =>
         Tr.pick('本日分の受け取りは上限に達しています', "You have reached today's limit"),
       // 途中で閉じただけなので、責めるような文言にしない。

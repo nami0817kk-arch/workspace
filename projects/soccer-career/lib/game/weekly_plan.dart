@@ -153,6 +153,7 @@ class SelectionOutlook {
     required this.forgiveness,
     this.debut = false,
     this.outOfSquad = false,
+    this.frozenOut = false,
   });
 
   /// 見込み。ローテーションで前後するので「必ず」ではない。
@@ -172,6 +173,9 @@ class SelectionOutlook {
 
   /// 登録メンバーから外れているか。評価点とは別の理由で出られない。
   final bool outOfSquad;
+
+  /// 監督の構想から外れているか。
+  final bool frozenOut;
 
   /// 判定に使われる値。
   double get effective => average + bonus + forgiveness;
@@ -197,6 +201,16 @@ class SelectionOutlook {
         bonus: 0,
         forgiveness: 0,
         outOfSquad: true,
+      );
+    }
+    // 構想外。評価点では戻せない。`startNextMatch` と同じ順で見る。
+    if (state.frozenOut) {
+      return const SelectionOutlook(
+        likely: Appearance.benched,
+        average: 0,
+        bonus: 0,
+        forgiveness: 0,
+        frozenOut: true,
       );
     }
     final rated = state.leagueResults
@@ -228,7 +242,9 @@ class SelectionOutlook {
   }
 
   /// 画面に出す一言。
-  String get headline => switch (likely) {
+  String get headline => frozenOut
+      ? '構想外'
+      : switch (likely) {
         Appearance.start => '先発の見込み',
         Appearance.sub => '途中出場の見込み',
         Appearance.benched => 'ベンチ外の見込み',
@@ -241,6 +257,10 @@ class SelectionOutlook {
     if (likely == Appearance.suspended) return '出場停止が明けるまで出られない。';
     if (likely == Appearance.injured) return '離脱中。治るまで出られない。';
     if (outOfSquad) return '登録メンバーから外れている。評価点では戻せない。';
+    if (frozenOut) {
+      return '監督の構想から外れている。出られないので評価点も付かない。'
+          '監督が代わるか、移籍するか、ピッチの外で歩み寄るしかない。';
+    }
     if (debut) return 'まだ評価点が付いていない。デビュー戦は必ず先発する。';
     final parts = <String>[
       '直近${Formulas.formWindow}試合の平均 ${average.toStringAsFixed(2)}',

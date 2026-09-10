@@ -254,8 +254,123 @@ class Formulas {
   static const int conditionBaseline = 60;
   static const double conditionChanceSlope = 0.0015;
 
+  /// 終盤の消耗。ここから足が止まりはじめる（分）。
+  ///
+  /// 局面の時間は表示・特性・展開の差し替えには効いていたのに、
+  /// **成功率そのものには入っていなかった**。累積疲労もローテーションと
+  /// 怪我にしか効いておらず、試合の中では何も起きなかった。
+  static const int lateFatigueFrom = 70;
+
+  /// 90分時点の落ち込み（スタミナが基準どおりのとき）。
+  static const double lateFatigueBase = 0.05;
+
+  /// スタミナ1あたり、落ち込みがどれだけ小さくなるか。
+  ///
+  /// スタミナはこれまで「フィジカルの平均に混ざる数字」でしかなかった。
+  /// ここで初めて、鍛える理由が試合の中に出る。
+  static const double lateFatiguePerStamina = 0.0015;
+
+  /// 累積疲労1あたり、落ち込みがどれだけ大きくなるか。
+  ///
+  /// 休養・リカバリー・ローテーションが、試合の終盤で初めて手触りになる。
+  static const double lateFatiguePerFatigue = 0.0006;
+
+  /// 落ち込みの上限。ここを超えると終盤が理不尽になる。
+  static const double lateFatigueMax = 0.20;
+
+  /// 伸びるはずだった1回ぶんが、何点の経験点になるか。
+  ///
+  /// 値段（`experienceCost`）の平均とここが釣り合っていないと、
+  /// 自分で振るだけで成長速度が変わってしまう。実測で揃えてある。
+  static const int pointsPerGrowth = 4;
+
+  /// 詳細能力を1上げるのに要る経験点。
+  ///
+  /// 上に行くほど高い。**平らにすると、一番得意なところに全部注ぐのが
+  /// 常に正解になる**。高いところを押し上げるか、安いうちに穴を埋めるか、
+  /// が毎回の判断になる幅に置く。
+  static int experienceCost(int value) =>
+      2 + (value < 45 ? 0 : value - 45) ~/ 9;
+
   /// 練習で能力が1伸びる確率（ポテンシャルに達していなければ）。
   static const double trainingGrowthChance = 0.3;
+
+  /// 週の手応えが、コンディションでどれだけ動くか。
+  ///
+  /// 元気なら深く入れるし、疲れていれば空回りする。
+  /// これが無いと「追い込む」を毎週押すのが最適解になる。
+  static const double trainingGreatPerCondition = 0.0018;
+  static const double trainingFlatPerCondition = 0.0045;
+
+  /// プロ意識が、手応えにどれだけ効くか。
+  static const double trainingGreatPerPro = 0.006;
+
+  /// 手応えの出方の上下限。運の要素を残すため、0や1には振り切らせない。
+  static const double trainingGreatMax = 0.72;
+  static const double trainingFlatMax = 0.70;
+
+  /// PK戦で勝つ確率。
+  ///
+  /// **能力ではほとんど決まらない**のが現実に近い。ここを実力差で決めると、
+  /// 一発勝負の意味が消える（格上が必ず勝つなら、それはリーグ戦と同じ）。
+  static const double shootoutBase = 0.5;
+
+  /// カップ戦の早いラウンドで、起用に乗る下駄。
+  ///
+  /// 現実の早いラウンドは控えと若手が出る場。普段出られない選手にも回る。
+  static const double cupRotationBonus = 0.45;
+
+  /// 主力がカップの早いラウンドで休まされる確率。
+  ///
+  /// 0 にするとカップが「主力の試合数が増えるだけ」の装置になり、
+  /// 若手が出る場という現実の構図が消える。
+  static const double cupRestChance = 0.35;
+
+  /// 休まされる線。これより上の見込みなら主力とみなす。
+  static const double cupRestFrom = 0.4;
+
+  /// 監督の信頼がこれを下回ると「構想外」。ベンチにも入れなくなる。
+  ///
+  /// **取り返しのつかないところが、このゲームには怪我しか無かった。**
+  /// 信頼は下がっても、出れば評価点で戻せる。出られなくなって初めて、
+  /// 積み上げてきた選択に値段が付く。
+  /// 戻る道はある（監督が代わる・移籍する・出来事で歩み寄る）が、
+  /// 「評価点で戻す」道だけは閉じている。出られないのだから。
+  static const int frozenOutTrust = 12;
+
+  /// これを下回ったら、構想外が近いことを画面で知らせる。
+  ///
+  /// 予告なしに落とすと、理不尽になる。落ちる前に必ず見えていること。
+  static const int trustWarning = 28;
+
+  /// ここを超えたら、疲労を警告として出す。`Fatigue.label` の段と揃える。
+  static const int fatigueWarning = 70;
+
+  /// 溜まった疲労が、重傷の割合に与える傾き。
+  ///
+  /// 数だけ増えて軽傷ばかりなら、無理を通すのはまだ得な賭けになる。
+  /// 限界で走り続けた選手が壊れるのは、重いほうの怪我。
+  static const double severePerFatigue = 0.0008;
+
+  /// 疲労で増えた重傷の割合の上限。
+  static const double severeShareMax = 0.13;
+
+  /// ピッチの外で能力が伸びる出来事に、必ず乗る疲労。
+  ///
+  /// これが無いと、出来事の頻度がそのまま「強さ」になる。
+  static const int eventTrainFatigue = 2;
+
+  /// ここを下回ると「身体が落ちている」出来事が出る。
+  static const int lowConditionForEvents = 62;
+
+  /// メンターに付いた週に、プロ意識が1上がる確率。
+  ///
+  /// 毎週上がると、性格が「積むだけの数字」になる。ゆっくりしか動かさない。
+  static const double mentorProfessionalismChance = 0.12;
+
+  /// 一緒に組んだ相手との関係が、その週にどれだけ動くか。
+  static const int companionSynergyGain = 2;
+  static const int companionTeammatesGain = 1;
 
   /// 居残り練習で余分に減るコンディション。
   static const int drillConditionCost = 6;
@@ -291,6 +406,12 @@ class Formulas {
   static const double plateauGrowthFactor = 0.25;
 
   /// 限界突破が起きる確率と、上がるポテンシャル。
+  /// 限界を超えるのに要る「大成功した週」の数。
+  ///
+  /// 追い込み続けた選手だけが上限を破る。ここを通さないと、週の選択は
+  /// ピークに着く速さを変えるだけで、届く高さは変わらない。
+  static const int breakthroughGreatWeeks = 18;
+
   static const double breakthroughChance = 0.25;
   static const int breakthroughGain = 3;
 
@@ -394,9 +515,28 @@ class Formulas {
   static const int contractYearsMin = 2;
   static const int contractYearsMax = 4;
 
+  /// 監督の求める形に沿った手・逆らった手が、1試合で信頼を動かす量。
+  ///
+  /// 監督は `fitFor` で**能力値だけ**を見ていた。つまり「あなたの数字」を
+  /// 採点する装置で、あなたが何を選んだかは見ていなかった。
+  /// 1試合3局面なので、全部沿えば +1、全部逆らえば -1 くらいに収める。
+  /// 大きくすると、型（identity）を通す遊び方が単に損になる。
+  static const double trustPerTacticFit = 0.34;
+
+  /// 要求の厳しい監督ほど、選択の善し悪しが強く響く。
+  static const double trustPerDemand = 0.12;
+
+  /// 自動で進めるとき、監督の求める形をどれだけ重く見るか。
+  ///
+  /// 入れないと、自動進行は監督を無視し続けて信頼を失う（実測で
+  /// 代表経験が 58%→51% に落ちた）。人が押す「区切りまで」も同じ道を通るので、
+  /// これが無いと自動進行そのものが罠になる。
+  /// 明らかに良い手を覆すほどではない重さにする。
+  static const double tacticPickBonus = 0.06;
+
   /// 登録メンバーに入るのに必要な、クラブの強さとの差。
   /// これより大きく劣ると25人枠に入れない。
-  static const int squadRegistrationGap = -18;
+  static const int squadRegistrationGap = -8;
 
   /// 大陸カップに出た年の年俸倍率。
   static const double continentalSalaryBonus = 1.1;

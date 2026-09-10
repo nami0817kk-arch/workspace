@@ -14,6 +14,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/data/save_repository.dart';
 import 'package:soccer_career/game/career_engine.dart';
 import 'package:soccer_career/game/match_engine.dart';
+import 'package:soccer_career/game/knacks.dart';
+import 'package:soccer_career/game/newsroom.dart';
 import 'package:soccer_career/game/world.dart';
 import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/attributes.dart';
@@ -56,6 +58,10 @@ class Playstyle {
     this.habits = const Habits(),
     this.bodyPlan = BodyPlan.maintain,
     this.preseason = PreseasonPlan.camp,
+    this.effort = TrainingEffort.normal,
+    this.companion = TrainingCompanion.alone,
+    this.spendsPoints = false,
+    this.autoRestBelow,
   });
 
   final String name;
@@ -69,6 +75,16 @@ class Playstyle {
 
   /// 稼ぎを専属スタッフに回す。
   final bool invests;
+
+  /// 週の踏み込み方と、組む相手。
+  final TrainingEffort effort;
+  final TrainingCompanion companion;
+
+  /// 自分で経験点を振るか。false なら今までどおり自動。
+  final bool spendsPoints;
+
+  /// 自動休養のしきい値。null なら既定のまま。
+  final int? autoRestBelow;
 
   /// 居残りでセットプレーを磨く。
   final bool drills;
@@ -102,6 +118,8 @@ class Career {
   int severeInjuries = 0;
   int missedMatches = 0;
   int transfers = 0;
+  int lastTier = 9;
+  bool reachedTopByPromotion = false;
   int loans = 0;
   int bestTier = 9;
   int bestPrestige = 0;
@@ -117,9 +135,19 @@ class Career {
   int leagueTitles = 0;
   int worldCups = 0;
   int breakthroughs = 0;
+  int greatWeeks = 0;
+  int knackAge = 0;
+  int professionalism = 0;
+  int atPotentialSeasons = 0;
   int signatures = 0;
   int plateaus = 0;
   int events = 0;
+
+  /// 実際に起きた状態。「作ってあるのに起きない」を探すために数える。
+  final Set<String> seenStates = {};
+
+  /// クラブの強さとの差の、いちばん厳しかったところ。
+  int minGap = 99;
   int offersSeen = 0;
   int topTierOffers = 0;
   int overallAt21 = 0;
@@ -161,6 +189,11 @@ Future<Career> runCareer(Playstyle style, int seed) async {
     await controller.setDirective(style.directive);
   }
   if (style.drills) await controller.setDrill(SetPiece.freeKick);
+  await controller.setEffort(style.effort);
+  if (style.autoRestBelow != null) {
+    await controller.setAutoRestBelow(style.autoRestBelow!);
+  }
+  if (style.spendsPoints) await controller.setAutoSpend(false);
 
   var guard = 0;
   while (!controller.state!.retired && guard++ < 30) {
@@ -170,9 +203,14 @@ Future<Career> runCareer(Playstyle style, int seed) async {
 
     // --- シーズンを戦う ---
     var matches = 0;
-    while (!state.seasonFinished && matches++ < 60) {
+    // リーグ38節 + カップ最大18 + 代表3。上限で切らないように余裕を持たせる。
+    while (!state.seasonFinished && matches++ < 90) {
       // 練習を決める。疲れていたら休む。
       await controller.setMenu(_menuFor(state, style));
+      // 組む相手は移籍で入れ替わる。毎週その時点の顔ぶれで選び直す。
+      await controller.setCompanion(state.companionChoices.contains(style.companion)
+          ? style.companion
+          : TrainingCompanion.alone);
       if (controller.pendingEvent != null) {
         career.events++;
         final choices = controller.pendingEvent!.choices;
@@ -182,12 +220,34 @@ Future<Career> runCareer(Playstyle style, int seed) async {
       // ので、単に別物かどうかで見ると離脱の長さを数えてしまう。
       final wasInjured = state.injured;
       await controller.simulateMatch();
+      if (style.spendsPoints) await _spendPoints(controller);
       final after = controller.state!.injury;
       if (!wasInjured && after != null) {
         career.injuries++;
+        career.seenStates.add('InjurySeverity.${after.severity.name}');
         if (after.severity.index >= 2) career.severeInjuries++;
       }
+      // 直前の試合の結果は状態から読む。simulateMatch の戻り値は
+      // analyzer の版によって null 許容の見立てが変わり、CI だけ落ちた。
+      final results = controller.state!.results;
+      if (results.isNotEmpty) {
+        career.seenStates.add('Appearance.${results.last.appearance.name}');
+      }
+      career.seenStates
+          .add('FixtureStake.${Newsroom.stakeFor(controller.state!).name}');
+      career.seenStates
+          .add('MomentumState.${controller.state!.form.state.name}');
+      for (final item in controller.state!.news.take(3)) {
+        career.seenStates.add('NewsKind.${item.kind.name}');
+      }
       if (controller.state!.injured) career.missedMatches++;
+      // 取り返しのつかない状態に、実際に到達するか。
+      if (controller.state!.frozenOut) career.seenStates.add('frozenOut');
+      if (controller.state!.trustAtRisk) career.seenStates.add('trustAtRisk');
+      // コツの条件に初めて届いた年齢を控える。
+      if (career.knackAge == 0 && Knacks.canLearn(controller.state!)) {
+        career.knackAge = controller.state!.player.age;
+      }
       career.moraleSum += controller.state!.morale.value;
       career.fatigueSum += controller.state!.fatigue.value;
       career.moraleSamples++;
@@ -203,6 +263,11 @@ Future<Career> runCareer(Playstyle style, int seed) async {
     career.goals += stats.goals;
     career.assists += stats.assists;
     career.ratingSum += stats.averageRating * stats.appearances;
+    // 1部にどうやって届いたか。昇格か、移籍か。
+    if (done.club.tier == 1 && career.bestTier > 1) {
+      career.reachedTopByPromotion = career.lastTier == 1;
+    }
+    career.lastTier = done.club.tier;
     career.bestTier = min(career.bestTier, done.club.tier);
     if (done.club.tier == 1) {
       career.bestPrestige =
@@ -212,9 +277,37 @@ Future<Career> runCareer(Playstyle style, int seed) async {
     career.peakSalary = max(career.peakSalary, done.salary);
     career.caps = done.caps;
     career.awards = done.reputation.awards.length;
+    career.seenStates.add('SquadStatus.${done.squadStatus.name}');
+    career.minGap = min(career.minGap, done.player.overall - done.club.strength);
+    career.seenStates.add('ContinentalStage.${done.continentalStage.name}');
+    career.seenStates.add('CupStage.${done.cupStage.name}');
+    career.seenStates.add('WorldCupStage.${done.worldCupStage.name}');
+    career.seenStates.add('CareerStage.${done.stage.name}');
+    for (final award in done.reputation.awards) {
+      career.seenStates.add('Award.${award.name}');
+    }
+    for (final trait in done.player.traits) {
+      career.seenStates.add('Trait.${trait.name}');
+    }
+    for (final signature in done.development.signatures) {
+      career.seenStates.add('Signature.${signature.name}');
+    }
+    if (done.development.identity != null) {
+      career.seenStates.add('AttributeKey.${done.development.identity!.name}');
+    }
+    if (done.manager != null) {
+      career.seenStates.add('Tactic.${done.manager!.tactic.name}');
+    }
+    if (done.retired) {
+      career.seenStates
+          .add('SecondCareer.${controller.suggestedSecondCareer.name}');
+    }
     career.savings = done.finances.savings;
     career.signatures = done.development.signatures.length;
     career.breakthroughs = done.development.breakthroughs;
+    career.greatWeeks = done.development.greatWeeks;
+    career.professionalism = done.player.personality.professionalism;
+    if (done.player.atPotential) career.atPotentialSeasons++;
     if (done.development.inPlateau) career.plateaus++;
     if (stats.appearances == 0) career.zeroAppearanceSeasons++;
     if (!done.squadStatus.canPlay) career.outOfSquadSeasons++;
@@ -268,6 +361,31 @@ Future<Career> runCareer(Playstyle style, int seed) async {
 
   career.retireAge = controller.state!.player.age;
   return career;
+}
+
+/// 溜まった経験点を振る。
+///
+/// 「そのポジションで重い能力から、安いものを順に」という、
+/// 平均的な遊び方に近い振り方。強い最適化はしない。
+Future<void> _spendPoints(CareerController controller) async {
+  final state = controller.state!;
+  var guard = 0;
+  while (guard++ < 40) {
+    final candidates = <Detail>[
+      for (final key in AttributeKey.values)
+        if ((state.development.points[key] ?? 0) > 0)
+          for (final d in key.details)
+            if (controller.canSpend(d)) d,
+    ];
+    if (candidates.isEmpty) return;
+    candidates.sort((a, b) {
+      final byWeight = Attributes.weightShare(state.player.position, b.category)
+          .compareTo(Attributes.weightShare(state.player.position, a.category));
+      if (byWeight != 0) return byWeight;
+      return controller.costOf(a).compareTo(controller.costOf(b));
+    });
+    if (await controller.spendPoint(candidates.first) == null) return;
+  }
 }
 
 /// 練習の決め方。

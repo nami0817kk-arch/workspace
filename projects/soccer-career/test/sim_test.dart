@@ -416,7 +416,9 @@ void main() {
           name: 'S', position: Position.cm, age: 19, agent: Agent.pool.first);
       final report = await c.simulateUntilEvent();
       expect(report.played, greaterThan(0));
-      expect(report.played, c.state!.leagueResults.length);
+      // カップ戦は週を1つ使うが、節は進まない。
+      expect(report.leaguePlayed, c.state!.leagueResults.length);
+      expect(report.played, report.leaguePlayed + report.cupPlayed);
       expect(report.won + report.drawn + report.lost, report.played);
       // 止まった理由と状態が一致している。
       switch (report.stoppedBy) {

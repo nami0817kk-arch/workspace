@@ -5,6 +5,7 @@ import '../models/attributes.dart';
 import '../models/career.dart';
 import '../models/club.dart';
 import '../models/competition.dart';
+import '../models/cup.dart';
 import '../models/aptitude.dart';
 import '../models/country.dart';
 import '../models/entourage.dart';
@@ -164,6 +165,7 @@ class CareerEngine {
     PlayerLook? look,
     int? squadNumber,
     Map<AttributeKey, int> tweaks = const {},
+    List<Trait>? traits,
   }) {
     final home = countryId == null
         ? World.randomHome(_random)
@@ -182,7 +184,10 @@ class CareerEngine {
     final overall = attributes.overallFor(position);
     // そのポジションで意味を持つ特性からだけ引く。
     // 天才はポテンシャルに乗るので、ポテンシャルより先に引く。
-    final traits = Trait.roll(_random, position: position);
+    //
+    // 選手作成画面は**先に引いて見せてから**ここへ渡す。渡されなければ
+    // これまでどおりここで引く（テストとシミュレーションのため）。
+    final rolled = traits ?? Trait.roll(_random, position: position);
     final player = Player(
       name: name,
       age: age,
@@ -190,14 +195,14 @@ class CareerEngine {
       // 左右のある役割でなければ、指定されていても中央に倒す。
       side: position.hasSide ? side : Side.center,
       attributes: attributes,
-      potential: (rollPotential(overall) + traits.potentialBonus)
+      potential: (rollPotential(overall) + rolled.potentialBonus)
           .clamp(Formulas.potentialMin, Formulas.maxAttribute),
       nationality: _rollNationality(home),
       personality: Personality.roll(_random),
       physique: physique ?? Physique.roll(_random, position),
       look: look ?? PlayerLook.roll(_random),
       aptitude: Aptitude.initial(position),
-      traits: traits,
+      traits: rolled,
     );
     return CareerState(
       player: player,
@@ -217,6 +222,8 @@ class CareerEngine {
       // 最初から練習している状態で始める。休養が既定だと、育成タブを
       // 開かない人は何も伸びないまま1年が過ぎる。
       menu: TrainingMenu.defaultFor(position),
+      // 国内カップは毎年、順位に関係なく全クラブが出る。
+      domesticCup: CupRun(kind: CupKind.domestic, round: CupRound.round32),
       nationalTeamId: home.id,
       manager: Manager.roll(_random),
       competitor: Teammate.roll(_random,
@@ -347,6 +354,8 @@ class CareerEngine {
       state.internationalGoals += result.goals;
       return;
     }
+    // カップ戦も順位表には影響しない。勝ち上がりは `Cups` が持つ。
+    if (result.cup != null) return;
 
     final opponent = state.opponentFor(result.matchday);
     _row(state, state.club.id)
@@ -505,6 +514,14 @@ class CareerEngine {
         : (state.objective!.achieved(stats)
             ? Formulas.objectiveMetSalaryFactor
             : Formulas.objectiveMissedSalaryFactor);
+    // 自分から口にした約束も年俸に効く。大きく出たぶんだけ振れる。
+    // 信頼は監督が代われば白紙に戻るので、効き目の中心はこちらに置く。
+    final promise = state.promise;
+    final promiseFactor = promise == null
+        ? 1.0
+        : (promise.achievedBy(stats)
+            ? promise.weight.salaryKept
+            : promise.weight.salaryBroken);
     // 大陸カップに出たシーズンは評価が上がる。
     final continentalFactor = state.continentalStage.participated
         ? Formulas.continentalSalaryBonus
@@ -513,10 +530,14 @@ class CareerEngine {
     // 良いシーズンが続くだけで年俸が指数で伸びる（100シーズン回して
     // 平均11億円、最大200億円になっていた）。
     // 下げ幅も緩めて、1年の不調で半減しないようにする。
-    final target = base * performance * objectiveFactor * continentalFactor;
+    final target =
+        base * performance * objectiveFactor * promiseFactor * continentalFactor;
+    // 約束は交渉の枠ごと動かす。上限・下限に丸めた後で掛けると、
+    // 良いシーズンで上限に張り付いた瞬間に約束の効き目が消える
+    // （実測で、果たしても破っても同じ 1350万円になっていた）。
     final salary = _round(target.clamp(
-      max(base * 0.6, state.salary * 0.7),
-      max(base * 1.8, state.salary * 1.1),
+      max(base * 0.6, state.salary * 0.7) * promiseFactor,
+      max(base * 1.8, state.salary * 1.1) * promiseFactor,
     ));
     return TransferOffer(
       club: club,
@@ -645,7 +666,7 @@ class CareerEngine {
         state.reputation.marketValue * (0.7 + state.contractYears * 0.2));
 
     // 声がかかる国。今の国と、代理人の人脈で届く範囲の国。
-    for (final country in _reachableCountries(state)) {
+    for (final country in reachableCountries(state)) {
       for (final tier in [1, 2]) {
         if (tier > country.tiers) continue;
         // 手の届く範囲の中から、格の近いクラブを選ぶ。
@@ -755,16 +776,17 @@ class CareerEngine {
   ///
   /// 今の国は常に対象。国外は「自分の格」と「代理人の人脈」で決まり、
   /// いきなり最上位リーグから声はかからない。
-  List<Country> _reachableCountries(CareerState state) {
+  List<Country> reachableCountries(CareerState state) {
     final here = World.byId(state.club.countryId);
     // 上の国へ行くには、実力に加えて「名前が知られていること」が要る。
     //
     // 以前は総合力55から1段ずつ届いたので、普通に育てた選手の半数以上が
     // 最上位の国の1部に流れ着いていた。代表歴を条件に足して、
     // 格上の国は一段ハードルを上げる。
-    final reachPrestige = (state.player.overall - 66) ~/ 7 +
-        state.agent.reach ~/ 4 +
-        (state.caps >= 10 ? 1 : 0);
+    final reachPrestige = ((state.player.overall - 66) ~/ 7 +
+            state.agent.reach ~/ 4 +
+            (state.caps >= 10 ? 1 : 0))
+        .clamp(0, 1);
     return [
       here,
       ...World.countries.where((c) =>
@@ -874,6 +896,8 @@ class CareerEngine {
       worldCupStage: state.worldCupStage,
       onLoan: state.onLoan,
       overall: state.player.overall,
+      promiseLabel: state.promise?.label,
+      promiseKept: state.promiseKept ?? false,
     );
 
     final league = _leagueContaining(accepted.club);
@@ -999,6 +1023,16 @@ class CareerEngine {
       agent: state.agent,
       salary: accepted.salary,
       menu: state.menu,
+      // 国内カップは毎年ある。大陸カップは前季の順位か、国内カップ優勝で。
+      domesticCup: CupRun(kind: CupKind.domestic, round: CupRound.round32),
+      continentalCup: inContinental(state)
+          ? CupRun(kind: CupKind.continental, round: CupRound.group)
+          : null,
+      // 週の設定はシーズンを跨いで残す。ここを渡し忘れると、
+      // 毎年こっそり「普通・一人」に戻る（実測で、追い込むを選び続けても
+      // 大成功が 46回 にしかならなかった）。
+      effort: state.effort,
+      companion: state.companion,
       drill: state.drill,
       staff: staff,
       habits: state.habits,
@@ -1080,7 +1114,11 @@ class CareerEngine {
     if (!player.atPotential) return false;
     if (player.age > Formulas.peakAge + 2) return false;
     if (player.personality.professionalism < 14) return false;
-    if (state.development.experience < 300) return false;
+    // 追い込んだ週の積み上げ。ここが週の選択と上限を繋ぐ唯一の線。
+    if (state.development.greatWeeks < Formulas.breakthroughGreatWeeks) {
+      return false;
+    }
+    if (state.development.experience < 150) return false;
     if (player.potential >= Formulas.maxAttribute) return false;
     return _random.nextDouble() <
         Formulas.breakthroughChance * player.traits.breakthroughFactor;
@@ -1232,15 +1270,28 @@ class CareerEngine {
   ///
   /// リーグ戦を戦い終えてから呼ぶ。出場していなければ none のまま。
   void resolveSeasonEnd(CareerState state) {
-    state.continentalStage = competitions.runContinental(
-      state,
-      qualified: inContinental(state),
-    );
+    // 到達ラウンドは**戦った結果**から決まる。
+    //
+    // かつては `runContinental` / `runDomesticCup` がここで振っていた。
+    // 年俸にも評判にも記録にも効く数字なのに、プレイヤーは1分もプレーしない
+    // ——「優勝した」と書かれるだけで、そこに試合が無かった。
+    // まだ戦い終えていない大会は、残りをその場で消化する（引退・強制終了用）。
+    // カップ戦を持たない保存データ（この仕組みより前のもの）は、
+    // これまでどおりその場で振って埋める。黙って不出場にすると、
+    // 続きから遊ぶ人のシーズンから大会が1つ消える。
+    final continental = state.continentalCup;
+    state.continentalStage = continental == null
+        ? competitions.runContinental(state, qualified: inContinental(state))
+        : continental.running
+            ? competitions.runContinental(state, qualified: true)
+            : continental.continentalStage;
     if (state.continentalStage.participated) {
       state.continentalExperience = true;
     }
-    // 国内カップは毎年ある。順位に関係なく全クラブが出る。
-    state.cupStage = competitions.runDomesticCup(state);
+    final domestic = state.domesticCup;
+    state.cupStage = domestic == null || domestic.running
+        ? competitions.runDomesticCup(state)
+        : domestic.domesticStage;
     // 世界大会は4年に1度。代表に呼ばれている選手だけ。
     state.worldCupStage = Competitions.isWorldCupYear(state.year)
         ? competitions.runWorldCup(state, calledUp: state.calledUp)
@@ -1268,6 +1319,8 @@ class CareerEngine {
       worldCupStage: state.worldCupStage,
       onLoan: state.onLoan,
       overall: state.player.overall,
+      promiseLabel: state.promise?.label,
+      promiseKept: state.promiseKept ?? false,
     );
     return CareerState(
       player: state.player,

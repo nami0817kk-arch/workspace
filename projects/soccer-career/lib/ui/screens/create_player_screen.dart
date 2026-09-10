@@ -3,12 +3,15 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 
 import 'guide_screen.dart';
+import 'hall_screen.dart';
 import '../../game/career_engine.dart';
 import '../../game/world.dart';
 import '../../models/look.dart';
 import '../../models/agent.dart';
 import '../../models/attributes.dart';
 import '../../models/physique.dart';
+import '../../models/traits.dart';
+import '../trait_row.dart';
 import '../../state/career_controller.dart';
 import '../player_portrait.dart';
 import '../readable_width.dart';
@@ -40,6 +43,24 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
   late final List<Agent> _agents = Agent.candidates(Random());
   Agent? _agent;
   bool _busy = false;
+
+  /// 引いた特性。始めるときにそのまま渡す。
+  ///
+  /// 特性は**始めてから分かるもの**にしていたが、2つの長所で選手の性格が
+  /// ほとんど決まるのに、それが見えないまま20年ぶんの選択をすることになる。
+  /// 見せて引き直せるようにする（引き直しは、作り直せば同じことができた）。
+  late List<Trait> _traits = Trait.roll(_traitRandom, position: _position);
+  final Random _traitRandom = Random();
+
+  /// 引き直した回数。稀な特性が出るまで押せることは隠さない。
+  int _rerolls = 0;
+
+  void _rerollTraits() {
+    setState(() {
+      _traits = Trait.roll(_traitRandom, position: _position);
+      _rerolls++;
+    });
+  }
 
   /// 1カテゴリを動かせる幅。
   static const int tweakLimit = 6;
@@ -76,6 +97,9 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
       }
       _height = _defaultHeightFor(position);
       _weight = _weightFor(_height);
+      // 特性はポジションで引ける集合が変わる。
+      // ストライカーに「反応の鬼」が付いたままになるのを防ぐ。
+      _traits = Trait.roll(_traitRandom, position: position);
     });
   }
 
@@ -113,6 +137,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
         weakFoot: 1 + Random().nextInt(3),
       ),
       tweaks: _tweaks,
+      traits: _traits,
     );
   }
 
@@ -138,7 +163,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                   Text(
                     '2部の下位クラブから始まる。38試合すべてに出て、'
                     '評価点を積み上げて上を目指す。'
-                    'ポテンシャルと特性は、始めてから分かる。',
+                    'ポテンシャルは始めてから分かる。',
                     style: theme.textTheme.bodyMedium
                         ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
                   ),
@@ -154,6 +179,24 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                       label: const Text('遊び方ガイドを読む'),
                     ),
                   ),
+                  // 前の選手をここから見に行ける。始める前に眺めるのが
+                  // 一番自然な場所（引退画面は一度閉じたら戻れない）。
+                  if (widget.controller.hall.legends.isNotEmpty)
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextButton.icon(
+                        onPressed: () => Navigator.of(context).push(
+                          MaterialPageRoute<void>(
+                            builder: (_) =>
+                                HallScreen(controller: widget.controller),
+                          ),
+                        ),
+                        icon: const Icon(Icons.workspace_premium_outlined,
+                            size: 18),
+                        label: Text(
+                            'これまでの選手（${widget.controller.hall.legends.length}人）'),
+                      ),
+                    ),
                   const SizedBox(height: 20),
                   TextField(
                     controller: _name,
@@ -415,7 +458,7 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                   Text(
                     'ポジションの基準値から、$tweakLimit まで動かせる。'
                     '増やしたぶんはどこかを削る（合計を0にすると始められる）。'
-                    'ポテンシャルと特性は、始めてから分かる。',
+                    'ポテンシャルは始めてから分かる。',
                     style: muted,
                   ),
                   const SizedBox(height: 8),
@@ -437,6 +480,40 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                       color: _tweakSum == 0
                           ? theme.colorScheme.primary
                           : theme.colorScheme.error,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Row(
+                    children: [
+                      Text('生まれ持った特性',
+                          style: theme.textTheme.labelLarge),
+                      const Spacer(),
+                      TextButton.icon(
+                        onPressed: _rerollTraits,
+                        icon: const Icon(Icons.casino_outlined, size: 18),
+                        label: const Text('引き直す'),
+                      ),
+                    ],
+                  ),
+                  Text(
+                    '長所が2つ、3割で欠点が1つ。まれに特別なものが混じる。'
+                    '伸ばせないが、効く場面は決まっている。'
+                    '${_rerolls > 0 ? '（$_rerolls回 引き直した）' : ''}',
+                    style: muted,
+                  ),
+                  const SizedBox(height: 8),
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(14),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          for (var i = 0; i < _traits.length; i++) ...[
+                            if (i > 0) const Divider(height: 20),
+                            TraitRow(trait: _traits[i]),
+                          ],
+                        ],
+                      ),
                     ),
                   ),
                   const SizedBox(height: 24),

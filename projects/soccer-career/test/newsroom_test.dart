@@ -28,6 +28,18 @@ class _MemoryRepository implements SaveRepository {
   Future<void> clear() async => _saved = null;
 }
 
+Future<CareerController> started({int seed = 3}) async {
+  final c = CareerController(
+    repository: _MemoryRepository(),
+    careerEngine: CareerEngine(random: Random(seed)),
+    matchEngine: MatchEngine(random: Random(seed)),
+    random: Random(seed),
+  );
+  await c.startCareer(
+      name: '主人公', position: Position.st, age: 20, agent: Agent.pool.first);
+  return c;
+}
+
 CareerState career({int seed = 3, Position position = Position.st}) =>
     CareerEngine(random: Random(seed)).startCareer(
         name: '主人公', position: position, age: 20, agent: Agent.pool.first);
@@ -56,6 +68,59 @@ MatchResult result({
     );
 
 void main() {
+  group('同じ見出しを並べない', () {
+    test('1シーズン回して、見出しが重複しない', () async {
+      // 節番号だけで言い回しを選んでいた頃は4節ごとに同じ文が回ってきて、
+      // 記録タブに「◯◯に称賛の声」が並んでいた（13本中7本が重複）。
+      final c = await started(seed: 21);
+      while (!c.state!.seasonFinished) {
+        await c.simulateMatch();
+      }
+      final headlines = c.state!.news.map((n) => n.headline).toList();
+      expect(headlines.length, greaterThan(5), reason: '見出しが少なすぎる');
+      // 同じ言い回しが並ばないこと。
+      // 「◯◯が2ゴール」のような**事実そのもの**の見出しは、
+      // 同じ出来事が起きれば同じ文になるのが正しいので、ここでは見ない。
+      final stylistic = headlines.where((h) =>
+          !h.contains('ゴール') &&
+          !h.contains('決勝点') &&
+          !h.contains('完封') &&
+          !h.contains('デビュー') &&
+          !h.contains('キャップ') &&
+          !h.contains('試合'));
+      expect(stylistic.toSet().length, stylistic.length,
+          reason: '同じ言い回しが並んでいる: '
+              '${stylistic.where((h) => stylistic.where((x) => x == h).length > 1).toSet()}');
+    });
+
+    test('言い回しが尽きたら、節で選んだものに戻る（落ちない）', () async {
+      final c = await started(seed: 22);
+      // 何季も回して、言い回しの数を超える見出しを出させる。
+      for (var season = 0; season < 3; season++) {
+        while (!c.state!.seasonFinished) {
+          await c.simulateMatch();
+        }
+        await c.finishSeason();
+        final offer = c.renewalOffer;
+        if (offer == null) break;
+        await c.advanceSeason(accepted: offer);
+      }
+      expect(c.state!.news, isNotEmpty);
+    });
+
+    test('同じ状態からは、同じ見出しが出る（乱数を持たない）', () async {
+      Future<List<String>> run() async {
+        final c = await started(seed: 23);
+        for (var i = 0; i < 12; i++) {
+          await c.simulateMatch();
+        }
+        return c.state!.news.map((n) => n.headline).toList();
+      }
+
+      expect(await run(), await run());
+    });
+  });
+
   group('見出し', () {
     test('目立ったことだけが記事になる', () {
       final state = career();
