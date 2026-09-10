@@ -185,7 +185,17 @@ SCENE_SUBJECTS = 4
 NOT_A_PERSON = ("(dog)", "(cat)", "(horse)", "dog)", "statue", "mural",
                 "graffiti", "street art", "waxwork", "madame tussauds",
                 "mosaic", "sculpture", "bust of", "monument", "plaque",
-                "postage stamp", "banknote", "coin", "mural of")
+                "postage stamp", "banknote", "coin", "mural of",
+                # **逮捕写真を掴んだ**（2026-09-10 実測）。「チアゴ・シウヴァ」で
+                # 引いたら、1位が `File:Thiago-Silva-mug-shot.jpg`（同名の
+                # UFC選手が SWAT との対峙のあと逮捕されたときのもの）だった。
+                # 候補に2枚あり、**被写体の照合もライセンスも通っている。**
+                # サッカー選手の回に無関係な人の逮捕写真を出すところだった
+                "mug-shot", "mug shot", "mugshot", "booking photo", "arrest",
+                # 紋章・盾も人ではない（アラウホの候補に混ざっていた）
+                "coat of arms", "crest of", "escudo de",
+                # 集合写真は顔が小さい（ブラジル代表の候補に混ざっていた）
+                "gruppenfoto", "team photo", "squad photo")
 
 
 # 画像でない添付。**Commons には音声も動画もある。**

@@ -325,3 +325,24 @@ def test_429が続いたら諦める(monkeypatch):
         assert "429" in str(err) or "取れません" in str(err)
     else:
         raise AssertionError("止まっていない")
+
+
+def test_逮捕写真と紋章を人として掴まない():
+    """**逮捕写真を掴んだ**（2026-09-10 実測）。
+
+    「チアゴ・シウヴァ」で引いたら、1位が
+    `File:Thiago-Silva-mug-shot.jpg`（同名のUFC選手が逮捕されたときのもの）。
+    候補に2枚あり、**被写体の照合もライセンスも通っていた。**
+    サッカー選手の回に、無関係な人の逮捕写真を出すところだった。
+    犬のメッシ・Deb Haaland と同じ「名前は誰にでも付く」問題。
+    """
+    from src.portrait import looks_like_person
+
+    assert not looks_like_person("File:Thiago-Silva-mug-shot.jpg")
+    assert not looks_like_person("File:Thiago Silva (Fighter) Mugshot.jpg")
+    assert not looks_like_person("File:The First Araujo Coat Of Arms.jpg")
+    assert not looks_like_person(
+        "File:20180610 FIFA Friendly Match Austria vs. Brazil Gruppenfoto Brasilien.jpg")
+    # 本人の写真は通る（外しすぎていないことも確かめる）
+    assert looks_like_person("File:Thiago Silva (cropped).jpg")
+    assert looks_like_person("File:Thiago Silva & Marquinhos.jpg")
