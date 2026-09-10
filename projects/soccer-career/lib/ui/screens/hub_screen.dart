@@ -1933,6 +1933,8 @@ class _EventCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Text('今週', style: theme.textTheme.labelSmall
+                ?.copyWith(color: theme.colorScheme.onSecondaryContainer)),
             Text(event.title, style: theme.textTheme.titleMedium),
             const SizedBox(height: 8),
             Text(event.body, style: theme.textTheme.bodyMedium),
@@ -1956,7 +1958,23 @@ class _EventCard extends StatelessWidget {
                 },
                 label: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 10),
-                  child: Text(choice.label),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(choice.label),
+                      // 何に効くかを出す。名前だけの三択は、どれを押しても
+                      // 同じに見えて、選ぶ材料が一つも無かった。
+                      if (choice.effect.summary.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2),
+                          child: Text(
+                            choice.effect.summary.join(' ・ '),
+                            style: theme.textTheme.labelSmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
               ),
               const SizedBox(height: 8),
