@@ -278,13 +278,82 @@ def face_problems(script: Script) -> list[str]:
 ESTIMATE_SLACK = 0.86
 
 
+def _blocks(scene: Scene) -> list[list[int]]:
+    """節を「語りの1行＋そのあとに続く代弁」のかたまりに割る。
+
+    取材メモは「そして、進め方そのものに踏み込みます。」のような
+    語りを置いてから発言を並べる。**語りだけ、発言だけを落とすと文が繋がらない**ので、
+    落とすときはこのかたまりごと動かす。
+    """
+    out: list[list[int]] = []
+    for index, line in enumerate(scene.lines):
+        who = (getattr(line, "speaker", "") or "").strip()
+        if who in NARRATORS and (not out or any(
+            (getattr(scene.lines[i], "speaker", "") or "").strip() not in NARRATORS
+            for i in out[-1]
+        )):
+            out.append([index])
+        elif out:
+            out[-1].append(index)
+        else:
+            out.append([index])
+    return out
+
+
+def _is_narrator(line) -> bool:
+    return (getattr(line, "speaker", "") or "").strip() in NARRATORS
+
+
+def _closing(scene: Scene) -> list[int]:
+    """締めのかたまり。代弁が入っていなければ空を返す（守る値打ちが無い）。"""
+    blocks = _blocks(scene)
+    if len(blocks) < 2:
+        return []
+    last = blocks[-1]
+    if all(_is_narrator(scene.lines[i]) for i in last):
+        return []
+    return last
+
+
+def _drop_middle(scene: Scene, script: Script, target: float) -> None:
+    """**締めを残して、その手前から落とす**（2026-09-10）。
+
+    後ろから1行ずつ落とすと、**いちばん強い一言がいつも先に消える。**
+    ブラジル代表の回で実際に起きた。チアゴ・シウヴァの発言は
+    年齢の話 → 進め方の話 → 「賛成しない」と積み上がっているのに、
+    尺に収める処理が後ろから削るので、締めの「賛成しない」が落ち、
+    途中の「全員を入れ替えて新しい顔ぶれにすることなんてできない」で終わっていた。
+    鎌田の回は逆に「こう話しています。」という**振りだけ**で終わっていた。
+
+    **視聴者が最後に聞くのは、いちばん強い一言であるべき。**
+    締めのかたまりに代弁が入っているときだけ効かせる。
+    振り（語り）だけが残ったら、その行も落とす（文が繋がらないため）。
+    """
+    closing = _closing(scene)
+    if not closing:
+        return
+    keep = closing[0]
+    while _estimate(script) > target and keep > 1:
+        del scene.lines[keep - 1]
+        keep -= 1
+        # 代弁を全部落としたあとの「こう話しました。」だけを残さない
+        while keep > 1 and _is_narrator(scene.lines[keep - 1]):
+            del scene.lines[keep - 1]
+            keep -= 1
+
+
 def _fit(script: Script, max_seconds: float) -> None:
-    """後ろのセリフから落として尺に収める。冒頭は削らない。
+    """尺に収める。冒頭は削らない。
 
     **見積りの甘さを見込んで、手前で切る。**そのまま上限まで詰めると、
     書き出したときに超える（実測で56秒の見積りが66秒になった）。
+
+    削る順番は、まず締めの手前から（`_drop_middle`）、
+    それでも収まらなければ後ろから1行ずつ。
     """
     target = max_seconds * ESTIMATE_SLACK
+    if _estimate(script) > target:
+        _drop_middle(script.scenes[-1], script, target)
     while _estimate(script) > target and len(script.scenes[-1].lines) > 1:
         script.scenes[-1].lines.pop()
 
