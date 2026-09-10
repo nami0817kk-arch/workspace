@@ -190,6 +190,7 @@ class CareerState {
     this.nationalTeamId,
     this.secondCareer,
     this.seenEvents = const [],
+    this.recentEvents = const [],
     this.news = const [],
     this.seasonStart,
     this.backedUpYear = 0,
@@ -352,6 +353,15 @@ class CareerState {
 
   /// もう起きた出来事のID。一度きりの出来事を繰り返さないために持つ。
   List<String> seenEvents;
+
+  /// 直近に出た出来事。続けて同じ話を出さないためだけに持つ。
+  ///
+  /// 頻度を上げた（6節に1回 → 3節に1回）ぶん、同じ話が近くで繰り返されると
+  /// 出来事そのものが安っぽく見える。
+  List<String> recentEvents;
+
+  /// 覚えておく直近の数。
+  static const int recentEventsKept = 6;
 
   /// 世の中に出た見出し。新しいものが先頭。
   List<NewsItem> news;
@@ -762,6 +772,7 @@ class CareerState {
         'nationalTeamId': nationalTeamId,
         'secondCareer': secondCareer?.name,
         'seenEvents': seenEvents,
+        'recentEvents': recentEvents,
         'news': news.map((n) => n.toJson()).toList(),
         'seasonStart': seasonStart?.toJson(),
         'backedUpYear': backedUpYear,
@@ -887,6 +898,8 @@ class CareerState {
               : null,
       seenEvents:
           (json['seenEvents'] as List? ?? const []).cast<String>().toList(),
+      recentEvents:
+          (json['recentEvents'] as List? ?? const []).cast<String>().toList(),
       news: [
         for (final n in (json['news'] as List? ?? const []))
           NewsItem.fromJson(n as Map<String, dynamic>),

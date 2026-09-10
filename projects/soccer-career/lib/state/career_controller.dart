@@ -265,8 +265,21 @@ class CareerController extends ChangeNotifier {
           lowMorale: state.morale.needsCare,
           people: people,
           overall: state.player.overall,
+          // 自分が選んだことが、ピッチの外の出来事になって返ってくる。
+          pushingHard: state.effort == TrainingEffort.hard,
+          promised: state.promise != null,
+          lowCondition:
+              state.player.condition < Formulas.lowConditionForEvents,
         ),
         seen: state.seenEvents.toSet(),
+        recent: state.recentEvents,
+        // 一緒に練習している相手の話は出やすい。
+        with_: switch (state.companion) {
+          TrainingCompanion.alone => null,
+          TrainingCompanion.partner => PersonKind.partner,
+          TrainingCompanion.mentor => PersonKind.mentor,
+          TrainingCompanion.rival => PersonKind.competitor,
+        },
       )?.withNames(people);
     }
   }
@@ -285,7 +298,7 @@ class CareerController extends ChangeNotifier {
         state.relations.bump(manager: e.manager, teammates: e.teammates);
     // 入る金も出ていく金も、貯蓄の増減として同じ扱いにする。
     if (e.money != 0) state.finances = state.finances.spend(-e.money);
-    state.fatigue = state.fatigue.add(e.fatigue);
+    state.fatigue = state.fatigue.add(e.totalFatigue);
 
     var personality = state.player.personality;
     personality = personality.bump(PersonalityAxis.confidence, e.confidence);
@@ -335,6 +348,11 @@ class CareerController extends ChangeNotifier {
     if (event.once && !state.seenEvents.contains(event.id)) {
       state.seenEvents = [...state.seenEvents, event.id];
     }
+    // 続けて同じ話を出さない。
+    state.recentEvents = [
+      event.id,
+      ...state.recentEvents,
+    ].take(CareerState.recentEventsKept).toList();
     pendingEvent = null;
     await _persist();
   }

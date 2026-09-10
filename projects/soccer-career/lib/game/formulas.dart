@@ -295,6 +295,14 @@ class Formulas {
   static const double trainingGreatMax = 0.72;
   static const double trainingFlatMax = 0.70;
 
+  /// ピッチの外で能力が伸びる出来事に、必ず乗る疲労。
+  ///
+  /// これが無いと、出来事の頻度がそのまま「強さ」になる。
+  static const int eventTrainFatigue = 2;
+
+  /// ここを下回ると「身体が落ちている」出来事が出る。
+  static const int lowConditionForEvents = 62;
+
   /// メンターに付いた週に、プロ意識が1上がる確率。
   ///
   /// 毎週上がると、性格が「積むだけの数字」になる。ゆっくりしか動かさない。

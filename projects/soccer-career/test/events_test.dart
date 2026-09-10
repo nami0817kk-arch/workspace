@@ -176,6 +176,157 @@ void main() {
     });
   });
 
+  group('出来事が週の主役になる', () {
+    LifeContext context({
+      bool pushingHard = false,
+      bool promised = false,
+      bool lowCondition = false,
+      Map<PersonKind, String> people = const {},
+    }) =>
+        LifeContext(
+          age: 26,
+          fame: 40,
+          savings: 5000,
+          abroad: false,
+          afterInjury: false,
+          sponsorOffered: false,
+          captaincyOffered: false,
+          lowMorale: false,
+          overall: 72,
+          people: people,
+          pushingHard: pushingHard,
+          promised: promised,
+          lowCondition: lowCondition,
+        );
+
+    /// [pick] を何度も引いて、出た ID を数える。
+    Map<String, int> draws(
+      LifeContext c, {
+      PersonKind? with_,
+      List<String> recent = const [],
+      int times = 600,
+    }) {
+      final counts = <String, int>{};
+      for (var seed = 0; seed < times; seed++) {
+        final e = LifeEvents(random: Random(seed))
+            .pick(c, with_: with_, recent: recent);
+        if (e == null) continue;
+        counts[e.id] = (counts[e.id] ?? 0) + 1;
+      }
+      return counts;
+    }
+
+    test('3節に1回くらいは何か起きる', () {
+      // 6節に1回だと「たまに何か出る画面」で、週の主役にはならない。
+      expect(LifeEvents.chancePerMatch, greaterThan(0.2));
+      // 毎試合だと邪魔になる。
+      expect(LifeEvents.chancePerMatch, lessThan(0.4));
+    });
+
+    test('自分が選んだことが、出来事になって返ってくる', () {
+      final plain = draws(context()).keys.toSet();
+      expect(plain.contains('push-body'), isFalse);
+      expect(plain.contains('promise-weight'), isFalse);
+
+      expect(draws(context(pushingHard: true)).keys, contains('push-body'));
+      expect(draws(context(promised: true)).keys, contains('promise-weight'));
+      expect(draws(context(lowCondition: true)).keys, contains('tired-choice'));
+    });
+
+    test('一緒に練習している相手の話が出やすい', () {
+      const people = {
+        PersonKind.partner: '相方',
+        PersonKind.mentor: 'メンター',
+        PersonKind.competitor: '競争相手',
+      };
+      int partnerDraws({PersonKind? with_}) {
+        final counts = draws(context(people: people), with_: with_);
+        var total = 0;
+        counts.forEach((id, n) {
+          if (LifeEvents.catalogue
+                  .firstWhere((e) => e.id == id)
+                  .person ==
+              PersonKind.partner) {
+            total += n;
+          }
+        });
+        return total;
+      }
+
+      expect(partnerDraws(with_: PersonKind.partner),
+          greaterThan(partnerDraws()));
+      expect(LifeEvents.companionWeight, greaterThan(1));
+    });
+
+    test('直前に出た話は、続けて出さない', () {
+      final counts = draws(context());
+      final common = counts.entries.reduce((a, b) => a.value >= b.value ? a : b);
+      final after = draws(context(), recent: [common.key]);
+      expect(after.containsKey(common.key), isFalse,
+          reason: '同じ話が続けて出ている');
+    });
+
+    test('避けた結果ゼロになるなら、そのまま出す', () {
+      // 候補が1つしか無い状況で黙って何も出さないと、出来事が消える。
+      final all = draws(context()).keys.toList();
+      final e = LifeEvents(random: Random(1)).pick(context(), recent: all);
+      expect(e, isNotNull);
+    });
+
+    test('選択肢に「何に効くか」が出る', () {
+      // 名前だけの三択は、どれを押しても同じに見えて選ぶ材料が無かった。
+      for (final event in LifeEvents.catalogue) {
+        for (final choice in event.choices) {
+          expect(choice.effect.summary, isNotEmpty,
+              reason: '${event.id} の「${choice.label}」に効きが無い');
+        }
+      }
+    });
+
+    test('画面に出す疲労と、実際に乗る疲労が同じ', () {
+      // 表示用に別の式を書かない。
+      for (final event in LifeEvents.catalogue) {
+        for (final choice in event.choices) {
+          final e = choice.effect;
+          if (e.totalFatigue == 0) continue;
+          expect(e.summary, contains('疲労 ${e.totalFatigue > 0 ? '+' : ''}${e.totalFatigue}'),
+              reason: event.id);
+        }
+      }
+    });
+
+    test('ピッチの外で伸びるにも、身体を使う', () {
+      // 出来事の頻度を上げたとき、伸びの効きだけが倍になって
+      // ピーク総合力と代表経験が膨らんだ。ただの上乗せ装置にしない。
+      for (final event in LifeEvents.catalogue) {
+        for (final choice in event.choices) {
+          final e = choice.effect;
+          if (e.train == null) continue;
+          expect(e.totalFatigue, greaterThan(e.fatigue), reason: event.id);
+        }
+      }
+    });
+
+    test('直近に出た話は保存に乗り、古い保存データでは空', () async {
+      final c = await started();
+      c.state!.recentEvents = ['a', 'b'];
+      final json = c.state!.toJson();
+      expect(CareerState.fromJson(json).recentEvents, ['a', 'b']);
+      expect(CareerState.fromJson(json..remove('recentEvents')).recentEvents,
+          isEmpty);
+    });
+
+    test('答えた話は、覚えておく数だけ残る', () async {
+      final c = await started();
+      final state = c.state!;
+      for (var i = 0; i < 40; i++) {
+        await c.simulateMatch();
+      }
+      expect(state.recentEvents.length,
+          lessThanOrEqualTo(CareerState.recentEventsKept));
+    });
+  });
+
   group('効きの上限', () {
     test('繰り返し起きる出来事は、性格を動かさない', () {
       // 性格は「経験で1シーズンに1〜2点」動くもの。毎年何度も動かすと、
