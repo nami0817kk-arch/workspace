@@ -282,6 +282,8 @@ def from_meta(meta: dict, title: str) -> dict:
         # 書いていなければ tags をそのまま使う
         "crests": ([str(x) for x in meta["thumbnail_crests"]]
                    if "thumbnail_crests" in meta else None),
+        # エンブレム2つの間に置く字。対戦以外の回では「対」だと誤解を招く
+        "crest_link": str(meta.get("thumbnail_crest_link", "対")),
     }
 
 
@@ -399,6 +401,7 @@ def build_thumbnail(
     quote: str = "",
     crest_main: list[str] | None = None,
     crests: list[str] | None = None,
+    crest_link: str = "対",
 ) -> Path:
     """サムネイルを1枚作る。
 
@@ -423,7 +426,7 @@ def build_thumbnail(
         return _band_thumbnail(
             config, out_path, background,
             lines or (title, subtitle), tags or [], focus, reaction, points or [],
-            photos or [], crest_main or [], crests,
+            photos or [], crest_main or [], crests, crest_link,
         )
 
     font_path = str(config.video.font_path())
@@ -479,6 +482,7 @@ def _band_thumbnail(
     photos: list[str] | None = None,
     crest_main: list[str] | None = None,
     crests: list[str] | None = None,
+    crest_link: str = "対",
 ) -> Path:
     """写真の上に蛍光イエローの帯を重ねる。**最高再生の型に合わせてある。**
 
@@ -492,7 +496,7 @@ def _band_thumbnail(
     """
     font_path = str(config.video.font_path())
     # **正方形に近い写真も右に置く。**全面に敷くと顔が帯に隠れる
-    stage = _crest_stage(crest_main or [], font_path)
+    stage = _crest_stage(crest_main or [], font_path, crest_link)
     tiles = [] if stage is not None else [q for q in (photos or []) if _resolve(q).exists()]
     if stage is not None:
         canvas = stage
@@ -576,7 +580,7 @@ def _band_thumbnail(
     return out_path
 
 
-def _crest_stage(names: list[str], font_path: str) -> Image.Image | None:
+def _crest_stage(names: list[str], font_path: str, link: str = "対") -> Image.Image | None:
     """エンブレムを大きく並べた下地。写真の代わりに使う。
 
     **元の画像が小さい**（実測で 112x132 など）。拡大するとどうしても
@@ -616,10 +620,14 @@ def _crest_stage(names: list[str], font_path: str) -> Image.Image | None:
         canvas.alpha_composite(mark, (x, top))
         middles.append(x + mark.width // 2)
         x += mark.width + gap
-    if len(marks) == 2:
+    if len(marks) == 2 and link:
+        # **間の字は「対」だけではない**（2026-09-10）。アラウホの回は
+        # 対戦ではなく**バルサからリヴァプールへのレンタル**の話なのに、
+        # 「リヴァプール 対 バルセロナ」に見えていた。取材メモの
+        # `thumbnail.crest_link` で変えられる（"対" / "→" / 空文字で消す）
         font = ImageFont.truetype(font_path, 72)
         draw = ImageDraw.Draw(canvas)
-        text = "対"
+        text = link
         width = draw.textlength(text, font=font)
         draw.text(((middles[0] + middles[1] - width) / 2,
                    top + CREST_MAIN_HEIGHT / 2 - 44),

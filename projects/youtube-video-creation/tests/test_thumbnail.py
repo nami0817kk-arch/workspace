@@ -641,3 +641,55 @@ def test_言葉が長ければ縮めて写真に食い込ませない():
     font = ImageFont.truetype(font_path, mod.POINTS_SIZE)
     assert max(draw.textlength(t, font=font) for t in long_rows) > mod.POINTS_WIDTH, (
         "この文字列では縮める必要が出ない。テストの前提が崩れている")
+
+
+def test_エンブレムの間の字を変えられる(tmp_path, monkeypatch):
+    """**「対」だけではない**（2026-09-10 実物で発見）。
+
+    アラウホの回は対戦ではなく、バルセロナからリヴァプールへのレンタルの
+    話なのに、サムネが「リヴァプール 対 バルセロナ」に見えていた。
+    """
+    from PIL import Image
+
+    from src import thumbnail as mod
+
+    drawn = []
+
+    real_draw = mod.ImageDraw.Draw
+
+    class Spy:
+        """本物に流しつつ、text の呼び出しだけ控える。"""
+
+        def __init__(self, image, *a, **k):
+            self._inner = real_draw(image, *a, **k)
+
+        def __getattr__(self, name):
+            return getattr(self._inner, name)
+
+        def text(self, xy, text, *a, **k):
+            drawn.append(("text", text))
+            return self._inner.text(xy, text, *a, **k)
+
+    def fake_find(name, root=None):
+        path = tmp_path / f"{name}.png"
+        Image.new("RGBA", (100, 100), (255, 0, 0, 255)).save(path)
+        return path
+
+    import src.crest as crest_mod
+
+    monkeypatch.setattr(crest_mod, "find", fake_find)
+    monkeypatch.setattr(mod.ImageDraw, "Draw", Spy)
+    font_path = str(_config().video.font_path())
+
+    mod._crest_stage(["A", "B"], font_path)
+    assert ("text", "対") in drawn
+
+    drawn.clear()
+    mod._crest_stage(["A", "B"], font_path, "→")
+    assert ("text", "→") in drawn
+    assert ("text", "対") not in drawn
+
+    # 空文字なら何も描かない
+    drawn.clear()
+    mod._crest_stage(["A", "B"], font_path, "")
+    assert not any(kind == "text" for kind, _ in drawn)

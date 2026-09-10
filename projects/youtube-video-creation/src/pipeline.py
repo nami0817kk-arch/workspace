@@ -116,6 +116,7 @@ def build_script(
         quote=short_quote(script),
         crest_main=look.get("crest_main") or [],
         crests=look.get("crests"),
+        crest_link=look.get("crest_link", "対"),
     )
     # 画像のクレジットも概要欄に出す。CC BY 系は表示しないと利用条件を満たさない
     outputs = subtitles.write_outputs(

@@ -1022,6 +1022,9 @@ def to_script(notes: Notes, plan: Plan) -> str:
         # 「小さく添えるだけ」の決まりを変えた。出てくる人のクラブ姿の写真が
         # 無いときに使う。写真より優先される
         "thumbnail_crest_main": [str(x) for x in (thumbnail.get("crest_main") or [])][:3],
+        # エンブレム2つの間に置く字。対戦以外の回で「対」だと誤解を招く
+        **({"thumbnail_crest_link": str(thumbnail["crest_link"])}
+           if thumbnail.get("crest_link") is not None else {}),
         # **エンブレムだけ止める**（2026-09-09 ユーザー「レアルは不要」）。
         # tags を削ると YouTube のタグからも消えるので、絵のほうだけ別に持つ
         **({"thumbnail_crests": [str(x) for x in (thumbnail.get("crests") or [])]}
