@@ -620,6 +620,16 @@ class _NextMatchCard extends StatelessWidget {
                         child: Text('自動で休養',
                             style: theme.textTheme.labelSmall
                                 ?.copyWith(color: theme.colorScheme.error)),
+                      )
+                    // 元気なのに休んでいると、その週は何も伸びない。
+                    // 実際に遊んで、コンディション100のまま9節「休養」で
+                    // 進んでいたのに、どこにもそう書いていなかった。
+                    else if (state.restingWhileFresh)
+                      Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: Text('伸びない',
+                            style: theme.textTheme.labelSmall
+                                ?.copyWith(color: theme.colorScheme.error)),
                       ),
                     Text('変える',
                         style: theme.textTheme.labelMedium

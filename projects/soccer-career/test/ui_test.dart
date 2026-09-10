@@ -347,6 +347,22 @@ void main() {
     expect(find.text('割り振りは釣り合っている。'), findsOneWidget);
   });
 
+  testWidgets('元気なのに休んでいると、伸びないと画面に出る', (tester) async {
+    final controller = await newCareer();
+    controller.state!.autoRestBelow = 0;
+    await controller.setMenu(TrainingMenu.rest);
+    controller.state!.player =
+        controller.state!.player.copyWith(condition: 100);
+    await pumpHub(tester, controller);
+    expect(find.text('伸びない'), findsOneWidget);
+
+    // 練習していれば出ない。
+    await controller
+        .setMenu(TrainingMenu.defaultFor(controller.state!.player.position));
+    await tester.pumpAndSettle();
+    expect(find.text('伸びない'), findsNothing);
+  });
+
   testWidgets('今週の練習が、試合に入る直前に見える', (tester) async {
     // 育成タブを開かないと今の設定が見えず、設定したことを忘れていた。
     final controller = await newCareer();

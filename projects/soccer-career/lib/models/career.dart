@@ -372,6 +372,19 @@ class CareerState {
   Map<AttributeKey, int> momentSuccesses;
 
   /// そのコンディションなら、自動で休むか。
+  /// 元気なのに休んでいるか。その週は何も伸びない。
+  ///
+  /// 休養が既定だった頃の保存データは、育成タブを開かない限り
+  /// ずっと休養のまま。コンディション100で9節進んでいても、
+  /// どこにもそう書いていなかった。
+  bool get restingWhileFresh =>
+      menu.isRest &&
+      !shouldAutoRest(player.condition) &&
+      player.condition >= restingWasteCondition;
+
+  /// これ以上のコンディションで休むと、ほぼ何も戻らない。
+  static const int restingWasteCondition = 85;
+
   bool shouldAutoRest(int condition) =>
       autoRestBelow > 0 && condition < autoRestBelow;
 
