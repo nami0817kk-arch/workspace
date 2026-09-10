@@ -1123,6 +1123,7 @@ class MatchEngine {
     int declineOffset = 0,
     bool plateau = false,
     double environment = 1.0,
+    void Function(AttributeKey key, int step)? toPoints,
   }) {
     if (rating == null) return player.attributes;
 
@@ -1175,6 +1176,12 @@ class MatchEngine {
             Attributes.weightShare(player.position, wanted.category));
     if (_random.nextDouble() >= chance) return player.attributes;
 
+    // 自分で振るなら、伸びるはずだったぶんを経験点にして持ち越す。
+    // どこに振るかはプレイヤーが決めるので、ここでは土台を見ない。
+    if (toPoints != null) {
+      toPoints(wanted.category, step);
+      return player.attributes;
+    }
     // 土台の許す範囲まで。届かなければ土台のほうが伸びる。
     final target = Dependencies.resolve(wanted, player.attributes,
         ceilingOf: player.ceilingFor);
@@ -1280,6 +1287,7 @@ class MatchEngine {
     bool plateau = false,
     double environment = 1.0,
     int fatigue = 0,
+    void Function(AttributeKey key, int step)? toPoints,
     required bool played,
   }) {
     final costFactor = player.traits.conditionCostFactor;
@@ -1342,6 +1350,11 @@ class MatchEngine {
                 Formulas.growthShareFactor(
                     Attributes.weightShare(player.position, key));
             if (_random.nextDouble() >= chance) continue;
+            // 自分で振るなら、伸びるはずだったぶんを経験点にする。
+            if (toPoints != null) {
+              toPoints(key, step);
+              continue;
+            }
             // 同じカテゴリの中に方向があれば、そこから選ぶ。
             // 練習が「カテゴリのどれか」ではなく「決めた項目」になる。
             final inFocus = [for (final d in focus) if (d.category == key) d];

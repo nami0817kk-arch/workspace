@@ -164,6 +164,7 @@ class CareerState {
     this.menu = TrainingMenu.rest,
     this.effort = TrainingEffort.normal,
     this.companion = TrainingCompanion.alone,
+    this.autoSpend = true,
     this.drill,
     this.staff = const StaffTeam(),
     this.habits = const Habits(),
@@ -248,6 +249,13 @@ class CareerState {
   /// 週の選択が「どのメニューか」だけだった頃は、毎週同じ画面で同じものを
   /// 選ぶだけで、練習の週に手応えが無かった。
   TrainingEffort effort;
+
+  /// 伸びるはずだったぶんを、自動でその場に振るか。
+  ///
+  /// **既定は自動**。今まで自動で伸びていたものが、ある日から自分で振らないと
+  /// 伸びなくなるのは、続きから遊ぶ人にとって不意打ちでしかない。
+  /// 自分で振りたい人が1タップで切り替えられる、という形にしてある。
+  bool autoSpend;
 
   /// 今週、誰と組むか。
   ///
@@ -760,6 +768,7 @@ class CareerState {
         'menu': menu.name,
         'effort': effort.name,
         'companion': companion.name,
+        'autoSpend': autoSpend,
         'drill': drill?.name,
         'staff': staff.toJson(),
         'habits': habits.toJson(),
@@ -868,6 +877,7 @@ class CareerState {
           TrainingCompanion.values.any((c) => c.name == json['companion'])
               ? TrainingCompanion.values.byName(json['companion'] as String)
               : TrainingCompanion.alone,
+      autoSpend: json['autoSpend'] as bool? ?? true,
       drill: SetPiece.values.any((p) => p.name == json['drill'])
           ? SetPiece.values.byName(json['drill'] as String)
           : null,

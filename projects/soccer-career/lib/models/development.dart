@@ -77,6 +77,7 @@ class Development {
     this.plateau = 0,
     this.breakthroughs = 0,
     this.greatWeeks = 0,
+    this.points = const {},
   });
 
   /// 試合経験値。出場のたびに積む。
@@ -99,6 +100,18 @@ class Development {
 
   /// 限界突破した回数。
   final int breakthroughs;
+
+  /// まだ振っていない経験点。カテゴリごとに持つ。
+  ///
+  /// 成長は**全部自動**で、プレイヤーが伸ばす先を選ぶ余地が無かった。
+  /// 練習の種類でカテゴリは選べるが、その中のどれが伸びるかは運任せ。
+  /// 経験点は「伸びるはずだったぶん」を貯めておいて、自分で振れるようにする。
+  ///
+  /// カテゴリを跨いで使うことはできない。パスの練習で守備は伸びない。
+  final Map<AttributeKey, int> points;
+
+  /// 振れる経験点の合計。
+  int get totalPoints => points.values.fold(0, (a, b) => a + b);
 
   /// 練習で大成功した週の数。
   ///
@@ -229,6 +242,7 @@ class Development {
     int? plateau,
     int? breakthroughs,
     int? greatWeeks,
+    Map<AttributeKey, int>? points,
   }) =>
       Development(
         experience: experience ?? this.experience,
@@ -239,6 +253,7 @@ class Development {
         plateau: plateau ?? this.plateau,
         breakthroughs: breakthroughs ?? this.breakthroughs,
         greatWeeks: greatWeeks ?? this.greatWeeks,
+        points: points ?? this.points,
       );
 
   Map<String, dynamic> toJson() => {
@@ -250,6 +265,9 @@ class Development {
         'plateau': plateau,
         'breakthroughs': breakthroughs,
         'greatWeeks': greatWeeks,
+        'points': {
+          for (final e in points.entries) e.key.name: e.value,
+        },
       };
 
   factory Development.fromJson(Map<String, dynamic>? json) {
@@ -279,6 +297,11 @@ class Development {
       plateau: json['plateau'] as int? ?? 0,
       breakthroughs: json['breakthroughs'] as int? ?? 0,
       greatWeeks: json['greatWeeks'] as int? ?? 0,
+      points: {
+        for (final e in (json['points'] as Map? ?? const {}).entries)
+          if (AttributeKey.values.any((k) => k.name == e.key))
+            AttributeKey.values.byName(e.key as String): e.value as int,
+      },
     );
   }
 }

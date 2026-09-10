@@ -278,6 +278,20 @@ class Formulas {
   /// 落ち込みの上限。ここを超えると終盤が理不尽になる。
   static const double lateFatigueMax = 0.20;
 
+  /// 伸びるはずだった1回ぶんが、何点の経験点になるか。
+  ///
+  /// 値段（`experienceCost`）の平均とここが釣り合っていないと、
+  /// 自分で振るだけで成長速度が変わってしまう。実測で揃えてある。
+  static const int pointsPerGrowth = 4;
+
+  /// 詳細能力を1上げるのに要る経験点。
+  ///
+  /// 上に行くほど高い。**平らにすると、一番得意なところに全部注ぐのが
+  /// 常に正解になる**。高いところを押し上げるか、安いうちに穴を埋めるか、
+  /// が毎回の判断になる幅に置く。
+  static int experienceCost(int value) =>
+      2 + (value < 45 ? 0 : value - 45) ~/ 9;
+
   /// 練習で能力が1伸びる確率（ポテンシャルに達していなければ）。
   static const double trainingGrowthChance = 0.3;
 

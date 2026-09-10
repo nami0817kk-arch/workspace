@@ -797,6 +797,11 @@ class _StatusCard extends StatelessWidget {
                       warn: state.form.state == MomentumState.slump),
                 if (state.development.inPlateau)
                   _tag(theme, '停滞期 あと${state.development.plateau}試合'),
+                // 貯めたまま忘れると、伸びない選手になる。
+                if (!state.autoSpend && state.development.totalPoints > 0)
+                  _tag(theme,
+                      '振っていない経験点 ${state.development.totalPoints}点',
+                      good: true),
                 if (state.captain) _tag(theme, 'キャプテン', good: true),
                 if (state.calledUp) _tag(theme, '代表招集', good: true),
                 // 待っている話は、出来事が来るまで気づけないので前に出す。
@@ -864,6 +869,8 @@ class _TrainingTab extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
       children: [
         _WeekPlanCard(state: state, controller: controller),
+        const SizedBox(height: 16),
+        _ExperienceCard(state: state, controller: controller),
         const SizedBox(height: 16),
         if (state.injured)
           Card(
@@ -1993,6 +2000,155 @@ class _EventCard extends StatelessWidget {
             ],
           ],
         ),
+      ),
+    );
+  }
+}
+
+/// 経験点。伸びるはずだったぶんを、自分で振る。
+///
+/// 成長は**全部自動**で、伸ばす先を選ぶ余地が無かった。練習の種類で
+/// カテゴリは選べても、その中のどれが伸びるかは運任せ。
+///
+/// 既定は自動のまま。今まで自動で伸びていたものが、ある日から自分で
+/// 振らないと伸びなくなるのは、続きから遊ぶ人にとって不意打ちでしかない。
+class _ExperienceCard extends StatelessWidget {
+  const _ExperienceCard({required this.state, required this.controller});
+
+  final CareerState state;
+  final CareerController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall
+        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final points = state.development.points;
+    final keys = [
+      for (final k in AttributeKey.values)
+        if (k != AttributeKey.goalkeeping ||
+            state.player.position == Position.gk)
+          k,
+    ];
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text('経験点', style: theme.textTheme.titleSmall),
+                const Spacer(),
+                Text(
+                  state.autoSpend ? 'その場で自動' : '自分で振る',
+                  style: theme.textTheme.labelMedium
+                      ?.copyWith(color: theme.colorScheme.primary),
+                ),
+                Switch(
+                  value: !state.autoSpend,
+                  onChanged: (value) => controller.setAutoSpend(!value),
+                ),
+              ],
+            ),
+            Text(
+              state.autoSpend
+                  ? '伸びるはずだったぶんは、その場で自動的に振られる（今までと同じ）。'
+                      '切り替えると、貯めて自分で振れる。'
+                  : '練習と試合で貯まったぶんを、自分で振る。'
+                      'カテゴリを跨いでは使えない。',
+              style: muted,
+            ),
+            if (!state.autoSpend) ...[
+              const SizedBox(height: 10),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  for (final key in keys)
+                    ActionChip(
+                      label: Text('${key.label} ${points[key] ?? 0}'),
+                      backgroundColor: (points[key] ?? 0) > 0
+                          ? theme.colorScheme.primaryContainer
+                          : null,
+                      onPressed: () => _open(context, key),
+                    ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Text(
+                '上に行くほど値段が上がる。'
+                '苦手を安いうちに埋めるか、得意をさらに押し上げるか。',
+                style: muted,
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _open(BuildContext context, AttributeKey key) async {
+    await showModalBottomSheet<void>(
+      context: context,
+      showDragHandle: true,
+      isScrollControlled: true,
+      builder: (sheetContext) => StatefulBuilder(
+        builder: (sheetContext, setSheetState) {
+          final theme = Theme.of(sheetContext);
+          final have = state.development.points[key] ?? 0;
+          return SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('${key.label}に振る', style: theme.textTheme.titleMedium),
+                  Text('残り $have 点',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant)),
+                  const SizedBox(height: 12),
+                  for (final detail in key.details)
+                    ListTile(
+                      dense: true,
+                      contentPadding: EdgeInsets.zero,
+                      title: Text(detail.label),
+                      subtitle: Text(
+                        controller.reasonNotToSpend(detail) ??
+                            '${state.player.attributes.detail(detail)} → '
+                                '${state.player.attributes.detail(detail) + 1}',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                            color: controller.canSpend(detail)
+                                ? theme.colorScheme.onSurfaceVariant
+                                : theme.colorScheme.error),
+                      ),
+                      trailing: FilledButton.tonal(
+                        onPressed: controller.canSpend(detail)
+                            ? () async {
+                                final grown =
+                                    await controller.spendPoint(detail);
+                                setSheetState(() {});
+                                if (!sheetContext.mounted || grown == null) {
+                                  return;
+                                }
+                                ScaffoldMessenger.of(sheetContext)
+                                  ..hideCurrentSnackBar()
+                                  ..showSnackBar(SnackBar(
+                                    content: Text(grown == detail
+                                        ? '${detail.label}が1上がった'
+                                        : '土台が足りず、${grown.label}のほうが伸びた'),
+                                  ));
+                              }
+                            : null,
+                        child: Text('${controller.costOf(detail)}点'),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
