@@ -59,6 +59,7 @@ class Playstyle {
     this.bodyPlan = BodyPlan.maintain,
     this.preseason = PreseasonPlan.camp,
     this.effort = TrainingEffort.normal,
+    this.easeFrom,
     this.companion = TrainingCompanion.alone,
     this.spendsPoints = false,
     this.autoRestBelow,
@@ -78,6 +79,17 @@ class Playstyle {
 
   /// 週の踏み込み方と、組む相手。
   final TrainingEffort effort;
+
+  /// この歳から「流す」に切り替える。null なら切り替えない。
+  ///
+  /// 一定の踏み込み方しか測っていないと、**踏み込み方を変える**という
+  /// 一番面白い手が測れない。若いうちに伸ばして、身体が効かなくなる前に
+  /// 引くのが効くのかどうかは、混ぜて回さないと分からない。
+  final int? easeFrom;
+
+  /// その歳のときの踏み込み方。
+  TrainingEffort effortAt(int age) =>
+      easeFrom != null && age >= easeFrom! ? TrainingEffort.easy : effort;
   final TrainingCompanion companion;
 
   /// 自分で経験点を振るか。false なら今までどおり自動。
@@ -138,6 +150,9 @@ class Career {
   int greatWeeks = 0;
   int knackAge = 0;
   int professionalism = 0;
+  int confidence = 0;
+  int ambition = 0;
+  int temper = 0;
   int atPotentialSeasons = 0;
   int signatures = 0;
   int plateaus = 0;
@@ -153,6 +168,17 @@ class Career {
   int overallAt21 = 0;
   int overallAt25 = 0;
   int overallAt29 = 0;
+
+  /// 引退したときの総合力と、33歳以降の出場・ゴール。
+  ///
+  /// 「流す」の見返りは**ピークの高さではなく、落ちるのが遅いこと**なので、
+  /// ピークだけを見ていると差が出ているのに見えない。
+  int finalOverall = 0;
+  int lateAppearances = 0;
+  int lateGoals = 0;
+
+  /// 引退時の身体の消耗。
+  double strain = 0;
   int moraleSum = 0;
   int fatigueSum = 0;
   int moraleSamples = 0;
@@ -198,6 +224,8 @@ Future<Career> runCareer(Playstyle style, int seed) async {
   var guard = 0;
   while (!controller.state!.retired && guard++ < 30) {
     final state = controller.state!;
+    // 歳に応じて踏み込み方を切り替える（切り替えない型なら毎季同じ値）。
+    await controller.setEffort(style.effortAt(state.player.age));
     // 重傷でポテンシャルは下がる。伸びの上限として見るのは最大値。
     career.potential = max(career.potential, state.player.potential);
 
@@ -307,6 +335,9 @@ Future<Career> runCareer(Playstyle style, int seed) async {
     career.breakthroughs = done.development.breakthroughs;
     career.greatWeeks = done.development.greatWeeks;
     career.professionalism = done.player.personality.professionalism;
+    career.confidence = done.player.personality.confidence;
+    career.ambition = done.player.personality.ambition;
+    career.temper = done.player.personality.temper;
     if (done.player.atPotential) career.atPotentialSeasons++;
     if (done.development.inPlateau) career.plateaus++;
     if (stats.appearances == 0) career.zeroAppearanceSeasons++;
@@ -320,6 +351,12 @@ Future<Career> runCareer(Playstyle style, int seed) async {
     if (age <= 21) career.overallAt21 = done.player.overall;
     if (age <= 25) career.overallAt25 = done.player.overall;
     if (age <= 29) career.overallAt29 = done.player.overall;
+    if (age >= 33) {
+      career.lateAppearances += stats.appearances;
+      career.lateGoals += stats.goals;
+    }
+    career.finalOverall = done.player.overall;
+    career.strain = done.development.strain;
 
     // --- 去就を決める ---
     if (controller.mustRetire) {

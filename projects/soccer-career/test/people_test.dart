@@ -235,12 +235,19 @@ void main() {
       fillSeason(state);
       state.rival = Rival(
           name: 'R', clubName: 'X', overall: state.player.overall + 10);
-      final person = Person(random: Random(1));
-      final evolved = person.evolve(state);
-      expect(evolved.ambition,
-          greaterThan(state.player.personality.ambition));
-      expect(evolved.professionalism,
-          greaterThan(state.player.personality.professionalism));
+      // メンターは実際にロッカールームに居ないと効かない。
+      // 居ないまま通っていたので、この試験は名前どおりのことを見ていなかった。
+      state.mentor = const Teammate(
+          name: 'C', kind: TeammateKind.mentor, overall: 78, age: 33);
+      final was = state.player.personality;
+      // 落ち着き先へ寄るのは毎季ではないので、数季ぶん回して見る。
+      var evolved = was;
+      for (var i = 0; i < 6; i++) {
+        state.player = state.player.copyWith(personality: evolved);
+        evolved = Person(random: Random(i + 1)).evolve(state);
+      }
+      expect(evolved.ambition, greaterThan(was.ambition));
+      expect(evolved.professionalism, greaterThan(was.professionalism));
     });
   });
 
