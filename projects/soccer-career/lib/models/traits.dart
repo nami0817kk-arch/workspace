@@ -279,6 +279,40 @@ enum Trait {
   /// 守備の選手にしか効かない特性（無失点の評価が乗るポジション）。
   static const Set<Trait> _defenceOnly = {Trait.organizer};
 
+  /// **コツとして掴める特性と、そのために積む能力**。
+  ///
+  /// 特性は生まれ持ったものだが、**キャリアの終盤に1つだけ、
+  /// 自分がやってきたことから身に付く**（パワプロの「コツ」）。
+  /// ここに無い特性は掴めない——生まれつきでしか手に入らないもの
+  /// （早熟・大器晩成・稀なもの・欠点）を、後から選べるようにはしない。
+  ///
+  /// 紐づけているのは**その場面で何度も勝負したか**を測るカテゴリ。
+  /// 「パスばかり選んできた選手が、ラストパスの名手になる」という形にする。
+  static const Map<Trait, AttributeKey> _knackKeys = {
+    // 場面の特性は、その場面に出続けたことで身に付く。
+    Trait.playmaker: AttributeKey.passing,
+    Trait.assistKing: AttributeKey.passing,
+    Trait.crosser: AttributeKey.passing,
+    Trait.tempoSetter: AttributeKey.passing,
+    Trait.poacher: AttributeKey.shooting,
+    Trait.longRange: AttributeKey.shooting,
+    Trait.composed: AttributeKey.shooting,
+    Trait.aerialAce: AttributeKey.shooting,
+    Trait.dribbler: AttributeKey.dribbling,
+    Trait.sprinter: AttributeKey.pace,
+    Trait.wall: AttributeKey.defending,
+    Trait.tackler: AttributeKey.defending,
+    Trait.organizer: AttributeKey.defending,
+    Trait.reflexKeeper: AttributeKey.goalkeeping,
+    Trait.sweeperKeeper: AttributeKey.goalkeeping,
+  };
+
+  /// コツとして掴めるか。掴めないなら null。
+  AttributeKey? get knackKey => _knackKeys[this];
+
+  /// コツとして掴める特性の一覧。
+  static List<Trait> get knacks => _knackKeys.keys.toList();
+
   /// そのポジションで意味を持つ特性か。
   ///
   /// ストライカーに「反応の鬼」が付くと、飾りの特性になる。

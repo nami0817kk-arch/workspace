@@ -29,6 +29,7 @@ import '../game/cups.dart';
 import '../models/legend.dart';
 import '../models/personality.dart';
 import '../models/promise.dart';
+import '../game/knacks.dart';
 import '../game/promises.dart';
 import '../models/traits.dart';
 import '../models/look.dart';
@@ -618,6 +619,27 @@ class CareerController extends ChangeNotifier {
     await _persist();
     notifyListeners();
     return target;
+  }
+
+  /// コツを掴む。**1キャリアに1つだけ。取り消せない。**
+  ///
+  /// 特性は生まれ持ったもの、という前提はそのまま。ここで開けるのは
+  /// 「20年やってきたことが、最後に1つだけ性質になる」という道だけ。
+  Future<bool> learnKnack(Trait trait) async {
+    final state = _state;
+    if (state == null || !Knacks.canLearn(state)) return false;
+    if (!Knacks.offer(state).contains(trait)) return false;
+    state.player = Player.rebuild(
+      state.player,
+      attributes: state.player.attributes,
+      potential: state.player.potential,
+      traits: [...state.player.traits, trait],
+    );
+    state.learnedKnack = true;
+    _publish(state, [Newsroom.knackLearned(state, trait)]);
+    await _persist();
+    notifyListeners();
+    return true;
   }
 
   /// 今週どこまで踏み込むか。

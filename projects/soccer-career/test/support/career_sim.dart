@@ -14,6 +14,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/data/save_repository.dart';
 import 'package:soccer_career/game/career_engine.dart';
 import 'package:soccer_career/game/match_engine.dart';
+import 'package:soccer_career/game/knacks.dart';
 import 'package:soccer_career/game/newsroom.dart';
 import 'package:soccer_career/game/world.dart';
 import 'package:soccer_career/models/agent.dart';
@@ -135,6 +136,7 @@ class Career {
   int worldCups = 0;
   int breakthroughs = 0;
   int greatWeeks = 0;
+  int knackAge = 0;
   int professionalism = 0;
   int atPotentialSeasons = 0;
   int signatures = 0;
@@ -242,6 +244,10 @@ Future<Career> runCareer(Playstyle style, int seed) async {
       // 取り返しのつかない状態に、実際に到達するか。
       if (controller.state!.frozenOut) career.seenStates.add('frozenOut');
       if (controller.state!.trustAtRisk) career.seenStates.add('trustAtRisk');
+      // コツの条件に初めて届いた年齢を控える。
+      if (career.knackAge == 0 && Knacks.canLearn(controller.state!)) {
+        career.knackAge = controller.state!.player.age;
+      }
       career.moraleSum += controller.state!.morale.value;
       career.fatigueSum += controller.state!.fatigue.value;
       career.moraleSamples++;

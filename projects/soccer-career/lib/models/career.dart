@@ -168,6 +168,7 @@ class CareerState {
     this.effort = TrainingEffort.normal,
     this.companion = TrainingCompanion.alone,
     this.autoSpend = true,
+    this.learnedKnack = false,
     this.domesticCup,
     this.continentalCup,
     this.pendingCup,
@@ -255,6 +256,12 @@ class CareerState {
   /// 週の選択が「どのメニューか」だけだった頃は、毎週同じ画面で同じものを
   /// 選ぶだけで、練習の週に手応えが無かった。
   TrainingEffort effort;
+
+  /// コツを掴んだか。**1キャリアに1つだけ。**
+  ///
+  /// 特性は生まれ持ったもの、という前提はそのまま。ここで開けるのは
+  /// 「20年やってきたことが、最後に1つだけ性質になる」という道だけ。
+  bool learnedKnack;
 
   /// 今シーズンの国内カップと大陸カップ。出ていなければ null。
   ///
@@ -823,6 +830,7 @@ class CareerState {
         'effort': effort.name,
         'companion': companion.name,
         'autoSpend': autoSpend,
+        'learnedKnack': learnedKnack,
         'domesticCup': domesticCup?.toJson(),
         'continentalCup': continentalCup?.toJson(),
         'pendingCup': pendingCup?.toJson(),
@@ -935,6 +943,7 @@ class CareerState {
               ? TrainingCompanion.values.byName(json['companion'] as String)
               : TrainingCompanion.alone,
       autoSpend: json['autoSpend'] as bool? ?? true,
+      learnedKnack: json['learnedKnack'] as bool? ?? false,
       domesticCup:
           CupRun.fromJson(json['domesticCup'] as Map<String, dynamic>?),
       continentalCup:

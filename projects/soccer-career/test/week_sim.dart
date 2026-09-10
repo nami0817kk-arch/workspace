@@ -29,6 +29,7 @@ void main() {
       var great = 0;
       var pro = 0;
       var atPot = 0;
+      var knack = 0;
       var potential = 0.0;
       for (var seed = 0; seed < seeds; seed++) {
         final c = await runCareer(style, seed);
@@ -41,6 +42,7 @@ void main() {
         great += c.greatWeeks;
         pro += c.professionalism;
         atPot += c.atPotentialSeasons;
+        if (c.knackAge > 0) knack++;
       }
       print('${name.padRight(22)} '
           'ピーク ${(peak / seeds).toStringAsFixed(1)}  '
@@ -51,7 +53,8 @@ void main() {
           '通算出場 ${(apps / seeds).toStringAsFixed(0)}  '
           '大成功 ${(great / seeds).toStringAsFixed(0)}  '
           'プロ意識 ${(pro / seeds).toStringAsFixed(1)}  '
-          '上限到達季 ${(atPot / seeds).toStringAsFixed(1)}');
+          '上限到達季 ${(atPot / seeds).toStringAsFixed(1)}  '
+          'コツ ${(knack * 100 / seeds).toStringAsFixed(0)}%');
     }
 
     Playstyle style({
