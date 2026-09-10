@@ -195,6 +195,22 @@ class Person {
     if (state.mentor != null && state.player.age <= 23) {
       personality = personality.bump(PersonalityAxis.professionalism, 1);
     }
+
+    // 整えた生活はプロ意識になり、崩した生活は削る。
+    //
+    // `Habits.disciplined` / `reckless` は「プロ意識が上がりやすいか」と
+    // 書いてあるのに、**どこからも読まれていなかった**。生活習慣は
+    // 練習の効き・怪我・回復にしか効いておらず、「整えた生活が人を作る」
+    // という肝心のところが死んでいた。
+    //
+    // 毎季必ず動かすと、プロ意識が練習の効きを押し上げて総合力が膨らむ
+    // （出来事のときに実際に膨らんだ）。半分の確率にして、年齢のぶんと
+    // 同じ重さに揃える。
+    if (state.habits.disciplined && _random.nextDouble() < 0.5) {
+      personality = personality.bump(PersonalityAxis.professionalism, 1);
+    } else if (state.habits.reckless && _random.nextDouble() < 0.5) {
+      personality = personality.bump(PersonalityAxis.professionalism, -1);
+    }
     return personality;
   }
 

@@ -1765,6 +1765,10 @@ class _ClubLifeCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('クラブでの立ち位置', style: theme.textTheme.titleSmall),
+            // 移籍市場の窓。計算はしていたのに、どこにも出ていなかった。
+            // 「なぜ今は移籍の話が来ないのか」は、ここで答えるのが自然。
+            const SizedBox(height: 8),
+            Text(controller.transferWindowLabel, style: muted),
             if (manager != null) ...[
               const SizedBox(height: 8),
               Text('監督 ${manager.name}（${manager.tactic.label}）',
