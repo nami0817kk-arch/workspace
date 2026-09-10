@@ -57,6 +57,8 @@ class Playstyle {
     this.habits = const Habits(),
     this.bodyPlan = BodyPlan.maintain,
     this.preseason = PreseasonPlan.camp,
+    this.effort = TrainingEffort.normal,
+    this.companion = TrainingCompanion.alone,
   });
 
   final String name;
@@ -70,6 +72,10 @@ class Playstyle {
 
   /// 稼ぎを専属スタッフに回す。
   final bool invests;
+
+  /// 週の踏み込み方と、組む相手。
+  final TrainingEffort effort;
+  final TrainingCompanion companion;
 
   /// 居残りでセットプレーを磨く。
   final bool drills;
@@ -118,6 +124,9 @@ class Career {
   int leagueTitles = 0;
   int worldCups = 0;
   int breakthroughs = 0;
+  int greatWeeks = 0;
+  int professionalism = 0;
+  int atPotentialSeasons = 0;
   int signatures = 0;
   int plateaus = 0;
   int events = 0;
@@ -168,6 +177,7 @@ Future<Career> runCareer(Playstyle style, int seed) async {
     await controller.setDirective(style.directive);
   }
   if (style.drills) await controller.setDrill(SetPiece.freeKick);
+  await controller.setEffort(style.effort);
 
   var guard = 0;
   while (!controller.state!.retired && guard++ < 30) {
@@ -180,6 +190,10 @@ Future<Career> runCareer(Playstyle style, int seed) async {
     while (!state.seasonFinished && matches++ < 60) {
       // 練習を決める。疲れていたら休む。
       await controller.setMenu(_menuFor(state, style));
+      // 組む相手は移籍で入れ替わる。毎週その時点の顔ぶれで選び直す。
+      await controller.setCompanion(state.companionChoices.contains(style.companion)
+          ? style.companion
+          : TrainingCompanion.alone);
       if (controller.pendingEvent != null) {
         career.events++;
         final choices = controller.pendingEvent!.choices;
@@ -261,6 +275,9 @@ Future<Career> runCareer(Playstyle style, int seed) async {
     career.savings = done.finances.savings;
     career.signatures = done.development.signatures.length;
     career.breakthroughs = done.development.breakthroughs;
+    career.greatWeeks = done.development.greatWeeks;
+    career.professionalism = done.player.personality.professionalism;
+    if (done.player.atPotential) career.atPotentialSeasons++;
     if (done.development.inPlateau) career.plateaus++;
     if (stats.appearances == 0) career.zeroAppearanceSeasons++;
     if (!done.squadStatus.canPlay) career.outOfSquadSeasons++;

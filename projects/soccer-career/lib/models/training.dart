@@ -1,4 +1,117 @@
 import 'attributes.dart';
+import 'entourage.dart';
+
+/// その週、どこまで踏み込むか。
+///
+/// これまで週の選択は「どのメニューか」だけで、**踏み込む/流すの判断が無かった**。
+/// 毎週同じ画面で同じものを選ぶだけなので、練習の週に手応えが無い。
+///
+/// 伸びの倍率は持たせない。**手応えの出方（大成功・空回り）そのものを動かす**。
+/// 倍率と確率の両方を動かすと、どちらが効いているのか画面から追えなくなる。
+enum TrainingEffort {
+  easy('流す', '軽く。伸びは薄いが、身体は残る',
+      great: 0.02, flat: 0.45, cost: 0.5, injury: 0.5),
+  normal('普通', 'いつもどおり', great: 0.15, flat: 0.15, cost: 1.0, injury: 1.0),
+  hard('追い込む', '限界まで。大きく伸びるが、消耗も怪我も跳ね上がる',
+      great: 0.45, flat: 0.10, cost: 1.9, injury: 1.8);
+
+  const TrainingEffort(
+    this.label,
+    this.description, {
+    required this.great,
+    required this.flat,
+    required this.cost,
+    required this.injury,
+  });
+
+  final String label;
+  final String description;
+
+  /// 大成功・空回りの出やすさ。
+  final double great;
+  final double flat;
+
+  /// コンディションの減り方と、怪我のしやすさ。
+  final double cost;
+  final double injury;
+}
+
+/// その週、誰と組むか。
+///
+/// 相方・メンター・競争相手は**試合の外で勝手に動く飾り**だった。
+/// 週の選択に乗せて初めて、その人がクラブに居ることに意味が出る。
+enum TrainingCompanion {
+  alone('一人でやる', '誰とも組まない'),
+  partner('相方と組む', '呼吸が合う。手応えが出やすく、呼吸も深まる'),
+  mentor('メンターに付く', '年長者から盗む。手応えが出やすく、無理をしない'),
+  rival('競争相手と張り合う', '一番手応えが出る。そのぶん消耗し、怪我もしやすい');
+
+  const TrainingCompanion(this.label, this.description);
+
+  final String label;
+
+  final String description;
+
+  /// 誰と組むかで動く、大成功の出やすさ。
+  double get greatBonus => switch (this) {
+        TrainingCompanion.alone => 0,
+        TrainingCompanion.partner => 0.08,
+        TrainingCompanion.mentor => 0.10,
+        TrainingCompanion.rival => 0.14,
+      };
+
+  /// 空回りの減り方。組んでいれば手は抜けない。
+  double get flatRelief => this == TrainingCompanion.alone ? 0 : 0.04;
+
+  /// 消耗の増え方。誰かと組めば、その人の時間にも付き合うことになる。
+  ///
+  /// ここを 1.0 のままにすると、組める相手が居る限り
+  /// 「一人でやる」を選ぶ理由が一つも無くなる。
+  double get cost => switch (this) {
+        TrainingCompanion.alone => 1.0,
+        TrainingCompanion.partner => 1.15,
+        TrainingCompanion.mentor => 1.15,
+        TrainingCompanion.rival => 1.35,
+      };
+
+  /// 怪我のしやすさ。年長者は無理をしない。張り合うと引けなくなる。
+  double get injury => switch (this) {
+        TrainingCompanion.alone => 1.0,
+        TrainingCompanion.partner => 1.0,
+        TrainingCompanion.mentor => 0.8,
+        TrainingCompanion.rival => 1.5,
+      };
+
+  /// その相手がクラブに居るか。居ない相手とは組めない。
+  TeammateKind? get needs => switch (this) {
+        TrainingCompanion.alone => null,
+        TrainingCompanion.partner => TeammateKind.partner,
+        TrainingCompanion.mentor => TeammateKind.mentor,
+        TrainingCompanion.rival => TeammateKind.rival,
+      };
+}
+
+/// その週の手応え。
+///
+/// 練習は「伸びたか伸びなかったか」しか出ていなかった。
+/// 伸びなかった週が、運が悪かったのか踏み込みが足りなかったのかも分からない。
+enum TrainingOutcome {
+  great('大成功', 'いつもより深く入った'),
+  good('手応えあり', 'いつもどおり積んだ'),
+  flat('空回り', '身体が言うことを聞かなかった');
+
+  const TrainingOutcome(this.label, this.description);
+
+  final String label;
+  final String description;
+
+  /// 伸びの抽選を何回引くか。大成功なら2回、空回りなら0回。
+  int get rolls => switch (this) {
+        TrainingOutcome.great => 2,
+        TrainingOutcome.good => 1,
+        TrainingOutcome.flat => 0,
+      };
+}
 
 /// 1週間の練習メニュー。
 ///

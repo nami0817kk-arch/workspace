@@ -360,6 +360,7 @@ void main() {
       required int professionalism,
       required int experience,
       required bool atPotential,
+      int greatWeeks = 99,
     }) {
       final s = CareerEngine(random: Random(2)).startCareer(
           name: 'B', position: Position.cm, age: age, agent: Agent.pool.first);
@@ -376,7 +377,8 @@ void main() {
           temper: 10,
         ),
       );
-      s.development = Development(experience: experience);
+      s.development =
+          Development(experience: experience, greatWeeks: greatWeeks);
       return s;
     }
 
@@ -408,6 +410,17 @@ void main() {
             age: 23, professionalism: 18, experience: 900, atPotential: false)),
         isFalse,
         reason: 'まだ頭打ちではない',
+      );
+
+      expect(
+        engine.breaksThrough(stateAt(
+            age: 23,
+            professionalism: 18,
+            experience: 900,
+            atPotential: true,
+            greatWeeks: 0)),
+        isFalse,
+        reason: '追い込んでいない選手が限界を超えている',
       );
 
       // 条件を満たせば、確率で起きる。

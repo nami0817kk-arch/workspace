@@ -658,10 +658,10 @@ class _NextMatchCard extends StatelessWidget {
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        state.menu.label +
-                            (state.drill != null
-                                ? '（居残り ${state.drill!.label}）'
-                                : ''),
+                        '${state.menu.label}'
+                        '${state.menu.isRest ? '' : ' ・ ${state.effort.label}'}'
+                        '${state.companion == TrainingCompanion.alone ? '' : ' ・ ${state.companion.label}'}'
+                        '${state.drill != null ? '（居残り ${state.drill!.label}）' : ''}',
                         style: theme.textTheme.bodyMedium,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -1672,6 +1672,20 @@ class _DevelopmentCard extends StatelessWidget {
             Text('試合経験 ${dev.experience}'
                 '${dev.breakthroughs > 0 ? ' ・ 限界突破 ${dev.breakthroughs}回' : ''}',
                 style: muted),
+            const SizedBox(height: 4),
+            // 追い込んだ週の積み上げ。ここが「週の選択」と「届く高さ」を
+            // 繋いでいる唯一の線なので、進み具合を出す。
+            Text(
+              dev.greatWeeks >= Formulas.breakthroughGreatWeeks
+                  ? '練習で大成功 ${dev.greatWeeks}回。限界を超える下地はできている'
+                  : '練習で大成功 ${dev.greatWeeks}回'
+                      '（限界突破の下地まであと'
+                      '${Formulas.breakthroughGreatWeeks - dev.greatWeeks}回）',
+              style: muted?.copyWith(
+                  color: dev.greatWeeks >= Formulas.breakthroughGreatWeeks
+                      ? theme.colorScheme.primary
+                      : null),
+            ),
             if (dev.signatures.isNotEmpty) ...[
               const SizedBox(height: 10),
               Text('個人技', style: theme.textTheme.labelMedium),

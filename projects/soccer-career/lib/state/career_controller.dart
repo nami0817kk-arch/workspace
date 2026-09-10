@@ -40,6 +40,8 @@ class WeekReport {
   const WeekReport({
     this.timeline = const [],
     this.autoRested = false,
+    this.outcome,
+    this.companion = TrainingCompanion.alone,
     this.trained,
     this.learned,
     this.weakFootAwakened = false,
@@ -59,6 +61,15 @@ class WeekReport {
   ///
   /// 黙って差し替えると「練習したのに伸びない」と見える。
   final bool autoRested;
+
+  /// その週の手応え。休養の週は null。
+  ///
+  /// 伸びなかった週が、運が悪かったのか踏み込みが足りなかったのかが
+  /// 分からないままだった。
+  final TrainingOutcome? outcome;
+
+  /// その週、誰と組んだか。
+  final TrainingCompanion companion;
 
   final Detail? trained;
 
@@ -498,6 +509,48 @@ class CareerController extends ChangeNotifier {
     await _persist();
   }
 
+  /// 今週どこまで踏み込むか。
+  Future<void> setEffort(TrainingEffort effort) async {
+    final state = _state;
+    if (state == null) return;
+    state.effort = effort;
+    await _persist();
+  }
+
+  /// 今週、誰と組むか。居ない相手は選べない。
+  Future<void> setCompanion(TrainingCompanion companion) async {
+    final state = _state;
+    if (state == null) return;
+    if (!state.companionChoices.contains(companion)) return;
+    state.companion = companion;
+    await _persist();
+  }
+
+  /// 組んだ相手との関係が、その週に動く。
+  void _applyCompanion(CareerState state, TrainingCompanion companion) {
+    switch (companion) {
+      case TrainingCompanion.alone:
+        return;
+      case TrainingCompanion.partner:
+        final partner = state.partner;
+        if (partner == null) return;
+        state.partner = partner
+            .withSynergy(partner.synergy + Formulas.companionSynergyGain);
+      case TrainingCompanion.mentor:
+        // 年長者から盗む。プロ意識はゆっくりしか動かない。
+        if (_random.nextDouble() < Formulas.mentorProfessionalismChance) {
+          state.player = state.player.copyWith(
+            personality: state.player.personality
+                .bump(PersonalityAxis.professionalism, 1),
+          );
+        }
+      case TrainingCompanion.rival:
+        // 張り合うと、ロッカールームでの立場が上がる。
+        state.relations = state.relations
+            .bump(teammates: Formulas.companionTeammatesGain);
+    }
+  }
+
   /// 監督に約束する。1シーズンに1つだけ。取り消せない。
   ///
   /// 与えられた目標と違って、これは**自分で選んだ数字**。
@@ -791,9 +844,18 @@ class CareerController extends ChangeNotifier {
         MatchEngine.conditionAfterMatch(player,
             played: result.appearance != Appearance.benched),
       );
+      // 組む相手が移籍でいなくなっていたら、一人に戻す。
+      // 居ない相手と組んだことにして手応えだけ上がるのが一番まずい。
+      if (!state.companionChoices.contains(state.companion)) {
+        state.companion = TrainingCompanion.alone;
+      }
+      final companion =
+          tired ? TrainingCompanion.alone : state.companion;
       final week = _match.applyWeek(
         player,
         menu: tired ? TrainingMenu.rest : state.menu,
+        effort: tired ? TrainingEffort.easy : state.effort,
+        companion: companion,
         drill: tired ? null : state.drill,
         staff: state.staff,
         habits: state.habits,
@@ -812,6 +874,11 @@ class CareerController extends ChangeNotifier {
       // 完全に休んだ週だけ、溜まった疲労が抜ける。リカバリーでは抜けない。
       if ((tired ? TrainingMenu.rest : state.menu) == TrainingMenu.rest) {
         state.fatigue = state.fatigue.add(-Formulas.restFatigueRelief);
+      }
+      // 追い込んだ週の積み上げ。限界突破の条件になる。
+      if (week.outcome == TrainingOutcome.great) {
+        state.development = state.development
+            .copyWith(greatWeeks: state.development.greatWeeks + 1);
       }
       // 伸びが続けば、どこかで足踏みが来る。
       state.development = state.development.afterGrowth(
@@ -841,9 +908,15 @@ class CareerController extends ChangeNotifier {
         player = Player.rebuild(player, attributes: attributes, potential: potential);
         state.injury = newInjury;
       }
+      // 組んだ相手との関係は、組んだその週に動く。
+      // 「一緒に練習した」ことが呼吸にもロッカールームにも届く。
+      _applyCompanion(state, companion);
+
       lastWeek = WeekReport(
         timeline: match.timeline,
         autoRested: tired,
+        outcome: week.outcome,
+        companion: companion,
         trained: week.trained,
         learned: week.learned,
         weakFootAwakened: week.weakFootAwakened,

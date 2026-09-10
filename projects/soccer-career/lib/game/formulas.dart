@@ -281,6 +281,29 @@ class Formulas {
   /// 練習で能力が1伸びる確率（ポテンシャルに達していなければ）。
   static const double trainingGrowthChance = 0.3;
 
+  /// 週の手応えが、コンディションでどれだけ動くか。
+  ///
+  /// 元気なら深く入れるし、疲れていれば空回りする。
+  /// これが無いと「追い込む」を毎週押すのが最適解になる。
+  static const double trainingGreatPerCondition = 0.0018;
+  static const double trainingFlatPerCondition = 0.0045;
+
+  /// プロ意識が、手応えにどれだけ効くか。
+  static const double trainingGreatPerPro = 0.006;
+
+  /// 手応えの出方の上下限。運の要素を残すため、0や1には振り切らせない。
+  static const double trainingGreatMax = 0.72;
+  static const double trainingFlatMax = 0.70;
+
+  /// メンターに付いた週に、プロ意識が1上がる確率。
+  ///
+  /// 毎週上がると、性格が「積むだけの数字」になる。ゆっくりしか動かさない。
+  static const double mentorProfessionalismChance = 0.12;
+
+  /// 一緒に組んだ相手との関係が、その週にどれだけ動くか。
+  static const int companionSynergyGain = 2;
+  static const int companionTeammatesGain = 1;
+
   /// 居残り練習で余分に減るコンディション。
   static const int drillConditionCost = 6;
 
@@ -315,6 +338,12 @@ class Formulas {
   static const double plateauGrowthFactor = 0.25;
 
   /// 限界突破が起きる確率と、上がるポテンシャル。
+  /// 限界を超えるのに要る「大成功した週」の数。
+  ///
+  /// 追い込み続けた選手だけが上限を破る。ここを通さないと、週の選択は
+  /// ピークに着く速さを変えるだけで、届く高さは変わらない。
+  static const int breakthroughGreatWeeks = 18;
+
   static const double breakthroughChance = 0.25;
   static const int breakthroughGain = 3;
 
