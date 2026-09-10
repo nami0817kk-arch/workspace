@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../models/attributes.dart';
 import '../../game/eligibility.dart';
 import '../../game/formulas.dart';
+import '../../game/match_brief.dart';
 import '../../game/world.dart';
 import '../../models/career.dart';
 import '../../models/personality.dart';
@@ -452,6 +453,56 @@ class _NextMatchCard extends StatelessWidget {
   final VoidCallback onSimulateUntilEvent;
   final Future<void> Function(SimStyle) onSimStyle;
 
+  /// 今日の意味を1枚に。行が無ければ何も足さない。
+  List<Widget> _brief(BuildContext context) {
+    final theme = Theme.of(context);
+    final lines = MatchBrief.of(state);
+    if (lines.isEmpty) return const [];
+    return [
+      const SizedBox(height: 8),
+      Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (final line in lines)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 1),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: 48,
+                      child: Text(line.label,
+                          style: theme.textTheme.labelSmall?.copyWith(
+                              color: theme.colorScheme.onSurfaceVariant)),
+                    ),
+                    Expanded(
+                      child: Text(
+                        line.text,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: line.urgent
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.onSurface,
+                          fontWeight:
+                              line.urgent ? FontWeight.w600 : null,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ),
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -578,15 +629,9 @@ class _NextMatchCard extends StatelessWidget {
                 ),
               ),
             ],
-            if (!state.pendingInternational) ...[
-              const SizedBox(height: 4),
-              Text(
-                '相手の戦い方: '
-                '${ClubStyle.of(state.opponentFor(state.matchday)).label}'
-                '（${ClubStyle.of(state.opponentFor(state.matchday)).description}）',
-                style: muted,
-              ),
-            ],
+            // 今日の1本が何に効くのか。監督・目標・順位・得点王・相手が
+            // 4つの画面に散っていたので、試合に入る直前に1枚で見せる。
+            ..._brief(context),
             const SizedBox(height: 12),
             // 練習は毎週決めるものなのに、育成タブを開かないと今の設定が
             // 見えなかった。試合に入る直前に置けば、忘れようがない。
@@ -2241,6 +2286,10 @@ class _ScorerCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scorers = ScorerRace.table(state);
+    // 圏外の自分は末尾に付け足されるので、並び順の番号は本当の順位ではない。
+    // 6位まで載せて自分が14位でも「7」と出ていた。
+    final myRank = ScorerRace.rankOf(state);
+    final chase = ScorerRace.chaseFor(state);
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -2248,6 +2297,10 @@ class _ScorerCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text('得点ランキング', style: theme.textTheme.titleSmall),
+            if (chase != null)
+              Text(chase,
+                  style: theme.textTheme.bodySmall
+                      ?.copyWith(color: theme.colorScheme.primary)),
             const SizedBox(height: 10),
             for (var i = 0; i < scorers.length; i++)
               Container(
@@ -2259,7 +2312,8 @@ class _ScorerCard extends StatelessWidget {
                   children: [
                     SizedBox(
                         width: 26,
-                        child: Text('${i + 1}',
+                        child: Text(
+                            '${scorers[i].isPlayer ? myRank : i + 1}',
                             style: theme.textTheme.bodySmall)),
                     Expanded(
                       child: Text(

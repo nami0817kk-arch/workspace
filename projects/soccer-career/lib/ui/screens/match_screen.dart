@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../game/formulas.dart';
 import '../../game/match_engine.dart';
+import '../../game/newsroom.dart';
 import '../../game/scenarios.dart';
 import '../../models/attributes.dart';
 import '../../models/injury.dart';
@@ -106,6 +107,8 @@ class _MatchScreenState extends State<MatchScreen> {
                         focus: widget.controller.state!.focus,
                         objectiveReach:
                             widget.controller.state!.objectiveReach,
+                        scorerChase:
+                            ScorerRace.chaseFor(widget.controller.state!),
                         onChoose: _choose,
                       ),
               ),
@@ -224,6 +227,7 @@ class _ScenarioView extends StatelessWidget {
     required this.seasonStart,
     required this.focus,
     required this.objectiveReach,
+    required this.scorerChase,
     required this.onChoose,
   });
 
@@ -241,6 +245,12 @@ class _ScenarioView extends StatelessWidget {
   /// 「得点関与 あと1」はクラブタブにあるだけで、局面を選ぶ画面には無かった。
   /// 同じ局面が、シーズンのどこにいるかで意味を変える。
   final String? objectiveReach;
+
+  /// 得点王に手が届くなら、その一言。
+  ///
+  /// 得点ランキングは他人の数字を眺めるだけの表で、試合の中には無かった。
+  /// 終盤の1本が「得点王への1本」になる。
+  final String? scorerChase;
 
   final void Function(int) onChoose;
 
@@ -303,6 +313,12 @@ class _ScenarioView extends StatelessWidget {
                       if (objectiveReach != null)
                         Chip(
                           label: Text(objectiveReach!),
+                          backgroundColor: theme.colorScheme.primaryContainer,
+                          visualDensity: VisualDensity.compact,
+                        ),
+                      if (scorerChase != null)
+                        Chip(
+                          label: Text(scorerChase!),
                           backgroundColor: theme.colorScheme.primaryContainer,
                           visualDensity: VisualDensity.compact,
                         ),
