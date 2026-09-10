@@ -693,3 +693,44 @@ def test_エンブレムの間の字を変えられる(tmp_path, monkeypatch):
     drawn.clear()
     mod._crest_stage(["A", "B"], font_path, "")
     assert not any(kind == "text" for kind, _ in drawn)
+
+
+def test_2枚並べたら間にぶつかる印を置ける(tmp_path):
+    """**顔を並べただけだと「共演」に見える**（2026-09-10 ユーザー指示
+    「喧嘩している感出して」）。言い分が食い違う回は、間に印を1つ入れる。
+    """
+    from PIL import Image
+
+    from src import thumbnail as mod
+
+    a = tmp_path / "a.jpg"
+    b = tmp_path / "b.jpg"
+    Image.new("RGB", (600, 900), "white").save(a)
+    Image.new("RGB", (600, 900), "white").save(b)
+
+    def build(link):
+        out = tmp_path / f"{link or 'none'}.png"
+        mod.build_thumbnail(_config(), "", out, style="band",
+                            lines=("上", "下"), photos=[str(a), str(b)],
+                            face_link=link)
+        with Image.open(out) as im:
+            return im.convert("RGB")
+
+    plain = build("")
+    clash = build("VS")
+    # 印を置いたほうだけ、継ぎ目に色が入る
+    mid = mod.SIZE[0] // 2
+    y = int(mod.SIZE[1] * 0.30)
+    assert plain.getpixel((mid, y)) != clash.getpixel((mid, y))
+
+
+def test_印を書かなければ何も置かない(tmp_path):
+    """対立でない回にまで「VS」を出さない。"""
+    from PIL import Image
+
+    from src import thumbnail as mod
+
+    canvas = Image.new("RGBA", mod.SIZE, (255, 255, 255, 255))
+    before = canvas.copy()
+    mod._face_clash(canvas, "", str(_config().video.font_path()))
+    assert canvas.tobytes() == before.tobytes()

@@ -1025,6 +1025,9 @@ def to_script(notes: Notes, plan: Plan) -> str:
         # エンブレム2つの間に置く字。対戦以外の回で「対」だと誤解を招く
         **({"thumbnail_crest_link": str(thumbnail["crest_link"])}
            if thumbnail.get("crest_link") is not None else {}),
+        # 並べた顔の継ぎ目に置く印。対立の回だけ
+        **({"thumbnail_face_link": str(thumbnail["face_link"])}
+           if thumbnail.get("face_link") is not None else {}),
         # **エンブレムだけ止める**（2026-09-09 ユーザー「レアルは不要」）。
         # tags を削ると YouTube のタグからも消えるので、絵のほうだけ別に持つ
         **({"thumbnail_crests": [str(x) for x in (thumbnail.get("crests") or [])]}

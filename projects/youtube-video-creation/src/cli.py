@@ -859,6 +859,7 @@ def _cmd_thumbnail(args, config) -> int:
             crest_main=look.get("crest_main") or [],
             crests=look.get("crests"),
             crest_link=look.get("crest_link", "対"),
+            face_link=look.get("face_link", ""),
         )
         made.append((look.get("name") or "", target, look["lines"]))
 

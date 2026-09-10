@@ -39,8 +39,15 @@ theme:
 thumbnail:
   line1: W杯から17人を入れ替え
   line2: 41歳「●●●●●●●●」
-  photo: "assets/photos/20260910_brazil/01.jpg"
-  tags: [ブラジル代表]
+  # **2人を並べて、間に印を置く**（2026-09-10 ユーザー指示
+  # 「ブラジルユニフォームのチアゴとアンチェロッティにして、喧嘩している感出して」）。
+  # 右下にはブラジル国旗（`assets/crests/ブラジル.png`。国旗はパブリックドメイン）
+  photo: "assets/photos/20260910_silva/01.jpg"
+  photos:
+    - "assets/photos/20260910_silva/01.jpg"
+    - "assets/photos/20260910_ancelotti/01.jpg"
+  face_link: "VS"
+  tags: [ブラジル]
   points:
     - 残ったのは26人中9人
     - GKは3人とも入れ替え

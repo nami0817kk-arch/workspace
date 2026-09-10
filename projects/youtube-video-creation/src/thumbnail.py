@@ -40,6 +40,9 @@ POINTS_SIZE = 74
 POINTS_MIN_SIZE = 40
 POINTS_WIDTH = 620
 POINTS_STROKE = 6
+# 並べた顔の継ぎ目に置く印（`thumbnail.face_link`）。対立の回だけ出す
+FACE_CLASH_SIZE = 96
+FACE_CLASH_GROUND = (200, 22, 34)
 BADGE_HEIGHT = 62
 SUBTITLE_HEIGHT = 70
 DATE_HEIGHT = 40
@@ -287,6 +290,8 @@ def from_meta(meta: dict, title: str) -> dict:
                    if "thumbnail_crests" in meta else None),
         # エンブレム2つの間に置く字。対戦以外の回では「対」だと誤解を招く
         "crest_link": str(meta.get("thumbnail_crest_link", "対")),
+        # 並べた顔の継ぎ目に置く印。対立の回だけ
+        "face_link": str(meta.get("thumbnail_face_link", "")),
     }
 
 
@@ -405,6 +410,7 @@ def build_thumbnail(
     crest_main: list[str] | None = None,
     crests: list[str] | None = None,
     crest_link: str = "対",
+    face_link: str = "",
 ) -> Path:
     """サムネイルを1枚作る。
 
@@ -429,7 +435,7 @@ def build_thumbnail(
         return _band_thumbnail(
             config, out_path, background,
             lines or (title, subtitle), tags or [], focus, reaction, points or [],
-            photos or [], crest_main or [], crests, crest_link,
+            photos or [], crest_main or [], crests, crest_link, face_link,
         )
 
     font_path = str(config.video.font_path())
@@ -486,6 +492,7 @@ def _band_thumbnail(
     crest_main: list[str] | None = None,
     crests: list[str] | None = None,
     crest_link: str = "対",
+    face_link: str = "",
 ) -> Path:
     """写真の上に蛍光イエローの帯を重ねる。**最高再生の型に合わせてある。**
 
@@ -507,6 +514,8 @@ def _band_thumbnail(
     elif len(tiles) >= 2:
         # **並べれば全面が写真になる。**ぼかしの下地が要らない
         canvas = _tile_photos(tiles)
+        if len(tiles) == 2 and face_link:
+            _face_clash(canvas, face_link, font_path)
         portrait = False
     else:
         portrait = _is_portrait(background, ratio=0.95)
@@ -672,6 +681,31 @@ def _is_portrait(background: str | None, ratio: float = 1.1) -> bool:
             return image.height > image.width * ratio
     except OSError:
         return False
+
+
+def _face_clash(canvas: Image.Image, text: str, font_path: str) -> None:
+    """並べた2枚の**継ぎ目に、ぶつかっている印を置く**（2026-09-10 ユーザー指示
+    「喧嘩している感出して」）。
+
+    2人の言い分が正面から食い違う回は、顔を並べただけだと
+    「共演」に見える。**間に印を1つ入れるだけで、対立の絵になる。**
+    """
+    if not text:
+        return
+    layer, draw = _layer(canvas.size)
+    font = ImageFont.truetype(font_path, FACE_CLASH_SIZE)
+    cx, cy = canvas.width // 2, int(canvas.height * 0.30)
+    width = draw.textlength(text, font=font)
+    pad = 34
+    box = [cx - width / 2 - pad, cy - FACE_CLASH_SIZE * 0.72,
+           cx + width / 2 + pad, cy + FACE_CLASH_SIZE * 0.78]
+    # 継ぎ目を割るように、上下へ伸びる帯
+    draw.polygon([(cx - 26, 0), (cx + 26, 0), (cx + 26, canvas.height),
+                  (cx - 26, canvas.height)], fill=(12, 14, 20, 210))
+    draw.rounded_rectangle(box, radius=14, fill=FACE_CLASH_GROUND + (255,))
+    draw.text((cx - width / 2, cy - FACE_CLASH_SIZE * 0.60), text, font=font,
+              fill=(255, 255, 255, 255), stroke_width=5, stroke_fill=(0, 0, 0, 235))
+    canvas.alpha_composite(layer)
 
 
 def _tile_photos(paths: list[str]) -> Image.Image:
