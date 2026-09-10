@@ -61,6 +61,7 @@ class Playstyle {
     this.preseason = PreseasonPlan.camp,
     this.effort = TrainingEffort.normal,
     this.easeFrom,
+    this.pick,
     this.companion = TrainingCompanion.alone,
     this.spendsPoints = false,
     this.autoRestBelow,
@@ -91,6 +92,13 @@ class Playstyle {
   /// その歳のときの踏み込み方。
   TrainingEffort effortAt(int age) =>
       easeFrom != null && age >= easeFrom! ? TrainingEffort.easy : effort;
+
+  /// 局面での手の選び方を差し替える。null なら `SimStyle` に任せる。
+  ///
+  /// **「選択が実際にキャリアを変えているか」を測るために要る。**
+  /// わざと一番悪い手を選び続けたキャリアと最善手のキャリアが同じなら、
+  /// 2280回ある選択は飾りということになる。
+  final ScenarioOption Function(MatchInProgress match)? pick;
   final TrainingCompanion companion;
 
   /// 自分で経験点を振るか。false なら今までどおり自動。
@@ -258,10 +266,10 @@ Future<Career> runCareer(
       // 「無傷 → 負傷」の瞬間だけ数える。離脱中は毎試合 Injury が作り直される
       // ので、単に別物かどうかで見ると離脱の長さを数えてしまう。
       final wasInjured = state.injured;
-      if (onDecision == null) {
+      if (onDecision == null && style.pick == null) {
         await controller.simulateMatch();
       } else {
-        await _playWatched(controller, onDecision);
+        await _playWatched(controller, style, onDecision);
       }
       if (style.spendsPoints) await _spendPoints(controller);
       final after = controller.state!.injury;
@@ -659,7 +667,8 @@ void report(String title, List<Career> careers) {
 /// 覗くためだけに本体へ穴を開けたくないので、ここで同じ形をなぞる。
 Future<void> _playWatched(
   CareerController controller,
-  void Function(MatchInProgress match, ScenarioOption option) onDecision,
+  Playstyle style,
+  void Function(MatchInProgress match, ScenarioOption option)? onDecision,
 ) async {
   final state = controller.state!;
   if (controller.currentMatch == null) {
@@ -673,8 +682,8 @@ Future<void> _playWatched(
   if (match == null) return;
   while (!match.isFinished) {
     match.autoArm(state.simStyle);
-    final option = match.pickFor(state.simStyle);
-    onDecision(match, option);
+    final option = style.pick?.call(match) ?? match.pickFor(state.simStyle);
+    onDecision?.call(match, option);
     match.choose(option);
   }
   await controller.finishMatch();
