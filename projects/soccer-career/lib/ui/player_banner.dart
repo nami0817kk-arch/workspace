@@ -22,15 +22,13 @@ class PlayerBanner extends StatelessWidget {
     final player = state.player;
     final identity = ClubIdentity.of(state.club);
     // 背は必ずクラブの色。移籍すれば選手証ごと変わる。
-    final onKit = _readableOn(identity.primary);
+    final onKit = readableOn(identity.primary);
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
-      child: CustomPaint(
-        painter: _KitPainter(
-          primary: identity.primary,
-          secondary: identity.secondary,
-          striped: identity.striped,
-        ),
+      child: KitBackground(
+        primary: identity.primary,
+        secondary: identity.secondary,
+        striped: identity.striped,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
           child: Row(
@@ -79,8 +77,9 @@ class PlayerBanner extends StatelessWidget {
                     if (state.nickname != null)
                       Text(
                         '「${state.nickname}」',
-                        style: theme.textTheme.bodySmall
-                            ?.copyWith(color: onKit.withValues(alpha: 0.8)),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: onKit.withValues(alpha: 0.8),
+                        ),
                       ),
                     const SizedBox(height: 4),
                     Row(
@@ -90,8 +89,9 @@ class PlayerBanner extends StatelessWidget {
                         Flexible(
                           child: Text(
                             '${player.positionLabel} ・ ${state.club.name}',
-                            style: theme.textTheme.bodySmall
-                                ?.copyWith(color: onKit.withValues(alpha: 0.9)),
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: onKit.withValues(alpha: 0.9),
+                            ),
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
@@ -115,8 +115,9 @@ class PlayerBanner extends StatelessWidget {
                   ),
                   Text(
                     '総合力',
-                    style: theme.textTheme.labelSmall
-                        ?.copyWith(color: onKit.withValues(alpha: 0.8)),
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: onKit.withValues(alpha: 0.8),
+                    ),
                   ),
                 ],
               ),
@@ -126,15 +127,44 @@ class PlayerBanner extends StatelessWidget {
       ),
     );
   }
+}
 
-  /// その色の上に置いて読める文字色。
-  ///
-  /// クラブの色は12色あって明るいものも暗いものもある。
-  /// 白で固定すると、明るいクラブで文字が飛ぶ。
-  static Color _readableOn(Color background) =>
-      ThemeData.estimateBrightnessForColor(background) == Brightness.dark
-          ? Colors.white
-          : const Color(0xFF14140F);
+/// その色の上に置いて読める文字色。
+///
+/// クラブの色は12色あって明るいものも暗いものもある。
+/// 白で固定すると、明るいクラブで文字が飛ぶ。
+Color readableOn(Color background) =>
+    ThemeData.estimateBrightnessForColor(background) == Brightness.dark
+    ? Colors.white
+    : const Color(0xFF14140F);
+
+/// 色を敷いた帯。選手証と、引退した選手の額に使う。
+///
+/// 平らな一色だと板に見えるので、わずかな傾斜と（縞のクラブなら）
+/// 斜めの縞を入れてある。
+class KitBackground extends StatelessWidget {
+  const KitBackground({
+    super.key,
+    required this.primary,
+    required this.secondary,
+    required this.striped,
+    required this.child,
+  });
+
+  final Color primary;
+  final Color secondary;
+  final bool striped;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => CustomPaint(
+    painter: _KitPainter(
+      primary: primary,
+      secondary: secondary,
+      striped: striped,
+    ),
+    child: child,
+  );
 }
 
 class _Pill extends StatelessWidget {
@@ -145,18 +175,19 @@ class _Pill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
-        decoration: BoxDecoration(
-          border: Border.all(color: on.withValues(alpha: 0.7)),
-          borderRadius: BorderRadius.circular(999),
-        ),
-        child: Text(label,
-            style: TextStyle(
-                fontSize: 11, fontWeight: FontWeight.w700, color: on)),
-      );
+    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
+    decoration: BoxDecoration(
+      border: Border.all(color: on.withValues(alpha: 0.7)),
+      borderRadius: BorderRadius.circular(999),
+    ),
+    child: Text(
+      label,
+      style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: on),
+    ),
+  );
 }
 
-/// 背景。クラブの色で、縦縞のクラブは縞にする。
+/// 背景の描画。
 class _KitPainter extends CustomPainter {
   _KitPainter({
     required this.primary,

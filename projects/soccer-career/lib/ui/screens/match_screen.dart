@@ -11,6 +11,7 @@ import '../../models/season.dart';
 import '../../models/training.dart';
 import '../../state/career_controller.dart';
 import '../club_identity.dart';
+import '../pitch_view.dart';
 import '../readable_width.dart';
 
 /// 1試合を進める画面。局面 → 結果 → 次の局面、を繰り返す。
@@ -92,36 +93,42 @@ class _MatchScreenState extends State<MatchScreen> {
       body: SafeArea(
         child: ReadableWidth(
           child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              _MatchHeader(match: match),
-              const SizedBox(height: 20),
-              Expanded(
-                child: match.isFinished
-                    ? _ReadyToFinish(last: _last, onFinish: _finish, busy: _busy)
-                    : _ScenarioView(
-                        match: match,
-                        last: _last,
-                        seasonStart: widget.controller.state!.seasonStart,
-                        focus: widget.controller.state!.focus,
-                        objectiveReach:
-                            widget.controller.state!.objectiveReach,
-                        scorerChase:
-                            ScorerRace.chaseFor(widget.controller.state!),
-                        promiseReach:
-                            widget.controller.state!.promiseReach,
-                        onChoose: _choose,
-                      ),
-              ),
-              if (!match.isFinished)
-                TextButton(
-                  onPressed: _busy ? null : _simulateRest,
-                  child: Text('残りを自動で進める（${widget.controller.state!.simStyle.label}）'),
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _MatchHeader(match: match),
+                const SizedBox(height: 20),
+                Expanded(
+                  child: match.isFinished
+                      ? _ReadyToFinish(
+                          last: _last,
+                          onFinish: _finish,
+                          busy: _busy,
+                        )
+                      : _ScenarioView(
+                          match: match,
+                          last: _last,
+                          seasonStart: widget.controller.state!.seasonStart,
+                          focus: widget.controller.state!.focus,
+                          objectiveReach:
+                              widget.controller.state!.objectiveReach,
+                          scorerChase: ScorerRace.chaseFor(
+                            widget.controller.state!,
+                          ),
+                          promiseReach: widget.controller.state!.promiseReach,
+                          onChoose: _choose,
+                        ),
                 ),
-            ],
-          ),
+                if (!match.isFinished)
+                  TextButton(
+                    onPressed: _busy ? null : _simulateRest,
+                    child: Text(
+                      '残りを自動で進める（${widget.controller.state!.simStyle.label}）',
+                    ),
+                  ),
+              ],
+            ),
           ),
         ),
       ),
@@ -137,8 +144,9 @@ class _MatchHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final muted = theme.textTheme.labelSmall
-        ?.copyWith(color: theme.colorScheme.onSurfaceVariant);
+    final muted = theme.textTheme.labelSmall?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+    );
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -160,7 +168,9 @@ class _MatchHeader extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   ClubCrest(
-                      club: match.home ? match.club : match.opponent, size: 26),
+                    club: match.home ? match.club : match.opponent,
+                    size: 26,
+                  ),
                 ],
               ),
             ),
@@ -170,7 +180,7 @@ class _MatchHeader extends StatelessWidget {
                 match.home
                     ? match.scoreLine
                     : '${match.concededBy(match.isFinished ? 90 : match.currentMinute)} - '
-                        '${match.scoredBy(match.isFinished ? 90 : match.currentMinute)}',
+                          '${match.scoredBy(match.isFinished ? 90 : match.currentMinute)}',
                 style: theme.textTheme.headlineSmall,
               ),
             ),
@@ -178,7 +188,9 @@ class _MatchHeader extends StatelessWidget {
               child: Row(
                 children: [
                   ClubCrest(
-                      club: match.home ? match.opponent : match.club, size: 26),
+                    club: match.home ? match.opponent : match.club,
+                    size: 26,
+                  ),
                   const SizedBox(width: 8),
                   Flexible(
                     child: Text(
@@ -194,7 +206,9 @@ class _MatchHeader extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          match.home ? 'ホーム・${match.appearance.label}' : 'アウェイ・${match.appearance.label}',
+          match.home
+              ? 'ホーム・${match.appearance.label}'
+              : 'アウェイ・${match.appearance.label}',
           style: muted,
           textAlign: TextAlign.center,
         ),
@@ -202,7 +216,11 @@ class _MatchHeader extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _stat(theme, '局面', '${match.currentIndex}/${match.scenarios.length}'),
+            _stat(
+              theme,
+              '局面',
+              '${match.currentIndex}/${match.scenarios.length}',
+            ),
             _stat(theme, '評価点', match.rating.toStringAsFixed(1)),
             _stat(theme, 'G / A', '${match.goals} / ${match.assists}'),
             _stat(theme, '調子', '${match.player.condition}'),
@@ -213,14 +231,17 @@ class _MatchHeader extends StatelessWidget {
   }
 
   Widget _stat(ThemeData theme, String label, String value) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(label,
-              style: theme.textTheme.labelSmall
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
-          Text(value, style: theme.textTheme.titleMedium),
-        ],
-      );
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        label,
+        style: theme.textTheme.labelSmall?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+      ),
+      Text(value, style: theme.textTheme.titleMedium),
+    ],
+  );
 }
 
 class _ScenarioView extends StatelessWidget {
@@ -286,92 +307,119 @@ class _ScenarioView extends StatelessWidget {
           if (last != null) _ResolutionCard(resolution: last!),
           if (last != null) const SizedBox(height: 20),
           Card(
-            child: Padding(
-              padding: const EdgeInsets.all(20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${MatchInProgress.minuteLabel(match.currentMinute)}'
-                    ' ・ ${match.scoreLine}',
-                    style: theme.textTheme.labelMedium
-                        ?.copyWith(color: theme.colorScheme.primary),
-                  ),
-                  const SizedBox(height: 6),
-                  Text(scenario.situation,
-                      style: theme.textTheme.titleMedium),
-                  const SizedBox(height: 10),
-                  Wrap(
-                    spacing: 6,
-                    runSpacing: 6,
+            clipBehavior: Clip.antiAlias,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // 局面の絵。文章の中にしか無かった「どこで」を、読まずに分かる形にする。
+                PitchView(
+                  spot: scenario.spot,
+                  club: match.club,
+                  opponent: match.opponent,
+                  style: match.opponentStyle,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Chip(
-                        label: Text(match.opponentStyle.label),
-                        visualDensity: VisualDensity.compact,
+                      Text(
+                        '${MatchInProgress.minuteLabel(match.currentMinute)}'
+                        ' ・ ${match.scoreLine}',
+                        style: theme.textTheme.labelMedium?.copyWith(
+                          color: theme.colorScheme.primary,
+                        ),
                       ),
-                      if (match.situationLabel != null)
-                        Chip(
-                          label: Text(match.situationLabel!),
-                          backgroundColor: match.margin < 0
-                              ? theme.colorScheme.errorContainer
-                              : theme.colorScheme.secondaryContainer,
-                          visualDensity: VisualDensity.compact,
+                      const SizedBox(height: 6),
+                      Text(
+                        scenario.situation,
+                        style: theme.textTheme.titleMedium,
+                      ),
+                      const SizedBox(height: 10),
+                      Wrap(
+                        spacing: 6,
+                        runSpacing: 6,
+                        children: [
+                          // 絵の中の白い丸がどこなのかを、言葉でも1つだけ添える。
+                          Chip(
+                            label: Text(scenario.spot.label),
+                            backgroundColor:
+                                theme.colorScheme.surfaceContainerHighest,
+                            visualDensity: VisualDensity.compact,
+                          ),
+                          Chip(
+                            label: Text(match.opponentStyle.label),
+                            visualDensity: VisualDensity.compact,
+                          ),
+                          if (match.situationLabel != null)
+                            Chip(
+                              label: Text(match.situationLabel!),
+                              backgroundColor: match.margin < 0
+                                  ? theme.colorScheme.errorContainer
+                                  : theme.colorScheme.secondaryContainer,
+                              visualDensity: VisualDensity.compact,
+                            ),
+                          // 監督の期待にあと一歩なら、局面の側に出す。
+                          // 終盤の1本が「シーズンの1本」になる。
+                          if (objectiveReach != null)
+                            Chip(
+                              label: Text(objectiveReach!),
+                              backgroundColor:
+                                  theme.colorScheme.primaryContainer,
+                              visualDensity: VisualDensity.compact,
+                            ),
+                          if (scorerChase != null)
+                            Chip(
+                              label: Text(scorerChase!),
+                              backgroundColor:
+                                  theme.colorScheme.primaryContainer,
+                              visualDensity: VisualDensity.compact,
+                            ),
+                          if (promiseReach != null)
+                            Chip(
+                              label: Text(promiseReach!),
+                              backgroundColor:
+                                  theme.colorScheme.tertiaryContainer,
+                              visualDensity: VisualDensity.compact,
+                            ),
+                          if (match.bigMatch)
+                            Chip(
+                              label: const Text('大一番'),
+                              backgroundColor:
+                                  theme.colorScheme.tertiaryContainer,
+                              visualDensity: VisualDensity.compact,
+                            ),
+                          if (match.weakFootMoment)
+                            Chip(
+                              label: const Text('逆足で対応'),
+                              backgroundColor: theme.colorScheme.errorContainer,
+                              visualDensity: VisualDensity.compact,
+                            ),
+                        ],
+                      ),
+                      // どの手にも同じだけ効いているもの。手ごとには出さない。
+                      if (shared.isNotEmpty) ...[
+                        const SizedBox(height: 8),
+                        Wrap(
+                          spacing: 10,
+                          runSpacing: 2,
+                          children: [
+                            for (final f in shared)
+                              Text(
+                                '${f.label} ${f.percent > 0 ? '+' : ''}${f.percent}%',
+                                style: theme.textTheme.labelSmall?.copyWith(
+                                  color: f.value > 0
+                                      ? theme.colorScheme.primary
+                                      : theme.colorScheme.error,
+                                ),
+                              ),
+                          ],
                         ),
-                      // 監督の期待にあと一歩なら、局面の側に出す。
-                      // 終盤の1本が「シーズンの1本」になる。
-                      if (objectiveReach != null)
-                        Chip(
-                          label: Text(objectiveReach!),
-                          backgroundColor: theme.colorScheme.primaryContainer,
-                          visualDensity: VisualDensity.compact,
-                        ),
-                      if (scorerChase != null)
-                        Chip(
-                          label: Text(scorerChase!),
-                          backgroundColor: theme.colorScheme.primaryContainer,
-                          visualDensity: VisualDensity.compact,
-                        ),
-                      if (promiseReach != null)
-                        Chip(
-                          label: Text(promiseReach!),
-                          backgroundColor: theme.colorScheme.tertiaryContainer,
-                          visualDensity: VisualDensity.compact,
-                        ),
-                      if (match.bigMatch)
-                        Chip(
-                          label: const Text('大一番'),
-                          backgroundColor: theme.colorScheme.tertiaryContainer,
-                          visualDensity: VisualDensity.compact,
-                        ),
-                      if (match.weakFootMoment)
-                        Chip(
-                          label: const Text('逆足で対応'),
-                          backgroundColor: theme.colorScheme.errorContainer,
-                          visualDensity: VisualDensity.compact,
-                        ),
+                      ],
                     ],
                   ),
-                  // どの手にも同じだけ効いているもの。手ごとには出さない。
-                  if (shared.isNotEmpty) ...[
-                    const SizedBox(height: 8),
-                    Wrap(
-                      spacing: 10,
-                      runSpacing: 2,
-                      children: [
-                        for (final f in shared)
-                          Text(
-                            '${f.label} ${f.percent > 0 ? '+' : ''}${f.percent}%',
-                            style: theme.textTheme.labelSmall?.copyWith(
-                              color: f.value > 0
-                                  ? theme.colorScheme.primary
-                                  : theme.colorScheme.error,
-                            ),
-                          ),
-                      ],
-                    ),
-                  ],
-                ],
-              ),
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 16),
@@ -380,7 +428,8 @@ class _ScenarioView extends StatelessWidget {
               option: scenario.options[i],
               attribute: match.attributeFor(scenario.options[i]),
               growth: _growthOf(scenario.options[i]),
-              focused: scenario.options[i].detail != null &&
+              focused:
+                  scenario.options[i].detail != null &&
                   focus.contains(scenario.options[i].detail),
               favoured: match.isFavoured(scenario.options[i]),
               chance: match.chanceFor(scenario.options[i]),
@@ -446,15 +495,14 @@ class _OptionButton extends StatelessWidget {
     final theme = Theme.of(context);
     final percent = (chance * 100).round();
     // 効いているものだけを、大きい順に少しだけ。
-    final shown =
-        factors.where((f) => f.notable).take(shownFactors).toList();
+    final shown = factors.where((f) => f.notable).take(shownFactors).toList();
     // 数字だけだと、3つの手を見比べるのに毎回読む必要がある。
     // 帯があれば、どれが堅くてどれが賭けかが一目で分かる。
     final color = chance >= 0.6
         ? theme.colorScheme.primary
         : chance >= 0.4
-            ? theme.colorScheme.tertiary
-            : theme.colorScheme.error;
+        ? theme.colorScheme.tertiary
+        : theme.colorScheme.error;
 
     return OutlinedButton(
       onPressed: onPressed,
@@ -474,9 +522,11 @@ class _OptionButton extends StatelessWidget {
                 // 手が通る確率と、それが点になる確率は別。
                 // 「決まるのは半分ほど」を数字で見せておく。
                 Chip(
-                  label: Text(option.outcome == Outcome.goal
-                      ? 'ゴール ${(chance * Formulas.goalConversion * 100).round()}%'
-                      : 'アシスト ${(chance * assistConversion * 100).round()}%'),
+                  label: Text(
+                    option.outcome == Outcome.goal
+                        ? 'ゴール ${(chance * Formulas.goalConversion * 100).round()}%'
+                        : 'アシスト ${(chance * assistConversion * 100).round()}%',
+                  ),
                   visualDensity: VisualDensity.compact,
                   backgroundColor: theme.colorScheme.secondaryContainer,
                 ),
@@ -487,8 +537,10 @@ class _OptionButton extends StatelessWidget {
             children: [
               SizedBox(
                 width: 42,
-                child: Text('$percent%',
-                    style: theme.textTheme.titleSmall?.copyWith(color: color)),
+                child: Text(
+                  '$percent%',
+                  style: theme.textTheme.titleSmall?.copyWith(color: color),
+                ),
               ),
               Expanded(
                 child: ClipRRect(
@@ -503,29 +555,39 @@ class _OptionButton extends StatelessWidget {
               const SizedBox(width: 10),
               Text(
                 '${option.detail?.label ?? option.key.label} $attribute',
-                style: theme.textTheme.bodySmall
-                    ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
               if (growth > 0)
                 Padding(
                   padding: const EdgeInsets.only(left: 4),
-                  child: Text('↑$growth',
-                      style: theme.textTheme.labelSmall
-                          ?.copyWith(color: theme.colorScheme.primary)),
+                  child: Text(
+                    '↑$growth',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
                 ),
               if (focused)
                 Padding(
                   padding: const EdgeInsets.only(left: 6),
-                  child: Text('重点',
-                      style: theme.textTheme.labelSmall
-                          ?.copyWith(color: theme.colorScheme.tertiary)),
+                  child: Text(
+                    '重点',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.tertiary,
+                    ),
+                  ),
                 ),
               if (favoured)
                 Padding(
                   padding: const EdgeInsets.only(left: 6),
-                  child: Text('監督好み',
-                      style: theme.textTheme.labelSmall
-                          ?.copyWith(color: theme.colorScheme.primary)),
+                  child: Text(
+                    '監督好み',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
                 ),
             ],
           ),
@@ -581,15 +643,17 @@ class _ResolutionCard extends StatelessWidget {
             resolution.isGoal
                 ? 'ゴール'
                 : resolution.isAssist
-                    ? 'アシスト'
-                    : resolution.success
-                        ? '成功'
-                        : '失敗',
+                ? 'アシスト'
+                : resolution.success
+                ? '成功'
+                : '失敗',
             style: theme.textTheme.labelLarge?.copyWith(color: onColor),
           ),
           const SizedBox(height: 4),
-          Text(resolution.text,
-              style: theme.textTheme.bodyMedium?.copyWith(color: onColor)),
+          Text(
+            resolution.text,
+            style: theme.textTheme.bodyMedium?.copyWith(color: onColor),
+          ),
         ],
       ),
     );
@@ -627,11 +691,7 @@ class _ReadyToFinish extends StatelessWidget {
 }
 
 class _BenchedView extends StatelessWidget {
-  const _BenchedView({
-    required this.onDone,
-    required this.busy,
-    this.idle = 0,
-  });
+  const _BenchedView({required this.onDone, required this.busy, this.idle = 0});
 
   final VoidCallback onDone;
   final bool busy;
@@ -656,17 +716,19 @@ class _BenchedView extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 '直近の評価点が低く、今節は招集されなかった。',
-                style: theme.textTheme.bodyMedium
-                    ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
               const SizedBox(height: 8),
               Text(
                 remaining <= 0
                     ? '外れ続けている。次節は途中出場から声がかかる。'
                     : 'あと$remaining試合外れると、まずは途中出場から戻ることになる。'
-                        '練習で調子を戻しておく。',
-                style: theme.textTheme.bodyMedium
-                    ?.copyWith(color: theme.colorScheme.primary),
+                          '練習で調子を戻しておく。',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.primary,
+                ),
               ),
               const SizedBox(height: 32),
               FilledButton(
@@ -711,20 +773,24 @@ class _MatchSummary extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Text(label,
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.headlineMedium),
+              Text(
+                label,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.headlineMedium,
+              ),
               const SizedBox(height: 4),
-              Text('${result.scoreLine}   vs ${result.opponentName}',
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.titleMedium
-                      ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+              Text(
+                '${result.scoreLine}   vs ${result.opponentName}',
+                textAlign: TextAlign.center,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
               const SizedBox(height: 28),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  _stat(theme, '評価点',
-                      result.rating?.toStringAsFixed(1) ?? '—'),
+                  _stat(theme, '評価点', result.rating?.toStringAsFixed(1) ?? '—'),
                   _stat(theme, 'ゴール', '${result.goals}'),
                   _stat(theme, 'アシスト', '${result.assists}'),
                 ],
@@ -740,14 +806,18 @@ class _MatchSummary extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      Text(headline.first.headline,
-                          textAlign: TextAlign.center,
-                          style: theme.textTheme.titleSmall),
+                      Text(
+                        headline.first.headline,
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.titleSmall,
+                      ),
                       if (headline.first.body.isNotEmpty) ...[
                         const SizedBox(height: 4),
-                        Text(headline.first.body,
-                            textAlign: TextAlign.center,
-                            style: theme.textTheme.bodySmall),
+                        Text(
+                          headline.first.body,
+                          textAlign: TextAlign.center,
+                          style: theme.textTheme.bodySmall,
+                        ),
                       ],
                     ],
                   ),
@@ -769,8 +839,9 @@ class _MatchSummary extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   '疲れが残っていたので、今週は自動で休養にした。',
-                  style: theme.textTheme.bodyMedium
-                      ?.copyWith(color: theme.colorScheme.error),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.error,
+                  ),
                 ),
               ],
               // その週の手応え。伸びなかった週が、運が悪かったのか
@@ -793,8 +864,9 @@ class _MatchSummary extends StatelessWidget {
                 Text(
                   week.outcome!.description,
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.bodySmall
-                      ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ],
               if (week.trained != null) ...[
@@ -804,8 +876,9 @@ class _MatchSummary extends StatelessWidget {
                       ? '土台から鍛え直した: ${week.trained!.label} が 1 伸びた'
                       : '練習の成果: ${week.trained!.label} が 1 伸びた',
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyMedium
-                      ?.copyWith(color: theme.colorScheme.primary),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.primary,
+                  ),
                 ),
               ],
               if (week.drilled != null) ...[
@@ -813,8 +886,9 @@ class _MatchSummary extends StatelessWidget {
                 Text(
                   '居残りの成果: ${week.drilled!.label} の精度が上がった',
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyMedium
-                      ?.copyWith(color: theme.colorScheme.primary),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.primary,
+                  ),
                 ),
               ],
               if (week.learned != null) ...[
@@ -822,8 +896,9 @@ class _MatchSummary extends StatelessWidget {
                 Text(
                   '個人技を覚えた: ${week.learned!.label}',
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.titleSmall
-                      ?.copyWith(color: theme.colorScheme.primary),
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    color: theme.colorScheme.primary,
+                  ),
                 ),
               ],
               if (week.weakFootAwakened) ...[
@@ -831,8 +906,9 @@ class _MatchSummary extends StatelessWidget {
                 Text(
                   '逆足が形になってきた。両足で持てる選手になりつつある。',
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyMedium
-                      ?.copyWith(color: theme.colorScheme.primary),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.primary,
+                  ),
                 ),
               ],
               if (week.plateau) ...[
@@ -840,8 +916,9 @@ class _MatchSummary extends StatelessWidget {
                 Text(
                   '伸び悩んでいる。しばらくは積み上がらない。',
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.bodySmall
-                      ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ],
               if (week.recovered) ...[
@@ -849,8 +926,9 @@ class _MatchSummary extends StatelessWidget {
                 Text(
                   '離脱から復帰した。コンディションはまだ戻っていない。',
                   textAlign: TextAlign.center,
-                  style: theme.textTheme.bodyMedium
-                      ?.copyWith(color: theme.colorScheme.primary),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.primary,
+                  ),
                 ),
               ],
               if (week.newInjury != null) ...[
@@ -873,13 +951,16 @@ class _MatchSummary extends StatelessWidget {
   }
 
   Widget _stat(ThemeData theme, String label, String value) => Column(
-        children: [
-          Text(label,
-              style: theme.textTheme.labelSmall
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
-          Text(value, style: theme.textTheme.headlineSmall),
-        ],
-      );
+    children: [
+      Text(
+        label,
+        style: theme.textTheme.labelSmall?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+      ),
+      Text(value, style: theme.textTheme.headlineSmall),
+    ],
+  );
 }
 
 /// 負傷を伝えるカード。重傷は後遺症まで書く。
@@ -902,21 +983,24 @@ class _InjuryNotice extends StatelessWidget {
         children: [
           Text(
             '負傷: ${injury.name}（${injury.severity.label}）',
-            style: theme.textTheme.titleSmall
-                ?.copyWith(color: theme.colorScheme.onErrorContainer),
+            style: theme.textTheme.titleSmall?.copyWith(
+              color: theme.colorScheme.onErrorContainer,
+            ),
           ),
           const SizedBox(height: 4),
           Text(
             '${injury.matchesOut}試合の離脱',
-            style: theme.textTheme.bodyMedium
-                ?.copyWith(color: theme.colorScheme.onErrorContainer),
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onErrorContainer,
+            ),
           ),
           if (severe) ...[
             const SizedBox(height: 4),
             Text(
               '長期離脱。体は元どおりにはならない。',
-              style: theme.textTheme.bodySmall
-                  ?.copyWith(color: theme.colorScheme.onErrorContainer),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onErrorContainer,
+              ),
             ),
           ],
         ],
@@ -940,9 +1024,12 @@ class _Timeline extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Text('試合の流れ',
-            style: theme.textTheme.labelMedium
-                ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+        Text(
+          '試合の流れ',
+          style: theme.textTheme.labelMedium?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
         const SizedBox(height: 8),
         for (final event in events)
           Padding(
@@ -951,18 +1038,21 @@ class _Timeline extends StatelessWidget {
               children: [
                 SizedBox(
                   width: 52,
-                  child: Text('${event.minute}分',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant)),
+                  child: Text(
+                    '${event.minute}分',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
                 ),
                 Icon(
                   event.kind == MatchEventKind.conceded
                       ? Icons.remove_circle_outline
                       : event.kind == MatchEventKind.ownGoal
-                          ? Icons.sports_soccer
-                          : event.kind == MatchEventKind.ownAssist
-                              ? Icons.trending_up
-                              : Icons.check_circle_outline,
+                      ? Icons.sports_soccer
+                      : event.kind == MatchEventKind.ownAssist
+                      ? Icons.trending_up
+                      : Icons.check_circle_outline,
                   size: 16,
                   color: event.kind.isOurs
                       ? theme.colorScheme.primary
@@ -972,7 +1062,8 @@ class _Timeline extends StatelessWidget {
                 Text(
                   event.kind.label,
                   style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: event.kind == MatchEventKind.ownGoal ||
+                    fontWeight:
+                        event.kind == MatchEventKind.ownGoal ||
                             event.kind == MatchEventKind.ownAssist
                         ? FontWeight.bold
                         : FontWeight.normal,

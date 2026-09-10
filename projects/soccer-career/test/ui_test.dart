@@ -11,9 +11,11 @@ import 'package:soccer_career/game/weekly_plan.dart';
 import 'package:soccer_career/models/traits.dart';
 import 'package:soccer_career/ui/attribute_shape.dart';
 import 'package:soccer_career/ui/club_identity.dart';
+import 'package:soccer_career/ui/pitch_view.dart';
 import 'package:soccer_career/ui/player_banner.dart';
 import 'package:soccer_career/ui/trait_row.dart';
 import 'package:soccer_career/models/agent.dart';
+import 'package:soccer_career/models/legend.dart';
 import 'package:soccer_career/models/attributes.dart';
 import 'package:soccer_career/models/career.dart';
 import 'package:soccer_career/models/training.dart';
@@ -41,9 +43,26 @@ class _MemoryRepository implements SaveRepository {
   Future<void> clear() async => _saved = null;
 }
 
-Future<CareerController> newCareer({int seed = 1, int age = 20}) async {
+/// 保存領域を持たない環境でも回るように、殿堂も差し替えられるようにしておく。
+/// 実物は SharedPreferences を待つので、引退させる画面はここを渡さないと止まる。
+class MemoryHall implements HallRepository {
+  Hall _saved = const Hall();
+
+  @override
+  Future<Hall> load() async => _saved;
+
+  @override
+  Future<void> save(Hall hall) async => _saved = hall;
+}
+
+Future<CareerController> newCareer({
+  int seed = 1,
+  int age = 20,
+  HallRepository? hallRepository,
+}) async {
   final controller = CareerController(
     repository: _MemoryRepository(),
+    hallRepository: hallRepository,
     careerEngine: CareerEngine(random: Random(seed)),
     matchEngine: MatchEngine(random: Random(seed)),
     random: Random(seed),
@@ -67,13 +86,15 @@ Future<void> pumpHub(
   tester.view.devicePixelRatio = 1.0;
   addTearDown(tester.view.reset);
 
-  await tester.pumpWidget(MaterialApp(
-    theme: ThemeData(useMaterial3: true),
-    home: AnimatedBuilder(
-      animation: controller,
-      builder: (context, _) => HubScreen(controller: controller),
+  await tester.pumpWidget(
+    MaterialApp(
+      theme: ThemeData(useMaterial3: true),
+      home: AnimatedBuilder(
+        animation: controller,
+        builder: (context, _) => HubScreen(controller: controller),
+      ),
     ),
-  ));
+  );
   await tester.pumpAndSettle();
 }
 
@@ -83,8 +104,11 @@ void main() {
     await pumpHub(tester, controller);
 
     for (final label in ['試合', '選手', '育成', 'クラブ', '記録']) {
-      expect(find.widgetWithText(Tab, label), findsOneWidget,
-          reason: '$label タブが無い');
+      expect(
+        find.widgetWithText(Tab, label),
+        findsOneWidget,
+        reason: '$label タブが無い',
+      );
     }
   });
 
@@ -103,8 +127,10 @@ void main() {
       await tester.pumpAndSettle();
       final fab = find.byType(FloatingActionButton);
       expect(fab, findsOneWidget, reason: tab);
-      expect(find.descendant(of: fab, matching: find.text('試合へ')),
-          findsOneWidget);
+      expect(
+        find.descendant(of: fab, matching: find.text('試合へ')),
+        findsOneWidget,
+      );
     }
   });
 
@@ -130,8 +156,10 @@ void main() {
     expect(find.text('今週の練習'), findsOneWidget);
     // ツールチップではなく、本文として出ていること。
     expect(find.text(TrainingMenu.athletic.description), findsOneWidget);
-    expect(find.textContaining('消耗 ${TrainingMenu.athletic.conditionCost}'),
-        findsOneWidget);
+    expect(
+      find.textContaining('消耗 ${TrainingMenu.athletic.conditionCost}'),
+      findsOneWidget,
+    );
     // 専属スタッフと生活習慣は畳んである。
     expect(find.text('専属スタッフ'), findsOneWidget);
     expect(find.text('世界的 1500万'), findsNothing);
@@ -167,8 +195,7 @@ void main() {
       }
     }
     // 回数か「試合の外」かのどちらかが書いてある。
-    expect(
-        find.textContaining(RegExp('今季|試合の外で効く')), findsAtLeastNWidgets(1));
+    expect(find.textContaining(RegExp('今季|試合の外で効く')), findsAtLeastNWidgets(1));
   });
 
   testWidgets('クラブのタブに順位表がある', (tester) async {
@@ -218,8 +245,9 @@ void main() {
     expect(find.text(grade.label), findsOneWidget);
     expect(find.textContaining('クラブの主力を上回っている'), findsOneWidget);
     expect(
-        find.textContaining('代表に呼ばれる総合力（${Formulas.callUpOverall}）'),
-        findsOneWidget);
+      find.textContaining('代表に呼ばれる総合力（${Formulas.callUpOverall}）'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('クラブのタブで、リーグが世界の何位か分かる', (tester) async {
@@ -235,10 +263,13 @@ void main() {
       const Offset(0, -200),
     );
     final mine = Ranking.of(
-        controller.state!.club.countryId, controller.state!.club.tier);
+      controller.state!.club.countryId,
+      controller.state!.club.tier,
+    );
     expect(
-        find.textContaining('世界${mine.rank}位 / ${mine.total}リーグ'),
-        findsOneWidget);
+      find.textContaining('世界${mine.rank}位 / ${mine.total}リーグ'),
+      findsOneWidget,
+    );
     expect(find.text('世界のリーグ一覧'), findsOneWidget);
   });
 
@@ -259,8 +290,9 @@ void main() {
     await tester.pumpAndSettle();
     // 項目は今の値つきで並ぶ。
     final value = controller.state!.player.attributes.detail(Detail.finishing);
-    await tester.tap(find.widgetWithText(
-        FilterChip, '${Detail.finishing.label} $value'));
+    await tester.tap(
+      find.widgetWithText(FilterChip, '${Detail.finishing.label} $value'),
+    );
     await tester.pumpAndSettle();
     expect(controller.state!.focus, [Detail.finishing]);
   });
@@ -299,8 +331,7 @@ void main() {
     expect(find.textContaining(plan.headline), findsOneWidget);
     expect(find.text(plan.reason), findsOneWidget);
     // 次の相手の名前が、育成のタブから読める。
-    expect(plan.headline,
-        contains(state.opponentFor(state.matchday).name));
+    expect(plan.headline, contains(state.opponentFor(state.matchday).name));
   });
 
   testWidgets('選手タブは、選手証と能力の形で始まる', (tester) async {
@@ -313,20 +344,29 @@ void main() {
 
     expect(find.byType(PlayerBanner), findsOneWidget);
     // 名前・総合力は帯の中に大きく出る。
-    expect(find.descendant(
+    expect(
+      find.descendant(
         of: find.byType(PlayerBanner),
-        matching: find.text(controller.state!.player.name)),
-        findsOneWidget);
-    expect(find.descendant(
+        matching: find.text(controller.state!.player.name),
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.descendant(
         of: find.byType(PlayerBanner),
-        matching: find.text('${controller.state!.player.overall}')),
-        findsOneWidget);
+        matching: find.text('${controller.state!.player.overall}'),
+      ),
+      findsOneWidget,
+    );
 
     // 能力の形。棒は残す（正確な値はそちらで読む）。
     final shape = tester.widget<AttributeShape>(find.byType(AttributeShape));
     expect(shape.keys, isNotEmpty);
-    expect(shape.keys.contains(AttributeKey.goalkeeping), isFalse,
-        reason: 'GK 以外に GK 能力の頂点が出ている');
+    expect(
+      shape.keys.contains(AttributeKey.goalkeeping),
+      isFalse,
+      reason: 'GK 以外に GK 能力の頂点が出ている',
+    );
     expect(find.text(AttributeKey.pace.label), findsWidgets);
   });
 
@@ -374,10 +414,12 @@ void main() {
     tester.view.physicalSize = const Size(390, 3000);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
-    await tester.pumpWidget(MaterialApp(
-      theme: ThemeData(useMaterial3: true),
-      home: CreatePlayerScreen(controller: controller),
-    ));
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData(useMaterial3: true),
+        home: CreatePlayerScreen(controller: controller),
+      ),
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('生まれ持った特性'), findsOneWidget);
@@ -406,8 +448,11 @@ void main() {
     await tester.tap(find.widgetWithText(ChoiceChip, Position.gk.label));
     await tester.pumpAndSettle();
     for (final row in tester.widgetList<TraitRow>(find.byType(TraitRow))) {
-      expect(row.trait.fitsPosition(Position.gk), isTrue,
-          reason: '${row.trait.label} は GK に付かないはず');
+      expect(
+        row.trait.fitsPosition(Position.gk),
+        isTrue,
+        reason: '${row.trait.label} は GK に付かないはず',
+      );
     }
   });
 
@@ -439,10 +484,12 @@ void main() {
     tester.view.physicalSize = const Size(390, 3000);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
-    await tester.pumpWidget(MaterialApp(
-      theme: ThemeData(useMaterial3: true),
-      home: CreatePlayerScreen(controller: controller),
-    ));
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData(useMaterial3: true),
+        home: CreatePlayerScreen(controller: controller),
+      ),
+    );
     await tester.pumpAndSettle();
 
     // 中央の役割では、立つ側は聞かれない。
@@ -462,8 +509,10 @@ void main() {
     await tester.tap(find.text('見た目と背番号'));
     await tester.pumpAndSettle();
     expect(find.text('髪型'), findsOneWidget);
-    expect(find.widgetWithText(ChoiceChip, HairStyle.curly.label),
-        findsOneWidget);
+    expect(
+      find.widgetWithText(ChoiceChip, HairStyle.curly.label),
+      findsOneWidget,
+    );
 
     // 出身国も選べる。
     expect(find.text('出身国'), findsOneWidget);
@@ -482,14 +531,16 @@ void main() {
     final controller = await newCareer();
     controller.state!.autoRestBelow = 0;
     await controller.setMenu(TrainingMenu.rest);
-    controller.state!.player =
-        controller.state!.player.copyWith(condition: 100);
+    controller.state!.player = controller.state!.player.copyWith(
+      condition: 100,
+    );
     await pumpHub(tester, controller);
     expect(find.text('伸びない'), findsOneWidget);
 
     // 練習していれば出ない。
-    await controller
-        .setMenu(TrainingMenu.defaultFor(controller.state!.player.position));
+    await controller.setMenu(
+      TrainingMenu.defaultFor(controller.state!.player.position),
+    );
     await tester.pumpAndSettle();
     expect(find.text('伸びない'), findsNothing);
   });
@@ -554,10 +605,12 @@ void main() {
     tester.view.physicalSize = const Size(390, 1400);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
-    await tester.pumpWidget(MaterialApp(
-      theme: ThemeData(useMaterial3: true),
-      home: MatchScreen(controller: controller),
-    ));
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData(useMaterial3: true),
+        home: MatchScreen(controller: controller),
+      ),
+    );
     await tester.pumpAndSettle();
 
     // どの手にも同じだけ効くものは、局面の側に1度だけ。
@@ -604,10 +657,12 @@ void main() {
     tester.view.physicalSize = const Size(390, 2400);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
-    await tester.pumpWidget(MaterialApp(
-      theme: ThemeData(useMaterial3: true),
-      home: SeasonEndScreen(controller: controller),
-    ));
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData(useMaterial3: true),
+        home: SeasonEndScreen(controller: controller),
+      ),
+    );
     await tester.pumpAndSettle();
 
     await tester.dragUntilVisible(
@@ -627,22 +682,29 @@ void main() {
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
 
-    await tester.pumpWidget(MaterialApp(
-      theme: ThemeData(useMaterial3: true),
-      home: HubScreen(controller: controller),
-    ));
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData(useMaterial3: true),
+        home: HubScreen(controller: controller),
+      ),
+    );
     await tester.pumpAndSettle();
 
     for (final label in ['試合', '選手', '育成', 'クラブ', '記録']) {
       await tester.tap(find.widgetWithText(Tab, label));
       await tester.pumpAndSettle();
       final list = tester.getSize(find.byType(ListView).first);
-      expect(list.width, lessThanOrEqualTo(ReadableWidth.maxContentWidth),
-          reason: '$label タブが画面幅いっぱいに広がっている');
+      expect(
+        list.width,
+        lessThanOrEqualTo(ReadableWidth.maxContentWidth),
+        reason: '$label タブが画面幅いっぱいに広がっている',
+      );
     }
     // タブそのものも同じ幅に収まっている。
-    expect(tester.getSize(find.byType(TabBar)).width,
-        lessThanOrEqualTo(ReadableWidth.maxContentWidth));
+    expect(
+      tester.getSize(find.byType(TabBar)).width,
+      lessThanOrEqualTo(ReadableWidth.maxContentWidth),
+    );
   });
 
   testWidgets('日本語フォントを同梱して使っている', (tester) async {
@@ -729,10 +791,12 @@ void main() {
     await pumpHub(tester, controller);
 
     expect(
-        find.descendant(
-            of: find.byType(FloatingActionButton),
-            matching: find.text('シーズンを終える')),
-        findsOneWidget);
+      find.descendant(
+        of: find.byType(FloatingActionButton),
+        matching: find.text('シーズンを終える'),
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets('試合の画面は、3つの手を見比べられる', (tester) async {
@@ -742,10 +806,12 @@ void main() {
     tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
-    await tester.pumpWidget(MaterialApp(
-      theme: ThemeData(useMaterial3: true),
-      home: MatchScreen(controller: controller),
-    ));
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData(useMaterial3: true),
+        home: MatchScreen(controller: controller),
+      ),
+    );
     await tester.pumpAndSettle();
 
     final match = controller.currentMatch!;
@@ -753,10 +819,14 @@ void main() {
     for (final option in match.current.options) {
       expect(find.text(option.label), findsOneWidget);
     }
-    final percent = (match.chanceFor(match.current.options.first) * 100).round();
+    final percent = (match.chanceFor(match.current.options.first) * 100)
+        .round();
     expect(find.text('$percent%'), findsWidgets);
     // 相手の戦い方が分かる。
     expect(find.text(match.opponentStyle.label), findsOneWidget);
+    // 局面がピッチの絵になっていて、その場所が言葉でも添えてある。
+    expect(find.byType(PitchView), findsOneWidget);
+    expect(find.text(match.current.spot.label), findsOneWidget);
   });
 
   testWidgets('シーズン終了の画面が、スマホの幅で崩れない', (tester) async {
@@ -768,10 +838,12 @@ void main() {
     tester.view.physicalSize = const Size(390, 844);
     tester.view.devicePixelRatio = 1.0;
     addTearDown(tester.view.reset);
-    await tester.pumpWidget(MaterialApp(
-      theme: ThemeData(useMaterial3: true),
-      home: SeasonEndScreen(controller: controller),
-    ));
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData(useMaterial3: true),
+        home: SeasonEndScreen(controller: controller),
+      ),
+    );
     await tester.pumpAndSettle();
 
     expect(find.textContaining('シーズン終了'), findsOneWidget);
