@@ -777,8 +777,20 @@ class _StatusCard extends StatelessWidget {
               children: [
                 _tag(theme, '気持ち ${state.morale.label}',
                     warn: state.morale.needsCare),
-                _tag(theme, '疲労 ${state.fatigue.label}',
-                    warn: state.fatigue.value >= 70),
+                _tag(
+                    theme,
+                    // 疲れ切った身体ほど、引くのは重いほうの怪我。
+                    // 「限界まで来ている」だけでは、何が起きるか分からない。
+                    state.fatigue.value >= Formulas.fatigueWarning
+                        ? '疲労 ${state.fatigue.label}'
+                            '（怪我が重くなりやすい）'
+                        : '疲労 ${state.fatigue.label}',
+                    warn: state.fatigue.value >= Formulas.fatigueWarning),
+                // 構想外は、落ちてからでは戻せない。落ちる前に出す。
+                if (state.frozenOut)
+                  _tag(theme, '構想外', warn: true)
+                else if (state.trustAtRisk)
+                  _tag(theme, '監督の信頼が危うい', warn: true),
                 if (state.form.isActive)
                   _tag(theme, state.form.state.label,
                       good: state.form.state == MomentumState.zone,

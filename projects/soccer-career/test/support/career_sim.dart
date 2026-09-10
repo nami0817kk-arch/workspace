@@ -223,6 +223,9 @@ Future<Career> runCareer(Playstyle style, int seed) async {
         career.seenStates.add('NewsKind.${item.kind.name}');
       }
       if (controller.state!.injured) career.missedMatches++;
+      // 取り返しのつかない状態に、実際に到達するか。
+      if (controller.state!.frozenOut) career.seenStates.add('frozenOut');
+      if (controller.state!.trustAtRisk) career.seenStates.add('trustAtRisk');
       career.moraleSum += controller.state!.morale.value;
       career.fatigueSum += controller.state!.fatigue.value;
       career.moraleSamples++;

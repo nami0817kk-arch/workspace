@@ -680,7 +680,10 @@ class CareerController extends ChangeNotifier {
               // 登録メンバーから外れていると、そもそもベンチにも入れない。
               : !state.squadStatus.canPlay
                   ? Appearance.benched
-                  : _selectionFor(state),
+                  // 監督の構想から外れていれば、力があっても使われない。
+                  : state.frozenOut
+                      ? Appearance.benched
+                      : _selectionFor(state),
     );
     notifyListeners();
   }
@@ -881,6 +884,7 @@ class CareerController extends ChangeNotifier {
         focus: state.focus,
         plateau: state.development.inPlateau,
         environment: _environmentFactor(state),
+        fatigue: state.fatigue.value,
         played: result.appearance != Appearance.benched,
       );
       player = player.copyWith(
@@ -908,7 +912,9 @@ class CareerController extends ChangeNotifier {
         state.development = state.development.learn(week.learned!);
       }
       newInjury = week.injury ??
-          _match.rollInjury(player, baseChance: injuryBaseChanceFor(state));
+          _match.rollInjury(player,
+              baseChance: injuryBaseChanceFor(state),
+              fatigue: state.fatigue.value);
       if (newInjury != null) {
         // 復帰の進め方で離脱の長さが変わる。
         newInjury = Injury(
