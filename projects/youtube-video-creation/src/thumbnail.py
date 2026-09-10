@@ -716,10 +716,19 @@ def _face_clash(canvas: Image.Image, text: str, font_path: str,
     # **印の上に置く**（2026-09-10 ユーザー「ブラジル国旗はvsの上において」）。
     # 右下だと顔にかかるうえ、2人のどちらの持ち物かが曖昧になる。
     # 真ん中の上なら「この2人が属しているもの」として読める
-    for name in (crests or [])[:1]:
-        mark = _crest_image(name, FACE_CLASH_FLAG_H)
-        if mark is None:
-            continue
+    marks = [(name, _crest_image(name, FACE_CLASH_FLAG_H)) for name in (crests or [])]
+    marks = [(name, mark) for name, mark in marks if mark is not None]
+    if len(marks) >= 2:
+        # **2つあるときは、それぞれの顔の上に置く**（2026-09-10 ユーザー指示
+        # 「デコと、フリアン、アトレティコ、バルサで移籍交渉の裏側的なものに」）。
+        # 移籍の話は「どちらのクラブの人か」が分からないと絵にならない。
+        # 真ん中に1つだけ置くと、2人の共通の持ち物に見える
+        for index, (_, mark) in enumerate(marks[:2]):
+            spot = int(canvas.width * (0.25 if index == 0 else 0.75))
+            top = int(box[1]) - mark.height - FACE_CLASH_GAP
+            canvas.alpha_composite(mark, (spot - mark.width // 2, max(8, top)))
+        return
+    for _, mark in marks[:1]:
         top = int(box[1]) - mark.height - FACE_CLASH_GAP
         canvas.alpha_composite(mark, (cx - mark.width // 2, max(8, top)))
 

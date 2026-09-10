@@ -103,6 +103,17 @@ sites:
   examples:
   - https://www.espn.co.uk/football/story/_/id/49826046/richarlison-was-offered-new-contract-months-tottenham-squad-omission-roberto-de-zerbi
   - https://www.espn.co.uk/football/story/_/id/49834658/raphinha-barcelona-la-liga-spain-brazil-pedri-lamine-yamal-frenkie-de-jong-eric-garcia
+- host: mondoudinese.it
+  seen: 5
+  days:
+  - '2026-09-04'
+  - '2026-09-05'
+  - '2026-09-07'
+  - '2026-09-10'
+  examples:
+  - https://www.mondoudinese.it/udinese/news-udinese/udinese-unai-gomez-voglio-migliorare-e-aumentare-i-miei-numeri/?intcmp=gazzanet-mondoudinese
+  - https://www.mondoudinese.it/udinese/news-udinese/conferenza-runjaic-bayo-puo-giocare-titolare-ma-non-vi-diro-lundici/?intcmp=gazzanet-mondoudinese
+  - https://www.mondoudinese.it/udinese/news-udinese/palma-il-posto-da-titolare-me-lo-dovro-riguadagnare/?intcmp=gazzanet-mondoudinese
 - host: ilmilanista.it
   seen: 4
   days:
@@ -134,15 +145,6 @@ sites:
   - '2026-09-05'
   examples:
   - https://www.sportsmole.co.uk/football/barcelona/race-for-the-la-liga-title/predicted-lineups/any-changes-for-flick-how-barca-could-line-up-against-valencia_604504.html
-- host: mondoudinese.it
-  seen: 4
-  days:
-  - '2026-09-04'
-  - '2026-09-05'
-  - '2026-09-07'
-  examples:
-  - https://www.mondoudinese.it/udinese/news-udinese/udinese-unai-gomez-voglio-migliorare-e-aumentare-i-miei-numeri/?intcmp=gazzanet-mondoudinese
-  - https://www.mondoudinese.it/udinese/news-udinese/conferenza-runjaic-bayo-puo-giocare-titolare-ma-non-vi-diro-lundici/?intcmp=gazzanet-mondoudinese
 - host: tuttobolognaweb.it
   seen: 4
   days:
@@ -345,3 +347,9 @@ sites:
   - '2026-09-09'
   examples:
   - https://www.violanews.com/news-viola/ultime-notizie/commisso-giocatori-vanno-e-vengono-noi-qua-per-costruire-altri-100-anni-insieme/?refresh_ce&intcmp=gazzanet-violanews
+- host: cittaceleste.it
+  seen: 1
+  days:
+  - '2026-09-10'
+  examples:
+  - https://www.cittaceleste.it/news/lazio-fabiani-leuropa-e-lobiettivo-mercato-i-voti-a-fine-anno-lanno-scorso/?refresh_ce

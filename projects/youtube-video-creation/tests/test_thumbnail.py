@@ -768,3 +768,37 @@ def test_国旗はVSの上に置く(tmp_path, monkeypatch):
         px = im.convert("RGB")
     # 真ん中の上（VSの帯より上）に、国旗の緑が乗っている
     assert px.getpixel((mod.SIZE[0] // 2, 60))[1] > 100
+
+
+def test_エンブレムが2つならそれぞれの顔の上に置く(tmp_path):
+    """**移籍の話は、どちらのクラブの人かが分からないと絵にならない**
+    （2026-09-10 ユーザー指示「デコと、フリアン、アトレティコ、バルサで
+    移籍交渉の裏側的なものに」）。真ん中に1つだけだと共通の持ち物に見える。
+    """
+    from PIL import Image
+
+    from src import thumbnail as th
+
+    seen = []
+
+    def fake(name, height):
+        seen.append(name)
+        return Image.new("RGBA", (60, height), (200, 30, 40, 255))
+
+    original = th._crest_image
+    th._crest_image = fake
+    try:
+        canvas = Image.new("RGBA", (1280, 720), (20, 20, 20, 255))
+        from src.config import load_config
+        font = str(load_config().video.font_path())
+        th._face_clash(canvas, "交渉", font,
+                       ["バルセロナ", "アトレティコマドリード"])
+    finally:
+        th._crest_image = original
+    assert seen == ["バルセロナ", "アトレティコマドリード"], seen
+
+    # 左右に分かれている（真ん中に重なっていない）
+    left = canvas.crop((0, 0, 640, 240)).convert("RGB")
+    right = canvas.crop((640, 0, 1280, 240)).convert("RGB")
+    assert any(px[0] > 150 and px[1] < 90 for px in left.getdata()), "左に無い"
+    assert any(px[0] > 150 and px[1] < 90 for px in right.getdata()), "右に無い"
