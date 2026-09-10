@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import '../game/formulas.dart';
 import 'attributes.dart';
 import 'club.dart';
 import 'season.dart';
@@ -78,6 +79,7 @@ class Development {
     this.breakthroughs = 0,
     this.greatWeeks = 0,
     this.points = const {},
+    this.strain = Formulas.strainNeutral,
   });
 
   /// 試合経験値。出場のたびに積む。
@@ -121,6 +123,22 @@ class Development {
   /// （実測: 流す 74.4 / 普通 74.6 / 追い込む 74.9）。
   final int greatWeeks;
 
+  /// 身体の消耗 0〜100。最近どう踏み込んできたかが寄っていく先。
+  ///
+  /// 衰え始めの年齢と、重傷の引きやすさを動かす。計算は `Formulas`
+  /// （`driftStrain` / `declineOffsetForStrain`）にあり、ここは値を持つだけ。
+  /// 既定は 50（＝「普通」で来た選手）。知らない保存データもここに落ちる。
+  final double strain;
+
+  /// 画面に出す言葉。判定と同じ値から作る。
+  String get strainLabel {
+    if (strain <= 30) return '軽い';
+    if (strain <= 42) return 'やや軽い';
+    if (strain >= 82) return '限界';
+    if (strain >= 68) return '重い';
+    return '普通';
+  }
+
   /// アイデンティティが決まるのに要る選択の数。
   static const int identityThreshold = 30;
 
@@ -139,15 +157,15 @@ class Development {
   }
 
   String get identityLabel => switch (identity) {
-        AttributeKey.pace => '走る選手',
-        AttributeKey.shooting => '仕留める選手',
-        AttributeKey.passing => '組み立てる選手',
-        AttributeKey.dribbling => '仕掛ける選手',
-        AttributeKey.defending => '潰す選手',
-        AttributeKey.physical => '身体で戦う選手',
-        AttributeKey.goalkeeping => '守る選手',
-        null => 'まだ型が無い',
-      };
+    AttributeKey.pace => '走る選手',
+    AttributeKey.shooting => '仕留める選手',
+    AttributeKey.passing => '組み立てる選手',
+    AttributeKey.dribbling => '仕掛ける選手',
+    AttributeKey.defending => '潰す選手',
+    AttributeKey.physical => '身体で戦う選手',
+    AttributeKey.goalkeeping => '守る選手',
+    null => 'まだ型が無い',
+  };
 
   /// 自分の型に沿った手の成功率への上乗せ。
   double identityBonusFor(AttributeKey key) =>
@@ -228,8 +246,8 @@ class Development {
     return copyWith(growthStreak: 0, plateau: max(1, length));
   }
 
-  Development learn(Signature signature) => signatures.contains(signature) ||
-          signatures.length >= Signature.maxOwned
+  Development learn(Signature signature) =>
+      signatures.contains(signature) || signatures.length >= Signature.maxOwned
       ? this
       : copyWith(signatures: [...signatures, signature]);
 
@@ -243,32 +261,32 @@ class Development {
     int? breakthroughs,
     int? greatWeeks,
     Map<AttributeKey, int>? points,
-  }) =>
-      Development(
-        experience: experience ?? this.experience,
-        choices: choices ?? this.choices,
-        faced: faced ?? this.faced,
-        signatures: signatures ?? this.signatures,
-        growthStreak: growthStreak ?? this.growthStreak,
-        plateau: plateau ?? this.plateau,
-        breakthroughs: breakthroughs ?? this.breakthroughs,
-        greatWeeks: greatWeeks ?? this.greatWeeks,
-        points: points ?? this.points,
-      );
+    double? strain,
+  }) => Development(
+    experience: experience ?? this.experience,
+    choices: choices ?? this.choices,
+    faced: faced ?? this.faced,
+    signatures: signatures ?? this.signatures,
+    growthStreak: growthStreak ?? this.growthStreak,
+    plateau: plateau ?? this.plateau,
+    breakthroughs: breakthroughs ?? this.breakthroughs,
+    greatWeeks: greatWeeks ?? this.greatWeeks,
+    points: points ?? this.points,
+    strain: strain ?? this.strain,
+  );
 
   Map<String, dynamic> toJson() => {
-        'experience': experience,
-        'choices': {for (final e in choices.entries) e.key.name: e.value},
-        'faced': {for (final e in faced.entries) e.key.name: e.value},
-        'signatures': signatures.map((s) => s.name).toList(),
-        'growthStreak': growthStreak,
-        'plateau': plateau,
-        'breakthroughs': breakthroughs,
-        'greatWeeks': greatWeeks,
-        'points': {
-          for (final e in points.entries) e.key.name: e.value,
-        },
-      };
+    'experience': experience,
+    'choices': {for (final e in choices.entries) e.key.name: e.value},
+    'faced': {for (final e in faced.entries) e.key.name: e.value},
+    'signatures': signatures.map((s) => s.name).toList(),
+    'growthStreak': growthStreak,
+    'plateau': plateau,
+    'breakthroughs': breakthroughs,
+    'greatWeeks': greatWeeks,
+    'strain': strain,
+    'points': {for (final e in points.entries) e.key.name: e.value},
+  };
 
   factory Development.fromJson(Map<String, dynamic>? json) {
     if (json == null) return const Development();
@@ -297,6 +315,8 @@ class Development {
       plateau: json['plateau'] as int? ?? 0,
       breakthroughs: json['breakthroughs'] as int? ?? 0,
       greatWeeks: json['greatWeeks'] as int? ?? 0,
+      // 知らない保存データは「普通で来た選手」として読む。
+      strain: (json['strain'] as num?)?.toDouble() ?? Formulas.strainNeutral,
       points: {
         for (final e in (json['points'] as Map? ?? const {}).entries)
           if (AttributeKey.values.any((k) => k.name == e.key))
