@@ -87,6 +87,7 @@ def test_ライセンスが駄目なら次の候補へ(monkeypatch, tmp_path):
     monkeypatch.setattr(mod, "info", fake_info)
 
     class Res:
+        status_code = 200        # _download が見る（2026-09-10 に足した）
         content = b"body"
 
         def raise_for_status(self):
@@ -252,13 +253,11 @@ def test_同じ名前の犬や銅像を人の写真として掴まない():
 
 
 def test_画像URLの計測用パラメータを落とす():
-    """**429 の正体だった**（2026-09-10）。
+    """控えに残すURLを短くするためだけ。**429 の原因ではない**（2026-09-10）。
 
-    Commons の API が返す thumburl には `?utm_source=commons.wikimedia.org&…`
-    が付いている。そのまま取りにいくと upload.wikimedia.org が
-    Too Many Requests を返し、20秒待っても解けなかった。
-    問い合わせを外したら、同じ画像がその場で200で返った。
-    **待てば解ける制限だと3回誤認した。**
+    最初「utm を外したら通った」と書いたが、同じURLが少しあとに
+    utm 付きでも200で返った。User-Agent の違いでもなかった。
+    **正体は本物の速度制限で、数秒〜1分で解ける。**
     """
     from src.portrait import _plain_url
 
@@ -268,3 +267,61 @@ def test_画像URLの計測用パラメータを落とす():
     assert _plain_url("https://x/y.jpg") == "https://x/y.jpg"
     assert _plain_url("") == ""
     assert _plain_url(None) == ""
+
+
+
+def test_429は待って試し直す(monkeypatch):
+    """**1回で諦めると「写真が無い」ように見える**（2026-09-10）。
+
+    鎌田・ハーランド・アラウホ・ロジャースで4回引っかかり、そのたびに
+    別の原因（utm・User-Agent）を疑って回り道した。正体は速度制限で、
+    数秒〜1分で解ける。**待って試し直すのが正しい直し方。**
+    """
+    import src.portrait as mod
+
+    monkeypatch.setattr(mod, "DOWNLOAD_WAIT", 0)
+    calls = []
+
+    class Res:
+        def __init__(self, code, body=b""):
+            self.status_code = code
+            self.content = body
+
+        def raise_for_status(self):
+            raise AssertionError("200 で返るはずなのに呼ばれた")
+
+    class Client:
+        def get(self, url, **k):
+            calls.append(k.get("headers", {}).get("User-Agent"))
+            return Res(429) if len(calls) < 3 else Res(200, b"gazou")
+
+    assert mod._download("http://x/y.jpg", Client()) == b"gazou"
+    assert len(calls) == 3
+    # **連絡先を入れた User-Agent で名乗る**（Wikimedia の求め）。
+    # 公開リポジトリなのでメールアドレスは書かない
+    assert "+https://" in calls[0]
+
+
+def test_429が続いたら諦める(monkeypatch):
+    """待っても解けないときに、無言で空の画像を書かない。"""
+    import src.portrait as mod
+
+    monkeypatch.setattr(mod, "DOWNLOAD_WAIT", 0)
+
+    class Res:
+        status_code = 429
+        content = b""
+
+        def raise_for_status(self):
+            raise RuntimeError("429")
+
+    class Client:
+        def get(self, url, **k):
+            return Res()
+
+    try:
+        mod._download("http://x/y.jpg", Client(), tries=2)
+    except Exception as err:
+        assert "429" in str(err) or "取れません" in str(err)
+    else:
+        raise AssertionError("止まっていない")
