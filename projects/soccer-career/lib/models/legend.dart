@@ -30,14 +30,37 @@ class LegendSpell {
   /// 一番上でプレーした部。
   final int tier;
 
-  Map<String, dynamic> toJson() =>
-      {'clubName': clubName, 'seasons': seasons, 'tier': tier};
+  Map<String, dynamic> toJson() => {
+    'clubName': clubName,
+    'seasons': seasons,
+    'tier': tier,
+  };
 
   factory LegendSpell.fromJson(Map<String, dynamic> json) => LegendSpell(
-        clubName: json['clubName'] as String? ?? '',
-        seasons: json['seasons'] as int? ?? 0,
-        tier: json['tier'] as int? ?? 1,
-      );
+    clubName: json['clubName'] as String? ?? '',
+    seasons: json['seasons'] as int? ?? 0,
+    tier: json['tier'] as int? ?? 1,
+  );
+}
+
+/// 歴代の記録1つ。次の選手が追う的。
+///
+/// 殿堂は**過去を見るだけの場所**だった。並んでいるだけで、
+/// 次のキャリアが何を目指すのかがどこにも書いていない。
+class HallRecord {
+  const HallRecord({
+    required this.label,
+    required this.holder,
+    required this.value,
+    required this.unit,
+  });
+
+  final String label;
+
+  /// 持ち主の名前。
+  final String holder;
+  final int value;
+  final String unit;
 }
 
 /// 引退した選手1人ぶんの記録。
@@ -125,6 +148,13 @@ class Legend {
   /// 手にしたタイトルの数。0 なら出さない。
   int get titles => leagueTitles + cupTitles + continentalTitles;
 
+  /// 次のキャリアの世界に、どの役で現れうるか。
+  ///
+  /// 引退後の道（[secondCareer]）がそのまま役になる。
+  /// footballから離れた人は出てこない。
+  bool get canManage => secondCareer == SecondCareer.manager;
+  bool get canCoach => secondCareer == SecondCareer.coach;
+
   /// 今のキャリアから写し取る。引退した時点で1度だけ呼ぶ。
   factory Legend.from(CareerState state, {required SecondCareer secondCareer}) {
     final totals = state.careerTotals;
@@ -134,17 +164,17 @@ class Legend {
     for (final record in [...state.history]) {
       if (spells.isNotEmpty && spells.last.clubName == record.clubName) {
         final last = spells.removeLast();
-        spells.add(LegendSpell(
-          clubName: last.clubName,
-          seasons: last.seasons + 1,
-          tier: last.tier < record.tier ? last.tier : record.tier,
-        ));
+        spells.add(
+          LegendSpell(
+            clubName: last.clubName,
+            seasons: last.seasons + 1,
+            tier: last.tier < record.tier ? last.tier : record.tier,
+          ),
+        );
       } else {
-        spells.add(LegendSpell(
-          clubName: record.clubName,
-          seasons: 1,
-          tier: record.tier,
-        ));
+        spells.add(
+          LegendSpell(clubName: record.clubName, seasons: 1, tier: record.tier),
+        );
       }
     }
     var worldCupBest = WorldCupStage.none;
@@ -178,8 +208,9 @@ class Legend {
       leagueTitles: state.history
           .where((h) => h.tier == 1 && h.leaguePosition == 1)
           .length,
-      cupTitles:
-          state.history.where((h) => h.cupStage == CupStage.winner).length,
+      cupTitles: state.history
+          .where((h) => h.cupStage == CupStage.winner)
+          .length,
       continentalTitles: state.history
           .where((h) => h.continentalStage == ContinentalStage.winner)
           .length,
@@ -196,77 +227,78 @@ class Legend {
   }
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'positionLabel': positionLabel,
-        'retiredYear': retiredYear,
-        'retiredAge': retiredAge,
-        'seasons': seasons,
-        'appearances': appearances,
-        'goals': goals,
-        'assists': assists,
-        'averageRating': averageRating,
-        'caps': caps,
-        'internationalGoals': internationalGoals,
-        'peakOverall': peakOverall,
-        'potential': potential,
-        'spells': [for (final s in spells) s.toJson()],
-        'awards': [for (final a in awards) a.name],
-        'traits': [for (final t in traits) t.name],
-        'leagueTitles': leagueTitles,
-        'cupTitles': cupTitles,
-        'continentalTitles': continentalTitles,
-        'worldCupBest': worldCupBest.name,
-        'bestTier': bestTier,
-        'look': look.toJson(),
-        'squadNumber': squadNumber,
-        'secondCareer': secondCareer.name,
-        'tampered': tampered,
-        'recordedAt': recordedAt,
-      };
+    'name': name,
+    'positionLabel': positionLabel,
+    'retiredYear': retiredYear,
+    'retiredAge': retiredAge,
+    'seasons': seasons,
+    'appearances': appearances,
+    'goals': goals,
+    'assists': assists,
+    'averageRating': averageRating,
+    'caps': caps,
+    'internationalGoals': internationalGoals,
+    'peakOverall': peakOverall,
+    'potential': potential,
+    'spells': [for (final s in spells) s.toJson()],
+    'awards': [for (final a in awards) a.name],
+    'traits': [for (final t in traits) t.name],
+    'leagueTitles': leagueTitles,
+    'cupTitles': cupTitles,
+    'continentalTitles': continentalTitles,
+    'worldCupBest': worldCupBest.name,
+    'bestTier': bestTier,
+    'look': look.toJson(),
+    'squadNumber': squadNumber,
+    'secondCareer': secondCareer.name,
+    'tampered': tampered,
+    'recordedAt': recordedAt,
+  };
 
   factory Legend.fromJson(Map<String, dynamic> json) => Legend(
-        name: json['name'] as String? ?? '名無し',
-        positionLabel: json['positionLabel'] as String? ?? '',
-        retiredYear: json['retiredYear'] as int? ?? 0,
-        retiredAge: json['retiredAge'] as int? ?? 0,
-        seasons: json['seasons'] as int? ?? 0,
-        appearances: json['appearances'] as int? ?? 0,
-        goals: json['goals'] as int? ?? 0,
-        assists: json['assists'] as int? ?? 0,
-        averageRating: (json['averageRating'] as num?)?.toDouble() ?? 0,
-        caps: json['caps'] as int? ?? 0,
-        internationalGoals: json['internationalGoals'] as int? ?? 0,
-        peakOverall: json['peakOverall'] as int? ?? 0,
-        potential: json['potential'] as int? ?? 0,
-        spells: [
-          for (final s in (json['spells'] as List? ?? const []))
-            LegendSpell.fromJson(s as Map<String, dynamic>),
-        ],
-        awards: [
-          for (final a in (json['awards'] as List? ?? const []))
-            if (Award.values.any((v) => v.name == a)) Award.values.byName(a as String),
-        ],
-        traits: [
-          for (final t in (json['traits'] as List? ?? const []))
-            if (Trait.values.any((v) => v.name == t)) Trait.values.byName(t as String),
-        ],
-        leagueTitles: json['leagueTitles'] as int? ?? 0,
-        cupTitles: json['cupTitles'] as int? ?? 0,
-        continentalTitles: json['continentalTitles'] as int? ?? 0,
-        worldCupBest:
-            WorldCupStage.values.any((v) => v.name == json['worldCupBest'])
-                ? WorldCupStage.values.byName(json['worldCupBest'] as String)
-                : WorldCupStage.none,
-        bestTier: json['bestTier'] as int? ?? 1,
-        look: PlayerLook.fromJson(json['look'] as Map<String, dynamic>?),
-        squadNumber: json['squadNumber'] as int? ?? 0,
-        secondCareer:
-            SecondCareer.values.any((v) => v.name == json['secondCareer'])
-                ? SecondCareer.values.byName(json['secondCareer'] as String)
-                : SecondCareer.quiet,
-        tampered: json['tampered'] as bool? ?? false,
-        recordedAt: json['recordedAt'] as int? ?? 0,
-      );
+    name: json['name'] as String? ?? '名無し',
+    positionLabel: json['positionLabel'] as String? ?? '',
+    retiredYear: json['retiredYear'] as int? ?? 0,
+    retiredAge: json['retiredAge'] as int? ?? 0,
+    seasons: json['seasons'] as int? ?? 0,
+    appearances: json['appearances'] as int? ?? 0,
+    goals: json['goals'] as int? ?? 0,
+    assists: json['assists'] as int? ?? 0,
+    averageRating: (json['averageRating'] as num?)?.toDouble() ?? 0,
+    caps: json['caps'] as int? ?? 0,
+    internationalGoals: json['internationalGoals'] as int? ?? 0,
+    peakOverall: json['peakOverall'] as int? ?? 0,
+    potential: json['potential'] as int? ?? 0,
+    spells: [
+      for (final s in (json['spells'] as List? ?? const []))
+        LegendSpell.fromJson(s as Map<String, dynamic>),
+    ],
+    awards: [
+      for (final a in (json['awards'] as List? ?? const []))
+        if (Award.values.any((v) => v.name == a))
+          Award.values.byName(a as String),
+    ],
+    traits: [
+      for (final t in (json['traits'] as List? ?? const []))
+        if (Trait.values.any((v) => v.name == t))
+          Trait.values.byName(t as String),
+    ],
+    leagueTitles: json['leagueTitles'] as int? ?? 0,
+    cupTitles: json['cupTitles'] as int? ?? 0,
+    continentalTitles: json['continentalTitles'] as int? ?? 0,
+    worldCupBest:
+        WorldCupStage.values.any((v) => v.name == json['worldCupBest'])
+        ? WorldCupStage.values.byName(json['worldCupBest'] as String)
+        : WorldCupStage.none,
+    bestTier: json['bestTier'] as int? ?? 1,
+    look: PlayerLook.fromJson(json['look'] as Map<String, dynamic>?),
+    squadNumber: json['squadNumber'] as int? ?? 0,
+    secondCareer: SecondCareer.values.any((v) => v.name == json['secondCareer'])
+        ? SecondCareer.values.byName(json['secondCareer'] as String)
+        : SecondCareer.quiet,
+    tampered: json['tampered'] as bool? ?? false,
+    recordedAt: json['recordedAt'] as int? ?? 0,
+  );
 }
 
 /// 引退した選手たち。新しい順に並ぶ。
@@ -278,26 +310,72 @@ class Hall {
   /// 残しておく数。端末の保存領域を無限には使わない。
   static const int keep = 40;
 
-  Hall add(Legend legend) => Hall(
-        legends: [legend, ...legends].take(keep).toList(),
-      );
+  Hall add(Legend legend) =>
+      Hall(legends: [legend, ...legends].take(keep).toList());
 
   Hall removeAt(int index) => Hall(
-        legends: [
-          for (var i = 0; i < legends.length; i++)
-            if (i != index) legends[i],
-        ],
-      );
+    legends: [
+      for (var i = 0; i < legends.length; i++)
+        if (i != index) legends[i],
+    ],
+  );
 
   bool get isEmpty => legends.isEmpty;
 
-  Map<String, dynamic> toJson() =>
-      {'legends': [for (final l in legends) l.toJson()]};
+  /// 歴代の記録。次の選手が追う的。
+  ///
+  /// **記録を持っていない項目は出さない**（0ゴールの「歴代最多」は的にならない）。
+  List<HallRecord> get records {
+    if (legends.isEmpty) return const [];
+    HallRecord? best(String label, String unit, int Function(Legend) of) {
+      final top = legends.reduce((a, b) => of(a) >= of(b) ? a : b);
+      final value = of(top);
+      if (value <= 0) return null;
+      return HallRecord(
+        label: label,
+        holder: top.name,
+        value: value,
+        unit: unit,
+      );
+    }
+
+    return [
+      for (final r in [
+        best('通算ゴール', 'G', (l) => l.goals),
+        best('通算出場', '試合', (l) => l.appearances),
+        best('タイトル', '冠', (l) => l.titles),
+        best('ピーク総合力', '', (l) => l.peakOverall),
+      ])
+        ?r,
+    ];
+  }
+
+  /// その選手が持っている歴代の記録。引退した直後に「更新した」と言うため。
+  List<HallRecord> recordsHeldBy(Legend legend) => [
+    for (final r in records)
+      if (r.holder == legend.name) r,
+  ];
+
+  /// 次のキャリアで、その役に据えられる選手。
+  ///
+  /// **新しく引退した人から先に見る**（`legends` は新しい順）。
+  /// 古い記録ほど出にくくなるが、40人の中から均等に引くと
+  /// 「さっき引退させた選手」が出る確率が 1/40 になって、繋がりが感じられない。
+  Legend? castFor(bool Function(Legend) fits) {
+    for (final legend in legends) {
+      if (fits(legend)) return legend;
+    }
+    return null;
+  }
+
+  Map<String, dynamic> toJson() => {
+    'legends': [for (final l in legends) l.toJson()],
+  };
 
   factory Hall.fromJson(Map<String, dynamic>? json) => Hall(
-        legends: [
-          for (final l in (json?['legends'] as List? ?? const []))
-            Legend.fromJson(l as Map<String, dynamic>),
-        ],
-      );
+    legends: [
+      for (final l in (json?['legends'] as List? ?? const []))
+        Legend.fromJson(l as Map<String, dynamic>),
+    ],
+  );
 }

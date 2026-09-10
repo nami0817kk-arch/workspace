@@ -276,8 +276,10 @@ void main() {
       await tester.pumpWidget(MaterialApp(home: HallScreen(controller: c)));
       await tester.pumpAndSettle();
       final peak = c.hall.legends.first.peakOverall;
-      expect(find.text('$peak'), findsOneWidget);
+      // 歴代の記録カードにも同じ数字が出るので、1つとは限らない。
+      expect(find.text('$peak'), findsWidgets);
       expect(find.text('ピーク'), findsOneWidget);
+      expect(find.text('歴代の記録'), findsOneWidget);
     });
 
     testWidgets('引退した選手が並ぶ', (tester) async {
@@ -287,7 +289,8 @@ void main() {
 
       await tester.pumpWidget(MaterialApp(home: HallScreen(controller: c)));
       await tester.pumpAndSettle();
-      expect(find.text('検証'), findsOneWidget);
+      // 歴代の記録にも名前が出る（1人しか居なければ全部その人）。
+      expect(find.text('検証'), findsWidgets);
       expect(find.textContaining('アルバ04'), findsWidgets);
       expect(find.textContaining('引退後'), findsOneWidget);
     });
