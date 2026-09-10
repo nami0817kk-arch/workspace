@@ -30,10 +30,10 @@
     "videos.update": 34
   },
   "2026-09-10": {
-    "videos.list": 5,
+    "videos.list": 11,
     "videos.update": 10,
-    "channels.list": 5,
-    "playlistItems.list": 5,
+    "channels.list": 7,
+    "playlistItems.list": 11,
     "commentThreads.list": 14,
     "commentThreads.insert": 7,
     "videos.insert": 2,
