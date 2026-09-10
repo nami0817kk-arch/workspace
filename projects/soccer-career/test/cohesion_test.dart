@@ -17,6 +17,7 @@ import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/attributes.dart';
 import 'package:soccer_career/models/career.dart';
 import 'package:soccer_career/models/club.dart';
+import 'package:soccer_career/models/competition.dart';
 import 'package:soccer_career/models/player.dart';
 import 'package:soccer_career/models/development.dart';
 import 'package:soccer_career/models/injury.dart';
@@ -190,6 +191,32 @@ void main() {
   });
 
   group('次に出られるか', () {
+    test('離脱・出場停止・登録外は、評価点より先に見る', () async {
+      // ここを飛ばしていたので、怪我をしていても「先発の見込み」と出ていた
+      // （headline の injured / suspended にそもそも到達しなかった）。
+      final c = await started();
+      final state = c.state!;
+
+      state.injury = const Injury(
+          name: '検証', severity: InjurySeverity.moderate, matchesOut: 5);
+      expect(c.outlook!.likely, Appearance.injured);
+      expect(c.outlook!.headline, '出られない');
+      expect(c.outlook!.reason, contains('離脱'));
+
+      state.injury = null;
+      state.suspension = 2;
+      expect(c.outlook!.likely, Appearance.suspended);
+      expect(c.outlook!.reason, contains('出場停止'));
+
+      state.suspension = 0;
+      state.squadStatus = SquadStatus.outOfSquad;
+      expect(c.outlook!.likely, Appearance.benched);
+      expect(c.outlook!.reason, contains('登録メンバー'));
+
+      state.squadStatus = SquadStatus.registered;
+      expect(c.outlook!.likely, isNot(Appearance.injured));
+    });
+
     test('デビュー前は、そう書く', () async {
       final c = await started(seed: 17);
       final outlook = c.outlook!;

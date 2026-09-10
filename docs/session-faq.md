@@ -1038,3 +1038,51 @@ tool-factory-pages / soccer の各 release / ci-alert）。**途中で止める�
   誰が何を持っているかを見てから始める。重なったら**先に master へ入っている方に合わせる**
 - **他セッションのブランチ・worktree には触らない**（規約4）
 - **判断できないことはユーザーに直接聞く。** 遠慮しなくてよい
+
+## お金が動く可能性があるものは、実行前に必ず聞く（2026-09-10 指示）
+
+ユーザーの指示: **「基本的に課金する時は認識してしたいので、可能性がある場合は必ず聞いてください」**
+
+規約6は「課金はユーザーに直接聞く」と書いているが、**「可能性がある」段階で聞く**のが条件。
+確実に課金されると分かったときだけではない。**無料だと確信できないなら、聞く側に倒す。**
+「無料枠に収まるはず」は判断であって、確認ではない。
+
+2026-09-10 に全経路を棚卸しした結果が下記。**この表に載っていないものを見つけたら、
+実行せずに聞いたうえで、ここに足す。**
+
+### いま発生しているもの
+
+| | 額 | 状態 |
+|---|---|---|
+| Claude Max 5x | 定額 | 従量課金は無効。使っても増えない |
+| **Apple Developer Program** | **$99/年・自動更新** | 支払い済み（配布証明書と App Store Connect の API キーが発行されている＝会員が有効） |
+
+### 引き金を引くと発生するもの
+
+| | 額 | 引き金 |
+|---|---|---|
+| GitHub Actions 超過 | 従量 | **workspace を private に戻す**こと。実測 370分/日 で 2,000分枠は6日で尽きる |
+| ↳ iOS リリース CI | 従量**×10** | `macos-latest`。private だと23分のビルドが230分相当になる |
+| Google Play 登録 | $25 買い切り | Android 提出。Secrets 7本すべて未登録＝まだ払っていない |
+| Google Cloud | 従量 | YouTube API の枠を上げたプロジェクト。新しい API を有効にするとき |
+| 有料の生成API | 従量 | Anthropic / OpenAI / Gemini / Stability / Replicate / ElevenLabs |
+
+### 事故では動かないことの根拠（変えたら課金経路が開く）
+
+- **GitHub Secrets に有料APIの鍵は1本も無い。** CI からは呼べない
+- `gemini-api-tests.yml` は上流をスタブ化してあり、鍵なしで通る
+- imagegen の既定は無料枠（pollinations / voicevox）。台帳 `platform/ai-lab/output/usage.jsonl`
+  は18件すべて $0.00
+- `platform/ai-lab/.env` の有料キーは**手元で明示的に指定したときだけ**使われる
+
+**上の3つはどれも「鍵を1本足すだけ」で崩れる。** Secrets に有料APIの鍵を登録するのは、
+それ自体が課金の可能性を作る操作なので、登録の前に聞く。
+
+### 課金されないもの（確認済み）
+
+Cloudflare Pages（46/500ビルド。超えても課金ではなくブロック）／GitHub のストレージ・
+LFS・Packages（LFS 0件、36MB/5GB）／楽天・Pexels・Pixabay・Hugging Face・VOICEVOX・
+YouTube Data API ／独自ドメイン（未取得）。
+
+なお `MONEYLOOP_BILLING_SECRET` は支出ではなく、**こちらが料金を請求する側**の仕組み
+（`moneyloop.pricing` が料金表の情報源）。名前で誤解しない。
