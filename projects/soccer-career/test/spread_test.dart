@@ -11,8 +11,6 @@ import 'dart:math';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/game/career_engine.dart';
 import 'package:soccer_career/game/formulas.dart';
-import 'package:soccer_career/models/agent.dart';
-import 'package:soccer_career/models/attributes.dart';
 
 void main() {
   group('ポテンシャルの引き', () {
