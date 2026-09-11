@@ -306,9 +306,19 @@ LEAD_IN = re.compile(r"こう[^。]{0,8}(?:まし|ていま|いま|ま)す?[た�
 QUOTE_BY = 15.0
 
 
+# 振りとして落としてよい長さの上限（2026-09-11）。
+# **中身のある行が「こう振り返っています。」で終わることがある。**
+# 中村敬斗の回で「17歳で日本を離れ、LASKリンツからランスへ移りました。
+# その移籍のときに感じたことを、こう振り返っています。」が丸ごと消え、
+# ショートがいきなり発言から始まっていた
+LEAD_IN_MAX = 30
+
+
 def _is_lead_in(line) -> bool:
     text = (getattr(line, "text", "") or "").strip()
-    return bool(text) and bool(LEAD_IN.search(text))
+    if not text or len(text) > LEAD_IN_MAX:
+        return False
+    return bool(LEAD_IN.search(text))
 
 
 def _drop_lead_in(scene: Scene) -> None:

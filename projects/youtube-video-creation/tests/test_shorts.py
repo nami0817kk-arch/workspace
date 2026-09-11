@@ -513,3 +513,23 @@ def test_古い台本の文字の印も当分は見る():
     script = parse_script(nl.join(body))
     old, plain = script.scenes[1], script.scenes[2]
     assert strength(old, {}) - strength(plain, {}) == MAIN_BONUS
+
+
+def test_中身のある行は振りとして落とさない():
+    """**「こう振り返っています。」で終わる長い行を丸ごと消していた**（2026-09-11）。
+
+    中村敬斗の回で「17歳で日本を離れ、LASKリンツからランスへ移りました。
+    そのときに感じたことを、こう振り返っています。」が消え、ショートが
+    いきなり発言から始まっていた。落とすのは**短い振りだけ**。
+    """
+    from src.script_model import Line
+    from src.shorts import LEAD_IN_MAX, _is_lead_in
+
+    short = Line(speaker="解説", text="こう話しました。")
+    assert _is_lead_in(short)
+
+    long = Line(speaker="解説",
+                text="17歳で日本を離れ、LASKリンツからランスへ移りました。"
+                     "そのときに感じたことを、こう振り返っています。")
+    assert len(long.text) > LEAD_IN_MAX
+    assert not _is_lead_in(long)
