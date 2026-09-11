@@ -20,13 +20,39 @@ enum MatchEventKind {
   ownGoal('あなたのゴール'),
   ownAssist('あなたのアシスト'),
   teammateGoal('味方のゴール'),
-  conceded('失点');
+  conceded('失点'),
+  sentOffThem('相手に退場者'),
+  sentOffUs('味方が退場');
 
   const MatchEventKind(this.label);
 
   final String label;
 
-  bool get isOurs => this != MatchEventKind.conceded;
+  bool get isOurs =>
+      this != MatchEventKind.conceded && this != MatchEventKind.sentOffUs;
+}
+
+/// **試合を動かす展開。** 局面ではないが、残りの試合の条件を変える。
+///
+/// 試合の中でプレイヤーが触るのは 2〜6 の局面だけで、そのあいだ試合は
+/// 何も起きていなかった。「11人対10人になった」「リードされた相手が
+/// 前に出てきた」——**選ぶことはできないが、次の手の意味が変わる**もの。
+enum MatchTurn {
+  /// 相手に退場者。数的優位。
+  numbersUp('相手に退場者'),
+
+  /// 味方が退場。数的不利。
+  numbersDown('味方が退場'),
+
+  /// リードされた相手が前に出てくる。点は取りやすくなる。
+  opponentOpen('相手が前がかり'),
+
+  /// リードした相手が引いて固める。点が取りにくくなる。
+  opponentShut('相手が守りを固めた');
+
+  const MatchTurn(this.label);
+
+  final String label;
 }
 
 /// 試合で起きたこと1つ。
@@ -105,6 +131,8 @@ class MatchInProgress {
     this.moodBonus = 0,
     this.extraRating = 0,
     this.weakFootMoments = const [],
+    this.sentOffThemMinute,
+    this.sentOffUsMinute,
     this.international = false,
     this.cup,
     Random? random,
@@ -199,7 +227,8 @@ class MatchInProgress {
   double get momentumFactor => 1 + momentum * Formulas.momentumPerStep;
 
   /// 今この局面で、その手が決まる確率（ゴール）。
-  double goalConversionNow() => Formulas.goalConversion * momentumFactor;
+  double goalConversionNow() =>
+      Formulas.goalConversion * momentumFactor * turnConversionFactor;
 
   /// 今の局面で構えている切り札。局面が変われば外れる。
   ///
@@ -358,7 +387,7 @@ class MatchInProgress {
   /// 画面の「アシスト N%」と自動進行の物差しはこれを使う。
   /// ノリ込みの、アシストが決まる確率。
   double assistConversionNow(int minute) =>
-      assistConversionAt(minute) * momentumFactor;
+      assistConversionAt(minute) * momentumFactor * turnConversionFactor;
 
   double assistConversionAt(int minute) {
     final remaining = ((90 - minute) / 90).clamp(0.0, 1.0);
@@ -370,6 +399,35 @@ class MatchInProgress {
   ///
   /// 以前は「抜け出した味方が決めた」と書いてあるのにスコアが 0-0 のままだった。
   /// 引き寄せるだけで足さないのは、足すと自分のクラブだけ点が増えるため。
+  /// **流れの中の1本。** この後に入る予定だった味方の得点を、自分が決める。
+  ///
+  /// **足すのではなく置き換える**——足すと自分のクラブだけ点が増える
+  /// （アシストのときに踏んだのと同じ穴）。取れなければ false。
+  bool _takeTeammateGoal(int minute) {
+    final index = teammateGoalMinutes.indexWhere((m) => m > minute);
+    if (index < 0) return false;
+    final when = teammateGoalMinutes.removeAt(index);
+    ownGoalMinutes.add(when);
+    ownGoalMinutes.sort();
+    return true;
+  }
+
+  /// 局面と局面のあいだに、流れの中で1本決めるか。
+  ///
+  /// **局面でしか点が入らないと、1試合の最大得点が局面の数で頭打ちになる**
+  /// （ふつうの試合は2局面）。実測で、中盤の選手は20年で1試合2点を一度も
+  /// 取らず、守備の選手は通算0ゴールだった。
+  /// ノリが乗っているほど起きる——**自分のしたことが返ってくる形**にする。
+  bool _rollFlowGoal() {
+    if (momentum <= 0) return false;
+    final share = Formulas.flowGoalShareFor(player.position.family);
+    if (share <= 0) return false;
+    final chance =
+        Formulas.flowGoalChance * share * momentumFactor * turnConversionFactor;
+    if (_random.nextDouble() >= chance) return false;
+    return _takeTeammateGoal(currentMinute);
+  }
+
   void _claimTeammateGoal(int minute) {
     final index = teammateGoalMinutes.indexWhere((m) => m > minute);
     if (index < 0) return;
@@ -432,6 +490,13 @@ class MatchInProgress {
         MatchEvent(minute: m, kind: MatchEventKind.ownGoal),
       for (final m in ownAssistMinutes)
         MatchEvent(minute: m, kind: MatchEventKind.ownAssist),
+      if (sentOffThemMinute != null)
+        MatchEvent(
+          minute: sentOffThemMinute!,
+          kind: MatchEventKind.sentOffThem,
+        ),
+      if (sentOffUsMinute != null)
+        MatchEvent(minute: sentOffUsMinute!, kind: MatchEventKind.sentOffUs),
     ]..sort((a, b) => a.minute.compareTo(b.minute));
     return events;
   }
@@ -442,6 +507,74 @@ class MatchInProgress {
   /// 今の局面が逆足で対応するものか。
   bool get weakFootMoment =>
       !isFinished && _index < weakFootMoments.length && weakFootMoments[_index];
+
+  /// 退場者が出る時間。**試合開始時に決めて固定する。**
+  ///
+  /// 呼ぶたびに引き直すと、画面に出した成功率と判定がずれる
+  /// （逆足の局面と同じ理屈）。null なら起きない。
+  final int? sentOffThemMinute;
+  final int? sentOffUsMinute;
+
+  /// **いま効いている展開。** 局面ではないが、次の手の条件を変える。
+  ///
+  /// 退場は時間で決まり、相手の出方はスコアで決まる。どちらも
+  /// **選べない**——自分の選択でないものが試合を動かしている、という手触り。
+  List<MatchTurn> get turns {
+    if (isFinished) return const [];
+    final minute = currentMinute;
+    final found = <MatchTurn>[];
+    final them = sentOffThemMinute;
+    final us = sentOffUsMinute;
+    if (them != null && minute >= them) found.add(MatchTurn.numbersUp);
+    if (us != null && minute >= us) found.add(MatchTurn.numbersDown);
+    // リードされた相手は前に出る。リードした相手は引く。
+    if (minute >= Formulas.situationalMinute) {
+      if (margin > 0) found.add(MatchTurn.opponentShut);
+      if (margin < 0) found.add(MatchTurn.opponentOpen);
+    }
+    return found;
+  }
+
+  /// 展開が、その手の成功率をどれだけ動かすか。
+  double turnBonusFor(ScenarioOption option) {
+    var total = 0.0;
+    for (final turn in turns) {
+      total += switch (turn) {
+        MatchTurn.numbersUp => Formulas.numbersUpBonus,
+        MatchTurn.numbersDown => -Formulas.numbersDownPenalty,
+        // 相手の出方は、点に絡む手にだけ効く。無難な手は変わらない。
+        MatchTurn.opponentOpen =>
+          option.outcome == Outcome.play ? 0.0 : Formulas.opponentOpenBonus,
+        MatchTurn.opponentShut =>
+          option.outcome == Outcome.play ? 0.0 : -Formulas.opponentShutPenalty,
+      };
+    }
+    return total;
+  }
+
+  /// 展開が、決まる確率に掛かる倍率。
+  double get turnConversionFactor {
+    var factor = 1.0;
+    for (final turn in turns) {
+      factor *= switch (turn) {
+        MatchTurn.numbersUp => Formulas.numbersUpConversion,
+        MatchTurn.numbersDown => Formulas.numbersDownConversion,
+        _ => 1.0,
+      };
+    }
+    return factor;
+  }
+
+  /// 流れの中で決めた本数。局面の外で入ったぶん。
+  int flowGoals = 0;
+
+  /// 流れの中の1本を、どう書くか。守備の選手はセットプレーの的になる。
+  String get _flowGoalText => switch (player.position.family) {
+    ScenarioFamily.forward => 'こぼれ球に詰めていた。流れの中から、押し込んだ。',
+    ScenarioFamily.midfield => '二列目から遅れて入ってきた。流れの中から、叩き込んだ。',
+    ScenarioFamily.defence => 'セットプレー。マークを外して、頭で合わせた。',
+    ScenarioFamily.goalkeeper => '流れの中から決めた。',
+  };
 
   /// 大一番か。格上との対戦と代表戦は、それだけで重い。
   bool get bigMatch => international || opponent.strength - club.strength >= 8;
@@ -537,6 +670,19 @@ class MatchInProgress {
     for (final trait in player.traits) {
       final value = trait.chanceBonus(context);
       if (value != 0) factors.add(ChanceFactor(trait.label, value));
+    }
+
+    // 試合を動かした展開。**選べないものが効いているときこそ、画面に出す。**
+    for (final turn in turns) {
+      final value = switch (turn) {
+        MatchTurn.numbersUp => Formulas.numbersUpBonus,
+        MatchTurn.numbersDown => -Formulas.numbersDownPenalty,
+        MatchTurn.opponentOpen =>
+          option.outcome == Outcome.play ? 0.0 : Formulas.opponentOpenBonus,
+        MatchTurn.opponentShut =>
+          option.outcome == Outcome.play ? 0.0 : -Formulas.opponentShutPenalty,
+      };
+      if (value != 0) factors.add(ChanceFactor(turn.label, value));
     }
 
     factors.add(ChanceFactor('コンディション', conditionModifier(player.condition)));
@@ -724,7 +870,9 @@ class MatchInProgress {
           _random.nextDouble() <
           (outcome == Outcome.goal
               ? goalConversionNow()
-              : Formulas.assistConversion * momentumFactor);
+              : Formulas.assistConversion *
+                    momentumFactor *
+                    turnConversionFactor);
       // アシストは、この後に味方が決める予定があるときだけ決まる。
       // 決まった瞬間にその得点を今に引き寄せてスコアに乗せる。
       // 予定が無いのに点を足すと、自分のクラブだけが強くなる。
@@ -812,6 +960,22 @@ class MatchInProgress {
       detail: option.detail,
     );
     resolutions.add(resolution);
+
+    // **局面のあとも試合は続いている。** ノリが乗っていれば、
+    // 次の局面までのあいだに流れの中から1本決めることがある。
+    if (_rollFlowGoal()) {
+      flowGoals++;
+      resolutions.add(
+        ScenarioResolution(
+          success: true,
+          text: _flowGoalText,
+          outcome: Outcome.goal,
+          ratingDelta: Formulas.ratingPerGoal,
+          key: AttributeKey.shooting,
+        ),
+      );
+    }
+
     _index++;
     _adapt();
     return resolution;
@@ -1260,6 +1424,14 @@ class MatchEngine {
       weakFootMoments: [
         for (var i = 0; i < count; i++) _random.nextDouble() < weakFootChance,
       ],
+      // 退場の時間は試合開始時に決めておく。呼ぶたびに引き直すと、
+      // 画面に出した成功率と判定がずれる（逆足の局面と同じ理屈）。
+      sentOffThemMinute: _random.nextDouble() < Formulas.redCardThemChance
+          ? 20 + _random.nextInt(60)
+          : null,
+      sentOffUsMinute: _random.nextDouble() < Formulas.redCardUsChance
+          ? 20 + _random.nextInt(60)
+          : null,
       international: international,
       cup: cup,
       random: _random,

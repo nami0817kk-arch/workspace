@@ -1132,13 +1132,15 @@ class _Timeline extends StatelessWidget {
                   ),
                 ),
                 Icon(
-                  event.kind == MatchEventKind.conceded
-                      ? Icons.remove_circle_outline
-                      : event.kind == MatchEventKind.ownGoal
-                      ? Icons.sports_soccer
-                      : event.kind == MatchEventKind.ownAssist
-                      ? Icons.trending_up
-                      : Icons.check_circle_outline,
+                  switch (event.kind) {
+                    MatchEventKind.conceded => Icons.remove_circle_outline,
+                    MatchEventKind.ownGoal => Icons.sports_soccer,
+                    MatchEventKind.ownAssist => Icons.trending_up,
+                    // 退場は試合を動かした展開。得点と同じ列に並べる。
+                    MatchEventKind.sentOffThem ||
+                    MatchEventKind.sentOffUs => Icons.style_outlined,
+                    MatchEventKind.teammateGoal => Icons.check_circle_outline,
+                  },
                   size: 16,
                   color: event.kind.isOurs
                       ? theme.colorScheme.primary
