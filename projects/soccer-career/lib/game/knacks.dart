@@ -58,6 +58,18 @@ class Knacks {
     return null;
   }
 
+  /// **いちばん勝負してきた場面の回数。** 取得条件の3つ目。
+  ///
+  /// `missing` は「今いちばん足りないもの」を1つ返すので、残り2つが
+  /// どこまで来ているのかが見えなかった。3つ全部を並べるために要る。
+  static int bestMoments(CareerState state) {
+    var best = 0;
+    for (final count in state.development.choices.values) {
+      if (count > best) best = count;
+    }
+    return best;
+  }
+
   /// 掴める候補。**キャリアから決まるので、待っても引き直せない。**
   ///
   /// 引き直せると「良いコツが出るまで待つ」が最適解になり、

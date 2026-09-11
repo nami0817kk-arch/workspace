@@ -749,6 +749,13 @@ class Formulas {
   /// 個人技を覚える確率（条件を満たした週）。
   static const double signatureChance = 0.06;
 
+  /// **狙っている技を掴む確率。**
+  ///
+  /// 狙わなければこれまでどおり（`signatureChance`）。狙えば速いが、
+  /// **能力が届いていなければ何も起きない**——狙いは「どれになるか」と
+  /// 「その速さ」を変えるだけで、積み上げの代わりにはならない。
+  static const double signatureAimChance = 0.20;
+
   /// 停滞期のあいだ、成長の確率に掛かる倍率。
   static const double plateauGrowthFactor = 0.25;
 

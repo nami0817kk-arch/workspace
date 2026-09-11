@@ -72,6 +72,7 @@ class Playstyle {
     this.traits,
     this.pinAbility,
     this.staysPut = false,
+    this.aim,
   });
 
   final String name;
@@ -135,6 +136,9 @@ class Playstyle {
 
   /// 移籍の話が来ても必ず残留する。環境を固定するための札。
   final bool staysPut;
+
+  /// 狙う個人技。
+  final Signature? aim;
 
   /// 居残りでセットプレーを磨く。
   final bool drills;
@@ -311,6 +315,7 @@ Future<Career> runCareer(
   for (final detail in style.focus) {
     await controller.toggleFocus(detail);
   }
+  if (style.aim != null) await controller.aimSignature(style.aim);
   await controller.setEffort(style.effort);
   if (style.autoRestBelow != null) {
     await controller.setAutoRestBelow(style.autoRestBelow!);

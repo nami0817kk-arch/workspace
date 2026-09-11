@@ -365,14 +365,28 @@ class CareerController extends ChangeNotifier {
     // 出来事は誰にでも起きるので、書いてある技をそのまま渡すと
     // GK が無回転シュートを覚える（実際に60%が覚えていた）。
     if (e.insight != null) {
-      final wanted = e.insight!.fitsPosition(state.player.position)
-          ? e.insight
-          : state.development.insightFor(state.player);
+      // **閃きは狙いに縛らない。** 一度そうしてみたが、届かないものを
+      // 狙ったまま忘れた選手の 86.5% が個人技0個で引退した（実測）。
+      // 枠を空けて待つのは練習のほうだけにして、贈り物は贈り物のまま置く。
+      // 狙ったものが届いていれば、そちらを優先する。
+      final aim = state.signatureAim;
+      final Signature? wanted;
+      if (aim != null &&
+          !state.development.signatures.contains(aim) &&
+          state.player.attributes.detail(aim.detail) >=
+              Signature.requirement) {
+        wanted = aim;
+      } else {
+        wanted = e.insight!.fitsPosition(state.player.position)
+            ? e.insight
+            : state.development.insightFor(state.player);
+      }
       if (wanted != null) {
         state.development = state.development.learn(
           wanted,
           position: state.player.position,
         );
+        if (state.signatureAim == wanted) state.signatureAim = null;
       }
     }
 
@@ -1235,6 +1249,7 @@ class CareerController extends ChangeNotifier {
         habits: state.habits,
         development: state.development,
         focus: state.focus,
+        signatureAim: state.signatureAim,
         plateau: state.development.inPlateau,
         environment: _environmentFactor(state),
         fatigue: state.fatigue.value,
@@ -1269,6 +1284,8 @@ class CareerController extends ChangeNotifier {
           week.learned!,
           position: state.player.position,
         );
+        // 掴んだら狙いは外す。狙ったままだと、残りの枠がずっと空で待つ。
+        if (state.signatureAim == week.learned) state.signatureAim = null;
       }
       newInjury =
           week.injury ??
@@ -1543,6 +1560,22 @@ class CareerController extends ChangeNotifier {
       if (next.length >= CareerState.maxFocus) return;
       state.focus = [...next, detail];
     }
+    await _persist();
+  }
+
+  /// **狙う個人技を決める。** 同じものをもう一度選べば、狙いを外す。
+  ///
+  /// 狙っても能力が届いていなければ何も起きない——狙いが変えるのは
+  /// 「候補のどれになるか」と「掴むまでの速さ」だけ。
+  /// 覚えてしまったものと、ポジションに合わないものは狙えない。
+  Future<void> aimSignature(Signature? signature) async {
+    final state = _state;
+    if (state == null) return;
+    if (signature != null) {
+      if (state.development.signatures.contains(signature)) return;
+      if (!signature.fitsPosition(state.player.position)) return;
+    }
+    state.signatureAim = state.signatureAim == signature ? null : signature;
     await _persist();
   }
 

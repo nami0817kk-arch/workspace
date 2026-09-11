@@ -132,6 +132,22 @@ void main() {
       await dump(tester, '0${i + 2}-${tabs[i]}');
     }
 
+    // 個人技を狙うカード。育成タブの下のほうにあるので、標準の高さでは
+    // 一度も撮れていなかった。候補を開いた状態で撮る。
+    await tester.tap(find.widgetWithText(Tab, '育成'));
+    await tester.pumpAndSettle();
+    await tester.dragUntilVisible(
+      find.text('狙う技を選ぶ'),
+      find.byType(ListView).first,
+      const Offset(0, -300),
+    );
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('狙う技を選ぶ'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('狙う技を選ぶ'));
+    await tester.pumpAndSettle();
+    await dump(tester, '10-aim');
+
     // 今週の練習のシート。毎週触る画面なので、必ず目で見る。
     await tester.tap(find.widgetWithText(Tab, '試合'));
     await tester.pumpAndSettle();

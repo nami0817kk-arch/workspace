@@ -18,6 +18,7 @@ import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/legend.dart';
 import 'package:soccer_career/models/attributes.dart';
 import 'package:soccer_career/models/career.dart';
+import 'package:soccer_career/models/development.dart';
 import 'package:soccer_career/models/training.dart';
 import 'package:soccer_career/main.dart';
 import 'package:soccer_career/state/career_controller.dart';
@@ -144,6 +145,56 @@ void main() {
     expect(find.text('詳細能力'), findsNothing);
   });
 
+  testWidgets('育成のタブで、個人技の取得条件が読めて、狙える', (tester) async {
+    final controller = await newCareer();
+    await pumpHub(tester, controller, height: 2000);
+
+    await tester.tap(find.widgetWithText(Tab, '育成'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('個人技を狙う'), findsOneWidget);
+
+    // 候補は畳んである。開くと、取得条件が全部書いてある。
+    await tester.dragUntilVisible(
+      find.text('狙う技を選ぶ'),
+      find.byType(ListView).first,
+      const Offset(0, -300),
+    );
+    await tester.pumpAndSettle();
+    await tester.ensureVisible(find.text('狙う技を選ぶ'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('狙う技を選ぶ'));
+    await tester.pumpAndSettle();
+
+    final player = controller.state!.player;
+    // 一番遠いものを見る。届いているものは文言が変わる。
+    final signature = [...Signature.forPosition(player.position)]..sort(
+      (a, b) => player.attributes
+          .detail(a.detail)
+          .compareTo(player.attributes.detail(b.detail)),
+    );
+    final target = signature.first;
+    final value = player.attributes.detail(target.detail);
+    expect(value, lessThan(Signature.requirement));
+    await tester.ensureVisible(find.text(target.label));
+    await tester.pumpAndSettle();
+    // **元になる能力・必要な値・今の値・あと何**。ここが「取得方法」。
+    expect(
+      find.textContaining(
+        '${target.detail.label} $value '
+        '（${Signature.requirement}で覚えられる、'
+        'あと${Signature.requirement - value}）',
+      ),
+      findsOneWidget,
+    );
+
+    // 押すと狙える。
+    await tester.tap(find.text(target.label));
+    await tester.pumpAndSettle();
+    expect(controller.state!.signatureAim, target);
+    expect(find.text('狙っている'), findsOneWidget);
+  });
+
   testWidgets('練習のタブでは、選んでいるメニューの中身が文字で読める', (tester) async {
     final controller = await newCareer();
     await controller.setMenu(TrainingMenu.athletic);
@@ -161,6 +212,14 @@ void main() {
       findsOneWidget,
     );
     // 専属スタッフと生活習慣は畳んである。
+    // **高さ決め打ちで探さない。** タブにカードを足すたびに下端が
+    // 画面から出て、この検査が「畳んである」と無関係に落ちる。
+    await tester.dragUntilVisible(
+      find.text('専属スタッフ'),
+      find.byType(ListView).first,
+      const Offset(0, -300),
+    );
+    await tester.pumpAndSettle();
     expect(find.text('専属スタッフ'), findsOneWidget);
     expect(find.text('世界的 1500万'), findsNothing);
   });

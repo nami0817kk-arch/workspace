@@ -1028,6 +1028,8 @@ class _TrainingTab extends StatelessWidget {
         const SizedBox(height: 16),
         _FocusCard(state: state, controller: controller),
         const SizedBox(height: 16),
+        _SignatureAimCard(state: state, controller: controller),
+        const SizedBox(height: 16),
         _TrainingEffectCard(state: state),
         const SizedBox(height: 16),
         _SupportCard(state: state, controller: controller),
@@ -2503,6 +2505,45 @@ class _KnackCard extends StatelessWidget {
               const SizedBox(height: 8),
               // 「まだ出ない」のか「もう掴んだ」のかが分からないのが一番困る。
               Text(missing, style: muted),
+              // **3つ全部を並べる。** 足りないものを1つずつ出していくと、
+              // 1つ埋めるたびに次が現れて、いつ届くのか読めない。
+              if (!state.learnedKnack) ...[
+                const SizedBox(height: 8),
+                for (final line in [
+                  (
+                    '試合経験',
+                    state.development.experience,
+                    Knacks.experienceNeeded,
+                  ),
+                  (
+                    '練習の大成功',
+                    state.development.greatWeeks,
+                    Knacks.greatWeeksNeeded,
+                  ),
+                  (
+                    '同じ場面での勝負',
+                    Knacks.bestMoments(state),
+                    Knacks.momentsNeeded,
+                  ),
+                ])
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 4),
+                    child: Row(
+                      children: [
+                        Icon(
+                          line.$2 >= line.$3
+                              ? Icons.check_circle
+                              : Icons.radio_button_unchecked,
+                          size: 14,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                        const SizedBox(width: 6),
+                        Expanded(child: Text(line.$1, style: muted)),
+                        Text('${line.$2} / ${line.$3}', style: muted),
+                      ],
+                    ),
+                  ),
+              ],
             ] else ...[
               const SizedBox(height: 12),
               Align(
@@ -3496,6 +3537,233 @@ class _FocusCard extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 個人技を狙う。**どれを覚えるかを選べる。**
+///
+/// ずっと「狙って取りには行けない」でやってきた。覚える条件（元になる
+/// 能力が78）はどこにも書いておらず、3つの枠は勝手に埋まった。
+/// 何が起きたのか分からないまま終わるので、選んだ実感が無い。
+///
+/// ここで変えたのは**2つだけ**:
+/// - 取得条件を全部並べる（元になる能力・必要78・今の値・あと何）
+/// - 1つ狙える。狙ったものは掴む確率が上がり、掴むときはそれになる
+///
+/// **能力は要る。** 78に届いていないものを狙っても何も起きない——
+/// 狙いが変えるのは「候補のどれになるか」と「その速さ」だけで、
+/// 積み上げの代わりにはならない。
+class _SignatureAimCard extends StatelessWidget {
+  const _SignatureAimCard({required this.state, required this.controller});
+
+  final CareerState state;
+  final CareerController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+    );
+    final player = state.player;
+    final owned = state.development.signatures;
+    final full = owned.length >= Signature.maxOwned;
+
+    // **そのポジションで覚えられるものだけ。** 近い順に並べる——
+    // 20個を定義順に並べても、どれが手の届く距離なのか読めない。
+    final all = [...Signature.forPosition(player.position)]
+      ..sort((a, b) {
+        final oa = owned.contains(a) ? 1 : 0;
+        final ob = owned.contains(b) ? 1 : 0;
+        if (oa != ob) return oa - ob;
+        return player.attributes
+            .detail(b.detail)
+            .compareTo(player.attributes.detail(a.detail));
+      });
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text('個人技を狙う', style: theme.textTheme.titleSmall),
+                const Spacer(),
+                // 「育てる方向」の 0/3 と紛らわしいので、何の数かを書く。
+                Text(
+                  '覚えた ${owned.length} / ${Signature.maxOwned}',
+                  style: muted,
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              full
+                  ? '覚えられるのは${Signature.maxOwned}つまで。もう埋まっている。'
+                  : '元になる能力が${Signature.requirement}に届くと、'
+                        'その練習をしている週に掴むことがある。'
+                        '1つ狙っておくと、掴むときはそれになる。',
+              style: muted,
+            ),
+            const SizedBox(height: 10),
+            // **覚えたものと狙っているものは、畳まずに出す。**
+            // ポジションによっては候補が20個あるので、全部を開いたままだと
+            // この下にあるものが画面から押し出される。
+            for (final signature in all)
+              if (owned.contains(signature) || state.signatureAim == signature)
+                _SignatureRow(
+                  signature: signature,
+                  value: player.attributes.detail(signature.detail),
+                  learned: owned.contains(signature),
+                  aimed: state.signatureAim == signature,
+                  focused: state.focus.contains(signature.detail),
+                  // 覚えたものは触れない。狙いはもう一度押せば外れる。
+                  onTap: owned.contains(signature)
+                      ? null
+                      : () => controller.aimSignature(signature),
+                ),
+            // 枠が埋まっていたら、もう狙う先は無い。
+            if (!full)
+              Theme(
+                data: theme.copyWith(dividerColor: Colors.transparent),
+                child: ExpansionTile(
+                  tilePadding: EdgeInsets.zero,
+                  childrenPadding: const EdgeInsets.only(bottom: 8),
+                  title: Text(
+                    state.signatureAim == null ? '狙う技を選ぶ' : '狙いを変える',
+                    style: theme.textTheme.bodySmall,
+                  ),
+                  children: [
+                    for (final signature in all)
+                      if (!owned.contains(signature) &&
+                          state.signatureAim != signature)
+                        _SignatureRow(
+                          signature: signature,
+                          value: player.attributes.detail(signature.detail),
+                          learned: false,
+                          aimed: false,
+                          focused: state.focus.contains(signature.detail),
+                          onTap: () => controller.aimSignature(signature),
+                        ),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 個人技1つぶん。取得条件と、あといくつかを出す。
+class _SignatureRow extends StatelessWidget {
+  const _SignatureRow({
+    required this.signature,
+    required this.value,
+    required this.learned,
+    required this.aimed,
+    required this.focused,
+    required this.onTap,
+  });
+
+  final Signature signature;
+  final int value;
+  final bool learned;
+  final bool aimed;
+  final bool focused;
+  final VoidCallback? onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+    );
+    final remaining = Signature.requirement - value;
+    final reached = remaining <= 0;
+
+    final String condition;
+    if (learned) {
+      condition = '習得ずみ';
+    } else if (reached) {
+      condition =
+          '${signature.detail.label} $value。'
+          '条件は満たしている。あとは${signature.key.label}の練習で掴むだけ';
+    } else {
+      condition =
+          '${signature.detail.label} $value '
+          '（${Signature.requirement}で覚えられる、あと$remaining）';
+    }
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: aimed
+                ? theme.colorScheme.secondaryContainer
+                : theme.colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    learned
+                        ? Icons.check_circle
+                        : aimed
+                        ? Icons.my_location
+                        : Icons.radio_button_unchecked,
+                    size: 16,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(signature.label, style: theme.textTheme.bodyMedium),
+                  const Spacer(),
+                  if (aimed)
+                    Text('狙っている', style: theme.textTheme.labelSmall),
+                ],
+              ),
+              const SizedBox(height: 6),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(4),
+                child: LinearProgressIndicator(
+                  value: (value / Signature.requirement).clamp(0.0, 1.0),
+                  minHeight: 4,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(condition, style: muted),
+              // 近づけ方まで書く。条件だけ出しても、何をすれば上がるのかが
+              // 分からなければ「狙って取りに行く」にはならない。
+              if (!learned && !reached && !focused)
+                Text(
+                  '育てる方向に「${signature.detail.label}」を入れると、'
+                  '練習も試合の成長もそこに寄る',
+                  style: muted,
+                ),
+              // **値段を先に書く。** 狙っている間は練習の枠を空けて待つ。
+              // 後から知らされる話ではない。
+              if (aimed && !reached)
+                Text(
+                  '狙っている間、練習では他の技を覚えない',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.error,
+                  ),
+                ),
+            ],
+          ),
         ),
       ),
     );

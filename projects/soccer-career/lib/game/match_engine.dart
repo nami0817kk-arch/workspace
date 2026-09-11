@@ -1676,6 +1676,7 @@ class MatchEngine {
     Habits habits = const Habits(),
     Development development = const Development(),
     List<Detail> focus = const [],
+    Signature? signatureAim,
     bool plateau = false,
     double environment = 1.0,
     int fatigue = 0,
@@ -1803,6 +1804,7 @@ class MatchEngine {
         menu: menu,
         development: development,
         position: player.position,
+        aim: signatureAim,
       );
     }
 
@@ -1910,6 +1912,7 @@ class MatchEngine {
     required TrainingMenu menu,
     required Development development,
     required Position position,
+    Signature? aim,
   }) {
     if (development.signatures.length >= Signature.maxOwned) return null;
     final candidates = [
@@ -1922,6 +1925,21 @@ class MatchEngine {
           s,
     ];
     if (candidates.isEmpty) return null;
+
+    // **狙っている間は、他のものを覚えない。**
+    //
+    // はじめは「狙ったものが出やすくなる」だけにしたが、実測で 30.5% →
+    // 31.5% しか動かなかった。枠は3つしかなく、20年のうちには**先に
+    // 条件を満たしたものから埋まってしまう**ので、確率をいくら上げても
+    // 埋まったあとでは遅い。狙うというのは、**空けて待つ**ということ。
+    //
+    // 代償はそのまま：狙ったものの能力が78に届かなければ、枠は空のまま
+    // キャリアが終わる。それが「狙って取りに行く」ことの値段。
+    if (aim != null && !development.signatures.contains(aim)) {
+      if (!candidates.contains(aim)) return null;
+      if (_random.nextDouble() >= Formulas.signatureAimChance) return null;
+      return aim;
+    }
     if (_random.nextDouble() >= Formulas.signatureChance) return null;
     return candidates[_random.nextInt(candidates.length)];
   }
