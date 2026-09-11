@@ -81,6 +81,22 @@ void main() {
     await run('読まずに左端', pick: first);
     await run('わざと最悪', pick: worst);
 
+    // **ノリを見て決める。** 乗っていなければ確実に通し、乗ったら決めにいく。
+    // 「上手い遊び方」が存在するなら、これが3つの型より上に出るはず。
+    ScenarioOption ride(MatchInProgress m) {
+      final options = m.current.options;
+      if (m.momentum >= 1) {
+        final scoring = options.where((o) => o.outcome != Outcome.play);
+        if (scoring.isNotEmpty) {
+          return scoring.reduce(
+              (a, b) => m.expectedDelta(a) >= m.expectedDelta(b) ? a : b);
+        }
+      }
+      return options.reduce((a, b) => m.chanceFor(a) >= m.chanceFor(b) ? a : b);
+    }
+
+    await run('刻んでから決める', pick: ride);
+
     print('--- ポジション別（最善） ---');
     for (final position in [Position.st, Position.wg, Position.cb]) {
       await run(position.name, position: position);

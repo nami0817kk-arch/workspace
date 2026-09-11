@@ -487,6 +487,13 @@ class CareerController extends ChangeNotifier {
       );
     }
     bonus += state.directive.appearanceBonus;
+    // **点を取る選手は干されない。** 評価点だけで決めていたので、
+    // 「6.8だが決めている」選手と「7.0だが何もしていない」選手を
+    // 区別できていなかった（平均は変動を嫌うので、安全な手が常に正しくなる）。
+    bonus += MatchEngine.decisiveBonus(
+      state.leagueResults,
+      state.player.position,
+    );
     // 同ポジションの競争相手との力の差。序列はここで決まる。
     final competitor = state.competitor;
     if (competitor != null) {

@@ -1,3 +1,4 @@
+import 'attributes.dart';
 import 'cup.dart';
 
 /// 試合を自動で進めるときの選び方。
@@ -23,6 +24,9 @@ enum Appearance {
   const Appearance(this.label);
 
   final String label;
+
+  /// 実際にピッチに立ったか。
+  bool get played => this == Appearance.start || this == Appearance.sub;
 }
 
 /// 1試合の結果。
@@ -73,6 +77,23 @@ class MatchResult {
   final int goals;
   final int assists;
 
+  /// **その試合を動かした数**（第2の通貨）。
+  ///
+  /// 平均評価だけがすべての入口だったので、平均は変動を嫌う＝
+  /// **安全な手が常に正しい**形になっていた。実測で、中身の違う3つの
+  /// 遊び方（最善・安全・勝負）がほぼ同じ結果になり、中盤の選手は
+  /// 20年で9ゴールしか取らなかった。
+  ///
+  /// 守る選手にとっての無失点は、点を取る選手にとってのゴールと同じ仕事
+  /// （評価点のほうでは既にそう扱っている）。ポジションで数え方を変える。
+  int decisiveFor(Position position) {
+    if (!appearance.played) return 0;
+    final defends =
+        position.family == ScenarioFamily.goalkeeper ||
+        position.family == ScenarioFamily.defence;
+    return goals + assists + (defends && conceded == 0 ? 1 : 0);
+  }
+
   /// その試合で受けた警告の数（0〜2）。
   final int yellowCards;
 
@@ -100,44 +121,46 @@ class MatchResult {
   String get scoreLine => '$scored - $conceded';
 
   Map<String, dynamic> toJson() => {
-        'matchday': matchday,
-        'opponentName': opponentName,
-        'home': home,
-        'scored': scored,
-        'conceded': conceded,
-        'appearance': appearance.name,
-        'rating': rating,
-        'goals': goals,
-        'assists': assists,
-        if (yellowCards > 0) 'yellowCards': yellowCards,
-        if (sentOff) 'sentOff': true,
-        if (goalMinutes.isNotEmpty) 'goalMinutes': goalMinutes,
-        if (assistMinutes.isNotEmpty) 'assistMinutes': assistMinutes,
-        'international': international,
-        'cup': cup?.name,
-      };
+    'matchday': matchday,
+    'opponentName': opponentName,
+    'home': home,
+    'scored': scored,
+    'conceded': conceded,
+    'appearance': appearance.name,
+    'rating': rating,
+    'goals': goals,
+    'assists': assists,
+    if (yellowCards > 0) 'yellowCards': yellowCards,
+    if (sentOff) 'sentOff': true,
+    if (goalMinutes.isNotEmpty) 'goalMinutes': goalMinutes,
+    if (assistMinutes.isNotEmpty) 'assistMinutes': assistMinutes,
+    'international': international,
+    'cup': cup?.name,
+  };
 
   factory MatchResult.fromJson(Map<String, dynamic> json) => MatchResult(
-        matchday: json['matchday'] as int,
-        opponentName: json['opponentName'] as String,
-        home: json['home'] as bool,
-        scored: json['scored'] as int,
-        conceded: json['conceded'] as int,
-        appearance: Appearance.values.byName(json['appearance'] as String),
-        rating: (json['rating'] as num?)?.toDouble(),
-        goals: json['goals'] as int,
-        assists: json['assists'] as int,
-        yellowCards: json['yellowCards'] as int? ?? 0,
-        sentOff: json['sentOff'] as bool? ?? false,
-        goalMinutes:
-            (json['goalMinutes'] as List? ?? const []).cast<int>().toList(),
-        assistMinutes:
-            (json['assistMinutes'] as List? ?? const []).cast<int>().toList(),
-        international: json['international'] as bool? ?? false,
-        cup: CupKind.values.any((k) => k.name == json['cup'])
-            ? CupKind.values.byName(json['cup'] as String)
-            : null,
-      );
+    matchday: json['matchday'] as int,
+    opponentName: json['opponentName'] as String,
+    home: json['home'] as bool,
+    scored: json['scored'] as int,
+    conceded: json['conceded'] as int,
+    appearance: Appearance.values.byName(json['appearance'] as String),
+    rating: (json['rating'] as num?)?.toDouble(),
+    goals: json['goals'] as int,
+    assists: json['assists'] as int,
+    yellowCards: json['yellowCards'] as int? ?? 0,
+    sentOff: json['sentOff'] as bool? ?? false,
+    goalMinutes: (json['goalMinutes'] as List? ?? const [])
+        .cast<int>()
+        .toList(),
+    assistMinutes: (json['assistMinutes'] as List? ?? const [])
+        .cast<int>()
+        .toList(),
+    international: json['international'] as bool? ?? false,
+    cup: CupKind.values.any((k) => k.name == json['cup'])
+        ? CupKind.values.byName(json['cup'] as String)
+        : null,
+  );
 }
 
 /// 1シーズンぶんの個人成績。
@@ -158,7 +181,11 @@ class SeasonStats {
     final played = results.where((r) => r.rating != null).toList();
     if (played.isEmpty) {
       return const SeasonStats(
-          appearances: 0, goals: 0, assists: 0, averageRating: 0);
+        appearances: 0,
+        goals: 0,
+        assists: 0,
+        averageRating: 0,
+      );
     }
     final total = played.fold<double>(0, (sum, r) => sum + r.rating!);
     return SeasonStats(
