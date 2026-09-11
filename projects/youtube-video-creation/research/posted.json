@@ -813,5 +813,25 @@
     "build": "20260910_brazil_short",
     "video_id": "FQpoqK0GEKY",
     "at": "2026-09-10T10:43:07+00:00"
+  },
+  {
+    "build": "20260910_deco",
+    "video_id": "nHhIUwobKvU",
+    "at": "2026-09-10T14:32:18+00:00"
+  },
+  {
+    "build": "20260910_deco_short",
+    "video_id": "a-_GFT_WRrM",
+    "at": "2026-09-10T14:32:40+00:00"
+  },
+  {
+    "build": "20260911_yamal",
+    "video_id": "PxCdMKtSd10",
+    "at": "2026-09-10T23:39:12+00:00"
+  },
+  {
+    "build": "20260911_yamal_short",
+    "video_id": "qQumCBIpcrs",
+    "at": "2026-09-10T23:39:34+00:00"
   }
 ]

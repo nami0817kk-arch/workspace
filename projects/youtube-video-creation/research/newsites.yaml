@@ -15,7 +15,7 @@ sites:
   - https://www.dailymail.com/sport/football/article-16098909/Chelsea-transfer-window-Enzo-Fernandez.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
   - https://www.dailymail.com/sport/football/article-16098687/Footballer-tears-mum.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
 - host: derbyderbyderby.it
-  seen: 15
+  seen: 16
   days:
   - '2026-09-02'
   - '2026-09-03'
@@ -23,6 +23,7 @@ sites:
   - '2026-09-05'
   - '2026-09-07'
   - '2026-09-09'
+  - '2026-09-11'
   examples:
   - https://www.derbyderbyderby.it/calcio-italiano/monza-juric-dopo-la-vittoria-sul-torino-se-ci-salviamo-sara-un-grande-risultato/?intcmp=gazzanet-derbyderbyderby
   - https://www.derbyderbyderby.it/calcio-estero/monza-ecco-zeballos-in-italia-per-il-mito-di-maradona-e-i-consigli-di-paredes/?intcmp=gazzanet-derbyderbyderby
@@ -221,6 +222,14 @@ sites:
   - '2026-09-08'
   examples:
   - https://www.fantamagazine.com/news/cagliari-lecce-1-0-di-francesco-poco-cattivi-e-determinati-cosi-non-possiamo-permettercelo/
+- host: numericalcio.it
+  seen: 2
+  days:
+  - '2026-09-07'
+  - '2026-09-11'
+  examples:
+  - https://www.numericalcio.it/calendario-gare/serie-b-2019-20-risultati-e-classifica-aggiornata/?intcmp=gazzanet-numericalcio
+  - https://www.numericalcio.it/uefa-youth-league/youth-league-2019-20-risultati-e-classifiche/?intcmp=gazzanet-numericalcio
 - host: guardian.ng
   seen: 1
   days:
@@ -329,12 +338,6 @@ sites:
   - '2026-09-05'
   examples:
   - https://www.newcastleworld.com/sport/football/newcastle-united/-8961947
-- host: numericalcio.it
-  seen: 1
-  days:
-  - '2026-09-07'
-  examples:
-  - https://www.numericalcio.it/calendario-gare/serie-b-2019-20-risultati-e-classifica-aggiornata/?intcmp=gazzanet-numericalcio
 - host: cagliaricalcio-news.it
   seen: 1
   days:
