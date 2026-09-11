@@ -19,10 +19,16 @@ class Player {
     required this.potential,
     this.nationality = Nationality.unknown,
     this.personality = const Personality(
-        confidence: 10, ambition: 10, professionalism: 10, temper: 10),
+      confidence: 10,
+      ambition: 10,
+      professionalism: 10,
+      temper: 10,
+    ),
     Aptitude? aptitude,
     this.physique = const Physique(
-        heightCm: Physique.baseHeight, weightKg: Physique.baseWeight),
+      heightCm: Physique.baseHeight,
+      weightKg: Physique.baseWeight,
+    ),
     this.setPieces = const SetPieceSkills(),
     this.look = const PlayerLook(),
     this.traits = const [],
@@ -86,6 +92,33 @@ class Player {
       attributes.overallFor(position) -
       aptitude.penaltyFor(position, factor: traits.aptitudeFactor);
 
+  /// **今の能力なら、どのポジションが一番高いか。**
+  ///
+  /// 育てた結果として別の選手になっていることがある——守備を極めた
+  /// 中盤の選手は、中盤の重みで測ると総合力が落ちるが、守備の選手として
+  /// 測れば高い（実測で、中盤の選手を守備一本で育てるとピークが
+  /// 75.4 → 69.4 に落ちた）。**それは間違った育て方ではなく、
+  /// 別の選手になったということ**なので、そう言ってやる。
+  ///
+  /// 適性（`Aptitude.canConvert`）のあるポジションだけを見る。
+  /// 今より [Formulas.convertGain] 以上高くなければ null。
+  Position? get suitedPosition {
+    if (aptitude.isUnknown) return null;
+    Position? best;
+    var bestOverall = overall + Formulas.convertGain - 1;
+    for (final p in Position.values) {
+      if (p == position || !aptitude.canConvert(p)) continue;
+      final value =
+          attributes.overallFor(p) -
+          aptitude.penaltyFor(p, factor: traits.aptitudeFactor);
+      if (value > bestOverall) {
+        best = p;
+        bestOverall = value;
+      }
+    }
+    return best;
+  }
+
   /// 本来の（適性を引く前の）そのポジションでの力。
   int overallAt(Position position) =>
       attributes.overallFor(position) -
@@ -101,10 +134,10 @@ class Player {
   ///
   /// 蓄えた能力値そのものは書き換えない。増量した週に「伸びた」ように
   /// 見えてしまうと、練習で積み上げた数字の意味が濁る。
-  int effective(Detail detail) => (attributes.detail(detail) +
-          physique.bonusFor(detail))
-      .clamp(Formulas.minAttribute, ceilingFor(detail))
-      .toInt();
+  int effective(Detail detail) =>
+      (attributes.detail(detail) + physique.bonusFor(detail))
+          .clamp(Formulas.minAttribute, ceilingFor(detail))
+          .toInt();
 
   /// その詳細能力の上限。超越の特性を持っていれば 99 を超える。
   int ceilingFor(Detail detail) => traits.ceilingFor(detail);
@@ -150,25 +183,24 @@ class Player {
     Physique? physique,
     SetPieceSkills? setPieces,
     Aptitude? aptitude,
-  }) =>
-      Player(
-        name: name,
-        age: age ?? this.age,
-        position: position ?? this.position,
-        side: side ?? this.side,
-        look: look ?? this.look,
-        attributes: attributes ?? this.attributes,
-        potential: potential,
-        nationality: nationality ?? this.nationality,
-        personality: personality ?? this.personality,
-        physique: physique ?? this.physique,
-        setPieces: setPieces ?? this.setPieces,
-        aptitude: aptitude ?? this.aptitude,
-        traits: traits ?? this.traits,
-        condition: (condition ?? this.condition)
-            .clamp(0, Formulas.conditionMax)
-            .toInt(),
-      );
+  }) => Player(
+    name: name,
+    age: age ?? this.age,
+    position: position ?? this.position,
+    side: side ?? this.side,
+    look: look ?? this.look,
+    attributes: attributes ?? this.attributes,
+    potential: potential,
+    nationality: nationality ?? this.nationality,
+    personality: personality ?? this.personality,
+    physique: physique ?? this.physique,
+    setPieces: setPieces ?? this.setPieces,
+    aptitude: aptitude ?? this.aptitude,
+    traits: traits ?? this.traits,
+    condition: (condition ?? this.condition)
+        .clamp(0, Formulas.conditionMax)
+        .toInt(),
+  );
 
   /// ポテンシャルまで含めて作り直す。重傷の後遺症で使う。
   ///
@@ -179,48 +211,50 @@ class Player {
     required Attributes attributes,
     required int potential,
     List<Trait>? traits,
-  }) =>
-      Player(
-        name: from.name,
-        age: from.age,
-        position: from.position,
-        // 立つ側と見た目を引き継ぐ。落としていたので、重傷を負うたびに
-        // 逆サイドの選手が中央に戻り、似顔まで別人になっていた。
-        side: from.side,
-        look: from.look,
-        attributes: attributes,
-        potential: potential,
-        nationality: from.nationality,
-        personality: from.personality,
-        physique: from.physique,
-        setPieces: from.setPieces,
-        aptitude: from.aptitude,
-        traits: traits ?? from.traits,
-        condition: from.condition,
-      );
+  }) => Player(
+    name: from.name,
+    age: from.age,
+    position: from.position,
+    // 立つ側と見た目を引き継ぐ。落としていたので、重傷を負うたびに
+    // 逆サイドの選手が中央に戻り、似顔まで別人になっていた。
+    side: from.side,
+    look: from.look,
+    attributes: attributes,
+    potential: potential,
+    nationality: from.nationality,
+    personality: from.personality,
+    physique: from.physique,
+    setPieces: from.setPieces,
+    aptitude: from.aptitude,
+    traits: traits ?? from.traits,
+    condition: from.condition,
+  );
 
   Map<String, dynamic> toJson() => {
-        'name': name,
-        'age': age,
-        'position': position.name,
-        'look': look.toJson(),
-        'side': side.name,
-        'attributes': attributes.toJson(),
-        'potential': potential,
-        'nationality': nationality.toJson(),
-        'personality': personality.toJson(),
-        'physique': physique.toJson(),
-        'setPieces': setPieces.toJson(),
-        'aptitude': aptitude.toJson(),
-        'traits': traits.map((t) => t.name).toList(),
-        'condition': condition,
-      };
+    'name': name,
+    'age': age,
+    'position': position.name,
+    'look': look.toJson(),
+    'side': side.name,
+    'attributes': attributes.toJson(),
+    'potential': potential,
+    'nationality': nationality.toJson(),
+    'personality': personality.toJson(),
+    'physique': physique.toJson(),
+    'setPieces': setPieces.toJson(),
+    'aptitude': aptitude.toJson(),
+    'traits': traits.map((t) => t.name).toList(),
+    'condition': condition,
+  };
 
   factory Player.fromJson(Map<String, dynamic> json) {
-    final attributes =
-        Attributes.fromJson(json['attributes'] as Map<String, dynamic>);
+    final attributes = Attributes.fromJson(
+      json['attributes'] as Map<String, dynamic>,
+    );
     final position = Position.parse(json['position'] as String);
-    final physique = Physique.fromJson(json['physique'] as Map<String, dynamic>?);
+    final physique = Physique.fromJson(
+      json['physique'] as Map<String, dynamic>?,
+    );
     return Player(
       name: json['name'] as String,
       age: json['age'] as int,
@@ -229,27 +263,33 @@ class Player {
       // 既定で右に寄せると、左利きのサイドバックが急に不利になる。
       side: json['side'] == null
           ? (position.hasSide
-              ? (physique.foot == Foot.left ? Side.left : Side.right)
-              : Side.center)
+                ? (physique.foot == Foot.left ? Side.left : Side.right)
+                : Side.center)
           : Side.parse(json['side'] as String?),
       attributes: attributes,
       // ポテンシャルを足す前の保存データには無い。今の総合力に少し上乗せする。
-      potential: json['potential'] as int? ??
-          (attributes.overallFor(position) + 8),
+      potential:
+          json['potential'] as int? ?? (attributes.overallFor(position) + 8),
       // 国籍を持たせる前の保存データは、既定の国の選手として読む。
       nationality: Nationality.fromJson(
-          json['nationality'] as Map<String, dynamic>?, 'yamato'),
-      personality:
-          Personality.fromJson(json['personality'] as Map<String, dynamic>?),
+        json['nationality'] as Map<String, dynamic>?,
+        'yamato',
+      ),
+      personality: Personality.fromJson(
+        json['personality'] as Map<String, dynamic>?,
+      ),
       // 身体データを持たせる前の保存データは標準体型として読む。
       physique: physique,
-      setPieces:
-          SetPieceSkills.fromJson(json['setPieces'] as Map<String, dynamic>?),
+      setPieces: SetPieceSkills.fromJson(
+        json['setPieces'] as Map<String, dynamic>?,
+      ),
       // 見た目を持たせる前の保存データは、既定の見た目で読む。
       look: PlayerLook.fromJson(json['look'] as Map<String, dynamic>?),
       // 適性を持たせる前の保存データは、今のポジションを本職として読む。
       aptitude: Aptitude.fromJson(
-          json['aptitude'] as Map<String, dynamic>?, position),
+        json['aptitude'] as Map<String, dynamic>?,
+        position,
+      ),
       traits: [
         for (final n in (json['traits'] as List? ?? const []))
           if (Trait.values.any((t) => t.name == n))

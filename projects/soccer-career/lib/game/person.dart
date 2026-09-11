@@ -1,8 +1,10 @@
 import 'dart:math';
 
+import '../models/attributes.dart';
 import '../models/career.dart';
 import '../models/competition.dart';
 import '../models/personality.dart';
+import '../models/player.dart';
 import '../models/reputation.dart';
 import '../models/traits.dart';
 import 'formulas.dart';
@@ -50,8 +52,44 @@ class Person {
     final prestige = World.byId(state.club.countryId).prestige;
     final leagueFactor = 0.6 + prestige * 0.18;
 
-    final value = base * ageFactor * contractFactor * form * leagueFactor * 1.6;
+    // **一芸は、総合力とは別に値札に乗る。**
+    // 総合力はポジションの重みで出すので、尖らせるほど下がる。
+    // ここが無いと「尖った選手を育てる」がただの損になる。
+    final standout = 1 + standoutOf(state.player) * Formulas.standoutValue;
+
+    final value =
+        base *
+        ageFactor *
+        contractFactor *
+        form *
+        leagueFactor *
+        standout *
+        1.6;
     return max(50, (value / 50).round() * 50);
+  }
+
+  /// **突き抜けた1つが、総合力からどれだけ離れているか。**
+  ///
+  /// 一芸と呼べない（`standoutFloor` に届かない、または総合力との差が
+  /// `standoutGap` 未満）なら 0。判定にも画面にも、同じここから出す。
+  /// **測るのは詳細ではなくカテゴリ。**
+  /// 詳細1つで測ると、尖っていない選手でも「視野98・総合力75」のように
+  /// 構造的に差が開くので、**全員に一芸が付いてしまう**（実際に付いた）。
+  /// 総合力はカテゴリの重み付き平均なので、同じ土俵で比べる。
+  static int standoutOf(Player player) {
+    final best = AttributeKey.values
+        .map((k) => player.attributes[k])
+        .reduce((a, b) => a > b ? a : b);
+    if (best < Formulas.standoutFloor) return 0;
+    return (best - player.overall - Formulas.standoutGap).clamp(0, 40);
+  }
+
+  /// 一芸そのもの。無ければ null。
+  static AttributeKey? standoutKey(Player player) {
+    if (standoutOf(player) == 0) return null;
+    return AttributeKey.values.reduce(
+      (a, b) => player.attributes[a] >= player.attributes[b] ? a : b,
+    );
   }
 
   /// 知名度。活躍と代表と大陸カップで上がり、何もしないと少し落ちる。

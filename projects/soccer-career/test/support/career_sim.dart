@@ -62,6 +62,8 @@ class Playstyle {
     this.effort = TrainingEffort.normal,
     this.easeFrom,
     this.pick,
+    this.focus = const [],
+    this.menu,
     this.companion = TrainingCompanion.alone,
     this.spendsPoints = false,
     this.autoRestBelow,
@@ -92,6 +94,12 @@ class Playstyle {
   /// その歳のときの踏み込み方。
   TrainingEffort effortAt(int age) =>
       easeFrom != null && age >= easeFrom! ? TrainingEffort.easy : effort;
+
+  /// 育てる方向。**何を選んだかが選手の形を変えるか**を測るために要る。
+  final List<Detail> focus;
+
+  /// 練習メニューを固定する。null ならポジションの既定。
+  final TrainingMenu? menu;
 
   /// 局面での手の選び方を差し替える。null なら `SimStyle` に任せる。
   ///
@@ -187,6 +195,13 @@ class Career {
   int leagueMatches = 0;
   int scenariosSeen = 0;
 
+  /// 引退時の能力。**選んだことが形に出たか**を見るために残す。
+  Attributes? finalAttributes;
+
+  /// どの項目を何回狙ったか。
+  Map<Detail, int> dedication = const {};
+  int dedicationOf(Detail detail) => dedication[detail] ?? 0;
+
   int finalOverall = 0;
   int lateAppearances = 0;
   int lateGoals = 0;
@@ -237,6 +252,9 @@ Future<Career> runCareer(
     await controller.setDirective(style.directive);
   }
   if (style.drills) await controller.setDrill(SetPiece.freeKick);
+  for (final detail in style.focus) {
+    await controller.toggleFocus(detail);
+  }
   await controller.setEffort(style.effort);
   if (style.autoRestBelow != null) {
     await controller.setAutoRestBelow(style.autoRestBelow!);
@@ -256,7 +274,7 @@ Future<Career> runCareer(
     // リーグ38節 + カップ最大18 + 代表3。上限で切らないように余裕を持たせる。
     while (!state.seasonFinished && matches++ < 90) {
       // 練習を決める。疲れていたら休む。
-      await controller.setMenu(_menuFor(state, style));
+      await controller.setMenu(style.menu ?? _menuFor(state, style));
       // 組む相手は移籍で入れ替わる。毎週その時点の顔ぶれで選び直す。
       await controller.setCompanion(
         state.companionChoices.contains(style.companion)
@@ -399,6 +417,8 @@ Future<Career> runCareer(
       career.lateGoals += stats.goals;
     }
     career.finalOverall = done.player.overall;
+    career.finalAttributes = done.player.attributes;
+    career.dedication = done.development.dedication;
     career.strain = done.development.strain;
 
     // --- 去就を決める ---

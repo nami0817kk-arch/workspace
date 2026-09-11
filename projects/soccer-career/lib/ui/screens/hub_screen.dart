@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../models/attributes.dart';
 import '../../game/eligibility.dart';
+import '../../game/dependencies.dart';
 import '../../game/formulas.dart';
 import '../../game/knacks.dart';
 import '../../game/match_brief.dart';
@@ -16,6 +17,7 @@ import '../../models/competition.dart';
 import '../../models/cup.dart';
 import '../../game/match_engine.dart';
 import '../../game/newsroom.dart';
+import '../../game/person.dart';
 import '../../game/ranking.dart';
 import '../../game/weekly_plan.dart';
 import '../../models/development.dart';
@@ -569,7 +571,11 @@ class _NextMatchCard extends StatelessWidget {
               // 入る前に分かるようにしておく。**行は増やさない**——
               // 次節カードが1行伸びるだけで、スマホの高さでは
               // 「今の状態」が画面の外に出る（実際に出た）。
-              '${state.pendingCup != null ? state.pendingCup!.label : state.pendingInternational ? '代表ウィーク' : '第${state.matchday}節 / $total'}'
+              '${state.pendingCup != null
+                  ? state.pendingCup!.label
+                  : state.pendingInternational
+                  ? '代表ウィーク'
+                  : '第${state.matchday}節 / $total'}'
               '${Newsroom.isBigFixture(state) ? '  ・  じっくりやる試合' : ''}',
               style: theme.textTheme.labelMedium?.copyWith(
                 color: theme.colorScheme.primary,
@@ -1192,6 +1198,27 @@ class _PlayerCard extends StatelessWidget {
                 ),
                 if (state.seasonStart != null)
                   Center(child: Text('外側の線が今、細い線が開幕時', style: muted)),
+                // **尖った1つは、総合力とは別に効いている。**
+                // 総合力はポジションの重みで出すので、尖らせるほど下がる。
+                // 見えないと「伸ばしたのに総合力が落ちた」だけが残り、
+                // 尖らせる遊び方がただの損に見える。
+                if (Person.standoutKey(player) != null) ...[
+                  const SizedBox(height: 8),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.tertiaryContainer,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Text(
+                      '一芸 ${Person.standoutKey(player)!.label} '
+                      '${player.attributes[Person.standoutKey(player)!]}。'
+                      '総合力とは別に、値札・代表の線・出場機会に効いている。',
+                      style: theme.textTheme.bodySmall,
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 8),
                 for (final key in AttributeKey.values)
                   if (key != AttributeKey.goalkeeping ||
@@ -3390,7 +3417,35 @@ class _FocusCard extends StatelessWidget {
                   learned: state.development.signatures.contains(
                     _signatureFor(detail),
                   ),
+                  // 積むほど土台を先行できる。ここが「尖った選手」の作り方で、
+                  // 見えないと積む理由が分からない。
+                  dedication: state.development.dedicationOf(detail),
+                  cap: Dependencies.capFor(
+                    detail,
+                    player.attributes,
+                    ceiling: player.ceilingFor(detail),
+                    dedication: state.development.dedicationOf(detail),
+                  ),
                 ),
+            ],
+            // **育てた結果、別の選手になっていることがある。**
+            // 総合力はポジションの重みで出すので、そのポジションが
+            // 求めないものを伸ばすほど下がる。それは間違った育て方ではない。
+            if (player.suitedPosition != null) ...[
+              const SizedBox(height: 10),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.tertiaryContainer,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  '今の能力なら ${player.suitedPosition!.label} のほうが向いている。'
+                  'クラブタブからコンバートできる。',
+                  style: theme.textTheme.bodySmall,
+                ),
+              ),
             ],
             const SizedBox(height: 4),
             Theme(
@@ -3443,18 +3498,30 @@ class _FocusCard extends StatelessWidget {
 }
 
 /// 方向に入れた項目1つぶん。個人技まであといくつかを出す。
+/// 育てる方向の1項目。**積み上げと、いま届く上限**を出す。
 class _FocusProgress extends StatelessWidget {
   const _FocusProgress({
     required this.detail,
     required this.value,
     required this.signature,
     required this.learned,
+    required this.dedication,
+    required this.cap,
   });
 
   final Detail detail;
   final int value;
   final Signature? signature;
   final bool learned;
+
+  /// その項目を何回狙ってきたか。積むほど土台を先行できる。
+  final int dedication;
+
+  /// いま届く上限（土台の平均＋積み上げぶん）。
+  final int cap;
+
+  /// 土台を持つ項目か。持たないなら積み上げは効かない。
+  bool get _chained => Dependencies.supports[detail]?.isNotEmpty ?? false;
 
   @override
   Widget build(BuildContext context) {
@@ -3487,6 +3554,22 @@ class _FocusProgress extends StatelessWidget {
               ),
             ],
           ),
+          // 土台で頭打ちなら、そう書く。**書かないと「伸ばしているのに
+          // 数字が動かない」理由が分からず、積む意味も見えない。**
+          //
+          // **土台を持たない項目には積み上げの回数を出さない**——
+          // そこは鎖に吸われないので、積んでも上限は動かない。
+          // 出すと「積めば上がる」と読めてしまう。
+          if (!_chained)
+            Text('上限 $cap', style: muted)
+          else if (value >= cap)
+            Text(
+              '土台で頭打ち（上限 $cap）。積み上げ $dedication回、あと'
+              '${Dependencies.dedicationStep - dedication % Dependencies.dedicationStep}回で上限 +1',
+              style: muted?.copyWith(color: theme.colorScheme.error),
+            )
+          else
+            Text('上限 $cap（積み上げ $dedication回）', style: muted),
           if (signature != null)
             Text(
               learned

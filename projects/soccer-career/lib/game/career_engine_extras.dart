@@ -6,6 +6,7 @@ import '../models/objective.dart';
 import '../models/player.dart';
 import 'formulas.dart';
 import 'national.dart';
+import 'person.dart';
 
 /// 代表招集と監督の目標。キャリア本体から切り出してある。
 ///
@@ -44,7 +45,15 @@ class CareerExtras {
   ///
   /// 実力（総合力）と、直近の出来の両方が要る。上手いだけでは呼ばれない。
   bool shouldCallUp(CareerState state) {
-    if (state.player.overall < Formulas.callUpOverall) return false;
+    // 一芸があれば、総合力の線が下がる。総合力はポジションの重みで出すので、
+    // 尖らせるほど下がる——ここを開けないと、尖った育成を選んだ時点で
+    // 代表が構造的に消える（実測で 代表12 → 0キャップ）。
+    final line =
+        Formulas.callUpOverall -
+        (Person.standoutOf(state.player) > 0
+            ? Formulas.standoutCallUpRelief
+            : 0);
+    if (state.player.overall < line) return false;
 
     final rated = state.leagueResults
         .where((r) => r.rating != null)
