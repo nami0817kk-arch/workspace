@@ -361,8 +361,19 @@ class CareerController extends ChangeNotifier {
       condition: state.player.condition + e.condition,
     );
     // 閃き。すでに3つ持っていれば何も起きない（learn が弾く）。
+    // **そのポジションで意味の無い技なら、覚えられるものに読み替える**——
+    // 出来事は誰にでも起きるので、書いてある技をそのまま渡すと
+    // GK が無回転シュートを覚える（実際に60%が覚えていた）。
     if (e.insight != null) {
-      state.development = state.development.learn(e.insight!);
+      final wanted = e.insight!.fitsPosition(state.player.position)
+          ? e.insight
+          : state.development.insightFor(state.player);
+      if (wanted != null) {
+        state.development = state.development.learn(
+          wanted,
+          position: state.player.position,
+        );
+      }
     }
 
     switch (e.special) {
@@ -1254,7 +1265,10 @@ class CareerController extends ChangeNotifier {
         plateauFactor: state.player.traits.plateauFactor,
       );
       if (week.learned != null) {
-        state.development = state.development.learn(week.learned!);
+        state.development = state.development.learn(
+          week.learned!,
+          position: state.player.position,
+        );
       }
       newInjury =
           week.injury ??

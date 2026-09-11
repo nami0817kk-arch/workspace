@@ -3,6 +3,7 @@ import 'dart:math';
 import '../game/formulas.dart';
 import 'attributes.dart';
 import 'club.dart';
+import 'player.dart';
 import 'season.dart';
 
 /// 相手クラブの戦い方。
@@ -36,14 +37,39 @@ enum ClubStyle {
 /// 能力値が一定に達した選手が、その練習を続けているうちに覚える。
 /// 覚えると、その技が出る局面だけ確率が上がる。
 enum Signature {
+  // ---- 運ぶ・かわす ----
   turn('切り返し', Detail.ballControl),
+  closeControl('足元の収まり', Detail.ballControl),
+  slalom('持ち出し', Detail.dribbling),
+  feint('緩急', Detail.agility),
+
+  // ---- 配る ----
   noLook('ノールックパス', Detail.vision),
-  knuckle('無回転シュート', Detail.shotPower),
-  burst('初速の一歩', Detail.acceleration),
-  shoulder('体の入れ方', Detail.strength),
-  read('読み', Detail.interceptions),
   spread('展開力', Detail.longPassing),
-  handsUp('1対1の間合い', Detail.reflexes);
+  throughBall('刺すパス', Detail.shortPassing),
+  earlyCross('早いクロス', Detail.crossing),
+
+  // ---- 決める ----
+  knuckle('無回転シュート', Detail.shotPower),
+  placement('流し込み', Detail.finishing),
+  volley('ボレー', Detail.longShots),
+  attackTheBall('打点', Detail.heading),
+
+  // ---- 止める ----
+  read('読み', Detail.interceptions),
+  timing('足を出す間', Detail.tackling),
+  bodyPosition('立ち位置', Detail.marking),
+
+  // ---- 走る・当たる ----
+  burst('初速の一歩', Detail.acceleration),
+  afterburner('伸びる足', Detail.sprintSpeed),
+  shoulder('体の入れ方', Detail.strength),
+  spring('跳ぶ間合い', Detail.jumping),
+
+  // ---- GK ----
+  handsUp('1対1の間合い', Detail.reflexes),
+  command('飛び出しの判断', Detail.gkPositioning),
+  safeHands('確実な処理', Detail.handling);
 
   const Signature(this.label, this.detail);
 
@@ -62,6 +88,43 @@ enum Signature {
 
   /// 同時に持てる数。何でも出来る選手にしない。
   static const int maxOwned = 3;
+
+  /// **そのポジションで意味を持つ技か。**
+  ///
+  /// ここが無かったので、実測（`test/craft_sim.dart`）で
+  /// **GK の95%が「無回転シュート」を覚え、CB の52%が
+  /// 「ノールックパス」を覚えていた**。伸びた詳細能力に自動で付くだけで、
+  /// 何をする選手なのかを一切見ていなかった。
+  ///
+  /// GK の技はフィールドの選手には付かず、その逆も無い。
+  /// 前線の技は守る選手に、守りの技は前線の選手に付かない——
+  /// **「その選手にしか無いもの」は、まずその選手がやることの中から出る。**
+  bool fitsPosition(Position position) {
+    final family = position.family;
+    if (key == AttributeKey.goalkeeping) {
+      return family == ScenarioFamily.goalkeeper;
+    }
+    // GK が覚えられるのは、GK の技と**身体の技**（競り合い・跳ぶ間合い）。
+    // GK 専用の詳細能力は3つしか無いので、ここを閉じると
+    // **全員が同じ3つを揃えて終わる**。
+    if (family == ScenarioFamily.goalkeeper) {
+      return key == AttributeKey.physical;
+    }
+    return switch (key) {
+      // 決める技は、守るのが仕事の選手には出ない（ヘディングだけは別）。
+      AttributeKey.shooting =>
+        detail == Detail.heading || family != ScenarioFamily.defence,
+      // 止める技は、点を取るのが仕事の選手には出ない。
+      AttributeKey.defending => family != ScenarioFamily.forward,
+      _ => true,
+    };
+  }
+
+  /// そのポジションで覚えられる技。
+  static List<Signature> forPosition(Position position) => [
+    for (final s in values)
+      if (s.fitsPosition(position)) s,
+  ];
 }
 
 /// キャリアを通じて積み上がるもの。
@@ -218,13 +281,21 @@ class Development {
   /// 合計だけを返していた頃は、画面に「なぜこの数字なのか」を出せなかった。
   /// 覚えた技が試合のどこで効いているのかが見えないと、
   /// 積み上げと試合が別のものに見える。
+  /// **その技が噛み合う手だけ、深く効く。**
+  ///
+  /// 0.05 / 0.02 に置いていた頃、実測（`influence_sim`）で個人技の持ち分は
+  /// 増減の 6.0% しかなく、**1人あたり 2.83個＝誰でも3つ揃う**ので
+  /// 選ぶ余地も無かった。特性で先に踏んだのと同じ「**影響度 = 頻度 × 深さ**」。
+  ///
+  /// 技そのものの手（`detail` が一致）は深く、同じカテゴリの手は浅いまま——
+  /// **広く薄く効かせると、また「常に少し効く飾り」に戻る。**
   Map<Signature, double> signatureFactors(AttributeKey key, Detail? detail) {
     final result = <Signature, double>{};
     for (final s in signatures) {
       if (detail != null && s.detail == detail) {
-        result[s] = 0.05;
+        result[s] = Formulas.signatureOnDetail;
       } else if (s.key == key) {
-        result[s] = 0.02;
+        result[s] = Formulas.signatureOnKey;
       }
     }
     return result;
@@ -281,10 +352,39 @@ class Development {
     return copyWith(growthStreak: 0, plateau: max(1, length));
   }
 
-  Development learn(Signature signature) =>
-      signatures.contains(signature) || signatures.length >= Signature.maxOwned
+  /// 個人技を覚える。**ポジションで意味を持つものだけ。**
+  ///
+  /// ここを通らない道があると、そこから漏れる——実際、ピッチ外の出来事
+  /// （`LifeEffect.insight`）がポジションを見ずに配っていて、
+  /// **GK の60%が「無回転シュート」を覚えていた**。
+  /// 練習の側だけ直しても塞がらないので、**入口をここ1つに絞って見る**。
+  Development learn(Signature signature, {Position? position}) =>
+      signatures.contains(signature) ||
+          signatures.length >= Signature.maxOwned ||
+          (position != null && !signature.fitsPosition(position))
       ? this
       : copyWith(signatures: [...signatures, signature]);
+
+  /// その選手が、いま覚えられる技。出来事の「閃き」の読み替え先。
+  ///
+  /// 閃いたのに**そのポジションでは意味の無い技**だった、では
+  /// 出来事そのものが無かったことになる。同じ場面で積んできたものから出す。
+  Signature? insightFor(Player player) {
+    final ready = [
+      for (final s in Signature.forPosition(player.position))
+        if (!signatures.contains(s) &&
+            player.attributes.detail(s.detail) >= Signature.requirement)
+          s,
+    ];
+    if (ready.isEmpty) return null;
+    // 一番伸ばしてきた項目のもの。**そこを積んだから閃いた**、という形。
+    ready.sort(
+      (a, b) => player.attributes
+          .detail(b.detail)
+          .compareTo(player.attributes.detail(a.detail)),
+    );
+    return ready.first;
+  }
 
   Development copyWith({
     int? experience,

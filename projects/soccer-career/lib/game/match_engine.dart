@@ -1802,6 +1802,7 @@ class MatchEngine {
         attributes: attributes,
         menu: menu,
         development: development,
+        position: player.position,
       );
     }
 
@@ -1908,10 +1909,13 @@ class MatchEngine {
     required Attributes attributes,
     required TrainingMenu menu,
     required Development development,
+    required Position position,
   }) {
     if (development.signatures.length >= Signature.maxOwned) return null;
     final candidates = [
-      for (final s in Signature.values)
+      // **そのポジションでやることの中からしか出ない。**
+      // 見ていなかったので、GK の95%が「無回転シュート」を覚えていた。
+      for (final s in Signature.forPosition(position))
         if (menu.keys.contains(s.key) &&
             !development.signatures.contains(s) &&
             attributes.detail(s.detail) >= Signature.requirement)
