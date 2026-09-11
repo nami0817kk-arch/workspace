@@ -565,11 +565,12 @@ class _NextMatchCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              state.pendingCup != null
-                  ? state.pendingCup!.label
-                  : state.pendingInternational
-                  ? '代表ウィーク'
-                  : '第${state.matchday}節 / $total',
+              // **今日はじっくりやる試合か。** 局面の数がここで変わるので、
+              // 入る前に分かるようにしておく。**行は増やさない**——
+              // 次節カードが1行伸びるだけで、スマホの高さでは
+              // 「今の状態」が画面の外に出る（実際に出た）。
+              '${state.pendingCup != null ? state.pendingCup!.label : state.pendingInternational ? '代表ウィーク' : '第${state.matchday}節 / $total'}'
+              '${Newsroom.isBigFixture(state) ? '  ・  じっくりやる試合' : ''}',
               style: theme.textTheme.labelMedium?.copyWith(
                 color: theme.colorScheme.primary,
               ),

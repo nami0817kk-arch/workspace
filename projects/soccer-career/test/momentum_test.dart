@@ -86,7 +86,10 @@ void main() {
       m.momentum = 1;
       expect(
         m.goalConversionNow(),
-        closeTo(Formulas.goalConversion * 1.25, 0.0001),
+        closeTo(
+          Formulas.goalConversion * (1 + Formulas.momentumPerStep),
+          0.0001,
+        ),
       );
       m.momentum = Formulas.momentumMax;
       expect(

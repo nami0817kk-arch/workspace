@@ -460,13 +460,26 @@ class MatchInProgress {
   /// 現時点の評価点。基準値から増減を積み上げ、特性の補正を足す。
   double get rating {
     final total =
-        resolutions.fold<double>(
-          Formulas.baseRating,
-          (sum, r) => sum + r.ratingDelta,
-        ) +
+        Formulas.baseRating +
+        resolutions.fold<double>(0, (sum, r) => sum + r.ratingDelta) *
+            ratingScale +
         player.traits.ratingBonus +
         extraRating;
     return total.clamp(Formulas.minRating, Formulas.maxRating);
+  }
+
+  /// 局面ごとの評価点を、**1試合ぶんの重み**に割り戻す倍率。
+  ///
+  /// 重い試合は8局面、ふつうの試合は2局面。割り戻さないと、
+  /// 重い試合に出ただけで評価点が跳ね、薄い試合に出ると下がる
+  /// （＝出た試合の重さが、そのまま平均評価になってしまう）。
+  /// 途中出場が先発より軽いことは、これまでどおり残す。
+  double get ratingScale {
+    if (scenarios.isEmpty) return 1;
+    final reference = appearance == Appearance.sub
+        ? Formulas.ratingScenarios * 2 / 3
+        : Formulas.ratingScenarios.toDouble();
+    return reference / scenarios.length;
   }
 
   /// この選択肢の判定に使う能力値。詳細があればそれ、無ければカテゴリ平均。
@@ -1155,6 +1168,19 @@ class MatchEngine {
     return _random.nextDouble() < chance.clamp(0.0, Formulas.rotationMax);
   }
 
+  /// その試合で提示する局面の数。
+  ///
+  /// **重い試合だけを厚くする。** 全部を等しく3局面にすると、1試合が
+  /// 「3回タップして終わり」の薄さに固定される。
+  static int scenarioCount(Appearance appearance, {required bool big}) =>
+      switch (appearance) {
+        Appearance.start =>
+          big ? Formulas.scenariosPerBigStart : Formulas.scenariosPerStart,
+        Appearance.sub =>
+          big ? Formulas.scenariosPerBigSub : Formulas.scenariosPerSub,
+        Appearance.benched || Appearance.injured || Appearance.suspended => 0,
+      };
+
   MatchInProgress start({
     required int matchday,
     required Player player,
@@ -1171,12 +1197,9 @@ class MatchEngine {
     List<AttributeKey> favoured = const [],
     int fatigue = 0,
     List<Scenario>? forcedScenarios,
+    bool big = false,
   }) {
-    final count = switch (appearance) {
-      Appearance.start => Formulas.scenariosPerStart,
-      Appearance.sub => Formulas.scenariosPerSub,
-      Appearance.benched || Appearance.injured || Appearance.suspended => 0,
-    };
+    final count = scenarioCount(appearance, big: big);
 
     // 試合の骨格は展開に依らない局面から引き、終盤に効く局面は控えに回す。
     final family = player.position.family;

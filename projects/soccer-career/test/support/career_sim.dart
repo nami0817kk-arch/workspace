@@ -182,6 +182,11 @@ class Career {
   ///
   /// 「流す」の見返りは**ピークの高さではなく、落ちるのが遅いこと**なので、
   /// ピークだけを見ていると差が出ているのに見えない。
+  /// じっくりやる試合が、どれだけ来たか。
+  int bigFixtures = 0;
+  int leagueMatches = 0;
+  int scenariosSeen = 0;
+
   int finalOverall = 0;
   int lateAppearances = 0;
   int lateGoals = 0;
@@ -265,6 +270,11 @@ Future<Career> runCareer(
       }
       // 「無傷 → 負傷」の瞬間だけ数える。離脱中は毎試合 Injury が作り直される
       // ので、単に別物かどうかで見ると離脱の長さを数えてしまう。
+      // じっくりやる試合が、どれだけ来ているか。
+      if (!state.seasonFinished) {
+        career.leagueMatches++;
+        if (Newsroom.isBigFixture(state)) career.bigFixtures++;
+      }
       final wasInjured = state.injured;
       if (onDecision == null && style.pick == null) {
         await controller.simulateMatch();

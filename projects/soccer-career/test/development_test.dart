@@ -237,27 +237,30 @@ void main() {
     });
 
     test('逆足の局面では精度の低い選手ほど落ちる', () {
+      // 局面の数は試合の重さで変わる（重い試合は6、ふつうは2）。
+      // 数を決め打ちにすると、重さを入れた日に落ちる。
+      final scenarios = MatchEngine(random: Random(1))
+          .start(
+            matchday: 1,
+            player: player(),
+            club: club('a'),
+            opponent: club('b'),
+            home: true,
+            appearance: Appearance.start,
+          )
+          .scenarios;
       MatchInProgress matchWith(int weakFoot) => MatchInProgress(
         matchday: 1,
         opponent: club('b'),
         home: true,
         appearance: Appearance.start,
-        scenarios: MatchEngine(random: Random(1))
-            .start(
-              matchday: 1,
-              player: player(),
-              club: club('a'),
-              opponent: club('b'),
-              home: true,
-              appearance: Appearance.start,
-            )
-            .scenarios,
-        minutes: const [10, 40, 70],
+        scenarios: scenarios,
+        minutes: [for (var i = 0; i < scenarios.length; i++) 10 + i * 30],
         player: player(
           physique: Physique(heightCm: 180, weightKg: 75, weakFoot: weakFoot),
         ),
         club: club('a'),
-        weakFootMoments: const [true, true, true],
+        weakFootMoments: [for (final _ in scenarios) true],
         random: Random(1),
       );
 

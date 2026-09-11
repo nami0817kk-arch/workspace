@@ -9,7 +9,10 @@
 /// `flutter test test/matters_sim.dart` で明示的に走らせる。
 library;
 
+import 'dart:math';
+
 import 'package:flutter_test/flutter_test.dart';
+import 'package:soccer_career/game/formulas.dart';
 import 'package:soccer_career/game/match_engine.dart';
 import 'package:soccer_career/game/scenarios.dart';
 import 'package:soccer_career/models/agent.dart';
@@ -35,7 +38,8 @@ void main() {
       var caps = 0.0;
       var titles = 0.0;
       var tier = 0.0;
-      var salary = 0.0;
+      var big = 0.0;
+      var weeks = 0.0;
       for (var seed = 0; seed < seeds; seed++) {
         final c = await runCareer(
           Playstyle(
@@ -55,22 +59,28 @@ void main() {
         caps += c.caps;
         titles += c.leagueTitles + c.cupTitles;
         tier += c.bestTier;
-        salary += c.peakSalary;
+        big += c.bigFixtures;
+        weeks += c.leagueMatches;
       }
-      print('${name.padRight(18)} '
-          'ピーク ${(peak / seeds).toStringAsFixed(1)}  '
-          '平均評価 ${(rating / seeds).toStringAsFixed(2)}  '
-          '通算 ${(goals / seeds).toStringAsFixed(0)}G  '
-          '出場 ${(apps / seeds).toStringAsFixed(0)}  '
-          '代表 ${(caps / seeds).toStringAsFixed(0)}キャップ  '
-          'タイトル ${(titles / seeds).toStringAsFixed(1)}  '
-          '最高の部 ${(tier / seeds).toStringAsFixed(1)}  '
-          '最高年俸 ${(salary / seeds / 10000).toStringAsFixed(0)}万');
+      print(
+        '${name.padRight(18)} '
+        'ピーク ${(peak / seeds).toStringAsFixed(1)}  '
+        '平均評価 ${(rating / seeds).toStringAsFixed(2)}  '
+        '通算 ${(goals / seeds).toStringAsFixed(0)}G  '
+        '出場 ${(apps / seeds).toStringAsFixed(0)}  '
+        '代表 ${(caps / seeds).toStringAsFixed(0)}キャップ  '
+        'タイトル ${(titles / seeds).toStringAsFixed(1)}  '
+        '最高の部 ${(tier / seeds).toStringAsFixed(1)}  '
+        'じっくり ${(big / seeds).toStringAsFixed(0)}/'
+        '${(weeks / seeds).toStringAsFixed(0)}週'
+        '（${(big * 100 / max(1, weeks)).toStringAsFixed(0)}%）',
+      );
     }
 
     // 一番悪い手（期待値が最小）を選び続ける。
-    ScenarioOption worst(MatchInProgress m) => m.current.options
-        .reduce((a, b) => m.expectedDelta(a) <= m.expectedDelta(b) ? a : b);
+    ScenarioOption worst(MatchInProgress m) => m.current.options.reduce(
+      (a, b) => m.expectedDelta(a) <= m.expectedDelta(b) ? a : b,
+    );
     // 毎回いちばん左の手を選ぶ。読まずに押しているのと同じ。
     ScenarioOption first(MatchInProgress m) => m.current.options.first;
 
@@ -85,13 +95,18 @@ void main() {
     // 「上手い遊び方」が存在するなら、これが3つの型より上に出るはず。
     ScenarioOption ride(MatchInProgress m) {
       final options = m.current.options;
-      if (m.momentum >= 1) {
+      final left = m.scenarios.length - m.resolutions.length;
+      // 乗り切っているか、使う場が残り少ないなら決めにいく。
+      final strike = m.momentum >= Formulas.momentumMax || left <= 2;
+      if (strike) {
         final scoring = options.where((o) => o.outcome != Outcome.play);
         if (scoring.isNotEmpty) {
           return scoring.reduce(
-              (a, b) => m.expectedDelta(a) >= m.expectedDelta(b) ? a : b);
+            (a, b) => m.expectedDelta(a) >= m.expectedDelta(b) ? a : b,
+          );
         }
       }
+      // 積む番。通す確率が一番高い手で、ノリを落とさない。
       return options.reduce((a, b) => m.chanceFor(a) >= m.chanceFor(b) ? a : b);
     }
 
