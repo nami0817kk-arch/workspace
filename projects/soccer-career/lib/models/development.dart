@@ -80,6 +80,7 @@ class Development {
     this.greatWeeks = 0,
     this.points = const {},
     this.strain = Formulas.strainNeutral,
+    this.dedication = const {},
   });
 
   /// 試合経験値。出場のたびに積む。
@@ -122,6 +123,20 @@ class Development {
   /// これが無いと、追い込んでもピークに早く着くだけで、同じ選手になる
   /// （実測: 流す 74.4 / 普通 74.6 / 追い込む 74.9）。
   final int greatWeeks;
+
+  /// **どの項目を、何回狙って伸ばそうとしてきたか。**
+  ///
+  /// 伸びたかどうかではなく「狙った回数」を数える——頭打ちで土台に
+  /// 回された回も積み上げに入れないと、**鎖の深い項目ほど永久に尖れない**。
+  /// 積むほど土台を先行できる幅が広がる（`Dependencies.headroomFor`）。
+  final Map<Detail, int> dedication;
+
+  /// その項目にどれだけ積んだか。
+  int dedicationOf(Detail detail) => dedication[detail] ?? 0;
+
+  /// 狙った項目を1回ぶん積む。
+  Development aiming(Detail detail) =>
+      copyWith(dedication: {...dedication, detail: dedicationOf(detail) + 1});
 
   /// 身体の消耗 0〜100。最近どう踏み込んできたかが寄っていく先。
   ///
@@ -282,6 +297,7 @@ class Development {
     int? greatWeeks,
     Map<AttributeKey, int>? points,
     double? strain,
+    Map<Detail, int>? dedication,
   }) => Development(
     experience: experience ?? this.experience,
     choices: choices ?? this.choices,
@@ -293,6 +309,7 @@ class Development {
     greatWeeks: greatWeeks ?? this.greatWeeks,
     points: points ?? this.points,
     strain: strain ?? this.strain,
+    dedication: dedication ?? this.dedication,
   );
 
   Map<String, dynamic> toJson() => {
@@ -305,6 +322,7 @@ class Development {
     'breakthroughs': breakthroughs,
     'greatWeeks': greatWeeks,
     'strain': strain,
+    'dedication': {for (final e in dedication.entries) e.key.name: e.value},
     'points': {for (final e in points.entries) e.key.name: e.value},
   };
 
@@ -337,6 +355,11 @@ class Development {
       greatWeeks: json['greatWeeks'] as int? ?? 0,
       // 知らない保存データは「普通で来た選手」として読む。
       strain: (json['strain'] as num?)?.toDouble() ?? Formulas.strainNeutral,
+      dedication: {
+        for (final e in (json['dedication'] as Map? ?? const {}).entries)
+          if (Detail.values.any((d) => d.name == e.key))
+            Detail.values.byName(e.key as String): e.value as int,
+      },
       points: {
         for (final e in (json['points'] as Map? ?? const {}).entries)
           if (AttributeKey.values.any((k) => k.name == e.key))

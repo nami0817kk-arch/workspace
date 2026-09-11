@@ -21,6 +21,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/data/save_repository.dart';
 import 'package:soccer_career/game/career_engine.dart';
 import 'package:soccer_career/game/match_engine.dart';
+import 'package:soccer_career/models/attributes.dart';
 import 'package:soccer_career/models/career.dart';
 import 'package:soccer_career/models/development.dart';
 import 'package:soccer_career/state/career_controller.dart';
@@ -104,6 +105,16 @@ void main() {
     while (controller.state!.pendingInternational ||
         controller.state!.pendingCup != null) {
       await controller.simulateMatch();
+    }
+
+    // 育てる方向は既定で空なので、そのままだと育成タブの
+    // 「積み上げ」「上限」が一行も撮れない。3つ選んでおく。
+    for (final detail in [
+      Detail.finishing,
+      Detail.shortPassing,
+      Detail.tackling,
+    ]) {
+      await controller.toggleFocus(detail);
     }
 
     tester.view.physicalSize = const Size(390, 1500);

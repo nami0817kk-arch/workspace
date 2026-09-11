@@ -487,6 +487,11 @@ class CareerController extends ChangeNotifier {
       );
     }
     bonus += state.directive.appearanceBonus;
+    // 一芸。突き抜けた1つがあれば、総合力が足りなくても監督は使いたがる。
+    bonus += (Person.standoutOf(state.player) * 0.01).clamp(
+      0.0,
+      Formulas.standoutAppearance,
+    );
     // **点を取る選手は干されない。** 評価点だけで決めていたので、
     // 「6.8だが決めている」選手と「7.0だが何もしていない」選手を
     // 区別できていなかった（平均は変動を嫌うので、安全な手が常に正しくなる）。
@@ -667,10 +672,12 @@ class CareerController extends ChangeNotifier {
     points[detail.category] = (points[detail.category] ?? 0) - cost;
     state.development = state.development.copyWith(points: points);
 
+    state.development = state.development.aiming(detail);
     final target = Dependencies.resolve(
       detail,
       state.player.attributes,
       ceilingOf: state.player.ceilingFor,
+      dedicationOf: state.development.dedicationOf,
     );
     state.player = state.player.copyWith(
       attributes: state.player.attributes.bumpDetail(
@@ -1166,6 +1173,11 @@ class CareerController extends ChangeNotifier {
       final before = _sumOf(player.attributes);
       player = player.copyWith(
         attributes: _match.grow(
+          development: state.development,
+          // 狙った項目を積む。**伸びたかどうかではなく狙った回数**を数える——
+          // 頭打ちで土台に回された回も入れないと、鎖の深い項目は永久に尖れない。
+          aimed: (detail) =>
+              state.development = state.development.aiming(detail),
           toPoints: state.autoSpend ? null : _awardTo(state),
           player,
           result.rating,
@@ -1215,6 +1227,7 @@ class CareerController extends ChangeNotifier {
         plateau: state.development.inPlateau,
         environment: _environmentFactor(state),
         fatigue: state.fatigue.value,
+        aimed: (detail) => state.development = state.development.aiming(detail),
         toPoints: state.autoSpend ? null : _awardTo(state),
         played: result.appearance != Appearance.benched,
       );

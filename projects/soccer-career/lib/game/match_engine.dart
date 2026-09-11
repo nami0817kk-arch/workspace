@@ -1300,6 +1300,8 @@ class MatchEngine {
     int declineOffset = 0,
     bool plateau = false,
     double environment = 1.0,
+    Development development = const Development(),
+    void Function(Detail detail)? aimed,
     void Function(AttributeKey key, int step)? toPoints,
   }) {
     if (rating == null) return player.attributes;
@@ -1366,10 +1368,13 @@ class MatchEngine {
       return player.attributes;
     }
     // 土台の許す範囲まで。届かなければ土台のほうが伸びる。
+    // **積んだ項目ほど、土台を先行できる**（尖った選手はここで作られる）。
+    aimed?.call(wanted);
     final target = Dependencies.resolve(
       wanted,
       player.attributes,
       ceilingOf: player.ceilingFor,
+      dedicationOf: development.dedicationOf,
     );
     return player.attributes.bumpDetail(
       target,
@@ -1488,6 +1493,7 @@ class MatchEngine {
     bool plateau = false,
     double environment = 1.0,
     int fatigue = 0,
+    void Function(Detail detail)? aimed,
     void Function(AttributeKey key, int step)? toPoints,
     required bool played,
   }) {
@@ -1571,10 +1577,12 @@ class MatchEngine {
             final wanted = onlyTranscend
                 ? transcend
                 : ds[_random.nextInt(ds.length)];
+            aimed?.call(wanted);
             final target = Dependencies.resolve(
               wanted,
               attributes,
               ceilingOf: player.ceilingFor,
+              dedicationOf: development.dedicationOf,
             );
             if (target != wanted) redirected = true;
             attributes = attributes.bumpDetail(
