@@ -903,7 +903,8 @@ class MatchInProgress {
   /// 能力値が難易度ちょうどでも五分にはしない。難しい手を選ぶことに
   /// リスクを残さないと、常に一番おいしい選択肢を押すだけのゲームになる。
   static double successChance(int attribute, int difficulty) {
-    final chance = 0.40 + (attribute - difficulty) * 0.009;
+    final chance =
+        0.40 + (attribute - difficulty) * Formulas.attributeChanceSlope;
     return chance.clamp(0.05, 0.90);
   }
 

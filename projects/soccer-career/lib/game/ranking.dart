@@ -47,21 +47,21 @@ class LeagueRank {
   /// 順位で切ると、リーグを1つ足しただけで全部の格が動く。
   /// 難易度そのもの（相手の強さ）で切れば、意味が変わらない。
   String get grade => switch (average) {
-        >= 70 => 'S',
-        >= 63 => 'A',
-        >= 54 => 'B',
-        >= 44 => 'C',
-        _ => 'D',
-      };
+    >= 70 => 'S',
+    >= 63 => 'A',
+    >= 54 => 'B',
+    >= 44 => 'C',
+    _ => 'D',
+  };
 
   /// 格の説明。文字だけだと何を意味するのか分からない。
   String get gradeLabel => switch (grade) {
-        'S' => '世界最高峰',
-        'A' => 'トップリーグ級',
-        'B' => '中堅リーグ',
-        'C' => '下部・地方リーグ',
-        _ => '最下層',
-      };
+    'S' => '世界最高峰',
+    'A' => 'トップリーグ級',
+    'B' => '中堅リーグ',
+    'C' => '下部・地方リーグ',
+    _ => '最下層',
+  };
 }
 
 /// 選手の水準。総合力が世界のどのあたりに当たるのかを言葉にする。
@@ -109,7 +109,8 @@ class Ranking {
     final cached = _cache;
     if (cached != null) return cached;
 
-    final rows = <({String countryId, int tier, double average, int top, int clubs})>[];
+    final rows =
+        <({String countryId, int tier, double average, int top, int clubs})>[];
     for (final country in World.countries) {
       for (var tier = 1; tier <= country.tiers; tier++) {
         final clubs = World.buildLeague(country.id, tier);
@@ -143,9 +144,9 @@ class Ranking {
 
   /// そのリーグの格付け。無ければ一番下を返す。
   static LeagueRank of(String countryId, int tier) => leagues().firstWhere(
-        (l) => l.countryId == countryId && l.tier == tier,
-        orElse: () => leagues().last,
-      );
+    (l) => l.countryId == countryId && l.tier == tier,
+    orElse: () => leagues().last,
+  );
 
   static List<int>? _strengths;
 
@@ -195,14 +196,14 @@ class Ranking {
   /// 「上位13%」のような数字が出て実感と合わない。ゲームの中で実際に
   /// 意味を持つしきい値（代表招集・最高峰リーグの平均）で切る。
   static (String, String) _band(int overall) => switch (overall) {
-        >= 88 => ('世界屈指', 'どのリーグでも中心になれる'),
-        >= 82 => ('ワールドクラス', '最高峰のリーグで主力を張れる'),
-        >= Formulas.callUpOverall => ('一流', '代表に呼ばれる水準'),
-        >= 70 => ('主力級', '上位リーグで計算される'),
-        >= 62 => ('戦力', '所属リーグで出場を積める'),
-        >= 52 => ('控え', '出場機会を争う段階'),
-        _ => ('育成中', 'まずは下の部で試合に出るところから'),
-      };
+    >= 88 => ('世界屈指', 'どのリーグでも中心になれる'),
+    >= 82 => ('ワールドクラス', '最高峰のリーグで主力を張れる'),
+    >= Formulas.callUpOverall => ('一流', '代表に呼ばれる水準'),
+    >= 70 => ('主力級', '上位リーグで計算される'),
+    >= 62 => ('戦力', '所属リーグで出場を積める'),
+    >= 52 => ('控え', '出場機会を争う段階'),
+    _ => ('育成中', 'まずは下の部で試合に出るところから'),
+  };
 
   /// 代表招集の目安まで、あといくつか。届いていれば 0。
   static int toCallUp(int overall) =>
@@ -221,7 +222,9 @@ class Ranking {
   /// 能力値が1上がると、その局面の成功率が何%動くか。
   ///
   /// 練習の1回が試合の何に化けるのかを、推測ではなく式のまま出すための値。
-  static const double chancePerPoint = 0.009;
+  /// **判定と同じ定数を読む。** ここに数字を書き写すと、傾きを変えたときに
+  /// 画面だけが黙って古くなる（テストで一致を縛ってある）。
+  static const double chancePerPoint = Formulas.attributeChanceSlope;
 
   /// 能力の伸びを、成功率の増分（%）に直す。
   static double chanceGainPercent(int growth) => growth * chancePerPoint * 100;
