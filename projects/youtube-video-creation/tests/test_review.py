@@ -1072,6 +1072,29 @@ def test_埋め草を知らせる():
     assert check_filler(clean).ok
 
 
+def test_札から始まるタイトルは落とす():
+    """**頭は人名かクラブ名**（2026-09-11 の実測）。
+
+    12時間以上たった27本（深夜を除く）で、1,100回を超えた10本の **80%が名前で始まり**、
+    群れ17本では29%だった。札は抜けた側で10%・群れで35%。
+    **札が名前を頭から押しのけている。**
+    それまでは札を剥がしてから見ていたので、
+    「【速報】ヴァーディがバーンリーへ」が「頭に名前」で通っていた。
+    """
+    from src.review import check_title_subject
+    from src.script_model import Line, Scene, Script
+
+    def titled(text):
+        return Script(title=text, scenes=[Scene(title="節",
+                      lines=[Line(speaker="キャスター", text="本文")])])
+
+    bad = check_title_subject(titled("【速報】ヴァーディがバーンリーへ"))
+    assert not bad.ok and "札から始まって" in bad.detail
+
+    assert check_title_subject(titled("ヴァーディがバーンリーへ。なぜ今なのか")).ok
+    assert check_title_subject(titled("ハーランドが40試合で並んだ記録")).ok
+
+
 def test_件数への感想は埋め草():
     """**「数としては多くありません」はいらない**（2026-09-11 ユーザー指摘）。
 

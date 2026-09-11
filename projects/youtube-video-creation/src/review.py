@@ -1160,7 +1160,19 @@ def check_title_subject(script: Script) -> Finding:
     if not title:
         return Finding(False, "タイトルの主語", "タイトルがありません")
 
-    head = re.sub(r"^【[^】]*】", "", title)[:TITLE_HEAD]
+    # **札を剥がして見ない**（2026-09-11）。ここでは剥がしていたので
+    # 「【速報】ヴァーディがバーンリーへ」が「頭に名前」で通っていたが、
+    # **画面に出るタイトルは【速報】から始まっている。**
+    # 実測（12時間以上たった27本、深夜を除く）で、
+    # **1,100回を超えた10本の80%が名前で始まり、群れ17本では29%**だった。
+    # 札を付けた本は、抜けた側で10%・群れで35%。札が名前を頭から押しのけている。
+    if title.startswith("【"):
+        return Finding(
+            False, "タイトルの主語",
+            f"札から始まっています（『{title[:8]}』）。**頭は人名かクラブ名にしてください。**"
+            "札を残すなら後ろへ。抜けた10本の80%が名前で始まり、群れは29%でした",
+        )
+    head = title[:TITLE_HEAD]
     if clubs_mod.find(head):
         return Finding(True, "タイトルの主語", f"頭にクラブ名: {head[:10]}")
     if any(name and name in head for name in _japanese_names()):
