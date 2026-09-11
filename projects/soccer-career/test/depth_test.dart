@@ -31,28 +31,27 @@ Player player({
   List<Trait> traits = const [],
   int condition = 100,
   Attributes? attributes,
-}) =>
-    Player(
-      name: 'P',
-      age: age,
-      position: position,
-      attributes: attributes ?? flat50,
-      potential: potential,
-      traits: traits,
-      condition: condition,
-    );
+}) => Player(
+  name: 'P',
+  age: age,
+  position: position,
+  attributes: attributes ?? flat50,
+  potential: potential,
+  traits: traits,
+  condition: condition,
+);
 
 MatchResult played(double rating) => MatchResult(
-      matchday: 1,
-      opponentName: 'X',
-      home: true,
-      scored: 1,
-      conceded: 0,
-      appearance: Appearance.start,
-      rating: rating,
-      goals: 0,
-      assists: 0,
-    );
+  matchday: 1,
+  opponentName: 'X',
+  home: true,
+  scored: 1,
+  conceded: 0,
+  appearance: Appearance.start,
+  rating: rating,
+  goals: 0,
+  assists: 0,
+);
 
 void main() {
   group('ポジション', () {
@@ -69,22 +68,42 @@ void main() {
 
     test('GK は GK 能力で総合力が決まる', () {
       final keeper = Attributes(
-          pace: 40, shooting: 20, passing: 40, dribbling: 30,
-          defending: 50, physical: 50, goalkeeping: 90);
-      expect(keeper.overallFor(Position.gk), greaterThan(keeper.overallFor(Position.st)));
+        pace: 40,
+        shooting: 20,
+        passing: 40,
+        dribbling: 30,
+        defending: 50,
+        physical: 50,
+        goalkeeping: 90,
+      );
+      expect(
+        keeper.overallFor(Position.gk),
+        greaterThan(keeper.overallFor(Position.st)),
+      );
     });
 
     test('GK 能力が無い保存データは既定値で読む', () {
       final a = Attributes.fromJson({
-        'pace': 50, 'shooting': 50, 'passing': 50,
-        'dribbling': 50, 'defending': 50, 'physical': 50,
+        'pace': 50,
+        'shooting': 50,
+        'passing': 50,
+        'dribbling': 50,
+        'defending': 50,
+        'physical': 50,
       });
       expect(a.goalkeeping, Formulas.defaultGoalkeeping);
     });
 
     test('GK には専用の局面が7つある', () {
-      expect(ScenarioPool.forPosition(Position.gk).length, greaterThanOrEqualTo(7));
-      expect(ScenarioPool.forPosition(Position.gk).every((s) => s.id.startsWith('gk-')), isTrue);
+      expect(
+        ScenarioPool.forPosition(Position.gk).length,
+        greaterThanOrEqualTo(7),
+      );
+      expect(
+        ScenarioPool.forPosition(Position.gk)
+            .every((s) => s.id.startsWith('gk-')),
+        isTrue,
+      );
     });
 
     test('細かいポジションはファミリーの局面を使う', () {
@@ -95,41 +114,93 @@ void main() {
   });
 
   group('特性', () {
-    test('2つ引き、矛盾する組み合わせは出ない', () {
-      for (var seed = 0; seed < 200; seed++) {
+    test('枚数は選手ごとに違い、矛盾する組み合わせは出ない', () {
+      // **平均は 2.0 に置いてある**（ここがずれると、特性の数を変えただけで
+      // 世界の強さが動く）。1〜4枚のあいだで散る。
+      var total = 0;
+      final seen = <int>{};
+      for (var seed = 0; seed < 400; seed++) {
         final traits = Trait.roll(Random(seed), flawChance: 0);
-        expect(traits.length, 2);
-        expect(Trait.compatible(traits[0], traits[1]), isTrue, reason: 'seed $seed');
+        expect(traits.length, inInclusiveRange(1, 4), reason: 'seed $seed');
+        total += traits.length;
+        seen.add(traits.length);
+        for (var i = 0; i < traits.length; i++) {
+          for (var j = i + 1; j < traits.length; j++) {
+            expect(
+              Trait.compatible(traits[i], traits[j]),
+              isTrue,
+              reason: 'seed $seed',
+            );
+          }
+        }
       }
+      expect(seen.length, greaterThan(2), reason: '枚数が散っていない');
+      expect(total / 400, closeTo(2.0, 0.25), reason: '平均が 2.0 から離れた');
     });
 
     test('クラッチは終盤だけ効く', () {
-      double bonus(int minute) => Trait.clutch.chanceBonus(TraitContext(
-          minute: minute, home: true, outcome: Outcome.play, afterFailure: false,
-          afterSuccess: false, key: AttributeKey.passing, detail: null,
-          scenarioId: 'x', international: false));
+      double bonus(int minute) => Trait.clutch.chanceBonus(
+        TraitContext(
+          minute: minute,
+          home: true,
+          outcome: Outcome.play,
+          afterFailure: false,
+          afterSuccess: false,
+          key: AttributeKey.passing,
+          detail: null,
+          scenarioId: 'x',
+          international: false,
+        ),
+      );
       expect(bonus(30), 0);
       expect(bonus(80), greaterThan(0));
     });
 
     test('負けず嫌いは失敗直後だけ効く', () {
-      double bonus(bool after) => Trait.fighter.chanceBonus(TraitContext(
-          minute: 10, home: true, outcome: Outcome.play, afterFailure: after,
-          afterSuccess: false, key: AttributeKey.passing, detail: null,
-          scenarioId: 'x', international: false));
+      double bonus(bool after) => Trait.fighter.chanceBonus(
+        TraitContext(
+          minute: 10,
+          home: true,
+          outcome: Outcome.play,
+          afterFailure: after,
+          afterSuccess: false,
+          key: AttributeKey.passing,
+          detail: null,
+          scenarioId: 'x',
+          international: false,
+        ),
+      );
       expect(bonus(false), 0);
       expect(bonus(true), greaterThan(0));
     });
 
     test('勝負師と職人は逆向き', () {
-      double g(Outcome o) => Trait.gambler.chanceBonus(TraitContext(
-          minute: 10, home: true, outcome: o, afterFailure: false,
-          afterSuccess: false, key: AttributeKey.passing, detail: null,
-          scenarioId: 'x', international: false));
-      double c(Outcome o) => Trait.craftsman.chanceBonus(TraitContext(
-          minute: 10, home: true, outcome: o, afterFailure: false,
-          afterSuccess: false, key: AttributeKey.passing, detail: null,
-          scenarioId: 'x', international: false));
+      double g(Outcome o) => Trait.gambler.chanceBonus(
+        TraitContext(
+          minute: 10,
+          home: true,
+          outcome: o,
+          afterFailure: false,
+          afterSuccess: false,
+          key: AttributeKey.passing,
+          detail: null,
+          scenarioId: 'x',
+          international: false,
+        ),
+      );
+      double c(Outcome o) => Trait.craftsman.chanceBonus(
+        TraitContext(
+          minute: 10,
+          home: true,
+          outcome: o,
+          afterFailure: false,
+          afterSuccess: false,
+          key: AttributeKey.passing,
+          detail: null,
+          scenarioId: 'x',
+          international: false,
+        ),
+      );
       expect(g(Outcome.goal), greaterThan(0));
       expect(g(Outcome.play), lessThan(0));
       expect(c(Outcome.play), greaterThan(0));
@@ -138,7 +209,8 @@ void main() {
 
     test('特性は表示される成功率と判定の両方に効く', () {
       final league = Names.buildLeague(2);
-      MatchInProgress start(List<Trait> traits) => MatchEngine(random: Random(1)).start(
+      MatchInProgress start(List<Trait> traits) =>
+          MatchEngine(random: Random(1)).start(
             matchday: 1,
             player: player(position: Position.st, traits: traits),
             club: league.first,
@@ -165,7 +237,10 @@ void main() {
       for (var i = 0; i < 100; i++) {
         final p = engine.rollPotential(55);
         expect(p, greaterThan(55));
-        expect(p, inInclusiveRange(Formulas.potentialMin, Formulas.potentialMax));
+        expect(
+          p,
+          inInclusiveRange(Formulas.potentialMin, Formulas.potentialMax),
+        );
       }
     });
 
@@ -181,11 +256,18 @@ void main() {
 
     test('新規キャリアの選手にはポテンシャルと特性が付く', () {
       final s = CareerEngine(random: Random(4)).startCareer(
-        name: 'N', position: Position.wg, age: 17, agent: Agent.pool.first);
+        name: 'N',
+        position: Position.wg,
+        age: 17,
+        agent: Agent.pool.first,
+      );
       expect(s.player.potential, greaterThan(s.player.overall));
-      // 長所2つ。3割で欠点が1つ付くので、合計は2か3。
-      expect(s.player.traits.where((t) => !t.flaw).length, 2);
-      expect(s.player.traits.length, inInclusiveRange(2, 3));
+      // 長所は1〜4枚。欠点はその数に応じて0〜2枚付く。
+      expect(
+        s.player.traits.where((t) => !t.flaw).length,
+        inInclusiveRange(1, 4),
+      );
+      expect(s.player.traits, isNotEmpty);
     });
 
     test('帯の表示は数値を出さない', () {
@@ -202,15 +284,20 @@ void main() {
       final rested = engine.applyWeek(base, played: false);
       expect(rested.condition, 50 + TrainingMenu.rest.recovery);
 
-      final trained = engine.applyWeek(base,
-          menu: TrainingMenu.passingWork, played: false);
-      expect(
-          trained.condition, 50 - TrainingMenu.passingWork.conditionCost);
+      final trained = engine.applyWeek(
+        base,
+        menu: TrainingMenu.passingWork,
+        played: false,
+      );
+      expect(trained.condition, 50 - TrainingMenu.passingWork.conditionCost);
     });
 
     test('試合に出た週はその分も減り、0〜100 に収まる', () {
-      final low = engine.applyWeek(player(condition: 5),
-          menu: TrainingMenu.sprint, played: true);
+      final low = engine.applyWeek(
+        player(condition: 5),
+        menu: TrainingMenu.sprint,
+        played: true,
+      );
       expect(low.condition, 0);
       final high = engine.applyWeek(player(condition: 95), played: false);
       expect(high.condition, Formulas.conditionMax);
@@ -220,8 +307,11 @@ void main() {
       var attrs = flat50;
       var grew = 0;
       for (var i = 0; i < 200; i++) {
-        final week = engine.applyWeek(player(attributes: attrs),
-            menu: TrainingMenu.finishingWork, played: false);
+        final week = engine.applyWeek(
+          player(attributes: attrs),
+          menu: TrainingMenu.finishingWork,
+          played: false,
+        );
         if (week.trained != null) {
           grew++;
           // 土台に阻まれた週は、土台のほうが伸びる。
@@ -234,16 +324,24 @@ void main() {
       }
       expect(grew, greaterThan(0));
       // 伸びるのはシュートの詳細のどれか。他のカテゴリは動かない。
-      final shootingTotal = AttributeKey.shooting.details
-          .fold(0, (sum, d) => sum + attrs.detail(d));
-      expect(shootingTotal, greaterThan(50 * AttributeKey.shooting.details.length));
+      final shootingTotal = AttributeKey.shooting.details.fold(
+        0,
+        (sum, d) => sum + attrs.detail(d),
+      );
+      expect(
+        shootingTotal,
+        greaterThan(50 * AttributeKey.shooting.details.length),
+      );
     });
 
     test('ポテンシャルに達していれば練習でも伸びない', () {
       final capped = player(potential: 50);
       for (var i = 0; i < 100; i++) {
-        final week = engine.applyWeek(capped,
-            menu: TrainingMenu.passingWork, played: false);
+        final week = engine.applyWeek(
+          capped,
+          menu: TrainingMenu.passingWork,
+          played: false,
+        );
         expect(week.trained, isNull);
       }
     });
@@ -256,7 +354,12 @@ void main() {
 
     test('新しいシーズンはコンディションが戻る', () {
       final ce = CareerEngine(random: Random(6));
-      final s = ce.startCareer(name: 'C', position: Position.cb, age: 18, agent: Agent.pool.first);
+      final s = ce.startCareer(
+        name: 'C',
+        position: Position.cb,
+        age: 18,
+        agent: Agent.pool.first,
+      );
       s.player = s.player.copyWith(condition: 20);
       final next = ce.advanceSeason(s, accepted: ce.renewalOffer(s));
       expect(next.player.condition, Formulas.conditionMax);
@@ -277,16 +380,25 @@ void main() {
     });
 
     test('年俸は総合力とリーグで上がる', () {
-      expect(CareerEngine.salaryFor(overall: 70, tier: 1),
-          greaterThan(CareerEngine.salaryFor(overall: 60, tier: 1)));
-      expect(CareerEngine.salaryFor(overall: 70, tier: 1),
-          greaterThan(CareerEngine.salaryFor(overall: 70, tier: 2)));
+      expect(
+        CareerEngine.salaryFor(overall: 70, tier: 1),
+        greaterThan(CareerEngine.salaryFor(overall: 60, tier: 1)),
+      );
+      expect(
+        CareerEngine.salaryFor(overall: 70, tier: 1),
+        greaterThan(CareerEngine.salaryFor(overall: 70, tier: 2)),
+      );
       expect(CareerEngine.salaryFor(overall: 30, tier: 2), greaterThan(0));
     });
 
     test('契約更改は常に提示され、好成績なら上がる', () {
       final ce = CareerEngine(random: Random(8));
-      final s = ce.startCareer(name: 'R', position: Position.st, age: 20, agent: Agent.pool.first);
+      final s = ce.startCareer(
+        name: 'R',
+        position: Position.st,
+        age: 20,
+        agent: Agent.pool.first,
+      );
       // 契約が残っている間は、残留しても条件は動かない（1年減るだけ）。
       s.contractYears = 3;
       final holding = ce.renewalOffer(s);
@@ -308,7 +420,12 @@ void main() {
     test('上乗せ要求: 交渉力が高く好成績なら通る', () {
       final ce = CareerEngine(random: Random(9));
       final strong = Agent.pool.firstWhere((a) => a.negotiation == 5);
-      final s = ce.startCareer(name: 'N', position: Position.st, age: 20, agent: strong);
+      final s = ce.startCareer(
+        name: 'N',
+        position: Position.st,
+        age: 20,
+        agent: strong,
+      );
       for (var i = 0; i < 12; i++) {
         s.results.add(played(8.5));
       }
@@ -324,7 +441,12 @@ void main() {
     test('上乗せに成功すると年俸が倍率分だけ上がり、二度目は要求できない', () {
       final ce = CareerEngine(random: Random(10));
       final strong = Agent.pool.firstWhere((a) => a.negotiation == 5);
-      final s = ce.startCareer(name: 'N', position: Position.st, age: 20, agent: strong);
+      final s = ce.startCareer(
+        name: 'N',
+        position: Position.st,
+        age: 20,
+        agent: strong,
+      );
       for (var i = 0; i < 12; i++) {
         s.results.add(played(9.0));
       }
@@ -335,7 +457,12 @@ void main() {
         if (result == NegotiationResult.raised) after = o;
       }
       expect(after, isNotNull);
-      expect(after!.salary, greaterThanOrEqualTo((offer.salary * Formulas.negotiationRaise).floor() - 10));
+      expect(
+        after!.salary,
+        greaterThanOrEqualTo(
+          (offer.salary * Formulas.negotiationRaise).floor() - 10,
+        ),
+      );
       expect(after.negotiated, isTrue);
       final (again, same) = ce.negotiate(s, after);
       expect(again, NegotiationResult.refused);
@@ -345,7 +472,12 @@ void main() {
     test('契約更改は失敗しても撤回されない', () {
       final ce = CareerEngine(random: Random(11));
       final weak = Agent.pool.firstWhere((a) => a.negotiation == 2);
-      final s = ce.startCareer(name: 'W', position: Position.cb, age: 20, agent: weak);
+      final s = ce.startCareer(
+        name: 'W',
+        position: Position.cb,
+        age: 20,
+        agent: weak,
+      );
       final offer = ce.renewalOffer(s);
       for (var i = 0; i < 50; i++) {
         final (result, o) = ce.negotiate(s, offer);
@@ -357,13 +489,19 @@ void main() {
     test('移籍オファーは失敗すると撤回されることがある', () {
       final ce = CareerEngine(random: Random(12));
       final weak = Agent.pool.firstWhere((a) => a.negotiation == 2);
-      final s = ce.startCareer(name: 'W', position: Position.st, age: 20, agent: weak);
+      final s = ce.startCareer(
+        name: 'W',
+        position: Position.st,
+        age: 20,
+        agent: weak,
+      );
       final offer = TransferOffer(
         club: Names.buildLeague(2).first,
         reason: '',
         salary: 500,
         role: '主力',
-        years: 3);
+        years: 3,
+      );
       var withdrawn = 0;
       for (var i = 0; i < 100; i++) {
         final (result, _) = ce.negotiate(s, offer);
@@ -375,13 +513,19 @@ void main() {
     test('人脈が広い代理人は、より強いクラブを引いてくる', () {
       CareerState build(Agent agent) {
         final ce = CareerEngine(random: Random(13));
-        final s = ce.startCareer(name: 'A', position: Position.st, age: 22, agent: agent);
+        final s = ce.startCareer(
+          name: 'A',
+          position: Position.st,
+          age: 22,
+          agent: agent,
+        );
         s.contractYears = 1;
         for (var i = 0; i < 12; i++) {
           s.results.add(played(8.0));
         }
         return s;
       }
+
       final narrow = Agent.pool.firstWhere((a) => a.reach == 1);
       final wide = Agent.pool.firstWhere((a) => a.reach == 8);
       final ce = CareerEngine(random: Random(13));
@@ -392,12 +536,22 @@ void main() {
 
     test('受けたオファーの年俸で次のシーズンが始まり、記録に残る', () {
       final ce = CareerEngine(random: Random(14));
-      final s = ce.startCareer(name: 'S', position: Position.cm, age: 20, agent: Agent.pool.first);
+      final s = ce.startCareer(
+        name: 'S',
+        position: Position.cm,
+        age: 20,
+        agent: Agent.pool.first,
+      );
       final before = s.salary;
       final next = ce.advanceSeason(
         s,
         accepted: TransferOffer(
-            club: s.club, reason: '', salary: 1234, role: '主力', years: 3),
+          club: s.club,
+          reason: '',
+          salary: 1234,
+          role: '主力',
+          years: 3,
+        ),
       );
       expect(next.salary, 1234);
       expect(next.history.last.salary, before);
@@ -407,7 +561,12 @@ void main() {
     test('手取りは手数料分だけ減る', () {
       final ce = CareerEngine(random: Random(15));
       final agent = Agent.pool.firstWhere((a) => a.feePercent == 10);
-      final s = ce.startCareer(name: 'T', position: Position.cm, age: 20, agent: agent);
+      final s = ce.startCareer(
+        name: 'T',
+        position: Position.cm,
+        age: 20,
+        agent: agent,
+      );
       expect(ce.takeHome(s, 1000), 900);
     });
   });
@@ -415,7 +574,12 @@ void main() {
   group('保存の互換性', () {
     test('代理人・年俸・練習・ポテンシャルが無い保存データを読める', () {
       final ce = CareerEngine(random: Random(16));
-      final s = ce.startCareer(name: 'O', position: Position.cm, age: 20, agent: Agent.pool[1]);
+      final s = ce.startCareer(
+        name: 'O',
+        position: Position.cm,
+        age: 20,
+        agent: Agent.pool[1],
+      );
       final json = s.toJson();
       json.remove('agent');
       json.remove('salary');
@@ -447,7 +611,12 @@ void main() {
 
     test('新しい項目は往復しても保たれる', () {
       final ce = CareerEngine(random: Random(17));
-      final s = ce.startCareer(name: 'O', position: Position.gk, age: 19, agent: Agent.pool[2]);
+      final s = ce.startCareer(
+        name: 'O',
+        position: Position.gk,
+        age: 19,
+        agent: Agent.pool[2],
+      );
       s.menu = TrainingMenu.keeperWork;
       s.drill = SetPiece.freeKick;
       s.player = s.player.copyWith(condition: 42);

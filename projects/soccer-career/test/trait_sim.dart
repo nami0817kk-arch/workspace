@@ -78,4 +78,42 @@ void main() {
     await run('天才', const [Trait.genius]);
     await run('欠点2つ', const [Trait.lazy, Trait.fragile]);
   }, timeout: const Timeout(Duration(minutes: 60)));
+
+  test('配られる枚数が、選手を変えているか', () async {
+    // **特性の数は選手ごとに違う。** 引いた枚数でキャリアを束ね直して、
+    // 枚数そのものが結果を動かしているかを見る。
+    const seeds = 60;
+    final byCount = <int, List<Career>>{};
+
+    for (var seed = 0; seed < seeds; seed++) {
+      final career = await runCareer(
+        Playstyle(
+          name: 'x',
+          position: Position.cm,
+          startAge: 18,
+          sim: SimStyle.balanced,
+          agent: Agent.pool.first,
+        ),
+        seed,
+      );
+      byCount.putIfAbsent(career.strengthCount, () => []).add(career);
+    }
+
+    print('--- 引いた長所の枚数で束ねる（$seeds キャリア）---');
+    final counts = byCount.keys.toList()..sort();
+    for (final count in counts) {
+      final group = byCount[count]!;
+      double avg(num Function(Career) of) =>
+          group.fold<double>(0, (s, c) => s + of(c)) / group.length;
+      print(
+        '長所$count枚 ${group.length.toString().padLeft(2)}人  '
+        'ピーク ${avg((c) => c.peakOverall).toStringAsFixed(1)}  '
+        '評価 ${avg((c) => c.averageRating).toStringAsFixed(2)}  '
+        '代表 ${avg((c) => c.caps).toStringAsFixed(0)}  '
+        '通算ゴール ${avg((c) => c.goals).toStringAsFixed(0)}  '
+        '欠点 ${avg((c) => c.flawCount).toStringAsFixed(2)}枚  '
+        '稀 ${group.where((c) => c.hadRare).length * 100 ~/ group.length}%',
+      );
+    }
+  }, timeout: const Timeout(Duration(minutes: 60)));
 }

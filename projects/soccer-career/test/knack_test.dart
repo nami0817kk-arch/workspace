@@ -43,7 +43,11 @@ Future<CareerController> started({
     random: Random(seed),
   );
   await c.startCareer(
-      name: '検証', position: position, age: 30, agent: Agent.pool.first);
+    name: '検証',
+    position: position,
+    age: 30,
+    agent: Agent.pool.first,
+  );
   return c;
 }
 
@@ -109,9 +113,11 @@ void main() {
       expect(state.learnedKnack, isTrue);
       expect(Knacks.canLearn(state), isFalse);
       expect(Knacks.missing(state), contains('もう掴んでいる'));
-      // 2つ目は通らない。
+      // 2つ目は通らない。**生まれつき持っていることがある**ので、
+      // 「入っていない」ではなく「増えていない」で見る。
+      final before = state.player.traits.length;
       expect(await c.learnKnack(Trait.wall), isFalse);
-      expect(state.player.traits.where((t) => t == Trait.wall), isEmpty);
+      expect(state.player.traits.length, before);
     });
   });
 
@@ -154,8 +160,11 @@ void main() {
       for (final trait in Knacks.offer(state)) {
         expect(state.player.traits.contains(trait), isFalse);
         for (final owned in state.player.traits) {
-          expect(Trait.compatible(owned, trait), isTrue,
-              reason: '${owned.label} と ${trait.label} が噛み合わない');
+          expect(
+            Trait.compatible(owned, trait),
+            isTrue,
+            reason: '${owned.label} と ${trait.label} が噛み合わない',
+          );
         }
       }
     });
@@ -189,8 +198,10 @@ void main() {
     test('出すのは3つまで', () async {
       final c = await started();
       ready(c.state!);
-      expect(Knacks.offer(c.state!).length,
-          lessThanOrEqualTo(Knacks.offerCount));
+      expect(
+        Knacks.offer(c.state!).length,
+        lessThanOrEqualTo(Knacks.offerCount),
+      );
     });
   });
 
@@ -233,8 +244,9 @@ void main() {
       final json = state.toJson();
       expect(CareerState.fromJson(json).learnedKnack, isTrue);
       expect(
-          CareerState.fromJson(json..remove('learnedKnack')).learnedKnack,
-          isFalse);
+        CareerState.fromJson(json..remove('learnedKnack')).learnedKnack,
+        isFalse,
+      );
     });
   });
 }

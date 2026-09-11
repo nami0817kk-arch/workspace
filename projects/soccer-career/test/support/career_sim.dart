@@ -176,6 +176,11 @@ class Career {
   /// そのシーズンに昇格した回数。
   int promotions = 0;
 
+  /// 配られた特性。**枚数が選手を変えているか**を見るために残す。
+  int strengthCount = 0;
+  int flawCount = 0;
+  bool hadRare = false;
+
   /// 1試合で2点・3点取った回数と、1試合の最多得点。
   ///
   /// **「ハットトリックができない」を数字で見るために要る。**
@@ -282,6 +287,10 @@ Future<Career> runCareer(
   );
 
   final career = Career(style)..startOverall = controller.state!.player.overall;
+  final dealt = controller.state!.player.traits;
+  career.strengthCount = dealt.where((t) => !t.flaw).length;
+  career.flawCount = dealt.where((t) => t.flaw).length;
+  career.hadRare = dealt.any((t) => t.rare);
   await controller.setSimStyle(style.sim);
   await controller.setHabits(style.habits);
   if (style.directive != Directive.none) {
