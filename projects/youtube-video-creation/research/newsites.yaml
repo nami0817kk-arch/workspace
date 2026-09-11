@@ -15,7 +15,7 @@ sites:
   - https://www.dailymail.com/sport/football/article-16098909/Chelsea-transfer-window-Enzo-Fernandez.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
   - https://www.dailymail.com/sport/football/article-16098687/Footballer-tears-mum.html?ns_mchannel=rss&ns_campaign=1490&ito=1490
 - host: derbyderbyderby.it
-  seen: 17
+  seen: 18
   days:
   - '2026-09-02'
   - '2026-09-03'
@@ -154,6 +154,14 @@ sites:
   examples:
   - https://www.tuttobolognaweb.it/mercato/tedesco/?intcmp=gazzanet-tuttobolognaweb
   - https://www.tuttobolognaweb.it/news/dovbyk-emozionato-per-il-gol-ma-dobbiamo-migliorare/?intcmp=gazzanet-tuttobolognaweb
+- host: numericalcio.it
+  seen: 4
+  days:
+  - '2026-09-07'
+  - '2026-09-11'
+  examples:
+  - https://www.numericalcio.it/calendario-gare/serie-b-2019-20-risultati-e-classifica-aggiornata/?intcmp=gazzanet-numericalcio
+  - https://www.numericalcio.it/uefa-youth-league/youth-league-2019-20-risultati-e-classifiche/?intcmp=gazzanet-numericalcio
 - host: genoaoggi.it
   seen: 3
   days:
@@ -183,14 +191,6 @@ sites:
   examples:
   - https://www.pianetamilan.it/news-milan/interviste/fofana-qui-per-riportare-il-siviglia-ad-alti-livelli-spero-di-ritrovare-il-piacere-di-giocare-a-calcio/?intcmp=gazzanet-pianetamilan
   - http://pianetamilan.it/news-milan/ultime-notizie/ex-milan-taarabt-appende-gli-scarpini-al-chiodo-non-cambierei-nulla-di-questo-viaggio/
-- host: numericalcio.it
-  seen: 3
-  days:
-  - '2026-09-07'
-  - '2026-09-11'
-  examples:
-  - https://www.numericalcio.it/calendario-gare/serie-b-2019-20-risultati-e-classifica-aggiornata/?intcmp=gazzanet-numericalcio
-  - https://www.numericalcio.it/uefa-youth-league/youth-league-2019-20-risultati-e-classifiche/?intcmp=gazzanet-numericalcio
 - host: today.rtl.lu
   seen: 2
   days:

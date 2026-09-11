@@ -1,0 +1,104 @@
+# ジダンがフランス代表を引き受けた経緯（2026年9月10日）。ユーザー指示「ジタンの話」
+#
+# **記事を2本開いて読んだ。**フットメルカートが、RMC で語ったフランスサッカー連盟
+# ディアロ会長の言葉と、最初の招集リストの話を伝えている。
+#
+# 引きは**「会長に言った一言」**。就任そのものは既報で、
+# **1年半前の秘密の会談で何を言ったか**のほうが新しい。
+#
+# **1行は54字まで。**超えると画面のテロップが「…」で切れる
+# （同日クチーニョの回で読み上げの68%しか画面に出ていなかった）
+#
+# **反応は入れない。**読める形のスレが無かった
+format: news
+voice_min: 40
+slot: other
+date: "2026年9月10日"
+
+# ハッシュタグに使う人の名前
+people:
+  - ジネディーヌ・ジダン
+  - フィリップ・ディアロ
+  - ディディエ・デシャン
+  - パブロ・パジス
+
+short_title: "ジダンが会長に言った一言"
+
+theme:
+  id: zidane_france
+  league: france
+  kind: other
+  topic: フランス代表
+  title: ジダンがフランス代表を引き受けた日。会長に言った一言とは
+  hook: デシャンの14年が、そこで終わりました。
+  question: 秘密の会談で、ジダンは何と言ったのか
+
+thumbnail:
+  line1: 秘密の会談は2025年2月
+  line2: ジダン「●●●●●●●●」
+  photo: "assets/photos/20260911_zidane/01.jpg"
+  tags: []
+  points:
+    - 初招集の発表は9月18日
+    - 相手はトルコとベルギー
+
+sections:
+  - id: now
+    heading: いま、どこまで来ているか
+    tier: 報道
+    telop: 初めてのメンバー発表は9月18日
+    narrator: キャスター
+    card:
+      type: table
+      title: ジダン体制の最初の2試合（ネーションズリーグ）
+      columns: ["日付", "相手"]
+      rows:
+        - ["9月18日 18時", "初めてのメンバー発表"]
+        - ["9月25日", "トルコ"]
+        - ["9月28日", "ベルギー"]
+    say:
+      - デシャンが14年率いたフランス代表を、いまジネディーヌ・ジダンが率いています。
+      - 1998年のW杯を制した、同じ世代の顔です。
+      - 最初のメンバー発表は9月18日。25日にトルコ、28日にベルギーと戦います。
+    official: false
+    sources:
+      - https://www.footmercato.net/a206889952732696435-edf-pablo-pagis-pre-convoque-par-zinedine-zidane
+      - https://www.footmercato.net/a7893617848249144096-edf-philippe-diallo-devoile-son-rendez-vous-secret-avec-zinedine-zidane
+
+  - id: meeting
+    heading: どうやって決まったのか
+    tier: 報道
+    main: true
+    telop: 「パリで、内密に会った」
+    narrator: 解説
+    say:
+      - 連盟のフィリップ・ディアロ会長が、経緯を明かしました。
+      - {voice: ディアロ会長, text: 2025年2月に彼と会った}
+      - {voice: ディアロ会長, text: デシャンの退任が発表された、すぐあとだ}
+      - {voice: ディアロ会長, text: 少し秘密の会合だった}
+      - {voice: ディアロ会長, text: いまいるチームを乱したくなかった}
+      - {voice: ディアロ会長, text: パリで、内密に会った}
+      - {voice: ディアロ会長, text: フランス代表を率いたいという巨大な意志を、まず確認したかった}
+      - {voice: ディアロ会長, text: 途方もない提案をいくつも受けてきた人だ}
+      - {voice: ディアロ会長, text: そのすべてを、フランス代表のために断ってきた}
+      - その席で、ジダンが返した言葉です。
+      - {voice: ジダン, text: 会長、私は勝ち方を知っています}
+      - 会長はこう締めくくりました。
+      - {voice: ディアロ会長, text: このアイコンに、レ・ブルーとの物語を続ける機会を与えられた}
+      - {voice: ディアロ会長, text: それが私の誇りだ}
+    official: false
+    sources:
+      - https://www.footmercato.net/a7893617848249144096-edf-philippe-diallo-devoile-son-rendez-vous-secret-avec-zinedine-zidane
+      - https://www.footmercato.net/a206889952732696435-edf-pablo-pagis-pre-convoque-par-zinedine-zidane
+
+  - id: list
+    heading: 最初のリストに、誰が入るのか
+    tier: 未確認
+    telop: パリFCの23歳の名前が挙がった
+    narrator: 解説
+    say:
+      - 予備の招集に、パリFCのFWパブロ・パジスの名前が挙がりました。
+      - 23歳。この夏にロリアンから約1500万ユーロで加入した選手です。
+    official: false
+    sources:
+      - https://www.footmercato.net/a206889952732696435-edf-pablo-pagis-pre-convoque-par-zinedine-zidane
