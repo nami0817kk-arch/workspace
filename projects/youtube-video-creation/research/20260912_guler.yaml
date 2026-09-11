@@ -1,0 +1,123 @@
+# アルダ・ギュレルの契約延長で合意（2026年9月12日）
+#
+# **確度は 報道。クラブ発表はまだ出ていない。**「契約した」とは書かない。
+#
+# **年数が報道で割れている。**スペイン紙 AS は 2031年まで、
+# ロマーノは 2032年までの6年。**どちらか一方を断定しない。両方そのまま出す。**
+# 一次情報（クラブ発表）が出るまでは、年数すら確定していない。
+# 給与は「大幅な昇給」としか出ていないので、**金額は書かない。**
+#
+# 引きは**「なぜ今なのか」**。延長そのものより、
+# **モウリーニョが役割を変えて、1億4000万ユーロの新加入より先に使っている**
+# ことが理由として出ている。ここが山場（@main）。
+#
+# **発言が1件も取れていない。**ギュレル本人もモウリーニョも、この件では
+# 何も言っていない。`voice_min` を 15 まで下げ、語りの動画として作る
+format: news
+voice_min: 15
+slot: laliga
+date: "2026年9月12日"
+
+people:
+  - アルダ・ギュレル
+  - ジョゼ・モウリーニョ
+  - ヤン・ディオマンデ
+
+short_title: "ギュレルの契約が延びる理由"
+
+theme:
+  id: guler_renewal
+  league: spain
+  kind: transfer
+  topic: レアル・マドリード
+  title: アルダ・ギュレルの契約が延びる。押しのけられたのは誰か
+  hook: いまの契約は2029年まで。まだ3年、残っています。
+  question: なぜ今、延ばすのか
+
+thumbnail:
+  line1: 先発を分けたのは
+  line2: 1億4000万ユーロの ●●
+  # **2枚並べる**（2026-09-12 ユーザー「サムネをもっとこだわって」）。
+  # 縦長1枚だと左半分がぼかしだけになり、話（序列）も絵にならなかった。
+  # 言い分が食い違う回ではないので、ぶつかる印は置かない
+  photos:
+    - "assets/photos/20260912_guler/01.jpg"
+    - "assets/photos/20260912_diomande/01.jpg"
+  tags: []
+
+sections:
+  - id: what
+    heading: 何が合意されたのか
+    tier: 報道
+    telop: 年数は報道で割れている
+    narrator: キャスター
+    card:
+      type: table
+      title: アルダ・ギュレルの契約
+      columns: ["", ""]
+      rows:
+        - ["いまの契約", "2029年まで"]
+        - ["スペイン紙 AS", "2031年まで"]
+        - ["ロマーノ", "2032年6月まで（6年）"]
+        - ["給与", "大幅な昇給（金額は未公表）"]
+    say:
+      - アルダ・ギュレルとレアル・マドリードが、契約の延長で合意したと伝えられています。
+      - ただし、何年までなのかが割れています。スペイン紙のASはこう伝えました。
+      - {voice: スペイン紙 AS, text: 2029年満了の契約を、2031年まで2年延長する}
+      - 一方、移籍情報の記者ファブリツィオ・ロマーノはこう書いています。
+      - {voice: ファブリツィオ・ロマーノ, text: 2032年6月までの6年で合意。まもなく発表される見込みで、給与も大幅に上がる}
+      - いまの契約は2029年まででしたから、どちらにしてもまだ3年残っている状態での上積みです。
+    official: false
+    sources:
+      - https://madriduniversal.com/just-in-real-madrid-reach-six-year-renewal-agreement-until-2032-with-young-playmaker-romano/
+      - https://footballtoday.com/2026/09/10/arda-guler-agrees-new-real-madrid-contract-after-emergence-as-key-mourinho-player/
+
+  - id: why
+    heading: なぜ今、延ばすのか
+    main: true
+    tier: 報道
+    telop: 先発を奪った相手が、その理由
+    narrator: 解説
+    # **ここが山場。**延長のニュースではなく、
+    # 「1億4000万ユーロの新加入より先に使われている」という事実が芯
+    card:
+      type: bars
+      title: 昨シーズンのアルダ・ギュレル
+      unit: ''
+      items:
+        - label: 出場
+          value: 51
+        - label: アシスト
+          value: 14
+          highlight: true
+        - label: ゴール
+          value: 6
+    say:
+      - 理由として挙げられているのは、序列です。
+      - この夏、レアルは1億4000万ユーロでヤン・ディオマンデを獲得しました。
+      - {voice: ファブリツィオ・ロマーノ, text: 右サイドの重要な選手として、1億4000万ユーロの新加入より先に先発している}
+      - 昨シーズンは51試合に出て、6ゴール14アシスト。
+      - チャンピオンズリーグでは14試合のうち13試合が先発で、2ゴール3アシストでした。
+      - 2025-26シーズンのチャンピオンズリーグ・ブレークスループレイヤーにも選ばれています。
+      - そしてもうひとつ、モウリーニョの就任が挙げられています。
+      - {voice: スペイン紙 AS, text: 中盤の一枚ではなく、異なる攻撃的な型として扱われている}
+      - 中盤の底ではなく、ゴールに近い位置で使う、ということです。
+      - ベティス戦ではベリンガム、バルベルデと並んで先発し、危険なクロスで2度、機会を作りました。
+    official: false
+    sources:
+      - https://madriduniversal.com/just-in-real-madrid-reach-six-year-renewal-agreement-until-2032-with-young-playmaker-romano/
+      - https://footballtoday.com/2026/09/10/arda-guler-agrees-new-real-madrid-contract-after-emergence-as-key-mourinho-player/
+
+  - id: careful
+    heading: まだ決まっていないこと
+    tier: 報道
+    telop: クラブ発表は出ていない
+    narrator: キャスター
+    say:
+      - ここまでは、すべて報道です。クラブからの発表は、まだ出ていません。
+      - 冒頭のとおり、年数も2031年と2032年で割れたままです。
+      - 金額も、契約の細かい中身も、公表されていません。
+    official: false
+    sources:
+      - https://madriduniversal.com/just-in-real-madrid-reach-six-year-renewal-agreement-until-2032-with-young-playmaker-romano/
+      - https://footballtoday.com/2026/09/10/arda-guler-agrees-new-real-madrid-contract-after-emergence-as-key-mourinho-player/

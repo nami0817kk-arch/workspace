@@ -1,0 +1,131 @@
+# ヴィニシウスがベルナベウでブーイングを浴び、モウリーニョが返した（2026年9月12日）
+#
+# **会見は2つある。混ぜない。**
+#   9月8日 インテル戦の試合後 … 「彼は最高の状態ではない」「6回の50メートル」
+#   9月11日 ラージョ戦の前日 … 「実のなる木にしか石は投げない」
+# 日付を言い分けて、**別の日の言葉だと分かるように置く。**
+#
+# 引きは**「なぜモウリーニョはことわざを持ち出したのか」**。
+# ブーイングそのものより、**守り方のほうが中身がある。**ここが山場（@main）。
+#
+# **ファンを責める話にしない。**モウリーニョ自身が
+# 「ファンを批判しているのではない」と言っている。この一文は必ず入れる。
+#
+# format は quote。発言が主役なので、語りは最小にする
+format: quote
+voice_min: 60
+slot: world
+date: "2026年9月12日"
+
+people:
+  - ヴィニシウス・ジュニオール
+  - ジョゼ・モウリーニョ
+
+short_title: "ヴィニシウスにモウリーニョが返した言葉"
+
+theme:
+  id: vinicius_mourinho
+  league: spain
+  kind: other
+  topic: レアル・マドリード
+  title: ヴィニシウスがブーイングを浴びた。モウリーニョが持ち出したのは何か
+  hook: 87分に交代したとき、拍手は口笛にかき消されました。
+  question: なぜモウリーニョは、ことわざで答えたのか
+
+thumbnail:
+  line1: ブーイングの翌日
+  line2: 石を投げるのは ●●●●
+  # **2人並べる**（2026-09-12 ユーザー「ヴィにだけでなくモウリーニョも」）。
+  # 言い分が食い違う回ではないので、ぶつかる印（face_link）は置かない
+  photos:
+    - "assets/photos/20260912_vinicius/01.jpg"
+    - "assets/photos/20260912_mourinho/01.jpg"
+  tags: []
+
+sections:
+  - id: what
+    heading: ベルナベウで何が起きたか
+    tier: 報道
+    telop: 9月8日 インテル戦
+    narrator: キャスター
+    card:
+      type: table
+      title: インテル戦のヴィニシウス
+      columns: ["", ""]
+      rows:
+        - ["結果", "レアル 2-1 インテル"]
+        - ["交代", "87分"]
+        - ["シュート", "枠外3本"]
+        - ["ゴール・アシスト", "なし"]
+    say:
+      - 9月8日、チャンピオンズリーグの初戦。レアル・マドリードがインテルに2対1で勝ちました。
+      - ただ、87分にヴィニシウスが下がったとき、まばらな拍手はブーイングと口笛にかき消されました。
+    official: false
+    sources:
+      - https://worldsoccertalk.com/news/real-madrid-boss-jose-mourinho-asks-for-respect-for-vinicius-jr-amid-form-struggles-in-ucl-debut/
+      - https://www.espn.com/soccer/story/_/id/49902879/real-madrid-jose-mourinho-vinicius-best-yet-come
+
+  - id: after
+    heading: 試合後、モウリーニョが話したこと
+    tier: 報道
+    telop: 9月8日 試合後の会見
+    narrator: 解説
+    say:
+      - その日の試合後、モウリーニョが会見で答えています。
+      - {voice: モウリーニョ, text: ファンを批判しているのではありません}
+      - {voice: モウリーニョ, text: 私は監督として、彼との関係について話しています。彼は全面的な敬意に値する}
+      - {voice: モウリーニョ, text: 彼が最高の状態でないことは、誰の目にも分かります}
+      - {voice: モウリーニョ, text: しかし、それを誰より分かっているのは本人です}
+      - {voice: モウリーニョ, text: 試合を決めるヴィニシウスに戻るために、彼は懸命に取り組んでいます}
+      - {voice: モウリーニョ, text: 最高の状態でないにもかかわらず、練習でも試合でも、これまでで最も努力しています}
+      - 守れていない場面についても、理由を挙げました。
+      - {voice: モウリーニョ, text: 味方と足並みをそろえて守れなかった数少ない場面は、疲労が原因です}
+      - {voice: モウリーニョ, text: 彼はボールを持って50メートルのスプリントを6回しているのですから}
+      - {voice: モウリーニョ, text: 簡単なことではありません。彼の献身は非常に良かった}
+    official: false
+    sources:
+      - https://worldsoccertalk.com/news/real-madrid-boss-jose-mourinho-asks-for-respect-for-vinicius-jr-amid-form-struggles-in-ucl-debut/
+      - https://www.espn.com/soccer/story/_/id/49902879/real-madrid-jose-mourinho-vinicius-best-yet-come
+
+  - id: proverb
+    heading: 3日後、ことわざで答えた
+    main: true
+    tier: 報道
+    telop: 9月11日 ラージョ戦の前日
+    narrator: 解説
+    # **ここが山場。**ショートはこの節を切り出す。
+    # ことわざ→説明→去年の例、の順で積み上がっていて、最後の一行がいちばん強い
+    card:
+      type: quote
+      title: モウリーニョ
+      text: 実のなる木にしか、石は投げない
+    say:
+      - 3日後、ラージョ・バジェカーノ戦の前日会見です。
+      - モウリーニョは、ポルトガルのことわざを持ち出しました。
+      - {voice: モウリーニョ, text: ポルトガルのことわざに、実のなる木にしか石は投げない、というものがあります}
+      - {voice: モウリーニョ, text: 彼は実をたくさんつけた木です}
+      - {voice: モウリーニョ, text: 人々が石を投げるのは、実がほしいからです}
+      - {voice: モウリーニョ, text: そして最高のヴィニシウスは、まだこれからです}
+      - そのうえで、具体的な日を挙げました。
+      - {voice: モウリーニョ, text: 去年、ベンフィカ戦でベルナベウが張りつめていたとき、彼が試合を決めました}
+      - {voice: モウリーニョ, text: あのヴィニシウスは、まだこれからです}
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49902879/real-madrid-jose-mourinho-vinicius-best-yet-come
+      - https://worldsoccertalk.com/news/real-madrid-boss-jose-mourinho-asks-for-respect-for-vinicius-jr-amid-form-struggles-in-ucl-debut/
+
+  - id: support
+    heading: 支持する条件も、はっきり言っている
+    tier: 報道
+    telop: 支持には条件がある
+    narrator: キャスター
+    say:
+      - ただし、無条件ではありません。支持する理由を、条件の形で言っています。
+      - {voice: モウリーニョ, text: 全てを出す選手を、私は尊重します}
+      - {voice: モウリーニョ, text: 彼はプレーしたがり、助けたがり、チームの一員としてプレーし、クラブの紋章に敬意を示しました}
+      - {voice: モウリーニョ, text: そういう選手は、いつでも私の支持を得られます}
+      - 今季のヴィニシウスは、5試合で1ゴールです。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49902879/real-madrid-jose-mourinho-vinicius-best-yet-come
+      - https://worldsoccertalk.com/news/real-madrid-boss-jose-mourinho-asks-for-respect-for-vinicius-jr-amid-form-struggles-in-ucl-debut/

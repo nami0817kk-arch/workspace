@@ -383,6 +383,27 @@ def test_正方形に近い写真は右に置く(tmp_path):
     assert sum(left[:3]) > 60
 
 
+def test_帯の2行目に1文字だけ残さない():
+    """**泣き別れした割り方を採用しない**（2026-09-12 ユーザー「サムネをもっとこだわって」）。
+
+    ギュレルの回で「押しのけたのは ●●●億の新加入」が、
+    2行目に「入」だけを残した形で書き出されていた。行数だけ見て控えていたため、
+    **いちばん大きい字＝泣き別れの割り方**が返っていた。
+    """
+    from PIL import Image, ImageDraw
+
+    from src.config import load_config
+    from src.thumbnail import SIZE, _fit_band
+
+    font_path = str(load_config().video.font_path())
+    draw = ImageDraw.Draw(Image.new("RGBA", SIZE))
+    for room in (640, 700, 0):
+        _, rows = _fit_band(draw, "押しのけたのは ●●●億の新加入", font_path, room=room)
+        assert len(rows) <= 2, rows
+        if len(rows) == 2:
+            assert len(rows[-1]) > 3, (room, rows)
+
+
 def test_帯の2行は同じ大きさで1行ずつに収める(tmp_path):
     """1行目だけで字の大きさを決めていて、2行目が泣き別れた（2026-09-07）。"""
     from PIL import ImageDraw

@@ -1029,11 +1029,13 @@ def _fit_band(draw: ImageDraw.ImageDraw, text: str, font_path: str, room: int = 
 
         if len(rows) == 1:
             return font, rows
-        if len(rows) == 2:
+        if len(rows) == 2 and len(rows[-1]) > 3:
+            # **泣き別れしていない2行だけを控えにする**（2026-09-12）。
+            # ここで行数だけ見て控えていたので、「入」1文字が2行目に残った割り方が
+            # いちばん大きい字として返っていた（ギュレルの回で書き出して発見）。
             if fallback is None:
                 fallback = (font, rows)
-            if len(rows[-1]) > 3:
-                return font, rows
+            return font, rows
     if fallback:
         return fallback
     font = ImageFont.truetype(font_path, BAND_SIZES[-1])
