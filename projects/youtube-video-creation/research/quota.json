@@ -30,13 +30,13 @@
     "videos.update": 34
   },
   "2026-09-10": {
-    "videos.list": 38,
+    "videos.list": 42,
     "videos.update": 13,
-    "channels.list": 26,
-    "playlistItems.list": 39,
+    "channels.list": 37,
+    "playlistItems.list": 52,
     "commentThreads.list": 14,
     "commentThreads.insert": 7,
-    "videos.insert": 16,
-    "thumbnails.set": 33
+    "videos.insert": 26,
+    "thumbnails.set": 53
   }
 }
