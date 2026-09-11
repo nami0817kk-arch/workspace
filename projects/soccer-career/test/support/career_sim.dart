@@ -175,6 +175,14 @@ class Career {
 
   /// そのシーズンに昇格した回数。
   int promotions = 0;
+
+  /// 1試合で2点・3点取った回数と、1試合の最多得点。
+  ///
+  /// **「ハットトリックができない」を数字で見るために要る。**
+  /// 通算ゴールが同じでも、毎試合0.5点と「たまに3点」はまるで違う試合になる。
+  int braces = 0;
+  int hatTricks = 0;
+  int bestMatchGoals = 0;
   bool reachedTopByPromotion = false;
   int loans = 0;
   int bestTier = 9;
@@ -347,6 +355,10 @@ Future<Career> runCareer(
       final results = controller.state!.results;
       if (results.isNotEmpty) {
         career.seenStates.add('Appearance.${results.last.appearance.name}');
+        final scored = results.last.goals;
+        if (scored >= 2) career.braces++;
+        if (scored >= 3) career.hatTricks++;
+        career.bestMatchGoals = max(career.bestMatchGoals, scored);
       }
       career.seenStates.add(
         'FixtureStake.${Newsroom.stakeFor(controller.state!).name}',

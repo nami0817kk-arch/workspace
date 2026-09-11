@@ -137,6 +137,54 @@ class Formulas {
     ScenarioFamily.defence || ScenarioFamily.goalkeeper => 1.0,
   };
 
+  /// **試合を動かす展開**（局面ではないが、残りの試合の条件を変えるもの）。
+  ///
+  /// 試合の中でプレイヤーに関わるのは 2〜6 の局面だけで、**そのあいだに
+  /// 試合が動いていなかった**。スコアは開始時に決まっていて時間で動くが、
+  /// 「11人対10人になった」「相手が引いた」といった、**次の手の条件そのものが
+  /// 変わる出来事**が無かった。
+  ///
+  /// 退場は試合開始時に引いて固定する（`weakFootMoments` と同じ理屈——
+  /// 表示のたびに引き直すと、画面に出した成功率と判定がずれる）。
+  static const double redCardThemChance = 0.06;
+  static const double redCardUsChance = 0.05;
+  static const double numbersUpBonus = 0.08;
+  static const double numbersDownPenalty = 0.08;
+
+  /// 数的優位・不利が、決まる確率に掛かる倍率。
+  static const double numbersUpConversion = 1.2;
+  static const double numbersDownConversion = 0.85;
+
+  /// リードされた相手は前に出る。リードした相手は引く。
+  /// 得点に繋がる手にだけ効く（無難な手は変わらない）。
+  static const double opponentOpenBonus = 0.07;
+  static const double opponentShutPenalty = 0.07;
+
+  /// **流れの中の1本。**
+  ///
+  /// 局面でしか点が入らないので、**1試合に取れる最大得点が局面の数**で
+  /// 頭打ちになっていた（ふつうの試合は2局面）。実測で、中盤の選手は
+  /// 20年で 1試合2点を**一度も**取らず、守備の選手は**通算0ゴール**だった。
+  /// ハットトリックは前線の選手だけのものになっていた。
+  ///
+  /// ノリが乗っているとき、**この後に入る予定だった味方の得点を、
+  /// 自分が決めることがある**。`_claimTeammateGoal` と同じで、
+  /// **足すのではなく置き換える**——足すと自分のクラブだけ点が増える。
+  /// 0.10 に置いたら ST の通算ゴールが 216 → 314（+45%）に膨らんだ。
+  /// **置き換えなので味方の得点は減るが、選手の記録は増える。**
+  static const double flowGoalChance = 0.07;
+
+  /// ポジションごとの、流れの中で点に絡む度合い。
+  ///
+  /// 守備の選手が 0 でないのは**セットプレーの的**になるから。
+  /// 実際、20年で1点も取らないセンターバックは football ではない。
+  static double flowGoalShareFor(ScenarioFamily family) => switch (family) {
+    ScenarioFamily.forward => 1.0,
+    ScenarioFamily.midfield => 0.5,
+    ScenarioFamily.defence => 0.3,
+    ScenarioFamily.goalkeeper => 0.0,
+  };
+
   /// 局面の成否が評価点に与える増減。
   ///
   /// 成功のほうを小さく、失敗のほうを大きくしてある。ここが逆だと、
