@@ -75,6 +75,9 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     reaction = check_reaction_layer(script)
     if reaction is not None:
         findings.append(reaction)
+    pairing = check_reaction_pairing(script)
+    if pairing is not None:
+        findings.append(pairing)
     # **構成の点検は本編だけに当てる。**縦型は本編から1節を切り出したもので、
     # 割合を測っても元の台本の話にならない（2026-09-07）
     findings.append(check_voice_length(script))
@@ -776,6 +779,43 @@ def check_reaction_layer(script: Script) -> Finding | None:
     )
 
 
+def check_reaction_pairing(script: Script) -> Finding | None:
+    """**カードに出した反応は、全部読み上げる**（2026-09-11 ユーザー指摘
+    「ネットの反応で使わないのがあるのはなぜ？」）。
+
+    伊藤涼太郎の回で、カードに5件出しながら読み上げは2件だけだった。
+    画面に出しておいて読まない理由が説明できない。**使うなら両方、落とすなら両方。**
+
+    **長い1件は、落とすのではなく行に分ける**（2026-09-11 ユーザー
+    「切らずにのせるはしないの？」）。分けても言葉は欠けないので、
+    ここでは**続けて読んだかどうか**で見る（空白を外してつなげて探す）。
+    落とした分は取材メモに理由を書く。
+    """
+    scenes = [s for s in script.scenes if any(w in (s.title or "") for w in REACTION_HEADINGS)]
+    if not scenes:
+        return None
+    cards = script.cards or {}
+    shown, said = [], []
+    for scene in scenes:
+        for line in scene.lines:
+            got = cards.get(getattr(line, "card", None)) or {}
+            if str(got.get("type", "")).lower() == "reactions":
+                for item in got.get("items") or []:
+                    text = str(item.get("text") or "").strip()
+                    if text:
+                        shown.append(text)
+            if (line.speaker or "") not in NARRATORS:
+                said.append((line.text or "").strip())
+    # **行に分けただけのものを別物にしない。**空白と記号を外してつなげて探す
+    joined = "".join(_bare(t) for t in said)
+    missing = [t for t in shown if _bare(t) not in joined]
+    if missing:
+        return Finding(False, "反応の読み上げ",
+                       f"カードに出して読み上げていない反応が{len(missing)}件あります"
+                       f"（{missing[0][:20]}…）。使うなら両方、落とすなら両方にしてください")
+    return Finding(True, "反応の読み上げ", f"カードの{len(shown)}件とも読み上げています")
+
+
 # 語り手。**「解説」も語り手であって、他人の声ではない。**
 # 一度ここを取り違えて、他人の声の割合を26%と数えた（実際は14%）。
 NARRATORS = ("キャスター", "解説", "ナレーター", "")
@@ -856,6 +896,19 @@ FILLER = (
     (re.compile(r"次は[^。]*(?:対戦|試合)します|次節は"), "この先の日程"),
     (re.compile(r"^(?:なお|ちなみに)[、，]"), "「なお、」"),
     (re.compile(r"ということになります"), "言い換え"),
+    # **件数への感想は言わない**（2026-09-11 ユーザー指摘
+    # 「数として多くありませんとかはいらない」）。件数はそのまま言えばよく、
+    # 多い・少ないの評価を足すと、そのぶん尺を食うだけで中身が増えない。
+    (re.compile(r"数としては|多くありません|少なくありません|多いほうです|少ないほうです"),
+     "件数への感想"),
+    # **どれを引いたかの断りも要らない。**そのまま読み上げに入る。
+    (re.compile(r"(?:だけ|のみ)(?:引きます|紹介します|挙げます)|読めるものを"),
+     "引く前の断り"),
+    # **反応の件数も読み上げない**（2026-09-11 ユーザー指摘「件数もいらない」）。
+    # 母数は残す決まりだったが、取り消した。**反応そのものから入る。**
+    # 出典は概要欄にある。
+    (re.compile(r"[0-9０-９]+件(?:の(?:書き込み|反応|コメント|声)|でした)"),
+     "反応の件数"),
 )
 
 
@@ -872,8 +925,11 @@ def check_board_mention(script: Script) -> Finding:
     """**まとめサイト・掲示板の名指しは読み上げない**（2026-09-10 ユーザー指示）。
 
     「掲示板のまとめには15件の書き込みがありました」と言う必要はない。
-    反応そのものを読めば足りる。**数えた母数は残してよい**（「47件中12件」）が、
-    どこで数えたかは概要欄に置く。出典を消すわけではない。
+    反応そのものを読めば足りる。どこで数えたかは概要欄に置く。出典を消すわけではない。
+
+    **母数も読み上げない**（2026-09-11 ユーザー指摘「件数もいらない」）。
+    それまでは「数えた母数は残してよい」としていたが、取り消した。
+    件数は `check_filler` の「反応の件数」が止める。
     """
     bad = [line.text for line in _narrator_lines(script) if BOARD.search(line.text or "")]
     if bad:

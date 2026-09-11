@@ -506,6 +506,45 @@ def test_反応カードがあれば通す():
     assert finding is not None and finding.ok
 
 
+def _reaction_script(shown, said):
+    from src.script_model import Line, Scene, Script
+
+    lines = [Line(speaker="ネット民", text=t, card="c1" if i == 0 else None)
+             for i, t in enumerate(said)] or [Line(speaker="キャスター", text="本文", card="c1")]
+    lines[0].card = "c1"
+    return Script(
+        title="見出し",
+        scenes=[Scene(title="ネットの反応", lines=lines)],
+        cards={"c1": {"type": "reactions",
+                      "items": [{"text": t} for t in shown]}},
+    )
+
+
+def test_カードに出した反応は全部読み上げる():
+    """2026-09-11 ユーザー指摘「ネットの反応で使わないのがあるのはなぜ？」。
+
+    伊藤涼太郎の回で、カードに5件出しながら読み上げは2件だけだった。
+    **画面に出しておいて読まない理由が説明できない。**
+    """
+    from src.review import check_reaction_pairing
+
+    five = ["どこか手を出しそう", "よっぽど重傷なんやな", "磐田いけ",
+            "伊藤の怪我って5月の足首やって", "うむ、そうらしい なんとも間が悪い"]
+    finding = check_reaction_pairing(_reaction_script(five, five))
+    assert finding is not None and finding.ok
+
+    half = check_reaction_pairing(_reaction_script(five, five[2:4]))
+    assert half is not None and not half.ok
+    assert "3件" in half.detail
+
+    # **長い1件を行に分けただけなら通す**（2026-09-11「切らずにのせるはしないの？」）。
+    # 落としていないので、続けて読んでいれば同じこと
+    long = ["メディカル落ちした選手を他のクラブがすぐ拾うだろうか"]
+    split = ["メディカル落ちした選手を", "他のクラブがすぐ拾うだろうか"]
+    finding = check_reaction_pairing(_reaction_script(long, split))
+    assert finding is not None and finding.ok
+
+
 def test_反応の節が無い回では黙る():
     """毎回うるさく言わない。移籍の回に反応を強要しない。"""
     from src.review import check_reaction_layer
@@ -1031,3 +1070,24 @@ def test_埋め草を知らせる():
 
     clean = _said(("キャスター", "17人が入れ替わりました。"))
     assert check_filler(clean).ok
+
+
+def test_件数への感想は埋め草():
+    """**「数としては多くありません」はいらない**（2026-09-11 ユーザー指摘）。
+
+    件数はそのまま言えばよく、多い・少ないの評価を足すと尺を食うだけ。
+    どの2件を引いたかの断りも要らない。そのまま読み上げに入る。
+    """
+    from src.review import check_filler
+
+    for text in ("8件でした。数としては多くありません。",
+                 "そのうち、短くそのまま読めるものを2件だけ引きます。",
+                 "賛成は少なくありません。",
+                 # **母数も読み上げない**（「件数もいらない」）。反応そのものから入る
+                 "ネット上に出ていた書き込みは、8件でした。",
+                 "47件の書き込みがありました。"):
+        assert not check_filler(_said(("解説", text))).ok, text
+
+    # 件数でない数字は通す
+    ok = _said(("解説", "17人が入れ替わりました。"))
+    assert check_filler(ok).ok
