@@ -22,6 +22,7 @@ import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/attributes.dart';
 import 'package:soccer_career/models/career.dart';
 import 'package:soccer_career/models/competition.dart';
+import 'package:soccer_career/models/development.dart';
 import 'package:soccer_career/models/entourage.dart';
 import 'package:soccer_career/models/life.dart';
 import 'package:soccer_career/models/physique.dart';
@@ -209,6 +210,13 @@ class Career {
   int breakthroughs = 0;
   int greatWeeks = 0;
   int knackAge = 0;
+
+  /// 実際に掴んだコツ。掴まなければ null。
+  Trait? knack;
+
+  /// 引退時に覚えていた個人技。**全員が同じものを揃えるなら、
+  /// それは「その選手にしか無いもの」ではない。**
+  List<Signature> finalSignatures = const [];
   int professionalism = 0;
   int confidence = 0;
   int ambition = 0;
@@ -387,9 +395,16 @@ Future<Career> runCareer(
       // 取り返しのつかない状態に、実際に到達するか。
       if (controller.state!.frozenOut) career.seenStates.add('frozenOut');
       if (controller.state!.trustAtRisk) career.seenStates.add('trustAtRisk');
-      // コツの条件に初めて届いた年齢を控える。
+      // コツの条件に初めて届いた年齢を控え、**実際に掴む**。
+      //
+      // 掴まずに数えていた頃は「掴める割合」しか測れておらず、
+      // 掴んだあと何が起きるか（試合でどれだけ効くか）が一度も測れていなかった。
       if (career.knackAge == 0 && Knacks.canLearn(controller.state!)) {
         career.knackAge = controller.state!.player.age;
+        final offer = Knacks.offer(controller.state!);
+        if (offer.isNotEmpty && await controller.learnKnack(offer.first)) {
+          career.knack = offer.first;
+        }
       }
       // 特性が効いた局面はシーズンの起点で空になるので、毎週の差を拾う。
       final hits = controller.state!.traitHits.values.fold<int>(
@@ -471,6 +486,7 @@ Future<Career> runCareer(
     }
     career.savings = done.finances.savings;
     career.signatures = done.development.signatures.length;
+    career.finalSignatures = [...done.development.signatures];
     career.breakthroughs = done.development.breakthroughs;
     career.greatWeeks = done.development.greatWeeks;
     career.professionalism = done.player.personality.professionalism;

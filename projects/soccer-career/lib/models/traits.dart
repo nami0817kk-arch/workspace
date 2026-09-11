@@ -289,23 +289,58 @@ enum Trait {
   ///
   /// 紐づけているのは**その場面で何度も勝負したか**を測るカテゴリ。
   /// 「パスばかり選んできた選手が、ラストパスの名手になる」という形にする。
+  /// コツとして掴める特性と、掴むのに要る場面。
+  ///
+  /// **得意技だけを並べていたので、掴むものが決め打ちになっていた**——
+  /// 実測（`test/craft_sim.dart`）で CM の90%が「司令塔」、GK の97%が
+  /// 「反応の鬼」、CB の82%が「鉄壁」。よく選ぶカテゴリの順に候補を出して
+  /// その先頭を取るので、**同じポジションなら同じコツ**になる。
+  ///
+  /// **やってきたことは、得意技だけではない。** 20年その場面で戦った選手が
+  /// 身に付けるのは「そこが上手くなる」ことだけでなく、
+  /// **そこでの振る舞い**（落ち着き・粘り・出足）でもある。
+  /// 同じカテゴリに複数並べて、掴むものが選手ごとに割れるようにする。
   static const Map<Trait, AttributeKey> _knackKeys = {
-    // 場面の特性は、その場面に出続けたことで身に付く。
+    // ---- 配る場面 ----
     Trait.playmaker: AttributeKey.passing,
     Trait.assistKing: AttributeKey.passing,
     Trait.crosser: AttributeKey.passing,
     Trait.tempoSetter: AttributeKey.passing,
+    Trait.craftsman: AttributeKey.passing,
+
+    // ---- 決める場面 ----
     Trait.poacher: AttributeKey.shooting,
     Trait.longRange: AttributeKey.shooting,
     Trait.composed: AttributeKey.shooting,
     Trait.aerialAce: AttributeKey.shooting,
+    Trait.clutch: AttributeKey.shooting,
+    Trait.gambler: AttributeKey.shooting,
+
+    // ---- 仕掛ける場面 ----
     Trait.dribbler: AttributeKey.dribbling,
+    Trait.twoFooted: AttributeKey.dribbling,
+    Trait.hotHand: AttributeKey.dribbling,
+
+    // ---- 走る場面 ----
     Trait.sprinter: AttributeKey.pace,
+    Trait.fastStarter: AttributeKey.pace,
+
+    // ---- 止める場面 ----
     Trait.wall: AttributeKey.defending,
     Trait.tackler: AttributeKey.defending,
     Trait.organizer: AttributeKey.defending,
+    Trait.comeback: AttributeKey.defending,
+    Trait.cleanPlayer: AttributeKey.defending,
+
+    // ---- 当たる・競る場面 ----
+    Trait.ironNerve: AttributeKey.physical,
+    Trait.fighter: AttributeKey.physical,
+    Trait.tireless: AttributeKey.physical,
+
+    // ---- GK ----
     Trait.reflexKeeper: AttributeKey.goalkeeping,
     Trait.sweeperKeeper: AttributeKey.goalkeeping,
+    Trait.unshakable: AttributeKey.goalkeeping,
   };
 
   /// コツとして掴めるか。掴めないなら null。

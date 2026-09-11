@@ -3368,8 +3368,11 @@ class _FocusCard extends StatelessWidget {
   final CareerController controller;
 
   /// その項目を極めると覚えられる個人技。無ければ null。
-  static Signature? _signatureFor(Detail detail) {
-    for (final s in Signature.values) {
+  ///
+  /// **そのポジションで覚えられるものだけ**を出す。
+  /// GK に「無回転シュート あと12」と書いても、覚えることはない。
+  Signature? _signatureFor(Detail detail) {
+    for (final s in Signature.forPosition(state.player.position)) {
       if (s.detail == detail) return s;
     }
     return null;
