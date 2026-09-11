@@ -357,6 +357,20 @@ class _ScenarioView extends StatelessWidget {
                             label: Text(match.opponentStyle.label),
                             visualDensity: VisualDensity.compact,
                           ),
+                          // ノリ。成功を重ねるほど決まるようになる。
+                          // 出さないと「なぜ決まったのか」が分からない。
+                          if (match.momentum > 0)
+                            Chip(
+                              label: Text(
+                                'ノリ ${'●' * match.momentum}'
+                                '${'○' * (Formulas.momentumMax - match.momentum)}'
+                                ' 決まる確率 ×'
+                                '${match.momentumFactor.toStringAsFixed(2)}',
+                              ),
+                              backgroundColor:
+                                  theme.colorScheme.tertiaryContainer,
+                              visualDensity: VisualDensity.compact,
+                            ),
                           if (match.situationLabel != null)
                             Chip(
                               label: Text(match.situationLabel!),

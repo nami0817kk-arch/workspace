@@ -188,6 +188,19 @@ class MatchInProgress {
   int followedTactic = 0;
   int againstTactic = 0;
 
+  /// その試合の**ノリ** 0〜[Formulas.momentumMax]。
+  ///
+  /// 成功を重ねるほど上がり、失敗で 0 に戻る。効くのは成功率ではなく
+  /// **決まる確率**（ゴール・アシスト）。成功率に乗せると安全な手が
+  /// さらに強くなるだけで、また一本道になる。
+  int momentum = 0;
+
+  /// ノリが、決まる確率を何倍にするか。判定にも画面にも同じここから出す。
+  double get momentumFactor => 1 + momentum * Formulas.momentumPerStep;
+
+  /// 今この局面で、その手が決まる確率（ゴール）。
+  double goalConversionNow() => Formulas.goalConversion * momentumFactor;
+
   /// 今の局面で構えている切り札。局面が変われば外れる。
   ///
   /// 個人技は身に付くと常に少しだけ効くだけの飾りだった。
@@ -343,6 +356,10 @@ class MatchInProgress {
   /// 「この後に味方が決める」確率 × 決まる確率。終盤ほど低く、弱いクラブほど
   /// 低い。予定そのものを見ると未来が漏れるので、期待値から出す。
   /// 画面の「アシスト N%」と自動進行の物差しはこれを使う。
+  /// ノリ込みの、アシストが決まる確率。
+  double assistConversionNow(int minute) =>
+      assistConversionAt(minute) * momentumFactor;
+
   double assistConversionAt(int minute) {
     final remaining = ((90 - minute) / 90).clamp(0.0, 1.0);
     final chance = 1 - exp(-expectedTeammateGoals * remaining);
@@ -693,8 +710,8 @@ class MatchInProgress {
       final rolled =
           _random.nextDouble() <
           (outcome == Outcome.goal
-              ? Formulas.goalConversion
-              : Formulas.assistConversion);
+              ? goalConversionNow()
+              : Formulas.assistConversion * momentumFactor);
       // アシストは、この後に味方が決める予定があるときだけ決まる。
       // 決まった瞬間にその得点を今に引き寄せてスコアに乗せる。
       // 予定が無いのに点を足すと、自分のクラブだけが強くなる。
@@ -747,6 +764,19 @@ class MatchInProgress {
       text = sentOff ? '$text 2枚目の警告。退場を命じられた。' : '$text 審判が笛を吹き、警告を受けた。';
     }
 
+    // ノリ。成功を重ねるほど決まるようになり、失敗で消える。
+    // 難しい手を通したほうが乗る（無難な手を積むだけでは上がりきらない）。
+    if (success) {
+      momentum =
+          (momentum +
+                  (option.outcome == Outcome.play
+                      ? 1
+                      : Formulas.momentumFromChance))
+              .clamp(0, Formulas.momentumMax);
+    } else {
+      momentum = 0;
+    }
+
     // 構えた切り札は、乗った手を選んだ時点で使い切る。
     // 外したら力みが残る（構えるだけならただ得、では判断にならない）。
     if (signatureLands(option)) {
@@ -782,11 +812,13 @@ class MatchInProgress {
     final p = chanceFor(option);
     var gain = Formulas.ratingPerSuccess;
     if (option.outcome != Outcome.play) gain += Formulas.ratingPerChance;
+    // 自動進行にもノリを見せる。見ないと、自動で進めるだけでは
+    // 「刻んでから決めにいく」が一度も起きない（切り札と同じ理屈）。
     if (option.outcome == Outcome.goal) {
-      gain += Formulas.ratingPerGoal * Formulas.goalConversion;
+      gain += Formulas.ratingPerGoal * goalConversionNow();
     }
     if (option.outcome == Outcome.assist) {
-      gain += Formulas.ratingPerAssist * assistConversionAt(currentMinute);
+      gain += Formulas.ratingPerAssist * assistConversionNow(currentMinute);
     }
     // カードのぶんを引く。ここを入れないと、自動進行が「止めるための反則」を
     // 代償なしの安い手として選び続ける。
@@ -1043,6 +1075,20 @@ class MatchEngine {
   /// 変わらず、一度ベンチに落ちた選手が永久に出られなかった。外れ続けるほど
   /// 評価を甘く見て、[Formulas.benchPatience] 試合外れたら必ず一度は
   /// ベンチに入れる。戻り道が無いと、そこでキャリアが終わってしまう。
+  /// 直近で試合を動かしたぶんの下駄。
+  ///
+  /// **点を取る選手は干されない。** 評価点だけで決めていたので、
+  /// 「6.8だが決めている」選手と「7.0だが何もしていない」選手を
+  /// 区別できていなかった。平均は変動を嫌うので、そのままだと
+  /// 安全な手が常に正しくなる。
+  static double decisiveBonus(List<MatchResult> recent, Position position) {
+    final window = recent.length <= Formulas.formWindow
+        ? recent
+        : recent.sublist(recent.length - Formulas.formWindow);
+    final acts = window.fold<int>(0, (a, r) => a + r.decisiveFor(position));
+    return min(acts * Formulas.decisivePerAct, Formulas.decisiveBonusMax);
+  }
+
   static Appearance decideAppearance(
     List<MatchResult> recent, {
     double bonus = 0,

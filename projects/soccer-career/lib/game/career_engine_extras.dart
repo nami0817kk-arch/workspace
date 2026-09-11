@@ -56,7 +56,19 @@ class CareerExtras {
         ? rated
         : rated.sublist(rated.length - Formulas.formWindow);
     final average = window.reduce((a, b) => a + b) / window.length;
-    return average >= Formulas.callUpRating;
+    if (average >= Formulas.callUpRating) return true;
+
+    // **決めているなら、評価点が届かなくても呼ばれる。**
+    // 評価点だけを入口にすると「6.8だが25ゴール」のシーズンが
+    // 代表から締め出される。平均は変動を嫌うので、点を取りにいく
+    // 遊び方そのものが割に合わなくなっていた。
+    final played = state.leagueResults.where((r) => r.appearance.played);
+    if (played.isEmpty) return false;
+    final acts = played.fold<int>(
+      0,
+      (a, r) => a + r.decisiveFor(state.player.position),
+    );
+    return acts / played.length >= Formulas.callUpProduction;
   }
 
   /// この節を終えたあとに代表ウィークが来るか。
@@ -71,5 +83,6 @@ class CareerExtras {
   int rollContractYears() =>
       Formulas.contractYearsMin +
       _random.nextInt(
-          Formulas.contractYearsMax - Formulas.contractYearsMin + 1);
+        Formulas.contractYearsMax - Formulas.contractYearsMin + 1,
+      );
 }
