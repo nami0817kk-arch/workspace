@@ -42,12 +42,22 @@ class Injury {
         'matchesOut': matchesOut,
       };
 
+  /// **中身が欠けていても投げない。**
+  ///
+  /// 投げると `SaveRepository.load` が握り潰して新規扱いになる——
+  /// つまり**黙ってキャリアが消える**。名前の無いものは怪我として
+  /// 扱えないので、怪我をしていない状態として読む。残り試合数が
+  /// 欠けているときも 0（＝治っている）に倒す。**閉じ込める側に倒さない。**
   static Injury? fromJson(Map<String, dynamic>? json) {
     if (json == null) return null;
+    final name = json['name'] as String?;
+    if (name == null) return null;
     return Injury(
-      name: json['name'] as String,
-      severity: InjurySeverity.values.byName(json['severity'] as String),
-      matchesOut: json['matchesOut'] as int,
+      name: name,
+      severity:
+          InjurySeverity.values.asNameMap()[json['severity'] as String?] ??
+          InjurySeverity.light,
+      matchesOut: json['matchesOut'] as int? ?? 0,
     );
   }
 }

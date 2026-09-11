@@ -27,6 +27,7 @@ import 'package:soccer_career/models/life.dart';
 import 'package:soccer_career/models/physique.dart';
 import 'package:soccer_career/models/season.dart';
 import 'package:soccer_career/models/support.dart';
+import 'package:soccer_career/models/traits.dart';
 import 'package:soccer_career/models/training.dart';
 import 'package:soccer_career/state/career_controller.dart';
 
@@ -67,6 +68,7 @@ class Playstyle {
     this.companion = TrainingCompanion.alone,
     this.spendsPoints = false,
     this.autoRestBelow,
+    this.traits,
   });
 
   final String name;
@@ -114,6 +116,13 @@ class Playstyle {
 
   /// 自動休養のしきい値。null なら既定のまま。
   final int? autoRestBelow;
+
+  /// 特性を固定する。null なら今までどおり引く。
+  ///
+  /// **「特性がキャリアをどれだけ変えているか」を測るために要る。**
+  /// 能力値と選び方を揃えて特性だけ差し替え、結果が動かないなら
+  /// 特性は飾りということになる。
+  final List<Trait>? traits;
 
   /// 居残りでセットプレーを磨く。
   final bool drills;
@@ -243,6 +252,7 @@ Future<Career> runCareer(
     position: style.position,
     age: style.startAge,
     agent: style.agent,
+    traits: style.traits,
   );
 
   final career = Career(style)..startOverall = controller.state!.player.overall;

@@ -1776,6 +1776,8 @@ class _DevelopmentCard extends StatelessWidget {
       color: theme.colorScheme.onSurfaceVariant,
     );
     final dev = state.development;
+    // 限界突破に要る回数は特性で変わる。判定と同じ `player` から読む。
+    final player = state.player;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -1802,13 +1804,13 @@ class _DevelopmentCard extends StatelessWidget {
             // 追い込んだ週の積み上げ。ここが「週の選択」と「届く高さ」を
             // 繋いでいる唯一の線なので、進み具合を出す。
             Text(
-              dev.greatWeeks >= Formulas.breakthroughGreatWeeks
+              dev.greatWeeks >= player.breakthroughWeeks
                   ? '練習で大成功 ${dev.greatWeeks}回。限界を超える下地はできている'
                   : '練習で大成功 ${dev.greatWeeks}回'
                         '（限界突破の下地まであと'
-                        '${Formulas.breakthroughGreatWeeks - dev.greatWeeks}回）',
+                        '${player.breakthroughWeeks - dev.greatWeeks}回）',
               style: muted?.copyWith(
-                color: dev.greatWeeks >= Formulas.breakthroughGreatWeeks
+                color: dev.greatWeeks >= player.breakthroughWeeks
                     ? theme.colorScheme.primary
                     : null,
               ),

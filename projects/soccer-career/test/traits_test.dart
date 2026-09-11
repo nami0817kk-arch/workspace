@@ -155,7 +155,7 @@ void main() {
     test('％の書き方', () {
       expect(Trait.percent(0.08), '+8%');
       expect(Trait.percent(-0.02), '-2%');
-      expect(Trait.clutch.rules.single.text, '後半30分以降 +8%');
+      expect(Trait.clutch.rules.single.text, '後半30分以降 +15%');
     });
 
     test('種類は 60 を超え、欠点は 10 ある', () {
@@ -592,6 +592,40 @@ void main() {
       state.recordTraitHits({Trait.clutch: 2});
       state.beginSeasonRecord();
       expect(state.traitHits, isEmpty);
+    });
+
+    test('効く場面が来たら、体感できる大きさで動く', () {
+      // **影響度 = 頻度 × 深さ。** 実測（`test/influence_sim.dart`）で、
+      // 特性はどれも「常に少しだけ効く飾り」で、1つあたり増減の
+      // 0.1〜1.4% しか占めていなかった。条件が狭いものほど、
+      // 効いた瞬間は深くないと存在しないのと同じになる。
+      for (final trait in Trait.values) {
+        if (trait.rules.isEmpty) continue;
+        if (trait.flaw) continue;
+        final best = trait.rules
+            .map((r) => r.value)
+            .reduce((a, b) => a > b ? a : b);
+        expect(
+          best,
+          greaterThanOrEqualTo(0.08),
+          reason: '${trait.label} は効いても動かない',
+        );
+      }
+    });
+
+    test('長所と欠点の深さが釣り合っている', () {
+      // 長所だけ深くすると「上位互換を作らない」の線が崩れる。
+      for (final trait in Trait.values.where((t) => t.flaw)) {
+        if (trait.rules.isEmpty) continue;
+        final worst = trait.rules
+            .map((r) => r.value)
+            .reduce((a, b) => a < b ? a : b);
+        expect(
+          worst,
+          lessThanOrEqualTo(-0.08),
+          reason: '${trait.label} の代償が浅い',
+        );
+      }
     });
 
     test('試合を進めると、効いた特性が記録される', () async {

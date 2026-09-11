@@ -119,6 +119,15 @@ class Player {
     return best;
   }
 
+  /// 限界突破に要る「練習で大成功した週」の数。
+  ///
+  /// **画面と判定が同じここを読む。** 特性で条件が軽くなるので、
+  /// 片方だけ `Formulas.breakthroughGreatWeeks` を直接読むと、
+  /// 「あと3回」と書いてあるのに起きない／もう起きているのに
+  /// 「あと3回」と出る、という食い違いになる。
+  int get breakthroughWeeks =>
+      Formulas.breakthroughGreatWeeks + traits.breakthroughWeekOffset;
+
   /// 本来の（適性を引く前の）そのポジションでの力。
   int overallAt(Position position) =>
       attributes.overallFor(position) -
