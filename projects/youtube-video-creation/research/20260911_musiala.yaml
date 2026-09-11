@@ -1,0 +1,112 @@
+# ムシアラが復帰戦でゴール（2026年9月10日）。ユーザー指示「cl順位表以外作って」
+#
+# **記事を開いて読んだ。**ESPN が本人・コンパニ・ケインの発言をまとめている。
+#
+# **病気の話なので、書いてあることだけを書く。**診断名は本人がSNSで公表した
+# 「神経系の機能障害による欠神発作」。**健康上の危険はなく、プレーを続ける**と
+# 本人が述べている。こちらで深刻さを足さない。煽らない。
+#
+# 引きは**「得点のあと、頭を指した」**。理由を言わずに絵から入る
+#
+# **反応は入れない。**読める形のスレが無かった
+format: news
+voice_min: 40
+slot: match
+date: "2026年9月10日"
+
+# ハッシュタグに使う人の名前
+people:
+  - ジャマル・ムシアラ
+  - ハリー・ケイン
+  - コンパニ
+  - パヴロヴィッチ
+
+short_title: "ムシアラが得点のあと、頭を指した理由"
+
+theme:
+  id: musiala_return
+  league: germany
+  kind: match
+  topic: バイエルン
+  title: ムシアラが今季初ゴールのあと、自分の頭を指した。何があったのか
+  hook: 先発は、プレシーズン以来です。
+  question: 得点のあとに頭を指したのは、なぜか
+
+thumbnail:
+  line1: 今季初ゴールのあと
+  line2: 頭を指したのは ●●●●●
+  photo: "assets/photos/20260911_musiala/01.jpg"
+  tags: []
+  points:
+    - 先発は3試合ぶり
+    - クラブの欧州通算900点目
+
+sections:
+  - id: goal
+    heading: 何が起きたか
+    tier: 報道
+    telop: 47分、こぼれ球に反応して先制
+    narrator: キャスター
+    card:
+      type: table
+      title: CLリーグフェーズ第1節 バイエルン 5-0 ボデ・グリムト
+      columns: ["", ""]
+      rows:
+        - ["先制点", "47分 ムシアラ"]
+        - ["この試合の意味", "クラブの欧州通算900点目"]
+    say:
+      - バイエルンがボデ・グリムトに5対0。先制点は47分、ジャマル・ムシアラでした。
+      - ケインのパスが相手に当たってこぼれたところへ、素早く反応して流し込みました。
+      - そのあとスタンドのほうを見ながら、自分の頭の横を何度も指しました。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49896289/jamal-musiala-bayern-munich-goal-bodo-glimt-seizures
+      - https://web.gekisaka.jp/news/ucl/detail/?458620-458620-fl
+
+  - id: why
+    heading: 頭を指したのは、なぜか
+    tier: 報道
+    main: true
+    telop: 「久しくなかった感覚だ」
+    narrator: 解説
+    say:
+      - 先発はプレシーズン以来。そのプレシーズンで、2試合続けてピッチに倒れていました。
+      - 本人がSNSで公表した診断は、神経系の機能障害による欠神発作。健康上の危険はなく、プレーを続けるつもりだと述べています。
+      - 薬の調整と、公になったことの衝撃で3試合を欠場。土曜のシャルケ戦に途中出場して戻っていました。
+      - 試合後、本人はこう話しました。
+      - {voice: ムシアラ, text: 今日感じたものは、久しくなかった感覚だ}
+      - {voice: ムシアラ, text: 嬉しいし、まだ進むべき段階があることも分かっている}
+      - {voice: ムシアラ, text: 体の状態は良い}
+      - {voice: ムシアラ, text: この件は、自分にとってもう新しいことではない}
+      - {voice: ムシアラ, text: またチームと一緒に、ピッチで楽しめた}
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49896289/jamal-musiala-bayern-munich-goal-bodo-glimt-seizures
+      - https://web.gekisaka.jp/news/world/detail/?458308-458308-fl
+
+  - id: around
+    heading: 監督とチームメイトは何と言ったか
+    tier: 報道
+    telop: 「彼の瞬間は来ると分かっていた」
+    narrator: 解説
+    say:
+      - ヴァンサン・コンパニ監督は、こう話しています。
+      - {voice: コンパニ監督, text: みんなが彼のために喜んだ}
+      - {voice: コンパニ監督, text: スタジアムの7万5000人も、テレビの前の人たちも}
+      - {voice: コンパニ監督, text: 彼の瞬間が来ることは分かっていた}
+      - {voice: コンパニ監督, text: 本当に大きなゴールを決めてくれた}
+      - そのうえで、これからについて言葉を選びました。
+      - {voice: コンパニ監督, text: これからは、彼のプレーだけが注目されることを願う}
+      - {voice: コンパニ監督, text: もう一方の話との向き合い方は、彼が分かっている}
+      - {voice: コンパニ監督, text: 我々はこれからも全面的に支える}
+      - パスを出した本人も、試合後に話しています。
+      - {voice: ハリー・ケイン, text: 彼のために本当に嬉しい}
+      - {voice: ハリー・ケイン, text: プレシーズンからシーズンの入りにかけて、つらい時期だった}
+      - {voice: ハリー・ケイン, text: 笑顔が見られたのが良かった}
+      - {voice: ハリー・ケイン, text: 重圧が取れたんだと思う。いまはとても良さそうだ}
+      - {voice: ハリー・ケイン, text: 練習から鋭さがあるし、飢えも見える}
+      - 公式戦の得点は、6月のワールドカップでドイツがキュラソーに7対1で勝った試合以来でした。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49896289/jamal-musiala-bayern-munich-goal-bodo-glimt-seizures
+      - https://web.gekisaka.jp/news/ucl/detail/?458620-458620-fl

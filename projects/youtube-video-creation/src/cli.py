@@ -386,6 +386,12 @@ def main(argv: list[str] | None = None) -> int:
 
     # 選手・クラブのページの表を数字の材料にする（2026-09-08）。
     # `stats` は「これまで何を出したか」の振り返りに使っているので、こちらは numbers
+    # **台本の確認が済んだことを控える**（2026-09-11 ユーザー
+    # 「どんな時も台本確認は必須です」）。build / short はこれが無いと動かない
+    p_approve = sub.add_parser(
+        "approve", help="台本の確認が済んだことを控える（OKを聞いたときだけ打つ）")
+    p_approve.add_argument("scripts", nargs="+", help="台本のパス")
+
     p_numbers = sub.add_parser(
         "numbers", help="transfermarkt.jp などのページの表を、行ごとの文字に起こして材料に足す")
     p_numbers.add_argument("url", help="選手・クラブのページのURL（transfermarkt.jp / fotmob）")
@@ -571,7 +577,34 @@ def _cmd_check(args, config) -> int:
     return 0
 
 
+def _guard_approved(script_path) -> bool:
+    """**台本の確認が済むまで書き出さない**（2026-09-11 ユーザー
+    「どんな時も台本確認は必須です」）。
+
+    それまでも決まりはあったが人の注意に頼っていたので抜けた。
+    9/11 にマンUと中村敬斗の回を、台本を見せないまま書き出している。
+    """
+    from . import approval
+
+    if approval.is_approved(script_path):
+        return True
+    print(approval.refusal(script_path), file=sys.stderr)
+    return False
+
+
+def _cmd_approve(args, config) -> int:
+    """台本の確認が済んだことを控える。**OKを聞いたときだけ打つ。**"""
+    from . import approval
+
+    for script in args.scripts:
+        stamp = approval.approve(script)
+        print(f"確認済み: {approval.key_of(script)}　{stamp}")
+    return 0
+
+
 def _cmd_build(args, config) -> int:
+    if not _guard_approved(args.script):
+        return 2
     if args.backend:
         config.voicevox.backend = args.backend
     ensure_assets(config)
@@ -598,6 +631,8 @@ def _cmd_short(args, config) -> int:
     from . import shorts
     from .pipeline import build_script
 
+    if not _guard_approved(args.script):
+        return 2
     script = load_script(args.script)
     try:
         short = shorts.trim(script, args.section or "")
@@ -3014,6 +3049,7 @@ HANDLERS = {
     "comment": _cmd_comment,
     "material": _cmd_material,
     "dig": _cmd_dig,
+    "approve": _cmd_approve,
     "insights": _cmd_insights,
     "numbers": _cmd_numbers,
     "publish": _cmd_publish,

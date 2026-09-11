@@ -1,0 +1,108 @@
+# 佐野航大がCLデビュー（2026年9月10日）。ユーザー指示「cl順位表以外作って」
+#
+# **記事を開いて読んだ。**フットボールチャンネルが、オランダの
+# 『Voetbal International』が伝えたフリットとゼンデンの評価を紹介している。
+#
+# **佐野航大の写真がCommonsに無い。**同姓同名の野球選手（佐野皓大）しか
+# 出てこない。決まりどおり、**記事に出てくる別の人の顔**を使う（フリット）。
+# 顔がフリットになるので、タイトルと帯で佐野の名前を必ず出す
+#
+# 引きは**「レジェンドが何と言ったか」**。デビューそのものより、評価のほうが中身がある
+#
+# **反応は入れない。**読める形のスレが無かった
+format: news
+voice_min: 40
+slot: japan
+date: "2026年9月10日"
+
+# ハッシュタグに使う人の名前
+people:
+  - 佐野航大
+  - ルート・フリット
+  - ゼンデン
+  - デスト
+
+short_title: "佐野航大のCLデビューに、蘭の英雄が言ったこと"
+
+theme:
+  id: sano_cl_debut
+  league: netherlands
+  kind: other
+  topic: PSV
+  title: 佐野航大がCLデビュー。オランダのレジェンドが口にしたのは、どんな言葉か
+  hook: チーム最高評価は、この日本人でした。
+  question: 現地は、このデビューをどう見たか
+
+thumbnail:
+  line1: 佐野航大がCLデビュー
+  line2: 蘭の英雄「●●●●●●●」
+  # **佐野の写真がCommonsに無い**ので、発言の主であるフリットの顔を使う
+  photo: "assets/photos/20260911_gullit/01.jpg"
+  tags: []
+  points:
+    - 採点はチーム最高の7.5
+    - デスト、オビスポらの7点を上回る
+
+sections:
+  - id: match
+    heading: 何が起きたか
+    tier: 報道
+    telop: PSV 1対1 シャフタール
+    narrator: キャスター
+    card:
+      type: table
+      title: CLリーグフェーズ第1節 PSV 1-1 シャフタール・ドネツク
+      columns: ["時間", "得点者"]
+      rows:
+        - ["前半終了間際", "メンドーサ（シャフタール）"]
+        - ["後半開始直後", "デスト（PSV）"]
+    say:
+      - PSVの佐野航大が、自身初のCLに先発しました。
+      - 前半終了間際に先制を許し、後半開始直後にデストが同点。
+      - ホームでのCL初戦は引き分けでした。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/11/post1008777/
+      - https://web.gekisaka.jp/news/ucl/detail/?458618-458618-fl
+
+  - id: gullit
+    heading: 現地は、この日本人をどう見たか
+    tier: 報道
+    main: true
+    telop: 「佐野は本当に素晴らしかった」
+    narrator: 解説
+    say:
+      - 試合後、PSVでもプレーしたルート・フリットが佐野について語りました。
+      - {voice: ルート・フリット, text: 佐野は本当に素晴らしかった}
+      - 簡単な展開ではありませんでした。
+      - {voice: ルート・フリット, text: シャフタールは非常に強度の高いプレッシャーをかけていた}
+      - {voice: ルート・フリット, text: その中でPSVは、中盤や前線にボールを届けるのに苦労していた}
+      - 元オランダ代表のボウデワイン・ゼンデンも続きます。
+      - {voice: ゼンデン, text: ファン・ボメルはそのスピードで脅威を与えた}
+      - {voice: ゼンデン, text: しかし、前線には何かが欠けていた}
+      - {voice: ゼンデン, text: そんな中で、佐野は非常に力強いプレーを見せた}
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/11/post1008777/
+      - https://web.gekisaka.jp/news/ucl/detail/?458618-458618-fl
+
+  - id: rating
+    heading: 採点はどうだったか
+    tier: 報道
+    telop: チーム単独最高の7.5点
+    narrator: 解説
+    card:
+      type: bars
+      title: この試合の採点
+      items:
+        - {label: "佐野航大", value: 7.5}
+        - {label: "デスト／オビスポ／ファン・ボメル", value: 7.0}
+      unit: 点
+    say:
+      - 採点は7.5点。デストやオビスポらの7点を上回り、チームで単独の最高評価でした。
+      - 「大きな傑出者」とも書かれています。
+      - 加入して早々に中盤で存在感を高めている選手が、初めての舞台でこの評価でした。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/11/post1008777/
+      - https://web.gekisaka.jp/news/ucl/detail/?458618-458618-fl
