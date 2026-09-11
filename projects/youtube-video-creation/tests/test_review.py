@@ -296,14 +296,22 @@ def test_字幕に確度バッジが混ざっていたら弾く(tmp_path):
     assert not _caption_badges(srt).ok
 
 
-def test_字幕1枚が長すぎたら弾く(tmp_path):
+def test_字幕は長くても弾かない(tmp_path):
+    """**字数では落とさない**（2026-09-11 ユーザー「制約はない」）。
+
+    字幕は焼き込みではなく別ファイルの CC なので、既定では画面に出ない。
+    読めないものは弾くが、長さは数を出すだけ。
+    """
     from src.review import _caption_load
 
     srt = tmp_path / "subtitles.srt"
     srt.write_text(
         "1\n00:00:01,000 --> 00:00:06,000\n" + "あ" * 60 + "\n\n", encoding="utf-8"
     )
-    assert not _caption_load(srt).ok
+    finding = _caption_load(srt)
+    assert finding.ok and "60" in finding.detail
+
+    assert not _caption_load(tmp_path / "ない.srt").ok
 
 
 def test_止まりすぎる画面を弾く(tmp_path):
@@ -572,14 +580,19 @@ def test_語りだけの台本は他人の声で止まる(tmp_path):
     assert "0%" in result["他人の声の量"].detail
 
 
-def test_長い引用は刻みで止まる(tmp_path):
+def test_長い引用でも刻みで止めない(tmp_path):
+    """**選ぶ基準は長さではなく中身**（2026-09-11 ユーザー
+    「内容がいいものを抜粋する」「文字数は関係ない」）。
+
+    20字で落としていると、**短いものだけが残る決まり**になっていた。
+    数は出すが、止めない。
+    """
     body = GOOD_BODY.replace(
         "ネット民: 完全に別チームだった。",
         "ネット民: 完全に別のチームになっていて見ていて本当に気持ちがよかった一戦だったし"
         "これが続くなら今季は本気で優勝を狙えると思う。")
-    # 上限は45字（2026-09-08 サッカーラボの実測 30〜45字に合わせた）
     result = _by_label(inspect(parse_script(body), _built(tmp_path)))
-    assert result["反応の刻み"].ok is False
+    assert result["反応の刻み"].ok is True
 
 
 def test_1行目がタイトルと違うと止まる(tmp_path):

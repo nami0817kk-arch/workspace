@@ -473,12 +473,17 @@ def _reaction_raw(**card_overrides):
     return raw
 
 
-def test_a_reactions_card_without_sources_is_blocked():
+def test_出典の無い反応カードも書き出す():
+    """**止めない**（2026-09-11 ユーザー「出しても良い」）。
+
+    反応そのものを実在する投稿から引く決まりは変えていない。
+    URL を後から足す回まで止めないだけ。
+    """
     plan = _plan()
     raw = _reaction_raw()
     raw["sections"][2]["sources"] = []
     problems = verify(build_notes(raw), plan)
-    assert any("反応カードに出典がありません" in p for p in problems)
+    assert not any("出典がありません" in p for p in problems)
 
 
 def test_a_reactions_card_with_sources_passes():

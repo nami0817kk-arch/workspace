@@ -140,15 +140,17 @@ def _cues(srt_path: Path) -> list[str]:
 
 
 def _caption_load(srt_path: Path) -> Finding:
-    """字幕1枚に載る量。多いと目で追えない（テレビは全角15字×2行）。"""
+    """字幕1枚の量。**字数では落とさない**（2026-09-11 ユーザー「制約はない」）。
+
+    テレビの全角15字×2行に合わせて38字で落としていたが、**字幕は焼き込みではなく
+    別ファイルの CC** なので、既定では画面に出ない。読み手が出したときの体裁より、
+    読み上げと合っていることのほうが大事。数は出すが、止めはしない。
+    """
     cues = _cues(srt_path)
     if not cues:
         return Finding(False, "字幕の量", "字幕が読めません")
     longest = max(cues, key=len)
-    if len(longest) > CAPTION_MAX:
-        return Finding(False, "字幕の量",
-                       f"{len(longest)}字の枚があります（上限{CAPTION_MAX}）: {longest[:24]}…")
-    return Finding(True, "字幕の量", f"{len(cues)}枚 / 最大{len(longest)}字")
+    return Finding(True, "字幕の量", f"{len(cues)}枚 / 最長{len(longest)}字")
 
 
 def _caption_badges(srt_path: Path) -> Finding:
@@ -1007,18 +1009,18 @@ def check_voice_share(script: Script, minimum: float | None = None) -> Finding:
 
 
 def check_voice_length(script: Script) -> Finding:
-    """1件が長すぎないか。長い引用は刻めず、画面も声も止まる。"""
+    """1件の長さ。**字数では落とさない**（2026-09-11 ユーザー
+    「内容がいいものを抜粋する」「文字数は関係ない」）。
+
+    20字で落としていたが、**短いものだけが残る決まりになっていた。**
+    選ぶ基準は長さではなく中身。長い1件は、元の改行で行に分けて全文を載せる
+    （`check_reaction_pairing` が、カードに出して読んでいない反応を止める）。
+    数は出すが、止めはしない。
+    """
     other, _ = _voice_lines(script)
     if not other:
         return Finding(True, "反応の刻み", "他人の声がありません")
-    longest = max(other)
-    if longest > VOICE_LINE_MAX:
-        return Finding(
-            False, "反応の刻み",
-            f"1件が{longest}字あります（上限{VOICE_LINE_MAX}字）。"
-            "短く割ってください。参考は1件3秒＝16字前後です",
-        )
-    return Finding(True, "反応の刻み", f"最長 {longest}字")
+    return Finding(True, "反応の刻み", f"最長 {max(other)}字")
 
 
 def _bare(text: str) -> str:

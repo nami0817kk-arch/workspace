@@ -40,9 +40,9 @@
     "thumbnails.set": 64
   },
   "2026-09-11": {
-    "channels.list": 5,
-    "playlistItems.list": 20,
-    "videos.list": 24,
+    "channels.list": 8,
+    "playlistItems.list": 24,
+    "videos.list": 28,
     "videos.insert": 4,
     "thumbnails.set": 7,
     "videos.update": 1

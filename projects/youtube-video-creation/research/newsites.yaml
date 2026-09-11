@@ -115,6 +115,16 @@ sites:
   - https://www.mondoudinese.it/udinese/news-udinese/udinese-unai-gomez-voglio-migliorare-e-aumentare-i-miei-numeri/?intcmp=gazzanet-mondoudinese
   - https://www.mondoudinese.it/udinese/news-udinese/conferenza-runjaic-bayo-puo-giocare-titolare-ma-non-vi-diro-lundici/?intcmp=gazzanet-mondoudinese
   - https://www.mondoudinese.it/udinese/news-udinese/palma-il-posto-da-titolare-me-lo-dovro-riguadagnare/?intcmp=gazzanet-mondoudinese
+- host: tuttobolognaweb.it
+  seen: 5
+  days:
+  - '2026-09-05'
+  - '2026-09-08'
+  - '2026-09-12'
+  examples:
+  - https://www.tuttobolognaweb.it/mercato/tedesco/?intcmp=gazzanet-tuttobolognaweb
+  - https://www.tuttobolognaweb.it/news/dovbyk-emozionato-per-il-gol-ma-dobbiamo-migliorare/?intcmp=gazzanet-tuttobolognaweb
+  - https://www.tuttobolognaweb.it/mercato/il-ritorno-di-theate-oggi-il-bologna-e-diverso-tedesco-grande-mister/?intcmp=gazzanet-tuttobolognaweb
 - host: ilmilanista.it
   seen: 4
   days:
@@ -146,14 +156,6 @@ sites:
   - '2026-09-05'
   examples:
   - https://www.sportsmole.co.uk/football/barcelona/race-for-the-la-liga-title/predicted-lineups/any-changes-for-flick-how-barca-could-line-up-against-valencia_604504.html
-- host: tuttobolognaweb.it
-  seen: 4
-  days:
-  - '2026-09-05'
-  - '2026-09-08'
-  examples:
-  - https://www.tuttobolognaweb.it/mercato/tedesco/?intcmp=gazzanet-tuttobolognaweb
-  - https://www.tuttobolognaweb.it/news/dovbyk-emozionato-per-il-gol-ma-dobbiamo-migliorare/?intcmp=gazzanet-tuttobolognaweb
 - host: numericalcio.it
   seen: 4
   days:
@@ -162,6 +164,16 @@ sites:
   examples:
   - https://www.numericalcio.it/calendario-gare/serie-b-2019-20-risultati-e-classifica-aggiornata/?intcmp=gazzanet-numericalcio
   - https://www.numericalcio.it/uefa-youth-league/youth-league-2019-20-risultati-e-classifiche/?intcmp=gazzanet-numericalcio
+- host: pianetamilan.it
+  seen: 4
+  days:
+  - '2026-09-08'
+  - '2026-09-09'
+  - '2026-09-12'
+  examples:
+  - https://www.pianetamilan.it/news-milan/interviste/fofana-qui-per-riportare-il-siviglia-ad-alti-livelli-spero-di-ritrovare-il-piacere-di-giocare-a-calcio/?intcmp=gazzanet-pianetamilan
+  - http://pianetamilan.it/news-milan/ultime-notizie/ex-milan-taarabt-appende-gli-scarpini-al-chiodo-non-cambierei-nulla-di-questo-viaggio/
+  - https://www.pianetamilan.it/news-milan/rassegna-stampa/fofana-al-siviglia-cifre-dal-prestito-dal-milan-e-le-sue-prime-dichiarazioni/?intcmp=gazzanet-pianetamilan
 - host: genoaoggi.it
   seen: 3
   days:
@@ -183,14 +195,6 @@ sites:
   examples:
   - https://www.mediagol.it/palermo/palermo-inzaghi-non-mi-e-piaciuto-assolutamente-quel-black-out-peda-vi-dico-come-sta/?intcmp=gazzanet-mediagol
   - https://www.mediagol.it/palermo/ex-palermo-brunori-subito-in-gol-ho-sentito-unenergia-che-mi-serviva-e-racconta-la-trattativa/?intcmp=gazzanet-mediagol
-- host: pianetamilan.it
-  seen: 3
-  days:
-  - '2026-09-08'
-  - '2026-09-09'
-  examples:
-  - https://www.pianetamilan.it/news-milan/interviste/fofana-qui-per-riportare-il-siviglia-ad-alti-livelli-spero-di-ritrovare-il-piacere-di-giocare-a-calcio/?intcmp=gazzanet-pianetamilan
-  - http://pianetamilan.it/news-milan/ultime-notizie/ex-milan-taarabt-appende-gli-scarpini-al-chiodo-non-cambierei-nulla-di-questo-viaggio/
 - host: today.rtl.lu
   seen: 2
   days:

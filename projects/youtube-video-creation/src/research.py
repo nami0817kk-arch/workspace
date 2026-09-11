@@ -506,11 +506,9 @@ def _check_reactions(section: Section) -> list[str]:
         return []
 
     problems: list[str] = []
-    if not section.sources:
-        problems.append(
-            f"{section.id}: 反応カードに出典がありません。"
-            "実在する投稿・記事のURLを sources に入れてください"
-        )
+    # **出典が無くても書き出す**（2026-09-11 ユーザー「出しても良い」）。
+    # それまでは弾いていた。**反応そのものが実在するかどうかの決まりは
+    # 変えていない**（作らない）。URL を後から足す回まで止めないだけ。
 
     for item in card.get("items") or []:
         entry = item if isinstance(item, dict) else {"text": str(item)}
