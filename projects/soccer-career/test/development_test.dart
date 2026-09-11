@@ -189,9 +189,10 @@ void main() {
       required int opponentStrength,
       int confidence = 10,
       Development dev = const Development(),
+      Attributes? attributes,
     }) => MatchEngine(random: Random(8)).start(
       matchday: 1,
-      player: player(confidence: confidence),
+      player: player(confidence: confidence, attributes: attributes),
       club: club('home', strength: 60),
       opponent: club('rival', strength: opponentStrength),
       home: true,
@@ -205,11 +206,28 @@ void main() {
     });
 
     test('自信と経験のある選手は大一番でも落ちない', () {
-      final timid = start(opponentStrength: 80, confidence: 3);
+      // **能力50のままだと、格上との対戦で両方が下限（5%）に張り付く**
+      // ——差を測る前に潰れて、何を比べても同じになる。
+      // 大一番の重圧そのものを見たいので、ここは届く能力で組む。
+      final able = Attributes(
+        pace: 75,
+        shooting: 75,
+        passing: 75,
+        dribbling: 75,
+        defending: 75,
+        physical: 75,
+        goalkeeping: 75,
+      );
+      final timid = start(
+        opponentStrength: 80,
+        confidence: 3,
+        attributes: able,
+      );
       final strong = start(
         opponentStrength: 80,
         confidence: 18,
         dev: const Development(experience: 5000),
+        attributes: able,
       );
       final option = timid.current.options.first;
       expect(strong.chanceFor(option), greaterThan(timid.chanceFor(option)));
