@@ -205,6 +205,7 @@ class CareerState {
     this.backedUpYear = 0,
     this.autoRestBelow = defaultAutoRestBelow,
     this.focus = const [],
+    this.signatureAim,
     this.yellowCards = 0,
     this.suspension = 0,
     this.momentAttempts = const {},
@@ -447,6 +448,17 @@ class CareerState {
 
   /// 同時に選べる数。全部を伸ばすのは方向とは言わない。
   static const int maxFocus = 3;
+
+  /// **狙っている個人技。**
+  ///
+  /// もともとは「能力値が上がった結果として身に付く」もので、
+  /// **狙って取りに行けなかった**。そのぶん実測（`craft_sim`）で
+  /// 1人3個が自動で埋まり、**どれを覚えるかを選ぶ余地が無かった**。
+  ///
+  /// 狙っても**能力は要る**（`Signature.requirement` に届くまで付かない）。
+  /// 狙えるのは「届いたときに、どれになるか」と「その速さ」だけ——
+  /// ここを崩すと、積み上げずに技だけ買えることになる。
+  Signature? signatureAim;
 
   /// そのカテゴリの中で、方向に入っている詳細。
   List<Detail> focusIn(AttributeKey key) =>
@@ -867,6 +879,7 @@ class CareerState {
         'backedUpYear': backedUpYear,
         'autoRestBelow': autoRestBelow,
         'focus': focus.map((d) => d.name).toList(),
+        'signatureAim': signatureAim?.name,
         'yellowCards': yellowCards,
         'suspension': suspension,
         'tampered': tampered,
@@ -1008,6 +1021,10 @@ class CareerState {
           if (Detail.values.any((d) => d.name == n))
             Detail.values.byName(n as String),
       ],
+      // 狙いを知らない保存データは「狙っていない」で読む。
+      signatureAim: Signature.values
+          .where((s) => s.name == json['signatureAim'])
+          .firstOrNull,
       yellowCards: json['yellowCards'] as int? ?? 0,
       suspension: json['suspension'] as int? ?? 0,
       seasonStart: json['seasonStart'] is Map<String, dynamic>

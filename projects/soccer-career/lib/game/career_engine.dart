@@ -1236,6 +1236,9 @@ class CareerEngine {
       backedUpYear: state.backedUpYear,
       autoRestBelow: state.autoRestBelow,
       focus: state.focus,
+      // 狙いもシーズンを跨いで残す。ここを渡し忘れると、毎年オフに
+      // 狙いが外れて、実測で取得率が 30.5% → 31.0% しか動かなかった。
+      signatureAim: state.signatureAim,
       // 累積警告はシーズンをまたぐと消える。出場停止は持ち越す。
       yellowCards: 0,
       suspension: state.suspension,
@@ -1528,6 +1531,9 @@ class CareerEngine {
       backedUpYear: state.backedUpYear,
       autoRestBelow: state.autoRestBelow,
       focus: state.focus,
+      // 狙いもシーズンを跨いで残す。ここを渡し忘れると、毎年オフに
+      // 狙いが外れて、実測で取得率が 30.5% → 31.0% しか動かなかった。
+      signatureAim: state.signatureAim,
       manager: state.manager,
       directive: state.directive,
       competitor: state.competitor,
