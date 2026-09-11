@@ -1,0 +1,124 @@
+# コモがCL初出場でライプツィヒに4-1（2026年9月10日）。ユーザー指示「8はやろう、才能ある二人も紹介したい」
+#
+# **記事を2本とロマーノの投稿を読んだ。**ESPN が試合とファブレガス・バトゥリナの
+# 発言、フットボール・イタリアが試合前の会見、ロマーノが試合後の「次はバルサ」。
+#
+# 引きは**「創立119年で初めての欧州大会」**。結果より、
+# **ファブレガスが名前を挙げた22歳と23歳**が中身になる（ユーザー指示）。
+#
+# **得点の細かい流れは書かない。**ESPN の記述はどのゴールの描写か読み取れず、
+# 断定できない。得点者と時間だけにする
+#
+# **ESPN の「レンタル」は誤り**（2026-09-11 ユーザー指摘「ニコパスってレンタルじゃないよね？」）。
+# ESPN は "stayed on loan from Real Madrid" と書いているが、英語版Wikipediaでは
+# **2024年8月25日に6600万ユーロと報じられる移籍金で4年契約**を結んだ完全移籍。
+# 2025-26 から**コモの背番号10**を付けている。
+# **ファブレガスの「10番が失われつつある」という言葉と、そのまま噛み合う**
+#
+# **反応は入れない。**読める形のスレが無かった
+format: news
+voice_min: 40
+slot: other
+date: "2026年9月10日"
+
+# ハッシュタグに使う人の名前
+people:
+  - セスク・ファブレガス
+  - ニコ・パス
+  - マルティン・バトゥリナ
+  - ドウヴィカス
+  - ディアオ
+
+short_title: "ファブレガスが名前を挙げた、22歳と23歳"
+
+theme:
+  id: como_ucl_debut
+  league: other
+  kind: match
+  topic: コモ
+  title: 創立119年で初の欧州大会。コモの4得点と、監督が名前を挙げた2人
+  hook: ライプツィヒに4対1で勝ちました。
+  question: ファブレガスが「幸運だ」と言ったのは、誰のことか
+
+thumbnail:
+  line1: 創立119年で初の欧州大会
+  line2: 監督が挙げた2人は ●●●●
+  photo: "assets/photos/20260911_fabregas/01.jpg"
+  # **3人並べる**（2026-09-11 ユーザー「マルティンもサムネに載っけたい」）。
+  # バトゥリナの写真は Commons に全身の動作写真しか無く、顔が豆粒だったので
+  #  で顔だけ切り出した（ディナモ・ザグレブ時代。古いユニフォームでよい）
+  photos:
+    - "assets/photos/20260911_fabregas/01.jpg"
+    - "assets/photos/20260911_paz/01.jpg"
+    - "assets/photos/20260911_baturina/01.jpg"
+  tags: []
+  points:
+    - 昨季セリエA4位
+    - ユーヴェとミランを上回った
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: コモ 4対1 ライプツィヒ
+    narrator: キャスター
+    card:
+      type: table
+      title: CLリーグフェーズ第1節 コモ 4-1 ライプツィヒ
+      columns: ["時間", "得点者"]
+      rows:
+        - ["15分", "バトゥリナ（クラブ初のCL得点）"]
+        - ["", "ドウヴィカス"]
+        - ["", "ディアオ"]
+        - ["終了間際", "ペローネ"]
+    say:
+      - コモがCL初戦でライプツィヒを4対1。欧州の大会に出るのは創立119年で初めてです。
+      - 15分にバトゥリナがクラブ初のCL得点。60分までに3対0とし、終了間際に4点目が入りました。
+      - 昨季セリエA4位。ユヴェントスとミランを上回って最後の枠を取りました。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49895790/cesc-fabregas-como-rout-rb-leipzig-dream-ucl-debut
+      - https://football-italia.net/ucl-como-4-1-rb-leipzig-ideal-champions-league/
+
+  - id: two
+    heading: 監督が名前を挙げた、22歳と23歳
+    tier: 報道
+    main: true
+    telop: 「10番が失われつつあると感じる」
+    narrator: 解説
+    say:
+      - セスク・ファブレガス監督が、2人の若い選手について話しました。
+      - {voice: ファブレガス監督, text: 10番というものが、失われつつあると感じている}
+      - {voice: ファブレガス監督, text: そのやり方でプレーできる才能ある2人がいるのは、幸運だ}
+      - {voice: ファブレガス監督, text: 22歳と23歳。サッカーで遠くまで行ける}
+      - 22歳がニコ・パス。レアル・マドリードの下部組織で育ち、いまはコモの10番です。
+      - 23歳がマルティン・バトゥリナ。この日クラブ初のCL得点を決め、マン・オブ・ザ・マッチにも選ばれました。
+      - {voice: バトゥリナ, text: そう、彼は多くの自由をくれる}
+      - {voice: バトゥリナ, text: たまに、少しポジションを離れすぎて嫌がられることもある}
+      - {voice: バトゥリナ, text: でも自由をくれるから、良いサッカーができる}
+      - {voice: バトゥリナ, text: 僕たちは大胆だ}
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49895790/cesc-fabregas-como-rout-rb-leipzig-dream-ucl-debut
+      - https://football-italia.net/fabregas-honoured-first-como-champions-league/
+
+  - id: next
+    heading: 次の相手は、バルセロナ
+    tier: 確定
+    telop: 「バルサは恐ろしい」
+    narrator: 解説
+    say:
+      - 選手に委ねる理由も、はっきり口にしています。
+      - {voice: ファブレガス監督, text: 型にはめるべき選手もいれば、自由を与えられる選手もいる}
+      - {voice: ファブレガス監督, text: 結局は、どこかで選手を信じることだ}
+      - {voice: ファブレガス監督, text: すべてを制御することはできない}
+      - 次の相手についても聞かれました。
+      - {voice: ファブレガス監督, text: バルセロナは恐ろしい。本当に怖いよ}
+      - {voice: ファブレガス監督, text: 彼らはいつでも解決策を見つけてくる}
+      - {voice: ファブレガス監督, text: バルセロナは相手を悪く見せるんだ}
+      - {voice: ファブレガス監督, text: どの瞬間でも答えを出せるから}
+      - {voice: ファブレガス監督, text: どの選手が出てきても、水準が高いままだ}
+    official: true
+    sources:
+      - https://x.com/FabrizioRomano/status/2098208149102628934
+      - https://www.espn.com/soccer/story/_/id/49895790/cesc-fabregas-como-rout-rb-leipzig-dream-ucl-debut

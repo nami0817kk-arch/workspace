@@ -359,6 +359,10 @@ accounts:
   - {handle: MatteMoretto, name: Matteo Moretto, tier: 未確認, note: スペイン・イタリア}
   - {handle: DiMarzio, name: Gianluca Di Marzio, tier: 未確認, note: セリエA}
   - {handle: TheAthleticFC, name: The Athletic Football, tier: 報道, note: 媒体の公式}
+  # クラブ公式（2026-09-11 ユーザー判断「B」）。佐野航大の写真が Commons に
+  # 無く、使えるのはクラブの投稿だけだった。**サムネイルには使えない**ので、
+  # 本文の1カットに限る
+  - {handle: PSV, name: PSV アイントホーフェン（クラブ公式）, tier: 確定, note: オランダ。クラブの公式アカウント}
 
 # 記者の投稿をどう扱うか
 social:

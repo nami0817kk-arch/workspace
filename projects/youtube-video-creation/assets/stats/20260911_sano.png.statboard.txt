@@ -1,0 +1,7 @@
+title: PSV対シャフタール 採点
+unit: 点
+佐野航大=7.5
+デスト=7.0
+オビスポ=7.0
+ファン・ボメル=7.0
+source: Voetbal International
