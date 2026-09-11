@@ -593,8 +593,10 @@ void main() {
     final outlook = controller.outlook!;
     expect(find.text(outlook.headline), findsOneWidget);
     expect(find.text(outlook.reason), findsOneWidget);
-    // 判定に使う線が書いてある。
-    expect(outlook.reason, contains('先発の線'));
+    // 判定に使う線が書いてある（離脱中なら、そちらの理由が先に来る）。
+    if (!controller.state!.injured && !controller.state!.suspended) {
+      expect(outlook.reason, contains('先発の線'));
+    }
   });
 
   testWidgets('試合の画面で、成功率の内訳が読める', (tester) async {

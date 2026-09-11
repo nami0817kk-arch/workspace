@@ -842,6 +842,8 @@ class CareerController extends ChangeNotifier {
     final matchday = state.matchday;
     _inProgress = _match.start(
       forcedScenarios: forcedScenarios,
+      // 重い試合だけを厚くする（局面 2 → 8）。判定は Newsroom に1か所。
+      big: Newsroom.isBigFixture(state),
       matchday: matchday,
       player: state.player,
       club: state.club,
@@ -909,6 +911,8 @@ class CareerController extends ChangeNotifier {
         ? Appearance.benched
         : null;
     _inProgress = _match.start(
+      // 勝ち上がるほど重くなる。早いラウンドは控えの出番。
+      big: tie.round.index >= CupRound.quarter.index,
       matchday: state.matchday,
       player: state.player,
       club: state.club,
@@ -965,6 +969,8 @@ class CareerController extends ChangeNotifier {
     }
 
     _inProgress = _match.start(
+      // 代表戦は数が少なく、1試合が重い。
+      big: true,
       matchday: state.matchday,
       player: state.player,
       club: National.home,
