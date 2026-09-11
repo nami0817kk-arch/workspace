@@ -92,6 +92,8 @@ clubs:
   - {canonical: ユヴェントス, league: italy, big: true,
      aka: [Juventus, Juve, ユベントス, ユーベ]}
   - {canonical: ナポリ, league: italy, big: false, aka: [Napoli]}
+  # 2026-09-11 に追加。CL初出場の回で、タイトルの主語の検査が名前と認めなかった
+  - {canonical: コモ, league: italy, big: false, aka: [Como, Como 1907, コモ1907]}
   - {canonical: ローマ, league: italy, big: false, aka: [AS Roma, Roma, ASローマ]}
   - {canonical: ラツィオ, league: italy, big: false, aka: [Lazio]}
   - {canonical: アタランタ, league: italy, big: false, aka: [Atalanta]}

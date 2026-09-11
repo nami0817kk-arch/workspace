@@ -32,11 +32,11 @@
   "2026-09-10": {
     "videos.list": 38,
     "videos.update": 13,
-    "channels.list": 24,
-    "playlistItems.list": 37,
+    "channels.list": 25,
+    "playlistItems.list": 38,
     "commentThreads.list": 14,
     "commentThreads.insert": 7,
-    "videos.insert": 14,
-    "thumbnails.set": 29
+    "videos.insert": 15,
+    "thumbnails.set": 31
   }
 }
