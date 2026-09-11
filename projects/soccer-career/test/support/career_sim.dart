@@ -69,6 +69,8 @@ class Playstyle {
     this.spendsPoints = false,
     this.autoRestBelow,
     this.traits,
+    this.pinAbility,
+    this.staysPut = false,
   });
 
   final String name;
@@ -124,6 +126,15 @@ class Playstyle {
   /// 特性は飾りということになる。
   final List<Trait>? traits;
 
+  /// 毎週この値に能力を固定する。null なら普通に成長する。
+  ///
+  /// **「能力99の選手が底辺の環境で何を残すか」を測るために要る。**
+  /// 普通に回すと、強くなった選手は移籍で環境ごと変わってしまう。
+  final int? pinAbility;
+
+  /// 移籍の話が来ても必ず残留する。環境を固定するための札。
+  final bool staysPut;
+
   /// 居残りでセットプレーを磨く。
   final bool drills;
 
@@ -157,6 +168,13 @@ class Career {
   int missedMatches = 0;
   int transfers = 0;
   int lastTier = 9;
+
+  /// 去年いたクラブ。**昇格で上がったのか、移籍で上がったのか**は
+  /// クラブが同じかどうかでしか区別できない。
+  String lastClub = '';
+
+  /// そのシーズンに昇格した回数。
+  int promotions = 0;
   bool reachedTopByPromotion = false;
   int loans = 0;
   int bestTier = 9;
@@ -303,6 +321,14 @@ Future<Career> runCareer(
         career.leagueMatches++;
         if (Newsroom.isBigFixture(state)) career.bigFixtures++;
       }
+      // 能力を固定する型なら、毎週そこへ戻す。
+      if (style.pinAbility != null) {
+        controller.state!.player = controller.state!.player.copyWith(
+          attributes: Attributes.fromDetails({
+            for (final d in Detail.values) d: style.pinAbility!,
+          }),
+        );
+      }
       final wasInjured = state.injured;
       if (onDecision == null && style.pick == null) {
         await controller.simulateMatch();
@@ -356,11 +382,20 @@ Future<Career> runCareer(
     career.goals += stats.goals;
     career.assists += stats.assists;
     career.ratingSum += stats.averageRating * stats.appearances;
-    // 1部にどうやって届いたか。昇格か、移籍か。
+    // **1部にどうやって届いたか。昇格か、移籍か。**
+    //
+    // ここは長いあいだ `career.lastTier == 1` を見ていて、**構造的に
+    // 一度も true にならなかった**（初めて1部に届く瞬間、去年の部は
+    // 必ず1ではない）。「60キャリア全員が移籍で到達、昇格は0人」という
+    // 記録は、この壊れた指標から出ている。**指標そのものを疑う。**
+    // 昇格と移籍を分けるのは部の数字ではなく、**クラブが同じかどうか**。
+    final sameClub = career.lastClub == done.club.name;
+    if (done.club.tier < career.lastTier && sameClub) career.promotions++;
     if (done.club.tier == 1 && career.bestTier > 1) {
-      career.reachedTopByPromotion = career.lastTier == 1;
+      career.reachedTopByPromotion = sameClub;
     }
     career.lastTier = done.club.tier;
+    career.lastClub = done.club.name;
     career.bestTier = min(career.bestTier, done.club.tier);
     if (done.club.tier == 1) {
       career.bestPrestige = max(
@@ -522,7 +557,8 @@ TransferOffer _pick(
   Playstyle style,
   CareerState state,
 ) {
-  if (!style.ambitious) {
+  // 環境を固定する型は、何が来ても残る。
+  if (style.staysPut || !style.ambitious) {
     return offers.firstWhere((o) => o.isRenewal, orElse: () => offers.first);
   }
   // 出番が無いならローンでも受ける。あるなら格と年俸で選ぶ。
