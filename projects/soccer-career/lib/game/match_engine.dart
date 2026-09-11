@@ -1370,8 +1370,15 @@ class MatchEngine {
     final family = player.position.family;
     final pool = [...ScenarioPool.neutralFor(family)]..shuffle(_random);
     // 管理画面（開発用）から局面を指定して入ることがある。
-    final picked = forcedScenarios != null
-        ? forcedScenarios.take(count).toList()
+    // 管理画面（開発用）から局面を指定して入ることがある。
+    // **渡された数が足りなければ繰り返して埋める**——局面の数は試合の重さで
+    // 2〜6 に変わるので、呼ぶ側が何枚要るかを知りようがない
+    // （3枚決め打ちで渡していて、重い試合に当たると assert で落ちていた）。
+    final picked = forcedScenarios != null && forcedScenarios.isNotEmpty
+        ? [
+            for (var i = 0; i < count; i++)
+              forcedScenarios[i % forcedScenarios.length],
+          ]
         : pool.take(count).toList();
     final reserves = count == 0
         ? const <Scenario>[]

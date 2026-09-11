@@ -98,10 +98,10 @@ class AdminImpact {
         headroom > 0
             ? 'ポテンシャルまであと $headroom'
             : transcend == null
-                ? 'ポテンシャルに到達（もう伸びない）'
-                : 'ポテンシャルに到達。${transcend.label}だけ '
-                    '${player.attributes.detail(transcend)} → '
-                    '${player.ceilingFor(transcend)} まで伸びる',
+            ? 'ポテンシャルに到達（もう伸びない）'
+            : 'ポテンシャルに到達。${transcend.label}だけ '
+                  '${player.attributes.detail(transcend)} → '
+                  '${player.ceilingFor(transcend)} まで伸びる',
       ),
       ImpactLine(
         '今季のお金',
@@ -122,11 +122,11 @@ class AdminImpact {
   ///
   /// 何をしたら何が動いたのかは、並べて見せないと分からない。
   static List<String> diff(AdminImpact before, AdminImpact after) => [
-        for (var i = 0; i < after.lines.length && i < before.lines.length; i++)
-          if (before.lines[i].value != after.lines[i].value)
-            '${after.lines[i].label} ${before.lines[i].value}'
-                ' → ${after.lines[i].value}',
-      ];
+    for (var i = 0; i < after.lines.length && i < before.lines.length; i++)
+      if (before.lines[i].value != after.lines[i].value)
+        '${after.lines[i].label} ${before.lines[i].value}'
+            ' → ${after.lines[i].value}',
+  ];
 
   static String _percent(double value) {
     final n = (value * 100).round();
@@ -158,20 +158,27 @@ class AdminActions {
       traits.add(trait);
     }
     await controller.applyAdmin(
-        (s) => s.player = s.player.copyWith(traits: traits));
+      (s) => s.player = s.player.copyWith(traits: traits),
+    );
   }
 
   Future<void> clearTraits() async {
-    await controller
-        .applyAdmin((s) => s.player = s.player.copyWith(traits: const []));
+    await controller.applyAdmin(
+      (s) => s.player = s.player.copyWith(traits: const []),
+    );
   }
 
   /// 詳細能力を1つ動かす。上限は特性を見て決める（超越なら 109 まで）。
   Future<void> bumpDetail(Detail detail, int delta) async {
-    await controller.applyAdmin((s) => s.player = s.player.copyWith(
-          attributes: s.player.attributes
-              .bumpDetail(detail, delta, max: s.player.ceilingFor(detail)),
-        ));
+    await controller.applyAdmin(
+      (s) => s.player = s.player.copyWith(
+        attributes: s.player.attributes.bumpDetail(
+          detail,
+          delta,
+          max: s.player.ceilingFor(detail),
+        ),
+      ),
+    );
   }
 
   /// 全部の詳細能力を動かす。総合力をまとめて上げ下げしたいとき。
@@ -179,56 +186,72 @@ class AdminActions {
     await controller.applyAdmin((s) {
       var attributes = s.player.attributes;
       for (final d in Detail.values) {
-        attributes = attributes.bumpDetail(d, delta,
-            max: s.player.ceilingFor(d));
+        attributes = attributes.bumpDetail(
+          d,
+          delta,
+          max: s.player.ceilingFor(d),
+        );
       }
       s.player = s.player.copyWith(attributes: attributes);
     });
   }
 
   Future<void> setPotential(int value) async {
-    await controller.applyAdmin((s) => s.player = Player.rebuild(
-          s.player,
-          attributes: s.player.attributes,
-          potential: value.clamp(1, 99),
-        ));
+    await controller.applyAdmin(
+      (s) => s.player = Player.rebuild(
+        s.player,
+        attributes: s.player.attributes,
+        potential: value.clamp(1, 99),
+      ),
+    );
   }
 
   Future<void> setAge(int value) async {
-    await controller
-        .applyAdmin((s) => s.player = s.player.copyWith(age: value.clamp(15, 45)));
+    await controller.applyAdmin(
+      (s) => s.player = s.player.copyWith(age: value.clamp(15, 45)),
+    );
   }
 
   Future<void> setCondition(int value) async {
     await controller.applyAdmin(
-        (s) => s.player = s.player.copyWith(condition: value.clamp(0, 100)));
+      (s) => s.player = s.player.copyWith(condition: value.clamp(0, 100)),
+    );
   }
 
   Future<void> setMorale(int value) async {
-    await controller
-        .applyAdmin((s) => s.morale = Morale(value: value.clamp(0, 100)));
+    await controller.applyAdmin(
+      (s) => s.morale = Morale(value: value.clamp(0, 100)),
+    );
   }
 
   Future<void> setFatigue(int value) async {
-    await controller
-        .applyAdmin((s) => s.fatigue = Fatigue(value: value.clamp(0, 100)));
+    await controller.applyAdmin(
+      (s) => s.fatigue = Fatigue(value: value.clamp(0, 100)),
+    );
   }
 
   Future<void> setManagerTrust(int value) async {
-    await controller.applyAdmin((s) => s.relations = Relations(
-          manager: value.clamp(0, 100),
-          teammates: s.relations.teammates,
-        ));
+    await controller.applyAdmin(
+      (s) => s.relations = Relations(
+        manager: value.clamp(0, 100),
+        teammates: s.relations.teammates,
+      ),
+    );
   }
 
   Future<void> setFame(int value) async {
-    await controller.applyAdmin((s) => s.reputation =
-        s.reputation.copyWith(fame: value.clamp(0, 100)));
+    await controller.applyAdmin(
+      (s) => s.reputation = s.reputation.copyWith(fame: value.clamp(0, 100)),
+    );
   }
 
   Future<void> setSavings(int value) async {
-    await controller.applyAdmin((s) => s.finances =
-        Finances(savings: value, lifestyle: s.finances.lifestyle));
+    await controller.applyAdmin(
+      (s) => s.finances = Finances(
+        savings: value,
+        lifestyle: s.finances.lifestyle,
+      ),
+    );
   }
 
   Future<void> setYellowCards(int value) async {
@@ -241,33 +264,33 @@ class AdminActions {
 
   /// 怪我をさせる／治す。復帰明けの挙動を見るときに使う。
   Future<void> setInjury(int matchesOut) async {
-    await controller.applyAdmin((s) => s.injury = matchesOut <= 0
-        ? null
-        : Injury(
-            name: '管理画面',
-            severity: matchesOut >= 10
-                ? InjurySeverity.severe
-                : matchesOut >= 4
-                    ? InjurySeverity.moderate
-                    : InjurySeverity.light,
-            matchesOut: matchesOut,
-          ));
+    await controller.applyAdmin(
+      (s) => s.injury = matchesOut <= 0
+          ? null
+          : Injury(
+              name: '管理画面',
+              severity: matchesOut >= 10
+                  ? InjurySeverity.severe
+                  : matchesOut >= 4
+                  ? InjurySeverity.moderate
+                  : InjurySeverity.light,
+              matchesOut: matchesOut,
+            ),
+    );
   }
 
   /// 局面を指定して試合に入る。条件が揃わないと出ない局面を直接見る。
   void startMatchWith(Scenario scenario) {
     final state = _state;
     if (state == null || state.seasonFinished) return;
-    controller.startNextMatch(
-      forcedScenarios: [
-        for (var i = 0; i < 3; i++) scenario,
-      ],
-    );
+    // 何枚要るかは試合の重さで変わる。足りないぶんは engine が繰り返す。
+    controller.startNextMatch(forcedScenarios: [scenario]);
   }
 
   /// 今のポジションで引ける局面。
-  List<Scenario> get scenarios =>
-      _state == null ? const [] : ScenarioPool.forPosition(_state!.player.position);
+  List<Scenario> get scenarios => _state == null
+      ? const []
+      : ScenarioPool.forPosition(_state!.player.position);
 
   /// 残りの試合を消化してシーズンを終える。
   ///
@@ -292,7 +315,8 @@ class AdminActions {
       await controller.finishSeason();
       // 契約が残っている間は移籍の話が来ないので、offers は空のことがある。
       // 残留（renewalOffer）はそれとは別に必ずあるので、そちらを先に見る。
-      final accepted = controller.renewalOffer ??
+      final accepted =
+          controller.renewalOffer ??
           (controller.offers.isEmpty ? null : controller.offers.first);
       if (accepted == null) break;
       await controller.advanceSeason(accepted: accepted);

@@ -33,18 +33,23 @@ Player player({
   List<Trait> traits = const [],
   Attributes? attributes,
   Position position = Position.st,
-}) =>
-    Player(
-      name: 'P',
-      age: 22,
-      position: position,
-      attributes: attributes ??
-          Attributes(
-              pace: 60, shooting: 60, passing: 60, dribbling: 60,
-              defending: 60, physical: 60),
-      potential: 99,
-      traits: traits,
-    );
+}) => Player(
+  name: 'P',
+  age: 22,
+  position: position,
+  attributes:
+      attributes ??
+      Attributes(
+        pace: 60,
+        shooting: 60,
+        passing: 60,
+        dribbling: 60,
+        defending: 60,
+        physical: 60,
+      ),
+  potential: 99,
+  traits: traits,
+);
 
 MatchInProgress startMatch({
   int seed = 1,
@@ -75,19 +80,18 @@ TraitContext ctx({
   String scenarioId = 'x',
   bool international = false,
   bool substitute = false,
-}) =>
-    TraitContext(
-      minute: minute,
-      home: home,
-      outcome: outcome,
-      afterFailure: afterFailure,
-      afterSuccess: afterSuccess,
-      key: key,
-      detail: detail,
-      scenarioId: scenarioId,
-      international: international,
-      substitute: substitute,
-    );
+}) => TraitContext(
+  minute: minute,
+  home: home,
+  outcome: outcome,
+  afterFailure: afterFailure,
+  afterSuccess: afterSuccess,
+  key: key,
+  detail: detail,
+  scenarioId: scenarioId,
+  international: international,
+  substitute: substitute,
+);
 
 void main() {
   group('詳細能力', () {
@@ -96,7 +100,10 @@ void main() {
       for (final key in AttributeKey.values) {
         expect(key.details, isNotEmpty, reason: key.label);
       }
-      final covered = AttributeKey.values.fold(0, (s, k) => s + k.details.length);
+      final covered = AttributeKey.values.fold(
+        0,
+        (s, k) => s + k.details.length,
+      );
       expect(covered, Detail.values.length);
     });
 
@@ -110,8 +117,13 @@ void main() {
 
     test('カテゴリ指定で作ると詳細はすべて同じ値', () {
       final a = Attributes(
-          pace: 55, shooting: 60, passing: 65, dribbling: 70,
-          defending: 45, physical: 50);
+        pace: 55,
+        shooting: 60,
+        passing: 65,
+        dribbling: 70,
+        defending: 45,
+        physical: 50,
+      );
       for (final d in AttributeKey.shooting.details) {
         expect(a.detail(d), 60);
       }
@@ -119,8 +131,15 @@ void main() {
 
     test('ばらつき付きで作ると詳細が揃わないが、範囲内に収まる', () {
       final a = Attributes.scattered(
-        pace: 50, shooting: 50, passing: 50, dribbling: 50,
-        defending: 50, physical: 50, goalkeeping: 50, random: Random(3), spread: 6,
+        pace: 50,
+        shooting: 50,
+        passing: 50,
+        dribbling: 50,
+        defending: 50,
+        physical: 50,
+        goalkeeping: 50,
+        random: Random(3),
+        spread: 6,
       );
       final values = Detail.values.map(a.detail).toSet();
       expect(values.length, greaterThan(1));
@@ -131,8 +150,12 @@ void main() {
 
     test('7項目だった頃の保存データを読み、詳細に展開する', () {
       final a = Attributes.fromJson({
-        'pace': 70, 'shooting': 50, 'passing': 55,
-        'dribbling': 60, 'defending': 40, 'physical': 65,
+        'pace': 70,
+        'shooting': 50,
+        'passing': 55,
+        'dribbling': 60,
+        'defending': 40,
+        'physical': 65,
       });
       expect(a.detail(Detail.acceleration), 70);
       expect(a.detail(Detail.sprintSpeed), 70);
@@ -141,8 +164,13 @@ void main() {
 
     test('詳細ごとの保存を往復できる', () {
       final a = Attributes.scattered(
-        pace: 50, shooting: 50, passing: 50, dribbling: 50,
-        defending: 50, physical: 50, random: Random(4),
+        pace: 50,
+        shooting: 50,
+        passing: 50,
+        dribbling: 50,
+        defending: 50,
+        physical: 50,
+        random: Random(4),
       );
       final r = Attributes.fromJson(a.toJson());
       for (final d in Detail.values) {
@@ -185,7 +213,11 @@ void main() {
 
     test('新規キャリアの初期能力には詳細のばらつきがある', () {
       final s = CareerEngine(random: Random(5)).startCareer(
-          name: 'N', position: Position.cm, age: 18, agent: Agent.pool.first);
+        name: 'N',
+        position: Position.cm,
+        age: 18,
+        agent: Agent.pool.first,
+      );
       final values = Detail.values.map(s.player.attributes.detail).toSet();
       expect(values.length, greaterThan(3));
     });
@@ -211,7 +243,8 @@ void main() {
     test('上位互換を作らない（何かしら効き、噛み合わない組み合わせは避ける）', () {
       for (final trait in Trait.values) {
         // 試合の中か外か、どこかには効いていること。
-        final affectsMatch = Trait.values.any((_) => false) ||
+        final affectsMatch =
+            Trait.values.any((_) => false) ||
             trait.ratingBonus != 0 ||
             trait.peakAgeOffset != 0 ||
             trait.declineAgeOffset != 0 ||
@@ -240,55 +273,87 @@ void main() {
             trait.potentialBonus != 0 ||
             trait.breakthroughWeekOffset != 0 ||
             trait.transcendDetail != null;
-        expect(affectsMatch || _affectsPlay(trait), isTrue,
-            reason: '${trait.label} は何も効いていない');
+        expect(
+          affectsMatch || _affectsPlay(trait),
+          isTrue,
+          reason: '${trait.label} は何も効いていない',
+        );
       }
     });
 
-    test('長所2つに、3割で欠点が付く', () {
+    test('長所は1〜4枚、平均で3割に欠点が付く', () {
+      // **尖った選手ほど穴がある。** 欠点の確率は長所の数で変わるが、
+      // 全体で均すとこれまでと同じ3割に落ちるように置いてある。
       var withFlaw = 0;
+      var strengthTotal = 0;
       for (var seed = 0; seed < 300; seed++) {
         final traits = Trait.roll(Random(seed));
         final strengths = traits.where((t) => !t.flaw).length;
         final flaws = traits.where((t) => t.flaw).length;
-        expect(strengths, 2, reason: 'seed $seed');
-        expect(flaws, lessThanOrEqualTo(1));
-        if (flaws == 1) withFlaw++;
+        expect(strengths, inInclusiveRange(1, 4), reason: 'seed $seed');
+        strengthTotal += strengths;
+        expect(flaws, lessThanOrEqualTo(2));
+        if (flaws >= 1) withFlaw++;
         for (var i = 0; i < traits.length; i++) {
           for (var j = i + 1; j < traits.length; j++) {
-            expect(Trait.compatible(traits[i], traits[j]), isTrue,
-                reason: '${traits[i].label} と ${traits[j].label}');
+            expect(
+              Trait.compatible(traits[i], traits[j]),
+              isTrue,
+              reason: '${traits[i].label} と ${traits[j].label}',
+            );
           }
         }
       }
       expect(withFlaw, inInclusiveRange(50, 130));
+      expect(strengthTotal / 300, closeTo(2.0, 0.25), reason: '平均が動いた');
     });
 
     test('欠点無しで引くこともできる', () {
       for (var seed = 0; seed < 50; seed++) {
         final traits = Trait.roll(Random(seed), flawChance: 0);
-        expect(traits.length, 2);
+        expect(traits.length, inInclusiveRange(1, 4));
         expect(traits.any((t) => t.flaw), isFalse);
       }
     });
 
     test('得意技は対応する能力の手だけに効く', () {
-      expect(Trait.aerialAce.chanceBonus(ctx(detail: Detail.heading)), greaterThan(0));
+      expect(
+        Trait.aerialAce.chanceBonus(ctx(detail: Detail.heading)),
+        greaterThan(0),
+      );
       expect(Trait.aerialAce.chanceBonus(ctx(detail: Detail.finishing)), 0);
-      expect(Trait.poacher.chanceBonus(ctx(detail: Detail.finishing)), greaterThan(0));
+      expect(
+        Trait.poacher.chanceBonus(ctx(detail: Detail.finishing)),
+        greaterThan(0),
+      );
       expect(Trait.poacher.chanceBonus(ctx(detail: Detail.heading)), 0);
-      expect(Trait.sprinter.chanceBonus(ctx(key: AttributeKey.pace)), greaterThan(0));
-      expect(Trait.wall.chanceBonus(ctx(key: AttributeKey.defending)), greaterThan(0));
+      expect(
+        Trait.sprinter.chanceBonus(ctx(key: AttributeKey.pace)),
+        greaterThan(0),
+      );
+      expect(
+        Trait.wall.chanceBonus(ctx(key: AttributeKey.defending)),
+        greaterThan(0),
+      );
       expect(Trait.wall.chanceBonus(ctx(key: AttributeKey.passing)), 0);
     });
 
     test('PK職人はPKの局面だけ、大舞台は代表戦だけ', () {
-      expect(Trait.penaltyKing.chanceBonus(ctx(scenarioId: 'fw-pk')), greaterThan(0));
+      expect(
+        Trait.penaltyKing.chanceBonus(ctx(scenarioId: 'fw-pk')),
+        greaterThan(0),
+      );
       expect(Trait.penaltyKing.chanceBonus(ctx(scenarioId: 'fw-box')), 0);
-      expect(Trait.bigGame.chanceBonus(ctx(international: true)), greaterThan(0));
+      expect(
+        Trait.bigGame.chanceBonus(ctx(international: true)),
+        greaterThan(0),
+      );
       expect(Trait.bigGame.chanceBonus(ctx()), 0);
       // ホームの英雄は代表戦では効かない（ホームの概念が違う）。
-      expect(Trait.homeHero.chanceBonus(ctx(home: true, international: true)), 0);
+      expect(
+        Trait.homeHero.chanceBonus(ctx(home: true, international: true)),
+        0,
+      );
     });
 
     test('欠点は成功率を下げる', () {
@@ -310,11 +375,20 @@ void main() {
         var n = 0;
         for (var seed = 0; seed < 500; seed++) {
           final p = Player(
-            name: 'I', age: 24, position: Position.cm,
+            name: 'I',
+            age: 24,
+            position: Position.cm,
             attributes: Attributes(
-                pace: 50, shooting: 50, passing: 50, dribbling: 50,
-                defending: 50, physical: 50),
-            potential: 99, traits: traits, condition: 40,
+              pace: 50,
+              shooting: 50,
+              passing: 50,
+              dribbling: 50,
+              defending: 50,
+              physical: 50,
+            ),
+            potential: 99,
+            traits: traits,
+            condition: 40,
           );
           if (MatchEngine(random: Random(seed))
                   .rollInjury(p, baseChance: Formulas.injuryBaseChance) !=
@@ -325,7 +399,10 @@ void main() {
         return n;
       }
 
-      expect(count(const [Trait.fragile]), greaterThan(count(const [Trait.robust])));
+      expect(
+        count(const [Trait.fragile]),
+        greaterThan(count(const [Trait.robust])),
+      );
     });
 
     test('無尽蔵は試合の消耗が少ない', () {
@@ -333,24 +410,35 @@ void main() {
       final normal = MatchEngine(random: Random(6))
           .applyWeek(player(), menu: TrainingMenu.sprint, played: true);
       final tireless = MatchEngine(random: Random(6)).applyWeek(
-          player(traits: const [Trait.engine]),
-          menu: TrainingMenu.sprint,
-          played: true);
+        player(traits: const [Trait.engine]),
+        menu: TrainingMenu.sprint,
+        played: true,
+      );
       expect(tireless.condition, greaterThan(normal.condition));
     });
 
     test('キャプテンは評価点が少し高い', () {
       final plain = startMatch(seed: 7);
-      final captain = startMatch(seed: 7, p: player(traits: const [Trait.captain]));
+      final captain = startMatch(
+        seed: 7,
+        p: player(traits: const [Trait.captain]),
+      );
       expect(captain.rating, greaterThan(plain.rating));
     });
 
     test('特性の保存を往復でき、知らない名前は捨てる', () {
       final s = CareerEngine(random: Random(8)).startCareer(
-          name: 'T', position: Position.cb, age: 20, agent: Agent.pool.first);
+        name: 'T',
+        position: Position.cb,
+        age: 20,
+        agent: Agent.pool.first,
+      );
       final json = s.toJson();
       final playerJson = json['player'] as Map<String, dynamic>;
-      playerJson['traits'] = [...(playerJson['traits'] as List), 'unknownTrait'];
+      playerJson['traits'] = [
+        ...(playerJson['traits'] as List),
+        'unknownTrait',
+      ];
       final r = CareerState.fromJson(json);
       expect(r.player.traits, s.player.traits);
     });
@@ -375,7 +463,9 @@ void main() {
       for (var seed = 0; seed < 30; seed++) {
         final m = startMatch(seed: seed);
         final pick = m.pickFor(SimStyle.aggressive);
-        final hasScoring = m.current.options.any((o) => o.outcome != Outcome.play);
+        final hasScoring = m.current.options.any(
+          (o) => o.outcome != Outcome.play,
+        );
         if (hasScoring) {
           expect(pick.outcome, isNot(Outcome.play), reason: 'seed $seed');
         }
@@ -398,7 +488,11 @@ void main() {
         random: Random(11),
       );
       await c.startCareer(
-          name: 'S', position: Position.st, age: 19, agent: Agent.pool.first);
+        name: 'S',
+        position: Position.st,
+        age: 19,
+        agent: Agent.pool.first,
+      );
       final before = c.state!.matchday;
       final result = await c.simulateMatch();
       expect(result, isNotNull);
@@ -414,7 +508,11 @@ void main() {
         random: Random(12),
       );
       await c.startCareer(
-          name: 'S', position: Position.cm, age: 19, agent: Agent.pool.first);
+        name: 'S',
+        position: Position.cm,
+        age: 19,
+        agent: Agent.pool.first,
+      );
       final report = await c.simulateUntilEvent();
       expect(report.played, greaterThan(0));
       // カップ戦は週を1つ使うが、節は進まない。
@@ -442,7 +540,11 @@ void main() {
         matchEngine: MatchEngine(random: Random(13)),
       );
       await c.startCareer(
-          name: 'S', position: Position.wg, age: 19, agent: Agent.pool.first);
+        name: 'S',
+        position: Position.wg,
+        age: 19,
+        agent: Agent.pool.first,
+      );
       var guard = 0;
       while (!c.state!.seasonFinished && guard < 20) {
         final report = await c.simulateUntilEvent();
@@ -458,7 +560,11 @@ void main() {
 
     test('スタイルは保存を往復しても残る', () {
       final s = CareerEngine(random: Random(14)).startCareer(
-          name: 'S', position: Position.st, age: 19, agent: Agent.pool.first);
+        name: 'S',
+        position: Position.st,
+        age: 19,
+        agent: Agent.pool.first,
+      );
       s.simStyle = SimStyle.aggressive;
       expect(CareerState.fromJson(s.toJson()).simStyle, SimStyle.aggressive);
       final json = s.toJson()..remove('simStyle');
@@ -466,7 +572,6 @@ void main() {
     });
   });
 }
-
 
 /// 局面の中で効く特性かどうか。文脈を振って、どこかで動けば効いている。
 bool _affectsPlay(Trait trait) {

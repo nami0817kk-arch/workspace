@@ -330,57 +330,97 @@ enum Trait {
     return true;
   }
 
-  /// 長所を2つ引き、3割で欠点が1つ付く。矛盾する組み合わせは避ける。
+  /// **長所の数は、選手ごとに違う。**
+  ///
+  /// ずっと「長所2つ＋3割で欠点1つ」の固定だった。**同じ数のカードを
+  /// 配られた選手しか生まれない**ので、能力値が似ていれば選手も似る。
+  /// 特性が実際にキャリアを動かすようになった（`test/trait_sim.dart` で
+  /// 長所2つと特性なしの差が ピーク +0.8〜1.1 / 代表 +4〜7）いま、
+  /// **配られる枚数そのものを引く**ことに意味が出る。
+  ///
+  /// 重みは**平均がちょうど 2.0** になるように置いてある——ここがずれると、
+  /// 特性の数を変えただけで世界の強さが動く。
+  /// 1つ 36% / 2つ 36% / 3つ 18% / 4つ 9%。
+  static const List<int> strengthCounts = [1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 4];
+
+  /// 長所が1つ増えるごとに、欠点の付きやすさがどれだけ上がるか。
+  ///
+  /// **尖った選手ほど穴がある。** 長所を4つ配って欠点の確率がそのままだと、
+  /// ただの当たりくじになる。2つのときが 0.3 で、1つなら 0.15、
+  /// 4つなら 0.6。**平均するとこれまでと同じ 0.30**。
+  static const double flawPerStrength = 0.15;
+
+  /// 長所を引き、その数に応じて欠点が付く。矛盾する組み合わせは避ける。
   ///
   /// ポジションを渡せば、そこで意味を持つものからだけ引く。
+  /// [flawChance] を渡すと欠点の確率を固定する（0 なら欠点を引かない）。
   static List<Trait> roll(
     Random random, {
-    double flawChance = 0.3,
+    double? flawChance,
     Position? position,
   }) {
+    // **枚数を最初に引く。** ここで乱数を1つ使うので、同じ種でも
+    // これまでとは違う選手が出る（種で再現している既存テストは作り直した）。
+    final want = strengthCounts[random.nextInt(strengthCounts.length)];
+
     final picked = <Trait>[];
     final pool = [
       for (final t in strengths)
         if (position == null || t.fitsPosition(position)) t,
     ]..shuffle(random);
     for (final t in pool) {
-      if (picked.length >= 2) break;
+      if (picked.length >= want) break;
       if (picked.every((p) => compatible(p, t))) picked.add(t);
     }
-    if (random.nextDouble() < flawChance) {
-      final candidates = flaws
-          .where(
-            (f) =>
-                (position == null || f.fitsPosition(position)) &&
-                picked.every((p) => compatible(p, f)),
-          )
-          .toList();
-      if (candidates.isNotEmpty) {
+    final strengthCount = picked.length;
+
+    // 欠点。**長所が多いほど付きやすい。** 渡されていれば、その値のまま使う
+    // （`flawChance: 0` で欠点なしを頼む呼び方が既にある）。
+    final flawOdds =
+        flawChance ?? (0.3 + (strengthCount - 2) * flawPerStrength);
+    var flaws = 0;
+    if (flawOdds > 0) {
+      // 2枚目は、長所を3つ以上もらった選手にだけ、その差のぶんだけ。
+      final second = (strengthCount - 2) * flawPerStrength;
+      for (final odds in [flawOdds, second]) {
+        if (random.nextDouble() >= odds) continue;
+        final candidates = Trait.flaws
+            .where(
+              (f) =>
+                  !picked.contains(f) &&
+                  (position == null || f.fitsPosition(position)) &&
+                  picked.every((p) => compatible(p, f)),
+            )
+            .toList();
+        if (candidates.isEmpty) break;
         picked.add(candidates[random.nextInt(candidates.length)]);
+        flaws++;
       }
     }
 
     // 稀なもの。普通の引きが終わったあとに判定するので、外れた選手は
-    // これまでと同じ結果になる（同じ種で同じ選手が出る）。
-    if (random.nextDouble() < rareChance) {
+    // それまでと同じ結果になる。**長所の1枚と置き換える**ので、
+    // 長所を1つしかもらえなかった選手にも起きる。
+    if (strengthCount > 0 && random.nextDouble() < rareChance) {
+      final replace = strengthCount - 1;
       final candidates = rares
           .where(
             (r) =>
                 !r.flaw &&
                 (position == null || r.fitsPosition(position)) &&
-                picked
-                    .where((p) => p != picked[1])
-                    .every((p) => compatible(p, r)),
+                !picked.contains(r) &&
+                [
+                  for (var i = 0; i < picked.length; i++)
+                    if (i != replace) picked[i],
+                ].every((p) => compatible(p, r)),
           )
           .toList();
       if (candidates.isNotEmpty) {
-        picked[1] = candidates[random.nextInt(candidates.length)];
+        picked[replace] = candidates[random.nextInt(candidates.length)];
       }
     }
     // 欠点を引かない呼び方（flawChance 0）では、稀な欠点も付けない。
-    if (flawChance > 0 &&
-        picked.every((p) => !p.flaw) &&
-        random.nextDouble() < rareFlawChance) {
+    if (flawOdds > 0 && flaws == 0 && random.nextDouble() < rareFlawChance) {
       final candidates = rares
           .where(
             (r) =>
@@ -628,8 +668,7 @@ enum Trait {
     if (aptitudeFactor != 1.0) '慣れないポジションの減点 ${_times(aptitudeFactor)}',
     if (adaptationFactor != 1.0) '相手への慣れ ${_times(adaptationFactor)}',
     if (breakthroughFactor != 1.0) '限界突破の確率 ${_times(breakthroughFactor)}',
-    if (breakthroughWeekOffset != 0)
-      '限界突破に要る大成功の週 $breakthroughWeekOffset回',
+    if (breakthroughWeekOffset != 0) '限界突破に要る大成功の週 $breakthroughWeekOffset回',
     if (plateauFactor != 1.0) '停滞期の長さ ${_times(plateauFactor)}',
     if (relationGainFactor != 1.0) '監督の信頼の上がり ${_times(relationGainFactor)}',
     if (relationLossFactor != 1.0) '監督の信頼の下がり ${_times(relationLossFactor)}',

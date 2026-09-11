@@ -37,7 +37,10 @@ class _MemoryRepository implements SaveRepository {
   Future<void> clear() async => _saved = null;
 }
 
-Future<CareerController> started({int seed = 3, Position position = Position.cb}) async {
+Future<CareerController> started({
+  int seed = 3,
+  Position position = Position.cb,
+}) async {
   final c = CareerController(
     repository: _MemoryRepository(),
     careerEngine: CareerEngine(random: Random(seed)),
@@ -45,37 +48,51 @@ Future<CareerController> started({int seed = 3, Position position = Position.cb}
     random: Random(seed),
   );
   await c.startCareer(
-      name: '検証', position: position, age: 24, agent: Agent.pool.first);
+    name: '検証',
+    position: position,
+    age: 24,
+    agent: Agent.pool.first,
+  );
   return c;
 }
 
-const _club = Club(id: 'm', name: 'M', strength: 60, tier: 1, countryId: 'yamato');
-const _opponent =
-    Club(id: 'x', name: 'X', strength: 60, tier: 1, countryId: 'yamato');
+const _club = Club(
+  id: 'm',
+  name: 'M',
+  strength: 60,
+  tier: 1,
+  countryId: 'yamato',
+);
+const _opponent = Club(
+  id: 'x',
+  name: 'X',
+  strength: 60,
+  tier: 1,
+  countryId: 'yamato',
+);
 
 Player player({
   List<Trait> traits = const [],
   Position position = Position.cb,
   int condition = 100,
   Aptitude? aptitude,
-}) =>
-    Player(
-      name: 'P',
-      age: 26,
-      position: position,
-      attributes: Attributes(
-        pace: 70,
-        shooting: 55,
-        passing: 62,
-        dribbling: 58,
-        defending: 78,
-        physical: 74,
-      ),
-      potential: 90,
-      traits: traits,
-      condition: condition,
-      aptitude: aptitude,
-    );
+}) => Player(
+  name: 'P',
+  age: 26,
+  position: position,
+  attributes: Attributes(
+    pace: 70,
+    shooting: 55,
+    passing: 62,
+    dribbling: 58,
+    defending: 78,
+    physical: 74,
+  ),
+  potential: 90,
+  traits: traits,
+  condition: condition,
+  aptitude: aptitude,
+);
 
 /// 決めた時間に守備の局面を並べた1試合。
 MatchInProgress match({
@@ -105,19 +122,18 @@ TraitContext ctx({
   Outcome outcome = Outcome.play,
   bool afterSuccess = false,
   bool substitute = false,
-}) =>
-    TraitContext(
-      minute: minute,
-      home: true,
-      outcome: outcome,
-      afterFailure: false,
-      afterSuccess: afterSuccess,
-      key: AttributeKey.defending,
-      detail: Detail.tackling,
-      scenarioId: 'def-x',
-      international: false,
-      substitute: substitute,
-    );
+}) => TraitContext(
+  minute: minute,
+  home: true,
+  outcome: outcome,
+  afterFailure: false,
+  afterSuccess: afterSuccess,
+  key: AttributeKey.defending,
+  detail: Detail.tackling,
+  scenarioId: 'def-x',
+  international: false,
+  substitute: substitute,
+);
 
 void main() {
   group('効き方の言葉', () {
@@ -125,8 +141,11 @@ void main() {
       for (final trait in Trait.values) {
         expect(trait.effects, isNotEmpty, reason: '${trait.label} の効き方が空');
         for (final line in trait.effects) {
-          expect(RegExp(r'[0-9]').hasMatch(line), isTrue,
-              reason: '${trait.label}「$line」に数字が無い');
+          expect(
+            RegExp(r'[0-9]').hasMatch(line),
+            isTrue,
+            reason: '${trait.label}「$line」に数字が無い',
+          );
         }
       }
     });
@@ -177,16 +196,23 @@ void main() {
       expect(sub.traitContextFor(sub.current.options.first).substitute, isTrue);
       final start = match(minutes: const [60, 80]);
       expect(
-          start.traitContextFor(start.current.options.first).substitute, isFalse);
+        start.traitContextFor(start.current.options.first).substitute,
+        isFalse,
+      );
     });
 
     test('出足が速いと乗ると止まらない', () {
       expect(Trait.fastStarter.chanceBonus(ctx(minute: 10)), greaterThan(0));
       expect(Trait.fastStarter.chanceBonus(ctx(minute: 60)), 0);
-      expect(Trait.hotHand.chanceBonus(ctx(afterSuccess: true)), greaterThan(0));
+      expect(
+        Trait.hotHand.chanceBonus(ctx(afterSuccess: true)),
+        greaterThan(0),
+      );
       expect(Trait.hotHand.chanceBonus(ctx()), 0);
-      expect(Trait.assistKing.chanceBonus(ctx(outcome: Outcome.assist)),
-          greaterThan(0));
+      expect(
+        Trait.assistKing.chanceBonus(ctx(outcome: Outcome.assist)),
+        greaterThan(0),
+      );
       expect(Trait.assistKing.chanceBonus(ctx(outcome: Outcome.goal)), 0);
     });
 
@@ -199,8 +225,10 @@ void main() {
           .firstWhere((o) => o.isTacticalFoul);
       final plain = match(minutes: const [40]);
       final hot = match(minutes: const [40], traits: const [Trait.hothead]);
-      final clean =
-          match(minutes: const [40], traits: const [Trait.cleanPlayer]);
+      final clean = match(
+        minutes: const [40],
+        traits: const [Trait.cleanPlayer],
+      );
       expect(hot.cardChanceFor(rough), greaterThan(plain.cardChanceFor(rough)));
       expect(clean.cardChanceFor(rough), lessThan(plain.cardChanceFor(rough)));
       // 止めるための反則は、誰が選んでも必ず警告。
@@ -210,23 +238,37 @@ void main() {
 
     test('寝れば戻るは、休養で戻る量が大きい', () {
       int rested(List<Trait> traits) => MatchEngine(random: Random(1))
-          .applyWeek(player(traits: traits, condition: 40),
-              menu: TrainingMenu.rest, played: false)
+          .applyWeek(
+            player(traits: traits, condition: 40),
+            menu: TrainingMenu.rest,
+            played: false,
+          )
           .condition;
-      expect(rested(const [Trait.quickRecovery]), greaterThan(rested(const [])));
+      expect(
+        rested(const [Trait.quickRecovery]),
+        greaterThan(rested(const [])),
+      );
     });
 
     test('守備の統率者は、無失点のときだけ評価が上がる', () {
       double rating(List<Trait> traits, List<int> conceded) {
-        final m = match(minutes: const [40], traits: traits, conceded: conceded);
+        final m = match(
+          minutes: const [40],
+          traits: traits,
+          conceded: conceded,
+        );
         m.choose(m.current.options.first);
         return m.finish().rating!;
       }
 
-      expect(rating(const [Trait.organizer], const []),
-          greaterThan(rating(const [], const [])));
-      expect(rating(const [Trait.organizer], const [30]),
-          rating(const [], const [30]));
+      expect(
+        rating(const [Trait.organizer], const []),
+        greaterThan(rating(const [], const [])),
+      );
+      expect(
+        rating(const [Trait.organizer], const [30]),
+        rating(const [], const [30]),
+      );
     });
 
     test('ユーティリティは、慣れないポジションの減点が半分', () {
@@ -234,8 +276,10 @@ void main() {
       final plain = player(aptitude: aptitude);
       final utility = player(aptitude: aptitude, traits: const [Trait.utility]);
       final plainPenalty =
-          plain.attributes.overallFor(Position.st) - plain.overallAt(Position.st);
-      final utilityPenalty = utility.attributes.overallFor(Position.st) -
+          plain.attributes.overallFor(Position.st) -
+          plain.overallAt(Position.st);
+      final utilityPenalty =
+          utility.attributes.overallFor(Position.st) -
           utility.overallAt(Position.st);
       expect(plainPenalty, greaterThan(0));
       expect(utilityPenalty, lessThan(plainPenalty));
@@ -245,18 +289,25 @@ void main() {
 
     test('研究熱心は相手に慣れるのが速く、足踏みしないは停滞期が短い', () {
       const dev = Development(faced: {ClubStyle.pressing: 10});
-      expect(dev.adaptationFor(ClubStyle.pressing, factor: 2.0),
-          greaterThan(dev.adaptationFor(ClubStyle.pressing)));
+      expect(
+        dev.adaptationFor(ClubStyle.pressing, factor: 2.0),
+        greaterThan(dev.adaptationFor(ClubStyle.pressing)),
+      );
       // 慣れの上限は同じ。
       const veteran = Development(faced: {ClubStyle.pressing: 100});
-      expect(veteran.adaptationFor(ClubStyle.pressing, factor: 2.0),
-          veteran.adaptationFor(ClubStyle.pressing));
+      expect(
+        veteran.adaptationFor(ClubStyle.pressing, factor: 2.0),
+        veteran.adaptationFor(ClubStyle.pressing),
+      );
 
       const streak = Development(growthStreak: Development.plateauStreak - 1);
       for (var seed = 0; seed < 20; seed++) {
         final normal = streak.afterGrowth(grew: true, random: Random(seed));
         final short = streak.afterGrowth(
-            grew: true, random: Random(seed), plateauFactor: 0.5);
+          grew: true,
+          random: Random(seed),
+          plateauFactor: 0.5,
+        );
         expect(short.plateau, lessThan(normal.plateau), reason: 'seed $seed');
         expect(short.plateau, greaterThanOrEqualTo(1));
       }
@@ -296,7 +347,26 @@ void main() {
   });
 
   group('稀な特性', () {
-    test('20人に1人ほどにしか付かず、付いても長所は2つのまま', () {
+    test('尖った選手ほど穴がある', () {
+      // **長所を多く配って欠点の確率がそのままだと、ただの当たりくじになる。**
+      // 枚数ごとに欠点の付いた割合を数え、右肩上がりであることを見る。
+      final flawed = <int, int>{};
+      final total = <int, int>{};
+      for (var seed = 0; seed < 4000; seed++) {
+        final traits = Trait.roll(Random(seed), position: Position.cm);
+        final strengths = traits.where((t) => !t.flaw).length;
+        total[strengths] = (total[strengths] ?? 0) + 1;
+        if (traits.any((t) => t.flaw)) {
+          flawed[strengths] = (flawed[strengths] ?? 0) + 1;
+        }
+      }
+      double rate(int n) => (flawed[n] ?? 0) / (total[n] ?? 1);
+      expect(total.keys.toList()..sort(), [1, 2, 3, 4]);
+      expect(rate(1), lessThan(rate(2)), reason: '長所1枚の選手に穴が多い');
+      expect(rate(2), lessThan(rate(4)), reason: '長所4枚が当たりくじになっている');
+    });
+
+    test('20人に1人ほどにしか付かず、付いても長所の枚数は増えない', () {
       var rareCount = 0;
       var rareFlawCount = 0;
       for (var seed = 0; seed < 2000; seed++) {
@@ -304,14 +374,22 @@ void main() {
         final rares = traits.where((t) => t.rare && !t.flaw).length;
         final rareFlaws = traits.where((t) => t.rare && t.flaw).length;
         expect(rares, lessThanOrEqualTo(1));
-        expect(traits.where((t) => !t.flaw).length, 2, reason: 'seed $seed');
-        expect(traits.where((t) => t.flaw).length, lessThanOrEqualTo(1));
+        // 稀なものは**長所の1枚と置き換わる**ので、枚数は増えない。
+        expect(
+          traits.where((t) => !t.flaw).length,
+          inInclusiveRange(1, 4),
+          reason: 'seed $seed',
+        );
+        expect(traits.where((t) => t.flaw).length, lessThanOrEqualTo(2));
         if (rares == 1) rareCount++;
         if (rareFlaws == 1) rareFlawCount++;
         for (var i = 0; i < traits.length; i++) {
           for (var j = i + 1; j < traits.length; j++) {
-            expect(Trait.compatible(traits[i], traits[j]), isTrue,
-                reason: '${traits[i].label} と ${traits[j].label}');
+            expect(
+              Trait.compatible(traits[i], traits[j]),
+              isTrue,
+              reason: '${traits[i].label} と ${traits[j].label}',
+            );
           }
         }
       }
@@ -371,9 +449,11 @@ void main() {
     test('超越は1人に1つしか付かない', () {
       for (var seed = 0; seed < 2000; seed++) {
         final traits = Trait.roll(Random(seed), position: Position.cm);
-        expect(traits.where((t) => t.transcendDetail != null).length,
-            lessThanOrEqualTo(1),
-            reason: 'seed $seed');
+        expect(
+          traits.where((t) => t.transcendDetail != null).length,
+          lessThanOrEqualTo(1),
+          reason: 'seed $seed',
+        );
       }
       expect(Trait.catReflex.fitsPosition(Position.st), isFalse);
       expect(Trait.eagleEye.fitsPosition(Position.gk), isFalse);
@@ -381,38 +461,51 @@ void main() {
     });
 
     test('99 で止まらず、109 で止まる', () {
-      final at99 = Attributes.fromDetails(
-          {for (final d in Detail.values) d: 99});
+      final at99 = Attributes.fromDetails({
+        for (final d in Detail.values) d: 99,
+      });
       expect(at99.bumpDetail(Detail.vision, 2).detail(Detail.vision), 99);
       expect(
-          at99
-              .bumpDetail(Detail.vision, 2, max: Formulas.absoluteMax)
-              .detail(Detail.vision),
-          101);
-      final at109 = at99.bumpDetail(Detail.vision, 20,
-          max: Formulas.absoluteMax);
+        at99
+            .bumpDetail(Detail.vision, 2, max: Formulas.absoluteMax)
+            .detail(Detail.vision),
+        101,
+      );
+      final at109 = at99.bumpDetail(
+        Detail.vision,
+        20,
+        max: Formulas.absoluteMax,
+      );
       expect(at109.detail(Detail.vision), 109);
       // 土台を持たない能力の上限は、そのまま渡した ceiling になる。
       expect(Dependencies.supports[Detail.shortPassing], isNull);
       expect(Dependencies.blocked(Detail.shortPassing, at99), isTrue);
       expect(
-          Dependencies.blocked(Detail.shortPassing, at99,
-              ceiling: Formulas.absoluteMax),
-          isFalse);
+        Dependencies.blocked(
+          Detail.shortPassing,
+          at99,
+          ceiling: Formulas.absoluteMax,
+        ),
+        isFalse,
+      );
       // 土台を持つ能力は、土台の平均 + 18 のまま（ここでは 99 で丸めない）。
       expect(Dependencies.capFor(Detail.vision, at99), greaterThan(99));
     });
 
     test('上限を超えた値は、保存を往復しても潰れない', () {
-      final a = Attributes.fromDetails(
-          {for (final d in Detail.values) d: 80, Detail.vision: 105});
+      final a = Attributes.fromDetails({
+        for (final d in Detail.values) d: 80,
+        Detail.vision: 105,
+      });
       final back = Attributes.fromJson(a.toJson());
       expect(back.detail(Detail.vision), 105);
       // ただし 109 までしか読まない。
       final json = a.toJson();
       (json['details'] as Map<String, dynamic>)['vision'] = 150;
-      expect(Attributes.fromJson(json).detail(Detail.vision),
-          Formulas.absoluteMax);
+      expect(
+        Attributes.fromJson(json).detail(Detail.vision),
+        Formulas.absoluteMax,
+      );
     });
 
     test('判定に使う値も上限を超える', () {
@@ -420,8 +513,10 @@ void main() {
         name: 'P',
         age: 26,
         position: Position.cm,
-        attributes: Attributes.fromDetails(
-            {for (final d in Detail.values) d: 80, Detail.vision: 105}),
+        attributes: Attributes.fromDetails({
+          for (final d in Detail.values) d: 80,
+          Detail.vision: 105,
+        }),
         potential: 90,
         traits: const [Trait.eagleEye],
       );
@@ -438,14 +533,16 @@ void main() {
 
     test('ポテンシャルに達しても、超越の1項目だけは練習で伸び続ける', () {
       Player at(List<Trait> traits) => Player(
-            name: 'P',
-            age: 22,
-            position: Position.cm,
-            attributes: Attributes.fromDetails(
-                {for (final d in Detail.values) d: 88, Detail.vision: 99}),
-            potential: 60,
-            traits: traits,
-          );
+        name: 'P',
+        age: 22,
+        position: Position.cm,
+        attributes: Attributes.fromDetails({
+          for (final d in Detail.values) d: 88,
+          Detail.vision: 99,
+        }),
+        potential: 60,
+        traits: traits,
+      );
       var grew = 0;
       var others = 0;
       for (var seed = 0; seed < 200; seed++) {
@@ -467,8 +564,9 @@ void main() {
         name: 'P',
         age: 22,
         position: Position.cm,
-        attributes: Attributes.fromDetails(
-            {for (final d in Detail.values) d: 80}),
+        attributes: Attributes.fromDetails({
+          for (final d in Detail.values) d: 80,
+        }),
         potential: 60,
         traits: const [Trait.eagleEye],
       );
@@ -497,15 +595,16 @@ void main() {
         name: 'P',
         age: 22,
         position: Position.cm,
-        attributes: Attributes.fromDetails(
-            {for (final d in Detail.values) d: 88, Detail.vision: 99}),
+        attributes: Attributes.fromDetails({
+          for (final d in Detail.values) d: 88,
+          Detail.vision: 99,
+        }),
         potential: 60,
         traits: const [Trait.eagleEye],
       );
       var grew = 0;
       for (var seed = 0; seed < 200; seed++) {
-        final next = MatchEngine(random: Random(seed))
-            .grow(p, 8.5);
+        final next = MatchEngine(random: Random(seed)).grow(p, 8.5);
         if (next.detail(Detail.vision) > 99) grew++;
         for (final d in Detail.values) {
           if (d != Detail.vision) expect(next.detail(d), 88);
@@ -520,16 +619,22 @@ void main() {
       for (var seed = 0; seed < 300; seed++) {
         final gk = Trait.roll(Random(seed), position: Position.gk);
         for (final t in gk) {
-          expect(t.fitsPosition(Position.gk), isTrue,
-              reason: 'GK に ${t.label}（seed $seed）');
+          expect(
+            t.fitsPosition(Position.gk),
+            isTrue,
+            reason: 'GK に ${t.label}（seed $seed）',
+          );
         }
         final st = Trait.roll(Random(seed), position: Position.st);
         for (final t in st) {
-          expect(t.fitsPosition(Position.st), isTrue,
-              reason: 'ST に ${t.label}（seed $seed）');
+          expect(
+            t.fitsPosition(Position.st),
+            isTrue,
+            reason: 'ST に ${t.label}（seed $seed）',
+          );
         }
-        expect(gk.where((t) => !t.flaw).length, 2);
-        expect(st.where((t) => !t.flaw).length, 2);
+        expect(gk.where((t) => !t.flaw).length, inInclusiveRange(1, 4));
+        expect(st.where((t) => !t.flaw).length, inInclusiveRange(1, 4));
       }
     });
 
@@ -557,7 +662,10 @@ void main() {
   group('今季に効いた回数', () {
     test('効いた局面だけを数える', () {
       // 40分では効かず、80分と88分で効く。
-      final m = match(minutes: const [40, 80, 88], traits: const [Trait.clutch]);
+      final m = match(
+        minutes: const [40, 80, 88],
+        traits: const [Trait.clutch],
+      );
       m.choose(m.current.options.first);
       expect(m.traitHits[Trait.clutch], isNull);
       m.choose(m.current.options.first);
@@ -582,7 +690,8 @@ void main() {
 
       // 知らない名前は読み飛ばす（特性を消した版との互換）。
       final odd = CareerState.fromJson(
-          state.toJson()..['traitHits'] = {'ghost': 4, 'wall': 1});
+        state.toJson()..['traitHits'] = {'ghost': 4, 'wall': 1},
+      );
       expect(odd.traitHits, {Trait.wall: 1});
     });
 
