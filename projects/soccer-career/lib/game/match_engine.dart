@@ -1510,9 +1510,15 @@ class MatchEngine {
         (0.18 + margin * 0.22) *
         ageFactor *
         player.traits.growthFactor(player.age) *
+        // 伸びしろのある選手は速く伸びる。近づくほど遅くなる。
+        Formulas.potentialDrive(player.overall, player.potential) *
         environment *
         (plateau ? Formulas.plateauGrowthFactor : 1.0);
-    final step = player.age <= Formulas.rapidGrowthAge ? 2 : 1;
+    final step = Formulas.growthStep(
+      player.age,
+      player.overall,
+      player.potential,
+    );
 
     // 伸ばす先を先に決める。ポジションの重みで割り戻すために、
     // どのカテゴリが伸びるのかが分かってから確率を出す。
@@ -1723,10 +1729,15 @@ class MatchEngine {
           menu.growthFactor *
           player.personality.trainingFactor *
           player.traits.trainingFactor *
+          Formulas.potentialDrive(player.overall, player.potential) *
           staff.growthFactor *
           habits.growthFactor *
           environment;
-      final step = player.age <= Formulas.rapidGrowthAge ? 2 : 1;
+      final step = Formulas.growthStep(
+        player.age,
+        player.overall,
+        player.potential,
+      );
       final effective = plateau ? base * Formulas.plateauGrowthFactor : base;
       if (canGrow || onlyTranscend) {
         // 大成功なら2回、空回りなら0回。倍率ではなく**引く回数**で効かせる。
