@@ -8,6 +8,8 @@
 /// `flutter test test/trait_sim.dart` で明示的に走らせる。
 library;
 
+import 'dart:math';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/attributes.dart';
@@ -82,7 +84,11 @@ void main() {
   test('配られる枚数が、選手を変えているか', () async {
     // **特性の数は選手ごとに違う。** 引いた枚数でキャリアを束ね直して、
     // 枚数そのものが結果を動かしているかを見る。
-    const seeds = 60;
+    //
+    // **束ごとの人数が要る。** 60キャリアだと 4枚の束が6人しか居らず、
+    // ±0.05 の差は引いた特性の当たり外れに埋もれて読めない
+    // （実際、欠点の重みを変えても数字が動かず、指標のほうが粗かった）。
+    const seeds = 240;
     final byCount = <int, List<Career>>{};
 
     for (var seed = 0; seed < seeds; seed++) {
@@ -116,4 +122,81 @@ void main() {
       );
     }
   }, timeout: const Timeout(Duration(minutes: 60)));
+
+  test('長所が増えても評価が上がらないのはなぜか', () async {
+    // 長所の枚数で束ねると 1枚 7.09 / 2枚 7.21 / 3枚 7.19 / 4枚 7.21 で、
+    // **2枚から先が平ら**だった。理由は2つ考えられる:
+    //   ① 3枚目・4枚目は条件が狭くて、そもそも効く局面が来ない
+    //   ② 評価点が上がると移籍で環境が上がり、評価点が戻る
+    // 環境を止めた場合と止めない場合の両方で測って、切り分ける。
+    const seeds = 16;
+
+    // 中盤の選手が持てる長所を、枚数ちょうどで組む。
+    const sets = <String, List<Trait>>{
+      '1枚': [Trait.playmaker],
+      '2枚': [Trait.playmaker, Trait.tempoSetter],
+      '3枚': [Trait.playmaker, Trait.tempoSetter, Trait.clutch],
+      '4枚': [
+        Trait.playmaker,
+        Trait.tempoSetter,
+        Trait.clutch,
+        Trait.fastStarter,
+      ],
+    };
+
+    Future<void> run(
+      String name,
+      List<Trait> traits, {
+      required bool free,
+    }) async {
+      var rating = 0.0;
+      var hits = 0.0;
+      var apps = 0.0;
+      var peak = 0.0;
+      var strength = 0.0;
+      var caps = 0.0;
+
+      for (var seed = 0; seed < seeds; seed++) {
+        final career = await runCareer(
+          Playstyle(
+            name: 'x',
+            position: Position.cm,
+            startAge: 18,
+            sim: SimStyle.balanced,
+            agent: Agent.pool.first,
+            traits: traits,
+            // 環境を止めるときは、移籍せず能力も固定する。
+            staysPut: !free,
+            pinAbility: free ? null : 75,
+          ),
+          seed,
+        );
+        rating += career.averageRating;
+        hits += career.traitHits;
+        apps += career.appearances;
+        peak += career.peakOverall;
+        strength += career.bestPrestige;
+        caps += career.caps;
+      }
+
+      print(
+        '${name.padRight(14)} '
+        '評価 ${(rating / seeds).toStringAsFixed(3)}  '
+        '効いた局面 ${(hits / max(1, apps)).toStringAsFixed(2)}/試合  '
+        'ピーク ${(peak / seeds).toStringAsFixed(1)}  '
+        '国の格 ${(strength / seeds).toStringAsFixed(1)}  '
+        '代表 ${(caps / seeds).toStringAsFixed(0)}',
+      );
+    }
+
+    print('--- 普通に回す（移籍あり・能力は成長する）---');
+    for (final e in sets.entries) {
+      await run(e.key, e.value, free: true);
+    }
+    print('');
+    print('--- 環境を止める（残留し続け、能力は75に固定）---');
+    for (final e in sets.entries) {
+      await run(e.key, e.value, free: false);
+    }
+  }, timeout: const Timeout(Duration(minutes: 90)));
 }

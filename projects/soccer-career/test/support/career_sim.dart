@@ -176,6 +176,9 @@ class Career {
   /// そのシーズンに昇格した回数。
   int promotions = 0;
 
+  /// 特性が実際に効いた局面の数。**持っていることと効くことは別**。
+  int traitHits = 0;
+
   /// 配られた特性。**枚数が選手を変えているか**を見るために残す。
   int strengthCount = 0;
   int flawCount = 0;
@@ -307,7 +310,9 @@ Future<Career> runCareer(
   if (style.spendsPoints) await controller.setAutoSpend(false);
 
   var guard = 0;
+  var hitsSeen = 0;
   while (!controller.state!.retired && guard++ < 30) {
+    hitsSeen = 0;
     final state = controller.state!;
     // 歳に応じて踏み込み方を切り替える（切り替えない型なら毎季同じ値）。
     await controller.setEffort(style.effortAt(state.player.age));
@@ -386,6 +391,13 @@ Future<Career> runCareer(
       if (career.knackAge == 0 && Knacks.canLearn(controller.state!)) {
         career.knackAge = controller.state!.player.age;
       }
+      // 特性が効いた局面はシーズンの起点で空になるので、毎週の差を拾う。
+      final hits = controller.state!.traitHits.values.fold<int>(
+        0,
+        (a, b) => a + b,
+      );
+      if (hits > hitsSeen) career.traitHits += hits - hitsSeen;
+      hitsSeen = hits;
       career.moraleSum += controller.state!.morale.value;
       career.fatigueSum += controller.state!.fatigue.value;
       career.moraleSamples++;

@@ -346,9 +346,15 @@ enum Trait {
   /// 長所が1つ増えるごとに、欠点の付きやすさがどれだけ上がるか。
   ///
   /// **尖った選手ほど穴がある。** 長所を4つ配って欠点の確率がそのままだと、
-  /// ただの当たりくじになる。2つのときが 0.3 で、1つなら 0.15、
-  /// 4つなら 0.6。**平均するとこれまでと同じ 0.30**。
-  static const double flawPerStrength = 0.15;
+  /// ただの当たりくじになる。2つのときが 0.3 で、1つなら 0.20、4つなら 0.50。
+  /// **平均するとこれまでと同じ 0.30**。
+  ///
+  /// **0.15 に置いたら、重しが効きすぎて枚数の見返りが消えていた。**
+  /// 特性を揃えて枚数だけ変えると 評価は 1枚 7.11 → 4枚 7.34 と上がるのに、
+  /// 実際に引かせて枚数で束ねると 2枚 7.21 / 4枚 7.21 で**平ら**だった——
+  /// 欠点の増分（4枚で 0.60＋2枚目まで）が、枚数の得をちょうど食っていた。
+  /// **持っているのに効かない**のは、このゲームで何度も踏んでいる形。
+  static const double flawPerStrength = 0.10;
 
   /// 長所を引き、その数に応じて欠点が付く。矛盾する組み合わせは避ける。
   ///
@@ -380,8 +386,9 @@ enum Trait {
         flawChance ?? (0.3 + (strengthCount - 2) * flawPerStrength);
     var flaws = 0;
     if (flawOdds > 0) {
-      // 2枚目は、長所を3つ以上もらった選手にだけ、その差のぶんだけ。
-      final second = (strengthCount - 2) * flawPerStrength;
+      // 2枚目は、長所を4つもらった選手にだけ。3枚で2つ欠点が付くと、
+      // 「尖っている」ではなく「ただ穴だらけ」になる。
+      final second = strengthCount >= 4 ? flawPerStrength : 0.0;
       for (final odds in [flawOdds, second]) {
         if (random.nextDouble() >= odds) continue;
         final candidates = Trait.flaws
