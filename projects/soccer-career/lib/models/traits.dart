@@ -161,15 +161,16 @@ enum Trait {
   // 滅多に付かない代わりに、付けばキャリアの形が変わる。
   genius('天才', '滅多に生まれない。伸びが速く、上限も高い', rare: true),
   ironBody('鋼の身体', '滅多に生まれない。ほとんど怪我をせず、しても早い', rare: true),
-  bornStar('生まれながらの主役', '滅多に生まれない。名が広まり、評価も高くつく',
-      rare: true),
-  bigMoment('大一番の申し子', '滅多に生まれない。終盤と大一番で別人になる',
-      rare: true),
-  glassBody('ガラスの身体', '滅多に無い。怪我が多く、治りも遅い',
-      flaw: true, rare: true);
+  bornStar('生まれながらの主役', '滅多に生まれない。名が広まり、評価も高くつく', rare: true),
+  bigMoment('大一番の申し子', '滅多に生まれない。終盤と大一番で別人になる', rare: true),
+  glassBody('ガラスの身体', '滅多に無い。怪我が多く、治りも遅い', flaw: true, rare: true);
 
-  const Trait(this.label, this.description,
-      {this.flaw = false, this.rare = false});
+  const Trait(
+    this.label,
+    this.description, {
+    this.flaw = false,
+    this.rare = false,
+  });
 
   final String label;
   final String description;
@@ -332,8 +333,11 @@ enum Trait {
   /// 長所を2つ引き、3割で欠点が1つ付く。矛盾する組み合わせは避ける。
   ///
   /// ポジションを渡せば、そこで意味を持つものからだけ引く。
-  static List<Trait> roll(Random random,
-      {double flawChance = 0.3, Position? position}) {
+  static List<Trait> roll(
+    Random random, {
+    double flawChance = 0.3,
+    Position? position,
+  }) {
     final picked = <Trait>[];
     final pool = [
       for (final t in strengths)
@@ -345,9 +349,11 @@ enum Trait {
     }
     if (random.nextDouble() < flawChance) {
       final candidates = flaws
-          .where((f) =>
-              (position == null || f.fitsPosition(position)) &&
-              picked.every((p) => compatible(p, f)))
+          .where(
+            (f) =>
+                (position == null || f.fitsPosition(position)) &&
+                picked.every((p) => compatible(p, f)),
+          )
           .toList();
       if (candidates.isNotEmpty) {
         picked.add(candidates[random.nextInt(candidates.length)]);
@@ -358,10 +364,14 @@ enum Trait {
     // これまでと同じ結果になる（同じ種で同じ選手が出る）。
     if (random.nextDouble() < rareChance) {
       final candidates = rares
-          .where((r) =>
-              !r.flaw &&
-              (position == null || r.fitsPosition(position)) &&
-              picked.where((p) => p != picked[1]).every((p) => compatible(p, r)))
+          .where(
+            (r) =>
+                !r.flaw &&
+                (position == null || r.fitsPosition(position)) &&
+                picked
+                    .where((p) => p != picked[1])
+                    .every((p) => compatible(p, r)),
+          )
           .toList();
       if (candidates.isNotEmpty) {
         picked[1] = candidates[random.nextInt(candidates.length)];
@@ -372,10 +382,12 @@ enum Trait {
         picked.every((p) => !p.flaw) &&
         random.nextDouble() < rareFlawChance) {
       final candidates = rares
-          .where((r) =>
-              r.flaw &&
-              (position == null || r.fitsPosition(position)) &&
-              picked.every((p) => compatible(p, r)))
+          .where(
+            (r) =>
+                r.flaw &&
+                (position == null || r.fitsPosition(position)) &&
+                picked.every((p) => compatible(p, r)),
+          )
           .toList();
       if (candidates.isNotEmpty) {
         picked.add(candidates[random.nextInt(candidates.length)]);
@@ -399,153 +411,139 @@ enum Trait {
     switch (this) {
       // ---- 場面 ----
       case Trait.clutch:
-        return [TraitRule('後半30分以降', 0.08, (c) => c.minute >= 75)];
+        return [TraitRule('後半30分以降', 0.15, (c) => c.minute >= 75)];
       case Trait.composed:
-        return [
-          TraitRule('ゴールの手', 0.05, (c) => c.outcome == Outcome.goal),
-        ];
+        return [TraitRule('ゴールの手', 0.10, (c) => c.outcome == Outcome.goal)];
       case Trait.fighter:
-        return [TraitRule('失敗した直後', 0.07, (c) => c.afterFailure)];
+        return [TraitRule('失敗した直後', 0.12, (c) => c.afterFailure)];
       case Trait.homeHero:
         return [
-          TraitRule('ホーム', 0.05, (c) => !c.international && c.home),
-          TraitRule('アウェイ', -0.02, (c) => !c.international && !c.home),
+          TraitRule('ホーム', 0.08, (c) => !c.international && c.home),
+          TraitRule('アウェイ', -0.03, (c) => !c.international && !c.home),
         ];
       case Trait.roadWarrior:
-        return [
-          TraitRule('アウェイ', 0.06, (c) => !c.international && !c.home),
-        ];
+        return [TraitRule('アウェイ', 0.11, (c) => !c.international && !c.home)];
       case Trait.gambler:
         return [
-          TraitRule('ゴール・アシストの手', 0.05,
-              (c) => c.outcome != Outcome.play),
-          TraitRule('安全な手', -0.04, (c) => c.outcome == Outcome.play),
+          TraitRule('ゴール・アシストの手', 0.09, (c) => c.outcome != Outcome.play),
+          TraitRule('安全な手', -0.07, (c) => c.outcome == Outcome.play),
         ];
       case Trait.craftsman:
         return [
-          TraitRule('安全な手', 0.06, (c) => c.outcome == Outcome.play),
-          TraitRule('ゴールの手', -0.03, (c) => c.outcome == Outcome.goal),
+          TraitRule('安全な手', 0.10, (c) => c.outcome == Outcome.play),
+          TraitRule('ゴールの手', -0.05, (c) => c.outcome == Outcome.goal),
         ];
       case Trait.bigGame:
-        return [TraitRule('代表戦', 0.08, (c) => c.international)];
+        return [TraitRule('代表戦', 0.15, (c) => c.international)];
       case Trait.ironNerve:
-        return [TraitRule('格上との対戦・代表戦', 0.07, (c) => c.bigMatch)];
+        return [TraitRule('格上との対戦・代表戦', 0.12, (c) => c.bigMatch)];
       case Trait.comeback:
-        return [TraitRule('負けているとき', 0.07, (c) => c.margin < 0)];
+        return [TraitRule('負けているとき', 0.12, (c) => c.margin < 0)];
       case Trait.frontRunner:
         return [
-          TraitRule('リードしているとき', 0.06, (c) => c.margin > 0),
-          TraitRule('負けているとき', -0.04, (c) => c.margin < 0),
+          TraitRule('リードしているとき', 0.10, (c) => c.margin > 0),
+          TraitRule('負けているとき', -0.07, (c) => c.margin < 0),
         ];
       case Trait.penaltyKing:
-        return [
-          TraitRule('PK', 0.12, (c) => c.scenarioId.contains('-pk')),
-        ];
+        return [TraitRule('PK', 0.20, (c) => c.scenarioId.contains('-pk'))];
       case Trait.twoFooted:
         // 逆足の落ち込みを打ち消す方向に働く。
-        return [TraitRule('逆足の局面', 0.08, (c) => c.weakFoot)];
+        return [TraitRule('逆足の局面', 0.14, (c) => c.weakFoot)];
       case Trait.cosmopolitan:
-        return [TraitRule('国外のクラブ', 0.05, (c) => c.abroad)];
+        return [TraitRule('国外のクラブ', 0.09, (c) => c.abroad)];
       case Trait.superSub:
-        return [TraitRule('途中出場', 0.06, (c) => c.substitute)];
+        return [TraitRule('途中出場', 0.11, (c) => c.substitute)];
       case Trait.fastStarter:
-        return [TraitRule('前半30分まで', 0.05, (c) => c.minute < 30)];
+        return [TraitRule('前半30分まで', 0.09, (c) => c.minute < 30)];
       case Trait.hotHand:
-        return [TraitRule('成功した直後', 0.06, (c) => c.afterSuccess)];
+        return [TraitRule('成功した直後', 0.11, (c) => c.afterSuccess)];
       case Trait.assistKing:
-        return [
-          TraitRule('アシストの手', 0.05, (c) => c.outcome == Outcome.assist),
-        ];
+        return [TraitRule('アシストの手', 0.09, (c) => c.outcome == Outcome.assist)];
 
       // ---- 得意技 ----
       case Trait.aerialAce:
         return [
           TraitRule(
-              'ヘディング・競り合い',
-              0.08,
-              (c) =>
-                  c.detail == Detail.heading || c.detail == Detail.jumping),
+            'ヘディング・競り合い',
+            0.13,
+            (c) => c.detail == Detail.heading || c.detail == Detail.jumping,
+          ),
         ];
       case Trait.sprinter:
-        return [
-          TraitRule('スピードの手', 0.06, (c) => c.key == AttributeKey.pace),
-        ];
+        return [TraitRule('スピードの手', 0.10, (c) => c.key == AttributeKey.pace)];
       case Trait.playmaker:
-        return [
-          TraitRule('パスの手', 0.05, (c) => c.key == AttributeKey.passing),
-        ];
+        return [TraitRule('パスの手', 0.08, (c) => c.key == AttributeKey.passing)];
       case Trait.poacher:
-        return [
-          TraitRule('決定力の手', 0.07, (c) => c.detail == Detail.finishing),
-        ];
+        return [TraitRule('決定力の手', 0.12, (c) => c.detail == Detail.finishing)];
       case Trait.wall:
         return [
-          TraitRule('守備の手', 0.06, (c) => c.key == AttributeKey.defending),
+          TraitRule('守備の手', 0.10, (c) => c.key == AttributeKey.defending),
         ];
       case Trait.dribbler:
         return [
-          TraitRule(
-              '仕掛ける手', 0.06, (c) => c.key == AttributeKey.dribbling),
+          TraitRule('仕掛ける手', 0.10, (c) => c.key == AttributeKey.dribbling),
         ];
       case Trait.tackler:
         return [
           TraitRule(
-              'タックル・インターセプト',
-              0.07,
-              (c) =>
-                  c.detail == Detail.tackling ||
-                  c.detail == Detail.interceptions),
+            'タックル・インターセプト',
+            0.12,
+            (c) =>
+                c.detail == Detail.tackling || c.detail == Detail.interceptions,
+          ),
         ];
       case Trait.longRange:
         return [
-          TraitRule('ロングシュート', 0.09, (c) => c.detail == Detail.longShots),
+          TraitRule('ロングシュート', 0.15, (c) => c.detail == Detail.longShots),
         ];
       case Trait.crosser:
         return [
           TraitRule(
-              'クロス・ロングパス',
-              0.07,
-              (c) =>
-                  c.detail == Detail.crossing ||
-                  c.detail == Detail.longPassing),
+            'クロス・ロングパス',
+            0.12,
+            (c) =>
+                c.detail == Detail.crossing || c.detail == Detail.longPassing,
+          ),
         ];
       case Trait.tempoSetter:
         return [
           TraitRule(
-              '短いパス・ボール扱い',
-              0.06,
-              (c) =>
-                  c.detail == Detail.shortPassing ||
-                  c.detail == Detail.ballControl),
+            '短いパス・ボール扱い',
+            0.10,
+            (c) =>
+                c.detail == Detail.shortPassing ||
+                c.detail == Detail.ballControl,
+          ),
         ];
       case Trait.sweeperKeeper:
         return [
-          TraitRule('GKのポジショニング', 0.08,
-              (c) => c.detail == Detail.gkPositioning),
+          TraitRule(
+            'GKのポジショニング',
+            0.13,
+            (c) => c.detail == Detail.gkPositioning,
+          ),
         ];
       case Trait.reflexKeeper:
-        return [
-          TraitRule('セービング', 0.08, (c) => c.detail == Detail.reflexes),
-        ];
+        return [TraitRule('セービング', 0.13, (c) => c.detail == Detail.reflexes)];
 
       // ---- 欠点 ----
       case Trait.moody:
         return [
-          TraitRule('成功した直後', 0.05, (c) => c.afterSuccess),
-          TraitRule('失敗した直後', -0.06, (c) => c.afterFailure),
+          TraitRule('成功した直後', 0.09, (c) => c.afterSuccess),
+          TraitRule('失敗した直後', -0.10, (c) => c.afterFailure),
         ];
       case Trait.slowStarter:
-        return [TraitRule('前半30分まで', -0.05, (c) => c.minute < 30)];
+        return [TraitRule('前半30分まで', -0.09, (c) => c.minute < 30)];
       case Trait.bigGameShy:
-        return [TraitRule('格上との対戦・代表戦', -0.07, (c) => c.bigMatch)];
+        return [TraitRule('格上との対戦・代表戦', -0.12, (c) => c.bigMatch)];
       case Trait.homesick:
-        return [TraitRule('国外のクラブ', -0.06, (c) => c.abroad)];
+        return [TraitRule('国外のクラブ', -0.10, (c) => c.abroad)];
       case Trait.benchCold:
-        return [TraitRule('途中出場', -0.06, (c) => c.substitute)];
+        return [TraitRule('途中出場', -0.11, (c) => c.substitute)];
       case Trait.bigMoment:
         return [
-          TraitRule('後半30分以降', 0.10, (c) => c.minute >= 75),
-          TraitRule('格上との対戦・代表戦', 0.08, (c) => c.bigMatch),
+          TraitRule('後半30分以降', 0.18, (c) => c.minute >= 75),
+          TraitRule('格上との対戦・代表戦', 0.15, (c) => c.bigMatch),
         ];
 
       // ---- 試合の外でだけ効くもの ----
@@ -603,227 +601,248 @@ enum Trait {
   ///
   /// 各 getter から作るので、数字を変えれば画面も変わる。
   List<String> get offPitchEffects => [
-        if (transcendDetail != null)
-          '${transcendDetail!.label}の上限 +${Formulas.ceilingBreak}'
-              '（${Formulas.absoluteMax}まで。${Formulas.transcendRunway}以上なら'
-              'ポテンシャルに達しても伸びる）',
-        if (potentialBonus != 0) '生まれたときのポテンシャル +$potentialBonus',
-        if (peakAgeOffset != 0) 'ピーク ${_years(peakAgeOffset)}',
-        if (declineAgeOffset != 0) '衰え始め ${_years(declineAgeOffset)}',
-        if (growthFactor(20) != 1.0) '22歳までの成長 ${_times(growthFactor(20))}',
-        if (growthFactor(30) != 1.0) '23歳からの成長 ${_times(growthFactor(30))}',
-        if (injuryFactor != 1.0) '怪我の確率 ${_times(injuryFactor)}',
-        if (conditionCostFactor != 1.0)
-          '試合と練習の消耗 ${_times(conditionCostFactor)}',
-        if (fatigueFactor != 1.0) '疲労の溜まり ${_times(fatigueFactor)}',
-        if (restFactor != 1.0) '休養で戻る量 ${_times(restFactor)}',
-        if (trainingFactor != 1.0) '練習の効き ${_times(trainingFactor)}',
-        if (setPieceFactor != 1.0) '居残りの効き ${_times(setPieceFactor)}',
-        if (deadBallThresholdOffset != 0)
-          'キッカーになる水準 $deadBallThresholdOffset',
-        if (rehabFactor != 1.0) '離脱の期間 ${_times(rehabFactor)}',
-        if (moraleFactor != 1.0) '気持ちの落ち込み ${_times(moraleFactor)}',
-        if (moraleGainFactor != 1.0) '気持ちの上向き ${_times(moraleGainFactor)}',
-        if (formFactor != 1.0) '波の入りやすさ ${_times(formFactor)}',
-        if (ratingBonus != 0) '毎試合の評価点 +${ratingBonus.toStringAsFixed(2)}',
-        if (cleanSheetFactor != 1.0) '無失点の評価 ${_times(cleanSheetFactor)}',
-        if (cardFactor != 1.0) '警告の確率 ${_times(cardFactor)}',
-        if (fameFactor != 1.0) '知名度の伸び ${_times(fameFactor)}',
-        if (aptitudeFactor != 1.0)
-          '慣れないポジションの減点 ${_times(aptitudeFactor)}',
-        if (adaptationFactor != 1.0) '相手への慣れ ${_times(adaptationFactor)}',
-        if (breakthroughFactor != 1.0)
-          '限界突破の確率 ${_times(breakthroughFactor)}',
-        if (plateauFactor != 1.0) '停滞期の長さ ${_times(plateauFactor)}',
-        if (relationGainFactor != 1.0)
-          '監督の信頼の上がり ${_times(relationGainFactor)}',
-        if (relationLossFactor != 1.0)
-          '監督の信頼の下がり ${_times(relationLossFactor)}',
-      ];
+    if (transcendDetail != null)
+      '${transcendDetail!.label}の上限 +${Formulas.ceilingBreak}'
+          '（${Formulas.absoluteMax}まで。${Formulas.transcendRunway}以上なら'
+          'ポテンシャルに達しても伸びる）',
+    if (potentialBonus != 0) '生まれたときのポテンシャル +$potentialBonus',
+    if (peakAgeOffset != 0) 'ピーク ${_years(peakAgeOffset)}',
+    if (declineAgeOffset != 0) '衰え始め ${_years(declineAgeOffset)}',
+    if (growthFactor(20) != 1.0) '22歳までの成長 ${_times(growthFactor(20))}',
+    if (growthFactor(30) != 1.0) '23歳からの成長 ${_times(growthFactor(30))}',
+    if (injuryFactor != 1.0) '怪我の確率 ${_times(injuryFactor)}',
+    if (conditionCostFactor != 1.0) '試合と練習の消耗 ${_times(conditionCostFactor)}',
+    if (fatigueFactor != 1.0) '疲労の溜まり ${_times(fatigueFactor)}',
+    if (restFactor != 1.0) '休養で戻る量 ${_times(restFactor)}',
+    if (trainingFactor != 1.0) '練習の効き ${_times(trainingFactor)}',
+    if (setPieceFactor != 1.0) '居残りの効き ${_times(setPieceFactor)}',
+    if (deadBallThresholdOffset != 0) 'キッカーになる水準 $deadBallThresholdOffset',
+    if (rehabFactor != 1.0) '離脱の期間 ${_times(rehabFactor)}',
+    if (moraleFactor != 1.0) '気持ちの落ち込み ${_times(moraleFactor)}',
+    if (moraleGainFactor != 1.0) '気持ちの上向き ${_times(moraleGainFactor)}',
+    if (formFactor != 1.0) '波の入りやすさ ${_times(formFactor)}',
+    if (ratingBonus != 0) '毎試合の評価点 +${ratingBonus.toStringAsFixed(2)}',
+    if (cleanSheetFactor != 1.0) '無失点の評価 ${_times(cleanSheetFactor)}',
+    if (cardFactor != 1.0) '警告の確率 ${_times(cardFactor)}',
+    if (fameFactor != 1.0) '知名度の伸び ${_times(fameFactor)}',
+    if (aptitudeFactor != 1.0) '慣れないポジションの減点 ${_times(aptitudeFactor)}',
+    if (adaptationFactor != 1.0) '相手への慣れ ${_times(adaptationFactor)}',
+    if (breakthroughFactor != 1.0) '限界突破の確率 ${_times(breakthroughFactor)}',
+    if (breakthroughWeekOffset != 0)
+      '限界突破に要る大成功の週 $breakthroughWeekOffset回',
+    if (plateauFactor != 1.0) '停滞期の長さ ${_times(plateauFactor)}',
+    if (relationGainFactor != 1.0) '監督の信頼の上がり ${_times(relationGainFactor)}',
+    if (relationLossFactor != 1.0) '監督の信頼の下がり ${_times(relationLossFactor)}',
+  ];
 
   /// 効き方をすべて言葉にしたもの。画面とガイドの両方で使う。
   List<String> get effects => [
-        for (final r in rules) r.text,
-        ...offPitchEffects,
-      ];
+    for (final r in rules) r.text,
+    ...offPitchEffects,
+  ];
 
   int get peakAgeOffset => switch (this) {
-        Trait.earlyBloomer => -2,
-        Trait.lateBloomer => 3,
-        _ => 0,
-      };
+    Trait.earlyBloomer => -2,
+    Trait.lateBloomer => 3,
+    _ => 0,
+  };
 
   int get declineAgeOffset => switch (this) {
-        Trait.ironman => 2,
-        Trait.lateBloomer => 2,
-        _ => 0,
-      };
+    Trait.ironman => 2,
+    Trait.lateBloomer => 2,
+    _ => 0,
+  };
 
   /// 成長判定の倍率。年齢で変わる。
   double growthFactor(int age) => switch (this) {
-        Trait.earlyBloomer => age <= 22 ? 1.4 : 0.85,
-        Trait.lateBloomer => age <= 22 ? 0.7 : 1.25,
-        Trait.genius => 1.3,
-        _ => 1.0,
-      };
+    Trait.earlyBloomer => age <= 22 ? 1.4 : 0.85,
+    Trait.lateBloomer => age <= 22 ? 0.7 : 1.25,
+    Trait.genius => 1.3,
+    _ => 1.0,
+  };
 
   /// 上限を超えて伸ばせる詳細能力。超越の特性だけが持つ。
   Detail? get transcendDetail => switch (this) {
-        Trait.eagleEye => Detail.vision,
-        Trait.cannon => Detail.shotPower,
-        Trait.lightning => Detail.sprintSpeed,
-        Trait.glue => Detail.ballControl,
-        Trait.sniper => Detail.finishing,
-        Trait.hawk => Detail.interceptions,
-        Trait.ironLungs => Detail.stamina,
-        Trait.catReflex => Detail.reflexes,
-        _ => null,
-      };
+    Trait.eagleEye => Detail.vision,
+    Trait.cannon => Detail.shotPower,
+    Trait.lightning => Detail.sprintSpeed,
+    Trait.glue => Detail.ballControl,
+    Trait.sniper => Detail.finishing,
+    Trait.hawk => Detail.interceptions,
+    Trait.ironLungs => Detail.stamina,
+    Trait.catReflex => Detail.reflexes,
+    _ => null,
+  };
 
   /// 生まれたときのポテンシャルへの上乗せ。キャリア開始時にだけ効く。
+  ///
+  /// **長所は「速さ」ではなく「届く高さ」に返す。**
+  /// 実測（`test/trait_sim.dart`、能力値と選び方を揃えて特性だけ差し替え）で、
+  /// 練習の効き 1.25 倍と限界突破 1.6 倍を持つ「飲み込みが早い＋殻を破る」が、
+  /// **特性なしよりピーク +0.4 しか高くなかった**。速く伸びても
+  /// **ポテンシャルで止まるので同じ選手になる**（週の踏み込み方で
+  /// 先に踏んだのと同じ壁）。一方、欠点2つは −3.1 効いていた——
+  /// **下振れには上限が無いのに、上振れには上限がある**というのが
+  /// 「長所が効かない」の正体だった。
+  /// 伸びる速さを持つ長所には、少しだけ高さも渡す。
   int get potentialBonus => switch (this) {
-        Trait.genius => 6,
-        _ => 0,
-      };
+    Trait.genius => 6,
+    Trait.quickLearner => 2,
+    // 「ピークが遅く長い」と書いてあるのに、**高さは同じ**だった。
+    // 遅れて伸びるぶんの見返りをここに置く。
+    Trait.lateBloomer => 3,
+    _ => 0,
+  };
+
+  /// 限界突破に要る「追い込んだ週」の数への下駄。
+  ///
+  /// `breakthroughFactor` は**起きる確率の倍率**なので、そもそも条件を
+  /// 満たさないキャリアには何も返らない（実測で限界突破は普通の
+  /// 踏み込み方だと 8%）。殻を破る選手は、条件そのものを軽くする。
+  int get breakthroughWeekOffset => switch (this) {
+    Trait.breaker => -6,
+    Trait.genius => -4,
+    _ => 0,
+  };
 
   /// 負傷確率の倍率。
   double get injuryFactor => switch (this) {
-        Trait.robust => 0.6,
-        Trait.fragile => 1.7,
-        Trait.ironBody => 0.3,
-        Trait.glassBody => 2.5,
-        _ => 1.0,
-      };
+    Trait.robust => 0.6,
+    Trait.fragile => 1.7,
+    Trait.ironBody => 0.3,
+    Trait.glassBody => 2.5,
+    _ => 1.0,
+  };
 
   /// 試合・練習の消耗の倍率。
   double get conditionCostFactor => switch (this) {
-        Trait.engine => 0.6,
-        _ => 1.0,
-      };
+    Trait.engine => 0.6,
+    _ => 1.0,
+  };
 
   /// 累積疲労の溜まりやすさ。
   double get fatigueFactor => switch (this) {
-        Trait.tireless => 0.6,
-        Trait.ironBody => 0.7,
-        _ => 1.0,
-      };
+    Trait.tireless => 0.6,
+    Trait.ironBody => 0.7,
+    _ => 1.0,
+  };
 
   /// 休養で戻るコンディションの倍率。
   double get restFactor => switch (this) {
-        Trait.quickRecovery => 1.4,
-        _ => 1.0,
-      };
+    Trait.quickRecovery => 1.4,
+    _ => 1.0,
+  };
 
   /// 練習の効きの倍率。
   double get trainingFactor => switch (this) {
-        Trait.quickLearner => 1.25,
-        Trait.lazy => 0.75,
-        Trait.genius => 1.2,
-        _ => 1.0,
-      };
+    Trait.quickLearner => 1.25,
+    Trait.lazy => 0.75,
+    Trait.genius => 1.2,
+    _ => 1.0,
+  };
 
   /// 居残り練習の効きの倍率。
   double get setPieceFactor => switch (this) {
-        Trait.deadBallMaster => 1.6,
-        _ => 1.0,
-      };
+    Trait.deadBallMaster => 1.6,
+    _ => 1.0,
+  };
 
   /// 離脱期間の倍率。
   double get rehabFactor => switch (this) {
-        Trait.fastHealer => 0.7,
-        Trait.slowHealer => 1.4,
-        Trait.ironBody => 0.6,
-        Trait.glassBody => 1.5,
-        _ => 1.0,
-      };
+    Trait.fastHealer => 0.7,
+    Trait.slowHealer => 1.4,
+    Trait.ironBody => 0.6,
+    Trait.glassBody => 1.5,
+    _ => 1.0,
+  };
 
   /// 気持ちの動きやすさ。落ち込みにだけ効かせる。
   double get moraleFactor => switch (this) {
-        Trait.unshakable => 0.5,
-        _ => 1.0,
-      };
+    Trait.unshakable => 0.5,
+    _ => 1.0,
+  };
 
   /// 気持ちの上がりやすさ。良いことがあったときにだけ効かせる。
   double get moraleGainFactor => switch (this) {
-        Trait.moodMaker => 1.5,
-        _ => 1.0,
-      };
+    Trait.moodMaker => 1.5,
+    _ => 1.0,
+  };
 
   /// 好不調の波に入りやすさ。
   double get formFactor => switch (this) {
-        Trait.streaky => 1.8,
-        _ => 1.0,
-      };
+    Trait.streaky => 1.8,
+    _ => 1.0,
+  };
 
   /// 試合ごとの評価点への加算。
   double get ratingBonus => switch (this) {
-        Trait.captain => 0.15,
-        Trait.bornStar => 0.1,
-        _ => 0,
-      };
+    Trait.captain => 0.15,
+    Trait.bornStar => 0.1,
+    _ => 0,
+  };
 
   /// 無失点で終えたときの評価の倍率。守備の選手にだけ乗る項に掛ける。
   double get cleanSheetFactor => switch (this) {
-        Trait.organizer => 1.4,
-        _ => 1.0,
-      };
+    Trait.organizer => 1.4,
+    _ => 1.0,
+  };
 
   /// キッカーを任される水準への下駄。
   int get deadBallThresholdOffset => switch (this) {
-        Trait.deadBallMaster => -10,
-        _ => 0,
-      };
+    Trait.deadBallMaster => -10,
+    _ => 0,
+  };
 
   /// 荒い手で警告を受ける確率の倍率。止めるための反則には効かない。
   double get cardFactor => switch (this) {
-        Trait.cleanPlayer => 0.5,
-        Trait.hothead => 1.6,
-        _ => 1.0,
-      };
+    Trait.cleanPlayer => 0.5,
+    Trait.hothead => 1.6,
+    _ => 1.0,
+  };
 
   /// 知名度の伸びの倍率。
   double get fameFactor => switch (this) {
-        Trait.showman => 1.4,
-        Trait.bornStar => 2.0,
-        _ => 1.0,
-      };
+    Trait.showman => 1.4,
+    Trait.bornStar => 2.0,
+    _ => 1.0,
+  };
 
   /// 慣れないポジションで引かれる減点の倍率。
   double get aptitudeFactor => switch (this) {
-        Trait.utility => 0.5,
-        _ => 1.0,
-      };
+    Trait.utility => 0.5,
+    _ => 1.0,
+  };
 
   /// 相手の戦い方に慣れる速さ。
   double get adaptationFactor => switch (this) {
-        Trait.studious => 2.0,
-        _ => 1.0,
-      };
+    Trait.studious => 2.0,
+    _ => 1.0,
+  };
 
   /// 限界突破が起きる確率の倍率。
   double get breakthroughFactor => switch (this) {
-        Trait.breaker => 1.6,
-        Trait.genius => 2.0,
-        _ => 1.0,
-      };
+    Trait.breaker => 1.6,
+    Trait.genius => 2.0,
+    _ => 1.0,
+  };
 
   /// 停滞期の長さの倍率。
   double get plateauFactor => switch (this) {
-        Trait.steady => 0.5,
-        _ => 1.0,
-      };
+    Trait.steady => 0.5,
+    _ => 1.0,
+  };
 
   /// 監督の信頼が上がるときの倍率。
   double get relationGainFactor => switch (this) {
-        Trait.coachable => 1.4,
-        _ => 1.0,
-      };
+    Trait.coachable => 1.4,
+    _ => 1.0,
+  };
 
   /// 監督の信頼が下がるときの倍率。
   double get relationLossFactor => switch (this) {
-        Trait.difficult => 1.5,
-        _ => 1.0,
-      };
+    Trait.difficult => 1.5,
+    _ => 1.0,
+  };
 }
 
 /// 複数の特性をまとめて評価する。
@@ -861,6 +880,8 @@ extension TraitList on List<Trait> {
   double get relationLossFactor =>
       fold(1.0, (f, t) => f * t.relationLossFactor);
   int get potentialBonus => fold(0, (s, t) => s + t.potentialBonus);
+  int get breakthroughWeekOffset =>
+      fold(0, (s, t) => s + t.breakthroughWeekOffset);
 
   /// 上限を超えて伸ばせる詳細能力。超越は1人に1つなので、最初の1つ。
   Detail? get transcendDetail {
@@ -871,7 +892,6 @@ extension TraitList on List<Trait> {
   }
 
   /// その詳細能力の上限。超越の対象なら 99 を超える。
-  int ceilingFor(Detail detail) => transcendDetail == detail
-      ? Formulas.absoluteMax
-      : Formulas.maxAttribute;
+  int ceilingFor(Detail detail) =>
+      transcendDetail == detail ? Formulas.absoluteMax : Formulas.maxAttribute;
 }

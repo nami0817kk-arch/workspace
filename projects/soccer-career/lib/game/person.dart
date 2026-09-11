@@ -57,8 +57,13 @@ class Person {
     // ここが無いと「尖った選手を育てる」がただの損になる。
     final standout = 1 + standoutOf(state.player) * Formulas.standoutValue;
 
+    // **名前も値段になる。** 知名度はここまで愛称にしか効いておらず、
+    // 代表も大陸カップも「華がある」も、移籍の場面には返っていなかった。
+    final fame = 1 + state.reputation.fame * Formulas.fameValue;
+
     final value =
         base *
+        fame *
         ageFactor *
         contractFactor *
         form *
