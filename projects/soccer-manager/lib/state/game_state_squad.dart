@@ -50,6 +50,25 @@ extension GameStateSquad on GameState {
     return amount;
   }
 
+  /// 資金パックの購入で受け取る額(万円)。所属ディビジョンに比例する。
+  int purchasedFundsAmount(FundsPack pack) =>
+      pack.fundsFor(_save?.currentDivisionTier ?? 5);
+
+  /// 資金パックの購入ぶんを受け取る。
+  ///
+  /// 購入が成立したかの判定は MonetizationController の責務で、ここは
+  /// ゲームの状態を触るだけ。特典と同じく、増えた理由をニュースに残す。
+  int claimPurchasedFunds(FundsPack pack) {
+    if (_save == null) return 0;
+    final amount = purchasedFundsAmount(pack);
+    _save!.budget += amount;
+    _logNews(Tr.pick('${pack.label}で$amount万円をクラブ資金に追加した。',
+        'You added $amount to the club budget from a ${pack.label}.'));
+    _notify();
+    _persist();
+    return amount;
+  }
+
   /// 開発者向けのデバッグ機能。資金を任意の額だけ増減させる
   /// (負の値で減額も可能)。設定画面の管理者専用メニューからのみ呼ばれる。
   void addDebugFunds(int amount) {
