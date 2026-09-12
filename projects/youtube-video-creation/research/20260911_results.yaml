@@ -11,7 +11,7 @@ candidates:
     tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
     en: ""            # 英語サイトを引く語
     url: https://www.fotmob.com/matches/x/5881169
-    hours_ago: 21.7   # フィードの時刻から
+    hours_ago: 24.9   # フィードの時刻から
     sources:
       - https://www.fotmob.com/matches/x/5881169
 
@@ -23,7 +23,7 @@ candidates:
     tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
     en: ""            # 英語サイトを引く語
     url: https://www.fotmob.com/matches/x/5868059
-    hours_ago: 21.7   # フィードの時刻から
+    hours_ago: 24.9   # フィードの時刻から
     sources:
       - https://www.fotmob.com/matches/x/5868059
 
@@ -35,7 +35,7 @@ candidates:
     tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
     en: ""            # 英語サイトを引く語
     url: https://www.fotmob.com/matches/x/5802935
-    hours_ago: 21.7   # フィードの時刻から
+    hours_ago: 24.9   # フィードの時刻から
     sources:
       - https://www.fotmob.com/matches/x/5802935
 
@@ -47,7 +47,7 @@ candidates:
     tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
     en: ""            # 英語サイトを引く語
     url: https://www.fotmob.com/matches/x/5749679
-    hours_ago: 21.7   # フィードの時刻から
+    hours_ago: 24.9   # フィードの時刻から
     goals: true        # 試合データから自動で立てた
     numbers: true        # 試合データから自動で立てた
     sources:
@@ -61,7 +61,7 @@ candidates:
     tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
     en: ""            # 英語サイトを引く語
     url: https://www.fotmob.com/matches/x/5781742
-    hours_ago: 21.7   # フィードの時刻から
+    hours_ago: 24.9   # フィードの時刻から
     sources:
       - https://www.fotmob.com/matches/x/5781742
 

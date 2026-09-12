@@ -67,6 +67,18 @@ sites:
   examples:
   - https://www.fcinter1908.it/news/interviste/sneijder-inter-triplete-ausilio-chivu-dumfries/?intcmp=gazzanet-fcinter1908
   - https://www.fcinter1908.it/cronaca-live/youth-league-real-madrid-inter/?intcmp=gazzanet-fcinter1908
+- host: calcionapoli1926.it
+  seen: 8
+  days:
+  - '2026-09-02'
+  - '2026-09-03'
+  - '2026-09-04'
+  - '2026-09-05'
+  - '2026-09-12'
+  examples:
+  - https://www.calcionapoli1926.it/ultimissime-calcio-napoli/mazzocchi-laddio-al-napoli-e-da-brividi-sono-stato-un-napoletano-con-quella-maglia-addosso/?intcmp=gazzanet-calcionapoli1926
+  - https://www.calcionapoli1926.it/altro/jorginho-agente-santos-proposte-serie-a/?intcmp=gazzanet-calcionapoli1926
+  - https://www.calcionapoli1926.it/photogallery/giovane-infortunio-napoli-seriea-intervento-ernia-inguinale-post-social-instagram-photogallery-ultime/?refresh_ce&intcmp=gazzanet-calcionapoli1926
 - host: tuttobolognaweb.it
   seen: 7
   days:
@@ -77,17 +89,6 @@ sites:
   - https://www.tuttobolognaweb.it/mercato/tedesco/?intcmp=gazzanet-tuttobolognaweb
   - https://www.tuttobolognaweb.it/news/dovbyk-emozionato-per-il-gol-ma-dobbiamo-migliorare/?intcmp=gazzanet-tuttobolognaweb
   - https://www.tuttobolognaweb.it/mercato/il-ritorno-di-theate-oggi-il-bologna-e-diverso-tedesco-grande-mister/?intcmp=gazzanet-tuttobolognaweb
-- host: calcionapoli1926.it
-  seen: 6
-  days:
-  - '2026-09-02'
-  - '2026-09-03'
-  - '2026-09-04'
-  - '2026-09-05'
-  examples:
-  - https://www.calcionapoli1926.it/ultimissime-calcio-napoli/mazzocchi-laddio-al-napoli-e-da-brividi-sono-stato-un-napoletano-con-quella-maglia-addosso/?intcmp=gazzanet-calcionapoli1926
-  - https://www.calcionapoli1926.it/altro/jorginho-agente-santos-proposte-serie-a/?intcmp=gazzanet-calcionapoli1926
-  - https://www.calcionapoli1926.it/photogallery/giovane-infortunio-napoli-seriea-intervento-ernia-inguinale-post-social-instagram-photogallery-ultime/?refresh_ce&intcmp=gazzanet-calcionapoli1926
 - host: bbc.co.uk
   seen: 6
   days:
