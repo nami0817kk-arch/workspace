@@ -62,11 +62,28 @@ sections:
         - ["給与", "大幅な昇給（金額は未公表）"]
     say:
       - アルダ・ギュレルとレアル・マドリードが、契約の延長で合意したと伝えられています。
+      - いまの契約は2029年まで。まだ3年残っている状態での上積みになります。
+    official: false
+    sources:
+      - https://madriduniversal.com/just-in-real-madrid-reach-six-year-renewal-agreement-until-2032-with-young-playmaker-romano/
+      - https://footballtoday.com/2026/09/10/arda-guler-agrees-new-real-madrid-contract-after-emergence-as-key-mourinho-player/
+
+  - id: split
+    heading: ただし、年数が割れている
+    tier: 報道
+    telop: 2031年か、2032年か
+    narrator: 解説
+    # **節を分けた**（2026-09-12）。1つの節に詰めたら37秒画面が変わらなかった
+    card:
+      type: quote
+      title: 報道が2つに割れている
+      text: AS は2031年まで。ロマーノは2032年までの6年
+    say:
       - ただし、何年までなのかが割れています。スペイン紙のASはこう伝えました。
       - {voice: スペイン紙 AS, text: 2029年満了の契約を、2031年まで2年延長する}
       - 一方、移籍情報の記者ファブリツィオ・ロマーノはこう書いています。
-      - {voice: ファブリツィオ・ロマーノ, text: 2032年6月までの6年で合意。まもなく発表される見込みで、給与も大幅に上がる}
-      - いまの契約は2029年まででしたから、どちらにしてもまだ3年残っている状態での上積みです。
+      - {voice: ファブリツィオ・ロマーノ, text: 2032年6月までの6年で合意した}
+      - {voice: ファブリツィオ・ロマーノ, text: まもなく発表される見込みで、給与も大幅に上がる}
     official: false
     sources:
       - https://madriduniversal.com/just-in-real-madrid-reach-six-year-renewal-agreement-until-2032-with-young-playmaker-romano/
@@ -93,16 +110,55 @@ sections:
         - label: ゴール
           value: 6
     say:
+      # **カードを持つ節は3行までにする**（2026-09-12）。
+      # カードは次の地の文にも残るので、長い節はそのぶん同じ絵が伸びる
       - 理由として挙げられているのは、序列です。
       - この夏、レアルは1億4000万ユーロでヤン・ディオマンデを獲得しました。
       - {voice: ファブリツィオ・ロマーノ, text: 右サイドの重要な選手として、1億4000万ユーロの新加入より先に先発している}
-      - 昨シーズンは51試合に出て、6ゴール14アシスト。
+    official: false
+    sources:
+      - https://madriduniversal.com/just-in-real-madrid-reach-six-year-renewal-agreement-until-2032-with-young-playmaker-romano/
+      - https://footballtoday.com/2026/09/10/arda-guler-agrees-new-real-madrid-contract-after-emergence-as-key-mourinho-player/
+
+  - id: numbers
+    heading: 去年、何をしていたのか
+    tier: 報道
+    telop: 昨季 51試合 6ゴール14アシスト
+    narrator: キャスター
+    card:
+      type: points
+      title: 2025-26シーズン
+      items:
+        - "リーグ・カップ戦あわせて51試合"
+        - "チャンピオンズリーグは13試合が先発"
+        - "CL ブレークスループレイヤーに選出"
+    say:
+      - ギュレルは昨シーズン51試合に出て、6ゴール14アシスト。
       - チャンピオンズリーグでは14試合のうち13試合が先発で、2ゴール3アシストでした。
-      - 2025-26シーズンのチャンピオンズリーグ・ブレークスループレイヤーにも選ばれています。
+      - 2025-26シーズンのブレークスループレイヤーにも選ばれています。
+    official: false
+    sources:
+      - https://madriduniversal.com/just-in-real-madrid-reach-six-year-renewal-agreement-until-2032-with-young-playmaker-romano/
+      - https://footballtoday.com/2026/09/10/arda-guler-agrees-new-real-madrid-contract-after-emergence-as-key-mourinho-player/
+
+  - id: role
+    heading: モウリーニョが、置く場所を変えた
+    tier: 報道
+    telop: 中盤の底ではなく、ゴールに近い位置へ
+    narrator: 解説
+    # **節を分けた**（2026-09-12）。1つの節に詰めたら、
+    # 同じカードのまま54秒画面が変わらなかった
+    # 絵の入れ替えは仕組みが入れる（カード → 写真 → 背景 → カード）
+    card:
+      type: points
+      title: モウリーニョが変えたこと
+      items:
+        - "中盤の底から、ゴールに近い位置へ"
+    say:
       - そしてもうひとつ、モウリーニョの就任が挙げられています。
-      - {voice: スペイン紙 AS, text: 中盤の一枚ではなく、異なる攻撃的な型として扱われている}
       - 中盤の底ではなく、ゴールに近い位置で使う、ということです。
       - ベティス戦ではベリンガム、バルベルデと並んで先発し、危険なクロスで2度、機会を作りました。
+      - {voice: スペイン紙 AS, text: 中盤の一枚ではなく、異なる攻撃的な型として扱われている}
     official: false
     sources:
       - https://madriduniversal.com/just-in-real-madrid-reach-six-year-renewal-agreement-until-2032-with-young-playmaker-romano/

@@ -1085,6 +1085,28 @@ def test_埋め草を知らせる():
     assert check_filler(clean).ok
 
 
+def test_体言止めのタイトルを通す():
+    """**体言止めも答えを隠す形**（2026-09-12）。
+
+    CLAUDE.md は「問いかけ・引用で切る・体言止めなど形はいくつもある」と
+    書いているのに、検査は体言止めを1つも認めていなかった。
+    「ニコ・パスがレアルを断って残った理由」が弾かれた。**また検査が形を狭めていた。**
+    """
+    from src.review import check_title_hook
+    from src.script_model import Line, Scene, Script
+
+    def titled(text):
+        return Script(title=text, scenes=[Scene(title="節",
+                      lines=[Line(speaker="キャスター", text="本文")])])
+
+    assert check_title_hook(titled("ニコ・パスがレアルを断って残った理由")).ok
+    assert check_title_hook(titled("デンベレ、バロンドール昨年度受賞者が語る")).ok
+    assert check_title_hook(titled("モウリーニョが返した一言")).ok
+
+    # 言い切りは今までどおり落とす
+    assert not check_title_hook(titled("ヴァーディがバーンリーへ完全移籍で加入")).ok
+
+
 def test_札から始まるタイトルは落とす():
     """**頭は人名かクラブ名**（2026-09-11 の実測）。
 

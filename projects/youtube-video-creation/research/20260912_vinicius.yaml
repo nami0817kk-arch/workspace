@@ -58,8 +58,8 @@ sections:
         - ["シュート", "枠外3本"]
         - ["ゴール・アシスト", "なし"]
     say:
-      - 9月8日、チャンピオンズリーグの初戦。レアル・マドリードがインテルに2対1で勝ちました。
-      - ただ、87分にヴィニシウスが下がったとき、まばらな拍手はブーイングと口笛にかき消されました。
+      - 9月8日、レアルがインテルに2対1で勝ちました。
+      - ただ、87分にヴィニシウスが下がると、拍手はブーイングにかき消されました。
     official: false
     sources:
       - https://worldsoccertalk.com/news/real-madrid-boss-jose-mourinho-asks-for-respect-for-vinicius-jr-amid-form-struggles-in-ucl-debut/
@@ -70,6 +70,12 @@ sections:
     tier: 報道
     telop: 9月8日 試合後の会見
     narrator: 解説
+    # **カードを置く**（2026-09-12）。置かずに書き出したら、
+    # 53秒のあいだ画面が変わらなかった
+    card:
+      type: quote
+      title: モウリーニョ（9月8日）
+      text: 彼が最高の状態でないことは、誰の目にも分かります
     say:
       - その日の試合後、モウリーニョが会見で答えています。
       - {voice: モウリーニョ, text: ファンを批判しているのではありません}
@@ -78,6 +84,23 @@ sections:
       - {voice: モウリーニョ, text: しかし、それを誰より分かっているのは本人です}
       - {voice: モウリーニョ, text: 試合を決めるヴィニシウスに戻るために、彼は懸命に取り組んでいます}
       - {voice: モウリーニョ, text: 最高の状態でないにもかかわらず、練習でも試合でも、これまでで最も努力しています}
+    official: false
+    sources:
+      - https://worldsoccertalk.com/news/real-madrid-boss-jose-mourinho-asks-for-respect-for-vinicius-jr-amid-form-struggles-in-ucl-debut/
+      - https://www.espn.com/soccer/story/_/id/49902879/real-madrid-jose-mourinho-vinicius-best-yet-come
+
+  - id: sprint
+    heading: 守れなかった場面についても、理由を挙げた
+    tier: 報道
+    telop: 50メートルを6回
+    narrator: 解説
+    # **節を分けた**（2026-09-12）。1つの節に10行入れたら、
+    # 同じカードのまま53秒画面が変わらなかった
+    card:
+      type: quote
+      title: モウリーニョ（9月8日）
+      text: ボールを持って50メートルのスプリントを6回しているのですから
+    say:
       - 守れていない場面についても、理由を挙げました。
       - {voice: モウリーニョ, text: 味方と足並みをそろえて守れなかった数少ない場面は、疲労が原因です}
       - {voice: モウリーニョ, text: 彼はボールを持って50メートルのスプリントを6回しているのですから}

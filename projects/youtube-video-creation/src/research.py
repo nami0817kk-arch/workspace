@@ -919,6 +919,11 @@ def check_repeats(notes: Notes, plan: Plan, now=None) -> list[str]:
 # **画面に出る字の上限**。1920幅・58pxで1行に約27.8字、枠には3行入る。
 # 26 は1行ぶんで、**読み上げの半分しか画面に出ていなかった**
 # （2026-09-10 に19本513行を数えて 46%。ユーザー指摘）。2行ぶんに広げた
+# **1枚のカードを出しておける行数**（2026-09-12）。
+# カードは明示的に消すまで残る（script_model の rows）。
+# 実測：1行5〜6秒。2行で12.7秒になり「同じ絵が12秒」に引っかかった。
+# **1行ごとに、カードと写真を入れ替える。**
+CARD_LINES_MAX = 1
 TELOP_LIMIT = 54
 
 
@@ -1110,6 +1115,17 @@ def to_script(notes: Notes, plan: Plan) -> str:
         lines.append(f"キャスター: {_ends_sentence(notes.hook)}")
     lines.append("")
 
+    # **カードを消したあとに置く絵**（2026-09-12）。カードを消しただけだと
+    # 「カードも写真も無い」まま画面が伸びる。サムネの写真を本文にも出す決まりが
+    # もともとあるので、それをここで使う
+    _thumb = notes.thumbnail or {}
+    fallback_image = str(_thumb.get("photo") or "")
+    if not fallback_image:
+        # **顔を2枚並べた回は `photos` に入っている**（`photo` は空）。
+        # ここを見ていなかったので、写真に戻すはずの行が空のままだった
+        _photos = [str(x) for x in (_thumb.get("photos") or []) if str(x).strip()]
+        fallback_image = _photos[0] if _photos else ""
+
     previous_background = ""
     for index, section in enumerate(notes.sections):
         background = section.bg or BACKGROUND_BY_SECTION.get(section.id, "")
@@ -1145,6 +1161,8 @@ def to_script(notes: Notes, plan: Plan) -> str:
             own_image = (section.line_images[number]
                          if number < len(section.line_images) else "")
             if number == 0:
+                shown_for = 0
+                showed_photo = False
                 # **1行目が代弁なら、その人の言葉として出す。**節のテロップを
                 # そのまま被せると、別人の発言に他人の名前が乗る（実測 2026-09-06）
                 head = own_telop or section.telop
@@ -1157,6 +1175,8 @@ def to_script(notes: Notes, plan: Plan) -> str:
                     lines.append(f"  card: {section.id}_{number}_card")
                 elif section.card:
                     lines.append(f"  card: {section.id}_card")
+                else:
+                    shown_for = CARD_LINES_MAX      # カードが無いので数えない
                 # **カードが無い行にも写真は出す。**入れ子にしていたせいで、
                 # カードを持たない行の写真が消えていた（実測 2026-09-06）
                 if own_image:
@@ -1183,8 +1203,39 @@ def to_script(notes: Notes, plan: Plan) -> str:
                     shown = _telop(sentence)
                 if shown:
                     lines.append(f"  telop: {shown}")
+                shown_for += 1
+                if own_image:
+                    # 自分で写真を指定した行も「写真を出した」と数える。
+                    # 数えないと、次の行に同じ写真がもう一度出て12.6秒になった
+                    showed_photo = True
                 if own_card:
                     lines.append(f"  card: {section.id}_{number}_card")
+                    shown_for = 0
+                elif voice and voice not in SPEAKERS:
+                    # **代弁の行には、その行の引用カードを出す**（2026-09-12）。
+                    # 節のカードは1行目にしか付かないので、引用が続く節では
+                    # **同じ絵のまま30〜50秒**画面が止まっていた
+                    # （ヴィニシウス53秒／ギュレル54秒。書き出して発見）。
+                    # `cardrule` はもともと「代弁の行＝引用カード」と決めている。
+                    lines.append(f"  card: {section.id}_{number}_voice")
+                    shown_for = 0
+                elif shown_for >= CARD_LINES_MAX:
+                    # **同じカードを出しっぱなしにしない**（2026-09-12）。
+                    # カードは次の行にも残る決まりなので（script_model の rows）、
+                    # 語りが続くとその分だけ同じ絵が伸びる。
+                    # 実測では、2行の節で11秒・3行で17秒・4行で23秒・10行で53秒。
+                    # **カードを消して、代わりに写真を出す。**消すだけだと
+                    # 「カードも写真も無い」まま16秒伸びた
+                    lines.append("  card: none")
+                    # **写真も続けて2回出さない**（2026-09-12）。
+                    # 同じ写真が2行続くと、それも「同じ絵」で13秒になった。
+                    # 写真 → 背景だけ → 写真、と交互にする
+                    if not own_image and fallback_image and not showed_photo:
+                        own_image = fallback_image
+                        showed_photo = True
+                    else:
+                        showed_photo = False
+                    shown_for = 0
                 if own_image:
                     lines.append(f"  image: {own_image}")
         lines.append("")
@@ -1229,6 +1280,16 @@ def _cards(notes: Notes) -> dict:
         for number, one in enumerate(section.line_cards):
             if one:
                 cards[f"{section.id}_{number}_card"] = one
+        # **代弁の行ぶんの引用カード**（2026-09-12）。台本と同じ番号で作る
+        for number, sentence in enumerate(section.say):
+            voice = section.voices[number] if number < len(section.voices) else ""
+            if number == 0 or not voice or voice in SPEAKERS:
+                continue
+            if number < len(section.line_cards) and section.line_cards[number]:
+                continue
+            cards[f"{section.id}_{number}_voice"] = {
+                "type": "quote", "title": voice, "text": sentence,
+            }
     # まとめのカードは「答え」だけにする。
     # 問い・答え・次の焦点を3つ並べたら、2分の動画の締めには字が細かすぎ、
     # 下のテロップとも重なっていた（作った動画を目視して発見）。

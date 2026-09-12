@@ -40,11 +40,19 @@
     "thumbnails.set": 64
   },
   "2026-09-11": {
-    "channels.list": 8,
-    "playlistItems.list": 24,
-    "videos.list": 28,
-    "videos.insert": 4,
-    "thumbnails.set": 7,
+    "channels.list": 19,
+    "playlistItems.list": 38,
+    "videos.list": 33,
+    "videos.insert": 14,
+    "thumbnails.set": 27,
     "videos.update": 1
+  },
+  "2026-09-12": {
+    "channels.list": 15,
+    "playlistItems.list": 24,
+    "videos.insert": 12,
+    "thumbnails.set": 20,
+    "videos.list": 13,
+    "commentThreads.insert": 4
   }
 }

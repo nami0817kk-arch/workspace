@@ -1,0 +1,67 @@
+# 候補テーマ（2026年9月11日）
+# collect が作った下書き。見出しに書いてあることだけが入っている。
+# tier / topic / league は判断が要るので、目で見て埋めること。
+date: "2026年9月11日"
+candidates:
+  - id: union_berlin_schalke
+    title: "Union Berlin 1 - 3 Schalke 04（Bundesliga）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: germany    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5881169
+    hours_ago: 21.7   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5881169
+
+  - id: sevilla_valencia_laliga
+    title: "Sevilla 1 - 0 Valencia（LaLiga）"
+    topic: "セビージャ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: spain    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5868059
+    hours_ago: 21.7   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5868059
+
+  - id: rennes_marseille_ligue
+    title: "Rennes 1 - 0 Marseille（Ligue 1）"
+    topic: "マルセイユ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: france    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5802935
+    hours_ago: 21.7   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5802935
+
+  - id: venezia_fiorentina_serie
+    title: "Venezia 2 - 4 Fiorentina（Serie A）"
+    topic: "フィオレンティーナ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: italy    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5749679
+    hours_ago: 21.7   # フィードの時刻から
+    goals: true        # 試合データから自動で立てた
+    numbers: true        # 試合データから自動で立てた
+    sources:
+      - https://www.fotmob.com/matches/x/5749679
+
+  - id: az_alkmaar_willem
+    title: "AZ Alkmaar 1 - 1 Willem II（Eredivisie）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: netherlands    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5781742
+    hours_ago: 21.7   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5781742
+

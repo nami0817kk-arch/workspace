@@ -1,0 +1,113 @@
+# スカローニの契約が12月で切れる（2026年9月12日）
+#
+# **ボーナスの話は入れない**（2026-09-12 ユーザー指示）。
+# **会長の資金洗浄の告発にも触れない。**人物への告発で、こちらで裏を取れない。
+# 扱うのは**契約の話だけ**。
+#
+# 引きは**「口約束では2030年まで決まっていた」**。切れる話より、
+# **いったん固まっていたものが動いた**ところが芯。ここが山場（@main）。
+#
+# **本人の言葉が取れた**（インフォバエ 9/9）。ここが軸になる。
+# 「更新しない」と決めたという報道はあるが、**本人も連盟も認めていない**ので
+# 「決まった」とは書かない。
+#
+# **タピア会長がSNSに何も出さなかった**という話は、記事が
+# 「交渉難航の兆しと解釈された」と書いている。**解釈だと明記して引く。**
+# こちらで「冷えている」と断定しない
+format: news
+# **人の発言は取れたが、多くはない回。**その分だけ下げる
+voice_min: 12
+slot: world
+date: "2026年9月12日"
+
+people:
+  - リオネル・スカローニ
+  - クラウディオ・タピア
+  - ワルテル・サムエル
+
+short_title: "スカローニ、2030年までの口約束"
+
+theme:
+  id: scaloni_contract
+  league: spain
+  kind: other
+  topic: アルゼンチン代表
+  title: スカローニの契約が12月で切れる。2030年までの話はどこへ行ったのか
+  hook: 口約束では、2030年までの更新で固まっていました。
+  question: いったん決まっていたものが、なぜ動いたのか
+
+thumbnail:
+  line1: 口約束では 2030年まで
+  line2: 残っているのは ●か月半
+  photo: "assets/photos/20260912_scaloni/01.jpg"
+  tags: []
+  points:
+    - 契約は12月30日まで
+    - 就任から8年
+
+sections:
+  - id: what
+    heading: 契約はいつ切れるのか
+    tier: 報道
+    telop: 2026年12月30日まで
+    narrator: キャスター
+    card:
+      type: table
+      title: スカローニとアルゼンチン連盟
+      columns: ["", ""]
+      rows:
+        - ["いまの契約", "2026年12月30日まで"]
+        - ["口約束", "2030年までの更新で合意していた"]
+        - ["就任", "8年目に入っている"]
+    say:
+      - リオネル・スカローニの契約が、今年の12月30日で切れます。残りは3か月半です。
+      - そして、いったんは先が決まっていました。アルゼンチンのインフォバエはこう書いています。
+      - {voice: インフォバエ, text: 2030年までの更新で、口約束の合意ができていた}
+    official: false
+    sources:
+      - https://www.infobae.com/deportes/2026/09/09/como-estan-las-negociaciones-por-la-renovacion-de-scaloni-a-poco-mas-de-tres-meses-de-la-finalizacion-de-su-contrato-con-la-seleccion/
+      - https://www.footmercato.net/a89112979108535397-argentine-cest-deja-le-bazar-apres-le-depart-de-lionel-messi
+
+  - id: words
+    heading: 本人が言っていること
+    main: true
+    tier: 報道
+    telop: 「もう一度、自分をリセットする必要がある」
+    narrator: 解説
+    # **ここが山場。**ショートはこの節を切り出す。
+    # 契約の日付ではなく、**本人がなぜ迷っているか**が芯
+    card:
+      type: quote
+      title: スカローニ
+      text: これほど大きなことが、またできるのか分からない
+    say:
+      - では、本人は何と言っているのか。
+      - {voice: スカローニ, text: 考える必要を感じています}
+      - {voice: スカローニ, text: これほど大きなことが、またできるのかどうか、もう分からないからです}
+      - {voice: スカローニ, text: 続けるには、たくさんのことが必要です}
+      - {voice: スカローニ, text: なにより、もう一度自分をリセットすることが}
+      - 2026年の予定は最後まで務める。そのあとは「それで終わり」とも話しています。
+      - 契約を全うして更新しない、と決めたという報道もあります。
+      - ただし本人も連盟も、それを認めてはいません。
+    official: false
+    sources:
+      - https://www.infobae.com/deportes/2026/09/09/como-estan-las-negociaciones-por-la-renovacion-de-scaloni-a-poco-mas-de-tres-meses-de-la-finalizacion-de-su-contrato-con-la-seleccion/
+      - https://www.footmercato.net/a89112979108535397-argentine-cest-deja-le-bazar-apres-le-depart-de-lionel-messi
+
+  - id: now
+    heading: 交渉はいま、どうなっているか
+    tier: 報道
+    telop: 会長と代理人の面談が残っている
+    narrator: キャスター
+    say:
+      - 交渉の状態については、こう書かれています。
+      - {voice: インフォバエ, text: 懸念の領域に入っている。4日前までは楽観があったのに、空気が変わった}
+      - 連盟はタピア会長と、スカローニの代理人マティアス・アルダオとの面談に望みをつないでいます。
+      - 記事は、ひとつの兆しを挙げています。
+      - スカローニの就任8年の節目に、タピア会長がSNSで何も出さなかった。
+      - これが交渉の難しさの表れだと受け取られた、という書き方です。
+      - もうひとつ、コーチ陣のワルテル・サムエルが、監督業を始めるために離れる可能性も出ています。
+    official: false
+    sources:
+      - https://www.infobae.com/deportes/2026/09/09/como-estan-las-negociaciones-por-la-renovacion-de-scaloni-a-poco-mas-de-tres-meses-de-la-finalizacion-de-su-contrato-con-la-seleccion/
+      - https://www.footmercato.net/a89112979108535397-argentine-cest-deja-le-bazar-apres-le-depart-de-lionel-messi

@@ -1,0 +1,102 @@
+# デンベレがバロンドールのあとを語った（2026年9月12日）
+#
+# **The Athletic の3人対談**（デンベレ／ファビアン・ルイス／クヴァラツヘリア）を
+# フットメルカートが引いたもの。**3人とも2026年バロンドールの候補30人に入っている。**
+#
+# 引きは**「同僚2人が挙げたのは、ゴールではなかった」**。
+# 受賞の感想より、**チームメイトが何を褒めたか**のほうが中身がある。
+# ファビアン・ルイスは守備、クヴァラツヘリアは両足と加速を挙げていて、
+# どちらも得点の話をしていない。ここが山場（@main）。
+#
+# **クヴァラツヘリアの「神でさえ分からない」は冗談。**
+# 利き足を聞かれて答えたもので、**皮肉ではなく称賛。**取り違えない。
+#
+# 数字は「29歳」「候補30人」まで。得点数や試合数は記事に無いので書かない。
+# 反応は入れない
+format: voices
+voice_min: 55
+slot: world
+date: "2026年9月12日"
+
+people:
+  - ウスマン・デンベレ
+  - ファビアン・ルイス
+  - フビチャ・クヴァラツヘリア
+  - ロナウジーニョ
+
+short_title: "バロンドール受賞者デンベレが語る"
+
+theme:
+  id: dembele_ballondor
+  league: france
+  kind: other
+  topic: パリ・サンジェルマン
+  title: デンベレ、バロンドール昨年度受賞者が語る
+  hook: 受け取ったのは、ロナウジーニョの手からでした。
+  question: 同僚2人が褒めたのは、彼のどこか
+
+thumbnail:
+  line1: バロンドール 昨年度受賞者
+  line2: デンベレが語る
+  photo: "assets/photos/20260912_dembele/01.jpg"
+  tags: []
+  points:
+    - 29歳
+    - 候補30人に選出
+
+sections:
+  - id: what
+    heading: 本人が振り返ったこと
+    tier: 報道
+    telop: The Athletic の対談
+    narrator: キャスター
+    say:
+      - デンベレが、去年のバロンドールについて語りました。3人での対談です。
+      - {voice: デンベレ, text: 人生が本当に変わったとは思いません。信じられないことではありましたが}
+      - {voice: デンベレ, text: ロナウジーニョがあのトロフィーを渡してくれたときは、信じられませんでした}
+      - {voice: デンベレ, text: 自分自身に、家族全員に、これまで関わってきたすべての人に、大きな誇りを感じました}
+    official: false
+    sources:
+      - https://www.footmercato.net/a6741951359509577749-ballon-dor-ousmane-dembele-passe-aux-aveux
+      - https://www.footmercato.net/a8986446818775693694-je-pense-que-meme-dieu-ne-sait-pas-la-boutade-de-kvaratskhelia-sur-ousmane-dembele
+
+  - id: mates
+    heading: 同僚2人が挙げたのは何か
+    main: true
+    tier: 報道
+    telop: 得点の話を、どちらもしていない
+    narrator: 解説
+    # **ここが山場。**受賞の感想ではなく、隣にいる2人が何を挙げたか。
+    # 2人とも得点に触れていない、というのが芯
+    card:
+      type: points
+      title: 同僚が挙げたこと
+      items:
+        - "ファビアン・ルイス … 守備で助けてくれる"
+        - "クヴァラツヘリア … 両足で蹴れる／加速"
+        - "どちらも、得点には触れていない"
+    say:
+      - 隣にいた2人の言葉です。まず、ファビアン・ルイス。
+      - {voice: ファビアン・ルイス, text: だから彼は去年バロンドールを獲ったんです。他の選手とは違う選手だから}
+      - {voice: ファビアン・ルイス, text: 守備でも、彼は僕たちをとても助けてくれます}
+      - 次に、クヴァラツヘリアです。
+      - {voice: クヴァラツヘリア, text: 両足で蹴れること、ボールを持ったまま加速するやり方}
+      - {voice: クヴァラツヘリア, text: 彼の才能は別の次元にあります}
+      - 2人とも、ゴールの数には触れていません。
+    official: false
+    sources:
+      - https://www.footmercato.net/a6741951359509577749-ballon-dor-ousmane-dembele-passe-aux-aveux
+      - https://www.footmercato.net/a8986446818775693694-je-pense-que-meme-dieu-ne-sait-pas-la-boutade-de-kvaratskhelia-sur-ousmane-dembele
+
+  - id: joke
+    heading: 利き足を聞かれて
+    tier: 報道
+    telop: 両足の話は、冗談にまでなった
+    narrator: キャスター
+    say:
+      - どちらが利き足かを聞かれて、クヴァラツヘリアが答えます。
+      - {voice: クヴァラツヘリア, text: 神でさえ分からないと思います}
+    official: false
+    sources:
+      - https://www.footmercato.net/a8986446818775693694-je-pense-que-meme-dieu-ne-sait-pas-la-boutade-de-kvaratskhelia-sur-ousmane-dembele
+      - https://www.footmercato.net/a6741951359509577749-ballon-dor-ousmane-dembele-passe-aux-aveux

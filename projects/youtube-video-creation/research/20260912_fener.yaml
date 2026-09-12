@@ -1,0 +1,114 @@
+# フェネルバフチェの監督が辞めるまでの3日間（2026年9月12日）
+#
+# **話が2日にまたがっている。時系列で置く。**
+#   9/10 CLでローマと1-1（18年ぶりの復帰）。会見でカルタルが辞意
+#   9/10 会長イルディリムが認めず、留任を求める
+#   9/11 カルタルが練習に来ない
+#   9/11 クラブが契約解除。暫定監督は元リヴァプールのディルク・クイト
+#
+# 引きは**「会長が一度は止めていた」**。辞任そのものより、
+# **止めたのに翌日に切れた**ところが芯。ここが山場（@main）。
+#
+# **ボトルの件は「当たった」以上を書かない。**けがの程度は記事に無い。
+# 投げた人の話にもしない。
+#
+# **カルタルを責める書き方にしない。**辞意の理由は本人の言葉以上に踏み込まない
+format: news
+# **引ける発言が少ない回。**出どころは仏メディア1系統で、
+# カルタルと会長の言葉しか無い。**語りで時系列を運ぶ回**なので下限を下げる
+voice_min: 12
+slot: world
+date: "2026年9月12日"
+
+people:
+  - イスマイル・カルタル
+  - アズィズ・イルディリム
+  - ディルク・クイト
+
+short_title: "フェネルバフチェ、会長が止めた辞任"
+
+theme:
+  id: fener_kartal
+  league: england
+  kind: other
+  topic: フェネルバフチェ
+  title: フェネルバフチェの監督が辞めるまでの3日間。会長が返した言葉
+  hook: 18年ぶりのチャンピオンズリーグでした。その翌日に、監督が辞意を口にします。
+  question: 会長が止めたのに、なぜ翌日に決まったのか
+
+thumbnail:
+  line1: 会長が一度は止めた
+  line2: 翌日に決まったのは ●●
+  photo: "assets/photos/20260912_fener/01.jpg"
+  tags: []
+  points:
+    - 就任から3か月
+    - 18年ぶりのCL
+
+sections:
+  - id: what
+    heading: 9月10日、会見で辞意を口にした
+    tier: 報道
+    telop: 18年ぶりのCLの、その日のうちに
+    narrator: キャスター
+    card:
+      type: table
+      title: 3日間の動き
+      columns: ["", ""]
+      rows:
+        - ["9/10", "CLでローマと1-1。会見で辞意"]
+        - ["9/10", "会長が認めず、留任を求める"]
+        - ["9/11", "監督が練習に来ない"]
+        - ["9/11", "クラブが契約解除"]
+    say:
+      - フェネルバフチェが18年ぶりにチャンピオンズリーグへ戻り、ローマと1対1で引き分けました。
+      - その試合中、サポーターの投げたボトルがカルタル監督に当たります。
+      - 試合後の会見で、監督は自分から辞意を口にしました。
+      - {voice: カルタル監督, text: 3か月ここにいた}
+      - {voice: カルタル監督, text: このプロジェクトのために辞任する}
+    official: false
+    sources:
+      - https://www.footmercato.net/a9203025472612049201-scene-surrealiste-a-fenerbahce-le-president-oblige-son-entraineur-a-rester-apres-sa-demission
+      - https://www.footmercato.net/a8764658938167442676-fenerbahce-se-separe-finalement-de-son-coach
+
+  - id: president
+    heading: ところが、会長が認めなかった
+    main: true
+    tier: 報道
+    telop: 「私は彼の上司だ」
+    narrator: 解説
+    # **ここが山場。**ショートはこの節を切り出す。
+    # 辞める・辞めないの話ではなく、**会長が止めたこと**が芯
+    card:
+      type: quote
+      title: イルディリム会長
+      text: 私は彼の上司だ。彼に続けると言った。それだけだ
+    say:
+      - 同じ日、会長のアズィズ・イルディリムが答えます。
+      - {voice: イルディリム会長, text: 彼は職務の初期段階にいる}
+      - {voice: イルディリム会長, text: 我々は彼を支えている}
+      - {voice: イルディリム会長, text: 私は彼の上司だ}
+      - {voice: イルディリム会長, text: 彼に続けると言った。それだけだ}
+      - 監督が自分で辞めると言ったのに、会長がそれを認めない形です。
+      # **ショートは山場の節だけを切り出すので、結末までここに入れる**
+      # （2026-09-12 ユーザー「ショートでも、最終的に辞めるところまで伝える」）
+      - ところが翌日、カルタルは練習に姿を見せませんでした。
+      - そしてクラブが、契約の解除を決めます。会長が止めた翌日でした。
+    official: false
+    sources:
+      - https://www.footmercato.net/a9203025472612049201-scene-surrealiste-a-fenerbahce-le-president-oblige-son-entraineur-a-rester-apres-sa-demission
+      - https://www.footmercato.net/a8764658938167442676-fenerbahce-se-separe-finalement-de-son-coach
+
+  - id: end
+    heading: 翌日、監督は練習に来なかった
+    tier: 報道
+    telop: 9月11日 契約解除
+    narrator: キャスター
+    say:
+      - しかし翌日、カルタルは練習に姿を見せませんでした。
+      - スポーツディレクターのオウズ・チェティンが面談し、クラブは契約の解除を決めます。就任から3か月でした。
+      - 後任は暫定で、カルタルの下でアシスタントを務めていたディルク・クイト。現役時代にリヴァプールでプレーした選手です。
+    official: false
+    sources:
+      - https://www.footmercato.net/a8764658938167442676-fenerbahce-se-separe-finalement-de-son-coach
+      - https://www.footmercato.net/a9203025472612049201-scene-surrealiste-a-fenerbahce-le-president-oblige-son-entraineur-a-rester-apres-sa-demission
