@@ -1061,3 +1061,15 @@ routines:
           - {q: "summer transfer window spending total", domains: english}
           - {q: "transfer window net spend club", domains: stats}
         check: どの範囲の集計か（リーグ全体か1クラブか）を必ず確かめる
+
+# 候補に出さないと決めた題材（2026-09-12 から）
+#
+# **持ち越しを繰り返すのは、決めていないのと同じ。**ムバッペの独裁者ミームは
+# 4日つづけて候補に載せ、4回とも見送られた。毎朝ユーザーの手を止めていた。
+# ここに書いたものは**題材を集めるときに落とす。**理由も一緒に残す
+# （あとで「なぜ外したか」が分からないと、また拾ってくる）。
+excluded_topics:
+  - topic: ムバッペを独裁者に見立てたミームへの本人の反応
+    reason: 独裁者・殺害という言葉が入り、サッカーの話から外れる
+    decided: 2026-09-12
+    source: https://www.espn.com/soccer/story/_/id/49903623/kylian-mbappe-dictator-meme-criticises-lack-political-awareness

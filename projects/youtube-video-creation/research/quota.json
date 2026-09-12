@@ -53,6 +53,6 @@
     "videos.insert": 12,
     "thumbnails.set": 20,
     "videos.list": 13,
-    "commentThreads.insert": 4
+    "commentThreads.insert": 5
   }
 }
