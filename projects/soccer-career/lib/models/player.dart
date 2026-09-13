@@ -5,6 +5,7 @@ import 'nationality.dart';
 import 'personality.dart';
 import 'look.dart';
 import 'physique.dart';
+import 'role.dart';
 import 'traits.dart';
 import 'training.dart';
 
@@ -33,6 +34,7 @@ class Player {
     this.look = const PlayerLook(),
     this.traits = const [],
     this.condition = Formulas.conditionMax,
+    this.role,
   }) : aptitude = aptitude ?? const Aptitude({});
 
   final String name;
@@ -84,12 +86,24 @@ class Player {
   /// 0〜100。試合と練習で減り、休養で戻る。低いと試合の成功率が落ちる。
   final int condition;
 
+  /// **いま就いている役割。** 無ければそのポジションの標準で測る。
+  ///
+  /// 役割は総合力の**重みの置き換え**で、上乗せではない。守備に寄せれば、
+  /// そのぶんパスやシュートは軽く見られる。
+  /// 就ける役割は監督の戦術が決める（`PlayerRole.offeredBy`）。
+  final PlayerRole? role;
+
+  /// その役割の重み。役割が今のポジションに合っていなければ使わない
+  /// （コンバートで置き去りになった役割を、黙って効かせないため）。
+  List<int>? get roleWeights =>
+      role != null && role!.position == position ? role!.weights : null;
+
   /// 総合力。今のポジションの適性ぶんを引く。
   ///
   /// 本職なら引かれない。慣れないポジションで出ている選手は、
   /// 同じ能力値でも同じようには働けない。
   int get overall =>
-      attributes.overallFor(position) -
+      attributes.overallFor(position, weights: roleWeights) -
       aptitude.penaltyFor(position, factor: traits.aptitudeFactor);
 
   /// **今の能力なら、どのポジションが一番高いか。**
@@ -192,6 +206,8 @@ class Player {
     Physique? physique,
     SetPieceSkills? setPieces,
     Aptitude? aptitude,
+    PlayerRole? role,
+    bool clearRole = false,
   }) => Player(
     name: name,
     age: age ?? this.age,
@@ -209,6 +225,7 @@ class Player {
     condition: (condition ?? this.condition)
         .clamp(0, Formulas.conditionMax)
         .toInt(),
+    role: clearRole ? null : (role ?? this.role),
   );
 
   /// ポテンシャルまで含めて作り直す。重傷の後遺症で使う。
@@ -237,6 +254,7 @@ class Player {
     aptitude: from.aptitude,
     traits: traits ?? from.traits,
     condition: from.condition,
+    role: from.role,
   );
 
   Map<String, dynamic> toJson() => {
@@ -253,6 +271,7 @@ class Player {
     'setPieces': setPieces.toJson(),
     'aptitude': aptitude.toJson(),
     'traits': traits.map((t) => t.name).toList(),
+    'role': role?.name,
     'condition': condition,
   };
 
@@ -299,6 +318,8 @@ class Player {
         json['aptitude'] as Map<String, dynamic>?,
         position,
       ),
+      // 役割を知らない保存データは「標準」で読む。
+      role: PlayerRole.parse(json['role'] as String?),
       traits: [
         for (final n in (json['traits'] as List? ?? const []))
           if (Trait.values.any((t) => t.name == n))

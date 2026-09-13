@@ -35,6 +35,7 @@ import '../models/traits.dart';
 import '../models/look.dart';
 import '../models/physique.dart';
 import '../models/player.dart';
+import '../models/role.dart';
 import '../models/season.dart';
 import '../game/world.dart';
 import '../models/support.dart';
@@ -1459,6 +1460,16 @@ class CareerController extends ChangeNotifier {
       accepted: accepted,
       bodyPlan: bodyPlan,
     );
+    // **新しい監督が使わない役割は外れる。** ここを開けたままだと、
+    // 一番高くなる監督の下で役割に就いて、あとはどこへ移っても持ち続けられる
+    // ——監督に紐づけた意味が消える。
+    final dropped = _state!.player.role;
+    if (dropped != null && !roleChoices.contains(dropped)) {
+      _state!.player = _state!.player.copyWith(clearRole: true);
+      roleDropped = dropped;
+    } else {
+      roleDropped = null;
+    }
     if (hadStaff && _state!.staff.isEmpty) {
       _publish(_state!, [Newsroom.staffDismissed(_state!)]);
     }
@@ -1585,6 +1596,36 @@ class CareerController extends ChangeNotifier {
       if (!signature.fitsPosition(state.player.position)) return;
     }
     state.signatureAim = state.signatureAim == signature ? null : signature;
+    await _persist();
+  }
+
+  /// **オフに外れた役割。** 新しい監督が使わなかったもの。
+  ///
+  /// 黙って外すと、総合力だけが下がって理由が分からない。
+  PlayerRole? roleDropped;
+
+  /// **いま就ける役割。** 監督の戦術が決める。null は「そのポジションの標準」。
+  ///
+  /// 好きに付け替えられると「一番高くなる役割を選ぶ」がただの正解になる。
+  /// 欲しい役割が無ければ、移籍するか監督が代わるのを待つことになる。
+  List<PlayerRole> get roleChoices {
+    final state = _state;
+    if (state == null) return const [];
+    final manager = state.manager;
+    if (manager == null) return const [];
+    return PlayerRole.offeredBy(manager.tactic, state.player.position);
+  }
+
+  /// 役割に就く。null で標準に戻る。
+  ///
+  /// 監督が使っていない役割には就けない。
+  Future<void> setRole(PlayerRole? role) async {
+    final state = _state;
+    if (state == null) return;
+    if (role != null && !roleChoices.contains(role)) return;
+    state.player = role == null
+        ? state.player.copyWith(clearRole: true)
+        : state.player.copyWith(role: role);
     await _persist();
   }
 

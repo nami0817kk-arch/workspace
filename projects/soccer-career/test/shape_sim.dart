@@ -13,6 +13,7 @@ library;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/attributes.dart';
+import 'package:soccer_career/models/role.dart';
 import 'package:soccer_career/models/season.dart';
 import 'package:soccer_career/models/training.dart';
 
@@ -26,6 +27,7 @@ void main() {
       String name, {
       List<Detail> focus = const [],
       TrainingMenu? menu,
+      PlayerRole? role,
     }) async {
       final totals = <Detail, double>{for (final d in Detail.values) d: 0};
       var top = 0.0;
@@ -47,6 +49,7 @@ void main() {
             agent: Agent.pool.first,
             focus: focus,
             menu: menu,
+            role: role,
           ),
           seed,
         );
@@ -124,6 +127,19 @@ void main() {
       '守備一本',
       focus: [Detail.tackling, Detail.marking, Detail.interceptions],
       menu: TrainingMenu.defenceWork,
+    );
+    // **役割に就くと、尖らせたことが評価されるか。**
+    await run(
+      '守備一本＋B2B',
+      focus: [Detail.tackling, Detail.marking, Detail.interceptions],
+      menu: TrainingMenu.defenceWork,
+      role: PlayerRole.dynamo,
+    );
+    await run(
+      'パス一本＋司令塔',
+      focus: [Detail.shortPassing, Detail.longPassing, Detail.vision],
+      menu: TrainingMenu.possession,
+      role: PlayerRole.playmaker,
     );
   }, timeout: const Timeout(Duration(minutes: 40)));
 }

@@ -26,6 +26,7 @@ import 'package:soccer_career/models/development.dart';
 import 'package:soccer_career/models/entourage.dart';
 import 'package:soccer_career/models/life.dart';
 import 'package:soccer_career/models/physique.dart';
+import 'package:soccer_career/models/role.dart';
 import 'package:soccer_career/models/season.dart';
 import 'package:soccer_career/models/support.dart';
 import 'package:soccer_career/models/traits.dart';
@@ -73,6 +74,7 @@ class Playstyle {
     this.pinAbility,
     this.staysPut = false,
     this.aim,
+    this.role,
   });
 
   final String name;
@@ -139,6 +141,9 @@ class Playstyle {
 
   /// 狙う個人技。
   final Signature? aim;
+
+  /// 就きたい役割。監督が使っていれば就く（毎シーズン試す）。
+  final PlayerRole? role;
 
   /// 居残りでセットプレーを磨く。
   final bool drills;
@@ -318,6 +323,7 @@ Future<Career> runCareer(
     await controller.toggleFocus(detail);
   }
   if (style.aim != null) await controller.aimSignature(style.aim);
+  if (style.role != null) await controller.setRole(style.role);
   await controller.setEffort(style.effort);
   if (style.autoRestBelow != null) {
     await controller.setAutoRestBelow(style.autoRestBelow!);
@@ -566,6 +572,8 @@ Future<Career> runCareer(
     // 稼ぎの使い道。
     if (style.invests) _invest(controller);
 
+    // 監督が代わると就ける役割が変わる。毎季かけ直す。
+    if (style.role != null) await controller.setRole(style.role);
     await controller.setPreseason(style.preseason);
     await controller.advanceSeason(
       accepted: accepted,
