@@ -48,11 +48,11 @@
     "videos.update": 1
   },
   "2026-09-12": {
-    "channels.list": 27,
-    "playlistItems.list": 38,
-    "videos.insert": 22,
-    "thumbnails.set": 30,
-    "videos.list": 17,
-    "commentThreads.insert": 12
+    "channels.list": 44,
+    "playlistItems.list": 59,
+    "videos.insert": 38,
+    "thumbnails.set": 46,
+    "videos.list": 22,
+    "commentThreads.insert": 17
   }
 }

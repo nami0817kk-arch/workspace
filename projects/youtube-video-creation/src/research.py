@@ -1125,6 +1125,16 @@ def to_script(notes: Notes, plan: Plan) -> str:
         # ここを見ていなかったので、写真に戻すはずの行が空のままだった
         _photos = [str(x) for x in (_thumb.get("photos") or []) if str(x).strip()]
         fallback_image = _photos[0] if _photos else ""
+    if not fallback_image:
+        # **エンブレムが主役の回は写真が1枚も無い**（2026-09-13）。
+        # カードを消さないようにしたら、今度は同じカードが33秒出たままになった。
+        # エンブレムそのものを、カードと入れ替える絵に使う
+        from . import crest as _crest
+        for _club in (_thumb.get("crest_main") or []):
+            _path = _crest.find(str(_club))
+            if _path is not None:
+                fallback_image = str(_path).replace("\\", "/")
+                break
 
     previous_background = ""
     for index, section in enumerate(notes.sections):
@@ -1226,15 +1236,21 @@ def to_script(notes: Notes, plan: Plan) -> str:
                     # 実測では、2行の節で11秒・3行で17秒・4行で23秒・10行で53秒。
                     # **カードを消して、代わりに写真を出す。**消すだけだと
                     # 「カードも写真も無い」まま16秒伸びた
-                    lines.append("  card: none")
-                    # **写真も続けて2回出さない**（2026-09-12）。
-                    # 同じ写真が2行続くと、それも「同じ絵」で13秒になった。
-                    # 写真 → 背景だけ → 写真、と交互にする
-                    if not own_image and fallback_image and not showed_photo:
-                        own_image = fallback_image
-                        showed_photo = True
-                    else:
-                        showed_photo = False
+                    # **代わりに出すものが無いなら、カードは消さない**（2026-09-13）。
+                    # エンブレムを主役にした回は写真が1枚も無く、
+                    # カードを消したあとが「カードも写真も無い」まま伸びていた
+                    # （実測でアーセナル27秒・チェルシー55秒・リヴァプール58秒）。
+                    # **消すのは、写真に入れ替えられるときだけ**にする
+                    if fallback_image:
+                        lines.append("  card: none")
+                        # **写真も続けて2回出さない**（2026-09-12）。
+                        # 同じ写真が2行続くと、それも「同じ絵」で13秒になった。
+                        # 写真 → 背景だけ → 写真、と交互にする
+                        if not own_image and not showed_photo:
+                            own_image = fallback_image
+                            showed_photo = True
+                        else:
+                            showed_photo = False
                     shown_for = 0
                 if own_image:
                     lines.append(f"  image: {own_image}")

@@ -676,7 +676,9 @@ def _crest_stage(names: list[str], font_path: str, link: str = "対") -> Image.I
         # 対戦ではなく**バルサからリヴァプールへのレンタル**の話なのに、
         # 「リヴァプール 対 バルセロナ」に見えていた。取材メモの
         # `thumbnail.crest_link` で変えられる（"対" / "→" / 空文字で消す）
-        font = ImageFont.truetype(font_path, 72)
+        # **親指の大きさだと 72px の「対」は消える**（2026-09-13、Gemini に
+        # サムネ4枚を見せて指摘された）。一覧で見る前提の大きさにする
+        font = ImageFont.truetype(font_path, 132)
         draw = ImageDraw.Draw(canvas)
         text = link
         width = draw.textlength(text, font=font)

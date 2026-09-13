@@ -958,3 +958,44 @@ def test_short_titleが台本に書き出される():
 
     del raw["short_title"]
     assert "short_title:" not in to_script(build_notes(raw), load_plan())
+
+
+def test_crest_fills_in_when_there_is_no_photo():
+    """写真が無い回は、エンブレムをカードと入れ替える絵に使う（2026-09-13）。
+
+    エンブレムを主役にした回は `thumbnail.photo` が無い。カードを消すと
+    「カードも写真も無い」画面が続き、実測でアーセナル27秒・
+    チェルシー55秒・リヴァプール58秒、同じ絵のままになっていた。
+    消さないようにすると、今度は同じカードが33秒出たままになった。
+    """
+    raw = _raw()
+    raw["thumbnail"] = {"line1": "帯", "line2": "●●", "crest_main": ["アーセナル", "チェルシー"]}
+    raw["sections"] = [
+        {
+            "id": f"s{n}", "heading": "見出し", "tier": "背景", "telop": "テロップ",
+            "narrator": "キャスター", "official": False, "sources": [],
+            "card": {"type": "points", "title": "表", "items": ["あ", "い"]},
+            "say": ["1行目です。", "2行目です。", "3行目です。", "4行目です。"],
+        }
+        for n in (1, 2, 3)
+    ]
+    text = to_script(build_notes(raw), _plan())
+    assert "assets/crests" in text          # 入れ替える絵として使う
+    assert "card: none" in text             # 入れ替え先があるので消してよい
+
+
+def test_card_stays_when_there_is_nothing_to_swap_to():
+    """写真もエンブレムも無いなら、カードは消さない（2026-09-13）。"""
+    raw = _raw()
+    raw["thumbnail"] = {"line1": "帯", "line2": "●●", "crest_main": ["実在しないクラブ"]}
+    raw["sections"] = [
+        {
+            "id": f"s{n}", "heading": "見出し", "tier": "背景", "telop": "テロップ",
+            "narrator": "キャスター", "official": False, "sources": [],
+            "card": {"type": "points", "title": "表", "items": ["あ", "い"]},
+            "say": ["1行目です。", "2行目です。", "3行目です。", "4行目です。"],
+        }
+        for n in (1, 2, 3)
+    ]
+    text = to_script(build_notes(raw), _plan())
+    assert "card: none" not in text
