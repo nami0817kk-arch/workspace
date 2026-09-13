@@ -292,6 +292,8 @@ Future<Career> runCareer(
   void Function(MatchInProgress match, ScenarioOption option)? onDecision,
   void Function(int age, Attributes attributes, int overall, int mastery)?
   onWeek,
+  void Function(CareerState state, SeasonStats stats, CareerController c)?
+  onSeason,
 }) async {
   final controller = CareerController(
     repository: MemoryRepository(),
@@ -507,6 +509,9 @@ Future<Career> runCareer(
         'SecondCareer.${controller.suggestedSecondCareer.name}',
       );
     }
+    // シーズンが1つ終わるたびに、そのときの世界ごと覗かせる。
+    // キャリアの弧（何歳で何に届き、そのあと何が起きるか）を測るために要る。
+    onSeason?.call(done, stats, controller);
     career.savings = done.finances.savings;
     career.signatures = done.development.signatures.length;
     career.finalSignatures = [...done.development.signatures];
