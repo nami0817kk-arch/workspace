@@ -64,7 +64,6 @@ voicevox:
   # 名前ごとの決め打ち。ハッシュが衝突したときの逃げ道（review が衝突を見つける）。
   # **男性の声は8つしかない**ので、よく出る名前は先に決めておく
   voice_fixed:
-    talkSPORT: 99
     ネット民: 52        # 雀松朱司。落ち着いた男性。匿名の書き込みを読む
     メッシ: 67          # 栗田まろん。若い男性
     モウリーニョ: 21     # 剣崎雌雄。低い男性
@@ -137,6 +136,22 @@ cast:
     key: analyst
     aliases: [analyst, 記者]
     style_id: 13       # 青山龍星 / ノーマル
+    speed: 1.0
+    pitch: 0.0
+    intonation: 1.0
+    position: none
+    color: "#f0c419"
+
+  # **媒体の名前は cast に置く**（2026-09-13）。voice_fixed に書くと、
+  # そのぶん匿名の反応が選べる声が1つ減る（tests/test_config.py が止めた）。
+  # cast は voice_fixed より先に引かれるので、声は固定できて群衆は減らない
+  talkSPORT:
+    key: talksport
+    aliases: [TalkSport, トークスポーツ]
+    # **voice_pool の外から選ぶ。**プールの中の声にすると、
+    # 匿名の反応がたまたま同じ声を引いて、媒体の引用と区別が付かなくなる
+    # （11 にしたら spurs2 の1件目のネット民と同じ声になった）
+    style_id: 94       # 中部つるぎ。硬い男性。媒体の見出しを読む
     speed: 1.0
     pitch: 0.0
     intonation: 1.0

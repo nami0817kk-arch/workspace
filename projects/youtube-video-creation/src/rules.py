@@ -25,7 +25,7 @@ import ast
 import importlib
 import re
 from dataclasses import dataclass
-from pathlib import Path
+from pathlib import Path, PurePath
 
 import yaml
 
@@ -100,6 +100,12 @@ def check(root: Path | None = None) -> list[Mismatch]:
             wanted = wanted_text
         if isinstance(wanted, (int, float)) and isinstance(found, (int, float)):
             same = float(wanted) == float(found)
+        elif isinstance(found, PurePath):
+            # **Path で持っている定数は文字で突き合わせる**（2026-09-13）。
+            # CLAUDE.md に書けるのは文字だけなので、そのままだと
+            # 'research/screened.json' と WindowsPath(...) が必ず食い違う。
+            # 区切りは / に寄せる（Windows とそれ以外で同じ印になるように）
+            same = str(wanted).replace(chr(92), "/") == found.as_posix()
         else:
             same = wanted == found
         if not same:

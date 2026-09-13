@@ -392,6 +392,12 @@ def main(argv: list[str] | None = None) -> int:
         "approve", help="台本の確認が済んだことを控える（OKを聞いたときだけ打つ）")
     p_approve.add_argument("scripts", nargs="+", help="台本のパス")
 
+    # **投稿の前に動画を見せる**（2026-09-13 ユーザー「今後は投稿する前に動画見して」）。
+    # upload はこれが無いと動かない
+    p_screen = sub.add_parser(
+        "screen", help="出来上がった動画を見せたことを控える（見せて OK を聞いたときだけ打つ）")
+    p_screen.add_argument("build_dirs", nargs="+", help="出力先（output/<名前>）")
+
     p_numbers = sub.add_parser(
         "numbers", help="transfermarkt.jp などのページの表を、行ごとの文字に起こして材料に足す")
     p_numbers.add_argument("url", help="選手・クラブのページのURL（transfermarkt.jp / fotmob）")
@@ -600,6 +606,34 @@ def _cmd_approve(args, config) -> int:
         stamp = approval.approve(script)
         print(f"確認済み: {approval.key_of(script)}　{stamp}")
     return 0
+
+
+def _cmd_screen(args, config) -> int:
+    """出来上がった動画を見せたことを控える。**見せて OK を聞いたときだけ打つ。**"""
+    from . import screening
+
+    for build_dir in args.build_dirs:
+        video = screening.video_of(build_dir)
+        if not video.exists():
+            print(f"■ {video} がありません。先に書き出してください", file=sys.stderr)
+            return 1
+        stamp = screening.screen(build_dir)
+        print(f"見せ済み: {screening.key_of(build_dir)}　{stamp}")
+    return 0
+
+
+def _guard_screened(build_dir) -> bool:
+    """**投稿の前に動画を見せる**（2026-09-13 ユーザー「今後は投稿する前に動画見して」）。
+
+    台本の確認は通っていても、**画面に何が映るかは台本に書いていない。**
+    9/13 のショートは開いた瞬間が玉ぼけの抽象画だったが、台本は確認済みだった。
+    """
+    from . import screening
+
+    if screening.is_screened(build_dir):
+        return True
+    print(screening.refusal(build_dir), file=sys.stderr)
+    return False
 
 
 def _cmd_build(args, config) -> int:
@@ -2896,6 +2930,11 @@ def _cmd_upload(args, config) -> int:
 
     build_dir = Path(args.build_dir)
 
+    # **投稿の前に動画を見せる**（2026-09-13 ユーザー指示）。
+    # 台本の確認とは別の関門。台本には画面に何が映るかが書いていない
+    if not _guard_screened(build_dir) and not args.anyway:
+        return 2
+
     # **同じ動画を二度上げない。**2026-09-07 に、投稿処理がまだ走っている
     # 最中に2本目を起こして本編4本を重複公開し、その分で本数の上限を
     # 使い切った。人の注意では防げないので、投稿する側に控えを持たせる。
@@ -3050,6 +3089,7 @@ HANDLERS = {
     "material": _cmd_material,
     "dig": _cmd_dig,
     "approve": _cmd_approve,
+    "screen": _cmd_screen,
     "insights": _cmd_insights,
     "numbers": _cmd_numbers,
     "publish": _cmd_publish,
