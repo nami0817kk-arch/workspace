@@ -62,6 +62,15 @@ def save_json(path: Path, value) -> None:
                     encoding="utf-8")
 
 
+def entry(row) -> tuple:
+    """履歴の1点を (日付, 価格, ポイント倍率) に揃える。
+
+    倍率を記録し始めたのは 2026-09-10 で、それ以前の点は2要素しかない。
+    古い点は通常倍率（1倍）として扱う。
+    """
+    return (row[0], row[1], row[2] if len(row) > 2 else 1)
+
+
 def update_summary(summary: dict, items: list[dict], day: str, tail_days: int) -> dict:
     """その日の価格を履歴に足し込む。
 
@@ -71,24 +80,25 @@ def update_summary(summary: dict, items: list[dict], day: str, tail_days: int) -
     out = dict(summary)
     for item in items:
         code, price = item["item_code"], int(item["price"])
+        rate = int(item.get("point_rate") or 1)
         rec = dict(out.get(code) or {})
         tail = [list(p) for p in rec.get("tail") or []]
 
         if tail and tail[-1][0] == day:
-            tail[-1] = [day, price]
+            tail[-1] = [day, price, rate]
             recompute = True
         else:
-            tail.append([day, price])
+            tail.append([day, price, rate])
             recompute = False
         tail = tail[-tail_days:]
 
         if recompute or "min" not in rec:
             # その日を上書きした場合、過去の最安値が今日の値だった可能性があるので
             # 保持している範囲から取り直す。
-            prices = [p for _, p in tail]
+            prices = [e[1] for e in map(entry, tail)]
             rec["min"] = min(prices)
             rec["max"] = max(prices)
-            rec["min_date"] = next(d for d, p in tail if p == rec["min"])
+            rec["min_date"] = next(e[0] for e in map(entry, tail) if e[1] == rec["min"])
         else:
             if price < rec["min"]:
                 rec["min"], rec["min_date"] = price, day
@@ -97,11 +107,14 @@ def update_summary(summary: dict, items: list[dict], day: str, tail_days: int) -
 
         rec["prev"] = rec.get("last")
         rec["prev_date"] = rec.get("last_date")
+        rec["prev_rate"] = rec.get("last_rate")
         if rec.get("last_date") == day:
             # 同日再実行。prev は元のまま維持する。
             rec["prev"] = (out.get(code) or {}).get("prev")
             rec["prev_date"] = (out.get(code) or {}).get("prev_date")
+            rec["prev_rate"] = (out.get(code) or {}).get("prev_rate")
         rec["last"], rec["last_date"] = price, day
+        rec["last_rate"] = rate
         rec["days"] = len(tail)
         rec["tail"] = tail
         out[code] = rec

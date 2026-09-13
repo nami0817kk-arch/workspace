@@ -71,6 +71,14 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 .was { color: var(--muted); text-decoration: line-through; margin-right: 4px; }
 .down { color: var(--down); font-weight: 700; margin-right: 8px; }
 .up { color: var(--near); font-weight: 700; margin-right: 8px; }
+
+/* ポイント込みの実質価格。価格を置き換えず、併記する。 */
+.point-line { margin: 4px 0 0; font-size: 13px; }
+.point-line:empty { display: none; }
+.point { display: inline-block; padding: 1px 8px; margin-right: 8px; border-radius: 999px;
+  font-size: 12px; color: var(--near); border: 1px solid currentColor; }
+.eff { color: var(--ink); font-weight: 600; }
+.eff small { font-weight: 400; color: var(--muted); font-size: 11px; }
 .empty { padding: 24px; text-align: center; color: var(--muted); list-style: none;
   border: 1px dashed var(--line); border-radius: var(--radius); }
 

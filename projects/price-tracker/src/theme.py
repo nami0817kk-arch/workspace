@@ -6,6 +6,7 @@ import re
 from datetime import datetime
 
 from .analyze import MIN_DAYS_FOR_LOW
+from .store import entry as store_entry
 
 SAFE = re.compile(r"[^a-z0-9]+")
 
@@ -40,7 +41,7 @@ def pct(value) -> str:
 
 def sparkline(tail: list, width: int = 220, height: int = 44) -> str:
     """価格推移の線。色は currentColor にして、明暗どちらのテーマでも読めるようにする。"""
-    points = [p for _, p in tail if p]
+    points = [e[1] for e in map(store_entry, tail) if e[1]]
     if len(points) < 2:
         return '<span class="spark-none">記録が足りません</span>'
     low, high = min(points), max(points)
@@ -68,8 +69,9 @@ FAVICON = ("data:image/svg+xml,"
 AD_NOTICE = ('<p class="ad-notice">本サイトは楽天アフィリエイトを利用しており、'
              'リンク経由の購入により収益を得ています。</p>')
 
-NAV = [("./", "今日の値下がり"), ("rises/", "値上がり"), ("lows/", "最安値圏"),
-       ("genre/", "ジャンル別"), ("search/", "商品を探す"), ("about/", "このサイトについて")]
+NAV = [("./", "今日の値下がり"), ("points/", "ポイント込み"), ("rises/", "値上がり"),
+       ("lows/", "最安値圏"), ("genre/", "ジャンル別"), ("search/", "商品を探す"),
+       ("about/", "このサイトについて")]
 
 
 def _verification(site: dict) -> str:
@@ -166,6 +168,19 @@ def verdict_note(row: dict) -> str:
     return f'記録した中の最安値は {yen(row["low"])}、最高値は {yen(row["high"])} です。'
 
 
+def point_note(row: dict) -> str:
+    """ポイント倍率と、それを引いた実質価格。
+
+    ポイントは現金ではなく、付与は SPU や会員ランクでも変わる。置き換えずに
+    価格と併記し、「目安」と明示する。
+    """
+    rate = int(row.get("point_rate") or 1)
+    if rate <= 1 or not row.get("eff_price"):
+        return ""
+    return (f'<span class="point">ポイント{rate}倍</span>'
+            f'<span class="eff">実質 {yen(row["eff_price"])}<small>（目安）</small></span>')
+
+
 def badge(row: dict) -> str:
     if row["at_low"]:
         cls = "low"
@@ -196,7 +211,7 @@ def card_spark(row: dict) -> str:
     このサイトの値打ちは履歴なので、一覧の時点で形が見えるほうがよい。
     点が2つ未満のときは何も出さない（「記録が足りません」を並べても邪魔になる）。
     """
-    points = [p for _, p in (row.get("tail") or []) if p]
+    points = [e[1] for e in map(store_entry, row.get("tail") or []) if e[1]]
     if len(points) < 2:
         return ""
     return f'<div class="card-spark">{sparkline(row.get("tail") or [], width=140, height=30)}</div>'
@@ -220,6 +235,7 @@ def card(row: dict, prefix: str = "") -> str:
   <div class="body">
     <a class="name" href="{href}">{esc(row["name"])}</a>
     <p class="price">{change}<strong>{yen(row["price"])}</strong> {badge(row)}</p>
+    <p class="point-line">{point_note(row)}</p>
     <p class="meta">{esc(row.get("shop", ""))}{history_note(row)}</p>
     {card_spark(row)}
   </div>
@@ -366,6 +382,10 @@ def item_page(row: dict, site: dict, updated: str) -> str:
                  ("記録した中での最高値", yen(row["high"])),
                  ("最安値との差", pct(row["vs_low_pct"]) if row["vs_low_pct"] else "最安値と同じ"),
                  ("記録日数", f'{row["days"]}日')]
+    if int(row.get("point_rate") or 1) > 1:
+        rows_html.insert(1, ("ポイント倍率", f'{row["point_rate"]}倍'))
+        rows_html.insert(2, ("ポイント分を引いた実質価格",
+                             f'{yen(row["eff_price"])}（目安）'))
     if row.get("prev"):
         rows_html.insert(1, ("前回の価格", yen(row["prev"])))
     table = "".join(f"<tr><th>{esc(k)}</th><td>{v}</td></tr>" for k, v in rows_html)

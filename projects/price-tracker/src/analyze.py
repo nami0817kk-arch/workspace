@@ -10,6 +10,22 @@
 MIN_DAYS_FOR_LOW = 7
 
 
+def effective(price, rate) -> int:
+    """ポイント分を引いた実質価格。
+
+    楽天の値引きは価格よりポイント倍率で動く。実測では、価格がほぼ動かなかった
+    2026-09-10 に実質価格は376件が5%以上下がっていた。価格だけを見ると、その日の
+    値引きを丸ごと取り逃す。
+
+    倍率は「購入額の何%が戻るか」に相当する（10倍 = 10%）。実際の付与は SPU や
+    会員ランクでも変わるため、これは目安であって確定額ではない。表示側で必ず
+    そう断ること。
+    """
+    if not price:
+        return 0
+    return round(int(price) * (1 - min(int(rate or 1), 100) / 100))
+
+
 def evaluate(rec: dict, drop_threshold: float, near_low_threshold: float) -> dict:
     """1商品の履歴レコードを判定結果に変える。"""
     price = rec.get("last")
@@ -41,7 +57,21 @@ def evaluate(rec: dict, drop_threshold: float, near_low_threshold: float) -> dic
     else:
         label = "横ばい"
 
+    rate = int(rec.get("last_rate") or 1)
+    eff = effective(price, rate)
+    # 倍率を記録し始める前の日は prev_rate が無い。1倍と決めつけると、記録開始の
+    # 翌日に「倍率が下がった/上がった」偽の変化が一斉に出る。分からない日は
+    # 実質の比較そのものをしない。
+    prev_rate = rec.get("prev_rate")
+    if prev and prev_rate is not None:
+        eff_prev = effective(prev, int(prev_rate))
+        eff_drop_pct = (eff_prev - eff) / eff_prev if eff_prev > eff else 0.0
+    else:
+        eff_prev, eff_drop_pct = None, 0.0
+
     return {
+        "point_rate": rate, "eff_price": eff, "eff_prev": eff_prev,
+        "eff_drop_pct": eff_drop_pct,
         "price": price, "low": low, "high": high, "days": days,
         "prev": prev, "drop_pct": drop_pct, "rise_pct": rise_pct,
         "vs_low_pct": vs_low_pct, "off_high_pct": off_high_pct,
@@ -92,6 +122,16 @@ def rises(rows: list[dict], threshold: float, limit: int = 100) -> list[dict]:
     """
     hit = [r for r in rows if r.get("rise_pct", 0) >= threshold]
     hit.sort(key=lambda r: (-r["rise_pct"], r["price"]))
+    return hit[:limit]
+
+
+def effective_drops(rows: list[dict], threshold: float, limit: int = 100) -> list[dict]:
+    """ポイント込みで安くなったものを、下げ幅の大きい順に。
+
+    価格が据え置きでも倍率が上がれば実質は下がる。その日を取り逃さないための一覧。
+    """
+    hit = [r for r in rows if r.get("eff_drop_pct", 0) >= threshold]
+    hit.sort(key=lambda r: (-r["eff_drop_pct"], r["price"]))
     return hit[:limit]
 
 

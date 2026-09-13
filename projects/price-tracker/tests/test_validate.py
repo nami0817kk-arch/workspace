@@ -221,3 +221,50 @@ class PointRateTest(unittest.TestCase):
             rows = list(csv.DictReader(gzip.open(path, "rt", encoding="utf-8")))
 
         self.assertEqual(rows[0]["point_rate"], "10")
+
+
+class EffectivePriceTest(unittest.TestCase):
+    """ポイント込みの実質価格。楽天の値引きは価格よりここで動く。"""
+
+    def setUp(self):
+        from src import analyze
+        self.analyze = analyze
+
+    def rec(self, **kw):
+        base = {"last": 10000, "prev": 10000, "min": 9000, "max": 11000,
+                "days": 10, "min_date": "2026-09-05", "tail": []}
+        base.update(kw)
+        return base
+
+    def test_倍率のぶんだけ実質価格が下がる(self):
+        self.assertEqual(self.analyze.effective(10000, 10), 9000)
+        self.assertEqual(self.analyze.effective(10000, 1), 9900)
+
+    def test_倍率が上がれば価格据え置きでも実質は下がる(self):
+        # 2026-09-10 に実際に起きた形。価格を見ているだけでは取り逃す
+        v = self.analyze.evaluate(self.rec(last_rate=10, prev_rate=1), 0.05, 0.02)
+
+        self.assertGreater(v["eff_drop_pct"], 0.05)
+        self.assertEqual(v["point_rate"], 10)
+
+    def test_倍率が未記録の日とは比較しない(self):
+        # 記録を始めた翌日に、偽の「実質値下がり」が一斉に出るのを防ぐ
+        v = self.analyze.evaluate(self.rec(last_rate=10, prev_rate=None), 0.05, 0.02)
+
+        self.assertEqual(v["eff_drop_pct"], 0.0)
+        self.assertIsNone(v["eff_prev"])
+
+    def test_実質で下がったものだけを拾う(self):
+        rows = [{"eff_drop_pct": 0.10, "price": 100, "item_code": "a"},
+                {"eff_drop_pct": 0.01, "price": 100, "item_code": "b"},
+                {"price": 100, "item_code": "c"}]
+
+        out = self.analyze.effective_drops(rows, 0.05)
+
+        self.assertEqual([r["item_code"] for r in out], ["a"])
+
+    def test_古い2要素の履歴も読める(self):
+        # 倍率を記録し始めたのは 2026-09-10。それ以前の点は日付と価格しかない
+        from src import store
+        self.assertEqual(store.entry(["2026-09-08", 500]), ("2026-09-08", 500, 1))
+        self.assertEqual(store.entry(["2026-09-11", 500, 10]), ("2026-09-11", 500, 10))
