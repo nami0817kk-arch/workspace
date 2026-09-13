@@ -65,3 +65,26 @@ def test_hints_carry_a_reason():
     (hint,) = check("9月1日")
     assert isinstance(hint, Hint)
     assert hint.why
+
+
+def test_draw_notation_is_flagged():
+    """勝敗表記の「分」は「ふん」と読まれる（2026-09-13）。
+
+    「1分3敗」は引き分けの数なのに、合成音声は時間の「いっぷん」で読む。
+    **聞き返せないので、耳では直せない。**Gemini に台本を読ませて見つかった。
+    9/10 のリヴァプール・PSG、9/12 の佐藤、9/13 のヴィラで実際に鳴っていた。
+    """
+    from src.reading import check
+
+    def flagged(text):
+        return [h for h in check(text) if "勝敗" in h.why]
+
+    assert flagged("ヴィラは開幕から4試合、1分3敗。")
+    assert flagged("プレミアリーグで1勝2分と勝ち切れていませんでした")
+    assert flagged("開幕から2分1敗で、まだ勝ち星がありません")
+    # **試合の時間は拾わない。**45分・後半30分は正しく読まれる
+    assert not flagged("試合は45分で折り返し")
+    assert not flagged("後半30分に交代")
+    assert not flagged("アディショナルタイム7分")
+    # すでに開いてあるものは拾わない
+    assert not flagged("1分け3敗")
