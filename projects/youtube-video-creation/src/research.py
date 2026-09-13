@@ -1173,12 +1173,23 @@ def to_script(notes: Notes, plan: Plan) -> str:
             if number == 0:
                 shown_for = 0
                 showed_photo = False
-                # **1行目が代弁なら、その人の言葉として出す。**節のテロップを
-                # そのまま被せると、別人の発言に他人の名前が乗る（実測 2026-09-06）
-                head = own_telop or section.telop
-                if not own_telop and voice and voice not in SPEAKERS:
+                # **1行目も、読み上げた文を画面に出す**（2026-09-13 ユーザー指示「A」）。
+                # それまでは節のテロップ（見出し）で上書きしていた。おかげで
+                # **これから言うことが画面に先に出ていた。**実例（アルテタの回）:
+                #   読み「この話が出た翌日、アーセナルはサンダーランドと戦いました」
+                #   画面「サンダーランドに2対0」← **結果を先に見せている**
+                # 「読み上げた文は画面にも出す」という決まりが、各節の1行目だけ
+                # 守られていなかった（`画面に出る字 96%` の残り4%がこれ）。
+                # 節の見出しは章カードで別に出ているので、ここでは要らない。
+                # **手で書いた line_telops があればそれを優先する**（従来どおり）
+                head = own_telop
+                if not head and voice and voice not in SPEAKERS:
+                    # **代弁なら、その人の言葉として出す。**節のテロップを
+                    # そのまま被せると、別人の発言に他人の名前が乗る（実測 2026-09-06）
                     room = max(8, TELOP_LIMIT - len(voice) - 1)
                     head = f"{voice}「{_telop(sentence, room)}」"
+                elif not head:
+                    head = _telop(sentence)
                 lines.append(f"  telop: {head}")
                 lines.append(f"  source: {section.tier}")
                 if own_card:

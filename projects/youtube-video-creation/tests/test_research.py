@@ -999,3 +999,26 @@ def test_card_stays_when_there_is_nothing_to_swap_to():
     ]
     text = to_script(build_notes(raw), _plan())
     assert "card: none" not in text
+
+
+def test_first_line_of_a_section_shows_what_is_said():
+    """節の1行目も、読み上げた文を画面に出す（2026-09-13 ユーザー指示「A」）。
+
+    それまでは節のテロップ（見出し）で上書きしていたので、
+    **これから言うことが画面に先に出ていた。**アルテタの回の実例:
+      読み「この話が出た翌日、アーセナルはサンダーランドと戦いました」
+      画面「サンダーランドに2対0」← 結果を先に見せている
+    """
+    raw = _raw()
+    raw["sections"] = [
+        {
+            "id": f"s{n}", "heading": "見出し", "tier": "背景",
+            "telop": "先に言ってしまう見出し",
+            "narrator": "キャスター", "official": False, "sources": [],
+            "say": ["この話が出た翌日、試合がありました。", "2行目です。"],
+        }
+        for n in (1, 2, 3)
+    ]
+    text = to_script(build_notes(raw), _plan())
+    assert "telop: この話が出た翌日、試合がありました" in text
+    assert "先に言ってしまう見出し" not in text
