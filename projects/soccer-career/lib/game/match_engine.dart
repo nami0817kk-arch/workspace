@@ -227,14 +227,29 @@ class MatchInProgress {
   double get momentumFactor => 1 + momentum * Formulas.momentumPerStep;
 
   /// 今この局面で、その手が決まる確率（ゴール）。
-  double goalConversionNow() =>
-      Formulas.goalConversion * momentumFactor * turnConversionFactor;
+  ///
+  /// [combo] は布石が乗っているとき。成功率だけを上げても
+  /// 「通ったが決まらない」が増えるだけなので、ノリと同じで
+  /// **決まる確率のほう**に効かせる。
+  double goalConversionNow({bool combo = false}) =>
+      Formulas.goalConversion *
+      momentumFactor *
+      turnConversionFactor *
+      (combo ? Formulas.comboConversion : 1.0);
 
   /// 今の局面で構えている切り札。局面が変われば外れる。
   ///
   /// 個人技は身に付くと常に少しだけ効くだけの飾りだった。
   /// 1試合に1回、「この局面で出す」と決められるようにする。
   Signature? armed;
+
+  /// **布石が通っているか。** その試合のあいだ残り、仕留めで使い切る。
+  ///
+  /// 局面は無作為に引くので「次に仕留めの手が来るか」は分からない。
+  /// 1局面で切れる形にすると、布石はただの賭けになる。試合のあいだ
+  /// 持てるようにして、**代償を「その1手で点を狙わなかったこと」**に置く
+  /// ——ふつうの試合は2局面しかないので、そこが痛い。
+  bool setupReady = false;
 
   /// この試合でもう切り札を使ったか。
   bool signatureSpent = false;
@@ -386,8 +401,11 @@ class MatchInProgress {
   /// 低い。予定そのものを見ると未来が漏れるので、期待値から出す。
   /// 画面の「アシスト N%」と自動進行の物差しはこれを使う。
   /// ノリ込みの、アシストが決まる確率。
-  double assistConversionNow(int minute) =>
-      assistConversionAt(minute) * momentumFactor * turnConversionFactor;
+  double assistConversionNow(int minute, {bool combo = false}) =>
+      assistConversionAt(minute) *
+      momentumFactor *
+      turnConversionFactor *
+      (combo ? Formulas.comboConversion : 1.0);
 
   double assistConversionAt(int minute) {
     final remaining = ((90 - minute) / 90).clamp(0.0, 1.0);
@@ -652,6 +670,10 @@ class MatchInProgress {
     substitute: appearance == Appearance.sub,
   );
 
+  /// その手に布石が乗るか。
+  bool comboLands(ScenarioOption option) =>
+      setupReady && current.roleOf(option) == ComboRole.finish;
+
   /// 能力と難度だけで決まる地力。ここに増減が乗る。
   double baseChanceFor(ScenarioOption option) =>
       successChance(attributeFor(option), option.difficulty);
@@ -670,6 +692,11 @@ class MatchInProgress {
     for (final trait in player.traits) {
       final value = trait.chanceBonus(context);
       if (value != 0) factors.add(ChanceFactor(trait.label, value));
+    }
+
+    // 布石が通っている。**乗るのは仕留めの手だけ。**
+    if (comboLands(option)) {
+      factors.add(ChanceFactor('布石が効いている', Formulas.comboBonus));
     }
 
     // 試合を動かした展開。**選べないものが効いているときこそ、画面に出す。**
@@ -838,6 +865,12 @@ class MatchInProgress {
   /// 手そのものの成否と、それが得点になるかは別に扱う。
   /// 良い判断でも点にならない試合があるほうが、決まった1点が重くなる。
   ScenarioResolution choose(ScenarioOption option) {
+    // **布石は、仕留めにいった時点で使い切る**（通っても外しても）。
+    // 外しても残ると、布石がただの上積みになって判断が消える。
+    final role = current.roleOf(option);
+    final combo = comboLands(option);
+    if (role == ComboRole.finish) setupReady = false;
+
     final chance = chanceFor(option);
     final success = _random.nextDouble() < chance;
 
@@ -866,13 +899,16 @@ class MatchInProgress {
     if (success && outcome != Outcome.play) {
       // 決定機を作った。決まらなくても、無難な手とは違う。
       delta += Formulas.ratingPerChance;
+      // 布石から繋がったぶんは、ここでまとめて返す。
+      if (combo) delta += Formulas.ratingPerCombo;
       final rolled =
           _random.nextDouble() <
           (outcome == Outcome.goal
-              ? goalConversionNow()
+              ? goalConversionNow(combo: combo)
               : Formulas.assistConversion *
                     momentumFactor *
-                    turnConversionFactor);
+                    turnConversionFactor *
+                    (combo ? Formulas.comboConversion : 1.0));
       // アシストは、この後に味方が決める予定があるときだけ決まる。
       // 決まった瞬間にその得点を今に引き寄せてスコアに乗せる。
       // 予定が無いのに点を足すと、自分のクラブだけが強くなる。
@@ -938,6 +974,16 @@ class MatchInProgress {
       momentum = 0;
     }
 
+    // **布石が通った。** 次に仕留めの手を選べば深く効く。
+    // 通らなければ何も残らない——安全な手ほど通るので、そこが釣り合い。
+    if (role == ComboRole.setup && success) {
+      setupReady = true;
+      delta += Formulas.ratingPerSetup;
+    }
+    if (combo) {
+      text = success ? '$text 布石が効いた。' : '$text 作ったものを使い切れなかった。';
+    }
+
     // 構えた切り札は、乗った手を選んだ時点で使い切る。
     // 外したら力みが残る（構えるだけならただ得、では判断にならない）。
     if (signatureLands(option)) {
@@ -989,13 +1035,22 @@ class MatchInProgress {
     final p = chanceFor(option);
     var gain = Formulas.ratingPerSuccess;
     if (option.outcome != Outcome.play) gain += Formulas.ratingPerChance;
+    if (comboLands(option)) gain += Formulas.ratingPerCombo;
     // 自動進行にもノリを見せる。見ないと、自動で進めるだけでは
     // 「刻んでから決めにいく」が一度も起きない（切り札と同じ理屈）。
+    // **布石の「先の価値」は見せない。** 今この手で得られるものだけを数える。
+    // ここに次の局面ぶんを足すと、自動進行も布石を積むようになり、
+    // 人が考えてエンジンに勝つ隙間がまた無くなる（それが元の問題）。
+    // 乗っている布石は見る——今この手に実際に効いているものなので、
+    // 隠すと自動進行がただ弱くなるだけになる。
+    final combo = comboLands(option);
     if (option.outcome == Outcome.goal) {
-      gain += Formulas.ratingPerGoal * goalConversionNow();
+      gain += Formulas.ratingPerGoal * goalConversionNow(combo: combo);
     }
     if (option.outcome == Outcome.assist) {
-      gain += Formulas.ratingPerAssist * assistConversionNow(currentMinute);
+      gain +=
+          Formulas.ratingPerAssist *
+          assistConversionNow(currentMinute, combo: combo);
     }
     // カードのぶんを引く。ここを入れないと、自動進行が「止めるための反則」を
     // 代償なしの安い手として選び続ける。

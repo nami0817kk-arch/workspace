@@ -13,6 +13,22 @@ enum Outcome {
   play,
 }
 
+/// **その局面での役どころ。布石か、仕留めか。**
+///
+/// 局面ごとに手で付けるのではなく、その局面の3つの手から機械的に決める
+/// （`Scenario.roleOf`）。手で付けると、局面を足したときに付け忘れて
+/// 「なぜかコンボが出ない局面」ができる。
+enum ComboRole {
+  /// どちらでもない手。
+  none,
+
+  /// **布石。** 通っても見返りは小さいが、次の仕留めが深くなる。
+  setup,
+
+  /// **仕留め。** 布石の後なら、通りやすく、決まりやすい。
+  finish,
+}
+
 /// 局面で選べる1つの手。
 class ScenarioOption {
   const ScenarioOption({
@@ -97,6 +113,32 @@ class Scenario {
 
   /// この局面が出てくる展開。
   final ScenarioTempo tempo;
+
+  /// **その手の役どころ。**
+  ///
+  /// 仕留めは「得点に繋がる手のうち一番難しいもの」、
+  /// 布石は「無難な手のうち一番易しいもの」。
+  /// **仕留めより難しい布石は置かない**——それはただの遠回りになる。
+  /// 仕留めが無い局面（3つとも無難な手）には布石も置かない。
+  ComboRole roleOf(ScenarioOption option) {
+    final scoring = [
+      for (final o in options)
+        if (o.outcome != Outcome.play) o,
+    ];
+    if (scoring.isEmpty) return ComboRole.none;
+    final finish = scoring.reduce(
+      (a, b) => b.difficulty > a.difficulty ? b : a,
+    );
+    if (identical(option, finish)) return ComboRole.finish;
+
+    final plain = [
+      for (final o in options)
+        if (o.outcome == Outcome.play && o.difficulty < finish.difficulty) o,
+    ];
+    if (plain.isEmpty) return ComboRole.none;
+    final setup = plain.reduce((a, b) => b.difficulty < a.difficulty ? b : a);
+    return identical(option, setup) ? ComboRole.setup : ComboRole.none;
+  }
 }
 
 /// ポジション別の局面プール。
