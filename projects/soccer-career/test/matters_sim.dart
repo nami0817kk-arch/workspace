@@ -23,7 +23,10 @@ import 'support/career_sim.dart';
 
 void main() {
   test('選択がキャリアを変えているか', () async {
-    const seeds = 24;
+    // **24本では差が読めない。** 同じ設定を2回回して、平均評価が
+    // 7.22 → 7.20、代表が 35 → 33キャップ動いた。比べたい差と
+    // 同じ大きさの揺れがあるので、束ねる本数を先に決める。
+    const seeds = 120;
 
     Future<void> run(
       String name, {
@@ -112,9 +115,42 @@ void main() {
 
     await run('刻んでから決める', pick: ride);
 
-    print('--- ポジション別（最善） ---');
-    for (final position in [Position.st, Position.wg, Position.cb]) {
-      await run(position.name, position: position);
+    // **布石を打ってから仕留める。** 布石はその場の見返りがほぼゼロなので、
+    // 1手ぶんしか見ない `expectedDelta` は選ばない。2手先に投資できるのは
+    // 人だけ——ここが、情報を隠さずに人がエンジンを上回れる隙間のはず。
+    ScenarioOption combo(MatchInProgress m) {
+      final options = m.current.options;
+      final left = m.scenarios.length - m.resolutions.length;
+      // **段取りが組めるのは、じっくりやる試合だけ。**
+      // 2局面しかない試合で1つを布石に使うと、ただ点を捨てることになる。
+      //
+      // 布石を打つのは、その局面に仕留めもあるときだけ——
+      // 最初は「仕留め＝一番難しい手」を固定で選ばせていて、
+      // 通らない手ばかり選んで評価が落ちていた（7.09 対 最善 7.18）。
+      if (!m.setupReady && left >= 3) {
+        final hasFinish = options.any(
+          (o) => m.current.roleOf(o) == ComboRole.finish,
+        );
+        if (hasFinish) {
+          for (final o in options) {
+            if (m.current.roleOf(o) == ComboRole.setup) return o;
+          }
+        }
+      }
+      // 乗っているぶんは `expectedDelta` が見ているので、
+      // あとは普通に一番良い手を選べば仕留めに行く。
+      return options.reduce(
+        (a, b) => m.expectedDelta(a) >= m.expectedDelta(b) ? a : b,
+      );
+    }
+
+    await run('布石から仕留める', pick: combo);
+
+    if (const bool.fromEnvironment('MATTERS_POSITIONS')) {
+      print('--- ポジション別（最善） ---');
+      for (final position in [Position.st, Position.wg, Position.cb]) {
+        await run(position.name, position: position);
+      }
     }
   }, timeout: const Timeout(Duration(minutes: 40)));
 }

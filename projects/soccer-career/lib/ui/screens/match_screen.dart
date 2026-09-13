@@ -457,6 +457,8 @@ class _ScenarioView extends StatelessWidget {
                   scenario.options[i].detail != null &&
                   focus.contains(scenario.options[i].detail),
               favoured: match.isFavoured(scenario.options[i]),
+              role: scenario.roleOf(scenario.options[i]),
+              setupReady: match.setupReady,
               chance: match.chanceFor(scenario.options[i]),
               assistConversion: match.assistConversionAt(match.currentMinute),
               factors: match.distinctFactorsFor(scenario.options[i]),
@@ -538,6 +540,8 @@ class _OptionButton extends StatelessWidget {
     required this.growth,
     required this.focused,
     required this.favoured,
+    required this.role,
+    required this.setupReady,
     required this.chance,
     required this.assistConversion,
     required this.factors,
@@ -559,6 +563,15 @@ class _OptionButton extends StatelessWidget {
   /// 監督はこれまで能力値だけを見ていて、**何を選んだかは見ていなかった**。
   /// 印を出さないと、信頼が動いた理由が分からない。
   final bool favoured;
+
+  /// **この局面での役どころ。布石か、仕留めか。**
+  ///
+  /// 布石はその場の見返りが小さいので、印を出さないと
+  /// 「ただの無難な手」にしか見えない。何のために打つのかを画面に出す。
+  final ComboRole role;
+
+  /// すでに布石が通っているか。仕留めの印を出し分けるために使う。
+  final bool setupReady;
 
   /// 特性とコンディションを含んだ成功率。判定と同じ値。
   final double chance;
@@ -672,6 +685,29 @@ class _OptionButton extends StatelessWidget {
                     '監督好み',
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: theme.colorScheme.primary,
+                    ),
+                  ),
+                ),
+              // **布石は印が無いとただの無難な手に見える。**
+              if (role == ComboRole.setup && !setupReady)
+                Padding(
+                  padding: const EdgeInsets.only(left: 6),
+                  child: Text(
+                    '布石',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.tertiary,
+                    ),
+                  ),
+                ),
+              if (role == ComboRole.finish)
+                Padding(
+                  padding: const EdgeInsets.only(left: 6),
+                  child: Text(
+                    setupReady ? '仕留め・布石あり' : '仕留め',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: setupReady
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.onSurfaceVariant,
                     ),
                   ),
                 ),
