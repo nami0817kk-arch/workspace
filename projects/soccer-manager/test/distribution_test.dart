@@ -320,6 +320,36 @@ void main() {
       }
     });
 
+    test('サポート窓口のページが実在し、連絡手段が載っている', () {
+      // ストアのサポートURLは、利用者が実際に開く。リンク先が無いページや、
+      // 連絡手段の無いページだと審査で止まる。
+      const url = 'https://soccer-manager.pages.dev/legal/support.html';
+      final listing = File('STORE_LISTING.md').readAsStringSync();
+      expect(listing, contains(url), reason: '掲載情報のサポート窓口が変わっている');
+
+      final page = File('legal/support.html');
+      expect(page.existsSync(), isTrue, reason: 'support.html が無い');
+      final html = page.readAsStringSync();
+      expect(html, contains('mailto:'), reason: '連絡手段が書かれていない');
+
+      // legal/*.html は soccer-pages.yml が Cloudflare Pages へ配置する。
+      // ここが外れると、掲載したURLが 404 になる。
+      final pages =
+          File('../../.github/workflows/soccer-pages.yml').readAsStringSync();
+      expect(pages, contains('legal/*.html'),
+          reason: 'legal のページが公開対象から外れている');
+    });
+
+    test('サポート窓口に個人を特定する情報が出ていない', () {
+      // 窓口はストアの製品ページから誰でも開ける。個人の名前やアドレスを
+      // 載せない方針で、専用のアドレスを用意してある。
+      final html = File('legal/support.html').readAsStringSync();
+      for (final leak in const ['nami', '0817', 'Namiki', 'namiki']) {
+        expect(html.toLowerCase(), isNot(contains(leak.toLowerCase())),
+            reason: 'support.html に $leak が含まれている');
+      }
+    });
+
     test('Androidが広告に必要なインターネット権限を宣言している', () {
       // 権限が無いと広告SDKは通信できず、リワード広告が永久に
       // 読み込まれない (押せないボタンだけが残る)。
