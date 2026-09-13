@@ -310,6 +310,20 @@ class Formulas {
   /// **技そのものの手だけを深くする**——同じカテゴリのほうまで上げると、
   /// 「常に少し効く飾り」に戻る（特性で先に踏んだのと同じ）。
   static const double signatureOnDetail = 0.10;
+
+  /// **1段磨くごとに、噛み合った手がどれだけ深くなるか。**
+  ///
+  /// 25歳を過ぎると伸びる週は 10% を切る（実測: 28〜37歳で 4〜7%）。
+  /// 能力では returns が出ない後半に、**技のほうを深くする**ことで
+  /// 週の選択に目的を戻す。上限まで磨くと 0.10 → 0.16。
+  static const double signaturePerMastery = 0.02;
+
+  /// 伸びなかった週に技が深くなる確率（手応え1回ぶん・伸びしろの余り1.0ぶん）。
+  ///
+  /// 実際の確率は `polishChance × 手応えの回数 × (1 - その週の伸びる確率)`。
+  /// 若いうちは伸びる確率が 1 を超えているので余りが無く、**磨けない**。
+  /// 歳を取って伸びなくなるほど、磨けるようになる。
+  static const double polishChance = 0.30;
   static const double signatureOnKey = 0.02;
 
   static const double signatureArmedBonus = 0.15;

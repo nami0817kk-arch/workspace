@@ -3604,7 +3604,8 @@ class _SignatureAimCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               full
-                  ? '覚えられるのは${Signature.maxOwned}つまで。もう埋まっている。'
+                  ? '覚えられるのは${Signature.maxOwned}つまで。'
+                        'ここから先は、磨いて深くしていく。'
                   : '元になる能力が${Signature.requirement}に届くと、'
                         'その練習をしている週に掴むことがある。'
                         '1つ狙っておくと、掴むときはそれになる。',
@@ -3620,6 +3621,7 @@ class _SignatureAimCard extends StatelessWidget {
                   signature: signature,
                   value: player.attributes.detail(signature.detail),
                   learned: owned.contains(signature),
+                  mastery: state.development.masteryOf(signature),
                   aimed: state.signatureAim == signature,
                   focused: state.focus.contains(signature.detail),
                   // 覚えたものは触れない。狙いはもう一度押せば外れる。
@@ -3646,6 +3648,7 @@ class _SignatureAimCard extends StatelessWidget {
                           signature: signature,
                           value: player.attributes.detail(signature.detail),
                           learned: false,
+                          mastery: 0,
                           aimed: false,
                           focused: state.focus.contains(signature.detail),
                           onTap: () => controller.aimSignature(signature),
@@ -3666,6 +3669,7 @@ class _SignatureRow extends StatelessWidget {
     required this.signature,
     required this.value,
     required this.learned,
+    required this.mastery,
     required this.aimed,
     required this.focused,
     required this.onTap,
@@ -3674,6 +3678,10 @@ class _SignatureRow extends StatelessWidget {
   final Signature signature;
   final int value;
   final bool learned;
+
+  /// 磨いた段（0〜`Signature.maxMastery`）。
+  final int mastery;
+
   final bool aimed;
   final bool focused;
   final VoidCallback? onTap;
@@ -3689,7 +3697,13 @@ class _SignatureRow extends StatelessWidget {
 
     final String condition;
     if (learned) {
-      condition = '習得ずみ';
+      // **磨いた段まで書く。** 覚えて終わりだと、後半の練習で何が
+      // 起きているのかが画面のどこにも出ない。
+      condition = mastery <= 0
+          ? '習得ずみ。伸びなくなった歳から、練習で磨かれていく'
+          : '習得ずみ・${Signature.masteryLabels[mastery]}'
+                '（$mastery / ${Signature.maxMastery}）'
+                '　噛み合う手に +${((Formulas.signatureOnDetail + Formulas.signaturePerMastery * mastery) * 100).round()}%';
     } else if (reached) {
       condition =
           '${signature.detail.label} $value。'
@@ -3739,7 +3753,10 @@ class _SignatureRow extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(4),
                 child: LinearProgressIndicator(
-                  value: (value / Signature.requirement).clamp(0.0, 1.0),
+                  // 覚えたあとは、能力ではなく磨いた段を出す。
+                  value: learned
+                      ? mastery / Signature.maxMastery
+                      : (value / Signature.requirement).clamp(0.0, 1.0),
                   minHeight: 4,
                 ),
               ),

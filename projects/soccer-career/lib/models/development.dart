@@ -89,6 +89,21 @@ enum Signature {
   /// 同時に持てる数。何でも出来る選手にしない。
   static const int maxOwned = 3;
 
+  /// **どこまで磨けるか。**
+  ///
+  /// 上限3個は変えない——増やす方向ではなく、深くする方向で後半を作る。
+  static const int maxMastery = 5;
+
+  /// 磨いた段の呼び方。0段目は呼ばない。
+  static const List<String> masteryLabels = [
+    '',
+    '手に馴染む',
+    '磨きがかかる',
+    '得意技',
+    '型になる',
+    '代名詞',
+  ];
+
   /// **そのポジションで意味を持つ技か。**
   ///
   /// ここが無かったので、実測（`test/craft_sim.dart`）で
@@ -144,6 +159,7 @@ class Development {
     this.points = const {},
     this.strain = Formulas.strainNeutral,
     this.dedication = const {},
+    this.mastery = const {},
   });
 
   /// 試合経験値。出場のたびに積む。
@@ -193,6 +209,19 @@ class Development {
   /// 回された回も積み上げに入れないと、**鎖の深い項目ほど永久に尖れない**。
   /// 積むほど土台を先行できる幅が広がる（`Dependencies.headroomFor`）。
   final Map<Detail, int> dedication;
+
+  /// **覚えた個人技を、どれだけ磨いたか**（0〜`Signature.maxMastery`）。
+  ///
+  /// 25歳を過ぎると**伸びる週は 10% を切る**（実測: 28〜37歳で 4〜7%、
+  /// つまり20週に1回）。残りの週は練習を選んでも何も起きず、
+  /// 引退までの13年・約680週が「疲労を調整するだけ」になっていた。
+  ///
+  /// **伸びなかった週に、代わりに技が深くなる。** 能力は落ちても
+  /// 引き出しは増える——ベテランが強い理由はそれなので。
+  final Map<Signature, int> mastery;
+
+  /// その技をどれだけ磨いたか。
+  int masteryOf(Signature signature) => mastery[signature] ?? 0;
 
   /// その項目にどれだけ積んだか。
   int dedicationOf(Detail detail) => dedication[detail] ?? 0;
@@ -292,8 +321,11 @@ class Development {
   Map<Signature, double> signatureFactors(AttributeKey key, Detail? detail) {
     final result = <Signature, double>{};
     for (final s in signatures) {
+      // **磨いたぶんだけ深くなる。** 噛み合った手のときだけ——
+      // 広く薄く効かせると「常に少し効く飾り」に戻る。
+      final polish = Formulas.signaturePerMastery * masteryOf(s);
       if (detail != null && s.detail == detail) {
-        result[s] = Formulas.signatureOnDetail;
+        result[s] = Formulas.signatureOnDetail + polish;
       } else if (s.key == key) {
         result[s] = Formulas.signatureOnKey;
       }
@@ -365,6 +397,23 @@ class Development {
       ? this
       : copyWith(signatures: [...signatures, signature]);
 
+  /// **その技を1段ぶん磨く。** 上限に達していれば何も起きない。
+  Development polish(Signature signature) {
+    if (!signatures.contains(signature)) return this;
+    final now = masteryOf(signature);
+    if (now >= Signature.maxMastery) return this;
+    return copyWith(mastery: {...mastery, signature: now + 1});
+  }
+
+  /// **いま磨ける技。** その練習で扱う能力に噛み合っていて、まだ上限でないもの。
+  ///
+  /// 磨ける技が無ければ、その週はこれまでどおり何も起きない——
+  /// 覚えていない選手にまで何かを配ると、個人技を取りに行く意味が消える。
+  List<Signature> polishable(Iterable<AttributeKey> keys) => [
+    for (final s in signatures)
+      if (keys.contains(s.key) && masteryOf(s) < Signature.maxMastery) s,
+  ];
+
   /// その選手が、いま覚えられる技。出来事の「閃き」の読み替え先。
   ///
   /// 閃いたのに**そのポジションでは意味の無い技**だった、では
@@ -398,6 +447,7 @@ class Development {
     Map<AttributeKey, int>? points,
     double? strain,
     Map<Detail, int>? dedication,
+    Map<Signature, int>? mastery,
   }) => Development(
     experience: experience ?? this.experience,
     choices: choices ?? this.choices,
@@ -410,6 +460,7 @@ class Development {
     points: points ?? this.points,
     strain: strain ?? this.strain,
     dedication: dedication ?? this.dedication,
+    mastery: mastery ?? this.mastery,
   );
 
   Map<String, dynamic> toJson() => {
@@ -424,6 +475,7 @@ class Development {
     'strain': strain,
     'dedication': {for (final e in dedication.entries) e.key.name: e.value},
     'points': {for (final e in points.entries) e.key.name: e.value},
+    'mastery': {for (final e in mastery.entries) e.key.name: e.value},
   };
 
   factory Development.fromJson(Map<String, dynamic>? json) {
@@ -459,6 +511,12 @@ class Development {
         for (final e in (json['dedication'] as Map? ?? const {}).entries)
           if (Detail.values.any((d) => d.name == e.key))
             Detail.values.byName(e.key as String): e.value as int,
+      },
+      // 磨きを知らない保存データは「まだ磨いていない」で読む。
+      mastery: {
+        for (final e in (json['mastery'] as Map? ?? const {}).entries)
+          if (Signature.values.any((sg) => sg.name == e.key))
+            Signature.values.byName(e.key as String): e.value as int,
       },
       points: {
         for (final e in (json['points'] as Map? ?? const {}).entries)

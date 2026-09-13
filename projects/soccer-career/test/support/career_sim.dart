@@ -285,6 +285,8 @@ Future<Career> runCareer(
   Playstyle style,
   int seed, {
   void Function(MatchInProgress match, ScenarioOption option)? onDecision,
+  void Function(int age, Attributes attributes, int overall, int mastery)?
+  onWeek,
 }) async {
   final controller = CareerController(
     repository: MemoryRepository(),
@@ -371,6 +373,16 @@ Future<Career> runCareer(
         await _playWatched(controller, style, onDecision);
       }
       if (style.spendsPoints) await _spendPoints(controller);
+      if (onWeek != null) {
+        final p = controller.state!.player;
+        final dev = controller.state!.development;
+        onWeek(
+          p.age,
+          p.attributes,
+          p.overall,
+          dev.mastery.values.fold(0, (a, b) => a + b),
+        );
+      }
       final after = controller.state!.injury;
       if (!wasInjured && after != null) {
         career.injuries++;

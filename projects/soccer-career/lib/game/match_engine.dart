@@ -1198,6 +1198,7 @@ class WeekOutcome {
     ),
     this.drilled,
     this.learned,
+    this.polished,
     this.redirected = false,
     this.weakFootAwakened = false,
     this.injury,
@@ -1221,6 +1222,9 @@ class WeekOutcome {
 
   /// その週に覚えた個人技。
   final Signature? learned;
+
+  /// **その週に1段深くなった個人技。** 伸びなかった週にだけ起きる。
+  final Signature? polished;
 
   /// 逆足が形になったか。
   final bool weakFootAwakened;
@@ -1692,6 +1696,7 @@ class MatchEngine {
     Detail? trained;
     SetPiece? drilled;
     Signature? learned;
+    Signature? polished;
     var redirected = false;
     var awakened = false;
 
@@ -1806,6 +1811,38 @@ class MatchEngine {
         position: player.position,
         aim: signatureAim,
       );
+
+      // **伸びなかった週に、技のほうを磨く。**
+      //
+      // 25歳を過ぎると伸びる週は 10% を切る（実測: 28〜37歳で 4〜7%）。
+      // 残りの週は練習を選んでも何も起きず、引退までの13年・約680週が
+      // 「疲労を調整するだけ」になっていた。能力で returns が出なくなった
+      // 選手にだけ、別の積み先を開ける——**伸びた週には起きない**ので、
+      // 若いうちに能力の代わりとして稼ぐことはできない。
+      //
+      // **伸びなくなった身体ほど、よく磨ける。**
+      //
+      // ここは2回置き直した。最初は伸びなかった週すべてで磨けるようにしたら、
+      // 磨きが17〜25歳で終わって肝心の後半がまた空になった。
+      // 次に「ポテンシャルに達してから」にしたら、到達する選手が少なくて
+      // **ほぼ一度も起きなかった**（実測 0.17/15）。
+      //
+      // 後半が空なのは伸びしろが尽きるからではなく、**年齢で伸びる確率
+      // そのものが落ちる**から（実測: 伸びる週が 18歳 45% → 28歳 4%）。
+      // だから磨きの確率は、その週の伸びる確率の**余り**から出す——
+      // 若いうちは `effective` が 1 を超えていて余りが無く、
+      // 歳を取るほど余りが増える。境目を決め打ちしないで済む。
+      if (trained == null && learned == null) {
+        final ready = development.polishable(menu.keys);
+        if (ready.isNotEmpty) {
+          final room = (1 - effective).clamp(0.0, 1.0);
+          // 手応えのぶんだけ確率が動く（大成功 rolls=2、空回り 0）。
+          final chance = Formulas.polishChance * outcome.rolls * room;
+          if (_random.nextDouble() < chance) {
+            polished = ready[_random.nextInt(ready.length)];
+          }
+        }
+      }
     }
 
     // 居残り。全体練習の後にもう一段。上に行くほど1本の重みが軽くなる。
@@ -1850,6 +1887,7 @@ class MatchEngine {
       physique: physique,
       drilled: drilled,
       learned: learned,
+      polished: polished,
       redirected: redirected,
       weakFootAwakened: awakened,
       injury: injury,
