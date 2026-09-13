@@ -71,6 +71,9 @@ BACKGROUNDS = (
 OPENING_BACKGROUND = STOCK + "match_stadium.mp4"
 
 SPEAKERS = ("キャスター", "解説")
+# 匿名の集まり。**画面に積む**ので、行ごとの引用カードは出さない
+# （config の voice_crowd と同じ並び。ここは台本を組み立てる側の控え）
+CROWD_VOICES = ("ネット民", "現地サポ", "海外のファン")
 
 
 class ResearchError(Exception):
@@ -498,7 +501,51 @@ def _check_card(section: Section) -> list[str]:
     elif kind == "bars":
         if not (card.get("items") or []):
             problems.append(f"{section.id}: bars カードには items が必要です")
+        problems += _check_bar_units(section, card)
     return problems
+
+
+# 棒の名前が自分の単位を抱えている書き方（「使った額（億円）」など）。
+# **括弧で単位を書いた時点で、その棒だけ別の単位だと言っている**
+_LABEL_PAREN = re.compile(r"[（(]([^（()）]{1,8})[)）]\s*$")
+# **括弧の中身が単位とは限らない。**「バルコラ（リヴァプール）」のように
+# クラブ名を入れる書き方があるので、単位の形をしたものだけ拾う。
+# 前に付いてよいのは数字・英字・億万千百だけ（「今回」を単位と読まないため）
+_UNIT_LIKE = re.compile(
+    r"^[0-9A-Za-z/％%億万千百]*"
+    r"(円|点|回|本|人|秒|分|試合|位|歳|勝|敗|ポンド|ユーロ|ドル|km/h|km|kg|cm|％|%)$")
+
+
+def _unit_in(label: str) -> str:
+    """名前の末尾の括弧から単位を取り出す。単位に見えなければ空。"""
+    found = _LABEL_PAREN.search(label.strip())
+    if not found:
+        return ""
+    inner = found.group(1).strip()
+    return inner if _UNIT_LIKE.match(inner) else ""
+
+
+def _check_bar_units(section, card: dict) -> list[str]:
+    """**単位の違う値を棒グラフに並べない。**
+
+    同じ軸に置くと `unit` が全部の棒に付く。2026-09-10 に
+    「総額（百万ユーロ）100」と「分ける回数 3」を並べて、
+    どちらも「単位ちがい」と表示された。そのときは台本だけ直して
+    **検査を足さなかったので、9/14 に同じことが起きた**
+    （「使った額（億円）780点」「取った点 0点」）。
+    金額と得点は比べるものではないので、表にする。
+    """
+    units = {str(card.get("unit") or "").strip()} - {""}
+    for item in card.get("items") or []:
+        label = str((item or {}).get("label", "") if isinstance(item, dict) else item)
+        found = _unit_in(label)
+        if found:
+            units.add(found)
+    if len(units) > 1:
+        return [f"{section.id}: 単位の違う値を棒グラフに並べています"
+                f"（{' / '.join(sorted(units))}）。"
+                "同じ軸に置くと unit が全部の棒に付きます。table にしてください"]
+    return []
 
 
 def _check_reactions(section: Section) -> list[str]:
@@ -754,7 +801,73 @@ def _advise_hook(notes: Notes) -> list[str]:
     if _bare_text(notes.hook) == _bare_text(notes.question):
         return ["theme.hook が問いと同じです。**その行は出しません。**"
                 "別の一言にするか、空のままにしてください"]
+    # **丸ごと同じでなくても言い直しになる**（2026-09-14 指摘
+    # 「送り出されたのはどんな場面でしたかが2回繰り返されてる」）。
+    # 題が「…送り出されたのはどんな場面か」、つかみが「…送り出されたのは、
+    # どんな場面だったのか」で、同じでないので素通りしていた
+    shared = _longest_common(_bare_text(notes.hook), _bare_text(notes.question))
+    if len(shared) >= HOOK_ECHO_MIN:
+        return [f"theme.hook が問いを言い直しています（『{shared}』が両方にあります）。"
+                "1行目で題を読んだ直後に同じことを言うと、2回繰り返して聞こえます。"
+                "別の事実を書くか、空のままにしてください"]
     return []
+
+
+# つかみと問いに、これだけ続けて同じ字が入っていたら言い直しとみなす
+HOOK_ECHO_MIN = 6
+
+
+def _longest_common(left: str, right: str) -> str:
+    """いちばん長く続けて重なっている部分を返す。"""
+    if not left or not right:
+        return ""
+    best = ""
+    # 題材の文は長くても100字ほどなので、素直に総当たりで足りる
+    for start in range(len(left)):
+        for end in range(start + len(best) + 1, len(left) + 1):
+            chunk = left[start:end]
+            if chunk in right:
+                best = chunk
+            else:
+                break
+    return best
+
+
+# 同じ言い回しが2か所に出てよい長さ。これを超えたら言い直し
+REPEAT_MIN = 12
+
+
+def _advise_repeats(notes: Notes) -> list[str]:
+    """節をまたいで同じことを言っていないか（2026-09-14 指摘「話の重複が多い」）。
+
+    **節ごとに書くと、どの節も自分で名乗り直す。**「マインツ対フランクフルト」
+    「鈴木唯人は3試合続けての先発でした」のように、前の節で言い終えた一文が
+    そのまま二度読まれていた。引きの一言が後の節で繰り返される型も多い。
+
+    人の目では見つからない。台本を通しで読み返すのは最後の1回だけだからで、
+    そのときには既に「知っている話」になっていて引っかからない。
+    """
+    said: list[tuple[str, str]] = []
+    if notes.hook:
+        said.append(("引き", _bare_text(notes.hook)))
+    for section in notes.sections:
+        for sentence in section.say:
+            text = sentence if isinstance(sentence, str) else str(
+                (sentence or {}).get("text", ""))
+            # **反応は人の書いた文なので直さない。**こちらが書いた地の文だけ見る
+            said.append((section.id, _bare_text(text)))
+
+    problems: list[str] = []
+    seen: set[str] = set()
+    for index, (where, text) in enumerate(said):
+        for other_where, other in said[:index]:
+            shared = _longest_common(text, other)
+            if len(shared) >= REPEAT_MIN and shared not in seen:
+                seen.add(shared)
+                problems.append(
+                    f"{other_where} と {where} で同じことを言っています"
+                    f"（『{shared}』）。あとの節から落とすか、言い換えてください")
+    return problems
 
 
 def _advise_thumbnail_repeat(notes: Notes) -> list[str]:
@@ -806,7 +919,7 @@ def _advise_voices(notes: Notes) -> list[str]:
     """反応の扱いで気をつける点。"""
     hints: list[str] = (_advise_volume(notes) + _advise_material(notes)
                         + _advise_hook(notes) + _advise_thumbnail_repeat(notes)
-                        + _advise_title(notes))
+                        + _advise_repeats(notes) + _advise_title(notes))
     for section in notes.sections:
         card = section.card or {}
         if str(card.get("type", "")).lower() != "reactions":
@@ -1115,9 +1228,12 @@ def to_script(notes: Notes, plan: Plan) -> str:
         if notes.hook and _bare_text(notes.hook) != _bare_text(notes.question):
             lines += [
                 f"キャスター: {_ends_sentence(notes.hook)}",
+                # **問いを画面に出さない**（2026-09-14 指摘「この今回の問はいらない」）。
+                # 読み上げずに画面へ出す形にしていたが、**喋っている言葉と
+                # 画面の字が違う**状態が続いていた。喋っている一言をそのまま出す。
                 # 画面は2〜3行に折り返せる。20字で切ると「…当の監督…」のように
                 # 途中で切れた文字がそのまま出ていた（2026-09-07 に書き出して確認）
-                f"  telop: 今回の問い: {_telop(notes.question, TELOP_LIMIT)}",
+                f"  telop: {_telop(notes.hook, TELOP_LIMIT)}",
             ]
     elif notes.hook:
         # 反応・本人の言葉の型は、つかみが書いてあれば1行だけ。問いは立てない。
@@ -1242,14 +1358,6 @@ def to_script(notes: Notes, plan: Plan) -> str:
                 if own_card:
                     lines.append(f"  card: {section.id}_{number}_card")
                     shown_for = 0
-                elif voice and voice not in SPEAKERS:
-                    # **代弁の行には、その行の引用カードを出す**（2026-09-12）。
-                    # 節のカードは1行目にしか付かないので、引用が続く節では
-                    # **同じ絵のまま30〜50秒**画面が止まっていた
-                    # （ヴィニシウス53秒／ギュレル54秒。書き出して発見）。
-                    # `cardrule` はもともと「代弁の行＝引用カード」と決めている。
-                    lines.append(f"  card: {section.id}_{number}_voice")
-                    shown_for = 0
                 elif shown_for >= CARD_LINES_MAX:
                     # **同じカードを出しっぱなしにしない**（2026-09-12）。
                     # カードは次の行にも残る決まりなので（script_model の rows）、
@@ -1324,9 +1432,14 @@ def _cards(notes: Notes) -> dict:
                 continue
             if number < len(section.line_cards) and section.line_cards[number]:
                 continue
-            cards[f"{section.id}_{number}_voice"] = {
-                "type": "quote", "title": voice, "text": sentence,
-            }
+            # **代弁の行に引用カードを出さない**（2026-09-14 指摘
+            # 「話の重複が多い」「現地はどう見たかで、同じテロップが出ている」）。
+            # 下のテロップが既に「LA NUOVA「〜」」と話者ごと出しているので、
+            # カードを重ねると**同じ一文が画面に2つ**並ぶ。匿名の反応なら
+            # 積み上げと合わせて3か所だった。
+            # 2026-09-12 にこのカードを足したのは「同じ絵のまま30〜50秒」を
+            # 避けるためだったが、いまは下地が実写で動いている
+            continue
     # まとめのカードは「答え」だけにする。
     # 問い・答え・次の焦点を3つ並べたら、2分の動画の締めには字が細かすぎ、
     # 下のテロップとも重なっていた（作った動画を目視して発見）。

@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import hashlib
 import math
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -206,8 +207,13 @@ class Renderer:
             # **前の反応を画面に残す**（2026-09-07）。参考チャンネルは白い吹き出しを
             # 4〜5件積み上げていて、途中から見た人も文脈を拾える。こちらは1行ずつ
             # 消えていた
-            self._draw_stack(canvas, stack)
-            self._draw_headline(canvas, text, telop_t, source)
+            # **反応の最中はテロップを出さない**（2026-09-14 指示
+            # 「ネット民の声の時は複数の声が並ぶ感じで、その時にテロップは不要」）。
+            # 声は白い箱に並ぶので、同じ一文を下でもう一度読ませる意味がない
+            if stack:
+                self._draw_stack(canvas, stack)
+            else:
+                self._draw_headline(canvas, text, telop_t, source)
         # 動画背景のときは重ねる前提なのでアルファを残す
         canvas.save(target) if over_video else canvas.convert("RGB").save(target)
         return target
@@ -651,10 +657,25 @@ class Renderer:
             layer.putalpha(layer.getchannel("A").point(lambda a: int(a * _ease_out(telop_t))))
         canvas.alpha_composite(layer)
 
-    # 積み上げる反応の見た目。**白い吹き出しに黒文字**（参考チャンネルと同じ）。
+    # 積み上げる反応の見た目。**白い箱に色つきの字**（2026-09-14 にユーザーが
+    # まとめ動画の画面を見本として提示）。1件ごとに色を変えるので、
+    # どこからどこまでが1つの書き込みかが、読まなくても分かる。
     # 何件残すかは、見出しの上に入る高さから決めた（実測で3件）
-    STACK_KEEP = 3
-    STACK_SIZE = 40
+    # 見本の画面は5件ならんでいた（2026-09-14 にユーザーが提示）
+    STACK_KEEP = 5
+    # **もっと大きく**（2026-09-14 指示）。見本は1行が画面幅の半分以上あった
+    STACK_SIZE = 58
+    # 見本は箱が左右にずれて置かれていた。**同じ左端に揃えない。**
+    # 画面幅に対する割合で、積んだ通し番号ごとにこの順で寄せる
+    STACK_INDENT = (0.04, 0.16, 0.02, 0.22, 0.10)
+    # 見本と同じ並び。白地で読める濃さにしてある
+    STACK_COLORS = (
+        (0, 132, 160, 255),     # 青緑
+        (176, 122, 0, 255),     # 山吹
+        (22, 132, 48, 255),     # 緑
+        (188, 88, 16, 255),     # 橙
+        (168, 32, 136, 255),    # 紅紫
+    )
 
     def _draw_stack(self, canvas: Image.Image, stack: tuple[str, ...]) -> None:
         """直前までの反応を、見出しの上に白い吹き出しで積む。
@@ -671,21 +692,42 @@ class Renderer:
         font = ImageFont.truetype(str(self.config.video.font_path()),
                                   int(self.STACK_SIZE * self.layout.width / 1920))
         layer, draw = _layer(canvas.size)
-        left, top, right, _bottom = self.layout.headline_box
-        pad = int(self.layout.width * 0.012)
-        line_height = font.size + pad * 2
-        y = top - pad - line_height * len(stack[-self.STACK_KEEP:])
-        for depth, text in enumerate(stack[-self.STACK_KEEP:]):
-            width = int(draw.textlength(text, font=font)) + pad * 3
-            width = min(width, right - left)
-            # 古いものほど薄い。いちばん下（新しい）がはっきり見える
-            fade = 150 + int(105 * (depth + 1) / len(stack[-self.STACK_KEEP:]))
-            draw.rounded_rectangle([left, y, left + width, y + line_height],
-                                   radius=int(line_height * 0.35),
-                                   fill=(255, 255, 255, fade))
-            draw.text((left + pad, y + pad - 2), text, font=font,
-                      fill=(18, 18, 22, min(255, fade + 60)))
-            y += line_height
+        _left, _top, right, bottom = self.layout.headline_box
+        pad = int(self.layout.width * 0.014)
+        kept = stack[-self.STACK_KEEP:]
+        # 色と寄せ方は**積んだ通し番号**で決める。画面から消えた分も数に入れるので、
+        # 隣り合う書き込みが同じ色・同じ位置にならない
+        first = len(stack) - len(kept)
+
+        # **書き込みごとに幅も折り返しも変わる。**先に組んでから、
+        # 全体の高さぶんだけ上へ戻して置く（見出しの居場所には入らない）
+        room = right - _left
+        boxes: list[tuple[int, int, list[str], tuple[int, int, int, int]]] = []
+        total = 0
+        for depth, text in enumerate(kept):
+            index = first + depth
+            indent = int(self.layout.width * self.STACK_INDENT[index % len(self.STACK_INDENT)])
+            body = _strip_speaker(text)
+            lines = balanced_wrap(draw, body, font, room - indent - pad * 3)[:3]
+            height = font.size * len(lines) + int(font.size * 0.42) * (len(lines) - 1) + pad * 2
+            width = pad * 3 + max(int(draw.textlength(chunk, font=font)) for chunk in lines)
+            boxes.append((indent, min(width, room - indent), lines,
+                          self.STACK_COLORS[index % len(self.STACK_COLORS)]))
+            total += height + pad
+        head_top = bottom - (self.config.video.headline_size + 26) * 3 - 18
+        y = max(int(self.layout.height * 0.06), head_top - total)
+
+        for indent, width, lines, ink in boxes:
+            height = font.size * len(lines) + int(font.size * 0.42) * (len(lines) - 1) + pad * 2
+            box_left = _left + indent
+            draw.rounded_rectangle([box_left, y, box_left + width, y + height],
+                                   radius=int(font.size * 0.26),
+                                   fill=(255, 255, 255, 246))
+            text_y = y + pad
+            for chunk in lines:
+                draw.text((box_left + pad + pad // 2, text_y), chunk, font=font, fill=ink)
+                text_y += font.size + int(font.size * 0.42)
+            y += height + pad
         canvas.alpha_composite(layer)
 
     def _draw_headline(
@@ -912,7 +954,10 @@ class Renderer:
                     changed = (headline, card) != before
 
                 crowd = (line.speaker or "").strip() in self.config.voice_crowd
-                shown = tuple(stack) if crowd else ()
+                # **いま読んでいる行も箱に入れる**（2026-09-14）。テロップを
+                # 出さない決まりにしたので、ここに入れないと読んでいる声が
+                # 画面のどこにも出なくなる
+                shown = tuple(stack + [line.telop_text() or line.text]) if crowd else ()
                 closed = self.frame(line, scene, mouth_open=False, panel=current,
                                     stack=shown)
                 opened = self.frame(line, scene, mouth_open=True, panel=current,
@@ -934,7 +979,7 @@ class Renderer:
                     ):
                         # 見出しやカードが変わったときだけ、出現のアニメを入れる
                         intro = min(motion.telop_in, speaking * 0.5)
-                        entries += self._intro(line, scene, intro, current)
+                        entries += self._intro(line, scene, intro, current, shown)
 
                 entries += self._mouth_loop(closed, opened, speaking - intro)
                 if pause > 0.01:
@@ -984,6 +1029,7 @@ class Renderer:
         scene: Scene,
         seconds: float,
         panel: tuple[str, str | None, str | None] | None = None,
+        stack: tuple[str, ...] = (),
     ) -> list[tuple[Path, float]]:
         steps = max(1, round(seconds * self.config.motion.fps))
         step = seconds / steps
@@ -993,8 +1039,12 @@ class Renderer:
             # 出現中は口を閉じたままにして、フレームの種類が増えすぎないようにする
             entries.append(
                 (
+                    # **積み上げもここへ渡す**（2026-09-14 指摘「一瞬だけ映る部分は不要」）。
+                    # テロップの出現アニメだけ stack を渡しておらず、
+                    # 反応の行でも0.3秒だけ大テロップが描かれていた
                     self.frame(
-                        line, scene, False, telop_t=progress, hop_t=progress, panel=panel
+                        line, scene, False, telop_t=progress, hop_t=progress,
+                        panel=panel, stack=stack
                     ),
                     step,
                 )
@@ -1255,6 +1305,19 @@ def wrap_text(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont
     if current:
         lines.append(current)
     return lines
+
+
+_SPEAKER_WRAP = re.compile(r"^[^「]{1,12}「(.+)」$", re.S)
+
+
+def _strip_speaker(text: str) -> str:
+    """「ネット民「〜」」から中身だけ取り出す（2026-09-14）。
+
+    積んだ箱に毎回おなじ話者名が付くと、**4件並べたときに同じ字が4回**出る。
+    見本の画面も、書き込みの本文だけを置いている。
+    """
+    found = _SPEAKER_WRAP.match(text.strip())
+    return found.group(1) if found else text
 
 
 def _ease_out(t: float) -> float:

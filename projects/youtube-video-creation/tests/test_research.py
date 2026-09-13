@@ -43,9 +43,12 @@ def _raw(**overrides):
         "watch": "本人の決断",
         "sections": [
             _section(),
+            # **節ごとに別のことを言う。**同じ一文を3節に置くと
+            # 「節をまたいだ言い直し」の点検に引っかかる（2026-09-14 に追加）
             _section(id="why", heading="なぜそうなったか", tier="背景", sources=[],
-                     official=False),
-            _section(id="next", heading="これからどうなる", tier="未確認", official=False),
+                     say="ちーむのじじょうがありました。", official=False),
+            _section(id="next", heading="これからどうなる", tier="未確認",
+                     say="つぎのしあいはどようびです。", official=False),
         ],
     }
     return {**base, **overrides}
@@ -149,8 +152,10 @@ def test_generated_script_opens_with_the_question():
     assert [s.title for s in script.scenes] == [
         "オープニング", "何が起きたか", "なぜそうなったか", "これからどうなる"
     ]
-    # 冒頭で問いを立てる。答えの節は読まない
-    assert any("なぜ金の問題ではないのか" in line.telop_text() for line in script.lines)
+    # **問いは画面に出さない**（2026-09-14 指摘「この今回の問はいらない」）。
+    # 冒頭の2行目は、喋っているつかみがそのまま画面に出る
+    assert not any("今回の問い" in line.telop_text() for line in script.lines)
+    assert any("大きな移籍が動いています" in line.telop_text() for line in script.lines)
     assert "wrap" not in script.cards
 
 
@@ -842,7 +847,9 @@ def test_つかみが別の一言なら残る():
 
     script = parse_script(to_script(build_notes(_raw()), _plan()))   # hook は別の文
     assert len(script.scenes[0].lines) == 2
-    assert any("今回の問い" in line.telop_text() for line in script.lines)
+    # つかみの行は残る。画面に出るのは**その一言**で、問いではない
+    assert any("大きな移籍が動いています" in line.telop_text() for line in script.lines)
+    assert not any("今回の問い" in line.telop_text() for line in script.lines)
 
 
 def test_節ごとに地の文の読み手を決められる():

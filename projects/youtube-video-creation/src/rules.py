@@ -61,10 +61,19 @@ def _from_yaml(path: Path, key: str):
 
 
 def _from_python(target: str, key: str):
+    """`.py` の中の定数を読む。
+
+    **クラスの中に置いた定数も読む**（2026-09-14）。`STACK_KEEP` のように
+    レンダラのクラス属性で持っているものが指せず、「その名前がありません」に
+    なっていた。`Klass.ATTR` と点でつないで書ける
+    """
     module = importlib.import_module(target.replace("/", ".").removesuffix(".py"))
-    if not hasattr(module, key):
-        raise KeyError(key)
-    return getattr(module, key)
+    found = module
+    for part in key.split("."):
+        if not hasattr(found, part):
+            raise KeyError(key)
+        found = getattr(found, part)
+    return found
 
 
 def check(root: Path | None = None) -> list[Mismatch]:
