@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/attributes.dart';
+import '../../models/role.dart';
 import '../../game/eligibility.dart';
 import '../../game/dependencies.dart';
 import '../../game/formulas.dart';
@@ -1051,6 +1052,8 @@ class _ClubTab extends StatelessWidget {
     children: [
       _ClubLifeCard(state: state, controller: controller),
       const SizedBox(height: 16),
+      _RoleCard(state: state, controller: controller),
+      const SizedBox(height: 16),
       _PersonCard(state: state, controller: controller),
       const SizedBox(height: 16),
       _LeagueCard(state: state),
@@ -1066,6 +1069,176 @@ class _ClubTab extends StatelessWidget {
       _TableCard(state: state),
     ],
   );
+}
+
+/// 役割。同じポジションでも、求められるものが違う。
+///
+/// 総合力はポジションの重み付き平均なので、**そのポジションが求めないものを
+/// 伸ばすほど総合力が下がる**（実測で、中盤の選手を守備一本で育てると
+/// ピークが 75.4 → 69.4、代表は 35 → 4 キャップまで落ちた）。
+/// 役割は**重みの置き換え**で、上乗せではない。
+///
+/// **選べるのは今の監督が使うものだけ。** 好きに付け替えられると
+/// 「一番高くなる役割を選ぶ」がただの正解になる。
+class _RoleCard extends StatelessWidget {
+  const _RoleCard({required this.state, required this.controller});
+
+  final CareerState state;
+  final CareerController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+    );
+    final player = state.player;
+    final choices = controller.roleChoices;
+    final manager = state.manager;
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Text('役割', style: theme.textTheme.titleSmall),
+                const Spacer(),
+                Text(
+                  player.role?.label ?? '${player.position.label}の標準',
+                  style: theme.textTheme.bodyMedium,
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text(
+              choices.isEmpty
+                  ? '${manager?.tactic.label ?? '今の監督'}は、'
+                        '${player.position.label}に特別な役割を置いていない。'
+                  : '就いた役割で総合力の測り方が変わる。'
+                        '重く見てもらう代わりに、他は軽く見られる。',
+              style: muted,
+            ),
+            // **外れたことは必ず書く。** 黙って外すと、総合力だけが下がって
+            // 理由が分からない。
+            if (controller.roleDropped != null) ...[
+              const SizedBox(height: 8),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.errorContainer,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  '新しい監督は「${controller.roleDropped!.label}」を使わない。'
+                  '役割が外れた。',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onErrorContainer,
+                  ),
+                ),
+              ),
+            ],
+            if (choices.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              for (final role in choices)
+                _RoleRow(
+                  role: role,
+                  selected: player.role == role,
+                  overall: player.attributes.overallFor(
+                    player.position,
+                    weights: role.weights,
+                  ),
+                  onTap: () =>
+                      controller.setRole(player.role == role ? null : role),
+                ),
+              _RoleRow(
+                role: null,
+                label: '${player.position.label}の標準',
+                note: 'そのポジションで普通に求められるもの。',
+                selected: player.role == null,
+                overall: player.attributes.overallFor(player.position),
+                onTap: () => controller.setRole(null),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 役割1つぶん。**その役割で測ったときの総合力**を先に出す。
+class _RoleRow extends StatelessWidget {
+  const _RoleRow({
+    required this.role,
+    required this.selected,
+    required this.overall,
+    required this.onTap,
+    this.label,
+    this.note,
+  });
+
+  final PlayerRole? role;
+  final String? label;
+  final String? note;
+  final bool selected;
+  final int overall;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: selected
+                ? theme.colorScheme.secondaryContainer
+                : theme.colorScheme.surfaceContainerHighest,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    selected
+                        ? Icons.check_circle
+                        : Icons.radio_button_unchecked,
+                    size: 16,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                  const SizedBox(width: 6),
+                  Text(
+                    role?.label ?? label ?? '',
+                    style: theme.textTheme.bodyMedium,
+                  ),
+                  const Spacer(),
+                  Text('総合力 $overall', style: theme.textTheme.labelMedium),
+                ],
+              ),
+              const SizedBox(height: 4),
+              Text(
+                role?.note ?? note ?? '',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
 }
 
 class _PlayerCard extends StatelessWidget {

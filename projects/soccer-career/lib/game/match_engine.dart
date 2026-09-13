@@ -1775,7 +1775,9 @@ class MatchEngine {
       condition -=
           (menu.conditionCost * costFactor * effort.cost * companion.cost)
               .round();
-      final canGrow = attributes.overallFor(player.position) < player.potential;
+      final canGrow =
+          attributes.overallFor(player.position, weights: player.roleWeights) <
+          player.potential;
       // ポテンシャルに達しても、超越の1項目だけはそのカテゴリの練習で伸びる。
       final transcend = player.transcendDetail;
       final onlyTranscend =
@@ -1811,7 +1813,14 @@ class MatchEngine {
             final chance =
                 effective *
                 Formulas.growthShareFactor(
-                  Attributes.weightShare(player.position, key),
+                  // **役割の重みで割り戻す。** 総合力を役割で測るのに
+                  // 成長の割り戻しだけ標準のままだと、重く見られる能力ほど
+                  // 伸びやすくなって二重取りになる。
+                  Attributes.weightShare(
+                    player.position,
+                    key,
+                    weights: player.roleWeights,
+                  ),
                 );
             if (_random.nextDouble() >= chance) continue;
             // 自分で振るなら、伸びるはずだったぶんを経験点にする。
