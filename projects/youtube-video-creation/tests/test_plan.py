@@ -8,7 +8,7 @@ RAW = {
     "domains": {"english": ["skysports.com", "espn.com"], "social": ["x.com"]},
     "tiers": {
         "確定": {"needs_sources": 1, "needs_official": True},
-        "報道": {"needs_sources": 2, "needs_official": False},
+        "報道": {"needs_sources": 1, "needs_official": False},
         "未確認": {"needs_sources": 1, "needs_official": False},
     },
     "cadence": {"per_day": 3, "slots": ["weekly"]},

@@ -3,7 +3,7 @@
 #   python -m src.cli sources --new
 sites:
 - host: derbyderbyderby.it
-  seen: 21
+  seen: 23
   days:
   - '2026-09-02'
   - '2026-09-03'
@@ -13,6 +13,7 @@ sites:
   - '2026-09-09'
   - '2026-09-11'
   - '2026-09-12'
+  - '2026-09-13'
   examples:
   - https://www.derbyderbyderby.it/calcio-italiano/monza-juric-dopo-la-vittoria-sul-torino-se-ci-salviamo-sara-un-grande-risultato/?intcmp=gazzanet-derbyderbyderby
   - https://www.derbyderbyderby.it/calcio-estero/monza-ecco-zeballos-in-italia-per-il-mito-di-maradona-e-i-consigli-di-paredes/?intcmp=gazzanet-derbyderbyderby
@@ -59,6 +60,18 @@ sites:
   examples:
   - https://samuraigoal.doorblog.jp/archives/63437489.html
   - https://samuraigoal.doorblog.jp/archives/63450028.html
+- host: calcionapoli1926.it
+  seen: 9
+  days:
+  - '2026-09-02'
+  - '2026-09-03'
+  - '2026-09-04'
+  - '2026-09-05'
+  - '2026-09-12'
+  examples:
+  - https://www.calcionapoli1926.it/ultimissime-calcio-napoli/mazzocchi-laddio-al-napoli-e-da-brividi-sono-stato-un-napoletano-con-quella-maglia-addosso/?intcmp=gazzanet-calcionapoli1926
+  - https://www.calcionapoli1926.it/altro/jorginho-agente-santos-proposte-serie-a/?intcmp=gazzanet-calcionapoli1926
+  - https://www.calcionapoli1926.it/photogallery/giovane-infortunio-napoli-seriea-intervento-ernia-inguinale-post-social-instagram-photogallery-ultime/?refresh_ce&intcmp=gazzanet-calcionapoli1926
 - host: fcinter1908.it
   seen: 8
   days:
@@ -77,17 +90,6 @@ sites:
   - https://www.tuttobolognaweb.it/mercato/tedesco/?intcmp=gazzanet-tuttobolognaweb
   - https://www.tuttobolognaweb.it/news/dovbyk-emozionato-per-il-gol-ma-dobbiamo-migliorare/?intcmp=gazzanet-tuttobolognaweb
   - https://www.tuttobolognaweb.it/mercato/il-ritorno-di-theate-oggi-il-bologna-e-diverso-tedesco-grande-mister/?intcmp=gazzanet-tuttobolognaweb
-- host: calcionapoli1926.it
-  seen: 6
-  days:
-  - '2026-09-02'
-  - '2026-09-03'
-  - '2026-09-04'
-  - '2026-09-05'
-  examples:
-  - https://www.calcionapoli1926.it/ultimissime-calcio-napoli/mazzocchi-laddio-al-napoli-e-da-brividi-sono-stato-un-napoletano-con-quella-maglia-addosso/?intcmp=gazzanet-calcionapoli1926
-  - https://www.calcionapoli1926.it/altro/jorginho-agente-santos-proposte-serie-a/?intcmp=gazzanet-calcionapoli1926
-  - https://www.calcionapoli1926.it/photogallery/giovane-infortunio-napoli-seriea-intervento-ernia-inguinale-post-social-instagram-photogallery-ultime/?refresh_ce&intcmp=gazzanet-calcionapoli1926
 - host: bbc.co.uk
   seen: 6
   days:
@@ -193,12 +195,14 @@ sites:
   - https://www.cittaceleste.it/news/lazio-fabiani-leuropa-e-lobiettivo-mercato-i-voti-a-fine-anno-lanno-scorso/?refresh_ce
   - https://www.cittaceleste.it/news/lazio-pinamonti-gattuso-molto-esigente-a-immobile-chiederei/
 - host: genoaoggi.it
-  seen: 3
+  seen: 4
   days:
   - '2026-09-04'
   - '2026-09-05'
+  - '2026-09-13'
   examples:
   - https://www.genoaoggi.it/calciomercato/mercato-genoa/ehizibue-al-genoa-anni-fa-dissi-no-oggi-e-il-modo-migliore-per-chiedere-perdono/?intcmp=gazzanet-genoaoggi
+  - https://www.genoaoggi.it/notizie/genoa-de-rossi-pari-frosinone/?intcmp=gazzanet-genoaoggi
 - host: leedsunited.com
   seen: 3
   days:
@@ -213,6 +217,14 @@ sites:
   examples:
   - https://www.mediagol.it/palermo/palermo-inzaghi-non-mi-e-piaciuto-assolutamente-quel-black-out-peda-vi-dico-come-sta/?intcmp=gazzanet-mediagol
   - https://www.mediagol.it/palermo/ex-palermo-brunori-subito-in-gol-ho-sentito-unenergia-che-mi-serviva-e-racconta-la-trattativa/?intcmp=gazzanet-mediagol
+- host: fantamagazine.com
+  seen: 3
+  days:
+  - '2026-09-08'
+  - '2026-09-13'
+  examples:
+  - https://www.fantamagazine.com/news/cagliari-lecce-1-0-di-francesco-poco-cattivi-e-determinati-cosi-non-possiamo-permettercelo/
+  - https://www.fantamagazine.com/news/verso-lecce-monza-di-francesco-avverte-non-possiamo-ripetere-la-gara-di-cagliari/
 - host: today.rtl.lu
   seen: 2
   days:
@@ -246,12 +258,14 @@ sites:
   examples:
   - https://www.leeds-live.co.uk/sport/leeds-united/how-joe-rodons-injury-impact-34569429
   - https://www.leeds-live.co.uk/sport/leeds-united/brighton-hove-albion-vs-34571891
-- host: fantamagazine.com
+- host: cagliaricalcio-news.it
   seen: 2
   days:
-  - '2026-09-08'
+  - '2026-09-07'
+  - '2026-09-13'
   examples:
-  - https://www.fantamagazine.com/news/cagliari-lecce-1-0-di-francesco-poco-cattivi-e-determinati-cosi-non-possiamo-permettercelo/
+  - https://www.cagliaricalcio-news.it/notizie/interviste/cagliari-pisacane-coppa-italia-fiducia-ragazzi/?intcmp=gazzanet-cagliaricalcionews
+  - https://www.cagliaricalcio-news.it/notizie/pisacane-cagliari-atalanta-romano/?intcmp=gazzanet-cagliaricalcionews
 - host: guardian.ng
   seen: 1
   days:
@@ -360,9 +374,9 @@ sites:
   - '2026-09-05'
   examples:
   - https://www.newcastleworld.com/sport/football/newcastle-united/-8961947
-- host: cagliaricalcio-news.it
+- host: atalantaoggi.it
   seen: 1
   days:
-  - '2026-09-07'
+  - '2026-09-13'
   examples:
-  - https://www.cagliaricalcio-news.it/notizie/interviste/cagliari-pisacane-coppa-italia-fiducia-ragazzi/?intcmp=gazzanet-cagliaricalcionews
+  - https://www.atalantaoggi.it/notizie/atalanta-sarri-cagliari-partita-sarri/?intcmp=gazzanet-atalantaoggi

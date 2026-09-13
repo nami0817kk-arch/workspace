@@ -96,11 +96,22 @@ def test_context_tier_needs_no_sources():
     assert verify(build_notes(raw), _plan()) == []
 
 
-def test_report_tier_needs_two_sources():
+def test_report_tier_needs_one_source():
+    """報道は**1本でよい**（2026-09-07 のユーザー判断）。
+
+    config だけ 2 のまま残っていたので、取材メモが「2本目の欄」を
+    埋めるために同じ記事を並べるようになっていた（2026-09-12 に発覚）。
+    """
     raw = _raw()
     raw["sections"][0] = _section(tier="報道", official=False)
+    assert not any("出典が" in p for p in verify(build_notes(raw), _plan()))
+
+
+def test_report_tier_needs_at_least_one_source():
+    raw = _raw()
+    raw["sections"][0] = _section(tier="報道", official=False, sources=[])
     problems = verify(build_notes(raw), _plan())
-    assert any("出典が2本必要" in p for p in problems)
+    assert any("出典が1本必要" in p for p in problems)
 
 
 def test_confirmed_tier_needs_an_official_announcement():

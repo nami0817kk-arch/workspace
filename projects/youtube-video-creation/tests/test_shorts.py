@@ -533,3 +533,42 @@ def test_中身のある行は振りとして落とさない():
                      "そのときに感じたことを、こう振り返っています。")
     assert len(long.text) > LEAD_IN_MAX
     assert not _is_lead_in(long)
+
+
+def test_marked_section_wins_over_score():
+    """@main の印がある節を必ず使う（2026-09-13）。
+
+    反応を7行並べた節が点で勝ち、ショートが試合の話をせず
+    ネットの声だけになっていた。印は書いた人の合図なので優先する。
+    """
+    from src.script_model import Line, Scene, Script
+    from src.shorts import _pick
+
+    opening = Scene(title="オープニング", lines=[Line(speaker="キャスター", text="題名")])
+    story = Scene(title="山場", main=True,
+                  lines=[Line(speaker="解説", text="ここが芯です")])
+    voices = Scene(title="見ていた人が書いていたこと",
+                   lines=[Line(speaker="ネット民", text="すごい") for _ in range(7)])
+    script = Script(title="見出し", scenes=[opening, voices, story])
+    assert _pick(script, "").title == "山場"
+
+
+def test_short_gets_a_few_voices_at_the_end():
+    """ショートの最後にもネットの声を少しだけ足す（2026-09-13 ユーザー指示）。
+
+    本編では反応を最後の節にまとめる決まりなので、山場の節を切り出す
+    ショートには1件も乗らなくなっていた。
+    """
+    from src.script_model import Line, Scene, Script
+    from src.shorts import trim
+
+    opening = Scene(title="オープニング", lines=[Line(speaker="キャスター", text="題名です")])
+    story = Scene(title="山場", main=True,
+                  lines=[Line(speaker="解説", text="ここが芯です")])
+    voices = Scene(title="見ていた人が書いていたこと",
+                   lines=[Line(speaker="ネット民", text=f"声{i}") for i in range(5)])
+    short = trim(Script(title="見出し", scenes=[opening, story, voices]))
+    said = [l.speaker for l in short.scenes[-1].lines]
+    assert "ネット民" in said
+    assert said.count("ネット民") <= 3
+    assert said[0] == "解説"        # 反応は最後に足す

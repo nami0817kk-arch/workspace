@@ -97,6 +97,9 @@ CREST_MAIN_HEIGHT = 410      # 1280x720 の中での高さ
 # **暗すぎると `サムネの黒` の点検が止める**（実測で顔の段の75%が黒だった）。
 # 一覧で沈まない明るさにする
 CREST_MAIN_GROUND = (34, 58, 96, 255)
+# **暗いエンブレムのときに使う明るい地**（2026-09-13）。
+# 紺の地に紺のロゴだと何のクラブか分からなかった
+CREST_MAIN_GROUND_LIGHT = (232, 236, 242, 255)
 
 SHORT_SIZE = (1080, 1920)
 SHORT_MARGIN = 56
@@ -605,6 +608,20 @@ def _band_thumbnail(
     return out_path
 
 
+def _crest_brightness(paths) -> float:
+    """エンブレムの明るさ（0=真っ黒 / 255=真っ白）。透けている所は数えない。"""
+    total, count = 0.0, 0
+    for path in paths:
+        with Image.open(path) as source:
+            mark = source.convert("RGBA").resize((64, 64), Image.LANCZOS)
+        for r, g, b, a in mark.getdata():
+            if a < 40:
+                continue
+            total += 0.299 * r + 0.587 * g + 0.114 * b
+            count += 1
+    return total / count if count else 128.0
+
+
 def _crest_stage(names: list[str], font_path: str, link: str = "対") -> Image.Image | None:
     """エンブレムを大きく並べた下地。写真の代わりに使う。
 
@@ -617,15 +634,22 @@ def _crest_stage(names: list[str], font_path: str, link: str = "対") -> Image.I
     found = [(n, p) for n, p in found if p is not None]
     if not found:
         return None
-    canvas = Image.new("RGBA", SIZE, CREST_MAIN_GROUND)
-    # 中央をうっすら明るく。**平らな一色は一覧で沈む**
+    # **地の色はエンブレムの明るさで決める**（2026-09-13 ユーザー
+    # 「白枠ではなく背景色をかえて」）。紺の地に紺のトッテナムを置いて
+    # 沈んでいた。白い丸を敷く案は、丸が並んで見た目がうるさかった
+    bright = _crest_brightness([p for _, p in found[:3]])
+    dark_marks = bright < 150
+    ground = CREST_MAIN_GROUND_LIGHT if dark_marks else CREST_MAIN_GROUND
+    canvas = Image.new("RGBA", SIZE, ground)
+    # 中央をうっすら濃く（明るい地）／明るく（暗い地）。**平らな一色は一覧で沈む**
     glow, glow_draw = _layer(SIZE)
+    tint = (150, 168, 196, 18) if dark_marks else (96, 132, 186, 16)
     for step in range(14):
         radius = int(SIZE[0] * (0.62 - step * 0.04))
         glow_draw.ellipse(
             [SIZE[0] // 2 - radius, int(SIZE[1] * 0.32) - radius // 2,
              SIZE[0] // 2 + radius, int(SIZE[1] * 0.32) + radius // 2],
-            fill=(96, 132, 186, 16),
+            fill=tint,
         )
     canvas.alpha_composite(glow)
     marks = []
@@ -635,7 +659,9 @@ def _crest_stage(names: list[str], font_path: str, link: str = "対") -> Image.I
         ratio = CREST_MAIN_HEIGHT / mark.height
         marks.append(mark.resize((max(1, int(mark.width * ratio)), CREST_MAIN_HEIGHT),
                                  Image.LANCZOS))
-    gap = 96
+    # **白い丸のぶん、間を広げる**（2026-09-13）。96 のままだと丸どうしが
+    # 重なり、あいだの「対」が白地に白で沈んだ
+    gap = 110
     total = sum(m.width for m in marks) + gap * (len(marks) - 1)
     x = (SIZE[0] - total) // 2
     # 帯が下を覆うので、少し上に置く
@@ -656,7 +682,10 @@ def _crest_stage(names: list[str], font_path: str, link: str = "対") -> Image.I
         width = draw.textlength(text, font=font)
         draw.text(((middles[0] + middles[1] - width) / 2,
                    top + CREST_MAIN_HEIGHT / 2 - 44),
-                  text, font=font, fill=(255, 255, 255, 235))
+                  # **地の色に合わせる**（2026-09-13）。明るい地に白の「対」だと
+                  # 消える。エンブレムが暗いときは地が明るいので、字は濃く
+                  text, font=font,
+                  fill=(40, 56, 84, 240) if dark_marks else (255, 255, 255, 235))
     return canvas
 
 

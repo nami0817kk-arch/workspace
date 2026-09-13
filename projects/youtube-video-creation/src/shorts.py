@@ -75,6 +75,7 @@ def trim(script: Script, section: str = "", max_seconds: float = MAX_SECONDS) ->
     _drop_main_mark(short.scenes[1])
     _drop_lead_in(short.scenes[1])
     _fit(short, max_seconds)
+    _add_voices_tail(short, script, max_seconds)
     _add_face(short)
     if not short.scenes[-1].lines:
         raise ShortError(f"『{body.title}』は冒頭だけで尺を使い切ります。節を選び直してください")
@@ -206,6 +207,15 @@ def _pick(script: Script, section: str) -> Scene:
         known = " / ".join(scene.title for scene in script.scenes[1:])
         raise ShortError(f"『{section}』という節がありません（{known}）")
 
+    # **山場の印があるなら、その節にする**（2026-09-13）。
+    # CLAUDE.md には「機械の点より印を優先する」と書いてあったのに、
+    # 実際は点の加算（MAIN_BONUS）でしかなく、**反応を並べた節に負けた。**
+    # 代弁が7行ある「見ていた人が書いていたこと」が選ばれ、
+    # ショートが試合の話をせずネットの声だけになっていた（書き出す前に発見）
+    marked = [s for s in script.scenes[1:] if getattr(s, "main", False)]
+    if marked:
+        return marked[0]
+
     # **冒頭の次を機械的に取らない。**そこは前置きであることが多い。
     # まとめは答えを先に言ってしまうので外す
     body = [s for s in script.scenes[1:] if s.title != "まとめ"]
@@ -214,6 +224,51 @@ def _pick(script: Script, section: str) -> Scene:
     cards = script.cards or {}
     best = max(body, key=lambda s: (strength(s, cards), -body.index(s)))
     return best
+
+
+# ショートの最後に足すネットの声の本数（2026-09-13 ユーザー「ショートにもいくつか」）
+VOICES_TAIL_MAX = 3
+
+
+def _is_voices_scene(scene: Scene) -> bool:
+    """反応だけを並べた節か。**語りが1行でもあれば違う。**"""
+    lines = [l for l in scene.lines if (l.text or "").strip()]
+    if not lines:
+        return False
+    return all((getattr(l, "speaker", "") or "").strip() not in NARRATORS for l in lines)
+
+
+def _add_voices_tail(short: Script, script: Script, max_seconds: float) -> None:
+    """**ショートの最後にもネットの声を少しだけ足す**（2026-09-13 ユーザー指示）。
+
+    本編では「反応は最後の節」と決まっているので、ショートが切り出す山場の節には
+    入らない。そのままだとショートに1件も乗らない。**尺が余っているぶんだけ**、
+    最後の反応の節から順に足す。
+
+    **尺に収める処理のあとに足す。**先に足すと、締めのかたまりが反応になり、
+    その手前＝山場の一番強い一言から削られてしまう（デ・パウルの回で実際に起きた）。
+    """
+    if short.scenes[-1] is short.scenes[0]:
+        return
+    source = None
+    for scene in reversed(script.scenes[1:]):
+        if scene is short.scenes[-1] or scene.title == short.scenes[-1].title:
+            continue
+        if _is_voices_scene(scene):
+            source = scene
+            break
+    if source is None:
+        return
+    target = max_seconds * ESTIMATE_SLACK
+    added = 0
+    for line in source.lines:
+        if added >= VOICES_TAIL_MAX:
+            break
+        cost = line.duration or line.estimated_duration()
+        if _estimate(short) + cost > target:
+            break
+        short.scenes[-1].lines.append(copy.deepcopy(line))
+        added += 1
 
 
 def _add_face(script: Script) -> None:

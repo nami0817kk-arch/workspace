@@ -1149,3 +1149,18 @@ def test_件数への感想は埋め草():
     # 件数でない数字は通す
     ok = _said(("解説", "17人が入れ替わりました。"))
     assert check_filler(ok).ok
+
+
+def test_title_ending_with_wa_hides_the_answer():
+    """「〜は」で切る形も答えは隠れている（2026-09-13）。
+
+    「クリスタル・パレス対イプスウィッチ、日本人3人の活躍は」を
+    言い切りだと弾いていた。述語がまだ来ていないのに。
+    """
+    from src.review import check_title_hook
+    from src.script_model import Script
+
+    ok = Script(title="クリスタル・パレス対イプスウィッチ、日本人3人の活躍は", scenes=[])
+    assert check_title_hook(ok).ok
+    ng = Script(title="クリスタル・パレスがイプスウィッチに逆転負けした", scenes=[])
+    assert not check_title_hook(ng).ok

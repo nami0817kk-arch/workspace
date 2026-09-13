@@ -592,7 +592,11 @@ tiers:
     needs_official: true      # クラブ・リーグ・当事者の発表であること
     description: クラブ・リーグ・当事者が発表した
   報道:
-    needs_sources: 2          # 2社以上で一致していること
+    # **1本でよい**（2026-09-07 のユーザー判断）。それまでは2社以上の一致を
+    # 条件にしていた。**CLAUDE.md には書き換えたのに、ここを直し忘れていた**
+    # （2026-09-12 に発覚）。おかげで取材メモは「2本目のURL」を埋めるために
+    # 同じ記事を並べるようになり、**数を満たすだけの欄**になっていた
+    needs_sources: 1
     needs_official: false
     description: 報道機関が報じた
   未確認:
@@ -1073,3 +1077,7 @@ excluded_topics:
     reason: 独裁者・殺害という言葉が入り、サッカーの話から外れる
     decided: 2026-09-12
     source: https://www.espn.com/soccer/story/_/id/49903623/kylian-mbappe-dictator-meme-criticises-lack-political-awareness
+  - topic: ロドリのバレンシアへの侮辱発言と、主将ガヤへの謝罪
+    reason: すでに扱った題材（2026-09-13 ユーザー「もう作ったよ」）
+    decided: 2026-09-13
+    source: https://footballnet.2chblog.jp/archives/60045000.html
