@@ -10,6 +10,7 @@ import 'package:soccer_manager/main.dart';
 import 'package:soccer_manager/models/incoming_offer.dart';
 import 'package:soccer_manager/models/season_award.dart';
 import 'package:soccer_manager/monetization/ad_service.dart';
+import 'package:soccer_manager/monetization/funds_pack.dart';
 import 'package:soccer_manager/monetization/monetization_controller.dart';
 import 'package:soccer_manager/monetization/purchase_service.dart';
 import 'package:soccer_manager/state/game_state.dart';
@@ -211,6 +212,13 @@ class _StubPurchaseService implements PurchaseService {
 
   @override
   Future<PurchaseOutcome> buySupporter() async => PurchaseOutcome.unavailable;
+
+  @override
+  Future<String?> priceLabelFor(FundsPack pack) async => null;
+
+  @override
+  Future<PurchaseOutcome> buyFundsPack(FundsPack pack) async =>
+      PurchaseOutcome.unavailable;
 
   @override
   Future<PurchaseOutcome> restorePurchases() async =>
