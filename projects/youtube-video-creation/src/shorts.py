@@ -47,7 +47,11 @@ def portrait(config: ProjectConfig) -> ProjectConfig:
         headline_size=max(44, int(config.video.headline_size * 0.70)),
         title_size=max(56, int(config.video.title_size * 0.62)),
     )
-    titles = replace(config.titles, intro=0.0, chapter=0.0)
+    # **末尾の無音を削る**（2026-09-13、Gemini に実物の動画を見せて指摘された）。
+    # 読み上げ37.2秒に対して動画は40.2秒。**最後の3秒は音が無い。**
+    # 冒頭の静止カードを外した理由（「最初の2.6秒で誰も喋っていなかった」）と
+    # まったく同じことが、終わりで起きていた。**ショートは最後の一言で終える**
+    titles = replace(config.titles, intro=0.0, chapter=0.0, outro=SHORT_OUTRO)
     # **ショートは少し速く読む**（2026-09-08）。参考は反応1件3秒台で、
     # 9/7 に Gemini に聞いた答えでも「1件3〜4秒に詰める」が2番目だった。
     # 本編の話速（1.0〜1.05）は参考と同じなので触らず、ショートだけ上げる
@@ -225,6 +229,10 @@ def _pick(script: Script, section: str) -> Scene:
     best = max(body, key=lambda s: (strength(s, cards), -body.index(s)))
     return best
 
+
+# ショートの最後のカードを出す秒数（2026-09-13）。**0 で切る。**
+# 本編は3秒あるが、ショートで3秒の無音はスワイプされるだけだった
+SHORT_OUTRO = 0.0
 
 # ショートの最後に足すネットの声の本数（2026-09-13 ユーザー「ショートにもいくつか」）
 VOICES_TAIL_MAX = 3

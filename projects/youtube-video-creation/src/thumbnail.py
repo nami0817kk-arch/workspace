@@ -9,7 +9,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw, ImageEnhance, ImageFont
 
 from . import ffmpeg
 from .config import ProjectConfig, _resolve
@@ -612,6 +612,43 @@ def _band_thumbnail(
     return out_path
 
 
+# エンブレムの下地に敷くスタジアムの写真（2026-09-13、Gemini 指摘）。
+# 「無地のグレーだと、素人がパワポで作った画像に見える」。
+# stadium_night.mp4 の1コマ。出どころは assets/grounds/credits.json
+CREST_GROUND_PHOTO = Path("assets/grounds/stadium.jpg")
+# 写真をどれだけ地の色へ寄せるか。**強く寄せる。**
+# 写真をそのまま出すとエンブレムが読めない。欲しいのは「무地ではない」ことだけ
+CREST_GROUND_BLEND = 0.78
+
+
+def _crest_ground(ground: tuple[int, int, int, int], dark_marks: bool) -> Image.Image:
+    """エンブレムを置く下地。**平らな一色にしない**（2026-09-13）。
+
+    スタジアムの写真を敷いてから、地の色へ強く寄せる。
+    暗いエンブレムなら明るい地へ、明るいエンブレムなら暗い地へ寄せるので、
+    **コントラストは今までどおり保ったまま、質感だけ足せる。**
+    写真が無ければ今までどおり一色（取り込んでいない環境でも壊れない）。
+    """
+    flat = Image.new("RGBA", SIZE, ground)
+    if not CREST_GROUND_PHOTO.exists():
+        return flat
+    try:
+        with Image.open(CREST_GROUND_PHOTO) as source:
+            photo = source.convert("RGBA")
+    except Exception:
+        return flat
+    ratio = max(SIZE[0] / photo.width, SIZE[1] / photo.height)
+    photo = photo.resize((max(1, int(photo.width * ratio)),
+                          max(1, int(photo.height * ratio))), Image.LANCZOS)
+    left = (photo.width - SIZE[0]) // 2
+    top = (photo.height - SIZE[1]) // 2
+    photo = photo.crop((left, top, left + SIZE[0], top + SIZE[1]))
+    if dark_marks:
+        # 明るい地に寄せるときは、写真も先に明るく持ち上げる
+        photo = ImageEnhance.Brightness(photo).enhance(1.25)
+    return Image.blend(photo, flat, CREST_GROUND_BLEND)
+
+
 def _crest_brightness(paths) -> float:
     """エンブレムの明るさ（0=真っ黒 / 255=真っ白）。透けている所は数えない。"""
     total, count = 0.0, 0
@@ -644,7 +681,7 @@ def _crest_stage(names: list[str], font_path: str, link: str = "対") -> Image.I
     bright = _crest_brightness([p for _, p in found[:3]])
     dark_marks = bright < 150
     ground = CREST_MAIN_GROUND_LIGHT if dark_marks else CREST_MAIN_GROUND
-    canvas = Image.new("RGBA", SIZE, ground)
+    canvas = _crest_ground(ground, dark_marks)
     # 中央をうっすら濃く（明るい地）／明るく（暗い地）。**平らな一色は一覧で沈む**
     glow, glow_draw = _layer(SIZE)
     tint = (150, 168, 196, 18) if dark_marks else (96, 132, 186, 16)

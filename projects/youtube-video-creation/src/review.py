@@ -114,6 +114,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     opening = check_short_opening(out_dir / "video.mp4")
     if opening is not None:
         findings.append(opening)
+    findings.append(check_tail_silence(script, out_dir))
     if duration is not None:
         findings.append(_duration(duration))
     return findings
@@ -1577,3 +1578,70 @@ def check_band_length(script: Script) -> Finding:
                        f"{len(line1)}字あります（{BAND_LINE_MAX}字まで）。"
                        "親指の大きさだと字が小さくなって読めません: " + line1)
     return Finding(True, "帯の1行目", f"{len(line1)}字")
+
+
+# 読み上げが終わってから動画が終わるまで、許す無音の長さ（2026-09-13）。
+# Gemini に実物のショートを見せたら「最後の3〜4秒が無音で、
+# ショートではここで確実にスワイプされる」と言われた。測ったら
+# 読み上げ37.2秒に対して動画40.2秒。**冒頭の静止カードを外したのと
+# 同じことが、終わりで起きていた**
+TAIL_SILENCE_MAX = 1.5
+# **本編は最後のカードを3秒出す決まり**（締めの挨拶を読み上げない代わり）。
+# そこは意図した無音なので、少しだけ余裕を見る
+TAIL_SILENCE_MAX_MAIN = 3.6
+
+
+def check_tail_silence(script: Script, out_dir) -> Finding:
+    """最後の一言のあと、音の無い時間がどれだけ続くか。
+
+    **音量の点検は平均で見るので、末尾の無音は通ってしまう。**
+    誰も喋っていない時間は、画面が静止していても点検に引っかからない。
+    """
+    from pathlib import Path
+
+    video = Path(out_dir) / "video.mp4"
+    if not video.exists():
+        return Finding(True, "末尾の無音", "書き出し前です")
+    # **台本の Script には尺が入っていない**（ビルドのときに決まる）。
+    # 書き出した script.json のほうを見る（2026-09-13 に直した）
+    spoken = built_duration(Path(out_dir))
+    if not spoken:
+        return Finding(True, "末尾の無音", "読み上げがありません")
+    length = _video_seconds(video)
+    if not length:
+        return Finding(True, "末尾の無音", "尺を測れませんでした")
+    gap = length - spoken
+    # **縦型（ショート）だけ厳しく見る。**本編は最後のカードを3秒出す決まりで、
+    # そこは意図した無音。ショートで3秒空けるとスワイプされるだけだった
+    size = _dimensions(video)
+    portrait = bool(size and size[1] > size[0])
+    limit = TAIL_SILENCE_MAX if portrait else TAIL_SILENCE_MAX_MAIN
+    if gap > limit:
+        return Finding(False, "末尾の無音",
+                       f"最後の {gap:.1f} 秒、誰も喋っていません"
+                       f"（読み上げ {spoken:.1f}秒 / 動画 {length:.1f}秒）")
+    return Finding(True, "末尾の無音", f"{max(gap, 0):.1f} 秒")
+
+
+def _video_seconds(video) -> float | None:
+    """書き出した動画の実尺（秒）。**script.json の合計ではない。**
+
+    script.json は読み上げの終わりまでしか持っていないので、
+    最後のカードぶんの無音が見えない。動画そのものを測る。
+    """
+    import re as _re
+    import subprocess
+
+    from . import ffmpeg as _ff
+
+    try:
+        out = subprocess.run([str(_ff.ffmpeg_exe()), "-i", str(video)],
+                             capture_output=True, text=True,
+                             encoding="utf-8", errors="replace")
+    except Exception:
+        return None
+    found = _re.search(r"Duration:\s*(\d+):(\d+):(\d+(?:\.\d+)?)", out.stderr or "")
+    if not found:
+        return None
+    h, m, sec = found.groups()
+    return int(h) * 3600 + int(m) * 60 + float(sec)

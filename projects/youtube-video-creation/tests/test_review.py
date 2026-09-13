@@ -1180,3 +1180,34 @@ def test_band_first_line_length_is_flagged():
     ng = Script(title="見出し", scenes=[],
                 meta={"thumbnail_line1": "パレス対イプスウィッチ 日本人3人の活躍は"})
     assert not check_band_length(ng).ok
+
+
+def test_tail_silence_is_flagged(tmp_path, monkeypatch):
+    """最後の一言のあと、誰も喋らない時間が長すぎないか（2026-09-13）。
+
+    Gemini に実物のショートを見せて見つかった。読み上げ37.2秒に対して
+    動画40.2秒で、**最後の3秒が無音**だった。音量の点検は平均で見るので、
+    末尾の無音は通ってしまう。冒頭の静止カードを外したのと同じことが、
+    終わりで起きていた。
+    """
+    from src import review
+    from src.script_model import Line, Scene, Script
+
+    (tmp_path / "video.mp4").write_bytes(b"dummy")
+    (tmp_path / "script.json").write_text(
+        '{"scenes":[{"lines":[{"start":0,"duration":37.2}]}]}', encoding="utf-8")
+    script = Script(title="見出し", scenes=[
+        Scene(title="節", lines=[Line(speaker="キャスター", text="本文")])])
+
+    # 縦型（ショート）: 3秒の無音は止める
+    monkeypatch.setattr(review, "_dimensions", lambda _v: (1080, 1920))
+    monkeypatch.setattr(review, "_video_seconds", lambda _v: 40.2)
+    assert not review.check_tail_silence(script, tmp_path).ok
+
+    monkeypatch.setattr(review, "_video_seconds", lambda _v: 37.6)
+    assert review.check_tail_silence(script, tmp_path).ok
+
+    # **本編は最後のカードを3秒出す決まり**なので、そこは通す
+    monkeypatch.setattr(review, "_dimensions", lambda _v: (1920, 1080))
+    monkeypatch.setattr(review, "_video_seconds", lambda _v: 40.2)
+    assert review.check_tail_silence(script, tmp_path).ok
