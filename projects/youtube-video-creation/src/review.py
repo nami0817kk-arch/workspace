@@ -98,6 +98,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
             findings.append(check_wrap_share(script))
         findings.append(check_title_hook(script))
         findings.append(check_title_subject(script))
+        findings.append(check_band_length(script))
     findings.append(_thumbnail_face(script))
     findings.append(check_thumbnail_dark(out_dir))
     findings.append(check_narration(out_dir))
@@ -1552,3 +1553,27 @@ def contact_sheet(out_dir: Path, columns: int = 4, limit: int = 24) -> Path | No
     target = out_dir / "contact.jpg"
     sheet.save(target, quality=86)
     return target
+
+
+# 帯の1行目の長さ（2026-09-13、Gemini にサムネ6枚を見せて出た数字）。
+# 「15文字を超えると親指サイズで潰れ、脳が文章として認識を拒否する。
+# 上限12、理想10」と言われた。**いきなり12は今の書き方と合わない**ので、
+# まず14で知らせる。詰まりぐあいを見ながら下げる
+BAND_LINE_MAX = 14
+
+
+def check_band_length(script: Script) -> Finding:
+    """サムネの帯の1行目が長すぎないか。
+
+    長いと `_fit_band` が字を小さくして収める。**収まってはいるが、
+    一覧で読めない。**画面で見ると問題なく見えるので、目視では気づけない。
+    """
+    meta = script.meta or {}
+    line1 = str(meta.get("thumbnail_line1") or "").strip()
+    if not line1:
+        return Finding(True, "帯の1行目", "ありません")
+    if len(line1) > BAND_LINE_MAX:
+        return Finding(False, "帯の1行目",
+                       f"{len(line1)}字あります（{BAND_LINE_MAX}字まで）。"
+                       "親指の大きさだと字が小さくなって読めません: " + line1)
+    return Finding(True, "帯の1行目", f"{len(line1)}字")

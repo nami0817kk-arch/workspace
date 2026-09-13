@@ -1164,3 +1164,19 @@ def test_title_ending_with_wa_hides_the_answer():
     assert check_title_hook(ok).ok
     ng = Script(title="クリスタル・パレスがイプスウィッチに逆転負けした", scenes=[])
     assert not check_title_hook(ng).ok
+
+
+def test_band_first_line_length_is_flagged():
+    """サムネの帯の1行目が長いと、親指の大きさで読めない（2026-09-13）。
+
+    Gemini にサムネ6枚を見せて「15文字を超えると潰れる」と指摘された。
+    収まってはいる（字が小さくなる）ので、画面で見ても気づけない。
+    """
+    from src.review import check_band_length
+    from src.script_model import Script
+
+    ok = Script(title="見出し", scenes=[], meta={"thumbnail_line1": "鎌田大地が2アシスト"})
+    assert check_band_length(ok).ok
+    ng = Script(title="見出し", scenes=[],
+                meta={"thumbnail_line1": "パレス対イプスウィッチ 日本人3人の活躍は"})
+    assert not check_band_length(ng).ok

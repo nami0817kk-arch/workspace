@@ -577,14 +577,18 @@ def _band_thumbnail(
                 rows.append((row, ink))
 
     if rows:
+        # **帯の中に余白を残す**（2026-09-13、Gemini にサムネ6枚を見せて指摘された）。
+        # 「上下左右ぎりぎりまで文字が詰まっていて、蛍光イエローで目を引く効果を
+        # 文字自体が塗りつぶしている」。字の高さに合わせて余白も広げる
+        pad_x, pad_y = 46, int(font.size * 0.26)
         line_height = font.size + 10
-        height = line_height * len(rows) + 20
+        height = line_height * len(rows) + pad_y * 2
         bottom = SIZE[1] - 22
         top = bottom - height
         draw.rectangle([16, top, right, bottom], fill=BAND_YELLOW + (255,))
-        y = top + 8
+        y = top + pad_y
         for row, ink in rows:
-            draw.text((34, y), row, font=font, fill=ink + (255,))
+            draw.text((16 + pad_x, y), row, font=font, fill=ink + (255,))
             y += line_height
         if reaction:
             _draw_chip(draw, reaction, font_path, top - 12)
@@ -1047,7 +1051,10 @@ def _fit_band(draw: ImageDraw.ImageDraw, text: str, font_path: str, room: int = 
     2行目が数文字だけになる（泣き別れ）ときはさらに字を詰める。
     """
     # 縦長の写真を右に置いた回は、帯が画面幅より狭い（顔を隠さないため）
-    width = (room - 40) if room else SIZE[0] - 80
+    # **帯の左右に余白を残す**（2026-09-13、Gemini にサムネ6枚を見せて指摘された）。
+    # 「帯の端まで文字が詰まっていて、蛍光イエローで目を引く効果を
+    # 文字自体が塗りつぶしている」。40/80 では1文字ぶんも空いていなかった
+    width = (room - 96) if room else SIZE[0] - 180
     fallback = None
     for size in BAND_SIZES:
         font = ImageFont.truetype(font_path, size)
