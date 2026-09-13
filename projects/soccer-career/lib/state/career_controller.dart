@@ -50,6 +50,7 @@ class WeekReport {
     this.companion = TrainingCompanion.alone,
     this.trained,
     this.learned,
+    this.polished,
     this.weakFootAwakened = false,
     this.plateau = false,
     this.drilled,
@@ -85,6 +86,9 @@ class WeekReport {
   /// その週に覚えた個人技。
   final Signature? learned;
 
+  /// **その週に1段深くなった個人技。** 伸びなくなった歳から起きる。
+  final Signature? polished;
+
   /// 逆足が形になったか。
   final bool weakFootAwakened;
 
@@ -109,6 +113,7 @@ class WeekReport {
   bool get isEmpty =>
       trained == null &&
       learned == null &&
+      polished == null &&
       !weakFootAwakened &&
       drilled == null &&
       deadBall == null &&
@@ -1287,6 +1292,9 @@ class CareerController extends ChangeNotifier {
         // 掴んだら狙いは外す。狙ったままだと、残りの枠がずっと空で待つ。
         if (state.signatureAim == week.learned) state.signatureAim = null;
       }
+      if (week.polished != null) {
+        state.development = state.development.polish(week.polished!);
+      }
       newInjury =
           week.injury ??
           _match.rollInjury(
@@ -1328,6 +1336,7 @@ class CareerController extends ChangeNotifier {
         companion: companion,
         trained: week.trained,
         learned: week.learned,
+        polished: week.polished,
         weakFootAwakened: week.weakFootAwakened,
         plateau: state.development.inPlateau,
         drilled: week.drilled,

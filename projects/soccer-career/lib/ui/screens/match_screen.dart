@@ -987,6 +987,18 @@ class _MatchSummary extends StatelessWidget {
                   ),
                 ),
               ],
+              // **磨いた週は、必ず画面に出す。** 伸びなくなった歳に
+              // 何が起きているのかが見えないと、練習を選ぶ意味が消える。
+              if (week.polished != null) ...[
+                const SizedBox(height: 12),
+                Text(
+                  '${week.polished!.label} に磨きがかかった',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+              ],
               if (week.weakFootAwakened) ...[
                 const SizedBox(height: 12),
                 Text(
