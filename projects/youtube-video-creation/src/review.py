@@ -114,6 +114,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     opening = check_short_opening(out_dir / "video.mp4")
     if opening is not None:
         findings.append(opening)
+    findings.append(check_opening_background(script))
     findings.append(check_tail_silence(script, out_dir))
     if duration is not None:
         findings.append(_duration(duration))
@@ -1578,6 +1579,33 @@ def check_band_length(script: Script) -> Finding:
                        f"{len(line1)}字あります（{BAND_LINE_MAX}字まで）。"
                        "親指の大きさだと字が小さくなって読めません: " + line1)
     return Finding(True, "帯の1行目", f"{len(line1)}字")
+
+
+# 下地に使ってはいけないもの（2026-09-13 指摘）。**自前で描いた抽象画**で、
+# サッカーが写っていない。night.png は玉ぼけ、default.png は無地。
+# 開いた瞬間の1枚がこれだと、何のチャンネルか分からない
+NOT_FOOTBALL_BACKGROUNDS = ("night.png", "default.png")
+
+
+def check_opening_background(script: Script) -> Finding:
+    """最初の画面がサッカーの実写になっているか。
+
+    **ここは長らく night.png の決め打ちだった。**写真のある回は人物の写真が
+    上に載るので気づけないが、エンブレムで作る回は、開いた瞬間が
+    玉ぼけの抽象画になっていた（2026-09-13 にユーザーが実物で気づいた）。
+    """
+    scenes = list(script.scenes or [])
+    if not scenes:
+        return Finding(True, "最初の画面", "節がありません")
+    background = str(getattr(scenes[0], "background", "") or script.background or "")
+    name = background.rsplit("/", 1)[-1]
+    if not background:
+        return Finding(False, "最初の画面", "下地の指定がありません")
+    if name in NOT_FOOTBALL_BACKGROUNDS:
+        return Finding(False, "最初の画面",
+                       f"{name} はサッカーが写っていません。"
+                       "実写のクリップを指してください")
+    return Finding(True, "最初の画面", name)
 
 
 # 読み上げが終わってから動画が終わるまで、許す無音の長さ（2026-09-13）。

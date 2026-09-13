@@ -3,7 +3,7 @@
 #   python -m src.cli sources --new
 sites:
 - host: derbyderbyderby.it
-  seen: 23
+  seen: 24
   days:
   - '2026-09-02'
   - '2026-09-03'
@@ -61,13 +61,14 @@ sites:
   - https://samuraigoal.doorblog.jp/archives/63437489.html
   - https://samuraigoal.doorblog.jp/archives/63450028.html
 - host: calcionapoli1926.it
-  seen: 9
+  seen: 10
   days:
   - '2026-09-02'
   - '2026-09-03'
   - '2026-09-04'
   - '2026-09-05'
   - '2026-09-12'
+  - '2026-09-13'
   examples:
   - https://www.calcionapoli1926.it/ultimissime-calcio-napoli/mazzocchi-laddio-al-napoli-e-da-brividi-sono-stato-un-napoletano-con-quella-maglia-addosso/?intcmp=gazzanet-calcionapoli1926
   - https://www.calcionapoli1926.it/altro/jorginho-agente-santos-proposte-serie-a/?intcmp=gazzanet-calcionapoli1926
@@ -225,6 +226,14 @@ sites:
   examples:
   - https://www.fantamagazine.com/news/cagliari-lecce-1-0-di-francesco-poco-cattivi-e-determinati-cosi-non-possiamo-permettercelo/
   - https://www.fantamagazine.com/news/verso-lecce-monza-di-francesco-avverte-non-possiamo-ripetere-la-gara-di-cagliari/
+- host: cagliaricalcio-news.it
+  seen: 3
+  days:
+  - '2026-09-07'
+  - '2026-09-13'
+  examples:
+  - https://www.cagliaricalcio-news.it/notizie/interviste/cagliari-pisacane-coppa-italia-fiducia-ragazzi/?intcmp=gazzanet-cagliaricalcionews
+  - https://www.cagliaricalcio-news.it/notizie/pisacane-cagliari-atalanta-romano/?intcmp=gazzanet-cagliaricalcionews
 - host: today.rtl.lu
   seen: 2
   days:
@@ -258,14 +267,12 @@ sites:
   examples:
   - https://www.leeds-live.co.uk/sport/leeds-united/how-joe-rodons-injury-impact-34569429
   - https://www.leeds-live.co.uk/sport/leeds-united/brighton-hove-albion-vs-34571891
-- host: cagliaricalcio-news.it
+- host: atalantaoggi.it
   seen: 2
   days:
-  - '2026-09-07'
   - '2026-09-13'
   examples:
-  - https://www.cagliaricalcio-news.it/notizie/interviste/cagliari-pisacane-coppa-italia-fiducia-ragazzi/?intcmp=gazzanet-cagliaricalcionews
-  - https://www.cagliaricalcio-news.it/notizie/pisacane-cagliari-atalanta-romano/?intcmp=gazzanet-cagliaricalcionews
+  - https://www.atalantaoggi.it/notizie/atalanta-sarri-cagliari-partita-sarri/?intcmp=gazzanet-atalantaoggi
 - host: guardian.ng
   seen: 1
   days:
@@ -374,9 +381,3 @@ sites:
   - '2026-09-05'
   examples:
   - https://www.newcastleworld.com/sport/football/newcastle-united/-8961947
-- host: atalantaoggi.it
-  seen: 1
-  days:
-  - '2026-09-13'
-  examples:
-  - https://www.atalantaoggi.it/notizie/atalanta-sarri-cagliari-partita-sarri/?intcmp=gazzanet-atalantaoggi

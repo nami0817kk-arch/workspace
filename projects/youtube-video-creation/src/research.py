@@ -46,11 +46,14 @@ BACKGROUND_BY_SECTION = {
     "numbers": "assets/backgrounds/studio.png",
     "point": "assets/backgrounds/studio.png",
     # 経緯・背景・反応 —— 観客側
-    "background": STOCK + "football_fans.mp4",
-    "context": STOCK + "football_fans.mp4",
-    "react": STOCK + "football_fans.mp4",
-    "voices": STOCK + "football_fans.mp4",
-    "collapsed": STOCK + "football_fans.mp4",
+    # **football_fans.mp4 は stadium_night.mp4 と同じファイルだった**（md5一致／
+    # 2026-09-13 に発覚）。名前が2つあるだけで、上の「場の空気」と同じ絵が
+    # 流れていた。観客の入った昼のスタジアムに差し替えた
+    "background": STOCK + "match_stadium.mp4",
+    "context": STOCK + "match_stadium.mp4",
+    "react": STOCK + "match_stadium.mp4",
+    "voices": STOCK + "match_stadium.mp4",
+    "collapsed": STOCK + "match_stadium.mp4",
     # これからどうなる / なぜ —— 練習・戦術
     "next": STOCK + "soccer_training.mp4",
     "why": STOCK + "soccer_training.mp4",
@@ -59,11 +62,14 @@ BACKGROUND_BY_SECTION = {
 # 上に無い節に配る並び。**実写を優先し、同じものが続かないようにする**
 BACKGROUNDS = (
     STOCK + "stadium_night.mp4",
-    STOCK + "football_fans.mp4",
+    STOCK + "match_stadium.mp4",
     STOCK + "soccer_training.mp4",
     "assets/backgrounds/studio.png",
     STOCK + "soccer_ball.mp4",
 )
+# オープニングの下地。**必ず実写のサッカー**（人が写っているもの）を指す
+OPENING_BACKGROUND = STOCK + "match_stadium.mp4"
+
 SPEAKERS = ("キャスター", "解説")
 
 
@@ -1083,7 +1089,11 @@ def to_script(notes: Notes, plan: Plan) -> str:
     # 落ちて、どちらも同じ緑になっていた（実測でまとめの3カットが緑だった）
     lines = ["---", _front_matter(front), "---", "",
              "## オープニング",
-             f"@bg: {moving_background('assets/backgrounds/night.png')}", ""]
+             # **最初の画面はサッカーの、人が写っているものにする**（2026-09-13 指摘）。
+             # ここは night.png 決め打ちだった。night.png は自前で描いた玉ぼけで、
+             # 人もピッチも写っていない。写真の無い回（クラブのエンブレムで作る回）は
+             # 開いた瞬間が抽象画になっていた
+             f"@bg: {moving_background(OPENING_BACKGROUND)}", ""]
     # **1行目はタイトルをそのまま読む**（2026-09-07）。参考3チャンネルの直近4本は
     # 全部、最初の2〜5秒でタイトルを読み上げていた。クリックした人が「これで
     # 合っている」と確かめられる。こちらは別の導入文から入っていた。

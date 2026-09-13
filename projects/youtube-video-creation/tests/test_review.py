@@ -24,6 +24,8 @@ tags: [サッカー, 海外サッカー]
 
 ## 何が起きたか
 
+@bg: assets/backgrounds/stock/match_stadium.mp4
+
 キャスター: アーセナルが勝った理由がこちらです。
   source: 確定
 
@@ -1211,3 +1213,24 @@ def test_tail_silence_is_flagged(tmp_path, monkeypatch):
     monkeypatch.setattr(review, "_dimensions", lambda _v: (1920, 1080))
     monkeypatch.setattr(review, "_video_seconds", lambda _v: 40.2)
     assert review.check_tail_silence(script, tmp_path).ok
+
+
+def test_玉ぼけの下地を最初の画面に使わせない():
+    # night.png は自前で描いた抽象画で、サッカーが写っていない。
+    # エンブレムで作る回は、開いた瞬間がこれになっていた（2026-09-13）
+    from src.review import check_opening_background
+
+    body = GOOD_BODY.replace(
+        "@bg: assets/backgrounds/stock/match_stadium.mp4",
+        "@bg: assets/backgrounds/night.png")
+    finding = check_opening_background(parse_script(body))
+    assert not finding.ok
+    assert "night.png" in finding.detail
+
+
+def test_実写のサッカーなら最初の画面は通る():
+    from src.review import check_opening_background
+
+    finding = check_opening_background(parse_script(GOOD_BODY))
+    assert finding.ok
+    assert "match_stadium.mp4" in finding.detail
