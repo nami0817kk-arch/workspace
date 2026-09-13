@@ -15,7 +15,7 @@
 | 対応言語 | 日本語・英語（アプリ内で切り替え可。既定は端末の設定に従う） |
 | プライバシーポリシー | https://soccer-manager.pages.dev/legal/privacy.html |
 | 利用規約 | https://soccer-manager.pages.dev/legal/terms.html |
-| サポート窓口 | https://github.com/nami0817kk-arch/claude-code-dev/issues |
+| サポート窓口 | https://soccer-manager.pages.dev/legal/support.html |
 
 ## 短い説明文（Google Play「簡単な説明」80字以内 目安）
 

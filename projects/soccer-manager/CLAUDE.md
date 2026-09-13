@@ -33,12 +33,15 @@ flutter build web --base-href /
   旧モノレポの GitHub Pages から移設済み)。URL は distribution_test.dart が
   アプリ内・STORE_LISTING.md の双方と一致するか検査しているので、片方だけ
   変えると落ちる。
-- **STORE_LISTING.md のサポート窓口だけは、意図して旧リポジトリ
-  (`github.com/nami0817kk-arch/claude-code-dev/issues`)のままにしてある。**
-  claude-code-dev は public で匿名でも開けるが、workspace は private で 404
-  になる。ストア掲載の窓口は利用者が実際に開く URL なので、機械的に
-  書き換えると誰も到達できなくなる。claude-code-dev をアーカイブしない方針が
-  決まっている(2026-09-03)。
+- **サポート窓口は `legal/support.html`(2026-09-13 に新設)。**
+  `https://soccer-manager.pages.dev/legal/support.html` を STORE_LISTING.md の
+  窓口にしている。以前は claude-code-dev の Issues を指していたが、それは
+  「workspace が private で 404 になる」ことが理由だった。workspace は
+  2026-09-08 に public になり、その前提は失効している。
+  いまは GitHub ではなく自前のページにしてある。利用者に GitHub アカウントを
+  要求しないため、および窓口に個人名・個人のアドレスを出さないため
+  (連絡先は `sakamane.support@gmail.com`)。
+  `legal/*.html` は soccer-pages.yml が Cloudflare Pages へ配置する。
 - ポジションは GK/DR/DC/DL/WBR/WBL/DM/MR/MC/ML/AMR/AMC/AML/ST の14種類。
   自動編成は 主ポジション → 副ポジション → 同じ大分類 の順に割り当てる。
   この優先順を変えるとスタメンが総入れ替えになる。
