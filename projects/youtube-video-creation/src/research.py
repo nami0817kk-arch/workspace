@@ -1200,13 +1200,15 @@ def to_script(notes: Notes, plan: Plan) -> str:
 
     # オープニングとまとめにも下地を指定する。指定が無いと frontmatter の既定に
     # 落ちて、どちらも同じ緑になっていた（実測でまとめの3カットが緑だった）
+    # **この回の下地。**題材ごとに変えるが、**1本のあいだは変えない**
+    opening_background = OPENING_BACKGROUND
     lines = ["---", _front_matter(front), "---", "",
              "## オープニング",
              # **最初の画面はサッカーの、人が写っているものにする**（2026-09-13 指摘）。
              # ここは night.png 決め打ちだった。night.png は自前で描いた玉ぼけで、
              # 人もピッチも写っていない。写真の無い回（クラブのエンブレムで作る回）は
              # 開いた瞬間が抽象画になっていた
-             f"@bg: {moving_background(OPENING_BACKGROUND)}", ""]
+             f"@bg: {moving_background(opening_background)}", ""]
     # **1行目はタイトルをそのまま読む**（2026-09-07）。参考3チャンネルの直近4本は
     # 全部、最初の2〜5秒でタイトルを読み上げていた。クリックした人が「これで
     # 合っている」と確かめられる。こちらは別の導入文から入っていた。
@@ -1264,15 +1266,15 @@ def to_script(notes: Notes, plan: Plan) -> str:
 
     previous_background = ""
     for index, section in enumerate(notes.sections):
-        background = section.bg or BACKGROUND_BY_SECTION.get(section.id, "")
+        # **1本のあいだ下地を変えない**（2026-09-14 指示「背景を何度も変更するのは
+        # やめてください。サムネとサッカー関連背景でお願いします」）。
+        # 節ごとに別のクリップへ切り替えていたので、2分のあいだに4回も
+        # 場所が変わって見えた。画面を動かすのは**サムネの写真の出し入れ**で足りる。
+        # 取材メモが `bg` を書いた節だけは、その指定に従う
+        background = section.bg or opening_background
         # **素材が無ければ静止画に落とす。**stock を取っていない環境でも動く
         if background.startswith(STOCK) and not _resolve_bg(background).exists():
-            background = ""
-        if not background or background == previous_background:
-            # 同じ下地が続くと、節が変わったことが画面から分からない。
-            # 割り当てが無いときと、前の節と同じになったときは並びから選ぶ
-            order = list(BACKGROUNDS[index % len(BACKGROUNDS):]) + list(BACKGROUNDS)
-            background = next(c for c in order if c != previous_background)
+            background = BACKGROUNDS[index % len(BACKGROUNDS)]
         previous_background = background
         lines += [f"## {section.heading}", f"@bg: {moving_background(background)}"]
         if section.main:
@@ -1400,9 +1402,8 @@ def to_script(notes: Notes, plan: Plan) -> str:
     # **まとめがあるのは news の型だけ。**反応や本人の言葉の型は、最後の1件で
     # 終わる。参考の動画はどれも反応で切れていて、締めの語りが無い
     if shape["wrap"]:
-        wrap_background = "assets/backgrounds/studio.png"
-        if wrap_background == previous_background:
-            wrap_background = next(c for c in BACKGROUNDS if c != previous_background)
+        # まとめも同じ下地のまま。ここだけ変えると、最後に場所が飛ぶ
+        wrap_background = previous_background or opening_background
         lines += [
             "## まとめ",
             f"@bg: {moving_background(wrap_background)}",
