@@ -81,8 +81,16 @@ flutter test tool/screenshots/feature_graphic_test.dart --update-goldens
 `tool/` に置いてあるのは、これらがテストではなく生成器で、実行すると
 ファイルを書き換えるため。`test/` の外なので CI では回らない。
 
-出力は `marketing/screenshots/` に9枚（すべて 1290x2796 = iPhone 6.7インチ。
-App Store がこの寸法を求め、Google Play もこのまま通る）。
+出力は端末ごとに9枚ずつ。
+
+| 出力先 | 寸法 | 用途 |
+|---|---|---|
+| `marketing/screenshots/` | 1290x2796 | iPhone 6.7インチ。Google Play もこのまま通る |
+| `marketing/screenshots_ipad/` | 2064x2752 | iPad 13インチ |
+
+iPad ぶんが要るのは、アプリが iPad でも動く設定になっているため。iPhone
+だけだと「13インチのiPadディスプレイのスクリーンショットをアップロード
+する必要があります」で提出できない。
 
 | ファイル | 画面 |
 |---|---|
