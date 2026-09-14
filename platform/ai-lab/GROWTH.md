@@ -2,10 +2,10 @@
 
 このファイルは `growth-loop` ワークフローが自動生成している。手で編集しても次回上書きされる。
 
-- 最終更新: 2026-09-07
-- 平均成熟度: **93** `▁▄▁▇█`
-- これまでに解決: **114** 件
-- 未対応: **8** 件
+- 最終更新: 2026-09-14
+- 平均成熟度: **93** `▁▄▁▇██`
+- これまでに解決: **115** 件
+- 未対応: **11** 件
 
 ## プロジェクト別の成熟度
 
@@ -13,15 +13,15 @@
 |---|---|---:|---:|---:|
 | `workspace` | monorepo | 100 | ±0 | 1 |
 | `workspace/projects/ai-side-business` | Python | 100 | ±0 | 1 |
-| `workspace/projects/gemini-api` | Python | 100 | ±0 | 0 |
+| `workspace/projects/gemini-api` | Python | 100 | +7 | 0 |
 | `workspace/projects/ir-analysis` | Python | 100 | ±0 | 0 |
 | `workspace/projects/kabu-agari-ranking` | Python | 100 | ±0 | 0 |
-| `workspace/projects/price-tracker` | Python | 100 | ±0 | 0 |
+| `workspace/projects/price-tracker` | Python | 100 | ±0 | 1 |
 | `workspace/projects/quality-gainer-tracker` | Python | 100 | ±0 | 0 |
 | `workspace/projects/stock-investment` | Python | 100 | ±0 | 3 |
 | `workspace/projects/tool-factory` | Python | 100 | ±0 | 0 |
-| `workspace/projects/youtube-video-creation` | Python | 100 | ±0 | 1 |
-| `workspace/projects/soccer-clicker` | Flutter | 95 | ±0 | 1 |
+| `workspace/projects/youtube-video-creation` | Python | 100 | ±0 | 2 |
+| `workspace/projects/soccer-career` | Flutter | 95 | ±0 | 2 |
 | `workspace/projects/soccer-manager` | Flutter | 95 | ±0 | 1 |
 | `workspace/libs/kabutan` | Python | 95 | ±0 | 0 |
 | `workspace/projects/cohabitation-budget` | 雛形のみ | 15 | ±0 | 0 |
@@ -39,7 +39,7 @@
 5. **[中] 例外を握りつぶしている箇所がある** — `workspace/projects/stock-investment`
    - 最低でも失敗内容を print / logging で残す。「失敗しても続行してよい」場所なら、なぜよいのかをコメントに書く。
 
-詳細と依頼文は `docs/growth/2026-09-07.md` を見る。
+詳細と依頼文は `docs/growth/2026-09-14.md` を見る。
 
 ## 保留中（理由あり）
 
@@ -47,16 +47,7 @@
 
 ## 直近で解決したもの
 
-- `workspace/libs/kabutan` .env.example で必要な設定を明示する（開発モノレポ（全PJT） で既に実践中）
-- `workspace/projects/quality-gainer-tracker` 例外を握りつぶしている箇所がある
-- `workspace/projects/kabu-agari-ranking` ドキュメントが存在しないファイルを載せている
-- `workspace/projects/tool-factory` ドキュメントが存在しないファイルを載せている
-- `workspace/projects/tool-factory` .env.example で必要な設定を明示する（開発モノレポ（全PJT） で既に実践中）
-- `workspace/projects/youtube-video-creation` 必要な環境変数の一覧が無い
-- `workspace/projects/youtube-video-creation` 依存バージョンが固定されていない
-- `workspace/projects/gemini-api` CLAUDE.md で AI に前提を渡す（soccer-manager で既に実践中）
-- `workspace/projects/soccer-manager` ドキュメントが存在しないファイルを載せている
-- `workspace/projects/quality-gainer-tracker` 1つの関数が長くなりすぎている
+- `workspace/projects/soccer-clicker` 1ファイルが大きくなりすぎている
 
 ## 使い方
 
