@@ -94,6 +94,8 @@ NEWS_LABEL = "海外サッカーニュース"
 # 実際、アーセナル対ヴィラの誤審の回で、関係者の誰にも使える
 # クラブユニフォーム姿の写真が無かった
 CREST_MAIN_HEIGHT = 410      # 1280x720 の中での高さ
+# 2つ並べて間に「対」を置くときの間隔。字は132pxなので左右に余白を取る
+CREST_LINK_GAP = 232
 # **暗すぎると `サムネの黒` の点検が止める**（実測で顔の段の75%が黒だった）。
 # 一覧で沈まない明るさにする
 CREST_MAIN_GROUND = (34, 58, 96, 255)
@@ -291,6 +293,14 @@ def from_meta(meta: dict, title: str) -> dict:
         # 左がぼかしだけになり「ただのぼかし」に見えた（ユーザー指摘）。
         # **中身を置けば余白が情報になる。**3つまで、1つ10字くらい
         "points": [str(x) for x in (meta.get("thumbnail_points") or [])][:3],
+        # **赤で1行だけ足せる口**（2026-09-14 指示「サムネに、佐藤龍之介の
+        # 未来は？？を赤字で入れてください」）。エンブレムの回は points を
+        # 出さないので、言いたい一言を置く場所が帯しか無かった
+        "note_red": str(meta.get("thumbnail_note_red") or ""),
+        # **帯を下いっぱいに広げる**（2026-09-14 指示「サムネの黄色い枠を
+        # 下いっぱいに広げて／久保のサムネみたいな感じ」）。縦長の写真は
+        # 自動で「右に置いて左はぼかし」になり、帯が左半分で止まっていた
+        "band_full": bool(meta.get("thumbnail_band_full", False)),
         # 顔を並べる（2026-09-08）。2〜3枚あれば全面が写真になり、
         # ぼかしの下地が要らない。参考チャンネルは全面が写真だった
         "photos": [str(x) for x in (meta.get("thumbnail_photos") or [])][:3],
@@ -419,6 +429,8 @@ def build_thumbnail(
     focus: float | None = None,
     reaction: str = "",
     points: list[str] | None = None,
+    note_red: str = "",
+    band_full: bool = False,
     photos: list[str] | None = None,
     quote: str = "",
     crest_main: list[str] | None = None,
@@ -449,7 +461,8 @@ def build_thumbnail(
         return _band_thumbnail(
             config, out_path, background,
             lines or (title, subtitle), tags or [], focus, reaction, points or [],
-            photos or [], crest_main or [], crests, crest_link, face_link,
+            note_red, band_full, photos or [], crest_main or [], crests, crest_link,
+            face_link,
         )
 
     font_path = str(config.video.font_path())
@@ -502,6 +515,8 @@ def _band_thumbnail(
     focus: float | None = None,
     reaction: str = "",
     points: list[str] | None = None,
+    note_red: str = "",
+    band_full: bool = False,
     photos: list[str] | None = None,
     crest_main: list[str] | None = None,
     crests: list[str] | None = None,
@@ -520,7 +535,8 @@ def _band_thumbnail(
     """
     font_path = str(config.video.font_path())
     # **正方形に近い写真も右に置く。**全面に敷くと顔が帯に隠れる
-    stage = _crest_stage(crest_main or [], font_path, crest_link)
+    stage = _crest_stage(crest_main or [], font_path, crest_link,
+                         note_room=bool(note_red))
     tiles = [] if stage is not None else [q for q in (photos or []) if _resolve(q).exists()]
     if stage is not None:
         canvas = stage
@@ -534,7 +550,8 @@ def _band_thumbnail(
             crests = []          # 上に置いたので、右下には出さない
         portrait = False
     else:
-        portrait = _is_portrait(background, ratio=0.95)
+        # **指定があれば、縦長でも全面に敷く。**帯が下いっぱいまで伸びる
+        portrait = False if band_full else _is_portrait(background, ratio=0.95)
     if stage is not None:
         pass
     elif portrait:
@@ -557,6 +574,8 @@ def _band_thumbnail(
     layer, draw = _layer(SIZE)
     if portrait and points:
         _draw_points(draw, points, font_path)
+    if note_red:
+        _draw_note_red(draw, note_red, font_path)
 
     top_text = (lines[0] or "").replace(chr(92) + "n", " ")
     bottom_text = lines[1] or ""
@@ -663,7 +682,8 @@ def _crest_brightness(paths) -> float:
     return total / count if count else 128.0
 
 
-def _crest_stage(names: list[str], font_path: str, link: str = "対") -> Image.Image | None:
+def _crest_stage(names: list[str], font_path: str, link: str = "対",
+                 note_room: bool = False) -> Image.Image | None:
     """エンブレムを大きく並べた下地。写真の代わりに使う。
 
     **元の画像が小さい**（実測で 112x132 など）。拡大するとどうしても
@@ -697,21 +717,37 @@ def _crest_stage(names: list[str], font_path: str, link: str = "対") -> Image.I
     for _, path in found[:3]:
         with Image.open(path) as source:
             mark = source.convert("RGBA")
-        ratio = CREST_MAIN_HEIGHT / mark.height
-        marks.append(mark.resize((max(1, int(mark.width * ratio)), CREST_MAIN_HEIGHT),
+        # **赤い一言を置く回は、その分だけ小さくして下げる**（2026-09-14）。
+        # そうしないとエンブレムの上端に字がかぶる
+        height = int(CREST_MAIN_HEIGHT * (0.84 if note_room else 1.0))
+        ratio = height / mark.height
+        marks.append(mark.resize((max(1, int(mark.width * ratio)), height),
                                  Image.LANCZOS))
-    # **白い丸のぶん、間を広げる**（2026-09-13）。96 のままだと丸どうしが
-    # 重なり、あいだの「対」が白地に白で沈んだ
-    gap = 110
+    # **「対」が入るだけ間を空ける**（2026-09-14 指摘「サムネの対がロゴと
+    # 被っている」）。110 だと 132px の字が両側のエンブレムに食い込んでいた。
+    # 字の幅＋左右の余白ぶんを確保する
+    gap = CREST_LINK_GAP if (len(marks) == 2 and link) else 110
     total = sum(m.width for m in marks) + gap * (len(marks) - 1)
+    # 広げたぶん、はみ出すなら全体を縮める。**エンブレムが切れるほうが悪い**
+    room = SIZE[0] - 80
+    if total > room:
+        shrink = (room - gap * (len(marks) - 1)) / max(1, sum(m.width for m in marks))
+        marks = [m.resize((max(1, int(m.width * shrink)), max(1, int(m.height * shrink))),
+                          Image.LANCZOS) for m in marks]
+        total = sum(m.width for m in marks) + gap * (len(marks) - 1)
     x = (SIZE[0] - total) // 2
     # 帯が下を覆うので、少し上に置く
-    top = int(SIZE[1] * 0.30) - CREST_MAIN_HEIGHT // 2
+    centre = 0.36 if note_room else 0.30
+    top = int(SIZE[1] * centre) - max(m.height for m in marks) // 2
     middles = []
-    for mark in marks:
+    for index, mark in enumerate(marks):
         canvas.alpha_composite(mark, (x, top))
-        middles.append(x + mark.width // 2)
-        x += mark.width + gap
+        x += mark.width
+        # **間の中央**を覚えておく。エンブレムの中点どうしの真ん中だと、
+        # 幅の違う2枚のときに字が片方へ寄る
+        if index < len(marks) - 1:
+            middles.append(x + gap // 2)
+            x += gap
     if len(marks) == 2 and link:
         # **間の字は「対」だけではない**（2026-09-10）。アラウホの回は
         # 対戦ではなく**バルサからリヴァプールへのレンタル**の話なのに、
@@ -723,8 +759,9 @@ def _crest_stage(names: list[str], font_path: str, link: str = "対") -> Image.I
         draw = ImageDraw.Draw(canvas)
         text = link
         width = draw.textlength(text, font=font)
-        draw.text(((middles[0] + middles[1] - width) / 2,
-                   top + CREST_MAIN_HEIGHT / 2 - 44),
+        # middles[0] は**空けた間の中央**（2026-09-14 に意味を変えた）
+        draw.text((middles[0] - width / 2,
+                   top + max(m.height for m in marks) / 2 - 44),
                   # **地の色に合わせる**（2026-09-13）。明るい地に白の「対」だと
                   # 消える。エンブレムが暗いときは地が明るいので、字は濃く
                   text, font=font,
@@ -1174,6 +1211,25 @@ def _draw_points(draw: ImageDraw.ImageDraw, points: list[str], font_path: str) -
         draw.line([(60, y + rule), (60 + draw.textlength(text, font=font), y + rule)],
                   fill=(232, 210, 31, 255), width=7)
         y += step
+
+
+def _draw_note_red(draw: ImageDraw.ImageDraw, text: str, font_path: str) -> None:
+    """赤い一言を上に置く（2026-09-14）。
+
+    エンブレムの回は `points` を描かないので、帯のほかに言葉を置く場所が
+    無かった。**帯の外に出す**ので、一覧では帯と2段で読める。
+    """
+    size = 72
+    font = ImageFont.truetype(font_path, size)
+    while size > 40 and draw.textlength(text, font=font) > SIZE[0] - 120:
+        size -= 4
+        font = ImageFont.truetype(font_path, size)
+    width = draw.textlength(text, font=font)
+    x = (SIZE[0] - width) / 2
+    y = 26
+    # 赤は背景に負けるので、白で太く縁取る
+    draw.text((x, y), text, font=font, fill=(214, 16, 38, 255),
+              stroke_width=10, stroke_fill=(255, 255, 255, 245))
 
 
 def _crest_px() -> int:

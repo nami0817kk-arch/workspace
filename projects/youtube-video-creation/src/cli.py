@@ -555,7 +555,9 @@ def _cmd_speakers(args, config) -> int:
 
 
 def _cmd_check(args, config) -> int:
-    script = load_script(args.script)
+    # 本編の尺を見るので、ショート専用の行は落としてから数える
+    from .pipeline import drop_short_only
+    script = drop_short_only(load_script(args.script))
     print(f"タイトル: {script.title}")
     print(f"シーン: {len(script.scenes)} / セリフ: {len(script.lines)} 行 / {script.char_count()} 文字")
     estimate = sum(line.estimated_duration() for line in script.lines)
@@ -865,9 +867,11 @@ def _cmd_contact(args, config) -> int:
 
 
 def _cmd_review(args, config) -> int:
+    from .pipeline import drop_short_only
     from .review import built_duration, inspect, manual_checks
 
-    script = load_script(args.script)
+    # 点検するのは本編。ショート専用の行は入らない
+    script = drop_short_only(load_script(args.script))
     out = Path(args.out) if args.out else Path(f"output/{Path(args.script).stem}")
     duration = built_duration(out)
 
@@ -929,6 +933,8 @@ def _cmd_thumbnail(args, config) -> int:
             lines=look["lines"], tags=look["tags"],
             reaction=look.get("reaction") or "",
             points=look.get("points") or [],
+            note_red=look.get("note_red") or "",
+            band_full=bool(look.get("band_full")),
             photos=look.get("photos") or [],
             crest_main=look.get("crest_main") or [],
             crests=look.get("crests"),

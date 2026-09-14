@@ -102,6 +102,8 @@ class Section:
     # 行に差し込む写真。**本文に写真が1枚も入っていなかった**（実測 2026-09-06）。
     # 使えるライセンスが広がったので、顔を本文にも出す
     line_images: list = field(default_factory=list)
+    # 行ごとの "short"（ショート専用）。空なら本編にも出す
+    line_onlys: list = field(default_factory=list)
     bg: str = ""      # この節の背景。空なら既定の並びから割り当てる
     # **その節の地の文を誰が読むか**（2026-09-09 ユーザー指示）。
     # 空なら今までどおりキャスターと解説の交互。「何が起きたか」は事実なので
@@ -205,6 +207,10 @@ class Notes:
     answer: str = ""                 # まとめで返す答え
     watch: str = ""                  # 次に何を見るか
     follow_up: bool = False
+    # **ショートに反応を入れない回**（2026-09-14 指示「この話題において、
+    # ショートにはネット民の声は不要」）。審判の声明や本人の発言が芯の回は、
+    # 最後が匿名の感想だと締まらない
+    short_voices: bool = True
     league: str = ""                 # england / spain / ... 何を追えていないかの集計に使う
     kind: str = "transfer"           # transfer / match / other
     topic: str = ""                  # 話題のまとまり。続報かどうかを見るのに使う
@@ -256,6 +262,7 @@ def build_notes(raw: dict) -> Notes:
         telops: list[str] = []
         cards: list = []
         images: list[str] = []
+        onlys: list[str] = []
         for item in raw_lines:
             if isinstance(item, dict):
                 lines.append(str(item.get("text", "")).strip())
@@ -263,12 +270,17 @@ def build_notes(raw: dict) -> Notes:
                 telops.append(str(item.get("telop", "")).strip())
                 cards.append(item.get("card"))
                 images.append(str(item.get("image", "")).strip())
+                # **ショートにだけ出す行**（2026-09-14 指示「ショートでも、
+                # 試合の概要を最初に説明して」）。ショートは節を切り出して
+                # 単体で出すので前置きが要るが、本編に残すと言い直しになる
+                onlys.append("short" if item.get("short_only") else "")
             else:
                 lines.append(str(item).strip())
                 voices.append("")
                 telops.append("")
                 cards.append(None)
                 images.append("")
+                onlys.append("")
         keep = [i for i, s in enumerate(lines) if s]
         sections.append(
             Section(
@@ -282,6 +294,7 @@ def build_notes(raw: dict) -> Notes:
                 line_telops=[telops[i] for i in keep],
                 line_cards=[cards[i] for i in keep],
                 line_images=[images[i] for i in keep],
+                line_onlys=[onlys[i] for i in keep],
                 sources=[str(u).strip() for u in (entry.get("sources") or []) if str(u).strip()],
                 official=bool(entry.get("official", False)),
                 card=entry.get("card"),
@@ -314,6 +327,7 @@ def build_notes(raw: dict) -> Notes:
         answer=str(raw.get("answer", "")).strip(),
         watch=str(raw.get("watch", "")).strip(),
         follow_up=bool(raw.get("follow_up", False)),
+        short_voices=raw.get("short_voices", True) is not False,
         league=str(theme.get("league", "")).strip().lower(),
         kind=str(theme.get("kind", "transfer")).strip().lower() or "transfer",
         topic=str(theme.get("topic", "")).strip(),
@@ -851,7 +865,14 @@ def _advise_repeats(notes: Notes) -> list[str]:
     if notes.hook:
         said.append(("引き", _bare_text(notes.hook)))
     for section in notes.sections:
-        for sentence in section.say:
+        for number, sentence in enumerate(section.say):
+            # **ショート専用の前置きは見ない**（2026-09-14）。本編には出ないので、
+            # 前の節と同じことを言っていて当たり前。ここで止めると
+            # 「ショートでも試合の概要を最初に説明して」が書けなくなる
+            only = (section.line_onlys[number]
+                    if number < len(section.line_onlys) else "")
+            if only == "short":
+                continue
             text = sentence if isinstance(sentence, str) else str(
                 (sentence or {}).get("text", ""))
             # **反応は人の書いた文なので直さない。**こちらが書いた地の文だけ見る
@@ -1144,6 +1165,13 @@ def to_script(notes: Notes, plan: Plan) -> str:
         "thumbnail_alt": [dict(a or {}) for a in (thumbnail.get("alt") or [])],
         # 左の余白に積む短い言葉（2026-09-08）。3つまで
         "thumbnail_points": [str(x) for x in (thumbnail.get("points") or [])][:3],
+        # **赤で1行**（2026-09-14 指示）。エンブレムの回は points を出さないので、
+        # 言いたい一言を置く場所が帯しか無かった
+        "thumbnail_note_red": str(thumbnail.get("note_red") or ""),
+        "thumbnail_band_full": bool(thumbnail.get("band_full", False)),
+        # **ショートに反応を入れない回**（2026-09-14 指示）。取材メモに
+        # `short_voices: false` と書く。既定は入れる
+        **({} if notes.short_voices else {"short_voices": False}),
         # 顔を並べる（2026-09-08）。2〜3枚で全面が写真になる
         "thumbnail_photos": [str(x) for x in (thumbnail.get("photos") or [])][:3],
         # **エンブレムを主役にする**（2026-09-09 ユーザー指示）。
@@ -1298,6 +1326,10 @@ def to_script(notes: Notes, plan: Plan) -> str:
                         if number < len(section.line_cards) else None)
             own_image = (section.line_images[number]
                          if number < len(section.line_images) else "")
+            own_only = (section.line_onlys[number]
+                        if number < len(section.line_onlys) else "")
+            if own_only:
+                lines.append(f"  only: {own_only}")
             if number == 0:
                 shown_for = 0
                 showed_photo = False

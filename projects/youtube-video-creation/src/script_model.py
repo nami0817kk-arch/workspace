@@ -31,7 +31,8 @@ LINE_RE = re.compile(r"^(?P<speaker>[^:：]{1,20})[:：]\s*(?P<text>.*)$")
 ATTR_RE = re.compile(r"^(?P<key>[a-zA-Z_]+)[:：]\s*(?P<value>.*)$")
 DIRECTIVE_RE = re.compile(r"^@(?P<key>[a-zA-Z_]+)[:：]\s*(?P<value>.*)$")
 
-LINE_ATTRS = {"telop", "emotion", "pause", "image", "speed", "no_telop", "se", "source", "card"}
+LINE_ATTRS = {"telop", "emotion", "pause", "image", "speed", "no_telop", "se", "source",
+              "card", "only"}
 
 # 情報の確度。ニュース系では、これを画面に出さないと視聴者が判断できない
 SOURCE_TIERS = {
@@ -108,6 +109,10 @@ class Line:
     pause: float | None = None
     speed: float | None = None
     no_telop: bool = False
+    # **ショートにだけ出す行**（2026-09-14 指示「ショートでは、最初にどことのいつの
+    # 試合か説明」）。ショートは節を切り出して単体で出すので、本編では前の節で
+    # 言い終えている前置きが要る。本編に残すと**節またぎの言い直し**になる
+    only: str | None = None     # "short" のときショート専用
     source_line: int = 0
 
     # ビルド中に埋まる
@@ -306,6 +311,10 @@ def _apply_attr(line: Line, key: str, value: str, number: int) -> None:
             raise ScriptError(f"{number}行目: {key} には数値を指定してください") from exc
     elif key == "no_telop":
         line.no_telop = value.lower() not in ("false", "no", "0", "")
+    elif key == "only":
+        if value.strip() not in ("short",):
+            raise ScriptError(f"{number}行目: only に書けるのは short だけです")
+        line.only = value.strip()
     else:
         setattr(line, key, value)
 

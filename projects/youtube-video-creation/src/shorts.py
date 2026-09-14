@@ -256,6 +256,11 @@ def _add_voices_tail(short: Script, script: Script, max_seconds: float) -> None:
     **尺に収める処理のあとに足す。**先に足すと、締めのかたまりが反応になり、
     その手前＝山場の一番強い一言から削られてしまう（デ・パウルの回で実際に起きた）。
     """
+    # **題材によっては、ショートに反応を入れない**（2026-09-14 指示
+    # 「この話題において、ショートにはネット民の声は不要」）。
+    # 審判の声明や本人の発言が芯の回は、最後が匿名の感想だと締まらない
+    if str((script.meta or {}).get("short_voices", "")).lower() in ("false", "no", "0"):
+        return
     if short.scenes[-1] is short.scenes[0]:
         return
     source = None

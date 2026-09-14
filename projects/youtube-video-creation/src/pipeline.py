@@ -25,6 +25,19 @@ class BuildResult:
     backend: str
 
 
+def drop_short_only(script):
+    """**ショート専用の行を本編から落とす**（2026-09-14）。
+
+    ショートは節を1つ切り出して単体で出すので、「いつ・どこの試合か」を
+    節の頭に置く必要がある。本編では前の節で言い終えているため、
+    そのまま残すと**節をまたいだ言い直し**になる（`_advise_repeats` が
+    止めるのと同じ型）。台本には `only: short` と書き、本編でだけ捨てる。
+    """
+    for scene in script.scenes:
+        scene.lines = [l for l in scene.lines if getattr(l, "only", None) != "short"]
+    return script
+
+
 def build(
     script_path: str | Path,
     config: ProjectConfig,
@@ -34,7 +47,7 @@ def build(
 ) -> BuildResult:
     """台本ファイルから書き出す。"""
     return build_script(
-        load_script(script_path),
+        drop_short_only(load_script(script_path)),
         config,
         Path(out_dir) if out_dir else _resolve(f"output/{Path(script_path).stem}"),
         use_tts=use_tts,
