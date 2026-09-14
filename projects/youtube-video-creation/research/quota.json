@@ -57,10 +57,17 @@
   },
   "2026-09-13": {
     "commentThreads.insert": 10,
-    "channels.list": 13,
-    "playlistItems.list": 17,
-    "videos.list": 5,
-    "videos.insert": 12,
-    "thumbnails.set": 12
+    "channels.list": 25,
+    "playlistItems.list": 29,
+    "videos.list": 553,
+    "videos.insert": 26,
+    "thumbnails.set": 26,
+    "videos.update": 47
+  },
+  "2026-09-14": {
+    "videos.list": 4,
+    "videos.insert": 1,
+    "thumbnails.set": 1,
+    "videos.update": 2
   }
 }

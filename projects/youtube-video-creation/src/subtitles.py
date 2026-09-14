@@ -163,6 +163,16 @@ def chapters(script: Script) -> list[tuple[float, str]]:
     return result
 
 
+# Xの検索結果。**反応の取得元の控えであって、概要欄に出す出典ではない**
+_X_HOSTS = ("x.com", "twitter.com", "mobile.twitter.com")
+
+
+def _is_x(url: str) -> bool:
+    from urllib.parse import urlparse
+    host = (urlparse(str(url)).hostname or "").lower()
+    return host.removeprefix("www.") in _X_HOSTS
+
+
 def description(script: Script, credits: list[str] | None = None,
                 footnotes: list[str] | None = None) -> str:
     """概要欄のたたき台（本文 + チャプター + クレジット + タグ）。"""
@@ -170,13 +180,21 @@ def description(script: Script, credits: list[str] | None = None,
     marks = chapters(script)
     if len(marks) > 1:
         parts.append("■ 目次\n" + "\n".join(f"{_clock(t)} {title}" for t, title in marks))
-    if script.sources:
-        # ニュース系では出典の明示が要る。frontmatter の sources をそのまま並べる
-        parts.append("■ 出典\n" + "\n".join(script.sources))
+    shown = [u for u in script.sources if not _is_x(u)]
+    if shown:
+        # ニュース系では出典の明示が要る。frontmatter の sources をそのまま並べる。
+        # **Xの検索結果は概要欄に書かない**（2026-09-14 ユーザー指示）。
+        # 反応をどこから取ったかの控えであって、読む人が当たる出典ではない。
+        # 台本の sources には残すので、こちらの手元では辿れる
+        parts.append("■ 出典\n" + "\n".join(shown))
     if credits:
         parts.append("■ クレジット\n" + "\n".join(credits))
-    if script.tags:
-        parts.append(" ".join(f"#{tag}" for tag in script.tags))
+    # **ハッシュタグはタグの全部ではない**（2026-09-15）。16個以上あると
+    # YouTube は全部を無視する。タグは500字まで詰めたいので、切り離した
+    from . import tags as tags_mod
+    shown_tags = tags_mod.hashtags(script.tags)
+    if shown_tags:
+        parts.append(" ".join(f"#{tag}" for tag in shown_tags))
     # **ハッシュタグより下に畳む。**表示義務のある写真の詳細は、消せないが
     # 上に並べると読むところが埋まる。YouTube は最初の3行しか初期表示しない
     # （2026-09-06 ユーザーの判断）

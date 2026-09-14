@@ -152,3 +152,69 @@ def test_相手クラブの日本人も拾う(tmp_path):
     got = build("バルセロナ、CL初戦で5得点", topic="バルセロナ", kind="match",
                 extra=["バルセロナ", "フェイエノールト"], players_path=str(book))
     assert got[:3] == ["サッカー", "バルセロナ", "渡辺剛"]
+
+
+def test_辞書に無いクラブでもトピックをタグにする():
+    """**clubs.yaml は63クラブしか無い**（2026-09-15 実測）。
+
+    載っていないクラブだと**クラブ名のタグが1つも付かない**。
+    9/11以降の本編96本のうち22本がこれで、ボーンマス・シャルケ・
+    フライブルク・サントス・フェネルバフチェ・ブラックバーン・カリアリが
+    落ちていた。**辞書の更新を待たない。**
+    """
+    from src.tags import build
+
+    got = build("ボーンマスが4試合続けてリードを手放した", topic="ボーンマス", kind="match")
+    assert got[:2] == ["サッカー", "ボーンマス"]
+
+
+def test_ひらがなの入ったトピックはタグにしない():
+    """クラブ名と代表名は片仮名・漢字・英字でできている。
+
+    ひらがなが入っていたら、それは話のまとまりを表す言い回し
+    （「メッシとロナウド」）で、タグには向かない。
+    """
+    from src.tags import build, topic_as_tag
+
+    assert topic_as_tag("ボーンマス")
+    assert topic_as_tag("日本代表")
+    assert topic_as_tag("PSV")
+    assert not topic_as_tag("メッシとロナウド")
+    assert "メッシとロナウド" not in build("メッシとロナウドを数字で並べる",
+                                          topic="メッシとロナウド")
+
+
+def test_代表の回もトピックがタグになる():
+    from src.tags import build
+
+    assert "フランス代表" in build("ジダンがフランス代表を引き受けた日",
+                                   topic="フランス代表")
+
+
+def test_試合結果にチャンピオンズリーグを付けない():
+    """**中身と食い違うタグは付けない**（2026-09-15）。
+
+    `kind: match` の回すべてに付くので、書き出し済み29本のうち
+    26本がCLの試合ではなかった（ボーンマス対ブレントフォードなど）。
+    ハイライトを外したのと同じ理由。
+    """
+    from src.tags import build
+
+    got = build("ボーンマスが4試合続けてリードを手放した", topic="ボーンマス",
+                league_name="プレミアリーグ", kind="match")
+    assert "チャンピオンズリーグ" not in got
+    assert "試合結果" in got and "プレミアリーグ" in got
+
+
+def test_ハッシュタグはタグの前から3つだけ():
+    """**16個以上あると YouTube は全部を無視する**（2026-09-15）。
+
+    タグの配列をそのまま `#` 付きで流していたので、`people:` を
+    丁寧に書いた回ほど個数が増え、ハッシュタグが1つも効かなくなっていた。
+    """
+    from src.tags import HASHTAG_LIMIT, hashtags
+
+    many = [f"タグ{i}" for i in range(21)]
+    got = hashtags(many)
+    assert got == ["タグ0", "タグ1", "タグ2"]
+    assert len(got) <= HASHTAG_LIMIT

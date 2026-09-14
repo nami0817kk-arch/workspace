@@ -572,3 +572,138 @@ def test_short_gets_a_few_voices_at_the_end():
     assert "ネット民" in said
     assert said.count("ネット民") <= 3
     assert said[0] == "解説"        # 反応は最後に足す
+
+
+def test_語りが2つ続いたら前のほうは振りとして落とす():
+    """**「こう」を含まない振りが残っていた**（2026-09-15 遠藤の回）。
+
+    「もうひとつ、理由を挙げています。」→（発言）→「そのうえで、こう
+    続けました。」の**真ん中だけが尺で落ち、振りが2つ並んだ**。
+    `LEAD_IN` は「こう」を含む形しか見ないので素通りするが、
+    **語りのあいだに発言が無い**ことは形で分かる。
+    """
+    from src.script_model import parse_script
+    from src.shorts import _fit
+
+    nl = chr(10)
+    body = ["## オープニング", "", "キャスター: つかみ。", "", "## 本編", ""]
+    body += ["解説: まず状況です。" + "あ" * 40, ""]
+    body += ["イラオラ: 最初の発言です。" + "あ" * 40, ""]
+    body += ["解説: もうひとつ、理由を挙げています。", ""]
+    body += ["イラオラ: 途中の発言です。" + "あ" * 40, ""]
+    body += ["解説: そのうえで、こう続けました。", ""]
+    body += ["イラオラ: 締めの発言です。", ""]
+    script = parse_script(nl.join(body))
+    _fit(script, 22.0)
+    texts = [line.text for line in script.scenes[-1].lines]
+    assert texts[-1] == "締めの発言です。", texts
+    assert not any(t.startswith("もうひとつ") for t in texts), texts
+
+
+def test_もともと語りが続く回は触らない():
+    """尺に収まっているなら、語りの連続はそのまま。"""
+    from src.script_model import parse_script
+    from src.shorts import _fit
+
+    nl = chr(10)
+    body = ["## オープニング", "", "キャスター: つかみ。", "", "## 本編", ""]
+    body += ["解説: ひとつめの語り。", ""]
+    body += ["解説: ふたつめの語り。", ""]
+    body += ["イラオラ: 締めの発言です。", ""]
+    script = parse_script(nl.join(body))
+    _fit(script, 60.0)
+    texts = [line.text for line in script.scenes[-1].lines]
+    assert texts == ["ひとつめの語り。", "ふたつめの語り。", "締めの発言です。"], texts
+
+
+def _voices_body(reactions):
+    """冒頭＋山場＋反応の節、という本編の形。"""
+    nl = chr(10)
+    body = ["## オープニング", "", "キャスター: つかみ。", "", "## 本編", ""]
+    body += ["解説: 語りです。" + "あ" * 30, ""]
+    body += ["監督: 締めの発言です。", "", "## 見ていた人が書いていたこと", ""]
+    for text, pick in reactions:
+        body += [f"ネット民: {text}", ""]
+        if pick:
+            body[-1] = "  short_voice: true"
+            body += [""]
+    return nl.join(body)
+
+
+def test_印を付けた反応だけを締めに使う():
+    """**どの反応で締めるかは、書いた人が選べる**（2026-09-15 指示）。
+
+    上から順に取っていたので、松木の回は1件目が
+    「松木玖生が今季公式戦初ゴール…平河悠との日本人対決を制す」で、
+    **タイトルとほぼ同じ**だった。
+    """
+    from src.script_model import parse_script
+    from src.shorts import trim
+
+    script = parse_script(_voices_body([
+        ("見出しの言い直しみたいな1件目。", False),
+        ("これを締めに使ってほしい。", True),
+    ]))
+    got = [line.text for line in trim(script, "本編").scenes[-1].lines]
+    assert "これを締めに使ってほしい。" in got, got
+    assert "見出しの言い直しみたいな1件目。" not in got, got
+
+
+def test_印が無ければ今までどおり上から取る():
+    from src.script_model import parse_script
+    from src.shorts import trim
+
+    script = parse_script(_voices_body([
+        ("1件目です。", False),
+        ("2件目です。", False),
+    ]))
+    got = [line.text for line in trim(script, "本編").scenes[-1].lines]
+    assert "1件目です。" in got, got
+
+
+def test_印を付けた反応のぶんは先に空ける():
+    """**尺が余っているぶんしか足していなかった**（2026-09-15）。
+
+    松木の回で、印を付けた2件目が0.6秒はみ出して落ちていた。
+    印は書いた人の指定なので、語りのほうを詰めて場所を作る。
+    """
+    from src.script_model import parse_script
+    from src.shorts import trim
+
+    nl = chr(10)
+    body = ["## オープニング", "", "キャスター: つかみ。", "", "## 本編", ""]
+    for i in range(6):
+        body += [f"解説: 語り{i}です。" + "あ" * 34, ""]
+    body += ["## 見ていた人が書いていたこと", ""]
+    body += ["ネット民: 選んだ1件目です。" + "あ" * 12, "  short_voice: true", ""]
+    body += ["ネット民: 選んだ2件目です。" + "あ" * 12, "  short_voice: true", ""]
+    script = parse_script(nl.join(body))
+    got = [line.text for line in trim(script, "本編").scenes[-1].lines]
+    picked = [t for t in got if t.startswith("選んだ")]
+    assert len(picked) == 2, got
+
+
+def test_発言より先に語りを削る():
+    """**監督の3つの発言のうち真ん中が落ちていた**（2026-09-15 指摘）。
+
+    手前から1行ずつ削っていたので、語りではなく発言が消えた。
+    CLAUDE.md は「短くするために発言を削るのは本末転倒」と書いている。
+    """
+    from src.script_model import parse_script
+    from src.shorts import _fit
+
+    nl = chr(10)
+    body = ["## オープニング", "", "キャスター: つかみ。", "", "## 本編", ""]
+    body += ["解説: まず状況です。" + "あ" * 40, ""]
+    body += ["解説: 監督が口を開きました。" + "あ" * 30, ""]
+    body += ["イラオラ: ひとつめの発言です。" + "あ" * 30, ""]
+    body += ["イラオラ: ふたつめの発言です。" + "あ" * 30, ""]
+    body += ["解説: そのうえで、こう続けました。", ""]
+    body += ["イラオラ: みっつめの発言です。", ""]
+    script = parse_script(nl.join(body))
+    _fit(script, 40.0)
+    texts = [line.text for line in script.scenes[-1].lines]
+    said = [t for t in texts if t.startswith(("ひとつめ", "ふたつめ", "みっつめ"))]
+    assert len(said) == 3, texts
+    # 削られたのは語りのほう
+    assert not any(t.startswith("監督が口を開") for t in texts), texts

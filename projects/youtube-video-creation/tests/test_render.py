@@ -109,6 +109,11 @@ def test_news_layout_clears_headline_on_no_telop(tmp_path):
 def test_motion_adds_intro_frames(tmp_path):
     config = load_config()
     script = _script_with_timing()
+    # **演出の秒数はテストで決める**（2026-09-14）。企画の設定は 0 にしたが
+    # （「切り替えの時に一瞬暗転」「一瞬背景が切り替わってる」）、
+    # 仕組みは残してあるので、ここでは効かせて確かめる
+    config.motion.telop_in = 0.55
+    config.motion.scene_fade = 0.32
 
     config.motion.enabled = False
     without = len(Renderer(config, tmp_path / "off").frame_entries(script))
@@ -121,6 +126,9 @@ def test_scene_change_uses_crossfade(tmp_path):
     """2つ目のシーンの頭には、前の画面と混ざった中間フレームが入る。"""
     config = load_config()
     script = parse_script("## 章1\n霊夢: あいうえお。\n\n## 章2\n魔理沙: かきくけこ。\n")
+    # 企画の設定では転換を 0 にしてあるので、ここで効かせて仕組みを確かめる
+    config.motion.scene_fade = 0.32
+    config.motion.scene_transition = "crossfade"
     for line in script.lines:
         line.duration, line.pause = 2.0, 0.4
     renderer = Renderer(config, tmp_path)
@@ -514,7 +522,11 @@ def test_積むのは匿名の反応だけ(tmp_path):
     from src.render import Renderer
 
     script = _stack_script()
-    renderer = Renderer(load_config(), tmp_path)
+    config = load_config()
+    # 企画の設定では演出を 0 にしてあるので、ここで効かせて仕組みを確かめる
+    config.motion.telop_in = 0.55
+    config.motion.scene_fade = 0.32
+    renderer = Renderer(config, tmp_path)
     renderer.script_background = script.background
     entries = renderer.frame_entries(script)
     assert entries, "フレームが作られていない"
@@ -591,3 +603,26 @@ def test_顔を並べた回でも冒頭に写真が出る():
                           "thumbnail_photos": ["a.jpg"]}) == "c.jpg"
     assert opening_photo({}) == ""
     assert opening_photo({"thumbnail_photos": []}) == ""
+
+
+def test_反応の箱は3行で切らない():
+    """**「文字が切れてる」**（2026-09-15 指摘）。
+
+    `balanced_wrap(...)[:3]` で切っていたので、4行必要な書き込みが
+    黙って途中で終わっていた（「行為として蹴ってる以上、そこは同」）。
+    「ネットのコメントは、画面に全部出す」と決めてある。
+    """
+    from PIL import Image, ImageDraw, ImageFont
+
+    from src.config import load_config
+    from src.render import _stack_height
+
+    draw = ImageDraw.Draw(Image.new("RGBA", (1080, 1920)))
+    font = ImageFont.truetype(str(load_config().video.font_path()), 48)
+    short = ["みじかい書き込み。"]
+    long = ["「見える見えない」とか限度で分け始めたら基準ガバガバな気がするし、"
+            "行為として蹴ってる以上、そこは同列で見るべきやと思います"]
+    room, pad, indents = 900, 14, (0.04,)
+    low = _stack_height(draw, short, font, pad, room, indents, 1080, 0)
+    high = _stack_height(draw, long, font, pad, room, indents, 1080, 0)
+    assert high > low * 2, (low, high)

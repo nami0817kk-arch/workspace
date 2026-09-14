@@ -146,6 +146,54 @@ def _fit_short(draw: ImageDraw.ImageDraw, text: str, font_path: str,
     return font, wrap_text(draw, text, font, room)[:max_lines]
 
 
+def _short_crest_stage(names: list[str], font_path: str,
+                       link: str = "対") -> Image.Image | None:
+    """縦型の下地に、エンブレムを大きく置く（2026-09-14）。
+
+    横型の `_crest_stage` は 1280x720 前提で、縦に切ると端が落ちる。
+    縦型は**上下に積む**。あいだに「対」を入れる。
+    """
+    from . import crest as crest_mod
+
+    found = [p for p in (crest_mod.find(n) for n in names[:2]) if p is not None]
+    if not found:
+        return None
+    width, height = SHORT_SIZE
+    bright = _crest_brightness(found)
+    dark_marks = bright < 150
+    ground = CREST_MAIN_GROUND_LIGHT if dark_marks else CREST_MAIN_GROUND
+    canvas = Image.new("RGBA", SHORT_SIZE, tuple(ground))
+
+    marks = []
+    room = int(width * 0.62)
+    for path in found:
+        with Image.open(path) as source:
+            mark = source.convert("RGBA")
+        ratio = min(room / mark.width, (height * 0.26) / mark.height)
+        marks.append(mark.resize((max(1, int(mark.width * ratio)),
+                                  max(1, int(mark.height * ratio))), Image.LANCZOS))
+    gap = int(height * 0.08)
+    total = sum(m.height for m in marks) + gap * (len(marks) - 1)
+    # **画面の真ん中に置く**（2026-09-14 指摘「ロゴが上によってる」）。
+    # 0.30 だと題名に重なり、0.42 でも上に寄って下が空いていた。
+    # 上は題名2行、下は引用1行ぶんを空ける
+    y = int(height * 0.52) - total // 2
+    middles = []
+    for index, mark in enumerate(marks):
+        canvas.alpha_composite(mark, ((width - mark.width) // 2, y))
+        y += mark.height
+        if index < len(marks) - 1:
+            middles.append(y + gap // 2)
+            y += gap
+    if len(marks) == 2 and link and middles:
+        font = ImageFont.truetype(font_path, 120)
+        draw = ImageDraw.Draw(canvas)
+        text_w = draw.textlength(link, font=font)
+        draw.text(((width - text_w) / 2, middles[0] - 66), link, font=font,
+                  fill=(40, 56, 84, 240) if dark_marks else (255, 255, 255, 235))
+    return canvas
+
+
 def _short_thumbnail(
     config: ProjectConfig,
     out_path: Path,
@@ -155,14 +203,23 @@ def _short_thumbnail(
     focus: float | None,
     quote: str,
     photos: list[str],
+    crest_main: list[str] | None = None,
+    crest_link: str = "対",
 ) -> Path:
     """1080x1920 のサムネイル。ショート専用。"""
     font_path = str(config.video.font_path())
     accent = _hex(config.video.accent)
     width, height = SHORT_SIZE
 
+    # **エンブレムが主役の回は、まずエンブレム**（2026-09-14 指摘）。
+    # 写真が無いと下地（自前で描いた緑のピッチ）が拾われ、
+    # エンブレムの3本が同じ絵に見えていた。写真があればそちらを優先する
+    stage = None
+    if not (photos or []) and (crest_main or []):
+        stage = _short_crest_stage(crest_main, font_path, crest_link)
+
     source = None
-    for candidate in [*(photos or []), background]:
+    for candidate in ([] if stage is not None else [*(photos or []), background]):
         if not candidate:
             continue
         path = _resolve(candidate)
@@ -177,6 +234,8 @@ def _short_thumbnail(
         with Image.open(source) as image:
             canvas = _cover(image.convert("RGBA"), width, height,
                             focus=focus if focus is not None else 0.18)
+    elif stage is not None:
+        canvas = stage
     else:
         canvas = Image.new("RGBA", SHORT_SIZE, (14, 20, 32, 255))
     _short_scrim(canvas)
@@ -450,7 +509,7 @@ def build_thumbnail(
         return _short_thumbnail(
             config, out_path, (photos or [None])[0] or background,
             lines or (title, subtitle), tags or [], focus,
-            quote or reaction, photos or [],
+            quote or reaction, photos or [], crest_main or [], crest_link,
         )
     if chosen == "news":
         return _news_thumbnail(

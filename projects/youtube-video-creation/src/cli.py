@@ -681,6 +681,15 @@ def _cmd_short(args, config) -> int:
     print(f"■ ショート　{' → '.join(scene.title for scene in short.scenes)}")
     print(f"　想定尺: 約{estimate:.0f}秒 / セリフ {len(short.lines)}行")
 
+    # **エンブレムの回は下地をエンブレムにする**（2026-09-14 指示）。
+    # ショートの一覧はサムネではなく動画の1コマが出るので、絵は中身に入れる
+    crest_bg = shorts.crest_background(short, out)
+    if crest_bg:
+        short.background = crest_bg
+        for scene in short.scenes:
+            scene.background = crest_bg
+        print(f"　下地: {crest_bg}（エンブレム）")
+
     result = build_script(
         short, shorts.portrait(config), out, use_tts=not args.no_tts
     )

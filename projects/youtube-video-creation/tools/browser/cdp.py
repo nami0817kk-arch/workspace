@@ -75,7 +75,14 @@ def new_tab(url: str = "about:blank") -> dict:
 
 
 def close_tab(target_id: str) -> None:
-    with urllib.request.urlopen(f"{BASE}/json/close/{target_id}", timeout=10):
+    # **閉じられなくても止めない**（2026-09-14）。ここで例外が出ると
+    # finally の中なので、本当のエラーが隠れて原因が分からなくなる
+    try:
+        with urllib.request.urlopen(f"{BASE}/json/close/{target_id}", timeout=10):
+            pass
+    except Exception:
+        return
+    with urllib.request.urlopen(f"{BASE}/json/version", timeout=10):
         pass
 
 

@@ -28,6 +28,41 @@ class ShortError(Exception):
     pass
 
 
+def crest_background(script, out_dir) -> str:
+    """**エンブレムの回は、ショートの下地をエンブレムにする**（2026-09-14 指示）。
+
+    YouTube はショートの一覧に**動画から自動で作った1コマ**を出す。
+    こちらが設定したサムネイルは届かない（2026-09-09 に確認済み。
+    `render._photo_stage` の注記も同じ）。つまり一覧で何が見えるかは
+    **動画の中身**で決まるので、エンブレムを下地そのものに敷く。
+
+    写真のある回は素通しする（人の顔のほうが強い）。
+    """
+    from pathlib import Path
+
+    from .thumbnail import _short_crest_stage
+
+    meta = script.meta or {}
+    if str(meta.get("thumbnail_photo") or "").strip():
+        return ""
+    if [x for x in (meta.get("thumbnail_photos") or []) if str(x).strip()]:
+        return ""
+    names = [str(x) for x in (meta.get("thumbnail_crest_main") or [])]
+    if not names:
+        return ""
+    from .config import load_config
+
+    font_path = str(load_config().video.font_path())
+    stage = _short_crest_stage(names, font_path,
+                              str(meta.get("thumbnail_crest_link", "対")))
+    if stage is None:
+        return ""
+    out = Path(out_dir) / "crest_bg.png"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    stage.convert("RGB").save(out, quality=95)
+    return str(out).replace("\\", "/")
+
+
 def portrait(config: ProjectConfig) -> ProjectConfig:
     """縦向きの設定にする。文字は横幅が狭くなるぶん小さくする。
 
@@ -78,7 +113,13 @@ def trim(script: Script, section: str = "", max_seconds: float = MAX_SECONDS) ->
     _drop_hook(short.scenes[0])
     _drop_main_mark(short.scenes[1])
     _drop_lead_in(short.scenes[1])
-    _fit(short, max_seconds)
+    # **選ばれた反応のぶんは、先に空けておく**（2026-09-15）。
+    # `_add_voices_tail` は尺が余っているぶんしか足さないので、
+    # 印を付けた2件目が0.6秒はみ出して落ちていた（松木の回）。
+    # 印は書いた人の指定なので、語りのほうを詰めて場所を作る
+    # `_fit` は渡した秒数に ESTIMATE_SLACK を掛けてから使うので、
+    # 空ける秒数のほうも割り戻しておく（掛け直されて目減りする）
+    _fit(short, max_seconds - _reserved(script, short, max_seconds) / ESTIMATE_SLACK)
     _add_voices_tail(short, script, max_seconds)
     _add_face(short)
     if not short.scenes[-1].lines:
@@ -246,6 +287,37 @@ def _is_voices_scene(scene: Scene) -> bool:
     return all((getattr(l, "speaker", "") or "").strip() not in NARRATORS for l in lines)
 
 
+def _reserved(script: Script, short: Script, max_seconds: float) -> float:
+    """`short_voice` で選ばれた反応が要る秒数（2026-09-15）。
+
+    印が無ければ0。今までどおり「余ったぶんだけ」足す。
+    """
+    if str((script.meta or {}).get("short_voices", "")).lower() in ("false", "no", "0"):
+        return 0.0
+    source = _voices_source(short, script)
+    if source is None:
+        return 0.0
+    picked = [l for l in source.lines if getattr(l, "short_voice", False)]
+    if not picked:
+        return 0.0
+    need = sum(l.duration or l.estimated_duration()
+               for l in picked[:VOICES_TAIL_MAX])
+    # 語りを削りすぎない。**半分までしか空けない**
+    return min(need, max_seconds * 0.5)
+
+
+def _voices_source(short: Script, script: Script) -> Scene | None:
+    """ショートの締めに足す反応の節。"""
+    if short.scenes[-1] is short.scenes[0]:
+        return None
+    for scene in reversed(script.scenes[1:]):
+        if scene is short.scenes[-1] or scene.title == short.scenes[-1].title:
+            continue
+        if _is_voices_scene(scene):
+            return scene
+    return None
+
+
 def _add_voices_tail(short: Script, script: Script, max_seconds: float) -> None:
     """**ショートの最後にもネットの声を少しだけ足す**（2026-09-13 ユーザー指示）。
 
@@ -261,20 +333,18 @@ def _add_voices_tail(short: Script, script: Script, max_seconds: float) -> None:
     # 審判の声明や本人の発言が芯の回は、最後が匿名の感想だと締まらない
     if str((script.meta or {}).get("short_voices", "")).lower() in ("false", "no", "0"):
         return
-    if short.scenes[-1] is short.scenes[0]:
-        return
-    source = None
-    for scene in reversed(script.scenes[1:]):
-        if scene is short.scenes[-1] or scene.title == short.scenes[-1].title:
-            continue
-        if _is_voices_scene(scene):
-            source = scene
-            break
+    source = _voices_source(short, script)
     if source is None:
         return
     target = max_seconds * ESTIMATE_SLACK
+    # **どの反応で締めるかは、書いた人が選べる**（2026-09-15 指示）。
+    # 上から順に取ると、1件目が見出しの言い直しになる回がある（松木の
+    # 「松木玖生が今季公式戦初ゴール…平河悠との日本人対決を制す」は
+    # タイトルとほぼ同じだった）。取材メモに `short_voice: true` と書く。
+    # 印が1つも無ければ、今までどおり上から順に取る
+    picked = [l for l in source.lines if getattr(l, "short_voice", False)]
     added = 0
-    for line in source.lines:
+    for line in (picked or source.lines):
         if added >= VOICES_TAIL_MAX:
             break
         cost = line.duration or line.estimated_duration()
@@ -477,13 +547,35 @@ def _drop_middle(scene: Scene, script: Script, target: float) -> None:
         return
     keep = closing[0]
     while _estimate(script) > target and keep > 1:
-        del scene.lines[keep - 1]
+        # **発言より先に語りを削る**（2026-09-15 指摘「イラオラの言葉に欠落がある」）。
+        # 手前から1行ずつ削っていたので、**監督の3つの発言のうち真ん中が落ちて**
+        # いた。CLAUDE.md は「短くするために発言を削るのは本末転倒」と書いている。
+        # 語りは包み紙で、発言が中身。**包み紙から捨てる**
+        cut = keep - 1
+        for index in range(keep - 1, 0, -1):
+            if _is_narrator(scene.lines[index]):
+                cut = index
+                break
+        del scene.lines[cut]
         keep -= 1
         # 代弁を全部落としたあとの「こう話しました。」だけを残さない。
         # **落とすのは振りだけ。**語りをまとめて消していたので、
         # マック・アリスターの回で決勝点の描写ごと消えて27秒になっていた
         # （2026-09-10 に書き出して発見）。尺に収まっていても削っていた
         while keep > 1 and _is_lead_in(scene.lines[keep - 1]):
+            del scene.lines[keep - 1]
+            keep -= 1
+        # **語りが2つ続いたら、前のほうは振りだった**（2026-09-15）。
+        # 遠藤の回で「もうひとつ、理由を挙げています。」→（イラオラの発言）→
+        # 「そのうえで、こう続けました。」の真ん中だけが尺で落ち、
+        # **振りが2つ並んだ。**`LEAD_IN` は「こう」を含む形しか見ないので
+        # 素通りしていたが、**語りのあいだに発言が無い**ことは形で分かる。
+        # 直前に消したのが発言だったときだけ効かせる（語りの連続を
+        # もともと書いている回は触らない）
+        while (keep > 1
+               and _is_narrator(scene.lines[keep - 1])
+               and keep < len(scene.lines)
+               and _is_narrator(scene.lines[keep])):
             del scene.lines[keep - 1]
             keep -= 1
 

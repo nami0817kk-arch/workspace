@@ -509,6 +509,17 @@ def _bars(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]
     return blocks
 
 
+def _fit_cell(draw, text: str, font, room: float) -> str:
+    """列に収まるところまで。収まらなければ末尾を … にする（2026-09-14）。"""
+    text = str(text)
+    if room <= 0 or draw.textlength(text, font=font) <= room:
+        return text
+    cut = text
+    while cut and draw.textlength(cut + "…", font=font) > room:
+        cut = cut[:-1]
+    return (cut + "…") if cut else ""
+
+
 def _table(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict]:
     """順位表のような表。1行だけ強調できる。"""
     title_font = ImageFont.truetype(font_path, 42)
@@ -524,11 +535,41 @@ def _table(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict
 
     highlight = spec.get("highlight_row")
     inner = width - PAD * 2 - 12
-    # 1列目は狭く、2列目を広く取る（順位＋名前の並びが多いため）
-    weights = [0.14] + [0.5] + [0.36 / max(1, len(columns) - 2)] * max(0, len(columns) - 2)
-    weights = weights[: len(columns)]
-    total = sum(weights)
-    widths = [inner * w / total for w in weights]
+    # **中身の長さで列幅を決める**（2026-09-14 指摘「サッカー部門CEOが被ってる」）。
+    # 1列目を14%の決め打ちにしていたので、「ロン・ゴーレイ」のような長い名前が
+    # はみ出して2列目の字に重なっていた。実際に測って、足りない列を広げる
+    ruler = ImageDraw.Draw(Image.new("RGB", (10, 10)))
+    GAP = 34
+
+    def _natural(font):
+        out = []
+        for index in range(len(columns)):
+            cells = [columns[index]] + [row[index] for row in rows]
+            out.append(max(ruler.textlength(str(c), font=font) for c in cells) + GAP)
+        return out
+
+    # **入らなければ字を縮める。**切って「…」にすると中身が消える
+    # （2026-09-14 に「ハーランドはオンサイドと…」で実際に消えた）
+    size = 34
+    natural = _natural(cell_font)
+    while sum(natural) > inner and size > 22:
+        size -= 2
+        cell_font = ImageFont.truetype(font_path, size)
+        natural = _natural(cell_font)
+    total = sum(natural)
+    if total <= inner:
+        # 余ったぶんは最後の列に足す。表が左に寄って見えないように
+        widths = list(natural)
+        widths[-1] += inner - total
+    else:
+        # 入りきらないときは、**広い列から削る**。狭い列を削ると名前が潰れる
+        widths = list(natural)
+        over = total - inner
+        while over > 1:
+            big = max(range(len(widths)), key=lambda i: widths[i])
+            take = min(over, widths[big] * 0.25)
+            widths[big] -= take
+            over -= take
 
     blocks: list[dict] = []
     title = str(spec.get("title") or "").strip()
@@ -560,7 +601,9 @@ def _table(spec: dict, width: int, font_path: str, latin_path: str) -> list[dict
             x = PAD + 12
             for index, cell in enumerate(row):
                 color = TEXT if index != 0 else SUB
-                draw.text((x, y), cell, font=cell_font, fill=color)
+                # **列からはみ出させない。**はみ出すと隣の字に重なる
+                shown = _fit_cell(draw, cell, cell_font, widths[index] - 16)
+                draw.text((x, y), shown, font=cell_font, fill=color)
                 x += widths[index]
 
         blocks.append({"height": 52, "draw": draw_row})

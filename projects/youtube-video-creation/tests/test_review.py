@@ -19,7 +19,7 @@ BODY = (
 GOOD_BODY = """---
 title: アーセナルが勝った理由がこちらです
 sources: [https://example.com/a]
-tags: [サッカー, 海外サッカー]
+tags: [サッカー, アーセナル, 海外サッカー]
 ---
 
 ## 何が起きたか
@@ -67,8 +67,10 @@ def _built(tmp_path, seconds=150.0):
         "1\n00:00:01,000 --> 00:00:03,000\n字幕\n", encoding="utf-8"
     )
     # サムネの写真もクレジットが要る（2026-09-06）。見本にも1行入れておく
+    # ハッシュタグも概要欄に出る（2026-09-15）。**タグ全部ではなく前の3つ**
     (tmp_path / "description.txt").write_text(
-        "概要" + chr(10) + "画像: File:x / 撮影者 / CC BY 3.0 / https://example.org",
+        "概要" + chr(10) + "画像: File:x / 撮影者 / CC BY 3.0 / https://example.org"
+        + chr(10) + chr(10) + "#サッカー #アーセナル #海外サッカー",
         encoding="utf-8")
     (tmp_path / "script.json").write_text(
         json.dumps({"scenes": [{"lines": [{"start": seconds - 10, "duration": 10}]}]}),
@@ -1234,3 +1236,110 @@ def test_実写のサッカーなら最初の画面は通る():
     finding = check_opening_background(parse_script(GOOD_BODY))
     assert finding.ok
     assert "match_stadium.mp4" in finding.detail
+
+
+def test_ハッシュタグが多すぎると止まる(tmp_path):
+    """**16個以上あると YouTube はハッシュタグを全部無視する**（2026-09-15）。
+
+    タグをそのまま概要欄へ流していたので、書き出し済み220本のうち5本が
+    これに当たっていた（いちばん多い回で21個）。
+    """
+    from src.review import check_hashtags
+
+    (tmp_path / "description.txt").write_text(
+        "本文" + chr(10) + chr(10) + " ".join(f"#タグ{i}" for i in range(21)),
+        encoding="utf-8")
+    got = check_hashtags(tmp_path)
+    assert not got.ok and "21個" in got.detail
+
+    (tmp_path / "description.txt").write_text(
+        "本文" + chr(10) + chr(10) + "#サッカー #アーセナル #海外サッカー",
+        encoding="utf-8")
+    assert check_hashtags(tmp_path).ok
+
+
+def test_クラブ名のタグが無いと止まる():
+    """**clubs.yaml に無いクラブだとタグが1つも付かない**（2026-09-15 実測）。
+
+    9/11以降の本編96本のうち22本がこれで、ボーンマス・シャルケ・
+    フライブルクの回はタグが人名と分類語だけだった。
+    """
+    from src.review import check_tag_club
+
+    head = "---\ntitle: T\ntags: [%s]\n---\n\n## 章\n\nキャスター: あ。\n  source: 確定\n"
+    assert not check_tag_club(parse_script(head % "サッカー, 移籍市場")).ok
+    assert check_tag_club(parse_script(head % "サッカー, アーセナル")).ok
+    assert check_tag_club(parse_script(head % "サッカー, フランス代表")).ok
+
+
+def test_辞書に無いクラブはエンブレムの名前で通す():
+    """`crest_main` は手で書いたクラブ名。辞書の更新を待たない。"""
+    from src.review import check_tag_club
+
+    body = ("---\ntitle: T\ntags: [サッカー, ボーンマス]\n"
+            "thumbnail_crest_main: [ボーンマス, ブレントフォード]\n---\n\n"
+            "## 章\n\nキャスター: あ。\n  source: 確定\n")
+    assert check_tag_club(parse_script(body)).ok
+
+
+def test_辞書に無いクラブはトピックで通す():
+    """`clubs.yaml` に無いクラブは topic からタグにしている（2026-09-15）。
+
+    サウサンプトンの回が「クラブ名も代表名も入っていません」で × になっていた。
+    """
+    from src.review import check_tag_club
+
+    body = ("---\ntitle: T\ntags: [サッカー, サウサンプトン]\n"
+            "topic: サウサンプトン\n---\n\n"
+            "## 章\n\nキャスター: あ。\n  source: 確定\n")
+    assert check_tag_club(parse_script(body)).ok
+
+
+def test_カードの持ちは写真を数えない():
+    """**写真は出たら最後まで残るのが正しい形**（2026-09-14 のユーザー判断）。
+
+    それを「絵が止まっている」と数えると、この点検を通すには
+    ユーザーが止めた明滅に戻すしかない。画面がほんとうに止まっていないかは
+    `見た目の変化`（カードもテロップも変わらないまま20秒）が見る。
+    """
+    import json
+
+    from src.review import check_card_hold
+
+    def build(tmp, lines):
+        path = tmp / "script.json"
+        path.write_text(json.dumps({"scenes": [{"lines": lines}]}), encoding="utf-8")
+        return path
+
+    import tempfile
+    from pathlib import Path as _P
+
+    with tempfile.TemporaryDirectory() as work:
+        tmp = _P(work)
+        held = [{"image": "a.jpg", "duration": 30} for _ in range(3)]
+        assert check_card_hold(build(tmp, held)).ok, "写真の出しっぱなしで鳴っている"
+        # **入れ替える相手（写真）が出てからのカードだけを数える。**
+        # 写真の無い節でカードを下ろすと「カードも写真も無い」まま伸びる
+        card = [{"image": "a.jpg", "card": "c1", "duration": 30} for _ in range(3)]
+        assert not check_card_hold(build(tmp, card)).ok, "カードの出しっぱなしを見逃した"
+        early = [{"card": "c1", "duration": 30} for _ in range(3)]
+        assert check_card_hold(build(tmp, early)).ok, "写真が出る前のカードで鳴っている"
+
+
+def test_したのはで止める形も答えを隠している():
+    """**3度目の同じ壊れ方**（2026-09-15）。
+
+    2026-09-08 は問いかけ、2026-09-12 は体言止めが弾かれた。今回は
+    「フォーデンの一発退場。キーンが口にしたのは」。**検査の一覧が形を狭めている。**
+    """
+    from src.review import check_title_hook
+
+    def title(text):
+        body = ("---\ntitle: " + text + "\n---\n\n## 章\n\n"
+                "キャスター: " + text + "。\n  source: 確定\n")
+        return check_title_hook(parse_script(body))
+
+    assert title("フォーデンの一発退場。キーンが口にしたのは").ok
+    assert title("久保建英が外れた。監督が挙げたのは").ok
+    # 言い切りは今までどおり止める
+    assert not title("アーセナルがサンダーランドに2対0で勝った").ok

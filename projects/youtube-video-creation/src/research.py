@@ -104,6 +104,9 @@ class Section:
     line_images: list = field(default_factory=list)
     # 行ごとの "short"（ショート専用）。空なら本編にも出す
     line_onlys: list = field(default_factory=list)
+    # **ショートの締めに回す反応**（2026-09-15 指示）。印の付いた反応だけを
+    # ショートの最後に足す。付いていなければ今までどおり上から順に取る
+    line_short_voices: list = field(default_factory=list)
     bg: str = ""      # この節の背景。空なら既定の並びから割り当てる
     # **その節の地の文を誰が読むか**（2026-09-09 ユーザー指示）。
     # 空なら今までどおりキャスターと解説の交互。「何が起きたか」は事実なので
@@ -212,6 +215,10 @@ class Notes:
     # 最後が匿名の感想だと締まらない
     short_voices: bool = True
     league: str = ""                 # england / spain / ... 何を追えていないかの集計に使う
+    # **画面とタグに出すリーグ名の上書き**（2026-09-15）。`league` は集計の鍵なので
+    # 国の単位までしか持てない。松木の回は `england` から「プレミアリーグ」が付いたが、
+    # **サウサンプトンもブリストル・シティも2部**で、中身と食い違っていた
+    league_name: str = ""            
     kind: str = "transfer"           # transfer / match / other
     topic: str = ""                  # 話題のまとまり。続報かどうかを見るのに使う
     thumbnail: dict = field(default_factory=dict)
@@ -263,6 +270,7 @@ def build_notes(raw: dict) -> Notes:
         cards: list = []
         images: list[str] = []
         onlys: list[str] = []
+        picks: list[bool] = []
         for item in raw_lines:
             if isinstance(item, dict):
                 lines.append(str(item.get("text", "")).strip())
@@ -274,6 +282,9 @@ def build_notes(raw: dict) -> Notes:
                 # 試合の概要を最初に説明して」）。ショートは節を切り出して
                 # 単体で出すので前置きが要るが、本編に残すと言い直しになる
                 onlys.append("short" if item.get("short_only") else "")
+                # **ショートの締めに回す反応**（2026-09-15 指示）。
+                # 上から順に取ると、1件目が見出しの言い直しになる回がある
+                picks.append(bool(item.get("short_voice")))
             else:
                 lines.append(str(item).strip())
                 voices.append("")
@@ -281,6 +292,7 @@ def build_notes(raw: dict) -> Notes:
                 cards.append(None)
                 images.append("")
                 onlys.append("")
+                picks.append(False)
         keep = [i for i, s in enumerate(lines) if s]
         sections.append(
             Section(
@@ -295,6 +307,7 @@ def build_notes(raw: dict) -> Notes:
                 line_cards=[cards[i] for i in keep],
                 line_images=[images[i] for i in keep],
                 line_onlys=[onlys[i] for i in keep],
+                line_short_voices=[picks[i] for i in keep],
                 sources=[str(u).strip() for u in (entry.get("sources") or []) if str(u).strip()],
                 official=bool(entry.get("official", False)),
                 card=entry.get("card"),
@@ -321,14 +334,15 @@ def build_notes(raw: dict) -> Notes:
         title=str(theme.get("title", "")).strip(),
         theme_id=str(theme.get("id", "")).strip(),
         question=str(theme.get("question", "")).strip(),
-        prefix=str(theme.get("prefix", "")).strip().strip("【】"),
-        hook=str(theme.get("hook", "")).strip(),
+        prefix=str(theme.get("prefix") or "").strip().strip("【】"),
+        hook=str(theme.get("hook") or "").strip(),
         thumbnail=dict(raw.get("thumbnail") or {}),
-        answer=str(raw.get("answer", "")).strip(),
-        watch=str(raw.get("watch", "")).strip(),
+        answer=str(raw.get("answer") or "").strip(),
+        watch=str(raw.get("watch") or "").strip(),
         follow_up=bool(raw.get("follow_up", False)),
         short_voices=raw.get("short_voices", True) is not False,
         league=str(theme.get("league", "")).strip().lower(),
+        league_name=str(theme.get("league_name") or "").strip(),
         kind=str(theme.get("kind", "transfer")).strip().lower() or "transfer",
         topic=str(theme.get("topic", "")).strip(),
         sections=sections,
@@ -339,6 +353,13 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
     """確度と構成の条件を満たしているか調べ、問題を文章で返す。空なら合格。"""
     policy = getattr(plan, "policy", {}) or {}
     problems: list[str] = []
+    # **知らないリーグの鍵で止める**（2026-09-15）。`league_name` が鍵そのものを
+    # 返していたので、`league: premier`（正しくは `england`）が
+    # **そのまま `premier` というタグ**になって公開の手前まで来ていた
+    if notes.league and not plan.league(notes.league):
+        known = "／".join(sorted(getattr(plan, "leagues", {}) or {}))
+        problems.append(
+            f"league の『{notes.league}』は知らない鍵です。書けるのは {known} です")
 
     if not notes.title:
         problems.append("theme.title が空です")
@@ -849,6 +870,11 @@ def _longest_common(left: str, right: str) -> str:
 
 # 同じ言い回しが2か所に出てよい長さ。これを超えたら言い直し
 REPEAT_MIN = 12
+# **ショートの中の重複は、もっと短くても効く**（2026-09-15）。
+# 本編で12字としたのは節と節が数十秒離れているからで、ショートでは
+# **タイトルの次の行**として2秒後に読まれる。遠藤の回の重なりは
+# 「4試合続けて出番なし」の10字で、12字では届かなかった
+SHORT_REPEAT_MIN = 8
 
 
 def _advise_repeats(notes: Notes) -> list[str]:
@@ -862,6 +888,11 @@ def _advise_repeats(notes: Notes) -> list[str]:
     そのときには既に「知っている話」になっていて引っかからない。
     """
     said: list[tuple[str, str]] = []
+    # **タイトルも読み上げの1行目**（2026-09-15 指摘「本編で重複がある」）。
+    # 引きだけ見ていたので、「遠藤航が4試合続けて出番なし」（題）と
+    # 「遠藤航が、リーグ戦で4試合続けて出番がありません」（節1）が
+    # **数秒の間に二度読まれて**いた。題は比べる相手に入っていなかった
+    said.append(("タイトル", _bare_text(notes.title)))
     if notes.hook:
         said.append(("引き", _bare_text(notes.hook)))
     for section in notes.sections:
@@ -873,21 +904,90 @@ def _advise_repeats(notes: Notes) -> list[str]:
                     if number < len(section.line_onlys) else "")
             if only == "short":
                 continue
+            # **反応は人の書いた文なので直さない。**こちらが書いた地の文だけ見る。
+            # **そう書いてあるのに、実装が見ていなかった**（2026-09-15）。
+            # 松木の回で「平河悠との日本人対決」がタイトルと重なると鳴ったが、
+            # それは書き込みの原文で、**こちらが直してはいけない文**だった
+            voice = (section.voices[number]
+                     if number < len(section.voices) else "")
+            if voice and voice not in SPEAKERS:
+                continue
             text = sentence if isinstance(sentence, str) else str(
                 (sentence or {}).get("text", ""))
-            # **反応は人の書いた文なので直さない。**こちらが書いた地の文だけ見る
             said.append((section.id, _bare_text(text)))
 
     problems: list[str] = []
     seen: set[str] = set()
+    opening = ("タイトル", "引き")
     for index, (where, text) in enumerate(said):
         for other_where, other in said[:index]:
             shared = _longest_common(text, other)
-            if len(shared) >= REPEAT_MIN and shared not in seen:
+            # **冒頭とのかぶりは、もっと短くても効く**（2026-09-15）。
+            # 12字は節と節が数十秒離れている前提の数字で、タイトルと第1節は
+            # 数秒しか離れていない。遠藤の重なりは「4試合続けて出番」の8字と
+            # 「チャンピオンズリーグの」の11字で、どちらも12字に届かなかった
+            limit = SHORT_REPEAT_MIN if other_where in opening else REPEAT_MIN
+            if len(shared) >= limit and shared not in seen:
                 seen.add(shared)
                 problems.append(
                     f"{other_where} と {where} で同じことを言っています"
                     f"（『{shared}』）。あとの節から落とすか、言い換えてください")
+    return problems
+
+
+def _advise_short_repeats(notes: Notes) -> list[str]:
+    """ショートの中で同じことを言っていないか（2026-09-15）。
+
+    **`_advise_repeats` には穴があった。**ショート専用の行（`short_only`）は
+    「本編には出ないので、前の節と同じで当たり前」として**まるごと見ていなかった。**
+    ところがショートでは、その行は**タイトルを読む1行目のすぐ下**に来る。
+    遠藤の回で実際にこうなっていた。
+
+        S:0 遠藤航が4試合続けて出番なし。監督が語った理由とは。   ← タイトル
+        S:1 遠藤航がリーグ戦で4試合続けて出番なし。…            ← short_only
+
+    9/14 に「節をまたいで同じことを言わない」を入れたのに、**同じ型の重複が
+    ユーザーの目で見つかった。**前の節と重なってよいのはそのとおりで、
+    **比べる相手が違っていた。**ショートに一緒に出るものと突き合わせる。
+    """
+    problems: list[str] = []
+    seen: set[str] = set()
+    title = _bare_text(notes.title)
+    for section in notes.sections:
+        # ショートに一緒に出るのは、タイトルの1行目と、この節の本編の行
+        others = [("タイトル", title)]
+        for number, sentence in enumerate(section.say):
+            only = (section.line_onlys[number]
+                    if number < len(section.line_onlys) else "")
+            if only == "short":
+                continue
+            voice = (section.voices[number]
+                     if number < len(section.voices) else "")
+            if voice and voice not in SPEAKERS:
+                continue          # 反応は人の書いた文なので直さない
+            text = sentence if isinstance(sentence, str) else str(
+                (sentence or {}).get("text", ""))
+            others.append((section.id, _bare_text(text)))
+        for number, sentence in enumerate(section.say):
+            only = (section.line_onlys[number]
+                    if number < len(section.line_onlys) else "")
+            if only != "short":
+                continue
+            text = _bare_text(sentence if isinstance(sentence, str) else str(
+                (sentence or {}).get("text", "")))
+            for where, other in others:
+                shared = _longest_common(text, other)
+                # **タイトルだけ基準を下げる。**ショートではタイトルの次の行として
+                # 2秒後に読まれる。節の中の他の行はもっと離れているので、
+                # 本編と同じ12字で見る（そうしないと「はフェルナンデス」のような
+                # 人名の重なりで鳴る）
+                limit = SHORT_REPEAT_MIN if where == "タイトル" else REPEAT_MIN
+                if len(shared) >= limit and shared not in seen:
+                    seen.add(shared)
+                    problems.append(
+                        f"ショート専用の行が {where} と重なっています"
+                        f"（『{shared}』）。ショートではこの2つが続けて読まれます。"
+                        "タイトルに無いことだけを書いてください")
     return problems
 
 
@@ -940,7 +1040,8 @@ def _advise_voices(notes: Notes) -> list[str]:
     """反応の扱いで気をつける点。"""
     hints: list[str] = (_advise_volume(notes) + _advise_material(notes)
                         + _advise_hook(notes) + _advise_thumbnail_repeat(notes)
-                        + _advise_repeats(notes) + _advise_title(notes))
+                        + _advise_repeats(notes) + _advise_short_repeats(notes)
+                        + _advise_title(notes))
     for section in notes.sections:
         card = section.card or {}
         if str(card.get("type", "")).lower() != "reactions":
@@ -1064,7 +1165,10 @@ def check_repeats(notes: Notes, plan: Plan, now=None) -> list[str]:
 # 実測：1行5〜6秒。2行で12.7秒になり「同じ絵が12秒」に引っかかった。
 # **1行ごとに、カードと写真を入れ替える。**
 CARD_LINES_MAX = 1
-TELOP_LIMIT = 54
+# **読み上げる文はぜんぶ画面に出す**（2026-09-14 指示）。
+# 54字で切っていたので、長い一文は「…アンドレス・」で終わっていた。
+# 収まらないぶんは render 側が字を小さくして入れる
+TELOP_LIMIT = 200
 
 
 def _resolve_bg(path: str):
@@ -1158,6 +1262,10 @@ def to_script(notes: Notes, plan: Plan) -> str:
         **({"voice_min": notes.voice_min} if notes.voice_min is not None else {}),
         # ショートだけ別の題名にする（2026-09-09）。shorts._retitle がここを見る
         **({"short_title": notes.short_title} if notes.short_title else {}),
+        # **話のまとまり**を台本にも残す（2026-09-15）。`clubs.yaml` に無いクラブは
+        # topic からタグにしているので、`review` の「タグのクラブ名」が
+        # 突き合わせる相手を持てなかった（サウサンプトンの回が × になっていた）
+        **({"topic": notes.topic} if notes.topic else {}),
         "thumbnail_line1": str(thumbnail.get("line1") or notes.title),
         "thumbnail_line2": str(thumbnail.get("line2") or notes.question),
         "thumbnail_tags": [str(t) for t in (thumbnail.get("tags") or [])],
@@ -1209,16 +1317,28 @@ def to_script(notes: Notes, plan: Plan) -> str:
         # タグは話の中身から作る。どの動画にも同じ4つでは検索に掛からない
         "tags": tags_mod.build(
             f"{notes.title} {notes.topic}",
-            league_name=plan.league_name(notes.league) if notes.league else "",
+            league_name=(notes.league_name
+                         or (plan.league_name(notes.league) if notes.league else "")),
             kind=notes.kind,
             # **選手名を入れる**（2026-09-08）。辞書が無いので推測はしないが、
             # サムネの札には人名を書いているので、そこから持ってくる。
             # 参考4チャンネルのハッシュタグはほぼ全部が選手名とクラブ名で、
             # こちらは「サッカー」「移籍市場」のような分類語しか無かった。
             # サンチョの回にサンチョが入っていない状態だった
-            extra=[str(t) for t in (thumbnail.get("tags") or [])],
+            # **エンブレムに書いたクラブ名も入れる**（2026-09-15）。
+            # `crest_main` / `crests` は手で書いたクラブ名なのに、タグへは
+            # 渡していなかった。ボーンマスの回は `crest_main` に
+            # 「ボーンマス」「ブレントフォード」と書いてあるのに、
+            # タグにクラブ名が1つも無かった
+            extra=[str(t) for t in (thumbnail.get("tags") or [])]
+            + [str(t) for t in (thumbnail.get("crest_main") or [])]
+            + [str(t) for t in (thumbnail.get("crests") or [])],
             # **この回に出てくる人**（2026-09-10）。取材メモの `people:` に書く。
-            # 辞書が無いので本文からは拾わない（推測で人名を作らない）
+            # 辞書が無いので本文からは拾わない（推測で人名を作らない）。
+            # **話者名から自動で足す案は取り下げた**（2026-09-15）。試したら
+            # タグは中央値8個→9個しか増えず、代わりに「ノティシアス・デ・
+            # ギプスコア」「Le Petit Lillois」のような**地元紙の名前**が入った。
+            # 話者名には媒体も混ざるので、機械では人と見分けられない
             people=list(notes.people),
             topic=notes.topic,
         ),
@@ -1293,6 +1413,17 @@ def to_script(notes: Notes, plan: Plan) -> str:
                 break
 
     previous_background = ""
+    # 絵を写真に替えたか。**替えるのは1本につき1回**
+    photo_on = False
+    # **エンブレムは全画面の下地に使えない**（2026-09-14 指摘「右側が黒くなってる」
+    # 「ユベントスのロゴか見えない」）。写真用の作りは、同じ写真をぼかして敷いた上に
+    # 右半分へ立てるので、**背景が透明なエンブレムを渡すと右半分が黒くなる**。
+    # 写真が1枚も無い回は、下地を最後まで替えない（切り替え0回）
+    has_photo = bool(str(_thumb.get("photo") or "").strip()
+                     or [x for x in (_thumb.get("photos") or []) if str(x).strip()])
+    # 山場の節から替える。**山場の指定が無い台本は2つ目の節**（1回なのは同じ）
+    switch_at = next((i for i, sec in enumerate(notes.sections) if sec.main),
+                     1 if len(notes.sections) > 1 else 0)
     for index, section in enumerate(notes.sections):
         # **1本のあいだ下地を変えない**（2026-09-14 指示「背景を何度も変更するのは
         # やめてください。サムネとサッカー関連背景でお願いします」）。
@@ -1307,6 +1438,9 @@ def to_script(notes: Notes, plan: Plan) -> str:
         lines += [f"## {section.heading}", f"@bg: {moving_background(background)}"]
         if section.main:
             lines.append("@main: true")
+        # **ここから写真に替える。**それより前は下地のまま
+        if has_photo and index >= switch_at:
+            photo_on = True
         lines.append("")
         for number, sentence in enumerate(section.say):
             # 掛け合いにする。1文目は事実をキャスターが読み、
@@ -1330,6 +1464,9 @@ def to_script(notes: Notes, plan: Plan) -> str:
                         if number < len(section.line_onlys) else "")
             if own_only:
                 lines.append(f"  only: {own_only}")
+            if (number < len(section.line_short_voices)
+                    and section.line_short_voices[number]):
+                lines.append("  short_voice: true")
             if number == 0:
                 shown_for = 0
                 showed_photo = False
@@ -1360,6 +1497,10 @@ def to_script(notes: Notes, plan: Plan) -> str:
                     shown_for = CARD_LINES_MAX      # カードが無いので数えない
                 # **カードが無い行にも写真は出す。**入れ子にしていたせいで、
                 # カードを持たない行の写真が消えていた（実測 2026-09-06）
+                # **節の1行目にも出す**（2026-09-14）。ここだけ抜けていたので、
+                # 節が変わるたびに下地へ戻り、写真と下地が交互に出ていた
+                if photo_on and fallback_image and not own_image:
+                    own_image = fallback_image
                 if own_image:
                     lines.append(f"  image: {own_image}")
             else:
@@ -1404,17 +1545,20 @@ def to_script(notes: Notes, plan: Plan) -> str:
                     # カードを消したあとが「カードも写真も無い」まま伸びていた
                     # （実測でアーセナル27秒・チェルシー55秒・リヴァプール58秒）。
                     # **消すのは、写真に入れ替えられるときだけ**にする
-                    if fallback_image:
+                    # **消すのは、写真に入れ替えられるときだけ**（2026-09-13）。
+                    # 入れ替える相手が無いのに消すと「カードも写真も無い」まま伸びる。
+                    # 2026-09-14 指摘「意味のないnoneが入っている」も同じところ
+                    if photo_on and fallback_image:
                         lines.append("  card: none")
-                        # **写真も続けて2回出さない**（2026-09-12）。
-                        # 同じ写真が2行続くと、それも「同じ絵」で13秒になった。
-                        # 写真 → 背景だけ → 写真、と交互にする
-                        if not own_image and not showed_photo:
-                            own_image = fallback_image
-                            showed_photo = True
-                        else:
-                            showed_photo = False
                     shown_for = 0
+                # **絵の切り替えは1本につき1回だけ**（2026-09-14 指示
+                # 「背景がコロコロ変わるのやめてほしい。変更は一度まで」）。
+                # それまでは「写真 → 下地だけ → 写真」と交互に出していたので、
+                # 2分のあいだに画面が何度も入れ替わって見えた。
+                # **山場の節に入ったところで写真に替え、そのまま最後まで出す。**
+                # image は行ごとの指定で次の行に残らないので、毎行に書く
+                if photo_on and fallback_image and not own_image:
+                    own_image = fallback_image
                 if own_image:
                     lines.append(f"  image: {own_image}")
         lines.append("")

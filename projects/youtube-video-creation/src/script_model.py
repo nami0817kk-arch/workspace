@@ -32,7 +32,7 @@ ATTR_RE = re.compile(r"^(?P<key>[a-zA-Z_]+)[:：]\s*(?P<value>.*)$")
 DIRECTIVE_RE = re.compile(r"^@(?P<key>[a-zA-Z_]+)[:：]\s*(?P<value>.*)$")
 
 LINE_ATTRS = {"telop", "emotion", "pause", "image", "speed", "no_telop", "se", "source",
-              "card", "only"}
+              "card", "only", "short_voice"}
 
 # 情報の確度。ニュース系では、これを画面に出さないと視聴者が判断できない
 SOURCE_TIERS = {
@@ -113,6 +113,10 @@ class Line:
     # 試合か説明」）。ショートは節を切り出して単体で出すので、本編では前の節で
     # 言い終えている前置きが要る。本編に残すと**節またぎの言い直し**になる
     only: str | None = None     # "short" のときショート専用
+    # **ショートの締めに回す反応**（2026-09-15 指示）。印の付いた反応だけを
+    # ショートの最後に足す。付いていなければ今までどおり上から順に取る。
+    # `only: short` とは別物で、**本編にもそのまま残る**
+    short_voice: bool = False
     source_line: int = 0
 
     # ビルド中に埋まる
@@ -309,8 +313,8 @@ def _apply_attr(line: Line, key: str, value: str, number: int) -> None:
             setattr(line, key, float(value))
         except ValueError as exc:
             raise ScriptError(f"{number}行目: {key} には数値を指定してください") from exc
-    elif key == "no_telop":
-        line.no_telop = value.lower() not in ("false", "no", "0", "")
+    elif key in ("no_telop", "short_voice"):
+        setattr(line, key, value.lower() not in ("false", "no", "0", ""))
     elif key == "only":
         if value.strip() not in ("short",):
             raise ScriptError(f"{number}行目: only に書けるのは short だけです")

@@ -82,6 +82,7 @@ def build_script(
     from .review import hold_limit
 
     spread_long_cards(script, hold_limit(config.video.height > config.video.width))
+    hold_photo(script)
 
     # タイトルカードのぶんの無音を挟み、各セリフの開始時刻を振り直す
     inserts = inserts_mod.plan(script, config)
@@ -124,6 +125,11 @@ def build_script(
         tags=look["tags"],
         reaction=reaction,
         points=look.get("points") or [],
+        # **書き出しの経路にも渡す**（2026-09-14）。`thumbnail` コマンドにだけ
+        # 渡していたので、単体で作ると正しく、build で上書きすると崩れていた
+        # （バルセロナの帯が左半分のまま／バレンシアの赤い一行が消えていた）
+        note_red=look.get("note_red") or "",
+        band_full=bool(look.get("band_full")),
         photos=look.get("photos") or [],
         # 縦サムネの下に置く一言。横型では使わない
         quote=short_quote(script),
@@ -150,6 +156,33 @@ def build_script(
         duration=script.duration + inserts.total,
         backend=backend.name,
     )
+
+
+def hold_photo(script: Script) -> int:
+    """**写真は一度出たら、そのあとも出したままにする**（2026-09-15）。
+
+    `spread_long_cards` は「同じ絵が20秒止まる」ところに写真を1枚挟むが、
+    **次の行で下地へ戻っていた。**フォーデンの回の本編は
+    スタジアム → 写真 → スタジアム → 写真 と**3回**入れ替わっていて、
+    2026-09-14 の指摘「一つの章で背景を変えるのやめて」
+    「この間に一瞬背景が切り替わってるなおして」がそのまま再発していた。
+
+    `research.to_script` の側は「山場の節から写真にして最後まで残す」と
+    書いているのに、**あとから挟むほうがその決まりを知らなかった。**
+    書き出しの最後に、写真を前から後ろへ引き継ぐ。
+
+    `scan_switch.py` で数えると、入れ替えは1本につき1回に収まる。
+    """
+    filled = 0
+    holding = ""
+    for scene in script.scenes:
+        for line in scene.lines:
+            if line.image:
+                holding = line.image
+            elif holding:
+                line.image = holding
+                filled += 1
+    return filled
 
 
 def spread_long_cards(script: Script, limit: float | None = None) -> int:

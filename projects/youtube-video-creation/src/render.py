@@ -590,13 +590,9 @@ class Renderer:
             )
             draw.text((76, 58), title, font=self.font_scene, fill=(240, 240, 240, 255))
 
-        if self.script_date:
-            date_w = draw.textlength(self.script_date, font=self.font_date)
-            right = canvas.width - 48
-            draw.text(
-                (right - date_w, 62), self.script_date, font=self.font_date,
-                fill=(206, 214, 226, 255), stroke_width=3, stroke_fill=(0, 0, 0, 190),
-            )
+        # **日付は画面に出さない**（2026-09-14 指示「日付入れなくて良い」）。
+        # 右上に「2026年9月14日」と出していたが、いつの話かは中身で言っている。
+        # 台本の `date` は残す（題材の重複を見るのに使っている）
         canvas.alpha_composite(layer)
 
     def _draw_telop(
@@ -661,10 +657,15 @@ class Renderer:
     # まとめ動画の画面を見本として提示）。1件ごとに色を変えるので、
     # どこからどこまでが1つの書き込みかが、読まなくても分かる。
     # 何件残すかは、見出しの上に入る高さから決めた（実測で3件）
-    # 見本の画面は5件ならんでいた（2026-09-14 にユーザーが提示）
-    STACK_KEEP = 5
-    # **もっと大きく**（2026-09-14 指示）。見本は1行が画面幅の半分以上あった
-    STACK_SIZE = 58
+    # **全部出す**（2026-09-14 指示「ネットのコメントは、画面に全部出す」）。
+    # 5件で切っていたので、6件以上ある節では最初の書き込みが消えていた。
+    # 入りきらないぶんは**字を小さくして収める**（下の _draw_stack）
+    STACK_KEEP = 99
+    # **もっと大きく**（2026-09-14 指示）。見本は1行が画面幅の半分以上あった。
+    # ここは上限で、件数が多い節では自動で下がる
+    # **もう少し大きく**（2026-09-14 指摘）。件数が多い節では自動で下がる
+    STACK_SIZE = 72
+    STACK_SIZE_MIN = 34
     # 見本は箱が左右にずれて置かれていた。**同じ左端に揃えない。**
     # 画面幅に対する割合で、積んだ通し番号ごとにこの順で寄せる
     STACK_INDENT = (0.04, 0.16, 0.02, 0.22, 0.10)
@@ -689,12 +690,24 @@ class Renderer:
             return
         from PIL import ImageFont
 
-        font = ImageFont.truetype(str(self.config.video.font_path()),
-                                  int(self.STACK_SIZE * self.layout.width / 1920))
         layer, draw = _layer(canvas.size)
         _left, _top, right, bottom = self.layout.headline_box
         pad = int(self.layout.width * 0.014)
         kept = stack[-self.STACK_KEEP:]
+        # **反応の最中はテロップを出さない**ので、見出しの居場所を空ける必要がない。
+        # 画面の下まで使えるぶん、字を大きくできる（2026-09-14 指摘「字が小さい」）
+        room_h = int(self.layout.height * 0.92) - int(self.layout.height * STACK_TOP)
+        scale = self.layout.width / 1920
+        size = int(self.STACK_SIZE * scale)
+        floor = max(12, int(self.STACK_SIZE_MIN * scale))
+        while True:
+            font = ImageFont.truetype(str(self.config.video.font_path()), size)
+            total = _stack_height(draw, kept, font, pad, right - _left,
+                                  self.STACK_INDENT, self.layout.width,
+                                  len(stack) - len(kept))
+            if total <= room_h or size <= floor:
+                break
+            size -= 3
         # 色と寄せ方は**積んだ通し番号**で決める。画面から消えた分も数に入れるので、
         # 隣り合う書き込みが同じ色・同じ位置にならない
         first = len(stack) - len(kept)
@@ -708,14 +721,15 @@ class Renderer:
             index = first + depth
             indent = int(self.layout.width * self.STACK_INDENT[index % len(self.STACK_INDENT)])
             body = _strip_speaker(text)
-            lines = balanced_wrap(draw, body, font, room - indent - pad * 3)[:3]
+            # **切らない**（2026-09-15 指摘「文字が切れてる」）。_stack_height と同じ
+            lines = balanced_wrap(draw, body, font, room - indent - pad * 3)
             height = font.size * len(lines) + int(font.size * 0.42) * (len(lines) - 1) + pad * 2
             width = pad * 3 + max(int(draw.textlength(chunk, font=font)) for chunk in lines)
             boxes.append((indent, min(width, room - indent), lines,
                           self.STACK_COLORS[index % len(self.STACK_COLORS)]))
             total += height + pad
-        head_top = bottom - (self.config.video.headline_size + 26) * 3 - 18
-        y = max(int(self.layout.height * 0.06), head_top - total)
+        # 上から積む。**下に余白が残っても、字の大きさを優先する**
+        y = int(self.layout.height * STACK_TOP)
 
         for indent, width, lines, ink in boxes:
             height = font.size * len(lines) + int(font.size * 0.42) * (len(lines) - 1) + pad * 2
@@ -744,8 +758,22 @@ class Renderer:
         left, top, right, bottom = self.layout.headline_box
         rise = int(TELOP_RISE * (1.0 - _ease_out(telop_t)))
 
-        lines = balanced_wrap(draw, text, self.font_headline, right - left - 90)[:3]
-        line_height = self.config.video.headline_size + 26
+        # **読み上げる文はぜんぶ出す**（2026-09-14 指示）。3行で切っていたので、
+        # 長い一文は「…アンドレス・」で終わっていた。
+        # 4行を超えるようなら字を小さくして、全部を入れる
+        from PIL import ImageFont as _IF
+        font_path = str(self.config.video.font_path())
+        size = self.config.video.headline_size
+        floor = max(22, int(size * 0.52))
+        font = self.font_headline
+        while True:
+            lines = balanced_wrap(draw, text, font, right - left - 90)
+            if len(lines) <= HEADLINE_LINES_MAX or size <= floor:
+                break
+            size -= 4
+            font = _IF.truetype(font_path, size)
+        self.font_headline_fit = font
+        line_height = size + 26
         text_top = bottom - line_height * len(lines) + rise
 
         badge = SOURCE_BADGES.get(source or "")
@@ -757,7 +785,7 @@ class Renderer:
         # 実写の上でも見出しが読めていた。こちらは白文字＋細い縁だけだった。
         band_right = left
         for chunk in lines:
-            band_right = max(band_right, left + 34 + draw.textlength(chunk, font=self.font_headline))
+            band_right = max(band_right, left + 34 + draw.textlength(chunk, font=font))
         draw.rounded_rectangle(
             [left - 8, text_top - 18,
              min(right, int(band_right + 34)), text_top + line_height * len(lines) - 4],
@@ -782,7 +810,7 @@ class Renderer:
         for chunk in lines:
             # 縁取りは縦型で太くする。実写や模様の上でも輪郭が残るように
             draw.text(
-                (left + 34, y), chunk, font=self.font_headline, fill=(255, 255, 255, 255),
+                (left + 34, y), chunk, font=font, fill=(255, 255, 255, 255),
                 stroke_width=8 if self.layout.is_portrait else 5,
                 stroke_fill=(0, 0, 0, 235),
             )
@@ -1092,29 +1120,16 @@ class Renderer:
     MAX_STILL_SECONDS = 7.0
 
     def _split_long(self, name: str, seconds: float, index: int) -> list[tuple[Path, float]]:
-        """長いシーンは背景を2枚に割る。読み上げの途中でも絵が変わる。
+        """シーンの背景は1枚のまま出す。
 
-        割る先は BACKGROUNDS の並びから、いまの絵と違うものを選ぶ。
-        動画の背景（mp4）は元から動いているので割らない。
+        **途中で割らない**（2026-09-14 指示「背景を何度も変更するのはやめて。
+        変更は一度まで」）。それまでは静止画が長いと BACKGROUNDS の並びから
+        別の絵を選んで半分で入れ替えていた。台本の側で下地を1つに固めても、
+        **ここが勝手に差し替えるので節の途中で絵が変わっていた**
+        （エンブレムの下地にしたショートで、25秒あたりからスタジアムに戻った）。
+        画面の動きは `background_zoom` のゆっくりした寄りで作る。
         """
-        source = _resolve(name)
-        if seconds <= self.MAX_STILL_SECONDS or is_video(source):
-            return [(self._moving(source, seconds), seconds)]
-
-        from .research import BACKGROUNDS
-
-        alternatives = [c for c in BACKGROUNDS if Path(c).name != source.name]
-        if not alternatives:
-            return [(self._moving(source, seconds), seconds)]
-        second = _resolve(alternatives[index % len(alternatives)])
-        if not second.exists():
-            return [(self._moving(source, seconds), seconds)]
-
-        half = seconds / 2
-        return [
-            (self._moving(source, half), half),
-            (self._moving(second, seconds - half), seconds - half),
-        ]
+        return [(self._moving(_resolve(name), seconds), seconds)]
 
     def _moving(self, path: Path, seconds: float) -> Path:
         """静止画の背景を、ゆっくり寄っていくクリップに置き換える。
@@ -1307,7 +1322,29 @@ def wrap_text(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont
     return lines
 
 
+# 積んだ箱の上端。**節名の帯（上から42〜110px）の下**から始める
+STACK_TOP = 0.17
+# 見出しの行数の上限。超えたら字を小さくして全部入れる
+HEADLINE_LINES_MAX = 4
+
 _SPEAKER_WRAP = re.compile(r"^[^「]{1,12}「(.+)」$", re.S)
+
+
+def _stack_height(draw, rows, font, pad, room, indents, width, first) -> int:
+    """積んだ箱ぜんぶの高さ。**字の大きさを決めるために先に測る**（2026-09-14）。"""
+    total = 0
+    for depth, text in enumerate(rows):
+        indent = int(width * indents[(first + depth) % len(indents)])
+        # **3行で切っていた**（2026-09-15 指摘「文字が切れてる」）。
+        # 「ネットのコメントは、画面に全部出す」と決めてあるのに、
+        # 4行必要な書き込みが**黙って途中で終わっていた**
+        # （「行為として蹴ってる以上、そこは同」）。切らずに測って、
+        # 入りきらなければ上の while が字を小さくする
+        lines = balanced_wrap(draw, _strip_speaker(text), font,
+                              max(60, room - indent - pad * 3))
+        total += (font.size * len(lines)
+                  + int(font.size * 0.42) * (len(lines) - 1) + pad * 2 + pad)
+    return total
 
 
 def _strip_speaker(text: str) -> str:

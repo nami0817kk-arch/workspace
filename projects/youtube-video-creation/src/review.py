@@ -56,6 +56,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
         findings.append(Finding(False, "概要欄", "description.txt がありません"))
 
     findings.append(_tags(script))
+    findings.append(check_hashtags(out_dir))
     findings.append(_files(out_dir))
     findings.append(_sources(script))
     findings.append(_tiers(script))
@@ -106,6 +107,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     findings.append(_photo_credits(script, out_dir))
     findings.append(check_thumbnail_photos(script))
     findings.append(check_tag_names(script))
+    findings.append(check_tag_club(script))
     findings.append(check_post_sources(script))
     findings.append(_double_marks(script))
     loudness = _loudness(out_dir / "video.mp4")
@@ -197,7 +199,13 @@ SAME_SCREEN_MAX = 20.0
 # 変われば通る**。実測（2026-09-07、出力8本）では、その状態で
 # 本編21.9〜26.5秒 / ショート17.7〜23.1秒 が同じカードのままだった。
 # ショートは尺の6〜7割。伸びている参考チャンネルは8秒で必ず変えている。
-CARD_HOLD_MAX = 12.0
+# **カードが出たままでよい上限**。2026-09-15 にユーザーが「表を出したまま」と
+# 決めたので、12 → 20 に上げた。12 は**下地が静止画だった頃**の数字で、
+# いまは下地が実写の動画で、テロップも1行ごとに変わる。
+# 画面がほんとうに止まっていないかは `見た目の変化`（20秒）が見るので、
+# そちらと同じ物差しにそろえる。**捕まえたいのは引用カードの30〜50秒**
+# （ヴィニシウス53秒・ギュレル54秒）で、表の17〜24秒ではない
+CARD_HOLD_MAX = 20.0
 # ショートはこれより短く見る。31秒の動画で12秒動かないと、尺の4割が同じ絵になる
 # （2026-09-07 に書き出して確認）。参考チャンネルは3〜8秒で必ず変えていた。
 SHORT_CARD_HOLD_MAX = 8.0
@@ -528,6 +536,32 @@ def check_tag_names(script: Script) -> Finding:
                        "／".join(missing) + " がタグに入っていません。"
                        "分類語だけでは検索に掛からない")
     return Finding(True, "タグの固有名", f"{len(script.tags)}個中に {'／'.join(wanted)}")
+
+
+def check_tag_club(script: Script) -> Finding:
+    """タグにクラブ名（か代表名）が入っているか（2026-09-15）。
+
+    `clubs.yaml` に載っていないクラブだと**1つも付かない**。
+    9/11以降の本編96本のうち22本がこれで、ボーンマス・シャルケ・
+    フライブルク・サントス・フェネルバフチェ・ブラックバーン・カリアリの回は
+    タグが人名と分類語だけだった。**検索はクラブ名でも起きる。**
+    """
+    from . import clubs as club_book
+
+    known = {c.canonical for c in club_book.load()}
+    known |= {n.replace("・", "") for n in known}
+    # 辞書に無いクラブは `crest_main` に書いてある（ボーンマス・シャルケ…）
+    meta = script.meta or {}
+    known |= {str(x).strip() for x in (meta.get("thumbnail_crest_main") or [])}
+    known |= {str(x).strip() for x in (meta.get("thumbnail_crests") or [])}
+    # 辞書に無いクラブは topic からタグにしている（サウサンプトン・シャルケ…）
+    known |= {str(meta.get("topic") or "").strip()}
+    hit = [t for t in script.tags if (t in known and t) or t.endswith("代表")]
+    if hit:
+        return Finding(True, "タグのクラブ名", "／".join(hit[:3]))
+    return Finding(False, "タグのクラブ名",
+                   "クラブ名も代表名も入っていません。"
+                   "取材メモの topic を確かめてください")
 
 
 def _photo_subject(path: Path) -> str:
@@ -892,7 +926,12 @@ OUTLET = re.compile(
 # 報道機関の名前とは働きが違う。落とすと確度が下がる
 PRIMARY = re.compile(
     r"(?:UEFA|FIFA|プレミアリーグ|ラ・リーガ|ブンデスリーガ|セリエA|リーグ"
-    r"|連盟|協会|クラブ|公式(?:サイト)?)(?:に)?(?:よると|よれば|の(?:発表|計測|集計))")
+    r"|連盟|協会|クラブ|公式(?:サイト)?)(?:に)?(?:よると|よれば|の(?:発表|計測|集計))"
+    # **試合を裁いた側も一次情報**（2026-09-15）。フォーデンの回で
+    # 「主審の説明は『レッドカード、フィル・フォーデン』。VARは『二次的な動き』と
+    # 伝えています」が**媒体名を言っている**として止まっていた。
+    # 主審とVARは報道機関ではなく、その場で判定を下した当人
+    r"|(?:主審|審判団?|レフェリー|VAR)(?:は|が|の)")
 
 # 埋め草。背番号・レンタル料・この先の日程・言い換え
 FILLER = (
@@ -1096,6 +1135,11 @@ TITLE_NOUN_TAILS = (
     # 中身は隠れたまま。体言止めの一覧に「理由」はあったのに、
     # 助詞が付いた「理由は」を弾いていた
     "理由は", "答えは", "中身は", "真相は", "本音は", "評価は", "監督は", "本人は",
+    # **「〜したのは」で止める形も同じ**（2026-09-15）。何を口にしたかは隠れている。
+    # 「フォーデンの一発退場。キーンが口にしたのは」が「答えを言い切っている」で
+    # 弾かれた。**3度目の同じ壊れ方**（2026-09-08 の問いかけ、
+    # 2026-09-12 の体言止めに続く）。検査の一覧が形を狭めている
+    "たのは", "ったのは", "いたのは", "えたのは", "したのは", "ないのは",
 )
 # 言い切らずに「語る／明かす」で止める形。何を語ったかは隠れている
 TITLE_VERB_TAILS = ("が語る", "が明かす", "が認める", "が口を開く", "を語る", "を明かす",
@@ -1290,10 +1334,19 @@ def hold_limit(portrait: bool) -> float:
 
 
 def check_card_hold(script_json: Path, limit: float = CARD_HOLD_MAX) -> Finding:
-    """画面の主役が同じまま続く時間。テロップの変化は数えない。
+    """**カード**が同じまま続く時間。テロップの変化は数えない。
 
-    下のテロップが変わっていても、カードと写真が同じなら画面はほぼ止まって見える。
-    見ているのは「読む文字」ではなく「絵が変わったか」。
+    カードは書かれた行で差し替わり、次の地の文にも残る。引用が10行続く回で
+    同じ絵のまま30〜50秒ということが実際に起きていた（ヴィニシウス53秒）。
+
+    **写真は数えない**（2026-09-15）。2026-09-14 にユーザーが
+    「一つの章で背景を変えるのやめて」「背景を何度も変更するのはやめてください」と
+    決めた時点で、**写真は出たら最後まで残るのが正しい形**になった。
+    それを「絵が止まっている」と数えると、**この点検を通すには
+    ユーザーが止めた明滅に戻すしかない**。
+
+    画面がほんとうに止まっていないかは `見た目の変化`（カードもテロップも
+    変わらないまま20秒）が見る。実測でこの3本は 9〜11秒だった。
     """
     import json
 
@@ -1302,15 +1355,31 @@ def check_card_hold(script_json: Path, limit: float = CARD_HOLD_MAX) -> Finding:
     data = json.loads(script_json.read_text(encoding="utf-8"))
 
     worst, span, current, label = 0.0, 0.0, None, ""
+    seen_photo = False
     for scene in data.get("scenes", []):
         for line in scene.get("lines", []):
-            look = (line.get("card") or "", line.get("image") or "")
-            if look == current:
+            if line.get("image"):
+                seen_photo = True
+            card = line.get("card") or ""
+            # カードが出ていない行は数えない。**止まっているのはカードの話**で、
+            # カードが無い行の画面はテロップが1行ごとに変わっている
+            if card in ("", "none", "なし"):
+                current, span = None, 0.0
+                continue
+            # **入れ替える相手が無いうちは数えない**（2026-09-15 ユーザー判断
+            # 「表を出したまま」）。書き出しの側も、写真が出ていない節では
+            # カードを下ろさない（下ろすと「カードも写真も無い」まま伸びる。
+            # 2026-09-13 にアーセナル27秒・リヴァプール58秒で実測）。
+            # **生成の決まりと点検の基準が食い違っていた**
+            if not seen_photo:
+                current, span = None, 0.0
+                continue
+            if card == current:
                 span += float(line.get("duration") or 0)
             else:
-                current, span = look, float(line.get("duration") or 0)
+                current, span = card, float(line.get("duration") or 0)
             if span > worst:
-                worst, label = span, (look[0] or look[1] or "（カードも写真も無い）")
+                worst, label = span, card
 
     if worst > limit:
         return Finding(
@@ -1334,7 +1403,36 @@ def _tags(script: Script) -> Finding:
         return Finding(False, "タグ", f"長すぎるタグがあります: {long_ones[0]}")
     if length > tags_mod.MAX_TAGS_TEXT:
         return Finding(False, "タグ", f"合計{length}字（上限{tags_mod.MAX_TAGS_TEXT}字）")
-    return Finding(True, "タグ", f"{len(script.tags)}個 / 合計{length}字")
+    return Finding(True, "タグ",
+                   f"{len(script.tags)}個 / 合計{length}字"
+                   f"（枠の{length * 100 // tags_mod.MAX_TAGS_TEXT}%）")
+
+
+def check_hashtags(out_dir: Path) -> Finding:
+    """概要欄のハッシュタグ（2026-09-15）。
+
+    **16個以上あると、YouTube はハッシュタグを全部無視する。**
+    タグの配列をそのまま `#` 付きで流していたので、`people:` を丁寧に
+    書いた回ほど個数が増え、**ハッシュタグが1つも効いていなかった**
+    （書き出し済み220本のうち5本。いちばん多い回で21個）。
+    タグは500字まで詰めたいので、ここだけ別に数える。
+    """
+    from . import tags as tags_mod
+
+    description = out_dir / "description.txt"
+    if not description.exists():
+        return Finding(True, "ハッシュタグ", "description.txt がまだありません")
+    found: list[str] = []
+    for line in description.read_text(encoding="utf-8").splitlines():
+        if line.lstrip().startswith("#"):
+            found += [w for w in line.split() if w.startswith("#")]
+    if len(found) > tags_mod.HASHTAG_LIMIT:
+        return Finding(False, "ハッシュタグ",
+                       f"{len(found)}個です（{tags_mod.HASHTAG_LIMIT}個を超えると"
+                       "YouTube は全部を無視します）")
+    if not found:
+        return Finding(False, "ハッシュタグ", "1つもありません")
+    return Finding(True, "ハッシュタグ", f"{len(found)}個　{' '.join(found)}")
 
 
 def built_duration(out_dir: Path) -> float | None:

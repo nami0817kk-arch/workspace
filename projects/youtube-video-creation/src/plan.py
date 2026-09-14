@@ -102,7 +102,13 @@ class Plan:
         return dict(self.leagues.get(str(key), {}))
 
     def league_name(self, key: str) -> str:
-        return str(self.league(key).get("name") or key)
+        """そのリーグの日本語名。**知らない鍵なら空**（2026-09-15）。
+
+        鍵そのものを返していたので、取材メモの `league: premier`（正しくは
+        `england`）が**そのまま `premier` というタグになって**公開手前まで来た。
+        鍵はリーグ名ではない。分からないなら何も足さない。
+        """
+        return str(self.league(key).get("name") or "")
 
     def match_queries(self, key: str, official: bool = True) -> list[Query]:
         """そのリーグの試合レポートを引く検索。

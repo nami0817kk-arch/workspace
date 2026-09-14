@@ -68,3 +68,41 @@ def test_写真が無い台本では黙って直さない():
 
     script = _script([_talk(f"行{i}", 6.0, card="c1") for i in range(4)], photo="")
     assert spread_long_cards(script, limit=12.0) == 0
+
+
+def test_写真は一度出たら残す():
+    """**挟んだ写真が次の行で下地へ戻っていた**（2026-09-15）。
+
+    フォーデンの回の本編が スタジアム → 写真 → スタジアム → 写真 と
+    3回入れ替わり、2026-09-14 の指摘「一つの章で背景を変えるのやめて」が
+    そのまま再発していた。`spread_long_cards` が挟んだ1枚を引き継ぐ。
+    """
+    from src.pipeline import hold_photo
+    from src.script_model import parse_script
+
+    nl = chr(10)
+    body = ["---", "title: T", "---", "", "## 章", ""]
+    body += ["キャスター: いちぎょうめ。", ""]
+    body += ["キャスター: にぎょうめ。", "  image: assets/photos/x/01.jpg", ""]
+    body += ["キャスター: さんぎょうめ。", ""]
+    script = parse_script(nl.join(body))
+    assert hold_photo(script) == 1
+    got = [line.image for line in script.scenes[0].lines]
+    assert got == [None, "assets/photos/x/01.jpg", "assets/photos/x/01.jpg"], got
+
+
+def test_別の写真が指定されていればそちらに替える():
+    from src.pipeline import hold_photo
+    from src.script_model import parse_script
+
+    nl = chr(10)
+    body = ["---", "title: T", "---", "", "## 章", ""]
+    body += ["キャスター: いち。", "  image: assets/photos/x/01.jpg", ""]
+    body += ["キャスター: に。", ""]
+    body += ["キャスター: さん。", "  image: assets/photos/y/01.jpg", ""]
+    body += ["キャスター: よん。", ""]
+    script = parse_script(nl.join(body))
+    hold_photo(script)
+    got = [line.image for line in script.scenes[0].lines]
+    assert got[1] == "assets/photos/x/01.jpg"
+    assert got[3] == "assets/photos/y/01.jpg", got

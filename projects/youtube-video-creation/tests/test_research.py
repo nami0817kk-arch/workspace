@@ -351,8 +351,12 @@ def test_long_notes_are_shortened_for_the_screen():
     two = "問題は金額ではなく「誰に売るか」。ライバルに主力を渡すこと自体を拒んでいる"
     assert len(two) <= TELOP_LIMIT
     assert _telop(two) == two                       # 2文とも出す
-    assert _telop("あ" * 100).endswith("…")
-    assert len(_telop("あ" * 100)) == TELOP_LIMIT
+    # **読み上げる文はぜんぶ出す**（2026-09-14 指示）。100字でも切らない。
+    # 入りきらないぶんは render が字を小さくして収める
+    assert _telop("あ" * 100) == "あ" * 100
+    # 上限そのものは残す。桁違いに長いものだけ落とす
+    assert _telop("あ" * 300).endswith("…")
+    assert len(_telop("あ" * 300)) == TELOP_LIMIT
     assert _telop("") == ""
     # 末尾の。は付けない（枠が狭く見える）
     assert _telop("短い一文です。") == "短い一文です"
@@ -987,8 +991,13 @@ def test_crest_fills_in_when_there_is_no_photo():
         for n in (1, 2, 3)
     ]
     text = to_script(build_notes(raw), _plan())
-    assert "assets/crests" in text          # 入れ替える絵として使う
-    assert "card: none" in text             # 入れ替え先があるので消してよい
+    # **エンブレムは全画面の下地に使わない**（2026-09-14 指摘
+    # 「右側が黒くなってる」「ユベントスのロゴか見えない」）。写真用の作りは
+    # 同じ写真をぼかして敷くので、背景が透明なエンブレムだと右半分が黒くなる。
+    # 写真が無い回は下地を最後まで替えない
+    assert "assets/crests" not in text
+    # 入れ替える相手が無いので、カードも消さない（意味のない none を出さない）
+    assert "card: none" not in text
 
 
 def test_card_stays_when_there_is_nothing_to_swap_to():
@@ -1029,3 +1038,84 @@ def test_first_line_of_a_section_shows_what_is_said():
     text = to_script(build_notes(raw), _plan())
     assert "telop: この話が出た翌日、試合がありました" in text
     assert "先に言ってしまう見出し" not in text
+
+
+def test_ショート専用の行がタイトルと重なったら止める():
+    """**`_advise_repeats` には穴があった**（2026-09-15 ユーザー指摘）。
+
+    ショート専用の行（`short_only`）は「本編には出ないので前の節と同じで
+    当たり前」として**まるごと見ていなかった**。ところがショートでは、
+    その行は**タイトルを読む1行目のすぐ下**に来る。遠藤の回で
+    「遠藤航が4試合続けて出番なし」が2秒のあいだに二度読まれていた。
+
+    9/14 に「節をまたいで同じことを言わない」を入れたのに、
+    **同じ型の重複がユーザーの目で見つかった。比べる相手が違っていた。**
+    """
+    from src.research import _advise_short_repeats, build_notes
+
+    raw = _raw()
+    raw["theme"]["title"] = "遠藤航が4試合続けて出番なし。監督が語った理由とは"
+    raw["sections"][1]["say"] = [
+        {"short_only": True,
+         "text": "遠藤航がリーグ戦で4試合続けて出番なし。登録からも外れています。"},
+        "ここから監督の話です。",
+    ]
+    notes = build_notes(raw)
+    got = _advise_short_repeats(notes)
+    assert got and "4試合続けて出番なし" in got[0], got
+
+
+def test_タイトルに無いことだけなら通す():
+    """前の節と重なるのは構わない。ショートにその節は出てこない。"""
+    from src.research import _advise_short_repeats, build_notes
+
+    raw = _raw()
+    raw["theme"]["title"] = "遠藤航が4試合続けて出番なし。監督が語った理由とは"
+    raw["sections"][1]["say"] = [
+        {"short_only": True,
+         "text": "リヴァプールの遠藤航は、チャンピオンズリーグの登録からも外れています。"},
+        "ここから監督の話です。",
+    ]
+    notes = build_notes(raw)
+    assert _advise_short_repeats(notes) == []
+
+
+def test_人名の重なりだけでは鳴らさない():
+    """節の中の他の行は、ショートでも離れて読まれる。本編と同じ12字で見る。
+
+    8字で見ていたら「はフェルナンデス」で鳴った（2026-09-15）。
+    """
+    from src.research import _advise_short_repeats, build_notes
+
+    raw = _raw()
+    raw["theme"]["title"] = "フォーデンの一発退場。解説陣の見方が割れた"
+    raw["sections"][1]["say"] = [
+        {"short_only": True, "text": "先に倒したのはフェルナンデスです。"},
+        "キーンは、フェルナンデスが小突いたと指摘しています。",
+    ]
+    notes = build_notes(raw)
+    assert _advise_short_repeats(notes) == []
+
+
+def test_知らないリーグの鍵で止める():
+    """`league: premier` が `premier` というタグになっていた（2026-09-15）。"""
+    from src.research import build_notes, verify
+
+    raw = _raw()
+    raw["theme"]["league"] = "premier"
+    got = verify(build_notes(raw), _plan())
+    assert any("premier" in p and "知らない鍵" in p for p in got), got
+
+
+def test_リーグ名は取材メモで上書きできる():
+    """**`england` から「プレミアリーグ」が付いていた**（2026-09-15）。
+
+    松木の回はサウサンプトンもブリストル・シティも2部で、中身と食い違う。
+    `league` は集計の鍵なので国の単位までしか持てない。
+    """
+    from src.research import build_notes
+
+    raw = _raw()
+    raw["theme"]["league"] = "england"
+    raw["theme"]["league_name"] = "イングランド2部"
+    assert build_notes(raw).league_name == "イングランド2部"
