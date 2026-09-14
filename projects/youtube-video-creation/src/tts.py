@@ -390,6 +390,39 @@ SITE_NAMES = {
 }
 
 
+# 表示が要らないライセンス。**その場合は1行ごと落とす**（2026-09-15 指示
+# 「省略可能なだけ省略してほしい」）。site 名は概要欄の頭の1行に残るので、
+# 出どころが消えるわけではない
+NO_ATTRIBUTION = ("cc0", "public domain", "pd-", "pexels", "pixabay", "unsplash")
+
+
+def credit_line(title: str, author: str, license_: str, url: str) -> str:
+    """写真1枚ぶんの表示。**義務の範囲だけにする**（2026-09-15）。
+
+    それまでは `題名 / 撮影者 / ライセンス / URL` の4つを並べていて、
+    **1行218字**あった。20クラブに1枚ずつ付けると概要欄の上限5,000字を超える。
+
+    | 部分 | 要る？ |
+    |---|---|
+    | 撮影者 | **要る**（CC BY / BY-SA の条件そのもの） |
+    | ライセンス名 | **要る** |
+    | 元へのリンク | **要る**（CC 4.0 は「URI があれば示す」） |
+    | 題名 | **CC 4.0 では要らない。**3.0 以前は条件に入っているので残す |
+    | 同じ URL の重ね書き | 要らない |
+
+    CC0・パブリックドメイン・Pexels・Pixabay は**表示そのものが要らない**ので、
+    行ごと落とす。出どころは概要欄の頭の「画像: pexels.com」に残る。
+    """
+    low = f"{license_}".lower()
+    if any(word in low for word in NO_ATTRIBUTION):
+        return ""
+    if title and url and title.strip() == url.strip():
+        title = ""                      # 同じものを2回書いていた
+    if "4.0" in low:
+        title = ""                      # 4.0 は題名を求めていない
+    return " / ".join(x for x in (title, author, license_, url) if x)
+
+
 def _ledger_lines(script, root=None) -> tuple[list[str], list[str]]:
     """使った画像の (詳細行, 出どころのサイト名)。
 
@@ -451,7 +484,7 @@ def _ledger_lines(script, root=None) -> tuple[list[str], list[str]]:
             author = _plain(str(row.get("author") or row.get("creator") or "").strip())
             license_ = str(row.get("license", "")).strip()
             url = str(row.get("page_url") or row.get("url") or "").strip()
-            part = " / ".join(x for x in (title, author, license_, url) if x)
+            part = credit_line(title, author, license_, url)
             if part and part not in details:
                 details.append(part)
             where = SITE_NAMES.get(str(row.get("source", "")).strip().lower(), "")

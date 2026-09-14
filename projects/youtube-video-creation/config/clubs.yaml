@@ -50,6 +50,18 @@ clubs:
      aka: [Crystal Palace, クリスタルパレス]}
   - {canonical: フラム, league: england, big: false, aka: [Fulham]}
   - {canonical: ブレントフォード, league: england, big: false, aka: [Brentford]}
+  # 2026-09-15 に足した。**今季プレミアの20クラブのうち5つが辞書に無く**、
+  # タグにもクラブ名が入っていなかった（ボーンマスの回など）
+  - {canonical: ボーンマス, league: england, big: false,
+     aka: [AFC Bournemouth, Bournemouth, AFCB]}
+  - {canonical: イプスウィッチ, league: england, big: false,
+     aka: [Ipswich Town, Ipswich]}
+  - {canonical: リーズ, league: england, big: false,
+     aka: [Leeds United, Leeds]}
+  - {canonical: サンダーランド, league: england, big: false,
+     aka: [Sunderland AFC, Sunderland]}
+  - {canonical: コヴェントリー, league: england, big: false,
+     aka: [Coventry City, Coventry]}
   - {canonical: ウォルバーハンプトン, league: england, big: false,
      aka: [Wolverhampton Wanderers, Wolves, ウルヴァーハンプトン]}
 
