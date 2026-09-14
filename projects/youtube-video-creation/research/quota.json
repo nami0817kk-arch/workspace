@@ -66,8 +66,10 @@
   },
   "2026-09-14": {
     "videos.list": 4,
-    "videos.insert": 1,
-    "thumbnails.set": 1,
-    "videos.update": 2
+    "videos.insert": 7,
+    "thumbnails.set": 7,
+    "videos.update": 2,
+    "channels.list": 6,
+    "playlistItems.list": 6
   }
 }

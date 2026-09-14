@@ -2934,6 +2934,25 @@ def _cmd_make_clip(args, config) -> int:
     return 0
 
 
+def report_upload_failure(err: Exception) -> None:
+    """**投稿できなかったことを、いちばん最後の行に残す**（2026-09-15）。
+
+    それまでは例外が上がるだけだったので、**呼んだ側が末尾しか見ないと、
+    手前に出ている「予約公開 …」の行を見て成功だと思い込む。**
+    実際 9/15 に6本ぶん、1本も投げられていないのに「予約しました」と報告した。
+
+    **stdout に出す。**stderr は行ごとに流れるが stdout はまとめて流れるので、
+    `> file 2>&1` で受けると**エラーが先頭に回り込む**（実際そうなった）。
+    「最後の行に残す」つもりが、いちばん上に出ていては意味が無い。
+    """
+    sys.stdout.flush()
+    print(f"{chr(10)}■ 投稿できませんでした: {type(err).__name__}: {err}")
+    if "invalid_grant" in str(err) or "RefreshError" in type(err).__name__:
+        print("  YouTube の認証が切れています。secrets/token.json を取り直してください:")
+        print('  python -c "from src.upload import get_service; get_service()"')
+    print("■ 投稿は0本です。控え（posted.json）も増えていません", flush=True)
+
+
 def _cmd_upload(args, config) -> int:
     from datetime import datetime, timedelta, timezone
 
@@ -3063,7 +3082,8 @@ def _cmd_upload(args, config) -> int:
             print("それまで投げないでください（手作業でも弾かれます）",
                   file=sys.stderr)
             return 1
-        raise
+        report_upload_failure(err)
+        return 1
     posted.record(build_dir, video_id)
     print(f"\n投稿しました: https://youtu.be/{video_id} ({draft.privacy})")
     n = posted.recent()

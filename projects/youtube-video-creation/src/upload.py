@@ -270,9 +270,26 @@ def get_service(client_secret: Path = CLIENT_SECRET_PATH, token: Path = TOKEN_PA
     if token.exists():
         credentials = Credentials.from_authorized_user_file(str(token), SCOPES)
     if not credentials or not credentials.valid:
+        refreshed = False
         if credentials and credentials.expired and credentials.refresh_token:
-            credentials.refresh(Request())
-        else:
+            try:
+                credentials.refresh(Request())
+                refreshed = True
+            except Exception as err:
+                # **失効していたら、同意画面からやり直す**（2026-09-15）。
+                # それまでは refresh が投げたところで終わっていたので、
+                # 「取り直してください」と案内して同じコマンドを打ってもらっても、
+                # **またここで止まってブラウザが開かなかった**。
+                # 取り直しの手段が、取り直せない状態で使えないのでは意味が無い
+                if "invalid_grant" not in str(err):
+                    raise
+                print(f"■ 保存してある認証が失効していました（{err}）")
+                print("  同意画面をブラウザで開きます。チャンネルを選んで許可してください")
+                gone = token.with_name(token.name + ".revoked")
+                token.replace(gone)
+                print(f"  古いものは {gone} に退けました")
+                credentials = None
+        if not refreshed:
             if not client_secret.exists():
                 raise UploadError(
                     f"OAuth クライアント情報がありません: {client_secret}\n"
@@ -280,7 +297,10 @@ def get_service(client_secret: Path = CLIENT_SECRET_PATH, token: Path = TOKEN_PA
                     "デスクトップアプリの client_secret.json を配置してください。"
                 )
             flow = InstalledAppFlow.from_client_secrets_file(str(client_secret), SCOPES)
-            credentials = flow.run_local_server(port=0)
+            # **毎回 refresh token を出させる**（2026-09-15）。`prompt="consent"`
+            # が無いと、一度承認したアカウントでは refresh token が返らないことがあり、
+            # 次に使うときにまた失効の形になる
+            credentials = flow.run_local_server(port=0, prompt="consent")
         token.parent.mkdir(parents=True, exist_ok=True)
         token.write_text(credentials.to_json(), encoding="utf-8")
     # **包んで返す。**呼ぶ側の書き忘れに頼らず、叩いたぶんを自動で数える

@@ -410,3 +410,19 @@ def test_明日の時刻で予約できる():
         assert "過ぎています" in str(err)
     else:
         raise AssertionError("過ぎた時刻を通した")
+
+
+def test_投稿できなかったことが最後の行に出る(capsys):
+    """**末尾しか見ないと成功に見えた**（2026-09-15）。
+
+    認証が切れて6本とも投げられていないのに、手前に出ている
+    「予約公開 …」の行を見て「予約しました」と報告した。
+    stderr に出すと `> file 2>&1` で**先頭に回り込む**ので、stdout に出す。
+    """
+    from src.cli import report_upload_failure
+
+    print("■ 予約公開　09/15 08:00 JST（それまでは非公開）")
+    report_upload_failure(RuntimeError("invalid_grant: Token has been expired or revoked."))
+    lines = [x for x in capsys.readouterr().out.splitlines() if x.strip()]
+    assert "投稿は0本" in lines[-1], lines
+    assert any("認証が切れています" in x for x in lines), lines
