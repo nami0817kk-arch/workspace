@@ -70,6 +70,9 @@
     "thumbnails.set": 7,
     "videos.update": 2,
     "channels.list": 7,
-    "playlistItems.list": 11
+    "playlistItems.list": 11,
+    "playlists.insert": 1,
+    "playlistItems.insert": 38,
+    "playlists.list": 1
   }
 }

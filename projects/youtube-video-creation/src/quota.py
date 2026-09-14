@@ -41,6 +41,9 @@ from pathlib import Path
 # 1,600 は公表値だが、このプロジェクトの Queries per day には乗らない。
 # **推測でカーブを合わせず、コンソールの数字だけを使う**
 COST_PER_UPLOAD = 0
+# 再生リストに1本入れるたびの値段（2026-09-15）。**ここが効いて刻む必要がある**
+PLAYLIST_ITEM_COST = 50
+
 COSTS = {
     "videos.insert": COST_PER_UPLOAD,
     "videos.update": 50,
@@ -52,6 +55,10 @@ COSTS = {
     "thumbnails.set": 50,
     "commentThreads.insert": 50,   # 最初のコメント（2026-09-08）。公式の表の値
     "playlistItems.list": 1,       # 掛け直す前の確認（2026-09-09）。読み取りは1
+    # 再生リスト（2026-09-15）。**1本入れるごとに50**なので、本編114本を
+    # ぜんぶ入れると 5,750。まとめて作ると枠がそこで尽きる
+    "playlists.insert": PLAYLIST_ITEM_COST,
+    "playlistItems.insert": PLAYLIST_ITEM_COST,
     # **いちばん高い。**参考チャンネルを探すのに8回叩いて800使った（2026-09-09）。
     # 調べもので気軽に使うと、投稿の枠をそこで削ることになる
     "search.list": 100,
