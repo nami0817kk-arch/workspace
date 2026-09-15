@@ -82,6 +82,10 @@ def build_script(
     from .review import hold_limit
 
     spread_long_cards(script, hold_limit(config.video.height > config.video.width))
+    # **冒頭だけは、もっと早く変える**（2026-09-15）。spread_long_cards の
+    # あとに置く。先に置くと、こちらが挟んだ1枚で「絵が変わった」ことになり、
+    # そのあと20秒の判定が効かなくなる
+    open_early(script)
     hold_photo(script)
 
     # タイトルカードのぶんの無音を挟み、各セリフの開始時刻を振り直す
@@ -184,6 +188,57 @@ def hold_photo(script: Script) -> int:
                 filled += 1
     return filled
 
+
+# **冒頭で絵が止まっている時間**（2026-09-15）。視聴維持のカーブを読んだら、
+# 崖は 12秒→24秒 の1か所で、82% から 50% へ落ちていた。そこは
+# **1枚目の絵が出っぱなしの区間**で、spread_long_cards が写真を挟むのは
+# 20秒を超えてから。**落ちきってから変えていた。**
+#
+# 参考にしている3チャンネルは8秒で必ず画面を変えている（2026-09-07 実測）。
+# 本編全体を8秒にすると写真1枚では足りないので、**冒頭だけ**詰める。
+OPENING_WINDOW = 25.0     # ここまでを「冒頭」とみなす（秒）
+OPENING_HOLD_MAX = 8.0    # 冒頭で同じ絵が止まってよい秒数
+
+
+def open_early(script: Script, within: float = OPENING_WINDOW,
+               limit: float = OPENING_HOLD_MAX) -> int:
+    """冒頭で、同じ絵が `limit` 秒を超える前に写真へ切り替える。
+
+    `spread_long_cards` と同じ道具（サムネイルの写真）を使う。
+    **1枚しか無いので、挟むのも1回だけ。**そのあとは `hold_photo` が
+    後ろへ引き継ぐので、入れ替えの回数は増えない
+    （`scan_switch.py` で数えて1本1回のまま）。
+
+    写真を持たない回（エンブレムで作る回）は何もしない。
+    """
+    photo = str((script.meta or {}).get("thumbnail_photo") or "").strip()
+    if not photo:
+        return 0
+
+    elapsed = 0.0
+    span = 0.0
+    look = None
+    showing = None
+    for scene in script.scenes:
+        showing = None            # カードは節をまたいで引き継がない
+        for line in scene.lines:
+            if elapsed >= within:
+                return 0
+            seconds = float(line.duration or 0)
+            if line.card is not None:
+                showing = None if line.card in ("none", "なし") else line.card
+            now = (showing or "", line.image or "")
+            if now != look:
+                look, span = now, seconds
+                elapsed += seconds
+                continue
+            # **超える行に先回りする。**超えてから挟むと、崖のあとになる
+            if span + seconds > limit and not line.image:
+                line.image = photo
+                return 1
+            span += seconds
+            elapsed += seconds
+    return 0
 
 def spread_long_cards(script: Script, limit: float | None = None) -> int:
     """同じ絵が続きすぎるところに、サムネイルの写真を挟む。

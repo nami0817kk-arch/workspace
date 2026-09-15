@@ -823,6 +823,12 @@ def _advise_volume(notes: Notes) -> list[str]:
 # 参考（サッカーラボ 25.5万回）は反応約15件、冒頭30秒に数字4つ
 VOLUME_VOICES = 10       # 件
 VOLUME_NUMBERS = 8       # 数字を含む行
+# **数字が並ぶ節には、画面にも表を出す**（2026-09-15）。
+# 9/16 に出した本編5本のうち4本は、110秒のあいだ画面が2つしかなかった
+# （下地の切替1回、カード0回）。手元に写真106枚・エンブレム40枚・
+# カードの仕組みがあるのに、どれも使っていなかった。
+# 参考チャンネルは5〜10秒ごとに絵が変わる。**素材ではなく使い方の差。**
+CARD_NUMBER_LINES = 3    # この本数以上の行に数字があれば、表を出したい
 VOLUME_SOURCES = 5       # 出典の本数
 VOLUME_OUTLETS = 3       # 媒体の数
 
@@ -1026,6 +1032,33 @@ def _advise_thumbnail_repeat(notes: Notes) -> list[str]:
     return hints
 
 
+
+def _advise_cards(notes: Notes) -> list[str]:
+    """数字が並んでいるのに、画面へ出していない節を拾う。
+
+    **声だけで数字を並べても、聞く人は数えられない。**表にすれば
+    画面がもう1枚増えるうえ、耳で追えなかった人が目で追える。
+    反応の節は数えない（白い箱を並べる形が決まっている）。
+    """
+    hints: list[str] = []
+    for section in notes.sections:
+        card = section.card or {}
+        if str(card.get("type", "")).lower() == "reactions":
+            continue
+        if card:
+            continue
+        numbered = [line for line in section.say
+                    if isinstance(line, str) and any(ch.isdigit() for ch in line)]
+        if len(numbered) < CARD_NUMBER_LINES:
+            continue
+        hints.append(
+            f"節『{section.heading}』は数字の行が{len(numbered)}行ありますが、"
+            "画面に表を出していません。`card: {type: table, title: …, rows: …}` "
+            "で1枚増やせます"
+        )
+    return hints
+
+
 def _advise_material(notes: Notes) -> list[str]:
     """中身の量が参考に届いているか。届かなければ、どこが薄いかを言う。"""
     from urllib.parse import urlparse
@@ -1049,7 +1082,7 @@ def _advise_material(notes: Notes) -> list[str]:
 
 def _advise_voices(notes: Notes) -> list[str]:
     """反応の扱いで気をつける点。"""
-    hints: list[str] = (_advise_volume(notes) + _advise_material(notes)
+    hints: list[str] = (_advise_volume(notes) + _advise_material(notes) + _advise_cards(notes)
                         + _advise_hook(notes) + _advise_thumbnail_repeat(notes)
                         + _advise_repeats(notes) + _advise_short_repeats(notes)
                         + _advise_title(notes))
