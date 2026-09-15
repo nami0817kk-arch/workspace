@@ -70,6 +70,10 @@ class VideoConfig:
     show_characters: bool = True   # False にすると立ち絵を出さないニュース風レイアウト
     headline_size: int = 74        # 立ち絵なしのときの見出し文字サイズ
     accent: str = "#3ea6ff"        # 見出し左のアクセント帯（確度バッジが無いとき）
+    # **テロップの中で大事な語に差をつける色**（2026-09-15）。
+    # 台本に `**4試合**` と書いた範囲だけ、この色と下線にする。
+    # 大きさは変えない（変えると折り返しの計算が狂う）
+    telop_accent: str = "#ffd54a"
     # news=報道テロップ風 / band=黄色帯＋赤帯 / clean=文字組みだけ
     thumbnail_style: str = "news"
     background: str = "assets/backgrounds/default.png"

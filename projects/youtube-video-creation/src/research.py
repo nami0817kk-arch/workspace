@@ -835,7 +835,7 @@ VOLUME_OUTLETS = 3       # 媒体の数
 
 def _bare_text(text: str) -> str:
     """比べるための素の文。句読点と記号を落とす。"""
-    return re.sub(r"[。、．，\s　？?！!「」『』]", "", str(text or ""))
+    return re.sub(r"[。、．，\s　？?！!「」『』*]", "", str(text or ""))
 
 
 def _advise_hook(notes: Notes) -> list[str]:

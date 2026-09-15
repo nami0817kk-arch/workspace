@@ -124,6 +124,17 @@ class Line:
     duration: float = 0.0
     start: float = 0.0
 
+    def __post_init__(self) -> None:
+        # **強調の囲み `**…**` は画面のためのもの**（2026-09-15）。セリフに書かれて
+        # いたら、囲み付きの文字はテロップへ移し、読み上げる文からは外す。
+        # 外さないと VOICEVOX が「アスタリスク」と読み、字幕にも漏れる
+        from . import emphasis
+
+        if emphasis.marked(self.text):
+            if self.telop is None:
+                self.telop = self.text
+            self.text = emphasis.strip(self.text)
+
     def telop_text(self) -> str:
         """画面に表示する文字列。telop 未指定ならセリフをそのまま使う。"""
         if self.no_telop:

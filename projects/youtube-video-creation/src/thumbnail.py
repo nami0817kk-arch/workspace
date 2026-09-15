@@ -423,7 +423,8 @@ def short_quote(script, limit: int = SHORT_QUOTE_MAX) -> str:
             if skip > 0:
                 skip -= 1
                 continue
-            telop = (getattr(line, "telop", "") or "").strip()
+            # 強調の囲みはサムネに持ち込まない（2026-09-15）
+            telop = re.sub(r"\*\*", "", (getattr(line, "telop", "") or "")).strip()
             if 0 < len(telop) <= limit:
                 return telop
     return ""

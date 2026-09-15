@@ -15,7 +15,7 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw, ImageFont
 
-from . import cards, ffmpeg
+from . import cards, emphasis, ffmpeg
 from .backgrounds import moving_background
 from .inserts import Inserts
 from .ffmpeg import is_video
@@ -614,7 +614,10 @@ class Renderer:
         # **枠は字の量に合わせて上へ伸ばす**（2026-09-10）。
         # テロップを2行ぶんに広げたので、高さ250pxの決め打ちだと3行目から
         # はみ出す。縦型は1行13.3字しか入らないので、とくに効く
-        lines = wrap_text(draw, text, self.font_telop, right - left - 88)
+        # **強調の囲みを外してから折り返す**（2026-09-15）。囲みを付けても
+        # 行の割れ方が1文字も変わらないようにする。大きさを変えないのも同じ理由
+        plain, spans = emphasis.split(text)
+        lines = wrap_text(draw, plain, self.font_telop, right - left - 88)
         line_height = self.config.video.telop_size + 16
         need = line_height * len(lines) + 44
         if need > bottom - top:
@@ -639,15 +642,30 @@ class Renderer:
             draw.text((box[0] + 22, box[1] + 8), label, font=self.font_name, fill=(16, 16, 20, 255))
 
         y = top + (bottom - top - line_height * len(lines)) // 2 + 12
+        accent = _hex(self.config.video.telop_accent) + (255,)
+        offset = 0
         for chunk in lines:
-            draw.text(
-                (left + 44, y),
-                chunk,
-                font=self.font_telop,
-                fill=(255, 255, 255, 255),
-                stroke_width=4,
-                stroke_fill=(0, 0, 0, 220),
-            )
+            x = left + 44
+            for segment, strong in _emphasis_segments(
+                chunk, emphasis.spans_in(chunk, offset, spans)
+            ):
+                draw.text(
+                    (x, y),
+                    segment,
+                    font=self.font_telop,
+                    fill=accent if strong else (255, 255, 255, 255),
+                    stroke_width=4,
+                    stroke_fill=(0, 0, 0, 220),
+                )
+                width = draw.textlength(segment, font=self.font_telop)
+                if strong:
+                    # **下線も引く。**色だけだと、明るい写真の上で差が薄れる
+                    bar = y + self.config.video.telop_size + 4
+                    draw.rounded_rectangle(
+                        [x, bar, x + width, bar + 6], radius=3, fill=accent
+                    )
+                x += width
+            offset += len(chunk)
             y += line_height
         if telop_t < 1.0:
             layer.putalpha(layer.getchannel("A").point(lambda a: int(a * _ease_out(telop_t))))
@@ -780,8 +798,10 @@ class Renderer:
         size = self.config.video.headline_size
         floor = max(22, int(size * 0.52))
         font = self.font_headline
+        # **強調の囲みを外してから折り返す**（2026-09-15）。囲みで割れ方が変わらない
+        plain, spans = emphasis.split(text)
         while True:
-            lines = balanced_wrap(draw, text, font, right - left - 90)
+            lines = balanced_wrap(draw, plain, font, right - left - 90)
             if len(lines) <= HEADLINE_LINES_MAX or size <= floor:
                 break
             size -= 4
@@ -821,13 +841,31 @@ class Renderer:
                       fill=(16, 16, 20, 255))
 
         y = text_top
+        strong_color = _hex(self.config.video.telop_accent) + (255,)
+        offset = 0
         for chunk in lines:
-            # 縁取りは縦型で太くする。実写や模様の上でも輪郭が残るように
-            draw.text(
-                (left + 34, y), chunk, font=font, fill=(255, 255, 255, 255),
-                stroke_width=8 if self.layout.is_portrait else 5,
-                stroke_fill=(0, 0, 0, 235),
-            )
+            # 折り返しが空白を落とすことがあるので、位置は全文から探して合わせる
+            found = plain.find(chunk, offset)
+            offset = found if found >= 0 else offset
+            x = left + 34
+            for segment, strong in _emphasis_segments(
+                chunk, emphasis.spans_in(chunk, offset, spans)
+            ):
+                # 縁取りは縦型で太くする。実写や模様の上でも輪郭が残るように
+                draw.text(
+                    (x, y), segment, font=font,
+                    fill=strong_color if strong else (255, 255, 255, 255),
+                    stroke_width=8 if self.layout.is_portrait else 5,
+                    stroke_fill=(0, 0, 0, 235),
+                )
+                width = draw.textlength(segment, font=font)
+                if strong:
+                    # **下線も引く。**色だけだと明るい写真の上で差が薄れる
+                    bar = y + size + 8
+                    draw.rounded_rectangle([x, bar, x + width, bar + 7], radius=3,
+                                           fill=strong_color)
+                x += width
+            offset += len(chunk)
             y += line_height
 
         if telop_t < 1.0:
@@ -999,13 +1037,13 @@ class Renderer:
                 # **いま読んでいる行も箱に入れる**（2026-09-14）。テロップを
                 # 出さない決まりにしたので、ここに入れないと読んでいる声が
                 # 画面のどこにも出なくなる
-                shown = tuple(stack + [line.telop_text() or line.text]) if crowd else ()
+                shown = tuple(stack + [emphasis.strip(line.telop_text() or line.text)]) if crowd else ()
                 closed = self.frame(line, scene, mouth_open=False, panel=current,
                                     stack=shown)
                 opened = self.frame(line, scene, mouth_open=True, panel=current,
                                     stack=shown)
                 # 積むのは匿名の反応だけ。語りが入ったらいったん流す
-                stack = (stack + [line.telop_text() or line.text]) if crowd else []
+                stack = (stack + [emphasis.strip(line.telop_text() or line.text)]) if crowd else []
                 pause = line.pause or 0.0
                 speaking = max(0.0, line.duration - pause)
                 is_scene_head = index == 0
@@ -1196,6 +1234,23 @@ class Renderer:
                 list_path, track, audio_path, out_path, size, self.config.video.fps
             )
         return ffmpeg.encode_video(list_path, audio_path, out_path, self.config.video.fps)
+
+
+def _emphasis_segments(chunk: str, spans: list[tuple[int, int]]
+                       ) -> list[tuple[str, bool]]:
+    """1行を「ふつう／強調」の連なりに割る。囲みが無ければ1つだけ返す。"""
+    if not spans:
+        return [(chunk, False)]
+    out: list[tuple[str, bool]] = []
+    at = 0
+    for start, end in spans:
+        if start > at:
+            out.append((chunk[at:start], False))
+        out.append((chunk[start:end], True))
+        at = end
+    if at < len(chunk):
+        out.append((chunk[at:], False))
+    return [(text, strong) for text, strong in out if text]
 
 
 def balanced_wrap(

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from . import emphasis
 from .script_model import Script
 
 
@@ -22,7 +23,8 @@ def to_srt(script: Script) -> str:
         # 画面用に短く切ってあるので、そのまま字幕にすると途中で切れる。
         # **確度バッジ（[報道] など）は画面の表示物なので字幕には入れない。**
         # 読み上げていない文字が字幕に出ると、聞こえた音と食い違う。
-        text = line.text or line.telop_text()
+        # **囲みを字幕に出さない**（2026-09-15）。聞こえた音と食い違う
+        text = emphasis.strip(line.text or line.telop_text())
         pause = line.pause or 0.0
         end = line.start + max(0.4, line.duration - pause)
 
