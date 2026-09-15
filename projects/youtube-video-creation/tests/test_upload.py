@@ -426,3 +426,76 @@ def test_投稿できなかったことが最後の行に出る(capsys):
     lines = [x for x in capsys.readouterr().out.splitlines() if x.strip()]
     assert "投稿は0本" in lines[-1], lines
     assert any("認証が切れています" in x for x in lines), lines
+
+
+def test_ショートの概要欄に本編への行が入る(tmp_path, monkeypatch):
+    """**ショートから本編へ、誰も流れていなかった**（2026-09-15 実測）。
+
+    9/1〜9/15 でショートは72,281再生。そこから本編に来たのは**1回**。
+    概要欄にリンクが無かった。収益化に要る4,000時間は本編の視聴時間しか
+    数えないので、いちばん人がいる場所から橋を架ける。
+    """
+    import json
+
+    from src import posted as posted_mod
+    from src.upload import prepare
+
+    ledger = tmp_path / "posted.json"
+    ledger.write_text(json.dumps([
+        {"build": "20260916_mitoma", "video_id": "M9eDi6wKWj8",
+         "at": "2026-09-15T10:00:00+00:00"},
+    ]), encoding="utf-8")
+    monkeypatch.setattr(posted_mod, "LEDGER", ledger)
+
+    short = tmp_path / "20260916_mitoma_short"
+    short.mkdir()
+    (short / "description.txt").write_text(
+        "三笘薫の退団報道\n\nリード\n\n■ 出典\nhttps://example.com/a\n",
+        encoding="utf-8")
+    (short / "video.mp4").write_bytes(b"x")
+
+    lines = prepare(short).description.splitlines()
+    assert "■ この話の本編" in lines
+    assert "https://youtu.be/M9eDi6wKWj8" in lines
+    # **リードのすぐ下に置く。**出典やクレジットの下では誰も開かない
+    assert lines.index("■ この話の本編") < lines.index("■ 出典")
+    assert lines[0] == "リード"
+
+
+def test_本編には本編への行を足さない(tmp_path):
+    """足すのはショートだけ。自分自身へのリンクは意味が無い。"""
+    from src.upload import prepare
+
+    main = tmp_path / "20260916_mitoma"
+    main.mkdir()
+    (main / "description.txt").write_text("題\n\nリード\n", encoding="utf-8")
+    (main / "video.mp4").write_bytes(b"x")
+    assert "この話の本編" not in prepare(main).description
+
+
+def test_本編をまだ投稿していないショートは何も足さない(tmp_path, monkeypatch):
+    """**ショートだけ先に出す回がある。**そこで止めると投稿が止まる。"""
+    import json
+
+    from src import posted as posted_mod
+    from src.upload import prepare
+
+    ledger = tmp_path / "posted.json"
+    ledger.write_text(json.dumps([]), encoding="utf-8")
+    monkeypatch.setattr(posted_mod, "LEDGER", ledger)
+
+    short = tmp_path / "20260917_foo_short"
+    short.mkdir()
+    (short / "description.txt").write_text("題\n\nリード\n", encoding="utf-8")
+    (short / "video.mp4").write_bytes(b"x")
+    assert "この話の本編" not in prepare(short).description
+
+
+def test_同じ行を二度足さない(tmp_path):
+    """概要欄を書き直して上げ直したときに、本編の行が二重に並ばない。"""
+    from src.upload import MAIN_LINK_HEADING, _with_main_link
+
+    link = MAIN_LINK_HEADING + "\nhttps://youtu.be/AAA"
+    once = _with_main_link("リード\n\n本文", link)
+    assert once.count(MAIN_LINK_HEADING) == 1
+    assert _with_main_link(once, link) == once

@@ -11,6 +11,7 @@ import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from . import posted as posted_mod
 from . import tags as tags_mod
 
 # upload だけでは**公開済み動画の概要欄を書き換えられない**（403）。
@@ -111,6 +112,31 @@ class Draft:
         ]
 
 
+MAIN_LINK_HEADING = "■ この話の本編"
+
+
+def main_video_link(build_dir: Path, path: Path | None = None) -> str:
+    """ショートの概要欄に、同じ題材の本編へ渡る行を作る（2026-09-15）。
+
+    **ショートから本編へ、誰も流れていなかった。**9/1〜9/15 の実測で
+    ショートは72,281再生あるのに、ショート経由の本編再生は**1回**。
+    概要欄にリンクが無く、辿る道がそもそも無かった。
+    収益化に要る4,000時間は**本編の視聴時間しか数えない**ので、
+    いちばん人がいる場所から本編へ橋を架ける。
+
+    本編を先に投稿していないと引けない。**無ければ黙って何も足さない**
+    （ショートだけ先に出す回もある。そこで止めると投稿が止まる）。
+    """
+    name = Path(build_dir).name
+    tail = "_short"
+    if not name.endswith(tail):
+        return ""
+    row = posted_mod.find(name[: -len(tail)], path or posted_mod.LEDGER)
+    if not row or not row.get("video_id"):
+        return ""
+    return f"{MAIN_LINK_HEADING}\nhttps://youtu.be/{row['video_id']}"
+
+
 def prepare(build_dir: Path, privacy: str = "private") -> Draft:
     """書き出したディレクトリから、投稿の中身を組み立てる。
 
@@ -133,16 +159,33 @@ def prepare(build_dir: Path, privacy: str = "private") -> Draft:
         except (OSError, ValueError):
             found = []
 
+    # **本編への橋は、書き出しではなくここで架ける。**本編の動画IDは
+    # 投稿してはじめて決まるので、description.txt には書きようがない
+    body = _with_main_link(body.strip(), main_video_link(build_dir))
+
     thumbnail = build_dir / "thumbnail.png"
     return Draft(
         video=build_dir / "video.mp4",
         title=title.strip() or build_dir.name,
-        description=body.strip(),
+        description=body,
         tags=tags_mod.fit(found),
         thumbnail=thumbnail if thumbnail.exists() else None,
         privacy=privacy,
         source=build_dir,
     )
+
+
+def _with_main_link(body: str, link: str) -> str:
+    """本編への行を、リードのすぐ下に差し込む。
+
+    **いちばん上ではなく2つ目の塊に置く。**概要欄の1行目は題名で、
+    YouTube が畳まずに見せるのはそこから3行ぶん。出典やクレジットの下では
+    誰も開かない
+    """
+    if not link or MAIN_LINK_HEADING in body:
+        return body
+    head, sep, rest = body.partition("\n\n")
+    return f"{head}{sep}{link}\n\n{rest}" if sep else f"{body}\n\n{link}"
 
 
 def recently_uploaded(service, title: str, minutes: int = 90) -> str | None:

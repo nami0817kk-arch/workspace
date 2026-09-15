@@ -75,5 +75,13 @@
     "playlistItems.insert": 121,
     "playlists.list": 1,
     "commentThreads.insert": 6
+  },
+  "2026-09-15": {
+    "videos.list": 8,
+    "channels.list": 13,
+    "playlistItems.list": 12,
+    "videos.insert": 10,
+    "thumbnails.set": 10,
+    "videos.update": 5
   }
 }
