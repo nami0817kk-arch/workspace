@@ -348,7 +348,7 @@ def main(argv: list[str] | None = None) -> int:
 
     # 公開と同時に最初のコメント（問い＋高評価・コメントへの誘い）を書く（2026-09-08）
     p_comment = sub.add_parser(
-        "comment", help="公開した動画に最初のコメント（問い＋誘い）を書く。固定は Studio で")
+        "comment", help="公開した動画に最初のコメント（問い＋誘い）を書く")
     p_comment.add_argument("build_dir", help="build の出力ディレクトリ")
     p_comment.add_argument("video_id", help="YouTube の動画ID。ハイフン始まりは `--` を挟む")
     p_comment.add_argument("--text", default=None, help="文面を自分で決めるとき")
@@ -2013,7 +2013,9 @@ def _cmd_material(args, config) -> int:
 def _cmd_comment(args, config) -> int:
     """公開した動画に、最初のコメント（問い＋高評価・コメントへの誘い）を書く。
 
-    Gemini（2026-09-08）の答え1。**固定は API にできない**ので Studio で行う。
+    Gemini（2026-09-08）の答え1。**固定しない**（2026-09-15 ユーザー決定）。
+    API では固定できず、Studio で1本ずつ手作業になる。1日20本を超える日に
+    その手間は釣り合わない。**案内も出さない**（出すと手作業を促し続ける）。
     文面は build の出力から作り、同じ動画には同じ文になる。
     """
     from . import comments
@@ -2043,7 +2045,7 @@ def _cmd_comment(args, config) -> int:
     except Exception as err:
         print(f"書き込めません: {str(err)[:160]}", file=sys.stderr)
         return 1
-    print(f"書きました: https://youtu.be/{args.video_id}　（固定は Studio で）　{comment_id}")
+    print(f"書きました: https://youtu.be/{args.video_id}　{comment_id}")
     return 0
 
 
