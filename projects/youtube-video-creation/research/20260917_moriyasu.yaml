@@ -1,0 +1,117 @@
+# W杯のあと、日本代表の顔ぶれはどこまで変わるのか（2026-09-13 の発言）
+#
+# **出どころは中日スポーツとスポニチ。**浦和―岡山戦（埼玉スタジアム）の
+# 視察後に、囲みで話したもの。
+#
+# 引きは**「W杯が終わったのに、顔ぶれは変わらない」**。
+# 世代交代を待っていた人ほど、この一言が刺さる。ここが山場（@main）。
+#
+# **「世代交代しない」と言い切らない。**本人は「これからを期待できる選手も
+# 招集して」とも言っている。**両方そのまま並べて、聞く人に委ねる。**
+#
+# **板倉の話は深追いしない。**9/16 に出した回と同じ話になる。
+# ここでは「呼ぼうと思っている」の一言だけに留める
+format: voices
+voice_min: 40
+slot: japan_1
+date: "2026年9月17日"
+
+people:
+  - 森保一
+
+short_title: "呼ばれるのは、ほぼW杯の26人"
+
+theme:
+  id: moriyasu_same_squad
+  league: japan
+  league_name: ""
+  kind: other
+  topic: 日本代表
+  title: W杯のあと、日本代表の顔ぶれはどこまで変わるのか
+  hook: 監督が答えたのは、試合を見にきた帰りの立ち話でした。
+  question: 新しい選手は入るのか
+
+thumbnail:
+  line1: 呼ぶのはW杯の26人
+  line2: 新しい顔は ●●●●
+  photo: "assets/photos/20260917_moriyasu/01.jpg"
+  band_full: true
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: どこで出た話か
+    tier: 報道
+    telop: 浦和―岡山戦を見にきた帰りの囲みで
+    narrator: キャスター
+    say:
+      - 9月13日、埼玉スタジアムでの出来事です。
+      - 浦和と岡山の試合を視察した帰りに、取材に応じました。
+      - 聞かれたのは、今月末から始まる4試合に誰を呼ぶか、でした。
+    official: false
+    sources:
+      - https://www.chunichi.co.jp/article/1310861
+
+  - id: said
+    heading: 監督が答えたこと
+    main: true
+    tier: 報道
+    telop: 「基本的にはW杯に選んだメンバーかなと思っている」
+    narrator: 解説
+    say:
+      - {short_only: true, text: 森保一監督が、今月末からの4試合について話しました。}
+      - 最初の一言が、これでした。
+      - {voice: 森保監督, text: 基本的にはW杯に選んだメンバーかなと思っている}
+      - 北中米での大会が終わって、初めての活動です。
+      - それでも顔ぶれは動かさない、と受け取れる言い方でした。
+      - ただ、そのあとにこう続けています。
+      - {voice: 森保監督, text: ベースはあるものの、これからを期待できる選手も招集して}
+      - {voice: 森保監督, text: いまのベストと未来に向けてというところも加味して}
+      - {voice: 森保監督, text: チームづくりをしていきたい}
+      - アジア杯に出られないと報じられている板倉滉についても、一言ありました。
+      - {voice: 森保監督, text: 呼ぼうと思っている}
+    official: false
+    sources:
+      - https://www.chunichi.co.jp/article/1310861
+
+  - id: matches
+    heading: その4試合とは何か
+    tier: 報道
+    telop: 9月に2試合、10月に2試合
+    narrator: キャスター
+    card:
+      type: table
+      title: 9月・10月の4試合
+      columns: ["", ""]
+      rows:
+        - ["9月24日", "ウルグアイ代表（宮城）"]
+        - ["9月28日", "ベネズエラ代表（広島）"]
+        - ["10月", "キリンカップ 2試合"]
+    say:
+      - 今月末に2つ、来月に2つあります。
+      - 24日に宮城でウルグアイ、28日に広島でベネズエラ。
+      - 10月はキリンカップで、北中米の大会に出た国が3つ集まります。
+      - メンバーの発表は、まだです。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20260807/2190333.html
+      - https://www.soccer-king.jp/news/japan/national/20260805/2189904.html
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「若い選手で調子のいいの呼べよ」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: 若い選手で調子のいいの呼べよ, short_voice: true}
+      - {voice: ネット民, text: 佐野航大が見たかったのに選外ですか, short_voice: true}
+      - {voice: ネット民, text: 町野も呼ぶんだな、頼んだぞポイチ}
+      - {voice: ネット民, text: いいんじゃね、ザイオン休みで, short_voice: true}
+      - {voice: ネット民, text: 参加しなけりゃよくね}
+      - {voice: ネット民, text: 忖度ジャパン}
+      - {voice: ネット民, text: ツマンネ}
+      - {voice: ネット民, text: ダメだこりゃ}
+    official: false
+    sources:
+      - https://sakarabo.blog.jp/archives/1084499136.html

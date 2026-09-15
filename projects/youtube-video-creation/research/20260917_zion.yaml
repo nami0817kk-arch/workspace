@@ -1,0 +1,100 @@
+# 2失点した鈴木彩艶に、地元紙がつけた点（2026-09-12 の試合）
+#
+# **評価が割れている回。**チームは開幕から勝てていない。ネットは冷たい。
+# それでも現地の採点は高い。**どちらかに寄せず、両方そのまま出す。**
+#
+# 引きは**「負けた試合で、なぜその点なのか」**。ここが山場（@main）。
+#
+# **採点は2紙ぶんある。**Read Aston Villa が7、バーミンガム・ライブが6。
+# **片方だけ出すと「高く評価された」に寄る**ので、両方並べる
+#
+# **反応は5件しか無い。**探したが、これが取れた全部（--find でも同じスレ）。
+# 水増ししない
+format: news
+voice_min: 36
+slot: japan_2
+date: "2026年9月17日"
+
+people:
+  - 鈴木彩艶
+
+short_title: "現地がつけた採点"
+
+theme:
+  id: zion_rating_seven
+  league: england
+  kind: other
+  topic: アストン・ヴィラ
+  title: 2点を取られた鈴木彩艶に、地元紙がつけた点
+  hook: 同じ試合を、2つの新聞が別々に採点しています。
+  question: 現地は何を見て点をつけたのか
+
+thumbnail:
+  line1: 2失点でも採点は
+  line2: 地元紙がつけたのは ●●●●
+  photo: "assets/photos/20260913_zion/01.jpg"
+  focus: 0.05
+  band_full: true
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: どんな試合だったか
+    tier: 報道
+    telop: ヴィラは開幕から4試合勝てていない
+    narrator: キャスター
+    card:
+      type: table
+      title: ノッティンガム・フォレスト戦（9月12日）
+      columns: ["", ""]
+      rows:
+        - ["46分", "デラップに先制点"]
+        - ["74分", "アリソンのヘディングで追いつく"]
+        - ["88分", "イゴール・ジェズスに決勝点"]
+    say:
+      - 12日のプレミアリーグ第4節です。
+      - 1対2で負けて、開幕からの未勝利が4試合になりました。
+      - 1つ引き分けて、3つ負けています。
+      - 鈴木彩艶は公式戦4試合続けて先発し、この日は5本のシュートを止めました。
+    official: false
+    sources:
+      - https://web.ultra-soccer.jp/news/all/36119/
+      - https://web.ultra-soccer.jp/news/all/36104/
+
+  - id: rating
+    heading: 地元紙がつけた点
+    main: true
+    tier: 報道
+    telop: Read Aston Villa は「7」、バーミンガム・ライブは「6」
+    narrator: 解説
+    say:
+      - {short_only: true, text: アストン・ヴィラのゴールキーパーに、現地の採点が出ました。}
+      - 負けた試合です。それでも点は低くありませんでした。
+      - Read Aston Villa がつけたのは7点です。理由はこう書かれています。
+      - {voice: 記者, text: デラップのシュートに対してはなす術がなかった}
+      - {voice: 記者, text: フォレストに決勝点を許す前には重要なセーブを披露した}
+      - {voice: 記者, text: 苦しい展開でも、ヴィラの中で安定したプレーを見せた}
+      - {voice: 記者, text: そのひとりだった}
+      - もう1紙、バーミンガム・ライブは6点でした。
+      - {voice: 記者, text: 前半、何度かシュートを浴びたのを凌いでいた}
+      - {voice: 記者, text: 後半立ち上がりに、ペナルティエリア外からの正確な一撃に屈した}
+      - つまり、2つの失点はどちらも止められる種類ではなかった、という見方です。
+    official: false
+    sources:
+      - https://web.ultra-soccer.jp/news/all/36119/
+
+  - id: voices
+    heading: 日本のファンはどう見たか
+    tier: 未確認
+    telop: 「ダメなチーム選んだな」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: 戦犯ZAION, short_voice: true}
+      - {voice: ネット民, text: ダメなチーム選んだな, short_voice: true}
+      - {voice: ネット民, text: パリに行っとけば, short_voice: true}
+      - {voice: ネット民, text: 鍛えられてますねw}
+      - {voice: ネット民, text: ジーク・ジオン}
+    official: false
+    sources:
+      - https://sakarabo.blog.jp/archives/1084499173.html

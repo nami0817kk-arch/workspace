@@ -359,6 +359,19 @@ accounts:
   - {handle: MatteMoretto, name: Matteo Moretto, tier: 未確認, note: スペイン・イタリア}
   - {handle: DiMarzio, name: Gianluca Di Marzio, tier: 未確認, note: セリエA}
   - {handle: TheAthleticFC, name: The Athletic Football, tier: 報道, note: 媒体の公式}
+  # 2026-09-15 に追加（ユーザーが一覧を持ってきた）。**ドイツと数字と戦術の穴を埋める。**
+  # ドイツの網は kicker.de と sport1.de の2つしか無く、しかも kicker は403を返す。
+  # 日本人選手はブンデスに多い（堂安・佐野・町田・板倉ほか）のに、現地の速い声が拾えていなかった
+  - {handle: Plettigoal, name: Florian Plettenberg, tier: 未確認, note: ブンデスリーガ専門。Sky Germany}
+  # 数字の1行（「史上◯人目」「◯年ぶり」）が作れる。**数字を含む行が足りないと draft が毎回言う**
+  - {handle: OptaJoe, name: Opta Joe, tier: 未確認, note: 試合中の記録。数字の裏取りは別途}
+  # 戦術。**保留中のプレミア20クラブ動画で、戦術をどう書くかが未決だった**（2026-09-15）
+  - {handle: TifoFootball, name: Tifo Football, tier: 未確認, note: 戦術の解説。図と動画}
+  # **@GettySport は入れない。**Getty との契約は見送り済みで、写真は CC0/BY と
+  # 生成だけで賄う方針（2026-09-06）。SNSに出た画像も使わない。ここに足すと
+  # 「引用できる」と誤解する元になる
+  # **@SkySportsNews も入れない。**skysports.com を記事として32本使っている。
+  # 同じ話なら記事のほうが引用しやすく、確度も上げやすい
   # クラブ公式（2026-09-11 ユーザー判断「B」）。佐野航大の写真が Commons に
   # 無く、使えるのはクラブの投稿だけだった。**サムネイルには使えない**ので、
   # 本文の1カットに限る

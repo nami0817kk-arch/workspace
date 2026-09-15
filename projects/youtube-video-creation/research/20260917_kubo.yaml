@@ -1,0 +1,106 @@
+# 久保建英について、スペイン紙が「2度目」と書いた（2026-09-13 の試合）
+#
+# **引用の回。**現地紙の表現がそのまま引きになる。
+# 「1度目」は前節エルチェ戦の出番なし、「2度目」がこのアトレティコ戦。
+#
+# 引きは**「2度目、と数えられている」**。ここが山場（@main）。
+#
+# **責める書き方にしない。**指摘しているのは現地紙であって、こちらではない。
+# **代役のオチエングが1得点2アシストという事実**を添えると、
+# 何が起きているかが説明なしで伝わる
+#
+# **出典が footballchannel に寄っている。**同じ試合を別の媒体でも確かめたが、
+# 「2度目の明確な警告」の訳文を載せていたのはここだけだった
+format: quote
+voice_min: 34
+slot: japan_3
+date: "2026年9月17日"
+
+people:
+  - 久保建英
+
+short_title: "現地紙が数えた「2度目」"
+
+theme:
+  id: kubo_second_warning
+  league: spain
+  kind: other
+  topic: レアル・ソシエダ
+  title: 久保建英について、スペイン紙が「2度目」と書いた
+  hook: 1度目がいつだったかまで、記事には書いてあります。
+  question: 何が2度目なのか
+
+thumbnail:
+  line1: 現地紙が書いた言葉
+  line2: 久保建英に「●●●●」
+  photo: "assets/photos/20260915_kubo/01.jpg"
+  focus: 0.05
+  band_full: true
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 何があったか
+    tier: 報道
+    telop: 2試合続けて先発から外れた
+    narrator: キャスター
+    say:
+      - 現地時間13日、ラ・リーガ第5節です。
+      - レアル・ソシエダはホームでアトレティコ・マドリードに0対3で負けました。
+      - 久保建英はベンチから始まり、72分から入っています。
+      - 先発を外れたのは、これで2試合続けてです。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/14/post1010271/
+
+  - id: said
+    heading: 現地紙が書いたこと
+    main: true
+    tier: 報道
+    telop: 「奮起しなければならないという2度目の明確な警告だ」
+    narrator: 解説
+    say:
+      - {short_only: true, text: ラ・リーガ第5節、ソシエダはアトレティコに0対3で負けました。}
+      - 記事は「警告を受けた」という一文から始まります。
+      - {voice: 記者, text: 奮起しなければならないという2度目の明確な警告だ}
+      - 1度目は、その前のエルチェ戦です。出番そのものがありませんでした。
+      - 2度目が、このアトレティコ戦になります。
+      - {voice: 記者, text: エルチェ戦では出場機会がなかった}
+      - {voice: 記者, text: 今回は72分から出場した}
+      - {voice: 記者, text: しかし、存在感を示すことができなかった}
+      - {voice: 記者, text: ソシエダの攻撃にあまり貢献できなかった}
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/14/post1010427/
+
+  - id: replacement
+    heading: そのあいだに起きていたこと
+    tier: 報道
+    telop: 代役のオチエングが1得点2アシスト
+    narrator: キャスター
+    say:
+      - 久保が出なかったエルチェ戦を、チームは3対2で勝っています。
+      - 代わりに先発したジョブ・オチエングが、1つ決めて2つ演出しました。
+      - 同じ紙は、その前にもこう書いていました。
+      - {voice: 記者, text: 不動の地位は危うくなる}
+      - 監督のマタラッツォは、このアトレティコ戦でも71分まで久保を使いませんでした。
+      - チームは終盤の10分あまりで3点を失っています。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/12/post1009527/
+
+  - id: voices
+    heading: 受け止めは厳しかった
+    tier: 未確認
+    telop: 「やっぱ守備穴なんだよな」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: やっぱ守備穴なんだよな, short_voice: true}
+      - {voice: ネット民, text: 久保がいる時間が狙い目だよな笑, short_voice: true}
+      - {voice: ネット民, text: ポジション放棄して失点の起点になってたな, short_voice: true}
+      - {voice: ネット民, text: 久保が入ったからアトレティコケチャドバ}
+      - {voice: ネット民, text: 流石に嘘だろ}
+    official: false
+    sources:
+      - https://sakarabo.blog.jp/archives/1084500859.html

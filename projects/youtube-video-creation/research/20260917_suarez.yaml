@@ -1,0 +1,120 @@
+# ウルグアイの46人に、スアレスの名前がなかった（2026-09-04 発表）
+#
+# **日本代表の回として出す。**9月24日に宮城で戦う相手の話で、
+# しかも相手の監督はフォルラン。日本にとっては「初陣を受ける側」になる。
+#
+# 引きは**「復帰が噂されていたのに、名前が無い」**。ここが山場（@main）。
+#
+# **46人は暫定の候補。**最終メンバーではない。「落選」と書かない。
+# 呼ばれなかったのは事実だが、ここから絞られる前の段階である
+#
+# **フォルランの「戻りたいと望むなら大歓迎だ」はサッカーダイジェストの記事。
+# 報道どまりで扱う。**
+#
+# **ショート用の行にタイトルの語を入れない**（2026-09-17）。
+# 「日本と戦うウルグアイ」で重なって draft に止められた
+format: news
+voice_min: 38
+slot: world_1
+date: "2026年9月17日"
+
+people:
+  - ルイス・スアレス
+
+short_title: "ウルグアイが呼ばなかった選手"
+
+theme:
+  id: uruguay_squad_no_suarez
+  league: japan
+  league_name: ""
+  kind: other
+  topic: ウルグアイ代表
+  title: 日本と戦うウルグアイの46人から漏れた、39歳のレジェンド
+  hook: 46人という数は、代表の招集としてはかなり多いほうです。
+  question: 誰が呼ばれなかったのか
+
+thumbnail:
+  line1: ウルグアイの46人
+  line2: スアレスは ●●●●
+  photo: "assets/photos/20260917_suarez/01.jpg"
+  band_full: true
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 何が発表されたか
+    tier: 報道
+    telop: ウルグアイ協会が候補46人を発表
+    narrator: キャスター
+    say:
+      - 現地時間の4日、ウルグアイサッカー協会が招集候補を出しました。
+      - 46人という、かなり幅のある形です。
+      - ここから絞って、24日に宮城へ来ます。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/05/post1004622/
+
+  - id: missing
+    heading: 名前が無かった選手
+    main: true
+    tier: 報道
+    telop: 39歳のルイス・スアレス
+    narrator: 解説
+    say:
+      - {short_only: true, text: 南米の強豪が、9月と10月の招集候補を出しました。}
+      - 46人という数なら、たいていの名前は入ります。
+      - 入っていなかったのが、39歳のルイス・スアレスでした。
+      - 代表に戻るのではないか、と言われていた直後のことです。
+      - リヴァプールに移ったロナルド・アラウホ、レアル・マドリードのフェデリコ・バルベルデ、ダルウィン・ヌニェスは入っています。
+      - 監督を引き受けた元エースは、こうも話していたと伝えられています。
+      - {voice: フォルラン監督, text: 戻りたいと望むなら大歓迎だ}
+      - 扉は閉じていない、という言い方です。それでも今回は呼ばれませんでした。
+    official: false
+    sources:
+      - https://web.ultra-soccer.jp/news/all/35223/
+
+  - id: why_here
+    heading: なぜ日本が最初の相手なのか
+    tier: 報道
+    telop: フォルラン体制のA代表初戦が、24日の日本戦
+    narrator: キャスター
+    card:
+      type: table
+      title: フォルラン体制のはじまり
+      columns: ["", ""]
+      rows:
+        - ["8月6日", "ウルグアイ協会がフォルラン就任を発表"]
+        - ["9月24日", "日本（宮城）＝A代表での初戦"]
+        - ["9月28日", "韓国"]
+        - ["10月6日", "インド"]
+    say:
+      - ウルグアイは今夏の大会で、グループステージを抜けられませんでした。
+      - サウジアラビアと1対1、カーボベルデと2対2、スペインに0対1。
+      - 3試合勝てず、勝ち点2で終わっています。
+      - その立て直しを任されたのが、2010年の大会で最優秀選手に選ばれたディエゴ・フォルランです。
+      - 監督としての最初の試合が、24日の宮城になります。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/05/post1004622/
+      - https://www.theworldmagazine.jp/20260805/02national_team/japan/500107
+
+  - id: voices
+    heading: この名前に、人はこう返した
+    tier: 未確認
+    telop: 「まだ現役だったのか」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: まだ現役だったのか, short_voice: true}
+      - {voice: ネット民, text: MSN時代は本当に凄かったな, short_voice: true}
+      - {voice: ネット民, text: 時代が違えばバロンドール取れた選手の1人}
+      - {voice: ネット民, text: バロンとW杯以外大体取るもの取ったか}
+      - {voice: ネット民, text: アヤックス時代が凄かったんだよな}
+      - {voice: ネット民, text: 寂しくなるねえ, short_voice: true}
+      - {voice: ネット民, text: 今後はどこで噛みつくのよ}
+      - {voice: ネット民, text: 最後はキーパーで}
+      - {voice: ネット民, text: 現役引退ちゃうんか}
+      - {voice: ネット民, text: ヘディング以外はペナウドより上だけどなw}
+    official: false
+    sources:
+      - https://footballnet.2chblog.jp/archives/58635602.html
