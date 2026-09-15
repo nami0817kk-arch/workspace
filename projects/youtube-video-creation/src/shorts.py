@@ -122,6 +122,7 @@ def trim(script: Script, section: str = "", max_seconds: float = MAX_SECONDS) ->
     _fit(short, max_seconds - _reserved(script, short, max_seconds) / ESTIMATE_SLACK)
     _add_voices_tail(short, script, max_seconds)
     _add_face(short)
+    _add_subscribe(short)
     if not short.scenes[-1].lines:
         raise ShortError(f"『{body.title}』は冒頭だけで尺を使い切ります。節を選び直してください")
     return short
@@ -271,9 +272,18 @@ def _pick(script: Script, section: str) -> Scene:
     return best
 
 
-# ショートの最後のカードを出す秒数（2026-09-13）。**0 で切る。**
-# 本編は3秒あるが、ショートで3秒の無音はスワイプされるだけだった
-SHORT_OUTRO = 0.0
+# ショートの最後のカードを出す秒数。
+# **2026-09-13 に 0 にした**理由は「3秒の**無音**でスワイプされる」だった。
+# 2026-09-15 にユーザーの指摘「最後にカードとチャンネル登録の依頼を
+# 読み上げれば良いのでは？」で戻す。**喋りながら出すなら、その理由は消える。**
+# 2026-09-07 に読み上げをやめた理由（毎回同じ文句に8秒）にも当たらない。
+# **2秒まで。**登録者は10日で24人しかおらず、本編が配られないのもそのため。
+# ショートの末尾は、登録を頼める唯一の場所
+SHORT_OUTRO = 2.0
+
+# 最後に読み上げる一言（2026-09-15）。**短くする。**8秒使っていた頃の
+# 「続報はチャンネル登録してお待ちください」には戻さない
+SHORT_SUBSCRIBE = "チャンネル登録、お願いします。"
 
 # ショートの最後に足すネットの声の本数（2026-09-13 ユーザー「ショートにもいくつか」）
 VOICES_TAIL_MAX = 3
@@ -352,6 +362,30 @@ def _add_voices_tail(short: Script, script: Script, max_seconds: float) -> None:
             break
         short.scenes[-1].lines.append(copy.deepcopy(line))
         added += 1
+
+
+def _add_subscribe(short: Script) -> None:
+    """**最後に登録を頼む一言を足す**（2026-09-15 ユーザー指摘）。
+
+    2026-09-13 にカードを 0 秒にしたのは「3秒の**無音**でスワイプされる」から。
+    喋りながら出すなら、その理由には当たらない。2026-09-07 に読み上げを
+    やめた理由（毎回同じ文句に8秒）にも、2秒なら当たらない。
+
+    **写真とテロップは前の行のものを引き継ぐ**（画面は止めない）。
+    """
+    lines = short.scenes[-1].lines
+    if not lines:
+        return
+    if (lines[-1].text or "").strip() == SHORT_SUBSCRIBE:
+        return
+    last = copy.deepcopy(lines[-1])
+    last.text = SHORT_SUBSCRIBE
+    last.speaker = NARRATORS[0]
+    last.telop = SHORT_SUBSCRIBE
+    last.duration = 0.0
+    last.audio_path = None
+    last.card = "none"
+    lines.append(last)
 
 
 def _add_face(script: Script) -> None:

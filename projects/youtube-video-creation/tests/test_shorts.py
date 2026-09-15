@@ -2,7 +2,8 @@ import pytest
 
 from src.config import load_config
 from src.script_model import parse_script
-from src.shorts import MAX_SECONDS, SIZE, ShortError, _estimate, portrait, trim
+from src.shorts import (MAX_SECONDS, SHORT_SUBSCRIBE, SIZE, ShortError, _estimate,
+                        portrait, trim)
 
 BODY = (
     "---\ntitle: T\n---\n\n"
@@ -47,7 +48,9 @@ def test_lines_are_dropped_from_the_back_until_it_fits():
     short = trim(script, "何が起きたか", max_seconds=1.0)
     # 冒頭は削らず、掘る節から後ろを落とす
     assert len(short.scenes[0].lines) == 1
-    assert len(short.scenes[1].lines) == 1
+    # **末尾に登録の一言が1行増える**（2026-09-15）。中身の行は1つのまま
+    assert len(short.scenes[1].lines) == 2
+    assert short.scenes[1].lines[-1].text == SHORT_SUBSCRIBE
     assert short.scenes[1].lines[0].text == "いち。"
 
 
@@ -357,6 +360,7 @@ def test_締めの一言を残して手前から落とす():
     script = parse_script(nl.join(body))
     _fit(script, 20.0)
     texts = [line.text for line in script.scenes[-1].lines]
+    # ここは `_fit` を直接呼ぶので、登録の一言（trim が足す）は入らない
     assert texts[-1] == "賛成しない", texts
     assert texts[-2] == "最後にはっきり否定しました。", texts
 
@@ -420,7 +424,9 @@ def test_振りの1行を落として発言を早く出す():
     assert "メンバー発表を前に、こう話しました。" not in texts, texts
     # 話者を名乗る行は残す（ショート単体で分かるようにするため）
     assert "異を唱えたのは、チアゴ・シウヴァです。" in texts, texts
-    assert texts[-1] == "賛成しない"
+    # **末尾は登録の一言になる**（2026-09-15）。守りたいのはその1つ手前
+    assert texts[-1] == SHORT_SUBSCRIBE
+    assert texts[-2] == "賛成しない"
 
 
 def test_発言が遅ければ知らせる():

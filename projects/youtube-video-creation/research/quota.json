@@ -65,14 +65,15 @@
     "videos.update": 47
   },
   "2026-09-14": {
-    "videos.list": 9,
-    "videos.insert": 7,
-    "thumbnails.set": 7,
+    "videos.list": 10,
+    "videos.insert": 23,
+    "thumbnails.set": 23,
     "videos.update": 2,
-    "channels.list": 7,
-    "playlistItems.list": 11,
+    "channels.list": 24,
+    "playlistItems.list": 28,
     "playlists.insert": 1,
     "playlistItems.insert": 38,
-    "playlists.list": 1
+    "playlists.list": 1,
+    "commentThreads.insert": 6
   }
 }

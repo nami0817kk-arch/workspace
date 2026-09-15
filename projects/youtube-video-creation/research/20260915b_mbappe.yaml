@@ -1,0 +1,88 @@
+# エムバペが「守備をしない」批判に答えた（2026-09-11 配信／9-15 に出す）
+#
+# **本人の言葉だけで持つ回。**批判そのものより、批判する人の描き方が強い。
+# デンベレの回（20260915b_dembele）と対になる。どちらもバロンドール前後の発言
+format: quote
+voice_min: 55
+slot: other_1
+date: "2026年9月15日"
+
+people:
+  - キリアン・エムバペ
+
+short_title: "エムバペが批判に答えた"
+
+theme:
+  id: mbappe_answers_critics
+  league: spain
+  kind: other
+  topic: レアル・マドリード
+  title: エムバペが「守備をしない」と言われて。返したのは
+  question: 批判をどう受け止めているのか
+
+thumbnail:
+  line1: 守備をしないと言われて
+  line2: エムバペが返したのは ●●●●
+  photo: "assets/photos/20260908_mbappe/01.jpg"
+  focus: 0.12
+  band_full: true
+  note_red: 数百万人の●●
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 何を言われていたか
+    tier: 報道
+    telop: 「守備をしない」という声
+    narrator: キャスター
+    say:
+      - エムバペには、長く付いて回る批判があります。
+      - 守備をしない、というものです。
+      - フランスの『フットボール』のインタビューで、本人がこの話に触れました。
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/articles/f76be0d5779d4fb230e218f836fccc3733be79d5
+
+  - id: said
+    heading: 本人が語ったこと
+    main: true
+    tier: 報道
+    telop: 「数百万人の監督が現れる」
+    narrator: 解説
+    say:
+      - {short_only: true, text: フランスの『フットボール』のインタビューでのやり取りです。}
+      - まず、批判が集まる理由をこう見ています。
+      - {voice: エムバペ, text: 普通じゃないと思う}
+      - {voice: エムバペ, text: でも、それが何年にもわたって極上に近いレベルにいた選手の掟なんだろう}
+      - {voice: エムバペ, text: 10年も経てば、していることは見なくなる}
+      - {voice: エムバペ, text: していないことに目を向けるようになるんだ}
+      - そのうえで、批判する側をこう描きました。
+      - {voice: エムバペ, text: 選手になって学んだのは、毎試合プレーする毎に、数百万人の監督が現れるということなんだ}
+      - {voice: エムバペ, text: そしてその監督たちは、全員が家で幸せじゃない}
+      - 最後に、自分の仕事をこう言い切っています。
+      - {voice: エムバペ, text: フットボールの目的はゴールを決めることだと思っている}
+      - {voice: エムバペ, text: 相手よりも1ゴール多く決めることだと、ね}
+      - {voice: エムバペ, text: ゴールを決める選手がチームにとって問題になるなんて、絶対にあり得ない}
+      - {voice: エムバペ, text: ゴールを決めずに優勝したチームなんて、僕は一度だって見たことがないんだ}
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/articles/f76be0d5779d4fb230e218f836fccc3733be79d5
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「エムバペ守備してるじゃん」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: エムバペ守備してるじゃん}
+      - {voice: ネット民, text: エムバペ守備免除で良いです}
+      - {voice: ネット民, text: 現代サッカーって点取ることよりも守備することの方が大事なんですか？　なんかエムバペが記者に責められてたので}
+      - {voice: ネット民, text: フルマッチをサッカー分かる人が見てればエムバペは最低限の守備はしているとわかる}
+      - {voice: ネット民, text: ちゃんと相手のコースを切って最低限の守備をしてオフザボールもちゃんと動いてる}
+      - {voice: ネット民, text: エムバペはいつからこんな風になったんだろうな。モナコの頃は守備も頑張ってたイメージはあったのに}
+      - {voice: ネット民, text: 今でさえゴール決めてるから守備しなくていいみたいな態度なのに}
+      - {voice: ネット民, text: エムバペもヴィニも両方守備が効いてるわ}
+    official: false
+    sources:
+      - https://x.com/search?q=%E3%82%A8%E3%83%A0%E3%83%90%E3%83%9A%20%E5%AE%88%E5%82%99&f=live

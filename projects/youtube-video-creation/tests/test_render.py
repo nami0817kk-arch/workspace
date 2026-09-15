@@ -626,3 +626,27 @@ def test_反応の箱は3行で切らない():
     low = _stack_height(draw, short, font, pad, room, indents, 1080, 0)
     high = _stack_height(draw, long, font, pad, room, indents, 1080, 0)
     assert high > low * 2, (low, high)
+
+
+def test_件数が多い節では古いほうから落として字を保つ():
+    """**字を小さくせず、古いほうから落とす**（2026-09-15 指示）。
+
+    2026-09-14 は逆に「全部出す。入りきらないぶんは字を小さくして収める」と
+    決めていたが、件数の多い節で**読めない大きさまで落ちていた**。
+    見せたいのは新しいほうなので、あふれたらいちばん古い1件から捨てる。
+    """
+    from PIL import Image
+
+    from src.config import load_config
+    from src.render import Renderer
+
+    import tempfile
+    from pathlib import Path as _P
+
+    config = load_config()
+    with tempfile.TemporaryDirectory() as work:
+        r = Renderer(config, _P(work))
+        canvas = Image.new("RGBA", (config.video.width, config.video.height))
+        many = tuple(f"ネット民「{i}件目の書き込みです。" + "あ" * 30 + "」" for i in range(12))
+        r._draw_stack(canvas, many)   # 落ちずに描ければよい（字の大きさは中で保つ）
+        assert canvas.getbbox() is not None

@@ -693,13 +693,27 @@ class Renderer:
         layer, draw = _layer(canvas.size)
         _left, _top, right, bottom = self.layout.headline_box
         pad = int(self.layout.width * 0.014)
-        kept = stack[-self.STACK_KEEP:]
+        kept = list(stack[-self.STACK_KEEP:])
         # **反応の最中はテロップを出さない**ので、見出しの居場所を空ける必要がない。
         # 画面の下まで使えるぶん、字を大きくできる（2026-09-14 指摘「字が小さい」）
         room_h = int(self.layout.height * 0.92) - int(self.layout.height * STACK_TOP)
         scale = self.layout.width / 1920
         size = int(self.STACK_SIZE * scale)
         floor = max(12, int(self.STACK_SIZE_MIN * scale))
+        # **字を小さくせず、古いほうから落とす**（2026-09-15 指示
+        # 「一番最初のコメントは削除して、大きさが小さくならないようにして」）。
+        # 2026-09-14 は逆に「全部出す。入りきらないぶんは字を小さくして収める」と
+        # 決めていたが、**件数の多い節で字が読めない大きさまで落ちていた**。
+        # 見せたいのは新しいほうなので、あふれたら**いちばん古い1件から捨てる**
+        font = ImageFont.truetype(str(self.config.video.font_path()), size)
+        while len(kept) > 1:
+            total = _stack_height(draw, kept, font, pad, right - _left,
+                                  self.STACK_INDENT, self.layout.width,
+                                  len(stack) - len(kept))
+            if total <= room_h:
+                break
+            kept.pop(0)
+        # 1件だけになっても入らないとき（とても長い書き込み）は、そこで初めて縮める
         while True:
             font = ImageFont.truetype(str(self.config.video.font_path()), size)
             total = _stack_height(draw, kept, font, pad, right - _left,

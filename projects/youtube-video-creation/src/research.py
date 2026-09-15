@@ -69,6 +69,17 @@ BACKGROUNDS = (
 )
 # オープニングの下地。**必ず実写のサッカー**（人が写っているもの）を指す
 OPENING_BACKGROUND = STOCK + "match_stadium.mp4"
+# **エンブレム主役の回だけ、下地を止める**（2026-09-15 指示
+# 「下地が、動くのやめて」→「エンブレムの時の話ね」）。
+# 写真のある回は画面が写真で持つが、**写真が無い回は実写の下地が
+# 2分間まるまる動き続ける**。VARの回は2分6秒で140MBあった
+# （写真のある回は25MB前後）。実写クリップから1コマ抜いた静止画なので、
+# サッカーの画のままで止まる
+# **名前を match_stadium にしてはいけない**（2026-09-15 に踏んだ）。
+# render は書き出しのたびに moving_background() を通し、
+# 「同じ名前で始まる .mp4 があれば差し替える」ので、
+# **静止画にしたつもりが stock/match_stadium.mp4 に戻されていた**
+STILL_BACKGROUND = "assets/backgrounds/crest_still.png"
 
 SPEAKERS = ("キャスター", "解説")
 # 匿名の集まり。**画面に積む**ので、行ごとの引用カードは出さない
@@ -1349,7 +1360,12 @@ def to_script(notes: Notes, plan: Plan) -> str:
     # オープニングとまとめにも下地を指定する。指定が無いと frontmatter の既定に
     # 落ちて、どちらも同じ緑になっていた（実測でまとめの3カットが緑だった）
     # **この回の下地。**題材ごとに変えるが、**1本のあいだは変えない**
-    opening_background = OPENING_BACKGROUND
+    # **エンブレム主役の回は、オープニングも止める**（2026-09-15）。
+    # has_photo を下で計算していたので、**冒頭の1節だけ実写のまま**残っていた
+    _has_photo_early = bool(str((notes.thumbnail or {}).get("photo") or "").strip()
+                            or [x for x in ((notes.thumbnail or {}).get("photos") or [])
+                                if str(x).strip()])
+    opening_background = (OPENING_BACKGROUND if _has_photo_early else STILL_BACKGROUND)
     lines = ["---", _front_matter(front), "---", "",
              "## オープニング",
              # **最初の画面はサッカーの、人が写っているものにする**（2026-09-13 指摘）。
@@ -1430,7 +1446,8 @@ def to_script(notes: Notes, plan: Plan) -> str:
         # 節ごとに別のクリップへ切り替えていたので、2分のあいだに4回も
         # 場所が変わって見えた。画面を動かすのは**サムネの写真の出し入れ**で足りる。
         # 取材メモが `bg` を書いた節だけは、その指定に従う
-        background = section.bg or opening_background
+        # **エンブレム主役の回は止まった下地**（2026-09-15）
+        background = section.bg or (opening_background if has_photo else STILL_BACKGROUND)
         # **素材が無ければ静止画に落とす。**stock を取っていない環境でも動く
         if background.startswith(STOCK) and not _resolve_bg(background).exists():
             background = BACKGROUNDS[index % len(BACKGROUNDS)]

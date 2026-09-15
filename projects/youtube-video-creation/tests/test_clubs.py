@@ -44,8 +44,14 @@ def test_英字の別名は語の切れ目でだけ当てる(book):
 
 
 def test_曖昧な略称は辞書に入れない(book):
-    # AFC は AFC Bournemouth にも当たるので、アーセナルの別名にしない
-    assert clubs.canonical("AFC Bournemouth sign a keeper", book) == []
+    """AFC は AFC Bournemouth にも当たるので、アーセナルの別名にしない。
+
+    **2026-09-15 にボーンマスを辞書へ入れた**ので、返りは空ではなくボーンマスになる。
+    見るべきは「アーセナルに化けないこと」で、そこは変わっていない。
+    """
+    got = clubs.canonical("AFC Bournemouth sign a keeper", book)
+    assert "アーセナル" not in got, got
+    assert got == ["ボーンマス"], got
 
 
 def test_リーグは1つに定まるときだけ返す(book):

@@ -1,0 +1,111 @@
+# 田中碧の一撃が先制点を生んだ。ただし記録はオウンゴール（2026-09-15）
+#
+# **タイトルだけ田中碧に替えて中身がカルヴァート＝ルーウィンのままだった**のを、
+# 田中碧の回として組み直した（2026-09-15 指摘「内容がめちゃくちゃ」）。
+# 日本人選手は検索にいちばん効く枠で、反応も全部そちらを向いていた
+format: news
+voice_min: 30
+slot: japan_1
+date: "2026年9月15日"
+
+people:
+  - 田中碧
+
+short_title: "田中碧の一撃がオウンゴールに"
+
+theme:
+  id: ao_tanaka_own_goal
+  league: england
+  league_name: プレミアリーグ
+  kind: match
+  topic: リーズ
+  title: 田中碧の先制ミドル。記録に残らなかった理由
+  question: なぜ田中の得点にならなかったのか
+
+thumbnail:
+  line1: 田中碧の先制ミドル
+  line2: 記録に残らなかった理由は ●●●●
+  photo: "assets/photos/20260915_tanaka/01.jpg"
+  band_full: true
+  crests:
+    - リーズ
+  tags: []
+  points: []
+
+sections:
+  - id: match
+    heading: 何が起きたか
+    tier: 報道
+    telop: リーズが4対1。田中碧は2戦続けて先発
+    narrator: キャスター
+    card:
+      type: table
+      title: リーズ 4-1 ニューカッスル
+      columns: ["", ""]
+      rows:
+        - ["先制", "前半32分（記録はオウンゴール）"]
+        - ["田中碧", "2試合続けて先発"]
+        - ["結果", "リーズが3位に浮上"]
+    say:
+      - リーズがニューカッスルに4対1で勝ちました。
+      - 田中碧は、リーグ戦で2試合続けての先発です。
+      - 試合を動かしたのは、その田中でした。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20260915/2205107.html
+
+  - id: goal
+    heading: なぜ記録に残らなかったのか
+    main: true
+    tier: 報道
+    telop: 2人に当たって、軌道が2度変わった
+    narrator: 解説
+    say:
+      - {short_only: true, text: リーズ対ニューカッスル、前半32分の先制点の話です。}
+      - 前半32分。田中がペナルティアークの中から右足を振りました。
+      - このシュートが、2人の相手選手に当たります。
+      - まずショーン・ステュア。次にルイス・マイリー。
+      - ボールは2度コースを変えながら、ゴールの右へ吸い込まれました。
+      - シュート自体は枠を捉えていたように見えます。
+      - ですが、ステュアに当たった時点で枠の外へ向かうコースになり、そこからマイリーに当たって、もう一度枠内へ戻った。
+      - そう判断されたため、記録はオウンゴールになったとみられています。
+      - 田中の今季初ゴールは、お預けになりました。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20260915/2205107.html
+      - https://news.yahoo.co.jp/articles/c96ceadaaa03c652f8fc34f77bae630c30d51328
+
+  - id: leeds
+    heading: リーズはいまどうなっているか
+    tier: 報道
+    telop: 昇格組が無敗で3位
+    narrator: 解説
+    say:
+      - リーズは昇格してきたクラブです。
+      - その昇格組が、ここまで負けていません。この勝利で3位に浮上しました。
+      - 4点のうち2点に関わったのが、ドミニク・カルヴァート＝ルーウィンです。
+      - ニューカッスルは、彼がこれまで8度も得点を挙げてきた相手でした。
+      - 終盤に交代でベンチへ下がるとき、エランド・ロードはスタンディングオベーションで迎えています。
+      - 29歳。代表での出場は11試合で、最後は2021年のユーロ準々決勝でした。
+      - この日の出来には、イングランド代表復帰の声が付いてきています。
+    official: false
+    sources:
+      - https://ca.sports.yahoo.com/news/unplayable-almost-perfect-calvert-lewin-225633905.html
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「田中の得点は0。でも、先制点を動かした」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: 田中碧は0ゴール。でも、先制点を動かした}
+      - {voice: ネット民, text: 田中は左へ展開したあと、そこで止まらなかった}
+      - {voice: ネット民, text: ゴール前へ入り直し、再びボールを受けてシュート。相手に当たり、記録はオウンゴール}
+      - {voice: ネット民, text: だから田中の得点は「0」}
+      - {voice: ネット民, text: 32分に右足ミドルを振って、相手に当たって先制のOGを誘発。チームは4対1で勝って暫定3位です}
+      - {voice: ネット民, text: 中盤からゴール前まで出ていけるのは、田中らしい形ですよね}
+      - {voice: ネット民, text: 前半の入り方や相手の強度への対応など、ニューカッスル側の問題点も当然あったが、単純に実力負け}
+      - {voice: ネット民, text: リーズが強かったという感想}
+    official: false
+    sources:
+      - https://x.com/search?q=%E3%83%AA%E3%83%BC%E3%82%BA%20%E3%83%8B%E3%83%A5%E3%83%BC%E3%82%AB%E3%83%83%E3%82%B9%E3%83%AB&f=live

@@ -1,0 +1,87 @@
+# デンベレが、ムバッペの発言を「まったく気に入らなかった」（2026-09-14）
+#
+# **エムバペの回と対になる。**サムネは2人を並べて、あいだに印を置く。
+# デンベレの発言はブレスト戦後（9-13）、ムバッペは『フランス・フットボール』
+format: quote
+voice_min: 55
+slot: france_1
+date: "2026年9月15日"
+
+people:
+  - ウスマン・デンベレ
+
+short_title: "デンベレがムバッペに返した"
+
+theme:
+  id: dembele_answers_mbappe
+  league: france
+  kind: other
+  topic: パリ・サンジェルマン
+  title: ムバッペの言葉に、デンベレが返したのは
+  question: 何が気に入らなかったのか
+
+thumbnail:
+  line1: ムバッペの言葉に
+  line2: デンベレが返したのは ●●●●
+  photos:
+    - "assets/photos/20260912_dembele/01.jpg"
+    - "assets/photos/20260908_mbappe/01.jpg"
+  face_link: "VS"
+  band_full: true
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 何があったか
+    tier: 報道
+    telop: バロンドールをめぐる、代表の同僚どうし
+    narrator: キャスター
+    say:
+      - バロンドールをめぐって、フランス代表の同僚どうしの言葉が交わりました。
+      - キリアン・ムバッペが『フランス・フットボール』のインタビューで、デンベレについて語ります。
+      - {voice: ムバッペ, text: デンベレ？　でも彼はずっと、才能のある選手として見られてきた}
+      - ムバッペは自分についても、こう振り返っていました。
+      - {voice: ムバッペ, text: ある年には、自分が世界最高の選手だと考えていた}
+    official: false
+    sources:
+      - https://www.footmercato.net/a4767334031534910056-ballon-dor-ousmane-dembele-na-pas-du-tout-aime-la-sortie-de-kylian-mbappe
+
+  - id: said
+    heading: デンベレの返し
+    main: true
+    tier: 報道
+    telop: 「僕はずっと教室のいちばん後ろで、黙って努力してきた」
+    narrator: 解説
+    say:
+      - {short_only: true, text: ムバッペの発言に、デンベレが試合のあと答えました。}
+      - デンベレが答えたのは、9月13日のブレスト戦のあとです。
+      - {voice: デンベレ, text: いや、僕はずっとこうだった}
+      - {voice: デンベレ, text: 僕はいつも教室のいちばん後ろにいて、懸命に努力してきた}
+      - {voice: デンベレ, text: キャリアを通して、僕は一言も言わなかった}
+      - {voice: デンベレ, text: ただ、働いた}
+      - 「選ばれた者」ではなかった、という言い方をしています。
+      - {voice: デンベレ, text: 僕は一度も「選ばれた者」ではなかった}
+      - {voice: デンベレ, text: 働いて、パリ・サンジェルマンで素晴らしい1年を送り、報われた}
+      - 今年については、力を抜いた言い方でした。
+      - {voice: デンベレ, text: 今年はどうなるか。重圧なしに見ている。どうなるか見てみよう}
+    official: false
+    sources:
+      - https://www.footmercato.net/a4767334031534910056-ballon-dor-ousmane-dembele-na-pas-du-tout-aime-la-sortie-de-kylian-mbappe
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「今年はどれも決め手に欠ける」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: 今年のバロンドールってどれも決め手に欠けるよなー}
+      - {voice: ネット民, text: チーム成績でいうたらファビアンルイスなんかなと思うけど個人成績がそこまでやもんなー}
+      - {voice: ネット民, text: あとはデンベレ、ケインあたりなんかなー？}
+      - {voice: ネット民, text: フェラン・トーレスやっと決めてくれた！　デンベレは2ゴール1アシスト}
+      - {voice: ネット民, text: 久々に楽しいパリのサッカーしてる}
+      - {voice: ネット民, text: バロンドール予想　1ケイン　2エンバペ　3ヤマル　と思ったけどデンベレ忘れてた}
+      - {voice: ネット民, text: 2026年のバロンドール争いは、かつてないほど白熱しています}
+    official: false
+    sources:
+      - https://x.com/search?q=%E3%83%87%E3%83%B3%E3%83%99%E3%83%AC%20%E3%83%90%E3%83%AD%E3%83%B3%E3%83%89%E3%83%BC%E3%83%AB&f=live

@@ -1,0 +1,102 @@
+# インテルが0対2から5対3（2026-09-14 サンシーロ）
+#
+# **スコアがそのまま引きになる回。**16分までに2点を失い、前半のうちに追いつき、
+# 後半に突き放した
+format: news
+voice_min: 22
+slot: italy_1
+date: "2026年9月15日"
+
+people:
+  - ニコロ・バレッラ
+
+short_title: "インテルが0対2から5対3"
+
+theme:
+  id: inter_udinese_comeback
+  league: italy
+  league_name: セリエA
+  kind: match
+  topic: インテル
+  title: インテルが0対2から。最後にいくつ入ったか
+  question: どうやって引っくり返したのか
+
+thumbnail:
+  line1: インテルが0対2から
+  line2: 最終スコアは ●●●●
+  photo: "assets/photos/20260915_barella/01.jpg"
+  band_full: true
+  tags: []
+  points: []
+
+sections:
+  - id: start
+    heading: 16分までに2点
+    tier: 報道
+    telop: ウディネーゼが先に2点
+    narrator: キャスター
+    card:
+      type: table
+      title: インテル 5-3 ウディネーゼ
+      columns: ["", ""]
+      rows:
+        - ["前半16分まで", "ウディネーゼが2点"]
+        - ["前半のうちに", "インテルが追いつく"]
+        - ["後半", "インテルがさらに3点"]
+    say:
+      - サンシーロでの一戦は、先に動いたのがウディネーゼでした。
+      - 16分までに2点。どちらもインテルの守備が崩された形です。
+      - 1点目はショートコーナーから。ウナイ・ゴメスのクロスに、ジェームズ・アバンクワが頭で合わせました。
+      - 2点目は左を破られ、ケイナン・デイビスの折り返しをユルゲン・エッケレンカンプが押し込みます。
+    official: false
+    sources:
+      - https://football-italia.net/serie-a-inter-5-3-udinese-spectacular-comeback/
+
+  - id: level
+    heading: 10分で追いついた
+    tier: 報道
+    telop: アウグストとバレッラ
+    narrator: 解説
+    say:
+      - 2点のリードは、10分もたたずに消えました。
+      - まずカルロス・アウグストが左足で決めます。
+      - 続いてニコロ・バレッラ。中盤でハッサン・カマラからボールを奪い返したところから始まりました。
+      - バレッラはチュラムの落としに一度足を滑らせています。それでも立ち上がって、角度のないところから右足で突き刺しました。
+    official: false
+    sources:
+      - https://football-italia.net/serie-a-inter-5-3-udinese-spectacular-comeback/
+
+  - id: back
+    heading: 追いついて、突き放した
+    main: true
+    tier: 報道
+    telop: 前半のうちに同点、後半に3点
+    narrator: 解説
+    say:
+      - {short_only: true, text: セリエA第4節、サンシーロでのウディネーゼ戦。先に2点を失ったところからの話です。}
+      - 前半のうちに2対2。後半はインテルの時間でした。
+      - チュラムが逆転弾。ピオ・エスポジトが流れるような攻撃を仕上げ、ボニーが続きます。
+      - ウディネーゼも終盤にゲイエが1点を返しましたが、5対3。
+      - インテルはローマとともに、開幕から勝ち続けています。
+    official: false
+    sources:
+      - https://football-italia.net/serie-a-inter-5-3-udinese-spectacular-comeback/
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「何度見ても狂っている」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: インテル5-3ウディネーゼって}
+      - {voice: ネット民, text: インテリスタは慣れっこか？　いや、何度見ても狂っている}
+      - {voice: ネット民, text: インテルはいつも相手を舐めて、油断したままピッチに現れる悪癖がある}
+      - {voice: ネット民, text: インテルはウディネーゼから2つの得点を受け、その後は本物のインテルが現れた}
+      - {voice: ネット民, text: 毎回インテルに勝ってくれるんじゃないかって期待感だけすごいくれるウディネーゼだよな}
+      - {voice: ネット民, text: 毎回インテル相手に惜しい試合できる数少ないクラブよ}
+      - {voice: ネット民, text: 特にインテルの血が濃いバレッラやアウグスト、テュラムらはビハインドからエンジンがかかり、ウディネーゼの選手らを圧倒し続ける}
+      - {voice: ネット民, text: これぞ王者の底力　テュラムのゴールでインテルがついに逆転}
+      - {voice: ネット民, text: 合計8発をハイライトで楽しむ}
+    official: false
+    sources:
+      - https://x.com/search?q=%E3%82%A4%E3%83%B3%E3%83%86%E3%83%AB%20%E3%82%A6%E3%83%87%E3%82%A3%E3%83%8D%E3%83%BC%E3%82%BC&f=live
