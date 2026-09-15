@@ -696,22 +696,23 @@ def tiktok_cut(script: Script, section: str = "") -> Script:
     content = [sc for sc in script.scenes[1:] if not _is_voices_scene(sc) and sc.title != "まとめ"]
     index = next((i for i, sc in enumerate(content) if sc.title == body_title), None)
 
-    # 2. 山場の手前の節
-    if index is not None and not enough():
-        for earlier in reversed(content[:index]):
-            if enough():
-                break
-            extra = copy.deepcopy(earlier)
-            cut.scenes.insert(1, extra)
-            for scene in cut.scenes[2:]:
-                scene.lines = [l for l in scene.lines if getattr(l, "only", None) != "short"]
+    # 2. 節を足すときは**山場のうしろへ**（2026-09-16）。
+    # 最初は手前に挟んでいたが、山場が後ろへ動いて最初の発言が16〜17秒目に
+    # なった（ロドリ・キャラガーで実測）。**発言が遅いとその前に離脱する。**
+    # うしろに置くので、締めの「チャンネル登録」は足し直して最後に戻す
+    def add_scene(scene: Scene) -> None:
+        lines = cut.scenes[-1].lines
+        if lines and (lines[-1].text or "").strip() == SHORT_SUBSCRIBE:
+            lines.pop()
+        cut.scenes.append(copy.deepcopy(scene))
+        _add_subscribe(cut)
 
-    # 3. 山場のうしろの節（締めの登録の一言より前に、節ごと挟む）
-    if index is not None and not enough():
-        for later in content[index + 1:]:
+    if index is not None:
+        rest = content[index + 1:] + list(reversed(content[:index]))
+        for scene in rest:
             if enough():
                 break
-            cut.scenes.insert(len(cut.scenes) - 1, copy.deepcopy(later))
+            add_scene(scene)
 
     _add_face(cut)
     return cut
