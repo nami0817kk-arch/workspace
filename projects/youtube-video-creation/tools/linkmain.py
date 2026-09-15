@@ -73,7 +73,14 @@ def main() -> int:
     for short_id, _main_id, out in chosen:
         try:
             draft = upload_mod.prepare(out)
-            now = api.videos().list(part="snippet", id=short_id).execute()["items"][0]["snippet"]
+            # **もう無い動画がある**（2026-09-15）。二重投稿を消したぶんと、
+            # 消えたまま上げ直していないぶん。items が空のまま [0] を取って
+            # `list index out of range` で落ちていたので、理由を出して飛ばす
+            items = api.videos().list(part="snippet", id=short_id).execute()["items"]
+            if not items:
+                failed.append((short_id, f"YouTube に無い（消されている）　{out.name}"))
+                continue
+            now = items[0]["snippet"]
             if upload_mod.MAIN_LINK_HEADING in now.get("description", ""):
                 continue                      # もう入っている。枠を使わない
             now["description"] = draft.description

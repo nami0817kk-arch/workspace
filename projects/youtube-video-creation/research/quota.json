@@ -77,11 +77,11 @@
     "commentThreads.insert": 6
   },
   "2026-09-15": {
-    "videos.list": 8,
+    "videos.list": 163,
     "channels.list": 13,
     "playlistItems.list": 12,
     "videos.insert": 10,
     "thumbnails.set": 10,
-    "videos.update": 5
+    "videos.update": 71
   }
 }
