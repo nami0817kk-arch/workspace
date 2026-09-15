@@ -640,5 +640,86 @@ def outro_line(script: Script) -> str:
     return "続きは本編で。チャンネル登録してお待ちください。"
 
 
+# **TikTok 用は1分を超える**（2026-09-16 ユーザー決定「上限は60秒以上でよい」）。
+# TikTok の Creator Rewards Program は「1分以上のオリジナル作品」だけが対象で、
+# YouTube ショート（58秒で切る）はそのまま上げても1本も数えられない。
+# 下限は60秒ちょうどにしない。書き出すまで実尺が分からず、見積りはぶれる
+TIKTOK_MIN_SECONDS = 62.0
+# **見積りは実尺より長く出る**（2026-09-16 実測）。板倉の回は見積り54秒に対して
+# 書き出したら48秒だった。ショートは話速を1.1倍にしているぶん、文字数からの
+# 見積りが実尺を上回る。足りるかどうかは、この比で割り戻してから見る
+TIKTOK_ESTIMATE_RATIO = 0.89
+# 上は決めない、というのがユーザーの判断。ただ**引き延ばしにしない**ため、
+# 足すのは台本に書いてある節と反応だけで、同じ台本の中身が尽きたらそこで止める
+TIKTOK_MAX_SECONDS = 90.0
+TIKTOK_VOICES_MAX = 6
+
+
+def tiktok_cut(script: Script, section: str = "") -> Script:
+    """ショートと同じ作りで、1分を超える縦動画にする。
+
+    まずショートと同じく「冒頭＋山場の節」を作り、足りなければ次の順で足す。
+
+    1. 反応をもう何件か（ショートは3件まで。TikTok は6件まで）
+    2. 山場の**手前の節**（何があったか）。足したら、山場の節に書いてある
+       ショート専用の前置きは外す（手前の節と同じことを二度言うため）
+    3. 山場の**うしろの節**（反応の節は1で使うので除く）
+
+    **台本に無いことは足さない。**尽きても1分に届かなければ、そのまま返す
+    （書き出したあとに `_cmd_short` が止める）。
+    """
+    cut = trim(script, section, max_seconds=TIKTOK_MAX_SECONDS)
+    need = TIKTOK_MIN_SECONDS / TIKTOK_ESTIMATE_RATIO
+
+    def enough() -> bool:
+        return _estimate(cut) >= need
+
+    def before_subscribe(line) -> None:
+        lines = cut.scenes[-1].lines
+        at = len(lines) - 1 if lines and (lines[-1].text or "").strip() == SHORT_SUBSCRIBE else len(lines)
+        lines.insert(at, copy.deepcopy(line))
+
+    # 1. 反応を足す
+    source = _voices_source(cut, script)
+    if source is not None and not enough():
+        have = {(l.text or "").strip() for l in cut.lines}
+        added = sum(1 for l in source.lines if (l.text or "").strip() in have)
+        for line in source.lines:
+            if enough() or added >= TIKTOK_VOICES_MAX:
+                break
+            if (line.text or "").strip() in have:
+                continue
+            before_subscribe(line)
+            added += 1
+
+    body_title = cut.scenes[-1].title
+    content = [sc for sc in script.scenes[1:] if not _is_voices_scene(sc) and sc.title != "まとめ"]
+    index = next((i for i, sc in enumerate(content) if sc.title == body_title), None)
+
+    # 2. 山場の手前の節
+    if index is not None and not enough():
+        for earlier in reversed(content[:index]):
+            if enough():
+                break
+            extra = copy.deepcopy(earlier)
+            cut.scenes.insert(1, extra)
+            for scene in cut.scenes[2:]:
+                scene.lines = [l for l in scene.lines if getattr(l, "only", None) != "short"]
+
+    # 3. 山場のうしろの節（締めの登録の一言より前に、節ごと挟む）
+    if index is not None and not enough():
+        for later in content[index + 1:]:
+            if enough():
+                break
+            cut.scenes.insert(len(cut.scenes) - 1, copy.deepcopy(later))
+
+    _add_face(cut)
+    return cut
+
+
+def tiktok_path(script_path: str | Path) -> Path:
+    return Path(f"output/{Path(script_path).stem}_tiktok")
+
+
 def default_path(script_path: str | Path) -> Path:
     return Path(f"output/{Path(script_path).stem}_short")

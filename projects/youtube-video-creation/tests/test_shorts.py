@@ -713,3 +713,29 @@ def test_発言より先に語りを削る():
     assert len(said) == 3, texts
     # 削られたのは語りのほう
     assert not any(t.startswith("監督が口を開") for t in texts), texts
+
+
+def test_TikTok用は1分を超えるまで台本の中身を足す():
+    """**TikTok の報酬は1分以上の動画だけ**（2026-09-16）。ショートの58秒では数えられない。"""
+    from src import shorts
+    from src.script_model import Line, Scene, Script
+
+    def talk(text, sec, speaker="キャスター"):
+        line = Line(speaker=speaker, text=text)
+        line.duration = sec
+        return line
+
+    script = Script(title="t", scenes=[
+        Scene(title="オープニング", lines=[talk("題名です", 4.0)]),
+        Scene(title="何があったか", lines=[talk(f"事実{i}", 5.0) for i in range(4)]),
+        Scene(title="山場", lines=[talk(f"山場{i}", 5.0) for i in range(5)]),
+        Scene(title="見ていた人", lines=[talk(f"反応{i}", 3.0, "ネット民") for i in range(8)]),
+    ])
+    script.scenes[2].main = True
+    cut = shorts.tiktok_cut(script)
+    assert shorts._estimate(cut) >= shorts.TIKTOK_MIN_SECONDS / shorts.TIKTOK_ESTIMATE_RATIO
+    # 足したのは台本にある行だけ
+    texts = {l.text for sc in script.scenes for l in sc.lines} | {shorts.SHORT_SUBSCRIBE}
+    assert all(l.text in texts for l in cut.lines)
+    # 締めは登録の一言のまま
+    assert cut.lines[-1].text == shorts.SHORT_SUBSCRIBE

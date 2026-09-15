@@ -51,13 +51,20 @@ def targets(args: list[str]) -> list[Path]:
         if path.is_dir():
             dirs.append(path)
         elif re.fullmatch(r"\d{8}[a-z]?", arg):
-            dirs += sorted(Path("output").glob(f"{arg}_*_short"))
+            # **1分を超える TikTok 用があれば、そちらを使う**（2026-09-16）。
+            # ショート（58秒まで）は報酬の対象にならない
+            for short in sorted(Path("output").glob(f"{arg}_*_short")):
+                longer = short.with_name(short.name.removesuffix("_short") + "_tiktok")
+                dirs.append(longer if (longer / "video.mp4").exists() else short)
     dirs = [d for d in dirs if (d / "video.mp4").exists()]
     # **YouTube に予約した順に並べる。**台帳には予約した順で控えが残っている。
     # 名前の順だと、8時に出るイラオラより12時のキャラガーが先頭に来ていた
     from src import posted
     order = {row.get("build"): i for i, row in enumerate(posted._load(posted.LEDGER))}
-    return sorted(dirs, key=lambda d: order.get(d.name, len(order)))
+    def rank(d: Path) -> int:
+        base = d.name.removesuffix("_tiktok").removesuffix("_short") + "_short"
+        return order.get(base, len(order))
+    return sorted(dirs, key=rank)
 
 
 def sections(text: str) -> tuple[str, dict[str, list[str]], list[str], list[str]]:
@@ -129,23 +136,24 @@ def main() -> int:
         if not screening.is_screened(build) or screening.changed_since_screening(build):
             skipped.append(build.name)
             continue
-        name = re.sub(r"^\d{8}[a-z]?_", "", build.name).removesuffix("_short")
+        name = re.sub(r"^\d{8}[a-z]?_", "", build.name).removesuffix("_short").removesuffix("_tiktok")
         stem = f"{len(listed) + 1:02d}_{name}"
         shutil.copyfile(build / "video.mp4", out / f"{stem}.mp4")
         text = caption(build)
         (out / f"{stem}.txt").write_text(text, encoding="utf-8")
-        listed.append((stem, len(text)))
+        listed.append((stem, len(text), build.name.endswith("_tiktok")))
 
     lines = [f"TikTok に上げる一式（{len(listed)}本）", "",
              "TikTok Studio で動画を選び、同じ名前の .txt を説明欄に貼って、時刻を予約する。", ""]
-    for stem, length in listed:
+    for stem, length, long_cut in listed:
         warn = f"　※説明欄が{length}字（{CAPTION_MAX}字を超えています）" if length > CAPTION_MAX else ""
-        lines.append(f"  {stem}.mp4　／　{stem}.txt{warn}")
+        kind = "" if long_cut else "　※1分未満（報酬の対象外）"
+        lines.append(f"  {stem}.mp4　／　{stem}.txt{kind}{warn}")
     (out / "一覧.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
     print(f"作りました: {out}")
-    for stem, length in listed:
-        print(f"  {stem}　説明欄 {length}字")
+    for stem, length, long_cut in listed:
+        print(f"  {stem}　説明欄 {length}字　{'1分超' if long_cut else 'ショート（1分未満）'}")
     # **入れなかったものを最後の行に残す**（upload と同じ理由）
     for name in skipped:
         print(f"  × {name}: 動画をまだ見せていない（または見せたあとに書き出し直した）")

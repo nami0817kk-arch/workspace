@@ -195,6 +195,8 @@ def main(argv: list[str] | None = None) -> int:
     p_short = sub.add_parser("short", help="同じ台本から縦9:16のショートを作る")
     p_short.add_argument("script")
     p_short.add_argument("--section", default=None, help="どの節を使うか（既定: 冒頭の次）")
+    p_short.add_argument("--tiktok", action="store_true",
+                         help="TikTok 用に1分を超える縦動画を作る（出力先は <名前>_tiktok）")
     p_short.add_argument("--out", default=None)
     p_short.add_argument("--no-tts", action="store_true", help="音声なしで尺だけ確認する")
 
@@ -671,12 +673,16 @@ def _cmd_short(args, config) -> int:
         return 2
     script = load_script(args.script)
     try:
-        short = shorts.trim(script, args.section or "")
+        # **TikTok 用は1分を超える**（2026-09-16）。報酬の対象が1分以上の動画だけ
+        short = (shorts.tiktok_cut(script, args.section or "") if getattr(args, "tiktok", False)
+                 else shorts.trim(script, args.section or ""))
     except shorts.ShortError as error:
         print(str(error), file=sys.stderr)
         return 1
 
-    out = Path(args.out) if args.out else shorts.default_path(args.script)
+    out = Path(args.out) if args.out else (
+        shorts.tiktok_path(args.script) if getattr(args, "tiktok", False)
+        else shorts.default_path(args.script))
     estimate = shorts._estimate(short)
     print(f"■ ショート　{' → '.join(scene.title for scene in short.scenes)}")
     print(f"　想定尺: 約{estimate:.0f}秒 / セリフ {len(short.lines)}行")
@@ -708,6 +714,13 @@ def _cmd_short(args, config) -> int:
     opening = check_short_opening(Path(result.video))
     if opening is not None and not opening.ok:
         print(f"! {opening.detail}", file=sys.stderr)
+    if getattr(args, "tiktok", False):
+        # **1分に届かなければ出さない。**届かないまま上げても報酬の対象にならない
+        if result.duration < 60.5:
+            print(f"! {result.duration:.1f}秒しかありません。TikTok の報酬は1分以上の動画だけです。"
+                  "台本の節か反応を足してください", file=sys.stderr)
+            return 1
+        return 0
     if result.duration > shorts.MAX_SECONDS:
         print(
             f"! {result.duration:.0f}秒あります。ショートは60秒までなので、"
