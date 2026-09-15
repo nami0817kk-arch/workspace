@@ -60,6 +60,11 @@ def main() -> int:
         return 1
 
     rows = mains(Path(args.snapshot))
+    # **すでに入れたものは外す**（2026-09-15）。控えを見ていなかったので、
+    # 2回目を走らせると同じ動画が二重に並ぶところだった
+    book = json.loads(LEDGER.read_text(encoding="utf-8")) if LEDGER.exists() else {}
+    inside = {vid for entry in book.values() for vid in entry.get("videos", [])}
+    rows = [v for v in rows if v["id"] not in inside]
     chosen = rows[args.skip:args.skip + args.limit]
     cost = (0 if args.id else 50) + len(chosen) * 50
     print(f"公開中の本編 {len(rows)}本　うち {args.skip + 1}〜{args.skip + len(chosen)}本目を入れます")

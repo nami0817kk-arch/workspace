@@ -1,0 +1,92 @@
+# クロップが最初の招集を発表する（2026-09-15 取材／**9-18 以降に出す**）
+#
+# **招集メンバーが分かってから出す**（2026-09-15 ユーザー指示）。
+# 発表は9月17日の木曜。いま出すと「木曜に分かります」で終わってしまう。
+# 発表後に、実際の顔ぶれと人数を入れて書き直す
+#
+# **kicker は 403 を返す**ので、別の媒体から取った
+format: news
+voice_min: 25
+slot: germany_1
+date: "2026年9月18日"
+
+people:
+  - ユルゲン・クロップ
+
+short_title: "クロップの最初の招集"
+
+theme:
+  id: klopp_first_squad
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: ドイツ代表
+  title: クロップが最初の招集を発表する。人数がふつうではない
+  question: なぜ人数を絞らないのか
+
+thumbnail:
+  line1: クロップの最初の招集
+  line2: 人数が ●●●●
+  photo: "assets/photos/20260916_klopp/01.jpg"
+  band_full: true
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: いつ発表されるか
+    tier: 報道
+    telop: 9月17日、木曜日
+    narrator: キャスター
+    say:
+      - 舞台はドイツ代表です。新しい監督のもとで、顔ぶれが一度まっさらになります。
+      - 発表は9月17日、木曜日。
+    official: false
+    sources:
+      - https://www.bavarianfootballworks.com/germany-international-soccer/247338/jurgen-klopps-squad-announcement-date-has-been-revealed
+
+  - id: many
+    heading: 人数の話
+    main: true
+    tier: 報道
+    telop: 合宿に呼ぶ人数に上限はない
+    narrator: 解説
+    say:
+      - {short_only: true, text: ドイツ代表の新監督ユルゲン・クロップが、木曜に顔ぶれを出します。}
+      - 規則のうえでは、合宿に呼ぶ人数に上限はありません。
+      - 決まっているのは、試合ごとに23人を提出することだけです。そのうち3人はゴールキーパーです。
+      - つまり、最初から絞る必要がない。
+      - 今回の発表で見えるのは、クロップがどこまで広く網を張るつもりかという一点です。
+    official: false
+    sources:
+      - https://www.bavarianfootballworks.com/germany-international-soccer/247338/jurgen-klopps-squad-announcement-date-has-been-revealed
+
+  - id: why
+    heading: なぜ広げるのか
+    tier: 報道
+    telop: まず情報を集める、という進め方
+    narrator: 解説
+    say:
+      - クロップは、最初から狭い顔ぶれに決め打ちしない進め方を取ろうとしていると伝えられています。
+      - 手元にある時間を、情報を集めることに使う。
+      - 次のドイツ代表をどう作り直すのか、その最初の手がかりが木曜に出ます。
+    official: false
+    sources:
+      - https://www.bavarianfootballworks.com/germany-international-soccer/256402/jurgen-klopps-strategy-for-squad-selection-revealed
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「2チーム編成も視野」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: クロップのドイツ代表としての初戦、相手はオランダ代表だったなそういえば。熱いな}
+      - {voice: ネット民, text: 2チーム編成も視野。クロップ・ドイツの初陣が迫る}
+      - {voice: ネット民, text: 今後クロップが本気でドイツ代表を再建するのであれば、CFや攻撃的MFを探すのと同じくらい}
+      - {voice: ネット民, text: 次の10年間、最後尾からドイツ代表を指揮できるGKは誰か、を重要視する可能性があります}
+      - {voice: ネット民, text: ライプツィヒ無茶苦茶にした後にドイツ代表行くからバイバイとか、ライプツィヒサポ視点めちゃくちゃキモいだろうな}
+      - {voice: ネット民, text: 長田澪は、ドイツ代表行って欲しいな}
+      - {voice: ネット民, text: ドイツ育ちでドイツ代表の戦術教育を受けてきた、194センチの22歳のブンデスリーガGKです}
+    official: false
+    sources:
+      - https://x.com/search?q=%E3%82%AF%E3%83%AD%E3%83%83%E3%83%97%20%E3%83%89%E3%82%A4%E3%83%84%E4%BB%A3%E8%A1%A8&f=live

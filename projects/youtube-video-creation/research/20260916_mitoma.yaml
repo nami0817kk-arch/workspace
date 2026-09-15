@@ -1,0 +1,92 @@
+# 三笘薫のブライトン退団報道と、そこへの批判（2026-09-15）
+#
+# **賛否が割れている題材。**報道そのものより、報じられ方への批判が芯
+format: quote
+voice_min: 45
+slot: japan_1
+date: "2026年9月16日"
+
+people:
+  - 三笘薫
+
+short_title: "三笘薫の退団報道をめぐって"
+
+theme:
+  id: mitoma_exit_reports
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ブライトン
+  title: 三笘薫の退団報道。英メディアが「後味が悪い」と書いた理由
+  question: 何が批判されているのか
+
+thumbnail:
+  line1: 三笘薫の退団報道
+  line2: 英メディアが書いたのは ●●●●
+  photo: "assets/photos/20260912_mitoma/01.jpg"
+  band_full: true
+  crests:
+    - ブライトン
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 何が報じられたか
+    tier: 報道
+    telop: 「契約延長に合意する可能性は低い」
+    narrator: キャスター
+    card:
+      type: table
+      title: 報じられた中身
+      columns: ["", ""]
+      rows:
+        - ["契約", "延長に合意する可能性は低い"]
+        - ["時期", "早ければ1月の移籍市場で放出"]
+        - ["週給", "8万ポンド（クラブ内で高給の一人）"]
+        - ["本人", "CL出場を熱望と報じられた"]
+    say:
+      - 英メディア『チームトーク』が、三笘薫について報じました。
+      - 契約延長に合意する可能性は低い、という内容です。
+      - ブライトンは早ければ1月の移籍市場で放出する、とも書かれています。
+      - 週給は8万ポンド。クラブの中では高給取りの一人にあたります。
+      - そして、複数のチャンピオンズリーグ出場クラブが接触していて、本人もCL出場を熱望している、と。
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/09/15/359265/
+
+  - id: said
+    heading: その報じ方への批判
+    main: true
+    tier: 報道
+    telop: 「後味の悪さを残すものだ」
+    narrator: 解説
+    say:
+      - {short_only: true, text: 三笘薫のブライトン退団が報じられた件の話です。}
+      - この報道に、別の英メディア『EPL Index』が批判を書きました。
+      - {voice: EPL Index, text: 今回の報道内容は、後味の悪さを残すものだ}
+      - 批判の芯は、三笘がどういう選手として見られてきたかにあります。
+      - {voice: EPL Index, text: 彼はサポーターが心からお金を払って見たいと思う選手である}
+      - {voice: EPL Index, text: 感情的な別れという言葉が彼の将来に関連して使われていることが、痛いほど正確に感じられるのも無理はない}
+      - 移籍の可否ではなく、**別れ方**の話として受け止められています。
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/09/15/359265/
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「なんか今のブライトンみると三笘移籍が現実的に感じる」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, short_voice: true, text: 三笘って移籍するけどどこのクラブ行くんかな}
+      - {voice: ネット民, short_voice: true, text: なんか今のブライトンみると三笘移籍が現実的に感じる、寂しい}
+      - {voice: ネット民, text: ブライトンで公式戦135試合27発を記録してきた三笘薫}
+      - {voice: ネット民, text: しかし5月の手術による長期離脱と契約年数の残りが響き、契約延長交渉が停滞}
+      - {voice: ネット民, text: 他クラブからの関心も絡み、冬の移籍市場での動きが現実味を帯び始めている}
+      - {voice: ネット民, text: ただ怪我が完治するのかどうかの様子見だろう}
+      - {voice: ネット民, text: ユナイテッドは両サイドの創造性が過大なわけだから、冬に移籍が噂されてる三笘を真剣に獲ることをオススメするよ}
+      - {voice: ネット民, short_voice: true, text: 三笘が冬移籍するなら背番号は変えんわな}
+    official: false
+    sources:
+      - https://x.com/search?q=%E4%B8%89%E7%AC%A0%20%E7%A7%BB%E7%B1%8D&f=live

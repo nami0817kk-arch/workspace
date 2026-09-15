@@ -1,0 +1,85 @@
+# イラオラがリヴァプールの前線に注文（2026-09-15）
+#
+# **9/15 8:40 に出した遠藤の回と同じ監督。**あちらは「遠藤が出ていない理由」、
+# こちらは「前線への要求」。同じ監督の言葉で話がつながる
+format: quote
+voice_min: 50
+slot: premier_1
+date: "2026年9月16日"
+
+people:
+  - アンドニ・イラオラ
+
+short_title: "イラオラが前線に求めたこと"
+
+theme:
+  id: iraola_presses_forwards
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: リヴァプール
+  title: リヴァプールがフラムと0対0。イラオラが挙げた理由
+  question: なぜ足が止まったのか
+
+thumbnail:
+  line1: リヴァプールが0対0
+  line2: 監督が挙げた理由は ●●●●
+  crest_main:
+    - リバプール
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: 中3日で0対0
+    narrator: キャスター
+    say:
+      - リヴァプールが本拠地でフラムと0対0に終わりました。
+      - 中3日です。その前の週の半ばに、チャンピオンズリーグでアトレティコ・マドリードに勝っていました。
+      - アンドニ・イラオラ監督は、この試合の内容をはっきり認めました。
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13586016/liverpool-under-andoni-iraola-need-to-play
+
+  - id: said
+    heading: 監督が語ったこと
+    main: true
+    tier: 報道
+    telop: 「プレスに間に合っていなかった」
+    narrator: 解説
+    say:
+      - {short_only: true, text: 中3日での一戦でした。その前の週の半ばにはアトレティコ戦があります。}
+      - まず、原因を一言で言い切りました。
+      - {voice: イラオラ, text: 明らかに、フレッシュさが足りなかった。隠すことはできない}
+      - どこに出ていたかも具体的です。
+      - {voice: イラオラ, text: とくに前半、我々はプレスに間に合っていなかった}
+      - そのうえで、選手の使い分けについて語りました。
+      - {voice: イラオラ, text: 3日ごとに出ても問題のない選手がいる。受け止められるし、出来もそれほど変わらない}
+      - {voice: イラオラ, text: 一方で、危険がもっと大きい選手もいる}
+      - {voice: イラオラ, text: 誰が2、3日ごとに出られて、誰が休んだほうが出来を落とさずに済むのか。私はそれを学ばなければならない}
+      - 同じ11人で押し通す道についても、否定的でした。
+      - {voice: イラオラ, text: 毎試合、同じ選手を並べることはできる}
+      - {voice: イラオラ, text: 問題は、いつか彼らがとても疲れて、怪我の危険が大きくなるということだ}
+    official: false
+    sources:
+      - https://www.skysports.com/football/news/11661/13586016/liverpool-under-andoni-iraola-need-to-play
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「イラオラの何が良いのか分からない」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, short_voice: true, text: イラオラの何が良いのか分からない。若手を積極起用する訳でも無く、ハイプレスもかわされて、縦パス刺されてる}
+      - {voice: ネット民, text: 保持は虚無でただ、選手を走らせて浪費させてるだけ}
+      - {voice: ネット民, short_voice: true, text: リヴァプールvsフラム観たけど、イラオラってほんとに優秀なん？}
+      - {voice: ネット民, text: リヴァプールのイラオラも容赦ない}
+      - {voice: ネット民, text: 事実上リヴァプールに在籍中のホールディングMFはワタ一人だけなのに、これだけ起用されない}
+      - {voice: ネット民, text: クロップ政権ラスト半年はレギュラーだったんだけどねぇ}
+      - {voice: ネット民, text: イラオラ監督がリーグ戦からの先発変更を示唆し、今季出場のなかった選手の起用が想定される}
+      - {voice: ネット民, short_voice: true, text: 遠藤航選手の起用は果たしてあるのか}
+    official: false
+    sources:
+      - https://x.com/search?q=%E3%83%AA%E3%83%B4%E3%82%A1%E3%83%97%E3%83%BC%E3%83%AB%20%E3%82%A4%E3%83%A9%E3%82%AA%E3%83%A9&f=live

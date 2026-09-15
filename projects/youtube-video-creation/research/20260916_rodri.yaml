@@ -1,0 +1,73 @@
+# ロドリが明かした、レアルとモウリーニョを断った理由（2026-09-15）
+format: quote
+voice_min: 50
+slot: spain_1
+date: "2026年9月16日"
+
+people:
+  - ロドリ
+
+short_title: "ロドリがレアルを断った理由"
+
+theme:
+  id: rodri_said_no_to_real
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: バルセロナ
+  title: ロドリがレアルを断った日、モウリーニョは直接電話をかけていた
+  question: なぜバルセロナを選んだのか
+
+thumbnail:
+  line1: レアルを断ったロドリ
+  line2: 決め手になったのは ●●●●
+  photo: "assets/photos/20260910_rodri/01.jpg"
+  focus: 0.05
+  band_full: true
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 何があったか
+    tier: 報道
+    telop: モウリーニョ本人から電話があった
+    narrator: キャスター
+    say:
+      - ロドリがスペイン紙『ムンド・デポルティーボ』のインタビューで、移籍の裏側を語りました。
+      - 誘っていたのは、モウリーニョ監督でした。直接、本人に接触しています。
+      - {voice: ロドリ, text: 彼は明確に私を望んでいることを表現し、チームに何をもたらせるか説明した}
+      - ロドリはこのあと、モウリーニョに電話をかけて感謝を伝えています。
+    official: false
+    sources:
+      - https://www.footmercato.net/a3425875232028208733-fc-barcelone-rodri-revele-pourquoi-il-a-dit-non-au-real-madrid-et-a-jose-mourinho
+
+  - id: said
+    heading: 何が分かれ目だったか
+    main: true
+    tier: 報道
+    telop: 「デコとハンシの指導力が違いを生んだ」
+    narrator: 解説
+    say:
+      - {short_only: true, text: 今夏、バルセロナへ加入した中盤の選手の話です。}
+      - 簡単な決断ではなかった、と本人は言います。
+      - {voice: ロドリ, text: 決断は容易ではなかった。レアル・マドリードにノーと言うことは決して簡単ではない}
+      - では、何が決め手になったのか。
+      - {voice: ロドリ, text: デコとハンシのリーダーシップが違いを生んだ}
+      - 判断はスポーツ的な観点からだった、という説明です。
+      - フリック監督の要求と、進歩への野心。そしてチームの雰囲気を挙げています。
+    official: false
+    sources:
+      - https://www.footmercato.net/a3425875232028208733-fc-barcelone-rodri-revele-pourquoi-il-a-dit-non-au-real-madrid-et-a-jose-mourinho
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「バルセロナを選んだからには言うなや」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, short_voice: true, text: ロドリは真面目な性格だからしょうがないけど、バルセロナを選んだからにはこんなん言うなやって思う}
+      - {voice: ネット民, short_voice: true, text: レアル・マドリーからの誘いを断るなんて簡単なわけがない。でも僕は家族的なバルサに惹かれてしまった}
+    official: false
+    sources:
+      - https://x.com/search?q=%E3%83%AD%E3%83%89%E3%83%AA%20%E3%83%90%E3%83%AB%E3%82%BB%E3%83%AD%E3%83%8A&f=live

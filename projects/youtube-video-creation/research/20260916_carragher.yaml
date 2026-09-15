@@ -1,0 +1,62 @@
+# キャラガーが「本当に失望した」と語った相手（2026-09-15）
+format: quote
+voice_min: 55
+slot: premier_2
+date: "2026年9月16日"
+
+people:
+  - ジェイミー・キャラガー
+
+short_title: "キャラガーが失望したのは誰か"
+
+theme:
+  id: carragher_disappointed
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・ユナイテッド
+  title: キャラガーが「本当に失望した」と言った相手
+  question: 誰の何に失望したのか
+
+thumbnail:
+  line1: キャラガーが失望したのは
+  line2: あの場面の ●●●●
+  crest_main:
+    - マンチェスターユナイテッド
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: どこで語ったか
+    tier: 報道
+    telop: マンデー・ナイト・フットボールで
+    narrator: キャスター
+    say:
+      - ジェイミー・キャラガーが、番組『マンデー・ナイト・フットボール』で語りました。
+      - 話題は、マンチェスター・ダービーの退場をめぐる場面です。
+      - 判定そのものについては、こう前置きしています。
+      - {voice: キャラガー, text: 言えるのは、イエロー2枚なら問題なかっただろう、ということだ}
+    official: false
+    sources:
+      - https://www.caughtoffside.com/2026/09/15/carragher-did-not-hold-back-in-his-criticism-man-united/
+
+  - id: said
+    heading: 失望した相手
+    main: true
+    tier: 報道
+    telop: 「ブルーノ・フェルナンデスには本当に失望した」
+    narrator: 解説
+    say:
+      - {short_only: true, text: マンチェスター・ダービーの退場場面についての話です。}
+      - そのうえで、名前を挙げました。
+      - {voice: キャラガー, text: だが、ブルーノ・フェルナンデスには本当に失望した}
+      - 何に失望したのかも、はっきり言っています。
+      - {voice: キャラガー, text: サッカーには好きなことも嫌いなこともある。私が本当に嫌いなのは、倒れて怪我をしたふりをすることだ}
+      - 身内びいきではない、という念の押し方もしていました。
+      - {voice: キャラガー, text: ユナイテッドのファンはこう言うだろう。彼がユナイテッドの選手だからだ、外国人選手だからだ、と}
+      - {voice: キャラガー, text: 5、6年前にこの番組で、トッテナム対エヴァートンの試合でハリー・ケインが同じことをしたときも、私は同じことを言った。受け入れられない}
+      - {voice: キャラガー, text: あのブルーノの反応は認められない。足がかすっただけだった}
+    official: false
+    sources:
+      - https://www.caughtoffside.com/2026/09/15/carragher-did-not-hold-back-in-his-criticism-man-united/

@@ -2825,6 +2825,12 @@ def _cmd_pick(args, config) -> int:
     return 0
 
 
+# **これが出たら、そのまま進めない**（2026-09-15）。重複と反応の欠落は、
+# どちらも同じ日に2度ユーザーから指摘された
+MUST_FIX = __import__("re").compile(
+    r"同じことを言っています|重なっています|他人の声が0|反応が1件も")
+
+
 def _cmd_draft(args, config) -> int:
     from .config import _resolve
     from .plan import load_plan
@@ -2854,10 +2860,24 @@ def _cmd_draft(args, config) -> int:
         f"検証OK: 節 {len(notes.sections)}つ / 出典 {len(notes.sources)}本"
         f"\n  タイトル: {notes.video_title}\n  問い　　: {notes.question}"
     )
-    for note in advise(notes, plan):
+    hints = list(advise(notes, plan))
+    for note in hints:
         print(f"  ヒント: {note}")
+    # **見逃せない指摘は、最後にもう一度出して終了コードを1にする**（2026-09-15）。
+    # ヒントは真ん中に並ぶので、`grep 検証` のように絞って読むと**消える**。
+    # 実際 9/15 に同じ日のうちに2度、自分で入れた重複検査の警告を捨てている
+    serious = [n for n in hints if MUST_FIX.search(n)]
+    if not any("ネット民" in str(v) for sec in notes.sections for v in sec.voices):
+        serious.append("ネットの反応が1件もありません。"
+                       "`xread.py <検索語>` で実在の投稿を探して節を足してください")
+    if serious:
+        sys.stdout.flush()
+        print(f"{chr(10)}■ 直したほうがよい指摘が {len(serious)}件あります")
+        for note in serious:
+            print(f"   ・{note}")
+        print("■ 台本は書き出しましたが、このまま進めないでください", flush=True)
     if args.check_only:
-        return 0
+        return 1 if serious else 0
 
     target = Path(args.out) if args.out else _resolve(
         f"scripts/{Path(args.notes).stem}.md"

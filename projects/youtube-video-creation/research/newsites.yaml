@@ -114,7 +114,7 @@ sites:
   - https://www.cittaceleste.it/news/lazio-pinamonti-gattuso-molto-esigente-a-immobile-chiederei/
   - https://www.cittaceleste.it/news/lazio-diogo-leite-primi-minuti-e-adesso/
 - host: mondoudinese.it
-  seen: 7
+  seen: 8
   days:
   - '2026-09-04'
   - '2026-09-05'
@@ -147,6 +147,16 @@ sites:
   examples:
   - https://www.espn.co.uk/football/story/_/id/49826046/richarlison-was-offered-new-contract-months-tottenham-squad-omission-roberto-de-zerbi
   - https://www.espn.co.uk/football/story/_/id/49834658/raphinha-barcelona-la-liga-spain-brazil-pedri-lamine-yamal-frenkie-de-jong-eric-garcia
+- host: fantamagazine.com
+  seen: 5
+  days:
+  - '2026-09-08'
+  - '2026-09-13'
+  - '2026-09-15'
+  examples:
+  - https://www.fantamagazine.com/news/cagliari-lecce-1-0-di-francesco-poco-cattivi-e-determinati-cosi-non-possiamo-permettercelo/
+  - https://www.fantamagazine.com/news/verso-lecce-monza-di-francesco-avverte-non-possiamo-ripetere-la-gara-di-cagliari/
+  - https://www.fantamagazine.com/news/como-parma-2-1-cuesta-abbiamo-creato-piu-occasioni-ma-non-e-bastato-dobbiamo-essere-piu-precisi/
 - host: ilmilanista.it
   seen: 4
   days:
@@ -213,16 +223,6 @@ sites:
   examples:
   - https://www.genoaoggi.it/calciomercato/mercato-genoa/ehizibue-al-genoa-anni-fa-dissi-no-oggi-e-il-modo-migliore-per-chiedere-perdono/?intcmp=gazzanet-genoaoggi
   - https://www.genoaoggi.it/notizie/genoa-de-rossi-pari-frosinone/?intcmp=gazzanet-genoaoggi
-- host: fantamagazine.com
-  seen: 4
-  days:
-  - '2026-09-08'
-  - '2026-09-13'
-  - '2026-09-15'
-  examples:
-  - https://www.fantamagazine.com/news/cagliari-lecce-1-0-di-francesco-poco-cattivi-e-determinati-cosi-non-possiamo-permettercelo/
-  - https://www.fantamagazine.com/news/verso-lecce-monza-di-francesco-avverte-non-possiamo-ripetere-la-gara-di-cagliari/
-  - https://www.fantamagazine.com/news/como-parma-2-1-cuesta-abbiamo-creato-piu-occasioni-ma-non-e-bastato-dobbiamo-essere-piu-precisi/
 - host: leedsunited.com
   seen: 3
   days:

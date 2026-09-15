@@ -1,0 +1,80 @@
+# 板倉滉の招集に「理解しがたい」（2026-09-15）
+#
+# **9/13 に出した「板倉滉のアジア杯辞退報道」の続き。**あちらは協会の返答、
+# こちらは招集そのものへの疑問
+format: quote
+voice_min: 45
+slot: japan_2
+date: "2026年9月16日"
+
+people:
+  - 板倉滉
+
+short_title: "板倉滉の招集への疑問"
+
+theme:
+  id: itakura_call_up_doubt
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: ボルシアMG
+  title: 板倉滉の招集を「理解しがたい」と書いた記者がいる
+  question: 何が引っかかっているのか
+
+thumbnail:
+  line1: 板倉滉の招集に疑問
+  line2: 記者が書いたのは ●●●●
+  photo: "assets/photos/20260913_itakura/01.jpg"
+  focus: 0.05
+  band_full: true
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 何があったか
+    tier: 報道
+    telop: アジア杯には出られない、という本人の意向
+    narrator: キャスター
+    say:
+      - 板倉滉は、アジア杯には出られないことが基本だという意向を示しています。
+      - 森保一監督も、それを認識したうえでこう話しました。
+      - {voice: 森保監督, text: これからの期間で状況が変わるかもしれない}
+      - そして9月と10月の招集については、こう述べています。
+      - {voice: 森保監督, text: 考え方を変える必要はない}
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/09/15/359249/
+
+  - id: said
+    heading: 記者が書いたこと
+    main: true
+    tier: 報道
+    telop: 「また理解しがたい選択をしている」
+    narrator: 解説
+    say:
+      - {short_only: true, text: 板倉滉の代表招集をめぐる話です。}
+      - これに疑問を書いたのが、『all asian football』のダニーロ記者です。
+      - {voice: ダニーロ, text: 森保はまたも理解しがたい選択をしている}
+      - 引っかかっているのは、順番です。
+      - 本人がアジア杯に出られないと言っているのに、そのあと状況が変わるかもしれない、として招集する。
+      - {voice: ダニーロ, text: 状況が変わらなかったら？}
+      - {voice: ダニーロ, text: 守備陣の一角を欠いたまま、大会直前に突然招集された選手にその穴を埋めてもらおうというのか}
+    official: false
+    sources:
+      - https://football-tribe.com/japan/2026/09/15/359249/
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「今の板倉は普通にパフォーマンス良くない」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, short_voice: true, text: 今の板倉は普通にパフォーマンス良くないから招集すべきじゃない}
+      - {voice: ネット民, text: レギュラー失ってる大迫敬介やら鹿島で不調の早川辺りが招集されたら「は？」ってなるけど、板倉招集はギリギリラインを越えてない範疇というか}
+      - {voice: ネット民, text: 今の板倉の状態で呼ぶとか森保監督の好き嫌いで選んでるだけじゃん}
+      - {voice: ネット民, short_voice: true, text: 田中聡、佐野航大あたりはさすがに呼んでほしい}
+      - {voice: ネット民, short_voice: true, text: 終わったな。なんも変わらんよ}
+    official: false
+    sources:
+      - https://x.com/search?q=%E6%9D%BF%E5%80%89%20%E6%8B%9B%E9%9B%86&f=live
