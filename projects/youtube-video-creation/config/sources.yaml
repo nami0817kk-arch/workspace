@@ -367,6 +367,22 @@ accounts:
   - {handle: OptaJoe, name: Opta Joe, tier: 未確認, note: 試合中の記録。数字の裏取りは別途}
   # 戦術。**保留中のプレミア20クラブ動画で、戦術をどう書くかが未決だった**（2026-09-15）
   - {handle: TifoFootball, name: Tifo Football, tier: 未確認, note: 戦術の解説。図と動画}
+  # 2026-09-15 の2回目の突き合わせ。**フランスとBBCの穴を埋める。**
+  # footmercato.net は24本で使っていて、フランス語の網ではいちばん効いている。
+  # その記者本人を追えていなかった
+  - {handle: Santi_J_FM, name: Santi Aouna, tier: 未確認, note: リーグアン・フランス。Foot Mercato}
+  # **BBCは検索でこちらのUAを弾く**（2026-09-15 実測）。記事は15本で使えているが、
+  # 「探す」ができない。**Xの投稿なら見出しが拾える**ので、そこだけ塞ぐ
+  - {handle: BBCSport, name: BBC Sport, tier: 報道, note: 媒体の公式。検索で本体が引けないぶんの入口}
+  # OptaJoe が試合中の1行、こちらは分析記事とグラフ。役割が違うので両方置く
+  - {handle: OptaAnalyst, name: The Analyst (Opta), tier: 未確認, note: 数字の分析。裏取りは別途}
+  # **@nocontextfooty は入れない。**珍場面の画像・動画を貼るアカウントで、
+  # SNSに出た画像と放送映像は使わない方針（2026-09-06）。出典としての確度も無い
+  # **@pythabol も入れない。**戦術クリップは TifoFootball と役割が重なるうえ、
+  # 中身が動画なので引けるのは言葉だけになる
+  # **@JacobsBen は保留。**チェルシーは効くが、もう半分のサウジリーグは扱わない
+  # （リーグの一覧は欧州7つのまま。2026-09-15 ユーザー判断）。
+  # プレミアは Romano と Ornstein で足りている
   # **@GettySport は入れない。**Getty との契約は見送り済みで、写真は CC0/BY と
   # 生成だけで賄う方針（2026-09-06）。SNSに出た画像も使わない。ここに足すと
   # 「引用できる」と誤解する元になる
