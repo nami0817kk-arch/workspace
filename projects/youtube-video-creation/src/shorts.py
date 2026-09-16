@@ -469,7 +469,7 @@ def face_problems(script: Script) -> list[str]:
 # 目標が46秒で、実尺は38〜45秒に収まっていた。**上限まで2割空けていた。**
 # 見積りのずれは回によって +5%〜+18%（実測）なので、0.86 で目標50秒、
 # 最悪でも59秒に収まる
-ESTIMATE_SLACK = 0.86
+ESTIMATE_SLACK = 0.92
 
 
 # 情報を持たない「振り」。**発言の直前に置かれ、2〜4秒を使う**
@@ -683,19 +683,6 @@ def tiktok_cut(script: Script, section: str = "") -> Script:
         at = len(lines) - 1 if lines and (lines[-1].text or "").strip() == SHORT_SUBSCRIBE else len(lines)
         lines.insert(at, copy.deepcopy(line))
 
-    # 1. 反応を足す
-    source = _voices_source(cut, script)
-    if source is not None and not enough():
-        have = {(l.text or "").strip() for l in cut.lines}
-        added = sum(1 for l in source.lines if (l.text or "").strip() in have)
-        for line in source.lines:
-            if enough() or added >= TIKTOK_VOICES_MAX:
-                break
-            if (line.text or "").strip() in have:
-                continue
-            before_subscribe(line)
-            added += 1
-
     body_title = cut.scenes[-1].title
     content = [sc for sc in script.scenes[1:] if not _is_voices_scene(sc) and sc.title != "まとめ"]
     index = next((i for i, sc in enumerate(content) if sc.title == body_title), None)
@@ -717,6 +704,29 @@ def tiktok_cut(script: Script, section: str = "") -> Script:
             if enough():
                 break
             add_scene(scene)
+
+    # **ネットの声は最後**（2026-09-16 ユーザー指摘「流れは、ネットの声は最後」）。
+    # 節を足すと、先に入れた反応が途中に挟まってしまう。**節を全部足してから**、
+    # いったん反応を抜いて、いちばん後ろへ置き直す
+    source = _voices_source(cut, script)
+    # 動かすのは**反応の節から来た行だけ**。記者や監督の引用は動かさない
+    voiced = {(l.text or "").strip()
+              for sc in script.scenes if _is_voices_scene(sc) for l in sc.lines}
+    crowd = [l for l in cut.lines if (l.text or "").strip() in voiced]
+    for scene in cut.scenes:
+        scene.lines = [l for l in scene.lines if l not in crowd]
+    for line in crowd:
+        before_subscribe(line)
+    if source is not None:
+        have = {(l.text or "").strip() for l in cut.lines}
+        added = len(crowd)
+        for line in source.lines:
+            if enough() or added >= TIKTOK_VOICES_MAX:
+                break
+            if (line.text or "").strip() in have:
+                continue
+            before_subscribe(line)
+            added += 1
 
     # 締めの一言を、YouTubeへ送る文に差し替える
     lines = cut.scenes[-1].lines

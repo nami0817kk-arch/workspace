@@ -707,7 +707,10 @@ def test_発言より先に語りを削る():
     body += ["解説: そのうえで、こう続けました。", ""]
     body += ["イラオラ: みっつめの発言です。", ""]
     script = parse_script(nl.join(body))
-    _fit(script, 40.0)
+    # **上限は ESTIMATE_SLACK を掛けてから使う。**0.86 → 0.92 にした
+    # （2026-09-16「ショートが不必要に短くなってる」）ので、削りが起きる
+    # ところまで上限を下げて、削る順番そのものを見る
+    _fit(script, 37.0)
     texts = [line.text for line in script.scenes[-1].lines]
     said = [t for t in texts if t.startswith(("ひとつめ", "ふたつめ", "みっつめ"))]
     assert len(said) == 3, texts
