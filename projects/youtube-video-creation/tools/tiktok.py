@@ -43,6 +43,23 @@ CAPTION_MAX = 2200
 # 「海外サッカー」を足した4つまで
 HASHTAG_MAX = 4
 
+# **YouTube への行き方は、説明欄のいちばん上に置く**（2026-09-16 指示
+# 「tiktokの説明画面にもyoutubeへのパスを載っけたい」）。
+# それまでは出典やクレジットと一緒に**いちばん下**にあり、しかも
+# `@kaigai-soccer-riyuu` とだけ書いていた。**TikTok で @ から始まる文字列は
+# TikTok の利用者のことなので、YouTube のチャンネル名だと読めない。**
+#
+# 3行に分けてあるのは、**押せるリンクが作れない**ため。TikTok の説明欄の
+# URL はただの文字で、押しても飛ばない。だから「探し方」を書く:
+#   ・チャンネル名（検索窓に入れる言葉）
+#   ・URL（打ち込む人のため）
+# 動画の最後の読み上げ（`shorts.TIKTOK_OUTRO`）と同じ言い方に揃える
+YOUTUBE_LINES = [
+    "▶ 続きと本編はYouTubeで",
+    "　チャンネル名「海外サッカーの理由」",
+    "　youtube.com/@kaigai-soccer-riyuu",
+]
+
 
 def targets(args: list[str]) -> list[Path]:
     dirs: list[Path] = []
@@ -106,8 +123,11 @@ def caption(build_dir: Path) -> str:
     out = [title]
     if lead:
         out += ["", lead[0]]
+    # **ハッシュタグより先に置く。**TikTok の説明欄はハッシュタグから下が
+    # 折りたたまれるので、下に置くと開いた人にしか見えない
+    out += [""] + YOUTUBE_LINES
     out += ["", " ".join(hashtags[:HASHTAG_MAX])]
-    tail = ["本編はYouTubeで → 海外サッカーの理由 @kaigai-soccer-riyuu"]
+    tail: list[str] = []
     if outlets:
         tail.append("出典: " + " / ".join(outlets))
     tail += parts.get("クレジット", [])
