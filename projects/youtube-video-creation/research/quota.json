@@ -83,5 +83,13 @@
     "videos.insert": 10,
     "thumbnails.set": 10,
     "videos.update": 71
+  },
+  "2026-09-16": {
+    "channels.list": 14,
+    "playlistItems.list": 14,
+    "videos.insert": 14,
+    "thumbnails.set": 14,
+    "videos.update": 14,
+    "videos.list": 1
   }
 }

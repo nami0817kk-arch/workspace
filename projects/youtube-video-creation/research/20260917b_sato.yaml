@@ -10,7 +10,7 @@
 format: news
 voice_min: 30
 slot: japan_2
-date: "2026年9月17日"
+date: "2026年9月16日"
 
 people:
   - 佐藤龍之介
@@ -30,9 +30,11 @@ theme:
 thumbnail:
   line1: バレンシア 今季初勝利
   line2: その日 佐藤龍之介は ●●●●
-  photo: "assets/photos/20260908_sato/01.jpg"
-  focus: 0.05
-  band_full: true
+  # **写真が無い。**assets/photos/20260908_sato/01.png は佐藤の写真ではなく
+  # 「バルセロナ戦の失点」の統計カードだった。Commons にも本人の写真が無い
+  # （2026-09-16 に確認）。**エンブレムで作る。**
+  crest_main:
+    - バレンシア
   tags: []
   points: []
 

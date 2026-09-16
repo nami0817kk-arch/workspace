@@ -17,7 +17,7 @@ thumbnail_crest_main:
 thumbnail_crests:
 - トッテナム
 bg: assets/backgrounds/stadium.png
-date: 2026年9月17日
+date: 2026年9月16日
 intro_title: 1点差に迫られた直後、途中出場の選手が30メートルから決めた
 intro_label: 海外サッカー ニュース
 outro_title: 続報は次回お伝えします
