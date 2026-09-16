@@ -14,7 +14,7 @@ thumbnail_band_full: false
 thumbnail_photos: []
 thumbnail_crest_main:
 - リヴァプール
-bg: assets/backgrounds/stadium.png
+bg: assets/backgrounds/crest_リヴァプール.png
 date: 2026年9月16日
 intro_title: プレミアリーグ20クラブ紹介 ⑭リヴァプール
 intro_label: 海外サッカー ニュース
@@ -88,14 +88,14 @@ cards:
 ---
 
 ## オープニング
-@bg: assets/backgrounds/crest_still.png
+@bg: assets/backgrounds/crest_リヴァプール.png
 
 キャスター: プレミアリーグ20クラブ紹介 ⑭リヴァプール。
   telop: プレミアリーグ20クラブ紹介 ⑭リヴァプール
   se: assets/audio/se_pon.wav
 
 ## 空になったスタジアム
-@bg: assets/backgrounds/crest_still.png
+@bg: assets/backgrounds/crest_リヴァプール.png
 @main: true
 
 解説: アルファベット順では、14番目に来ます。
@@ -120,7 +120,7 @@ cards:
   telop: アンフィールドの収容は**6万1276人**。2021年から24年にかけても広げています
 
 ## 積み上げたもの
-@bg: assets/backgrounds/crest_still.png
+@bg: assets/backgrounds/crest_リヴァプール.png
 
 キャスター: リーグ優勝は**20回**。イングランドで最も多いクラブと並んでいます。
   telop: リーグ優勝は**20回**。イングランドで最も多いクラブと並んでいます
@@ -136,7 +136,7 @@ cards:
   telop: そして2025年、20回目の優勝。アルネ・スロットのもとでした
 
 ## 今季の顔ぶれ
-@bg: assets/backgrounds/crest_still.png
+@bg: assets/backgrounds/crest_リヴァプール.png
 
 キャスター: このクラブには、日本人選手がいます。**遠藤航**です。中盤の選手として登録されています。
   telop: このクラブには、日本人選手がいます。**遠藤航**です。中盤の選手として登録されています
@@ -146,7 +146,7 @@ cards:
   telop: 監督はアンドニ・イラオラ。2026年5月に就任しました
 
 ## 歌と、忘れられない日
-@bg: assets/backgrounds/crest_still.png
+@bg: assets/backgrounds/crest_リヴァプール.png
 
 解説: このクラブには、歌があります。
   telop: このクラブには、歌があります

@@ -14,7 +14,7 @@ thumbnail_band_full: false
 thumbnail_photos: []
 thumbnail_crest_main:
 - トッテナム
-bg: assets/backgrounds/stadium.png
+bg: assets/backgrounds/crest_トッテナム.png
 date: 2026年9月16日
 intro_title: プレミアリーグ20クラブ紹介 ⑳トッテナム・ホットスパー
 intro_label: 海外サッカー ニュース
@@ -88,14 +88,14 @@ cards:
 ---
 
 ## オープニング
-@bg: assets/backgrounds/crest_still.png
+@bg: assets/backgrounds/crest_トッテナム.png
 
 キャスター: プレミアリーグ20クラブ紹介 ⑳トッテナム・ホットスパー。
   telop: プレミアリーグ20クラブ紹介 ⑳トッテナム・ホットスパー
   se: assets/audio/se_pon.wav
 
 ## 名前と愛称
-@bg: assets/backgrounds/crest_still.png
+@bg: assets/backgrounds/crest_トッテナム.png
 
 キャスター: アルファベット順では、20番目。最後のクラブです。
   telop: アルファベット順では、20番目。最後のクラブです
@@ -119,7 +119,7 @@ cards:
   telop: 2019年から使っています。それまではホワイト・ハート・レーンでした
 
 ## リーグに入らないまま、FAカップを獲った
-@bg: assets/backgrounds/crest_still.png
+@bg: assets/backgrounds/crest_トッテナム.png
 @main: true
 
 解説: このクラブが最初に名を残したのは1901年です。
@@ -138,7 +138,7 @@ cards:
   telop: **20世紀で最初の2冠**です
 
 ## ヨーロッパでの最初
-@bg: assets/backgrounds/crest_still.png
+@bg: assets/backgrounds/crest_トッテナム.png
 
 キャスター: 1963年、カップウィナーズカップを制しました。
   telop: 1963年、カップウィナーズカップを制しました
@@ -152,7 +152,7 @@ cards:
   telop: 種類の違うヨーロッパのタイトルを2つ獲ったのも、イギリス勢では最初でした
 
 ## 17年ぶりのタイトル
-@bg: assets/backgrounds/crest_still.png
+@bg: assets/backgrounds/crest_トッテナム.png
 
 解説: 記録を持つクラブでも、勝てない時期は続きます。
   telop: 記録を持つクラブでも、勝てない時期は続きます

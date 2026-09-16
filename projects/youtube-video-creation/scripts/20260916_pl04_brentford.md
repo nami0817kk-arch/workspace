@@ -14,7 +14,7 @@ thumbnail_band_full: false
 thumbnail_photos: []
 thumbnail_crest_main:
 - ブレントフォード
-bg: assets/backgrounds/stadium.png
+bg: assets/backgrounds/crest_ブレントフォード.png
 date: 2026年9月16日
 intro_title: プレミアリーグ20クラブ紹介 ④ブレントフォード
 intro_label: 海外サッカー ニュース
@@ -88,14 +88,14 @@ cards:
 ---
 
 ## オープニング
-@bg: assets/backgrounds/crest_still.png
+@bg: assets/backgrounds/crest_ブレントフォード.png
 
 キャスター: プレミアリーグ20クラブ紹介 ④ブレントフォード。
   telop: プレミアリーグ20クラブ紹介 ④ブレントフォード
   se: assets/audio/se_pon.wav
 
 ## 名前と愛称
-@bg: assets/backgrounds/crest_still.png
+@bg: assets/backgrounds/crest_ブレントフォード.png
 
 キャスター: アルファベット順では、4番目に来ます。
   telop: アルファベット順では、4番目に来ます
@@ -121,7 +121,7 @@ cards:
   telop: それを聞いた人たちが「**バック・アップ、蜂**」だと思った。そのまま愛称になりました
 
 ## 本拠地
-@bg: assets/backgrounds/crest_still.png
+@bg: assets/backgrounds/crest_ブレントフォード.png
 @main: true
 
 解説: 本拠地はGテック・コミュニティ・スタジアム。ロンドン西部にあります。
@@ -139,7 +139,7 @@ cards:
   image: assets/images/pl_brentford/scene.jpg
 
 ## 今季の顔ぶれ
-@bg: assets/backgrounds/crest_still.png
+@bg: assets/backgrounds/crest_ブレントフォード.png
 
 キャスター: 監督はキース・アンドリュースです。
   telop: 監督はキース・アンドリュースです
@@ -165,7 +165,7 @@ cards:
   telop: そして、日本人選手はいません
 
 ## 歩んできた道
-@bg: assets/backgrounds/crest_still.png
+@bg: assets/backgrounds/crest_ブレントフォード.png
 
 解説: このクラブは、一度消えかけています。
   telop: このクラブは、一度消えかけています

@@ -14,7 +14,7 @@ thumbnail_band_full: false
 thumbnail_photos: []
 thumbnail_crest_main:
 - ボーンマス
-bg: assets/backgrounds/stadium.png
+bg: assets/backgrounds/crest_ボーンマス.png
 date: 2026年9月15日
 intro_title: プレミアリーグ20クラブ紹介 ①AFCボーンマス
 intro_label: 海外サッカー ニュース
@@ -90,14 +90,14 @@ cards:
 ---
 
 ## オープニング
-@bg: assets/backgrounds/stock/match_stadium.mp4
+@bg: assets/backgrounds/crest_ボーンマス.png
 
 キャスター: プレミアリーグ20クラブ紹介 ①AFCボーンマス。
   telop: プレミアリーグ20クラブ紹介 ①AFCボーンマス
   se: assets/audio/se_pon.wav
 
 ## 名前と愛称
-@bg: assets/backgrounds/stock/match_stadium.mp4
+@bg: assets/backgrounds/crest_ボーンマス.png
 
 キャスター: アルファベット順の1番目は、AFCボーンマスです。
   telop: アルファベット順の1番目は、AFCボーンマスです
@@ -129,7 +129,7 @@ cards:
   telop: クラブ自身は、後者のほうは「こちらはやや説得力に欠ける」としています
 
 ## 本拠地
-@bg: assets/backgrounds/stock/match_stadium.mp4
+@bg: assets/backgrounds/crest_ボーンマス.png
 @main: true
 
 解説: 本拠地はディーン・コート。スポンサーの名前で、ヴァイタリティ・スタジアムとも呼ばれます。
@@ -144,7 +144,7 @@ cards:
   image: assets/images/pl_bournemouth2/scene.jpg
 
 ## 今季の顔ぶれ
-@bg: assets/backgrounds/stock/match_stadium.mp4
+@bg: assets/backgrounds/crest_ボーンマス.png
 
 キャスター: 今季の監督は、マルコ・ローゼです。
   telop: 今季の監督は、マルコ・ローゼです
@@ -176,7 +176,7 @@ cards:
   telop: 今季のボーンマスの登録名簿に、日本のパスポートを持つ選手は入っていません
 
 ## 歩んできた道
-@bg: assets/backgrounds/stock/match_stadium.mp4
+@bg: assets/backgrounds/crest_ボーンマス.png
 
 解説: このクラブの物語は、消えかけたところから始まります。
   telop: このクラブの物語は、消えかけたところから始まります

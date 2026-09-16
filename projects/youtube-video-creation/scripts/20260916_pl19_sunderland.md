@@ -14,7 +14,7 @@ thumbnail_band_full: false
 thumbnail_photos: []
 thumbnail_crest_main:
 - サンダーランド
-bg: assets/backgrounds/stadium.png
+bg: assets/backgrounds/crest_サンダーランド.png
 date: 2026年9月16日
 intro_title: プレミアリーグ20クラブ紹介 ⑲サンダーランド
 intro_label: 海外サッカー ニュース
@@ -76,14 +76,14 @@ cards:
 ---
 
 ## オープニング
-@bg: assets/backgrounds/crest_still.png
+@bg: assets/backgrounds/crest_サンダーランド.png
 
 キャスター: プレミアリーグ20クラブ紹介 ⑲サンダーランド。
   telop: プレミアリーグ20クラブ紹介 ⑲サンダーランド
   se: assets/audio/se_pon.wav
 
 ## 名前と愛称
-@bg: assets/backgrounds/crest_still.png
+@bg: assets/backgrounds/crest_サンダーランド.png
 
 キャスター: アルファベット順では、19番目に来ます。
   telop: アルファベット順では、19番目に来ます
@@ -103,7 +103,7 @@ cards:
   telop: 監督はレジス・ル・ブリス。今季の登録に日本人選手はいません
 
 ## 6回優勝したクラブが、3部へ
-@bg: assets/backgrounds/crest_still.png
+@bg: assets/backgrounds/crest_サンダーランド.png
 @main: true
 
 解説: このクラブは、1部で**6回**優勝しています。
@@ -126,7 +126,7 @@ cards:
   telop: **53年ぶり**に、ヨーロッパの舞台に出る権利を取っています
 
 ## 1973年の決勝
-@bg: assets/backgrounds/crest_still.png
+@bg: assets/backgrounds/crest_サンダーランド.png
 
 キャスター: このクラブのFAカップには、語り継がれる1回があります。
   telop: このクラブのFAカップには、語り継がれる1回があります
@@ -141,7 +141,7 @@ cards:
   telop: **格下が勝った決勝**として、いまも残っています
 
 ## 戻ってきた場所
-@bg: assets/backgrounds/crest_still.png
+@bg: assets/backgrounds/crest_サンダーランド.png
 
 解説: 3部にいたのが2018年、1部に戻ったのが2025年です。
   telop: 3部にいたのが2018年、1部に戻ったのが2025年です

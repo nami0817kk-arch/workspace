@@ -14,7 +14,7 @@ thumbnail_band_full: false
 thumbnail_photos: []
 thumbnail_crest_main:
 - ニューカッスル
-bg: assets/backgrounds/stadium.png
+bg: assets/backgrounds/crest_ニューカッスル.png
 date: 2026年9月16日
 intro_title: プレミアリーグ20クラブ紹介 ⑰ニューカッスル・ユナイテッド
 intro_label: 海外サッカー ニュース
@@ -75,14 +75,14 @@ cards:
 ---
 
 ## オープニング
-@bg: assets/backgrounds/crest_still.png
+@bg: assets/backgrounds/crest_ニューカッスル.png
 
 キャスター: プレミアリーグ20クラブ紹介 ⑰ニューカッスル・ユナイテッド。
   telop: プレミアリーグ20クラブ紹介 ⑰ニューカッスル・ユナイテッド
   se: assets/audio/se_pon.wav
 
 ## 名前と愛称
-@bg: assets/backgrounds/crest_still.png
+@bg: assets/backgrounds/crest_ニューカッスル.png
 
 キャスター: アルファベット順では、17番目に来ます。
   telop: アルファベット順では、17番目に来ます
@@ -106,7 +106,7 @@ cards:
   telop: 本拠地はセント・ジェームズ・パーク。収容は5万2729人です
 
 ## 56年待った
-@bg: assets/backgrounds/crest_still.png
+@bg: assets/backgrounds/crest_ニューカッスル.png
 @main: true
 
 解説: このクラブは、長いあいだタイトルから遠ざかっていました。
@@ -127,7 +127,7 @@ cards:
   telop: 国内の大きなタイトルとしては**1955年以来**、そして**56年ぶり**の歓喜でした
 
 ## 2021年に変わったこと
-@bg: assets/backgrounds/crest_still.png
+@bg: assets/backgrounds/crest_ニューカッスル.png
 
 キャスター: 2021年10月7日、クラブの持ち主が変わりました。
   telop: 2021年10月7日、クラブの持ち主が変わりました
@@ -142,7 +142,7 @@ cards:
   telop: 今季の登録に、日本人選手はいません
 
 ## 落ちない
-@bg: assets/backgrounds/crest_still.png
+@bg: assets/backgrounds/crest_ニューカッスル.png
 
 解説: 記録としてもうひとつ。
   telop: 記録としてもうひとつ
