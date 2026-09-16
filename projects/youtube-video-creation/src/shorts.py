@@ -286,7 +286,7 @@ SHORT_OUTRO = 2.0
 SHORT_SUBSCRIBE = "チャンネル登録、お願いします。"
 
 # ショートの最後に足すネットの声の本数（2026-09-13 ユーザー「ショートにもいくつか」）
-VOICES_TAIL_MAX = 3
+VOICES_TAIL_MAX = 6
 
 
 def _is_voices_scene(scene: Scene) -> bool:

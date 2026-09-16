@@ -576,7 +576,11 @@ def test_short_gets_a_few_voices_at_the_end():
     short = trim(Script(title="見出し", scenes=[opening, story, voices]))
     said = [l.speaker for l in short.scenes[-1].lines]
     assert "ネット民" in said
-    assert said.count("ネット民") <= 3
+    # **上限は 3 → 6**（2026-09-16「ショートが不必要に短くなってる」）。
+    # 実尺で収める `enforce_limit` が入ったので、入るだけ足してよい
+    from src.shorts import VOICES_TAIL_MAX
+
+    assert said.count("ネット民") <= VOICES_TAIL_MAX
     assert said[0] == "解説"        # 反応は最後に足す
 
 
