@@ -29,7 +29,7 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: フラム
-  title: プレミアリーグ20クラブ紹介 ⑩フラム
+  title: フラムとはどんなクラブか ⑩プレミア20クラブ紹介
   question: どんなクラブなのか
 
 thumbnail:
@@ -66,7 +66,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Fulham_F.C.
-
   - id: yoyo
     heading: 5年続けて、いる場所が変わった
     main: true
@@ -92,7 +91,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Fulham_F.C.
-
   - id: ground
     heading: 本拠地
     tier: 背景
@@ -116,7 +114,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Fulham_F.C.
-
   - id: europe
     heading: 2010年の決勝
     tier: 背景
@@ -131,3 +128,31 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Fulham_F.C.
+  - id: titles
+    heading: 獲ってきたもの
+    tier: 背景
+    telop: 1部優勝0回、FAカップ0回（準優勝 1974-75）
+    narrator: キャスター
+    card:
+      type: table
+      title: 獲ってきたもの
+      columns: ["", ""]
+      rows:
+        - ["1部優勝", "0回"]
+        - ["FAカップ", "0回（準優勝 1974-75）"]
+        - ["リーグカップ", "0回"]
+        - ["ヨーロッパ", "0回（EL準優勝 2009-10）"]
+        - ["インタートトカップ", "1回（2002年）"]
+    say:
+      - 数えると、大きなタイトルは**ゼロ**です。
+      - "決勝には2度立って、**2度とも負けています。**"
+      - 1975年のFAカップ決勝と、2010年のヨーロッパリーグ決勝です。
+      - ただし、ヨーロッパのタイトルが1つだけあります。2002年のインタートトカップです。
+      - そして、その決勝で決めたのが日本人でした。
+      - "**稲本潤一**です。2002年8月27日、ロフタス・ロードでの第2レグ。"
+      - 12分、47分、50分。**ハットトリック**でした。3対1、2試合合計5対3。
+      - BBCは「稲本のハットトリックが、フラム初のヨーロッパのタイトルを決めた」と書いています。
+      - 稲本は2シーズンで58試合9得点。この優勝で、クラブはUEFAカップの出場権も取りました。
+    official: false
+    sources:
+      - https://en.wikipedia.org/wiki/Premier_League

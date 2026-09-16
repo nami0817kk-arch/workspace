@@ -26,7 +26,7 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: サンダーランド
-  title: プレミアリーグ20クラブ紹介 ⑲サンダーランド
+  title: サンダーランドとはどんなクラブか ⑲プレミア20クラブ紹介
   question: どんなクラブなのか
 
 thumbnail:
@@ -63,7 +63,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
-
   - id: fall
     heading: 6回優勝したクラブが、3部へ
     main: true
@@ -91,7 +90,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
-
   - id: cup
     heading: 1973年の決勝
     tier: 背景
@@ -106,7 +104,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
-
   - id: now
     heading: 戻ってきた場所
     tier: 背景
@@ -120,3 +117,27 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
+  - id: titles
+    heading: 獲ってきたもの
+    tier: 背景
+    telop: 1部優勝6回（直近 1935-36）、FAカップ2回（直近 1972-73）
+    narrator: キャスター
+    card:
+      type: table
+      title: 獲ってきたもの
+      columns: ["", ""]
+      rows:
+        - ["1部優勝", "6回（直近 1935-36）"]
+        - ["FAカップ", "2回（直近 1972-73）"]
+        - ["リーグカップ", "0回（決勝で2度敗退）"]
+        - ["ヨーロッパ", "0回"]
+    say:
+      - 数えると、大きなタイトルで**8個**です。
+      - 1部優勝6回、FAカップ2回。
+      - "ただし**リーグカップだけは、一度も獲っていません。**"
+      - 決勝には2度立って、1985年と2014年、どちらも負けています。
+      - ヨーロッパのタイトルもありません。
+      - 3部から戻ってきたクラブに、まだ手つかずのタイトルが1つ残っている形です。
+    official: false
+    sources:
+      - https://en.wikipedia.org/wiki/Premier_League

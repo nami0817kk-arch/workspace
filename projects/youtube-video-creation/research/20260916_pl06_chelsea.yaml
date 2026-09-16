@@ -29,7 +29,7 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: チェルシー
-  title: プレミアリーグ20クラブ紹介 ⑥チェルシー
+  title: チェルシーとはどんなクラブか ⑥プレミア20クラブ紹介
   question: どんなクラブなのか
 
 thumbnail:
@@ -63,7 +63,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Chelsea_F.C.
-
   - id: origin
     heading: 順番が逆だった
     main: true
@@ -88,7 +87,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Chelsea_F.C.
-
   - id: season
     heading: 今季の顔ぶれ
     tier: 報道
@@ -116,7 +114,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/2026%E2%80%9327_Chelsea_F.C._season
-
   - id: history
     heading: 歩んできた道
     tier: 背景
@@ -145,3 +142,29 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Chelsea_F.C.
+  - id: titles
+    heading: 獲ってきたもの
+    tier: 背景
+    telop: 1部優勝6回（直近 2016-17）、FAカップ8回（直近 2017-18）
+    narrator: キャスター
+    card:
+      type: table
+      title: 獲ってきたもの
+      columns: ["", ""]
+      rows:
+        - ["1部優勝", "6回（直近 2016-17）"]
+        - ["FAカップ", "8回（直近 2017-18）"]
+        - ["リーグカップ", "5回（直近 2014-15）"]
+        - ["ヨーロッパ", "CL2／EL2／CWC2／カンファレンス1"]
+    say:
+      - 数えると、大きなタイトルで**26個**あります。
+      - 1部優勝6回、FAカップ8回、リーグカップ5回。
+      - ヨーロッパはチャンピオンズリーグ2回、ヨーロッパリーグ2回、カップウィナーズカップ2回、カンファレンスリーグ1回。
+      - クラブワールドカップも2021年と2025年に獲っています。
+      - "**ヨーロッパで獲れるものを、全部獲ったクラブ**です。"
+      - ただし、1部優勝の直近は**2016年から17年**。
+      - "**10シーズン、リーグから遠ざかっています。**"
+      - 世界一になった帰り道が、いちばん近いはずのリーグだけ遠い。そこが今季の見どころです。
+    official: false
+    sources:
+      - https://en.wikipedia.org/wiki/Premier_League

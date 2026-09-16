@@ -26,7 +26,7 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: トッテナム
-  title: プレミアリーグ20クラブ紹介 ⑳トッテナム・ホットスパー
+  title: トッテナム・ホットスパーとはどんなクラブか ⑳プレミア20クラブ紹介
   question: どんなクラブなのか
 
 thumbnail:
@@ -65,7 +65,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
-
   - id: cup1901
     heading: リーグに入らないまま、FAカップを獲った
     main: true
@@ -90,7 +89,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
-
   - id: europe
     heading: ヨーロッパでの最初
     tier: 背景
@@ -112,19 +110,56 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
-
   - id: recent
     heading: 17年ぶりのタイトル
     tier: 背景
     telop: 2025年、ヨーロッパリーグ決勝でユナイテッドに1-0
     narrator: 解説
+    card:
+      type: table
+      title: 2025年のヨーロッパリーグ
+      columns: ["", ""]
+      rows:
+        - ["空白", "17年"]
+        - ["決勝の相手", "マンチェスター・ユナイテッド"]
+        - ["結果", "1-0"]
     say:
       - 記録を持つクラブでも、勝てない時期は続きます。
       - トッテナムは**17年**、タイトルから遠ざかっていました。
       - 終わったのは2025年です。ヨーロッパリーグの決勝でした。
       - 相手はマンチェスター・ユナイテッド。1対0で勝っています。
       - 監督はロベルト・デ・ゼルビ。今季の登録に、日本人選手はいません。
-      - これで20クラブです。お付き合いいただき、ありがとうございました。
+
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
+  - id: titles
+    heading: 獲ってきたもの
+    tier: 背景
+    telop: 1部優勝2回（直近 1960-61）、FAカップ8回（直近 1990-91）
+    narrator: キャスター
+    card:
+      type: table
+      title: 獲ってきたもの
+      columns: ["", ""]
+      rows:
+        - ["1部優勝", "2回（直近 1960-61）"]
+        - ["FAカップ", "8回（直近 1990-91）"]
+        - ["リーグカップ", "4回（直近 2007-08）"]
+        - ["ヨーロッパ", "CWC1回／UEFAカップ・EL3回"]
+    say:
+      - 数えると、大きなタイトルで**18個**です。
+      - 1部優勝2回、FAカップ8回、リーグカップ4回。
+      - ヨーロッパはカップウィナーズカップが1回、UEFAカップとヨーロッパリーグが**3回**。
+      - 1972年、1984年、そして2025年です。
+      - "ただし**1部優勝の直近は1960年から61年**。65年前になります。"
+      - 最後に、日本との関わりを1つ。
+      - "日本代表の**高井幸大**が、このクラブの選手です。"
+      - 2025年7月、川崎フロンターレから2030年までの契約で加わりました。
+      - いまはベルギーのシント＝トロイデンへレンタルに出ています。
+      - "そのシント＝トロイデンは、**日本のDMM.comが2017年から全株を持っているクラブ**です。"
+      - トッテナムの選手が、日本企業の持つクラブでプレーしている、という形になっています。
+      - これで20クラブです。お付き合いいただき、ありがとうございました。
+    official: false
+    sources:
+      - https://en.wikipedia.org/wiki/Premier_League

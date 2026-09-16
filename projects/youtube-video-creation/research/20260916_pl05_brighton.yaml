@@ -30,7 +30,7 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: ブライトン
-  title: プレミアリーグ20クラブ紹介 ⑤ブライトン
+  title: ブライトンとはどんなクラブか ⑤プレミア20クラブ紹介
   question: どんなクラブなのか
 
 thumbnail:
@@ -57,7 +57,7 @@ sections:
         - ["本拠地", "ファルマー・スタジアム"]
         - ["収容人数", "32,176人"]
     say:
-      - アルファベット順では、5番目に来ます。
+      - "アルファベット順では5番目。**14年間、自分の家が無かったクラブ**です。"
       - 創設は1901年。イングランド南部の海沿いの街、ブライトンのクラブです。
       - 正式には「ブライトン・アンド・ホーヴ・アルビオン」。隣り合う2つの街の名前が入っています。
       - 愛称は「シーガルズ」。**カモメ**です。
@@ -66,7 +66,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Brighton_%26_Hove_Albion_F.C.
-
   - id: home
     heading: 本拠地を失った14年
     main: true
@@ -100,7 +99,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Brighton_%26_Hove_Albion_F.C.
-
   - id: season
     heading: 今季の顔ぶれ
     tier: 報道
@@ -128,7 +126,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/2026%E2%80%9327_Brighton_%26_Hove_Albion_F.C._season
-
   - id: history
     heading: 歩んできた道
     tier: 背景
@@ -151,6 +148,43 @@ sections:
       - 2016年から17年のシーズン、チャンピオンシップを2位で終えて昇格します。
       - そして2022年から23年、リーグ6位。
       - "**クラブの歴史ではじめて**、ヨーロッパの舞台に出る権利を得ました。"
+      - 愛称の話も、ひとつ残っています。
+      - このクラブは昔「**ドルフィンズ**」、イルカと呼ばれていました。
+      - 変わったきっかけはパレス戦です。相手のサポーターが「イーグルス」と叫んだ。
+      - "その替え歌として、観客席から「**シーガルズ**」が返りました。"
+      - あとからクラブが、それを正式な愛称にしています。
+      - "つまり**看板そのものが、ライバルへの当てこすりから生まれている**わけです。"
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Brighton_%26_Hove_Albion_F.C.
+      - https://en.wikipedia.org/wiki/1910_FA_Charity_Shield
+      - https://en.wikipedia.org/wiki/M23_derby
+  - id: titles
+    heading: 獲ってきたもの
+    tier: 背景
+    telop: 1部優勝0回、FAカップ0回（準優勝 1982-83）
+    narrator: キャスター
+    card:
+      type: table
+      title: 獲ってきたもの
+      columns: ["", ""]
+      rows:
+        - ["1部優勝", "0回"]
+        - ["FAカップ", "0回（準優勝 1982-83）"]
+        - ["リーグカップ", "0回"]
+        - ["ヨーロッパ", "0回"]
+        - ["全国タイトル", "1910年のチャリティ・シールドだけ"]
+    say:
+      - 数字にすると、こうなります。
+      - 1部優勝ゼロ。FAカップもゼロ。リーグカップもゼロ。ヨーロッパもゼロ。
+      - "全国規模のタイトルは、**1910年のチャリティ・シールドがただ1つ**だけです。"
+      - "その試合の会場は、**チェルシーのスタンフォード・ブリッジ**でした。"
+      - "アストン・ヴィラを1対0で下し、地元では「全イングランドの王者」と呼ばれています。"
+      - "**116年経っても、これを超える優勝がありません。**"
+      - "そのうえで今季、三笘薫の契約は**2027年まで**残っています。"
+      - 月間賞を獲った初の日本人で、月間ゴール賞はすでに3回。
+      - "日本人のイングランド1部単シーズン最多得点も、本人が持っています。"
+      - タイトルゼロのクラブと、記録を持つ日本人。そこが今季の見どころです。
+    official: false
+    sources:
+      - https://en.wikipedia.org/wiki/Premier_League

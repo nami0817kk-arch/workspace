@@ -29,7 +29,7 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: ニューカッスル
-  title: プレミアリーグ20クラブ紹介 ⑰ニューカッスル・ユナイテッド
+  title: ニューカッスル・ユナイテッドとはどんなクラブか ⑰プレミア20クラブ紹介
   question: どんなクラブなのか
 
 thumbnail:
@@ -68,7 +68,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
-
   - id: drought
     heading: 56年待った
     main: true
@@ -94,12 +93,19 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
-
   - id: owner
     heading: 2021年に変わったこと
     tier: 背景
     telop: サウジアラビアの公的投資基金が取得
     narrator: キャスター
+    card:
+      type: table
+      title: 2021年からのニューカッスル
+      columns: ["", ""]
+      rows:
+        - ["2021年10月7日", "持ち主が交代"]
+        - ["それまで", "マイク・アシュリーの14年"]
+        - ["監督", "マティアス・ヤイスレ（2026年8月）"]
     say:
       - 2021年10月7日、クラブの持ち主が変わりました。
       - サウジアラビアの公的投資基金を中心とする陣営が取得しています。
@@ -109,7 +115,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
-
   - id: stay
     heading: 落ちない
     tier: 背景
@@ -123,3 +128,26 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
+  - id: titles
+    heading: 獲ってきたもの
+    tier: 背景
+    telop: 1部優勝4回（直近 1926-27）、FAカップ6回（直近 1954-55）
+    narrator: キャスター
+    card:
+      type: table
+      title: 獲ってきたもの
+      columns: ["", ""]
+      rows:
+        - ["1部優勝", "4回（直近 1926-27）"]
+        - ["FAカップ", "6回（直近 1954-55）"]
+        - ["リーグカップ", "1回（2024-25）"]
+        - ["ヨーロッパ", "フェアーズカップ1回／インタートト1回"]
+    say:
+      - 数えると、大きなタイトルで**13個**です。
+      - 1部優勝4回、FAカップ6回。
+      - "ただし**1部優勝の直近は1926年から27年**。FAカップも1955年が最後です。"
+      - 56年の空白を終わらせたのが、2025年のリーグカップでした。
+      - "そして今季は、**最後にリーグを獲った年からちょうど100年目**にあたります。"
+    official: false
+    sources:
+      - https://en.wikipedia.org/wiki/Premier_League

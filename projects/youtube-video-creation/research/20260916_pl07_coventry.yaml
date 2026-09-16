@@ -28,7 +28,7 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: コヴェントリー
-  title: プレミアリーグ20クラブ紹介 ⑦コヴェントリー・シティ
+  title: コヴェントリー・シティとはどんなクラブか ⑦プレミア20クラブ紹介
   question: どんなクラブなのか
 
 thumbnail:
@@ -64,7 +64,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Coventry_City_F.C.
-
   - id: exile
     heading: 本拠地を追われた
     main: true
@@ -92,7 +91,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Coventry_City_F.C.
-
   - id: season
     heading: 今季の顔ぶれ
     tier: 報道
@@ -115,7 +113,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Coventry_City_F.C.
-
   - id: history
     heading: 歩んできた道
     tier: 背景
@@ -130,3 +127,28 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Coventry_City_F.C.
+  - id: titles
+    heading: 獲ってきたもの
+    tier: 背景
+    telop: 1部優勝0回、FAカップ1回（1986-87）
+    narrator: キャスター
+    card:
+      type: table
+      title: 獲ってきたもの
+      columns: ["", ""]
+      rows:
+        - ["1部優勝", "0回"]
+        - ["FAカップ", "1回（1986-87）"]
+        - ["リーグカップ", "0回"]
+        - ["ヨーロッパ", "0回"]
+        - ["2部優勝", "2回（直近 2025-26）"]
+    say:
+      - 数えると、大きなタイトルは**1987年のFAカップ、ただ1つ**です。
+      - 1部優勝はゼロ。リーグカップもゼロ。ヨーロッパもゼロ。
+      - "**39年、この1つを更新できていません。**"
+      - そのクラブが、25年ぶりに1部へ戻ってきました。
+      - 昨季のチャンピオンシップ優勝メンバーに、坂元達裕がいます。
+      - "**坂元がプレミアのピッチに立つこと自体、このクラブでは初めて**です。"
+    official: false
+    sources:
+      - https://en.wikipedia.org/wiki/Premier_League

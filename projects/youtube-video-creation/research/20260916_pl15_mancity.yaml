@@ -28,7 +28,7 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: マンチェスター・シティ
-  title: プレミアリーグ20クラブ紹介 ⑮マンチェスター・シティ
+  title: マンチェスター・シティとはどんなクラブか ⑮プレミア20クラブ紹介
   question: どんなクラブなのか
 
 thumbnail:
@@ -65,7 +65,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Manchester_City_F.C.
-
   - id: fall
     heading: 3部まで落ちたクラブ
     main: true
@@ -91,12 +90,19 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Manchester_City_F.C.
-
   - id: aguero
     heading: 2012年の最終節
     tier: 背景
     telop: アディショナルタイム4分、アグエロ
     narrator: キャスター
+    card:
+      type: table
+      title: 2012年5月13日
+      columns: ["", ""]
+      rows:
+        - ["前半終了時", "0-1"]
+        - ["アディショナルタイム", "2点を返す"]
+        - ["決勝点", "アグエロ（追加4分目）"]
     say:
       - プレミアリーグでの最初の優勝は、2012年でした。
       - 決まり方が、語り草になっています。
@@ -106,7 +112,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Manchester_City_F.C.
-
   - id: treble
     heading: 積み上げた記録
     tier: 背景
@@ -128,3 +133,27 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Manchester_City_F.C.
+  - id: titles
+    heading: 獲ってきたもの
+    tier: 背景
+    telop: 1部優勝10回（直近 2023-24）、FAカップ8回（直近 2025-26）
+    narrator: キャスター
+    card:
+      type: table
+      title: 獲ってきたもの
+      columns: ["", ""]
+      rows:
+        - ["1部優勝", "10回（直近 2023-24）"]
+        - ["FAカップ", "8回（直近 2025-26）"]
+        - ["リーグカップ", "9回（直近 2025-26）"]
+        - ["ヨーロッパ", "CL1回（2022-23）／CWC1回（2023）"]
+    say:
+      - 数えると、大きなタイトルで**31個**です。
+      - 1部優勝10回、FAカップ8回、リーグカップ9回。
+      - 2023年にはチャンピオンズリーグとクラブワールドカップも獲っています。
+      - 昨季も、FAカップとリーグカップの2つを持ち帰りました。
+      - "ただし**リーグは2023年から24年の4連覇を最後に、2シーズン獲れていません。**"
+      - 3部にいたクラブが世界一になり、そのあとリーグだけ取り返せていない。今季はそこを見ることになります。
+    official: false
+    sources:
+      - https://en.wikipedia.org/wiki/Premier_League

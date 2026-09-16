@@ -28,7 +28,7 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: ハル・シティ
-  title: プレミアリーグ20クラブ紹介 ⑪ハル・シティ
+  title: ハル・シティとはどんなクラブか ⑪プレミア20クラブ紹介
   question: どんなクラブなのか
 
 thumbnail:
@@ -64,7 +64,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
-
   - id: rise
     heading: 4部からプレミアまで5年
     main: true
@@ -92,7 +91,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
-
   - id: japan
     heading: 今季の顔ぶれ
     tier: 報道
@@ -117,20 +115,54 @@ sections:
     sources:
       - https://www.footballchannel.jp/2026/09/07/post1005300/
       - https://www.footballchannel.jp/2026/09/03/post1003017/
-
   - id: cup
     heading: 2014年の決勝
     tier: 背景
     telop: 先に2点を取って、延長で逆転された
     narrator: 解説
+    card:
+      type: table
+      title: 2014年のFAカップ決勝
+      columns: ["", ""]
+      rows:
+        - ["相手", "アーセナル"]
+        - ["立ち上がり", "ハルが2点を先行"]
+        - ["結果", "2-3。クラブ唯一の決勝"]
     say:
       - もうひとつ、忘れられない試合があります。
       - 2014年のFAカップ決勝。クラブとして**はじめての決勝**でした。
       - 相手はアーセナル。ハルは立ち上がりに**2点**を先に取ります。
       - そこから追いつかれ、延長までもつれました。
       - 結果は2対3。**あと一歩のところで、タイトルを逃しています。**
-      - なお、このクラブには名前をめぐる騒動もありました。
+      - このクラブには名前をめぐる騒動もありました。
       - オーナー側が「ハル・タイガース」への改名を持ちかけ、サポーターが強く反発しています。
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
+  - id: titles
+    heading: 獲ってきたもの
+    tier: 背景
+    telop: 1部優勝0回、FAカップ0回（準優勝 2013-14）
+    narrator: キャスター
+    card:
+      type: table
+      title: 獲ってきたもの
+      columns: ["", ""]
+      rows:
+        - ["1部優勝", "0回"]
+        - ["FAカップ", "0回（準優勝 2013-14）"]
+        - ["リーグカップ", "0回"]
+        - ["ヨーロッパ", "0回"]
+        - ["3部優勝", "4回（直近 2020-21）"]
+    say:
+      - 数えると、大きなタイトルは**ゼロ**です。
+      - 創設1904年から**122年、ひとつも獲っていません。**
+      - 決勝に立ったのも、2014年のFAカップの1度だけです。
+      - そのクラブに、いま**守田英正**がいます。
+      - 日本代表で40試合6得点を積んだ選手が、タイトルゼロのクラブにいる。
+      - 昇格を決めた試合にも、日本人が絡んでいました。
+      - "2026年5月23日のプレーオフ決勝。後半45分過ぎ、**平河悠**のドリブルとクロスから決勝点が生まれています。"
+      - 1対0。ハルは2017年以来の1部復帰を決めました。ただし平河は、レンタルが終わって今はいません。
+    official: false
+    sources:
+      - https://en.wikipedia.org/wiki/Premier_League

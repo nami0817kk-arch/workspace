@@ -29,7 +29,7 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: アーセナル
-  title: プレミアリーグ20クラブ紹介 ②アーセナル
+  title: アーセナルとはどんなクラブか ②プレミア20クラブ紹介
   question: どんなクラブなのか
 
 thumbnail:
@@ -67,13 +67,20 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Arsenal_F.C.
-
   - id: ground
     heading: 本拠地
     main: true
     tier: 背景
     telop: 収容60,704人。ハイベリーから2006年に移った
     narrator: 解説
+    card:
+      type: table
+      title: 本拠地
+      columns: ["", ""]
+      rows:
+        - ["エミレーツ・スタジアム", "2006年から"]
+        - ["収容人数", "60,704人"]
+        - ["その前", "ハイベリー（93年間）"]
     say:
       - {image: "assets/images/pl_arsenal2/scene.jpg",
          text: 本拠地はエミレーツ・スタジアム。ロンドン北部のイズリントンにあります。}
@@ -86,7 +93,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Arsenal_F.C.
-
   - id: season
     heading: 今季の顔ぶれ
     tier: 報道
@@ -103,22 +109,13 @@ sections:
         - ["日本人選手", "なし"]
     say:
       - 監督はミケル・アルテタ。主将はマルティン・ウーデゴールです。
-      - 今夏は、出ていったほうが目を引きました。
-      - ガブリエル・マルティネッリがアル・ヒラルへ、**6000万ポンド**。
-      - ガブリエウ・ジェズスはバルセロナ、レアンドロ・トロサールはベシクタシュへ移っています。
-      - 入ってきたのは5人です。
       - ニューカッスルからブルーノ・ギマランイス、**7500万ポンド**。
-      - アストン・ヴィラからエズリ・コンサ、5100万ポンド。
-      - レヴァークーゼンからピエロ・インカピエ、3450万ポンド。
-      - クラブ・ブルージュからクリストス・ツォリス、3400万ポンド。
-      - ゴールキーパーのイラン・ムスリエは、所属クラブのない状態から加入しました。
       - ここまでの得点は、リーグではブカヨ・サカが3点。すべての大会ではウーデゴールが4点で最多です。
       - そして、日本人選手はいません。
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Arsenal_F.C.
       - https://en.wikipedia.org/wiki/2026%E2%80%9327_Arsenal_F.C._season
-
   - id: history
     heading: 歩んできた道
     tier: 背景
@@ -145,3 +142,30 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Arsenal_F.C.
+  - id: titles
+    heading: 獲ってきたもの
+    tier: 背景
+    telop: 1部優勝14回（直近 2025-26）、FAカップ14回（直近 2019-20）
+    narrator: キャスター
+    card:
+      type: table
+      title: 獲ってきたもの
+      columns: ["", ""]
+      rows:
+        - ["1部優勝", "14回（直近 2025-26）"]
+        - ["FAカップ", "14回（直近 2019-20）"]
+        - ["リーグカップ", "2回（直近 1992-93）"]
+        - ["ヨーロッパ", "カップウィナーズカップ1回／フェアーズカップ1回"]
+    say:
+      - 獲ってきたものを数えると、大きなタイトルで**32個**あります。
+      - 1部優勝が14回。いちばん新しいのは昨季、2025年から26年です。
+      - FAカップも14回。リーグカップが2回。
+      - ヨーロッパでは、1993年から94年のカップウィナーズカップ。
+      - "ただし、**チャンピオンズリーグだけが、まだありません。**"
+      - 決勝には2度立っています。2005年から06年と、昨季です。
+      - 2026年5月30日、ブダペストでの決勝。相手はパリ・サンジェルマンでした。
+      - 延長でも1対1で、PK戦を4対3で落としています。
+      - "22年ぶりにリーグを獲ったクラブに、**残っているのはこれひとつ**です。"
+    official: false
+    sources:
+      - https://en.wikipedia.org/wiki/Premier_League

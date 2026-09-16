@@ -2923,9 +2923,34 @@ def _cmd_draft(args, config) -> int:
             league=notes.league, kind=notes.kind,
             topic=notes.topic, sources=notes.sources,
         )
+    # **書き出した台本そのものにも、review の検査を掛ける**（2026-09-16）。
+    # `check_filler`（背番号・「なお、」）と `check_title_subject`（頭14字に名前）は
+    # **review にしか無かった。**review は動画を書き出したあとに走るので、
+    # プレミア20クラブの回では**20本つくってから止まる**ところだった。
+    # 動画を見なくても分かる検査は、ここで出す（`--check-only` でも出る）。
+    late = []
+    try:
+        from . import review as _review
+        from .script_model import parse_script
+        _script = parse_script(target.read_text(encoding="utf-8"))
+        for _name in ("check_filler", "check_title_subject",
+                      "check_board_mention", "check_outlet_talk"):
+            _fn = getattr(_review, _name, None)
+            if _fn is None:
+                continue
+            _found = _fn(_script)
+            if getattr(_found, "ok", True) is False:
+                late.append(f"{_found.name}: {_found.detail}")
+    except Exception as err:      # 検査で書き出しを落とさない
+        print(f"  （台本の点検を飛ばしました: {err}）")
+    if late:
+        print(f"{chr(10)}■ 台本そのものの点検で {len(late)}件")
+        for note in late:
+            print(f"   ・{note}")
+        print("■ ここは動画を書き出さなくても直せます", flush=True)
     print(f"台本: {target}")
     print(f"`python -m src.cli check {target}` で書式と尺を確認してください")
-    return 0
+    return 1 if late else 0
 
 
 def _cmd_new(args, config) -> int:

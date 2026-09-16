@@ -29,7 +29,7 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: ブレントフォード
-  title: プレミアリーグ20クラブ紹介 ④ブレントフォード
+  title: ブレントフォードとはどんなクラブか ④プレミア20クラブ紹介
   question: どんなクラブなのか
 
 thumbnail:
@@ -69,13 +69,20 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Brentford_F.C.
-
   - id: ground
     heading: 本拠地
     main: true
     tier: 背景
     telop: 収容17,250人。116年いた場所を2020年に離れた
     narrator: 解説
+    card:
+      type: table
+      title: 本拠地
+      columns: ["", ""]
+      rows:
+        - ["Gtechコミュニティ・スタジアム", "2020年から"]
+        - ["収容人数", "17,250人"]
+        - ["その前", "グリフィン・パーク（116年間）"]
     say:
       - {image: "assets/images/pl_brentford/scene.jpg",
          text: 本拠地はGテック・コミュニティ・スタジアム。ロンドン西部にあります。}
@@ -88,7 +95,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Brentford_F.C.
-
   - id: season
     heading: 今季の顔ぶれ
     tier: 報道
@@ -116,7 +122,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/2026%E2%80%9327_Brentford_F.C._season
-
   - id: history
     heading: 歩んできた道
     tier: 背景
@@ -142,3 +147,28 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Brentford_F.C.
+  - id: titles
+    heading: 獲ってきたもの
+    tier: 背景
+    telop: 1部優勝0回、FAカップ0回
+    narrator: キャスター
+    card:
+      type: table
+      title: 獲ってきたもの
+      columns: ["", ""]
+      rows:
+        - ["1部優勝", "0回"]
+        - ["FAカップ", "0回"]
+        - ["リーグカップ", "0回"]
+        - ["ヨーロッパ", "出場そのものが無い"]
+        - ["2部優勝", "1回（1934-35）"]
+    say:
+      - 最後に、獲ってきたものを数えます。
+      - 1部優勝、ゼロ。FAカップ、ゼロ。リーグカップ、ゼロ。
+      - "ヨーロッパは優勝がないどころか、**出たことがありません。**"
+      - 持っているのは1934年から35年の2部優勝と、3部を2回、4部を3回。
+      - 今季で創設から**137年目**、プレミアリーグは**6季連続**です。
+      - "**137年、大きなタイトルをひとつも獲らずにここまで来ました。**"
+    official: false
+    sources:
+      - https://en.wikipedia.org/wiki/Premier_League

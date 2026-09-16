@@ -28,7 +28,7 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: エヴァートン
-  title: プレミアリーグ20クラブ紹介 ⑨エヴァートン
+  title: エヴァートンとはどんなクラブか ⑨プレミア20クラブ紹介
   question: どんなクラブなのか
 
 thumbnail:
@@ -65,7 +65,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Everton_F.C.
-
   - id: move
     heading: 133年いた家を出た
     main: true
@@ -91,7 +90,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Everton_F.C.
-
   - id: record
     heading: 1部にいた年数
     tier: 背景
@@ -117,18 +115,51 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Everton_F.C.
-
   - id: founding
     heading: 2つのリーグを作った側
     tier: 背景
     telop: フットボールリーグも、プレミアリーグも
     narrator: 解説
+    card:
+      type: table
+      title: 創設メンバーだった2つ
+      columns: ["", ""]
+      rows:
+        - ["1888年", "フットボールリーグ"]
+        - ["1992年", "プレミアリーグ"]
+        - ["その間", "104年"]
     say:
       - このクラブは、**2つのリーグの創設メンバー**です。
       - ひとつは1888年のフットボールリーグ。
       - もうひとつは1992年のプレミアリーグです。
       - 100年の間を空けて、どちらの始まりにもいました。
-      - なお、今季の登録に日本人選手はいません。
+      - 今季の登録に日本人選手はいません。
+    official: false
+    sources:
+      - https://en.wikipedia.org/wiki/Everton_F.C.
+  - id: titles
+    heading: 獲ってきたもの
+    tier: 背景
+    telop: 1部優勝9回（直近 1986-87）、FAカップ5回（直近 1994-95）
+    narrator: キャスター
+    card:
+      type: table
+      title: 獲ってきたもの
+      columns: ["", ""]
+      rows:
+        - ["1部優勝", "9回（直近 1986-87）"]
+        - ["FAカップ", "5回（直近 1994-95）"]
+        - ["リーグカップ", "0回（準優勝2回）"]
+        - ["ヨーロッパ", "カップウィナーズカップ1回（1984-85）"]
+    say:
+      - 数えると、大きなタイトルで**15個**あります。
+      - 内訳は1部優勝9回、FAカップ5回、それにヨーロッパが1つです。
+      - "ただし**リーグカップだけは、一度も獲っていません。**決勝には2度立っています。"
+      - 1部優勝の直近は**1986年から87年**。39年前です。
+      - 日本との関わりも、ひとつあります。スポンサーです。
+      - "1985年から1995年までの10年間、胸にあったのは日本の**NEC**でした。"
+      - "そして**最後のリーグ優勝は、その10年のあいだ**にあります。"
+      - 1986年から87年。日本の企業の名を胸に付けて、このクラブは最後の頂点に立ちました。
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Everton_F.C.

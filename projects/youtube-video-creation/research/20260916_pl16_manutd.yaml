@@ -28,7 +28,7 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: マンチェスター・ユナイテッド
-  title: プレミアリーグ20クラブ紹介 ⑯マンチェスター・ユナイテッド
+  title: マンチェスター・ユナイテッドとはどんなクラブか ⑯プレミア20クラブ紹介
   question: どんなクラブなのか
 
 thumbnail:
@@ -67,7 +67,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Manchester_United_F.C.
-
   - id: munich
     heading: 1958年2月6日
     main: true
@@ -92,7 +91,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Manchester_United_F.C.
-
   - id: ferguson
     heading: ファーガソンの27年
     tier: 背景
@@ -114,7 +112,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Manchester_United_F.C.
-
   - id: now
     heading: 今季の顔ぶれ
     tier: 報道
@@ -127,3 +124,28 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Manchester_United_F.C.
+  - id: titles
+    heading: 獲ってきたもの
+    tier: 背景
+    telop: 1部優勝20回（直近 2012-13）、FAカップ13回（直近 2023-24）
+    narrator: キャスター
+    card:
+      type: table
+      title: 獲ってきたもの
+      columns: ["", ""]
+      rows:
+        - ["1部優勝", "20回（直近 2012-13）"]
+        - ["FAカップ", "13回（直近 2023-24）"]
+        - ["リーグカップ", "6回（直近 2022-23）"]
+        - ["欧州カップ／CL", "3回（1968／1999／2008）"]
+    say:
+      - 数えると、大きなタイトルで**47個**になります。
+      - 1部優勝20回。これは⑭リヴァプールと並ぶ最多です。
+      - FAカップ13回、リーグカップ6回、ヨーロッパの頂点が3回。
+      - コミュニティ・シールドの21回は、イングランド記録です。
+      - "ただし、**1部優勝の直近は2012年から13年**。13年前です。"
+      - 直近の大きなタイトルは、2024年のFAカップ。
+      - "**20回獲ったクラブが、13年リーグを獲っていない。**そこが今季の見どころです。"
+    official: false
+    sources:
+      - https://en.wikipedia.org/wiki/Premier_League

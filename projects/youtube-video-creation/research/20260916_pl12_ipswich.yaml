@@ -28,7 +28,7 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: イプスウィッチ
-  title: プレミアリーグ20クラブ紹介 ⑫イプスウィッチ・タウン
+  title: イプスウィッチ・タウンとはどんなクラブか ⑫プレミア20クラブ紹介
   question: どんなクラブなのか
 
 thumbnail:
@@ -64,7 +64,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
-
   - id: champion
     heading: 上がった年に、優勝した
     main: true
@@ -90,7 +89,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
-
   - id: japan
     heading: 今季の顔ぶれ
     tier: 報道
@@ -105,17 +103,25 @@ sections:
         - ["日本人選手", "前田大然（背番号38）"]
     say:
       - このクラブには、日本人選手がいます。**前田大然**です。
-      - 登録は前線で、背番号は38。
+      - 登録は前線で、
       - 監督はゲイリー・オニール。2026年6月23日に就任しました。
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
-
   - id: back
     heading: 22年ぶりに戻ってきた
     tier: 背景
     telop: 3部から2年続けて上がった
     narrator: 解説
+    card:
+      type: table
+      title: 落ちて、戻るまで
+      columns: ["", ""]
+      rows:
+        - ["離れた期間", "22年"]
+        - ["最も低いとき", "3部"]
+        - ["2023年・2024年", "2年続けて昇格"]
+        - ["続けて昇格", "イングランドで5チーム目"]
     say:
       - 優勝したクラブも、長く沈むことがあります。
       - イプスウィッチは1部を離れ、**22年**帰ってきませんでした。
@@ -125,3 +131,30 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
+  - id: titles
+    heading: 獲ってきたもの
+    tier: 背景
+    telop: 1部優勝1回（1961-62）、FAカップ1回（1977-78）
+    narrator: キャスター
+    card:
+      type: table
+      title: 獲ってきたもの
+      columns: ["", ""]
+      rows:
+        - ["1部優勝", "1回（1961-62）"]
+        - ["FAカップ", "1回（1977-78）"]
+        - ["リーグカップ", "0回"]
+        - ["ヨーロッパ", "UEFAカップ1回（1980-81）"]
+    say:
+      - 数えると、大きなタイトルは**3つ**です。
+      - 1961年から62年の1部優勝、1978年のFAカップ、1981年のUEFAカップ。
+      - "**1978年のFAカップ以来、タイトルがありません。**"
+      - そのクラブに、いま**前田大然**がいます。
+      - 前はセルティックで、公式戦133試合44得点。日本代表でも30試合5得点です。
+      - スポンサーの話も、日本と関わります。
+      - "1981年、このクラブは日本の**パイオニア**と契約しました。クラブ史上はじめての公式スポンサーです。"
+      - 契約は1985年まで。ポートマン・ロードのスタンドは、1999年まで「パイオニア・スタンド」と呼ばれていました。
+      - "**UEFAカップを獲った1981年のイプスウィッチは、日本企業の名前を胸に付けていた**ことになります。"
+    official: false
+    sources:
+      - https://en.wikipedia.org/wiki/Premier_League

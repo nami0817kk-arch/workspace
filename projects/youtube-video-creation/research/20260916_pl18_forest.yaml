@@ -26,7 +26,7 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: ノッティンガム・フォレスト
-  title: プレミアリーグ20クラブ紹介 ⑱ノッティンガム・フォレスト
+  title: ノッティンガム・フォレストとはどんなクラブか ⑱プレミア20クラブ紹介
   question: どんなクラブなのか
 
 thumbnail:
@@ -61,7 +61,6 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
-
   - id: clough
     heading: 上がって、優勝して、ヨーロッパを獲った
     main: true
@@ -90,12 +89,19 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
-
   - id: fall
     heading: そして落ちた
     tier: 背景
     telop: 1993年、プレミアリーグ最初のシーズンに降格
     narrator: キャスター
+    card:
+      type: table
+      title: 落ちた年
+      columns: ["", ""]
+      rows:
+        - ["1993年", "プレミア最初のシーズンに降格"]
+        - ["クラフ時代", "18年でここまで"]
+        - ["1部復帰まで", "23年"]
     say:
       - 頂点にいたクラブが、そのままではいられませんでした。
       - 1993年、**プレミアリーグの最初のシーズン**に降格します。
@@ -104,12 +110,19 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
-
   - id: back
     heading: 23年ぶりに戻ってきた
     tier: 背景
     telop: 2022年、プレーオフを勝ち上がって
     narrator: 解説
+    card:
+      type: table
+      title: 戻るまで
+      columns: ["", ""]
+      rows:
+        - ["下のリーグ", "23年"]
+        - ["復帰", "2022年（プレーオフ）"]
+        - ["その間の欧州王者", "連覇の記録は残ったまま"]
     say:
       - 下のリーグで過ごした年月は、**23年**にのぼりました。
       - 戻ってきたのは2022年です。プレーオフを勝ち上がっての昇格でした。
@@ -117,3 +130,29 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
+  - id: titles
+    heading: 獲ってきたもの
+    tier: 背景
+    telop: 1部優勝1回（1977-78）、FAカップ2回（直近 1958-59）
+    narrator: キャスター
+    card:
+      type: table
+      title: 獲ってきたもの
+      columns: ["", ""]
+      rows:
+        - ["1部優勝", "1回（1977-78）"]
+        - ["FAカップ", "2回（直近 1958-59）"]
+        - ["リーグカップ", "4回（直近 1989-90）"]
+        - ["ヨーロッパカップ", "2回（1978-79／1979-80）"]
+    say:
+      - 数えると、大きなタイトルで**10個**です。
+      - 1部優勝は1回。ヨーロッパカップは2回。
+      - "**ヨーロッパで獲った数が、自国リーグで獲った数より多い。**"
+      - "これはヨーロッパで**このクラブだけ**です。"
+      - 言い換えると、リーグをもう1回獲った瞬間に、この記録は消えます。
+      - 本拠地の話も、ひとつ添えておきます。
+      - シティ・グラウンドはいま3万1212人ですが、2031年に4万5千人、2033年に5万2500人への拡張が計画されています。
+      - いまの姿を見られるのは、あと数年です。
+    official: false
+    sources:
+      - https://en.wikipedia.org/wiki/Premier_League
