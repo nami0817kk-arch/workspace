@@ -746,3 +746,32 @@ def tiktok_path(script_path: str | Path) -> Path:
 
 def default_path(script_path: str | Path) -> Path:
     return Path(f"output/{Path(script_path).stem}_short")
+
+
+def enforce_limit(script: Script, max_seconds: float, config) -> int:
+    """**音声を作ったあと、実尺で上限に収める**（2026-09-16）。
+
+    それまでは文字数からの見積りに安全率（`ESTIMATE_SLACK`）を掛けて
+    手前で切っていた。**見積りは当てにならない。**直近5本の実測では
+    実尺／見積りが 0.923〜1.073 とばらつき、古い記録では 56秒の見積りが
+    66秒になっている。安全率を厳しくすると短くなりすぎ（43〜46秒）、
+    緩めると上限を超える。**どちらも直らない。**
+
+    合成が終われば1行ずつの秒数が分かる。ここで**足りなければ落とす**。
+    落とすのは後ろから（＝ネットの声から）で、**締めの一言は残す。**
+    """
+    from . import inserts as inserts_mod
+
+    dropped = 0
+    while True:
+        total = (sum(line.duration or 0.0 for line in script.lines)
+                 + inserts_mod.plan(script, config).total)
+        if total <= max_seconds:
+            return dropped
+        lines = script.scenes[-1].lines
+        keep_last = bool(lines) and (lines[-1].text or "").strip() == SHORT_SUBSCRIBE
+        index = len(lines) - (2 if keep_last else 1)
+        if index < 1:
+            return dropped          # これ以上は削れない。呼んだ側が止める
+        lines.pop(index)
+        dropped += 1

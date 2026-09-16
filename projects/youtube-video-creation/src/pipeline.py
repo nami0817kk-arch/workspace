@@ -61,6 +61,7 @@ def build_script(
     out_dir: Path,
     use_tts: bool = True,
     keep_work: bool = False,
+    max_seconds: float | None = None,
 ) -> BuildResult:
     """読み込み済みの台本から書き出す。
 
@@ -76,6 +77,15 @@ def build_script(
 
     backend = create_backend(config, use_tts)
     synthesize_script(script, config, audio_dir, backend=backend)
+
+    # **上限があるなら、実尺で収める**（2026-09-16）。見積りの安全率では
+    # 短くなりすぎるか、超えるかのどちらかにしかならなかった
+    if max_seconds:
+        from .shorts import enforce_limit
+
+        cut = enforce_limit(script, max_seconds, config)
+        if cut:
+            print(f"　上限{max_seconds:.0f}秒に収めるため、後ろから{cut}行落としました")
 
     # 尺が決まってから、長く止まる絵をほぐす。合成の前だと秒数が分からない。
     # 縦型（ショート）は同じ絵を出しておける時間が短い

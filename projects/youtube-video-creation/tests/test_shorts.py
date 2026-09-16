@@ -744,3 +744,34 @@ def test_TikTok用は1分を超えるまで台本の中身を足す():
     # **締めは YouTube へ送る一言**（2026-09-16）。TikTok は説明欄のリンクを
     # 押せないので、声で名前を言うしかない
     assert cut.lines[-1].text == shorts.TIKTOK_OUTRO
+
+
+def test_実尺で上限に収める(tmp_path):
+    """**見積りの安全率では、短くなりすぎるか超えるかにしかならない**（2026-09-16）。
+
+    直近5本の実測で 実尺／見積り は 0.923〜1.073 とばらついた。
+    合成が終われば1行ずつの秒数が分かるので、そこで落とす。
+    """
+    from src.config import load_config
+    from src.script_model import Line, Scene, Script
+    from src.shorts import SHORT_SUBSCRIBE, enforce_limit
+
+    def talk(text, sec, who="キャスター"):
+        line = Line(speaker=who, text=text)
+        line.duration = sec
+        return line
+
+    lines = [talk(f"語り{i}", 8.0) for i in range(6)]
+    lines += [talk(f"反応{i}", 4.0, "ネット民") for i in range(3)]
+    lines += [talk(SHORT_SUBSCRIBE, 2.0)]
+    script = Script(title="t", scenes=[Scene(title="オープニング", lines=[talk("題", 4.0)]),
+                                       Scene(title="本編", lines=lines)])
+    config = load_config()
+
+    dropped = enforce_limit(script, 58.0, config)
+    assert dropped >= 1
+    total = sum(l.duration for l in script.lines)
+    assert total <= 58.0
+    # **締めは残す。**落とすのは後ろ（＝ネットの声）から
+    assert script.lines[-1].text == SHORT_SUBSCRIBE
+    assert any(l.text.startswith("語り") for l in script.lines)

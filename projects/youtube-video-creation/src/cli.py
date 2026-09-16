@@ -703,7 +703,9 @@ def _cmd_short(args, config) -> int:
         print(f"　下地: {crest_bg}（エンブレム）")
 
     result = build_script(
-        short, shorts.portrait(config), out, use_tts=not args.no_tts
+        short, shorts.portrait(config), out, use_tts=not args.no_tts,
+        # TikTok 用に上限は無い（1分を超えることが条件）
+        max_seconds=None if getattr(args, "tiktok", False) else shorts.MAX_SECONDS,
     )
     print(f"完成: {result.video}  ({result.duration:.0f}秒)")
     # **どちらも要る点検。**顔が遅い／冒頭で喋っていない、は別の問題
