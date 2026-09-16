@@ -257,7 +257,24 @@ def load_notes(path: str | Path) -> Notes:
     path = Path(path)
     if not path.exists():
         raise ResearchError(f"取材メモがありません: {path}")
-    raw = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+    text = path.read_text(encoding="utf-8")
+    try:
+        raw = yaml.safe_load(text) or {}
+    except yaml.YAMLError as err:
+        # **行頭の `**` は YAML の別名（alias）扱いで落ちる**（2026-09-16 に3度踏んだ）。
+        # `*` で始まる平文はエイリアス参照とみなされるので、引用符で囲む必要がある。
+        # 素の ScannerError は「expected alphabetic or numeric character」としか言わず、
+        # 強調のせいだと分からない
+        bad = [n for n, line in enumerate(text.splitlines(), 1)
+               if line.lstrip().startswith("- **")]
+        if bad:
+            rows = "、".join(str(n) for n in bad[:5])
+            raise ResearchError(
+                f"{path} の {rows} 行目が `- **` で始まっています。"
+                "**行頭の強調は引用符で囲んでください**"
+                '（例: - "**4試合**になりました。"）。YAML は `*` を別名の印とみなします'
+            ) from err
+        raise ResearchError(f"{path} を読めません: {err}") from err
     return build_notes(raw)
 
 

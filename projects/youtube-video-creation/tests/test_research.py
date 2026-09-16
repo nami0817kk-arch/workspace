@@ -1119,3 +1119,22 @@ def test_リーグ名は取材メモで上書きできる():
     raw["theme"]["league"] = "england"
     raw["theme"]["league_name"] = "イングランド2部"
     assert build_notes(raw).league_name == "イングランド2部"
+
+
+def test_行頭の強調はYAMLで落ちると教える(tmp_path):
+    """**`- **強調**` は YAML の別名扱いで落ちる**（2026-09-16 に3度踏んだ）。
+
+    素の ScannerError は「expected alphabetic or numeric character」としか
+    言わないので、強調のせいだと分からない。行番号を添えて教える。
+    """
+    from src.research import ResearchError, load_notes
+
+    p = tmp_path / "x.yaml"
+    p.write_text("sections:\n  - say:\n      - **4試合**になりました。\n", encoding="utf-8")
+    try:
+        load_notes(p)
+    except ResearchError as err:
+        assert "引用符で囲んで" in str(err)
+        assert "3 行目" in str(err)
+    else:
+        raise AssertionError("落ちなかった")
