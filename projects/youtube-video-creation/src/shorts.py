@@ -353,6 +353,10 @@ def _add_voices_tail(short: Script, script: Script, max_seconds: float) -> None:
     # タイトルとほぼ同じだった）。取材メモに `short_voice: true` と書く。
     # 印が1つも無ければ、今までどおり上から順に取る
     picked = [l for l in source.lines if getattr(l, "short_voice", False)]
+    # **印があるときは、印の付いたものだけ**（2026-09-15 指示）。
+    # 2026-09-16 に「ショートが短い」からと残りで埋める形にしかけたが、
+    # それをやると**見出しの言い直しの反応が締めに戻ってくる**（9/15 の指摘そのもの）。
+    # 尺が余るなら、埋めるのではなく**取材メモの印を増やす**（書いた人が選ぶ）
     added = 0
     for line in (picked or source.lines):
         if added >= VOICES_TAIL_MAX:

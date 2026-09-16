@@ -102,10 +102,10 @@ sections:
     say:
       - {voice: ネット民, text: 調子よかったのプレシーズンだけだったな, short_voice: true}
       - {voice: ネット民, text: スピードがないからかな, short_voice: true}
-      - {voice: ネット民, text: あちゃー}
-      - {voice: ネット民, text: 降格かな}
-      - {voice: ネット民, text: スペランなぁ}
-      - {voice: ネット民, text: まじでJの上位より弱い}
+      - {voice: ネット民, text: あちゃー, short_voice: true}
+      - {voice: ネット民, text: 降格かな, short_voice: true}
+      - {voice: ネット民, text: スペランなぁ, short_voice: true}
+      - {voice: ネット民, text: まじでJの上位より弱い, short_voice: true}
     official: false
     sources:
       - https://sakarabo.blog.jp/archives/1084497965.html

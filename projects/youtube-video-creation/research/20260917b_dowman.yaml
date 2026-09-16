@@ -110,9 +110,9 @@ sections:
       - {voice: ネット民, text: 勝ってるー！ダウマン2得点マジ？！, short_voice: true}
       - {voice: ネット民, text: ダウマンは育てる局面というより普通に戦力にみえる, short_voice: true}
       - {voice: ネット民, text: ウーデゴールの代わりはダウマンだった, short_voice: true}
-      - {voice: ネット民, text: ダウマン調子いいですね}
-      - {voice: ネット民, text: ダウマン左とか出来ないかな}
-      - {voice: ネット民, text: ダウマン右で出た時の守備もみたいな}
+      - {voice: ネット民, text: ダウマン調子いいですね, short_voice: true}
+      - {voice: ネット民, text: ダウマン左とか出来ないかな, short_voice: true}
+      - {voice: ネット民, text: ダウマン右で出た時の守備もみたいな, short_voice: true}
     official: false
     sources:
       - https://x.com/search?q=ダウマン&f=live

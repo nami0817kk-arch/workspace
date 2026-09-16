@@ -103,7 +103,7 @@ sections:
       - {voice: ネット民, text: ソボスライのミドルは重要無形文化財ですわ, short_voice: true}
       - {voice: ネット民, text: ソボスライまじでキック上手いな かっけえ〜, short_voice: true}
       - {voice: ネット民, text: やっぱソボスライはこの距離よな, short_voice: true}
-      - {voice: ネット民, text: ソボスライのトドメの1発は最高でした}
+      - {voice: ネット民, text: ソボスライのトドメの1発は最高でした, short_voice: true}
       - {voice: ネット民, text: マクアリスターといいソボスライといいプレーで周りを納得させるのかっこよすぎだろ}
       - {voice: ネット民, text: ソボスライがちであのシュート以外ゴミだったから}
     official: false

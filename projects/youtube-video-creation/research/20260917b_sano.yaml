@@ -92,7 +92,7 @@ sections:
       - {voice: ネット民, text: 兄より優れた弟はいない, short_voice: true}
       - {voice: ネット民, text: 兄より凄いと思うぞ、この選手は, short_voice: true}
       - {voice: ネット民, text: まさか佐野が日本最高選手になるとは, short_voice: true}
-      - {voice: ネット民, text: 俺ニワカだけど兄が現日本最強なんでしょ}
+      - {voice: ネット民, text: 俺ニワカだけど兄が現日本最強なんでしょ, short_voice: true}
       - {voice: ネット民, text: この帽子ドイツんだ オランダ}
     official: false
     sources:

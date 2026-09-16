@@ -108,8 +108,8 @@ sections:
       - {voice: ネット民, text: 遠藤航自身がリヴァプールにいたいんだろうけど、カップ戦でも出番ないのはしんどいな, short_voice: true}
       - {voice: ネット民, text: 遠藤航はカラバオでもスタメン落ちか, short_voice: true}
       - {voice: ネット民, text: 出場機会を求めるなら冬に移籍かなぁ, short_voice: true}
-      - {voice: ネット民, text: 欧州主要リーグに拘らなければ、獲得するチームはあると思う}
-      - {voice: ネット民, text: 残り契約期間は一年やから少しでも金得る為に今冬放出か？}
+      - {voice: ネット民, text: 欧州主要リーグに拘らなければ、獲得するチームはあると思う, short_voice: true}
+      - {voice: ネット民, text: 残り契約期間は一年やから少しでも金得る為に今冬放出か？, short_voice: true}
       - {voice: ネット民, text: 怪我の期間が長かったのとそのあとの試合の機会がだいぶ少なかった}
     official: false
     sources:

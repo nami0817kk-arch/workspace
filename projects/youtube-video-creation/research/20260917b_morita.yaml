@@ -108,9 +108,9 @@ sections:
       - {voice: ネット民, text: ハルシティの守田どこ行ったん？, short_voice: true}
       - {voice: ネット民, text: 守田はまだダメか。, short_voice: true}
       - {voice: ネット民, text: ハル・シティ普通にやれてるやんw 守田いたらもう一段階良くなるし, short_voice: true}
-      - {voice: ネット民, text: しかしハル・シティ強いな。守田も早くケガ直して復帰してくれ。}
-      - {voice: ネット民, text: いやぁまじで開幕間に合って欲しかったなあ}
-      - {voice: ネット民, text: 早く怪我が治りますように}
+      - {voice: ネット民, text: しかしハル・シティ強いな。守田も早くケガ直して復帰してくれ。, short_voice: true}
+      - {voice: ネット民, text: いやぁまじで開幕間に合って欲しかったなあ, short_voice: true}
+      - {voice: ネット民, text: 早く怪我が治りますように, short_voice: true}
     official: false
     sources:
       - https://x.com/search?q=守田 ハルシティ&f=live
