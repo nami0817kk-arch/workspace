@@ -286,12 +286,13 @@ def test_分で渡せる():
         upload_mod.when_to_publish("+5", now)
 
 
-def test_投稿の枠は7時から24時():
-    """**深夜に出さない**（2026-09-10 ユーザー決定「動画投稿は7時から24時」）。
+def test_投稿の枠は9時から24時():
+    """**9時より前に出さない**（2026-09-16 ユーザー決定。7時→9時）。
 
-    126本を公開時刻で並べたら、深夜0〜4時のショートは中央値10回で、
-    朝1,035回・夕1,078回と2桁ちがった。**書き出しが押すと、
-    気づいたら深夜の枠に落ちる。**ここで止める。
+    「その日の何本目か」の影響を外して測り直したら、危ないのは9時より前だけだった。
+    7〜8時の6本のうち3本が100回未満（1回・26回・18回）、0〜6時は6本中5本。
+    9〜20時の68本は中央値1,065回で**100回未満がゼロ**。
+    **書き出しが押すと、気づいたら朝イチの枠に落ちる。**ここで止める。
     """
     from datetime import datetime, timedelta, timezone
 
@@ -302,18 +303,22 @@ def test_投稿の枠は7時から24時():
 
     # 枠の中はそのまま通る
     assert upload_mod.when_to_publish("23:30", now) == "2026-09-10T14:30:00Z"
-    assert upload_mod.when_to_publish("明日07:00", now) == "2026-09-10T22:00:00Z"
+    assert upload_mod.when_to_publish("明日09:00", now) == "2026-09-11T00:00:00Z"
 
     # 深夜は止める（時計でも、分での指定でも）
     with pytest.raises(upload_mod.UploadError, match="枠の外"):
         upload_mod.when_to_publish("明日02:00", now)
     with pytest.raises(upload_mod.UploadError, match="枠の外"):
         upload_mod.when_to_publish("+120", now)      # 翌 01:00
-    with pytest.raises(upload_mod.UploadError, match="枠の外"):
-        upload_mod.when_to_publish("明日06:59", now)
 
-    # 7時ちょうどは通る。24時（＝0時）は枠の外
-    assert upload_mod.when_to_publish("明日07:00", now)
+    # **朝イチの7〜8時台も止める**（ここが 2026-09-16 に変わったところ）
+    with pytest.raises(upload_mod.UploadError, match="枠の外"):
+        upload_mod.when_to_publish("明日07:00", now)
+    with pytest.raises(upload_mod.UploadError, match="枠の外"):
+        upload_mod.when_to_publish("明日08:59", now)
+
+    # 9時ちょうどは通る。24時（＝0時）は枠の外
+    assert upload_mod.when_to_publish("明日09:00", now)
     with pytest.raises(upload_mod.UploadError, match="枠の外"):
         upload_mod.when_to_publish("明日00:00", now)
 
@@ -399,9 +404,9 @@ def test_明日の時刻で予約できる():
     jst = timezone(timedelta(hours=9))
     now = datetime(2026, 9, 9, 19, 30, tzinfo=jst)
 
-    got = when_to_publish("明日07:30", now)
-    assert got == "2026-09-09T22:30:00Z"          # 翌日07:30 JST = 当日22:30 UTC
-    assert when_to_publish("翌 08:15", now) == "2026-09-09T23:15:00Z"
+    got = when_to_publish("明日09:30", now)
+    assert got == "2026-09-10T00:30:00Z"          # 翌日09:30 JST = 当日00:30 UTC
+    assert when_to_publish("翌 10:15", now) == "2026-09-10T01:15:00Z"
 
     # 今日の指定は、過ぎていればこれまでどおり止める
     try:
