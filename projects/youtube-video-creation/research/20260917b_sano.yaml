@@ -1,0 +1,99 @@
+# 佐野航大のミドル弾と、「ボールのおかげ」という指摘（2026-09-13 の試合）
+#
+# **褒めて終わらない回。**移籍後初ゴールは事実。そのうえで、元オランダ代表が
+# 「新しい公式球のせいでもある」と言っている。**両方そのまま並べる。**
+#
+# 引きは**「あのゴールは、ボールのおかげなのか」**。ここが山場（@main）。
+#
+# **ユーザーが以前に名前を挙げた選手**（2026-09-15「佐野航大あたりはアジアカップに
+# 絡んで来そう」）。9/17 に出す森保の回でも、反応に「佐野航大が見たかった」がある
+format: voices
+voice_min: 35
+slot: japan_3
+date: "2026年9月17日"
+
+people:
+  - 佐野航大
+
+short_title: "移籍後初ゴールへの、ある指摘"
+
+theme:
+  id: sano_first_goal_ball
+  league: netherlands
+  league_name: エールディヴィジ
+  kind: other
+  topic: PSV
+  title: 佐野航大の移籍後初ゴールに、元オランダ代表がつけた注釈
+  hook: 約30メートル手前からの一撃でした。
+  question: 何を指摘したのか
+
+thumbnail:
+  line1: 佐野航大 移籍後初ゴール
+  line2: つけられた注釈は ●●●●
+  photo: "assets/photos/20260914_sano/01.jpg"
+  focus: 0.05
+  band_full: true
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: どんなゴールだったか
+    tier: 報道
+    telop: 39分、右足のミドルで逆転
+    narrator: キャスター
+    card:
+      type: table
+      title: PSV 4-1 スパルタ・ロッテルダム（9月13日）
+      columns: ["", ""]
+      rows:
+        - ["39分", "佐野航大の逆転ゴール"]
+        - ["出場", "5試合連続の先発フル出場"]
+        - ["チーム", "リーグ戦5連勝"]
+    say:
+      - エールディヴィジ第6節、PSV対スパルタ・ロッテルダムです。
+      - 39分、ペナルティエリアの手前でパスを受けた佐野航大が、右足を振り抜きました。
+      - 強烈なシュートはゴール右下の隅に突き刺さり、**逆転ゴール**になりました。
+      - PSVはこの試合を**4対1**で勝ち、リーグ戦5連勝です。
+      - 佐野はこれで**5試合続けて先発フル出場**。移籍後はじめての得点でした。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/14/post1010244/
+
+  - id: ball
+    heading: つけられた注釈
+    main: true
+    tier: 報道
+    telop: 「新しいボールは、とても気持ちよく打てる」
+    narrator: 解説
+    say:
+      - {short_only: true, text: PSVの佐野航大が、移籍後初ゴールを決めました。}
+      - このゴールについて、元オランダ代表の選手が別の見方を示しました。
+      - まず、止められなかったゴールキーパーに触れています。
+      - {voice: 元オランダ代表, text: もちろん、彼はあのボールを止めなければならなかった}
+      - {voice: 元オランダ代表, text: それは本人も分かっているだろう}
+      - そのうえで、こう続けました。
+      - {voice: 元オランダ代表, text: しかし、新しいエールディヴィジのボールは、とても気持ちよくシュートを打てるボールなんだ}
+      - 理由も説明しています。
+      - {voice: 元オランダ代表, text: ボールが比較的軽いので、足から速く離れると選手たちは言っています}
+      - {voice: 元オランダ代表, text: あまり力を加えなくても速いボールを蹴ることができる}
+      - {voice: 元オランダ代表, text: さらに、本当にブレるボールでもあります}
+      - オランダの『VoetbalPrimeur』が13日に伝えました。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/14/post1010928/
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「兄より凄いと思うぞ、この選手は」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: 兄より優れた弟はいない, short_voice: true}
+      - {voice: ネット民, text: 兄より凄いと思うぞ、この選手は, short_voice: true}
+      - {voice: ネット民, text: まさか佐野が日本最高選手になるとは, short_voice: true}
+      - {voice: ネット民, text: 俺ニワカだけど兄が現日本最強なんでしょ}
+      - {voice: ネット民, text: この帽子ドイツんだ オランダ}
+    official: false
+    sources:
+      - https://sakarabo.blog.jp/archives/1084500151.html

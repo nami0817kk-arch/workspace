@@ -735,7 +735,9 @@ def test_TikTok用は1分を超えるまで台本の中身を足す():
     cut = shorts.tiktok_cut(script)
     assert shorts._estimate(cut) >= shorts.TIKTOK_MIN_SECONDS / shorts.TIKTOK_ESTIMATE_RATIO
     # 足したのは台本にある行だけ
-    texts = {l.text for sc in script.scenes for l in sc.lines} | {shorts.SHORT_SUBSCRIBE}
+    texts = ({l.text for sc in script.scenes for l in sc.lines}
+             | {shorts.SHORT_SUBSCRIBE, shorts.TIKTOK_OUTRO})
     assert all(l.text in texts for l in cut.lines)
-    # 締めは登録の一言のまま
-    assert cut.lines[-1].text == shorts.SHORT_SUBSCRIBE
+    # **締めは YouTube へ送る一言**（2026-09-16）。TikTok は説明欄のリンクを
+    # 押せないので、声で名前を言うしかない
+    assert cut.lines[-1].text == shorts.TIKTOK_OUTRO

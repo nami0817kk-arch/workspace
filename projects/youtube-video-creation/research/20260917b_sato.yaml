@@ -1,0 +1,111 @@
+# バレンシアが監督解任の直後に初勝利。その日、佐藤龍之介は出なかった（2026-09-15）
+#
+# **良い知らせと悪い知らせが同じ試合に入っている回。**
+# チームは勝った。ただし佐藤は今季はじめて出番が無かった。
+#
+# 引きは**「勝った日に、それまで出ていた選手が消えた」**。ここが山場（@main）。
+#
+# **佐藤を責める書き方にしない。**新体制の初戦で、監督の選び方が変わっただけ。
+# 現地の評価は新体制そのものに向いている
+format: news
+voice_min: 30
+slot: japan_2
+date: "2026年9月17日"
+
+people:
+  - 佐藤龍之介
+
+short_title: "勝った日に出番が消えた"
+
+theme:
+  id: sato_first_win_benched
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: バレンシア
+  title: バレンシアが今季初めて勝った日、佐藤龍之介はピッチにいなかった
+  hook: 監督と首脳陣が解任された直後の一戦でした。
+  question: 何が変わったのか
+
+thumbnail:
+  line1: バレンシア 今季初勝利
+  line2: その日 佐藤龍之介は ●●●●
+  photo: "assets/photos/20260908_sato/01.jpg"
+  focus: 0.05
+  band_full: true
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 何があったか
+    tier: 報道
+    telop: アラベスに1-0。開幕6試合目で初勝利
+    narrator: キャスター
+    card:
+      type: table
+      title: アラベス 0-1 バレンシア（9月15日）
+      columns: ["", ""]
+      rows:
+        - ["ここまで", "1分4敗で最下位"]
+        - ["77分", "リオハの決勝点"]
+        - ["相手", "ホーム3連勝中のアラベス"]
+    say:
+      - ラ・リーガ第6節、アラベス対バレンシアです。
+      - アウェイのバレンシアが**1対0**で勝ちました。
+      - 開幕から5試合勝てず、**1分4敗で最下位**に沈んでいたチームの、待望の初白星です。
+      - 決めたのは77分、途中出場のルイス・リオハでした。
+      - 相手のアラベスは、ホームで開幕3連勝中でした。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/16/post1011762/
+
+  - id: sato
+    heading: その日の佐藤龍之介
+    main: true
+    tier: 報道
+    telop: 今季はじめて、出番が無かった
+    narrator: 解説
+    say:
+      - {short_only: true, text: ラ・リーガ第6節、最下位に沈んでいたチームの話です。}
+      - この試合、佐藤龍之介はベンチから始まりました。
+      - そして、**5枚の交代枠をすべて使っても、呼ばれませんでした。**
+      - ここまで佐藤は、**開幕5試合すべてに出場**しています。うち4試合は先発でした。
+      - 新しい体制の初戦で、はじめてピッチに立たなかったことになります。
+      - 監督が代わると、序列は最初の1試合で決まってしまうことがあります。
+      - 代わりに、18歳のアーロン・マヨルがラ・リーガデビューを飾りました。
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/16/post1011762/
+
+  - id: local
+    heading: 現地はどう書いたか
+    tier: 報道
+    telop: 「墓地から蘇った」
+    narrator: キャスター
+    say:
+      - 現地の評価は、チームそのものに向いています。
+      - {voice: 記者, text: 今季ここまでで最高のバレンシアだった}
+      - {voice: 記者, text: バレンシアに光が見えた}
+      - {voice: 記者, text: 墓地から蘇った}
+      - 『El País』は、前の体制の5試合と比べてこう書きました。
+      - {voice: 記者, text: よりダイナミックで、大胆で、一貫性のあるチームだった}
+    official: false
+    sources:
+      - https://www.footballchannel.jp/2026/09/16/post1011762/
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「調子よかったのプレシーズンだけだったな」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: 調子よかったのプレシーズンだけだったな, short_voice: true}
+      - {voice: ネット民, text: スピードがないからかな, short_voice: true}
+      - {voice: ネット民, text: あちゃー}
+      - {voice: ネット民, text: 降格かな}
+      - {voice: ネット民, text: スペランなぁ}
+      - {voice: ネット民, text: まじでJの上位より弱い}
+    official: false
+    sources:
+      - https://sakarabo.blog.jp/archives/1084497965.html

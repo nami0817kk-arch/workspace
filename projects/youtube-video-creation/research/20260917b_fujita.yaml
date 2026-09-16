@@ -1,0 +1,110 @@
+# ドイツ2部の日本人対決。決めたのは藤田譲瑠チマだった（2026-09-12）
+#
+# **①塩貝健人を題材に挙げていたが、中身を確かめて角度を変えた**（2026-09-16）。
+# Number の「人生を拓いた12分間」は 2026年6月の記事で、しかも有料の壁の内側。
+# **古い言葉を今日の話に混ぜない。**同じ試合を、勝ったほうから書く。
+#
+# 引きは**「88分に決めたのは、相手DFに当たったシュートだった」**。ここが山場（@main）。
+#
+# **塩貝を落とす書き方にしない。**先発して74分までプレーしている。
+# チームの初黒星は彼の責任ではない
+format: news
+voice_min: 25
+slot: japan_5
+date: "2026年9月17日"
+
+people:
+  - 藤田譲瑠チマ
+
+short_title: "ドイツ2部の日本人対決"
+
+theme:
+  id: fujita_winner_vs_wolfsburg
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: ザンクトパウリ
+  title: ドイツ2部で日本人が3人そろった試合を、決めたのは誰か
+  hook: 88分までスコアは動きませんでした。
+  question: 誰が決めたのか
+
+thumbnail:
+  line1: ドイツ2部の日本人対決
+  line2: 決めたのは ●●●●
+  photo: "assets/photos/20260917_fujita/01.jpg"
+  focus: 0.05
+  band_full: true
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: どんな試合だったか
+    tier: 報道
+    telop: ザンクトパウリ 1-0 ヴォルフスブルク
+    narrator: キャスター
+    card:
+      type: table
+      title: ブンデスリーガ2部 第5節（9月12日）
+      columns: ["", ""]
+      rows:
+        - ["藤田譲瑠チマ", "先発フル出場・決勝点"]
+        - ["塩貝健人", "先発、74分まで"]
+        - ["原大智", "90分から出場"]
+    say:
+      - ブンデスリーガ2部の第5節、ザンクトパウリ対ヴォルフスブルクです。
+      - ピッチには日本人が3人いました。
+      - ザンクトパウリに**藤田譲瑠チマ**、途中から**原大智**。
+      - ヴォルフスブルクには**塩貝健人**が先発しています。
+      - 試合は88分まで、0対0のままでした。
+    official: false
+    sources:
+      - https://web.ultra-soccer.jp/news/all/36110/
+
+  - id: goal
+    heading: 88分に起きたこと
+    main: true
+    tier: 報道
+    telop: 高い位置で奪って、右足。相手に当たって入った
+    narrator: 解説
+    say:
+      - {short_only: true, text: ザンクトパウリとヴォルフスブルクの一戦です。}
+      - 動いたのは88分でした。
+      - 藤田譲瑠チマが、**高い位置でボールを奪います。**
+      - そのままドリブルで運び、切り返してから右足を振り抜きました。
+      - このシュートが**相手ディフェンダーに当たり**、ネットを揺らします。
+      - 今季初ゴールが、そのまま決勝点になりました。
+      - ザンクトパウリはこれが今季のリーグ戦**初勝利**です。3分1敗のあとでした。
+      - ヴォルフスブルクにとっては、逆に**今季初黒星**でした。2勝2分けで来ていました。
+    official: false
+    sources:
+      - https://web.ultra-soccer.jp/news/all/36110/
+
+  - id: shiogai
+    heading: 負けたほうの日本人
+    tier: 背景
+    telop: 塩貝健人は公式戦5試合でまだ無得点
+    narrator: キャスター
+    say:
+      - 塩貝健人は、この試合も先発でした。74分までプレーしています。
+      - ヴォルフスブルクは昨季、**2部へ降格**したクラブです。
+      - 塩貝はW杯の日本代表に選ばれた選手で、そのまま2部で戦っています。
+      - ここまで公式戦**5試合**に出て、まだゴールはありません。
+      - 同じ日本人が、勝ったほうで決めて、負けたほうは無得点で退いた試合になりました。
+    official: false
+    sources:
+      - https://web.ultra-soccer.jp/news/all/36110/
+      - https://www.footballchannel.jp/2026/09/09/post1007637/
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「ちまー！！！！」
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: あああああああああ！ ちまー！！！！, short_voice: true}
+      - {voice: ネット民, text: 藤田譲瑠チマがミドル弾で決勝点！, short_voice: true}
+      - {voice: ネット民, text: 藤田譲瑠チマは冬に移籍してほしい, short_voice: true}
+    official: false
+    sources:
+      - https://x.com/search?q=藤田譲瑠チマ&f=live

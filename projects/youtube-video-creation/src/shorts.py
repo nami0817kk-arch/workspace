@@ -653,6 +653,10 @@ TIKTOK_ESTIMATE_RATIO = 0.89
 # 足すのは台本に書いてある節と反応だけで、同じ台本の中身が尽きたらそこで止める
 TIKTOK_MAX_SECONDS = 90.0
 TIKTOK_VOICES_MAX = 6
+# **TikTok の締めはYouTubeへ送る**（2026-09-16 ユーザー「tiktokからyoutubeへの流れを
+# 作りたい」）。TikTok は説明欄のリンクを押せないので、**声で名前を言う**しかない。
+# ショートの締め（チャンネル登録の依頼）と入れ替える
+TIKTOK_OUTRO = "続きは、ユーチューブの海外サッカーの理由で。"
 
 
 def tiktok_cut(script: Script, section: str = "") -> Script:
@@ -713,6 +717,14 @@ def tiktok_cut(script: Script, section: str = "") -> Script:
             if enough():
                 break
             add_scene(scene)
+
+    # 締めの一言を、YouTubeへ送る文に差し替える
+    lines = cut.scenes[-1].lines
+    if lines and (lines[-1].text or "").strip() == SHORT_SUBSCRIBE:
+        lines[-1].text = TIKTOK_OUTRO
+        lines[-1].telop = TIKTOK_OUTRO
+        lines[-1].audio_path = None
+        lines[-1].duration = 0.0
 
     _add_face(cut)
     return cut

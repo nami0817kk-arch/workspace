@@ -107,7 +107,7 @@ def caption(build_dir: Path) -> str:
     if lead:
         out += ["", lead[0]]
     out += ["", " ".join(hashtags[:HASHTAG_MAX])]
-    tail = []
+    tail = ["本編はYouTubeで → 海外サッカーの理由 @kaigai-soccer-riyuu"]
     if outlets:
         tail.append("出典: " + " / ".join(outlets))
     tail += parts.get("クレジット", [])
