@@ -1343,3 +1343,27 @@ def test_したのはで止める形も答えを隠している():
     assert title("久保建英が外れた。監督が挙げたのは").ok
     # 言い切りは今までどおり止める
     assert not title("アーセナルがサンダーランドに2対0で勝った").ok
+
+
+def test_取材メモより古い台本を知らせる(tmp_path):
+    """**draft は既存の台本を上書きしない**（2026-09-16 に2度踏んだ）。
+
+    取材メモを直して掛け直しても「すでにあります」で止まるだけで、
+    古い台本のまま先へ進めてしまう。気づけるようにする。
+    """
+    import os
+    from src.review import stale_against_notes
+
+    (tmp_path / "scripts").mkdir()
+    (tmp_path / "research").mkdir()
+    script = tmp_path / "scripts" / "a.md"
+    notes = tmp_path / "research" / "a.yaml"
+    script.write_text("古い", encoding="utf-8")
+    notes.write_text("新しい", encoding="utf-8")
+
+    os.utime(script, (1000, 1000))
+    os.utime(notes, (2000, 2000))
+    assert "取材メモより古い" in stale_against_notes(script)
+
+    os.utime(notes, (500, 500))
+    assert stale_against_notes(script) == ""

@@ -1771,3 +1771,25 @@ def _video_seconds(video) -> float | None:
         return None
     h, m, sec = found.groups()
     return int(h) * 3600 + int(m) * 60 + float(sec)
+
+
+def stale_against_notes(script_path) -> str:
+    """取材メモより台本が古ければ、そう言う（2026-09-16）。
+
+    **`draft` は既存の台本を上書きしない。**取材メモを直して掛け直しても
+    「すでにあります」で止まるだけなので、**古い台本のまま先へ進める。**
+    実際に2度踏んだ。2度目は、足したはずのネットの反応が7本ぜんぶ
+    ショートに入っておらず、確認ページも古い中身で公開してしまった。
+
+    消して掛け直せば直る。ここは**気づくための検査**で、直しはしない。
+    """
+    from pathlib import Path
+
+    script = Path(script_path)
+    notes = script.parent.parent / "research" / (script.stem + ".yaml")
+    if not script.exists() or not notes.exists():
+        return ""
+    if notes.stat().st_mtime <= script.stat().st_mtime:
+        return ""
+    return (f"台本が取材メモより古いです（{notes.name} のほうが新しい）。"
+            f"`rm {script}` してから draft を掛け直してください")

@@ -560,6 +560,12 @@ def _cmd_check(args, config) -> int:
     # 本編の尺を見るので、ショート専用の行は落としてから数える
     from .pipeline import drop_short_only
     script = drop_short_only(load_script(args.script))
+    # **古い台本のまま進めない**（2026-09-16 に2度踏んだ）
+    from .review import stale_against_notes
+
+    stale = stale_against_notes(args.script)
+    if stale:
+        print(f"■ {stale}", flush=True)
     print(f"タイトル: {script.title}")
     print(f"シーン: {len(script.scenes)} / セリフ: {len(script.lines)} 行 / {script.char_count()} 文字")
     estimate = sum(line.estimated_duration() for line in script.lines)
@@ -2896,7 +2902,13 @@ def _cmd_draft(args, config) -> int:
         f"scripts/{Path(args.notes).stem}.md"
     )
     if target.exists():
-        print(f"すでにあります: {target}", file=sys.stderr)
+        # **黙って素通りさせない**（2026-09-16 に2度踏んだ）。取材メモを直してから
+        # draft を掛け直しても、ここで止まるだけなので**台本は古いまま**になる。
+        # 実際、反応を足した7本がショートに1件も入らず、確認ページも古い中身で出た。
+        # stderr の1行では見落とすので、最後の行に stdout で出す
+        print(f"■ 台本がすでにあります: {target}", flush=True)
+        print("■ 書き出していません。取材メモの直しは反映されていません。"
+              "反映するには、この台本を消してから掛け直してください", flush=True)
         return 1
     target.parent.mkdir(parents=True, exist_ok=True)
     target.write_text(to_script(notes, plan), encoding="utf-8")
