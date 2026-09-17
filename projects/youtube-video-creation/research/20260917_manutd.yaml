@@ -1,0 +1,122 @@
+# マンチェスター・ユナイテッドがカラバオ杯で敗退（2026-09-17）
+#
+# **ロマーノ枠。**ロマーノが OFFICIAL で出している（`accounts` で唯一
+# 確度「確定」にしているアカウント）。キャリックの発言も本人の投稿から。
+#
+# **英語の記事では発言が取れなかった**（取材で確認）。日本語の記事も見つからず。
+# **ロマーノの投稿が、この発言の出どころ。**
+#
+# 引きは**「10分で2点リードしていた」**。そこから3失点。
+# オールド・トラフォードで2点差以上のリードから敗れたのは**50年以上ぶり**。
+# ここが山場（@main）。
+#
+# **15歳のJJガブリエルの件は混ぜない。**別の話。
+format: news
+voice_min: 0
+slot: romano_1
+date: "2026年9月17日"
+
+people:
+  - マンチェスター・ユナイテッド
+
+short_title: "マンUが10分で作った2点リードは何だったか"
+
+theme:
+  id: manutd_carabao_collapse
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・ユナイテッド
+  title: マンチェスター・ユナイテッドが10分で2点リードして、それから起きたこと
+  question: 何が起きたのか
+
+thumbnail:
+  line1: 10分で2点リード
+  line2: そこから ●●●●
+  crest_main:
+    - マンチェスターユナイテッド
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: オールド・トラフォードで2-3。カラバオ杯敗退
+    narrator: キャスター
+    card:
+      type: table
+      title: 試合の流れ
+      columns: ["", ""]
+      rows:
+        - ["8分", "シェイ・レイシー（マンU）"]
+        - ["10分", "メイソン・マウント（マンU）"]
+        - ["45分", "コストゥーラス（ブライトン）"]
+        - ["65分・70分", "グロス／デ・カイパー（ブライトン）"]
+    say:
+      - リーグカップの3回戦、本拠地での一戦です。
+      - 相手はブライトン。2対3で敗れ、敗退しました。
+      - 立ち上がりは、ユナイテッドのものでした。
+      - "8分にシェイ・レイシー、10分にメイソン・マウント。**10分で2点**です。"
+      - そこから3失点しました。
+      - 前半の終わりぎわに1点を返され、65分と70分に逆転されています。
+    official: false
+    sources:
+      - https://x.com/FabrizioRomano
+      - https://www.goal.com/en/news/brighton-complete-sensational-comeback-and-knock-manchester-united-out-of-the-carabao-cup/blta5f5795c7e63945f
+
+  - id: record
+    heading: 50年以上なかったこと
+    main: true
+    tier: 報道
+    telop: 本拠地で2点差以上のリードから敗れたのは1976年以来
+    narrator: 解説
+    card:
+      type: table
+      title: この敗戦の重さ
+      columns: ["", ""]
+      rows:
+        - ["前回", "1976年9月のトッテナム戦（3-2）"]
+        - ["つまり", "50年以上なかったこと"]
+        - ["キャリックの今季", "6試合で2勝"]
+    say:
+      - この負け方には、記録が付きました。
+      - "ユナイテッドが**オールド・トラフォードで2点差以上のリードから敗れた**のは、50年以上ぶりです。"
+      - 前にあったのは1976年9月、トッテナム戦の3対2でした。
+      - 試合のあと、監督のマイケル・キャリックが話しています。
+      - {voice: キャリック, text: これは受け入れられるものではなかった。この敗戦の責任は私にある}
+      - {voice: キャリック, text: 後半の終わりにかけての出来については、私の責任だ}
+      - キャリックの今季は、6試合で2勝です。
+    official: false
+    sources:
+      - https://x.com/FabrizioRomano
+
+  - id: lacey
+    heading: 先制点を決めたのは10代だった
+    tier: 報道
+    telop: シェイ・レイシー。初先発でのゴールはラッシュフォード以来
+    narrator: キャスター
+    say:
+      - 先制点を決めたシェイ・レイシーについて、ひとつ記録があります。
+      - "ユナイテッドで**10代の選手が初先発で得点した**のは、2016年2月のマーカス・ラッシュフォード以来です。"
+      - 10年ぶりでした。
+      - その2点が、90分のうちに消えたことになります。
+    official: false
+    sources:
+      - https://www.goal.com/en-us/lists/old-trafford-collapse-michael-carrick-man-utd-blow-two-goal-lead-brighton-carabao-cup-exit/bltbf7924f9f61573d5
+
+  - id: voices
+    heading: ネットの声
+    tier: 未確認
+    telop: 試合直後にXで出ていた声
+    narrator: キャスター
+    say:
+      - {short_only: true, text: 相手はブライトン。敵地での逆転勝ちでした。}
+      - {voice: ネット民, text: マンU10分で2点リードも逆転されて1回戦ボーイ, telop: 10分で2点リードも逆転されて1回戦ボーイ}
+      - {voice: ネット民, text: キャリック解任かな これは酷い, telop: キャリック解任かな これは酷い}
+      - {voice: ネット民, text: マンUブライトン相手に逝くw キャリック解任なるか？, telop: マンUブライトン相手に逝くw キャリック解任なるか？}
+      - {voice: ネット民, text: 中村敬斗のゴールも生まれたしブライトンはマンUに逆転勝利だし良い朝だな, telop: 中村敬斗のゴールも生まれたし、ブライトンは逆転勝利。良い朝だな}
+      - {voice: ネット民, text: マンU、2点リードから敗戦。ブライトンが後半3得点で逆転勝利, telop: 2点リードから敗戦。ブライトンが後半3得点で逆転勝利}
+    official: false
+    sources:
+      - https://x.com/search?q=%E3%83%9E%E3%83%B3U%20%E3%83%96%E3%83%A9%E3%82%A4%E3%83%88%E3%83%B3&f=live

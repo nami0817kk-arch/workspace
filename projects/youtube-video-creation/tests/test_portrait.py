@@ -346,3 +346,30 @@ def test_逮捕写真と紋章を人として掴まない():
     # 本人の写真は通る（外しすぎていないことも確かめる）
     assert looks_like_person("File:Thiago Silva (cropped).jpg")
     assert looks_like_person("File:Thiago Silva & Marquinhos.jpg")
+
+
+def test_前に使った写真は後ろへ回す(tmp_path, monkeypatch):
+    """**同じ人がいつも同じ1枚になっていた**（2026-09-17 ユーザー指摘
+    「画像の出典が過去と同じことになってる」）。
+
+    候補を点数順に並べて必ず1位を取るので、中村敬斗は 9/6 と 9/17 で同じ
+    ザルツブルク時代の写真、鈴木彩艶も同じタイ戦の写真になっていた。
+    **候補は8枚あった。**前に使ったものは後ろへ回す。
+    """
+    import json as _json
+
+    from src import portrait as P
+
+    root = tmp_path / "images"
+    (root / "nakamura").mkdir(parents=True)
+    (root / "nakamura" / "credits.json").write_text(
+        _json.dumps([{"file": "01.jpg", "title": "File:A.jpg"}]), encoding="utf-8")
+    (root / "nakamura2609").mkdir()
+
+    used = P.used_titles(root / "nakamura2609")
+    assert used == {"File:A.jpg"}, "別フォルダの控えを見ていない"
+
+    pool = ["File:A.jpg", "File:B.jpg", "File:C.jpg"]
+    ordered = [t for t in pool if t not in used] + [t for t in pool if t in used]
+    assert ordered[0] == "File:B.jpg"
+    assert ordered[-1] == "File:A.jpg", "使い切ったら前のものへ戻ってよい"

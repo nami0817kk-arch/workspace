@@ -79,7 +79,14 @@ OPENING_BACKGROUND = STOCK + "match_stadium.mp4"
 # render は書き出しのたびに moving_background() を通し、
 # 「同じ名前で始まる .mp4 があれば差し替える」ので、
 # **静止画にしたつもりが stock/match_stadium.mp4 に戻されていた**
-STILL_BACKGROUND = "assets/backgrounds/crest_still.png"
+# **クラブの実写を既定値にしない**（2026-09-17）。ここは長いあいだ
+# `crest_still.png` で、その中身は**ヴォルフスブルクのスタジアムの実写**だった
+# （LEDの看板に VFL WOLFSBURG と読める）。写真の無い回は全部これになるので、
+# ホッフェンハイムの話もPSVの話もマンUの話も、同じドイツのスタジアムの前で
+# 喋っていた。9/17 に台本4本を手で直したが、**既定値を直さなかったので
+# その日のうちに新しい台本3本へ戻ってきた。**
+# いまは模様の無い下地（studio.png）。**どのクラブのものでもない**
+STILL_BACKGROUND = "assets/backgrounds/studio.png"
 
 SPEAKERS = ("キャスター", "解説")
 # 匿名の集まり。**画面に積む**ので、行ごとの引用カードは出さない
@@ -1361,6 +1368,9 @@ def to_script(notes: Notes, plan: Plan) -> str:
         # 台本を作り直すたびに消えていた（2026-09-06 に2回やった）。
         # 直すたびに手で書き戻すのは、必ずどこかで抜ける
         **({"thumbnail_photo": str(thumbnail["photo"])} if thumbnail.get("photo") else {}),
+        # **サムネだけに敷く絵**（2026-09-17）。一覧板や数字の図をここに書く。
+        # `thumbnail_photo` に入れると動画の中でも使われ、カードと重なる
+        **({"thumbnail_board": str(thumbnail["board"])} if thumbnail.get("board") else {}),
         **({"thumbnail_focus": thumbnail["focus"]} if thumbnail.get("focus") is not None else {}),
         # init-assets が必ず作るものを既定にする。動く背景にしたいときは
         # `make-clip` で mp4 を作ってから、台本の bg を差し替える

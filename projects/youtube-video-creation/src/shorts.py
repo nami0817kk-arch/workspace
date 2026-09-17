@@ -290,8 +290,19 @@ VOICES_TAIL_MAX = 6
 
 
 def _is_voices_scene(scene: Scene) -> bool:
-    """反応だけを並べた節か。**語りが1行でもあれば違う。**"""
-    lines = [l for l in scene.lines if (l.text or "").strip()]
+    """反応だけを並べた節か。**語りが1行でもあれば違う。**
+
+    ただし **`only: short` の1行は数えない**（2026-09-17 に発見）。
+    反応の節の頭には「ショート単体で話が分かるように」状況説明を1行置く決まりで、
+    その行の話者はキャスターである。**取材メモの雛形が必ずそう作る**ので、
+    語りを1行でも見た時点で弾いていたこの関数は、**どの回でも False を返していた。**
+    結果、`_add_voices_tail` の元が見つからず、**9/17 のショート5本すべてに
+    ネットの声が1件も入っていなかった**（ユーザー指示「声は必ず」に反する）。
+    その1行はショートの本体側へ切り出されるので、ここで数える相手ではない。
+    """
+    lines = [l for l in scene.lines
+             if (l.text or "").strip()
+             and str(getattr(l, "only", "") or "").strip() != "short"]
     if not lines:
         return False
     return all((getattr(l, "speaker", "") or "").strip() not in NARRATORS for l in lines)
@@ -358,7 +369,11 @@ def _add_voices_tail(short: Script, script: Script, max_seconds: float) -> None:
     # それをやると**見出しの言い直しの反応が締めに戻ってくる**（9/15 の指摘そのもの）。
     # 尺が余るなら、埋めるのではなく**取材メモの印を増やす**（書いた人が選ぶ）
     added = 0
-    for line in (picked or source.lines):
+    # 印が無いときの受け皿からも、頭の状況説明（`only: short`）は外す。
+    # あれは語りで、ショートの本体側に既に入っている
+    rest = [l for l in source.lines
+            if str(getattr(l, "only", "") or "").strip() != "short"]
+    for line in (picked or rest):
         if added >= VOICES_TAIL_MAX:
             break
         cost = line.duration or line.estimated_duration()
@@ -392,6 +407,43 @@ def _add_subscribe(short: Script) -> None:
     lines.append(last)
 
 
+STACK_DIR = Path("assets/images/_stack")
+
+
+def stacked_photo(meta: dict) -> str:
+    """**サムネが2枚並びの回は、ショートでも同じ2枚を出す**
+    （2026-09-17 指示「ショートも横割りで本編のサムネと同じようにして」）。
+
+    本編のサムネは左右に割るが、ショートは縦長なので**上下に割る**。
+    それまでは `thumbnail_photos` の**1枚目しか出ていなかった**ので、
+    鈴木の回はサムネにある人影（＝答えの伏せ字）がショートに出ず、
+    同じ回に見えなかった。
+
+    作った1枚は `assets/images/_stack/` に控える（同じ組み合わせなら作り直さない）。
+    """
+    tiles = [str(x).strip() for x in ((meta or {}).get("thumbnail_photos") or [])]
+    tiles = [x for x in tiles if x and Path(x).exists()]
+    if len(tiles) < 2:
+        return ""
+    from PIL import Image
+
+    from .render import _cover
+
+    name = "__".join(Path(t).stem for t in tiles[:3]) + ".jpg"
+    out = STACK_DIR / name
+    if out.exists():
+        return out.as_posix()
+    width, height = SIZE
+    band = height // len(tiles[:3])
+    canvas = Image.new("RGB", (width, band * len(tiles[:3])), (12, 14, 20))
+    for index, tile in enumerate(tiles[:3]):
+        with Image.open(tile) as image:
+            canvas.paste(_cover(image.convert("RGB"), width, band), (0, band * index))
+    out.parent.mkdir(parents=True, exist_ok=True)
+    canvas.save(out, quality=95)
+    return out.as_posix()
+
+
 def _add_face(script: Script) -> None:
     """顔写真を**最初の行から最後まで、全部の行に置く**。
 
@@ -403,13 +455,16 @@ def _add_face(script: Script) -> None:
     カードとテロップで、写真は指定した行だけ。最初そう思い込んで先頭にだけ
     置いたところ、5秒出て消えた（実測して分かった）。全部の行に置く。
     """
-    photo = str((script.meta or {}).get("thumbnail_photo") or "").strip()
+    # **2枚並びのサムネは、上下に割った1枚にしてから敷く**（2026-09-17 指示）
+    photo = stacked_photo(script.meta)
+    if not photo:
+        photo = str((script.meta or {}).get("thumbnail_photo") or "").strip()
     if not photo:
         photo = next((str(line.image) for line in script.lines if line.image), "")
     if not photo:
         return
     for line in script.lines:
-        if not line.image:
+        if not line.image or photo.startswith(STACK_DIR.as_posix()):
             line.image = photo
 
 
@@ -448,6 +503,31 @@ def quote_problems(script: Script) -> list[str]:
         return [f"最初の発言が{at:.0f}秒目です（{QUOTE_BY:.0f}秒までに出す。"
                 "状況の説明を短くするか、発言のある節を選ぶ）"]
     return []
+
+
+def subject_problems(short: Script, script: Script) -> list[str]:
+    """**ショートが、自分の題名に答えているか**（2026-09-17）。
+
+    同じ日に2回やった。鈴木彩艶の回は題名が「鈴木彩艶が後半から出た試合」なのに、
+    ショートの中身は相手選手の経歴だけで、**鈴木の話が1行も入っていなかった**。
+    日本代表の回も「名前が消えたのは誰だったか」と聞いて、**誰なのかを一度も
+    言わずに**終わっていた。どちらもユーザーが見て気づいた。
+
+    ショートは山場の節しか切り出さない。その節に主語が出てこない台本は普通にある。
+    **1行目（題名の読み上げ）を除いて**、題材の名前が一度も出てこなければ知らせる。
+    直し方は、その節に `short_only` の行を足すこと。
+    """
+    topic = str((script.meta or {}).get("topic") or "").strip()
+    people = [str(x).strip() for x in ((script.meta or {}).get("people") or []) if str(x).strip()]
+    names = [n for n in ([topic] + people) if n]
+    if not names:
+        return []
+    body = [l for l in short.lines if (l.text or "").strip()][1:]
+    said = "".join((l.text or "") for l in body)
+    if any(name in said for name in names):
+        return []
+    return [f"ショートの中身に「{names[0]}」が一度も出てきません"
+            "（題名だけで、答えが入っていない。山場の節に short_only の行を足す）"]
 
 
 def face_problems(script: Script) -> list[str]:

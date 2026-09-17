@@ -125,7 +125,8 @@ def build_script(
 
     look = from_meta(script.meta, script.title)
     # 帯の上に出す反応。指定が無ければ台本から短いものを拾う（2026-09-07）
-    reaction = look.get("reaction") or reaction_line(script)
+    reaction = look.get("reaction") or (
+        "" if look.get("no_auto_reaction") else reaction_line(script))
     thumbnail = build_thumbnail(
         config,
         look["title"],

@@ -93,6 +93,9 @@ class Renderer:
         )
         self.frame_dir = work_dir / "frames"
         self._stages: dict[str, Image.Image | None] = {}
+        # **画面いっぱいに敷いた横長の絵**（一覧板・数字の図）の控え。
+        # その上にはカードも節の名前も重ねない（2026-09-17）
+        self._wide_stages: set[str] = set()
         # 冒頭の節で敷く写真（frame_entries が台本から入れる）
         self.opening_photo: str = ""
         self.opening_scene: str = ""
@@ -179,7 +182,14 @@ class Renderer:
         # **冒頭の節はサムネの写真を敷く**（2026-09-08）。ぼかした夜景に黒い板では、
         # 最初の3秒が止まって見えた。参考は0秒目からその人の実写が出ている
         opening = scene.title == self.opening_scene and self.opening_photo
-        stage = self._photo_stage(line.image or (self.opening_photo if opening else None))
+        stage_path = line.image or (self.opening_photo if opening else None)
+        stage = self._photo_stage(stage_path)
+        # **板を出している間は、その上に何も重ねない**（2026-09-17 ユーザー指示
+        # 「松木の顔ではなくて、サムネ画面をだしておいて」）。板は文字でできた絵なので、
+        # カードや節の名前を乗せると板の文字が読めなくなる。
+        # 実際、齋藤俊輔と松木玖生がカードの下に隠れていた
+        wide = bool(stage is not None and stage_path
+                    and str(stage_path) in self._wide_stages)
         if stage is not None:
             # 写真を主役にした下地。動画背景の上でも不透明に敷く
             canvas = stage.copy()
@@ -190,13 +200,14 @@ class Renderer:
         # 写真を下地にしたときは小さなカードを重ねない。図表だけ左半分に置く。
         # **縦型は左半分に寄せない。**写真が画面いっぱいなので、寄せる相手がいない
         # （2026-09-09。1080の幅をさらに半分にすると図表が読めなくなる）
-        self._draw_media(canvas, None if stage is not None else line.image, card, telop_t,
-                         left_half=stage is not None and not self.layout.is_portrait)
+        if not wide:
+            self._draw_media(canvas, None if stage is not None else line.image, card, telop_t,
+                             left_half=stage is not None and not self.layout.is_portrait)
         # **縦型では制作側の言葉を画面に出さない**（2026-09-07 の方針）。
         # 「オープニング」「まとめ」は章の目印で、視聴者には意味が無い。
         # 一等地の左上を、本編の作業用ラベルで埋めない。
         # 中身のある節名（「監督は何と言ったか」など）は残す
-        if not (self.layout.is_portrait and scene.title in INTERNAL_LABELS):
+        if not wide and not (self.layout.is_portrait and scene.title in INTERNAL_LABELS):
             self._draw_scene_title(canvas, scene.title)
         if scene.title == self.opening_scene and scene.lines and line is scene.lines[0]:
             self._draw_channel_card(canvas)
@@ -286,6 +297,26 @@ class Renderer:
             start = int(height * 0.60)
             for y in range(start, height):
                 alpha = int(196 * (y - start) / (height - start))
+                shade_draw.line([(0, y), (width, y)], fill=(0, 0, 0, alpha))
+            bed.alpha_composite(shade)
+            self._stages[image_path] = bed
+            return bed
+        # **横長の絵は画面いっぱいに敷く**（2026-09-17 ユーザー指摘
+        # 「動画の画面の左側がぼやけている」）。右半分に立てる作りは
+        # **人物の縦写真のためのもの**で、16:9 の絵（一覧板・数字の図）を
+        # 入れると左半分がぼかしだけになり、しかも絵の左半分が切り落とされる。
+        # 代表発表の一覧板では、齋藤と松木が画面から消えていた
+        # **1.4倍では足りなかった**（2026-09-17 夜）。佐野の回に使った写真は
+        # 800x600＝1.33倍で、この網に掛からず、公開した動画の左が暗いままだった。
+        # 縦写真だけを右半分に立てたいので、**横長も正方形に近いものも全面**にする
+        if photo.width >= photo.height * 1.15:
+            self._wide_stages.add(image_path)
+            bed = _cover(photo, width, height)
+            shade = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+            shade_draw = ImageDraw.Draw(shade)
+            start = int(height * 0.56)
+            for y in range(start, height):
+                alpha = int(150 * (y - start) / (height - start))
                 shade_draw.line([(0, y), (width, y)], fill=(0, 0, 0, alpha))
             bed.alpha_composite(shade)
             self._stages[image_path] = bed

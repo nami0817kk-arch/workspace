@@ -3,7 +3,7 @@
 #   python -m src.cli sources --new
 sites:
 - host: derbyderbyderby.it
-  seen: 30
+  seen: 32
   days:
   - '2026-09-02'
   - '2026-09-03'
@@ -15,6 +15,7 @@ sites:
   - '2026-09-12'
   - '2026-09-13'
   - '2026-09-14'
+  - '2026-09-16'
   examples:
   - https://www.derbyderbyderby.it/calcio-italiano/monza-juric-dopo-la-vittoria-sul-torino-se-ci-salviamo-sara-un-grande-risultato/?intcmp=gazzanet-derbyderbyderby
   - https://www.derbyderbyderby.it/calcio-estero/monza-ecco-zeballos-in-italia-per-il-mito-di-maradona-e-i-consigli-di-paredes/?intcmp=gazzanet-derbyderbyderby
@@ -96,6 +97,20 @@ sites:
   - https://blog.domesoccer.jp/archives/60253571.html
   - https://blog.domesoccer.jp/archives/60253934.html
   - https://blog.domesoccer.jp/archives/60253949.html
+- host: mondoudinese.it
+  seen: 9
+  days:
+  - '2026-09-04'
+  - '2026-09-05'
+  - '2026-09-07'
+  - '2026-09-10'
+  - '2026-09-14'
+  - '2026-09-15'
+  - '2026-09-17'
+  examples:
+  - https://www.mondoudinese.it/udinese/news-udinese/udinese-unai-gomez-voglio-migliorare-e-aumentare-i-miei-numeri/?intcmp=gazzanet-mondoudinese
+  - https://www.mondoudinese.it/udinese/news-udinese/conferenza-runjaic-bayo-puo-giocare-titolare-ma-non-vi-diro-lundici/?intcmp=gazzanet-mondoudinese
+  - https://www.mondoudinese.it/udinese/news-udinese/palma-il-posto-da-titolare-me-lo-dovro-riguadagnare/?intcmp=gazzanet-mondoudinese
 - host: fcinter1908.it
   seen: 8
   days:
@@ -114,19 +129,17 @@ sites:
   - https://www.cittaceleste.it/news/lazio-fabiani-leuropa-e-lobiettivo-mercato-i-voti-a-fine-anno-lanno-scorso/?refresh_ce
   - https://www.cittaceleste.it/news/lazio-pinamonti-gattuso-molto-esigente-a-immobile-chiederei/
   - https://www.cittaceleste.it/news/lazio-diogo-leite-primi-minuti-e-adesso/
-- host: mondoudinese.it
-  seen: 8
+- host: pianetamilan.it
+  seen: 7
   days:
-  - '2026-09-04'
-  - '2026-09-05'
-  - '2026-09-07'
-  - '2026-09-10'
-  - '2026-09-14'
-  - '2026-09-15'
+  - '2026-09-08'
+  - '2026-09-09'
+  - '2026-09-12'
+  - '2026-09-16'
   examples:
-  - https://www.mondoudinese.it/udinese/news-udinese/udinese-unai-gomez-voglio-migliorare-e-aumentare-i-miei-numeri/?intcmp=gazzanet-mondoudinese
-  - https://www.mondoudinese.it/udinese/news-udinese/conferenza-runjaic-bayo-puo-giocare-titolare-ma-non-vi-diro-lundici/?intcmp=gazzanet-mondoudinese
-  - https://www.mondoudinese.it/udinese/news-udinese/palma-il-posto-da-titolare-me-lo-dovro-riguadagnare/?intcmp=gazzanet-mondoudinese
+  - https://www.pianetamilan.it/news-milan/interviste/fofana-qui-per-riportare-il-siviglia-ad-alti-livelli-spero-di-ritrovare-il-piacere-di-giocare-a-calcio/?intcmp=gazzanet-pianetamilan
+  - http://pianetamilan.it/news-milan/ultime-notizie/ex-milan-taarabt-appende-gli-scarpini-al-chiodo-non-cambierei-nulla-di-questo-viaggio/
+  - https://www.pianetamilan.it/news-milan/rassegna-stampa/fofana-al-siviglia-cifre-dal-prestito-dal-milan-e-le-sue-prime-dichiarazioni/?intcmp=gazzanet-pianetamilan
 - host: bbc.co.uk
   seen: 6
   days:
@@ -168,17 +181,6 @@ sites:
   examples:
   - https://www.sportsmole.co.uk/football/barcelona/race-for-the-la-liga-title/predicted-lineups/any-changes-for-flick-how-barca-could-line-up-against-valencia_604504.html
   - https://www.sportsmole.co.uk/football/arsenal/league-cup/news/far-too-good-dowman-breaks-arsenal-record-as-gunners-reach-next-round_605207.html
-- host: pianetamilan.it
-  seen: 5
-  days:
-  - '2026-09-08'
-  - '2026-09-09'
-  - '2026-09-12'
-  - '2026-09-16'
-  examples:
-  - https://www.pianetamilan.it/news-milan/interviste/fofana-qui-per-riportare-il-siviglia-ad-alti-livelli-spero-di-ritrovare-il-piacere-di-giocare-a-calcio/?intcmp=gazzanet-pianetamilan
-  - http://pianetamilan.it/news-milan/ultime-notizie/ex-milan-taarabt-appende-gli-scarpini-al-chiodo-non-cambierei-nulla-di-questo-viaggio/
-  - https://www.pianetamilan.it/news-milan/rassegna-stampa/fofana-al-siviglia-cifre-dal-prestito-dal-milan-e-le-sue-prime-dichiarazioni/?intcmp=gazzanet-pianetamilan
 - host: genoaoggi.it
   seen: 5
   days:
@@ -190,6 +192,16 @@ sites:
   - https://www.genoaoggi.it/calciomercato/mercato-genoa/ehizibue-al-genoa-anni-fa-dissi-no-oggi-e-il-modo-migliore-per-chiedere-perdono/?intcmp=gazzanet-genoaoggi
   - https://www.genoaoggi.it/notizie/genoa-de-rossi-pari-frosinone/?intcmp=gazzanet-genoaoggi
   - https://www.genoaoggi.it/coppa-italia/de-rossi-promuove-il-genoa-risposte-positive-traore-ed-el-shaarawy-possono-fare-la-differenza/?intcmp=gazzanet-genoaoggi
+- host: violanews.com
+  seen: 5
+  days:
+  - '2026-09-09'
+  - '2026-09-12'
+  - '2026-09-17'
+  examples:
+  - https://www.violanews.com/news-viola/ultime-notizie/commisso-giocatori-vanno-e-vengono-noi-qua-per-costruire-altri-100-anni-insieme/?refresh_ce&intcmp=gazzanet-violanews
+  - https://www.violanews.com/news-viola/conferenze-stampa/vanoli-conf-non-so-qua-per-rivincita-questa-la-fiorentina-che-voglio/?intcmp=gazzanet-violanews
+  - https://www.violanews.com/news-viola/conferenze-stampa/si-presenta-gnonto-dalle-14-30-il-live-della-conferenza-stampa/?intcmp=gazzanet-violanews
 - host: ilmilanista.it
   seen: 4
   days:
@@ -223,14 +235,6 @@ sites:
   examples:
   - https://www.numericalcio.it/calendario-gare/serie-b-2019-20-risultati-e-classifica-aggiornata/?intcmp=gazzanet-numericalcio
   - https://www.numericalcio.it/uefa-youth-league/youth-league-2019-20-risultati-e-classifiche/?intcmp=gazzanet-numericalcio
-- host: violanews.com
-  seen: 4
-  days:
-  - '2026-09-09'
-  - '2026-09-12'
-  examples:
-  - https://www.violanews.com/news-viola/ultime-notizie/commisso-giocatori-vanno-e-vengono-noi-qua-per-costruire-altri-100-anni-insieme/?refresh_ce&intcmp=gazzanet-violanews
-  - https://www.violanews.com/news-viola/conferenze-stampa/vanoli-conf-non-so-qua-per-rivincita-questa-la-fiorentina-che-voglio/?intcmp=gazzanet-violanews
 - host: leedsunited.com
   seen: 3
   days:
@@ -262,6 +266,13 @@ sites:
   - https://www.leeds-live.co.uk/sport/leeds-united/how-joe-rodons-injury-impact-34569429
   - https://www.leeds-live.co.uk/sport/leeds-united/brighton-hove-albion-vs-34571891
   - https://www.leeds-live.co.uk/sport/leeds-united/leeds-united-newcastle-injuries-gruev-34612373
+- host: juvenews.eu
+  seen: 3
+  days:
+  - '2026-09-16'
+  - '2026-09-17'
+  examples:
+  - https://www.juvenews.eu/news/bremer-voglio-lasciare-il-segno-nella-storia-della-juventus/?intcmp=gazzanet-juvenews
 - host: today.rtl.lu
   seen: 2
   days:
@@ -342,6 +353,12 @@ sites:
   examples:
   - https://www.aljazeera.com/sports/2026/9/5/coach-luis-enrique-unconcerned-by-psgs-poor-start-to-french-league-season
   - https://www.aljazeera.com/sports/2026/9/15/champions-league-final-venues-revealed-munich-2028-barcelona-2029
+- host: milanistichannel.com
+  seen: 2
+  days:
+  - '2026-09-16'
+  examples:
+  - https://www.milanistichannel.com/news-milan/riconoscimento-importante-per-franco-baresi-il-suo-nome-nel-famedio-di-milano/?intcmp=gazzanet-milanistichannel
 - host: guardian.ng
   seen: 1
   days:

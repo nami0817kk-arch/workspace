@@ -858,3 +858,42 @@ def test_3枚並べたら札は真ん中の顔を避ける():
 
     # 札は真ん中の顔より下（画面の6割より下）
     assert th.FACE_CLASH_Y_TRIO > th.FACE_CLASH_Y
+
+
+def test_サムネだけに敷く絵は動画に回さない():
+    """**一覧板を thumbnail_photo に入れると、動画の中でカードと重なる**
+    （2026-09-17 の代表発表の回で、齋藤と松木がカードの下に隠れていた）。
+
+    `thumbnail_board` はサムネイルだけに効く。動画のほうは
+    `thumbnail_photo`（人の顔）のまま。
+    """
+    from src.thumbnail import from_meta
+
+    meta = {"title": "T", "thumbnail_line1": "あ", "thumbnail_line2": "い",
+            "thumbnail_photo": "assets/images/matsuki/01.jpg",
+            "thumbnail_board": "assets/stats/daihyo_new.png"}
+    assert from_meta(meta, "T")["photo"] == "assets/stats/daihyo_new.png"
+
+    del meta["thumbnail_board"]
+    assert from_meta(meta, "T")["photo"] == "assets/images/matsuki/01.jpg"
+
+
+def test_一覧板の回は書き込みの小窓を重ねない():
+    """**板の文字が小窓に隠れていた**（2026-09-17）。
+
+    松木の「サウサンプトン・23歳」が「松木遂に代表デビューか！」の小窓の
+    下に入っていた。板そのものが絵なので、台本から拾った断片は重ねない。
+    手で `thumbnail_reaction` を書いたときだけ出す。
+    """
+    from src.thumbnail import from_meta
+
+    board = {"thumbnail_line1": "あ", "thumbnail_line2": "い",
+             "thumbnail_board": "assets/stats/daihyo_new.png"}
+    assert from_meta(board, "T")["no_auto_reaction"] is True
+
+    board_with_words = dict(board, thumbnail_reaction="手で書いた一言")
+    assert from_meta(board_with_words, "T")["no_auto_reaction"] is False
+    assert from_meta(board_with_words, "T")["reaction"] == "手で書いた一言"
+
+    plain = {"thumbnail_line1": "あ", "thumbnail_line2": "い"}
+    assert from_meta(plain, "T")["no_auto_reaction"] is False

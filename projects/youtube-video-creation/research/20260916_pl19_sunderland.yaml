@@ -59,7 +59,6 @@ sections:
       - 愛称は「ブラック・キャッツ」。**黒猫**です。正式に決まったのは2000年でした。
       - ほかに「マッケムズ」「ウェアサイダーズ」とも呼ばれます。
       - 本拠地はスタジアム・オブ・ライト。収容は**4万8095人**です。
-      - 監督はレジス・ル・ブリス。今季の登録に日本人選手はいません。
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
@@ -117,6 +116,30 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
+  - id: season
+    heading: 今季の顔ぶれ
+    tier: 報道
+    telop: 主将はグラニト・ジャカ
+    narrator: キャスター
+    card:
+      type: table
+      title: 今季の顔ぶれ
+      columns: ["", ""]
+      rows:
+        - ["監督", "レジス・ル・ブリス"]
+        - ["主将", "グラニト・ジャカ（MF・スイス）"]
+        - ["エース", "ブライアン・ブロッベイ（FW・オランダ）"]
+        - ["昨季", "7点。突出した点取り屋はいない"]
+        - ["今季", "4人が1点ずつ"]
+    say:
+      - 主将はグラニト・ジャカ。スイス代表を長く引っ張ってきた中盤です。
+      - 前線はブライアン・ブロッベイ。オランダ人のセンターフォワードです。
+      - ただし、このクラブは**得点が1人に集まりません。**
+      - 昨季のチーム最多も7点で、今季は4人が1点ずつ。
+      - "**誰が取るか分からない**、というのがこのクラブの見どころです。"
+    official: false
+    sources:
+      - https://www.premierleague.com/en/news/4706912
   - id: titles
     heading: 獲ってきたもの
     tier: 背景

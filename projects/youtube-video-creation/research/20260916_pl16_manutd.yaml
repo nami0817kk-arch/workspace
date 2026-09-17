@@ -112,18 +112,31 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Manchester_United_F.C.
-  - id: now
+  - id: season
     heading: 今季の顔ぶれ
     tier: 報道
-    telop: 監督はマイケル・キャリック
+    telop: 主将はブルーノ・フェルナンデス
     narrator: キャスター
+    card:
+      type: table
+      title: 今季の顔ぶれ
+      columns: ["", ""]
+      rows:
+        - ["監督", "マイケル・キャリック"]
+        - ["主将", "ブルーノ・フェルナンデス（MF・ポルトガル）"]
+        - ["エース", "主将と同じ人"]
+        - ["今季", "リーグ3点・全4点でチーム最多"]
+        - ["昨季の得点王", "シェシュコとムベウモが11点で並ぶ"]
     say:
       - 監督はマイケル・キャリックです。
-      - 正式な監督として、**少なくとも2028年まで**の契約を結んでいます。
-      - 今季の登録に、日本人選手はいません。
+      - 主将はブルーノ・フェルナンデス。ポルトガル代表の中盤で。
+      - そして今季、**チームでいちばん点を取っているのも、この人**です。
+      - リーグで3点、すべての大会で4点。**中盤の主将が得点王**という形になっています。
+      - 昨季はシェシュコとムベウモが11点ずつで並んでいました。
+      - "**前線に決め手が1人いない**、というのが今のユナイテッドです。"
     official: false
     sources:
-      - https://en.wikipedia.org/wiki/Manchester_United_F.C.
+      - https://www.premierleague.com/en/news/4706912
   - id: titles
     heading: 獲ってきたもの
     tier: 背景

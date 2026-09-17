@@ -1367,3 +1367,53 @@ def test_取材メモより古い台本を知らせる(tmp_path):
 
     os.utime(notes, (500, 500))
     assert stale_against_notes(script) == ""
+
+
+def test_手元に無いエンブレムを主役にしたら止める(tmp_path):
+    """**顔もロゴも無いサムネが通っていた**（2026-09-17 ユーザー「町田の画像はないんだっけ？」）。
+
+    町田浩樹の回は `crest_main: [ホッフェンハイム]` と書いてあり検査は通ったが、
+    `assets/crests/` にホッフェンハイムは無く、できあがったのは**夜景だけ**のサムネ。
+    **名前を書けば通る検査は、通るだけ。**実物があるかを見る。
+    """
+    from src.review import _thumbnail_face
+    from src.script_model import parse_script
+
+    missing = parse_script(
+        "---\ntitle: T\nthumbnail_crest_main:\n- ホッフェンハイム\n---\n\n"
+        "## 何が起きたか\n\nキャスター: あ。\n")
+    found = _thumbnail_face(missing)
+    assert found.ok is False
+    assert "ホッフェンハイム" in found.detail
+
+    有る = parse_script(
+        "---\ntitle: T\nthumbnail_crest_main:\n- アーセナル\n---\n\n"
+        "## 何が起きたか\n\nキャスター: あ。\n")
+    assert _thumbnail_face(有る).ok is True
+
+
+def test_海外の反応が無ければ知らせる():
+    """**日本人選手の海外での話なのに、日本のネット民の声しか読んでいなかった**
+    （2026-09-17）。
+
+    同じ8日間・同じ選手を扱う「サムライスター情報局」の直近10本は、
+    10本すべてが「現地ファン騒然」「仏メディアが絶賛」で、再生の中央値 11,849回。
+    こちらは同じ期間で1,043回、題名に「現地」「海外」が1本も無かった。
+
+    話者の型（現地サポ・海外のファン）は最初から config にある。
+    **仕組みがあるのに使っていなかった。**
+    """
+    from src.review import check_overseas_voices
+    from src.script_model import parse_script
+
+    only_jp = parse_script(
+        "---\ntitle: T\n---\n\n## ネットの声\n\n"
+        "ネット民: すごい\nネット民: たしかに\n")
+    found = check_overseas_voices(only_jp)
+    assert found.ok is False
+    assert "現地サポ" in found.detail
+
+    mixed = parse_script(
+        "---\ntitle: T\n---\n\n## ネットの声\n\n"
+        "ネット民: すごい\n現地サポ: あちらでも話題になっている\n")
+    assert check_overseas_voices(mixed).ok is True

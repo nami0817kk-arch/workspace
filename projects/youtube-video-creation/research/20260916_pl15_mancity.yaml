@@ -61,7 +61,6 @@ sections:
       - いまの名前になったのは1894年でした。
       - 愛称は3つあります。「シチズンズ」「ブルーズ」「スカイブルーズ」。
       - 本拠地はエティハド・スタジアム。収容は**6万1038人**です。
-      - 監督はエンツォ・マレスカ。今季の登録に日本人選手はいません。
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Manchester_City_F.C.
@@ -133,6 +132,28 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Manchester_City_F.C.
+  - id: season
+    heading: 今季の顔ぶれ
+    tier: 報道
+    telop: 主将はルベン・ディアス
+    narrator: キャスター
+    card:
+      type: table
+      title: 今季の顔ぶれ
+      columns: ["", ""]
+      rows:
+        - ["監督", "エンツォ・マレスカ"]
+        - ["主将", "ルベン・ディアス（CB・ポルトガル）"]
+        - ["エース", "アーリング・ハーランド（FW・ノルウェー）"]
+        - ["今季", "6点。副主将でもある"]
+        - ["日本人選手", "なし"]
+    say:
+      - 主将はルベン・ディアス。ポルトガル代表のセンターバックです。
+      - エースはアーリング・ハーランド。説明の要らない、ノルウェー代表の背番号9です。
+      - 今季すでに**6点**。しかも**副主将**を兼ねています。
+    official: false
+    sources:
+      - https://www.premierleague.com/en/news/4706912
   - id: titles
     heading: 獲ってきたもの
     tier: 背景

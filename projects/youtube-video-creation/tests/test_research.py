@@ -1138,3 +1138,21 @@ def test_行頭の強調はYAMLで落ちると教える(tmp_path):
         assert "3 行目" in str(err)
     else:
         raise AssertionError("落ちなかった")
+
+
+def test_写真の無い回の下地は特定クラブの実写にしない():
+    """**既定の下地がヴォルフスブルクのスタジアムだった**（2026-09-17 に発覚）。
+
+    ユーザー指摘「動画の画面の左側がぼやけている」から書き出した1コマを見て
+    分かった。`crest_still.png` の中身は実写で、LEDの看板に VFL WOLFSBURG と
+    読める。**写真の無い回は全部これ**になるので、ホッフェンハイムの話も
+    PSVの話もマンUの話も、同じドイツのスタジアムの前で喋っていた。
+
+    9/17 の午前に台本4本を手で直したのに、**既定値を直さなかったため
+    その日のうちに新しい台本3本へ戻ってきた**（マンU・トッテナム・ベンフィカ）。
+    手で直すだけでは戻る。
+    """
+    from src.research import STILL_BACKGROUND
+
+    assert "crest_still" not in STILL_BACKGROUND, "クラブの実写に戻っている"
+    assert STILL_BACKGROUND.endswith(".png"), "静止画のはず（動画に差し替わる名前は使わない）"

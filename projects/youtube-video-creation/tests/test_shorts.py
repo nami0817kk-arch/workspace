@@ -779,3 +779,82 @@ def test_実尺で上限に収める(tmp_path):
     # **締めは残す。**落とすのは後ろ（＝ネットの声）から
     assert script.lines[-1].text == SHORT_SUBSCRIBE
     assert any(l.text.startswith("語り") for l in script.lines)
+
+
+def test_状況説明の1行があってもネットの声は締めに足す():
+    """**反応の節の頭にある `only: short` の語りを、語りとして数えない**
+    （2026-09-17 にユーザー指摘「ショートの内容が薄い」から発見）。
+
+    `_is_voices_scene` は「語りが1行でもあれば反応の節ではない」と見ていた。
+    ところが取材メモの雛形は、反応の節の頭に**必ず**キャスターの状況説明を
+    1行置く（「ショート単体で話が分かるように」2026-09-10 指示）。
+    そのため**どの回でも False を返し**、9/17 のショート5本すべてに
+    ネットの声が1件も入っていなかった。ユーザー指示は「声は必ず」。
+
+    その1行はショート本体の側へ切り出されるので、ここで数える相手ではない。
+    """
+    from src.script_model import Line, Scene, Script
+    from src.shorts import trim
+
+    opening = Scene(title="オープニング", lines=[Line(speaker="キャスター", text="題名です")])
+    story = Scene(title="山場", main=True,
+                  lines=[Line(speaker="解説", text="ここが芯です")])
+    voices = Scene(
+        title="ネットの声",
+        lines=[Line(speaker="キャスター", text="前提の説明です", only="short")]
+        + [Line(speaker="ネット民", text=f"声{i}") for i in range(5)],
+    )
+    short = trim(Script(title="見出し", scenes=[opening, story, voices]))
+    said = [l.speaker for l in short.scenes[-1].lines]
+    assert "ネット民" in said, "状況説明の1行で、反応の節と見なされなくなっている"
+    assert "前提の説明です" not in [l.text for l in short.scenes[-1].lines]
+
+
+def test_2枚並びのサムネはショートで上下に割って両方出す(tmp_path, monkeypatch):
+    """**ショートの冒頭が、サムネの1枚目しか出ていなかった**
+    （2026-09-17 指示「ショートも横割りで本編のサムネと同じようにして」）。
+
+    鈴木の回はサムネが「顔｜人影」の2枚並びなのに、ショートには顔しか出ず、
+    答えを伏せた人影が消えていた。**同じ回に見えない。**
+    """
+    from PIL import Image
+
+    from src import shorts as shorts_mod
+
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(shorts_mod, "STACK_DIR", tmp_path / "_stack")
+    for name, color in (("a.jpg", (200, 30, 30)), ("b.jpg", (30, 30, 200))):
+        Image.new("RGB", (480, 660), color).save(tmp_path / name)
+
+    made = shorts_mod.stacked_photo({"thumbnail_photos": ["a.jpg", "b.jpg"]})
+    assert made, "2枚あるのに組めていない"
+    with Image.open(made) as out:
+        assert out.size == shorts_mod.SIZE
+        assert out.getpixel((540, 480))[0] > 150      # 上は1枚目
+        assert out.getpixel((540, 1440))[2] > 150     # 下は2枚目
+    assert shorts_mod.stacked_photo({"thumbnail_photos": ["a.jpg"]}) == ""
+
+
+def test_ショートが題名に答えていなければ知らせる():
+    """**同じ日に2回やった**（2026-09-17）。
+
+    鈴木彩艶の回は題名が「鈴木彩艶が後半から出た試合」なのに、ショートの中身は
+    相手選手の経歴だけで、**鈴木の話が1行も入っていなかった**。日本代表の回も
+    「名前が消えたのは誰だったか」と聞いて、誰なのかを一度も言わずに終わっていた。
+    どちらもユーザーが見て気づいた。**山場の節に主語が出てこない台本は普通にある。**
+    """
+    from src.script_model import Line, Scene, Script
+    from src.shorts import subject_problems, trim
+
+    opening = Scene(title="オープニング", lines=[Line(speaker="キャスター", text="鈴木彩艶の話です")])
+    story = Scene(title="山場", main=True,
+                  lines=[Line(speaker="解説", text="相手の選手は2023年に来ました")])
+    voices = Scene(title="ネットの声",
+                   lines=[Line(speaker="ネット民", text=f"声{i}") for i in range(3)])
+    script = Script(title="見出し", scenes=[opening, story, voices])
+    script.meta = {"topic": "鈴木彩艶"}
+    found = subject_problems(trim(script), script)
+    assert found and "鈴木彩艶" in found[0]
+
+    story.lines.append(Line(speaker="解説", text="鈴木彩艶は45分を無失点で守りました"))
+    assert subject_problems(trim(script), script) == []

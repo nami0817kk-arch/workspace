@@ -650,3 +650,38 @@ def test_件数が多い節では古いほうから落として字を保つ():
         many = tuple(f"ネット民「{i}件目の書き込みです。" + "あ" * 30 + "」" for i in range(12))
         r._draw_stack(canvas, many)   # 落ちずに描ければよい（字の大きさは中で保つ）
         assert canvas.getbbox() is not None
+
+
+def test_横長の一覧板は画面いっぱいに敷く(tmp_path):
+    """**左半分がぼかしだけになっていた**（2026-09-17 ユーザー指摘
+    「動画の画面の左側がぼやけている」）。
+
+    写真を右半分に立てる作りは**人物の縦写真のためのもの**で、16:9 の
+    一覧板を入れると左半分がぼかし、板の左半分（齋藤と松木）は画面の外。
+    横長は画面いっぱいに敷く。
+
+    さらに、板は**文字でできた絵**なので、カードや節の名前を上に重ねると
+    板の文字が読めない（ユーザー指示「サムネ画面をだしておいて」）。
+    """
+    from PIL import Image
+
+    from src.config import load_config
+    from src.render import Renderer
+
+    wide = tmp_path / "board.png"
+    Image.new("RGB", (1280, 720), (20, 40, 120)).save(wide)
+    tall = tmp_path / "face.jpg"
+    Image.new("RGB", (480, 680), (200, 180, 160)).save(tall)
+
+    renderer = Renderer(load_config(), tmp_path / "work")
+    renderer._photo_stage(str(wide))
+    renderer._photo_stage(str(tall))
+    assert str(wide) in renderer._wide_stages, "横長が全面扱いになっていない"
+    assert str(tall) not in renderer._wide_stages, "縦写真まで全面にしている"
+
+    # **4:3 も全面**（2026-09-17 夜）。1.4倍の網では 800x600 が漏れ、
+    # 公開した佐野の回の左が暗いままだった
+    four_three = tmp_path / "43.jpg"
+    Image.new("RGB", (800, 600), (40, 90, 60)).save(four_three)
+    renderer._photo_stage(str(four_three))
+    assert str(four_three) in renderer._wide_stages, "4:3 が右半分に立てられている"

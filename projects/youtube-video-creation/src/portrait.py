@@ -259,6 +259,25 @@ def crop_to(path: Path, box: str) -> tuple[int, int]:
         return cut.size
 
 
+def used_titles(folder: Path) -> set[str]:
+    """**これまでに使った Commons の File: 名**を、控えを全部読んで集める。
+
+    置き先のフォルダだけを見ても足りない。同じ人でも日付を付けた別フォルダへ
+    落としていることがあり（`nakamura` と `nakamura2609`）、フォルダの中だけ
+    見ると「初めて」に見えてしまう。**assets/images/ を横断して見る。**
+    """
+    root = folder.parent if folder.parent.name else folder
+    titles: set[str] = set()
+    for ledger in root.glob("*/credits.json"):
+        try:
+            for entry in json.loads(ledger.read_text(encoding="utf-8")):
+                if entry.get("title"):
+                    titles.add(entry["title"])
+        except (OSError, ValueError):
+            continue
+    return titles
+
+
 def save(names: list[str], folder: Path, session=None, only: str = "",
          modify: bool = True) -> dict:
     """本人と確認でき、ライセンスも通った1枚を落として控える。
@@ -272,6 +291,15 @@ def save(names: list[str], folder: Path, session=None, only: str = "",
             else sorted([c for c in candidates(names, session=session)
                          if is_image(c) and looks_like_person(c)],
                         key=rank))
+    # **前に使った写真は後ろへ回す**（2026-09-17 ユーザー指摘
+    # 「画像の出典が過去と同じことになってる」）。
+    # ここは候補を点数順に並べて**いつも1位を取る**ので、同じ人はいつも同じ1枚に
+    # なっていた。中村敬斗は 9/6 と 9/17 で同じザルツブルク時代の写真、
+    # 鈴木彩艶も同じタイ戦の写真。**候補は8枚あったのに、毎回1枚目だった。**
+    # 落とすのではなく後ろへ回す（他に通るものが無ければ、結局それを使う）
+    if not only:
+        used = used_titles(folder)
+        pool = [t for t in pool if t not in used] + [t for t in pool if t in used]
     for title in pool:
         ok, reason = verify(title, *names, session=session)
         if not ok:

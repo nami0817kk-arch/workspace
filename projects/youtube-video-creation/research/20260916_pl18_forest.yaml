@@ -57,7 +57,6 @@ sections:
       - 創設は**1865年**。今季のプレミアリーグで、いちばん古いクラブです。
       - 愛称はいくつもあります。「ガリバルディス」「レッズ」、そして「トリッキー・トゥリーズ」。
       - 本拠地はシティ・グラウンド。収容は3万1212人です。
-      - 監督はオリヴァー・グラスナー。今季の登録に日本人選手はいません。
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
@@ -130,6 +129,29 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
+  - id: season
+    heading: 今季の顔ぶれ
+    tier: 報道
+    telop: 主将はライアン・イェーツ
+    narrator: キャスター
+    card:
+      type: table
+      title: 今季の顔ぶれ
+      columns: ["", ""]
+      rows:
+        - ["監督", "オリヴァー・グラスナー"]
+        - ["主将", "ライアン・イェーツ（MF・イングランド）"]
+        - ["下部組織入り", "2005年"]
+        - ["エース", "ギブス＝ホワイト（副主将・背番号10）"]
+        - ["昨季", "18点"]
+    say:
+      - 主将はライアン・イェーツ。イングランド人の中盤です。
+      - "**2005年にこのクラブの下部組織へ入りました。**そこから上がってきた生え抜きです。"
+      - エースはモーガン・ギブス＝ホワイト。副主将です。
+      - 昨季は18点を挙げています。**生え抜きの主将と、点を取る10番**という組み合わせです。
+    official: false
+    sources:
+      - https://www.premierleague.com/en/news/4706912
   - id: titles
     heading: 獲ってきたもの
     tier: 背景

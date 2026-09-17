@@ -168,6 +168,19 @@ cast:
     position: none
     color: "#f0c419"
 
+  インディペンデント:
+    key: independent
+    aliases: [Independent, ジ・インディペンデント]
+    # **ハッシュだと 52 になり、ネット民（voice_fixed 52）と同じ声になる**
+    # （2026-09-17 のトッテナムの回で draft が止めた）。
+    # 118 は voice_pool の外。実測 197Hz で、talkSPORT の 94（195Hz）と同じ帯
+    style_id: 118      # 夜語トバリ
+    speed: 1.0
+    pitch: 0.0
+    intonation: 1.0
+    position: none
+    color: "#f0c419"
+
   # ゆっくり実況向け（show_characters: true のとき）
   霊夢:
     key: reimu

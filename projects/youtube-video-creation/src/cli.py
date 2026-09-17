@@ -393,6 +393,10 @@ def main(argv: list[str] | None = None) -> int:
     p_approve = sub.add_parser(
         "approve", help="台本の確認が済んだことを控える（OKを聞いたときだけ打つ）")
     p_approve.add_argument("scripts", nargs="+", help="台本のパス")
+    # **声が無い台本は通さない**（2026-09-17 ユーザー指示「声は必ず」）。
+    # 紹介もの（プレミア20クラブ紹介など）だけ、理由を書いて外す
+    p_approve.add_argument("--no-voices", default="",
+                           help="声を入れない型だと分かっている回だけ。理由を書く")
 
     # **投稿の前に動画を見せる**（2026-09-13 ユーザー「今後は投稿する前に動画見して」）。
     # upload はこれが無いと動かない
@@ -611,10 +615,29 @@ def _guard_approved(script_path) -> bool:
 def _cmd_approve(args, config) -> int:
     """台本の確認が済んだことを控える。**OKを聞いたときだけ打つ。**"""
     from . import approval
+    from .script_model import parse_script
 
+    # **声が1件も無い台本は通さない**（2026-09-17 ユーザー指示「声は必ず」）。
+    # `draft` は「ネットの反応が1件もありません」と知らせるだけで、**止めていなかった。**
+    # 実際この日、反応の無い台本を3本作って、そのまま出しかけている。
+    # まとめサイトが試合に追いついていない朝は、**待つのが正しい。**
+    crowd = tuple(getattr(getattr(config, "voicevox", None), "crowd", None)
+                  or ("ネット民", "現地サポ", "海外のファン"))
     for script in args.scripts:
+        text = Path(script).read_text(encoding="utf-8")
+        spoken = parse_script(text)
+        voices = [line for scene in spoken.scenes for line in scene.lines
+                  if (line.speaker or "") in crowd]
+        if not voices and not args.no_voices:
+            print(f"■ {Path(script).name} には、ネットの声が1件もありません", file=sys.stderr)
+            print("■ 通していません。`reactions <スレURL> --say` で実在の書き込みを足してください",
+                  file=sys.stderr)
+            print("■ 紹介ものなど、声を入れない型だと分かっている回だけ "
+                  "`--no-voices <理由>` を付けてください", file=sys.stderr)
+            return 1
         stamp = approval.approve(script)
-        print(f"確認済み: {approval.key_of(script)}　{stamp}")
+        note = f"　（声なし: {args.no_voices}）" if not voices else f"　声{len(voices)}件"
+        print(f"確認済み: {approval.key_of(script)}　{stamp}{note}")
     return 0
 
 
@@ -713,6 +736,9 @@ def _cmd_short(args, config) -> int:
         print(f"  ! {problem}", file=sys.stderr)
     # **発言までの秒数がそのまま維持に効く**（2026-09-10 の実測）
     for problem in shorts.quote_problems(short):
+        print(f"  ! {problem}", file=sys.stderr)
+    # **題名に答えているか**（2026-09-17。同じ日に2回やった）
+    for problem in shorts.subject_problems(short, script):
         print(f"  ! {problem}", file=sys.stderr)
 
     # 冒頭で捨てられていないか、その場で見る。review は --out を渡さないと
@@ -2934,15 +2960,19 @@ def _cmd_draft(args, config) -> int:
         from .script_model import parse_script
         _script = parse_script(target.read_text(encoding="utf-8"))
         for _name in ("check_filler", "check_title_subject",
-                      "check_board_mention", "check_outlet_talk"):
+                      "check_board_mention", "check_outlet_talk",
+                      # **海外の反応**（2026-09-17）。止めはしないが知らせる
+                      "check_overseas_voices"):
             _fn = getattr(_review, _name, None)
             if _fn is None:
                 continue
             _found = _fn(_script)
             if getattr(_found, "ok", True) is False:
-                late.append(f"{_found.name}: {_found.detail}")
+                late.append(f"{_found.label}: {_found.detail}")
     except Exception as err:      # 検査で書き出しを落とさない
-        print(f"  （台本の点検を飛ばしました: {err}）")
+        # **黙って飲み込まない。**2026-09-16 に `Finding.name` を書き間違えて、
+        # この except が全部を吸っていた。**「✓ しか出ない点検」そのもの**だった
+        print(f"  ■ 台本の点検が動きませんでした（直してください）: {err!r}", flush=True)
     if late:
         print(f"{chr(10)}■ 台本そのものの点検で {len(late)}件")
         for note in late:
@@ -3025,6 +3055,11 @@ def report_upload_failure(err: Exception) -> None:
         print("  YouTube の認証が切れています。secrets/token.json を取り直してください:")
         print('  python -c "from src.upload import get_service; get_service()"')
     print("■ 投稿は0本です。控え（posted.json）も増えていません", flush=True)
+
+
+# **本編を入れる再生リスト**（2026-09-15 作成・公開）。
+# 再生リストの中の自動再生は、登録者がいなくても動く唯一の道
+MAIN_PLAYLIST = "PLNEp9wyuYKJk"
 
 
 def _cmd_upload(args, config) -> int:
@@ -3160,6 +3195,30 @@ def _cmd_upload(args, config) -> int:
         return 1
     posted.record(build_dir, video_id)
     print(f"\n投稿しました: https://youtu.be/{video_id} ({draft.privacy})")
+
+    # **本編は再生リストへ入れる**（2026-09-17 ユーザー指示
+    # 「新規の本編動画は再生リストに入れておいてね」）。
+    # 再生リストの中の自動再生は、**登録者がいなくても動く唯一の道**
+    # （ホームと関連動画は登録者がいないと出てこない）。
+    # 手で `tools/playlist.py` を打つ形だと、出した日に入れ忘れる。
+    # **ショートは入れない。**自動再生に乗らないので、枠を使うだけ。
+    if not Path(args.build_dir).name.endswith(("_short", "_tiktok")):
+        try:
+            # **ここで作る。**上の投稿は upload_mod が中で service を作るので、
+            # この関数には api という名前が無かった（2026-09-17 に実際に落ちた）
+            from . import quota as quota_mod
+            api = quota_mod.counted(upload_mod.get_service())
+            api.playlistItems().insert(
+                part="snippet",
+                body={"snippet": {"playlistId": MAIN_PLAYLIST,
+                                  "resourceId": {"kind": "youtube#video",
+                                                 "videoId": video_id}}},
+            ).execute()
+            print(f"  再生リストに入れました: {MAIN_PLAYLIST}")
+        except Exception as err:      # 入らなくても投稿は成功している
+            print(f"  ■ 再生リストに入れられませんでした（{err}）。"
+                  f"あとで tools/playlist.py で足してください", flush=True)
+
     n = posted.recent()
     if n >= posted.SOFT_MAX:
         print(f"  直近24時間で {n} 本目。開設まもないチャンネルは{posted.SOFT_MAX}本前後で弾かれる")
