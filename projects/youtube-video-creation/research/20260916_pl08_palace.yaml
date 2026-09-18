@@ -21,6 +21,10 @@
 #   ・タイトルとサムネを「丸数字＋クラブ名＋そのクラブの引き」に変えた（20本とも同じ名札だった）
 #   ・**宿敵（rival）**と**このクラブを語る3人（legends）**の節を足した（出典は英語版Wikipedia）
 #   ・日本人2人（鎌田大地・冨安健洋）の節を、宿敵より前へ出した
+#
+# **2026-09-19 ユーザー指示（クラブの歴史はもう少しシンプルに）で、歴史の節を整理した。**
+# 「歩んできた道」（1909年のカップ王者撃破・水晶宮の決勝会場・セルハースト・パークの間借り）を
+# 丸ごと落とし、タイトルの節からも優勝の節と重なるカンファレンスリーグの2行を落とした。
 format: news
 voice_min: 0
 slot: premier_1
@@ -99,8 +103,6 @@ sections:
       - 1905年にプロのクラブができてから、120年が経っていました。
       - FAカップの決勝に立つのは、これが3度目です。
       - 2016年は1対2。どちらも相手はマンチェスター・ユナイテッドでした。
-      - さらに昨季、2025年から26年のカンファレンスリーグも制しています。
-      - ラージョ・バジェカーノを1対0で下しての、初のヨーロッパのタイトルです。
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
@@ -186,40 +188,6 @@ sections:
     sources:
       - https://en.wikipedia.org/wiki/List_of_Crystal_Palace_F.C._records_and_statistics
       - https://en.wikipedia.org/wiki/Wilfried_Zaha
-  - id: history
-    heading: 歩んできた道
-    tier: 背景
-    telop: 1909年、リーグに属さないチームが王者を倒した
-    narrator: 解説
-    card:
-      type: table
-      title: 水晶宮とクラブ
-      columns: ["", ""]
-      rows:
-        - ["1895年", "FAカップ決勝の会場に"]
-        - ["1909年", "リーグ外でカップ王者を撃破"]
-        - ["1915年", "戦争で水晶宮から退去"]
-        - ["2025年", "その決勝を勝つまで120年"]
-    say:
-      - "**リーグ外のクラブが、カップ王者を倒した最初の例**。それがこのクラブです。"
-      - 1909年のFAカップ1回戦でした。
-      - 相手はウルヴァーハンプトン・ワンダラーズ。**そのときのカップ王者**でした。
-      - このクラブは当時、まだリーグに属していませんでした。
-      - その試合に勝ちました。
-      - タイトルを獲るまでには、そこからさらに116年かかりました。
-      - もうひとつ、この話には続きがあります。
-      - 1895年から、**FAカップの決勝は水晶宮の敷地にあった競技場で行われていました。**
-      - つまり、**決勝の会場で生まれたクラブが、その決勝を勝つまでに120年かかった**ことになります。
-      - 本拠地のセルハースト・パークには、もうひとつ珍しい記録があります。
-      - 1985年にチャールトンが間借りしました。**イングランドで初めて、2つのクラブが本拠地を分け合った例**です。
-      - 1991年からはウィンブルドンが入り、2003年まで使っていました。
-    official: false
-    sources:
-      - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
-      - https://en.wikipedia.org/wiki/History_of_Crystal_Palace_F.C.
-      - https://en.wikipedia.org/wiki/Selhurst_Park
-      - https://en.wikipedia.org/wiki/Daichi_Kamada
-      - https://en.wikipedia.org/wiki/Takehiro_Tomiyasu
   - id: titles
     heading: 獲ってきたもの
     tier: 背景
