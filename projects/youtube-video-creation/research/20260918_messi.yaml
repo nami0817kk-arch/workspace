@@ -95,7 +95,7 @@ theme:
   # **答えを言い切らない**（draft の指摘）。頭に「メッシ」を置いて、
   # 共通点そのものは中で明かす
   title: バロンドールはメッシだと言った4人。共通していたのは
-  hook: 一人目は、同じ更衣室にいる選手でした。
+  hook: 名前を並べてみると、あることに気づきます。
   question: 誰がメッシを推しているのか
 
 thumbnail:
@@ -128,64 +128,74 @@ sections:
       - 2026年のバロンドールは、まだ決まっていません。
       - 候補30人が9月9日に発表され、授賞式は**10月26日**です。
       - 投票の結果は、まだ誰も知りません。
-      - それでも、名前を挙げる人が相次いでいます。
-      - "**そのほとんどが、同じ一人を推しています。**"
+      - それでも、**「メッシだ」と言う人が相次いでいます。**
     official: false
     sources:
       - https://www.theworldmagazine.jp/20260916/01world/england/505877
       - https://news.yahoo.co.jp/articles/bfdd27b613f395d255340f0c2d78e5af53f35351
 
-  - id: club
-    heading: 同じクラブの2人
+  # **「一人目」「二人目」と数えない**（2026-09-18）。ショートが尺で
+  # 2人目と3人目を落とし、**「一人目」の次が「四人目」**になっていた。
+  # 名前から入れば、どこが落ちても文が壊れない。
+  #
+  # **4人を1つの節にまとめた**（2026-09-18 ユーザー指示「話の流れを見直して」）。
+  # 前は「同じクラブの2人」「同じ国の2人」と節を割っていたが、
+  # **見出しが答えそのもの**だった。画面に出た瞬間に共通点が割れる。
+  # 4人をまず並べて、**そのあとの節で気づかせる**
+  - id: four
+    heading: メッシだと言った4人
     main: true
     tier: 報道
     bg: assets/backgrounds/messi_20260918.png
-    telop: チームメイトと、クラブの共同オーナー
+    telop: 「議論の余地はない」「彼が受賞すべきだ」
     narrator: キャスター
     say:
       - {short_only: true, text: バロンドールでメッシを推しているのは誰か、という話です。}
-      - {text: "一人目は、ロドリゴ・デ・パウル、32歳。**メッシと同じインテル・マイアミの選手**です。", image: assets/photos/20260918_2s_depaul/01.png}
+      - {text: "まず、ロドリゴ・デ・パウル、32歳。インテル・マイアミの選手です。", image: assets/photos/20260918_2s_depaul/01.png}
       - {text: アルゼンチンの番組で、こう言いました。, image: assets/photos/20260918_2s_depaul/01.png}
       - {voice: デ・パウル, text: 議論の余地はない, image: assets/photos/20260918_2s_depaul/01.png}
       - {voice: デ・パウル, text: ワールドカップの年に、メッシに肩を並べた選手は誰もいない, image: assets/photos/20260918_2s_depaul/01.png}
       - {voice: デ・パウル, text: これからも出ないだろう。しかも彼は39歳だ, image: assets/photos/20260918_2s_depaul/01.png}
-      - {text: "二人目は、デービッド・ベッカム、51歳。**そのインテル・マイアミの共同オーナー**です。", image: assets/photos/20260918_2s_beckham/01.jpg}
+      - {text: "デービッド・ベッカム、51歳。インテル・マイアミの共同オーナーです。", image: assets/photos/20260918_2s_beckham/01.jpg}
       - {voice: ベッカム, text: 39歳であれだけのことを、しかもあのレベルで成し遂げている選手は他にいない, image: assets/photos/20260918_2s_beckham/01.jpg}
       - {voice: ベッカム, text: 私の意見では、彼が受賞すべきだ, image: assets/photos/20260918_2s_beckham/01.jpg}
-    official: false
-    sources:
-      - https://www.theworldmagazine.jp/20260918/01world/506158
-      - https://news.yahoo.co.jp/articles/bfdd27b613f395d255340f0c2d78e5af53f35351
-
-  - id: country
-    heading: 同じ国の2人
-    tier: 報道
-    bg: assets/backgrounds/messi_20260918.png
-    telop: アトレティコの監督と、代表の同僚
-    narrator: キャスター
-    card:
-      type: table
-      title: メッシを推した4人
-      columns: ["", ""]
-      rows:
-        - ["デ・パウル（32）", "インテル・マイアミの選手"]
-        - ["ベッカム（51）", "インテル・マイアミ共同オーナー"]
-        - ["シメオネ（56）", "アルゼンチン人の監督"]
-        - ["ラウタロ（29）", "アルゼンチン代表の同僚"]
-      note: 4人とも、クラブか国でつながっている
-    say:
-      - {text: 三人目は、ディエゴ・シメオネ、56歳。アトレティコ・マドリーの監督で、アルゼンチン人です。, image: assets/photos/20260918_pair_simeone/01.jpg}
+      - {text: ディエゴ・シメオネ、56歳。アトレティコ・マドリーの監督です。, image: assets/photos/20260918_pair_simeone/01.jpg}
       - {text: 15日の会見で問われ、こう答えました。, image: assets/photos/20260918_pair_simeone/01.jpg}
       - {voice: シメオネ, text: メッシ。間違いなく, image: assets/photos/20260918_pair_simeone/01.jpg}
       - {voice: シメオネ, text: あの年齢で、あのワールドカップをやったことを考えれば, image: assets/photos/20260918_pair_simeone/01.jpg}
       - {voice: シメオネ, text: 疑いなくメッシ, image: assets/photos/20260918_pair_simeone/01.jpg}
-      - {text: 四人目は、ラウタロ・マルティネス、29歳。インテルの選手で、アルゼンチン代表ではメッシと同じチームです。, image: assets/photos/20260918_messi_lautaro/01.jpg}
-      - {text: こちらも、メッシの名前を挙げています。, image: assets/photos/20260918_messi_lautaro/01.jpg}
+      - {text: ラウタロ・マルティネス、29歳。インテルの選手です。, image: assets/photos/20260918_messi_lautaro/01.jpg}
       - {voice: ラウタロ, text: 間違いない。彼は世界最高, image: assets/photos/20260918_messi_lautaro/01.jpg}
-      - この4人は、**そろってクラブか国でメッシとつながっています。**
     official: false
     sources:
+      - https://www.theworldmagazine.jp/20260918/01world/506158
+      - https://news.yahoo.co.jp/articles/bfdd27b613f395d255340f0c2d78e5af53f35351
       - https://www.theworldmagazine.jp/20260916/01world/spain/505841
+      - https://www.theworldmagazine.jp/20260916/01world/england/505877
+
+  # **ここが山場。**4人を出しきってから、並べて気づかせる
+  - id: pattern
+    heading: 並べてみると
+    tier: 背景
+    bg: assets/backgrounds/messi_20260918.png
+    telop: 4人とも、クラブか国でメッシとつながっていた
+    narrator: キャスター
+    card:
+      type: table
+      title: メッシだと言った4人
+      columns: ["", ""]
+      rows:
+        - ["デ・パウル（32）", "同じクラブの選手"]
+        - ["ベッカム（51）", "そのクラブの共同オーナー"]
+        - ["シメオネ（56）", "同じアルゼンチンの人"]
+        - ["ラウタロ（29）", "同じ代表チームの選手"]
+    say:
+      - 4人の立場を、並べてみます。
+      - デ・パウルとベッカムは、**メッシと同じインテル・マイアミ**。選手と、共同オーナーです。
+      - シメオネとラウタロは、**メッシと同じアルゼンチン**。ラウタロは代表でも同じチームです。
+      - "**4人とも、クラブか国でメッシとつながっていました。**"
+    official: false
+    sources:
       - https://www.theworldmagazine.jp/20260916/01world/england/505877
 
   - id: voices
