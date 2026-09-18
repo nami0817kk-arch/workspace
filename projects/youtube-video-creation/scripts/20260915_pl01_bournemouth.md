@@ -1,11 +1,11 @@
 ---
-title: ①AFCボーンマス。FAカップで1人9得点を決めた男とは
+title: AFCボーンマス。FAカップで1人9得点を決めた男とは
 format: news
 voice_min: 0.0
 short_title: AFCボーンマスとはどんなクラブか
 topic: ボーンマス
 thumbnail_line1: FAカップで1人9得点
-thumbnail_line2: ①AFCボーンマス
+thumbnail_line2: AFCボーンマス
 thumbnail_tags: []
 thumbnail_alt: []
 thumbnail_points: []
@@ -16,11 +16,11 @@ thumbnail_crest_main:
 - ボーンマス
 bg: assets/backgrounds/stadium.png
 date: 2026年9月15日
-intro_title: ①AFCボーンマス。FAカップで1人9得点を決めた男とは
+intro_title: AFCボーンマス。FAカップで1人9得点を決めた男とは
 intro_label: 海外サッカー ニュース
 outro_title: 続報は次回お伝えします
 outro_sub: チャンネル登録でお待ちください
-description: '①AFCボーンマス。FAカップで1人9得点を決めた男とは
+description: 'AFCボーンマス。FAカップで1人9得点を決めた男とは
 
 
   この動画が答える問い: どんなクラブなのか
@@ -138,8 +138,8 @@ cards:
 ## オープニング
 @bg: assets/backgrounds/studio.png
 
-キャスター: ①AFCボーンマス。FAカップで1人9得点を決めた男とは。
-  telop: ①AFCボーンマス。FAカップで1人9得点を決めた男とは
+キャスター: AFCボーンマス。FAカップで1人9得点を決めた男とは。
+  telop: AFCボーンマス。FAカップで1人9得点を決めた男とは
   se: assets/audio/se_pon.wav
 キャスター: 消えかけたクラブが、いまヨーロッパで戦っています。
   telop: 消えかけたクラブが、いまヨーロッパで戦っています

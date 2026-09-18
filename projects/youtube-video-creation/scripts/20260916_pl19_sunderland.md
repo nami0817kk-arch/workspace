@@ -1,11 +1,11 @@
 ---
-title: ⑲サンダーランド。6回優勝したクラブが3部にいた、その7年とは
+title: サンダーランド。6回優勝したクラブが3部にいた、その7年とは
 format: news
 voice_min: 0.0
 short_title: サンダーランドとはどんなクラブか
 topic: サンダーランド
 thumbnail_line1: 6回優勝が、3部にいた
-thumbnail_line2: ⑲サンダーランド
+thumbnail_line2: サンダーランド
 thumbnail_tags: []
 thumbnail_alt: []
 thumbnail_points: []
@@ -16,11 +16,11 @@ thumbnail_crest_main:
 - サンダーランド
 bg: assets/backgrounds/stadium.png
 date: 2026年9月16日
-intro_title: ⑲サンダーランド。6回優勝したクラブが3部にいた、その7年とは
+intro_title: サンダーランド。6回優勝したクラブが3部にいた、その7年とは
 intro_label: 海外サッカー ニュース
 outro_title: 続報は次回お伝えします
 outro_sub: チャンネル登録でお待ちください
-description: '⑲サンダーランド。6回優勝したクラブが3部にいた、その7年とは
+description: 'サンダーランド。6回優勝したクラブが3部にいた、その7年とは
 
 
   この動画が答える問い: どんなクラブなのか
@@ -140,8 +140,8 @@ cards:
 ## オープニング
 @bg: assets/backgrounds/studio.png
 
-キャスター: ⑲サンダーランド。6回優勝したクラブが3部にいた、その7年とは。
-  telop: ⑲サンダーランド。6回優勝したクラブが3部にいた、その7年とは
+キャスター: サンダーランド。6回優勝したクラブが3部にいた、その7年とは。
+  telop: サンダーランド。6回優勝したクラブが3部にいた、その7年とは
   se: assets/audio/se_pon.wav
 キャスター: 3部から7年で、ヨーロッパに手が届きました。
   telop: 3部から7年で、ヨーロッパに手が届きました

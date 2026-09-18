@@ -38,13 +38,13 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: エヴァートン
-  title: ⑨エヴァートン。出て行った家から宿敵が生まれた理由とは
+  title: エヴァートン。出て行った家から宿敵が生まれた理由とは
   hook: リヴァプールとは、もとは同じ場所にいました。
   question: どんなクラブなのか
 
 thumbnail:
   line1: 出た家から宿敵が生まれた
-  line2: ⑨エヴァートン
+  line2: エヴァートン
   crest_main:
     - エヴァートン
   tags: []

@@ -41,13 +41,13 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: チェルシー
-  title: ⑥チェルシー。イングランドで最も荒れたと呼ばれる決勝とは
+  title: チェルシー。イングランドで最も荒れたと呼ばれる決勝とは
   question: どんなクラブなのか
   hook: 宿敵の名前が、記録に残っていないクラブです。
 
 thumbnail:
   line1: 史上最も荒れた決勝
-  line2: ⑥チェルシー
+  line2: チェルシー
   crest_main:
     - チェルシー
   tags: []

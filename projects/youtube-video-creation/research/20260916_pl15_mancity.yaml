@@ -36,13 +36,13 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: マンチェスター・シティ
-  title: ⑮マンチェスター・シティ。ヨーロッパを獲ったクラブが、なぜ3部にいたのか
+  title: マンチェスター・シティ。ヨーロッパを獲ったクラブが、なぜ3部にいたのか
   question: どんなクラブなのか
   hook: 宿敵は、同じ街の赤いクラブです。
 
 thumbnail:
   line1: ヨーロッパを獲って、3部へ
-  line2: ⑮シティ
+  line2: シティ
   crest_main:
     - マンチェスターシティ
   tags: []

@@ -35,13 +35,13 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: サンダーランド
-  title: ⑲サンダーランド。6回優勝したクラブが3部にいた、その7年とは
+  title: サンダーランド。6回優勝したクラブが3部にいた、その7年とは
   question: どんなクラブなのか
   hook: 3部から7年で、ヨーロッパに手が届きました。
 
 thumbnail:
   line1: 6回優勝が、3部にいた
-  line2: ⑲サンダーランド
+  line2: サンダーランド
   crest_main:
     - サンダーランド
   tags: []

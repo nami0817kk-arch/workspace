@@ -1,11 +1,11 @@
 ---
-title: ④ブレントフォード。酒場の投票でサッカーを選んだクラブとは
+title: ブレントフォード。酒場の投票でサッカーを選んだクラブとは
 format: news
 voice_min: 0.0
 short_title: ブレントフォードとはどんなクラブか
 topic: ブレントフォード
 thumbnail_line1: 酒場の投票で決まった
-thumbnail_line2: ④ブレントフォード
+thumbnail_line2: ブレントフォード
 thumbnail_tags: []
 thumbnail_alt: []
 thumbnail_points: []
@@ -16,11 +16,11 @@ thumbnail_crest_main:
 - ブレントフォード
 bg: assets/backgrounds/stadium.png
 date: 2026年9月16日
-intro_title: ④ブレントフォード。酒場の投票でサッカーを選んだクラブとは
+intro_title: ブレントフォード。酒場の投票でサッカーを選んだクラブとは
 intro_label: 海外サッカー ニュース
 outro_title: 続報は次回お伝えします
 outro_sub: チャンネル登録でお待ちください
-description: '④ブレントフォード。酒場の投票でサッカーを選んだクラブとは
+description: 'ブレントフォード。酒場の投票でサッカーを選んだクラブとは
 
 
   この動画が答える問い: どんなクラブなのか
@@ -157,8 +157,8 @@ cards:
 ## オープニング
 @bg: assets/backgrounds/studio.png
 
-キャスター: ④ブレントフォード。酒場の投票でサッカーを選んだクラブとは。
-  telop: ④ブレントフォード。酒場の投票でサッカーを選んだクラブとは
+キャスター: ブレントフォード。酒場の投票でサッカーを選んだクラブとは。
+  telop: ブレントフォード。酒場の投票でサッカーを選んだクラブとは
   se: assets/audio/se_pon.wav
 キャスター: 9回続けて跳ね返されたクラブが、いまプレミアにいます。
   telop: 9回続けて跳ね返されたクラブが、いまプレミアにいます

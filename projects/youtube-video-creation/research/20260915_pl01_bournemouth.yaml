@@ -40,13 +40,13 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: ボーンマス
-  title: ①AFCボーンマス。FAカップで1人9得点を決めた男とは
+  title: AFCボーンマス。FAカップで1人9得点を決めた男とは
   question: どんなクラブなのか
   hook: 消えかけたクラブが、いまヨーロッパで戦っています。
 
 thumbnail:
   line1: FAカップで1人9得点
-  line2: ①AFCボーンマス
+  line2: AFCボーンマス
   crest_main:
     - ボーンマス
   tags: []

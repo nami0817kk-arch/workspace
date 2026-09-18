@@ -37,13 +37,13 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: クリスタル・パレス
-  title: ⑧クリスタル・パレス。120年目の初タイトル、決めたのは誰か
+  title: クリスタル・パレス。120年目の初タイトル、決めたのは誰か
   hook: 宿敵はブライトン。日本人は、鎌田大地と冨安健洋。
   question: どんなクラブなのか
 
 thumbnail:
   line1: 120年待った初タイトル
-  line2: ⑧クリスタル・パレス
+  line2: クリスタル・パレス
   crest_main:
     - クリスタルパレス
   tags: []

@@ -40,13 +40,13 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: アーセナル
-  title: ②アーセナル。トッテナムとの因縁を決めた1919年の投票とは
+  title: アーセナル。トッテナムとの因縁を決めた1919年の投票とは
   question: どんなクラブなのか
   hook: 無敗優勝と、22年の空白と、北ロンドンの因縁。
 
 thumbnail:
   line1: 1919年、票で決まった
-  line2: ②アーセナル
+  line2: アーセナル
   crest_main:
     - アーセナル
   tags: []

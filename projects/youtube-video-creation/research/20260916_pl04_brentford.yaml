@@ -41,13 +41,13 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: ブレントフォード
-  title: ④ブレントフォード。酒場の投票でサッカーを選んだクラブとは
+  title: ブレントフォード。酒場の投票でサッカーを選んだクラブとは
   question: どんなクラブなのか
   hook: 9回続けて跳ね返されたクラブが、いまプレミアにいます。
 
 thumbnail:
   line1: 酒場の投票で決まった
-  line2: ④ブレントフォード
+  line2: ブレントフォード
   crest_main:
     - ブレントフォード
   tags: []

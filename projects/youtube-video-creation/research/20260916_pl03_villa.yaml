@@ -40,13 +40,13 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: アストン・ヴィラ
-  title: ③アストン・ヴィラ。「ラグビーは荒っぽすぎる」から始まったクラブとは
+  title: アストン・ヴィラ。「ラグビーは荒っぽすぎる」から始まったクラブとは
   question: どんなクラブなのか
   hook: 世界で初めてのリーグは、このクラブの重役が作りました。
 
 thumbnail:
   line1: ラグビーは荒っぽすぎる
-  line2: ③アストン・ヴィラ
+  line2: アストン・ヴィラ
   crest_main:
     - アストンヴィラ
   tags: []

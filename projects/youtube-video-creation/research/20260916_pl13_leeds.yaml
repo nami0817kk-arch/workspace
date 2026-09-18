@@ -39,13 +39,13 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: リーズ
-  title: ⑬リーズ・ユナイテッド。田中碧のクラブが1919年に生まれた理由とは
+  title: リーズ・ユナイテッド。田中碧のクラブが1919年に生まれた理由とは
   hook: 白いユニフォームには、まねた相手がいます。
   question: どんなクラブなのか
 
 thumbnail:
   line1: 前のクラブは、消された
-  line2: ⑬リーズ・ユナイテッド
+  line2: リーズ・ユナイテッド
   crest_main:
     - リーズ
   tags: []

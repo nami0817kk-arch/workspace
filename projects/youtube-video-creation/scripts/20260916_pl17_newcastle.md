@@ -1,11 +1,11 @@
 ---
-title: ⑰ニューカッスル・ユナイテッド。56年待って、ようやく手にしたものとは
+title: ニューカッスル・ユナイテッド。56年待って、ようやく手にしたものとは
 format: news
 voice_min: 0.0
 short_title: ニューカッスルとはどんなクラブか
 topic: ニューカッスル
 thumbnail_line1: 56年待って、獲ったもの
-thumbnail_line2: ⑰ニューカッスル
+thumbnail_line2: ニューカッスル
 thumbnail_tags: []
 thumbnail_alt: []
 thumbnail_points: []
@@ -16,11 +16,11 @@ thumbnail_crest_main:
 - ニューカッスル
 bg: assets/backgrounds/stadium.png
 date: 2026年9月16日
-intro_title: ⑰ニューカッスル・ユナイテッド。56年待って、ようやく手にしたものとは
+intro_title: ニューカッスル・ユナイテッド。56年待って、ようやく手にしたものとは
 intro_label: 海外サッカー ニュース
 outro_title: 続報は次回お伝えします
 outro_sub: チャンネル登録でお待ちください
-description: '⑰ニューカッスル・ユナイテッド。56年待って、ようやく手にしたものとは
+description: 'ニューカッスル・ユナイテッド。56年待って、ようやく手にしたものとは
 
 
   この動画が答える問い: どんなクラブなのか
@@ -158,8 +158,8 @@ cards:
 ## オープニング
 @bg: assets/backgrounds/studio.png
 
-キャスター: ⑰ニューカッスル・ユナイテッド。56年待って、ようやく手にしたものとは。
-  telop: ⑰ニューカッスル・ユナイテッド。56年待って、ようやく手にしたものとは
+キャスター: ニューカッスル・ユナイテッド。56年待って、ようやく手にしたものとは。
+  telop: ニューカッスル・ユナイテッド。56年待って、ようやく手にしたものとは
   se: assets/audio/se_pon.wav
 キャスター: 獲るまでに、56年かかったクラブです。
   telop: 獲るまでに、56年かかったクラブです

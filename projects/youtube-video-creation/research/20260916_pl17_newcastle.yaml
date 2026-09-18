@@ -37,13 +37,13 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: ニューカッスル
-  title: ⑰ニューカッスル・ユナイテッド。56年待って、ようやく手にしたものとは
+  title: ニューカッスル・ユナイテッド。56年待って、ようやく手にしたものとは
   question: どんなクラブなのか
   hook: 獲るまでに、56年かかったクラブです。
 
 thumbnail:
   line1: 56年待って、獲ったもの
-  line2: ⑰ニューカッスル
+  line2: ニューカッスル
   crest_main:
     - ニューカッスル
   tags: []
