@@ -460,37 +460,36 @@ def check_post_sources(script: Script) -> Finding:
 
 
 def _photo_credits(script: Script, out_dir: Path) -> Finding:
-    """使った写真のクレジットが概要欄に出ているか。
+    """使った写真のうち、**表示が条件のもの**が概要欄に出ているか。
 
     **CC BY 系は表示が必須。**出ていないと利用条件を満たさないまま公開になる。
     実測（2026-09-04）で、行に差し込んだ写真が1件も拾われていなかった。
+
+    **数え方が2つとも間違っていた**（2026-09-18）。
+      1. 写真を**ファイル名**で数えていた。どのフォルダも中身は `01.jpg` なので、
+         5枚使っていても1枚として数えていた
+      2. 報道写真まで数えていた。報道写真は**1枚ごとの行を出さない**決まり
+         （2026-09-17 ユーザー指示）。出ないものを待って落ちていた
+    いま見るのは「**表示が条件の写真の枚数**」と「**※ 画像: の行数**」。
     """
-    used = sorted({
-        Path(line.image).name for line in script.lines if getattr(line, "image", None)
-    })
-    # **サムネイルの写真も数える。**動画本体には出ないが、サムネイルも配布物で、
-    # 表示義務は同じ。行の画像しか見ておらず、公開済みの5本が
-    # クレジット無しで出ていた（2026-09-06 実測）
-    meta = script.meta or {}
-    thumbs = [str(meta.get("thumbnail_photo") or "")]
-    # 並べて敷く写真も配布物。1枚目しか数えておらず、2枚目の表示義務が
-    # 抜けていた（2026-09-08）
-    thumbs += [str(x) for x in (meta.get("thumbnail_photos") or [])]
-    names = {Path(t).name for t in thumbs if t.strip()}
-    if names:
-        used = sorted(set(used) | names)
-    if not used:
-        return Finding(True, "写真のクレジット", "写真を使っていません")
+    from .tts import image_details
+
     description = out_dir / "description.txt"
+    want = image_details(script)
     if not description.exists():
-        return Finding(False, "写真のクレジット", "概要欄がありません")
+        return Finding(False if want else True, "写真のクレジット",
+                       "概要欄がありません" if want else "写真を使っていません")
+    if not want:
+        return Finding(True, "写真のクレジット", "表示が条件の写真はありません")
     body = description.read_text(encoding="utf-8")
-    credits = [ln for ln in body.splitlines() if ln.startswith("画像:")]
-    if len(credits) < len(used):
-        return Finding(False, "写真のクレジット",
-                       f"写真{len(used)}枚に対しクレジット{len(credits)}件。"
-                       "CC BY 系は表示が必須です")
-    return Finding(True, "写真のクレジット", f"写真{len(used)}枚 / クレジット{len(credits)}件")
+    missing = [line for line in want if line not in body]
+    if missing:
+        return Finding(
+            False, "写真のクレジット",
+            f"表示が条件の写真{len(want)}枚のうち{len(missing)}枚が概要欄にありません。"
+            "CC BY 系は表示が必須です",
+        )
+    return Finding(True, "写真のクレジット", f"表示が条件の写真{len(want)}枚すべてに表示があります")
 
 
 def check_thumbnail_photos(script: Script) -> Finding:

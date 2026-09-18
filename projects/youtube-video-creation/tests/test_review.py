@@ -338,9 +338,17 @@ def test_写真のクレジットが足りなければ弾く(tmp_path):
     script = _script("## S\nキャスター: 遠藤選手です。\n  image: assets/images/endo/03.jpg\n")
     assert not _photo_credits(script, tmp_path).ok
 
+    # **数え方を2つとも直した**（2026-09-18）。それまでは「写真の**ファイル名**の数」と
+    # 「`画像:` で始まる行の数」を比べていた。どのフォルダも中身は `01.jpg` なので
+    # **何枚使っても1枚**に数えられ、しかも**報道写真まで数えて**いた
+    # （報道写真は1枚ごとの行を出さない決まり）。
+    # いまは `image_details` が出す行が、そのまま概要欄にあるかを見る
+    from src.tts import image_details
+
+    want = image_details(script)
+    assert want, "表示が条件の写真が拾えていない"
     (tmp_path / "description.txt").write_text(
-        "本文\n画像: File:Wataru endo.jpg / Jeollo / CC BY 3.0", encoding="utf-8"
-    )
+        "本文\n" + "\n".join(want), encoding="utf-8")
     assert _photo_credits(script, tmp_path).ok
 
 
@@ -406,27 +414,23 @@ def test_サムネの写真もクレジットが要る(tmp_path):
     2026-09-06 に、公開済みの5本がクレジット無しで出ていた。
     """
     from src.review import _photo_credits
+    from src.tts import image_details
 
     nl = chr(10)
-
-    class Line:
-        image = None
-
-    class Script:
-        lines = [Line()]
-        meta = {"thumbnail_photo": "assets/images/arteta/01.jpg"}
+    # **動画の行には写真を1枚も出さない。**サムネだけに使う
+    script = _script("## S" + nl + "キャスター: 遠藤選手の話です。" + nl)
+    script.meta = {"thumbnail_photo": "assets/images/endo/03.jpg"}
 
     out = tmp_path
     (out / "description.txt").write_text(
         "■ クレジット" + nl + "音声: VOICEVOX" + nl, encoding="utf-8")
-    finding = _photo_credits(Script(), out)
-    assert not finding.ok, "サムネの写真が数えられていない"
+    assert not _photo_credits(script, out).ok, "サムネの写真が数えられていない"
 
+    want = image_details(script)
+    assert want, "サムネの写真が拾えていない"
     (out / "description.txt").write_text(
-        "■ クレジット" + nl
-        + "画像: File:x / 撮影者 / CC BY 3.0 / https://example.org" + nl,
-        encoding="utf-8")
-    assert _photo_credits(Script(), out).ok
+        "■ クレジット" + nl + nl.join(want) + nl, encoding="utf-8")
+    assert _photo_credits(script, out).ok
 
 
 # ショートは冒頭で捨てられる。2026-09-07 の実測で、公開済みショートは

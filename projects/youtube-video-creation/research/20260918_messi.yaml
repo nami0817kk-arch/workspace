@@ -54,10 +54,25 @@
 # 分からないまま**流れた。振り（「こう言いました。」）だけを別行にして、
 # 切るならそこを切らせる
 #
-# **写真はユーザー指定**（「バロンドール受賞した時のメッシがよい」）。
+# **サムネはメッシ1人。2ショットは本編の中**（2026-09-18 ユーザー指示
+# 「サムネは、メッシ／各人の内容を話す時に、メッシとその人の写真」
+# 「commons以外から探して」）。
+#   デ・パウル … MLS公式の報道写真。**2人とも顔が見える**。肩を組んで笑う
+#   ベッカム　 … MLS公式。2025年12月のMLSカップ優勝。**MLSが作った金の枠を
+#                外して中の写真だけ**を使った。ベッカムがメッシの肩に手を置く
+#   ラウタロ　 … 2026年ワールドカップ（Commons, CC BY-SA 4.0）。2人で抱き合う。
+#                背中の「22」「MESSI」で分かる。5000x3333 といちばん綺麗
+#   シメオネ　 … **2ショットが無い。**並べた1枚のまま（20260918_pair_simeone）。
+#                唯一見つかったのは2014-15年のカンプノウで、**メッシは後ろ姿、
+#                シメオネは怒鳴っている**。褒めている節に付ける絵ではない
+#
+# **ロイター表記のベッカム抱擁は使わない。**画はいちばん良いが、
+# 通信社の写真は機械的に突き合わせられる。MLS公式のほうを採った
+#
+# **下地（本編の背景）は受賞時の写真のまま**（「バロンドール受賞した時のメッシがよい」）。
 # 2019年の受賞時、バルセロナの自宅でフランスフットボール誌の取材を受けた
-# ときの1枚（Commons, CC BY-SA 4.0）。**7年前の写真だが、意図して選んでいる**
-# ——トロフィーが写っている写真は Commons にこれしか無い
+# ときの1枚（Commons, CC BY-SA 4.0）。7年前だが、トロフィーが写っている写真は
+# Commons にこれしか無い
 #
 # **海外の声は「海外の反応」ブログの訳文**（英語の原文そのものではない）。
 # X はログイン壁、r/soccer には到達できなかった。9/18 のクロップの回と同じ扱い
@@ -86,6 +101,8 @@ theme:
 thumbnail:
   line1: バロンドールはメッシだ
   line2: そう言った4人は ●●●●
+  # **サムネはメッシ**（2026-09-18 ユーザー指示）。受賞したときの1枚。
+  # 2ショットを試したが差し戻し。**2ショットは本編の中で使う**
   photo: assets/photos/20260918_messi_bdo/01.jpg
   focus: 0.3
   tags:
@@ -127,14 +144,14 @@ sections:
     narrator: キャスター
     say:
       - {short_only: true, text: バロンドールでメッシを推しているのは誰か、という話です。}
-      - {text: "一人目は、ロドリゴ・デ・パウル、32歳。**メッシと同じインテル・マイアミの選手**です。", image: assets/photos/20260918_depaul/01.jpg}
-      - {text: アルゼンチンの番組で、こう言いました。, image: assets/photos/20260918_depaul/01.jpg}
-      - {voice: デ・パウル, text: 議論の余地はない, image: assets/photos/20260918_depaul/01.jpg}
-      - {voice: デ・パウル, text: ワールドカップの年に、メッシに肩を並べた選手は誰もいない, image: assets/photos/20260918_depaul/01.jpg}
-      - {voice: デ・パウル, text: これからも出ないだろう。しかも彼は39歳だ, image: assets/photos/20260918_depaul/01.jpg}
-      - {text: "二人目は、デービッド・ベッカム、51歳。**そのインテル・マイアミの共同オーナー**です。", image: assets/photos/20260918_beckham/01.jpg}
-      - {voice: ベッカム, text: 39歳であれだけのことを、しかもあのレベルで成し遂げている選手は他にいない, image: assets/photos/20260918_beckham/01.jpg}
-      - {voice: ベッカム, text: 私の意見では、彼が受賞すべきだ, image: assets/photos/20260918_beckham/01.jpg}
+      - {text: "一人目は、ロドリゴ・デ・パウル、32歳。**メッシと同じインテル・マイアミの選手**です。", image: assets/photos/20260918_2s_depaul/01.png}
+      - {text: アルゼンチンの番組で、こう言いました。, image: assets/photos/20260918_2s_depaul/01.png}
+      - {voice: デ・パウル, text: 議論の余地はない, image: assets/photos/20260918_2s_depaul/01.png}
+      - {voice: デ・パウル, text: ワールドカップの年に、メッシに肩を並べた選手は誰もいない, image: assets/photos/20260918_2s_depaul/01.png}
+      - {voice: デ・パウル, text: これからも出ないだろう。しかも彼は39歳だ, image: assets/photos/20260918_2s_depaul/01.png}
+      - {text: "二人目は、デービッド・ベッカム、51歳。**そのインテル・マイアミの共同オーナー**です。", image: assets/photos/20260918_2s_beckham/01.jpg}
+      - {voice: ベッカム, text: 39歳であれだけのことを、しかもあのレベルで成し遂げている選手は他にいない, image: assets/photos/20260918_2s_beckham/01.jpg}
+      - {voice: ベッカム, text: 私の意見では、彼が受賞すべきだ, image: assets/photos/20260918_2s_beckham/01.jpg}
     official: false
     sources:
       - https://www.theworldmagazine.jp/20260918/01world/506158
@@ -157,14 +174,14 @@ sections:
         - ["ラウタロ（29）", "アルゼンチン代表の同僚"]
       note: 4人とも、クラブか国でつながっている
     say:
-      - {text: 三人目は、ディエゴ・シメオネ、56歳。アトレティコ・マドリーの監督で、アルゼンチン人です。, image: assets/photos/20260918_simeone/01.jpg}
-      - {text: 15日の会見で問われ、こう答えました。, image: assets/photos/20260918_simeone/01.jpg}
-      - {voice: シメオネ, text: メッシ。間違いなく, image: assets/photos/20260918_simeone/01.jpg}
-      - {voice: シメオネ, text: あの年齢で、あのワールドカップをやったことを考えれば, image: assets/photos/20260918_simeone/01.jpg}
-      - {voice: シメオネ, text: 疑いなくメッシ, image: assets/photos/20260918_simeone/01.jpg}
-      - {text: 四人目は、ラウタロ・マルティネス、29歳。インテルの選手で、アルゼンチン代表ではメッシと同じチームです。, image: assets/photos/20260918_lautaro/01.jpg}
-      - {text: こちらも、メッシの名前を挙げています。, image: assets/photos/20260918_lautaro/01.jpg}
-      - {voice: ラウタロ, text: 間違いない。彼は世界最高, image: assets/photos/20260918_lautaro/01.jpg}
+      - {text: 三人目は、ディエゴ・シメオネ、56歳。アトレティコ・マドリーの監督で、アルゼンチン人です。, image: assets/photos/20260918_pair_simeone/01.jpg}
+      - {text: 15日の会見で問われ、こう答えました。, image: assets/photos/20260918_pair_simeone/01.jpg}
+      - {voice: シメオネ, text: メッシ。間違いなく, image: assets/photos/20260918_pair_simeone/01.jpg}
+      - {voice: シメオネ, text: あの年齢で、あのワールドカップをやったことを考えれば, image: assets/photos/20260918_pair_simeone/01.jpg}
+      - {voice: シメオネ, text: 疑いなくメッシ, image: assets/photos/20260918_pair_simeone/01.jpg}
+      - {text: 四人目は、ラウタロ・マルティネス、29歳。インテルの選手で、アルゼンチン代表ではメッシと同じチームです。, image: assets/photos/20260918_messi_lautaro/01.jpg}
+      - {text: こちらも、メッシの名前を挙げています。, image: assets/photos/20260918_messi_lautaro/01.jpg}
+      - {voice: ラウタロ, text: 間違いない。彼は世界最高, image: assets/photos/20260918_messi_lautaro/01.jpg}
       - この4人は、**そろってクラブか国でメッシとつながっています。**
     official: false
     sources:
