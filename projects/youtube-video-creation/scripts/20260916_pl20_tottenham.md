@@ -11,10 +11,11 @@ thumbnail_alt: []
 thumbnail_points: []
 thumbnail_note_red: ''
 thumbnail_band_full: false
+thumbnail_photo: assets/backgrounds/stadium_トッテナム_in.png
 thumbnail_photos: []
 thumbnail_crest_main:
 - トッテナム
-bg: assets/backgrounds/crest_トッテナム.png
+bg: assets/backgrounds/stadium_トッテナム.png
 date: 2026年9月16日
 intro_title: トッテナム・ホットスパーとはどんなクラブか ⑳プレミア20クラブ紹介
 intro_label: 海外サッカー ニュース
@@ -43,6 +44,7 @@ tags:
 - サッカーニュース
 sources:
 - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
+- https://www.premierleague.com/en/news/4706912
 - https://en.wikipedia.org/wiki/Premier_League
 cards:
   name_card:
@@ -99,6 +101,23 @@ cards:
       - マンチェスター・ユナイテッド
     - - 結果
       - 1-0
+  season_card:
+    type: table
+    title: 今季の顔ぶれ
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ロベルト・デ・ゼルビ
+    - - 主将
+      - ファン・デ・フェン（CB・オランダ／25歳）
+    - - エース
+      - リシャルリソン（FW・ブラジル）
+    - - 昨季
+      - リーグ11点・全12点
+    - - 今季
+      - リーグの得点はまだゼロ
   titles_card:
     type: table
     title: 獲ってきたもの
@@ -117,14 +136,14 @@ cards:
 ---
 
 ## オープニング
-@bg: assets/backgrounds/crest_トッテナム.png
+@bg: assets/backgrounds/stadium_トッテナム.png
 
 キャスター: トッテナム・ホットスパーとはどんなクラブか ⑳プレミア20クラブ紹介。
   telop: トッテナム・ホットスパーとはどんなクラブか ⑳プレミア20クラブ紹介
   se: assets/audio/se_pon.wav
 
 ## 名前と愛称
-@bg: assets/backgrounds/crest_トッテナム.png
+@bg: assets/backgrounds/stadium_トッテナム.png
 
 キャスター: アルファベット順では、20番目。最後のクラブです。
   telop: アルファベット順では、20番目。最後のクラブです
@@ -148,7 +167,7 @@ cards:
   telop: 2019年から使っています。それまではホワイト・ハート・レーンでした
 
 ## リーグに入らないまま、FAカップを獲った
-@bg: assets/backgrounds/crest_トッテナム.png
+@bg: assets/backgrounds/stadium_トッテナム.png
 @main: true
 
 解説: このクラブが最初に名を残したのは1901年です。
@@ -167,7 +186,7 @@ cards:
   telop: **20世紀で最初の2冠**です
 
 ## ヨーロッパでの最初
-@bg: assets/backgrounds/crest_トッテナム.png
+@bg: assets/backgrounds/stadium_トッテナム.png
 
 キャスター: 1963年、カップウィナーズカップを制しました。
   telop: 1963年、カップウィナーズカップを制しました
@@ -181,7 +200,7 @@ cards:
   telop: 種類の違うヨーロッパのタイトルを2つ獲ったのも、イギリス勢では最初でした
 
 ## 17年ぶりのタイトル
-@bg: assets/backgrounds/crest_トッテナム.png
+@bg: assets/backgrounds/stadium_トッテナム.png
 
 解説: 記録を持つクラブでも、勝てない時期は続きます。
   telop: 記録を持つクラブでも、勝てない時期は続きます
@@ -193,11 +212,25 @@ cards:
   telop: 終わったのは2025年です。ヨーロッパリーグの決勝でした
 解説: 相手はマンチェスター・ユナイテッド。1対0で勝っています。
   telop: 相手はマンチェスター・ユナイテッド。1対0で勝っています
-解説: 監督はロベルト・デ・ゼルビ。今季の登録に、日本人選手はいません。
-  telop: 監督はロベルト・デ・ゼルビ。今季の登録に、日本人選手はいません
+
+## 今季の顔ぶれ
+@bg: assets/backgrounds/stadium_トッテナム.png
+
+キャスター: 主将はミッキー・ファン・デ・フェン。25歳のオランダ人センターバックです。
+  telop: 主将はミッキー・ファン・デ・フェン。25歳のオランダ人センターバックです
+  source: 報道
+  card: season_card
+キャスター: 長く主将だったクリスティアン・ロメロが今夏いなくなり、引き継ぎました。
+  telop: 長く主将だったクリスティアン・ロメロが今夏いなくなり、引き継ぎました
+キャスター: エースはリシャルリソン。ブラジル代表のフォワードで、昨季は12点。
+  telop: エースはリシャルリソン。ブラジル代表のフォワードで、昨季は12点
+キャスター: ただし**今季、リーグでの得点はまだゼロ**です。
+  telop: ただし**今季、リーグでの得点はまだゼロ**です
+キャスター: 最初の1点が誰から出るか。そこが今のトッテナムの見どころです。
+  telop: 最初の1点が誰から出るか。そこが今のトッテナムの見どころです
 
 ## 獲ってきたもの
-@bg: assets/backgrounds/crest_トッテナム.png
+@bg: assets/backgrounds/stadium_トッテナム.png
 
 キャスター: 数えると、大きなタイトルで**18個**です。
   telop: 数えると、大きなタイトルで**18個**です

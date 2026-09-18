@@ -161,3 +161,21 @@ def test_詳細が無ければ区切り線も出さない():
     nl = chr(10)
     script = parse_script(nl.join(["---", "title: T", "---", "", "## 章", "", "キャスター: あ。"]))
     assert "─" not in description(script, ["音声: VOICEVOX"], [])
+
+
+def test_概要欄に連絡先を必ず置く():
+    """**権利者が「警告」ではなく「連絡」を選べるようにする**（2026-09-17）。
+
+    報道写真を使う方針にした（[[video-asset-policy]]）。写真は Content ID で
+    検出されないので、動くのは人が申し立てたときだけ。申し立て＝著作権侵害の
+    警告で、**3回でチャンネルが消える**。連絡先が無いと、権利者に取れる手段が
+    それしかない。ユーザーの方針「一度指摘されたら考えよう」は、
+    **指摘が届く道があって初めて成り立つ**。
+    """
+    from src.script_model import parse_script
+    from src.subtitles import description
+
+    s = parse_script("---\ntitle: T\n---\n\n## 何が起きたか\n\nキャスター: あ。\n")
+    out = description(s)
+    assert "お問い合わせ" in out
+    assert "sakamane.support@gmail.com" in out

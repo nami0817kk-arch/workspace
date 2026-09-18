@@ -11,10 +11,11 @@ thumbnail_alt: []
 thumbnail_points: []
 thumbnail_note_red: ''
 thumbnail_band_full: false
+thumbnail_photo: assets/backgrounds/stadium_ブレントフォード_in.png
 thumbnail_photos: []
 thumbnail_crest_main:
 - ブレントフォード
-bg: assets/backgrounds/crest_ブレントフォード.png
+bg: assets/backgrounds/stadium_ブレントフォード.png
 date: 2026年9月16日
 intro_title: ブレントフォードとはどんなクラブか ④プレミア20クラブ紹介
 intro_label: 海外サッカー ニュース
@@ -42,7 +43,7 @@ tags:
 - サッカーニュース
 sources:
 - https://en.wikipedia.org/wiki/Brentford_F.C.
-- https://en.wikipedia.org/wiki/2026%E2%80%9327_Brentford_F.C._season
+- https://www.premierleague.com/en/news/4706912
 - https://en.wikipedia.org/wiki/Premier_League
 cards:
   name_card:
@@ -75,7 +76,7 @@ cards:
       - グリフィン・パーク（116年間）
   season_card:
     type: table
-    title: 今季の陣容
+    title: 今季の顔ぶれ
     columns:
     - ''
     - ''
@@ -83,7 +84,11 @@ cards:
     - - 監督
       - キース・アンドリュース
     - - 主将
-      - ネイサン・コリンズ
+      - ネイサン・コリンズ（CB・アイルランド）
+    - - エース
+      - イゴール・チアゴ（FW・ブラジル）
+    - - 昨季
+      - リーグ22点・全25点
     - - 日本人選手
       - なし
   history_card:
@@ -119,14 +124,14 @@ cards:
 ---
 
 ## オープニング
-@bg: assets/backgrounds/crest_ブレントフォード.png
+@bg: assets/backgrounds/stadium_ブレントフォード.png
 
 キャスター: ブレントフォードとはどんなクラブか ④プレミア20クラブ紹介。
   telop: ブレントフォードとはどんなクラブか ④プレミア20クラブ紹介
   se: assets/audio/se_pon.wav
 
 ## 名前と愛称
-@bg: assets/backgrounds/crest_ブレントフォード.png
+@bg: assets/backgrounds/stadium_ブレントフォード.png
 
 キャスター: アルファベット順では、4番目に来ます。
   telop: アルファベット順では、4番目に来ます
@@ -152,7 +157,7 @@ cards:
   telop: それを聞いた人たちが「**バック・アップ、蜂**」だと思った。そのまま愛称になりました
 
 ## 本拠地
-@bg: assets/backgrounds/crest_ブレントフォード.png
+@bg: assets/backgrounds/stadium_ブレントフォード.png
 @main: true
 
 解説: 本拠地はGテック・コミュニティ・スタジアム。ロンドン西部にあります。
@@ -171,33 +176,23 @@ cards:
   image: assets/images/pl_brentford/scene.jpg
 
 ## 今季の顔ぶれ
-@bg: assets/backgrounds/crest_ブレントフォード.png
+@bg: assets/backgrounds/stadium_ブレントフォード.png
 
 キャスター: 監督はキース・アンドリュースです。
   telop: 監督はキース・アンドリュースです
   source: 報道
   card: season_card
-キャスター: 就任は2025年6月。前任のトーマス・フランクがトッテナムへ移ったあとを引き継ぎました。
-  telop: 就任は2025年6月。前任のトーマス・フランクがトッテナムへ移ったあとを引き継ぎました
-キャスター: 主将はネイサン・コリンズ。センターバックです。
-  telop: 主将はネイサン・コリンズ。センターバックです
-キャスター: 今夏は5人が加わりました。
-  telop: 今夏は5人が加わりました
-キャスター: ランスからママドゥ・サンガレ、**4100万ポンド**。
-  telop: ランスからママドゥ・サンガレ、**4100万ポンド**
-キャスター: ウェストハムからエル・ハジ・マリック・ディウフが3500万ポンド。
-  telop: ウェストハムからエル・ハジ・マリック・ディウフが3500万ポンド
-キャスター: バーンリーからジェイドン・アンソニーが1500万ポンド、ザルツブルクからヤニク・シュスターが1200万ポンド。
-  telop: バーンリーからジェイドン・アンソニーが1500万ポンド、ザルツブルクからヤニク・シュスターが1200万ポンド
-キャスター: カラム・ウィルソンは、所属クラブのない状態から加わっています。
-  telop: カラム・ウィルソンは、所属クラブのない状態から加わっています
-キャスター: 出ていったほうでは、ジョーダン・ヘンダーソンがチェルシーへ移りました。
-  telop: 出ていったほうでは、ジョーダン・ヘンダーソンがチェルシーへ移りました
-キャスター: そして、日本人選手はいません。
-  telop: そして、日本人選手はいません
+キャスター: 主将はネイサン・コリンズ。アイルランド代表のセンターバックです。
+  telop: 主将はネイサン・コリンズ。アイルランド代表のセンターバックです
+キャスター: エースはイゴール・チアゴ。ブラジル人のセンターフォワードです。
+  telop: エースはイゴール・チアゴ。ブラジル人のセンターフォワードです
+キャスター: 昨季はリーグで**22点**、すべての大会で25点を挙げました。
+  telop: 昨季はリーグで**22点**、すべての大会で25点を挙げました
+キャスター: **主要タイトルがひとつも無いクラブに、得点王争いを持ち込んだ**選手です。
+  telop: **主要タイトルがひとつも無いクラブに、得点王争いを持ち込んだ**選手です
 
 ## 歩んできた道
-@bg: assets/backgrounds/crest_ブレントフォード.png
+@bg: assets/backgrounds/stadium_ブレントフォード.png
 
 解説: このクラブは、一度消えかけています。
   telop: このクラブは、一度消えかけています
@@ -219,7 +214,7 @@ cards:
   telop: 1部での最高順位は、1935年から36年の5位です
 
 ## 獲ってきたもの
-@bg: assets/backgrounds/crest_ブレントフォード.png
+@bg: assets/backgrounds/stadium_ブレントフォード.png
 
 キャスター: 最後に、獲ってきたものを数えます。
   telop: 最後に、獲ってきたものを数えます

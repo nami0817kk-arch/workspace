@@ -265,3 +265,36 @@ def test_同じURLを二度書かない():
     url = "https://www.pexels.com/video/x/"
     got = credit_line(url, "撮影者", "CC BY 4.0", url)
     assert got.count(url) == 1, got
+
+
+def test_人物写真のクレジットも概要欄に出る(tmp_path):
+    """**assets/photos/ の帳簿を見ていなかった**（2026-09-18 に発覚）。
+
+    人物写真の置き場を assets/photos/ に移したのに、クレジットを探す場所は
+    assets/images/ と assets/backgrounds/ のままだった。そのため
+    **9/18 に出した12本すべてに「※ 画像:」が1行も入っていなかった。**
+    CC BY / BY-SA は表示が条件なので、抜けると利用条件を満たさない。
+    """
+    import json
+
+    from src.script_model import parse_script
+    from src.tts import image_credits, image_details
+
+    d = tmp_path / "assets" / "photos" / "someone"
+    d.mkdir(parents=True)
+    (d / "01.jpg").write_bytes(b"")
+    (d / "credits.json").write_text(json.dumps([{
+        "file": "01.jpg", "source": "wikimedia", "title": "File:Someone.jpg",
+        "license": "CC BY-SA 4.0", "author": "撮影者",
+        "page_url": "https://commons.wikimedia.org/wiki/File:Someone.jpg",
+    }], ensure_ascii=False), encoding="utf-8")
+
+    nl = chr(10)
+    script = parse_script(nl.join([
+        "## 本編", "", "キャスター: 誰かの話です。",
+        "  image: assets/photos/someone/01.jpg", "",
+    ]))
+    details = image_details(script, root=tmp_path)
+    assert details, "人物写真のクレジットが出ていない"
+    assert "CC BY-SA 4.0" in details[0]
+    assert image_credits(script, root=tmp_path) == ["画像: Wikimedia Commons"]

@@ -110,7 +110,6 @@ sections:
       - いまの収容人数は2万8107人。
       - いちばん人が入ったのは1938年10月8日、ミルウォール戦でした。
       - その日の入場者は**4万9335人**。いまの収容の1.7倍です。
-      - 監督はアルバロ・アルベロア。今季の登録に日本人選手はいません。
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Fulham_F.C.
@@ -128,6 +127,30 @@ sections:
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Fulham_F.C.
+  - id: season
+    heading: 今季の顔ぶれ
+    tier: 報道
+    telop: 主将はトム・ケアニー
+    narrator: キャスター
+    card:
+      type: table
+      title: 今季の顔ぶれ
+      columns: ["", ""]
+      rows:
+        - ["監督", "アルバロ・アルベロア"]
+        - ["主将", "トム・ケアニー（MF・スコットランド）"]
+        - ["腕章", "2017年以降ずっと"]
+        - ["エース", "今季は4人が2点ずつで並ぶ"]
+        - ["昨季の上位2人", "どちらも退団"]
+    say:
+      - 主将はトム・ケアニー。スコットランド人の中盤です。
+      - 2015年にこのクラブへ来て、**2017年以降ずっと腕章を巻いています。**
+      - エースは、今季まだ決まっていません。**4人が2点ずつで並んでいます。**
+      - 昨季の得点上位2人は、どちらもクラブを離れました。
+      - 11点のハリー・ウィルソンはリーズへ、10点のラウール・ヒメネスも退団しています。
+    official: false
+    sources:
+      - https://www.premierleague.com/en/news/4706912
   - id: titles
     heading: 獲ってきたもの
     tier: 背景

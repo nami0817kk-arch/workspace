@@ -650,3 +650,149 @@ def test_件数が多い節では古いほうから落として字を保つ():
         many = tuple(f"ネット民「{i}件目の書き込みです。" + "あ" * 30 + "」" for i in range(12))
         r._draw_stack(canvas, many)   # 落ちずに描ければよい（字の大きさは中で保つ）
         assert canvas.getbbox() is not None
+
+
+def test_横長の一覧板は画面いっぱいに敷く(tmp_path):
+    """**左半分がぼかしだけになっていた**（2026-09-17 ユーザー指摘
+    「動画の画面の左側がぼやけている」）。
+
+    写真を右半分に立てる作りは**人物の縦写真のためのもの**で、16:9 の
+    一覧板を入れると左半分がぼかし、板の左半分（齋藤と松木）は画面の外。
+    横長は画面いっぱいに敷く。
+
+    さらに、板は**文字でできた絵**なので、カードや節の名前を上に重ねると
+    板の文字が読めない（ユーザー指示「サムネ画面をだしておいて」）。
+    """
+    from PIL import Image
+
+    from src.config import load_config
+    from src.render import Renderer
+
+    wide = tmp_path / "board.png"
+    Image.new("RGB", (1280, 720), (20, 40, 120)).save(wide)
+    tall = tmp_path / "face.jpg"
+    Image.new("RGB", (480, 680), (200, 180, 160)).save(tall)
+
+    renderer = Renderer(load_config(), tmp_path / "work")
+    renderer._photo_stage(str(wide))
+    renderer._photo_stage(str(tall))
+    assert str(wide) in renderer._wide_stages, "横長が全面扱いになっていない"
+    assert str(tall) not in renderer._wide_stages, "縦写真まで全面にしている"
+
+    # **4:3 も全面**（2026-09-17 夜）。1.4倍の網では 800x600 が漏れ、
+    # 公開した佐野の回の左が暗いままだった
+    four_three = tmp_path / "43.jpg"
+    Image.new("RGB", (800, 600), (40, 90, 60)).save(four_three)
+    renderer._photo_stage(str(four_three))
+    assert str(four_three) in renderer._wide_stages, "4:3 が右半分に立てられている"
+
+
+def test_数字は途中で割らない():
+    """**「後半38分」が「後半3／8分」に割れていた**（2026-09-18 に画面で見つかった）。
+
+    1文字ずつ幅を見て折り返していたので、数字の真ん中で改行されていた。
+    拗音（チェ→チ／ェ）や熟語（成立→成／立）の割れは直してあったのに、
+    **数字は見ていなかった。**読んでも意味が取れない画面になる。
+    """
+    from PIL import Image, ImageDraw, ImageFont
+
+    from src.render import wrap_text
+
+    draw = ImageDraw.Draw(Image.new("RGB", (10, 10)))
+    font = ImageFont.load_default()
+    for width in range(60, 260, 10):
+        for text in ("そして今回は、後半38分からの出場でした",
+                     "移籍金は9億5000万ポンドでした",
+                     "クリアレイクが61.5%を持っています"):
+            for line in wrap_text(draw, text, font, width):
+                # 行が数字で終わり、次の行が数字で始まる＝数字の途中で割れている
+                pass
+            lines = wrap_text(draw, text, font, width)
+            for before, after in zip(lines, lines[1:]):
+                assert not (before and after and before[-1].isdigit()
+                            and after[0].isdigit()), (text, width, lines)
+
+
+def test_英字も途中で割らない():
+    """Sky Sports が「Sky Spo／rts」になると読めない（2026-09-18）。"""
+    from PIL import Image, ImageDraw, ImageFont
+
+    from src.render import wrap_text
+
+    draw = ImageDraw.Draw(Image.new("RGB", (10, 10)))
+    font = ImageFont.load_default()
+    for width in range(60, 260, 10):
+        lines = wrap_text(draw, "アロンソはSky Sportsに語った", font, width)
+        for before, after in zip(lines, lines[1:]):
+            assert not (before and after and before[-1].isascii() and before[-1].isalpha()
+                        and after[0].isascii() and after[0].isalpha()), (width, lines)
+
+
+def test_数字と助数詞は離さない():
+    """**「72／分から」と単位が離れて読みにくかった**（2026-09-18）。
+
+    数字を割らないようにした直後に見つかった。数字だけくっつけても、
+    「戦は72」で行が終わって次が「分から」では、目で拾い直すことになる。
+    """
+    from PIL import Image, ImageDraw, ImageFont
+
+    from src.render import wrap_text
+
+    draw = ImageDraw.Draw(Image.new("RGB", (10, 10)))
+    font = ImageFont.load_default()
+    for width in range(60, 300, 10):
+        for text in ("アトレティコ・マドリード戦は72分から",
+                     "そして今回は、後半38分からの出場でした",
+                     "選ばれたのは44人。そのうち11人が初招集です"):
+            lines = wrap_text(draw, text, font, width)
+            for before, after in zip(lines, lines[1:]):
+                assert not (before and after and before[-1].isdigit()
+                            and after[0] in "分秒時日月年人名位点個回戦歳億万千円本勝敗"), \
+                    (text, width, lines)
+
+
+def test_横長の写真にはカードを重ねる(tmp_path):
+    """**写真を使う回はカードが1枚も出なくなっていた**（2026-09-18 に画面で見つかった）。
+
+    9/17 に「一覧板の上にはカードも節の名前も重ねない」と決めたとき、
+    **横長の絵すべて**を対象にしてしまった。報道写真を使えるようになってからは
+    写真がほぼ16:9なので、**カードが全部消える**。
+    クロップの選手の表も、久保の表も、画面に出ていなかった。
+    **止めるのは板のときだけ。**
+    """
+    from PIL import Image
+
+    from src.config import load_config
+    from src.render import Renderer, _is_board
+
+    board = tmp_path / "assets" / "stats" / "squad.png"
+    board.parent.mkdir(parents=True, exist_ok=True)
+    Image.new("RGB", (1280, 720), (20, 40, 120)).save(board)
+    photo = tmp_path / "assets" / "photos" / "klopp" / "01.jpg"
+    photo.parent.mkdir(parents=True, exist_ok=True)
+    Image.new("RGB", (1200, 675), (180, 170, 150)).save(photo)
+
+    renderer = Renderer(load_config(), tmp_path / "work")
+    renderer._photo_stage(str(board))
+    renderer._photo_stage(str(photo))
+
+    # どちらも全面に敷く（左半分がぼかしにならない）
+    assert str(board) in renderer._wide_stages
+    assert str(photo) in renderer._wide_stages
+    # **カードを止めるのは板だけ**
+    assert str(board) in renderer._board_stages, "板にカードが重なる"
+    assert str(photo) not in renderer._board_stages, "写真の回でカードが消える"
+    assert _is_board(str(board)) and not _is_board(str(photo))
+
+
+def test_数字の図の控えがあれば板とみなす(tmp_path):
+    """`statboard` は `<絵>.statboard.txt` を残す。置き場所が違っても板。"""
+    from PIL import Image
+
+    from src.render import _is_board
+
+    made = tmp_path / "run.png"
+    Image.new("RGB", (1280, 720)).save(made)
+    assert not _is_board(str(made))
+    made.with_suffix(".png.statboard.txt").write_text("title: 走行距離", encoding="utf-8")
+    assert _is_board(str(made))

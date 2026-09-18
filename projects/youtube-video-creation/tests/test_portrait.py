@@ -346,3 +346,59 @@ def test_逮捕写真と紋章を人として掴まない():
     # 本人の写真は通る（外しすぎていないことも確かめる）
     assert looks_like_person("File:Thiago Silva (cropped).jpg")
     assert looks_like_person("File:Thiago Silva & Marquinhos.jpg")
+
+
+def test_前に使った写真は後ろへ回す(tmp_path, monkeypatch):
+    """**同じ人がいつも同じ1枚になっていた**（2026-09-17 ユーザー指摘
+    「画像の出典が過去と同じことになってる」）。
+
+    候補を点数順に並べて必ず1位を取るので、中村敬斗は 9/6 と 9/17 で同じ
+    ザルツブルク時代の写真、鈴木彩艶も同じタイ戦の写真になっていた。
+    **候補は8枚あった。**前に使ったものは後ろへ回す。
+    """
+    import json as _json
+
+    from src import portrait as P
+
+    root = tmp_path / "images"
+    (root / "nakamura").mkdir(parents=True)
+    (root / "nakamura" / "credits.json").write_text(
+        _json.dumps([{"file": "01.jpg", "title": "File:A.jpg"}]), encoding="utf-8")
+    (root / "nakamura2609").mkdir()
+
+    used = P.used_titles(root / "nakamura2609")
+    assert used == {"File:A.jpg"}, "別フォルダの控えを見ていない"
+
+    pool = ["File:A.jpg", "File:B.jpg", "File:C.jpg"]
+    ordered = [t for t in pool if t not in used] + [t for t in pool if t in used]
+    assert ordered[0] == "File:B.jpg"
+    assert ordered[-1] == "File:A.jpg", "使い切ったら前のものへ戻ってよい"
+
+
+def test_撮影年を控えに残す():
+    """**Commons の写真は年代が古いほうに寄る**（2026-09-18 に同じ日で3件）。
+
+    「その人が有名になった頃」の写真が多く残っていて、機械は被写体と
+    ライセンスしか見ていなかった。久保建英=2019年（18歳・レアル時代）、
+    クロップ=2012年（ドルトムント時代・長髪）、アロンソ=現役時代。
+    **止めない**（他に無ければ古い写真でも使ってよい）が、知らせる。
+    """
+    from src.portrait import _year
+
+    assert _year({"value": "2019-07-16"}) == 2019
+    assert _year({"value": "2012-08-12 12:53"}) == 2012
+    assert _year({"value": "circa 1998"}) == 1998
+    # **取れなければ 0。**古いと決めつけない
+    assert _year({"value": "unknown"}) == 0
+    assert _year(None) == 0
+
+
+def test_古い写真は知らせるが止めない():
+    """判断は人がする。**5年あれば所属も見た目も変わる。**"""
+    import datetime
+
+    from src.cli import PORTRAIT_OLD_YEARS
+
+    assert PORTRAIT_OLD_YEARS == 5
+    # クロップの2010年の写真は、いつ実行しても「古い」に落ちる
+    assert datetime.date.today().year - 2010 >= PORTRAIT_OLD_YEARS

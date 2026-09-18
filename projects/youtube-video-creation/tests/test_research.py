@@ -1138,3 +1138,252 @@ def test_行頭の強調はYAMLで落ちると教える(tmp_path):
         assert "3 行目" in str(err)
     else:
         raise AssertionError("落ちなかった")
+
+
+def test_写真の無い回の下地は特定クラブの実写にしない():
+    """**既定の下地がヴォルフスブルクのスタジアムだった**（2026-09-17 に発覚）。
+
+    ユーザー指摘「動画の画面の左側がぼやけている」から書き出した1コマを見て
+    分かった。`crest_still.png` の中身は実写で、LEDの看板に VFL WOLFSBURG と
+    読める。**写真の無い回は全部これ**になるので、ホッフェンハイムの話も
+    PSVの話もマンUの話も、同じドイツのスタジアムの前で喋っていた。
+
+    9/17 の午前に台本4本を手で直したのに、**既定値を直さなかったため
+    その日のうちに新しい台本3本へ戻ってきた**（マンU・トッテナム・ベンフィカ）。
+    手で直すだけでは戻る。
+    """
+    from src.research import STILL_BACKGROUND
+
+    assert "crest_still" not in STILL_BACKGROUND, "クラブの実写に戻っている"
+    assert STILL_BACKGROUND.endswith(".png"), "静止画のはず（動画に差し替わる名前は使わない）"
+
+
+def test_知らないカードの種類はdraftで止める():
+    """**書き出しまで気づけなかった**（2026-09-18）。
+
+    `type: bullets` と書いた取材メモが draft を通り、音声を合成し終えた
+    あとの render で「カードの type は … のいずれか」で落ちた。正しくは `points`。
+    `_check_card` は「落ちる条件を先に見る」ための関数なのに、
+    **中身の欄だけ見て、種類の名前を見ていなかった。**
+    """
+    from src.cards import CARD_TYPES
+    from src.research import Section, _check_card
+
+    def make(card):
+        return Section(id="s", heading="h", tier="報道", telop="t",
+                       say=["a"], sources=["https://example.com/1"], card=card)
+
+    found = _check_card(make({"type": "bullets", "items": ["a", "b"]}))
+    assert found, "知らない type を通している"
+    assert "points" in found[0], "近い綴りを教えていない"
+
+    # 正しい種類は素通しする
+    for kind in CARD_TYPES:
+        card = {"type": kind, "title": "x", "items": ["a"],
+                "columns": ["a", "b"], "rows": [["1", "2"]]}
+        assert not [p for p in _check_card(make(card)) if "知りません" in p], kind
+
+
+def test_節が下地を指定したらオープニングも合わせる(tmp_path):
+    """**オープニングだけ別の下地だった**（2026-09-18 に踏んだ）。
+
+    久保の回で全節に `bg` を書いたのに、オープニングは既定の実写クリップのままで、
+    1つ目の切り替わりで場所が変わって見えた。
+    「下地は1本のあいだ変えない」（2026-09-14 指示）に、ここだけ従っていなかった。
+    """
+    import re
+
+    from src.plan import load_plan
+    from src.research import load_notes, to_script
+
+    body = (tmp_path / "n.yaml")
+    body.write_text("""format: news
+voice_min: 20
+date: "2026年9月18日"
+theme:
+  id: t
+  league: spain
+  kind: other
+  topic: レアル・ソシエダ
+  title: 久保建英が3試合続けて外れた理由とは
+  hook: ひと言だけ。
+  question: なぜか
+thumbnail:
+  line1: あ
+  line2: い
+  photo: assets/photos/x/01.jpg
+sections:
+  - id: a
+    heading: 何が起きたか
+    tier: 報道
+    bg: assets/backgrounds/kubo.png
+    telop: て
+    narrator: キャスター
+    say: [いちばん最初の行です。]
+    sources: ["https://example.com/1"]
+  - id: b
+    heading: どう動いたか
+    main: true
+    tier: 報道
+    bg: assets/backgrounds/kubo.png
+    telop: ど
+    narrator: 解説
+    say: [そのあとに起きたことです。]
+    sources: ["https://example.com/2"]
+  - id: c
+    heading: 見通し
+    tier: 背景
+    bg: assets/backgrounds/kubo.png
+    telop: み
+    narrator: キャスター
+    say: [これから何があるかです。]
+    sources: ["https://example.com/3"]
+  - id: voices
+    heading: 反応
+    tier: 未確認
+    bg: assets/backgrounds/kubo.png
+    telop: こ
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: なるほど}
+    sources: ["https://example.com/4"]
+""", encoding="utf-8")
+    text = to_script(load_notes(body), load_plan())
+    backgrounds = re.findall(r"^@bg: (.+)$", text, re.M)
+    assert backgrounds, "下地の指定が1つも無い"
+    assert len(set(backgrounds)) == 1, f"1本の中で下地が変わっている: {set(backgrounds)}"
+    assert "kubo.png" in backgrounds[0]
+
+
+def test_ショート専用の行に節のカードを付けない(tmp_path):
+    """**表が本編に一度も出なかった**（2026-09-18 に画面で見つかった）。
+
+    節のカードは1行目に付く。ところが取材メモの雛形は、節の頭に
+    `only: short` の状況説明を置くことがある。その行は本編では落ちるので、
+    **カードごと消える。**クロップの回で、選手の表が画面に出ていなかった。
+    `_is_voices_scene` が `only: short` の語りを数えて壊れたのと同じ型で、
+    **あの1行はショート専用なのに、節の1行目として扱われていた。**
+    """
+    import re
+
+    from src.plan import load_plan
+    from src.research import load_notes, to_script
+
+    note = tmp_path / "n.yaml"
+    note.write_text("""format: news
+voice_min: 20
+date: "2026年9月18日"
+theme:
+  id: t
+  league: germany
+  kind: other
+  topic: ドイツ代表
+  title: クロップが呼んだ44人は誰だったのか
+  hook: ひと言だけ。
+  question: 誰か
+thumbnail:
+  line1: あ
+  line2: い
+  photo: assets/photos/x/01.jpg
+sections:
+  - id: a
+    heading: 何が起きたか
+    tier: 報道
+    telop: て
+    narrator: キャスター
+    say: [いちばん最初の行です。]
+    sources: ["https://example.com/1"]
+  - id: who
+    heading: 誰が呼ばれたか
+    main: true
+    tier: 報道
+    telop: ひ
+    narrator: キャスター
+    card:
+      type: table
+      title: 初招集
+      columns: ["所属", "名前", "位置", "年齢"]
+      rows:
+        - ["フランクフルト", "エブヌタリブ", "FW", "23"]
+    say:
+      - {short_only: true, text: ショートのための状況説明です。}
+      - 本編に残る最初の行です。
+    sources: ["https://example.com/2"]
+  - id: voices
+    heading: 反応
+    tier: 未確認
+    telop: こ
+    narrator: キャスター
+    say:
+      - {voice: ネット民, text: なるほど}
+    sources: ["https://example.com/3"]
+""", encoding="utf-8")
+    text = to_script(load_notes(note), load_plan())
+    block = text.split("## 誰が呼ばれたか")[1].split("\n## ")[0]
+    # カードが付いた行の1つ前の読み上げを探す
+    holder = None
+    for line in block.splitlines():
+        if re.match(r"^[^ \t#@].*?: ", line):
+            holder = line
+        if line.strip() == "card: who_card":
+            break
+    assert holder and "ショートのための状況説明" not in holder, \
+        f"ショート専用の行にカードが付いている: {holder}"
+    assert "本編に残る最初の行" in holder
+
+
+def test_ネットの声が少ない回を知らせる(tmp_path):
+    """**件数を数えていなかった**（2026-09-18 に気づいた）。
+
+    「読み上げる反応は10〜20件」と 2026-09-07 に決めてあるのに、
+    機械は **1件でもあれば通していた**。サンバの回は6件、
+    ヴァツケの回は日本語0件のまま書き出せた。
+    **止めない**（記事が1本しか出ていない題材では数が伸びない）。
+    気づかずに出ることだけを防ぐ。
+    """
+    from src.plan import load_plan
+    from src.research import advise, load_notes
+
+    def note(count):
+        says = "\n".join(f"      - {{voice: ネット民, text: こえ{i}}}" for i in range(count))
+        path = tmp_path / f"n{count}.yaml"
+        path.write_text(f"""format: news
+voice_min: 20
+date: "2026年9月18日"
+theme:
+  id: t
+  league: england
+  kind: other
+  topic: マンチェスター・シティ
+  title: マンチェスター・シティの17歳が見せたものとは
+  hook: ひと言。
+  question: なにか
+thumbnail:
+  line1: あ
+  line2: い
+  photo: assets/photos/x/01.jpg
+sections:
+  - id: a
+    heading: 何が起きたか
+    tier: 報道
+    telop: て
+    narrator: キャスター
+    say: [いちばん最初の行です。]
+    sources: ["https://example.com/1"]
+  - id: voices
+    heading: 反応
+    tier: 未確認
+    telop: こ
+    narrator: キャスター
+    say:
+{says}
+    sources: ["https://example.com/2"]
+""", encoding="utf-8")
+        return advise(load_notes(path), load_plan())
+
+    few = [n for n in note(6) if "ネットの声が" in n]
+    assert few, "6件でも知らせていない"
+    assert "6件" in few[0]
+
+    enough = [n for n in note(12) if "ネットの声が" in n]
+    assert not enough, "12件で鳴っている"

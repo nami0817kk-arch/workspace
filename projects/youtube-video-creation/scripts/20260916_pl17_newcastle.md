@@ -11,10 +11,11 @@ thumbnail_alt: []
 thumbnail_points: []
 thumbnail_note_red: ''
 thumbnail_band_full: false
+thumbnail_photo: assets/backgrounds/stadium_ニューカッスル_in.png
 thumbnail_photos: []
 thumbnail_crest_main:
 - ニューカッスル
-bg: assets/backgrounds/crest_ニューカッスル.png
+bg: assets/backgrounds/stadium_ニューカッスル.png
 date: 2026年9月16日
 intro_title: ニューカッスル・ユナイテッドとはどんなクラブか ⑰プレミア20クラブ紹介
 intro_label: 海外サッカー ニュース
@@ -43,6 +44,7 @@ tags:
 - サッカーニュース
 sources:
 - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
+- https://www.premierleague.com/en/news/4706912
 - https://en.wikipedia.org/wiki/Premier_League
 cards:
   name_card:
@@ -86,6 +88,23 @@ cards:
       - マイク・アシュリーの14年
     - - 監督
       - マティアス・ヤイスレ（2026年8月）
+  season_card:
+    type: table
+    title: 今季の顔ぶれ
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - マティアス・ヤイスレ
+    - - 主将
+      - ダン・バーン（CB・イングランド／2m01）
+    - - 出身
+      - 地元ノーサンバランド州
+    - - エース
+      - ハーヴィー・バーンズ（FW・イングランド）
+    - - 今季
+      - 3点でチーム最多
   titles_card:
     type: table
     title: 獲ってきたもの
@@ -104,14 +123,14 @@ cards:
 ---
 
 ## オープニング
-@bg: assets/backgrounds/crest_ニューカッスル.png
+@bg: assets/backgrounds/stadium_ニューカッスル.png
 
 キャスター: ニューカッスル・ユナイテッドとはどんなクラブか ⑰プレミア20クラブ紹介。
   telop: ニューカッスル・ユナイテッドとはどんなクラブか ⑰プレミア20クラブ紹介
   se: assets/audio/se_pon.wav
 
 ## 名前と愛称
-@bg: assets/backgrounds/crest_ニューカッスル.png
+@bg: assets/backgrounds/stadium_ニューカッスル.png
 
 キャスター: アルファベット順では、17番目に来ます。
   telop: アルファベット順では、17番目に来ます
@@ -135,7 +154,7 @@ cards:
   telop: 本拠地はセント・ジェームズ・パーク。収容は5万2729人です
 
 ## 56年待った
-@bg: assets/backgrounds/crest_ニューカッスル.png
+@bg: assets/backgrounds/stadium_ニューカッスル.png
 @main: true
 
 解説: このクラブは、長いあいだタイトルから遠ざかっていました。
@@ -156,7 +175,7 @@ cards:
   telop: 国内の大きなタイトルとしては**1955年以来**、そして**56年ぶり**の歓喜でした
 
 ## 2021年に変わったこと
-@bg: assets/backgrounds/crest_ニューカッスル.png
+@bg: assets/backgrounds/stadium_ニューカッスル.png
 
 キャスター: 2021年10月7日、クラブの持ち主が変わりました。
   telop: 2021年10月7日、クラブの持ち主が変わりました
@@ -166,13 +185,11 @@ cards:
   telop: サウジアラビアの公的投資基金を中心とする陣営が取得しています
 キャスター: それまでの14年間は、マイク・アシュリーの体制でした。
   telop: それまでの14年間は、マイク・アシュリーの体制でした
-キャスター: 監督はマティアス・ヤイスレ。2026年8月に就任しています。
-  telop: 監督はマティアス・ヤイスレ。2026年8月に就任しています
 キャスター: 今季の登録に、日本人選手はいません。
   telop: 今季の登録に、日本人選手はいません
 
 ## 落ちない
-@bg: assets/backgrounds/crest_ニューカッスル.png
+@bg: assets/backgrounds/stadium_ニューカッスル.png
 
 解説: 記録としてもうひとつ。
   telop: 記録としてもうひとつ
@@ -184,8 +201,22 @@ cards:
 解説: タイトルは遠くても、居場所は動かないクラブでした。
   telop: タイトルは遠くても、居場所は動かないクラブでした
 
+## 今季の顔ぶれ
+@bg: assets/backgrounds/stadium_ニューカッスル.png
+
+キャスター: 主将はダン・バーン。身長2メートル1センチのセンターバックです。
+  telop: 主将はダン・バーン。身長2メートル1センチのセンターバックです
+  source: 報道
+  card: season_card
+キャスター: 生まれは**地元ノーサンバランド州**。この街の人間が腕章を巻いています。
+  telop: 生まれは**地元ノーサンバランド州**。この街の人間が腕章を巻いています
+キャスター: しかも、**さきほどの56年ぶりのタイトルを決めた1点は、この人のもの**でした。
+  telop: しかも、**さきほどの56年ぶりのタイトルを決めた1点は、この人のもの**でした
+キャスター: エースはハーヴィー・バーンズ。イングランド人のフォワードで、今季3点です。
+  telop: エースはハーヴィー・バーンズ。イングランド人のフォワードで、今季3点です
+
 ## 獲ってきたもの
-@bg: assets/backgrounds/crest_ニューカッスル.png
+@bg: assets/backgrounds/stadium_ニューカッスル.png
 
 キャスター: 数えると、大きなタイトルで**13個**です。
   telop: 数えると、大きなタイトルで**13個**です

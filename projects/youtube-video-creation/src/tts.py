@@ -393,7 +393,13 @@ SITE_NAMES = {
 # 表示が要らないライセンス。**その場合は1行ごと落とす**（2026-09-15 指示
 # 「省略可能なだけ省略してほしい」）。site 名は概要欄の頭の1行に残るので、
 # 出どころが消えるわけではない
-NO_ATTRIBUTION = ("cc0", "public domain", "pd-", "pexels", "pixabay", "unsplash")
+NO_ATTRIBUTION = ("cc0", "public domain", "pd-", "pexels", "pixabay", "unsplash",
+                  # **報道写真・ネット画像は概要欄に出さない**（2026-09-17 ユーザー指示
+                  # 「何かあれば連絡としたので、概要への出典記載も不要」）。
+                  # 許諾を得ていないので**守るべき表示条件が無い**。
+                  # 出どころは credits.json に残るので、こちらの手元では辿れる。
+                  # **CC BY / BY-SA は別**。あれは条件そのものなので消さない
+                  "許諾は得ていない")
 
 
 def credit_line(title: str, author: str, license_: str, url: str) -> str:
@@ -462,6 +468,11 @@ def _ledger_lines(script, root=None) -> tuple[list[str], list[str]]:
     sites: list[str] = []
     ledgers = sorted(root.glob("assets/images/**/credits.json"))
     ledgers += sorted(root.glob("assets/backgrounds/**/credits.json"))
+    # **assets/photos/ を見ていなかった**（2026-09-18 に発覚）。
+    # 人物写真の置き場をここに移したのに、帳簿を探す場所は増やしていなかった。
+    # そのため**今日の12本すべてに「※ 画像:」が1行も入っていない**。
+    # CC BY / BY-SA は表示が条件なので、これは礼儀ではなく**利用条件の不履行**
+    ledgers += sorted(root.glob("assets/photos/**/credits.json"))
     for ledger in ledgers:
         try:
             rows = json.loads(ledger.read_text(encoding="utf-8"))
@@ -507,6 +518,14 @@ def image_credits(script, root=None) -> list[str]:
 
 
 def image_details(script, root=None) -> list[str]:
-    """概要欄の末尾に畳む、写真1枚ごとの表示。**表示義務はここで果たす。**"""
+    """概要欄の末尾に畳む、写真1枚ごとの表示。**表示義務はここで果たす。**
+
+    **2026-09-17：報道写真・ネット画像の行は出さない**（ユーザー指示
+    「概要への出典記載も不要」）。連絡先を置いたので、問い合わせはそちらで受ける。
+
+    **CC BY / BY-SA は残す。**あれは礼儀ではなく**ライセンスの条件そのもの**で、
+    消すと、いま合法に使えている写真が無許諾になる。**消して得るものが無い。**
+    控え（credits.json）には全部残るので、こちらの手元では辿れる。
+    """
     details, _ = _ledger_lines(script, root)
     return [f"※ 画像: {line}" for line in details]

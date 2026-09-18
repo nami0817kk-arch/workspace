@@ -1,0 +1,122 @@
+"""代表メンバーの一覧板をつくる（2026-09-17）。
+
+ユーザーが**サッカーキングのInstagramの一覧画像**を参考として提示した。
+青い地に、名前を白の太字、その下にクラブ名を小さく、初招集には印。
+
+**あの画像そのものは使わない。**制作物の権利はあちらにある。
+使うのは**情報のほう**（誰が選ばれたか）で、組み方はこちらで決める。
+
+**31人は並べない。**サムネイルは一覧の中で小さく出るので、31人だと
+どの名前も読めない。**その回で話している数人だけ**を並べる。
+
+下の4割は蛍光イエローの帯に隠れるので、描くのは `FLOOR` まで。
+
+    python tools/squadboard.py assets/stats/daihyo_new.png \
+        --title "日本代表 初招集" --note "2026年9月17日発表" \
+        --row "齋藤俊輔|ウェステルロー／ベルギー・21歳|new" \
+        --row "松木玖生|サウサンプトン／イングランド・23歳|new"
+"""
+from __future__ import annotations
+
+import argparse
+import sys
+from pathlib import Path
+
+from PIL import Image, ImageDraw, ImageFont
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+
+from src.config import load_config  # noqa: E402
+
+SIZE = (1280, 720)
+FLOOR = 430                      # ここから下は帯に隠れる
+TOP = (10, 26, 74)               # 濃い紺
+BOTTOM = (26, 76, 170)           # 明るい青
+STRIPE = (255, 255, 255, 14)     # 斜めの薄い筋
+BAR = (8, 18, 52)
+NAME = (255, 255, 255)
+CLUB = (168, 200, 245)
+MARK = (222, 255, 0)             # 帯と同じ蛍光イエロー
+
+
+def _ground() -> Image.Image:
+    board = Image.new("RGB", SIZE, TOP)
+    draw = ImageDraw.Draw(board)
+    for y in range(SIZE[1]):
+        t = y / SIZE[1]
+        draw.line([(0, y), (SIZE[0], y)],
+                  fill=tuple(round(a + (b - a) * t) for a, b in zip(TOP, BOTTOM)))
+    layer = Image.new("RGBA", SIZE, (0, 0, 0, 0))
+    pen = ImageDraw.Draw(layer)
+    for x in range(-SIZE[1], SIZE[0], 78):
+        pen.polygon([(x, SIZE[1]), (x + 34, SIZE[1]), (x + 34 + SIZE[1], 0), (x + SIZE[1], 0)],
+                    fill=STRIPE)
+    return Image.alpha_composite(board.convert("RGBA"), layer).convert("RGB")
+
+
+def build(out: Path, title: str, note: str, rows: list[tuple[str, str, bool]]) -> Path:
+    font_path = str(load_config().video.font_path())
+    board = _ground()
+    draw = ImageDraw.Draw(board)
+
+    draw.rectangle([0, 0, SIZE[0], 104], fill=BAR)
+    draw.rectangle([0, 104, SIZE[0], 110], fill=MARK)
+    draw.text((40, 30), title, font=ImageFont.truetype(font_path, 58), fill=NAME)
+    if note:
+        small = ImageFont.truetype(font_path, 26)
+        draw.text((SIZE[0] - 40 - draw.textlength(note, font=small), 58), note,
+                  font=small, fill=CLUB)
+
+    # **帯に隠れない高さは 320px しかない。**1列に4人並べると、名前と
+    # クラブ名が重なった（2026-09-17 に書き出して発見）。段の高さを先に出し、
+    # そこから字の大きさを決める。3人以上は2列にする
+    columns = 1 if len(rows) <= 2 else 2
+    per = -(-len(rows) // columns)
+    band = (FLOOR - 132) // max(1, per)
+    name_size = max(30, min(60, round(band * 0.42)))
+    club_size = max(18, min(30, round(band * 0.20)))
+    name_font = ImageFont.truetype(font_path, name_size)
+    club_font = ImageFont.truetype(font_path, club_size)
+
+    for index, (name, club, is_new) in enumerate(rows):
+        col, row = divmod(index, per)
+        x = 46 + col * (SIZE[0] - 92) // columns
+        y = 132 + row * band
+        draw.text((x, y), name, font=name_font, fill=NAME)
+        width = draw.textlength(name, font=name_font)
+        if is_new:
+            draw.text((x + width + 16, y + name_size * 0.18), "★",
+                      font=ImageFont.truetype(font_path, round(name_size * 0.62)), fill=MARK)
+        if club:
+            draw.text((x + 4, y + name_size + 4), club, font=club_font, fill=CLUB)
+
+    out.parent.mkdir(parents=True, exist_ok=True)
+    board.save(out)
+    return out
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("out")
+    ap.add_argument("--title", required=True)
+    ap.add_argument("--note", default="")
+    ap.add_argument("--row", action="append", default=[],
+                    help="名前|所属など|new（new を付けると印が出る）")
+    args = ap.parse_args()
+    rows = []
+    for raw in args.row:
+        parts = (raw.split("|") + ["", ""])[:3]
+        rows.append((parts[0].strip(), parts[1].strip(), parts[2].strip() == "new"))
+    if not rows:
+        print("--row が1つもありません", file=sys.stderr)
+        return 1
+    if len(rows) > 8:
+        print("■ 8人を超えると、一覧では読めません", file=sys.stderr)
+        return 1
+    where = build(Path(args.out), args.title, args.note, rows)
+    print(f"一覧板: {where}  （{len(rows)}人）")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

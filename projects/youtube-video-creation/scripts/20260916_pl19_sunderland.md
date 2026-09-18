@@ -11,10 +11,11 @@ thumbnail_alt: []
 thumbnail_points: []
 thumbnail_note_red: ''
 thumbnail_band_full: false
+thumbnail_photo: assets/backgrounds/stadium_サンダーランド_in.png
 thumbnail_photos: []
 thumbnail_crest_main:
 - サンダーランド
-bg: assets/backgrounds/crest_サンダーランド.png
+bg: assets/backgrounds/stadium_サンダーランド.png
 date: 2026年9月16日
 intro_title: サンダーランドとはどんなクラブか ⑲プレミア20クラブ紹介
 intro_label: 海外サッカー ニュース
@@ -42,6 +43,7 @@ tags:
 - サッカーニュース
 sources:
 - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
+- https://www.premierleague.com/en/news/4706912
 - https://en.wikipedia.org/wiki/Premier_League
 cards:
   name_card:
@@ -74,6 +76,23 @@ cards:
       - プレーオフ決勝でシェフィールド・Uに2-1
     - - 2025-26年
       - 7位。53年ぶりのヨーロッパ
+  season_card:
+    type: table
+    title: 今季の顔ぶれ
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - レジス・ル・ブリス
+    - - 主将
+      - グラニト・ジャカ（MF・スイス）
+    - - エース
+      - ブライアン・ブロッベイ（FW・オランダ）
+    - - 昨季
+      - 7点。突出した点取り屋はいない
+    - - 今季
+      - 4人が1点ずつ
   titles_card:
     type: table
     title: 獲ってきたもの
@@ -92,14 +111,14 @@ cards:
 ---
 
 ## オープニング
-@bg: assets/backgrounds/crest_サンダーランド.png
+@bg: assets/backgrounds/stadium_サンダーランド.png
 
 キャスター: サンダーランドとはどんなクラブか ⑲プレミア20クラブ紹介。
   telop: サンダーランドとはどんなクラブか ⑲プレミア20クラブ紹介
   se: assets/audio/se_pon.wav
 
 ## 名前と愛称
-@bg: assets/backgrounds/crest_サンダーランド.png
+@bg: assets/backgrounds/stadium_サンダーランド.png
 
 キャスター: アルファベット順では、19番目に来ます。
   telop: アルファベット順では、19番目に来ます
@@ -115,11 +134,9 @@ cards:
   telop: ほかに「マッケムズ」「ウェアサイダーズ」とも呼ばれます
 キャスター: 本拠地はスタジアム・オブ・ライト。収容は**4万8095人**です。
   telop: 本拠地はスタジアム・オブ・ライト。収容は**4万8095人**です
-キャスター: 監督はレジス・ル・ブリス。今季の登録に日本人選手はいません。
-  telop: 監督はレジス・ル・ブリス。今季の登録に日本人選手はいません
 
 ## 6回優勝したクラブが、3部へ
-@bg: assets/backgrounds/crest_サンダーランド.png
+@bg: assets/backgrounds/stadium_サンダーランド.png
 @main: true
 
 解説: このクラブは、1部で**6回**優勝しています。
@@ -142,7 +159,7 @@ cards:
   telop: **53年ぶり**に、ヨーロッパの舞台に出る権利を取っています
 
 ## 1973年の決勝
-@bg: assets/backgrounds/crest_サンダーランド.png
+@bg: assets/backgrounds/stadium_サンダーランド.png
 
 キャスター: このクラブのFAカップには、語り継がれる1回があります。
   telop: このクラブのFAカップには、語り継がれる1回があります
@@ -157,7 +174,7 @@ cards:
   telop: **格下が勝った決勝**として、いまも残っています
 
 ## 戻ってきた場所
-@bg: assets/backgrounds/crest_サンダーランド.png
+@bg: assets/backgrounds/stadium_サンダーランド.png
 
 解説: 3部にいたのが2018年、1部に戻ったのが2025年です。
   telop: 3部にいたのが2018年、1部に戻ったのが2025年です
@@ -169,8 +186,24 @@ cards:
 解説: 落ちるときも早く、上がるときも早いクラブでした。
   telop: 落ちるときも早く、上がるときも早いクラブでした
 
+## 今季の顔ぶれ
+@bg: assets/backgrounds/stadium_サンダーランド.png
+
+キャスター: 主将はグラニト・ジャカ。スイス代表を長く引っ張ってきた中盤です。
+  telop: 主将はグラニト・ジャカ。スイス代表を長く引っ張ってきた中盤です
+  source: 報道
+  card: season_card
+キャスター: 前線はブライアン・ブロッベイ。オランダ人のセンターフォワードです。
+  telop: 前線はブライアン・ブロッベイ。オランダ人のセンターフォワードです
+キャスター: ただし、このクラブは**得点が1人に集まりません。**
+  telop: ただし、このクラブは**得点が1人に集まりません。**
+キャスター: 昨季のチーム最多も7点で、今季は4人が1点ずつ。
+  telop: 昨季のチーム最多も7点で、今季は4人が1点ずつ
+キャスター: **誰が取るか分からない**、というのがこのクラブの見どころです。
+  telop: **誰が取るか分からない**、というのがこのクラブの見どころです
+
 ## 獲ってきたもの
-@bg: assets/backgrounds/crest_サンダーランド.png
+@bg: assets/backgrounds/stadium_サンダーランド.png
 
 キャスター: 数えると、大きなタイトルで**8個**です。
   telop: 数えると、大きなタイトルで**8個**です

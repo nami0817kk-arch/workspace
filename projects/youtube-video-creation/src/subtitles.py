@@ -175,6 +175,15 @@ def _is_x(url: str) -> bool:
     return host.removeprefix("www.") in _X_HOSTS
 
 
+# 概要欄に置く連絡先（2026-09-17 ユーザー決定）。アプリと同じ窓口
+CONTACT = "\n".join((
+    "■ お問い合わせ",
+    "掲載内容や画像について、修正・削除のご希望がありましたら",
+    "下記までご連絡ください。速やかに対応します。",
+    "sakamane.support@gmail.com",
+))
+
+
 def description(script: Script, credits: list[str] | None = None,
                 footnotes: list[str] | None = None) -> str:
     """概要欄のたたき台（本文 + チャプター + クレジット + タグ）。"""
@@ -182,15 +191,18 @@ def description(script: Script, credits: list[str] | None = None,
     marks = chapters(script)
     if len(marks) > 1:
         parts.append("■ 目次\n" + "\n".join(f"{_clock(t)} {title}" for t, title in marks))
-    shown = [u for u in script.sources if not _is_x(u)]
-    if shown:
-        # ニュース系では出典の明示が要る。frontmatter の sources をそのまま並べる。
-        # **Xの検索結果は概要欄に書かない**（2026-09-14 ユーザー指示）。
-        # 反応をどこから取ったかの控えであって、読む人が当たる出典ではない。
-        # 台本の sources には残すので、こちらの手元では辿れる
-        parts.append("■ 出典\n" + "\n".join(shown))
+    # **記事の出典は概要欄に出さない**（2026-09-17 ユーザー指示
+    # 「何かあれば連絡としたので、概要への出典記載も不要」）。
+    # 連絡先を置いたので、問い合わせはそちらで受ける。
+    # **台本の `sources` には残す。**確度の札（確定／報道／未確認）の根拠は
+    # そちらにあり、こちらの手元では全部辿れる
     if credits:
         parts.append("■ クレジット\n" + "\n".join(credits))
+    # **連絡先を必ず置く**（2026-09-17。報道写真を使う方針とセット）。
+    # いま権利者に取れる手段は著作権侵害の申し立てしかなく、それは
+    # **指摘ではなく警告**で、3回でチャンネルが消える。メールを1行置けば
+    # 「一度指摘されたら考える」という方針が、実際に成り立つ
+    parts.append(CONTACT)
     # **ハッシュタグはタグの全部ではない**（2026-09-15）。16個以上あると
     # YouTube は全部を無視する。タグは500字まで詰めたいので、切り離した
     from . import tags as tags_mod

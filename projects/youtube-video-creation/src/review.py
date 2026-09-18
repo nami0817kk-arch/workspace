@@ -371,8 +371,22 @@ def _thumbnail_face(script: Script) -> Finding:
     if not photo:
         tiles = [str(x).strip() for x in (meta.get("thumbnail_photos") or [])]
         photo = next((x for x in tiles if x), "")
-    # エンブレムを主役にした回は、顔の代わりにそれを認める（2026-09-09 ユーザー指示）
-    if not photo and [x for x in (meta.get("thumbnail_crest_main") or []) if x]:
+    # エンブレムを主役にした回は、顔の代わりにそれを認める（2026-09-09 ユーザー指示）。
+    # **ただし、そのエンブレムが手元にあるか見る**（2026-09-17）。
+    # 町田浩樹の回は `crest_main: [ホッフェンハイム]` と書いてあり、ここは通ったが、
+    # `assets/crests/` にホッフェンハイムは無い。できあがったのは
+    # **顔もロゴも無い、夜景だけのサムネ**だった。ユーザーが見て気づいた
+    # （「町田の画像はないんだっけ？」）。名前を書けば通る検査は、通るだけ
+    wanted = [str(x) for x in (meta.get("thumbnail_crest_main") or []) if str(x).strip()]
+    if not photo and wanted:
+        from . import crest as _crest
+
+        missing = [name for name in wanted if _crest.find(name) is None]
+        if missing:
+            return Finding(False, "サムネの顔",
+                           f"エンブレムが手元にありません: {'・'.join(missing)}"
+                           "（顔もロゴも無いサムネになります。写真を用意するか、"
+                           "`crest.fetch` で取り込む）")
         return Finding(True, "サムネの顔", "エンブレムを主役にしています")
     if not photo:
         return Finding(False, "サムネの顔",
@@ -948,6 +962,25 @@ FILLER = (
     # **どれを引いたかの断りも要らない。**そのまま読み上げに入る。
     (re.compile(r"(?:だけ|のみ)(?:引きます|紹介します|挙げます)|読めるものを"),
      "引く前の断り"),
+    # **これから何を言うかを、言わない**（2026-09-17 ユーザー指摘
+    # 「得点の形も書いておきます。こう言うのはいらない」
+    # 「あなたが何を書くかは言う必要ない」）。
+    # 語り手が自分の段取りを説明する行は、中身を持たずに尺だけ使う。
+    # 「ここから本題です」は 2026-09-10 に読み上げから外したのに、
+    # **書く側が別の言い方で戻していた**（この日の遠藤の回）。
+    (re.compile(r"(?:書いて|置いて|並べて|挙げて|触れて|残して|添えて|話して)おきます"
+                r"|ここから(?:が)?本題|ここがこの話の中身"
+                r"|(?:について|のことを)(?:見て|話して)いきます"),
+     "これから何を言うかの説明"),
+    # **自分のチャンネルの過去回に触れない**（2026-09-17 ユーザー指示）。
+    # ベンフィカの回に「このチャンネルでは9月6日に、アモリム監督のミランを
+    # 扱いました」と書いていた。**見ている人には要らない情報**で、
+    # 「まとめサイトでは」を落としたのと同じ筋（`check_board_mention`）。
+    # その回を見ていない人には通じず、見た人にも中身が増えない
+    (re.compile(r"この(?:チャンネル|動画|番組)で(?:は|も)?"
+                r"|前回の(?:動画|回)|以前(?:の回|扱った|お伝えした)"
+                r"|先日(?:の動画|お伝えした)"),
+     "自分のチャンネルの過去回への言及"),
     # **反応の件数も読み上げない**（2026-09-11 ユーザー指摘「件数もいらない」）。
     # 母数は残す決まりだったが、取り消した。**反応そのものから入る。**
     # 出典は概要欄にある。
@@ -1263,7 +1296,11 @@ def check_title_subject(script: Script) -> Finding:
             return Finding(True, "タイトルの主語", f"頭に名前: {run[:10]}")
     # 漢字の名前。**文頭にあって助詞か読点が続くもの**だけを見る。
     # 「南野拓実が」「旗手怜央、」は名前、「移籍市場が」は名前ではない
-    kanji = re.match(r"^([一-龥々ヶ]{2,5})(?=[がはのをにへとも、。])", head)
+    # **鉤括弧が続く形を見ていなかった**（2026-09-18 に踏んだ）。
+    # 「佐野航大「行きたかったのですが、できなかった」」が × になる。
+    # 名前のすぐ後ろに発言を置く形は、このチャンネルでよく使う書き方で、
+    # **助詞も読点も挟まない**。引用符と中黒・空白も切れ目として数える
+    kanji = re.match(r"^([一-龥々ヶ]{2,5})(?=[がはのをにへとも、。「『（(　 、])", head)
     if kanji and kanji.group(1) not in COMMON_KANJI_HEADS:
         return Finding(True, "タイトルの主語", f"頭に名前: {kanji.group(1)}")
     return Finding(
@@ -1793,3 +1830,37 @@ def stale_against_notes(script_path) -> str:
         return ""
     return (f"台本が取材メモより古いです（{notes.name} のほうが新しい）。"
             f"`rm {script}` してから draft を掛け直してください")
+
+
+# **海外の反応を必ず混ぜる**（2026-09-17 ユーザー了承）。
+# 同じ8日間・同じ選手（鈴木彩艶・中村敬斗）を扱っている
+# 「サムライスター情報局」の直近10本は、**10本すべてが「現地ファン騒然」
+# 「仏メディアが絶賛」「欧州騒然」**で、再生の中央値は 11,849回。
+# こちらは同じ期間で1,043回、題名に「現地」「海外」が**1本も無い**。
+#
+# **日本人選手が海外でプレーする話を扱っているのに、読み上げているのは
+# 日本のネット民の声だけ**だった。視聴者が知りたいのは
+# 「何が起きたか」より「**向こうでどう見られているか**」。
+#
+# 話者の型（`現地サポ` / `海外のファン`）は最初から config にある。
+# 仕組みがあるのに使っていなかった。
+OVERSEAS_VOICES = ("現地サポ", "海外のファン")
+
+
+def check_overseas_voices(script) -> Finding:
+    """反応に、現地・海外の声が混ざっているか。**止めない。知らせる。**"""
+    voices = []
+    for scene in getattr(script, "scenes", []) or []:
+        for line in getattr(scene, "lines", []) or []:
+            who = (getattr(line, "speaker", "") or "").strip()
+            if who and who not in ("キャスター", "解説", "ナレーター"):
+                voices.append(who)
+    if not voices:
+        return Finding(True, "海外の反応", "反応そのものがありません（別の検査が見ます）")
+    overseas = [w for w in voices if w in OVERSEAS_VOICES]
+    if overseas:
+        return Finding(True, "海外の反応", f"{len(overseas)}件（話者 {len(voices)}件のうち）")
+    return Finding(False, "海外の反応",
+                   "現地サポ・海外のファンの声が1件もありません"
+                   "（日本人選手が海外でプレーする話なら、**向こうでどう見られたか**を足す。"
+                   "Xを現地の言葉で引く: x.com/search?q=<選手名の現地表記>&f=live）")

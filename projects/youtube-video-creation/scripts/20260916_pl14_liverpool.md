@@ -11,10 +11,11 @@ thumbnail_alt: []
 thumbnail_points: []
 thumbnail_note_red: ''
 thumbnail_band_full: false
+thumbnail_photo: assets/backgrounds/stadium_リヴァプール_in.png
 thumbnail_photos: []
 thumbnail_crest_main:
 - リヴァプール
-bg: assets/backgrounds/crest_リヴァプール.png
+bg: assets/backgrounds/stadium_リヴァプール.png
 date: 2026年9月16日
 intro_title: リヴァプールとはどんなクラブか ⑭プレミア20クラブ紹介
 intro_label: 海外サッカー ニュース
@@ -43,6 +44,7 @@ tags:
 - サッカーニュース
 sources:
 - https://en.wikipedia.org/wiki/Liverpool_F.C.
+- https://www.premierleague.com/en/news/4706912
 - https://en.wikipedia.org/wiki/Premier_League
 cards:
   birth_card:
@@ -75,28 +77,34 @@ cards:
       - 10回（イングランド最多）
     - - 欧州カップ／CL
       - 6回（イングランド最多）
-  japan_card:
+  season_card:
     type: table
-    title: 今季の陣容
+    title: 今季の顔ぶれ
     columns:
     - ''
     - ''
     rows:
     - - 監督
-      - アンドニ・イラオラ（2026年5月就任）
+      - アンドニ・イラオラ
+    - - 主将
+      - ファン・ダイク（DF・オランダ）
+    - - 副主将
+      - アリソン／ゴメス／ソボスライ
+    - - エース
+      - アレクサンデル・イサク（FW・スウェーデン）
     - - 日本人選手
-      - 遠藤航
+      - 遠藤航（背番号3）
 ---
 
 ## オープニング
-@bg: assets/backgrounds/crest_リヴァプール.png
+@bg: assets/backgrounds/stadium_リヴァプール.png
 
 キャスター: リヴァプールとはどんなクラブか ⑭プレミア20クラブ紹介。
   telop: リヴァプールとはどんなクラブか ⑭プレミア20クラブ紹介
   se: assets/audio/se_pon.wav
 
 ## 空になったスタジアム
-@bg: assets/backgrounds/crest_リヴァプール.png
+@bg: assets/backgrounds/stadium_リヴァプール.png
 @main: true
 
 解説: アルファベット順では、14番目に来ます。
@@ -121,7 +129,7 @@ cards:
   telop: アンフィールドの収容は**6万1276人**。2021年から24年にかけても広げています
 
 ## 積み上げたもの
-@bg: assets/backgrounds/crest_リヴァプール.png
+@bg: assets/backgrounds/stadium_リヴァプール.png
 
 キャスター: リーグ優勝は**20回**。イングランドで最も多いクラブと並んでいます。
   telop: リーグ優勝は**20回**。イングランドで最も多いクラブと並んでいます
@@ -137,17 +145,25 @@ cards:
   telop: そして2025年、20回目の優勝。アルネ・スロットのもとでした
 
 ## 今季の顔ぶれ
-@bg: assets/backgrounds/crest_リヴァプール.png
+@bg: assets/backgrounds/stadium_リヴァプール.png
 
-キャスター: このクラブには、日本人選手がいます。**遠藤航**です。中盤の選手として登録されています。
-  telop: このクラブには、日本人選手がいます。**遠藤航**です。中盤の選手として登録されています
+キャスター: 監督はアンドニ・イラオラです。
+  telop: 監督はアンドニ・イラオラです
   source: 報道
-  card: japan_card
-キャスター: 監督はアンドニ・イラオラ。2026年5月に就任しました。
-  telop: 監督はアンドニ・イラオラ。2026年5月に就任しました
+  card: season_card
+キャスター: 主将はフィルジル・ファン・ダイク。オランダ代表のセンターバックです。
+  telop: 主将はフィルジル・ファン・ダイク。オランダ代表のセンターバックです
+キャスター: 副主将は**3人**。アリソン、ジョー・ゴメス、そしてソボスライ。
+  telop: 副主将は**3人**。アリソン、ジョー・ゴメス、そしてソボスライ
+キャスター: エースはアレクサンデル・イサク。スウェーデン代表の背番号9で、今季リーグ最多の3点です。
+  telop: エースはアレクサンデル・イサク。スウェーデン代表の背番号9で、今季リーグ最多の3点です
+キャスター: 昨季の得点王はウーゴ・エキティケで、17点。この選手も今季います。
+  telop: 昨季の得点王はウーゴ・エキティケで、17点。この選手も今季います
+キャスター: そして、このクラブには**遠藤航**がいます。
+  telop: そして、このクラブには**遠藤航**がいます
 
 ## 歌と、忘れられない日
-@bg: assets/backgrounds/crest_リヴァプール.png
+@bg: assets/backgrounds/stadium_リヴァプール.png
 
 解説: このクラブには、歌があります。
   telop: このクラブには、歌があります
@@ -168,7 +184,7 @@ cards:
   telop: この事故のあと、イングランドのスタジアムの安全基準は大きく作り替えられています
 
 ## 獲ってきたもの
-@bg: assets/backgrounds/crest_リヴァプール.png
+@bg: assets/backgrounds/stadium_リヴァプール.png
 
 キャスター: 数えると、大きなタイトルで**52個**になります。
   telop: 数えると、大きなタイトルで**52個**になります

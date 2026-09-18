@@ -93,6 +93,15 @@ class Renderer:
         )
         self.frame_dir = work_dir / "frames"
         self._stages: dict[str, Image.Image | None] = {}
+        # **画面いっぱいに敷いた横長の絵**（一覧板・数字の図）の控え。
+        # その上にはカードも節の名前も重ねない（2026-09-17）
+        self._wide_stages: set[str] = set()
+        # **カードを止めるのは「板」のときだけ**（2026-09-18 に踏んだ）。
+        # 9/17 に「一覧板の上にはカードも節の名前も重ねない」と決めたとき、
+        # **横長の絵すべて**を対象にしてしまった。報道写真を使えるように
+        # なってからは写真がほぼ16:9なので、**写真を使う回はカードが1枚も出ない**。
+        # クロップの選手の表も、久保の表も、画面に出ていなかった
+        self._board_stages: set[str] = set()
         # 冒頭の節で敷く写真（frame_entries が台本から入れる）
         self.opening_photo: str = ""
         self.opening_scene: str = ""
@@ -179,7 +188,18 @@ class Renderer:
         # **冒頭の節はサムネの写真を敷く**（2026-09-08）。ぼかした夜景に黒い板では、
         # 最初の3秒が止まって見えた。参考は0秒目からその人の実写が出ている
         opening = scene.title == self.opening_scene and self.opening_photo
-        stage = self._photo_stage(line.image or (self.opening_photo if opening else None))
+        stage_path = line.image or (self.opening_photo if opening else None)
+        stage = self._photo_stage(stage_path)
+        # **板を出している間は、その上に何も重ねない**（2026-09-17 ユーザー指示
+        # 「松木の顔ではなくて、サムネ画面をだしておいて」）。板は文字でできた絵なので、
+        # カードや節の名前を乗せると板の文字が読めなくなる。
+        # 実際、齋藤俊輔と松木玖生がカードの下に隠れていた
+        wide = bool(stage is not None and stage_path
+                    and str(stage_path) in self._wide_stages)
+        # 板（一覧板・数字の図）はそれ自体が読ませる絵なので、上に何も重ねない。
+        # ふつうの写真は重ねてよい
+        board = bool(stage is not None and stage_path
+                     and str(stage_path) in self._board_stages)
         if stage is not None:
             # 写真を主役にした下地。動画背景の上でも不透明に敷く
             canvas = stage.copy()
@@ -190,13 +210,15 @@ class Renderer:
         # 写真を下地にしたときは小さなカードを重ねない。図表だけ左半分に置く。
         # **縦型は左半分に寄せない。**写真が画面いっぱいなので、寄せる相手がいない
         # （2026-09-09。1080の幅をさらに半分にすると図表が読めなくなる）
-        self._draw_media(canvas, None if stage is not None else line.image, card, telop_t,
-                         left_half=stage is not None and not self.layout.is_portrait)
+        if not board:
+            self._draw_media(canvas, None if stage is not None else line.image, card, telop_t,
+                             left_half=(stage is not None and not wide
+                                        and not self.layout.is_portrait))
         # **縦型では制作側の言葉を画面に出さない**（2026-09-07 の方針）。
         # 「オープニング」「まとめ」は章の目印で、視聴者には意味が無い。
         # 一等地の左上を、本編の作業用ラベルで埋めない。
         # 中身のある節名（「監督は何と言ったか」など）は残す
-        if not (self.layout.is_portrait and scene.title in INTERNAL_LABELS):
+        if not board and not (self.layout.is_portrait and scene.title in INTERNAL_LABELS):
             self._draw_scene_title(canvas, scene.title)
         if scene.title == self.opening_scene and scene.lines and line is scene.lines[0]:
             self._draw_channel_card(canvas)
@@ -286,6 +308,28 @@ class Renderer:
             start = int(height * 0.60)
             for y in range(start, height):
                 alpha = int(196 * (y - start) / (height - start))
+                shade_draw.line([(0, y), (width, y)], fill=(0, 0, 0, alpha))
+            bed.alpha_composite(shade)
+            self._stages[image_path] = bed
+            return bed
+        # **横長の絵は画面いっぱいに敷く**（2026-09-17 ユーザー指摘
+        # 「動画の画面の左側がぼやけている」）。右半分に立てる作りは
+        # **人物の縦写真のためのもの**で、16:9 の絵（一覧板・数字の図）を
+        # 入れると左半分がぼかしだけになり、しかも絵の左半分が切り落とされる。
+        # 代表発表の一覧板では、齋藤と松木が画面から消えていた
+        # **1.4倍では足りなかった**（2026-09-17 夜）。佐野の回に使った写真は
+        # 800x600＝1.33倍で、この網に掛からず、公開した動画の左が暗いままだった。
+        # 縦写真だけを右半分に立てたいので、**横長も正方形に近いものも全面**にする
+        if photo.width >= photo.height * 1.15:
+            self._wide_stages.add(image_path)
+            if _is_board(image_path):
+                self._board_stages.add(image_path)
+            bed = _cover(photo, width, height)
+            shade = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+            shade_draw = ImageDraw.Draw(shade)
+            start = int(height * 0.56)
+            for y in range(start, height):
+                alpha = int(150 * (y - start) / (height - start))
                 shade_draw.line([(0, y), (width, y)], fill=(0, 0, 0, alpha))
             bed.alpha_composite(shade)
             self._stages[image_path] = bed
@@ -801,7 +845,9 @@ class Renderer:
         # **強調の囲みを外してから折り返す**（2026-09-15）。囲みで割れ方が変わらない
         plain, spans = emphasis.split(text)
         while True:
-            lines = balanced_wrap(draw, plain, font, right - left - 90)
+            # **右の余白は文字の始まり（left+34）と釣り合う分だけ**（2026-09-18）。
+            # 90 だと縦型（幅1080）で 900px しか使えず、画面の83%で折り返していた
+            lines = balanced_wrap(draw, plain, font, right - left - 48)
             if len(lines) <= HEADLINE_LINES_MAX or size <= floor:
                 break
             size -= 4
@@ -1253,6 +1299,26 @@ def _emphasis_segments(chunk: str, spans: list[tuple[int, int]]
     return [(text, strong) for text, strong in out if text]
 
 
+def _is_board(image_path: str) -> bool:
+    """その絵は「板」か。**一覧板・数字の図はそれ自体が読ませる絵**。
+
+    ふつうの写真と見分ける手がかりは置き場所と控え:
+      ・`assets/stats/` … `squadboard.py` と `statboard` の書き出し先
+      ・`<絵>.statboard.txt` … 数字の図が残す控え（review が顔の代わりに認める印）
+    **写真（assets/photos, assets/images）は板ではない。**
+    2026-09-18 に、ここを分けずに「横長なら板」としていたせいで、
+    報道写真の回のカードが全部消えていた
+    """
+    from pathlib import Path as _P
+    text = str(image_path).replace("\\", "/")
+    if "/assets/stats/" in text or text.startswith("assets/stats/"):
+        return True
+    try:
+        return _P(str(image_path) + ".statboard.txt").exists()
+    except OSError:
+        return False
+
+
 def balanced_wrap(
     draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont, max_width: float
 ) -> list[str]:
@@ -1356,6 +1422,26 @@ LINE_START_FORBIDDEN = (
 LINE_END_FORBIDDEN = "「『（［｛〈《([{‘“"
 
 
+# 途中で割ってはいけない連なり。数字（小数点・カンマ・時刻の区切りを含む）と英字。
+# **「後半38分」が「後半3／8分」になっていた**（2026-09-18 に画面で見つかった）
+# **助数詞まで一緒に運ぶ**（2026-09-18）。「72」は割れなくなったが、
+# 今度は「アトレティコ・マドリード戦は72／分から」と単位が離れて読みにくかった
+_COUNTER = "分秒時日月年人名位点個回戦歳億万千円点本勝敗試合"
+_UNBREAKABLE = re.compile(
+    r"[0-9０-９]+(?:[.,．，:：][0-9０-９]+)*[%％]?"
+    rf"(?:試合|[{_COUNTER}])?|[A-Za-zＡ-Ｚａ-ｚ]+")
+
+
+def _unbreakable(text: str):
+    """折り返しの単位。**数字と英字のかたまりは1つとして扱う。**"""
+    at = 0
+    for found in _UNBREAKABLE.finditer(text):
+        yield from text[at:found.start()]
+        yield found.group(0)
+        at = found.end()
+    yield from text[at:]
+
+
 def wrap_text(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont, max_width: float) -> list[str]:
     """日本語向けに1文字ずつ幅を見て折り返す。行頭・行末の禁則を守る。
 
@@ -1365,7 +1451,11 @@ def wrap_text(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont
     forbidden = LINE_START_FORBIDDEN
     lines: list[str] = []
     current = ""
-    for char in text:
+    # **数字と英字は途中で割らない**（2026-09-18 ユーザー指摘）。
+    # 1文字ずつ幅を見て折り返していたので、「後半38分」が
+    # **「後半3」「8分」**に割れて、読んでも意味が取れない画面になっていた。
+    # 拗音や熟語の途中で割れる問題は直してあったのに、**数字は見ていなかった**
+    for char in _unbreakable(text):
         if char == "\n":
             lines.append(current)
             current = ""

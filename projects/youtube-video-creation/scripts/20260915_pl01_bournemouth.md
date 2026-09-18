@@ -11,10 +11,11 @@ thumbnail_alt: []
 thumbnail_points: []
 thumbnail_note_red: ''
 thumbnail_band_full: false
+thumbnail_photo: assets/backgrounds/stadium_ボーンマス_in.png
 thumbnail_photos: []
 thumbnail_crest_main:
 - ボーンマス
-bg: assets/backgrounds/crest_ボーンマス.png
+bg: assets/backgrounds/stadium_ボーンマス.png
 date: 2026年9月15日
 intro_title: AFCボーンマスとはどんなクラブか ①プレミア20クラブ紹介
 intro_label: 海外サッカー ニュース
@@ -42,9 +43,7 @@ tags:
 - サッカーニュース
 sources:
 - https://en.wikipedia.org/wiki/AFC_Bournemouth
-- https://en.wikipedia.org/wiki/2026%E2%80%9327_AFC_Bournemouth_season
-- https://en.wikipedia.org/wiki/Kazuyoshi_Miura
-- https://www.premierleague.com/en/news/4567591
+- https://www.premierleague.com/en/news/4706912
 - https://en.wikipedia.org/wiki/Premier_League
 cards:
   name_card:
@@ -64,17 +63,19 @@ cards:
       - 12,357人
   season_card:
     type: table
-    title: 今季のボーンマス
+    title: 今季の顔ぶれ
     columns:
     - ''
     - ''
     rows:
     - - 監督
-      - マルコ・ローゼ（3年契約）
+      - マルコ・ローゼ
     - - 主将
-      - アダム・スミス
-    - - 得点源
-      - タヴァニー / クリスティ（各3点）
+      - アダム・スミス（DF・イングランド）
+    - - エース
+      - マーカス・タヴァニー（今季リーグ3点）
+    - - 昨季の得点王
+      - クルピ13点。足の手術で離脱中
     - - 日本人選手
       - なし
   history_card:
@@ -110,14 +111,14 @@ cards:
 ---
 
 ## オープニング
-@bg: assets/backgrounds/crest_ボーンマス.png
+@bg: assets/backgrounds/stadium_ボーンマス.png
 
 キャスター: AFCボーンマスとはどんなクラブか ①プレミア20クラブ紹介。
   telop: AFCボーンマスとはどんなクラブか ①プレミア20クラブ紹介
   se: assets/audio/se_pon.wav
 
 ## 名前と愛称
-@bg: assets/backgrounds/crest_ボーンマス.png
+@bg: assets/backgrounds/stadium_ボーンマス.png
 
 キャスター: アルファベット順では1番目。**プレミアでいちばん小さい家で戦うクラブ**です。
   telop: アルファベット順では1番目。**プレミアでいちばん小さい家で戦うクラブ**です
@@ -149,7 +150,7 @@ cards:
   telop: クラブ自身は、後者のほうは「こちらはやや説得力に欠ける」としています
 
 ## 本拠地
-@bg: assets/backgrounds/crest_ボーンマス.png
+@bg: assets/backgrounds/stadium_ボーンマス.png
 @main: true
 
 解説: 本拠地はディーン・コート。スポンサーの名前で、ヴァイタリティ・スタジアムとも呼ばれます。
@@ -164,31 +165,27 @@ cards:
   image: assets/images/pl_bournemouth2/scene.jpg
 
 ## 今季の顔ぶれ
-@bg: assets/backgrounds/crest_ボーンマス.png
+@bg: assets/backgrounds/stadium_ボーンマス.png
 
-キャスター: 今季の監督は、マルコ・ローゼです。
-  telop: 今季の監督は、マルコ・ローゼです
+キャスター: 監督はマルコ・ローゼです。
+  telop: 監督はマルコ・ローゼです
   source: 報道
   card: season_card
-キャスター: 前任はアンドニ・イラオラ。退任が発表され、その後任として3年契約で就任しました。
-  telop: 前任はアンドニ・イラオラ。退任が発表され、その後任として3年契約で就任しました
-キャスター: そのイラオラは、いまリヴァプールを率いています。
-  telop: そのイラオラは、いまリヴァプールを率いています
-キャスター: 日本人選手はいません。ただ、日本と無縁だったわけでもありません。
-  telop: 日本人選手はいません。ただ、日本と無縁だったわけでもありません
-キャスター: 1999年、**三浦知良がこのクラブのテストを受けています。**
-  telop: 1999年、**三浦知良がこのクラブのテストを受けています。**
-キャスター: クロアチアから戻る途中で、短い練習参加でした。入団には至らず、日本へ帰っています。
-  telop: クロアチアから戻る途中で、短い練習参加でした。入団には至らず、日本へ帰っています
-キャスター: オーナーの話もしておきます。アメリカの実業家ビル・フォーリーが2022年に買いました。
-  telop: オーナーの話もしておきます。アメリカの実業家ビル・フォーリーが2022年に買いました
-キャスター: 同じ資本がフランスのロリアン、ポルトガルのモレイレンセ、ニュージーランドのオークランドも持っています。
-  telop: 同じ資本がフランスのロリアン、ポルトガルのモレイレンセ、ニュージーランドのオークランドも持っています
-キャスター: さらに、俳優の**マイケル・B・ジョーダン**が共同オーナーの一人に入っています。
-  telop: さらに、俳優の**マイケル・B・ジョーダン**が共同オーナーの一人に入っています
+キャスター: 主将はアダム・スミス。ディフェンダーで、イングランド人です。
+  telop: 主将はアダム・スミス。ディフェンダーで、イングランド人です
+キャスター: 2010年にレンタルで来て、2014年に完全移籍。**16年このクラブにいます。**
+  telop: 2010年にレンタルで来て、2014年に完全移籍。**16年このクラブにいます。**
+キャスター: 腕章を巻いたのは2024年9月からです。
+  telop: 腕章を巻いたのは2024年9月からです
+キャスター: エースは、いまマーカス・タヴァニー。今季リーグ3点でチーム最多です。
+  telop: エースは、いまマーカス・タヴァニー。今季リーグ3点でチーム最多です
+キャスター: ただし本来の点取り屋は別にいます。エリ・ジュニオール・クルピ。
+  telop: ただし本来の点取り屋は別にいます。エリ・ジュニオール・クルピ
+キャスター: **昨季13点**を挙げましたが、今年7月に足の手術を受けて離脱しています。
+  telop: **昨季13点**を挙げましたが、今年7月に足の手術を受けて離脱しています
 
 ## 歩んできた道
-@bg: assets/backgrounds/crest_ボーンマス.png
+@bg: assets/backgrounds/stadium_ボーンマス.png
 
 解説: このクラブの物語は、消えかけたところから始まります。
   telop: このクラブの物語は、消えかけたところから始まります
@@ -212,7 +209,7 @@ cards:
   telop: リーグ6位、勝ち点57。クラブ史上はじめて、ヨーロッパの舞台への出場権をつかみます
 
 ## 獲ってきたもの
-@bg: assets/backgrounds/crest_ボーンマス.png
+@bg: assets/backgrounds/stadium_ボーンマス.png
 
 キャスター: 最後に、このクラブが獲ってきたものを数えます。
   telop: 最後に、このクラブが獲ってきたものを数えます

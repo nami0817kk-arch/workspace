@@ -49,11 +49,14 @@ BACKGROUND_BY_SECTION = {
     # **football_fans.mp4 は stadium_night.mp4 と同じファイルだった**（md5一致／
     # 2026-09-13 に発覚）。名前が2つあるだけで、上の「場の空気」と同じ絵が
     # 流れていた。観客の入った昼のスタジアムに差し替えた
-    "background": STOCK + "match_stadium.mp4",
-    "context": STOCK + "match_stadium.mp4",
-    "react": STOCK + "match_stadium.mp4",
-    "voices": STOCK + "match_stadium.mp4",
-    "collapsed": STOCK + "match_stadium.mp4",
+    # **`match_stadium.mp4` はヴォルフスブルクのスタジアム**で、
+    # LEDの看板に VFL WOLFSBURG と読める（2026-09-18 に画面で見つけた）。
+    # どのクラブの回でも使う下地なので、**クラブ名が映るものは置けない**
+    "background": STOCK + "stadium_night.mp4",
+    "context": STOCK + "stadium_night.mp4",
+    "react": STOCK + "stadium_night.mp4",
+    "voices": STOCK + "stadium_night.mp4",
+    "collapsed": STOCK + "stadium_night.mp4",
     # これからどうなる / なぜ —— 練習・戦術
     "next": STOCK + "soccer_training.mp4",
     "why": STOCK + "soccer_training.mp4",
@@ -62,13 +65,18 @@ BACKGROUND_BY_SECTION = {
 # 上に無い節に配る並び。**実写を優先し、同じものが続かないようにする**
 BACKGROUNDS = (
     STOCK + "stadium_night.mp4",
-    STOCK + "match_stadium.mp4",
     STOCK + "soccer_training.mp4",
+    STOCK + "stadium_night.mp4",
     "assets/backgrounds/studio.png",
     STOCK + "soccer_ball.mp4",
 )
-# オープニングの下地。**必ず実写のサッカー**（人が写っているもの）を指す
-OPENING_BACKGROUND = STOCK + "match_stadium.mp4"
+# オープニングの下地。**必ず実写のサッカー**（人が写っているもの）を指す。
+# **`match_stadium.mp4` は使わない**（2026-09-18 ユーザー指摘「一瞬だけ背景が変わった」）。
+# 中身は**ヴォルフスブルクのスタジアム**で、LEDの看板に VFL WOLFSBURG と読める。
+# 9/17 に静止画の既定（`crest_still.png`）は直したが、**動くほうは「未決」のまま
+# 置いていた**。伊藤涼太郎の回で、写真の出ない行だけ下地が見えて露見した。
+# `stadium_night.mp4` は夜のスタジアムで、クラブ名が読めない
+OPENING_BACKGROUND = STOCK + "stadium_night.mp4"
 # **エンブレム主役の回だけ、下地を止める**（2026-09-15 指示
 # 「下地が、動くのやめて」→「エンブレムの時の話ね」）。
 # 写真のある回は画面が写真で持つが、**写真が無い回は実写の下地が
@@ -79,7 +87,14 @@ OPENING_BACKGROUND = STOCK + "match_stadium.mp4"
 # render は書き出しのたびに moving_background() を通し、
 # 「同じ名前で始まる .mp4 があれば差し替える」ので、
 # **静止画にしたつもりが stock/match_stadium.mp4 に戻されていた**
-STILL_BACKGROUND = "assets/backgrounds/crest_still.png"
+# **クラブの実写を既定値にしない**（2026-09-17）。ここは長いあいだ
+# `crest_still.png` で、その中身は**ヴォルフスブルクのスタジアムの実写**だった
+# （LEDの看板に VFL WOLFSBURG と読める）。写真の無い回は全部これになるので、
+# ホッフェンハイムの話もPSVの話もマンUの話も、同じドイツのスタジアムの前で
+# 喋っていた。9/17 に台本4本を手で直したが、**既定値を直さなかったので
+# その日のうちに新しい台本3本へ戻ってきた。**
+# いまは模様の無い下地（studio.png）。**どのクラブのものでもない**
+STILL_BACKGROUND = "assets/backgrounds/studio.png"
 
 SPEAKERS = ("キャスター", "解説")
 # 匿名の集まり。**画面に積む**ので、行ごとの引用カードは出さない
@@ -552,6 +567,22 @@ def _check_card(section: Section) -> list[str]:
     card = section.card or {}
     kind = str(card.get("type", "")).lower()
     problems: list[str] = []
+    if not card:
+        return problems
+    # **type の名前そのものを見ていなかった**（2026-09-18 に踏んだ）。
+    # `type: bullets` と書いた取材メモが draft を通り、**音声を合成し終えた
+    # あとの render** で「カードの type は … のいずれか」で落ちた。
+    # 正しくは `points`。この関数は「落ちる条件を先に見る」ためにあるのに、
+    # 中身の欄だけ見て、種類の名前を見ていなかった
+    from .cards import CARD_TYPES
+    if kind not in CARD_TYPES:
+        near = {"bullets": "points", "list": "points", "箇条書き": "points",
+                "bar": "bars", "graph": "bars", "quotes": "quote"}.get(kind, "")
+        problems.append(
+            f"{section.id}: カードの type『{kind}』は知りません。"
+            f"書けるのは {'／'.join(CARD_TYPES)} です"
+            + (f"（`{near}` のことですか）" if near else ""))
+        return problems
     if kind == "table":
         columns = card.get("columns") or []
         rows = card.get("rows") or []
@@ -650,9 +681,26 @@ def _has_name(title: str, sections) -> bool:
     return bool(re.search(r"[一-鿿]{2,4}", title))
 
 
+# **読み上げる反応は10〜20件**（2026-09-07 ユーザー決定）。
+# 伸びている3チャンネルの実測は他人の声が尺の58%・19.2件で、こちらは14%・2.2件だった
+REACTION_MIN = 10
+
+
 def advise(notes: Notes, plan: Plan | None = None, now=None) -> list[str]:
     """止めるほどではないが直したほうがよい点。draft のときに出す。"""
     notes_warnings: list[str] = []
+
+    # **件数を数えていなかった**（2026-09-18 に気づいた）。
+    # 「10〜20件」と決めてあるのに、機械は**1件でもあれば通していた**。
+    # サンバの回は6件、ヴァツケの回は日本語0件のまま書き出せた。
+    # **数が少ない回はある**（記事が1本しか出ていない題材など）ので**止めない**。
+    # 気づかずに出ることだけを防ぐ
+    voices = sum(1 for sec in notes.sections for v in sec.voices
+                 if str(v or "").strip() in ("ネット民", "現地サポ", "海外のファン"))
+    if 0 < voices < REACTION_MIN:
+        notes_warnings.append(
+            f"ネットの声が{voices}件です（決まりは10〜20件）。"
+            "少ないまま出すなら、それでよいか確かめてください")
 
     if notes.prefix and notes.prefix not in PREFIXES:
         known = " / ".join(k for k in PREFIXES if k)
@@ -1361,6 +1409,9 @@ def to_script(notes: Notes, plan: Plan) -> str:
         # 台本を作り直すたびに消えていた（2026-09-06 に2回やった）。
         # 直すたびに手で書き戻すのは、必ずどこかで抜ける
         **({"thumbnail_photo": str(thumbnail["photo"])} if thumbnail.get("photo") else {}),
+        # **サムネだけに敷く絵**（2026-09-17）。一覧板や数字の図をここに書く。
+        # `thumbnail_photo` に入れると動画の中でも使われ、カードと重なる
+        **({"thumbnail_board": str(thumbnail["board"])} if thumbnail.get("board") else {}),
         **({"thumbnail_focus": thumbnail["focus"]} if thumbnail.get("focus") is not None else {}),
         # init-assets が必ず作るものを既定にする。動く背景にしたいときは
         # `make-clip` で mp4 を作ってから、台本の bg を差し替える
@@ -1416,6 +1467,13 @@ def to_script(notes: Notes, plan: Plan) -> str:
                             or [x for x in ((notes.thumbnail or {}).get("photos") or [])
                                 if str(x).strip()])
     opening_background = (OPENING_BACKGROUND if _has_photo_early else STILL_BACKGROUND)
+    # **節が下地を指定していたら、オープニングもそれに合わせる**（2026-09-18 に踏んだ）。
+    # 全節に `bg` を書いたのに、**オープニングだけ既定の実写クリップ**のままで、
+    # 1つ目の切り替わりで場所が変わって見えた。
+    # 「下地は1本のあいだ変えない」（2026-09-14 指示）に、ここだけ従っていなかった
+    _first_bg = next((sec.bg for sec in notes.sections if sec.bg), "")
+    if _first_bg:
+        opening_background = _first_bg
     lines = ["---", _front_matter(front), "---", "",
              "## オープニング",
              # **最初の画面はサッカーの、人が写っているものにする**（2026-09-13 指摘）。
@@ -1531,10 +1589,20 @@ def to_script(notes: Notes, plan: Plan) -> str:
                         if number < len(section.line_onlys) else "")
             if own_only:
                 lines.append(f"  only: {own_only}")
+            # 本編に残る最初の行（`only: short` を飛ばす）
+            first_kept = next(
+                (i for i in range(len(section.say))
+                 if not (section.line_onlys[i]
+                         if i < len(section.line_onlys) else "")), 0)
             if (number < len(section.line_short_voices)
                     and section.line_short_voices[number]):
                 lines.append("  short_voice: true")
-            if number == 0:
+            # **`only: short` の行に節のカードを付けない**（2026-09-18 に踏んだ）。
+            # その行は本編では落ちるので、**カードごと消える**。
+            # クロップの回で、選手の表が画面に一度も出なかった。
+            # `_is_voices_scene` が `only: short` の語りを数えて壊れたのと同じ型で、
+            # **あの1行はショート専用なのに、節の1行目として扱われている**
+            if number == first_kept:
                 shown_for = 0
                 showed_photo = False
                 # **1行目も、読み上げた文を画面に出す**（2026-09-13 ユーザー指示「A」）。

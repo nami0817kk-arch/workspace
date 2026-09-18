@@ -736,21 +736,33 @@ def _drop_middle(scene: Scene, script: Script, target: float) -> None:
             cut = index
             break
         if cut is None:
-            # 見出しばかりで、削れる語りが無い。**対ごと落とす。**
-            # 片方だけ落とすと、見出しの無い発言か、発言の無い見出しが残る。
-            # **一つの話ごと落とすほうが、筋は通る**
-            pair = None
+            # 削れる語りが無い。**次は「2つ目以降の発言」を削る**（2026-09-18）。
+            # 見出しと最初の発言を対で捨てると、**後ろに続く同じ人の発言が
+            # 宙に浮く**。デ・パウルの回で、紹介ごと落ちたのに発言だけが
+            # 2つ残り、誰の言葉か分からないショートになっていた。
+            # 一つの話の中で**余っている発言から**削る
+            for index in range(keep - 1, 1, -1):
+                if (not _is_narrator(scene.lines[index])
+                        and not _is_narrator(scene.lines[index - 1])):
+                    cut = index
+                    break
+        if cut is None:
+            # それでも足りない。**話ごと（見出し＋続く発言すべて）落とす**
+            head = None
             for index in range(keep - 2, 0, -1):
                 if (_is_narrator(scene.lines[index])
                         and not _is_narrator(scene.lines[index + 1])):
-                    pair = index
+                    head = index
                     break
-            if pair is None:
+            if head is None:
                 cut = keep - 1
             else:
-                del scene.lines[pair + 1]
-                keep -= 1
-                cut = pair
+                last = head + 1
+                while (last + 1 < keep and not _is_narrator(scene.lines[last + 1])):
+                    last += 1
+                del scene.lines[head + 1:last + 1]
+                keep -= last - head
+                cut = head
         del scene.lines[cut]
         keep -= 1
         # 代弁を全部落としたあとの「こう話しました。」だけを残さない。

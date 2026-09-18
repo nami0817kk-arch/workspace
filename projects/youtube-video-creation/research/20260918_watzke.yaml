@@ -1,0 +1,150 @@
+# ヴァツケが、インファンティーノに去れと言った（2026-09-18）
+#
+# **これは quote の型。**中身のほとんどが1人の発言で、3つの理由が順に並ぶ。
+# 事実は最初の30秒（誰が・どこで・何と言ったか）、あとは言葉を読む。
+#
+# 引きは**「3つのことが起きた。あれは度が過ぎていた」**から始まる並び。
+#
+# **W杯の開催地・回数・日程・クラブW杯には触れない。**記事に無い。
+# ヴァツケが挙げたのは**3点だけ**（平和賞・バログン・投資家案）
+#
+# **英語mediaの裏は取れていない。**kicker とフェスティバル主催側のリリースは
+# 同じ登壇の同じ発言なので、**独立した2系統ではない**。だから確度は「報道」まで。
+# 批判の対象になっている事実のほう（投資家計画・バログンの処分取り消し・
+# FA会長の文書要求）は ESPN でも確認できている
+#
+# **「läuft wie geschnitten Brot」は慣用句。**直訳すると意味が通らないので
+# 「放っておいても売れる」と訳す
+#
+# **フィーゴの「He should go. Now.」は使わない。**8月5日の別件で、言葉が似ている
+# ぶん混ざる。**同じ日の話だけにする**
+# **下地は本人の写真**（2026-09-18 ユーザー指摘「一瞬だけ背景が変わった」）
+format: quote
+voice_min: 45
+slot: world_2
+date: "2026年9月18日"
+
+people:
+  - ハンス＝ヨアヒム・ヴァツケ
+
+short_title: "ヴァツケが並べた3つの理由"
+
+theme:
+  id: watzke_infantino_go
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: ドルトムント
+  title: ヴァツケが会長に「彼は去るべきだ」と言った。挙げた理由は3つ
+  hook: 言ったのは、口の重さで知られてきた人です。
+  question: 何を理由に挙げたのか
+
+thumbnail:
+  line1: ヴァツケ「彼は去るべきだ」
+  line2: 挙げた理由は ●●つ
+  # **縦長だと左半分がぼかしになる**（2026-09-18 ユーザー指摘）。
+  # 手元のヴァツケは Commons の縦長1枚（532x832）しかないので、
+  # 16:9 に切り出して全面に敷く。CC BY 2.0 なので改変できる
+  photo: assets/photos/20260918_watzke_wide/01.jpg
+  focus: 0.25
+  # 右下に小さく添える。**主役にはしない**（顔があるので）
+  tags:
+    - ドルトムント
+  points: []
+
+sections:
+  - id: what
+    heading: 誰が、どこで言ったか
+    tier: 報道
+    bg: assets/backgrounds/watzke_20260918.png
+    telop: ドルトムント会長のヴァツケが、ベルリンの催しで
+    narrator: キャスター
+    card:
+      type: points
+      title: ハンス＝ヨアヒム・ヴァツケ（67）の肩書
+      items:
+        - ボルシア・ドルトムント会長
+        - UEFA執行委員会メンバー
+        - ドイツサッカー連盟 副会長
+        - ブンデスリーガ リーグ会長
+    say:
+      - 話しているのは、ハンス＝ヨアヒム・ヴァツケ、67歳。
+      - ボルシア・ドルトムントの会長であり、**UEFAの執行委員**、ドイツサッカー連盟の副会長、ブンデスリーガのリーグ会長でもあります。
+      - 17日、ベルリンで開かれた催しに登壇し、FIFA会長について話しました。
+      - 切り出しは、こうです。
+      - {voice: ヴァツケ, text: 起きた三つのこと、あれは度が過ぎていた}
+    official: false
+    sources:
+      - https://www.kicker.de/watzke-ueber-infantino-er-sollte-weg-ohne-wenn-und-aber-1253659/artikel
+      - https://www.presseportal.de/pm/153584/6354275
+
+  - id: three
+    heading: 挙げた三つ
+    main: true
+    tier: 報道
+    bg: assets/backgrounds/watzke_20260918.png
+    telop: 平和賞、バログン、投資家案
+    narrator: キャスター
+    say:
+      - {short_only: true, text: ドルトムント会長が、FIFA会長の退陣を求めました。}
+      - 一つ目は、トランプ大統領へ贈った「FIFA平和賞」。
+      - {voice: ヴァツケ, text: 自分で創設し、自分で決めた。狂気の沙汰だ}
+      - 二つ目は、バログンの出場停止が取り消されたこと。
+      - {voice: ヴァツケ, text: 大統領がFIFA会長に電話をかけ、処分が即座に取り消される。あっていいはずがない}
+      - 三つ目は、ワールドカップの権利を投資家に売る計画。
+      - {voice: ヴァツケ, text: 完全に正気じゃない。FIFAの副会長も評議会も、何も知らなかった}
+      - {voice: ヴァツケ, text: ワールドカップは、放っておいても売れる。なぜ投資家が要るんだ}
+      - そして、重ねて問われて答えたのが、この一言でした。
+      - {voice: ヴァツケ, text: 彼は去るべきだ、何の条件もなく}
+    official: false
+    sources:
+      - https://www.presseportal.de/pm/153584/6354275
+      - https://www.kicker.de/watzke-ueber-infantino-er-sollte-weg-ohne-wenn-und-aber-1253659/artikel
+
+  - id: around
+    heading: 一人ではない
+    tier: 報道
+    bg: assets/backgrounds/watzke_20260918.png
+    telop: ドイツ連盟の会長も、イングランドFAの会長も
+    narrator: 解説
+    say:
+      - 声を上げているのは、ヴァツケだけではありません。
+      - ドイツサッカー連盟の会長は、こう話しています。
+      - {voice: ドイツ連盟の会長, text: ジャンニ・インファンティーノとの、このFIFA指導部との信頼関係は、当然ながら壊れている}
+      - イングランド協会の会長は、書簡で文書の開示を求めました。
+      - フランス、イタリア、オランダの協会も、反対の立場を取っています。
+      - 一方の会長本人は、退く気配を見せていません。
+      - "**2027年3月の再選に、立候補する意向を表明しています。**"
+    official: false
+    sources:
+      - https://www.kicker.de/watzke-ueber-infantino-er-sollte-weg-ohne-wenn-und-aber-1253659/artikel
+      - https://www.espn.com/soccer/story/_/id/49964525/fa-chief-demands-gianni-infantino-releases-fifa-documents-private-equity-proposal-folarin-balogun-decision
+
+  # **この発言そのものへの反応は、事実上存在しない**（2026-09-18 に確かめた）。
+  #   日本語 0件（この発言を報じた日本語記事が1本も出ていない）
+  #   ドイツ語 4件、うち2件は**ノイエンドルフ批判**でヴァツケの話ではない
+  #   英語 1件は7月の別件
+  # **だから「ヴァツケへの反応」としては出さない。**代わりに、
+  # ヴァツケが求めていること（会長の退陣）そのものをめぐる、実在する声を置く。
+  # 語りで**「この発言への反応ではない」と断る**。reddit と X は読めなかった
+  - id: voices
+    heading: 会長の座をめぐって荒れている
+    tier: 未確認
+    bg: assets/backgrounds/watzke_20260918.png
+    telop: 「インファンティーノ会長は辞任を」
+    narrator: キャスター
+    say:
+      - {short_only: true, text: ドルトムント会長のヴァツケが、FIFA会長の退陣を求めた話です。}
+      - この発言そのものへの反応は、まだほとんど出ていません。ただ、会長の座をめぐる声は以前から出ています。
+      - {voice: ネット民, text: 今年のW杯も、米国のレッドカード処分が延期されたり、決勝のハーフタイムがありえないくらい長かったりと滅茶苦茶にされた}
+      - {voice: ネット民, text: 挙句インファンティーノが将来まで売り渡しそうになった。どれも経済規模拡大の夢に魂を売ってしまったツケだと思う}
+      - {voice: ネット民, text: コレがまた組織の私物化じゃないの？}
+      - {voice: ネット民, text: このオンライン署名に賛同をお願いします。「インファンティーノ会長は辞任を。世界のサッカーファンがFIFA改革を求めています」}
+      - 一方で、こういう声もあります。
+      - {voice: 海外のファン, text: そんなのは嘘だ。加盟国に提示して承認にかけるつもりの提案を持っていただけで、何ひとつ確定してなどいなかった}
+      - {voice: 海外のファン, text: ドイツサッカー連盟もようやく、会長を批判しても安全だと感じられるようになったわけだ, short_voice: true}
+      - {voice: 海外のファン, text: ただし早すぎる抜け駆けは絶対にしない、大会を招致したいからな, short_voice: true}
+    official: false
+    sources:
+      - https://x.com/search?q=インファンティーノ&f=live
+      - https://x.com/search?q=Infantino -filter%3Alinks lang%3Ade&f=live

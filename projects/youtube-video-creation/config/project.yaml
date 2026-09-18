@@ -168,6 +168,130 @@ cast:
     position: none
     color: "#f0c419"
 
+  インディペンデント:
+    key: independent
+    aliases: [Independent, ジ・インディペンデント]
+    # **ハッシュだと 52 になり、ネット民（voice_fixed 52）と同じ声になる**
+    # （2026-09-17 のトッテナムの回で draft が止めた）。
+    # 118 は voice_pool の外。実測 197Hz で、talkSPORT の 94（195Hz）と同じ帯
+    style_id: 118      # 夜語トバリ
+    speed: 1.0
+    pitch: 0.0
+    intonation: 1.0
+    position: none
+    color: "#f0c419"
+
+  アロンソ:
+    key: xabi_alonso
+    aliases: [シャビ・アロンソ, Xabi Alonso]
+    # **ハッシュだと 99 になり、海外のファン（群衆）とぶつかる**
+    # （2026-09-18 のチェルシーの回で draft が止めた）。94 は voice_pool の外。
+    # **チェルシーの監督なので何度も出る。**決め打ちしておけば毎回同じ声になる
+    style_id: 94
+    speed: 1.0
+    pitch: 0.0
+    intonation: 1.0
+    position: none
+    color: "#f0c419"
+
+  NECのディレクター:
+    key: nec_director
+    aliases: [アールベルス, カルロス・アールベルス]
+    # **ハッシュだと 51 になり、現地サポ（群衆）とぶつかる**
+    # （2026-09-18 の佐野航大の回で draft が止めた）。118 は voice_pool の外
+    style_id: 118
+    speed: 1.0
+    pitch: 0.0
+    intonation: 1.0
+    position: none
+    color: "#f0c419"
+
+  ドイツ連盟の会長:
+    key: dfb_president
+    aliases: [ノイエンドルフ, ベルント・ノイエンドルフ]
+    # **ハッシュだと 52（ネット民）や 11（ヴァツケ）とぶつかる**
+    # （2026-09-18 のヴァツケの回で draft が2度止めた）。
+    # 94 は voice_pool の外。talkSPORT と同じ番号だが、
+    # **衝突を見るのは1本の中だけ**なので、同じ動画に両方出さなければよい
+    style_id: 94
+    speed: 1.0
+    pitch: 0.0
+    intonation: 1.0
+    position: none
+    color: "#f0c419"
+
+  ベルギーの地元紙:
+    key: belgian_press
+    aliases: [ベルギー紙, VoetbalBelgie, HBVL]
+    # **ハッシュだと 51 になり、現地サポ（群衆）とぶつかる**
+    # （2026-09-18 の伊藤涼太郎の回で draft が止めた）。
+    # 13 は voice_pool の外。青山龍星。解説と同じ声なので、
+    # **解説が出ない回だけ**使う（この回は解説がいない）
+    style_id: 13
+    speed: 1.0
+    pitch: 0.0
+    intonation: 1.0
+    position: none
+    color: "#f0c419"
+
+  # **バロンドールの回の4人**（2026-09-18）。
+  # プールの外にある男性の声は 12 / 13 / 94 / 118 の4つしかない（42 は使わない）。
+  # **1本に出せる名前付きの話者は、この4つが上限**。足りなければ
+  # 語りで引く（この回はラウタロの一言を語りに回した）
+  デ・パウル:
+    key: de_paul
+    aliases: [ロドリゴ・デ・パウル, De Paul]
+    style_id: 12       # 白上虎太郎 / ふつう。voice_pool の外
+    speed: 1.0
+    pitch: 0.0
+    intonation: 1.0
+    position: none
+    color: "#f0c419"
+
+  ベッカム:
+    key: beckham
+    aliases: [デービッド・ベッカム, David Beckham]
+    style_id: 94       # 中部つるぎ。talkSPORT と同じ番号（同じ回に出さない）
+    speed: 1.0
+    pitch: 0.0
+    intonation: 1.0
+    position: none
+    color: "#f0c419"
+
+  シメオネ:
+    key: simeone
+    aliases: [ディエゴ・シメオネ, Simeone]
+    # **ハッシュだと 52 になり、ネット民とぶつかる**（draft が止めた）
+    style_id: 118      # 夜語トバリ。voice_pool の外
+    speed: 1.0
+    pitch: 0.0
+    intonation: 1.0
+    position: none
+    color: "#f0c419"
+
+  ラウタロ:
+    key: lautaro
+    aliases: [ラウタロ・マルティネス, Lautaro]
+    # 13 は解説・マテウスと同じ声。**同じ回に出さなければよい**
+    style_id: 13       # 青山龍星 / ノーマル
+    speed: 1.0
+    pitch: 0.0
+    intonation: 1.0
+    position: none
+    color: "#f0c419"
+
+  マテウス:
+    key: matthaus
+    aliases: [ローター・マテウス, Lothar Matthaus]
+    # **ハッシュだと 21 になり、ロドリとぶつかった**（draft が止めた）。
+    # 13 は解説と同じ声なので、**解説が出ない回だけ**使う
+    style_id: 13       # 青山龍星 / ノーマル
+    speed: 1.0
+    pitch: 0.0
+    intonation: 1.0
+    position: none
+    color: "#f0c419"
+
   # ゆっくり実況向け（show_characters: true のとき）
   霊夢:
     key: reimu

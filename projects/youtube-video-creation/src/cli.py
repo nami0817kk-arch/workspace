@@ -39,6 +39,7 @@ import sys
 import unicodedata
 from pathlib import Path
 
+from . import recency
 from .assets import ensure_assets
 from .config import ConfigError, load_config
 from .pipeline import build
@@ -393,6 +394,10 @@ def main(argv: list[str] | None = None) -> int:
     p_approve = sub.add_parser(
         "approve", help="台本の確認が済んだことを控える（OKを聞いたときだけ打つ）")
     p_approve.add_argument("scripts", nargs="+", help="台本のパス")
+    # **声が無い台本は通さない**（2026-09-17 ユーザー指示「声は必ず」）。
+    # 紹介もの（プレミア20クラブ紹介など）だけ、理由を書いて外す
+    p_approve.add_argument("--no-voices", default="",
+                           help="声を入れない型だと分かっている回だけ。理由を書く")
 
     # **投稿の前に動画を見せる**（2026-09-13 ユーザー「今後は投稿する前に動画見して」）。
     # upload はこれが無いと動かない
@@ -460,6 +465,13 @@ def main(argv: list[str] | None = None) -> int:
     p_queries.add_argument("--days", type=int, default=30)
 
     sub.add_parser("doctor", help="収集の仕組みが効いているかをまとめて点検する")
+
+    p_recent = sub.add_parser("recent", help="その題材を最近すでに読み上げていないか見る")
+    p_recent.add_argument("titles", nargs="+", help="題材の見出し（いくつでも）")
+    p_recent.add_argument("--days", type=int, default=recency.DEFAULT_DAYS,
+                          help=f"さかのぼる日数（既定: {recency.DEFAULT_DAYS}）")
+    p_recent.add_argument("--all", action="store_true",
+                          help="名前を読んだだけの回も出す（既定は題材にした回だけ）")
 
     p_sources = sub.add_parser("sources", help="情報源の網と、群ごとに置ける確度を表示する")
     p_sources.add_argument("--new", action="store_true",
@@ -611,10 +623,29 @@ def _guard_approved(script_path) -> bool:
 def _cmd_approve(args, config) -> int:
     """台本の確認が済んだことを控える。**OKを聞いたときだけ打つ。**"""
     from . import approval
+    from .script_model import parse_script
 
+    # **声が1件も無い台本は通さない**（2026-09-17 ユーザー指示「声は必ず」）。
+    # `draft` は「ネットの反応が1件もありません」と知らせるだけで、**止めていなかった。**
+    # 実際この日、反応の無い台本を3本作って、そのまま出しかけている。
+    # まとめサイトが試合に追いついていない朝は、**待つのが正しい。**
+    crowd = tuple(getattr(getattr(config, "voicevox", None), "crowd", None)
+                  or ("ネット民", "現地サポ", "海外のファン"))
     for script in args.scripts:
+        text = Path(script).read_text(encoding="utf-8")
+        spoken = parse_script(text)
+        voices = [line for scene in spoken.scenes for line in scene.lines
+                  if (line.speaker or "") in crowd]
+        if not voices and not args.no_voices:
+            print(f"■ {Path(script).name} には、ネットの声が1件もありません", file=sys.stderr)
+            print("■ 通していません。`reactions <スレURL> --say` で実在の書き込みを足してください",
+                  file=sys.stderr)
+            print("■ 紹介ものなど、声を入れない型だと分かっている回だけ "
+                  "`--no-voices <理由>` を付けてください", file=sys.stderr)
+            return 1
         stamp = approval.approve(script)
-        print(f"確認済み: {approval.key_of(script)}　{stamp}")
+        note = f"　（声なし: {args.no_voices}）" if not voices else f"　声{len(voices)}件"
+        print(f"確認済み: {approval.key_of(script)}　{stamp}{note}")
     return 0
 
 
@@ -713,6 +744,9 @@ def _cmd_short(args, config) -> int:
         print(f"  ! {problem}", file=sys.stderr)
     # **発言までの秒数がそのまま維持に効く**（2026-09-10 の実測）
     for problem in shorts.quote_problems(short):
+        print(f"  ! {problem}", file=sys.stderr)
+    # **題名に答えているか**（2026-09-17。同じ日に2回やった）
+    for problem in shorts.subject_problems(short, script):
         print(f"  ! {problem}", file=sys.stderr)
 
     # 冒頭で捨てられていないか、その場で見る。review は --out を渡さないと
@@ -1308,6 +1342,29 @@ def _cmd_queries(args, config) -> int:
     for label in queries_mod.dead(rows):
         print(f"\n! 『{label}』は何度も回して1件も候補になっていません。"
               "検索語を見直すか、config/sources.yaml から外してください")
+    return 0
+
+
+def _cmd_recent(args, config) -> int:
+    """その題材を最近すでに読み上げていないか（2026-09-18）。
+
+    **見出しの重なりだけでは足りない。**9/18 に出した題材8件が全部×になり、
+    5件は前日の代表発表の回で名前を読み上げたばかりだった。
+    """
+    scripts = recency.past(args.days)
+    print(f"■ 直近{args.days}日の台本 {len(scripts)}本と突き合わせます")
+    if not scripts:
+        print("  台本がありません")
+        return 0
+    lines = recency.advise(args.titles, args.days, subjects_only=not args.all)
+    if not lines:
+        print("  重なりはありません")
+        return 0
+    for line in lines:
+        print(f"  ! {line}")
+    # **落とさない。**続報は正しく続報だし、2日あけて同じ人を出すのも普通。
+    # 気づかずに出すことだけを防ぐ
+    print("\n※ 止めてはいません。続報として出すなら、そのつもりで書いてください")
     return 0
 
 
@@ -2330,6 +2387,10 @@ def _cmd_variety(args, config) -> int:
     return 1 if bad else 0
 
 
+# **何年前から「古い」と言うか。**5年あれば所属も見た目も変わる
+PORTRAIT_OLD_YEARS = 5
+
+
 def _cmd_portrait(args, config) -> int:
     """本人と確認できた顔写真を1枚落とす。**確かめられなければ落とさない。**"""
     from .portrait import PortraitError, save
@@ -2355,6 +2416,21 @@ def _cmd_portrait(args, config) -> int:
     if entry.get("no_derivatives"):
         print("  ※ 改変不可。**サムネイルと背景には使えません。**"
               "本文に image: で、切らずに出すだけ")
+    # **Commons の写真は年代が古いほうに寄る**（2026-09-18 に同じ日で3件）。
+    # 「その人が有名になった頃」の写真が多く残っていて、機械は被写体と
+    # ライセンスしか見ていない。久保建英=2019年（18歳・レアル時代）、
+    # クロップ=2012年（ドルトムント時代・長髪）、アロンソ=現役時代。
+    # **止めない。**他に無ければ古い写真でも使ってよい（2026-09-10 決定）。
+    # 知らせるだけで、判断は人がする
+    taken = int(entry.get("taken") or 0)
+    if taken:
+        age = datetime.date.today().year - taken
+        if age >= PORTRAIT_OLD_YEARS:
+            print(f"  ! この写真は **{taken}年** のものです（{age}年前）。"
+                  "所属も見た目も変わっているかもしれません。"
+                  "記事の写真を使うなら `tools/articlephoto.py --url <記事>`")
+        else:
+            print(f"  撮影　: {taken}年")
     print(f"  台本に: thumbnail_photo: {folder.as_posix()}/{entry['file']}")
     return 0
 
@@ -2811,6 +2887,12 @@ def _cmd_pick(args, config) -> int:
     for note in saga_mod.advise(list(threads.values()), now):
         print(f"  ! {note}")
 
+    # **`covered.yaml` の id が一致したときしか弾けない**（2026-09-18）。
+    # 見出しが違えば同じ人でも素通りし、代表発表の回で名前を読み上げた6人は
+    # そもそも控えに残らない。**台本の本文まで見る**
+    for note in recency.advise([c.title for c in ranked]):
+        print(f"  ! 最近すでに出ています　{note}")
+
     chosen, fallbacks = candidates_mod.assign(ranked, plan.scoring, plan.slots)
 
     for slot in plan.slots:
@@ -2934,15 +3016,19 @@ def _cmd_draft(args, config) -> int:
         from .script_model import parse_script
         _script = parse_script(target.read_text(encoding="utf-8"))
         for _name in ("check_filler", "check_title_subject",
-                      "check_board_mention", "check_outlet_talk"):
+                      "check_board_mention", "check_outlet_talk",
+                      # **海外の反応**（2026-09-17）。止めはしないが知らせる
+                      "check_overseas_voices"):
             _fn = getattr(_review, _name, None)
             if _fn is None:
                 continue
             _found = _fn(_script)
             if getattr(_found, "ok", True) is False:
-                late.append(f"{_found.name}: {_found.detail}")
+                late.append(f"{_found.label}: {_found.detail}")
     except Exception as err:      # 検査で書き出しを落とさない
-        print(f"  （台本の点検を飛ばしました: {err}）")
+        # **黙って飲み込まない。**2026-09-16 に `Finding.name` を書き間違えて、
+        # この except が全部を吸っていた。**「✓ しか出ない点検」そのもの**だった
+        print(f"  ■ 台本の点検が動きませんでした（直してください）: {err!r}", flush=True)
     if late:
         print(f"{chr(10)}■ 台本そのものの点検で {len(late)}件")
         for note in late:
@@ -3025,6 +3111,11 @@ def report_upload_failure(err: Exception) -> None:
         print("  YouTube の認証が切れています。secrets/token.json を取り直してください:")
         print('  python -c "from src.upload import get_service; get_service()"')
     print("■ 投稿は0本です。控え（posted.json）も増えていません", flush=True)
+
+
+# **本編を入れる再生リスト**（2026-09-15 作成・公開）。
+# 再生リストの中の自動再生は、登録者がいなくても動く唯一の道
+MAIN_PLAYLIST = "PLNEp9wyuYKJk"
 
 
 def _cmd_upload(args, config) -> int:
@@ -3160,6 +3251,30 @@ def _cmd_upload(args, config) -> int:
         return 1
     posted.record(build_dir, video_id)
     print(f"\n投稿しました: https://youtu.be/{video_id} ({draft.privacy})")
+
+    # **本編は再生リストへ入れる**（2026-09-17 ユーザー指示
+    # 「新規の本編動画は再生リストに入れておいてね」）。
+    # 再生リストの中の自動再生は、**登録者がいなくても動く唯一の道**
+    # （ホームと関連動画は登録者がいないと出てこない）。
+    # 手で `tools/playlist.py` を打つ形だと、出した日に入れ忘れる。
+    # **ショートは入れない。**自動再生に乗らないので、枠を使うだけ。
+    if not Path(args.build_dir).name.endswith(("_short", "_tiktok")):
+        try:
+            # **ここで作る。**上の投稿は upload_mod が中で service を作るので、
+            # この関数には api という名前が無かった（2026-09-17 に実際に落ちた）
+            from . import quota as quota_mod
+            api = quota_mod.counted(upload_mod.get_service())
+            api.playlistItems().insert(
+                part="snippet",
+                body={"snippet": {"playlistId": MAIN_PLAYLIST,
+                                  "resourceId": {"kind": "youtube#video",
+                                                 "videoId": video_id}}},
+            ).execute()
+            print(f"  再生リストに入れました: {MAIN_PLAYLIST}")
+        except Exception as err:      # 入らなくても投稿は成功している
+            print(f"  ■ 再生リストに入れられませんでした（{err}）。"
+                  f"あとで tools/playlist.py で足してください", flush=True)
+
     n = posted.recent()
     if n >= posted.SOFT_MAX:
         print(f"  直近24時間で {n} 本目。開設まもないチャンネルは{posted.SOFT_MAX}本前後で弾かれる")
@@ -3186,6 +3301,7 @@ HANDLERS = {
     "stats": _cmd_stats,
     "queries": _cmd_queries,
     "doctor": _cmd_doctor,
+    "recent": _cmd_recent,
     "sources": _cmd_sources,
     "fresh": _cmd_fresh,
     "x": _cmd_x,
