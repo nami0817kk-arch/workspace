@@ -2,7 +2,7 @@ import pytest
 
 from src.config import load_config
 from src.script_model import parse_script
-from src.shorts import (MAX_SECONDS, SHORT_SUBSCRIBE, SIZE, ShortError, _estimate,
+from src.shorts import (MAX_SECONDS, SHORT_SUBSCRIBE, SHORT_SUBSCRIBE_2, SIZE, ShortError, _estimate,
                         portrait, trim)
 
 BODY = (
@@ -48,9 +48,12 @@ def test_lines_are_dropped_from_the_back_until_it_fits():
     short = trim(script, "何が起きたか", max_seconds=1.0)
     # 冒頭は削らず、掘る節から後ろを落とす
     assert len(short.scenes[0].lines) == 1
-    # **末尾に登録の一言が1行増える**（2026-09-15）。中身の行は1つのまま
-    assert len(short.scenes[1].lines) == 2
-    assert short.scenes[1].lines[-1].text == SHORT_SUBSCRIBE
+    # **末尾に締めが2行増える**（2026-09-18 に1行から増やした。
+    # ユーザー指示「ショートの最後に本編はチャンネルから見て下さい的な感じを」）。
+    # 中身の行は1つのまま
+    assert len(short.scenes[1].lines) == 3
+    assert short.scenes[1].lines[-2].text == SHORT_SUBSCRIBE
+    assert short.scenes[1].lines[-1].text == SHORT_SUBSCRIBE_2
     assert short.scenes[1].lines[0].text == "いち。"
 
 
@@ -424,9 +427,9 @@ def test_振りの1行を落として発言を早く出す():
     assert "メンバー発表を前に、こう話しました。" not in texts, texts
     # 話者を名乗る行は残す（ショート単体で分かるようにするため）
     assert "異を唱えたのは、チアゴ・シウヴァです。" in texts, texts
-    # **末尾は登録の一言になる**（2026-09-15）。守りたいのはその1つ手前
-    assert texts[-1] == SHORT_SUBSCRIBE
-    assert texts[-2] == "賛成しない"
+    # **末尾は締めの2行になる**（2026-09-18）。守りたいのはその手前
+    assert texts[-2:] == [SHORT_SUBSCRIBE, SHORT_SUBSCRIBE_2]
+    assert texts[-3] == "賛成しない"
 
 
 def test_発言が遅ければ知らせる():
@@ -705,7 +708,9 @@ def test_発言より先に語りを削る():
     nl = chr(10)
     body = ["## オープニング", "", "キャスター: つかみ。", "", "## 本編", ""]
     body += ["解説: まず状況です。" + "あ" * 40, ""]
-    body += ["解説: 監督が口を開きました。" + "あ" * 30, ""]
+    # **振りは短い。**あ30字を足して44字の行にしていたが、そんな語りは書かない。
+    # 長い行は「見出し」として守られる（2026-09-18）ので、本来の長さに戻した
+    body += ["解説: 監督が口を開きました。", ""]
     body += ["イラオラ: ひとつめの発言です。" + "あ" * 30, ""]
     body += ["イラオラ: ふたつめの発言です。" + "あ" * 30, ""]
     body += ["解説: そのうえで、こう続けました。", ""]
@@ -714,7 +719,7 @@ def test_発言より先に語りを削る():
     # **上限は ESTIMATE_SLACK を掛けてから使う。**0.86 → 0.92 にした
     # （2026-09-16「ショートが不必要に短くなってる」）ので、削りが起きる
     # ところまで上限を下げて、削る順番そのものを見る
-    _fit(script, 37.0)
+    _fit(script, 31.0)
     texts = [line.text for line in script.scenes[-1].lines]
     said = [t for t in texts if t.startswith(("ひとつめ", "ふたつめ", "みっつめ"))]
     assert len(said) == 3, texts
@@ -779,3 +784,197 @@ def test_実尺で上限に収める(tmp_path):
     # **締めは残す。**落とすのは後ろ（＝ネットの声）から
     assert script.lines[-1].text == SHORT_SUBSCRIBE
     assert any(l.text.startswith("語り") for l in script.lines)
+
+
+def test_状況説明の1行があってもネットの声は締めに足す():
+    """**反応の節の頭にある `only: short` の語りを、語りとして数えない**
+    （2026-09-17 にユーザー指摘「ショートの内容が薄い」から発見）。
+
+    `_is_voices_scene` は「語りが1行でもあれば反応の節ではない」と見ていた。
+    ところが取材メモの雛形は、反応の節の頭に**必ず**キャスターの状況説明を
+    1行置く（「ショート単体で話が分かるように」2026-09-10 指示）。
+    そのため**どの回でも False を返し**、9/17 のショート5本すべてに
+    ネットの声が1件も入っていなかった。ユーザー指示は「声は必ず」。
+
+    その1行はショート本体の側へ切り出されるので、ここで数える相手ではない。
+    """
+    from src.script_model import Line, Scene, Script
+    from src.shorts import trim
+
+    opening = Scene(title="オープニング", lines=[Line(speaker="キャスター", text="題名です")])
+    story = Scene(title="山場", main=True,
+                  lines=[Line(speaker="解説", text="ここが芯です")])
+    voices = Scene(
+        title="ネットの声",
+        lines=[Line(speaker="キャスター", text="前提の説明です", only="short")]
+        + [Line(speaker="ネット民", text=f"声{i}") for i in range(5)],
+    )
+    short = trim(Script(title="見出し", scenes=[opening, story, voices]))
+    said = [l.speaker for l in short.scenes[-1].lines]
+    assert "ネット民" in said, "状況説明の1行で、反応の節と見なされなくなっている"
+    assert "前提の説明です" not in [l.text for l in short.scenes[-1].lines]
+
+
+def test_2枚並びのサムネはショートで上下に割って両方出す(tmp_path, monkeypatch):
+    """**ショートの冒頭が、サムネの1枚目しか出ていなかった**
+    （2026-09-17 指示「ショートも横割りで本編のサムネと同じようにして」）。
+
+    鈴木の回はサムネが「顔｜人影」の2枚並びなのに、ショートには顔しか出ず、
+    答えを伏せた人影が消えていた。**同じ回に見えない。**
+    """
+    from PIL import Image
+
+    from src import shorts as shorts_mod
+
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(shorts_mod, "STACK_DIR", tmp_path / "_stack")
+    for name, color in (("a.jpg", (200, 30, 30)), ("b.jpg", (30, 30, 200))):
+        Image.new("RGB", (480, 660), color).save(tmp_path / name)
+
+    made = shorts_mod.stacked_photo({"thumbnail_photos": ["a.jpg", "b.jpg"]})
+    assert made, "2枚あるのに組めていない"
+    with Image.open(made) as out:
+        assert out.size == shorts_mod.SIZE
+        assert out.getpixel((540, 480))[0] > 150      # 上は1枚目
+        assert out.getpixel((540, 1440))[2] > 150     # 下は2枚目
+    assert shorts_mod.stacked_photo({"thumbnail_photos": ["a.jpg"]}) == ""
+
+
+def test_ショートが題名に答えていなければ知らせる():
+    """**同じ日に2回やった**（2026-09-17）。
+
+    鈴木彩艶の回は題名が「鈴木彩艶が後半から出た試合」なのに、ショートの中身は
+    相手選手の経歴だけで、**鈴木の話が1行も入っていなかった**。日本代表の回も
+    「名前が消えたのは誰だったか」と聞いて、誰なのかを一度も言わずに終わっていた。
+    どちらもユーザーが見て気づいた。**山場の節に主語が出てこない台本は普通にある。**
+    """
+    from src.script_model import Line, Scene, Script
+    from src.shorts import subject_problems, trim
+
+    opening = Scene(title="オープニング", lines=[Line(speaker="キャスター", text="鈴木彩艶の話です")])
+    story = Scene(title="山場", main=True,
+                  lines=[Line(speaker="解説", text="相手の選手は2023年に来ました")])
+    voices = Scene(title="ネットの声",
+                   lines=[Line(speaker="ネット民", text=f"声{i}") for i in range(3)])
+    script = Script(title="見出し", scenes=[opening, story, voices])
+    script.meta = {"topic": "鈴木彩艶"}
+    found = subject_problems(trim(script), script)
+    assert found and "鈴木彩艶" in found[0]
+
+    story.lines.append(Line(speaker="解説", text="鈴木彩艶は45分を無失点で守りました"))
+    assert subject_problems(trim(script), script) == []
+
+
+def test_ショートの締めで本編へ渡す():
+    """**ショートから本編へ渡す道が無かった**（2026-09-18 ユーザー指示
+    「ショートの最後に本編はチャンネルから見て下さい的な感じを入れたい。5秒くらいの枠で」）。
+
+    それまでの締めは「チャンネル登録、お願いします。」の1行・2秒だけで、
+    **本編があることも、どこで見られるかも言っていなかった。**
+    本編の再生は86%が登録者から来ていて、ショートを見た人が本編へ回る経路は
+    どこにも作られていない。
+    """
+    from src.shorts import SHORT_OUTRO, SHORT_OUTRO_LINES, SHORT_SUBSCRIBE
+
+    assert SHORT_OUTRO == 5.0, "締めの枠が5秒でない"
+    assert "本編" in SHORT_SUBSCRIBE, "本編があることを言っていない"
+    assert "チャンネル" in SHORT_SUBSCRIBE, "どこで見られるかを言っていない"
+    assert len(SHORT_OUTRO_LINES) == 2
+
+    short = trim(parse_script(BODY), "何が起きたか")
+    texts = [line.text for line in short.scenes[-1].lines]
+    assert texts[-2:] == list(SHORT_OUTRO_LINES)
+
+
+def test_締めが2行でもTikTokは行き先を差し替える():
+    """TikTok は YouTube へ誘う（2026-09-16）。**2行まとめて置き換える。**"""
+    from src.shorts import TIKTOK_OUTRO, _has_outro, tiktok_cut
+
+    short = trim(parse_script(BODY), "何が起きたか")
+    assert _has_outro(short.scenes[-1].lines)
+    cut = tiktok_cut(short)
+    texts = [line.text for line in cut.scenes[-1].lines]
+    assert texts[-1] == TIKTOK_OUTRO
+    assert not any("チャンネル登録もお願いします" in (x or "") for x in texts)
+
+
+def test_題名に名前があればショート本文には求めない():
+    """**2つの検査が両立しなくなっていた**（2026-09-18 に踏んだ）。
+
+    `subject_problems` は「題材の名前をショート本文にも出せ」と言い、
+    `_advise_short_repeats` は「ショート専用の行が題名と8字以上重なるな」と言う。
+    題名に「マンチェスター・シティ」が入っている回では、
+    **入れれば重複で叱られ、入れなければ主語なしで叱られる。**
+    ショートの1行目は題名の読み上げなので、視聴者はそこで聞いている。
+    """
+    from src.script_model import Line, Scene, Script
+    from src.shorts import subject_problems
+
+    def make(lines, title):
+        scenes = [Scene(title="本編", lines=[Line(speaker="キャスター", text=x) for x in lines])]
+        s = Script(title=title, scenes=scenes)
+        s.meta = {"topic": "マンチェスター・シティ"}
+        return s
+
+    full = make(["マンチェスター・シティの17歳が2発。監督が聞いたこと。",
+                 "空いた9番に置かれたのが、中盤の17歳です。"],
+                "マンチェスター・シティの17歳が2発。監督が聞いたこと")
+    assert not subject_problems(full, full), "題名に名前があるのに求めている"
+
+    # **略した呼び方でも通す**
+    short_name = make(["何かが起きた日。",
+                       "シティが10人を入れ替えた一戦でした。"], "何かが起きた日")
+    assert not subject_problems(short_name, short_name), "「シティ」を認めていない"
+
+    # 名前がどこにも無ければ、これまでどおり知らせる
+    none = make(["何かが起きた日。", "そこで2点が入りました。"], "何かが起きた日")
+    assert subject_problems(none, none)
+
+
+def test_尺を詰めても締めの2行は両方残す():
+    """**「本編はチャンネルから」が先に落ちていた**（2026-09-18 ユーザー指摘
+    「ショートの最後がチャンネル登録お願いだけになってる」）。
+
+    締めを1行から2行に増やしたのに、尺に収める処理は**1行ぶんしか守って
+    いなかった**。後ろから落とすので、2行のうち**前の1行**が消える。
+    残るのは「チャンネル登録もお願いします」だけで、
+    **本編へ渡すという目的がまるごと失われる。**
+    """
+    from src.shorts import SHORT_OUTRO_LINES, trim
+
+    for limit in (60.0, 30.0, 20.0, 12.0):
+        short = trim(parse_script(BODY), "何が起きたか", max_seconds=limit)
+        texts = [l.text for l in short.scenes[-1].lines]
+        assert texts[-2:] == list(SHORT_OUTRO_LINES), (limit, texts)
+
+
+def test_尺を詰めても見出しと発言は対で残る():
+    """**見出しだけが抜けて、発言が宙に浮いていた**（2026-09-18 ユーザー指摘
+    「ヴァツケのショートを改善して、ちゃんと3つ言う」）。
+
+    9/15 に「発言に欠落がある」と言われて、尺を詰めるときは
+    **語りから先に削る**ようにした。「語りは包み紙、発言が中身」という理屈は
+    正しいが、**包み紙ではない語り**がある。「二つ目は、バログンの件です」は
+    次の発言が**何の話か**を決めていて、これを抜くと発言が何の二つ目か
+    分からないまま流れる。ヴァツケの回で「一つ目は」「二つ目は」「三つ目は」が
+    **3つとも消えた。**
+
+    落とすなら**対ごと**落とす。
+    """
+    from src.shorts import _is_narrator, trim
+
+    lines = ["## オープニング", "", "キャスター: 三つの理由を挙げた。", "", "## 本編", ""]
+    for name in ("一つ目", "二つ目", "三つ目"):
+        lines += [f"キャスター: {name}は、これこれこういうことです。", ""]
+        lines += [f"ヴァツケ: {name}についての発言です。とても長い発言をここに置きます。", ""]
+    body = "\n".join(lines)
+
+    for limit in (40.0, 28.0, 20.0):
+        short = trim(parse_script(body), max_seconds=limit)
+        kept = short.scenes[-1].lines
+        for i, line in enumerate(kept):
+            if _is_narrator(line) or "についての発言" not in (line.text or ""):
+                continue
+            before = kept[i - 1] if i else None
+            assert before is not None and _is_narrator(before), (
+                f"{limit}秒: 「{line.text}」の見出しが消えている")

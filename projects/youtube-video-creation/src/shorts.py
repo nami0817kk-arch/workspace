@@ -279,19 +279,58 @@ def _pick(script: Script, section: str) -> Scene:
 # 2026-09-07 に読み上げをやめた理由（毎回同じ文句に8秒）にも当たらない。
 # **2秒まで。**登録者は10日で24人しかおらず、本編が配られないのもそのため。
 # ショートの末尾は、登録を頼める唯一の場所
-SHORT_OUTRO = 2.0
+# **締めは5秒枠**（2026-09-18 ユーザー指示「ショートの最後に本編はチャンネルから
+# 見て下さい的な感じを入れたい。5秒くらいの枠で」）。2.0 から広げた。
+# **ショートから本編へ渡す道が、これまで無かった。**本編の再生は登録者からが
+# 86%で、ショートを見た人が本編へ回る経路はどこにも作っていない
+SHORT_OUTRO = 5.0
 
 # 最後に読み上げる一言（2026-09-15）。**短くする。**8秒使っていた頃の
 # 「続報はチャンネル登録してお待ちください」には戻さない
-SHORT_SUBSCRIBE = "チャンネル登録、お願いします。"
+# **本編へ渡す一言**（2026-09-18）。登録の依頼だけだったところに、
+# 「本編がある」ことと「どこで見られるか」を足した。
+# **押せるリンクは作れない**ので、行き先は「チャンネル」と言い切る。
+# 2行に分けるのは、読み上げが5秒の枠に収まるようにするため
+SHORT_SUBSCRIBE = "本編はチャンネルから見られます。"
+SHORT_SUBSCRIBE_2 = "チャンネル登録もお願いします。"
+
+# 締めのかたまり（本編への誘い＋登録の依頼）。**2行ある**（2026-09-18 に1行から増やした）
+SHORT_OUTRO_LINES = (SHORT_SUBSCRIBE, SHORT_SUBSCRIBE_2)
+
+
+def _outro_count(lines) -> int:
+    """末尾にある締めの行数。**0〜2**。"""
+    count = 0
+    for line in reversed(lines):
+        if (line.text or "").strip() in SHORT_OUTRO_LINES:
+            count += 1
+        else:
+            break
+    return count
+
+
+def _has_outro(lines) -> bool:
+    return _outro_count(lines) > 0
+
 
 # ショートの最後に足すネットの声の本数（2026-09-13 ユーザー「ショートにもいくつか」）
 VOICES_TAIL_MAX = 6
 
 
 def _is_voices_scene(scene: Scene) -> bool:
-    """反応だけを並べた節か。**語りが1行でもあれば違う。**"""
-    lines = [l for l in scene.lines if (l.text or "").strip()]
+    """反応だけを並べた節か。**語りが1行でもあれば違う。**
+
+    ただし **`only: short` の1行は数えない**（2026-09-17 に発見）。
+    反応の節の頭には「ショート単体で話が分かるように」状況説明を1行置く決まりで、
+    その行の話者はキャスターである。**取材メモの雛形が必ずそう作る**ので、
+    語りを1行でも見た時点で弾いていたこの関数は、**どの回でも False を返していた。**
+    結果、`_add_voices_tail` の元が見つからず、**9/17 のショート5本すべてに
+    ネットの声が1件も入っていなかった**（ユーザー指示「声は必ず」に反する）。
+    その1行はショートの本体側へ切り出されるので、ここで数える相手ではない。
+    """
+    lines = [l for l in scene.lines
+             if (l.text or "").strip()
+             and str(getattr(l, "only", "") or "").strip() != "short"]
     if not lines:
         return False
     return all((getattr(l, "speaker", "") or "").strip() not in NARRATORS for l in lines)
@@ -358,7 +397,11 @@ def _add_voices_tail(short: Script, script: Script, max_seconds: float) -> None:
     # それをやると**見出しの言い直しの反応が締めに戻ってくる**（9/15 の指摘そのもの）。
     # 尺が余るなら、埋めるのではなく**取材メモの印を増やす**（書いた人が選ぶ）
     added = 0
-    for line in (picked or source.lines):
+    # 印が無いときの受け皿からも、頭の状況説明（`only: short`）は外す。
+    # あれは語りで、ショートの本体側に既に入っている
+    rest = [l for l in source.lines
+            if str(getattr(l, "only", "") or "").strip() != "short"]
+    for line in (picked or rest):
         if added >= VOICES_TAIL_MAX:
             break
         cost = line.duration or line.estimated_duration()
@@ -380,16 +423,54 @@ def _add_subscribe(short: Script) -> None:
     lines = short.scenes[-1].lines
     if not lines:
         return
-    if (lines[-1].text or "").strip() == SHORT_SUBSCRIBE:
+    if _has_outro(lines):
         return
-    last = copy.deepcopy(lines[-1])
-    last.text = SHORT_SUBSCRIBE
-    last.speaker = NARRATORS[0]
-    last.telop = SHORT_SUBSCRIBE
-    last.duration = 0.0
-    last.audio_path = None
-    last.card = "none"
-    lines.append(last)
+    for words in (SHORT_SUBSCRIBE, SHORT_SUBSCRIBE_2):
+        last = copy.deepcopy(lines[-1])
+        last.text = words
+        last.speaker = NARRATORS[0]
+        last.telop = words
+        last.duration = 0.0
+        last.audio_path = None
+        last.card = "none"
+        lines.append(last)
+
+
+STACK_DIR = Path("assets/images/_stack")
+
+
+def stacked_photo(meta: dict) -> str:
+    """**サムネが2枚並びの回は、ショートでも同じ2枚を出す**
+    （2026-09-17 指示「ショートも横割りで本編のサムネと同じようにして」）。
+
+    本編のサムネは左右に割るが、ショートは縦長なので**上下に割る**。
+    それまでは `thumbnail_photos` の**1枚目しか出ていなかった**ので、
+    鈴木の回はサムネにある人影（＝答えの伏せ字）がショートに出ず、
+    同じ回に見えなかった。
+
+    作った1枚は `assets/images/_stack/` に控える（同じ組み合わせなら作り直さない）。
+    """
+    tiles = [str(x).strip() for x in ((meta or {}).get("thumbnail_photos") or [])]
+    tiles = [x for x in tiles if x and Path(x).exists()]
+    if len(tiles) < 2:
+        return ""
+    from PIL import Image
+
+    from .render import _cover
+
+    name = "__".join(Path(t).stem for t in tiles[:3]) + ".jpg"
+    out = STACK_DIR / name
+    if out.exists():
+        return out.as_posix()
+    width, height = SIZE
+    band = height // len(tiles[:3])
+    canvas = Image.new("RGB", (width, band * len(tiles[:3])), (12, 14, 20))
+    for index, tile in enumerate(tiles[:3]):
+        with Image.open(tile) as image:
+            canvas.paste(_cover(image.convert("RGB"), width, band), (0, band * index))
+    out.parent.mkdir(parents=True, exist_ok=True)
+    canvas.save(out, quality=95)
+    return out.as_posix()
 
 
 def _add_face(script: Script) -> None:
@@ -403,13 +484,16 @@ def _add_face(script: Script) -> None:
     カードとテロップで、写真は指定した行だけ。最初そう思い込んで先頭にだけ
     置いたところ、5秒出て消えた（実測して分かった）。全部の行に置く。
     """
-    photo = str((script.meta or {}).get("thumbnail_photo") or "").strip()
+    # **2枚並びのサムネは、上下に割った1枚にしてから敷く**（2026-09-17 指示）
+    photo = stacked_photo(script.meta)
+    if not photo:
+        photo = str((script.meta or {}).get("thumbnail_photo") or "").strip()
     if not photo:
         photo = next((str(line.image) for line in script.lines if line.image), "")
     if not photo:
         return
     for line in script.lines:
-        if not line.image:
+        if not line.image or photo.startswith(STACK_DIR.as_posix()):
             line.image = photo
 
 
@@ -450,6 +534,47 @@ def quote_problems(script: Script) -> list[str]:
     return []
 
 
+def subject_problems(short: Script, script: Script) -> list[str]:
+    """**ショートが、自分の題名に答えているか**（2026-09-17）。
+
+    同じ日に2回やった。鈴木彩艶の回は題名が「鈴木彩艶が後半から出た試合」なのに、
+    ショートの中身は相手選手の経歴だけで、**鈴木の話が1行も入っていなかった**。
+    日本代表の回も「名前が消えたのは誰だったか」と聞いて、**誰なのかを一度も
+    言わずに**終わっていた。どちらもユーザーが見て気づいた。
+
+    ショートは山場の節しか切り出さない。その節に主語が出てこない台本は普通にある。
+    **1行目（題名の読み上げ）を除いて**、題材の名前が一度も出てこなければ知らせる。
+    直し方は、その節に `short_only` の行を足すこと。
+    """
+    topic = str((script.meta or {}).get("topic") or "").strip()
+    people = [str(x).strip() for x in ((script.meta or {}).get("people") or []) if str(x).strip()]
+    names = [n for n in ([topic] + people) if n]
+    if not names:
+        return []
+    body = [l for l in short.lines if (l.text or "").strip()][1:]
+    said = "".join((l.text or "") for l in body)
+    if any(name in said for name in names):
+        return []
+    # **題名にその名前が入っているなら、もう言っている**（2026-09-18 に踏んだ）。
+    # ショートの1行目は題名の読み上げなので、視聴者はそこで聞いている。
+    # ここを見ずに「本文にも出せ」と求めると、**もう一方の検査と両立しない**——
+    # `_advise_short_repeats` は「ショート専用の行が題名と8字以上重なるな」と言う。
+    # サンバの回で、題名の「マンチェスター・シティ」を本文に入れれば重複で叱られ、
+    # 入れなければ主語なしで叱られ、**どちらにしても直せない**状態になった
+    title = str((short.title or script.title or "")).strip()
+    if any(name in title for name in names):
+        return []
+    # **略した呼び方でも通す。**「マンチェスター・シティ」に対する「シティ」など。
+    # 略称は**中黒で区切られた一部**を使うことが多いので、そこだけ見る。
+    # 部分文字列を総当たりすると「マン」のような短い断片で誤って通る
+    for name in names:
+        for piece in re.split(r"[・=＝\s]", name):
+            if len(piece) >= 3 and piece in said:
+                return []
+    return [f"ショートの中身に「{names[0]}」が一度も出てきません"
+            "（題名だけで、答えが入っていない。山場の節に short_only の行を足す）"]
+
+
 def face_problems(script: Script) -> list[str]:
     """顔の出し方の問題。**実測（2026-09-06）で平均12秒目・全体の2割だった。**
 
@@ -477,7 +602,11 @@ ESTIMATE_SLACK = 0.92
 
 
 # 情報を持たない「振り」。**発言の直前に置かれ、2〜4秒を使う**
-LEAD_IN = re.compile(r"こう[^。]{0,8}(?:まし|ていま|いま|ま)す?[た。]?。?$")
+# **「こう」が無い振りもある**（2026-09-18）。「監督が口を開きました。」は
+# 何ひとつ言っていないのに、「こう」を含まないので見出し扱いで守られていた。
+# 話す動作の言い方を並べる（中身のある行はこの形で終わらない）
+_SPEAK = r"(?:こう[^。]{0,8}|口を開き|語り|話し|明かし|続け|答え|振り返っ|述べ|説明し)"
+LEAD_IN = re.compile(_SPEAK + r"(?:まし|ていま|いま|ま)す?[た。]?。?$")
 # 最初の発言はここまでに出したい（秒）。実測の境目は19秒
 QUOTE_BY = 15.0
 
@@ -589,11 +718,39 @@ def _drop_middle(scene: Scene, script: Script, target: float) -> None:
         # 手前から1行ずつ削っていたので、**監督の3つの発言のうち真ん中が落ちて**
         # いた。CLAUDE.md は「短くするために発言を削るのは本末転倒」と書いている。
         # 語りは包み紙で、発言が中身。**包み紙から捨てる**
-        cut = keep - 1
+        # **見出しになっている語りは削らない**（2026-09-18 ユーザー指摘）。
+        # 「語りは包み紙、発言が中身」は正しいが、**包み紙ではない語り**がある。
+        # 「二つ目は、バログンの件です」は次の発言が**何の話か**を決めていて、
+        # これを抜くと発言が宙に浮く。ヴァツケの回で、
+        # 「一つ目は…」「二つ目は…」「三つ目は…」が全部消え、
+        # 発言だけが並んで**何の話か分からない**ショートになっていた。
+        # **次が発言の語りは飛ばして、そうでない語りから削る**
+        cut = None
         for index in range(keep - 1, 0, -1):
-            if _is_narrator(scene.lines[index]):
-                cut = index
-                break
+            if not _is_narrator(scene.lines[index]):
+                continue
+            leads = (index + 1 < len(scene.lines)
+                     and not _is_narrator(scene.lines[index + 1]))
+            if leads and not _is_lead_in(scene.lines[index]):
+                continue          # 見出し。中身を決めているので残す
+            cut = index
+            break
+        if cut is None:
+            # 見出しばかりで、削れる語りが無い。**対ごと落とす。**
+            # 片方だけ落とすと、見出しの無い発言か、発言の無い見出しが残る。
+            # **一つの話ごと落とすほうが、筋は通る**
+            pair = None
+            for index in range(keep - 2, 0, -1):
+                if (_is_narrator(scene.lines[index])
+                        and not _is_narrator(scene.lines[index + 1])):
+                    pair = index
+                    break
+            if pair is None:
+                cut = keep - 1
+            else:
+                del scene.lines[pair + 1]
+                keep -= 1
+                cut = pair
         del scene.lines[cut]
         keep -= 1
         # 代弁を全部落としたあとの「こう話しました。」だけを残さない。
@@ -684,7 +841,7 @@ def tiktok_cut(script: Script, section: str = "") -> Script:
 
     def before_subscribe(line) -> None:
         lines = cut.scenes[-1].lines
-        at = len(lines) - 1 if lines and (lines[-1].text or "").strip() == SHORT_SUBSCRIBE else len(lines)
+        at = len(lines) - _outro_count(lines)
         lines.insert(at, copy.deepcopy(line))
 
     body_title = cut.scenes[-1].title
@@ -697,7 +854,7 @@ def tiktok_cut(script: Script, section: str = "") -> Script:
     # うしろに置くので、締めの「チャンネル登録」は足し直して最後に戻す
     def add_scene(scene: Scene) -> None:
         lines = cut.scenes[-1].lines
-        if lines and (lines[-1].text or "").strip() == SHORT_SUBSCRIBE:
+        if _has_outro(lines):
             lines.pop()
         cut.scenes.append(copy.deepcopy(scene))
         _add_subscribe(cut)
@@ -734,9 +891,18 @@ def tiktok_cut(script: Script, section: str = "") -> Script:
 
     # 締めの一言を、YouTubeへ送る文に差し替える
     lines = cut.scenes[-1].lines
-    if lines and (lines[-1].text or "").strip() == SHORT_SUBSCRIBE:
-        lines[-1].text = TIKTOK_OUTRO
-        lines[-1].telop = TIKTOK_OUTRO
+    if _has_outro(lines):
+        # TikTok は行き先が違う。**締めの2行をまとめて差し替える**
+        for _ in range(_outro_count(lines)):
+            lines.pop()
+        tail = copy.deepcopy(lines[-1])
+        tail.text = TIKTOK_OUTRO
+        tail.telop = TIKTOK_OUTRO
+        tail.speaker = NARRATORS[0]
+        tail.duration = 0.0
+        tail.audio_path = None
+        tail.card = "none"
+        lines.append(tail)
         lines[-1].audio_path = None
         lines[-1].duration = 0.0
 
@@ -750,6 +916,24 @@ def tiktok_path(script_path: str | Path) -> Path:
 
 def default_path(script_path: str | Path) -> Path:
     return Path(f"output/{Path(script_path).stem}_short")
+
+
+def _introduces(lines, index: int) -> bool:
+    """`index` の行は**直前の語りに紹介された発言**か。
+
+    「二つ目は、バログンの件です」→「大統領が電話をかけ…」のような対。
+    発言だけ残すと**何の話か分からなくなる**ので、対ごと落とす。
+    直前がもっと前の発言に続く語り（別の対の一部）なら、そこは切らない。
+    """
+    if index < 1 or index >= len(lines):
+        return False
+    here = (getattr(lines[index], "speaker", "") or "").strip()
+    before = (getattr(lines[index - 1], "speaker", "") or "").strip()
+    # 落とすのが発言で、その直前が語りなら対とみなす
+    if here in NARRATORS or before not in NARRATORS:
+        return False
+    # **節の1行目は残す。**そこを抜くと話の入口が消える
+    return index - 1 > 0
 
 
 def enforce_limit(script: Script, max_seconds: float, config) -> int:
@@ -773,9 +957,23 @@ def enforce_limit(script: Script, max_seconds: float, config) -> int:
         if total <= max_seconds:
             return dropped
         lines = script.scenes[-1].lines
-        keep_last = bool(lines) and (lines[-1].text or "").strip() == SHORT_SUBSCRIBE
-        index = len(lines) - (2 if keep_last else 1)
+        # **締めは2行ある**（2026-09-18 に1行から増やした）。1行ぶんしか
+        # 守っていなかったので、**「本編はチャンネルから見られます」が先に落ちて**、
+        # 残るのは「チャンネル登録もお願いします」だけになっていた。
+        # ユーザー指摘「ショートの最後がチャンネル登録お願いだけになってる」。
+        # **かたまりごと守る**
+        keep = _outro_count(lines)
+        index = len(lines) - (keep + 1)
         if index < 1:
             return dropped          # これ以上は削れない。呼んだ側が止める
-        lines.pop(index)
-        dropped += 1
+        # **見出しと発言は対で落とす**（2026-09-18 ユーザー指摘。ヴァツケの回で
+        # 「一つ目は…」「二つ目は…」だけが消え、**発言が宙に浮いていた**）。
+        # 1行ずつ後ろから抜くので、語りだけが先に消えて
+        # 「二つ目についての発言」が、何の二つ目か分からないまま流れる。
+        # 落とす行が発言なら、**その直前の語り（振り）も一緒に**落とす
+        take = [index]
+        if _introduces(lines, index):
+            take.insert(0, index - 1)
+        for at in reversed(take):
+            lines.pop(at)
+            dropped += 1
