@@ -44,6 +44,9 @@ class Layout:
     width: int
     height: int
     with_characters: bool = True
+    # **横のどこを残すか**（2026-09-18）。縦型に横長の写真を敷くと、
+    # 横は真ん中で切られる。端に写っている人を残したいときだけ台本から指定する
+    focus_x: float | None = None
 
     @property
     def telop_box(self) -> tuple[int, int, int, int]:
@@ -302,7 +305,8 @@ class Renderer:
         bed = ImageEnhance.Brightness(bed).enhance(0.55)
         if self.layout.is_portrait:
             # 縦型は横に並べる余地が無い。**写真で画面を埋める**
-            bed.alpha_composite(_cover(photo, width, height, focus=0.18))
+            bed.alpha_composite(_cover(photo, width, height, focus=0.18,
+                                       focus_x=self.layout.focus_x))
             shade = Image.new("RGBA", (width, height), (0, 0, 0, 0))
             shade_draw = ImageDraw.Draw(shade)
             start = int(height * 0.60)
@@ -1024,6 +1028,11 @@ class Renderer:
         inserts = inserts or Inserts()
         entries: list[tuple[Path, float]] = []
         previous: Path | None = None
+        # **横のどこを残すか**（2026-09-18）。縦型は写真を画面いっぱいに敷くので、
+        # 端に写っている人が落ちる。台本の `thumbnail_focus_x` で寄せる
+        _fx = script.meta.get("thumbnail_focus_x")
+        self.layout.focus_x = float(_fx) if _fx not in (None, "") else None
+        self._stages.clear()
         self.opening_photo = opening_photo(script.meta)
         self.opening_scene = script.scenes[0].title if script.scenes else ""
         self.opening_points = [str(x) for x in (script.meta.get("thumbnail_points") or [])]
@@ -1548,16 +1557,24 @@ def opening_photo(meta: dict) -> str:
     return tiles[0] if tiles else ""
 
 
-def _cover(image: Image.Image, width: int, height: int, focus: float | None = None) -> Image.Image:
+def _cover(image: Image.Image, width: int, height: int, focus: float | None = None,
+           focus_x: float | None = None) -> Image.Image:
     """アスペクト比を保ったまま画面いっぱいに敷き詰める。
 
     **縦長の写真は上寄りに切る。**人物写真は顔が上にあるので、真ん中で切ると
     顔が落ちる。実測（2026-09-05）で、サムネに選手の写真を敷いたら胴体だけが
     残り、誰なのか分からなくなった。
+
+    **横も指定できる**（2026-09-18 ユーザー指摘「ショートのサムネのメッシが
+    見切れてる」）。横は必ず真ん中で切っていたので、**横長の写真を縦型に敷くと
+    端に写っている人が落ちる。**バロンドールの回で、右端のメッシが
+    手と膝しか残らなかった。`focus_x` は 0.0=左端 / 1.0=右端
     """
     scale = max(width / image.width, height / image.height)
     resized = image.resize((int(image.width * scale), int(image.height * scale)), Image.LANCZOS)
-    left = (resized.width - width) // 2
+    room = resized.width - width
+    left = (int(room * min(1.0, max(0.0, focus_x)))
+            if focus_x is not None else room // 2)
     spare = resized.height - height
     tall = image.height > image.width * 1.1
     # focus は「縦のどこを残すか」（0.0=上端 / 1.0=下端）。**顔の位置は写真ごとに

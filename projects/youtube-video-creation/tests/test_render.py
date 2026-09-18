@@ -796,3 +796,28 @@ def test_数字の図の控えがあれば板とみなす(tmp_path):
     assert not _is_board(str(made))
     made.with_suffix(".png.statboard.txt").write_text("title: 走行距離", encoding="utf-8")
     assert _is_board(str(made))
+
+
+def test_横長の写真を縦に敷くとき横の位置を指定できる():
+    """**端に写っている人が落ちていた**（2026-09-18 ユーザー指摘
+    「ショートのサムネのメッシが見切れてる」）。
+
+    `_cover` は横を必ず真ん中で切っていた。横長の写真を縦の画面に敷くと、
+    右端に写っているメッシが**手と膝しか残らなかった**。
+    """
+    from PIL import Image
+
+    from src.render import _cover
+
+    # 右端だけ白、あとは黒の横長。縦に敷いたとき、どこが残るかを見る
+    wide = Image.new("RGB", (1920, 1080), (0, 0, 0))
+    wide.paste(Image.new("RGB", (200, 1080), (255, 255, 255)), (1720, 0))
+
+    middle = _cover(wide.convert("RGBA"), 1080, 1920)
+    assert middle.convert("RGB").getpixel((1000, 960)) == (0, 0, 0), "既定は真ん中のまま"
+
+    right = _cover(wide.convert("RGBA"), 1080, 1920, focus_x=1.0)
+    assert right.convert("RGB").getpixel((1000, 960)) == (255, 255, 255), "右端に寄っていない"
+
+    left = _cover(wide.convert("RGBA"), 1080, 1920, focus_x=0.0)
+    assert left.convert("RGB").getpixel((40, 960)) == (0, 0, 0)

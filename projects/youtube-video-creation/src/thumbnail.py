@@ -205,6 +205,7 @@ def _short_thumbnail(
     photos: list[str],
     crest_main: list[str] | None = None,
     crest_link: str = "対",
+    focus_x: float | None = None,
 ) -> Path:
     """1080x1920 のサムネイル。ショート専用。"""
     font_path = str(config.video.font_path())
@@ -232,8 +233,11 @@ def _short_thumbnail(
             break
     if source is not None:
         with Image.open(source) as image:
+            # **横のどこを残すか**（2026-09-18）。横長の写真を縦の画面に
+            # 敷くと真ん中で切られ、端に写っている人が落ちる
             canvas = _cover(image.convert("RGBA"), width, height,
-                            focus=focus if focus is not None else 0.18)
+                            focus=focus if focus is not None else 0.18,
+                            focus_x=focus_x)
     elif stage is not None:
         canvas = stage
     else:
@@ -350,6 +354,7 @@ def from_meta(meta: dict, title: str) -> dict:
                      or meta.get("thumbnail_photo") or ""),
         # 写真のどこを残すか（0.0=上端 / 1.0=下端）。顔が中央にある写真で使う
         "focus": meta.get("thumbnail_focus"),
+        "focus_x": meta.get("thumbnail_focus_x"),
         # 帯の上に出す反応のひとこと（2026-09-07）。最高再生の2本はどちらも
         # 「変な声出た」「一番強くて草」のような**書き込みの断片**を小窓で出して
         # いた。反応を集めたチャンネルであることが、一覧の時点で分かる
@@ -500,6 +505,8 @@ def build_thumbnail(
     lines: tuple[str, str] | None = None,
     tags: list[str] | None = None,
     focus: float | None = None,
+    # **横のどこを残すか**（2026-09-18）。縦のサムネだけで効く
+    focus_x: float | None = None,
     reaction: str = "",
     points: list[str] | None = None,
     note_red: str = "",
@@ -524,6 +531,7 @@ def build_thumbnail(
             config, out_path, (photos or [None])[0] or background,
             lines or (title, subtitle), tags or [], focus,
             quote or reaction, photos or [], crest_main or [], crest_link,
+            focus_x=focus_x,
         )
     if chosen == "news":
         return _news_thumbnail(

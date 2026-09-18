@@ -1413,6 +1413,10 @@ def to_script(notes: Notes, plan: Plan) -> str:
         # `thumbnail_photo` に入れると動画の中でも使われ、カードと重なる
         **({"thumbnail_board": str(thumbnail["board"])} if thumbnail.get("board") else {}),
         **({"thumbnail_focus": thumbnail["focus"]} if thumbnail.get("focus") is not None else {}),
+        # **縦型（ショート）で横のどこを残すか**（2026-09-18）。
+        # 横長の写真を縦の画面に敷くと真ん中で切られ、端の人が落ちる
+        **({"thumbnail_focus_x": thumbnail["focus_x"]}
+           if thumbnail.get("focus_x") is not None else {}),
         # init-assets が必ず作るものを既定にする。動く背景にしたいときは
         # `make-clip` で mp4 を作ってから、台本の bg を差し替える
         "bg": "assets/backgrounds/stadium.png",

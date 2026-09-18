@@ -134,6 +134,7 @@ def build_script(
         subtitle=look["subtitle"],
         background=look["photo"] or script.background,
         focus=look.get("focus"),
+        focus_x=look.get("focus_x"),
         badge=look["badge"],
         date=script.date,
         lines=look["lines"],
