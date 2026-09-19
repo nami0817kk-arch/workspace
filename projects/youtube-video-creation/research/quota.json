@@ -105,11 +105,12 @@
     "videos.update": 1
   },
   "2026-09-18": {
-    "channels.list": 9,
-    "playlistItems.list": 8,
-    "videos.insert": 4,
-    "thumbnails.set": 4,
-    "videos.list": 2,
-    "playlistItems.insert": 2
+    "channels.list": 17,
+    "playlistItems.list": 16,
+    "videos.insert": 12,
+    "thumbnails.set": 12,
+    "videos.list": 10,
+    "playlistItems.insert": 6,
+    "videos.update": 2
   }
 }
