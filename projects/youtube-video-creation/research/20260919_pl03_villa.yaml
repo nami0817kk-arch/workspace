@@ -1,0 +1,239 @@
+# プレミアリーグ20クラブ紹介 ③アストン・ヴィラ（2026-09-19 作り直し。見本）
+#
+# **サッカーキングの紹介動画を手本に組み直した**（2026-09-19 ユーザー指示
+# 「取り入れたいのは、全部」「スタメン図は不要、登録選手一覧だけでよい」）。
+# 手本: https://www.youtube.com/watch?v=pCRlRj9HE5s
+#   「【名門復活へ】鈴木彩艶が所属するアストン・ヴィラってどんなクラブ？」（41分・4.4万回）
+#
+# 取り入れたもの
+#   ・題を日本人選手から入る形に（「鈴木彩艶がいる〜ってどんなクラブ？」）
+#   ・**基礎DATAの板を1枚**（tools/clubdata.py。中身は research/pl_data/villa.json）
+#   ・有名なファン（ウィリアム皇太子・トム・ハンクス）
+#   ・歴代の名選手を1990年以降に（アグボンラホー・グリーリッシュ・ワトキンス）
+#   ・オーナー（歩んできた道の節）
+#   ・**登録選手一覧**（tools/squadboard.py --full。29人を位置別に4枚）
+# 取り入れなかったもの
+#   ・予想スタメンの図（ユーザー指示で不要）
+#   ・今夏の出入りの節（2026-09-19 ユーザー指示「今夏、出ていった主力と今夏、加わった選手は不要」）
+#   ・バーミンガム・シティとの支持層の違い（労働者層／中流層）。手本は英語の資料で
+#     調べたと言っていたが、**こちらでは裏が取れなかった**ので入れない
+#
+# **数字の出どころ**（すべて英語版 Wikipedia。2026-09-19 に原文を取得して確認）
+#   ・創立・収容・オーナー・タイトル・128得点・1992-93の2位: Aston_Villa_F.C.
+#   ・登録選手29人・背番号・国籍: 同ページ「First-team squad」
+#   ・年齢: 各選手のページの生年月日から 2026-09-19 時点で計算
+#   ・今夏の出入り・今季の結果: 2026–27_Aston_Villa_F.C._season
+#   ・有名なファン: 同ページの Notable supporters。トム・ハンクスの「保養地のよう」は
+#     本人の発言として報じられたもの（HITC・Yahoo UK）
+#   ・グリーリッシュ: Jack_Grealish（6歳で入団、2019年主将、2021年に1億ポンド）
+#
+# **鈴木の移籍金は2,560万ポンド**（上積み最大430万ポンドは別）。
+# 手本では触れていない。読み上げでは「約2,560万ポンド」と丸めずに出す
+format: news
+voice_min: 0
+slot: premier_1
+date: "2026年9月19日"
+
+people:
+  - 鈴木彩艶
+  - アストン・ヴィラ
+
+short_title: "鈴木彩艶がいるアストン・ヴィラ"
+
+theme:
+  id: pl_clubs_03_villa
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: アストン・ヴィラ
+  title: 鈴木彩艶がいるアストン・ヴィラってどんなクラブ？ ③プレミア20クラブ紹介
+  question: どんなクラブなのか
+  hook: 世界で初めてのリーグを作ったクラブに、日本代表の守護神が加わりました。
+
+thumbnail:
+  photo: assets/images/zion2609/01.jpg
+  line1: 鈴木彩艶の新天地
+  line2: アストン・ヴィラってどんなクラブ？
+  tags:
+    - アストンヴィラ
+  points: []
+
+sections:
+  - id: why
+    heading: 日本代表の守護神が選んだクラブ
+    tier: 報道
+    bg: assets/backgrounds/stadium_アストンヴィラ.png
+    telop: 鈴木彩艶、パルマからアストン・ヴィラへ
+    narrator: キャスター
+    card:
+      type: table
+      title: 鈴木彩艶の移籍
+      columns: ["", ""]
+      rows:
+        - ["加入", "2026年8月19日"]
+        - ["前所属", "パルマ（イタリア）"]
+        - ["移籍金", "2,560万ポンド"]
+        - ["今季の舞台", "プレミアリーグ／チャンピオンズリーグ"]
+    say:
+      - 日本代表のゴールキーパー、鈴木彩艶が今夏、イタリアのパルマからヴィラに加わりました。
+      - "移籍金は**2,560万ポンド**。今季はチャンピオンズリーグにも出るクラブです。"
+      - では、どんなクラブなのか。まずは基本のデータから見ていきます。
+    official: false
+    sources:
+      - https://en.wikipedia.org/wiki/2026%E2%80%9327_Aston_Villa_F.C._season
+
+  # **基礎DATAの板**（手本の「アストン・ヴィラ基礎DATA」と同じ役目）。
+  # 板は1枚で、読み上げが板の上を順に指していく
+  - id: data
+    heading: アストン・ヴィラ 基礎DATA
+    main: true
+    tier: 背景
+    bg: assets/backgrounds/stadium_アストンヴィラ.png
+    telop: 1874年創立、バーミンガムのクラブ
+    narrator: 解説
+    say:
+      - {short_only: true, text: 鈴木彩艶が加わったクラブの、基本のデータです。}
+      - {image: assets/stats/pl_villa_data.png, text: "創立は**1874年**。礼拝堂に集まっていた青年4人が立ち上げました。"}
+      - {image: assets/stats/pl_villa_data.png, text: 本拠地はイングランド第2の都市バーミンガム。ヴィラ・パークは4万3205人が入ります。}
+      - {image: assets/stats/pl_villa_data.png, text: "1部リーグの優勝は**7回**。FAカップ7回、リーグカップ5回。"}
+      - {image: assets/stats/pl_villa_data.png, text: "ヨーロッパでは1982年にチャンピオンズカップ、そして昨季は**ヨーロッパリーグ**を獲りました。"}
+      - {image: assets/stats/pl_villa_data.png, text: "1930年から31年には、1シーズンで**128ゴール**。いまもイングランド1部の最多記録です。"}
+      - {image: assets/stats/pl_villa_data.png, text: プレミアリーグでの最高位は、初年度1992年から93年の2位です。}
+    official: false
+    sources:
+      - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
+
+  - id: fans
+    heading: 有名なファン
+    tier: 報道
+    bg: assets/backgrounds/stadium_アストンヴィラ.png
+    telop: ウィリアム皇太子も、トム・ハンクスも
+    narrator: キャスター
+    card:
+      type: table
+      title: アストン・ヴィラの有名なファン
+      columns: ["", ""]
+      rows:
+        - ["ウィリアム皇太子", "イギリス王室"]
+        - ["トム・ハンクス", "俳優"]
+        - ["オジー・オズボーン", "ブラック・サバス"]
+        - ["デーヴィッド・キャメロン", "元首相"]
+    say:
+      - "有名なファンも多いクラブです。いちばん知られているのは、**ウィリアム皇太子**。"
+      - 俳優のトム・ハンクスもファンを公言しています。
+      - 理由は名前でした。
+      - "「**アストン・ヴィラ**という響きが、すてきな保養地のように聞こえた」。"
+      - 実際にはバーミンガムにあると知って、驚いたそうです。
+      - ほかにも、ブラック・サバスのオジー・オズボーン、デーヴィッド・キャメロン元首相の名前が挙がります。
+    official: false
+    sources:
+      - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
+      - https://uk.news.yahoo.com/why-tom-hanks-supports-aston-184607511.html
+      - https://www.hitc.com/why-tom-hanks-supports-aston-villa-explained-forrest-gump-star-is-a-huge-villa-fan/
+
+  - id: history
+    heading: 歩んできた道
+    tier: 背景
+    bg: assets/backgrounds/stadium_アストンヴィラ.png
+    telop: 世界で初めてのリーグを、このクラブが作った
+    narrator: 解説
+    card:
+      type: table
+      title: 大きな出来事
+      columns: ["", ""]
+      rows:
+        - ["1888年", "重役マクレガーがフットボールリーグを創設"]
+        - ["1982年", "チャンピオンズカップ優勝（決勝でバイエルンに1対0）"]
+        - ["2018年", "いまのオーナーが経営に"]
+        - ["2026年", "ヨーロッパリーグ優勝。30年ぶりのタイトル"]
+    say:
+      - "1888年、ヴィラの重役だったウィリアム・マクレガーが、**世界で初めてのフットボールリーグ**を立ち上げました。"
+      - "1982年にはチャンピオンズカップで優勝。決勝の相手はバイエルンで、**1対0**でした。"
+      - 2018年には、エジプトの実業家ナセフ・サウィリスとアメリカのウェス・エデンスがクラブの経営を握ります。
+      - "そして昨季、ヨーロッパリーグで優勝。**30年ぶりのタイトル**でした。"
+    official: false
+    sources:
+      - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
+
+  # **1990年以降の選手だけ**（2026-09-18 ユーザー指示「過去の選手は1990年以降」）
+  - id: legends
+    heading: このクラブを語る3人
+    tier: 背景
+    bg: assets/backgrounds/stadium_アストンヴィラ.png
+    telop: 生え抜き、1億ポンドの男、そして得点王
+    narrator: キャスター
+    card:
+      type: table
+      title: 1990年以降の名選手
+      columns: [名前, 在籍, 残したもの]
+      rows:
+        - ["ガブリエル・アグボンラホー", "2005-2018", "プレミア74得点。長くクラブ最多"]
+        - ["ジャック・グリーリッシュ", "2013-2021", "6歳で入団。1億ポンドでシティへ"]
+        - ["オリー・ワトキンス", "2020-2026", "アグボンラホーを抜きプレミア最多に"]
+    say:
+      - 地元出身のガブリエル・アグボンラホーは、プレミアリーグで74得点。長くクラブの最多記録でした。
+      - "ジャック・グリーリッシュは**6歳**でヴィラに入り、主将まで務めました。"
+      - "2021年、**1億ポンド**でマンチェスター・シティへ。当時のイギリス人選手の最高額です。"
+      - アグボンラホーの記録を抜いたのが、オリー・ワトキンス。2025年5月のことでした。
+      - そのワトキンスも、今夏クラブを離れています。
+    official: false
+    sources:
+      - https://en.wikipedia.org/wiki/Gabriel_Agbonlahor
+      - https://en.wikipedia.org/wiki/Jack_Grealish
+      - https://en.wikipedia.org/wiki/Ollie_Watkins
+
+  - id: rival
+    heading: 宿敵
+    tier: 背景
+    bg: assets/backgrounds/stadium_アストンヴィラ.png
+    telop: 同じ街のバーミンガム・シティ
+    narrator: 解説
+    say:
+      - "宿敵は同じ街のバーミンガム・シティ。この対戦は**セカンド・シティ・ダービー**と呼ばれます。"
+      - "語り草は1982年。ヴィラがヨーロッパの頂点に立った直後に、敵地で**0対3**で敗れました。"
+      - そのバーミンガムは、今季のプレミアリーグにはいません。
+    official: false
+    sources:
+      - https://en.wikipedia.org/wiki/Second_City_derby
+
+  # **登録選手一覧**（2026-09-19 ユーザー指示「スタメン図は不要、登録選手一覧だけでよい」）。
+  # 29人を位置別に4枚。★は今夏の新加入（レンタル含む）
+  - id: squad
+    heading: 今季の登録選手
+    tier: 報道
+    bg: assets/backgrounds/stadium_アストンヴィラ.png
+    telop: 29人。うち11人が今夏の新加入
+    narrator: キャスター
+    say:
+      - "今季の登録選手は29人。**★が今夏の新加入**です。"
+      - {image: assets/stats/pl_villa_gk.png, text: ゴールキーパーは3人。24歳の鈴木彩艶が、その先頭にいます。}
+      - {image: assets/stats/pl_villa_df.png, text: ディフェンダーは9人。キャッシュ、パウ・トーレス、ミングスに、ハーウッド＝ベリスとルッジェーリが加わりました。}
+      - {image: assets/stats/pl_villa_mf.png, text: ミッドフィールダーは11人。主将はスコットランド代表のジョン・マッギンです。}
+      - {image: assets/stats/pl_villa_fw.png, text: フォワードは6人。ワトキンスの穴を、ジャクソンとガルナチョ、18歳のムバイエで埋めにいきます。}
+      - "29人のうち**11人**が、この夏に来た選手です。"
+    official: false
+    sources:
+      - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
+
+  - id: season
+    heading: 今季のここまで
+    tier: 報道
+    bg: assets/backgrounds/stadium_アストンヴィラ.png
+    telop: プレミアでは、まだ勝てていない
+    narrator: 解説
+    card:
+      type: table
+      title: プレミアリーグの結果
+      columns: [日付, 相手, 結果]
+      rows:
+        - ["8月23日", "ブライトン（アウェー）", "0対4"]
+        - ["8月31日", "アーセナル（ホーム）", "0対1"]
+        - ["9月5日", "ハル・シティ（アウェー）", "0対0"]
+        - ["9月12日", "ノッティンガム・フォレスト（ホーム）", "1対2"]
+    say:
+      - "プレミアリーグは4試合を終えて、**1引き分け3敗**。まだ勝てていません。"
+      - 11人が入れ替わったチームなので、形ができるまでには時間がかかります。
+      - "監督はヨーロッパリーグの優勝請負人、**ウナイ・エメリ**。立て直しの中心に、鈴木彩艶がいます。"
+    official: false
+    sources:
+      - https://en.wikipedia.org/wiki/2026%E2%80%9327_Aston_Villa_F.C._season
