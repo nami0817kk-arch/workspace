@@ -1387,3 +1387,61 @@ sections:
 
     enough = [n for n in note(12) if "ネットの声が" in n]
     assert not enough, "12件で鳴っている"
+
+
+def test_1節目がショート専用の行で始まっても落ちない(tmp_path):
+    """**`shown_for` を数え始める前に使って落ちた**（2026-09-20、プレミア20クラブで踏んだ）。
+
+    数え始めは「本編に残る最初の行」なので、`only: short` の行はその前に来る。
+    前の節があればその値が残っていて表に出ないが、**1節目がショート専用の行で
+    始まる台本**（日本人のいないクラブは入口の節が無く、基礎DATAから始まる）で
+    UnboundLocalError になった。
+    """
+    from src.plan import load_plan
+    from src.research import load_notes, to_script
+
+    note = tmp_path / "n.yaml"
+    note.write_text("""format: news
+voice_min: 0
+date: "2026年9月20日"
+theme:
+  id: t
+  league: england
+  kind: other
+  topic: アーセナル
+  title: アーセナルってどんなクラブ？
+  hook: ひと言だけ。
+  question: どんなクラブか
+thumbnail:
+  line1: あ
+  line2: い
+  photo: assets/photos/x/01.jpg
+sections:
+  - id: data
+    heading: 基礎DATA
+    main: true
+    tier: 背景
+    telop: て
+    narrator: 解説
+    say:
+      - {short_only: true, text: このクラブの、基本のデータです。}
+      - 創立は1886年です。
+      - 本拠地はエミレーツ・スタジアムです。
+    sources: ["https://example.com/1"]
+  - id: rival
+    heading: 宿敵
+    tier: 背景
+    telop: と
+    narrator: 解説
+    say: [宿敵はトッテナムです。]
+    sources: ["https://example.com/2"]
+  - id: season
+    heading: 今季
+    tier: 報道
+    telop: き
+    narrator: 解説
+    say: [5試合で4勝です。]
+    sources: ["https://example.com/3"]
+""", encoding="utf-8")
+    text = to_script(load_notes(note), load_plan())
+    assert "創立は1886年です。" in text

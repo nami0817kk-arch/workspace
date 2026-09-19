@@ -1,0 +1,223 @@
+# プレミアリーグ20クラブ紹介 ④ブレントフォード（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/brentford*.json と旧台本 20260916_pl04_brentford.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- ブレントフォード
+short_title: ブレントフォードってどんなクラブ？
+theme:
+  id: pl_clubs_04_brentford
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ブレントフォード
+  title: ブレントフォードってどんなクラブ？ ④プレミア20クラブ紹介
+  question: どんなクラブなのか
+  hook: 9回続けて跳ね返されたクラブが、いまプレミアにいます。
+thumbnail:
+  line1: 酒場の投票で決まった
+  line2: ブレントフォード
+  crest_main:
+  - ブレントフォード
+  tags: []
+  points: []
+sections:
+- id: data
+  heading: ブレントフォード 基礎DATA
+  main: true
+  tier: 背景
+  telop: 1889年創立
+  narrator: 解説
+  say:
+  - short_only: true
+    text: このクラブの、基本のデータです。
+  - image: assets/stats/pl_brentford_data.png
+    text: 創立は**1889年**。ボートを漕ぐクラブの仲間たちが作りました。
+  - image: assets/stats/pl_brentford_data.png
+    text: 本拠地のスタジアムには、1万7250人が入ります。
+  - image: assets/stats/pl_brentford_data.png
+    text: 場所は西ロンドン、テムズ川沿いの町です。
+  - image: assets/stats/pl_brentford_data.png
+    text: オーナーはマシュー・ベンハム。2012年からクラブを持っています。
+  - image: assets/stats/pl_brentford_data.png
+    text: 大きなタイトルはまだありません。いちばん大きな一歩は2021年、昇格プレーオフに勝って初めてプレミアに上がったことです。
+  - image: assets/stats/pl_brentford_data.png
+    text: プレミアでの最高位は、2022年から23年の**9位**です。
+  - image: assets/stats/pl_brentford_data.png
+    text: 愛称は「ビーズ」。蜂です。
+  sources:
+  - https://en.wikipedia.org/wiki/Brentford_F.C.
+  bg: assets/backgrounds/stadium_ブレントフォード.png
+  official: false
+- id: fans
+  heading: 有名なファン
+  tier: 報道
+  telop: エド・オブライエンも応援している
+  narrator: キャスター
+  card:
+    type: table
+    title: ブレントフォードの有名なファン
+    columns:
+    - ''
+    - ''
+    rows:
+    - - エド・オブライエン
+      - Radiohead ギタリスト
+    - - ジョン・エドワーズ("Rhino")
+      - Status Quo ベーシスト
+  say:
+  - 有名なファンには、レディオヘッドのギタリスト、エド・オブライエンがいます。
+  - ステイタス・クォーのベーシスト、ジョン・エドワーズもファンです。
+  sources:
+  - https://en.wikipedia.org/wiki/Brentford_F.C.
+  bg: assets/backgrounds/stadium_ブレントフォード.png
+  official: false
+- id: history
+  heading: 歩んできた道
+  tier: 背景
+  telop: プレーオフに9回負けてから、10回目で上がった
+  narrator: 解説
+  card:
+    type: table
+    title: 残してきた記録
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1967年
+      - 身売り話が白紙に。消滅を免れる
+    - - 2021年
+      - プレーオフ決勝でスウォンジーに2-0
+  say:
+  - このクラブは、一度消えかけています。
+  - 1967年、QPRへの身売りの話がまとまりかけました。止めたのはサポーターです。抗議と寄付で、話は白紙に戻りました。
+  - そしてもうひとつ、長く続いた記録があります。
+  - '**プレーオフで9回続けて敗れた。**これはリーグの記録です。'
+  - 10回目が2021年でした。決勝でスウォンジー・シティを2対0で下します。
+  - '**74年ぶり**の1部昇格でした。'
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Brentford_F.C.
+  bg: assets/backgrounds/stadium_ブレントフォード.png
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - - ケヴィン・オコナー
+      - 1999-2015
+      - 16年在籍・501試合
+    - - イヴァン・トニー
+      - 2020-2024
+      - 初のプレミア昇格の得点王
+    - - ブライアン・エンベウモ
+      - 2019-2025
+      - プレミアで20得点
+  say:
+  - ケヴィン・オコナーは16シーズン在籍し、**501試合**に出た主将です。
+  - イヴァン・トニーは、2部の1シーズン最多得点の記録を作り、クラブを初めてプレミアへ上げました。
+  - ブライアン・エンベウモは6年在籍し、2024年から25年にはプレミアで**20得点**を挙げています。
+  sources:
+  - https://en.wikipedia.org/wiki/Kevin_O%27Connor_(footballer,_born_1982)
+  - https://en.wikipedia.org/wiki/Ivan_Toney
+  - https://en.wikipedia.org/wiki/Bryan_Mbeumo
+  bg: assets/backgrounds/stadium_ブレントフォード.png
+  official: false
+- id: rival
+  heading: 宿敵
+  tier: 背景
+  telop: ウェスト・ロンドン・ダービー。相手はフラム
+  narrator: 解説
+  card:
+    type: table
+    title: ウェスト・ロンドン・ダービー
+    columns:
+    - ''
+    - ''
+    rows:
+    - - いちばん激しい相手
+      - フラム／QPR
+    - - 呼び名
+      - ウェスト・ロンドン・ダービー
+    - - 2020年8月4日
+      - プレーオフ決勝。延長でフラムが2-1
+    - - 今季
+      - フラムもプレミアリーグにいる
+  say:
+  - ウェスト・ロンドン・ダービーと呼ばれる一戦があります。
+  - 指しているのは4つのクラブです。チェルシー、フラム、QPR、そしてこのクラブ。
+  - そのなかでいちばん激しいのが**フラム戦**、そしてQPR戦だと書かれています。
+  - 熱を帯びたのは1980年代からです。フラムが下のリーグへ落ちていった時期でした。
+  - 試合はいつも満員で、ピッチでもスタンドでも緊張が高まった、と残っています。
+  - 近いところで決定的だったのは2020年8月4日。チャンピオンシップのプレーオフ決勝です。
+  - 延長の末、フラムが2対1で勝ち、昇格していきました。
+  - ジョー・ブライアンが105分と117分に2点。こちらはヘンリク・ダルスゴーが120分すぎに1点を返すのがやっとでした。
+  - そのフラムは、今季もプレミアリーグにいます。
+  - なお距離の近いチェルシーとは、むしろ「わりと良好な関係」だとも書かれています。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/West_London_derby
+  bg: assets/backgrounds/stadium_ブレントフォード.png
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - 今季の登録選手は28人です。
+  - image: assets/stats/pl_brentford_gk.png
+    text: ゴールキーパーは3人。
+  - image: assets/stats/pl_brentford_df.png
+    text: ディフェンダーは9人。
+  - image: assets/stats/pl_brentford_mf.png
+    text: ミッドフィールダーは9人。
+  - image: assets/stats/pl_brentford_fw.png
+    text: フォワードは7人。
+  sources:
+  - https://en.wikipedia.org/wiki/Brentford_F.C.
+  bg: assets/backgrounds/stadium_ブレントフォード.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 5試合で2勝3引き分け
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - トッテナム・ホットスパー（ホーム）
+      - 3対0
+    - - 第2節
+      - リーズ・ユナイテッド（アウェー）
+      - 1対1
+    - - 第3節
+      - サンダーランド（ホーム）
+      - 1対1
+    - - 第4節
+      - AFCボーンマス（アウェー）
+      - 2対2
+    - - 第5節
+      - チェルシー（ホーム）
+      - 3対0
+  say:
+  - プレミアリーグは5試合を終えて、**2勝3引き分け**です。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Brentford_F.C._season
+  bg: assets/backgrounds/stadium_ブレントフォード.png
+  official: false

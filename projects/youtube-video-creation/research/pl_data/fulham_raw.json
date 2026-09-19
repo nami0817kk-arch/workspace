@@ -1,0 +1,436 @@
+{
+ "club_title": "Fulham_F.C.",
+ "season_title": "2026–27_Fulham_F.C._season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "GER",
+   "name": "Bernd Leno",
+   "dob": "1992-03-04",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "NED",
+   "name": "Kenny Tete",
+   "dob": "1995-10-09",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "NGA",
+   "name": "Calvin Bassey",
+   "dob": "1999-12-31",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Jorge Cuenca",
+   "dob": "1999-11-17",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "DEN",
+   "name": "Joachim Andersen",
+   "dob": "1996-05-31",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "6",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Harrison Reed",
+   "dob": "1995-01-27",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "7",
+   "pos": "FW",
+   "nat": "ESP",
+   "name": "Gonzalo García",
+   "dob": "2004-03-24",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "ESP",
+   "name": "César Palacios",
+   "dob": "2004-11-11",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "BRA",
+   "name": "Rodrigo Muniz",
+   "dob": "2001-05-04",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "11",
+   "pos": "FW",
+   "nat": "BRA",
+   "name": "Kevin",
+   "dob": "2003-01-04",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "14",
+   "pos": "FW",
+   "nat": "NOR",
+   "name": "Oscar Bobb",
+   "dob": "2003-07-12",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "15",
+   "pos": "MF",
+   "nat": "SWE",
+   "name": "Hugo Larsson",
+   "dob": "2004-06-27",
+   "captain": false,
+   "loan": true
+  },
+  {
+   "no": "16",
+   "pos": "MF",
+   "nat": "NOR",
+   "name": "Sander Berge",
+   "dob": "1998-02-14",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "17",
+   "pos": "MF",
+   "nat": "NGA",
+   "name": "Alex Iwobi",
+   "dob": "1996-05-03",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "18",
+   "pos": "FW",
+   "nat": "SWE",
+   "name": "Jonah Kusi-Asare",
+   "dob": "2007-07-04",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "19",
+   "pos": "MF",
+   "nat": "NIR",
+   "name": "Shea Charles",
+   "dob": "2003-11-05",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "20",
+   "pos": "MF",
+   "nat": "ESP",
+   "name": "Manuel Ángel",
+   "dob": "2004-03-15",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "21",
+   "pos": "DF",
+   "nat": "BEL",
+   "name": "Timothy Castagne",
+   "dob": "1995-12-05",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "22",
+   "pos": "DF",
+   "nat": "AUT",
+   "name": "David Affengruber",
+   "dob": "2001-03-19",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "23",
+   "pos": "GK",
+   "nat": "FRA",
+   "name": "Benjamin Lecomte",
+   "dob": "1991-04-26",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "24",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Josh King",
+   "dob": "2007-01-03",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "30",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Ryan Sessegnon",
+   "dob": "2000-05-18",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "32",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Emile Smith Rowe",
+   "dob": "2000-07-28",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "33",
+   "pos": "DF",
+   "nat": "USA",
+   "name": "Antonee Robinson",
+   "dob": "1997-08-08",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "36",
+   "pos": "GK",
+   "nat": "USA",
+   "name": "Alex Borto",
+   "dob": "",
+   "captain": false,
+   "loan": false
+  }
+ ],
+ "results": [
+  [
+   "25 July 2026",
+   "Friendly",
+   "Fulham",
+   "0–2",
+   "Norwich City"
+  ],
+  [
+   "28 July 2026",
+   "Friendly",
+   "Al-Ahli",
+   "1–1",
+   "Fulham"
+  ],
+  [
+   "1 August 2026",
+   "Friendly",
+   "Farense",
+   "1–2",
+   "Fulham"
+  ],
+  [
+   "7 August 2026",
+   "Friendly",
+   "Fulham",
+   "1–2",
+   "Crystal Palace"
+  ],
+  [
+   "12 August 2026",
+   "Trofeo Costa del Sol",
+   "Málaga",
+   "2–2",
+   "Fulham"
+  ],
+  [
+   "15 August 2026",
+   "Friendly",
+   "Fulham",
+   "1–0",
+   "VfB Stuttgart"
+  ],
+  [
+   "24 August 2026",
+   "1",
+   "Fulham",
+   "2–3",
+   "Chelsea"
+  ],
+  [
+   "30 August 2026",
+   "2",
+   "Sunderland",
+   "1–0",
+   "Fulham"
+  ],
+  [
+   "5 September 2026",
+   "3",
+   "Fulham",
+   "2–3",
+   "Crystal Palace"
+  ],
+  [
+   "12 September 2026",
+   "4",
+   "Liverpool",
+   "0–0",
+   "Fulham"
+  ],
+  [
+   "20 September 2026",
+   "5",
+   "Fulham",
+   "| report     =",
+   "Manchester United"
+  ],
+  [
+   "10 October 2026",
+   "6",
+   "Ipswich Town",
+   "| report     =",
+   "Fulham"
+  ],
+  [
+   "17 October 2026",
+   "7",
+   "Fulham",
+   "| report     =",
+   "Hull City"
+  ],
+  [
+   "24 October 2026",
+   "8",
+   "Coventry City",
+   "| report     =",
+   "Fulham"
+  ],
+  [
+   "31 October 2026",
+   "9",
+   "Aston Villa",
+   "| report     =",
+   "Fulham"
+  ],
+  [
+   "7 November 2026",
+   "10",
+   "Fulham",
+   "| result     =",
+   "Newcastle United"
+  ],
+  [
+   "21 November 2026",
+   "11",
+   "Manchester City",
+   "| result     =",
+   "Fulham"
+  ],
+  [
+   "28 November 2026",
+   "12",
+   "Fulham",
+   "| result     =",
+   "Bournemouth"
+  ],
+  [
+   "2 December 2026",
+   "13",
+   "Tottenham Hotspur",
+   "| result     =",
+   "Fulham"
+  ],
+  [
+   "5 December 2026",
+   "14",
+   "Everton",
+   "| result     =",
+   "Fulham"
+  ],
+  [
+   "12 December 2026",
+   "15",
+   "Fulham",
+   "| result     =",
+   "Brentford"
+  ],
+  [
+   "19 December 2026",
+   "16",
+   "Leeds United",
+   "| result     =",
+   "Fulham"
+  ],
+  [
+   "26 December 2026",
+   "17",
+   "Fulham",
+   "| result     =",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "30 December 2026",
+   "18",
+   "Fulham",
+   "| result     =",
+   "Arsenal"
+  ],
+  [
+   "2 January 2027",
+   "19",
+   "Nottingham Forest",
+   "| result     =",
+   "Fulham"
+  ],
+  [
+   "6 January 2027",
+   "20",
+   "Fulham",
+   "| result     =",
+   "Tottenham Hotspur"
+  ],
+  [
+   "27 August 2026",
+   "Second round",
+   "Fulham",
+   "3–0",
+   "AFC Wimbledon"
+  ],
+  [
+   "15 September 2026",
+   "Third round",
+   "West Ham United",
+   "2–3",
+   "Fulham"
+  ],
+  [
+   "w/c 26 October 2026",
+   "Fourth round",
+   "Fulham",
+   "| result     =",
+   "Crystal Palace"
+  ]
+ ]
+}

@@ -1,0 +1,246 @@
+# プレミアリーグ20クラブ紹介 ⑪ハル・シティ（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/hull*.json と旧台本 20260916_pl11_hull.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- 守田英正
+- ハル・シティ
+short_title: 守田英正がいるハル・シティってどんなクラブ？
+theme:
+  id: pl_clubs_11_hull
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ハル・シティ
+  title: 守田英正がいるハル・シティってどんなクラブ？ ⑪プレミア20クラブ紹介
+  question: どんなクラブなのか
+  hook: 日本代表の中盤が、この港町にいます。
+thumbnail:
+  line1: 4部から5年でプレミアへ
+  line2: ハル・シティ
+  crest_main:
+  - ハルシティ
+  tags: []
+  points: []
+sections:
+- id: why
+  heading: 守田英正がいるクラブ
+  tier: 報道
+  telop: 守田英正が所属するハル・シティ
+  narrator: キャスター
+  say:
+  - 日本代表の守田英正が所属しているのが、今季プレミアに上がってきたハル・シティです。
+  - では、どんなクラブなのか。まずは基本のデータから見ていきます。
+  sources:
+  - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
+  bg: assets/backgrounds/stadium_ハルシティ.png
+  official: false
+- id: data
+  heading: ハル・シティ 基礎DATA
+  main: true
+  tier: 背景
+  telop: 1904年創立
+  narrator: 解説
+  say:
+  - short_only: true
+    text: 守田英正の所属クラブを、基本のデータで見ていきます。
+  - image: assets/stats/pl_hull_data.png
+    text: 創立は**1904年**。イングランド東部の港町、キングストン・アポン・ハルのクラブです。
+  - image: assets/stats/pl_hull_data.png
+    text: 本拠地はMKMスタジアム。**2万4983人**が入ります。
+  - image: assets/stats/pl_hull_data.png
+    text: オーナーはトルコの実業家アジュン・ウルジャル。2022年からクラブを持っています。
+  - image: assets/stats/pl_hull_data.png
+    text: 大きなタイトルはまだありません。昨季、2025年から26年に昇格プレーオフを勝ち抜いて、プレミアに上がってきました。
+  - image: assets/stats/pl_hull_data.png
+    text: プレミアでの最高位は、2013年から14年の**16位**です。
+  - image: assets/stats/pl_hull_data.png
+    text: 1939年には、カーライル・ユナイテッドに**11対1**で勝っています。クラブ最大の勝利です。
+  sources:
+  - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
+  bg: assets/backgrounds/stadium_ハルシティ.png
+  official: false
+- id: fans
+  heading: 有名なファン
+  tier: 報道
+  telop: オマー・シャリフも応援している
+  narrator: キャスター
+  card:
+    type: table
+    title: ハル・シティの有名なファン
+    columns:
+    - ''
+    - ''
+    rows:
+    - - オマー・シャリフ
+      - 俳優（『ドクトル・ジバゴ』等）
+    - - トム・コートネイ
+      - 俳優、ハル出身
+    - - ジョン・プレスコット
+      - 元副首相（英労働党）
+    - - スティーヴン・マルクマス
+      - ペイヴメントのボーカル
+    - - シニッタ
+      - 歌手
+  say:
+  - 有名なファンには、映画『ドクトル・ジバゴ』の俳優オマー・シャリフがいました。
+  - パリの自宅からテレビで試合を追い、見られないときはクラブの自動音声電話に何度もかけて、途中経過を確かめていたそうです。
+  - ほかに、ハル出身の俳優トム・コートネイや、元副首相のジョン・プレスコットもファンです。
+  sources:
+  - https://footballleagueworld.co.uk/meet-hull-citys-celebrity-supporters-from-hollywood-star-to-chart-topping-singer/
+  - https://www.hulldailymail.co.uk/news/celebs-tv/google-paid-tribute-hull-city-1441810
+  - https://www.independent.co.uk/sport/football/news/john-prescott-backs-assem-allam-over-hull-city-name-change-as-tigers-future-remains-unclear-9063681.html
+  - https://www.mirror.co.uk/sport/football/news/hull-city-stephen-malkmus-praises-2361724
+  - https://www.standard.co.uk/sport/football/sir-tom-courtenay-and-omar-sharif-are-off-to-support-hull-city-in-fa-cup-final-9386285.html
+  bg: assets/backgrounds/stadium_ハルシティ.png
+  official: false
+- id: rise
+  heading: 4部からプレミアまで5年
+  tier: 背景
+  telop: 4部からプレミアまで5シーズン
+  narrator: 解説
+  card:
+    type: table
+    title: 駆け上がった5シーズン
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 出発点
+      - 4部
+    - - 2008年
+      - プレーオフ決勝でブリストル・シティに1-0
+    - - 速さ
+      - イングランドで3番目
+  say:
+  - 4部からプレミアリーグまで、**5シーズン**で駆け上がったクラブです。
+  - イングランドのサッカーで**3番目に速い**上がり方とされています。
+  - その締めくくりが2008年でした。
+  - チャンピオンシップのプレーオフ決勝、相手はブリストル・シティ。
+  - 決めたのはディーン・ウィンダス。前半の**ボレー1本**でした。
+  - 1対0。**クラブの歴史ではじめて、1部に上がります。**
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
+  bg: assets/backgrounds/stadium_ハルシティ.png
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - - ディーン・ウィンダス
+      - 1991-2009
+      - 初の1部昇格を決めた
+    - - イアン・アシュビー
+      - 2002-2011
+      - 4部から1部まで主将
+    - - ニック・バームビー
+      - 2004-2012
+      - 地元に戻り2度の昇格
+  say:
+  - ディーン・ウィンダスは地元出身のフォワード。2008年のプレーオフ決勝で決勝点を決め、創設104年で初めて1部に上げました。
+  - イアン・アシュビーは、4部から1部まで同じクラブを主将として上げた選手です。
+  - ニック・バームビーは、イングランド代表経験者が地元に戻り、2度の昇格を支えました。
+  sources:
+  - https://en.wikipedia.org/wiki/Dean_Windass
+  - https://en.wikipedia.org/wiki/Ian_Ashbee
+  - https://en.wikipedia.org/wiki/Nick_Barmby
+  bg: assets/backgrounds/stadium_ハルシティ.png
+  official: false
+- id: rival
+  heading: 宿敵
+  tier: 背景
+  telop: 宿敵が1つに定まっていないクラブ
+  narrator: 解説
+  card:
+    type: table
+    title: ハンバー・ダービー
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 呼び名
+      - ハンバー・ダービー
+    - - 相手
+      - グリムズビー・タウン／スカンソープ・ユナイテッド
+    - - 初の公式戦
+      - 1905年12月16日（0-1で敗戦）
+    - - 今季
+      - 相手はプレミアリーグにいない
+  say:
+  - このクラブは、**宿敵が1つに定まっていません。**
+  - 英語版ウィキペディアには、グリムズビー・タウンとスカンソープ・ユナイテッドの**両方と**ハンバー・ダービーを争う、と書かれています。
+  - どちらが最大の相手なのかは、書かれていません。**そのまま正直にお伝えします。**
+  - 呼び名の由来は、この地方を流れるハンバーです。
+  - 初の公式戦は**1905年12月16日**。ハルのホームで、相手はグリムズビー・タウンでした。
+  - 結果は0対1。グリムズビーが勝っています。
+  - ただし、そのグリムズビーも、スカンソープも、**今季のプレミアリーグにはいません。**
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Humber_derby
+  bg: assets/backgrounds/stadium_ハルシティ.png
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - 今季の登録選手は33人です。
+  - image: assets/stats/pl_hull_gk.png
+    text: ゴールキーパーは3人。
+  - image: assets/stats/pl_hull_df.png
+    text: ディフェンダーは10人。
+  - image: assets/stats/pl_hull_mf1.png
+    text: ミッドフィールダーは13人。日本の守田英正もここにいます。
+  - image: assets/stats/pl_hull_mf2.png
+    text: ミッドフィールダーの続きです。
+  - image: assets/stats/pl_hull_fw.png
+    text: フォワードは7人。
+  sources:
+  - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
+  bg: assets/backgrounds/stadium_ハルシティ.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 5試合で2勝2引き分け1敗
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - マンチェスター・ユナイテッド（ホーム）
+      - 2対0
+    - - 第2節
+      - コヴェントリー・シティ（アウェー）
+      - 1対0
+    - - 第3節
+      - アストン・ヴィラ（ホーム）
+      - 0対0
+    - - 第4節
+      - チェルシー（アウェー）
+      - 2対2
+    - - 第5節
+      - ニューカッスル・ユナイテッド（アウェー）
+      - 1対2
+  say:
+  - プレミアリーグは5試合を終えて、**2勝2引き分け1敗**です。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Hull_City_A.F.C._season
+  bg: assets/backgrounds/stadium_ハルシティ.png
+  official: false

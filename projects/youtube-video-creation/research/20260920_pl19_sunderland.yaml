@@ -1,0 +1,201 @@
+# プレミアリーグ20クラブ紹介 ⑲サンダーランド（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/sunderland*.json と旧台本 20260916_pl19_sunderland.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- サンダーランド
+short_title: サンダーランドってどんなクラブ？
+theme:
+  id: pl_clubs_19_sunderland
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: サンダーランド
+  title: サンダーランドってどんなクラブ？ ⑲プレミア20クラブ紹介
+  question: どんなクラブなのか
+  hook: 3部から7年で、ヨーロッパに手が届きました。
+thumbnail:
+  line1: 6回優勝が、3部にいた
+  line2: サンダーランド
+  crest_main:
+  - サンダーランド
+  tags: []
+  points: []
+sections:
+- id: data
+  heading: サンダーランド 基礎DATA
+  main: true
+  tier: 背景
+  telop: 1879年創立
+  narrator: 解説
+  say:
+  - short_only: true
+    text: このクラブの、基本のデータです。
+  - image: assets/stats/pl_sunderland_data.png
+    text: 創立は**1879年**。地元の先生たちが作ったチームが始まりです。
+  - image: assets/stats/pl_sunderland_data.png
+    text: 本拠地はスタジアム・オブ・ライト。**4万8095人**が入ります。
+  - image: assets/stats/pl_sunderland_data.png
+    text: オーナーはキリル・ルイ＝ドレフュス。株の64%を持っています。
+  - image: assets/stats/pl_sunderland_data.png
+    text: 1部リーグの優勝は**6回**。FAカップも2回獲っています。
+  - image: assets/stats/pl_sunderland_data.png
+    text: 1998年から99年には、勝ち点**105**。当時のリーグの最多記録でした。
+  - image: assets/stats/pl_sunderland_data.png
+    text: プレミアでの最高位は**7位**。2000年から01年、そして昨季の2025年から26年です。
+  - image: assets/stats/pl_sunderland_data.png
+    text: 愛称は「ブラック・キャッツ」。黒猫です。
+  sources:
+  - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
+  bg: assets/backgrounds/stadium_サンダーランド.png
+  official: false
+- id: fall
+  heading: 6回優勝したクラブが、3部へ
+  tier: 背景
+  telop: 6回優勝したクラブが、2018年には3部にいた
+  narrator: 解説
+  card:
+    type: table
+    title: 落ちて、戻るまで
+    columns:
+    - ''
+    - ''
+    rows:
+    - - リーグ優勝
+      - 6回（1892・1893・1895・1902・1913・1936）
+    - - 1973年
+      - 2部のクラブとしてFAカップ優勝
+    - - 2018年
+      - 3部へ。2年続けての降格
+    - - 2025年5月24日
+      - プレーオフ決勝でシェフィールド・Uに2-1
+    - - 3部から1部まで
+      - 7年
+    - - 2025-26年
+      - 7位。53年ぶりのヨーロッパ
+  say:
+  - 1部で**6回**も優勝しているクラブが、2018年には**3部**にいました。2年続けて落ちた結果です。
+  - この時期のクラブを追った記録は、ネットフリックスの『**サンダーランド・ティル・アイ・ダイ**』になっています。
+  - 6回の優勝は、1892年、93年、95年、1902年、1913年、そして1936年。19世紀の終わりには、イングランドで最も強いクラブのひとつでした。
+  - 1973年には、**2部**のクラブだったサンダーランドがFAカップの決勝を勝っています。立役者はゴールキーパーのジミー・モンゴメリー、決勝点はイアン・ポーターフィールドでした。
+  - 戻ってきたのは2025年5月24日。プレーオフ決勝でシェフィールド・ユナイテッドに2対1。**3部から1部まで、7年**でした。
+  - そして昨季、2025年から26年はリーグ**7位**。
+  - '**53年ぶり**に、ヨーロッパの舞台に出る権利を取っています。'
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
+  bg: assets/backgrounds/stadium_サンダーランド.png
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - - ケヴィン・フィリップス
+      - 1997-2003
+      - プレミア得点王・欧州得点王
+    - - ナイアル・クイン
+      - 1996-2002
+      - 2トップの柱、のちに会長
+    - - ケヴィン・ボール
+      - 1990-1999
+      - 2度の昇格を率いた主将
+  say:
+  - ケヴィン・フィリップスは、1999年から2000年にプレミアの**得点王**。ヨーロッパのゴールデンシューも獲りました。
+  - ナイアル・クインは、フィリップスとの2トップでクラブの一番いい時代を作り、のちに会長も務めました。
+  - ケヴィン・ボールは主将として、1996年と99年の2度、クラブを1部に上げました。
+  sources:
+  - https://en.wikipedia.org/wiki/Kevin_Phillips_(footballer)
+  - https://en.wikipedia.org/wiki/Niall_Quinn
+  - https://en.wikipedia.org/wiki/Kevin_Ball
+  bg: assets/backgrounds/stadium_サンダーランド.png
+  official: false
+- id: rival
+  heading: 宿敵
+  tier: 背景
+  telop: ニューカッスルとの、タイン・ウィア・ダービー
+  narrator: 解説
+  card:
+    type: table
+    title: タイン・ウィア・ダービー
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 初対戦
+      - 1888年11月10日／FAカップ予選・2-0
+    - - 1908年12月5日
+      - 9-1。ダービー史上の最大差
+    - - 2013〜2015年
+      - 6連勝
+    - - 今季
+      - 相手もプレミアリーグにいる
+  say:
+  - 相手は**ニューカッスル・ユナイテッド**。**タイン・ウィア・ダービー**です。
+  - 競技会で最初に当たったのは1888年11月10日、FAカップの予選でした。相手がまだ「イースト・エンド」だった頃で、**2対0**で勝っています。
+  - 1908年12月5日には**9対1**。このダービーで最も点差のついた試合です。
+  - 2013年から2015年にかけては、**6連勝**しました。
+  - ニューカッスルは、**今季もプレミアリーグにいます。**
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Tyne%E2%80%93Wear_derby
+  bg: assets/backgrounds/stadium_サンダーランド.png
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - 今季の登録選手は29人です。
+  - image: assets/stats/pl_sunderland_gk.png
+    text: ゴールキーパーは3人。
+  - image: assets/stats/pl_sunderland_df.png
+    text: ディフェンダーは9人。
+  - image: assets/stats/pl_sunderland_mf.png
+    text: ミッドフィールダーは9人。
+  - image: assets/stats/pl_sunderland_fw.png
+    text: フォワードは8人。
+  sources:
+  - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
+  bg: assets/backgrounds/stadium_サンダーランド.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 4試合で1勝1引き分け2敗
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - イプスウィッチ・タウン（アウェー）
+      - 1対2
+    - - 第2節
+      - フラム（ホーム）
+      - 1対0
+    - - 第3節
+      - ブレントフォード（アウェー）
+      - 1対1
+    - - 第4節
+      - アーセナル（ホーム）
+      - 0対2
+  say:
+  - プレミアリーグは4試合を終えて、**1勝1引き分け2敗**です。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Sunderland_A.F.C._season
+  bg: assets/backgrounds/stadium_サンダーランド.png
+  official: false

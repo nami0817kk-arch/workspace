@@ -1,0 +1,245 @@
+# プレミアリーグ20クラブ紹介 ⑧クリスタル・パレス（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/palace*.json と旧台本 20260916_pl08_palace.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- 冨安健洋
+- 鎌田大地
+- クリスタル・パレス
+short_title: 冨安健洋がいるクリスタル・パレスってどんなクラブ？
+theme:
+  id: pl_clubs_08_palace
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: クリスタル・パレス
+  title: 冨安健洋がいるクリスタル・パレスってどんなクラブ？ ⑧プレミア20クラブ紹介
+  question: どんなクラブなのか
+  hook: 宿敵はブライトン。日本人は、鎌田大地と冨安健洋。
+thumbnail:
+  line1: 120年待った初タイトル
+  line2: クリスタル・パレス
+  crest_main:
+  - クリスタルパレス
+  tags: []
+  points: []
+sections:
+- id: why
+  heading: 冨安健洋と鎌田大地がいるクラブ
+  tier: 報道
+  telop: 冨安健洋と鎌田大地が所属するクリスタル・パレス
+  narrator: キャスター
+  say:
+  - 日本代表の冨安健洋と鎌田大地、2人の日本人が所属しているクラブです。
+  - では、どんなクラブなのか。まずは基本のデータから見ていきます。
+  sources:
+  - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
+  bg: assets/backgrounds/stadium_クリスタルパレス.png
+  official: false
+- id: data
+  heading: クリスタル・パレス 基礎DATA
+  main: true
+  tier: 背景
+  telop: 1905年創立
+  narrator: 解説
+  say:
+  - short_only: true
+    text: 冨安健洋の所属クラブを、基本のデータで見ていきます。
+  - image: assets/stats/pl_palace_data.png
+    text: 創立は**1905年**。本拠地は南ロンドンのセルハースト・パーク、2万5194人が入ります。
+  - image: assets/stats/pl_palace_data.png
+    text: オーナーは、アメリカンフットボール、ニューヨーク・ジェッツの会長ウッディ・ジョンソン。2025年にクラブを買いました。
+  - image: assets/stats/pl_palace_data.png
+    text: 1部リーグの優勝はありませんが、FAカップを1回、そしてヨーロッパのタイトルを1回獲っています。
+  - image: assets/stats/pl_palace_data.png
+    text: そのヨーロッパのタイトルが、昨季のカンファレンスリーグ優勝です。
+  - image: assets/stats/pl_palace_data.png
+    text: 当時の1部での最高位は、1990年から91年の**3位**です。
+  sources:
+  - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
+  bg: assets/backgrounds/stadium_クリスタルパレス.png
+  official: false
+- id: fans
+  heading: 有名なファン
+  tier: 報道
+  telop: ビル・ワイマンも応援している
+  narrator: キャスター
+  card:
+    type: table
+    title: クリスタル・パレスの有名なファン
+    columns:
+    - ''
+    - ''
+    rows:
+    - - ビル・ワイマン
+      - ローリング・ストーンズのベーシスト
+    - - アレックス・イー
+      - 五輪金メダリスト（トライアスロン）
+    - - ビル・ナイ
+      - 俳優
+    - - ニール・モリッシー
+      - 俳優
+    - - デヴィッド・ジェンセン
+      - ラジオDJ
+  say:
+  - 有名なファンには、ローリング・ストーンズのベーシストだったビル・ワイマンがいます。
+  - 俳優のビル・ナイもファンです。
+  - 俳優のニール・モリッシーは、スタジアムで売られる「パレス・エール」というビールを自分で手がけて発売しました。
+  sources:
+  - https://billwyman.com/2015/07/bill-appears-in-crystal-palace-fc-interview-video/
+  - https://web.archive.org/web/20130417142910/http://www.tapitlocal.com/cpscc/
+  - https://web.archive.org/web/20131017055551/http://www.football-league.co.uk/championship/news/20110513/palace-launch-their-own-ale_2293322_2359484
+  - https://www.cpfc.co.uk/news/club/olympic-champion-crystal-palace-fan-alex-yee-nominated-sports-personality-of-the-year/
+  - https://www.theguardian.com/money/2011/dec/09/david-jensen-saturday-job
+  bg: assets/backgrounds/stadium_クリスタルパレス.png
+  official: false
+- id: trophy
+  heading: 120年待ったタイトル
+  tier: 背景
+  telop: 2025年のFAカップ。相手はマンチェスター・シティ
+  narrator: 解説
+  card:
+    type: table
+    title: FAカップ決勝の記録
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1990年
+      - 3-3のあと再試合で敗れる
+    - - 2016年
+      - 1-2で敗れる
+    - - 2025年
+      - 1-0。クラブ史上初のタイトル
+  say:
+  - 2025年、FAカップの決勝。相手はマンチェスター・シティです。
+  - エベレチ・エゼの1点を守り切り、1対0で勝ちました。
+  - '**クラブの歴史ではじめての、大きなタイトル**でした。'
+  - 1905年にプロのクラブができてから、120年が経っていました。
+  - FAカップの決勝に立つのは、これが3度目です。
+  - 2016年は1対2。どちらも相手はマンチェスター・ユナイテッドでした。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
+  bg: assets/backgrounds/stadium_クリスタルパレス.png
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - - ウィルフリード・ザハ
+      - 2010-2023
+      - クラブのプレミア最多得点
+    - - フリアン・スペローニ
+      - 2004-2019
+      - 年間最優秀選手4回のGK
+    - - アンドリュー・ジョンソン
+      - 2002-2006
+      - プレミアで21得点
+  say:
+  - ウィルフリード・ザハは、クラブのプレミアリーグ最多得点者。10年以上、チームの切り札でした。
+  - フリアン・スペローニは15年在籍し、クラブの年間最優秀選手に**4回**選ばれたキーパーです。
+  - アンドリュー・ジョンソンは、2004年から05年にプレミアで**21得点**。イングランド人で最多でした。
+  sources:
+  - https://en.wikipedia.org/wiki/Wilfried_Zaha
+  - https://en.wikipedia.org/wiki/Julian_Speroni
+  - https://en.wikipedia.org/wiki/Andrew_Johnson_(footballer,_born_1981)
+  bg: assets/backgrounds/stadium_クリスタルパレス.png
+  official: false
+- id: rival
+  heading: 宿敵
+  tier: 背景
+  telop: 64キロ離れたブライトンとのM23ダービー
+  narrator: 解説
+  card:
+    type: table
+    title: M23ダービー
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 相手
+      - ブライトン・アンド・ホーヴ・アルビオン
+    - - 呼び名
+      - M23ダービー（A23ダービー）
+    - - 火種
+      - 1976年、FAカップで3試合もつれた
+    - - 今季
+      - 相手もプレミアリーグにいる
+  say:
+  - 宿敵は、64キロ離れた**ブライトン**です。
+  - イングランドのダービーとしては、かなり遠い相手になります。
+  - 呼び名は**M23ダービー**。2つの土地を結ぶ道路の名前から来ています。
+  - ただし、この呼び名をサポーターは嫌っています。
+  - 最初に当たったのは1920年ですが、本物になったのは1970年代の半ばでした。
+  - きっかけは2人の人間です。
+  - トッテナムで同僚だった、パレスのテリー・ヴェナブルズと、ブライトンのアラン・マラリー。
+  - 1976年のFAカップは3試合までもつれ、12月6日の再々試合をパレスが1対0で取りました。
+  - 試合のあと、マラリーはパレスのロッカールームに入り、床に**5ポンド**を投げつけます。
+  - 「お前のチームはこの金の値打ちもない」。ヴェナブルズに、そう言い放ちました。
+  - 翌1977年、パレスは勝ち点1差でブライトンを抑えて3部優勝。ここで決定的になります。
+  - そのブライトンは、**今季もプレミアリーグにいます。**
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/M23_derby
+  bg: assets/backgrounds/stadium_クリスタルパレス.png
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - 今季の登録選手は28人です。
+  - image: assets/stats/pl_palace_gk.png
+    text: ゴールキーパーは3人。
+  - image: assets/stats/pl_palace_df.png
+    text: ディフェンダーは10人。日本の冨安健洋もここにいます。
+  - image: assets/stats/pl_palace_mf.png
+    text: ミッドフィールダーは6人。日本の鎌田大地もここにいます。
+  - image: assets/stats/pl_palace_fw.png
+    text: フォワードは9人。
+  sources:
+  - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
+  bg: assets/backgrounds/stadium_クリスタルパレス.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 4試合で1勝3敗
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - エヴァートン（アウェー）
+      - 0対2
+    - - 第2節
+      - マンチェスター・シティ（ホーム）
+      - 1対4
+    - - 第3節
+      - フラム（アウェー）
+      - 3対2
+    - - 第4節
+      - イプスウィッチ・タウン（ホーム）
+      - 2対3
+  say:
+  - プレミアリーグは4試合を終えて、**1勝3敗**です。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Crystal_Palace_F.C._season
+  bg: assets/backgrounds/stadium_クリスタルパレス.png
+  official: false

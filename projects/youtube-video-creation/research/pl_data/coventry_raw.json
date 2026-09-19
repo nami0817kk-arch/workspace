@@ -1,0 +1,451 @@
+{
+ "club_title": "Coventry_City_F.C.",
+ "season_title": "2026–27_Coventry_City_F.C._season",
+ "squad": [
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "JAM",
+   "name": "Ethan Pinnock",
+   "dob": "1993-05-29",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "WAL",
+   "name": "Jay Dasilva",
+   "dob": "1998-04-22",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Bobby Thomas",
+   "dob": "2001-01-30",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "5",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Jack Rudoni",
+   "dob": "2001-06-14",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "6",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Matt Grimes",
+   "dob": "1995-07-15",
+   "captain": true,
+   "loan": false
+  },
+  {
+   "no": "7",
+   "pos": "FW",
+   "nat": "JPN",
+   "name": "Tatsuhiro Sakamoto",
+   "dob": "1996-10-22",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "GHA",
+   "name": "Caleb Yirenkyi",
+   "dob": "2006-01-15",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Ellis Simms",
+   "dob": "2001-01-05",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "10",
+   "pos": "FW",
+   "nat": "JAM",
+   "name": "Ephron Mason-Clark",
+   "dob": "1999-08-25",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "11",
+   "pos": "FW",
+   "nat": "USA",
+   "name": "Haji Wright",
+   "dob": "1998-03-27",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "12",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Stephen Mfuni",
+   "dob": "2008-02-12",
+   "captain": false,
+   "loan": true
+  },
+  {
+   "no": "13",
+   "pos": "GK",
+   "nat": "ENG",
+   "name": "Ben Wilson",
+   "dob": "1992-08-09",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "14",
+   "pos": "FW",
+   "nat": "NGA",
+   "name": "Taiwo Awoniyi",
+   "dob": "1997-08-12",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "16",
+   "pos": "MF",
+   "nat": "NGA",
+   "name": "Frank Onyeka",
+   "dob": "1998-01-01",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "17",
+   "pos": "FW",
+   "nat": "FRA",
+   "name": "Loum Tchaouna",
+   "dob": "2003-09-08",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "19",
+   "pos": "GK",
+   "nat": "ENG",
+   "name": "Carl Rushworth",
+   "dob": "2001-07-02",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "20",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Kaine Kesler-Hayden",
+   "dob": "2002-10-23",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "21",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Jake Bidwell",
+   "dob": "1993-03-21",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "22",
+   "pos": "DF",
+   "nat": "JAM",
+   "name": "Joel Latibeaudiere",
+   "dob": "2000-01-06",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "23",
+   "pos": "FW",
+   "nat": "GHA",
+   "name": "Brandon Thomas-Asante",
+   "dob": "1998-12-29",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "24",
+   "pos": "DF",
+   "nat": "SUI",
+   "name": "Aurèle Amenda",
+   "dob": "2003-07-31",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "25",
+   "pos": "GK",
+   "nat": "ENG",
+   "name": "Dan Bentley",
+   "dob": "1993-07-13",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "26",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Luke Woolfenden",
+   "dob": "1998-10-21",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "27",
+   "pos": "DF",
+   "nat": "NED",
+   "name": "Milan van Ewijk",
+   "dob": "2000-09-08",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "28",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Josh Eccles",
+   "dob": "2000-04-06",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "29",
+   "pos": "MF",
+   "nat": "DEN",
+   "name": "Victor Torp",
+   "dob": "1999-07-30",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "34",
+   "pos": "FW",
+   "nat": "FRA",
+   "name": "Yann Gboho",
+   "dob": "2001-01-14",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "38",
+   "pos": "MF",
+   "nat": "NED",
+   "name": "Gustavo Hamer",
+   "dob": "1997-06-24",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "49",
+   "pos": "FW",
+   "nat": "GUI",
+   "name": "Sidiki Cherif",
+   "dob": "",
+   "captain": false,
+   "loan": false
+  }
+ ],
+ "results": [
+  [
+   "12 July 2026",
+   "Friendly",
+   "AFC Wimbledon",
+   "3–2",
+   "Coventry City"
+  ],
+  [
+   "18 July 2026",
+   "Friendly",
+   "Northampton Town",
+   "0–0",
+   "Coventry City"
+  ],
+  [
+   "1 August 2026",
+   "Friendly",
+   "Leicester City",
+   "0–1",
+   "Coventry City"
+  ],
+  [
+   "14 August 2026",
+   "Friendly",
+   "Coventry City",
+   "2–0",
+   "Monaco"
+  ],
+  [
+   "21 August 2026",
+   "1",
+   "Arsenal",
+   "3–0",
+   "Coventry City"
+  ],
+  [
+   "29 August 2026",
+   "2",
+   "Coventry City",
+   "0–1",
+   "Hull City"
+  ],
+  [
+   "5 September 2026",
+   "3",
+   "Manchester City",
+   "1–0",
+   "Coventry City"
+  ],
+  [
+   "13 September 2026",
+   "4",
+   "Coventry City",
+   "0–5",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "19 September 2026",
+   "5",
+   "Nottingham Forest",
+   "| report     = https://www.premierleague.com/en/match/2645243",
+   "Coventry City"
+  ],
+  [
+   "12 October 2026",
+   "6",
+   "Coventry City",
+   "| report     = https://www.premierleague.com/en/match/2645248",
+   "Newcastle United"
+  ],
+  [
+   "19 October 2026",
+   "7",
+   "Tottenham Hotspur",
+   "| report     = https://www.premierleague.com/en/match/2645264",
+   "Coventry City"
+  ],
+  [
+   "24 October 2026",
+   "8",
+   "Coventry City",
+   "| report     = https://www.premierleague.com/en/match/2645268",
+   "Fulham"
+  ],
+  [
+   "31 October 2026",
+   "9",
+   "Coventry City",
+   "| report     = https://www.premierleague.com/en/match/2645279",
+   "Sunderland"
+  ],
+  [
+   "7 November 2026",
+   "10",
+   "Everton",
+   "| report     = https://www.premierleague.com/en/match/2645288",
+   "Coventry City"
+  ],
+  [
+   "21 November 2026",
+   "11",
+   "Coventry City",
+   "| report     = https://www.premierleague.com/en/match/2645299",
+   "Crystal Palace"
+  ],
+  [
+   "28 November 2026",
+   "12",
+   "Leeds United",
+   "| report     = https://www.premierleague.com/en/match/2645299",
+   "Coventry City"
+  ],
+  [
+   "2 December 2026",
+   "13",
+   "Coventry City",
+   "| report     = https://www.premierleague.com/en/match/2645319",
+   "Ipswich Town"
+  ],
+  [
+   "5 December 2026",
+   "14",
+   "Manchester United",
+   "| report     = https://www.premierleague.com/en/match/2645331",
+   "Coventry City"
+  ],
+  [
+   "12 December 2026",
+   "15",
+   "Coventry City",
+   "| report     =",
+   "Aston Villa"
+  ],
+  [
+   "19 December 2026",
+   "16",
+   "Bournemouth",
+   "| report     =",
+   "Coventry City"
+  ],
+  [
+   "26 December 2026",
+   "17",
+   "Coventry City",
+   "| report     =",
+   "Chelsea"
+  ],
+  [
+   "30 December 2026",
+   "18",
+   "Coventry City",
+   "| report     =",
+   "Brentford"
+  ],
+  [
+   "2 January 2027",
+   "19",
+   "Liverpool",
+   "| result     =",
+   "Coventry City"
+  ],
+  [
+   "6 January 2027",
+   "20",
+   "Ipswich Town",
+   "| report     =",
+   "Coventry City"
+  ],
+  [
+   "25 August 2026",
+   "Second round",
+   "Plymouth Argyle",
+   "2–4",
+   "Coventry City"
+  ],
+  [
+   "16 September 2026",
+   "Third round",
+   "Coventry City",
+   "1–3",
+   "Aston Villa"
+  ]
+ ]
+}

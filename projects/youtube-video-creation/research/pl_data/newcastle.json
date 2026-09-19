@@ -1,0 +1,80 @@
+{
+ "title": "ニューカッスル・ユナイテッド 基礎DATA",
+ "colors": [
+  "#000000",
+  "#FFFFFF"
+ ],
+ "crest": "assets/crests/ニューカッスル.png",
+ "tiles": [
+  [
+   "クラブ創立",
+   "1881年",
+   "1892年に今の名前に"
+  ],
+  [
+   "本拠地",
+   "セント・ジェームズ・パーク",
+   "収容 52,729人"
+  ],
+  [
+   "ホームタウン",
+   "ニューカッスル・アポン・タイン",
+   "イングランド北東部"
+  ],
+  [
+   "オーナー",
+   "PIF",
+   "サウジ公共投資基金（2021年〜）"
+  ],
+  [
+   "タイトル歴",
+   "1部優勝 4回",
+   "FA杯6・リーグ杯1・欧州1"
+  ],
+  [
+   "直近のタイトル",
+   "EFLカップ優勝",
+   "2024-25シーズン"
+  ],
+  [
+   "クラブ最多入場者",
+   "68,386人",
+   "1930年、対チェルシー戦（1部）"
+  ],
+  [
+   "プレミア最高位",
+   "2位",
+   "1995-96・1996-97"
+  ],
+  [
+   "有名なファン",
+   "スティング",
+   "マーク・ノップラー、ジミー・ネイル"
+  ]
+ ],
+ "fans": [
+  {
+   "name": "スティング",
+   "who": "ミュージシャン（The Police）",
+   "source": "https://en.wikipedia.org/wiki/Newcastle_United_F.C."
+  },
+  {
+   "name": "マーク・ノップラー",
+   "who": "ミュージシャン（Dire Straitsの創設者）",
+   "source": "https://en.wikipedia.org/wiki/Newcastle_United_F.C."
+  },
+  {
+   "name": "ジミー・ネイル",
+   "who": "俳優・歌手",
+   "source": "https://en.wikipedia.org/wiki/Newcastle_United_F.C."
+  }
+ ],
+ "fan_story": {
+  "text": "サポーターのマーク・ノップラー（Dire Straits創設者）が書いた「Going Home」が、いまもホームゲームでチームが入場する際のテーマ曲として使われている。",
+  "source": "https://en.wikipedia.org/wiki/Newcastle_United_F.C."
+ },
+ "sources": [
+  "https://en.wikipedia.org/wiki/Newcastle_United_F.C."
+ ],
+ "notes": "本拠地の収容人数は本文中に52,769人という記載もあり、インフォボックスの52,729人と食い違う（原文どおりインフォボックス値を採用）。クラブ創立は1881年にStanley F.C.として発足、1882年にNewcastle East End F.C.、1892年にNewcastle West Endを吸収して現在のNewcastle United F.C.になった経緯があり、単純な「創立年」は一義に定めにくい。"
+}

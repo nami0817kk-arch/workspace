@@ -1,0 +1,277 @@
+{
+ "club_title": "Manchester_United_F.C.",
+ "season_title": "2026–27_Manchester_United_F.C._season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "BEL",
+   "name": "Senne Lammens",
+   "dob": "2002-07-07",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "POR",
+   "name": "Diogo Dalot",
+   "dob": "1999-03-18",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "MAR",
+   "name": "Noussair Mazraoui",
+   "dob": "1997-11-14",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "NED",
+   "name": "Matthijs de Ligt",
+   "dob": "1999-08-12",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Harry Maguire",
+   "dob": "1993-03-05",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "6",
+   "pos": "DF",
+   "nat": "ARG",
+   "name": "Lisandro Martínez",
+   "dob": "1998-01-18",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "7",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Mason Mount",
+   "dob": "1999-01-10",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "POR",
+   "name": "Bruno Fernandes",
+   "dob": "1994-09-08",
+   "captain": true,
+   "loan": false
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Marcus Rashford",
+   "dob": "1997-10-31",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "10",
+   "pos": "FW",
+   "nat": "BRA",
+   "name": "Matheus Cunha",
+   "dob": "1999-05-27",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "11",
+   "pos": "FW",
+   "nat": "NED",
+   "name": "Joshua Zirkzee",
+   "dob": "2001-05-22",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "12",
+   "pos": "GK",
+   "nat": "WAL",
+   "name": "Karl Darlow",
+   "dob": "1990-10-08",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "13",
+   "pos": "DF",
+   "nat": "DEN",
+   "name": "Patrick Dorgu",
+   "dob": "2004-10-26",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "15",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Leny Yoro",
+   "dob": "2005-11-13",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "16",
+   "pos": "FW",
+   "nat": "CIV",
+   "name": "Amad Diallo",
+   "dob": "2002-07-11",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "17",
+   "pos": "MF",
+   "nat": "BRA",
+   "name": "Andrey Santos",
+   "dob": "2004-05-03",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "18",
+   "pos": "MF",
+   "nat": "BEL",
+   "name": "Youri Tielemans",
+   "dob": "1997-05-07",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "19",
+   "pos": "FW",
+   "nat": "CMR",
+   "name": "Bryan Mbeumo",
+   "dob": "1999-08-07",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "20",
+   "pos": "MF",
+   "nat": "CMR",
+   "name": "Carlos Baleba",
+   "dob": "2004-01-03",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "22",
+   "pos": "GK",
+   "nat": "ENG",
+   "name": "Tom Heaton",
+   "dob": "1986-04-15",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "23",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Luke Shaw",
+   "dob": "1995-07-12",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "25",
+   "pos": "MF",
+   "nat": "URU",
+   "name": "Manuel Ugarte",
+   "dob": "2001-04-11",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "26",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Ayden Heaven",
+   "dob": "2006-09-22",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "30",
+   "pos": "FW",
+   "nat": "SVN",
+   "name": "Benjamin Šeško",
+   "dob": "2003-05-31",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "31",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Shea Lacey",
+   "dob": "2007-04-14",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "37",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Kobbie Mainoo",
+   "dob": "2005-04-19",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "38",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Jack Fletcher",
+   "dob": "2007-03-19",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "39",
+   "pos": "MF",
+   "nat": "SCO",
+   "name": "Tyler Fletcher",
+   "dob": "2007-03-19",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "41",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Harry Amass",
+   "dob": "2007-03-16",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "45",
+   "pos": "GK",
+   "nat": "NIR",
+   "name": "Dermot Mee",
+   "dob": "2002-11-20",
+   "captain": false,
+   "loan": false
+  }
+ ],
+ "results": []
+}

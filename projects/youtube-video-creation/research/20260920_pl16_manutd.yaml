@@ -1,0 +1,198 @@
+# プレミアリーグ20クラブ紹介 ⑯マンチェスター・ユナイテッド（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/manutd*.json と旧台本 20260916_pl16_manutd.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- マンチェスター・ユナイテッド
+short_title: マンチェスター・ユナイテッドってどんなクラブ？
+theme:
+  id: pl_clubs_16_manutd
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・ユナイテッド
+  title: マンチェスター・ユナイテッドってどんなクラブ？ ⑯プレミア20クラブ紹介
+  question: どんなクラブなのか
+  hook: 宿敵との因縁は、1本の運河から始まりました。
+thumbnail:
+  line1: 操車場のチームが、赤い悪魔に
+  line2: ユナイテッド
+  crest_main:
+  - マンチェスターユナイテッド
+  tags: []
+  points: []
+sections:
+- id: data
+  heading: マンチェスター・ユナイテッド 基礎DATA
+  main: true
+  tier: 背景
+  telop: 1878年創立
+  narrator: 解説
+  say:
+  - short_only: true
+    text: このクラブの、基本のデータです。
+  - image: assets/stats/pl_manutd_data.png
+    text: 創立は**1878年**。ニュートン・ヒースという名前で始まり、1902年に今の名前になりました。
+  - image: assets/stats/pl_manutd_data.png
+    text: 本拠地はオールド・トラッフォード。**7万4158人**が入る、プレミアで一番大きなスタジアムです。
+  - image: assets/stats/pl_manutd_data.png
+    text: オーナーはアメリカのグレイザー家。2024年からは、INEOSのラトクリフ氏も出資しています。
+  - image: assets/stats/pl_manutd_data.png
+    text: 1部リーグの優勝は**20回**。FAカップは13回、チャンピオンズリーグは3回獲っています。
+  - image: assets/stats/pl_manutd_data.png
+    text: 直近のタイトルは、2023年から24年のFAカップです。
+  - image: assets/stats/pl_manutd_data.png
+    text: 2021年2月には、サウサンプトンに**9対0**。プレミアで最も大きな点差の勝利に並ぶ記録です。
+  - image: assets/stats/pl_manutd_data.png
+    text: 愛称は「レッド・デビルズ」。赤い悪魔です。
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_United_F.C.
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+  official: false
+- id: munich
+  heading: 1958年2月6日
+  tier: 背景
+  telop: ミュンヘンでの事故と、その10年後
+  narrator: 解説
+  card:
+    type: table
+    title: 事故から、頂点まで
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1958年2月6日
+      - ミュンヘンでの航空機事故。23人が亡くなる
+    - - うち選手
+      - 8人
+    - - 1968年
+      - イングランド勢で初の欧州制覇
+  say:
+  - 1958年2月6日。給油のために立ち寄ったミュンヘンで、飛行機が墜落しました。
+  - 亡くなったのは**23人**。そのうち**8人**が選手でした。
+  - このクラブを語るとき、外せない日です。
+  - チームは、作り直すところから始めることになります。
+  - そして**10年後**の1968年。
+  - 決勝でベンフィカを4対1で下し、**イングランドのクラブとして初めて**ヨーロッパの頂点に立ちました。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_United_F.C.
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - - ライアン・ギグス
+      - 1990-2014
+      - クラブ最多の963試合
+    - - ウェイン・ルーニー
+      - 2004-2017
+      - クラブ最多の253得点
+    - - ポール・スコールズ
+      - 1993-2013
+      - 3冠を支えた中盤
+  say:
+  - ライアン・ギグスは、クラブ史上最多の**963試合**に出場。13度のリーグ優勝を経験しました。
+  - ウェイン・ルーニーは、ボビー・チャールトンを抜いたクラブ史上最多の**253得点**。
+  - ポール・スコールズは、1999年の3冠を含む黄金期を20年支えた中盤の要です。
+  sources:
+  - https://en.wikipedia.org/wiki/Ryan_Giggs
+  - https://en.wikipedia.org/wiki/Wayne_Rooney
+  - https://en.wikipedia.org/wiki/Paul_Scholes
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+  official: false
+- id: rival
+  heading: 宿敵
+  tier: 背景
+  telop: リヴァプールとの、ノース・ウェスト・ダービー
+  narrator: 解説
+  card:
+    type: table
+    title: ノース・ウェスト・ダービー
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 発端
+      - マンチェスター・シップ・カナル
+    - - 運河の完成
+      - 1894年
+    - - 初対戦
+      - 1894年4月28日／2-0で敗れる
+    - - 場所
+      - ブラックバーンのユーウッド・パーク
+    - - 今季
+      - 相手もプレミアリーグにいる
+  say:
+  - 相手は**リヴァプール**。呼び名は**ノース・ウェスト・ダービー**です。
+  - もとをたどると、サッカーではなく**運河**にぶつかります。
+  - マンチェスターの商人たちが金を出した運河、シップ・カナルです。
+  - これにリヴァプールの政治家が反対し、ふたつの街のあいだに遺恨が残りました。
+  - 運河ができたのは1894年。その**3か月後**に、両者は初めて顔を合わせています。
+  - 1894年4月28日、ブラックバーンのユーウッド・パーク。**2対0**で敗れました。
+  - 相手は**今季もプレミアリーグにいます。**
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Liverpool_F.C.%E2%80%93Manchester_United_F.C._rivalry
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - 今季の登録選手は30人です。
+  - image: assets/stats/pl_manutd_gk.png
+    text: ゴールキーパーは4人。
+  - image: assets/stats/pl_manutd_df.png
+    text: ディフェンダーは10人。
+  - image: assets/stats/pl_manutd_mf.png
+    text: ミッドフィールダーは9人。
+  - image: assets/stats/pl_manutd_fw.png
+    text: フォワードは7人。
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_United_F.C.
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 4試合で1勝1引き分け2敗
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - ハル・シティ（アウェー）
+      - 0対2
+    - - 第2節
+      - イプスウィッチ・タウン（ホーム）
+      - 5対2
+    - - 第3節
+      - エヴァートン（アウェー）
+      - 2対2
+    - - 第4節
+      - マンチェスター・シティ（ホーム）
+      - 0対1
+  say:
+  - プレミアリーグは4試合を終えて、**1勝1引き分け2敗**です。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Manchester_United_F.C._season
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+  official: false

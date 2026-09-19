@@ -1,0 +1,201 @@
+# プレミアリーグ20クラブ紹介 ⑮マンチェスター・シティ（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/mancity*.json と旧台本 20260916_pl15_mancity.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- マンチェスター・シティ
+short_title: マンチェスター・シティってどんなクラブ？
+theme:
+  id: pl_clubs_15_mancity
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・シティ
+  title: マンチェスター・シティってどんなクラブ？ ⑮プレミア20クラブ紹介
+  question: どんなクラブなのか
+  hook: 宿敵は、同じ街の赤いクラブです。
+thumbnail:
+  line1: ヨーロッパを獲って、3部へ
+  line2: シティ
+  crest_main:
+  - マンチェスターシティ
+  tags: []
+  points: []
+sections:
+- id: data
+  heading: マンチェスター・シティ 基礎DATA
+  main: true
+  tier: 背景
+  telop: 1880年創立
+  narrator: 解説
+  say:
+  - short_only: true
+    text: このクラブの、基本のデータです。
+  - image: assets/stats/pl_mancity_data.png
+    text: 創立は**1880年**。セント・マークスという名前で始まり、1894年に今の名前になりました。
+  - image: assets/stats/pl_mancity_data.png
+    text: 本拠地はエティハド・スタジアム。**6万1038人**が入ります。
+  - image: assets/stats/pl_mancity_data.png
+    text: オーナーはシティ・フットボール・グループ。2008年からクラブを持っています。
+  - image: assets/stats/pl_mancity_data.png
+    text: 1部リーグの優勝は**10回**。FAカップ8回、リーグカップ9回、チャンピオンズリーグも獲っています。
+  - image: assets/stats/pl_mancity_data.png
+    text: 昨季はFAカップとリーグカップの**2冠**でした。
+  - image: assets/stats/pl_mancity_data.png
+    text: 2017年から18年には、勝ち点**100**。プレミアリーグの記録です。
+  - image: assets/stats/pl_mancity_data.png
+    text: 愛称は「シチズンズ」。ほかに「ブルーズ」「スカイブルーズ」とも呼ばれます。
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_City_F.C.
+  bg: assets/backgrounds/stadium_マンチェスターシティ.png
+  official: false
+- id: fall
+  heading: 3部まで落ちたクラブ
+  tier: 背景
+  telop: 1998年、3部へ。ヨーロッパを獲った経験がありながら
+  narrator: 解説
+  card:
+    type: table
+    title: 落ちて、変わるまで
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1998年
+      - 3部へ降格
+    - - 2008年8月
+      - アブダビの投資グループが買収
+    - - 2012年
+      - 初のプレミアリーグ優勝
+    - - その最終節
+      - 決勝点はアグエロ（追加4分目）
+  say:
+  - 1998年、このクラブは**3部**まで落ちました。
+  - しかもヨーロッパのタイトルを獲った経験のあるクラブで、**ヨーロッパの優勝クラブが自国の3部に落ちたのは、これが2例目**でした。
+  - 1990年代、経営が傾いた末の降格です。いまの姿からは想像しにくい話です。
+  - 転機は2008年8月。アブダビの投資グループがクラブを買い取りました。
+  - そして2012年、プレミアリーグで最初の優勝を果たします。
+  - 最終節、**アディショナルタイムに2点**を取って逆転しました。2点目を決めたのはセルヒオ・アグエロ、**追加された4分目**のことです。
+  - この1点で優勝が決まりました。決まり方が、いまも語り草になっています。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_City_F.C.
+  bg: assets/backgrounds/stadium_マンチェスターシティ.png
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - - セルヒオ・アグエロ
+      - 2011-2021
+      - クラブ最多の260得点
+    - - ヴァンサン・コンパニ
+      - 2008-2019
+      - 8年間の主将
+    - - ダビド・シルバ
+      - 2010-2020
+      - 4度優勝の司令塔
+  say:
+  - セルヒオ・アグエロは、クラブ史上最多の**260得点**。2011年から12年の最終節に、44年ぶりの優勝を決めるゴールを決めました。
+  - ヴァンサン・コンパニは、在籍11年のうち8年を主将として過ごしました。
+  - ダビド・シルバは、10年で4度のリーグ優勝を支えた司令塔。スタジアムの外に銅像が建っています。
+  sources:
+  - https://en.wikipedia.org/wiki/Sergio_Ag%C3%BCero
+  - https://en.wikipedia.org/wiki/Vincent_Kompany
+  - https://en.wikipedia.org/wiki/David_Silva
+  bg: assets/backgrounds/stadium_マンチェスターシティ.png
+  official: false
+- id: rival
+  heading: 宿敵
+  tier: 背景
+  telop: マンチェスター・ダービー。相手は今季もプレミアにいる
+  narrator: 解説
+  card:
+    type: table
+    title: マンチェスター・ダービー
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 初対戦
+      - 1881年11月12日／3-0
+    - - 当時の名前
+      - セント・マークス 対 ニュートン・ヒース
+    - - 1973-74年
+      - ローの1点で、相手の降格が決まる
+    - - 今季
+      - 相手もプレミアリーグにいる
+  say:
+  - 相手は、同じ街の**ユナイテッド**です。呼び名は**マンチェスターダービー**。
+  - 初めて当たったのは1881年11月12日。**3対0**という結果でした。
+  - このときの両者は、セント・マークスと、ニュートン・ヒースと名乗っています。
+  - いちばん語られるのは、1973年から74年の終盤の一戦です。
+  - もともとユナイテッドにいたデニス・ローが、シティの選手として**バックヒール**で決勝点を入れました。
+  - この1点で、**ユナイテッドの降格が決まりました。**
+  - 相手は**今季もプレミアリーグにいます。**
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_derby
+  bg: assets/backgrounds/stadium_マンチェスターシティ.png
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - 今季の登録選手は34人です。
+  - image: assets/stats/pl_mancity_gk.png
+    text: ゴールキーパーは4人。
+  - image: assets/stats/pl_mancity_df.png
+    text: ディフェンダーは10人。
+  - image: assets/stats/pl_mancity_mf1.png
+    text: ミッドフィールダーは13人。
+  - image: assets/stats/pl_mancity_mf2.png
+    text: ミッドフィールダーの続きです。
+  - image: assets/stats/pl_mancity_fw.png
+    text: フォワードは7人。
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_City_F.C.
+  bg: assets/backgrounds/stadium_マンチェスターシティ.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 4試合で4勝
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - AFCボーンマス（ホーム）
+      - 2対1
+    - - 第2節
+      - クリスタル・パレス（アウェー）
+      - 4対1
+    - - 第3節
+      - コヴェントリー・シティ（ホーム）
+      - 1対0
+    - - 第4節
+      - マンチェスター・ユナイテッド（アウェー）
+      - 1対0
+  say:
+  - プレミアリーグは4試合を終えて、**4勝**です。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Manchester_City_F.C._season
+  bg: assets/backgrounds/stadium_マンチェスターシティ.png
+  official: false

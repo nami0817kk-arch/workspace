@@ -1,0 +1,631 @@
+{
+ "club_title": "AFC_Bournemouth",
+ "season_title": "2026–27_AFC_Bournemouth_season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "SRB",
+   "name": "Đorđe Petrović",
+   "dob": "1999-10-08",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "MEX",
+   "name": "Julián Araujo",
+   "dob": "2001-08-13",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Adrien Truffert",
+   "dob": "2001-11-20",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "4",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Lewis Cook",
+   "dob": "1997-02-03",
+   "captain": true,
+   "loan": false
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "James Hill",
+   "dob": "2002-01-10",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "6",
+   "pos": "DF",
+   "nat": "ARG",
+   "name": "Julio Soler",
+   "dob": "2005-02-16",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "7",
+   "pos": "MF",
+   "nat": "WAL",
+   "name": "David Brooks",
+   "dob": "1997-07-08",
+   "captain": true,
+   "loan": false
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Alex Scott",
+   "dob": "2003-08-21",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "BRA",
+   "name": "Evanilson",
+   "dob": "1999-10-06",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "10",
+   "pos": "MF",
+   "nat": "SCO",
+   "name": "Ryan Christie",
+   "dob": "1995-02-22",
+   "captain": true,
+   "loan": false
+  },
+  {
+   "no": "11",
+   "pos": "FW",
+   "nat": "SCO",
+   "name": "Ben Gannon-Doak",
+   "dob": "2005-11-11",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "12",
+   "pos": "MF",
+   "nat": "USA",
+   "name": "Tyler Adams",
+   "dob": "1999-02-14",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "14",
+   "pos": "DF",
+   "nat": "POR",
+   "name": "António Silva",
+   "dob": "2003-10-30",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "15",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Adam Smith",
+   "dob": "1991-04-29",
+   "captain": true,
+   "loan": false
+  },
+  {
+   "no": "16",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Marcus Tavernier",
+   "dob": "1999-03-22",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "17",
+   "pos": "GK",
+   "nat": "ENG",
+   "name": "Fraser Forster",
+   "dob": "1988-03-17",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "18",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Bafodé Diakité",
+   "dob": "2001-01-06",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "19",
+   "pos": "FW",
+   "nat": "NED",
+   "name": "Justin Kluivert",
+   "dob": "1999-05-05",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "20",
+   "pos": "GK",
+   "nat": "ITA",
+   "name": "Michele Di Gregorio",
+   "dob": "1997-07-27",
+   "captain": false,
+   "loan": true
+  },
+  {
+   "no": "21",
+   "pos": "MF",
+   "nat": "MAR",
+   "name": "Amine Adli",
+   "dob": "2000-05-10",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "22",
+   "pos": "FW",
+   "nat": "FRA",
+   "name": "Eli Junior Kroupi",
+   "dob": "2006-06-23",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "24",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Juanlu Sánchez",
+   "dob": "2003-08-15",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "27",
+   "pos": "MF",
+   "nat": "HUN",
+   "name": "Alex Tóth",
+   "dob": "2005-10-23",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "28",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Max Aarons",
+   "dob": "2000-01-04",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "29",
+   "pos": "FW",
+   "nat": "CAN",
+   "name": "Daniel Jebbison",
+   "dob": "2003-08-13",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "30",
+   "pos": "FW",
+   "nat": "URU",
+   "name": "Álvaro Rodríguez",
+   "dob": "2004-07-14",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "37",
+   "pos": "FW",
+   "nat": "BRA",
+   "name": "Rayan",
+   "dob": "2006-08-03",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "44",
+   "pos": "DF",
+   "nat": "SRB",
+   "name": "Veljko Milosavljević",
+   "dob": "2007-06-28",
+   "captain": false,
+   "loan": false
+  }
+ ],
+ "results": [
+  [
+   "24 July 2026",
+   "Friendly",
+   "FC St. Pauli",
+   "1–4",
+   "Bournemouth"
+  ],
+  [
+   "30 July 2026",
+   "Friendly",
+   "FC Augsburg",
+   "2–5",
+   "Bournemouth"
+  ],
+  [
+   "4 August 2026",
+   "Friendly",
+   "Bournemouth",
+   "10–1",
+   "Genoa"
+  ],
+  [
+   "8 August 2026",
+   "Friendly",
+   "Real Betis",
+   "2–2",
+   "Bournemouth"
+  ],
+  [
+   "15 August 2026",
+   "Friendly",
+   "Mainz 05",
+   "2–1",
+   "Bournemouth"
+  ],
+  [
+   "23 August 2026",
+   "1",
+   "Manchester City",
+   "2–1",
+   "Bournemouth"
+  ],
+  [
+   "29 August 2026",
+   "2",
+   "Bournemouth",
+   "1–1",
+   "Everton"
+  ],
+  [
+   "5 September 2026",
+   "3",
+   "Newcastle United",
+   "2–2",
+   "Bournemouth"
+  ],
+  [
+   "12 September 2026",
+   "4",
+   "Bournemouth",
+   "2–2",
+   "Brentford"
+  ],
+  [
+   "20 September 2026",
+   "5",
+   "Bournemouth",
+   "| report     =",
+   "Liverpool"
+  ],
+  [
+   "10 October 2026",
+   "6",
+   "Chelsea",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "18 October 2026",
+   "7",
+   "Bournemouth",
+   "| report     =",
+   "Sunderland"
+  ],
+  [
+   "25 October 2026",
+   "8",
+   "Manchester United",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "31 October 2026",
+   "9",
+   "Bournemouth",
+   "| report     =",
+   "Leeds United"
+  ],
+  [
+   "7 November 2026",
+   "10",
+   "Ipswich Town",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "21 November 2026",
+   "11",
+   "Bournemouth",
+   "| report     =",
+   "Nottingham Forest"
+  ],
+  [
+   "28 November 2026",
+   "12",
+   "Fulham",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "2 December 2026",
+   "13",
+   "Bournemouth",
+   "| report     =",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "5 December 2026",
+   "14",
+   "Bournemouth",
+   "| report     =",
+   "Hull City"
+  ],
+  [
+   "12 December 2026",
+   "15",
+   "Arsenal",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "19 December 2026",
+   "16",
+   "Bournemouth",
+   "| report     =",
+   "Coventry City"
+  ],
+  [
+   "26 December 2026",
+   "17",
+   "Tottenham Hotspur",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "30 December 2026",
+   "18",
+   "Crystal Palace",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "2 January 2027",
+   "19",
+   "Bournemouth",
+   "| report     =",
+   "Aston Villa"
+  ],
+  [
+   "5 January 2027",
+   "20",
+   "Brighton & Hove Albion",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "16 January 2027",
+   "21",
+   "Bournemouth",
+   "| report     =",
+   "Ipswich Town"
+  ],
+  [
+   "23 January 2027",
+   "22",
+   "Nottingham Forest",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "30 January 2027",
+   "23",
+   "Bournemouth",
+   "| report     =",
+   "Fulham"
+  ],
+  [
+   "6 February 2027",
+   "24",
+   "Leeds United",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "10 February 2027",
+   "25",
+   "Aston Villa",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "20 February 2027",
+   "26",
+   "Bournemouth",
+   "| report     =",
+   "Crystal Palace"
+  ],
+  [
+   "27 February 2027",
+   "27",
+   "Coventry City",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "3 March 2027",
+   "28",
+   "Bournemouth",
+   "| report     =",
+   "Tottenham Hotspur"
+  ],
+  [
+   "13 March 2027",
+   "29",
+   "Bournemouth",
+   "| report     =",
+   "Newcastle United"
+  ],
+  [
+   "20 March 2027",
+   "30",
+   "Brentford",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "10 April 2027",
+   "31",
+   "Bournemouth",
+   "| report     =",
+   "Manchester City"
+  ],
+  [
+   "17 April 2027",
+   "32",
+   "Everton",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "24 April 2027",
+   "33",
+   "Bournemouth",
+   "| report     =",
+   "Arsenal"
+  ],
+  [
+   "1 May 2027",
+   "34",
+   "Hull City",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "8 May 2027",
+   "35",
+   "Bournemouth",
+   "| report     =",
+   "Manchester United"
+  ],
+  [
+   "15 May 2027",
+   "36",
+   "Sunderland",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "23 May 2027",
+   "37",
+   "Bournemouth",
+   "| report     =",
+   "Chelsea"
+  ],
+  [
+   "30 May 2027",
+   "38",
+   "Liverpool",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "8 September 2026",
+   "Third round",
+   "Bournemouth",
+   "4–0",
+   "Lincoln City"
+  ],
+  [
+   "28 October 2026",
+   "Fourth round",
+   "Bournemouth",
+   "| report     =",
+   "Aston Villa"
+  ],
+  [
+   "17 September 2026",
+   "1",
+   "Real Sociedad",
+   "1–2",
+   "Bournemouth"
+  ],
+  [
+   "15 October 2026",
+   "2",
+   "Bournemouth",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050086/",
+   "Sturm Graz"
+  ],
+  [
+   "22 October 2026",
+   "3",
+   "Bournemouth",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050102/",
+   "Milan"
+  ],
+  [
+   "5 November 2026",
+   "4",
+   "Sparta Prague",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050117/",
+   "Bournemouth"
+  ],
+  [
+   "26 November 2026",
+   "5",
+   "Celta Vigo",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050141/",
+   "Bournemouth"
+  ],
+  [
+   "10 December 2026",
+   "6",
+   "Bournemouth",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050158/",
+   "Viktoria Plzeň"
+  ],
+  [
+   "21 January 2027",
+   "7",
+   "Lillestrøm",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050180/",
+   "Bournemouth"
+  ],
+  [
+   "28 January 2027",
+   "8",
+   "Bournemouth",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050193/",
+   "Hapoel Be'er Sheva"
+  ]
+ ]
+}

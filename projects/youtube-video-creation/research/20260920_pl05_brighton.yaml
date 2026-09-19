@@ -1,0 +1,225 @@
+# プレミアリーグ20クラブ紹介 ⑤ブライトン（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/brighton*.json と旧台本 20260916_pl05_brighton.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- 三笘薫
+- ブライトン
+short_title: 三笘薫がいるブライトンってどんなクラブ？
+theme:
+  id: pl_clubs_05_brighton
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ブライトン
+  title: 三笘薫がいるブライトンってどんなクラブ？ ⑤プレミア20クラブ紹介
+  question: どんなクラブなのか
+  hook: カモメの愛称は、宿敵への返し歌が始まりでした。
+thumbnail:
+  line1: 三笘薫と、14年の●●
+  line2: ブライトン
+  crest_main:
+  - ブライトン
+  tags: []
+  points: []
+sections:
+- id: why
+  heading: 三笘薫がいるクラブ
+  tier: 報道
+  telop: 三笘薫が所属するブライトン
+  narrator: キャスター
+  say:
+  - 日本代表の三笘薫が所属しているのが、ブライトンです。
+  - では、どんなクラブなのか。まずは基本のデータから見ていきます。
+  sources:
+  - https://en.wikipedia.org/wiki/Brighton_&_Hove_Albion_F.C.
+  bg: assets/backgrounds/stadium_ブライトン.png
+  official: false
+- id: data
+  heading: ブライトン 基礎DATA
+  main: true
+  tier: 背景
+  telop: 1901年創立
+  narrator: 解説
+  say:
+  - short_only: true
+    text: 三笘薫の所属クラブを、基本のデータで見ていきます。
+  - image: assets/stats/pl_brighton_data.png
+    text: 創立は**1901年**。1920年にフットボールリーグに加わりました。
+  - image: assets/stats/pl_brighton_data.png
+    text: 本拠地はファルマー・スタジアム。**3万2176人**が入ります。
+  - image: assets/stats/pl_brighton_data.png
+    text: ホームタウンは、イングランド南の海沿いの町ブライトン・アンド・ホーヴ。
+  - image: assets/stats/pl_brighton_data.png
+    text: オーナーはトニー・ブルーム。2009年に会長になり、株の75%を持っています。
+  - image: assets/stats/pl_brighton_data.png
+    text: 1部リーグの優勝やカップのタイトルは、まだありません。
+  - image: assets/stats/pl_brighton_data.png
+    text: プレミアでの最高位は、2022年から23年の**6位**。クラブの歴史で一番の順位です。
+  - image: assets/stats/pl_brighton_data.png
+    text: 愛称は「シーガルズ」。カモメです。
+  sources:
+  - https://en.wikipedia.org/wiki/Brighton_&_Hove_Albion_F.C.
+  bg: assets/backgrounds/stadium_ブライトン.png
+  official: false
+- id: home
+  heading: 本拠地を失った14年
+  tier: 背景
+  telop: 1997年、取締役会が本拠地を売った
+  narrator: 解説
+  card:
+    type: table
+    title: 家を失っていた期間
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1997年
+      - ゴールドストーン・グラウンドを売却
+    - - 1997-1999年
+      - ジリンガムの本拠地を借りる
+    - - 1999-2011年
+      - 陸上競技場を改造したウィズディーン
+    - - 2011年
+      - ファルマー・スタジアムへ
+  say:
+  - image: assets/images/pl_brighton/scene.jpg
+    text: 1997年、取締役会が歴史あるゴールドストーン・グラウンドを売却しました。
+  - image: assets/images/pl_brighton/scene.jpg
+    text: 同じ年、リーグからの降格も、そして清算も、すれすれのところで免れています。
+  - image: assets/images/pl_brighton/scene.jpg
+    text: ここから14年間、ブライトンは自分の家を持ちませんでした。
+  - image: assets/images/pl_brighton/scene.jpg
+    text: はじめの2年はジリンガムの本拠地を借り、そのあとの12年は陸上競技場を改造したウィズディーン・スタジアムでした。
+  - image: assets/images/pl_brighton/scene.jpg
+    text: いまのファルマー・スタジアムに入ったのは2011年。収容は3万2176人です。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Brighton_%26_Hove_Albion_F.C.
+  bg: assets/backgrounds/stadium_ブライトン.png
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - - ルイス・ダンク
+      - 2010-
+      - 一筋で500試合超えの主将
+    - - グレン・マレー
+      - 2008-2021
+      - プレミア初昇格の得点源
+    - - ボビー・ザモラ
+      - 2000-2003
+      - 136試合83得点
+  say:
+  - ルイス・ダンクは、ブライトン一筋で**500試合**を超えた主将です。
+  - グレン・マレーは、2016年から17年のプレミア初昇格を決めた得点源です。
+  - ボビー・ザモラは、136試合で**83得点**。2年続けて優勝し、クラブを2段上げました。
+  sources:
+  - https://en.wikipedia.org/wiki/Lewis_Dunk
+  - https://en.wikipedia.org/wiki/Glenn_Murray
+  - https://en.wikipedia.org/wiki/Bobby_Zamora
+  bg: assets/backgrounds/stadium_ブライトン.png
+  official: false
+- id: rival
+  heading: 宿敵
+  tier: 背景
+  telop: 発端は、トッテナムで同僚だった2人の敵対心
+  narrator: 解説
+  card:
+    type: table
+    title: M23ダービー
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 相手
+      - クリスタル・パレス
+    - - 呼び名
+      - M23ダービー（A23ダービー）
+    - - 1976年
+      - FAカップ1回戦が3試合もつれる
+    - - 1989年
+      - 1試合5本のPK。27分の間に
+    - - 今季
+      - パレスもプレミアリーグにいる
+  say:
+  - 宿敵はクリスタル・パレス。呼び名は**M23ダービー**です。
+  - サセックスと南ロンドンを結ぶ道路の名前から来ています。**ただしサポーターはこの呼び名を嫌っています。**
+  - 最初に当たったのは1920年ですが、因縁が本物になったのは1970年代の半ばでした。
+  - 発端は2人の人物です。パレスのテリー・ヴェナブルズと、こちらのアラン・マラリー。
+  - 2人はトッテナムで同僚でした。
+  - 1976年11月20日のFAカップ1回戦は2対2。11月23日の再試合は延長の末1対1。
+  - 12月6日、スタンフォード・ブリッジでの3度目を、パレスが1対0で取ります。
+  - 試合のあと、マラリーは警察に連れ出されながら、相手のサポーターへVサインを送って罵りました。
+  - さらに相手のロッカールームに入り、床に**5ポンド**を投げつけます。
+  - 「お前のチームはこの金の値打ちもない」。ヴェナブルズへ、そう言い放ちました。
+  - 1989年には、1人の主審が1試合で5本のPKを、それも27分の間に与えた試合もあります。リーグの記録で、勝ったのはパレスでした。
+  - そのパレスは、今季もプレミアリーグにいます。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/M23_derby
+  bg: assets/backgrounds/stadium_ブライトン.png
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - 今季の登録選手は30人です。
+  - image: assets/stats/pl_brighton_gk.png
+    text: ゴールキーパーは3人。
+  - image: assets/stats/pl_brighton_df.png
+    text: ディフェンダーは10人。
+  - image: assets/stats/pl_brighton_mf.png
+    text: ミッドフィールダーは12人。日本の三笘薫もここにいます。
+  - image: assets/stats/pl_brighton_fw.png
+    text: フォワードは5人。
+  sources:
+  - https://en.wikipedia.org/wiki/Brighton_&_Hove_Albion_F.C.
+  bg: assets/backgrounds/stadium_ブライトン.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 5試合で3勝1引き分け1敗
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - アストン・ヴィラ（ホーム）
+      - 4対0
+    - - 第2節
+      - チェルシー（アウェー）
+      - 3対4
+    - - 第3節
+      - リーズ・ユナイテッド（ホーム）
+      - 1対1
+    - - 第4節
+      - コヴェントリー・シティ（アウェー）
+      - 5対0
+    - - 第5節
+      - アーセナル（ホーム）
+      - 3対0
+  say:
+  - プレミアリーグは5試合を終えて、**3勝1引き分け1敗**です。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Brighton_&_Hove_Albion_F.C._season
+  bg: assets/backgrounds/stadium_ブライトン.png
+  official: false

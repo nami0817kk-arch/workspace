@@ -1,0 +1,202 @@
+# プレミアリーグ20クラブ紹介 ⑱ノッティンガム・フォレスト（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/forest*.json と旧台本 20260916_pl18_forest.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- ノッティンガム・フォレスト
+short_title: ノッティンガム・フォレストってどんなクラブ？
+theme:
+  id: pl_clubs_18_forest
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ノッティンガム・フォレスト
+  title: ノッティンガム・フォレストってどんなクラブ？ ⑱プレミア20クラブ紹介
+  question: どんなクラブなのか
+  hook: 国内よりも、ヨーロッパで勝ってきたクラブです。
+thumbnail:
+  line1: 国内より、欧州で獲った
+  line2: フォレスト
+  crest_main:
+  - ノッティンガムフォレスト
+  tags: []
+  points: []
+sections:
+- id: data
+  heading: ノッティンガム・フォレスト 基礎DATA
+  main: true
+  tier: 背景
+  telop: 1865年創立
+  narrator: 解説
+  say:
+  - short_only: true
+    text: このクラブの、基本のデータです。
+  - image: assets/stats/pl_forest_data.png
+    text: 創立は**1865年**。本拠地はシティ・グラウンド、**3万1212人**が入ります。
+  - image: assets/stats/pl_forest_data.png
+    text: オーナーはギリシャの実業家エヴァンゲロス・マリナキス。2017年からクラブを持っています。
+  - image: assets/stats/pl_forest_data.png
+    text: 1部リーグの優勝は**1回**。FAカップ2回、リーグカップ4回、そしてヨーロッパのタイトルを**2回**獲っています。
+  - image: assets/stats/pl_forest_data.png
+    text: 1977年11月から翌年11月まで、リーグで**42試合負けなし**。1部で優勝したシーズンです。
+  - image: assets/stats/pl_forest_data.png
+    text: プレミアでの最高位は、1994年から95年の**3位**です。
+  - image: assets/stats/pl_forest_data.png
+    text: 愛称は「トリッキー・トゥリーズ」。ほかに「ガリバルディス」「レッズ」とも呼ばれます。
+  sources:
+  - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
+  bg: assets/backgrounds/stadium_ノッティンガムフォレスト.png
+  official: false
+- id: clough
+  heading: 上がって、ヨーロッパを獲って、そして落ちた
+  tier: 背景
+  telop: 2部から上がった翌シーズンに、1部で優勝した
+  narrator: 解説
+  card:
+    type: table
+    title: 上がって、落ちて、戻るまで
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1977年
+      - 2部から昇格（勝ち点52）
+    - - 翌シーズン
+      - 1部優勝
+    - - 1979年・1980年
+      - ヨーロッパカップ連覇
+    - - 1977年11月から
+      - リーグ42試合無敗
+    - - 1993年
+      - プレミア最初のシーズンに降格
+    - - 2022年
+      - 23年ぶりに1部へ（プレーオフ）
+  say:
+  - 2部から昇格した翌シーズンに、**1部で優勝したクラブ**です。
+  - さらにその次から、ヨーロッパカップを**2年続けて**制しました。1979年と1980年です。
+  - 昇格したのは1977年。勝ち点は**52**で、昇格したチームとしては**歴代5番目に少ない**数字でした。
+  - この時代を作ったのが、ブライアン・クラフとピーター・テイラーです。
+  - 1977年11月からは、リーグ戦で**42試合**負けませんでした。1シーズンぶんに相当する長さです。
+  - そして1993年、**プレミアリーグの最初のシーズン**に降格します。クラフが指揮した18年も、そこで終わりました。
+  - ヨーロッパを連覇したクラブが、**23年**のあいだ1部にいませんでした。戻ってきたのは2022年、プレーオフを勝ち上がっての昇格です。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
+  bg: assets/backgrounds/stadium_ノッティンガムフォレスト.png
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - - スチュアート・ピアース
+      - 1985-1997
+      - 12年間の主将
+    - - デス・ウォーカー
+      - 1984-2005
+      - 1990年W杯4強のCB
+    - - スタン・コリモア
+      - 1993-1995
+      - 昇格即3位のFW
+  say:
+  - スチュアート・ピアースは、12年在籍の大半で主将を務めた「サイコ」です。
+  - デス・ウォーカーは、1990年ワールドカップでベスト4に入ったイングランド代表のセンターバックです。
+  - スタン・コリモアは、昇格と、昇格してすぐの3位を引っ張ったフォワードです。
+  sources:
+  - https://en.wikipedia.org/wiki/Stuart_Pearce
+  - https://en.wikipedia.org/wiki/Des_Walker
+  - https://en.wikipedia.org/wiki/Stan_Collymore
+  bg: assets/backgrounds/stadium_ノッティンガムフォレスト.png
+  official: false
+- id: rival
+  heading: 宿敵
+  tier: 背景
+  telop: ダービー・カウンティとの、イースト・ミッドランズ・ダービー
+  narrator: 解説
+  card:
+    type: table
+    title: イースト・ミッドランズ・ダービー
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 初対戦
+      - 1892年10月1日／3-2
+    - - 火が付いたのは
+      - 1970年代後半（クラフの移籍）
+    - - 2007年から
+      - ブライアン・クラフ・トロフィー
+    - - 初のトロフィー戦
+      - 2007年7月31日／0-2
+    - - 今季
+      - 相手はプレミアリーグにいない
+  say:
+  - 相手は**ダービー・カウンティ**。**イースト・ミッドランズ・ダービー**と呼ばれます。
+  - 公式戦で初めて当たったのは1892年10月1日。レースコース・グラウンドで、フォレストが**3対2**で勝ちました。
+  - 火が付いたのは1970年代の後半です。**ダービーで成功したブライアン・クラフが、フォレストの監督になった**ことがきっかけでした。
+  - 2007年からは、この試合に**ブライアン・クラフ・トロフィー**が懸かっています。
+  - 最初のトロフィー戦は2007年7月31日、プライド・パーク。**ダービーが2対0**で勝っています。
+  - ただし、**今季のプレミアリーグに、ダービー・カウンティはいません。**リーグでこの一戦は組まれません。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Derby_County_F.C.%E2%80%93Nottingham_Forest_F.C._rivalry
+  bg: assets/backgrounds/stadium_ノッティンガムフォレスト.png
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - 今季の登録選手は24人です。
+  - image: assets/stats/pl_forest_gk.png
+    text: ゴールキーパーは3人。
+  - image: assets/stats/pl_forest_df.png
+    text: ディフェンダーは9人。
+  - image: assets/stats/pl_forest_mf.png
+    text: ミッドフィールダーは6人。
+  - image: assets/stats/pl_forest_fw.png
+    text: フォワードは6人。
+  sources:
+  - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
+  bg: assets/backgrounds/stadium_ノッティンガムフォレスト.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 4試合で1勝2引き分け1敗
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - リーズ・ユナイテッド（ホーム）
+      - 0対1
+    - - 第2節
+      - リヴァプール（アウェー）
+      - 2対2
+    - - 第3節
+      - トッテナム・ホットスパー（ホーム）
+      - 0対0
+    - - 第4節
+      - アストン・ヴィラ（アウェー）
+      - 2対1
+  say:
+  - プレミアリーグは4試合を終えて、**1勝2引き分け1敗**です。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Nottingham_Forest_F.C._season
+  bg: assets/backgrounds/stadium_ノッティンガムフォレスト.png
+  official: false

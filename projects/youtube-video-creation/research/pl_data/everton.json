@@ -1,0 +1,78 @@
+{
+ "title": "エヴァートン 基礎DATA",
+ "colors": [
+  "#003399",
+  "#FFFFFF"
+ ],
+ "crest": "assets/crests/エヴァートン.png",
+ "tiles": [
+  [
+   "クラブ創立",
+   "1878年",
+   "スタンリー・パークで産声を上げた"
+  ],
+  [
+   "本拠地",
+   "ヒル・ディキンソン・スタジアム",
+   "収容 52,769人"
+  ],
+  [
+   "ホームタウン",
+   "リヴァプール",
+   "2025-26に新スタジアムへ移転"
+  ],
+  [
+   "オーナー",
+   "ダン・フリードキン",
+   "米実業家（2024年12月〜）"
+  ],
+  [
+   "タイトル歴",
+   "1部優勝 9回",
+   "FA杯5・リーグ杯0・欧州1"
+  ],
+  [
+   "直近のタイトル",
+   "FA杯優勝",
+   "1994-95シーズン"
+  ],
+  [
+   "クラブ記録",
+   "1季60得点",
+   "ディキシー・ディーン。英記録"
+  ],
+  [
+   "プレミア最高位",
+   "4位",
+   "2004-05シーズン"
+  ],
+  [
+   "有名なファン",
+   "ポール・マッカートニー",
+   "トニー・ベリュー"
+  ]
+ ],
+ "fans": [
+  {
+   "name": "ポール・マッカートニー",
+   "who": "ミュージシャン（元ビートルズ）",
+   "source": "https://web.archive.org/web/20150514131535/http://bleacherreport.com/articles/2460282-20-stars-of-the-music-world-and-the-football-clubs-they-support"
+  },
+  {
+   "name": "トニー・ベリュー",
+   "who": "元プロボクサー、俳優",
+   "source": "https://web.archive.org/web/20181024232100/https://www.bbc.co.uk/sport/football/42249192"
+  }
+ ],
+ "fan_story": {
+  "text": "元ボクシング世界王者のトニー・ベリューは映画『クリード』にラスティ・コンロイ役で出演した際、練習着とショーツにエヴァートンのバッジを着けて演じた。",
+  "source": "https://web.archive.org/web/20180723152655/https://www.liverpoolecho.co.uk/sport/football/football-news/everton-club-crest-gets-hollywood-10057827"
+ },
+ "sources": [
+  "https://en.wikipedia.org/wiki/Everton_F.C.",
+  "https://web.archive.org/web/20150514131535/http://bleacherreport.com/articles/2460282-20-stars-of-the-music-world-and-the-football-clubs-they-support",
+  "https://web.archive.org/web/20181024232100/https://www.bbc.co.uk/sport/football/42249192",
+  "https://web.archive.org/web/20180723152655/https://www.liverpoolecho.co.uk/sport/football/football-news/everton-club-crest-gets-hollywood-10057827"
+ ],
+ "notes": "2026-27シーズンより本拠地はヒル・ディキンソン・スタジアム（旧称エヴァートン・スタジアム）に移転済み。旧本拠地グディソン・パークは2025-26シーズンから女子チームの本拠地になっている。プレミア最高位『4位（2004-05）』は本文の記述（歴代最高finishが1990-91年より前は無く、PL発足後で確認できた最高順位）に基づく。有名なファンの節ではポール・マッカートニーとトニー・ベリューのみ個別の出典URLが確認できたため、この2人を採用した。配色はクラブ伝統のロイヤルブルーを採用（原文に厳密な公式hex指定は無い）。"
+}

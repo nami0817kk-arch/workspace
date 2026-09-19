@@ -1,0 +1,533 @@
+{
+ "club_title": "Everton_F.C.",
+ "season_title": "2026–27_Everton_F.C._season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "ENG",
+   "name": "Jordan Pickford",
+   "dob": "1994-03-07",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Ainsley Maitland-Niles",
+   "dob": "1997-08-29",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Jarrad Branthwaite",
+   "dob": "2002-06-27",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Michael Keane",
+   "dob": "1993-01-11",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "6",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "James Tarkowski",
+   "dob": "1992-11-19",
+   "captain": true,
+   "loan": false
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Kiernan Dewsbury-Hall",
+   "dob": "1998-09-06",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "10",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Jack Grealish",
+   "dob": "1995-09-10",
+   "captain": false,
+   "loan": true
+  },
+  {
+   "no": "11",
+   "pos": "FW",
+   "nat": "FRA",
+   "name": "Thierno Barry",
+   "dob": "2002-10-21",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "12",
+   "pos": "GK",
+   "nat": "IRL",
+   "name": "Mark Travers",
+   "dob": "1999-05-18",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "15",
+   "pos": "DF",
+   "nat": "IRL",
+   "name": "Jake O'Brien",
+   "dob": "2001-05-15",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "16",
+   "pos": "DF",
+   "nat": "UKR",
+   "name": "Vitalii Mykolenko",
+   "dob": "1999-05-29",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "19",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Tyrique George",
+   "dob": "2006-02-04",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "20",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Tyler Dibling",
+   "dob": "2006-02-17",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "22",
+   "pos": "FW",
+   "nat": "WAL",
+   "name": "Brennan Johnson",
+   "dob": "2001-05-23",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "23",
+   "pos": "MF",
+   "nat": "DEN",
+   "name": "Christian Nørgaard",
+   "dob": "1994-03-10",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "24",
+   "pos": "MF",
+   "nat": "ARG",
+   "name": "Charly Alcaraz",
+   "dob": "2002-11-30",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "30",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Hayden Hackney",
+   "dob": "2002-06-26",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "31",
+   "pos": "GK",
+   "nat": "WAL",
+   "name": "Tom King",
+   "dob": "1995-03-09",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "34",
+   "pos": "MF",
+   "nat": "GER",
+   "name": "Merlin Röhl",
+   "dob": "2002-07-05",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "37",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "James Garner",
+   "dob": "2001-03-13",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "45",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Harrison Armstrong",
+   "dob": "2007-01-19",
+   "captain": false,
+   "loan": false
+  }
+ ],
+ "results": [
+  [
+   "18 July 2026",
+   "Friendly",
+   "Dundee",
+   "0−4",
+   "Everton"
+  ],
+  [
+   "25 July 2026",
+   "Friendly",
+   "Bolton Wanderers",
+   "0–0",
+   "Everton"
+  ],
+  [
+   "28 July 2026",
+   "Friendly",
+   "Stoke City",
+   "1−0",
+   "Everton"
+  ],
+  [
+   "1 August 2026",
+   "Friendly",
+   "Hamburger SV",
+   "1−2",
+   "Everton"
+  ],
+  [
+   "8 August 2026",
+   "Friendly",
+   "VfB Stuttgart",
+   "3−1",
+   "Everton"
+  ],
+  [
+   "12 August 2026",
+   "Friendly",
+   "Newcastle United",
+   "1−3",
+   "Everton"
+  ],
+  [
+   "15 August 2026",
+   "Friendly",
+   "Everton",
+   "1−1",
+   "Lille"
+  ],
+  [
+   "22 August 2026",
+   "1",
+   "Everton",
+   "2−0",
+   "Crystal Palace"
+  ],
+  [
+   "29 August 2026",
+   "2",
+   "Bournemouth",
+   "1–1",
+   "Everton"
+  ],
+  [
+   "6 September 2026",
+   "3",
+   "Everton",
+   "2–2",
+   "Manchester United"
+  ],
+  [
+   "12 September 2026",
+   "4",
+   "Tottenham Hotspur",
+   "0–0",
+   "Everton"
+  ],
+  [
+   "19 September 2026",
+   "5",
+   "Everton",
+   "1–0",
+   "Ipswich Town"
+  ],
+  [
+   "11 October 2026",
+   "6",
+   "Hull City",
+   "| report     =",
+   "Everton"
+  ],
+  [
+   "17 October 2026",
+   "7",
+   "Everton",
+   "| report     =",
+   "Chelsea"
+  ],
+  [
+   "24 October 2026",
+   "8",
+   "Arsenal",
+   "| report     =",
+   "Everton"
+  ],
+  [
+   "2 November 2026",
+   "9",
+   "Newcastle United",
+   "| report     =",
+   "Everton"
+  ],
+  [
+   "7 November 2026",
+   "10",
+   "Everton",
+   "| report     =",
+   "Coventry City"
+  ],
+  [
+   "21 November 2026",
+   "11",
+   "Brentford",
+   "| report     =",
+   "Everton"
+  ],
+  [
+   "28 November 2026",
+   "12",
+   "Everton",
+   "| report     =",
+   "Liverpool"
+  ],
+  [
+   "2 December 2026",
+   "13",
+   "Aston Villa",
+   "| report     =",
+   "Everton"
+  ],
+  [
+   "5 December 2026",
+   "14",
+   "Everton",
+   "| report     =",
+   "Fulham"
+  ],
+  [
+   "12 December 2026",
+   "15",
+   "Brighton & Hove Albion",
+   "| report     =",
+   "Everton"
+  ],
+  [
+   "19 December 2026",
+   "16",
+   "Nottingham Forest",
+   "| report     =",
+   "Everton"
+  ],
+  [
+   "26 December 2026",
+   "17",
+   "Everton",
+   "| report     =",
+   "Sunderland"
+  ],
+  [
+   "29 December 2026",
+   "18",
+   "Everton",
+   "| report     =",
+   "Manchester City"
+  ],
+  [
+   "1 January 2027",
+   "19",
+   "Leeds United",
+   "| report     =",
+   "Everton"
+  ],
+  [
+   "5 January 2027",
+   "20",
+   "Everton",
+   "| report     =",
+   "Aston Villa"
+  ],
+  [
+   "16 January 2027",
+   "21",
+   "Coventry City",
+   "| report     =",
+   "Everton"
+  ],
+  [
+   "23 January 2027",
+   "22",
+   "Everton",
+   "| report     =",
+   "Brentford"
+  ],
+  [
+   "30 January 2027",
+   "23",
+   "Liverpool",
+   "| report     =",
+   "Everton"
+  ],
+  [
+   "6 February 2027",
+   "24",
+   "Everton",
+   "| report     =",
+   "Newcastle United"
+  ],
+  [
+   "10 February 2027",
+   "25",
+   "Everton",
+   "| report     =",
+   "Leeds United"
+  ],
+  [
+   "20 February 2027",
+   "26",
+   "Sunderland",
+   "| report     =",
+   "Everton"
+  ],
+  [
+   "27 February 2027",
+   "27",
+   "Everton",
+   "| report     =",
+   "Nottingham Forest"
+  ],
+  [
+   "3 March 2027",
+   "28",
+   "Manchester City",
+   "| report     =",
+   "Everton"
+  ],
+  [
+   "13 March 2027",
+   "29",
+   "Manchester United",
+   "| report     =",
+   "Everton"
+  ],
+  [
+   "20 March 2027",
+   "30",
+   "Everton",
+   "| report     =",
+   "Tottenham Hotspur"
+  ],
+  [
+   "10 April 2027",
+   "31",
+   "Crystal Palace",
+   "| report     =",
+   "Everton"
+  ],
+  [
+   "17 April 2027",
+   "32",
+   "Everton",
+   "| report     =",
+   "Bournemouth"
+  ],
+  [
+   "24 April 2027",
+   "33",
+   "Everton",
+   "| report     =",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "1 May 2027",
+   "34",
+   "Fulham",
+   "| report     =",
+   "Everton"
+  ],
+  [
+   "8 May 2027",
+   "35",
+   "Everton",
+   "| report     =",
+   "Hull City"
+  ],
+  [
+   "15 May 2027",
+   "36",
+   "Chelsea",
+   "| report     =",
+   "Everton"
+  ],
+  [
+   "23 May 2027",
+   "37",
+   "Everton",
+   "| report     =",
+   "Arsenal"
+  ],
+  [
+   "30 May 2027",
+   "38",
+   "Ipswich Town",
+   "| report     =",
+   "Everton"
+  ],
+  [
+   "26 August 2026",
+   "Second round",
+   "Preston North End",
+   "0–4",
+   "Everton"
+  ],
+  [
+   "16 September 2026",
+   "Third round",
+   "Everton",
+   "1–0",
+   "Wolverhampton Wanderers"
+  ],
+  [
+   "w/c 26 October 2026",
+   "Fourth round",
+   "Everton",
+   "| result     =",
+   "Newcastle United"
+  ]
+ ]
+}

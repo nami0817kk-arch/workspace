@@ -1,0 +1,91 @@
+{
+ "title": "アーセナル 基礎DATA",
+ "colors": [
+  "#F00000",
+  "#0D1B5C"
+ ],
+ "crest": "assets/crests/アーセナル.png",
+ "tiles": [
+  [
+   "クラブ創立",
+   "1886年",
+   "ディアル・スクエアとして創設"
+  ],
+  [
+   "本拠地",
+   "エミレーツ・スタジアム",
+   "収容 60,704人"
+  ],
+  [
+   "ホームタウン",
+   "ロンドン",
+   "北ロンドン・イズリントン区"
+  ],
+  [
+   "オーナー",
+   "クロエンケ家",
+   "スタン・クロエンケ(2018年〜)"
+  ],
+  [
+   "タイトル歴",
+   "1部優勝 14回",
+   "FA杯14・リーグ杯2・欧州2"
+  ],
+  [
+   "直近のタイトル",
+   "プレミアリーグ優勝",
+   "2025-26シーズン"
+  ],
+  [
+   "無敗優勝",
+   "インビンシブルズ",
+   "2003-04、史上唯一の38戦無敗"
+  ],
+  [
+   "プレミア最高位",
+   "1位",
+   "4回。直近は2025-26"
+  ],
+  [
+   "有名なファン",
+   "ジェイ・Z",
+   "リアーナ、ドゥア・リパ"
+  ]
+ ],
+ "fans": [
+  {
+   "name": "ジェイ・Z",
+   "who": "ラッパー",
+   "source": "https://en.wikipedia.org/wiki/Jay-Z"
+  },
+  {
+   "name": "リアーナ",
+   "who": "歌手",
+   "source": "https://www.arsenal.com/news/rihannas-gooner-behind-scenes-emirates"
+  },
+  {
+   "name": "ドゥア・リパ",
+   "who": "歌手",
+   "source": "https://x.com/afcstuff/status/2028541537622114761"
+  },
+  {
+   "name": "ジャスティン・ビーバー",
+   "who": "歌手",
+   "source": "https://www.instagram.com/reel/C982WLLpTEC/"
+  },
+  {
+   "name": "イドリス・エルバ",
+   "who": "俳優",
+   "source": "http://www.arsenal.com/usa/sh/usa/news/features/idris-elba"
+  }
+ ],
+ "fan_story": {
+  "text": null,
+  "source": null
+ },
+ "sources": [
+  "https://en.wikipedia.org/wiki/Arsenal_F.C.",
+  "https://en.wikipedia.org/wiki/Arsenal_F.C._supporters"
+ ],
+ "notes": "有名なファンは『Arsenal F.C. supporters』記事のNotable supportersの節（役職ごとの列挙リスト形式で、個々のエピソード文は無い）から選んだため、fan_storyに書けるような逸話の原文は見つからず null にした。オーナーは大株主スタン・クロエンケで、2011年に過半数(62.89%)取得、2018年にウスマノフの株を買い取り単独所有に。タイトル歴の『1部優勝14回』にはFootball League First Division時代とPremier League時代の優勝が両方含まれる（直近は2025-26のプレミアリーグ優勝）。プレミア最高位『1位』は1997-98・2001-02・2003-04・2025-26の4シーズン。"
+}

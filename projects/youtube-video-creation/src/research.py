@@ -1571,6 +1571,11 @@ def to_script(notes: Notes, plan: Plan) -> str:
         if has_photo and index >= switch_at:
             photo_on = True
         lines.append("")
+        # **節の頭で数え直す**（2026-09-20）。1行目が `only: short` だと、
+        # 数え始め（first_kept）より前にこの2つを使って落ちた。前の節があれば
+        # その値が残っていて表に出ず、**1節目がショート専用の行で始まる台本**で初めて踏んだ
+        shown_for = 0
+        showed_photo = False
         for number, sentence in enumerate(section.say):
             # 掛け合いにする。1文目は事実をキャスターが読み、
             # 2文目以降は解説が受ける。交互に振ると同じ文体の読み分けになり、

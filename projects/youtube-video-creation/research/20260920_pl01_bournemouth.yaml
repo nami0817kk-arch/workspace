@@ -1,0 +1,198 @@
+# プレミアリーグ20クラブ紹介 ①ボーンマス（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/bournemouth*.json と旧台本 20260915_pl01_bournemouth.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- ボーンマス
+short_title: ボーンマスってどんなクラブ？
+theme:
+  id: pl_clubs_01_bournemouth
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ボーンマス
+  title: ボーンマスってどんなクラブ？ ①プレミア20クラブ紹介
+  question: どんなクラブなのか
+  hook: 消えかけたクラブが、いまヨーロッパで戦っています。
+thumbnail:
+  line1: FAカップで1人9得点
+  line2: AFCボーンマス
+  crest_main:
+  - ボーンマス
+  tags: []
+  points: []
+sections:
+- id: data
+  heading: ボーンマス 基礎DATA
+  main: true
+  tier: 背景
+  telop: 1899年創立
+  narrator: 解説
+  say:
+  - short_only: true
+    text: このクラブの、基本のデータです。
+  - image: assets/stats/pl_bournemouth_data.png
+    text: 創立は**1899年**。前身はボスコム・セント・ジョンズというクラブです。
+  - image: assets/stats/pl_bournemouth_data.png
+    text: 本拠地はディーン・コート。収容は1万2357人と、プレミアでもかなり小さなスタジアムです。
+  - image: assets/stats/pl_bournemouth_data.png
+    text: ホームタウンは、イングランド南部ドーセット州の海沿いの町ボーンマス。
+  - image: assets/stats/pl_bournemouth_data.png
+    text: オーナーはアメリカのビル・フォーリー。2022年からクラブを持っています。
+  - image: assets/stats/pl_bournemouth_data.png
+    text: 1部リーグの優勝もカップのタイトルも、まだありません。直近のタイトルは2014年から15年の2部優勝です。
+  - image: assets/stats/pl_bournemouth_data.png
+    text: そのかわり、昨季はプレミアリーグで**6位**。クラブ史上最高の順位で、初めてヨーロッパへの切符をつかみました。
+  - image: assets/stats/pl_bournemouth_data.png
+    text: 愛称は「ザ・チェリーズ」。さくらんぼ、という意味です。
+  sources:
+  - https://en.wikipedia.org/wiki/AFC_Bournemouth
+  bg: assets/backgrounds/stadium_ボーンマス.png
+  official: false
+- id: history
+  heading: 歩んできた道
+  tier: 背景
+  telop: 破産寸前から、初の欧州へ
+  narrator: 解説
+  card:
+    type: table
+    title: ボーンマスの18年
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 2008年
+      - 経営破綻。勝ち点17剥奪
+    - - 2015年
+      - クラブ史上初の1部昇格
+    - - 2026年
+      - クラブ史上初の欧州出場
+  say:
+  - このクラブの物語は、消えかけたところから始まります。
+  - 2008年から2009年にかけて経営破綻に追い込まれ、リーグの倒産規定に従わなかったとして勝ち点17を差し引かれました。
+  - ここで監督を引き受けたのが、31歳のエディ・ハウです。フットボールリーグで最も若い監督でした。
+  - それでもボーンマスは落ちませんでした。
+  - 6年後の2015年、チャンピオンシップを制して、クラブ史上はじめてイングランドの1部に上がります。
+  - そして昨季はリーグ6位、勝ち点57。クラブ史上はじめて、ヨーロッパの舞台への出場権をつかみました。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/AFC_Bournemouth
+  bg: assets/backgrounds/stadium_ボーンマス.png
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - - スティーヴ・フレッチャー
+      - 1992-2013
+      - クラブ最多の726試合出場
+    - - カラム・ウィルソン
+      - 2014-2020
+      - 初のプレミア昇格の得点源
+    - - エディ・ハウ
+      - 選手・監督
+      - 4部からプレミアへ導いた
+  say:
+  - スティーヴ・フレッチャーは、クラブ史上最多の**726試合**に出場した選手です。
+  - カラム・ウィルソンは、2014年から15年にリーグ20得点。クラブ初のプレミア昇格を決めました。
+  - エディ・ハウは選手として長くプレーし、のちに監督として、4部にいたクラブを**プレミアまで**連れていきました。
+  sources:
+  - https://en.wikipedia.org/wiki/List_of_AFC_Bournemouth_records_and_statistics
+  - https://en.wikipedia.org/wiki/Callum_Wilson
+  - https://en.wikipedia.org/wiki/Eddie_Howe
+  bg: assets/backgrounds/stadium_ボーンマス.png
+  official: false
+- id: rival
+  heading: 宿敵
+  tier: 背景
+  telop: 名前の付いた宿敵が、記録に残っていない
+  narrator: 解説
+  card:
+    type: table
+    title: 宿敵をめぐる記録
+    columns:
+    - ''
+    - ''
+    rows:
+    - - サポーターが挙げた相手
+      - サウサンプトン（2019年8月の調査）
+    - - そのクラブ
+      - 今季のプレミアリーグにいない
+    - - 1990年5月5日
+      - リーズのサポーターが街で暴動
+    - - リーズ
+      - 今季もプレミアリーグにいる
+  say:
+  - このクラブには、**名前の付いた宿敵がいません。**
+  - ダービーの呼び名も、その由来も、記事には書かれていないのです。
+  - 手がかりは2つあります。
+  - ひとつは2019年8月の調査。ボーンマスのサポーターが最大のライバルに挙げたのは、サウサンプトンでした。
+  - ただし理由までは残っていません。しかもサウサンプトンは、今季のプレミアリーグにいません。
+  - もうひとつがリーズ・ユナイテッドです。
+  - 1990年5月5日、メーデーの連休中に、リーズのサポーターがこの街で大規模な暴動と破壊を起こしました。
+  - 記事はこれを「最も激しい因縁」と書いています。ただしこの一文には、**出典を求める印が付いたまま**です。
+  - そのリーズは、今季もプレミアリーグにいます。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/AFC_Bournemouth
+  bg: assets/backgrounds/stadium_ボーンマス.png
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - 今季の登録選手は28人です。
+  - image: assets/stats/pl_bournemouth_gk.png
+    text: ゴールキーパーは3人。
+  - image: assets/stats/pl_bournemouth_df.png
+    text: ディフェンダーは10人。
+  - image: assets/stats/pl_bournemouth_mf.png
+    text: ミッドフィールダーは8人。
+  - image: assets/stats/pl_bournemouth_fw.png
+    text: フォワードは7人。
+  sources:
+  - https://en.wikipedia.org/wiki/AFC_Bournemouth
+  bg: assets/backgrounds/stadium_ボーンマス.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 4試合で3引き分け1敗
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - マンチェスター・シティ（アウェー）
+      - 1対2
+    - - 第2節
+      - エヴァートン（ホーム）
+      - 1対1
+    - - 第3節
+      - ニューカッスル・ユナイテッド（アウェー）
+      - 2対2
+    - - 第4節
+      - ブレントフォード（ホーム）
+      - 2対2
+  say:
+  - プレミアリーグは4試合を終えて、**3引き分け1敗**です。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_AFC_Bournemouth_season
+  bg: assets/backgrounds/stadium_ボーンマス.png
+  official: false

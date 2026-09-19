@@ -1,0 +1,31 @@
+{"title": "ハル・シティ 基礎DATA",
+ "colors": ["#000000", "#F5A300"],
+ "crest": "assets/crests/ハルシティ.png",
+ "tiles": [
+  ["クラブ創立", "1904年", "キングストン・アポン・ハルで発足"],
+  ["本拠地", "MKMスタジアム", "収容 24,983人"],
+  ["ホームタウン", "キングストン・アポン・ハル", "イングランド東部の港町"],
+  ["オーナー", "アジュン・ウルジャル", "トルコの実業家（2022年〜）"],
+  ["タイトル歴", "1部優勝 0回", "FA杯0・リーグ杯0・欧州0"],
+  ["直近のタイトル", "EFL昇格プレーオフ優勝", "2025-26シーズン"],
+  ["クラブ記録", "最大勝利 11-1", "1939年 対カーライル・ユナイテッド"],
+  ["プレミア最高位", "16位", "2013-14シーズン（歴代最高）"],
+  ["有名なファン", "オマー・シャリフ", "トム・コートネイ、ジョン・プレスコット"]
+ ],
+ "fans": [
+  {"name": "オマー・シャリフ", "who": "俳優（『ドクトル・ジバゴ』等）", "source": "https://www.standard.co.uk/sport/football/sir-tom-courtenay-and-omar-sharif-are-off-to-support-hull-city-in-fa-cup-final-9386285.html"},
+  {"name": "トム・コートネイ", "who": "俳優、ハル出身", "source": "https://www.standard.co.uk/sport/football/sir-tom-courtenay-and-omar-sharif-are-off-to-support-hull-city-in-fa-cup-final-9386285.html"},
+  {"name": "ジョン・プレスコット", "who": "元副首相（英労働党）", "source": "https://www.independent.co.uk/sport/football/news/john-prescott-backs-assem-allam-over-hull-city-name-change-as-tigers-future-remains-unclear-9063681.html"},
+  {"name": "スティーヴン・マルクマス", "who": "ペイヴメントのボーカル", "source": "https://www.mirror.co.uk/sport/football/news/hull-city-stephen-malkmus-praises-2361724"},
+  {"name": "シニッタ", "who": "歌手", "source": "https://footballleagueworld.co.uk/meet-hull-citys-celebrity-supporters-from-hollywood-star-to-chart-topping-singer/"}
+ ],
+ "fan_story": {"text": "俳優オマー・シャリフはパリの自宅からテレビでハルの試合を追っており、テレビが見られない時はクラブの自動音声電話に何度もかけて途中経過を確認していたという。", "source": "https://www.hulldailymail.co.uk/news/celebs-tv/google-paid-tribute-hull-city-1441810"},
+ "sources": [
+  "https://en.wikipedia.org/wiki/Hull_City_A.F.C.",
+  "https://www.standard.co.uk/sport/football/sir-tom-courtenay-and-omar-sharif-are-off-to-support-hull-city-in-fa-cup-final-9386285.html",
+  "https://www.independent.co.uk/sport/football/news/john-prescott-backs-assem-allam-over-hull-city-name-change-as-tigers-future-remains-unclear-9063681.html",
+  "https://www.mirror.co.uk/sport/football/news/hull-city-stephen-malkmus-praises-2361724",
+  "https://footballleagueworld.co.uk/meet-hull-citys-celebrity-supporters-from-hollywood-star-to-chart-topping-singer/",
+  "https://www.hulldailymail.co.uk/news/celebs-tv/google-paid-tribute-hull-city-1441810"
+ ],
+ "notes": "ハルはFA杯決勝進出(2014年、アーセナルに敗戦)はあるが優勝経験は一度も無く、1部優勝・FA杯・リーグ杯・欧州タイトルはいずれも0回。直近のタイトルはHonours節に載る最新の実績である2025-26シーズンのEFLチャンピオンシップ昇格プレーオフ優勝(2026年5月、ミドルズブラを破る。決勝は当初サウサンプトンが進出していたが『スパイゲート』事件で失格しミドルズブラが繰り上がった)。プレミア最高位『16位』は本文に明記された『歴代最高順位』(2013-14シーズン)。配色はクラブの伝統色である黒×アンバー(黄色系)を採用した目安（原文に厳密な公式hex指定は無い）。"}

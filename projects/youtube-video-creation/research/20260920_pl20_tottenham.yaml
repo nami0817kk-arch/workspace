@@ -1,0 +1,217 @@
+# プレミアリーグ20クラブ紹介 ⑳トッテナム（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/tottenham*.json と旧台本 20260916_pl20_tottenham.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- 高井幸大
+- トッテナム
+short_title: 高井幸大がいるトッテナムってどんなクラブ？
+theme:
+  id: pl_clubs_20_tottenham
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: トッテナム
+  title: 高井幸大がいるトッテナムってどんなクラブ？ ⑳プレミア20クラブ紹介
+  question: どんなクラブなのか
+  hook: このクラブには、日本の高井幸大がいます。
+thumbnail:
+  line1: リーグの外から、FAカップ
+  line2: トッテナム
+  crest_main:
+  - トッテナム
+  tags: []
+  points: []
+sections:
+- id: why
+  heading: 高井幸大がいるクラブ
+  tier: 報道
+  telop: 高井幸大が所属するトッテナム
+  narrator: キャスター
+  say:
+  - 日本代表の高井幸大が所属しているのが、トッテナム・ホットスパーです。
+  - では、どんなクラブなのか。まずは基本のデータから見ていきます。
+  sources:
+  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
+  bg: assets/backgrounds/stadium_トッテナム.png
+  official: false
+- id: data
+  heading: トッテナム 基礎DATA
+  main: true
+  tier: 背景
+  telop: 1882年創立
+  narrator: 解説
+  say:
+  - short_only: true
+    text: 高井幸大の所属クラブを、基本のデータで見ていきます。
+  - image: assets/stats/pl_tottenham_data.png
+    text: 創立は**1882年**。ホットスパーという名前で始まりました。
+  - image: assets/stats/pl_tottenham_data.png
+    text: 本拠地のスタジアムには、**6万2850人**が入ります。
+  - image: assets/stats/pl_tottenham_data.png
+    text: オーナーはENICグループ。2001年からクラブを持っています。
+  - image: assets/stats/pl_tottenham_data.png
+    text: 1部リーグの優勝は**2回**。FAカップは8回、リーグカップ4回、ヨーロッパのタイトルもあります。
+  - image: assets/stats/pl_tottenham_data.png
+    text: 直近のタイトルは、2024年から25年のヨーロッパリーグです。
+  - image: assets/stats/pl_tottenham_data.png
+    text: プレミアでの最高位は、2016年から17年の**2位**です。
+  - image: assets/stats/pl_tottenham_data.png
+    text: 愛称は「スパーズ」。「リリーホワイツ」とも呼ばれます。
+  sources:
+  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
+  bg: assets/backgrounds/stadium_トッテナム.png
+  official: false
+- id: cup1901
+  heading: リーグに入らないまま、FAカップを獲った
+  tier: 背景
+  telop: 1901年。これ以降、同じ例はない
+  narrator: 解説
+  card:
+    type: table
+    title: 最初に立てた記録
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1901年
+      - リーグ外のクラブとしてFAカップ優勝
+    - - 以降
+      - 同じ例は1つもない
+    - - 1961年
+      - 20世紀で最初の2冠
+    - - 1963年
+      - カップウィナーズカップ。英国勢で初
+    - - 1972年
+      - UEFAカップ。2種類目も英国勢で初
+  say:
+  - 1901年、**リーグに属していないまま**FAカップを獲りました。
+  - 1888年にフットボールリーグができて以降、**リーグ外のクラブが優勝したのは、これだけ**です。125年経っても、並ぶ例がありません。
+  - 1961年には、リーグとカップの両方を獲りました。**20世紀で最初の2冠**です。
+  - '**イギリスのクラブで、ヨーロッパのタイトルを最初に獲ったのもトッテナム**でした。1963年のカップウィナーズカップです。'
+  - 1972年にはUEFAカップも獲りました。種類の違うヨーロッパのタイトルを2つ獲ったのも、イギリス勢では最初でした。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
+  bg: assets/backgrounds/stadium_トッテナム.png
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - - ハリー・ケイン
+      - 2009-2023
+      - クラブ最多の280得点
+    - - ソン・フンミン
+      - 2015-2025
+      - EL優勝の主将
+    - - レドリー・キング
+      - 1999-2012
+      - 一筋の主将
+  say:
+  - ハリー・ケインは、ジミー・グリーヴスを抜いたクラブ史上最多の**280得点**。
+  - ソン・フンミンは2023年から主将を務め、2025年にヨーロッパリーグを掲げました。
+  - レドリー・キングは、生涯トッテナム一筋の主将。2008年にリーグカップを掲げています。
+  sources:
+  - https://en.wikipedia.org/wiki/Harry_Kane
+  - https://en.wikipedia.org/wiki/Son_Heung-min
+  - https://en.wikipedia.org/wiki/Ledley_King
+  bg: assets/backgrounds/stadium_トッテナム.png
+  official: false
+- id: rival
+  heading: 宿敵
+  tier: 背景
+  telop: アーセナルとの、ノース・ロンドン・ダービー
+  narrator: 解説
+  card:
+    type: table
+    title: ノース・ロンドン・ダービー
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1913年
+      - アーセナルがハイベリーへ移転
+    - - 距離
+      - ホワイト・ハート・レーンから4マイル
+    - - 1919年の投票
+      - アーセナル18票／トッテナム8票
+    - - 結果
+      - 1部に選ばれたのはアーセナル
+    - - 今季
+      - 相手もプレミアリーグにいる
+  say:
+  - 相手は**アーセナル**。**ノース・ロンドン・ダービー**です。
+  - 始まりは1913年。アーセナルが、プラムステッドのマナー・グラウンドからハイベリーへ移ってきました。
+  - トッテナムの本拠地から、わずか**4マイル**の場所です。
+  - 決定的になったのは1919年でした。1部を2つ広げることになり、どのクラブを入れるかが**投票**で決まります。
+  - アーセナルが**18票**、トッテナムが**8票**。選ばれたのはアーセナルでした。
+  - このときの票は、ほかにバーンズリーが5、ウルヴァーハンプトンが4、ノッティンガム・フォレストが3、バーミンガムが2、ハル・シティが1と割れています。
+  - 相手は**今季もプレミアリーグにいます。**
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/North_London_derby
+  bg: assets/backgrounds/stadium_トッテナム.png
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - 今季の登録選手は35人です。
+  - image: assets/stats/pl_tottenham_gk.png
+    text: ゴールキーパーは4人。
+  - image: assets/stats/pl_tottenham_df.png
+    text: ディフェンダーは12人。日本の高井幸大もここにいます。
+  - image: assets/stats/pl_tottenham_mf.png
+    text: ミッドフィールダーは9人。
+  - image: assets/stats/pl_tottenham_fw.png
+    text: フォワードは10人。
+  sources:
+  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
+  bg: assets/backgrounds/stadium_トッテナム.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 5試合で2引き分け3敗
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - ブレントフォード（アウェー）
+      - 0対3
+    - - 第2節
+      - ニューカッスル・ユナイテッド（ホーム）
+      - 0対2
+    - - 第3節
+      - ノッティンガム・フォレスト（アウェー）
+      - 0対0
+    - - 第4節
+      - エヴァートン（ホーム）
+      - 0対0
+    - - 第5節
+      - アストン・ヴィラ（ホーム）
+      - 2対3
+  say:
+  - プレミアリーグは5試合を終えて、**2引き分け3敗**です。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Tottenham_Hotspur_F.C._season
+  bg: assets/backgrounds/stadium_トッテナム.png
+  official: false

@@ -1,0 +1,519 @@
+{
+ "club_title": "Crystal_Palace_F.C.",
+ "season_title": "2026–27_Crystal_Palace_F.C._season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "ENG",
+   "name": "Dean Henderson",
+   "dob": "1997-03-12",
+   "captain": true,
+   "loan": false
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Tyrick Mitchell",
+   "dob": "1999-09-01",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "MAR",
+   "name": "Chadi Riad",
+   "dob": "2003-06-17",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Axel Disasi",
+   "dob": "1998-03-11",
+   "captain": false,
+   "loan": true
+  },
+  {
+   "no": "6",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "Jaydee Canvot",
+   "dob": "2006-07-29",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "7",
+   "pos": "FW",
+   "nat": "SEN",
+   "name": "Ismaïla Sarr",
+   "dob": "1998-02-25",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "COL",
+   "name": "Jefferson Lerma",
+   "dob": "1994-10-25",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Eddie Nketiah",
+   "dob": "1999-05-30",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "10",
+   "pos": "FW",
+   "nat": "ESP",
+   "name": "Yéremy Pino",
+   "dob": "2002-10-20",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "11",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Dwight McNeil",
+   "dob": "1999-11-22",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "12",
+   "pos": "FW",
+   "nat": "USA",
+   "name": "Zavier Gozo",
+   "dob": "2007-03-22",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "14",
+   "pos": "FW",
+   "nat": "FRA",
+   "name": "Jean-Philippe Mateta",
+   "dob": "1997-06-28",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "17",
+   "pos": "DF",
+   "nat": "JPN",
+   "name": "Takehiro Tomiyasu",
+   "dob": "1998-11-05",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "18",
+   "pos": "MF",
+   "nat": "JPN",
+   "name": "Daichi Kamada",
+   "dob": "1996-08-05",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "19",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Will Hughes",
+   "dob": "1995-04-17",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "20",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Adam Wharton",
+   "dob": "2004-02-06",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "21",
+   "pos": "DF",
+   "nat": "ITA",
+   "name": "Honest Ahanor",
+   "dob": "2008-02-23",
+   "captain": false,
+   "loan": true
+  },
+  {
+   "no": "22",
+   "pos": "FW",
+   "nat": "NOR",
+   "name": "Jørgen Strand Larsen",
+   "dob": "2000-02-06",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "23",
+   "pos": "MF",
+   "nat": "NED",
+   "name": "Quinten Timber",
+   "dob": "2001-06-17",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "24",
+   "pos": "FW",
+   "nat": "CHI",
+   "name": "Darío Osorio",
+   "dob": "2004-01-24",
+   "captain": false,
+   "loan": true
+  },
+  {
+   "no": "25",
+   "pos": "DF",
+   "nat": "ISR",
+   "name": "Anan Khalaili",
+   "dob": "2004-09-03",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "26",
+   "pos": "DF",
+   "nat": "USA",
+   "name": "Chris Richards",
+   "dob": "2000-03-28",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "28",
+   "pos": "MF",
+   "nat": "MLI",
+   "name": "Cheick Doucouré",
+   "dob": "2000-01-08",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "29",
+   "pos": "FW",
+   "nat": "CIV",
+   "name": "Evann Guessand",
+   "dob": "2001-07-01",
+   "captain": false,
+   "loan": true
+  },
+  {
+   "no": "30",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Óscar Mingueza",
+   "dob": "1999-05-13",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "31",
+   "pos": "GK",
+   "nat": "ENG",
+   "name": "Remi Matthews",
+   "dob": "1994-02-10",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "33",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Ben Chilwell",
+   "dob": "1996-12-21",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "44",
+   "pos": "GK",
+   "nat": "ARG",
+   "name": "Walter Benítez",
+   "dob": "1993-01-19",
+   "captain": false,
+   "loan": false
+  }
+ ],
+ "results": [
+  [
+   "18 July 2026",
+   "Friendly",
+   "Crystal Palace",
+   "5−1",
+   "Swindon Town"
+  ],
+  [
+   "25 July 2026",
+   "Friendly",
+   "Bromley",
+   "3–0",
+   "Crystal Palace"
+  ],
+  [
+   "28 July 2026",
+   "Friendly",
+   "Crystal Palace",
+   "0–3",
+   "Lens"
+  ],
+  [
+   "28 July 2026",
+   "Friendly",
+   "Famalicão",
+   "0−0",
+   "Crystal Palace"
+  ],
+  [
+   "31 July 2026",
+   "Friendly",
+   "Al-Ula",
+   "1−3",
+   "Crystal Palace"
+  ],
+  [
+   "7 August 2026",
+   "Friendly",
+   "Fulham",
+   "1–2",
+   "Crystal Palace"
+  ],
+  [
+   "15 August 2026",
+   "Friendly",
+   "SC Freiburg",
+   "3−0",
+   "Crystal Palace"
+  ],
+  [
+   "22 August 2026",
+   "1",
+   "Everton",
+   "2−0",
+   "Crystal Palace"
+  ],
+  [
+   "28 August 2026",
+   "2",
+   "Crystal Palace",
+   "1−4",
+   "Manchester City"
+  ],
+  [
+   "5 September 2026",
+   "3",
+   "Fulham",
+   "2–3",
+   "Crystal Palace"
+  ],
+  [
+   "12 September 2026",
+   "4",
+   "Crystal Palace",
+   "2–3",
+   "Ipswich Town"
+  ],
+  [
+   "20 September 2026",
+   "5",
+   "Leeds United",
+   "| report     =",
+   "Crystal Palace"
+  ],
+  [
+   "10 October 2026",
+   "6",
+   "Crystal Palace",
+   "| report     =",
+   "Nottingham Forest"
+  ],
+  [
+   "18 October 2026",
+   "7",
+   "Brighton & Hove Albion",
+   "| report     =",
+   "Crystal Palace"
+  ],
+  [
+   "25 October 2026",
+   "8",
+   "Crystal Palace",
+   "| report     =",
+   "Newcastle United"
+  ],
+  [
+   "31 October 2026",
+   "9",
+   "Tottenham Hotspur",
+   "| report     =",
+   "Crystal Palace"
+  ],
+  [
+   "7 November 2026",
+   "10",
+   "Crystal Palace",
+   "| result     =",
+   "Liverpool"
+  ],
+  [
+   "21 November 2026",
+   "11",
+   "Coventry City",
+   "| result     =",
+   "Crystal Palace"
+  ],
+  [
+   "28 November 2026",
+   "12",
+   "Crystal Palace",
+   "| result     =",
+   "Hull City"
+  ],
+  [
+   "2 December 2026",
+   "13",
+   "Chelsea",
+   "| result     =",
+   "Crystal Palace"
+  ],
+  [
+   "5 December 2026",
+   "14",
+   "Aston Villa",
+   "| result     =",
+   "Crystal Palace"
+  ],
+  [
+   "12 December 2026",
+   "15",
+   "Crystal Palace",
+   "| result     =",
+   "Manchester United"
+  ],
+  [
+   "19 December 2026",
+   "16",
+   "Sunderland",
+   "| result     =",
+   "Crystal Palace"
+  ],
+  [
+   "27 December 2026",
+   "17",
+   "Crystal Palace",
+   "| result     =",
+   "Arsenal"
+  ],
+  [
+   "30 December 2026",
+   "18",
+   "Crystal Palace",
+   "| result     =",
+   "Bournemouth"
+  ],
+  [
+   "2 January 2027",
+   "19",
+   "Brentford",
+   "| result     =",
+   "Crystal Palace"
+  ],
+  [
+   "6 January 2027",
+   "20",
+   "Crystal Palace",
+   "| result     =",
+   "Chelsea"
+  ],
+  [
+   "8 September 2026",
+   "Third round",
+   "Crystal Palace",
+   "3–0",
+   "Middlesbrough"
+  ],
+  [
+   "w/c 26 October 2026",
+   "Fourth round",
+   "Fulham",
+   "| result     =",
+   "Crystal Palace"
+  ],
+  [
+   "17 September 2026",
+   "1",
+   "Crystal Palace",
+   "4–0",
+   "Lech Poznań"
+  ],
+  [
+   "15 October 2026",
+   "2",
+   "Lyon",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050076/",
+   "Crystal Palace"
+  ],
+  [
+   "22 October 2026",
+   "3",
+   "Beşiktaş",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050107/",
+   "Crystal Palace"
+  ],
+  [
+   "5 November 2026",
+   "4",
+   "Crystal Palace",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050121/",
+   "TSG Hoffenheim"
+  ],
+  [
+   "26 November 2026",
+   "5",
+   "Crystal Palace",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050139/",
+   "Real Sociedad"
+  ],
+  [
+   "10 December 2026",
+   "6",
+   "Jagiellonia Białystok",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050160/",
+   "Crystal Palace"
+  ],
+  [
+   "21 January 2027",
+   "7",
+   "Crystal Palace",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050175/",
+   "Sparta Prague"
+  ],
+  [
+   "28 January 2027",
+   "8",
+   "Red Bull Salzburg",
+   "| report     = https://www.uefa.com/uefaeuropaleague/match/2050191/",
+   "Crystal Palace"
+  ]
+ ]
+}

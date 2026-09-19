@@ -1,0 +1,652 @@
+{
+ "club_title": "Tottenham_Hotspur_F.C.",
+ "season_title": "2026–27_Tottenham_Hotspur_F.C._season",
+ "squad": [
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "SCO",
+   "name": "Andy Robertson",
+   "dob": "1994-03-11",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Tosin Adarabioyo",
+   "dob": "1997-09-24",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "ARG",
+   "name": "Marcos Senesi",
+   "dob": "1997-05-10",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "6",
+   "pos": "DF",
+   "nat": "NED",
+   "name": "Jan Paul van Hecke",
+   "dob": "2000-06-08",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "7",
+   "pos": "MF",
+   "nat": "NED",
+   "name": "Xavi Simons",
+   "dob": "2003-04-21",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Conor Gallagher",
+   "dob": "2000-02-06",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "9",
+   "pos": "FW",
+   "nat": "BRA",
+   "name": "Richarlison",
+   "dob": "1997-05-10",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "10",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "James Maddison",
+   "dob": "1996-11-23",
+   "captain": true,
+   "loan": false
+  },
+  {
+   "no": "11",
+   "pos": "FW",
+   "nat": "FRA",
+   "name": "Mathys Tel",
+   "dob": "2005-04-27",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "13",
+   "pos": "DF",
+   "nat": "ITA",
+   "name": "Destiny Udogie",
+   "dob": "2002-11-28",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "14",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Archie Gray",
+   "dob": "2006-03-12",
+   "captain": true,
+   "loan": false
+  },
+  {
+   "no": "15",
+   "pos": "MF",
+   "nat": "SWE",
+   "name": "Lucas Bergvall",
+   "dob": "2006-02-02",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "16",
+   "pos": "MF",
+   "nat": "ITA",
+   "name": "Sandro Tonali",
+   "dob": "2000-05-08",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "17",
+   "pos": "FW",
+   "nat": "BRA",
+   "name": "Sávio",
+   "dob": "2004-04-10",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "18",
+   "pos": "MF",
+   "nat": "POR",
+   "name": "Mateus Fernandes",
+   "dob": "2004-07-10",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "19",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Dominic Solanke",
+   "dob": "1997-09-14",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "20",
+   "pos": "FW",
+   "nat": "GHA",
+   "name": "Mohammed Kudus",
+   "dob": "2000-08-02",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "21",
+   "pos": "FW",
+   "nat": "SWE",
+   "name": "Dejan Kulusevski",
+   "dob": "2000-04-25",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "22",
+   "pos": "FW",
+   "nat": "EGY",
+   "name": "Omar Marmoush",
+   "dob": "1999-02-07",
+   "captain": false,
+   "loan": true
+  },
+  {
+   "no": "23",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Pedro Porro",
+   "dob": "1999-09-13",
+   "captain": true,
+   "loan": false
+  },
+  {
+   "no": "27",
+   "pos": "FW",
+   "nat": "UKR",
+   "name": "Mykhailo Mudryk",
+   "dob": "2001-01-05",
+   "captain": false,
+   "loan": true
+  },
+  {
+   "no": "28",
+   "pos": "FW",
+   "nat": "FRA",
+   "name": "Wilson Odobert",
+   "dob": "2004-11-28",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "30",
+   "pos": "MF",
+   "nat": "URU",
+   "name": "Rodrigo Bentancur",
+   "dob": "1997-06-25",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "31",
+   "pos": "GK",
+   "nat": "CZE",
+   "name": "Antonín Kinský",
+   "dob": "2003-03-13",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "33",
+   "pos": "DF",
+   "nat": "WAL",
+   "name": "Ben Davies",
+   "dob": "1993-04-24",
+   "captain": true,
+   "loan": false
+  },
+  {
+   "no": "37",
+   "pos": "DF",
+   "nat": "NED",
+   "name": "Micky van de Ven",
+   "dob": "2001-04-19",
+   "captain": true,
+   "loan": false
+  },
+  {
+   "no": "39",
+   "pos": "GK",
+   "nat": "SVK",
+   "name": "Martin Dúbravka",
+   "dob": "1989-01-15",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "40",
+   "pos": "GK",
+   "nat": "USA",
+   "name": "Brandon Austin",
+   "dob": "1999-01-08",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "ITA",
+   "name": "Guglielmo Vicario",
+   "dob": "1996-10-07",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "25",
+   "pos": "DF",
+   "nat": "JPN",
+   "name": "Kōta Takai",
+   "dob": "2004-09-04",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "29",
+   "pos": "MF",
+   "nat": "SEN",
+   "name": "Pape Matar Sarr",
+   "dob": "2002-09-14",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "38",
+   "pos": "DF",
+   "nat": "BRA",
+   "name": "Souza",
+   "dob": "2006-06-16",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "",
+   "pos": "DF",
+   "nat": "AUT",
+   "name": "Kevin Danso",
+   "dob": "1998-09-19",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "",
+   "pos": "DF",
+   "nat": "ROU",
+   "name": "Radu Drăgușin",
+   "dob": "2002-02-03",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "",
+   "pos": "FW",
+   "nat": "KOR",
+   "name": "Yang Min-hyeok",
+   "dob": "2006-04-16",
+   "captain": false,
+   "loan": false
+  }
+ ],
+ "results": [
+  [
+   "22 July 2026",
+   "Friendly",
+   "Tottenham Hotspur",
+   "1−0",
+   "Milton Keynes Dons"
+  ],
+  [
+   "26 July 2026",
+   "Friendly",
+   "Auckland FC",
+   "0–2",
+   "Tottenham Hotspur"
+  ],
+  [
+   "29 July 2026",
+   "Sydney Super Cup",
+   "Sydney FC",
+   "1–1",
+   "Tottenham Hotspur"
+  ],
+  [
+   "1 August 2026",
+   "Sydney Super Cup",
+   "Chelsea",
+   "1−2",
+   "Tottenham Hotspur"
+  ],
+  [
+   "8 August 2026",
+   "Friendly",
+   "Tottenham Hotspur",
+   "1−1",
+   "Getafe"
+  ],
+  [
+   "15 August 2026",
+   "Friendly",
+   "Tottenham Hotspur",
+   "3−0",
+   "TSG Hoffenheim"
+  ],
+  [
+   "16 August 2026",
+   "Friendly",
+   "Tottenham Hotspur",
+   "2−2",
+   "TSG Hoffenheim"
+  ],
+  [
+   "22 August 2026",
+   "1",
+   "Brentford",
+   "3–0",
+   "Tottenham Hotspur"
+  ],
+  [
+   "29 August 2026",
+   "2",
+   "Tottenham Hotspur",
+   "0–2",
+   "Newcastle United"
+  ],
+  [
+   "5 September 2026",
+   "3",
+   "Nottingham Forest",
+   "0–0",
+   "Tottenham Hotspur"
+  ],
+  [
+   "12 September 2026",
+   "4",
+   "Tottenham Hotspur",
+   "0–0",
+   "Everton"
+  ],
+  [
+   "19 September 2026",
+   "5",
+   "Tottenham Hotspur",
+   "2–3",
+   "Aston Villa"
+  ],
+  [
+   "10 October 2026",
+   "6",
+   "Manchester United",
+   "| report = https://www.premierleague.com/en/match/2645253",
+   "Tottenham Hotspur"
+  ],
+  [
+   "19 October 2026",
+   "7",
+   "Tottenham Hotspur",
+   "| report = https://www.premierleague.com/en/match/2645264",
+   "Coventry City"
+  ],
+  [
+   "24 October 2026",
+   "8",
+   "Chelsea",
+   "| report = https://www.premierleague.com/en/match/2645267",
+   "Tottenham Hotspur"
+  ],
+  [
+   "31 October 2026",
+   "9",
+   "Tottenham Hotspur",
+   "| report = https://www.premierleague.com/en/match/2645284",
+   "Crystal Palace"
+  ],
+  [
+   "7 November 2026",
+   "10",
+   "Leeds United",
+   "| report = http://premierleague.com/en/match/2645291",
+   "Tottenham Hotspur"
+  ],
+  [
+   "21 November 2026",
+   "11",
+   "Tottenham Hotspur",
+   "| report = https://www.premierleague.com/en/match/2645304",
+   "Ipswich Town"
+  ],
+  [
+   "28 November 2026",
+   "12",
+   "Sunderland",
+   "| report = https://www.premierleague.com/en/match/2645314",
+   "Tottenham Hotspur"
+  ],
+  [
+   "2 December 2026",
+   "13",
+   "Tottenham Hotspur",
+   "| report = https://www.premierleague.com/en/match/2645324",
+   "Fulham"
+  ],
+  [
+   "5 December 2026",
+   "14",
+   "Tottenham Hotspur",
+   "| report = https://www.premierleague.com/en/match/2645334",
+   "Arsenal"
+  ],
+  [
+   "12 December 2026",
+   "15",
+   "Hull City",
+   "| report = https://www.premierleague.com/en/match/2645340",
+   "Tottenham Hotspur"
+  ],
+  [
+   "19 December 2026",
+   "16",
+   "Liverpool",
+   "| report = https://www.premierleague.com/en/match/2645351",
+   "Tottenham Hotspur"
+  ],
+  [
+   "26 December 2026",
+   "17",
+   "Tottenham Hotspur",
+   "| report = https://www.premierleague.com/en/match/2645364",
+   "Bournemouth"
+  ],
+  [
+   "29 December 2026",
+   "18",
+   "Tottenham Hotspur",
+   "| report = https://www.premierleague.com/en/match/2645374",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "3 January 2027",
+   "19",
+   "Manchester City",
+   "| report = https://www.premierleague.com/en/match/2645382",
+   "Tottenham Hotspur"
+  ],
+  [
+   "6 January 2027",
+   "20",
+   "Fulham",
+   "| report = https://www.premierleague.com/en/match/2645389",
+   "Tottenham Hotspur"
+  ],
+  [
+   "16 January 2027",
+   "21",
+   "Tottenham Hotspur",
+   "| report = https://www.premierleague.com/en/match/2645404",
+   "Leeds United"
+  ],
+  [
+   "23 January 2027",
+   "22",
+   "Crystal Palace",
+   "| report = https://www.premierleague.com/en/match/2645407",
+   "Tottenham Hotspur"
+  ],
+  [
+   "30 January 2027",
+   "23",
+   "Tottenham Hotspur",
+   "| report = https://www.premierleague.com/en/match/2645424",
+   "Sunderland"
+  ],
+  [
+   "6 February 2027",
+   "24",
+   "Ipswich Town",
+   "| report = https://www.premierleague.com/en/match/2645430",
+   "Tottenham Hotspur"
+  ],
+  [
+   "10 February 2027",
+   "25",
+   "Tottenham Hotspur",
+   "| report = https://www.premierleague.com/en/match/2645444",
+   "Manchester City"
+  ],
+  [
+   "20 February 2027",
+   "26",
+   "Brighton & Hove Albion",
+   "| report = https://www.premierleague.com/en/match/2645448",
+   "Tottenham Hotspur"
+  ],
+  [
+   "27 February 2027",
+   "27",
+   "Tottenham Hotspur",
+   "| report = https://www.premierleague.com/en/match/2645464l",
+   "Liverpool"
+  ],
+  [
+   "3 March 2027",
+   "28",
+   "Bournemouth",
+   "| report = https://www.premierleague.com/en/match/2645465",
+   "Tottenham Hotspur"
+  ],
+  [
+   "13 March 2027",
+   "29",
+   "Tottenham Hotspur",
+   "| report = https://www.premierleague.com/en/match/2645484",
+   "Nottingham Forest"
+  ],
+  [
+   "20 March 2027",
+   "30",
+   "Everton",
+   "| report = https://www.premierleague.com/en/match/2645488",
+   "Tottenham Hotspur"
+  ],
+  [
+   "10 April 2027",
+   "31",
+   "Tottenham Hotspur",
+   "| report = https://www.premierleague.com/en/match/2645504",
+   "Brentford"
+  ],
+  [
+   "17 April 2027",
+   "32",
+   "Newcastle United",
+   "| report = https://www.premierleague.com/en/match/2645513",
+   "Tottenham Hotspur"
+  ],
+  [
+   "24 April 2027",
+   "33",
+   "Tottenham Hotspur",
+   "| report = https://www.premierleague.com/en/match/2645524",
+   "Hull City"
+  ],
+  [
+   "1 May 2027",
+   "34",
+   "Arsenal",
+   "| report = https://www.premierleague.com/en/match/2645525",
+   "Tottenham Hotspur"
+  ],
+  [
+   "8 May 2027",
+   "35",
+   "Tottenham Hotspur",
+   "| report = https://www.premierleague.com/en/match/2645544",
+   "Chelsea"
+  ],
+  [
+   "15 May 2027",
+   "36",
+   "Coventry City",
+   "| report = https://www.premierleague.com/en/match/2645548",
+   "Tottenham Hotspur"
+  ],
+  [
+   "23 May 2027",
+   "37",
+   "Tottenham Hotspur",
+   "| report = https://www.premierleague.com/en/match/2645564",
+   "Manchester United"
+  ],
+  [
+   "30 May 2027",
+   "38",
+   "Aston Villa",
+   "| report = https://www.premierleague.com/en/match/2645566",
+   "Tottenham Hotspur"
+  ],
+  [
+   "26 August 2026",
+   "Second round",
+   "Tottenham Hotspur",
+   "5–1",
+   "Charlton Athletic"
+  ],
+  [
+   "15 September 2026",
+   "Third round",
+   "Liverpool",
+   "3–1",
+   "Tottenham Hotspur"
+  ]
+ ]
+}

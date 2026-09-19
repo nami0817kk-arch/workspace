@@ -39,13 +39,13 @@ CLUB = (168, 200, 245)
 MARK = (222, 255, 0)             # 帯と同じ蛍光イエロー
 
 
-def _ground() -> Image.Image:
-    board = Image.new("RGB", SIZE, TOP)
+def _ground(top=TOP, bottom=BOTTOM) -> Image.Image:
+    board = Image.new("RGB", SIZE, top)
     draw = ImageDraw.Draw(board)
     for y in range(SIZE[1]):
         t = y / SIZE[1]
         draw.line([(0, y), (SIZE[0], y)],
-                  fill=tuple(round(a + (b - a) * t) for a, b in zip(TOP, BOTTOM)))
+                  fill=tuple(round(a + (b - a) * t) for a, b in zip(top, bottom)))
     layer = Image.new("RGBA", SIZE, (0, 0, 0, 0))
     pen = ImageDraw.Draw(layer)
     for x in range(-SIZE[1], SIZE[0], 78):
@@ -54,16 +54,34 @@ def _ground() -> Image.Image:
     return Image.alpha_composite(board.convert("RGBA"), layer).convert("RGB")
 
 
-def build(out: Path, title: str, note: str, rows: list[tuple[str, str, bool]]) -> Path:
+def _fit(draw, text: str, path: str, size: int, width: float) -> ImageFont.FreeTypeFont:
+    """幅に収まるまで字を縮める。長い名前（ジモ＝アロバ等）が隣の列へはみ出した。"""
+    while size > 16 and draw.textlength(text, font=ImageFont.truetype(path, size)) > width:
+        size -= 2
+    return ImageFont.truetype(path, size)
+
+
+def _hex(code: str) -> tuple[int, int, int]:
+    code = code.strip().lstrip("#")
+    return tuple(int(code[i:i + 2], 16) for i in (0, 2, 4))
+
+
+def build(out: Path, title: str, note: str, rows: list[tuple[str, str, bool]],
+          floor: int = FLOOR, colors: tuple | None = None) -> Path:
+    """`floor` は描いてよい下端。**動画で出す板は帯に隠れないので SIZE[1] まで使う**
+    （2026-09-19。サムネ用の 430 のままだと下の4割が空いた）。
+    `colors` はクラブの色（地の上・地の下）。"""
     font_path = str(load_config().video.font_path())
-    board = _ground()
+    board = _ground(*colors) if colors else _ground()
     draw = ImageDraw.Draw(board)
 
     draw.rectangle([0, 0, SIZE[0], 104], fill=BAR)
     draw.rectangle([0, 104, SIZE[0], 110], fill=MARK)
-    draw.text((40, 30), title, font=ImageFont.truetype(font_path, 58), fill=NAME)
+    small = ImageFont.truetype(font_path, 26)
+    note_w = draw.textlength(note, font=small) + 40 if note else 0
+    # 見出しと注記が重なった（2026-09-19）。注記のぶんを空けて見出しを縮める
+    draw.text((40, 30), title, font=_fit(draw, title, font_path, 58, SIZE[0] - 80 - note_w), fill=NAME)
     if note:
-        small = ImageFont.truetype(font_path, 26)
         draw.text((SIZE[0] - 40 - draw.textlength(note, font=small), 58), note,
                   font=small, fill=CLUB)
 
@@ -72,7 +90,7 @@ def build(out: Path, title: str, note: str, rows: list[tuple[str, str, bool]]) -
     # そこから字の大きさを決める。3人以上は2列にする
     columns = 1 if len(rows) <= 2 else 2
     per = -(-len(rows) // columns)
-    band = (FLOOR - 132) // max(1, per)
+    band = (floor - 132) // max(1, per)
     name_size = max(30, min(60, round(band * 0.42)))
     club_size = max(18, min(30, round(band * 0.20)))
     name_font = ImageFont.truetype(font_path, name_size)
@@ -82,8 +100,10 @@ def build(out: Path, title: str, note: str, rows: list[tuple[str, str, bool]]) -
         col, row = divmod(index, per)
         x = 46 + col * (SIZE[0] - 92) // columns
         y = 132 + row * band
-        draw.text((x, y), name, font=name_font, fill=NAME)
-        width = draw.textlength(name, font=name_font)
+        cell = (SIZE[0] - 92) // columns - 60
+        font = _fit(draw, name, font_path, name_size, cell)
+        draw.text((x, y), name, font=font, fill=NAME)
+        width = draw.textlength(name, font=font)
         if is_new:
             draw.text((x + width + 16, y + name_size * 0.18), "★",
                       font=ImageFont.truetype(font_path, round(name_size * 0.62)), fill=MARK)
@@ -100,6 +120,10 @@ def main() -> int:
     ap.add_argument("out")
     ap.add_argument("--title", required=True)
     ap.add_argument("--note", default="")
+    ap.add_argument("--full", action="store_true",
+                    help="動画で出す板。帯に隠れないので下まで使う")
+    ap.add_argument("--colors", default="",
+                    help="地の色を2つ（例 #670E36,#2A0616）。クラブの色にするとき")
     ap.add_argument("--row", action="append", default=[],
                     help="名前|所属など|new（new を付けると印が出る）")
     args = ap.parse_args()
@@ -110,10 +134,12 @@ def main() -> int:
     if not rows:
         print("--row が1つもありません", file=sys.stderr)
         return 1
-    if len(rows) > 8:
+    if len(rows) > (12 if args.full else 8):
         print("■ 8人を超えると、一覧では読めません", file=sys.stderr)
         return 1
-    where = build(Path(args.out), args.title, args.note, rows)
+    colors = tuple(_hex(c) for c in args.colors.split(",")) if args.colors else None
+    where = build(Path(args.out), args.title, args.note, rows,
+                  floor=SIZE[1] - 30 if args.full else FLOOR, colors=colors)
     print(f"一覧板: {where}  （{len(rows)}人）")
     return 0
 

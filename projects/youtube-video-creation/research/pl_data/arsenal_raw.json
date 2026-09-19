@@ -1,0 +1,611 @@
+{
+ "club_title": "Arsenal_F.C.",
+ "season_title": "2026–27_Arsenal_F.C._season",
+ "squad": [
+  {
+   "no": "1",
+   "pos": "GK",
+   "nat": "ESP",
+   "name": "David Raya",
+   "dob": "1995-09-15",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "2",
+   "pos": "DF",
+   "nat": "FRA",
+   "name": "William Saliba",
+   "dob": "2001-03-24",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "3",
+   "pos": "DF",
+   "nat": "ESP",
+   "name": "Cristhian Mosquera",
+   "dob": "2004-06-27",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "4",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Ben White",
+   "dob": "1997-10-08",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "5",
+   "pos": "DF",
+   "nat": "ECU",
+   "name": "Piero Hincapié",
+   "dob": "2002-01-09",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "6",
+   "pos": "DF",
+   "nat": "BRA",
+   "name": "Gabriel Magalhães",
+   "dob": "1997-12-19",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "7",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Bukayo Saka",
+   "dob": "2001-09-05",
+   "captain": true,
+   "loan": false
+  },
+  {
+   "no": "8",
+   "pos": "MF",
+   "nat": "NOR",
+   "name": "Martin Ødegaard",
+   "dob": "1998-12-17",
+   "captain": true,
+   "loan": false
+  },
+  {
+   "no": "10",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Eberechi Eze",
+   "dob": "1998-06-29",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "12",
+   "pos": "DF",
+   "nat": "NED",
+   "name": "Jurriën Timber",
+   "dob": "2001-06-17",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "13",
+   "pos": "GK",
+   "nat": "ESP",
+   "name": "Kepa Arrizabalaga",
+   "dob": "1994-10-03",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "14",
+   "pos": "FW",
+   "nat": "SWE",
+   "name": "Viktor Gyökeres",
+   "dob": "1998-06-04",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "15",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Ezri Konsa",
+   "dob": "1997-10-23",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "17",
+   "pos": "FW",
+   "nat": "GRE",
+   "name": "Christos Tzolis",
+   "dob": "2002-01-30",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "20",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Noni Madueke",
+   "dob": "2002-03-10",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "23",
+   "pos": "MF",
+   "nat": "ESP",
+   "name": "Mikel Merino",
+   "dob": "1996-06-22",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "29",
+   "pos": "FW",
+   "nat": "GER",
+   "name": "Kai Havertz",
+   "dob": "1999-06-11",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "30",
+   "pos": "GK",
+   "nat": "FRA",
+   "name": "Illan Meslier",
+   "dob": "2000-03-02",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "33",
+   "pos": "DF",
+   "nat": "ITA",
+   "name": "Riccardo Calafiori",
+   "dob": "2002-05-19",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "36",
+   "pos": "MF",
+   "nat": "ESP",
+   "name": "Martín Zubimendi",
+   "dob": "1999-02-02",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "39",
+   "pos": "MF",
+   "nat": "BRA",
+   "name": "Bruno Guimarães",
+   "dob": "1997-11-16",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "41",
+   "pos": "MF",
+   "nat": "ENG",
+   "name": "Declan Rice",
+   "dob": "1999-01-14",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "49",
+   "pos": "DF",
+   "nat": "ENG",
+   "name": "Myles Lewis-Skelly",
+   "dob": "2006-09-26",
+   "captain": false,
+   "loan": false
+  },
+  {
+   "no": "22",
+   "pos": "FW",
+   "nat": "ENG",
+   "name": "Ethan Nwaneri",
+   "dob": "2007-03-21",
+   "captain": false,
+   "loan": true
+  },
+  {
+   "no": "35",
+   "pos": "GK",
+   "nat": "ENG",
+   "name": "Tommy Setford",
+   "dob": "2006-03-13",
+   "captain": false,
+   "loan": true
+  }
+ ],
+ "results": [
+  [
+   "1 August 2026",
+   "Friendly",
+   "Girona",
+   "1–4",
+   "Arsenal"
+  ],
+  [
+   "5 August 2026",
+   "Friendly",
+   "Arsenal",
+   "1–3",
+   "Real Betis"
+  ],
+  [
+   "9 August 2026",
+   "Emirates Cup",
+   "Arsenal",
+   "2–3",
+   "Borussia Dortmund"
+  ],
+  [
+   "12 August 2026",
+   "Friendly",
+   "Arsenal",
+   "1–1",
+   "Como"
+  ],
+  [
+   "16 August 2026",
+   "Final",
+   "Arsenal",
+   "3–0",
+   "Manchester City"
+  ],
+  [
+   "21 August 2026",
+   "1",
+   "Arsenal",
+   "3–0",
+   "Coventry City"
+  ],
+  [
+   "31 August 2026",
+   "2",
+   "Aston Villa",
+   "0–1",
+   "Arsenal"
+  ],
+  [
+   "6 September 2026",
+   "3",
+   "Arsenal",
+   "2–1",
+   "Chelsea"
+  ],
+  [
+   "12 September 2026",
+   "4",
+   "Sunderland",
+   "0–2",
+   "Arsenal"
+  ],
+  [
+   "19 September 2026",
+   "5",
+   "Brighton & Hove Albion",
+   "3–0",
+   "Arsenal"
+  ],
+  [
+   "10 October 2026",
+   "6",
+   "Arsenal",
+   "| report     = https://www.premierleague.com/en/match/2645245",
+   "Leeds United"
+  ],
+  [
+   "18 October 2026",
+   "7",
+   "Nottingham Forest",
+   "| report     = https://www.premierleague.com/en/match/2645263",
+   "Arsenal"
+  ],
+  [
+   "24 October 2026",
+   "8",
+   "Arsenal",
+   "| report     = https://www.premierleague.com/en/match/2645265/arsenal-vs-everton",
+   "Everton"
+  ],
+  [
+   "1 November 2026",
+   "9",
+   "Liverpool",
+   "| report     = https://www.premierleague.com/en/match/2645281/liverpool-vs-arsenal",
+   "Arsenal"
+  ],
+  [
+   "7 November 2026",
+   "10",
+   "Arsenal",
+   "| report     = https://www.premierleague.com/en/match/2645285/arsenal-vs-hull-city",
+   "Hull City"
+  ],
+  [
+   "21 November 2026",
+   "11",
+   "Newcastle United",
+   "| report     = https://www.premierleague.com/en/match/2645303/newcastle-united-vs-arsenal",
+   "Arsenal"
+  ],
+  [
+   "28 November 2026",
+   "12",
+   "Arsenal",
+   "| report     = https://www.premierleague.com/en/match/2645305/arsenal-vs-manchester-city",
+   "Manchester City"
+  ],
+  [
+   "2 December 2026",
+   "13",
+   "Brentford",
+   "| report     = https://www.premierleague.com/en/match/2645317/brentford-vs-arsenal",
+   "Arsenal"
+  ],
+  [
+   "5 December 2026",
+   "14",
+   "Tottenham Hotspur",
+   "| report     = https://www.premierleague.com/en/match/2645334/tottenham-hotspur-vs-arsenal",
+   "Arsenal"
+  ],
+  [
+   "12 December 2026",
+   "15",
+   "Arsenal",
+   "| report     = https://www.premierleague.com/en/match/2645335/arsenal-vs-bournemouth",
+   "Bournemouth"
+  ],
+  [
+   "19 December 2026",
+   "16",
+   "Arsenal",
+   "| report     = https://www.premierleague.com/en/match/2645346/arsenal-vs-manchester-united",
+   "Manchester United"
+  ],
+  [
+   "27 December 2026",
+   "17",
+   "Crystal Palace",
+   "| report     = https://www.premierleague.com/en/match/2645357/crystal-palace-vs-arsenal",
+   "Arsenal"
+  ],
+  [
+   "30 December 2026",
+   "18",
+   "Fulham",
+   "| report     = https://www.premierleague.com/en/match/2645369/fulham-vs-arsenal",
+   "Arsenal"
+  ],
+  [
+   "2 January 2027",
+   "19",
+   "Arsenal",
+   "| report     = https://www.premierleague.com/en/match/2645376/arsenal-vs-ipswich-town",
+   "Ipswich Town"
+  ],
+  [
+   "5 January 2027",
+   "20",
+   "Arsenal",
+   "| report     = https://www.premierleague.com/en/match/2645385/arsenal-vs-brentford",
+   "Brentford"
+  ],
+  [
+   "16 January 2027",
+   "21",
+   "Hull City",
+   "| report     = https://www.premierleague.com/en/match/2645400/hull-city-vs-arsenal",
+   "Arsenal"
+  ],
+  [
+   "23 January 2027",
+   "22",
+   "Arsenal",
+   "| report     = https://www.premierleague.com/en/match/2645405/arsenal-vs-newcastle-united",
+   "Newcastle United"
+  ],
+  [
+   "30 January 2027",
+   "23",
+   "Manchester City",
+   "| report     = https://www.premierleague.com/en/match/2645422/manchester-city-vs-arsenal",
+   "Arsenal"
+  ],
+  [
+   "6 February 2027",
+   "24",
+   "Arsenal",
+   "| report     = https://www.premierleague.com/en/match/2645425/arsenal-vs-liverpool",
+   "Liverpool"
+  ],
+  [
+   "10 February 2027",
+   "25",
+   "Ipswich Town",
+   "| report     = https://www.premierleague.com/en/match/2645441/ipswich-town-vs-arsenal",
+   "Arsenal"
+  ],
+  [
+   "20 February 2027",
+   "26",
+   "Arsenal",
+   "| report     = https://www.premierleague.com/en/match/2645446/arsenal-vs-fulham",
+   "Fulham"
+  ],
+  [
+   "27 February 2027",
+   "27",
+   "Manchester United",
+   "| report     = https://www.premierleague.com/en/match/2645462/manchester-united-vs-arsenal",
+   "Arsenal"
+  ],
+  [
+   "3 March 2027",
+   "28",
+   "Arsenal",
+   "| report     = https://www.premierleague.com/en/match/2645466/arsenal-vs-crystal-palace/overview",
+   "Crystal Palace"
+  ],
+  [
+   "13 March 2027",
+   "29",
+   "Chelsea",
+   "| report     = https://www.premierleague.com/en/match/2645477/chelsea-vs-arsenal/overview",
+   "Arsenal"
+  ],
+  [
+   "20 March 2027",
+   "30",
+   "Arsenal",
+   "| report     = https://www.premierleague.com/en/match/2645485/arsenal-vs-sunderland",
+   "Sunderland"
+  ],
+  [
+   "10 April 2027",
+   "31",
+   "Coventry City",
+   "| report     = https://www.premierleague.com/en/match/2645498/coventry-city-vs-arsenal",
+   "Arsenal"
+  ],
+  [
+   "17 April 2027",
+   "32",
+   "Arsenal",
+   "| report     = https://www.premierleague.com/en/match/2645505/arsenal-vs-aston-villa",
+   "Aston Villa"
+  ],
+  [
+   "24 April 2027",
+   "33",
+   "Bournemouth",
+   "| report     = https://www.premierleague.com/en/match/2645515/bournemouth-vs-arsenal",
+   "Arsenal"
+  ],
+  [
+   "1 May 2027",
+   "34",
+   "Arsenal",
+   "| report     = https://www.premierleague.com/en/match/2645525/arsenal-vs-tottenham-hotspur",
+   "Tottenham Hotspur"
+  ],
+  [
+   "8 May 2027",
+   "35",
+   "Leeds United",
+   "| report     = https://www.premierleague.com/en/match/2645540/leeds-united-vs-arsenal",
+   "Arsenal"
+  ],
+  [
+   "15 May 2027",
+   "36",
+   "Arsenal",
+   "| report     = https://www.premierleague.com/en/match/2645545/arsenal-vs-nottingham-forest",
+   "Nottingham Forest"
+  ],
+  [
+   "23 May 2027",
+   "37",
+   "Everton",
+   "| report     = https://www.premierleague.com/en/match/2645558/everton-vs-arsenal",
+   "Arsenal"
+  ],
+  [
+   "30 May 2027",
+   "38",
+   "Arsenal",
+   "| report     = https://www.premierleague.com/en/match/2645565/arsenal-vs-brighton-and-hove-albion",
+   "Brighton & Hove Albion"
+  ],
+  [
+   "8–11 January 2027",
+   "<small>3rd Round</small>",
+   "| score      =",
+   "| report     = https://www.bbc.co.uk/sport/football/live/c",
+   "| goals1     ="
+  ],
+  [
+   "15 September 2026",
+   "<small>3rd Round</small>",
+   "Ipswich Town",
+   "2–4",
+   "Arsenal"
+  ],
+  [
+   "27 October 2026",
+   "<small>4th Round</small>",
+   "Fleetwood Town",
+   "| report     = https://www.efl.com/match-centre/g2687771",
+   "Arsenal"
+  ],
+  [
+   "9 September 2026",
+   "1",
+   "Napoli",
+   "0–1",
+   "Arsenal"
+  ],
+  [
+   "13 October 2026",
+   "2",
+   "Arsenal",
+   "| report     = https://www.uefa.com/uefachampionsleague/match/2049572/",
+   "Lille"
+  ],
+  [
+   "21 October 2026",
+   "3",
+   "Bayern Munich",
+   "| report     = https://www.uefa.com/uefachampionsleague/match/2049598/",
+   "Arsenal"
+  ],
+  [
+   "4 November 2026",
+   "4",
+   "Slavia Prague",
+   "| report     = https://www.uefa.com/uefachampionsleague/match/2049621/",
+   "Arsenal"
+  ],
+  [
+   "24 November 2026",
+   "5",
+   "Arsenal",
+   "| report     = https://www.uefa.com/uefachampionsleague/match/2049627/",
+   "Borussia Dortmund"
+  ],
+  [
+   "9 December 2026",
+   "6",
+   "Arsenal",
+   "| report     = https://www.uefa.com/uefachampionsleague/match/2049653/",
+   "Real Madrid"
+  ],
+  [
+   "20 January 2027",
+   "7",
+   "Real Betis",
+   "| report     = https://www.uefa.com/uefachampionsleague/match/2049672/",
+   "Arsenal"
+  ],
+  [
+   "27 January 2027",
+   "8",
+   "Arsenal",
+   "| report     = https://www.uefa.com/uefachampionsleague/match/2049683/",
+   "Sabah"
+  ]
+ ]
+}

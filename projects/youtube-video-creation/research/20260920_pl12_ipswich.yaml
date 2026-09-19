@@ -1,0 +1,226 @@
+# プレミアリーグ20クラブ紹介 ⑫イプスウィッチ（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/ipswich*.json と旧台本 20260916_pl12_ipswich.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- 前田大然
+- イプスウィッチ
+short_title: 前田大然がいるイプスウィッチってどんなクラブ？
+theme:
+  id: pl_clubs_12_ipswich
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: イプスウィッチ
+  title: 前田大然がいるイプスウィッチってどんなクラブ？ ⑫プレミア20クラブ紹介
+  question: どんなクラブなのか
+  hook: 日本人がひとり、この青いユニフォームを着ています。
+thumbnail:
+  line1: 上がった年に、そのまま優勝
+  line2: イプスウィッチ・タウン
+  crest_main:
+  - イプスウィッチ
+  tags: []
+  points: []
+sections:
+- id: why
+  heading: 前田大然がいるクラブ
+  tier: 報道
+  telop: 前田大然が所属するイプスウィッチ
+  narrator: キャスター
+  say:
+  - 日本代表の前田大然が所属しているのが、イプスウィッチ・タウンです。
+  - では、どんなクラブなのか。まずは基本のデータから見ていきます。
+  sources:
+  - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
+  bg: assets/backgrounds/stadium_イプスウィッチ.png
+  official: false
+- id: data
+  heading: イプスウィッチ 基礎DATA
+  main: true
+  tier: 背景
+  telop: 1878年創立
+  narrator: 解説
+  say:
+  - short_only: true
+    text: 前田大然の所属クラブを、基本のデータで見ていきます。
+  - image: assets/stats/pl_ipswich_data.png
+    text: 創立は**1878年**。フットボールリーグに加わったのは1938年です。
+  - image: assets/stats/pl_ipswich_data.png
+    text: 本拠地はポートマン・ロード。**3万56人**が入ります。場所はイングランド東部のサフォーク州です。
+  - image: assets/stats/pl_ipswich_data.png
+    text: オーナーは、アメリカの投資グループが集まったゲームチェンジャー20。2021年からです。
+  - image: assets/stats/pl_ipswich_data.png
+    text: 1部リーグの優勝が**1回**。FAカップ1回、そしてヨーロッパのUEFAカップも1回獲っています。
+  - image: assets/stats/pl_ipswich_data.png
+    text: プレミアでの最高位は、2000年から01年の**5位**です。
+  sources:
+  - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
+  bg: assets/backgrounds/stadium_イプスウィッチ.png
+  official: false
+- id: fans
+  heading: 有名なファン
+  tier: 報道
+  telop: エド・シーランも応援している
+  narrator: キャスター
+  card:
+    type: table
+    title: イプスウィッチの有名なファン
+    columns:
+    - ''
+    - ''
+    rows:
+    - - エド・シーラン
+      - ミュージシャン、クラブスポンサー・少数株主
+  say:
+  - 有名なファンは、歌手のエド・シーラン。クラブのスポンサーで、株も少し持っています。
+  - その名誉として、エド・シーランには**背番号17**が与えられています。
+  sources:
+  - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
+  bg: assets/backgrounds/stadium_イプスウィッチ.png
+  official: false
+- id: champion
+  heading: 上がった年に、優勝した
+  tier: 背景
+  telop: 1961-62年。率いたのはアルフ・ラムゼイ
+  narrator: 解説
+  card:
+    type: table
+    title: 残してきた記録
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1961-62年
+      - 1部初挑戦で優勝
+    - - 1981年
+      - UEFAカップ優勝（AZに5-4）
+  say:
+  - '**1部に上がった、その最初のシーズンに優勝しました。**1961年から62年のことです。'
+  - 率いていたのはアルフ・ラムゼイ。のちにイングランド代表を率いる監督です。
+  - 1981年にはUEFAカップを制しました。決勝は2試合の合計で、AZに5対4です。
+  - この時期に指揮していたのがボビー・ロブソン。1969年から82年まで、**709試合**を指揮しました。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
+  bg: assets/backgrounds/stadium_イプスウィッチ.png
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - - マット・ホランド
+      - 1997-2003
+      - 223試合連続出場の主将
+    - - ジム・マギルトン
+      - 1999-2006
+      - プレーオフでハットトリック
+    - - マーカス・スチュワート
+      - 2000-2002
+      - 昇格1年目に19得点
+  say:
+  - マット・ホランドは、**223試合連続**で出場し続けた主将。2000年のプレーオフ決勝でクラブをプレミアに上げました。
+  - ジム・マギルトンは、プレーオフ準決勝でハットトリックを決め、昇格を決定づけました。
+  - マーカス・スチュワートは、昇格1年目の2000年から01年にプレミアで**19得点**。クラブを5位に押し上げました。
+  sources:
+  - https://en.wikipedia.org/wiki/Matt_Holland
+  - https://en.wikipedia.org/wiki/Jim_Magilton
+  - https://en.wikipedia.org/wiki/Marcus_Stewart
+  bg: assets/backgrounds/stadium_イプスウィッチ.png
+  official: false
+- id: rival
+  heading: 宿敵
+  tier: 背景
+  telop: ノリッジとのイースト・アングリアン・ダービー
+  narrator: 解説
+  card:
+    type: table
+    title: イースト・アングリアン・ダービー
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 相手
+      - ノリッジ・シティ
+    - - 初対戦
+      - 1902年11月15日（0-1）
+    - - プロ同士の初戦
+      - 1939年9月2日（1-1）
+    - - 今季
+      - 相手はプレミアリーグにいない
+  say:
+  - 宿敵は**ノリッジ・シティ**です。
+  - 呼び名は**イースト・アングリアン・ダービー**。2つの州の名前から来ています。
+  - 初めて当たったのは**1902年11月15日**。どちらもまだアマチュアでした。
+  - 舞台はノーフォーク＆サフォーク・リーグ。結果は0対1で、ノリッジが勝っています。
+  - 完全なプロ同士のリーグ戦になったのは**1939年9月2日**。
+  - 3部南地区、ポートマン・ロードでの1対1の引き分けでした。
+  - ただしノリッジは、**今季のプレミアリーグにはいません。**
+  - この一戦が戻るには、どちらかが動く必要があります。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/East_Anglian_derby
+  bg: assets/backgrounds/stadium_イプスウィッチ.png
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - 今季の登録選手は28人です。
+  - image: assets/stats/pl_ipswich_gk.png
+    text: ゴールキーパーは4人。
+  - image: assets/stats/pl_ipswich_df.png
+    text: ディフェンダーは7人。
+  - image: assets/stats/pl_ipswich_mf.png
+    text: ミッドフィールダーは6人。
+  - image: assets/stats/pl_ipswich_fw.png
+    text: フォワードは11人。日本の前田大然もここにいます。
+  sources:
+  - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
+  bg: assets/backgrounds/stadium_イプスウィッチ.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 5試合で2勝3敗
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - サンダーランド（ホーム）
+      - 2対1
+    - - 第2節
+      - マンチェスター・ユナイテッド（アウェー）
+      - 2対5
+    - - 第3節
+      - リヴァプール（ホーム）
+      - 0対2
+    - - 第4節
+      - クリスタル・パレス（アウェー）
+      - 3対2
+    - - 第5節
+      - エヴァートン（アウェー）
+      - 0対1
+  say:
+  - プレミアリーグは5試合を終えて、**2勝3敗**です。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Ipswich_Town_F.C._season
+  bg: assets/backgrounds/stadium_イプスウィッチ.png
+  official: false

@@ -1,0 +1,65 @@
+{
+ "title": "マンチェスター・ユナイテッド 基礎DATA",
+ "colors": [
+  "#DA291C",
+  "#FBE122"
+ ],
+ "crest": "assets/crests/マンチェスターユナイテッド.png",
+ "tiles": [
+  [
+   "クラブ創立",
+   "1878年",
+   "ニュートン・ヒースとして創設"
+  ],
+  [
+   "本拠地",
+   "オールド・トラッフォード",
+   "収容 74,158人"
+  ],
+  [
+   "ホームタウン",
+   "マンチェスター",
+   "グレーター・マンチェスター"
+  ],
+  [
+   "オーナー",
+   "グレイザー家（71%）",
+   "2005年〜。INEOSも出資"
+  ],
+  [
+   "タイトル歴",
+   "1部優勝 20回",
+   "FA杯13・リーグ杯6・CL3"
+  ],
+  [
+   "直近のタイトル",
+   "FA杯優勝",
+   "2023-24シーズン"
+  ],
+  [
+   "クラブ記録",
+   "9-0の大勝",
+   "2021年、サウサンプトン戦"
+  ],
+  [
+   "プレミア最高位",
+   "優勝(1位)",
+   "13回。直近は2012-13"
+  ],
+  [
+   "愛称",
+   "レッド・デビルズ",
+   "赤い悪魔、という意味"
+  ]
+ ],
+ "fans": [],
+ "fan_story": {
+  "text": null,
+  "source": null
+ },
+ "sources": [
+  "https://en.wikipedia.org/wiki/Manchester_United_F.C.",
+  "https://en.wikipedia.org/wiki/List_of_Manchester_United_F.C._records_and_statistics"
+ ],
+ "notes": "「Notable supporters」に相当する著名人の一覧は原文になく、個人名を書けなかった（fansは空、fan_storyもnull）。タイトル歴の『1部優勝20回』はプレミアリーグ時代13回・それ以前の旧First Division7回の合計（Liverpoolと並ぶ英国record）。『欧州』はUEFAチャンピオンズリーグ/欧州カップ3回+UEFAカップウィナーズカップ1回+UEFAヨーロッパリーグ1回の合計で、UEFAスーパーカップ・インターコンチネンタルカップ・FIFAクラブW杯（各1回）は含めていない。直近のタイトルは原文に『The club's most recent trophy is the 2023–24 FA Cup.』と明記されていたのでそのまま採用。"
+}

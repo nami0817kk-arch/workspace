@@ -1,0 +1,197 @@
+# プレミアリーグ20クラブ紹介 ⑥チェルシー（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/chelsea*.json と旧台本 20260916_pl06_chelsea.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- チェルシー
+short_title: チェルシーってどんなクラブ？
+theme:
+  id: pl_clubs_06_chelsea
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: チェルシー
+  title: チェルシーってどんなクラブ？ ⑥プレミア20クラブ紹介
+  question: どんなクラブなのか
+  hook: 宿敵の名前が、記録に残っていないクラブです。
+thumbnail:
+  line1: 史上最も荒れた決勝
+  line2: チェルシー
+  crest_main:
+  - チェルシー
+  tags: []
+  points: []
+sections:
+- id: data
+  heading: チェルシー 基礎DATA
+  main: true
+  tier: 背景
+  telop: 1905年創立
+  narrator: 解説
+  say:
+  - short_only: true
+    text: このクラブの、基本のデータです。
+  - image: assets/stats/pl_chelsea_data.png
+    text: 創立は**1905年**。ロンドンのクラブです。
+  - image: assets/stats/pl_chelsea_data.png
+    text: 本拠地には**4万44人**が入ります。
+  - image: assets/stats/pl_chelsea_data.png
+    text: オーナーはブルーコという投資グループです。
+  - image: assets/stats/pl_chelsea_data.png
+    text: 1部リーグの優勝は**6回**。FAカップは8回、ヨーロッパのタイトルは9回あります。
+  - image: assets/stats/pl_chelsea_data.png
+    text: UEFAの主要な大会を**すべて獲った**、史上唯一のクラブです。
+  - image: assets/stats/pl_chelsea_data.png
+    text: 直近のタイトルは2025年のクラブワールドカップ。決勝でパリ・サンジェルマンを破りました。
+  - image: assets/stats/pl_chelsea_data.png
+    text: 愛称は「ザ・ブルーズ」。青です。
+  sources:
+  - https://en.wikipedia.org/wiki/Chelsea_F.C.
+  bg: assets/backgrounds/stadium_チェルシー.png
+  official: false
+- id: origin
+  heading: 順番が逆だった
+  tier: 背景
+  telop: スタジアムが先。断られたので、クラブを作った
+  narrator: 解説
+  say:
+  - image: assets/images/pl_chelsea/scene.jpg
+    text: このクラブは、できた順番がふつうと逆です。
+  - image: assets/images/pl_chelsea/scene.jpg
+    text: 先にあったのは、スタジアムのほうでした。
+  - image: assets/images/pl_chelsea/scene.jpg
+    text: 実業家のガス・ミアーズが、スタンフォード・ブリッジを手に入れます。
+  - image: assets/images/pl_chelsea/scene.jpg
+    text: そして近くのクラブ、フラムに「ここを借りないか」と持ちかけました。
+  - image: assets/images/pl_chelsea/scene.jpg
+    text: フラムは、断ります。
+  - image: assets/images/pl_chelsea/scene.jpg
+    text: 借り手がいないなら、自分でクラブを作ればいい。そう考えて生まれたのがチェルシーです。1905年のことでした。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Chelsea_F.C.
+  bg: assets/backgrounds/stadium_チェルシー.png
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - - フランク・ランパード
+      - 2001-2014
+      - クラブ最多の211得点
+    - - ジョン・テリー
+      - 1998-2017
+      - 黄金期を率いた主将
+    - - ディディエ・ドログバ
+      - 2004-2015
+      - 2012年CL決勝の同点弾
+  say:
+  - フランク・ランパードは、中盤の選手でありながらクラブ史上最多の**211得点**を挙げました。
+  - ジョン・テリーは19年在籍した主将。クラブの黄金期をすべて率いました。
+  - ディディエ・ドログバは、2012年のチャンピオンズリーグ決勝で88分に同点弾、PK戦でも決めて、クラブを**初の欧州王者**にしました。
+  sources:
+  - https://en.wikipedia.org/wiki/Frank_Lampard
+  - https://en.wikipedia.org/wiki/John_Terry
+  - https://en.wikipedia.org/wiki/Didier_Drogba
+  bg: assets/backgrounds/stadium_チェルシー.png
+  official: false
+- id: rival
+  heading: 宿敵
+  tier: 背景
+  telop: 呼び名の付いたダービーが、記事に見当たらない
+  narrator: 解説
+  card:
+    type: table
+    title: 宿敵をめぐる記録
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 名前が挙がる相手
+      - アーセナル／トッテナム
+    - - ダービーの呼び名
+      - この2つには無い
+    - - 1970年4月29日
+      - FAカップ決勝の再試合。リーズに2-1
+    - - その試合
+      - 2,800万人が見たとされる
+    - - 今季
+      - リーズもプレミアリーグにいる
+  say:
+  - このクラブには、**呼び名の付いたダービーがありません。**
+  - ライバルとして名前が挙がるのはアーセナルとトッテナムですが、どちらが一番かも書かれていません。
+  - 由来も、語り継がれている一戦も、ライバルの節には出てこないのです。
+  - 年号つきの出来事が残っているのは、別の相手でした。リーズ・ユナイテッドです。
+  - 発端は1960年代から70年代の荒れた試合。とりわけ1970年のFAカップ決勝です。
+  - 4月11日のウェンブリーは、延長の末に2対2。
+  - 4月29日、オールド・トラフォードでの再試合を2対1で制しました。
+  - この一戦は**2800万人**が見たとされ、イングランドのサッカー史で最も荒れた試合と呼ばれています。
+  - 現代の審判が見返すと、退場6枚に警告20枚。別の審判は、退場が11枚出てもおかしくないとしました。
+  - そのリーズは、今季もプレミアリーグにいます。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Chelsea_F.C.
+  bg: assets/backgrounds/stadium_チェルシー.png
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - 今季の登録選手は29人です。
+  - image: assets/stats/pl_chelsea_gk.png
+    text: ゴールキーパーは4人。
+  - image: assets/stats/pl_chelsea_df.png
+    text: ディフェンダーは10人。
+  - image: assets/stats/pl_chelsea_mf.png
+    text: ミッドフィールダーは8人。
+  - image: assets/stats/pl_chelsea_fw.png
+    text: フォワードは7人。
+  sources:
+  - https://en.wikipedia.org/wiki/Chelsea_F.C.
+  bg: assets/backgrounds/stadium_チェルシー.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 5試合で2勝1引き分け2敗
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - フラム（アウェー）
+      - 3対2
+    - - 第2節
+      - ブライトン（ホーム）
+      - 4対3
+    - - 第3節
+      - アーセナル（アウェー）
+      - 1対2
+    - - 第4節
+      - ハル・シティ（ホーム）
+      - 2対2
+    - - 第5節
+      - ブレントフォード（アウェー）
+      - 0対3
+  say:
+  - プレミアリーグは5試合を終えて、**2勝1引き分け2敗**です。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Chelsea_F.C._season
+  bg: assets/backgrounds/stadium_チェルシー.png
+  official: false

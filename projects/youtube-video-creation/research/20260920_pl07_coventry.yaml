@@ -1,0 +1,243 @@
+# プレミアリーグ20クラブ紹介 ⑦コヴェントリー（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/coventry*.json と旧台本 20260916_pl07_coventry.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- 坂元達裕
+- コヴェントリー
+short_title: 坂元達裕がいるコヴェントリーってどんなクラブ？
+theme:
+  id: pl_clubs_07_coventry
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: コヴェントリー
+  title: 坂元達裕がいるコヴェントリーってどんなクラブ？ ⑦プレミア20クラブ紹介
+  question: どんなクラブなのか
+  hook: 4部まで落ちて、25年かけて戻ってきたクラブです。
+thumbnail:
+  line1: 坂元達裕と、70マイル
+  line2: コヴェントリー
+  crest_main:
+  - コヴェントリー
+  tags: []
+  points: []
+sections:
+- id: why
+  heading: 坂元達裕がいるクラブ
+  tier: 報道
+  telop: 坂元達裕が所属するコヴェントリー
+  narrator: キャスター
+  say:
+  - 日本の坂元達裕が所属しているのが、今季プレミアに上がってきたコヴェントリー・シティです。
+  - では、どんなクラブなのか。まずは基本のデータから見ていきます。
+  sources:
+  - https://en.wikipedia.org/wiki/Coventry_City_F.C.
+  bg: assets/backgrounds/stadium_コヴェントリー.png
+  official: false
+- id: data
+  heading: コヴェントリー 基礎DATA
+  main: true
+  tier: 背景
+  telop: 1883年創立
+  narrator: 解説
+  say:
+  - short_only: true
+    text: 坂元達裕の所属クラブを、基本のデータで見ていきます。
+  - image: assets/stats/pl_coventry_data.png
+    text: 創立は**1883年**。自転車を作るシンガー社の工員たちが作ったクラブです。
+  - image: assets/stats/pl_coventry_data.png
+    text: 本拠地はCBSアリーナ。**3万2609人**が入ります。
+  - image: assets/stats/pl_coventry_data.png
+    text: オーナーは地元の実業家ダグ・キング。2023年からクラブを持っています。
+  - image: assets/stats/pl_coventry_data.png
+    text: 1部リーグの優勝はありませんが、1987年にFAカップを獲っています。
+  - image: assets/stats/pl_coventry_data.png
+    text: そして昨季、2025年から26年に2部で優勝。プレミアに戻ってきました。
+  - image: assets/stats/pl_coventry_data.png
+    text: 1931年から32年には、クラリー・バートンが1シーズンで**50得点**を挙げています。
+  sources:
+  - https://en.wikipedia.org/wiki/Coventry_City_F.C.
+  bg: assets/backgrounds/stadium_コヴェントリー.png
+  official: false
+- id: fans
+  heading: 有名なファン
+  tier: 報道
+  telop: アヤオ・コマツも応援している
+  narrator: キャスター
+  card:
+    type: table
+    title: コヴェントリーの有名なファン
+    columns:
+    - ''
+    - ''
+    rows:
+    - - アヤオ・コマツ
+      - ハースF1代表
+    - - トム・グレナン
+      - シンガーソングライター
+    - - ネヴィル・ステイプル
+      - ザ・スペシャルズのメンバー
+  say:
+  - 有名なファンには、F1チーム、ハースの代表を務める小松礼雄さんがいます。
+  - イギリスの大学に通っていたころにファンになったとされ、2026年の日本グランプリのあとには、ハースの一行がクラブの練習場を訪れました。
+  - ほかに、歌手のトム・グレナンや、ザ・スペシャルズのネヴィル・ステイプルもファンです。
+  sources:
+  - https://formularapida.net/en/surprise-visit-by-ayao-komatsu-to-coventry-city-fc-after-the-japanese-gp/
+  - https://www.coventryobserver.co.uk/news/coventry-city-2-tone-kit-launch-a-sell-out-success/
+  - https://www.coventrytelegraph.net/whats-on/whats-on-news/tom-grennan-massive-sky-blues-26061241
+  - https://www.planetf1.com/news/ayao-komatsu-christian-horner-coventry-city-invitation
+  bg: assets/backgrounds/stadium_コヴェントリー.png
+  official: false
+- id: exile
+  heading: 本拠地を追われた
+  tier: 背景
+  telop: 70マイル離れた街のスタジアムを間借りした
+  narrator: 解説
+  card:
+    type: table
+    title: 落ちていった10年
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 2001年
+      - 34年続いた1部から降格
+    - - 2013年
+      - ノーサンプトンへ間借り（往復70マイル）
+    - - 2017年
+      - 4部まで落ちる
+    - - 2026年4月17日
+      - 25年ぶりの1部復帰
+  say:
+  - このクラブは、一度**家を追われています。**
+  - 経営の行き詰まりから、2013年、本拠地を離れることになりました。
+  - 移った先はノーサンプトン・タウンのスタジアム。**往復70マイル**、およそ113キロの道のりです。そこで**1年以上**戦いました。
+  - 落ちるところまで落ちて、2017年には4部にいます。
+  - そこから戻ってきました。**2026年4月17日**、プレミアリーグへの昇格が決まります。
+  - 1部に戻るのは、2000年から01年のシーズン以来、25年ぶりでした。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Coventry_City_F.C.
+  bg: assets/backgrounds/stadium_コヴェントリー.png
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - - スティーヴ・オグリゾヴィッチ
+      - 1984-2000
+      - 1987年FA杯優勝のGK
+    - - ディオン・ダブリン
+      - 1994-1998
+      - クラブ唯一のプレミア得点王
+    - - ゲイリー・マカリスター
+      - 1996-2000
+      - 残留争いを戦った主将
+  say:
+  - スティーヴ・オグリゾヴィッチは、16年間ゴールを守り、1987年のFAカップ優勝も経験したキーパーです。
+  - ディオン・ダブリンは1997年から98年、プレミアリーグで**得点王**になりました。クラブ唯一の記録です。
+  - ゲイリー・マカリスターは、残留争いを主将として戦い抜いた司令塔です。
+  sources:
+  - https://en.wikipedia.org/wiki/Steve_Ogrizovic
+  - https://en.wikipedia.org/wiki/Dion_Dublin
+  - https://en.wikipedia.org/wiki/Gary_McAllister
+  bg: assets/backgrounds/stadium_コヴェントリー.png
+  official: false
+- id: rival
+  heading: 宿敵
+  tier: 背景
+  telop: 決まった呼び名が無い。残るのは1977年の最終節
+  narrator: 解説
+  card:
+    type: table
+    title: 宿敵をめぐる記録
+    columns:
+    - ''
+    - ''
+    rows:
+    - - サポーターが挙げる相手
+      - アストン・ヴィラ（2020年の調査で83%）
+    - - ダービーの呼び名
+      - ヴィラ戦には無い
+    - - 1976-77年の最終節
+      - 引き分けで両者残留。事実上プレーが止まる
+    - - M69ダービー
+      - レスター戦。今季その相手はプレミアにいない
+    - - 今季
+      - ヴィラはプレミアリーグにいる
+  say:
+  - この街のクラブの宿敵には、**決まった呼び名がありません。**
+  - 2020年の調査では、**83%**のサポーターがアストン・ヴィラを5大ライバルに挙げています。
+  - ただ、いつ何があってそうなったのかは書かれていないのです。
+  - そのヴィラは、今季もプレミアリーグにいます。
+  - 年号つきで残っている出来事は、別の相手とのものでした。
+  - 1976年から77年のシーズン最終節。相手はサンダーランドです。
+  - 2対2の引き分けなら両方が残り、サンダーランドが落ちる。それが分かった時点で、こちらとブリストル・シティは事実上プレーをやめました。
+  - ウルヴァーハンプトンとは、1960年代の終わりから70年代のはじめにかけて激しく争っています。
+  - 1967年にそろって昇格し、のちにFAカップの準々決勝で当たりました。
+  - レスター・シティとの一戦は「**M69ダービー**」と呼ばれ、2023年から24年に11年ぶりに戻りました。ただしレスターは、今季のプレミアリーグにいません。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Coventry_City_F.C.
+  bg: assets/backgrounds/stadium_コヴェントリー.png
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - 今季の登録選手は28人です。
+  - image: assets/stats/pl_coventry_gk.png
+    text: ゴールキーパーは3人。
+  - image: assets/stats/pl_coventry_df.png
+    text: ディフェンダーは10人。
+  - image: assets/stats/pl_coventry_mf.png
+    text: ミッドフィールダーは7人。
+  - image: assets/stats/pl_coventry_fw.png
+    text: フォワードは8人。日本の坂元達裕もここにいます。
+  sources:
+  - https://en.wikipedia.org/wiki/Coventry_City_F.C.
+  bg: assets/backgrounds/stadium_コヴェントリー.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 4試合で4敗
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - アーセナル（アウェー）
+      - 0対3
+    - - 第2節
+      - ハル・シティ（ホーム）
+      - 0対1
+    - - 第3節
+      - マンチェスター・シティ（アウェー）
+      - 0対1
+    - - 第4節
+      - ブライトン（ホーム）
+      - 0対5
+  say:
+  - プレミアリーグは4試合を終えて、**4敗**です。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Coventry_City_F.C._season
+  bg: assets/backgrounds/stadium_コヴェントリー.png
+  official: false

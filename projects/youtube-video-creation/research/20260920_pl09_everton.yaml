@@ -1,0 +1,223 @@
+# プレミアリーグ20クラブ紹介 ⑨エヴァートン（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/everton*.json と旧台本 20260916_pl09_everton.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- エヴァートン
+short_title: エヴァートンってどんなクラブ？
+theme:
+  id: pl_clubs_09_everton
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: エヴァートン
+  title: エヴァートンってどんなクラブ？ ⑨プレミア20クラブ紹介
+  question: どんなクラブなのか
+  hook: リヴァプールとは、もとは同じ場所にいました。
+thumbnail:
+  line1: 出た家から宿敵が生まれた
+  line2: エヴァートン
+  crest_main:
+  - エヴァートン
+  tags: []
+  points: []
+sections:
+- id: data
+  heading: エヴァートン 基礎DATA
+  main: true
+  tier: 背景
+  telop: 1878年創立
+  narrator: 解説
+  say:
+  - short_only: true
+    text: このクラブの、基本のデータです。
+  - image: assets/stats/pl_everton_data.png
+    text: 創立は**1878年**。リヴァプールのスタンリー・パークで生まれたクラブです。
+  - image: assets/stats/pl_everton_data.png
+    text: 昨季、2025年から26年に新しいスタジアムへ移りました。**5万2769人**が入ります。
+  - image: assets/stats/pl_everton_data.png
+    text: オーナーはアメリカの実業家ダン・フリードキン。2024年12月からクラブを持っています。
+  - image: assets/stats/pl_everton_data.png
+    text: 1部リーグの優勝は**9回**。FAカップは5回、ヨーロッパのタイトルも1回あります。
+  - image: assets/stats/pl_everton_data.png
+    text: 直近のタイトルは、1994年から95年のFAカップです。
+  - image: assets/stats/pl_everton_data.png
+    text: 1927年から28年には、ディキシー・ディーンが1シーズンで**60得点**。いまもイングランドの記録です。
+  sources:
+  - https://en.wikipedia.org/wiki/Everton_F.C.
+  bg: assets/backgrounds/stadium_エヴァートン.png
+  official: false
+- id: fans
+  heading: 有名なファン
+  tier: 報道
+  telop: ポール・マッカートニーも応援している
+  narrator: キャスター
+  card:
+    type: table
+    title: エヴァートンの有名なファン
+    columns:
+    - ''
+    - ''
+    rows:
+    - - ポール・マッカートニー
+      - ミュージシャン（元ビートルズ）
+    - - トニー・ベリュー
+      - 元プロボクサー、俳優
+  say:
+  - 有名なファンには、元ビートルズのポール・マッカートニーがいます。
+  - 元ボクシング世界王者のトニー・ベリューは、映画『クリード』に出たとき、練習着とショーツにエヴァートンのバッジを着けて演じました。
+  sources:
+  - https://web.archive.org/web/20150514131535/http://bleacherreport.com/articles/2460282-20-stars-of-the-music-world-and-the-football-clubs-they-support
+  - https://web.archive.org/web/20180723152655/https://www.liverpoolecho.co.uk/sport/football/football-news/everton-club-crest-gets-hollywood-10057827
+  - https://web.archive.org/web/20181024232100/https://www.bbc.co.uk/sport/football/42249192
+  bg: assets/backgrounds/stadium_エヴァートン.png
+  official: false
+- id: move
+  heading: 133年いた家を出た
+  tier: 背景
+  telop: グディソン・パークから、ヒル・ディキンソンへ
+  narrator: 解説
+  card:
+    type: table
+    title: 本拠地
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1892年-2025年
+      - グディソン・パーク
+    - - 2025-26年から
+      - ヒル・ディキンソン・スタジアム
+    - - 収容人数
+      - 52,888人
+  say:
+  - '**133年いた家を、去年出ました。**'
+  - それまでいたのはグディソン・パーク。**1892年**からの本拠地です。
+  - 新しい家は、ヒル・ディキンソン・スタジアム。2025年から26年のシーズンに開きました。
+  - 収容人数は**5万2888人**。プレミアリーグでも大きいほうに入ります。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Everton_F.C.
+  bg: assets/backgrounds/stadium_エヴァートン.png
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - - ネヴィル・サウスオール
+      - 1981-1998
+      - クラブ最多578試合のGK
+    - - シェイマス・コールマン
+      - 2009-2026
+      - 17年在籍の主将
+    - - ティム・ケイヒル
+      - 2004-2012
+      - 中盤から点を取り続けた
+  say:
+  - ネヴィル・サウスオールは、クラブ記録のリーグ**578試合**に出たキーパー。1995年のFAカップ優勝も守りました。
+  - シェイマス・コールマンは17年在籍した主将。グディソン・パーク最後の世代の象徴です。
+  - ティム・ケイヒルは、中盤から点を取り続けた選手。2006年のワールドカップで、日本から2点を奪った選手でもあります。
+  sources:
+  - https://en.wikipedia.org/wiki/Neville_Southall
+  - https://en.wikipedia.org/wiki/Seamus_Coleman
+  - https://en.wikipedia.org/wiki/Tim_Cahill
+  bg: assets/backgrounds/stadium_エヴァートン.png
+  official: false
+- id: rival
+  heading: 宿敵
+  tier: 背景
+  telop: 空いた家を使うために、リヴァプールが作られた
+  narrator: 解説
+  card:
+    type: table
+    title: マージーサイド・ダービー
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 相手
+      - リヴァプール
+    - - 1892年
+      - 理事たちがアンフィールドを去る
+    - - その跡地に
+      - リヴァプールFCが作られた
+    - - 初の公式戦
+      - 1894年10月13日（エヴァートンが3-0）
+  say:
+  - 宿敵は**リヴァプール**。呼び名は**マージーサイド・ダービー**です。
+  - そもそも、この2つは同じ場所から分かれたクラブです。
+  - エヴァートンは1884年から、**アンフィールド**を本拠にしていました。
+  - ところが1892年、会長で地主のジョン・ホールディングと、ほかの理事たちが対立します。
+  - 理事たちはアンフィールドを去り、スタンリー・パークの反対側へ移りました。
+  - 残されたホールディングは、**空いたアンフィールドを使うためにリヴァプールFCを作ります。**
+  - つまり宿敵は、このクラブが空けた場所に生まれたクラブです。
+  - 公式戦で初めて当たったのは**1894年10月13日**。エヴァートンが3対0で勝ちました。
+  - プレミアリーグが始まってからは、**退場者がいちばん多いカード**でもあります。
+  - そのリヴァプールは、**今季もプレミアリーグにいます。**
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Merseyside_derby
+  bg: assets/backgrounds/stadium_エヴァートン.png
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - 今季の登録選手は21人です。
+  - image: assets/stats/pl_everton_gk.png
+    text: ゴールキーパーは3人。
+  - image: assets/stats/pl_everton_df.png
+    text: ディフェンダーは6人。
+  - image: assets/stats/pl_everton_mf.png
+    text: ミッドフィールダーは8人。
+  - image: assets/stats/pl_everton_fw.png
+    text: フォワードは4人。
+  sources:
+  - https://en.wikipedia.org/wiki/Everton_F.C.
+  bg: assets/backgrounds/stadium_エヴァートン.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 5試合で2勝3引き分け
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - クリスタル・パレス（ホーム）
+      - 2対0
+    - - 第2節
+      - AFCボーンマス（アウェー）
+      - 1対1
+    - - 第3節
+      - マンチェスター・ユナイテッド（ホーム）
+      - 2対2
+    - - 第4節
+      - トッテナム・ホットスパー（アウェー）
+      - 0対0
+    - - 第5節
+      - イプスウィッチ・タウン（ホーム）
+      - 1対0
+  say:
+  - プレミアリーグは5試合を終えて、**2勝3引き分け**です。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Everton_F.C._season
+  bg: assets/backgrounds/stadium_エヴァートン.png
+  official: false
