@@ -48,19 +48,6 @@ sources:
 - https://en.wikipedia.org/wiki/Tyne%E2%80%93Wear_derby
 - https://en.wikipedia.org/wiki/2026–27_Newcastle_United_F.C._season
 cards:
-  fans_card:
-    type: table
-    title: ニューカッスルの有名なファン
-    columns:
-    - ''
-    - ''
-    rows:
-    - - スティング
-      - ミュージシャン（The Police）
-    - - マーク・ノップラー
-      - ミュージシャン（Dire Straitsの創設者）
-    - - ジミー・ネイル
-      - 俳優・歌手
   drought_card:
     type: table
     title: タイトルの記録
@@ -170,18 +157,9 @@ cards:
 解説: プレミアでの最高位は2位。1995年から96年と、その翌年の2回です。
   telop: プレミアでの最高位は2位。1995年から96年と、その翌年の2回です
   image: assets/stats/pl_newcastle_data.png
-
-## 有名なファン
-@bg: assets/backgrounds/stadium_ニューカッスル.png
-
-キャスター: 有名なファンには、ポリスのスティングがいます。
-  telop: 有名なファンには、ポリスのスティングがいます
-  source: 報道
-  card: fans_card
-キャスター: ダイアー・ストレイツを作ったマーク・ノップラーもファンです。
-  telop: ダイアー・ストレイツを作ったマーク・ノップラーもファンです
-キャスター: 彼が書いた「ゴーイング・ホーム」は、今もホームゲームで選手が入場するときの曲に使われています。
-  telop: 彼が書いた「ゴーイング・ホーム」は、今もホームゲームで選手が入場するときの曲に使われています
+解説: 愛称は「マグパイズ」。カササギです。白と黒の縞から来ています。
+  telop: 愛称は「マグパイズ」。カササギです。白と黒の縞から来ています
+  image: assets/stats/pl_newcastle_data.png
 
 ## 56年待った
 @bg: assets/backgrounds/stadium_ニューカッスル.png

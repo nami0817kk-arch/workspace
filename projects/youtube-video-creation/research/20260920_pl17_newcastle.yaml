@@ -45,32 +45,8 @@ sections:
     text: 直近のタイトルは、2024年から25年のリーグカップです。
   - image: assets/stats/pl_newcastle_data.png
     text: プレミアでの最高位は2位。1995年から96年と、その翌年の2回です。
-  sources:
-  - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
-  bg: assets/backgrounds/stadium_ニューカッスル.png
-  official: false
-- id: fans
-  heading: 有名なファン
-  tier: 報道
-  telop: スティングも応援している
-  narrator: キャスター
-  card:
-    type: table
-    title: ニューカッスルの有名なファン
-    columns:
-    - ''
-    - ''
-    rows:
-    - - スティング
-      - ミュージシャン（The Police）
-    - - マーク・ノップラー
-      - ミュージシャン（Dire Straitsの創設者）
-    - - ジミー・ネイル
-      - 俳優・歌手
-  say:
-  - 有名なファンには、ポリスのスティングがいます。
-  - ダイアー・ストレイツを作ったマーク・ノップラーもファンです。
-  - 彼が書いた「ゴーイング・ホーム」は、今もホームゲームで選手が入場するときの曲に使われています。
+  - image: assets/stats/pl_newcastle_data.png
+    text: 愛称は「マグパイズ」。カササギです。白と黒の縞から来ています。
   sources:
   - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
   bg: assets/backgrounds/stadium_ニューカッスル.png

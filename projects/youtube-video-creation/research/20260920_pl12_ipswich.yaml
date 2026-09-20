@@ -56,27 +56,8 @@ sections:
     text: 1部リーグの優勝が**1回**。FAカップ1回、そしてヨーロッパのUEFAカップも1回獲っています。
   - image: assets/stats/pl_ipswich_data.png
     text: プレミアでの最高位は、2000年から01年の**5位**です。
-  sources:
-  - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
-  bg: assets/backgrounds/stadium_イプスウィッチ.png
-  official: false
-- id: fans
-  heading: 有名なファン
-  tier: 報道
-  telop: エド・シーランも応援している
-  narrator: キャスター
-  card:
-    type: table
-    title: イプスウィッチの有名なファン
-    columns:
-    - ''
-    - ''
-    rows:
-    - - エド・シーラン
-      - ミュージシャン、クラブスポンサー・少数株主
-  say:
-  - 有名なファンは、歌手のエド・シーラン。クラブのスポンサーで、株も少し持っています。
-  - その名誉として、エド・シーランには**背番号17**が与えられています。
+  - image: assets/stats/pl_ipswich_data.png
+    text: 愛称は「トラクター・ボーイズ」。農業の盛んな土地で、自分たちを茶化した呼び名です。
   sources:
   - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
   bg: assets/backgrounds/stadium_イプスウィッチ.png

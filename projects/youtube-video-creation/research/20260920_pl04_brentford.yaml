@@ -51,29 +51,6 @@ sections:
   - https://en.wikipedia.org/wiki/Brentford_F.C.
   bg: assets/backgrounds/stadium_ブレントフォード.png
   official: false
-- id: fans
-  heading: 有名なファン
-  tier: 報道
-  telop: エド・オブライエンも応援している
-  narrator: キャスター
-  card:
-    type: table
-    title: ブレントフォードの有名なファン
-    columns:
-    - ''
-    - ''
-    rows:
-    - - エド・オブライエン
-      - Radiohead ギタリスト
-    - - ジョン・エドワーズ("Rhino")
-      - Status Quo ベーシスト
-  say:
-  - 有名なファンには、レディオヘッドのギタリスト、エド・オブライエンがいます。
-  - ステイタス・クォーのベーシスト、ジョン・エドワーズもファンです。
-  sources:
-  - https://en.wikipedia.org/wiki/Brentford_F.C.
-  bg: assets/backgrounds/stadium_ブレントフォード.png
-  official: false
 - id: history
   heading: 歩んできた道
   tier: 背景

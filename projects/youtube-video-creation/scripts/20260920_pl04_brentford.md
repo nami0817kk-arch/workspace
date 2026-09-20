@@ -48,17 +48,6 @@ sources:
 - https://en.wikipedia.org/wiki/West_London_derby
 - https://en.wikipedia.org/wiki/2026–27_Brentford_F.C._season
 cards:
-  fans_card:
-    type: table
-    title: ブレントフォードの有名なファン
-    columns:
-    - ''
-    - ''
-    rows:
-    - - エド・オブライエン
-      - Radiohead ギタリスト
-    - - ジョン・エドワーズ("Rhino")
-      - Status Quo ベーシスト
   history_card:
     type: table
     title: 残してきた記録
@@ -165,16 +154,6 @@ cards:
 解説: 愛称は「ビーズ」。蜂です。
   telop: 愛称は「ビーズ」。蜂です
   image: assets/stats/pl_brentford_data.png
-
-## 有名なファン
-@bg: assets/backgrounds/stadium_ブレントフォード.png
-
-キャスター: 有名なファンには、レディオヘッドのギタリスト、エド・オブライエンがいます。
-  telop: 有名なファンには、レディオヘッドのギタリスト、エド・オブライエンがいます
-  source: 報道
-  card: fans_card
-キャスター: ステイタス・クォーのベーシスト、ジョン・エドワーズもファンです。
-  telop: ステイタス・クォーのベーシスト、ジョン・エドワーズもファンです
 
 ## 歩んできた道
 @bg: assets/backgrounds/stadium_ブレントフォード.png

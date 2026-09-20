@@ -57,42 +57,10 @@ sections:
     text: そのヨーロッパのタイトルが、昨季のカンファレンスリーグ優勝です。
   - image: assets/stats/pl_palace_data.png
     text: 当時の1部での最高位は、1990年から91年の**3位**です。
+  - image: assets/stats/pl_palace_data.png
+    text: 愛称は「イーグルス」。鷲です。
   sources:
   - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
-  bg: assets/backgrounds/stadium_クリスタルパレス.png
-  official: false
-- id: fans
-  heading: 有名なファン
-  tier: 報道
-  telop: ビル・ワイマンも応援している
-  narrator: キャスター
-  card:
-    type: table
-    title: クリスタル・パレスの有名なファン
-    columns:
-    - ''
-    - ''
-    rows:
-    - - ビル・ワイマン
-      - ローリング・ストーンズのベーシスト
-    - - アレックス・イー
-      - 五輪金メダリスト（トライアスロン）
-    - - ビル・ナイ
-      - 俳優
-    - - ニール・モリッシー
-      - 俳優
-    - - デヴィッド・ジェンセン
-      - ラジオDJ
-  say:
-  - 有名なファンには、ローリング・ストーンズのベーシストだったビル・ワイマンがいます。
-  - 俳優のビル・ナイもファンです。
-  - 俳優のニール・モリッシーは、スタジアムで売られる「パレス・エール」というビールを自分で手がけて発売しました。
-  sources:
-  - https://billwyman.com/2015/07/bill-appears-in-crystal-palace-fc-interview-video/
-  - https://web.archive.org/web/20130417142910/http://www.tapitlocal.com/cpscc/
-  - https://web.archive.org/web/20131017055551/http://www.football-league.co.uk/championship/news/20110513/palace-launch-their-own-ale_2293322_2359484
-  - https://www.cpfc.co.uk/news/club/olympic-champion-crystal-palace-fan-alex-yee-nominated-sports-personality-of-the-year/
-  - https://www.theguardian.com/money/2011/dec/09/david-jensen-saturday-job
   bg: assets/backgrounds/stadium_クリスタルパレス.png
   official: false
 - id: trophy

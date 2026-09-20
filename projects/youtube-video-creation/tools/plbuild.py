@@ -4,11 +4,13 @@
 「今夏、出ていった主力と今夏、加わった選手は不要」を受けて作ったヴィラの見本
 （research/20260919_pl03_villa.yaml）と同じ節の並びにする。
 
-    日本人がいれば入口（why） → 基礎DATA（main） → 有名なファン → そのクラブの話
+    日本人がいれば入口（why） → 基礎DATA（main） → そのクラブの話
     → 1990年以降の名選手 → 宿敵 → 登録選手一覧 → 今季のここまで
 
+**有名なファンの節は 2026-09-20 に廃止した**（ユーザー指示）。板の9枚目も愛称にしてある。
+
 材料（すべて research/pl_data/）:
-    <key>.json       基礎DATAの板と有名なファン（下請けが Wikipedia 原文から調べた）
+    <key>.json       基礎DATAの板（下請けが Wikipedia 原文から調べた）
     <key>_raw.json   登録選手と今季の結果（tools/plsquad.py が原文から抜いた）
     kana.json        選手名のカタカナ
 **そのクラブの話と宿敵は、2026-09-16 の旧台本の節をそのまま使う**
@@ -153,21 +155,9 @@ def build(key: str, number: int, old_file: str) -> Path:
     sections.append(sec(id="data", heading=f"{club} 基礎DATA", main=True, tier="背景",
                         telop=facts["tiles"][0][1] + "創立", narrator="解説", say=say,
                         sources=[wiki]))
-    # 有名なファン
-    fans = facts.get("fans") or []
-    if fans:
-        fsay = ov.get("fans") or [f"有名なファンもいます。いちばん知られているのは、**{fans[0]['name']}**。{fans[0]['who']}です。"]
-        story = facts.get("fan_story") or {}
-        if story.get("text") and not ov.get("fans"):
-            fsay.append(story["text"])
-        if len(fans) > 1 and not ov.get("fans"):
-            fsay.append("ほかにも、" + "、".join(f"{f['who']}の{f['name']}" for f in fans[1:4]) + "の名前が挙がります。")
-        sections.append(sec(id="fans", heading="有名なファン", tier="報道",
-                            telop=f"{fans[0]['name']}も応援している", narrator="キャスター",
-                            card={"type": "table", "title": f"{club}の有名なファン", "columns": ["", ""],
-                                  "rows": [[f["name"], f["who"]] for f in fans[:5]]},
-                            say=fsay,
-                            sources=sorted({f["source"] for f in fans if f.get("source")} | ({story["source"]} if story.get("source") else set()))))
+    # **有名なファンの節は作らない**（2026-09-20 指示「有名なファンは廃止」）。
+    # <key>.json の `fans` / `fan_story` は残っているが、台本では一切使わない。
+    # 板の9枚目も「有名なファン」ではなく「愛称」にしてある（research/pl_data/<key>.json）。
     # そのクラブの話・宿敵は旧台本から
     story_sec = next((s for s in old["sections"] if s["id"] == ov.get("story")), None) or next((s for s in old["sections"] if s.get("main")), None) or next(
         (s for s in old["sections"] if s["id"] not in ("name", "ground", "season", "rival", "legends", "titles")), None)

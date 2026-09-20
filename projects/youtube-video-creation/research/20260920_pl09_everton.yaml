@@ -45,33 +45,10 @@ sections:
     text: 直近のタイトルは、1994年から95年のFAカップです。
   - image: assets/stats/pl_everton_data.png
     text: 1927年から28年には、ディキシー・ディーンが1シーズンで**60得点**。いまもイングランドの記録です。
+  - image: assets/stats/pl_everton_data.png
+    text: 愛称は「トフィーズ」。村にあったキャンディ屋から来ています。
   sources:
   - https://en.wikipedia.org/wiki/Everton_F.C.
-  bg: assets/backgrounds/stadium_エヴァートン.png
-  official: false
-- id: fans
-  heading: 有名なファン
-  tier: 報道
-  telop: ポール・マッカートニーも応援している
-  narrator: キャスター
-  card:
-    type: table
-    title: エヴァートンの有名なファン
-    columns:
-    - ''
-    - ''
-    rows:
-    - - ポール・マッカートニー
-      - ミュージシャン（元ビートルズ）
-    - - トニー・ベリュー
-      - 元プロボクサー、俳優
-  say:
-  - 有名なファンには、元ビートルズのポール・マッカートニーがいます。
-  - 元ボクシング世界王者のトニー・ベリューは、映画『クリード』に出たとき、練習着とショーツにエヴァートンのバッジを着けて演じました。
-  sources:
-  - https://web.archive.org/web/20150514131535/http://bleacherreport.com/articles/2460282-20-stars-of-the-music-world-and-the-football-clubs-they-support
-  - https://web.archive.org/web/20180723152655/https://www.liverpoolecho.co.uk/sport/football/football-news/everton-club-crest-gets-hollywood-10057827
-  - https://web.archive.org/web/20181024232100/https://www.bbc.co.uk/sport/football/42249192
   bg: assets/backgrounds/stadium_エヴァートン.png
   official: false
 - id: move

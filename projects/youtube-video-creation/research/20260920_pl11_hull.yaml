@@ -58,42 +58,10 @@ sections:
     text: プレミアでの最高位は、2013年から14年の**16位**です。
   - image: assets/stats/pl_hull_data.png
     text: 1939年には、カーライル・ユナイテッドに**11対1**で勝っています。クラブ最大の勝利です。
+  - image: assets/stats/pl_hull_data.png
+    text: 愛称は「タイガース」。黒と琥珀色の縞模様を、昔から着てきたクラブです。
   sources:
   - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
-  bg: assets/backgrounds/stadium_ハルシティ.png
-  official: false
-- id: fans
-  heading: 有名なファン
-  tier: 報道
-  telop: オマー・シャリフも応援している
-  narrator: キャスター
-  card:
-    type: table
-    title: ハル・シティの有名なファン
-    columns:
-    - ''
-    - ''
-    rows:
-    - - オマー・シャリフ
-      - 俳優（『ドクトル・ジバゴ』等）
-    - - トム・コートネイ
-      - 俳優、ハル出身
-    - - ジョン・プレスコット
-      - 元副首相（英労働党）
-    - - スティーヴン・マルクマス
-      - ペイヴメントのボーカル
-    - - シニッタ
-      - 歌手
-  say:
-  - 有名なファンには、映画『ドクトル・ジバゴ』の俳優オマー・シャリフがいました。
-  - パリの自宅からテレビで試合を追い、見られないときはクラブの自動音声電話に何度もかけて、途中経過を確かめていたそうです。
-  - ほかに、ハル出身の俳優トム・コートネイや、元副首相のジョン・プレスコットもファンです。
-  sources:
-  - https://footballleagueworld.co.uk/meet-hull-citys-celebrity-supporters-from-hollywood-star-to-chart-topping-singer/
-  - https://www.hulldailymail.co.uk/news/celebs-tv/google-paid-tribute-hull-city-1441810
-  - https://www.independent.co.uk/sport/football/news/john-prescott-backs-assem-allam-over-hull-city-name-change-as-tigers-future-remains-unclear-9063681.html
-  - https://www.mirror.co.uk/sport/football/news/hull-city-stephen-malkmus-praises-2361724
-  - https://www.standard.co.uk/sport/football/sir-tom-courtenay-and-omar-sharif-are-off-to-support-hull-city-in-fa-cup-final-9386285.html
   bg: assets/backgrounds/stadium_ハルシティ.png
   official: false
 - id: rise

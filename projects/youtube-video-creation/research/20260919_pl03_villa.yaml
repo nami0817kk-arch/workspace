@@ -8,13 +8,14 @@
 # 取り入れたもの
 #   ・題を日本人選手から入る形に（「鈴木彩艶がいる〜ってどんなクラブ？」）
 #   ・**基礎DATAの板を1枚**（tools/clubdata.py。中身は research/pl_data/villa.json）
-#   ・有名なファン（ウィリアム皇太子・トム・ハンクス）
 #   ・歴代の名選手を1990年以降に（アグボンラホー・グリーリッシュ・ワトキンス）
 #   ・オーナー（歩んできた道の節）
 #   ・**登録選手一覧**（tools/squadboard.py --full。29人を位置別に4枚）
 # 取り入れなかったもの
 #   ・予想スタメンの図（ユーザー指示で不要）
 #   ・今夏の出入りの節（2026-09-19 ユーザー指示「今夏、出ていった主力と今夏、加わった選手は不要」）
+#   ・**有名なファンの節**（2026-09-20 ユーザー指示「有名なファンは廃止」）。
+#     手本には入っていたが、20本すべてで作らない。板の9枚目も愛称に替えた
 #   ・バーミンガム・シティとの支持層の違い（労働者層／中流層）。手本は英語の資料で
 #     調べたと言っていたが、**こちらでは裏が取れなかった**ので入れない
 #
@@ -23,8 +24,6 @@
 #   ・登録選手29人・背番号・国籍: 同ページ「First-team squad」
 #   ・年齢: 各選手のページの生年月日から 2026-09-19 時点で計算
 #   ・今夏の出入り・今季の結果: 2026–27_Aston_Villa_F.C._season
-#   ・有名なファン: 同ページの Notable supporters。トム・ハンクスの「保養地のよう」は
-#     本人の発言として報じられたもの（HITC・Yahoo UK）
 #   ・グリーリッシュ: Jack_Grealish（6歳で入団、2019年主将、2021年に1億ポンド）
 #
 # **鈴木の移籍金は2,560万ポンド**（上積み最大430万ポンドは別）。
@@ -99,37 +98,10 @@ sections:
       - {image: assets/stats/pl_villa_data.png, text: "ヨーロッパでは1982年にチャンピオンズカップ、そして昨季は**ヨーロッパリーグ**を獲りました。"}
       - {image: assets/stats/pl_villa_data.png, text: "1930年から31年には、1シーズンで**128ゴール**。いまもイングランド1部の最多記録です。"}
       - {image: assets/stats/pl_villa_data.png, text: プレミアリーグでの最高位は、初年度1992年から93年の2位です。}
+      - {image: assets/stats/pl_villa_data.png, text: 愛称は「ヴィランズ」。「ライオンズ」とも呼ばれます。}
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
-
-  - id: fans
-    heading: 有名なファン
-    tier: 報道
-    bg: assets/backgrounds/stadium_アストンヴィラ.png
-    telop: ウィリアム皇太子も、トム・ハンクスも
-    narrator: キャスター
-    card:
-      type: table
-      title: アストン・ヴィラの有名なファン
-      columns: ["", ""]
-      rows:
-        - ["ウィリアム皇太子", "イギリス王室"]
-        - ["トム・ハンクス", "俳優"]
-        - ["オジー・オズボーン", "ブラック・サバス"]
-        - ["デーヴィッド・キャメロン", "元首相"]
-    say:
-      - "有名なファンも多いクラブです。いちばん知られているのは、**ウィリアム皇太子**。"
-      - 俳優のトム・ハンクスもファンを公言しています。
-      - 理由は名前でした。
-      - "「**アストン・ヴィラ**という響きが、すてきな保養地のように聞こえた」。"
-      - 実際にはバーミンガムにあると知って、驚いたそうです。
-      - ほかにも、ブラック・サバスのオジー・オズボーン、デーヴィッド・キャメロン元首相の名前が挙がります。
-    official: false
-    sources:
-      - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
-      - https://uk.news.yahoo.com/why-tom-hanks-supports-aston-184607511.html
-      - https://www.hitc.com/why-tom-hanks-supports-aston-villa-explained-forrest-gump-star-is-a-huge-villa-fan/
 
   - id: history
     heading: 歩んできた道
