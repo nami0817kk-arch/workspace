@@ -7,225 +7,312 @@
    "pos": "GK",
    "nat": "GER",
    "name": "Bernd Leno",
+   "page": "Bernd Leno",
    "dob": "1992-03-04",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Germany",
+   "caps": 9
   },
   {
    "no": "2",
    "pos": "DF",
    "nat": "NED",
    "name": "Kenny Tete",
+   "page": "Kenny Tete",
    "dob": "1995-10-09",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 14
   },
   {
    "no": "3",
    "pos": "DF",
    "nat": "NGA",
    "name": "Calvin Bassey",
+   "page": "Calvin Bassey",
    "dob": "1999-12-31",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Nigeria",
+   "caps": 45
   },
   {
    "no": "4",
    "pos": "DF",
    "nat": "ESP",
    "name": "Jorge Cuenca",
+   "page": "Jorge Cuenca",
    "dob": "1999-11-17",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "5",
    "pos": "DF",
    "nat": "DEN",
    "name": "Joachim Andersen",
+   "page": "Joachim Andersen (footballer)",
    "dob": "1996-05-31",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Denmark",
+   "caps": 51
   },
   {
    "no": "6",
    "pos": "MF",
    "nat": "ENG",
    "name": "Harrison Reed",
+   "page": "Harrison Reed (footballer)",
    "dob": "1995-01-27",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "7",
    "pos": "FW",
    "nat": "ESP",
    "name": "Gonzalo García",
+   "page": "Gonzalo García (footballer, born 2004)",
    "dob": "2004-03-24",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Spain",
+   "caps": 1
   },
   {
    "no": "8",
    "pos": "MF",
    "nat": "ESP",
    "name": "César Palacios",
+   "page": "César Palacios (footballer, born 2004)",
    "dob": "2004-11-11",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "9",
    "pos": "FW",
    "nat": "BRA",
    "name": "Rodrigo Muniz",
+   "page": "Rodrigo Muniz (Brazilian footballer)",
    "dob": "2001-05-04",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
+  },
+  {
+   "no": "10",
+   "pos": "MF",
+   "nat": "SCO",
+   "name": "Tom Cairney",
+   "page": "Tom Cairney",
+   "dob": "1991-01-20",
+   "captain": true,
+   "loan": false,
+   "team": "Scotland",
+   "caps": 2
   },
   {
    "no": "11",
    "pos": "FW",
    "nat": "BRA",
    "name": "Kevin",
+   "page": "Kevin (footballer, born 2003)",
    "dob": "2003-01-04",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "14",
    "pos": "FW",
    "nat": "NOR",
    "name": "Oscar Bobb",
+   "page": "Oscar Bobb",
    "dob": "2003-07-12",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Norway",
+   "caps": 26
   },
   {
    "no": "15",
    "pos": "MF",
    "nat": "SWE",
    "name": "Hugo Larsson",
+   "page": "Hugo Larsson (footballer)",
    "dob": "2004-06-27",
    "captain": false,
-   "loan": true
+   "loan": true,
+   "team": "Sweden",
+   "caps": 12
   },
   {
    "no": "16",
    "pos": "MF",
    "nat": "NOR",
    "name": "Sander Berge",
+   "page": "Sander Berge",
    "dob": "1998-02-14",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Norway",
+   "caps": 71
   },
   {
    "no": "17",
    "pos": "MF",
    "nat": "NGA",
    "name": "Alex Iwobi",
+   "page": "Alex Iwobi",
    "dob": "1996-05-03",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Nigeria",
+   "caps": 99
   },
   {
    "no": "18",
    "pos": "FW",
    "nat": "SWE",
    "name": "Jonah Kusi-Asare",
+   "page": "Jonah Kusi-Asare",
    "dob": "2007-07-04",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "19",
    "pos": "MF",
    "nat": "NIR",
    "name": "Shea Charles",
+   "page": "Shea Charles",
    "dob": "2003-11-05",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Northern Ireland",
+   "caps": 35
   },
   {
    "no": "20",
    "pos": "MF",
    "nat": "ESP",
    "name": "Manuel Ángel",
+   "page": "Manuel Ángel",
    "dob": "2004-03-15",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "21",
    "pos": "DF",
    "nat": "BEL",
    "name": "Timothy Castagne",
+   "page": "Timothy Castagne",
    "dob": "1995-12-05",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Belgium",
+   "caps": 69
   },
   {
    "no": "22",
    "pos": "DF",
    "nat": "AUT",
    "name": "David Affengruber",
+   "page": "David Affengruber (footballer, born 2001)",
    "dob": "2001-03-19",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Austria",
+   "caps": 1
   },
   {
    "no": "23",
    "pos": "GK",
    "nat": "FRA",
    "name": "Benjamin Lecomte",
+   "page": "Benjamin Lecomte",
    "dob": "1991-04-26",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "24",
    "pos": "MF",
    "nat": "ENG",
    "name": "Josh King",
+   "page": "Josh King (footballer, born 2007)",
    "dob": "2007-01-03",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "30",
    "pos": "MF",
    "nat": "ENG",
    "name": "Ryan Sessegnon",
+   "page": "Ryan Sessegnon",
    "dob": "2000-05-18",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "32",
    "pos": "MF",
    "nat": "ENG",
    "name": "Emile Smith Rowe",
+   "page": "Emile Smith Rowe",
    "dob": "2000-07-28",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 3
   },
   {
    "no": "33",
    "pos": "DF",
    "nat": "USA",
    "name": "Antonee Robinson",
+   "page": "Antonee Robinson",
    "dob": "1997-08-08",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "United States",
+   "caps": 58
   },
   {
    "no": "36",
    "pos": "GK",
    "nat": "USA",
    "name": "Alex Borto",
+   "page": "Alex Borto",
    "dob": "",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   }
  ],
  "results": [
@@ -303,7 +390,7 @@
    "20 September 2026",
    "5",
    "Fulham",
-   "| report     =",
+   "1–1",
    "Manchester United"
   ],
   [

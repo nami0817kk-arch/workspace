@@ -7,315 +7,420 @@
    "pos": "DF",
    "nat": "SCO",
    "name": "Andy Robertson",
+   "page": "Andy Robertson",
    "dob": "1994-03-11",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Scotland",
+   "caps": 97
   },
   {
    "no": "4",
    "pos": "DF",
    "nat": "ENG",
    "name": "Tosin Adarabioyo",
+   "page": "Tosin Adarabioyo",
    "dob": "1997-09-24",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "5",
    "pos": "DF",
    "nat": "ARG",
    "name": "Marcos Senesi",
+   "page": "Marcos Senesi",
    "dob": "1997-05-10",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Argentina",
+   "caps": 5
   },
   {
    "no": "6",
    "pos": "DF",
    "nat": "NED",
    "name": "Jan Paul van Hecke",
+   "page": "Jan Paul van Hecke",
    "dob": "2000-06-08",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 16
   },
   {
    "no": "7",
    "pos": "MF",
    "nat": "NED",
    "name": "Xavi Simons",
+   "page": "Xavi Simons",
    "dob": "2003-04-21",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 34
   },
   {
    "no": "8",
    "pos": "MF",
    "nat": "ENG",
    "name": "Conor Gallagher",
+   "page": "Conor Gallagher",
    "dob": "2000-02-06",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 22
   },
   {
    "no": "9",
    "pos": "FW",
    "nat": "BRA",
    "name": "Richarlison",
+   "page": "Richarlison",
    "dob": "1997-05-10",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Brazil",
+   "caps": 54
   },
   {
    "no": "10",
    "pos": "MF",
    "nat": "ENG",
    "name": "James Maddison",
+   "page": "James Maddison",
    "dob": "1996-11-23",
-   "captain": true,
-   "loan": false
+   "captain": false,
+   "loan": false,
+   "team": "England",
+   "caps": 7
   },
   {
    "no": "11",
    "pos": "FW",
    "nat": "FRA",
    "name": "Mathys Tel",
+   "page": "Mathys Tel",
    "dob": "2005-04-27",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "13",
    "pos": "DF",
    "nat": "ITA",
    "name": "Destiny Udogie",
+   "page": "Destiny Udogie",
    "dob": "2002-11-28",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Italy",
+   "caps": 12
   },
   {
    "no": "14",
    "pos": "MF",
    "nat": "ENG",
    "name": "Archie Gray",
+   "page": "Archie Gray",
    "dob": "2006-03-12",
-   "captain": true,
-   "loan": false
+   "captain": false,
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "15",
    "pos": "MF",
    "nat": "SWE",
    "name": "Lucas Bergvall",
+   "page": "Lucas Bergvall",
    "dob": "2006-02-02",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Sweden",
+   "caps": 14
   },
   {
    "no": "16",
    "pos": "MF",
    "nat": "ITA",
    "name": "Sandro Tonali",
+   "page": "Sandro Tonali",
    "dob": "2000-05-08",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Italy",
+   "caps": 32
   },
   {
    "no": "17",
    "pos": "FW",
    "nat": "BRA",
    "name": "Sávio",
+   "page": "Sávio (footballer, born 2004)",
    "dob": "2004-04-10",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Brazil",
+   "caps": 13
   },
   {
    "no": "18",
    "pos": "MF",
    "nat": "POR",
    "name": "Mateus Fernandes",
+   "page": "Mateus Fernandes (footballer)",
    "dob": "2004-07-10",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Portugal",
+   "caps": 1
   },
   {
    "no": "19",
    "pos": "FW",
    "nat": "ENG",
    "name": "Dominic Solanke",
+   "page": "Dominic Solanke",
    "dob": "1997-09-14",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 5
   },
   {
    "no": "20",
    "pos": "FW",
    "nat": "GHA",
    "name": "Mohammed Kudus",
+   "page": "Mohammed Kudus",
    "dob": "2000-08-02",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Ghana",
+   "caps": 46
   },
   {
    "no": "21",
    "pos": "FW",
    "nat": "SWE",
    "name": "Dejan Kulusevski",
+   "page": "Dejan Kulusevski",
    "dob": "2000-04-25",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Sweden",
+   "caps": 45
   },
   {
    "no": "22",
    "pos": "FW",
    "nat": "EGY",
    "name": "Omar Marmoush",
+   "page": "Omar Marmoush",
    "dob": "1999-02-07",
    "captain": false,
-   "loan": true
+   "loan": true,
+   "team": "Egypt",
+   "caps": 55
   },
   {
    "no": "23",
    "pos": "DF",
    "nat": "ESP",
    "name": "Pedro Porro",
+   "page": "Pedro Porro",
    "dob": "1999-09-13",
-   "captain": true,
-   "loan": false
+   "captain": false,
+   "loan": false,
+   "team": "Spain",
+   "caps": 24
   },
   {
    "no": "27",
    "pos": "FW",
    "nat": "UKR",
    "name": "Mykhailo Mudryk",
+   "page": "Mykhailo Mudryk",
    "dob": "2001-01-05",
    "captain": false,
-   "loan": true
+   "loan": true,
+   "team": "Ukraine",
+   "caps": 28
   },
   {
    "no": "28",
    "pos": "FW",
    "nat": "FRA",
    "name": "Wilson Odobert",
+   "page": "Wilson Odobert",
    "dob": "2004-11-28",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "30",
    "pos": "MF",
    "nat": "URU",
    "name": "Rodrigo Bentancur",
+   "page": "Rodrigo Bentancur",
    "dob": "1997-06-25",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Uruguay",
+   "caps": 77
   },
   {
    "no": "31",
    "pos": "GK",
    "nat": "CZE",
    "name": "Antonín Kinský",
+   "page": "Antonín Kinský (footballer, born 2003)",
    "dob": "2003-03-13",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "33",
    "pos": "DF",
    "nat": "WAL",
    "name": "Ben Davies",
+   "page": "Ben Davies (footballer, born 1993)",
    "dob": "1993-04-24",
-   "captain": true,
-   "loan": false
+   "captain": false,
+   "loan": false,
+   "team": "Wales",
+   "caps": 100
   },
   {
    "no": "37",
    "pos": "DF",
    "nat": "NED",
    "name": "Micky van de Ven",
+   "page": "Micky van de Ven",
    "dob": "2001-04-19",
    "captain": true,
-   "loan": false
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 24
   },
   {
    "no": "39",
    "pos": "GK",
    "nat": "SVK",
    "name": "Martin Dúbravka",
+   "page": "Martin Dúbravka",
    "dob": "1989-01-15",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Slovakia",
+   "caps": 60
   },
   {
    "no": "40",
    "pos": "GK",
    "nat": "USA",
    "name": "Brandon Austin",
+   "page": "Brandon Austin",
    "dob": "1999-01-08",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "1",
    "pos": "GK",
    "nat": "ITA",
    "name": "Guglielmo Vicario",
+   "page": "Guglielmo Vicario",
    "dob": "1996-10-07",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Italy",
+   "caps": 5
   },
   {
    "no": "25",
    "pos": "DF",
    "nat": "JPN",
    "name": "Kōta Takai",
+   "page": "Kōta Takai",
    "dob": "2004-09-04",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Japan",
+   "caps": 4
   },
   {
    "no": "29",
    "pos": "MF",
    "nat": "SEN",
    "name": "Pape Matar Sarr",
+   "page": "Pape Matar Sarr",
    "dob": "2002-09-14",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Senegal",
+   "caps": 42
   },
   {
    "no": "38",
    "pos": "DF",
    "nat": "BRA",
    "name": "Souza",
+   "page": "Souza (footballer, born 2006)",
    "dob": "2006-06-16",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "",
    "pos": "DF",
    "nat": "AUT",
    "name": "Kevin Danso",
+   "page": "Kevin Danso",
    "dob": "1998-09-19",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Austria",
+   "caps": 36
   },
   {
    "no": "",
    "pos": "DF",
    "nat": "ROU",
    "name": "Radu Drăgușin",
+   "page": "Radu Drăgușin",
    "dob": "2002-02-03",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Romania",
+   "caps": 30
   },
   {
    "no": "",
    "pos": "FW",
    "nat": "KOR",
    "name": "Yang Min-hyeok",
+   "page": "Yang Min-hyeok",
    "dob": "2006-04-16",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "South Korea",
+   "caps": 2
   }
  ],
  "results": [

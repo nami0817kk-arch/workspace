@@ -7,216 +7,288 @@
    "pos": "DF",
    "nat": "CIV",
    "name": "Ousmane Diomande",
+   "page": "Ousmane Diomande",
    "dob": "2003-12-04",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Ivory Coast",
+   "caps": 16
   },
   {
    "no": "3",
    "pos": "DF",
    "nat": "WAL",
    "name": "Neco Williams",
+   "page": "Neco Williams",
    "dob": "2001-04-13",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Wales",
+   "caps": 57
   },
   {
    "no": "5",
    "pos": "DF",
    "nat": "BRA",
    "name": "Murillo",
+   "page": "Murillo (footballer)",
    "dob": "2002-07-04",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Brazil",
+   "caps": 1
   },
   {
    "no": "6",
    "pos": "MF",
    "nat": "CIV",
    "name": "Ibrahim Sangaré",
+   "page": "Ibrahim Sangaré (Ivorian footballer)",
    "dob": "1997-12-02",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Ivory Coast",
+   "caps": 61
   },
   {
    "no": "7",
    "pos": "FW",
    "nat": "ENG",
    "name": "Callum Hudson-Odoi",
+   "page": "Callum Hudson-Odoi",
    "dob": "2000-11-07",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 3
   },
   {
    "no": "8",
    "pos": "MF",
    "nat": "ARG",
    "name": "Nicolás Domínguez",
+   "page": "Nicolás Domínguez",
    "dob": "1998-06-28",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Argentina",
+   "caps": 11
   },
   {
    "no": "9",
    "pos": "FW",
    "nat": "NZL",
    "name": "Chris Wood",
+   "page": "Chris Wood (footballer, born 1991)",
    "dob": "1991-12-07",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "New Zealand",
+   "caps": 93
   },
   {
    "no": "10",
    "pos": "MF",
    "nat": "ENG",
    "name": "Morgan Gibbs-White",
+   "page": "Morgan Gibbs-White",
    "dob": "2000-01-27",
-   "captain": true,
-   "loan": false
+   "captain": false,
+   "loan": false,
+   "team": "England",
+   "caps": 6
   },
   {
    "no": "11",
    "pos": "FW",
    "nat": "BRA",
    "name": "Igor Jesus",
+   "page": "Igor Jesus (footballer, born 2001)",
    "dob": "2001-02-25",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Brazil",
+   "caps": 5
   },
   {
    "no": "12",
    "pos": "GK",
    "nat": "BRA",
    "name": "John Victor",
+   "page": "John Victor (Brazilian footballer)",
    "dob": "1996-02-13",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "14",
    "pos": "FW",
    "nat": "SUI",
    "name": "Dan Ndoye",
+   "page": "Dan Ndoye",
    "dob": "2000-10-25",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Switzerland",
+   "caps": 37
   },
   {
    "no": "15",
    "pos": "FW",
    "nat": "FRA",
    "name": "Arnaud Kalimuendo",
+   "page": "Arnaud Kalimuendo",
    "dob": "2002-01-20",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "19",
    "pos": "FW",
    "nat": "ENG",
    "name": "Liam Delap",
+   "page": "Liam Delap",
    "dob": "2003-02-08",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "21",
    "pos": "MF",
    "nat": "AUT",
    "name": "Xaver Schlager",
+   "page": "Xaver Schlager",
    "dob": "1997-09-28",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Austria",
+   "caps": 55
   },
   {
    "no": "22",
    "pos": "MF",
    "nat": "ENG",
    "name": "Ryan Yates",
+   "page": "Ryan Yates",
    "dob": "1997-11-21",
    "captain": true,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "23",
    "pos": "DF",
    "nat": "BRA",
    "name": "Jair Cunha",
+   "page": "Jair Cunha",
    "dob": "2005-03-07",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "24",
    "pos": "MF",
    "nat": "ENG",
    "name": "James McAtee",
+   "page": "James McAtee",
    "dob": "2002-10-18",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "25",
    "pos": "DF",
    "nat": "GER",
    "name": "Luca Netz",
+   "page": "Luca Netz",
    "dob": "2003-05-15",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "26",
    "pos": "GK",
    "nat": "BEL",
    "name": "Matz Sels",
+   "page": "Matz Sels",
    "dob": "1992-02-26",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Belgium",
+   "caps": 13
   },
   {
    "no": "27",
    "pos": "DF",
    "nat": "COL",
    "name": "Daniel Muñoz",
+   "page": "Daniel Muñoz (footballer)",
    "dob": "1996-05-26",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Colombia",
+   "caps": 51
   },
   {
    "no": "31",
    "pos": "DF",
    "nat": "SRB",
    "name": "Nikola Milenković",
+   "page": "Nikola Milenković",
    "dob": "1997-10-12",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Serbia",
+   "caps": 71
   },
   {
    "no": "33",
    "pos": "GK",
    "nat": "GER",
    "name": "Steven Benda",
+   "page": "Steven Benda",
    "dob": "1998-10-01",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "34",
    "pos": "DF",
    "nat": "NGA",
    "name": "Ola Aina",
+   "page": "Ola Aina",
    "dob": "1996-10-08",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Nigeria",
+   "caps": 48
   },
   {
    "no": "37",
    "pos": "DF",
    "nat": "ITA",
    "name": "Nicolò Savona",
+   "page": "Nicolò Savona",
    "dob": "2003-03-19",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   }
  ],
  "results": [
@@ -315,7 +387,7 @@
    "19 September 2026",
    "5",
    "Nottingham Forest",
-   "| report     =",
+   "0–1",
    "Coventry City"
   ],
   [

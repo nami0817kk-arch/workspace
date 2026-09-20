@@ -7,315 +7,420 @@
    "pos": "GK",
    "nat": "BRA",
    "name": "Alisson Becker",
+   "page": "Alisson Becker",
    "dob": "1992-10-02",
-   "captain": true,
-   "loan": false
+   "captain": false,
+   "loan": false,
+   "team": "Brazil",
+   "caps": 83
   },
   {
    "no": "2",
    "pos": "DF",
    "nat": "ENG",
    "name": "Joe Gomez",
+   "page": "Joe Gomez",
    "dob": "1997-05-23",
-   "captain": true,
-   "loan": false
+   "captain": false,
+   "loan": false,
+   "team": "England",
+   "caps": 15
   },
   {
    "no": "3",
    "pos": "MF",
    "nat": "JPN",
    "name": "Wataru Endo",
+   "page": "Wataru Endo",
    "dob": "1993-02-09",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Japan",
+   "caps": 73
   },
   {
    "no": "4",
    "pos": "DF",
    "nat": "NED",
    "name": "Virgil van Dijk",
+   "page": "Virgil van Dijk",
    "dob": "1991-07-08",
    "captain": true,
-   "loan": false
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 96
   },
   {
    "no": "5",
    "pos": "DF",
    "nat": "FRA",
    "name": "Jérémy Jacquet",
+   "page": "Jérémy Jacquet",
    "dob": "2005-07-13",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "6",
    "pos": "DF",
    "nat": "HUN",
    "name": "Milos Kerkez",
+   "page": "Milos Kerkez",
    "dob": "2003-11-07",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Hungary",
+   "caps": 32
   },
   {
    "no": "7",
    "pos": "MF",
    "nat": "GER",
    "name": "Florian Wirtz",
+   "page": "Florian Wirtz",
    "dob": "2003-05-03",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Germany",
+   "caps": 45
   },
   {
    "no": "8",
    "pos": "MF",
    "nat": "HUN",
    "name": "Dominik Szoboszlai",
+   "page": "Dominik Szoboszlai",
    "dob": "2000-10-25",
-   "captain": true,
-   "loan": false
+   "captain": false,
+   "loan": false,
+   "team": "Hungary",
+   "caps": 65
   },
   {
    "no": "9",
    "pos": "FW",
    "nat": "SWE",
    "name": "Alexander Isak",
+   "page": "Alexander Isak",
    "dob": "1999-09-21",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Sweden",
+   "caps": 62
   },
   {
    "no": "10",
    "pos": "MF",
    "nat": "ARG",
    "name": "Alexis Mac Allister",
+   "page": "Alexis Mac Allister",
    "dob": "1998-12-24",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Argentina",
+   "caps": 54
   },
   {
    "no": "12",
    "pos": "DF",
    "nat": "NIR",
    "name": "Conor Bradley",
+   "page": "Conor Bradley",
    "dob": "2003-07-09",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Northern Ireland",
+   "caps": 30
   },
   {
    "no": "14",
    "pos": "FW",
    "nat": "ITA",
    "name": "Federico Chiesa",
+   "page": "Federico Chiesa",
    "dob": "1997-10-25",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Italy",
+   "caps": 51
   },
   {
    "no": "15",
    "pos": "DF",
    "nat": "ITA",
    "name": "Giovanni Leoni",
+   "page": "Giovanni Leoni",
    "dob": "2006-12-21",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "18",
    "pos": "FW",
    "nat": "NED",
    "name": "Cody Gakpo",
+   "page": "Cody Gakpo",
    "dob": "1999-05-07",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 54
   },
   {
    "no": "21",
    "pos": "DF",
    "nat": "GRE",
    "name": "Kostas Tsimikas",
+   "page": "Kostas Tsimikas",
    "dob": "1996-05-12",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Greece",
+   "caps": 51
   },
   {
    "no": "22",
    "pos": "FW",
    "nat": "FRA",
    "name": "Hugo Ekitike",
+   "page": "Hugo Ekitike",
    "dob": "2002-06-20",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "France",
+   "caps": 8
   },
   {
    "no": "23",
    "pos": "FW",
    "nat": "ESP",
    "name": "Víctor Muñoz",
+   "page": "Víctor Muñoz (footballer, born 2003)",
    "dob": "2003-07-13",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Spain",
+   "caps": 2
   },
   {
    "no": "25",
    "pos": "GK",
    "nat": "GEO",
    "name": "Giorgi Mamardashvili",
+   "page": "Giorgi Mamardashvili",
    "dob": "2000-09-29",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Georgia",
+   "caps": 38
   },
   {
    "no": "28",
    "pos": "GK",
    "nat": "ENG",
    "name": "Freddie Woodman",
+   "page": "Freddie Woodman",
    "dob": "1997-03-04",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "29",
    "pos": "FW",
    "nat": "FRA",
    "name": "Bradley Barcola",
+   "page": "Bradley Barcola",
    "dob": "2002-09-02",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "France",
+   "caps": 28
   },
   {
    "no": "30",
    "pos": "DF",
    "nat": "NED",
    "name": "Jeremie Frimpong",
+   "page": "Jeremie Frimpong",
    "dob": "2000-12-10",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 15
   },
   {
    "no": "33",
    "pos": "DF",
    "nat": "URU",
    "name": "Ronald Araújo",
+   "page": "Ronald Araújo",
    "dob": "1999-03-07",
    "captain": false,
-   "loan": true
+   "loan": true,
+   "team": "Uruguay",
+   "caps": 27
   },
   {
    "no": "38",
    "pos": "MF",
    "nat": "NED",
    "name": "Ryan Gravenberch",
+   "page": "Ryan Gravenberch",
    "dob": "2002-05-16",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 31
   },
   {
    "no": "42",
    "pos": "MF",
    "nat": "ENG",
    "name": "Trey Nyoni",
+   "page": "Trey Nyoni",
    "dob": "2007-06-30",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "44",
    "pos": "DF",
    "nat": "ENG",
    "name": "Luke Chambers",
+   "page": "Luke Chambers (footballer, born 2004)",
    "dob": "2004-06-24",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "53",
    "pos": "MF",
    "nat": "ENG",
    "name": "James McConnell",
+   "page": "James McConnell (footballer, born 2004)",
    "dob": "2004-09-13",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "56",
    "pos": "GK",
    "nat": "CZE",
    "name": "Vítězslav Jaroš",
+   "page": "Vítězslav Jaroš",
    "dob": "2001-07-23",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Czech Republic",
+   "caps": 2
   },
   {
    "no": "67",
    "pos": "FW",
    "nat": "WAL",
    "name": "Lewis Koumas",
+   "page": "Lewis Koumas",
    "dob": "2005-09-19",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Wales",
+   "caps": 12
   },
   {
    "no": "73",
    "pos": "FW",
    "nat": "ENG",
    "name": "Rio Ngumoha",
+   "page": "Rio Ngumoha",
    "dob": "2008-08-29",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 1
   },
   {
    "no": "76",
    "pos": "FW",
    "nat": "ENG",
    "name": "Jayden Danns",
+   "page": "Jayden Danns",
    "dob": "2006-01-16",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "95",
    "pos": "GK",
    "nat": "ENG",
    "name": "Harvey Davies",
+   "page": "Harvey Davies",
    "dob": "2003-09-03",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "19",
    "pos": "MF",
    "nat": "ENG",
    "name": "Harvey Elliott",
+   "page": "Harvey Elliott",
    "dob": "2003-04-04",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "41",
    "pos": "GK",
    "nat": "HUN",
    "name": "Ármin Pécsi",
+   "page": "Ármin Pécsi",
    "dob": "2005-02-24",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Hungary",
+   "caps": 1
   },
   {
    "no": "47",
    "pos": "DF",
    "nat": "SCO",
    "name": "Calvin Ramsay",
+   "page": "Calvin Ramsay",
    "dob": "2003-07-31",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Scotland",
+   "caps": 1
   },
   {
    "no": "83",
    "pos": "DF",
    "nat": "AUT",
    "name": "Ifeanyi Ndukwe",
+   "page": "Ifeanyi Ndukwe",
    "dob": "2008-03-03",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   }
  ],
  "results": [
@@ -393,7 +498,7 @@
    "20 September 2026",
    "5",
    "Bournemouth",
-   "| report     = https://www.premierleague.com/en/match/2645235",
+   "0–1",
    "Liverpool"
   ],
   [

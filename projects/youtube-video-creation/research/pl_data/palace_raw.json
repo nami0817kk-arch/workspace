@@ -7,252 +7,336 @@
    "pos": "GK",
    "nat": "ENG",
    "name": "Dean Henderson",
+   "page": "Dean Henderson",
    "dob": "1997-03-12",
    "captain": true,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 6
   },
   {
    "no": "3",
    "pos": "DF",
    "nat": "ENG",
    "name": "Tyrick Mitchell",
+   "page": "Tyrick Mitchell",
    "dob": "1999-09-01",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 2
   },
   {
    "no": "4",
    "pos": "DF",
    "nat": "MAR",
    "name": "Chadi Riad",
+   "page": "Chadi Riad",
    "dob": "2003-06-17",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Morocco",
+   "caps": 10
   },
   {
    "no": "5",
    "pos": "DF",
    "nat": "FRA",
    "name": "Axel Disasi",
+   "page": "Axel Disasi",
    "dob": "1998-03-11",
    "captain": false,
-   "loan": true
+   "loan": true,
+   "team": "France",
+   "caps": 5
   },
   {
    "no": "6",
    "pos": "DF",
    "nat": "FRA",
    "name": "Jaydee Canvot",
+   "page": "Jaydee Canvot",
    "dob": "2006-07-29",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "7",
    "pos": "FW",
    "nat": "SEN",
    "name": "Ismaïla Sarr",
+   "page": "Ismaïla Sarr",
    "dob": "1998-02-25",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Senegal",
+   "caps": 88
   },
   {
    "no": "8",
    "pos": "MF",
    "nat": "COL",
    "name": "Jefferson Lerma",
+   "page": "Jefferson Lerma",
    "dob": "1994-10-25",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Colombia",
+   "caps": 70
   },
   {
    "no": "9",
    "pos": "FW",
    "nat": "ENG",
    "name": "Eddie Nketiah",
+   "page": "Eddie Nketiah",
    "dob": "1999-05-30",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 1
   },
   {
    "no": "10",
    "pos": "FW",
    "nat": "ESP",
    "name": "Yéremy Pino",
+   "page": "Yéremy Pino",
    "dob": "2002-10-20",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Spain",
+   "caps": 25
   },
   {
    "no": "11",
    "pos": "FW",
    "nat": "ENG",
    "name": "Dwight McNeil",
+   "page": "Dwight McNeil",
    "dob": "1999-11-22",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "12",
    "pos": "FW",
    "nat": "USA",
    "name": "Zavier Gozo",
+   "page": "Zavier Gozo",
    "dob": "2007-03-22",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "United States",
+   "caps": 0
   },
   {
    "no": "14",
    "pos": "FW",
    "nat": "FRA",
    "name": "Jean-Philippe Mateta",
+   "page": "Jean-Philippe Mateta",
    "dob": "1997-06-28",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "France",
+   "caps": 7
   },
   {
    "no": "17",
    "pos": "DF",
    "nat": "JPN",
    "name": "Takehiro Tomiyasu",
+   "page": "Takehiro Tomiyasu",
    "dob": "1998-11-05",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Japan",
+   "caps": 46
   },
   {
    "no": "18",
    "pos": "MF",
    "nat": "JPN",
    "name": "Daichi Kamada",
+   "page": "Daichi Kamada",
    "dob": "1996-08-05",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Japan",
+   "caps": 53
   },
   {
    "no": "19",
    "pos": "MF",
    "nat": "ENG",
    "name": "Will Hughes",
+   "page": "Will Hughes",
    "dob": "1995-04-17",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "20",
    "pos": "MF",
    "nat": "ENG",
    "name": "Adam Wharton",
+   "page": "Adam Wharton",
    "dob": "2004-02-06",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 4
   },
   {
    "no": "21",
    "pos": "DF",
    "nat": "ITA",
    "name": "Honest Ahanor",
+   "page": "Honest Ahanor",
    "dob": "2008-02-23",
    "captain": false,
-   "loan": true
+   "loan": true,
+   "team": "Italy",
+   "caps": 2
   },
   {
    "no": "22",
    "pos": "FW",
    "nat": "NOR",
    "name": "Jørgen Strand Larsen",
+   "page": "Jørgen Strand Larsen",
    "dob": "2000-02-06",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Norway",
+   "caps": 30
   },
   {
    "no": "23",
    "pos": "MF",
    "nat": "NED",
    "name": "Quinten Timber",
+   "page": "Quinten Timber",
    "dob": "2001-06-17",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 13
   },
   {
    "no": "24",
    "pos": "FW",
    "nat": "CHI",
    "name": "Darío Osorio",
+   "page": "Darío Osorio",
    "dob": "2004-01-24",
    "captain": false,
-   "loan": true
+   "loan": true,
+   "team": "Chile",
+   "caps": 25
   },
   {
    "no": "25",
    "pos": "DF",
    "nat": "ISR",
    "name": "Anan Khalaili",
+   "page": "Anan Khalaili",
    "dob": "2004-09-03",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Israel",
+   "caps": 16
   },
   {
    "no": "26",
    "pos": "DF",
    "nat": "USA",
    "name": "Chris Richards",
+   "page": "Chris Richards (soccer)",
    "dob": "2000-03-28",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "United States",
+   "caps": 40
   },
   {
    "no": "28",
    "pos": "MF",
    "nat": "MLI",
    "name": "Cheick Doucouré",
+   "page": "Cheick Doucouré",
    "dob": "2000-01-08",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Mali",
+   "caps": 16
   },
   {
    "no": "29",
    "pos": "FW",
    "nat": "CIV",
    "name": "Evann Guessand",
+   "page": "Evann Guessand",
    "dob": "2001-07-01",
    "captain": false,
-   "loan": true
+   "loan": true,
+   "team": "Ivory Coast",
+   "caps": 23
   },
   {
    "no": "30",
    "pos": "DF",
    "nat": "ESP",
    "name": "Óscar Mingueza",
+   "page": "Óscar Mingueza",
    "dob": "1999-05-13",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Catalonia",
+   "caps": 2
   },
   {
    "no": "31",
    "pos": "GK",
    "nat": "ENG",
    "name": "Remi Matthews",
+   "page": "Remi Matthews",
    "dob": "1994-02-10",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "33",
    "pos": "DF",
    "nat": "ENG",
    "name": "Ben Chilwell",
+   "page": "Ben Chilwell",
    "dob": "1996-12-21",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 21
   },
   {
    "no": "44",
    "pos": "GK",
    "nat": "ARG",
    "name": "Walter Benítez",
+   "page": "Walter Benítez (footballer)",
    "dob": "1993-01-19",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Argentina",
+   "caps": 1
   }
  ],
  "results": [
@@ -337,7 +421,7 @@
    "20 September 2026",
    "5",
    "Leeds United",
-   "| report     =",
+   "0–0",
    "Crystal Palace"
   ],
   [

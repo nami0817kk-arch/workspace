@@ -7,189 +7,252 @@
    "pos": "GK",
    "nat": "ENG",
    "name": "Jordan Pickford",
+   "page": "Jordan Pickford",
    "dob": "1994-03-07",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 91
   },
   {
    "no": "2",
    "pos": "DF",
    "nat": "ENG",
    "name": "Ainsley Maitland-Niles",
+   "page": "Ainsley Maitland-Niles",
    "dob": "1997-08-29",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 5
   },
   {
    "no": "4",
    "pos": "DF",
    "nat": "ENG",
    "name": "Jarrad Branthwaite",
+   "page": "Jarrad Branthwaite",
    "dob": "2002-06-27",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 1
   },
   {
    "no": "5",
    "pos": "DF",
    "nat": "ENG",
    "name": "Michael Keane",
+   "page": "Michael Keane (footballer, born 1993)",
    "dob": "1993-01-11",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 12
   },
   {
    "no": "6",
    "pos": "DF",
    "nat": "ENG",
    "name": "James Tarkowski",
+   "page": "James Tarkowski",
    "dob": "1992-11-19",
    "captain": true,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 2
   },
   {
    "no": "8",
    "pos": "MF",
    "nat": "ENG",
    "name": "Kiernan Dewsbury-Hall",
+   "page": "Kiernan Dewsbury-Hall",
    "dob": "1998-09-06",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "10",
    "pos": "MF",
    "nat": "ENG",
    "name": "Jack Grealish",
+   "page": "Jack Grealish",
    "dob": "1995-09-10",
    "captain": false,
-   "loan": true
+   "loan": true,
+   "team": "England",
+   "caps": 39
   },
   {
    "no": "11",
    "pos": "FW",
    "nat": "FRA",
    "name": "Thierno Barry",
+   "page": "Thierno Barry (footballer, born 2002)",
    "dob": "2002-10-21",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "12",
    "pos": "GK",
    "nat": "IRL",
    "name": "Mark Travers",
+   "page": "Mark Travers",
    "dob": "1999-05-18",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Republic of Ireland",
+   "caps": 6
   },
   {
    "no": "15",
    "pos": "DF",
    "nat": "IRL",
    "name": "Jake O'Brien",
+   "page": "Jake O'Brien (footballer)",
    "dob": "2001-05-15",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Republic of Ireland",
+   "caps": 17
   },
   {
    "no": "16",
    "pos": "DF",
    "nat": "UKR",
    "name": "Vitalii Mykolenko",
+   "page": "Vitaliy Mykolenko",
    "dob": "1999-05-29",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Ukraine",
+   "caps": 54
   },
   {
    "no": "19",
    "pos": "FW",
    "nat": "ENG",
    "name": "Tyrique George",
+   "page": "Tyrique George",
    "dob": "2006-02-04",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "20",
    "pos": "FW",
    "nat": "ENG",
    "name": "Tyler Dibling",
+   "page": "Tyler Dibling",
    "dob": "2006-02-17",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "22",
    "pos": "FW",
    "nat": "WAL",
    "name": "Brennan Johnson",
+   "page": "Brennan Johnson",
    "dob": "2001-05-23",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Wales",
+   "caps": 45
   },
   {
    "no": "23",
    "pos": "MF",
    "nat": "DEN",
    "name": "Christian Nørgaard",
+   "page": "Christian Nørgaard",
    "dob": "1994-03-10",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Denmark",
+   "caps": 41
   },
   {
    "no": "24",
    "pos": "MF",
    "nat": "ARG",
    "name": "Charly Alcaraz",
+   "page": "Charly Alcaraz",
    "dob": "2002-11-30",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "30",
    "pos": "MF",
    "nat": "ENG",
    "name": "Hayden Hackney",
+   "page": "Hayden Hackney",
    "dob": "2002-06-26",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "31",
    "pos": "GK",
    "nat": "WAL",
    "name": "Tom King",
+   "page": "Tom King (footballer, born 1995)",
    "dob": "1995-03-09",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Wales",
+   "caps": 1
   },
   {
    "no": "34",
    "pos": "MF",
    "nat": "GER",
    "name": "Merlin Röhl",
+   "page": "Merlin Röhl",
    "dob": "2002-07-05",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "37",
    "pos": "MF",
    "nat": "ENG",
    "name": "James Garner",
+   "page": "James Garner (footballer, born 2001)",
    "dob": "2001-03-13",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 2
   },
   {
    "no": "45",
    "pos": "MF",
    "nat": "ENG",
    "name": "Harrison Armstrong",
+   "page": "Harrison Armstrong (footballer)",
    "dob": "2007-01-19",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   }
  ],
  "results": [
@@ -523,10 +586,10 @@
    "Wolverhampton Wanderers"
   ],
   [
-   "w/c 26 October 2026",
+   "29 October 2026",
    "Fourth round",
    "Everton",
-   "| result     =",
+   "| report     = https://www.efl.com/match-centre/g2687773",
    "Newcastle United"
   ]
  ]

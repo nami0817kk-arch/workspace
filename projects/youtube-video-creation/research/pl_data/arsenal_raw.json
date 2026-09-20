@@ -7,225 +7,300 @@
    "pos": "GK",
    "nat": "ESP",
    "name": "David Raya",
+   "page": "David Raya",
    "dob": "1995-09-15",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Spain",
+   "caps": 13
   },
   {
    "no": "2",
    "pos": "DF",
    "nat": "FRA",
    "name": "William Saliba",
+   "page": "William Saliba",
    "dob": "2001-03-24",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "France",
+   "caps": 38
   },
   {
    "no": "3",
    "pos": "DF",
    "nat": "ESP",
    "name": "Cristhian Mosquera",
+   "page": "Cristhian Mosquera",
    "dob": "2004-06-27",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Spain",
+   "caps": 2
   },
   {
    "no": "4",
    "pos": "DF",
    "nat": "ENG",
    "name": "Ben White",
+   "page": "Ben White (footballer)",
    "dob": "1997-10-08",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 6
   },
   {
    "no": "5",
    "pos": "DF",
    "nat": "ECU",
    "name": "Piero Hincapié",
+   "page": "Piero Hincapié",
    "dob": "2002-01-09",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Ecuador",
+   "caps": 56
   },
   {
    "no": "6",
    "pos": "DF",
    "nat": "BRA",
    "name": "Gabriel Magalhães",
+   "page": "Gabriel Magalhães",
    "dob": "1997-12-19",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Brazil",
+   "caps": 22
   },
   {
    "no": "7",
    "pos": "FW",
    "nat": "ENG",
    "name": "Bukayo Saka",
+   "page": "Bukayo Saka",
    "dob": "2001-09-05",
-   "captain": true,
-   "loan": false
+   "captain": false,
+   "loan": false,
+   "team": "England",
+   "caps": 56
   },
   {
    "no": "8",
    "pos": "MF",
    "nat": "NOR",
    "name": "Martin Ødegaard",
+   "page": "Martin Ødegaard",
    "dob": "1998-12-17",
    "captain": true,
-   "loan": false
+   "loan": false,
+   "team": "Norway",
+   "caps": 73
   },
   {
    "no": "10",
    "pos": "MF",
    "nat": "ENG",
    "name": "Eberechi Eze",
+   "page": "Eberechi Eze",
    "dob": "1998-06-29",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 22
   },
   {
    "no": "12",
    "pos": "DF",
    "nat": "NED",
    "name": "Jurriën Timber",
+   "page": "Jurriën Timber",
    "dob": "2001-06-17",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 23
   },
   {
    "no": "13",
    "pos": "GK",
    "nat": "ESP",
    "name": "Kepa Arrizabalaga",
+   "page": "Kepa Arrizabalaga",
    "dob": "1994-10-03",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Spain",
+   "caps": 13
   },
   {
    "no": "14",
    "pos": "FW",
    "nat": "SWE",
    "name": "Viktor Gyökeres",
+   "page": "Viktor Gyökeres",
    "dob": "1998-06-04",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Sweden",
+   "caps": 37
   },
   {
    "no": "15",
    "pos": "DF",
    "nat": "ENG",
    "name": "Ezri Konsa",
+   "page": "Ezri Konsa",
    "dob": "1997-10-23",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 28
   },
   {
    "no": "17",
    "pos": "FW",
    "nat": "GRE",
    "name": "Christos Tzolis",
+   "page": "Christos Tzolis",
    "dob": "2002-01-30",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Greece",
+   "caps": 34
   },
   {
    "no": "20",
    "pos": "FW",
    "nat": "ENG",
    "name": "Noni Madueke",
+   "page": "Noni Madueke",
    "dob": "2002-03-10",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 16
   },
   {
    "no": "23",
    "pos": "MF",
    "nat": "ESP",
    "name": "Mikel Merino",
+   "page": "Mikel Merino",
    "dob": "1996-06-22",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "29",
    "pos": "FW",
    "nat": "GER",
    "name": "Kai Havertz",
+   "page": "Kai Havertz",
    "dob": "1999-06-11",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Germany",
+   "caps": 62
   },
   {
    "no": "30",
    "pos": "GK",
    "nat": "FRA",
    "name": "Illan Meslier",
+   "page": "Illan Meslier",
    "dob": "2000-03-02",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "33",
    "pos": "DF",
    "nat": "ITA",
    "name": "Riccardo Calafiori",
+   "page": "Riccardo Calafiori",
    "dob": "2002-05-19",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Italy",
+   "caps": 14
   },
   {
    "no": "36",
    "pos": "MF",
    "nat": "ESP",
    "name": "Martín Zubimendi",
+   "page": "Martín Zubimendi",
    "dob": "1999-02-02",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Spain",
+   "caps": 27
   },
   {
    "no": "39",
    "pos": "MF",
    "nat": "BRA",
    "name": "Bruno Guimarães",
+   "page": "Bruno Guimarães",
    "dob": "1997-11-16",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Brazil",
+   "caps": 48
   },
   {
    "no": "41",
    "pos": "MF",
    "nat": "ENG",
    "name": "Declan Rice",
+   "page": "Declan Rice",
    "dob": "1999-01-14",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 80
   },
   {
    "no": "49",
    "pos": "DF",
    "nat": "ENG",
    "name": "Myles Lewis-Skelly",
+   "page": "Myles Lewis-Skelly",
    "dob": "2006-09-26",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 6
   },
   {
    "no": "22",
    "pos": "FW",
    "nat": "ENG",
    "name": "Ethan Nwaneri",
+   "page": "Ethan Nwaneri",
    "dob": "2007-03-21",
    "captain": false,
-   "loan": true
+   "loan": true,
+   "team": "",
+   "caps": null
   },
   {
    "no": "35",
    "pos": "GK",
    "nat": "ENG",
    "name": "Tommy Setford",
+   "page": "Tommy Setford",
    "dob": "2006-03-13",
    "captain": false,
-   "loan": true
+   "loan": true,
+   "team": "",
+   "caps": null
   }
  ],
  "results": [

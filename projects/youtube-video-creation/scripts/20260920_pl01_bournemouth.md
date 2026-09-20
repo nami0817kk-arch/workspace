@@ -140,6 +140,9 @@ cards:
     - - 第4節
       - ブレントフォード（ホーム）
       - 2対2
+    - - 第5節
+      - リヴァプール（ホーム）
+      - 0対1
 ---
 
 ## オープニング
@@ -241,25 +244,26 @@ cards:
 @bg: assets/backgrounds/stadium_ボーンマス.png
 
 キャスター: 今季の登録選手は28人です。
-  telop: 今季の登録選手は28人です
+  no_telop: true
   source: 報道
-キャスター: ゴールキーパーは3人。
+  image: assets/stats/pl_bournemouth_gk.png
+キャスター: ゴールキーパーは3人。ジョルジェ・ペトロヴィッチはセルビア代表で**12試合**。
   no_telop: true
   image: assets/stats/pl_bournemouth_gk.png
-キャスター: ディフェンダーは10人。
+キャスター: ディフェンダーは10人。主将の**アダム・スミス**は、ここにいます。アントニオ・シウヴァはポルトガル代表で**20試合**。
   no_telop: true
   image: assets/stats/pl_bournemouth_df.png
-キャスター: ミッドフィールダーは8人。
+キャスター: ミッドフィールダーは8人。ライアン・クリスティはスコットランド代表で**71試合**。タイラー・アダムスはアメリカ代表で**58試合**。
   no_telop: true
   image: assets/stats/pl_bournemouth_mf.png
-キャスター: フォワードは7人。
+キャスター: フォワードは7人。ベン・ギャノン＝ドークはスコットランド代表で**17試合**。ジャスティン・クライファートはオランダ代表で**14試合**。
   no_telop: true
   image: assets/stats/pl_bournemouth_fw.png
 
 ## 今季のここまで
 @bg: assets/backgrounds/stadium_ボーンマス.png
 
-解説: プレミアリーグは4試合を終えて、**3引き分け1敗**です。
-  telop: プレミアリーグは4試合を終えて、**3引き分け1敗**です
+解説: プレミアリーグは5試合を終えて、**3引き分け2敗**です。
+  telop: プレミアリーグは5試合を終えて、**3引き分け2敗**です
   source: 報道
   card: season_card

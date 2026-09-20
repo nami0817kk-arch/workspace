@@ -7,261 +7,348 @@
    "pos": "GK",
    "nat": "JPN",
    "name": "Zion Suzuki",
+   "page": "Zion Suzuki",
    "dob": "2002-08-21",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Japan",
+   "caps": 28
   },
   {
    "no": "2",
    "pos": "DF",
    "nat": "POL",
    "name": "Matty Cash",
+   "page": "Matty Cash",
    "dob": "1997-08-07",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Poland",
+   "caps": 25
   },
   {
    "no": "3",
    "pos": "DF",
    "nat": "SWE",
    "name": "Victor Lindelöf",
+   "page": "Victor Lindelöf",
    "dob": "1994-07-17",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Sweden",
+   "caps": 80
   },
   {
    "no": "4",
    "pos": "DF",
    "nat": "ENG",
    "name": "Taylor Harwood-Bellis",
+   "page": "Taylor Harwood-Bellis",
    "dob": "2002-01-30",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 1
   },
   {
    "no": "5",
    "pos": "DF",
    "nat": "ENG",
    "name": "Tyrone Mings",
+   "page": "Tyrone Mings",
    "dob": "1993-03-13",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 18
   },
   {
    "no": "6",
    "pos": "MF",
    "nat": "ENG",
    "name": "Ross Barkley",
+   "page": "Ross Barkley",
    "dob": "1993-12-05",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 33
   },
   {
    "no": "7",
    "pos": "MF",
    "nat": "SCO",
    "name": "John McGinn",
+   "page": "John McGinn",
    "dob": "1994-10-18",
    "captain": true,
-   "loan": false
+   "loan": false,
+   "team": "Scotland",
+   "caps": 89
   },
   {
    "no": "8",
    "pos": "MF",
    "nat": "FRA",
    "name": "Boubacar Kamara",
+   "page": "Boubacar Kamara",
    "dob": "1999-11-23",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "France",
+   "caps": 5
   },
   {
    "no": "10",
    "pos": "MF",
    "nat": "ARG",
    "name": "Emiliano Buendía",
+   "page": "Emiliano Buendía",
    "dob": "1996-12-25",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Argentina",
+   "caps": 2
   },
   {
    "no": "11",
    "pos": "FW",
    "nat": "SEN",
    "name": "Nicolas Jackson",
+   "page": "Nicolas Jackson",
    "dob": "2001-06-20",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Senegal",
+   "caps": 37
   },
   {
    "no": "13",
    "pos": "DF",
    "nat": "ITA",
    "name": "Matteo Ruggeri",
+   "page": "Matteo Ruggeri",
    "dob": "2002-07-11",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "14",
    "pos": "DF",
    "nat": "ESP",
    "name": "Pau Torres",
+   "page": "Pau Torres",
    "dob": "1997-01-16",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "17",
    "pos": "FW",
    "nat": "ARG",
    "name": "Alejandro Garnacho",
+   "page": "Alejandro Garnacho",
    "dob": "2004-07-01",
    "captain": false,
-   "loan": true
+   "loan": true,
+   "team": "Argentina",
+   "caps": 8
   },
   {
    "no": "18",
    "pos": "FW",
    "nat": "ENG",
    "name": "Tammy Abraham",
+   "page": "Tammy Abraham",
    "dob": "1997-10-02",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 11
   },
   {
    "no": "19",
    "pos": "FW",
    "nat": "SEN",
    "name": "Ibrahim Mbaye",
+   "page": "Ibrahim Mbaye",
    "dob": "2008-01-24",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Senegal",
+   "caps": 15
   },
   {
    "no": "20",
    "pos": "MF",
    "nat": "ENG",
    "name": "Jamaldeen Jimoh-Aloba",
+   "page": "Jamaldeen Jimoh-Aloba",
    "dob": "2006-10-02",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "22",
    "pos": "DF",
    "nat": "NED",
    "name": "Ian Maatsen",
+   "page": "Ian Maatsen",
    "dob": "2002-03-10",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 1
   },
   {
    "no": "24",
    "pos": "MF",
    "nat": "BEL",
    "name": "Amadou Onana",
+   "page": "Amadou Onana",
    "dob": "2001-08-16",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Belgium",
+   "caps": 33
   },
   {
    "no": "26",
    "pos": "MF",
    "nat": "NED",
    "name": "Lamare Bogarde",
+   "page": "Lamare Bogarde",
    "dob": "2004-01-05",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "27",
    "pos": "MF",
    "nat": "GER",
    "name": "Leon Goretzka",
+   "page": "Leon Goretzka",
    "dob": "1995-02-06",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Germany",
+   "caps": 73
   },
   {
    "no": "29",
    "pos": "DF",
    "nat": "COD",
    "name": "Aaron Wan-Bissaka",
+   "page": "Aaron Wan-Bissaka",
    "dob": "1997-11-26",
    "captain": false,
-   "loan": true
+   "loan": true,
+   "team": "DR Congo",
+   "caps": 16
   },
   {
    "no": "35",
    "pos": "MF",
    "nat": "BRA",
    "name": "João Gomes",
+   "page": "João Gomes (footballer, born 2001)",
    "dob": "2001-02-12",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Brazil",
+   "caps": 10
   },
   {
    "no": "39",
    "pos": "FW",
    "nat": "ENG",
    "name": "Brian Madjo",
+   "page": "Brian Madjo",
    "dob": "2009-01-12",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Luxembourg",
+   "caps": 3
   },
   {
    "no": "40",
    "pos": "GK",
    "nat": "NED",
    "name": "Marco Bizot",
+   "page": "Marco Bizot",
    "dob": "1991-03-10",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 1
   },
   {
    "no": "42",
    "pos": "GK",
    "nat": "ENG",
    "name": "James Wright",
+   "page": "James Wright (footballer)",
    "dob": "2004-12-02",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "nationalcaps1 =",
+   "caps": null
   },
   {
    "no": "44",
    "pos": "MF",
    "nat": "SUI",
    "name": "Johan Manzambi",
+   "page": "Johan Manzambi",
    "dob": "2005-10-14",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Switzerland",
+   "caps": 16
   },
   {
    "no": "47",
    "pos": "FW",
    "nat": "BRA",
    "name": "Alysson",
+   "page": "Alysson (footballer, born 2006)",
    "dob": "2006-05-05",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "48",
    "pos": "DF",
    "nat": "SEN",
    "name": "Modou Kéba Cissé",
+   "page": "Modou Kéba Cissé",
    "dob": "2005-08-04",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "nationalcaps1 =",
+   "caps": null
   },
   {
    "no": "53",
    "pos": "MF",
    "nat": "ENG",
    "name": "George Hemmings",
+   "page": "George Hemmings",
    "dob": "2007-03-04",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   }
  ],
  "results": [
@@ -598,7 +685,7 @@
    "28 October 2026",
    "Fourth round",
    "Bournemouth",
-   "| report     =",
+   "| report     = https://www.efl.com/match-centre/g2687778",
    "Aston Villa"
   ],
   [

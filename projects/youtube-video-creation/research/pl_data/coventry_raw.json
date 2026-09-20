@@ -7,261 +7,348 @@
    "pos": "DF",
    "nat": "JAM",
    "name": "Ethan Pinnock",
+   "page": "Ethan Pinnock",
    "dob": "1993-05-29",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Jamaica",
+   "caps": 28
   },
   {
    "no": "3",
    "pos": "DF",
    "nat": "WAL",
    "name": "Jay Dasilva",
+   "page": "Jay Dasilva",
    "dob": "1998-04-22",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Wales",
+   "caps": 10
   },
   {
    "no": "4",
    "pos": "DF",
    "nat": "ENG",
    "name": "Bobby Thomas",
+   "page": "Bobby Thomas (footballer)",
    "dob": "2001-01-30",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "5",
    "pos": "MF",
    "nat": "ENG",
    "name": "Jack Rudoni",
+   "page": "Jack Rudoni",
    "dob": "2001-06-14",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "6",
    "pos": "MF",
    "nat": "ENG",
    "name": "Matt Grimes",
+   "page": "Matt Grimes",
    "dob": "1995-07-15",
    "captain": true,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "7",
    "pos": "FW",
    "nat": "JPN",
    "name": "Tatsuhiro Sakamoto",
+   "page": "Tatsuhiro Sakamoto",
    "dob": "1996-10-22",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Japan",
+   "caps": 2
   },
   {
    "no": "8",
    "pos": "MF",
    "nat": "GHA",
    "name": "Caleb Yirenkyi",
+   "page": "Caleb Yirenkyi",
    "dob": "2006-01-15",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Ghana",
+   "caps": 15
   },
   {
    "no": "9",
    "pos": "FW",
    "nat": "ENG",
    "name": "Ellis Simms",
+   "page": "Ellis Simms",
    "dob": "2001-01-05",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "10",
    "pos": "FW",
    "nat": "JAM",
    "name": "Ephron Mason-Clark",
+   "page": "Ephron Mason-Clark",
    "dob": "1999-08-25",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Jamaica",
+   "caps": 2
   },
   {
    "no": "11",
    "pos": "FW",
    "nat": "USA",
    "name": "Haji Wright",
+   "page": "Haji Wright",
    "dob": "1998-03-27",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "United States",
+   "caps": 22
   },
   {
    "no": "12",
    "pos": "DF",
    "nat": "ENG",
    "name": "Stephen Mfuni",
+   "page": "Stephen Mfuni",
    "dob": "2008-02-12",
    "captain": false,
-   "loan": true
+   "loan": true,
+   "team": "",
+   "caps": null
   },
   {
    "no": "13",
    "pos": "GK",
    "nat": "ENG",
    "name": "Ben Wilson",
+   "page": "Ben Wilson (footballer, born 1992)",
    "dob": "1992-08-09",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "14",
    "pos": "FW",
    "nat": "NGA",
    "name": "Taiwo Awoniyi",
+   "page": "Taiwo Awoniyi",
    "dob": "1997-08-12",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Nigeria",
+   "caps": 10
   },
   {
    "no": "16",
    "pos": "MF",
    "nat": "NGA",
    "name": "Frank Onyeka",
+   "page": "Frank Onyeka",
    "dob": "1998-01-01",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Nigeria",
+   "caps": 45
   },
   {
    "no": "17",
    "pos": "FW",
    "nat": "FRA",
    "name": "Loum Tchaouna",
+   "page": "Loum Tchaouna",
    "dob": "2003-09-08",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "19",
    "pos": "GK",
    "nat": "ENG",
    "name": "Carl Rushworth",
+   "page": "Carl Rushworth",
    "dob": "2001-07-02",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "20",
    "pos": "DF",
    "nat": "ENG",
    "name": "Kaine Kesler-Hayden",
+   "page": "Kaine Kesler-Hayden",
    "dob": "2002-10-23",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "21",
    "pos": "DF",
    "nat": "ENG",
    "name": "Jake Bidwell",
+   "page": "Jake Bidwell",
    "dob": "1993-03-21",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "22",
    "pos": "DF",
    "nat": "JAM",
    "name": "Joel Latibeaudiere",
+   "page": "Joel Latibeaudiere",
    "dob": "2000-01-06",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Jamaica",
+   "caps": 31
   },
   {
    "no": "23",
    "pos": "FW",
    "nat": "GHA",
    "name": "Brandon Thomas-Asante",
+   "page": "Brandon Thomas-Asante",
    "dob": "1998-12-29",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Ghana",
+   "caps": 10
   },
   {
    "no": "24",
    "pos": "DF",
    "nat": "SUI",
    "name": "Aurèle Amenda",
+   "page": "Aurèle Amenda",
    "dob": "2003-07-31",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Switzerland",
+   "caps": 7
   },
   {
    "no": "25",
    "pos": "GK",
    "nat": "ENG",
    "name": "Dan Bentley",
+   "page": "Dan Bentley (footballer)",
    "dob": "1993-07-13",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "26",
    "pos": "DF",
    "nat": "ENG",
    "name": "Luke Woolfenden",
+   "page": "Luke Woolfenden",
    "dob": "1998-10-21",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "27",
    "pos": "DF",
    "nat": "NED",
    "name": "Milan van Ewijk",
+   "page": "Milan van Ewijk",
    "dob": "2000-09-08",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "28",
    "pos": "MF",
    "nat": "ENG",
    "name": "Josh Eccles",
+   "page": "Josh Eccles",
    "dob": "2000-04-06",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "29",
    "pos": "MF",
    "nat": "DEN",
    "name": "Victor Torp",
+   "page": "Victor Torp",
    "dob": "1999-07-30",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "34",
    "pos": "FW",
    "nat": "FRA",
    "name": "Yann Gboho",
+   "page": "Yann Gboho",
    "dob": "2001-01-14",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "38",
    "pos": "MF",
    "nat": "NED",
    "name": "Gustavo Hamer",
+   "page": "Gustavo Hamer",
    "dob": "1997-06-24",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "49",
    "pos": "FW",
    "nat": "GUI",
    "name": "Sidiki Cherif",
+   "page": "Sidiki Cherif",
    "dob": "",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "nationalcaps1 =",
+   "caps": null
   }
  ],
  "results": [
@@ -325,7 +412,7 @@
    "19 September 2026",
    "5",
    "Nottingham Forest",
-   "| report     = https://www.premierleague.com/en/match/2645243",
+   "0–1",
    "Coventry City"
   ],
   [
@@ -423,7 +510,7 @@
    "2 January 2027",
    "19",
    "Liverpool",
-   "| result     =",
+   "| report     =",
    "Coventry City"
   ],
   [

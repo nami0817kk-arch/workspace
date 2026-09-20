@@ -33,6 +33,33 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "research" / "pl_data"
 TODAY = datetime.date(2026, 9, 19)
 NUM = "①②③④⑤⑥⑦⑧⑨⑩⑪⑫⑬⑭⑮⑯⑰⑱⑲⑳"
+# **これ未満の出場数は「有名な選手」として出さない。**「1試合」は紹介にならない
+CAPS_MIN = 10
+# 代表の名前（Wikipedia の英語表記）を日本語に
+TEAM_JA = {"England": "イングランド", "Scotland": "スコットランド", "Wales": "ウェールズ",
+           "Northern Ireland": "北アイルランド", "Republic of Ireland": "アイルランド",
+           "France": "フランス", "Spain": "スペイン", "Portugal": "ポルトガル",
+           "Germany": "ドイツ", "Netherlands": "オランダ", "Belgium": "ベルギー",
+           "Italy": "イタリア", "Switzerland": "スイス", "Austria": "オーストリア",
+           "Denmark": "デンマーク", "Sweden": "スウェーデン", "Norway": "ノルウェー",
+           "Poland": "ポーランド", "Czech Republic": "チェコ", "Croatia": "クロアチア",
+           "Serbia": "セルビア", "Slovenia": "スロベニア", "Slovakia": "スロバキア",
+           "Hungary": "ハンガリー", "Ukraine": "ウクライナ", "Greece": "ギリシャ",
+           "Turkey": "トルコ", "Brazil": "ブラジル", "Argentina": "アルゼンチン",
+           "Uruguay": "ウルグアイ", "Colombia": "コロンビア", "Ecuador": "エクアドル",
+           "Paraguay": "パラグアイ", "Chile": "チリ", "Peru": "ペルー",
+           "Mexico": "メキシコ", "United States": "アメリカ", "Canada": "カナダ",
+           "Jamaica": "ジャマイカ", "Senegal": "セネガル", "Ivory Coast": "コートジボワール",
+           "Ghana": "ガーナ", "Nigeria": "ナイジェリア", "Cameroon": "カメルーン",
+           "Mali": "マリ", "Guinea": "ギニア", "Morocco": "モロッコ",
+           "Algeria": "アルジェリア", "Tunisia": "チュニジア", "Egypt": "エジプト",
+           "South Africa": "南アフリカ", "Japan": "日本", "South Korea": "韓国",
+           "Australia": "オーストラリア", "Israel": "イスラエル", "Georgia": "ジョージア",
+           "Albania": "アルバニア", "Kosovo": "コソボ", "Iceland": "アイスランド",
+           "Finland": "フィンランド", "Romania": "ルーマニア", "Zimbabwe": "ジンバブエ",
+           "DR Congo": "コンゴ民主共和国", "Uzbekistan": "ウズベキスタン",
+           "Curaçao": "キュラソー", "Cape Verde": "カーボベルデ", "Angola": "アンゴラ",
+           "Burkina Faso": "ブルキナファソ", "Gambia": "ガンビア", "Benin": "ベナン"}
 POS = [("GK", "ゴールキーパー"), ("DF", "ディフェンダー"), ("MF", "ミッドフィールダー"), ("FW", "フォワード")]
 NAT = {"JPN": "日本", "ENG": "イングランド", "SCO": "スコットランド", "WAL": "ウェールズ", "NIR": "北アイルランド",
        "IRL": "アイルランド", "FRA": "フランス", "ESP": "スペイン", "POR": "ポルトガル", "GER": "ドイツ",
@@ -90,8 +117,10 @@ def boards(key: str, club: str, colors: list[str], squad: list[dict], kana: dict
                     "--colors", f"{colors[0]},#15090f",
                     "--title", f"{club} {label}{suffix}（{len(people)}人）", "--note", "年齢は2026年9月19日時点"]
             for p in chunk:
-                # 主将の印は付けない。原文の印は副主将も拾い、リヴァプールで4人が「主将」になった
-                extra = "・レンタル" if p.get("loan") else ""
+                # **主将の印を戻した**（2026-09-20）。落としていたのは、原文の印を
+                # `|` の手前だけ読んでいて副主将まで拾っていたから（リヴァプールで4人が
+                # 「主将」になった）。plsquad.py が見える字で判じるようにしたので戻せる
+                extra = ("・主将" if p.get("captain") else "") + ("・レンタル" if p.get("loan") else "")
                 args += ["--row", f"{kana.get(p['name'], p['name'])}|{NAT.get(p['nat'], p['nat'])}・{age(p['dob'])}歳{extra}|"]
             subprocess.run(args, check=True, capture_output=True)
             made.append((out, label, len(people)))
@@ -272,19 +301,44 @@ def build(key: str, number: int, old_file: str) -> Path:
     # **宿敵の節は作らない**（2026-09-20 指示「宿敵は不要」）。
     # 旧台本には残っているが、20本すべてで落とす。
     # <key>_say.yaml の `rival_sections` も使わない（戻すときのために残してある）。
-    # 登録選手
-    ssay = [f"今季の登録選手は{sum(1 for p in raw['squad'] if age(p['dob']) is not None)}人です。"]
+    # 登録選手（2026-09-20 指示「選手紹介をもう少し内容増やしてほしい／
+    # 各ポジの有名選手、キャプテンを紹介」）。
+    # **「有名」は代表の出場数で決める。**好き嫌いで選ばない。
+    # 各選手の Wikipedia にある A代表の出場数（plsquad.py が控えている）の
+    # 上から2人までを、その位置の板といっしょに読む
+    total = sum(1 for p in raw["squad"] if age(p["dob"]) is not None)
+    cap = next((p for p in raw["squad"] if p.get("captain")), None)
+    # **主将は、その人の位置の板といっしょに出す**（2026-09-20）。
+    # 節の頭で名前だけ言うと、画面は前の節の写真（名選手の顔）が残ったままで、
+    # **別人の顔を見せながら主将の名前を読む**ことになっていた。
+    # 頭の行にも板を当てて、前の節の写真が流れ込まないようにする
+    first_board = squad_boards[0][0] if squad_boards else ""
+    ssay = [{"text": f"今季の登録選手は{total}人です。", "image": first_board, "no_telop": True}
+            if first_board else f"今季の登録選手は{total}人です。"]
     seen = set()
     for out, label, n in squad_boards:
         if label in seen:
             ssay.append({"image": out, "text": f"{label}の続きです。", "no_telop": True})
             continue
         seen.add(label)
-        names = [kana.get(p["name"], p["name"]) for p in raw["squad"] if dict(POS).get(p["pos"]) == label and age(p["dob"]) is not None]
+        here = [p for p in raw["squad"]
+                if dict(POS).get(p["pos"]) == label and age(p["dob"]) is not None]
+        names = [kana.get(p["name"], p["name"]) for p in here]
         jp = [n2 for n2 in names if n2 in jp_names]
         tail = f"日本の{jp[0]}もここにいます。" if jp else ""
+        if cap and dict(POS).get(cap["pos"]) == label:
+            tail += f"主将の**{kana.get(cap['name'], cap['name'])}**は、ここにいます。"
+        # **1枚の板は12秒まで**（検査の上限）。主将の話を足す位置は、
+        # 有名な選手を1人に減らして収める
+        room = 1 if tail else 2
+        known = sorted((p for p in here if (p.get("caps") or 0) >= CAPS_MIN),
+                       key=lambda p: -(p.get("caps") or 0))[:room]
+        note = "".join(
+            f"{kana.get(p['name'], p['name'])}は{TEAM_JA.get(p.get('team', ''), p.get('team', ''))}代表で"
+            f"**{p['caps']}試合**。" for p in known)
         extra = (ov.get("squad") or {}).get(label, "")
-        ssay.append({"image": out, "text": f"{label}は{n}人。{tail}{extra}", "no_telop": True})
+        ssay.append({"image": out, "text": f"{label}は{n}人。{tail}{note}{extra}",
+                     "no_telop": True})
     sections.append(sec(id="squad", heading="今季の登録選手", tier="報道", telop="今季の登録選手",
                         narrator="キャスター", say=ssay, sources=[wiki]))
     # 今季のここまで（プレミアの節だけ）

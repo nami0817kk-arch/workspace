@@ -7,270 +7,360 @@
    "pos": "GK",
    "nat": "ARG",
    "name": "Emiliano Martínez",
+   "page": "Emiliano Martínez",
    "dob": "1992-09-02",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Argentina",
+   "caps": 67
   },
   {
    "no": "2",
    "pos": "DF",
    "nat": "ITA",
    "name": "Marco Palestra",
+   "page": "Marco Palestra",
    "dob": "2005-03-03",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Italy",
+   "caps": 2
   },
   {
    "no": "3",
    "pos": "DF",
    "nat": "FRA",
    "name": "Wesley Fofana",
+   "page": "Wesley Fofana (footballer)",
    "dob": "2000-12-17",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "France",
+   "caps": 1
   },
   {
    "no": "4",
    "pos": "MF",
    "nat": "ARG",
    "name": "Valentín Barco",
+   "page": "Valentín Barco",
    "dob": "2004-07-23",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Argentina",
+   "caps": 5
   },
   {
    "no": "5",
    "pos": "DF",
    "nat": "FRA",
    "name": "Maxence Lacroix",
+   "page": "Maxence Lacroix",
    "dob": "2000-04-06",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "France",
+   "caps": 7
   },
   {
    "no": "6",
    "pos": "DF",
    "nat": "ENG",
    "name": "Levi Colwill",
+   "page": "Levi Colwill",
    "dob": "2003-02-26",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 5
   },
   {
    "no": "7",
    "pos": "FW",
    "nat": "POR",
    "name": "Pedro Neto",
+   "page": "Pedro Neto",
    "dob": "2000-03-09",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "9",
    "pos": "FW",
    "nat": "BRA",
    "name": "João Pedro",
+   "page": "João Pedro (footballer, born 2001)",
    "dob": "2001-09-26",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Brazil",
+   "caps": 8
   },
   {
    "no": "10",
    "pos": "MF",
    "nat": "ENG",
    "name": "Cole Palmer",
+   "page": "Cole Palmer",
    "dob": "2002-05-06",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 14
   },
   {
    "no": "11",
    "pos": "FW",
    "nat": "ENG",
    "name": "Jamie Gittens",
+   "page": "Jamie Gittens",
    "dob": "2004-08-08",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "14",
    "pos": "MF",
    "nat": "ENG",
    "name": "Jordan Henderson",
+   "page": "Jordan Henderson",
    "dob": "1990-06-17",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 91
   },
   {
    "no": "17",
    "pos": "MF",
    "nat": "ENG",
    "name": "Morgan Rogers",
+   "page": "Morgan Rogers",
    "dob": "2002-07-26",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 22
   },
   {
    "no": "18",
    "pos": "FW",
    "nat": "ENG",
    "name": "Danny Welbeck",
+   "page": "Danny Welbeck",
    "dob": "1990-11-26",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 42
   },
   {
    "no": "21",
    "pos": "DF",
    "nat": "NED",
    "name": "Jorrel Hato",
+   "page": "Jorrel Hato",
    "dob": "2006-03-07",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 9
   },
   {
    "no": "22",
    "pos": "FW",
    "nat": "NED",
    "name": "Emmanuel Emegha",
+   "page": "Emmanuel Emegha",
    "dob": "2003-02-03",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 2
   },
   {
    "no": "23",
    "pos": "FW",
    "nat": "POR",
    "name": "Geovany Quenda",
+   "page": "Geovany Quenda",
    "dob": "2007-04-30",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "24",
    "pos": "DF",
    "nat": "ENG",
    "name": "Reece James",
+   "page": "Reece James",
    "dob": "1999-12-08",
    "captain": true,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 29
   },
   {
    "no": "25",
    "pos": "MF",
    "nat": "ECU",
    "name": "Moisés Caicedo",
+   "page": "Moisés Caicedo",
    "dob": "2001-11-02",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Ecuador",
+   "caps": 65
   },
   {
    "no": "27",
    "pos": "DF",
    "nat": "FRA",
    "name": "Malo Gusto",
+   "page": "Malo Gusto",
    "dob": "2003-05-19",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "France",
+   "caps": 16
   },
   {
    "no": "28",
    "pos": "GK",
    "nat": "ENG",
    "name": "Teddy Sharman-Lowe",
+   "page": "Teddy Sharman-Lowe",
    "dob": "2003-03-30",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "29",
    "pos": "DF",
    "nat": "ESP",
    "name": "Pep Chavarría",
+   "page": "Pep Chavarría",
    "dob": "1998-04-10",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "30",
    "pos": "DF",
    "nat": "ARG",
    "name": "Aarón Anselmino",
+   "page": "Aarón Anselmino",
    "dob": "2005-04-29",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "31",
    "pos": "MF",
    "nat": "ENG",
    "name": "Reggie Watson",
+   "page": "Reggie Watson",
    "dob": "2010-01-26",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "32",
    "pos": "MF",
    "nat": "ENG",
    "name": "Mahdi Nicoll-Jazuli",
+   "page": "Mahdi Nicoll-Jazuli",
    "dob": "2010-01-06",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "34",
    "pos": "DF",
    "nat": "ENG",
    "name": "Josh Acheampong",
+   "page": "Josh Acheampong",
    "dob": "2006-05-05",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "37",
    "pos": "DF",
    "nat": "ENG",
    "name": "Olutayo Subuloye",
+   "page": "Olutayo Subuloye",
    "dob": "",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "39",
    "pos": "GK",
    "nat": "BEL",
    "name": "Mike Penders",
+   "page": "Mike Penders",
    "dob": "2005-07-31",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "41",
    "pos": "FW",
    "nat": "BRA",
    "name": "Estêvão",
+   "page": "Estêvão Willian",
    "dob": "2007-04-24",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Brazil",
+   "caps": 11
   },
   {
    "no": "44",
    "pos": "GK",
    "nat": "USA",
    "name": "Gabriel Slonina",
+   "page": "Gabriel Slonina",
    "dob": "2004-05-15",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "United States",
+   "caps": 1
   },
   {
    "no": "45",
    "pos": "MF",
    "nat": "BEL",
    "name": "Roméo Lavia",
+   "page": "Roméo Lavia",
    "dob": "2004-01-06",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Belgium",
+   "caps": 1
   }
  ],
  "results": [

@@ -7,225 +7,300 @@
    "pos": "GK",
    "nat": "ENG",
    "name": "Nick Pope",
+   "page": "Nick Pope (footballer)",
    "dob": "1992-04-19",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 10
   },
   {
    "no": "2",
    "pos": "DF",
    "nat": "ENG",
    "name": "Tino Livramento",
+   "page": "Tino Livramento",
    "dob": "2002-11-12",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 6
   },
   {
    "no": "3",
    "pos": "DF",
    "nat": "ENG",
    "name": "Lewis Hall",
+   "page": "Lewis Hall (footballer)",
    "dob": "2004-09-08",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 4
   },
   {
    "no": "4",
    "pos": "DF",
    "nat": "NED",
    "name": "Sven Botman",
+   "page": "Sven Botman",
    "dob": "2000-01-12",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "5",
    "pos": "DF",
    "nat": "SUI",
    "name": "Fabian Schär",
+   "page": "Fabian Schär",
    "dob": "1991-12-20",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Switzerland",
+   "caps": 86
   },
   {
    "no": "6",
    "pos": "MF",
    "nat": "ESP",
    "name": "Nico González",
+   "page": "Nico González (footballer, born 2002)",
    "dob": "2002-01-03",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "7",
    "pos": "FW",
    "nat": "BRA",
    "name": "Joelinton",
+   "page": "Joelinton",
    "dob": "1996-08-14",
-   "captain": true,
-   "loan": false
+   "captain": false,
+   "loan": false,
+   "team": "Brazil",
+   "caps": 8
   },
   {
    "no": "8",
    "pos": "MF",
    "nat": "FRA",
    "name": "Aladji Bamba",
+   "page": "Aladji Bamba",
    "dob": "2006-07-14",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "9",
    "pos": "FW",
    "nat": "COD",
    "name": "Yoane Wissa",
+   "page": "Yoane Wissa",
    "dob": "1996-09-03",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "DR Congo",
+   "caps": 43
   },
   {
    "no": "10",
    "pos": "FW",
    "nat": "DEN",
    "name": "William Osula",
+   "page": "William Osula",
    "dob": "2003-08-04",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Denmark",
+   "caps": 2
   },
   {
    "no": "11",
    "pos": "FW",
    "nat": "ENG",
    "name": "Harvey Barnes",
+   "page": "Harvey Barnes",
    "dob": "1997-12-09",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 2
   },
   {
    "no": "12",
    "pos": "DF",
    "nat": "GER",
    "name": "Malick Thiaw",
+   "page": "Malick Thiaw",
    "dob": "2001-08-08",
-   "captain": true,
-   "loan": false
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 7
   },
   {
    "no": "14",
    "pos": "MF",
    "nat": "NED",
    "name": "Sean Steur",
+   "page": "Sean Steur",
    "dob": "2008-01-11",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "17",
    "pos": "FW",
    "nat": "CIV",
    "name": "Bazoumana Touré",
+   "page": "Bazoumana Touré",
    "dob": "2006-03-02",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Ivory Coast",
+   "caps": 9
   },
   {
    "no": "19",
    "pos": "FW",
    "nat": "SWE",
    "name": "Anthony Elanga",
+   "page": "Anthony Elanga",
    "dob": "2002-04-27",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Sweden",
+   "caps": 34
   },
   {
    "no": "20",
    "pos": "FW",
    "nat": "BEL",
    "name": "Matias Fernandez-Pardo",
+   "page": "Matias Fernandez-Pardo",
    "dob": "2005-02-03",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Belgium",
+   "caps": 5
   },
   {
    "no": "21",
    "pos": "GK",
    "nat": "CZE",
    "name": "Lukáš Horníček",
+   "page": "Lukáš Horníček",
    "dob": "2002-07-13",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Czech Republic",
+   "caps": 1
   },
   {
    "no": "23",
    "pos": "MF",
    "nat": "ENG",
    "name": "Jacob Murphy",
+   "page": "Jacob Murphy",
    "dob": "1995-02-24",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "24",
    "pos": "GK",
    "nat": "FRA",
    "name": "Ewen Jaouen",
+   "page": "Ewen Jaouen",
    "dob": "2005-12-29",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "28",
    "pos": "MF",
    "nat": "ENG",
    "name": "Joe Willock",
+   "page": "Joe Willock",
    "dob": "1999-08-20",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "29",
    "pos": "GK",
    "nat": "ENG",
    "name": "Mark Gillespie",
+   "page": "Mark Gillespie (footballer)",
    "dob": "1992-03-27",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "33",
    "pos": "DF",
    "nat": "ENG",
    "name": "Dan Burn",
+   "page": "Dan Burn",
    "dob": "1992-05-09",
    "captain": true,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 11
   },
   {
    "no": "37",
    "pos": "DF",
    "nat": "BIH",
    "name": "Amar Dedić",
+   "page": "Amar Dedić",
    "dob": "2002-08-18",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Bosnia and Herzegovina",
+   "caps": 31
   },
   {
    "no": "41",
    "pos": "MF",
    "nat": "ENG",
    "name": "Jacob Ramsey",
+   "page": "Jacob Ramsey",
    "dob": "2001-05-28",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "67",
    "pos": "MF",
    "nat": "ENG",
    "name": "Lewis Miley",
+   "page": "Lewis Miley",
    "dob": "2006-05-01",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   }
  ],
  "results": [
@@ -559,10 +634,10 @@
    "Newcastle United"
   ],
   [
-   "w/c 26 October 2026",
+   "29 October 2026",
    "Fourth round",
    "Everton",
-   "| report     =",
+   "| report     = https://www.efl.com/match-centre/g2687773",
    "Newcastle United"
   ]
  ]

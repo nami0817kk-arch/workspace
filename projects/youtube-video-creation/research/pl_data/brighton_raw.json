@@ -7,270 +7,360 @@
    "pos": "GK",
    "nat": "NED",
    "name": "Bart Verbruggen",
+   "page": "Bart Verbruggen",
    "dob": "2002-08-18",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 33
   },
   {
    "no": "3",
    "pos": "DF",
    "nat": "ALG",
    "name": "Jaouen Hadjam",
+   "page": "Jaouen Hadjam",
    "dob": "2003-03-26",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Algeria",
+   "caps": 21
   },
   {
    "no": "4",
    "pos": "DF",
    "nat": "NED",
    "name": "Pascal Struijk",
+   "page": "Pascal Struijk",
    "dob": "1999-08-11",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "5",
    "pos": "DF",
    "nat": "ENG",
    "name": "Lewis Dunk",
+   "page": "Lewis Dunk",
    "dob": "1991-11-21",
    "captain": true,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 6
   },
   {
    "no": "7",
    "pos": "MF",
    "nat": "JPN",
    "name": "Kaoru Mitoma",
+   "page": "Kaoru Mitoma",
    "dob": "1997-05-20",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Japan",
+   "caps": 31
   },
   {
    "no": "8",
    "pos": "MF",
    "nat": "ENG",
    "name": "Jack Hinshelwood",
+   "page": "Jack Hinshelwood",
    "dob": "2005-04-11",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "9",
    "pos": "FW",
    "nat": "GRE",
    "name": "Stefanos Tzimas",
+   "page": "Stefanos Tzimas",
    "dob": "2006-01-06",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "10",
    "pos": "FW",
    "nat": "FRA",
    "name": "Georginio Rutter",
+   "page": "Georginio Rutter",
    "dob": "2002-04-20",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "11",
    "pos": "MF",
    "nat": "GAM",
    "name": "Yankuba Minteh",
+   "page": "Yankuba Minteh",
    "dob": "2004-07-22",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Gambia",
+   "caps": 20
   },
   {
    "no": "12",
    "pos": "FW",
    "nat": "CAN",
    "name": "Promise David",
+   "page": "Promise David",
    "dob": "2001-07-03",
    "captain": false,
-   "loan": true
+   "loan": true,
+   "team": "Canada",
+   "caps": 14
   },
   {
    "no": "13",
    "pos": "MF",
    "nat": "GER",
    "name": "Pascal Groß",
+   "page": "Pascal Groß",
    "dob": "1991-06-15",
-   "captain": true,
-   "loan": false
+   "captain": false,
+   "loan": false,
+   "team": "Germany",
+   "caps": 19
   },
   {
    "no": "14",
    "pos": "MF",
    "nat": "ESP",
    "name": "Chema Andrés",
+   "page": "Chema Andrés",
    "dob": "2005-04-25",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "15",
    "pos": "MF",
    "nat": "GHA",
    "name": "Ibrahim Osman",
+   "page": "Ibrahim Osman (footballer, born 2004)",
    "dob": "2004-11-29",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Ghana",
+   "caps": 3
   },
   {
    "no": "19",
    "pos": "FW",
    "nat": "GRE",
    "name": "Charalampos Kostoulas",
+   "page": "Charalampos Kostoulas",
    "dob": "2007-05-30",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Greece",
+   "caps": 4
   },
   {
    "no": "20",
    "pos": "DF",
    "nat": "POR",
    "name": "Costinha",
+   "page": "Costinha (footballer, born 2000)",
    "dob": "2000-03-26",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "21",
    "pos": "DF",
    "nat": "FRA",
    "name": "Olivier Boscagli",
+   "page": "Olivier Boscagli",
    "dob": "1997-11-18",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "23",
    "pos": "GK",
    "nat": "ENG",
    "name": "Jason Steele",
+   "page": "Jason Steele (footballer)",
    "dob": "1990-08-18",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 0
   },
   {
    "no": "24",
    "pos": "DF",
    "nat": "TUR",
    "name": "Ferdi Kadıoğlu",
+   "page": "Ferdi Kadıoğlu",
    "dob": "1999-10-07",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Turkey",
+   "caps": 32
   },
   {
    "no": "25",
    "pos": "MF",
    "nat": "PAR",
    "name": "Diego Gómez",
+   "page": "Diego Gómez (Paraguayan footballer)",
    "dob": "2003-03-27",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Paraguay",
+   "caps": 28
   },
   {
    "no": "26",
    "pos": "MF",
    "nat": "SWE",
    "name": "Yasin Ayari",
+   "page": "Yasin Ayari",
    "dob": "2003-10-06",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Sweden",
+   "caps": 25
   },
   {
    "no": "27",
    "pos": "DF",
    "nat": "NED",
    "name": "Mats Wieffer",
+   "page": "Mats Wieffer",
    "dob": "1999-11-16",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Netherlands",
+   "caps": 15
   },
   {
    "no": "28",
    "pos": "FW",
    "nat": "IRL",
    "name": "Evan Ferguson",
+   "page": "Evan Ferguson",
    "dob": "2004-10-19",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Republic of Ireland",
+   "caps": 26
   },
   {
    "no": "29",
    "pos": "DF",
    "nat": "BEL",
    "name": "Maxim De Cuyper",
+   "page": "Maxim De Cuyper",
    "dob": "2000-12-22",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Belgium",
+   "caps": 25
   },
   {
    "no": "30",
    "pos": "DF",
    "nat": "AUT",
    "name": "Michael Svoboda",
+   "page": "Michael Svoboda",
    "dob": "1998-10-15",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Austria",
+   "caps": 4
   },
   {
    "no": "33",
    "pos": "MF",
    "nat": "DEN",
    "name": "Matt O'Riley",
+   "page": "Matt O'Riley",
    "dob": "2000-11-21",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Denmark",
+   "caps": 6
   },
   {
    "no": "35",
    "pos": "MF",
    "nat": "CIV",
    "name": "Malick Yalcouyé",
+   "page": "Malick Yalcouyé",
    "dob": "2005-11-18",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Ivory Coast",
+   "caps": 0
   },
   {
    "no": "36",
    "pos": "MF",
    "nat": "NGA",
    "name": "Zadok Yohanna",
+   "page": "Zadok Yohanna",
    "dob": "2007-06-29",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "38",
    "pos": "GK",
    "nat": "CAN",
    "name": "Tom McGill",
+   "page": "Tom McGill",
    "dob": "2000-03-25",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "39",
    "pos": "MF",
    "nat": "NGA",
    "name": "Femi Azeez",
+   "page": "Femi Azeez",
    "dob": "2001-06-05",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Nigeria",
+   "caps": 2
   },
   {
    "no": "44",
    "pos": "DF",
    "nat": "CRO",
    "name": "Luka Vušković",
+   "page": "Luka Vušković",
    "dob": "2007-02-24",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Croatia",
+   "caps": 6
   }
  ],
  "results": [

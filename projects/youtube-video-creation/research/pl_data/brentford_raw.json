@@ -7,261 +7,348 @@
    "pos": "GK",
    "nat": "IRL",
    "name": "Caoimhín Kelleher",
+   "page": "Caoimhín Kelleher",
    "dob": "1998-11-23",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Republic of Ireland",
+   "caps": 32
   },
   {
    "no": "2",
    "pos": "DF",
    "nat": "SCO",
    "name": "Aaron Hickey",
+   "page": "Aaron Hickey",
    "dob": "2002-06-10",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Scotland",
+   "caps": 22
   },
   {
    "no": "3",
    "pos": "DF",
    "nat": "JAM",
    "name": "Rico Henry",
+   "page": "Rico Henry",
    "dob": "1997-07-08",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Jamaica",
+   "caps": 1
   },
   {
    "no": "4",
    "pos": "DF",
    "nat": "NED",
    "name": "Sepp van den Berg",
+   "page": "Sepp van den Berg",
    "dob": "2001-12-20",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "6",
    "pos": "MF",
    "nat": "UKR",
    "name": "Yehor Yarmolyuk",
+   "page": "Yehor Yarmolyuk",
    "dob": "2004-03-01",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Ukraine",
+   "caps": 9
   },
   {
    "no": "7",
    "pos": "FW",
    "nat": "GER",
    "name": "Kevin Schade",
+   "page": "Kevin Schade",
    "dob": "2001-11-27",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Germany",
+   "caps": 5
   },
   {
    "no": "8",
    "pos": "MF",
    "nat": "DEN",
    "name": "Mathias Jensen",
+   "page": "Mathias Jensen",
    "dob": "1996-01-01",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Denmark",
+   "caps": 32
   },
   {
    "no": "9",
    "pos": "FW",
    "nat": "BRA",
    "name": "Igor Thiago",
+   "page": "Igor Thiago",
    "dob": "2001-06-26",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Brazil",
+   "caps": 5
   },
   {
    "no": "10",
    "pos": "MF",
    "nat": "ENG",
    "name": "Josh Dasilva",
+   "page": "Josh Dasilva",
    "dob": "1998-10-23",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "11",
    "pos": "FW",
    "nat": "BFA",
    "name": "Dango Ouattara",
+   "page": "Dango Ouattara",
    "dob": "2002-02-11",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Burkina Faso",
+   "caps": 44
   },
   {
    "no": "12",
    "pos": "GK",
    "nat": "ISL",
    "name": "Hákon Valdimarsson",
+   "page": "Hákon Valdimarsson",
    "dob": "2001-10-13",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Iceland",
+   "caps": 22
   },
   {
    "no": "13",
    "pos": "FW",
    "nat": "ENG",
    "name": "Callum Wilson",
+   "page": "Callum Wilson",
    "dob": "1992-02-27",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "England",
+   "caps": 9
   },
   {
    "no": "14",
    "pos": "MF",
    "nat": "POR",
    "name": "Fábio Carvalho",
+   "page": "Fábio Carvalho (footballer, born 2002)",
    "dob": "2002-08-30",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "17",
    "pos": "MF",
    "nat": "NED",
    "name": "Antoni Milambo",
+   "page": "Antoni Milambo",
    "dob": "2005-04-03",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "18",
    "pos": "MF",
    "nat": "MLI",
    "name": "Mamadou Sangaré",
+   "page": "Mamadou Sangaré",
    "dob": "2002-06-26",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Mali",
+   "caps": 16
   },
   {
    "no": "19",
    "pos": "FW",
    "nat": "ENG",
    "name": "Jaidon Anthony",
+   "page": "Jaidon Anthony",
    "dob": "1999-12-01",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "20",
    "pos": "DF",
    "nat": "NOR",
    "name": "Kristoffer Ajer",
+   "page": "Kristoffer Ajer",
    "dob": "1998-04-17",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Norway",
+   "caps": 57
   },
   {
    "no": "22",
    "pos": "DF",
    "nat": "IRL",
    "name": "Nathan Collins",
+   "page": "Nathan Collins",
    "dob": "2001-04-30",
    "captain": true,
-   "loan": false
+   "loan": false,
+   "team": "Republic of Ireland",
+   "caps": 40
   },
   {
    "no": "23",
    "pos": "MF",
    "nat": "ENG",
    "name": "Keane Lewis-Potter",
+   "page": "Keane Lewis-Potter",
    "dob": "2001-02-22",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "24",
    "pos": "MF",
    "nat": "DEN",
    "name": "Mikkel Damsgaard",
+   "page": "Mikkel Damsgaard",
    "dob": "2000-07-03",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Denmark",
+   "caps": 40
   },
   {
    "no": "25",
    "pos": "DF",
    "nat": "SEN",
    "name": "El Hadji Malick Diouf",
+   "page": "El Hadji Malick Diouf",
    "dob": "2004-12-28",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Senegal",
+   "caps": 23
   },
   {
    "no": "27",
    "pos": "MF",
    "nat": "GER",
    "name": "Vitaly Janelt",
+   "page": "Vitaly Janelt",
    "dob": "1998-05-10",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "31",
    "pos": "GK",
    "nat": "ENG",
    "name": "Ellery Balcombe",
+   "page": "Ellery Balcombe",
    "dob": "1999-10-15",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "33",
    "pos": "DF",
    "nat": "ITA",
    "name": "Michael Kayode",
+   "page": "Michael Kayode",
    "dob": "2004-07-10",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "36",
    "pos": "DF",
    "nat": "KOR",
    "name": "Kim Ji-soo",
+   "page": "Kim Ji-soo (footballer)",
    "dob": "2004-12-24",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "39",
    "pos": "FW",
    "nat": "BRA",
    "name": "Gustavo Nunes",
+   "page": "Gustavo Nunes",
    "dob": "2005-11-20",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "44",
    "pos": "DF",
    "nat": "AUT",
    "name": "Jannik Schuster",
+   "page": "Jannik Schuster",
    "dob": "",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "nationalcaps5 =",
+   "caps": null
   },
   {
    "no": "47",
    "pos": "FW",
    "nat": "BEL",
    "name": "Kaye Furo",
+   "page": "Kaye Furo",
    "dob": "2007-02-06",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "",
+   "caps": null
   },
   {
    "no": "48",
    "pos": "DF",
    "nat": "NGA",
    "name": "Benjamin Fredrick",
+   "page": "Benjamin Fredrick",
    "dob": "2005-05-28",
    "captain": false,
-   "loan": false
+   "loan": false,
+   "team": "Nigeria",
+   "caps": 7
   }
  ],
  "results": [

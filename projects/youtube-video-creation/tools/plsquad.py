@@ -36,6 +36,30 @@ def raw(title: str) -> str:
     return text
 
 
+YOUTH = re.compile(r"U-?\d|Under-?\d|Youth|B team|Olympic", re.I)
+
+
+def captain_label(other: str) -> str:
+    """`other=[[Captain (association football)|vice-captain]]` の**見える字**を返す。"""
+    m = re.search(r"\[\[\s*captain[^\]|]*\|([^\]]+)\]\]", other, re.I)
+    return m.group(1).strip().lower() if m else ""
+
+
+def senior_caps(text: str) -> tuple[str, int | None]:
+    """A代表の名前と出場数。**年代別（U-21 など）は飛ばし、いちばん下の行を採る。**"""
+    teams, caps = {}, {}
+    for m in re.finditer(r"^\s*\|\s*nationalteam(\d+)\s*=\s*(.+)$", text, re.M):
+        name = re.sub(r"[\[\]']", "", m.group(2))
+        name = re.sub(r"\{\{[^}]*\}\}", "", name).split("|")[-1].strip()
+        teams[int(m.group(1))] = name
+    for m in re.finditer(r"^\s*\|\s*nationalcaps(\d+)\s*=\s*(\d+)", text, re.M):
+        caps[int(m.group(1))] = int(m.group(2))
+    for n in sorted(teams, reverse=True):
+        if teams[n] and not YOUTH.search(teams[n]):
+            return teams[n], caps.get(n)
+    return "", None
+
+
 def squad(club_title: str) -> list[dict]:
     text = raw(club_title)
     # 見出しで探す。本文に同じ言葉があると、そこから読み始めて0人になった
@@ -46,7 +70,11 @@ def squad(club_title: str) -> list[dict]:
     end = start + nxt.start() if nxt else start + 20000
     block = text[start:end if end > 0 else start + 20000]
     players = []
-    for r in re.findall(r"\{\{(?:[Ff]s|[Ff]ootball squad) player\|(.*?)\}\}\s*$", block, re.M):
+    # **行末で切らない**（2026-09-20）。フラムの主将の行は
+    # `{{Fs player|…|other=[[Captain…|captain]]}}<ref>…` と続いていて、
+    # 行末の縛りに引っかかって**その選手ごと落ちていた**（主将が誰も居ない回になる）
+    for r in re.findall(r"\{\{(?:[Ff]s|[Ff]ootball squad) player\|"
+                        r"([^{}]*(?:\{\{[^{}]*\}\}[^{}]*)*)\}\}", block):
         get = lambda k: (re.search(k + r"=\s*([^|}]+)", r) or [None, ""])[1].strip()
         nm = re.search(r"name=\s*(\[\[[^]]*\]\]|[^|]+)", r).group(1)
         link = re.match(r"\[\[([^]|]*)(?:\|([^]]*))?\]\]", nm)
@@ -55,11 +83,28 @@ def squad(club_title: str) -> list[dict]:
         page = raw(title)
         m = re.search(r"birth[_ ]date(?: and age)?\s*\|(?:\s*df=\w+\s*\|)?(?:\s*mf=\w+\s*\|)?"
                       r"\s*(\d{4})\s*\|\s*(\d{1,2})\s*\|\s*(\d{1,2})", page, re.I)
-        other = get("other")
+        # **`|` で切ってはいけない**（2026-09-20 に根っこが分かった）。
+        # 原文は `other=[[Captain (association football)|vice-captain]]` で、
+        # `|` の手前だけ見ると副主将が「Captain」に見える。
+        # **リヴァプールで4人が「主将」になったのはこれ。**丸ごと取る
+        om = re.search(r"other=\s*(\[\[[^\]]*\]\]|[^|}]+)", r)
+        other = om.group(1).strip() if om else ""
+        team, caps = senior_caps(page)
         players.append({
             "no": get("no"), "pos": get("pos"), "nat": get("nat"), "name": name,
+            "page": title,
             "dob": "%s-%02d-%02d" % (m.group(1), int(m.group(2)), int(m.group(3))) if m else "",
-            "captain": "aptain" in other, "loan": "loan" in other.lower(),
+            # **副主将を主将に数えない**（2026-09-19 にリヴァプールで4人が「主将」になった）。
+            # 原文は `other=[[Captain (association football)|vice-captain]]` のように書く
+            # **見出しの字そのもので決める。**原文は
+            # `[[Captain (association football)|captain]]` / `|vice-captain]]` /
+            # `|3rd captain]]` / `|4th captain]]` と書き分けてある。
+            # 「captain」ちょうどの1人だけが主将
+            "captain": captain_label(other) == "captain",
+            "loan": "loan" in other.lower(),
+            # **「有名な選手」は代表の出場数で決める**（2026-09-20 指示
+            # 「各ポジの有名選手、キャプテンを紹介」）。好き嫌いで選ばない
+            "team": team, "caps": caps,
         })
     return players
 
