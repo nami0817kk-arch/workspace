@@ -172,19 +172,44 @@ def build(key: str, number: int, old_file: str) -> Path:
                        check=True, capture_output=True)
         return out
 
+    # **話している題材の画面にする**（2026-09-20 指示「各題材ごとに別画面に
+    # 映るようにしたい」「スタジアムの話では、スタジアムに映る感じに」）。
+    # 本拠地のタイルだけは板ではなく**スタジアムの中の写真**にする。
+    # 写真は板と違って読ませる絵ではないので、**字幕は出す**
+    # （板と同じ字を重ねない、という決まりに反しない）。
+    # ほかの行に別の絵を当てたいときは <key>_say.yaml の `screens`（行番号→絵）
+    inside = f"assets/backgrounds/stadium_{facts['crest'].split('/')[-1].replace('.png', '')}_in.png"
+    if not (ROOT / inside).exists():
+        inside = ""
+    screens = {int(k): v for k, v in (ov.get("screens") or {}).items()}
+
+    def picture(n: int, i: int | None) -> tuple[str, bool]:
+        """(その行に出す絵, 字幕を消すか)"""
+        if n in screens:
+            return screens[n], False
+        if i is not None and inside and str(tiles[i][0]).startswith("本拠地"):
+            return inside, False
+        return board_for(i), True
+
     picks = list(ov.get("data_focus") or [])
     if ov.get("data"):
         for n, text in enumerate(ov["data"]):
             i = focus_of(text, picks[n] if n < len(picks) else None)
             if i is None:
                 print(f"  ！ {key} の基礎DATA {n + 1}行目は、どのタイルか当てられませんでした", file=sys.stderr)
-            say.append({"image": board_for(i), "text": text, "no_telop": True})
+            shot, mute = picture(n, i)
+            say.append({"image": shot, "text": text, "no_telop": True} if mute
+                       else {"image": shot, "text": text})
     else:
-        for n, (label, big, small) in enumerate(tiles):
+        n = 0
+        for i, (label, big, small) in enumerate(tiles):
             if label.startswith("有名なファン"):
                 continue
             text = f"{label}は、**{big}**。" + (f"{small.rstrip('。')}。" if small else "")
-            say.append({"image": board_for(n), "text": text, "no_telop": True})
+            shot, mute = picture(n, i)
+            say.append({"image": shot, "text": text, "no_telop": True} if mute
+                       else {"image": shot, "text": text})
+            n += 1
     sections.append(sec(id="data", heading=f"{club} 基礎DATA", main=True, tier="背景",
                         telop=facts["tiles"][0][1] + "創立", narrator="解説", say=say,
                         sources=[wiki]))

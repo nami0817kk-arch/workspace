@@ -217,8 +217,8 @@ cards:
   source: 背景
   image: assets/stats/pl_bournemouth_data0.png
 解説: 本拠地はディーン・コート。収容は1万2357人と、プレミアでもかなり小さなスタジアムです。
-  no_telop: true
-  image: assets/stats/pl_bournemouth_data1.png
+  telop: 本拠地はディーン・コート。収容は1万2357人と、プレミアでもかなり小さなスタジアムです
+  image: assets/backgrounds/stadium_ボーンマス_in.png
 解説: ホームタウンは、イングランド南部ドーセット州の海沿いの町ボーンマス。
   no_telop: true
   image: assets/stats/pl_bournemouth_data2.png

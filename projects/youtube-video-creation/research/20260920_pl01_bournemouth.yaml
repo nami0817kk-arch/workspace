@@ -36,9 +36,8 @@ sections:
   - image: assets/stats/pl_bournemouth_data0.png
     text: 創立は**1899年**。前身はボスコム・セント・ジョンズというクラブです。
     no_telop: true
-  - image: assets/stats/pl_bournemouth_data1.png
+  - image: assets/backgrounds/stadium_ボーンマス_in.png
     text: 本拠地はディーン・コート。収容は1万2357人と、プレミアでもかなり小さなスタジアムです。
-    no_telop: true
   - image: assets/stats/pl_bournemouth_data2.png
     text: ホームタウンは、イングランド南部ドーセット州の海沿いの町ボーンマス。
     no_telop: true
