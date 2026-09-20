@@ -32,9 +32,7 @@ theme:
   question: 何が止まらないのか
 
 thumbnail:
-  photos:
-    - assets/photos/20260920_machino/01.jpg
-    - assets/photos/20260920_sano/01.jpg
+  photo: assets/images/20260920_mainz_press/01.jpg
   line1: 日本人対決は7ゴールの乱打戦
   line2: ボルシアMGは4試合で ●●失点
   tags: []

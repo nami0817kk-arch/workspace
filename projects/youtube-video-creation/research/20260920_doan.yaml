@@ -34,9 +34,7 @@ theme:
   question: どちらが上回ったのか
 
 thumbnail:
-  photos:
-    - assets/photos/20260920_yuito/01.jpg
-    - assets/photos/20260920_doan/01.jpg
+  photo: assets/images/20260920_yuito_press/01.jpg
   line1: 日本人対決の結末は
   line2: 鈴木唯人、4試合で ●点目
   tags: []
