@@ -17,8 +17,8 @@ theme:
   question: どんなクラブなのか
   hook: 消えかけたクラブが、いまヨーロッパで戦っています。
 thumbnail:
-  line1: FAカップで1人9得点
-  line2: AFCボーンマス
+  line1: 勝ち点17を引かれた
+  line2: そこから18年で、初の欧州へ
   crest_main:
   - ボーンマス
   tags: []
@@ -54,32 +54,75 @@ sections:
 - id: history
   heading: 歩んできた道
   tier: 背景
-  telop: 破産寸前から、初の欧州へ
+  telop: 2008年、このクラブは消えかけた
   narrator: 解説
   card:
     type: table
-    title: ボーンマスの18年
+    title: 2008年に起きたこと
     columns:
     - ''
     - ''
     rows:
-    - - 2008年
-      - 経営破綻。勝ち点17剥奪
-    - - 2015年
-      - クラブ史上初の1部昇格
-    - - 2026年
-      - クラブ史上初の欧州出場
+    - - 経営破綻
+      - 2008年から2009年にかけて
+    - - 罰則
+      - 勝ち点17の剥奪
   say:
   - このクラブの物語は、消えかけたところから始まります。
   - 2008年から2009年にかけて経営破綻に追い込まれ、リーグの倒産規定に従わなかったとして勝ち点17を差し引かれました。
-  - ここで監督を引き受けたのが、31歳のエディ・ハウです。フットボールリーグで最も若い監督でした。
-  - それでもボーンマスは落ちませんでした。
-  - 6年後の2015年、チャンピオンシップを制して、クラブ史上はじめてイングランドの1部に上がります。
-  - そして昨季はリーグ6位、勝ち点57。クラブ史上はじめて、ヨーロッパの舞台への出場権をつかみました。
-  official: false
   sources:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
   bg: assets/backgrounds/stadium_ボーンマス.png
+  official: false
+- id: history2
+  heading: 31歳の監督
+  tier: 背景
+  telop: 引き受けたのは、31歳のエディ・ハウ
+  narrator: 解説
+  card:
+    type: table
+    title: 31歳の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - エディ・ハウ
+      - 31歳で就任
+    - - 当時
+      - フットボールリーグで最も若い監督
+  say:
+  - ここで監督を引き受けたのが、31歳のエディ・ハウです。フットボールリーグで最も若い監督でした。
+  - それでもボーンマスは落ちませんでした。
+  sources:
+  - https://en.wikipedia.org/wiki/AFC_Bournemouth
+  - https://en.wikipedia.org/wiki/Eddie_Howe
+  bg: assets/backgrounds/stadium_ボーンマス.png
+  official: false
+- id: history3
+  heading: そこから18年
+  tier: 背景
+  telop: 2015年に初昇格、そして初の欧州へ
+  narrator: 解説
+  card:
+    type: table
+    title: そこから18年
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 2015年
+      - クラブ史上初の1部昇格
+    - - 昨季
+      - リーグ6位・勝ち点57
+    - - 同じ年
+      - クラブ史上初の欧州出場
+  say:
+  - 6年後の2015年、チャンピオンシップを制して、クラブ史上はじめてイングランドの1部に上がります。
+  - そして昨季はリーグ6位、勝ち点57。クラブ史上はじめて、ヨーロッパの舞台への出場権をつかみました。
+  sources:
+  - https://en.wikipedia.org/wiki/AFC_Bournemouth
+  bg: assets/backgrounds/stadium_ボーンマス.png
+  official: false
 - id: legends
   heading: このクラブを語る3人
   tier: 背景
@@ -93,23 +136,62 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - - スティーヴ・フレッチャー
+    - &id001
+      - スティーヴ・フレッチャー
       - 1992-2013
       - クラブ最多の726試合出場
-    - - カラム・ウィルソン
+  say:
+  - スティーヴ・フレッチャーは、クラブ史上最多の**726試合**に出場した選手です。
+  sources: &id002
+  - https://en.wikipedia.org/wiki/List_of_AFC_Bournemouth_records_and_statistics
+  - https://en.wikipedia.org/wiki/Callum_Wilson
+  - https://en.wikipedia.org/wiki/Eddie_Howe
+  bg: assets/backgrounds/stadium_ボーンマス.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - &id003
+      - カラム・ウィルソン
       - 2014-2020
       - 初のプレミア昇格の得点源
+  say:
+  - カラム・ウィルソンは、2014年から15年にリーグ20得点。クラブ初のプレミア昇格を決めました。
+  sources: *id002
+  bg: assets/backgrounds/stadium_ボーンマス.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - *id003
     - - エディ・ハウ
       - 選手・監督
       - 4部からプレミアへ導いた
   say:
-  - スティーヴ・フレッチャーは、クラブ史上最多の**726試合**に出場した選手です。
-  - カラム・ウィルソンは、2014年から15年にリーグ20得点。クラブ初のプレミア昇格を決めました。
   - エディ・ハウは選手として長くプレーし、のちに監督として、4部にいたクラブを**プレミアまで**連れていきました。
-  sources:
-  - https://en.wikipedia.org/wiki/List_of_AFC_Bournemouth_records_and_statistics
-  - https://en.wikipedia.org/wiki/Callum_Wilson
-  - https://en.wikipedia.org/wiki/Eddie_Howe
+  sources: *id002
   bg: assets/backgrounds/stadium_ボーンマス.png
   official: false
 - id: rival
@@ -124,28 +206,97 @@ sections:
     - ''
     - ''
     rows:
-    - - サポーターが挙げた相手
-      - サウサンプトン（2019年8月の調査）
-    - - そのクラブ
-      - 今季のプレミアリーグにいない
-    - - 1990年5月5日
-      - リーズのサポーターが街で暴動
-    - - リーズ
-      - 今季もプレミアリーグにいる
+    - - ダービーの呼び名
+      - 記事に無い
+    - - その由来
+      - 記事に無い
+    - - 手がかり
+      - 2つ
   say:
   - このクラブには、**名前の付いた宿敵がいません。**
   - ダービーの呼び名も、その由来も、記事には書かれていないのです。
   - 手がかりは2つあります。
-  - ひとつは2019年8月の調査。ボーンマスのサポーターが最大のライバルに挙げたのは、サウサンプトンでした。
-  - ただし理由までは残っていません。しかもサウサンプトンは、今季のプレミアリーグにいません。
-  - もうひとつがリーズ・ユナイテッドです。
-  - 1990年5月5日、メーデーの連休中に、リーズのサポーターがこの街で大規模な暴動と破壊を起こしました。
-  - 記事はこれを「最も激しい因縁」と書いています。ただしこの一文には、**出典を求める印が付いたまま**です。
-  - そのリーズは、今季もプレミアリーグにいます。
-  official: false
   sources:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
   bg: assets/backgrounds/stadium_ボーンマス.png
+  official: false
+- id: rival2
+  heading: 手がかり①　サウサンプトン
+  tier: 背景
+  telop: サポーターが挙げたのはサウサンプトン
+  narrator: 解説
+  card:
+    type: table
+    title: 手がかり①　2019年8月の調査
+    columns:
+    - ''
+    - ''
+    rows:
+    - - サポーターが挙げた相手
+      - サウサンプトン
+    - - 理由
+      - 残っていない
+    - - そのクラブ
+      - 今季のプレミアリーグにいない
+  say:
+  - ひとつは2019年8月の調査。ボーンマスのサポーターが最大のライバルに挙げたのは、サウサンプトンでした。
+  - ただし理由までは残っていません。しかもサウサンプトンは、今季のプレミアリーグにいません。
+  - もうひとつがリーズ・ユナイテッドです。
+  sources:
+  - https://en.wikipedia.org/wiki/AFC_Bournemouth
+  bg: assets/backgrounds/stadium_ボーンマス.png
+  official: false
+- id: rival3
+  heading: 手がかり②　リーズ
+  tier: 背景
+  telop: 1990年5月5日、この街で起きたこと
+  narrator: 解説
+  card:
+    type: table
+    title: 手がかり②　1990年5月5日
+    columns:
+    - ''
+    - ''
+    rows:
+    - - メーデーの連休中
+      - リーズのサポーターが街で暴動
+    - - 記事の書き方
+      - 最も激しい因縁
+    - - ただし
+      - 出典を求める印が付いたまま
+  say:
+  - 1990年5月5日、メーデーの連休中に、リーズのサポーターがこの街で大規模な暴動と破壊を起こしました。
+  - 記事はこれを「最も激しい因縁」と書いています。ただしこの一文には、**出典を求める印が付いたまま**です。
+  sources:
+  - https://en.wikipedia.org/wiki/AFC_Bournemouth
+  bg: assets/backgrounds/stadium_ボーンマス.png
+  official: false
+- id: rival4
+  heading: 手がかり②　リーズ（つづき）
+  tier: 背景
+  telop: そのリーズは、今季もプレミアリーグにいる
+  narrator: 解説
+  card:
+    type: table
+    title: 手がかり②　1990年5月5日
+    columns:
+    - ''
+    - ''
+    rows:
+    - - メーデーの連休中
+      - リーズのサポーターが街で暴動
+    - - 記事の書き方
+      - 最も激しい因縁
+    - - ただし
+      - 出典を求める印が付いたまま
+    - - リーズ
+      - 今季もプレミアリーグにいる
+  say:
+  - そのリーズは、今季もプレミアリーグにいます。
+  sources:
+  - https://en.wikipedia.org/wiki/AFC_Bournemouth
+  bg: assets/backgrounds/stadium_ボーンマス.png
+  official: false
 - id: squad
   heading: 今季の登録選手
   tier: 報道

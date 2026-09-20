@@ -162,7 +162,11 @@ def build(key: str, number: int, old_file: str) -> Path:
     story_sec = next((s for s in old["sections"] if s["id"] == ov.get("story")), None) or next((s for s in old["sections"] if s.get("main")), None) or next(
         (s for s in old["sections"] if s["id"] not in ("name", "ground", "season", "rival", "legends", "titles")), None)
     rival_sec = next((s for s in old["sections"] if s["id"] == "rival"), None)
-    if story_sec:
+    # 割り方を手で書いた回は、そちらを使う（下の rival_sections と同じ理由）
+    if ov.get("story_sections"):
+        for s in ov["story_sections"]:
+            sections.append(sec(**s))
+    elif story_sec:
         story_sec = {k: v for k, v in story_sec.items() if k != "main"}
         if bg:
             story_sec["bg"] = bg
@@ -172,12 +176,25 @@ def build(key: str, number: int, old_file: str) -> Path:
     if leg:
         rows = ov.get("legend_rows") or [[l["name"], l["era"], l["why"][:24]] for l in leg["legends"]]
         lsay = ov.get("legends") or [f"{l['name']}。{l['numbers'].split('。')[0]}。" for l in leg["legends"]]
-        sections.append(sec(id="legends", heading="このクラブを語る3人", tier="背景",
-                            telop="1990年以降の名選手", narrator="キャスター",
-                            card={"type": "table", "title": "1990年以降の名選手",
-                                  "columns": ["名前", "在籍", "残したもの"], "rows": rows},
-                            say=lsay, sources=[l["source"] for l in leg["legends"]]))
-    if rival_sec:
+        # **1人ずつ節を分け、カードは名前が出たぶんだけ増やす**（2026-09-20）。
+        # 3人を1枚のカードでまとめると**22秒**、同じ絵のまま出っぱなしになった（上限20秒）。
+        # 増やす形なら、**まだ話していない選手が先に画面に出ることがない**
+        srcs = [l["source"] for l in leg["legends"]]
+        for i, line in enumerate(lsay):
+            sections.append(sec(id="legends" if i == 0 else f"legends{i + 1}",
+                                heading="このクラブを語る3人" if i == 0 else f"このクラブを語る3人（{i + 1}人目）",
+                                tier="背景", telop="1990年以降の名選手", narrator="キャスター",
+                                card={"type": "table", "title": "1990年以降の名選手",
+                                      "columns": ["名前", "在籍", "残したもの"], "rows": rows[:i + 1]},
+                                say=[line], sources=srcs))
+    # **1枚のカードを20秒以上出しっぱなしにしない**（2026-09-20）。
+    # 旧台本の宿敵は9行を1枚のカードで通すことがあり、ボーンマスで**49秒**になった。
+    # 機械に割らせると「サウサンプトンの話をしている画面にリーズの行が出る」ので、
+    # **割り方はクラブごとに手で書く**（<key>_say.yaml の `rival_sections`）。
+    if ov.get("rival_sections"):
+        for s in ov["rival_sections"]:
+            sections.append(sec(**s))
+    elif rival_sec:
         rival_sec = dict(rival_sec)
         if bg:
             rival_sec["bg"] = bg
@@ -223,7 +240,10 @@ def build(key: str, number: int, old_file: str) -> Path:
         "theme": {"id": old["theme"]["id"], "league": "england", "league_name": "プレミアリーグ", "kind": "other",
                   "topic": club, "title": f"{title_head}ってどんなクラブ？ {NUM[number - 1]}プレミア20クラブ紹介",
                   "question": "どんなクラブなのか", "hook": old["theme"].get("hook", "")},
-        "thumbnail": dict(old["thumbnail"]),
+        # **サムネの文字は台本に合わせて書き直す**（2026-09-20）。旧台本のものを
+        # そのまま持ってくると、ボーンマスが「FAカップで1人9得点」のままになった。
+        # **作り直した台本にその話は無い。**約束したことを中で答えられない
+        "thumbnail": dict(old["thumbnail"], **(ov.get("thumbnail") or {})),
         "sections": sections,
     }
     out = ROOT / "research" / f"20260920_pl{number:02d}_{key}.yaml"

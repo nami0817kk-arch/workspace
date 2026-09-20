@@ -771,6 +771,25 @@ def test_問いかけで終わるタイトルを通す():
         assert check_title_hook(script).ok, title
 
 
+def test_問いかけのあとにシリーズ名が付いても通す():
+    """**一覧が形を狭めるのは4度目**（2026-09-20）。
+
+    プレミア20クラブ紹介を見本の形に作り直したら、
+    「ボーンマスってどんなクラブ？ ①プレミア20クラブ紹介」が弾かれた。
+    疑問符はあるのに**文の途中**（うしろにシリーズの名札が付く）なので、
+    語尾だけを見る枝に引っかからなかった。
+    """
+    from src.review import check_title_hook
+    from src.script_model import parse_script
+
+    nl = chr(10)
+    for title in ("ボーンマスってどんなクラブ？ ①プレミア20クラブ紹介",
+                  "鈴木彩艶がいるアストン・ヴィラってどんなクラブ？ ③プレミア20クラブ紹介"):
+        script = parse_script(nl.join(["---", f"title: {title}", "---", "",
+                                       "## 本編", "", "キャスター: 本文。", ""]))
+        assert check_title_hook(script).ok, title
+
+
 def test_言い切りのタイトルは止める():
     from src.review import check_title_hook
     from src.script_model import parse_script

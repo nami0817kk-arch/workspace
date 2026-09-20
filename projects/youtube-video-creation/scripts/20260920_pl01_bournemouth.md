@@ -4,8 +4,8 @@ format: news
 voice_min: 0.0
 short_title: ボーンマスってどんなクラブ？
 topic: ボーンマス
-thumbnail_line1: FAカップで1人9得点
-thumbnail_line2: AFCボーンマス
+thumbnail_line1: 勝ち点17を引かれた
+thumbnail_line2: そこから18年で、初の欧州へ
 thumbnail_tags: []
 thumbnail_alt: []
 thumbnail_points: []
@@ -42,23 +42,45 @@ tags:
 - サッカーニュース
 sources:
 - https://en.wikipedia.org/wiki/AFC_Bournemouth
+- https://en.wikipedia.org/wiki/Eddie_Howe
 - https://en.wikipedia.org/wiki/List_of_AFC_Bournemouth_records_and_statistics
 - https://en.wikipedia.org/wiki/Callum_Wilson
-- https://en.wikipedia.org/wiki/Eddie_Howe
 - https://en.wikipedia.org/wiki/2026–27_AFC_Bournemouth_season
 cards:
   history_card:
     type: table
-    title: ボーンマスの18年
+    title: 2008年に起きたこと
     columns:
     - ''
     - ''
     rows:
-    - - 2008年
-      - 経営破綻。勝ち点17剥奪
+    - - 経営破綻
+      - 2008年から2009年にかけて
+    - - 罰則
+      - 勝ち点17の剥奪
+  history2_card:
+    type: table
+    title: 31歳の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - エディ・ハウ
+      - 31歳で就任
+    - - 当時
+      - フットボールリーグで最も若い監督
+  history3_card:
+    type: table
+    title: そこから18年
+    columns:
+    - ''
+    - ''
+    rows:
     - - 2015年
       - クラブ史上初の1部昇格
-    - - 2026年
+    - - 昨季
+      - リーグ6位・勝ち点57
+    - - 同じ年
       - クラブ史上初の欧州出場
   legends_card:
     type: table
@@ -68,12 +90,33 @@ cards:
     - 在籍
     - 残したもの
     rows:
-    - - スティーヴ・フレッチャー
+    - &id001
+      - スティーヴ・フレッチャー
       - 1992-2013
       - クラブ最多の726試合出場
-    - - カラム・ウィルソン
+  legends2_card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - &id002
+      - カラム・ウィルソン
       - 2014-2020
       - 初のプレミア昇格の得点源
+  legends3_card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - *id002
     - - エディ・ハウ
       - 選手・監督
       - 4部からプレミアへ導いた
@@ -84,12 +127,51 @@ cards:
     - ''
     - ''
     rows:
+    - - ダービーの呼び名
+      - 記事に無い
+    - - その由来
+      - 記事に無い
+    - - 手がかり
+      - 2つ
+  rival2_card:
+    type: table
+    title: 手がかり①　2019年8月の調査
+    columns:
+    - ''
+    - ''
+    rows:
     - - サポーターが挙げた相手
-      - サウサンプトン（2019年8月の調査）
+      - サウサンプトン
+    - - 理由
+      - 残っていない
     - - そのクラブ
       - 今季のプレミアリーグにいない
-    - - 1990年5月5日
+  rival3_card:
+    type: table
+    title: 手がかり②　1990年5月5日
+    columns:
+    - ''
+    - ''
+    rows:
+    - - メーデーの連休中
       - リーズのサポーターが街で暴動
+    - - 記事の書き方
+      - 最も激しい因縁
+    - - ただし
+      - 出典を求める印が付いたまま
+  rival4_card:
+    type: table
+    title: 手がかり②　1990年5月5日
+    columns:
+    - ''
+    - ''
+    rows:
+    - - メーデーの連休中
+      - リーズのサポーターが街で暴動
+    - - 記事の書き方
+      - 最も激しい因縁
+    - - ただし
+      - 出典を求める印が付いたまま
     - - リーズ
       - 今季もプレミアリーグにいる
   season_card:
@@ -162,12 +244,24 @@ cards:
   card: history_card
 解説: 2008年から2009年にかけて経営破綻に追い込まれ、リーグの倒産規定に従わなかったとして勝ち点17を差し引かれました。
   telop: 2008年から2009年にかけて経営破綻に追い込まれ、リーグの倒産規定に従わなかったとして勝ち点17を差し引かれました
+
+## 31歳の監督
+@bg: assets/backgrounds/stadium_ボーンマス.png
+
 解説: ここで監督を引き受けたのが、31歳のエディ・ハウです。フットボールリーグで最も若い監督でした。
   telop: ここで監督を引き受けたのが、31歳のエディ・ハウです。フットボールリーグで最も若い監督でした
+  source: 背景
+  card: history2_card
 解説: それでもボーンマスは落ちませんでした。
   telop: それでもボーンマスは落ちませんでした
+
+## そこから18年
+@bg: assets/backgrounds/stadium_ボーンマス.png
+
 解説: 6年後の2015年、チャンピオンシップを制して、クラブ史上はじめてイングランドの1部に上がります。
   telop: 6年後の2015年、チャンピオンシップを制して、クラブ史上はじめてイングランドの1部に上がります
+  source: 背景
+  card: history3_card
 解説: そして昨季はリーグ6位、勝ち点57。クラブ史上はじめて、ヨーロッパの舞台への出場権をつかみました。
   telop: そして昨季はリーグ6位、勝ち点57。クラブ史上はじめて、ヨーロッパの舞台への出場権をつかみました
 
@@ -178,10 +272,22 @@ cards:
   telop: スティーヴ・フレッチャーは、クラブ史上最多の**726試合**に出場した選手です
   source: 背景
   card: legends_card
+
+## このクラブを語る3人（2人目）
+@bg: assets/backgrounds/stadium_ボーンマス.png
+
 キャスター: カラム・ウィルソンは、2014年から15年にリーグ20得点。クラブ初のプレミア昇格を決めました。
   telop: カラム・ウィルソンは、2014年から15年にリーグ20得点。クラブ初のプレミア昇格を決めました
+  source: 背景
+  card: legends2_card
+
+## このクラブを語る3人（3人目）
+@bg: assets/backgrounds/stadium_ボーンマス.png
+
 キャスター: エディ・ハウは選手として長くプレーし、のちに監督として、4部にいたクラブを**プレミアまで**連れていきました。
   telop: エディ・ハウは選手として長くプレーし、のちに監督として、4部にいたクラブを**プレミアまで**連れていきました
+  source: 背景
+  card: legends3_card
 
 ## 宿敵
 @bg: assets/backgrounds/stadium_ボーンマス.png
@@ -194,18 +300,36 @@ cards:
   telop: ダービーの呼び名も、その由来も、記事には書かれていないのです
 解説: 手がかりは2つあります。
   telop: 手がかりは2つあります
+
+## 手がかり①　サウサンプトン
+@bg: assets/backgrounds/stadium_ボーンマス.png
+
 解説: ひとつは2019年8月の調査。ボーンマスのサポーターが最大のライバルに挙げたのは、サウサンプトンでした。
   telop: ひとつは2019年8月の調査。ボーンマスのサポーターが最大のライバルに挙げたのは、サウサンプトンでした
+  source: 背景
+  card: rival2_card
 解説: ただし理由までは残っていません。しかもサウサンプトンは、今季のプレミアリーグにいません。
   telop: ただし理由までは残っていません。しかもサウサンプトンは、今季のプレミアリーグにいません
 解説: もうひとつがリーズ・ユナイテッドです。
   telop: もうひとつがリーズ・ユナイテッドです
+
+## 手がかり②　リーズ
+@bg: assets/backgrounds/stadium_ボーンマス.png
+
 解説: 1990年5月5日、メーデーの連休中に、リーズのサポーターがこの街で大規模な暴動と破壊を起こしました。
   telop: 1990年5月5日、メーデーの連休中に、リーズのサポーターがこの街で大規模な暴動と破壊を起こしました
+  source: 背景
+  card: rival3_card
 解説: 記事はこれを「最も激しい因縁」と書いています。ただしこの一文には、**出典を求める印が付いたまま**です。
   telop: 記事はこれを「最も激しい因縁」と書いています。ただしこの一文には、**出典を求める印が付いたまま**です
+
+## 手がかり②　リーズ（つづき）
+@bg: assets/backgrounds/stadium_ボーンマス.png
+
 解説: そのリーズは、今季もプレミアリーグにいます。
   telop: そのリーズは、今季もプレミアリーグにいます
+  source: 背景
+  card: rival4_card
 
 ## 今季の登録選手
 @bg: assets/backgrounds/stadium_ボーンマス.png
