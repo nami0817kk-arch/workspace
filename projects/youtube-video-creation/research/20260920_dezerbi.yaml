@@ -30,8 +30,9 @@ theme:
   question: 何に苛立っていたのか
 
 thumbnail:
-  crest_main:
-    - トッテナム
+  # **デ・ゼルビの顔にする**（2026-09-20 ユーザー指示）。
+  # エンブレムではなく本人。写真はこの試合の記事から
+  photo: assets/images/20260920_dezerbi_press/01.jpg
   line1: 試合前に、何度も確認していた
   line2: デ・ゼルビ「信じられない」
   tags:
