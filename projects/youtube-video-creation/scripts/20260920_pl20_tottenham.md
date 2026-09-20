@@ -46,7 +46,6 @@ sources:
 - https://en.wikipedia.org/wiki/Harry_Kane
 - https://en.wikipedia.org/wiki/Son_Heung-min
 - https://en.wikipedia.org/wiki/Ledley_King
-- https://en.wikipedia.org/wiki/North_London_derby
 - https://en.wikipedia.org/wiki/2026–27_Tottenham_Hotspur_F.C._season
 cards:
   cup1901_card:
@@ -74,32 +73,36 @@ cards:
     - 在籍
     - 残したもの
     rows:
-    - - ハリー・ケイン
+    - &id001
+      - ハリー・ケイン
       - 2009-2023
       - クラブ最多の280得点
-    - - ソン・フンミン
+  legends2_card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - &id002
+      - ソン・フンミン
       - 2015-2025
       - EL優勝の主将
+  legends3_card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - *id002
     - - レドリー・キング
       - 1999-2012
       - 一筋の主将
-  rival_card:
-    type: table
-    title: ノース・ロンドン・ダービー
-    columns:
-    - ''
-    - ''
-    rows:
-    - - 1913年
-      - アーセナルがハイベリーへ移転
-    - - 距離
-      - ホワイト・ハート・レーンから4マイル
-    - - 1919年の投票
-      - アーセナル18票／トッテナム8票
-    - - 結果
-      - 1部に選ばれたのはアーセナル
-    - - 今季
-      - 相手もプレミアリーグにいる
   season_card:
     type: table
     title: プレミアリーグの結果
@@ -151,27 +154,27 @@ cards:
   only: short
   telop: 高井幸大の所属クラブを、基本のデータで見ていきます
 解説: 創立は**1882年**。ホットスパーという名前で始まりました。
-  telop: 創立は**1882年**。ホットスパーという名前で始まりました
+  no_telop: true
   source: 背景
-  image: assets/stats/pl_tottenham_data.png
+  image: assets/stats/pl_tottenham_data0.png
 解説: 本拠地のスタジアムには、**6万2850人**が入ります。
   telop: 本拠地のスタジアムには、**6万2850人**が入ります
-  image: assets/stats/pl_tottenham_data.png
+  image: assets/backgrounds/stadium_トッテナム_in.png
 解説: オーナーはENICグループ。2001年からクラブを持っています。
-  telop: オーナーはENICグループ。2001年からクラブを持っています
-  image: assets/stats/pl_tottenham_data.png
+  no_telop: true
+  image: assets/stats/pl_tottenham_data3.png
 解説: 1部リーグの優勝は**2回**。FAカップは8回、リーグカップ4回、ヨーロッパのタイトルもあります。
-  telop: 1部リーグの優勝は**2回**。FAカップは8回、リーグカップ4回、ヨーロッパのタイトルもあります
+  no_telop: true
   image: assets/stats/pl_tottenham_data.png
 解説: 直近のタイトルは、2024年から25年のヨーロッパリーグです。
-  telop: 直近のタイトルは、2024年から25年のヨーロッパリーグです
-  image: assets/stats/pl_tottenham_data.png
+  no_telop: true
+  image: assets/stats/pl_tottenham_data5.png
 解説: プレミアでの最高位は、2016年から17年の**2位**です。
-  telop: プレミアでの最高位は、2016年から17年の**2位**です
-  image: assets/stats/pl_tottenham_data.png
+  no_telop: true
+  image: assets/stats/pl_tottenham_data7.png
 解説: 愛称は「スパーズ」。「リリーホワイツ」とも呼ばれます。
-  telop: 愛称は「スパーズ」。「リリーホワイツ」とも呼ばれます
-  image: assets/stats/pl_tottenham_data.png
+  no_telop: true
+  image: assets/stats/pl_tottenham_data8.png
 
 ## リーグに入らないまま、FAカップを獲った
 @bg: assets/backgrounds/stadium_トッテナム.png
@@ -196,30 +199,22 @@ cards:
   telop: ハリー・ケインは、ジミー・グリーヴスを抜いたクラブ史上最多の**280得点**
   source: 背景
   card: legends_card
-キャスター: ソン・フンミンは2023年から主将を務め、2025年にヨーロッパリーグを掲げました。
-  telop: ソン・フンミンは2023年から主将を務め、2025年にヨーロッパリーグを掲げました
-キャスター: レドリー・キングは、生涯トッテナム一筋の主将。2008年にリーグカップを掲げています。
-  telop: レドリー・キングは、生涯トッテナム一筋の主将。2008年にリーグカップを掲げています
 
-## 宿敵
+## このクラブを語る3人（2人目）
 @bg: assets/backgrounds/stadium_トッテナム.png
 
-解説: 相手は**アーセナル**。**ノース・ロンドン・ダービー**です。
-  telop: 相手は**アーセナル**。**ノース・ロンドン・ダービー**です
+キャスター: ソン・フンミンは2023年から主将を務め、2025年にヨーロッパリーグを掲げました。
+  telop: ソン・フンミンは2023年から主将を務め、2025年にヨーロッパリーグを掲げました
   source: 背景
-  card: rival_card
-解説: 始まりは1913年。アーセナルが、プラムステッドのマナー・グラウンドからハイベリーへ移ってきました。
-  telop: 始まりは1913年。アーセナルが、プラムステッドのマナー・グラウンドからハイベリーへ移ってきました
-解説: トッテナムの本拠地から、わずか**4マイル**の場所です。
-  telop: トッテナムの本拠地から、わずか**4マイル**の場所です
-解説: 決定的になったのは1919年でした。1部を2つ広げることになり、どのクラブを入れるかが**投票**で決まります。
-  telop: 決定的になったのは1919年でした。1部を2つ広げることになり、どのクラブを入れるかが**投票**で決まります
-解説: アーセナルが**18票**、トッテナムが**8票**。選ばれたのはアーセナルでした。
-  telop: アーセナルが**18票**、トッテナムが**8票**。選ばれたのはアーセナルでした
-解説: このときの票は、ほかにバーンズリーが5、ウルヴァーハンプトンが4、ノッティンガム・フォレストが3、バーミンガムが2、ハル・シティが1と割れています。
-  telop: このときの票は、ほかにバーンズリーが5、ウルヴァーハンプトンが4、ノッティンガム・フォレストが3、バーミンガムが2、ハル・シティが1と割れています
-解説: 相手は**今季もプレミアリーグにいます。**
-  telop: 相手は**今季もプレミアリーグにいます。**
+  card: legends2_card
+
+## このクラブを語る3人（3人目）
+@bg: assets/backgrounds/stadium_トッテナム.png
+
+キャスター: レドリー・キングは、生涯トッテナム一筋の主将。2008年にリーグカップを掲げています。
+  telop: レドリー・キングは、生涯トッテナム一筋の主将。2008年にリーグカップを掲げています
+  source: 背景
+  card: legends3_card
 
 ## 今季の登録選手
 @bg: assets/backgrounds/stadium_トッテナム.png
@@ -228,16 +223,16 @@ cards:
   telop: 今季の登録選手は35人です
   source: 報道
 キャスター: ゴールキーパーは4人。
-  telop: ゴールキーパーは4人
+  no_telop: true
   image: assets/stats/pl_tottenham_gk.png
 キャスター: ディフェンダーは12人。日本の高井幸大もここにいます。
-  telop: ディフェンダーは12人。日本の高井幸大もここにいます
+  no_telop: true
   image: assets/stats/pl_tottenham_df.png
 キャスター: ミッドフィールダーは9人。
-  telop: ミッドフィールダーは9人
+  no_telop: true
   image: assets/stats/pl_tottenham_mf.png
 キャスター: フォワードは10人。
-  telop: フォワードは10人
+  no_telop: true
   image: assets/stats/pl_tottenham_fw.png
 
 ## 今季のここまで

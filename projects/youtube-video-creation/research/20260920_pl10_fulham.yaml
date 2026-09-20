@@ -33,20 +33,26 @@ sections:
   say:
   - short_only: true
     text: このクラブの、基本のデータです。
-  - image: assets/stats/pl_fulham_data.png
+  - image: assets/stats/pl_fulham_data0.png
     text: 創立は**1879年**。セント・アンドリューズ教会のクラブとして始まりました。
-  - image: assets/stats/pl_fulham_data.png
+    no_telop: true
+  - image: assets/backgrounds/stadium_フラム_in.png
     text: 本拠地はテムズ川沿いのクレイヴン・コテージ。**2万8107人**が入ります。
-  - image: assets/stats/pl_fulham_data.png
+  - image: assets/stats/pl_fulham_data3.png
     text: オーナーはアメリカの実業家シャヒド・カーン。2013年からクラブを持っています。
+    no_telop: true
   - image: assets/stats/pl_fulham_data.png
     text: 1部リーグの優勝はありませんが、ヨーロッパのタイトルを1回獲っています。
-  - image: assets/stats/pl_fulham_data.png
+    no_telop: true
+  - image: assets/stats/pl_fulham_data7.png
     text: プレミアでの最高位は、2008年から09年の**7位**です。
+    no_telop: true
   - image: assets/stats/pl_fulham_data.png
     text: 最多出場はジョニー・ヘインズ。1952年から70年に**658試合**に出ました。
-  - image: assets/stats/pl_fulham_data.png
+    no_telop: true
+  - image: assets/stats/pl_fulham_data8.png
     text: 愛称は「コテジャーズ」。小屋に住む人、という意味です。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Fulham_F.C.
   bg: assets/backgrounds/stadium_フラム.png
@@ -95,59 +101,64 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - - アレクサンダル・ミトロヴィッチ
+    - &id001
+      - アレクサンダル・ミトロヴィッチ
       - 2018-2023
       - 2部で1シーズン43得点
-    - - トム・ケアニー
-      - 2015-
-      - プレーオフ決勝の決勝点
-    - - クリント・デンプシー
-      - 2007-2012
-      - クラブのプレミア最多50得点
   say:
   - アレクサンダル・ミトロヴィッチは、2021年から22年に2部で**43得点**。46試合のリーグでの最多記録です。
-  - トム・ケアニーは10年以上在籍する主将。2018年のプレーオフ決勝で決勝点を決め、クラブをプレミアに戻しました。
-  - クリント・デンプシーは、クラブのプレミアリーグ最多となる**50得点**を挙げています。
-  sources:
+  sources: &id002
   - https://en.wikipedia.org/wiki/Aleksandar_Mitrovi%C4%87
   - https://en.wikipedia.org/wiki/Tom_Cairney
   - https://en.wikipedia.org/wiki/Clint_Dempsey
   bg: assets/backgrounds/stadium_フラム.png
   official: false
-- id: rival
-  heading: 宿敵
+- id: legends2
+  heading: このクラブを語る3人（2人目）
   tier: 背景
-  telop: 1.8マイル先のチェルシーとウェスト・ロンドン・ダービー
-  narrator: 解説
+  telop: 1990年以降の名選手
+  narrator: キャスター
   card:
     type: table
-    title: ウェスト・ロンドン・ダービー
+    title: 1990年以降の名選手
     columns:
-    - ''
-    - ''
+    - 名前
+    - 在籍
+    - 残したもの
     rows:
-    - - 相手
-      - チェルシー
-    - - 距離
-      - クレイヴン・コテージから1.8マイル
-    - - 始まり
-      - 1905年3月10日、チェルシー創設
-    - - 今季
-      - 相手もプレミアリーグにいる
+    - *id001
+    - &id003
+      - トム・ケアニー
+      - 2015-
+      - プレーオフ決勝の決勝点
   say:
-  - サポーターが最大のライバルに挙げるのは、**チェルシー**です。
-  - 呼び名は**ウェスト・ロンドン・ダービー**。
-  - 相手の本拠地スタンフォード・ブリッジは、**フラム地区の中にあります。**
-  - クレイヴン・コテージからは**1.8マイル**しか離れていません。
-  - そして、その近さこそが因縁の始まりでした。
-  - ガス・ミアーズはその競技場をフラムの本拠にしてもらおうとしましたが、賃料で折り合わず断られます。
-  - そこで**1905年3月10日**、パブ「ライジング・サン」で自らチェルシーを作りました。
-  - 2番手のライバルはQPR、3番手がブレントフォードです。
-  - そのチェルシーは、**今季もプレミアリーグにいます。**
-  official: false
-  sources:
-  - https://en.wikipedia.org/wiki/Fulham_F.C.
+  - トム・ケアニーは10年以上在籍する主将。2018年のプレーオフ決勝で決勝点を決め、クラブをプレミアに戻しました。
+  sources: *id002
   bg: assets/backgrounds/stadium_フラム.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - *id003
+    - - クリント・デンプシー
+      - 2007-2012
+      - クラブのプレミア最多50得点
+  say:
+  - クリント・デンプシーは、クラブのプレミアリーグ最多となる**50得点**を挙げています。
+  sources: *id002
+  bg: assets/backgrounds/stadium_フラム.png
+  official: false
 - id: squad
   heading: 今季の登録選手
   tier: 報道
@@ -157,12 +168,16 @@ sections:
   - 今季の登録選手は24人です。
   - image: assets/stats/pl_fulham_gk.png
     text: ゴールキーパーは2人。
+    no_telop: true
   - image: assets/stats/pl_fulham_df.png
     text: ディフェンダーは7人。
+    no_telop: true
   - image: assets/stats/pl_fulham_mf.png
     text: ミッドフィールダーは10人。
+    no_telop: true
   - image: assets/stats/pl_fulham_fw.png
     text: フォワードは5人。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Fulham_F.C.
   bg: assets/backgrounds/stadium_フラム.png

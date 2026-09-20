@@ -33,18 +33,24 @@ sections:
   say:
   - short_only: true
     text: このクラブの、基本のデータです。
-  - image: assets/stats/pl_forest_data.png
+  - image: assets/stats/pl_forest_data0.png
     text: 創立は**1865年**。本拠地はシティ・グラウンド、**3万1212人**が入ります。
-  - image: assets/stats/pl_forest_data.png
+    no_telop: true
+  - image: assets/stats/pl_forest_data3.png
     text: オーナーはギリシャの実業家エヴァンゲロス・マリナキス。2017年からクラブを持っています。
+    no_telop: true
   - image: assets/stats/pl_forest_data.png
     text: 1部リーグの優勝は**1回**。FAカップ2回、リーグカップ4回、そしてヨーロッパのタイトルを**2回**獲っています。
+    no_telop: true
   - image: assets/stats/pl_forest_data.png
     text: 1977年11月から翌年11月まで、リーグで**42試合負けなし**。1部で優勝したシーズンです。
-  - image: assets/stats/pl_forest_data.png
+    no_telop: true
+  - image: assets/stats/pl_forest_data7.png
     text: プレミアでの最高位は、1994年から95年の**3位**です。
-  - image: assets/stats/pl_forest_data.png
+    no_telop: true
+  - image: assets/stats/pl_forest_data8.png
     text: 愛称は「トリッキー・トゥリーズ」。ほかに「ガリバルディス」「レッズ」とも呼ばれます。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
   bg: assets/backgrounds/stadium_ノッティンガムフォレスト.png
@@ -98,58 +104,64 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - - スチュアート・ピアース
+    - &id001
+      - スチュアート・ピアース
       - 1985-1997
       - 12年間の主将
-    - - デス・ウォーカー
-      - 1984-2005
-      - 1990年W杯4強のCB
-    - - スタン・コリモア
-      - 1993-1995
-      - 昇格即3位のFW
   say:
   - スチュアート・ピアースは、12年在籍の大半で主将を務めた「サイコ」です。
-  - デス・ウォーカーは、1990年ワールドカップでベスト4に入ったイングランド代表のセンターバックです。
-  - スタン・コリモアは、昇格と、昇格してすぐの3位を引っ張ったフォワードです。
-  sources:
+  sources: &id002
   - https://en.wikipedia.org/wiki/Stuart_Pearce
   - https://en.wikipedia.org/wiki/Des_Walker
   - https://en.wikipedia.org/wiki/Stan_Collymore
   bg: assets/backgrounds/stadium_ノッティンガムフォレスト.png
   official: false
-- id: rival
-  heading: 宿敵
+- id: legends2
+  heading: このクラブを語る3人（2人目）
   tier: 背景
-  telop: ダービー・カウンティとの、イースト・ミッドランズ・ダービー
-  narrator: 解説
+  telop: 1990年以降の名選手
+  narrator: キャスター
   card:
     type: table
-    title: イースト・ミッドランズ・ダービー
+    title: 1990年以降の名選手
     columns:
-    - ''
-    - ''
+    - 名前
+    - 在籍
+    - 残したもの
     rows:
-    - - 初対戦
-      - 1892年10月1日／3-2
-    - - 火が付いたのは
-      - 1970年代後半（クラフの移籍）
-    - - 2007年から
-      - ブライアン・クラフ・トロフィー
-    - - 初のトロフィー戦
-      - 2007年7月31日／0-2
-    - - 今季
-      - 相手はプレミアリーグにいない
+    - *id001
+    - &id003
+      - デス・ウォーカー
+      - 1984-2005
+      - 1990年W杯4強のCB
   say:
-  - 相手は**ダービー・カウンティ**。**イースト・ミッドランズ・ダービー**と呼ばれます。
-  - 公式戦で初めて当たったのは1892年10月1日。レースコース・グラウンドで、フォレストが**3対2**で勝ちました。
-  - 火が付いたのは1970年代の後半です。**ダービーで成功したブライアン・クラフが、フォレストの監督になった**ことがきっかけでした。
-  - 2007年からは、この試合に**ブライアン・クラフ・トロフィー**が懸かっています。
-  - 最初のトロフィー戦は2007年7月31日、プライド・パーク。**ダービーが2対0**で勝っています。
-  - ただし、**今季のプレミアリーグに、ダービー・カウンティはいません。**リーグでこの一戦は組まれません。
-  official: false
-  sources:
-  - https://en.wikipedia.org/wiki/Derby_County_F.C.%E2%80%93Nottingham_Forest_F.C._rivalry
+  - デス・ウォーカーは、1990年ワールドカップでベスト4に入ったイングランド代表のセンターバックです。
+  sources: *id002
   bg: assets/backgrounds/stadium_ノッティンガムフォレスト.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - *id003
+    - - スタン・コリモア
+      - 1993-1995
+      - 昇格即3位のFW
+  say:
+  - スタン・コリモアは、昇格と、昇格してすぐの3位を引っ張ったフォワードです。
+  sources: *id002
+  bg: assets/backgrounds/stadium_ノッティンガムフォレスト.png
+  official: false
 - id: squad
   heading: 今季の登録選手
   tier: 報道
@@ -159,12 +171,16 @@ sections:
   - 今季の登録選手は24人です。
   - image: assets/stats/pl_forest_gk.png
     text: ゴールキーパーは3人。
+    no_telop: true
   - image: assets/stats/pl_forest_df.png
     text: ディフェンダーは9人。
+    no_telop: true
   - image: assets/stats/pl_forest_mf.png
     text: ミッドフィールダーは6人。
+    no_telop: true
   - image: assets/stats/pl_forest_fw.png
     text: フォワードは6人。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
   bg: assets/backgrounds/stadium_ノッティンガムフォレスト.png

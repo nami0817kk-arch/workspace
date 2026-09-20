@@ -33,20 +33,26 @@ sections:
   say:
   - short_only: true
     text: このクラブの、基本のデータです。
-  - image: assets/stats/pl_brentford_data.png
+  - image: assets/stats/pl_brentford_data0.png
     text: 創立は**1889年**。ボートを漕ぐクラブの仲間たちが作りました。
-  - image: assets/stats/pl_brentford_data.png
+    no_telop: true
+  - image: assets/backgrounds/stadium_ブレントフォード_in.png
     text: 本拠地のスタジアムには、1万7250人が入ります。
   - image: assets/stats/pl_brentford_data.png
     text: 場所は西ロンドン、テムズ川沿いの町です。
-  - image: assets/stats/pl_brentford_data.png
+    no_telop: true
+  - image: assets/stats/pl_brentford_data3.png
     text: オーナーはマシュー・ベンハム。2012年からクラブを持っています。
+    no_telop: true
   - image: assets/stats/pl_brentford_data.png
     text: 大きなタイトルはまだありません。いちばん大きな一歩は2021年、昇格プレーオフに勝って初めてプレミアに上がったことです。
-  - image: assets/stats/pl_brentford_data.png
+    no_telop: true
+  - image: assets/stats/pl_brentford_data7.png
     text: プレミアでの最高位は、2022年から23年の**9位**です。
-  - image: assets/stats/pl_brentford_data.png
+    no_telop: true
+  - image: assets/stats/pl_brentford_data8.png
     text: 愛称は「ビーズ」。蜂です。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Brentford_F.C.
   bg: assets/backgrounds/stadium_ブレントフォード.png
@@ -91,60 +97,64 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - - ケヴィン・オコナー
+    - &id001
+      - ケヴィン・オコナー
       - 1999-2015
       - 16年在籍・501試合
-    - - イヴァン・トニー
-      - 2020-2024
-      - 初のプレミア昇格の得点王
-    - - ブライアン・エンベウモ
-      - 2019-2025
-      - プレミアで20得点
   say:
   - ケヴィン・オコナーは16シーズン在籍し、**501試合**に出た主将です。
-  - イヴァン・トニーは、2部の1シーズン最多得点の記録を作り、クラブを初めてプレミアへ上げました。
-  - ブライアン・エンベウモは6年在籍し、2024年から25年にはプレミアで**20得点**を挙げています。
-  sources:
+  sources: &id002
   - https://en.wikipedia.org/wiki/Kevin_O%27Connor_(footballer,_born_1982)
   - https://en.wikipedia.org/wiki/Ivan_Toney
   - https://en.wikipedia.org/wiki/Bryan_Mbeumo
   bg: assets/backgrounds/stadium_ブレントフォード.png
   official: false
-- id: rival
-  heading: 宿敵
+- id: legends2
+  heading: このクラブを語る3人（2人目）
   tier: 背景
-  telop: ウェスト・ロンドン・ダービー。相手はフラム
-  narrator: 解説
+  telop: 1990年以降の名選手
+  narrator: キャスター
   card:
     type: table
-    title: ウェスト・ロンドン・ダービー
+    title: 1990年以降の名選手
     columns:
-    - ''
-    - ''
+    - 名前
+    - 在籍
+    - 残したもの
     rows:
-    - - いちばん激しい相手
-      - フラム／QPR
-    - - 呼び名
-      - ウェスト・ロンドン・ダービー
-    - - 2020年8月4日
-      - プレーオフ決勝。延長でフラムが2-1
-    - - 今季
-      - フラムもプレミアリーグにいる
+    - *id001
+    - &id003
+      - イヴァン・トニー
+      - 2020-2024
+      - 初のプレミア昇格の得点王
   say:
-  - ウェスト・ロンドン・ダービーと呼ばれる一戦があります。
-  - 指しているのは4つのクラブです。チェルシー、フラム、QPR、そしてこのクラブ。
-  - そのなかでいちばん激しいのが**フラム戦**、そしてQPR戦だと書かれています。
-  - 熱を帯びたのは1980年代からです。フラムが下のリーグへ落ちていった時期でした。
-  - 試合はいつも満員で、ピッチでもスタンドでも緊張が高まった、と残っています。
-  - 近いところで決定的だったのは2020年8月4日。チャンピオンシップのプレーオフ決勝です。
-  - 延長の末、フラムが2対1で勝ち、昇格していきました。
-  - ジョー・ブライアンが105分と117分に2点。こちらはヘンリク・ダルスゴーが120分すぎに1点を返すのがやっとでした。
-  - そのフラムは、今季もプレミアリーグにいます。
-  - なお距離の近いチェルシーとは、むしろ「わりと良好な関係」だとも書かれています。
-  official: false
-  sources:
-  - https://en.wikipedia.org/wiki/West_London_derby
+  - イヴァン・トニーは、2部の1シーズン最多得点の記録を作り、クラブを初めてプレミアへ上げました。
+  sources: *id002
   bg: assets/backgrounds/stadium_ブレントフォード.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - *id003
+    - - ブライアン・エンベウモ
+      - 2019-2025
+      - プレミアで20得点
+  say:
+  - ブライアン・エンベウモは6年在籍し、2024年から25年にはプレミアで**20得点**を挙げています。
+  sources: *id002
+  bg: assets/backgrounds/stadium_ブレントフォード.png
+  official: false
 - id: squad
   heading: 今季の登録選手
   tier: 報道
@@ -154,12 +164,16 @@ sections:
   - 今季の登録選手は28人です。
   - image: assets/stats/pl_brentford_gk.png
     text: ゴールキーパーは3人。
+    no_telop: true
   - image: assets/stats/pl_brentford_df.png
     text: ディフェンダーは9人。
+    no_telop: true
   - image: assets/stats/pl_brentford_mf.png
     text: ミッドフィールダーは9人。
+    no_telop: true
   - image: assets/stats/pl_brentford_fw.png
     text: フォワードは7人。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Brentford_F.C.
   bg: assets/backgrounds/stadium_ブレントフォード.png

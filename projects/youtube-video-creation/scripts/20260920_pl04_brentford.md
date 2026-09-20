@@ -45,7 +45,6 @@ sources:
 - https://en.wikipedia.org/wiki/Kevin_O%27Connor_(footballer,_born_1982)
 - https://en.wikipedia.org/wiki/Ivan_Toney
 - https://en.wikipedia.org/wiki/Bryan_Mbeumo
-- https://en.wikipedia.org/wiki/West_London_derby
 - https://en.wikipedia.org/wiki/2026–27_Brentford_F.C._season
 cards:
   history_card:
@@ -67,30 +66,36 @@ cards:
     - 在籍
     - 残したもの
     rows:
-    - - ケヴィン・オコナー
+    - &id001
+      - ケヴィン・オコナー
       - 1999-2015
       - 16年在籍・501試合
-    - - イヴァン・トニー
+  legends2_card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - &id002
+      - イヴァン・トニー
       - 2020-2024
       - 初のプレミア昇格の得点王
+  legends3_card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - *id002
     - - ブライアン・エンベウモ
       - 2019-2025
       - プレミアで20得点
-  rival_card:
-    type: table
-    title: ウェスト・ロンドン・ダービー
-    columns:
-    - ''
-    - ''
-    rows:
-    - - いちばん激しい相手
-      - フラム／QPR
-    - - 呼び名
-      - ウェスト・ロンドン・ダービー
-    - - 2020年8月4日
-      - プレーオフ決勝。延長でフラムが2-1
-    - - 今季
-      - フラムもプレミアリーグにいる
   season_card:
     type: table
     title: プレミアリーグの結果
@@ -133,27 +138,27 @@ cards:
   only: short
   telop: このクラブの、基本のデータです
 解説: 創立は**1889年**。ボートを漕ぐクラブの仲間たちが作りました。
-  telop: 創立は**1889年**。ボートを漕ぐクラブの仲間たちが作りました
+  no_telop: true
   source: 背景
-  image: assets/stats/pl_brentford_data.png
+  image: assets/stats/pl_brentford_data0.png
 解説: 本拠地のスタジアムには、1万7250人が入ります。
   telop: 本拠地のスタジアムには、1万7250人が入ります
-  image: assets/stats/pl_brentford_data.png
+  image: assets/backgrounds/stadium_ブレントフォード_in.png
 解説: 場所は西ロンドン、テムズ川沿いの町です。
-  telop: 場所は西ロンドン、テムズ川沿いの町です
+  no_telop: true
   image: assets/stats/pl_brentford_data.png
 解説: オーナーはマシュー・ベンハム。2012年からクラブを持っています。
-  telop: オーナーはマシュー・ベンハム。2012年からクラブを持っています
-  image: assets/stats/pl_brentford_data.png
+  no_telop: true
+  image: assets/stats/pl_brentford_data3.png
 解説: 大きなタイトルはまだありません。いちばん大きな一歩は2021年、昇格プレーオフに勝って初めてプレミアに上がったことです。
-  telop: 大きなタイトルはまだありません。いちばん大きな一歩は2021年、昇格プレーオフに勝って初めてプレミアに上がったことです
+  no_telop: true
   image: assets/stats/pl_brentford_data.png
 解説: プレミアでの最高位は、2022年から23年の**9位**です。
-  telop: プレミアでの最高位は、2022年から23年の**9位**です
-  image: assets/stats/pl_brentford_data.png
+  no_telop: true
+  image: assets/stats/pl_brentford_data7.png
 解説: 愛称は「ビーズ」。蜂です。
-  telop: 愛称は「ビーズ」。蜂です
-  image: assets/stats/pl_brentford_data.png
+  no_telop: true
+  image: assets/stats/pl_brentford_data8.png
 
 ## 歩んできた道
 @bg: assets/backgrounds/stadium_ブレントフォード.png
@@ -180,36 +185,22 @@ cards:
   telop: ケヴィン・オコナーは16シーズン在籍し、**501試合**に出た主将です
   source: 背景
   card: legends_card
-キャスター: イヴァン・トニーは、2部の1シーズン最多得点の記録を作り、クラブを初めてプレミアへ上げました。
-  telop: イヴァン・トニーは、2部の1シーズン最多得点の記録を作り、クラブを初めてプレミアへ上げました
-キャスター: ブライアン・エンベウモは6年在籍し、2024年から25年にはプレミアで**20得点**を挙げています。
-  telop: ブライアン・エンベウモは6年在籍し、2024年から25年にはプレミアで**20得点**を挙げています
 
-## 宿敵
+## このクラブを語る3人（2人目）
 @bg: assets/backgrounds/stadium_ブレントフォード.png
 
-解説: ウェスト・ロンドン・ダービーと呼ばれる一戦があります。
-  telop: ウェスト・ロンドン・ダービーと呼ばれる一戦があります
+キャスター: イヴァン・トニーは、2部の1シーズン最多得点の記録を作り、クラブを初めてプレミアへ上げました。
+  telop: イヴァン・トニーは、2部の1シーズン最多得点の記録を作り、クラブを初めてプレミアへ上げました
   source: 背景
-  card: rival_card
-解説: 指しているのは4つのクラブです。チェルシー、フラム、QPR、そしてこのクラブ。
-  telop: 指しているのは4つのクラブです。チェルシー、フラム、QPR、そしてこのクラブ
-解説: そのなかでいちばん激しいのが**フラム戦**、そしてQPR戦だと書かれています。
-  telop: そのなかでいちばん激しいのが**フラム戦**、そしてQPR戦だと書かれています
-解説: 熱を帯びたのは1980年代からです。フラムが下のリーグへ落ちていった時期でした。
-  telop: 熱を帯びたのは1980年代からです。フラムが下のリーグへ落ちていった時期でした
-解説: 試合はいつも満員で、ピッチでもスタンドでも緊張が高まった、と残っています。
-  telop: 試合はいつも満員で、ピッチでもスタンドでも緊張が高まった、と残っています
-解説: 近いところで決定的だったのは2020年8月4日。チャンピオンシップのプレーオフ決勝です。
-  telop: 近いところで決定的だったのは2020年8月4日。チャンピオンシップのプレーオフ決勝です
-解説: 延長の末、フラムが2対1で勝ち、昇格していきました。
-  telop: 延長の末、フラムが2対1で勝ち、昇格していきました
-解説: ジョー・ブライアンが105分と117分に2点。こちらはヘンリク・ダルスゴーが120分すぎに1点を返すのがやっとでした。
-  telop: ジョー・ブライアンが105分と117分に2点。こちらはヘンリク・ダルスゴーが120分すぎに1点を返すのがやっとでした
-解説: そのフラムは、今季もプレミアリーグにいます。
-  telop: そのフラムは、今季もプレミアリーグにいます
-解説: なお距離の近いチェルシーとは、むしろ「わりと良好な関係」だとも書かれています。
-  telop: なお距離の近いチェルシーとは、むしろ「わりと良好な関係」だとも書かれています
+  card: legends2_card
+
+## このクラブを語る3人（3人目）
+@bg: assets/backgrounds/stadium_ブレントフォード.png
+
+キャスター: ブライアン・エンベウモは6年在籍し、2024年から25年にはプレミアで**20得点**を挙げています。
+  telop: ブライアン・エンベウモは6年在籍し、2024年から25年にはプレミアで**20得点**を挙げています
+  source: 背景
+  card: legends3_card
 
 ## 今季の登録選手
 @bg: assets/backgrounds/stadium_ブレントフォード.png
@@ -218,16 +209,16 @@ cards:
   telop: 今季の登録選手は28人です
   source: 報道
 キャスター: ゴールキーパーは3人。
-  telop: ゴールキーパーは3人
+  no_telop: true
   image: assets/stats/pl_brentford_gk.png
 キャスター: ディフェンダーは9人。
-  telop: ディフェンダーは9人
+  no_telop: true
   image: assets/stats/pl_brentford_df.png
 キャスター: ミッドフィールダーは9人。
-  telop: ミッドフィールダーは9人
+  no_telop: true
   image: assets/stats/pl_brentford_mf.png
 キャスター: フォワードは7人。
-  telop: フォワードは7人
+  no_telop: true
   image: assets/stats/pl_brentford_fw.png
 
 ## 今季のここまで

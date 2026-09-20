@@ -5,15 +5,16 @@
 （research/20260919_pl03_villa.yaml）と同じ節の並びにする。
 
     日本人がいれば入口（why） → 基礎DATA（main） → そのクラブの話
-    → 1990年以降の名選手 → 宿敵 → 登録選手一覧 → 今季のここまで
+    → 1990年以降の名選手 → 登録選手一覧 → 今季のここまで
 
 **有名なファンの節は 2026-09-20 に廃止した**（ユーザー指示）。板の9枚目も愛称にしてある。
+**宿敵の節も 2026-09-20 に廃止した**（ユーザー指示「宿敵は不要」）。
 
 材料（すべて research/pl_data/）:
     <key>.json       基礎DATAの板（下請けが Wikipedia 原文から調べた）
     <key>_raw.json   登録選手と今季の結果（tools/plsquad.py が原文から抜いた）
     kana.json        選手名のカタカナ
-**そのクラブの話と宿敵は、2026-09-16 の旧台本の節をそのまま使う**
+**そのクラブの話は、2026-09-16 の旧台本の節をそのまま使う**
 （ユーザーに一度見せて通っている中身。作り直さない）。
 
     python tools/plbuild.py arsenal 02 20260916_pl02_arsenal.yaml
@@ -219,8 +220,8 @@ def build(key: str, number: int, old_file: str) -> Path:
     # そのクラブの話・宿敵は旧台本から
     story_sec = next((s for s in old["sections"] if s["id"] == ov.get("story")), None) or next((s for s in old["sections"] if s.get("main")), None) or next(
         (s for s in old["sections"] if s["id"] not in ("name", "ground", "season", "rival", "legends", "titles")), None)
-    rival_sec = next((s for s in old["sections"] if s["id"] == "rival"), None)
-    # 割り方を手で書いた回は、そちらを使う（下の rival_sections と同じ理由）
+    # 割り方を手で書いた回は、そちらを使う。1枚のカードを20秒以上出しっぱなしに
+    # しないため（機械に割らせると、話していない行が画面に先に出る）
     if ov.get("story_sections"):
         for s in ov["story_sections"]:
             sections.append(sec(**s))
@@ -245,18 +246,9 @@ def build(key: str, number: int, old_file: str) -> Path:
                                 card={"type": "table", "title": "1990年以降の名選手",
                                       "columns": ["名前", "在籍", "残したもの"], "rows": rows[:i + 1]},
                                 say=[line], sources=srcs))
-    # **1枚のカードを20秒以上出しっぱなしにしない**（2026-09-20）。
-    # 旧台本の宿敵は9行を1枚のカードで通すことがあり、ボーンマスで**49秒**になった。
-    # 機械に割らせると「サウサンプトンの話をしている画面にリーズの行が出る」ので、
-    # **割り方はクラブごとに手で書く**（<key>_say.yaml の `rival_sections`）。
-    if ov.get("rival_sections"):
-        for s in ov["rival_sections"]:
-            sections.append(sec(**s))
-    elif rival_sec:
-        rival_sec = dict(rival_sec)
-        if bg:
-            rival_sec["bg"] = bg
-        sections.append(rival_sec)
+    # **宿敵の節は作らない**（2026-09-20 指示「宿敵は不要」）。
+    # 旧台本には残っているが、20本すべてで落とす。
+    # <key>_say.yaml の `rival_sections` も使わない（戻すときのために残してある）。
     # 登録選手
     ssay = [f"今季の登録選手は{sum(1 for p in raw['squad'] if age(p['dob']) is not None)}人です。"]
     seen = set()
@@ -297,7 +289,11 @@ def build(key: str, number: int, old_file: str) -> Path:
         "short_title": f"{title_head}ってどんなクラブ？"[:40],
         "theme": {"id": old["theme"]["id"], "league": "england", "league_name": "プレミアリーグ", "kind": "other",
                   "topic": club, "title": f"{title_head}ってどんなクラブ？ {NUM[number - 1]}プレミア20クラブ紹介",
-                  "question": "どんなクラブなのか", "hook": old["theme"].get("hook", "")},
+                  "question": "どんなクラブなのか",
+                  # **宿敵の節を落としたら、宿敵を約束する引きが残った**（2026-09-20）。
+                  # 「宿敵は、同じ街の赤いクラブです」と言って、その話を一度もしない。
+                  # 中身に残っている話へ書き換える（<key>_say.yaml の `hook`）
+                  "hook": ov.get("hook") or old["theme"].get("hook", "")},
         # **サムネの文字は台本に合わせて書き直す**（2026-09-20）。旧台本のものを
         # そのまま持ってくると、ボーンマスが「FAカップで1人9得点」のままになった。
         # **作り直した台本にその話は無い。**約束したことを中で答えられない

@@ -46,20 +46,26 @@ sections:
   say:
   - short_only: true
     text: 守田英正の所属クラブを、基本のデータで見ていきます。
-  - image: assets/stats/pl_hull_data.png
+  - image: assets/stats/pl_hull_data0.png
     text: 創立は**1904年**。イングランド東部の港町、キングストン・アポン・ハルのクラブです。
-  - image: assets/stats/pl_hull_data.png
+    no_telop: true
+  - image: assets/backgrounds/stadium_ハルシティ_in.png
     text: 本拠地はMKMスタジアム。**2万4983人**が入ります。
-  - image: assets/stats/pl_hull_data.png
+  - image: assets/stats/pl_hull_data3.png
     text: オーナーはトルコの実業家アジュン・ウルジャル。2022年からクラブを持っています。
+    no_telop: true
   - image: assets/stats/pl_hull_data.png
     text: 大きなタイトルはまだありません。昨季、2025年から26年に昇格プレーオフを勝ち抜いて、プレミアに上がってきました。
-  - image: assets/stats/pl_hull_data.png
+    no_telop: true
+  - image: assets/stats/pl_hull_data7.png
     text: プレミアでの最高位は、2013年から14年の**16位**です。
+    no_telop: true
   - image: assets/stats/pl_hull_data.png
     text: 1939年には、カーライル・ユナイテッドに**11対1**で勝っています。クラブ最大の勝利です。
-  - image: assets/stats/pl_hull_data.png
+    no_telop: true
+  - image: assets/stats/pl_hull_data8.png
     text: 愛称は「タイガース」。黒と琥珀色の縞模様を、昔から着てきたクラブです。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
   bg: assets/backgrounds/stadium_ハルシティ.png
@@ -106,57 +112,64 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - - ディーン・ウィンダス
+    - &id001
+      - ディーン・ウィンダス
       - 1991-2009
       - 初の1部昇格を決めた
-    - - イアン・アシュビー
-      - 2002-2011
-      - 4部から1部まで主将
-    - - ニック・バームビー
-      - 2004-2012
-      - 地元に戻り2度の昇格
   say:
   - ディーン・ウィンダスは地元出身のフォワード。2008年のプレーオフ決勝で決勝点を決め、創設104年で初めて1部に上げました。
-  - イアン・アシュビーは、4部から1部まで同じクラブを主将として上げた選手です。
-  - ニック・バームビーは、イングランド代表経験者が地元に戻り、2度の昇格を支えました。
-  sources:
+  sources: &id002
   - https://en.wikipedia.org/wiki/Dean_Windass
   - https://en.wikipedia.org/wiki/Ian_Ashbee
   - https://en.wikipedia.org/wiki/Nick_Barmby
   bg: assets/backgrounds/stadium_ハルシティ.png
   official: false
-- id: rival
-  heading: 宿敵
+- id: legends2
+  heading: このクラブを語る3人（2人目）
   tier: 背景
-  telop: 宿敵が1つに定まっていないクラブ
-  narrator: 解説
+  telop: 1990年以降の名選手
+  narrator: キャスター
   card:
     type: table
-    title: ハンバー・ダービー
+    title: 1990年以降の名選手
     columns:
-    - ''
-    - ''
+    - 名前
+    - 在籍
+    - 残したもの
     rows:
-    - - 呼び名
-      - ハンバー・ダービー
-    - - 相手
-      - グリムズビー・タウン／スカンソープ・ユナイテッド
-    - - 初の公式戦
-      - 1905年12月16日（0-1で敗戦）
-    - - 今季
-      - 相手はプレミアリーグにいない
+    - *id001
+    - &id003
+      - イアン・アシュビー
+      - 2002-2011
+      - 4部から1部まで主将
   say:
-  - このクラブは、**宿敵が1つに定まっていません。**
-  - 英語版ウィキペディアには、グリムズビー・タウンとスカンソープ・ユナイテッドの**両方と**ハンバー・ダービーを争う、と書かれています。
-  - どちらが最大の相手なのかは、書かれていません。**そのまま正直にお伝えします。**
-  - 呼び名の由来は、この地方を流れるハンバーです。
-  - 初の公式戦は**1905年12月16日**。ハルのホームで、相手はグリムズビー・タウンでした。
-  - 結果は0対1。グリムズビーが勝っています。
-  - ただし、そのグリムズビーも、スカンソープも、**今季のプレミアリーグにはいません。**
-  official: false
-  sources:
-  - https://en.wikipedia.org/wiki/Humber_derby
+  - イアン・アシュビーは、4部から1部まで同じクラブを主将として上げた選手です。
+  sources: *id002
   bg: assets/backgrounds/stadium_ハルシティ.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - *id003
+    - - ニック・バームビー
+      - 2004-2012
+      - 地元に戻り2度の昇格
+  say:
+  - ニック・バームビーは、イングランド代表経験者が地元に戻り、2度の昇格を支えました。
+  sources: *id002
+  bg: assets/backgrounds/stadium_ハルシティ.png
+  official: false
 - id: squad
   heading: 今季の登録選手
   tier: 報道
@@ -166,14 +179,19 @@ sections:
   - 今季の登録選手は33人です。
   - image: assets/stats/pl_hull_gk.png
     text: ゴールキーパーは3人。
+    no_telop: true
   - image: assets/stats/pl_hull_df.png
     text: ディフェンダーは10人。
+    no_telop: true
   - image: assets/stats/pl_hull_mf1.png
     text: ミッドフィールダーは13人。日本の守田英正もここにいます。
+    no_telop: true
   - image: assets/stats/pl_hull_mf2.png
     text: ミッドフィールダーの続きです。
+    no_telop: true
   - image: assets/stats/pl_hull_fw.png
     text: フォワードは7人。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
   bg: assets/backgrounds/stadium_ハルシティ.png

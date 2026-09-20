@@ -15,7 +15,7 @@ theme:
   topic: マンチェスター・ユナイテッド
   title: マンチェスター・ユナイテッドってどんなクラブ？ ⑯プレミア20クラブ紹介
   question: どんなクラブなのか
-  hook: 宿敵との因縁は、1本の運河から始まりました。
+  hook: このクラブを語るとき、外せない日があります。
 thumbnail:
   line1: 操車場のチームが、赤い悪魔に
   line2: ユナイテッド
@@ -33,20 +33,26 @@ sections:
   say:
   - short_only: true
     text: このクラブの、基本のデータです。
-  - image: assets/stats/pl_manutd_data.png
+  - image: assets/stats/pl_manutd_data0.png
     text: 創立は**1878年**。ニュートン・ヒースという名前で始まり、1902年に今の名前になりました。
-  - image: assets/stats/pl_manutd_data.png
+    no_telop: true
+  - image: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
     text: 本拠地はオールド・トラッフォード。**7万4158人**が入る、プレミアで一番大きなスタジアムです。
-  - image: assets/stats/pl_manutd_data.png
+  - image: assets/stats/pl_manutd_data3.png
     text: オーナーはアメリカのグレイザー家。2024年からは、INEOSのラトクリフ氏も出資しています。
+    no_telop: true
   - image: assets/stats/pl_manutd_data.png
     text: 1部リーグの優勝は**20回**。FAカップは13回、チャンピオンズリーグは3回獲っています。
-  - image: assets/stats/pl_manutd_data.png
+    no_telop: true
+  - image: assets/stats/pl_manutd_data5.png
     text: 直近のタイトルは、2023年から24年のFAカップです。
+    no_telop: true
   - image: assets/stats/pl_manutd_data.png
     text: 2021年2月には、サウサンプトンに**9対0**。プレミアで最も大きな点差の勝利に並ぶ記録です。
-  - image: assets/stats/pl_manutd_data.png
+    no_telop: true
+  - image: assets/stats/pl_manutd_data8.png
     text: 愛称は「レッド・デビルズ」。赤い悪魔です。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Manchester_United_F.C.
   bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
@@ -93,59 +99,64 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - - ライアン・ギグス
+    - &id001
+      - ライアン・ギグス
       - 1990-2014
       - クラブ最多の963試合
-    - - ウェイン・ルーニー
-      - 2004-2017
-      - クラブ最多の253得点
-    - - ポール・スコールズ
-      - 1993-2013
-      - 3冠を支えた中盤
   say:
   - ライアン・ギグスは、クラブ史上最多の**963試合**に出場。13度のリーグ優勝を経験しました。
-  - ウェイン・ルーニーは、ボビー・チャールトンを抜いたクラブ史上最多の**253得点**。
-  - ポール・スコールズは、1999年の3冠を含む黄金期を20年支えた中盤の要です。
-  sources:
+  sources: &id002
   - https://en.wikipedia.org/wiki/Ryan_Giggs
   - https://en.wikipedia.org/wiki/Wayne_Rooney
   - https://en.wikipedia.org/wiki/Paul_Scholes
   bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
   official: false
-- id: rival
-  heading: 宿敵
+- id: legends2
+  heading: このクラブを語る3人（2人目）
   tier: 背景
-  telop: リヴァプールとの、ノース・ウェスト・ダービー
-  narrator: 解説
+  telop: 1990年以降の名選手
+  narrator: キャスター
   card:
     type: table
-    title: ノース・ウェスト・ダービー
+    title: 1990年以降の名選手
     columns:
-    - ''
-    - ''
+    - 名前
+    - 在籍
+    - 残したもの
     rows:
-    - - 発端
-      - マンチェスター・シップ・カナル
-    - - 運河の完成
-      - 1894年
-    - - 初対戦
-      - 1894年4月28日／2-0で敗れる
-    - - 場所
-      - ブラックバーンのユーウッド・パーク
-    - - 今季
-      - 相手もプレミアリーグにいる
+    - *id001
+    - &id003
+      - ウェイン・ルーニー
+      - 2004-2017
+      - クラブ最多の253得点
   say:
-  - 相手は**リヴァプール**。呼び名は**ノース・ウェスト・ダービー**です。
-  - もとをたどると、サッカーではなく**運河**にぶつかります。
-  - マンチェスターの商人たちが金を出した運河、シップ・カナルです。
-  - これにリヴァプールの政治家が反対し、ふたつの街のあいだに遺恨が残りました。
-  - 運河ができたのは1894年。その**3か月後**に、両者は初めて顔を合わせています。
-  - 1894年4月28日、ブラックバーンのユーウッド・パーク。**2対0**で敗れました。
-  - 相手は**今季もプレミアリーグにいます。**
-  official: false
-  sources:
-  - https://en.wikipedia.org/wiki/Liverpool_F.C.%E2%80%93Manchester_United_F.C._rivalry
+  - ウェイン・ルーニーは、ボビー・チャールトンを抜いたクラブ史上最多の**253得点**。
+  sources: *id002
   bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - *id003
+    - - ポール・スコールズ
+      - 1993-2013
+      - 3冠を支えた中盤
+  say:
+  - ポール・スコールズは、1999年の3冠を含む黄金期を20年支えた中盤の要です。
+  sources: *id002
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+  official: false
 - id: squad
   heading: 今季の登録選手
   tier: 報道
@@ -155,12 +166,16 @@ sections:
   - 今季の登録選手は30人です。
   - image: assets/stats/pl_manutd_gk.png
     text: ゴールキーパーは4人。
+    no_telop: true
   - image: assets/stats/pl_manutd_df.png
     text: ディフェンダーは10人。
+    no_telop: true
   - image: assets/stats/pl_manutd_mf.png
     text: ミッドフィールダーは9人。
+    no_telop: true
   - image: assets/stats/pl_manutd_fw.png
     text: フォワードは7人。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Manchester_United_F.C.
   bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png

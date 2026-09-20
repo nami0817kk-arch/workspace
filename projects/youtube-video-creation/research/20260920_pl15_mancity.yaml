@@ -15,7 +15,7 @@ theme:
   topic: マンチェスター・シティ
   title: マンチェスター・シティってどんなクラブ？ ⑮プレミア20クラブ紹介
   question: どんなクラブなのか
-  hook: 宿敵は、同じ街の赤いクラブです。
+  hook: いまの姿になる前に、3部まで落ちています。
 thumbnail:
   line1: ヨーロッパを獲って、3部へ
   line2: シティ
@@ -33,20 +33,26 @@ sections:
   say:
   - short_only: true
     text: このクラブの、基本のデータです。
-  - image: assets/stats/pl_mancity_data.png
+  - image: assets/stats/pl_mancity_data0.png
     text: 創立は**1880年**。セント・マークスという名前で始まり、1894年に今の名前になりました。
-  - image: assets/stats/pl_mancity_data.png
+    no_telop: true
+  - image: assets/backgrounds/stadium_マンチェスターシティ_in.png
     text: 本拠地はエティハド・スタジアム。**6万1038人**が入ります。
-  - image: assets/stats/pl_mancity_data.png
+  - image: assets/stats/pl_mancity_data3.png
     text: オーナーはシティ・フットボール・グループ。2008年からクラブを持っています。
+    no_telop: true
   - image: assets/stats/pl_mancity_data.png
     text: 1部リーグの優勝は**10回**。FAカップ8回、リーグカップ9回、チャンピオンズリーグも獲っています。
+    no_telop: true
   - image: assets/stats/pl_mancity_data.png
     text: 昨季はFAカップとリーグカップの**2冠**でした。
+    no_telop: true
   - image: assets/stats/pl_mancity_data.png
     text: 2017年から18年には、勝ち点**100**。プレミアリーグの記録です。
-  - image: assets/stats/pl_mancity_data.png
+    no_telop: true
+  - image: assets/stats/pl_mancity_data8.png
     text: 愛称は「シチズンズ」。ほかに「ブルーズ」「スカイブルーズ」とも呼ばれます。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Manchester_City_F.C.
   bg: assets/backgrounds/stadium_マンチェスターシティ.png
@@ -96,57 +102,64 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - - セルヒオ・アグエロ
+    - &id001
+      - セルヒオ・アグエロ
       - 2011-2021
       - クラブ最多の260得点
-    - - ヴァンサン・コンパニ
-      - 2008-2019
-      - 8年間の主将
-    - - ダビド・シルバ
-      - 2010-2020
-      - 4度優勝の司令塔
   say:
   - セルヒオ・アグエロは、クラブ史上最多の**260得点**。2011年から12年の最終節に、44年ぶりの優勝を決めるゴールを決めました。
-  - ヴァンサン・コンパニは、在籍11年のうち8年を主将として過ごしました。
-  - ダビド・シルバは、10年で4度のリーグ優勝を支えた司令塔。スタジアムの外に銅像が建っています。
-  sources:
+  sources: &id002
   - https://en.wikipedia.org/wiki/Sergio_Ag%C3%BCero
   - https://en.wikipedia.org/wiki/Vincent_Kompany
   - https://en.wikipedia.org/wiki/David_Silva
   bg: assets/backgrounds/stadium_マンチェスターシティ.png
   official: false
-- id: rival
-  heading: 宿敵
+- id: legends2
+  heading: このクラブを語る3人（2人目）
   tier: 背景
-  telop: マンチェスター・ダービー。相手は今季もプレミアにいる
-  narrator: 解説
+  telop: 1990年以降の名選手
+  narrator: キャスター
   card:
     type: table
-    title: マンチェスター・ダービー
+    title: 1990年以降の名選手
     columns:
-    - ''
-    - ''
+    - 名前
+    - 在籍
+    - 残したもの
     rows:
-    - - 初対戦
-      - 1881年11月12日／3-0
-    - - 当時の名前
-      - セント・マークス 対 ニュートン・ヒース
-    - - 1973-74年
-      - ローの1点で、相手の降格が決まる
-    - - 今季
-      - 相手もプレミアリーグにいる
+    - *id001
+    - &id003
+      - ヴァンサン・コンパニ
+      - 2008-2019
+      - 8年間の主将
   say:
-  - 相手は、同じ街の**ユナイテッド**です。呼び名は**マンチェスターダービー**。
-  - 初めて当たったのは1881年11月12日。**3対0**という結果でした。
-  - このときの両者は、セント・マークスと、ニュートン・ヒースと名乗っています。
-  - いちばん語られるのは、1973年から74年の終盤の一戦です。
-  - もともとユナイテッドにいたデニス・ローが、シティの選手として**バックヒール**で決勝点を入れました。
-  - この1点で、**ユナイテッドの降格が決まりました。**
-  - 相手は**今季もプレミアリーグにいます。**
-  official: false
-  sources:
-  - https://en.wikipedia.org/wiki/Manchester_derby
+  - ヴァンサン・コンパニは、在籍11年のうち8年を主将として過ごしました。
+  sources: *id002
   bg: assets/backgrounds/stadium_マンチェスターシティ.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - *id003
+    - - ダビド・シルバ
+      - 2010-2020
+      - 4度優勝の司令塔
+  say:
+  - ダビド・シルバは、10年で4度のリーグ優勝を支えた司令塔。スタジアムの外に銅像が建っています。
+  sources: *id002
+  bg: assets/backgrounds/stadium_マンチェスターシティ.png
+  official: false
 - id: squad
   heading: 今季の登録選手
   tier: 報道
@@ -156,14 +169,19 @@ sections:
   - 今季の登録選手は34人です。
   - image: assets/stats/pl_mancity_gk.png
     text: ゴールキーパーは4人。
+    no_telop: true
   - image: assets/stats/pl_mancity_df.png
     text: ディフェンダーは10人。
+    no_telop: true
   - image: assets/stats/pl_mancity_mf1.png
     text: ミッドフィールダーは13人。
+    no_telop: true
   - image: assets/stats/pl_mancity_mf2.png
     text: ミッドフィールダーの続きです。
+    no_telop: true
   - image: assets/stats/pl_mancity_fw.png
     text: フォワードは7人。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Manchester_City_F.C.
   bg: assets/backgrounds/stadium_マンチェスターシティ.png

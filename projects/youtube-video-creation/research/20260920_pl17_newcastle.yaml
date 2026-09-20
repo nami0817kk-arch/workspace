@@ -33,20 +33,26 @@ sections:
   say:
   - short_only: true
     text: このクラブの、基本のデータです。
-  - image: assets/stats/pl_newcastle_data.png
+  - image: assets/stats/pl_newcastle_data0.png
     text: 創立は**1881年**。1892年に今の名前になりました。
-  - image: assets/stats/pl_newcastle_data.png
+    no_telop: true
+  - image: assets/backgrounds/stadium_ニューカッスル_in.png
     text: 本拠地はセント・ジェームズ・パーク。**5万2729人**が入ります。
-  - image: assets/stats/pl_newcastle_data.png
+  - image: assets/stats/pl_newcastle_data3.png
     text: オーナーはサウジアラビアの公共投資基金。2021年からクラブを持っています。
+    no_telop: true
   - image: assets/stats/pl_newcastle_data.png
     text: 1部リーグの優勝は**4回**。FAカップ6回、リーグカップ1回、ヨーロッパのタイトルが1回あります。
-  - image: assets/stats/pl_newcastle_data.png
+    no_telop: true
+  - image: assets/stats/pl_newcastle_data5.png
     text: 直近のタイトルは、2024年から25年のリーグカップです。
-  - image: assets/stats/pl_newcastle_data.png
+    no_telop: true
+  - image: assets/stats/pl_newcastle_data7.png
     text: プレミアでの最高位は2位。1995年から96年と、その翌年の2回です。
-  - image: assets/stats/pl_newcastle_data.png
+    no_telop: true
+  - image: assets/stats/pl_newcastle_data8.png
     text: 愛称は「マグパイズ」。カササギです。白と黒の縞から来ています。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
   bg: assets/backgrounds/stadium_ニューカッスル.png
@@ -96,58 +102,64 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - - アラン・シアラー
+    - &id001
+      - アラン・シアラー
       - 1996-2006
       - クラブ最多の206得点
-    - - シェイ・ギヴン
-      - 1997-2009
-      - 12年間守ったGK
-    - - ロブ・リー
-      - 1992-2002
-      - エンターテイナーズの中心
   say:
   - アラン・シアラーは、クラブ史上最多の**206得点**。49年間破られなかった記録を塗り替えました。
-  - シェイ・ギヴンは、12年間ゴールを守り続けたキーパーです。
-  - ロブ・リーは、「エンターテイナーズ」と呼ばれたチームの中心として10年在籍しました。
-  sources:
+  sources: &id002
   - https://en.wikipedia.org/wiki/Alan_Shearer
   - https://en.wikipedia.org/wiki/Shay_Given
   - https://en.wikipedia.org/wiki/Rob_Lee
   bg: assets/backgrounds/stadium_ニューカッスル.png
   official: false
-- id: rival
-  heading: 宿敵
+- id: legends2
+  heading: このクラブを語る3人（2人目）
   tier: 背景
-  telop: サンダーランドとの、タイン・ウィア・ダービー
-  narrator: 解説
+  telop: 1990年以降の名選手
+  narrator: キャスター
   card:
     type: table
-    title: タイン・ウィア・ダービー
+    title: 1990年以降の名選手
     columns:
-    - ''
-    - ''
+    - 名前
+    - 在籍
+    - 残したもの
     rows:
-    - - 初対戦
-      - 1888年11月10日／FAカップ予選・0-2
-    - - 1908年12月5日
-      - 1-9。ダービー史上の最大差
-    - - 2013〜2015年
-      - サンダーランドが6連勝
-    - - 対立の根
-      - イングランド内戦（王党派と議会派）
-    - - 今季
-      - 相手もプレミアリーグにいる
+    - *id001
+    - &id003
+      - シェイ・ギヴン
+      - 1997-2009
+      - 12年間守ったGK
   say:
-  - 相手は**サンダーランド**。呼び名は**タイン・ウィア・ダービー**です。
-  - ふたつの街の対立は、イングランド内戦までさかのぼります。サンダーランドが議会派、ニューカッスルは王党派でした。
-  - 競技会で最初に当たったのは1888年11月10日、FAカップの予選です。**イースト・エンド**の時代で、2対0で敗れました。
-  - そして1908年12月5日、**1対9**。これがこのダービーで最も点差のついた試合です。
-  - 2013年から2015年にかけては、相手に**6連勝**を許しています。
-  - サンダーランドは、**今季もプレミアリーグにいます。**
-  official: false
-  sources:
-  - https://en.wikipedia.org/wiki/Tyne%E2%80%93Wear_derby
+  - シェイ・ギヴンは、12年間ゴールを守り続けたキーパーです。
+  sources: *id002
   bg: assets/backgrounds/stadium_ニューカッスル.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - *id003
+    - - ロブ・リー
+      - 1992-2002
+      - エンターテイナーズの中心
+  say:
+  - ロブ・リーは、「エンターテイナーズ」と呼ばれたチームの中心として10年在籍しました。
+  sources: *id002
+  bg: assets/backgrounds/stadium_ニューカッスル.png
+  official: false
 - id: squad
   heading: 今季の登録選手
   tier: 報道
@@ -157,12 +169,16 @@ sections:
   - 今季の登録選手は25人です。
   - image: assets/stats/pl_newcastle_gk.png
     text: ゴールキーパーは4人。
+    no_telop: true
   - image: assets/stats/pl_newcastle_df.png
     text: ディフェンダーは7人。
+    no_telop: true
   - image: assets/stats/pl_newcastle_mf.png
     text: ミッドフィールダーは7人。
+    no_telop: true
   - image: assets/stats/pl_newcastle_fw.png
     text: フォワードは7人。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
   bg: assets/backgrounds/stadium_ニューカッスル.png

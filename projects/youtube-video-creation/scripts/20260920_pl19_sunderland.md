@@ -45,7 +45,6 @@ sources:
 - https://en.wikipedia.org/wiki/Kevin_Phillips_(footballer)
 - https://en.wikipedia.org/wiki/Niall_Quinn
 - https://en.wikipedia.org/wiki/Kevin_Ball
-- https://en.wikipedia.org/wiki/Tyne%E2%80%93Wear_derby
 - https://en.wikipedia.org/wiki/2026–27_Sunderland_A.F.C._season
 cards:
   fall_card:
@@ -75,30 +74,36 @@ cards:
     - 在籍
     - 残したもの
     rows:
-    - - ケヴィン・フィリップス
+    - &id001
+      - ケヴィン・フィリップス
       - 1997-2003
       - プレミア得点王・欧州得点王
-    - - ナイアル・クイン
+  legends2_card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - &id002
+      - ナイアル・クイン
       - 1996-2002
       - 2トップの柱、のちに会長
+  legends3_card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - *id002
     - - ケヴィン・ボール
       - 1990-1999
       - 2度の昇格を率いた主将
-  rival_card:
-    type: table
-    title: タイン・ウィア・ダービー
-    columns:
-    - ''
-    - ''
-    rows:
-    - - 初対戦
-      - 1888年11月10日／FAカップ予選・2-0
-    - - 1908年12月5日
-      - 9-1。ダービー史上の最大差
-    - - 2013〜2015年
-      - 6連勝
-    - - 今季
-      - 相手もプレミアリーグにいる
   season_card:
     type: table
     title: プレミアリーグの結果
@@ -138,27 +143,27 @@ cards:
   only: short
   telop: このクラブの、基本のデータです
 解説: 創立は**1879年**。地元の先生たちが作ったチームが始まりです。
-  telop: 創立は**1879年**。地元の先生たちが作ったチームが始まりです
+  no_telop: true
   source: 背景
-  image: assets/stats/pl_sunderland_data.png
+  image: assets/stats/pl_sunderland_data0.png
 解説: 本拠地はスタジアム・オブ・ライト。**4万8095人**が入ります。
   telop: 本拠地はスタジアム・オブ・ライト。**4万8095人**が入ります
-  image: assets/stats/pl_sunderland_data.png
+  image: assets/backgrounds/stadium_サンダーランド_in.png
 解説: オーナーはキリル・ルイ＝ドレフュス。株の64%を持っています。
-  telop: オーナーはキリル・ルイ＝ドレフュス。株の64%を持っています
-  image: assets/stats/pl_sunderland_data.png
+  no_telop: true
+  image: assets/stats/pl_sunderland_data3.png
 解説: 1部リーグの優勝は**6回**。FAカップも2回獲っています。
-  telop: 1部リーグの優勝は**6回**。FAカップも2回獲っています
+  no_telop: true
   image: assets/stats/pl_sunderland_data.png
 解説: 1998年から99年には、勝ち点**105**。当時のリーグの最多記録でした。
-  telop: 1998年から99年には、勝ち点**105**。当時のリーグの最多記録でした
+  no_telop: true
   image: assets/stats/pl_sunderland_data.png
 解説: プレミアでの最高位は**7位**。2000年から01年、そして昨季の2025年から26年です。
-  telop: プレミアでの最高位は**7位**。2000年から01年、そして昨季の2025年から26年です
-  image: assets/stats/pl_sunderland_data.png
+  no_telop: true
+  image: assets/stats/pl_sunderland_data7.png
 解説: 愛称は「ブラック・キャッツ」。黒猫です。
-  telop: 愛称は「ブラック・キャッツ」。黒猫です
-  image: assets/stats/pl_sunderland_data.png
+  no_telop: true
+  image: assets/stats/pl_sunderland_data8.png
 
 ## 6回優勝したクラブが、3部へ
 @bg: assets/backgrounds/stadium_サンダーランド.png
@@ -187,26 +192,22 @@ cards:
   telop: ケヴィン・フィリップスは、1999年から2000年にプレミアの**得点王**。ヨーロッパのゴールデンシューも獲りました
   source: 背景
   card: legends_card
-キャスター: ナイアル・クインは、フィリップスとの2トップでクラブの一番いい時代を作り、のちに会長も務めました。
-  telop: ナイアル・クインは、フィリップスとの2トップでクラブの一番いい時代を作り、のちに会長も務めました
-キャスター: ケヴィン・ボールは主将として、1996年と99年の2度、クラブを1部に上げました。
-  telop: ケヴィン・ボールは主将として、1996年と99年の2度、クラブを1部に上げました
 
-## 宿敵
+## このクラブを語る3人（2人目）
 @bg: assets/backgrounds/stadium_サンダーランド.png
 
-解説: 相手は**ニューカッスル・ユナイテッド**。**タイン・ウィア・ダービー**です。
-  telop: 相手は**ニューカッスル・ユナイテッド**。**タイン・ウィア・ダービー**です
+キャスター: ナイアル・クインは、フィリップスとの2トップでクラブの一番いい時代を作り、のちに会長も務めました。
+  telop: ナイアル・クインは、フィリップスとの2トップでクラブの一番いい時代を作り、のちに会長も務めました
   source: 背景
-  card: rival_card
-解説: 競技会で最初に当たったのは1888年11月10日、FAカップの予選でした。相手がまだ「イースト・エンド」だった頃で、**2対0**で勝っています。
-  telop: 競技会で最初に当たったのは1888年11月10日、FAカップの予選でした。相手がまだ「イースト・エンド」だった頃で、**2対0**で勝っています
-解説: 1908年12月5日には**9対1**。このダービーで最も点差のついた試合です。
-  telop: 1908年12月5日には**9対1**。このダービーで最も点差のついた試合です
-解説: 2013年から2015年にかけては、**6連勝**しました。
-  telop: 2013年から2015年にかけては、**6連勝**しました
-解説: ニューカッスルは、**今季もプレミアリーグにいます。**
-  telop: ニューカッスルは、**今季もプレミアリーグにいます。**
+  card: legends2_card
+
+## このクラブを語る3人（3人目）
+@bg: assets/backgrounds/stadium_サンダーランド.png
+
+キャスター: ケヴィン・ボールは主将として、1996年と99年の2度、クラブを1部に上げました。
+  telop: ケヴィン・ボールは主将として、1996年と99年の2度、クラブを1部に上げました
+  source: 背景
+  card: legends3_card
 
 ## 今季の登録選手
 @bg: assets/backgrounds/stadium_サンダーランド.png
@@ -215,16 +216,16 @@ cards:
   telop: 今季の登録選手は29人です
   source: 報道
 キャスター: ゴールキーパーは3人。
-  telop: ゴールキーパーは3人
+  no_telop: true
   image: assets/stats/pl_sunderland_gk.png
 キャスター: ディフェンダーは9人。
-  telop: ディフェンダーは9人
+  no_telop: true
   image: assets/stats/pl_sunderland_df.png
 キャスター: ミッドフィールダーは9人。
-  telop: ミッドフィールダーは9人
+  no_telop: true
   image: assets/stats/pl_sunderland_mf.png
 キャスター: フォワードは8人。
-  telop: フォワードは8人
+  no_telop: true
   image: assets/stats/pl_sunderland_fw.png
 
 ## 今季のここまで

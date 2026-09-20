@@ -15,7 +15,7 @@ theme:
   topic: アーセナル
   title: アーセナルってどんなクラブ？ ②プレミア20クラブ紹介
   question: どんなクラブなのか
-  hook: 無敗優勝と、22年の空白と、北ロンドンの因縁。
+  hook: 1つも負けずに優勝したシーズンがあります。
 thumbnail:
   line1: 1919年、票で決まった
   line2: アーセナル
@@ -33,20 +33,26 @@ sections:
   say:
   - short_only: true
     text: このクラブの、基本のデータです。
-  - image: assets/stats/pl_arsenal_data.png
+  - image: assets/stats/pl_arsenal_data0.png
     text: 創立は**1886年**。ディアル・スクエアという名前で始まりました。
-  - image: assets/stats/pl_arsenal_data.png
+    no_telop: true
+  - image: assets/backgrounds/stadium_アーセナル_in.png
     text: 本拠地はロンドン北部のエミレーツ・スタジアム。**6万704人**が入ります。
-  - image: assets/stats/pl_arsenal_data.png
+  - image: assets/stats/pl_arsenal_data3.png
     text: オーナーはスタン・クロエンケ。2018年から単独でクラブを持っています。
+    no_telop: true
   - image: assets/stats/pl_arsenal_data.png
     text: 1部リーグの優勝は**14回**。FAカップも14回獲っています。
-  - image: assets/stats/pl_arsenal_data.png
+    no_telop: true
+  - image: assets/stats/pl_arsenal_data5.png
     text: 直近のタイトルは昨季、2025年から26年のプレミアリーグ優勝です。
-  - image: assets/stats/pl_arsenal_data.png
+    no_telop: true
+  - image: assets/stats/pl_arsenal_data6.png
     text: そして2003年から04年には、38試合を1度も負けずに優勝。**インビンシブルズ**と呼ばれ、プレミアリーグでは今も唯一の記録です。
-  - image: assets/stats/pl_arsenal_data.png
+    no_telop: true
+  - image: assets/stats/pl_arsenal_data8.png
     text: 愛称は「ガナーズ」。砲手、という意味です。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Arsenal_F.C.
   bg: assets/backgrounds/stadium_アーセナル.png
@@ -90,59 +96,64 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - - ティエリ・アンリ
+    - &id001
+      - ティエリ・アンリ
       - 1999-2007
       - クラブ最多の228得点
-    - - デニス・ベルカンプ
-      - 1995-2006
-      - 無敗優勝の司令塔
-    - - トニー・アダムス
-      - 1983-2002
-      - 14年間の主将
   say:
   - ティエリ・アンリは、クラブ史上最多の**228得点**。無敗優勝の中心にいました。
-  - デニス・ベルカンプは、無敗優勝を含む3度のリーグ優勝を支えた司令塔です。
-  - トニー・アダムスは、**14年間**主将を務めたセンターバックです。
-  sources:
+  sources: &id002
   - https://en.wikipedia.org/wiki/Thierry_Henry
   - https://en.wikipedia.org/wiki/Dennis_Bergkamp
   - https://en.wikipedia.org/wiki/Tony_Adams
   bg: assets/backgrounds/stadium_アーセナル.png
   official: false
-- id: rival
-  heading: 宿敵
+- id: legends2
+  heading: このクラブを語る3人（2人目）
   tier: 背景
-  telop: 始まりは、4マイル先への引っ越しだった
-  narrator: 解説
+  telop: 1990年以降の名選手
+  narrator: キャスター
   card:
     type: table
-    title: ノース・ロンドン・ダービー
+    title: 1990年以降の名選手
     columns:
-    - ''
-    - ''
+    - 名前
+    - 在籍
+    - 残したもの
     rows:
-    - - 相手
-      - トッテナム・ホットスパー
-    - - 1913年
-      - ハイベリーへ移転。相手の本拠地まで4マイル
-    - - 1919年
-      - 1部拡大の投票。アーセナル18票・トッテナム8票
-    - - 今季
-      - トッテナムもプレミアリーグにいる
+    - *id001
+    - &id003
+      - デニス・ベルカンプ
+      - 1995-2006
+      - 無敗優勝の司令塔
   say:
-  - 宿敵はトッテナム・ホットスパー。呼び名は**ノース・ロンドン・ダービー**です。
-  - 始まりは1913年。アーセナルがプラムステッドのマナー・グラウンドから、ハイベリーへ移りました。
-  - 移った先は、相手の本拠地ホワイト・ハート・レーンから**わずか4マイル**の場所でした。
-  - 決定的になったのは1919年です。
-  - 第一次大戦のあと、1部が2枠ひろがることになり、どのクラブを上げるかの投票が行われました。
-  - アーセナルが**18票**。トッテナムは**8票**でした。
-  - ほかはバーンズリーが5票、ウルヴァーハンプトンが4票、ノッティンガム・フォレストが3票、バーミンガムが2票、ハル・シティが1票。
-  - こうしてアーセナルが1部に選ばれます。ここから本物の因縁になりました。
-  - そのトッテナムは、今季もプレミアリーグにいます。
-  official: false
-  sources:
-  - https://en.wikipedia.org/wiki/North_London_derby
+  - デニス・ベルカンプは、無敗優勝を含む3度のリーグ優勝を支えた司令塔です。
+  sources: *id002
   bg: assets/backgrounds/stadium_アーセナル.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - *id003
+    - - トニー・アダムス
+      - 1983-2002
+      - 14年間の主将
+  say:
+  - トニー・アダムスは、**14年間**主将を務めたセンターバックです。
+  sources: *id002
+  bg: assets/backgrounds/stadium_アーセナル.png
+  official: false
 - id: squad
   heading: 今季の登録選手
   tier: 報道
@@ -152,12 +163,16 @@ sections:
   - 今季の登録選手は25人です。
   - image: assets/stats/pl_arsenal_gk.png
     text: ゴールキーパーは4人。
+    no_telop: true
   - image: assets/stats/pl_arsenal_df.png
     text: ディフェンダーは9人。
+    no_telop: true
   - image: assets/stats/pl_arsenal_mf.png
     text: ミッドフィールダーは6人。ウーデゴールやライスが並びます。
+    no_telop: true
   - image: assets/stats/pl_arsenal_fw.png
     text: フォワードは6人。サカがここにいます。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Arsenal_F.C.
   bg: assets/backgrounds/stadium_アーセナル.png

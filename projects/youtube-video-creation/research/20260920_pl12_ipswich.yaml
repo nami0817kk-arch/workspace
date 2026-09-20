@@ -46,18 +46,23 @@ sections:
   say:
   - short_only: true
     text: 前田大然の所属クラブを、基本のデータで見ていきます。
-  - image: assets/stats/pl_ipswich_data.png
+  - image: assets/stats/pl_ipswich_data0.png
     text: 創立は**1878年**。フットボールリーグに加わったのは1938年です。
-  - image: assets/stats/pl_ipswich_data.png
+    no_telop: true
+  - image: assets/backgrounds/stadium_イプスウィッチ_in.png
     text: 本拠地はポートマン・ロード。**3万56人**が入ります。場所はイングランド東部のサフォーク州です。
-  - image: assets/stats/pl_ipswich_data.png
+  - image: assets/stats/pl_ipswich_data3.png
     text: オーナーは、アメリカの投資グループが集まったゲームチェンジャー20。2021年からです。
+    no_telop: true
   - image: assets/stats/pl_ipswich_data.png
     text: 1部リーグの優勝が**1回**。FAカップ1回、そしてヨーロッパのUEFAカップも1回獲っています。
-  - image: assets/stats/pl_ipswich_data.png
+    no_telop: true
+  - image: assets/stats/pl_ipswich_data7.png
     text: プレミアでの最高位は、2000年から01年の**5位**です。
-  - image: assets/stats/pl_ipswich_data.png
+    no_telop: true
+  - image: assets/stats/pl_ipswich_data8.png
     text: 愛称は「トラクター・ボーイズ」。農業の盛んな土地で、自分たちを茶化した呼び名です。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
   bg: assets/backgrounds/stadium_イプスウィッチ.png
@@ -100,58 +105,64 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - - マット・ホランド
+    - &id001
+      - マット・ホランド
       - 1997-2003
       - 223試合連続出場の主将
-    - - ジム・マギルトン
-      - 1999-2006
-      - プレーオフでハットトリック
-    - - マーカス・スチュワート
-      - 2000-2002
-      - 昇格1年目に19得点
   say:
   - マット・ホランドは、**223試合連続**で出場し続けた主将。2000年のプレーオフ決勝でクラブをプレミアに上げました。
-  - ジム・マギルトンは、プレーオフ準決勝でハットトリックを決め、昇格を決定づけました。
-  - マーカス・スチュワートは、昇格1年目の2000年から01年にプレミアで**19得点**。クラブを5位に押し上げました。
-  sources:
+  sources: &id002
   - https://en.wikipedia.org/wiki/Matt_Holland
   - https://en.wikipedia.org/wiki/Jim_Magilton
   - https://en.wikipedia.org/wiki/Marcus_Stewart
   bg: assets/backgrounds/stadium_イプスウィッチ.png
   official: false
-- id: rival
-  heading: 宿敵
+- id: legends2
+  heading: このクラブを語る3人（2人目）
   tier: 背景
-  telop: ノリッジとのイースト・アングリアン・ダービー
-  narrator: 解説
+  telop: 1990年以降の名選手
+  narrator: キャスター
   card:
     type: table
-    title: イースト・アングリアン・ダービー
+    title: 1990年以降の名選手
     columns:
-    - ''
-    - ''
+    - 名前
+    - 在籍
+    - 残したもの
     rows:
-    - - 相手
-      - ノリッジ・シティ
-    - - 初対戦
-      - 1902年11月15日（0-1）
-    - - プロ同士の初戦
-      - 1939年9月2日（1-1）
-    - - 今季
-      - 相手はプレミアリーグにいない
+    - *id001
+    - &id003
+      - ジム・マギルトン
+      - 1999-2006
+      - プレーオフでハットトリック
   say:
-  - 宿敵は**ノリッジ・シティ**です。
-  - 呼び名は**イースト・アングリアン・ダービー**。2つの州の名前から来ています。
-  - 初めて当たったのは**1902年11月15日**。どちらもまだアマチュアでした。
-  - 舞台はノーフォーク＆サフォーク・リーグ。結果は0対1で、ノリッジが勝っています。
-  - 完全なプロ同士のリーグ戦になったのは**1939年9月2日**。
-  - 3部南地区、ポートマン・ロードでの1対1の引き分けでした。
-  - ただしノリッジは、**今季のプレミアリーグにはいません。**
-  - この一戦が戻るには、どちらかが動く必要があります。
-  official: false
-  sources:
-  - https://en.wikipedia.org/wiki/East_Anglian_derby
+  - ジム・マギルトンは、プレーオフ準決勝でハットトリックを決め、昇格を決定づけました。
+  sources: *id002
   bg: assets/backgrounds/stadium_イプスウィッチ.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - *id003
+    - - マーカス・スチュワート
+      - 2000-2002
+      - 昇格1年目に19得点
+  say:
+  - マーカス・スチュワートは、昇格1年目の2000年から01年にプレミアで**19得点**。クラブを5位に押し上げました。
+  sources: *id002
+  bg: assets/backgrounds/stadium_イプスウィッチ.png
+  official: false
 - id: squad
   heading: 今季の登録選手
   tier: 報道
@@ -161,12 +172,16 @@ sections:
   - 今季の登録選手は28人です。
   - image: assets/stats/pl_ipswich_gk.png
     text: ゴールキーパーは4人。
+    no_telop: true
   - image: assets/stats/pl_ipswich_df.png
     text: ディフェンダーは7人。
+    no_telop: true
   - image: assets/stats/pl_ipswich_mf.png
     text: ミッドフィールダーは6人。
+    no_telop: true
   - image: assets/stats/pl_ipswich_fw.png
     text: フォワードは11人。日本の前田大然もここにいます。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
   bg: assets/backgrounds/stadium_イプスウィッチ.png

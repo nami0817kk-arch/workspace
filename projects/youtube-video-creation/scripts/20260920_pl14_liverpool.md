@@ -47,7 +47,6 @@ sources:
 - https://en.wikipedia.org/wiki/Steven_Gerrard
 - https://en.wikipedia.org/wiki/Jamie_Carragher
 - https://en.wikipedia.org/wiki/Mohamed_Salah
-- https://en.wikipedia.org/wiki/Merseyside_derby
 - https://en.wikipedia.org/wiki/2026–27_Liverpool_F.C._season
 cards:
   birth_card:
@@ -73,32 +72,36 @@ cards:
     - 在籍
     - 残したもの
     rows:
-    - - スティーヴン・ジェラード
+    - &id001
+      - スティーヴン・ジェラード
       - 1998-2015
       - イスタンブールの奇跡の主将
-    - - ジェイミー・キャラガー
+  legends2_card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - &id002
+      - ジェイミー・キャラガー
       - 1996-2013
       - 737試合の生え抜き
+  legends3_card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - *id002
     - - モハメド・サラー
       - 2017-2026
       - プレミア1シーズン32得点
-  rival_card:
-    type: table
-    title: マージーサイド・ダービー
-    columns:
-    - ''
-    - ''
-    rows:
-    - - 初対戦
-      - 1894年10月13日／0-3
-    - - 通算
-      - 248試合（2026年4月時点）
-    - - 勝敗
-      - リヴァプール102勝・78分・エヴァートン68勝
-    - - 最大差
-      - 1935-36 アンフィールドで6-0
-    - - 今季
-      - 相手もプレミアリーグにいる
   season_card:
     type: table
     title: プレミアリーグの結果
@@ -147,20 +150,20 @@ cards:
   only: short
   telop: 遠藤航の所属クラブを、基本のデータで見ていきます
 解説: 創立は**1892年**。本拠地はアンフィールド、**6万1276人**が入ります。
-  telop: 創立は**1892年**。本拠地はアンフィールド、**6万1276人**が入ります
+  no_telop: true
   source: 背景
-  image: assets/stats/pl_liverpool_data.png
+  image: assets/stats/pl_liverpool_data0.png
 解説: オーナーはアメリカのFSG。2010年からクラブを持っています。
-  telop: オーナーはアメリカのFSG。2010年からクラブを持っています
-  image: assets/stats/pl_liverpool_data.png
+  no_telop: true
+  image: assets/stats/pl_liverpool_data3.png
 解説: 1部リーグの優勝は**20回**。FAカップ8回、リーグカップ10回、チャンピオンズリーグは6回獲っています。
-  telop: 1部リーグの優勝は**20回**。FAカップ8回、リーグカップ10回、チャンピオンズリーグは6回獲っています
+  no_telop: true
   image: assets/stats/pl_liverpool_data.png
 解説: 直近のタイトルは、2024年から25年のプレミアリーグ優勝です。
-  telop: 直近のタイトルは、2024年から25年のプレミアリーグ優勝です
-  image: assets/stats/pl_liverpool_data.png
+  no_telop: true
+  image: assets/stats/pl_liverpool_data5.png
 解説: 2017年から18年には、モハメド・サラーが1シーズンで**44得点**を挙げました。
-  telop: 2017年から18年には、モハメド・サラーが1シーズンで**44得点**を挙げました
+  no_telop: true
   image: assets/stats/pl_liverpool_data.png
 
 ## 空になったスタジアム
@@ -192,30 +195,22 @@ cards:
   telop: スティーヴン・ジェラードは、2005年に**イスタンブールの奇跡**でチャンピオンズリーグを掲げた主将です
   source: 背景
   card: legends_card
-キャスター: ジェイミー・キャラガーは、クラブ史上2番目に多い**737試合**に出た生え抜きのディフェンダーです。
-  telop: ジェイミー・キャラガーは、クラブ史上2番目に多い**737試合**に出た生え抜きのディフェンダーです
-キャスター: モハメド・サラーは、2017年から18年に38試合制のプレミアで最多の32得点。クラブを代表するエースでした。
-  telop: モハメド・サラーは、2017年から18年に38試合制のプレミアで最多の32得点。クラブを代表するエースでした
 
-## 宿敵
+## このクラブを語る3人（2人目）
 @bg: assets/backgrounds/stadium_リヴァプール.png
 
-解説: 宿敵は、同じ街の**エヴァートン**です。
-  telop: 宿敵は、同じ街の**エヴァートン**です
+キャスター: ジェイミー・キャラガーは、クラブ史上2番目に多い**737試合**に出た生え抜きのディフェンダーです。
+  telop: ジェイミー・キャラガーは、クラブ史上2番目に多い**737試合**に出た生え抜きのディフェンダーです
   source: 背景
-  card: rival_card
-解説: 呼び名は**マージーサイド・ダービー**。
-  telop: 呼び名は**マージーサイド・ダービー**
-解説: 公式戦で初めて当たったのは1894年10月13日でした。この日は**エヴァートンが3対0**。
-  telop: 公式戦で初めて当たったのは1894年10月13日でした。この日は**エヴァートンが3対0**
-解説: 2026年4月の時点で、通算**248試合**。リヴァプールの102勝、78分け、エヴァートンの68勝です。
-  telop: 2026年4月の時点で、通算**248試合**。リヴァプールの102勝、78分け、エヴァートンの68勝です
-解説: 最も点差がついたのは1935年から36年、アンフィールドでの**6対0**でした。
-  telop: 最も点差がついたのは1935年から36年、アンフィールドでの**6対0**でした
-解説: プレミアリーグが始まってから、**退場者がいちばん多いカード**でもあります。合計23枚です。
-  telop: プレミアリーグが始まってから、**退場者がいちばん多いカード**でもあります。合計23枚です
-解説: そして相手は、**今季もプレミアリーグにいます。**年に2度、この試合が組まれます。
-  telop: そして相手は、**今季もプレミアリーグにいます。**年に2度、この試合が組まれます
+  card: legends2_card
+
+## このクラブを語る3人（3人目）
+@bg: assets/backgrounds/stadium_リヴァプール.png
+
+キャスター: モハメド・サラーは、2017年から18年に38試合制のプレミアで最多の32得点。クラブを代表するエースでした。
+  telop: モハメド・サラーは、2017年から18年に38試合制のプレミアで最多の32得点。クラブを代表するエースでした
+  source: 背景
+  card: legends3_card
 
 ## 今季の登録選手
 @bg: assets/backgrounds/stadium_リヴァプール.png
@@ -224,16 +219,16 @@ cards:
   telop: 今季の登録選手は35人です
   source: 報道
 キャスター: ゴールキーパーは6人。
-  telop: ゴールキーパーは6人
+  no_telop: true
   image: assets/stats/pl_liverpool_gk.png
 キャスター: ディフェンダーは12人。
-  telop: ディフェンダーは12人
+  no_telop: true
   image: assets/stats/pl_liverpool_df.png
 キャスター: ミッドフィールダーは8人。日本の遠藤航もここにいます。
-  telop: ミッドフィールダーは8人。日本の遠藤航もここにいます
+  no_telop: true
   image: assets/stats/pl_liverpool_mf.png
 キャスター: フォワードは9人。
-  telop: フォワードは9人
+  no_telop: true
   image: assets/stats/pl_liverpool_fw.png
 
 ## 今季のここまで

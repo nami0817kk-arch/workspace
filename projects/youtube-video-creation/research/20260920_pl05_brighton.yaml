@@ -16,7 +16,7 @@ theme:
   topic: ブライトン
   title: 三笘薫がいるブライトンってどんなクラブ？ ⑤プレミア20クラブ紹介
   question: どんなクラブなのか
-  hook: カモメの愛称は、宿敵への返し歌が始まりでした。
+  hook: 14年のあいだ、自分たちの家がありませんでした。
 thumbnail:
   line1: 三笘薫と、14年の●●
   line2: ブライトン
@@ -46,20 +46,26 @@ sections:
   say:
   - short_only: true
     text: 三笘薫の所属クラブを、基本のデータで見ていきます。
-  - image: assets/stats/pl_brighton_data.png
+  - image: assets/stats/pl_brighton_data0.png
     text: 創立は**1901年**。1920年にフットボールリーグに加わりました。
-  - image: assets/stats/pl_brighton_data.png
+    no_telop: true
+  - image: assets/backgrounds/stadium_ブライトン_in.png
     text: 本拠地はファルマー・スタジアム。**3万2176人**が入ります。
-  - image: assets/stats/pl_brighton_data.png
+  - image: assets/stats/pl_brighton_data2.png
     text: ホームタウンは、イングランド南の海沿いの町ブライトン・アンド・ホーヴ。
-  - image: assets/stats/pl_brighton_data.png
+    no_telop: true
+  - image: assets/stats/pl_brighton_data3.png
     text: オーナーはトニー・ブルーム。2009年に会長になり、株の75%を持っています。
+    no_telop: true
   - image: assets/stats/pl_brighton_data.png
     text: 1部リーグの優勝やカップのタイトルは、まだありません。
-  - image: assets/stats/pl_brighton_data.png
+    no_telop: true
+  - image: assets/stats/pl_brighton_data7.png
     text: プレミアでの最高位は、2022年から23年の**6位**。クラブの歴史で一番の順位です。
-  - image: assets/stats/pl_brighton_data.png
+    no_telop: true
+  - image: assets/stats/pl_brighton_data8.png
     text: 愛称は「シーガルズ」。カモメです。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Brighton_&_Hove_Albion_F.C.
   bg: assets/backgrounds/stadium_ブライトン.png
@@ -112,64 +118,64 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - - ルイス・ダンク
+    - &id001
+      - ルイス・ダンク
       - 2010-
       - 一筋で500試合超えの主将
-    - - グレン・マレー
-      - 2008-2021
-      - プレミア初昇格の得点源
-    - - ボビー・ザモラ
-      - 2000-2003
-      - 136試合83得点
   say:
   - ルイス・ダンクは、ブライトン一筋で**500試合**を超えた主将です。
-  - グレン・マレーは、2016年から17年のプレミア初昇格を決めた得点源です。
-  - ボビー・ザモラは、136試合で**83得点**。2年続けて優勝し、クラブを2段上げました。
-  sources:
+  sources: &id002
   - https://en.wikipedia.org/wiki/Lewis_Dunk
   - https://en.wikipedia.org/wiki/Glenn_Murray
   - https://en.wikipedia.org/wiki/Bobby_Zamora
   bg: assets/backgrounds/stadium_ブライトン.png
   official: false
-- id: rival
-  heading: 宿敵
+- id: legends2
+  heading: このクラブを語る3人（2人目）
   tier: 背景
-  telop: 発端は、トッテナムで同僚だった2人の敵対心
-  narrator: 解説
+  telop: 1990年以降の名選手
+  narrator: キャスター
   card:
     type: table
-    title: M23ダービー
+    title: 1990年以降の名選手
     columns:
-    - ''
-    - ''
+    - 名前
+    - 在籍
+    - 残したもの
     rows:
-    - - 相手
-      - クリスタル・パレス
-    - - 呼び名
-      - M23ダービー（A23ダービー）
-    - - 1976年
-      - FAカップ1回戦が3試合もつれる
-    - - 1989年
-      - 1試合5本のPK。27分の間に
-    - - 今季
-      - パレスもプレミアリーグにいる
+    - *id001
+    - &id003
+      - グレン・マレー
+      - 2008-2021
+      - プレミア初昇格の得点源
   say:
-  - 宿敵はクリスタル・パレス。呼び名は**M23ダービー**です。
-  - サセックスと南ロンドンを結ぶ道路の名前から来ています。**ただしサポーターはこの呼び名を嫌っています。**
-  - 最初に当たったのは1920年ですが、因縁が本物になったのは1970年代の半ばでした。
-  - 発端は2人の人物です。パレスのテリー・ヴェナブルズと、こちらのアラン・マラリー。
-  - 2人はトッテナムで同僚でした。
-  - 1976年11月20日のFAカップ1回戦は2対2。11月23日の再試合は延長の末1対1。
-  - 12月6日、スタンフォード・ブリッジでの3度目を、パレスが1対0で取ります。
-  - 試合のあと、マラリーは警察に連れ出されながら、相手のサポーターへVサインを送って罵りました。
-  - さらに相手のロッカールームに入り、床に**5ポンド**を投げつけます。
-  - 「お前のチームはこの金の値打ちもない」。ヴェナブルズへ、そう言い放ちました。
-  - 1989年には、1人の主審が1試合で5本のPKを、それも27分の間に与えた試合もあります。リーグの記録で、勝ったのはパレスでした。
-  - そのパレスは、今季もプレミアリーグにいます。
-  official: false
-  sources:
-  - https://en.wikipedia.org/wiki/M23_derby
+  - グレン・マレーは、2016年から17年のプレミア初昇格を決めた得点源です。
+  sources: *id002
   bg: assets/backgrounds/stadium_ブライトン.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - *id003
+    - - ボビー・ザモラ
+      - 2000-2003
+      - 136試合83得点
+  say:
+  - ボビー・ザモラは、136試合で**83得点**。2年続けて優勝し、クラブを2段上げました。
+  sources: *id002
+  bg: assets/backgrounds/stadium_ブライトン.png
+  official: false
 - id: squad
   heading: 今季の登録選手
   tier: 報道
@@ -179,12 +185,16 @@ sections:
   - 今季の登録選手は30人です。
   - image: assets/stats/pl_brighton_gk.png
     text: ゴールキーパーは3人。
+    no_telop: true
   - image: assets/stats/pl_brighton_df.png
     text: ディフェンダーは10人。
+    no_telop: true
   - image: assets/stats/pl_brighton_mf.png
     text: ミッドフィールダーは12人。日本の三笘薫もここにいます。
+    no_telop: true
   - image: assets/stats/pl_brighton_fw.png
     text: フォワードは5人。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Brighton_&_Hove_Albion_F.C.
   bg: assets/backgrounds/stadium_ブライトン.png

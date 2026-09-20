@@ -33,20 +33,26 @@ sections:
   say:
   - short_only: true
     text: このクラブの、基本のデータです。
-  - image: assets/stats/pl_sunderland_data.png
+  - image: assets/stats/pl_sunderland_data0.png
     text: 創立は**1879年**。地元の先生たちが作ったチームが始まりです。
-  - image: assets/stats/pl_sunderland_data.png
+    no_telop: true
+  - image: assets/backgrounds/stadium_サンダーランド_in.png
     text: 本拠地はスタジアム・オブ・ライト。**4万8095人**が入ります。
-  - image: assets/stats/pl_sunderland_data.png
+  - image: assets/stats/pl_sunderland_data3.png
     text: オーナーはキリル・ルイ＝ドレフュス。株の64%を持っています。
+    no_telop: true
   - image: assets/stats/pl_sunderland_data.png
     text: 1部リーグの優勝は**6回**。FAカップも2回獲っています。
+    no_telop: true
   - image: assets/stats/pl_sunderland_data.png
     text: 1998年から99年には、勝ち点**105**。当時のリーグの最多記録でした。
-  - image: assets/stats/pl_sunderland_data.png
+    no_telop: true
+  - image: assets/stats/pl_sunderland_data7.png
     text: プレミアでの最高位は**7位**。2000年から01年、そして昨季の2025年から26年です。
-  - image: assets/stats/pl_sunderland_data.png
+    no_telop: true
+  - image: assets/stats/pl_sunderland_data8.png
     text: 愛称は「ブラック・キャッツ」。黒猫です。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
   bg: assets/backgrounds/stadium_サンダーランド.png
@@ -100,55 +106,64 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - - ケヴィン・フィリップス
+    - &id001
+      - ケヴィン・フィリップス
       - 1997-2003
       - プレミア得点王・欧州得点王
-    - - ナイアル・クイン
-      - 1996-2002
-      - 2トップの柱、のちに会長
-    - - ケヴィン・ボール
-      - 1990-1999
-      - 2度の昇格を率いた主将
   say:
   - ケヴィン・フィリップスは、1999年から2000年にプレミアの**得点王**。ヨーロッパのゴールデンシューも獲りました。
-  - ナイアル・クインは、フィリップスとの2トップでクラブの一番いい時代を作り、のちに会長も務めました。
-  - ケヴィン・ボールは主将として、1996年と99年の2度、クラブを1部に上げました。
-  sources:
+  sources: &id002
   - https://en.wikipedia.org/wiki/Kevin_Phillips_(footballer)
   - https://en.wikipedia.org/wiki/Niall_Quinn
   - https://en.wikipedia.org/wiki/Kevin_Ball
   bg: assets/backgrounds/stadium_サンダーランド.png
   official: false
-- id: rival
-  heading: 宿敵
+- id: legends2
+  heading: このクラブを語る3人（2人目）
   tier: 背景
-  telop: ニューカッスルとの、タイン・ウィア・ダービー
-  narrator: 解説
+  telop: 1990年以降の名選手
+  narrator: キャスター
   card:
     type: table
-    title: タイン・ウィア・ダービー
+    title: 1990年以降の名選手
     columns:
-    - ''
-    - ''
+    - 名前
+    - 在籍
+    - 残したもの
     rows:
-    - - 初対戦
-      - 1888年11月10日／FAカップ予選・2-0
-    - - 1908年12月5日
-      - 9-1。ダービー史上の最大差
-    - - 2013〜2015年
-      - 6連勝
-    - - 今季
-      - 相手もプレミアリーグにいる
+    - *id001
+    - &id003
+      - ナイアル・クイン
+      - 1996-2002
+      - 2トップの柱、のちに会長
   say:
-  - 相手は**ニューカッスル・ユナイテッド**。**タイン・ウィア・ダービー**です。
-  - 競技会で最初に当たったのは1888年11月10日、FAカップの予選でした。相手がまだ「イースト・エンド」だった頃で、**2対0**で勝っています。
-  - 1908年12月5日には**9対1**。このダービーで最も点差のついた試合です。
-  - 2013年から2015年にかけては、**6連勝**しました。
-  - ニューカッスルは、**今季もプレミアリーグにいます。**
-  official: false
-  sources:
-  - https://en.wikipedia.org/wiki/Tyne%E2%80%93Wear_derby
+  - ナイアル・クインは、フィリップスとの2トップでクラブの一番いい時代を作り、のちに会長も務めました。
+  sources: *id002
   bg: assets/backgrounds/stadium_サンダーランド.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - *id003
+    - - ケヴィン・ボール
+      - 1990-1999
+      - 2度の昇格を率いた主将
+  say:
+  - ケヴィン・ボールは主将として、1996年と99年の2度、クラブを1部に上げました。
+  sources: *id002
+  bg: assets/backgrounds/stadium_サンダーランド.png
+  official: false
 - id: squad
   heading: 今季の登録選手
   tier: 報道
@@ -158,12 +173,16 @@ sections:
   - 今季の登録選手は29人です。
   - image: assets/stats/pl_sunderland_gk.png
     text: ゴールキーパーは3人。
+    no_telop: true
   - image: assets/stats/pl_sunderland_df.png
     text: ディフェンダーは9人。
+    no_telop: true
   - image: assets/stats/pl_sunderland_mf.png
     text: ミッドフィールダーは9人。
+    no_telop: true
   - image: assets/stats/pl_sunderland_fw.png
     text: フォワードは8人。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
   bg: assets/backgrounds/stadium_サンダーランド.png

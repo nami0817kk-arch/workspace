@@ -45,7 +45,6 @@ sources:
 - https://en.wikipedia.org/wiki/Alan_Shearer
 - https://en.wikipedia.org/wiki/Shay_Given
 - https://en.wikipedia.org/wiki/Rob_Lee
-- https://en.wikipedia.org/wiki/Tyne%E2%80%93Wear_derby
 - https://en.wikipedia.org/wiki/2026–27_Newcastle_United_F.C._season
 cards:
   drought_card:
@@ -71,32 +70,36 @@ cards:
     - 在籍
     - 残したもの
     rows:
-    - - アラン・シアラー
+    - &id001
+      - アラン・シアラー
       - 1996-2006
       - クラブ最多の206得点
-    - - シェイ・ギヴン
+  legends2_card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - &id002
+      - シェイ・ギヴン
       - 1997-2009
       - 12年間守ったGK
+  legends3_card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - *id002
     - - ロブ・リー
       - 1992-2002
       - エンターテイナーズの中心
-  rival_card:
-    type: table
-    title: タイン・ウィア・ダービー
-    columns:
-    - ''
-    - ''
-    rows:
-    - - 初対戦
-      - 1888年11月10日／FAカップ予選・0-2
-    - - 1908年12月5日
-      - 1-9。ダービー史上の最大差
-    - - 2013〜2015年
-      - サンダーランドが6連勝
-    - - 対立の根
-      - イングランド内戦（王党派と議会派）
-    - - 今季
-      - 相手もプレミアリーグにいる
   season_card:
     type: table
     title: プレミアリーグの結果
@@ -139,27 +142,27 @@ cards:
   only: short
   telop: このクラブの、基本のデータです
 解説: 創立は**1881年**。1892年に今の名前になりました。
-  telop: 創立は**1881年**。1892年に今の名前になりました
+  no_telop: true
   source: 背景
-  image: assets/stats/pl_newcastle_data.png
+  image: assets/stats/pl_newcastle_data0.png
 解説: 本拠地はセント・ジェームズ・パーク。**5万2729人**が入ります。
   telop: 本拠地はセント・ジェームズ・パーク。**5万2729人**が入ります
-  image: assets/stats/pl_newcastle_data.png
+  image: assets/backgrounds/stadium_ニューカッスル_in.png
 解説: オーナーはサウジアラビアの公共投資基金。2021年からクラブを持っています。
-  telop: オーナーはサウジアラビアの公共投資基金。2021年からクラブを持っています
-  image: assets/stats/pl_newcastle_data.png
+  no_telop: true
+  image: assets/stats/pl_newcastle_data3.png
 解説: 1部リーグの優勝は**4回**。FAカップ6回、リーグカップ1回、ヨーロッパのタイトルが1回あります。
-  telop: 1部リーグの優勝は**4回**。FAカップ6回、リーグカップ1回、ヨーロッパのタイトルが1回あります
+  no_telop: true
   image: assets/stats/pl_newcastle_data.png
 解説: 直近のタイトルは、2024年から25年のリーグカップです。
-  telop: 直近のタイトルは、2024年から25年のリーグカップです
-  image: assets/stats/pl_newcastle_data.png
+  no_telop: true
+  image: assets/stats/pl_newcastle_data5.png
 解説: プレミアでの最高位は2位。1995年から96年と、その翌年の2回です。
-  telop: プレミアでの最高位は2位。1995年から96年と、その翌年の2回です
-  image: assets/stats/pl_newcastle_data.png
+  no_telop: true
+  image: assets/stats/pl_newcastle_data7.png
 解説: 愛称は「マグパイズ」。カササギです。白と黒の縞から来ています。
-  telop: 愛称は「マグパイズ」。カササギです。白と黒の縞から来ています
-  image: assets/stats/pl_newcastle_data.png
+  no_telop: true
+  image: assets/stats/pl_newcastle_data8.png
 
 ## 56年待った
 @bg: assets/backgrounds/stadium_ニューカッスル.png
@@ -188,28 +191,22 @@ cards:
   telop: アラン・シアラーは、クラブ史上最多の**206得点**。49年間破られなかった記録を塗り替えました
   source: 背景
   card: legends_card
-キャスター: シェイ・ギヴンは、12年間ゴールを守り続けたキーパーです。
-  telop: シェイ・ギヴンは、12年間ゴールを守り続けたキーパーです
-キャスター: ロブ・リーは、「エンターテイナーズ」と呼ばれたチームの中心として10年在籍しました。
-  telop: ロブ・リーは、「エンターテイナーズ」と呼ばれたチームの中心として10年在籍しました
 
-## 宿敵
+## このクラブを語る3人（2人目）
 @bg: assets/backgrounds/stadium_ニューカッスル.png
 
-解説: 相手は**サンダーランド**。呼び名は**タイン・ウィア・ダービー**です。
-  telop: 相手は**サンダーランド**。呼び名は**タイン・ウィア・ダービー**です
+キャスター: シェイ・ギヴンは、12年間ゴールを守り続けたキーパーです。
+  telop: シェイ・ギヴンは、12年間ゴールを守り続けたキーパーです
   source: 背景
-  card: rival_card
-解説: ふたつの街の対立は、イングランド内戦までさかのぼります。サンダーランドが議会派、ニューカッスルは王党派でした。
-  telop: ふたつの街の対立は、イングランド内戦までさかのぼります。サンダーランドが議会派、ニューカッスルは王党派でした
-解説: 競技会で最初に当たったのは1888年11月10日、FAカップの予選です。**イースト・エンド**の時代で、2対0で敗れました。
-  telop: 競技会で最初に当たったのは1888年11月10日、FAカップの予選です。**イースト・エンド**の時代で、2対0で敗れました
-解説: そして1908年12月5日、**1対9**。これがこのダービーで最も点差のついた試合です。
-  telop: そして1908年12月5日、**1対9**。これがこのダービーで最も点差のついた試合です
-解説: 2013年から2015年にかけては、相手に**6連勝**を許しています。
-  telop: 2013年から2015年にかけては、相手に**6連勝**を許しています
-解説: サンダーランドは、**今季もプレミアリーグにいます。**
-  telop: サンダーランドは、**今季もプレミアリーグにいます。**
+  card: legends2_card
+
+## このクラブを語る3人（3人目）
+@bg: assets/backgrounds/stadium_ニューカッスル.png
+
+キャスター: ロブ・リーは、「エンターテイナーズ」と呼ばれたチームの中心として10年在籍しました。
+  telop: ロブ・リーは、「エンターテイナーズ」と呼ばれたチームの中心として10年在籍しました
+  source: 背景
+  card: legends3_card
 
 ## 今季の登録選手
 @bg: assets/backgrounds/stadium_ニューカッスル.png
@@ -218,16 +215,16 @@ cards:
   telop: 今季の登録選手は25人です
   source: 報道
 キャスター: ゴールキーパーは4人。
-  telop: ゴールキーパーは4人
+  no_telop: true
   image: assets/stats/pl_newcastle_gk.png
 キャスター: ディフェンダーは7人。
-  telop: ディフェンダーは7人
+  no_telop: true
   image: assets/stats/pl_newcastle_df.png
 キャスター: ミッドフィールダーは7人。
-  telop: ミッドフィールダーは7人
+  no_telop: true
   image: assets/stats/pl_newcastle_mf.png
 キャスター: フォワードは7人。
-  telop: フォワードは7人
+  no_telop: true
   image: assets/stats/pl_newcastle_fw.png
 
 ## 今季のここまで

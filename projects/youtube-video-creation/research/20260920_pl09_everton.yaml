@@ -33,20 +33,27 @@ sections:
   say:
   - short_only: true
     text: このクラブの、基本のデータです。
-  - image: assets/stats/pl_everton_data.png
+  - image: assets/stats/pl_everton_data0.png
     text: 創立は**1878年**。リヴァプールのスタンリー・パークで生まれたクラブです。
+    no_telop: true
   - image: assets/stats/pl_everton_data.png
     text: 昨季、2025年から26年に新しいスタジアムへ移りました。**5万2769人**が入ります。
-  - image: assets/stats/pl_everton_data.png
+    no_telop: true
+  - image: assets/stats/pl_everton_data3.png
     text: オーナーはアメリカの実業家ダン・フリードキン。2024年12月からクラブを持っています。
+    no_telop: true
   - image: assets/stats/pl_everton_data.png
     text: 1部リーグの優勝は**9回**。FAカップは5回、ヨーロッパのタイトルも1回あります。
-  - image: assets/stats/pl_everton_data.png
+    no_telop: true
+  - image: assets/stats/pl_everton_data5.png
     text: 直近のタイトルは、1994年から95年のFAカップです。
+    no_telop: true
   - image: assets/stats/pl_everton_data.png
     text: 1927年から28年には、ディキシー・ディーンが1シーズンで**60得点**。いまもイングランドの記録です。
-  - image: assets/stats/pl_everton_data.png
+    no_telop: true
+  - image: assets/stats/pl_everton_data8.png
     text: 愛称は「トフィーズ」。村にあったキャンディ屋から来ています。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Everton_F.C.
   bg: assets/backgrounds/stadium_エヴァートン.png
@@ -91,60 +98,64 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - - ネヴィル・サウスオール
+    - &id001
+      - ネヴィル・サウスオール
       - 1981-1998
       - クラブ最多578試合のGK
-    - - シェイマス・コールマン
-      - 2009-2026
-      - 17年在籍の主将
-    - - ティム・ケイヒル
-      - 2004-2012
-      - 中盤から点を取り続けた
   say:
   - ネヴィル・サウスオールは、クラブ記録のリーグ**578試合**に出たキーパー。1995年のFAカップ優勝も守りました。
-  - シェイマス・コールマンは17年在籍した主将。グディソン・パーク最後の世代の象徴です。
-  - ティム・ケイヒルは、中盤から点を取り続けた選手。2006年のワールドカップで、日本から2点を奪った選手でもあります。
-  sources:
+  sources: &id002
   - https://en.wikipedia.org/wiki/Neville_Southall
   - https://en.wikipedia.org/wiki/Seamus_Coleman
   - https://en.wikipedia.org/wiki/Tim_Cahill
   bg: assets/backgrounds/stadium_エヴァートン.png
   official: false
-- id: rival
-  heading: 宿敵
+- id: legends2
+  heading: このクラブを語る3人（2人目）
   tier: 背景
-  telop: 空いた家を使うために、リヴァプールが作られた
-  narrator: 解説
+  telop: 1990年以降の名選手
+  narrator: キャスター
   card:
     type: table
-    title: マージーサイド・ダービー
+    title: 1990年以降の名選手
     columns:
-    - ''
-    - ''
+    - 名前
+    - 在籍
+    - 残したもの
     rows:
-    - - 相手
-      - リヴァプール
-    - - 1892年
-      - 理事たちがアンフィールドを去る
-    - - その跡地に
-      - リヴァプールFCが作られた
-    - - 初の公式戦
-      - 1894年10月13日（エヴァートンが3-0）
+    - *id001
+    - &id003
+      - シェイマス・コールマン
+      - 2009-2026
+      - 17年在籍の主将
   say:
-  - 宿敵は**リヴァプール**。呼び名は**マージーサイド・ダービー**です。
-  - そもそも、この2つは同じ場所から分かれたクラブです。
-  - エヴァートンは1884年から、**アンフィールド**を本拠にしていました。
-  - ところが1892年、会長で地主のジョン・ホールディングと、ほかの理事たちが対立します。
-  - 理事たちはアンフィールドを去り、スタンリー・パークの反対側へ移りました。
-  - 残されたホールディングは、**空いたアンフィールドを使うためにリヴァプールFCを作ります。**
-  - つまり宿敵は、このクラブが空けた場所に生まれたクラブです。
-  - 公式戦で初めて当たったのは**1894年10月13日**。エヴァートンが3対0で勝ちました。
-  - プレミアリーグが始まってからは、**退場者がいちばん多いカード**でもあります。
-  - そのリヴァプールは、**今季もプレミアリーグにいます。**
-  official: false
-  sources:
-  - https://en.wikipedia.org/wiki/Merseyside_derby
+  - シェイマス・コールマンは17年在籍した主将。グディソン・パーク最後の世代の象徴です。
+  sources: *id002
   bg: assets/backgrounds/stadium_エヴァートン.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - *id003
+    - - ティム・ケイヒル
+      - 2004-2012
+      - 中盤から点を取り続けた
+  say:
+  - ティム・ケイヒルは、中盤から点を取り続けた選手。2006年のワールドカップで、日本から2点を奪った選手でもあります。
+  sources: *id002
+  bg: assets/backgrounds/stadium_エヴァートン.png
+  official: false
 - id: squad
   heading: 今季の登録選手
   tier: 報道
@@ -154,12 +165,16 @@ sections:
   - 今季の登録選手は21人です。
   - image: assets/stats/pl_everton_gk.png
     text: ゴールキーパーは3人。
+    no_telop: true
   - image: assets/stats/pl_everton_df.png
     text: ディフェンダーは6人。
+    no_telop: true
   - image: assets/stats/pl_everton_mf.png
     text: ミッドフィールダーは8人。
+    no_telop: true
   - image: assets/stats/pl_everton_fw.png
     text: フォワードは4人。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Everton_F.C.
   bg: assets/backgrounds/stadium_エヴァートン.png

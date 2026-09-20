@@ -17,7 +17,7 @@ theme:
   topic: クリスタル・パレス
   title: 冨安健洋がいるクリスタル・パレスってどんなクラブ？ ⑧プレミア20クラブ紹介
   question: どんなクラブなのか
-  hook: 宿敵はブライトン。日本人は、鎌田大地と冨安健洋。
+  hook: 最初の大きなタイトルまで、120年かかりました。
 thumbnail:
   line1: 120年待った初タイトル
   line2: クリスタル・パレス
@@ -47,18 +47,24 @@ sections:
   say:
   - short_only: true
     text: 冨安健洋の所属クラブを、基本のデータで見ていきます。
-  - image: assets/stats/pl_palace_data.png
+  - image: assets/stats/pl_palace_data0.png
     text: 創立は**1905年**。本拠地は南ロンドンのセルハースト・パーク、2万5194人が入ります。
-  - image: assets/stats/pl_palace_data.png
+    no_telop: true
+  - image: assets/stats/pl_palace_data3.png
     text: オーナーは、アメリカンフットボール、ニューヨーク・ジェッツの会長ウッディ・ジョンソン。2025年にクラブを買いました。
+    no_telop: true
   - image: assets/stats/pl_palace_data.png
     text: 1部リーグの優勝はありませんが、FAカップを1回、そしてヨーロッパのタイトルを1回獲っています。
+    no_telop: true
   - image: assets/stats/pl_palace_data.png
     text: そのヨーロッパのタイトルが、昨季のカンファレンスリーグ優勝です。
-  - image: assets/stats/pl_palace_data.png
+    no_telop: true
+  - image: assets/stats/pl_palace_data7.png
     text: 当時の1部での最高位は、1990年から91年の**3位**です。
-  - image: assets/stats/pl_palace_data.png
+    no_telop: true
+  - image: assets/stats/pl_palace_data8.png
     text: 愛称は「イーグルス」。鷲です。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
   bg: assets/backgrounds/stadium_クリスタルパレス.png
@@ -105,62 +111,64 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - - ウィルフリード・ザハ
+    - &id001
+      - ウィルフリード・ザハ
       - 2010-2023
       - クラブのプレミア最多得点
-    - - フリアン・スペローニ
-      - 2004-2019
-      - 年間最優秀選手4回のGK
-    - - アンドリュー・ジョンソン
-      - 2002-2006
-      - プレミアで21得点
   say:
   - ウィルフリード・ザハは、クラブのプレミアリーグ最多得点者。10年以上、チームの切り札でした。
-  - フリアン・スペローニは15年在籍し、クラブの年間最優秀選手に**4回**選ばれたキーパーです。
-  - アンドリュー・ジョンソンは、2004年から05年にプレミアで**21得点**。イングランド人で最多でした。
-  sources:
+  sources: &id002
   - https://en.wikipedia.org/wiki/Wilfried_Zaha
   - https://en.wikipedia.org/wiki/Julian_Speroni
   - https://en.wikipedia.org/wiki/Andrew_Johnson_(footballer,_born_1981)
   bg: assets/backgrounds/stadium_クリスタルパレス.png
   official: false
-- id: rival
-  heading: 宿敵
+- id: legends2
+  heading: このクラブを語る3人（2人目）
   tier: 背景
-  telop: 64キロ離れたブライトンとのM23ダービー
-  narrator: 解説
+  telop: 1990年以降の名選手
+  narrator: キャスター
   card:
     type: table
-    title: M23ダービー
+    title: 1990年以降の名選手
     columns:
-    - ''
-    - ''
+    - 名前
+    - 在籍
+    - 残したもの
     rows:
-    - - 相手
-      - ブライトン・アンド・ホーヴ・アルビオン
-    - - 呼び名
-      - M23ダービー（A23ダービー）
-    - - 火種
-      - 1976年、FAカップで3試合もつれた
-    - - 今季
-      - 相手もプレミアリーグにいる
+    - *id001
+    - &id003
+      - フリアン・スペローニ
+      - 2004-2019
+      - 年間最優秀選手4回のGK
   say:
-  - 宿敵は、64キロ離れた**ブライトン**です。
-  - イングランドのダービーとしては、かなり遠い相手になります。
-  - 呼び名は**M23ダービー**。2つの土地を結ぶ道路の名前から来ています。
-  - ただし、この呼び名をサポーターは嫌っています。
-  - 最初に当たったのは1920年ですが、本物になったのは1970年代の半ばでした。
-  - きっかけは2人の人間です。
-  - トッテナムで同僚だった、パレスのテリー・ヴェナブルズと、ブライトンのアラン・マラリー。
-  - 1976年のFAカップは3試合までもつれ、12月6日の再々試合をパレスが1対0で取りました。
-  - 試合のあと、マラリーはパレスのロッカールームに入り、床に**5ポンド**を投げつけます。
-  - 「お前のチームはこの金の値打ちもない」。ヴェナブルズに、そう言い放ちました。
-  - 翌1977年、パレスは勝ち点1差でブライトンを抑えて3部優勝。ここで決定的になります。
-  - そのブライトンは、**今季もプレミアリーグにいます。**
-  official: false
-  sources:
-  - https://en.wikipedia.org/wiki/M23_derby
+  - フリアン・スペローニは15年在籍し、クラブの年間最優秀選手に**4回**選ばれたキーパーです。
+  sources: *id002
   bg: assets/backgrounds/stadium_クリスタルパレス.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - *id003
+    - - アンドリュー・ジョンソン
+      - 2002-2006
+      - プレミアで21得点
+  say:
+  - アンドリュー・ジョンソンは、2004年から05年にプレミアで**21得点**。イングランド人で最多でした。
+  sources: *id002
+  bg: assets/backgrounds/stadium_クリスタルパレス.png
+  official: false
 - id: squad
   heading: 今季の登録選手
   tier: 報道
@@ -170,12 +178,16 @@ sections:
   - 今季の登録選手は28人です。
   - image: assets/stats/pl_palace_gk.png
     text: ゴールキーパーは3人。
+    no_telop: true
   - image: assets/stats/pl_palace_df.png
     text: ディフェンダーは10人。日本の冨安健洋もここにいます。
+    no_telop: true
   - image: assets/stats/pl_palace_mf.png
     text: ミッドフィールダーは6人。日本の鎌田大地もここにいます。
+    no_telop: true
   - image: assets/stats/pl_palace_fw.png
     text: フォワードは9人。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
   bg: assets/backgrounds/stadium_クリスタルパレス.png
