@@ -43,6 +43,7 @@ sections:
   - id: what
     heading: 何が起きたか
     tier: 報道
+    bg: assets/backgrounds/maeda_20260920.png
     telop: エヴァートンに0対1。開幕5試合で2勝3敗
     narrator: キャスター
     card:
@@ -53,12 +54,32 @@ sections:
         - ["エヴァートン", "1"]
         - ["イプスウィッチ", "0"]
         - ["得点", "11分 ティエルノ・バリー"]
-        - ["イプスウィッチ", "開幕5試合で2勝3敗"]
     say:
       - エヴァートンに0対1で敗れました。
       - "得点は11分。ティエルノ・バリーが、デューズベリー＝ホールのアシストから決めています。"
-      - これで開幕5試合で2勝3敗。前節はクリスタル・パレスに勝っていましたが、連勝はなりませんでした。
       - 前田大然は、後半の途中から入っています。
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?459194-459194-fl
+
+  # **カードを2枚に割った**（2026-09-20）。1枚のままだと22秒動かなかった
+  - id: table
+    heading: 開幕5試合の勝ち負け
+    tier: 報道
+    bg: assets/backgrounds/maeda_20260920.png
+    telop: 2勝3敗。前節はパレスに勝っていた
+    narrator: 解説
+    card:
+      type: table
+      title: イプスウィッチの開幕5試合
+      columns: ["", ""]
+      rows:
+        - ["勝ち", "2"]
+        - ["負け", "3"]
+        - ["前節", "クリスタル・パレスに勝利"]
+    say:
+      - これで開幕5試合で2勝3敗になりました。
+      - 前節はクリスタル・パレスに勝っていましたが、連勝はなりませんでした。
     official: false
     sources:
       - https://web.gekisaka.jp/news/world/detail/?459194-459194-fl
@@ -66,6 +87,7 @@ sections:
   - id: red
     heading: 10人になった試合
     tier: 報道
+    bg: assets/backgrounds/maeda_20260920.png
     telop: シミュレーションで2枚目の警告
     narrator: 解説
     say:
@@ -81,6 +103,7 @@ sections:
     heading: そこから入った前田大然
     main: true
     tier: 報道
+    bg: assets/backgrounds/maeda_20260920.png
     telop: 人数が足りないなかで、前から追い続けた
     narrator: キャスター
     say:
@@ -96,6 +119,7 @@ sections:
   - id: voices
     heading: 見ていた人が書いていたこと
     tier: 未確認
+    bg: assets/backgrounds/maeda_20260920.png
     telop: 「そろそろ結果が欲しい」
     narrator: キャスター
     say:

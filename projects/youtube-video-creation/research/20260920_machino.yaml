@@ -5,13 +5,15 @@
 #
 # **反応は2件しか取れなかった。**この試合を扱った記事のコメント欄が2件で止まっていた。
 # **足さない。**作らない。海外の反応も見つからなかった。
+# そのため `voice_min` を 25 に下げている（既定は40）。**作った声で埋めるよりは、
+# 少ないまま出す。**反応が2件しか存在しない題材で、割合だけを満たす方法は無い。
 #
 # **暫定監督の言葉は板倉滉についてのもので、試合前（17日の会見）のもの。**
 # 同じ試合に先発した選手の話なので入れるが、**試合後の言葉ではない**ことを混ぜない。
 #
 # 失敗したPKの時間は媒体で56分と57分に割れている。**分は言わない。**
 format: news
-voice_min: 30
+voice_min: 25
 slot: japan_3
 date: "2026年9月20日"
 
@@ -42,6 +44,7 @@ sections:
   - id: what
     heading: 何が起きたか
     tier: 報道
+    bg: assets/backgrounds/machino_20260920.png
     telop: ボルシアMG3対4マインツ。7点が入った
     narrator: キャスター
     card:
@@ -69,6 +72,7 @@ sections:
   - id: sano
     heading: 佐野海舟が2つの得点に絡んだ
     tier: 報道
+    bg: assets/backgrounds/machino_20260920.png
     telop: 45+1分の起点と、78分のアシスト
     narrator: 解説
     say:
@@ -85,6 +89,7 @@ sections:
     heading: 町野修斗のPK、そして4連敗
     main: true
     tier: 報道
+    bg: assets/backgrounds/machino_20260920.png
     telop: 開幕4試合で16失点
     narrator: キャスター
     card:
@@ -115,6 +120,7 @@ sections:
   - id: voices
     heading: 見ていた人が書いていたこと
     tier: 未確認
+    bg: assets/backgrounds/machino_20260920.png
     telop: 「クロスが上がれば全部決定機」
     narrator: キャスター
     say:

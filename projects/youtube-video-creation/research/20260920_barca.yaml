@@ -41,6 +41,7 @@ sections:
   - id: what
     heading: 何が起きたか
     tier: 報道
+    bg: assets/backgrounds/barca_20260920.png
     telop: セビージャに1対3。ラフィーニャが3発
     narrator: キャスター
     card:
@@ -66,6 +67,7 @@ sections:
     heading: 3点の中身
     main: true
     tier: 報道
+    bg: assets/backgrounds/barca_20260920.png
     telop: 右足、頭、そして左足のループ
     narrator: 解説
     say:
@@ -81,6 +83,7 @@ sections:
   - id: record
     heading: 83年前の記録に並んだ
     tier: 報道
+    bg: assets/backgrounds/barca_20260920.png
     telop: リーグ7試合で12得点。メッシの同時点は11
     narrator: キャスター
     card:
@@ -104,6 +107,7 @@ sections:
   - id: voices
     heading: 見ていた人が書いていたこと
     tier: 未確認
+    bg: assets/backgrounds/barca_20260920.png
     telop: 「難所攻略。こりゃ止まらんな」
     narrator: キャスター
     say:

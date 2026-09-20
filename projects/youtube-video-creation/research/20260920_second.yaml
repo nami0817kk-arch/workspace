@@ -43,6 +43,7 @@ sections:
     heading: 5人は誰か
     main: true
     tier: 報道
+    bg: assets/backgrounds/second_20260920.png
     telop: モラタ、ファン・デ・ベーク、ボーウェン、ヒメネス、バロテッリ
     narrator: キャスター
     card:
@@ -68,6 +69,7 @@ sections:
   - id: down
     heading: クラブごと落ちた2人
     tier: 報道
+    bg: assets/backgrounds/second_20260920.png
     telop: ボーウェンとヒメネスは、残ることを選んだ
     narrator: 解説
     say:
@@ -86,6 +88,7 @@ sections:
   - id: fall
     heading: 行き場がなくなった3人
     tier: 報道
+    bg: assets/backgrounds/second_20260920.png
     telop: モラタ、ファン・デ・ベーク、そしてバロテッリ
     narrator: キャスター
     say:

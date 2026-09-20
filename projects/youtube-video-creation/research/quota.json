@@ -115,11 +115,11 @@
   },
   "2026-09-19": {
     "videos.list": 2,
-    "channels.list": 5,
-    "playlistItems.list": 5,
-    "videos.insert": 4,
-    "thumbnails.set": 4,
-    "playlistItems.insert": 2,
+    "channels.list": 9,
+    "playlistItems.list": 9,
+    "videos.insert": 8,
+    "thumbnails.set": 8,
+    "playlistItems.insert": 4,
     "videos.update": 1
   }
 }

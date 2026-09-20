@@ -46,6 +46,7 @@ sections:
   - id: what
     heading: 何が起きたか
     tier: 報道
+    bg: assets/backgrounds/arsenal_20260920.png
     telop: ブライトンが3対0。王者に完勝
     narrator: キャスター
     card:
@@ -59,6 +60,27 @@ sections:
     say:
       - ブライトンがアーセナルに3対0で勝ちました。
       - 31分にグロス、前半の終わりぎわにコストゥラス、後半に入ってアンドレスが決めています。
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49978067/arsenal-aura-premier-league-champions-evaporates-brighton-thrash-3-0
+      - https://news.yahoo.co.jp/articles/ba1b94b5653b3fadce2b51f30b3a2f2e7a7a5757
+
+  # **カードを2枚に割った**（2026-09-20）。1枚のままだと21秒動かなかった
+  - id: champion
+    heading: 王者が受けた3点差
+    tier: 報道
+    bg: assets/backgrounds/arsenal_20260920.png
+    telop: 3点差の敗戦は2023年5月以来
+    narrator: 解説
+    card:
+      type: table
+      title: アーセナルの今季
+      columns: ["", ""]
+      rows:
+        - ["昨季", "22年ぶりのプレミア優勝"]
+        - ["今回", "3点差での敗戦"]
+        - ["前回の3点差", "2023年5月"]
+    say:
       - アーセナルは昨季、22年ぶりにプレミアリーグを制したチームです。
       - "王者がこれだけ大きな差で敗れたのは、**2023年5月**以来のことです。"
     official: false
@@ -70,6 +92,7 @@ sections:
     heading: アルテタが認めたこと
     main: true
     tier: 報道
+    bg: assets/backgrounds/arsenal_20260920.png
     telop: 「最初のスローインの時点で、明らかだった」
     narrator: キャスター
     say:
@@ -86,6 +109,7 @@ sections:
   - id: brighton
     heading: ブライトンの側から見ると
     tier: 報道
+    bg: assets/backgrounds/arsenal_20260920.png
     telop: 3シーズン続けて、前の王者を倒している
     narrator: 解説
     card:
@@ -109,6 +133,7 @@ sections:
   - id: voices
     heading: 見ていた人が書いていたこと
     tier: 未確認
+    bg: assets/backgrounds/arsenal_20260920.png
     telop: 「点差以上に一方的すぎた」
     narrator: キャスター
     say:

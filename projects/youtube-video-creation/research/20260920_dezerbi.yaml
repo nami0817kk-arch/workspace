@@ -43,6 +43,7 @@ sections:
   - id: what
     heading: 何が起きたか
     tier: 報道
+    bg: assets/backgrounds/dezerbi_20260920.png
     telop: トッテナムがホームで2対3。5試合勝ちなし
     narrator: キャスター
     card:
@@ -67,6 +68,7 @@ sections:
     heading: 監督が指した、2失点目
     main: true
     tier: 報道
+    bg: assets/backgrounds/dezerbi_20260920.png
     telop: 事前に警戒していた形から、そのまま失点
     narrator: 解説
     say:
@@ -82,6 +84,7 @@ sections:
   - id: words
     heading: 試合後に話したこと
     tier: 報道
+    bg: assets/backgrounds/dezerbi_20260920.png
     telop: 「非常に失望し、悲しく、苛立っている」
     narrator: キャスター
     say:
@@ -100,6 +103,7 @@ sections:
   - id: voices
     heading: 見ていた人が書いていたこと
     tier: 未確認
+    bg: assets/backgrounds/dezerbi_20260920.png
     telop: 「分かってて止められるのならだれも苦労しない」
     narrator: キャスター
     say:

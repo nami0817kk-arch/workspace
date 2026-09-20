@@ -643,12 +643,16 @@ def _voices_body(reactions):
     return nl.join(body)
 
 
-def test_印を付けた反応だけを締めに使う():
+def test_印を付けた反応を先に締めに使う():
     """**どの反応で締めるかは、書いた人が選べる**（2026-09-15 指示）。
 
     上から順に取っていたので、松木の回は1件目が
     「松木玖生が今季公式戦初ゴール…平河悠との日本人対決を制す」で、
     **タイトルとほぼ同じ**だった。
+
+    **2026-09-20 に、印のあとは残りで埋める形にした**
+    （「ショートの内容が薄い、ちゃんと時間使って」）。
+    見るのは**印の付いたものが先に来るか**で、残りが入ること自体は正しい。
     """
     from src.script_model import parse_script
     from src.shorts import trim
@@ -659,7 +663,8 @@ def test_印を付けた反応だけを締めに使う():
     ]))
     got = [line.text for line in trim(script, "本編").scenes[-1].lines]
     assert "これを締めに使ってほしい。" in got, got
-    assert "見出しの言い直しみたいな1件目。" not in got, got
+    if "見出しの言い直しみたいな1件目。" in got:
+        assert got.index("これを締めに使ってほしい。") < got.index("見出しの言い直しみたいな1件目。"), got
 
 
 def test_印が無ければ今までどおり上から取る():
@@ -978,3 +983,72 @@ def test_尺を詰めても見出しと発言は対で残る():
             before = kept[i - 1] if i else None
             assert before is not None and _is_narrator(before), (
                 f"{limit}秒: 「{line.text}」の見出しが消えている")
+
+
+def test_印のあとは残りの反応で上限まで埋める(tmp_path):
+    """**ショートが短すぎた**（2026-09-20 指摘「ちゃんと時間使って」）。
+
+    印（`short_voice`）の付いた反応だけで締めていたので、上限58秒に対して
+    38〜52秒しか使っていなかった。印のあとは残りの反応で埋める。
+    ただし**タイトルの言い直しになる反応は飛ばす**（2026-09-15 の指摘）。
+    """
+    from src.script_model import parse_script
+    from src.shorts import trim
+
+    lines = "\n".join(
+        f"ネット民: これは{i}件目の書き込みで、そこそこの長さがあります。" for i in range(10))
+    text = f"""# 鈴木彩艶が止めて、蹴って。ヴィラに初勝利をもたらしたのは
+title: 鈴木彩艶が止めて、蹴って。ヴィラに初勝利をもたらしたのは
+
+## 何が起きたか
+
+キャスター: ヴィラがトッテナムに3対2で勝ちました。
+
+## 前半に止めた3本
+@main: true
+
+キャスター: 前半のうちに3本を止めました。
+
+## 見ていた人が書いていたこと
+
+ネット民: 鈴木彩艶が止めて、蹴って。ヴィラに初勝利をもたらしたのは見事でした。
+ネット民: あの時間帯に抑えたのが勝因だと思う。
+  short_voice: true
+{lines}
+"""
+    script = parse_script(text)
+    short = trim(script)
+    said = [l.text for l in short.scenes[-1].lines]
+    assert "あの時間帯に抑えたのが勝因だと思う。" in said, "印の付いた反応が入っていない"
+    assert sum(1 for t in said if "件目の書き込み" in t) >= 2, \
+        f"残りの反応で埋めていない: {said}"
+    assert not any("初勝利をもたらしたのは" in t for t in said), \
+        "タイトルの言い直しを締めに入れている"
+
+
+def test_反応が無い回は次の節から足して尺を使う(tmp_path):
+    """**コメントが0件の回が38秒で終わっていた**（2026-09-20）。
+
+    締めに足せるのは反応の節だけなので、紹介ものは尺が余ったまま終わる。
+    そういう回は、切り出した節の**次の節の語り**で埋める。
+    """
+    from src.script_model import parse_script
+    from src.shorts import trim
+
+    tail = "\n".join(f"キャスター: 次の節の{i}行目です。ここもそれなりの長さがあります。" for i in range(8))
+    text = f"""# 2部でプレーする5人
+title: モラタもバロテッリも、いま2部にいる。その理由とは
+
+## 5人は誰か
+@main: true
+
+キャスター: いま2部でプレーしている5人を見ていきます。
+
+## クラブごと落ちた2人
+
+{tail}
+"""
+    script = parse_script(text)
+    short = trim(script)
+    said = [l.text for l in short.scenes[-1].lines]
+    assert any("次の節の" in t for t in said), f"続きの節から足していない: {said}"

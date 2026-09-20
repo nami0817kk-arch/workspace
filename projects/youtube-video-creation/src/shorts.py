@@ -121,6 +121,7 @@ def trim(script: Script, section: str = "", max_seconds: float = MAX_SECONDS) ->
     # 空ける秒数のほうも割り戻しておく（掛け直されて目減りする）
     _fit(short, max_seconds - _reserved(script, short, max_seconds) / ESTIMATE_SLACK)
     _add_voices_tail(short, script, max_seconds)
+    _add_more_body(short, script, max_seconds)
     _add_face(short)
     _add_subscribe(short)
     if not short.scenes[-1].lines:
@@ -314,7 +315,7 @@ def _has_outro(lines) -> bool:
 
 
 # ショートの最後に足すネットの声の本数（2026-09-13 ユーザー「ショートにもいくつか」）
-VOICES_TAIL_MAX = 6
+VOICES_TAIL_MAX = 12
 
 
 def _is_voices_scene(scene: Scene) -> bool:
@@ -367,6 +368,19 @@ def _voices_source(short: Script, script: Script) -> Scene | None:
     return None
 
 
+def _echoes_title(text: str, title: str) -> bool:
+    """タイトルの言い直しか。**8字以上そのまま重なったら**そう見なす。
+
+    `research.SHORT_REPEAT_MIN` と同じ基準。ショートでは、締めの反応が
+    タイトルの2秒後に読まれるので、同じ言い回しだと言い直しに聞こえる。
+    """
+    body = "".join(ch for ch in str(text or "") if ch not in "、。「」『』！？ 　")
+    head = "".join(ch for ch in str(title or "") if ch not in "、。「」『』！？ 　")
+    if len(body) < 8 or len(head) < 8:
+        return False
+    return any(body[i:i + 8] in head for i in range(len(body) - 7))
+
+
 def _add_voices_tail(short: Script, script: Script, max_seconds: float) -> None:
     """**ショートの最後にもネットの声を少しだけ足す**（2026-09-13 ユーザー指示）。
 
@@ -392,16 +406,25 @@ def _add_voices_tail(short: Script, script: Script, max_seconds: float) -> None:
     # タイトルとほぼ同じだった）。取材メモに `short_voice: true` と書く。
     # 印が1つも無ければ、今までどおり上から順に取る
     picked = [l for l in source.lines if getattr(l, "short_voice", False)]
-    # **印があるときは、印の付いたものだけ**（2026-09-15 指示）。
-    # 2026-09-16 に「ショートが短い」からと残りで埋める形にしかけたが、
-    # それをやると**見出しの言い直しの反応が締めに戻ってくる**（9/15 の指摘そのもの）。
-    # 尺が余るなら、埋めるのではなく**取材メモの印を増やす**（書いた人が選ぶ）
-    added = 0
     # 印が無いときの受け皿からも、頭の状況説明（`only: short`）は外す。
     # あれは語りで、ショートの本体側に既に入っている
     rest = [l for l in source.lines
-            if str(getattr(l, "only", "") or "").strip() != "short"]
-    for line in (picked or rest):
+            if str(getattr(l, "only", "") or "").strip() != "short"
+            and not getattr(l, "short_voice", False)]
+    # **印の付いたものを先に置き、そのあと残りで上限まで埋める**
+    # （2026-09-20 ユーザー指摘「ショートの内容が薄い、ちゃんと時間使って」）。
+    # 2026-09-16 に一度この形にしかけて見送ったのは、**残りの1件目が
+    # 見出しの言い直しになる回がある**ため（9/15 の指摘）。そこで、
+    # **タイトルと重なる反応だけを飛ばして**埋める。印の順番は変えないので、
+    # 締めは書いた人が選んだ一言のまま
+    # タイトルは `title` 属性が正。meta に無い書き方の台本もある
+    title = str(getattr(script, "title", "") or (script.meta or {}).get("title", "") or "")
+    if not title and script.scenes and script.scenes[0].lines:
+        # 1行目はタイトルを読む決まりなので、そこからでも拾える
+        title = str(script.scenes[0].lines[0].text or "")
+    rest = [l for l in rest if not _echoes_title(l.text, title)]
+    added = 0
+    for line in (picked + rest):
         if added >= VOICES_TAIL_MAX:
             break
         cost = line.duration or line.estimated_duration()
@@ -409,6 +432,42 @@ def _add_voices_tail(short: Script, script: Script, max_seconds: float) -> None:
             break
         short.scenes[-1].lines.append(copy.deepcopy(line))
         added += 1
+
+
+def _add_more_body(short: Script, script: Script, max_seconds: float) -> None:
+    """**反応が無い回は、続きの節から足して尺を使い切る**（2026-09-20）。
+
+    ユーザー指摘「ショートの内容が薄い、ちゃんと時間使って」。
+    締めに足せるのは反応の節だけなので、**コメントが0件の回**
+    （紹介もの）は38秒で終わっていた。そういう回は、
+    切り出した節の**次の節の語り**を、尺が余っているぶんだけ続ける。
+
+    足すのは語りだけ。**反応の節からは取らない**（それは `_add_voices_tail` の役目）。
+    """
+    target = max_seconds * ESTIMATE_SLACK
+    if _estimate(short) > target - 4:
+        return
+    body_title = short.scenes[-1].title
+    seen = {str(l.text) for l in short.scenes[-1].lines}
+    after = []
+    passed = False
+    for scene in script.scenes[1:]:
+        if scene.title == body_title:
+            passed = True
+            continue
+        if passed and not _is_voices_scene(scene):
+            after.append(scene)
+    for scene in after:
+        for line in scene.lines:
+            if str(getattr(line, "only", "") or "").strip() == "short":
+                continue
+            if str(line.text) in seen:
+                continue
+            cost = line.duration or line.estimated_duration()
+            if _estimate(short) + cost > target:
+                return
+            short.scenes[-1].lines.append(copy.deepcopy(line))
+            seen.add(str(line.text))
 
 
 def _add_subscribe(short: Script) -> None:

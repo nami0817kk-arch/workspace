@@ -3,8 +3,8 @@
 # 材料はサッカーキングの試合記事と、theWORLD（Yahoo!ニュース配信）の現地評。
 # **下請けの取材が間に合わなかったので、この回はこちらで直接取った。**
 #
-# **反応が1件しか無い。**この試合を扱ったYahoo!ニュースのコメント欄は1件だった
-# （途中出場で無得点のため、書き込みが少ない）。**足さない。**
+# **反応は2つの記事のコメント欄から8件。**サッカーキングの記事が1件、
+# DAZN Newsの記事が5件（表示された全件）。**文脈の分からない1件は落とした。**
 # 代わりに、**フランスの媒体がEL初ゴールに付けた評価**を他人の声として入れる。
 #
 # **EL初ゴールの日付は、媒体で食い違う**（サッカーキングは16日、theWORLDの
@@ -40,6 +40,7 @@ sections:
   - id: what
     heading: 何が起きたか
     tier: 報道
+    bg: assets/backgrounds/nakamura_20260920.png
     telop: リヨンがレンヌに4対0。中村は79分から
     narrator: キャスター
     card:
@@ -64,6 +65,7 @@ sections:
     heading: 加入してからの3試合
     main: true
     tier: 報道
+    bg: assets/backgrounds/nakamura_20260920.png
     telop: デビュー、初先発で初ゴール、そして連続出場
     narrator: 解説
     card:
@@ -88,6 +90,7 @@ sections:
   - id: france
     heading: 現地はどう見たか
     tier: 報道
+    bg: assets/backgrounds/nakamura_20260920.png
     telop: 「リヨンに新たな次元をもたらす」
     narrator: キャスター
     say:
@@ -103,11 +106,20 @@ sections:
   - id: voices
     heading: 見ていた人が書いていたこと
     tier: 未確認
+    bg: assets/backgrounds/nakamura_20260920.png
     telop: 「短い時間でも特徴活かしたプレー」
     narrator: キャスター
     say:
       - {short_only: true, text: この試合を見ていた人の声です。}
       - {voice: ネット民, text: いいね、短い時間でも特徴活かしたプレーしてるし、他の選択肢あるところでもボールもらえてるし, short_voice: true}
+      - {voice: ネット民, text: リヨン自体が相当強いので、ターンオーバーさせながら確実に勝ててるのは監督の手腕の高さのあらわれ}
+      - {voice: ネット民, text: ランスでは中村依存が凄かったから、それ考えたらリヨンは天と地の差くらいチームとして機能してる}
+      - {voice: ネット民, text: リヨン勢いあるね。中村敬斗の今回の移籍は運ある予感。あとは活躍するのみ}
+      - {voice: ネット民, text: 上田や南野もいるし楽しみ。日本人選手がいるチームが優勝もある}
+      - {voice: ネット民, text: 中2日でこの試合なんだから、途中出場になるのは当たり前だよ}
+      - {voice: ネット民, text: 10分ちょっとの出場でこれなら、充分に良いよ, short_voice: true}
+      - {voice: ネット民, text: ベンチスタート。なんだか嫌な予感がする}
     official: false
     sources:
       - https://news.yahoo.co.jp/articles/08d13d8a43a32736c9c8629d18e07a3ef2197a71/comments
+      - https://news.yahoo.co.jp/articles/adf5fbd9aa81ab21892b2dd38e97576f68e0b146/comments

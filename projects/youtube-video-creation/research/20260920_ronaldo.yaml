@@ -41,6 +41,7 @@ sections:
   - id: what
     heading: 何が起きたか
     tier: 報道
+    bg: assets/backgrounds/ronaldo_20260920.png
     telop: ポルトガル代表に、41歳のロナウドが選出
     narrator: キャスター
     card:
@@ -65,6 +66,7 @@ sections:
     heading: 新監督が話したこと
     main: true
     tier: 報道
+    bg: assets/backgrounds/ronaldo_20260920.png
     telop: 「クリスは他の選手と同じだ」
     narrator: キャスター
     say:
@@ -81,6 +83,7 @@ sections:
   - id: voices
     heading: 見ていた人が書いていたこと
     tier: 未確認
+    bg: assets/backgrounds/ronaldo_20260920.png
     telop: 「メッシが引退するなか、あくまで拘る」
     narrator: キャスター
     say:

@@ -47,6 +47,7 @@ sections:
   - id: what
     heading: 何が起きたか
     tier: 報道
+    bg: assets/backgrounds/zion_20260920.png
     telop: ヴィラが3対2で、今季リーグ戦初勝利
     narrator: キャスター
     card:
@@ -71,6 +72,7 @@ sections:
     heading: 前半に止めた3本
     main: true
     tier: 報道
+    bg: assets/backgrounds/zion_20260920.png
     telop: サヴィオ、グレイ、そしてまたサヴィオ
     narrator: キャスター
     say:
@@ -87,6 +89,7 @@ sections:
   - id: kick
     heading: 2点目は、ゴールキックから
     tier: 報道
+    bg: assets/backgrounds/zion_20260920.png
     telop: 鈴木のロングフィードが、67分の起点
     narrator: 解説
     card:
@@ -110,6 +113,7 @@ sections:
   - id: rating
     heading: 現地の採点
     tier: 報道
+    bg: assets/backgrounds/zion_20260920.png
     telop: 3媒体がそろって最高評価
     narrator: キャスター
     card:
@@ -131,6 +135,7 @@ sections:
   - id: voices
     heading: 見ていた人が書いていたこと
     tier: 未確認
+    bg: assets/backgrounds/zion_20260920.png
     telop: 「あの時間帯に抑えたのが勝因」
     narrator: キャスター
     say:

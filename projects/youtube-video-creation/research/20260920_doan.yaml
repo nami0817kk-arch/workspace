@@ -44,6 +44,7 @@ sections:
   - id: what
     heading: 何が起きたか
     tier: 報道
+    bg: assets/backgrounds/doan_20260920.png
     telop: フランクフルト2対2フライブルク
     narrator: キャスター
     card:
@@ -68,6 +69,7 @@ sections:
   - id: doan
     heading: 堂安律の今季初アシスト
     tier: 報道
+    bg: assets/backgrounds/doan_20260920.png
     telop: 1人かわし、GKを引きつけて横へ
     narrator: 解説
     say:
@@ -83,6 +85,7 @@ sections:
     heading: 鈴木唯人のダイレクトボレー
     main: true
     tier: 報道
+    bg: assets/backgrounds/doan_20260920.png
     telop: 走りながら、右足で合わせた
     narrator: キャスター
     say:
@@ -100,6 +103,7 @@ sections:
   - id: voices
     heading: 見ていた人が書いていたこと
     tier: 未確認
+    bg: assets/backgrounds/doan_20260920.png
     telop: 「簡単に撃ってるけど、かなり難しい」
     narrator: キャスター
     say:
@@ -114,6 +118,11 @@ sections:
       - {voice: ネット民, text: 覚醒してるねぇ}
       - {voice: ネット民, text: ブンデスでは唯人に海舟、そして田中聡。中盤ヤバすぎ}
       - {voice: ネット民, text: 対照的に、アシストしたけど停滞気味の堂安}
+      - {voice: ネット民, text: 三笘が稼働できず久保が大きく調子を崩している今が最大のチャンスだ。がんばれ唯人}
+      - {voice: ネット民, text: 代表でもスタメンで見たいね。シャドーなら右左関係なくハマるだろう}
+      - {voice: ネット民, text: のってますねー。かなり調子がいい。代表でもこの勢いでいけばスタメン確保もありえるかも}
+      - {voice: ネット民, text: ワールドカップのブラジル戦に出してほしかったなぁ}
+      - {voice: ネット民, text: 次のW杯が楽しみだ}
       - {voice: ネット民, text: これからW鈴木の時代だね, short_voice: true}
     official: false
     sources:
