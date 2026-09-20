@@ -33,10 +33,9 @@ theme:
   question: 何が足りなかったのか
 
 thumbnail:
-  crest_main:
-    - アーセナル
-    - ブライトン
-  face_link: "0-3"
+  # **アルテタ本人**（2026-09-20 ユーザー指示「アーセナルはアルテタに変更」）。
+  # ブライトン戦のタッチラインで頭を抱えている場面
+  photo: assets/images/20260920_arteta_press/01.jpg
   line1: 王者が、なすすべなし
   line2: アルテタ「●●から程遠かった」
   tags:
