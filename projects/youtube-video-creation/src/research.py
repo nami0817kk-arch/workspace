@@ -130,6 +130,10 @@ class Section:
     line_images: list = field(default_factory=list)
     # 行ごとの "short"（ショート専用）。空なら本編にも出す
     line_onlys: list = field(default_factory=list)
+    # **画面に出している板と字幕が同じなら、字幕は出さない**（2026-09-20 指示
+    # 「画面と字幕のが同じ場合は、字幕不要」）。基礎DATAの板の上に読み上げ文を
+    # 重ねると、板のタイルが読めなくなっていた
+    line_no_telops: list = field(default_factory=list)
     # **ショートの締めに回す反応**（2026-09-15 指示）。印の付いた反応だけを
     # ショートの最後に足す。付いていなければ今までどおり上から順に取る
     line_short_voices: list = field(default_factory=list)
@@ -314,6 +318,7 @@ def build_notes(raw: dict) -> Notes:
         images: list[str] = []
         onlys: list[str] = []
         picks: list[bool] = []
+        mutes: list[bool] = []
         for item in raw_lines:
             if isinstance(item, dict):
                 lines.append(str(item.get("text", "")).strip())
@@ -328,6 +333,7 @@ def build_notes(raw: dict) -> Notes:
                 # **ショートの締めに回す反応**（2026-09-15 指示）。
                 # 上から順に取ると、1件目が見出しの言い直しになる回がある
                 picks.append(bool(item.get("short_voice")))
+                mutes.append(bool(item.get("no_telop")))
             else:
                 lines.append(str(item).strip())
                 voices.append("")
@@ -336,6 +342,7 @@ def build_notes(raw: dict) -> Notes:
                 images.append("")
                 onlys.append("")
                 picks.append(False)
+                mutes.append(False)
         keep = [i for i, s in enumerate(lines) if s]
         sections.append(
             Section(
@@ -351,6 +358,7 @@ def build_notes(raw: dict) -> Notes:
                 line_images=[images[i] for i in keep],
                 line_onlys=[onlys[i] for i in keep],
                 line_short_voices=[picks[i] for i in keep],
+                line_no_telops=[mutes[i] for i in keep],
                 sources=[str(u).strip() for u in (entry.get("sources") or []) if str(u).strip()],
                 official=bool(entry.get("official", False)),
                 card=entry.get("card"),
@@ -1596,6 +1604,9 @@ def to_script(notes: Notes, plan: Plan) -> str:
                          if number < len(section.line_images) else "")
             own_only = (section.line_onlys[number]
                         if number < len(section.line_onlys) else "")
+            # **板と同じことを字幕で重ねない**（2026-09-20 指示）
+            own_mute = (section.line_no_telops[number]
+                        if number < len(section.line_no_telops) else False)
             if own_only:
                 lines.append(f"  only: {own_only}")
             # 本編に残る最初の行（`only: short` を飛ばす）
@@ -1631,7 +1642,10 @@ def to_script(notes: Notes, plan: Plan) -> str:
                     head = f"{voice}「{_telop(sentence, room)}」"
                 elif not head:
                     head = _telop(sentence)
-                lines.append(f"  telop: {head}")
+                if own_mute:
+                    lines.append("  no_telop: true")
+                else:
+                    lines.append(f"  telop: {head}")
                 lines.append(f"  source: {section.tier}")
                 if own_card:
                     lines.append(f"  card: {section.id}_{number}_card")
@@ -1667,7 +1681,9 @@ def to_script(notes: Notes, plan: Plan) -> str:
                     # 元の理由（字幕と二重になる）は、字幕が焼き込みではなく
                     # 別ファイルの CC なので、そもそも二重にならない
                     shown = _telop(sentence)
-                if shown:
+                if own_mute:
+                    lines.append("  no_telop: true")
+                elif shown:
                     lines.append(f"  telop: {shown}")
                 shown_for += 1
                 if own_image:

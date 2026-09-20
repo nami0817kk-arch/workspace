@@ -13,6 +13,7 @@ from pathlib import Path
 
 from .config import _resolve
 from .script_model import Script
+from .render import _is_board
 from .subtitles import chapters
 
 # YouTube の実務上の上限。超えると切られる
@@ -270,6 +271,14 @@ def _telop_coverage(script_json: Path) -> Finding:
     for scene in data.get("scenes", []):
         for line in scene.get("lines", []):
             said += len(line.get("text") or "")
+            # **板を出している行は、板そのものが画面の字**（2026-09-20 指示
+            # 「画面と字幕のが同じ場合は、字幕不要」）。基礎DATAの板や
+            # 登録選手一覧の上に読み上げ文を重ねると、タイルが読めなくなる。
+            # ここで数えないと、板の回だけ「声だけで流れている」と出てしまう
+            if line.get("no_telop") and _is_board(str(line.get("image") or "")):
+                shown += len(line.get("text") or "")
+                previous = None
+                continue
             telop = line.get("telop") or ""
             if not telop or telop == previous:
                 stale += 1

@@ -84,6 +84,9 @@ def _scene_lines(scene) -> list[dict]:
             "speaker": line.speaker,
             "text": line.text,
             "telop": headline,
+            # **板と同じ字幕を出さない行の印**（2026-09-20）。review はこれを見て
+            # 「画面に出る字」を数える。記録に残さないと、板の回だけ落ちる
+            "no_telop": line.no_telop,
             "source": source,
             "card": card,
             "emotion": line.emotion,

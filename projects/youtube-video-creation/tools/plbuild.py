@@ -144,14 +144,47 @@ def build(key: str, number: int, old_file: str) -> Path:
     # 基礎DATA
     img = f"assets/stats/pl_{key}_data.png"
     say = [{"short_only": True, "text": f"{jp_names[0]}の所属クラブを、基本のデータで見ていきます。" if japanese else "このクラブの、基本のデータです。"}]
+    # **板を出している行に字幕は重ねない**（2026-09-20 指示
+    # 「画面と字幕のが同じ場合は、字幕不要」）。基礎DATAの板の上に読み上げ文を
+    # 重ねたら、9枚のタイルがほとんど読めなくなっていた
+    # **1行ごとに、いま話しているタイルだけを明るく残した板に差し替える**（2026-09-20）。
+    # 1枚のまま通すと48秒、画面がまったく変わらなかった（上限20秒）。
+    # どのタイルの話かは `data_focus` で書ける。書いていなければ、タイルの
+    # 見出しか大きな字が文に出てくるかで当てる。**当たらない行は板そのまま**
+    tiles = facts["tiles"]
+
+    def focus_of(text: str, fallback: int | None) -> int | None:
+        if fallback is not None:
+            return fallback
+        for i, (label, big, _small) in enumerate(tiles):
+            if big and big in text:
+                return i
+            if label and label in text:
+                return i
+        return None
+
+    def board_for(i: int | None) -> str:
+        if i is None:
+            return img
+        out = f"assets/stats/pl_{key}_data{i}.png"
+        subprocess.run([sys.executable, str(ROOT / "tools" / "clubdata.py"), str(ROOT / out),
+                        "--spec", str(DATA / f"{key}.json"), "--focus", str(i)],
+                       check=True, capture_output=True)
+        return out
+
+    picks = list(ov.get("data_focus") or [])
     if ov.get("data"):
-        say += [{"image": img, "text": t} for t in ov["data"]]
+        for n, text in enumerate(ov["data"]):
+            i = focus_of(text, picks[n] if n < len(picks) else None)
+            if i is None:
+                print(f"  ！ {key} の基礎DATA {n + 1}行目は、どのタイルか当てられませんでした", file=sys.stderr)
+            say.append({"image": board_for(i), "text": text, "no_telop": True})
     else:
-        for label, big, small in facts["tiles"]:
+        for n, (label, big, small) in enumerate(tiles):
             if label.startswith("有名なファン"):
                 continue
             text = f"{label}は、**{big}**。" + (f"{small.rstrip('。')}。" if small else "")
-            say.append({"image": img, "text": text})
+            say.append({"image": board_for(n), "text": text, "no_telop": True})
     sections.append(sec(id="data", heading=f"{club} 基礎DATA", main=True, tier="背景",
                         telop=facts["tiles"][0][1] + "創立", narrator="解説", say=say,
                         sources=[wiki]))
@@ -204,14 +237,14 @@ def build(key: str, number: int, old_file: str) -> Path:
     seen = set()
     for out, label, n in squad_boards:
         if label in seen:
-            ssay.append({"image": out, "text": f"{label}の続きです。"})
+            ssay.append({"image": out, "text": f"{label}の続きです。", "no_telop": True})
             continue
         seen.add(label)
         names = [kana.get(p["name"], p["name"]) for p in raw["squad"] if dict(POS).get(p["pos"]) == label and age(p["dob"]) is not None]
         jp = [n2 for n2 in names if n2 in jp_names]
         tail = f"日本の{jp[0]}もここにいます。" if jp else ""
         extra = (ov.get("squad") or {}).get(label, "")
-        ssay.append({"image": out, "text": f"{label}は{n}人。{tail}{extra}"})
+        ssay.append({"image": out, "text": f"{label}は{n}人。{tail}{extra}", "no_telop": True})
     sections.append(sec(id="squad", heading="今季の登録選手", tier="報道", telop="今季の登録選手",
                         narrator="キャスター", say=ssay, sources=[wiki]))
     # 今季のここまで（プレミアの節だけ）

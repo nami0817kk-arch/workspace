@@ -33,20 +33,27 @@ sections:
   say:
   - short_only: true
     text: このクラブの、基本のデータです。
-  - image: assets/stats/pl_bournemouth_data.png
+  - image: assets/stats/pl_bournemouth_data0.png
     text: 創立は**1899年**。前身はボスコム・セント・ジョンズというクラブです。
-  - image: assets/stats/pl_bournemouth_data.png
+    no_telop: true
+  - image: assets/stats/pl_bournemouth_data1.png
     text: 本拠地はディーン・コート。収容は1万2357人と、プレミアでもかなり小さなスタジアムです。
-  - image: assets/stats/pl_bournemouth_data.png
+    no_telop: true
+  - image: assets/stats/pl_bournemouth_data2.png
     text: ホームタウンは、イングランド南部ドーセット州の海沿いの町ボーンマス。
-  - image: assets/stats/pl_bournemouth_data.png
+    no_telop: true
+  - image: assets/stats/pl_bournemouth_data3.png
     text: オーナーはアメリカのビル・フォーリー。2022年からクラブを持っています。
-  - image: assets/stats/pl_bournemouth_data.png
+    no_telop: true
+  - image: assets/stats/pl_bournemouth_data5.png
     text: 1部リーグの優勝もカップのタイトルも、まだありません。直近のタイトルは2014年から15年の2部優勝です。
-  - image: assets/stats/pl_bournemouth_data.png
+    no_telop: true
+  - image: assets/stats/pl_bournemouth_data7.png
     text: そのかわり、昨季はプレミアリーグで**6位**。クラブ史上最高の順位で、初めてヨーロッパへの切符をつかみました。
-  - image: assets/stats/pl_bournemouth_data.png
+    no_telop: true
+  - image: assets/stats/pl_bournemouth_data8.png
     text: 愛称は「ザ・チェリーズ」。さくらんぼ、という意味です。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
   bg: assets/backgrounds/stadium_ボーンマス.png
@@ -306,12 +313,16 @@ sections:
   - 今季の登録選手は28人です。
   - image: assets/stats/pl_bournemouth_gk.png
     text: ゴールキーパーは3人。
+    no_telop: true
   - image: assets/stats/pl_bournemouth_df.png
     text: ディフェンダーは10人。
+    no_telop: true
   - image: assets/stats/pl_bournemouth_mf.png
     text: ミッドフィールダーは8人。
+    no_telop: true
   - image: assets/stats/pl_bournemouth_fw.png
     text: フォワードは7人。
+    no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
   bg: assets/backgrounds/stadium_ボーンマス.png

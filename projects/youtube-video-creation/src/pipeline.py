@@ -188,13 +188,22 @@ def hold_photo(script: Script) -> int:
     書き出しの最後に、写真を前から後ろへ引き継ぐ。
 
     `scan_switch.py` で数えると、入れ替えは1本につき1回に収まる。
+
+    **板は引き継がない**（2026-09-20）。ここで言う「写真」は本当に写真のことで、
+    板（`assets/stats/` の一覧板・数字の図）を引き継ぐと**そのあとの節のカードが
+    全部消える。**プレミア20クラブ紹介のボーンマスで、基礎DATAの板が
+    20秒から165秒まで出っぱなしになり、歩んできた道・名選手・宿敵の
+    カードが1枚も画面に出ていなかった。板の上には何も重ねない決まり
+    （render.py の `board`）と噛み合って、**節が進んでも絵が変わらない**。
     """
+    from .render import _is_board
+
     filled = 0
     holding = ""
     for scene in script.scenes:
         for line in scene.lines:
             if line.image:
-                holding = line.image
+                holding = "" if _is_board(line.image) else line.image
             elif holding:
                 line.image = holding
                 filled += 1

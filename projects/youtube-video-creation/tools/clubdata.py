@@ -56,7 +56,14 @@ def _fit(draw: ImageDraw.ImageDraw, text: str, path: str, size: int, width: int)
     return ImageFont.truetype(path, size)
 
 
-def build(out: Path, spec: dict) -> Path:
+def build(out: Path, spec: dict, focus: int | None = None) -> Path:
+    """`focus` を渡すと、その番号（0始まり）のタイル以外を暗く落とす。
+
+    **板を1枚のまま48秒出すと、画面が止まる**（2026-09-20）。読み上げは
+    9枚のタイルを順に説明しているのに、絵は1枚も変わっていなかった。
+    いま話しているタイルだけを明るく残せば、**読み上げと画面が一致したまま
+    1行ごとに絵が変わる**（テロップを重ねずに済む）。
+    """
     font = str(load_config().video.font_path())
     base, accent = (_rgb(c) for c in spec["colors"])
     board = Image.new("RGB", SIZE, base)
@@ -95,6 +102,10 @@ def build(out: Path, spec: dict) -> Path:
         if small:
             draw.text((x + 14, y + h - 40), small, font=_fit(draw, small, font, 22, w - 28), fill=SUB)
 
+        if focus is not None and i != focus:
+            shade = Image.new("RGB", (w + 1, h + 1), tuple(round(c * 0.45) for c in base))
+            board.paste(Image.blend(board.crop((x, y, x + w + 1, y + h + 1)), shade, 0.72), (x, y))
+
     out.parent.mkdir(parents=True, exist_ok=True)
     board.save(out)
     return out
@@ -104,12 +115,13 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("out")
     ap.add_argument("--spec", required=True, help="板の中身（JSON）")
+    ap.add_argument("--focus", type=int, help="このタイルだけを明るく残す（0始まり）")
     args = ap.parse_args()
     spec = json.loads(Path(args.spec).read_text(encoding="utf-8"))
     if len(spec.get("tiles", [])) > 9:
         print("■ タイルは9枚まで（それ以上は字が読めない）", file=sys.stderr)
         return 1
-    print(f"基礎DATA板: {build(Path(args.out), spec)}")
+    print(f"基礎DATA板: {build(Path(args.out), spec, args.focus)}")
     return 0
 
 

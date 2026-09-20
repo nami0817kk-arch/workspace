@@ -213,27 +213,27 @@ cards:
   only: short
   telop: このクラブの、基本のデータです
 解説: 創立は**1899年**。前身はボスコム・セント・ジョンズというクラブです。
-  telop: 創立は**1899年**。前身はボスコム・セント・ジョンズというクラブです
+  no_telop: true
   source: 背景
-  image: assets/stats/pl_bournemouth_data.png
+  image: assets/stats/pl_bournemouth_data0.png
 解説: 本拠地はディーン・コート。収容は1万2357人と、プレミアでもかなり小さなスタジアムです。
-  telop: 本拠地はディーン・コート。収容は1万2357人と、プレミアでもかなり小さなスタジアムです
-  image: assets/stats/pl_bournemouth_data.png
+  no_telop: true
+  image: assets/stats/pl_bournemouth_data1.png
 解説: ホームタウンは、イングランド南部ドーセット州の海沿いの町ボーンマス。
-  telop: ホームタウンは、イングランド南部ドーセット州の海沿いの町ボーンマス
-  image: assets/stats/pl_bournemouth_data.png
+  no_telop: true
+  image: assets/stats/pl_bournemouth_data2.png
 解説: オーナーはアメリカのビル・フォーリー。2022年からクラブを持っています。
-  telop: オーナーはアメリカのビル・フォーリー。2022年からクラブを持っています
-  image: assets/stats/pl_bournemouth_data.png
+  no_telop: true
+  image: assets/stats/pl_bournemouth_data3.png
 解説: 1部リーグの優勝もカップのタイトルも、まだありません。直近のタイトルは2014年から15年の2部優勝です。
-  telop: 1部リーグの優勝もカップのタイトルも、まだありません。直近のタイトルは2014年から15年の2部優勝です
-  image: assets/stats/pl_bournemouth_data.png
+  no_telop: true
+  image: assets/stats/pl_bournemouth_data5.png
 解説: そのかわり、昨季はプレミアリーグで**6位**。クラブ史上最高の順位で、初めてヨーロッパへの切符をつかみました。
-  telop: そのかわり、昨季はプレミアリーグで**6位**。クラブ史上最高の順位で、初めてヨーロッパへの切符をつかみました
-  image: assets/stats/pl_bournemouth_data.png
+  no_telop: true
+  image: assets/stats/pl_bournemouth_data7.png
 解説: 愛称は「ザ・チェリーズ」。さくらんぼ、という意味です。
-  telop: 愛称は「ザ・チェリーズ」。さくらんぼ、という意味です
-  image: assets/stats/pl_bournemouth_data.png
+  no_telop: true
+  image: assets/stats/pl_bournemouth_data8.png
 
 ## 歩んできた道
 @bg: assets/backgrounds/stadium_ボーンマス.png
@@ -338,16 +338,16 @@ cards:
   telop: 今季の登録選手は28人です
   source: 報道
 キャスター: ゴールキーパーは3人。
-  telop: ゴールキーパーは3人
+  no_telop: true
   image: assets/stats/pl_bournemouth_gk.png
 キャスター: ディフェンダーは10人。
-  telop: ディフェンダーは10人
+  no_telop: true
   image: assets/stats/pl_bournemouth_df.png
 キャスター: ミッドフィールダーは8人。
-  telop: ミッドフィールダーは8人
+  no_telop: true
   image: assets/stats/pl_bournemouth_mf.png
 キャスター: フォワードは7人。
-  telop: フォワードは7人
+  no_telop: true
   image: assets/stats/pl_bournemouth_fw.png
 
 ## 今季のここまで

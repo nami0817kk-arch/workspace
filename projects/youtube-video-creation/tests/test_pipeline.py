@@ -91,6 +91,28 @@ def test_写真は一度出たら残す():
     assert got == [None, "assets/photos/x/01.jpg", "assets/photos/x/01.jpg"], got
 
 
+def test_板は次の行へ引き継がない():
+    """**板を引き継ぐと、そのあとの節のカードが全部消える**（2026-09-20）。
+
+    プレミア20クラブ紹介のボーンマスで、基礎DATAの板が20秒から165秒まで
+    出っぱなしになり、歩んできた道・名選手・宿敵のカードが1枚も画面に
+    出ていなかった。板の上には何も重ねない決まりと噛み合って、
+    節が進んでも絵が変わらない。引き継ぐのは写真だけ。
+    """
+    from src.pipeline import hold_photo
+    from src.script_model import parse_script
+
+    nl = chr(10)
+    body = ["---", "title: T", "---", "", "## 章", ""]
+    body += ["キャスター: いち。", "  image: assets/stats/pl_bournemouth_data.png", ""]
+    body += ["キャスター: に。", ""]
+    body += ["キャスター: さん。", ""]
+    script = parse_script(nl.join(body))
+    assert hold_photo(script) == 0
+    got = [line.image for line in script.scenes[0].lines]
+    assert got == ["assets/stats/pl_bournemouth_data.png", None, None], got
+
+
 def test_別の写真が指定されていればそちらに替える():
     from src.pipeline import hold_photo
     from src.script_model import parse_script
