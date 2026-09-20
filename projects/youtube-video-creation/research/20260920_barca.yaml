@@ -29,11 +29,12 @@ theme:
   question: どこまで伸びるのか
 
 thumbnail:
-  photo: assets/photos/20260920_raphinha/01.jpg
+  photo: assets/photos/20260920_raphinha_wide/01.jpg
   line1: 2試合続けてハットトリック
   line2: 並んだのは ●●年前の記録
-  tags:
-    - バルセロナ
+  # **この回はエンブレムを出さない**（2026-09-20）。写真の右にラフィーニャの
+  # 頭があり、右下のエンブレムがちょうど重なった
+  tags: []
   points: []
 
 sections:
