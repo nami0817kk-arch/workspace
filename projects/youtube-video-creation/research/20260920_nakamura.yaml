@@ -1,0 +1,113 @@
+# 中村敬斗、リヨンで3試合続けて出場。レンヌに4対0（2026-09-20）
+#
+# 材料はサッカーキングの試合記事と、theWORLD（Yahoo!ニュース配信）の現地評。
+# **下請けの取材が間に合わなかったので、この回はこちらで直接取った。**
+#
+# **反応が1件しか無い。**この試合を扱ったYahoo!ニュースのコメント欄は1件だった
+# （途中出場で無得点のため、書き込みが少ない）。**足さない。**
+# 代わりに、**フランスの媒体がEL初ゴールに付けた評価**を他人の声として入れる。
+#
+# **EL初ゴールの日付は、媒体で食い違う**（サッカーキングは16日、theWORLDの
+# 記事本文からは別の日付が読めた）。**日付は言わない。**「ELの初戦で」とする。
+format: news
+voice_min: 20
+slot: japan_4
+date: "2026年9月20日"
+
+people:
+  - 中村敬斗
+
+short_title: "中村敬斗、3試合続けて出場"
+
+theme:
+  id: nakamura_lyon_rennes
+  league: france
+  league_name: リーグ・アン
+  kind: match
+  topic: リヨン
+  title: 中村敬斗が加入してからの3試合。リヨンで起きているのは
+  hook: 現地の評価は、初先発の日に出そろいました。
+  question: どんな立ち位置にいるのか
+
+thumbnail:
+  photo: assets/photos/20260920_nakamura/01.jpg
+  line1: 加入から3試合続けて出場
+  line2: 現地紙「リヨンに ●●を」
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: リヨンがレンヌに4対0。中村は79分から
+    narrator: キャスター
+    card:
+      type: table
+      title: リーグ・アン第5節
+      columns: ["", ""]
+      rows:
+        - ["リヨン", "4"]
+        - ["レンヌ", "0"]
+        - ["中村敬斗", "79分から出場"]
+        - ["リヨン", "暫定2位"]
+    say:
+      - リヨンがレンヌに4対0で勝ちました。
+      - 前半にヌアマが2点、後半にも2点が入る快勝でした。
+      - "中村敬斗は**79分から**の出場。リーグ戦では2試合続けて、ベンチから入っています。"
+      - チームはこれで今季3勝目。暫定ながら2位に上がりました。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/fra/20260920/2206929.html
+
+  - id: three
+    heading: 加入してからの3試合
+    main: true
+    tier: 報道
+    telop: デビュー、初先発で初ゴール、そして連続出場
+    narrator: 解説
+    card:
+      type: table
+      title: 中村敬斗の3試合
+      columns: ["", ""]
+      rows:
+        - ["リーグ第4節", "パリFC戦で新天地デビュー"]
+        - ["ヨーロッパリーグ初戦", "初先発で初ゴール（2対1）"]
+        - ["リーグ第5節", "レンヌ戦で79分から出場"]
+    say:
+      - {short_only: true, text: 今夏リヨンへ移った中村敬斗が、3試合続けて出場しています。}
+      - 中村は今夏、スタッド・ランスからリヨンに移りました。
+      - 最初の出場は、リーグ戦第4節のパリFC戦。途中からピッチに立っています。
+      - "続くヨーロッパリーグの初戦では**初先発で初ゴール**。チームは2対1で勝ちました。"
+      - そして今回のレンヌ戦。デビューから公式戦3試合続けて、出場機会を得ています。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/fra/20260920/2206929.html
+      - https://news.yahoo.co.jp/articles/4c50b22c04bf4eae5274358115515fb1e50a3172
+
+  - id: france
+    heading: 現地はどう見たか
+    tier: 報道
+    telop: 「リヨンに新たな次元をもたらす」
+    narrator: キャスター
+    say:
+      - 初先発で決めたあと、フランスの媒体はこう書いています。
+      - {voice: ル・プログレ, text: テクニック面で全く劣るところはなく、中村はリヨンに新たな次元をもたらす存在であることを証明した}
+      - {voice: ル・プログレ, text: 彼は何度もチームメイトと効果的に連携し、オペンダにも2度のチャンスをもたらした。そして監督の期待に応える初ゴールだ}
+      - {voice: フット・メルカト, text: 左ウイングでかなり良いプレイを見せた。活発な動き、テクニック、スピードを披露し、チャンスを見事モノにした}
+      - {voice: フット・メルカト, text: 守備も積極的だった}
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/articles/4c50b22c04bf4eae5274358115515fb1e50a3172
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「短い時間でも特徴活かしたプレー」
+    narrator: キャスター
+    say:
+      - {short_only: true, text: この試合を見ていた人の声です。}
+      - {voice: ネット民, text: いいね、短い時間でも特徴活かしたプレーしてるし、他の選択肢あるところでもボールもらえてるし, short_voice: true}
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/articles/08d13d8a43a32736c9c8629d18e07a3ef2197a71/comments

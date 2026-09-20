@@ -1,0 +1,122 @@
+# 鈴木唯人が4試合4得点、堂安律は今季初アシスト（2026-09-20）
+#
+# 材料は research/raw/20260920_doan.md。出典はサッカーキングとゲキサカ。
+#
+# **名前の表記が媒体で違う。**フライブルクの得点者は「シェアハント」（サッカーキング）と
+# 「シャーハント」（ゲキサカ）。**台本では名前を出さず「左サイドから」とだけ言う。**
+#
+# **交代の時間も表記が違う**が、通算では合う（堂安62分＝後半17分、鈴木83〜84分）。
+# **分は言わない。**
+#
+# **発言はゼロ。**両記事とも監督・選手の直接引用が無い。
+#
+# **反応は鈴木唯人の得点を扱った記事のコメント欄から。**堂安への言及は1件しかない。
+# 海外の反応は見つからなかった（ドイツ語圏を探したが特定できず）。
+format: news
+voice_min: 40
+slot: japan_2
+date: "2026年9月20日"
+
+people:
+  - 鈴木唯人
+  - 堂安律
+
+short_title: "鈴木唯人が4戦4発"
+
+theme:
+  id: yuito_doan_bundesliga
+  league: germany
+  league_name: ブンデスリーガ
+  kind: match
+  topic: フライブルク
+  title: 鈴木唯人が4試合で4点目。堂安律との日本人対決は
+  hook: 先に仕掛けたのは、堂安のほうでした。
+  question: どちらが上回ったのか
+
+thumbnail:
+  photos:
+    - assets/photos/20260920_yuito/01.jpg
+    - assets/photos/20260920_doan/01.jpg
+  line1: 日本人対決の結末は
+  line2: 鈴木唯人、4試合で ●点目
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: フランクフルト2対2フライブルク
+    narrator: キャスター
+    card:
+      type: table
+      title: ブンデスリーガ第4節
+      columns: [時間, 得点者]
+      rows:
+        - ["10分", "エブヌタリブ（フランクフルト）"]
+        - ["34分", "フライブルクが同点"]
+        - ["36分", "ブルカルト（フランクフルト）"]
+        - ["48分", "鈴木唯人（フライブルク）"]
+    say:
+      - フランクフルトとフライブルクが2対2で引き分けました。
+      - 日本人選手が向き合う試合になり、両チームの得点にどちらも絡んでいます。
+      - フランクフルトの先制点をお膳立てしたのが堂安律。
+      - 追いついたのが、フライブルクの鈴木唯人でした。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/ger/20260920/2206874.html
+      - https://web.gekisaka.jp/news/world/detail/?459187-459187-fl
+
+  - id: doan
+    heading: 堂安律の今季初アシスト
+    tier: 報道
+    telop: 1人かわし、GKを引きつけて横へ
+    narrator: 解説
+    say:
+      - 10分の先制点は、ブルカルトのクロスから始まりました。
+      - "ニアに走り込んだ堂安が、最初のタッチで**1人をかわします**。"
+      - そのままゴールキーパーを引きつけ、横へ。エブヌタリブが誰もいないゴールへ流し込みました。
+      - 堂安にとっては、今季初めてのアシストです。
+    official: false
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?459187-459187-fl
+
+  - id: yuito
+    heading: 鈴木唯人のダイレクトボレー
+    main: true
+    tier: 報道
+    telop: 走りながら、右足で合わせた
+    narrator: キャスター
+    say:
+      - {short_only: true, text: フライブルクの日本人が、後半すぐに追いつきました。}
+      - フランクフルトが2対1でリードして折り返した後半、48分でした。
+      - 左サイドから、緩やかなクロスが入ります。
+      - "ファーサイドでフリーになっていた鈴木唯人が、**走りながら右足のダイレクトボレー**。"
+      - 開幕節のハットトリック以来、3試合ぶりの得点で、今季4点目になりました。
+      - フライブルクはこの引き分けで、バイエルンと勝ち点で並びながら得失点差で首位を明け渡しています。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/ger/20260920/2206874.html
+      - https://web.gekisaka.jp/news/world/detail/?459187-459187-fl
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「簡単に撃ってるけど、かなり難しい」
+    narrator: キャスター
+    say:
+      - {short_only: true, text: このゴールを見た人たちの声です。}
+      - {voice: ネット民, text: このボレー、簡単に撃ってるけどかなり難しい, short_voice: true}
+      - {voice: ネット民, text: 素晴らしいボレーだったな。鈴木唯人は本当良いタイミングでエリア内に入ってくるわ}
+      - {voice: ネット民, text: ここぞってところで決めてくれるその決定力と、後半この人が前向いてボール受けたらドリブルで畳みかけられる畏怖があった}
+      - {voice: ネット民, text: 推進力のあるドリブルと無駄なロストが少ないのがいいよな}
+      - {voice: ネット民, text: ドリブルの推進力の他に、田中碧みたいな嗅覚も併せ持っていたようだな}
+      - {voice: ネット民, text: 代表でレギュラーで見たい選手の1人}
+      - {voice: ネット民, text: やっぱキック精度と質だよね}
+      - {voice: ネット民, text: 覚醒してるねぇ}
+      - {voice: ネット民, text: ブンデスでは唯人に海舟、そして田中聡。中盤ヤバすぎ}
+      - {voice: ネット民, text: 対照的に、アシストしたけど停滞気味の堂安}
+      - {voice: ネット民, text: これからW鈴木の時代だね, short_voice: true}
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/articles/7ea4dd89b352cf59c360138d68012819d2607095/comments

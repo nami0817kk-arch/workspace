@@ -116,3 +116,17 @@ def test_候補ファイルに話題とリーグの当たりが入る():
     text = to_yaml(parse("Spurs agree deal\thttps://a.com/spurs-deal"), "2026年8月31日")
     assert 'topic: "トッテナム"' in text
     assert "league: england" in text
+
+
+def test_カタカナが続く語の途中はクラブに当てない():
+    """**「ポルトガル代表」の回に #ポルト が付いた**（2026-09-20）。
+
+    「ポルト」＋「ガ」で、別の語の途中を拾っていた。中身と食い違うタグは付けない
+    （`#ハイライト` や `#チャンピオンズリーグ` を外したのと同じ筋）。
+    """
+    from src import clubs
+
+    assert clubs.canonical("ポルトガル代表に41歳のロナウドが選ばれた") == []
+    # 続きがカタカナでなければ、今までどおり当てる
+    assert clubs.canonical("ポルトがベンフィカに勝った") == ["ポルト", "ベンフィカ"]
+    assert clubs.canonical("ミランのMFが決めた") == ["ミラン"]

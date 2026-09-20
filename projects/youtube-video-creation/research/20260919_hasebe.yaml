@@ -1,0 +1,141 @@
+# 長谷部誠が、日本代表の守備メインコーチになる（2026-09-19）
+#
+# **取材の下請けが1時間かけて1本も上げられなかったので、こちらで書いた。**
+#
+# **スポニチの元記事は開けていない**（ユーザーが開くのを止めた）。
+# 事実は Yahoo!ニュース に配信されたスポニチの記事2本と、サッカーキング、
+# JFA公式で取った。**だから確度は「報道」まで。**
+#
+# **中村俊輔の担当（攻撃のセットプレー、4月就任）も同じ記事にある。**
+# 長谷部だけの話にせず、2人の担当替えとして出す
+#
+# **斎藤俊秀コーチがどうなるかは、記事に書かれていない。**
+# まとめサイトのスレでは「斎藤の立場がない」と書かれているが、
+# **報道に無いので台本には入れない。**憶測を事実として出さない
+#
+# **反応は footballnet（2chまとめ）から。**「長谷部を監督にしろ」という声が
+# いちばん多く、次いで「海外で経験を積んでほしい」。**どちらも載せる。**
+# 日本語だけで、海外の反応は取れていない（日本の人事なので当然ではある）
+format: news
+voice_min: 30
+slot: japan_5
+date: "2026年9月19日"
+
+people:
+  - 長谷部誠
+
+short_title: "長谷部誠が守備のメインへ"
+
+theme:
+  id: hasebe_defence_coach
+  league: japan
+  league_name: 日本代表
+  kind: other
+  topic: 日本代表
+  title: 長谷部誠が日本代表の守備を任される。入閣から2年で変わったのは
+  hook: 同じ日に、もう1人の担当も決まりました。
+  question: 何を任されることになったのか
+
+thumbnail:
+  photo: assets/photos/20260919_hasebe2/01.jpg
+  line1: 現役をやめて、まだ2年
+  line2: 長谷部誠が任されたのは ●●
+  tags:
+    - 日本代表
+  points: []
+
+sections:
+  - id: what
+    heading: 何が変わったか
+    main: true
+    tier: 報道
+    bg: assets/backgrounds/hasebe_20260919.png
+    telop: 長谷部誠が、守備のメイン担当に
+    narrator: キャスター
+    card:
+      type: table
+      title: 担当が変わった2人
+      columns: ["", ""]
+      rows:
+        - ["長谷部誠（42）", "守備のメイン担当"]
+        - ["中村俊輔（48）", "攻撃のセットプレー担当"]
+        - ["国内合宿", "9月21日から"]
+    say:
+      - "日本代表のコーチ陣で、**担当が変わります。**"
+      - "長谷部誠コーチが、**守備のメイン担当**になります。"
+      - 2024年8月にコーチ陣に加わってから、**3年目**を迎えるタイミングでの変更です。
+      - 今年4月に就任した中村俊輔コーチが、**攻撃のセットプレー**を担当します。
+      - 新しい体制は、9月21日から始まる国内合宿から動き出します。
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/articles/35651c4111c7db93600f78649bbb661394eae3c9
+      - https://news.yahoo.co.jp/articles/448209cac45f2bf5d579d612b6aff7f9bbf494b9
+
+  - id: road
+    heading: 現役をやめて2年で、ここまで来た
+    tier: 背景
+    bg: assets/backgrounds/hasebe_20260919.png
+    telop: 2024年5月に引退、その年の9月に代表へ
+    narrator: 解説
+    card:
+      type: table
+      title: 長谷部誠の2年
+      columns: ["", ""]
+      rows:
+        - ["2024年5月", "フランクフルトで現役を終える"]
+        - ["同シーズン", "フランクフルトU21のコーチに"]
+        - ["2024年8月", "日本代表のコーチ陣へ"]
+        - ["2026年1月", "クラブを一時離れ、代表に専念"]
+    say:
+      - "長谷部が現役を終えたのは、**2024年5月**です。"
+      - 長く在籍したドイツのアイントラハト・フランクフルトで、選手生活を終えました。
+      - そのシーズンから、同じクラブのU21でコーチを始めます。
+      - 日本代表のコーチ陣に加わったのが、その年の8月。
+      - "そして今年1月、**クラブを一時的に離れて、代表の仕事に専念**しています。"
+      - 並行して、ドイツサッカー連盟のAライセンス取得も進めてきました。
+      - 現役をやめてから2年で、守備を任されるところまで来たことになります。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20260120/2116942.html
+      - https://news.yahoo.co.jp/articles/eda20274971614febf19e4b7f03774997b316402
+
+  - id: moriyasu
+    heading: 監督が言ったこと
+    tier: 報道
+    bg: assets/backgrounds/hasebe_20260919.png
+    telop: 「視点を変えて、チーム、選手が成長するために」
+    narrator: キャスター
+    say:
+      - 担当を替えた理由について、森保監督はこう話しています。
+      - {voice: 森保監督, text: チームとして同じイメージで進むが、個々のアイデアは違うところがある}
+      - {voice: 森保監督, text: 視点を変えて、チーム、選手が成長するために、アイデアを生かしてもらいたい}
+      - {voice: 森保監督, text: スタッフもいい経験を積んで成長してもらえれば}
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/articles/35651c4111c7db93600f78649bbb661394eae3c9
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    bg: assets/backgrounds/hasebe_20260919.png
+    telop: 「長谷部を監督にしろよ」
+    narrator: キャスター
+    say:
+      - {short_only: true, text: 現役をやめて2年、ここまで来たことへの声です。}
+      - {voice: ネット民, text: 長谷部を監督にしろよ, short_voice: true}
+      - {voice: ネット民, text: やはり次期代表監督の本命は長谷部か, short_voice: true}
+      - {voice: ネット民, text: 大岩を監督にするぐらいだったら長谷部監督でいいぞ}
+      - {voice: ネット民, text: だったら、長谷部監督でええやん。何の継投やねん}
+      - {voice: ネット民, text: もったいない。海外で監督やらせろよ, short_voice: true}
+      - {voice: ネット民, text: 長谷部は早くフランクフルトへ戻って欧州でキャリア積んでほしかったのに}
+      - {voice: ネット民, text: まだ出来る限り協会に関わらずに欧州で経験値を積んで欲しい}
+      - {voice: ネット民, text: 長谷部はもっと海外で指導者として経験積んでから代表監督やってくれ, short_voice: true}
+      - {voice: ネット民, text: 長谷部っていきなり代表コーチに抜擢するくらいそんなに指導者として能力高いのか}
+      - {voice: ネット民, text: 長谷部はどうやろうなあ。スパルタすぎるかも}
+      - {voice: ネット民, text: 代表でベーハセブートキャンプする気かw}
+      - {voice: ネット民, text: 長谷部はS級講習あるから来年まで日本メイン。代表は片手間だけど昇格}
+      - {voice: ネット民, text: まこちゃんナショナルチームの前にクラブで監督業務やって欲しさがあるよな}
+      - {voice: ネット民, text: 心を整える}
+    official: false
+    sources:
+      - https://footballnet.2chblog.jp/archives/60056073.html

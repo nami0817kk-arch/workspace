@@ -631,19 +631,22 @@ def _band_thumbnail(
             crests = []          # 上に置いたので、右下には出さない
         portrait = False
     else:
-        # **指定があれば、縦長でも全面に敷く。**帯が下いっぱいまで伸びる
-        portrait = False if band_full else _is_portrait(background, ratio=0.95)
+        # **左のぼかしは禁止**（2026-09-20 ユーザー指示「サムネについて、
+        # 左がぼやけるのは禁止」）。縦長の写真は、左に**べた塗りの面**を敷いて
+        # その上に文字を置く。全面に敷く案は試したが、幅を埋めるまで拡大すると
+        # **顎から下が帯に隠れた**（鈴木・前田で実際に起きた）
+        portrait = False if band_full else _is_portrait(background, ratio=1.05)
     if stage is not None:
         pass
     elif portrait:
-        canvas = _blur_bed(background)
+        canvas = _flat_bed(background, crests if crests is not None else tags)
         _paste_side(canvas, background)
     elif len(tiles) < 2:
         # **帯が下の4割を覆うので、顔を上に寄せる。**真ん中で切ると、
         # 額と目だけが残って口から下が帯に隠れた（2026-09-07 に書き出して発見）。
         # 指定があればそちらを優先する
         canvas = _base(config, background, out_path,
-                       BAND_FOCUS if focus is None else focus)
+                       _photo_focus(background) if focus is None else focus)
 
     # 写真をそのまま活かすので、暗幕は下側だけ薄くかける
     scrim, draw = _layer(SIZE)
@@ -660,8 +663,9 @@ def _band_thumbnail(
 
     top_text = (lines[0] or "").replace(chr(92) + "n", " ")
     bottom_text = lines[1] or ""
-    # 縦長の写真を右に置いた回は、帯を左だけにして顔を隠さない
-    right = int(SIZE[0] * 0.52) if portrait else SIZE[0] - 16
+    # **帯はいつも全幅**（2026-09-20）。左半分だけにすると字が小さくなり、
+    # 左のべた塗りが広く空いて見えた。顔は写真の上のほうにあるので隠れない
+    right = SIZE[0] - 16
     # **2行は同じ大きさで描く。**入る字の大きさは行ごとに違うので、
     # 小さいほうに合わせる。1行目だけで決めていたら、2行目が枠を超えて
     # 「GKコーチ」が「G / Kコーチ」に泣き別れた（2026-09-07 に書き出して発見）
@@ -702,7 +706,7 @@ def _band_thumbnail(
     # **主役にしたときは、小さいほうを出さない。**同じ絵が2つ並ぶ
     if stage is None:
         floor = SIZE[1] - 28
-        if band_top is not None and not portrait:
+        if band_top is not None:
             floor = band_top - 16
         _draw_tags(layer, tags if crests is None else crests, floor)
 
@@ -967,63 +971,6 @@ def _tile_photos(paths: list[str]) -> Image.Image:
     return canvas
 
 
-def _blur_bed(background: str | None) -> Image.Image:
-    """縦長の写真を右に置くとき、**左に敷く下地**を作る。
-
-    2026-09-08 まで、左は塗りつぶしの濃紺だった。実測すると顔の段の
-    **72%が真っ黒**で、一覧に並べると沈んで見えた（ユーザー指摘）。
-    同じ写真を大きく引き伸ばしてぼかし、暗くして敷く。
-    別の写真を持ってこないので、権利の扱いは変わらない。
-    """
-    from PIL import ImageEnhance, ImageFilter
-
-    base = Image.new("RGBA", SIZE, (14, 20, 32, 255))
-    path = _resolve(background or "")
-    if not path.exists():
-        return base
-    with Image.open(path) as source:
-        photo = source.convert("RGB")
-    # 画面を埋める大きさまで拡大してから、真ん中を切る
-    scale = max(SIZE[0] / photo.width, SIZE[1] / photo.height) * 1.35
-    photo = photo.resize((max(1, int(photo.width * scale)),
-                          max(1, int(photo.height * scale))), Image.LANCZOS)
-    left = max(0, (photo.width - SIZE[0]) // 2)
-    top = max(0, (photo.height - SIZE[1]) // 3)
-    photo = photo.crop((left, top, left + SIZE[0], top + SIZE[1]))
-    photo = photo.filter(ImageFilter.GaussianBlur(28))
-    photo = ImageEnhance.Brightness(photo).enhance(0.60)
-    photo = ImageEnhance.Color(photo).enhance(0.85)
-    base.alpha_composite(photo.convert("RGBA"))
-    return base
-
-
-def _paste_side(canvas: Image.Image, background: str | None) -> None:
-    """縦長の写真を、画面の右側に置く。高さいっぱいに使う。"""
-    path = _resolve(background or "")
-    if not path.exists():
-        return
-    with Image.open(path) as source:
-        photo = source.convert("RGBA")
-    # **枠を埋めるまで拡大する。**高さだけ合わせていたので、細い縦写真だと
-    # 幅が足りず、左半分がぼかしのまま残った（2026-09-08 ユーザー指摘）。
-    # 顔は上にあるので、縦は上寄りに切る
-    width = int(SIZE[0] * 0.58)
-    scale = max(width / photo.width, SIZE[1] / photo.height)
-    photo = photo.resize((max(1, int(photo.width * scale)) + 1,
-                          max(1, int(photo.height * scale)) + 1), Image.LANCZOS)
-    left = max(0, (photo.width - width) // 2)
-    top = max(0, min(photo.height - SIZE[1], int(photo.height * 0.04)))
-    photo = photo.crop((left, top, left + width, top + SIZE[1]))
-    canvas.alpha_composite(photo, (SIZE[0] - width, 0))
-
-    # 写真の左端をぼかして地になじませる（切り貼りに見せない）
-    fade, draw = _layer(SIZE)
-    edge = 90
-    for step in range(edge):
-        alpha = int(235 * (1 - step / edge))
-        draw.line([(SIZE[0] - width + step, 0), (SIZE[0] - width + step, SIZE[1])],
-                  fill=(10, 14, 22, alpha))
-    canvas.alpha_composite(fade)
 
 
 def _news_thumbnail(
@@ -1043,15 +990,14 @@ def _news_thumbnail(
     """
     font_path = str(config.video.font_path())
     # **正方形に近い写真も右に置く。**全面に敷くと顔が帯に隠れる
-    portrait = _is_portrait(background, ratio=0.95)
+    # **左のぼかしは禁止**（2026-09-20 ユーザー指示）。縦長は左をべた塗りにする
+    portrait = _is_portrait(background, ratio=1.05)
     if portrait:
-        # **縦長の写真は全面に敷けない。**16:9 に切ると顔が残らず、
-        # 下の見出しとぶつかる（2026-09-05 実測。切る位置を変えても解けなかった）。
-        # 右側に置いて、文字は左に寄せる。参考チャンネルもこの並び
-        canvas = _base(config, None, out_path)
+        canvas = _flat_bed(background, tags)
         _paste_side(canvas, background)
     else:
-        canvas = _base(config, background, out_path, focus)
+        canvas = _base(config, background, out_path,
+                       _photo_focus(background) if focus is None else focus)
     _news_scrim(canvas, narrow=portrait)
 
     layer, draw = _layer(SIZE)
@@ -1356,6 +1302,77 @@ def _paste_crest(layer: Image.Image, tag: str, right: int, bottom: int) -> int:
 
 
 # ------------------------------------------------------------------ パーツ
+
+
+def _flat_bed(background: str | None, tags: list[str] | None = None) -> Image.Image:
+    """縦長の写真の左に敷く、**べた塗りの面**（2026-09-20）。
+
+    ぼかしは禁止（ユーザー指示）。代わりに、**その写真から拾った色**で
+    上から下へのグラデーションを作る。別の絵を持ってこないので権利は変わらず、
+    ぼけた絵も出ない。2026-09-08 に却下された濃紺のベタとは違い、
+    写真と地続きの色になる。
+    """
+    base = Image.new("RGBA", SIZE, (14, 20, 32, 255))
+    # **まずクラブの色**。エンブレムがあれば、そこから拾うほうが写真の芝より映える
+    source_image = None
+    for tag in tags or []:
+        crest = _crest_image(tag, 64)
+        if crest is not None:
+            source_image = crest.convert("RGB")
+            break
+    if source_image is None:
+        path = _resolve(background or "")
+        if not path.exists():
+            return base
+        with Image.open(path) as opened:
+            source_image = opened.convert("RGB")
+    small = source_image.resize((24, 24), Image.LANCZOS)
+    pixels = [c for c in small.getdata() if sum(c) > 60 and sum(c) < 720]
+    if not pixels:
+        pixels = list(small.getdata())
+    top = tuple(sum(c[i] for c in pixels) // len(pixels) for i in range(3))
+    # 文字が乗るので、拾った色をそのままではなく落ち着かせる
+    top = tuple(int(c * 0.55 + 18) for c in top)
+    bottom = tuple(int(c * 0.45) for c in top)
+    draw = ImageDraw.Draw(base)
+    for y in range(SIZE[1]):
+        t = y / SIZE[1]
+        draw.line([(0, y), (SIZE[0], y)],
+                  fill=tuple(round(a + (b - a) * t) for a, b in zip(top, bottom)) + (255,))
+    return base
+
+
+def _paste_side(canvas: Image.Image, background: str | None) -> None:
+    """縦長の写真を、画面の右側に置く。高さいっぱいに使う。
+
+    **左端はぼかさない**（2026-09-20 ユーザー指示）。境目は、べた塗りの面と
+    写真がそのまま隣り合う。
+    """
+    path = _resolve(background or "")
+    if not path.exists():
+        return
+    with Image.open(path) as source:
+        photo = source.convert("RGBA")
+    width = int(SIZE[0] * 0.56)
+    scale = max(width / photo.width, SIZE[1] / photo.height)
+    photo = photo.resize((max(1, int(photo.width * scale)) + 1,
+                          max(1, int(photo.height * scale)) + 1), Image.LANCZOS)
+    left = max(0, (photo.width - width) // 2)
+    top = max(0, min(photo.height - SIZE[1], int(photo.height * 0.04)))
+    canvas.alpha_composite(photo.crop((left, top, left + width, top + SIZE[1])),
+                           (SIZE[0] - width, 0))
+
+
+def _photo_focus(background: str | None) -> float:
+    """切る高さの中心。**縦長の写真は上寄りで切る**（2026-09-20）。
+
+    左のぼかしをやめて全面に敷いたら、既定の 0.38 では**頭の上が切れた**
+    （鈴木・前田・ラフィーニャで実際に起きた）。顔は上のほうにあるので、
+    縦長のときだけ上端寄りにする。
+    """
+    if _is_portrait(background, ratio=1.05):
+        return 0.10
+    return BAND_FOCUS
 
 
 def _base(config: ProjectConfig, background: str | None, out_path: Path,

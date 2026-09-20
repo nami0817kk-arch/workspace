@@ -610,6 +610,10 @@ def test_エンブレムは右下に置く(tmp_path, monkeypatch):
     バルコラの回で、速度ランキング3行の真上にリヴァプールのエンブレムが
     重なり、数字が読めなくなった。ユーザーの指示で右下へ移した。
     言葉（左）とエンブレム（右下）は、**両方出る**のが正しい。
+
+    **2026-09-20 に下端の条件をゆるめた。**左のぼかしを禁じたのに合わせて
+    帯を全幅にしたので、縦長の回でもエンブレムは**帯の上**に乗る。
+    右に寄っていることと、帯に隠れていないことだけを見る。
     """
     from PIL import Image
 
@@ -628,7 +632,7 @@ def test_エンブレムは右下に置く(tmp_path, monkeypatch):
     assert placed, "エンブレムを置いていない"
     right, bottom = placed[0]
     assert right > SIZE[0] * 0.7, f"右に寄っていない: {right}"
-    assert bottom > SIZE[1] * 0.7, f"下に寄っていない: {bottom}"
+    assert bottom > SIZE[1] * 0.4, f"上すぎる: {bottom}"
 
 
 def test_横長の回はエンブレムを帯の上に載せる(tmp_path, monkeypatch):
@@ -897,3 +901,30 @@ def test_一覧板の回は書き込みの小窓を重ねない():
 
     plain = {"thumbnail_line1": "あ", "thumbnail_line2": "い"}
     assert from_meta(plain, "T")["no_auto_reaction"] is False
+
+
+def test_縦長の写真でも左をぼかさない(tmp_path):
+    """**左がぼやけるのは禁止**（2026-09-20 ユーザー指示）。
+
+    縦長の写真は右に置き、左は**べた塗りの面**にする。
+    ぼかした写真を敷いていた頃は、左半分に元の絵がうっすら残っていた。
+    面は1色のグラデーションなので、**横に並んだ画素の色がほとんど動かない**。
+    """
+    from PIL import Image
+
+    from src import thumbnail as mod
+
+    photo = tmp_path / "tate.jpg"
+    # 左右で色がはっきり違う縦長の写真（ぼかして敷けば、その差が左に残る）
+    source = Image.new("RGB", (600, 1000), "white")
+    for x in range(300):
+        for y in range(1000):
+            source.putpixel((x, y), (220, 30, 30))
+    source.save(photo)
+
+    out = mod.build_thumbnail(_config(), "", tmp_path / "a.png", style="band",
+                              background=str(photo), lines=("上", "下"), tags=[])
+    with Image.open(out) as made:
+        row = [made.convert("RGB").getpixel((x, 120)) for x in range(0, 480, 40)]
+    spread = max(max(c[i] for c in row) - min(c[i] for c in row) for i in range(3))
+    assert spread < 30, f"左に写真の名残がある（色の振れ幅 {spread}）"
