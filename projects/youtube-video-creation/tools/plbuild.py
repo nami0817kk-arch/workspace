@@ -184,12 +184,20 @@ def build(key: str, number: int, old_file: str) -> Path:
         inside = ""
     screens = {int(k): v for k, v in (ov.get("screens") or {}).items()}
 
+    # **ホームタウンの話では地図を出す**（2026-09-20 指示。イングランドの地図に
+    # 20クラブの紋章を置き、その回のクラブだけ大きく残す。tools/plmap.py）
+    town_map = f"assets/stats/pl_{key}_map.png"
+    if not (ROOT / town_map).exists():
+        town_map = ""
+
     def picture(n: int, i: int | None) -> tuple[str, bool]:
         """(その行に出す絵, 字幕を消すか)"""
         if n in screens:
             return screens[n], False
         if i is not None and inside and str(tiles[i][0]).startswith("本拠地"):
             return inside, False
+        if i is not None and town_map and str(tiles[i][0]).startswith("ホームタウン"):
+            return town_map, True
         return board_for(i), True
 
     picks = list(ov.get("data_focus") or [])

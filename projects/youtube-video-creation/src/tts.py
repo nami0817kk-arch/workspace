@@ -473,6 +473,11 @@ def _ledger_lines(script, root=None) -> tuple[list[str], list[str]]:
     # そのため**今日の12本すべてに「※ 画像:」が1行も入っていない**。
     # CC BY / BY-SA は表示が条件なので、これは礼儀ではなく**利用条件の不履行**
     ledgers += sorted(root.glob("assets/photos/**/credits.json"))
+    # **assets/stats/ も見る**（2026-09-20）。こちらで作る板は表示の要らない
+    # 自前の絵だが、**ホームタウンの地図だけは Commons の白地図（CC BY-SA）の
+    # 上に紋章を置いたもの**で、表示が条件。帳簿を置いても探す場所に入って
+    # いなければ、概要欄に1行も出ない（**2026-09-18 と同じ型の抜け**）
+    ledgers += sorted(root.glob("assets/stats/**/credits.json"))
     for ledger in ledgers:
         try:
             rows = json.loads(ledger.read_text(encoding="utf-8"))

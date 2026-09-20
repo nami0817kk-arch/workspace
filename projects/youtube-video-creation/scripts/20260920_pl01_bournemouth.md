@@ -167,7 +167,7 @@ cards:
   image: assets/backgrounds/stadium_ボーンマス_in.png
 解説: ホームタウンは、イングランド南部ドーセット州の海沿いの町ボーンマス。
   no_telop: true
-  image: assets/stats/pl_bournemouth_data2.png
+  image: assets/stats/pl_bournemouth_map.png
 解説: オーナーはアメリカのビル・フォーリー。2022年からクラブを持っています。
   no_telop: true
   image: assets/stats/pl_bournemouth_data3.png
