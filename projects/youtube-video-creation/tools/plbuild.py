@@ -189,6 +189,13 @@ def build(key: str, number: int, old_file: str) -> Path:
     town_map = f"assets/stats/pl_{key}_map.png"
     if not (ROOT / town_map).exists():
         town_map = ""
+    # **オーナーと選手の話では顔写真を出す**（2026-09-20 指示）。
+    # tools/plfaces.py が Wikipedia の記事の代表画像から集めたもの。
+    # **自由に使えるものが無い人は写真無し**（作らない・探し回らない）
+    faces_path = DATA / "faces.json"
+    faces = json.loads(faces_path.read_text(encoding="utf-8")).get(key, {}) if faces_path.exists() else {}
+    owner_face = next((v["file"] for v in faces.values()
+                       if v.get("role") == "owner" and v.get("file")), "")
 
     def picture(n: int, i: int | None) -> tuple[str, bool]:
         """(その行に出す絵, 字幕を消すか)"""
@@ -198,6 +205,8 @@ def build(key: str, number: int, old_file: str) -> Path:
             return inside, False
         if i is not None and town_map and str(tiles[i][0]).startswith("ホームタウン"):
             return town_map, True
+        if i is not None and owner_face and str(tiles[i][0]).startswith("オーナー"):
+            return owner_face, False
         return board_for(i), True
 
     picks = list(ov.get("data_focus") or [])
@@ -248,12 +257,18 @@ def build(key: str, number: int, old_file: str) -> Path:
         # 増やす形なら、**まだ話していない選手が先に画面に出ることがない**
         srcs = [l["source"] for l in leg["legends"]]
         for i, line in enumerate(lsay):
-            sections.append(sec(id="legends" if i == 0 else f"legends{i + 1}",
-                                heading="このクラブを語る3人" if i == 0 else f"このクラブを語る3人（{i + 1}人目）",
-                                tier="背景", telop="1990年以降の名選手", narrator="キャスター",
-                                card={"type": "table", "title": "1990年以降の名選手",
-                                      "columns": ["名前", "在籍", "残したもの"], "rows": rows[:i + 1]},
-                                say=[line], sources=srcs))
+            # **その選手の顔を出す**（2026-09-20 指示「選手の話の時には写真をだす」）。
+            # 名前は legend_rows の1列目（読み上げの文とは限らない）で引く
+            who = str(rows[i][0]) if i < len(rows) else ""
+            face = (faces.get(who) or {}).get("file", "")
+            body = {"id": "legends" if i == 0 else f"legends{i + 1}",
+                    "heading": "このクラブを語る3人" if i == 0 else f"このクラブを語る3人（{i + 1}人目）",
+                    "tier": "背景", "telop": "1990年以降の名選手", "narrator": "キャスター",
+                    "card": {"type": "table", "title": "1990年以降の名選手",
+                             "columns": ["名前", "在籍", "残したもの"], "rows": rows[:i + 1]},
+                    "say": [{"text": line, "image": face} if face else line],
+                    "sources": srcs}
+            sections.append(sec(**body))
     # **宿敵の節は作らない**（2026-09-20 指示「宿敵は不要」）。
     # 旧台本には残っているが、20本すべてで落とす。
     # <key>_say.yaml の `rival_sections` も使わない（戻すときのために残してある）。

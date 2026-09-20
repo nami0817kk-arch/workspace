@@ -169,8 +169,8 @@ cards:
   no_telop: true
   image: assets/stats/pl_bournemouth_map.png
 解説: オーナーはアメリカのビル・フォーリー。2022年からクラブを持っています。
-  no_telop: true
-  image: assets/stats/pl_bournemouth_data3.png
+  telop: オーナーはアメリカのビル・フォーリー。2022年からクラブを持っています
+  image: assets/photos/pl/bournemouth_owner_cf0347c5.jpg
 解説: 1部リーグの優勝もカップのタイトルも、まだありません。直近のタイトルは2014年から15年の2部優勝です。
   no_telop: true
   image: assets/stats/pl_bournemouth_data5.png
@@ -226,6 +226,7 @@ cards:
   telop: カラム・ウィルソンは、2014年から15年にリーグ20得点。クラブ初のプレミア昇格を決めました
   source: 背景
   card: legends2_card
+  image: assets/photos/pl/bournemouth_legend_224f5148.jpg
 
 ## このクラブを語る3人（3人目）
 @bg: assets/backgrounds/stadium_ボーンマス.png
@@ -234,6 +235,7 @@ cards:
   telop: エディ・ハウは選手として長くプレーし、のちに監督として、4部にいたクラブを**プレミアまで**連れていきました
   source: 背景
   card: legends3_card
+  image: assets/photos/pl/bournemouth_legend_c837613d.jpg
 
 ## 今季の登録選手
 @bg: assets/backgrounds/stadium_ボーンマス.png

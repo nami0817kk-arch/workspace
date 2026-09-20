@@ -41,9 +41,8 @@ sections:
   - image: assets/stats/pl_bournemouth_map.png
     text: ホームタウンは、イングランド南部ドーセット州の海沿いの町ボーンマス。
     no_telop: true
-  - image: assets/stats/pl_bournemouth_data3.png
+  - image: assets/photos/pl/bournemouth_owner_cf0347c5.jpg
     text: オーナーはアメリカのビル・フォーリー。2022年からクラブを持っています。
-    no_telop: true
   - image: assets/stats/pl_bournemouth_data5.png
     text: 1部リーグの優勝もカップのタイトルも、まだありません。直近のタイトルは2014年から15年の2部優勝です。
     no_telop: true
@@ -173,7 +172,8 @@ sections:
       - 2014-2020
       - 初のプレミア昇格の得点源
   say:
-  - カラム・ウィルソンは、2014年から15年にリーグ20得点。クラブ初のプレミア昇格を決めました。
+  - text: カラム・ウィルソンは、2014年から15年にリーグ20得点。クラブ初のプレミア昇格を決めました。
+    image: assets/photos/pl/bournemouth_legend_224f5148.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_ボーンマス.png
   official: false
@@ -196,7 +196,8 @@ sections:
       - 選手・監督
       - 4部からプレミアへ導いた
   say:
-  - エディ・ハウは選手として長くプレーし、のちに監督として、4部にいたクラブを**プレミアまで**連れていきました。
+  - text: エディ・ハウは選手として長くプレーし、のちに監督として、4部にいたクラブを**プレミアまで**連れていきました。
+    image: assets/photos/pl/bournemouth_legend_c837613d.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_ボーンマス.png
   official: false
