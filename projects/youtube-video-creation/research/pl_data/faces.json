@@ -41,6 +41,21 @@
    "role": "legend",
    "file": "",
    "note": "日本語名で引いたら俳優のデクスター・フレッチャーの写真を拾った（2026-09-20）。Steve Fletcher (footballer) の記事に自由に使える写真が無いので、写真は出さない"
+  },
+  "ライアン・フレイザー": {
+   "role": "legend",
+   "file": "assets/photos/pl/bournemouth_legend_9f069e9f.jpg",
+   "page": "Ryan Fraser"
+  },
+  "ブレット・ピットマン": {
+   "role": "legend",
+   "file": "assets/photos/pl/bournemouth_legend_2f36ed97.jpg",
+   "page": "Brett Pitman"
+  },
+  "マイケル・B・ジョーダン": {
+   "role": "owner_minority",
+   "file": "assets/photos/pl/bournemouth_owner_07f09a4e.jpg",
+   "page": "Michael B. Jordan"
   }
  },
  "brentford": {

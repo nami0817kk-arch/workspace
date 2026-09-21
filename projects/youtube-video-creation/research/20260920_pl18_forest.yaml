@@ -41,13 +41,13 @@ sections:
   - image: assets/stats/pl_forest_map.png
     text: ホームタウンはウェスト・ブリッジフォード。ノッティンガムの隣町です。
     no_telop: true
-  - image: assets/stats/pl_forest_data4.png
+  - image: assets/stats/pl_forest_cups.png
     text: 1部リーグの優勝は**1回**。FAカップ2回、リーグカップ4回、そしてヨーロッパのタイトルを**2回**獲っています。
     no_telop: true
   - image: assets/stats/pl_forest_data6.png
     text: 1977年11月から翌年11月まで、リーグで**42試合負けなし**。1部で優勝したシーズンです。
     no_telop: true
-  - image: assets/stats/pl_forest_data7.png
+  - image: assets/stats/pl_forest_last.png
     text: プレミアでの最高位は、1994年から95年の**3位**です。
     no_telop: true
   - image: assets/stats/pl_forest_data8.png
@@ -176,16 +176,16 @@ sections:
   - text: 今季の登録選手は24人です。
     image: assets/stats/pl_forest_gk.png
     no_telop: true
-  - image: assets/stats/pl_forest_gk.png
+  - image: assets/stats/pl_forest_gk_f.png
     text: ゴールキーパーは3人。マッツ・セルスはベルギー代表で**13試合**。
     no_telop: true
-  - image: assets/stats/pl_forest_df.png
-    text: ディフェンダーは9人。ニコラ・ミレンコヴィッチはセルビア代表で**71試合**。ネコ・ウィリアムズはウェールズ代表で**57試合**。
+  - image: assets/stats/pl_forest_df_f.png
+    text: ディフェンダーは9人。ネコ・ウィリアムズはウェールズ代表で**57試合**。ニコラ・ミレンコヴィッチはセルビア代表で**71試合**。
     no_telop: true
-  - image: assets/stats/pl_forest_mf.png
-    text: ミッドフィールダーは6人。主将の**ライアン・イェーツ**は、ここにいます。イブラヒム・サンガレはコートジボワール代表で**61試合**。
+  - image: assets/stats/pl_forest_mf_f.png
+    text: ミッドフィールダーは6人。主将を務めるのが**ライアン・イェーツ**。リーグ戦で**238試合**に出ています。イブラヒム・サンガレはコートジボワール代表で**61試合**。
     no_telop: true
-  - image: assets/stats/pl_forest_fw.png
+  - image: assets/stats/pl_forest_fw_f.png
     text: フォワードは6人。クリス・ウッドはNew Zealand代表で**93試合**。ダン・ンドイェはスイス代表で**37試合**。
     no_telop: true
   sources:
@@ -195,7 +195,7 @@ sections:
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 5試合で1勝2引き分け2敗
+  telop: 5試合で1勝2引き分け2敗。13位
   narrator: 解説
   card:
     type: table
@@ -222,6 +222,7 @@ sections:
       - 0対1
   say:
   - プレミアリーグは5試合を終えて、**1勝2引き分け2敗**です。
+  - 順位は**13位**、勝ち点は**5**です。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Nottingham_Forest_F.C._season
   bg: assets/backgrounds/stadium_ノッティンガムフォレスト.png

@@ -55,7 +55,7 @@ sections:
   - image: assets/stats/pl_villa_map.png
     text: ホームタウンはバーミンガム。イングランド第2の都市です。
     no_telop: true
-  - image: assets/stats/pl_villa_data4.png
+  - image: assets/stats/pl_villa_cups.png
     text: 1部リーグの優勝は**7回**。FAカップ7回、リーグカップ5回。
     no_telop: true
   - image: assets/stats/pl_villa_data5.png
@@ -64,7 +64,7 @@ sections:
   - image: assets/stats/pl_villa_data6.png
     text: 1930年から31年には、1シーズンで**128ゴール**。いまもイングランド1部の最多記録です。
     no_telop: true
-  - image: assets/stats/pl_villa_data7.png
+  - image: assets/stats/pl_villa_last.png
     text: プレミアリーグでの最高位は、初年度1992年から93年の2位です。
     no_telop: true
   - image: assets/stats/pl_villa_data8.png
@@ -185,17 +185,17 @@ sections:
   - text: 今季の登録選手は29人です。
     image: assets/stats/pl_villa_gk.png
     no_telop: true
-  - image: assets/stats/pl_villa_gk.png
-    text: ゴールキーパーは3人。日本の鈴木彩艶もここにいます。鈴木彩艶は日本代表で**28試合**。
+  - image: assets/stats/pl_villa_gk_f.png
+    text: ゴールキーパーは3人。日本の鈴木彩艶がいます。鈴木彩艶は日本代表で**28試合**。
     no_telop: true
-  - image: assets/stats/pl_villa_df.png
-    text: ディフェンダーは9人。ヴィクトル・リンデロフはスウェーデン代表で**80試合**。マティ・キャッシュはポーランド代表で**25試合**。
+  - image: assets/stats/pl_villa_df_f.png
+    text: ディフェンダーは9人。マティ・キャッシュはポーランド代表で**25試合**。ヴィクトル・リンデロフはスウェーデン代表で**80試合**。
     no_telop: true
-  - image: assets/stats/pl_villa_mf.png
-    text: ミッドフィールダーは11人。主将の**ジョン・マッギン**は、ここにいます。ジョン・マッギンはスコットランド代表で**89試合**。
+  - image: assets/stats/pl_villa_mf_f.png
+    text: ミッドフィールダーは11人。主将を務めるのが**ジョン・マッギン**。リーグ戦で**337試合**に出ています。レオン・ゴレツカはドイツ代表で**73試合**。
     no_telop: true
-  - image: assets/stats/pl_villa_fw.png
-    text: フォワードは6人。ニコラス・ジャクソンはセネガル代表で**37試合**。イブラヒム・ムバイエはセネガル代表で**15試合**。
+  - image: assets/stats/pl_villa_fw_f.png
+    text: フォワードは6人。ニコラス・ジャクソンはセネガル代表で**37試合**。タミー・エイブラハムはイングランド代表で**11試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
@@ -204,7 +204,7 @@ sections:
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 5試合で1勝1引き分け3敗
+  telop: 5試合で1勝1引き分け3敗。16位
   narrator: 解説
   card:
     type: table
@@ -231,6 +231,7 @@ sections:
       - 3対2
   say:
   - プレミアリーグは5試合を終えて、**1勝1引き分け3敗**です。
+  - 順位は**16位**、勝ち点は**4**です。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Aston_Villa_F.C._season
   bg: assets/backgrounds/stadium_アストンヴィラ.png

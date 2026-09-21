@@ -44,7 +44,7 @@ sections:
   - image: assets/stats/pl_everton_data3.png
     text: オーナーはアメリカの実業家ダン・フリードキン。2024年12月からクラブを持っています。
     no_telop: true
-  - image: assets/stats/pl_everton_data4.png
+  - image: assets/stats/pl_everton_cups.png
     text: 1部リーグの優勝は**9回**。FAカップは5回、ヨーロッパのタイトルも1回あります。
     no_telop: true
   - image: assets/stats/pl_everton_data5.png
@@ -55,6 +55,9 @@ sections:
     no_telop: true
   - image: assets/stats/pl_everton_data8.png
     text: 愛称は「トフィーズ」。村にあったキャンディ屋から来ています。
+    no_telop: true
+  - image: assets/stats/pl_everton_last.png
+    text: 昨季は**13位**。勝ち点は49でした。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Everton_F.C.
@@ -170,17 +173,17 @@ sections:
   - text: 今季の登録選手は21人です。
     image: assets/stats/pl_everton_gk.png
     no_telop: true
-  - image: assets/stats/pl_everton_gk.png
+  - image: assets/stats/pl_everton_gk_f.png
     text: ゴールキーパーは3人。ジョーダン・ピックフォードはイングランド代表で**91試合**。
     no_telop: true
-  - image: assets/stats/pl_everton_df.png
-    text: ディフェンダーは6人。主将の**ジェームズ・ターコウスキー**は、ここにいます。ヴィタリー・ミコレンコはウクライナ代表で**54試合**。
+  - image: assets/stats/pl_everton_df_f.png
+    text: ディフェンダーは6人。主将を務めるのが**ジェームズ・ターコウスキー**。リーグ戦で**151試合**に出ています。ヴィタリー・ミコレンコはウクライナ代表で**54試合**。
     no_telop: true
-  - image: assets/stats/pl_everton_mf.png
-    text: ミッドフィールダーは8人。クリスティアン・ノアゴーはデンマーク代表で**41試合**。ジャック・グリーリッシュはイングランド代表で**39試合**。
+  - image: assets/stats/pl_everton_mf_f.png
+    text: ミッドフィールダーは8人。ジャック・グリーリッシュはイングランド代表で**39試合**。クリスティアン・ノアゴーはデンマーク代表で**41試合**。
     no_telop: true
-  - image: assets/stats/pl_everton_fw.png
-    text: フォワードは4人。ブレナン・ジョンソンはウェールズ代表で**45試合**。
+  - image: assets/stats/pl_everton_fw_f.png
+    text: フォワードは4人。ブレナン・ジョンソンはウェールズ代表で**45試合**。ティエルノ・バリーはリーグ戦で**43試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Everton_F.C.
@@ -189,7 +192,7 @@ sections:
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 5試合で2勝3引き分け
+  telop: 5試合で2勝3引き分け。7位
   narrator: 解説
   card:
     type: table
@@ -216,6 +219,7 @@ sections:
       - 1対0
   say:
   - プレミアリーグは5試合を終えて、**2勝3引き分け**です。
+  - 順位は**7位**、勝ち点は**9**です。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Everton_F.C._season
   bg: assets/backgrounds/stadium_エヴァートン.png

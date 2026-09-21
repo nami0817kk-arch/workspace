@@ -67,7 +67,8 @@ def _hex(code: str) -> tuple[int, int, int]:
 
 
 def build(out: Path, title: str, note: str, rows: list[tuple[str, str, bool]],
-          floor: int = FLOOR, colors: tuple | None = None) -> Path:
+          floor: int = FLOOR, colors: tuple | None = None,
+          focus: list[str] | None = None) -> Path:
     """`floor` は描いてよい下端。**動画で出す板は帯に隠れないので SIZE[1] まで使う**
     （2026-09-19。サムネ用の 430 のままだと下の4割が空いた）。
     `colors` はクラブの色（地の上・地の下）。"""
@@ -96,19 +97,40 @@ def build(out: Path, title: str, note: str, rows: list[tuple[str, str, bool]],
     name_font = ImageFont.truetype(font_path, name_size)
     club_font = ImageFont.truetype(font_path, club_size)
 
+    # **いま話している選手の行だけ明るくする**（2026-09-21 ユーザー選択）。
+    # 10人ぶんの名前を出したまま「アダム・スミスは」と読んでも、
+    # 見ている人はどれがその人か探せない。**基礎DATAの板と同じ仕掛け**
+    lit = set(focus or [])
+    if lit:
+        layer = Image.new("RGBA", SIZE, (0, 0, 0, 0))
+        pen = ImageDraw.Draw(layer)
+        for index, (name, _club, _new) in enumerate(rows):
+            if name not in lit:
+                continue
+            col, row = divmod(index, per)
+            x = 46 + col * (SIZE[0] - 92) // columns
+            y = 132 + row * band
+            wide = (SIZE[0] - 92) // columns - 30
+            pen.rectangle([x - 16, y - 10, x + wide, y + band - 16], fill=(255, 255, 255, 38))
+            pen.rectangle([x - 16, y - 10, x - 10, y + band - 16], fill=MARK + (255,))
+        board = Image.alpha_composite(board.convert("RGBA"), layer).convert("RGB")
+        draw = ImageDraw.Draw(board)
+
     for index, (name, club, is_new) in enumerate(rows):
         col, row = divmod(index, per)
         x = 46 + col * (SIZE[0] - 92) // columns
         y = 132 + row * band
         cell = (SIZE[0] - 92) // columns - 60
+        on = not lit or name in lit
         font = _fit(draw, name, font_path, name_size, cell)
-        draw.text((x, y), name, font=font, fill=NAME)
+        draw.text((x, y), name, font=font, fill=NAME if on else (172, 166, 168))
         width = draw.textlength(name, font=font)
         if is_new:
             draw.text((x + width + 16, y + name_size * 0.18), "★",
                       font=ImageFont.truetype(font_path, round(name_size * 0.62)), fill=MARK)
         if club:
-            draw.text((x + 4, y + name_size + 4), club, font=club_font, fill=CLUB)
+            draw.text((x + 4, y + name_size + 4), club, font=club_font,
+                      fill=CLUB if on else (132, 126, 128))
 
     out.parent.mkdir(parents=True, exist_ok=True)
     board.save(out)
@@ -124,6 +146,8 @@ def main() -> int:
                     help="動画で出す板。帯に隠れないので下まで使う")
     ap.add_argument("--colors", default="",
                     help="地の色を2つ（例 #670E36,#2A0616）。クラブの色にするとき")
+    ap.add_argument("--focus", action="append", default=[],
+                    help="明るく残す名前。指定した行以外は沈める（何度でも指定できる）")
     ap.add_argument("--row", action="append", default=[],
                     help="名前|所属など|new（new を付けると印が出る）")
     args = ap.parse_args()
@@ -139,7 +163,12 @@ def main() -> int:
         return 1
     colors = tuple(_hex(c) for c in args.colors.split(",")) if args.colors else None
     where = build(Path(args.out), args.title, args.note, rows,
-                  floor=SIZE[1] - 30 if args.full else FLOOR, colors=colors)
+                  floor=SIZE[1] - 30 if args.full else FLOOR, colors=colors,
+                  focus=args.focus)
+    missing = [n for n in args.focus if n not in [r[0] for r in rows]]
+    if missing:
+        # **黙って全部沈む。**名前が1つも当たらないと、板は読めるが誰も光らない
+        print(f"■ --focus の名前が板にありません: {'、'.join(missing)}", file=sys.stderr)
     print(f"一覧板: {where}  （{len(rows)}人）")
     return 0
 

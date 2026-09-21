@@ -168,13 +168,13 @@ cards:
   image: assets/stats/pl_tottenham_data3.png
 解説: 1部リーグの優勝は**2回**。FAカップは8回、リーグカップ4回、ヨーロッパのタイトルもあります。
   no_telop: true
-  image: assets/stats/pl_tottenham_data4.png
+  image: assets/stats/pl_tottenham_cups.png
 解説: 直近のタイトルは、2024年から25年のヨーロッパリーグです。
   no_telop: true
   image: assets/stats/pl_tottenham_data5.png
 解説: プレミアでの最高位は、2016年から17年の**2位**です。
   no_telop: true
-  image: assets/stats/pl_tottenham_data7.png
+  image: assets/stats/pl_tottenham_last.png
 解説: 愛称は「スパーズ」。「リリーホワイツ」とも呼ばれます。
   no_telop: true
   image: assets/stats/pl_tottenham_data8.png
@@ -229,18 +229,18 @@ cards:
   no_telop: true
   source: 報道
   image: assets/stats/pl_tottenham_gk.png
-キャスター: ゴールキーパーは4人。マルティン・ドゥーブラフカはスロバキア代表で**60試合**。
+キャスター: ゴールキーパーは4人。マルティン・ドゥーブラフカはスロバキア代表で**60試合**。グリエルモ・ヴィカーリオはリーグ戦で**93試合**。
   no_telop: true
-  image: assets/stats/pl_tottenham_gk.png
-キャスター: ディフェンダーは12人。日本の高井幸大もここにいます。主将の**ミッキー・ファン・デ・フェン**は、ここにいます。ベン・デイヴィスはウェールズ代表で**100試合**。
+  image: assets/stats/pl_tottenham_gk_f.png
+キャスター: ディフェンダーは12人。日本の高井幸大がいます。主将を務めるのが**ミッキー・ファン・デ・フェン**。リーグ戦で**79試合**に出ています。ベン・デイヴィスはウェールズ代表で**100試合**。
   no_telop: true
-  image: assets/stats/pl_tottenham_df.png
+  image: assets/stats/pl_tottenham_df_f.png
 キャスター: ミッドフィールダーは9人。ロドリゴ・ベンタンクールはウルグアイ代表で**77試合**。パペ・マタル・サールはセネガル代表で**42試合**。
   no_telop: true
-  image: assets/stats/pl_tottenham_mf.png
-キャスター: フォワードは10人。オマル・マルムーシュはエジプト代表で**55試合**。リシャルリソンはブラジル代表で**54試合**。
+  image: assets/stats/pl_tottenham_mf_f.png
+キャスター: フォワードは10人。リシャルリソンはブラジル代表で**54試合**。デヤン・クルゼフスキはスウェーデン代表で**45試合**。
   no_telop: true
-  image: assets/stats/pl_tottenham_fw.png
+  image: assets/stats/pl_tottenham_fw_f.png
 
 ## 今季のここまで
 @bg: assets/backgrounds/stadium_トッテナム.png
@@ -249,3 +249,7 @@ cards:
   telop: プレミアリーグは5試合を終えて、**2引き分け3敗**です
   source: 報道
   card: season_card
+解説: 順位は**20位**、勝ち点は**2**です。
+  telop: 順位は**20位**、勝ち点は**2**です
+解説: いまは降格圏にいます。
+  telop: いまは降格圏にいます

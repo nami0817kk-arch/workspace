@@ -43,13 +43,13 @@ sections:
     no_telop: true
   - image: assets/photos/pl/newcastle_owner_d7f21670.jpg
     text: オーナーはサウジアラビアの公共投資基金。2021年からクラブを持っています。
-  - image: assets/stats/pl_newcastle_data4.png
+  - image: assets/stats/pl_newcastle_cups.png
     text: 1部リーグの優勝は**4回**。FAカップ6回、リーグカップ1回、ヨーロッパのタイトルが1回あります。
     no_telop: true
   - image: assets/stats/pl_newcastle_data5.png
     text: 直近のタイトルは、2024年から25年のリーグカップです。
     no_telop: true
-  - image: assets/stats/pl_newcastle_data7.png
+  - image: assets/stats/pl_newcastle_last.png
     text: プレミアでの最高位は2位。1995年から96年と、その翌年の2回です。
     no_telop: true
   - image: assets/stats/pl_newcastle_data8.png
@@ -174,17 +174,17 @@ sections:
   - text: 今季の登録選手は25人です。
     image: assets/stats/pl_newcastle_gk.png
     no_telop: true
-  - image: assets/stats/pl_newcastle_gk.png
+  - image: assets/stats/pl_newcastle_gk_f.png
     text: ゴールキーパーは4人。ニック・ポープはイングランド代表で**10試合**。
     no_telop: true
-  - image: assets/stats/pl_newcastle_df.png
-    text: ディフェンダーは7人。主将の**ダン・バーン**は、ここにいます。ファビアン・シェアはスイス代表で**86試合**。
+  - image: assets/stats/pl_newcastle_df_f.png
+    text: ディフェンダーは7人。主将を務めるのが**ダン・バーン**。リーグ戦で**153試合**に出ています。ファビアン・シェアはスイス代表で**86試合**。
     no_telop: true
-  - image: assets/stats/pl_newcastle_mf.png
-    text: ミッドフィールダーは7人。
+  - image: assets/stats/pl_newcastle_mf_f.png
+    text: ミッドフィールダーは7人。ジェイコブ・マーフィーはリーグ戦で**218試合**。ジョー・ウィロックはリーグ戦で**148試合**。
     no_telop: true
-  - image: assets/stats/pl_newcastle_fw.png
-    text: フォワードは7人。ヨアネ・ウィサはコンゴ民主共和国代表で**43試合**。アンソニー・エランガはスウェーデン代表で**34試合**。
+  - image: assets/stats/pl_newcastle_fw_f.png
+    text: フォワードは7人。ジョエリントンはリーグ戦で**212試合**。ヨアネ・ウィサはコンゴ民主共和国代表で**43試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
@@ -193,7 +193,7 @@ sections:
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 5試合で2勝2引き分け1敗
+  telop: 5試合で2勝2引き分け1敗。9位
   narrator: 解説
   card:
     type: table
@@ -220,6 +220,7 @@ sections:
       - 2対1
   say:
   - プレミアリーグは5試合を終えて、**2勝2引き分け1敗**です。
+  - 順位は**9位**、勝ち点は**8**です。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Newcastle_United_F.C._season
   bg: assets/backgrounds/stadium_ニューカッスル.png

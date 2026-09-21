@@ -57,7 +57,7 @@ sections:
   - image: assets/stats/pl_coventry_data3.png
     text: オーナーは地元の実業家ダグ・キング。2023年からクラブを持っています。
     no_telop: true
-  - image: assets/stats/pl_coventry_data4.png
+  - image: assets/stats/pl_coventry_cups.png
     text: 1部リーグの優勝はありませんが、1987年にFAカップを獲っています。
     no_telop: true
   - image: assets/stats/pl_coventry_data5.png
@@ -186,17 +186,17 @@ sections:
   - text: 今季の登録選手は28人です。
     image: assets/stats/pl_coventry_gk.png
     no_telop: true
-  - image: assets/stats/pl_coventry_gk.png
-    text: ゴールキーパーは3人。
+  - image: assets/stats/pl_coventry_gk_f.png
+    text: ゴールキーパーは3人。ベン・ウィルソンはリーグ戦で**97試合**。カール・ラッシュワースはリーグ戦で**51試合**。
     no_telop: true
-  - image: assets/stats/pl_coventry_df.png
-    text: ディフェンダーは10人。ジョエル・ラティボーディエールはジャマイカ代表で**31試合**。イーサン・ピノックはジャマイカ代表で**28試合**。
+  - image: assets/stats/pl_coventry_df_f.png
+    text: ディフェンダーは10人。ジョエル・ラティボーディエールはジャマイカ代表で**31試合**。ジェイ・ダシルヴァはウェールズ代表で**10試合**。
     no_telop: true
-  - image: assets/stats/pl_coventry_mf.png
-    text: ミッドフィールダーは7人。主将の**マット・グライムズ**は、ここにいます。フランク・オニェカはナイジェリア代表で**45試合**。
+  - image: assets/stats/pl_coventry_mf_f.png
+    text: ミッドフィールダーは7人。主将を務めるのが**マット・グライムズ**。リーグ戦で**66試合**に出ています。ジョシュ・エクルズはリーグ戦で**166試合**。
     no_telop: true
-  - image: assets/stats/pl_coventry_fw.png
-    text: フォワードは8人。日本の坂元達裕もここにいます。ハジ・ライトはアメリカ代表で**22試合**。
+  - image: assets/stats/pl_coventry_fw_f.png
+    text: フォワードは8人。日本の坂元達裕がいます。ハジ・ライトはアメリカ代表で**22試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Coventry_City_F.C.
@@ -205,7 +205,7 @@ sections:
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 5試合で1勝4敗
+  telop: 5試合で1勝4敗。18位
   narrator: 解説
   card:
     type: table
@@ -232,6 +232,8 @@ sections:
       - 1対0
   say:
   - プレミアリーグは5試合を終えて、**1勝4敗**です。
+  - 順位は**18位**、勝ち点は**3**です。
+  - いまは降格圏にいます。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Coventry_City_F.C._season
   bg: assets/backgrounds/stadium_コヴェントリー.png

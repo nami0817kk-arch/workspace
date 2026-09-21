@@ -57,7 +57,7 @@ sections:
   - image: assets/stats/pl_ipswich_data3.png
     text: オーナーは、アメリカの投資グループが集まったゲームチェンジャー20。2021年からです。
     no_telop: true
-  - image: assets/stats/pl_ipswich_data4.png
+  - image: assets/stats/pl_ipswich_cups.png
     text: 1部リーグの優勝が**1回**。FAカップ1回、そしてヨーロッパのUEFAカップも1回獲っています。
     no_telop: true
   - image: assets/stats/pl_ipswich_data7.png
@@ -178,17 +178,17 @@ sections:
   - text: 今季の登録選手は28人です。
     image: assets/stats/pl_ipswich_gk.png
     no_telop: true
-  - image: assets/stats/pl_ipswich_gk.png
-    text: ゴールキーパーは4人。
+  - image: assets/stats/pl_ipswich_gk_f.png
+    text: ゴールキーパーは4人。クリスチャン・ウォルトンはリーグ戦で**125試合**。
     no_telop: true
-  - image: assets/stats/pl_ipswich_df.png
-    text: ディフェンダーは7人。ダラ・オシェイはアイルランド代表で**45試合**。
+  - image: assets/stats/pl_ipswich_df_f.png
+    text: ディフェンダーは7人。ダラ・オシェイはアイルランド代表で**45試合**。リーフ・デイヴィスはリーグ戦で**160試合**。
     no_telop: true
-  - image: assets/stats/pl_ipswich_mf.png
-    text: ミッドフィールダーは6人。サシャ・ルキッチはセルビア代表で**62試合**。エセキエル・パラシオスはアルゼンチン代表で**41試合**。
+  - image: assets/stats/pl_ipswich_mf_f.png
+    text: ミッドフィールダーは6人。サシャ・ルキッチはセルビア代表で**62試合**。ジャック・テイラーはアイルランド代表で**11試合**。
     no_telop: true
-  - image: assets/stats/pl_ipswich_fw.png
-    text: フォワードは11人。日本の前田大然もここにいます。フリオ・エンシソはパラグアイ代表で**37試合**。
+  - image: assets/stats/pl_ipswich_fw_f.png
+    text: フォワードは11人。日本の前田大然がいます。フリオ・エンシソはパラグアイ代表で**37試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
@@ -197,7 +197,7 @@ sections:
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 5試合で2勝3敗
+  telop: 5試合で2勝3敗。11位
   narrator: 解説
   card:
     type: table
@@ -224,6 +224,7 @@ sections:
       - 0対1
   say:
   - プレミアリーグは5試合を終えて、**2勝3敗**です。
+  - 順位は**11位**、勝ち点は**6**です。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Ipswich_Town_F.C._season
   bg: assets/backgrounds/stadium_イプスウィッチ.png

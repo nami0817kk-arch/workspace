@@ -55,7 +55,7 @@ sections:
   - image: assets/stats/pl_leeds_map.png
     text: ホームタウンはリーズ。イングランド・ウェストヨークシャーです。
     no_telop: true
-  - image: assets/stats/pl_leeds_data4.png
+  - image: assets/stats/pl_leeds_cups.png
     text: 1部リーグの優勝は**3回**。FAカップとリーグカップが1回ずつ、ヨーロッパのフェアーズカップを2回獲っています。
     no_telop: true
   - image: assets/stats/pl_leeds_data5.png
@@ -63,6 +63,9 @@ sections:
     no_telop: true
   - image: assets/stats/pl_leeds_data6.png
     text: 1968年から69年にかけては、**34試合続けて負けなし**。いまも破られていないクラブ記録です。
+    no_telop: true
+  - image: assets/stats/pl_leeds_last.png
+    text: 昨季は**14位**。勝ち点は47でした。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Leeds_United_F.C.
@@ -190,13 +193,13 @@ sections:
   - image: assets/stats/pl_leeds_gk.png
     text: ゴールキーパーは3人。
     no_telop: true
-  - image: assets/stats/pl_leeds_df.png
-    text: ディフェンダーは8人。ヤカ・ビヨルはスロベニア代表で**73試合**。ニコ・エルヴェディはスイス代表で**73試合**。
+  - image: assets/stats/pl_leeds_df_f.png
+    text: ディフェンダーは8人。ジョー・ロドンはウェールズ代表で**62試合**。ヤカ・ビヨルはスロベニア代表で**73試合**。
     no_telop: true
-  - image: assets/stats/pl_leeds_mf.png
-    text: ミッドフィールダーは8人。日本の田中碧もここにいます。主将の**イーサン・アンパドゥ**は、ここにいます。ハリー・ウィルソンはウェールズ代表で**69試合**。
+  - image: assets/stats/pl_leeds_mf_f.png
+    text: ミッドフィールダーは8人。日本の田中碧がいます。主将を務めるのが**イーサン・アンパドゥ**。リーグ戦で**113試合**に出ています。ダニエル・ジェームズはウェールズ代表で**65試合**。
     no_telop: true
-  - image: assets/stats/pl_leeds_fw.png
+  - image: assets/stats/pl_leeds_fw_f.png
     text: フォワードは5人。ノア・オカフォーはスイス代表で**26試合**。ドミニク・キャルヴァート＝ルーウィンはイングランド代表で**12試合**。
     no_telop: true
   sources:
@@ -206,7 +209,7 @@ sections:
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 5試合で2勝3引き分け
+  telop: 5試合で2勝3引き分け。5位
   narrator: 解説
   card:
     type: table
@@ -233,6 +236,7 @@ sections:
       - 0対0
   say:
   - プレミアリーグは5試合を終えて、**2勝3引き分け**です。
+  - 順位は**5位**、勝ち点は**9**です。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Leeds_United_F.C._season
   bg: assets/backgrounds/stadium_リーズ.png

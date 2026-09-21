@@ -164,13 +164,16 @@ cards:
   image: assets/stats/pl_liverpool_map.png
 解説: 1部リーグの優勝は**20回**。FAカップ8回、リーグカップ10回、チャンピオンズリーグは6回獲っています。
   no_telop: true
-  image: assets/stats/pl_liverpool_data4.png
+  image: assets/stats/pl_liverpool_cups.png
 解説: 直近のタイトルは、2024年から25年のプレミアリーグ優勝です。
   no_telop: true
   image: assets/stats/pl_liverpool_data5.png
 解説: 2017年から18年には、モハメド・サラーが1シーズンで**44得点**を挙げました。
   no_telop: true
   image: assets/stats/pl_liverpool_data6.png
+解説: 昨季は**5位**。勝ち点は60でした。
+  no_telop: true
+  image: assets/stats/pl_liverpool_last.png
 
 ## 空になったスタジアム
 @bg: assets/backgrounds/stadium_リヴァプール.png
@@ -230,16 +233,16 @@ cards:
   image: assets/stats/pl_liverpool_gk.png
 キャスター: ゴールキーパーは6人。アリソン・ベッカーはブラジル代表で**83試合**。ギオルギ・ママルダシュヴィリはジョージア代表で**38試合**。
   no_telop: true
-  image: assets/stats/pl_liverpool_gk.png
-キャスター: ディフェンダーは12人。主将の**フィルジル・ファン・ダイク**は、ここにいます。フィルジル・ファン・ダイクはオランダ代表で**96試合**。
+  image: assets/stats/pl_liverpool_gk_f.png
+キャスター: ディフェンダーは12人。主将を務めるのが**フィルジル・ファン・ダイク**。リーグ戦で**277試合**に出ています。コスタス・ツィミカスはギリシャ代表で**51試合**。
   no_telop: true
-  image: assets/stats/pl_liverpool_df.png
-キャスター: ミッドフィールダーは8人。日本の遠藤航もここにいます。遠藤航は日本代表で**73試合**。
+  image: assets/stats/pl_liverpool_df_f.png
+キャスター: ミッドフィールダーは8人。日本の遠藤航がいます。ドミニク・ソボスライはハンガリー代表で**65試合**。
   no_telop: true
-  image: assets/stats/pl_liverpool_mf.png
-キャスター: フォワードは9人。アレクサンデル・イサクはスウェーデン代表で**62試合**。コーディ・ガクポはオランダ代表で**54試合**。
+  image: assets/stats/pl_liverpool_mf_f.png
+キャスター: フォワードは9人。コーディ・ガクポはオランダ代表で**54試合**。アレクサンデル・イサクはスウェーデン代表で**62試合**。
   no_telop: true
-  image: assets/stats/pl_liverpool_fw.png
+  image: assets/stats/pl_liverpool_fw_f.png
 
 ## 今季のここまで
 @bg: assets/backgrounds/stadium_リヴァプール.png
@@ -248,3 +251,5 @@ cards:
   telop: プレミアリーグは5試合を終えて、**2勝3引き分け**です
   source: 報道
   card: season_card
+解説: 順位は**6位**、勝ち点は**9**です。
+  telop: 順位は**6位**、勝ち点は**9**です

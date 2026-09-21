@@ -43,10 +43,10 @@ sections:
     no_telop: true
   - image: assets/photos/pl/fulham_owner_9cb77ec2.jpg
     text: オーナーはアメリカの実業家シャヒド・カーン。2013年からクラブを持っています。
-  - image: assets/stats/pl_fulham_data4.png
+  - image: assets/stats/pl_fulham_cups.png
     text: 1部リーグの優勝はありませんが、ヨーロッパのタイトルを1回獲っています。
     no_telop: true
-  - image: assets/stats/pl_fulham_data7.png
+  - image: assets/stats/pl_fulham_last.png
     text: プレミアでの最高位は、2008年から09年の**7位**です。
     no_telop: true
   - image: assets/stats/pl_fulham_data6.png
@@ -172,17 +172,17 @@ sections:
   - text: 今季の登録選手は25人です。
     image: assets/stats/pl_fulham_gk.png
     no_telop: true
-  - image: assets/stats/pl_fulham_gk.png
-    text: ゴールキーパーは2人。
+  - image: assets/stats/pl_fulham_gk_f.png
+    text: ゴールキーパーは2人。ベルント・レノはリーグ戦で**154試合**。
     no_telop: true
-  - image: assets/stats/pl_fulham_df.png
-    text: ディフェンダーは7人。ティモシー・カスターニュはベルギー代表で**69試合**。アントニー・ロビンソンはアメリカ代表で**58試合**。
+  - image: assets/stats/pl_fulham_df_f.png
+    text: ディフェンダーは7人。アントニー・ロビンソンはアメリカ代表で**58試合**。ティモシー・カスターニュはベルギー代表で**69試合**。
     no_telop: true
-  - image: assets/stats/pl_fulham_mf.png
-    text: ミッドフィールダーは11人。主将の**Tom Cairney**は、ここにいます。アレックス・イウォビはナイジェリア代表で**99試合**。
+  - image: assets/stats/pl_fulham_mf_f.png
+    text: ミッドフィールダーは11人。主将を務めるのが**Tom Cairney**。リーグ戦で**340試合**に出ています。アレックス・イウォビはナイジェリア代表で**99試合**。
     no_telop: true
-  - image: assets/stats/pl_fulham_fw.png
-    text: フォワードは5人。オスカー・ボブはノルウェー代表で**26試合**。
+  - image: assets/stats/pl_fulham_fw_f.png
+    text: フォワードは5人。ロドリゴ・ムニスはリーグ戦で**106試合**。オスカー・ボブはノルウェー代表で**26試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Fulham_F.C.
@@ -191,7 +191,7 @@ sections:
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 5試合で2引き分け3敗
+  telop: 5試合で2引き分け3敗。19位
   narrator: 解説
   card:
     type: table
@@ -218,6 +218,8 @@ sections:
       - 1対1
   say:
   - プレミアリーグは5試合を終えて、**2引き分け3敗**です。
+  - 順位は**19位**、勝ち点は**2**です。
+  - いまは降格圏にいます。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Fulham_F.C._season
   bg: assets/backgrounds/stadium_フラム.png

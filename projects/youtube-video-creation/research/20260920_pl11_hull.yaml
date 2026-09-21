@@ -56,7 +56,7 @@ sections:
     no_telop: true
   - image: assets/photos/pl/hull_owner_8739e202.jpg
     text: オーナーはトルコの実業家アジュン・ウルジャル。2022年からクラブを持っています。
-  - image: assets/stats/pl_hull_data5.png
+  - image: assets/stats/pl_hull_cups.png
     text: 大きなタイトルはまだありません。昨季、2025年から26年に昇格プレーオフを勝ち抜いて、プレミアに上がってきました。
     no_telop: true
   - image: assets/stats/pl_hull_data7.png
@@ -187,17 +187,17 @@ sections:
   - image: assets/stats/pl_hull_gk.png
     text: ゴールキーパーは3人。
     no_telop: true
-  - image: assets/stats/pl_hull_df.png
-    text: ディフェンダーは10人。パディ・マクネアは北アイルランド代表で**82試合**。セミ・アジャイはナイジェリア代表で**57試合**。
+  - image: assets/stats/pl_hull_df_f.png
+    text: ディフェンダーは10人。パディ・マクネアは北アイルランド代表で**82試合**。ルーイ・コイルはリーグ戦で**219試合**。
     no_telop: true
   - image: assets/stats/pl_hull_mf1.png
-    text: ミッドフィールダーは13人。日本の守田英正もここにいます。守田英正は日本代表で**40試合**。
+    text: ミッドフィールダーは13人。日本の守田英正がいます。リーガン・スレイターはリーグ戦で**212試合**。
     no_telop: true
   - image: assets/stats/pl_hull_mf2.png
     text: ミッドフィールダーの続きです。
     no_telop: true
-  - image: assets/stats/pl_hull_fw.png
-    text: フォワードは7人。ソーバ・トーマスはウェールズ代表で**27試合**。オリ・マクバーニーはスコットランド代表で**16試合**。
+  - image: assets/stats/pl_hull_fw_f.png
+    text: フォワードは7人。オリ・マクバーニーはスコットランド代表で**16試合**。ソーバ・トーマスはウェールズ代表で**27試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
@@ -206,7 +206,7 @@ sections:
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 5試合で2勝2引き分け1敗
+  telop: 5試合で2勝2引き分け1敗。8位
   narrator: 解説
   card:
     type: table
@@ -233,6 +233,7 @@ sections:
       - 1対2
   say:
   - プレミアリーグは5試合を終えて、**2勝2引き分け1敗**です。
+  - 順位は**8位**、勝ち点は**8**です。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Hull_City_A.F.C._season
   bg: assets/backgrounds/stadium_ハルシティ.png
