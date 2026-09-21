@@ -176,7 +176,7 @@ cards:
   image: assets/photos/pl/bournemouth_owner_cf0347c5.jpg
 解説: 1部リーグの優勝もカップのタイトルも、まだありません。直近のタイトルは2014年から15年の2部優勝です。
   no_telop: true
-  image: assets/stats/pl_bournemouth_data5.png
+  image: assets/stats/pl_bournemouth_data4.png
 解説: そのかわり、昨季はプレミアリーグで**6位**。クラブ史上最高の順位で、初めてヨーロッパへの切符をつかみました。
   no_telop: true
   image: assets/stats/pl_bournemouth_data7.png

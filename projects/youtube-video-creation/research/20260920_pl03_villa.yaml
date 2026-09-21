@@ -1,0 +1,237 @@
+# プレミアリーグ20クラブ紹介 ③アストン・ヴィラ（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/pl_data/villa*.json と旧台本 20260916_pl03_villa.yaml
+format: news
+voice_min: 0
+slot: premier_1
+date: 2026年9月19日
+people:
+- 鈴木彩艶
+- アストン・ヴィラ
+short_title: 鈴木彩艶がいるアストン・ヴィラってどんなクラブ？
+theme:
+  id: pl_clubs_03_villa
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: アストン・ヴィラ
+  title: 鈴木彩艶がいるアストン・ヴィラってどんなクラブ？ ③プレミア20クラブ紹介
+  question: どんなクラブなのか
+  hook: 世界で初めてのリーグを作ったクラブに、日本代表の守護神が加わりました。
+thumbnail:
+  line1: 鈴木彩艶の新天地
+  line2: 世界初のリーグを作ったクラブ
+  crest_main:
+  - アストンヴィラ
+  tags: []
+  points: []
+sections:
+- id: why
+  heading: 鈴木彩艶がいるクラブ
+  tier: 報道
+  telop: 鈴木彩艶が所属するアストン・ヴィラ
+  narrator: キャスター
+  say:
+  - 日本代表のゴールキーパー、鈴木彩艶が今夏、イタリアのパルマからヴィラに加わりました。
+  - 移籍金は**2,560万ポンド**。今季はチャンピオンズリーグにも出るクラブです。
+  - では、どんなクラブなのか。まずは基本のデータから見ていきます。
+  sources:
+  - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
+  bg: assets/backgrounds/stadium_アストンヴィラ.png
+  official: false
+- id: data
+  heading: アストン・ヴィラ 基礎DATA
+  main: true
+  tier: 背景
+  telop: 1874年創立
+  narrator: 解説
+  say:
+  - short_only: true
+    text: 鈴木彩艶の所属クラブを、基本のデータで見ていきます。
+  - image: assets/stats/pl_villa_data0.png
+    text: 創立は**1874年**。礼拝堂に集まっていた青年4人が立ち上げました。
+    no_telop: true
+  - image: assets/backgrounds/stadium_アストンヴィラ_in.png
+    text: 本拠地はヴィラ・パーク。4万3205人が入ります。
+  - image: assets/stats/pl_villa_map.png
+    text: ホームタウンはバーミンガム。イングランド第2の都市です。
+    no_telop: true
+  - image: assets/stats/pl_villa_data4.png
+    text: 1部リーグの優勝は**7回**。FAカップ7回、リーグカップ5回。
+    no_telop: true
+  - image: assets/stats/pl_villa_data5.png
+    text: ヨーロッパでは1982年にチャンピオンズカップ、そして昨季は**ヨーロッパリーグ**を獲りました。
+    no_telop: true
+  - image: assets/stats/pl_villa_data6.png
+    text: 1930年から31年には、1シーズンで**128ゴール**。いまもイングランド1部の最多記録です。
+    no_telop: true
+  - image: assets/stats/pl_villa_data7.png
+    text: プレミアリーグでの最高位は、初年度1992年から93年の2位です。
+    no_telop: true
+  - image: assets/stats/pl_villa_data8.png
+    text: 愛称は「ヴィランズ」。「ライオンズ」とも呼ばれます。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
+  bg: assets/backgrounds/stadium_アストンヴィラ.png
+  official: false
+- id: history
+  heading: 歩んできた道
+  tier: 背景
+  telop: リーグそのものを作ったクラブ
+  narrator: 解説
+  card:
+    type: table
+    title: 残してきた記録
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1888年
+      - ヴィラの重役がフットボールリーグを創設
+    - - 1982年
+      - ヨーロッパカップ優勝（バイエルンに1-0）
+    - - 2025-26年
+      - ヨーロッパリーグ優勝。30年ぶりのタイトル
+  say:
+  - このクラブは、リーグそのものを作った側にいます。
+  - 1888年、ヴィラの重役だったウィリアム・マクレガーが、**世界で初めてのフットボールリーグ**を立ち上げました。
+  - ヴィラは、その創設メンバーの1つです。
+  - 1982年には、イングランドのクラブとして**4番目**にヨーロッパカップを勝ち取りました。決勝の相手はバイエルン・ミュンヘン。ロッテルダムで1対0でした。
+  - そして昨季、2025年から26年。ヨーロッパリーグで優勝します。
+  - フライブルクを3対0で下しての戴冠で、**30年ぶりのタイトル**でした。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
+  bg: assets/backgrounds/stadium_アストンヴィラ.png
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id001
+      - ガブリエル・アグボンラホー
+      - 2005-2018
+      - プレミア74得点。長くクラブ最多
+  say:
+  - text: 地元出身のガブリエル・アグボンラホーは、プレミアリーグで74得点。長くクラブの最多記録でした。
+    image: assets/photos/pl/villa_legend_27411382.jpg
+  sources: &id002
+  - https://en.wikipedia.org/wiki/Gabriel_Agbonlahor
+  - https://en.wikipedia.org/wiki/Ollie_Watkins
+  - https://en.wikipedia.org/wiki/Paul_McGrath_(footballer)
+  bg: assets/backgrounds/stadium_アストンヴィラ.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - &id003
+      - ジャック・グリーリッシュ
+      - 2013-2021
+      - 6歳で入団。1億ポンドでシティへ
+  say:
+  - ジャック・グリーリッシュは**6歳**でヴィラに入り、主将まで務めました。2021年、**1億ポンド**でマンチェスター・シティへ。
+  sources: *id002
+  bg: assets/backgrounds/stadium_アストンヴィラ.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id001
+    - *id003
+    - - オリー・ワトキンス
+      - 2020-2026
+      - アグボンラホーを抜きプレミア最多に
+  say:
+  - text: アグボンラホーの記録を抜いたのが、オリー・ワトキンス。2025年5月のことでした。
+    image: assets/photos/pl/villa_legend_b8954c93.jpg
+  sources: *id002
+  bg: assets/backgrounds/stadium_アストンヴィラ.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は29人です。
+    image: assets/stats/pl_villa_gk.png
+    no_telop: true
+  - image: assets/stats/pl_villa_gk.png
+    text: ゴールキーパーは3人。日本の鈴木彩艶もここにいます。鈴木彩艶は日本代表で**28試合**。
+    no_telop: true
+  - image: assets/stats/pl_villa_df.png
+    text: ディフェンダーは9人。ヴィクトル・リンデロフはスウェーデン代表で**80試合**。マティ・キャッシュはポーランド代表で**25試合**。
+    no_telop: true
+  - image: assets/stats/pl_villa_mf.png
+    text: ミッドフィールダーは11人。主将の**ジョン・マッギン**は、ここにいます。ジョン・マッギンはスコットランド代表で**89試合**。
+    no_telop: true
+  - image: assets/stats/pl_villa_fw.png
+    text: フォワードは6人。ニコラス・ジャクソンはセネガル代表で**37試合**。イブラヒム・ムバイエはセネガル代表で**15試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
+  bg: assets/backgrounds/stadium_アストンヴィラ.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 5試合で1勝1引き分け3敗
+  narrator: 解説
+  card:
+    type: table
+    title: プレミアリーグの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - ブライトン（アウェー）
+      - 0対4
+    - - 第2節
+      - アーセナル（ホーム）
+      - 0対1
+    - - 第3節
+      - ハル・シティ（アウェー）
+      - 0対0
+    - - 第4節
+      - ノッティンガム・フォレスト（ホーム）
+      - 1対2
+    - - 第5節
+      - トッテナム・ホットスパー（アウェー）
+      - 3対2
+  say:
+  - プレミアリーグは5試合を終えて、**1勝1引き分け3敗**です。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Aston_Villa_F.C._season
+  bg: assets/backgrounds/stadium_アストンヴィラ.png
+  official: false

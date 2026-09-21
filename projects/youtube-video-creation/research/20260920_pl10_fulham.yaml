@@ -38,16 +38,18 @@ sections:
     no_telop: true
   - image: assets/backgrounds/stadium_フラム_in.png
     text: 本拠地はテムズ川沿いのクレイヴン・コテージ。**2万8107人**が入ります。
-  - image: assets/stats/pl_fulham_data3.png
-    text: オーナーはアメリカの実業家シャヒド・カーン。2013年からクラブを持っています。
+  - image: assets/stats/pl_fulham_map.png
+    text: ホームタウンはフラム。ロンドン中心部の西です。
     no_telop: true
-  - image: assets/stats/pl_fulham_data.png
+  - image: assets/photos/pl/fulham_owner_9cb77ec2.jpg
+    text: オーナーはアメリカの実業家シャヒド・カーン。2013年からクラブを持っています。
+  - image: assets/stats/pl_fulham_data4.png
     text: 1部リーグの優勝はありませんが、ヨーロッパのタイトルを1回獲っています。
     no_telop: true
   - image: assets/stats/pl_fulham_data7.png
     text: プレミアでの最高位は、2008年から09年の**7位**です。
     no_telop: true
-  - image: assets/stats/pl_fulham_data.png
+  - image: assets/stats/pl_fulham_data6.png
     text: 最多出場はジョニー・ヘインズ。1952年から70年に**658試合**に出ました。
     no_telop: true
   - image: assets/stats/pl_fulham_data8.png
@@ -132,7 +134,8 @@ sections:
       - 2015-
       - プレーオフ決勝の決勝点
   say:
-  - トム・ケアニーは10年以上在籍する主将。2018年のプレーオフ決勝で決勝点を決め、クラブをプレミアに戻しました。
+  - text: トム・ケアニーは10年以上在籍する主将。2018年のプレーオフ決勝で決勝点を決め、クラブをプレミアに戻しました。
+    image: assets/photos/pl/fulham_legend_02ecd663.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_フラム.png
   official: false
@@ -155,7 +158,8 @@ sections:
       - 2007-2012
       - クラブのプレミア最多50得点
   say:
-  - クリント・デンプシーは、クラブのプレミアリーグ最多となる**50得点**を挙げています。
+  - text: クリント・デンプシーは、クラブのプレミアリーグ最多となる**50得点**を挙げています。
+    image: assets/photos/pl/fulham_legend_368535cd.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_フラム.png
   official: false
@@ -165,18 +169,20 @@ sections:
   telop: 今季の登録選手
   narrator: キャスター
   say:
-  - 今季の登録選手は24人です。
+  - text: 今季の登録選手は25人です。
+    image: assets/stats/pl_fulham_gk.png
+    no_telop: true
   - image: assets/stats/pl_fulham_gk.png
     text: ゴールキーパーは2人。
     no_telop: true
   - image: assets/stats/pl_fulham_df.png
-    text: ディフェンダーは7人。
+    text: ディフェンダーは7人。ティモシー・カスターニュはベルギー代表で**69試合**。アントニー・ロビンソンはアメリカ代表で**58試合**。
     no_telop: true
   - image: assets/stats/pl_fulham_mf.png
-    text: ミッドフィールダーは10人。
+    text: ミッドフィールダーは11人。主将の**Tom Cairney**は、ここにいます。アレックス・イウォビはナイジェリア代表で**99試合**。
     no_telop: true
   - image: assets/stats/pl_fulham_fw.png
-    text: フォワードは5人。
+    text: フォワードは5人。オスカー・ボブはノルウェー代表で**26試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Fulham_F.C.
@@ -185,7 +191,7 @@ sections:
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 4試合で1引き分け3敗
+  telop: 5試合で2引き分け3敗
   narrator: 解説
   card:
     type: table
@@ -207,8 +213,11 @@ sections:
     - - 第4節
       - リヴァプール（アウェー）
       - 0対0
+    - - 第5節
+      - マンチェスター・ユナイテッド（ホーム）
+      - 1対1
   say:
-  - プレミアリーグは4試合を終えて、**1引き分け3敗**です。
+  - プレミアリーグは5試合を終えて、**2引き分け3敗**です。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Fulham_F.C._season
   bg: assets/backgrounds/stadium_フラム.png

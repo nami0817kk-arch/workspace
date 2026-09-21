@@ -148,12 +148,15 @@ cards:
 解説: 本拠地はセント・ジェームズ・パーク。**5万2729人**が入ります。
   telop: 本拠地はセント・ジェームズ・パーク。**5万2729人**が入ります
   image: assets/backgrounds/stadium_ニューカッスル_in.png
-解説: オーナーはサウジアラビアの公共投資基金。2021年からクラブを持っています。
+解説: ホームタウンはニューカッスル・アポン・タイン。イングランド北東部です。
   no_telop: true
-  image: assets/stats/pl_newcastle_data3.png
+  image: assets/stats/pl_newcastle_map.png
+解説: オーナーはサウジアラビアの公共投資基金。2021年からクラブを持っています。
+  telop: オーナーはサウジアラビアの公共投資基金。2021年からクラブを持っています
+  image: assets/photos/pl/newcastle_owner_d7f21670.jpg
 解説: 1部リーグの優勝は**4回**。FAカップ6回、リーグカップ1回、ヨーロッパのタイトルが1回あります。
   no_telop: true
-  image: assets/stats/pl_newcastle_data.png
+  image: assets/stats/pl_newcastle_data4.png
 解説: 直近のタイトルは、2024年から25年のリーグカップです。
   no_telop: true
   image: assets/stats/pl_newcastle_data5.png
@@ -191,6 +194,7 @@ cards:
   telop: アラン・シアラーは、クラブ史上最多の**206得点**。49年間破られなかった記録を塗り替えました
   source: 背景
   card: legends_card
+  image: assets/photos/pl/newcastle_legend_f4f90b59.jpg
 
 ## このクラブを語る3人（2人目）
 @bg: assets/backgrounds/stadium_ニューカッスル.png
@@ -199,6 +203,7 @@ cards:
   telop: シェイ・ギヴンは、12年間ゴールを守り続けたキーパーです
   source: 背景
   card: legends2_card
+  image: assets/photos/pl/newcastle_legend_03981f93.jpg
 
 ## このクラブを語る3人（3人目）
 @bg: assets/backgrounds/stadium_ニューカッスル.png
@@ -207,23 +212,25 @@ cards:
   telop: ロブ・リーは、「エンターテイナーズ」と呼ばれたチームの中心として10年在籍しました
   source: 背景
   card: legends3_card
+  image: assets/photos/pl/newcastle_legend_69dd2e4f.jpg
 
 ## 今季の登録選手
 @bg: assets/backgrounds/stadium_ニューカッスル.png
 
 キャスター: 今季の登録選手は25人です。
-  telop: 今季の登録選手は25人です
+  no_telop: true
   source: 報道
-キャスター: ゴールキーパーは4人。
+  image: assets/stats/pl_newcastle_gk.png
+キャスター: ゴールキーパーは4人。ニック・ポープはイングランド代表で**10試合**。
   no_telop: true
   image: assets/stats/pl_newcastle_gk.png
-キャスター: ディフェンダーは7人。
+キャスター: ディフェンダーは7人。主将の**ダン・バーン**は、ここにいます。ファビアン・シェアはスイス代表で**86試合**。
   no_telop: true
   image: assets/stats/pl_newcastle_df.png
 キャスター: ミッドフィールダーは7人。
   no_telop: true
   image: assets/stats/pl_newcastle_mf.png
-キャスター: フォワードは7人。
+キャスター: フォワードは7人。ヨアネ・ウィサはコンゴ民主共和国代表で**43試合**。アンソニー・エランガはスウェーデン代表で**34試合**。
   no_telop: true
   image: assets/stats/pl_newcastle_fw.png
 

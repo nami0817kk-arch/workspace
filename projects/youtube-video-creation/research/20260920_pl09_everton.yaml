@@ -36,19 +36,21 @@ sections:
   - image: assets/stats/pl_everton_data0.png
     text: 創立は**1878年**。リヴァプールのスタンリー・パークで生まれたクラブです。
     no_telop: true
-  - image: assets/stats/pl_everton_data.png
+  - image: assets/backgrounds/stadium_エヴァートン_in.png
     text: 昨季、2025年から26年に新しいスタジアムへ移りました。**5万2769人**が入ります。
+  - image: assets/stats/pl_everton_map.png
+    text: ホームタウンはリヴァプール。2025-26に新スタジアムへ移転です。
     no_telop: true
   - image: assets/stats/pl_everton_data3.png
     text: オーナーはアメリカの実業家ダン・フリードキン。2024年12月からクラブを持っています。
     no_telop: true
-  - image: assets/stats/pl_everton_data.png
+  - image: assets/stats/pl_everton_data4.png
     text: 1部リーグの優勝は**9回**。FAカップは5回、ヨーロッパのタイトルも1回あります。
     no_telop: true
   - image: assets/stats/pl_everton_data5.png
     text: 直近のタイトルは、1994年から95年のFAカップです。
     no_telop: true
-  - image: assets/stats/pl_everton_data.png
+  - image: assets/stats/pl_everton_data6.png
     text: 1927年から28年には、ディキシー・ディーンが1シーズンで**60得点**。いまもイングランドの記録です。
     no_telop: true
   - image: assets/stats/pl_everton_data8.png
@@ -103,7 +105,8 @@ sections:
       - 1981-1998
       - クラブ最多578試合のGK
   say:
-  - ネヴィル・サウスオールは、クラブ記録のリーグ**578試合**に出たキーパー。1995年のFAカップ優勝も守りました。
+  - text: ネヴィル・サウスオールは、クラブ記録のリーグ**578試合**に出たキーパー。1995年のFAカップ優勝も守りました。
+    image: assets/photos/pl/everton_legend_721f5e76.jpg
   sources: &id002
   - https://en.wikipedia.org/wiki/Neville_Southall
   - https://en.wikipedia.org/wiki/Seamus_Coleman
@@ -129,7 +132,8 @@ sections:
       - 2009-2026
       - 17年在籍の主将
   say:
-  - シェイマス・コールマンは17年在籍した主将。グディソン・パーク最後の世代の象徴です。
+  - text: シェイマス・コールマンは17年在籍した主将。グディソン・パーク最後の世代の象徴です。
+    image: assets/photos/pl/everton_legend_ee9aaa81.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_エヴァートン.png
   official: false
@@ -152,7 +156,8 @@ sections:
       - 2004-2012
       - 中盤から点を取り続けた
   say:
-  - ティム・ケイヒルは、中盤から点を取り続けた選手。2006年のワールドカップで、日本から2点を奪った選手でもあります。
+  - text: ティム・ケイヒルは、中盤から点を取り続けた選手。2006年のワールドカップで、日本から2点を奪った選手でもあります。
+    image: assets/photos/pl/everton_legend_e016a71b.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_エヴァートン.png
   official: false
@@ -162,18 +167,20 @@ sections:
   telop: 今季の登録選手
   narrator: キャスター
   say:
-  - 今季の登録選手は21人です。
+  - text: 今季の登録選手は21人です。
+    image: assets/stats/pl_everton_gk.png
+    no_telop: true
   - image: assets/stats/pl_everton_gk.png
-    text: ゴールキーパーは3人。
+    text: ゴールキーパーは3人。ジョーダン・ピックフォードはイングランド代表で**91試合**。
     no_telop: true
   - image: assets/stats/pl_everton_df.png
-    text: ディフェンダーは6人。
+    text: ディフェンダーは6人。主将の**ジェームズ・ターコウスキー**は、ここにいます。ヴィタリー・ミコレンコはウクライナ代表で**54試合**。
     no_telop: true
   - image: assets/stats/pl_everton_mf.png
-    text: ミッドフィールダーは8人。
+    text: ミッドフィールダーは8人。クリスティアン・ノアゴーはデンマーク代表で**41試合**。ジャック・グリーリッシュはイングランド代表で**39試合**。
     no_telop: true
   - image: assets/stats/pl_everton_fw.png
-    text: フォワードは4人。
+    text: フォワードは4人。ブレナン・ジョンソンはウェールズ代表で**45試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Everton_F.C.

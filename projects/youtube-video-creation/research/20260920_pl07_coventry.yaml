@@ -51,16 +51,19 @@ sections:
     no_telop: true
   - image: assets/backgrounds/stadium_コヴェントリー_in.png
     text: 本拠地はCBSアリーナ。**3万2609人**が入ります。
+  - image: assets/stats/pl_coventry_map.png
+    text: ホームタウンはコヴェントリー。ウェスト・ミッドランズの都市です。
+    no_telop: true
   - image: assets/stats/pl_coventry_data3.png
     text: オーナーは地元の実業家ダグ・キング。2023年からクラブを持っています。
     no_telop: true
-  - image: assets/stats/pl_coventry_data.png
+  - image: assets/stats/pl_coventry_data4.png
     text: 1部リーグの優勝はありませんが、1987年にFAカップを獲っています。
     no_telop: true
-  - image: assets/stats/pl_coventry_data.png
+  - image: assets/stats/pl_coventry_data5.png
     text: そして昨季、2025年から26年に2部で優勝。プレミアに戻ってきました。
     no_telop: true
-  - image: assets/stats/pl_coventry_data.png
+  - image: assets/stats/pl_coventry_data6.png
     text: 1931年から32年には、クラリー・バートンが1シーズンで**50得点**を挙げています。
     no_telop: true
   - image: assets/stats/pl_coventry_data8.png
@@ -145,7 +148,8 @@ sections:
       - 1994-1998
       - クラブ唯一のプレミア得点王
   say:
-  - ディオン・ダブリンは1997年から98年、プレミアリーグで**得点王**になりました。クラブ唯一の記録です。
+  - text: ディオン・ダブリンは1997年から98年、プレミアリーグで**得点王**になりました。クラブ唯一の記録です。
+    image: assets/photos/pl/coventry_legend_5dd33917.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_コヴェントリー.png
   official: false
@@ -168,7 +172,8 @@ sections:
       - 1996-2000
       - 残留争いを戦った主将
   say:
-  - ゲイリー・マカリスターは、残留争いを主将として戦い抜いた司令塔です。
+  - text: ゲイリー・マカリスターは、残留争いを主将として戦い抜いた司令塔です。
+    image: assets/photos/pl/coventry_legend_f86f9736.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_コヴェントリー.png
   official: false
@@ -178,18 +183,20 @@ sections:
   telop: 今季の登録選手
   narrator: キャスター
   say:
-  - 今季の登録選手は28人です。
+  - text: 今季の登録選手は28人です。
+    image: assets/stats/pl_coventry_gk.png
+    no_telop: true
   - image: assets/stats/pl_coventry_gk.png
     text: ゴールキーパーは3人。
     no_telop: true
   - image: assets/stats/pl_coventry_df.png
-    text: ディフェンダーは10人。
+    text: ディフェンダーは10人。ジョエル・ラティボーディエールはジャマイカ代表で**31試合**。イーサン・ピノックはジャマイカ代表で**28試合**。
     no_telop: true
   - image: assets/stats/pl_coventry_mf.png
-    text: ミッドフィールダーは7人。
+    text: ミッドフィールダーは7人。主将の**マット・グライムズ**は、ここにいます。フランク・オニェカはナイジェリア代表で**45試合**。
     no_telop: true
   - image: assets/stats/pl_coventry_fw.png
-    text: フォワードは8人。日本の坂元達裕もここにいます。
+    text: フォワードは8人。日本の坂元達裕もここにいます。ハジ・ライトはアメリカ代表で**22試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Coventry_City_F.C.
@@ -198,7 +205,7 @@ sections:
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 4試合で4敗
+  telop: 5試合で1勝4敗
   narrator: 解説
   card:
     type: table
@@ -220,8 +227,11 @@ sections:
     - - 第4節
       - ブライトン（ホーム）
       - 0対5
+    - - 第5節
+      - ノッティンガム・フォレスト（アウェー）
+      - 1対0
   say:
-  - プレミアリーグは4試合を終えて、**4敗**です。
+  - プレミアリーグは5試合を終えて、**1勝4敗**です。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Coventry_City_F.C._season
   bg: assets/backgrounds/stadium_コヴェントリー.png

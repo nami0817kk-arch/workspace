@@ -50,13 +50,15 @@ sections:
   - image: assets/stats/pl_palace_data0.png
     text: 創立は**1905年**。本拠地は南ロンドンのセルハースト・パーク、2万5194人が入ります。
     no_telop: true
-  - image: assets/stats/pl_palace_data3.png
+  - image: assets/photos/pl/palace_owner_51aa6fad.jpg
     text: オーナーは、アメリカンフットボール、ニューヨーク・ジェッツの会長ウッディ・ジョンソン。2025年にクラブを買いました。
+  - image: assets/stats/pl_palace_map.png
+    text: ホームタウンはセルハースト。南ロンドン、クロイドン区です。
     no_telop: true
-  - image: assets/stats/pl_palace_data.png
+  - image: assets/stats/pl_palace_data4.png
     text: 1部リーグの優勝はありませんが、FAカップを1回、そしてヨーロッパのタイトルを1回獲っています。
     no_telop: true
-  - image: assets/stats/pl_palace_data.png
+  - image: assets/stats/pl_palace_data5.png
     text: そのヨーロッパのタイトルが、昨季のカンファレンスリーグ優勝です。
     no_telop: true
   - image: assets/stats/pl_palace_data7.png
@@ -116,7 +118,8 @@ sections:
       - 2010-2023
       - クラブのプレミア最多得点
   say:
-  - ウィルフリード・ザハは、クラブのプレミアリーグ最多得点者。10年以上、チームの切り札でした。
+  - text: ウィルフリード・ザハは、クラブのプレミアリーグ最多得点者。10年以上、チームの切り札でした。
+    image: assets/photos/pl/palace_legend_cd98ad83.jpg
   sources: &id002
   - https://en.wikipedia.org/wiki/Wilfried_Zaha
   - https://en.wikipedia.org/wiki/Julian_Speroni
@@ -142,7 +145,8 @@ sections:
       - 2004-2019
       - 年間最優秀選手4回のGK
   say:
-  - フリアン・スペローニは15年在籍し、クラブの年間最優秀選手に**4回**選ばれたキーパーです。
+  - text: フリアン・スペローニは15年在籍し、クラブの年間最優秀選手に**4回**選ばれたキーパーです。
+    image: assets/photos/pl/palace_legend_80f288a7.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_クリスタルパレス.png
   official: false
@@ -165,7 +169,8 @@ sections:
       - 2002-2006
       - プレミアで21得点
   say:
-  - アンドリュー・ジョンソンは、2004年から05年にプレミアで**21得点**。イングランド人で最多でした。
+  - text: アンドリュー・ジョンソンは、2004年から05年にプレミアで**21得点**。イングランド人で最多でした。
+    image: assets/photos/pl/palace_legend_3bc227d6.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_クリスタルパレス.png
   official: false
@@ -175,18 +180,20 @@ sections:
   telop: 今季の登録選手
   narrator: キャスター
   say:
-  - 今季の登録選手は28人です。
+  - text: 今季の登録選手は28人です。
+    image: assets/stats/pl_palace_gk.png
+    no_telop: true
   - image: assets/stats/pl_palace_gk.png
-    text: ゴールキーパーは3人。
+    text: ゴールキーパーは3人。主将の**ディーン・ヘンダーソン**は、ここにいます。
     no_telop: true
   - image: assets/stats/pl_palace_df.png
-    text: ディフェンダーは10人。日本の冨安健洋もここにいます。
+    text: ディフェンダーは10人。日本の冨安健洋もここにいます。冨安健洋は日本代表で**46試合**。
     no_telop: true
   - image: assets/stats/pl_palace_mf.png
-    text: ミッドフィールダーは6人。日本の鎌田大地もここにいます。
+    text: ミッドフィールダーは6人。日本の鎌田大地もここにいます。ジェフェルソン・レルマはコロンビア代表で**70試合**。
     no_telop: true
   - image: assets/stats/pl_palace_fw.png
-    text: フォワードは9人。
+    text: フォワードは9人。イスマイラ・サールはセネガル代表で**88試合**。ヨルゲン・ストランド・ラーセンはノルウェー代表で**30試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
@@ -195,7 +202,7 @@ sections:
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 4試合で1勝3敗
+  telop: 5試合で1勝1引き分け3敗
   narrator: 解説
   card:
     type: table
@@ -217,8 +224,11 @@ sections:
     - - 第4節
       - イプスウィッチ・タウン（ホーム）
       - 2対3
+    - - 第5節
+      - リーズ・ユナイテッド（アウェー）
+      - 0対0
   say:
-  - プレミアリーグは4試合を終えて、**1勝3敗**です。
+  - プレミアリーグは5試合を終えて、**1勝1引き分け3敗**です。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Crystal_Palace_F.C._season
   bg: assets/backgrounds/stadium_クリスタルパレス.png

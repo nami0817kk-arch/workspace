@@ -52,7 +52,10 @@ sections:
   - image: assets/stats/pl_leeds_data3.png
     text: オーナーは、アメリカンフットボールの49ersにつながる投資グループ。2023年に完全に買い取りました。
     no_telop: true
-  - image: assets/stats/pl_leeds_data.png
+  - image: assets/stats/pl_leeds_map.png
+    text: ホームタウンはリーズ。イングランド・ウェストヨークシャーです。
+    no_telop: true
+  - image: assets/stats/pl_leeds_data4.png
     text: 1部リーグの優勝は**3回**。FAカップとリーグカップが1回ずつ、ヨーロッパのフェアーズカップを2回獲っています。
     no_telop: true
   - image: assets/stats/pl_leeds_data5.png
@@ -146,7 +149,8 @@ sections:
       - 1994-2005
       - CL準決勝期の主将
   say:
-  - ルーカス・ラデベは、チャンピオンズリーグ準決勝まで進んだころの守備を、主将として率いた南アフリカ代表です。
+  - text: ルーカス・ラデベは、チャンピオンズリーグ準決勝まで進んだころの守備を、主将として率いた南アフリカ代表です。
+    image: assets/photos/pl/leeds_legend_f81a9796.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_リーズ.png
   official: false
@@ -169,7 +173,8 @@ sections:
       - 2000-2004
       - 欧州挑戦期の看板FW
   say:
-  - マーク・ビドゥカは、リヴァプール戦で1人で4得点を挙げたこともある、ヨーロッパ挑戦期の看板フォワードです。
+  - text: マーク・ビドゥカは、リヴァプール戦で1人で4得点を挙げたこともある、ヨーロッパ挑戦期の看板フォワードです。
+    image: assets/photos/pl/leeds_legend_ea0d2287.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_リーズ.png
   official: false
@@ -179,18 +184,20 @@ sections:
   telop: 今季の登録選手
   narrator: キャスター
   say:
-  - 今季の登録選手は24人です。
+  - text: 今季の登録選手は24人です。
+    image: assets/stats/pl_leeds_gk.png
+    no_telop: true
   - image: assets/stats/pl_leeds_gk.png
     text: ゴールキーパーは3人。
     no_telop: true
   - image: assets/stats/pl_leeds_df.png
-    text: ディフェンダーは8人。
+    text: ディフェンダーは8人。ヤカ・ビヨルはスロベニア代表で**73試合**。ニコ・エルヴェディはスイス代表で**73試合**。
     no_telop: true
   - image: assets/stats/pl_leeds_mf.png
-    text: ミッドフィールダーは8人。日本の田中碧もここにいます。
+    text: ミッドフィールダーは8人。日本の田中碧もここにいます。主将の**イーサン・アンパドゥ**は、ここにいます。ハリー・ウィルソンはウェールズ代表で**69試合**。
     no_telop: true
   - image: assets/stats/pl_leeds_fw.png
-    text: フォワードは5人。
+    text: フォワードは5人。ノア・オカフォーはスイス代表で**26試合**。ドミニク・キャルヴァート＝ルーウィンはイングランド代表で**12試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Leeds_United_F.C.
@@ -199,7 +206,7 @@ sections:
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 4試合で2勝2引き分け
+  telop: 5試合で2勝3引き分け
   narrator: 解説
   card:
     type: table
@@ -221,8 +228,11 @@ sections:
     - - 第4節
       - ニューカッスル・ユナイテッド（ホーム）
       - 4対1
+    - - 第5節
+      - クリスタル・パレス（ホーム）
+      - 0対0
   say:
-  - プレミアリーグは4試合を終えて、**2勝2引き分け**です。
+  - プレミアリーグは5試合を終えて、**2勝3引き分け**です。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Leeds_United_F.C._season
   bg: assets/backgrounds/stadium_リーズ.png

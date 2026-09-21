@@ -38,10 +38,12 @@ sections:
     no_telop: true
   - image: assets/backgrounds/stadium_アーセナル_in.png
     text: 本拠地はロンドン北部のエミレーツ・スタジアム。**6万704人**が入ります。
-  - image: assets/stats/pl_arsenal_data3.png
-    text: オーナーはスタン・クロエンケ。2018年から単独でクラブを持っています。
+  - image: assets/stats/pl_arsenal_map.png
+    text: ホームタウンはロンドン。北ロンドン・イズリントン区です。
     no_telop: true
-  - image: assets/stats/pl_arsenal_data.png
+  - image: assets/photos/pl/arsenal_owner_87703a59.jpg
+    text: オーナーはスタン・クロエンケ。2018年から単独でクラブを持っています。
+  - image: assets/stats/pl_arsenal_data4.png
     text: 1部リーグの優勝は**14回**。FAカップも14回獲っています。
     no_telop: true
   - image: assets/stats/pl_arsenal_data5.png
@@ -101,7 +103,8 @@ sections:
       - 1999-2007
       - クラブ最多の228得点
   say:
-  - ティエリ・アンリは、クラブ史上最多の**228得点**。無敗優勝の中心にいました。
+  - text: ティエリ・アンリは、クラブ史上最多の**228得点**。無敗優勝の中心にいました。
+    image: assets/photos/pl/arsenal_legend_7851c0a6.jpg
   sources: &id002
   - https://en.wikipedia.org/wiki/Thierry_Henry
   - https://en.wikipedia.org/wiki/Dennis_Bergkamp
@@ -127,7 +130,8 @@ sections:
       - 1995-2006
       - 無敗優勝の司令塔
   say:
-  - デニス・ベルカンプは、無敗優勝を含む3度のリーグ優勝を支えた司令塔です。
+  - text: デニス・ベルカンプは、無敗優勝を含む3度のリーグ優勝を支えた司令塔です。
+    image: assets/photos/pl/arsenal_legend_33c1caef.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_アーセナル.png
   official: false
@@ -150,7 +154,8 @@ sections:
       - 1983-2002
       - 14年間の主将
   say:
-  - トニー・アダムスは、**14年間**主将を務めたセンターバックです。
+  - text: トニー・アダムスは、**14年間**主将を務めたセンターバックです。
+    image: assets/photos/pl/arsenal_legend_2f4344ee.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_アーセナル.png
   official: false
@@ -160,18 +165,20 @@ sections:
   telop: 今季の登録選手
   narrator: キャスター
   say:
-  - 今季の登録選手は25人です。
+  - text: 今季の登録選手は25人です。
+    image: assets/stats/pl_arsenal_gk.png
+    no_telop: true
   - image: assets/stats/pl_arsenal_gk.png
-    text: ゴールキーパーは4人。
+    text: ゴールキーパーは4人。ダビド・ラヤはスペイン代表で**13試合**。ケパ・アリサバラガはスペイン代表で**13試合**。
     no_telop: true
   - image: assets/stats/pl_arsenal_df.png
-    text: ディフェンダーは9人。
+    text: ディフェンダーは9人。ピエロ・インカピエはエクアドル代表で**56試合**。ウィリアム・サリバはフランス代表で**38試合**。
     no_telop: true
   - image: assets/stats/pl_arsenal_mf.png
-    text: ミッドフィールダーは6人。ウーデゴールやライスが並びます。
+    text: ミッドフィールダーは6人。主将の**マルティン・ウーデゴール**は、ここにいます。デクラン・ライスはイングランド代表で**80試合**。ウーデゴールやライスが並びます。
     no_telop: true
   - image: assets/stats/pl_arsenal_fw.png
-    text: フォワードは6人。サカがここにいます。
+    text: フォワードは6人。カイ・ハヴァーツはドイツ代表で**62試合**。ブカヨ・サカはイングランド代表で**56試合**。サカがここにいます。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Arsenal_F.C.

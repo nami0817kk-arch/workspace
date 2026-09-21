@@ -160,12 +160,15 @@ cards:
 解説: 本拠地のスタジアムには、**6万2850人**が入ります。
   telop: 本拠地のスタジアムには、**6万2850人**が入ります
   image: assets/backgrounds/stadium_トッテナム_in.png
+解説: ホームタウンはロンドン（トッテナム）。北ロンドンです。
+  no_telop: true
+  image: assets/stats/pl_tottenham_map.png
 解説: オーナーはENICグループ。2001年からクラブを持っています。
   no_telop: true
   image: assets/stats/pl_tottenham_data3.png
 解説: 1部リーグの優勝は**2回**。FAカップは8回、リーグカップ4回、ヨーロッパのタイトルもあります。
   no_telop: true
-  image: assets/stats/pl_tottenham_data.png
+  image: assets/stats/pl_tottenham_data4.png
 解説: 直近のタイトルは、2024年から25年のヨーロッパリーグです。
   no_telop: true
   image: assets/stats/pl_tottenham_data5.png
@@ -199,6 +202,7 @@ cards:
   telop: ハリー・ケインは、ジミー・グリーヴスを抜いたクラブ史上最多の**280得点**
   source: 背景
   card: legends_card
+  image: assets/photos/pl/tottenham_legend_131bf2d1.jpg
 
 ## このクラブを語る3人（2人目）
 @bg: assets/backgrounds/stadium_トッテナム.png
@@ -207,6 +211,7 @@ cards:
   telop: ソン・フンミンは2023年から主将を務め、2025年にヨーロッパリーグを掲げました
   source: 背景
   card: legends2_card
+  image: assets/photos/pl/tottenham_legend_41006aeb.jpg
 
 ## このクラブを語る3人（3人目）
 @bg: assets/backgrounds/stadium_トッテナム.png
@@ -215,23 +220,25 @@ cards:
   telop: レドリー・キングは、生涯トッテナム一筋の主将。2008年にリーグカップを掲げています
   source: 背景
   card: legends3_card
+  image: assets/photos/pl/tottenham_legend_a1b6d580.jpg
 
 ## 今季の登録選手
 @bg: assets/backgrounds/stadium_トッテナム.png
 
 キャスター: 今季の登録選手は35人です。
-  telop: 今季の登録選手は35人です
+  no_telop: true
   source: 報道
-キャスター: ゴールキーパーは4人。
+  image: assets/stats/pl_tottenham_gk.png
+キャスター: ゴールキーパーは4人。マルティン・ドゥーブラフカはスロバキア代表で**60試合**。
   no_telop: true
   image: assets/stats/pl_tottenham_gk.png
-キャスター: ディフェンダーは12人。日本の高井幸大もここにいます。
+キャスター: ディフェンダーは12人。日本の高井幸大もここにいます。主将の**ミッキー・ファン・デ・フェン**は、ここにいます。ベン・デイヴィスはウェールズ代表で**100試合**。
   no_telop: true
   image: assets/stats/pl_tottenham_df.png
-キャスター: ミッドフィールダーは9人。
+キャスター: ミッドフィールダーは9人。ロドリゴ・ベンタンクールはウルグアイ代表で**77試合**。パペ・マタル・サールはセネガル代表で**42試合**。
   no_telop: true
   image: assets/stats/pl_tottenham_mf.png
-キャスター: フォワードは10人。
+キャスター: フォワードは10人。オマル・マルムーシュはエジプト代表で**55試合**。リシャルリソンはブラジル代表で**54試合**。
   no_telop: true
   image: assets/stats/pl_tottenham_fw.png
 

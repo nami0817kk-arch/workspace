@@ -1,0 +1,313 @@
+# 候補テーマ（2026年9月20日）
+# collect が作った下書き。見出しに書いてあることだけが入っている。
+# tier / topic / league は判断が要るので、目で見て埋めること。
+date: "2026年9月20日"
+candidates:
+  - id: afc_bournemouth_liverpool
+    title: "AFC Bournemouth 0 - 1 Liverpool（Premier League）"
+    topic: "ボーンマス"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5795455
+    hours_ago: 12.1   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5795455
+
+  - id: leeds_united_crystal
+    title: "Leeds United 0 - 0 Crystal Palace（Premier League）"
+    topic: "リーズ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5795460
+    hours_ago: 12.1   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5795460
+
+  - id: manchester_city_sunderland
+    title: "Manchester City 5 - 3 Sunderland（Premier League）"
+    topic: "マンチェスター・シティ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5795461
+    hours_ago: 12.1   # フィードの時刻から
+    goals: true        # 試合データから自動で立てた
+    numbers: true        # 試合データから自動で立てた
+    sources:
+      - https://www.fotmob.com/matches/x/5795461
+
+  - id: fulham_manchester_united
+    title: "Fulham 1 - 1 Manchester United（Premier League）"
+    topic: "フラム"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: england    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5795459
+    hours_ago: 12.1   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5795459
+
+  - id: bayer_leverkusen_rb
+    title: "Bayer Leverkusen 2 - 0 RB Leipzig（Bundesliga）"
+    topic: "レバークーゼン"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: germany    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5881170
+    hours_ago: 12.1   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5881170
+
+  - id: schalke_elversberg_bundeslig
+    title: "Schalke 04 0 - 0 Elversberg（Bundesliga）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: germany    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5881176
+    hours_ago: 12.1   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5881176
+
+  - id: paderborn_hoffenheim_bundesl
+    title: "Paderborn 3 - 1 Hoffenheim（Bundesliga）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: germany    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5881175
+    hours_ago: 12.1   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5881175
+
+  - id: getafe_m_laga
+    title: "Getafe 1 - 0 Málaga（LaLiga）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: spain    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5868076
+    hours_ago: 12.1   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5868076
+
+  - id: atl_tico_madrid
+    title: "Atlético Madrid 2 - 1 Real Madrid（LaLiga）"
+    topic: "アトレティコ・マドリード"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: spain    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5868072
+    hours_ago: 12.1   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5868072
+
+  - id: deportivo_a_coru
+    title: "Deportivo A Coruña 1 - 1 Real Betis（LaLiga）"
+    topic: "ベティス"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: spain    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5868074
+    hours_ago: 12.1   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5868074
+
+  - id: villarreal_levante_laliga
+    title: "Villarreal 3 - 1 Levante（LaLiga）"
+    topic: "ビジャレアル"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: spain    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5868080
+    hours_ago: 12.1   # フィードの時刻から
+    numbers: true        # 試合データから自動で立てた
+    sources:
+      - https://www.fotmob.com/matches/x/5868080
+
+  - id: valencia_real_sociedad
+    title: "Valencia 2 - 3 Real Sociedad（LaLiga）"
+    topic: "バレンシア"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: spain    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5868079
+    hours_ago: 12.1   # フィードの時刻から
+    goals: true        # 試合データから自動で立てた
+    sources:
+      - https://www.fotmob.com/matches/x/5868079
+
+  - id: auxerre_brest_ligue
+    title: "Auxerre 2 - 1 Brest（Ligue 1）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: france    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5802938
+    hours_ago: 12.1   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5802938
+
+  - id: nice_lille_ligue
+    title: "Nice 2 - 1 Lille（Ligue 1）"
+    topic: "リール"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: france    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5802942
+    hours_ago: 12.1   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5802942
+
+  - id: marseille_paris_saint
+    title: "Marseille 1 - 2 Paris Saint-Germain（Ligue 1）"
+    topic: "マルセイユ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: france    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5802945
+    hours_ago: 12.1   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5802945
+
+  - id: fiorentina_napoli_serie
+    title: "Fiorentina 1 - 1 Napoli（Serie A）"
+    topic: "フィオレンティーナ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: italy    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5749683
+    hours_ago: 12.1   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5749683
+
+  - id: frosinone_como_serie
+    title: "Frosinone 2 - 0 Como（Serie A）"
+    topic: "コモ"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: italy    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5749684
+    hours_ago: 12.1   # フィードの時刻から
+    numbers: true        # 試合データから自動で立てた
+    sources:
+      - https://www.fotmob.com/matches/x/5749684
+
+  - id: parma_genoa_serie
+    title: "Parma 2 - 1 Genoa（Serie A）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: italy    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5749687
+    hours_ago: 12.1   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5749687
+
+  - id: juventus_atalanta_serie
+    title: "Juventus 2 - 0 Atalanta（Serie A）"
+    topic: "ユヴェントス"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: italy    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5749685
+    hours_ago: 12.1   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5749685
+
+  - id: milan_lecce_serie
+    title: "Milan 3 - 0 Lecce（Serie A）"
+    topic: "ミラン"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: italy    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5749680
+    hours_ago: 12.1   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5749680
+
+  - id: feyenoord_fc_utrecht
+    title: "Feyenoord 5 - 0 FC Utrecht（Eredivisie）"
+    topic: "フェイエノールト"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: netherlands    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5781750
+    hours_ago: 12.1   # フィードの時刻から
+    goals: true        # 試合データから自動で立てた
+    numbers: true        # 試合データから自動で立てた
+    sources:
+      - https://www.fotmob.com/matches/x/5781750
+
+  - id: az_alkmaar_telstar
+    title: "AZ Alkmaar 1 - 0 Telstar（Eredivisie）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: netherlands    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5781752
+    hours_ago: 12.1   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5781752
+
+  - id: fc_twente_psv
+    title: "FC Twente 3 - 2 PSV Eindhoven（Eredivisie）"
+    topic: "PSV"    # クラブ名の辞書から。同じ topic は1日1枠まで
+    league: netherlands    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5781753
+    hours_ago: 12.1   # フィードの時刻から
+    goals: true        # 試合データから自動で立てた
+    sources:
+      - https://www.fotmob.com/matches/x/5781753
+
+  - id: nec_nijmegen_go
+    title: "NEC Nijmegen 1 - 1 Go Ahead Eagles（Eredivisie）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: netherlands    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5781751
+    hours_ago: 12.1   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5781751
+
+  - id: tochigi_city_fc
+    title: "Tochigi City FC 1 - 3 Vegalta Sendai（J. League 2）"
+    topic: ""          # 話題のまとまり。同じ topic は1日1枠まで
+    league: japan    # 取得元 or クラブ名の辞書から。違えば直す
+    kind: match           # transfer / match。見出しからの当たり。見て直す
+    tier: 報道           # 見出しは『確定』寄りだが、この情報源では報道まで
+    en: ""            # 英語サイトを引く語
+    url: https://www.fotmob.com/matches/x/5836274
+    hours_ago: 12.1   # フィードの時刻から
+    sources:
+      - https://www.fotmob.com/matches/x/5836274
+

@@ -51,10 +51,13 @@ sections:
     no_telop: true
   - image: assets/backgrounds/stadium_トッテナム_in.png
     text: 本拠地のスタジアムには、**6万2850人**が入ります。
+  - image: assets/stats/pl_tottenham_map.png
+    text: ホームタウンはロンドン（トッテナム）。北ロンドンです。
+    no_telop: true
   - image: assets/stats/pl_tottenham_data3.png
     text: オーナーはENICグループ。2001年からクラブを持っています。
     no_telop: true
-  - image: assets/stats/pl_tottenham_data.png
+  - image: assets/stats/pl_tottenham_data4.png
     text: 1部リーグの優勝は**2回**。FAカップは8回、リーグカップ4回、ヨーロッパのタイトルもあります。
     no_telop: true
   - image: assets/stats/pl_tottenham_data5.png
@@ -120,7 +123,8 @@ sections:
       - 2009-2023
       - クラブ最多の280得点
   say:
-  - ハリー・ケインは、ジミー・グリーヴスを抜いたクラブ史上最多の**280得点**。
+  - text: ハリー・ケインは、ジミー・グリーヴスを抜いたクラブ史上最多の**280得点**。
+    image: assets/photos/pl/tottenham_legend_131bf2d1.jpg
   sources: &id002
   - https://en.wikipedia.org/wiki/Harry_Kane
   - https://en.wikipedia.org/wiki/Son_Heung-min
@@ -146,7 +150,8 @@ sections:
       - 2015-2025
       - EL優勝の主将
   say:
-  - ソン・フンミンは2023年から主将を務め、2025年にヨーロッパリーグを掲げました。
+  - text: ソン・フンミンは2023年から主将を務め、2025年にヨーロッパリーグを掲げました。
+    image: assets/photos/pl/tottenham_legend_41006aeb.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_トッテナム.png
   official: false
@@ -169,7 +174,8 @@ sections:
       - 1999-2012
       - 一筋の主将
   say:
-  - レドリー・キングは、生涯トッテナム一筋の主将。2008年にリーグカップを掲げています。
+  - text: レドリー・キングは、生涯トッテナム一筋の主将。2008年にリーグカップを掲げています。
+    image: assets/photos/pl/tottenham_legend_a1b6d580.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_トッテナム.png
   official: false
@@ -179,18 +185,20 @@ sections:
   telop: 今季の登録選手
   narrator: キャスター
   say:
-  - 今季の登録選手は35人です。
+  - text: 今季の登録選手は35人です。
+    image: assets/stats/pl_tottenham_gk.png
+    no_telop: true
   - image: assets/stats/pl_tottenham_gk.png
-    text: ゴールキーパーは4人。
+    text: ゴールキーパーは4人。マルティン・ドゥーブラフカはスロバキア代表で**60試合**。
     no_telop: true
   - image: assets/stats/pl_tottenham_df.png
-    text: ディフェンダーは12人。日本の高井幸大もここにいます。
+    text: ディフェンダーは12人。日本の高井幸大もここにいます。主将の**ミッキー・ファン・デ・フェン**は、ここにいます。ベン・デイヴィスはウェールズ代表で**100試合**。
     no_telop: true
   - image: assets/stats/pl_tottenham_mf.png
-    text: ミッドフィールダーは9人。
+    text: ミッドフィールダーは9人。ロドリゴ・ベンタンクールはウルグアイ代表で**77試合**。パペ・マタル・サールはセネガル代表で**42試合**。
     no_telop: true
   - image: assets/stats/pl_tottenham_fw.png
-    text: フォワードは10人。
+    text: フォワードは10人。オマル・マルムーシュはエジプト代表で**55試合**。リシャルリソンはブラジル代表で**54試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.

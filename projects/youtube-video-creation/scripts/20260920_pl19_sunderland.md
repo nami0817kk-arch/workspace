@@ -124,6 +124,9 @@ cards:
     - - 第4節
       - アーセナル（ホーム）
       - 0対2
+    - - 第5節
+      - マンチェスター・シティ（アウェー）
+      - 3対5
 ---
 
 ## オープニング
@@ -149,15 +152,18 @@ cards:
 解説: 本拠地はスタジアム・オブ・ライト。**4万8095人**が入ります。
   telop: 本拠地はスタジアム・オブ・ライト。**4万8095人**が入ります
   image: assets/backgrounds/stadium_サンダーランド_in.png
+解説: ホームタウンはサンダーランド。タイン・アンド・ウィアです。
+  no_telop: true
+  image: assets/stats/pl_sunderland_map.png
 解説: オーナーはキリル・ルイ＝ドレフュス。株の64%を持っています。
   no_telop: true
   image: assets/stats/pl_sunderland_data3.png
 解説: 1部リーグの優勝は**6回**。FAカップも2回獲っています。
   no_telop: true
-  image: assets/stats/pl_sunderland_data.png
+  image: assets/stats/pl_sunderland_data4.png
 解説: 1998年から99年には、勝ち点**105**。当時のリーグの最多記録でした。
   no_telop: true
-  image: assets/stats/pl_sunderland_data.png
+  image: assets/stats/pl_sunderland_data6.png
 解説: プレミアでの最高位は**7位**。2000年から01年、そして昨季の2025年から26年です。
   no_telop: true
   image: assets/stats/pl_sunderland_data7.png
@@ -192,6 +198,7 @@ cards:
   telop: ケヴィン・フィリップスは、1999年から2000年にプレミアの**得点王**。ヨーロッパのゴールデンシューも獲りました
   source: 背景
   card: legends_card
+  image: assets/photos/pl/sunderland_legend_1bb9e670.jpg
 
 ## このクラブを語る3人（2人目）
 @bg: assets/backgrounds/stadium_サンダーランド.png
@@ -200,6 +207,7 @@ cards:
   telop: ナイアル・クインは、フィリップスとの2トップでクラブの一番いい時代を作り、のちに会長も務めました
   source: 背景
   card: legends2_card
+  image: assets/photos/pl/sunderland_legend_b2b573bf.jpg
 
 ## このクラブを語る3人（3人目）
 @bg: assets/backgrounds/stadium_サンダーランド.png
@@ -213,25 +221,26 @@ cards:
 @bg: assets/backgrounds/stadium_サンダーランド.png
 
 キャスター: 今季の登録選手は29人です。
-  telop: 今季の登録選手は29人です
+  no_telop: true
   source: 報道
+  image: assets/stats/pl_sunderland_gk.png
 キャスター: ゴールキーパーは3人。
   no_telop: true
   image: assets/stats/pl_sunderland_gk.png
-キャスター: ディフェンダーは9人。
+キャスター: ディフェンダーは9人。トマ・ムニエはベルギー代表で**83試合**。レイニウドはMozambique代表で**56試合**。
   no_telop: true
   image: assets/stats/pl_sunderland_df.png
-キャスター: ミッドフィールダーは9人。
+キャスター: ミッドフィールダーは9人。主将の**グラニト・ジャカ**は、ここにいます。アラン・ブラウンはアイルランド代表で**39試合**。
   no_telop: true
   image: assets/stats/pl_sunderland_mf.png
-キャスター: フォワードは8人。
+キャスター: フォワードは8人。ニルソン・アングロはエクアドル代表で**18試合**。ブライアン・ブロベイはオランダ代表で**16試合**。
   no_telop: true
   image: assets/stats/pl_sunderland_fw.png
 
 ## 今季のここまで
 @bg: assets/backgrounds/stadium_サンダーランド.png
 
-解説: プレミアリーグは4試合を終えて、**1勝1引き分け2敗**です。
-  telop: プレミアリーグは4試合を終えて、**1勝1引き分け2敗**です
+解説: プレミアリーグは5試合を終えて、**1勝1引き分け3敗**です。
+  telop: プレミアリーグは5試合を終えて、**1勝1引き分け3敗**です
   source: 報道
   card: season_card

@@ -122,6 +122,9 @@ cards:
     - - 第4節
       - フラム（ホーム）
       - 0対0
+    - - 第5節
+      - AFCボーンマス（アウェー）
+      - 1対0
 ---
 
 ## オープニング
@@ -156,15 +159,18 @@ cards:
 解説: オーナーはアメリカのFSG。2010年からクラブを持っています。
   no_telop: true
   image: assets/stats/pl_liverpool_data3.png
+解説: ホームタウンはリヴァプール。イングランド・マージーサイドです。
+  no_telop: true
+  image: assets/stats/pl_liverpool_map.png
 解説: 1部リーグの優勝は**20回**。FAカップ8回、リーグカップ10回、チャンピオンズリーグは6回獲っています。
   no_telop: true
-  image: assets/stats/pl_liverpool_data.png
+  image: assets/stats/pl_liverpool_data4.png
 解説: 直近のタイトルは、2024年から25年のプレミアリーグ優勝です。
   no_telop: true
   image: assets/stats/pl_liverpool_data5.png
 解説: 2017年から18年には、モハメド・サラーが1シーズンで**44得点**を挙げました。
   no_telop: true
-  image: assets/stats/pl_liverpool_data.png
+  image: assets/stats/pl_liverpool_data6.png
 
 ## 空になったスタジアム
 @bg: assets/backgrounds/stadium_リヴァプール.png
@@ -195,6 +201,7 @@ cards:
   telop: スティーヴン・ジェラードは、2005年に**イスタンブールの奇跡**でチャンピオンズリーグを掲げた主将です
   source: 背景
   card: legends_card
+  image: assets/photos/pl/liverpool_legend_7c62ed45.jpg
 
 ## このクラブを語る3人（2人目）
 @bg: assets/backgrounds/stadium_リヴァプール.png
@@ -203,6 +210,7 @@ cards:
   telop: ジェイミー・キャラガーは、クラブ史上2番目に多い**737試合**に出た生え抜きのディフェンダーです
   source: 背景
   card: legends2_card
+  image: assets/photos/pl/liverpool_legend_1840df0d.jpg
 
 ## このクラブを語る3人（3人目）
 @bg: assets/backgrounds/stadium_リヴァプール.png
@@ -211,30 +219,32 @@ cards:
   telop: モハメド・サラーは、2017年から18年に38試合制のプレミアで最多の32得点。クラブを代表するエースでした
   source: 背景
   card: legends3_card
+  image: assets/photos/pl/liverpool_legend_bec22eba.jpg
 
 ## 今季の登録選手
 @bg: assets/backgrounds/stadium_リヴァプール.png
 
 キャスター: 今季の登録選手は35人です。
-  telop: 今季の登録選手は35人です
+  no_telop: true
   source: 報道
-キャスター: ゴールキーパーは6人。
+  image: assets/stats/pl_liverpool_gk.png
+キャスター: ゴールキーパーは6人。アリソン・ベッカーはブラジル代表で**83試合**。ギオルギ・ママルダシュヴィリはジョージア代表で**38試合**。
   no_telop: true
   image: assets/stats/pl_liverpool_gk.png
-キャスター: ディフェンダーは12人。
+キャスター: ディフェンダーは12人。主将の**フィルジル・ファン・ダイク**は、ここにいます。フィルジル・ファン・ダイクはオランダ代表で**96試合**。
   no_telop: true
   image: assets/stats/pl_liverpool_df.png
-キャスター: ミッドフィールダーは8人。日本の遠藤航もここにいます。
+キャスター: ミッドフィールダーは8人。日本の遠藤航もここにいます。遠藤航は日本代表で**73試合**。
   no_telop: true
   image: assets/stats/pl_liverpool_mf.png
-キャスター: フォワードは9人。
+キャスター: フォワードは9人。アレクサンデル・イサクはスウェーデン代表で**62試合**。コーディ・ガクポはオランダ代表で**54試合**。
   no_telop: true
   image: assets/stats/pl_liverpool_fw.png
 
 ## 今季のここまで
 @bg: assets/backgrounds/stadium_リヴァプール.png
 
-解説: プレミアリーグは4試合を終えて、**1勝3引き分け**です。
-  telop: プレミアリーグは4試合を終えて、**1勝3引き分け**です
+解説: プレミアリーグは5試合を終えて、**2勝3引き分け**です。
+  telop: プレミアリーグは5試合を終えて、**2勝3引き分け**です
   source: 報道
   card: season_card

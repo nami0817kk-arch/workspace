@@ -51,16 +51,18 @@ sections:
     no_telop: true
   - image: assets/backgrounds/stadium_ハルシティ_in.png
     text: 本拠地はMKMスタジアム。**2万4983人**が入ります。
-  - image: assets/stats/pl_hull_data3.png
-    text: オーナーはトルコの実業家アジュン・ウルジャル。2022年からクラブを持っています。
+  - image: assets/stats/pl_hull_map.png
+    text: ホームタウンはキングストン・アポン・ハル。イングランド東部の港町です。
     no_telop: true
-  - image: assets/stats/pl_hull_data.png
+  - image: assets/photos/pl/hull_owner_8739e202.jpg
+    text: オーナーはトルコの実業家アジュン・ウルジャル。2022年からクラブを持っています。
+  - image: assets/stats/pl_hull_data5.png
     text: 大きなタイトルはまだありません。昨季、2025年から26年に昇格プレーオフを勝ち抜いて、プレミアに上がってきました。
     no_telop: true
   - image: assets/stats/pl_hull_data7.png
     text: プレミアでの最高位は、2013年から14年の**16位**です。
     no_telop: true
-  - image: assets/stats/pl_hull_data.png
+  - image: assets/stats/pl_hull_data6.png
     text: 1939年には、カーライル・ユナイテッドに**11対1**で勝っています。クラブ最大の勝利です。
     no_telop: true
   - image: assets/stats/pl_hull_data8.png
@@ -117,7 +119,8 @@ sections:
       - 1991-2009
       - 初の1部昇格を決めた
   say:
-  - ディーン・ウィンダスは地元出身のフォワード。2008年のプレーオフ決勝で決勝点を決め、創設104年で初めて1部に上げました。
+  - text: ディーン・ウィンダスは地元出身のフォワード。2008年のプレーオフ決勝で決勝点を決め、創設104年で初めて1部に上げました。
+    image: assets/photos/pl/hull_legend_f160fd58.jpg
   sources: &id002
   - https://en.wikipedia.org/wiki/Dean_Windass
   - https://en.wikipedia.org/wiki/Ian_Ashbee
@@ -143,7 +146,8 @@ sections:
       - 2002-2011
       - 4部から1部まで主将
   say:
-  - イアン・アシュビーは、4部から1部まで同じクラブを主将として上げた選手です。
+  - text: イアン・アシュビーは、4部から1部まで同じクラブを主将として上げた選手です。
+    image: assets/photos/pl/hull_legend_24d5dcb4.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_ハルシティ.png
   official: false
@@ -166,7 +170,8 @@ sections:
       - 2004-2012
       - 地元に戻り2度の昇格
   say:
-  - ニック・バームビーは、イングランド代表経験者が地元に戻り、2度の昇格を支えました。
+  - text: ニック・バームビーは、イングランド代表経験者が地元に戻り、2度の昇格を支えました。
+    image: assets/photos/pl/hull_legend_56329695.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_ハルシティ.png
   official: false
@@ -176,21 +181,23 @@ sections:
   telop: 今季の登録選手
   narrator: キャスター
   say:
-  - 今季の登録選手は33人です。
+  - text: 今季の登録選手は33人です。
+    image: assets/stats/pl_hull_gk.png
+    no_telop: true
   - image: assets/stats/pl_hull_gk.png
     text: ゴールキーパーは3人。
     no_telop: true
   - image: assets/stats/pl_hull_df.png
-    text: ディフェンダーは10人。
+    text: ディフェンダーは10人。パディ・マクネアは北アイルランド代表で**82試合**。セミ・アジャイはナイジェリア代表で**57試合**。
     no_telop: true
   - image: assets/stats/pl_hull_mf1.png
-    text: ミッドフィールダーは13人。日本の守田英正もここにいます。
+    text: ミッドフィールダーは13人。日本の守田英正もここにいます。守田英正は日本代表で**40試合**。
     no_telop: true
   - image: assets/stats/pl_hull_mf2.png
     text: ミッドフィールダーの続きです。
     no_telop: true
   - image: assets/stats/pl_hull_fw.png
-    text: フォワードは7人。
+    text: フォワードは7人。ソーバ・トーマスはウェールズ代表で**27試合**。オリ・マクバーニーはスコットランド代表で**16試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Hull_City_A.F.C.

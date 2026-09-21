@@ -239,6 +239,16 @@ def build(key: str, number: int, old_file: str) -> Path:
         return board_for(i), True
 
     picks = list(ov.get("data_focus") or [])
+    # **ホームタウンの行が無いクラブが多い**（2026-09-20）。手で書いた読み上げは
+    # 本拠地とまとめてしまっていて、20クラブのうち17クラブに「ホームタウンは〜」の
+    # 行が無かった。**地図を出す行がそもそも無い。**タイルから1行作って足す
+    town_i = next((i for i, x in enumerate(tiles) if str(x[0]).startswith("ホームタウン")), None)
+    if ov.get("data") and town_i is not None and town_i not in picks:
+        label, big, small = tiles[town_i]
+        line = f"ホームタウンは{big}。" + (f"{small.rstrip('。')}です。" if small else "")
+        at = min(2, len(ov["data"]))
+        ov = dict(ov, data=list(ov["data"][:at]) + [line] + list(ov["data"][at:]))
+        picks = picks[:at] + [town_i] + picks[at:]
     if ov.get("data"):
         for n, text in enumerate(ov["data"]):
             i = focus_of(text, picks[n] if n < len(picks) else None)

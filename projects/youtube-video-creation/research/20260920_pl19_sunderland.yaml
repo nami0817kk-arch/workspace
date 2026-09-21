@@ -38,13 +38,16 @@ sections:
     no_telop: true
   - image: assets/backgrounds/stadium_サンダーランド_in.png
     text: 本拠地はスタジアム・オブ・ライト。**4万8095人**が入ります。
+  - image: assets/stats/pl_sunderland_map.png
+    text: ホームタウンはサンダーランド。タイン・アンド・ウィアです。
+    no_telop: true
   - image: assets/stats/pl_sunderland_data3.png
     text: オーナーはキリル・ルイ＝ドレフュス。株の64%を持っています。
     no_telop: true
-  - image: assets/stats/pl_sunderland_data.png
+  - image: assets/stats/pl_sunderland_data4.png
     text: 1部リーグの優勝は**6回**。FAカップも2回獲っています。
     no_telop: true
-  - image: assets/stats/pl_sunderland_data.png
+  - image: assets/stats/pl_sunderland_data6.png
     text: 1998年から99年には、勝ち点**105**。当時のリーグの最多記録でした。
     no_telop: true
   - image: assets/stats/pl_sunderland_data7.png
@@ -111,7 +114,8 @@ sections:
       - 1997-2003
       - プレミア得点王・欧州得点王
   say:
-  - ケヴィン・フィリップスは、1999年から2000年にプレミアの**得点王**。ヨーロッパのゴールデンシューも獲りました。
+  - text: ケヴィン・フィリップスは、1999年から2000年にプレミアの**得点王**。ヨーロッパのゴールデンシューも獲りました。
+    image: assets/photos/pl/sunderland_legend_1bb9e670.jpg
   sources: &id002
   - https://en.wikipedia.org/wiki/Kevin_Phillips_(footballer)
   - https://en.wikipedia.org/wiki/Niall_Quinn
@@ -137,7 +141,8 @@ sections:
       - 1996-2002
       - 2トップの柱、のちに会長
   say:
-  - ナイアル・クインは、フィリップスとの2トップでクラブの一番いい時代を作り、のちに会長も務めました。
+  - text: ナイアル・クインは、フィリップスとの2トップでクラブの一番いい時代を作り、のちに会長も務めました。
+    image: assets/photos/pl/sunderland_legend_b2b573bf.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_サンダーランド.png
   official: false
@@ -170,18 +175,20 @@ sections:
   telop: 今季の登録選手
   narrator: キャスター
   say:
-  - 今季の登録選手は29人です。
+  - text: 今季の登録選手は29人です。
+    image: assets/stats/pl_sunderland_gk.png
+    no_telop: true
   - image: assets/stats/pl_sunderland_gk.png
     text: ゴールキーパーは3人。
     no_telop: true
   - image: assets/stats/pl_sunderland_df.png
-    text: ディフェンダーは9人。
+    text: ディフェンダーは9人。トマ・ムニエはベルギー代表で**83試合**。レイニウドはMozambique代表で**56試合**。
     no_telop: true
   - image: assets/stats/pl_sunderland_mf.png
-    text: ミッドフィールダーは9人。
+    text: ミッドフィールダーは9人。主将の**グラニト・ジャカ**は、ここにいます。アラン・ブラウンはアイルランド代表で**39試合**。
     no_telop: true
   - image: assets/stats/pl_sunderland_fw.png
-    text: フォワードは8人。
+    text: フォワードは8人。ニルソン・アングロはエクアドル代表で**18試合**。ブライアン・ブロベイはオランダ代表で**16試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
@@ -190,7 +197,7 @@ sections:
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 4試合で1勝1引き分け2敗
+  telop: 5試合で1勝1引き分け3敗
   narrator: 解説
   card:
     type: table
@@ -212,8 +219,11 @@ sections:
     - - 第4節
       - アーセナル（ホーム）
       - 0対2
+    - - 第5節
+      - マンチェスター・シティ（アウェー）
+      - 3対5
   say:
-  - プレミアリーグは4試合を終えて、**1勝1引き分け2敗**です。
+  - プレミアリーグは5試合を終えて、**1勝1引き分け3敗**です。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Sunderland_A.F.C._season
   bg: assets/backgrounds/stadium_サンダーランド.png

@@ -38,13 +38,13 @@ sections:
     no_telop: true
   - image: assets/backgrounds/stadium_ブレントフォード_in.png
     text: 本拠地のスタジアムには、1万7250人が入ります。
-  - image: assets/stats/pl_brentford_data.png
+  - image: assets/stats/pl_brentford_map.png
     text: 場所は西ロンドン、テムズ川沿いの町です。
     no_telop: true
   - image: assets/stats/pl_brentford_data3.png
     text: オーナーはマシュー・ベンハム。2012年からクラブを持っています。
     no_telop: true
-  - image: assets/stats/pl_brentford_data.png
+  - image: assets/stats/pl_brentford_data5.png
     text: 大きなタイトルはまだありません。いちばん大きな一歩は2021年、昇格プレーオフに勝って初めてプレミアに上がったことです。
     no_telop: true
   - image: assets/stats/pl_brentford_data7.png
@@ -128,7 +128,8 @@ sections:
       - 2020-2024
       - 初のプレミア昇格の得点王
   say:
-  - イヴァン・トニーは、2部の1シーズン最多得点の記録を作り、クラブを初めてプレミアへ上げました。
+  - text: イヴァン・トニーは、2部の1シーズン最多得点の記録を作り、クラブを初めてプレミアへ上げました。
+    image: assets/photos/pl/brentford_legend_6dfd5356.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_ブレントフォード.png
   official: false
@@ -161,18 +162,20 @@ sections:
   telop: 今季の登録選手
   narrator: キャスター
   say:
-  - 今季の登録選手は28人です。
+  - text: 今季の登録選手は28人です。
+    image: assets/stats/pl_brentford_gk.png
+    no_telop: true
   - image: assets/stats/pl_brentford_gk.png
-    text: ゴールキーパーは3人。
+    text: ゴールキーパーは3人。クィービーン・ケレハーはアイルランド代表で**32試合**。ハウコン・ヴァルディマルソンはアイスランド代表で**22試合**。
     no_telop: true
   - image: assets/stats/pl_brentford_df.png
-    text: ディフェンダーは9人。
+    text: ディフェンダーは9人。主将の**ネイサン・コリンズ**は、ここにいます。クリストファー・アイエルはノルウェー代表で**57試合**。
     no_telop: true
   - image: assets/stats/pl_brentford_mf.png
-    text: ミッドフィールダーは9人。
+    text: ミッドフィールダーは9人。ミケル・ダムスゴーはデンマーク代表で**40試合**。マティアス・イェンセンはデンマーク代表で**32試合**。
     no_telop: true
   - image: assets/stats/pl_brentford_fw.png
-    text: フォワードは7人。
+    text: フォワードは7人。ダンゴ・ワタラはブルキナファソ代表で**44試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Brentford_F.C.

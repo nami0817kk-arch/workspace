@@ -38,16 +38,18 @@ sections:
     no_telop: true
   - image: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
     text: 本拠地はオールド・トラッフォード。**7万4158人**が入る、プレミアで一番大きなスタジアムです。
-  - image: assets/stats/pl_manutd_data3.png
-    text: オーナーはアメリカのグレイザー家。2024年からは、INEOSのラトクリフ氏も出資しています。
+  - image: assets/stats/pl_manutd_map.png
+    text: ホームタウンはマンチェスター。グレーター・マンチェスターです。
     no_telop: true
-  - image: assets/stats/pl_manutd_data.png
+  - image: assets/photos/pl/manutd_owner_3345c4b8.jpg
+    text: オーナーはアメリカのグレイザー家。2024年からは、INEOSのラトクリフ氏も出資しています。
+  - image: assets/stats/pl_manutd_data4.png
     text: 1部リーグの優勝は**20回**。FAカップは13回、チャンピオンズリーグは3回獲っています。
     no_telop: true
   - image: assets/stats/pl_manutd_data5.png
     text: 直近のタイトルは、2023年から24年のFAカップです。
     no_telop: true
-  - image: assets/stats/pl_manutd_data.png
+  - image: assets/stats/pl_manutd_data6.png
     text: 2021年2月には、サウサンプトンに**9対0**。プレミアで最も大きな点差の勝利に並ぶ記録です。
     no_telop: true
   - image: assets/stats/pl_manutd_data8.png
@@ -104,7 +106,8 @@ sections:
       - 1990-2014
       - クラブ最多の963試合
   say:
-  - ライアン・ギグスは、クラブ史上最多の**963試合**に出場。13度のリーグ優勝を経験しました。
+  - text: ライアン・ギグスは、クラブ史上最多の**963試合**に出場。13度のリーグ優勝を経験しました。
+    image: assets/photos/pl/manutd_legend_f3ad91ce.jpg
   sources: &id002
   - https://en.wikipedia.org/wiki/Ryan_Giggs
   - https://en.wikipedia.org/wiki/Wayne_Rooney
@@ -130,7 +133,8 @@ sections:
       - 2004-2017
       - クラブ最多の253得点
   say:
-  - ウェイン・ルーニーは、ボビー・チャールトンを抜いたクラブ史上最多の**253得点**。
+  - text: ウェイン・ルーニーは、ボビー・チャールトンを抜いたクラブ史上最多の**253得点**。
+    image: assets/photos/pl/manutd_legend_8c632d7c.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
   official: false
@@ -153,7 +157,8 @@ sections:
       - 1993-2013
       - 3冠を支えた中盤
   say:
-  - ポール・スコールズは、1999年の3冠を含む黄金期を20年支えた中盤の要です。
+  - text: ポール・スコールズは、1999年の3冠を含む黄金期を20年支えた中盤の要です。
+    image: assets/photos/pl/manutd_legend_15d06a2f.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
   official: false
@@ -163,18 +168,20 @@ sections:
   telop: 今季の登録選手
   narrator: キャスター
   say:
-  - 今季の登録選手は30人です。
+  - text: 今季の登録選手は30人です。
+    image: assets/stats/pl_manutd_gk.png
+    no_telop: true
   - image: assets/stats/pl_manutd_gk.png
-    text: ゴールキーパーは4人。
+    text: ゴールキーパーは4人。カール・ダーロウはウェールズ代表で**15試合**。
     no_telop: true
   - image: assets/stats/pl_manutd_df.png
-    text: ディフェンダーは10人。
+    text: ディフェンダーは10人。ハリー・マグワイアはイングランド代表で**66試合**。マタイス・デ・リフトはオランダ代表で**52試合**。
     no_telop: true
   - image: assets/stats/pl_manutd_mf.png
-    text: ミッドフィールダーは9人。
+    text: ミッドフィールダーは9人。主将の**ブルーノ・フェルナンデス**は、ここにいます。ブルーノ・フェルナンデスはポルトガル代表で**94試合**。
     no_telop: true
   - image: assets/stats/pl_manutd_fw.png
-    text: フォワードは7人。
+    text: フォワードは7人。マーカス・ラッシュフォードはイングランド代表で**78試合**。ベンヤミン・シェシュコはスロベニア代表で**45試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Manchester_United_F.C.
@@ -183,7 +190,7 @@ sections:
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 4試合で1勝1引き分け2敗
+  telop: 5試合で1勝2引き分け2敗
   narrator: 解説
   card:
     type: table
@@ -205,8 +212,11 @@ sections:
     - - 第4節
       - マンチェスター・シティ（ホーム）
       - 0対1
+    - - 第5節
+      - フラム（アウェー）
+      - 1対1
   say:
-  - プレミアリーグは4試合を終えて、**1勝1引き分け2敗**です。
+  - プレミアリーグは5試合を終えて、**1勝2引き分け2敗**です。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Manchester_United_F.C._season
   bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png

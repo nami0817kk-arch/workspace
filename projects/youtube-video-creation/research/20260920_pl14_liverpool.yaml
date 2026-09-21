@@ -52,13 +52,16 @@ sections:
   - image: assets/stats/pl_liverpool_data3.png
     text: オーナーはアメリカのFSG。2010年からクラブを持っています。
     no_telop: true
-  - image: assets/stats/pl_liverpool_data.png
+  - image: assets/stats/pl_liverpool_map.png
+    text: ホームタウンはリヴァプール。イングランド・マージーサイドです。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_data4.png
     text: 1部リーグの優勝は**20回**。FAカップ8回、リーグカップ10回、チャンピオンズリーグは6回獲っています。
     no_telop: true
   - image: assets/stats/pl_liverpool_data5.png
     text: 直近のタイトルは、2024年から25年のプレミアリーグ優勝です。
     no_telop: true
-  - image: assets/stats/pl_liverpool_data.png
+  - image: assets/stats/pl_liverpool_data6.png
     text: 2017年から18年には、モハメド・サラーが1シーズンで**44得点**を挙げました。
     no_telop: true
   sources:
@@ -116,7 +119,8 @@ sections:
       - 1998-2015
       - イスタンブールの奇跡の主将
   say:
-  - スティーヴン・ジェラードは、2005年に**イスタンブールの奇跡**でチャンピオンズリーグを掲げた主将です。
+  - text: スティーヴン・ジェラードは、2005年に**イスタンブールの奇跡**でチャンピオンズリーグを掲げた主将です。
+    image: assets/photos/pl/liverpool_legend_7c62ed45.jpg
   sources: &id002
   - https://en.wikipedia.org/wiki/Steven_Gerrard
   - https://en.wikipedia.org/wiki/Jamie_Carragher
@@ -142,7 +146,8 @@ sections:
       - 1996-2013
       - 737試合の生え抜き
   say:
-  - ジェイミー・キャラガーは、クラブ史上2番目に多い**737試合**に出た生え抜きのディフェンダーです。
+  - text: ジェイミー・キャラガーは、クラブ史上2番目に多い**737試合**に出た生え抜きのディフェンダーです。
+    image: assets/photos/pl/liverpool_legend_1840df0d.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_リヴァプール.png
   official: false
@@ -165,7 +170,8 @@ sections:
       - 2017-2026
       - プレミア1シーズン32得点
   say:
-  - モハメド・サラーは、2017年から18年に38試合制のプレミアで最多の32得点。クラブを代表するエースでした。
+  - text: モハメド・サラーは、2017年から18年に38試合制のプレミアで最多の32得点。クラブを代表するエースでした。
+    image: assets/photos/pl/liverpool_legend_bec22eba.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_リヴァプール.png
   official: false
@@ -175,18 +181,20 @@ sections:
   telop: 今季の登録選手
   narrator: キャスター
   say:
-  - 今季の登録選手は35人です。
+  - text: 今季の登録選手は35人です。
+    image: assets/stats/pl_liverpool_gk.png
+    no_telop: true
   - image: assets/stats/pl_liverpool_gk.png
-    text: ゴールキーパーは6人。
+    text: ゴールキーパーは6人。アリソン・ベッカーはブラジル代表で**83試合**。ギオルギ・ママルダシュヴィリはジョージア代表で**38試合**。
     no_telop: true
   - image: assets/stats/pl_liverpool_df.png
-    text: ディフェンダーは12人。
+    text: ディフェンダーは12人。主将の**フィルジル・ファン・ダイク**は、ここにいます。フィルジル・ファン・ダイクはオランダ代表で**96試合**。
     no_telop: true
   - image: assets/stats/pl_liverpool_mf.png
-    text: ミッドフィールダーは8人。日本の遠藤航もここにいます。
+    text: ミッドフィールダーは8人。日本の遠藤航もここにいます。遠藤航は日本代表で**73試合**。
     no_telop: true
   - image: assets/stats/pl_liverpool_fw.png
-    text: フォワードは9人。
+    text: フォワードは9人。アレクサンデル・イサクはスウェーデン代表で**62試合**。コーディ・ガクポはオランダ代表で**54試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Liverpool_F.C.
@@ -195,7 +203,7 @@ sections:
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 4試合で1勝3引き分け
+  telop: 5試合で2勝3引き分け
   narrator: 解説
   card:
     type: table
@@ -217,8 +225,11 @@ sections:
     - - 第4節
       - フラム（ホーム）
       - 0対0
+    - - 第5節
+      - AFCボーンマス（アウェー）
+      - 1対0
   say:
-  - プレミアリーグは4試合を終えて、**1勝3引き分け**です。
+  - プレミアリーグは5試合を終えて、**2勝3引き分け**です。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Liverpool_F.C._season
   bg: assets/backgrounds/stadium_リヴァプール.png

@@ -38,13 +38,16 @@ sections:
     no_telop: true
   - image: assets/backgrounds/stadium_チェルシー_in.png
     text: 本拠地には**4万44人**が入ります。
+  - image: assets/stats/pl_chelsea_map.png
+    text: ホームタウンはロンドン。チェルシー地区(ロンドン)発祥です。
+    no_telop: true
   - image: assets/stats/pl_chelsea_data3.png
     text: オーナーはブルーコという投資グループです。
     no_telop: true
-  - image: assets/stats/pl_chelsea_data.png
+  - image: assets/stats/pl_chelsea_data4.png
     text: 1部リーグの優勝は**6回**。FAカップは8回、ヨーロッパのタイトルは9回あります。
     no_telop: true
-  - image: assets/stats/pl_chelsea_data.png
+  - image: assets/stats/pl_chelsea_data6.png
     text: UEFAの主要な大会を**すべて獲った**、史上唯一のクラブです。
     no_telop: true
   - image: assets/stats/pl_chelsea_data5.png
@@ -97,7 +100,8 @@ sections:
       - 2001-2014
       - クラブ最多の211得点
   say:
-  - フランク・ランパードは、中盤の選手でありながらクラブ史上最多の**211得点**を挙げました。
+  - text: フランク・ランパードは、中盤の選手でありながらクラブ史上最多の**211得点**を挙げました。
+    image: assets/photos/pl/chelsea_legend_ff78bb8a.jpg
   sources: &id002
   - https://en.wikipedia.org/wiki/Frank_Lampard
   - https://en.wikipedia.org/wiki/John_Terry
@@ -123,7 +127,8 @@ sections:
       - 1998-2017
       - 黄金期を率いた主将
   say:
-  - ジョン・テリーは19年在籍した主将。クラブの黄金期をすべて率いました。
+  - text: ジョン・テリーは19年在籍した主将。クラブの黄金期をすべて率いました。
+    image: assets/photos/pl/chelsea_legend_322e28ae.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_チェルシー.png
   official: false
@@ -146,7 +151,8 @@ sections:
       - 2004-2015
       - 2012年CL決勝の同点弾
   say:
-  - ディディエ・ドログバは、2012年のチャンピオンズリーグ決勝で88分に同点弾、PK戦でも決めて、クラブを**初の欧州王者**にしました。
+  - text: ディディエ・ドログバは、2012年のチャンピオンズリーグ決勝で88分に同点弾、PK戦でも決めて、クラブを**初の欧州王者**にしました。
+    image: assets/photos/pl/chelsea_legend_cc53b1d9.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_チェルシー.png
   official: false
@@ -156,18 +162,20 @@ sections:
   telop: 今季の登録選手
   narrator: キャスター
   say:
-  - 今季の登録選手は29人です。
+  - text: 今季の登録選手は29人です。
+    image: assets/stats/pl_chelsea_gk.png
+    no_telop: true
   - image: assets/stats/pl_chelsea_gk.png
-    text: ゴールキーパーは4人。
+    text: ゴールキーパーは4人。エミリアーノ・マルティネスはアルゼンチン代表で**67試合**。
     no_telop: true
   - image: assets/stats/pl_chelsea_df.png
-    text: ディフェンダーは10人。
+    text: ディフェンダーは10人。主将の**リース・ジェームズ**は、ここにいます。リース・ジェームズはイングランド代表で**29試合**。
     no_telop: true
   - image: assets/stats/pl_chelsea_mf.png
-    text: ミッドフィールダーは8人。
+    text: ミッドフィールダーは8人。ジョーダン・ヘンダーソンはイングランド代表で**91試合**。モイセス・カイセドはエクアドル代表で**65試合**。
     no_telop: true
   - image: assets/stats/pl_chelsea_fw.png
-    text: フォワードは7人。
+    text: フォワードは7人。ダニー・ウェルベックはイングランド代表で**42試合**。エステヴァンはブラジル代表で**11試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Chelsea_F.C.

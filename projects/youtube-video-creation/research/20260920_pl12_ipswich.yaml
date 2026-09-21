@@ -51,10 +51,13 @@ sections:
     no_telop: true
   - image: assets/backgrounds/stadium_イプスウィッチ_in.png
     text: 本拠地はポートマン・ロード。**3万56人**が入ります。場所はイングランド東部のサフォーク州です。
+  - image: assets/stats/pl_ipswich_map.png
+    text: ホームタウンはイプスウィッチ。イングランド東部サフォーク州です。
+    no_telop: true
   - image: assets/stats/pl_ipswich_data3.png
     text: オーナーは、アメリカの投資グループが集まったゲームチェンジャー20。2021年からです。
     no_telop: true
-  - image: assets/stats/pl_ipswich_data.png
+  - image: assets/stats/pl_ipswich_data4.png
     text: 1部リーグの優勝が**1回**。FAカップ1回、そしてヨーロッパのUEFAカップも1回獲っています。
     no_telop: true
   - image: assets/stats/pl_ipswich_data7.png
@@ -110,7 +113,8 @@ sections:
       - 1997-2003
       - 223試合連続出場の主将
   say:
-  - マット・ホランドは、**223試合連続**で出場し続けた主将。2000年のプレーオフ決勝でクラブをプレミアに上げました。
+  - text: マット・ホランドは、**223試合連続**で出場し続けた主将。2000年のプレーオフ決勝でクラブをプレミアに上げました。
+    image: assets/photos/pl/ipswich_legend_79ba8f9c.jpg
   sources: &id002
   - https://en.wikipedia.org/wiki/Matt_Holland
   - https://en.wikipedia.org/wiki/Jim_Magilton
@@ -136,7 +140,8 @@ sections:
       - 1999-2006
       - プレーオフでハットトリック
   say:
-  - ジム・マギルトンは、プレーオフ準決勝でハットトリックを決め、昇格を決定づけました。
+  - text: ジム・マギルトンは、プレーオフ準決勝でハットトリックを決め、昇格を決定づけました。
+    image: assets/photos/pl/ipswich_legend_7557cc62.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_イプスウィッチ.png
   official: false
@@ -159,7 +164,8 @@ sections:
       - 2000-2002
       - 昇格1年目に19得点
   say:
-  - マーカス・スチュワートは、昇格1年目の2000年から01年にプレミアで**19得点**。クラブを5位に押し上げました。
+  - text: マーカス・スチュワートは、昇格1年目の2000年から01年にプレミアで**19得点**。クラブを5位に押し上げました。
+    image: assets/photos/pl/ipswich_legend_0858d337.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_イプスウィッチ.png
   official: false
@@ -169,18 +175,20 @@ sections:
   telop: 今季の登録選手
   narrator: キャスター
   say:
-  - 今季の登録選手は28人です。
+  - text: 今季の登録選手は28人です。
+    image: assets/stats/pl_ipswich_gk.png
+    no_telop: true
   - image: assets/stats/pl_ipswich_gk.png
     text: ゴールキーパーは4人。
     no_telop: true
   - image: assets/stats/pl_ipswich_df.png
-    text: ディフェンダーは7人。
+    text: ディフェンダーは7人。ダラ・オシェイはアイルランド代表で**45試合**。
     no_telop: true
   - image: assets/stats/pl_ipswich_mf.png
-    text: ミッドフィールダーは6人。
+    text: ミッドフィールダーは6人。サシャ・ルキッチはセルビア代表で**62試合**。エセキエル・パラシオスはアルゼンチン代表で**41試合**。
     no_telop: true
   - image: assets/stats/pl_ipswich_fw.png
-    text: フォワードは11人。日本の前田大然もここにいます。
+    text: フォワードは11人。日本の前田大然もここにいます。フリオ・エンシソはパラグアイ代表で**37試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.

@@ -38,10 +38,12 @@ sections:
     no_telop: true
   - image: assets/backgrounds/stadium_ニューカッスル_in.png
     text: 本拠地はセント・ジェームズ・パーク。**5万2729人**が入ります。
-  - image: assets/stats/pl_newcastle_data3.png
-    text: オーナーはサウジアラビアの公共投資基金。2021年からクラブを持っています。
+  - image: assets/stats/pl_newcastle_map.png
+    text: ホームタウンはニューカッスル・アポン・タイン。イングランド北東部です。
     no_telop: true
-  - image: assets/stats/pl_newcastle_data.png
+  - image: assets/photos/pl/newcastle_owner_d7f21670.jpg
+    text: オーナーはサウジアラビアの公共投資基金。2021年からクラブを持っています。
+  - image: assets/stats/pl_newcastle_data4.png
     text: 1部リーグの優勝は**4回**。FAカップ6回、リーグカップ1回、ヨーロッパのタイトルが1回あります。
     no_telop: true
   - image: assets/stats/pl_newcastle_data5.png
@@ -107,7 +109,8 @@ sections:
       - 1996-2006
       - クラブ最多の206得点
   say:
-  - アラン・シアラーは、クラブ史上最多の**206得点**。49年間破られなかった記録を塗り替えました。
+  - text: アラン・シアラーは、クラブ史上最多の**206得点**。49年間破られなかった記録を塗り替えました。
+    image: assets/photos/pl/newcastle_legend_f4f90b59.jpg
   sources: &id002
   - https://en.wikipedia.org/wiki/Alan_Shearer
   - https://en.wikipedia.org/wiki/Shay_Given
@@ -133,7 +136,8 @@ sections:
       - 1997-2009
       - 12年間守ったGK
   say:
-  - シェイ・ギヴンは、12年間ゴールを守り続けたキーパーです。
+  - text: シェイ・ギヴンは、12年間ゴールを守り続けたキーパーです。
+    image: assets/photos/pl/newcastle_legend_03981f93.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_ニューカッスル.png
   official: false
@@ -156,7 +160,8 @@ sections:
       - 1992-2002
       - エンターテイナーズの中心
   say:
-  - ロブ・リーは、「エンターテイナーズ」と呼ばれたチームの中心として10年在籍しました。
+  - text: ロブ・リーは、「エンターテイナーズ」と呼ばれたチームの中心として10年在籍しました。
+    image: assets/photos/pl/newcastle_legend_69dd2e4f.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_ニューカッスル.png
   official: false
@@ -166,18 +171,20 @@ sections:
   telop: 今季の登録選手
   narrator: キャスター
   say:
-  - 今季の登録選手は25人です。
+  - text: 今季の登録選手は25人です。
+    image: assets/stats/pl_newcastle_gk.png
+    no_telop: true
   - image: assets/stats/pl_newcastle_gk.png
-    text: ゴールキーパーは4人。
+    text: ゴールキーパーは4人。ニック・ポープはイングランド代表で**10試合**。
     no_telop: true
   - image: assets/stats/pl_newcastle_df.png
-    text: ディフェンダーは7人。
+    text: ディフェンダーは7人。主将の**ダン・バーン**は、ここにいます。ファビアン・シェアはスイス代表で**86試合**。
     no_telop: true
   - image: assets/stats/pl_newcastle_mf.png
     text: ミッドフィールダーは7人。
     no_telop: true
   - image: assets/stats/pl_newcastle_fw.png
-    text: フォワードは7人。
+    text: フォワードは7人。ヨアネ・ウィサはコンゴ民主共和国代表で**43試合**。アンソニー・エランガはスウェーデン代表で**34試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
