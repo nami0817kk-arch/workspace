@@ -12,7 +12,10 @@
    "captain": false,
    "loan": false,
    "team": "Serbia",
-   "caps": 12
+   "caps": 12,
+   "club_caps": 43,
+   "club_goals": 0,
+   "prev_club": "Chelsea"
   },
   {
    "no": "2",
@@ -24,7 +27,10 @@
    "captain": false,
    "loan": false,
    "team": "Mexico",
-   "caps": 16
+   "caps": 16,
+   "club_caps": 12,
+   "club_goals": 0,
+   "prev_club": "Barcelona B"
   },
   {
    "no": "3",
@@ -36,7 +42,10 @@
    "captain": false,
    "loan": false,
    "team": "France",
-   "caps": 1
+   "caps": 1,
+   "club_caps": 42,
+   "club_goals": 1,
+   "prev_club": "Rennes"
   },
   {
    "no": "4",
@@ -48,7 +57,10 @@
    "captain": false,
    "loan": false,
    "team": "England",
-   "caps": 1
+   "caps": 1,
+   "club_caps": 249,
+   "club_goals": 3,
+   "prev_club": "Leeds United"
   },
   {
    "no": "5",
@@ -60,7 +72,10 @@
    "captain": false,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 50,
+   "club_goals": 0,
+   "prev_club": "Fleetwood Town"
   },
   {
    "no": "6",
@@ -72,7 +87,10 @@
    "captain": false,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 6,
+   "club_goals": 0,
+   "prev_club": "Lanús"
   },
   {
    "no": "7",
@@ -84,7 +102,10 @@
    "captain": false,
    "loan": false,
    "team": "Wales",
-   "caps": 45
+   "caps": 45,
+   "club_caps": 157,
+   "club_goals": 18,
+   "prev_club": "Sheffield United"
   },
   {
    "no": "8",
@@ -96,7 +117,10 @@
    "captain": false,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 83,
+   "club_goals": 5,
+   "prev_club": "Bristol City"
   },
   {
    "no": "9",
@@ -108,7 +132,10 @@
    "captain": false,
    "loan": false,
    "team": "Brazil",
-   "caps": 2
+   "caps": 2,
+   "club_caps": 67,
+   "club_goals": 16,
+   "prev_club": "Porto B"
   },
   {
    "no": "10",
@@ -120,7 +147,10 @@
    "captain": false,
    "loan": false,
    "team": "Scotland",
-   "caps": 71
+   "caps": 71,
+   "club_caps": 164,
+   "club_goals": 8,
+   "prev_club": "Celtic"
   },
   {
    "no": "11",
@@ -132,7 +162,10 @@
    "captain": false,
    "loan": false,
    "team": "Scotland",
-   "caps": 17
+   "caps": 17,
+   "club_caps": 12,
+   "club_goals": 0,
+   "prev_club": "Liverpool"
   },
   {
    "no": "12",
@@ -144,7 +177,10 @@
    "captain": false,
    "loan": false,
    "team": "United States",
-   "caps": 58
+   "caps": 58,
+   "club_caps": 56,
+   "club_goals": 2,
+   "prev_club": "Leeds United"
   },
   {
    "no": "14",
@@ -156,7 +192,10 @@
    "captain": false,
    "loan": false,
    "team": "Portugal",
-   "caps": 20
+   "caps": 20,
+   "club_caps": 5,
+   "club_goals": 0,
+   "prev_club": "Benfica"
   },
   {
    "no": "15",
@@ -168,7 +207,10 @@
    "captain": true,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 350,
+   "club_goals": 5,
+   "prev_club": "Tottenham Hotspur"
   },
   {
    "no": "16",
@@ -180,7 +222,10 @@
    "captain": false,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 120,
+   "club_goals": 21,
+   "prev_club": "Middlesbrough"
   },
   {
    "no": "17",
@@ -192,7 +237,10 @@
    "captain": false,
    "loan": false,
    "team": "England",
-   "caps": 6
+   "caps": 6,
+   "club_caps": 0,
+   "club_goals": 0,
+   "prev_club": "Tottenham Hotspur"
   },
   {
    "no": "18",
@@ -204,7 +252,10 @@
    "captain": false,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 16,
+   "club_goals": 0,
+   "prev_club": "Lille"
   },
   {
    "no": "19",
@@ -216,7 +267,10 @@
    "captain": false,
    "loan": false,
    "team": "Netherlands",
-   "caps": 14
+   "caps": 14,
+   "club_caps": 90,
+   "club_goals": 22,
+   "prev_club": "Roma"
   },
   {
    "no": "20",
@@ -228,7 +282,10 @@
    "captain": false,
    "loan": true,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0,
+   "prev_club": "Juventus"
   },
   {
    "no": "21",
@@ -240,7 +297,10 @@
    "captain": false,
    "loan": false,
    "team": "Morocco",
-   "caps": 17
+   "caps": 17,
+   "club_caps": 31,
+   "club_goals": 3,
+   "prev_club": "Bayer Leverkusen"
   },
   {
    "no": "22",
@@ -252,7 +312,10 @@
    "captain": false,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 33,
+   "club_goals": 13,
+   "prev_club": "Lorient"
   },
   {
    "no": "24",
@@ -264,7 +327,10 @@
    "captain": false,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0,
+   "prev_club": "Sevilla"
   },
   {
    "no": "27",
@@ -276,7 +342,10 @@
    "captain": false,
    "loan": false,
    "team": "Hungary",
-   "caps": 13
+   "caps": 13,
+   "club_caps": 10,
+   "club_goals": 0,
+   "prev_club": "Ferencváros"
   },
   {
    "no": "28",
@@ -288,7 +357,10 @@
    "captain": false,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 23,
+   "club_goals": 0,
+   "prev_club": "Norwich City"
   },
   {
    "no": "29",
@@ -300,7 +372,10 @@
    "captain": false,
    "loan": false,
    "team": "Canada",
-   "caps": 7
+   "caps": 7,
+   "club_caps": 18,
+   "club_goals": 1,
+   "prev_club": "Sheffield United"
   },
   {
    "no": "30",
@@ -312,7 +387,10 @@
    "captain": false,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 1,
+   "club_goals": 0,
+   "prev_club": "Elche"
   },
   {
    "no": "37",
@@ -324,7 +402,10 @@
    "captain": false,
    "loan": false,
    "team": "Brazil",
-   "caps": 6
+   "caps": 6,
+   "club_caps": 19,
+   "club_goals": 5,
+   "prev_club": "Vasco da Gama"
   },
   {
    "no": "44",
@@ -336,7 +417,10 @@
    "captain": false,
    "loan": false,
    "team": "Serbia",
-   "caps": 2
+   "caps": 2,
+   "club_caps": 7,
+   "club_goals": 0,
+   "prev_club": "Grafičar Beograd (dual)"
   }
  ],
  "results": [

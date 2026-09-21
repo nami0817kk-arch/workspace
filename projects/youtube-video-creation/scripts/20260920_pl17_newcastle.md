@@ -1,5 +1,5 @@
 ---
-title: ニューカッスルってどんなクラブ？ ⑰プレミア20クラブ紹介
+title: ニューカッスルってどんなクラブ？
 format: news
 voice_min: 0.0
 short_title: ニューカッスルってどんなクラブ？
@@ -16,11 +16,11 @@ thumbnail_crest_main:
 - ニューカッスル
 bg: assets/backgrounds/stadium.png
 date: 2026年9月19日
-intro_title: ニューカッスルってどんなクラブ？ ⑰プレミア20クラブ紹介
+intro_title: ニューカッスルってどんなクラブ？
 intro_label: 海外サッカー ニュース
 outro_title: 続報は次回お伝えします
 outro_sub: チャンネル登録でお待ちください
-description: 'ニューカッスルってどんなクラブ？ ⑰プレミア20クラブ紹介
+description: 'ニューカッスルってどんなクラブ？
 
 
   この動画が答える問い: どんなクラブなのか
@@ -128,8 +128,8 @@ cards:
 ## オープニング
 @bg: assets/backgrounds/stadium_ニューカッスル.png
 
-キャスター: ニューカッスルってどんなクラブ？ ⑰プレミア20クラブ紹介。
-  telop: ニューカッスルってどんなクラブ？ ⑰プレミア20クラブ紹介
+キャスター: ニューカッスルってどんなクラブ？
+  telop: ニューカッスルってどんなクラブ？
   se: assets/audio/se_pon.wav
 キャスター: 獲るまでに、56年かかったクラブです。
   telop: 獲るまでに、56年かかったクラブです

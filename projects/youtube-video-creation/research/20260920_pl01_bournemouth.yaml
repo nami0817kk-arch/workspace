@@ -13,7 +13,7 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: ボーンマス
-  title: ボーンマスってどんなクラブ？ ①プレミア20クラブ紹介
+  title: ボーンマスってどんなクラブ？
   question: どんなクラブなのか
   hook: 消えかけたクラブが、いまヨーロッパで戦っています。
 thumbnail:
@@ -214,13 +214,13 @@ sections:
     text: ゴールキーパーは3人。ジョルジェ・ペトロヴィッチはセルビア代表で**12試合**。
     no_telop: true
   - image: assets/stats/pl_bournemouth_df.png
-    text: ディフェンダーは10人。主将の**アダム・スミス**は、ここにいます。アントニオ・シウヴァはポルトガル代表で**20試合**。
+    text: ディフェンダーは10人。主将を務めるのが**アダム・スミス**。クラブで**350試合**に出ています。アントニオ・シウヴァはポルトガル代表で**20試合**。
     no_telop: true
   - image: assets/stats/pl_bournemouth_mf.png
-    text: ミッドフィールダーは8人。ライアン・クリスティはスコットランド代表で**71試合**。タイラー・アダムスはアメリカ代表で**58試合**。
+    text: ミッドフィールダーは8人。ライアン・クリスティはスコットランド代表で**71試合**。デイヴィッド・ブルックスはウェールズ代表で**45試合**。
     no_telop: true
   - image: assets/stats/pl_bournemouth_fw.png
-    text: フォワードは7人。ベン・ギャノン＝ドークはスコットランド代表で**17試合**。ジャスティン・クライファートはオランダ代表で**14試合**。
+    text: フォワードは7人。ジャスティン・クライファートはオランダ代表で**14試合**。エヴァニウソンは**16得点**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
@@ -229,7 +229,7 @@ sections:
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 5試合で3引き分け2敗
+  telop: 5試合で3引き分け2敗。17位
   narrator: 解説
   card:
     type: table
@@ -256,6 +256,7 @@ sections:
       - 0対1
   say:
   - プレミアリーグは5試合を終えて、**3引き分け2敗**です。
+  - 順位は**17位**、勝ち点は**3**です。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_AFC_Bournemouth_season
   bg: assets/backgrounds/stadium_ボーンマス.png

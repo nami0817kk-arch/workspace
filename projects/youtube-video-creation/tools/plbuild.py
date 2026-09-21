@@ -335,17 +335,37 @@ def build(key: str, number: int, old_file: str) -> Path:
                 if dict(POS).get(p["pos"]) == label and age(p["dob"]) is not None]
         names = [kana.get(p["name"], p["name"]) for p in here]
         jp = [n2 for n2 in names if n2 in jp_names]
-        tail = f"日本の{jp[0]}もここにいます。" if jp else ""
+        tail = f"日本の{jp[0]}がいます。" if jp else ""
         if cap and dict(POS).get(cap["pos"]) == label:
-            tail += f"主将の**{kana.get(cap['name'], cap['name'])}**は、ここにいます。"
+            cap_name = kana.get(cap["name"], cap["name"])
+            more = f"クラブで**{cap['club_caps']}試合**に出ています。" if (cap.get("club_caps") or 0) >= 50 else ""
+            tail += f"主将を務めるのが**{cap_name}**。{more}"
         # **1枚の板は12秒まで**（検査の上限）。主将の話を足す位置は、
         # 有名な選手を1人に減らして収める
         room = 1 if tail else 2
-        known = sorted((p for p in here if (p.get("caps") or 0) >= CAPS_MIN),
-                       key=lambda p: -(p.get("caps") or 0))[:room]
-        note = "".join(
-            f"{kana.get(p['name'], p['name'])}は{TEAM_JA.get(p.get('team', ''), p.get('team', ''))}代表で"
-            f"**{p['caps']}試合**。" for p in known)
+
+        def worth(p):
+            """代表歴だけでなく、クラブでの積み上げも見て選ぶ（2026-09-21 指示）。"""
+            return (p.get("club_caps") or 0) + (p.get("caps") or 0) * 3
+
+        def about(p):
+            """その選手について言えることを、1〜2個だけ。"""
+            bits = []
+            if (p.get("caps") or 0) >= CAPS_MIN and p.get("team"):
+                bits.append(f"{TEAM_JA.get(p['team'], p['team'])}代表で**{p['caps']}試合**")
+            if (p.get("club_caps") or 0) >= 80:
+                bits.append(f"クラブで**{p['club_caps']}試合**")
+            if (p.get("club_goals") or 0) >= 15:
+                bits.append(f"**{p['club_goals']}得点**")
+            if not bits and (p.get("club_caps") or 0) >= 30:
+                bits.append(f"クラブで**{p['club_caps']}試合**")
+            if not bits:
+                return ""
+            return f"{kana.get(p['name'], p['name'])}は" + bits[0] + "。"
+
+        known = [x for x in sorted(here, key=lambda p: -worth(p))
+                 if about(x) and not (cap and x["name"] == cap["name"])][:room]
+        note = "".join(about(p) for p in known)
         extra = (ov.get("squad") or {}).get(label, "")
         ssay.append({"image": out, "text": f"{label}は{n}人。{tail}{note}{extra}",
                      "no_telop": True})
@@ -363,19 +383,37 @@ def build(key: str, number: int, old_file: str) -> Path:
             opp = ja_club(t2 if home else t1)
             rows.append([f"第{rnd}節", f"{opp}（{'ホーム' if home else 'アウェー'}）", f"{mine}対{theirs}"])
         record = f"{w}勝{d}引き分け{l}敗".replace("0勝", "").replace("0引き分け", "").replace("0敗", "")
-        sections.append(sec(id="season", heading="今季のここまで", tier="報道", telop=f"{len(games)}試合で{record}",
+        # **いまの順位を必ず載せる**（2026-09-21 指示「今季は、今の順位を載せる」）。
+        # 順位表は research/pl_data/standings.json に控えてある
+        stand = json.loads((DATA / "standings.json").read_text(encoding="utf-8"))["table"].get(key)
+        say_season = [f"プレミアリーグは{len(games)}試合を終えて、**{record}**です。"]
+        if stand:
+            rows = [["順位", f"**{stand['rank']}位** / 20クラブ"],
+                    ["勝ち点", f"{stand['points']}"],
+                    ["成績", stand["record"]]] and rows
+            say_season.append(f"順位は**{stand['rank']}位**、勝ち点は**{stand['points']}**です。")
+            if stand["rank"] >= 18:
+                say_season.append("いまは降格圏にいます。")
+            elif stand["rank"] <= 4:
+                say_season.append("この順位を保てば、来季のチャンピオンズリーグに出られます。")
+        sections.append(sec(id="season", heading="今季のここまで", tier="報道",
+                            telop=f"{len(games)}試合で{record}。{stand['rank']}位" if stand else f"{len(games)}試合で{record}",
                             narrator="解説",
                             card={"type": "table", "title": "プレミアリーグの結果", "columns": ["節", "相手", "結果"], "rows": rows},
-                            say=[f"プレミアリーグは{len(games)}試合を終えて、**{record}**です。"] + (ov.get("season") or []),
+                            say=say_season + (ov.get("season") or []),
                             sources=[season_url]))
 
-    title_head = f"{jp_names[0]}がいる{club}" if japanese else club
+    # **日本人が2人いるクラブは2人とも題に出す**（2026-09-21）。
+    # 1人目だけだと、パレスが「冨安健洋がいる」になって鎌田大地が消えていた
+    title_head = (f"{'と'.join(jp_names[:2])}がいる{club}" if japanese else club)
     note = {
         "format": "news", "voice_min": 0, "slot": "premier_1", "date": "2026年9月19日",
         "people": jp_names + [club],
         "short_title": f"{title_head}ってどんなクラブ？"[:40],
         "theme": {"id": old["theme"]["id"], "league": "england", "league_name": "プレミアリーグ", "kind": "other",
-                  "topic": club, "title": f"{title_head}ってどんなクラブ？ {NUM[number - 1]}プレミア20クラブ紹介",
+                  # **シリーズの名札は付けない**（2026-09-21 指示「②プレミア20クラブ紹介はいらない」）。
+                  # 検索で来る言葉はクラブ名で、連番はタイトルの尺を食うだけだった
+                  "topic": club, "title": f"{title_head}ってどんなクラブ？",
                   "question": "どんなクラブなのか",
                   # **宿敵の節を落としたら、宿敵を約束する引きが残った**（2026-09-20）。
                   # 「宿敵は、同じ街の赤いクラブです」と言って、その話を一度もしない。

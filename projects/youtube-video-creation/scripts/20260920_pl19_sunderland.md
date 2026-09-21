@@ -1,5 +1,5 @@
 ---
-title: サンダーランドってどんなクラブ？ ⑲プレミア20クラブ紹介
+title: サンダーランドってどんなクラブ？
 format: news
 voice_min: 0.0
 short_title: サンダーランドってどんなクラブ？
@@ -16,11 +16,11 @@ thumbnail_crest_main:
 - サンダーランド
 bg: assets/backgrounds/stadium.png
 date: 2026年9月19日
-intro_title: サンダーランドってどんなクラブ？ ⑲プレミア20クラブ紹介
+intro_title: サンダーランドってどんなクラブ？
 intro_label: 海外サッカー ニュース
 outro_title: 続報は次回お伝えします
 outro_sub: チャンネル登録でお待ちください
-description: 'サンダーランドってどんなクラブ？ ⑲プレミア20クラブ紹介
+description: 'サンダーランドってどんなクラブ？
 
 
   この動画が答える問い: どんなクラブなのか
@@ -132,8 +132,8 @@ cards:
 ## オープニング
 @bg: assets/backgrounds/stadium_サンダーランド.png
 
-キャスター: サンダーランドってどんなクラブ？ ⑲プレミア20クラブ紹介。
-  telop: サンダーランドってどんなクラブ？ ⑲プレミア20クラブ紹介
+キャスター: サンダーランドってどんなクラブ？
+  telop: サンダーランドってどんなクラブ？
   se: assets/audio/se_pon.wav
 キャスター: 3部から7年で、ヨーロッパに手が届きました。
   telop: 3部から7年で、ヨーロッパに手が届きました

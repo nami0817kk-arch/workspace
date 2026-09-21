@@ -1,5 +1,5 @@
 ---
-title: ブレントフォードってどんなクラブ？ ④プレミア20クラブ紹介
+title: ブレントフォードってどんなクラブ？
 format: news
 voice_min: 0.0
 short_title: ブレントフォードってどんなクラブ？
@@ -16,11 +16,11 @@ thumbnail_crest_main:
 - ブレントフォード
 bg: assets/backgrounds/stadium.png
 date: 2026年9月19日
-intro_title: ブレントフォードってどんなクラブ？ ④プレミア20クラブ紹介
+intro_title: ブレントフォードってどんなクラブ？
 intro_label: 海外サッカー ニュース
 outro_title: 続報は次回お伝えします
 outro_sub: チャンネル登録でお待ちください
-description: 'ブレントフォードってどんなクラブ？ ④プレミア20クラブ紹介
+description: 'ブレントフォードってどんなクラブ？
 
 
   この動画が答える問い: どんなクラブなのか
@@ -124,8 +124,8 @@ cards:
 ## オープニング
 @bg: assets/backgrounds/stadium_ブレントフォード.png
 
-キャスター: ブレントフォードってどんなクラブ？ ④プレミア20クラブ紹介。
-  telop: ブレントフォードってどんなクラブ？ ④プレミア20クラブ紹介
+キャスター: ブレントフォードってどんなクラブ？
+  telop: ブレントフォードってどんなクラブ？
   se: assets/audio/se_pon.wav
 キャスター: 9回続けて跳ね返されたクラブが、いまプレミアにいます。
   telop: 9回続けて跳ね返されたクラブが、いまプレミアにいます
