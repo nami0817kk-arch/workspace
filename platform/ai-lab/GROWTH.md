@@ -2,8 +2,8 @@
 
 このファイルは `growth-loop` ワークフローが自動生成している。手で編集しても次回上書きされる。
 
-- 最終更新: 2026-09-14
-- 平均成熟度: **93** `▁▄▁▇██`
+- 最終更新: 2026-09-21
+- 平均成熟度: **93** `▁▄▁▇███`
 - これまでに解決: **115** 件
 - 未対応: **11** 件
 
@@ -13,7 +13,7 @@
 |---|---|---:|---:|---:|
 | `workspace` | monorepo | 100 | ±0 | 1 |
 | `workspace/projects/ai-side-business` | Python | 100 | ±0 | 1 |
-| `workspace/projects/gemini-api` | Python | 100 | +7 | 0 |
+| `workspace/projects/gemini-api` | Python | 100 | ±0 | 0 |
 | `workspace/projects/ir-analysis` | Python | 100 | ±0 | 0 |
 | `workspace/projects/kabu-agari-ranking` | Python | 100 | ±0 | 0 |
 | `workspace/projects/price-tracker` | Python | 100 | ±0 | 1 |
@@ -28,26 +28,22 @@
 
 ## 次にやること
 
-1. **[中] 1つの関数が長くなりすぎている** — `workspace`
-   - 関数の中で「まとまった仕事」をしている塊を、名前を付けて切り出す。切り出した先はテストしやすくなるので、そこから1本書ける。
-2. **[中] 1つの関数が長くなりすぎている** — `workspace/projects/ai-side-business`
-   - 関数の中で「まとまった仕事」をしている塊を、名前を付けて切り出す。切り出した先はテストしやすくなるので、そこから1本書ける。
-3. **[中] 依存バージョンが固定されていない** — `workspace/projects/stock-investment`
-   - 動いている今の環境で `pip freeze` を取り、`requirements.txt` を `==` で固定する。更新は Dependabot に任せて、上がったときに気づけるようにする。 参考: workspace/projects/youtube-video-creation が既に同じことをやっているので、そこから写すのが早い。
-4. **[中] 1つの関数が長くなりすぎている** — `workspace/projects/stock-investment`
-   - 関数の中で「まとまった仕事」をしている塊を、名前を付けて切り出す。切り出した先はテストしやすくなるので、そこから1本書ける。
-5. **[中] 例外を握りつぶしている箇所がある** — `workspace/projects/stock-investment`
+1. **[中] 例外を握りつぶしている箇所がある** — `workspace/projects/youtube-video-creation`
    - 最低でも失敗内容を print / logging で残す。「失敗しても続行してよい」場所なら、なぜよいのかをコメントに書く。
+2. **[中] 1つの関数が長くなりすぎている** — `workspace`
+   - 関数の中で「まとまった仕事」をしている塊を、名前を付けて切り出す。切り出した先はテストしやすくなるので、そこから1本書ける。
+3. **[中] 1つの関数が長くなりすぎている** — `workspace/projects/ai-side-business`
+   - 関数の中で「まとまった仕事」をしている塊を、名前を付けて切り出す。切り出した先はテストしやすくなるので、そこから1本書ける。
+4. **[中] 依存バージョンが固定されていない** — `workspace/projects/stock-investment`
+   - 動いている今の環境で `pip freeze` を取り、`requirements.txt` を `==` で固定する。更新は Dependabot に任せて、上がったときに気づけるようにする。 参考: workspace/projects/youtube-video-creation が既に同じことをやっているので、そこから写すのが早い。
+5. **[中] 1つの関数が長くなりすぎている** — `workspace/projects/stock-investment`
+   - 関数の中で「まとまった仕事」をしている塊を、名前を付けて切り出す。切り出した先はテストしやすくなるので、そこから1本書ける。
 
-詳細と依頼文は `docs/growth/2026-09-14.md` を見る。
+詳細と依頼文は `docs/growth/2026-09-21.md` を見る。
 
 ## 保留中（理由あり）
 
 - `workspace/projects/cohabitation-budget` 雛形だけ作られて中身が無い — index.html 1枚で完結させることが価値の完成品。README に「完成・運用中／構成を分割しない」と明記済み
-
-## 直近で解決したもの
-
-- `workspace/projects/soccer-clicker` 1ファイルが大きくなりすぎている
 
 ## 使い方
 
