@@ -1,0 +1,169 @@
+# リーズ0-0パレス。無敗は続いたが、何も起きなかった（2026-09-21）
+#
+# 材料は research/raw/20260921_leeds.md。
+#
+# **軸は試合そのもの。**冨安健洋の負傷は別の回で扱うので、ここでは
+# 「ハーフタイムで交代した」という事実だけに触れ、負傷の話には踏み込まない。
+#
+# **ファンサイト1本を不使用にした。**鎌田大地を「途中出場」と書いており、
+# 日本の4媒体と FotMob の「先発フル出場」と真っ向から食い違うため。
+#
+# **日本語の反応15件のうち9件は冨安の負傷が主題。**この回で使えるのは
+# 試合について書かれた分だけ。足りないぶんは英語の反応で補う。
+#
+# **xG は「リーズが上」なのに、現地の見立ては「パレスが上回った」。**
+# どちらか一方を正しいことにしない。両方出す。
+format: news
+voice_min: 40
+slot: premier_3
+date: "2026年9月21日"
+
+people:
+  - 鎌田大地
+  - 田中碧
+
+short_title: "リーズ0-0パレス、無敗は続く"
+
+theme:
+  id: leeds_palace_goalless
+  league: england
+  league_name: プレミアリーグ
+  kind: match
+  topic: リーズ・ユナイテッド
+  title: エランド・ロードで0対0。リーズが続けているものと、失ったものは
+  hook: 日本人3人が、同じ試合に先発しました。
+  question: なぜ点が入らなかったのか
+
+thumbnail:
+  photo: assets/images/20260921_leeds/01.jpg
+  line1: 13本撃って0点
+  line2: 無敗でも 勝てない
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: リーズ0対0クリスタル・パレス
+    narrator: キャスター
+    card:
+      type: table
+      title: プレミアリーグ第5節
+      columns: ["", ""]
+      rows:
+        - ["リーズ・ユナイテッド", "0"]
+        - ["クリスタル・パレス", "0"]
+        - ["リーズ", "5位・勝ち点9・開幕5試合無敗"]
+        - ["パレス", "15位・勝ち点4"]
+    say:
+      - リーズとクリスタル・パレスが、エランド・ロードで0対0の引き分けに終わりました。
+      - "リーズは**開幕5試合で無敗**。この記録は2001年から02年以来のことです。"
+    official: false
+    sources:
+      - https://www.skysports.com/football/leeds-united-vs-crystal-palace/report/559489
+      - https://www.theguardian.com/football/2026/sep/20/leeds-crystal-palace-premier-league-match-report
+
+  - id: both
+    heading: 続いたものと、途切れたもの
+    tier: 報道
+    telop: 無敗は続き、得点は止まった
+    narrator: キャスター
+    card:
+      type: table
+      title: この引き分けが意味するもの
+      columns: ["", ""]
+      rows:
+        - ["リーズ", "開幕5試合無敗・5位"]
+        - ["ただし", "今季初めての無得点"]
+        - ["パレス", "15位・勝ち点4"]
+        - ["降格圏との差", "1"]
+    say:
+      - "一方で、**今季初めて点が取れなかった試合**にもなりました。"
+      - パレスは勝ち点4。降格圏との差は1です。
+      - "パレスにとっては、いまの監督になってからリーグ戦で**初めての無失点**でもありました。"
+    official: false
+    sources:
+      - https://www.skysports.com/football/leeds-united-vs-crystal-palace/report/559489
+
+  - id: nothing
+    heading: 何が起きなかったのか
+    main: true
+    tier: 報道
+    telop: 前半40分間、相手のキーパーは一度も動かなかった
+    narrator: 解説
+    card:
+      type: table
+      title: この試合の数字
+      columns: ["", ""]
+      rows:
+        - ["リーズのシュート", "13本"]
+        - ["うち枠内", "2本"]
+        - ["はっきりした決定機", "1つ"]
+        - ["前半40分間", "パレスのGKは枠内シュートを受けず"]
+    say:
+      - {short_only: true, text: エランド・ロードで、0対0でした。}
+      - 0対0の試合なので、何が起きなかったのかを見ていきます。
+      - "前半の40分間、パレスのキーパーは**枠内シュートを1本も受けていません。**"
+      - "リーズは13本撃ちましたが、キーパーを動かしたのは**2本だけ**でした。"
+      - はっきりした決定機は、1つと数えられています。
+      - 前線のカルヴァート＝ルーウィンには、ボールが届かないままでした。
+    official: false
+    sources:
+      - https://www.theguardian.com/football/2026/sep/20/leeds-crystal-palace-premier-league-match-report
+      - https://www.leeds-live.co.uk/sport/leeds-united/leeds-united-farke-crystal-palace-34645682
+
+  - id: japanese
+    heading: 日本人3人が、同じ試合に
+    tier: 報道
+    telop: 鎌田大地、田中碧、冨安健洋がそろって先発
+    narrator: キャスター
+    say:
+      - この試合、日本の3人がそろって先発しました。
+      - パレスの鎌田大地と冨安健洋、そしてリーズの田中碧です。
+      - 前半、田中が流れてきたロングスローに左足で合わせましたが、枠を外れます。
+      - 後半には鎌田がペナルティエリアの手前から左足で狙い、ゴールの右へ外れました。
+      - "冨安は**ハーフタイムで交代**しています。"
+      - 後半には、田中が鎌田を倒して警告を受ける場面もありました。
+    official: false
+    sources:
+      - https://web.gekisaka.jp/
+      - https://www.theguardian.com/football/2026/sep/20/leeds-crystal-palace-premier-league-match-report
+
+  - id: farke
+    heading: 監督は、どう見ていたか
+    tier: 報道
+    telop: 「入り混じった気持ちだ」
+    narrator: 解説
+    say:
+      - リーズのファルケ監督は、試合後にこう話しました。
+      - {voice: ファルケ監督, text: 入り混じった気持ちだ。勝ちたかったが、現実には38試合ある。いつも照明の下の魔法の夜というわけにはいかない}
+      - {voice: ファルケ監督, text: 気に入ったことも多い。無敗を伸ばしたこと、無失点だったこと}
+      - {voice: ファルケ監督, text: 攻撃の面では、今日は間違いなく最良の試合ではなかった。少し緩かった}
+      - "スタンドからは、**「前へ」というチャント**が起きていました。"
+    official: false
+    sources:
+      - https://www.leeds-live.co.uk/sport/leeds-united/leeds-united-farke-crystal-palace-34645682
+      - https://www.yorkshirepost.co.uk/sport/football/-9116221
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「鎌田と田中碧がバチバチやってんのがすごい良かった」
+    narrator: キャスター
+    say:
+      - {short_only: true, text: この試合を見ていた人たちの声です。}
+      - {voice: ネット民, text: 鎌田と田中碧がプレミアの舞台でバチバチやってんのがすごい良かった, short_voice: true}
+      - {voice: ネット民, text: 田中が鎌田にとてもキツく当たっていた理由が後退して分かった}
+      - {voice: ネット民, text: スタメンに3人は凄い。少なくとも片方は2人スタメンに入り、更に相手にも1人いる}
+      - {voice: ネット民, text: これがCLリーグレベルのチーム同士なら、本当に日本はもっと強くなる}
+      - {voice: ネット民, text: ミッチェルのはゴールと思ったんだがなあ、オフサイドのCGに納得しない}
+      - {voice: ネット民, text: Pretty decent performance front to back, could have nicked it but that's a great point}
+      - {voice: ネット民, text: 冨安交代は時間管理かな！？怪我じゃなけりゃいいけど}
+      - {voice: ネット民, text: トミー大丈夫かぁ…？？？}
+      - {voice: ネット民, text: 遠藤はベンチからも外れたらしい}
+      - {voice: ネット民, text: プレミアの舞台で日本人が3人も先発する時代になったんだな}
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/
+      - https://www.theguardian.com/football/2026/sep/20/leeds-crystal-palace-premier-league-match-report

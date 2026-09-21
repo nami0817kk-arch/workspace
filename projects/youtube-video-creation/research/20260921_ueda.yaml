@@ -1,0 +1,117 @@
+# 上田綺世、背中で落として左足（2026-09-21）
+#
+# 材料は research/raw/20260921_ueda.md。
+#
+# **通算得点の数え方が媒体で4通りに割れている**（3ゴール目／公式戦4試合3ゴール／
+# リーグ2点目／8戦6発）。**3媒体が一致する「加入してから公式戦4試合で3ゴール」**だけを使う。
+# **得点の時間は言わない**（先制点が22分と23分で割れ、サッカーキングは同じ記事に両方書いている）。
+# ジルーの投入時間も64分/65分で割れるので、**分は言わず「後半に」とする**。
+#
+# **本人とジルーのコメントは、どの記事にも無い。**監督の言葉だけ。
+# 監督の言葉は LOSC 公式（フランス語）の原文があるので、訳の食い違いはそれで解決できる。
+format: news
+voice_min: 40
+slot: japan_3
+date: "2026年9月21日"
+
+people:
+  - 上田綺世
+
+short_title: "上田綺世、背中で落として左足"
+
+theme:
+  id: ueda_lille_nice
+  league: france
+  league_name: リーグ・アン
+  kind: match
+  topic: リール
+  title: 上田綺世が背中で落として決めた1点。リールに起きたのは
+  hook: 加入してから、4試合で3ゴールです。
+  question: どんなゴールだったのか
+
+thumbnail:
+  photo: assets/images/20260921_ueda/01.jpg
+  line1: 背中でトラップ！？
+  line2: 4試合3発の衝撃弾
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: ニース2対1リール。リールはリーグ戦初黒星
+    narrator: キャスター
+    card:
+      type: table
+      title: リーグ・アン第5節
+      columns: ["", ""]
+      rows:
+        - ["ニース", "2"]
+        - ["リール", "1"]
+        - ["上田綺世", "先発フル出場・1ゴール"]
+        - ["リール", "リーグ戦で今季初黒星"]
+    say:
+      - リールがニースに1対2で敗れました。リーグ戦では今季初めての黒星です。
+      - 先制点は、ニースのシュートがリールの選手に当たって入ったオウンゴールでした。
+      - 後半に2点目を決められ、リールは2点を追う展開になります。
+      - "そこから1点を返したのが、**上田綺世**でした。"
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/fra/20260921/2207128.html
+      - https://web.gekisaka.jp/news/world/detail/?459291-459291-fl
+
+  - id: goal
+    heading: 背中で落として、左足
+    main: true
+    tier: 報道
+    telop: 背中に当たって流れた球を、左足で
+    narrator: 解説
+    say:
+      - {short_only: true, text: 上田綺世のゴールが、変わった形でした。}
+      - 上田は自分で下がってボールを受け、前に走り直しました。
+      - "そこへ出てきたケアゴーの浮き球が、**上田の背中に当たって左へ流れます。**"
+      - "流れたところを左足で振り抜き、飛び出してきたキーパーの**股の下**を抜きました。"
+      - "加入してから**公式戦4試合で3ゴール**。フル出場は、この試合が初めてでした。"
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/fra/20260921/2207128.html
+      - https://news.yahoo.co.jp/articles/7d26759f1353cd09167a525f5c49058334ce5da8
+
+  - id: giroud
+    heading: ジルーとの2トップ
+    tier: 報道
+    telop: 後半に3枚替え。2トップが実現した
+    narrator: キャスター
+    say:
+      - 後半、リールは3人をまとめて代えました。そこで入ったのがジルーです。
+      - 上田とジルーが前に2人並ぶ形が、この試合で実現しました。
+      - 監督のダヴィデ・アンチェロッティは、試合後にこう話しています。
+      - {voice: アンチェロッティ監督, text: 彼らは補い合う2人だ。こういう試合で、追いかけるときには面白い組み合わせになる}
+      - {voice: アンチェロッティ監督, text: 守備でコンパクトさが足りなかった}
+      - {voice: アンチェロッティ監督, text: あきらめはしなかったが、足りなかった}
+    official: false
+    sources:
+      - https://www.losc.fr/actualites/2026-09-20/davide-ancelotti-pas-assez-compact-defensivement
+      - https://news.yahoo.co.jp/articles/7d26759f1353cd09167a525f5c49058334ce5da8
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「背中でトラップしてそのまま左足」
+    narrator: キャスター
+    say:
+      - {short_only: true, text: このゴールに、声が集まりました。}
+      - {voice: ネット民, text: 背中でトラップしてそのまま左足で叩き込む, short_voice: true}
+      - {voice: ネット民, text: 彼のシュート技術は本物だな}
+      - {voice: ネット民, text: 背中でボールをコントロールするなんて、ウイニングイレブンのバグ動画を見ているようだ}
+      - {voice: ネット民, text: 公式戦4試合で3ゴール、完全にリールのエース}
+      - {voice: ネット民, text: 背中トラップは流石に狙ってやったわけじゃないと思うが、あの落ち際を完璧に捉えるのが上田}
+      - {voice: ネット民, text: 負けたのは残念だけど、ウエダの評価は上がる一方だな}
+      - {voice: ネット民, text: 最下位のチームに負けて首位陥落}
+      - {voice: ネット民, text: 彼のゴールハイライトを見るためだけにリーグ・アンの試合をチェックするようになった}
+      - {voice: ネット民, text: 上田は上手すぎる。このクラブのファンは、上田を獲れたことがどれだけ幸運なのか分かってない}
+      - {voice: ネット民, text: 上田は並外れたストライカーだ}
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/articles/7d26759f1353cd09167a525f5c49058334ce5da8

@@ -121,5 +121,13 @@
     "thumbnails.set": 24,
     "playlistItems.insert": 12,
     "videos.update": 1
+  },
+  "2026-09-20": {
+    "channels.list": 20,
+    "playlistItems.list": 20,
+    "videos.insert": 20,
+    "thumbnails.set": 20,
+    "playlistItems.insert": 10,
+    "videos.list": 1
   }
 }

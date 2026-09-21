@@ -1,0 +1,159 @@
+# 遠藤航、今季のリーグ戦ではじめてメンバー外（2026-09-21）
+#
+# 材料は research/raw/20260921_endo.md。
+#
+# **年齢は言わない。**媒体で33歳と34歳に割れている。
+# **得点の時間も言わない。**ゲキサカは「後半12分」、サッカーキングは「後半57分」と
+# 書き方が違う（同じ場面）。「後半に1点」とだけ言う。
+#
+# **イラオラが遠藤について語ったのは9/12と9/14の2回で、どちらもこの試合より前。**
+# 試合後に遠藤について話した記録は無い。**「試合後にこう言った」と混ぜない。**
+#
+# **「現地では書かれていない」の節は落とした**（2026-09-21 ユーザー指示）。
+# どの媒体が扱ったかは視聴者に関係ない。立ち位置そのものを見せる。
+#
+# 反応は SOCCER DIGEST Web の記事本文に載っていた10件と、Yahoo!のコメント欄から。
+# **記事そのものへの批判（「生成AIで作らせたような記事」等）は使わない。**題材と別の話。
+format: news
+voice_min: 40
+slot: japan_2
+date: "2026年9月21日"
+
+people:
+  - 遠藤航
+
+short_title: "遠藤航、ついにメンバー外"
+
+theme:
+  id: endo_out_of_squad
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: リバプール
+  title: 遠藤航に悲報。ついにベンチにも入れず、いま何番目にいるのか
+  hook: 4試合ベンチに座り、一度も呼ばれず、そして外れました。
+  question: なぜメンバーから外れたのか
+
+thumbnail:
+  photo: assets/images/20260921_endo/01.jpg
+  line1: 【悲報】ついにベンチ外
+  line2: 4試合ベンチで 出場0分
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: 今季のリーグ戦で初のメンバー外
+    narrator: キャスター
+    card:
+      type: table
+      title: プレミアリーグ第5節
+      columns: ["", ""]
+      rows:
+        - ["ボーンマス", "0"]
+        - ["リバプール", "1"]
+        - ["得点", "イサク（後半）"]
+        - ["遠藤航", "メンバー外"]
+    say:
+      - リバプールがボーンマスに1対0で勝ちました。
+      - "遠藤航は、**今季のリーグ戦ではじめてメンバーから外れました。**"
+      - 開幕からの4試合は、すべてベンチに入っていました。ただし出場は0分です。
+      - 遠征の21人にも名前がなく、外れたのは遠藤を含む3人でした。
+    official: false
+    sources:
+      - https://www.skysports.com/football/bournemouth-vs-liverpool/report/559484
+      - https://web.gekisaka.jp/news/world/detail/?459278-459278-fl
+
+  - id: where
+    heading: いまの立ち位置
+    main: true
+    tier: 報道
+    telop: ヨーロッパの登録25人にも入っていない
+    narrator: 解説
+    card:
+      type: table
+      title: 遠藤航の今季
+      columns: ["", ""]
+      rows:
+        - ["リーグ戦", "4試合ベンチ入り・出場0分"]
+        - ["第5節", "メンバー外"]
+        - ["欧州の登録", "25人のリストに入らず"]
+        - ["プレシーズン", "親善試合の出場は115分"]
+    say:
+      - {short_only: true, text: 遠藤航が、リバプールのメンバーから外れました。}
+      - 開幕からの4試合、遠藤はベンチにいました。けれど一度もピッチに立っていません。
+      - "ヨーロッパの大会の選手登録でも、**25人のリストに名前がありませんでした。**"
+      - プレシーズンの親善試合で出たのは115分。帯同した中盤の選手では最も短い時間です。
+      - 今季が契約の最終年にあたります。
+    official: false
+    sources:
+      - https://sports.yahoo.co.jp/
+      - https://www.thisisanfield.com/
+
+  - id: reason
+    heading: 監督が話していたこと
+    tier: 報道
+    telop: 左足のけがが、まだ治りきっていない
+    narrator: キャスター
+    say:
+      - 理由について、監督のイラオラは2週間前にこう説明しています。
+      - "夏のワールドカップを欠場することになった**左足のけがが、まだ治りきっていない**、と。"
+      - それが2週間前。そこから状況は、良くなるどころか一段下がりました。
+    official: false
+    sources:
+      - https://sports.yahoo.co.jp/
+      - https://www.thisisanfield.com/
+
+  - id: match
+    heading: 試合のほうは
+    tier: 報道
+    telop: イサクの1点。リバプールは3試合続けて無失点
+    narrator: キャスター
+    card:
+      type: table
+      title: この試合で分かれたところ
+      columns: ["", ""]
+      rows:
+        - ["得点", "ガクポのクロスからイサク"]
+        - ["リバプール", "3試合続けて無失点"]
+        - ["イラオラ", "リーグ最初の5試合を無敗"]
+        - ["ボーンマス", "17位。5試合で勝ち点3"]
+    say:
+      - 試合を決めたのは、後半のイサクの1点でした。
+      - ガクポが右から入れたクロスが流れ、イサクが押し込んでいます。
+      - "リバプールはこれで**3試合続けて無失点**。監督のイラオラは、リーグ最初の5試合を負けずに終えました。"
+      - "そのイラオラが前に率いていたのが、この日の相手ボーンマスです。**古巣への帰還**でした。"
+      - "ボーンマスは17位。5試合で勝ち点3にとどまっています。"
+    official: false
+    sources:
+      - https://www.skysports.com/football/bournemouth-vs-liverpool/report/559484
+      - https://www.espn.com/soccer/story/_/id/49989024/alexander-isak-found-form-liverpool-winning-goal-bournemouth-iraola-hope
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「ついにベンチ外か」
+    narrator: キャスター
+    say:
+      - {short_only: true, text: 遠藤航のメンバー外に、こんな声が出ています。}
+      - {voice: ネット民, text: ついにベンチ外か...しょうがないけど悲しいなあ, short_voice: true}
+      - {voice: ネット民, text: 遠藤ってもう完全に構想外なんやな}
+      - {voice: ネット民, text: 怪我でもないのにこれはもうきついな}
+      - {voice: ネット民, text: 本当に悲しいまじで悲しい、辛い、ホンマに辛い}
+      - {voice: ネット民, text: 冬移籍かな}
+      - {voice: ネット民, text: 遠藤選手本人が他チームへ動く気配がないのは、必要となる時がいつ来てもいいように準備はしていると思うし、やはりこのチームへの愛着があるからだと思う}
+      - {voice: ネット民, text: クロップ時代に一年スタメンで出て、グアルディオラから遠藤がいたから試合が難しかったって言われた事が日本人として誇らしいレベルだし、凄すぎるわ}
+      - {voice: ネット民, text: リヴァプールファンは全然騒いでませんね。ボランチの控えにはジローとニョニがいて右サイドバックにはフリンポン、CBにはゴメスいるならベンチにも入れないのは至って妥当, short_voice: true}
+      - {voice: ネット民, text: 試合に出られなくても今のチームを離れたくない、とチーム名でサッカーやってる感じ}
+      - {voice: ネット民, text: 本人も話していたけど、リバプールブランドはそんな容易く手放せないって話}
+      - {voice: ネット民, text: 厳しいな}
+      - {voice: ネット民, text: 干すねぇ}
+      - {voice: ネット民, text: どうなってるんだ。完全に構想外か}
+      - {voice: ネット民, text: もう使われないのか}
+      - {voice: ネット民, text: 日本人としては悲しい}
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/
+      - https://soccerdigestweb.com/

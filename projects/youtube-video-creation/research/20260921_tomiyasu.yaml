@@ -1,0 +1,146 @@
+# 冨安健洋、ふくらはぎ。代表合流の3日前（2026-09-21）
+#
+# 材料は research/raw/20260921_tomiyasu.md。
+#
+# **軸は負傷と日本代表への影響。**同じ日のリーズ対パレスは別の回で扱うので、
+# 試合そのものの中身には踏み込まない。
+#
+# **負傷の場面は、どの記事にも書かれていない。**分かるのは「前半のどこかで痛めて、
+# ハーフタイムに退いた」まで。**「何分に」「どのプレーで」は言わない。**
+# 現地の記者は逆に「試合中に足を気にする素振りは見せなかった」と書いている。
+#
+# **監督名は「サージュ」に統一**（媒体でサージュ／セージ／サージ／サジュの4通り）。
+# 発言はクリスタル・パレス公式の英語原文から訳す（日本の4媒体で訳が違うため）。
+#
+# **出場記録は「公式戦5試合」**（サッカーキングと Sofascore が一致）。
+# Wikipedia と fbref の数字は8月末時点の古い集計なので使わない。
+format: news
+voice_min: 40
+slot: japan_5
+date: "2026年9月21日"
+
+people:
+  - 冨安健洋
+
+short_title: "冨安健洋、ふくらはぎ"
+
+theme:
+  id: tomiyasu_calf_japan
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: クリスタル・パレス
+  title: 冨安健洋に悲報。ハーフタイムで消えて、代表合流まで残りは
+  hook: 日本代表が動き出す、3日前のことです。
+  question: 代表に間に合うのか
+
+thumbnail:
+  photo: assets/images/20260921_tomiyasu/01.jpg
+  line1: 【悲報】ハーフタイムで交代
+  line2: 代表まで あと3日
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: 先発、そしてハーフタイムで交代
+    narrator: キャスター
+    card:
+      type: table
+      title: リーズ戦の冨安健洋
+      columns: ["", ""]
+      rows:
+        - ["出場", "先発（3バックの左）"]
+        - ["交代", "ハーフタイムで退く"]
+        - ["交代した相手", "レルマ"]
+        - ["試合", "リーズ 0対0 クリスタル・パレス"]
+    say:
+      - 冨安健洋が、リーズ戦で先発しました。3バックの左です。
+      - "ところが後半、ピッチに戻ってきませんでした。**ハーフタイムでの交代**です。"
+      - 試合は0対0の引き分けでした。
+      - 交代で入ったのは、レルマでした。
+    official: false
+    sources:
+      - https://www.soccer-king.jp/news/world/eng/20260921/2207216.html
+
+  - id: manager
+    heading: 監督が言ったこと
+    main: true
+    tier: 報道
+    telop: 「ふくらはぎを痛めた。深刻ではないと思う」
+    narrator: 解説
+    say:
+      - {short_only: true, text: 冨安健洋が、ハーフタイムで退きました。}
+      - パレスのサージュ監督は、試合後にこう話しました。
+      - {voice: サージュ監督, text: 彼はふくらはぎを痛めた}
+      - {voice: サージュ監督, text: 深刻ではないと思う。ただ、続けてプレーするには無理がある}
+      - {voice: サージュ監督, text: 選手が自分から「無理だ」と言えるのは、良い兆しだと思う}
+    official: false
+    sources:
+      - https://www.cpfc.co.uk/
+      - https://www.soccer-king.jp/news/world/eng/20260921/2207216.html
+
+  - id: unknown
+    heading: 誰も気づいていなかった
+    tier: 背景
+    telop: 足を気にする素振りは、見せていなかった
+    narrator: キャスター
+    say:
+      - "ところが、**痛めた場面を見た人がいません。**"
+      - "冨安は前半のあいだ、**足を気にする素振りをまったく見せていませんでした。**"
+      - 試合後、鎌田と並んで記者の前に立ったときも、歩き方はいつもどおりでした。
+      - それでも、後半にはもう出てきませんでした。
+    official: false
+    sources:
+      - https://hochi.news/
+
+  - id: japan
+    heading: 3日後に、代表の試合がある
+    tier: 報道
+    telop: 9月24日ウルグアイ戦。31人に名前は入ったまま
+    narrator: 解説
+    card:
+      type: table
+      title: 日本代表の日程
+      columns: ["", ""]
+      rows:
+        - ["9月24日", "ウルグアイ代表"]
+        - ["9月28日", "ベネズエラ代表"]
+        - ["10月1日", "エクアドル代表"]
+        - ["10月5日", "パナマまたはニュージーランド"]
+    say:
+      - 日本代表は9月17日に31人を発表し、冨安もその中に入っています。
+      - "最初の試合は**9月24日のウルグアイ戦**。この負傷の、3日後です。"
+      - "9月21日の時点で、**辞退や離脱の発表はありません。**"
+      - 間に合うのかどうかは、まだ分かりません。
+    official: false
+    sources:
+      - https://www.jfa.jp/
+      - https://www.soccer-king.jp/news/world/eng/20260921/2207216.html
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「またかと思ってしまった」
+    narrator: キャスター
+    say:
+      - {short_only: true, text: この知らせに、こんな声が出ています。}
+      - {voice: ネット民, text: 冨安好きだけどまたかと思ってしまった, short_voice: true}
+      - {voice: ネット民, text: 冨安はいい選手なんだけど、ホントに怪我が多いんだよな}
+      - {voice: ネット民, text: 久々のプレミアでまだフル稼働は難しいでしょうから、無理せず頑張ってほしい}
+      - {voice: ネット民, text: 冨安は肝心な試合に出られたらOK、くらいの位置づけかな}
+      - {voice: ネット民, text: アジア杯は来なくてもよいと思います。移動せず欧州でコンディションを整えてほしい}
+      - {voice: ネット民, text: やりくりするのに計算できない選手だね}
+      - {voice: ネット民, text: 無事是名馬}
+      - {voice: ネット民, text: トミー縦パスも上手いよ}
+      - {voice: ネット民, text: まさに三杉君状態}
+      - {voice: ネット民, text: このタイミングで代表戦で良かった}
+      - {voice: ネット民, text: もう癖になってるのでしょうね}
+      - {voice: ネット民, text: 怪我が多いことはわかりきってたでしょ}
+      - {voice: ネット民, text: トミー大丈夫かぁ…？？？}
+      - {voice: ネット民, text: ケガが残念だね}
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/

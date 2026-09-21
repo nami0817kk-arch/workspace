@@ -1,0 +1,123 @@
+# ハーランドが「対戦した25クラブすべて」から得点（2026-09-21）
+#
+# 材料は research/raw/20260921_city.md。
+#
+# **得点の時間は言わない。**4か所で媒体が割れている（フェルナンデス9分/10分、
+# セメニョ57分/56分、ブロビー59分/58分、ハーランド81分/82分）。順番だけを言う。
+#
+# **記録は日本の媒体がどこも書いていない。**ESPN・Opta・Sky・Yahoo Sports の4媒体が
+# 一致している。**「何人目か」は媒体で数え方が割れるので言わない。**
+#
+# 英語の書き込みは5件しか取れていない。**「反応が少ない」のではなく
+# Reddit とファンサイトが読めなかっただけ**なので、「海外では話題にならなかった」
+# とは言わない。日本のコメント欄が中心になる。
+format: news
+voice_min: 40
+slot: premier_2
+date: "2026年9月21日"
+
+people:
+  - アーリング・ハーランド
+
+short_title: "ハーランド、25クラブ全部から"
+
+theme:
+  id: haaland_all_25_clubs
+  league: england
+  league_name: プレミアリーグ
+  kind: match
+  topic: マンチェスター・シティ
+  title: ハーランドが8ゴールの乱打戦で届いた場所。残っていた相手は
+  hook: 最後に残っていた1クラブから、ついに決めました。
+  question: どんな記録に届いたのか
+
+thumbnail:
+  photo: assets/images/20260921_city/01.jpg
+  line1: 8ゴールの乱打戦
+  line2: ハーランド ついに全制覇
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: マンチェスター・シティ5対3サンダーランド
+    narrator: キャスター
+    card:
+      type: table
+      title: プレミアリーグ第5節
+      columns: ["", ""]
+      rows:
+        - ["マンチェスター・シティ", "5"]
+        - ["サンダーランド", "3"]
+        - ["ブロビー（サンダーランド）", "ハットトリック"]
+        - ["シティ", "1位・5戦5勝"]
+    say:
+      - マンチェスター・シティとサンダーランドが、8点を分け合いました。
+      - 5対3でシティが勝ち、開幕5連勝で首位に立っています。
+      - 負けたサンダーランドも、ブロビーが3点。ハットトリックを決めました。
+      - そして最後の1点が、記録につながります。
+    official: false
+    sources:
+      - https://www.skysports.com/football/manchester-city-vs-sunderland/report/559490
+      - https://www.espn.com/soccer/story/_/id/49989640/erling-haaland-sets-unique-goal-milestone-man-city-beat-sunderland
+
+  - id: record
+    heading: 最後に残っていた1クラブ
+    main: true
+    tier: 報道
+    telop: 対戦した25クラブすべてから得点
+    narrator: 解説
+    card:
+      type: table
+      title: ハーランドの記録
+      columns: ["", ""]
+      rows:
+        - ["この日の得点", "オフサイドの判定が取り消されて成立"]
+        - ["残っていた相手", "サンダーランド"]
+        - ["到達したもの", "プレミアで対戦した25クラブすべてから得点"]
+    say:
+      - {short_only: true, text: ハーランドが、ある記録に届きました。}
+      - "終盤に決めたハーランドの得点は、**いったんオフサイドの判定**でした。"
+      - それがVARで取り消され、ゴールとして認められます。
+      - "この1点で、ハーランドは**プレミアリーグで対戦した25クラブすべてから得点**したことになりました。"
+      - "**サンダーランドは、唯一まだ決めていない相手**でした。"
+    official: false
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49989640/erling-haaland-sets-unique-goal-milestone-man-city-beat-sunderland
+      - https://www.skysports.com/football/manchester-city-vs-sunderland/report/559490
+
+  - id: maresca
+    heading: 監督は、喜んでいない
+    tier: 報道
+    telop: 「5対3より1対0で勝ちたい」
+    narrator: 解説
+    say:
+      - 勝ったシティの監督マレスカは、試合後にこう言いました。
+      - {voice: マレスカ監督, text: ゴールが多すぎた。1対0で勝つほうが良い。そのほうがずっといい}
+      - {voice: マレスカ監督, text: 正直に言えば、5対3より1対0で勝ちたい。ただ、とても難しい試合になると思っていた}
+      - {voice: マレスカ監督, text: 我々は支配したいが、相手はそれを許してくれない}
+      - {voice: マレスカ監督, text: とても良いチームで、強く、危険だった。それでも我々は勝つ道を見つけた}
+    official: false
+    sources:
+      - https://www.skysports.com/football/manchester-city-vs-sunderland/report/559490
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「サンダーランドがめちゃくちゃ強かった」
+    narrator: キャスター
+    say:
+      - {short_only: true, text: この試合を見ていた人たちの声です。}
+      - {voice: ネット民, text: マジでこれぞプレミアだって怖さがあったわ, short_voice: true}
+      - {voice: ネット民, text: いやあ～面白い試合だったなあ。乱打戦と言っても守備が緩いわけでなく非常に見応えがあった}
+      - {voice: ネット民, text: サンダーランドめっちゃ強い。負けてもおかしくなかった}
+      - {voice: ネット民, text: マンU相手に10人で守りきったシティを相手にハットトリックするブロビーは凄い}
+      - {voice: ネット民, text: なんだよシティは弱いとか言ってたけど、むっちゃ強いじゃん笑}
+      - {voice: ネット民, text: シティ、ペップの時より粘りが強くなってる気がする}
+      - {voice: ネット民, text: バカ試合だけど、分かりやすくて面白いね}
+      - {voice: ネット民, text: 守備に不安を残したけど勝ち点3取れて良かった}
+    official: false
+    sources:
+      - https://news.yahoo.co.jp/

@@ -1,0 +1,152 @@
+# ル・クラシック。マルセイユが降格圏に沈んだ（2026-09-21）
+#
+# 材料は research/raw/20260921_psg.md。
+#
+# **私がはじめに渡した前提「前半11分に退場」は誤りだった。**ドイツの見出し
+# 「Wilde elf Minuten（荒れた11分間＝66分から77分の時間帯）」を「11分に」と読み違えていた。
+# **実際の退場は77分のティモシー・ウェア**で、そのときPSGは既に2対1でリードしていた。
+# **「数的不利になって崩れた」という筋ではない。**
+#
+# 日本語の記事は DAZN News の1本だけで、**コメント欄は0件**。
+# **反応は57件すべてフランス語。**日本の声は無いまま出す。
+#
+# 前半32分ごろ「主審が一度レッドカードを出して引っ込めた」という話は、
+# **報道が1媒体しかない。**現地の実況書き込みに時刻付きで残っているが、
+# **確度は未確認**として扱い、断定しない。
+format: news
+voice_min: 40
+slot: france_1
+date: "2026年9月21日"
+
+people:
+  - フェラン・トーレス
+
+short_title: "ル・クラシック、OMは17位"
+
+theme:
+  id: psg_om_classique
+  league: france
+  league_name: リーグ・アン
+  kind: match
+  topic: マルセイユ
+  title: ル・クラシックに敗れたマルセイユが、いま立っている場所は
+  hook: 大一番のあと、順位表の下から数えたほうが早くなりました。
+  question: マルセイユに何が起きているのか
+
+thumbnail:
+  photo: assets/images/20260921_psg/01.jpg
+  line1: まさかの17位転落
+  line2: ル・クラシックでも敗戦
+  tags: []
+  points: []
+
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: マルセイユ1対2PSG。ヴェロドロームでの大一番
+    narrator: キャスター
+    card:
+      type: table
+      title: ル・クラシック
+      columns: [時間, 得点者]
+      rows:
+        - ["66分", "フェラン・トーレス（PSG）"]
+        - ["72分", "アンヘル・ゴメス（PSG）"]
+        - ["74分", "マルキーニョス（PSG）"]
+        - ["77分", "ウェア退場（マルセイユ）"]
+    say:
+      - 大一番のル・クラシックは、PSGが2対1で勝ちました。
+      - 前半は0対0。動いたのは後半の半ばからです。
+      - ドゥエのクロスにフェラン・トーレスがニアで合わせ、そこから10分足らずで3点が入りました。
+    official: false
+    sources:
+      - https://www.kicker.de/wilde-elf-minuten-psg-schlaegt-om-in-ueberzahl-1254714/video
+      - https://www.vi.nl/nieuws/opnieuw-belangrijke-ferran-torres-helpt-psg-in-le-classique-langs-marseille
+
+  - id: red
+    heading: そして退場者が出た
+    tier: 報道
+    telop: 主将ウェアが、2枚目の警告で退場
+    narrator: キャスター
+    say:
+      - "マルセイユの**主将ウェアが退場**になったのは、そのあとです。"
+      - ヌーノ・メンデスを後ろから抑えて、2枚目の警告を受けました。
+      - 10人になったマルセイユは、そのまま終わりを迎えます。
+    official: false
+    sources:
+      - https://www.kicker.de/wilde-elf-minuten-psg-schlaegt-om-in-ueberzahl-1254714/video
+
+  - id: order
+    heading: 順番が、思われているのと逆
+    main: true
+    tier: 報道
+    telop: 退場のとき、PSGはもう2対1でリードしていた
+    narrator: 解説
+    card:
+      type: table
+      title: 起きた順番
+      columns: ["", ""]
+      rows:
+        - ["66分", "PSGが先制"]
+        - ["72分", "PSGが2点目"]
+        - ["74分", "PSGが3点目"]
+        - ["77分", "マルセイユが退場者"]
+    say:
+      - {short_only: true, text: マルセイユが降格圏に沈みました。}
+      - この試合、順番を取り違えやすいところがあります。
+      - "マルセイユが退場者を出したのは**77分**。そのときPSGは、もう**2対1でリードしていました。**"
+      - つまり「1人少なくなって崩れた」のではなく、崩れたあとに1人減っています。
+      - 3点が入ったのは、わずか11分のあいだでした。
+    official: false
+    sources:
+      - https://www.kicker.de/wilde-elf-minuten-psg-schlaegt-om-in-ueberzahl-1254714/video
+      - https://news.footeo.com/
+
+  - id: om
+    heading: マルセイユは17位
+    tier: 報道
+    telop: 勝ち点3。降格圏に沈んでいる
+    narrator: キャスター
+    say:
+      - "マルセイユは、これで**17位**。勝ち点は3です。"
+      - "順位表では、**降格圏**に入る位置です。"
+      - 監督のジェネジオは、試合後にこう話しました。
+      - {voice: ジェネジオ監督, text: マルセイユがこの状況にあるのは、正常ではない}
+      - {voice: ジェネジオ監督, text: 負けることはある。それはサッカーの一部だ。だが、立派な負けに満足するのは、受け入れられない}
+      - {voice: ジェネジオ監督, text: 辞めるという考えはない}
+    official: false
+    sources:
+      - https://www.footmercato.net/a3814219626525543005-psg-luis-enrique-se-prononce-sur-la-17eme-place-de-lom
+      - https://www.footmercato.net/a6398914280381077709-ligue-1-apres-la-defaite-face-au-psg-lom-est-relegable
+
+  - id: enrique
+    heading: 勝った側は、どう見ていたか
+    tier: 報道
+    telop: 「とても良いOMを見た」
+    narrator: 解説
+    say:
+      - PSGのルイス・エンリケは、相手をこう評しました。
+      - {voice: ルイス・エンリケ, text: とても良いOMを見た。よく守っていたし、とても良い監督がいる}
+      - {voice: ルイス・エンリケ, text: 試合前はみんな簡単だと言っていたが、何も簡単ではなかった}
+      - {voice: ルイス・エンリケ, text: 前半は相手がとても良くプレーしたので、こちらのチャンスは少なかった}
+    official: false
+    sources:
+      - https://www.footmercato.net/a38103876732425886-psg-luis-enrique-on-a-vu-un-tres-bel-om
+
+  - id: voices
+    heading: 見ていた人が書いていたこと
+    tier: 未確認
+    telop: 「でも俺たちは17位だ」
+    narrator: キャスター
+    say:
+      - {short_only: true, text: 見ていた人たちは、こう書いています。}
+      - {voice: ネット民, text: 戦術的には悪い試合ではなかった。選手たちは2つのハーフを戦った。でも俺たちは17位だ, short_voice: true}
+      - {voice: ネット民, text: 立派な負けなんて言いたくない}
+      - {voice: ネット民, text: 次の試合でまた話そう。今度こそ本当に立て直さないといけない}
+      - {voice: ネット民, text: 勝てなければ、今季は最悪のことを覚悟することになる}
+      - {voice: ネット民, text: 審判はまたしてもひどい。しかもまたルテクシエだ}
+      - {voice: ネット民, text: 「得失点差の維持」作戦、今夜も達成}
+    official: false
+    sources:
+      - https://www.footmercato.net/a6398914280381077709-ligue-1-apres-la-defaite-face-au-psg-lom-est-relegable
