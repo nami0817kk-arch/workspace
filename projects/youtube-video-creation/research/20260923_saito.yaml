@@ -1,0 +1,137 @@
+date: 2026年9月23日
+slot: japan_5
+format: quote
+voice_min: 0.6
+people: [齋藤俊輔, 中村俊輔]
+theme:
+  id: saito_first_call
+  league_name: 日本代表
+  kind: other
+  topic: 齋藤俊輔
+  title: '齋藤俊輔、1年前はJ2だった21歳が日本代表に初招集「一番は…」'
+  hook: U-21には入れず、A代表に呼ばれた21歳です。
+  question: 初めて呼ばれて、本人は何と言ったのか
+short_title: 齋藤俊輔「ここに来るまで早いなと自分でも思います」
+thumbnail:
+  photo: assets/images/20260923_saito/02.jpg
+  line1: 1年前はJ2にいた21歳
+  line2: 初招集に言ったのは
+sections:
+  - id: what
+    heading: 何があったか
+    tier: 報道
+    telop: 1年前はJ2。今季はベルギーで開幕から先発、7試合3得点
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    card:
+      type: table
+      title: 齋藤俊輔
+      columns: ["", ""]
+      rows:
+        - ["年齢", "21歳"]
+        - ["所属", "ウェステルロー（ベルギー1部）"]
+        - ["昨季", "J2 水戸で8得点、J1昇格"]
+        - ["移籍", "2026年1月"]
+        - ["今季", "開幕7試合で3得点"]
+    say:
+      - 齋藤俊輔、21歳。ベルギー1部ウェステルローの左ウイングです。
+      - 去年までJ2の水戸にいて、今季は開幕から先発を続けてリーグ戦7試合で3得点。
+      - 同じ世代のU-21がアジア大会に出ているなか、そのメンバーには入っていませんでした。
+      - そこから、**9月17日に日本代表へ初めて呼ばれました。**
+    sources:
+      - https://www.footballchannel.jp/2026/09/22/post1016655/
+      - https://web.gekisaka.jp/news/japan/detail/?459016-459016-fl=
+      - https://news.yahoo.co.jp/articles/f2c9a45506b0020e1276175d9586073f26a55394
+      - https://news.yahoo.co.jp/articles/f02770d07815dc62fdcae2f83f2a23ff55f56c0a
+  - id: said
+    main: true
+    heading: 言ったこと
+    tier: 報道
+    telop: 「一番はびっくりしたのがあります」
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - text: '日本代表に初めて入った齋藤俊輔が、練習のあとに話しました。'
+        short_only: true
+      - voice: 齋藤俊輔
+        text: '**一番はびっくりしたのがありますし、入ると思っていなかったので、**'
+      - voice: 齋藤俊輔
+        text: 本当に嬉しかったのと、ここまでやってきてよかったなという気持ちがあります
+      - voice: 齋藤俊輔
+        text: 難しいところだけど、捉え方としては
+      - voice: 齋藤俊輔
+        text: 開幕からベルギーでちゃんとやるというのはプレーシーズンを通して思っていた。
+      - voice: 齋藤俊輔
+        text: 開幕からスタートで出れていることは、今ここにいる結果になっているかなと思います
+      - voice: 齋藤俊輔
+        text: 1年前までJ2でやっていたことを考えると、ここに来るまで早いなと自分でも思います。
+      - voice: 齋藤俊輔
+        text: 一番は身体的なところ。
+      - voice: 齋藤俊輔
+        text: 今シーズン始まってからフィジカルを上げることをやってきたので、
+      - voice: 齋藤俊輔
+        text: そういうところでベルギーリーグのサッカーに適応していった
+      - voice: 齋藤俊輔
+        text: ワールドカップで見ていた人たちとやれるのは本当にいい機会だと思いますし、
+      - voice: 齋藤俊輔
+        text: 自分のレベルもちゃんと上げていかなきゃいけないなって思いました
+      - voice: 齋藤俊輔
+        text: 自分のストロングだったらドリブルだったりゴール前で足を振るところだったりだと思うので
+      - voice: 齋藤俊輔
+        text: そういうところを出していきたい
+    sources:
+      - https://www.footballchannel.jp/2026/09/22/post1016655/
+      - https://news.yahoo.co.jp/articles/f2c9a45506b0020e1276175d9586073f26a55394
+      - https://www.soccer-king.jp/news/japan/national/20260923/2208043.html
+  - id: name
+    heading: 名前の由来
+    tier: 報道
+    telop: 名前は代表コーチの中村俊輔から
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - 名前は、いま代表コーチをしている中村俊輔から取ったものです。
+      - マリノスの下部組織から桐光学園へ、という道のりも同じでした。
+      - voice: 齋藤俊輔
+        text: 俊輔さんがいるA代表でプレーできることは誇りに思います
+      - voice: 齋藤俊輔
+        text: FKは少しでも吸収して帰りたい
+    sources:
+      - https://news.yahoo.co.jp/articles/f02770d07815dc62fdcae2f83f2a23ff55f56c0a
+  - id: voices
+    heading: ネットの声
+    tier: 未確認
+    telop: これを聞いた人が書いていたこと
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - voice: ネット民
+        text: 大学行かないで水戸から海外そして代表は凄すぎる、応援します
+      - voice: ネット民
+        text: ベルギーのウェステルローの齋藤俊輔が、今日メヘレン相手に2発。今季2点目と3点目だ。開幕から5試合で3得点と、好調が続いている
+      - voice: ネット民
+        text: 斎藤俊輔は今夏プレシーズンをクラブで過ごせたのがデカいだろうね。考えてみれば去年12月まではJ2にいたんだしマジで成長速度が凄いな。
+      - voice: ネット民
+        text: バセットが調子を取り戻して、サイトーが持ち味を出せば、ウェステルローは今年のサプライズになるかもしれない
+      - voice: ネット民
+        text: 森保の選考基準が分からない。齋藤もまだまだ。2部でも全く活躍してない塩貝とか。ほんとお気に入り呼んでるんだろうな。
+      - voice: ネット民
+        text: ベルギーの新聞が齋藤俊輔を今季の予想外のヒーローの1人に選んだ。日本の2部から来た、いちばん点を取っているウインガーだと
+      - voice: ネット民
+        text: 親父さんが憧れた中村俊輔選手の名前を息子につけ、その息子が中村俊輔コーチの元で代表初招集される…漫画みたいな話だ…
+      - voice: ネット民
+        text: 親父さん、幸せ者だなぁ…
+      - voice: ネット民
+        text: 齋藤学と中村俊輔がフュージョンした名前の選手いて草
+      - voice: ネット民
+        text: さぁ、始めよう もう止まらない 齋藤俊輔 ゴールゴールゴール
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/80b7b5f57c0a61c758fca68bbba234f5bc94ffcc/comments
+      - https://news.yahoo.co.jp/articles/f2c9a45506b0020e1276175d9586073f26a55394/comments
+      - https://news.yahoo.co.jp/articles/f02770d07815dc62fdcae2f83f2a23ff55f56c0a/comments
+      - https://news.yahoo.co.jp/articles/170ab7018c437e07f7c442370e8f4c1b80a175bb/comments
+      - https://x.com/search?q=%E9%BD%8B%E8%97%A4%E4%BF%8A%E8%BC%94&f=live
+      - https://x.com/search?q=%E6%96%8E%E8%97%A4%E4%BF%8A%E8%BC%94&f=live
+      - https://x.com/search?q=Saito%20Westerlo%20Japan%20lang%3Aen&f=live
+      - https://x.com/search?q=Saito%20Westerlo%20lang%3Afr&f=live

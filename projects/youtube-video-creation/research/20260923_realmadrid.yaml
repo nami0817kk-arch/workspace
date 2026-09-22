@@ -1,0 +1,182 @@
+# レアル・マドリードが公式声明、リーガのテバス会長を「容認できない」（2026-09-23）
+#
+# 型は news。発言が主役の回（テバスの投稿 → クラブの声明 → テバスの返答）。
+# 発言は原文（スペイン語）から訳した。原文と時系列は research/raw/20260923_realmadrid.md。
+# 反応は X の投稿ページの返信（スペイン語は X の英訳で読んだ）と Yahoo のコメント欄から。
+# 海外の声と日本語の声を混ぜ、全部「ネット民」。原文は各行の上の # に控える。
+format: news
+date: "2026年9月23日"
+slot: laliga_1
+voice_min: 0.4
+people: [テバス, フロレンティーノ・ペレス, モウリーニョ]
+theme:
+  id: realmadrid_tebas_statement
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: レアル・マドリード
+  title: 'レアル・マドリードが「容認できない」。リーガ会長が書いていた一言'
+  hook: 発端は、会長が自分のXに書いた一つの投稿でした。
+  question: テバス会長は何を書き、クラブは何を求めたのか
+short_title: 'レアル・マドリード、リーガ会長に「容認できない」'
+thumbnail:
+  # テバスとペレスを並べ、継ぎ目に VS。エンブレムは印の真上に出る
+  photo: assets/images/20260923_tebas/01.jpg
+  photos:
+    - assets/images/20260923_tebas/01.jpg
+    - assets/images/20260923_perez/01.jpg
+  face_link: "VS"
+  tags: [レアルマドリード]
+  line1: 「容認できない」と公式声明
+  line2: 会長が書いたのは ●●●●
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: 発端は22日の朝、テバス会長がXに書いた投稿
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    card:
+      type: table
+      title: 3日間の経緯
+      columns: ["", ""]
+      rows:
+        - ["9月20日", "ダービーで1対2。クラブが判定を批判"]
+        - ["22日 朝", "テバス会長がXに投稿"]
+        - ["22日 午後", "クラブが公式声明"]
+        - ["22日 夜", "会長が返答"]
+    say:
+      - 9月20日のダービー。レアル・マドリードはアトレティコに1対2で敗れました。
+      - 試合後、クラブは判定への批判を公式に出しました。
+      - モウリーニョ監督は会見で、退場になるべきだった場面を印刷して見せています。
+      - 2日後の22日の朝。リーガのテバス会長が、この件を扱ったある記事に反応する形で、自分のXに書きました。
+      - voice: テバス会長
+        text: またいつもの代弁者たちと体制側のテレビが、いつもの筋書きを組み立て始めた。永遠の陰謀だ
+      - voice: テバス会長
+        text: 審判がレアル・マドリードに対して仕組まれていると言い張るのは、別の銀河に生きているようなものだ
+    sources:
+      - https://x.com/Tebasjavier/status/2102262211456409707
+      - https://www.footballchannel.jp/2026/09/22/post1016478/
+      - https://www.infobae.com/america/agencias/2026/09/22/javier-tebas-sostener-que-los-arbitros-estan-dirigidos-contra-el-real-madrid-es-vivir-en-otra-galaxia/
+      - https://www.cope.es/programas/tiempo-de-juego/noticias/javier-tebas-arremete-portacoces-television-regimen-ultimas-quejas-arbitrales-real-madrid-quiten-venda-20260922_3441060.html
+      - https://www.vi.nl/nieuws/real-madrid-haalt-in-statement-vernietigend-uit-naar-la-liga-baas-tebas
+  - id: statement
+    main: true
+    heading: クラブの声明
+    tier: 確定
+    official: true   # realmadrid.com の公式声明（クラブの X 投稿でも確認）
+    telop: 「発言のたびにレアル・マドリードをおとしめ、攻撃し続けることを容認できない」
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - text: '判定を批判したレアル・マドリードを、リーガのテバス会長が「陰謀論」と一蹴。クラブが公式声明で答えました。'
+        short_only: true
+      - 同じ日の午後、クラブは公式サイトに声明を出しました。全文です。
+      - voice: レアル・マドリード
+        text: ラ・リーガのハビエル・テバス・メドラーノ会長の発言を受け、レアル・マドリードは次のことを表明する
+      - voice: レアル・マドリード
+        text: 我々のクラブは、ラ・リーガの会長がその制度上の立場を使い、発言のたびにレアル・マドリードをおとしめ、攻撃し続けることを容認できないと考える
+      - voice: レアル・マドリード
+        text: 直近の発言はとりわけ重大で理解しがたく、責任ある運営者にふさわしくない。デジタル媒体の独立した記者の記事にコメントする形で行われたからだ
+      - voice: レアル・マドリード
+        text: それなのに我々のクラブに向かって反応し、しかも我々のスポーツ戦略まで論評している。まったくの見当違いで、無責任だ
+    sources:
+      - https://www.realmadrid.com/es-ES/noticias/club/comunicados/comunicado-oficial-22-09-2026
+      - https://x.com/realmadriden/status/2102412095119642871
+      - https://www.eldesmarque.com/futbol/liga-1a-division/20260922/duro-comunicado-oficial-real-madrid-contra-javier-tebas-publicacion_18_020239499.html
+      - https://www.infobae.com/espana/deportes/2026/09/22/el-real-madrid-carga-contra-javier-tebas-y-sus-ultimas-declaraciones-es-especialmente-grave-e-incomprensible/
+  - id: statement2
+    heading: 声明の後半
+    tier: 確定
+    official: true
+    telop: 「ラ・リーガの会長は大会の所有者ではなく、クラブに仕える運営者だ」
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - voice: レアル・マドリード
+        text: 自分の職の性質を理解する人物が必要だ
+      - voice: レアル・マドリード
+        text: ラ・リーガの会長は大会の所有者ではなく、大会を構成し、その運営を託しているクラブに仕える運営者だからだ
+      - voice: レアル・マドリード
+        text: クラブが必要としているのは、この使命に誠実に仕える人物である
+    sources:
+      - https://www.realmadrid.com/es-ES/noticias/club/comunicados/comunicado-oficial-22-09-2026
+      - https://x.com/realmadriden/status/2102412095119642871
+      - https://www.eldesmarque.com/futbol/liga-1a-division/20260922/duro-comunicado-oficial-real-madrid-contra-javier-tebas-publicacion_18_020239499.html
+  - id: reply
+    heading: 会長の返答
+    tier: 報道
+    telop: 「レアル・マドリードの会長もまた、そうではない」
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - その夜、テバス会長が返しました。
+      - voice: テバス会長
+        text: 声明を読んだ。一つの文には完全に同意する。リーガの会長は大会のオーナーではない
+      - voice: テバス会長
+        text: レアル・マドリードの会長もまた、そうではない
+      - voice: テバス会長
+        text: あるクラブの利益を守ることは、そのクラブの言い分を引き受けることではない
+      - voice: テバス会長
+        text: そして全員を代表することは、最も力のある者に従うことでもない
+    sources:
+      - https://x.com/Tebasjavier/status/2102446224091578512
+      - https://www.libertaddigital.com/deportes/liga/2026-09-22/tebas-vuelve-a-contratacar-y-responde-al-comunicado-del-real-madrid-7464325/
+      - https://okdiario.com/diariomadridista/real-madrid/tebas-contesta-real-madrid-representar-todos-tampoco-significa-obedecer-mas-poderoso-663477
+      # 見出しで返答の事実を確認（本文は読めなかった）。発言の文字は上の2本と投稿そのもので突き合わせた
+      - https://www.mundodeportivo.com/futbol/real-madrid/20260922/1004230218/tebas-contesta-vez-real-madrid-dardo-florentino-perez.html
+  - id: background
+    heading: 2人の間にあったこと
+    tier: 背景
+    telop: 2021年のスーパーリーグ、2025年2月の審判への書簡
+    narrator: 解説
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - 対立は今回が最初ではありません。
+      - 2021年のスーパーリーグ構想では、ペレス会長が旗を振り、テバス会長が真っ向から反対しました。
+      - 2025年2月には、エスパニョール戦の判定を受けて、連盟とスポーツ高等評議会に書簡を送りました。
+      - 審判制度を「完全に信用を失った」と書いた書簡に、テバス会長は「正気を失った」と返しています。
+    sources:
+      - https://espndeportes.espn.com/futbol/espana/nota/_/id/15131953/real-madrid-batalla-arbitros-como-empezo-cuando-terminara-laliga
+  - id: voices
+    heading: ネットの声
+    tier: 未確認
+    telop: これを見た人が書いていたこと
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      # @olaleyekunle4: They don't want equality. They want a private referee. Lose one derby in September and suddenly Negreira is alive, the VAR has a vendetta, and LaLiga is "worth nothing." The league didn't change. The excuses did.
+      - voice: ネット民
+        text: 彼らは平等なんて求めていない。専属の審判が欲しいんだ。9月にダービーを一つ落としただけで、突然ネグレイラが生き返り、VARには恨みがあり、リーガは「価値がない」ことになる。変わったのはリーグじゃない。言い訳のほうだ
+      # @coentrao2811（日本語）
+      - voice: ネット民
+        text: これに関してはテバス会長に同意。レアルともあろうクラブが公式で審判批判するのはマドリディスタとしても萎える。シンプルに勝てんかっただけやろ。他責思考じゃなくて自責思考でやってくれ
+      # @dorchanox: YOU ARE THE FIRST ONE RAISING SUSPICIONS. You're the first league president I've ever met who is 0 neutral. All the teams talk about referees and you go ahead and criticize Madrid. The Negreira case is in the courts for a reason, right? If it's a lie, why are there documents?
+      - voice: ネット民
+        text: 疑いを最初にまいているのはあなただ。中立性ゼロのリーグ会長なんて初めて見た。どのチームも審判の話をしているのに、あなたはマドリーだけを批判しにいく。ネグレイラの件が法廷にあるのには理由があるんだろう？ 嘘なら、なぜ書類があるんだ
+      # @AvgDadGamr08: Can anyone show me an example of a time where Madrid lost and just accepted it without crying, complaining, or coming up with conspiracies? I honestly can't think of one time
+      # Yahoo（dai）
+      # @EmigerL: 3 assaults / 3 red cards let slide / 3 plays where the VAR is on vacation / 3 times where the referee turns a blind eye / And here you come talking about conspiracies, well, here are the images for you
+      # @Uscuti_: Madrid have released more official statements in the last two years than they've won trophies.
+      - voice: ネット民
+        text: マドリーはこの2年、獲ったタイトルより出した公式声明のほうが多い
+      # @Phil_Jacks_: So, basically, you think it should be someone who gives you preferential treatment.
+      # @barca_harumaki（日本語）
+      - voice: ネット民
+        text: テバスのことはマジで嫌いやけど、今回の件は同情するわ。落ちたクラブの巻き添え
+      # @SBHL1000（日本語）
+      # @fromhelII: First blame referee / Then La Liga / Then Trump / Then dinosaurs
+      # @SpainNT_JP（日本語）
+      - voice: ネット民
+        text: (会長になる前にマドリディスタだと公言していたでお馴染み)テバスのことを、ペレスは声明まで出して批判しているのか…………
+      # @pantorada（日本語）
+      - voice: ネット民
+        text: テバスはマドリディスタってよく煽り文句で使われるけど、喧嘩してるところしか見たことない
+        short_voice: true
+    sources:
+      - https://x.com/Tebasjavier/status/2102262211456409707
+      - https://x.com/realmadriden/status/2102412095119642871
+      - https://x.com/Tebasjavier/status/2102446224091578512
+      - https://x.com/search?q=%E3%83%86%E3%83%90%E3%82%B9%20lang%3Aja&f=live
+      - https://news.yahoo.co.jp/articles/d70a39856b7bd063b01aec5d73bcb11895e36220/comments
+      - https://news.yahoo.co.jp/articles/37194d8531901b84fdc89f29fc597e9a7741bd34/comments
