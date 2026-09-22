@@ -110,6 +110,8 @@ def trim(script: Script, section: str = "", max_seconds: float = MAX_SECONDS) ->
     short = copy.deepcopy(script)
     short.scenes = [copy.deepcopy(opening), copy.deepcopy(body)]
     _retitle(short, body)
+    # 冒頭に題の読み上げが何行目にあるかを見るため、元の題を渡す
+    short.scenes[0]._title = str(getattr(script, "title", "") or (script.meta or {}).get("title", "") or "")
     _drop_hook(short.scenes[0])
     _drop_main_mark(short.scenes[1])
     _drop_lead_in(short.scenes[1])
@@ -164,8 +166,22 @@ def _drop_hook(opening: Scene) -> None:
     半分以上が消える。問いの言い直しは、クリックした人がもう知っている話。
     画面のテロップには残るので、読み上げだけ落とす。
     """
-    if len(opening.lines) > 1:
-        del opening.lines[1:]
+    if len(opening.lines) <= 1:
+        return
+    # **一言 → 題 の順で始まる回は、題まで残す**（2026-09-22）。プレミア20クラブ紹介は
+    # 「クラブを表す一言」を題の前に読む（09-21 指示）ので、1行目だけ残すと
+    # **ショートがクラブ名を一度も言わない**（「プレミアリーグで、いちばん小さなスタジアム。
+    # このクラブの、基本のデータです」）。題を読む行までを残し、そのあとの問いを落とす
+    def bare(text: str) -> str:
+        return "".join(ch for ch in str(text or "") if ch not in "、。！？!? 　「」『』*")
+
+    title = bare(getattr(opening, "_title", "") or "")
+    keep = 1
+    for index, line in enumerate(opening.lines[1:3], start=1):
+        if title and bare(line.text) == title:
+            keep = index + 1
+            break
+    del opening.lines[keep:]
 
 
 def _drop_main_mark(scene: Scene) -> None:
