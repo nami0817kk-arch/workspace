@@ -18,7 +18,9 @@ void main() {
   test('positions', () async {
     const n = int.fromEnvironment('N', defaultValue: 32);
     print('ポジション  ピーク  評価   代表   リーグ優勝  カップ  クラブ強さ(25-30)  差(総合力-強さ)  ゴール');
+    const only = String.fromEnvironment('POS');
     for (final position in Position.values) {
+      if (only.isNotEmpty && !only.split(',').contains(position.name)) continue;
       var peak = 0.0, rating = 0.0, caps = 0.0, goals = 0.0;
       var league = 0, cups = 0;
       var strength = 0.0, gap = 0.0, primeSeasons = 0;
