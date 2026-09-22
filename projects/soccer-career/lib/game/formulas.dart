@@ -131,6 +131,25 @@ class Formulas {
   ///
   /// 差し引く量はポジションで変える。一律にすると、点を取らない選手の
   /// チームだけが弱くなり、GK や CB のクラブが勝てなくなる。
+  /// **自分がクラブを持ち上げる幅。** 力の差（総合力 − クラブの強さ）1につき、
+  /// 出た試合のクラブの強さがこれだけ上がる（下も同じ傾き、下限は `starLiftFloor`）。
+  ///
+  /// 無かった頃は、総合力73の選手が強さ35のクラブに19年居ても
+  /// **順位が序列より 0.5 しか上がらず、毎年15位・41%で降格**していた
+  /// （`test/world_sim.dart`）。自分の得点は味方の得点を置き換える形なので、
+  /// 局面で何を選んでもクラブの勝ち負けはほぼ動かない——「引っ張り上げた実感」が
+  /// どこにも無かった。出ていない試合には効かない（居ないぶん弱い）。
+  static const double starLift = 0.5;
+
+  /// 持ち上げる上限。差 34 で頭打ち（強さ35のクラブに 69 の選手で +12）。
+  static const double starLiftCap = 16;
+
+  /// 弱いほうへの下限。クラブより下の選手が先発しても、落とすのはここまで。
+  static const double starLiftFloor = 0;
+
+  /// 途中出場なら半分。
+  static const double subLiftShare = 0.5;
+
   static double teammateGoalShareFor(ScenarioFamily family) => switch (family) {
     ScenarioFamily.forward => 0.65,
     ScenarioFamily.midfield => 0.85,

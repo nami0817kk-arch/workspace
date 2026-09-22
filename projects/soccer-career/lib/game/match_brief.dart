@@ -10,6 +10,8 @@
 library;
 
 import '../models/career.dart';
+import '../models/season.dart';
+import 'match_engine.dart';
 import '../models/development.dart';
 import 'newsroom.dart';
 
@@ -99,6 +101,21 @@ class MatchBrief {
       final opponent = state.opponentFor(state.matchday);
       final style = ClubStyle.of(opponent);
       lines.add(BriefLine('相手', '${style.label}（${style.description}）'));
+
+      // 自分が出るぶん、クラブがどれだけ強くなるか。判定と同じ式を読む。
+      // 1 未満なら出さない（「+0」は情報ではない）。
+      final lift = MatchEngine.starLift(
+        overall: state.player.overall,
+        clubStrength: state.club.strength,
+        appearance: Appearance.start,
+      );
+      if (lift >= 1) {
+        lines.add(BriefLine(
+          'チーム',
+          '自分が出ると強さ ${state.club.strength} → '
+              '${state.club.strength + lift.round()}',
+        ));
+      }
     }
 
     return lines;

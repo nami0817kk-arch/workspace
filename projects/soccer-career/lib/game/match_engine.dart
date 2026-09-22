@@ -1459,7 +1459,15 @@ class MatchEngine {
           };
 
     // 味方と相手の得点を、時間まで含めて先に決めておく。
-    final advantage = club.strength - opponent.strength + (home ? 6 : -2);
+    // **自分が出る試合は、自分のぶんだけクラブが強い。** 力の差がそのまま
+    // 味方の得点と失点に乗る。出ない試合は素のクラブの強さで戦う。
+    final lift = starLift(
+      overall: player.overall,
+      clubStrength: club.strength,
+      appearance: appearance,
+    );
+    final advantage =
+        club.strength - opponent.strength + lift + (home ? 6 : -2);
     final teammateGoals = _poissonish(
       (1.25 + advantage / 40) *
           Formulas.teammateGoalShareFor(player.position.family),
@@ -1502,6 +1510,27 @@ class MatchEngine {
       cup: cup,
       random: _random,
     );
+  }
+
+  /// 自分が出ることで、その試合のクラブの強さがどれだけ動くか。
+  ///
+  /// 画面（今日の意味）と判定が同じ値を読む。表示用に別の式を書かない。
+  static double starLift({
+    required int overall,
+    required int clubStrength,
+    required Appearance appearance,
+  }) {
+    final share = switch (appearance) {
+      Appearance.start => 1.0,
+      Appearance.sub => Formulas.subLiftShare,
+      _ => 0.0,
+    };
+    if (share == 0) return 0;
+    final raw = ((overall - clubStrength) * Formulas.starLift).clamp(
+      Formulas.starLiftFloor,
+      Formulas.starLiftCap,
+    );
+    return raw * share;
   }
 
   /// 得点の時間を散らす。1分と90分に固まらないようにする。

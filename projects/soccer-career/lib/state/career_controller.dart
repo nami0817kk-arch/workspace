@@ -379,8 +379,7 @@ class CareerController extends ChangeNotifier {
       final Signature? wanted;
       if (aim != null &&
           !state.development.signatures.contains(aim) &&
-          state.player.attributes.detail(aim.detail) >=
-              Signature.requirement) {
+          state.player.attributes.detail(aim.detail) >= Signature.requirement) {
         wanted = aim;
       } else {
         wanted = e.insight!.fitsPosition(state.player.position)
@@ -1433,6 +1432,9 @@ class CareerController extends ChangeNotifier {
     final window = transferWindow;
     if (!window.isOpen) {
       return '${window.label}。話が動くのはシーズンの終わり。';
+    }
+    if (!state.squadStatus.canPlay || state.frozenOut) {
+      return '${window.label}。使われていないので、契約が残っていても話が来る。';
     }
     if (state.contractYears > 1) {
       return '${window.label}。ただし契約があと${state.contractYears}年ある——'

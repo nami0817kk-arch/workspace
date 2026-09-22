@@ -356,11 +356,11 @@ class _MatchTab extends StatelessWidget {
                   Text(
                     // 数字は実装から引く。「3つの局面」と書いたまま
                     // 2〜6局面に変わっていて、最初に読む文が嘘になっていた。
-                    '下の「試合へ」で試合に入り、局面ごとに3つの手から選ぶ。'
-                    'ふつうの試合は${Formulas.scenariosPerStart}局面、'
-                    'じっくりやる試合は${Formulas.scenariosPerBigStart}局面。'
-                    '今週の練習は、すぐ上の「変える」から。'
-                    'まずは1試合やってみるのが早い。',
+                    // 3行に収める。1行増えるだけで「今の状態」が画面の外に出る。
+                    '下の「試合へ」で試合に入り、局面ごとに3つの手から選ぶ'
+                    '（ふつう${Formulas.scenariosPerStart}局面、'
+                    'じっくりやる試合は${Formulas.scenariosPerBigStart}局面）。'
+                    '練習はすぐ上の「変える」から。',
                     style: theme.textTheme.bodyMedium,
                   ),
                 ],
