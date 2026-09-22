@@ -1212,7 +1212,12 @@ def _meaningful(shared: str, notes: Notes) -> str:
     out = shared
     for name in notes.people or []:
         out = out.replace(str(name), "")
-    # 助詞だけが残ったら、重なっていないのと同じ
+    # **固有名詞の一致は言い直しではない**（2026-09-22）。8字に下げたら
+    # 「ヨーロッパリーグ」「ファルマー・スタジアム」「1部リーグの優勝」で鳴った。
+    # 助詞を除いてひらがなが残らない重なりは、名詞が同じだけ。
+    # 動詞や形容詞（「負けずに優勝し」）が含まれていて初めて言い直し
+    if not re.search(r"[ぁ-ん]", re.sub(r"[のとやからまでにはがをでも]", "", out)):
+        return ""
     return out.strip("はがをにでとのも")
 
 
@@ -1536,6 +1541,11 @@ def check_repeats(notes: Notes, plan: Plan, now=None) -> list[str]:
     # 同じ日・同じ枠の記録は、この動画そのもの。作り直しは重複ではない
     today = (now or datetime.now()).date()
     if entry.slot == notes.slot and entry.at.date() == today:
+        return []
+    # **同じ題の作り直しも、この動画そのもの**（2026-09-22）。プレミア20クラブの
+    # 台本を翌日に直して掛け直したら、8本すべてが「昨日扱ったテーマ」で止まった。
+    # 見出しまで同じなら、別の話題ではない
+    if entry.headline and entry.headline == notes.title and entry.at.date() != today:
         return []
 
     stamp = entry.at.strftime("%m/%d %H:%M")

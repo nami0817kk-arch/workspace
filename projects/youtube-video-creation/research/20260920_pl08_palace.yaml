@@ -101,6 +101,32 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
   bg: assets/backgrounds/stadium_クリスタルパレス.png
+- id: episode
+  heading: 万博の会社が作ったクラブ
+  tier: 背景
+  telop: 「水晶宮」の会社が作った
+  narrator: 解説
+  card:
+    type: table
+    title: 万博の会社が作ったクラブ
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 名前の由来
+      - 万博の建物「水晶宮」
+    - - 1905年
+      - 建物の会社がクラブを作る
+    - - 最初のユニフォーム
+      - ヴィラと同じえんじ色と青
+  say:
+  - クリスタル・パレスは、もともと「水晶宮」と呼ばれた万博の建物の名前です。
+  - '**1905年**、その建物を持つ会社が、来場者を増やすために自分たちでプロのクラブを作りました。'
+  - 立ち上げを手伝ったのはアストン・ヴィラの職員。だから最初のユニフォームは、ヴィラと同じえんじ色と青でした。
+  sources:
+  - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
+  bg: assets/backgrounds/stadium_クリスタルパレス.png
+  official: false
 - id: legends
   heading: このクラブを語る3人
   tier: 背景

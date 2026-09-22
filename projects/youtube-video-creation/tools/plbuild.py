@@ -352,6 +352,17 @@ def build(key: str, number: int, old_file: str) -> Path:
         if bg:
             story_sec["bg"] = bg
         sections.append(story_sec)
+    # **「へえ」の逸話を1つ**（2026-09-22 ユーザー指示「1.2を実施」）。Gemini の点検で
+    # 「データの読み上げで、覚えて帰る逸話が無い」と言われた。<key>_say.yaml の `episode`。
+    # 原文は Wikipedia のクラブ記事で裏を取ったものだけ
+    if ov.get("episode"):
+        ep = dict(ov["episode"])
+        ep.setdefault("id", "episode")
+        ep.setdefault("tier", "背景")
+        ep.setdefault("narrator", "解説")
+        if bg:
+            ep["bg"] = bg
+        sections.append(sec(**ep))
     # 名選手（1990年以降）
     leg = next((c for c in legends_all if c["club"].replace("・", "").replace("AFC", "") in club.replace("・", "") or club.replace("・", "") in c["club"].replace("・", "")), None)
     if leg:

@@ -91,6 +91,32 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Premier_League
   bg: assets/backgrounds/stadium_フラム.png
+- id: episode
+  heading: スタジアムの角にある家
+  tier: 背景
+  telop: 名前の由来は1780年の屋敷
+  narrator: 解説
+  card:
+    type: table
+    title: スタジアムの角にある家
+    columns:
+    - ''
+    - ''
+    rows:
+    - - クレイヴン・コテージ
+      - 1780年、クレイヴン男爵の屋敷
+    - - 1888年
+      - 火事で焼ける
+    - - いまのコテージ
+      - 1905年。更衣室と家族の観戦席
+  say:
+  - 本拠地の名前、クレイヴン・コテージは、**1780年**にクレイヴン男爵が建てた小さな屋敷から来ています。
+  - その建物は1888年の火事で焼けました。いまスタンドの角にある「コテージ」は、1905年に建てたものです。
+  - 選手の更衣室であり、選手の家族がバルコニーから試合を見る場所でもあります。
+  sources:
+  - https://en.wikipedia.org/wiki/Craven_Cottage
+  bg: assets/backgrounds/stadium_フラム.png
+  official: false
 - id: legends
   heading: このクラブを語る3人
   tier: 背景

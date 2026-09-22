@@ -1594,3 +1594,37 @@ def test_群れの回はサムネも並べる():
     raw["thumbnail"].pop("photos")
     raw["theme"]["title"] = "佐野海舟の値段が上がった"
     assert _advise_group_thumbnail(build_notes(raw)) == []
+
+
+def test_同じ題の作り直しは重複扱いしない(tmp_path):
+    """2026-09-22: プレミア20クラブの台本を翌日に直したら、全部が「昨日扱ったテーマ」で止まった。"""
+    from datetime import datetime
+    from src import coverage
+    from src.research import build_notes, check_repeats
+
+    ledger = tmp_path / "covered.yaml"
+    now = datetime(2026, 9, 22, 12, 0)
+    coverage.record(ledger, "premier_1", [("pl_clubs_11_hull", "守田英正がいるハル・シティってどんなクラブ？")],
+                    now=datetime(2026, 9, 21, 23, 3))
+    raw = _raw()
+    raw["theme"]["id"] = "pl_clubs_11_hull"
+    raw["theme"]["title"] = "守田英正がいるハル・シティってどんなクラブ？"
+    raw["slot"] = "premier_2"
+    plan = _plan()
+    plan.coverage = {"ledger": str(ledger), "repeat_within_hours": 36}
+    assert check_repeats(build_notes(raw), plan, now=now) == []
+    raw["theme"]["title"] = "ハル・シティの別の話"
+    assert check_repeats(build_notes(raw), plan, now=now)
+
+
+def test_固有名詞だけの重なりは言い直しではない():
+    """2026-09-22: 8字に下げたら「ヨーロッパリーグ」「1部リーグの優勝」で鳴った。"""
+    from src.research import _advise_repeats, build_notes
+
+    raw = _raw()
+    raw["sections"][0]["say"] = ["昨季はヨーロッパリーグで優勝しました。", "1部リーグの優勝は4回です。"]
+    raw["sections"][1]["say"] = ["ヨーロッパリーグの決勝は5月でした。", "1部リーグの優勝から半世紀たちます。"]
+    assert _advise_repeats(build_notes(raw)) == []
+    raw["sections"][1]["say"] = ["リーグ戦を1つも負けずに優勝しました。"]
+    raw["sections"][0]["say"] = ["1つも負けずに優勝したシーズンがあります。"]
+    assert _advise_repeats(build_notes(raw))

@@ -100,11 +100,37 @@ sections:
   - image: assets/images/pl_brighton/scene.jpg
     text: はじめの2年はジリンガムの本拠地を借り、そのあとの12年は陸上競技場を改造したウィズディーン・スタジアムでした。
   - image: assets/images/pl_brighton/scene.jpg
-    text: いまのファルマー・スタジアムに入ったのは2011年。収容は3万2176人です。
+    text: いまのファルマー・スタジアムに入ったのは2011年です。
   official: false
   sources:
   - https://en.wikipedia.org/wiki/Brighton_%26_Hove_Albion_F.C.
   bg: assets/backgrounds/stadium_ブライトン.png
+- id: episode
+  heading: 決めるはずだった一撃
+  tier: 背景
+  telop: 1983年FAカップ決勝、最後のワンプレー
+  narrator: 解説
+  card:
+    type: table
+    title: 決めるはずだった一撃
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1983年 FAカップ決勝
+      - マンチェスター・ユナイテッドと2対2
+    - - 延長の最後
+      - ゴードン・スミスが外す
+    - - 再試合
+      - 0対4。同じ季にリーグ最下位
+  say:
+  - 1983年、初めてFAカップの決勝に立ちました。相手はマンチェスター・ユナイテッド。
+  - 2対2の延長、最後のワンプレー。ゴードン・スミスの決定機が、外れました。
+  - 再試合は0対4。同じシーズン、リーグでは最下位で降格しています。
+  sources:
+  - https://en.wikipedia.org/wiki/Brighton_%26_Hove_Albion_F.C.
+  bg: assets/backgrounds/stadium_ブライトン.png
+  official: false
 - id: legends
   heading: このクラブを語る3人
   tier: 背景

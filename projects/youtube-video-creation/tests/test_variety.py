@@ -169,9 +169,12 @@ def test_本のあいだの重なりは語りだけを見て名前は数えな�
         return Script(title=title, meta={"title": title}, scenes=[
             Scene(title="本編", lines=[Line(speaker="解説", text=text)])])
 
-    a = script("A", "バルセロナは7戦全勝で首位。31得点7失点です。")
-    b = script("B", "バルセロナは7戦全勝で勝ち点21。31点を取っています。")
-    assert _cross_repeats([a, b])
+    a = script("A", "移籍金は1500万ユーロでした。獲ったときの倍です。")
+    b = script("B", "1500万ユーロで移った上田が、初戦で決めました。")
+    assert _cross_repeats([a, b])                      # 同じ金額を2本で読んでいる
+    a2 = script("A2", "オランダでは、この額に厳しい声が出ていました。")
+    b2 = script("B2", "送り出したオランダでは、この額に厳しい声が出ていました。")
+    assert _cross_repeats([a2, b2])                    # 同じ言い回し
     c = script("C", "前の5人は、メッシ、クリスティアーノ・ロナウド、イグアイン。")
     d = script("D", "クリスティアーノ・ロナウドは64本、マラドーナは61本です。")
     assert _cross_repeats([c, d]) == []

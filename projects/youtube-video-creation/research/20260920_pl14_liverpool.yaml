@@ -105,6 +105,32 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Liverpool_F.C.
   bg: assets/backgrounds/stadium_リヴァプール.png
+- id: episode
+  heading: 触ってはいけない看板
+  tier: 背景
+  telop: 「THIS IS ANFIELD」触るのは優勝のあと
+  narrator: 解説
+  card:
+    type: table
+    title: 触ってはいけない看板
+    columns:
+    - ''
+    - ''
+    rows:
+    - - THIS IS ANFIELD
+      - シャンクリーが付けた看板
+    - - クロップ監督
+      - 獲るまで触るなと禁じる
+    - - 2019年
+      - チャンピオンズリーグ決勝に勝って解禁
+  say:
+  - アンフィールドの選手用トンネルに、「ジス・イズ・アンフィールド」の看板があります。
+  - ビル・シャンクリーが付けたもので、相手を怖がらせ、触ったリヴァプールの選手には運を呼ぶためのものでした。
+  - クロップ監督は「タイトルを獲るまで触るな」と禁じ、**2019年**のチャンピオンズリーグ決勝に勝って、ようやく触ることが許されました。
+  sources:
+  - https://en.wikipedia.org/wiki/Anfield
+  bg: assets/backgrounds/stadium_リヴァプール.png
+  official: false
 - id: legends
   heading: このクラブを語る3人
   tier: 背景
@@ -174,7 +200,7 @@ sections:
       - 2017-2026
       - プレミア1シーズン32得点
   say:
-  - text: モハメド・サラーは、2017年から18年に38試合制のプレミアで最多の32得点。クラブを代表するエースでした。
+  - text: モハメド・サラーは、クラブを代表するエース。加入1年目の得点は、38試合制のプレミアで最多でした。
     image: assets/photos/pl/liverpool_legend_bec22eba.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_リヴァプール.png

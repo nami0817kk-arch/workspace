@@ -70,30 +70,87 @@ def _cross_repeats(scripts: list[Script]) -> list[str]:
     import re
 
     def bare(text: str) -> str:
-        return re.sub(r"[。、！？!?\s　「」『』*・]", "", text or "")
+        # 句読点は空白に置き換える。消すと「勝ち点21。31点」が「2131点」に繋がる
+        return re.sub(r"[「」『』*・]", "", re.sub(r"[。、！？!?\s　]+", " ", text or ""))
 
     def lines(script: Script) -> list[str]:
         return [bare(l.text) for sc in script.scenes for l in sc.lines
                 if (getattr(l, "speaker", "") or "") in NARRATORS
                 and (getattr(l, "only", "") or "") != "short"]
 
+    # 同じ数字＋単位を2本で読んでいないか（「31得点7失点」）。research.NUMBER_TOKEN と同じ
+    number = re.compile(r"\d[\d,.]*(?:万|億|点|ゴール|試合|本|人|回|位|歳|分|秒|月|日|戦|失点|得点|勝|敗|ユーロ|ポンド|円|%)")
+
+    def numbers(script: Script) -> set[str]:
+        # **偶然そろう数字は見ない**。クラブ紹介20本で「20点」「10人」が2本ずつ重なり、
+        # 123か所になった。3桁以上か、金額・割合だけを見る（「1500万ユーロ」「63.5%」）
+        found = {tok.replace("得点", "点") for text in lines(script) for tok in number.findall(text)}
+        def digits(tok: str) -> int:
+            return len(re.match(r"[\d,.]+", tok).group(0).replace(",", "").replace(".", ""))
+
+        return {tok for tok in found
+                if (digits(tok) >= 4
+                    or (digits(tok) >= 2 and tok.endswith(("万", "億", "ユーロ", "ポンド", "円", "%"))))
+                and not re.fullmatch(r"\d{4}年?", tok)}
+
+    # **3本以上に出る言い回しは型の文**（2026-09-22）。プレミア20クラブ紹介は
+    # 「リーグは5試合を終えて」「ミッドフィールダーは6人」を全本で読むので、
+    # 対で数えると162か所になった。同じ日の7本でも、決まり文句は同じ。
+    # 2本だけに出る重なりが、言い直し
+    def windows(script: Script) -> set[str]:
+        got: set[str] = set()
+        for x in lines(script):
+            for i in range(len(x) - CROSS_REPEAT_MIN + 1):
+                g = x[i:i + CROSS_REPEAT_MIN]
+                if re.search(r"[ぁ-ん]", re.sub(r"[のとやからまでにはがをでも]", "", g)):
+                    got.add(g)
+        return got
+
+    per_script = [(s, lines(s), windows(s), numbers(s)) for s in scripts]
+    count_w: dict[str, int] = {}
+    count_n: dict[str, int] = {}
+    for _, _, ws, ns in per_script:
+        for w in ws:
+            count_w[w] = count_w.get(w, 0) + 1
+        for n in ns:
+            count_n[n] = count_n.get(n, 0) + 1
+    # 10本を超える並び（シリーズ）は決まり文句が多いので、長い重なりだけ見る
+    least = CROSS_REPEAT_MIN if len(scripts) < 10 else CROSS_REPEAT_MIN + 6
+
     out: list[str] = []
     seen: set[str] = set()
-    for a, b in itertools.combinations(scripts, 2):
-        la, lb = lines(a), lines(b)
+    for (a, la, wa, na), (b, lb, wb, nb) in itertools.combinations(per_script, 2):
+        for tok in sorted(na & nb):
+            if count_n.get(tok, 0) == 2 and tok not in seen:
+                seen.add(tok)
+                out.append(f"『{tok}』（{_short_name(a)} と {_short_name(b)}）")
+        if not (wa & wb):
+            continue
+        # 行どうしで、いちばん長く続けて重なる部分を1つ（窓を並べると1字ずつずれて何度も鳴る）
         for x in la:
             for y in lb:
-                for i in range(len(x) - CROSS_REPEAT_MIN + 1):
-                    g = x[i:i + CROSS_REPEAT_MIN]
-                    # 人名・大会名だけの重なり（「クリスティアーノロナウド」）は言い直しではない。
-                    # ひらがなを1字も含まない重なりは名詞の一致なので見ない
-                    if not re.search(r"[ぁ-ん]", g):
-                        continue
-                    if g in y and g not in seen:
-                        seen.add(g)
-                        out.append(f"『{g}…』（{_short_name(a)} と {_short_name(b)}）")
-                        break
+                shared = _longest_common(x, y)
+                if len(shared) < least or shared in seen:
+                    continue
+                if not re.search(r"[ぁ-ん]", re.sub(r"[のとやからまでにはがをでも]", "", shared)):
+                    continue
+                # 3本以上に出る言い回しを含むなら型の文
+                if any(count_w.get(shared[i:i + CROSS_REPEAT_MIN], 0) >= 3
+                       for i in range(len(shared) - CROSS_REPEAT_MIN + 1)):
+                    continue
+                seen.add(shared)
+                out.append(f"『{shared}』（{_short_name(a)} と {_short_name(b)}）")
     return out
+
+
+def _longest_common(left: str, right: str) -> str:
+    best = ""
+    for start in range(len(left)):
+        for end in range(len(left), start + len(best), -1):
+            if left[start:end] in right:
+                best = left[start:end]
+                break
+    return best
 
 
 def _short_name(script: Script) -> str:

@@ -104,6 +104,32 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
   bg: assets/backgrounds/stadium_アストンヴィラ.png
+- id: episode
+  heading: 前半だけラグビー
+  tier: 背景
+  telop: 初戦は、前半ラグビー・後半サッカー
+  narrator: 解説
+  card:
+    type: table
+    title: 前半だけラグビー
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 最初の相手
+      - 地元のラグビーチーム
+    - - 前半
+      - ラグビーのルール
+    - - 後半
+      - サッカーのルール。1対0で勝ち
+  say:
+  - 最初の試合の相手は、地元のラグビーチームでした。
+  - 条件は、**前半はラグビーのルール、後半はサッカーのルール**。
+  - ヴィラは、その試合を1対0で勝っています。
+  sources:
+  - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
+  bg: assets/backgrounds/stadium_アストンヴィラ.png
+  official: false
 - id: legends
   heading: このクラブを語る3人
   tier: 背景

@@ -44,6 +44,7 @@ tags:
 - サッカーニュース
 sources:
 - https://en.wikipedia.org/wiki/Liverpool_F.C.
+- https://en.wikipedia.org/wiki/Anfield
 - https://en.wikipedia.org/wiki/Steven_Gerrard
 - https://en.wikipedia.org/wiki/Jamie_Carragher
 - https://en.wikipedia.org/wiki/Mohamed_Salah
@@ -64,6 +65,19 @@ cards:
       - The Reds（レッズ）
     - - 本拠地
       - アンフィールド／61,276人
+  episode_card:
+    type: table
+    title: 触ってはいけない看板
+    columns:
+    - ''
+    - ''
+    rows:
+    - - THIS IS ANFIELD
+      - シャンクリーが付けた看板
+    - - クロップ監督
+      - 獲るまで触るなと禁じる
+    - - 2019年
+      - チャンピオンズリーグ決勝に勝って解禁
   legends_card:
     type: table
     title: 1990年以降の名選手
@@ -199,6 +213,18 @@ cards:
 解説: アンフィールドの収容は**6万1276人**。2021年から24年にかけても広げています。
   telop: アンフィールドの収容は**6万1276人**。2021年から24年にかけても広げています
 
+## 触ってはいけない看板
+@bg: assets/backgrounds/stadium_リヴァプール.png
+
+解説: アンフィールドの選手用トンネルに、「ジス・イズ・アンフィールド」の看板があります。
+  telop: アンフィールドの選手用トンネルに、「ジス・イズ・アンフィールド」の看板があります
+  source: 背景
+  card: episode_card
+解説: ビル・シャンクリーが付けたもので、相手を怖がらせ、触ったリヴァプールの選手には運を呼ぶためのものでした。
+  telop: ビル・シャンクリーが付けたもので、相手を怖がらせ、触ったリヴァプールの選手には運を呼ぶためのものでした
+解説: クロップ監督は「タイトルを獲るまで触るな」と禁じ、**2019年**のチャンピオンズリーグ決勝に勝って、ようやく触ることが許されました。
+  telop: クロップ監督は「タイトルを獲るまで触るな」と禁じ、**2019年**のチャンピオンズリーグ決勝に勝って、ようやく触ることが許されました
+
 ## このクラブを語る3人
 @bg: assets/backgrounds/stadium_リヴァプール.png
 
@@ -220,8 +246,8 @@ cards:
 ## このクラブを語る3人（3人目）
 @bg: assets/backgrounds/stadium_リヴァプール.png
 
-キャスター: モハメド・サラーは、2017年から18年に38試合制のプレミアで最多の32得点。クラブを代表するエースでした。
-  telop: モハメド・サラーは、2017年から18年に38試合制のプレミアで最多の32得点。クラブを代表するエースでした
+キャスター: モハメド・サラーは、クラブを代表するエース。加入1年目の得点は、38試合制のプレミアで最多でした。
+  telop: モハメド・サラーは、クラブを代表するエース。加入1年目の得点は、38試合制のプレミアで最多でした
   source: 背景
   card: legends3_card
   image: assets/photos/pl/liverpool_legend_bec22eba.jpg

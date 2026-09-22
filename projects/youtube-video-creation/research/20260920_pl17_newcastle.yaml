@@ -92,6 +92,31 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
   bg: assets/backgrounds/stadium_ニューカッスル.png
+- id: episode
+  heading: 最初は赤いシャツだった
+  tier: 背景
+  telop: 最初は赤。白黒の縞は1894年から
+  narrator: 解説
+  card:
+    type: table
+    title: 最初は赤いシャツだった
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 最初
+      - 赤いシャツ・白いパンツ・赤いソックス
+    - - 1894年
+      - 白黒の縞へ
+    - - その色
+      - もとはリザーブチームの色
+  say:
+  - いまは白と黒の縞が有名ですが、最初のユニフォームは**赤いシャツ**に白いパンツ、赤いソックスでした。
+  - 白黒の縞に変えたのは**1894年**。それまでは、リザーブチームが着ていた色でした。
+  sources:
+  - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
+  bg: assets/backgrounds/stadium_ニューカッスル.png
+  official: false
 - id: legends
   heading: このクラブを語る3人
   tier: 背景

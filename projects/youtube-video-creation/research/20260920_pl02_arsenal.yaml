@@ -81,7 +81,7 @@ sections:
       - 14回目のリーグ優勝（22年ぶり）
   say:
   - 語り継がれているのは、2003年から2004年のシーズンです。
-  - リーグ戦を1つも負けずに優勝しました。「**無敗**」と呼ばれるチームです。
+  - リーグ戦38試合、負けなし。「**無敗**」と呼ばれるチームです。
   - この前後にまたがる連続無敗は**49試合**。イングランドの1部での最長記録です。
   - ただ、そこからリーグ優勝は遠ざかりました。
   - 次の優勝は**2026年5月19日**。クラブ14回目で、**22年ぶり**でした。
@@ -89,6 +89,33 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Arsenal_F.C.
   bg: assets/backgrounds/stadium_アーセナル.png
+- id: episode
+  heading: クラブ名の地下鉄駅
+  tier: 背景
+  telop: 地下鉄の駅の名前が「アーセナル」
+  narrator: 解説
+  card:
+    type: table
+    title: クラブ名の地下鉄駅
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 駅の名前
+      - アーセナル（もとはジレスピー・ロード）
+    - - 変わった日
+      - 1932年10月31日
+    - - 働きかけた人
+      - 監督ハーバート・チャップマン
+  say:
+  - ロンドンの地下鉄に、「アーセナル」という駅があります。
+  - もとはジレスピー・ロード駅。監督のハーバート・チャップマンが働きかけて、**1932年**に名前が変わりました。
+  - クラブの名前をそのまま付けた地下鉄の駅は、ここだけです。
+  sources:
+  - https://en.wikipedia.org/wiki/History_of_Arsenal_F.C._(1886%E2%80%931966)
+  - https://en.wikipedia.org/wiki/Arsenal_tube_station
+  bg: assets/backgrounds/stadium_アーセナル.png
+  official: false
 - id: legends
   heading: このクラブを語る3人
   tier: 背景

@@ -106,6 +106,32 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
   bg: assets/backgrounds/stadium_トッテナム.png
+- id: episode
+  heading: 雄鶏と拍車
+  tier: 背景
+  telop: 雄鶏の由来は「拍車」
+  narrator: 解説
+  card:
+    type: table
+    title: 雄鶏と拍車
+    columns:
+    - ''
+    - ''
+    rows:
+    - - ハリー・ホットスパー
+      - 馬に拍車を蹴り込んだ人
+    - - 拍車
+      - 闘鶏の鶏にも付ける
+    - - 1909-10年
+      - 元選手が35ポンドで雄鶏の像を作る
+  say:
+  - エンブレムの雄鶏は、クラブ名の由来になった、ハリー・ホットスパーから来ています。
+  - 戦いで馬に拍車を蹴り込んだことから「ホットスパー」と呼ばれた人物で、拍車は闘鶏の鶏にも付けるものでした。
+  - 1909年から10年のシーズンの終わり、元選手が**35ポンド**で作ったブロンズの雄鶏が、スタンドの屋根に置かれました。
+  sources:
+  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
+  bg: assets/backgrounds/stadium_トッテナム.png
+  official: false
 - id: legends
   heading: このクラブを語る3人
   tier: 背景

@@ -85,6 +85,32 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Brentford_F.C.
   bg: assets/backgrounds/stadium_ブレントフォード.png
+- id: episode
+  heading: ホーム全勝でも昇格なし
+  tier: 背景
+  telop: ホーム21戦全勝。それでも2位
+  narrator: 解説
+  card:
+    type: table
+    title: ホーム全勝でも昇格なし
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1929-30年 ホーム
+      - 21試合21勝
+    - - イングランド記録
+      - いまも破られていない
+    - - 順位
+      - 2位。上がれるのは1位だけ
+  say:
+  - 1929年から30年のシーズン、ホームのリーグ戦**21試合に全部勝ちました**。
+  - ホーム全勝は、いまもイングランドの記録です。
+  - それでも昇格できませんでした。順位は2位。上がれるのは1位だけだったからです。
+  sources:
+  - https://en.wikipedia.org/wiki/1929%E2%80%9330_Brentford_F.C._season
+  bg: assets/backgrounds/stadium_ブレントフォード.png
+  official: false
 - id: legends
   heading: このクラブを語る3人
   tier: 背景

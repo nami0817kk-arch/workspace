@@ -32,7 +32,7 @@ sections:
   telop: 守田英正が所属するハル・シティ
   narrator: キャスター
   say:
-  - 日本代表の守田英正が所属しているのが、今季プレミアに上がってきたハル・シティです。
+  - 日本代表の守田英正が所属しているのが、ハル・シティです。
   - では、どんなクラブなのか。まずは基本のデータから見ていきます。
   sources:
   - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
@@ -48,7 +48,7 @@ sections:
   - short_only: true
     text: 守田英正の所属クラブを、基本のデータで見ていきます。
   - image: assets/stats/pl_hull_data0.png
-    text: 創立は**1904年**。イングランド東部の港町、キングストン・アポン・ハルのクラブです。
+    text: 創立は**1904年**です。
     no_telop: true
   - image: assets/backgrounds/stadium_ハルシティ_in.png
     text: 本拠地はエムケーエム・スタジアム。**2万4983人**が入ります。
@@ -102,6 +102,32 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
   bg: assets/backgrounds/stadium_ハルシティ.png
+- id: episode
+  heading: 名前を変えられかけた
+  tier: 背景
+  telop: 「ハル・タイガース」への改名、退けられる
+  narrator: 解説
+  card:
+    type: table
+    title: 名前を変えられかけた
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 2013年
+      - オーナーが「ハル・タイガース」への改名を表明
+    - - サポーター
+      - 「City Till We Die」
+    - - 2014年4月9日
+      - FAが63.5%の票で退ける
+  say:
+  - '**2013年**、オーナーのアッセム・アラムが、クラブの名前を「ハル・タイガース」に変えると言い出しました。'
+  - 「シティ」はありふれていて、名前は短いほうが売れる、という理由です。
+  - サポーターは「死ぬまでシティ」と声を上げ、2014年4月、FAの評議会は**63.5%**の票で改名を退けました。
+  sources:
+  - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
+  bg: assets/backgrounds/stadium_ハルシティ.png
+  official: false
 - id: legends
   heading: このクラブを語る3人
   tier: 背景

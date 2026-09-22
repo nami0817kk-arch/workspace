@@ -105,6 +105,33 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Coventry_City_F.C.
   bg: assets/backgrounds/stadium_コヴェントリー.png
+- id: episode
+  heading: 唯一のタイトル
+  tier: 背景
+  telop: 主要タイトルは1987年のFAカップだけ
+  narrator: 解説
+  card:
+    type: table
+    title: 唯一のタイトル
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1987年 FAカップ決勝
+      - トッテナムに3対2
+    - - 同点ゴール
+      - キース・ハウチェンのダイビングヘッド
+    - - 決勝点
+      - 延長、相手のオウンゴール
+  say:
+  - 主要なタイトルは、クラブの歴史で1つだけ。**1987年**のFAカップです。
+  - 決勝の相手はトッテナム。開始2分で先制され、キース・ハウチェンのダイビングヘッドで追いつきました。
+  - 延長、決勝点は相手のオウンゴール。**3対2**でした。
+  sources:
+  - https://en.wikipedia.org/wiki/Coventry_City_F.C.
+  - https://en.wikipedia.org/wiki/1987_FA_Cup_final
+  bg: assets/backgrounds/stadium_コヴェントリー.png
+  official: false
 - id: legends
   heading: このクラブを語る3人
   tier: 背景

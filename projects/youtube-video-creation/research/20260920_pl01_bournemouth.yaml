@@ -134,6 +134,32 @@ sections:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
   bg: assets/backgrounds/stadium_ボーンマス.png
   official: false
+- id: episode
+  heading: ひとりで9点
+  tier: 背景
+  telop: FAカップで11対0。うち9点はひとりで
+  narrator: 解説
+  card:
+    type: table
+    title: ひとりで9点
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1971年11月 FAカップ
+      - マーゲイトに11対0
+    - - テッド・マクドゥーガル
+      - ひとりで9点
+    - - 赤と黒の縦じま
+      - 1971年から。手本はACミラン
+  say:
+  - 1971年11月、FAカップでマーゲイトに**11対0**で勝ちました。
+  - そのうち**9点**を、フォワードのテッド・マクドゥーガルがひとりで決めています。
+  - 同じ年に生まれたのが、赤と黒の縦じまのユニフォーム。手本はACミランでした。
+  sources:
+  - https://en.wikipedia.org/wiki/AFC_Bournemouth
+  bg: assets/backgrounds/stadium_ボーンマス.png
+  official: false
 - id: legends
   heading: このクラブを語る3人
   tier: 背景

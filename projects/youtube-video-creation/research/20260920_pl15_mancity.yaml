@@ -95,6 +95,32 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Manchester_City_F.C.
   bg: assets/backgrounds/stadium_マンチェスターシティ.png
+- id: episode
+  heading: 優勝の翌年に降格
+  tier: 背景
+  telop: 初優勝の翌年に降格。得点はリーグ最多
+  narrator: 解説
+  card:
+    type: table
+    title: 優勝の翌年に降格
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1937年
+      - 初めての1部優勝
+    - - 翌シーズン
+      - 降格
+    - - その季の得点
+      - リーグで最多
+  say:
+  - '**1937年**、このクラブは初めて1部で優勝しました。'
+  - ところが、その翌シーズンに降格します。
+  - しかも落ちたそのシーズン、リーグでいちばん多くゴールを決めていたのは、マンチェスター・シティでした。
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_City_F.C.
+  bg: assets/backgrounds/stadium_マンチェスターシティ.png
+  official: false
 - id: legends
   heading: このクラブを語る3人
   tier: 背景

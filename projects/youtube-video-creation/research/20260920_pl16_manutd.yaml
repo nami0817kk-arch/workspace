@@ -84,7 +84,7 @@ sections:
   say:
   - 1958年2月6日。給油のために立ち寄ったミュンヘンで、飛行機が墜落しました。
   - 亡くなったのは**23人**。そのうち**8人**が選手でした。
-  - このクラブを語るとき、外せない日です。
+  - その日が、1958年2月6日です。
   - チームは、作り直すところから始めることになります。
   - そして**10年後**の1968年。
   - 決勝でベンフィカを4対1で下し、**イングランドのクラブとして初めて**ヨーロッパの頂点に立ちました。
@@ -92,6 +92,32 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Manchester_United_F.C.
   bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+- id: episode
+  heading: 解散寸前で生まれた名前
+  tier: 背景
+  telop: 借金2670ポンド、解散命令から
+  narrator: 解説
+  card:
+    type: table
+    title: 解散寸前で生まれた名前
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1902年1月
+      - 借金2670ポンド。解散の命令
+    - - 主将スタッフォード
+      - 実業家4人が500ポンドずつ
+    - - 1902年4月24日
+      - マンチェスター・ユナイテッド誕生
+  say:
+  - '**1902年**1月、クラブは2670ポンドの借金を抱え、解散の命令を受けました。'
+  - 主将のハリー・スタッフォードが地元の実業家を4人見つけ、1人500ポンドずつ出して救います。
+  - その年の4月24日、マンチェスター・ユナイテッドという名前が生まれました。
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_United_F.C.
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+  official: false
 - id: legends
   heading: このクラブを語る3人
   tier: 背景

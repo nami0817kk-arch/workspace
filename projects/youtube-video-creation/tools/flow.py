@@ -79,7 +79,7 @@ def ask(text: str, model: str | None = None) -> str:
         except urllib.error.HTTPError as err:
             if err.code not in (429, 503) or attempt == 2:
                 raise
-            time.sleep(20 * (attempt + 1))
+            time.sleep(45 * (attempt + 1))
     return "\n".join(part.get("text", "")
                      for cand in data.get("candidates", [])
                      for part in cand.get("content", {}).get("parts", []))

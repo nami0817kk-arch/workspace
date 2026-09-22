@@ -135,7 +135,7 @@ sections:
       - {image: "assets/images/pl_brighton/scene.jpg",
          text: はじめの2年はジリンガムの本拠地を借り、そのあとの12年は陸上競技場を改造したウィズディーン・スタジアムでした。}
       - {image: "assets/images/pl_brighton/scene.jpg",
-         text: いまのファルマー・スタジアムに入ったのは2011年。収容は3万2176人です。}
+         text: いまのファルマー・スタジアムに入ったのは2011年です。}
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Brighton_%26_Hove_Albion_F.C.

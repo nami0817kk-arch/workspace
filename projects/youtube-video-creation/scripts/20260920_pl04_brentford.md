@@ -42,6 +42,7 @@ tags:
 - サッカーニュース
 sources:
 - https://en.wikipedia.org/wiki/Brentford_F.C.
+- https://en.wikipedia.org/wiki/1929%E2%80%9330_Brentford_F.C._season
 - https://en.wikipedia.org/wiki/Kevin_O%27Connor_(footballer,_born_1982)
 - https://en.wikipedia.org/wiki/Ivan_Toney
 - https://en.wikipedia.org/wiki/Bryan_Mbeumo
@@ -58,6 +59,19 @@ cards:
       - 身売り話が白紙に。消滅を免れる
     - - 2021年
       - プレーオフ決勝でスウォンジーに2-0
+  episode_card:
+    type: table
+    title: ホーム全勝でも昇格なし
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1929-30年 ホーム
+      - 21試合21勝
+    - - イングランド記録
+      - いまも破られていない
+    - - 順位
+      - 2位。上がれるのは1位だけ
   legends_card:
     type: table
     title: 1990年以降の名選手
@@ -179,6 +193,18 @@ cards:
   telop: 10回目が2021年でした。決勝でスウォンジー・シティを2対0で下します
 解説: **74年ぶり**の1部昇格でした。
   telop: **74年ぶり**の1部昇格でした
+
+## ホーム全勝でも昇格なし
+@bg: assets/backgrounds/stadium_ブレントフォード.png
+
+解説: 1929年から30年のシーズン、ホームのリーグ戦**21試合に全部勝ちました**。
+  telop: 1929年から30年のシーズン、ホームのリーグ戦**21試合に全部勝ちました**
+  source: 背景
+  card: episode_card
+解説: ホーム全勝は、いまもイングランドの記録です。
+  telop: ホーム全勝は、いまもイングランドの記録です
+解説: それでも昇格できませんでした。順位は2位。上がれるのは1位だけだったからです。
+  telop: それでも昇格できませんでした。順位は2位。上がれるのは1位だけだったからです
 
 ## このクラブを語る3人
 @bg: assets/backgrounds/stadium_ブレントフォード.png

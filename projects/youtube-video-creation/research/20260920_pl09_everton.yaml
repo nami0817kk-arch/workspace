@@ -85,12 +85,38 @@ sections:
   say:
   - '**133年いた家を、去年出ました。**'
   - それまでいたのはグディソン・パーク。**1892年**からの本拠地です。
-  - 新しい家は、ヒル・ディキンソン・スタジアム。2025年から26年のシーズンに開きました。
+  - 新しい家は、ヒル・ディキンソン・スタジアムです。
   - 収容人数は**5万2888人**。プレミアリーグでも大きいほうに入ります。
   official: false
   sources:
   - https://en.wikipedia.org/wiki/Everton_F.C.
   bg: assets/backgrounds/stadium_エヴァートン.png
+- id: episode
+  heading: 1シーズン60ゴールの男
+  tier: 背景
+  telop: 39試合で60ゴール。いまも記録
+  narrator: 解説
+  card:
+    type: table
+    title: 1シーズン60ゴールの男
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1927-28年
+      - ディクシー・ディーン
+    - - リーグ戦39試合
+      - 60ゴール
+    - - 1部の1季記録
+      - いまも破られていない
+  say:
+  - 1927年から28年のシーズン、ディクシー・ディーンがリーグ戦39試合で**60ゴール**を決めました。
+  - 1部リーグの、1シーズンの得点記録です。
+  - 100年近くたったいまも、破られていません。
+  sources:
+  - https://en.wikipedia.org/wiki/Everton_F.C.
+  bg: assets/backgrounds/stadium_エヴァートン.png
+  official: false
 - id: legends
   heading: このクラブを語る3人
   tier: 背景

@@ -96,6 +96,29 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
   bg: assets/backgrounds/stadium_イプスウィッチ.png
+- id: episode
+  heading: 欧州で、家では負けない
+  tier: 背景
+  telop: 欧州の大会、ホーム31試合無敗
+  narrator: 解説
+  card:
+    type: table
+    title: 欧州で、家では負けない
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1962年
+      - 初めてヨーロッパカップに出る
+    - - ホームの欧州戦
+      - 31試合無敗
+  say:
+  - イプスウィッチは、ヨーロッパの大会でホームでは一度も負けていません。
+  - '**1962年**に初めてヨーロッパカップに出てから、ホーム**31試合**、無敗のままです。'
+  sources:
+  - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
+  bg: assets/backgrounds/stadium_イプスウィッチ.png
+  official: false
 - id: legends
   heading: このクラブを語る3人
   tier: 背景

@@ -39,3 +39,30 @@ opening: "ロンドンでいちばん多い、**14回**のリーグ優勝。"
 thumbnail:
   line1: "38試合、1つも負けずに"
   line2: "アーセナル"
+# 「へえ」の逸話（2026-09-22）。Wikipedia のクラブ記事で裏を取った1つだけ
+episode:
+  id: episode
+  heading: クラブ名の地下鉄駅
+  tier: 背景
+  telop: 地下鉄の駅の名前が「アーセナル」
+  narrator: 解説
+  card:
+    type: table
+    title: クラブ名の地下鉄駅
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 駅の名前
+      - アーセナル（もとはジレスピー・ロード）
+    - - 変わった日
+      - 1932年10月31日
+    - - 働きかけた人
+      - 監督ハーバート・チャップマン
+  say:
+  - ロンドンの地下鉄に、「アーセナル」という駅があります。
+  - もとはジレスピー・ロード駅。監督のハーバート・チャップマンが働きかけて、**1932年**に名前が変わりました。
+  - クラブの名前をそのまま付けた地下鉄の駅は、ここだけです。
+  sources:
+  - https://en.wikipedia.org/wiki/History_of_Arsenal_F.C._(1886%E2%80%931966)
+  - https://en.wikipedia.org/wiki/Arsenal_tube_station
