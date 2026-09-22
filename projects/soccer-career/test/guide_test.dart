@@ -31,6 +31,7 @@ void main() {
       '控えとして呼ぶクラブ',
       '自分が出る試合',
       '契約が残っていても話が来る',
+      '名前で選ぶ',
     ]) {
       expect(text, contains(name), reason: name);
     }
