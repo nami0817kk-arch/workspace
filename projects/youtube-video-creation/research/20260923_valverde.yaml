@@ -34,13 +34,25 @@ sections:
         - ["離脱の見立て", "2〜3週間"]
     say:
       - ウルグアイ代表のバルベルデ。24日に日本と戦う予定でした。
-      - そのレアル・マドリードが、検査の結果を出しました。
-      - 左足首の**グレード3の捻挫**。24日の日本戦には出られません。
+      - 所属するレアル・マドリードが、検査の結果を出しました。
+      - 左足首の**グレード3の捻挫**。その日本戦には出られません。
       - 痛めたのはアトレティコとのダービー、前半44分。相手に左足首を踏まれた場面でした。
       - それでもバルベルデは、**最後までピッチにいました。**
     sources:
       - https://www.realmadrid.com/es-ES/noticias/futbol/primer-equipo/partes-medicos/nuevo-parte-medico-de-valverde-22-09-2026
       - https://x.com/FabrizioRomano/status/2102351949219721499
+      - https://www.soccer-king.jp/news/world/esp/20260922/2207937.html
+  - id: back
+    heading: いつ戻るのか
+    tier: 報道
+    telop: 離脱は2〜3週間の見立て。次のリーグ戦は10月10日
+    narrator: 解説
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - クラブは、戻る時期を出していません。「経過を注意深く見守っていく」とだけ伝えています。
+      - 離脱は2〜3週間という見立ても出ています。
+      - 代表戦の期間が明けたあと、リーグの次の試合は**10月10日**のビジャレアル戦です。
+    sources:
       - https://www.soccer-king.jp/news/world/esp/20260922/2207937.html
   - id: doubt
     main: true
@@ -50,7 +62,7 @@ sections:
     narrator: キャスター
     bg: assets/backgrounds/stock/stadium_night.mp4
     say:
-      - text: 'ウルグアイ代表のバルベルデが左足首の重い捻挫で、日本戦に出られなくなりました。前半で痛めたあとも最後まで出ていたことに、驚きの声が出ています。'
+      - text: 'ウルグアイ代表のバルベルデが、左足首のグレード3の捻挫と発表されました。前半で痛めたあとも交代せずに残っていたことに、驚きの声が出ています。'
         short_only: true
       - voice: ネット民
         text: いやいや、バルベルデは「けがをした」まま45分も出たんだぞ。君らの言うグレード3の捻挫で、プレーを続けられると思うか？
@@ -70,18 +82,6 @@ sections:
       - https://x.com/search?q=Valverde%20esguince%20lang%3Aes&f=live
       - https://news.yahoo.co.jp/articles/1c89a2b43ef367d44ec944671803184a64b21f39/comments
       - https://x.com/search?q=%E3%83%90%E3%83%AB%E3%83%99%E3%83%AB%E3%83%87%20%E6%97%A5%E6%9C%AC%E6%88%A6%20lang%3Aja&f=live
-  - id: back
-    heading: いつ戻るのか
-    tier: 報道
-    telop: 離脱は2〜3週間の見立て。次のリーグ戦は10月10日
-    narrator: 解説
-    bg: assets/backgrounds/stock/stadium_night.mp4
-    say:
-      - クラブは、戻る時期を出していません。「経過を注意深く見守っていく」とだけ伝えています。
-      - スペインでは、離脱は2〜3週間という見立てです。
-      - 代表戦の期間が明けたあと、リーグの次の試合は**10月10日**のビジャレアル戦です。
-    sources:
-      - https://www.soccer-king.jp/news/world/esp/20260922/2207937.html
   - id: voices
     heading: ネットの声
     tier: 未確認

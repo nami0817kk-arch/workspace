@@ -30,20 +30,6 @@ sections:
     sources:
       - https://x.com/FabrizioRomano/status/2101773919841595868
       - https://www.abola.pt/noticias/ferran-e-a-ida-para-paris-a-unica-coisa-que-nao-pude-levar-foi-o-pedri-2026092206272434641
-  - id: goal
-    heading: 決勝のゴールのこと
-    tier: 報道
-    telop: 「あのゴールは、世界の何とも比べられない」
-    narrator: キャスター
-    bg: assets/backgrounds/stock/stadium_night.mp4
-    say:
-      - 決勝のゴールの映像は、いまも毎日見返しているそうです。
-      - voice: フェラン・トーレス
-        text: あのゴールは、世界の何とも比べられない。
-      - voice: フェラン・トーレス
-        text: 運命を信じている。あのボールは自分のためにあった。あれは自分のゴールじゃない。スペインのみんなの力が、決めさせてくれたと感じた。
-    sources:
-      - https://www.abola.pt/noticias/o-oh-ferran-sinto-muita-vergonha-2026092206030593801
   - id: said
     main: true
     heading: 言ったこと
@@ -64,6 +50,20 @@ sections:
     sources:
       - https://x.com/FabrizioRomano/status/2102292310830817423
       - https://www.abola.pt/noticias/ferran-e-a-ida-para-paris-a-unica-coisa-que-nao-pude-levar-foi-o-pedri-2026092206272434641
+  - id: goal
+    heading: 決勝のゴールのこと
+    tier: 報道
+    telop: 「あのゴールは、世界の何とも比べられない」
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - 決勝のゴールの映像は、いまも毎日見返しているそうです。
+      - voice: フェラン・トーレス
+        text: あのゴールは、世界の何とも比べられない。
+      - voice: フェラン・トーレス
+        text: 運命を信じている。あのボールは自分のためにあった。あれは自分のゴールじゃない。スペインのみんなの力が、決めさせてくれたと感じた。
+    sources:
+      - https://www.abola.pt/noticias/o-oh-ferran-sinto-muita-vergonha-2026092206030593801
   - id: voices
     heading: ネットの声
     tier: 未確認
@@ -78,7 +78,6 @@ sections:
       - voice: ネット民
         text: フェランのアンチまで、ペドリとの友情をかばってるのを見た
       - voice: ネット民
-        text: パリに引っ越すフェランが、ただ一つ連れて行けないのがペドリ。
       - voice: ネット民
         text: バルセロナからパリへの引っ越しはまだいい。でも親友を置いていくのは話が違う。バルサの友情は永遠だ！
       - voice: ネット民
@@ -88,7 +87,7 @@ sections:
       - voice: ネット民
         text: フェランをあんな高く買ってくれてこちらこそ頭が上がりません、今後とも良い取引をよろしくお願い致します。おかげでペドリも絶好調です
       - voice: ネット民
-        text: フェランとペドリがまた一緒に。もうスーツケースで運ばなくていい
+        text: パリに引っ越すフェランが、ただ一つ連れて行けないのがペドリ。
         short_voice: true
     sources:
       - https://x.com/search?q=Ferran%20Pedri%20lang%3Aes&f=live

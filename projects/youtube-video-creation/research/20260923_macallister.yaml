@@ -2,7 +2,7 @@ date: 2026年9月23日
 slot: premier_1
 format: quote
 voice_min: 0.6
-people: [マックアリスター]
+people: [アレクシス・マック・アリスター]
 theme:
   id: macallister_future
   league: england
@@ -26,6 +26,7 @@ sections:
     bg: assets/backgrounds/stock/stadium_night.mp4
     say:
       - リヴァプールのマック・アリスター。新しい契約を結んだという発表は、まだありません。
+      - 延長がなければ、2年後には移籍金のかからない立場になります。
       - 残っている契約について聞かれて、こう答えました。
     sources:
       - https://x.com/FabrizioRomano/status/2102064636811952337
@@ -39,15 +40,15 @@ sections:
     say:
       - text: '契約の延長が決まらないまま、リヴァプールのマック・アリスターが自分の将来について話しました。'
         short_only: true
-      - voice: マックアリスター
+      - voice: アレクシス・マック・アリスター
         text: 最終的な決断は、まだ何も決まっていない。現実として、契約はまだ2年残っている。
-      - voice: マックアリスター
+      - voice: アレクシス・マック・アリスター
         text: 全力を尽くすつもりだ。2年あれば、いろんなことが起こりうる。可能性はたくさんある。
-      - voice: マックアリスター
+      - voice: アレクシス・マック・アリスター
         text: 自分としては、今いる場所を本当に楽しんでいる。
-      - voice: マックアリスター
+      - voice: アレクシス・マック・アリスター
         text: できれば、もっと長く残りたい。**でも、それが2年だけになっても、それはそれで構わない。**
-      - voice: マックアリスター
+      - voice: アレクシス・マック・アリスター
         text: 家族とこの時間を楽しみたい。ここが世界最高のクラブの一つだということに、疑いはないから。
     sources:
       - https://x.com/FabrizioRomano/status/2102064636811952337

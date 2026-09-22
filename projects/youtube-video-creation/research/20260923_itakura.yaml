@@ -10,7 +10,7 @@ theme:
   kind: other
   topic: 板倉滉
   title: '板倉滉、アジアカップに出られるのか「自分は拾ってもらった身なので」'
-  hook: 代表がいちばん大事だと言い、そのあとにクラブの話をしました。
+  hook: 「難しい」と言ったうえで、最後に一つだけ足しました。
   question: アジアカップに出られるのか
 short_title: 板倉滉が語ったアジアカップの本音
 thumbnail:
@@ -25,11 +25,9 @@ sections:
     narrator: キャスター
     bg: assets/backgrounds/stock/stadium_night.mp4
     say:
-      - 板倉はこの夏、オランダのアヤックスから1年で、古巣のボルシア・メンヘングラートバッハに引き取ってもらいました。
+      - 板倉はこの夏、オランダのアヤックスで1シーズンを過ごしたあと、古巣のボルシア・メンヘングラートバッハに引き取ってもらいました。
       - そのクラブのために、来年1月のアジアカップを辞退するのではと報じられています。
       - ドイツのリーグは、アジアカップのあいだも止まらないからです。
-      - voice: 森保監督
-        text: アジア杯に出られないのは基本かなとは思っている
     sources:
       - https://web.gekisaka.jp/news/japan/detail/?459419-459419-fl
       - https://www.soccer-king.jp/news/japan/national/20260922/2207878.html
@@ -70,6 +68,9 @@ sections:
         text: 結構難しいとは思う
       - voice: 板倉滉
         text: 決定したわけではないところは一つ希望として残しておきたい
+      - 森保監督は、今月の取材でこう話しています。
+      - voice: 森保監督
+        text: アジア杯に出られないのは基本かなとは思っている
     sources:
       - https://www.soccer-king.jp/news/japan/national/20260922/2207878.html
       - https://web.gekisaka.jp/news/japan/detail/?459419-459419-fl

@@ -48,12 +48,13 @@ sites:
   - https://www.transfermarkt.co.uk/barcola-4th-rodri-19th-cucurella-29th-top-50-most-expensive-transfers-this-summer-ranked/view/news/483667
   - https://www.transfermarkt.co.uk/club-record-sale-why-arsenal-were-right-to-sell-gabriel-martinelli-to-al-hilal/view/news/484606
 - host: forzaroma.info
-  seen: 12
+  seen: 13
   days:
   - '2026-09-02'
   - '2026-09-05'
   - '2026-09-09'
   - '2026-09-12'
+  - '2026-09-22'
   examples:
   - https://www.forzaroma.info/news-as-roma/rodrigo-mora-gasperini-fondamentale-nella-mia-scelta-e-un-sogno-giocare-con-dybala/?intcmp=gazzanet-forzaroma
   - https://www.forzaroma.info/news-as-roma/fenerbahce-guendouzi-squalificato-salta-la-roma-greenwood-ci-sara-ecco-perche/?intcmp=gazzanet-forzaroma
@@ -85,6 +86,19 @@ sites:
   - https://www.mondoudinese.it/udinese/news-udinese/udinese-unai-gomez-voglio-migliorare-e-aumentare-i-miei-numeri/?intcmp=gazzanet-mondoudinese
   - https://www.mondoudinese.it/udinese/news-udinese/conferenza-runjaic-bayo-puo-giocare-titolare-ma-non-vi-diro-lundici/?intcmp=gazzanet-mondoudinese
   - https://www.mondoudinese.it/udinese/news-udinese/palma-il-posto-da-titolare-me-lo-dovro-riguadagnare/?intcmp=gazzanet-mondoudinese
+- host: blog.domesoccer.jp
+  seen: 11
+  days:
+  - '2026-09-04'
+  - '2026-09-05'
+  - '2026-09-14'
+  - '2026-09-16'
+  - '2026-09-21'
+  - '2026-09-22'
+  examples:
+  - https://blog.domesoccer.jp/archives/60253571.html
+  - https://blog.domesoccer.jp/archives/60253934.html
+  - https://blog.domesoccer.jp/archives/60253949.html
 - host: samuraigoal.doorblog.jp
   seen: 10
   days:
@@ -106,40 +120,19 @@ sites:
   - https://www.calcionapoli1926.it/ultimissime-calcio-napoli/mazzocchi-laddio-al-napoli-e-da-brividi-sono-stato-un-napoletano-con-quella-maglia-addosso/?intcmp=gazzanet-calcionapoli1926
   - https://www.calcionapoli1926.it/altro/jorginho-agente-santos-proposte-serie-a/?intcmp=gazzanet-calcionapoli1926
   - https://www.calcionapoli1926.it/photogallery/giovane-infortunio-napoli-seriea-intervento-ernia-inguinale-post-social-instagram-photogallery-ultime/?refresh_ce&intcmp=gazzanet-calcionapoli1926
-- host: blog.domesoccer.jp
-  seen: 10
-  days:
-  - '2026-09-04'
-  - '2026-09-05'
-  - '2026-09-14'
-  - '2026-09-16'
-  - '2026-09-21'
-  examples:
-  - https://blog.domesoccer.jp/archives/60253571.html
-  - https://blog.domesoccer.jp/archives/60253934.html
-  - https://blog.domesoccer.jp/archives/60253949.html
 - host: fcinter1908.it
-  seen: 9
+  seen: 10
   days:
   - '2026-09-05'
   - '2026-09-09'
   - '2026-09-19'
+  - '2026-09-22'
   examples:
   - https://www.fcinter1908.it/news/interviste/sneijder-inter-triplete-ausilio-chivu-dumfries/?intcmp=gazzanet-fcinter1908
   - https://www.fcinter1908.it/cronaca-live/youth-league-real-madrid-inter/?intcmp=gazzanet-fcinter1908
   - https://www.fcinter1908.it/partite/conferenze-stampa/fabregas-roma-inter-como-frosinone/?intcmp=gazzanet-fcinter1908
-- host: cittaceleste.it
-  seen: 8
-  days:
-  - '2026-09-10'
-  - '2026-09-12'
-  - '2026-09-14'
-  examples:
-  - https://www.cittaceleste.it/news/lazio-fabiani-leuropa-e-lobiettivo-mercato-i-voti-a-fine-anno-lanno-scorso/?refresh_ce
-  - https://www.cittaceleste.it/news/lazio-pinamonti-gattuso-molto-esigente-a-immobile-chiederei/
-  - https://www.cittaceleste.it/news/lazio-diogo-leite-primi-minuti-e-adesso/
 - host: violanews.com
-  seen: 8
+  seen: 9
   days:
   - '2026-09-09'
   - '2026-09-12'
@@ -151,6 +144,16 @@ sites:
   - https://www.violanews.com/news-viola/ultime-notizie/commisso-giocatori-vanno-e-vengono-noi-qua-per-costruire-altri-100-anni-insieme/?refresh_ce&intcmp=gazzanet-violanews
   - https://www.violanews.com/news-viola/conferenze-stampa/vanoli-conf-non-so-qua-per-rivincita-questa-la-fiorentina-che-voglio/?intcmp=gazzanet-violanews
   - https://www.violanews.com/news-viola/conferenze-stampa/si-presenta-gnonto-dalle-14-30-il-live-della-conferenza-stampa/?intcmp=gazzanet-violanews
+- host: cittaceleste.it
+  seen: 8
+  days:
+  - '2026-09-10'
+  - '2026-09-12'
+  - '2026-09-14'
+  examples:
+  - https://www.cittaceleste.it/news/lazio-fabiani-leuropa-e-lobiettivo-mercato-i-voti-a-fine-anno-lanno-scorso/?refresh_ce
+  - https://www.cittaceleste.it/news/lazio-pinamonti-gattuso-molto-esigente-a-immobile-chiederei/
+  - https://www.cittaceleste.it/news/lazio-diogo-leite-primi-minuti-e-adesso/
 - host: pianetamilan.it
   seen: 7
   days:
@@ -315,6 +318,16 @@ sites:
   - https://www.dailystar.co.uk/sport/football/breaking-liverpool-richard-hughes-quits-37630544
   - https://www.dailystar.co.uk/sport/football/man-utd-city-goal-var-37659172
   - https://www.dailystar.co.uk/sport/football/fulham-man-utd-premier-league-37683165
+- host: shieldsgazette.com
+  seen: 3
+  days:
+  - '2026-09-05'
+  - '2026-09-14'
+  - '2026-09-22'
+  examples:
+  - https://www.shieldsgazette.com/sport/football/newcastle-united/-8962131
+  - https://www.shieldsgazette.com/sport/football/newcastle-united/-9023229
+  - https://www.shieldsgazette.com/sport/football/newcastle-united/-9140553
 - host: today.rtl.lu
   seen: 2
   days:
@@ -340,14 +353,6 @@ sites:
   - '2026-09-13'
   examples:
   - https://www.atalantaoggi.it/notizie/atalanta-sarri-cagliari-partita-sarri/?intcmp=gazzanet-atalantaoggi
-- host: shieldsgazette.com
-  seen: 2
-  days:
-  - '2026-09-05'
-  - '2026-09-14'
-  examples:
-  - https://www.shieldsgazette.com/sport/football/newcastle-united/-8962131
-  - https://www.shieldsgazette.com/sport/football/newcastle-united/-9023229
 - host: barcablaugranes.com
   seen: 2
   days:
@@ -410,6 +415,30 @@ sites:
   examples:
   - https://www.bavarianfootballworks.com/bayern-munich-transfer-rumors-news/253916/pundit-lauds-nathaniel-browns-versatility-as-big-asset-to-bayern-munich
   - https://www.bavarianfootballworks.com/bayern-munich-finances-board/256752/bayern-munich-exec-talks-history-with-bradley-barcola
+- host: yorkshireeveningpost.co.uk
+  seen: 2
+  days:
+  - '2026-09-05'
+  - '2026-09-22'
+  examples:
+  - https://www.yorkshireeveningpost.co.uk/sport/football/leeds-united/-8962041
+  - https://www.yorkshireeveningpost.co.uk/sport/football/leeds-united/-9141827
+- host: vitalfootball.co.uk
+  seen: 2
+  days:
+  - '2026-09-14'
+  - '2026-09-22'
+  examples:
+  - https://vitalfootball.co.uk/leeds-united-newcastle-united-team-news/
+  - https://vitalfootball.co.uk/bosnia-boss-unhappy-newcastle-united-dedic-injury/
+- host: metro.co.uk
+  seen: 2
+  days:
+  - '2026-09-16'
+  - '2026-09-22'
+  examples:
+  - https://metro.co.uk/2026/09/15/its-not-easy-mikel-arteta-makes-honest-max-dowman-admission-arsenal-beat-ipswich-29616996/?ito=newsnow-feed
+  - https://metro.co.uk/2026/09/22/lewis-hall-sends-transfer-message-man-utd-signing-newcastle-contract-29643573/?ito=newsnow-feed
 - host: guardian.ng
   seen: 1
   days:
@@ -470,12 +499,6 @@ sites:
   - '2026-09-05'
   examples:
   - https://www.sportbible.com/football/premier-league/liverpool-var-penalty-pgmol-chief-ipswich-town-darren-england-referee-255230-20260905
-- host: yorkshireeveningpost.co.uk
-  seen: 1
-  days:
-  - '2026-09-05'
-  examples:
-  - https://www.yorkshireeveningpost.co.uk/sport/football/leeds-united/-8962041
 - host: tntsports.co.uk
   seen: 1
   days:
@@ -524,12 +547,6 @@ sites:
   - '2026-09-14'
   examples:
   - https://coventryobserver.co.uk/sport/football-coventry-citys-miserable-start-to-season-continues-after-heavy-home-defeat-against-brighton/
-- host: vitalfootball.co.uk
-  seen: 1
-  days:
-  - '2026-09-14'
-  examples:
-  - https://vitalfootball.co.uk/leeds-united-newcastle-united-team-news/
 - host: premiumtimesng.com
   seen: 1
   days:
@@ -554,12 +571,6 @@ sites:
   - '2026-09-16'
   examples:
   - https://www.fulhamfc.com/news/2026/september/15/west-ham-highlights/
-- host: metro.co.uk
-  seen: 1
-  days:
-  - '2026-09-16'
-  examples:
-  - https://metro.co.uk/2026/09/15/its-not-easy-mikel-arteta-makes-honest-max-dowman-admission-arsenal-beat-ipswich-29616996/?ito=newsnow-feed
 - host: football360.com.au
   seen: 1
   days:
@@ -656,3 +667,57 @@ sites:
   - '2026-09-21'
   examples:
   - https://www.yorkshirepost.co.uk/sport/football/-9116221
+- host: newsletter.co.uk
+  seen: 1
+  days:
+  - '2026-09-22'
+  examples:
+  - https://www.newsletter.co.uk/sport/football/rangers/-9143382
+- host: 3addedminutes.com
+  seen: 1
+  days:
+  - '2026-09-22'
+  examples:
+  - https://www.3addedminutes.com/sport/football/newcastle-united/-9141735
+- host: tsn.ca
+  seen: 1
+  days:
+  - '2026-09-22'
+  examples:
+  - https://www.tsn.ca/soccer/article/infantino-open-to-an-independent-fifa-governance-review-after-backlash-over-failed-project/
+- host: limerickleader.ie
+  seen: 1
+  days:
+  - '2026-09-22'
+  examples:
+  - https://www.limerickleader.ie/sport/soccer/treaty-united/treaty-united-women-stalwart-the-first-to-reach-100-caps-for-the-club-9130035
+- host: timeslive.co.za
+  seen: 1
+  days:
+  - '2026-09-22'
+  examples:
+  - https://www.timeslive.co.za/sport/soccer/2026-09-22-infantino-says-he-is-open-to-talks-and-independent-review-over-fifa-reform/
+- host: belfastmedia.com
+  seen: 1
+  days:
+  - '2026-09-22'
+  examples:
+  - https://belfastmedia.com/belfast-sports-stars-urge-fboycott-israeli-fixture
+- host: irishtimes.com
+  seen: 1
+  days:
+  - '2026-09-22'
+  examples:
+  - https://www.irishtimes.com/sport/soccer/2026/09/22/gianni-infantino-proposes-an-independent-external-review-of-fifa-governance/
+- host: gazette-news.co.uk
+  seen: 1
+  days:
+  - '2026-09-22'
+  examples:
+  - https://www.gazette-news.co.uk/sport/colchesterunited/26569478.colchester-united-women-beat-newmarket-town-4-1-fa-cup/
+- host: sportwitness.co.uk
+  seen: 1
+  days:
+  - '2026-09-22'
+  examples:
+  - https://sportwitness.co.uk/tottenham-face-barcelona-fight-for-signing-spurs-offer-already-made/
