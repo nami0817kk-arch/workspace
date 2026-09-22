@@ -150,3 +150,25 @@ reasons_rows:
 # 題（2026-09-22 指示「タイトルをもっと視聴者が見たいと思うものに」）
 title: 守田英正のハル・シティ。名前を変えられかけた日に起きたこと
 short_title: 守田英正のハル、名前を変えられかけた日
+# このクラブの特徴（2026-09-23 指示「三つの要素入れたい！」）。プレーの色・運営の型・クラブの気質。
+# 出典は英語版Wikipedia とクラブ公式。要確認は research/pl_data/features_notes.md
+features:
+- ボールを持ったら前へ、ゴール前に放り込む攻めのサッカーを掲げる監督です
+- 2022年にトルコのテレビ番組プロデューサーが買収し、生え抜きを売りながら回すクラブ
+- ラグビーリーグの街で、2014年のクラブ名変更はサポーターの反対で却下されました
+features_telop: 前へ放り込む。育てて売る
+features_rows:
+- - プレーの色
+  - 前へ、ゴール前に放り込む
+- - 運営の型
+  - テレビ王の資金＋生え抜き売却
+- - クラブの気質
+  - ラグビーの街、改名を跳ね返す
+features_sources:
+- https://www.wearehullcity.co.uk/news/2025/june/11/jakirovic-appointed-new-head-coach/
+- https://www.wearehullcity.co.uk/news/2025/september/26/match-preview-watford-a/
+- https://en.wikipedia.org/wiki/Acun_Il%C4%B1cal%C4%B1
+- https://en.wikipedia.org/wiki/Jacob_Greaves
+- https://en.wikipedia.org/wiki/Keane_Lewis-Potter
+- https://en.wikipedia.org/wiki/Hull_City_A.F.C.
+- https://en.wikipedia.org/wiki/Assem_Allam

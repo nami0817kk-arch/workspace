@@ -116,3 +116,21 @@ reasons_rows:
 # 題（2026-09-22 指示「タイトルをもっと視聴者が見たいと思うものに」）
 title: 56年間タイトルゼロ。ニューカッスルが待っていたものとは
 short_title: ニューカッスルが56年待っていたものとは
+# このクラブの特徴（2026-09-23 指示「三つの要素入れたい！」）。プレーの色・運営の型・クラブの気質。
+# 出典は英語版Wikipedia とクラブ公式。要確認は research/pl_data/features_notes.md
+features:
+- ヤイスレ監督のサッカーは、前へ前へ。奪ってすぐに、速く攻めます。
+- 2021年、サウジアラビアの公共投資基金が3億500万ポンドで買収。オーナーの資金で買う型です。
+- 街にクラブは一つだけ。2部に落ちた2016年からの1年も、平均5万人を超えるお客さんが来ました。
+features_telop: 奪って速い。街に一つの誇り
+features_rows:
+- - プレーの色
+  - 奪ってすぐ、速く攻める
+- - 運営の型
+  - サウジの基金、3億ポンド
+- - クラブの気質
+  - 街に一つ。2部でも5万人
+features_sources:
+- https://www.newcastleunited.com/en/news/fact-file-matthias-jaissle
+- https://www.newcastleunited.com/en/news/newcastle-united-appoint-matthias-jaissle-as-the-clubs-new-head-coach
+- https://en.wikipedia.org/wiki/Newcastle_United_F.C.

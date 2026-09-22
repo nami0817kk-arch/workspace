@@ -48,11 +48,13 @@ sources:
 - https://en.wikipedia.org/wiki/Liverpool_F.C.
 - https://en.wikipedia.org/wiki/2026–27_Liverpool_F.C._season
 - https://en.wikipedia.org/wiki/Bill_Shankly
+- https://en.wikipedia.org/wiki/Andoni_Iraola
+- https://en.wikipedia.org/wiki/Fenway_Sports_Group
+- https://en.wikipedia.org/wiki/Michael_Edwards_(football_executive)
 - https://en.wikipedia.org/wiki/Anfield
 - https://en.wikipedia.org/wiki/Steven_Gerrard
 - https://en.wikipedia.org/wiki/Jamie_Carragher
 - https://en.wikipedia.org/wiki/Mohamed_Salah
-- https://en.wikipedia.org/wiki/Andoni_Iraola
 cards:
   reasons_card:
     type: table
@@ -67,6 +69,19 @@ cards:
       - 新監督イラオラの1年目
     - - 理由3
       - サラー退団後、最初の1年
+  features_card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 奪ってから速く縦へ
+    - - 運営の型
+      - 米資本、データで選手を選ぶ
+    - - クラブの気質
+      - 1960年代からの応援歌
   birth_card:
     type: table
     title: クラブの成り立ち
@@ -236,6 +251,18 @@ cards:
 解説: 昨季は**5位**。勝ち点は60でした。
   no_telop: true
   image: assets/stats/pl_liverpool_last.png
+
+## このクラブの特徴
+@bg: assets/backgrounds/stadium_リヴァプール.png
+
+解説: ボールを持つより、奪ってから速く縦に急ぐサッカーを持ち込んだ新監督です
+  telop: ボールを持つより、奪ってから速く縦に急ぐサッカーを持ち込んだ新監督です
+  source: 背景
+  card: features_card
+解説: 2010年にアメリカの投資会社フェンウェイが3億ポンドで買収し、データで選手を選ぶ型
+  telop: 2010年にアメリカの投資会社フェンウェイが3億ポンドで買収し、データで選手を選ぶ型
+解説: 応援歌ユールネバーウォークアローンは、1960年代からアンフィールドで歌い継がれています
+  telop: 応援歌ユールネバーウォークアローンは、1960年代からアンフィールドで歌い継がれています
 
 ## 空になったスタジアム
 @bg: assets/backgrounds/stadium_リヴァプール.png

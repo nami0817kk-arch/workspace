@@ -46,6 +46,11 @@ sources:
 - https://en.wikipedia.org/wiki/Brentford_F.C.
 - https://en.wikipedia.org/wiki/2026–27_Brentford_F.C._season
 - https://www.brentfordfc.com/en/news/video/interviews-keith-andrews-brentford-head-coach
+- https://www.brentfordfc.com/en/news/article/analysis-keith-andrews-new-contract-brentford-premier-league-tactical-evolution
+- https://www.brentfordfc.com/en/news/article/the-long-read-keith-andrews-first-premier-league-season
+- https://en.wikipedia.org/wiki/Brentford_F.C._Reserves_and_Academy
+- https://en.wikipedia.org/wiki/Matthew_Benham
+- https://en.wikipedia.org/wiki/Griffin_Park
 - https://en.wikipedia.org/wiki/1929%E2%80%9330_Brentford_F.C._season
 - https://en.wikipedia.org/wiki/Kevin_O%27Connor_(footballer,_born_1982)
 - https://en.wikipedia.org/wiki/Ivan_Toney
@@ -65,6 +70,19 @@ cards:
       - アンドリュース「ファンの代表だと感じるチームに」
     - - 理由3
       - 保てばクラブ史上初の欧州
+  features_card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 長いボールと空中戦で押す
+    - - 運営の型
+      - 育成を閉じデータで買って売る
+    - - クラブの気質
+      - 四つ角にパブの球場
   history_card:
     type: table
     title: 残してきた記録
@@ -216,6 +234,18 @@ cards:
 解説: プレミアでの最高位は、2022年から23年の**9位**です。
   no_telop: true
   image: assets/stats/pl_brentford_last.png
+
+## このクラブの特徴
+@bg: assets/backgrounds/stadium_ブレントフォード.png
+
+解説: 長いボールと空中戦で押し、セットプレーは攻めも守りも武器にするサッカーです。
+  telop: 長いボールと空中戦で押し、セットプレーは攻めも守りも武器にするサッカーです
+  source: 背景
+  card: features_card
+解説: 育成組織は2016年に閉じ、賭けの統計会社を持つオーナーのデータで、安く獲って高く売ります。
+  telop: 育成組織は2016年に閉じ、賭けの統計会社を持つオーナーのデータで、安く獲って高く売ります
+解説: 2020年まで使ったグリフィン・パークは、四つ角すべてにパブがあるイングランド唯一の球場。
+  telop: 2020年まで使ったグリフィン・パークは、四つ角すべてにパブがあるイングランド唯一の球場
 
 ## 歩んできた道
 @bg: assets/backgrounds/stadium_ブレントフォード.png

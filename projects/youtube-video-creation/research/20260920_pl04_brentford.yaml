@@ -89,6 +89,37 @@ sections:
   - https://en.wikipedia.org/wiki/Brentford_F.C.
   bg: assets/backgrounds/stadium_ブレントフォード.png
   official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: ロングボール。買って売る
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 長いボールと空中戦で押す
+    - - 運営の型
+      - 育成を閉じデータで買って売る
+    - - クラブの気質
+      - 四つ角にパブの球場
+  say:
+  - 長いボールと空中戦で押し、セットプレーは攻めも守りも武器にするサッカーです。
+  - 育成組織は2016年に閉じ、賭けの統計会社を持つオーナーのデータで、安く獲って高く売ります。
+  - 2020年まで使ったグリフィン・パークは、四つ角すべてにパブがあるイングランド唯一の球場。
+  sources:
+  - https://en.wikipedia.org/wiki/Brentford_F.C.
+  - https://www.brentfordfc.com/en/news/article/analysis-keith-andrews-new-contract-brentford-premier-league-tactical-evolution
+  - https://www.brentfordfc.com/en/news/article/the-long-read-keith-andrews-first-premier-league-season
+  - https://en.wikipedia.org/wiki/Brentford_F.C._Reserves_and_Academy
+  - https://en.wikipedia.org/wiki/Matthew_Benham
+  - https://en.wikipedia.org/wiki/Griffin_Park
+  bg: assets/backgrounds/stadium_ブレントフォード.png
+  official: false
 - id: history
   heading: 歩んできた道
   tier: 背景

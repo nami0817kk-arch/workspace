@@ -92,6 +92,35 @@ sections:
   - https://en.wikipedia.org/wiki/Everton_F.C.
   bg: assets/backgrounds/stadium_エヴァートン.png
   official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 規律で締める、1部最多在籍
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 規律で締めるモイーズ
+    - - 運営の型
+      - 勝ち点8剥奪の後に買収
+    - - クラブの気質
+      - 1部在籍数は最多
+  say:
+  - 規律で締めるデイヴィッド・モイーズのサッカー、復帰直後の2025年2月は無敗で月間最優秀監督。
+  - オーナー資金で買う型、赤字で勝ち点8を引かれ、2024年末にダン・フリードキンが買い取りました。
+  - 1888年のリーグ創設メンバーで、1部在籍シーズン数は国内最多、愛称は「ピープルズ・クラブ」。
+  sources:
+  - https://en.wikipedia.org/wiki/Everton_F.C.
+  - https://en.wikipedia.org/wiki/David_Moyes
+  - https://en.wikipedia.org/wiki/2023%E2%80%9324_Everton_F.C._season
+  - https://en.wikipedia.org/wiki/Dan_Friedkin
+  bg: assets/backgrounds/stadium_エヴァートン.png
+  official: false
 - id: move
   heading: 133年いた家を出た
   tier: 背景

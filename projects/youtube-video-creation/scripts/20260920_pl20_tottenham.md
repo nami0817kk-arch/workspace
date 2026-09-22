@@ -47,10 +47,10 @@ sources:
 - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
 - https://en.wikipedia.org/wiki/2026–27_Tottenham_Hotspur_F.C._season
 - https://en.wikipedia.org/wiki/Danny_Blanchflower
+- https://en.wikipedia.org/wiki/Roberto_De_Zerbi
 - https://en.wikipedia.org/wiki/Harry_Kane
 - https://en.wikipedia.org/wiki/Son_Heung-min
 - https://en.wikipedia.org/wiki/Ledley_King
-- https://en.wikipedia.org/wiki/Roberto_De_Zerbi
 cards:
   reasons_card:
     type: table
@@ -65,6 +65,19 @@ cards:
       - ヨーロッパリーグ王者が最下位
     - - 理由3
       - デ・ゼルビ2年目、開幕勝ちなし
+  features_card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - つないで崩し、前から奪う
+    - - 運営の型
+      - 稼ぎ世界9位、追加で1億
+    - - クラブの気質
+      - 讃美歌から生まれた応援歌
   cup1901_card:
     type: table
     title: 最初に立てた記録
@@ -227,6 +240,18 @@ cards:
 解説: プレミアでの最高位は、2016年から17年の**2位**です。
   no_telop: true
   image: assets/stats/pl_tottenham_last.png
+
+## このクラブの特徴
+@bg: assets/backgrounds/stadium_トッテナム.png
+
+解説: デ・ゼルビ監督のサッカーは、キーパーからつないで崩し、失えばすぐ前から奪い返す。
+  telop: デ・ゼルビ監督のサッカーは、キーパーからつないで崩し、失えばすぐ前から奪い返す
+  source: 背景
+  card: features_card
+解説: 10億ポンドのスタジアムを持ち、稼ぎは世界9位。2025年秋、オーナーから1億ポンドの追加出資。
+  telop: 10億ポンドのスタジアムを持ち、稼ぎは世界9位。2025年秋、オーナーから1億ポンドの追加出資
+解説: 応援歌「グローリー・グローリー」は讃美歌から。1961年からの欧州の戦いで歌われ始めました。
+  telop: 応援歌「グローリー・グローリー」は讃美歌から。1961年からの欧州の戦いで歌われ始めました
 
 ## リーグに入らないまま、FAカップを獲った
 @bg: assets/backgrounds/stadium_トッテナム.png

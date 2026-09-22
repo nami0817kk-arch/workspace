@@ -143,3 +143,21 @@ people_extra:
 # 題（2026-09-22 指示「タイトルをもっと視聴者が見たいと思うものに」）
 title: 鈴木彩艶のアストン・ヴィラ。リーグそのものを作ったクラブの正体
 short_title: 鈴木彩艶のヴィラ、リーグを作ったクラブの正体
+# このクラブの特徴（2026-09-23 指示「三つの要素入れたい！」）。プレーの色・運営の型・クラブの気質。
+# 出典は英語版Wikipedia とクラブ公式。要確認は research/pl_data/features_notes.md
+features:
+- 守りで厳しく、ボールを持ったら主導権を握るサッカーです。
+- オーナーの資金で買う型で、2部だった2018年に買い、4年で約3億6000万ポンドを注ぎました。
+- 熱心なサポーターが集まるホルト・エンドは、1995年の完成時、イギリス最大のゴール裏スタンド。
+features_telop: 厳しく守る。資金で買う
+features_rows:
+- - プレーの色
+  - 厳しく守り、持てば握る
+- - 運営の型
+  - 2018年に買収、資金を注ぐ
+- - クラブの気質
+  - 熱いホルト・エンド
+features_sources:
+- https://www.avfc.co.uk/news/2026/september/18/prematch-emery-previews-tottenham-tilt
+- https://en.wikipedia.org/wiki/Nassef_Sawiris
+- https://en.wikipedia.org/wiki/Villa_Park

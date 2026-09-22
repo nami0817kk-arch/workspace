@@ -88,6 +88,34 @@ sections:
   - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
   bg: assets/backgrounds/stadium_ニューカッスル.png
   official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 奪って速い。街に一つの誇り
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 奪ってすぐ、速く攻める
+    - - 運営の型
+      - サウジの基金、3億ポンド
+    - - クラブの気質
+      - 街に一つ。2部でも5万人
+  say:
+  - ヤイスレ監督のサッカーは、前へ前へ。奪ってすぐに、速く攻めます。
+  - 2021年、サウジアラビアの公共投資基金が3億500万ポンドで買収。オーナーの資金で買う型です。
+  - 街にクラブは一つだけ。2部に落ちた2016年からの1年も、平均5万人を超えるお客さんが来ました。
+  sources:
+  - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
+  - https://www.newcastleunited.com/en/news/fact-file-matthias-jaissle
+  - https://www.newcastleunited.com/en/news/newcastle-united-appoint-matthias-jaissle-as-the-clubs-new-head-coach
+  bg: assets/backgrounds/stadium_ニューカッスル.png
+  official: false
 - id: drought
   heading: 56年待った
   tier: 背景

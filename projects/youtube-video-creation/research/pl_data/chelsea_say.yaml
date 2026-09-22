@@ -119,3 +119,22 @@ reasons_rows:
 # 題（2026-09-22 指示「タイトルをもっと視聴者が見たいと思うものに」）
 title: 先にあったのはスタジアム。チェルシーが生まれた順番とは
 short_title: チェルシーが生まれた順番とは
+# このクラブの特徴（2026-09-23 指示「三つの要素入れたい！」）。プレーの色・運営の型・クラブの気質。
+# 出典は英語版Wikipedia とクラブ公式。要確認は research/pl_data/features_notes.md
+features:
+- ボールを持って崩し、奪ったら高い位置から速く前へ運ぶ、シャビ・アロンソのサッカー。
+- 投資会社が買う型、2022年に42億ポンド超で買収、直近の赤字は英国記録の3億5500万ポンド。
+- 本拠地の土地とクラブ名の権利はサポーターの会社が持ち、開発業者への売却を防いでいます。
+features_telop: 持って崩し、資金で買う
+features_rows:
+- - プレーの色
+  - 持って崩し、奪って速い
+- - 運営の型
+  - 投資会社が42億で買収
+- - クラブの気質
+  - 土地の主はサポーター
+features_sources:
+- https://en.wikipedia.org/wiki/Xabi_Alonso
+- https://en.wikipedia.org/wiki/Chelsea_F.C.
+- https://en.wikipedia.org/wiki/BlueCo
+- https://en.wikipedia.org/wiki/Chelsea_Pitch_Owners

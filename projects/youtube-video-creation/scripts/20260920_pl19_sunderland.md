@@ -46,6 +46,9 @@ sources:
 - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
 - https://en.wikipedia.org/wiki/2026–27_Sunderland_A.F.C._season
 - https://en.wikipedia.org/wiki/Niall_Quinn
+- https://www.safc.com/news/2026/may/15/the-numbers-behind-r-gis-le-bris--premier-league-manager-of-the-season-nomination/
+- https://en.wikipedia.org/wiki/2025%E2%80%9326_Sunderland_A.F.C._season
+- https://en.wikipedia.org/wiki/Kyril_Louis-Dreyfus
 - https://en.wikipedia.org/wiki/Kevin_Phillips_(footballer)
 - https://en.wikipedia.org/wiki/Kevin_Ball
 - https://en.wikipedia.org/wiki/Kevin_Phillips_(English_footballer)
@@ -64,6 +67,19 @@ cards:
       - 順位での欧州行きは史上初
     - - 理由3
       - リーグは開幕3敗
+  features_card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 激しさと献身
+    - - 運営の型
+      - ジョブ・ベリンガムを高く売る
+    - - クラブの気質
+      - 炭鉱跡の本拠地、紋章に輪
   fall_card:
     type: table
     title: 落ちて、戻るまで
@@ -228,6 +244,18 @@ cards:
 解説: プレミアでの最高位は**7位**。2000年から01年と、昨季の2回です。
   no_telop: true
   image: assets/stats/pl_sunderland_last.png
+
+## このクラブの特徴
+@bg: assets/backgrounds/stadium_サンダーランド.png
+
+解説: ル・ブリ監督のサッカーは、激しさと献身。それがサポーターとの絆になりました。
+  telop: ル・ブリ監督のサッカーは、激しさと献身。それがサポーターとの絆になりました
+  source: 背景
+  card: features_card
+解説: 若手を育てて高く売る型。ジョブ・ベリンガムは2025年、3200万ポンドでドルトムントへ。
+  telop: 若手を育てて高く売る型。ジョブ・ベリンガムは2025年、3200万ポンドでドルトムントへ
+解説: 本拠地は炭鉱の跡地。エンブレムの上の輪は巻き上げ機で、この土地の炭鉱の歴史を表しています。
+  telop: 本拠地は炭鉱の跡地。エンブレムの上の輪は巻き上げ機で、この土地の炭鉱の歴史を表しています
 
 ## 6回優勝したクラブが、3部へ
 @bg: assets/backgrounds/stadium_サンダーランド.png

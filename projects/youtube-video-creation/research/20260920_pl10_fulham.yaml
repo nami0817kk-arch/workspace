@@ -91,6 +91,35 @@ sections:
   - https://en.wikipedia.org/wiki/Fulham_F.C.
   bg: assets/backgrounds/stadium_フラム.png
   official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 育成畑の監督、川沿いの本拠地
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - レアル育成畑の監督
+    - - 運営の型
+      - アメフト球団主が支える
+    - - クラブの気質
+      - 最古のスタンドが現役
+  say:
+  - 新監督アルベロアは、レアル・マドリードの14歳以下からトップまで育成の階段を上ってきた人。
+  - オーナーが支える型。2013年にアメフト球団主のシャヒド・カーンが買い、資金を出し続けています。
+  - テムズ川沿いの本拠地クレイヴン・コテージ、1905年築のスタンドはイングランドのプロ最古です。
+  sources:
+  - https://en.wikipedia.org/wiki/Fulham_F.C.
+  - https://en.wikipedia.org/wiki/%C3%81lvaro_Arbeloa
+  - https://en.wikipedia.org/wiki/Shahid_Khan
+  - https://en.wikipedia.org/wiki/Craven_Cottage
+  bg: assets/backgrounds/stadium_フラム.png
+  official: false
 - id: titles
   heading: ヨーロッパを獲った日
   tier: 背景

@@ -118,3 +118,23 @@ reasons_rows:
 # 題（2026-09-22 指示「タイトルをもっと視聴者が見たいと思うものに」）
 title: 坂元達裕のコヴェントリー。4部から25年、戻れたのはなぜか
 short_title: 坂元達裕のコヴェントリー、戻れたのはなぜか
+# このクラブの特徴（2026-09-23 指示「三つの要素入れたい！」）。プレーの色・運営の型・クラブの気質。
+# 出典は英語版Wikipedia とクラブ公式。要確認は research/pl_data/features_notes.md
+features:
+- 点を取って勝つランパードのサッカーで、昨季は46試合97ゴールで2部を制しました。
+- オーナー主導の型で、実業家ダグ・キングが2023年に買い、2025年には球場も手に入れました。
+- ジミー・ヒル監督が1962年に書いた応援歌「スカイ・ブルー・ソング」、節はイートン校のボート歌。
+features_telop: 97ゴールの攻撃、地元の主
+features_rows:
+- - プレーの色
+  - 46試合97ゴール
+- - 運営の型
+  - 地元実業家が球場も
+- - クラブの気質
+  - ヒル監督の応援歌
+features_sources:
+- https://en.wikipedia.org/wiki/2025%E2%80%9326_Coventry_City_F.C._season
+- https://en.wikipedia.org/wiki/Frank_Lampard
+- https://en.wikipedia.org/wiki/Doug_King_(businessman)
+- https://en.wikipedia.org/wiki/Coventry_Building_Society_Arena
+- https://en.wikipedia.org/wiki/Coventry_City_F.C.

@@ -93,6 +93,38 @@ sections:
   - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
   bg: assets/backgrounds/stadium_ハルシティ.png
   official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 前へ放り込む。育てて売る
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 前へ、ゴール前に放り込む
+    - - 運営の型
+      - テレビ王の資金＋生え抜き売却
+    - - クラブの気質
+      - ラグビーの街、改名を跳ね返す
+  say:
+  - ボールを持ったら前へ、ゴール前に放り込む攻めのサッカーを掲げる監督です
+  - 2022年にトルコのテレビ番組プロデューサーが買収し、生え抜きを売りながら回すクラブ
+  - ラグビーリーグの街で、2014年のクラブ名変更はサポーターの反対で却下されました
+  sources:
+  - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
+  - https://www.wearehullcity.co.uk/news/2025/june/11/jakirovic-appointed-new-head-coach/
+  - https://www.wearehullcity.co.uk/news/2025/september/26/match-preview-watford-a/
+  - https://en.wikipedia.org/wiki/Acun_Il%C4%B1cal%C4%B1
+  - https://en.wikipedia.org/wiki/Jacob_Greaves
+  - https://en.wikipedia.org/wiki/Keane_Lewis-Potter
+  - https://en.wikipedia.org/wiki/Assem_Allam
+  bg: assets/backgrounds/stadium_ハルシティ.png
+  official: false
 - id: episode
   heading: 名前を変えられかけた
   tier: 背景

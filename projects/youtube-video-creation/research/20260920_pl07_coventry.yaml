@@ -93,6 +93,36 @@ sections:
   - https://en.wikipedia.org/wiki/Coventry_City_F.C.
   bg: assets/backgrounds/stadium_コヴェントリー.png
   official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 97ゴールの攻撃、地元の主
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 46試合97ゴール
+    - - 運営の型
+      - 地元実業家が球場も
+    - - クラブの気質
+      - ヒル監督の応援歌
+  say:
+  - 点を取って勝つランパードのサッカーで、昨季は46試合97ゴールで2部を制しました。
+  - オーナー主導の型で、実業家ダグ・キングが2023年に買い、2025年には球場も手に入れました。
+  - ジミー・ヒル監督が1962年に書いた応援歌「スカイ・ブルー・ソング」、節はイートン校のボート歌。
+  sources:
+  - https://en.wikipedia.org/wiki/Coventry_City_F.C.
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_Coventry_City_F.C._season
+  - https://en.wikipedia.org/wiki/Frank_Lampard
+  - https://en.wikipedia.org/wiki/Doug_King_(businessman)
+  - https://en.wikipedia.org/wiki/Coventry_Building_Society_Arena
+  bg: assets/backgrounds/stadium_コヴェントリー.png
+  official: false
 - id: exile
   heading: 本拠地を追われた
   tier: 背景

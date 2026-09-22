@@ -124,3 +124,22 @@ reasons_rows:
 # 題（2026-09-22 指示「タイトルをもっと視聴者が見たいと思うものに」）
 title: 借金で解散命令。マンチェスター・ユナイテッドが生き延びたのは
 short_title: マンUが解散命令から生き延びたのは
+# このクラブの特徴（2026-09-23 指示「三つの要素入れたい！」）。プレーの色・運営の型・クラブの気質。
+# 出典は英語版Wikipedia とクラブ公式。要確認は research/pl_data/features_notes.md
+features:
+- キャリック監督が掲げるのは、見ていてわくわくする、前向きで表現豊かなサッカー。
+- 1937年から4000試合を超えて、毎試合の名簿にユース出身の選手がいる、育てるクラブ。
+- 2005年の買収のあと、一部のファンは自分たちで別のクラブを立ち上げました。
+features_telop: わくわく前向き。育てる伝統
+features_rows:
+- - プレーの色
+  - わくわく、前向きなサッカー
+- - 運営の型
+  - 1937年から続く育成
+- - クラブの気質
+  - 買収後、ファンが別クラブ設立
+features_sources:
+- https://www.manutd.com/en/news/detail/what-will-michael-carrick-style-of-play-be-at-man-utd
+- https://www.manutd.com/en/news/detail/man-utd-celebrate-unrivalled-academy-milestone-with-4000th-game
+- https://www.manutd.com/en/news/detail/man-utd-incredible-academy-landmark-reaches-88-years
+- https://en.wikipedia.org/wiki/Manchester_United_F.C.

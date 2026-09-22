@@ -93,6 +93,33 @@ sections:
   - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
   bg: assets/backgrounds/stadium_トッテナム.png
   official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: つないで崩す。栄光の歌
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - つないで崩し、前から奪う
+    - - 運営の型
+      - 稼ぎ世界9位、追加で1億
+    - - クラブの気質
+      - 讃美歌から生まれた応援歌
+  say:
+  - デ・ゼルビ監督のサッカーは、キーパーからつないで崩し、失えばすぐ前から奪い返す。
+  - 10億ポンドのスタジアムを持ち、稼ぎは世界9位。2025年秋、オーナーから1億ポンドの追加出資。
+  - 応援歌「グローリー・グローリー」は讃美歌から。1961年からの欧州の戦いで歌われ始めました。
+  sources:
+  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
+  - https://en.wikipedia.org/wiki/Roberto_De_Zerbi
+  bg: assets/backgrounds/stadium_トッテナム.png
+  official: false
 - id: cup1901
   heading: リーグに入らないまま、FAカップを獲った
   tier: 背景

@@ -131,3 +131,20 @@ reasons_rows:
 # 題（2026-09-22 指示「タイトルをもっと視聴者が見たいと思うものに」）
 title: 高井幸大のトッテナム。リーグの外からFAカップをつかんだクラブの結末
 short_title: 高井幸大のトッテナム、リーグ外でFAカップを獲った結末
+# このクラブの特徴（2026-09-23 指示「三つの要素入れたい！」）。プレーの色・運営の型・クラブの気質。
+# 出典は英語版Wikipedia とクラブ公式。要確認は research/pl_data/features_notes.md
+features:
+- デ・ゼルビ監督のサッカーは、キーパーからつないで崩し、失えばすぐ前から奪い返す。
+- 10億ポンドのスタジアムを持ち、稼ぎは世界9位。2025年秋、オーナーから1億ポンドの追加出資。
+- 応援歌「グローリー・グローリー」は讃美歌から。1961年からの欧州の戦いで歌われ始めました。
+features_telop: つないで崩す。栄光の歌
+features_rows:
+- - プレーの色
+  - つないで崩し、前から奪う
+- - 運営の型
+  - 稼ぎ世界9位、追加で1億
+- - クラブの気質
+  - 讃美歌から生まれた応援歌
+features_sources:
+- https://en.wikipedia.org/wiki/Roberto_De_Zerbi
+- https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.

@@ -285,3 +285,21 @@ people_extra:
 # 題（2026-09-22 指示「タイトルをもっと視聴者が見たいと思うものに」）
 title: マイナス17の勝ち点から欧州へ。ボーンマスに何があったのか
 short_title: ボーンマスに何があったのか
+# このクラブの特徴（2026-09-23 指示「三つの要素入れたい！」）。プレーの色・運営の型・クラブの気質。
+# 出典は英語版Wikipedia とクラブ公式。要確認は research/pl_data/features_notes.md
+features:
+- ボールを奪いに走り、奪ったら最短距離でゴールへ向かう、走るサッカーです。
+- 若手を安く獲って高く売る型で、ハイセンは1年でレアル・マドリードへ5000万ポンド。
+- 愛称チェリーズの由来は、さくらんぼ色のシャツとも、球場の隣にあった桜桃の木とも言われます。
+features_telop: 奪って走る。買って売る
+features_rows:
+- - プレーの色
+  - 奪ったら最短でゴールへ
+- - 運営の型
+  - 若手を安く獲り高く売る
+- - クラブの気質
+  - さくらんぼ色のシャツが由来
+features_sources:
+- https://en.wikipedia.org/wiki/Marco_Rose
+- https://en.wikipedia.org/wiki/Dean_Huijsen
+- https://en.wikipedia.org/wiki/AFC_Bournemouth

@@ -131,3 +131,23 @@ people_extra:
 # 題（2026-09-22 指示「タイトルをもっと視聴者が見たいと思うものに」）
 title: プレーオフに9回落ちて、いま4位。ブレントフォードが変わった理由
 short_title: ブレントフォードが変わった理由
+# このクラブの特徴（2026-09-23 指示「三つの要素入れたい！」）。プレーの色・運営の型・クラブの気質。
+# 出典は英語版Wikipedia とクラブ公式。要確認は research/pl_data/features_notes.md
+features:
+- 長いボールと空中戦で押し、セットプレーは攻めも守りも武器にするサッカーです。
+- 育成組織は2016年に閉じ、賭けの統計会社を持つオーナーのデータで、安く獲って高く売ります。
+- 2020年まで使ったグリフィン・パークは、四つ角すべてにパブがあるイングランド唯一の球場。
+features_telop: ロングボール。買って売る
+features_rows:
+- - プレーの色
+  - 長いボールと空中戦で押す
+- - 運営の型
+  - 育成を閉じデータで買って売る
+- - クラブの気質
+  - 四つ角にパブの球場
+features_sources:
+- https://www.brentfordfc.com/en/news/article/analysis-keith-andrews-new-contract-brentford-premier-league-tactical-evolution
+- https://www.brentfordfc.com/en/news/article/the-long-read-keith-andrews-first-premier-league-season
+- https://en.wikipedia.org/wiki/Brentford_F.C._Reserves_and_Academy
+- https://en.wikipedia.org/wiki/Matthew_Benham
+- https://en.wikipedia.org/wiki/Griffin_Park

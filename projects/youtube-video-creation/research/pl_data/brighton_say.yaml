@@ -133,3 +133,22 @@ people_extra:
 # 題（2026-09-22 指示「タイトルをもっと視聴者が見たいと思うものに」）
 title: 三笘薫のブライトンが、14年間スタジアムを持てなかったのは
 short_title: 三笘薫のブライトン、家が無かった14年
+# このクラブの特徴（2026-09-23 指示「三つの要素入れたい！」）。プレーの色・運営の型・クラブの気質。
+# 出典は英語版Wikipedia とクラブ公式。要確認は research/pl_data/features_notes.md
+features:
+- 高い位置で奪う守りが看板で、昨季は敵陣でボールを奪った回数がリーグで最多でした。
+- 若手を安く獲って高く売る型。カイセドは2年半でチェルシーへ、1億ポンド以上の移籍金でした。
+- 入場のとき流れる応援歌は、1907年に書かれたサセックスの歌で、最後のサビは観客だけで歌います。
+features_telop: 高い位置で奪う。育てて売る
+features_rows:
+- - プレーの色
+  - 敵陣で奪う回数、リーグ最多
+- - 運営の型
+  - カイセドを1億ポンド超で売る
+- - クラブの気質
+  - 応援歌のサビは観客だけで
+features_sources:
+- https://www.brightonandhovealbion.com/media-article/mft-albion-analytics-2025-26-season-review-june-2026
+- https://www.brightonandhovealbion.com/media-article/mft-albion-analytics--fabian-hurzeler-october-2024
+- https://en.wikipedia.org/wiki/Mois%C3%A9s_Caicedo
+- https://en.wikipedia.org/wiki/Sussex_by_the_Sea

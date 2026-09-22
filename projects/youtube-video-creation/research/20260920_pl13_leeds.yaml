@@ -103,6 +103,37 @@ sections:
   - https://en.wikipedia.org/wiki/Leeds_United_F.C.
   bg: assets/backgrounds/stadium_リーズ.png
   official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: ボールを持つ。アメフト資本
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - ボールを持って主導権
+    - - 運営の型
+      - 米アメフト資本が完全買収
+    - - クラブの気質
+      - 応援歌は選手が歌った裏面曲
+  say:
+  - ボールを持って主導権を握り、果敢に相手ゴールを脅かすサッカーです
+  - アメフトのフォーティナイナーズの運営会社が2023年に完全買収し、翌年レッドブルも出資したクラブ
+  - 応援歌マーチング・オン・トゥゲザーは、1972年に選手自身が歌ったレコードの裏面の曲
+  sources:
+  - https://en.wikipedia.org/wiki/Leeds_United_F.C.
+  - https://www.leedsunited.com/en/news/daniel-farke-we-have-to-be-brave
+  - https://www.leedsunited.com/en/news/daniel-farke-we-were-back-to-our-best
+  - https://en.wikipedia.org/wiki/49ers_Enterprises
+  - https://en.wikipedia.org/wiki/Red_Bull_GmbH
+  - https://en.wikipedia.org/wiki/Daniel_Farke
+  bg: assets/backgrounds/stadium_リーズ.png
+  official: false
 - id: birth
   heading: 前のクラブは、解散させられた
   tier: 背景

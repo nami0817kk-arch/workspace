@@ -92,6 +92,35 @@ sections:
   - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
   bg: assets/backgrounds/stadium_サンダーランド.png
   official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 激しく献身。育てて高く売る
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 激しさと献身
+    - - 運営の型
+      - ジョブ・ベリンガムを高く売る
+    - - クラブの気質
+      - 炭鉱跡の本拠地、紋章に輪
+  say:
+  - ル・ブリ監督のサッカーは、激しさと献身。それがサポーターとの絆になりました。
+  - 若手を育てて高く売る型。ジョブ・ベリンガムは2025年、3200万ポンドでドルトムントへ。
+  - 本拠地は炭鉱の跡地。エンブレムの上の輪は巻き上げ機で、この土地の炭鉱の歴史を表しています。
+  sources:
+  - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
+  - https://www.safc.com/news/2026/may/15/the-numbers-behind-r-gis-le-bris--premier-league-manager-of-the-season-nomination/
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_Sunderland_A.F.C._season
+  - https://en.wikipedia.org/wiki/Kyril_Louis-Dreyfus
+  bg: assets/backgrounds/stadium_サンダーランド.png
+  official: false
 - id: fall
   heading: 6回優勝したクラブが、3部へ
   tier: 背景

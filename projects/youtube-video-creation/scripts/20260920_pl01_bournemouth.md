@@ -46,6 +46,7 @@ sources:
 - https://en.wikipedia.org/wiki/AFC_Bournemouth
 - https://en.wikipedia.org/wiki/2026–27_AFC_Bournemouth_season
 - https://en.wikipedia.org/wiki/Marco_Rose
+- https://en.wikipedia.org/wiki/Dean_Huijsen
 - https://en.wikipedia.org/wiki/Eddie_Howe
 - https://en.wikipedia.org/wiki/List_of_AFC_Bournemouth_records_and_statistics
 - https://en.wikipedia.org/wiki/Callum_Wilson
@@ -65,6 +66,19 @@ cards:
       - 新監督ローゼ「たくさん走りたい」
     - - 理由3
       - 初戦で久保建英のクラブに勝利
+  features_card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 奪ったら最短でゴールへ
+    - - 運営の型
+      - 若手を安く獲り高く売る
+    - - クラブの気質
+      - さくらんぼ色のシャツが由来
   history_card:
     type: table
     title: 2008年に起きたこと
@@ -243,6 +257,18 @@ cards:
 解説: そのボーンマスが昨季、**6位**。クラブ史上最高の順位でした。
   no_telop: true
   image: assets/stats/pl_bournemouth_last.png
+
+## このクラブの特徴
+@bg: assets/backgrounds/stadium_ボーンマス.png
+
+解説: ボールを奪いに走り、奪ったら最短距離でゴールへ向かう、走るサッカーです。
+  telop: ボールを奪いに走り、奪ったら最短距離でゴールへ向かう、走るサッカーです
+  source: 背景
+  card: features_card
+解説: 若手を安く獲って高く売る型で、ハイセンは1年でレアル・マドリードへ5000万ポンド。
+  telop: 若手を安く獲って高く売る型で、ハイセンは1年でレアル・マドリードへ5000万ポンド
+解説: 愛称チェリーズの由来は、さくらんぼ色のシャツとも、球場の隣にあった桜桃の木とも言われます。
+  telop: 愛称チェリーズの由来は、さくらんぼ色のシャツとも、球場の隣にあった桜桃の木とも言われます
 
 ## 歩んできた道
 @bg: assets/backgrounds/stadium_ボーンマス.png

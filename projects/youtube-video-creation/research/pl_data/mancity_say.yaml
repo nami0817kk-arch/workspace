@@ -112,3 +112,22 @@ reasons_rows:
 # 題（2026-09-22 指示「タイトルをもっと視聴者が見たいと思うものに」）
 title: 初優勝の翌年に降格。シティは3部から、なぜここまで来たのか
 short_title: シティは3部からなぜここまで来たのか
+# このクラブの特徴（2026-09-23 指示「三つの要素入れたい！」）。プレーの色・運営の型・クラブの気質。
+# 出典は英語版Wikipedia とクラブ公式。要確認は research/pl_data/features_notes.md
+features:
+- ボールを持って崩し、奪われたらその場で奪い返す、グアルディオラ譲りのサッカーです
+- 2008年にアブダビの王族が買収し、翌年だけで1億ポンド超を選手に注いだオーナー資金の型
+- 始まりは1880年、失業と暴力に悩む東マンチェスターの男たちのために教会が作ったチーム
+features_telop: 持って崩す。王族の資金
+features_rows:
+- - プレーの色
+  - 持って崩し、すぐ奪い返す
+- - 運営の型
+  - アブダビ王族の資金
+- - クラブの気質
+  - 失業の街で教会が作った
+features_sources:
+- https://en.wikipedia.org/wiki/Enzo_Maresca
+- https://en.wikipedia.org/wiki/Manchester_City_F.C.
+- https://en.wikipedia.org/wiki/History_of_Manchester_City_F.C.
+- https://en.wikipedia.org/wiki/City_Football_Group

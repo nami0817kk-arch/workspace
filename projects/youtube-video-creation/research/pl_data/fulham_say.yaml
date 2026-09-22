@@ -118,3 +118,22 @@ reasons_rows:
 # 題（2026-09-22 指示「タイトルをもっと視聴者が見たいと思うものに」）
 title: 稲本潤一が歴史を動かしたフラム。ロンドンで2番目に古いクラブとは
 short_title: 稲本が歴史を動かしたフラムとは
+# このクラブの特徴（2026-09-23 指示「三つの要素入れたい！」）。プレーの色・運営の型・クラブの気質。
+# 出典は英語版Wikipedia とクラブ公式。要確認は research/pl_data/features_notes.md
+features:
+- 新監督アルベロアは、レアル・マドリードの14歳以下からトップまで育成の階段を上ってきた人。
+- オーナーが支える型。2013年にアメフト球団主のシャヒド・カーンが買い、資金を出し続けています。
+- テムズ川沿いの本拠地クレイヴン・コテージ、1905年築のスタンドはイングランドのプロ最古です。
+features_telop: 育成畑の監督、川沿いの本拠地
+features_rows:
+- - プレーの色
+  - レアル育成畑の監督
+- - 運営の型
+  - アメフト球団主が支える
+- - クラブの気質
+  - 最古のスタンドが現役
+features_sources:
+- https://en.wikipedia.org/wiki/%C3%81lvaro_Arbeloa
+- https://en.wikipedia.org/wiki/Shahid_Khan
+- https://en.wikipedia.org/wiki/Craven_Cottage
+- https://en.wikipedia.org/wiki/Fulham_F.C.

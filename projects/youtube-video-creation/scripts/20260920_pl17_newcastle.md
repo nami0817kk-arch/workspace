@@ -46,6 +46,8 @@ sources:
 - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
 - https://en.wikipedia.org/wiki/2026–27_Newcastle_United_F.C._season
 - https://en.wikipedia.org/wiki/Alan_Shearer
+- https://www.newcastleunited.com/en/news/fact-file-matthias-jaissle
+- https://www.newcastleunited.com/en/news/newcastle-united-appoint-matthias-jaissle-as-the-clubs-new-head-coach
 - https://en.wikipedia.org/wiki/Inter-Cities_Fairs_Cup
 - https://en.wikipedia.org/wiki/Shay_Given
 - https://en.wikipedia.org/wiki/Rob_Lee
@@ -62,6 +64,19 @@ cards:
       - 新監督ヤイスレ、38歳の1年目
     - - 理由2
       - 昨季12位。開幕5試合で1敗
+  features_card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 奪ってすぐ、速く攻める
+    - - 運営の型
+      - サウジの基金、3億ポンド
+    - - クラブの気質
+      - 街に一つ。2部でも5万人
   drought_card:
     type: table
     title: タイトルの記録
@@ -220,6 +235,18 @@ cards:
 解説: プレミアでの最高位は2位。1995年から96年と、その翌年の2回です。
   no_telop: true
   image: assets/stats/pl_newcastle_last.png
+
+## このクラブの特徴
+@bg: assets/backgrounds/stadium_ニューカッスル.png
+
+解説: ヤイスレ監督のサッカーは、前へ前へ。奪ってすぐに、速く攻めます。
+  telop: ヤイスレ監督のサッカーは、前へ前へ。奪ってすぐに、速く攻めます
+  source: 背景
+  card: features_card
+解説: 2021年、サウジアラビアの公共投資基金が3億500万ポンドで買収。オーナーの資金で買う型です。
+  telop: 2021年、サウジアラビアの公共投資基金が3億500万ポンドで買収。オーナーの資金で買う型です
+解説: 街にクラブは一つだけ。2部に落ちた2016年からの1年も、平均5万人を超えるお客さんが来ました。
+  telop: 街にクラブは一つだけ。2部に落ちた2016年からの1年も、平均5万人を超えるお客さんが来ました
 
 ## 56年待った
 @bg: assets/backgrounds/stadium_ニューカッスル.png

@@ -102,6 +102,35 @@ sections:
   - https://en.wikipedia.org/wiki/Liverpool_F.C.
   bg: assets/backgrounds/stadium_リヴァプール.png
   official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 奪って速い。データで買う
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 奪ってから速く縦へ
+    - - 運営の型
+      - 米資本、データで選手を選ぶ
+    - - クラブの気質
+      - 1960年代からの応援歌
+  say:
+  - ボールを持つより、奪ってから速く縦に急ぐサッカーを持ち込んだ新監督です
+  - 2010年にアメリカの投資会社フェンウェイが3億ポンドで買収し、データで選手を選ぶ型
+  - 応援歌ユールネバーウォークアローンは、1960年代からアンフィールドで歌い継がれています
+  sources:
+  - https://en.wikipedia.org/wiki/Liverpool_F.C.
+  - https://en.wikipedia.org/wiki/Andoni_Iraola
+  - https://en.wikipedia.org/wiki/Fenway_Sports_Group
+  - https://en.wikipedia.org/wiki/Michael_Edwards_(football_executive)
+  bg: assets/backgrounds/stadium_リヴァプール.png
+  official: false
 - id: birth
   heading: 空になったスタジアム
   tier: 背景

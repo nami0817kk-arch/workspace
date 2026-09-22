@@ -90,6 +90,34 @@ sections:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
   bg: assets/backgrounds/stadium_ボーンマス.png
   official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 奪って走る。買って売る
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 奪ったら最短でゴールへ
+    - - 運営の型
+      - 若手を安く獲り高く売る
+    - - クラブの気質
+      - さくらんぼ色のシャツが由来
+  say:
+  - ボールを奪いに走り、奪ったら最短距離でゴールへ向かう、走るサッカーです。
+  - 若手を安く獲って高く売る型で、ハイセンは1年でレアル・マドリードへ5000万ポンド。
+  - 愛称チェリーズの由来は、さくらんぼ色のシャツとも、球場の隣にあった桜桃の木とも言われます。
+  sources:
+  - https://en.wikipedia.org/wiki/AFC_Bournemouth
+  - https://en.wikipedia.org/wiki/Marco_Rose
+  - https://en.wikipedia.org/wiki/Dean_Huijsen
+  bg: assets/backgrounds/stadium_ボーンマス.png
+  official: false
 - id: history
   heading: 歩んできた道
   tier: 背景

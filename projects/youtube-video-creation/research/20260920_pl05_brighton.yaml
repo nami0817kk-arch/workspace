@@ -89,6 +89,36 @@ sections:
   - https://en.wikipedia.org/wiki/Brighton_&_Hove_Albion_F.C.
   bg: assets/backgrounds/stadium_ブライトン.png
   official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 高い位置で奪う。育てて売る
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 敵陣で奪う回数、リーグ最多
+    - - 運営の型
+      - カイセドを1億ポンド超で売る
+    - - クラブの気質
+      - 応援歌のサビは観客だけで
+  say:
+  - 高い位置で奪う守りが看板で、昨季は敵陣でボールを奪った回数がリーグで最多でした。
+  - 若手を安く獲って高く売る型。カイセドは2年半でチェルシーへ、1億ポンド以上の移籍金でした。
+  - 入場のとき流れる応援歌は、1907年に書かれたサセックスの歌で、最後のサビは観客だけで歌います。
+  sources:
+  - https://en.wikipedia.org/wiki/Brighton_&_Hove_Albion_F.C.
+  - https://www.brightonandhovealbion.com/media-article/mft-albion-analytics-2025-26-season-review-june-2026
+  - https://www.brightonandhovealbion.com/media-article/mft-albion-analytics--fabian-hurzeler-october-2024
+  - https://en.wikipedia.org/wiki/Mois%C3%A9s_Caicedo
+  - https://en.wikipedia.org/wiki/Sussex_by_the_Sea
+  bg: assets/backgrounds/stadium_ブライトン.png
+  official: false
 - id: home
   heading: 本拠地を失った14年
   tier: 背景
