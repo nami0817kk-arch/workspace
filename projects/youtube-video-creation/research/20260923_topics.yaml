@@ -1,0 +1,125 @@
+title: 9月23日の題材
+lead: 候補471件（フィード）＋ロマーノの投稿24件から15件
+note: |
+  昨日（9/22）は対象リーグの試合なし。<b>別セッションが作っている8本</b>（堂安のサウジ辞退・フェランとペドリ・ルイス・ホール・板倉のアジア杯・マック・アリスター・久保の背番号・バルベルデ欠場・ヴィルツ）は外してあります。
+  プレミア20クラブ紹介は保留。○△✖はこのページで付けてください（番号だけ振っています）。
+items:
+  - num: 1
+    slot: 日本人
+    head: 谷村海那、JFLのいわきから日本代表へ「言葉だけではなく行動にできた」
+    why: 初招集4人のなかでいちばん物語がある。JFL出身のストライカーが代表に呼ばれた。<b>本人の言葉が2つ</b>（「言葉だけではなく行動にできた」「アジアカップにも呼ばれるようなプレーがしたい」）。顔写真は Commons に無い見込みで、報道写真を使う
+    src: サッカーキング（0.2時間前）・ゲキサカ（0.3時間前）
+    url: https://www.soccer-king.jp/news/japan/national/20260923/2207971.html
+    fmt: quote
+  - num: 2
+    slot: 日本人
+    head: 松木玖生、初招集で「そこが今の自分の主戦場」右サイドで生きる
+    why: 青森山田で高校3冠、いま右サイド。<b>「いいイメージでできる」</b>と本人。別セッションの背番号の回では19番として名前だけなので重ならない
+    src: サッカーキング（0.7時間前）・ゲキサカ（0.3時間前）
+    url: https://www.soccer-king.jp/news/japan/national/20260923/2207963.html
+    fmt: quote
+  - num: 3
+    slot: 日本人
+    head: 齋藤俊輔、初招集に「一番はびっくりした」ベルギーで続けてきた21歳
+    why: 今季ブレイクのドリブラー。<b>「今ここにいる結果になっている」</b>。1と2と同じ「初招集」の並びなので、3本とも採ると同じ型が続く
+    src: フットボールチャンネル（9/22）・ゲキサカ（0.3時間前）
+    url: https://www.footballchannel.jp/2026/09/22/post1016655/
+    fmt: quote
+    weak: true
+  - num: 4
+    slot: 日本人
+    head: 鎌田大地、初の代表タイトルへ「アジア杯までは最低限やりたいと思っていた」
+    why: 前回大会は不在（屈辱の敗退）。別セッションの板倉の回はアジア杯を<b>辞退する側</b>、こちらは<b>燃える側</b>で対になる
+    src: ゲキサカ（1.4時間前）
+    url: https://web.gekisaka.jp/news/japan/detail/?459499-459499-fl
+    fmt: quote
+  - num: 5
+    slot: 日本人
+    head: 鈴木彩艶は別メニュー。日本代表のGKは早川友基と小久保玲央ブライアンが全体練習
+    why: ウルグアイ戦の前日にGKが別メニュー。<b>状態の説明がまだ無い</b>ので、明日の試合前に出すなら「出るのか」の1本になる。弱い
+    src: ゲキサカ 写真ニュース（0.4時間前）
+    url: https://web.gekisaka.jp/photonews/japan/detail/?459494-459494-pn
+    fmt: news
+    weak: true
+  - num: 6
+    slot: ロマーノ
+    head: アルテタ、アーセナルと新たに4年契約。「クラブに取りつかれている」
+    why: ロマーノ「合意済み、正式手続きへ。スタッフ全員も新契約」。<b>22年ぶりの優勝の直後</b>で、昇給と移籍の統括も含む。プレミア紹介のアーセナル回とも噛み合う
+    src: ロマーノ（54分前・6時間前）・スカイスポーツ（4.7時間前）
+    url: https://x.com/FabrizioRomano
+    fmt: news
+  - num: 7
+    slot: 海外
+    head: ムバッペ「リヴァプールに近かった。母はクロップの大ファンだった」
+    why: <b>「母の一番の希望はリヴァプールだった。でも聞かなかった、パリでやりたかったから」</b>。本人の口から出た移籍の裏話で、量も十分
+    src: ロマーノ（8時間前）・ESPN（0時間前）
+    url: https://www.espn.com/soccer/story/_/id/50004516/kylian-mbappe-liverpool-transfer-talks-mum-went-anfield-fell-love
+    fmt: quote
+  - num: 8
+    slot: 海外
+    head: ムバッペ、バロンドールを「取れなければがっかりする」「アフリカに捧げたい」
+    why: 発表前の本人の言葉が4本（RFI・AS・アスレティック）。<b>7と同じ人</b>なので、両方採ると同じ顔が2本並ぶ
+    src: ロマーノ（46分前〜14時間前）
+    url: https://x.com/FabrizioRomano
+    fmt: quote
+    weak: true
+  - num: 9
+    slot: 海外
+    head: ヤマル「バロンドールはゴールの数とは関係ない」メッシとロナウジーニョの名前を挙げた
+    why: <b>「違う選手、見ていて笑顔になる選手」</b>。ムバッペの「得点王が鍵」と正面から食い違うので、8と並べても成立する
+    src: ロマーノ（3時間前、フランス・フットボール）
+    url: https://x.com/FabrizioRomano
+    fmt: quote
+  - num: 10
+    slot: ラ・リーガ
+    head: レアル・マドリードが公式声明。リーガのテバス会長を「容認できない」
+    why: クラブ公式の声明（確定）。<b>会長を名指しで非難</b>する異例の文面。反応も多い
+    src: ロマーノ（6時間前、OFFICIAL）・VI（7.2時間前）
+    url: https://www.vi.nl/nieuws/real-madrid-haalt-in-statement-vernietigend-uit-naar-la-liga-baas-tebas
+    fmt: news
+  - num: 11
+    slot: プレミア
+    head: ロバートソン「1月から、残留すればトッテナムしかなかった」
+    why: リヴァプールを出た左サイドバック。<b>「デ・ゼルビが来て確信した」</b>「リヴァプールの新加入には罪悪感がある」。今季最下位のトッテナムの話にもなる
+    src: ロマーノ（8時間前）・VI（今日）
+    url: https://www.vi.nl/nieuws/robertson-voelt-zich-schuldig-naar-liverpool-aanwinsten-gaven-niets-om-voetbal
+    fmt: quote
+  - num: 12
+    slot: プレミア
+    head: エステヴァン、アロンソ体制のチェルシーを聞かれて「監督にはそれぞれのやり方がある」
+    why: 18歳の言葉が慎重で、<b>逆に何かあると読める</b>。ワールドカップに出られなかった話（VI）も足せる。弱め
+    src: ロマーノ（12時間前）・VI（今日）
+    url: https://www.vi.nl/video/wat-estevao-het-moeilijkste-vond-aan-het-gemiste-wk-met-brazilie
+    fmt: quote
+    weak: true
+  - num: 13
+    slot: その他
+    head: アルゼンチン協会がスカローニに2030年までの新契約を提示。選手たちも残留を望む
+    why: ワールドカップ連覇の監督の去就。<b>決めるのは本人</b>（ロマーノ）。ESPN は選手の声を載せている
+    src: ロマーノ（6時間前）・ESPN（今日）
+    url: https://www.espn.com/soccer/story/_/id/50008351/argentina-players-urge-scaloni-stay-contract-talks
+    fmt: news
+  - num: 14
+    slot: プレミア
+    head: セシュコ、代表を辞退したけがについて「回復は順調」
+    why: マンUの得点源の状態。本人の言葉はあるが短い。弱い
+    src: スカイスポーツ（11時間前）
+    url: https://www.skysports.com/football/live-blog/11661/13025492/man-utd-transfer-news-rumours-and-gossip-live-updates-and-latest-on-deals-signings-loans-and-contracts
+    fmt: quote
+    weak: true
+  - num: 15
+    slot: プレミア
+    head: リヴァプール、ジュリアン・ウォードがテクニカルディレクターとして復帰
+    why: フロントの人事。エドワーズ退任（7月）の後。<b>オランダの1媒体だけ</b>で、確度は報道どまり。弱い
+    src: VI（4.2時間前）
+    url: https://www.vi.nl/nieuws/galatasaray-spot-toptarget-voor-winterwindow-bij-real-madrid
+    fmt: news
+    weak: true
+drops:
+  - [レインデルス「金のためにサウジへ」, タブロイド1本の未確認。本人の原文が取れれば戻せる]
+  - [サラーに6か月の運転禁止, タブロイド1本。サッカーの外の話]
+  - [「英メディアが日本対ウルグアイを分析」, 媒体の見立てを伝える話（9/21 の決まりで出さない）]
+  - [「日本代表が敗れたFIFAランキング下位国5選」, 記事の企画もの]
+  - [キャリックは不可能な仕事（ESPN）, 意見記事]
+  - [ライス長期契約へ（ペーパートーク）, 噂の段階]
+  - [中野就斗の初招集, 本人の言葉が無い（写真ニュースのみ）。1〜3で初招集は足りる]
