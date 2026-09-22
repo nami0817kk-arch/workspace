@@ -48,8 +48,8 @@ sections:
     narrator: 解説
     bg: assets/backgrounds/stock/stadium_night.mp4
     say:
-      - クラブは、戻る時期を出していません。離脱は**2〜3週間**という見立ても出ています。
-      - リーグの次の試合は、**10月10日**のビジャレアル戦です。
+      - クラブは戻る時期を出さず、離脱は**2〜3週間**という見立ても出ています。
+      - 代表戦が明けて最初の試合は**10月10日**。ここには出られるのでは、とも見られています。
     sources:
       - https://www.soccer-king.jp/news/world/esp/20260922/2207937.html
   - id: doubt

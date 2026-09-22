@@ -66,11 +66,12 @@ sections:
         text: 両方をリスペクトした上で、自分個人で決めるわけでもないし、色々な人と話し合って決めている部分がある。
       - voice: 板倉滉
         text: 結構難しいとは思う
-      - voice: 板倉滉
-        text: 決定したわけではないところは一つ希望として残しておきたい
       - 森保監督は、今月の取材でこう話しています。
       - voice: 森保監督
         text: アジア杯に出られないのは基本かなとは思っている
+      - それでも、本人はこう言いました。
+      - voice: 板倉滉
+        text: 決定したわけではないところは一つ希望として残しておきたい
     sources:
       - https://www.soccer-king.jp/news/japan/national/20260922/2207878.html
       - https://web.gekisaka.jp/news/japan/detail/?459419-459419-fl
