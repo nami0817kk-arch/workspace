@@ -245,8 +245,8 @@ class Formulas {
   /// 実際、20年で1点も取らないセンターバックは football ではない。
   static double flowGoalShareFor(ScenarioFamily family) => switch (family) {
     ScenarioFamily.forward => 1.0,
-    ScenarioFamily.midfield => 0.5,
-    ScenarioFamily.defence => 0.3,
+    ScenarioFamily.midfield => 0.9,
+    ScenarioFamily.defence => 0.45,
     ScenarioFamily.goalkeeper => 0.0,
   };
 

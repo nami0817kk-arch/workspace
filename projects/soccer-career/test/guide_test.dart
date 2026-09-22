@@ -34,6 +34,8 @@ void main() {
       '名前で選ぶ',
       '空く能力が1つ',
       '出場給',
+      '2つ以上で達成',
+      '出た試合',
     ]) {
       expect(text, contains(name), reason: name);
     }
