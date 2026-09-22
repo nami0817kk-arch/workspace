@@ -722,7 +722,7 @@ class CareerEngine {
 
     final stats = state.seasonStats;
     if (!clause && !unused) {
-      if (stats.appearances < 10) return offers;
+      if (stats.appearances < Formulas.transferOfferAppearances) return offers;
       if (stats.averageRating < Formulas.transferOfferRating) return offers;
     }
     return [...offers, ..._marketOffers(state)];

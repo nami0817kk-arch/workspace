@@ -1426,6 +1426,15 @@ class CareerController extends ChangeNotifier {
   ///
   /// 窓は計算していたのに**どこにも出ていなかった**ので、「契約が残っている
   /// から来ないのか、時期ではないのか」が分からなかった。理由まで書く。
+  /// **移籍の話が来ない理由を、判定と同じ順番で答える。**
+  ///
+  /// 契約が残り1年になっても「出場10試合・平均評価6.7」に届いていなければ
+  /// 話は来ないのに、画面は「話が来る」としか書いていなかった。
+  /// **日本1部から移籍できない**という報告の正体がこれで、
+  /// 待っていれば来るのか、何かが足りないのかが区別できなかった。
+  ///
+  /// 順番は `CareerEngine.offersFor` と同じ（窓 → 使われていない →
+  /// 違約金 → 契約 → 出場 → 評価）。
   String get transferWindowLabel {
     final state = _state;
     if (state == null) return '';
@@ -1436,11 +1445,61 @@ class CareerController extends ChangeNotifier {
     if (!state.squadStatus.canPlay || state.frozenOut) {
       return '${window.label}。使われていないので、契約が残っていても話が来る。';
     }
+    if (_career.clauseTriggered(state)) {
+      return '${window.label}。違約金を追い越しているので、契約が残っていても話が来る。';
+    }
     if (state.contractYears > 1) {
       return '${window.label}。ただし契約があと${state.contractYears}年ある——'
           '残り1年になるまで、よそからは動かせない。';
     }
+    final stats = state.seasonStats;
+    final short = Formulas.transferOfferAppearances - stats.appearances;
+    if (short > 0) {
+      return '${window.label}。契約は残り${state.contractYears}年だが、'
+          '今季の出場が${stats.appearances}試合——'
+          'あと$short試合出ないと話は来ない。';
+    }
+    if (stats.averageRating < Formulas.transferOfferRating) {
+      return '${window.label}。契約は残り${state.contractYears}年だが、'
+          '今季の平均評価が${stats.averageRating.toStringAsFixed(2)}——'
+          '${Formulas.transferOfferRating}を超えないと話は来ない。';
+    }
     return '${window.label}。契約は残り${state.contractYears}年、話が来る。';
+  }
+
+  /// **どこまで声がかかるか。** 行ける国の格と、その先へ行くのに要るもの。
+  ///
+  /// 格3の国（日本など）から直接行けるのは格4まで。**それがどこにも
+  /// 書いていなかった**ので、上のリーグの話を待ち続けることになっていた。
+  String get transferReachLabel {
+    final state = _state;
+    if (state == null) return '';
+    final countries = _career.reachableCountries(state);
+    final top = countries.map((c) => c.prestige).reduce(max);
+    final names = countries
+        .where((c) => c.prestige == top && c.id != state.club.countryId)
+        .map((c) => c.name)
+        .take(3)
+        .toList();
+    final worldTop = World.countries.map((c) => c.prestige).reduce(max);
+    final reach = names.isEmpty
+        ? '今は同じ格の国までしか声がかからない。'
+        : '今の名前で声がかかるのは格$topの国まで（${names.join('・')}）。';
+    if (top >= worldTop) return reach;
+    // 一段上へ行くのに何が足りないのか。
+    final needs = <String>[];
+    if (state.caps < 10) needs.add('代表10キャップ');
+    if (state.player.overall < 73) needs.add('総合力73');
+    // 次の一段が最上位なら、その門（代表か知名度）もここで言う。
+    // 今いる国の格で見ていたときは、格3の国に居るあいだ出てこなかった。
+    if (top + 1 >= worldTop) {
+      needs.add(
+        '最上位の国は代表${Formulas.eliteCaps}キャップか知名度${Formulas.eliteFame}',
+      );
+    }
+    return needs.isEmpty
+        ? '$reach一段上の国へは、まずこの格の国で実績を積むことになる。'
+        : '$reachもう一段上げるには ${needs.join(' か ')}。';
   }
 
   TransferWindow get transferWindow => _state == null
