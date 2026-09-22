@@ -1628,3 +1628,21 @@ def test_固有名詞だけの重なりは言い直しではない():
     raw["sections"][1]["say"] = ["リーグ戦を1つも負けずに優勝しました。"]
     raw["sections"][0]["say"] = ["1つも負けずに優勝したシーズンがあります。"]
     assert _advise_repeats(build_notes(raw))
+
+
+def test_耳で分からない言い回しを知らせる():
+    """2026-09-22: 流れの点検で20本中十数本に出た型。勝敗の無いスコア・長い行・です×3・アルファベット。"""
+    from src.research import _advise_ear, build_notes
+
+    raw = _raw()
+    raw["sections"][0]["say"] = [
+        "アウェーで2対1。クラブにとって初めての欧州の試合でした。",
+        "オーナーはアメリカのビル・フォーリーで、2022年にクラブを買収し、共同オーナーには俳優もいて話題になりました。",
+        "UEFAの主要な大会をすべて獲った、史上唯一のクラブです。",
+    ]
+    raw["sections"][1]["say"] = ["創立は1899年です。", "愛称はチェリーズです。", "本拠地はディーン・コートです。"]
+    got = "\n".join(_advise_ear(build_notes(raw)))
+    assert "勝敗" in got and "字あります" in got and "アルファベット" in got and "3行続いて" in got
+    raw["sections"][0]["say"] = ["アウェーで2対1の勝ち。初めての欧州の試合でした。"]
+    raw["sections"][1]["say"] = ["創立は1899年です。", "愛称はチェリーズ。", "本拠地はディーン・コートです。"]
+    assert _advise_ear(build_notes(raw)) == []

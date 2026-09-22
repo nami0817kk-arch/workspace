@@ -1059,6 +1059,44 @@ def _check_thumbnail_resolution(notes: Notes) -> list[str]:
     return problems
 
 
+# 読み上げ1行の長さの目安。超えると合成音声で一息に聞き取れない（2026-09-22、読み手の指摘）
+LINE_MAX = 48
+# 勝敗の言葉。スコアの行にこれが無いと「2対1」だけでどちらが勝ったか分からない
+RESULT_WORDS = ("勝", "負", "敗", "引き分け", "ドロー", "下し", "破", "退け", "制し", "屈し")
+
+
+def _advise_ear(notes: Notes) -> list[str]:
+    """**耳で分からない言い回し**（2026-09-22、流れの点検で20本中十数本に出た型）。
+
+    - スコアだけで勝敗を言わない（「アウェーで2対1。」）
+    - 1行が長すぎる（48字超。合成音声は一息に読むので聞き取れない）
+    - 語りの語尾が「です」で3行続く（アナウンスに聞こえて離脱する）
+    - 読み上げにアルファベットが残る（UEFA・CL は読めない。FA・PK の2文字は通す）
+    反応・引用（他人の文）は見ない。こちらが書いた地の文だけ。
+    """
+    hints: list[str] = []
+    for section in notes.sections:
+        run = 0
+        for number, sentence in enumerate(section.say):
+            voice = section.voices[number] if number < len(section.voices) else ""
+            if voice and voice not in SPEAKERS:
+                run = 0
+                continue
+            text = sentence if isinstance(sentence, str) else str((sentence or {}).get("text", ""))
+            bare = _bare_text(text)
+            where = f"節『{section.heading}』"
+            if re.search(r"\d+対\d+", text) and not any(w in text for w in RESULT_WORDS):
+                hints.append(f"{where}: スコアだけで勝敗を言っていません（『{text[:24]}』）。「2対1の勝ち」のように言ってください")
+            if len(bare) > LINE_MAX:
+                hints.append(f"{where}: 1行が{len(bare)}字あります（{LINE_MAX}字まで）。2つに割ってください（『{text[:20]}…』）")
+            if re.search(r"[A-Za-z]{3,}", text):
+                hints.append(f"{where}: 読み上げにアルファベットが残っています（『{text[:24]}』）。カタカナにしてください")
+            run = run + 1 if bare.endswith("です") else 0
+            if run == 3:
+                hints.append(f"{where}: 語尾の「です」が3行続いています（『{text[:20]}…』）。言い切りや体言止めを混ぜてください")
+    return hints
+
+
 def _advise_group_thumbnail(notes: Notes) -> list[str]:
     """**群れの回は、サムネも並べる**（2026-09-22 ユーザー「一人の写真ではなくて
     取り上げた選手を並べて」。9/17「群れの回は群れを主語にする」と同じ型）。
@@ -1435,7 +1473,8 @@ def _advise_voices(notes: Notes) -> list[str]:
                         + _advise_hook(notes) + _advise_thumbnail_repeat(notes)
                         + _advise_thumbnail_promise(notes)
                         + _advise_repeats(notes) + _advise_short_repeats(notes)
-                        + _advise_title(notes) + _advise_group_thumbnail(notes))
+                        + _advise_title(notes) + _advise_group_thumbnail(notes)
+                        + _advise_ear(notes))
     for section in notes.sections:
         card = section.card or {}
         if str(card.get("type", "")).lower() != "reactions":

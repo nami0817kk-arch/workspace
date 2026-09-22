@@ -861,6 +861,35 @@ python tools/playlist.py --id PLNEp9wyuYKJk --limit 38 --skip 38   # 残りを�
 - **見せたあとに「確認して」と言われた点検は、翌日から表に足す。**表に無い指摘を2回受けたら、それは表の欠け
 - 表が長くなっても削らない。削るときは、機械の点検に置き換えたときだけ
 
+## 別のセッションで1日ぶんを回す手順（2026-09-22 指示「別セッションでも題材集めて動画作成できるようにしたい」）
+
+どのセッションでも同じ形で回せるように、道具は全部 `tools/`・`src/` にある。
+**手元だけにある道具は残さない**（ページを作る道具は 9/22 に `tools/pages.py`・`tools/plpage.py` へ移した）。
+
+1. **worktree を切る**（workspace の CLAUDE.md の規約）。この PJT のブランチは `claude/youtube-<日付>`。
+   `git -C C:/Users/なみ/dev/workspace worktree add C:/Users/なみ/dev/wt-yt-<日付> -b claude/youtube-<日付> origin/master`
+   作業は必ずその worktree の `projects/youtube-video-creation` で。**手元にしか無い絵は gitignore**
+   （`assets/images/`・`output/`）なので、写真はそのセッションで取り直す（`portrait`・`matchphoto`）。
+2. **VOICEVOX を起動**（127.0.0.1:50021）。無いと無音の動画ができる。
+3. **題材**：`python -m src.cli gather` → `results --write` → 候補を YAML に書いて
+   `python tools/pages.py topics <日付> <候補.yaml>` → Artifact に出す（`capabilities: {db: {}}` で ○△✖ が保存される）。
+   ○の読み取りは `ArtifactData`（collection `picks`, doc `<日付>`）。**見せる前の決まり**の表を当てる
+4. **取材と台本**：○ごとに `research/<日付>_<key>.yaml` を書き、`python -m src.cli draft research/<日付>_<key>.yaml`。
+   ヒントは全部読む（重複・数字・言葉の早さ・耳で分からない言い回し・サムネ）。
+   `python tools/preshow.py scripts/<日付>_*.md`（1本ずつ・並べて・流れの点検）を通し、手で見る表に答えてから
+   `python tools/pages.py scripts <日付> [--images]` → Artifact に出す。**台本のOKが出るまで書き出さない**
+5. **承認**：OK が出たら `python -m src.cli approve scripts/<日付>_<key>.md`（流れの点検の控えが必要。
+   Gemini の枠が切れていれば Claude の下請けに `python tools/flow.py --prompt` の問いで読ませて控えを書かせる）
+6. **書き出し**：`build` → `short`（存在確認は**出力ファイルの有無**で。コマンドの戻り値は当てにならない）
+   → `review`（× を直す）→ 動画を SendUserFile で見せる（本編＋ショート）→ OK で `screen` → `upload --at HH:MM`
+   （9〜24時、1日ショート10本まで、間隔は15〜20分。予約時刻は承認が通ってから決める）
+7. **区切りごとに push**。master への取り込みは fetch → 検証 → merge を自分で。
+
+- 決まりは全部 CLAUDE.md（この PJT）と `~/.claude/projects/C--Users----dev/memory/` に書いてある。
+  別セッションでも同じ記憶が読める（同じ PC・同じパス）。**見せて言われた指摘は、その日のうちに表に足す**
+- プレミア20クラブ紹介は `tools/plbuild.py`（組み立て）→ `draft` → `tools/plpage.py --thumbs && tools/plpage.py`
+  → 同じURLの Artifact へ出し直す
+
 ## 毎日の流れ
 
 **台本にユーザーのOKが出てから書き出す**（2026-09-08 の指示）。

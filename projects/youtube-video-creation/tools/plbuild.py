@@ -500,8 +500,13 @@ def build(key: str, number: int, old_file: str) -> Path:
         # **読み上げで名前を出す人だけ、板の行を明るくする**
         lit = ([jp[0]] if jp else []) + ([cap_name] if cap and dict(POS).get(cap["pos"]) == label else [])
         lit += [kana.get(p["name"], p["name"]) for p in known]
-        ssay.append({"image": lit_board(board, lit), "text": f"{label}は{n}人。{tail}{note}{extra}",
-                     "no_telop": True})
+        # **1文ずつ別の行にする**（2026-09-22）。「ディフェンダーは10人。主将は…。◯◯は代表で…」を
+        # 1行で読むと50〜80字になり、合成音声で一息に聞き取れない（読み手の指摘）。
+        # 板は同じものを各行に付ける（板の明るい行は変えない）
+        whole = f"{label}は{n}人。{tail}{note}{extra}"
+        shot = lit_board(board, lit)
+        for piece in [s + "。" for s in whole.split("。") if s.strip()]:
+            ssay.append({"image": shot, "text": piece, "no_telop": True})
     sections.append(sec(id="squad", heading="今季の登録選手", tier="報道", telop="今季の登録選手",
                         narrator="キャスター", say=ssay, sources=[wiki]))
     # 今季のここまで（プレミアの節だけ）
