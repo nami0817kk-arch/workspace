@@ -584,7 +584,10 @@ def test_short_gets_a_few_voices_at_the_end():
     from src.shorts import VOICES_TAIL_MAX
 
     assert said.count("ネット民") <= VOICES_TAIL_MAX
-    assert said[0] == "解説"        # 反応は最後に足す
+    # **語りだけの山場は、反応を1件だけ冒頭に上げる**（2026-09-22 ユーザーOK）。
+    # 言葉が16秒までに出ないショートは維持が落ちる実測から。残りは最後に足す
+    assert said[0] == "ネット民" and said[1] == "解説"
+    assert "ネット民" in said[2:]        # 残りは締めに足す（最後の2行は登録の誘い）
 
 
 def test_語りが2つ続いたら前のほうは振りとして落とす():

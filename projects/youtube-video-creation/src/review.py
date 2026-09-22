@@ -118,6 +118,7 @@ def inspect(script: Script, out_dir: Path, duration: float | None = None) -> lis
     if opening is not None:
         findings.append(opening)
     findings.append(check_opening_background(script))
+    findings.append(check_quote_speed(out_dir, portrait))
     findings.append(check_tail_silence(script, out_dir))
     if duration is not None:
         findings.append(_duration(duration))
@@ -1422,6 +1423,37 @@ def check_wrap_share(script: Script) -> Finding:
 def hold_limit(portrait: bool) -> float:
     """同じ絵を出しておいてよい秒数。縦型（ショート）は短い。"""
     return SHORT_CARD_HOLD_MAX if portrait else CARD_HOLD_MAX
+
+
+# 誰かの言葉が出るまでの上限（秒）。research.py の SHORT_QUOTE_BY / MAIN_QUOTE_BY と同じ実測
+QUOTE_SPEED = {"short": 16.0, "main": 46.0}
+
+
+def check_quote_speed(out_dir: Path, portrait: bool) -> Finding:
+    """誰かの言葉が何秒目に出るか。実尺で見る（2026-09-22）。
+
+    直近14日・196本で、ショートは16秒・本編は46秒を境に維持率が7〜10ポイント違った。
+    語りしか無い回（紹介もの）は見ない。
+    """
+    import json
+
+    script_json = out_dir / "script.json"
+    if not script_json.exists():
+        return Finding(False, "言葉の早さ", "script.json がありません")
+    data = json.loads(script_json.read_text(encoding="utf-8"))
+    narrators = {"キャスター", "解説", "ナレーター"}
+    elapsed = 0.0
+    for scene in data.get("scenes", []):
+        for line in scene.get("lines", []):
+            if (line.get("speaker") or "") not in narrators:
+                limit = QUOTE_SPEED["short" if portrait else "main"]
+                if elapsed > limit:
+                    return Finding(False, "言葉の早さ",
+                                   f"最初の言葉が{elapsed:.0f}秒目です（{limit:.0f}秒まで）。"
+                                   "本人の発言か反応を前に置いてください")
+                return Finding(True, "言葉の早さ", f"最初の言葉は{elapsed:.0f}秒目")
+            elapsed += float(line.get("duration") or 0)
+    return Finding(True, "言葉の早さ", "語りだけの回なので見ません")
 
 
 def check_card_hold(script_json: Path, limit: float = CARD_HOLD_MAX) -> Finding:

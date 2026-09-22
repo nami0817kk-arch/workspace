@@ -467,6 +467,8 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
     # こちらは反応のあとに「これから何を見るか」と「まとめ」を語っていた。
     # 反応の節より後ろに、語りだけの節があれば止める
     problems += _check_voices_last(notes)
+    problems += _check_quote_timing(notes)
+    problems += _check_thumbnail_resolution(notes)
     if notes.format == "voices" and not _has_crowd(notes):
         problems.append(
             "型『voices』なのに、反応の行（voice: ネット民 など）がありません。"
@@ -953,6 +955,110 @@ def _bare_text(text: str) -> str:
     return re.sub(r"[。、．，\s　？?！!「」『』*]", "", str(text or ""))
 
 
+# 誰かの言葉が出るまでの上限（秒）。直近14日・196本の実測（2026-09-22）:
+# ショートは16秒までに出る60本が維持46.6%、遅い59本が39.8%。
+# 本編は46秒までに出る31本が40.9%、遅い30本が31.3%。
+# 9/13 に測ったときは「知らせるだけ」にしたが、その日の7本のうち
+# ショートで16秒に収まったのは1本だけだった。**知らせても直さないので止める**
+SHORT_QUOTE_BY = 16.0
+MAIN_QUOTE_BY = 46.0
+
+
+def _seconds_of(text: str) -> float:
+    """読み上げの見積り。script_model と同じ式。"""
+    from .script_model import BASE_SECONDS, MIN_SECONDS, SECONDS_PER_CHAR
+
+    return max(MIN_SECONDS, BASE_SECONDS + len(_bare_text(text)) * SECONDS_PER_CHAR)
+
+
+def _check_quote_timing(notes: Notes) -> list[str]:
+    """誰かの言葉が早く出るか。本編は46秒、ショートは16秒まで。
+
+    紹介ものなど、他人の声を1つも持たない回は見ない。
+    ショートは山場（main）の節を切り出すので、その節の中で数える。
+    山場に言葉が遅くても、反応（ネット民など）があれば `shorts` が
+    1件を冒頭に上げるので通す。
+    """
+    has_voice = any(v and v not in SPEAKERS for s in notes.sections for v in s.voices)
+    if not has_voice:
+        return []
+    problems: list[str] = []
+    opening = _seconds_of(notes.title) + (_seconds_of(notes.hook) if notes.hook else 0.0)
+
+    elapsed = opening
+    found = False
+    for section in notes.sections:
+        for number, sentence in enumerate(section.say):
+            only = section.line_onlys[number] if number < len(section.line_onlys) else ""
+            if only == "short":
+                continue
+            voice = section.voices[number] if number < len(section.voices) else ""
+            if voice and voice not in SPEAKERS:
+                found = True
+                break
+            elapsed += _seconds_of(sentence)
+        if found:
+            break
+    if found and elapsed > MAIN_QUOTE_BY:
+        problems.append(
+            f"本編で誰かの言葉が出るのが{elapsed:.0f}秒目です（{MAIN_QUOTE_BY:.0f}秒まで）。"
+            "本人の発言か反応を、前のほうの節に1つ置いてください")
+
+    main = next((s for s in notes.sections if s.main), None)
+    crowd = any(v and v not in SPEAKERS and v not in notes.people
+                for s in notes.sections for v in s.voices)
+    if main is not None and not crowd:
+        elapsed = _seconds_of(notes.title)
+        found = False
+        for number, sentence in enumerate(main.say):
+            voice = main.voices[number] if number < len(main.voices) else ""
+            if voice and voice not in SPEAKERS:
+                found = True
+                break
+            elapsed += _seconds_of(sentence)
+        if found and elapsed > SHORT_QUOTE_BY:
+            problems.append(
+                f"ショートで誰かの言葉が出るのが{elapsed:.0f}秒目です（{SHORT_QUOTE_BY:.0f}秒まで）。"
+                "山場の前置きは1行にして、その直後に言葉を置いてください")
+    return problems
+
+
+# 写真をこれ以上引き伸ばすとぼやける（2026-09-22 ユーザー「サムネが左がぼやけてる」）。
+# 400×530の写真を1280×720の左3分の1に伸ばしていた。9/17 の「画面の左がぼやける」も同じ
+THUMB_STRETCH_MAX = 1.6
+THUMB_SIZE = (1280, 720)
+
+
+def _check_thumbnail_resolution(notes: Notes) -> list[str]:
+    thumb = notes.thumbnail or {}
+    photos = [str(x) for x in (thumb.get("photos") or []) if str(x).strip()]
+    single = str(thumb.get("photo") or "").strip()
+    targets = [(p, len(photos)) for p in photos] or ([(single, 1)] if single else [])
+    problems: list[str] = []
+    for path, tiles in targets:
+        file = Path(path)
+        if not file.exists():
+            continue
+        try:
+            from PIL import Image
+
+            with Image.open(file) as im:
+                w, h = im.size
+        except Exception:
+            continue
+        if tiles > 1:
+            need = max((THUMB_SIZE[0] / tiles) / w, THUMB_SIZE[1] / h)
+        elif h > w * 1.1:
+            need = THUMB_SIZE[1] / h          # 縦長は右に立てるので高さだけ
+        else:
+            need = max(THUMB_SIZE[0] / w, THUMB_SIZE[1] / h)
+        if need > THUMB_STRETCH_MAX:
+            problems.append(
+                f"サムネの写真 {file.name} は {w}×{h} で、{need:.1f}倍に引き伸ばすとぼやけます"
+                f"（{THUMB_STRETCH_MAX}倍まで）。大きい写真を探すか、並べる枚数を減らしてください")
+    return problems
+
+
 def _advise_thumbnail_promise(notes: Notes) -> list[str]:
     """**サムネが、本編で言っていないことを約束していないか**（2026-09-21）。
 
@@ -1063,12 +1169,30 @@ def _longest_common(left: str, right: str) -> str:
 
 
 # 同じ言い回しが2か所に出てよい長さ。これを超えたら言い直し
-REPEAT_MIN = 12
+# **12字→8字**（2026-09-22）。「7試合で12ゴール」（シメオネの引用と確認の節）や
+# 「9月18日時点」（日本代表の1節目と山場）が12字に届かず素通りし、
+# ユーザーの「内容の重複とかないか確認して」で手で数えて見つけた
+REPEAT_MIN = 8
+# 同じ数字を別の節で読む（2026-09-22）。数字＋単位で見る。
+# 年号（2025年）は節をまたいで出て当たり前なので除く
+NUMBER_TOKEN = re.compile(r"\d[\d,.]*(?:万|億|点|ゴール|試合|本|人|回|位|歳|分|秒|月|日|戦|失点|得点|勝|敗|ユーロ|ポンド|円|%)")
 # **ショートの中の重複は、もっと短くても効く**（2026-09-15）。
 # 本編で12字としたのは節と節が数十秒離れているからで、ショートでは
 # **タイトルの次の行**として2秒後に読まれる。遠藤の回の重なりは
 # 「4試合続けて出番なし」の10字で、12字では届かなかった
 SHORT_REPEAT_MIN = 8
+
+
+def _meaningful(shared: str, notes: Notes) -> str:
+    """重なりのうち、意味を持つ部分。
+
+    人名（`people:`）は節をまたいで出て当たり前なので落とす。
+    """
+    out = shared
+    for name in notes.people or []:
+        out = out.replace(str(name), "")
+    # 助詞だけが残ったら、重なっていないのと同じ
+    return out.strip("はがをにでとのも")
 
 
 def _advise_repeats(notes: Notes) -> list[str]:
@@ -1121,11 +1245,32 @@ def _advise_repeats(notes: Notes) -> list[str]:
             # 数秒しか離れていない。遠藤の重なりは「4試合続けて出番」の8字と
             # 「チャンピオンズリーグの」の11字で、どちらも12字に届かなかった
             limit = SHORT_REPEAT_MIN if other_where in opening else REPEAT_MIN
+            # 同じ節の中の対句（「4000万から5000万へ」「2000万から3000万へ」）は
+            # 言い直しではない。節の中だけは元の12字で見る
+            if other_where == where:
+                limit = max(limit, 12)
+            shared = _meaningful(shared, notes)
             if len(shared) >= limit and shared not in seen:
                 seen.add(shared)
                 problems.append(
                     f"{other_where} と {where} で同じことを言っています"
                     f"（『{shared}』）。あとの節から落とすか、言い換えてください")
+    # **同じ数字を別の節でもう一度読んでいないか**（2026-09-22）。
+    # シメオネの回で、本人の引用「7試合で12ゴール」を次の節で
+    # 「ラフィーニャは7試合で12ゴール」と読み直していた。ユーザー「数字が
+    # あっているとかは不要」。字面が違っても数字は同じなので、数字で見る
+    said_numbers: dict[str, str] = {}
+    for where, text in said:
+        for token in NUMBER_TOKEN.findall(text):
+            if len(token) < 4 or re.fullmatch(r"\d{4}年?", token):
+                continue          # 「2失点」「7試合」は短すぎて、題材そのものの数字
+            first = said_numbers.setdefault(token, where)
+            if first != where and token not in seen and not (
+                    first in opening and where in opening):
+                seen.add(token)
+                problems.append(
+                    f"{first} と {where} で同じ数字を読んでいます（『{token}』）。"
+                    "数字は一度だけ言い、あとは画面の表に任せてください")
     return problems
 
 
@@ -1176,6 +1321,7 @@ def _advise_short_repeats(notes: Notes) -> list[str]:
                 # 本編と同じ12字で見る（そうしないと「はフェルナンデス」のような
                 # 人名の重なりで鳴る）
                 limit = SHORT_REPEAT_MIN if where == "タイトル" else REPEAT_MIN
+                shared = _meaningful(shared, notes)
                 if len(shared) >= limit and shared not in seen:
                     seen.add(shared)
                     problems.append(

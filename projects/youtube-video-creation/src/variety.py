@@ -59,6 +59,43 @@ def _tail_kind(title: str) -> str:
     return bare[-6:]
 
 
+# 本のあいだで重なってよい長さ。1本の中（8字）より長め。人名や大会名は重なって当然
+CROSS_REPEAT_MIN = 10
+NARRATORS = ("キャスター", "解説", "ナレーター")
+
+
+def _cross_repeats(scripts: list[Script]) -> list[str]:
+    """語りの行どうしで、10字以上続けて重なるところ。反応（他人の文）は見ない。"""
+    import itertools
+    import re
+
+    def bare(text: str) -> str:
+        return re.sub(r"[。、！？!?\s　「」『』*・]", "", text or "")
+
+    def lines(script: Script) -> list[str]:
+        return [bare(l.text) for sc in script.scenes for l in sc.lines
+                if (getattr(l, "speaker", "") or "") in NARRATORS
+                and (getattr(l, "only", "") or "") != "short"]
+
+    out: list[str] = []
+    seen: set[str] = set()
+    for a, b in itertools.combinations(scripts, 2):
+        la, lb = lines(a), lines(b)
+        for x in la:
+            for y in lb:
+                for i in range(len(x) - CROSS_REPEAT_MIN + 1):
+                    g = x[i:i + CROSS_REPEAT_MIN]
+                    if g in y and g not in seen:
+                        seen.add(g)
+                        out.append(f"『{g}…』（{_short_name(a)} と {_short_name(b)}）")
+                        break
+    return out
+
+
+def _short_name(script: Script) -> str:
+    return str((script.meta or {}).get("title") or script.title or "")[:12]
+
+
 def _prefix(script: Script) -> str:
     title = str((script.meta or {}).get("title") or "").strip()
     if title.startswith("【") and "】" in title:
@@ -162,6 +199,18 @@ def inspect_day(scripts: list[Script]) -> list[Finding]:
             "毎回同じ結び方だと、一覧で見分けが付きません"))
     else:
         findings.append(Finding(True, "結び方", "結び方は散らばっています"))
+
+    # **本と本のあいだで同じことを言っていないか**（2026-09-22）。
+    # ラフィーニャとシメオネの回が、どちらも「バルセロナは7戦全勝、31得点7失点」を
+    # 読んでいた。同じ日に出すので、続けて見た人には二度聞こえる。
+    # 1本の中の重複は draft が見るが、本のあいだは並べないと見えない
+    crossed = _cross_repeats(scripts)
+    if crossed:
+        findings.append(Finding(
+            False, "本のあいだ",
+            f"{len(crossed)}か所で同じことを言っています。最初の1つ: {crossed[0]}"))
+    else:
+        findings.append(Finding(True, "本のあいだ", "本どうしで同じ話は重なっていません"))
 
     # **札は毎回付けない**（2026-09-08 ユーザー指示）。付いている本数そのものを見る
     with_badge = [s for s in scripts if _prefix(s)]

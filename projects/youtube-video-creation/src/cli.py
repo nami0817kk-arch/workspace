@@ -398,6 +398,10 @@ def main(argv: list[str] | None = None) -> int:
     # 紹介もの（プレミア20クラブ紹介など）だけ、理由を書いて外す
     p_approve.add_argument("--no-voices", default="",
                            help="声を入れない型だと分かっている回だけ。理由を書く")
+    # **流れの点検（tools/flow.py）を通していない台本は通さない**（2026-09-22）。
+    # 機械の点検は形式しか見ない。話の流れは Gemini に読ませて穴を言わせる
+    p_approve.add_argument("--no-flow", default="",
+                           help="流れの点検を飛ばす理由（原則書かない）")
 
     # **投稿の前に動画を見せる**（2026-09-13 ユーザー「今後は投稿する前に動画見して」）。
     # upload はこれが無いと動かない
@@ -643,8 +647,21 @@ def _cmd_approve(args, config) -> int:
             print("■ 紹介ものなど、声を入れない型だと分かっている回だけ "
                   "`--no-voices <理由>` を付けてください", file=sys.stderr)
             return 1
+        # **流れの点検の控えが無ければ通さない**（2026-09-22）。9/13 に作った手順を
+        # 使わないまま、「何を言いたいか分からない」を同じ日に3本で言われた。
+        # 台本を直したら点検もやり直す（控えが台本より古ければ止める）
+        flow = Path("output/flow") / (Path(script).stem + ".md")
+        stale = flow.exists() and flow.stat().st_mtime < Path(script).stat().st_mtime
+        if (not flow.exists() or stale) and not args.no_flow:
+            why = "台本より古いです" if stale else "ありません"
+            print(f"■ {Path(script).name} の流れの点検の控え（{flow}）が{why}", file=sys.stderr)
+            print("■ 通していません。`python tools/flow.py <台本>` を通して、"
+                  "指摘を直してから掛け直してください", file=sys.stderr)
+            return 1
         stamp = approval.approve(script)
         note = f"　（声なし: {args.no_voices}）" if not voices else f"　声{len(voices)}件"
+        if args.no_flow:
+            note += f"　（流れ点検なし: {args.no_flow}）"
         print(f"確認済み: {approval.key_of(script)}　{stamp}{note}")
     return 0
 

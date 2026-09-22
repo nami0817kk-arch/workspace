@@ -113,6 +113,7 @@ def trim(script: Script, section: str = "", max_seconds: float = MAX_SECONDS) ->
     _drop_hook(short.scenes[0])
     _drop_main_mark(short.scenes[1])
     _drop_lead_in(short.scenes[1])
+    _hoist_voice(short, script)
     # **選ばれた反応のぶんは、先に空けておく**（2026-09-15）。
     # `_add_voices_tail` は尺が余っているぶんしか足さないので、
     # 印を付けた2件目が0.6秒はみ出して落ちていた（松木の回）。
@@ -423,8 +424,12 @@ def _add_voices_tail(short: Script, script: Script, max_seconds: float) -> None:
         # 1行目はタイトルを読む決まりなので、そこからでも拾える
         title = str(script.scenes[0].lines[0].text or "")
     rest = [l for l in rest if not _echoes_title(l.text, title)]
+    # 冒頭に上げた反応（`_hoist_voice`）は締めに重ねない
+    already = {(l.text or "").strip() for l in short.lines}
     added = 0
     for line in (picked + rest):
+        if (line.text or "").strip() in already:
+            continue
         if added >= VOICES_TAIL_MAX:
             break
         cost = line.duration or line.estimated_duration()
@@ -667,7 +672,9 @@ ESTIMATE_SLACK = 0.92
 _SPEAK = r"(?:こう[^。]{0,8}|口を開き|語り|話し|明かし|続け|答え|振り返っ|述べ|説明し)"
 LEAD_IN = re.compile(_SPEAK + r"(?:まし|ていま|いま|ま)す?[た。]?。?$")
 # 最初の発言はここまでに出したい（秒）。実測の境目は19秒
-QUOTE_BY = 15.0
+# **2026-09-22 に16秒へ**。直近14日・196本の実測で、16秒までに出る60本が
+# 維持46.6%、遅い59本が39.8%。超えたら `_hoist_voice` が反応を1件、冒頭に上げる
+QUOTE_BY = 16.0
 
 
 # 振りとして落としてよい長さの上限（2026-09-11）。
@@ -705,6 +712,35 @@ def _drop_lead_in(scene: Scene) -> None:
             out.append(index)
     for index in reversed(out):
         del scene.lines[index]
+
+
+def _hoist_voice(short: Script, script: Script) -> None:
+    """**言葉が遅いショートは、反応を1件だけ冒頭に上げる**（2026-09-22 ユーザーOK）。
+
+    数字だけの回（記録・市場価値）は、山場の節に本人の言葉が無く、
+    ネットの声が最後に来るまで語りが続く。実測で16秒を超えると維持が落ちるので、
+    締めに使わない反応を1件、題の直後に置く。締めの反応（`short_voice`）は動かさない。
+    `short_voices: false` の回は上げない。
+    """
+    if str((script.meta or {}).get("short_voices", "")).lower() in ("false", "no", "0"):
+        return
+    at = quote_at(short)
+    # 語りだけの山場（記録・市場価値の回）は at が None。**それこそ上げる相手**
+    if at is not None and at <= QUOTE_BY:
+        return
+    source = _voices_source(short, script)
+    if source is None:
+        return
+    title = str(getattr(script, "title", "") or (script.meta or {}).get("title", "") or "")
+    for line in source.lines:
+        if str(getattr(line, "only", "") or "").strip() == "short":
+            continue
+        if getattr(line, "short_voice", False):
+            continue          # 締めに取ってある
+        if _echoes_title(line.text, title):
+            continue
+        short.scenes[1].lines.insert(0, copy.deepcopy(line))
+        return
 
 
 def quote_at(script: Script) -> float | None:
