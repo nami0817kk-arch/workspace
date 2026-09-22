@@ -102,10 +102,13 @@ def build(out: Path, spec: dict) -> Path:
     room = SIZE[1] - top - 16
     rh = room // len(rows)
     label_font = ImageFont.truetype(font, min(30, max(18, rh // 3)))
+    # **名前の欄は、いちばん長い名前に合わせる**（2026-09-22）。ヨーロッパを大会ごとにしたら
+    # 「カップウィナーズカップ」「インタートトカップ」が杯の絵に重なった
+    widest = max(d.textlength(name, font=label_font) for name, _ in rows)
+    left = MARGIN + max(300, int(widest) + 28)
     for i, (name, n) in enumerate(rows):
         y = top + i * rh
         d.text((MARGIN, y + rh // 2 - label_font.size // 2), name, font=label_font, fill=WHITE)
-        left = MARGIN + 300
         # **右に回数を書く場所を残す。**残さないとアーセナルの「14回」が切れた
         width = SIZE[0] - MARGIN - left - 130
         ch = min(rh - 10, 96)
