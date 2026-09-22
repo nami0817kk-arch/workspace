@@ -1059,6 +1059,27 @@ def _check_thumbnail_resolution(notes: Notes) -> list[str]:
     return problems
 
 
+def _advise_group_thumbnail(notes: Notes) -> list[str]:
+    """**群れの回は、サムネも並べる**（2026-09-22 ユーザー「一人の写真ではなくて
+    取り上げた選手を並べて」。9/17「群れの回は群れを主語にする」と同じ型）。
+
+    タイトルに `people` の誰の名前も出ていないなら、その回の主語は群れ。
+    それなのに写真が1枚なら知らせる。
+    """
+    people = [str(p) for p in (notes.people or []) if str(p).strip()]
+    if len(people) < 2:
+        return []
+    title = str(notes.title or "")
+    if any(name in title for name in people):
+        return []
+    thumb = notes.thumbnail or {}
+    photos = [x for x in (thumb.get("photos") or []) if str(x).strip()]
+    if len(photos) >= 2:
+        return []
+    return [f"群れの回（{'・'.join(people[:4])}）なのに、サムネの写真が1枚です。"
+            "thumbnail.photos に取り上げた人を並べてください（5枚まで）"]
+
+
 def _advise_thumbnail_promise(notes: Notes) -> list[str]:
     """**サムネが、本編で言っていないことを約束していないか**（2026-09-21）。
 
@@ -1409,7 +1430,7 @@ def _advise_voices(notes: Notes) -> list[str]:
                         + _advise_hook(notes) + _advise_thumbnail_repeat(notes)
                         + _advise_thumbnail_promise(notes)
                         + _advise_repeats(notes) + _advise_short_repeats(notes)
-                        + _advise_title(notes))
+                        + _advise_title(notes) + _advise_group_thumbnail(notes))
     for section in notes.sections:
         card = section.card or {}
         if str(card.get("type", "")).lower() != "reactions":

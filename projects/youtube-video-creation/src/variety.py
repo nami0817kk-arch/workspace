@@ -85,6 +85,10 @@ def _cross_repeats(scripts: list[Script]) -> list[str]:
             for y in lb:
                 for i in range(len(x) - CROSS_REPEAT_MIN + 1):
                     g = x[i:i + CROSS_REPEAT_MIN]
+                    # 人名・大会名だけの重なり（「クリスティアーノロナウド」）は言い直しではない。
+                    # ひらがなを1字も含まない重なりは名詞の一致なので見ない
+                    if not re.search(r"[ぁ-ん]", g):
+                        continue
                     if g in y and g not in seen:
                         seen.add(g)
                         out.append(f"『{g}…』（{_short_name(a)} と {_short_name(b)}）")

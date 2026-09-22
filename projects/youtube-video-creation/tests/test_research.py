@@ -1578,3 +1578,19 @@ def test_main以外の節のshort_onlyは止める(tmp_path):
         encoding="utf-8")
     with pytest.raises(ResearchError, match="main でない節"):
         load_notes(note)
+
+
+def test_群れの回はサムネも並べる():
+    """2026-09-22: 日本代表の市場価値の回で、佐野1人の写真を出していた。"""
+    from src.research import _advise_group_thumbnail, build_notes
+
+    raw = _raw()
+    raw["people"] = ["佐野海舟", "鈴木彩艶", "上田綺世"]
+    raw["theme"]["title"] = "日本代表の値段が一斉に更新。値上がりしたのは誰か"
+    raw["thumbnail"] = {"photo": "a.jpg", "line1": "x", "line2": "y"}
+    assert _advise_group_thumbnail(build_notes(raw))
+    raw["thumbnail"]["photos"] = ["a.jpg", "b.jpg", "c.jpg"]
+    assert _advise_group_thumbnail(build_notes(raw)) == []
+    raw["thumbnail"].pop("photos")
+    raw["theme"]["title"] = "佐野海舟の値段が上がった"
+    assert _advise_group_thumbnail(build_notes(raw)) == []

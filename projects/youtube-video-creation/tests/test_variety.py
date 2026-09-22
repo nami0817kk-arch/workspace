@@ -157,3 +157,21 @@ def test_言いさしの結びは字面が違っても揃いとみなす():
     scripts = [_script(t, ["何が", t[:3], "これから"]) for t in titles]
     found = {f.label: f for f in inspect_day(scripts)}
     assert not found["結び方"].ok
+
+
+def test_本のあいだの重なりは語りだけを見て名前は数えない():
+    """2026-09-22: ラフィーニャとシメオネが同じ「7戦全勝、31得点7失点」を読んでいた。
+    クリスティアーノ・ロナウドの名前が両方に出るだけなら鳴らさない。"""
+    from src.script_model import Line, Scene, Script
+    from src.variety import _cross_repeats
+
+    def script(title, text):
+        return Script(title=title, meta={"title": title}, scenes=[
+            Scene(title="本編", lines=[Line(speaker="解説", text=text)])])
+
+    a = script("A", "バルセロナは7戦全勝で首位。31得点7失点です。")
+    b = script("B", "バルセロナは7戦全勝で勝ち点21。31点を取っています。")
+    assert _cross_repeats([a, b])
+    c = script("C", "前の5人は、メッシ、クリスティアーノ・ロナウド、イグアイン。")
+    d = script("D", "クリスティアーノ・ロナウドは64本、マラドーナは61本です。")
+    assert _cross_repeats([c, d]) == []
