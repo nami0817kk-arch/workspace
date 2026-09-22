@@ -22,17 +22,21 @@ class CareerExtras {
   /// クラブの中での位置づけで難度が変わる。格上のクラブに移れば
   /// 求められる出場数は下がるが、質は高く求められる。
   SeasonObjective objectiveFor({required Player player, required Club club}) {
+    // **線は実測から置く。** 18試合・評価 6.3 という古い目安のままで、
+    // 実際には1シーズン 29試合・評価 7.2 出ていた——**3つとも達成が 81%、
+    // 2つ以上が 89%** で、毎週カードに出している「監督の期待」が
+    // ほぼ無条件に付いてくるだけの飾りになっていた（2026-09-23 に測り直した）。
     final gap = player.overall - club.strength;
-    final appearances = (18 + gap.clamp(-12, 12)).clamp(8, 34);
+    final appearances = (28 + gap.clamp(-12, 12)).clamp(8, 36);
 
     // 攻撃のポジションほど得点関与を求められる。
     final attacking = switch (player.position.family.name) {
-      'forward' => 12,
-      'midfield' => 7,
-      _ => 3,
+      'forward' => 23,
+      'midfield' => 14,
+      _ => 7,
     };
-    final contributions = (attacking + (gap ~/ 4)).clamp(1, 30);
-    final rating = (6.3 + gap * 0.012).clamp(6.0, 7.4);
+    final contributions = (attacking + (gap ~/ 4)).clamp(1, 34);
+    final rating = (7.1 + gap * 0.02).clamp(6.4, 7.7);
 
     return SeasonObjective(
       appearances: appearances,
