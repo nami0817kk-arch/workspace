@@ -549,11 +549,13 @@ def build(key: str, number: int, old_file: str) -> Path:
         "format": "news", "voice_min": 0, "slot": "premier_1", "date": "2026年9月19日",
         # `people_extra`: 本人の言葉を読ませる人（監督・名選手）。声の割り当てと、言葉の早さの点検に使う
         "people": jp_names + [club] + [str(x) for x in (ov.get("people_extra") or [])],
-        "short_title": f"{title_head}ってどんなクラブ？"[:40],
+        # **題は手で書く**（2026-09-22 指示「タイトルをもっと視聴者が見たいと思うものに」）。
+        # <key>_say.yaml の `title`／`short_title`。無ければ「◯◯ってどんなクラブ？」
+        "short_title": str(ov.get("short_title") or ov.get("title") or f"{title_head}ってどんなクラブ？")[:40],
         "theme": {"id": old["theme"]["id"], "league": "england", "league_name": "プレミアリーグ", "kind": "other",
                   # **シリーズの名札は付けない**（2026-09-21 指示「②プレミア20クラブ紹介はいらない」）。
                   # 検索で来る言葉はクラブ名で、連番はタイトルの尺を食うだけだった
-                  "topic": club, "title": f"{title_head}ってどんなクラブ？",
+                  "topic": club, "title": str(ov.get("title") or f"{title_head}ってどんなクラブ？"),
                   "question": "どんなクラブなのか",
                   # **宿敵の節を落としたら、宿敵を約束する引きが残った**（2026-09-20）。
                   # 「宿敵は、同じ街の赤いクラブです」と言って、その話を一度もしない。

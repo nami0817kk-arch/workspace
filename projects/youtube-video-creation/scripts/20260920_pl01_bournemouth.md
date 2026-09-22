@@ -1,8 +1,8 @@
 ---
-title: ボーンマスってどんなクラブ？
+title: マイナス17の勝ち点から欧州へ。ボーンマスに何があったのか
 format: news
 voice_min: 0.0
-short_title: ボーンマスってどんなクラブ？
+short_title: ボーンマスに何があったのか
 topic: ボーンマス
 thumbnail_line1: 勝ち点17を引かれた
 thumbnail_line2: そこから18年で、初の欧州へ
@@ -16,11 +16,11 @@ thumbnail_crest_main:
 - ボーンマス
 bg: assets/backgrounds/stadium.png
 date: 2026年9月19日
-intro_title: ボーンマスってどんなクラブ？
+intro_title: マイナス17の勝ち点から欧州へ。ボーンマスに何があったのか
 intro_label: 海外サッカー ニュース
 outro_title: 続報は次回お伝えします
 outro_sub: チャンネル登録でお待ちください
-description: 'ボーンマスってどんなクラブ？
+description: 'マイナス17の勝ち点から欧州へ。ボーンマスに何があったのか
 
 
   この動画が答える問い: どんなクラブなのか
@@ -193,8 +193,8 @@ cards:
 
 キャスター: プレミアリーグで、いちばん小さなスタジアム。
   telop: プレミアリーグで、いちばん小さなスタジアム
-キャスター: ボーンマスってどんなクラブ？
-  telop: ボーンマスってどんなクラブ？
+キャスター: マイナス17の勝ち点から欧州へ。ボーンマスに何があったのか。
+  telop: マイナス17の勝ち点から欧州へ。ボーンマスに何があったのか
   se: assets/audio/se_pon.wav
 キャスター: 消えかけたクラブが、いまヨーロッパで戦っています。
   telop: 消えかけたクラブが、いまヨーロッパで戦っています
