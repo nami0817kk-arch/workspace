@@ -1,0 +1,94 @@
+date: 2026年9月23日
+slot: premier_1
+format: quote
+voice_min: 0.6
+people: [アレクシス・マック・アリスター]
+theme:
+  id: macallister_future
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: リヴァプール
+  title: 'マック・アリスター、リヴァプールでの将来に「2年だけでも構わない」'
+  hook: 残りたいと言ったすぐあとに、別の言葉を足しました。
+  question: リヴァプールに残るつもりなのか
+short_title: マック・アリスター、契約はあと2年
+thumbnail:
+  photo: assets/images/20260923_macallister/01.jpg
+  line1: 「できればもっと長く」
+  line2: 「2年だけになっても」
+sections:
+  - id: what
+    heading: いまの状況
+    tier: 報道
+    telop: 2週間前は「本当に悲しい」と話していた
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - リヴァプールのマック・アリスター。新しい契約を結んだという発表は、まだありません。
+      - 今月の初め、本人はこう話していました。
+      - voice: アレクシス・マック・アリスター
+        text: 代理人から聞いた話では、僕は契約更新できる立場にはいないということだ。本当に悲しい。
+      - voice: アレクシス・マック・アリスター
+        text: 僕たちはともにリーグ制覇を果たし、困難な時期も乗り越えてきた。僕は常にベストを尽くしてきた。
+      - それから2週間。残っている契約について聞かれて、こう答えました。
+    sources:
+      - https://x.com/FabrizioRomano/status/2102064636811952337
+      - https://news.yahoo.co.jp/articles/42a8bc7a1c9e6e9fd4a2b7754516462bfa8e220c
+  - id: said
+    main: true
+    heading: 言ったこと
+    tier: 報道
+    telop: 「2年だけになっても、それはそれで構わない」
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - text: '契約の延長が決まらないまま、リヴァプールのマック・アリスターが自分の将来について話しました。'
+        short_only: true
+      - voice: アレクシス・マック・アリスター
+        text: 最終的な決断は、まだ何も決まっていない。現実として、契約はまだ2年残っている。
+      - voice: アレクシス・マック・アリスター
+        text: 全力を尽くすつもりだ。2年あれば、いろんなことが起こりうる。可能性はたくさんある。
+      - voice: アレクシス・マック・アリスター
+        text: 自分としては、今いる場所を本当に楽しんでいる。
+      - voice: アレクシス・マック・アリスター
+        text: できれば、もっと長く残りたい。**でも、それが2年だけになっても、それはそれで構わない。**
+      - voice: アレクシス・マック・アリスター
+        text: 家族とこの時間を楽しみたい。ここが世界最高のクラブの一つだということに、疑いはないから。
+    sources:
+      - https://x.com/FabrizioRomano/status/2102064636811952337
+      - https://x.com/FabrizioRomano/status/2102189041005273565
+  - id: voices
+    heading: ネットの声
+    tier: 未確認
+    telop: これを聞いた人が書いていたこと
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - voice: ネット民
+        text: マック・アリスターが「2年あればいろんなことが起こる」とだけ言って、リヴァプールのファンが全員考えすぎてる。2年より先も残ると思う？
+      - voice: ネット民
+        text: 「できれば残りたい」と「2年だけでも構わない」を同じ話の中で言うのか。リヴァプールのファンなら少し心配になる。
+      - voice: ネット民
+        text: 移籍を否定しているようには聞こえない
+      - voice: ネット民
+        text: 焦らず、騒がず、ただ全力を尽くすことに集中している。もっと長く残れるなら、なおいい。YNWA
+      - voice: ネット民
+        text: マクアリスターと契約延長しない理由がマジで一つもないのにフロントから声がかからないの、本当に何故？？？
+      - voice: ネット民
+        text: リヴァプールの中盤で一番良いのずっとマクアリスターだと思うんだけどなんでこいつが放出候補とされてんの？
+      - voice: ネット民
+        text: 現状ソボスライとヴィルツを併用すると意識が攻撃に傾くからそのバランスを取れるマクアリスターは必須だし、来季移籍しちゃうなら気が利く選手が必要
+      - voice: ネット民
+        text: マクアリスターも延長してほしいけど、ファンダイクも延長してもらいたい。このまま来シーズンいけば、アリソン&ファンダイク卒業はDFラインの統率がなくなりそう
+      - voice: ネット民
+        text: このクラスをフリーで出すとか意味わからん。まぁ年俸ふっかけてるって情報も流れてたが
+      - voice: ネット民
+        text: この活躍を見てもまだ新契約しないのか？馬鹿げてる。彼以上を探すのは難しいよ。また移籍金を高く支払いフィットせずに放出を繰り返すつもり？
+      - voice: ネット民
+        text: ほんとマクアリスターは早く契約延長して欲しいなと。続報待つばかりです。
+        short_voice: true
+    sources:
+      - https://x.com/FabrizioRomano/status/2102064636811952337
+      - https://x.com/search?q=%E3%83%9E%E3%82%AF%E3%82%A2%E3%83%AA%E3%82%B9%E3%82%BF%E3%83%BC%20lang%3Aja&f=live
+      - https://news.yahoo.co.jp/articles/42a8bc7a1c9e6e9fd4a2b7754516462bfa8e220c/comments

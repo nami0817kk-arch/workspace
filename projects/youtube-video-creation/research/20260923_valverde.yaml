@@ -1,0 +1,106 @@
+date: 2026年9月23日
+slot: laliga_1
+format: news
+voice_min: 0.4
+people: [バルベルデ]
+theme:
+  id: valverde_sprain
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: レアル・マドリード
+  title: 'バルベルデが日本戦を欠場。痛めた前半から最後まで出ていた'
+  hook: 検査の結果が出たのは、試合の2日後でした。
+  question: どれくらいの怪我で、いつ戻るのか
+short_title: バルベルデ、日本戦に来られなくなった
+thumbnail:
+  photo: assets/images/20260923_valverde/01.jpg
+  line1: 左足首に重い捻挫
+  line2: それでも最後まで出ていた
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: 左足首にグレード3の捻挫。24日の日本戦は欠場
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    card:
+      type: table
+      title: バルベルデの左足首
+      columns: ["", ""]
+      rows:
+        - ["診断", "グレード3の捻挫"]
+        - ["痛めた場面", "9月20日 ダービーの前半44分"]
+        - ["離脱の見立て", "2〜3週間"]
+    say:
+      - ウルグアイ代表のバルベルデが、24日の日本戦を欠場します。
+      - 所属するレアル・マドリードの検査で、左足首の**グレード3の捻挫**と分かりました。
+      - 痛めたのはアトレティコとのダービー、前半44分。左足首を踏まれた場面です。
+      - それでも**最後までピッチにいました。**
+    sources:
+      - https://www.realmadrid.com/es-ES/noticias/futbol/primer-equipo/partes-medicos/nuevo-parte-medico-de-valverde-22-09-2026
+      - https://x.com/FabrizioRomano/status/2102351949219721499
+      - https://www.soccer-king.jp/news/world/esp/20260922/2207937.html
+  - id: back
+    heading: いつ戻るのか
+    tier: 報道
+    telop: 離脱は2〜3週間の見立て。次のリーグ戦は10月10日
+    narrator: 解説
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - クラブは戻る時期を出さず、離脱は**2〜3週間**という見立ても出ています。
+      - クラブの次の試合は**10月10日**のビジャレアル戦。ここには出られるのでは、とも見られています。
+    sources:
+      - https://www.soccer-king.jp/news/world/esp/20260922/2207937.html
+  - id: doubt
+    main: true
+    heading: 引っかかっているところ
+    tier: 未確認
+    telop: 「グレード3で、後半も出続けられるのか」
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - text: 'ウルグアイ代表のバルベルデが、24日の日本戦を欠場します。左足首のグレード3の捻挫と発表されました。'
+        short_only: true
+      - 交代しなかった理由を、本人もクラブも話していません。
+      - voice: ネット民
+        text: いやいや、バルベルデは「けがをした」まま45分も出たんだぞ。君らの言うグレード3の捻挫で、プレーを続けられると思うか？
+      - voice: ネット民
+        text: メッシでさえ、決勝で足首を捻挫したときは最後までできなかった。痛めてすぐに交代して、少しすると足首はひどく腫れていた。それより重い捻挫で、バルベルデが試合を最後までやったって本気で信じるのか？
+      - voice: ネット民
+        text: バルベルデ怪我で日本戦にも出れないってまじ？あの時痛がらなかったのなんでなんや。アドレナリンもあるかもやけど出せてたやろ
+      - voice: ネット民
+        text: あのプレーはレッドだと思う。でも本当に議論になっているのは、発表が嘘かどうかだ（違うかもしれないけど）。グレード2でもまともに踏めないはずなのに、バルベルデはグレード3で後半をやった。正直、何か変だ…
+      - voice: ネット民
+        text: 言いたいことは分かるし、君は正しい。でも、グレード2だとその場では痛みを感じないことがある。止まらずに続けたせいで、最後はグレード3になったのかもしれない。バルベルデがそんな嘘で2か月も休むとは思えないしね
+      - voice: ネット民
+        text: バルベルデのファンになった。グレード3で後半を戦って、しかも3週間で戻るなんてスーパーヒーローだ
+      - voice: ネット民
+        text: バルベルデだから普通にプレー続けてたけど、一般人なら手術が必要になるレベルの危険なスパイクだったよね。
+    sources:
+      - https://x.com/search?q=Valverde%20esguince%20lang%3Aes&f=live
+      - https://news.yahoo.co.jp/articles/1c89a2b43ef367d44ec944671803184a64b21f39/comments
+      - https://x.com/search?q=%E3%83%90%E3%83%AB%E3%83%99%E3%83%AB%E3%83%87%20%E6%97%A5%E6%9C%AC%E6%88%A6%20lang%3Aja&f=live
+  - id: voices
+    heading: ネットの声
+    tier: 未確認
+    telop: これを見た人が書いていたこと
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - voice: ネット民
+        text: 冗談じゃない、無理だ。グレード3は手術が要ることもある。でも見てろ、代表戦明けには何もなかったように先発してるから
+      - voice: ネット民
+        text: マドリーは嘘をついてる…本当にグレード3なら、クリスマスまで戻れない…代表戦明けにバルベルデが出ていたら、ウルグアイに行かせないためにマドリーが嘘をついたってことだ
+      - voice: ネット民
+        text: えー、バルベルデ、代表戦に出れないのかぁ…。めっちゃ残念。でも、重度の捻挫は、ちゃんと治してほしいです。お大事に…
+      - voice: ネット民
+        text: バルベルデ日本戦欠場なら、見る意味なくなってしまったな。
+      - voice: ネット民
+        text: バルベルデが見たかったのに…
+      - voice: ネット民
+        text: せっかくの日本旅行だったのにね
+        short_voice: true
+    sources:
+      - https://x.com/search?q=Valverde%20esguince%20lang%3Aes&f=live
+      - https://news.yahoo.co.jp/articles/1c89a2b43ef367d44ec944671803184a64b21f39/comments

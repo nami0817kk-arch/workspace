@@ -1,0 +1,106 @@
+date: 2026年9月23日
+slot: japan_1
+format: quote
+voice_min: 0.6
+people: [堂安律]
+theme:
+  id: doan_saudi
+  league: germany
+  league_name: 日本代表
+  kind: other
+  topic: 堂安律
+  title: '堂安律「めっちゃ叩かれた」サウジを断ったあとに返した言葉'
+  hook: 言われた言葉を、そのまま引き受けると言いました。
+  question: 叩かれたことに、本人は何と答えたのか
+short_title: 堂安律「全部背負ってやろうかな」
+thumbnail:
+  photo: assets/images/20260923_doan/01.jpg
+  line1: 「日本を背負うな」と言われて
+  line2: 返した答えは
+sections:
+  - id: what
+    heading: 何があったか
+    tier: 報道
+    telop: サウジからの誘いを断り、フランクフルトに残った
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - 日本代表の10番、堂安律。この夏、サウジアラビアのアル・イテハドが獲得に動きました。
+      - 堂安はその誘いを断り、**フランクフルトに残りました。**
+      - 代表の練習のあと、その夏のことを自分から話しています。
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20260922/2207876.html
+      - https://www.footballchannel.jp/2026/09/22/post1016592/
+  - id: after
+    heading: 決めるまでと、決めたあと
+    tier: 報道
+    telop: 「自分の頭がすごいスッキリした」
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - ワールドカップが終わってから、迷っていた時間があったそうです。
+      - voice: 堂安律
+        text: 頭の中でギアが入らないような。プレシーズンやってる時もスイッチ入らんなと思っていた
+      - voice: 堂安律
+        text: 決断した後はもうすごいスッキリして、今はまた楽しくエネルギーが湧いてサッカーができてます
+      - voice: 堂安律
+        text: すごい自然体で自信もある。自分の存在意義を見せれたらなと思います
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20260922/2207876.html
+  - id: said
+    main: true
+    heading: 言ったこと
+    tier: 報道
+    telop: 「全部背負ってやろうかなと思ってます」
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - text: 'サウジ移籍が噂された堂安律が、残ると決めた夏のことを話しました。'
+        short_only: true
+      - voice: 堂安律
+        text: 行ってもないのにめっちゃ叩かれた
+      - voice: 堂安律
+        text: いろいろ考えました。
+      - voice: 堂安律
+        text: 叩いてる人らの百倍ぐらい僕は考えているので、
+      - voice: 堂安律
+        text: 自分のキャリア、自分の人生を今回はいろんな人に聞きながら選んだ道でもある。
+      - voice: 堂安律
+        text: 『日本を背負うな』とか『10番つけるな』とか言われたんですけど、
+      - voice: 堂安律
+        text: '**全部背負ってやろうかなと思ってます**'
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20260922/2207876.html
+      - https://www.footballchannel.jp/2026/09/22/post1016592/
+  - id: voices
+    heading: ネットの声
+    tier: 未確認
+    telop: これを聞いた人が書いていたこと
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - voice: ネット民
+        text: サウジに行くのは、なんだか違う気がする
+      - voice: ネット民
+        text: 堂安がサウジに行っていたら、残念に思っただろう。大金を払ってフライブルクから、違いを作れる選手として連れてきたんだ。だったら、やってもらおうじゃないか
+      - voice: ネット民
+        text: これで合ってる？手放したくない。代わりもいない。なのに手放す。しかもサウジへ、1年前に払った額より安く。疑問しかない
+      - voice: ネット民
+        text: 律最高かww
+      - voice: ネット民
+        text: 叩いてる奴らは堂安の何を知って何の責任を取れるんだろうね？
+      - voice: ネット民
+        text: 移籍に前向きという報道が出た時は驚いたけどね。叩くのはだめですね。
+      - voice: ネット民
+        text: キャリアの歩み方は堂安自身のものだし、外野がどうこう言う筋合いじゃない。それは分かってるんだけど、10番だけはエースのタケに託してくれないか。
+      - voice: ネット民
+        text: 次も10番背負ってくれ。ほんとはゴール決める為のプレーにもっと集中したかったはず。
+      - voice: ネット民
+        text: 私は堂安選手に10番背負ってほしくないなんて思ったことない。民意だとか言う人いるみたいだから否定しときます！自分の人生に日本も背負って戦う戦士に応援しかない
+      - voice: ネット民
+        text: 堂安凄いな。俺も「お前が日本を背負うな」とか言われてみたい
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/cfa4107341b4023e97cec33c112963ca671bf125/comments
+      - https://x.com/search?q=%E5%A0%82%E5%AE%89%20%E8%83%8C%E8%B2%A0%E3%81%86%20lang%3Aja&f=live
+      - https://x.com/search?q=Doan%20Saudi%20lang%3Ade&f=live
