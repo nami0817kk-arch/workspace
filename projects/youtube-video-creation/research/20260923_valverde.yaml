@@ -49,7 +49,7 @@ sections:
     bg: assets/backgrounds/stock/stadium_night.mp4
     say:
       - クラブは戻る時期を出さず、離脱は**2〜3週間**という見立ても出ています。
-      - 代表戦が明けて最初の試合は**10月10日**。ここには出られるのでは、とも見られています。
+      - クラブの次の試合は**10月10日**のビジャレアル戦。ここには出られるのでは、とも見られています。
     sources:
       - https://www.soccer-king.jp/news/world/esp/20260922/2207937.html
   - id: doubt
@@ -60,7 +60,7 @@ sections:
     narrator: キャスター
     bg: assets/backgrounds/stock/stadium_night.mp4
     say:
-      - text: 'ウルグアイ代表のバルベルデが、左足首のグレード3の捻挫と発表されました。'
+      - text: 'ウルグアイ代表のバルベルデが、24日の日本戦を欠場します。左足首のグレード3の捻挫と発表されました。'
         short_only: true
       - 交代しなかった理由を、本人もクラブも話していません。
       - voice: ネット民

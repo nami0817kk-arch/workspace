@@ -53,6 +53,8 @@ sections:
         text: アジアカップはシーズン中にやるので、チームの言っていることももちろんリスペクトしないといけない。
       - voice: 板倉滉
         text: '**自分は拾ってもらった身なので**、チームに専念しなければいけないというのもある'
+      - voice: 板倉滉
+        text: 決定したわけではないところは一つ希望として残しておきたい
     sources:
       - https://www.soccer-king.jp/news/japan/national/20260922/2207878.html
   - id: decided
@@ -69,9 +71,6 @@ sections:
       - 森保監督は、今月の取材でこう話しています。
       - voice: 森保監督
         text: アジア杯に出られないのは基本かなとは思っている
-      - それでも、本人はこう言いました。
-      - voice: 板倉滉
-        text: 決定したわけではないところは一つ希望として残しておきたい
     sources:
       - https://www.soccer-king.jp/news/japan/national/20260922/2207878.html
       - https://web.gekisaka.jp/news/japan/detail/?459419-459419-fl
