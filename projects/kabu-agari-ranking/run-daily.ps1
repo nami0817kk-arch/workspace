@@ -42,6 +42,23 @@ function Run($cmdline) {
     return $LASTEXITCODE
 }
 
+# 時間制限つきで実行する。制限を超えたらプロセスごと止めて 124 を返す。
+# タスク側の実行時間制限（30分）で強制終了されると、このスクリプトも一緒に
+# 殺されて FAILED も通知も残らない。2026-09-08 に build_site.py が応答しないまま
+# 止まり、その日のデータが通知なしで欠測した。だから先にこちらで打ち切る。
+# これはリトライではない（打ち切ったら失敗として知らせるだけ）。
+function RunTimed($cmdline, $minutes) {
+    Add-Content $log ">> $cmdline (timeout ${minutes}m)"
+    $p = Start-Process cmd -ArgumentList "/c `"$cmdline >> `"$log`" 2>&1`"" -NoNewWindow -PassThru
+    [void]$p.Handle  # これを触っておかないと 5.1 では ExitCode が取れない
+    if (-not $p.WaitForExit($minutes * 60 * 1000)) {
+        cmd /c "taskkill /T /F /PID $($p.Id) >nul 2>&1"
+        Add-Content $log "TIMEOUT: ${minutes}分で打ち切り"
+        return 124
+    }
+    return $p.ExitCode
+}
+
 # ネットワーク系のコマンドをリトライ付きで実行する。
 # 16:10 の定時実行で DNS 解決が一時的に失敗する事象が続いたため
 # （2026-09-03 / 09-04 に git pull が getaddrinfo 失敗で即死し、2営業日分を欠測）、
@@ -64,7 +81,13 @@ if ((RunRetry "git pull --ff-only origin master") -ne 0) {
     Notify "株ランキングの取得が失敗しました" "git pull がネットワークで失敗しました（3回リトライ済み）。今日のデータは取れていません。"
     exit 1
 }
-if ((Run "`"$repo\.venv\Scripts\python.exe`" src\build_site.py") -ne 0) {
+$rc = RunTimed "`"$repo\.venv\Scripts\python.exe`" src\build_site.py" 15
+if ($rc -eq 124) {
+    Add-Content $log "FAILED: build_site.py (timeout)"
+    Notify "株ランキングの取得が止まりました" "build_site.py が15分たっても終わらないので打ち切りました。今日のうちに src\build_site.py を手で回してください。"
+    exit 1
+}
+if ($rc -ne 0) {
     Add-Content $log "FAILED: build_site.py"
     Notify "株ランキングの取得が失敗しました" "build_site.py が失敗しました。kabutan から取得できていない可能性があります。run-daily.log を確認してください。"
     exit 1

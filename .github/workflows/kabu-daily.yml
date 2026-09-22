@@ -81,7 +81,9 @@ jobs:
                   business_days += 1
 
           print(f"latest rec_date={rec} / today={today} / 営業日で{business_days}日ぶん遅れ")
-          if business_days > 1:
+          # 16:10 の取得のあとに走るので、平日なら当日分があるはず。
+          # 「> 1」だと2日続けて欠けるまで鳴らず、9/08 の1日欠測が素通りした。
+          if business_days >= 1:
               print(
                   f"::error::ランキングデータが{business_days}営業日ぶん古いままです"
                   f"（最新 {rec}）。手元PCの取得タスク run-daily.ps1 が動いたか、"
