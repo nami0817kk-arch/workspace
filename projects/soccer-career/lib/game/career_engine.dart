@@ -308,6 +308,44 @@ class CareerEngine {
     return max(120, (base * tierFactor * countryFactor / 10).round() * 10);
   }
 
+  /// **今季の出来が、年俸をどれだけ動かすか。**
+  ///
+  /// 契約更改と移籍オファーの**両方がここを読む**。以前は更改だけが
+  /// 出来を見ていて、移籍の話は `salaryFor` の素の値だった——
+  /// 25歳以降に来た「上のクラブからの話」403件で、**残留の更改 9985万に対して
+  /// 上のクラブは 8480万（−15%）**。上へ行くと損をするので誰も動かず、
+  /// 移籍が 22歳の 53% から 25歳以降 1〜7% に落ちていた（`arc_sim`）。
+  static double performanceFactor(SeasonStats stats) => stats.appearances == 0
+      ? 0.85
+      : (0.85 + (stats.averageRating - 6.0) * 0.25).clamp(0.7, 1.4);
+
+  /// **今より強いクラブは、その差のぶん上乗せして払う。ただし主力として。**
+  ///
+  /// 強さの差1につき [Formulas.stepUpPayPerPoint]、上限 [Formulas.stepUpPayCap]。
+  /// 格下や同格からの話には何も足さない（下がるわけでもない）。
+  ///
+  /// **上乗せは「自分が主力でいられる格」までで止める**
+  /// （[overall] + [Formulas.stepUpStarterMargin]）。強いほど青天井に払う形に
+  /// していたら、身の丈より上のクラブへ行って登録から外れる選手が増え、
+  /// **無出場シーズンが 0.38 → 1.72 回/キャリア（4.5倍）**になった。
+  /// 現実のクラブも、控えに主力の年俸は払わない。
+  static double stepUpFactor(int fromStrength, int toStrength, int overall) {
+    final paidUpTo = min(toStrength, overall + Formulas.stepUpStarterMargin);
+    final premium =
+        1 +
+        ((paidUpTo - fromStrength) * Formulas.stepUpPayPerPoint).clamp(
+          0.0,
+          Formulas.stepUpPayCap,
+        );
+    // **控えとして呼ぶクラブは、控えの値段しか出さない。**
+    // 主力の線で止めるだけでは、格上の国ほど基本給が高い（`salaryFor` の
+    // 国の格）ぶんで額が勝ち、無出場シーズンが master の倍（0.38 → 0.84）残った。
+    final bench = toStrength - overall > Formulas.benchOfferGap
+        ? Formulas.benchOfferFactor
+        : 1.0;
+    return premium * bench;
+  }
+
   /// ポジションごとの初期能力の基準値。
   ///
   /// 選手作成画面の割り振りもここを起点にする。数字を2か所に持つと、
@@ -598,9 +636,7 @@ class CareerEngine {
       tier: club.tier,
       prestige: World.byId(club.countryId).prestige,
     );
-    final performance = stats.appearances == 0
-        ? 0.85
-        : (0.85 + (stats.averageRating - 6.0) * 0.25).clamp(0.7, 1.4);
+    final performance = performanceFactor(stats);
     // 監督の目標を達成したかどうかも年俸に効く。
     final objectiveFactor = state.objective == null
         ? 1.0
@@ -806,11 +842,19 @@ class CareerEngine {
         // 枠が空いていない、または許可が下りない移籍は成立しない。
         if (!eligibility.canJoin) continue;
 
+        // **買う側も今季の出来を見て払い、上のクラブほど上乗せする。**
+        // 素の値だけで出していた頃は、残留の更改に 15% 負けていた。
         final salary = _round(
           salaryFor(
                 overall: state.player.overall,
                 tier: tier,
                 prestige: country.prestige,
+              ) *
+              performanceFactor(state.seasonStats) *
+              stepUpFactor(
+                state.club.strength,
+                club.strength,
+                state.player.overall,
               ) *
               (1 + state.agent.negotiation * 0.03),
         );

@@ -325,6 +325,28 @@ class Formulas {
   /// 歳を取って伸びなくなるほど、磨けるようになる。
   static const double polishChance = 0.30;
 
+  /// **上のクラブが、強さの差1につき上乗せする年俸の割合。**
+  ///
+  /// 25歳以降に来る「上のクラブからの話」は、強さの差が平均 +5.5。
+  /// 0.02 なら +11%。出来の倍率（`CareerEngine.performanceFactor`）と
+  /// 合わせて、残留の更改に負けない水準に置く。
+  static const double stepUpPayPerPoint = 0.02;
+
+  /// 上乗せの上限。大きく格上のクラブが青天井に払うと、
+  /// 移籍が年俸を吊り上げる装置になる。
+  static const double stepUpPayCap = 0.30;
+
+  /// 上乗せが止まる格。自分の総合力 +3 まで（`_roleFor` の「主力」の線）。
+  /// それより強いクラブは、主力の値段以上は払わない。
+  static const int stepUpStarterMargin = 3;
+
+  /// 自分より強さがこれ以上うえのクラブは、控えとして呼んでいる
+  /// （`_roleFor` の「控え」の線、総合力 −10 より下）。
+  static const int benchOfferGap = 10;
+
+  /// 控えとして呼ぶクラブの年俸の割り引き。
+  static const double benchOfferFactor = 0.75;
+
   /// **布石が通った後、仕留めの手がどれだけ通りやすくなるか。**
   ///
   /// 実測（`matters_sim`）で、中身の違う3つの遊び方（最善・安全・勝負）が
