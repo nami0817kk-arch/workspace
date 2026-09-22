@@ -293,10 +293,13 @@ cards:
   telop: デ・ゼルビ監督のサッカーは、キーパーからつないで崩し、失えばすぐ前から奪い返す
   source: 背景
   card: features_card
+  image: assets/photos/pl/tottenham_manager_57aac009.jpg
 解説: 10億ポンドのスタジアムを持ち、稼ぎは世界9位。2025年秋、オーナーから1億ポンドの追加出資。
   telop: 10億ポンドのスタジアムを持ち、稼ぎは世界9位。2025年秋、オーナーから1億ポンドの追加出資
 解説: 応援歌「グローリー・グローリー」は讃美歌から。1961年からの欧州の戦いで歌われ始めました。
   telop: 応援歌「グローリー・グローリー」は讃美歌から。1961年からの欧州の戦いで歌われ始めました
+  card: none
+  image: assets/photos/pl/tottenham_manager_57aac009.jpg
 
 ## 雄鶏と拍車
 @bg: assets/backgrounds/stadium_トッテナム.png

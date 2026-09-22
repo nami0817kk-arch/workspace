@@ -275,10 +275,13 @@ cards:
   telop: アンドリュースのサッカーは、長いボールと空中戦で押し、セットプレーは攻めも守りも武器
   source: 背景
   card: features_card
+  image: assets/photos/pl/brentford_manager_9acd4388.jpg
 解説: 変わったのは運営。育成組織を2016年に閉じ、賭けの統計会社を持つオーナーのデータで選手を選ぶ。
   telop: 変わったのは運営。育成組織を2016年に閉じ、賭けの統計会社を持つオーナーのデータで選手を選ぶ
 解説: 2020年まで使ったグリフィン・パークは、四つ角すべてにパブがあるイングランド唯一の球場でした。
   telop: 2020年まで使ったグリフィン・パークは、四つ角すべてにパブがあるイングランド唯一の球場でした
+  card: none
+  image: assets/photos/pl/brentford_manager_9acd4388.jpg
 
 ## ホーム全勝でも昇格なし
 @bg: assets/backgrounds/stadium_ブレントフォード.png

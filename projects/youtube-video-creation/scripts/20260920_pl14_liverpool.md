@@ -288,10 +288,13 @@ cards:
   telop: イラオラのサッカーは、ボールを持つより、奪ってから速く縦に急ぐ
   source: 背景
   card: features_card
+  image: assets/photos/pl/liverpool_manager_703e8e97.jpg
 解説: データで選手を選ぶ型。2010年に来たアメリカの投資会社が、分析部門を作って補強を決めてきました。
   telop: データで選手を選ぶ型。2010年に来たアメリカの投資会社が、分析部門を作って補強を決めてきました
 解説: ゴール裏のスタンド「コップ」の名は、1906年、ボーア戦争の戦場になった丘から付けられました。
   telop: ゴール裏のスタンド「コップ」の名は、1906年、ボーア戦争の戦場になった丘から付けられました
+  card: none
+  image: assets/photos/pl/liverpool_manager_703e8e97.jpg
 
 ## 触ってはいけない看板
 @bg: assets/backgrounds/stadium_リヴァプール.png

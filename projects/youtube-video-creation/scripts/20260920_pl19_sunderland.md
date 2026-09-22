@@ -297,10 +297,13 @@ cards:
   telop: ル・ブリ監督のサッカーは、激しさと献身。それがサポーターとの絆になりました
   source: 背景
   card: features_card
+  image: assets/photos/pl/sunderland_manager_1ba8b156.jpg
 解説: 若手を育てて高く売る型。ジョブ・ベリンガムは2025年、3200万ポンドでドルトムントへ。
   telop: 若手を育てて高く売る型。ジョブ・ベリンガムは2025年、3200万ポンドでドルトムントへ
 解説: 本拠地は炭鉱の跡地。エンブレムの上の輪は巻き上げ機で、この土地の炭鉱の歴史を表しています。
   telop: 本拠地は炭鉱の跡地。エンブレムの上の輪は巻き上げ機で、この土地の炭鉱の歴史を表しています
+  card: none
+  image: assets/photos/pl/sunderland_manager_1ba8b156.jpg
 
 ## イングランド銀行クラブ
 @bg: assets/backgrounds/stadium_サンダーランド.png

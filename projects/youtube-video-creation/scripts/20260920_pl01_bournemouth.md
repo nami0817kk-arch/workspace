@@ -306,10 +306,13 @@ cards:
   telop: 監督マルコ・ローゼのサッカーは、ボールを奪いに走り、奪ったら最短距離でゴールへ向かう
   source: 背景
   card: features_card
+  image: assets/photos/pl/bournemouth_manager_19d3b54a.jpg
 解説: 若手を育てて高く手放す型。ディフェンダーのハイセンは1年でレアル・マドリードへ、5000万ポンド。
   telop: 若手を育てて高く手放す型。ディフェンダーのハイセンは1年でレアル・マドリードへ、5000万ポンド
 解説: 1997年と2008年、2度の経営破綻から立ち直ってきた、しぶといクラブです。
   telop: 1997年と2008年、2度の経営破綻から立ち直ってきた、しぶといクラブです
+  card: none
+  image: assets/photos/pl/bournemouth_manager_19d3b54a.jpg
 
 ## ひとりで9点
 @bg: assets/backgrounds/stadium_ボーンマス.png

@@ -284,10 +284,13 @@ cards:
   telop: ヤイスレ監督のサッカーは、前へ前へ。奪ってすぐに、速く攻めます
   source: 背景
   card: features_card
+  image: assets/photos/pl/newcastle_manager_37492bb4.jpg
 解説: オーナーの資金で買う型。買収額は3億500万ポンドで、そこから4年でタイトルに届きました。
   telop: オーナーの資金で買う型。買収額は3億500万ポンドで、そこから4年でタイトルに届きました
 解説: 街にクラブは一つだけ。2部に落ちた2016年からの1年も、平均5万人を超えるお客さんが来ました。
   telop: 街にクラブは一つだけ。2部に落ちた2016年からの1年も、平均5万人を超えるお客さんが来ました
+  card: none
+  image: assets/photos/pl/newcastle_manager_37492bb4.jpg
 
 ## 最初は赤いシャツだった
 @bg: assets/backgrounds/stadium_ニューカッスル.png

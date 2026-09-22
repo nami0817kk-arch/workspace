@@ -380,6 +380,13 @@ def build(key: str, number: int, old_file: str) -> Path:
     # `features_sources`。基礎DATAの直後、クラブの話の前。ショートには入れない
     if ov.get("features"):
         f_say = list(ov["features"])
+        # 1行目（プレーの色＝監督の話）に監督の顔を置く。写真のある行が先にあれば、
+        # research が3行目でカードを下ろして顔だけにする（名選手の節と同じ仕掛け）。
+        # 置かないと表が22秒出っぱなしになった（review「カードの持ち」）
+        f_face = next((v.get("file", "") for v in faces.values()
+                       if isinstance(v, dict) and v.get("role") == "manager"), "")
+        if f_face:
+            f_say[0] = {"text": f_say[0], "image": f_face}
         sections.append(sec(id="features", heading="このクラブの特徴", tier="背景",
                             telop=str(ov.get("features_telop") or "このクラブの特徴"),
                             narrator="解説",
