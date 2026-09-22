@@ -309,10 +309,13 @@ cards:
   telop: ケヴィン・オコナーはブラックバーン生まれ。1995年に育成組織へ入り、16シーズンで**501試合**
   source: 背景
   card: legends_card
+  image: assets/photos/pl/brentford_legend_69f3b6b5.jpg
 キャスター: 2004年から主将として200試合以上。4部優勝も2部への昇格も、腕章を巻いて迎えました。
   telop: 2004年から主将として200試合以上。4部優勝も2部への昇格も、腕章を巻いて迎えました
 キャスター: 2015年、契約中のまま殿堂入り。引退後もコーチとしてクラブに残りました。
   telop: 2015年、契約中のまま殿堂入り。引退後もコーチとしてクラブに残りました
+  card: none
+  image: assets/photos/pl/brentford_legend_69f3b6b5.jpg
 
 ## このクラブを語る3人（2人目）
 @bg: assets/backgrounds/stadium_ブレントフォード.png
