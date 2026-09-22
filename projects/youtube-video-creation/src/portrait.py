@@ -209,7 +209,12 @@ NOT_A_PERSON = ("(dog)", "(cat)", "(horse)", "dog)", "statue", "mural",
                 # 紋章・盾も人ではない（アラウホの候補に混ざっていた）
                 "coat of arms", "crest of", "escudo de",
                 # 集合写真は顔が小さい（ブラジル代表の候補に混ざっていた）
-                "gruppenfoto", "team photo", "squad photo")
+                "gruppenfoto", "team photo", "squad photo",
+                # **人名の付いた建物**（2026-09-23 実測）。「Lewis Hall」で
+                # `File:Lewis Hall Chapel.jpg`（礼拝堂の内部）を掴み、被写体の
+                # 照合も「Lewis Hall が明記されています」と通した
+                "chapel", "church", "cathedral", "building", "interior",
+                "exterior", "dormitory", "residence hall", "campus")
 
 
 # 画像でない添付。**Commons には音声も動画もある。**

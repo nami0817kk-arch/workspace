@@ -1,0 +1,82 @@
+date: 2026年9月23日
+slot: romano_1
+format: quote
+voice_min: 0.6
+people: [ルイス・ホール]
+theme:
+  id: hall_newcastle
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: ニューカッスル
+  title: 'ルイス・ホール、マンUに誘われた夏を振り返って「迷うまでもなかった」'
+  hook: 噂されたことを、悪い話だとは受け取っていませんでした。
+  question: なぜニューカッスルに残ったのか
+short_title: ルイス・ホールがマンUを選ばなかった理由
+thumbnail:
+  photo: assets/images/20260923_hall/01.jpg
+  line1: マンUの関心を
+  line2: どう受け取ったのか
+sections:
+  - id: what
+    heading: 何があったか
+    tier: 報道
+    telop: 新しい契約を結び、ニューカッスルに残った
+    narrator: キャスター
+    say:
+      - ニューカッスルのルイス・ホールは、新しい契約を結びました。
+      - その夏、マンチェスター・ユナイテッドが関心を寄せていると伝えられていた選手です。
+    sources:
+      - https://metro.co.uk/2026/09/22/lewis-hall-sends-transfer-message-man-utd-signing-newcastle-contract-29643573/
+      - https://www.goal.com/en-gb/lists/it-was-a-no-brainer-lewis-hall-reveals-why-he-snubbed-man-utd-to-spearhead-newcastle-s-new-era-under/blt33a6e222cbf3f713
+  - id: said
+    main: true
+    heading: 言ったこと
+    tier: 報道
+    telop: 「新しい契約にサインするのは、迷うまでもなかった」
+    narrator: キャスター
+    say:
+      - text: 'マンチェスター・ユナイテッドの関心が伝えられたルイス・ホールが、残った理由を話しました。'
+        short_only: true
+      - voice: ルイス・ホール
+        text: 新しい契約にサインするのは、**迷うまでもなかった。**
+      - voice: ルイス・ホール
+        text: ほかのチームと噂されるときは、自分が正しいことをしているってことなんだと思う。
+      - voice: ルイス・ホール
+        text: それは前向きに受け取った。でも同時に、ここでプレーするのがどれだけ好きか分かっていた。
+      - voice: ルイス・ホール
+        text: 監督が来てから、クラブの野心も、自分たちが何を成し遂げたいのかも分かっていた。
+    sources:
+      - https://x.com/FabrizioRomano/status/2102350989420277975
+      - https://metro.co.uk/2026/09/22/lewis-hall-sends-transfer-message-man-utd-signing-newcastle-contract-29643573/
+  - id: voices
+    heading: ネットの声
+    tier: 未確認
+    telop: これを聞いた人が書いていたこと
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: サインした直後は、どの選手も「迷うまでもなかった」と言う。面白いのは、マンUの最終ラインの多くがまだ定位置も決まっていないうちに、彼がニューカッスルでキャプテン候補になっていることだ
+      - voice: ネット民
+        text: ルイス・ホールの件は、まさに俺がユナイテッドの補強を疑い続けている理由だ。去年の夏、左サイドバックに明らかな問題があった。プレミアで実績のある本職の左サイドバックが必要で、ホールはまさにその選手だった
+      - voice: ネット民
+        text: ニューカッスルが新しい契約を与えたのは、将来高く売るためだ。でもマンチェスター・ユナイテッドは値段を恐れない。欲しくなったら買う
+      - voice: ネット民
+        text: ルイス・ホールは他のクラブの目をまっすぐ見て、何も感じず、振り返ってニューカッスルを選んだ。あれは契約じゃない、野心への接近禁止命令だ。なのに彼史上いちばんかっこいい
+      - voice: ネット民
+        text: チェルシーは彼を売って、よく分からないDFを6000万で買った。本当にチェルシーが嫌いだ。アカデミーの選手を売るのがうちの弱点だった
+      - voice: ネット民
+        text: 今の市場にルイスホール以外めぼしいLBいないよな。
+      - voice: ネット民
+        text: ルイスホール上手すぎだろ…まじで1億出してでも取れ
+      - voice: ネット民
+        text: 契約延長したルイスホールの得点。素晴らしい序盤、素晴らしい、素晴らしいぞー。
+      - voice: ネット民
+        text: ルイスホールのユニ買います
+      - voice: ネット民
+        text: ルイスホール、神の子。
+        short_voice: true
+    sources:
+      - https://x.com/FabrizioRomano/status/2102350989420277975
+      - https://x.com/search?q=Lewis%20Hall%20contract%20lang%3Aen&f=live
+      - https://x.com/search?q=%E3%83%AB%E3%82%A4%E3%82%B9%E3%83%BB%E3%83%9B%E3%83%BC%E3%83%AB%20lang%3Aja&f=live

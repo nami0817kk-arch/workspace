@@ -1,0 +1,120 @@
+date: 2026年9月23日
+slot: japan_3
+format: news
+voice_min: 0.4
+people: [久保建英, 遠藤航, 田中聡]
+theme:
+  id: jp_numbers
+  league_name: 日本代表
+  kind: other
+  topic: 日本代表
+  title: '遠藤航の6番は誰に？ワールドカップ後の日本代表、背番号が入れ替わった'
+  hook: 久保建英は、自分から8番を手放していました。
+  question: ワールドカップのあと、番号はどう動いたのか
+short_title: 久保建英が8番を返した理由
+thumbnail:
+  photo: assets/images/20260923_endo/01.jpg
+  photos:
+    - assets/images/20260923_endo/01.jpg
+    - assets/images/20260923_kubo/01.jpg
+    - assets/images/20260923_matsuki/01.jpg
+  line1: 6番は湘南の後輩へ
+  line2: 8番を着けた久保は20番に
+sections:
+  - id: what
+    heading: 何が決まったか
+    tier: 報道
+    telop: 9月と10月の4試合。背番号が発表された
+    narrator: キャスター
+    card:
+      type: table
+      title: ワールドカップから番号を戻した2人
+      columns: ["", "ワールドカップ", "今回"]
+      rows:
+        - ["久保建英", "8", "20"]
+        - ["田中碧", "7", "17"]
+    say:
+      - ワールドカップのあと最初の4試合。その背番号が決まりました。
+      - 大会から続けて呼ばれた選手のうち、**6人**の番号が変わっています。
+    sources:
+      - https://news.yahoo.co.jp/articles/c6eb188843046f54e67564652b02e5141c7cadf8
+      - https://www.soccer-king.jp/news/japan/national/20260922/2207840.html
+  - id: kubo
+    main: true
+    heading: 8番と7番は、誰の番号だったか
+    tier: 報道
+    telop: 久保の8番は南野の、田中碧の7番は三笘の番号だった
+    narrator: 解説
+    card:
+      type: table
+      title: 7番と8番
+      columns: ["", "ワールドカップ", "今回"]
+      rows:
+        - ["7番", "田中碧（三笘薫の番号）", "相馬勇紀"]
+        - ["8番", "久保建英（南野拓実の番号）", "鈴木唯人"]
+    say:
+      - text: 'ワールドカップで8番だった久保建英が、20番に戻りました。'
+        short_only: true
+      - voice: 久保建英
+        text: 元々8番は今回だけって言ってたんで
+      - ワールドカップで久保が着けた8番は、**南野拓実**の番号でした。
+      - 田中碧も同じです。7番は**三笘薫**の番号で、今回は17に戻りました。
+      - 空いた7番は相馬勇紀、8番は鈴木唯人が着けます。
+    sources:
+      - https://news.yahoo.co.jp/articles/5fc3a54a3fb4cd23f28e408828b5bfa2b6374047
+      - https://news.yahoo.co.jp/articles/226c032a520d462b9fd158d8ae03e4cc2c7651a6
+  - id: six
+    heading: 遠藤航の6番
+    tier: 報道
+    telop: 6番は、湘南の後輩の田中聡へ
+    narrator: 解説
+    card:
+      type: table
+      title: 初めて呼ばれた4人
+      columns: ["", ""]
+      rows:
+        - ["中野就斗", "2"]
+        - ["松木玖生", "19"]
+        - ["齋藤俊輔", "29"]
+        - ["谷村海那", "31"]
+    say:
+      - 代表を退いた遠藤航が、長く着けてきた**6番**。
+      - 継いだのは**田中聡**。湘南ベルマーレの後輩です。
+      - 初めて呼ばれた4人は、中野就斗が2、松木玖生が19、齋藤俊輔が29、谷村海那が31です。
+    sources:
+      - https://news.yahoo.co.jp/articles/10cb54c4dfe543b01c4b5f001be234700cc7e822
+      - https://www.soccer-king.jp/news/japan/national/20260922/2207840.html
+  - id: voices
+    heading: ネットの声
+    tier: 未確認
+    telop: 番号を見た人が書いていたこと
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: ヤフコメさんたちはいろいろ理屈を付けてるけど、三笘・南野両選手が代表に戻ってきたときに、番号を戻しやすいような人選としか思えないですが。
+      - voice: ネット民
+        text: 相馬については三笘が復帰したら外れる前提なのがわかる。クラブでの活躍度が代表に影響するのが本当なら、久保より唯人が序列が上なのも当たり前。日本代表の背番号9が後藤なのは現時点では物足りない。
+      - voice: ネット民
+        text: 6番を聡が引き継ぐって…湘南サポにはたまらんよありがとう
+      - voice: ネット民
+        text: 田中聡「６」！！！
+      - voice: ネット民
+        text: 谷村は３１！！！！！
+      - voice: ネット民
+        text: 背番号はあえて前世代の選手に敬意を払い、同じポジションではない所に若手が入るのが、最近のルールやリスペクトな気がします。代表定着して欲しい期待や成長も加味した選択かなと感じてます。
+      - voice: ネット民
+        text: 久保の20への戻しは序列を表してるような措置で驚いた。周りとは違って自己評価は厳しいイメージだから本人の希望かな。相馬のレギュラーナンバーの7は違和感しかないけど相馬しか希望しなかったのか。三笘が戻ったら三笘になるだろうけど。
+      - voice: ネット民
+        text: 久保の20は衝撃だ。いつかは日本の10番を背負うと思っていたのだが。
+      - voice: ネット民
+        text: 鎌田が変わるかなとも思ったんだけど、本人あまりこだわりなさそうだからかな？6とか8とか空いたらつけるのかなと勝手に思ってたんだけどね。15が悪いわけじゃないが、さ。
+      - voice: ネット民
+        text: 佐野航大は前も19だったから変えなくても良かったのになあとは思う
+      - voice: ネット民
+        text: 久保も頑張れ！！てか背番号20に戻したんだね、
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/10cb54c4dfe543b01c4b5f001be234700cc7e822/comments
+      - https://news.yahoo.co.jp/articles/c6eb188843046f54e67564652b02e5141c7cadf8/comments
+      - https://news.yahoo.co.jp/articles/226c032a520d462b9fd158d8ae03e4cc2c7651a6/comments
+      - https://x.com/search?q=%E8%83%8C%E7%95%AA%E5%8F%B7%20%E4%B9%85%E4%BF%9D%2020%20lang%3Aja&f=live
