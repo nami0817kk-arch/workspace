@@ -14,6 +14,18 @@ import 'club_identity.dart';
 /// **描くのは判定に効いているものだけ**にしてある。自分の位置（[spot]）と、
 /// 相手の戦い方（[style]）が作るブロックの高さ。味方を勝手に何人も置くと、
 /// 判定に無いものが画面にあることになる（このゲームで一番やらないこと）。
+/// 選んだ手がどうなったか。ピッチの上に、ボールの行方として描く。
+///
+/// 局面の絵は「どこで」を読まずに分からせたが、**結果は文字だけ**だった。
+/// 通ったなら前へ、決まったならゴールまで、止められたなら相手の色で。
+/// 判定に無いものは描かない——描くのは成否とゴールかどうか、それだけ。
+class PitchOutcome {
+  const PitchOutcome({required this.success, required this.goal});
+
+  final bool success;
+  final bool goal;
+}
+
 class PitchView extends StatelessWidget {
   const PitchView({
     super.key,
@@ -21,7 +33,15 @@ class PitchView extends StatelessWidget {
     required this.club,
     required this.opponent,
     required this.style,
+    this.outcome,
+    this.aspectRatio = 2.15,
   });
+
+  /// 結果。null なら局面（これから選ぶ）として描く。
+  final PitchOutcome? outcome;
+
+  /// 横長さ。結果の絵は小さく置くので、少し詰める。
+  final double aspectRatio;
 
   final PitchSpot spot;
 
@@ -38,13 +58,14 @@ class PitchView extends StatelessWidget {
     return Semantics(
       label: '${spot.label}。相手は${style.label}',
       child: AspectRatio(
-        aspectRatio: 2.15,
+        aspectRatio: aspectRatio,
         child: CustomPaint(
           painter: _PitchPainter(
             spot: spot,
             style: style,
             home: ClubIdentity.of(club),
             away: ClubIdentity.of(opponent),
+            outcome: outcome,
           ),
         ),
       ),
@@ -58,12 +79,14 @@ class _PitchPainter extends CustomPainter {
     required this.style,
     required this.home,
     required this.away,
+    this.outcome,
   });
 
   final PitchSpot spot;
   final ClubStyle style;
   final ClubIdentity home;
   final ClubIdentity away;
+  final PitchOutcome? outcome;
 
   /// 芝。彩度を落としてあるのは、この上に置く色（クラブ色）を
   /// 読ませるため。緑が主役になると、自分がどこに居るか分からなくなる。
@@ -120,7 +143,84 @@ class _PitchPainter extends CustomPainter {
     _goals(canvas, inset);
     _opponents(canvas, inset);
     _player(canvas, inset);
+    _ball(canvas, inset);
     canvas.restore();
+  }
+
+  /// ボール。局面ならこの選手の足元、結果なら行った先まで。
+  void _ball(Canvas canvas, Rect p) {
+    final from = Offset(
+      p.left + p.width * spot.along,
+      p.top + p.height * spot.across,
+    );
+    final r = p.height * 0.032;
+    final white = Paint()..color = Colors.white;
+    final dark = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 1.2
+      ..color = const Color(0xCC14140F);
+    final result = outcome;
+    if (result == null) {
+      // まだ選んでいない。足元にボール。
+      final at = from + Offset(r * 2.2, r * 1.6);
+      canvas.drawCircle(at, r, white);
+      canvas.drawCircle(at, r, dark);
+      return;
+    }
+
+    // 行き先。決めたならゴール、通ったなら前へ、止められたなら少し先で相手に。
+    final goal = Offset(p.right, p.center.dy);
+    final Offset to;
+    if (result.goal) {
+      to = goal;
+    } else if (result.success) {
+      final dx = (goal.dx - from.dx) * 0.38;
+      final dy = (goal.dy - from.dy) * 0.38;
+      to = Offset(from.dx + dx, from.dy + dy);
+    } else {
+      final dx = (goal.dx - from.dx) * 0.22;
+      final dy = (goal.dy - from.dy) * 0.22;
+      to = Offset(from.dx + dx, from.dy + dy);
+    }
+
+    // 軌跡。通ったなら実線、止められたなら途中で切れる破線。
+    final path = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.2
+      ..strokeCap = StrokeCap.round
+      ..color = result.success
+          ? Colors.white.withValues(alpha: 0.9)
+          : Colors.white.withValues(alpha: 0.55);
+    if (result.success) {
+      canvas.drawLine(from, to, path);
+    } else {
+      const segments = 6;
+      for (var i = 0; i < segments; i += 2) {
+        final a = Offset.lerp(from, to, i / segments)!;
+        final b = Offset.lerp(from, to, (i + 1) / segments)!;
+        canvas.drawLine(a, b, path);
+      }
+    }
+
+    // 行き着いたボール。決まったなら大きく、止められたなら相手の色で。
+    if (result.goal) {
+      canvas.drawCircle(to, r * 2.6, Paint()..color = const Color(0x55FFFFFF));
+      canvas.drawCircle(to, r * 1.4, white);
+      canvas.drawCircle(to, r * 1.4, dark);
+    } else if (result.success) {
+      canvas.drawCircle(to, r, white);
+      canvas.drawCircle(to, r, dark);
+    } else {
+      canvas.drawCircle(to, r * 1.6, Paint()..color = away.primary);
+      canvas.drawCircle(
+        to,
+        r * 1.6,
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1.4
+          ..color = const Color(0xCCFFFFFF),
+      );
+    }
   }
 
   void _lines(Canvas canvas, Rect p) {
@@ -226,6 +326,8 @@ class _PitchPainter extends CustomPainter {
   @override
   bool shouldRepaint(_PitchPainter old) =>
       old.spot != spot ||
+      old.outcome?.success != outcome?.success ||
+      old.outcome?.goal != outcome?.goal ||
       old.style != style ||
       old.home.primary != home.primary ||
       old.away.primary != away.primary;

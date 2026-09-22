@@ -170,6 +170,11 @@ void main() {
     await pump(tester, MatchScreen(controller: controller), theme);
     await dump(tester, '06-match');
 
+    // 手を選んだ直後。結果のカード（ミニピッチにボールの行方）を見る。
+    await tester.tap(find.byType(OutlinedButton).first);
+    await tester.pumpAndSettle();
+    await dump(tester, '06b-result');
+
     // 殿堂。引退させて、記録として残ったところを見る。
     await controller.retire();
     await pump(tester, HallScreen(controller: controller), theme);

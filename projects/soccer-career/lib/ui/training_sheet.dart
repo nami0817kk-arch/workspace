@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../game/formulas.dart';
 import '../game/match_engine.dart';
-import '../models/attributes.dart';
 import '../models/career.dart';
 import '../models/traits.dart';
 import '../models/training.dart';
@@ -159,46 +158,52 @@ class TrainingSheet {
                       ],
                     ),
                     const SizedBox(height: 4),
+                    // メニューは4つの小見出しに分けて、札で並べる。
+                    // 1行ずつ説明付きで13行並べていた頃は、毎週この
+                    // シートを開くたびに2画面ぶんスクロールしていた。
+                    // 説明は選んでいるものだけ、その札の下に出す。
                     Flexible(
                       child: ListView(
                         shrinkWrap: true,
                         padding: const EdgeInsets.only(bottom: 12),
                         children: [
-                          for (final menu in menus)
-                            ListTile(
-                              dense: true,
-                              selected: state.menu == menu,
-                              leading: Icon(
-                                state.menu == menu
-                                    ? Icons.radio_button_checked
-                                    : Icons.radio_button_unchecked,
-                                size: 20,
-                              ),
-                              title: Text(menu.label),
-                              subtitle: Text(
-                                '${menu.description}'
-                                '${menu.isRest ? '' : ' ・ 消耗 ${menu.conditionCost}'}',
-                                style: theme.textTheme.bodySmall,
-                              ),
-                              trailing: menu.keys.isEmpty
-                                  ? null
-                                  : Text(
-                                      menu.keys
-                                          .map((AttributeKey k) => k.label)
-                                          .join('・'),
-                                      style: theme.textTheme.labelSmall
-                                          ?.copyWith(
-                                            color: theme
-                                                .colorScheme
-                                                .onSurfaceVariant,
-                                          ),
-                                    ),
-                              onTap: () async {
-                                await controller.setMenu(menu);
-                                if (!sheetContext.mounted) return;
-                                Navigator.of(sheetContext).pop();
-                              },
-                            ),
+                          _MenuGroup(
+                            title: '休む',
+                            menus: [
+                              for (final m in menus)
+                                if (m.isRest) m,
+                            ],
+                            selected: state.menu,
+                            onPick: (m) => _pick(controller, sheetContext, m),
+                          ),
+                          _MenuGroup(
+                            title: '1か所を鍛える',
+                            menus: [
+                              for (final m in menus)
+                                if (!m.isRest && !m.isCompound && !m.weakFoot)
+                                  m,
+                            ],
+                            selected: state.menu,
+                            onPick: (m) => _pick(controller, sheetContext, m),
+                          ),
+                          _MenuGroup(
+                            title: '2か所を同時に',
+                            menus: [
+                              for (final m in menus)
+                                if (m.isCompound) m,
+                            ],
+                            selected: state.menu,
+                            onPick: (m) => _pick(controller, sheetContext, m),
+                          ),
+                          _MenuGroup(
+                            title: '苦手をつぶす',
+                            menus: [
+                              for (final m in menus)
+                                if (m.weakFoot) m,
+                            ],
+                            selected: state.menu,
+                            onPick: (m) => _pick(controller, sheetContext, m),
+                          ),
                         ],
                       ),
                     ),
@@ -212,6 +217,16 @@ class TrainingSheet {
     );
   }
 
+  static Future<void> _pick(
+    CareerController controller,
+    BuildContext sheetContext,
+    TrainingMenu menu,
+  ) async {
+    await controller.setMenu(menu);
+    if (!sheetContext.mounted) return;
+    Navigator.of(sheetContext).pop();
+  }
+
   /// 「相方と組む（真木 遼）」。名前が出ないと、誰と組むのか分からない。
   static String _companionLabel(
     CareerState state,
@@ -221,6 +236,82 @@ class TrainingSheet {
     if (kind == null) return companion.label;
     final who = state.teammateOf(kind);
     return who == null ? companion.label : '${companion.label}（${who.name}）';
+  }
+}
+
+/// 練習メニューの1グループ。札を並べ、選んでいるものの説明だけ下に出す。
+class _MenuGroup extends StatelessWidget {
+  const _MenuGroup({
+    required this.title,
+    required this.menus,
+    required this.selected,
+    required this.onPick,
+  });
+
+  final String title;
+  final List<TrainingMenu> menus;
+  final TrainingMenu selected;
+  final void Function(TrainingMenu) onPick;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    if (menus.isEmpty) return const SizedBox.shrink();
+    final picked = menus.contains(selected) ? selected : null;
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(20, 8, 20, 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: theme.textTheme.labelMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 6),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: [
+              for (final menu in menus)
+                ChoiceChip(
+                  // 消耗を札に書く。開かないと読めない数字は無いのと同じ。
+                  // 名前と数字は別の Text にする（名前だけで探せるように）。
+                  label: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(menu.label),
+                      if (!menu.isRest) ...[
+                        const SizedBox(width: 6),
+                        Text(
+                          '${menu.conditionCost}',
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                  selected: menu == selected,
+                  visualDensity: VisualDensity.compact,
+                  onSelected: (_) => onPick(menu),
+                ),
+            ],
+          ),
+          if (picked != null) ...[
+            const SizedBox(height: 6),
+            Text(
+              '${picked.description}'
+              '${picked.keys.isEmpty ? '' : ' ・ ${picked.keys.map((k) => k.label).join('・')}'}',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
   }
 }
 
