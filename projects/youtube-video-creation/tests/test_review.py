@@ -1512,3 +1512,13 @@ def test_白い箱で積む反応も反応の層として数える():
     only_caster = parse_script("---\ntitle: T\n---\n\n## ネットの声\n\n"
                                "キャスター: 反応を紹介します。\n")
     assert check_reaction_layer(only_caster).ok is False
+
+
+def test_疑問符で終わる題は問いかけとして通す():
+    """2026-09-22: 「メッシ通算930点目。フリーキックだけなら歴代何位？」が弾かれた。"""
+    from types import SimpleNamespace
+    from src.review import check_title_hook
+
+    assert check_title_hook(SimpleNamespace(title="フリーキックだけなら歴代何位？")).ok
+    assert check_title_hook(SimpleNamespace(title="デンベレとのあいだで起きたこと")).ok
+    assert not check_title_hook(SimpleNamespace(title="メッシが930点目を決めた")).ok

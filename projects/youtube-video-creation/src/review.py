@@ -1212,6 +1212,8 @@ TITLE_NOUN_TAILS = (
     # 「〜のは」「〜のが」で終わる形は、**それ自体が体言止めで答えを隠している**。
     # 語尾そのものを認めれば、次からこの形で鳴らない
     "のは", "のが",
+    # 「〜のあいだで起きたこと」も、何が起きたかは伏せている（2026-09-22）
+    "たこと", "ったこと", "いたこと",
 )
 # 言い切らずに「語る／明かす」で止める形。何を語ったかは隠れている
 TITLE_VERB_TAILS = ("が語る", "が明かす", "が認める", "が口を開く", "を語る", "を明かす",
@@ -1232,6 +1234,11 @@ def check_title_hook(script: Script) -> Finding:
         return Finding(False, "タイトルの型", "タイトルがありません")
     if any(word in script.title for word in TITLE_HOOKS):
         return Finding(True, "タイトルの型", "続きを見たくなる形です")
+    # **疑問符で終わるなら問いかけ**（2026-09-22）。`_bare` が「？」を落とすので、
+    # 「歴代何位？」が「何位」になり、言い切りとして弾かれていた
+    quoted_tail = re.sub(r"【[^】]*】", "", script.title or "").strip()
+    if quoted_tail.endswith(("？", "?")):
+        return Finding(True, "タイトルの型", "問いかけで終わっています")
     if bare.rstrip("。！!").endswith(TITLE_QUESTION_TAILS):
         return Finding(True, "タイトルの型", "問いかけで終わっています")
     tail = bare.rstrip("。！!")

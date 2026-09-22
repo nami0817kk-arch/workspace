@@ -871,15 +871,14 @@ def _advise_title(notes: Notes) -> list[str]:
     # **`draft` と `review` で物差しが違っていた**（2026-09-22 に判明）。
     # こちらは体言止めの一覧（TITLE_NOUN_TAILS）を見ていなかったので、
     # `review` が通す題を `draft` が弾いていた。**同じ一覧を見る**
-    from .review import TITLE_HOOKS, TITLE_NOUN_TAILS, TITLE_QUESTION_TAILS
+    # 一覧を共有しても、**判定の枝（「は」止め・動詞止め）がずれた**ので、
+    # 同じ関数そのものを呼ぶ
+    from types import SimpleNamespace
+
+    from .review import check_title_hook
 
     title = notes.video_title
-    if any(word in title for word in TITLE_HOOKS):
-        return []
-    tail = title.rstrip("。！!")
-    if tail.endswith(TITLE_QUESTION_TAILS) or tail.endswith(TITLE_NOUN_TAILS):
-        return []
-    if tail.endswith(("」", "』")):
+    if check_title_hook(SimpleNamespace(title=title)).ok:
         return []
     return [
         f"タイトル『{title[:24]}…』が答えを言い切っています。"
