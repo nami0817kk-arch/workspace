@@ -88,3 +88,29 @@ def test_draw_notation_is_flagged():
     assert not flagged("アディショナルタイム7分")
     # すでに開いてあるものは拾わない
     assert not flagged("1分け3敗")
+
+
+def test_辞書の読みを合成に渡す文へ開く():
+    """2026-09-22 指示「日本人選手を読む時に読み仮名間違えているから改善して」。
+    辞書は check で知らせるだけで、合成には使っていなかった。"""
+    from src.reading import apply
+
+    d = {"鈴木彩艶": "すずきざいおん", "彩艶": "ざいおん", "鎌田": "かまだ", "鎌田大地": "かまだだいち"}
+    assert apply("鈴木彩艶と鎌田大地。鎌田は", d) == "すずきざいおんとかまだだいち。かまだは"
+    assert apply("彩艶が", d) == "ざいおんが"
+
+
+def test_辞書に無い漢字の人名は下書きで知らせる():
+    from src.research import _advise_readings, build_notes
+
+    raw = _raw_people(["冨安健洋", "架空太郎"])
+    got = _advise_readings(build_notes(raw))
+    assert any("架空太郎" in h for h in got) and not any("冨安健洋" in h for h in got)
+
+
+def _raw_people(people):
+    from tests.test_research import _raw
+
+    raw = _raw()
+    raw["people"] = people
+    return raw

@@ -282,13 +282,21 @@ def synthesize_script(
     backend = backend or create_backend(config, use_tts)
 
     cursor = 0.0
+    from dataclasses import replace as _replace
+
+    from .reading import apply as _apply_reading, load_dictionary as _load_readings
+
+    readings = _load_readings()
     for index, line in enumerate(script.lines):
         member = config.resolve_speaker(line.speaker, line.text or '')
         pause = pause_for(config, line)
-        target = out_dir / f"{index:04d}_{member.key}_{_digest(line, member, pause, backend.name)}.wav"
+        # **声に渡す文は、読みの辞書で開く**（2026-09-22）。画面の字（line.text）は変えない。
+        # 控えの鍵も開いた文で作るので、辞書を足せば作り直される
+        spoken = _replace(line, text=_apply_reading(line.text or "", readings))
+        target = out_dir / f"{index:04d}_{member.key}_{_digest(spoken, member, pause, backend.name)}.wav"
 
         if not target.exists():
-            _write_padded(backend.synthesize(line, member), pause, target)
+            _write_padded(backend.synthesize(spoken, member), pause, target)
 
         line.audio_path = target
         line.pause = pause  # 描画側が末尾の無音を口パクから外すために使う

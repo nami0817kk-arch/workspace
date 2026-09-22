@@ -1097,6 +1097,24 @@ def _advise_ear(notes: Notes) -> list[str]:
     return hints
 
 
+def _advise_readings(notes: Notes) -> list[str]:
+    """**漢字の人名は読みの辞書に無いと誤読される**（2026-09-22）。
+
+    `people:` の漢字だけの名前が config/reading.yaml に無ければ知らせる。
+    VOICEVOX は日本人選手の名前を半分近く読み違えていた（実測）。
+    """
+    from .reading import load_dictionary
+
+    known = load_dictionary()
+    hints: list[str] = []
+    for person in notes.people or []:
+        name = str(person).strip()
+        if re.fullmatch(r"[一-龥々]{2,6}", name) and name not in known:
+            hints.append(f"『{name}』の読みが config/reading.yaml にありません。"
+                         "合成音声が読み違えます。読みを足してください")
+    return hints
+
+
 def _advise_group_thumbnail(notes: Notes) -> list[str]:
     """**群れの回は、サムネも並べる**（2026-09-22 ユーザー「一人の写真ではなくて
     取り上げた選手を並べて」。9/17「群れの回は群れを主語にする」と同じ型）。
@@ -1474,7 +1492,7 @@ def _advise_voices(notes: Notes) -> list[str]:
                         + _advise_thumbnail_promise(notes)
                         + _advise_repeats(notes) + _advise_short_repeats(notes)
                         + _advise_title(notes) + _advise_group_thumbnail(notes)
-                        + _advise_ear(notes))
+                        + _advise_ear(notes) + _advise_readings(notes))
     for section in notes.sections:
         card = section.card or {}
         if str(card.get("type", "")).lower() != "reactions":

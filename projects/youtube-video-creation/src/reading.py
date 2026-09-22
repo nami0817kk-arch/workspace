@@ -58,6 +58,24 @@ def load_dictionary(path: str | Path = DICT_PATH) -> dict[str, str]:
     return {str(k): str(v) for k, v in (raw.get("readings") or {}).items() if str(v).strip()}
 
 
+def apply(text: str, dictionary: dict[str, str] | None = None) -> str:
+    """読み上げに渡す文を、辞書の読みに置き換える（2026-09-22 指示「日本人選手を読む時に
+    読み仮名間違えているから改善して」）。
+
+    それまで辞書は `check` で知らせるだけで、**合成には使っていなかった。**
+    VOICEVOX は「冨安健洋」を「トミヤス ケンヨオ」、「鎌田」を「カマタ」と読む
+    （`audio_query` の kana で実測）。画面に出す字は変えず、声に渡す文だけ開く。
+    長い語から当てる（「鈴木彩艶」と「彩艶」の二重当てを避ける）。
+    """
+    if dictionary is None:
+        dictionary = load_dictionary()
+    out = str(text or "")
+    for word in sorted(dictionary, key=len, reverse=True):
+        if word in out:
+            out = out.replace(word, dictionary[word])
+    return out
+
+
 def date_reading(month: int, day: int) -> str:
     """「9月1日」→「くがつついたち」。"""
     return MONTHS.get(month, f"{month}がつ") + DAYS.get(day, f"{day}にち")
