@@ -303,16 +303,43 @@ cards:
   no_telop: true
   source: 報道
   image: assets/stats/pl_brentford_gk.png
-キャスター: ゴールキーパーは3人。クィービーン・ケレハーはアイルランド代表で**32試合**。ハウコン・ヴァルディマルソンはアイスランド代表で**22試合**。
+キャスター: ゴールキーパーは3人。
   no_telop: true
   image: assets/stats/pl_brentford_gk_f.png
-キャスター: ディフェンダーは9人。主将を務めるのが**ネイサン・コリンズ**。リーグ戦で**105試合**に出ています。クリストファー・アイエルはノルウェー代表で**57試合**。
+キャスター: クィービーン・ケレハーはアイルランド代表で**32試合**。
+  no_telop: true
+  image: assets/stats/pl_brentford_gk_f.png
+キャスター: ハウコン・ヴァルディマルソンはアイスランド代表で**22試合**。
+  no_telop: true
+  image: assets/stats/pl_brentford_gk_f.png
+キャスター: ディフェンダーは9人。
   no_telop: true
   image: assets/stats/pl_brentford_df_f.png
-キャスター: ミッドフィールダーは9人。マティアス・イェンセンはデンマーク代表で**32試合**。ミケル・ダムスゴーはデンマーク代表で**40試合**。
+キャスター: 主将を務めるのが**ネイサン・コリンズ**。
+  no_telop: true
+  image: assets/stats/pl_brentford_df_f.png
+キャスター: リーグ戦で**105試合**に出ています。
+  no_telop: true
+  image: assets/stats/pl_brentford_df_f.png
+キャスター: クリストファー・アイエルはノルウェー代表で**57試合**。
+  no_telop: true
+  image: assets/stats/pl_brentford_df_f.png
+キャスター: ミッドフィールダーは9人。
   no_telop: true
   image: assets/stats/pl_brentford_mf_f.png
-キャスター: フォワードは7人。ダンゴ・ワタラはブルキナファソ代表で**44試合**。ケヴィン・シャーデはブレントフォードのリーグ戦で**88試合**。
+キャスター: マティアス・イェンセンはデンマーク代表で**32試合**。
+  no_telop: true
+  image: assets/stats/pl_brentford_mf_f.png
+キャスター: ミケル・ダムスゴーはデンマーク代表で**40試合**。
+  no_telop: true
+  image: assets/stats/pl_brentford_mf_f.png
+キャスター: フォワードは7人。
+  no_telop: true
+  image: assets/stats/pl_brentford_fw_f.png
+キャスター: ダンゴ・ワタラはブルキナファソ代表で**44試合**。
+  no_telop: true
+  image: assets/stats/pl_brentford_fw_f.png
+キャスター: ケヴィン・シャーデはブレントフォードのリーグ戦で**88試合**。
   no_telop: true
   image: assets/stats/pl_brentford_fw_f.png
 

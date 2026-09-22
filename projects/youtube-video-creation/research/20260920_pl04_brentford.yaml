@@ -260,16 +260,43 @@ sections:
     image: assets/stats/pl_brentford_gk.png
     no_telop: true
   - image: assets/stats/pl_brentford_gk_f.png
-    text: ゴールキーパーは3人。クィービーン・ケレハーはアイルランド代表で**32試合**。ハウコン・ヴァルディマルソンはアイスランド代表で**22試合**。
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/pl_brentford_gk_f.png
+    text: クィービーン・ケレハーはアイルランド代表で**32試合**。
+    no_telop: true
+  - image: assets/stats/pl_brentford_gk_f.png
+    text: ハウコン・ヴァルディマルソンはアイスランド代表で**22試合**。
     no_telop: true
   - image: assets/stats/pl_brentford_df_f.png
-    text: ディフェンダーは9人。主将を務めるのが**ネイサン・コリンズ**。リーグ戦で**105試合**に出ています。クリストファー・アイエルはノルウェー代表で**57試合**。
+    text: ディフェンダーは9人。
+    no_telop: true
+  - image: assets/stats/pl_brentford_df_f.png
+    text: 主将を務めるのが**ネイサン・コリンズ**。
+    no_telop: true
+  - image: assets/stats/pl_brentford_df_f.png
+    text: リーグ戦で**105試合**に出ています。
+    no_telop: true
+  - image: assets/stats/pl_brentford_df_f.png
+    text: クリストファー・アイエルはノルウェー代表で**57試合**。
     no_telop: true
   - image: assets/stats/pl_brentford_mf_f.png
-    text: ミッドフィールダーは9人。マティアス・イェンセンはデンマーク代表で**32試合**。ミケル・ダムスゴーはデンマーク代表で**40試合**。
+    text: ミッドフィールダーは9人。
+    no_telop: true
+  - image: assets/stats/pl_brentford_mf_f.png
+    text: マティアス・イェンセンはデンマーク代表で**32試合**。
+    no_telop: true
+  - image: assets/stats/pl_brentford_mf_f.png
+    text: ミケル・ダムスゴーはデンマーク代表で**40試合**。
     no_telop: true
   - image: assets/stats/pl_brentford_fw_f.png
-    text: フォワードは7人。ダンゴ・ワタラはブルキナファソ代表で**44試合**。ケヴィン・シャーデはブレントフォードのリーグ戦で**88試合**。
+    text: フォワードは7人。
+    no_telop: true
+  - image: assets/stats/pl_brentford_fw_f.png
+    text: ダンゴ・ワタラはブルキナファソ代表で**44試合**。
+    no_telop: true
+  - image: assets/stats/pl_brentford_fw_f.png
+    text: ケヴィン・シャーデはブレントフォードのリーグ戦で**88試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Brentford_F.C.

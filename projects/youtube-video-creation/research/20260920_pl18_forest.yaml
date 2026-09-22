@@ -71,7 +71,10 @@ sections:
   - image: assets/photos/pl/forest_owner_741d4568.jpg
     text: オーナーはギリシャの実業家エヴァンゲロス・マリナキス。2017年からクラブを持っています。
   - image: assets/stats/pl_forest_cups.png
-    text: 1部リーグの優勝は**1回**。FAカップ2回、リーグカップ4回。そしてチャンピオンズリーグを**2回**、スーパーカップを1回獲っています。
+    text: 1部リーグの優勝は**1回**。FAカップ2回、リーグカップ4回。
+    no_telop: true
+  - image: assets/stats/pl_forest_cups.png
+    text: そしてチャンピオンズリーグを**2回**、スーパーカップを1回獲っています。
     no_telop: true
   - image: assets/stats/pl_forest_data6.png
     text: リーグで**42試合負けなし**という記録も持っています。1シーズンぶんの長さです。
@@ -116,7 +119,8 @@ sections:
   - さきほどの負けなしの記録も、1部に上がったその年の11月に始まっています。
   - さらに次のシーズンからは、ヨーロッパカップ、いまのチャンピオンズリーグです。
   - 1979年と1980年、**2年続けて**制しました。
-  - そして1993年、**プレミアリーグの最初のシーズン**に降格します。クラフが指揮した18年も、そこで終わりました。
+  - そして1993年、**プレミアリーグの最初のシーズン**に降格します。
+  - クラフが指揮した18年も、そこで終わりました。
   - 1994年にすぐ戻り、その次のシーズンには**3位**に入りました。
   - ですが1999年に、また落ちます。
   - ヨーロッパを連覇したクラブが、そこから**23年**、1部にいませんでした。
@@ -200,7 +204,7 @@ sections:
   say:
   - text: デス・ウォーカーは生え抜きのセンターバックで、1990年ワールドカップの**4強**メンバーです。
     image: assets/photos/pl/forest_legend_504f470d.jpg
-  - プロ生活で決めた得点は**1点**だけ。1992年の元日、ルートン戦で1対1に追いついた一撃です。
+  - プロ生活の得点は**1点**だけ。1992年の元日、ルートン戦。1対1の引き分けに持ち込んだ一撃です。
   - 1992年、**150万ポンド**でサンプドリアへ。10年後に戻ってきて、38歳まで守りました。
   sources:
   - https://en.wikipedia.org/wiki/Stuart_Pearce
@@ -274,16 +278,40 @@ sections:
     image: assets/stats/pl_forest_gk.png
     no_telop: true
   - image: assets/stats/pl_forest_gk_f.png
-    text: ゴールキーパーは3人。マッツ・セルスはベルギー代表で**13試合**。
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/pl_forest_gk_f.png
+    text: マッツ・セルスはベルギー代表で**13試合**。
     no_telop: true
   - image: assets/stats/pl_forest_df_f.png
-    text: ディフェンダーは9人。ネコ・ウィリアムズはウェールズ代表で**57試合**。ニコラ・ミレンコヴィッチはセルビア代表で**71試合**。
+    text: ディフェンダーは9人。
+    no_telop: true
+  - image: assets/stats/pl_forest_df_f.png
+    text: ネコ・ウィリアムズはウェールズ代表で**57試合**。
+    no_telop: true
+  - image: assets/stats/pl_forest_df_f.png
+    text: ニコラ・ミレンコヴィッチはセルビア代表で**71試合**。
     no_telop: true
   - image: assets/stats/pl_forest_mf_f.png
-    text: ミッドフィールダーは6人。主将を務めるのが**ライアン・イェーツ**。リーグ戦で**238試合**に出ています。イブラヒム・サンガレはコートジボワール代表で**61試合**。
+    text: ミッドフィールダーは6人。
+    no_telop: true
+  - image: assets/stats/pl_forest_mf_f.png
+    text: 主将を務めるのが**ライアン・イェーツ**。
+    no_telop: true
+  - image: assets/stats/pl_forest_mf_f.png
+    text: リーグ戦で**238試合**に出ています。
+    no_telop: true
+  - image: assets/stats/pl_forest_mf_f.png
+    text: イブラヒム・サンガレはコートジボワール代表で**61試合**。
     no_telop: true
   - image: assets/stats/pl_forest_fw_f.png
-    text: フォワードは6人。クリス・ウッドはニュージーランド代表で**93試合**。ダン・ンドイェはスイス代表で**37試合**。
+    text: フォワードは6人。
+    no_telop: true
+  - image: assets/stats/pl_forest_fw_f.png
+    text: クリス・ウッドはニュージーランド代表で**93試合**。
+    no_telop: true
+  - image: assets/stats/pl_forest_fw_f.png
+    text: ダン・ンドイェはスイス代表で**37試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.

@@ -65,7 +65,7 @@ sections:
     text: 創立は**1904年**です。
     no_telop: true
   - image: assets/stats/pl_hull_data1.png
-    text: 愛称は「タイガース」。黒と琥珀色の縞模様を、昔から着てきたクラブです。
+    text: 愛称は「タイガース」。黒と琥珀色の縞模様を、昔から着てきました。
     no_telop: true
   - image: assets/stats/pl_hull_map.png
     text: ホームタウンはキングストン・アポン・ハル。イングランド東部です。
@@ -270,16 +270,34 @@ sections:
     text: ゴールキーパーは3人。
     no_telop: true
   - image: assets/stats/pl_hull_df_f.png
-    text: ディフェンダーは10人。パディ・マクネアは北アイルランド代表で**82試合**。ルーイ・コイルはリーグ戦で**219試合**。
+    text: ディフェンダーは10人。
+    no_telop: true
+  - image: assets/stats/pl_hull_df_f.png
+    text: パディ・マクネアは北アイルランド代表で**82試合**。
+    no_telop: true
+  - image: assets/stats/pl_hull_df_f.png
+    text: ルーイ・コイルはリーグ戦で**219試合**。
     no_telop: true
   - image: assets/stats/pl_hull_mf1.png
-    text: ミッドフィールダーは13人。日本の守田英正がいます。リーガン・スレイターはリーグ戦で**212試合**。
+    text: ミッドフィールダーは13人。
+    no_telop: true
+  - image: assets/stats/pl_hull_mf1.png
+    text: 日本の守田英正がいます。
+    no_telop: true
+  - image: assets/stats/pl_hull_mf1.png
+    text: リーガン・スレイターはリーグ戦で**212試合**。
     no_telop: true
   - image: assets/stats/pl_hull_mf2.png
     text: ミッドフィールダーの続きです。
     no_telop: true
   - image: assets/stats/pl_hull_fw_f.png
-    text: フォワードは7人。オリ・マクバーニーはスコットランド代表で**16試合**。ソーバ・トーマスはウェールズ代表で**27試合**。
+    text: フォワードは7人。
+    no_telop: true
+  - image: assets/stats/pl_hull_fw_f.png
+    text: オリ・マクバーニーはスコットランド代表で**16試合**。
+    no_telop: true
+  - image: assets/stats/pl_hull_fw_f.png
+    text: ソーバ・トーマスはウェールズ代表で**27試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Hull_City_A.F.C.

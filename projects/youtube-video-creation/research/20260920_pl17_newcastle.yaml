@@ -69,9 +69,12 @@ sections:
   - image: assets/backgrounds/stadium_ニューカッスル_in.png
     text: 本拠地はセント・ジェームズ・パーク。**5万2729人**が入ります。
   - image: assets/photos/pl/newcastle_owner_d7f21670.jpg
-    text: オーナーは、サウジアラビアの公共投資基金です。
+    text: オーナーは、サウジアラビアの公共投資基金。
   - image: assets/stats/pl_newcastle_cups.png
-    text: 1部リーグの優勝は**4回**。FAカップはさきほどの6回で、リーグカップとフェアーズカップが1回ずつ。インタートトカップも1回です。
+    text: 1部リーグの優勝は**4回**。FAカップはさきほどの6回。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_cups.png
+    text: リーグカップとフェアーズカップが1回ずつ。インタートトカップも1回です。
     no_telop: true
   - image: assets/stats/pl_newcastle_last.png
     text: プレミアでの最高位は2位。1995年から96年と、その翌年の2回です。
@@ -265,16 +268,40 @@ sections:
     image: assets/stats/pl_newcastle_gk.png
     no_telop: true
   - image: assets/stats/pl_newcastle_gk_f.png
-    text: ゴールキーパーは4人。ニック・ポープはイングランド代表で**10試合**。
+    text: ゴールキーパーは4人。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_gk_f.png
+    text: ニック・ポープはイングランド代表で**10試合**。
     no_telop: true
   - image: assets/stats/pl_newcastle_df_f.png
-    text: ディフェンダーは7人。主将を務めるのが**ダン・バーン**。リーグ戦で**153試合**に出ています。ファビアン・シェアはスイス代表で**86試合**。
+    text: ディフェンダーは7人。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_df_f.png
+    text: 主将を務めるのが**ダン・バーン**。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_df_f.png
+    text: リーグ戦で**153試合**に出ています。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_df_f.png
+    text: ファビアン・シェアはスイス代表で**86試合**。
     no_telop: true
   - image: assets/stats/pl_newcastle_mf_f.png
-    text: ミッドフィールダーは7人。ジェイコブ・マーフィーはリーグ戦で**218試合**。ジョー・ウィロックはリーグ戦で**148試合**。
+    text: ミッドフィールダーは7人。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_mf_f.png
+    text: ジェイコブ・マーフィーはリーグ戦で**218試合**。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_mf_f.png
+    text: ジョー・ウィロックはリーグ戦で**148試合**。
     no_telop: true
   - image: assets/stats/pl_newcastle_fw_f.png
-    text: フォワードは7人。ジョエリントンはリーグ戦で**212試合**。ヨアネ・ウィサはコンゴ民主共和国代表で**43試合**。
+    text: フォワードは7人。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_fw_f.png
+    text: ジョエリントンはリーグ戦で**212試合**。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_fw_f.png
+    text: ヨアネ・ウィサはコンゴ民主共和国代表で**43試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Newcastle_United_F.C.

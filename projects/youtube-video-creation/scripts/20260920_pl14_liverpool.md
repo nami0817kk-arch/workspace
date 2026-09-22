@@ -188,8 +188,8 @@ cards:
   telop: 日本代表の中盤、遠藤航が、リーグ戦**57試合**を戦ってきたクラブです
   source: 報道
   card: reasons_card
-キャスター: 監督が代わりました。ボーンマスを**6位**まで引き上げたイラオラの、1年目です。
-  telop: 監督が代わりました。ボーンマスを**6位**まで引き上げたイラオラの、1年目です
+キャスター: 監督が代わりました。ボーンマスを**6位**まで引き上げたイラオラが、1年目の指揮を執っています。
+  telop: 監督が代わりました。ボーンマスを**6位**まで引き上げたイラオラが、1年目の指揮を執っています
 キャスター: 2シーズン前に**20回目**の優勝、昨季は5位。サラーが去って初めてのシーズンです。
   telop: 2シーズン前に**20回目**の優勝、昨季は5位。サラーが去って初めてのシーズンです
 
@@ -218,7 +218,7 @@ cards:
 解説: 1部リーグの優勝は**20回**。マンチェスター・ユナイテッドと並んで最多です。
   no_telop: true
   image: assets/stats/pl_liverpool_cups.png
-解説: FAカップは8回、リーグカップは10回です。
+解説: FAカップは8回、リーグカップは10回。
   no_telop: true
   image: assets/stats/pl_liverpool_cups.png
 解説: チャンピオンズリーグ**6回**、ヨーロッパリーグ3回、スーパーカップ4回、クラブワールドカップ1回。
@@ -238,8 +238,10 @@ cards:
   telop: 生まれたきっかけは、**もめごと**でした
   source: 背景
   card: birth_card
-解説: アンフィールドという土地を持っていたのがジョン・ホールディングで、そこを使っていたのがエヴァートンです。
-  telop: アンフィールドという土地を持っていたのがジョン・ホールディングで、そこを使っていたのがエヴァートンです
+解説: アンフィールドという土地を持っていたのは、ジョン・ホールディングでした。
+  telop: アンフィールドという土地を持っていたのは、ジョン・ホールディングでした
+解説: そこを使っていたのが、エヴァートンです。
+  telop: そこを使っていたのが、エヴァートンです
 解説: 両者が対立し、エヴァートンはグディソン・パークへ移っていきました。
   telop: 両者が対立し、エヴァートンはグディソン・パークへ移っていきました
 解説: **スタジアムだけが残りました。**
@@ -324,16 +326,43 @@ cards:
   no_telop: true
   source: 報道
   image: assets/stats/pl_liverpool_gk.png
-キャスター: ゴールキーパーは6人。アリソン・ベッカーはブラジル代表で**83試合**。ギオルギ・ママルダシュヴィリはジョージア代表で**38試合**。
+キャスター: ゴールキーパーは6人。
   no_telop: true
   image: assets/stats/pl_liverpool_gk_f.png
-キャスター: ディフェンダーは12人。主将を務めるのが**フィルジル・ファン・ダイク**。リーグ戦で**277試合**に出ています。コスタス・ツィミカスはギリシャ代表で**51試合**。
+キャスター: アリソン・ベッカーはブラジル代表で**83試合**。
+  no_telop: true
+  image: assets/stats/pl_liverpool_gk_f.png
+キャスター: ギオルギ・ママルダシュヴィリはジョージア代表で**38試合**。
+  no_telop: true
+  image: assets/stats/pl_liverpool_gk_f.png
+キャスター: ディフェンダーは12人。
   no_telop: true
   image: assets/stats/pl_liverpool_df_f.png
-キャスター: ミッドフィールダーは8人。日本の遠藤航がいます。ドミニク・ソボスライはハンガリー代表で**65試合**。
+キャスター: 主将を務めるのが**フィルジル・ファン・ダイク**。
+  no_telop: true
+  image: assets/stats/pl_liverpool_df_f.png
+キャスター: リーグ戦で**277試合**に出ています。
+  no_telop: true
+  image: assets/stats/pl_liverpool_df_f.png
+キャスター: コスタス・ツィミカスはギリシャ代表で**51試合**。
+  no_telop: true
+  image: assets/stats/pl_liverpool_df_f.png
+キャスター: ミッドフィールダーは8人。
   no_telop: true
   image: assets/stats/pl_liverpool_mf_f.png
-キャスター: フォワードは9人。コーディ・ガクポはオランダ代表で**54試合**。アレクサンデル・イサクはスウェーデン代表で**62試合**。
+キャスター: 日本の遠藤航がいます。
+  no_telop: true
+  image: assets/stats/pl_liverpool_mf_f.png
+キャスター: ドミニク・ソボスライはハンガリー代表で**65試合**。
+  no_telop: true
+  image: assets/stats/pl_liverpool_mf_f.png
+キャスター: フォワードは9人。
+  no_telop: true
+  image: assets/stats/pl_liverpool_fw_f.png
+キャスター: コーディ・ガクポはオランダ代表で**54試合**。
+  no_telop: true
+  image: assets/stats/pl_liverpool_fw_f.png
+キャスター: アレクサンデル・イサクはスウェーデン代表で**62試合**。
   no_telop: true
   image: assets/stats/pl_liverpool_fw_f.png
 

@@ -266,16 +266,40 @@ sections:
     image: assets/stats/pl_everton_gk.png
     no_telop: true
   - image: assets/stats/pl_everton_gk_f.png
-    text: ゴールキーパーは3人。ジョーダン・ピックフォードはイングランド代表で**91試合**。
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/pl_everton_gk_f.png
+    text: ジョーダン・ピックフォードはイングランド代表で**91試合**。
     no_telop: true
   - image: assets/stats/pl_everton_df_f.png
-    text: ディフェンダーは6人。主将を務めるのが**ジェームズ・ターコウスキー**。リーグ戦で**151試合**に出ています。ヴィタリー・ミコレンコはウクライナ代表で**54試合**。
+    text: ディフェンダーは6人。
+    no_telop: true
+  - image: assets/stats/pl_everton_df_f.png
+    text: 主将を務めるのが**ジェームズ・ターコウスキー**。
+    no_telop: true
+  - image: assets/stats/pl_everton_df_f.png
+    text: リーグ戦で**151試合**に出ています。
+    no_telop: true
+  - image: assets/stats/pl_everton_df_f.png
+    text: ヴィタリー・ミコレンコはウクライナ代表で**54試合**。
     no_telop: true
   - image: assets/stats/pl_everton_mf_f.png
-    text: ミッドフィールダーは8人。ジャック・グリーリッシュはイングランド代表で**39試合**。クリスティアン・ノアゴーはデンマーク代表で**41試合**。
+    text: ミッドフィールダーは8人。
+    no_telop: true
+  - image: assets/stats/pl_everton_mf_f.png
+    text: ジャック・グリーリッシュはイングランド代表で**39試合**。
+    no_telop: true
+  - image: assets/stats/pl_everton_mf_f.png
+    text: クリスティアン・ノアゴーはデンマーク代表で**41試合**。
     no_telop: true
   - image: assets/stats/pl_everton_fw_f.png
-    text: フォワードは4人。ブレナン・ジョンソンはウェールズ代表で**45試合**。ティエルノ・バリーはリーグ戦で**43試合**。
+    text: フォワードは4人。
+    no_telop: true
+  - image: assets/stats/pl_everton_fw_f.png
+    text: ブレナン・ジョンソンはウェールズ代表で**45試合**。
+    no_telop: true
+  - image: assets/stats/pl_everton_fw_f.png
+    text: ティエルノ・バリーはリーグ戦で**43試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Everton_F.C.

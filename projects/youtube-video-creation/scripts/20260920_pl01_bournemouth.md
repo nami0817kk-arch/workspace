@@ -221,7 +221,7 @@ cards:
 解説: 愛称は「ザ・チェリーズ」。さくらんぼです。赤と黒の縦じまは、イタリアのミランが手本です。
   no_telop: true
   image: assets/stats/pl_bournemouth_data1.png
-解説: 町はイングランド南部、ドーセット州の海沿いです。
+解説: 町はイングランド南部、ドーセット州の海沿いにあります。
   no_telop: true
   image: assets/stats/pl_bournemouth_map.png
 解説: 本拠地はディーン・コート。**1万2357人**。マンチェスター・ユナイテッドの**6分の1**です。
@@ -349,16 +349,40 @@ cards:
   no_telop: true
   source: 報道
   image: assets/stats/pl_bournemouth_gk.png
-キャスター: ゴールキーパーは3人。ジョルジェ・ペトロヴィッチはセルビア代表で**12試合**。
+キャスター: ゴールキーパーは3人。
   no_telop: true
   image: assets/stats/pl_bournemouth_gk_f.png
-キャスター: ディフェンダーは10人。主将を務めるのが**アダム・スミス**。リーグ戦で**350試合**に出ています。アントニオ・シウヴァはポルトガル代表で**20試合**。
+キャスター: ジョルジェ・ペトロヴィッチはセルビア代表で**12試合**。
+  no_telop: true
+  image: assets/stats/pl_bournemouth_gk_f.png
+キャスター: ディフェンダーは10人。
   no_telop: true
   image: assets/stats/pl_bournemouth_df_f.png
-キャスター: ミッドフィールダーは8人。ライアン・クリスティはスコットランド代表で**71試合**。デイヴィッド・ブルックスはウェールズ代表で**45試合**。
+キャスター: 主将を務めるのが**アダム・スミス**。
+  no_telop: true
+  image: assets/stats/pl_bournemouth_df_f.png
+キャスター: リーグ戦で**350試合**に出ています。
+  no_telop: true
+  image: assets/stats/pl_bournemouth_df_f.png
+キャスター: アントニオ・シウヴァはポルトガル代表で**20試合**。
+  no_telop: true
+  image: assets/stats/pl_bournemouth_df_f.png
+キャスター: ミッドフィールダーは8人。
   no_telop: true
   image: assets/stats/pl_bournemouth_mf_f.png
-キャスター: フォワードは7人。ジャスティン・クライファートはオランダ代表で**14試合**。エヴァニウソンは**クラブ最高額の4020万ポンド**で加入しました。
+キャスター: ライアン・クリスティはスコットランド代表で**71試合**。
+  no_telop: true
+  image: assets/stats/pl_bournemouth_mf_f.png
+キャスター: デイヴィッド・ブルックスはウェールズ代表で**45試合**。
+  no_telop: true
+  image: assets/stats/pl_bournemouth_mf_f.png
+キャスター: フォワードは7人。
+  no_telop: true
+  image: assets/stats/pl_bournemouth_fw_f.png
+キャスター: ジャスティン・クライファートはオランダ代表で**14試合**。
+  no_telop: true
+  image: assets/stats/pl_bournemouth_fw_f.png
+キャスター: エヴァニウソンは**クラブ最高額の4020万ポンド**で加入しました。
   no_telop: true
   image: assets/stats/pl_bournemouth_fw_f.png
 

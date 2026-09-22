@@ -64,7 +64,7 @@ sections:
     text: 教会のクラブとして始まり、ロンドンでは1861年起源のクリスタル・パレスに次いで古いプロクラブです。
     no_telop: true
   - image: assets/stats/pl_fulham_data1.png
-    text: 愛称は「コテジャーズ」。小屋に住む人、という意味です。
+    text: 愛称は「コテジャーズ」。小屋に住む人、という意味。
     no_telop: true
   - image: assets/stats/pl_fulham_map.png
     text: ホームタウンはフラム。ロンドン中心部の西です。
@@ -268,16 +268,40 @@ sections:
     image: assets/stats/pl_fulham_gk.png
     no_telop: true
   - image: assets/stats/pl_fulham_gk_f.png
-    text: ゴールキーパーは2人。ベルント・レノはリーグ戦で**154試合**。
+    text: ゴールキーパーは2人。
+    no_telop: true
+  - image: assets/stats/pl_fulham_gk_f.png
+    text: ベルント・レノはリーグ戦で**154試合**。
     no_telop: true
   - image: assets/stats/pl_fulham_df_f.png
-    text: ディフェンダーは7人。アントニー・ロビンソンはアメリカ代表で**58試合**。ティモシー・カスターニュはベルギー代表で**69試合**。
+    text: ディフェンダーは7人。
+    no_telop: true
+  - image: assets/stats/pl_fulham_df_f.png
+    text: アントニー・ロビンソンはアメリカ代表で**58試合**。
+    no_telop: true
+  - image: assets/stats/pl_fulham_df_f.png
+    text: ティモシー・カスターニュはベルギー代表で**69試合**。
     no_telop: true
   - image: assets/stats/pl_fulham_mf_f.png
-    text: ミッドフィールダーは11人。主将を務めるのが**トム・ケアニー**。リーグ戦で**340試合**に出ています。アレックス・イウォビはナイジェリア代表で**99試合**。
+    text: ミッドフィールダーは11人。
+    no_telop: true
+  - image: assets/stats/pl_fulham_mf_f.png
+    text: 主将を務めるのが**トム・ケアニー**。
+    no_telop: true
+  - image: assets/stats/pl_fulham_mf_f.png
+    text: リーグ戦で**340試合**に出ています。
+    no_telop: true
+  - image: assets/stats/pl_fulham_mf_f.png
+    text: アレックス・イウォビはナイジェリア代表で**99試合**。
     no_telop: true
   - image: assets/stats/pl_fulham_fw_f.png
-    text: フォワードは5人。ロドリゴ・ムニスはリーグ戦で**106試合**。オスカー・ボブはノルウェー代表で**26試合**。
+    text: フォワードは5人。
+    no_telop: true
+  - image: assets/stats/pl_fulham_fw_f.png
+    text: ロドリゴ・ムニスはリーグ戦で**106試合**。
+    no_telop: true
+  - image: assets/stats/pl_fulham_fw_f.png
+    text: オスカー・ボブはノルウェー代表で**26試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Fulham_F.C.

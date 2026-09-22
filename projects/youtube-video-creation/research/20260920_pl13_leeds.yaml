@@ -65,7 +65,7 @@ sections:
     text: 愛称は「ホワイツ」。真っ白なユニフォームからです。
     no_telop: true
   - image: assets/stats/pl_leeds_data1.png
-    text: この白は、1960年代のドン・レヴィー監督が**レアル・マドリード**に倣ったものです。
+    text: 1960年代のドン・レヴィー監督が、**レアル・マドリード**に倣って白にしました。
     no_telop: true
   - image: assets/stats/pl_leeds_map.png
     text: ホームタウンはリーズ。イングランド・ウェストヨークシャーです。
@@ -279,13 +279,37 @@ sections:
     text: ゴールキーパーは3人。
     no_telop: true
   - image: assets/stats/pl_leeds_df_f.png
-    text: ディフェンダーは8人。ジョー・ロドンはウェールズ代表で**62試合**。ヤカ・ビヨルはスロベニア代表で**73試合**。
+    text: ディフェンダーは8人。
+    no_telop: true
+  - image: assets/stats/pl_leeds_df_f.png
+    text: ジョー・ロドンはウェールズ代表で**62試合**。
+    no_telop: true
+  - image: assets/stats/pl_leeds_df_f.png
+    text: ヤカ・ビヨルはスロベニア代表で**73試合**。
     no_telop: true
   - image: assets/stats/pl_leeds_mf_f.png
-    text: ミッドフィールダーは8人。日本の田中碧がいます。主将を務めるのが**イーサン・アンパドゥ**。リーグ戦で**113試合**に出ています。ダニエル・ジェームズはウェールズ代表で**65試合**。
+    text: ミッドフィールダーは8人。
+    no_telop: true
+  - image: assets/stats/pl_leeds_mf_f.png
+    text: 日本の田中碧がいます。
+    no_telop: true
+  - image: assets/stats/pl_leeds_mf_f.png
+    text: 主将を務めるのが**イーサン・アンパドゥ**。
+    no_telop: true
+  - image: assets/stats/pl_leeds_mf_f.png
+    text: リーグ戦で**113試合**に出ています。
+    no_telop: true
+  - image: assets/stats/pl_leeds_mf_f.png
+    text: ダニエル・ジェームズはウェールズ代表で**65試合**。
     no_telop: true
   - image: assets/stats/pl_leeds_fw_f.png
-    text: フォワードは5人。ノア・オカフォーはスイス代表で**26試合**。ドミニク・キャルヴァート＝ルーウィンはイングランド代表で**12試合**。
+    text: フォワードは5人。
+    no_telop: true
+  - image: assets/stats/pl_leeds_fw_f.png
+    text: ノア・オカフォーはスイス代表で**26試合**。
+    no_telop: true
+  - image: assets/stats/pl_leeds_fw_f.png
+    text: ドミニク・キャルヴァート＝ルーウィンはイングランド代表で**12試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Leeds_United_F.C.

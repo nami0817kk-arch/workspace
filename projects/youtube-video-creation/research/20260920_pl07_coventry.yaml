@@ -62,7 +62,7 @@ sections:
   narrator: 解説
   say:
   - image: assets/stats/pl_coventry_data0.png
-    text: 創立は**1883年**。自転車を作るシンガー社の工員たちが作ったクラブです。
+    text: 創立は**1883年**。自転車を作るシンガー社の工員たちが作りました。
     no_telop: true
   - image: assets/stats/pl_coventry_data1.png
     text: 愛称は「スカイブルーズ」。空色です。
@@ -82,7 +82,7 @@ sections:
     text: 1シーズンの最多得点は、クラリー・バートンの**50得点**。1931年から32年の記録です。
     no_telop: true
   - image: assets/stats/pl_coventry_data7.png
-    text: 直近の優勝は、昨季の2部リーグです。
+    text: 直近の優勝は、昨季の2部リーグ。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Coventry_City_F.C.
@@ -142,7 +142,7 @@ sections:
   say:
   - 主要なタイトルは、クラブの歴史で1つだけ。**1987年**のFAカップです。
   - 決勝の相手はトッテナム。開始2分で先制され、いったん追いつき、また突き放されます。
-  - 後半、キース・ハウチェンのダイビングヘッドで**2対2**。
+  - 後半、キース・ハウチェンのダイビングヘッドで**2対2**。勝負は延長へ。
   - 延長、決勝点は相手のオウンゴール。**3対2**で勝ちました。
   sources:
   - https://en.wikipedia.org/wiki/Coventry_City_F.C.
@@ -271,16 +271,43 @@ sections:
     image: assets/stats/pl_coventry_gk.png
     no_telop: true
   - image: assets/stats/pl_coventry_gk_f.png
-    text: ゴールキーパーは3人。ベン・ウィルソンはリーグ戦で**97試合**。カール・ラッシュワースはリーグ戦で**51試合**。
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/pl_coventry_gk_f.png
+    text: ベン・ウィルソンはリーグ戦で**97試合**。
+    no_telop: true
+  - image: assets/stats/pl_coventry_gk_f.png
+    text: カール・ラッシュワースはリーグ戦で**51試合**。
     no_telop: true
   - image: assets/stats/pl_coventry_df_f.png
-    text: ディフェンダーは10人。ジョエル・ラティボーディエールはジャマイカ代表で**31試合**。ジェイ・ダシルヴァはウェールズ代表で**10試合**。
+    text: ディフェンダーは10人。
+    no_telop: true
+  - image: assets/stats/pl_coventry_df_f.png
+    text: ジョエル・ラティボーディエールはジャマイカ代表で**31試合**。
+    no_telop: true
+  - image: assets/stats/pl_coventry_df_f.png
+    text: ジェイ・ダシルヴァはウェールズ代表で**10試合**。
     no_telop: true
   - image: assets/stats/pl_coventry_mf_f.png
-    text: ミッドフィールダーは7人。主将を務めるのが**マット・グライムズ**。リーグ戦で**66試合**に出ています。ジョシュ・エクルズはリーグ戦で**166試合**。
+    text: ミッドフィールダーは7人。
+    no_telop: true
+  - image: assets/stats/pl_coventry_mf_f.png
+    text: 主将を務めるのが**マット・グライムズ**。
+    no_telop: true
+  - image: assets/stats/pl_coventry_mf_f.png
+    text: リーグ戦で**66試合**に出ています。
+    no_telop: true
+  - image: assets/stats/pl_coventry_mf_f.png
+    text: ジョシュ・エクルズはリーグ戦で**166試合**。
     no_telop: true
   - image: assets/stats/pl_coventry_fw_f.png
-    text: フォワードは8人。日本の坂元達裕がいます。ハジ・ライトはアメリカ代表で**22試合**。
+    text: フォワードは8人。
+    no_telop: true
+  - image: assets/stats/pl_coventry_fw_f.png
+    text: 日本の坂元達裕がいます。
+    no_telop: true
+  - image: assets/stats/pl_coventry_fw_f.png
+    text: ハジ・ライトはアメリカ代表で**22試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Coventry_City_F.C.

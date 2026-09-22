@@ -69,12 +69,14 @@ sections:
     text: 愛称は「イーグルス」。鷲です。
     no_telop: true
   - image: assets/stats/pl_palace_map.png
-    text: ホームタウンは南ロンドンの、クロイドン区セルハーストです。
+    text: ホームタウンは南ロンドンの、クロイドン区セルハースト。
     no_telop: true
   - image: assets/backgrounds/stadium_クリスタルパレス_in.png
     text: 本拠地はセルハースト・パーク。**2万5194人**が入ります。
   - image: assets/photos/pl/palace_owner_51aa6fad.jpg
-    text: オーナーは、アメリカンフットボールのニューヨーク・ジェッツの会長、ウッディ・ジョンソン。2025年にクラブを買いました。
+    text: オーナーは、アメリカンフットボールのニューヨーク・ジェッツの会長、ウッディ・ジョンソン。
+  - image: assets/photos/pl/palace_owner_51aa6fad.jpg
+    text: 2025年に、クラブを買いました。
   - image: assets/stats/pl_palace_cups.png
     text: 1部リーグの優勝はありませんが、FAカップを1回、そしてカンファレンスリーグを1回獲っています。
     no_telop: true
@@ -109,7 +111,8 @@ sections:
   say:
   - はじめて大きなタイトルを獲ったのは、**2025年**のFAカップでした。
   - FAカップの決勝には、それまで2度立って、2度負けていました。
-  - どちらもマンチェスター・ユナイテッドに負けました。1990年は引き分けのあとの再試合で0対1、2016年は1対2です。
+  - どちらもマンチェスター・ユナイテッドに負けました。
+  - 1990年は引き分けのあとの再試合で0対1、2016年は1対2でした。
   - 3度目の決勝、相手はマンチェスター・シティです。
   - エベレチ・エゼの1点を守り切り、1対0で勝ちました。
   - このタイトルで初めてヨーロッパに出て、翌シーズン、その大会も獲りました。
@@ -138,7 +141,8 @@ sections:
   say:
   - クリスタル・パレスは、もともと「水晶宮」と呼ばれた万博の建物の名前です。
   - '**1905年**、その建物を持つ会社が、来場者を増やすために自分たちでプロのクラブを作りました。'
-  - 会社が立ち上げを任せたのは、アストン・ヴィラの職員でした。だから最初のユニフォームは、ヴィラと同じえんじ色と青です。
+  - 会社が立ち上げを任せたのは、アストン・ヴィラの職員でした。
+  - だから最初のユニフォームは、ヴィラと同じえんじ色と青です。
   sources:
   - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
   bg: assets/backgrounds/stadium_クリスタルパレス.png
@@ -267,16 +271,40 @@ sections:
     image: assets/stats/pl_palace_gk.png
     no_telop: true
   - image: assets/stats/pl_palace_gk_f.png
-    text: ゴールキーパーは3人。主将を務めるのが**ディーン・ヘンダーソン**。リーグ戦で**96試合**に出ています。
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/pl_palace_gk_f.png
+    text: 主将を務めるのが**ディーン・ヘンダーソン**。
+    no_telop: true
+  - image: assets/stats/pl_palace_gk_f.png
+    text: リーグ戦で**96試合**に出ています。
     no_telop: true
   - image: assets/stats/pl_palace_df_f.png
-    text: ディフェンダーは10人。日本の冨安健洋がいます。タイリック・ミッチェルはリーグ戦で**211試合**。
+    text: ディフェンダーは10人。
+    no_telop: true
+  - image: assets/stats/pl_palace_df_f.png
+    text: 日本の冨安健洋がいます。
+    no_telop: true
+  - image: assets/stats/pl_palace_df_f.png
+    text: タイリック・ミッチェルはリーグ戦で**211試合**。
     no_telop: true
   - image: assets/stats/pl_palace_mf_f.png
-    text: ミッドフィールダーは6人。日本の鎌田大地がいます。ジェフェルソン・レルマはコロンビア代表で**70試合**。
+    text: ミッドフィールダーは6人。
+    no_telop: true
+  - image: assets/stats/pl_palace_mf_f.png
+    text: 日本の鎌田大地がいます。
+    no_telop: true
+  - image: assets/stats/pl_palace_mf_f.png
+    text: ジェフェルソン・レルマはコロンビア代表で**70試合**。
     no_telop: true
   - image: assets/stats/pl_palace_fw_f.png
-    text: フォワードは9人。イスマイラ・サールはセネガル代表で**88試合**。ジャン＝フィリップ・マテタはリーグ戦で**163試合**。
+    text: フォワードは9人。
+    no_telop: true
+  - image: assets/stats/pl_palace_fw_f.png
+    text: イスマイラ・サールはセネガル代表で**88試合**。
+    no_telop: true
+  - image: assets/stats/pl_palace_fw_f.png
+    text: ジャン＝フィリップ・マテタはリーグ戦で**163試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.

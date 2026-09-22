@@ -68,7 +68,7 @@ sections:
     text: 愛称は「シーガルズ」。カモメです。
     no_telop: true
   - image: assets/stats/pl_brighton_map.png
-    text: ホームタウンは、イングランド南の海沿いの町、ブライトン・アンド・ホーヴです。
+    text: ホームタウンは、イングランド南の海沿いの町、ブライトン・アンド・ホーヴ。
     no_telop: true
   - image: assets/backgrounds/stadium_ブライトン_in.png
     text: 本拠地はファルマー・スタジアム。**3万2176人**。ようやく持てた、自分たちの家です。
@@ -139,7 +139,8 @@ sections:
       - 0対4で敗戦。同じシーズンにリーグ最下位
   say:
   - 1983年、初めてFAカップの決勝に立ちました。相手はマンチェスター・ユナイテッド。
-  - 2対2の延長、最後のワンプレー。ブライトンのゴードン・スミスの決定機が、外れました。
+  - 2対2の引き分けのまま、延長の最後のワンプレーを迎えます。
+  - そこで、ブライトンのゴードン・スミスの決定機が外れました。
   - 再試合は0対4で敗れました。同じシーズン、リーグでは最下位で降格しています。
   sources:
   - https://en.wikipedia.org/wiki/Brighton_%26_Hove_Albion_F.C.
@@ -192,7 +193,7 @@ sections:
       - 2008-2021
       - プレミア初昇格の得点源
   say:
-  - text: グレン・マレーは2008年、ロッチデールから**30万ポンド**で加入したストライカーです。
+  - text: グレン・マレーは2008年、ロッチデールから**30万ポンド**で来たストライカー。
     image: assets/photos/pl/brighton_legend_baa41613.jpg
   - 2011年に離れ、2016年に戻ってプレミア初昇格の得点源に。初のプレミアで12得点です。
   - クラブ通算**111得点**は歴代2位。1位は1920年代のトミー・クックで、123点です。
@@ -223,7 +224,7 @@ sections:
   say:
   - text: ルイス・ダンクはブライトン生まれ。2003年に育成組織へ入り、3部だった2010年にデビュー。
     image: assets/photos/pl/brighton_legend_85972114.jpg
-  - 2023年10月、自身初のヨーロッパの試合。マルセイユで0対2から2対2に追いつきました。
+  - 2023年10月、自身初のヨーロッパの試合。マルセイユで0対2から追いついて、2対2のドロー。
   - 2025年12月、通算**500試合**に到達。イングランド代表でも6試合に出場しました。
   sources:
   - https://en.wikipedia.org/wiki/Lewis_Dunk
@@ -268,16 +269,43 @@ sections:
     image: assets/stats/pl_brighton_gk.png
     no_telop: true
   - image: assets/stats/pl_brighton_gk_f.png
-    text: ゴールキーパーは3人。バルト・フェルブルッヘンはオランダ代表で**33試合**。ジェイソン・スティールはリーグ戦で**35試合**。
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/pl_brighton_gk_f.png
+    text: バルト・フェルブルッヘンはオランダ代表で**33試合**。
+    no_telop: true
+  - image: assets/stats/pl_brighton_gk_f.png
+    text: ジェイソン・スティールはリーグ戦で**35試合**。
     no_telop: true
   - image: assets/stats/pl_brighton_df_f.png
-    text: ディフェンダーは10人。主将を務めるのが**ルイス・ダンク**。リーグ戦で**473試合**に出ています。フェルディ・カドゥオールはトルコ代表で**32試合**。
+    text: ディフェンダーは10人。
+    no_telop: true
+  - image: assets/stats/pl_brighton_df_f.png
+    text: 主将を務めるのが**ルイス・ダンク**。
+    no_telop: true
+  - image: assets/stats/pl_brighton_df_f.png
+    text: リーグ戦で**473試合**に出ています。
+    no_telop: true
+  - image: assets/stats/pl_brighton_df_f.png
+    text: フェルディ・カドゥオールはトルコ代表で**32試合**。
     no_telop: true
   - image: assets/stats/pl_brighton_mf_f.png
-    text: ミッドフィールダーは12人。日本の三笘薫がいます。日本代表で**31試合**に出ています。
+    text: ミッドフィールダーは12人。
+    no_telop: true
+  - image: assets/stats/pl_brighton_mf_f.png
+    text: 日本の三笘薫がいます。
+    no_telop: true
+  - image: assets/stats/pl_brighton_mf_f.png
+    text: 日本代表で**31試合**に出ています。
     no_telop: true
   - image: assets/stats/pl_brighton_fw_f.png
-    text: フォワードは5人。エヴァン・ファーガソンはアイルランド代表で**26試合**。ジョルジニオ・ルターはリーグ戦で**62試合**。
+    text: フォワードは5人。
+    no_telop: true
+  - image: assets/stats/pl_brighton_fw_f.png
+    text: エヴァン・ファーガソンはアイルランド代表で**26試合**。
+    no_telop: true
+  - image: assets/stats/pl_brighton_fw_f.png
+    text: ジョルジニオ・ルターはリーグ戦で**62試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Brighton_&_Hove_Albion_F.C.

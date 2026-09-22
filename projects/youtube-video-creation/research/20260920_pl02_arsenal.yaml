@@ -138,7 +138,8 @@ sections:
       - 監督ハーバート・チャップマン
   say:
   - ロンドンの地下鉄に、「アーセナル」という駅があります。
-  - もとはジレスピー・ロード駅。監督のハーバート・チャップマンが働きかけて、**1932年**に名前が変わりました。
+  - もとの名前は、ジレスピー・ロード駅。
+  - 監督のハーバート・チャップマンが働きかけて、**1932年**に名前が変わりました。
   - クラブの名前をそのまま付けた駅は、ロンドンの地下鉄でここだけです。
   sources:
   - https://en.wikipedia.org/wiki/History_of_Arsenal_F.C._(1886%E2%80%931966)
@@ -268,16 +269,43 @@ sections:
     image: assets/stats/pl_arsenal_gk.png
     no_telop: true
   - image: assets/stats/pl_arsenal_gk_f.png
-    text: ゴールキーパーは4人。ダビド・ラヤはアーセナルのリーグ戦で**80試合**。ケパ・アリサバラガはスペイン代表で**13試合**。
+    text: ゴールキーパーは4人。
+    no_telop: true
+  - image: assets/stats/pl_arsenal_gk_f.png
+    text: ダビド・ラヤはアーセナルのリーグ戦で**80試合**。
+    no_telop: true
+  - image: assets/stats/pl_arsenal_gk_f.png
+    text: ケパ・アリサバラガはスペイン代表で**13試合**。
     no_telop: true
   - image: assets/stats/pl_arsenal_df_f.png
-    text: ディフェンダーは9人。ガブリエウ・マガリャンイスはブラジル代表で**22試合**。ウィリアム・サリバはアーセナルのリーグ戦で**131試合**。
+    text: ディフェンダーは9人。
+    no_telop: true
+  - image: assets/stats/pl_arsenal_df_f.png
+    text: ガブリエウ・マガリャンイスはブラジル代表で**22試合**。
+    no_telop: true
+  - image: assets/stats/pl_arsenal_df_f.png
+    text: ウィリアム・サリバはアーセナルのリーグ戦で**131試合**。
     no_telop: true
   - image: assets/stats/pl_arsenal_mf_f.png
-    text: ミッドフィールダーは6人。主将を務めるのが**マルティン・ウーデゴール**。リーグ戦で**167試合**に出ています。デクラン・ライスはイングランド代表で**80試合**。
+    text: ミッドフィールダーは6人。
+    no_telop: true
+  - image: assets/stats/pl_arsenal_mf_f.png
+    text: 主将を務めるのが**マルティン・ウーデゴール**。
+    no_telop: true
+  - image: assets/stats/pl_arsenal_mf_f.png
+    text: リーグ戦で**167試合**に出ています。
+    no_telop: true
+  - image: assets/stats/pl_arsenal_mf_f.png
+    text: デクラン・ライスはイングランド代表で**80試合**。
     no_telop: true
   - image: assets/stats/pl_arsenal_fw_f.png
-    text: フォワードは6人。ブカヨ・サカはイングランド代表で**56試合**。カイ・ハヴァーツはドイツ代表で**62試合**。
+    text: フォワードは6人。
+    no_telop: true
+  - image: assets/stats/pl_arsenal_fw_f.png
+    text: ブカヨ・サカはイングランド代表で**56試合**。
+    no_telop: true
+  - image: assets/stats/pl_arsenal_fw_f.png
+    text: カイ・ハヴァーツはドイツ代表で**62試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Arsenal_F.C.

@@ -269,16 +269,43 @@ sections:
     image: assets/stats/pl_villa_gk.png
     no_telop: true
   - image: assets/stats/pl_villa_gk_f.png
-    text: ゴールキーパーは3人。日本の鈴木彩艶がいます。日本代表で**28試合**に出ています。
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/pl_villa_gk_f.png
+    text: 日本の鈴木彩艶がいます。
+    no_telop: true
+  - image: assets/stats/pl_villa_gk_f.png
+    text: 日本代表で**28試合**に出ています。
     no_telop: true
   - image: assets/stats/pl_villa_df_f.png
-    text: ディフェンダーは9人。マティ・キャッシュはポーランド代表で**25試合**。ヴィクトル・リンデロフはスウェーデン代表で**80試合**。
+    text: ディフェンダーは9人。
+    no_telop: true
+  - image: assets/stats/pl_villa_df_f.png
+    text: マティ・キャッシュはポーランド代表で**25試合**。
+    no_telop: true
+  - image: assets/stats/pl_villa_df_f.png
+    text: ヴィクトル・リンデロフはスウェーデン代表で**80試合**。
     no_telop: true
   - image: assets/stats/pl_villa_mf_f.png
-    text: ミッドフィールダーは11人。主将を務めるのが**ジョン・マッギン**。リーグ戦で**337試合**に出ています。レオン・ゴレツカはドイツ代表で**73試合**。
+    text: ミッドフィールダーは11人。
+    no_telop: true
+  - image: assets/stats/pl_villa_mf_f.png
+    text: 主将を務めるのが**ジョン・マッギン**。
+    no_telop: true
+  - image: assets/stats/pl_villa_mf_f.png
+    text: リーグ戦で**337試合**に出ています。
+    no_telop: true
+  - image: assets/stats/pl_villa_mf_f.png
+    text: レオン・ゴレツカはドイツ代表で**73試合**。
     no_telop: true
   - image: assets/stats/pl_villa_fw_f.png
-    text: フォワードは6人。ニコラス・ジャクソンはセネガル代表で**37試合**。タミー・エイブラハムはイングランド代表で**11試合**。
+    text: フォワードは6人。
+    no_telop: true
+  - image: assets/stats/pl_villa_fw_f.png
+    text: ニコラス・ジャクソンはセネガル代表で**37試合**。
+    no_telop: true
+  - image: assets/stats/pl_villa_fw_f.png
+    text: タミー・エイブラハムはイングランド代表で**11試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Aston_Villa_F.C.

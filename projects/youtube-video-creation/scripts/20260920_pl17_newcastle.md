@@ -204,10 +204,13 @@ cards:
 解説: 本拠地はセント・ジェームズ・パーク。**5万2729人**が入ります。
   telop: 本拠地はセント・ジェームズ・パーク。**5万2729人**が入ります
   image: assets/backgrounds/stadium_ニューカッスル_in.png
-解説: オーナーは、サウジアラビアの公共投資基金です。
-  telop: オーナーは、サウジアラビアの公共投資基金です
+解説: オーナーは、サウジアラビアの公共投資基金。
+  telop: オーナーは、サウジアラビアの公共投資基金
   image: assets/photos/pl/newcastle_owner_d7f21670.jpg
-解説: 1部リーグの優勝は**4回**。FAカップはさきほどの6回で、リーグカップとフェアーズカップが1回ずつ。インタートトカップも1回です。
+解説: 1部リーグの優勝は**4回**。FAカップはさきほどの6回。
+  no_telop: true
+  image: assets/stats/pl_newcastle_cups.png
+解説: リーグカップとフェアーズカップが1回ずつ。インタートトカップも1回です。
   no_telop: true
   image: assets/stats/pl_newcastle_cups.png
 解説: プレミアでの最高位は2位。1995年から96年と、その翌年の2回です。
@@ -311,16 +314,40 @@ cards:
   no_telop: true
   source: 報道
   image: assets/stats/pl_newcastle_gk.png
-キャスター: ゴールキーパーは4人。ニック・ポープはイングランド代表で**10試合**。
+キャスター: ゴールキーパーは4人。
   no_telop: true
   image: assets/stats/pl_newcastle_gk_f.png
-キャスター: ディフェンダーは7人。主将を務めるのが**ダン・バーン**。リーグ戦で**153試合**に出ています。ファビアン・シェアはスイス代表で**86試合**。
+キャスター: ニック・ポープはイングランド代表で**10試合**。
+  no_telop: true
+  image: assets/stats/pl_newcastle_gk_f.png
+キャスター: ディフェンダーは7人。
   no_telop: true
   image: assets/stats/pl_newcastle_df_f.png
-キャスター: ミッドフィールダーは7人。ジェイコブ・マーフィーはリーグ戦で**218試合**。ジョー・ウィロックはリーグ戦で**148試合**。
+キャスター: 主将を務めるのが**ダン・バーン**。
+  no_telop: true
+  image: assets/stats/pl_newcastle_df_f.png
+キャスター: リーグ戦で**153試合**に出ています。
+  no_telop: true
+  image: assets/stats/pl_newcastle_df_f.png
+キャスター: ファビアン・シェアはスイス代表で**86試合**。
+  no_telop: true
+  image: assets/stats/pl_newcastle_df_f.png
+キャスター: ミッドフィールダーは7人。
   no_telop: true
   image: assets/stats/pl_newcastle_mf_f.png
-キャスター: フォワードは7人。ジョエリントンはリーグ戦で**212試合**。ヨアネ・ウィサはコンゴ民主共和国代表で**43試合**。
+キャスター: ジェイコブ・マーフィーはリーグ戦で**218試合**。
+  no_telop: true
+  image: assets/stats/pl_newcastle_mf_f.png
+キャスター: ジョー・ウィロックはリーグ戦で**148試合**。
+  no_telop: true
+  image: assets/stats/pl_newcastle_mf_f.png
+キャスター: フォワードは7人。
+  no_telop: true
+  image: assets/stats/pl_newcastle_fw_f.png
+キャスター: ジョエリントンはリーグ戦で**212試合**。
+  no_telop: true
+  image: assets/stats/pl_newcastle_fw_f.png
+キャスター: ヨアネ・ウィサはコンゴ民主共和国代表で**43試合**。
   no_telop: true
   image: assets/stats/pl_newcastle_fw_f.png
 

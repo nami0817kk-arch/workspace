@@ -65,7 +65,7 @@ sections:
     text: 創立は**1878年**です。
     no_telop: true
   - image: assets/stats/pl_ipswich_data1.png
-    text: 愛称は「トラクター・ボーイズ」。農業の盛んな土地で、自分たちを茶化した呼び名です。青いシャツから、「ブルーズ」とも呼ばれます。
+    text: 愛称は「トラクター・ボーイズ」。農業の盛んな土地で、自らを茶化した名です。青いシャツから「ブルーズ」とも。
     no_telop: true
   - image: assets/stats/pl_ipswich_map.png
     text: ホームタウンはイプスウィッチ。イングランド東部サフォーク州です。
@@ -259,16 +259,37 @@ sections:
     image: assets/stats/pl_ipswich_gk.png
     no_telop: true
   - image: assets/stats/pl_ipswich_gk_f.png
-    text: ゴールキーパーは4人。クリスチャン・ウォルトンはリーグ戦で**125試合**。
+    text: ゴールキーパーは4人。
+    no_telop: true
+  - image: assets/stats/pl_ipswich_gk_f.png
+    text: クリスチャン・ウォルトンはリーグ戦で**125試合**。
     no_telop: true
   - image: assets/stats/pl_ipswich_df_f.png
-    text: ディフェンダーは7人。ダラ・オシェイはアイルランド代表で**45試合**。リーフ・デイヴィスはリーグ戦で**160試合**。
+    text: ディフェンダーは7人。
+    no_telop: true
+  - image: assets/stats/pl_ipswich_df_f.png
+    text: ダラ・オシェイはアイルランド代表で**45試合**。
+    no_telop: true
+  - image: assets/stats/pl_ipswich_df_f.png
+    text: リーフ・デイヴィスはリーグ戦で**160試合**。
     no_telop: true
   - image: assets/stats/pl_ipswich_mf_f.png
-    text: ミッドフィールダーは6人。サシャ・ルキッチはセルビア代表で**62試合**。ジャック・テイラーはアイルランド代表で**11試合**。
+    text: ミッドフィールダーは6人。
+    no_telop: true
+  - image: assets/stats/pl_ipswich_mf_f.png
+    text: サシャ・ルキッチはセルビア代表で**62試合**。
+    no_telop: true
+  - image: assets/stats/pl_ipswich_mf_f.png
+    text: ジャック・テイラーはアイルランド代表で**11試合**。
     no_telop: true
   - image: assets/stats/pl_ipswich_fw_f.png
-    text: フォワードは11人。日本の前田大然がいます。フリオ・エンシソはパラグアイ代表で**37試合**。
+    text: フォワードは11人。
+    no_telop: true
+  - image: assets/stats/pl_ipswich_fw_f.png
+    text: 日本の前田大然がいます。
+    no_telop: true
+  - image: assets/stats/pl_ipswich_fw_f.png
+    text: フリオ・エンシソはパラグアイ代表で**37試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.

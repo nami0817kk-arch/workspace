@@ -67,7 +67,7 @@ sections:
     text: 愛称は「ブラック・キャッツ」。黒猫です。
     no_telop: true
   - image: assets/stats/pl_sunderland_map.png
-    text: ホームタウンは、サンダーランドの街です。
+    text: ホームタウンは、サンダーランドの街。
     no_telop: true
   - image: assets/backgrounds/stadium_サンダーランド_in.png
     text: 本拠地はスタジアム・オブ・ライト。**4万8095人**が入ります。
@@ -119,7 +119,8 @@ sections:
   - そのクラブが、2018年には**3部**にいました。2年続けて落ちた結果です。
   - この時期を追った配信番組が、『**サンダーランド・ティル・アイ・ダイ**』です。
   - 題の意味は、「死ぬまでサンダーランド」。
-  - 2022年に2部へ戻り、2025年5月24日、プレーオフ決勝でシェフィールド・ユナイテッドを2対1で下します。
+  - 2022年に2部へ戻りました。
+  - 2025年5月24日、プレーオフ決勝でシェフィールド・ユナイテッドを2対1で下します。
   - '**3部から1部まで、7年**でした。'
   - そして昨季は、7位に入りました。
   - 1973年以来、**53年ぶり**のヨーロッパ。今季はヨーロッパリーグに出ます。
@@ -277,16 +278,37 @@ sections:
     image: assets/stats/pl_sunderland_gk.png
     no_telop: true
   - image: assets/stats/pl_sunderland_gk_f.png
-    text: ゴールキーパーは3人。ロビン・ルーフスはリーグ戦で**39試合**。
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/pl_sunderland_gk_f.png
+    text: ロビン・ルーフスはリーグ戦で**39試合**。
     no_telop: true
   - image: assets/stats/pl_sunderland_df_f.png
-    text: ディフェンダーは9人。トマ・ムニエはベルギー代表で**83試合**。トライ・ヒュームは北アイルランド代表で**26試合**。
+    text: ディフェンダーは9人。
+    no_telop: true
+  - image: assets/stats/pl_sunderland_df_f.png
+    text: トマ・ムニエはベルギー代表で**83試合**。
+    no_telop: true
+  - image: assets/stats/pl_sunderland_df_f.png
+    text: トライ・ヒュームは北アイルランド代表で**26試合**。
     no_telop: true
   - image: assets/stats/pl_sunderland_mf_f.png
-    text: ミッドフィールダーは9人。主将を務めるのが**グラニト・ジャカ**。ルーク・オナイエンはリーグ戦で**277試合**。
+    text: ミッドフィールダーは9人。
+    no_telop: true
+  - image: assets/stats/pl_sunderland_mf_f.png
+    text: 主将を務めるのが**グラニト・ジャカ**。
+    no_telop: true
+  - image: assets/stats/pl_sunderland_mf_f.png
+    text: ルーク・オナイエンはリーグ戦で**277試合**。
     no_telop: true
   - image: assets/stats/pl_sunderland_fw_f.png
-    text: フォワードは8人。ウィルソン・イシドールはリーグ戦で**19得点**。ブライアン・ブロベイはオランダ代表で**16試合**。
+    text: フォワードは8人。
+    no_telop: true
+  - image: assets/stats/pl_sunderland_fw_f.png
+    text: ウィルソン・イシドールはリーグ戦で**19得点**。
+    no_telop: true
+  - image: assets/stats/pl_sunderland_fw_f.png
+    text: ブライアン・ブロベイはオランダ代表で**16試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Sunderland_A.F.C.

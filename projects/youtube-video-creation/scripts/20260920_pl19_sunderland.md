@@ -206,7 +206,7 @@ cards:
 解説: 愛称は「ブラック・キャッツ」。黒猫です。
   no_telop: true
   image: assets/stats/pl_sunderland_data1.png
-解説: ホームタウンは、サンダーランドの街です。
+解説: ホームタウンは、サンダーランドの街。
   no_telop: true
   image: assets/stats/pl_sunderland_map.png
 解説: 本拠地はスタジアム・オブ・ライト。**4万8095人**が入ります。
@@ -240,8 +240,10 @@ cards:
   telop: この時期を追った配信番組が、『**サンダーランド・ティル・アイ・ダイ**』です
 解説: 題の意味は、「死ぬまでサンダーランド」。
   telop: 題の意味は、「死ぬまでサンダーランド」
-解説: 2022年に2部へ戻り、2025年5月24日、プレーオフ決勝でシェフィールド・ユナイテッドを2対1で下します。
-  telop: 2022年に2部へ戻り、2025年5月24日、プレーオフ決勝でシェフィールド・ユナイテッドを2対1で下します
+解説: 2022年に2部へ戻りました。
+  telop: 2022年に2部へ戻りました
+解説: 2025年5月24日、プレーオフ決勝でシェフィールド・ユナイテッドを2対1で下します。
+  telop: 2025年5月24日、プレーオフ決勝でシェフィールド・ユナイテッドを2対1で下します
 解説: **3部から1部まで、7年**でした。
   telop: **3部から1部まで、7年**でした
 解説: そして昨季は、7位に入りました。
@@ -323,16 +325,37 @@ cards:
   no_telop: true
   source: 報道
   image: assets/stats/pl_sunderland_gk.png
-キャスター: ゴールキーパーは3人。ロビン・ルーフスはリーグ戦で**39試合**。
+キャスター: ゴールキーパーは3人。
   no_telop: true
   image: assets/stats/pl_sunderland_gk_f.png
-キャスター: ディフェンダーは9人。トマ・ムニエはベルギー代表で**83試合**。トライ・ヒュームは北アイルランド代表で**26試合**。
+キャスター: ロビン・ルーフスはリーグ戦で**39試合**。
+  no_telop: true
+  image: assets/stats/pl_sunderland_gk_f.png
+キャスター: ディフェンダーは9人。
   no_telop: true
   image: assets/stats/pl_sunderland_df_f.png
-キャスター: ミッドフィールダーは9人。主将を務めるのが**グラニト・ジャカ**。ルーク・オナイエンはリーグ戦で**277試合**。
+キャスター: トマ・ムニエはベルギー代表で**83試合**。
+  no_telop: true
+  image: assets/stats/pl_sunderland_df_f.png
+キャスター: トライ・ヒュームは北アイルランド代表で**26試合**。
+  no_telop: true
+  image: assets/stats/pl_sunderland_df_f.png
+キャスター: ミッドフィールダーは9人。
   no_telop: true
   image: assets/stats/pl_sunderland_mf_f.png
-キャスター: フォワードは8人。ウィルソン・イシドールはリーグ戦で**19得点**。ブライアン・ブロベイはオランダ代表で**16試合**。
+キャスター: 主将を務めるのが**グラニト・ジャカ**。
+  no_telop: true
+  image: assets/stats/pl_sunderland_mf_f.png
+キャスター: ルーク・オナイエンはリーグ戦で**277試合**。
+  no_telop: true
+  image: assets/stats/pl_sunderland_mf_f.png
+キャスター: フォワードは8人。
+  no_telop: true
+  image: assets/stats/pl_sunderland_fw_f.png
+キャスター: ウィルソン・イシドールはリーグ戦で**19得点**。
+  no_telop: true
+  image: assets/stats/pl_sunderland_fw_f.png
+キャスター: ブライアン・ブロベイはオランダ代表で**16試合**。
   no_telop: true
   image: assets/stats/pl_sunderland_fw_f.png
 
