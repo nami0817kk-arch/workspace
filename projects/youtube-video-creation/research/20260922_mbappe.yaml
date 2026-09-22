@@ -32,8 +32,6 @@ sections:
         - ["9月21日", "ムバッペ「緊張関係などない」"]
         - ["10月26日", "バロンドールの発表"]
     say:
-      - text: ムバッペとデンベレのあいだで、10日のあいだに何があったかです。
-        short_only: true
       - 始まりは、今月11日のムバッペの一言でした。
     sources:
       - https://le10sport.com/football/equipe-de-france/malaise-avec-ousmane-dembele-autour-du-ballon-dor-kylian-mbappe-reprend-la-parole-791034
@@ -86,6 +84,10 @@ sections:
     telop: 「もう彼とは話した。緊張関係などない」
     narrator: キャスター
     say:
+      - text: '今月11日、ムバッペは自分とデンベレを比べて、「僕のほうは、ずっと選ばれし者として見られてきた」と話しました。'
+        short_only: true
+      - text: '2日後、デンベレは「僕はずっと、教室のいちばん後ろで必死に勉強してきた」と返しています。'
+        short_only: true
       - 代表が集まった日、ムバッペはこう話しました。
       - voice: ムバッペ
         text: もう彼とは話した。いや、緊張関係なんてない。
@@ -105,8 +107,6 @@ sections:
     telop: これを見た人が書いていたこと
     narrator: キャスター
     say:
-      - text: このやりとりを見た人たちが、書いていたことです。
-        short_only: true
       - voice: ネット民
         text: 教室の後ろで授業も聞かずゲームばかりしてた少年が、劇的に変わったもんな
       - voice: ネット民

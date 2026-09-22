@@ -24,8 +24,6 @@ sections:
     telop: マドリード・ダービーに勝った、その直後
     narrator: キャスター
     say:
-      - text: ダービーに勝った直後の会見で、名前が出たのは別のクラブでした。
-        short_only: true
       - 自分のアトレティコが、マドリード・ダービーに**2対1**で勝った直後です。
       - 聞かれたのは、優勝争いのことでした。
       - そこで挙がったのは、**バルセロナ**という名前でした。
@@ -38,6 +36,10 @@ sections:
     telop: 「違うスポーツをやっているように見える」
     narrator: キャスター
     say:
+      - text: 'アトレティコのシメオネ監督が、マドリード・ダービーに2対1で勝った直後の会見です。'
+        short_only: true
+      - text: '優勝争いについて聞かれて、挙げたのはバルセロナでした。'
+        short_only: true
       - voice: シメオネ
         text: 彼らは素晴らしいプレーをする。
       - voice: シメオネ
@@ -55,36 +57,12 @@ sections:
     sources:
       - https://es-us.noticias.yahoo.com/deportes/diego-simeone-elogi%C3%B3-barcelona-hansi-115500105.html
       - https://barcauniversal.com/atletico-madrid-boss-diego-simeone-names-barcelona-the-best-team-in-la-liga-playing-a-different-sport/
-  - id: numbers
-    heading: その数字を、確かめてみる
-    tier: 報道
-    telop: ラフィーニャ12点、ヤマル7点。どちらも合っている
-    narrator: 解説
-    card:
-      type: table
-      title: ラ・リーガ 第7節終了時
-      columns: ["", ""]
-      rows:
-        - ["1位 バルセロナ", "勝ち点21（7戦全勝）"]
-        - ["2位 アトレティコ", "勝ち点16"]
-        - ["4位 レアル・マドリード", "勝ち点15"]
-        - ["バルセロナの得失点", "31得点7失点"]
-    say:
-      - シメオネが挙げた数字は、どちらも合っています。
-      - ラフィーニャは7試合で**12ゴール**。ヤマルは**7ゴール**です。
-      - バルセロナは**7戦全勝**で勝ち点21。31点を取って、7点しか取られていません。
-      - アトレティコは2位で16。破った相手のレアルは4位で15です。
-    sources:
-      - https://www.laprensa.hn/fotogalerias/deportes/pichichi-liga-espanola-raphinha-triplete-mbappe-lamine-yamal-camello-tabla-goleadores-AJ32080462
-      - https://en.wikipedia.org/wiki/2026%E2%80%9327_La_Liga
   - id: voices
     heading: ネットの声
     tier: 未確認
     telop: これを聞いた人が書いていたこと
     narrator: キャスター
     say:
-      - text: この言葉を聞いた人たちが、書いていたことです。
-        short_only: true
       - voice: ネット民
         text: アトレティコの方がチームとして走るし、あの熱量を持ってる選手がマドリーにはいない
       - voice: ネット民

@@ -323,6 +323,11 @@ def _prefix_of(title: str) -> str:
     return ""
 
 
+# 並べる顔の上限。**取り上げた選手を全員並べる回がある**（2026-09-22 ユーザー
+# 「一人の写真ではなくて取り上げた選手を並べて」。日本代表の上位5人）
+PHOTOS_MAX = 5
+
+
 def from_meta(meta: dict, title: str) -> dict:
     """台本の frontmatter からサムネの引数を取り出す。
 
@@ -380,7 +385,7 @@ def from_meta(meta: dict, title: str) -> dict:
         "band_full": bool(meta.get("thumbnail_band_full", False)),
         # 顔を並べる（2026-09-08）。2〜3枚あれば全面が写真になり、
         # ぼかしの下地が要らない。参考チャンネルは全面が写真だった
-        "photos": [str(x) for x in (meta.get("thumbnail_photos") or [])][:3],
+        "photos": [str(x) for x in (meta.get("thumbnail_photos") or [])][:PHOTOS_MAX],
         # **エンブレムを主役にする**（2026-09-09 ユーザー指示）。
         # 出てくる人のクラブ姿の写真が無いときの逃げ道。写真より優先する
         "crest_main": [str(x) for x in (meta.get("thumbnail_crest_main") or [])][:3],

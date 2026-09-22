@@ -309,7 +309,19 @@ def build_notes(raw: dict) -> Notes:
         )
 
     sections: list[Section] = []
+    # **ショートに使うのは main の節だけ**。ほかの節の `short_only` は本編からも
+    # 落ちるので、**どこにも読まれない**（2026-09-22 に7本すべてで踏んだ。
+    # 「ベストイレブンに選ばれた」という前置きが、ショートに一度も出なかった）
+    has_main = any(isinstance(e, dict) and e.get("main")
+                   for e in (raw.get("sections") or []))
     for index, entry in enumerate(raw.get("sections") or [], start=1):
+        if has_main and isinstance(entry, dict) and not entry.get("main"):
+            for item in entry.get("say") or []:
+                if isinstance(item, dict) and item.get("short_only"):
+                    raise ResearchError(
+                        f"{entry.get('id') or index}: short_only の行が main でない節にあります"
+                        f"（{str(item.get('text', ''))[:20]}）。ショートは main の節しか使わないので、"
+                        "この行はどこにも読まれません。main の節の頭に移してください")
         entry = dict(entry or {})
         say = entry.get("say")
         raw_lines = [say] if isinstance(say, str) else list(say or [])
@@ -1491,7 +1503,7 @@ def to_script(notes: Notes, plan: Plan) -> str:
         # `short_voices: false` と書く。既定は入れる
         **({} if notes.short_voices else {"short_voices": False}),
         # 顔を並べる（2026-09-08）。2〜3枚で全面が写真になる
-        "thumbnail_photos": [str(x) for x in (thumbnail.get("photos") or [])][:3],
+        "thumbnail_photos": [str(x) for x in (thumbnail.get("photos") or [])][:5],
         # **エンブレムを主役にする**（2026-09-09 ユーザー指示）。
         # 「小さく添えるだけ」の決まりを変えた。出てくる人のクラブ姿の写真が
         # 無いときに使う。写真より優先される

@@ -1563,3 +1563,18 @@ def test_行の知らない鍵は止める(tmp_path):
         encoding="utf-8")
     with pytest.raises(ResearchError, match="知らない鍵"):
         load_notes(note)
+
+
+def test_main以外の節のshort_onlyは止める(tmp_path):
+    """2026-09-22: 前置きを「何が起きたか」に置き、7本のショートに一度も出なかった。"""
+    import pytest
+    from src.research import ResearchError, load_notes
+
+    note = tmp_path / "n.yaml"
+    note.write_text(
+        "theme:\n  title: 題\nsections:\n  - id: a\n    heading: 見出し\n    say:\n"
+        "      - text: 前置き\n        short_only: true\n      - 本文\n"
+        "  - id: b\n    main: true\n    heading: 山場\n    say:\n      - 山場の本文\n",
+        encoding="utf-8")
+    with pytest.raises(ResearchError, match="main でない節"):
+        load_notes(note)
