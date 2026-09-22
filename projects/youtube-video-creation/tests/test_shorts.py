@@ -1052,3 +1052,26 @@ title: モラタもバロテッリも、いま2部にいる。その理由とは
     short = trim(script)
     said = [l.text for l in short.scenes[-1].lines]
     assert any("次の節の" in t for t in said), f"続きの節から足していない: {said}"
+
+
+def test_尺を詰めてもショート専用の前置きと受けの元は残る():
+    """2026-09-22: 鈴木彩艶のショートで「2点取られた」の前置きが消え、
+    「2点目は、鈴木が蹴ったボールから」も消えて「そのボールが」から始まっていた。"""
+    from src.shorts import trim
+
+    body = "\n".join([
+        "## オープニング", "", "キャスター: 2失点でもベスト11。", "", "## 本編", "",
+        "解説: 鈴木がベストイレブンに選ばれました。選んだのは解説者です。", "  only: short", "",
+        "解説: ヴィラは3対2で勝ちましたが、2点を取られています。", "  only: short", "",
+        "解説: 2点目は、鈴木が自陣から蹴ったボールから生まれています。", "",
+        "解説: そのボールが相手陣の深くまで落ち、味方が決めました。", "",
+        "エメリ: 彼はロングボールを選べる。とても長いパスを持っている選手だ。", "",
+        "解説: 選んだ人は、2失点についてこう書いています。", "",
+        "ディーニー: あの2点で、彼が責められることはない。本当に早く馴染んだ。", "",
+    ])
+    for limit in (40.0, 30.0, 25.0):
+        texts = [l.text for l in trim(parse_script(body), max_seconds=limit).scenes[-1].lines]
+        assert any("2点を取られています" in t for t in texts), f"{limit}秒: 前置きが消えた"
+        for i, t in enumerate(texts):
+            if t.startswith("そのボール"):
+                assert i and "2点目は" in texts[i - 1], f"{limit}秒: 受けの元が消えた"

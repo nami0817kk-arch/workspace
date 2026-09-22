@@ -754,6 +754,10 @@ def _closing(scene: Scene) -> list[int]:
     return last
 
 
+# 前の行を受ける書き出し。これで始まる行の手前は削らない
+REFERRING = ("その", "この", "そこ", "それ", "これ", "そう")
+
+
 def _drop_middle(scene: Scene, script: Script, target: float) -> None:
     """**締めを残して、その手前から落とす**（2026-09-10）。
 
@@ -788,8 +792,20 @@ def _drop_middle(scene: Scene, script: Script, target: float) -> None:
         for index in range(keep - 1, 0, -1):
             if not _is_narrator(scene.lines[index]):
                 continue
-            leads = (index + 1 < len(scene.lines)
-                     and not _is_narrator(scene.lines[index + 1]))
+            # **ショートのために書いた前置きは削らない**（2026-09-22）。
+            # 鈴木彩艶の回で「ヴィラは3対2で勝ったが2点取られた」が消え、
+            # 「2失点でもベスト11」の2失点が何のことか分からなくなっていた
+            if (getattr(scene.lines[index], "only", "") or "") == "short":
+                continue
+            # **次の語りが「その」「この」で受けているなら、元の行を残す**。
+            # 「2点目は、鈴木が蹴ったボールから」が消え、ショートが
+            # 「そのボールが相手陣の深くまで落ち」から始まっていた
+            nxt = scene.lines[index + 1] if index + 1 < len(scene.lines) else None
+            referred = (nxt is not None and _is_narrator(nxt)
+                        and (getattr(nxt, "text", "") or "").lstrip("*").startswith(REFERRING))
+            if referred:
+                continue
+            leads = nxt is not None and not _is_narrator(nxt)
             if leads and not _is_lead_in(scene.lines[index]):
                 continue          # 見出し。中身を決めているので残す
             cut = index
@@ -840,6 +856,7 @@ def _drop_middle(scene: Scene, script: Script, target: float) -> None:
         # もともと書いている回は触らない）
         while (keep > 1
                and _is_narrator(scene.lines[keep - 1])
+               and (getattr(scene.lines[keep - 1], "only", "") or "") != "short"
                and keep < len(scene.lines)
                and _is_narrator(scene.lines[keep])):
             del scene.lines[keep - 1]
