@@ -182,7 +182,7 @@ cards:
   image: assets/stats/pl_bournemouth_data0.png
 解説: 愛称は「ザ・チェリーズ」。さくらんぼです。赤と黒の縦じまは、イタリアのミランが手本です。
   no_telop: true
-  image: assets/stats/pl_bournemouth_data8.png
+  image: assets/stats/pl_bournemouth_data1.png
 解説: 本拠地はディーン・コート。**1万2357人**。マンチェスター・ユナイテッドの**6分の1**です。
   telop: 本拠地はディーン・コート。**1万2357人**。マンチェスター・ユナイテッドの**6分の1**です
   image: assets/backgrounds/stadium_ボーンマス_in.png

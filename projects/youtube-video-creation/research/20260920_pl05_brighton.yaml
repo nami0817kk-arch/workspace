@@ -62,7 +62,7 @@ sections:
   - image: assets/stats/pl_brighton_last.png
     text: プレミアでの最高位は、2022年から23年の**6位**です。
     no_telop: true
-  - image: assets/stats/pl_brighton_data8.png
+  - image: assets/stats/pl_brighton_data6.png
     text: 愛称は「シーガルズ」。カモメです。
     no_telop: true
   sources:

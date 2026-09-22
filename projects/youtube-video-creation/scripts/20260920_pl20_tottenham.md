@@ -146,8 +146,8 @@ cards:
 ## オープニング
 @bg: assets/backgrounds/stadium_トッテナム.png
 
-キャスター: 北ロンドンから、**FAカップ8回**と**ヨーロッパ4回**。
-  telop: 北ロンドンから、**FAカップ8回**と**ヨーロッパ4回**
+キャスター: 北ロンドンから、**FAカップ8回**と**ヨーロッパリーグ3回**。
+  telop: 北ロンドンから、**FAカップ8回**と**ヨーロッパリーグ3回**
 キャスター: 高井幸大がいるトッテナムってどんなクラブ？
   telop: 高井幸大がいるトッテナムってどんなクラブ？
   se: assets/audio/se_pon.wav
@@ -184,12 +184,15 @@ cards:
 解説: 1部リーグの優勝は**2回**。FAカップは8回、リーグカップは4回です。
   no_telop: true
   image: assets/stats/pl_tottenham_cups.png
+解説: ヨーロッパリーグ3回、カップウィナーズカップ1回。合わせて4つです。
+  no_telop: true
+  image: assets/stats/pl_tottenham_cups.png
 解説: プレミアでの最高位は、2016年から17年の**2位**です。
   no_telop: true
   image: assets/stats/pl_tottenham_last.png
 解説: 愛称は「スパーズ」。「リリーホワイツ」とも呼ばれます。
   no_telop: true
-  image: assets/stats/pl_tottenham_data8.png
+  image: assets/stats/pl_tottenham_data6.png
 
 ## リーグに入らないまま、FAカップを獲った
 @bg: assets/backgrounds/stadium_トッテナム.png

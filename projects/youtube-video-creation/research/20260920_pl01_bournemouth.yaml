@@ -37,7 +37,7 @@ sections:
   - image: assets/stats/pl_bournemouth_data0.png
     text: 創立は**1899年**。ボスコムという地区のクラブが前身です。
     no_telop: true
-  - image: assets/stats/pl_bournemouth_data8.png
+  - image: assets/stats/pl_bournemouth_data1.png
     text: 愛称は「ザ・チェリーズ」。さくらんぼです。赤と黒の縦じまは、イタリアのミランが手本です。
     no_telop: true
   - image: assets/backgrounds/stadium_ボーンマス_in.png

@@ -37,7 +37,7 @@ sections:
   - image: assets/stats/pl_arsenal_data0.png
     text: 創立は**1886年**。兵器工場の作業場、ディアル・スクエアの名で始まりました。
     no_telop: true
-  - image: assets/stats/pl_arsenal_data8.png
+  - image: assets/stats/pl_arsenal_data1.png
     text: 愛称は「ガナーズ」。砲手、という意味です。
     no_telop: true
   - image: assets/stats/pl_arsenal_map.png
@@ -50,13 +50,16 @@ sections:
   - image: assets/stats/pl_arsenal_cups.png
     text: FAカップも、リーグと同じ**14回**獲っています。
     no_telop: true
+  - image: assets/stats/pl_arsenal_cups.png
+    text: ヨーロッパは、カップウィナーズカップとフェアーズカップを1回ずつです。
+    no_telop: true
   - image: assets/stats/pl_arsenal_last.png
     text: 直近のタイトルは昨季、2025年から26年のプレミアリーグ優勝。勝ち点は85でした。
     no_telop: true
-  - image: assets/stats/pl_arsenal_data6.png
+  - image: assets/stats/pl_arsenal_data7.png
     text: 2003年から2004年は、38試合を1度も負けずに優勝しました。
     no_telop: true
-  - image: assets/stats/pl_arsenal_data6.png
+  - image: assets/stats/pl_arsenal_data7.png
     text: '**インビンシブルズ**と呼ばれ、プレミアリーグでは今も唯一の記録です。'
     no_telop: true
   sources:

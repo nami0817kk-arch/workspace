@@ -17,7 +17,7 @@ theme:
   title: 高井幸大がいるトッテナムってどんなクラブ？
   question: どんなクラブなのか
   hook: 高井幸大は、2025年の夏に川崎フロンターレから来ました。
-  lead: 北ロンドンから、**FAカップ8回**と**ヨーロッパ4回**。
+  lead: 北ロンドンから、**FAカップ8回**と**ヨーロッパリーグ3回**。
 thumbnail:
   line1: リーグの外から、FAカップ
   line2: トッテナム
@@ -60,10 +60,13 @@ sections:
   - image: assets/stats/pl_tottenham_cups.png
     text: 1部リーグの優勝は**2回**。FAカップは8回、リーグカップは4回です。
     no_telop: true
+  - image: assets/stats/pl_tottenham_cups.png
+    text: ヨーロッパリーグ3回、カップウィナーズカップ1回。合わせて4つです。
+    no_telop: true
   - image: assets/stats/pl_tottenham_last.png
     text: プレミアでの最高位は、2016年から17年の**2位**です。
     no_telop: true
-  - image: assets/stats/pl_tottenham_data8.png
+  - image: assets/stats/pl_tottenham_data6.png
     text: 愛称は「スパーズ」。「リリーホワイツ」とも呼ばれます。
     no_telop: true
   sources:

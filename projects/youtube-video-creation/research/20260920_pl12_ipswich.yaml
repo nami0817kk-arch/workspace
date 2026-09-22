@@ -55,22 +55,22 @@ sections:
   - image: assets/stats/pl_ipswich_map.png
     text: ホームタウンはイプスウィッチ。イングランド東部サフォーク州です。
     no_telop: true
-  - image: assets/stats/pl_ipswich_data3.png
+  - image: assets/stats/pl_ipswich_data2.png
     text: オーナーは、アメリカの投資グループ「ゲームチェンジャー・トゥエンティ」。2021年からです。
     no_telop: true
   - image: assets/stats/pl_ipswich_cups.png
     text: 1部リーグの優勝が**1回**。FAカップ1回、そしてヨーロッパのウエファカップも1回獲っています。
     no_telop: true
-  - image: assets/stats/pl_ipswich_data7.png
+  - image: assets/stats/pl_ipswich_data4.png
     text: プレミアでの最高位は、昇格1年目、2000年から01年の**5位**です。
     no_telop: true
-  - image: assets/stats/pl_ipswich_data7.png
+  - image: assets/stats/pl_ipswich_data4.png
     text: 2025年に2部へ落ち、昨季は2部で**2位**に入って1年で戻ってきました。
     no_telop: true
-  - image: assets/stats/pl_ipswich_data8.png
+  - image: assets/stats/pl_ipswich_data5.png
     text: 愛称は「トラクター・ボーイズ」。農業の盛んな土地で、自分たちを茶化した呼び名です。
     no_telop: true
-  - image: assets/stats/pl_ipswich_data8.png
+  - image: assets/stats/pl_ipswich_data5.png
     text: 青いシャツから、「ブルーズ」とも呼ばれます。
     no_telop: true
   sources:

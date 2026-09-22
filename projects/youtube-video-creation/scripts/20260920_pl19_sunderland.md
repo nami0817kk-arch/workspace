@@ -180,13 +180,13 @@ cards:
   image: assets/stats/pl_sunderland_cups.png
 解説: 1998年から99年には、2部で勝ち点**105**。当時のリーグの最多記録でした。
   no_telop: true
-  image: assets/stats/pl_sunderland_data6.png
+  image: assets/stats/pl_sunderland_data5.png
 解説: プレミアでの最高位は**7位**。2000年から01年と、昨季の2回です。
   no_telop: true
   image: assets/stats/pl_sunderland_last.png
 解説: 愛称は「ブラック・キャッツ」。黒猫です。
   no_telop: true
-  image: assets/stats/pl_sunderland_data8.png
+  image: assets/stats/pl_sunderland_data7.png
 
 ## 6回優勝したクラブが、3部へ
 @bg: assets/backgrounds/stadium_サンダーランド.png

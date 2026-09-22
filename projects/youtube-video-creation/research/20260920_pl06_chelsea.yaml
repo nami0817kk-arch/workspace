@@ -16,7 +16,7 @@ theme:
   title: チェルシーってどんなクラブ？
   question: どんなクラブなのか
   hook: 先にあったのは、クラブではなくスタジアムでした。
-  lead: ロンドンから、ヨーロッパのタイトルを**9回**。
+  lead: ロンドンから、ヨーロッパの主要な大会を**全制覇**。
 thumbnail:
   line1: 先にあったのはスタジアム
   line2: チェルシー
@@ -48,13 +48,16 @@ sections:
   - image: assets/stats/pl_chelsea_cups.png
     text: 1部リーグの優勝は**6回**。FAカップは8回あります。
     no_telop: true
-  - image: assets/stats/pl_chelsea_data6.png
-    text: チャンピオンズリーグからカンファレンスリーグまで、ヨーロッパの主要な大会を**すべて獲った**、史上唯一のクラブです。
+  - image: assets/stats/pl_chelsea_data5.png
+    text: チャンピオンズリーグ2回、ヨーロッパリーグ2回、カップウィナーズカップ2回、カンファレンスリーグ1回。
     no_telop: true
   - image: assets/stats/pl_chelsea_data5.png
+    text: ヨーロッパの主要な大会を**すべて獲った**、史上唯一のクラブです。
+    no_telop: true
+  - image: assets/stats/pl_chelsea_data6.png
     text: 直近のタイトルは2025年のクラブワールドカップ。決勝でパリ・サンジェルマンを破りました。
     no_telop: true
-  - image: assets/stats/pl_chelsea_data8.png
+  - image: assets/stats/pl_chelsea_data7.png
     text: 愛称は「ザ・ブルーズ」。青です。
     no_telop: true
   - image: assets/stats/pl_chelsea_last.png

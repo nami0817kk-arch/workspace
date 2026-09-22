@@ -45,12 +45,12 @@ sections:
   - image: assets/photos/pl/newcastle_owner_d7f21670.jpg
     text: オーナーは、サウジアラビアの公共投資基金です。
   - image: assets/stats/pl_newcastle_cups.png
-    text: 1部リーグの優勝は**4回**。FAカップはさきほどの6回で、リーグカップとヨーロッパが1回ずつです。
+    text: 1部リーグの優勝は**4回**。FAカップはさきほどの6回で、リーグカップとフェアーズカップが1回ずつ。インタートトカップも1回です。
     no_telop: true
   - image: assets/stats/pl_newcastle_last.png
     text: プレミアでの最高位は2位。1995年から96年と、その翌年の2回です。
     no_telop: true
-  - image: assets/stats/pl_newcastle_data8.png
+  - image: assets/stats/pl_newcastle_data6.png
     text: 愛称は「マグパイズ」。カササギです。白と黒の縞から来ています。
     no_telop: true
   sources:

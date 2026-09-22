@@ -181,25 +181,28 @@ cards:
   image: assets/stats/pl_liverpool_map.png
 解説: 2010年から、大リーグのレッドソックスも持つフェンウェイ・スポーツ・グループがオーナーです。
   no_telop: true
-  image: assets/stats/pl_liverpool_data3.png
+  image: assets/stats/pl_liverpool_data2.png
 解説: 1部リーグの優勝は**20回**。マンチェスター・ユナイテッドと並んで最多です。
   no_telop: true
   image: assets/stats/pl_liverpool_cups.png
-解説: FAカップは8回、リーグカップ10回、チャンピオンズリーグも**6回**獲っています。
+解説: FAカップは8回、リーグカップは10回です。
+  no_telop: true
+  image: assets/stats/pl_liverpool_cups.png
+解説: チャンピオンズリーグ**6回**、ヨーロッパリーグ3回、スーパーカップ4回、クラブワールドカップ1回。
   no_telop: true
   image: assets/stats/pl_liverpool_cups.png
 解説: 直近のタイトルは、2024年から25年のプレミアリーグ優勝です。
   no_telop: true
-  image: assets/stats/pl_liverpool_data5.png
+  image: assets/stats/pl_liverpool_data4.png
 解説: 昨季は**5位**。勝ち点は60でした。
   no_telop: true
   image: assets/stats/pl_liverpool_last.png
 解説: 愛称は「レッズ」。1959年から74年まで率いたビル・シャンクリー監督の時代に定着します。
   no_telop: true
-  image: assets/stats/pl_liverpool_data8.png
+  image: assets/stats/pl_liverpool_data6.png
 解説: 試合前の「ユール・ネヴァー・ウォーク・アローン」も、1960年代の初めから歌われています。
   no_telop: true
-  image: assets/stats/pl_liverpool_data8.png
+  image: assets/stats/pl_liverpool_data6.png
 
 ## 空になったスタジアム
 @bg: assets/backgrounds/stadium_リヴァプール.png

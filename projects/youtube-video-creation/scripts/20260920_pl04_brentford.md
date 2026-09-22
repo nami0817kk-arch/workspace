@@ -174,7 +174,7 @@ cards:
   image: assets/stats/pl_brentford_last.png
 解説: 愛称は「ビーズ」。蜂です。
   no_telop: true
-  image: assets/stats/pl_brentford_data8.png
+  image: assets/stats/pl_brentford_data6.png
 
 ## 歩んできた道
 @bg: assets/backgrounds/stadium_ブレントフォード.png

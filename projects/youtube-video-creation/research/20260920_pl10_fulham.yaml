@@ -45,15 +45,15 @@ sections:
   - image: assets/photos/pl/fulham_owner_9cb77ec2.jpg
     text: オーナーはアメリカの実業家シャヒド・カーン。2013年からクラブを持っています。
   - image: assets/stats/pl_fulham_cups.png
-    text: 1部リーグの優勝はありませんが、ヨーロッパのタイトルを1回獲っています。
+    text: 1部リーグの優勝はありませんが、ヨーロッパのインタートトカップを1回獲っています。
     no_telop: true
   - image: assets/stats/pl_fulham_last.png
     text: プレミアでの最高位は、2008年から09年の**7位**です。
     no_telop: true
-  - image: assets/stats/pl_fulham_data6.png
+  - image: assets/stats/pl_fulham_data5.png
     text: クラブ最多出場は、イングランド代表の主将も務めたジョニー・ヘインズ。**658試合**です。
     no_telop: true
-  - image: assets/stats/pl_fulham_data8.png
+  - image: assets/stats/pl_fulham_data6.png
     text: 愛称は「コテジャーズ」。小屋に住む人、という意味です。
     no_telop: true
   sources:

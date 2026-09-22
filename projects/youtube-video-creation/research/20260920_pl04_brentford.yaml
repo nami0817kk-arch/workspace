@@ -51,7 +51,7 @@ sections:
   - image: assets/stats/pl_brentford_last.png
     text: プレミアでの最高位は、2022年から23年の**9位**です。
     no_telop: true
-  - image: assets/stats/pl_brentford_data8.png
+  - image: assets/stats/pl_brentford_data6.png
     text: 愛称は「ビーズ」。蜂です。
     no_telop: true
   sources:

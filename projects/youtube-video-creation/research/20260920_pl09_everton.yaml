@@ -46,12 +46,12 @@ sections:
     text: オーナーはアメリカの実業家ダン・フリードキン。2024年12月からクラブを持っています。
     no_telop: true
   - image: assets/stats/pl_everton_cups.png
-    text: 1部リーグの優勝は**9回**。次いでFAカップが5回、ヨーロッパが1回です。
+    text: 1部リーグの優勝は**9回**。次いでFAカップが5回、カップウィナーズカップが1回です。
     no_telop: true
   - image: assets/stats/pl_everton_data5.png
     text: 直近のタイトルは、1994年から95年のFAカップです。
     no_telop: true
-  - image: assets/stats/pl_everton_data8.png
+  - image: assets/stats/pl_everton_data6.png
     text: 愛称は「トフィーズ」。エヴァートン村にあったキャンディ屋から来ています。
     no_telop: true
   - image: assets/stats/pl_everton_last.png
