@@ -649,6 +649,9 @@ class Formulas {
   /// 移籍オファーが届く最低シーズン平均評価点。
   static const double transferOfferRating = 6.7;
 
+  /// 移籍の話が来るのに要る出場数。`offersFor` と画面が同じ値を読む。
+  static const int transferOfferAppearances = 10;
+
   /// **能力値1点が、局面の成功率をどれだけ動かすか。**
   ///
   /// `Ranking.chanceGainPercent` が画面に出す「能力+1 = 成功率 +◯%」も

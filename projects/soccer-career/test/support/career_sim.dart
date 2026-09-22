@@ -292,6 +292,8 @@ class Career {
 Future<Career> runCareer(
   Playstyle style,
   int seed, {
+  /// 出身国を決め打ちにする（特定の国から出られるかを測るため）。
+  String? countryId,
   void Function(MatchInProgress match, ScenarioOption option)? onDecision,
   void Function(int age, Attributes attributes, int overall, int mastery)?
   onWeek,
@@ -311,6 +313,7 @@ Future<Career> runCareer(
     age: style.startAge,
     agent: style.agent,
     traits: style.traits,
+    countryId: countryId,
   );
 
   final career = Career(style)..startOverall = controller.state!.player.overall;

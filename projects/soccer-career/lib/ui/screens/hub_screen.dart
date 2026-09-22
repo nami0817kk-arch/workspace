@@ -2200,6 +2200,8 @@ class _ClubLifeCard extends StatelessWidget {
                 // 「なぜ今は移籍の話が来ないのか」は、ここで答えるのが自然。
                 const SizedBox(height: 8),
                 Text(controller.transferWindowLabel, style: muted),
+                const SizedBox(height: 4),
+                Text(controller.transferReachLabel, style: muted),
                 if (manager != null) ...[
                   const SizedBox(height: 8),
                   Text(
