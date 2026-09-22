@@ -114,28 +114,35 @@ sections:
     heading: 本拠地を失った14年
     main: true
     tier: 背景
-    telop: 1997年、取締役会が本拠地を売った
+    telop: 1997年、経営陣が本拠地を売った
     narrator: 解説
     card:
       type: table
       title: 家を失っていた期間
       columns: ["", ""]
       rows:
-        - ["1997年", "ゴールドストーン・グラウンドを売却"]
+        - ["1997年", "借金のためゴールドストーン・グラウンドを売却"]
         - ["1997-1999年", "ジリンガムの本拠地を借りる"]
         - ["1999-2011年", "陸上競技場を改造したウィズディーン"]
         - ["2011年", "ファルマー・スタジアムへ"]
+    # 2026-09-22: なぜ売ったか（借金）が無く、「清算」「取締役会」は耳で立たなかった。
+    # 降格・消滅の話は本拠地の流れを切っていたので節の最後へ。
+    # 「すれすれ」の中身は最終節の引き分け（ヘレフォードと1対1）
     say:
       - {image: "assets/images/pl_brighton/scene.jpg",
-         text: 1997年、取締役会が歴史あるゴールドストーン・グラウンドを売却しました。}
-      - {image: "assets/images/pl_brighton/scene.jpg",
-         text: 同じ年、リーグからの降格も、そして清算も、すれすれのところで免れています。}
+         text: 1997年、クラブの経営陣が、借金を返すために本拠地のゴールドストーン・グラウンドを売りました。}
       - {image: "assets/images/pl_brighton/scene.jpg",
          text: ここから14年間、ブライトンは自分の家を持ちませんでした。}
       - {image: "assets/images/pl_brighton/scene.jpg",
-         text: はじめの2年はジリンガムの本拠地を借り、そのあとの12年は陸上競技場を改造したウィズディーン・スタジアムでした。}
+         text: はじめの2年は、別のクラブ、ジリンガムの本拠地を借りました。}
+      - {image: "assets/images/pl_brighton/scene.jpg",
+         text: そのあとの12年は、陸上競技場を改造したウィズディーン・スタジアムです。}
       - {image: "assets/images/pl_brighton/scene.jpg",
          text: いまのファルマー・スタジアムに入ったのは2011年です。}
+      - {image: "assets/images/pl_brighton/scene.jpg",
+         text: 本拠地を売ったその年は、最終節の引き分けでようやくフットボールリーグに残っています。}
+      - {image: "assets/images/pl_brighton/scene.jpg",
+         text: クラブの消滅も、紙一重で免れました。}
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Brighton_%26_Hove_Albion_F.C.

@@ -15,7 +15,7 @@ theme:
   topic: エヴァートン
   title: エヴァートンってどんなクラブ？
   question: どんなクラブなのか
-  hook: リヴァプールとは、もとは同じ場所にいました。
+  hook: 赤いリヴァプールとは、もとは同じ家にいました。
   lead: リヴァプールの街から、**1部リーグを9回**。
 thumbnail:
   line1: 133年いた家を、去年出た
@@ -35,27 +35,27 @@ sections:
   - short_only: true
     text: このクラブの、基本のデータです。
   - image: assets/stats/pl_everton_data0.png
-    text: 創立は**1878年**。リヴァプールのスタンリー・パークで生まれたクラブです。
+    text: 創立は**1878年**。街の公園、スタンリー・パークで生まれたクラブです。
     no_telop: true
   - image: assets/backgrounds/stadium_エヴァートン_in.png
-    text: 昨季、2025年から26年に新しいスタジアムへ移りました。**5万2769人**が入ります。
+    text: 本拠地はヒル・ディキンソン・スタジアム。**5万2769人**が入ります。
   - image: assets/stats/pl_everton_map.png
-    text: ホームタウンはリヴァプール。2025-26に新スタジアムへ移転です。
+    text: ホームタウンは、港の街リヴァプール。
     no_telop: true
   - image: assets/stats/pl_everton_data3.png
     text: オーナーはアメリカの実業家ダン・フリードキン。2024年12月からクラブを持っています。
     no_telop: true
   - image: assets/stats/pl_everton_cups.png
-    text: 1部リーグの優勝は**9回**。FAカップは5回、ヨーロッパのタイトルも1回あります。
+    text: タイトルでいちばん多いのは、1部リーグの優勝。次いでFAカップが5回、ヨーロッパが1回です。
     no_telop: true
   - image: assets/stats/pl_everton_data5.png
     text: 直近のタイトルは、1994年から95年のFAカップです。
     no_telop: true
   - image: assets/stats/pl_everton_data6.png
-    text: 1927年から28年には、ディキシー・ディーンが1シーズンで**60得点**。いまもイングランドの記録です。
+    text: クラブ記録は、ディクシー・ディーンが1シーズンで挙げた得点数です。
     no_telop: true
   - image: assets/stats/pl_everton_data8.png
-    text: 愛称は「トフィーズ」。村にあったキャンディ屋から来ています。
+    text: 愛称は「トフィーズ」。エヴァートン村にあったキャンディ屋から来ています。
     no_telop: true
   - image: assets/stats/pl_everton_last.png
     text: 昨季は**13位**。勝ち点は49でした。
@@ -76,20 +76,22 @@ sections:
     - ''
     - ''
     rows:
+    - - 1884年-1892年
+      - アンフィールド
     - - 1892年-2025年
       - グディソン・パーク
     - - 2025-26年から
       - ヒル・ディキンソン・スタジアム
-    - - 収容人数
-      - 52,888人
   say:
   - '**133年いた家を、去年出ました。**'
-  - それまでいたのはグディソン・パーク。**1892年**からの本拠地です。
-  - 新しい家は、ヒル・ディキンソン・スタジアムです。
-  - 収容人数は**5万2888人**。プレミアリーグでも大きいほうに入ります。
+  - その家、グディソン・パークに入ったのは**1892年**。それまではアンフィールドにいました。
+  - 地主と家賃でもめて出ていき、残った地主が作ったのがリヴァプールです。
+  - グディソンは古く、席を増やせなくなっていました。
+  - 新しい家は、川沿いのドックに建てたヒル・ディキンソン・スタジアム。名前は地元の法律事務所です。
   official: false
   sources:
   - https://en.wikipedia.org/wiki/Everton_F.C.
+  - https://en.wikipedia.org/wiki/Hill_Dickinson_Stadium
   bg: assets/backgrounds/stadium_エヴァートン.png
 - id: episode
   heading: 1シーズン60ゴールの男
@@ -110,7 +112,7 @@ sections:
     - - 1部の1季記録
       - いまも破られていない
   say:
-  - 1927年から28年のシーズン、ディクシー・ディーンがリーグ戦39試合で**60ゴール**を決めました。
+  - 1927年から28年のシーズン、ディクシー・ディーンがリーグ戦だけで**60ゴール**を決めました。
   - 1部リーグの、1シーズンの得点記録です。
   - 100年近くたったいまも、破られていません。
   sources:
@@ -135,7 +137,7 @@ sections:
       - 1981-1998
       - クラブ最多578試合のGK
   say:
-  - text: ネヴィル・サウスオールは、クラブ記録のリーグ**578試合**に出たキーパー。1995年のFAカップ優勝も守りました。
+  - text: ネヴィル・サウスオールは、クラブ記録のリーグ**578試合**に出たキーパー。17年間、ゴールを守りました。
     image: assets/photos/pl/everton_legend_721f5e76.jpg
   sources: &id002
   - https://en.wikipedia.org/wiki/Neville_Southall
@@ -162,7 +164,7 @@ sections:
       - 2009-2026
       - 17年在籍の主将
   say:
-  - text: シェイマス・コールマンは17年在籍した主将。グディソン・パーク最後の世代の象徴です。
+  - text: シェイマス・コールマンは17年在籍した主将。去年のグディソン・パーク最後の試合も、主将として先発しました。
     image: assets/photos/pl/everton_legend_ee9aaa81.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_エヴァートン.png

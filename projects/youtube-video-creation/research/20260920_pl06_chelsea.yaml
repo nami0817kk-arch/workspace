@@ -35,21 +35,21 @@ sections:
   - short_only: true
     text: このクラブの、基本のデータです。
   - image: assets/stats/pl_chelsea_data0.png
-    text: 創立は**1905年**。ロンドンのクラブです。
+    text: 創立は**1905年**。ロンドン西部のクラブです。
     no_telop: true
   - image: assets/backgrounds/stadium_チェルシー_in.png
-    text: 本拠地には**4万44人**が入ります。
+    text: 本拠地はスタンフォード・ブリッジ。**4万44人**が入ります。
   - image: assets/stats/pl_chelsea_map.png
-    text: ホームタウンはロンドン。チェルシー地区(ロンドン)発祥です。
+    text: ホームタウンはロンドンの、チェルシー地区です。
     no_telop: true
   - image: assets/stats/pl_chelsea_data3.png
-    text: オーナーはブルーコという投資グループです。
+    text: オーナーはブルーコという投資グループ。投資会社のクリアレイクが握っています。
     no_telop: true
   - image: assets/stats/pl_chelsea_cups.png
-    text: 1部リーグの優勝は**6回**。FAカップは8回、ヨーロッパのタイトルは9回あります。
+    text: 1部リーグの優勝は**6回**。FAカップは8回あります。
     no_telop: true
   - image: assets/stats/pl_chelsea_data6.png
-    text: UEFAの主要な大会を**すべて獲った**、史上唯一のクラブです。
+    text: チャンピオンズリーグからカンファレンスリーグまで、ヨーロッパの主要な大会を**すべて獲った**、史上唯一のクラブです。
     no_telop: true
   - image: assets/stats/pl_chelsea_data5.png
     text: 直近のタイトルは2025年のクラブワールドカップ。決勝でパリ・サンジェルマンを破りました。
@@ -73,15 +73,13 @@ sections:
   - image: assets/images/pl_chelsea/scene.jpg
     text: このクラブは、できた順番がふつうと逆です。
   - image: assets/images/pl_chelsea/scene.jpg
-    text: 先にあったのは、スタジアムのほうでした。
-  - image: assets/images/pl_chelsea/scene.jpg
-    text: 実業家のガス・ミアーズが、スタンフォード・ブリッジを手に入れます。
+    text: 1904年、実業家のガス・ミアーズが、スタンフォード・ブリッジを手に入れます。
   - image: assets/images/pl_chelsea/scene.jpg
     text: そして近くのクラブ、フラムに「ここを借りないか」と持ちかけました。
   - image: assets/images/pl_chelsea/scene.jpg
     text: フラムは、断ります。
   - image: assets/images/pl_chelsea/scene.jpg
-    text: 借り手がいないなら、自分でクラブを作ればいい。そう考えて生まれたのがチェルシーです。1905年のことでした。
+    text: 借り手がいないなら、自分でクラブを作ればいい。そう考えて生まれたのがチェルシーです。
   official: false
   sources:
   - https://en.wikipedia.org/wiki/Chelsea_F.C.
@@ -103,11 +101,11 @@ sections:
     - - あだ名
       - ペンショナーズ（年金暮らし）
     - - 替えた人
-      - 1952年、監督テッド・ドレイク
+      - 1952年、監督テッド・ドレイク。翌年ライオンに
   say:
-  - 最初の紋章は、選手でもライオンでもなく、赤い制服の退役軍人でした。
-  - 近くの王立チェルシー病院で暮らす「チェルシー・ペンショナー」です。あだ名も「ペンショナーズ」、年金暮らしの人たち。
-  - '**1952年**に監督になったテッド・ドレイクが「古くさい」と言って、紋章を替えさせました。'
+  - あだ名はもともと「ペンショナーズ」、年金暮らしの人たち。近くの王立チェルシー病院の退役軍人です。
+  - 最初の紋章も、選手でもライオンでもなく、その赤い制服の退役軍人でした。
+  - '**1952年**に監督になったテッド・ドレイクが「古くさい」と言って、翌年、いまのライオンの紋章に替えさせました。'
   sources:
   - https://en.wikipedia.org/wiki/Chelsea_F.C.
   bg: assets/backgrounds/stadium_チェルシー.png
@@ -157,7 +155,7 @@ sections:
       - 1998-2017
       - 黄金期を率いた主将
   say:
-  - text: ジョン・テリーは19年在籍した主将。クラブの黄金期をすべて率いました。
+  - text: ジョン・テリーは19年在籍した主将。2005年からのプレミア優勝**5回**、すべてで主将でした。
     image: assets/photos/pl/chelsea_legend_322e28ae.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_チェルシー.png
@@ -181,7 +179,7 @@ sections:
       - 2004-2015
       - 2012年CL決勝の同点弾
   say:
-  - text: ディディエ・ドログバは、2012年のチャンピオンズリーグ決勝で88分に同点弾、PK戦でも決めて、クラブを**初の欧州王者**にしました。
+  - text: ディディエ・ドログバは、2012年のチャンピオンズリーグ決勝、バイエルン相手に88分の同点弾。PK戦も決めて、クラブ初のチャンピオンズリーグ優勝でした。
     image: assets/photos/pl/chelsea_legend_cc53b1d9.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_チェルシー.png

@@ -15,10 +15,10 @@ theme:
   topic: フラム
   title: フラムってどんなクラブ？
   question: どんなクラブなのか
-  hook: 日本人が、このクラブの歴史を1つ動かしています。
-  lead: 創立**1879年**。ロンドンでいちばん古い、テムズ川沿い。
+  hook: 日本人が、このクラブの歴史を1つ動かしました。
+  lead: 創立**1879年**。ロンドンのプロクラブでは、2番目の古さ。
 thumbnail:
-  line1: 欧州初制覇を決めた日本人
+  line1: ヨーロッパを獲った日本人
   line2: フラム
   crest_main:
   - フラム
@@ -35,7 +35,7 @@ sections:
   - short_only: true
     text: このクラブの、基本のデータです。
   - image: assets/stats/pl_fulham_data0.png
-    text: 創立は**1879年**。セント・アンドリューズ教会のクラブとして始まりました。
+    text: 教会のクラブとして始まり、ロンドンではクリスタル・パレスに次いで古いプロクラブです。
     no_telop: true
   - image: assets/backgrounds/stadium_フラム_in.png
     text: 本拠地はテムズ川沿いのクレイヴン・コテージ。**2万8107人**が入ります。
@@ -51,7 +51,7 @@ sections:
     text: プレミアでの最高位は、2008年から09年の**7位**です。
     no_telop: true
   - image: assets/stats/pl_fulham_data6.png
-    text: 最多出場はジョニー・ヘインズ。1952年から70年に**658試合**に出ました。
+    text: クラブ最多出場は、イングランド代表の主将も務めたジョニー・ヘインズ。**658試合**です。
     no_telop: true
   - image: assets/stats/pl_fulham_data8.png
     text: 愛称は「コテジャーズ」。小屋に住む人、という意味です。
@@ -81,15 +81,17 @@ sections:
     - - ヨーロッパリーグ
       - 準優勝（2009-10）
   say:
-  - '**稲本潤一**です。2002年8月27日、ロフタス・ロードでの第2レグでした。'
-  - 12分、47分、50分。**ハットトリック**です。3対1、2試合合計5対3。
-  - 稲本のハットトリックが、フラム初のヨーロッパのタイトルを決めた。
-  - 大会の名前はインタートトカップ。この優勝で、クラブはUEFAカップの出場権も取りました。
-  - 稲本は2シーズンで58試合9得点を残しています。
-  - 大きな決勝に立ったのは2度。1975年のFAカップと、2010年のヨーロッパリーグです。
+  - 決めたのは**稲本潤一**。2002年、インタートトカップの決勝でした。
+  - 相手はイタリアのボローニャ。8月27日の第2レグは、改修中の本拠地に代わって借りていたロフタス・ロードです。
+  - 12分、47分、50分。稲本の**ハットトリック**で3対1。2試合合計5対3で勝ちました。
+  - クラブの歴史でただ1つの、ヨーロッパのタイトルです。
+  - 稲本はこのクラブで2シーズンを過ごし、9得点を残しています。
+  - 大きな決勝はほかに2度。1975年のFAカップと2010年のヨーロッパリーグ、どちらも準優勝でした。
   official: false
   sources:
-  - https://en.wikipedia.org/wiki/Premier_League
+  - https://en.wikipedia.org/wiki/Fulham_F.C.
+  - https://en.wikipedia.org/wiki/Junichi_Inamoto
+  - https://en.wikipedia.org/wiki/Craven_Cottage
   bg: assets/backgrounds/stadium_フラム.png
 - id: episode
   heading: スタジアムの角にある家
@@ -135,7 +137,7 @@ sections:
       - 2018-2023
       - 2部で1シーズン43得点
   say:
-  - アレクサンダル・ミトロヴィッチは、2021年から22年に2部で**43得点**。46試合のリーグでの最多記録です。
+  - アレクサンダル・ミトロヴィッチは、2021年から22年に2部で**43得点**。46試合制になってからの、1シーズンの最多記録です。
   sources: &id002
   - https://en.wikipedia.org/wiki/Aleksandar_Mitrovi%C4%87
   - https://en.wikipedia.org/wiki/Tom_Cairney

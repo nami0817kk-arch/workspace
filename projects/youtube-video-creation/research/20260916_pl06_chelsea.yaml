@@ -91,15 +91,13 @@ sections:
       - {image: "assets/images/pl_chelsea/scene.jpg",
          text: このクラブは、できた順番がふつうと逆です。}
       - {image: "assets/images/pl_chelsea/scene.jpg",
-         text: 先にあったのは、スタジアムのほうでした。}
-      - {image: "assets/images/pl_chelsea/scene.jpg",
-         text: 実業家のガス・ミアーズが、スタンフォード・ブリッジを手に入れます。}
+         text: 1904年、実業家のガス・ミアーズが、スタンフォード・ブリッジを手に入れます。}
       - {image: "assets/images/pl_chelsea/scene.jpg",
          text: そして近くのクラブ、フラムに「ここを借りないか」と持ちかけました。}
       - {image: "assets/images/pl_chelsea/scene.jpg",
          text: フラムは、断ります。}
       - {image: "assets/images/pl_chelsea/scene.jpg",
-         text: 借り手がいないなら、自分でクラブを作ればいい。そう考えて生まれたのがチェルシーです。1905年のことでした。}
+         text: 借り手がいないなら、自分でクラブを作ればいい。そう考えて生まれたのがチェルシーです。}
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Chelsea_F.C.

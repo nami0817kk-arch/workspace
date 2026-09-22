@@ -62,24 +62,45 @@ def _key() -> str:
     sys.exit("GEMINI_API_KEY が空です")
 
 
-def ask(text: str, model: str | None = None) -> str:
-    model = model or os.environ.get("GEMINI_MODEL", "gemini-3.6-flash")
+# 混雑（503）が続くときは、別のモデルへ順に逃がす（2026-09-22、3.6-flash が1時間落ち続けた）
+# 429 は無料枠の使い切り（課金はしていない）。その日はそのモデルを飛ばす
+MODELS = ("gemini-3.6-flash", "gemini-3.5-flash", "gemini-flash-latest", "gemini-3.8-flash", "gemini-3.7-flash")
+
+
+def _call(model: str, body: bytes):
     url = (f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
            f"?key={_key()}")
-    body = json.dumps({"contents": [{"parts": [{"text": text}]}]}).encode("utf-8")
     req = urllib.request.Request(url, data=body, headers={"Content-Type": "application/json"})
-    # 503（混雑）は数十秒で直ることが多い。3回まで待って掛け直す
+    with urllib.request.urlopen(req, timeout=180) as res:
+        return json.load(res)
+
+
+def ask(text: str, model: str | None = None) -> str:
     import time
 
-    for attempt in range(3):
-        try:
-            with urllib.request.urlopen(req, timeout=180) as res:
-                data = json.load(res)
+    first = model or os.environ.get("GEMINI_MODEL", MODELS[0])
+    order = [first] + [m for m in MODELS if m != first]
+    body = json.dumps({"contents": [{"parts": [{"text": text}]}]}).encode("utf-8")
+    data = None
+    last: Exception | None = None
+    for name in order:
+        for attempt in range(2):
+            try:
+                data = _call(name, body)
+                break
+            except urllib.error.HTTPError as err:
+                last = err
+                if err.code not in (429, 503):
+                    raise
+                if err.code == 429:
+                    break          # 枠切れは待っても戻らない。次のモデルへ
+                time.sleep(20)
+        if data is not None:
+            if name != first:
+                print(f"  （{first} が混雑のため {name} で読みました）")
             break
-        except urllib.error.HTTPError as err:
-            if err.code not in (429, 503) or attempt == 2:
-                raise
-            time.sleep(45 * (attempt + 1))
+    if data is None:
+        raise last  # type: ignore[misc]
     return "\n".join(part.get("text", "")
                      for cand in data.get("candidates", [])
                      for part in cand.get("content", {}).get("parts", []))
@@ -97,6 +118,12 @@ def main(argv: list[str]) -> int:
     if not argv:
         print(__doc__)
         return 2
+    if argv == ["--prompt"]:
+        # Gemini の無料枠が切れた日は、同じ問いを別の読み手（Claude の下請け）に渡す。
+        # 控えは同じ output/flow/<台本>.md に、1行目を
+        # 「# 流れの点検: <台本>（読み手: Claude。Gemini は無料枠切れ）」として書く
+        print(PROMPT)
+        return 0
     for arg in argv:
         script = Path(arg)
         if not script.exists():

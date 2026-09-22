@@ -33,7 +33,8 @@ sections:
   telop: 冨安健洋と鎌田大地が所属するクリスタル・パレス
   narrator: キャスター
   say:
-  - 日本代表の冨安健洋と鎌田大地、2人の日本人が所属しているクラブです。
+  - 冨安健洋は、日本代表**46試合**のディフェンダー。
+  - 鎌田大地は日本代表**53試合**。このクラブでリーグ戦**66試合**を戦っています。
   - では、どんなクラブなのか。まずは基本のデータから見ていきます。
   sources:
   - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
@@ -49,21 +50,23 @@ sections:
   - short_only: true
     text: 冨安健洋の所属クラブを、基本のデータで見ていきます。
   - image: assets/stats/pl_palace_data0.png
-    text: 創立は**1905年**。本拠地は南ロンドンのセルハースト・パーク、2万5194人が入ります。
+    text: 創立は**1905年**。起源は1861年のアマチュアクラブです。
+    no_telop: true
+  - image: assets/backgrounds/stadium_クリスタルパレス_in.png
+    text: 本拠地はセルハースト・パーク。**2万5194人**が入ります。
+  - image: assets/stats/pl_palace_map.png
+    text: ホームタウンは南ロンドンの、クロイドン区セルハーストです。
     no_telop: true
   - image: assets/photos/pl/palace_owner_51aa6fad.jpg
-    text: オーナーは、アメリカンフットボール、ニューヨーク・ジェッツの会長ウッディ・ジョンソン。2025年にクラブを買いました。
-  - image: assets/stats/pl_palace_map.png
-    text: ホームタウンはセルハースト。南ロンドン、クロイドン区です。
-    no_telop: true
+    text: オーナーは、アメリカンフットボールのニューヨーク・ジェッツの会長、ウッディ・ジョンソン。2025年にクラブを買いました。
   - image: assets/stats/pl_palace_cups.png
     text: 1部リーグの優勝はありませんが、FAカップを1回、そしてヨーロッパのタイトルを1回獲っています。
     no_telop: true
   - image: assets/stats/pl_palace_data5.png
-    text: そのヨーロッパのタイトルが、昨季のカンファレンスリーグ優勝です。
+    text: そのヨーロッパのタイトルが、昨季のカンファレンスリーグ。決勝でスペインのラージョ・バジェカーノを1対0で破りました。
     no_telop: true
   - image: assets/stats/pl_palace_last.png
-    text: 当時の1部での最高位は、1990年から91年の**3位**です。
+    text: 1部での最高位は、1990年から91年の**3位**。プレミアリーグができる前です。
     no_telop: true
   - image: assets/stats/pl_palace_data8.png
     text: 愛称は「イーグルス」。鷲です。
@@ -91,12 +94,12 @@ sections:
     - - 2025年
       - 1-0。クラブ史上初のタイトル
   say:
-  - 2025年、FAカップの決勝。相手はマンチェスター・シティです。
+  - FAカップの決勝には、それまで2度立って、2度負けていました。
+  - 1990年は引き分けのあとの再試合で0対1、2016年は1対2。どちらもマンチェスター・ユナイテッドに負けています。
+  - '**2025年**、3度目の決勝。相手はマンチェスター・シティです。'
   - エベレチ・エゼの1点を守り切り、1対0で勝ちました。
   - '**クラブの歴史ではじめての、大きなタイトル**でした。'
-  - 1905年にプロのクラブができてから、120年が経っていました。
-  - FAカップの決勝に立つのは、これが3度目です。
-  - 2016年は1対2。どちらも相手はマンチェスター・ユナイテッドでした。
+  - このタイトルで初めてヨーロッパに出て、その大会も獲ったのが昨季です。
   official: false
   sources:
   - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
@@ -122,7 +125,7 @@ sections:
   say:
   - クリスタル・パレスは、もともと「水晶宮」と呼ばれた万博の建物の名前です。
   - '**1905年**、その建物を持つ会社が、来場者を増やすために自分たちでプロのクラブを作りました。'
-  - 立ち上げを手伝ったのはアストン・ヴィラの職員。だから最初のユニフォームは、ヴィラと同じえんじ色と青でした。
+  - 会社が立ち上げを任せたのは、アストン・ヴィラの職員でした。だから最初のユニフォームは、ヴィラと同じえんじ色と青です。
   sources:
   - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
   bg: assets/backgrounds/stadium_クリスタルパレス.png
@@ -196,7 +199,7 @@ sections:
       - 2002-2006
       - プレミアで21得点
   say:
-  - text: アンドリュー・ジョンソンは、2004年から05年にプレミアで**21得点**。イングランド人で最多でした。
+  - text: アンドリュー・ジョンソンは、2004年から05年にプレミアで**21得点**。その季のイングランド人では最多でした。
     image: assets/photos/pl/palace_legend_3bc227d6.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_クリスタルパレス.png

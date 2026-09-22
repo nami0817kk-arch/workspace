@@ -35,29 +35,26 @@ sections:
   - short_only: true
     text: このクラブの、基本のデータです。
   - image: assets/stats/pl_arsenal_data0.png
-    text: 創立は**1886年**。ディアル・スクエアという名前で始まりました。
-    no_telop: true
-  - image: assets/backgrounds/stadium_アーセナル_in.png
-    text: 本拠地はロンドン北部のエミレーツ・スタジアム。**6万704人**が入ります。
-  - image: assets/stats/pl_arsenal_map.png
-    text: ホームタウンはロンドン。北ロンドン・イズリントン区です。
-    no_telop: true
-  - image: assets/photos/pl/arsenal_owner_87703a59.jpg
-    text: オーナーはスタン・クロエンケ。2018年から単独でクラブを持っています。
-  - image: assets/stats/pl_arsenal_cups.png
-    text: 1部リーグの優勝は**14回**。FAカップも14回獲っています。
-    no_telop: true
-  - image: assets/stats/pl_arsenal_data5.png
-    text: 直近のタイトルは昨季、2025年から26年のプレミアリーグ優勝です。
-    no_telop: true
-  - image: assets/stats/pl_arsenal_data6.png
-    text: そして2003年から04年には、38試合を1度も負けずに優勝。**インビンシブルズ**と呼ばれ、プレミアリーグでは今も唯一の記録です。
+    text: 創立は**1886年**。兵器工場の作業場、ディアル・スクエアの名で始まりました。
     no_telop: true
   - image: assets/stats/pl_arsenal_data8.png
     text: 愛称は「ガナーズ」。砲手、という意味です。
     no_telop: true
+  - image: assets/stats/pl_arsenal_map.png
+    text: ホームタウンはロンドン。北ロンドン・イズリントン区です。
+    no_telop: true
+  - image: assets/backgrounds/stadium_アーセナル_in.png
+    text: 本拠地はエミレーツ・スタジアム。**6万704人**が入ります。
+  - image: assets/photos/pl/arsenal_owner_87703a59.jpg
+    text: オーナーはアメリカのスタン・クロエンケ。2018年にほかの株主を買い取り、ひとりで持っています。
+  - image: assets/stats/pl_arsenal_cups.png
+    text: FAカップも、リーグと同じ数だけ獲っています。
+    no_telop: true
   - image: assets/stats/pl_arsenal_last.png
-    text: 昨季は**1位**。勝ち点は85でした。
+    text: 直近のタイトルは昨季、2025年から26年のプレミアリーグ優勝。勝ち点は85でした。
+    no_telop: true
+  - image: assets/stats/pl_arsenal_data6.png
+    text: 2003年から04年は、38試合を1度も負けずに優勝。**インビンシブルズ**と呼ばれ、今も唯一の記録です。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Arsenal_F.C.
@@ -80,11 +77,11 @@ sections:
     - - 2026年5月19日
       - 14回目のリーグ優勝（22年ぶり）
   say:
-  - 語り継がれているのは、2003年から2004年のシーズンです。
-  - リーグ戦38試合、負けなし。「**無敗**」と呼ばれるチームです。
-  - この前後にまたがる連続無敗は**49試合**。イングランドの1部での最長記録です。
+  - 無敗優勝のシーズンには、前後があります。
+  - 前のシーズンの5月から、次のシーズンの10月まで。
+  - リーグ戦**49試合**、続けて負けなし。イングランド1部の最長記録です。
   - ただ、そこからリーグ優勝は遠ざかりました。
-  - 次の優勝は**2026年5月19日**。クラブ14回目で、**22年ぶり**でした。
+  - 次の優勝は**2026年5月19日**。**22年ぶり**でした。
   official: false
   sources:
   - https://en.wikipedia.org/wiki/Arsenal_F.C.
@@ -183,9 +180,9 @@ sections:
     - *id003
     - - トニー・アダムス
       - 1983-2002
-      - 14年間の主将
+      - 1988-2002年の主将
   say:
-  - text: トニー・アダムスは、**14年間**主将を務めたセンターバックです。
+  - text: トニー・アダムスは、**1988年から2002年**まで主将を務めたセンターバックです。
     image: assets/photos/pl/arsenal_legend_2f4344ee.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_アーセナル.png
@@ -200,10 +197,10 @@ sections:
     image: assets/stats/pl_arsenal_gk.png
     no_telop: true
   - image: assets/stats/pl_arsenal_gk_f.png
-    text: ゴールキーパーは4人。ダビド・ラヤはスペイン代表で**13試合**。ケパ・アリサバラガはスペイン代表で**13試合**。
+    text: ゴールキーパーは4人。ダビド・ラヤはアーセナルのリーグ戦で**80試合**。ケパ・アリサバラガはスペイン代表で**13試合**。
     no_telop: true
   - image: assets/stats/pl_arsenal_df_f.png
-    text: ディフェンダーは9人。ガブリエウ・マガリャンイスはブラジル代表で**22試合**。ウィリアム・サリバはフランス代表で**38試合**。
+    text: ディフェンダーは9人。ガブリエウ・マガリャンイスはブラジル代表で**22試合**。ウィリアム・サリバはアーセナルのリーグ戦で**131試合**。
     no_telop: true
   - image: assets/stats/pl_arsenal_mf_f.png
     text: ミッドフィールダーは6人。主将を務めるのが**マルティン・ウーデゴール**。リーグ戦で**167試合**に出ています。デクラン・ライスはイングランド代表で**80試合**。
@@ -247,6 +244,8 @@ sections:
   - プレミアリーグは5試合を終えて、**4勝1敗**です。
   - 順位は**2位**、勝ち点は**12**です。
   - この順位を保てば、来季のチャンピオンズリーグに出られます。
+  - 唯一の黒星は第5節。ブライトンにアウェーで0対3で敗れました。
+  - 首位のマンチェスター・シティとは、勝ち点3の差です。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Arsenal_F.C._season
   bg: assets/backgrounds/stadium_アーセナル.png

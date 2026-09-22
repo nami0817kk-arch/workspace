@@ -32,8 +32,7 @@ sections:
   telop: 三笘薫が所属するブライトン
   narrator: キャスター
   say:
-  - 日本代表の三笘薫が所属しているのが、ブライトンです。
-  - では、どんなクラブなのか。まずは基本のデータから見ていきます。
+  - 三笘薫は、ブライトンのリーグ戦で**113試合**に出て、**23得点**を挙げています。
   sources:
   - https://en.wikipedia.org/wiki/Brighton_&_Hove_Albion_F.C.
   bg: assets/backgrounds/stadium_ブライトン.png
@@ -51,17 +50,17 @@ sections:
     text: 創立は**1901年**。1920年にフットボールリーグに加わりました。
     no_telop: true
   - image: assets/backgrounds/stadium_ブライトン_in.png
-    text: 本拠地はファルマー・スタジアム。**3万2176人**が入ります。
+    text: 本拠地はファルマー・スタジアム。**3万2176人**。ようやく持てた、自分たちの家です。
   - image: assets/stats/pl_brighton_map.png
-    text: ホームタウンは、イングランド南の海沿いの町ブライトン・アンド・ホーヴ。
+    text: ホームタウンは、イングランド南の海沿いの町、ブライトン・アンド・ホーヴです。
     no_telop: true
   - image: assets/photos/pl/brighton_owner_dbf32f4e.jpg
     text: オーナーはトニー・ブルーム。2009年に会長になり、株の75%を持っています。
   - image: assets/stats/pl_brighton_cups.png
-    text: 1部リーグの優勝やカップのタイトルは、まだありません。
+    text: 直近のタイトルは、2010年から11年の3部優勝です。
     no_telop: true
   - image: assets/stats/pl_brighton_last.png
-    text: プレミアでの最高位は、2022年から23年の**6位**。クラブの歴史で一番の順位です。
+    text: プレミアでの最高位は、2022年から23年の**6位**です。
     no_telop: true
   - image: assets/stats/pl_brighton_data8.png
     text: 愛称は「シーガルズ」。カモメです。
@@ -73,7 +72,7 @@ sections:
 - id: home
   heading: 本拠地を失った14年
   tier: 背景
-  telop: 1997年、取締役会が本拠地を売った
+  telop: 1997年、経営陣が本拠地を売った
   narrator: 解説
   card:
     type: table
@@ -83,7 +82,7 @@ sections:
     - ''
     rows:
     - - 1997年
-      - ゴールドストーン・グラウンドを売却
+      - 借金のためゴールドストーン・グラウンドを売却
     - - 1997-1999年
       - ジリンガムの本拠地を借りる
     - - 1999-2011年
@@ -92,15 +91,19 @@ sections:
       - ファルマー・スタジアムへ
   say:
   - image: assets/images/pl_brighton/scene.jpg
-    text: 1997年、取締役会が歴史あるゴールドストーン・グラウンドを売却しました。
-  - image: assets/images/pl_brighton/scene.jpg
-    text: 同じ年、リーグからの降格も、そして清算も、すれすれのところで免れています。
+    text: 1997年、クラブの経営陣が、借金を返すために本拠地のゴールドストーン・グラウンドを売りました。
   - image: assets/images/pl_brighton/scene.jpg
     text: ここから14年間、ブライトンは自分の家を持ちませんでした。
   - image: assets/images/pl_brighton/scene.jpg
-    text: はじめの2年はジリンガムの本拠地を借り、そのあとの12年は陸上競技場を改造したウィズディーン・スタジアムでした。
+    text: はじめの2年は、別のクラブ、ジリンガムの本拠地を借りました。
+  - image: assets/images/pl_brighton/scene.jpg
+    text: そのあとの12年は、陸上競技場を改造したウィズディーン・スタジアムです。
   - image: assets/images/pl_brighton/scene.jpg
     text: いまのファルマー・スタジアムに入ったのは2011年です。
+  - image: assets/images/pl_brighton/scene.jpg
+    text: 本拠地を売ったその年は、最終節の引き分けでようやくフットボールリーグに残っています。
+  - image: assets/images/pl_brighton/scene.jpg
+    text: クラブの消滅も、紙一重で免れました。
   official: false
   sources:
   - https://en.wikipedia.org/wiki/Brighton_%26_Hove_Albion_F.C.
@@ -120,13 +123,13 @@ sections:
     - - 1983年 FAカップ決勝
       - マンチェスター・ユナイテッドと2対2
     - - 延長の最後
-      - ゴードン・スミスが外す
+      - ブライトンのゴードン・スミスが外す
     - - 再試合
-      - 0対4。同じ季にリーグ最下位
+      - 0対4で敗戦。同じシーズンにリーグ最下位
   say:
   - 1983年、初めてFAカップの決勝に立ちました。相手はマンチェスター・ユナイテッド。
-  - 2対2の延長、最後のワンプレー。ゴードン・スミスの決定機が、外れました。
-  - 再試合は0対4。同じシーズン、リーグでは最下位で降格しています。
+  - 2対2の延長、最後のワンプレー。ブライトンのゴードン・スミスの決定機が、外れました。
+  - 再試合は0対4で敗れました。同じシーズン、リーグでは最下位で降格しています。
   sources:
   - https://en.wikipedia.org/wiki/Brighton_%26_Hove_Albion_F.C.
   bg: assets/backgrounds/stadium_ブライトン.png
@@ -145,12 +148,12 @@ sections:
     - 残したもの
     rows:
     - &id001
-      - ルイス・ダンク
-      - 2010-
-      - 一筋で500試合超えの主将
+      - ボビー・ザモラ
+      - 2000-2003
+      - 136試合83得点。2年続けて優勝
   say:
-  - text: ルイス・ダンクは、ブライトン一筋で**500試合**を超えた主将です。
-    image: assets/photos/pl/brighton_legend_85972114.jpg
+  - text: ボビー・ザモラは136試合で**83得点**。4部と3部で2年続けて優勝し、2部へ上げました。
+    image: assets/photos/pl/brighton_legend_17bed45d.jpg
   sources: &id002
   - https://en.wikipedia.org/wiki/Lewis_Dunk
   - https://en.wikipedia.org/wiki/Glenn_Murray
@@ -196,12 +199,12 @@ sections:
     rows:
     - *id001
     - *id003
-    - - ボビー・ザモラ
-      - 2000-2003
-      - 136試合83得点
+    - - ルイス・ダンク
+      - 2010-
+      - 3部の時代から一筋。いまの主将
   say:
-  - text: ボビー・ザモラは、136試合で**83得点**。2年続けて優勝し、クラブを2段上げました。
-    image: assets/photos/pl/brighton_legend_17bed45d.jpg
+  - text: ルイス・ダンクは3部だった2010年にデビューし、いまはプレミアで主将です。
+    image: assets/photos/pl/brighton_legend_85972114.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_ブライトン.png
   official: false
@@ -221,7 +224,7 @@ sections:
     text: ディフェンダーは10人。主将を務めるのが**ルイス・ダンク**。リーグ戦で**473試合**に出ています。フェルディ・カドゥオールはトルコ代表で**32試合**。
     no_telop: true
   - image: assets/stats/pl_brighton_mf_f.png
-    text: ミッドフィールダーは12人。日本の三笘薫がいます。三笘薫は日本代表で**31試合**。
+    text: ミッドフィールダーは12人。日本の三笘薫がいます。日本代表で**31試合**に出ています。
     no_telop: true
   - image: assets/stats/pl_brighton_fw_f.png
     text: フォワードは5人。エヴァン・ファーガソンはアイルランド代表で**26試合**。ジョルジニオ・ルターはリーグ戦で**62試合**。
@@ -262,6 +265,7 @@ sections:
   - プレミアリーグは5試合を終えて、**3勝1引き分け1敗**です。
   - 順位は**3位**、勝ち点は**10**です。
   - この順位を保てば、来季のチャンピオンズリーグに出られます。
+  - 第5節は、昨季王者のアーセナルをホームで3対0で下しました。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Brighton_&_Hove_Albion_F.C._season
   bg: assets/backgrounds/stadium_ブライトン.png

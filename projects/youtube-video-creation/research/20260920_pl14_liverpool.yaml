@@ -32,7 +32,7 @@ sections:
   telop: 遠藤航が所属するリヴァプール
   narrator: キャスター
   say:
-  - 遠藤航がいるのが、リヴァプールです。
+  - 遠藤航は、リヴァプールでリーグ戦**57試合**に出ている日本代表の中盤です。
   - では、どんなクラブなのか。まずは基本のデータから見ていきます。
   sources:
   - https://en.wikipedia.org/wiki/Liverpool_F.C.
@@ -48,25 +48,24 @@ sections:
   - short_only: true
     text: 遠藤航の所属クラブを、基本のデータで見ていきます。
   - image: assets/stats/pl_liverpool_data0.png
-    text: 創立は**1892年**。本拠地はアンフィールド、**6万1276人**が入ります。
+    text: 創立は**1892年**です。
     no_telop: true
-  - image: assets/stats/pl_liverpool_data3.png
-    text: オーナーはアメリカのエフエスジー。2010年からクラブを持っています。
-    no_telop: true
+  - image: assets/backgrounds/stadium_リヴァプール_in.png
+    text: 本拠地はアンフィールド。**約6万1000人**が入ります。2024年に広げたばかりです。
   - image: assets/stats/pl_liverpool_map.png
     text: ホームタウンはリヴァプール。イングランド・マージーサイドです。
     no_telop: true
+  - image: assets/stats/pl_liverpool_data3.png
+    text: 2010年から、大リーグのレッドソックスも持つフェンウェイ・スポーツ・グループがオーナーです。
+    no_telop: true
   - image: assets/stats/pl_liverpool_cups.png
-    text: 1部リーグの優勝は**20回**。FAカップ8回、リーグカップ10回、チャンピオンズリーグは6回獲っています。
+    text: FAカップは8回、リーグカップ10回、チャンピオンズリーグも**6回**獲っています。
     no_telop: true
   - image: assets/stats/pl_liverpool_data5.png
     text: 直近のタイトルは、2024年から25年のプレミアリーグ優勝です。
     no_telop: true
-  - image: assets/stats/pl_liverpool_data6.png
-    text: 2017年から18年には、モハメド・サラーが1シーズンで**44得点**を挙げました。
-    no_telop: true
   - image: assets/stats/pl_liverpool_last.png
-    text: 昨季は**5位**。勝ち点は60でした。
+    text: その翌シーズン、昨季は**5位**。勝ち点は60でした。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Liverpool_F.C.
@@ -93,17 +92,17 @@ sections:
     - - 本拠地
       - アンフィールド／61,276人
   say:
-  - このクラブができたのは1892年。きっかけは**もめごと**でした。
+  - 生まれたきっかけは、**もめごと**でした。
   - アンフィールドという土地を持っていたのがジョン・ホールディングで、そこを使っていたのがエヴァートンです。
   - 両者が対立し、エヴァートンはグディソン・パークへ移っていきました。
   - '**スタジアムだけが残りました。**'
-  - そのアンフィールドで試合前に歌われるのが、「ユール・ネヴァー・ウォーク・アローン」です。
   - ホールディングは、そこで戦う新しいクラブを作ります。それがリヴァプールです。
-  - 愛称は「レッズ」。ビル・シャンクリーが監督だった時代に定着しました。
-  - アンフィールドの収容は**6万1276人**。2021年から24年にかけても広げています。
+  - 愛称は「レッズ」。1959年から74年まで率いたビル・シャンクリー監督の時代に定着します。
+  - 試合前の「ユール・ネヴァー・ウォーク・アローン」も、1960年代の初めから歌われています。
   official: false
   sources:
   - https://en.wikipedia.org/wiki/Liverpool_F.C.
+  - https://en.wikipedia.org/wiki/Bill_Shankly
   bg: assets/backgrounds/stadium_リヴァプール.png
 - id: episode
   heading: 触ってはいけない看板
@@ -125,7 +124,7 @@ sections:
       - チャンピオンズリーグ決勝に勝って解禁
   say:
   - アンフィールドの選手用トンネルに、「ジス・イズ・アンフィールド」の看板があります。
-  - ビル・シャンクリーが付けたもので、相手を怖がらせ、触ったリヴァプールの選手には運を呼ぶためのものでした。
+  - シャンクリー監督が付けたもので、相手を怖がらせ、味方が触れば運が付く、というものでした。
   - クロップ監督は「タイトルを獲るまで触るな」と禁じ、**2019年**のチャンピオンズリーグ決勝に勝って、ようやく触ることが許されました。
   sources:
   - https://en.wikipedia.org/wiki/Anfield
@@ -149,7 +148,7 @@ sections:
       - 1998-2015
       - イスタンブールの奇跡の主将
   say:
-  - text: スティーヴン・ジェラードは、2005年に**イスタンブールの奇跡**でチャンピオンズリーグを掲げた主将です。
+  - text: スティーヴン・ジェラードは、2005年の**イスタンブールの奇跡**の主将。0対3からピーケー戦で勝ちました。
     image: assets/photos/pl/liverpool_legend_7c62ed45.jpg
   sources: &id002
   - https://en.wikipedia.org/wiki/Steven_Gerrard
@@ -176,7 +175,7 @@ sections:
       - 1996-2013
       - 737試合の生え抜き
   say:
-  - text: ジェイミー・キャラガーは、クラブ史上2番目に多い**737試合**に出た生え抜きのディフェンダーです。
+  - text: ジェイミー・キャラガーは、**737試合**に出た生え抜きのディフェンダーです。
     image: assets/photos/pl/liverpool_legend_1840df0d.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_リヴァプール.png
@@ -200,7 +199,7 @@ sections:
       - 2017-2026
       - プレミア1シーズン32得点
   say:
-  - text: モハメド・サラーは、クラブを代表するエース。加入1年目の得点は、38試合制のプレミアで最多でした。
+  - text: モハメド・サラーは加入1年目、2017年から18年にリーグ**32得点**。プレミアの記録です。
     image: assets/photos/pl/liverpool_legend_bec22eba.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_リヴァプール.png
@@ -261,6 +260,7 @@ sections:
   say:
   - プレミアリーグは5試合を終えて、**2勝3引き分け**です。
   - 順位は**6位**、勝ち点は**9**です。
+  - 遠藤航は今年7月、契約を**2031年**まで延ばしました。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Liverpool_F.C._season
   bg: assets/backgrounds/stadium_リヴァプール.png
