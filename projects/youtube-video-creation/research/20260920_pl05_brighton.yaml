@@ -93,17 +93,13 @@ sections:
   - image: assets/images/pl_brighton/scene.jpg
     text: 1997年、クラブの経営陣が、借金を返すために本拠地のゴールドストーン・グラウンドを売りました。
   - image: assets/images/pl_brighton/scene.jpg
-    text: ここから14年間、ブライトンは自分の家を持ちませんでした。
+    text: その年は、最終節の引き分けで、ようやく4部に残りました。
   - image: assets/images/pl_brighton/scene.jpg
-    text: はじめの2年は、別のクラブ、ジリンガムの本拠地を借りました。
+    text: 売ってからの2年間は、別のクラブ、ジリンガムの本拠地を借りました。
   - image: assets/images/pl_brighton/scene.jpg
     text: そのあとの12年は、陸上競技場を改造したウィズディーン・スタジアムです。
   - image: assets/images/pl_brighton/scene.jpg
     text: いまのファルマー・スタジアムに入ったのは2011年です。
-  - image: assets/images/pl_brighton/scene.jpg
-    text: 本拠地を売ったその年は、最終節の引き分けでようやくフットボールリーグに残っています。
-  - image: assets/images/pl_brighton/scene.jpg
-    text: クラブの消滅も、紙一重で免れました。
   official: false
   sources:
   - https://en.wikipedia.org/wiki/Brighton_%26_Hove_Albion_F.C.
@@ -201,9 +197,9 @@ sections:
     - *id003
     - - ルイス・ダンク
       - 2010-
-      - 3部の時代から一筋。いまの主将
+      - 2010年のデビュー以来、3部の時代から一筋
   say:
-  - text: ルイス・ダンクは3部だった2010年にデビューし、いまはプレミアで主将です。
+  - text: ルイス・ダンクは3部だった2010年にデビューして以来、このクラブ一筋です。
     image: assets/photos/pl/brighton_legend_85972114.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_ブライトン.png

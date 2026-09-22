@@ -41,20 +41,23 @@ sections:
     text: 愛称は「ガナーズ」。砲手、という意味です。
     no_telop: true
   - image: assets/stats/pl_arsenal_map.png
-    text: ホームタウンはロンドン。北ロンドン・イズリントン区です。
+    text: ホームタウンは北ロンドン、イズリントン区です。
     no_telop: true
   - image: assets/backgrounds/stadium_アーセナル_in.png
     text: 本拠地はエミレーツ・スタジアム。**6万704人**が入ります。
   - image: assets/photos/pl/arsenal_owner_87703a59.jpg
     text: オーナーはアメリカのスタン・クロエンケ。2018年にほかの株主を買い取り、ひとりで持っています。
   - image: assets/stats/pl_arsenal_cups.png
-    text: FAカップも、リーグと同じ数だけ獲っています。
+    text: FAカップも、リーグと同じ**14回**獲っています。
     no_telop: true
   - image: assets/stats/pl_arsenal_last.png
     text: 直近のタイトルは昨季、2025年から26年のプレミアリーグ優勝。勝ち点は85でした。
     no_telop: true
   - image: assets/stats/pl_arsenal_data6.png
-    text: 2003年から04年は、38試合を1度も負けずに優勝。**インビンシブルズ**と呼ばれ、今も唯一の記録です。
+    text: 2003年から2004年は、38試合を1度も負けずに優勝しました。
+    no_telop: true
+  - image: assets/stats/pl_arsenal_data6.png
+    text: '**インビンシブルズ**と呼ばれ、プレミアリーグでは今も唯一の記録です。'
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Arsenal_F.C.
@@ -77,9 +80,9 @@ sections:
     - - 2026年5月19日
       - 14回目のリーグ優勝（22年ぶり）
   say:
-  - 無敗優勝のシーズンには、前後があります。
-  - 前のシーズンの5月から、次のシーズンの10月まで。
-  - リーグ戦**49試合**、続けて負けなし。イングランド1部の最長記録です。
+  - この無敗は、そのシーズンだけで終わっていません。
+  - 前のシーズンの5月から、次のシーズンの10月まで、リーグ戦**49試合**です。
+  - この連続無敗は、いまもイングランド1部の最長記録です。
   - ただ、そこからリーグ優勝は遠ざかりました。
   - 次の優勝は**2026年5月19日**。**22年ぶり**でした。
   official: false
@@ -107,7 +110,7 @@ sections:
   say:
   - ロンドンの地下鉄に、「アーセナル」という駅があります。
   - もとはジレスピー・ロード駅。監督のハーバート・チャップマンが働きかけて、**1932年**に名前が変わりました。
-  - クラブの名前をそのまま付けた地下鉄の駅は、ここだけです。
+  - クラブの名前をそのまま付けた駅は、ロンドンの地下鉄でここだけです。
   sources:
   - https://en.wikipedia.org/wiki/History_of_Arsenal_F.C._(1886%E2%80%931966)
   - https://en.wikipedia.org/wiki/Arsenal_tube_station
@@ -156,9 +159,9 @@ sections:
     - &id003
       - デニス・ベルカンプ
       - 1995-2006
-      - 無敗優勝の司令塔
+      - 3度のリーグ優勝の司令塔
   say:
-  - text: デニス・ベルカンプは、無敗優勝を含む3度のリーグ優勝を支えた司令塔です。
+  - text: デニス・ベルカンプは、3度のリーグ優勝を支えた司令塔です。
     image: assets/photos/pl/arsenal_legend_33c1caef.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_アーセナル.png
@@ -246,6 +249,7 @@ sections:
   - この順位を保てば、来季のチャンピオンズリーグに出られます。
   - 唯一の黒星は第5節。ブライトンにアウェーで0対3で敗れました。
   - 首位のマンチェスター・シティとは、勝ち点3の差です。
+  - 今季のチャンピオンズリーグは、初戦でナポリにアウェーで**1対0**の勝ちです。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Arsenal_F.C._season
   bg: assets/backgrounds/stadium_アーセナル.png

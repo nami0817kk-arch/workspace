@@ -45,10 +45,7 @@ sections:
   - image: assets/photos/pl/newcastle_owner_d7f21670.jpg
     text: オーナーは、サウジアラビアの公共投資基金です。
   - image: assets/stats/pl_newcastle_cups.png
-    text: 1部リーグの優勝は**4回**。FAカップ6回、リーグカップ1回、ヨーロッパのタイトルが1回あります。
-    no_telop: true
-  - image: assets/stats/pl_newcastle_data5.png
-    text: 直近のタイトルは、2024年から25年のリーグカップです。
+    text: 1部リーグの優勝は**4回**。FAカップはさきほどの6回で、リーグカップとヨーロッパが1回ずつです。
     no_telop: true
   - image: assets/stats/pl_newcastle_last.png
     text: プレミアでの最高位は2位。1995年から96年と、その翌年の2回です。
@@ -89,8 +86,7 @@ sections:
   - 決勝はハンガリーのウイペシュトに、2試合合計6対2で勝ちました。
   - ところが、そこから先が長かった。
   - 変わり目は2021年10月7日です。
-  - サウジアラビアの公共投資基金を中心とする陣営が、クラブを買い取りました。
-  - それまで14年間、オーナーはマイク・アシュリーでした。
+  - いまのオーナーが、クラブを買い取った日です。オーナーが代わるのは14年ぶりでした。
   - そして2025年、リーグカップの決勝でリヴァプールを2対1で下します。
   - 1969年から数えて、**56年ぶり**のタイトルでした。
   official: false
@@ -141,7 +137,7 @@ sections:
       - 1996-2006
       - クラブ最多の206得点
   say:
-  - text: アラン・シアラーは、クラブ史上最多の**206得点**。ミルバーンが49年持っていた記録を塗り替えました。
+  - text: アラン・シアラーは、クラブ史上最多の**206得点**。1950年代のエース、ミルバーンを抜きました。
     image: assets/photos/pl/newcastle_legend_f4f90b59.jpg
   sources: &id002
   - https://en.wikipedia.org/wiki/Alan_Shearer

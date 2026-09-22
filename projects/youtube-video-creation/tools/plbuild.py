@@ -198,7 +198,9 @@ def build(key: str, number: int, old_file: str) -> Path:
                             sources=[wiki]))
     # 基礎DATA
     img = f"assets/stats/pl_{key}_data.png"
-    say = [{"short_only": True, "text": f"{jp_names[0]}の所属クラブを、基本のデータで見ていきます。" if japanese else "このクラブの、基本のデータです。"}]
+    # **ショート専用の前置きも、日本人が2人なら2人とも**（2026-09-22）。題は2人なのに
+    # この行だけ1人目で、パレスの鎌田大地がショートから消えていた
+    say = [{"short_only": True, "text": f"{'と'.join(jp_names[:2])}の所属クラブを、基本のデータで見ていきます。" if japanese else "このクラブの、基本のデータです。"}]
     # **板を出している行に字幕は重ねない**（2026-09-20 指示
     # 「画面と字幕のが同じ場合は、字幕不要」）。基礎DATAの板の上に読み上げ文を
     # 重ねたら、9枚のタイルがほとんど読めなくなっていた

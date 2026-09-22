@@ -46,13 +46,10 @@ sections:
     text: オーナーはアメリカの実業家ダン・フリードキン。2024年12月からクラブを持っています。
     no_telop: true
   - image: assets/stats/pl_everton_cups.png
-    text: タイトルでいちばん多いのは、1部リーグの優勝。次いでFAカップが5回、ヨーロッパが1回です。
+    text: 1部リーグの優勝は**9回**。次いでFAカップが5回、ヨーロッパが1回です。
     no_telop: true
   - image: assets/stats/pl_everton_data5.png
     text: 直近のタイトルは、1994年から95年のFAカップです。
-    no_telop: true
-  - image: assets/stats/pl_everton_data6.png
-    text: クラブ記録は、ディクシー・ディーンが1シーズンで挙げた得点数です。
     no_telop: true
   - image: assets/stats/pl_everton_data8.png
     text: 愛称は「トフィーズ」。エヴァートン村にあったキャンディ屋から来ています。
@@ -84,9 +81,9 @@ sections:
       - ヒル・ディキンソン・スタジアム
   say:
   - '**133年いた家を、去年出ました。**'
-  - その家、グディソン・パークに入ったのは**1892年**。それまではアンフィールドにいました。
+  - その家、グディソン・パークは古く、席を増やせなくなっていました。
+  - そこに入ったのは**1892年**。それまではアンフィールドにいました。
   - 地主と家賃でもめて出ていき、残った地主が作ったのがリヴァプールです。
-  - グディソンは古く、席を増やせなくなっていました。
   - 新しい家は、川沿いのドックに建てたヒル・ディキンソン・スタジアム。名前は地元の法律事務所です。
   official: false
   sources:
@@ -164,7 +161,7 @@ sections:
       - 2009-2026
       - 17年在籍の主将
   say:
-  - text: シェイマス・コールマンは17年在籍した主将。去年のグディソン・パーク最後の試合も、主将として先発しました。
+  - text: シェイマス・コールマンは、同じく17年在籍した主将。去年のグディソン・パーク最後の試合も、主将として先発しました。
     image: assets/photos/pl/everton_legend_ee9aaa81.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_エヴァートン.png

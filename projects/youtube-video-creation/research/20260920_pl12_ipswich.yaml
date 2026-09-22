@@ -16,8 +16,8 @@ theme:
   topic: イプスウィッチ
   title: 前田大然がいるイプスウィッチってどんなクラブ？
   question: どんなクラブなのか
-  hook: 日本人がひとり、この青いユニフォームを着ています。
-  lead: イングランド東部の街から、**1部リーグ**と**ウエファカップ**を獲ったクラブ。
+  hook: ヨーロッパの大会で、家では負けなかったクラブです。
+  lead: '**1部リーグ**も、**ウエファカップ**も獲ったことのある古豪。'
 thumbnail:
   line1: 上がった年に、そのまま優勝
   line2: イプスウィッチ・タウン
@@ -65,7 +65,7 @@ sections:
     text: プレミアでの最高位は、昇格1年目、2000年から01年の**5位**です。
     no_telop: true
   - image: assets/stats/pl_ipswich_data7.png
-    text: 昨季は2部で**2位**に入り、1年でプレミアに戻ってきました。
+    text: 2025年に2部へ落ち、昨季は2部で**2位**に入って1年で戻ってきました。
     no_telop: true
   - image: assets/stats/pl_ipswich_data8.png
     text: 愛称は「トラクター・ボーイズ」。農業の盛んな土地で、自分たちを茶化した呼び名です。
@@ -120,8 +120,7 @@ sections:
     - - ホームの欧州戦
       - 31試合無敗
   say:
-  - ヨーロッパの大会には、ひとつ珍しい記録があります。
-  - '**1962年**に初めて出てから、ホームでは**31試合**、負けていません。'
+  - ヨーロッパの大会に初めて出た**1962年**から、ホームで戦った**31試合**、一度も負けませんでした。
   sources:
   - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
   bg: assets/backgrounds/stadium_イプスウィッチ.png
@@ -140,12 +139,12 @@ sections:
     - 残したもの
     rows:
     - &id001
-      - マット・ホランド
-      - 1997-2003
-      - 223試合連続出場の主将
+      - ジム・マギルトン
+      - 1999-2006
+      - プレーオフでハットトリック
   say:
-  - text: マット・ホランドは、**223試合連続**で出場し続けた主将。2000年のプレーオフ決勝でクラブをプレミアに上げました。
-    image: assets/photos/pl/ipswich_legend_79ba8f9c.jpg
+  - text: ジム・マギルトンは、2000年のプレーオフ準決勝でボルトンに**ハットトリック**。5対3で勝ちました。
+    image: assets/photos/pl/ipswich_legend_7557cc62.jpg
   sources: &id002
   - https://en.wikipedia.org/wiki/Matt_Holland
   - https://en.wikipedia.org/wiki/Jim_Magilton
@@ -167,12 +166,12 @@ sections:
     rows:
     - *id001
     - &id003
-      - ジム・マギルトン
-      - 1999-2006
-      - プレーオフでハットトリック
+      - マット・ホランド
+      - 1997-2003
+      - 223試合連続出場の主将
   say:
-  - text: ジム・マギルトンは、その準決勝でボルトン相手に**ハットトリック**。5対3で勝ちました。
-    image: assets/photos/pl/ipswich_legend_7557cc62.jpg
+  - text: マット・ホランドは、**223試合連続**で出場した主将。その決勝でクラブをプレミアに上げました。
+    image: assets/photos/pl/ipswich_legend_79ba8f9c.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_イプスウィッチ.png
   official: false

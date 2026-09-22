@@ -38,7 +38,7 @@ sections:
     text: 創立は**1899年**。ボスコムという地区のクラブが前身です。
     no_telop: true
   - image: assets/stats/pl_bournemouth_data8.png
-    text: 愛称は「ザ・チェリーズ」。さくらんぼです。赤と黒の縦じまは、ACミランが手本です。
+    text: 愛称は「ザ・チェリーズ」。さくらんぼです。赤と黒の縦じまは、イタリアのミランが手本です。
     no_telop: true
   - image: assets/backgrounds/stadium_ボーンマス_in.png
     text: 本拠地はディーン・コート。**1万2357人**。マンチェスター・ユナイテッドの**6分の1**です。
@@ -48,7 +48,7 @@ sections:
   - image: assets/photos/pl/bournemouth_owner_cf0347c5.jpg
     text: オーナーはアメリカのビル・フォーリー。2022年に買収。**1億ポンド超**と報じられました。
   - image: assets/photos/pl/bournemouth_owner_07f09a4e.jpg
-    text: 共同オーナーには、ハリウッド俳優の**マイケル・B・ジョーダン**もいます。
+    text: 共同オーナーには、ハリウッド俳優の**マイケル・ビー・ジョーダン**もいます。
   - image: assets/stats/pl_bournemouth_cups.png
     text: 1部の優勝も、FAカップも、リーグカップもゼロ。20クラブで3つとも無いのは**5クラブ**です。
     no_telop: true
@@ -129,6 +129,7 @@ sections:
     - - 同じ年
       - クラブ史上初の欧州出場
   say:
+  - そこから3部、2部と上がっていきます。
   - 6年後の2015年、ハウの下で2部を制して**初めて1部**へ。
   - そして昨季、**初めてヨーロッパの切符**をつかみました。
   sources:
@@ -202,9 +203,9 @@ sections:
     - &id003
       - カラム・ウィルソン
       - 2014-2020
-      - 2014-15にリーグ20得点。初昇格の得点源
+      - 2014-15に2部で20得点。初昇格を決めた得点源
   say:
-  - text: カラム・ウィルソンは2014年から15年にリーグ**20得点**。初昇格のシーズンの得点源でした。
+  - text: カラム・ウィルソンは2014年から15年に2部で**20得点**。初昇格を決めた得点源でした。
     image: assets/photos/pl/bournemouth_legend_224f5148.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_ボーンマス.png
@@ -290,7 +291,7 @@ sections:
   - プレミアリーグは5試合を終えて、**3引き分け2敗**です。
   - 順位は**17位**、勝ち点は**3**です。
   - ヨーロッパリーグの初戦は、久保建英のいるレアル・ソシエダでした。
-  - アウェーで**2対1**の勝ち。欧州の初戦を白星で飾りました。
+  - アウェーで**2対1**の勝ち。クラブの歴史で初めての、欧州の試合でした。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_AFC_Bournemouth_season
   bg: assets/backgrounds/stadium_ボーンマス.png

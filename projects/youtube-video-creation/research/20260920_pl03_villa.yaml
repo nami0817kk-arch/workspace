@@ -32,7 +32,7 @@ sections:
   telop: 鈴木彩艶が所属するアストン・ヴィラ
   narrator: キャスター
   say:
-  - 鈴木彩艶は今夏、イタリアのパルマから加わりました。移籍金は**2,560万ポンド**。
+  - 鈴木彩艶は今夏、イタリアのパルマから加わりました。移籍金は**2560万ポンド**。
   - リーグ戦はここまで**4試合**でゴールを守っています。今季はチャンピオンズリーグにも出るクラブです。
   sources:
   - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
@@ -48,7 +48,7 @@ sections:
   - short_only: true
     text: 鈴木彩艶の所属クラブを、基本のデータで見ていきます。
   - image: assets/stats/pl_villa_data0.png
-    text: 礼拝堂に集まった青年4人が始めたクラブ。14年後には、世界初のリーグを作る側に回ります。
+    text: 礼拝堂に集まった青年4人が始めたクラブ。1888年には、世界初のリーグを作る側に回ります。
     no_telop: true
   - image: assets/backgrounds/stadium_アストンヴィラ_in.png
     text: 本拠地はヴィラ・パーク。4万3205人が入ります。
@@ -58,11 +58,11 @@ sections:
   - image: assets/stats/pl_villa_cups.png
     text: 1部リーグの優勝は**7回**。FAカップ7回、リーグカップ5回。
     no_telop: true
-  - image: assets/stats/pl_villa_data6.png
-    text: 1930年から31年には、1シーズンで**128ゴール**。いまもイングランド1部の最多記録です。
-    no_telop: true
   - image: assets/stats/pl_villa_data5.png
     text: ヨーロッパの大会でも、2つのタイトルがあります。
+    no_telop: true
+  - image: assets/stats/pl_villa_data6.png
+    text: 1930年から31年には、1シーズンで**128ゴール**。いまもイングランド1部の最多記録です。
     no_telop: true
   - image: assets/stats/pl_villa_last.png
     text: プレミアリーグでの最高位は、初年度1992年から93年の2位です。
@@ -93,7 +93,7 @@ sections:
     - - 2025-26年
       - ヨーロッパリーグ優勝。30年ぶりのタイトル
   say:
-  - 1888年、ヴィラの重役だったウィリアム・マクレガーが、**世界で初めてのフットボールリーグ**を立ち上げました。
+  - そのフットボールリーグを立ち上げたのは、ヴィラの重役だったウィリアム・マクレガーです。
   - 1982年には、ヨーロッパカップを勝ち取りました。イングランドのクラブでは**4番目**です。
   - 決勝はロッテルダムで、バイエルン・ミュンヘンに1対0の勝ち。
   - そして昨季、2025年から26年。ヨーロッパリーグで優勝します。

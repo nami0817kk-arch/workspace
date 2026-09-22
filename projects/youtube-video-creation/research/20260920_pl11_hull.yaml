@@ -16,7 +16,7 @@ theme:
   topic: ハル・シティ
   title: 守田英正がいるハル・シティってどんなクラブ？
   question: どんなクラブなのか
-  hook: 日本代表の中盤が、この港町にいます。
+  hook: 名前を変えられかけたことも、あります。
   lead: 1部も、FAカップも、リーグカップも無い、東部の港町。
 thumbnail:
   line1: 4部から5年でプレミアへ
@@ -73,34 +73,6 @@ sections:
   - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
   bg: assets/backgrounds/stadium_ハルシティ.png
   official: false
-- id: rise
-  heading: 4部からプレミアまで5年
-  tier: 背景
-  telop: 4部からプレミアまで5シーズン
-  narrator: 解説
-  card:
-    type: table
-    title: 駆け上がった5シーズン
-    columns:
-    - ''
-    - ''
-    rows:
-    - - 出発点
-      - 4部
-    - - 2008年
-      - プレーオフ決勝でブリストル・シティに1-0
-    - - 速さ
-      - イングランドで3番目
-  say:
-  - はじめて1部に上がったのは**2008年**。4部から**5シーズン**で駆け上がりました。
-  - イングランドのサッカーで**3番目に速い**上がり方とされています。
-  - 舞台は2部のプレーオフ決勝。相手はブリストル・シティ。
-  - 決めたのはディーン・ウィンダス。前半の**ボレー1本**でした。
-  - 1対0で勝って、**クラブの歴史ではじめて、1部に上がりました。**
-  official: false
-  sources:
-  - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
-  bg: assets/backgrounds/stadium_ハルシティ.png
 - id: episode
   heading: 名前を変えられかけた
   tier: 背景
@@ -128,6 +100,34 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
   - https://en.wikipedia.org/wiki/Acun_Ilıcalı
+  bg: assets/backgrounds/stadium_ハルシティ.png
+  official: false
+- id: rise
+  heading: 4部からプレミアまで5年
+  tier: 背景
+  telop: 4部からプレミアまで5シーズン
+  narrator: 解説
+  card:
+    type: table
+    title: 駆け上がった5シーズン
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 出発点
+      - 4部
+    - - 2008年
+      - プレーオフ決勝でブリストル・シティに1-0
+    - - 速さ
+      - イングランドで3番目
+  say:
+  - はじめて1部に上がったのは**2008年**。4部から**5シーズン**で駆け上がりました。
+  - その年のプレーオフ決勝の相手は、ブリストル・シティでした。
+  - 決めたのはディーン・ウィンダス。前半の**ボレー1本**でした。
+  - この1点を守りきり、ハルが1対0で勝ちました。
+  - この上がり方は、イングランドのサッカーで**3番目に速い**とされています。
+  sources:
+  - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
   bg: assets/backgrounds/stadium_ハルシティ.png
   official: false
 - id: legends
@@ -175,7 +175,7 @@ sections:
       - 2002-2011
       - 4部から1部まで主将
   say:
-  - text: イアン・アシュビーは、4部から1部まで同じクラブを主将として上げた選手です。
+  - text: イアン・アシュビーは、4部から1部まで、すべての階級で主将を務めた選手です。
     image: assets/photos/pl/hull_legend_24d5dcb4.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_ハルシティ.png
@@ -199,7 +199,7 @@ sections:
       - 2004-2012
       - 地元に戻り2度の昇格
   say:
-  - text: ニック・バームビーは、イングランド代表経験者が地元に戻り、2度の昇格を支えました。
+  - text: ニック・バームビーは、イングランド代表も経験して地元ハルに戻り、2度の昇格を支えました。
     image: assets/photos/pl/hull_legend_56329695.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_ハルシティ.png

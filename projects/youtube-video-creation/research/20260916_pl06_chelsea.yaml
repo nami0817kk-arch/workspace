@@ -89,8 +89,6 @@ sections:
     narrator: 解説
     say:
       - {image: "assets/images/pl_chelsea/scene.jpg",
-         text: このクラブは、できた順番がふつうと逆です。}
-      - {image: "assets/images/pl_chelsea/scene.jpg",
          text: 1904年、実業家のガス・ミアーズが、スタンフォード・ブリッジを手に入れます。}
       - {image: "assets/images/pl_chelsea/scene.jpg",
          text: そして近くのクラブ、フラムに「ここを借りないか」と持ちかけました。}

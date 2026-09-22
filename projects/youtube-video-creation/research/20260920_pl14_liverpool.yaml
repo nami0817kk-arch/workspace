@@ -16,7 +16,7 @@ theme:
   topic: リヴァプール
   title: 遠藤航がいるリヴァプールってどんなクラブ？
   question: どんなクラブなのか
-  hook: 日本代表の遠藤航が、いまこのクラブにいます。
+  hook: エヴァートンが出ていったスタジアムで、生まれたクラブです。
   lead: '**1部リーグ20回**。マンチェスター・ユナイテッドと並ぶ最多。'
 thumbnail:
   line1: エヴァートンが去った跡地に
@@ -59,13 +59,22 @@ sections:
     text: 2010年から、大リーグのレッドソックスも持つフェンウェイ・スポーツ・グループがオーナーです。
     no_telop: true
   - image: assets/stats/pl_liverpool_cups.png
+    text: 1部リーグの優勝は**20回**。マンチェスター・ユナイテッドと並んで最多です。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_cups.png
     text: FAカップは8回、リーグカップ10回、チャンピオンズリーグも**6回**獲っています。
     no_telop: true
   - image: assets/stats/pl_liverpool_data5.png
     text: 直近のタイトルは、2024年から25年のプレミアリーグ優勝です。
     no_telop: true
   - image: assets/stats/pl_liverpool_last.png
-    text: その翌シーズン、昨季は**5位**。勝ち点は60でした。
+    text: 昨季は**5位**。勝ち点は60でした。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_data8.png
+    text: 愛称は「レッズ」。1959年から74年まで率いたビル・シャンクリー監督の時代に定着します。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_data8.png
+    text: 試合前の「ユール・ネヴァー・ウォーク・アローン」も、1960年代の初めから歌われています。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Liverpool_F.C.
@@ -97,8 +106,6 @@ sections:
   - 両者が対立し、エヴァートンはグディソン・パークへ移っていきました。
   - '**スタジアムだけが残りました。**'
   - ホールディングは、そこで戦う新しいクラブを作ります。それがリヴァプールです。
-  - 愛称は「レッズ」。1959年から74年まで率いたビル・シャンクリー監督の時代に定着します。
-  - 試合前の「ユール・ネヴァー・ウォーク・アローン」も、1960年代の初めから歌われています。
   official: false
   sources:
   - https://en.wikipedia.org/wiki/Liverpool_F.C.
@@ -125,9 +132,11 @@ sections:
   say:
   - アンフィールドの選手用トンネルに、「ジス・イズ・アンフィールド」の看板があります。
   - シャンクリー監督が付けたもので、相手を怖がらせ、味方が触れば運が付く、というものでした。
-  - クロップ監督は「タイトルを獲るまで触るな」と禁じ、**2019年**のチャンピオンズリーグ決勝に勝って、ようやく触ることが許されました。
+  - 2015年に来たクロップ監督は、「タイトルを獲るまで触るな」と禁じました。
+  - '**2019年**のチャンピオンズリーグ決勝に勝って、ようやく触ることが許されました。'
   sources:
   - https://en.wikipedia.org/wiki/Anfield
+  - https://en.wikipedia.org/wiki/Liverpool_F.C.
   bg: assets/backgrounds/stadium_リヴァプール.png
   official: false
 - id: legends
@@ -148,7 +157,7 @@ sections:
       - 1998-2015
       - イスタンブールの奇跡の主将
   say:
-  - text: スティーヴン・ジェラードは、2005年の**イスタンブールの奇跡**の主将。0対3からピーケー戦で勝ちました。
+  - text: スティーヴン・ジェラードは、2005年のチャンピオンズリーグ決勝の主将。ミランに0対3から追いついて勝ちました。
     image: assets/photos/pl/liverpool_legend_7c62ed45.jpg
   sources: &id002
   - https://en.wikipedia.org/wiki/Steven_Gerrard
@@ -199,7 +208,7 @@ sections:
       - 2017-2026
       - プレミア1シーズン32得点
   say:
-  - text: モハメド・サラーは加入1年目、2017年から18年にリーグ**32得点**。プレミアの記録です。
+  - text: モハメド・サラーは加入1年目、2017年から18年にリーグ**32得点**。当時のプレミア記録でした。
     image: assets/photos/pl/liverpool_legend_bec22eba.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_リヴァプール.png
