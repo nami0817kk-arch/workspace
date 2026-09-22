@@ -9,13 +9,13 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: ニューカッスル
-  title: 'ルイス・ホール、マンUに誘われた夏を振り返って「迷うまでもなかった」'
+  title: 'ルイス・ホール、ユナイテッドに誘われた夏を振り返って「迷うまでもなかった」'
   hook: 噂されたことを、悪い話だとは受け取っていませんでした。
   question: なぜニューカッスルに残ったのか
-short_title: ルイス・ホールがマンUを選ばなかった理由
+short_title: ルイス・ホールがユナイテッドを選ばなかった理由
 thumbnail:
   photo: assets/images/20260923_hall/01.jpg
-  line1: マンUの関心を
+  line1: ユナイテッドの関心を
   line2: どう受け取ったのか
 sections:
   - id: what
@@ -23,9 +23,11 @@ sections:
     tier: 報道
     telop: 新しい契約を結び、ニューカッスルに残った
     narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
     say:
-      - ニューカッスルのルイス・ホールは、新しい契約を結びました。
-      - その夏、マンチェスター・ユナイテッドが関心を寄せていると伝えられていた選手です。
+      - ニューカッスルの左サイドバック、ルイス・ホール。22歳です。
+      - この夏、マンチェスター・ユナイテッドが左サイドバックの第一候補に挙げていたと伝えられていました。
+      - そのホールが、ニューカッスルと新しい契約を結びました。
     sources:
       - https://metro.co.uk/2026/09/22/lewis-hall-sends-transfer-message-man-utd-signing-newcastle-contract-29643573/
       - https://www.goal.com/en-gb/lists/it-was-a-no-brainer-lewis-hall-reveals-why-he-snubbed-man-utd-to-spearhead-newcastle-s-new-era-under/blt33a6e222cbf3f713
@@ -35,8 +37,9 @@ sections:
     tier: 報道
     telop: 「新しい契約にサインするのは、迷うまでもなかった」
     narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
     say:
-      - text: 'マンチェスター・ユナイテッドの関心が伝えられたルイス・ホールが、残った理由を話しました。'
+      - text: 'マンチェスター・ユナイテッドの関心が伝えられたルイス・ホールが、ニューカッスルに残った理由を話しました。'
         short_only: true
       - voice: ルイス・ホール
         text: 新しい契約にサインするのは、**迷うまでもなかった。**
@@ -54,6 +57,7 @@ sections:
     tier: 未確認
     telop: これを聞いた人が書いていたこと
     narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
     say:
       - voice: ネット民
         text: サインした直後は、どの選手も「迷うまでもなかった」と言う。面白いのは、マンUの最終ラインの多くがまだ定位置も決まっていないうちに、彼がニューカッスルでキャプテン候補になっていることだ

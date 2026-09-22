@@ -23,8 +23,10 @@ sections:
     tier: 報道
     telop: サウジからの誘いを断り、フランクフルトに残った
     narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
     say:
       - この夏、サウジアラビアのアル・イテハドが堂安の獲得に動きました。
+      - 行くとも言っていない段階で、「日本を背負うな」「10番つけるな」という声がSNSに出ました。
       - 最後に堂安が選んだのは、**フランクフルトに残る**ことでした。
       - 代表の練習のあと、その夏のことを自分から話しています。
     sources:
@@ -36,6 +38,7 @@ sections:
     tier: 報道
     telop: 「全部背負ってやろうかなと思ってます」
     narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
     say:
       - text: 'サウジ移籍が噂された堂安律が、残ると決めた夏のことを話しました。'
         short_only: true
@@ -55,12 +58,13 @@ sections:
       - https://www.soccer-king.jp/news/japan/national/20260922/2207876.html
       - https://www.footballchannel.jp/2026/09/22/post1016592/
   - id: after
-    heading: 決めたあと
+    heading: 決める前と、決めたあと
     tier: 報道
     telop: 「自分の頭がすごいスッキリした」
     narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
     say:
-      - ワールドカップのあと、迷っていた時間があったそうです。
+      - ワールドカップが終わってから、迷っていた時間があったそうです。
       - voice: 堂安律
         text: 頭の中でギアが入らないような。プレシーズンやってる時もスイッチ入らんなと思っていた
       - voice: 堂安律
@@ -74,6 +78,7 @@ sections:
     tier: 未確認
     telop: これを聞いた人が書いていたこと
     narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
     say:
       - voice: ネット民
         text: 律最高かww

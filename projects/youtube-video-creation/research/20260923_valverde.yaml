@@ -9,9 +9,9 @@ theme:
   league_name: ラ・リーガ
   kind: other
   topic: レアル・マドリード
-  title: 'バルベルデが日本戦を欠場。重い捻挫のまま最後まで走っていた'
-  hook: 痛めたのは前半でした。それでも交代していません。
-  question: 重い捻挫で、なぜ最後までピッチにいられたのか
+  title: 'バルベルデが日本戦を欠場。痛めた前半から最後まで出ていた'
+  hook: 検査の結果が出たのは、試合の2日後でした。
+  question: どれくらいの怪我で、いつ戻るのか
 short_title: バルベルデ、日本戦に来られなくなった
 thumbnail:
   photo: assets/images/20260923_valverde/01.jpg
@@ -23,6 +23,7 @@ sections:
     tier: 報道
     telop: 左足首にグレード3の捻挫。24日の日本戦は欠場
     narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
     card:
       type: table
       title: バルベルデの左足首
@@ -30,10 +31,10 @@ sections:
       rows:
         - ["診断", "グレード3の捻挫"]
         - ["痛めた場面", "9月20日 ダービーの前半44分"]
-        - ["その試合", "最後まで出場"]
         - ["離脱の見立て", "2〜3週間"]
     say:
-      - レアル・マドリードが、バルベルデの検査の結果を出しました。
+      - ウルグアイ代表のバルベルデ。24日に日本と戦う予定でした。
+      - そのレアル・マドリードが、検査の結果を出しました。
       - 左足首の**グレード3の捻挫**。24日の日本戦には出られません。
       - 痛めたのはアトレティコとのダービー、前半44分。相手に左足首を踏まれた場面でした。
       - それでもバルベルデは、**最後までピッチにいました。**
@@ -43,12 +44,13 @@ sections:
       - https://www.soccer-king.jp/news/world/esp/20260922/2207937.html
   - id: doubt
     main: true
-    heading: 最後まで出られたのはなぜか
+    heading: 引っかかっているところ
     tier: 未確認
     telop: 「グレード3で、後半も出続けられるのか」
     narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
     say:
-      - text: 'バルベルデが左足首の重い捻挫で、日本戦に出られなくなりました。'
+      - text: 'ウルグアイ代表のバルベルデが左足首の重い捻挫で、日本戦に出られなくなりました。前半で痛めたあとも最後まで出ていたことに、驚きの声が出ています。'
         short_only: true
       - voice: ネット民
         text: いやいや、バルベルデは「けがをした」まま45分も出たんだぞ。君らの言うグレード3の捻挫で、プレーを続けられると思うか？
@@ -73,6 +75,7 @@ sections:
     tier: 報道
     telop: 離脱は2〜3週間の見立て。次のリーグ戦は10月10日
     narrator: 解説
+    bg: assets/backgrounds/stock/stadium_night.mp4
     say:
       - クラブは、戻る時期を出していません。「経過を注意深く見守っていく」とだけ伝えています。
       - スペインでは、離脱は2〜3週間という見立てです。
@@ -84,6 +87,7 @@ sections:
     tier: 未確認
     telop: これを見た人が書いていたこと
     narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
     say:
       - voice: ネット民
         text: 冗談じゃない、無理だ。グレード3は手術が要ることもある。でも見てろ、代表戦明けには何もなかったように先発してるから

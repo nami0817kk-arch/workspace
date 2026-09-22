@@ -23,10 +23,11 @@ sections:
     tier: 報道
     telop: 来年1月のアジアカップ。辞退が報じられている
     narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
     say:
-      - 板倉はこの夏、アヤックスから1年でボルシアMGに戻りました。
-      - ドイツでは、来年1月のアジアカップを辞退するのではと報じられています。
-      - ブンデスリーガは、アジアカップのあいだも止まりません。
+      - 板倉はこの夏、オランダのアヤックスから1年で、古巣のボルシア・メンヘングラートバッハに引き取ってもらいました。
+      - そのクラブのために、来年1月のアジアカップを辞退するのではと報じられています。
+      - ドイツのリーグは、アジアカップのあいだも止まらないからです。
       - voice: 森保監督
         text: アジア杯に出られないのは基本かなとは思っている
     sources:
@@ -38,8 +39,9 @@ sections:
     tier: 報道
     telop: 「自分は拾ってもらった身なので」
     narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
     say:
-      - text: 'アジアカップ辞退が報じられている板倉滉が、代表の練習のあとに口を開きました。'
+      - text: 'アジアカップのあいだもドイツのリーグは止まらず、板倉滉の辞退が報じられています。本人が代表の練習のあとに口を開きました。'
         short_only: true
       - voice: 板倉滉
         text: サッカーやってる上でプライオリティが一番高いのは日本代表で、
@@ -60,6 +62,7 @@ sections:
     tier: 報道
     telop: 「一つ希望として残しておきたい」
     narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
     say:
       - voice: 板倉滉
         text: 両方をリスペクトした上で、自分個人で決めるわけでもないし、色々な人と話し合って決めている部分がある。
@@ -75,6 +78,7 @@ sections:
     tier: 未確認
     telop: これを聞いた人が書いていたこと
     narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
     say:
       - voice: ネット民
         text: 板倉のボルシアMG復帰の条件にクラブが望んだ場合はアジアカップ出場辞退を申し入れる的な条項があるんだなという雰囲気だな。本人も拾ってもらった立場と言ってるし板倉抜きの可能性は高いな…

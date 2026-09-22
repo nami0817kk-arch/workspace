@@ -26,18 +26,42 @@ sections:
     tier: 報道
     telop: 9月と10月の4試合。背番号が発表された
     narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
     card:
       type: table
-      title: ワールドカップから番号を戻した2人
-      columns: ["", "ワールドカップ", "今回"]
+      title: 初めて呼ばれた4人
+      columns: ["", ""]
       rows:
-        - ["久保建英", "8", "20"]
-        - ["田中碧", "7", "17"]
+        - ["中野就斗", "2"]
+        - ["松木玖生", "19"]
+        - ["齋藤俊輔", "29"]
+        - ["谷村海那", "31"]
     say:
       - ワールドカップのあと最初の4試合。その背番号が決まりました。
-      - 大会から続けて呼ばれた選手のうち、**6人**の番号が変わっています。
+      - 大会から続けて呼ばれた選手にも、番号が変わった人がいます。
+      - 初めて呼ばれたのは、中野就斗が2、松木玖生が19、齋藤俊輔が29、谷村海那が31です。
     sources:
       - https://news.yahoo.co.jp/articles/c6eb188843046f54e67564652b02e5141c7cadf8
+      - https://www.soccer-king.jp/news/japan/national/20260922/2207840.html
+  - id: six
+    heading: 遠藤航の6番
+    tier: 報道
+    telop: 6番は、湘南の後輩の田中聡へ
+    narrator: 解説
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    card:
+      type: table
+      title: 空いた番号と、継いだ人
+      columns: ["", "前", "今回"]
+      rows:
+        - ["6番", "遠藤航", "田中聡"]
+        - ["7番", "田中碧", "相馬勇紀"]
+        - ["8番", "久保建英", "鈴木唯人"]
+    say:
+      - 代表を退いた遠藤航が、長く着けてきた**6番**。
+      - 継いだのは**田中聡**。湘南ベルマーレの後輩です。
+    sources:
+      - https://news.yahoo.co.jp/articles/10cb54c4dfe543b01c4b5f001be234700cc7e822
       - https://www.soccer-king.jp/news/japan/national/20260922/2207840.html
   - id: kubo
     main: true
@@ -45,13 +69,14 @@ sections:
     tier: 報道
     telop: 久保の8番は南野の、田中碧の7番は三笘の番号だった
     narrator: 解説
+    bg: assets/backgrounds/stock/stadium_night.mp4
     card:
       type: table
-      title: 7番と8番
-      columns: ["", "ワールドカップ", "今回"]
+      title: ワールドカップで借りていた番号
+      columns: ["", "本来の持ち主", "ワールドカップ"]
       rows:
-        - ["7番", "田中碧（三笘薫の番号）", "相馬勇紀"]
-        - ["8番", "久保建英（南野拓実の番号）", "鈴木唯人"]
+        - ["7番", "三笘薫", "田中碧"]
+        - ["8番", "南野拓実", "久保建英"]
     say:
       - text: 'ワールドカップで8番だった久保建英が、20番に戻りました。'
         short_only: true
@@ -63,32 +88,12 @@ sections:
     sources:
       - https://news.yahoo.co.jp/articles/5fc3a54a3fb4cd23f28e408828b5bfa2b6374047
       - https://news.yahoo.co.jp/articles/226c032a520d462b9fd158d8ae03e4cc2c7651a6
-  - id: six
-    heading: 遠藤航の6番
-    tier: 報道
-    telop: 6番は、湘南の後輩の田中聡へ
-    narrator: 解説
-    card:
-      type: table
-      title: 初めて呼ばれた4人
-      columns: ["", ""]
-      rows:
-        - ["中野就斗", "2"]
-        - ["松木玖生", "19"]
-        - ["齋藤俊輔", "29"]
-        - ["谷村海那", "31"]
-    say:
-      - 代表を退いた遠藤航が、長く着けてきた**6番**。
-      - 継いだのは**田中聡**。湘南ベルマーレの後輩です。
-      - 初めて呼ばれた4人は、中野就斗が2、松木玖生が19、齋藤俊輔が29、谷村海那が31です。
-    sources:
-      - https://news.yahoo.co.jp/articles/10cb54c4dfe543b01c4b5f001be234700cc7e822
-      - https://www.soccer-king.jp/news/japan/national/20260922/2207840.html
   - id: voices
     heading: ネットの声
     tier: 未確認
     telop: 番号を見た人が書いていたこと
     narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
     say:
       - voice: ネット民
         text: ヤフコメさんたちはいろいろ理屈を付けてるけど、三笘・南野両選手が代表に戻ってきたときに、番号を戻しやすいような人選としか思えないですが。

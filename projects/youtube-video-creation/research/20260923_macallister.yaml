@@ -21,11 +21,12 @@ sections:
   - id: what
     heading: いまの状況
     tier: 報道
-    telop: 契約は、あと2年
+    telop: 新しい契約の発表は、まだ無い
     narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
     say:
-      - リヴァプールのマック・アリスター。契約は、あと2年残っています。
-      - その先について聞かれて、こう答えました。
+      - リヴァプールのマック・アリスター。新しい契約を結んだという発表は、まだありません。
+      - 残っている契約について聞かれて、こう答えました。
     sources:
       - https://x.com/FabrizioRomano/status/2102064636811952337
   - id: said
@@ -34,8 +35,9 @@ sections:
     tier: 報道
     telop: 「2年だけになっても、それはそれで構わない」
     narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
     say:
-      - text: 'リヴァプールとの契約が残り2年のマック・アリスターが、自分の将来について話しました。'
+      - text: '契約の延長が決まらないまま、リヴァプールのマック・アリスターが自分の将来について話しました。'
         short_only: true
       - voice: マックアリスター
         text: 最終的な決断は、まだ何も決まっていない。現実として、契約はまだ2年残っている。
@@ -55,6 +57,7 @@ sections:
     tier: 未確認
     telop: これを聞いた人が書いていたこと
     narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
     say:
       - voice: ネット民
         text: マック・アリスターが「2年あればいろんなことが起こる」とだけ言って、リヴァプールのファンが全員考えすぎてる。2年より先も残ると思う？
