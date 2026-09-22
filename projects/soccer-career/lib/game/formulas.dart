@@ -551,9 +551,12 @@ class Formulas {
   ///
   /// 若いうちを3段にも上げてみたが、**通算ゴールが +16% に膨らむ割に
   /// 幅は 10 → 11 しか広がらなかった**ので戻した。
+  /// 22歳を過ぎても2段ずつ伸びる、ポテンシャルまでの残り。
+  static const int growthStepGap = 10;
+
   static int growthStep(int age, int overall, int potential) {
     if (age <= rapidGrowthAge) return 2;
-    return potential - overall >= 20 ? 2 : 1;
+    return potential - overall >= growthStepGap ? 2 : 1;
   }
 
   /// 成長を割り戻すときの基準の重み。
