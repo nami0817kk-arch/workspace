@@ -34,6 +34,7 @@ import '../club_identity.dart';
 import '../budget_lines.dart';
 import '../fixture_banner.dart';
 import '../stat_tile.dart';
+import '../../game/impact.dart';
 import '../attribute_shape.dart';
 import '../player_banner.dart';
 import '../readable_width.dart';
@@ -321,6 +322,7 @@ class _MatchTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final finished = state.seasonFinished;
+    final impact = Impact.of(state.leagueResults);
 
     return ListView(
       // タブを行き来してもスクロール位置が戻らないように。
@@ -451,6 +453,22 @@ class _MatchTab extends StatelessWidget {
                     ),
                   ],
                 ),
+                // 出た試合と出なかった試合。持ち上げが数字で見える唯一の場所。
+                if (impact.comparable) ...[
+                  const SizedBox(height: 12),
+                  Text(
+                    '出た試合 ${impact.with_.label}（勝ち点 '
+                    '${impact.with_.pointsPerGame.toStringAsFixed(1)}/試合）',
+                    style: theme.textTheme.bodySmall,
+                  ),
+                  Text(
+                    '出なかった試合 ${impact.without.label}（勝ち点 '
+                    '${impact.without.pointsPerGame.toStringAsFixed(1)}/試合）',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
               ],
             ),
           ),

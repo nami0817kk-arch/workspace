@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/data/save_repository.dart';
 import 'package:soccer_career/game/career_engine.dart';
 import 'package:soccer_career/game/formulas.dart';
+import 'package:soccer_career/game/impact.dart';
 import 'package:soccer_career/game/match_engine.dart';
 import 'package:soccer_career/game/ranking.dart';
 import 'package:soccer_career/game/weekly_plan.dart';
@@ -1074,5 +1075,21 @@ void main() {
         .position
         .pixels;
     expect(after, before);
+  });
+
+  testWidgets('今シーズンの成績に、出た試合と出なかった試合が出る', (tester) async {
+    // 自分が出る試合はそのぶんクラブが強いのに、それが見える場所が無かった。
+    final controller = await newCareer();
+    for (var i = 0; i < 20; i++) {
+      await controller.simulateMatch();
+    }
+    await pumpHub(tester, controller, height: 2400);
+    final impact = Impact.of(controller.state!.leagueResults);
+    if (!impact.comparable) return; // 出なかった試合がまだ無い種もある。
+    expect(find.textContaining('出た試合 ${impact.with_.label}'), findsOneWidget);
+    expect(
+      find.textContaining('出なかった試合 ${impact.without.label}'),
+      findsOneWidget,
+    );
   });
 }

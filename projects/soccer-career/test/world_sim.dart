@@ -17,6 +17,7 @@ library;
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/game/eligibility.dart';
+import 'package:soccer_career/game/impact.dart';
 import 'package:soccer_career/game/world.dart';
 import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/attributes.dart';
@@ -79,6 +80,7 @@ void main() {
           <int, List<int>>{}; // year → [strength, tier, position, overall]
       final zeroReasons = <String, int>{};
       var zeroSeasons = 0;
+      var withPts = 0.0, withN = 0, withoutPts = 0.0, withoutN = 0, shown = 0;
       var seasonsTotal = 0;
       var lastClubName = '';
 
@@ -116,6 +118,12 @@ void main() {
             row[3] += state.player.overall;
             row[4] += 1;
 
+            final impact = Impact.of(state.leagueResults);
+            withPts += impact.with_.pointsPerGame * impact.with_.played;
+            withN += impact.with_.played;
+            withoutPts += impact.without.pointsPerGame * impact.without.played;
+            withoutN += impact.without.played;
+            if (impact.comparable) shown++;
             if (stats.appearances == 0) {
               zeroSeasons++;
               final country = World.byId(state.club.countryId);
@@ -177,6 +185,15 @@ void main() {
         );
       }
 
+      print('');
+      print(
+        '--- 出た試合と出なかった試合（勝ち点/試合） ---',
+      );
+      print(
+        '  出た ${(withPts / withN).toStringAsFixed(2)}（$withN試合）  '
+        '出なかった ${(withoutPts / withoutN).toStringAsFixed(2)}（$withoutN試合）  '
+        '画面に出る季 ${(shown / seasonsTotal * 100).toStringAsFixed(0)}%',
+      );
       print('');
       print(
         '--- 無出場シーズン $zeroSeasons（${(zeroSeasons / n).toStringAsFixed(2)}/キャリア） ---',
