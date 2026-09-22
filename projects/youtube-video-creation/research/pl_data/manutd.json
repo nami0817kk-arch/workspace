@@ -61,5 +61,23 @@
   "https://en.wikipedia.org/wiki/Manchester_United_F.C.",
   "https://en.wikipedia.org/wiki/List_of_Manchester_United_F.C._records_and_statistics"
  ],
- "notes": "「Notable supporters」に相当する著名人の一覧は原文になく、個人名を書けなかった（fansは空、fan_storyもnull）。タイトル歴の『1部優勝20回』はプレミアリーグ時代13回・それ以前の旧First Division7回の合計（Liverpoolと並ぶ英国record）。『欧州』はUEFAチャンピオンズリーグ/欧州カップ3回+UEFAカップウィナーズカップ1回+UEFAヨーロッパリーグ1回の合計で、UEFAスーパーカップ・インターコンチネンタルカップ・FIFAクラブW杯（各1回）は含めていない。直近のタイトルは原文に『The club's most recent trophy is the 2023–24 FA Cup.』と明記されていたのでそのまま採用。"
+ "notes": "「Notable supporters」に相当する著名人の一覧は原文になく、個人名を書けなかった（fansは空、fan_storyもnull）。タイトル歴の『1部優勝20回』はプレミアリーグ時代13回・それ以前の旧First Division7回の合計（Liverpoolと並ぶ英国record）。『欧州』はUEFAチャンピオンズリーグ/欧州カップ3回+UEFAカップウィナーズカップ1回+UEFAヨーロッパリーグ1回の合計で、UEFAスーパーカップ・インターコンチネンタルカップ・FIFAクラブW杯（各1回）は含めていない。直近のタイトルは原文に『The club's most recent trophy is the 2023–24 FA Cup.』と明記されていたのでそのまま採用。",
+ "trophies": [
+  [
+   "1部リーグ",
+   20
+  ],
+  [
+   "FAカップ",
+   13
+  ],
+  [
+   "リーグカップ",
+   6
+  ],
+  [
+   "ヨーロッパ合計",
+   3
+  ]
+ ]
 }

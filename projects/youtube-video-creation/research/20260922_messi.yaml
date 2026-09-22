@@ -1,0 +1,144 @@
+date: 2026年9月22日
+slot: world_1
+format: news
+voice_min: 0.4
+people: [メッシ]
+theme:
+  id: messi_930
+  league_name: MLS
+  kind: other
+  topic: インテル・マイアミ
+  title: 'メッシ通算930点目。フリーキックだけなら歴代何位？'
+  hook: この1点で、ある順位がひとつ上がりました。
+  question: フリーキックの記録で、いまどこにいるのか
+short_title: 'メッシ、フリーキックで歴代何位？'
+thumbnail:
+  photo: assets/images/20260922_messi/01.jpg
+  line1: 通算930点目
+  line2: フリーキックだけで75本
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: 24分のフリーキック。試合は2対2
+    narrator: キャスター
+    card:
+      type: table
+      title: インテル・マイアミ 2対2 サンディエゴ
+      columns: ["", ""]
+      rows:
+        - ["12分", "サンディエゴが先制"]
+        - ["24分", "メッシのフリーキック"]
+        - ["74分", "スアレスが逆転"]
+        - ["82分", "サンディエゴが同点"]
+    say:
+      - text: メッシが、フリーキックを直接決めました。
+        short_only: true
+      - 相手はサンディエゴ。先に失点したあとの、24分でした。
+      - ペナルティエリアのすぐ外で自らファウルを受け、左足で蹴り込んでいます。
+      - 試合は一度ひっくり返してから追いつかれ、**2対2**で終わりました。
+    sources:
+      - https://sports.yahoo.com/articles/watch-lionel-messi-reaches-930-022904987.html
+      - https://www.sportsmole.co.uk/football/inter-miami/news/video-terrific-messi-scores-fortuitous-record-goal-in-inter-miami-draw_605547.html
+  - id: numbers
+    heading: この1点が、何番目だったか
+    tier: 報道
+    telop: 通算930ゴール。フリーキックだけで75本目
+    narrator: 解説
+    card:
+      type: table
+      title: メッシの数字
+      columns: ["", ""]
+      rows:
+        - ["通算", "930ゴール"]
+        - ["かかった試合数", "1176"]
+        - ["フリーキックだけで", "75本目"]
+    say:
+      - これがメッシの通算**930ゴール**目でした。**1176試合**での数字です。
+      - そして、止まったボールから直接決めたものとしては**75本目**です。
+      - text: 内訳は、バルセロナで50、アルゼンチン代表で12、いまのクラブで11、パリで2。
+        card:
+          type: bars
+          title: フリーキック75本の内訳
+          unit: 本
+          items:
+            - {label: "バルセロナ", value: 50}
+            - {label: "アルゼンチン代表", value: 12}
+            - {label: "インテル・マイアミ", value: 11}
+            - {label: "パリ", value: 2}
+      - text: いまのクラブでの得点は、4日前に100に届いたばかりでした。これで**101**です。
+        card:
+          type: table
+          title: インテル・マイアミでの得点
+          columns: ["", ""]
+          rows:
+            - ["4日前", "100"]
+            - ["この試合で", "101"]
+    sources:
+      - https://www.thedailystar.net/sports/football/news/75-and-counting-messi-three-away-all-time-free-kick-record-4278686
+      - https://www.sports.ru/football/1117377125-messi-zabil-930-j-gol-v-karere-v-1176-m-matche-u-ronaldu-979-myachej-v.html
+  - id: rank
+    main: true
+    heading: フリーキックの歴代で、いまどこにいるか
+    tier: 報道
+    telop: 74本を抜いて2位。1位まであと3本
+    narrator: 解説
+    card:
+      type: bars
+      title: 直接フリーキックの歴代
+      unit: 本
+      items:
+        - {label: "マルセリーニョ・カリオカ", value: 78}
+        - {label: "メッシ", value: 75}
+        - {label: "ジャイール・ローザ・ピント", value: 74}
+        - {label: "ロベルト・ヂナミッチ", value: 73}
+        - {label: "ジュニーニョ・ペルナンブカーノ", value: 72}
+        - {label: "クリスティアーノ・ロナウド", value: 64}
+    say:
+      - この1点で、74本のジャイール・ローザ・ピントを抜きました。
+      - 歴代では、**2位**です。
+      - 1位はマルセリーニョ・カリオカの**78本**。**あと3本**で並びます。
+      - クリスティアーノ・ロナウドは64本、マラドーナは61本です。
+      - メッシは**39歳**になっています。
+    sources:
+      - https://www.thedailystar.net/sports/football/news/75-and-counting-messi-three-away-all-time-free-kick-record-4278686
+  - id: voices
+    heading: ネットの声
+    tier: 未確認
+    telop: 見ていた人が書いていたこと
+    narrator: キャスター
+    say:
+      - text: このフリーキックのあと、書かれていたことです。
+        short_only: true
+      - voice: ネット民
+        text: 今のフリーキック何だよ。うわあ
+      - voice: ネット民
+        text: この人、999ゴールで引退するんじゃないか
+      - voice: ネット民
+        text: 君は天才だ。人々に喜びを与えるために神が遣わされた
+      - voice: ネット民
+        text: 引退前にクリスティアーノみたいに1000ゴールまで行くべきだ
+      - voice: ネット民
+        text: インテル・マイアミがメッシの足を引っ張ってる
+      - voice: ネット民
+        text: マイアミの守備は本物のザルだ
+      - voice: ネット民
+        text: 頼むからDFを買ってくれ
+      - voice: ネット民
+        text: メッシとスアレスが7点取っても、この守備は最低6点は献上する
+      - voice: ネット民
+        text: アメリカの人たちは羨ましい、メッシを生で見られるんだから
+      - voice: ネット民
+        text: 毎週そんなメッシが見れるのが羨ましい
+      - voice: ネット民
+        text: 体力やスピードが落ちても、技術と経験で総合力はむしろ上回っているかも
+      - voice: ネット民
+        text: 神様ですから。人間の体の造りと違うんですよ
+      - voice: ネット民
+        text: 凄い簡単そうに決めるのが怖い
+      - voice: ネット民
+        text: 1000ゴールだけじゃなく、フリーキックの最多記録も視野に入ってきたね
+        short_voice: true
+    sources:
+      - https://www.youtube.com/watch?v=E26w456j784
+      - https://news.yahoo.co.jp/articles/33ecdf94542aaeaeeb3226ae6be780f010d86aee/comments

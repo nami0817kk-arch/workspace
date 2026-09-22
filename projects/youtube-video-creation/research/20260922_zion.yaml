@@ -1,0 +1,131 @@
+date: 2026年9月22日
+slot: japan_2
+format: news
+voice_min: 0.4
+people: [鈴木彩艶, ディーニー, エメリ]
+theme:
+  id: zion_totw
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: アストン・ヴィラ
+  title: '2失点でもベスト11。鈴木彩艶が選ばれた理由'
+  hook: 2失点しているのに、選ばれました。
+  question: なぜ2失点で選ばれたのか
+short_title: 鈴木彩艶が今節のベスト11に
+thumbnail:
+  photo: assets/images/20260922_zion/01.jpg
+  line1: 2失点したのに、ベスト11
+  line2: 選んだ人が書いたのは
+sections:
+  - id: what
+    heading: 何が起きたか
+    tier: 報道
+    telop: 鈴木彩艶が、今節のベストイレブンに選ばれた
+    narrator: キャスター
+    say:
+      - text: 鈴木彩艶が、プレミアリーグの今節のベストイレブンに選ばれました。
+        short_only: true
+      - 選んだのは、元選手で解説者の**トロイ・ディーニー**です。リーグの公式の賞ではありません。
+      - 選ばれた11人のうち、ゴールキーパーは鈴木ひとりでした。
+      - ただ、その試合でヴィラは**2失点**しています。
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?459373-459373-fl
+      - https://www.bbc.com/sport/football/articles/ckzdz2l0m52mo
+  - id: match
+    heading: トッテナム戦で何をしたか
+    tier: 報道
+    telop: セーブ5本。うち4本は前半の21分までに
+    narrator: 解説
+    card:
+      type: table
+      title: トッテナム 2対3 アストン・ヴィラ
+      columns: ["", ""]
+      rows:
+        - ["ヴィラ", "今季リーグ戦初勝利"]
+        - ["鈴木彩艶", "セーブ5本"]
+        - ["うち前半21分までに", "4本"]
+    say:
+      - 相手はトッテナム。**2対3**でヴィラが勝ちました。今季のリーグ戦で、初めての勝利です。
+      - 鈴木のセーブは**5本**。そのうち**4本は、始まって21分まで**に出ています。
+      - text: 前半はトッテナムに押し込まれ続けました。そこを1人で持ちこたえています。
+        image: assets/images/20260922_zion/01.jpg
+      - text: 採点は**7.8**。チームで最も高い数字でした。
+        card:
+          type: table
+          title: この試合の採点
+          columns: ["", ""]
+          rows:
+            - ["鈴木彩艶", "7.8"]
+            - ["ヴィラの中で", "いちばん高い"]
+    sources:
+      - https://www.bbc.com/sport/football/articles/cmg490nn12pvo
+      - https://www.fotmob.com/players/1053679/zion-suzuki
+  - id: assist
+    main: true
+    heading: 2点目は、自陣のゴールエリアから始まった
+    tier: 報道
+    telop: 自陣ゴールエリアから蹴ったボールが、そのまま得点に
+    narrator: 解説
+    say:
+      - 2点目は、鈴木が**自陣のゴールエリアから蹴ったボール**から生まれています。
+      - そのボールが相手陣の深くまで落ち、ジャクソンが収めて左隅へ決めました。
+      - 監督のエメリは、こう話しています。
+      - voice: エメリ
+        text: 彼は組み立てのとき、ロングボールを選べる。
+      - voice: エメリ
+        text: 裏へのとても長いパスを持っている。**2点目は、まさにそれだった。**
+      - text: 選んだディーニーは、2失点についてこう書いています。
+      - voice: ディーニー
+        text: スパーズ相手に2点は取られた。だが、あれはヴィラがもう攻めるのをやめたあとだ。
+      - voice: ディーニー
+        text: あの2点で、彼が責められることはない。
+      - voice: ディーニー
+        text: 自分のエリアを支配していたし、**プレミアに本当に早く馴染んだ。**
+    sources:
+      - https://www.bbc.com/sport/football/articles/ckzdz2l0m52mo
+      - https://www.avillafan.com/41033/zion-suzuki-tipped-what-aston-villa-boss-needed/
+  - id: voices
+    heading: ネットの声
+    tier: 未確認
+    telop: 見ていた人が書いていたこと
+    narrator: キャスター
+    say:
+      - text: この試合のあとに、書かれていたことです。
+        short_only: true
+      - voice: ネット民
+        text: 今日のザイオンは化け物だったろ
+      - voice: ネット民
+        text: 股下狙われたのをかかとで反応したのなんて人間技じゃねーよ
+      - voice: ネット民
+        text: 出る出ないの判断も今日は完璧だった
+      - voice: ネット民
+        text: ザイオンいなかったら普通に負けてたな
+      - voice: ネット民
+        text: 2失点してても評価が高いってのは、彩艶だったから2失点で済んだって考え方なんかな
+      - voice: ネット民
+        text: 並のGKなら前半の内に失点してただろうからね
+      - voice: ネット民
+        text: エメリがここまでザイオンにロングキックやらすとは思わなかったよ
+      - voice: ネット民
+        text: ある意味、自分の戦術を捨てるってことだし
+      - voice: ネット民
+        text: ヴィラで正GKやってるだけですごいのに、まだステップアップできそうなのがな
+      - voice: ネット民
+        text: 速攻引き抜かれる気配すらある
+      - voice: ネット民
+        text: スズキはヴィラに長くはとどまらないぞ
+      - voice: ネット民
+        text: スズキってずっとこんなに良かったのか
+      - voice: ネット民
+        text: 今日のスズキは全盛期のノイアーのようだ
+      - voice: ネット民
+        text: 足元が本当に上手いし、素晴らしいセーブも何本かした
+      - voice: ネット民
+        text: 彼のプレーを知らなかった。すごい
+      - voice: ネット民
+        text: まさか日本人GKが出てる試合でこんなに楽しめる日が来るとは思わなかった
+        short_voice: true
+    sources:
+      - https://kizuna.5ch.io/test/read.cgi/football/1789821387/
+      - https://www.footballinsider247.com/aston-villa/zion-suzuki-is-not-staying-for-long-aston-villa-fans-explode-after-latest

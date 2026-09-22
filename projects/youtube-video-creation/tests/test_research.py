@@ -1445,3 +1445,121 @@ sections:
 """, encoding="utf-8")
     text = to_script(load_notes(note), load_plan())
     assert "創立は1886年です。" in text
+
+
+def test_一言はタイトルより前に読む():
+    """**2026-09-21 指示**「最初にクラブを表す一言を述べてから始める」。
+
+    「1行目はタイトル」の決まり（2026-09-07）は残すので、**一言 → タイトル**の順。
+    """
+    raw = _raw()
+    raw["theme"]["lead"] = "プレミアで一番小さなスタジアムのクラブです。"
+    text = to_script(build_notes(raw), _plan())
+    lines = [x for x in text.splitlines() if x.startswith("キャスター: ")]
+    assert lines[0] == "キャスター: プレミアで一番小さなスタジアムのクラブです。"
+    assert lines[1] == "キャスター: なぜ移籍が決まらないのか。"
+
+
+def test_一言を書いていなければタイトルから始まる():
+    """書いていない回は、今までどおりタイトルが1行目。**既定を変えない**。"""
+    text = to_script(build_notes(_raw()), _plan())
+    lines = [x for x in text.splitlines() if x.startswith("キャスター: ")]
+    assert lines[0] == "キャスター: なぜ移籍が決まらないのか。"
+
+
+def test_一言がタイトルの言い直しなら出さない():
+    """タイトルと同じことを言う一言は、前置きが増えるだけ。**その行ごと出さない**。"""
+    raw = _raw()
+    raw["theme"]["lead"] = "なぜ移籍が決まらないのか"
+    text = to_script(build_notes(raw), _plan())
+    lines = [x for x in text.splitlines() if x.startswith("キャスター: ")]
+    assert lines[0] == "キャスター: なぜ移籍が決まらないのか。"
+    assert len([x for x in lines if "移籍が決まらないのか" in x]) == 1
+
+
+def _raw_kanji():
+    raw = _raw()
+    raw["sections"][0]["say"] = "移籍が決まりました。"
+    return raw
+
+
+def test_サムネが本編で言っていないことを約束していたら知らせる():
+    """**2026-09-21 に4本見つかった。**旧台本から節を落としたのに、サムネの文字だけ
+    残っていて、その話を一度もしない動画になっていた（アーセナル「1919年、票で決まった」）。
+    """
+    from src.research import _advise_thumbnail_promise
+
+    raw = _raw_kanji()
+    raw["thumbnail"] = {"line1": "酒場の投票で決まった", "line2": "ブレントフォード"}
+    hints = _advise_thumbnail_promise(build_notes(raw))
+    assert any("line1" in h for h in hints), hints
+
+
+def test_読み上げに出てくるサムネは知らせない():
+    """言い回しは変わるので、**手がかりが1つでも出てくれば通す**。"""
+    from src.research import _advise_thumbnail_promise
+
+    raw = _raw_kanji()
+    raw["thumbnail"] = {"line1": "移籍のゆくえ", "line2": "なぞ"}
+    assert _advise_thumbnail_promise(build_notes(raw)) == []
+
+
+def test_伏せ字のサムネは見ない():
+    """`●●` は隠すのが目的なので、読み上げに無くて当たり前。"""
+    from src.research import _advise_thumbnail_promise
+
+    raw = _raw_kanji()
+    raw["thumbnail"] = {"line1": "本人が望むのは ●●", "line2": "移籍"}
+    assert _advise_thumbnail_promise(build_notes(raw)) == []
+
+
+def test_サムネの数字は丸ごと一致で見る():
+    """**2桁ずつで見ると通ってしまう**（2026-09-21 実測）。サムネ「1919年」が、
+    読み上げの「2026年5月19日」の "19" に当たって鳴らなくなった。
+    """
+    from src.research import _advise_thumbnail_promise
+
+    raw = _raw_kanji()
+    raw["sections"][0]["say"] = "移籍は2026年5月19日に決まりました。"
+    raw["thumbnail"] = {"line1": "1919年に決まった", "line2": "移籍"}
+    assert _advise_thumbnail_promise(build_notes(raw)), "1919 が 19 で通ってしまう"
+
+
+def test_言い回しが変わっていても通す():
+    """サムネ「6回優勝が、3部にいた」に対して読み上げは「1部で6回も優勝している」。
+    **丸ごとでは当たらないが、同じ話をしている**ので鳴らせない。
+    """
+    from src.research import _advise_thumbnail_promise
+
+    raw = _raw_kanji()
+    raw["sections"][0]["say"] = "1部で6回も優勝しているクラブが3部にいました。"
+    raw["thumbnail"] = {"line1": "6回優勝が、3部にいた", "line2": "移籍"}
+    assert _advise_thumbnail_promise(build_notes(raw)) == []
+
+
+def test_棒グラフの項目は形まで見る():
+    """**2026-09-22 に2本が書き出しの途中で落ちた。**`- ["佐野海舟", 5000]` と書いても
+    `draft` は「items がある」で通していた。形の誤りは書き出す前に止める。"""
+    from src.research import verify
+
+    raw = _raw()
+    raw["sections"][0]["card"] = {"type": "bars", "title": "t", "items": [["佐野海舟", 5000]]}
+    problems = verify(build_notes(raw), _plan())
+    assert any("label" in p for p in problems), problems
+
+    raw["sections"][0]["card"]["items"] = [{"label": "佐野海舟", "value": 5000}]
+    assert not any("bars" in p for p in verify(build_notes(raw), _plan()))
+
+
+def test_行の知らない鍵は止める(tmp_path):
+    """2026-09-22: `short_only: true` を `only: short` と書き、前置きが本編にも入った。"""
+    import pytest
+    from src.research import ResearchError, load_notes
+
+    note = tmp_path / "n.yaml"
+    note.write_text(
+        "theme:\n  title: 題\nsections:\n  - id: a\n    heading: 見出し\n    say:\n"
+        "      - text: 前置き\n        only: short\n      - 本文\n",
+        encoding="utf-8")
+    with pytest.raises(ResearchError, match="知らない鍵"):
+        load_notes(note)

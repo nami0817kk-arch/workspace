@@ -237,6 +237,10 @@ class Notes:
     theme_id: str = ""
     prefix: str = ""                 # 【速報】【朗報】【悲報】
     hook: str = ""                   # 冒頭のつかみ
+    # **タイトルより前に読む一言**（2026-09-21 指示「最初にクラブを表す
+    # 一言を述べてから始める」）。プレミア20クラブ紹介のために足した。
+    # 書いていなければ、その行は出さない（今までどおりタイトルから始まる）
+    lead: str = ""
     answer: str = ""                 # まとめで返す答え
     watch: str = ""                  # 次に何を見るか
     follow_up: bool = False
@@ -321,6 +325,15 @@ def build_notes(raw: dict) -> Notes:
         mutes: list[bool] = []
         for item in raw_lines:
             if isinstance(item, dict):
+                # **知らない鍵は黙って捨てない**（2026-09-22）。`short_only: true` を
+                # `only: short` と書いた5本で、ショート専用の前置きが本編にも入っていた。
+                # 文中の「: 」で YAML が鍵に割れた行も、ここで止まる
+                unknown = sorted(str(k) for k in item if k not in LINE_KEYS)
+                if unknown:
+                    raise ResearchError(
+                        f"{entry.get('id') or index}: 行に知らない鍵があります（{unknown[0][:30]}）。"
+                        f"使えるのは {'・'.join(sorted(LINE_KEYS))}。"
+                        "文に「: 」が入るなら text を引用符で囲んでください")
                 lines.append(str(item.get("text", "")).strip())
                 voices.append(str(item.get("voice", "")).strip())
                 telops.append(str(item.get("telop", "")).strip())
@@ -387,6 +400,7 @@ def build_notes(raw: dict) -> Notes:
         question=str(theme.get("question", "")).strip(),
         prefix=str(theme.get("prefix") or "").strip().strip("【】"),
         hook=str(theme.get("hook") or "").strip(),
+        lead=str(theme.get("lead") or "").strip(),
         thumbnail=dict(raw.get("thumbnail") or {}),
         answer=str(raw.get("answer") or "").strip(),
         watch=str(raw.get("watch") or "").strip(),
@@ -564,6 +578,11 @@ def _check_voice_clash(notes: Notes) -> list[str]:
     return problems
 
 
+# 1行ぶんの辞書に書いてよい鍵
+LINE_KEYS = frozenset({"text", "voice", "telop", "card", "image",
+                       "short_only", "short_voice", "no_telop"})
+
+
 def _check_card(section: Section) -> list[str]:
     """カードの中身が、書き出しに耐える形かを取材メモの段階で見る。
 
@@ -603,6 +622,14 @@ def _check_card(section: Section) -> list[str]:
     elif kind == "bars":
         if not (card.get("items") or []):
             problems.append(f"{section.id}: bars カードには items が必要です")
+        # **形まで見る**（2026-09-22）。`- ["佐野海舟", 5000]` と書いた2本が `draft` を通り、
+        # 書き出しの途中で ValueError で落ちた。items は `{label: …, value: …}` の並び
+        elif card.get("type") == "bars":
+            for item in card.get("items") or []:
+                if not (isinstance(item, dict) and "label" in item and "value" in item):
+                    problems.append(f"{section.id}: bars の items は "
+                                    f"{{label: …, value: …}} で書いてください（{str(item)[:30]}）")
+                    break
         problems += _check_bar_units(section, card)
     return problems
 
@@ -841,14 +868,18 @@ def _advise_title(notes: Notes) -> list[str]:
     各チャンネルの最高再生を並べたら、上位はほぼ全部が答えを隠していた。
     こちらの直近14本は全部が言い切りで、タイトルで用が足りてしまっていた。
     """
-    from .review import TITLE_HOOKS, TITLE_QUESTION_TAILS
+    # **`draft` と `review` で物差しが違っていた**（2026-09-22 に判明）。
+    # こちらは体言止めの一覧（TITLE_NOUN_TAILS）を見ていなかったので、
+    # `review` が通す題を `draft` が弾いていた。**同じ一覧を見る**
+    from .review import TITLE_HOOKS, TITLE_NOUN_TAILS, TITLE_QUESTION_TAILS
 
     title = notes.video_title
     if any(word in title for word in TITLE_HOOKS):
         return []
-    if title.rstrip("。！!").endswith(TITLE_QUESTION_TAILS):
+    tail = title.rstrip("。！!")
+    if tail.endswith(TITLE_QUESTION_TAILS) or tail.endswith(TITLE_NOUN_TAILS):
         return []
-    if title.rstrip("。！!").endswith(("」", "』")):
+    if tail.endswith(("」", "』")):
         return []
     return [
         f"タイトル『{title[:24]}…』が答えを言い切っています。"
@@ -909,6 +940,68 @@ VOLUME_OUTLETS = 3       # 媒体の数
 def _bare_text(text: str) -> str:
     """比べるための素の文。句読点と記号を落とす。"""
     return re.sub(r"[。、．，\s　？?！!「」『』*]", "", str(text or ""))
+
+
+def _advise_thumbnail_promise(notes: Notes) -> list[str]:
+    """**サムネが、本編で言っていないことを約束していないか**（2026-09-21）。
+
+    プレミア20クラブ紹介で4本見つかった。旧台本から節を落としたのに、
+    サムネの文字だけが残っていて、**その話を一度もしない動画**になっていた
+    （アーセナル「1919年、票で決まった」／チェルシー「史上最も荒れた決勝」／
+    ブレントフォード「酒場の投票で決まった」／エヴァートン「出た家から宿敵が生まれた」）。
+
+    **節を落としたら、その節を指している言葉が他に無いか必ず見る**（CLAUDE.md）の、
+    サムネ側。手がかり（漢字・カタカナ・数字のかたまり）が**1つも読み上げに
+    出てこない**ときだけ知らせる。言い回しは変わるので、厳しくは見ない。
+    """
+    import re as _re
+
+    thumbnail = notes.thumbnail or {}
+    # **題も比べる相手に入れる**（2026-09-21）。サムネの2行目はクラブ名や選手名の
+    # ことが多く、読み上げの本文には出てこない。それを「約束を破っている」と
+    # 数えると、20本中8本で鳴った（全部この形だった）
+    body = _bare_text(" ".join(
+        text for scene in notes.sections for text in scene.say))
+    # 題・問い・一言・つかみも**比べる相手**に入れる（サムネの2行目はクラブ名や
+    # 選手名のことが多く、節の本文には出てこない）。ただし**判じるかどうかは
+    # 節の中身で決める**。雛形の段階で鳴らしても直しようがない
+    said = body + _bare_text(" ".join(
+        [notes.title, notes.question, notes.lead, notes.hook]))
+    # **比べる相手が無いときは黙る。**節がまだ無い雛形や、読み上げに漢字・カタカナが
+    # 1つも無い作り物では、「出てこない」と言っても意味がない
+    if not _re.search(r"[一-龯ァ-ヶー]{2,}|\d+", body):
+        return []
+    hints: list[str] = []
+    for which in ("line1", "line2"):
+        text = str(thumbnail.get(which) or "")
+        # 伏せ字（●●）を含む行は、隠すのが目的なので見ない
+        if not text or "●" in text:
+            continue
+        clues = [c for c in _re.findall(r"[一-龯ァ-ヶー]{2,}|\d+", text) if len(c) >= 2]
+        if not clues:
+            continue
+
+        def found(clue: str) -> bool:
+            """**言い回しは変わる。**3字以上のかたまりは、2字が重なれば通す。
+
+            サムネ「6回優勝が、3部にいた」に対して読み上げは
+            「1部で6回も優勝しているクラブが、2018年には3部にいました」。
+            丸ごとでは当たらないが、「優勝」が重なっていれば同じ話をしている
+            """
+            if clue in said:
+                return True
+            # **数字は丸ごと一致だけ。**2桁ずつで見ると「1919年」が
+            # 「2026年5月19日」の "19" に当たって通ってしまった（2026-09-21 実測）
+            if clue.isdigit():
+                return False
+            return len(clue) >= 3 and any(clue[i:i + 2] in said
+                                          for i in range(len(clue) - 1))
+
+        if not any(found(clue) for clue in clues):
+            hints.append(f"サムネの {which}『{text}』は、読み上げのどこにも出てきません。"
+                         "**その話をしない動画**になっていないか見てください"
+                         "（節を落としたときに、サムネの文字だけ残ることがあります）")
+    return hints
 
 
 def _advise_hook(notes: Notes) -> list[str]:
@@ -1157,6 +1250,7 @@ def _advise_voices(notes: Notes) -> list[str]:
     """反応の扱いで気をつける点。"""
     hints: list[str] = (_advise_volume(notes) + _advise_material(notes) + _advise_cards(notes)
                         + _advise_hook(notes) + _advise_thumbnail_repeat(notes)
+                        + _advise_thumbnail_promise(notes)
                         + _advise_repeats(notes) + _advise_short_repeats(notes)
                         + _advise_title(notes))
     for section in notes.sections:
@@ -1500,6 +1594,14 @@ def to_script(notes: Notes, plan: Plan) -> str:
     # **冒頭から名乗らない。**「海外サッカーのニュースです」は毎回同じで中身が無く、
     # 続く「〜ここを掘っていきます」も問いを言い直しているだけだった。
     # **問いは読み上げず、画面に出す。**読むと、つかみと合わせて前置きが18秒になる
+    # **タイトルの前に、そのクラブを表す一言**（2026-09-21 指示）。
+    # 「1行目はタイトル」の決まりは残す（クリックした人が確かめられる）ので、
+    # **一言 → タイトル**の順。書いていない回は今までどおりタイトルから始まる
+    if notes.lead and _bare_text(notes.lead) != _bare_text(notes.title):
+        lines += [
+            f"キャスター: {_ends_sentence(notes.lead)}",
+            f"  telop: {_telop(notes.lead, TELOP_LIMIT)}",
+        ]
     lines += [
         f"キャスター: {_ends_sentence(notes.title)}",
         f"  telop: {notes.title}",

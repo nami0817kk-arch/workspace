@@ -87,5 +87,23 @@
   "https://en.wikipedia.org/wiki/Arsenal_F.C.",
   "https://en.wikipedia.org/wiki/Arsenal_F.C._supporters"
  ],
- "notes": "有名なファンは『Arsenal F.C. supporters』記事のNotable supportersの節（役職ごとの列挙リスト形式で、個々のエピソード文は無い）から選んだため、fan_storyに書けるような逸話の原文は見つからず null にした。オーナーは大株主スタン・クロエンケで、2011年に過半数(62.89%)取得、2018年にウスマノフの株を買い取り単独所有に。タイトル歴の『1部優勝14回』にはFootball League First Division時代とPremier League時代の優勝が両方含まれる（直近は2025-26のプレミアリーグ優勝）。プレミア最高位『1位』は1997-98・2001-02・2003-04・2025-26の4シーズン。"
+ "notes": "有名なファンは『Arsenal F.C. supporters』記事のNotable supportersの節（役職ごとの列挙リスト形式で、個々のエピソード文は無い）から選んだため、fan_storyに書けるような逸話の原文は見つからず null にした。オーナーは大株主スタン・クロエンケで、2011年に過半数(62.89%)取得、2018年にウスマノフの株を買い取り単独所有に。タイトル歴の『1部優勝14回』にはFootball League First Division時代とPremier League時代の優勝が両方含まれる（直近は2025-26のプレミアリーグ優勝）。プレミア最高位『1位』は1997-98・2001-02・2003-04・2025-26の4シーズン。",
+ "trophies": [
+  [
+   "1部リーグ",
+   14
+  ],
+  [
+   "FAカップ",
+   14
+  ],
+  [
+   "リーグカップ",
+   2
+  ],
+  [
+   "ヨーロッパ合計",
+   2
+  ]
+ ]
 }

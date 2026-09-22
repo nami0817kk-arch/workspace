@@ -1444,18 +1444,71 @@ def test_海外の反応が無ければ知らせる():
 
     話者の型（現地サポ・海外のファン）は最初から config にある。
     **仕組みがあるのに使っていなかった。**
+
+    **2026-09-22 に、この検査の前提が外れた。**9/21 の指示
+    「国で分けない。語り手はネット民に統一する」で、海外から取った反応も
+    話者は `ネット民` になる。**話者名では見分けられない。**
+    だから「無い」とは言えなくなり、×ではなく覚え書きを返す。
+    国で分けている古い台本だけ、今までどおり数える。
     """
     from src.review import check_overseas_voices
     from src.script_model import parse_script
 
-    only_jp = parse_script(
+    merged = parse_script(
         "---\ntitle: T\n---\n\n## ネットの声\n\n"
         "ネット民: すごい\nネット民: たしかに\n")
-    found = check_overseas_voices(only_jp)
-    assert found.ok is False
-    assert "現地サポ" in found.detail
+    found = check_overseas_voices(merged)
+    # **×にしない。**海外の反応をネット民として混ぜてあるかもしれない
+    assert found.ok is True
+    assert "見分けられません" in found.detail
 
-    mixed = parse_script(
+    old_style = parse_script(
         "---\ntitle: T\n---\n\n## ネットの声\n\n"
         "ネット民: すごい\n現地サポ: あちらでも話題になっている\n")
-    assert check_overseas_voices(mixed).ok is True
+    hit = check_overseas_voices(old_style)
+    assert hit.ok is True
+    assert "1件" in hit.detail
+
+    none_at_all = parse_script("---\ntitle: T\n---\n\n## 何が起きたか\n\nキャスター: あ\n")
+    assert "反応そのものがありません" in check_overseas_voices(none_at_all).detail
+
+
+def test_3文字のカタカナ名も頭の名前として数える():
+    """**メッシ・ヤマル・ロドリ・ジダン・ケインは、どれも3文字**（2026-09-22）。
+
+    4文字以上しか見ていなかったので、「メッシが930点目を決めた」が
+    「頭に人名もクラブ名もありません」で × になった。
+    このチャンネルがいちばんよく出す名前が、まるごと抜けていた。
+    """
+    from src.review import check_title_subject
+    from src.script_model import parse_script
+
+    for name in ("メッシ", "ヤマル", "ロドリ", "ケイン"):
+        script = parse_script(f"---\ntitle: {name}が決めた1点。残したのは\n---\n\n## あ\n\nキャスター: あ\n")
+        assert check_title_subject(script).ok is True, name
+
+
+def test_3文字の普通名詞は名前として数えない():
+    """下げたぶん、普通名詞が通らないようにする。"""
+    from src.review import check_title_subject
+    from src.script_model import parse_script
+
+    for word in ("ミス", "パス", "セーブ", "ハット"):
+        script = parse_script(f"---\ntitle: {word}が続いた試合で起きたのは\n---\n\n## あ\n\nキャスター: あ\n")
+        assert check_title_subject(script).ok is False, word
+
+
+def test_白い箱で積む反応も反応の層として数える():
+    """**9/14 から反応はカードではなく白い箱で積んでいる。**この検査はそれを知らず、
+    9/21 の10本は見出しを「見ていた人が書いていたこと」にして探す語を避けていたから
+    通っていただけだった（2026-09-22 に判明）。見出しで逃がさず、箱の数で見る。"""
+    from src.review import check_reaction_layer
+    from src.script_model import parse_script
+
+    script = parse_script("---\ntitle: T\n---\n\n## ネットの声\n\n"
+                          "ネット民: すごい\nネット民: たしかに\nネット民: やばい\n")
+    assert check_reaction_layer(script).ok is True
+
+    only_caster = parse_script("---\ntitle: T\n---\n\n## ネットの声\n\n"
+                               "キャスター: 反応を紹介します。\n")
+    assert check_reaction_layer(only_caster).ok is False

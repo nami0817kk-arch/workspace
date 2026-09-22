@@ -16,6 +16,7 @@ theme:
   title: ボーンマスってどんなクラブ？
   question: どんなクラブなのか
   hook: 消えかけたクラブが、いまヨーロッパで戦っています。
+  lead: プレミアリーグで、いちばん小さなスタジアム。
 thumbnail:
   line1: 勝ち点17を引かれた
   line2: そこから18年で、初の欧州へ
@@ -34,23 +35,25 @@ sections:
   - short_only: true
     text: このクラブの、基本のデータです。
   - image: assets/stats/pl_bournemouth_data0.png
-    text: 創立は**1899年**。前身はボスコム・セント・ジョンズというクラブです。
-    no_telop: true
-  - image: assets/backgrounds/stadium_ボーンマス_in.png
-    text: 本拠地はディーン・コート。収容は1万2357人と、プレミアでもかなり小さなスタジアムです。
-  - image: assets/stats/pl_bournemouth_map.png
-    text: ホームタウンは、イングランド南部ドーセット州の海沿いの町ボーンマス。
-    no_telop: true
-  - image: assets/photos/pl/bournemouth_owner_cf0347c5.jpg
-    text: オーナーはアメリカのビル・フォーリー。2022年からクラブを持っています。
-  - image: assets/stats/pl_bournemouth_data4.png
-    text: 1部リーグの優勝もカップのタイトルも、まだありません。直近のタイトルは2014年から15年の2部優勝です。
-    no_telop: true
-  - image: assets/stats/pl_bournemouth_data7.png
-    text: そのかわり、昨季はプレミアリーグで**6位**。クラブ史上最高の順位で、初めてヨーロッパへの切符をつかみました。
+    text: 創立は**1899年**。前身はボスコム・セント・ジョンズ・インスティチュートです。
     no_telop: true
   - image: assets/stats/pl_bournemouth_data8.png
-    text: 愛称は「ザ・チェリーズ」。さくらんぼ、という意味です。
+    text: 愛称は「ザ・チェリーズ」。さくらんぼです。
+    no_telop: true
+  - image: assets/backgrounds/stadium_ボーンマス_in.png
+    text: 本拠地はディーン・コート。**1万2357人**。マンチェスター・ユナイテッドの**6分の1**です。
+  - image: assets/stats/pl_bournemouth_map.png
+    text: 町はイングランド南部、ドーセット州の海沿いです。
+    no_telop: true
+  - image: assets/photos/pl/bournemouth_owner_cf0347c5.jpg
+    text: オーナーはアメリカのビル・フォーリー。2022年に買収。**1億ポンド超**と報じられました。
+  - image: assets/photos/pl/bournemouth_owner_07f09a4e.jpg
+    text: 共同オーナーには、ハリウッド俳優の**マイケル・B・ジョーダン**もいます。
+  - image: assets/stats/pl_bournemouth_cups.png
+    text: 1部の優勝も、FAカップも、リーグカップもゼロ。20クラブで3つとも無いのは**5クラブ**です。
+    no_telop: true
+  - image: assets/stats/pl_bournemouth_last.png
+    text: それが昨季、**6位**。クラブ史上最高の順位でした。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
@@ -68,13 +71,16 @@ sections:
     - ''
     - ''
     rows:
-    - - 経営破綻
-      - 2008年から2009年にかけて
-    - - 罰則
-      - 勝ち点17の剥奪
+    - - 借金
+      - 約400万ポンド
+    - - リーグの構え
+      - 参加を認めないと通告
+    - - 認めた条件
+      - 勝ち点マイナス17（4部）
   say:
-  - このクラブの物語は、消えかけたところから始まります。
-  - 2008年から2009年にかけて経営破綻に追い込まれ、リーグの倒産規定に従わなかったとして勝ち点17を差し引かれました。
+  - 話は、消えかけたところから始まります。
+  - 2008年、借金は**400万ポンド**。クラブは倒産寸前でした。
+  - リーグは、参加そのものを認めないと言いました。認めた条件が**勝ち点マイナス17**。当時は4部です。
   sources:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
   bg: assets/backgrounds/stadium_ボーンマス.png
@@ -96,8 +102,8 @@ sections:
     - - 当時
       - フットボールリーグで最も若い監督
   say:
-  - ここで監督を引き受けたのが、31歳のエディ・ハウです。フットボールリーグで最も若い監督でした。
-  - それでもボーンマスは落ちませんでした。
+  - 引き受けたのが**31歳のエディ・ハウ**。リーグで最も若い監督でした。
+  - それでも、4部に残りました。
   sources:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
   - https://en.wikipedia.org/wiki/Eddie_Howe
@@ -122,8 +128,8 @@ sections:
     - - 同じ年
       - クラブ史上初の欧州出場
   say:
-  - 6年後の2015年、チャンピオンシップを制して、クラブ史上はじめてイングランドの1部に上がります。
-  - そして昨季はリーグ6位、勝ち点57。クラブ史上はじめて、ヨーロッパの舞台への出場権をつかみました。
+  - 6年後の2015年、2部を制して**初めて1部**へ。
+  - そして昨季、**初めてヨーロッパの切符**をつかみました。
   sources:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
   bg: assets/backgrounds/stadium_ボーンマス.png
@@ -142,11 +148,12 @@ sections:
     - 残したもの
     rows:
     - &id001
-      - スティーヴ・フレッチャー
-      - 1992-2013
-      - クラブ最多の726試合出場
+      - カラム・ウィルソン
+      - 2014-2020
+      - 初のプレミア昇格の得点源
   say:
-  - スティーヴ・フレッチャーは、クラブ史上最多の**726試合**に出場した選手です。
+  - text: カラム・ウィルソンはリーグ**20得点**。クラブ初のプレミア昇格を決めました。
+    image: assets/photos/pl/bournemouth_legend_224f5148.jpg
   sources: &id002
   - https://en.wikipedia.org/wiki/List_of_AFC_Bournemouth_records_and_statistics
   - https://en.wikipedia.org/wiki/Callum_Wilson
@@ -168,12 +175,12 @@ sections:
     rows:
     - *id001
     - &id003
-      - カラム・ウィルソン
-      - 2014-2020
-      - 初のプレミア昇格の得点源
+      - ライアン・フレイザー
+      - 2013-2020
+      - 1季14アシスト。リーグ183試合
   say:
-  - text: カラム・ウィルソンは、2014年から15年にリーグ20得点。クラブ初のプレミア昇格を決めました。
-    image: assets/photos/pl/bournemouth_legend_224f5148.jpg
+  - text: ライアン・フレイザーは2018年から19年に**14アシスト**。リーグ戦で183試合です。
+    image: assets/photos/pl/bournemouth_legend_9f069e9f.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_ボーンマス.png
   official: false
@@ -192,12 +199,12 @@ sections:
     rows:
     - *id001
     - *id003
-    - - エディ・ハウ
-      - 選手・監督
-      - 4部からプレミアへ導いた
+    - - ブレット・ピットマン
+      - 2005-2015
+      - リーグ267試合96得点。どん底も優勝も
   say:
-  - text: エディ・ハウは選手として長くプレーし、のちに監督として、4部にいたクラブを**プレミアまで**連れていきました。
-    image: assets/photos/pl/bournemouth_legend_c837613d.jpg
+  - text: ブレット・ピットマンはリーグ戦で**267試合96得点**。勝ち点17を引かれた季も、2部を制した季もいました。
+    image: assets/photos/pl/bournemouth_legend_2f36ed97.jpg
   sources: *id002
   bg: assets/backgrounds/stadium_ボーンマス.png
   official: false
@@ -210,17 +217,17 @@ sections:
   - text: 今季の登録選手は28人です。
     image: assets/stats/pl_bournemouth_gk.png
     no_telop: true
-  - image: assets/stats/pl_bournemouth_gk.png
+  - image: assets/stats/pl_bournemouth_gk_f.png
     text: ゴールキーパーは3人。ジョルジェ・ペトロヴィッチはセルビア代表で**12試合**。
     no_telop: true
-  - image: assets/stats/pl_bournemouth_df.png
-    text: ディフェンダーは10人。主将を務めるのが**アダム・スミス**。クラブで**350試合**に出ています。アントニオ・シウヴァはポルトガル代表で**20試合**。
+  - image: assets/stats/pl_bournemouth_df_f.png
+    text: ディフェンダーは10人。主将を務めるのが**アダム・スミス**。リーグ戦で**350試合**に出ています。アントニオ・シウヴァはポルトガル代表で**20試合**。
     no_telop: true
-  - image: assets/stats/pl_bournemouth_mf.png
+  - image: assets/stats/pl_bournemouth_mf_f.png
     text: ミッドフィールダーは8人。ライアン・クリスティはスコットランド代表で**71試合**。デイヴィッド・ブルックスはウェールズ代表で**45試合**。
     no_telop: true
-  - image: assets/stats/pl_bournemouth_fw.png
-    text: フォワードは7人。ジャスティン・クライファートはオランダ代表で**14試合**。エヴァニウソンは**16得点**。
+  - image: assets/stats/pl_bournemouth_fw_f.png
+    text: フォワードは7人。ジャスティン・クライファートはオランダ代表で**14試合**。エヴァニウソンは**クラブ最高額の4020万ポンド**で加入しました。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
@@ -257,6 +264,8 @@ sections:
   say:
   - プレミアリーグは5試合を終えて、**3引き分け2敗**です。
   - 順位は**17位**、勝ち点は**3**です。
+  - ヨーロッパリーグの初戦は、久保建英のいるレアル・ソシエダでした。
+  - アウェーで**2対1**。クラブにとって、初めての欧州の試合でした。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_AFC_Bournemouth_season
   bg: assets/backgrounds/stadium_ボーンマス.png

@@ -76,5 +76,23 @@
  "sources": [
   "https://en.wikipedia.org/wiki/Newcastle_United_F.C."
  ],
- "notes": "本拠地の収容人数は本文中に52,769人という記載もあり、インフォボックスの52,729人と食い違う（原文どおりインフォボックス値を採用）。クラブ創立は1881年にStanley F.C.として発足、1882年にNewcastle East End F.C.、1892年にNewcastle West Endを吸収して現在のNewcastle United F.C.になった経緯があり、単純な「創立年」は一義に定めにくい。"
+ "notes": "本拠地の収容人数は本文中に52,769人という記載もあり、インフォボックスの52,729人と食い違う（原文どおりインフォボックス値を採用）。クラブ創立は1881年にStanley F.C.として発足、1882年にNewcastle East End F.C.、1892年にNewcastle West Endを吸収して現在のNewcastle United F.C.になった経緯があり、単純な「創立年」は一義に定めにくい。",
+ "trophies": [
+  [
+   "1部リーグ",
+   4
+  ],
+  [
+   "FAカップ",
+   6
+  ],
+  [
+   "リーグカップ",
+   1
+  ],
+  [
+   "ヨーロッパ合計",
+   1
+  ]
+ ]
 }

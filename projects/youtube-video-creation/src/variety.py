@@ -42,6 +42,23 @@ def _bare(title: str) -> str:
     return re.sub(r"[\s。！!？?]", "", re.sub(r"【[^】]*】", "", title or ""))
 
 
+# 言いさしで切る結び（「〜のは」「〜言葉は」）。**末尾の字面が違っても同じ形**
+DANGLING = "はがをにともへで"
+
+
+def _tail_kind(title: str) -> str:
+    """結び方の形。末尾6字の一致では、言いさしの揃いを見落とした。
+
+    2026-09-22 に7本中7本が「〜のは」「〜言葉は」で終わっていたのに、
+    末尾の字面が1本ずつ違うので「散らばっています」と出た。
+    **助詞で切っているなら、その助詞で1つにまとめる**
+    """
+    bare = _bare(title)
+    if bare and bare[-1] in DANGLING:
+        return f"〜{bare[-1]}（言いさし）"
+    return bare[-6:]
+
+
 def _prefix(script: Script) -> str:
     title = str((script.meta or {}).get("title") or "").strip()
     if title.startswith("【") and "】" in title:
@@ -136,7 +153,7 @@ def inspect_day(scripts: list[Script]) -> list[Finding]:
     # **タイトルの結び方が揃っていないか**（2026-09-08 ユーザー指摘）。
     # 9本中7本が「〜がこちらです」で終わっていた。1本ずつの点検は
     # 「答えを隠しているか」しか見ないので、**並べないと気づけない**
-    tails = Counter(_bare(s.title)[-6:] for s in scripts if _bare(s.title))
+    tails = Counter(_tail_kind(s.title) for s in scripts if _bare(s.title))
     top_tail, tail_share = _share(tails, total)
     if tail_share > SAME_TAIL:
         findings.append(Finding(

@@ -12,7 +12,9 @@
    "captain": false,
    "loan": false,
    "team": "Ivory Coast",
-   "caps": 16
+   "caps": 16,
+   "club_caps": 2,
+   "club_goals": 0
   },
   {
    "no": "3",
@@ -24,7 +26,9 @@
    "captain": false,
    "loan": false,
    "team": "Wales",
-   "caps": 57
+   "caps": 57,
+   "club_caps": 131,
+   "club_goals": 4
   },
   {
    "no": "5",
@@ -36,7 +40,9 @@
    "captain": false,
    "loan": false,
    "team": "Brazil",
-   "caps": 1
+   "caps": 1,
+   "club_caps": 94,
+   "club_goals": 3
   },
   {
    "no": "6",
@@ -48,7 +54,9 @@
    "captain": false,
    "loan": false,
    "team": "Ivory Coast",
-   "caps": 61
+   "caps": 61,
+   "club_caps": 59,
+   "club_goals": 2
   },
   {
    "no": "7",
@@ -60,7 +68,9 @@
    "captain": false,
    "loan": false,
    "team": "England",
-   "caps": 3
+   "caps": 3,
+   "club_caps": 91,
+   "club_goals": 16
   },
   {
    "no": "8",
@@ -72,7 +82,9 @@
    "captain": false,
    "loan": false,
    "team": "Argentina",
-   "caps": 11
+   "caps": 11,
+   "club_caps": 88,
+   "club_goals": 3
   },
   {
    "no": "9",
@@ -84,7 +96,9 @@
    "captain": false,
    "loan": false,
    "team": "New Zealand",
-   "caps": 93
+   "caps": 93,
+   "club_caps": 90,
+   "club_goals": 38
   },
   {
    "no": "10",
@@ -96,7 +110,9 @@
    "captain": false,
    "loan": false,
    "team": "England",
-   "caps": 6
+   "caps": 6,
+   "club_caps": 145,
+   "club_goals": 33
   },
   {
    "no": "11",
@@ -108,7 +124,9 @@
    "captain": false,
    "loan": false,
    "team": "Brazil",
-   "caps": 5
+   "caps": 5,
+   "club_caps": 41,
+   "club_goals": 7
   },
   {
    "no": "12",
@@ -120,7 +138,9 @@
    "captain": false,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
   },
   {
    "no": "14",
@@ -132,7 +152,9 @@
    "captain": false,
    "loan": false,
    "team": "Switzerland",
-   "caps": 37
+   "caps": 37,
+   "club_caps": 26,
+   "club_goals": 2
   },
   {
    "no": "15",
@@ -144,7 +166,9 @@
    "captain": false,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 10,
+   "club_goals": 0
   },
   {
    "no": "19",
@@ -156,7 +180,9 @@
    "captain": false,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 3,
+   "club_goals": 1
   },
   {
    "no": "21",
@@ -168,7 +194,9 @@
    "captain": false,
    "loan": false,
    "team": "Austria",
-   "caps": 55
+   "caps": 55,
+   "club_caps": 2,
+   "club_goals": 0
   },
   {
    "no": "22",
@@ -180,7 +208,9 @@
    "captain": true,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 238,
+   "club_goals": 17
   },
   {
    "no": "23",
@@ -192,7 +222,9 @@
    "captain": false,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 11,
+   "club_goals": 0
   },
   {
    "no": "24",
@@ -204,7 +236,9 @@
    "captain": false,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 16,
+   "club_goals": 0
   },
   {
    "no": "25",
@@ -216,7 +250,9 @@
    "captain": false,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 9,
+   "club_goals": 0
   },
   {
    "no": "26",
@@ -228,7 +264,9 @@
    "captain": false,
    "loan": false,
    "team": "Belgium",
-   "caps": 13
+   "caps": 13,
+   "club_caps": 87,
+   "club_goals": 0
   },
   {
    "no": "27",
@@ -240,7 +278,9 @@
    "captain": false,
    "loan": false,
    "team": "Colombia",
-   "caps": 51
+   "caps": 51,
+   "club_caps": 0,
+   "club_goals": 0
   },
   {
    "no": "31",
@@ -252,7 +292,9 @@
    "captain": false,
    "loan": false,
    "team": "Serbia",
-   "caps": 71
+   "caps": 71,
+   "club_caps": 78,
+   "club_goals": 5
   },
   {
    "no": "33",
@@ -264,7 +306,9 @@
    "captain": false,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
   },
   {
    "no": "34",
@@ -276,7 +320,9 @@
    "captain": false,
    "loan": false,
    "team": "Nigeria",
-   "caps": 48
+   "caps": 48,
+   "club_caps": 77,
+   "club_goals": 3
   },
   {
    "no": "37",
@@ -288,7 +334,9 @@
    "captain": false,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 14,
+   "club_goals": 2
   }
  ],
  "results": [

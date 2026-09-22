@@ -17,6 +17,7 @@ theme:
   title: 三笘薫がいるブライトンってどんなクラブ？
   question: どんなクラブなのか
   hook: 14年のあいだ、自分たちの家がありませんでした。
+  lead: 1部も、FAカップも、リーグカップも。優勝はまだゼロ。
 thumbnail:
   line1: 三笘薫と、14年の●●
   line2: ブライトン
@@ -56,10 +57,10 @@ sections:
     no_telop: true
   - image: assets/photos/pl/brighton_owner_dbf32f4e.jpg
     text: オーナーはトニー・ブルーム。2009年に会長になり、株の75%を持っています。
-  - image: assets/stats/pl_brighton_data4.png
+  - image: assets/stats/pl_brighton_cups.png
     text: 1部リーグの優勝やカップのタイトルは、まだありません。
     no_telop: true
-  - image: assets/stats/pl_brighton_data7.png
+  - image: assets/stats/pl_brighton_last.png
     text: プレミアでの最高位は、2022年から23年の**6位**。クラブの歴史で一番の順位です。
     no_telop: true
   - image: assets/stats/pl_brighton_data8.png
@@ -187,17 +188,17 @@ sections:
   - text: 今季の登録選手は30人です。
     image: assets/stats/pl_brighton_gk.png
     no_telop: true
-  - image: assets/stats/pl_brighton_gk.png
-    text: ゴールキーパーは3人。バルト・フェルブルッヘンはオランダ代表で**33試合**。
+  - image: assets/stats/pl_brighton_gk_f.png
+    text: ゴールキーパーは3人。バルト・フェルブルッヘンはオランダ代表で**33試合**。ジェイソン・スティールはリーグ戦で**35試合**。
     no_telop: true
-  - image: assets/stats/pl_brighton_df.png
-    text: ディフェンダーは10人。主将の**ルイス・ダンク**は、ここにいます。フェルディ・カドゥオールはトルコ代表で**32試合**。
+  - image: assets/stats/pl_brighton_df_f.png
+    text: ディフェンダーは10人。主将を務めるのが**ルイス・ダンク**。リーグ戦で**473試合**に出ています。フェルディ・カドゥオールはトルコ代表で**32試合**。
     no_telop: true
-  - image: assets/stats/pl_brighton_mf.png
-    text: ミッドフィールダーは12人。日本の三笘薫もここにいます。三笘薫は日本代表で**31試合**。
+  - image: assets/stats/pl_brighton_mf_f.png
+    text: ミッドフィールダーは12人。日本の三笘薫がいます。三笘薫は日本代表で**31試合**。
     no_telop: true
-  - image: assets/stats/pl_brighton_fw.png
-    text: フォワードは5人。エヴァン・ファーガソンはアイルランド代表で**26試合**。プロミス・デイヴィッドはカナダ代表で**14試合**。
+  - image: assets/stats/pl_brighton_fw_f.png
+    text: フォワードは5人。エヴァン・ファーガソンはアイルランド代表で**26試合**。ジョルジニオ・ルターはリーグ戦で**62試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Brighton_&_Hove_Albion_F.C.
@@ -206,7 +207,7 @@ sections:
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 5試合で3勝1引き分け1敗
+  telop: 5試合で3勝1引き分け1敗。3位
   narrator: 解説
   card:
     type: table
@@ -233,6 +234,8 @@ sections:
       - 3対0
   say:
   - プレミアリーグは5試合を終えて、**3勝1引き分け1敗**です。
+  - 順位は**3位**、勝ち点は**10**です。
+  - この順位を保てば、来季のチャンピオンズリーグに出られます。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Brighton_&_Hove_Albion_F.C._season
   bg: assets/backgrounds/stadium_ブライトン.png

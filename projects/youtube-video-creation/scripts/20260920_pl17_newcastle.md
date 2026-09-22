@@ -128,6 +128,8 @@ cards:
 ## オープニング
 @bg: assets/backgrounds/stadium_ニューカッスル.png
 
+キャスター: イングランド北東部から、**FAカップを6回**。
+  telop: イングランド北東部から、**FAカップを6回**
 キャスター: ニューカッスルってどんなクラブ？
   telop: ニューカッスルってどんなクラブ？
   se: assets/audio/se_pon.wav
@@ -156,13 +158,13 @@ cards:
   image: assets/photos/pl/newcastle_owner_d7f21670.jpg
 解説: 1部リーグの優勝は**4回**。FAカップ6回、リーグカップ1回、ヨーロッパのタイトルが1回あります。
   no_telop: true
-  image: assets/stats/pl_newcastle_data4.png
+  image: assets/stats/pl_newcastle_cups.png
 解説: 直近のタイトルは、2024年から25年のリーグカップです。
   no_telop: true
   image: assets/stats/pl_newcastle_data5.png
 解説: プレミアでの最高位は2位。1995年から96年と、その翌年の2回です。
   no_telop: true
-  image: assets/stats/pl_newcastle_data7.png
+  image: assets/stats/pl_newcastle_last.png
 解説: 愛称は「マグパイズ」。カササギです。白と黒の縞から来ています。
   no_telop: true
   image: assets/stats/pl_newcastle_data8.png
@@ -223,16 +225,16 @@ cards:
   image: assets/stats/pl_newcastle_gk.png
 キャスター: ゴールキーパーは4人。ニック・ポープはイングランド代表で**10試合**。
   no_telop: true
-  image: assets/stats/pl_newcastle_gk.png
-キャスター: ディフェンダーは7人。主将の**ダン・バーン**は、ここにいます。ファビアン・シェアはスイス代表で**86試合**。
+  image: assets/stats/pl_newcastle_gk_f.png
+キャスター: ディフェンダーは7人。主将を務めるのが**ダン・バーン**。リーグ戦で**153試合**に出ています。ファビアン・シェアはスイス代表で**86試合**。
   no_telop: true
-  image: assets/stats/pl_newcastle_df.png
-キャスター: ミッドフィールダーは7人。
+  image: assets/stats/pl_newcastle_df_f.png
+キャスター: ミッドフィールダーは7人。ジェイコブ・マーフィーはリーグ戦で**218試合**。ジョー・ウィロックはリーグ戦で**148試合**。
   no_telop: true
-  image: assets/stats/pl_newcastle_mf.png
-キャスター: フォワードは7人。ヨアネ・ウィサはコンゴ民主共和国代表で**43試合**。アンソニー・エランガはスウェーデン代表で**34試合**。
+  image: assets/stats/pl_newcastle_mf_f.png
+キャスター: フォワードは7人。ジョエリントンはリーグ戦で**212試合**。ヨアネ・ウィサはコンゴ民主共和国代表で**43試合**。
   no_telop: true
-  image: assets/stats/pl_newcastle_fw.png
+  image: assets/stats/pl_newcastle_fw_f.png
 
 ## 今季のここまで
 @bg: assets/backgrounds/stadium_ニューカッスル.png
@@ -241,3 +243,5 @@ cards:
   telop: プレミアリーグは5試合を終えて、**2勝2引き分け1敗**です
   source: 報道
   card: season_card
+解説: 順位は**9位**、勝ち点は**8**です。
+  telop: 順位は**9位**、勝ち点は**8**です

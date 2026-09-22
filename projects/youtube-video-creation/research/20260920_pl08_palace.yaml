@@ -18,6 +18,7 @@ theme:
   title: 冨安健洋と鎌田大地がいるクリスタル・パレスってどんなクラブ？
   question: どんなクラブなのか
   hook: 最初の大きなタイトルまで、120年かかりました。
+  lead: 南ロンドンから、**昨季のヨーロッパのカップ**。
 thumbnail:
   line1: 120年待った初タイトル
   line2: クリスタル・パレス
@@ -55,13 +56,13 @@ sections:
   - image: assets/stats/pl_palace_map.png
     text: ホームタウンはセルハースト。南ロンドン、クロイドン区です。
     no_telop: true
-  - image: assets/stats/pl_palace_data4.png
+  - image: assets/stats/pl_palace_cups.png
     text: 1部リーグの優勝はありませんが、FAカップを1回、そしてヨーロッパのタイトルを1回獲っています。
     no_telop: true
   - image: assets/stats/pl_palace_data5.png
     text: そのヨーロッパのタイトルが、昨季のカンファレンスリーグ優勝です。
     no_telop: true
-  - image: assets/stats/pl_palace_data7.png
+  - image: assets/stats/pl_palace_last.png
     text: 当時の1部での最高位は、1990年から91年の**3位**です。
     no_telop: true
   - image: assets/stats/pl_palace_data8.png
@@ -183,17 +184,17 @@ sections:
   - text: 今季の登録選手は28人です。
     image: assets/stats/pl_palace_gk.png
     no_telop: true
-  - image: assets/stats/pl_palace_gk.png
-    text: ゴールキーパーは3人。主将の**ディーン・ヘンダーソン**は、ここにいます。
+  - image: assets/stats/pl_palace_gk_f.png
+    text: ゴールキーパーは3人。主将を務めるのが**ディーン・ヘンダーソン**。リーグ戦で**96試合**に出ています。
     no_telop: true
-  - image: assets/stats/pl_palace_df.png
-    text: ディフェンダーは10人。日本の冨安健洋もここにいます。冨安健洋は日本代表で**46試合**。
+  - image: assets/stats/pl_palace_df_f.png
+    text: ディフェンダーは10人。日本の冨安健洋がいます。タイリック・ミッチェルはリーグ戦で**211試合**。
     no_telop: true
-  - image: assets/stats/pl_palace_mf.png
-    text: ミッドフィールダーは6人。日本の鎌田大地もここにいます。ジェフェルソン・レルマはコロンビア代表で**70試合**。
+  - image: assets/stats/pl_palace_mf_f.png
+    text: ミッドフィールダーは6人。日本の鎌田大地がいます。ジェフェルソン・レルマはコロンビア代表で**70試合**。
     no_telop: true
-  - image: assets/stats/pl_palace_fw.png
-    text: フォワードは9人。イスマイラ・サールはセネガル代表で**88試合**。ヨルゲン・ストランド・ラーセンはノルウェー代表で**30試合**。
+  - image: assets/stats/pl_palace_fw_f.png
+    text: フォワードは9人。イスマイラ・サールはセネガル代表で**88試合**。ジャン＝フィリップ・マテタはリーグ戦で**163試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
@@ -202,7 +203,7 @@ sections:
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 5試合で1勝1引き分け3敗
+  telop: 5試合で1勝1引き分け3敗。15位
   narrator: 解説
   card:
     type: table
@@ -229,6 +230,7 @@ sections:
       - 0対0
   say:
   - プレミアリーグは5試合を終えて、**1勝1引き分け3敗**です。
+  - 順位は**15位**、勝ち点は**4**です。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Crystal_Palace_F.C._season
   bg: assets/backgrounds/stadium_クリスタルパレス.png

@@ -1,0 +1,135 @@
+date: 2026年9月22日
+slot: japan_3
+format: news
+voice_min: 0.4
+people: [佐野海舟, 鈴木彩艶]
+theme:
+  id: jp_market_value
+  league_name: 日本代表
+  kind: other
+  topic: 日本代表
+  title: '日本代表の値段が一斉に更新。値上がりしたのは誰か'
+  hook: 31人ぶんの数字が、9月18日時点で出そろいました。
+  question: ワールドカップで誰の評価が上がったのか
+short_title: '日本代表の値段、上がったのは2人だけ'
+thumbnail:
+  photo: assets/images/20260922_value/01.jpg
+  line1: 上がったのは2人だけ
+  line2: 日本代表31人の値段
+sections:
+  - id: what
+    heading: 何が出たのか
+    tier: 報道
+    telop: 代表31人の市場価値。9月18日時点の数字
+    narrator: キャスター
+    say:
+      - text: 日本代表31人の市場価値が出ました。
+        short_only: true
+      - 9月18日時点の数字です。今月と来月の代表活動に呼ばれた31人が対象です。
+      - 市場価値は、移籍金そのものではありません。**その選手にいくら出せるかの目安**です。
+      - まず、上位5人からです。
+    sources:
+      - https://www.footballchannel.jp/2026/09/22/post1015854/
+      - https://www.footballchannel.jp/2026/09/22/post1015845/
+  - id: top5
+    heading: 上位5人
+    tier: 報道
+    telop: 1位は佐野海舟の5000万ユーロ
+    narrator: 解説
+    card:
+      type: bars
+      title: 日本代表の市場価値（万ユーロ）
+      unit: 万ユーロ
+      items:
+        - {label: "佐野海舟", value: 5000}
+        - {label: "鈴木彩艶", value: 3000}
+        - {label: "鈴木唯人", value: 2400}
+        - {label: "久保建英", value: 2000}
+        - {label: "上田綺世", value: 2000}
+    say:
+      - 1位は**佐野海舟**。**5000万ユーロ**です。
+      - 2位が**鈴木彩艶**で3000万ユーロ。3位は鈴木唯人の2400万。
+      - 4位に久保建英、5位に上田綺世が並びます。どちらも2000万です。
+      - text: 6位から10位は、伊藤洋輝、堂安律、前田大然、田中碧、中村敬斗の順でした。
+        card:
+          type: table
+          title: 6位から10位
+          columns: ["", ""]
+          rows:
+            - ["6位", "伊藤洋輝"]
+            - ["7位", "堂安律"]
+            - ["8位", "前田大然"]
+            - ["9位", "田中碧"]
+            - ["10位", "中村敬斗"]
+    sources:
+      - https://www.footballchannel.jp/2026/09/22/post1015854/
+      - https://www.footballchannel.jp/2026/09/22/post1015845/
+  - id: changed
+    main: true
+    heading: ワールドカップの前と、比べてみる
+    tier: 報道
+    telop: 上がったのは佐野海舟と鈴木彩艶の2人だけ
+    narrator: 解説
+    card:
+      type: table
+      title: 6月と9月で動いた人
+      columns: ["", "6月", "9月"]
+      rows:
+        - ["佐野海舟", "4000万", "5000万"]
+        - ["鈴木彩艶", "2000万", "3000万"]
+        - ["上田綺世", "1700万", "2000万"]
+        - ["中村敬斗", "圏外", "1200万"]
+        - ["鎌田大地", "1000万", "圏外"]
+    say:
+      - ワールドカップの前、6月の数字と比べます。
+      - "**大きく上がったのは2人だけ**でした。"
+      - 佐野海舟が4000万から**5000万**へ。鈴木彩艶が2000万から**3000万**へ。
+      - どちらも**1000万ユーロ**上がっています。
+      - 上田綺世が1700万から2000万へ、300万ぶん。中村敬斗は圏外から10位に入りました。
+      - 逆に、鎌田大地が10位から圏外に出ています。
+      - "**残りの7人は、据え置きです。**"
+    sources:
+      - https://www.footballchannel.jp/2026/06/23/post926307/
+      - https://www.footballchannel.jp/2026/09/22/post1015854/
+  - id: voices
+    heading: ネットの声
+    tier: 未確認
+    telop: この順位について言われていること
+    narrator: キャスター
+    say:
+      - text: この順位について、言われていることです。
+        short_only: true
+      - voice: ネット民
+        text: 日本の価値的には相対的にザイオンが一番価値ある選手
+      - voice: ネット民
+        text: 変えが効かなくなりそう
+      - voice: ネット民
+        text: 順位的には彩艶はもう少し上に行くかな
+      - voice: ネット民
+        text: 佐野海舟はオランダ戦からのパフォーマンスが凄かった
+      - voice: ネット民
+        text: 市場価値って実際の年俸ともリンクしないし
+      - voice: ネット民
+        text: 本人にとってもクラブにとってもほとんど意味のない指標だと思うな
+      - voice: ネット民
+        text: 自分がクラブのフロントなら、どんなにいい選手でも怪我持ちはやめとけって言う
+      - voice: ネット民
+        text: 年齢を見て安心した。次回ワールドカップが楽しみだ
+      - voice: ネット民
+        text: 身長も高い選手が増えましたね
+      - voice: ネット民
+        text: 日本のファンは彼を「佐野リカバリー」と呼ぶ
+      - voice: ネット民
+        text: 相手からボールを取り返すために生まれてきたようだ
+      - voice: ネット民
+        text: カンテのようにピッチ中を走り回る
+      - voice: ネット民
+        text: 日本人だからと過小評価して、獲る価値がないと決めつける人が多い
+      - voice: ネット民
+        text: 完全に間違っている
+      - voice: ネット民
+        text: Jリーグ時代から見ているが、全盛期のカンテを超えるポテンシャルがある
+        short_voice: true
+    sources:
+      - https://www.youtube.com/watch?v=pHNyrUgBrqs
+      - https://www.youtube.com/watch?v=GbIbl61-z0k

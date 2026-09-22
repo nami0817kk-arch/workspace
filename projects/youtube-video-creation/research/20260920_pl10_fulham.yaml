@@ -16,6 +16,7 @@ theme:
   title: フラムってどんなクラブ？
   question: どんなクラブなのか
   hook: 日本人が、このクラブの歴史を1つ動かしています。
+  lead: 創立**1879年**。ロンドンでいちばん古い、テムズ川沿い。
 thumbnail:
   line1: 欧州初制覇を決めた日本人
   line2: フラム
@@ -43,10 +44,10 @@ sections:
     no_telop: true
   - image: assets/photos/pl/fulham_owner_9cb77ec2.jpg
     text: オーナーはアメリカの実業家シャヒド・カーン。2013年からクラブを持っています。
-  - image: assets/stats/pl_fulham_data4.png
+  - image: assets/stats/pl_fulham_cups.png
     text: 1部リーグの優勝はありませんが、ヨーロッパのタイトルを1回獲っています。
     no_telop: true
-  - image: assets/stats/pl_fulham_data7.png
+  - image: assets/stats/pl_fulham_last.png
     text: プレミアでの最高位は、2008年から09年の**7位**です。
     no_telop: true
   - image: assets/stats/pl_fulham_data6.png
@@ -82,7 +83,7 @@ sections:
   say:
   - '**稲本潤一**です。2002年8月27日、ロフタス・ロードでの第2レグでした。'
   - 12分、47分、50分。**ハットトリック**です。3対1、2試合合計5対3。
-  - BBCは「稲本のハットトリックが、フラム初のヨーロッパのタイトルを決めた」と書いています。
+  - 稲本のハットトリックが、フラム初のヨーロッパのタイトルを決めた。
   - 大会の名前はインタートトカップ。この優勝で、クラブはUEFAカップの出場権も取りました。
   - 稲本は2シーズンで58試合9得点を残しています。
   - 大きな決勝に立ったのは2度。1975年のFAカップと、2010年のヨーロッパリーグです。
@@ -172,17 +173,17 @@ sections:
   - text: 今季の登録選手は25人です。
     image: assets/stats/pl_fulham_gk.png
     no_telop: true
-  - image: assets/stats/pl_fulham_gk.png
-    text: ゴールキーパーは2人。
+  - image: assets/stats/pl_fulham_gk_f.png
+    text: ゴールキーパーは2人。ベルント・レノはリーグ戦で**154試合**。
     no_telop: true
-  - image: assets/stats/pl_fulham_df.png
-    text: ディフェンダーは7人。ティモシー・カスターニュはベルギー代表で**69試合**。アントニー・ロビンソンはアメリカ代表で**58試合**。
+  - image: assets/stats/pl_fulham_df_f.png
+    text: ディフェンダーは7人。アントニー・ロビンソンはアメリカ代表で**58試合**。ティモシー・カスターニュはベルギー代表で**69試合**。
     no_telop: true
-  - image: assets/stats/pl_fulham_mf.png
-    text: ミッドフィールダーは11人。主将の**Tom Cairney**は、ここにいます。アレックス・イウォビはナイジェリア代表で**99試合**。
+  - image: assets/stats/pl_fulham_mf_f.png
+    text: ミッドフィールダーは11人。主将を務めるのが**トム・ケアニー**。リーグ戦で**340試合**に出ています。アレックス・イウォビはナイジェリア代表で**99試合**。
     no_telop: true
-  - image: assets/stats/pl_fulham_fw.png
-    text: フォワードは5人。オスカー・ボブはノルウェー代表で**26試合**。
+  - image: assets/stats/pl_fulham_fw_f.png
+    text: フォワードは5人。ロドリゴ・ムニスはリーグ戦で**106試合**。オスカー・ボブはノルウェー代表で**26試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Fulham_F.C.
@@ -191,7 +192,7 @@ sections:
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 5試合で2引き分け3敗
+  telop: 5試合で2引き分け3敗。19位
   narrator: 解説
   card:
     type: table
@@ -218,6 +219,8 @@ sections:
       - 1対1
   say:
   - プレミアリーグは5試合を終えて、**2引き分け3敗**です。
+  - 順位は**19位**、勝ち点は**2**です。
+  - いまは降格圏にいます。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Fulham_F.C._season
   bg: assets/backgrounds/stadium_フラム.png

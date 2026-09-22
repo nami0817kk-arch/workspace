@@ -54,7 +54,7 @@ TEAM_JA = {"England": "イングランド", "Scotland": "スコットランド",
            "Mali": "マリ", "Guinea": "ギニア", "Morocco": "モロッコ",
            "Algeria": "アルジェリア", "Tunisia": "チュニジア", "Egypt": "エジプト",
            "South Africa": "南アフリカ", "Japan": "日本", "South Korea": "韓国",
-           "Australia": "オーストラリア", "Israel": "イスラエル", "Georgia": "ジョージア",
+           "Australia": "オーストラリア", "New Zealand": "ニュージーランド", "Israel": "イスラエル", "Georgia": "ジョージア",
            "Albania": "アルバニア", "Kosovo": "コソボ", "Iceland": "アイスランド",
            "Finland": "フィンランド", "Romania": "ルーマニア", "Zimbabwe": "ジンバブエ",
            "DR Congo": "コンゴ民主共和国", "Uzbekistan": "ウズベキスタン",
@@ -123,8 +123,33 @@ def boards(key: str, club: str, colors: list[str], squad: list[dict], kana: dict
                 extra = ("・主将" if p.get("captain") else "") + ("・レンタル" if p.get("loan") else "")
                 args += ["--row", f"{kana.get(p['name'], p['name'])}|{NAT.get(p['nat'], p['nat'])}・{age(p['dob'])}歳{extra}|"]
             subprocess.run(args, check=True, capture_output=True)
-            made.append((out, label, len(people)))
+            # **同じ引数をとっておく**。あとで「話している選手だけ明るい板」を
+            # 作り直すのに要る。ここで作れないのは、誰を紹介するかが
+            # 読み上げを組み立てるときに決まるから
+            made.append({"out": out, "label": label, "count": len(people), "args": args})
     return made
+
+
+def lit_board(board: dict, names: list[str]) -> str:
+    """その板の、**話している選手の行だけ明るい**版を作る（2026-09-21）。
+
+    Gemini の指摘「10人ぶんの名前を出したまま読み上げても、どれがその人か
+    探せない」を受けた（ユーザーが選んだ案）。名前が1つも無ければ元の板のまま。
+    """
+    names = [n for n in names if n]
+    if not names:
+        return board["out"]
+    out = board["out"].replace(".png", "_f.png")
+    args = list(board["args"])
+    args[2] = str(ROOT / out)
+    for name in names:
+        args += ["--focus", name]
+    done = subprocess.run(args, capture_output=True, text=True, encoding="utf-8")
+    if done.returncode or "■" in (done.stderr or ""):
+        # **黙って全部沈んだ板を出さない。**当たらなければ元の板に戻す
+        print(f"　板の名前が当たりません（{board['label']}）: {done.stderr.strip()}")
+        return board["out"]
+    return out
 
 
 def build(key: str, number: int, old_file: str) -> Path:
@@ -218,6 +243,24 @@ def build(key: str, number: int, old_file: str) -> Path:
     town_map = f"assets/stats/pl_{key}_map.png"
     if not (ROOT / town_map).exists():
         town_map = ""
+    # **優勝回数の話ではトロフィーの板を出す**（2026-09-21 指示。見本はアーセナルの
+    # トロフィーキャビネット。画像は使わず tools/trophies.py で描いている）
+    cups = f"assets/stats/pl_{key}_cups.png"
+    if not (ROOT / cups).exists():
+        cups = ""
+    # **昨季の順位の話では、昨季の最終順位表を出す**（2026-09-21 指示。見本は
+    # 順位表アプリの画面。画像は使わず tools/plast.py で描いている）。
+    # **20クラブで同じ表を使い、明るい行だけが違う**ので、自分の順位が
+    # 他の19クラブの中のどこかとして見える
+    last = f"assets/stats/pl_{key}_last.png"
+    if not (ROOT / last).exists():
+        last = ""
+    # **昇格したクラブは昨季の表にいない**（2026-09-21。コヴェントリー・ハル・
+    # イプスウィッチ）。そのまま出すと20クラブの表が出るのに**どの行も光らない**
+    if last:
+        table = json.loads((DATA / "last_season.json").read_text(encoding="utf-8"))["table"]
+        if not any(r.get("key") == key for r in table):
+            last = ""
     # **オーナーと選手の話では顔写真を出す**（2026-09-20 指示）。
     # tools/plfaces.py が Wikipedia の記事の代表画像から集めたもの。
     # **自由に使えるものが無い人は写真無し**（作らない・探し回らない）
@@ -236,6 +279,18 @@ def build(key: str, number: int, old_file: str) -> Path:
             return town_map, True
         if i is not None and owner_face and str(tiles[i][0]).startswith("オーナー"):
             return owner_face, False
+        if i is not None and cups and str(tiles[i][0]).startswith("タイトル歴"):
+            return cups, True
+        # **「タイトル歴」を読み上げないクラブがある**（2026-09-21。ブレントフォードと
+        # ハルは「直近のタイトル」の行で「大きなタイトルはまだありません」と言っている）。
+        # そのクラブだけ、こちらの行にトロフィーの板を当てる。両方あるクラブでは
+        # 板が2行続いて12秒を超えるので、**片方の行が無いときだけ**
+        if (i is not None and cups and str(tiles[i][0]).startswith("直近のタイトル")
+                and not any(str(tiles[j][0]).startswith("タイトル歴")
+                            for j in picks if j is not None)):
+            return cups, True
+        if i is not None and last and str(tiles[i][0]).startswith("プレミア最高位"):
+            return last, True
         return board_for(i), True
 
     picks = list(ov.get("data_focus") or [])
@@ -249,6 +304,17 @@ def build(key: str, number: int, old_file: str) -> Path:
         at = min(2, len(ov["data"]))
         ov = dict(ov, data=list(ov["data"][:at]) + [line] + list(ov["data"][at:]))
         picks = picks[:at] + [town_i] + picks[at:]
+    # **昨季の順位表を必ず出す**（2026-09-21）。「プレミア最高位」のタイルを
+    # 読み上げに入れていないクラブが多く、せっかく作った順位表の板が出ないままだった。
+    # ホームタウンの地図と同じ直し方で、1行つくって足す
+    last_i = next((i for i, x in enumerate(tiles) if str(x[0]).startswith("プレミア最高位")), None)
+    if ov.get("data") and last and last_i is not None and last_i not in picks:
+        table = json.loads((DATA / "last_season.json").read_text(encoding="utf-8"))["table"]
+        me = next((r for r in table if r.get("key") == key), None)
+        if me:
+            ov = dict(ov, data=list(ov["data"]) + [f"昨季は**{me['rank']}位**。勝ち点は{me['points']}でした。"])
+            picks = picks + [last_i]
+
     if ov.get("data"):
         for n, text in enumerate(ov["data"]):
             i = focus_of(text, picks[n] if n < len(picks) else None)
@@ -322,11 +388,12 @@ def build(key: str, number: int, old_file: str) -> Path:
     # 節の頭で名前だけ言うと、画面は前の節の写真（名選手の顔）が残ったままで、
     # **別人の顔を見せながら主将の名前を読む**ことになっていた。
     # 頭の行にも板を当てて、前の節の写真が流れ込まないようにする
-    first_board = squad_boards[0][0] if squad_boards else ""
+    first_board = squad_boards[0]["out"] if squad_boards else ""
     ssay = [{"text": f"今季の登録選手は{total}人です。", "image": first_board, "no_telop": True}
             if first_board else f"今季の登録選手は{total}人です。"]
     seen = set()
-    for out, label, n in squad_boards:
+    for board in squad_boards:
+        out, label, n = board["out"], board["label"], board["count"]
         if label in seen:
             ssay.append({"image": out, "text": f"{label}の続きです。", "no_telop": True})
             continue
@@ -338,7 +405,7 @@ def build(key: str, number: int, old_file: str) -> Path:
         tail = f"日本の{jp[0]}がいます。" if jp else ""
         if cap and dict(POS).get(cap["pos"]) == label:
             cap_name = kana.get(cap["name"], cap["name"])
-            more = f"クラブで**{cap['club_caps']}試合**に出ています。" if (cap.get("club_caps") or 0) >= 50 else ""
+            more = f"リーグ戦で**{cap['club_caps']}試合**に出ています。" if (cap.get("club_caps") or 0) >= 50 else ""
             tail += f"主将を務めるのが**{cap_name}**。{more}"
         # **1枚の板は12秒まで**（検査の上限）。主将の話を足す位置は、
         # 有名な選手を1人に減らして収める
@@ -350,15 +417,23 @@ def build(key: str, number: int, old_file: str) -> Path:
 
         def about(p):
             """その選手について言えることを、1〜2個だけ。"""
+            # **手で書いた一文があれば、それを使う**（2026-09-21）。移籍金のように
+            # Wikipedia の infobox からは取れないが、**視聴者がいちばん反応する数字**を
+            # 入れるための口。<key>_say.yaml の `squad_about`（選手名→文）
+            said = (ov.get("squad_about") or {}).get(kana.get(p["name"], p["name"]))
+            if said:
+                return said
             bits = []
             if (p.get("caps") or 0) >= CAPS_MIN and p.get("team"):
                 bits.append(f"{TEAM_JA.get(p['team'], p['team'])}代表で**{p['caps']}試合**")
             if (p.get("club_caps") or 0) >= 80:
-                bits.append(f"クラブで**{p['club_caps']}試合**")
+                bits.append(f"リーグ戦で**{p['club_caps']}試合**")
             if (p.get("club_goals") or 0) >= 15:
-                bits.append(f"**{p['club_goals']}得点**")
+                # **「16得点」だけでは何の得点か分からない**（2026-09-21）。
+                # 他の選手が「◯◯代表で◯試合」なので、耳では通算とも今季とも取れる
+                bits.append(f"リーグ戦で**{p['club_goals']}得点**")
             if not bits and (p.get("club_caps") or 0) >= 30:
-                bits.append(f"クラブで**{p['club_caps']}試合**")
+                bits.append(f"リーグ戦で**{p['club_caps']}試合**")
             if not bits:
                 return ""
             return f"{kana.get(p['name'], p['name'])}は" + bits[0] + "。"
@@ -367,7 +442,10 @@ def build(key: str, number: int, old_file: str) -> Path:
                  if about(x) and not (cap and x["name"] == cap["name"])][:room]
         note = "".join(about(p) for p in known)
         extra = (ov.get("squad") or {}).get(label, "")
-        ssay.append({"image": out, "text": f"{label}は{n}人。{tail}{note}{extra}",
+        # **読み上げで名前を出す人だけ、板の行を明るくする**
+        lit = ([jp[0]] if jp else []) + ([cap_name] if cap and dict(POS).get(cap["pos"]) == label else [])
+        lit += [kana.get(p["name"], p["name"]) for p in known]
+        ssay.append({"image": lit_board(board, lit), "text": f"{label}は{n}人。{tail}{note}{extra}",
                      "no_telop": True})
     sections.append(sec(id="squad", heading="今季の登録選手", tier="報道", telop="今季の登録選手",
                         narrator="キャスター", say=ssay, sources=[wiki]))
@@ -418,7 +496,9 @@ def build(key: str, number: int, old_file: str) -> Path:
                   # **宿敵の節を落としたら、宿敵を約束する引きが残った**（2026-09-20）。
                   # 「宿敵は、同じ街の赤いクラブです」と言って、その話を一度もしない。
                   # 中身に残っている話へ書き換える（<key>_say.yaml の `hook`）
-                  "hook": ov.get("hook") or old["theme"].get("hook", "")},
+                  "hook": ov.get("hook") or old["theme"].get("hook", ""),
+                  # **クラブを表す一言**（2026-09-21 指示）。タイトルより前に読む
+                  "lead": ov.get("opening", "")},
         # **サムネの文字は台本に合わせて書き直す**（2026-09-20）。旧台本のものを
         # そのまま持ってくると、ボーンマスが「FAカップで1人9得点」のままになった。
         # **作り直した台本にその話は無い。**約束したことを中で答えられない

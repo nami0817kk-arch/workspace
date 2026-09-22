@@ -132,6 +132,8 @@ cards:
 ## オープニング
 @bg: assets/backgrounds/stadium_サンダーランド.png
 
+キャスター: **1部リーグを6回**。その歴史を持つ、北東部の街。
+  telop: **1部リーグを6回**。その歴史を持つ、北東部の街
 キャスター: サンダーランドってどんなクラブ？
   telop: サンダーランドってどんなクラブ？
   se: assets/audio/se_pon.wav
@@ -160,13 +162,13 @@ cards:
   image: assets/stats/pl_sunderland_data3.png
 解説: 1部リーグの優勝は**6回**。FAカップも2回獲っています。
   no_telop: true
-  image: assets/stats/pl_sunderland_data4.png
+  image: assets/stats/pl_sunderland_cups.png
 解説: 1998年から99年には、勝ち点**105**。当時のリーグの最多記録でした。
   no_telop: true
   image: assets/stats/pl_sunderland_data6.png
 解説: プレミアでの最高位は**7位**。2000年から01年、そして昨季の2025年から26年です。
   no_telop: true
-  image: assets/stats/pl_sunderland_data7.png
+  image: assets/stats/pl_sunderland_last.png
 解説: 愛称は「ブラック・キャッツ」。黒猫です。
   no_telop: true
   image: assets/stats/pl_sunderland_data8.png
@@ -224,18 +226,18 @@ cards:
   no_telop: true
   source: 報道
   image: assets/stats/pl_sunderland_gk.png
-キャスター: ゴールキーパーは3人。
+キャスター: ゴールキーパーは3人。ロビン・ルーフスはリーグ戦で**39試合**。
   no_telop: true
-  image: assets/stats/pl_sunderland_gk.png
-キャスター: ディフェンダーは9人。トマ・ムニエはベルギー代表で**83試合**。レイニウドはMozambique代表で**56試合**。
+  image: assets/stats/pl_sunderland_gk_f.png
+キャスター: ディフェンダーは9人。トマ・ムニエはベルギー代表で**83試合**。トライ・ヒュームは北アイルランド代表で**26試合**。
   no_telop: true
-  image: assets/stats/pl_sunderland_df.png
-キャスター: ミッドフィールダーは9人。主将の**グラニト・ジャカ**は、ここにいます。アラン・ブラウンはアイルランド代表で**39試合**。
+  image: assets/stats/pl_sunderland_df_f.png
+キャスター: ミッドフィールダーは9人。主将を務めるのが**グラニト・ジャカ**。ルーク・オナイエンはリーグ戦で**277試合**。
   no_telop: true
-  image: assets/stats/pl_sunderland_mf.png
-キャスター: フォワードは8人。ニルソン・アングロはエクアドル代表で**18試合**。ブライアン・ブロベイはオランダ代表で**16試合**。
+  image: assets/stats/pl_sunderland_mf_f.png
+キャスター: フォワードは8人。ウィルソン・イシドールはリーグ戦で**19得点**。ブライアン・ブロベイはオランダ代表で**16試合**。
   no_telop: true
-  image: assets/stats/pl_sunderland_fw.png
+  image: assets/stats/pl_sunderland_fw_f.png
 
 ## 今季のここまで
 @bg: assets/backgrounds/stadium_サンダーランド.png
@@ -244,3 +246,5 @@ cards:
   telop: プレミアリーグは5試合を終えて、**1勝1引き分け3敗**です
   source: 報道
   card: season_card
+解説: 順位は**14位**、勝ち点は**4**です。
+  telop: 順位は**14位**、勝ち点は**4**です

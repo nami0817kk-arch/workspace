@@ -12,7 +12,9 @@
    "captain": false,
    "loan": false,
    "team": "Netherlands",
-   "caps": 33
+   "caps": 33,
+   "club_caps": 100,
+   "club_goals": 0
   },
   {
    "no": "3",
@@ -24,7 +26,9 @@
    "captain": false,
    "loan": false,
    "team": "Algeria",
-   "caps": 21
+   "caps": 21,
+   "club_caps": 0,
+   "club_goals": 0
   },
   {
    "no": "4",
@@ -36,7 +40,9 @@
    "captain": false,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 3,
+   "club_goals": 0
   },
   {
    "no": "5",
@@ -48,7 +54,9 @@
    "captain": true,
    "loan": false,
    "team": "England",
-   "caps": 6
+   "caps": 6,
+   "club_caps": 473,
+   "club_goals": 28
   },
   {
    "no": "7",
@@ -60,7 +68,9 @@
    "captain": false,
    "loan": false,
    "team": "Japan",
-   "caps": 31
+   "caps": 31,
+   "club_caps": 113,
+   "club_goals": 23
   },
   {
    "no": "8",
@@ -72,7 +82,9 @@
    "captain": false,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 67,
+   "club_goals": 14
   },
   {
    "no": "9",
@@ -84,7 +96,9 @@
    "captain": false,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 9,
+   "club_goals": 1
   },
   {
    "no": "10",
@@ -96,7 +110,9 @@
    "captain": false,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 62,
+   "club_goals": 8
   },
   {
    "no": "11",
@@ -108,7 +124,9 @@
    "captain": false,
    "loan": false,
    "team": "Gambia",
-   "caps": 20
+   "caps": 20,
+   "club_caps": 66,
+   "club_goals": 9
   },
   {
    "no": "12",
@@ -120,7 +138,9 @@
    "captain": false,
    "loan": true,
    "team": "Canada",
-   "caps": 14
+   "caps": 14,
+   "club_caps": 2,
+   "club_goals": 0
   },
   {
    "no": "13",
@@ -132,7 +152,9 @@
    "captain": false,
    "loan": false,
    "team": "Germany",
-   "caps": 19
+   "caps": 19,
+   "club_caps": 24,
+   "club_goals": 4
   },
   {
    "no": "14",
@@ -144,7 +166,9 @@
    "captain": false,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 2,
+   "club_goals": 1
   },
   {
    "no": "15",
@@ -156,7 +180,9 @@
    "captain": false,
    "loan": false,
    "team": "Ghana",
-   "caps": 3
+   "caps": 3,
+   "club_caps": 3,
+   "club_goals": 0
   },
   {
    "no": "19",
@@ -168,7 +194,9 @@
    "captain": false,
    "loan": false,
    "team": "Greece",
-   "caps": 4
+   "caps": 4,
+   "club_caps": 26,
+   "club_goals": 4
   },
   {
    "no": "20",
@@ -180,7 +208,9 @@
    "captain": false,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 5,
+   "club_goals": 0
   },
   {
    "no": "21",
@@ -192,7 +222,9 @@
    "captain": false,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 12,
+   "club_goals": 0
   },
   {
    "no": "23",
@@ -204,7 +236,9 @@
    "captain": false,
    "loan": false,
    "team": "England",
-   "caps": 0
+   "caps": 0,
+   "club_caps": 35,
+   "club_goals": 0
   },
   {
    "no": "24",
@@ -216,7 +250,9 @@
    "captain": false,
    "loan": false,
    "team": "Turkey",
-   "caps": 32
+   "caps": 32,
+   "club_caps": 47,
+   "club_goals": 2
   },
   {
    "no": "25",
@@ -228,7 +264,9 @@
    "captain": false,
    "loan": false,
    "team": "Paraguay",
-   "caps": 28
+   "caps": 28,
+   "club_caps": 53,
+   "club_goals": 6
   },
   {
    "no": "26",
@@ -240,7 +278,9 @@
    "captain": false,
    "loan": false,
    "team": "Sweden",
-   "caps": 25
+   "caps": 25,
+   "club_caps": 70,
+   "club_goals": 6
   },
   {
    "no": "27",
@@ -252,7 +292,9 @@
    "captain": false,
    "loan": false,
    "team": "Netherlands",
-   "caps": 15
+   "caps": 15,
+   "club_caps": 53,
+   "club_goals": 3
   },
   {
    "no": "28",
@@ -264,7 +306,9 @@
    "captain": false,
    "loan": false,
    "team": "Republic of Ireland",
-   "caps": 26
+   "caps": 26,
+   "club_caps": 60,
+   "club_goals": 13
   },
   {
    "no": "29",
@@ -276,7 +320,9 @@
    "captain": false,
    "loan": false,
    "team": "Belgium",
-   "caps": 25
+   "caps": 25,
+   "club_caps": 35,
+   "club_goals": 3
   },
   {
    "no": "30",
@@ -288,7 +334,9 @@
    "captain": false,
    "loan": false,
    "team": "Austria",
-   "caps": 4
+   "caps": 4,
+   "club_caps": 1,
+   "club_goals": 0
   },
   {
    "no": "33",
@@ -300,7 +348,9 @@
    "captain": false,
    "loan": false,
    "team": "Denmark",
-   "caps": 6
+   "caps": 6,
+   "club_caps": 29,
+   "club_goals": 3
   },
   {
    "no": "35",
@@ -312,7 +362,9 @@
    "captain": false,
    "loan": false,
    "team": "Ivory Coast",
-   "caps": 0
+   "caps": 0,
+   "club_caps": 5,
+   "club_goals": 2
   },
   {
    "no": "36",
@@ -324,7 +376,9 @@
    "captain": false,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 1,
+   "club_goals": 0
   },
   {
    "no": "38",
@@ -336,7 +390,9 @@
    "captain": false,
    "loan": false,
    "team": "",
-   "caps": null
+   "caps": null,
+   "club_caps": 0,
+   "club_goals": 0
   },
   {
    "no": "39",
@@ -348,7 +404,9 @@
    "captain": false,
    "loan": false,
    "team": "Nigeria",
-   "caps": 2
+   "caps": 2,
+   "club_caps": 0,
+   "club_goals": 0
   },
   {
    "no": "44",
@@ -360,7 +418,9 @@
    "captain": false,
    "loan": false,
    "team": "Croatia",
-   "caps": 6
+   "caps": 6,
+   "club_caps": 5,
+   "club_goals": 1
   }
  ],
  "results": [

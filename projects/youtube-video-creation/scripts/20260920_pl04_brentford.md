@@ -4,7 +4,7 @@ format: news
 voice_min: 0.0
 short_title: ブレントフォードってどんなクラブ？
 topic: ブレントフォード
-thumbnail_line1: 酒場の投票で決まった
+thumbnail_line1: 9回続けて負けた、その10回目
 thumbnail_line2: ブレントフォード
 thumbnail_tags: []
 thumbnail_alt: []
@@ -124,6 +124,8 @@ cards:
 ## オープニング
 @bg: assets/backgrounds/stadium_ブレントフォード.png
 
+キャスター: 収容**1万7250人**。20クラブで2番目に小さいスタジアム。
+  telop: 収容**1万7250人**。20クラブで2番目に小さいスタジアム
 キャスター: ブレントフォードってどんなクラブ？
   telop: ブレントフォードってどんなクラブ？
   se: assets/audio/se_pon.wav
@@ -152,10 +154,10 @@ cards:
   image: assets/stats/pl_brentford_data3.png
 解説: 大きなタイトルはまだありません。いちばん大きな一歩は2021年、昇格プレーオフに勝って初めてプレミアに上がったことです。
   no_telop: true
-  image: assets/stats/pl_brentford_data5.png
+  image: assets/stats/pl_brentford_cups.png
 解説: プレミアでの最高位は、2022年から23年の**9位**です。
   no_telop: true
-  image: assets/stats/pl_brentford_data7.png
+  image: assets/stats/pl_brentford_last.png
 解説: 愛称は「ビーズ」。蜂です。
   no_telop: true
   image: assets/stats/pl_brentford_data8.png
@@ -167,8 +169,8 @@ cards:
   telop: このクラブは、一度消えかけています
   source: 背景
   card: history_card
-解説: 1967年、QPRへの身売りの話がまとまりかけました。止めたのはサポーターです。抗議と寄付で、話は白紙に戻りました。
-  telop: 1967年、QPRへの身売りの話がまとまりかけました。止めたのはサポーターです。抗議と寄付で、話は白紙に戻りました
+解説: 1967年、クイーンズ・パーク・レンジャーズへの身売りの話がまとまりかけました。止めたのはサポーターです。抗議と寄付で、話は白紙に戻りました。
+  telop: 1967年、クイーンズ・パーク・レンジャーズへの身売りの話がまとまりかけました。止めたのはサポーターです。抗議と寄付で、話は白紙に戻りました
 解説: そしてもうひとつ、長く続いた記録があります。
   telop: そしてもうひとつ、長く続いた記録があります
 解説: **プレーオフで9回続けて敗れた。**これはリーグの記録です。
@@ -212,16 +214,16 @@ cards:
   image: assets/stats/pl_brentford_gk.png
 キャスター: ゴールキーパーは3人。クィービーン・ケレハーはアイルランド代表で**32試合**。ハウコン・ヴァルディマルソンはアイスランド代表で**22試合**。
   no_telop: true
-  image: assets/stats/pl_brentford_gk.png
-キャスター: ディフェンダーは9人。主将の**ネイサン・コリンズ**は、ここにいます。クリストファー・アイエルはノルウェー代表で**57試合**。
+  image: assets/stats/pl_brentford_gk_f.png
+キャスター: ディフェンダーは9人。主将を務めるのが**ネイサン・コリンズ**。リーグ戦で**105試合**に出ています。クリストファー・アイエルはノルウェー代表で**57試合**。
   no_telop: true
-  image: assets/stats/pl_brentford_df.png
-キャスター: ミッドフィールダーは9人。ミケル・ダムスゴーはデンマーク代表で**40試合**。マティアス・イェンセンはデンマーク代表で**32試合**。
+  image: assets/stats/pl_brentford_df_f.png
+キャスター: ミッドフィールダーは9人。マティアス・イェンセンはデンマーク代表で**32試合**。ミケル・ダムスゴーはデンマーク代表で**40試合**。
   no_telop: true
-  image: assets/stats/pl_brentford_mf.png
-キャスター: フォワードは7人。ダンゴ・ワタラはブルキナファソ代表で**44試合**。
+  image: assets/stats/pl_brentford_mf_f.png
+キャスター: フォワードは7人。ダンゴ・ワタラはブルキナファソ代表で**44試合**。ケヴィン・シャーデはリーグ戦で**88試合**。
   no_telop: true
-  image: assets/stats/pl_brentford_fw.png
+  image: assets/stats/pl_brentford_fw_f.png
 
 ## 今季のここまで
 @bg: assets/backgrounds/stadium_ブレントフォード.png
@@ -230,3 +232,7 @@ cards:
   telop: プレミアリーグは5試合を終えて、**2勝3引き分け**です
   source: 報道
   card: season_card
+解説: 順位は**4位**、勝ち点は**9**です。
+  telop: 順位は**4位**、勝ち点は**9**です
+解説: この順位を保てば、来季のチャンピオンズリーグに出られます。
+  telop: この順位を保てば、来季のチャンピオンズリーグに出られます

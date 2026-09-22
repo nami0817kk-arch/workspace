@@ -54,10 +54,12 @@ cards:
     - ''
     - ''
     rows:
-    - - 経営破綻
-      - 2008年から2009年にかけて
-    - - 罰則
-      - 勝ち点17の剥奪
+    - - 借金
+      - 約400万ポンド
+    - - リーグの構え
+      - 参加を認めないと通告
+    - - 認めた条件
+      - 勝ち点マイナス17（4部）
   history2_card:
     type: table
     title: 31歳の監督
@@ -91,9 +93,9 @@ cards:
     - 残したもの
     rows:
     - &id001
-      - スティーヴ・フレッチャー
-      - 1992-2013
-      - クラブ最多の726試合出場
+      - カラム・ウィルソン
+      - 2014-2020
+      - 初のプレミア昇格の得点源
   legends2_card:
     type: table
     title: 1990年以降の名選手
@@ -104,9 +106,9 @@ cards:
     rows:
     - *id001
     - &id002
-      - カラム・ウィルソン
-      - 2014-2020
-      - 初のプレミア昇格の得点源
+      - ライアン・フレイザー
+      - 2013-2020
+      - 1季14アシスト。リーグ183試合
   legends3_card:
     type: table
     title: 1990年以降の名選手
@@ -117,9 +119,9 @@ cards:
     rows:
     - *id001
     - *id002
-    - - エディ・ハウ
-      - 選手・監督
-      - 4部からプレミアへ導いた
+    - - ブレット・ピットマン
+      - 2005-2015
+      - リーグ267試合96得点。どん底も優勝も
   season_card:
     type: table
     title: プレミアリーグの結果
@@ -148,6 +150,8 @@ cards:
 ## オープニング
 @bg: assets/backgrounds/stadium_ボーンマス.png
 
+キャスター: プレミアリーグで、いちばん小さなスタジアム。
+  telop: プレミアリーグで、いちばん小さなスタジアム
 キャスター: ボーンマスってどんなクラブ？
   telop: ボーンマスってどんなクラブ？
   se: assets/audio/se_pon.wav
@@ -161,84 +165,90 @@ cards:
 解説: このクラブの、基本のデータです。
   only: short
   telop: このクラブの、基本のデータです
-解説: 創立は**1899年**。前身はボスコム・セント・ジョンズというクラブです。
+解説: 創立は**1899年**。前身はボスコム・セント・ジョンズ・インスティチュートです。
   no_telop: true
   source: 背景
   image: assets/stats/pl_bournemouth_data0.png
-解説: 本拠地はディーン・コート。収容は1万2357人と、プレミアでもかなり小さなスタジアムです。
-  telop: 本拠地はディーン・コート。収容は1万2357人と、プレミアでもかなり小さなスタジアムです
-  image: assets/backgrounds/stadium_ボーンマス_in.png
-解説: ホームタウンは、イングランド南部ドーセット州の海沿いの町ボーンマス。
-  no_telop: true
-  image: assets/stats/pl_bournemouth_map.png
-解説: オーナーはアメリカのビル・フォーリー。2022年からクラブを持っています。
-  telop: オーナーはアメリカのビル・フォーリー。2022年からクラブを持っています
-  image: assets/photos/pl/bournemouth_owner_cf0347c5.jpg
-解説: 1部リーグの優勝もカップのタイトルも、まだありません。直近のタイトルは2014年から15年の2部優勝です。
-  no_telop: true
-  image: assets/stats/pl_bournemouth_data4.png
-解説: そのかわり、昨季はプレミアリーグで**6位**。クラブ史上最高の順位で、初めてヨーロッパへの切符をつかみました。
-  no_telop: true
-  image: assets/stats/pl_bournemouth_data7.png
-解説: 愛称は「ザ・チェリーズ」。さくらんぼ、という意味です。
+解説: 愛称は「ザ・チェリーズ」。さくらんぼです。
   no_telop: true
   image: assets/stats/pl_bournemouth_data8.png
+解説: 本拠地はディーン・コート。**1万2357人**。マンチェスター・ユナイテッドの**6分の1**です。
+  telop: 本拠地はディーン・コート。**1万2357人**。マンチェスター・ユナイテッドの**6分の1**です
+  image: assets/backgrounds/stadium_ボーンマス_in.png
+解説: 町はイングランド南部、ドーセット州の海沿いです。
+  no_telop: true
+  image: assets/stats/pl_bournemouth_map.png
+解説: オーナーはアメリカのビル・フォーリー。2022年に買収。**1億ポンド超**と報じられました。
+  telop: オーナーはアメリカのビル・フォーリー。2022年に買収。**1億ポンド超**と報じられました
+  image: assets/photos/pl/bournemouth_owner_cf0347c5.jpg
+解説: 共同オーナーには、ハリウッド俳優の**マイケル・B・ジョーダン**もいます。
+  telop: 共同オーナーには、ハリウッド俳優の**マイケル・B・ジョーダン**もいます
+  image: assets/photos/pl/bournemouth_owner_07f09a4e.jpg
+解説: 1部の優勝も、FAカップも、リーグカップもゼロ。20クラブで3つとも無いのは**5クラブ**です。
+  no_telop: true
+  image: assets/stats/pl_bournemouth_cups.png
+解説: それが昨季、**6位**。クラブ史上最高の順位でした。
+  no_telop: true
+  image: assets/stats/pl_bournemouth_last.png
 
 ## 歩んできた道
 @bg: assets/backgrounds/stadium_ボーンマス.png
 
-解説: このクラブの物語は、消えかけたところから始まります。
-  telop: このクラブの物語は、消えかけたところから始まります
+解説: 話は、消えかけたところから始まります。
+  telop: 話は、消えかけたところから始まります
   source: 背景
   card: history_card
-解説: 2008年から2009年にかけて経営破綻に追い込まれ、リーグの倒産規定に従わなかったとして勝ち点17を差し引かれました。
-  telop: 2008年から2009年にかけて経営破綻に追い込まれ、リーグの倒産規定に従わなかったとして勝ち点17を差し引かれました
+解説: 2008年、借金は**400万ポンド**。クラブは倒産寸前でした。
+  telop: 2008年、借金は**400万ポンド**。クラブは倒産寸前でした
+解説: リーグは、参加そのものを認めないと言いました。認めた条件が**勝ち点マイナス17**。当時は4部です。
+  telop: リーグは、参加そのものを認めないと言いました。認めた条件が**勝ち点マイナス17**。当時は4部です
 
 ## 31歳の監督
 @bg: assets/backgrounds/stadium_ボーンマス.png
 
-解説: ここで監督を引き受けたのが、31歳のエディ・ハウです。フットボールリーグで最も若い監督でした。
-  telop: ここで監督を引き受けたのが、31歳のエディ・ハウです。フットボールリーグで最も若い監督でした
+解説: 引き受けたのが**31歳のエディ・ハウ**。リーグで最も若い監督でした。
+  telop: 引き受けたのが**31歳のエディ・ハウ**。リーグで最も若い監督でした
   source: 背景
   card: history2_card
-解説: それでもボーンマスは落ちませんでした。
-  telop: それでもボーンマスは落ちませんでした
+解説: それでも、4部に残りました。
+  telop: それでも、4部に残りました
 
 ## そこから18年
 @bg: assets/backgrounds/stadium_ボーンマス.png
 
-解説: 6年後の2015年、チャンピオンシップを制して、クラブ史上はじめてイングランドの1部に上がります。
-  telop: 6年後の2015年、チャンピオンシップを制して、クラブ史上はじめてイングランドの1部に上がります
+解説: 6年後の2015年、2部を制して**初めて1部**へ。
+  telop: 6年後の2015年、2部を制して**初めて1部**へ
   source: 背景
   card: history3_card
-解説: そして昨季はリーグ6位、勝ち点57。クラブ史上はじめて、ヨーロッパの舞台への出場権をつかみました。
-  telop: そして昨季はリーグ6位、勝ち点57。クラブ史上はじめて、ヨーロッパの舞台への出場権をつかみました
+解説: そして昨季、**初めてヨーロッパの切符**をつかみました。
+  telop: そして昨季、**初めてヨーロッパの切符**をつかみました
 
 ## このクラブを語る3人
 @bg: assets/backgrounds/stadium_ボーンマス.png
 
-キャスター: スティーヴ・フレッチャーは、クラブ史上最多の**726試合**に出場した選手です。
-  telop: スティーヴ・フレッチャーは、クラブ史上最多の**726試合**に出場した選手です
+キャスター: カラム・ウィルソンはリーグ**20得点**。クラブ初のプレミア昇格を決めました。
+  telop: カラム・ウィルソンはリーグ**20得点**。クラブ初のプレミア昇格を決めました
   source: 背景
   card: legends_card
+  image: assets/photos/pl/bournemouth_legend_224f5148.jpg
 
 ## このクラブを語る3人（2人目）
 @bg: assets/backgrounds/stadium_ボーンマス.png
 
-キャスター: カラム・ウィルソンは、2014年から15年にリーグ20得点。クラブ初のプレミア昇格を決めました。
-  telop: カラム・ウィルソンは、2014年から15年にリーグ20得点。クラブ初のプレミア昇格を決めました
+キャスター: ライアン・フレイザーは2018年から19年に**14アシスト**。リーグ戦で183試合です。
+  telop: ライアン・フレイザーは2018年から19年に**14アシスト**。リーグ戦で183試合です
   source: 背景
   card: legends2_card
-  image: assets/photos/pl/bournemouth_legend_224f5148.jpg
+  image: assets/photos/pl/bournemouth_legend_9f069e9f.jpg
 
 ## このクラブを語る3人（3人目）
 @bg: assets/backgrounds/stadium_ボーンマス.png
 
-キャスター: エディ・ハウは選手として長くプレーし、のちに監督として、4部にいたクラブを**プレミアまで**連れていきました。
-  telop: エディ・ハウは選手として長くプレーし、のちに監督として、4部にいたクラブを**プレミアまで**連れていきました
+キャスター: ブレット・ピットマンはリーグ戦で**267試合96得点**。勝ち点17を引かれた季も、2部を制した季もいました。
+  telop: ブレット・ピットマンはリーグ戦で**267試合96得点**。勝ち点17を引かれた季も、2部を制した季もいました
   source: 背景
   card: legends3_card
-  image: assets/photos/pl/bournemouth_legend_c837613d.jpg
+  image: assets/photos/pl/bournemouth_legend_2f36ed97.jpg
 
 ## 今季の登録選手
 @bg: assets/backgrounds/stadium_ボーンマス.png
@@ -249,16 +259,16 @@ cards:
   image: assets/stats/pl_bournemouth_gk.png
 キャスター: ゴールキーパーは3人。ジョルジェ・ペトロヴィッチはセルビア代表で**12試合**。
   no_telop: true
-  image: assets/stats/pl_bournemouth_gk.png
-キャスター: ディフェンダーは10人。主将を務めるのが**アダム・スミス**。クラブで**350試合**に出ています。アントニオ・シウヴァはポルトガル代表で**20試合**。
+  image: assets/stats/pl_bournemouth_gk_f.png
+キャスター: ディフェンダーは10人。主将を務めるのが**アダム・スミス**。リーグ戦で**350試合**に出ています。アントニオ・シウヴァはポルトガル代表で**20試合**。
   no_telop: true
-  image: assets/stats/pl_bournemouth_df.png
+  image: assets/stats/pl_bournemouth_df_f.png
 キャスター: ミッドフィールダーは8人。ライアン・クリスティはスコットランド代表で**71試合**。デイヴィッド・ブルックスはウェールズ代表で**45試合**。
   no_telop: true
-  image: assets/stats/pl_bournemouth_mf.png
-キャスター: フォワードは7人。ジャスティン・クライファートはオランダ代表で**14試合**。エヴァニウソンは**16得点**。
+  image: assets/stats/pl_bournemouth_mf_f.png
+キャスター: フォワードは7人。ジャスティン・クライファートはオランダ代表で**14試合**。エヴァニウソンは**クラブ最高額の4020万ポンド**で加入しました。
   no_telop: true
-  image: assets/stats/pl_bournemouth_fw.png
+  image: assets/stats/pl_bournemouth_fw_f.png
 
 ## 今季のここまで
 @bg: assets/backgrounds/stadium_ボーンマス.png
@@ -269,3 +279,7 @@ cards:
   card: season_card
 解説: 順位は**17位**、勝ち点は**3**です。
   telop: 順位は**17位**、勝ち点は**3**です
+解説: ヨーロッパリーグの初戦は、久保建英のいるレアル・ソシエダでした。
+  telop: ヨーロッパリーグの初戦は、久保建英のいるレアル・ソシエダでした
+解説: アウェーで**2対1**。クラブにとって、初めての欧州の試合でした。
+  telop: アウェーで**2対1**。クラブにとって、初めての欧州の試合でした

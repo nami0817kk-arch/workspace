@@ -16,6 +16,7 @@ theme:
   title: サンダーランドってどんなクラブ？
   question: どんなクラブなのか
   hook: 3部から7年で、ヨーロッパに手が届きました。
+  lead: '**1部リーグを6回**。その歴史を持つ、北東部の街。'
 thumbnail:
   line1: 6回優勝が、3部にいた
   line2: サンダーランド
@@ -44,13 +45,13 @@ sections:
   - image: assets/stats/pl_sunderland_data3.png
     text: オーナーはキリル・ルイ＝ドレフュス。株の64%を持っています。
     no_telop: true
-  - image: assets/stats/pl_sunderland_data4.png
+  - image: assets/stats/pl_sunderland_cups.png
     text: 1部リーグの優勝は**6回**。FAカップも2回獲っています。
     no_telop: true
   - image: assets/stats/pl_sunderland_data6.png
     text: 1998年から99年には、勝ち点**105**。当時のリーグの最多記録でした。
     no_telop: true
-  - image: assets/stats/pl_sunderland_data7.png
+  - image: assets/stats/pl_sunderland_last.png
     text: プレミアでの最高位は**7位**。2000年から01年、そして昨季の2025年から26年です。
     no_telop: true
   - image: assets/stats/pl_sunderland_data8.png
@@ -178,17 +179,17 @@ sections:
   - text: 今季の登録選手は29人です。
     image: assets/stats/pl_sunderland_gk.png
     no_telop: true
-  - image: assets/stats/pl_sunderland_gk.png
-    text: ゴールキーパーは3人。
+  - image: assets/stats/pl_sunderland_gk_f.png
+    text: ゴールキーパーは3人。ロビン・ルーフスはリーグ戦で**39試合**。
     no_telop: true
-  - image: assets/stats/pl_sunderland_df.png
-    text: ディフェンダーは9人。トマ・ムニエはベルギー代表で**83試合**。レイニウドはMozambique代表で**56試合**。
+  - image: assets/stats/pl_sunderland_df_f.png
+    text: ディフェンダーは9人。トマ・ムニエはベルギー代表で**83試合**。トライ・ヒュームは北アイルランド代表で**26試合**。
     no_telop: true
-  - image: assets/stats/pl_sunderland_mf.png
-    text: ミッドフィールダーは9人。主将の**グラニト・ジャカ**は、ここにいます。アラン・ブラウンはアイルランド代表で**39試合**。
+  - image: assets/stats/pl_sunderland_mf_f.png
+    text: ミッドフィールダーは9人。主将を務めるのが**グラニト・ジャカ**。ルーク・オナイエンはリーグ戦で**277試合**。
     no_telop: true
-  - image: assets/stats/pl_sunderland_fw.png
-    text: フォワードは8人。ニルソン・アングロはエクアドル代表で**18試合**。ブライアン・ブロベイはオランダ代表で**16試合**。
+  - image: assets/stats/pl_sunderland_fw_f.png
+    text: フォワードは8人。ウィルソン・イシドールはリーグ戦で**19得点**。ブライアン・ブロベイはオランダ代表で**16試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
@@ -197,7 +198,7 @@ sections:
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 5試合で1勝1引き分け3敗
+  telop: 5試合で1勝1引き分け3敗。14位
   narrator: 解説
   card:
     type: table
@@ -224,6 +225,7 @@ sections:
       - 3対5
   say:
   - プレミアリーグは5試合を終えて、**1勝1引き分け3敗**です。
+  - 順位は**14位**、勝ち点は**4**です。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Sunderland_A.F.C._season
   bg: assets/backgrounds/stadium_サンダーランド.png

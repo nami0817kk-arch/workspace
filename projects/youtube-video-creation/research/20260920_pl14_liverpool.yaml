@@ -17,6 +17,7 @@ theme:
   title: 遠藤航がいるリヴァプールってどんなクラブ？
   question: どんなクラブなのか
   hook: 日本代表の遠藤航が、いまこのクラブにいます。
+  lead: '**1部リーグ20回**。マンチェスター・ユナイテッドと並ぶ最多。'
 thumbnail:
   line1: エヴァートンが去った跡地に
   line2: リヴァプール
@@ -50,12 +51,12 @@ sections:
     text: 創立は**1892年**。本拠地はアンフィールド、**6万1276人**が入ります。
     no_telop: true
   - image: assets/stats/pl_liverpool_data3.png
-    text: オーナーはアメリカのFSG。2010年からクラブを持っています。
+    text: オーナーはアメリカのエフエスジー。2010年からクラブを持っています。
     no_telop: true
   - image: assets/stats/pl_liverpool_map.png
     text: ホームタウンはリヴァプール。イングランド・マージーサイドです。
     no_telop: true
-  - image: assets/stats/pl_liverpool_data4.png
+  - image: assets/stats/pl_liverpool_cups.png
     text: 1部リーグの優勝は**20回**。FAカップ8回、リーグカップ10回、チャンピオンズリーグは6回獲っています。
     no_telop: true
   - image: assets/stats/pl_liverpool_data5.png
@@ -63,6 +64,9 @@ sections:
     no_telop: true
   - image: assets/stats/pl_liverpool_data6.png
     text: 2017年から18年には、モハメド・サラーが1シーズンで**44得点**を挙げました。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_last.png
+    text: 昨季は**5位**。勝ち点は60でした。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Liverpool_F.C.
@@ -184,17 +188,17 @@ sections:
   - text: 今季の登録選手は35人です。
     image: assets/stats/pl_liverpool_gk.png
     no_telop: true
-  - image: assets/stats/pl_liverpool_gk.png
+  - image: assets/stats/pl_liverpool_gk_f.png
     text: ゴールキーパーは6人。アリソン・ベッカーはブラジル代表で**83試合**。ギオルギ・ママルダシュヴィリはジョージア代表で**38試合**。
     no_telop: true
-  - image: assets/stats/pl_liverpool_df.png
-    text: ディフェンダーは12人。主将の**フィルジル・ファン・ダイク**は、ここにいます。フィルジル・ファン・ダイクはオランダ代表で**96試合**。
+  - image: assets/stats/pl_liverpool_df_f.png
+    text: ディフェンダーは12人。主将を務めるのが**フィルジル・ファン・ダイク**。リーグ戦で**277試合**に出ています。コスタス・ツィミカスはギリシャ代表で**51試合**。
     no_telop: true
-  - image: assets/stats/pl_liverpool_mf.png
-    text: ミッドフィールダーは8人。日本の遠藤航もここにいます。遠藤航は日本代表で**73試合**。
+  - image: assets/stats/pl_liverpool_mf_f.png
+    text: ミッドフィールダーは8人。日本の遠藤航がいます。ドミニク・ソボスライはハンガリー代表で**65試合**。
     no_telop: true
-  - image: assets/stats/pl_liverpool_fw.png
-    text: フォワードは9人。アレクサンデル・イサクはスウェーデン代表で**62試合**。コーディ・ガクポはオランダ代表で**54試合**。
+  - image: assets/stats/pl_liverpool_fw_f.png
+    text: フォワードは9人。コーディ・ガクポはオランダ代表で**54試合**。アレクサンデル・イサクはスウェーデン代表で**62試合**。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Liverpool_F.C.
@@ -203,7 +207,7 @@ sections:
 - id: season
   heading: 今季のここまで
   tier: 報道
-  telop: 5試合で2勝3引き分け
+  telop: 5試合で2勝3引き分け。6位
   narrator: 解説
   card:
     type: table
@@ -230,6 +234,7 @@ sections:
       - 1対0
   say:
   - プレミアリーグは5試合を終えて、**2勝3引き分け**です。
+  - 順位は**6位**、勝ち点は**9**です。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Liverpool_F.C._season
   bg: assets/backgrounds/stadium_リヴァプール.png

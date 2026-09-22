@@ -143,3 +143,17 @@ def test_結び方が散っていれば通す():
     scripts = [_script(t, ["何が", t[:3], "これから"]) for t in titles]
     found = {f.label: f for f in inspect_day(scripts)}
     assert found["結び方"].ok
+
+
+def test_言いさしの結びは字面が違っても揃いとみなす():
+    """2026-09-22 に7本中7本が「〜のは」「〜言葉は」で終わっていた。
+
+    末尾6字の一致で見ていたので、1本ずつ字面が違い「散らばっています」と出た。
+    """
+    from src.variety import inspect_day
+
+    titles = ["上田綺世が決めた1点。並んだ言葉は", "鈴木彩艶がベスト11に。書いたのは",
+              "日本代表の値段が出た。上がったのは", "メッシが930点目。届いたのは"]
+    scripts = [_script(t, ["何が", t[:3], "これから"]) for t in titles]
+    found = {f.label: f for f in inspect_day(scripts)}
+    assert not found["結び方"].ok
