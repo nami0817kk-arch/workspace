@@ -73,7 +73,7 @@ class FixtureBanner extends StatelessWidget {
               // エンブレムの幅より狭くなり、2.5px はみ出して落ちた。
               // 試合中はスコアが大きいので、帯の高さに入り切らなければ縮める。
               ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 108),
+                constraints: const BoxConstraints(maxWidth: 104),
                 child: FittedBox(
                   fit: BoxFit.scaleDown,
                   child: Column(
@@ -84,7 +84,11 @@ class FixtureBanner extends StatelessWidget {
                       if (caption != null)
                         Text(
                           caption!,
-                          maxLines: 1,
+                          // 「ホーム ・ 9/38」と「じっくりやる試合」を1行に
+                          // 並べると生成りの幅を超え、帯の上に文字が乗った
+                          // （公開ページで実際に読めなくなっていた）。改行して2行。
+                          maxLines: 2,
+                          textAlign: TextAlign.center,
                           overflow: TextOverflow.ellipsis,
                           style: Theme.of(context).textTheme.labelSmall
                               ?.copyWith(
@@ -128,9 +132,11 @@ class _Team extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final on = readableOn(identity.primary);
-    final crest = ClubCrest(club: club, size: 38);
+    final crest = ClubCrest(club: club, size: 34);
     final name = ConstrainedBox(
-      constraints: const BoxConstraints(maxWidth: 96),
+      // 7文字のクラブ名（「トヨヴィエント」）が入る幅。足りないと
+      // 「トヨヴィエン／ト」で折れる。全体は FittedBox が縮める。
+      constraints: const BoxConstraints(maxWidth: 100),
       child: Text(
         club.name,
         style: theme.textTheme.titleSmall?.copyWith(
@@ -144,10 +150,7 @@ class _Team extends StatelessWidget {
       ),
     );
     return Padding(
-      padding: EdgeInsets.only(
-        left: alignEnd ? 4 : 10,
-        right: alignEnd ? 10 : 4,
-      ),
+      padding: EdgeInsets.only(left: alignEnd ? 4 : 8, right: alignEnd ? 8 : 4),
       // 狭い幅ではエンブレムごと縮める。はみ出すよりは小さいほうがいい。
       child: FittedBox(
         fit: BoxFit.scaleDown,
@@ -187,17 +190,20 @@ class _BannerPainter extends CustomPainter {
     canvas.drawRect(Offset.zero & size, Paint()..color = _paper);
 
     // 斜めに切った帯。まっすぐに割ると表に見える。
-    const slant = 14.0;
+    // 帯は 0.35 ずつ。0.40 だと真ん中の生成りが上端で 37px しか無く、
+    // 「第9節」が帯の上に掛かっていた（公開ページで見えた）。
+    const slant = 12.0;
+    const band = 0.35;
     final leftPath = Path()
       ..moveTo(0, 0)
-      ..lineTo(w * 0.40 + slant, 0)
-      ..lineTo(w * 0.40 - slant, h)
+      ..lineTo(w * band + slant, 0)
+      ..lineTo(w * band - slant, h)
       ..lineTo(0, h)
       ..close();
     final rightPath = Path()
       ..moveTo(w, 0)
-      ..lineTo(w * 0.60 - slant, 0)
-      ..lineTo(w * 0.60 + slant, h)
+      ..lineTo(w * (1 - band) - slant, 0)
+      ..lineTo(w * (1 - band) + slant, h)
       ..lineTo(w, h)
       ..close();
     _band(canvas, leftPath, left, size);
