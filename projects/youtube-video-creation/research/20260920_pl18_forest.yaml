@@ -47,11 +47,12 @@ sections:
     - - 理由3
       - 開幕5試合で1勝、13位
   say:
-  - パレスをFAカップに導いたグラスナーの**1年目**。半世紀前の名将クラフは、最初の杯をこう語りました。
+  - パレスをFAカップに導いたグラスナーの**1年目**。名将クラフは、最初に獲ったリーグカップをこう語りました。
   - voice: ブライアン・クラフ
     text: 「つまらない杯だなんてどうかしてる。獲ったから全部変わった」
   - 昨季は**16位**。2022年に戻ってきてから、今季でプレミア5シーズン目になります。
   - 開幕から**5試合で1勝**。新しい監督の立て直しが、いま始まったところです。
+  - 1886年にアーセナルへ赤いシャツを贈り、1979年と80年には欧州の頂点に2年続けて立ちました。
   sources:
   - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
   - https://en.wikipedia.org/wiki/2026–27_Nottingham_Forest_F.C._season
@@ -89,34 +90,6 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
-  bg: assets/backgrounds/stadium_ノッティンガムフォレスト.png
-  official: false
-- id: features
-  heading: このクラブの特徴
-  tier: 背景
-  telop: 整えて攻める。川向こうに隣人
-  narrator: 解説
-  card:
-    type: table
-    title: このクラブの特徴
-    columns:
-    - ''
-    - ''
-    rows:
-    - - プレーの色
-      - 激しく整えて、攻めに出る
-    - - 運営の型
-      - 2022年夏に21人を獲得
-    - - クラブの気質
-      - 隣のクラブまで300ヤード
-  say:
-  - グラスナー監督のサッカーは、激しく、きっちり整えて、攻めに出る。
-  - オーナーの資金で買う型。昇格した2022年の夏に21人を獲り、これはイギリスの記録でした。
-  - 川向こう300ヤードに、ノッツ・カウンティの本拠地。国内でいちばん近いスタジアム同士です。
-  sources:
-  - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
-  - https://www.nottinghamforest.co.uk/news/2026/july/06/in-profile---oliver-glasner/
-  - https://en.wikipedia.org/wiki/Evangelos_Marinakis
   bg: assets/backgrounds/stadium_ノッティンガムフォレスト.png
   official: false
 - id: clough
@@ -163,6 +136,34 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
   bg: assets/backgrounds/stadium_ノッティンガムフォレスト.png
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 整えて攻める。川向こうに隣人
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 激しく整えて、攻めに出る
+    - - 運営の型
+      - 2022年夏に21人を獲得
+    - - クラブの気質
+      - 隣のクラブまで300ヤード
+  say:
+  - グラスナー監督のサッカーは、激しく、きっちり整えて、攻めに出る。
+  - オーナーの資金で買う型。23年ぶりに昇格した2022年の夏に21人を獲り、これはイギリスの記録でした。
+  - 川向こう300ヤードに、ノッツ・カウンティの本拠地。国内でいちばん近いスタジアム同士です。
+  sources:
+  - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
+  - https://www.nottinghamforest.co.uk/news/2026/july/06/in-profile---oliver-glasner/
+  - https://en.wikipedia.org/wiki/Evangelos_Marinakis
+  bg: assets/backgrounds/stadium_ノッティンガムフォレスト.png
+  official: false
 - id: episode
   heading: アーセナルの赤の由来
   tier: 背景

@@ -53,7 +53,8 @@ sections:
   - 名キーパー、スペローニが38歳のときの言葉です。
   - voice: フリアン・スペローニ
     text: 38歳はキーパーなら悪くない。いまが一番いい状態だ
-  - 鎌田大地は優勝を**3回**経験、冨安健洋は今夏に加入。**2年**続けて優勝し、今季はヨーロッパリーグです。
+  - 鎌田大地はこのクラブで**3つ**の杯を掲げ、冨安健洋は今夏に加入。今季はヨーロッパリーグです。
+  - 去年のFAカップが1つ目、昨季のカンファレンスリーグが2つ目のタイトル。
   sources:
   - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
   - https://en.wikipedia.org/wiki/2026–27_Crystal_Palace_F.C._season
@@ -95,37 +96,6 @@ sections:
   - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
   bg: assets/backgrounds/stadium_クリスタルパレス.png
   official: false
-- id: features
-  heading: このクラブの特徴
-  tier: 背景
-  telop: 立て直し役、獲って高く売る
-  narrator: 解説
-  card:
-    type: table
-    title: このクラブの特徴
-    columns:
-    - ''
-    - ''
-    rows:
-    - - プレーの色
-      - 降格圏から6位、2位へ
-    - - 運営の型
-      - オリセを6倍で売却
-    - - クラブの気質
-      - 勝てば歌う応援歌
-  say:
-  - 新監督はピエール・サージュ、降格圏のリヨンを6位に、ランスを2位に引き上げてきた立て直し役。
-  - 安く獲って高く売る型、オリセは800万ポンドで獲り、3年後に約5000万ポンドでバイエルンへ。
-  - 1964年から試合前に流れる「グラッド・オール・オーバー」、勝てば試合後にもう一度流れます。
-  sources:
-  - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
-  - https://en.wikipedia.org/wiki/Pierre_Sage
-  - https://en.wikipedia.org/wiki/2023%E2%80%9324_Olympique_Lyonnais_season
-  - https://en.wikipedia.org/wiki/2025%E2%80%9326_RC_Lens_season
-  - https://en.wikipedia.org/wiki/Michael_Olise
-  - https://en.wikipedia.org/wiki/Glad_All_Over
-  bg: assets/backgrounds/stadium_クリスタルパレス.png
-  official: false
 - id: trophy
   heading: 120年待ったタイトル
   tier: 背景
@@ -157,6 +127,37 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
   bg: assets/backgrounds/stadium_クリスタルパレス.png
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 立て直し役、獲って高く売る
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 立て直し役の新監督
+    - - 運営の型
+      - オリセを6倍で売却
+    - - クラブの気質
+      - 勝てばもう一度流れる歌
+  say:
+  - 新監督サージュは、降格圏のリヨンを6位に、ランスを2位に引き上げてきた立て直し役です。
+  - 掘り出し物を高く売る型。オリセは800万ポンドで獲り、3年後に約5000万ポンドでバイエルンへ。
+  - 1964年から試合前に流れる「グラッド・オール・オーバー」は、勝てば試合後にもう一度流れます。
+  sources:
+  - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
+  - https://en.wikipedia.org/wiki/Pierre_Sage
+  - https://en.wikipedia.org/wiki/2023%E2%80%9324_Olympique_Lyonnais_season
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_RC_Lens_season
+  - https://en.wikipedia.org/wiki/Michael_Olise
+  - https://en.wikipedia.org/wiki/Glad_All_Over
+  bg: assets/backgrounds/stadium_クリスタルパレス.png
+  official: false
 - id: episode
   heading: 万博の会社が作ったクラブ
   tier: 背景

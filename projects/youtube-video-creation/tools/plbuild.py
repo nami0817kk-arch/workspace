@@ -358,20 +358,6 @@ def build(key: str, number: int, old_file: str) -> Path:
     sections.append(sec(id="data", heading=f"{club} 基礎DATA", main=not reasons, tier="背景",
                         telop=facts["tiles"][0][1] + "創立", narrator="解説", say=say,
                         sources=[wiki]))
-    # **このクラブの特徴**（2026-09-23 指示「チームの特徴とかも加えられる？」→「三つの要素入れたい！」）。
-    # プレーの色（監督のサッカーを一言。陣形の数字は言わない。9/16「戦術の節は入れない」はそのまま）・
-    # 運営の型・クラブの気質の3行。<key>_say.yaml の `features`／`features_rows`／`features_telop`／
-    # `features_sources`。基礎DATAの直後、クラブの話の前。ショートには入れない
-    if ov.get("features"):
-        f_say = list(ov["features"])
-        sections.append(sec(id="features", heading="このクラブの特徴", tier="背景",
-                            telop=str(ov.get("features_telop") or "このクラブの特徴"),
-                            narrator="解説",
-                            card={"type": "table", "title": "このクラブの特徴", "columns": ["", ""],
-                                  "rows": ov.get("features_rows") or []},
-                            say=f_say,
-                            sources=[wiki] + [u for u in (ov.get("features_sources") or []) if u != wiki],
-                            **({"bg": bg} if bg else {})))
     # **有名なファンの節は作らない**（2026-09-20 指示「有名なファンは廃止」）。
     # <key>.json の `fans` / `fan_story` は残っているが、台本では一切使わない。
     # 板の9枚目も「有名なファン」ではなく「愛称」にしてある（research/pl_data/<key>.json）。
@@ -388,6 +374,20 @@ def build(key: str, number: int, old_file: str) -> Path:
         if bg:
             story_sec["bg"] = bg
         sections.append(story_sec)
+    # **このクラブの特徴**（2026-09-23 指示「チームの特徴とかも加えられる？」→「三つの要素入れたい！」）。
+    # プレーの色（監督のサッカーを一言。陣形の数字は言わない。9/16「戦術の節は入れない」はそのまま）・
+    # 運営の型・クラブの気質の3行。<key>_say.yaml の `features`／`features_rows`／`features_telop`／
+    # `features_sources`。基礎DATAの直後、クラブの話の前。ショートには入れない
+    if ov.get("features"):
+        f_say = list(ov["features"])
+        sections.append(sec(id="features", heading="このクラブの特徴", tier="背景",
+                            telop=str(ov.get("features_telop") or "このクラブの特徴"),
+                            narrator="解説",
+                            card={"type": "table", "title": "このクラブの特徴", "columns": ["", ""],
+                                  "rows": ov.get("features_rows") or []},
+                            say=f_say,
+                            sources=[wiki] + [u for u in (ov.get("features_sources") or []) if u != wiki],
+                            **({"bg": bg} if bg else {})))
     # **「へえ」の逸話を1つ**（2026-09-22 ユーザー指示「1.2を実施」）。Gemini の点検で
     # 「データの読み上げで、覚えて帰る逸話が無い」と言われた。<key>_say.yaml の `episode`。
     # 原文は Wikipedia のクラブ記事で裏を取ったものだけ

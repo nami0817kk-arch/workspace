@@ -46,8 +46,8 @@ sources:
 - https://en.wikipedia.org/wiki/AFC_Bournemouth
 - https://en.wikipedia.org/wiki/2026–27_AFC_Bournemouth_season
 - https://en.wikipedia.org/wiki/Marco_Rose
-- https://en.wikipedia.org/wiki/Dean_Huijsen
 - https://en.wikipedia.org/wiki/Eddie_Howe
+- https://en.wikipedia.org/wiki/Dean_Huijsen
 - https://en.wikipedia.org/wiki/List_of_AFC_Bournemouth_records_and_statistics
 - https://en.wikipedia.org/wiki/Callum_Wilson
 - https://en.wikipedia.org/wiki/Brett_Pitman
@@ -66,19 +66,6 @@ cards:
       - 新監督ローゼ「たくさん走りたい」
     - - 理由3
       - 初戦で久保建英のクラブに勝利
-  features_card:
-    type: table
-    title: このクラブの特徴
-    columns:
-    - ''
-    - ''
-    rows:
-    - - プレーの色
-      - 奪ったら最短でゴールへ
-    - - 運営の型
-      - 若手を安く獲り高く売る
-    - - クラブの気質
-      - さくらんぼ色のシャツが由来
   history_card:
     type: table
     title: 2008年に起きたこと
@@ -116,6 +103,19 @@ cards:
       - リーグ6位・勝ち点57
     - - 同じ年
       - クラブ史上初の欧州出場
+  features_card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 奪いに走り、最短でゴールへ
+    - - 運営の型
+      - 育てて高く手放す
+    - - クラブの気質
+      - 2度の破綻から立ち直った
   episode_card:
     type: table
     title: ひとりで9点
@@ -228,6 +228,8 @@ cards:
   telop: マルコ・ローゼ「「ボールに対して、とても積極的に。たくさん走りたい」」
 キャスター: 欧州の初戦は、久保建英が所属するクラブに勝ちました。
   telop: 欧州の初戦は、久保建英が所属するクラブに勝ちました
+キャスター: 17年前は4部、しかもマイナスの勝ち点から始めたクラブです。
+  telop: 17年前は4部、しかもマイナスの勝ち点から始めたクラブです
 
 ## ボーンマス 基礎DATA
 @bg: assets/backgrounds/stadium_ボーンマス.png
@@ -258,18 +260,6 @@ cards:
   no_telop: true
   image: assets/stats/pl_bournemouth_last.png
 
-## このクラブの特徴
-@bg: assets/backgrounds/stadium_ボーンマス.png
-
-解説: ボールを奪いに走り、奪ったら最短距離でゴールへ向かう、走るサッカーです。
-  telop: ボールを奪いに走り、奪ったら最短距離でゴールへ向かう、走るサッカーです
-  source: 背景
-  card: features_card
-解説: 若手を安く獲って高く売る型で、ハイセンは1年でレアル・マドリードへ5000万ポンド。
-  telop: 若手を安く獲って高く売る型で、ハイセンは1年でレアル・マドリードへ5000万ポンド
-解説: 愛称チェリーズの由来は、さくらんぼ色のシャツとも、球場の隣にあった桜桃の木とも言われます。
-  telop: 愛称チェリーズの由来は、さくらんぼ色のシャツとも、球場の隣にあった桜桃の木とも言われます
-
 ## 歩んできた道
 @bg: assets/backgrounds/stadium_ボーンマス.png
 
@@ -294,8 +284,8 @@ cards:
   card: history2_card
 解説: 当時、フットボールリーグで最も若い監督でした。
   telop: 当時、フットボールリーグで最も若い監督でした
-解説: それでも、4部に残りました。
-  telop: それでも、4部に残りました
+解説: その年、マイナスから始めて4部に残りました。
+  telop: その年、マイナスから始めて4部に残りました
 
 ## そこから18年
 @bg: assets/backgrounds/stadium_ボーンマス.png
@@ -308,6 +298,18 @@ cards:
   telop: 6年後の2015年、ハウの下で2部を制して**初めて1部**へ
 解説: そして昨季、**初めてヨーロッパの切符**をつかみました。
   telop: そして昨季、**初めてヨーロッパの切符**をつかみました
+
+## このクラブの特徴
+@bg: assets/backgrounds/stadium_ボーンマス.png
+
+解説: 監督マルコ・ローゼのサッカーは、ボールを奪いに走り、奪ったら最短距離でゴールへ向かう。
+  telop: 監督マルコ・ローゼのサッカーは、ボールを奪いに走り、奪ったら最短距離でゴールへ向かう
+  source: 背景
+  card: features_card
+解説: 若手を育てて高く手放す型。ディフェンダーのハイセンは1年でレアル・マドリードへ、5000万ポンド。
+  telop: 若手を育てて高く手放す型。ディフェンダーのハイセンは1年でレアル・マドリードへ、5000万ポンド
+解説: 1997年と2008年、2度の経営破綻から立ち直ってきた、しぶといクラブです。
+  telop: 1997年と2008年、2度の経営破綻から立ち直ってきた、しぶといクラブです
 
 ## ひとりで9点
 @bg: assets/backgrounds/stadium_ボーンマス.png
@@ -431,5 +433,5 @@ cards:
   telop: 順位は**17位**、勝ち点は**3**です
 解説: ヨーロッパリーグの初戦は、久保建英のいるレアル・ソシエダでした。
   telop: ヨーロッパリーグの初戦は、久保建英のいるレアル・ソシエダでした
-解説: アウェーで**2対1**の勝ち。クラブの歴史で初めての、欧州の試合でした。
-  telop: アウェーで**2対1**の勝ち。クラブの歴史で初めての、欧州の試合でした
+解説: アウェーで**2対1**で勝ちました。
+  telop: アウェーで**2対1**で勝ちました

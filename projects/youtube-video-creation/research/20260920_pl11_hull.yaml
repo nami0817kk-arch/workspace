@@ -19,7 +19,7 @@ theme:
   title: 守田英正のハル・シティ。名前を変えられかけた日に起きたこと
   question: どんなクラブなのか
   hook: この港町のクラブには、忘れられない2013年があります。
-  lead: 1部も、FAカップも、リーグカップも無い、東部の港町。
+  lead: 東部の港町から、10年ぶりに戻ってきたプレミアリーグ。
 thumbnail:
   line1: 4部から5年でプレミアへ
   line2: ハル・シティ
@@ -54,6 +54,7 @@ sections:
     text: 「あなたをプレミアリーグへ上げる決勝ゴールは、私が決める」
   - 開幕から5試合で**8位**。1部での最高順位、16位より上にいます。
   - 指揮を執るのは、ボスニア人として初めてプレミアで勝った監督。**2年目**です。
+  - 2013年、オーナーがクラブの名前を変えると言い出し、サポーターが立ち上がりました。
   sources:
   - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
   - https://en.wikipedia.org/wiki/2026–27_Hull_City_A.F.C._season
@@ -91,38 +92,6 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
-  bg: assets/backgrounds/stadium_ハルシティ.png
-  official: false
-- id: features
-  heading: このクラブの特徴
-  tier: 背景
-  telop: 前へ放り込む。育てて売る
-  narrator: 解説
-  card:
-    type: table
-    title: このクラブの特徴
-    columns:
-    - ''
-    - ''
-    rows:
-    - - プレーの色
-      - 前へ、ゴール前に放り込む
-    - - 運営の型
-      - テレビ王の資金＋生え抜き売却
-    - - クラブの気質
-      - ラグビーの街、改名を跳ね返す
-  say:
-  - ボールを持ったら前へ、ゴール前に放り込む攻めのサッカーを掲げる監督です
-  - 2022年にトルコのテレビ番組プロデューサーが買収し、生え抜きを売りながら回すクラブ
-  - ラグビーリーグの街で、2014年のクラブ名変更はサポーターの反対で却下されました
-  sources:
-  - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
-  - https://www.wearehullcity.co.uk/news/2025/june/11/jakirovic-appointed-new-head-coach/
-  - https://www.wearehullcity.co.uk/news/2025/september/26/match-preview-watford-a/
-  - https://en.wikipedia.org/wiki/Acun_Il%C4%B1cal%C4%B1
-  - https://en.wikipedia.org/wiki/Jacob_Greaves
-  - https://en.wikipedia.org/wiki/Keane_Lewis-Potter
-  - https://en.wikipedia.org/wiki/Assem_Allam
   bg: assets/backgrounds/stadium_ハルシティ.png
   official: false
 - id: episode
@@ -184,6 +153,38 @@ sections:
   - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
   bg: assets/backgrounds/stadium_ハルシティ.png
   official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 前へ放り込む。育てて売る
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 前へ、ゴール前に放り込む
+    - - 運営の型
+      - 生え抜きを売って回す
+    - - クラブの気質
+      - ラグビーの街にひとつ
+  say:
+  - ヤキロヴィッチのサッカーは、ボールを持ったら前へ、ゴール前に放り込む攻めのサッカーです。
+  - 育成出身のグリーヴスとルイス＝ポッターを、プレミアのクラブへ売って回す、生え抜きの型。
+  - ラグビーリーグの盛んな街で、プロのサッカークラブはこの街にひとつだけです。
+  sources:
+  - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
+  - https://www.wearehullcity.co.uk/news/2025/june/11/jakirovic-appointed-new-head-coach/
+  - https://www.wearehullcity.co.uk/news/2025/september/26/match-preview-watford-a/
+  - https://en.wikipedia.org/wiki/Acun_Il%C4%B1cal%C4%B1
+  - https://en.wikipedia.org/wiki/Jacob_Greaves
+  - https://en.wikipedia.org/wiki/Keane_Lewis-Potter
+  - https://en.wikipedia.org/wiki/Assem_Allam
+  bg: assets/backgrounds/stadium_ハルシティ.png
+  official: false
 - id: legends
   heading: このクラブを語る3人
   tier: 背景
@@ -202,7 +203,7 @@ sections:
       - 1991-2009
       - 初の1部昇格を決めた
   say:
-  - text: ディーン・ウィンダスは地元ハル出身のフォワード。1991年、リーグ外のクラブから来ました。
+  - text: ディーン・ウィンダスは地元ハル出身のフォワード。1991年、リーグに属さない小さなクラブから来ました。
     image: assets/photos/pl/hull_legend_f160fd58.jpg
   - 1995年に**70万ポンド**でアバディーンへ売られ、2007年に戻ってきました。
   - あのボレーを決めたとき、**39歳**でした。
@@ -234,7 +235,7 @@ sections:
   - text: イアン・アシュビーは、2002年にケンブリッジから加わった中盤。4部にいたころのことです。
     image: assets/photos/pl/hull_legend_24d5dcb4.jpg
   - 2004年、ヨービル戦で決めたゴールが、クラブを4部から3部へ上げました。
-  - 4階級すべてで主将を務めた、ただひとりの男。リーグ戦**243試合**に出ました。
+  - 4つのリーグすべてで主将を務めた、ただひとりの男。リーグ戦**243試合**に出ました。
   sources:
   - https://en.wikipedia.org/wiki/Dean_Windass
   - https://en.wikipedia.org/wiki/Ian_Ashbee

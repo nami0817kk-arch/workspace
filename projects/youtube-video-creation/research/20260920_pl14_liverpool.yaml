@@ -54,6 +54,7 @@ sections:
     text: 「私の考えは、リヴァプールを無敵の砦に築き上げることだった」
   - 監督が代わりました。ボーンマスを**6位**まで引き上げたイラオラが、1年目の指揮を執っています。
   - 2シーズン前に**20回目**の優勝、昨季は5位。サラーが去って初めてのシーズンです。
+  - 生まれたのは1892年。地代でもめたエヴァートンが去り、残った地主がクラブを作りました。
   sources:
   - https://en.wikipedia.org/wiki/Liverpool_F.C.
   - https://en.wikipedia.org/wiki/2026–27_Liverpool_F.C._season
@@ -102,35 +103,6 @@ sections:
   - https://en.wikipedia.org/wiki/Liverpool_F.C.
   bg: assets/backgrounds/stadium_リヴァプール.png
   official: false
-- id: features
-  heading: このクラブの特徴
-  tier: 背景
-  telop: 奪って速い。データで買う
-  narrator: 解説
-  card:
-    type: table
-    title: このクラブの特徴
-    columns:
-    - ''
-    - ''
-    rows:
-    - - プレーの色
-      - 奪ってから速く縦へ
-    - - 運営の型
-      - 米資本、データで選手を選ぶ
-    - - クラブの気質
-      - 1960年代からの応援歌
-  say:
-  - ボールを持つより、奪ってから速く縦に急ぐサッカーを持ち込んだ新監督です
-  - 2010年にアメリカの投資会社フェンウェイが3億ポンドで買収し、データで選手を選ぶ型
-  - 応援歌ユールネバーウォークアローンは、1960年代からアンフィールドで歌い継がれています
-  sources:
-  - https://en.wikipedia.org/wiki/Liverpool_F.C.
-  - https://en.wikipedia.org/wiki/Andoni_Iraola
-  - https://en.wikipedia.org/wiki/Fenway_Sports_Group
-  - https://en.wikipedia.org/wiki/Michael_Edwards_(football_executive)
-  bg: assets/backgrounds/stadium_リヴァプール.png
-  official: false
 - id: birth
   heading: 空になったスタジアム
   tier: 背景
@@ -164,6 +136,35 @@ sections:
   - https://en.wikipedia.org/wiki/Liverpool_F.C.
   - https://en.wikipedia.org/wiki/Bill_Shankly
   bg: assets/backgrounds/stadium_リヴァプール.png
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 奪って速い。データで買う
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 奪ってから速く縦へ
+    - - 運営の型
+      - データで選手を選ぶ
+    - - クラブの気質
+      - ゴール裏は戦場の丘の名
+  say:
+  - イラオラのサッカーは、ボールを持つより、奪ってから速く縦に急ぐ。
+  - データで選手を選ぶ型。2010年に来たアメリカの投資会社が、分析部門を作って補強を決めてきました。
+  - ゴール裏のスタンド「コップ」の名は、1906年、ボーア戦争の戦場になった丘から付けられました。
+  sources:
+  - https://en.wikipedia.org/wiki/Liverpool_F.C.
+  - https://en.wikipedia.org/wiki/Andoni_Iraola
+  - https://en.wikipedia.org/wiki/Fenway_Sports_Group
+  - https://en.wikipedia.org/wiki/Michael_Edwards_(football_executive)
+  bg: assets/backgrounds/stadium_リヴァプール.png
+  official: false
 - id: episode
   heading: 触ってはいけない看板
   tier: 背景
@@ -271,7 +272,7 @@ sections:
   say:
   - text: モハメド・サラーは2017年、ローマから**3690万ポンド**で来た右ウイングです。
     image: assets/photos/pl/liverpool_legend_bec22eba.jpg
-  - 2024年から25年は29得点18アシスト。合わせて**47**は、20チーム制で最多でした。
+  - 2024年から25年は29得点18アシスト。合わせて**47**は、20チームになってからの最多記録でした。
   - リーグ戦**315試合**で191得点。クラブ史上3番目の得点者となり、この夏、去りました。
   sources:
   - https://en.wikipedia.org/wiki/Steven_Gerrard

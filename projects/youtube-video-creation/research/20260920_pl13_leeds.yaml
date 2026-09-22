@@ -49,11 +49,12 @@ sections:
       - 昨季14位。2年目の挑戦
   say:
   - 日本代表の中盤、田中碧が、リーグ戦**74試合**を戦っています。
-  - 主将ビリー・ブレムナーは、首位を奪われた夜に言いました。
+  - 1970年代の主将ビリー・ブレムナーは、首位を奪われた夜に言いました。
   - voice: ビリー・ブレムナー
     text: 「だが、我々は戦い続ける。間違いなく、まだ終わってはいない」
   - 今季はまだ負けていません。開幕から**5試合**、負けなしの5位です。
   - 昇格1年目の昨季は**14位**で残留。2年目の今季は、監督4年目のファルケが率います。
+  - 手本にしたのは、1960年代に欧州を5連覇した、スペインの白いクラブです。
   sources:
   - https://en.wikipedia.org/wiki/Leeds_United_F.C.
   - https://en.wikipedia.org/wiki/2026–27_Leeds_United_F.C._season
@@ -103,37 +104,6 @@ sections:
   - https://en.wikipedia.org/wiki/Leeds_United_F.C.
   bg: assets/backgrounds/stadium_リーズ.png
   official: false
-- id: features
-  heading: このクラブの特徴
-  tier: 背景
-  telop: ボールを持つ。アメフト資本
-  narrator: 解説
-  card:
-    type: table
-    title: このクラブの特徴
-    columns:
-    - ''
-    - ''
-    rows:
-    - - プレーの色
-      - ボールを持って主導権
-    - - 運営の型
-      - 米アメフト資本が完全買収
-    - - クラブの気質
-      - 応援歌は選手が歌った裏面曲
-  say:
-  - ボールを持って主導権を握り、果敢に相手ゴールを脅かすサッカーです
-  - アメフトのフォーティナイナーズの運営会社が2023年に完全買収し、翌年レッドブルも出資したクラブ
-  - 応援歌マーチング・オン・トゥゲザーは、1972年に選手自身が歌ったレコードの裏面の曲
-  sources:
-  - https://en.wikipedia.org/wiki/Leeds_United_F.C.
-  - https://www.leedsunited.com/en/news/daniel-farke-we-have-to-be-brave
-  - https://www.leedsunited.com/en/news/daniel-farke-we-were-back-to-our-best
-  - https://en.wikipedia.org/wiki/49ers_Enterprises
-  - https://en.wikipedia.org/wiki/Red_Bull_GmbH
-  - https://en.wikipedia.org/wiki/Daniel_Farke
-  bg: assets/backgrounds/stadium_リーズ.png
-  official: false
 - id: birth
   heading: 前のクラブは、解散させられた
   tier: 背景
@@ -153,7 +123,7 @@ sections:
     - - 同じ日
       - リーズ・シティの選手16人が競売に
   say:
-  - text: ほかより遅い生まれには、理由があります。
+  - text: 1919年と、ほかより遅く生まれたのには理由があります。
     image: assets/images/pl_leeds_story/01.jpg
   - '**この街には、すでに別のクラブがありました。**リーズ・シティです。'
   - そのクラブが、リーグから**強制的に解散させられました。**
@@ -166,6 +136,37 @@ sections:
   - https://en.wikipedia.org/wiki/Leeds_United_F.C.
   - https://en.wikipedia.org/wiki/Leeds_City_F.C.
   bg: assets/backgrounds/stadium_リーズ.png
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: ボールを持つ。アメフト資本
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - ボールを持って主導権
+    - - 運営の型
+      - レッドブルも出資
+    - - クラブの気質
+      - 応援歌は選手が歌った裏面曲
+  say:
+  - ファルケのサッカーは、ボールを持って主導権を握り、果敢に相手ゴールを脅かす。
+  - アメフト資本のクラブ。2024年にはレッドブルも出資し、胸のスポンサーになりました。
+  - 応援歌マーチング・オン・トゥゲザーは、1972年に選手自身が歌ったレコードの裏面の曲です。
+  sources:
+  - https://en.wikipedia.org/wiki/Leeds_United_F.C.
+  - https://www.leedsunited.com/en/news/daniel-farke-we-have-to-be-brave
+  - https://www.leedsunited.com/en/news/daniel-farke-we-were-back-to-our-best
+  - https://en.wikipedia.org/wiki/49ers_Enterprises
+  - https://en.wikipedia.org/wiki/Red_Bull_GmbH
+  - https://en.wikipedia.org/wiki/Daniel_Farke
+  bg: assets/backgrounds/stadium_リーズ.png
+  official: false
 - id: episode
   heading: 古い1部の最後の王者
   tier: 背景

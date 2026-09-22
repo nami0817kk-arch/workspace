@@ -48,11 +48,12 @@ sections:
     - - 理由3
       - デ・ゼルビ2年目、開幕勝ちなし
   say:
-  - 1961年の2冠を主将として率いた、ダニー・ブランチフラワーの言葉があります。
+  - 1961年のリーグとカップの2冠を主将として率いた、ブランチフラワーの言葉があります。
   - voice: ダニー・ブランチフラワー
     text: 「サッカーは栄光のためにある。粋に、華やかにやるんだ」
   - 高井幸大は**22歳**のセンターバック。いまは期限付きで、ベルギーのシント＝トロイデンにいます。
   - '**2025年**のヨーロッパリーグ王者が、いま最下位。デ・ゼルビ監督の**2年目**は、開幕5試合で勝ちなし。'
+  - 1901年、まだリーグに入っていないのにFAカップを制した、唯一のクラブです。
   sources:
   - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
   - https://en.wikipedia.org/wiki/2026–27_Tottenham_Hotspur_F.C._season
@@ -91,33 +92,6 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
-  bg: assets/backgrounds/stadium_トッテナム.png
-  official: false
-- id: features
-  heading: このクラブの特徴
-  tier: 背景
-  telop: つないで崩す。栄光の歌
-  narrator: 解説
-  card:
-    type: table
-    title: このクラブの特徴
-    columns:
-    - ''
-    - ''
-    rows:
-    - - プレーの色
-      - つないで崩し、前から奪う
-    - - 運営の型
-      - 稼ぎ世界9位、追加で1億
-    - - クラブの気質
-      - 讃美歌から生まれた応援歌
-  say:
-  - デ・ゼルビ監督のサッカーは、キーパーからつないで崩し、失えばすぐ前から奪い返す。
-  - 10億ポンドのスタジアムを持ち、稼ぎは世界9位。2025年秋、オーナーから1億ポンドの追加出資。
-  - 応援歌「グローリー・グローリー」は讃美歌から。1961年からの欧州の戦いで歌われ始めました。
-  sources:
-  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
-  - https://en.wikipedia.org/wiki/Roberto_De_Zerbi
   bg: assets/backgrounds/stadium_トッテナム.png
   official: false
 - id: cup1901
@@ -160,6 +134,33 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
   bg: assets/backgrounds/stadium_トッテナム.png
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: つないで崩す。栄光の歌
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - つないで崩し、前から奪う
+    - - 運営の型
+      - 稼ぎ世界9位、追加で1億
+    - - クラブの気質
+      - 讃美歌から生まれた応援歌
+  say:
+  - デ・ゼルビ監督のサッカーは、キーパーからつないで崩し、失えばすぐ前から奪い返す。
+  - 10億ポンドのスタジアムを持ち、稼ぎは世界9位。2025年秋、オーナーから1億ポンドの追加出資。
+  - 応援歌「グローリー・グローリー」は讃美歌から。1961年からの欧州の戦いで歌われ始めました。
+  sources:
+  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
+  - https://en.wikipedia.org/wiki/Roberto_De_Zerbi
+  bg: assets/backgrounds/stadium_トッテナム.png
+  official: false
 - id: episode
   heading: 雄鶏と拍車
   tier: 背景

@@ -52,6 +52,7 @@ sections:
   - voice: マルコ・ローゼ
     text: 「ボールに対して、とても積極的に。たくさん走りたい」
   - 欧州の初戦は、久保建英が所属するクラブに勝ちました。
+  - 17年前は4部、しかもマイナスの勝ち点から始めたクラブです。
   sources:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
   - https://en.wikipedia.org/wiki/2026–27_AFC_Bournemouth_season
@@ -88,34 +89,6 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
-  bg: assets/backgrounds/stadium_ボーンマス.png
-  official: false
-- id: features
-  heading: このクラブの特徴
-  tier: 背景
-  telop: 奪って走る。買って売る
-  narrator: 解説
-  card:
-    type: table
-    title: このクラブの特徴
-    columns:
-    - ''
-    - ''
-    rows:
-    - - プレーの色
-      - 奪ったら最短でゴールへ
-    - - 運営の型
-      - 若手を安く獲り高く売る
-    - - クラブの気質
-      - さくらんぼ色のシャツが由来
-  say:
-  - ボールを奪いに走り、奪ったら最短距離でゴールへ向かう、走るサッカーです。
-  - 若手を安く獲って高く売る型で、ハイセンは1年でレアル・マドリードへ5000万ポンド。
-  - 愛称チェリーズの由来は、さくらんぼ色のシャツとも、球場の隣にあった桜桃の木とも言われます。
-  sources:
-  - https://en.wikipedia.org/wiki/AFC_Bournemouth
-  - https://en.wikipedia.org/wiki/Marco_Rose
-  - https://en.wikipedia.org/wiki/Dean_Huijsen
   bg: assets/backgrounds/stadium_ボーンマス.png
   official: false
 - id: history
@@ -164,7 +137,7 @@ sections:
   say:
   - 2009年、監督を引き受けたのが**31歳のエディ・ハウ**。
   - 当時、フットボールリーグで最も若い監督でした。
-  - それでも、4部に残りました。
+  - その年、マイナスから始めて4部に残りました。
   sources:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
   - https://en.wikipedia.org/wiki/Eddie_Howe
@@ -195,6 +168,34 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
   - https://en.wikipedia.org/wiki/Eddie_Howe
+  bg: assets/backgrounds/stadium_ボーンマス.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 奪って走る。育てて売る
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 奪いに走り、最短でゴールへ
+    - - 運営の型
+      - 育てて高く手放す
+    - - クラブの気質
+      - 2度の破綻から立ち直った
+  say:
+  - 監督マルコ・ローゼのサッカーは、ボールを奪いに走り、奪ったら最短距離でゴールへ向かう。
+  - 若手を育てて高く手放す型。ディフェンダーのハイセンは1年でレアル・マドリードへ、5000万ポンド。
+  - 1997年と2008年、2度の経営破綻から立ち直ってきた、しぶといクラブです。
+  sources:
+  - https://en.wikipedia.org/wiki/AFC_Bournemouth
+  - https://en.wikipedia.org/wiki/Marco_Rose
+  - https://en.wikipedia.org/wiki/Dean_Huijsen
   bg: assets/backgrounds/stadium_ボーンマス.png
   official: false
 - id: episode
@@ -417,7 +418,7 @@ sections:
   - プレミアリーグは5試合を終えて、**3引き分け2敗**です。
   - 順位は**17位**、勝ち点は**3**です。
   - ヨーロッパリーグの初戦は、久保建英のいるレアル・ソシエダでした。
-  - アウェーで**2対1**の勝ち。クラブの歴史で初めての、欧州の試合でした。
+  - アウェーで**2対1**で勝ちました。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_AFC_Bournemouth_season
   bg: assets/backgrounds/stadium_ボーンマス.png

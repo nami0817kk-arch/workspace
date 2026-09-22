@@ -17,8 +17,8 @@ theme:
   topic: ニューカッスル
   title: 56年間タイトルゼロ。ニューカッスルが待っていたものとは
   question: どんなクラブなのか
-  hook: 大きなタイトルが、56年間ゼロだったクラブです。
-  lead: イングランド北東部から、**FAカップを6回**。
+  hook: 最後に杯を掲げたのは1969年。次は2025年でした。
+  lead: イングランド北東部、白と黒の縞。
 thumbnail:
   line1: 56年待って、獲ったもの
   line2: ニューカッスル
@@ -45,10 +45,11 @@ sections:
     - - 理由2
       - 昨季12位。開幕5試合で1敗
   say:
-  - エディ・ハウが去り、**38歳**の新監督ヤイスレの1年目。地元の英雄アラン・シアラーは、かつてこう言いました。
+  - ハウが去り、**38歳**のヤイスレの1年目。降格危機の2009年に監督を引き受けたシアラーの言葉です。
   - voice: アラン・シアラー
     text: 「愛するクラブだ。落ちてほしくない。できることは全部やる」
   - 昨季は**12位**。今季は開幕から5試合で負けが1つだけと、滑り出しは上々です。
+  - 待っていたのは新しいオーナー。2021年に代わって、4年後にリーグカップを獲りました。
   sources:
   - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
   - https://en.wikipedia.org/wiki/2026–27_Newcastle_United_F.C._season
@@ -88,34 +89,6 @@ sections:
   - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
   bg: assets/backgrounds/stadium_ニューカッスル.png
   official: false
-- id: features
-  heading: このクラブの特徴
-  tier: 背景
-  telop: 奪って速い。街に一つの誇り
-  narrator: 解説
-  card:
-    type: table
-    title: このクラブの特徴
-    columns:
-    - ''
-    - ''
-    rows:
-    - - プレーの色
-      - 奪ってすぐ、速く攻める
-    - - 運営の型
-      - サウジの基金、3億ポンド
-    - - クラブの気質
-      - 街に一つ。2部でも5万人
-  say:
-  - ヤイスレ監督のサッカーは、前へ前へ。奪ってすぐに、速く攻めます。
-  - 2021年、サウジアラビアの公共投資基金が3億500万ポンドで買収。オーナーの資金で買う型です。
-  - 街にクラブは一つだけ。2部に落ちた2016年からの1年も、平均5万人を超えるお客さんが来ました。
-  sources:
-  - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
-  - https://www.newcastleunited.com/en/news/fact-file-matthias-jaissle
-  - https://www.newcastleunited.com/en/news/newcastle-united-appoint-matthias-jaissle-as-the-clubs-new-head-coach
-  bg: assets/backgrounds/stadium_ニューカッスル.png
-  official: false
 - id: drought
   heading: 56年待った
   tier: 背景
@@ -145,7 +118,7 @@ sections:
   - ヨーロッパでは1969年のフェアーズカップ。のちのヨーロッパリーグにつながる大会です。
   - 決勝はハンガリーのウイペシュトに、2試合合計6対2で勝ちました。
   - ところが、そこから先が長かった。
-  - 変わり目は2021年10月7日です。
+  - 変わり目は2021年10月。いまのオーナーが買い取り、14年ぶりにオーナーが代わりました。
   - いまのオーナーが、クラブを買い取った日です。オーナーが代わるのは14年ぶりでした。
   - そして2025年、リーグカップの決勝でリヴァプールを2対1で下します。
   - 1969年から数えて、**56年ぶり**のタイトルでした。
@@ -154,6 +127,34 @@ sections:
   - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
   - https://en.wikipedia.org/wiki/Inter-Cities_Fairs_Cup
   bg: assets/backgrounds/stadium_ニューカッスル.png
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 奪って速い。街に一つの誇り
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 奪ってすぐ、速く攻める
+    - - 運営の型
+      - 3億ポンドで買収
+    - - クラブの気質
+      - 街に一つ。2部でも5万人
+  say:
+  - ヤイスレ監督のサッカーは、前へ前へ。奪ってすぐに、速く攻めます。
+  - オーナーの資金で買う型。買収額は3億500万ポンドで、そこから4年でタイトルに届きました。
+  - 街にクラブは一つだけ。2部に落ちた2016年からの1年も、平均5万人を超えるお客さんが来ました。
+  sources:
+  - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
+  - https://www.newcastleunited.com/en/news/fact-file-matthias-jaissle
+  - https://www.newcastleunited.com/en/news/newcastle-united-appoint-matthias-jaissle-as-the-clubs-new-head-coach
+  bg: assets/backgrounds/stadium_ニューカッスル.png
+  official: false
 - id: episode
   heading: 最初は赤いシャツだった
   tier: 背景

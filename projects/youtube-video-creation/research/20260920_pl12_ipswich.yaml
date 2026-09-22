@@ -18,7 +18,7 @@ theme:
   topic: イプスウィッチ
   title: 前田大然のイプスウィッチ。上がった年に優勝できたのはなぜか
   question: どんなクラブなのか
-  hook: ヨーロッパの大会で、家では負けなかったクラブです。
+  hook: ヨーロッパの大会で、ホームでは負けなかったクラブです。
   lead: '**1部リーグ**も、**ウエファカップ**も獲ったことのある古豪。'
 thumbnail:
   line1: 上がった年に、そのまま優勝
@@ -54,6 +54,7 @@ sections:
     text: 「イプスウィッチへ行ったとき、私には何の計画も無かった」
   - 降格から**1年**でプレミアに戻ってきた、昇格組のひとつです。
   - 監督も新顔です。ストラスブールから来たギャリー・オニールの**1年目**です。
+  - 答えは監督です。1962年、ラムゼイが率いて、昇格1年目で1部を制しました。
   sources:
   - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
   - https://en.wikipedia.org/wiki/2026–27_Ipswich_Town_F.C._season
@@ -94,35 +95,6 @@ sections:
   - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
   bg: assets/backgrounds/stadium_イプスウィッチ.png
   official: false
-- id: features
-  heading: このクラブの特徴
-  tier: 背景
-  telop: 出てきた所を刺す。米国資本
-  narrator: 解説
-  card:
-    type: table
-    title: このクラブの特徴
-    columns:
-    - ''
-    - ''
-    rows:
-    - - プレーの色
-      - 相手が出てきた所を速く突く
-    - - 運営の型
-      - 2021年から米国資本
-    - - クラブの気質
-      - 野次を自ら名乗った愛称
-  say:
-  - 相手が出てきたところを速く突き、守りの堅さも重ねていくサッカーです
-  - 2021年にオハイオ州の投資会社を中心とするアメリカ資本が買収し、オーナーの資金で補強する型
-  - 愛称トラクター・ボーイズは相手サポーターの野次を自ら名乗った、農業の街らしい自嘲から来ています
-  sources:
-  - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
-  - https://www.itfc.co.uk/news/2026/september/18/gary-previews-everton-trip/
-  - https://www.itfc.co.uk/news/2026/june/23/gary-oneil-appointed-ipswich-town-manager/
-  - https://en.wikipedia.org/wiki/Gary_O%27Neil
-  bg: assets/backgrounds/stadium_イプスウィッチ.png
-  official: false
 - id: champion
   heading: 上がった年に、優勝した
   tier: 背景
@@ -150,6 +122,35 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
   bg: assets/backgrounds/stadium_イプスウィッチ.png
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 出てきた所を刺す。米国資本
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 出てきた所を速く突く
+    - - 運営の型
+      - 3部から2年続けて昇格
+    - - クラブの気質
+      - 1884年から同じ本拠地
+  say:
+  - オニールのサッカーは、相手が出てきたところを速く突き、守りの堅さも重ねていく。
+  - オーナーの資金で補強する型。買収した2021年は3部にいて、そこから2年続けて昇格しました。
+  - 本拠地ポートマン・ロードは1884年から。クラブ創立から6年後に、いまの場所にいます。
+  sources:
+  - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
+  - https://www.itfc.co.uk/news/2026/september/18/gary-previews-everton-trip/
+  - https://www.itfc.co.uk/news/2026/june/23/gary-oneil-appointed-ipswich-town-manager/
+  - https://en.wikipedia.org/wiki/Gary_O%27Neil
+  bg: assets/backgrounds/stadium_イプスウィッチ.png
+  official: false
 - id: episode
   heading: 欧州で、家では負けない
   tier: 背景

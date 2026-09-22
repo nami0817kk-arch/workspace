@@ -15,9 +15,9 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: エヴァートン
-  title: リヴァプールと同じ家にいたエヴァートン。133年の家を出た理由
+  title: エヴァートンが去った家からリヴァプールが生まれた。133年の家をまた出た理由
   question: どんなクラブなのか
-  hook: 赤いリヴァプールとは、もとは同じ家にいました。
+  hook: 赤いリヴァプールは、このクラブが出ていった家で始まりました。
   lead: リヴァプールの街から、**1部リーグを9回**。
 thumbnail:
   line1: 133年いた家を、去年出た
@@ -52,6 +52,7 @@ sections:
   - voice: デイヴィッド・モイーズ
     text: 人々のクラブに加わる。街で会う人の大半がエヴァートンファンだ
   - ジャック・グリーリッシュが**9月**、シティから期限付きで加入。港の新本拠地は、まだ**2シーズン目**です。
+  - 家を替えた理由は、古い家では席を増やせなかったから。
   sources:
   - https://en.wikipedia.org/wiki/Everton_F.C.
   - https://en.wikipedia.org/wiki/2026–27_Everton_F.C._season
@@ -92,35 +93,6 @@ sections:
   - https://en.wikipedia.org/wiki/Everton_F.C.
   bg: assets/backgrounds/stadium_エヴァートン.png
   official: false
-- id: features
-  heading: このクラブの特徴
-  tier: 背景
-  telop: 規律で締める、1部最多在籍
-  narrator: 解説
-  card:
-    type: table
-    title: このクラブの特徴
-    columns:
-    - ''
-    - ''
-    rows:
-    - - プレーの色
-      - 規律で締めるモイーズ
-    - - 運営の型
-      - 勝ち点8剥奪の後に買収
-    - - クラブの気質
-      - 1部在籍数は最多
-  say:
-  - 規律で締めるデイヴィッド・モイーズのサッカー、復帰直後の2025年2月は無敗で月間最優秀監督。
-  - オーナー資金で買う型、赤字で勝ち点8を引かれ、2024年末にダン・フリードキンが買い取りました。
-  - 1888年のリーグ創設メンバーで、1部在籍シーズン数は国内最多、愛称は「ピープルズ・クラブ」。
-  sources:
-  - https://en.wikipedia.org/wiki/Everton_F.C.
-  - https://en.wikipedia.org/wiki/David_Moyes
-  - https://en.wikipedia.org/wiki/2023%E2%80%9324_Everton_F.C._season
-  - https://en.wikipedia.org/wiki/Dan_Friedkin
-  bg: assets/backgrounds/stadium_エヴァートン.png
-  official: false
 - id: move
   heading: 133年いた家を出た
   tier: 背景
@@ -151,6 +123,35 @@ sections:
   - https://en.wikipedia.org/wiki/Everton_F.C.
   - https://en.wikipedia.org/wiki/Hill_Dickinson_Stadium
   bg: assets/backgrounds/stadium_エヴァートン.png
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 規律で締める、1部最多在籍
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 規律で締めるモイーズ
+    - - 運営の型
+      - 勝ち点8剥奪の後に買収
+    - - クラブの気質
+      - 1部在籍数は最多
+  say:
+  - モイーズのサッカーは規律で締める。復帰直後の2025年2月は無敗で、月間最優秀監督でした。
+  - 赤字の規則違反で勝ち点8を引かれた末に、いまのオーナーが買い取った、資金で買う型です。
+  - 1888年のリーグ創設メンバーで、1部にいたシーズン数は国内最多。愛称は「ピープルズ・クラブ」。
+  sources:
+  - https://en.wikipedia.org/wiki/Everton_F.C.
+  - https://en.wikipedia.org/wiki/David_Moyes
+  - https://en.wikipedia.org/wiki/2023%E2%80%9324_Everton_F.C._season
+  - https://en.wikipedia.org/wiki/Dan_Friedkin
+  bg: assets/backgrounds/stadium_エヴァートン.png
+  official: false
 - id: episode
   heading: 1シーズン60ゴールの男
   tier: 背景
@@ -286,7 +287,7 @@ sections:
   say:
   - text: 監督はスコットランド人のデイヴィッド・モイーズ。**2025年1月**から、3年目です。
     image: assets/photos/pl/everton_manager_c9564519.jpg
-  - 2002年から13年に続く、2度目のエヴァートン監督。前はウェストハムでした。
+  - 2002年から2013年まで率いた時に続く、2度目のエヴァートン監督。前はウェストハムでした。
   sources:
   - https://en.wikipedia.org/wiki/Everton_F.C.
   - https://en.wikipedia.org/wiki/David_Moyes

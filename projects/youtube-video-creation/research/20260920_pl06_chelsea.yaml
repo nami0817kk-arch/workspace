@@ -52,6 +52,7 @@ sections:
   - voice: ディディエ・ドログバ
     text: このクラブとの特別な関係は皆が知っている。ずっと我が家だった
   - 去年の夏に世界一を決める大会で優勝し、今季はヨーロッパの大会なし。プレミアだけに力を注げる**1年**です。
+  - 1905年、空いたスタジアムを埋めるために作られたクラブです。
   sources:
   - https://en.wikipedia.org/wiki/Chelsea_F.C.
   - https://en.wikipedia.org/wiki/2026–27_Chelsea_F.C._season
@@ -98,6 +99,21 @@ sections:
   - https://en.wikipedia.org/wiki/Chelsea_F.C.
   bg: assets/backgrounds/stadium_チェルシー.png
   official: false
+- id: origin
+  heading: 順番が逆だった
+  tier: 背景
+  telop: スタジアムが先。断られたので、クラブを作った
+  narrator: 解説
+  say:
+  - image: assets/images/pl_chelsea_story/scene.jpg
+    text: 1904年、実業家のガス・ミアーズが、スタンフォード・ブリッジを手に入れます。
+  - そして近くのクラブ、フラムに「ここを借りないか」と持ちかけました。
+  - フラムは、断ります。
+  - 借り手がいないなら、自分でクラブを作ればいい。そう考えて生まれたのがチェルシーです。
+  official: false
+  sources:
+  - https://en.wikipedia.org/wiki/Chelsea_F.C.
+  bg: assets/backgrounds/stadium_チェルシー.png
 - id: features
   heading: このクラブの特徴
   tier: 背景
@@ -117,8 +133,8 @@ sections:
     - - クラブの気質
       - 土地の主はサポーター
   say:
-  - ボールを持って崩し、奪ったら高い位置から速く前へ運ぶ、シャビ・アロンソのサッカー。
-  - 投資会社が買う型、2022年に42億ポンド超で買収、直近の赤字は英国記録の3億5500万ポンド。
+  - アロンソのサッカーは、ボールを持って崩し、奪ったら高い位置から速く前へ運ぶ。
+  - 投資会社が買う型です。2022年に42億ポンド超で買収し、直近の赤字は英国記録の3億5500万ポンド。
   - 本拠地の土地とクラブ名の権利はサポーターの会社が持ち、開発業者への売却を防いでいます。
   sources:
   - https://en.wikipedia.org/wiki/Chelsea_F.C.
@@ -127,21 +143,6 @@ sections:
   - https://en.wikipedia.org/wiki/Chelsea_Pitch_Owners
   bg: assets/backgrounds/stadium_チェルシー.png
   official: false
-- id: origin
-  heading: 順番が逆だった
-  tier: 背景
-  telop: スタジアムが先。断られたので、クラブを作った
-  narrator: 解説
-  say:
-  - image: assets/images/pl_chelsea_story/scene.jpg
-    text: 1904年、実業家のガス・ミアーズが、スタンフォード・ブリッジを手に入れます。
-  - そして近くのクラブ、フラムに「ここを借りないか」と持ちかけました。
-  - フラムは、断ります。
-  - 借り手がいないなら、自分でクラブを作ればいい。そう考えて生まれたのがチェルシーです。
-  official: false
-  sources:
-  - https://en.wikipedia.org/wiki/Chelsea_F.C.
-  bg: assets/backgrounds/stadium_チェルシー.png
 - id: episode
   heading: あだ名は年金暮らし
   tier: 背景
@@ -249,7 +250,7 @@ sections:
   say:
   - text: ディディエ・ドログバは2004年、マルセイユから**2400万ポンド**で加わったフォワード。
     image: assets/photos/pl/chelsea_legend_cc53b1d9.jpg
-  - 2012年チャンピオンズリーグ決勝、バイエルン相手に**88分**の同点弾。最後のキックも決めました。
+  - 2012年チャンピオンズリーグ決勝、バイエルン相手に**88分**の同点弾。PK戦の最後のキックも決めました。
   - 2014年に戻ってもう一度優勝。外国人選手としてクラブ最多の**157得点**を残しました。
   sources:
   - https://en.wikipedia.org/wiki/Frank_Lampard

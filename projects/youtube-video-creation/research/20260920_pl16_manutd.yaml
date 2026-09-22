@@ -52,6 +52,7 @@ sections:
     text: 「マンチェスターは、私の天国だ」
   - 監督は、かつて主将も務めたマイケル・キャリック。今季から正式な監督です。
   - 昨季は**3位**。ところが今季は開幕から足踏みが続き、順位表の真ん中にいます。
+  - 1902年、借金で解散を命じられ、救ったのは主将が見つけた4人の実業家でした。
   sources:
   - https://en.wikipedia.org/wiki/Manchester_United_F.C.
   - https://en.wikipedia.org/wiki/2026–27_Manchester_United_F.C._season
@@ -97,35 +98,6 @@ sections:
   - https://en.wikipedia.org/wiki/Manchester_United_F.C.
   bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
   official: false
-- id: features
-  heading: このクラブの特徴
-  tier: 背景
-  telop: わくわく前向き。育てる伝統
-  narrator: 解説
-  card:
-    type: table
-    title: このクラブの特徴
-    columns:
-    - ''
-    - ''
-    rows:
-    - - プレーの色
-      - わくわく、前向きなサッカー
-    - - 運営の型
-      - 1937年から続く育成
-    - - クラブの気質
-      - 買収後、ファンが別クラブ設立
-  say:
-  - キャリック監督が掲げるのは、見ていてわくわくする、前向きで表現豊かなサッカー。
-  - 1937年から4000試合を超えて、毎試合の名簿にユース出身の選手がいる、育てるクラブ。
-  - 2005年の買収のあと、一部のファンは自分たちで別のクラブを立ち上げました。
-  sources:
-  - https://en.wikipedia.org/wiki/Manchester_United_F.C.
-  - https://www.manutd.com/en/news/detail/what-will-michael-carrick-style-of-play-be-at-man-utd
-  - https://www.manutd.com/en/news/detail/man-utd-celebrate-unrivalled-academy-milestone-with-4000th-game
-  - https://www.manutd.com/en/news/detail/man-utd-incredible-academy-landmark-reaches-88-years
-  bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
-  official: false
 - id: munich
   heading: 1958年2月6日
   tier: 背景
@@ -157,6 +129,35 @@ sections:
   - https://en.wikipedia.org/wiki/Manchester_United_F.C.
   - https://en.wikipedia.org/wiki/Bobby_Charlton
   bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: わくわく前向き。育てる伝統
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - わくわく、前向きなサッカー
+    - - 運営の型
+      - 1937年から続く育成
+    - - クラブの気質
+      - 買収後、ファンが別クラブ設立
+  say:
+  - キャリック監督が掲げるのは、見ていてわくわくする、前向きで表現豊かなサッカーです。
+  - 1937年から4000試合を超えて、毎試合の名簿にユース出身の選手がいる、育てるクラブ。
+  - 2005年にグレイザー家が買収したあと、一部のファンは自分たちで別のクラブを立ち上げました。
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_United_F.C.
+  - https://www.manutd.com/en/news/detail/what-will-michael-carrick-style-of-play-be-at-man-utd
+  - https://www.manutd.com/en/news/detail/man-utd-celebrate-unrivalled-academy-milestone-with-4000th-game
+  - https://www.manutd.com/en/news/detail/man-utd-incredible-academy-landmark-reaches-88-years
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+  official: false
 - id: episode
   heading: 解散寸前で生まれた名前
   tier: 背景

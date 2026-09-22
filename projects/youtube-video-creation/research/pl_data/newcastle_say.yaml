@@ -48,7 +48,7 @@ data_focus: [0, 1, 2, 3, 4, 5, 5, 8]
 
 # **クラブを表す一言**（2026-09-21 指示「最初にクラブを表す一言を述べてから始める」）。
 # タイトルより前に読む。つかみ（hook）と同じことを言わない
-opening: "イングランド北東部から、**FAカップを6回**。"
+opening: "イングランド北東部、白と黒の縞。"
 # 「へえ」の逸話（2026-09-22）。Wikipedia のクラブ記事で裏を取った1つだけ
 episode:
   id: episode
@@ -100,9 +100,10 @@ manager_sources:
 # "It's a club I love and I don't want them to go down. I'll do everything I can to stop that."）。
 # ショートの16秒以内に出すので2行目
 reasons:
-- エディ・ハウが去り、**38歳**の新監督ヤイスレの1年目。地元の英雄アラン・シアラーは、かつてこう言いました。
+- ハウが去り、**38歳**のヤイスレの1年目。降格危機の2009年に監督を引き受けたシアラーの言葉です。
 - {voice: アラン・シアラー, text: "「愛するクラブだ。落ちてほしくない。できることは全部やる」"}
 - 昨季は**12位**。今季は開幕から5試合で負けが1つだけと、滑り出しは上々です。
+- "待っていたのは新しいオーナー。2021年に代わって、4年後にリーグカップを獲りました。"
 reasons_sources:
 - https://en.wikipedia.org/wiki/Alan_Shearer
 people_extra:
@@ -119,18 +120,19 @@ short_title: ニューカッスルが56年待っていたものとは
 # このクラブの特徴（2026-09-23 指示「三つの要素入れたい！」）。プレーの色・運営の型・クラブの気質。
 # 出典は英語版Wikipedia とクラブ公式。要確認は research/pl_data/features_notes.md
 features:
-- ヤイスレ監督のサッカーは、前へ前へ。奪ってすぐに、速く攻めます。
-- 2021年、サウジアラビアの公共投資基金が3億500万ポンドで買収。オーナーの資金で買う型です。
-- 街にクラブは一つだけ。2部に落ちた2016年からの1年も、平均5万人を超えるお客さんが来ました。
+- "ヤイスレ監督のサッカーは、前へ前へ。奪ってすぐに、速く攻めます。"
+- "オーナーの資金で買う型。買収額は3億500万ポンドで、そこから4年でタイトルに届きました。"
+- "街にクラブは一つだけ。2部に落ちた2016年からの1年も、平均5万人を超えるお客さんが来ました。"
 features_telop: 奪って速い。街に一つの誇り
 features_rows:
 - - プレーの色
   - 奪ってすぐ、速く攻める
 - - 運営の型
-  - サウジの基金、3億ポンド
+  - 3億ポンドで買収
 - - クラブの気質
   - 街に一つ。2部でも5万人
 features_sources:
 - https://www.newcastleunited.com/en/news/fact-file-matthias-jaissle
 - https://www.newcastleunited.com/en/news/newcastle-united-appoint-matthias-jaissle-as-the-clubs-new-head-coach
 - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
+hook: "最後に杯を掲げたのは1969年。次は2025年でした。"

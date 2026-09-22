@@ -46,9 +46,9 @@ sources:
 - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
 - https://en.wikipedia.org/wiki/2026–27_Newcastle_United_F.C._season
 - https://en.wikipedia.org/wiki/Alan_Shearer
+- https://en.wikipedia.org/wiki/Inter-Cities_Fairs_Cup
 - https://www.newcastleunited.com/en/news/fact-file-matthias-jaissle
 - https://www.newcastleunited.com/en/news/newcastle-united-appoint-matthias-jaissle-as-the-clubs-new-head-coach
-- https://en.wikipedia.org/wiki/Inter-Cities_Fairs_Cup
 - https://en.wikipedia.org/wiki/Shay_Given
 - https://en.wikipedia.org/wiki/Rob_Lee
 - https://en.wikipedia.org/wiki/Matthias_Jaissle
@@ -64,19 +64,6 @@ cards:
       - 新監督ヤイスレ、38歳の1年目
     - - 理由2
       - 昨季12位。開幕5試合で1敗
-  features_card:
-    type: table
-    title: このクラブの特徴
-    columns:
-    - ''
-    - ''
-    rows:
-    - - プレーの色
-      - 奪ってすぐ、速く攻める
-    - - 運営の型
-      - サウジの基金、3億ポンド
-    - - クラブの気質
-      - 街に一つ。2部でも5万人
   drought_card:
     type: table
     title: タイトルの記録
@@ -94,6 +81,19 @@ cards:
       - 持ち主が交代（それまでは14年）
     - - 2025年
       - リーグカップ優勝。56年ぶりのタイトル
+  features_card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 奪ってすぐ、速く攻める
+    - - 運営の型
+      - 3億ポンドで買収
+    - - クラブの気質
+      - 街に一つ。2部でも5万人
   episode_card:
     type: table
     title: 最初は赤いシャツだった
@@ -186,26 +186,28 @@ cards:
 ## オープニング
 @bg: assets/backgrounds/stadium_ニューカッスル.png
 
-キャスター: イングランド北東部から、**FAカップを6回**。
-  telop: イングランド北東部から、**FAカップを6回**
+キャスター: イングランド北東部、白と黒の縞。
+  telop: イングランド北東部、白と黒の縞
 キャスター: 56年間タイトルゼロ。ニューカッスルが待っていたものとは。
   telop: 56年間タイトルゼロ。ニューカッスルが待っていたものとは
   se: assets/audio/se_pon.wav
-キャスター: 大きなタイトルが、56年間ゼロだったクラブです。
-  telop: 大きなタイトルが、56年間ゼロだったクラブです
+キャスター: 最後に杯を掲げたのは1969年。次は2025年でした。
+  telop: 最後に杯を掲げたのは1969年。次は2025年でした
 
 ## いま見る理由
 @bg: assets/backgrounds/stadium_ニューカッスル.png
 @main: true
 
-キャスター: エディ・ハウが去り、**38歳**の新監督ヤイスレの1年目。地元の英雄アラン・シアラーは、かつてこう言いました。
-  telop: エディ・ハウが去り、**38歳**の新監督ヤイスレの1年目。地元の英雄アラン・シアラーは、かつてこう言いました
+キャスター: ハウが去り、**38歳**のヤイスレの1年目。降格危機の2009年に監督を引き受けたシアラーの言葉です。
+  telop: ハウが去り、**38歳**のヤイスレの1年目。降格危機の2009年に監督を引き受けたシアラーの言葉です
   source: 報道
   card: reasons_card
 アラン・シアラー: 「愛するクラブだ。落ちてほしくない。できることは全部やる」
   telop: アラン・シアラー「「愛するクラブだ。落ちてほしくない。できることは全部やる」」
 キャスター: 昨季は**12位**。今季は開幕から5試合で負けが1つだけと、滑り出しは上々です。
   telop: 昨季は**12位**。今季は開幕から5試合で負けが1つだけと、滑り出しは上々です
+キャスター: 待っていたのは新しいオーナー。2021年に代わって、4年後にリーグカップを獲りました。
+  telop: 待っていたのは新しいオーナー。2021年に代わって、4年後にリーグカップを獲りました
 
 ## ニューカッスル 基礎DATA
 @bg: assets/backgrounds/stadium_ニューカッスル.png
@@ -236,18 +238,6 @@ cards:
   no_telop: true
   image: assets/stats/pl_newcastle_last.png
 
-## このクラブの特徴
-@bg: assets/backgrounds/stadium_ニューカッスル.png
-
-解説: ヤイスレ監督のサッカーは、前へ前へ。奪ってすぐに、速く攻めます。
-  telop: ヤイスレ監督のサッカーは、前へ前へ。奪ってすぐに、速く攻めます
-  source: 背景
-  card: features_card
-解説: 2021年、サウジアラビアの公共投資基金が3億500万ポンドで買収。オーナーの資金で買う型です。
-  telop: 2021年、サウジアラビアの公共投資基金が3億500万ポンドで買収。オーナーの資金で買う型です
-解説: 街にクラブは一つだけ。2部に落ちた2016年からの1年も、平均5万人を超えるお客さんが来ました。
-  telop: 街にクラブは一つだけ。2部に落ちた2016年からの1年も、平均5万人を超えるお客さんが来ました
-
 ## 56年待った
 @bg: assets/backgrounds/stadium_ニューカッスル.png
 
@@ -270,8 +260,8 @@ cards:
   telop: ところが、そこから先が長かった
   card: none
   image: assets/images/pl_newcastle_story/scene.jpg
-解説: 変わり目は2021年10月7日です。
-  telop: 変わり目は2021年10月7日です
+解説: 変わり目は2021年10月。いまのオーナーが買い取り、14年ぶりにオーナーが代わりました。
+  telop: 変わり目は2021年10月。いまのオーナーが買い取り、14年ぶりにオーナーが代わりました
   card: none
   image: assets/images/pl_newcastle_story/scene.jpg
 解説: いまのオーナーが、クラブを買い取った日です。オーナーが代わるのは14年ぶりでした。
@@ -286,6 +276,18 @@ cards:
   telop: 1969年から数えて、**56年ぶり**のタイトルでした
   card: none
   image: assets/images/pl_newcastle_story/scene.jpg
+
+## このクラブの特徴
+@bg: assets/backgrounds/stadium_ニューカッスル.png
+
+解説: ヤイスレ監督のサッカーは、前へ前へ。奪ってすぐに、速く攻めます。
+  telop: ヤイスレ監督のサッカーは、前へ前へ。奪ってすぐに、速く攻めます
+  source: 背景
+  card: features_card
+解説: オーナーの資金で買う型。買収額は3億500万ポンドで、そこから4年でタイトルに届きました。
+  telop: オーナーの資金で買う型。買収額は3億500万ポンドで、そこから4年でタイトルに届きました
+解説: 街にクラブは一つだけ。2部に落ちた2016年からの1年も、平均5万人を超えるお客さんが来ました。
+  telop: 街にクラブは一つだけ。2部に落ちた2016年からの1年も、平均5万人を超えるお客さんが来ました
 
 ## 最初は赤いシャツだった
 @bg: assets/backgrounds/stadium_ニューカッスル.png

@@ -48,10 +48,11 @@ sections:
       - リーグ優勝から2シーズン
   say:
   - 開幕から**5連勝**。いま、プレミアの首位にいるクラブです。
-  - 監督はエンツォ・マレスカ。かつての助手が、**1年目**の指揮です。
+  - 監督はエンツォ・マレスカ。かつてグアルディオラを支えた助手が、**1年目**の指揮です。
   - voice: エンツォ・マレスカ
     text: 「シティは、信じられないほどよく運営されているクラブだ」
   - 昨季はリーグ2位で、カップは**2つ**。リーグの優勝からは、2シーズン遠ざかっています。
+  - 3部にいたのは1998年。転機は10年後の買収でした。
   sources:
   - https://en.wikipedia.org/wiki/Manchester_City_F.C.
   - https://en.wikipedia.org/wiki/2026–27_Manchester_City_F.C._season
@@ -94,35 +95,6 @@ sections:
   - https://en.wikipedia.org/wiki/Manchester_City_F.C.
   bg: assets/backgrounds/stadium_マンチェスターシティ.png
   official: false
-- id: features
-  heading: このクラブの特徴
-  tier: 背景
-  telop: 持って崩す。王族の資金
-  narrator: 解説
-  card:
-    type: table
-    title: このクラブの特徴
-    columns:
-    - ''
-    - ''
-    rows:
-    - - プレーの色
-      - 持って崩し、すぐ奪い返す
-    - - 運営の型
-      - アブダビ王族の資金
-    - - クラブの気質
-      - 失業の街で教会が作った
-  say:
-  - ボールを持って崩し、奪われたらその場で奪い返す、グアルディオラ譲りのサッカーです
-  - 2008年にアブダビの王族が買収し、翌年だけで1億ポンド超を選手に注いだオーナー資金の型
-  - 始まりは1880年、失業と暴力に悩む東マンチェスターの男たちのために教会が作ったチーム
-  sources:
-  - https://en.wikipedia.org/wiki/Manchester_City_F.C.
-  - https://en.wikipedia.org/wiki/Enzo_Maresca
-  - https://en.wikipedia.org/wiki/History_of_Manchester_City_F.C.
-  - https://en.wikipedia.org/wiki/City_Football_Group
-  bg: assets/backgrounds/stadium_マンチェスターシティ.png
-  official: false
 - id: fall
   heading: 3部まで落ちたクラブ
   tier: 背景
@@ -162,6 +134,35 @@ sections:
   - https://en.wikipedia.org/wiki/Manchester_City_F.C.
   - https://en.wikipedia.org/wiki/Vincent_Kompany
   bg: assets/backgrounds/stadium_マンチェスターシティ.png
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 持って崩す。王族の資金
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 持って崩し、すぐ奪い返す
+    - - 運営の型
+      - 買収から4年で優勝
+    - - クラブの気質
+      - 東マンチェスターの街
+  say:
+  - マレスカのサッカーは、ボールを持って崩し、奪われたらその場で奪い返す。グアルディオラ譲りです。
+  - オーナー資金で買う型。買収の翌年だけで1億ポンド超を選手に注ぎ、4年で優勝まで駆け上がりました。
+  - 始まりは東マンチェスターの労働者の街。いまも本拠地は、その東側にあります。
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_City_F.C.
+  - https://en.wikipedia.org/wiki/Enzo_Maresca
+  - https://en.wikipedia.org/wiki/History_of_Manchester_City_F.C.
+  - https://en.wikipedia.org/wiki/City_Football_Group
+  bg: assets/backgrounds/stadium_マンチェスターシティ.png
+  official: false
 - id: episode
   heading: 優勝の翌年に降格
   tier: 背景

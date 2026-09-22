@@ -52,6 +52,7 @@ sections:
   - voice: ミケル・アルテタ
     text: 「仕事に責任を持ち、情熱とエネルギーを注ぐ人がほしい」
   - 今季は連覇に挑む立場。首位を勝ち点**3**差で追っています。
+  - 無敗の記録を残したのは2004年。その先に22年の空白がありました。
   sources:
   - https://en.wikipedia.org/wiki/Arsenal_F.C.
   - https://en.wikipedia.org/wiki/2026–27_Arsenal_F.C._season
@@ -97,35 +98,6 @@ sections:
   - https://en.wikipedia.org/wiki/Arsenal_F.C.
   bg: assets/backgrounds/stadium_アーセナル.png
   official: false
-- id: features
-  heading: このクラブの特徴
-  tier: 背景
-  telop: 持って崩す。7歳から育てる
-  narrator: 解説
-  card:
-    type: table
-    title: このクラブの特徴
-    columns:
-    - ''
-    - ''
-    rows:
-    - - プレーの色
-      - 持って組み立てて崩す
-    - - 運営の型
-      - 育成ハレ・エンドが土台
-    - - クラブの気質
-      - 株を買う仕組みに1800人
-  say:
-  - ボールを持って試合を支配し、後ろから組み立てて崩す、セットプレーも強いサッカー。
-  - 育成のハレ・エンドが土台で、サカは7歳で入って以来、ずっとこのクラブの選手です。
-  - サポーター団体が作った株を少しずつ買う仕組みに、1800人が200万ポンド弱を出しました。
-  sources:
-  - https://en.wikipedia.org/wiki/Arsenal_F.C.
-  - https://en.wikipedia.org/wiki/Mikel_Arteta
-  - https://en.wikipedia.org/wiki/Bukayo_Saka
-  - https://en.wikipedia.org/wiki/Arsenal_Supporters%27_Trust
-  bg: assets/backgrounds/stadium_アーセナル.png
-  official: false
 - id: history
   heading: 歩んできた道
   tier: 背景
@@ -145,7 +117,7 @@ sections:
   say:
   - text: この無敗は、そのシーズンだけで終わっていません。
     image: assets/images/pl_arsenal_story/scene.jpg
-  - 前のシーズンの5月から、次のシーズンの10月まで、リーグ戦**49試合**です。
+  - 2003年5月から2004年10月まで、リーグ戦**49試合**、負けませんでした。
   - この連続無敗は、いまもイングランド1部の最長記録です。
   - ただ、そこからリーグ優勝は遠ざかりました。
   - 次の優勝は**2026年5月19日**。**22年ぶり**でした。
@@ -153,6 +125,35 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Arsenal_F.C.
   bg: assets/backgrounds/stadium_アーセナル.png
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 持って崩す。7歳から育てる
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 持って支配し、崩す
+    - - 運営の型
+      - 7歳から育てる
+    - - クラブの気質
+      - 南から北へ渡ってきた
+  say:
+  - アルテタのサッカーは、ボールを持って試合を支配し、後ろから組み立てて崩す。セットプレーも強い。
+  - 育成のハレ・エンドが土台。サカは7歳で入って以来、ずっとこのクラブの選手です。
+  - 1913年、南のウーリッジから北ロンドンへ移ってきました。テムズ川を渡った引っ越しです。
+  sources:
+  - https://en.wikipedia.org/wiki/Arsenal_F.C.
+  - https://en.wikipedia.org/wiki/Mikel_Arteta
+  - https://en.wikipedia.org/wiki/Bukayo_Saka
+  - https://en.wikipedia.org/wiki/Arsenal_Supporters%27_Trust
+  bg: assets/backgrounds/stadium_アーセナル.png
+  official: false
 - id: episode
   heading: クラブ名の地下鉄駅
   tier: 背景
@@ -260,7 +261,7 @@ sections:
   say:
   - text: トニー・アダムスは1983年、17歳でデビュー。引退までこのクラブだけのセンターバックです。
     image: assets/photos/pl/arsenal_legend_2f4344ee.jpg
-  - 1988年、21歳で主将に。3つの年代でリーグ優勝の腕章を巻いた、ただひとりの選手です。
+  - 1988年、21歳で主将に。80年代、90年代、2000年代、3つの時代で優勝の腕章を巻きました。
   - リーグ戦で**504試合**。2011年、創立125年を記念して、エミレーツに銅像が立ちました。
   sources:
   - https://en.wikipedia.org/wiki/Thierry_Henry
@@ -380,7 +381,6 @@ sections:
   - 順位は**2位**、勝ち点は**12**です。
   - この順位を保てば、来季のチャンピオンズリーグに出られます。
   - 唯一の黒星は第5節。ブライトンにアウェーで0対3で敗れました。
-  - 首位のマンチェスター・シティとは、勝ち点3の差です。
   - 今季のチャンピオンズリーグは、初戦でナポリにアウェーで**1対0**の勝ちです。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Arsenal_F.C._season
