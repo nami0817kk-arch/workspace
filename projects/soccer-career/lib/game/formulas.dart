@@ -141,6 +141,15 @@ class Formulas {
   /// どこにも無かった。出ていない試合には効かない（居ないぶん弱い）。
   static const double starLift = 0.5;
 
+  /// 知名度が1シーズンで薄れる割合。露出が止まると、有名なほど早く忘れられる。
+  static const double fameFade = 0.22;
+
+  /// 最上位の国のクラブが声をかける線（代表キャップ）。どちらか一方でよい。
+  static const int eliteCaps = 30;
+
+  /// 最上位の国のクラブが声をかける線（知名度）。
+  static const int eliteFame = 68;
+
   /// 持ち上げる上限。差 34 で頭打ち（強さ35のクラブに 69 の選手で +12）。
   static const double starLiftCap = 16;
 

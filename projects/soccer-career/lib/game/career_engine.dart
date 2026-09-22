@@ -962,10 +962,21 @@ class CareerEngine {
                 state.agent.reach ~/ 4 +
                 (state.caps >= 10 ? 1 : 0))
             .clamp(0, 1);
+    // **最上位の国は、名前で入る。** 総合力だけで一段ずつ上がれると、
+    // クラブを持ち上げて昇格し、上のクラブに払われて（2026-09-22/23）、
+    // 83% が格5の国の1部に着いていた。最上位の国のクラブが声をかけるのは、
+    // 代表で積み上げた選手か、名前が国の外まで届いている選手だけにする。
+    final top = World.countries.map((c) => c.prestige).reduce(max);
+    final known =
+        state.caps >= Formulas.eliteCaps ||
+        state.reputation.fame >= Formulas.eliteFame;
     return [
       here,
       ...World.countries.where(
-        (c) => c.id != here.id && c.prestige <= here.prestige + reachPrestige,
+        (c) =>
+            c.id != here.id &&
+            c.prestige <= here.prestige + reachPrestige &&
+            (c.prestige < top || here.prestige >= top || known),
       ),
     ];
   }

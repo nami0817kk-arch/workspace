@@ -117,11 +117,17 @@ class Person {
       gained += World.byId(state.club.countryId).prestige;
     }
     // 華のある選手は同じ働きでも名前が広まる。忘れられる速さは同じ。
-    final fame =
-        state.reputation.fame -
-        2 +
-        (gained * state.player.traits.fameFactor).round();
-    return fame.clamp(0, 100);
+    //
+    // **足し算にしない。** 以前は毎季 −2 して露出を足すだけだったので、
+    // 25歳で 3/4 の選手が 99〜100 に張り付いていた（`test/world_sim.dart` の
+    // 調べ）——知名度で値札も届く先も愛称も決めているのに、全員同じ値だった。
+    // 今は「広まるほど広まりにくく、有名なほど早く忘れられる」形にして、
+    // 今の露出に見合う高さへ寄っていく（露出 20 で 60 前後に落ち着く）。
+    final now = state.reputation.fame;
+    final gain =
+        gained * state.player.traits.fameFactor * (100 - now) / 100;
+    final fade = now * Formulas.fameFade;
+    return (now + gain - fade).round().clamp(0, 100);
   }
 
   /// そのシーズンで得た称号。
