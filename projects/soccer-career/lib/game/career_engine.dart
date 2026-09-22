@@ -1405,16 +1405,28 @@ class CareerEngine {
   }
 
   /// 引退後の道を、やってきたことから見立てる。
+  /// **順番が配分を決める。** 上から順に当てはめるので、線の緩いものを
+  /// 先に置くとそれだけになる。解説者（知名度）を2番目に置いていた頃、
+  /// 知名度が誰でも 100 に張り付いていた（2026-09-23 に直した）ぶんも重なって、
+  /// **引退の 58% が解説者**だった。監督は 10%・コーチは 5% しか出ず、
+  /// **引退させた選手が次のキャリアに現れる仕組みがほとんど動いていなかった**
+  /// （ピッチに戻るのは監督とコーチだけ）。
   SecondCareer secondCareerFor(CareerState state) {
     final p = state.player.personality;
     final totals = state.careerTotals;
+    // 腕章を巻いてロッカールームをまとめた選手は、監督へ。
+    if (state.captain && p.professionalism >= 12) return SecondCareer.manager;
+    // 積み上げたものを渡す側へ。プロ意識が要る。
+    if (p.professionalism >= 15) return SecondCareer.coach;
+    // 稼いで、外の世界を見ていた選手。
     if (state.finances.savings >= 30000 && p.ambition >= 14) {
       return SecondCareer.entrepreneur;
     }
-    if (state.captain && p.professionalism >= 13) return SecondCareer.manager;
-    if (state.reputation.fame >= 60) return SecondCareer.pundit;
-    if (p.professionalism >= 14) return SecondCareer.coach;
-    if (totals.appearances >= 300) return SecondCareer.director;
+    // 名前が残っている選手は、話す側に呼ばれる。
+    if (state.reputation.fame >= Formulas.punditFame) {
+      return SecondCareer.pundit;
+    }
+    if (totals.appearances >= 520) return SecondCareer.director;
     return SecondCareer.quiet;
   }
 

@@ -166,6 +166,9 @@ class Career {
 
   int seasons = 0;
   int retireAge = 0;
+
+  /// 引退後の道（引退の直前に控えたもの）。
+  SecondCareer? secondCareer;
   int peakOverall = 0;
   int potential = 0;
   int startOverall = 0;
@@ -504,11 +507,11 @@ Future<Career> runCareer(
     if (done.manager != null) {
       career.seenStates.add('Tactic.${done.manager!.tactic.name}');
     }
-    if (done.retired) {
-      career.seenStates.add(
-        'SecondCareer.${controller.suggestedSecondCareer.name}',
-      );
-    }
+    // **引退後の道は、引退の直前に控える。**
+    // `done.retired` で見ていた頃は、シーズンの終わりにまだ引退していないので
+    // **6つの道が1つも記録されず**、`reach_sim` が「一度も起きない」と言っていた
+    // （壊れていたのは仕組みではなく指標のほう。これで7回目）。
+    career.secondCareer = controller.suggestedSecondCareer;
     // シーズンが1つ終わるたびに、そのときの世界ごと覗かせる。
     // キャリアの弧（何歳で何に届き、そのあと何が起きるか）を測るために要る。
     onSeason?.call(done, stats, controller);
@@ -545,6 +548,7 @@ Future<Career> runCareer(
 
     // --- 去就を決める ---
     if (controller.mustRetire) {
+      career.seenStates.add('SecondCareer.${career.secondCareer!.name}');
       await controller.retire();
       break;
     }
@@ -552,6 +556,7 @@ Future<Career> runCareer(
     if (controller.canRetire &&
         (stats.appearances < 8 || done.player.age >= 35) &&
         random.nextDouble() < 0.5) {
+      career.seenStates.add('SecondCareer.${career.secondCareer!.name}');
       await controller.retire();
       break;
     }
@@ -561,6 +566,7 @@ Future<Career> runCareer(
       ...controller.offers,
     ];
     if (offers.isEmpty) {
+      career.seenStates.add('SecondCareer.${career.secondCareer!.name}');
       await controller.retire();
       break;
     }

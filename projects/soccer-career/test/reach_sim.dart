@@ -119,7 +119,12 @@ void main() {
         '中央 ${gaps[gaps.length ~/ 2]} / 最大 ${gaps.last}');
     print('  いまの登録外の線: ${Formulas.squadRegistrationGap}');
     print('');
-    print('=== 起きた回数（少ない順に20件）===');
+    print('=== 引退後の道 ===');
+    for (final v in SecondCareer.values) {
+      print('  ${v.name.padRight(14)} ${seen['SecondCareer.${v.name}'] ?? 0}');
+    }
+    print('');
+  print('=== 起きた回数（少ない順に20件）===');
     final sorted = seen.entries.toList()
       ..sort((a, b) => a.value.compareTo(b.value));
     for (final entry in sorted.take(20)) {

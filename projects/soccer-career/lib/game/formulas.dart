@@ -147,6 +147,9 @@ class Formulas {
   /// 最上位の国のクラブが声をかける線（代表キャップ）。どちらか一方でよい。
   static const int eliteCaps = 30;
 
+  /// 引退後、解説者に呼ばれる知名度の線。
+  static const int punditFame = 66;
+
   /// 最上位の国のクラブが声をかける線（知名度）。
   static const int eliteFame = 68;
 
