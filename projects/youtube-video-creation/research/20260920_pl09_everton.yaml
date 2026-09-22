@@ -228,6 +228,33 @@ sections:
   - https://en.wikipedia.org/wiki/Everton_F.C.
   bg: assets/backgrounds/stadium_エヴァートン.png
   official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はデイヴィッド・モイーズ。3年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - デイヴィッド・モイーズ（スコットランド）
+    - - 就任
+      - 2025年1月・3年目
+    - - 前職
+      - ウェストハム
+  say:
+  - text: 監督はスコットランド人のデイヴィッド・モイーズ。**2025年1月**から、3年目です。
+    image: assets/photos/pl/everton_manager_c9564519.jpg
+  - 2002年から13年に続く、2度目のエヴァートン監督。前はウェストハムでした。
+  sources:
+  - https://en.wikipedia.org/wiki/Everton_F.C.
+  - https://en.wikipedia.org/wiki/David_Moyes
+  bg: assets/backgrounds/stadium_エヴァートン.png
+  official: false
 - id: season
   heading: 今季のここまで
   tier: 報道

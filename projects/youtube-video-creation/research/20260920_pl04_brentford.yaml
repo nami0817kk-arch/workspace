@@ -222,6 +222,33 @@ sections:
   - https://en.wikipedia.org/wiki/Brentford_F.C.
   bg: assets/backgrounds/stadium_ブレントフォード.png
   official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はキース・アンドリュース。2年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - キース・アンドリュース（アイルランド）
+    - - 就任
+      - 2025年6月・2年目
+    - - 前職
+      - このクラブのセットプレー担当コーチ
+  say:
+  - text: 監督はアイルランド人のキース・アンドリュース。**2025年6月**から、2年目です。
+    image: assets/photos/pl/brentford_manager_9acd4388.jpg
+  - 前の年まで、このクラブのセットプレー担当のコーチ。中から上がった監督です。
+  sources:
+  - https://en.wikipedia.org/wiki/Brentford_F.C.
+  - https://en.wikipedia.org/wiki/Keith_Andrews_(footballer)
+  bg: assets/backgrounds/stadium_ブレントフォード.png
+  official: false
 - id: season
   heading: 今季のここまで
   tier: 報道

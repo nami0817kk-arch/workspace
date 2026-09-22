@@ -79,3 +79,17 @@ episode:
   sources:
   - https://en.wikipedia.org/wiki/Coventry_City_F.C.
   - https://en.wikipedia.org/wiki/1987_FA_Cup_final
+# 今季の監督（2026-09-22 指示）。Wikipedia のクラブ記事と本人の記事で裏を取った
+manager:
+- 監督はイングランド人のフランク・ランパード。**2024年11月**から、3年目です。
+- 昨季、2部で優勝させて、プレミアに連れてきた監督です。
+manager_telop: 監督はフランク・ランパード。3年目
+manager_rows:
+- - 監督
+  - フランク・ランパード（イングランド）
+- - 就任
+  - 2024年11月・3年目
+- - 前職
+  - チェルシー暫定監督
+manager_sources:
+- https://en.wikipedia.org/wiki/Frank_Lampard

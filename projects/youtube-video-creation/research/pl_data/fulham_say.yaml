@@ -79,3 +79,17 @@ episode:
   - 選手の更衣室であり、選手の家族がバルコニーから試合を見る場所でもあります。
   sources:
   - https://en.wikipedia.org/wiki/Craven_Cottage
+# 今季の監督（2026-09-22 指示）。Wikipedia のクラブ記事と本人の記事で裏を取った
+manager:
+- 今季の監督は、スペイン人のアルバロ・アルベロア。**2026年7月**に来た1年目です。
+- 前はレアル・マドリード。現役時代はリヴァプールとレアルの右サイドバックでした。
+manager_telop: 監督はアルバロ・アルベロア。1年目
+manager_rows:
+- - 監督
+  - アルバロ・アルベロア（スペイン）
+- - 就任
+  - 2026年7月・1年目
+- - 前職
+  - レアル・マドリード
+manager_sources:
+- https://en.wikipedia.org/wiki/Álvaro_Arbeloa

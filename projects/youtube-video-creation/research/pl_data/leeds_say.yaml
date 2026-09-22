@@ -75,3 +75,17 @@ episode:
   - エリック・カントナも、11月に**120万ポンド**でマンチェスター・ユナイテッドへ売られました。
   sources:
   - https://en.wikipedia.org/wiki/History_of_Leeds_United_F.C.
+# 今季の監督（2026-09-22 指示）。Wikipedia のクラブ記事と本人の記事で裏を取った
+manager:
+- 監督はドイツ人のダニエル・ファルケ。**2023年7月**から、4年目です。
+- 2部の優勝は**3回**。ノリッジで2回、リーズで1回です。
+manager_telop: 監督はダニエル・ファルケ。4年目
+manager_rows:
+- - 監督
+  - ダニエル・ファルケ（ドイツ）
+- - 就任
+  - 2023年7月・4年目
+- - 前職
+  - ボルシア・メンヒェングラートバッハ
+manager_sources:
+- https://en.wikipedia.org/wiki/Daniel_Farke

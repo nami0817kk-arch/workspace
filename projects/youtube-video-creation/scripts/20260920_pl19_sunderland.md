@@ -46,6 +46,7 @@ sources:
 - https://en.wikipedia.org/wiki/Niall_Quinn
 - https://en.wikipedia.org/wiki/Kevin_Ball
 - https://en.wikipedia.org/wiki/Kevin_Phillips_(English_footballer)
+- https://en.wikipedia.org/wiki/Régis_Le_Bris
 - https://en.wikipedia.org/wiki/2026–27_Sunderland_A.F.C._season
 cards:
   fall_card:
@@ -120,6 +121,19 @@ cards:
     - - ケヴィン・ボール
       - 1990-1999
       - 2度の昇格を率いた主将
+  manager_card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - レジス・ル・ブリ（フランス）
+    - - 就任
+      - 2024年7月・3年目
+    - - 前職
+      - ロリアン
   season_card:
     type: table
     title: プレミアリーグの結果
@@ -237,8 +251,6 @@ cards:
   image: assets/photos/pl/sunderland_legend_1bb9e670.jpg
 キャスター: 2000年、プレミアで**30得点**の得点王。ヨーロッパの得点王もイングランド人で初めてでした。
   telop: 2000年、プレミアで**30得点**の得点王。ヨーロッパの得点王もイングランド人で初めてでした
-  card: none
-  image: assets/photos/pl/sunderland_legend_1bb9e670.jpg
 キャスター: リーグ戦で**208試合113得点**。2003年、325万ポンドでサウサンプトンへ移りました。
   telop: リーグ戦で**208試合113得点**。2003年、325万ポンドでサウサンプトンへ移りました
   card: none
@@ -254,8 +266,6 @@ cards:
   image: assets/photos/pl/sunderland_legend_b2b573bf.jpg
 キャスター: フィリップスとの2トップで、2人合わせて**194得点**。「大と小」と呼ばれたコンビでした。
   telop: フィリップスとの2トップで、2人合わせて**194得点**。「大と小」と呼ばれたコンビでした
-  card: none
-  image: assets/photos/pl/sunderland_legend_b2b573bf.jpg
 キャスター: 引退試合の収益**100万ポンド**を子どもの病院に寄付。2006年にはクラブの会長になりました。
   telop: 引退試合の収益**100万ポンド**を子どもの病院に寄付。2006年にはクラブの会長になりました
   card: none
@@ -292,6 +302,17 @@ cards:
 キャスター: フォワードは8人。ウィルソン・イシドールはリーグ戦で**19得点**。ブライアン・ブロベイはオランダ代表で**16試合**。
   no_telop: true
   image: assets/stats/pl_sunderland_fw_f.png
+
+## 今季の監督
+@bg: assets/backgrounds/stadium_サンダーランド.png
+
+キャスター: 監督はフランス人のレジス・ル・ブリ。**2024年7月**から、3年目です。
+  telop: 監督はフランス人のレジス・ル・ブリ。**2024年7月**から、3年目です
+  source: 報道
+  card: manager_card
+  image: assets/photos/pl/sunderland_manager_1ba8b156.jpg
+キャスター: 昇格1年目のクラブを7位に。ヨーロッパリーグへ連れていった監督です。
+  telop: 昇格1年目のクラブを7位に。ヨーロッパリーグへ連れていった監督です
 
 ## 今季のここまで
 @bg: assets/backgrounds/stadium_サンダーランド.png

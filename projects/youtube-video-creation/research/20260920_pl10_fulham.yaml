@@ -230,6 +230,33 @@ sections:
   - https://en.wikipedia.org/wiki/Fulham_F.C.
   bg: assets/backgrounds/stadium_フラム.png
   official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はアルバロ・アルベロア。1年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - アルバロ・アルベロア（スペイン）
+    - - 就任
+      - 2026年7月・1年目
+    - - 前職
+      - レアル・マドリード
+  say:
+  - text: 今季の監督は、スペイン人のアルバロ・アルベロア。**2026年7月**に来た1年目です。
+    image: assets/photos/pl/fulham_manager_465c1add.jpg
+  - 前はレアル・マドリード。現役時代はリヴァプールとレアルの右サイドバックでした。
+  sources:
+  - https://en.wikipedia.org/wiki/Fulham_F.C.
+  - https://en.wikipedia.org/wiki/Álvaro_Arbeloa
+  bg: assets/backgrounds/stadium_フラム.png
+  official: false
 - id: season
   heading: 今季のここまで
   tier: 報道

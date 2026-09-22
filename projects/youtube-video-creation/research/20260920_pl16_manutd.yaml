@@ -235,6 +235,33 @@ sections:
   - https://en.wikipedia.org/wiki/Manchester_United_F.C.
   bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
   official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はマイケル・キャリック。2年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - マイケル・キャリック（イングランド）
+    - - 就任
+      - 2026年1月・2年目
+    - - 前職
+      - ミドルズブラ
+  say:
+  - text: 監督はイングランド人のマイケル・キャリック。**2026年1月**に暫定で就き、5月に正式に決まりました。
+    image: assets/photos/pl/manutd_manager_ab69d494.jpg
+  - 現役時代は12年間、このクラブの中盤。最後の年は主将でした。
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_United_F.C.
+  - https://en.wikipedia.org/wiki/Michael_Carrick
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+  official: false
 - id: season
   heading: 今季のここまで
   tier: 報道

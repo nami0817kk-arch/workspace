@@ -245,6 +245,33 @@ sections:
   - https://en.wikipedia.org/wiki/Coventry_City_F.C.
   bg: assets/backgrounds/stadium_コヴェントリー.png
   official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はフランク・ランパード。3年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - フランク・ランパード（イングランド）
+    - - 就任
+      - 2024年11月・3年目
+    - - 前職
+      - チェルシー暫定監督
+  say:
+  - text: 監督はイングランド人のフランク・ランパード。**2024年11月**から、3年目です。
+    image: assets/photos/pl/coventry_manager_ff78bb8a.jpg
+  - 昨季、2部で優勝させて、プレミアに連れてきた監督です。
+  sources:
+  - https://en.wikipedia.org/wiki/Coventry_City_F.C.
+  - https://en.wikipedia.org/wiki/Frank_Lampard
+  bg: assets/backgrounds/stadium_コヴェントリー.png
+  official: false
 - id: season
   heading: 今季のここまで
   tier: 報道

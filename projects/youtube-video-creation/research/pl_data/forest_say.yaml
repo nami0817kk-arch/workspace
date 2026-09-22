@@ -71,3 +71,17 @@ episode:
   - エヴァートンにもシャツを贈り、ブライトンには試合をする土地を探す手伝いもしています。
   sources:
   - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
+# 今季の監督（2026-09-22 指示）。Wikipedia のクラブ記事と本人の記事で裏を取った
+manager:
+- 今季の監督は、オーストリア人のオリバー・グラスナー。**2026年7月**に来た1年目です。
+- 前はクリスタル・パレス。2025年、パレスにクラブ初のFAカップをもたらしました。
+manager_telop: 監督はオリバー・グラスナー。1年目
+manager_rows:
+- - 監督
+  - オリバー・グラスナー（オーストリア）
+- - 就任
+  - 2026年7月・1年目
+- - 前職
+  - クリスタル・パレス
+manager_sources:
+- https://en.wikipedia.org/wiki/Oliver_Glasner

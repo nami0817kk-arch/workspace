@@ -230,6 +230,33 @@ sections:
   - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
   bg: assets/backgrounds/stadium_ニューカッスル.png
   official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はマティアス・ヤイスレ。1年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - マティアス・ヤイスレ（ドイツ）
+    - - 就任
+      - 2026年8月・1年目
+    - - 前職
+      - アル・アハリ
+  say:
+  - text: 今季の監督は、ドイツ人のマティアス・ヤイスレ。**2026年8月**に来た1年目です。
+    image: assets/photos/pl/newcastle_manager_37492bb4.jpg
+  - 前はサウジアラビアのアル・アハリ。エディ・ハウが退いた6日後の就任でした。
+  sources:
+  - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
+  - https://en.wikipedia.org/wiki/Matthias_Jaissle
+  bg: assets/backgrounds/stadium_ニューカッスル.png
+  official: false
 - id: season
   heading: 今季のここまで
   tier: 報道

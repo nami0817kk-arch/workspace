@@ -76,3 +76,17 @@ episode:
   - 会社が立ち上げを任せたのは、アストン・ヴィラの職員でした。だから最初のユニフォームは、ヴィラと同じえんじ色と青です。
   sources:
   - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
+# 今季の監督（2026-09-22 指示）。Wikipedia のクラブ記事と本人の記事で裏を取った
+manager:
+- 今季の監督は、フランス人のピエール・サージュ。**2026年6月**に来た1年目です。
+- 前はランス。クラブ史上初のフランスカップ優勝に導いてから来ました。
+manager_telop: 監督はピエール・サージュ。1年目
+manager_rows:
+- - 監督
+  - ピエール・サージュ（フランス）
+- - 就任
+  - 2026年6月・1年目
+- - 前職
+  - ランス
+manager_sources:
+- https://en.wikipedia.org/wiki/Pierre_Sage

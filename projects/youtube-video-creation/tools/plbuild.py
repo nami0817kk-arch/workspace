@@ -470,6 +470,21 @@ def build(key: str, number: int, old_file: str) -> Path:
                      "no_telop": True})
     sections.append(sec(id="squad", heading="今季の登録選手", tier="報道", telop="今季の登録選手",
                         narrator="キャスター", say=ssay, sources=[wiki]))
+    # **今季の監督**（2026-09-22 指示「今季の監督が誰かも加えよう」）。
+    # <key>_say.yaml の `manager`（読み上げの行）・`manager_rows`（板）・`manager_sources`。
+    # 顔は faces.json の role "manager"（tools/plmanagers.py が集める）
+    if ov.get("manager"):
+        m_face = next((v.get("file", "") for v in faces.values()
+                       if isinstance(v, dict) and v.get("role") == "manager"), "")
+        m_lines = list(ov["manager"])
+        m_say = [{"text": m_lines[0], "image": m_face} if m_face else m_lines[0]] + m_lines[1:]
+        sections.append(sec(id="manager", heading="今季の監督", tier="報道",
+                            telop=str(ov.get("manager_telop") or "今季の監督"),
+                            narrator="キャスター",
+                            card={"type": "table", "title": "今季の監督", "columns": ["", ""],
+                                  "rows": ov.get("manager_rows") or []},
+                            say=m_say,
+                            sources=[wiki] + [u for u in (ov.get("manager_sources") or []) if u != wiki]))
     # 今季のここまで（プレミアの節だけ）
     games = pl_games(key)
     if games:

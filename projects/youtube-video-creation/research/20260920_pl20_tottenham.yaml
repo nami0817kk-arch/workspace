@@ -247,6 +247,33 @@ sections:
   - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
   bg: assets/backgrounds/stadium_トッテナム.png
   official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はロベルト・デ・ゼルビ。2年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ロベルト・デ・ゼルビ（イタリア）
+    - - 就任
+      - 2026年3月・2年目
+    - - 前職
+      - マルセイユ
+  say:
+  - text: 監督はイタリア人のロベルト・デ・ゼルビ。**2026年3月**から、2年目です。
+    image: assets/photos/pl/tottenham_manager_57aac009.jpg
+  - 前はマルセイユ。就任した昨季は17位で、最終節で残留を決めました。
+  sources:
+  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
+  - https://en.wikipedia.org/wiki/Roberto_De_Zerbi
+  bg: assets/backgrounds/stadium_トッテナム.png
+  official: false
 - id: season
   heading: 今季のここまで
   tier: 報道

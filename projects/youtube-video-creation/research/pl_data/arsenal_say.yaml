@@ -110,3 +110,17 @@ episode:
   sources:
   - https://en.wikipedia.org/wiki/History_of_Arsenal_F.C._(1886%E2%80%931966)
   - https://en.wikipedia.org/wiki/Arsenal_tube_station
+# 今季の監督（2026-09-22 指示）。Wikipedia のクラブ記事と本人の記事で裏を取った
+manager:
+- 今季の監督は、スペイン人のミケル・アルテタ。**2019年12月**から率いて、8年目です。
+- 現役時代はアーセナルの中盤。シティでグアルディオラの助手を務めてから戻りました。
+manager_telop: 監督はミケル・アルテタ。8年目
+manager_rows:
+- - 監督
+  - ミケル・アルテタ（スペイン）
+- - 就任
+  - 2019年12月・8年目
+- - 前職
+  - マンチェスター・シティの助手
+manager_sources:
+- https://en.wikipedia.org/wiki/Mikel_Arteta

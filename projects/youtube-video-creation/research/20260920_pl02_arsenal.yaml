@@ -230,6 +230,33 @@ sections:
   - https://en.wikipedia.org/wiki/Arsenal_F.C.
   bg: assets/backgrounds/stadium_アーセナル.png
   official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はミケル・アルテタ。8年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ミケル・アルテタ（スペイン）
+    - - 就任
+      - 2019年12月・8年目
+    - - 前職
+      - マンチェスター・シティの助手
+  say:
+  - text: 今季の監督は、スペイン人のミケル・アルテタ。**2019年12月**から率いて、8年目です。
+    image: assets/photos/pl/arsenal_manager_aa6bf3cd.jpg
+  - 現役時代はアーセナルの中盤。シティでグアルディオラの助手を務めてから戻りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Arsenal_F.C.
+  - https://en.wikipedia.org/wiki/Mikel_Arteta
+  bg: assets/backgrounds/stadium_アーセナル.png
+  official: false
 - id: season
   heading: 今季のここまで
   tier: 報道

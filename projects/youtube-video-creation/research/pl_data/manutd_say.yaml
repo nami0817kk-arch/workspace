@@ -81,3 +81,17 @@ episode:
   - その年の4月24日、マンチェスター・ユナイテッドという名前が生まれました。
   sources:
   - https://en.wikipedia.org/wiki/Manchester_United_F.C.
+# 今季の監督（2026-09-22 指示）。Wikipedia のクラブ記事と本人の記事で裏を取った
+manager:
+- 監督はイングランド人のマイケル・キャリック。**2026年1月**に暫定で就き、5月に正式に決まりました。
+- 現役時代は12年間、このクラブの中盤。最後の年は主将でした。
+manager_telop: 監督はマイケル・キャリック。2年目
+manager_rows:
+- - 監督
+  - マイケル・キャリック（イングランド）
+- - 就任
+  - 2026年1月・2年目
+- - 前職
+  - ミドルズブラ
+manager_sources:
+- https://en.wikipedia.org/wiki/Michael_Carrick

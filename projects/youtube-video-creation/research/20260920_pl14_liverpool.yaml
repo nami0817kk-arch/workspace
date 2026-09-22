@@ -252,6 +252,33 @@ sections:
   - https://en.wikipedia.org/wiki/Liverpool_F.C.
   bg: assets/backgrounds/stadium_リヴァプール.png
   official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はアンドニ・イラオラ。1年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - アンドニ・イラオラ（スペイン）
+    - - 就任
+      - 2026年6月・1年目
+    - - 前職
+      - ボーンマス
+  say:
+  - text: 今季の監督は、スペイン人のアンドニ・イラオラ。**2026年6月**に来た1年目です。
+    image: assets/photos/pl/liverpool_manager_703e8e97.jpg
+  - 前はボーンマス。クラブ史上最高の6位と、初めてのヨーロッパに連れていきました。
+  sources:
+  - https://en.wikipedia.org/wiki/Liverpool_F.C.
+  - https://en.wikipedia.org/wiki/Andoni_Iraola
+  bg: assets/backgrounds/stadium_リヴァプール.png
+  official: false
 - id: season
   heading: 今季のここまで
   tier: 報道

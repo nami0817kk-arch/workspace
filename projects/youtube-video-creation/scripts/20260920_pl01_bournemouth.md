@@ -47,6 +47,7 @@ sources:
 - https://en.wikipedia.org/wiki/Callum_Wilson
 - https://en.wikipedia.org/wiki/Brett_Pitman
 - https://en.wikipedia.org/wiki/Ryan_Fraser
+- https://en.wikipedia.org/wiki/Marco_Rose
 - https://en.wikipedia.org/wiki/2026–27_AFC_Bournemouth_season
 cards:
   history_card:
@@ -135,6 +136,19 @@ cards:
     - - ライアン・フレイザー
       - 2013-2020
       - 1シーズン14アシスト。リーグ183試合
+  manager_card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - マルコ・ローゼ（ドイツ）
+    - - 就任
+      - 2026年6月・1年目
+    - - 前職
+      - ライプツィヒ
   season_card:
     type: table
     title: プレミアリーグの結果
@@ -260,8 +274,6 @@ cards:
   image: assets/photos/pl/bournemouth_legend_2f36ed97.jpg
 キャスター: 2009年から10年は**26得点**。5月1日、ポート・ヴェイルに4対0で勝ち、3部へ上げました。
   telop: 2009年から10年は**26得点**。5月1日、ポート・ヴェイルに4対0で勝ち、3部へ上げました
-  card: none
-  image: assets/photos/pl/bournemouth_legend_2f36ed97.jpg
 キャスター: 2部を制した2014年から15年にも13得点。リーグ戦で通算**267試合96得点**です。
   telop: 2部を制した2014年から15年にも13得点。リーグ戦で通算**267試合96得点**です
   card: none
@@ -277,8 +289,6 @@ cards:
   image: assets/photos/pl/bournemouth_legend_224f5148.jpg
 キャスター: 2015年8月、プレミア初戦のウェストハム戦でハットトリック。アウェーで4対3の勝ち。
   telop: 2015年8月、プレミア初戦のウェストハム戦でハットトリック。アウェーで4対3の勝ち
-  card: none
-  image: assets/photos/pl/bournemouth_legend_224f5148.jpg
 キャスター: ボーンマスの選手として初めてイングランド代表で得点。2020年、ニューカッスルに移りました。
   telop: ボーンマスの選手として初めてイングランド代表で得点。2020年、ニューカッスルに移りました
   card: none
@@ -294,8 +304,6 @@ cards:
   image: assets/photos/pl/bournemouth_legend_9f069e9f.jpg
 キャスター: 2016年12月、リヴァプールに4対3で勝ち。途中から出て1点を決め、1点を演出しました。
   telop: 2016年12月、リヴァプールに4対3で勝ち。途中から出て1点を決め、1点を演出しました
-  card: none
-  image: assets/photos/pl/bournemouth_legend_9f069e9f.jpg
 キャスター: 2018年から19年は7得点**14アシスト**。2020年、ウィルソンと同じ日にニューカッスルへ。
   telop: 2018年から19年は7得点**14アシスト**。2020年、ウィルソンと同じ日にニューカッスルへ
   card: none
@@ -320,6 +328,17 @@ cards:
 キャスター: フォワードは7人。ジャスティン・クライファートはオランダ代表で**14試合**。エヴァニウソンは**クラブ最高額の4020万ポンド**で加入しました。
   no_telop: true
   image: assets/stats/pl_bournemouth_fw_f.png
+
+## 今季の監督
+@bg: assets/backgrounds/stadium_ボーンマス.png
+
+キャスター: 今季の監督は、ドイツ人のマルコ・ローゼ。**2026年6月**に来た1年目です。
+  telop: 今季の監督は、ドイツ人のマルコ・ローゼ。**2026年6月**に来た1年目です
+  source: 報道
+  card: manager_card
+  image: assets/photos/pl/bournemouth_manager_19d3b54a.jpg
+キャスター: 前はライプツィヒ。リヴァプールへ去ったイラオラの後任です。
+  telop: 前はライプツィヒ。リヴァプールへ去ったイラオラの後任です
 
 ## 今季のここまで
 @bg: assets/backgrounds/stadium_ボーンマス.png

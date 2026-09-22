@@ -233,6 +233,33 @@ sections:
   - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
   bg: assets/backgrounds/stadium_イプスウィッチ.png
   official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はギャリー・オニール。1年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ギャリー・オニール（イングランド）
+    - - 就任
+      - 2026年6月・1年目
+    - - 前職
+      - ストラスブール
+  say:
+  - text: 今季の監督は、イングランド人のギャリー・オニール。**2026年6月**に来た1年目です。
+    image: assets/photos/pl/ipswich_manager_0a40cb8c.jpg
+  - 前はフランスのストラスブール。家族を優先して退いたマッケンナの後任です。
+  sources:
+  - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
+  - https://en.wikipedia.org/wiki/Gary_O'Neil
+  bg: assets/backgrounds/stadium_イプスウィッチ.png
+  official: false
 - id: season
   heading: 今季のここまで
   tier: 報道

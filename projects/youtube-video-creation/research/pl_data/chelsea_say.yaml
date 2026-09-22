@@ -80,3 +80,17 @@ episode:
   - 年金暮らしのあだ名も、およそ半世紀でその役目を終えました。
   sources:
   - https://en.wikipedia.org/wiki/Chelsea_F.C.
+# 今季の監督（2026-09-22 指示）。Wikipedia のクラブ記事と本人の記事で裏を取った
+manager:
+- 今季の監督は、スペイン人のシャビ・アロンソ。**2026年7月**に来た1年目です。
+- 前はレアル・マドリード。現役時代はリヴァプールの中盤でした。
+manager_telop: 監督はシャビ・アロンソ。1年目
+manager_rows:
+- - 監督
+  - シャビ・アロンソ（スペイン）
+- - 就任
+  - 2026年7月・1年目
+- - 前職
+  - レアル・マドリード
+manager_sources:
+- https://en.wikipedia.org/wiki/Xabi_Alonso

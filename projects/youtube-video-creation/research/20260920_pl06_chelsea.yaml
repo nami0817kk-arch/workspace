@@ -223,6 +223,33 @@ sections:
   - https://en.wikipedia.org/wiki/Chelsea_F.C.
   bg: assets/backgrounds/stadium_チェルシー.png
   official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はシャビ・アロンソ。1年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - シャビ・アロンソ（スペイン）
+    - - 就任
+      - 2026年7月・1年目
+    - - 前職
+      - レアル・マドリード
+  say:
+  - text: 今季の監督は、スペイン人のシャビ・アロンソ。**2026年7月**に来た1年目です。
+    image: assets/photos/pl/chelsea_manager_5f5bf55b.jpg
+  - 前はレアル・マドリード。現役時代はリヴァプールの中盤でした。
+  sources:
+  - https://en.wikipedia.org/wiki/Chelsea_F.C.
+  - https://en.wikipedia.org/wiki/Xabi_Alonso
+  bg: assets/backgrounds/stadium_チェルシー.png
+  official: false
 - id: season
   heading: 今季のここまで
   tier: 報道

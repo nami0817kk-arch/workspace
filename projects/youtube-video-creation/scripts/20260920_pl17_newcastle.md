@@ -46,6 +46,7 @@ sources:
 - https://en.wikipedia.org/wiki/Alan_Shearer
 - https://en.wikipedia.org/wiki/Shay_Given
 - https://en.wikipedia.org/wiki/Rob_Lee
+- https://en.wikipedia.org/wiki/Matthias_Jaissle
 - https://en.wikipedia.org/wiki/2026–27_Newcastle_United_F.C._season
 cards:
   drought_card:
@@ -116,6 +117,19 @@ cards:
     - - ロブ・リー
       - 1992-2002
       - エンターテイナーズの中心
+  manager_card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - マティアス・ヤイスレ（ドイツ）
+    - - 就任
+      - 2026年8月・1年目
+    - - 前職
+      - アル・アハリ
   season_card:
     type: table
     title: プレミアリーグの結果
@@ -226,8 +240,6 @@ cards:
   image: assets/photos/pl/newcastle_legend_f4f90b59.jpg
 キャスター: 2006年の201点目で、1950年代のエース、ミルバーンの記録を**49年ぶり**に抜きました。
   telop: 2006年の201点目で、1950年代のエース、ミルバーンの記録を**49年ぶり**に抜きました
-  card: none
-  image: assets/photos/pl/newcastle_legend_f4f90b59.jpg
 キャスター: クラブ史上最多の**206得点**。タイトルは獲れませんでしたが、スタジアムの前に銅像があります。
   telop: クラブ史上最多の**206得点**。タイトルは獲れませんでしたが、スタジアムの前に銅像があります
   card: none
@@ -243,8 +255,6 @@ cards:
   image: assets/photos/pl/newcastle_legend_03981f93.jpg
 キャスター: **150万ポンド**で加入し、リーグ戦で354試合。年間ベストイレブンにも2度選ばれました。
   telop: **150万ポンド**で加入し、リーグ戦で354試合。年間ベストイレブンにも2度選ばれました
-  card: none
-  image: assets/photos/pl/newcastle_legend_03981f93.jpg
 キャスター: 2009年にマンチェスター・シティへ。クラブの最多出場記録まで、あと**34試合**でした。
   telop: 2009年にマンチェスター・シティへ。クラブの最多出場記録まで、あと**34試合**でした
   card: none
@@ -260,8 +270,6 @@ cards:
   image: assets/photos/pl/newcastle_legend_69dd2e4f.jpg
 キャスター: 2位になった年の11月、リーグの月間最優秀選手に選ばれています。
   telop: 2位になった年の11月、リーグの月間最優秀選手に選ばれています
-  card: none
-  image: assets/photos/pl/newcastle_legend_69dd2e4f.jpg
 キャスター: 主将も務め、リーグ戦で**303試合**44得点。2019年にはクラブの殿堂入りを果たしました。
   telop: 主将も務め、リーグ戦で**303試合**44得点。2019年にはクラブの殿堂入りを果たしました
   card: none
@@ -286,6 +294,17 @@ cards:
 キャスター: フォワードは7人。ジョエリントンはリーグ戦で**212試合**。ヨアネ・ウィサはコンゴ民主共和国代表で**43試合**。
   no_telop: true
   image: assets/stats/pl_newcastle_fw_f.png
+
+## 今季の監督
+@bg: assets/backgrounds/stadium_ニューカッスル.png
+
+キャスター: 今季の監督は、ドイツ人のマティアス・ヤイスレ。**2026年8月**に来た1年目です。
+  telop: 今季の監督は、ドイツ人のマティアス・ヤイスレ。**2026年8月**に来た1年目です
+  source: 報道
+  card: manager_card
+  image: assets/photos/pl/newcastle_manager_37492bb4.jpg
+キャスター: 前はサウジアラビアのアル・アハリ。エディ・ハウが退いた6日後の就任でした。
+  telop: 前はサウジアラビアのアル・アハリ。エディ・ハウが退いた6日後の就任でした
 
 ## 今季のここまで
 @bg: assets/backgrounds/stadium_ニューカッスル.png

@@ -241,6 +241,33 @@ sections:
   - https://en.wikipedia.org/wiki/Brighton_&_Hove_Albion_F.C.
   bg: assets/backgrounds/stadium_ブライトン.png
   official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はファビアン・ヒュルツェラー。3年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ファビアン・ヒュルツェラー（ドイツ）
+    - - 就任
+      - 2024年6月・3年目
+    - - 前職
+      - ザンクト・パウリ
+  say:
+  - text: 監督はドイツ人のファビアン・ヒュルツェラー。**2024年6月**から、3年目です。
+    image: assets/photos/pl/brighton_manager_f0635d10.jpg
+  - 就任のとき**31歳**。プレミアリーグの正式な監督では、史上最年少でした。
+  sources:
+  - https://en.wikipedia.org/wiki/Brighton_&_Hove_Albion_F.C.
+  - https://en.wikipedia.org/wiki/Fabian_Hürzeler
+  bg: assets/backgrounds/stadium_ブライトン.png
+  official: false
 - id: season
   heading: 今季のここまで
   tier: 報道

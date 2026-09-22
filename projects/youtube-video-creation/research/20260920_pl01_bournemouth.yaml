@@ -273,6 +273,33 @@ sections:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
   bg: assets/backgrounds/stadium_ボーンマス.png
   official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はマルコ・ローゼ。1年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - マルコ・ローゼ（ドイツ）
+    - - 就任
+      - 2026年6月・1年目
+    - - 前職
+      - ライプツィヒ
+  say:
+  - text: 今季の監督は、ドイツ人のマルコ・ローゼ。**2026年6月**に来た1年目です。
+    image: assets/photos/pl/bournemouth_manager_19d3b54a.jpg
+  - 前はライプツィヒ。リヴァプールへ去ったイラオラの後任です。
+  sources:
+  - https://en.wikipedia.org/wiki/AFC_Bournemouth
+  - https://en.wikipedia.org/wiki/Marco_Rose
+  bg: assets/backgrounds/stadium_ボーンマス.png
+  official: false
 - id: season
   heading: 今季のここまで
   tier: 報道

@@ -49,6 +49,7 @@ sources:
 - https://en.wikipedia.org/wiki/Steven_Gerrard
 - https://en.wikipedia.org/wiki/Jamie_Carragher
 - https://en.wikipedia.org/wiki/Mohamed_Salah
+- https://en.wikipedia.org/wiki/Andoni_Iraola
 - https://en.wikipedia.org/wiki/2026–27_Liverpool_F.C._season
 cards:
   birth_card:
@@ -117,6 +118,19 @@ cards:
     - - モハメド・サラー
       - 2017-2026
       - プレミア1シーズン32得点
+  manager_card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - アンドニ・イラオラ（スペイン）
+    - - 就任
+      - 2026年6月・1年目
+    - - 前職
+      - ボーンマス
   season_card:
     type: table
     title: プレミアリーグの結果
@@ -244,8 +258,6 @@ cards:
   image: assets/photos/pl/liverpool_legend_7c62ed45.jpg
 キャスター: 2005年のチャンピオンズリーグ決勝の主将。ミランに0対3から追いついて勝ちました。
   telop: 2005年のチャンピオンズリーグ決勝の主将。ミランに0対3から追いついて勝ちました
-  card: none
-  image: assets/photos/pl/liverpool_legend_7c62ed45.jpg
 キャスター: リーグ戦で**504試合**。のちに監督となり、レンジャーズを無敗で優勝させています。
   telop: リーグ戦で**504試合**。のちに監督となり、レンジャーズを無敗で優勝させています
   card: none
@@ -261,8 +273,6 @@ cards:
   image: assets/photos/pl/liverpool_legend_1840df0d.jpg
 キャスター: 2001年、FAカップ、リーグカップ、ウエファカップの3冠。副主将を10年、務めました。
   telop: 2001年、FAカップ、リーグカップ、ウエファカップの3冠。副主将を10年、務めました
-  card: none
-  image: assets/photos/pl/liverpool_legend_1840df0d.jpg
 キャスター: 出場**737試合**はクラブ史上2番目。2013年に引退し、いまは解説者をしています。
   telop: 出場**737試合**はクラブ史上2番目。2013年に引退し、いまは解説者をしています
   card: none
@@ -278,8 +288,6 @@ cards:
   image: assets/photos/pl/liverpool_legend_bec22eba.jpg
 キャスター: 2024年から25年は29得点18アシスト。合わせて**47**は、20チーム制で最多でした。
   telop: 2024年から25年は29得点18アシスト。合わせて**47**は、20チーム制で最多でした
-  card: none
-  image: assets/photos/pl/liverpool_legend_bec22eba.jpg
 キャスター: リーグ戦**315試合**で191得点。クラブ史上3番目の得点者となり、この夏、去りました。
   telop: リーグ戦**315試合**で191得点。クラブ史上3番目の得点者となり、この夏、去りました
   card: none
@@ -304,6 +312,17 @@ cards:
 キャスター: フォワードは9人。コーディ・ガクポはオランダ代表で**54試合**。アレクサンデル・イサクはスウェーデン代表で**62試合**。
   no_telop: true
   image: assets/stats/pl_liverpool_fw_f.png
+
+## 今季の監督
+@bg: assets/backgrounds/stadium_リヴァプール.png
+
+キャスター: 今季の監督は、スペイン人のアンドニ・イラオラ。**2026年6月**に来た1年目です。
+  telop: 今季の監督は、スペイン人のアンドニ・イラオラ。**2026年6月**に来た1年目です
+  source: 報道
+  card: manager_card
+  image: assets/photos/pl/liverpool_manager_703e8e97.jpg
+キャスター: 前はボーンマス。クラブ史上最高の6位と、初めてのヨーロッパに連れていきました。
+  telop: 前はボーンマス。クラブ史上最高の6位と、初めてのヨーロッパに連れていきました
 
 ## 今季のここまで
 @bg: assets/backgrounds/stadium_リヴァプール.png

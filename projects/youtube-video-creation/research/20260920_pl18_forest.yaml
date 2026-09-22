@@ -236,6 +236,33 @@ sections:
   - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
   bg: assets/backgrounds/stadium_ノッティンガムフォレスト.png
   official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はオリバー・グラスナー。1年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - オリバー・グラスナー（オーストリア）
+    - - 就任
+      - 2026年7月・1年目
+    - - 前職
+      - クリスタル・パレス
+  say:
+  - text: 今季の監督は、オーストリア人のオリバー・グラスナー。**2026年7月**に来た1年目です。
+    image: assets/photos/pl/forest_manager_0c9c0210.jpg
+  - 前はクリスタル・パレス。2025年、パレスにクラブ初のFAカップをもたらしました。
+  sources:
+  - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
+  - https://en.wikipedia.org/wiki/Oliver_Glasner
+  bg: assets/backgrounds/stadium_ノッティンガムフォレスト.png
+  official: false
 - id: season
   heading: 今季のここまで
   tier: 報道

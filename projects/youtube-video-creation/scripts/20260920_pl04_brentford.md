@@ -46,6 +46,7 @@ sources:
 - https://en.wikipedia.org/wiki/Kevin_O%27Connor_(footballer,_born_1982)
 - https://en.wikipedia.org/wiki/Ivan_Toney
 - https://en.wikipedia.org/wiki/Bryan_Mbeumo
+- https://en.wikipedia.org/wiki/Keith_Andrews_(footballer)
 - https://en.wikipedia.org/wiki/2026–27_Brentford_F.C._season
 cards:
   history_card:
@@ -110,6 +111,19 @@ cards:
     - - ブライアン・エンベウモ
       - 2019-2025
       - プレミアで20得点
+  manager_card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - キース・アンドリュース（アイルランド）
+    - - 就任
+      - 2025年6月・2年目
+    - - 前職
+      - このクラブのセットプレー担当コーチ
   season_card:
     type: table
     title: プレミアリーグの結果
@@ -232,8 +246,6 @@ cards:
   image: assets/photos/pl/brentford_legend_6dfd5356.jpg
 キャスター: 1年目の2020年から21年に2部で**31得点**。1シーズンの得点として、いまも2部の記録です。
   telop: 1年目の2020年から21年に2部で**31得点**。1シーズンの得点として、いまも2部の記録です
-  card: none
-  image: assets/photos/pl/brentford_legend_6dfd5356.jpg
 キャスター: 2024年8月、**4000万ポンド**でサウジアラビアのアル・アハリへ移りました。
   telop: 2024年8月、**4000万ポンド**でサウジアラビアのアル・アハリへ移りました
   card: none
@@ -270,6 +282,17 @@ cards:
 キャスター: フォワードは7人。ダンゴ・ワタラはブルキナファソ代表で**44試合**。ケヴィン・シャーデはブレントフォードのリーグ戦で**88試合**。
   no_telop: true
   image: assets/stats/pl_brentford_fw_f.png
+
+## 今季の監督
+@bg: assets/backgrounds/stadium_ブレントフォード.png
+
+キャスター: 監督はアイルランド人のキース・アンドリュース。**2025年6月**から、2年目です。
+  telop: 監督はアイルランド人のキース・アンドリュース。**2025年6月**から、2年目です
+  source: 報道
+  card: manager_card
+  image: assets/photos/pl/brentford_manager_9acd4388.jpg
+キャスター: 前の年まで、このクラブのセットプレー担当のコーチ。中から上がった監督です。
+  telop: 前の年まで、このクラブのセットプレー担当のコーチ。中から上がった監督です
 
 ## 今季のここまで
 @bg: assets/backgrounds/stadium_ブレントフォード.png

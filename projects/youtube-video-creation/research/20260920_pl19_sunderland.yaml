@@ -239,6 +239,33 @@ sections:
   - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
   bg: assets/backgrounds/stadium_サンダーランド.png
   official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はレジス・ル・ブリ。3年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - レジス・ル・ブリ（フランス）
+    - - 就任
+      - 2024年7月・3年目
+    - - 前職
+      - ロリアン
+  say:
+  - text: 監督はフランス人のレジス・ル・ブリ。**2024年7月**から、3年目です。
+    image: assets/photos/pl/sunderland_manager_1ba8b156.jpg
+  - 昇格1年目のクラブを7位に。ヨーロッパリーグへ連れていった監督です。
+  sources:
+  - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
+  - https://en.wikipedia.org/wiki/Régis_Le_Bris
+  bg: assets/backgrounds/stadium_サンダーランド.png
+  official: false
 - id: season
   heading: 今季のここまで
   tier: 報道

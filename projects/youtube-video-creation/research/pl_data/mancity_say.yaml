@@ -75,3 +75,17 @@ episode:
   - しかも落ちたそのシーズン、リーグでいちばん多くゴールを決めていたのは、マンチェスター・シティでした。
   sources:
   - https://en.wikipedia.org/wiki/Manchester_City_F.C.
+# 今季の監督（2026-09-22 指示）。Wikipedia のクラブ記事と本人の記事で裏を取った
+manager:
+- 今季の監督は、イタリア人のエンツォ・マレスカ。**2026年6月**に来た1年目です。
+- 前はチェルシー。2022年から23年には、このクラブでグアルディオラの助手でした。
+manager_telop: 監督はエンツォ・マレスカ。1年目
+manager_rows:
+- - 監督
+  - エンツォ・マレスカ（イタリア）
+- - 就任
+  - 2026年6月・1年目
+- - 前職
+  - チェルシー
+manager_sources:
+- https://en.wikipedia.org/wiki/Enzo_Maresca

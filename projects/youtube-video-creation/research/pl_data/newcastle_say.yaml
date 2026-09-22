@@ -73,3 +73,17 @@ episode:
   - 白黒の縞に変えたのは**1894年**。もともとは、リザーブチームの色でした。
   sources:
   - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
+# 今季の監督（2026-09-22 指示）。Wikipedia のクラブ記事と本人の記事で裏を取った
+manager:
+- 今季の監督は、ドイツ人のマティアス・ヤイスレ。**2026年8月**に来た1年目です。
+- 前はサウジアラビアのアル・アハリ。エディ・ハウが退いた6日後の就任でした。
+manager_telop: 監督はマティアス・ヤイスレ。1年目
+manager_rows:
+- - 監督
+  - マティアス・ヤイスレ（ドイツ）
+- - 就任
+  - 2026年8月・1年目
+- - 前職
+  - アル・アハリ
+manager_sources:
+- https://en.wikipedia.org/wiki/Matthias_Jaissle

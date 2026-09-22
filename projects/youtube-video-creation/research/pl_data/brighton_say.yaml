@@ -93,3 +93,17 @@ episode:
   - 再試合は0対4で敗れました。同じシーズン、リーグでは最下位で降格しています。
   sources:
   - https://en.wikipedia.org/wiki/Brighton_%26_Hove_Albion_F.C.
+# 今季の監督（2026-09-22 指示）。Wikipedia のクラブ記事と本人の記事で裏を取った
+manager:
+- 監督はドイツ人のファビアン・ヒュルツェラー。**2024年6月**から、3年目です。
+- 就任のとき**31歳**。プレミアリーグの正式な監督では、史上最年少でした。
+manager_telop: 監督はファビアン・ヒュルツェラー。3年目
+manager_rows:
+- - 監督
+  - ファビアン・ヒュルツェラー（ドイツ）
+- - 就任
+  - 2024年6月・3年目
+- - 前職
+  - ザンクト・パウリ
+manager_sources:
+- https://en.wikipedia.org/wiki/Fabian_Hürzeler

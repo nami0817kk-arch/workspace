@@ -2007,7 +2007,8 @@ def to_script(notes: Notes, plan: Plan) -> str:
                     # 2026-09-14 指摘「意味のないnoneが入っている」も同じところ
                     if photo_on and fallback_image:
                         lines.append("  card: none")
-                    elif showed_photo and not own_image and last_image:
+                    elif showed_photo and not own_image and last_image and number >= 2:
+                        # 3行目から下ろす（2行の節は板を最後まで出す。20秒に届かない）。
                         # カードを下ろし、直前の写真をそのまま出しておく
                         lines.append("  card: none")
                         own_image = last_image

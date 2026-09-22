@@ -244,6 +244,33 @@ sections:
   - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
   bg: assets/backgrounds/stadium_ハルシティ.png
   official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はセルゲイ・ヤキロヴィッチ。2年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - セルゲイ・ヤキロヴィッチ（ボスニア・ヘルツェゴビナ）
+    - - 就任
+      - 2025年6月・2年目
+    - - 前職
+      - カイセリスポル
+  say:
+  - text: 監督はボスニア出身のセルゲイ・ヤキロヴィッチ。**2025年6月**から、2年目です。
+    image: assets/photos/pl/hull_manager_3daf3c84.jpg
+  - プレミアリーグで指揮を執って勝った、史上初のボスニア人監督です。
+  sources:
+  - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
+  - https://en.wikipedia.org/wiki/Sergej_Jakirović
+  bg: assets/backgrounds/stadium_ハルシティ.png
+  official: false
 - id: season
   heading: 今季のここまで
   tier: 報道

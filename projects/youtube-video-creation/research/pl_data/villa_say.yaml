@@ -101,3 +101,17 @@ episode:
   - ヴィラは、その試合を1対0で勝っています。
   sources:
   - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
+# 今季の監督（2026-09-22 指示）。Wikipedia のクラブ記事と本人の記事で裏を取った
+manager:
+- 監督はスペイン人のウナイ・エメリ。**2022年11月**から、5年目です。
+- 前はビジャレアル。ヨーロッパリーグの優勝は自身で**5回**、最多記録です。
+manager_telop: 監督はウナイ・エメリ。5年目
+manager_rows:
+- - 監督
+  - ウナイ・エメリ（スペイン）
+- - 就任
+  - 2022年11月・5年目
+- - 前職
+  - ビジャレアル
+manager_sources:
+- https://en.wikipedia.org/wiki/Unai_Emery

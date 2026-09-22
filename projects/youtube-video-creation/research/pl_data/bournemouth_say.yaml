@@ -243,3 +243,17 @@ episode:
   - そのうち**9点**を、フォワードのテッド・マクドゥーガルがひとりで決めています。
   sources:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
+# 今季の監督（2026-09-22 指示）。Wikipedia のクラブ記事と本人の記事で裏を取った
+manager:
+- 今季の監督は、ドイツ人のマルコ・ローゼ。**2026年6月**に来た1年目です。
+- 前はライプツィヒ。リヴァプールへ去ったイラオラの後任です。
+manager_telop: 監督はマルコ・ローゼ。1年目
+manager_rows:
+- - 監督
+  - マルコ・ローゼ（ドイツ）
+- - 就任
+  - 2026年6月・1年目
+- - 前職
+  - ライプツィヒ
+manager_sources:
+- https://en.wikipedia.org/wiki/Marco_Rose

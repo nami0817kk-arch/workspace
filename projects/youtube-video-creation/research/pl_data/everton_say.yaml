@@ -77,3 +77,17 @@ episode:
   - 100年近くたったいまも、破られていません。
   sources:
   - https://en.wikipedia.org/wiki/Everton_F.C.
+# 今季の監督（2026-09-22 指示）。Wikipedia のクラブ記事と本人の記事で裏を取った
+manager:
+- 監督はスコットランド人のデイヴィッド・モイーズ。**2025年1月**から、3年目です。
+- 2002年から13年に続く、2度目のエヴァートン監督。前はウェストハムでした。
+manager_telop: 監督はデイヴィッド・モイーズ。3年目
+manager_rows:
+- - 監督
+  - デイヴィッド・モイーズ（スコットランド）
+- - 就任
+  - 2025年1月・3年目
+- - 前職
+  - ウェストハム
+manager_sources:
+- https://en.wikipedia.org/wiki/David_Moyes

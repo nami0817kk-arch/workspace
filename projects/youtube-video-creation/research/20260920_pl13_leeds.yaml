@@ -250,6 +250,33 @@ sections:
   - https://en.wikipedia.org/wiki/Leeds_United_F.C.
   bg: assets/backgrounds/stadium_リーズ.png
   official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はダニエル・ファルケ。4年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ダニエル・ファルケ（ドイツ）
+    - - 就任
+      - 2023年7月・4年目
+    - - 前職
+      - ボルシア・メンヒェングラートバッハ
+  say:
+  - text: 監督はドイツ人のダニエル・ファルケ。**2023年7月**から、4年目です。
+    image: assets/photos/pl/leeds_manager_7fd3a0aa.jpg
+  - 2部の優勝は**3回**。ノリッジで2回、リーズで1回です。
+  sources:
+  - https://en.wikipedia.org/wiki/Leeds_United_F.C.
+  - https://en.wikipedia.org/wiki/Daniel_Farke
+  bg: assets/backgrounds/stadium_リーズ.png
+  official: false
 - id: season
   heading: 今季のここまで
   tier: 報道

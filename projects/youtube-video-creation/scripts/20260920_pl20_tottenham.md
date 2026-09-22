@@ -46,6 +46,7 @@ sources:
 - https://en.wikipedia.org/wiki/Harry_Kane
 - https://en.wikipedia.org/wiki/Son_Heung-min
 - https://en.wikipedia.org/wiki/Ledley_King
+- https://en.wikipedia.org/wiki/Roberto_De_Zerbi
 - https://en.wikipedia.org/wiki/2026–27_Tottenham_Hotspur_F.C._season
 cards:
   cup1901_card:
@@ -118,6 +119,19 @@ cards:
     - - レドリー・キング
       - 1999-2012
       - 一筋の主将
+  manager_card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ロベルト・デ・ゼルビ（イタリア）
+    - - 就任
+      - 2026年3月・2年目
+    - - 前職
+      - マルセイユ
   season_card:
     type: table
     title: プレミアリーグの結果
@@ -238,8 +252,6 @@ cards:
   image: assets/photos/pl/tottenham_legend_131bf2d1.jpg
 キャスター: 2023年2月、シティ戦のゴールで、60年代のエース、グリーヴスのクラブ記録を抜きました。
   telop: 2023年2月、シティ戦のゴールで、60年代のエース、グリーヴスのクラブ記録を抜きました
-  card: none
-  image: assets/photos/pl/tottenham_legend_131bf2d1.jpg
 キャスター: クラブ史上最多の**280得点**を残し、無冠のままバイエルンへ。プレミアの得点王は3回でした。
   telop: クラブ史上最多の**280得点**を残し、無冠のままバイエルンへ。プレミアの得点王は3回でした
   card: none
@@ -255,8 +267,6 @@ cards:
   image: assets/photos/pl/tottenham_legend_41006aeb.jpg
 キャスター: 2021年から22年、サラーと並ぶ**23得点**で得点王。アジアの選手では初めてでした。
   telop: 2021年から22年、サラーと並ぶ**23得点**で得点王。アジアの選手では初めてでした
-  card: none
-  image: assets/photos/pl/tottenham_legend_41006aeb.jpg
 キャスター: 10年目、主将としてヨーロッパリーグの決勝でユナイテッドに**1対0**。初めてのタイトルでした。
   telop: 10年目、主将としてヨーロッパリーグの決勝でユナイテッドに**1対0**。初めてのタイトルでした
   card: none
@@ -272,8 +282,6 @@ cards:
   image: assets/photos/pl/tottenham_legend_a1b6d580.jpg
 キャスター: 2000年12月、ブラッドフォード戦で開始**10秒**のゴール。当時のプレミア最速記録でした。
   telop: 2000年12月、ブラッドフォード戦で開始**10秒**のゴール。当時のプレミア最速記録でした
-  card: none
-  image: assets/photos/pl/tottenham_legend_a1b6d580.jpg
 キャスター: 膝の軟骨が無く、練習できないまま試合へ。2008年、主将としてリーグカップを掲げました。
   telop: 膝の軟骨が無く、練習できないまま試合へ。2008年、主将としてリーグカップを掲げました
   card: none
@@ -298,6 +306,17 @@ cards:
 キャスター: フォワードは10人。リシャルリソンはブラジル代表で**54試合**。デヤン・クルゼフスキはスウェーデン代表で**45試合**。
   no_telop: true
   image: assets/stats/pl_tottenham_fw_f.png
+
+## 今季の監督
+@bg: assets/backgrounds/stadium_トッテナム.png
+
+キャスター: 監督はイタリア人のロベルト・デ・ゼルビ。**2026年3月**から、2年目です。
+  telop: 監督はイタリア人のロベルト・デ・ゼルビ。**2026年3月**から、2年目です
+  source: 報道
+  card: manager_card
+  image: assets/photos/pl/tottenham_manager_57aac009.jpg
+キャスター: 前はマルセイユ。就任した昨季は17位で、最終節で残留を決めました。
+  telop: 前はマルセイユ。就任した昨季は17位で、最終節で残留を決めました
 
 ## 今季のここまで
 @bg: assets/backgrounds/stadium_トッテナム.png

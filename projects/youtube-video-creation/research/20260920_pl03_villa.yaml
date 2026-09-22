@@ -243,6 +243,33 @@ sections:
   - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
   bg: assets/backgrounds/stadium_アストンヴィラ.png
   official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はウナイ・エメリ。5年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ウナイ・エメリ（スペイン）
+    - - 就任
+      - 2022年11月・5年目
+    - - 前職
+      - ビジャレアル
+  say:
+  - text: 監督はスペイン人のウナイ・エメリ。**2022年11月**から、5年目です。
+    image: assets/photos/pl/villa_manager_4b03a7c7.jpg
+  - 前はビジャレアル。ヨーロッパリーグの優勝は自身で**5回**、最多記録です。
+  sources:
+  - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
+  - https://en.wikipedia.org/wiki/Unai_Emery
+  bg: assets/backgrounds/stadium_アストンヴィラ.png
+  official: false
 - id: season
   heading: 今季のここまで
   tier: 報道

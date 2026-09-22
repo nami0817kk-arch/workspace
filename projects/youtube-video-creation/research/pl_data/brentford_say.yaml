@@ -90,3 +90,17 @@ episode:
   - それでも3部から上がれませんでした。順位は2位。上がれるのは1位だけだったからです。
   sources:
   - https://en.wikipedia.org/wiki/1929%E2%80%9330_Brentford_F.C._season
+# 今季の監督（2026-09-22 指示）。Wikipedia のクラブ記事と本人の記事で裏を取った
+manager:
+- 監督はアイルランド人のキース・アンドリュース。**2025年6月**から、2年目です。
+- 前の年まで、このクラブのセットプレー担当のコーチ。中から上がった監督です。
+manager_telop: 監督はキース・アンドリュース。2年目
+manager_rows:
+- - 監督
+  - キース・アンドリュース（アイルランド）
+- - 就任
+  - 2025年6月・2年目
+- - 前職
+  - このクラブのセットプレー担当コーチ
+manager_sources:
+- https://en.wikipedia.org/wiki/Keith_Andrews_(footballer)
