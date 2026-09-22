@@ -237,28 +237,52 @@ cards:
 ## このクラブを語る3人
 @bg: assets/backgrounds/stadium_リヴァプール.png
 
-キャスター: スティーヴン・ジェラードは、2005年のチャンピオンズリーグ決勝の主将。ミランに0対3から追いついて勝ちました。
-  telop: スティーヴン・ジェラードは、2005年のチャンピオンズリーグ決勝の主将。ミランに0対3から追いついて勝ちました
+キャスター: 中盤のスティーヴン・ジェラードは、9歳でアカデミーに入り、1998年にデビューしました。
+  telop: 中盤のスティーヴン・ジェラードは、9歳でアカデミーに入り、1998年にデビューしました
   source: 背景
   card: legends_card
+  image: assets/photos/pl/liverpool_legend_7c62ed45.jpg
+キャスター: 2005年のチャンピオンズリーグ決勝の主将。ミランに0対3から追いついて勝ちました。
+  telop: 2005年のチャンピオンズリーグ決勝の主将。ミランに0対3から追いついて勝ちました
+  card: none
+  image: assets/photos/pl/liverpool_legend_7c62ed45.jpg
+キャスター: リーグ戦で**504試合**。のちに監督となり、レンジャーズを無敗で優勝させています。
+  telop: リーグ戦で**504試合**。のちに監督となり、レンジャーズを無敗で優勝させています
+  card: none
   image: assets/photos/pl/liverpool_legend_7c62ed45.jpg
 
 ## このクラブを語る3人（2人目）
 @bg: assets/backgrounds/stadium_リヴァプール.png
 
-キャスター: ジェイミー・キャラガーは、**737試合**に出た生え抜きのディフェンダーです。
-  telop: ジェイミー・キャラガーは、**737試合**に出た生え抜きのディフェンダーです
+キャスター: ジェイミー・キャラガーは生え抜きのディフェンダー。少年時代はエヴァートンのファンでした。
+  telop: ジェイミー・キャラガーは生え抜きのディフェンダー。少年時代はエヴァートンのファンでした
   source: 背景
   card: legends2_card
+  image: assets/photos/pl/liverpool_legend_1840df0d.jpg
+キャスター: 2001年、FAカップ、リーグカップ、ウエファカップの3冠。副主将を10年、務めました。
+  telop: 2001年、FAカップ、リーグカップ、ウエファカップの3冠。副主将を10年、務めました
+  card: none
+  image: assets/photos/pl/liverpool_legend_1840df0d.jpg
+キャスター: 出場**737試合**はクラブ史上2番目。2013年に引退し、いまは解説者をしています。
+  telop: 出場**737試合**はクラブ史上2番目。2013年に引退し、いまは解説者をしています
+  card: none
   image: assets/photos/pl/liverpool_legend_1840df0d.jpg
 
 ## このクラブを語る3人（3人目）
 @bg: assets/backgrounds/stadium_リヴァプール.png
 
-キャスター: モハメド・サラーは加入1年目、2017年から18年にリーグ**32得点**。当時のプレミア記録でした。
-  telop: モハメド・サラーは加入1年目、2017年から18年にリーグ**32得点**。当時のプレミア記録でした
+キャスター: モハメド・サラーは2017年、ローマから**3690万ポンド**で来た右ウイングです。
+  telop: モハメド・サラーは2017年、ローマから**3690万ポンド**で来た右ウイングです
   source: 背景
   card: legends3_card
+  image: assets/photos/pl/liverpool_legend_bec22eba.jpg
+キャスター: 2024年から25年は29得点18アシスト。合わせて**47**は、20チーム制で最多でした。
+  telop: 2024年から25年は29得点18アシスト。合わせて**47**は、20チーム制で最多でした
+  card: none
+  image: assets/photos/pl/liverpool_legend_bec22eba.jpg
+キャスター: リーグ戦**315試合**で191得点。クラブ史上3番目の得点者となり、この夏、去りました。
+  telop: リーグ戦**315試合**で191得点。クラブ史上3番目の得点者となり、この夏、去りました
+  card: none
   image: assets/photos/pl/liverpool_legend_bec22eba.jpg
 
 ## 今季の登録選手

@@ -374,18 +374,26 @@ def build(key: str, number: int, old_file: str) -> Path:
         # 3人を1枚のカードでまとめると**22秒**、同じ絵のまま出っぱなしになった（上限20秒）。
         # 増やす形なら、**まだ話していない選手が先に画面に出ることがない**
         srcs = [l["source"] for l in leg["legends"]]
+        # **1人に何行でも書ける**（2026-09-22 指示「このクラブの3人の内容をもう少し濃くしたい」）。
+        # <key>_say.yaml の `legends` の要素が list なら、その行を全部その選手の節に置く。
+        # 顔写真は1行目に付け、あとの行にも残る（hold_photo）。
+        # 出典は `legend_sources`（選手ごとの URL の list）があれば足す
+        extra_srcs = ov.get("legend_sources") or []
         for i, line in enumerate(lsay):
             # **その選手の顔を出す**（2026-09-20 指示「選手の話の時には写真をだす」）。
             # 名前は legend_rows の1列目（読み上げの文とは限らない）で引く
             who = str(rows[i][0]) if i < len(rows) else ""
             face = (faces.get(who) or {}).get("file", "")
+            texts = list(line) if isinstance(line, list) else [line]
+            say_lines = [{"text": texts[0], "image": face} if face else texts[0]] + texts[1:]
+            more = list(extra_srcs[i]) if i < len(extra_srcs) and extra_srcs[i] else []
             body = {"id": "legends" if i == 0 else f"legends{i + 1}",
                     "heading": "このクラブを語る3人" if i == 0 else f"このクラブを語る3人（{i + 1}人目）",
                     "tier": "背景", "telop": "1990年以降の名選手", "narrator": "キャスター",
                     "card": {"type": "table", "title": "1990年以降の名選手",
                              "columns": ["名前", "在籍", "残したもの"], "rows": rows[:i + 1]},
-                    "say": [{"text": line, "image": face} if face else line],
-                    "sources": srcs}
+                    "say": say_lines,
+                    "sources": srcs + [u for u in more if u not in srcs]}
             sections.append(sec(**body))
     # **宿敵の節は作らない**（2026-09-20 指示「宿敵は不要」）。
     # 旧台本には残っているが、20本すべてで落とす。

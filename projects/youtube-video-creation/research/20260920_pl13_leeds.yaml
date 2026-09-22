@@ -158,8 +158,10 @@ sections:
       - 1992-2007
       - 15年在籍・531試合
   say:
-  - ゲイリー・ケリーは15年在籍した右サイドバック。**531試合**に出ました。
-  sources: &id002
+  - ゲイリー・ケリーはアイルランド出身の右サイドバック。生涯リーズひと筋でした。
+  - もとはフォワード。監督に右サイドバックへ変えられ、**531試合**に出ました。
+  - 2002年の記念試合で集めた**150万ポンド**で、故郷にがんの治療施設を建てました。
+  sources:
   - https://en.wikipedia.org/wiki/Gary_Kelly_(footballer,_born_1974)
   - https://en.wikipedia.org/wiki/Lucas_Radebe
   - https://en.wikipedia.org/wiki/Mark_Viduka
@@ -179,14 +181,19 @@ sections:
     - 残したもの
     rows:
     - *id001
-    - &id003
+    - &id002
       - ルーカス・ラデベ
       - 1994-2005
       - 2001年CL4強の主将
   say:
-  - text: ルーカス・ラデベは、2001年のチャンピオンズリーグ4強のときの主将。南アフリカ代表です。
+  - text: ルーカス・ラデベは南アフリカのセンターバック。1994年、**25万ポンド**の移籍でした。
     image: assets/photos/pl/leeds_legend_f81a9796.jpg
-  sources: *id002
+  - 1998年から主将。2001年には、チャンピオンズリーグの4強までチームを率いています。
+  - 南アフリカ代表でも主将。2005年の記念試合には**3万7886人**が入りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Gary_Kelly_(footballer,_born_1974)
+  - https://en.wikipedia.org/wiki/Lucas_Radebe
+  - https://en.wikipedia.org/wiki/Mark_Viduka
   bg: assets/backgrounds/stadium_リーズ.png
   official: false
 - id: legends3
@@ -203,14 +210,19 @@ sections:
     - 残したもの
     rows:
     - *id001
-    - *id003
+    - *id002
     - - マーク・ビドゥカ
       - 2000-2004
       - リヴァプール戦で4得点
   say:
-  - text: マーク・ビドゥカは、加入1年目のリヴァプール戦で1人で**4得点**。4対3で勝ちました。
+  - text: マーク・ビドゥカは2000年、セルティックから**600万ポンド**で来たフォワードです。
     image: assets/photos/pl/leeds_legend_ea0d2287.jpg
-  sources: *id002
+  - 1年目に**22得点**。4点はリヴァプールに4対3で勝った試合で、1人で決めました。
+  - 2004年に降格すると、ミドルズブラへ**450万ポンド**で売られました。
+  sources:
+  - https://en.wikipedia.org/wiki/Gary_Kelly_(footballer,_born_1974)
+  - https://en.wikipedia.org/wiki/Lucas_Radebe
+  - https://en.wikipedia.org/wiki/Mark_Viduka
   bg: assets/backgrounds/stadium_リーズ.png
   official: false
 - id: squad

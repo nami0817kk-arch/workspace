@@ -149,9 +149,11 @@ sections:
       - 2005-2018
       - プレミア74得点。長くクラブ最多
   say:
-  - text: 地元出身のガブリエル・アグボンラホーは、プレミアリーグで74得点。長くクラブの最多記録でした。
+  - text: ガブリエル・アグボンラホーは地元生まれ。2006年のデビュー戦で、いきなり得点しました。
     image: assets/photos/pl/villa_legend_27411382.jpg
-  sources: &id002
+  - 2008年、マンチェスター・シティ戦で7分間に3点。史上3番目に速いハットトリックです。
+  - プレミアで**74得点**。長くクラブの最多記録でした。リーグ戦は341試合、在籍は17年です。
+  sources:
   - https://en.wikipedia.org/wiki/Gabriel_Agbonlahor
   - https://en.wikipedia.org/wiki/Ollie_Watkins
   - https://en.wikipedia.org/wiki/Paul_McGrath_(footballer)
@@ -171,14 +173,19 @@ sections:
     - 残したもの
     rows:
     - *id001
-    - &id003
+    - &id002
       - オリー・ワトキンス
       - 2020-2026
       - アグボンラホーを抜きプレミア最多に
   say:
-  - text: アグボンラホーの記録を抜いたのが、オリー・ワトキンス。2025年5月のことでした。
+  - text: オリー・ワトキンスはブレントフォードから当時のクラブ最高額、**2800万ポンド**で加入。
     image: assets/photos/pl/villa_legend_b8954c93.jpg
-  sources: *id002
+  - 初得点は2020年10月、王者リヴァプールに7対2で勝った試合。ハットトリックでした。
+  - 2025年5月、アグボンラホーの記録を抜いてプレミア最多に。2026年8月、アル・ヒラルへ。
+  sources:
+  - https://en.wikipedia.org/wiki/Gabriel_Agbonlahor
+  - https://en.wikipedia.org/wiki/Ollie_Watkins
+  - https://en.wikipedia.org/wiki/Paul_McGrath_(footballer)
   bg: assets/backgrounds/stadium_アストンヴィラ.png
   official: false
 - id: legends3
@@ -195,13 +202,20 @@ sections:
     - 残したもの
     rows:
     - *id001
-    - *id003
+    - *id002
     - - ジャック・グリーリッシュ
       - 2013-2021
       - 6歳から育成組織。1億ポンドでシティへ
   say:
-  - ジャック・グリーリッシュは**6歳**から育成組織で育った主将。2021年、**1億ポンド**でマンチェスター・シティへ。
-  sources: *id002
+  - ジャック・グリーリッシュは**6歳**で育成組織に入り、2014年、18歳でデビューしました。
+  - 2019年、23歳で主将に。プレーオフ決勝でダービーを2対1で下し、3年ぶりにプレミアへ。
+  - 2021年、**1億ポンド**でマンチェスター・シティへ。イングランド人では史上最高額でした。
+  sources:
+  - https://en.wikipedia.org/wiki/Gabriel_Agbonlahor
+  - https://en.wikipedia.org/wiki/Ollie_Watkins
+  - https://en.wikipedia.org/wiki/Paul_McGrath_(footballer)
+  - https://en.wikipedia.org/wiki/Jack_Grealish
+  - https://en.wikipedia.org/wiki/2019_EFL_Championship_play-off_final
   bg: assets/backgrounds/stadium_アストンヴィラ.png
   official: false
 - id: squad

@@ -148,9 +148,11 @@ sections:
       - 2000-2003
       - 136試合83得点。2年続けて優勝
   say:
-  - text: ボビー・ザモラは136試合で**83得点**。4部と3部で2年続けて優勝し、2部へ上げました。
+  - text: ボビー・ザモラは2000年、ブリストル・ローヴァーズから期限付きで来て、6試合で6得点。
     image: assets/photos/pl/brighton_legend_17bed45d.jpg
-  sources: &id002
+  - 10万ポンドで買い取ると、2年続けて**28得点**。4部と3部で続けて優勝し、2部へ上げました。
+  - 2003年に150万ポンドでトッテナムへ。12年後に戻り、**4549日ぶり**の得点を決めました。
+  sources:
   - https://en.wikipedia.org/wiki/Lewis_Dunk
   - https://en.wikipedia.org/wiki/Glenn_Murray
   - https://en.wikipedia.org/wiki/Bobby_Zamora
@@ -170,14 +172,19 @@ sections:
     - 残したもの
     rows:
     - *id001
-    - &id003
+    - &id002
       - グレン・マレー
       - 2008-2021
       - プレミア初昇格の得点源
   say:
-  - text: グレン・マレーは、2016年から17年のプレミア初昇格を決めた得点源です。
+  - text: グレン・マレーは2008年、ロッチデールから**30万ポンド**で加入したストライカーです。
     image: assets/photos/pl/brighton_legend_baa41613.jpg
-  sources: *id002
+  - 2011年に離れ、2016年に戻ってプレミア初昇格の得点源に。初のプレミアで12得点です。
+  - クラブ通算**111得点**は歴代2位。1位は1920年代のトミー・クックで、123点です。
+  sources:
+  - https://en.wikipedia.org/wiki/Lewis_Dunk
+  - https://en.wikipedia.org/wiki/Glenn_Murray
+  - https://en.wikipedia.org/wiki/Bobby_Zamora
   bg: assets/backgrounds/stadium_ブライトン.png
   official: false
 - id: legends3
@@ -194,14 +201,19 @@ sections:
     - 残したもの
     rows:
     - *id001
-    - *id003
+    - *id002
     - - ルイス・ダンク
       - 2010-
       - 2010年のデビュー以来、3部の時代から一筋
   say:
-  - text: ルイス・ダンクは3部だった2010年にデビューして以来、このクラブ一筋です。
+  - text: ルイス・ダンクはブライトン生まれ。2003年に育成組織へ入り、3部だった2010年にデビュー。
     image: assets/photos/pl/brighton_legend_85972114.jpg
-  sources: *id002
+  - 2023年10月、自身初のヨーロッパの試合。マルセイユで0対2から2対2に追いつきました。
+  - 2025年12月、通算**500試合**に到達。イングランド代表でも6試合に出場しました。
+  sources:
+  - https://en.wikipedia.org/wiki/Lewis_Dunk
+  - https://en.wikipedia.org/wiki/Glenn_Murray
+  - https://en.wikipedia.org/wiki/Bobby_Zamora
   bg: assets/backgrounds/stadium_ブライトン.png
   official: false
 - id: squad

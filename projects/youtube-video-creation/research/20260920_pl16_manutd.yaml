@@ -142,9 +142,11 @@ sections:
       - 1990-2014
       - クラブ最多の963試合
   say:
-  - text: ライアン・ギグスは、クラブ史上最多の**963試合**に出場。13度のリーグ優勝を経験しました。
+  - text: ライアン・ギグスは、**14歳**の誕生日に入団した左ウイング。リーグ優勝を13度経験しました。
     image: assets/photos/pl/manutd_legend_f3ad91ce.jpg
-  sources: &id002
+  - 1999年のFAカップ準決勝アーセナル戦。延長で自陣から守備陣を抜き去った一撃は有名です。
+  - クラブ史上最多の**963試合**に出場。引退した2014年には、暫定の監督も務めました。
+  sources:
   - https://en.wikipedia.org/wiki/Ryan_Giggs
   - https://en.wikipedia.org/wiki/Wayne_Rooney
   - https://en.wikipedia.org/wiki/Paul_Scholes
@@ -164,14 +166,19 @@ sections:
     - 残したもの
     rows:
     - *id001
-    - &id003
+    - &id002
       - ウェイン・ルーニー
       - 2004-2017
       - クラブ最多の253得点
   say:
-  - text: ウェイン・ルーニーは、ボビー・チャールトンを抜いたクラブ史上最多の**253得点**。
+  - text: ウェイン・ルーニーは、18歳でエヴァートンから来たフォワード。移籍金は**2560万ポンド**。
     image: assets/photos/pl/manutd_legend_8c632d7c.jpg
-  sources: *id002
+  - 2011年のマンチェスター・ダービー。オーバーヘッドの決勝点で、シティに**2対1**の勝ちです。
+  - チャールトンを抜いたクラブ史上最多の**253得点**。2017年、古巣エヴァートンへ戻りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Ryan_Giggs
+  - https://en.wikipedia.org/wiki/Wayne_Rooney
+  - https://en.wikipedia.org/wiki/Paul_Scholes
   bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
   official: false
 - id: legends3
@@ -188,14 +195,19 @@ sections:
     - 残したもの
     rows:
     - *id001
-    - *id003
+    - *id002
     - - ポール・スコールズ
       - 1993-2013
       - 3冠を支えた中盤
   say:
-  - text: ポール・スコールズは、1999年にリーグ、FAカップ、チャンピオンズリーグの3冠を支えた中盤の要です。
+  - text: ポール・スコールズはサルフォード生まれの生え抜き。1994年の初出場で、いきなり**2得点**。
     image: assets/photos/pl/manutd_legend_15d06a2f.jpg
-  sources: *id002
+  - 2008年のチャンピオンズリーグ準決勝。バルセロナに**1対0**、その1点を決めました。
+  - リーグ優勝は**11回**で、イングランド人の最多。生涯このクラブだけでプレーしました。
+  sources:
+  - https://en.wikipedia.org/wiki/Ryan_Giggs
+  - https://en.wikipedia.org/wiki/Wayne_Rooney
+  - https://en.wikipedia.org/wiki/Paul_Scholes
   bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
   official: false
 - id: squad

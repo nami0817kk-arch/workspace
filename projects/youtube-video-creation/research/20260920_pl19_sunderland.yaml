@@ -146,12 +146,15 @@ sections:
       - 1997-2003
       - プレミア得点王・欧州得点王
   say:
-  - text: ケヴィン・フィリップスは、1999年から2000年にプレミアの**得点王**。ヨーロッパのゴールデンシューも獲りました。
+  - text: ケヴィン・フィリップスは、ワトフォードから**32万5千ポンド**で来たストライカーです。
     image: assets/photos/pl/sunderland_legend_1bb9e670.jpg
-  sources: &id002
+  - 2000年、プレミアで**30得点**の得点王。ヨーロッパの得点王もイングランド人で初めてでした。
+  - リーグ戦で**208試合113得点**。2003年、325万ポンドでサウサンプトンへ移りました。
+  sources:
   - https://en.wikipedia.org/wiki/Kevin_Phillips_(footballer)
   - https://en.wikipedia.org/wiki/Niall_Quinn
   - https://en.wikipedia.org/wiki/Kevin_Ball
+  - https://en.wikipedia.org/wiki/Kevin_Phillips_(English_footballer)
   bg: assets/backgrounds/stadium_サンダーランド.png
   official: false
 - id: legends2
@@ -168,14 +171,19 @@ sections:
     - 残したもの
     rows:
     - *id001
-    - &id003
+    - &id002
       - ナイアル・クイン
       - 1996-2002
       - 2トップの柱、のちに会長
   say:
-  - text: ナイアル・クインは、フィリップスとの2トップでクラブの一番いい時代を作り、のちに会長も務めました。
+  - text: ナイアル・クインは、身長**193センチ**のフォワード。マンチェスター・シティから来ました。
     image: assets/photos/pl/sunderland_legend_b2b573bf.jpg
-  sources: *id002
+  - フィリップスとの2トップで、2人合わせて**194得点**。「大と小」と呼ばれたコンビでした。
+  - 引退試合の収益**100万ポンド**を子どもの病院に寄付。2006年にはクラブの会長になりました。
+  sources:
+  - https://en.wikipedia.org/wiki/Kevin_Phillips_(footballer)
+  - https://en.wikipedia.org/wiki/Niall_Quinn
+  - https://en.wikipedia.org/wiki/Kevin_Ball
   bg: assets/backgrounds/stadium_サンダーランド.png
   official: false
 - id: legends3
@@ -192,13 +200,18 @@ sections:
     - 残したもの
     rows:
     - *id001
-    - *id003
+    - *id002
     - - ケヴィン・ボール
       - 1990-1999
       - 2度の昇格を率いた主将
   say:
-  - ケヴィン・ボールは主将として、1996年と99年の2度、クラブを1部に上げました。
-  sources: *id002
+  - ケヴィン・ボールは、ポーツマスから来たディフェンダー。のちに中盤へ移り、主将になりました。
+  - 1992年、2部にいながらFAカップ決勝へ。リヴァプールに**0対2**で敗れました。
+  - 主将として1996年と99年、クラブを1部へ。引退後も暫定監督を**2度**務めています。
+  sources:
+  - https://en.wikipedia.org/wiki/Kevin_Phillips_(footballer)
+  - https://en.wikipedia.org/wiki/Niall_Quinn
+  - https://en.wikipedia.org/wiki/Kevin_Ball
   bg: assets/backgrounds/stadium_サンダーランド.png
   official: false
 - id: squad

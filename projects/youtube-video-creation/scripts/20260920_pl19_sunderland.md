@@ -45,6 +45,7 @@ sources:
 - https://en.wikipedia.org/wiki/Kevin_Phillips_(footballer)
 - https://en.wikipedia.org/wiki/Niall_Quinn
 - https://en.wikipedia.org/wiki/Kevin_Ball
+- https://en.wikipedia.org/wiki/Kevin_Phillips_(English_footballer)
 - https://en.wikipedia.org/wiki/2026–27_Sunderland_A.F.C._season
 cards:
   fall_card:
@@ -229,28 +230,48 @@ cards:
 ## このクラブを語る3人
 @bg: assets/backgrounds/stadium_サンダーランド.png
 
-キャスター: ケヴィン・フィリップスは、1999年から2000年にプレミアの**得点王**。ヨーロッパのゴールデンシューも獲りました。
-  telop: ケヴィン・フィリップスは、1999年から2000年にプレミアの**得点王**。ヨーロッパのゴールデンシューも獲りました
+キャスター: ケヴィン・フィリップスは、ワトフォードから**32万5千ポンド**で来たストライカーです。
+  telop: ケヴィン・フィリップスは、ワトフォードから**32万5千ポンド**で来たストライカーです
   source: 背景
   card: legends_card
+  image: assets/photos/pl/sunderland_legend_1bb9e670.jpg
+キャスター: 2000年、プレミアで**30得点**の得点王。ヨーロッパの得点王もイングランド人で初めてでした。
+  telop: 2000年、プレミアで**30得点**の得点王。ヨーロッパの得点王もイングランド人で初めてでした
+  card: none
+  image: assets/photos/pl/sunderland_legend_1bb9e670.jpg
+キャスター: リーグ戦で**208試合113得点**。2003年、325万ポンドでサウサンプトンへ移りました。
+  telop: リーグ戦で**208試合113得点**。2003年、325万ポンドでサウサンプトンへ移りました
+  card: none
   image: assets/photos/pl/sunderland_legend_1bb9e670.jpg
 
 ## このクラブを語る3人（2人目）
 @bg: assets/backgrounds/stadium_サンダーランド.png
 
-キャスター: ナイアル・クインは、フィリップスとの2トップでクラブの一番いい時代を作り、のちに会長も務めました。
-  telop: ナイアル・クインは、フィリップスとの2トップでクラブの一番いい時代を作り、のちに会長も務めました
+キャスター: ナイアル・クインは、身長**193センチ**のフォワード。マンチェスター・シティから来ました。
+  telop: ナイアル・クインは、身長**193センチ**のフォワード。マンチェスター・シティから来ました
   source: 背景
   card: legends2_card
+  image: assets/photos/pl/sunderland_legend_b2b573bf.jpg
+キャスター: フィリップスとの2トップで、2人合わせて**194得点**。「大と小」と呼ばれたコンビでした。
+  telop: フィリップスとの2トップで、2人合わせて**194得点**。「大と小」と呼ばれたコンビでした
+  card: none
+  image: assets/photos/pl/sunderland_legend_b2b573bf.jpg
+キャスター: 引退試合の収益**100万ポンド**を子どもの病院に寄付。2006年にはクラブの会長になりました。
+  telop: 引退試合の収益**100万ポンド**を子どもの病院に寄付。2006年にはクラブの会長になりました
+  card: none
   image: assets/photos/pl/sunderland_legend_b2b573bf.jpg
 
 ## このクラブを語る3人（3人目）
 @bg: assets/backgrounds/stadium_サンダーランド.png
 
-キャスター: ケヴィン・ボールは主将として、1996年と99年の2度、クラブを1部に上げました。
-  telop: ケヴィン・ボールは主将として、1996年と99年の2度、クラブを1部に上げました
+キャスター: ケヴィン・ボールは、ポーツマスから来たディフェンダー。のちに中盤へ移り、主将になりました。
+  telop: ケヴィン・ボールは、ポーツマスから来たディフェンダー。のちに中盤へ移り、主将になりました
   source: 背景
   card: legends3_card
+キャスター: 1992年、2部にいながらFAカップ決勝へ。リヴァプールに**0対2**で敗れました。
+  telop: 1992年、2部にいながらFAカップ決勝へ。リヴァプールに**0対2**で敗れました
+キャスター: 主将として1996年と99年、クラブを1部へ。引退後も暫定監督を**2度**務めています。
+  telop: 主将として1996年と99年、クラブを1部へ。引退後も暫定監督を**2度**務めています
 
 ## 今季の登録選手
 @bg: assets/backgrounds/stadium_サンダーランド.png

@@ -140,9 +140,11 @@ sections:
       - 1999-2006
       - プレーオフでハットトリック
   say:
-  - text: ジム・マギルトンは、2000年のプレーオフ準決勝でボルトンに**ハットトリック**。5対3で勝ちました。
+  - text: ジム・マギルトンは北アイルランド代表の中盤。1999年、約**75万ポンド**で来ました。
     image: assets/photos/pl/ipswich_legend_7557cc62.jpg
-  sources: &id002
+  - 2000年のプレーオフ準決勝でボルトンに**ハットトリック**。5対3で勝ちました。
+  - ハットトリックはキャリアでこの1度だけ。2006年から3年、監督も務めました。
+  sources:
   - https://en.wikipedia.org/wiki/Matt_Holland
   - https://en.wikipedia.org/wiki/Jim_Magilton
   - https://en.wikipedia.org/wiki/Marcus_Stewart
@@ -162,14 +164,19 @@ sections:
     - 残したもの
     rows:
     - *id001
-    - &id003
+    - &id002
       - マット・ホランド
       - 1997-2003
       - 223試合連続出場の主将
   say:
-  - text: マット・ホランドは、**223試合連続**で出場した主将。その決勝でクラブをプレミアに上げました。
+  - text: マット・ホランドは1997年、ボーンマスから**80万ポンド**で来た中盤です。
     image: assets/photos/pl/ipswich_legend_79ba8f9c.jpg
-  sources: *id002
+  - 2000年5月、プレーオフ決勝でバーンズリーに4対2。主将としてプレミアへ上げました。
+  - 6年間でリーグ戦を休んだのは、代表で呼ばれた1試合だけ。**223試合連続**で出ました。
+  sources:
+  - https://en.wikipedia.org/wiki/Matt_Holland
+  - https://en.wikipedia.org/wiki/Jim_Magilton
+  - https://en.wikipedia.org/wiki/Marcus_Stewart
   bg: assets/backgrounds/stadium_イプスウィッチ.png
   official: false
 - id: legends3
@@ -186,14 +193,19 @@ sections:
     - 残したもの
     rows:
     - *id001
-    - *id003
+    - *id002
     - - マーカス・スチュワート
       - 2000-2002
       - 昇格1年目に19得点
   say:
-  - text: マーカス・スチュワートは、その昇格1年目にプレミアで**19得点**を挙げたフォワードです。
+  - text: マーカス・スチュワートは**250万ポンド**のフォワード。当時のクラブ最高額です。
     image: assets/photos/pl/ipswich_legend_0858d337.jpg
-  sources: *id002
+  - 決勝でも1点を決め、昇格1年目はプレミアで**19得点**。得点ランキングの2位でした。
+  - 2002年の降格でサンダーランドへ。2022年に運動ニューロン疾患と診断されました。
+  sources:
+  - https://en.wikipedia.org/wiki/Matt_Holland
+  - https://en.wikipedia.org/wiki/Jim_Magilton
+  - https://en.wikipedia.org/wiki/Marcus_Stewart
   bg: assets/backgrounds/stadium_イプスウィッチ.png
   official: false
 - id: squad

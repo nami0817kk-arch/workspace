@@ -148,9 +148,11 @@ sections:
       - 1991-2009
       - 初の1部昇格を決めた
   say:
-  - text: ディーン・ウィンダスは、地元ハル出身のフォワード。あのボレーを決めた男です。
+  - text: ディーン・ウィンダスは地元ハル出身のフォワード。1991年、リーグ外のクラブから来ました。
     image: assets/photos/pl/hull_legend_f160fd58.jpg
-  sources: &id002
+  - 1995年に**70万ポンド**でアバディーンへ売られ、2007年に戻ってきました。
+  - あのボレーを決めたとき、**39歳**でした。
+  sources:
   - https://en.wikipedia.org/wiki/Dean_Windass
   - https://en.wikipedia.org/wiki/Ian_Ashbee
   - https://en.wikipedia.org/wiki/Nick_Barmby
@@ -170,14 +172,19 @@ sections:
     - 残したもの
     rows:
     - *id001
-    - &id003
+    - &id002
       - イアン・アシュビー
       - 2002-2011
       - 4部から1部まで主将
   say:
-  - text: イアン・アシュビーは、4部から1部まで、すべての階級で主将を務めた選手です。
+  - text: イアン・アシュビーは、2002年にケンブリッジから加わった中盤。4部にいたころのことです。
     image: assets/photos/pl/hull_legend_24d5dcb4.jpg
-  sources: *id002
+  - 2004年、ヨービル戦で決めたゴールが、クラブを4部から3部へ上げました。
+  - 4階級すべてで主将を務めた、ただひとりの男。リーグ戦**243試合**に出ました。
+  sources:
+  - https://en.wikipedia.org/wiki/Dean_Windass
+  - https://en.wikipedia.org/wiki/Ian_Ashbee
+  - https://en.wikipedia.org/wiki/Nick_Barmby
   bg: assets/backgrounds/stadium_ハルシティ.png
   official: false
 - id: legends3
@@ -194,14 +201,19 @@ sections:
     - 残したもの
     rows:
     - *id001
-    - *id003
+    - *id002
     - - ニック・バームビー
       - 2004-2012
       - 地元に戻り2度の昇格
   say:
-  - text: ニック・バームビーは、イングランド代表も経験して地元ハルに戻り、2度の昇格を支えました。
+  - text: ニック・バームビーは、ハル生まれのイングランド代表。代表で**23試合**に出ています。
     image: assets/photos/pl/hull_legend_56329695.jpg
-  sources: *id002
+  - 2000年、エヴァートンからリヴァプールへ**600万ポンド**で移った男でもあります。
+  - 2004年、移籍金なしで地元ハルに戻り、2012年には監督も務めました。
+  sources:
+  - https://en.wikipedia.org/wiki/Dean_Windass
+  - https://en.wikipedia.org/wiki/Ian_Ashbee
+  - https://en.wikipedia.org/wiki/Nick_Barmby
   bg: assets/backgrounds/stadium_ハルシティ.png
   official: false
 - id: squad

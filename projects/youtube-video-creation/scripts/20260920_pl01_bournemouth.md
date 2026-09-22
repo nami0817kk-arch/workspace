@@ -45,6 +45,8 @@ sources:
 - https://en.wikipedia.org/wiki/Eddie_Howe
 - https://en.wikipedia.org/wiki/List_of_AFC_Bournemouth_records_and_statistics
 - https://en.wikipedia.org/wiki/Callum_Wilson
+- https://en.wikipedia.org/wiki/Brett_Pitman
+- https://en.wikipedia.org/wiki/Ryan_Fraser
 - https://en.wikipedia.org/wiki/2026–27_AFC_Bournemouth_season
 cards:
   history_card:
@@ -251,28 +253,52 @@ cards:
 ## このクラブを語る3人
 @bg: assets/backgrounds/stadium_ボーンマス.png
 
-キャスター: ブレット・ピットマンはリーグ戦で**267試合96得点**。どん底も、2部優勝も知る選手です。
-  telop: ブレット・ピットマンはリーグ戦で**267試合96得点**。どん底も、2部優勝も知る選手です
+キャスター: ブレット・ピットマンはジャージー島の出身。ボーンマス相手に4点を奪って、入団が決まりました。
+  telop: ブレット・ピットマンはジャージー島の出身。ボーンマス相手に4点を奪って、入団が決まりました
   source: 背景
   card: legends_card
+  image: assets/photos/pl/bournemouth_legend_2f36ed97.jpg
+キャスター: 2009年から10年は**26得点**。5月1日、ポート・ヴェイルに4対0で勝ち、3部へ上げました。
+  telop: 2009年から10年は**26得点**。5月1日、ポート・ヴェイルに4対0で勝ち、3部へ上げました
+  card: none
+  image: assets/photos/pl/bournemouth_legend_2f36ed97.jpg
+キャスター: 2部を制した2014年から15年にも13得点。リーグ戦で通算**267試合96得点**です。
+  telop: 2部を制した2014年から15年にも13得点。リーグ戦で通算**267試合96得点**です
+  card: none
   image: assets/photos/pl/bournemouth_legend_2f36ed97.jpg
 
 ## このクラブを語る3人（2人目）
 @bg: assets/backgrounds/stadium_ボーンマス.png
 
-キャスター: カラム・ウィルソンは2014年から15年に2部で**20得点**。初昇格を決めた得点源でした。
-  telop: カラム・ウィルソンは2014年から15年に2部で**20得点**。初昇格を決めた得点源でした
+キャスター: カラム・ウィルソンはコヴェントリーから来た1年目、2部で**20得点**。初昇格の得点源です。
+  telop: カラム・ウィルソンはコヴェントリーから来た1年目、2部で**20得点**。初昇格の得点源です
   source: 背景
   card: legends2_card
+  image: assets/photos/pl/bournemouth_legend_224f5148.jpg
+キャスター: 2015年8月、プレミア初戦のウェストハム戦でハットトリック。アウェーで4対3の勝ち。
+  telop: 2015年8月、プレミア初戦のウェストハム戦でハットトリック。アウェーで4対3の勝ち
+  card: none
+  image: assets/photos/pl/bournemouth_legend_224f5148.jpg
+キャスター: ボーンマスの選手として初めてイングランド代表で得点。2020年、ニューカッスルに移りました。
+  telop: ボーンマスの選手として初めてイングランド代表で得点。2020年、ニューカッスルに移りました
+  card: none
   image: assets/photos/pl/bournemouth_legend_224f5148.jpg
 
 ## このクラブを語る3人（3人目）
 @bg: assets/backgrounds/stadium_ボーンマス.png
 
-キャスター: ライアン・フレイザーは2018年から19年に**14アシスト**。リーグ戦で183試合です。
-  telop: ライアン・フレイザーは2018年から19年に**14アシスト**。リーグ戦で183試合です
+キャスター: ライアン・フレイザーは2013年、スコットランドのアバディーンから来た左ウイングです。
+  telop: ライアン・フレイザーは2013年、スコットランドのアバディーンから来た左ウイングです
   source: 背景
   card: legends3_card
+  image: assets/photos/pl/bournemouth_legend_9f069e9f.jpg
+キャスター: 2016年12月、リヴァプールに4対3で勝ち。途中から出て1点を決め、1点を演出しました。
+  telop: 2016年12月、リヴァプールに4対3で勝ち。途中から出て1点を決め、1点を演出しました
+  card: none
+  image: assets/photos/pl/bournemouth_legend_9f069e9f.jpg
+キャスター: 2018年から19年は7得点**14アシスト**。2020年、ウィルソンと同じ日にニューカッスルへ。
+  telop: 2018年から19年は7得点**14アシスト**。2020年、ウィルソンと同じ日にニューカッスルへ
+  card: none
   image: assets/photos/pl/bournemouth_legend_9f069e9f.jpg
 
 ## 今季の登録選手

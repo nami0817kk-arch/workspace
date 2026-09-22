@@ -219,28 +219,52 @@ cards:
 ## このクラブを語る3人
 @bg: assets/backgrounds/stadium_ニューカッスル.png
 
-キャスター: アラン・シアラーは、クラブ史上最多の**206得点**。1950年代のエース、ミルバーンを抜きました。
-  telop: アラン・シアラーは、クラブ史上最多の**206得点**。1950年代のエース、ミルバーンを抜きました
+キャスター: アラン・シアラーは地元生まれのフォワード。世界最高額の**1500万ポンド**で帰ってきました。
+  telop: アラン・シアラーは地元生まれのフォワード。世界最高額の**1500万ポンド**で帰ってきました
   source: 背景
   card: legends_card
+  image: assets/photos/pl/newcastle_legend_f4f90b59.jpg
+キャスター: 2006年の201点目で、1950年代のエース、ミルバーンの記録を**49年ぶり**に抜きました。
+  telop: 2006年の201点目で、1950年代のエース、ミルバーンの記録を**49年ぶり**に抜きました
+  card: none
+  image: assets/photos/pl/newcastle_legend_f4f90b59.jpg
+キャスター: クラブ史上最多の**206得点**。タイトルは獲れませんでしたが、スタジアムの前に銅像があります。
+  telop: クラブ史上最多の**206得点**。タイトルは獲れませんでしたが、スタジアムの前に銅像があります
+  card: none
   image: assets/photos/pl/newcastle_legend_f4f90b59.jpg
 
 ## このクラブを語る3人（2人目）
 @bg: assets/backgrounds/stadium_ニューカッスル.png
 
-キャスター: シェイ・ギヴンは、12年間ゴールを守り続けたキーパーです。
-  telop: シェイ・ギヴンは、12年間ゴールを守り続けたキーパーです
+キャスター: シェイ・ギヴンは、アイルランド代表で**134試合**のキーパー。ブラックバーンから来ました。
+  telop: シェイ・ギヴンは、アイルランド代表で**134試合**のキーパー。ブラックバーンから来ました
   source: 背景
   card: legends2_card
+  image: assets/photos/pl/newcastle_legend_03981f93.jpg
+キャスター: **150万ポンド**で加入し、リーグ戦で354試合。年間ベストイレブンにも2度選ばれました。
+  telop: **150万ポンド**で加入し、リーグ戦で354試合。年間ベストイレブンにも2度選ばれました
+  card: none
+  image: assets/photos/pl/newcastle_legend_03981f93.jpg
+キャスター: 2009年にマンチェスター・シティへ。クラブの最多出場記録まで、あと**34試合**でした。
+  telop: 2009年にマンチェスター・シティへ。クラブの最多出場記録まで、あと**34試合**でした
+  card: none
   image: assets/photos/pl/newcastle_legend_03981f93.jpg
 
 ## このクラブを語る3人（3人目）
 @bg: assets/backgrounds/stadium_ニューカッスル.png
 
-キャスター: ロブ・リーは、90年代に2位になった「エンターテイナーズ」の中盤で、10年在籍しました。
-  telop: ロブ・リーは、90年代に2位になった「エンターテイナーズ」の中盤で、10年在籍しました
+キャスター: ロブ・リーは、チャールトンから来た中盤。「ロンドンに近い」とキーガン監督に口説かれました。
+  telop: ロブ・リーは、チャールトンから来た中盤。「ロンドンに近い」とキーガン監督に口説かれました
   source: 背景
   card: legends3_card
+  image: assets/photos/pl/newcastle_legend_69dd2e4f.jpg
+キャスター: 2位になった年の11月、リーグの月間最優秀選手に選ばれています。
+  telop: 2位になった年の11月、リーグの月間最優秀選手に選ばれています
+  card: none
+  image: assets/photos/pl/newcastle_legend_69dd2e4f.jpg
+キャスター: 主将も務め、リーグ戦で**303試合**44得点。2019年にはクラブの殿堂入りを果たしました。
+  telop: 主将も務め、リーグ戦で**303試合**44得点。2019年にはクラブの殿堂入りを果たしました
+  card: none
   image: assets/photos/pl/newcastle_legend_69dd2e4f.jpg
 
 ## 今季の登録選手

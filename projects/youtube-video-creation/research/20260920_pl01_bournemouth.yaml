@@ -178,12 +178,15 @@ sections:
       - 2005-2015
       - リーグ267試合96得点。どん底も優勝も
   say:
-  - text: ブレット・ピットマンはリーグ戦で**267試合96得点**。どん底も、2部優勝も知る選手です。
+  - text: ブレット・ピットマンはジャージー島の出身。ボーンマス相手に4点を奪って、入団が決まりました。
     image: assets/photos/pl/bournemouth_legend_2f36ed97.jpg
-  sources: &id002
+  - 2009年から10年は**26得点**。5月1日、ポート・ヴェイルに4対0で勝ち、3部へ上げました。
+  - 2部を制した2014年から15年にも13得点。リーグ戦で通算**267試合96得点**です。
+  sources:
   - https://en.wikipedia.org/wiki/List_of_AFC_Bournemouth_records_and_statistics
   - https://en.wikipedia.org/wiki/Callum_Wilson
   - https://en.wikipedia.org/wiki/Eddie_Howe
+  - https://en.wikipedia.org/wiki/Brett_Pitman
   bg: assets/backgrounds/stadium_ボーンマス.png
   official: false
 - id: legends2
@@ -200,14 +203,19 @@ sections:
     - 残したもの
     rows:
     - *id001
-    - &id003
+    - &id002
       - カラム・ウィルソン
       - 2014-2020
       - 2014-15に2部で20得点。初昇格を決めた得点源
   say:
-  - text: カラム・ウィルソンは2014年から15年に2部で**20得点**。初昇格を決めた得点源でした。
+  - text: カラム・ウィルソンはコヴェントリーから来た1年目、2部で**20得点**。初昇格の得点源です。
     image: assets/photos/pl/bournemouth_legend_224f5148.jpg
-  sources: *id002
+  - 2015年8月、プレミア初戦のウェストハム戦でハットトリック。アウェーで4対3の勝ち。
+  - ボーンマスの選手として初めてイングランド代表で得点。2020年、ニューカッスルに移りました。
+  sources:
+  - https://en.wikipedia.org/wiki/List_of_AFC_Bournemouth_records_and_statistics
+  - https://en.wikipedia.org/wiki/Callum_Wilson
+  - https://en.wikipedia.org/wiki/Eddie_Howe
   bg: assets/backgrounds/stadium_ボーンマス.png
   official: false
 - id: legends3
@@ -224,14 +232,20 @@ sections:
     - 残したもの
     rows:
     - *id001
-    - *id003
+    - *id002
     - - ライアン・フレイザー
       - 2013-2020
       - 1シーズン14アシスト。リーグ183試合
   say:
-  - text: ライアン・フレイザーは2018年から19年に**14アシスト**。リーグ戦で183試合です。
+  - text: ライアン・フレイザーは2013年、スコットランドのアバディーンから来た左ウイングです。
     image: assets/photos/pl/bournemouth_legend_9f069e9f.jpg
-  sources: *id002
+  - 2016年12月、リヴァプールに4対3で勝ち。途中から出て1点を決め、1点を演出しました。
+  - 2018年から19年は7得点**14アシスト**。2020年、ウィルソンと同じ日にニューカッスルへ。
+  sources:
+  - https://en.wikipedia.org/wiki/List_of_AFC_Bournemouth_records_and_statistics
+  - https://en.wikipedia.org/wiki/Callum_Wilson
+  - https://en.wikipedia.org/wiki/Eddie_Howe
+  - https://en.wikipedia.org/wiki/Ryan_Fraser
   bg: assets/backgrounds/stadium_ボーンマス.png
   official: false
 - id: squad

@@ -153,8 +153,10 @@ sections:
       - 1984-2000
       - 1987年FA杯優勝のGK
   say:
-  - スティーヴ・オグリゾヴィッチは、16年間ゴールを守ったキーパー。クラブ記録の**601試合**に出て、あのFAカップ決勝も守りました。
-  sources: &id002
+  - スティーヴ・オグリゾヴィッチは1984年、シュルーズベリーから加わったキーパーです。
+  - 1986年、シェフィールド・ウェンズデイ戦。2対2の引き分けで、キーパーながら得点しました。
+  - クラブ記録の**601試合**に出て、引退後も2019年までキーパーのコーチを務めました。
+  sources:
   - https://en.wikipedia.org/wiki/Steve_Ogrizovic
   - https://en.wikipedia.org/wiki/Dion_Dublin
   - https://en.wikipedia.org/wiki/Gary_McAllister
@@ -174,14 +176,19 @@ sections:
     - 残したもの
     rows:
     - *id001
-    - &id003
+    - &id002
       - ディオン・ダブリン
       - 1994-1998
       - クラブ唯一のプレミア得点王
   say:
-  - text: ディオン・ダブリンは1997年から98年、プレミアリーグの**得点王**。このクラブから得点王が出たのは、この一度だけです。
+  - text: ディオン・ダブリンは1994年、マンチェスター・ユナイテッドから来たフォワードです。
     image: assets/photos/pl/coventry_legend_5dd33917.jpg
-  sources: *id002
+  - 1997年から98年はプレミアの**得点王**。マイケル・オーウェンらと並んでの受賞でした。
+  - リーグ戦で61得点を残し、1998年に**575万ポンド**でアストン・ヴィラへ移りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Steve_Ogrizovic
+  - https://en.wikipedia.org/wiki/Dion_Dublin
+  - https://en.wikipedia.org/wiki/Gary_McAllister
   bg: assets/backgrounds/stadium_コヴェントリー.png
   official: false
 - id: legends3
@@ -198,14 +205,19 @@ sections:
     - 残したもの
     rows:
     - *id001
-    - *id003
+    - *id002
     - - ゲイリー・マカリスター
       - 1996-2000
       - 残留争いを戦った主将
   say:
-  - text: ゲイリー・マカリスターは、1996年からの4年間、残留争いを主将として戦い抜いた司令塔です。
+  - text: ゲイリー・マカリスターは1996年、リーズから**300万ポンド**で来た31歳の司令塔。
     image: assets/photos/pl/coventry_legend_f86f9736.jpg
-  sources: *id002
+  - 主将として残留争いを戦い抜き、1999年から2000年には年間最優秀選手に選ばれました。
+  - 2000年に35歳でリヴァプールへ移り、2002年には監督兼選手として戻ってきました。
+  sources:
+  - https://en.wikipedia.org/wiki/Steve_Ogrizovic
+  - https://en.wikipedia.org/wiki/Dion_Dublin
+  - https://en.wikipedia.org/wiki/Gary_McAllister
   bg: assets/backgrounds/stadium_コヴェントリー.png
   official: false
 - id: squad

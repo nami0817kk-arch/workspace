@@ -154,9 +154,11 @@ sections:
       - 2009-2023
       - クラブ最多の280得点
   say:
-  - text: ハリー・ケインは、60年代のエース、ジミー・グリーヴスを抜いたクラブ史上最多の**280得点**。
+  - text: ハリー・ケインは**11歳**で入った生え抜き。4度の期限付き移籍を経て、定位置をつかみました。
     image: assets/photos/pl/tottenham_legend_131bf2d1.jpg
-  sources: &id002
+  - 2023年2月、シティ戦のゴールで、60年代のエース、グリーヴスのクラブ記録を抜きました。
+  - クラブ史上最多の**280得点**を残し、無冠のままバイエルンへ。プレミアの得点王は3回でした。
+  sources:
   - https://en.wikipedia.org/wiki/Harry_Kane
   - https://en.wikipedia.org/wiki/Son_Heung-min
   - https://en.wikipedia.org/wiki/Ledley_King
@@ -176,14 +178,19 @@ sections:
     - 残したもの
     rows:
     - *id001
-    - &id003
+    - &id002
       - ソン・フンミン
       - 2015-2025
       - EL優勝の主将
   say:
-  - text: ソン・フンミンは、10年在籍の最後の年に、主将としてヨーロッパリーグの優勝杯を掲げました。
+  - text: ソン・フンミンは、レバークーゼンから来た韓国代表。**2200万ポンド**はアジア人の最高額。
     image: assets/photos/pl/tottenham_legend_41006aeb.jpg
-  sources: *id002
+  - 2021年から22年、サラーと並ぶ**23得点**で得点王。アジアの選手では初めてでした。
+  - 10年目、主将としてヨーロッパリーグの決勝でユナイテッドに**1対0**。初めてのタイトルでした。
+  sources:
+  - https://en.wikipedia.org/wiki/Harry_Kane
+  - https://en.wikipedia.org/wiki/Son_Heung-min
+  - https://en.wikipedia.org/wiki/Ledley_King
   bg: assets/backgrounds/stadium_トッテナム.png
   official: false
 - id: legends3
@@ -200,14 +207,19 @@ sections:
     - 残したもの
     rows:
     - *id001
-    - *id003
+    - *id002
     - - レドリー・キング
       - 1999-2012
       - 一筋の主将
   say:
-  - text: レドリー・キングは、生涯トッテナム一筋の主将。2008年にリーグカップを掲げています。
+  - text: レドリー・キングは生え抜きのセンターバック。クラブ一筋で、リーグ戦**268試合**を戦いました。
     image: assets/photos/pl/tottenham_legend_a1b6d580.jpg
-  sources: *id002
+  - 2000年12月、ブラッドフォード戦で開始**10秒**のゴール。当時のプレミア最速記録でした。
+  - 膝の軟骨が無く、練習できないまま試合へ。2008年、主将としてリーグカップを掲げました。
+  sources:
+  - https://en.wikipedia.org/wiki/Harry_Kane
+  - https://en.wikipedia.org/wiki/Son_Heung-min
+  - https://en.wikipedia.org/wiki/Ledley_King
   bg: assets/backgrounds/stadium_トッテナム.png
   official: false
 - id: squad

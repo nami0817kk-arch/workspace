@@ -159,9 +159,11 @@ sections:
       - 1998-2015
       - イスタンブールの奇跡の主将
   say:
-  - text: スティーヴン・ジェラードは、2005年のチャンピオンズリーグ決勝の主将。ミランに0対3から追いついて勝ちました。
+  - text: 中盤のスティーヴン・ジェラードは、9歳でアカデミーに入り、1998年にデビューしました。
     image: assets/photos/pl/liverpool_legend_7c62ed45.jpg
-  sources: &id002
+  - 2005年のチャンピオンズリーグ決勝の主将。ミランに0対3から追いついて勝ちました。
+  - リーグ戦で**504試合**。のちに監督となり、レンジャーズを無敗で優勝させています。
+  sources:
   - https://en.wikipedia.org/wiki/Steven_Gerrard
   - https://en.wikipedia.org/wiki/Jamie_Carragher
   - https://en.wikipedia.org/wiki/Mohamed_Salah
@@ -181,14 +183,19 @@ sections:
     - 残したもの
     rows:
     - *id001
-    - &id003
+    - &id002
       - ジェイミー・キャラガー
       - 1996-2013
       - 737試合の生え抜き
   say:
-  - text: ジェイミー・キャラガーは、**737試合**に出た生え抜きのディフェンダーです。
+  - text: ジェイミー・キャラガーは生え抜きのディフェンダー。少年時代はエヴァートンのファンでした。
     image: assets/photos/pl/liverpool_legend_1840df0d.jpg
-  sources: *id002
+  - 2001年、FAカップ、リーグカップ、ウエファカップの3冠。副主将を10年、務めました。
+  - 出場**737試合**はクラブ史上2番目。2013年に引退し、いまは解説者をしています。
+  sources:
+  - https://en.wikipedia.org/wiki/Steven_Gerrard
+  - https://en.wikipedia.org/wiki/Jamie_Carragher
+  - https://en.wikipedia.org/wiki/Mohamed_Salah
   bg: assets/backgrounds/stadium_リヴァプール.png
   official: false
 - id: legends3
@@ -205,14 +212,19 @@ sections:
     - 残したもの
     rows:
     - *id001
-    - *id003
+    - *id002
     - - モハメド・サラー
       - 2017-2026
       - プレミア1シーズン32得点
   say:
-  - text: モハメド・サラーは加入1年目、2017年から18年にリーグ**32得点**。当時のプレミア記録でした。
+  - text: モハメド・サラーは2017年、ローマから**3690万ポンド**で来た右ウイングです。
     image: assets/photos/pl/liverpool_legend_bec22eba.jpg
-  sources: *id002
+  - 2024年から25年は29得点18アシスト。合わせて**47**は、20チーム制で最多でした。
+  - リーグ戦**315試合**で191得点。クラブ史上3番目の得点者となり、この夏、去りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Steven_Gerrard
+  - https://en.wikipedia.org/wiki/Jamie_Carragher
+  - https://en.wikipedia.org/wiki/Mohamed_Salah
   bg: assets/backgrounds/stadium_リヴァプール.png
   official: false
 - id: squad

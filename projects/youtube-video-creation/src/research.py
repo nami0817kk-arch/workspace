@@ -1873,6 +1873,7 @@ def to_script(notes: Notes, plan: Plan) -> str:
         # 数え始め（first_kept）より前にこの2つを使って落ちた。前の節があれば
         # その値が残っていて表に出ず、**1節目がショート専用の行で始まる台本**で初めて踏んだ
         shown_for = 0
+        last_image = ""
         showed_photo = False
         for number, sentence in enumerate(section.say):
             # 掛け合いにする。1文目は事実をキャスターが読み、
@@ -1951,6 +1952,11 @@ def to_script(notes: Notes, plan: Plan) -> str:
                     own_image = fallback_image
                 if own_image:
                     lines.append(f"  image: {own_image}")
+                    # **行に写真があれば、そのあとの行でカードを下ろせる**（2026-09-22）。
+                    # 名選手の節が1人3行になり、顔写真はあるのに、サムネ写真の無い回
+                    # （プレミア20クラブ紹介）は photo_on が立たず、同じカードが22秒続いた
+                    showed_photo = True
+                    last_image = own_image
             else:
                 # **指定が無い行にも、読み上げ文からテロップを作る**
                 # （2026-09-06 ユーザーの指示）。指定が無いと前の見た目のまま
@@ -1980,6 +1986,7 @@ def to_script(notes: Notes, plan: Plan) -> str:
                     # 自分で写真を指定した行も「写真を出した」と数える。
                     # 数えないと、次の行に同じ写真がもう一度出て12.6秒になった
                     showed_photo = True
+                    last_image = own_image
                 if own_card:
                     lines.append(f"  card: {section.id}_{number}_card")
                     shown_for = 0
@@ -2000,6 +2007,10 @@ def to_script(notes: Notes, plan: Plan) -> str:
                     # 2026-09-14 指摘「意味のないnoneが入っている」も同じところ
                     if photo_on and fallback_image:
                         lines.append("  card: none")
+                    elif showed_photo and not own_image and last_image:
+                        # カードを下ろし、直前の写真をそのまま出しておく
+                        lines.append("  card: none")
+                        own_image = last_image
                     shown_for = 0
                 # **絵の切り替えは1本につき1回だけ**（2026-09-14 指示
                 # 「背景がコロコロ変わるのやめてほしい。変更は一度まで」）。

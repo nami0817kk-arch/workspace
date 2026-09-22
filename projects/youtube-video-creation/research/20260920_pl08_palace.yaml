@@ -148,9 +148,11 @@ sections:
       - 2010-2023
       - クラブのプレミア最多得点
   say:
-  - text: ウィルフリード・ザハは、クラブのプレミアリーグ最多得点者。10年以上、チームの切り札でした。
+  - text: ウィルフリード・ザハは8歳から下部組織にいた、クロイドン育ちの生え抜きです。
     image: assets/photos/pl/palace_legend_cd98ad83.jpg
-  sources: &id002
+  - 2013年、マンチェスター・ユナイテッドへ**1000万ポンド**で移り、2015年に戻りました。
+  - プレミアで挙げた**68得点**はクラブ最多。2023年、18年いたクラブを離れました。
+  sources:
   - https://en.wikipedia.org/wiki/Wilfried_Zaha
   - https://en.wikipedia.org/wiki/Julian_Speroni
   - https://en.wikipedia.org/wiki/Andrew_Johnson_(footballer,_born_1981)
@@ -170,14 +172,20 @@ sections:
     - 残したもの
     rows:
     - *id001
-    - &id003
+    - &id002
       - フリアン・スペローニ
       - 2004-2019
       - 年間最優秀選手4回のGK
   say:
-  - text: フリアン・スペローニは15年在籍し、クラブの年間最優秀選手に**4回**選ばれたキーパーです。
+  - text: フリアン・スペローニは、2004年にダンディーから来たアルゼンチン人のキーパーです。
     image: assets/photos/pl/palace_legend_80f288a7.jpg
-  sources: *id002
+  - 2013年の昇格プレーオフ決勝は、ワトフォードに1対0。無失点でプレミア昇格を決めました。
+  - 年間最優秀選手に4回。キーパーとしてクラブ最多の、リーグ戦**371試合**に出ました。
+  sources:
+  - https://en.wikipedia.org/wiki/Wilfried_Zaha
+  - https://en.wikipedia.org/wiki/Julian_Speroni
+  - https://en.wikipedia.org/wiki/Andrew_Johnson_(footballer,_born_1981)
+  - https://en.wikipedia.org/wiki/Juli%C3%A1n_Speroni
   bg: assets/backgrounds/stadium_クリスタルパレス.png
   official: false
 - id: legends3
@@ -194,14 +202,19 @@ sections:
     - 残したもの
     rows:
     - *id001
-    - *id003
+    - *id002
     - - アンドリュー・ジョンソン
       - 2002-2006
       - プレミアで21得点
   say:
-  - text: アンドリュー・ジョンソンは、2004年から05年にプレミアで**21得点**。そのシーズンのイングランド人では最多でした。
+  - text: アンドリュー・ジョンソンは2002年、バーミンガムとの選手交換で加わったフォワードです。
     image: assets/photos/pl/palace_legend_3bc227d6.jpg
-  sources: *id002
+  - 2003年から04年は2部で**32得点**。ウェストハムを1対0で破り、プレミアへ昇格しました。
+  - 翌シーズンはプレミアで**21得点**。2006年、860万ポンドでエヴァートンへ移りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Wilfried_Zaha
+  - https://en.wikipedia.org/wiki/Julian_Speroni
+  - https://en.wikipedia.org/wiki/Andrew_Johnson_(footballer,_born_1981)
   bg: assets/backgrounds/stadium_クリスタルパレス.png
   official: false
 - id: squad

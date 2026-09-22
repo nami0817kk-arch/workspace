@@ -137,9 +137,11 @@ sections:
       - 1999-2007
       - クラブ最多の228得点
   say:
-  - text: ティエリ・アンリは、クラブ史上最多の**228得点**。無敗優勝の中心にいました。
+  - text: ティエリ・アンリは1999年、ユヴェントスから加入。ヴェンゲルがストライカーに変えました。
     image: assets/photos/pl/arsenal_legend_7851c0a6.jpg
-  sources: &id002
+  - クラブ史上最多の**228得点**。プレミアの得点王には、歴代最多の4回選ばれています。
+  - 2007年にバルセロナへ。2012年には期限付きで戻り、復帰戦でリーズから得点しました。
+  sources:
   - https://en.wikipedia.org/wiki/Thierry_Henry
   - https://en.wikipedia.org/wiki/Dennis_Bergkamp
   - https://en.wikipedia.org/wiki/Tony_Adams
@@ -159,14 +161,19 @@ sections:
     - 残したもの
     rows:
     - *id001
-    - &id003
+    - &id002
       - デニス・ベルカンプ
       - 1995-2006
       - 3度のリーグ優勝の司令塔
   say:
-  - text: デニス・ベルカンプは、3度のリーグ優勝を支えた司令塔です。
+  - text: デニス・ベルカンプは1995年、インテルから当時のクラブ最高額**750万ポンド**で加入。
     image: assets/photos/pl/arsenal_legend_33c1caef.jpg
-  sources: *id002
+  - 2002年のニューカッスル戦のゴールは、のちにプレミア25年で最高の1点に選ばれました。
+  - 3度のリーグ優勝を支えた司令塔。2006年の引退試合が、エミレーツの最初の試合でした。
+  sources:
+  - https://en.wikipedia.org/wiki/Thierry_Henry
+  - https://en.wikipedia.org/wiki/Dennis_Bergkamp
+  - https://en.wikipedia.org/wiki/Tony_Adams
   bg: assets/backgrounds/stadium_アーセナル.png
   official: false
 - id: legends3
@@ -183,14 +190,19 @@ sections:
     - 残したもの
     rows:
     - *id001
-    - *id003
+    - *id002
     - - トニー・アダムス
       - 1983-2002
       - 1988-2002年の主将
   say:
-  - text: トニー・アダムスは、**1988年から2002年**まで主将を務めたセンターバックです。
+  - text: トニー・アダムスは1983年、17歳でデビュー。引退までこのクラブだけのセンターバックです。
     image: assets/photos/pl/arsenal_legend_2f4344ee.jpg
-  sources: *id002
+  - 1988年、21歳で主将に。3つの年代でリーグ優勝の腕章を巻いた、ただひとりの選手です。
+  - リーグ戦で**504試合**。2011年、創立125年を記念して、エミレーツに銅像が立ちました。
+  sources:
+  - https://en.wikipedia.org/wiki/Thierry_Henry
+  - https://en.wikipedia.org/wiki/Dennis_Bergkamp
+  - https://en.wikipedia.org/wiki/Tony_Adams
   bg: assets/backgrounds/stadium_アーセナル.png
   official: false
 - id: squad
