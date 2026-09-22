@@ -48,7 +48,7 @@ sections:
     narrator: 解説
     bg: assets/backgrounds/stock/stadium_night.mp4
     say:
-      - 離脱は**2〜3週間**という見立てです。クラブは戻る時期を出していません。
+      - クラブは、戻る時期を出していません。離脱は**2〜3週間**という見立ても出ています。
       - リーグの次の試合は、**10月10日**のビジャレアル戦です。
     sources:
       - https://www.soccer-king.jp/news/world/esp/20260922/2207937.html
@@ -60,8 +60,9 @@ sections:
     narrator: キャスター
     bg: assets/backgrounds/stock/stadium_night.mp4
     say:
-      - text: 'ウルグアイ代表のバルベルデが、左足首のグレード3の捻挫と発表されました。前半で痛めたあとも交代せずに残っていたことに、驚きの声が出ています。'
+      - text: 'ウルグアイ代表のバルベルデが、左足首のグレード3の捻挫と発表されました。'
         short_only: true
+      - 交代しなかった理由を、本人もクラブも話していません。
       - voice: ネット民
         text: いやいや、バルベルデは「けがをした」まま45分も出たんだぞ。君らの言うグレード3の捻挫で、プレーを続けられると思うか？
       - voice: ネット民
