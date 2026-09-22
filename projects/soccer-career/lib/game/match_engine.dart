@@ -764,6 +764,12 @@ class MatchInProgress {
               ),
         ),
       );
+    } else if (opponentStyle.openFor == option.key) {
+      // その戦い方が空ける場所。**慣れでは動かない**——
+      // 相手の弱点は、こちらが何度当たっても弱点のまま。
+      factors.add(
+        ChanceFactor('${opponentStyle.label}の裏', Formulas.styleOpening),
+      );
     }
 
     // 大一番の重圧。経験と自信で薄まり、若く自信の無い選手ほど呑まれる。

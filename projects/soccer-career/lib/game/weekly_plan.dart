@@ -93,8 +93,12 @@ class WeekPlan {
     if (!state.seasonFinished) {
       final opponent = state.opponentFor(state.matchday);
       final style = ClubStyle.of(opponent);
+      // **判定と同じ定数から出す。** −0.05 と手で書いてあって、
+      // 実際の判定は −0.08 だった（`styleMismatch` を深くしたときに
+      // ここだけ古くなった）。表示と判定の食い違いは、このゲームで
+      // 一番やってはいけないこと。
       final penalty =
-          (-0.05 +
+          (-Formulas.styleMismatch +
               state.development.adaptationFor(
                 style,
                 factor: state.player.traits.adaptationFactor,
@@ -107,7 +111,9 @@ class WeekPlan {
         reason:
             '${style.description}。'
             '${style.hardFor.label}の局面が ${penalty.toStringAsFixed(1)}% 通りにくい'
-            '（${state.development.faced[style] ?? 0}回戦って慣れてきたぶんを含む）。',
+            '（${state.development.faced[style] ?? 0}回戦って慣れてきたぶんを含む）。'
+            '${style.openFor.label}は +'
+            '${(Formulas.styleOpening * 100).toStringAsFixed(0)}%。',
         suggested: menu.availableFor(state.player.position) ? menu : null,
       );
     }
