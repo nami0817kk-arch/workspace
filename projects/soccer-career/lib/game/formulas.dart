@@ -336,6 +336,9 @@ class Formulas {
   /// 相手の戦い方と噛み合わない手の重り。慣れ（`adaptationFor`）で消える。
   static const double styleMismatch = 0.08;
 
+  /// 相手の戦い方が空ける場所の上乗せ。慣れでは動かない（弱点は弱点のまま）。
+  static const double styleOpening = 0.06;
+
   /// 大一番の重圧。経験（`composure`）と自信で薄まる。
   static const double bigMatchPressure = 0.10;
 

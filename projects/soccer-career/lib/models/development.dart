@@ -11,18 +11,47 @@ import 'season.dart';
 /// クラブごとに保存はしない。IDから決めることで、同じクラブとは毎回
 /// 同じ噛み合わせになり、「あそこは苦手だ」という記憶が成立する。
 enum ClubStyle {
-  pressing('ハイプレス', 'パスを出す余裕が無い', AttributeKey.passing),
-  defensive('堅守速攻', 'ゴール前を固めてくる', AttributeKey.shooting),
-  technical('技巧派', 'ボールを持たれる', AttributeKey.defending),
-  physical('肉弾戦', '当たりが強く、仕掛けが潰される', AttributeKey.dribbling);
+  pressing(
+    'ハイプレス',
+    'パスが重い。背後は空く',
+    AttributeKey.passing,
+    AttributeKey.pace,
+  ),
+  defensive(
+    '堅守速攻',
+    'ゴール前が固い。運べる',
+    AttributeKey.shooting,
+    AttributeKey.dribbling,
+  ),
+  technical(
+    '技巧派',
+    '持たれる。当たれば奪える',
+    AttributeKey.defending,
+    AttributeKey.physical,
+  ),
+  physical(
+    '肉弾戦',
+    '仕掛けが潰される。外せば通る',
+    AttributeKey.dribbling,
+    AttributeKey.passing,
+  );
 
-  const ClubStyle(this.label, this.description, this.hardFor);
+  const ClubStyle(this.label, this.description, this.hardFor, this.openFor);
 
   final String label;
   final String description;
 
   /// この相手に対して難しくなる能力。
   final AttributeKey hardFor;
+
+  /// **その戦い方が空ける場所。**
+  ///
+  /// 苦手な1つだけを重くしていた頃、相手の戦い方は増減の **0.4%** しか
+  /// 持っていなかった（`influence_sim`）。毎週画面に出している情報なのに、
+  /// 局面の 1つのカテゴリにしか掛からず、しかも下げるだけなので
+  /// 「今日はこの手でいく」という読みに繋がらなかった。
+  /// 難しくなる1つと、空く1つ——**形**にすると、相手を見る意味が出る。
+  final AttributeKey openFor;
 
   /// クラブIDから決める。ハッシュではなく符号の和で出すのは、
   /// 実行ごとに変わらないようにするため。
