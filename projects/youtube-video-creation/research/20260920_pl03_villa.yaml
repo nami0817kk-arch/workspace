@@ -50,28 +50,28 @@ sections:
   - image: assets/stats/pl_villa_data0.png
     text: 礼拝堂に集まった青年4人が始めたクラブ。1888年には、世界初のリーグを作る側に回ります。
     no_telop: true
-  - image: assets/backgrounds/stadium_アストンヴィラ_in.png
-    text: 本拠地はヴィラ・パーク。4万3205人が入ります。
+  - image: assets/stats/pl_villa_data1.png
+    text: 愛称は「ヴィランズ」。「ライオンズ」とも呼ばれます。
+    no_telop: true
   - image: assets/stats/pl_villa_map.png
     text: ホームタウンはバーミンガム。イングランド第2の都市です。
     no_telop: true
+  - image: assets/backgrounds/stadium_アストンヴィラ_in.png
+    text: 本拠地はヴィラ・パーク。4万3205人が入ります。
   - image: assets/stats/pl_villa_cups.png
     text: 1部リーグの優勝は**7回**。FAカップ7回、リーグカップ5回。
     no_telop: true
-  - image: assets/stats/pl_villa_data3.png
+  - image: assets/stats/pl_villa_data6.png
+    text: 1930年から31年には、1シーズンで**128ゴール**。いまもイングランド1部の最多記録です。
+    no_telop: true
+  - image: assets/stats/pl_villa_data7.png
     text: ヨーロッパは、チャンピオンズリーグとヨーロッパリーグを1回ずつ。
     no_telop: true
-  - image: assets/stats/pl_villa_data3.png
+  - image: assets/stats/pl_villa_data7.png
     text: スーパーカップとインタートトカップも、1回ずつ獲っています。
-    no_telop: true
-  - image: assets/stats/pl_villa_data4.png
-    text: 1930年から31年には、1シーズンで**128ゴール**。いまもイングランド1部の最多記録です。
     no_telop: true
   - image: assets/stats/pl_villa_last.png
     text: プレミアリーグでの最高位は、初年度1992年から93年の2位です。
-    no_telop: true
-  - image: assets/stats/pl_villa_data6.png
-    text: 愛称は「ヴィランズ」。「ライオンズ」とも呼ばれます。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Aston_Villa_F.C.

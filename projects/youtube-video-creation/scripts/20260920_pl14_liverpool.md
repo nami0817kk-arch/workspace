@@ -173,15 +173,21 @@ cards:
   no_telop: true
   source: 背景
   image: assets/stats/pl_liverpool_data0.png
-解説: 本拠地はアンフィールド。**約6万1000人**が入ります。2024年に広げたばかりです。
-  telop: 本拠地はアンフィールド。**約6万1000人**が入ります。2024年に広げたばかりです
-  image: assets/backgrounds/stadium_リヴァプール_in.png
+解説: 愛称は「レッズ」。1959年から74年まで率いたビル・シャンクリー監督の時代に定着します。
+  no_telop: true
+  image: assets/stats/pl_liverpool_data1.png
 解説: ホームタウンはリヴァプール。イングランド・マージーサイドです。
   no_telop: true
   image: assets/stats/pl_liverpool_map.png
+解説: 本拠地はアンフィールド。**約6万1000人**が入ります。2024年に広げたばかりです。
+  telop: 本拠地はアンフィールド。**約6万1000人**が入ります。2024年に広げたばかりです
+  image: assets/backgrounds/stadium_リヴァプール_in.png
+解説: 試合前の「ユール・ネヴァー・ウォーク・アローン」も、1960年代の初めから歌われています。
+  telop: 試合前の「ユール・ネヴァー・ウォーク・アローン」も、1960年代の初めから歌われています
+  image: assets/backgrounds/stadium_リヴァプール_in.png
 解説: 2010年から、大リーグのレッドソックスも持つフェンウェイ・スポーツ・グループがオーナーです。
   no_telop: true
-  image: assets/stats/pl_liverpool_data2.png
+  image: assets/stats/pl_liverpool_data4.png
 解説: 1部リーグの優勝は**20回**。マンチェスター・ユナイテッドと並んで最多です。
   no_telop: true
   image: assets/stats/pl_liverpool_cups.png
@@ -193,16 +199,10 @@ cards:
   image: assets/stats/pl_liverpool_cups.png
 解説: 直近のタイトルは、2024年から25年のプレミアリーグ優勝です。
   no_telop: true
-  image: assets/stats/pl_liverpool_data4.png
+  image: assets/stats/pl_liverpool_data7.png
 解説: 昨季は**5位**。勝ち点は60でした。
   no_telop: true
   image: assets/stats/pl_liverpool_last.png
-解説: 愛称は「レッズ」。1959年から74年まで率いたビル・シャンクリー監督の時代に定着します。
-  no_telop: true
-  image: assets/stats/pl_liverpool_data6.png
-解説: 試合前の「ユール・ネヴァー・ウォーク・アローン」も、1960年代の初めから歌われています。
-  no_telop: true
-  image: assets/stats/pl_liverpool_data6.png
 
 ## 空になったスタジアム
 @bg: assets/backgrounds/stadium_リヴァプール.png

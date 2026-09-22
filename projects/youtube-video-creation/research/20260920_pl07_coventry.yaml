@@ -50,25 +50,25 @@ sections:
   - image: assets/stats/pl_coventry_data0.png
     text: 創立は**1883年**。自転車を作るシンガー社の工員たちが作ったクラブです。
     no_telop: true
-  - image: assets/backgrounds/stadium_コヴェントリー_in.png
-    text: 本拠地はシービーエス・アリーナ。**3万2609人**が入ります。
+  - image: assets/stats/pl_coventry_data1.png
+    text: 愛称は「スカイブルーズ」。空色です。
+    no_telop: true
   - image: assets/stats/pl_coventry_map.png
     text: ホームタウンはコヴェントリー。ウェスト・ミッドランズの都市です。
     no_telop: true
-  - image: assets/stats/pl_coventry_data2.png
+  - image: assets/backgrounds/stadium_コヴェントリー_in.png
+    text: 本拠地はシービーエス・アリーナ。**3万2609人**が入ります。
+  - image: assets/stats/pl_coventry_data4.png
     text: オーナーは地元の実業家ダグ・キング。2023年からクラブを持っています。
     no_telop: true
   - image: assets/stats/pl_coventry_cups.png
     text: 1部リーグの優勝も、リーグカップの優勝もありません。FAカップが1回です。
     no_telop: true
-  - image: assets/stats/pl_coventry_data4.png
-    text: 直近の優勝は、昨季の2部リーグです。
-    no_telop: true
-  - image: assets/stats/pl_coventry_data5.png
+  - image: assets/stats/pl_coventry_data6.png
     text: 1シーズンの最多得点は、クラリー・バートンの**50得点**。1931年から32年の記録です。
     no_telop: true
-  - image: assets/stats/pl_coventry_data6.png
-    text: 愛称は「スカイブルーズ」。空色です。
+  - image: assets/stats/pl_coventry_data7.png
+    text: 直近の優勝は、昨季の2部リーグです。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Coventry_City_F.C.

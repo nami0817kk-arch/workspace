@@ -37,24 +37,24 @@ sections:
   - image: assets/stats/pl_fulham_data0.png
     text: 教会のクラブとして始まり、ロンドンでは1861年起源のクリスタル・パレスに次いで古いプロクラブです。
     no_telop: true
-  - image: assets/backgrounds/stadium_フラム_in.png
-    text: 本拠地はテムズ川沿いのクレイヴン・コテージ。**2万8107人**が入ります。
+  - image: assets/stats/pl_fulham_data1.png
+    text: 愛称は「コテジャーズ」。小屋に住む人、という意味です。
+    no_telop: true
   - image: assets/stats/pl_fulham_map.png
     text: ホームタウンはフラム。ロンドン中心部の西です。
     no_telop: true
+  - image: assets/backgrounds/stadium_フラム_in.png
+    text: 本拠地はテムズ川沿いのクレイヴン・コテージ。**2万8107人**が入ります。
   - image: assets/photos/pl/fulham_owner_9cb77ec2.jpg
     text: オーナーはアメリカの実業家シャヒド・カーン。2013年からクラブを持っています。
   - image: assets/stats/pl_fulham_cups.png
     text: 1部リーグの優勝はありませんが、ヨーロッパのインタートトカップを1回獲っています。
     no_telop: true
-  - image: assets/stats/pl_fulham_last.png
-    text: プレミアでの最高位は、2008年から09年の**7位**です。
-    no_telop: true
-  - image: assets/stats/pl_fulham_data5.png
+  - image: assets/stats/pl_fulham_data6.png
     text: クラブ最多出場は、イングランド代表の主将も務めたジョニー・ヘインズ。**658試合**です。
     no_telop: true
-  - image: assets/stats/pl_fulham_data6.png
-    text: 愛称は「コテジャーズ」。小屋に住む人、という意味です。
+  - image: assets/stats/pl_fulham_last.png
+    text: プレミアでの最高位は、2008年から09年の**7位**です。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Fulham_F.C.

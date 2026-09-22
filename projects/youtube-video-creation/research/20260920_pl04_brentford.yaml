@@ -37,12 +37,15 @@ sections:
   - image: assets/stats/pl_brentford_data0.png
     text: 創立は**1889年**。ボートを漕ぐクラブの仲間たちが作りました。
     no_telop: true
-  - image: assets/backgrounds/stadium_ブレントフォード_in.png
-    text: 本拠地はブレントフォード・コミュニティ・スタジアム。2020年に移ってきました。
+  - image: assets/stats/pl_brentford_data1.png
+    text: 愛称は「ビーズ」。蜂です。
+    no_telop: true
   - image: assets/stats/pl_brentford_map.png
     text: 場所は西ロンドン、テムズ川沿いの町です。
     no_telop: true
-  - image: assets/stats/pl_brentford_data3.png
+  - image: assets/backgrounds/stadium_ブレントフォード_in.png
+    text: 本拠地はブレントフォード・コミュニティ・スタジアム。2020年に移ってきました。
+  - image: assets/stats/pl_brentford_data4.png
     text: オーナーはマシュー・ベンハム。2012年からクラブを持っています。
     no_telop: true
   - image: assets/stats/pl_brentford_cups.png
@@ -50,9 +53,6 @@ sections:
     no_telop: true
   - image: assets/stats/pl_brentford_last.png
     text: プレミアでの最高位は、2022年から23年の**9位**です。
-    no_telop: true
-  - image: assets/stats/pl_brentford_data6.png
-    text: 愛称は「ビーズ」。蜂です。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Brentford_F.C.

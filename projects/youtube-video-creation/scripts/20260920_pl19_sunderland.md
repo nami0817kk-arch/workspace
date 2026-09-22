@@ -166,27 +166,27 @@ cards:
   no_telop: true
   source: 背景
   image: assets/stats/pl_sunderland_data0.png
-解説: 本拠地はスタジアム・オブ・ライト。**4万8095人**が入ります。
-  telop: 本拠地はスタジアム・オブ・ライト。**4万8095人**が入ります
-  image: assets/backgrounds/stadium_サンダーランド_in.png
+解説: 愛称は「ブラック・キャッツ」。黒猫です。
+  no_telop: true
+  image: assets/stats/pl_sunderland_data1.png
 解説: ホームタウンは、サンダーランドの街です。
   no_telop: true
   image: assets/stats/pl_sunderland_map.png
+解説: 本拠地はスタジアム・オブ・ライト。**4万8095人**が入ります。
+  telop: 本拠地はスタジアム・オブ・ライト。**4万8095人**が入ります
+  image: assets/backgrounds/stadium_サンダーランド_in.png
 解説: オーナーはキリル・ルイ＝ドレフュス。2021年から、株の64%を持っています。
   no_telop: true
-  image: assets/stats/pl_sunderland_data3.png
+  image: assets/stats/pl_sunderland_data4.png
 解説: 1部リーグの優勝は、さきほどの**6回**。FAカップも2回獲っています。
   no_telop: true
   image: assets/stats/pl_sunderland_cups.png
 解説: 1998年から99年には、2部で勝ち点**105**。当時のリーグの最多記録でした。
   no_telop: true
-  image: assets/stats/pl_sunderland_data5.png
+  image: assets/stats/pl_sunderland_data6.png
 解説: プレミアでの最高位は**7位**。2000年から01年と、昨季の2回です。
   no_telop: true
   image: assets/stats/pl_sunderland_last.png
-解説: 愛称は「ブラック・キャッツ」。黒猫です。
-  no_telop: true
-  image: assets/stats/pl_sunderland_data7.png
 
 ## 6回優勝したクラブが、3部へ
 @bg: assets/backgrounds/stadium_サンダーランド.png

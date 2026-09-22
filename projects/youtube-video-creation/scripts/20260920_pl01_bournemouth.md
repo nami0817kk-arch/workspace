@@ -183,12 +183,12 @@ cards:
 解説: 愛称は「ザ・チェリーズ」。さくらんぼです。赤と黒の縦じまは、イタリアのミランが手本です。
   no_telop: true
   image: assets/stats/pl_bournemouth_data1.png
-解説: 本拠地はディーン・コート。**1万2357人**。マンチェスター・ユナイテッドの**6分の1**です。
-  telop: 本拠地はディーン・コート。**1万2357人**。マンチェスター・ユナイテッドの**6分の1**です
-  image: assets/backgrounds/stadium_ボーンマス_in.png
 解説: 町はイングランド南部、ドーセット州の海沿いです。
   no_telop: true
   image: assets/stats/pl_bournemouth_map.png
+解説: 本拠地はディーン・コート。**1万2357人**。マンチェスター・ユナイテッドの**6分の1**です。
+  telop: 本拠地はディーン・コート。**1万2357人**。マンチェスター・ユナイテッドの**6分の1**です
+  image: assets/backgrounds/stadium_ボーンマス_in.png
 解説: オーナーはアメリカのビル・フォーリー。2022年に買収。**1億ポンド超**と報じられました。
   telop: オーナーはアメリカのビル・フォーリー。2022年に買収。**1億ポンド超**と報じられました
   image: assets/photos/pl/bournemouth_owner_cf0347c5.jpg

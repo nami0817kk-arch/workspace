@@ -163,12 +163,15 @@ cards:
   no_telop: true
   source: 背景
   image: assets/stats/pl_newcastle_data0.png
-解説: 本拠地はセント・ジェームズ・パーク。**5万2729人**が入ります。
-  telop: 本拠地はセント・ジェームズ・パーク。**5万2729人**が入ります
-  image: assets/backgrounds/stadium_ニューカッスル_in.png
+解説: 愛称は「マグパイズ」。カササギです。白と黒の縞から来ています。
+  no_telop: true
+  image: assets/stats/pl_newcastle_data1.png
 解説: ホームタウンは、ニューカッスル・アポン・タインです。
   no_telop: true
   image: assets/stats/pl_newcastle_map.png
+解説: 本拠地はセント・ジェームズ・パーク。**5万2729人**が入ります。
+  telop: 本拠地はセント・ジェームズ・パーク。**5万2729人**が入ります
+  image: assets/backgrounds/stadium_ニューカッスル_in.png
 解説: オーナーは、サウジアラビアの公共投資基金です。
   telop: オーナーは、サウジアラビアの公共投資基金です
   image: assets/photos/pl/newcastle_owner_d7f21670.jpg
@@ -178,9 +181,6 @@ cards:
 解説: プレミアでの最高位は2位。1995年から96年と、その翌年の2回です。
   no_telop: true
   image: assets/stats/pl_newcastle_last.png
-解説: 愛称は「マグパイズ」。カササギです。白と黒の縞から来ています。
-  no_telop: true
-  image: assets/stats/pl_newcastle_data6.png
 
 ## 56年待った
 @bg: assets/backgrounds/stadium_ニューカッスル.png

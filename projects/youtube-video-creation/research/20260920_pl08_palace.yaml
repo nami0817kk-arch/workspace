@@ -52,24 +52,24 @@ sections:
   - image: assets/stats/pl_palace_data0.png
     text: プロのクラブとしての創立は**1905年**。起源は1861年のアマチュアクラブです。
     no_telop: true
-  - image: assets/backgrounds/stadium_クリスタルパレス_in.png
-    text: 本拠地はセルハースト・パーク。**2万5194人**が入ります。
+  - image: assets/stats/pl_palace_data1.png
+    text: 愛称は「イーグルス」。鷲です。
+    no_telop: true
   - image: assets/stats/pl_palace_map.png
     text: ホームタウンは南ロンドンの、クロイドン区セルハーストです。
     no_telop: true
+  - image: assets/backgrounds/stadium_クリスタルパレス_in.png
+    text: 本拠地はセルハースト・パーク。**2万5194人**が入ります。
   - image: assets/photos/pl/palace_owner_51aa6fad.jpg
     text: オーナーは、アメリカンフットボールのニューヨーク・ジェッツの会長、ウッディ・ジョンソン。2025年にクラブを買いました。
   - image: assets/stats/pl_palace_cups.png
     text: 1部リーグの優勝はありませんが、FAカップを1回、そしてカンファレンスリーグを1回獲っています。
     no_telop: true
-  - image: assets/stats/pl_palace_data5.png
+  - image: assets/stats/pl_palace_data7.png
     text: その優勝が昨季です。決勝でスペインのラージョ・バジェカーノを1対0で破りました。
     no_telop: true
   - image: assets/stats/pl_palace_last.png
     text: 1部での最高位は、1990年から91年の**3位**。プレミアリーグができる前です。
-    no_telop: true
-  - image: assets/stats/pl_palace_data7.png
-    text: 愛称は「イーグルス」。鷲です。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.

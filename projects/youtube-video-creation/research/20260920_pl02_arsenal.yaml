@@ -53,14 +53,14 @@ sections:
   - image: assets/stats/pl_arsenal_cups.png
     text: ヨーロッパは、カップウィナーズカップとフェアーズカップを1回ずつです。
     no_telop: true
-  - image: assets/stats/pl_arsenal_last.png
-    text: 直近のタイトルは昨季、2025年から26年のプレミアリーグ優勝。勝ち点は85でした。
-    no_telop: true
-  - image: assets/stats/pl_arsenal_data7.png
+  - image: assets/stats/pl_arsenal_data6.png
     text: 2003年から2004年は、38試合を1度も負けずに優勝しました。
     no_telop: true
-  - image: assets/stats/pl_arsenal_data7.png
+  - image: assets/stats/pl_arsenal_data6.png
     text: '**インビンシブルズ**と呼ばれ、プレミアリーグでは今も唯一の記録です。'
+    no_telop: true
+  - image: assets/stats/pl_arsenal_last.png
+    text: 直近のタイトルは昨季、2025年から26年のプレミアリーグ優勝。勝ち点は85でした。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Arsenal_F.C.

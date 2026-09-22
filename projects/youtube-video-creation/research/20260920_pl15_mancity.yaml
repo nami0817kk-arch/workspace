@@ -37,11 +37,14 @@ sections:
   - image: assets/stats/pl_mancity_data0.png
     text: 創立は**1880年**。教会のチーム、セント・マークスから、1894年に今の名前になりました。
     no_telop: true
-  - image: assets/backgrounds/stadium_マンチェスターシティ_in.png
-    text: 本拠地はエティハド・スタジアム。**約6万1000人**が入ります。
+  - image: assets/stats/pl_mancity_data1.png
+    text: 愛称は「シチズンズ」。ほかに「ブルーズ」「スカイブルーズ」とも呼ばれます。
+    no_telop: true
   - image: assets/stats/pl_mancity_map.png
     text: ホームタウンはマンチェスター。イングランド北西部です。
     no_telop: true
+  - image: assets/backgrounds/stadium_マンチェスターシティ_in.png
+    text: 本拠地はエティハド・スタジアム。**約6万1000人**が入ります。
   - image: assets/photos/pl/mancity_owner_90b48e45.jpg
     text: オーナーは、アブダビの投資グループです。
   - image: assets/stats/pl_mancity_cups.png
@@ -50,11 +53,8 @@ sections:
   - image: assets/stats/pl_mancity_cups.png
     text: チャンピオンズリーグ1回、カップウィナーズカップ1回、スーパーカップ1回、クラブワールドカップ1回。
     no_telop: true
-  - image: assets/stats/pl_mancity_data4.png
+  - image: assets/stats/pl_mancity_data6.png
     text: 1シーズン勝ち点100を挙げたのは、2017年から18年です。
-    no_telop: true
-  - image: assets/stats/pl_mancity_data5.png
-    text: 愛称は「シチズンズ」。ほかに「ブルーズ」「スカイブルーズ」とも呼ばれます。
     no_telop: true
   - image: assets/stats/pl_mancity_last.png
     text: 昨季は**2位**、勝ち点78。FAカップとリーグカップの**2冠**でした。

@@ -47,13 +47,19 @@ sections:
   say:
   - short_only: true
     text: 田中碧の所属クラブを、基本のデータで見ていきます。
-  - image: assets/backgrounds/stadium_リーズ_in.png
-    text: 本拠地はエランド・ロード。**約3万8000人**が入ります。
-  - image: assets/stats/pl_leeds_data2.png
-    text: オーナーはアメフト球団、サンフランシスコ・フォーティナイナーズの会社。2023年からです。
+  - image: assets/stats/pl_leeds_data1.png
+    text: 愛称は「ホワイツ」。真っ白なユニフォームからです。
+    no_telop: true
+  - image: assets/stats/pl_leeds_data1.png
+    text: この白は、1960年代のドン・レヴィー監督が**レアル・マドリード**に倣ったものです。
     no_telop: true
   - image: assets/stats/pl_leeds_map.png
     text: ホームタウンはリーズ。イングランド・ウェストヨークシャーです。
+    no_telop: true
+  - image: assets/backgrounds/stadium_リーズ_in.png
+    text: 本拠地はエランド・ロード。**約3万8000人**が入ります。
+  - image: assets/stats/pl_leeds_data4.png
+    text: オーナーはアメフト球団、サンフランシスコ・フォーティナイナーズの会社。2023年からです。
     no_telop: true
   - image: assets/stats/pl_leeds_cups.png
     text: 1部リーグの優勝は**3回**。FAカップとリーグカップが1回ずつ。
@@ -61,19 +67,13 @@ sections:
   - image: assets/stats/pl_leeds_cups.png
     text: ヨーロッパの大会、フェアーズカップも2回制しています。
     no_telop: true
-  - image: assets/stats/pl_leeds_data4.png
-    text: 愛称は「ホワイツ」。真っ白なユニフォームからです。
-    no_telop: true
-  - image: assets/stats/pl_leeds_data4.png
-    text: この白は、1960年代のドン・レヴィー監督が**レアル・マドリード**に倣ったものです。
-    no_telop: true
-  - image: assets/stats/pl_leeds_data5.png
+  - image: assets/stats/pl_leeds_data6.png
     text: 1968年から69年は**34試合負けなし**。いまもクラブ記録です。
     no_telop: true
-  - image: assets/stats/pl_leeds_data5.png
+  - image: assets/stats/pl_leeds_data6.png
     text: このシーズンが、レヴィー監督のもとでの初優勝でした。
     no_telop: true
-  - image: assets/stats/pl_leeds_data6.png
+  - image: assets/stats/pl_leeds_data7.png
     text: 直近のタイトルは2024年から25年の2部優勝です。
     no_telop: true
   - image: assets/stats/pl_leeds_last.png

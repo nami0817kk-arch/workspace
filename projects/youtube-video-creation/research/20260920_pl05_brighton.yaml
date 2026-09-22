@@ -49,11 +49,14 @@ sections:
   - image: assets/stats/pl_brighton_data0.png
     text: 創立は**1901年**。1920年にフットボールリーグに加わりました。
     no_telop: true
-  - image: assets/backgrounds/stadium_ブライトン_in.png
-    text: 本拠地はファルマー・スタジアム。**3万2176人**。ようやく持てた、自分たちの家です。
+  - image: assets/stats/pl_brighton_data1.png
+    text: 愛称は「シーガルズ」。カモメです。
+    no_telop: true
   - image: assets/stats/pl_brighton_map.png
     text: ホームタウンは、イングランド南の海沿いの町、ブライトン・アンド・ホーヴです。
     no_telop: true
+  - image: assets/backgrounds/stadium_ブライトン_in.png
+    text: 本拠地はファルマー・スタジアム。**3万2176人**。ようやく持てた、自分たちの家です。
   - image: assets/photos/pl/brighton_owner_dbf32f4e.jpg
     text: オーナーはトニー・ブルーム。2009年に会長になり、株の75%を持っています。
   - image: assets/stats/pl_brighton_cups.png
@@ -61,9 +64,6 @@ sections:
     no_telop: true
   - image: assets/stats/pl_brighton_last.png
     text: プレミアでの最高位は、2022年から23年の**6位**です。
-    no_telop: true
-  - image: assets/stats/pl_brighton_data6.png
-    text: 愛称は「シーガルズ」。カモメです。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Brighton_&_Hove_Albion_F.C.

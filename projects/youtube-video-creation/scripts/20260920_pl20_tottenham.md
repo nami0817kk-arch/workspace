@@ -172,15 +172,18 @@ cards:
   no_telop: true
   source: 背景
   image: assets/stats/pl_tottenham_data0.png
-解説: 本拠地はトッテナム・ホットスパー・スタジアム。**6万2850人**が入ります。
-  telop: 本拠地はトッテナム・ホットスパー・スタジアム。**6万2850人**が入ります
-  image: assets/backgrounds/stadium_トッテナム_in.png
+解説: 愛称は「スパーズ」。「リリーホワイツ」とも呼ばれます。
+  no_telop: true
+  image: assets/stats/pl_tottenham_data1.png
 解説: ホームタウンは、ロンドン北部のトッテナムです。
   no_telop: true
   image: assets/stats/pl_tottenham_map.png
+解説: 本拠地はトッテナム・ホットスパー・スタジアム。**6万2850人**が入ります。
+  telop: 本拠地はトッテナム・ホットスパー・スタジアム。**6万2850人**が入ります
+  image: assets/backgrounds/stadium_トッテナム_in.png
 解説: オーナーは投資会社のイーニック。2001年からクラブを持っています。
   no_telop: true
-  image: assets/stats/pl_tottenham_data3.png
+  image: assets/stats/pl_tottenham_data4.png
 解説: 1部リーグの優勝は**2回**。FAカップは8回、リーグカップは4回です。
   no_telop: true
   image: assets/stats/pl_tottenham_cups.png
@@ -190,9 +193,6 @@ cards:
 解説: プレミアでの最高位は、2016年から17年の**2位**です。
   no_telop: true
   image: assets/stats/pl_tottenham_last.png
-解説: 愛称は「スパーズ」。「リリーホワイツ」とも呼ばれます。
-  no_telop: true
-  image: assets/stats/pl_tottenham_data6.png
 
 ## リーグに入らないまま、FAカップを獲った
 @bg: assets/backgrounds/stadium_トッテナム.png

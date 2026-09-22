@@ -157,24 +157,24 @@ cards:
   no_telop: true
   source: 背景
   image: assets/stats/pl_brentford_data0.png
-解説: 本拠地はブレントフォード・コミュニティ・スタジアム。2020年に移ってきました。
-  telop: 本拠地はブレントフォード・コミュニティ・スタジアム。2020年に移ってきました
-  image: assets/backgrounds/stadium_ブレントフォード_in.png
+解説: 愛称は「ビーズ」。蜂です。
+  no_telop: true
+  image: assets/stats/pl_brentford_data1.png
 解説: 場所は西ロンドン、テムズ川沿いの町です。
   no_telop: true
   image: assets/stats/pl_brentford_map.png
+解説: 本拠地はブレントフォード・コミュニティ・スタジアム。2020年に移ってきました。
+  telop: 本拠地はブレントフォード・コミュニティ・スタジアム。2020年に移ってきました
+  image: assets/backgrounds/stadium_ブレントフォード_in.png
 解説: オーナーはマシュー・ベンハム。2012年からクラブを持っています。
   no_telop: true
-  image: assets/stats/pl_brentford_data3.png
+  image: assets/stats/pl_brentford_data4.png
 解説: 大きなタイトルはまだありません。プレミアに上がったのも、2021年が初めてです。
   no_telop: true
   image: assets/stats/pl_brentford_cups.png
 解説: プレミアでの最高位は、2022年から23年の**9位**です。
   no_telop: true
   image: assets/stats/pl_brentford_last.png
-解説: 愛称は「ビーズ」。蜂です。
-  no_telop: true
-  image: assets/stats/pl_brentford_data6.png
 
 ## 歩んできた道
 @bg: assets/backgrounds/stadium_ブレントフォード.png

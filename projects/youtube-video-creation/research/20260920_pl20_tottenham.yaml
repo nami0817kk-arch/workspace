@@ -49,12 +49,15 @@ sections:
   - image: assets/stats/pl_tottenham_data0.png
     text: 創立は**1882年**。ホットスパーという名前で始まりました。
     no_telop: true
-  - image: assets/backgrounds/stadium_トッテナム_in.png
-    text: 本拠地はトッテナム・ホットスパー・スタジアム。**6万2850人**が入ります。
+  - image: assets/stats/pl_tottenham_data1.png
+    text: 愛称は「スパーズ」。「リリーホワイツ」とも呼ばれます。
+    no_telop: true
   - image: assets/stats/pl_tottenham_map.png
     text: ホームタウンは、ロンドン北部のトッテナムです。
     no_telop: true
-  - image: assets/stats/pl_tottenham_data3.png
+  - image: assets/backgrounds/stadium_トッテナム_in.png
+    text: 本拠地はトッテナム・ホットスパー・スタジアム。**6万2850人**が入ります。
+  - image: assets/stats/pl_tottenham_data4.png
     text: オーナーは投資会社のイーニック。2001年からクラブを持っています。
     no_telop: true
   - image: assets/stats/pl_tottenham_cups.png
@@ -65,9 +68,6 @@ sections:
     no_telop: true
   - image: assets/stats/pl_tottenham_last.png
     text: プレミアでの最高位は、2016年から17年の**2位**です。
-    no_telop: true
-  - image: assets/stats/pl_tottenham_data6.png
-    text: 愛称は「スパーズ」。「リリーホワイツ」とも呼ばれます。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
