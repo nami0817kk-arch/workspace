@@ -560,7 +560,11 @@ def build(key: str, number: int, old_file: str) -> Path:
                             telop=f"{len(games)}試合で{record}。{stand['rank']}位" if stand else f"{len(games)}試合で{record}",
                             narrator="解説",
                             card={"type": "table", "title": "プレミアリーグの結果", "columns": ["節", "相手", "結果"], "rows": rows},
-                            say=say_season + (ov.get("season") or []),
+                            # `season_image`（<key>_say.yaml）: 今季の節の1行目に置く写真。
+                            # 結果の表が6行で22秒出っぱなしになった回（アーセナル）だけ、
+                            # 写真を先に置いて3行目で表を下ろす（名選手の節と同じ仕掛け）
+                            say=([{"text": say_season[0], "image": str(ov["season_image"])}] + say_season[1:]
+                                 if ov.get("season_image") and say_season else say_season) + (ov.get("season") or []),
                             sources=[season_url]))
 
     # **日本人が2人いるクラブは2人とも題に出す**（2026-09-21）。

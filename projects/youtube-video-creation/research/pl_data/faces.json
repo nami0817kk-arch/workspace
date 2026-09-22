@@ -91,6 +91,11 @@
    "role": "manager",
    "file": "assets/photos/pl/brentford_manager_9acd4388.jpg",
    "page": "Keith Andrews (footballer)"
+  },
+  "ブライアン・エンベウモ": {
+   "role": "legend",
+   "file": "assets/photos/pl/brentford_legend_df82049f.jpg",
+   "page": "Bryan Mbeumo"
   }
  },
  "brighton": {
@@ -530,6 +535,11 @@
    "role": "manager",
    "file": "assets/photos/pl/villa_manager_4b03a7c7.jpg",
    "page": "Unai Emery"
+  },
+  "ジャック・グリーリッシュ": {
+   "role": "legend",
+   "file": "assets/photos/pl/villa_legend_ad97dc28.jpg",
+   "page": "Jack Grealish"
   }
  }
 }
