@@ -33,6 +33,7 @@ void main() {
       '契約が残っていても話が来る',
       '名前で選ぶ',
       '空く能力が1つ',
+      '出場給',
     ]) {
       expect(text, contains(name), reason: name);
     }

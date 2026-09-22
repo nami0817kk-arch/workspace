@@ -526,6 +526,9 @@ class CareerState {
         staffCost: staff.costPerSeason,
         extraLivingRate: habits.livingCostExtra,
         sponsor: sponsor?.annual ?? 0,
+        // **出場給は今の出場数で見込む。** 基準で見せると、
+        // 怪我で半分しか出ていない年でも「足りる」と出てしまう。
+        appearances: seasonStats.appearances,
       );
 
   /// このシーズンを終えたときの貯蓄の見込み。

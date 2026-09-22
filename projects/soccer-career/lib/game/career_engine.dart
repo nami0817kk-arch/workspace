@@ -1144,6 +1144,7 @@ class CareerEngine {
       agentFeePercent: state.agent.feePercent,
       staffCost: state.staff.costPerSeason,
       extraLivingRate: state.habits.livingCostExtra,
+      appearances: state.seasonStats.appearances,
     );
     // 払えない専属は契約を切る。金の裏付けの無い環境は続かない。
     final staff = finances.savings < 0 ? const StaffTeam() : state.staff;
@@ -1587,6 +1588,7 @@ class CareerEngine {
         agentFeePercent: state.agent.feePercent,
         staffCost: state.staff.costPerSeason,
         extraLivingRate: state.habits.livingCostExtra,
+        appearances: state.seasonStats.appearances,
       ),
       staff: state.staff,
       habits: state.habits,

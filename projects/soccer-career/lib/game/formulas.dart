@@ -147,6 +147,28 @@ class Formulas {
   /// 最上位の国のクラブが声をかける線（代表キャップ）。どちらか一方でよい。
   static const int eliteCaps = 30;
 
+  /// **出場給。** 年俸のうち、出場した試合数で増減する割合。
+  ///
+  /// 基準（[appearanceBaseline] 試合）でちょうど 0 になるので、
+  /// **普通に出ていれば収入は変わらない**。出ずっぱりなら増え、
+  /// 怪我やベンチで欠けたぶんは減る。契約を「座っていても同じ額」から
+  /// 「出た試合で決まる額」に変えるための仕組みで、
+  /// 世界の金額そのものは動かさない。
+  static const double appearanceBonusRate = 0.20;
+
+  /// 出場給の基準になる試合数（1シーズンの目安）。
+  static const int appearanceBaseline = 28;
+
+  /// 増減の上限（基準の ±100%ぶん）。
+  static const double appearanceBonusCap = 1.0;
+
+  /// 出場給（万円）。基準ちょうどなら 0。
+  static int appearanceBonus({required int salary, required int appearances}) {
+    final ratio = ((appearances - appearanceBaseline) / appearanceBaseline)
+        .clamp(-appearanceBonusCap, appearanceBonusCap);
+    return (salary * appearanceBonusRate * ratio).round();
+  }
+
   /// 引退後、解説者に呼ばれる知名度の線。
   static const int punditFame = 66;
 
