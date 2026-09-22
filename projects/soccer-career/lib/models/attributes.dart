@@ -214,7 +214,7 @@ class Attributes {
     //                pace sho pas dri def phy gk
     Position.gk: [1, 0, 1, 0, 2, 3, 10],
     Position.cb: [2, 0, 2, 1, 6, 5, 0],
-    Position.sb: [4, 1, 3, 3, 4, 3, 0],
+    Position.sb: [4, 0, 3, 1, 6, 4, 0],
     Position.dm: [2, 1, 4, 2, 5, 4, 0],
     Position.cm: [2, 2, 5, 4, 3, 3, 0],
     Position.am: [3, 4, 5, 5, 1, 2, 0],
