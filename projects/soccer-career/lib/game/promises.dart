@@ -44,9 +44,9 @@ class PromiseOffers {
   ///
   /// 評価や得点の効きを変えたら、ここも測り直す。
   static const int appearancesOver = -1;
-  static const double ratingOver = 0.5;
+  static const double ratingOver = 0.55;
   static const int goalsOver = 7;
-  static const int contributionsOver = -4;
+  static const int contributionsOver = 0;
 
   /// 選べる3つ。控えめ・順当・大きく出る。
   static List<ManagerPromise> forState(CareerState state) {

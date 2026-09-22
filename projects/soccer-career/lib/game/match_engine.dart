@@ -1470,7 +1470,7 @@ class MatchEngine {
         club.strength - opponent.strength + lift + (home ? 6 : -2);
     final teammateGoals = _poissonish(
       (1.25 + advantage / 40) *
-          Formulas.teammateGoalShareFor(player.position.family),
+          Formulas.teammateGoalShareFor(player.position),
     );
     final conceded = _poissonish(1.25 - advantage / 40);
 
@@ -1490,7 +1490,7 @@ class MatchEngine {
       teammateGoalMinutes: _goalMinutes(teammateGoals),
       expectedTeammateGoals:
           (1.25 + advantage / 40) *
-          Formulas.teammateGoalShareFor(player.position.family),
+          Formulas.teammateGoalShareFor(player.position),
       concededMinutes: _goalMinutes(conceded),
       allyBonus: allyBonus,
       moodBonus: moodBonus,

@@ -159,10 +159,22 @@ class Formulas {
   /// 途中出場なら半分。
   static const double subLiftShare = 0.5;
 
-  static double teammateGoalShareFor(ScenarioFamily family) => switch (family) {
-    ScenarioFamily.forward => 0.65,
-    ScenarioFamily.midfield => 0.85,
-    ScenarioFamily.defence || ScenarioFamily.goalkeeper => 1.0,
+  /// **味方の得点の見込みを、自分の得点のぶんだけ差し引く割合。**
+  ///
+  /// 自分の得点は味方の得点に上乗せするので、点を取る選手のクラブだけ
+  /// 強くならないよう、試合開始時の味方の得点を割り引いておく。
+  /// **割り引くのは、そのポジションが実際に取る点のぶんだけ**
+  /// （2026-09-23 に `test/position_sim.dart` で測り直した）。
+  /// 以前はファミリーで 前線0.65 / 中盤0.85 / 守備1.0 と置いていて、
+  /// 中盤の選手は1試合 0.04点しか取らないのに味方の得点を 15% 削られていた
+  /// ——**毎試合 0.18点ぶんクラブが弱かった**。同じ強さのクラブに居ても
+  /// リーグ優勝が CM 1.4 / DM 1.2 / WG 1.1 回、CB・GK は 4.0 回だった。
+  static double teammateGoalShareFor(Position position) => switch (position) {
+    Position.st => 0.70,
+    Position.wg => 0.84,
+    Position.am => 0.97,
+    Position.cm || Position.dm => 0.97,
+    Position.sb || Position.cb || Position.gk => 1.0,
   };
 
   /// **試合を動かす展開**（局面ではないが、残りの試合の条件を変えるもの）。
