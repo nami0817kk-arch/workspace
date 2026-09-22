@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/game/career_engine.dart';
+import 'package:soccer_career/game/formulas.dart';
 import 'package:soccer_career/game/competitions.dart';
 import 'package:soccer_career/game/person.dart';
 import 'package:soccer_career/models/agent.dart';
@@ -15,24 +16,26 @@ CareerState career({
   int seed = 3,
   int age = 20,
   Position position = Position.cm,
-}) =>
-    CareerEngine(random: Random(seed)).startCareer(
-        name: 'T', position: position, age: age, agent: Agent.pool.first);
+}) => CareerEngine(
+  random: Random(seed),
+).startCareer(name: 'T', position: position, age: age, agent: Agent.pool.first);
 
 /// そのシーズンを「出場して活躍した」ことにする。
 void fillSeason(CareerState state, {double rating = 7.2, int matches = 20}) {
   for (var i = 0; i < matches; i++) {
-    state.results.add(MatchResult(
-      matchday: i + 1,
-      opponentName: 'X',
-      home: true,
-      scored: 1,
-      conceded: 0,
-      appearance: Appearance.start,
-      rating: rating,
-      goals: 1,
-      assists: 0,
-    ));
+    state.results.add(
+      MatchResult(
+        matchday: i + 1,
+        opponentName: 'X',
+        home: true,
+        scored: 1,
+        conceded: 0,
+        appearance: Appearance.start,
+        rating: rating,
+        goals: 1,
+        assists: 0,
+      ),
+    );
   }
 }
 
@@ -59,15 +62,21 @@ void main() {
     test('優勝すれば翌季の大陸カップに出られる', () {
       final engine = CareerEngine(random: Random(7));
       final state = career();
-      state.history.add(SeasonRecord(
-        year: state.year - 1,
-        clubName: state.club.name,
-        tier: state.club.tier,
-        leaguePosition: 14,
-        stats: const SeasonStats(
-            appearances: 30, goals: 5, assists: 4, averageRating: 6.9),
-        cupStage: CupStage.winner,
-      ));
+      state.history.add(
+        SeasonRecord(
+          year: state.year - 1,
+          clubName: state.club.name,
+          tier: state.club.tier,
+          leaguePosition: 14,
+          stats: const SeasonStats(
+            appearances: 30,
+            goals: 5,
+            assists: 4,
+            averageRating: 6.9,
+          ),
+          cupStage: CupStage.winner,
+        ),
+      );
       // 14位でも、前年のカップ優勝で出場権がある。
       expect(engine.inContinental(state), isTrue);
     });
@@ -82,10 +91,14 @@ void main() {
     test('招集されていなければ出られない', () {
       final competitions = Competitions(random: Random(2));
       final state = career();
-      expect(competitions.runWorldCup(state, calledUp: false),
-          WorldCupStage.none);
-      expect(competitions.runWorldCup(state, calledUp: true).participated,
-          isTrue);
+      expect(
+        competitions.runWorldCup(state, calledUp: false),
+        WorldCupStage.none,
+      );
+      expect(
+        competitions.runWorldCup(state, calledUp: true).participated,
+        isTrue,
+      );
     });
 
     test('本大会に出るとキャップが積み上がる', () {
@@ -201,10 +214,17 @@ void main() {
       state.contractYears = 3;
       state.releaseClause = 1000;
 
-      // 追い越す前は動けない。
+      // 追い越す前は、移籍金を積む上のクラブしか来ない。
       state.reputation = const Reputation(marketValue: 500);
       expect(engine.clauseTriggered(state), isFalse);
-      expect(engine.offersFor(state).where((o) => !o.loan), isEmpty);
+      for (final o in engine.offersFor(state).where((o) => !o.loan)) {
+        expect(
+          o.club.strength,
+          greaterThanOrEqualTo(
+            state.club.strength + Formulas.transferUnderContractStep,
+          ),
+        );
+      }
 
       state.reputation = const Reputation(marketValue: 20000);
       expect(engine.clauseTriggered(state), isTrue);
@@ -231,8 +251,7 @@ void main() {
           fee: 5000,
         ),
       );
-      expect(expensive.relations.manager,
-          greaterThan(cheap.relations.manager));
+      expect(expensive.relations.manager, greaterThan(cheap.relations.manager));
       expect(before, isNotNull);
     });
   });
@@ -294,12 +313,14 @@ void main() {
     expect(r.parentClub!.name, state.parentClub!.name);
     expect(r.onLoan, isTrue);
 
-    final legacy = CareerState.fromJson(state.toJson()
-      ..remove('cupStage')
-      ..remove('worldCupStage')
-      ..remove('parentClub')
-      ..remove('releaseClause')
-      ..remove('loanBuyOption'));
+    final legacy = CareerState.fromJson(
+      state.toJson()
+        ..remove('cupStage')
+        ..remove('worldCupStage')
+        ..remove('parentClub')
+        ..remove('releaseClause')
+        ..remove('loanBuyOption'),
+    );
     expect(legacy.cupStage, CupStage.none);
     expect(legacy.onLoan, isFalse);
     expect(legacy.releaseClause, isNull);

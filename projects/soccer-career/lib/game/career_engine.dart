@@ -717,11 +717,35 @@ class CareerEngine {
     // クラブで登録から外れ、契約が切れるまで2年間まるごと無出場になっていた
     // （`world_sim` で無出場シーズンの 8割がこれ）。
     final unused = !state.squadStatus.canPlay || state.frozenOut;
-    // 契約が残っている間は動けない。ただし違約金を追い越したときは別。
-    if (state.contractYears > 1 && !clause && !unused) return offers;
-
     final stats = state.seasonStats;
-    if (!clause && !unused) {
+    // **契約が残っている間は、行き先が「上のクラブ」に狭まる。**
+    // 動けないのではなく、移籍金を積む理由のある相手しか来ない。
+    if (state.contractYears > 1 && !clause && !unused) {
+      if (stats.appearances < Formulas.transferOfferAppearances) return offers;
+      if (stats.averageRating < Formulas.transferUnderContractRating) {
+        return offers;
+      }
+      // 契約を破って獲りに来るのは1クラブだけ。しかも一段上に限る。
+      // 市場を丸ごと開けると、誰もが最短で強豪へ上がってしまう
+      // （試したらリーグ優勝が1割増え、無出場シーズンが0.31→0.51になった）。
+      final up =
+          _marketOffers(state)
+              .where(
+                (o) =>
+                    o.club.strength >=
+                    state.club.strength + Formulas.transferUnderContractStep,
+              )
+              .toList()
+            ..sort((a, b) => a.club.strength.compareTo(b.club.strength));
+      return [...offers, ...up.take(1)];
+    }
+
+    // クラブの器を超えている選手は、評価点が平凡でも見られている。
+    final outgrown =
+        stats.appearances >= Formulas.transferOfferAppearances &&
+        state.player.overall - state.club.strength >=
+            Formulas.transferOutgrownGap;
+    if (!clause && !unused && !outgrown) {
       if (stats.appearances < Formulas.transferOfferAppearances) return offers;
       if (stats.averageRating < Formulas.transferOfferRating) return offers;
     }
