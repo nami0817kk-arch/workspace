@@ -8,10 +8,10 @@ theme:
   league_name: 日本代表
   kind: other
   topic: 日本代表
-  title: '日本代表の背番号が入れ替わった。遠藤航の6番と、久保建英の8番'
-  hook: 久保建英は、自分から8番を手放していました。
+  title: '久保建英が8番を返した。日本代表の背番号が入れ替わっている'
+  hook: 遠藤航が退いた6番にも、継いだ選手がいます。
   question: ワールドカップのあと、番号はどう動いたのか
-short_title: 久保建英が8番を返した理由
+short_title: 久保建英、ワールドカップの8番を手放した理由
 thumbnail:
   photo: assets/images/20260923_endo/01.jpg
   photos:
