@@ -38,6 +38,7 @@ tags:
 - リバプール
 - 遠藤航
 - リヴァプール
+- ビル・シャンクリー
 - プレミアリーグ
 - 解説
 - 海外サッカー
@@ -188,6 +189,10 @@ cards:
   telop: 日本代表の中盤、遠藤航が、リーグ戦**57試合**を戦ってきたクラブです
   source: 報道
   card: reasons_card
+キャスター: このクラブを作り替えた名将、ビル・シャンクリーの言葉があります。
+  telop: このクラブを作り替えた名将、ビル・シャンクリーの言葉があります
+ビル・シャンクリー: 「私の考えは、リヴァプールを無敵の砦に築き上げることだった」
+  telop: ビル・シャンクリー「「私の考えは、リヴァプールを無敵の砦に築き上げることだった」」
 キャスター: 監督が代わりました。ボーンマスを**6位**まで引き上げたイラオラが、1年目の指揮を執っています。
   telop: 監督が代わりました。ボーンマスを**6位**まで引き上げたイラオラが、1年目の指揮を執っています
 キャスター: 2シーズン前に**20回目**の優勝、昨季は5位。サラーが去って初めてのシーズンです。
@@ -238,16 +243,25 @@ cards:
   telop: 生まれたきっかけは、**もめごと**でした
   source: 背景
   card: birth_card
+  image: assets/images/pl_liverpool_story/01.jpg
 解説: アンフィールドという土地を持っていたのは、ジョン・ホールディングでした。
   telop: アンフィールドという土地を持っていたのは、ジョン・ホールディングでした
 解説: そこを使っていたのが、エヴァートンです。
   telop: そこを使っていたのが、エヴァートンです
+  card: none
+  image: assets/images/pl_liverpool_story/01.jpg
 解説: 両者が対立し、エヴァートンはグディソン・パークへ移っていきました。
   telop: 両者が対立し、エヴァートンはグディソン・パークへ移っていきました
+  card: none
+  image: assets/images/pl_liverpool_story/01.jpg
 解説: **スタジアムだけが残りました。**
   telop: **スタジアムだけが残りました。**
+  card: none
+  image: assets/images/pl_liverpool_story/01.jpg
 解説: ホールディングは、そこで戦う新しいクラブを作ります。それがリヴァプールです。
   telop: ホールディングは、そこで戦う新しいクラブを作ります。それがリヴァプールです
+  card: none
+  image: assets/images/pl_liverpool_story/01.jpg
 
 ## 触ってはいけない看板
 @bg: assets/backgrounds/stadium_リヴァプール.png
@@ -256,12 +270,17 @@ cards:
   telop: アンフィールドの選手用トンネルに、「ジス・イズ・アンフィールド」の看板があります
   source: 背景
   card: episode_card
+  image: assets/images/pl_liverpool_episode/01.jpg
 解説: シャンクリー監督が付けたもので、相手を怖がらせ、味方が触れば運が付く、というものでした。
   telop: シャンクリー監督が付けたもので、相手を怖がらせ、味方が触れば運が付く、というものでした
 解説: 2015年に来たクロップ監督は、「タイトルを獲るまで触るな」と禁じました。
   telop: 2015年に来たクロップ監督は、「タイトルを獲るまで触るな」と禁じました
+  card: none
+  image: assets/images/pl_liverpool_episode/01.jpg
 解説: **2019年**のチャンピオンズリーグ決勝に勝って、ようやく触ることが許されました。
   telop: **2019年**のチャンピオンズリーグ決勝に勝って、ようやく触ることが許されました
+  card: none
+  image: assets/images/pl_liverpool_episode/01.jpg
 
 ## このクラブを語る3人
 @bg: assets/backgrounds/stadium_リヴァプール.png

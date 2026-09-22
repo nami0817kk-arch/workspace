@@ -67,7 +67,9 @@ episode:
     - - ほかにも
       - エヴァートンにシャツ、ブライトンに土地探し
   say:
-  - '**1886年**、できたばかりのアーセナルに、ユニフォームを一式贈りました。'
+  # 2026-09-22 この節に実写を1枚（Commons、1888年のアーセナル（ロイヤル・アーセナル）のチーム写真）
+  - text: '**1886年**、できたばかりのアーセナルに、ユニフォームを一式贈りました。'
+    image: assets/images/pl_forest_episode/scene.jpg
   - アーセナルがいまも赤いのは、そのためです。
   - エヴァートンにもシャツを贈り、ブライトンには試合をする土地を探す手伝いもしています。
   sources:
@@ -91,10 +93,19 @@ manager_sources:
 # 冒頭の直後に置き、ショートもここから切る。事実は今季のシーズン記事（Glasner 就任、
 # fifth consecutive season in the Premier League）、last_season.json（昨季16位）、
 # standings.json（第5節で1勝2分2敗）。「FAカップをもたらした」は監督の節と同じ言い回しになるので避けた
+# 本人の言葉を1つ（2026-09-22 指示）。原文は Brian_Clough の記事（1976-77 のアングロ・スコティッシュ杯、
+# 頂点へ上がる前の最初の杯について "Those who said it was a nothing trophy were absolutely crackers.
+# We'd won something, and it made all the difference."）。ショートの16秒以内に出すので2行目
 reasons:
-- 昨年、クリスタル・パレスを初のFAカップに導いたオリバー・グラスナー監督の**1年目**です。
+# 1行48字・引用30字の上限（draft のヒント）に合わせて詰めた
+- パレスをFAカップに導いたグラスナーの**1年目**。半世紀前の名将クラフは、最初の杯をこう語りました。
+- {voice: ブライアン・クラフ, text: "「つまらない杯だなんてどうかしてる。獲ったから全部変わった」"}
 - 昨季は**16位**。2022年に戻ってきてから、今季でプレミア5シーズン目になります。
 - 開幕から**5試合で1勝**。新しい監督の立て直しが、いま始まったところです。
+reasons_sources:
+- https://en.wikipedia.org/wiki/Brian_Clough
+people_extra:
+- ブライアン・クラフ
 reasons_telop: パレスをFAカップに導いた監督が来た
 reasons_rows:
 - - 理由1

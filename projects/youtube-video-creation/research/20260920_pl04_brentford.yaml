@@ -6,6 +6,7 @@ slot: premier_1
 date: 2026年9月19日
 people:
 - ブレントフォード
+- キース・アンドリュース
 short_title: ブレントフォードってどんなクラブ？
 theme:
   id: pl_clubs_04_brentford
@@ -41,16 +42,19 @@ sections:
     - - 理由1
       - 開幕5試合負けなしで4位
     - - 理由2
-      - トッテナムとチェルシーに3対0
+      - アンドリュース「ファンの代表だと感じるチームに」
     - - 理由3
       - 保てばクラブ史上初の欧州
   say:
   - 開幕**5試合**を負けなしで走り、いまは**4位**にいます。
-  - トッテナムとチェルシーを、どちらも3対0で退けました。
+  - 監督のキース・アンドリュースは、就任のときこう言いました。
+  - voice: キース・アンドリュース
+    text: 「ファンが自分たちの代表だと感じるチームにしたい」
   - このまま行けば、クラブ史上初めて欧州の舞台に立てます。
   sources:
   - https://en.wikipedia.org/wiki/Brentford_F.C.
   - https://en.wikipedia.org/wiki/2026–27_Brentford_F.C._season
+  - https://www.brentfordfc.com/en/news/video/interviews-keith-andrews-brentford-head-coach
   bg: assets/backgrounds/stadium_ブレントフォード.png
   official: false
 - id: data
@@ -101,7 +105,8 @@ sections:
     - - 1967年
       - QPRに吸収される話が白紙に。消滅を免れる
   say:
-  - プレーオフに出ては敗れる。それが**9回**続きました。イングランドで、ほかにない数です。
+  - text: プレーオフに出ては敗れる。それが**9回**続きました。イングランドで、ほかにない数です。
+    image: assets/images/pl_brentford_story/scene.jpg
   - そのうち4回は、決勝まで行って敗れました。1997年から2020年のあいだのことです。
   - 10回目が2021年でした。決勝でスウォンジー・シティを2対0で下します。
   - プレミアリーグになってからは初めて。1部としては**74年ぶり**でした。
@@ -131,7 +136,8 @@ sections:
     - - 順位
       - 3部で2位。上がれるのは1位だけ
   say:
-  - 昇格に届かなかった年は、ほかにもあります。
+  - text: 昇格に届かなかった年は、ほかにもあります。
+    image: assets/images/pl_brentford_episode/scene.jpg
   - 1929年から30年のシーズン、ホームのリーグ戦**21試合に全部勝ちました**。
   - ホーム全勝は、いまもイングランドの記録です。
   - それでも3部から上がれませんでした。順位は2位。上がれるのは1位だけだったからです。

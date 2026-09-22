@@ -36,6 +36,7 @@ description: 'サンダーランドってどんなクラブ？
 tags:
 - サッカー
 - サンダーランド
+- ナイアル・クイン
 - プレミアリーグ
 - 解説
 - 海外サッカー
@@ -43,8 +44,8 @@ tags:
 sources:
 - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
 - https://en.wikipedia.org/wiki/2026–27_Sunderland_A.F.C._season
-- https://en.wikipedia.org/wiki/Kevin_Phillips_(footballer)
 - https://en.wikipedia.org/wiki/Niall_Quinn
+- https://en.wikipedia.org/wiki/Kevin_Phillips_(footballer)
 - https://en.wikipedia.org/wiki/Kevin_Ball
 - https://en.wikipedia.org/wiki/Kevin_Phillips_(English_footballer)
 - https://en.wikipedia.org/wiki/Régis_Le_Bris
@@ -187,10 +188,12 @@ cards:
 @bg: assets/backgrounds/stadium_サンダーランド.png
 @main: true
 
-キャスター: **半世紀**ぶりにヨーロッパの舞台に戻り、いまヨーロッパリーグを戦っています。
-  telop: **半世紀**ぶりにヨーロッパの舞台に戻り、いまヨーロッパリーグを戦っています
+キャスター: **半世紀**ぶりにヨーロッパの舞台へ。元エースで会長も務めたナイアル・クインの言葉があります。
+  telop: **半世紀**ぶりにヨーロッパの舞台へ。元エースで会長も務めたナイアル・クインの言葉があります
   source: 報道
   card: reasons_card
+ナイアル・クイン: 「サンダーランドが本当に名乗りを上げる準備は、すべて整った」
+  telop: ナイアル・クイン「「サンダーランドが本当に名乗りを上げる準備は、すべて整った」」
 キャスター: リーグの順位でヨーロッパ行きを勝ち取ったのは、クラブの歴史で**初めて**のことです。
   telop: リーグの順位でヨーロッパ行きを勝ち取ったのは、クラブの歴史で**初めて**のことです
 キャスター: リーグは開幕から**3敗**と苦しい出だし。ヨーロッパと国内、二つの戦いを同時に進めています。
@@ -232,24 +235,41 @@ cards:
   telop: 6回のうち3回が1890年代で、最後は1936年です
   source: 背景
   card: fall_card
+  image: assets/images/pl_sunderland_story/scene.jpg
 解説: 1973年には、**2部**のクラブとしてFAカップを獲りました。翌シーズンはヨーロッパにも出ています。
   telop: 1973年には、**2部**のクラブとしてFAカップを獲りました。翌シーズンはヨーロッパにも出ています
 解説: そのクラブが、2018年には**3部**にいました。2年続けて落ちた結果です。
   telop: そのクラブが、2018年には**3部**にいました。2年続けて落ちた結果です
+  card: none
+  image: assets/images/pl_sunderland_story/scene.jpg
 解説: この時期を追った配信番組が、『**サンダーランド・ティル・アイ・ダイ**』です。
   telop: この時期を追った配信番組が、『**サンダーランド・ティル・アイ・ダイ**』です
+  card: none
+  image: assets/images/pl_sunderland_story/scene.jpg
 解説: 題の意味は、「死ぬまでサンダーランド」。
   telop: 題の意味は、「死ぬまでサンダーランド」
+  card: none
+  image: assets/images/pl_sunderland_story/scene.jpg
 解説: 2022年に2部へ戻りました。
   telop: 2022年に2部へ戻りました
+  card: none
+  image: assets/images/pl_sunderland_story/scene.jpg
 解説: 2025年5月24日、プレーオフ決勝でシェフィールド・ユナイテッドを2対1で下します。
   telop: 2025年5月24日、プレーオフ決勝でシェフィールド・ユナイテッドを2対1で下します
+  card: none
+  image: assets/images/pl_sunderland_story/scene.jpg
 解説: **3部から1部まで、7年**でした。
   telop: **3部から1部まで、7年**でした
+  card: none
+  image: assets/images/pl_sunderland_story/scene.jpg
 解説: そして昨季は、7位に入りました。
   telop: そして昨季は、7位に入りました
+  card: none
+  image: assets/images/pl_sunderland_story/scene.jpg
 解説: 1973年以来、**53年ぶり**のヨーロッパ。今季はヨーロッパリーグに出ます。
   telop: 1973年以来、**53年ぶり**のヨーロッパ。今季はヨーロッパリーグに出ます
+  card: none
+  image: assets/images/pl_sunderland_story/scene.jpg
 
 ## イングランド銀行クラブ
 @bg: assets/backgrounds/stadium_サンダーランド.png
@@ -258,12 +278,17 @@ cards:
   telop: 戦後まもなく、大金で選手を集め、「イングランド銀行クラブ」と呼ばれました
   source: 背景
   card: episode_card
+  image: assets/images/pl_sunderland_episode/scene.jpg
 解説: 当時は選手の給料に上限がありました。ところが**1957年**、それを超える支払いが発覚します。
   telop: 当時は選手の給料に上限がありました。ところが**1957年**、それを超える支払いが発覚します
 解説: 5000ポンドの罰金。会長と役員3人が資格停止になりました。
   telop: 5000ポンドの罰金。会長と役員3人が資格停止になりました
+  card: none
+  image: assets/images/pl_sunderland_episode/scene.jpg
 解説: その翌年、リーグに入って68年で初めて、1部から落ちました。
   telop: その翌年、リーグに入って68年で初めて、1部から落ちました
+  card: none
+  image: assets/images/pl_sunderland_episode/scene.jpg
 
 ## このクラブを語る3人
 @bg: assets/backgrounds/stadium_サンダーランド.png
@@ -302,10 +327,13 @@ cards:
   telop: ケヴィン・ボールは、ポーツマスから来たディフェンダー。のちに中盤へ移り、主将になりました
   source: 背景
   card: legends3_card
+  image: assets/photos/pl/sunderland_legend_b6528308.jpg
 キャスター: 1992年、2部にいながらFAカップ決勝へ。リヴァプールに**0対2**で敗れました。
   telop: 1992年、2部にいながらFAカップ決勝へ。リヴァプールに**0対2**で敗れました
 キャスター: 主将として1996年と99年、クラブを1部へ。引退後も暫定監督を**2度**務めています。
   telop: 主将として1996年と99年、クラブを1部へ。引退後も暫定監督を**2度**務めています
+  card: none
+  image: assets/photos/pl/sunderland_legend_b6528308.jpg
 
 ## 今季の監督
 @bg: assets/backgrounds/stadium_サンダーランド.png

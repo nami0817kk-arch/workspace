@@ -6,6 +6,7 @@ slot: premier_1
 date: 2026年9月19日
 people:
 - アーセナル
+- ミケル・アルテタ
 short_title: アーセナルってどんなクラブ？
 theme:
   id: pl_clubs_02_arsenal
@@ -41,16 +42,19 @@ sections:
     - - 理由1
       - 昨季22年ぶりのリーグ優勝
     - - 理由2
-      - 首位と勝ち点3差で連覇争い
+      - アルテタ「情熱とエネルギーを」
     - - 理由3
-      - 欧州最高峰の大会も初戦勝利
+      - 首位と勝ち点3差で連覇争い
   say:
   - 昨季、**22年**待ったリーグ優勝をつかんだ王者です。
+  - 率いるミケル・アルテタは、就任の日にこう言いました。
+  - voice: ミケル・アルテタ
+    text: 「仕事に責任を持ち、情熱とエネルギーを注ぐ人がほしい」
   - 今季は連覇に挑む立場。首位を勝ち点**3**差で追っています。
-  - 欧州の頂点を争う大会も、初戦はアウェーで勝ちました。
   sources:
   - https://en.wikipedia.org/wiki/Arsenal_F.C.
   - https://en.wikipedia.org/wiki/2026–27_Arsenal_F.C._season
+  - https://en.wikipedia.org/wiki/Mikel_Arteta
   bg: assets/backgrounds/stadium_アーセナル.png
   official: false
 - id: data
@@ -109,7 +113,8 @@ sections:
     - - 2026年5月19日
       - 14回目のリーグ優勝（22年ぶり）
   say:
-  - この無敗は、そのシーズンだけで終わっていません。
+  - text: この無敗は、そのシーズンだけで終わっていません。
+    image: assets/images/pl_arsenal_story/scene.jpg
   - 前のシーズンの5月から、次のシーズンの10月まで、リーグ戦**49試合**です。
   - この連続無敗は、いまもイングランド1部の最長記録です。
   - ただ、そこからリーグ優勝は遠ざかりました。
@@ -137,7 +142,8 @@ sections:
     - - 働きかけた人
       - 監督ハーバート・チャップマン
   say:
-  - ロンドンの地下鉄に、「アーセナル」という駅があります。
+  - text: ロンドンの地下鉄に、「アーセナル」という駅があります。
+    image: assets/images/pl_arsenal_episode/scene.jpg
   - もとの名前は、ジレスピー・ロード駅。
   - 監督のハーバート・チャップマンが働きかけて、**1932年**に名前が変わりました。
   - クラブの名前をそのまま付けた駅は、ロンドンの地下鉄でここだけです。

@@ -132,15 +132,16 @@ sections:
     # 「フットボールリーグに残る」は耳で取れないので「4部に残る」。消滅の行は中身が1文で
     # 言えないので落とした。「ここから14年間」はオープニングの言い直しなので落とし、
     # 時系列を 売却 → 残留 → 2年 → 12年 → 2011年 の一本にした
+    # 節の頭は売られた当のゴールドストーン・グラウンド（1996年4月、売却の前年の写真）にした
+    # （2026-09-22）。それまでは5行ともファルマーの写真で、話と絵が合っていなかった。
+    # 2〜4行目は写真を引き継ぐ（hold_photo）。最後の行だけ、いまのファルマーに切り替える。
+    # 出典は assets/images/pl_brighton_story/credits.json
     say:
-      - {image: "assets/images/pl_brighton/scene.jpg",
+      - {image: "assets/images/pl_brighton_story/scene.jpg",
          text: 1997年、クラブの経営陣が、借金を返すために本拠地のゴールドストーン・グラウンドを売りました。}
-      - {image: "assets/images/pl_brighton/scene.jpg",
-         text: その年は、最終節の引き分けで、ようやく4部に残りました。}
-      - {image: "assets/images/pl_brighton/scene.jpg",
-         text: 売ってからの2年間は、別のクラブ、ジリンガムの本拠地を借りました。}
-      - {image: "assets/images/pl_brighton/scene.jpg",
-         text: そのあとの12年は、陸上競技場を改造したウィズディーン・スタジアムです。}
+      - その年は、最終節の引き分けで、ようやく4部に残りました。
+      - 売ってからの2年間は、別のクラブ、ジリンガムの本拠地を借りました。
+      - そのあとの12年は、陸上競技場を改造したウィズディーン・スタジアムです。
       - {image: "assets/images/pl_brighton/scene.jpg",
          text: いまのファルマー・スタジアムに入ったのは2011年です。}
     official: false

@@ -7,6 +7,7 @@ date: 2026年9月19日
 people:
 - 三笘薫
 - ブライトン
+- ファビアン・ヒュルツェラー
 short_title: 三笘薫がいるブライトンってどんなクラブ？
 theme:
   id: pl_clubs_05_brighton
@@ -42,16 +43,19 @@ sections:
     - - 理由1
       - 三笘薫がリーグ113試合23得点
     - - 理由2
-      - 開幕5試合で3勝、順位は3位
+      - ヒュルツェラー「なぜ勝てているのか」
     - - 理由3
-      - 第5節で昨季王者に3対0
+      - 開幕5試合で3勝、順位は3位
   say:
   - 三笘薫がリーグ戦**113試合**に出て、**23得点**を挙げているクラブです。
+  - 王者アーセナルを破った夜、監督のヒュルツェラーはこう言いました。
+  - voice: ファビアン・ヒュルツェラー
+    text: 「この瞬間を楽しむのは大事。ただ、なぜ勝てたかも知らないと」
   - 開幕から5試合で**3勝**を挙げ、順位は**3位**です。
-  - 第5節では、昨季の王者アーセナルから3点を奪って勝ちました。
   sources:
   - https://en.wikipedia.org/wiki/Brighton_&_Hove_Albion_F.C.
   - https://en.wikipedia.org/wiki/2026–27_Brighton_&_Hove_Albion_F.C._season
+  - https://www.brightonandhovealbion.com/media-article/mft-interviews-fabian-hurzeler-bha-arsenal-pl-september-2026
   bg: assets/backgrounds/stadium_ブライトン.png
   official: false
 - id: data
@@ -105,14 +109,11 @@ sections:
     - - 2011年
       - ファルマー・スタジアムへ
   say:
-  - image: assets/images/pl_brighton/scene.jpg
+  - image: assets/images/pl_brighton_story/scene.jpg
     text: 1997年、クラブの経営陣が、借金を返すために本拠地のゴールドストーン・グラウンドを売りました。
-  - image: assets/images/pl_brighton/scene.jpg
-    text: その年は、最終節の引き分けで、ようやく4部に残りました。
-  - image: assets/images/pl_brighton/scene.jpg
-    text: 売ってからの2年間は、別のクラブ、ジリンガムの本拠地を借りました。
-  - image: assets/images/pl_brighton/scene.jpg
-    text: そのあとの12年は、陸上競技場を改造したウィズディーン・スタジアムです。
+  - その年は、最終節の引き分けで、ようやく4部に残りました。
+  - 売ってからの2年間は、別のクラブ、ジリンガムの本拠地を借りました。
+  - そのあとの12年は、陸上競技場を改造したウィズディーン・スタジアムです。
   - image: assets/images/pl_brighton/scene.jpg
     text: いまのファルマー・スタジアムに入ったのは2011年です。
   official: false

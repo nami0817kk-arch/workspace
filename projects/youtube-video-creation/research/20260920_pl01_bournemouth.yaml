@@ -6,6 +6,7 @@ slot: premier_1
 date: 2026年9月19日
 people:
 - ボーンマス
+- マルコ・ローゼ
 short_title: ボーンマスってどんなクラブ？
 theme:
   id: pl_clubs_01_bournemouth
@@ -41,16 +42,19 @@ sections:
     - - 理由1
       - 創立127年で初の欧州の舞台
     - - 理由2
-      - 初戦で久保建英のクラブに勝利
+      - 新監督ローゼ「たくさん走りたい」
     - - 理由3
-      - 今夏に監督が交代、1年目
+      - 初戦で久保建英のクラブに勝利
   say:
   - 創立から**127年**、欧州の大会に出るのは今季が初めてです。
-  - その初戦は、久保建英が所属するクラブに勝ちました。
-  - 監督も今夏に交代し、新しい体制の**1年目**です。
+  - 今夏に来た監督のマルコ・ローゼは、こう言っています。
+  - voice: マルコ・ローゼ
+    text: 「ボールに対して、とても積極的に。たくさん走りたい」
+  - 欧州の初戦は、久保建英が所属するクラブに勝ちました。
   sources:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
   - https://en.wikipedia.org/wiki/2026–27_AFC_Bournemouth_season
+  - https://en.wikipedia.org/wiki/Marco_Rose
   bg: assets/backgrounds/stadium_ボーンマス.png
   official: false
 - id: data
@@ -104,7 +108,8 @@ sections:
     - - 認めた条件
       - 勝ち点マイナス17（4部）
   say:
-  - 2008年、借金は**400万ポンド**。クラブは倒産寸前でした。
+  - text: 2008年、借金は**400万ポンド**。クラブは倒産寸前でした。
+    image: assets/images/pl_bournemouth_story/scene.jpg
   - フットボールリーグは、参加そのものを認めないと言いました。
   - 認めた条件が**勝ち点マイナス17**。当時は4部です。
   sources:
@@ -180,7 +185,8 @@ sections:
     - - テッド・マクドゥーガル
       - ひとりで9点
   say:
-  - 1971年11月、FAカップでマーゲイトに**11対0**で勝ちました。
+  - text: 1971年11月、FAカップでマーゲイトに**11対0**で勝ちました。
+    image: assets/images/pl_bournemouth_episode/scene.jpg
   - そのうち**9点**を、フォワードのテッド・マクドゥーガルがひとりで決めています。
   sources:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth

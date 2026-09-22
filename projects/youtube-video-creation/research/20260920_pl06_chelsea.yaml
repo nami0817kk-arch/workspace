@@ -6,6 +6,7 @@ slot: premier_1
 date: 2026年9月19日
 people:
 - チェルシー
+- ディディエ・ドログバ
 short_title: チェルシーってどんなクラブ？
 theme:
   id: pl_clubs_06_chelsea
@@ -46,11 +47,14 @@ sections:
       - 今季は欧州の大会なし
   say:
   - レアル・マドリードを率いたシャビ・アロンソが、**4年**契約でこの夏に来ました。
-  - 去年の夏は、クラブの世界一を決める大会で優勝。いまの**世界一**です。
-  - 今季はヨーロッパの大会に出ません。プレミアだけに力を注げる**1年**です。
+  - 名選手ディディエ・ドログバが、クラブに戻った日の言葉です。
+  - voice: ディディエ・ドログバ
+    text: このクラブとの特別な関係は皆が知っている。ずっと我が家だった
+  - 去年の夏に世界一を決める大会で優勝し、今季はヨーロッパの大会なし。プレミアだけに力を注げる**1年**です。
   sources:
   - https://en.wikipedia.org/wiki/Chelsea_F.C.
   - https://en.wikipedia.org/wiki/2026–27_Chelsea_F.C._season
+  - https://en.wikipedia.org/wiki/Didier_Drogba
   bg: assets/backgrounds/stadium_チェルシー.png
   official: false
 - id: data
@@ -99,14 +103,11 @@ sections:
   telop: スタジアムが先。断られたので、クラブを作った
   narrator: 解説
   say:
-  - image: assets/images/pl_chelsea/scene.jpg
+  - image: assets/images/pl_chelsea_story/scene.jpg
     text: 1904年、実業家のガス・ミアーズが、スタンフォード・ブリッジを手に入れます。
-  - image: assets/images/pl_chelsea/scene.jpg
-    text: そして近くのクラブ、フラムに「ここを借りないか」と持ちかけました。
-  - image: assets/images/pl_chelsea/scene.jpg
-    text: フラムは、断ります。
-  - image: assets/images/pl_chelsea/scene.jpg
-    text: 借り手がいないなら、自分でクラブを作ればいい。そう考えて生まれたのがチェルシーです。
+  - そして近くのクラブ、フラムに「ここを借りないか」と持ちかけました。
+  - フラムは、断ります。
+  - 借り手がいないなら、自分でクラブを作ればいい。そう考えて生まれたのがチェルシーです。
   official: false
   sources:
   - https://en.wikipedia.org/wiki/Chelsea_F.C.
@@ -130,7 +131,8 @@ sections:
     - - 替えた人
       - 1952年、監督テッド・ドレイク。翌年ライオンに
   say:
-  - あだ名はもともと「ペンショナーズ」、年金暮らしの人たち。近くの王立チェルシー病院の退役軍人です。
+  - text: あだ名はもともと「ペンショナーズ」、年金暮らしの人たち。近くの王立チェルシー病院の退役軍人です。
+    image: assets/images/pl_chelsea_episode/scene.jpg
   - 最初の紋章も、選手でもライオンでもなく、その赤い制服の退役軍人でした。
   - '**1952年**に監督になったテッド・ドレイクが、これを「古くさい」と言いました。'
   - 翌年、いまのライオンの紋章に替えさせました。

@@ -70,7 +70,8 @@ episode:
     - - その季の得点
       - リーグで最多
   say:
-  - '**1937年**、このクラブは初めて1部で優勝しました。'
+  # 2026-09-22: 節の1行目に実写を1枚（当時の本拠地メイン・ロードの場内。Commons CC BY-SA 3.0）
+  - {text: "**1937年**、このクラブは初めて1部で優勝しました。", image: assets/images/pl_mancity_episode/01.jpg}
   - ところが、その翌シーズンに降格します。
   - しかも落ちたそのシーズン、リーグでいちばん多くゴールを決めていたのは、マンチェスター・シティでした。
   sources:
@@ -91,10 +92,18 @@ manager_sources:
 - https://en.wikipedia.org/wiki/Enzo_Maresca
 # **いま見る理由**（2026-09-22 指示「今そのクラブを見る理由を最初につけて視聴者の
 # 興味を上げたい」）。冒頭の直後に置き、ショートはここから
+# **本人の言葉を1つ**（2026-09-22）。原文は英語版Wikipedia（Enzo Maresca）:
+# "City is an incredibly well-run football club."（2026年の監督就任時、クラブが出した声明の中の言葉）。
+# 話者は people_extra に足す
 reasons:
 - 開幕から**5連勝**。いま、プレミアの首位にいるクラブです。
 - 監督はエンツォ・マレスカ。かつてこのクラブの助手だった男の、**1年目**です。
+- {voice: エンツォ・マレスカ, text: "「シティは、信じられないほどよく運営されているクラブだ」"}
 - 昨季はリーグ2位で、カップは**2つ**。リーグの優勝からは、2シーズン遠ざかっています。
+reasons_sources:
+- https://en.wikipedia.org/wiki/Enzo_Maresca
+people_extra:
+- エンツォ・マレスカ
 reasons_telop: 開幕5連勝で首位。新監督マレスカ
 reasons_rows:
 - ["理由1", "開幕5連勝、首位"]

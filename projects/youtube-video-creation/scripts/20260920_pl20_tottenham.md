@@ -37,6 +37,7 @@ tags:
 - サッカー
 - トッテナム
 - 高井幸大
+- ダニー・ブランチフラワー
 - プレミアリーグ
 - 解説
 - 海外サッカー
@@ -44,6 +45,7 @@ tags:
 sources:
 - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
 - https://en.wikipedia.org/wiki/2026–27_Tottenham_Hotspur_F.C._season
+- https://en.wikipedia.org/wiki/Danny_Blanchflower
 - https://en.wikipedia.org/wiki/Harry_Kane
 - https://en.wikipedia.org/wiki/Son_Heung-min
 - https://en.wikipedia.org/wiki/Ledley_King
@@ -185,14 +187,16 @@ cards:
 @bg: assets/backgrounds/stadium_トッテナム.png
 @main: true
 
-キャスター: 高井幸大は**22歳**のセンターバック。いまは期限付きで、ベルギーのシント＝トロイデンにいます。
-  telop: 高井幸大は**22歳**のセンターバック。いまは期限付きで、ベルギーのシント＝トロイデンにいます
+キャスター: 1961年の2冠を主将として率いた、ダニー・ブランチフラワーの言葉があります。
+  telop: 1961年の2冠を主将として率いた、ダニー・ブランチフラワーの言葉があります
   source: 報道
   card: reasons_card
-キャスター: **2025年**にヨーロッパリーグを獲ったクラブが、いま順位表のいちばん下にいます。
-  telop: **2025年**にヨーロッパリーグを獲ったクラブが、いま順位表のいちばん下にいます
-キャスター: 監督は昨季の3月に来たロベルト・デ・ゼルビ。**2年目**は、開幕5試合でまだ勝ちがありません。
-  telop: 監督は昨季の3月に来たロベルト・デ・ゼルビ。**2年目**は、開幕5試合でまだ勝ちがありません
+ダニー・ブランチフラワー: 「サッカーは栄光のためにある。粋に、華やかにやるんだ」
+  telop: ダニー・ブランチフラワー「「サッカーは栄光のためにある。粋に、華やかにやるんだ」」
+キャスター: 高井幸大は**22歳**のセンターバック。いまは期限付きで、ベルギーのシント＝トロイデンにいます。
+  telop: 高井幸大は**22歳**のセンターバック。いまは期限付きで、ベルギーのシント＝トロイデンにいます
+キャスター: **2025年**のヨーロッパリーグ王者が、いま最下位。デ・ゼルビ監督の**2年目**は、開幕5試合で勝ちなし。
+  telop: **2025年**のヨーロッパリーグ王者が、いま最下位。デ・ゼルビ監督の**2年目**は、開幕5試合で勝ちなし
 
 ## トッテナム 基礎DATA
 @bg: assets/backgrounds/stadium_トッテナム.png
@@ -230,24 +234,41 @@ cards:
   telop: 1888年に、フットボールリーグができました
   source: 背景
   card: cup1901_card
+  image: assets/images/pl_tottenham_story/scene.jpg
 解説: それ以来、リーグの外のクラブがFAカップを獲った例は、ひとつだけ。
   telop: それ以来、リーグの外のクラブがFAカップを獲った例は、ひとつだけ
 解説: それが1901年のトッテナム。**リーグに属していないまま**の優勝で、125年前のことです。
   telop: それが1901年のトッテナム。**リーグに属していないまま**の優勝で、125年前のことです
+  card: none
+  image: assets/images/pl_tottenham_story/scene.jpg
 解説: 1961年には、リーグとカップの両方を獲りました。**20世紀で最初の2冠**です。
   telop: 1961年には、リーグとカップの両方を獲りました。**20世紀で最初の2冠**です
+  card: none
+  image: assets/images/pl_tottenham_story/scene.jpg
 解説: **イギリスのクラブで、ヨーロッパのタイトルを最初に獲ったのもトッテナム**でした。
   telop: **イギリスのクラブで、ヨーロッパのタイトルを最初に獲ったのもトッテナム**でした
+  card: none
+  image: assets/images/pl_tottenham_story/scene.jpg
 解説: 1963年のカップウィナーズカップ。国内カップの王者どうしで争った、いまは無い大会です。
   telop: 1963年のカップウィナーズカップ。国内カップの王者どうしで争った、いまは無い大会です
+  card: none
+  image: assets/images/pl_tottenham_story/scene.jpg
 解説: 1972年にはウエファカップも獲りました。
   telop: 1972年にはウエファカップも獲りました
+  card: none
+  image: assets/images/pl_tottenham_story/scene.jpg
 解説: 種類の違うヨーロッパのタイトルを2つ獲ったのも、イギリス勢では最初でした。
   telop: 種類の違うヨーロッパのタイトルを2つ獲ったのも、イギリス勢では最初でした
+  card: none
+  image: assets/images/pl_tottenham_story/scene.jpg
 解説: ウエファカップは1984年にも獲りました。
   telop: ウエファカップは1984年にも獲りました
+  card: none
+  image: assets/images/pl_tottenham_story/scene.jpg
 解説: そして2025年のヨーロッパリーグで、ヨーロッパのタイトルは**4つ**になりました。
   telop: そして2025年のヨーロッパリーグで、ヨーロッパのタイトルは**4つ**になりました
+  card: none
+  image: assets/images/pl_tottenham_story/scene.jpg
 
 ## 雄鶏と拍車
 @bg: assets/backgrounds/stadium_トッテナム.png
@@ -256,14 +277,21 @@ cards:
   telop: クラブ名の由来は、中世の貴族ハリー・ホットスパー。エンブレムの雄鶏も、そこから来ています
   source: 背景
   card: episode_card
+  image: assets/images/pl_tottenham_episode/scene.jpg
 解説: 戦いで馬に拍車を蹴り込むことから、ホットスパーと呼ばれた人物です。
   telop: 戦いで馬に拍車を蹴り込むことから、ホットスパーと呼ばれた人物です
 解説: その拍車は、闘鶏の鶏にも付けるもの。だから雄鶏、というわけです。
   telop: その拍車は、闘鶏の鶏にも付けるもの。だから雄鶏、というわけです
+  card: none
+  image: assets/images/pl_tottenham_episode/scene.jpg
 解説: 1909年から10年のシーズンの終わり。元選手が**35ポンド**で、ブロンズの雄鶏を作りました。
   telop: 1909年から10年のシーズンの終わり。元選手が**35ポンド**で、ブロンズの雄鶏を作りました
+  card: none
+  image: assets/images/pl_tottenham_episode/scene.jpg
 解説: その雄鶏が、スタンドの屋根に置かれました。
   telop: その雄鶏が、スタンドの屋根に置かれました
+  card: none
+  image: assets/images/pl_tottenham_episode/scene.jpg
 
 ## このクラブを語る3人
 @bg: assets/backgrounds/stadium_トッテナム.png

@@ -78,6 +78,10 @@ def screen_name(path: str, key: str) -> str:
         return "優勝回数の板（トロフィー）"
     if "_last" in n:
         return "昨季の最終順位表"
+    if "_story/" in path:
+        return "クラブの話の実写"
+    if "_episode/" in path:
+        return "逸話の実写"
     if "/photos/pl/" in path:
         return "オーナーの顔写真" if "owner" in n else "監督の顔写真" if "manager" in n else "名選手の顔写真"
     m = re.match(rf"pl_{key}_data(\d)$", n)

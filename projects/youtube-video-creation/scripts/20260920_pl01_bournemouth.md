@@ -36,6 +36,7 @@ description: 'ボーンマスってどんなクラブ？
 tags:
 - サッカー
 - ボーンマス
+- マルコ・ローゼ
 - プレミアリーグ
 - 解説
 - 海外サッカー
@@ -43,12 +44,12 @@ tags:
 sources:
 - https://en.wikipedia.org/wiki/AFC_Bournemouth
 - https://en.wikipedia.org/wiki/2026–27_AFC_Bournemouth_season
+- https://en.wikipedia.org/wiki/Marco_Rose
 - https://en.wikipedia.org/wiki/Eddie_Howe
 - https://en.wikipedia.org/wiki/List_of_AFC_Bournemouth_records_and_statistics
 - https://en.wikipedia.org/wiki/Callum_Wilson
 - https://en.wikipedia.org/wiki/Brett_Pitman
 - https://en.wikipedia.org/wiki/Ryan_Fraser
-- https://en.wikipedia.org/wiki/Marco_Rose
 cards:
   reasons_card:
     type: table
@@ -60,9 +61,9 @@ cards:
     - - 理由1
       - 創立127年で初の欧州の舞台
     - - 理由2
-      - 初戦で久保建英のクラブに勝利
+      - 新監督ローゼ「たくさん走りたい」
     - - 理由3
-      - 今夏に監督が交代、1年目
+      - 初戦で久保建英のクラブに勝利
   history_card:
     type: table
     title: 2008年に起きたこと
@@ -206,10 +207,12 @@ cards:
   telop: 創立から**127年**、欧州の大会に出るのは今季が初めてです
   source: 報道
   card: reasons_card
-キャスター: その初戦は、久保建英が所属するクラブに勝ちました。
-  telop: その初戦は、久保建英が所属するクラブに勝ちました
-キャスター: 監督も今夏に交代し、新しい体制の**1年目**です。
-  telop: 監督も今夏に交代し、新しい体制の**1年目**です
+キャスター: 今夏に来た監督のマルコ・ローゼは、こう言っています。
+  telop: 今夏に来た監督のマルコ・ローゼは、こう言っています
+マルコ・ローゼ: 「ボールに対して、とても積極的に。たくさん走りたい」
+  telop: マルコ・ローゼ「「ボールに対して、とても積極的に。たくさん走りたい」」
+キャスター: 欧州の初戦は、久保建英が所属するクラブに勝ちました。
+  telop: 欧州の初戦は、久保建英が所属するクラブに勝ちました
 
 ## ボーンマス 基礎DATA
 @bg: assets/backgrounds/stadium_ボーンマス.png
@@ -247,10 +250,13 @@ cards:
   telop: 2008年、借金は**400万ポンド**。クラブは倒産寸前でした
   source: 背景
   card: history_card
+  image: assets/images/pl_bournemouth_story/scene.jpg
 解説: フットボールリーグは、参加そのものを認めないと言いました。
   telop: フットボールリーグは、参加そのものを認めないと言いました
 解説: 認めた条件が**勝ち点マイナス17**。当時は4部です。
   telop: 認めた条件が**勝ち点マイナス17**。当時は4部です
+  card: none
+  image: assets/images/pl_bournemouth_story/scene.jpg
 
 ## 31歳の監督
 @bg: assets/backgrounds/stadium_ボーンマス.png
@@ -283,6 +289,7 @@ cards:
   telop: 1971年11月、FAカップでマーゲイトに**11対0**で勝ちました
   source: 背景
   card: episode_card
+  image: assets/images/pl_bournemouth_episode/scene.jpg
 解説: そのうち**9点**を、フォワードのテッド・マクドゥーガルがひとりで決めています。
   telop: そのうち**9点**を、フォワードのテッド・マクドゥーガルがひとりで決めています
 

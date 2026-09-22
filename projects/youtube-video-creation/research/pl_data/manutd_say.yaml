@@ -72,7 +72,9 @@ episode:
   say:
   # 2026-09-22 流れの点検。1968年から66年さかのぼる合図（まだニュートン・ヒースだった）と、
   # 当時の金額の目安（Wikipedia の「2025年の28万ポンド相当」）を足した
-  - '**1902年**1月、まだニュートン・ヒースだったクラブは、2670ポンドの借金で解散の命令を受けました。'
+  # 2026-09-22 この節に実写を1枚（Commons、1892-93年のニュートン・ヒースのチーム写真）
+  - text: '**1902年**1月、まだニュートン・ヒースだったクラブは、2670ポンドの借金で解散の命令を受けました。'
+    image: assets/images/pl_manutd_episode/scene.jpg
   - いまのお金でおよそ28万ポンド、日本円で数千万円の借金です。
   # 2026-09-22 2回目。4人×500＝2000 が借金2670に足りなく聞こえた。借金の返済ではなく
   # 出資（Wikipedia: each invested £500 in return for a direct interest in running the club）
@@ -100,10 +102,17 @@ manager_sources:
 # 冒頭の直後に置き、ショートもここから切る。事実は今季のシーズン記事（2026–27 season: 
 # first appearance in the Champions League since 2023–24、Carrick permanent head coach）と
 # last_season.json（昨季3位）、standings.json（第5節で12位）。あとの節と同じ文・数字は読まない
+# 本人の言葉を1つ（2026-09-22 指示）。原文は Matt_Busby の記事
+# （Real Madrid の誘いを断って "Manchester is my heaven"）。ショートの16秒以内に出すので2行目
 reasons:
-- '**3シーズンぶり**のチャンピオンズリーグに、今季は帰ってきました。'
+- '**3シーズンぶり**のチャンピオンズリーグ。この舞台を初めて制した監督、マット・バズビーの言葉があります。'
+- {voice: マット・バズビー, text: "「マンチェスターは、私の天国だ」"}
 - 監督は、かつて主将も務めたマイケル・キャリック。今季から正式な監督です。
 - 昨季は**3位**。ところが今季は開幕から足踏みが続き、順位表の真ん中にいます。
+reasons_sources:
+- https://en.wikipedia.org/wiki/Matt_Busby
+people_extra:
+- マット・バズビー
 reasons_telop: 3シーズンぶりのチャンピオンズリーグ
 reasons_rows:
 - - 理由1

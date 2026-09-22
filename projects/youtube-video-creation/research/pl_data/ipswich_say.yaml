@@ -71,7 +71,8 @@ episode:
     - - ホームの欧州戦
       - 31試合無敗
   say:
-  - ヨーロッパの大会に初めて出た**1962年**から、ホームで戦った**31試合**、一度も負けませんでした。
+  # 2026-09-22: 節の1行目に実写を1枚（満員のポートマン・ロードの場内。Commons CC BY-SA 4.0）
+  - {text: "ヨーロッパの大会に初めて出た**1962年**から、ホームで戦った**31試合**、一度も負けませんでした。", image: assets/images/pl_ipswich_episode/01.jpg}
   sources:
   - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
 # 今季の節に足す行（2026-09-22 流れの点検「前田について本文が1句だけ」）。
@@ -94,10 +95,19 @@ manager_sources:
 - https://en.wikipedia.org/wiki/Gary_O'Neil
 # **いま見る理由**（2026-09-22 指示「今そのクラブを見る理由を最初につけて視聴者の
 # 興味を上げたい」）。冒頭の直後に置き、ショートはここから。旧 why はこの節に吸収
+# **本人の言葉を1つ**（2026-09-22）。原文は英語版Wikipedia（Alf Ramsey）:
+# "I had no plan for Ipswich when I went there"（3部のイプスウィッチに来たときを、のちに振り返って）。
+# 話者は people_extra に足す
 reasons:
 - 日本代表**30試合**のフォワード、前田大然が、この夏セルティックを離れて選びました。
+- 3部のクラブを1部の王者にした、アルフ・ラムゼイの言葉です。
+- {voice: アルフ・ラムゼイ, text: "「イプスウィッチへ行ったとき、私には何の計画も無かった」"}
 - 降格から**1年**でプレミアに戻ってきた、昇格組のひとつです。
 - 監督も新顔です。ストラスブールから来たギャリー・オニールの**1年目**です。
+reasons_sources:
+- https://en.wikipedia.org/wiki/Alf_Ramsey
+people_extra:
+- アルフ・ラムゼイ
 reasons_telop: 前田大然が来た。1年でプレミアに復帰
 reasons_rows:
 - ["理由1", "前田大然が今夏に加入"]

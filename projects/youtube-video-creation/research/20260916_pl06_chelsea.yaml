@@ -88,14 +88,13 @@ sections:
     telop: スタジアムが先。断られたので、クラブを作った
     narrator: 解説
     say:
-      - {image: "assets/images/pl_chelsea/scene.jpg",
+      # 2026-09-22: 節の1行目に、当時のスタンフォード・ブリッジ（陸上競技場だった頃）の写真。
+      # 1行目に付けた写真は後ろの行にも残るので、2行目以降の image は外した
+      - {image: "assets/images/pl_chelsea_story/scene.jpg",
          text: 1904年、実業家のガス・ミアーズが、スタンフォード・ブリッジを手に入れます。}
-      - {image: "assets/images/pl_chelsea/scene.jpg",
-         text: そして近くのクラブ、フラムに「ここを借りないか」と持ちかけました。}
-      - {image: "assets/images/pl_chelsea/scene.jpg",
-         text: フラムは、断ります。}
-      - {image: "assets/images/pl_chelsea/scene.jpg",
-         text: 借り手がいないなら、自分でクラブを作ればいい。そう考えて生まれたのがチェルシーです。}
+      - そして近くのクラブ、フラムに「ここを借りないか」と持ちかけました。
+      - フラムは、断ります。
+      - 借り手がいないなら、自分でクラブを作ればいい。そう考えて生まれたのがチェルシーです。
     official: false
     sources:
       - https://en.wikipedia.org/wiki/Chelsea_F.C.

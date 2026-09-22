@@ -36,6 +36,7 @@ description: 'ブレントフォードってどんなクラブ？
 tags:
 - サッカー
 - ブレントフォード
+- キース・アンドリュース
 - プレミアリーグ
 - 解説
 - 海外サッカー
@@ -43,6 +44,7 @@ tags:
 sources:
 - https://en.wikipedia.org/wiki/Brentford_F.C.
 - https://en.wikipedia.org/wiki/2026–27_Brentford_F.C._season
+- https://www.brentfordfc.com/en/news/video/interviews-keith-andrews-brentford-head-coach
 - https://en.wikipedia.org/wiki/1929%E2%80%9330_Brentford_F.C._season
 - https://en.wikipedia.org/wiki/Kevin_O%27Connor_(footballer,_born_1982)
 - https://en.wikipedia.org/wiki/Ivan_Toney
@@ -59,7 +61,7 @@ cards:
     - - 理由1
       - 開幕5試合負けなしで4位
     - - 理由2
-      - トッテナムとチェルシーに3対0
+      - アンドリュース「ファンの代表だと感じるチームに」
     - - 理由3
       - 保てばクラブ史上初の欧州
   history_card:
@@ -181,8 +183,10 @@ cards:
   telop: 開幕**5試合**を負けなしで走り、いまは**4位**にいます
   source: 報道
   card: reasons_card
-キャスター: トッテナムとチェルシーを、どちらも3対0で退けました。
-  telop: トッテナムとチェルシーを、どちらも3対0で退けました
+キャスター: 監督のキース・アンドリュースは、就任のときこう言いました。
+  telop: 監督のキース・アンドリュースは、就任のときこう言いました
+キース・アンドリュース: 「ファンが自分たちの代表だと感じるチームにしたい」
+  telop: キース・アンドリュース「「ファンが自分たちの代表だと感じるチームにしたい」」
 キャスター: このまま行けば、クラブ史上初めて欧州の舞台に立てます。
   telop: このまま行けば、クラブ史上初めて欧州の舞台に立てます
 
@@ -219,18 +223,29 @@ cards:
   telop: プレーオフに出ては敗れる。それが**9回**続きました。イングランドで、ほかにない数です
   source: 背景
   card: history_card
+  image: assets/images/pl_brentford_story/scene.jpg
 解説: そのうち4回は、決勝まで行って敗れました。1997年から2020年のあいだのことです。
   telop: そのうち4回は、決勝まで行って敗れました。1997年から2020年のあいだのことです
 解説: 10回目が2021年でした。決勝でスウォンジー・シティを2対0で下します。
   telop: 10回目が2021年でした。決勝でスウォンジー・シティを2対0で下します
+  card: none
+  image: assets/images/pl_brentford_story/scene.jpg
 解説: プレミアリーグになってからは初めて。1部としては**74年ぶり**でした。
   telop: プレミアリーグになってからは初めて。1部としては**74年ぶり**でした
+  card: none
+  image: assets/images/pl_brentford_story/scene.jpg
 解説: 消えかけた年も、あります。
   telop: 消えかけた年も、あります
+  card: none
+  image: assets/images/pl_brentford_story/scene.jpg
 解説: 1967年、クイーンズ・パーク・レンジャーズに吸収されて、クラブごと消える話がまとまりかけました。
   telop: 1967年、クイーンズ・パーク・レンジャーズに吸収されて、クラブごと消える話がまとまりかけました
+  card: none
+  image: assets/images/pl_brentford_story/scene.jpg
 解説: 止めたのはサポーターです。抗議と寄付で、話は白紙に戻りました。
   telop: 止めたのはサポーターです。抗議と寄付で、話は白紙に戻りました
+  card: none
+  image: assets/images/pl_brentford_story/scene.jpg
 
 ## ホーム全勝でも昇格なし
 @bg: assets/backgrounds/stadium_ブレントフォード.png
@@ -239,12 +254,17 @@ cards:
   telop: 昇格に届かなかった年は、ほかにもあります
   source: 背景
   card: episode_card
+  image: assets/images/pl_brentford_episode/scene.jpg
 解説: 1929年から30年のシーズン、ホームのリーグ戦**21試合に全部勝ちました**。
   telop: 1929年から30年のシーズン、ホームのリーグ戦**21試合に全部勝ちました**
 解説: ホーム全勝は、いまもイングランドの記録です。
   telop: ホーム全勝は、いまもイングランドの記録です
+  card: none
+  image: assets/images/pl_brentford_episode/scene.jpg
 解説: それでも3部から上がれませんでした。順位は2位。上がれるのは1位だけだったからです。
   telop: それでも3部から上がれませんでした。順位は2位。上がれるのは1位だけだったからです
+  card: none
+  image: assets/images/pl_brentford_episode/scene.jpg
 
 ## このクラブを語る3人
 @bg: assets/backgrounds/stadium_ブレントフォード.png

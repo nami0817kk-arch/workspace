@@ -69,7 +69,9 @@ episode:
     - - 翌年
       - 68年で初めて1部から降格
   say:
-  - 戦後まもなく、大金で選手を集め、「イングランド銀行クラブ」と呼ばれました。
+  # 2026-09-22 この節に実写を1枚（Commons、当時の本拠地ローカー・パーク）
+  - text: 戦後まもなく、大金で選手を集め、「イングランド銀行クラブ」と呼ばれました。
+    image: assets/images/pl_sunderland_episode/scene.jpg
   # 2026-09-22 流れの点検。当時は給料に上限があった、と先に言う。「翌年、68年」が
   # 1968年に聞こえるので言い換えた
   - 当時は選手の給料に上限がありました。ところが**1957年**、それを超える支払いが発覚します。
@@ -106,10 +108,19 @@ manager_sources:
 # history that they qualified for a European competition through a league position、
 # first European participation since 1973–74）、standings.json（第5節で1勝1分3敗）。
 # 「53年ぶり」「7位」はクラブの話・監督の節で読むので、ここでは「半世紀ぶり」で言う
+# 本人の言葉を1つ（2026-09-22 指示）。原文は Niall_Quinn の記事（2012年にクラブの役職を退くとき
+# "Everything is in place for Sunderland to really make a statement, which was always my aim"）。
+# ショートの16秒以内に出すので2行目
 reasons:
-- '**半世紀**ぶりにヨーロッパの舞台に戻り、いまヨーロッパリーグを戦っています。'
+# 1行48字の上限（draft のヒント）に合わせて詰めた
+- '**半世紀**ぶりにヨーロッパの舞台へ。元エースで会長も務めたナイアル・クインの言葉があります。'
+- {voice: ナイアル・クイン, text: "「サンダーランドが本当に名乗りを上げる準備は、すべて整った」"}
 - リーグの順位でヨーロッパ行きを勝ち取ったのは、クラブの歴史で**初めて**のことです。
 - リーグは開幕から**3敗**と苦しい出だし。ヨーロッパと国内、二つの戦いを同時に進めています。
+reasons_sources:
+- https://en.wikipedia.org/wiki/Niall_Quinn
+people_extra:
+- ナイアル・クイン
 reasons_telop: 半世紀ぶりのヨーロッパの舞台
 reasons_rows:
 - - 理由1

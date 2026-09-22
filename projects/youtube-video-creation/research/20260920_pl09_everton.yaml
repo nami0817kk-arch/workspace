@@ -6,6 +6,7 @@ slot: premier_1
 date: 2026年9月19日
 people:
 - エヴァートン
+- デイヴィッド・モイーズ
 short_title: エヴァートンってどんなクラブ？
 theme:
   id: pl_clubs_09_everton
@@ -46,11 +47,14 @@ sections:
       - 新本拠地は2シーズン目
   say:
   - 開幕**5試合**を負けなしで、上から7番目にいます。
-  - ジャック・グリーリッシュが**9月**、マンチェスター・シティから期限付きで来ました。
-  - 港に建てた新しい本拠地は、まだ**2シーズン目**です。
+  - 監督デイヴィッド・モイーズが、最初に来た2002年の言葉です。
+  - voice: デイヴィッド・モイーズ
+    text: 人々のクラブに加わる。街で会う人の大半がエヴァートンファンだ
+  - ジャック・グリーリッシュが**9月**、シティから期限付きで加入。港の新本拠地は、まだ**2シーズン目**です。
   sources:
   - https://en.wikipedia.org/wiki/Everton_F.C.
   - https://en.wikipedia.org/wiki/2026–27_Everton_F.C._season
+  - https://en.wikipedia.org/wiki/David_Moyes
   bg: assets/backgrounds/stadium_エヴァートン.png
   official: false
 - id: data
@@ -106,7 +110,8 @@ sections:
     - - 2025-26年から
       - ヒル・ディキンソン・スタジアム
   say:
-  - '**133年いた家を、去年出ました。**'
+  - image: assets/images/pl_everton_story/scene.jpg
+    text: '**133年いた家を、去年出ました。**'
   - その家、グディソン・パークは古く、席を増やせなくなっていました。
   - そこに入ったのは**1892年**。それまではアンフィールドにいました。
   - 地主と家賃でもめて出ていき、残った地主が作ったのがリヴァプールです。
@@ -135,7 +140,8 @@ sections:
     - - 1部の1季記録
       - いまも破られていない
   say:
-  - 1927年から28年のシーズン、ディクシー・ディーンがリーグ戦だけで**60ゴール**を決めました。
+  - text: 1927年から28年のシーズン、ディクシー・ディーンがリーグ戦だけで**60ゴール**を決めました。
+    image: assets/images/pl_everton_episode/scene.jpg
   - 1部リーグの、1シーズンの得点記録です。
   - 100年近くたったいまも、破られていません。
   sources:

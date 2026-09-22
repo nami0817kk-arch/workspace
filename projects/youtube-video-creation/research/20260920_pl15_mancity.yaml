@@ -6,6 +6,7 @@ slot: premier_1
 date: 2026年9月19日
 people:
 - マンチェスター・シティ
+- エンツォ・マレスカ
 short_title: マンチェスター・シティってどんなクラブ？
 theme:
   id: pl_clubs_15_mancity
@@ -47,10 +48,13 @@ sections:
   say:
   - 開幕から**5連勝**。いま、プレミアの首位にいるクラブです。
   - 監督はエンツォ・マレスカ。かつてこのクラブの助手だった男の、**1年目**です。
+  - voice: エンツォ・マレスカ
+    text: 「シティは、信じられないほどよく運営されているクラブだ」
   - 昨季はリーグ2位で、カップは**2つ**。リーグの優勝からは、2シーズン遠ざかっています。
   sources:
   - https://en.wikipedia.org/wiki/Manchester_City_F.C.
   - https://en.wikipedia.org/wiki/2026–27_Manchester_City_F.C._season
+  - https://en.wikipedia.org/wiki/Enzo_Maresca
   bg: assets/backgrounds/stadium_マンチェスターシティ.png
   official: false
 - id: data
@@ -112,7 +116,8 @@ sections:
     - - 同じ日
       - 1968年以来、44年ぶりの優勝
   say:
-  - 1998年、このクラブは**3部**まで落ちました。
+  - text: 1998年、このクラブは**3部**まで落ちました。
+    image: assets/images/pl_mancity_story/01.jpg
   - 1990年代、経営が傾いた末の降格でした。
   - 1970年にヨーロッパの**カップウィナーズカップ**を獲ったクラブです。
   - ヨーロッパを制したクラブの3部落ちは、ドイツのマクデブルクに続く**2例目**でした。
@@ -146,7 +151,8 @@ sections:
     - - その季の得点
       - リーグで最多
   say:
-  - '**1937年**、このクラブは初めて1部で優勝しました。'
+  - text: '**1937年**、このクラブは初めて1部で優勝しました。'
+    image: assets/images/pl_mancity_episode/01.jpg
   - ところが、その翌シーズンに降格します。
   - しかも落ちたそのシーズン、リーグでいちばん多くゴールを決めていたのは、マンチェスター・シティでした。
   sources:
@@ -171,7 +177,8 @@ sections:
       - 2011-2021
       - クラブ最多の260得点
   say:
-  - セルヒオ・アグエロは2011年、アトレティコから**3500万ポンド**で来ました。
+  - text: セルヒオ・アグエロは2011年、アトレティコから**3500万ポンド**で来ました。
+    image: assets/photos/pl/mancity_legend_341b1699.jpg
   - '**260得点**はクラブ史上最多。ハットトリック**12回**はプレミアで最多です。'
   - 2021年にバルセロナへ移りましたが、心臓の不整脈が見つかり、12月に引退しました。
   sources:

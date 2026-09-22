@@ -70,7 +70,9 @@ episode:
     - - その色
       - もとはリザーブチームの色
   say:
-  - いまは白と黒の縞が有名ですが、最初のユニフォームは**赤いシャツ**に白いパンツ、赤いソックスでした。
+  # 2026-09-22 この節に実写を1枚（Commons、白黒の縞のユニフォーム）
+  - text: いまは白と黒の縞が有名ですが、最初のユニフォームは**赤いシャツ**に白いパンツ、赤いソックスでした。
+    image: assets/images/pl_newcastle_episode/scene.jpg
   - 白黒の縞に変えたのは**1894年**。もともとは、リザーブチームの色でした。
   sources:
   - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
@@ -94,9 +96,17 @@ manager_sources:
 # Jaissle は8月に就任）と本人の記事（1988年4月5日生まれ＝38歳）、last_season.json（昨季12位）、
 # standings.json（第5節で2勝2分1敗）。**2025年のリーグカップはここで言わない**
 # （サムネと引きで伏せた「56年待って獲ったもの」の答えになる）
+# 本人の言葉を1つ（2026-09-22 指示）。原文は Alan_Shearer の記事（2009年に暫定監督を引き受けたとき
+# "It's a club I love and I don't want them to go down. I'll do everything I can to stop that."）。
+# ショートの16秒以内に出すので2行目
 reasons:
-- エディ・ハウが去り、**38歳**の新監督マティアス・ヤイスレの1年目です。
+- エディ・ハウが去り、**38歳**の新監督ヤイスレの1年目。地元の英雄アラン・シアラーは、かつてこう言いました。
+- {voice: アラン・シアラー, text: "「愛するクラブだ。落ちてほしくない。できることは全部やる」"}
 - 昨季は**12位**。今季は開幕から5試合で負けが1つだけと、滑り出しは上々です。
+reasons_sources:
+- https://en.wikipedia.org/wiki/Alan_Shearer
+people_extra:
+- アラン・シアラー
 reasons_telop: 開幕直前に監督交代。38歳の1年目
 reasons_rows:
 - - 理由1

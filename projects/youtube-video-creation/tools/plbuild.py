@@ -202,7 +202,8 @@ def build(key: str, number: int, old_file: str) -> Path:
                             card={"type": "table", "title": "いま見る理由", "columns": ["", ""],
                                   "rows": ov.get("reasons_rows") or []},
                             say=reasons,
-                            sources=[wiki, season_url]))
+                            sources=[wiki, season_url] + [u for u in (ov.get("reasons_sources") or [])
+                                                          if u not in (wiki, season_url)]))
     # 入口
     if japanese and not reasons:
         who = "と".join(jp_names)
@@ -546,7 +547,8 @@ def build(key: str, number: int, old_file: str) -> Path:
     title_head = (f"{'と'.join(jp_names[:2])}がいる{club}" if japanese else club)
     note = {
         "format": "news", "voice_min": 0, "slot": "premier_1", "date": "2026年9月19日",
-        "people": jp_names + [club],
+        # `people_extra`: 本人の言葉を読ませる人（監督・名選手）。声の割り当てと、言葉の早さの点検に使う
+        "people": jp_names + [club] + [str(x) for x in (ov.get("people_extra") or [])],
         "short_title": f"{title_head}ってどんなクラブ？"[:40],
         "theme": {"id": old["theme"]["id"], "league": "england", "league_name": "プレミアリーグ", "kind": "other",
                   # **シリーズの名札は付けない**（2026-09-21 指示「②プレミア20クラブ紹介はいらない」）。

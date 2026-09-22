@@ -36,6 +36,7 @@ description: 'ニューカッスルってどんなクラブ？
 tags:
 - サッカー
 - ニューカッスル
+- アラン・シアラー
 - プレミアリーグ
 - 解説
 - 海外サッカー
@@ -43,8 +44,8 @@ tags:
 sources:
 - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
 - https://en.wikipedia.org/wiki/2026–27_Newcastle_United_F.C._season
-- https://en.wikipedia.org/wiki/Inter-Cities_Fairs_Cup
 - https://en.wikipedia.org/wiki/Alan_Shearer
+- https://en.wikipedia.org/wiki/Inter-Cities_Fairs_Cup
 - https://en.wikipedia.org/wiki/Shay_Given
 - https://en.wikipedia.org/wiki/Rob_Lee
 - https://en.wikipedia.org/wiki/Matthias_Jaissle
@@ -181,10 +182,12 @@ cards:
 @bg: assets/backgrounds/stadium_ニューカッスル.png
 @main: true
 
-キャスター: エディ・ハウが去り、**38歳**の新監督マティアス・ヤイスレの1年目です。
-  telop: エディ・ハウが去り、**38歳**の新監督マティアス・ヤイスレの1年目です
+キャスター: エディ・ハウが去り、**38歳**の新監督ヤイスレの1年目。地元の英雄アラン・シアラーは、かつてこう言いました。
+  telop: エディ・ハウが去り、**38歳**の新監督ヤイスレの1年目。地元の英雄アラン・シアラーは、かつてこう言いました
   source: 報道
   card: reasons_card
+アラン・シアラー: 「愛するクラブだ。落ちてほしくない。できることは全部やる」
+  telop: アラン・シアラー「「愛するクラブだ。落ちてほしくない。できることは全部やる」」
 キャスター: 昨季は**12位**。今季は開幕から5試合で負けが1つだけと、滑り出しは上々です。
   telop: 昨季は**12位**。今季は開幕から5試合で負けが1つだけと、滑り出しは上々です
 
@@ -224,22 +227,37 @@ cards:
   telop: リーグ優勝は、3回が**1904年から1910年**、最後が1927年です
   source: 背景
   card: drought_card
+  image: assets/images/pl_newcastle_story/scene.jpg
 解説: FAカップは1955年が最後。国内のタイトルは、そこで止まりました。
   telop: FAカップは1955年が最後。国内のタイトルは、そこで止まりました
 解説: ヨーロッパでは1969年のフェアーズカップ。のちのヨーロッパリーグにつながる大会です。
   telop: ヨーロッパでは1969年のフェアーズカップ。のちのヨーロッパリーグにつながる大会です
+  card: none
+  image: assets/images/pl_newcastle_story/scene.jpg
 解説: 決勝はハンガリーのウイペシュトに、2試合合計6対2で勝ちました。
   telop: 決勝はハンガリーのウイペシュトに、2試合合計6対2で勝ちました
+  card: none
+  image: assets/images/pl_newcastle_story/scene.jpg
 解説: ところが、そこから先が長かった。
   telop: ところが、そこから先が長かった
+  card: none
+  image: assets/images/pl_newcastle_story/scene.jpg
 解説: 変わり目は2021年10月7日です。
   telop: 変わり目は2021年10月7日です
+  card: none
+  image: assets/images/pl_newcastle_story/scene.jpg
 解説: いまのオーナーが、クラブを買い取った日です。オーナーが代わるのは14年ぶりでした。
   telop: いまのオーナーが、クラブを買い取った日です。オーナーが代わるのは14年ぶりでした
+  card: none
+  image: assets/images/pl_newcastle_story/scene.jpg
 解説: そして2025年、リーグカップの決勝でリヴァプールを2対1で下します。
   telop: そして2025年、リーグカップの決勝でリヴァプールを2対1で下します
+  card: none
+  image: assets/images/pl_newcastle_story/scene.jpg
 解説: 1969年から数えて、**56年ぶり**のタイトルでした。
   telop: 1969年から数えて、**56年ぶり**のタイトルでした
+  card: none
+  image: assets/images/pl_newcastle_story/scene.jpg
 
 ## 最初は赤いシャツだった
 @bg: assets/backgrounds/stadium_ニューカッスル.png
@@ -248,6 +266,7 @@ cards:
   telop: いまは白と黒の縞が有名ですが、最初のユニフォームは**赤いシャツ**に白いパンツ、赤いソックスでした
   source: 背景
   card: episode_card
+  image: assets/images/pl_newcastle_episode/scene.jpg
 解説: 白黒の縞に変えたのは**1894年**。もともとは、リザーブチームの色でした。
   telop: 白黒の縞に変えたのは**1894年**。もともとは、リザーブチームの色でした
 

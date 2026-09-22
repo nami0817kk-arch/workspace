@@ -7,6 +7,7 @@ date: 2026年9月19日
 people:
 - 鈴木彩艶
 - アストン・ヴィラ
+- ウナイ・エメリ
 short_title: 鈴木彩艶がいるアストン・ヴィラってどんなクラブ？
 theme:
   id: pl_clubs_03_villa
@@ -42,16 +43,19 @@ sections:
     - - 理由1
       - 鈴木彩艶が今夏パルマから加入
     - - 理由2
-      - リーグ戦4試合でゴールを守る
+      - エメリ「ヨーロッパは素晴らしい」
     - - 理由3
       - 昨季30年ぶりの欧州タイトル
   say:
   - 鈴木彩艶が今夏、パルマから**2560万ポンド**で加入しました。
-  - リーグ戦はここまで**4試合**でゴールを守っています。
+  - 監督のウナイ・エメリは、ヨーロッパの舞台をこう語ります。
+  - voice: ウナイ・エメリ
+    text: 「この大会が本当に楽しみだ。ヨーロッパは素晴らしいものだ」
   - 昨季は**30年ぶり**に欧州のタイトルを獲り、今季は最高峰の舞台にも立ちます。
   sources:
   - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
   - https://en.wikipedia.org/wiki/2026–27_Aston_Villa_F.C._season
+  - https://www.avfc.co.uk/news/2026/september/07/prematch-emery-looks-ahead-to-champions-league-action
   bg: assets/backgrounds/stadium_アストンヴィラ.png
   official: false
 - id: data
@@ -110,7 +114,8 @@ sections:
     - - 2025-26年
       - ヨーロッパリーグ優勝。30年ぶりのタイトル
   say:
-  - そのフットボールリーグを立ち上げたのは、ヴィラの重役だったウィリアム・マクレガーです。
+  - text: そのフットボールリーグを立ち上げたのは、ヴィラの重役だったウィリアム・マクレガーです。
+    image: assets/images/pl_villa_story/scene.jpg
   - 1982年には、ヨーロッパカップを勝ち取りました。イングランドのクラブでは**4番目**です。
   - 決勝はロッテルダムで、バイエルン・ミュンヘンに1対0の勝ち。
   - そして昨季、2025年から26年。ヨーロッパリーグで優勝します。
@@ -138,7 +143,8 @@ sections:
     - - 後半
       - サッカーのルール。1対0で勝ち
   say:
-  - 創立してすぐの、最初の試合。相手は地元のラグビーチームでした。
+  - text: 創立してすぐの、最初の試合。相手は地元のラグビーチームでした。
+    image: assets/images/pl_villa_episode/scene.jpg
   - 条件は、**前半はラグビーのルール、後半はサッカーのルール**。
   - ヴィラは、その試合を1対0で勝っています。
   sources:

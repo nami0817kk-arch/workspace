@@ -6,6 +6,7 @@ slot: premier_1
 date: 2026年9月19日
 people:
 - ニューカッスル
+- アラン・シアラー
 short_title: ニューカッスルってどんなクラブ？
 theme:
   id: pl_clubs_17_newcastle
@@ -43,11 +44,14 @@ sections:
     - - 理由2
       - 昨季12位。開幕5試合で1敗
   say:
-  - エディ・ハウが去り、**38歳**の新監督マティアス・ヤイスレの1年目です。
+  - エディ・ハウが去り、**38歳**の新監督ヤイスレの1年目。地元の英雄アラン・シアラーは、かつてこう言いました。
+  - voice: アラン・シアラー
+    text: 「愛するクラブだ。落ちてほしくない。できることは全部やる」
   - 昨季は**12位**。今季は開幕から5試合で負けが1つだけと、滑り出しは上々です。
   sources:
   - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
   - https://en.wikipedia.org/wiki/2026–27_Newcastle_United_F.C._season
+  - https://en.wikipedia.org/wiki/Alan_Shearer
   bg: assets/backgrounds/stadium_ニューカッスル.png
   official: false
 - id: data
@@ -106,7 +110,8 @@ sections:
     - - 2025年
       - リーグカップ優勝。56年ぶりのタイトル
   say:
-  - リーグ優勝は、3回が**1904年から1910年**、最後が1927年です。
+  - text: リーグ優勝は、3回が**1904年から1910年**、最後が1927年です。
+    image: assets/images/pl_newcastle_story/scene.jpg
   - FAカップは1955年が最後。国内のタイトルは、そこで止まりました。
   - ヨーロッパでは1969年のフェアーズカップ。のちのヨーロッパリーグにつながる大会です。
   - 決勝はハンガリーのウイペシュトに、2試合合計6対2で勝ちました。
@@ -139,7 +144,8 @@ sections:
     - - その色
       - もとはリザーブチームの色
   say:
-  - いまは白と黒の縞が有名ですが、最初のユニフォームは**赤いシャツ**に白いパンツ、赤いソックスでした。
+  - text: いまは白と黒の縞が有名ですが、最初のユニフォームは**赤いシャツ**に白いパンツ、赤いソックスでした。
+    image: assets/images/pl_newcastle_episode/scene.jpg
   - 白黒の縞に変えたのは**1894年**。もともとは、リザーブチームの色でした。
   sources:
   - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
