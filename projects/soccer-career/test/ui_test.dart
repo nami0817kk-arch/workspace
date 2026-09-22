@@ -836,7 +836,14 @@ void main() {
 
     // 見出しが並んでいて、開くと中身が読める。
     expect(find.text('1週間の流れ'), findsOneWidget);
-    await tester.tap(find.text('生まれ持った特性'));
+    // 見出しが増えたので、画面の下にあることがある。スクロールして探す。
+    await tester.dragUntilVisible(
+      find.text('生まれ持った特性とコツ'),
+      find.byType(ListView).first,
+      const Offset(0, -300),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('生まれ持った特性とコツ'));
     await tester.pumpAndSettle();
     expect(find.textContaining('長所（'), findsOneWidget);
     expect(find.text('クラッチ'), findsOneWidget);
