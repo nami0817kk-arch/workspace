@@ -29,6 +29,8 @@ void main() {
       'どこまで踏み込むか',
       '誰と組むか',
       '控えとして呼ぶクラブ',
+      '自分が出る試合',
+      '契約が残っていても話が来る',
     ]) {
       expect(text, contains(name), reason: name);
     }

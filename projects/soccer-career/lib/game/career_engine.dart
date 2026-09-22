@@ -712,11 +712,16 @@ class CareerEngine {
     offers.addAll(_loanOffers(state));
 
     final clause = clauseTriggered(state);
+    // **使われていない選手は、契約が残っていても話が動く。** 登録外か構想外なら
+    // クラブの側に売る理由がある。閉じたままだと、昇格で強さが +6 された
+    // クラブで登録から外れ、契約が切れるまで2年間まるごと無出場になっていた
+    // （`world_sim` で無出場シーズンの 8割がこれ）。
+    final unused = !state.squadStatus.canPlay || state.frozenOut;
     // 契約が残っている間は動けない。ただし違約金を追い越したときは別。
-    if (state.contractYears > 1 && !clause) return offers;
+    if (state.contractYears > 1 && !clause && !unused) return offers;
 
     final stats = state.seasonStats;
-    if (!clause) {
+    if (!clause && !unused) {
       if (stats.appearances < 10) return offers;
       if (stats.averageRating < Formulas.transferOfferRating) return offers;
     }
@@ -752,7 +757,9 @@ class CareerEngine {
   /// 登録から外れている、力が足りない、出場が少ない。どれかに当てはまる
   /// 若手だけに来る。移籍と違って成績は問わない。出られないことが理由だから。
   List<TransferOffer> _loanOffers(CareerState state) {
-    if (state.player.age > Formulas.loanMaxAge) return const [];
+    // 若手だけ。ただし登録外・構想外は歳に関係なく出る（出る場所を探す動機は同じ）。
+    final unused = !state.squadStatus.canPlay || state.frozenOut;
+    if (state.player.age > Formulas.loanMaxAge && !unused) return const [];
     // 先発で見る。途中出場だけを積み重ねている選手こそ、
     // 「出られる場所」を探す動機がある。
     final starts = state.leagueResults
