@@ -26,26 +26,41 @@ thumbnail:
   tags: []
   points: []
 sections:
-- id: why
-  heading: 三笘薫がいるクラブ
+- id: reasons
+  heading: いま見る理由
   tier: 報道
-  telop: 三笘薫が所属するブライトン
+  main: true
+  telop: 三笘薫のクラブが、いま3位
   narrator: キャスター
+  card:
+    type: table
+    title: いま見る理由
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 理由1
+      - 三笘薫がリーグ113試合23得点
+    - - 理由2
+      - 開幕5試合で3勝、順位は3位
+    - - 理由3
+      - 第5節で昨季王者に3対0
   say:
-  - 三笘薫は、ブライトンのリーグ戦で**113試合**に出て、**23得点**を挙げています。
+  - 三笘薫がリーグ戦**113試合**に出て、**23得点**を挙げているクラブです。
+  - 開幕から5試合で**3勝**を挙げ、順位は**3位**です。
+  - 第5節では、昨季の王者アーセナルから3点を奪って勝ちました。
   sources:
   - https://en.wikipedia.org/wiki/Brighton_&_Hove_Albion_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Brighton_&_Hove_Albion_F.C._season
   bg: assets/backgrounds/stadium_ブライトン.png
   official: false
 - id: data
   heading: ブライトン 基礎DATA
-  main: true
+  main: false
   tier: 背景
   telop: 1901年創立
   narrator: 解説
   say:
-  - short_only: true
-    text: 三笘薫の所属クラブを、基本のデータで見ていきます。
   - image: assets/stats/pl_brighton_data0.png
     text: 創立は**1901年**。1920年にフットボールリーグに加わりました。
     no_telop: true
@@ -216,31 +231,6 @@ sections:
   - https://en.wikipedia.org/wiki/Bobby_Zamora
   bg: assets/backgrounds/stadium_ブライトン.png
   official: false
-- id: squad
-  heading: 今季の登録選手
-  tier: 報道
-  telop: 今季の登録選手
-  narrator: キャスター
-  say:
-  - text: 今季の登録選手は30人です。
-    image: assets/stats/pl_brighton_gk.png
-    no_telop: true
-  - image: assets/stats/pl_brighton_gk_f.png
-    text: ゴールキーパーは3人。バルト・フェルブルッヘンはオランダ代表で**33試合**。ジェイソン・スティールはリーグ戦で**35試合**。
-    no_telop: true
-  - image: assets/stats/pl_brighton_df_f.png
-    text: ディフェンダーは10人。主将を務めるのが**ルイス・ダンク**。リーグ戦で**473試合**に出ています。フェルディ・カドゥオールはトルコ代表で**32試合**。
-    no_telop: true
-  - image: assets/stats/pl_brighton_mf_f.png
-    text: ミッドフィールダーは12人。日本の三笘薫がいます。日本代表で**31試合**に出ています。
-    no_telop: true
-  - image: assets/stats/pl_brighton_fw_f.png
-    text: フォワードは5人。エヴァン・ファーガソンはアイルランド代表で**26試合**。ジョルジニオ・ルターはリーグ戦で**62試合**。
-    no_telop: true
-  sources:
-  - https://en.wikipedia.org/wiki/Brighton_&_Hove_Albion_F.C.
-  bg: assets/backgrounds/stadium_ブライトン.png
-  official: false
 - id: manager
   heading: 今季の監督
   tier: 報道
@@ -266,6 +256,31 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Brighton_&_Hove_Albion_F.C.
   - https://en.wikipedia.org/wiki/Fabian_Hürzeler
+  bg: assets/backgrounds/stadium_ブライトン.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は30人です。
+    image: assets/stats/pl_brighton_gk.png
+    no_telop: true
+  - image: assets/stats/pl_brighton_gk_f.png
+    text: ゴールキーパーは3人。バルト・フェルブルッヘンはオランダ代表で**33試合**。ジェイソン・スティールはリーグ戦で**35試合**。
+    no_telop: true
+  - image: assets/stats/pl_brighton_df_f.png
+    text: ディフェンダーは10人。主将を務めるのが**ルイス・ダンク**。リーグ戦で**473試合**に出ています。フェルディ・カドゥオールはトルコ代表で**32試合**。
+    no_telop: true
+  - image: assets/stats/pl_brighton_mf_f.png
+    text: ミッドフィールダーは12人。日本の三笘薫がいます。日本代表で**31試合**に出ています。
+    no_telop: true
+  - image: assets/stats/pl_brighton_fw_f.png
+    text: フォワードは5人。エヴァン・ファーガソンはアイルランド代表で**26試合**。ジョルジニオ・ルターはリーグ戦で**62試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Brighton_&_Hove_Albion_F.C.
   bg: assets/backgrounds/stadium_ブライトン.png
   official: false
 - id: season

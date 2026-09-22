@@ -25,15 +25,41 @@ thumbnail:
   tags: []
   points: []
 sections:
+- id: reasons
+  heading: いま見る理由
+  tier: 報道
+  main: true
+  telop: 半世紀ぶりのヨーロッパの舞台
+  narrator: キャスター
+  card:
+    type: table
+    title: いま見る理由
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 理由1
+      - 半世紀ぶりのヨーロッパ
+    - - 理由2
+      - 順位での欧州行きは史上初
+    - - 理由3
+      - リーグは開幕3敗
+  say:
+  - '**半世紀**ぶりにヨーロッパの舞台に戻り、いまヨーロッパリーグを戦っています。'
+  - リーグの順位でヨーロッパ行きを勝ち取ったのは、クラブの歴史で**初めて**のことです。
+  - リーグは開幕から**3敗**と苦しい出だし。ヨーロッパと国内、二つの戦いを同時に進めています。
+  sources:
+  - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Sunderland_A.F.C._season
+  bg: assets/backgrounds/stadium_サンダーランド.png
+  official: false
 - id: data
   heading: サンダーランド 基礎DATA
-  main: true
+  main: false
   tier: 背景
   telop: 1879年創立
   narrator: 解説
   say:
-  - short_only: true
-    text: このクラブの、基本のデータです。
   - image: assets/stats/pl_sunderland_data0.png
     text: 創立は**1879年**。地元の先生たちが作ったチームが始まりです。
     no_telop: true
@@ -214,31 +240,6 @@ sections:
   - https://en.wikipedia.org/wiki/Kevin_Ball
   bg: assets/backgrounds/stadium_サンダーランド.png
   official: false
-- id: squad
-  heading: 今季の登録選手
-  tier: 報道
-  telop: 今季の登録選手
-  narrator: キャスター
-  say:
-  - text: 今季の登録選手は29人です。
-    image: assets/stats/pl_sunderland_gk.png
-    no_telop: true
-  - image: assets/stats/pl_sunderland_gk_f.png
-    text: ゴールキーパーは3人。ロビン・ルーフスはリーグ戦で**39試合**。
-    no_telop: true
-  - image: assets/stats/pl_sunderland_df_f.png
-    text: ディフェンダーは9人。トマ・ムニエはベルギー代表で**83試合**。トライ・ヒュームは北アイルランド代表で**26試合**。
-    no_telop: true
-  - image: assets/stats/pl_sunderland_mf_f.png
-    text: ミッドフィールダーは9人。主将を務めるのが**グラニト・ジャカ**。ルーク・オナイエンはリーグ戦で**277試合**。
-    no_telop: true
-  - image: assets/stats/pl_sunderland_fw_f.png
-    text: フォワードは8人。ウィルソン・イシドールはリーグ戦で**19得点**。ブライアン・ブロベイはオランダ代表で**16試合**。
-    no_telop: true
-  sources:
-  - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
-  bg: assets/backgrounds/stadium_サンダーランド.png
-  official: false
 - id: manager
   heading: 今季の監督
   tier: 報道
@@ -264,6 +265,31 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
   - https://en.wikipedia.org/wiki/Régis_Le_Bris
+  bg: assets/backgrounds/stadium_サンダーランド.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は29人です。
+    image: assets/stats/pl_sunderland_gk.png
+    no_telop: true
+  - image: assets/stats/pl_sunderland_gk_f.png
+    text: ゴールキーパーは3人。ロビン・ルーフスはリーグ戦で**39試合**。
+    no_telop: true
+  - image: assets/stats/pl_sunderland_df_f.png
+    text: ディフェンダーは9人。トマ・ムニエはベルギー代表で**83試合**。トライ・ヒュームは北アイルランド代表で**26試合**。
+    no_telop: true
+  - image: assets/stats/pl_sunderland_mf_f.png
+    text: ミッドフィールダーは9人。主将を務めるのが**グラニト・ジャカ**。ルーク・オナイエンはリーグ戦で**277試合**。
+    no_telop: true
+  - image: assets/stats/pl_sunderland_fw_f.png
+    text: フォワードは8人。ウィルソン・イシドールはリーグ戦で**19得点**。ブライアン・ブロベイはオランダ代表で**16試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
   bg: assets/backgrounds/stadium_サンダーランド.png
   official: false
 - id: season

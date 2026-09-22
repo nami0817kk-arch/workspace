@@ -25,15 +25,41 @@ thumbnail:
   tags: []
   points: []
 sections:
+- id: reasons
+  heading: いま見る理由
+  tier: 報道
+  main: true
+  telop: アロンソが来た。去年の夏は世界一
+  narrator: キャスター
+  card:
+    type: table
+    title: いま見る理由
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 理由1
+      - 新監督シャビ・アロンソ
+    - - 理由2
+      - 去年の夏に世界一
+    - - 理由3
+      - 今季は欧州の大会なし
+  say:
+  - レアル・マドリードを率いたシャビ・アロンソが、**4年**契約でこの夏に来ました。
+  - 去年の夏は、クラブの世界一を決める大会で優勝。いまの**世界一**です。
+  - 今季はヨーロッパの大会に出ません。プレミアだけに力を注げる**1年**です。
+  sources:
+  - https://en.wikipedia.org/wiki/Chelsea_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Chelsea_F.C._season
+  bg: assets/backgrounds/stadium_チェルシー.png
+  official: false
 - id: data
   heading: チェルシー 基礎DATA
-  main: true
+  main: false
   tier: 背景
   telop: 1905年創立
   narrator: 解説
   say:
-  - short_only: true
-    text: このクラブの、基本のデータです。
   - image: assets/stats/pl_chelsea_data0.png
     text: 創立は**1905年**。ロンドン西部のクラブです。
     no_telop: true
@@ -198,31 +224,6 @@ sections:
   - https://en.wikipedia.org/wiki/Didier_Drogba
   bg: assets/backgrounds/stadium_チェルシー.png
   official: false
-- id: squad
-  heading: 今季の登録選手
-  tier: 報道
-  telop: 今季の登録選手
-  narrator: キャスター
-  say:
-  - text: 今季の登録選手は29人です。
-    image: assets/stats/pl_chelsea_gk.png
-    no_telop: true
-  - image: assets/stats/pl_chelsea_gk_f.png
-    text: ゴールキーパーは4人。エミリアーノ・マルティネスはアルゼンチン代表で**67試合**。
-    no_telop: true
-  - image: assets/stats/pl_chelsea_df_f.png
-    text: ディフェンダーは10人。主将を務めるのが**リース・ジェームズ**。リーグ戦で**160試合**に出ています。マロ・ギュストはフランス代表で**16試合**。
-    no_telop: true
-  - image: assets/stats/pl_chelsea_mf_f.png
-    text: ミッドフィールダーは8人。モイセス・カイセドはエクアドル代表で**65試合**。ジョーダン・ヘンダーソンはイングランド代表で**91試合**。
-    no_telop: true
-  - image: assets/stats/pl_chelsea_fw_f.png
-    text: フォワードは7人。ダニー・ウェルベックはイングランド代表で**42試合**。ジョアン・ペドロはリーグ戦で**18得点**。
-    no_telop: true
-  sources:
-  - https://en.wikipedia.org/wiki/Chelsea_F.C.
-  bg: assets/backgrounds/stadium_チェルシー.png
-  official: false
 - id: manager
   heading: 今季の監督
   tier: 報道
@@ -248,6 +249,31 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Chelsea_F.C.
   - https://en.wikipedia.org/wiki/Xabi_Alonso
+  bg: assets/backgrounds/stadium_チェルシー.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は29人です。
+    image: assets/stats/pl_chelsea_gk.png
+    no_telop: true
+  - image: assets/stats/pl_chelsea_gk_f.png
+    text: ゴールキーパーは4人。エミリアーノ・マルティネスはアルゼンチン代表で**67試合**。
+    no_telop: true
+  - image: assets/stats/pl_chelsea_df_f.png
+    text: ディフェンダーは10人。主将を務めるのが**リース・ジェームズ**。リーグ戦で**160試合**に出ています。マロ・ギュストはフランス代表で**16試合**。
+    no_telop: true
+  - image: assets/stats/pl_chelsea_mf_f.png
+    text: ミッドフィールダーは8人。モイセス・カイセドはエクアドル代表で**65試合**。ジョーダン・ヘンダーソンはイングランド代表で**91試合**。
+    no_telop: true
+  - image: assets/stats/pl_chelsea_fw_f.png
+    text: フォワードは7人。ダニー・ウェルベックはイングランド代表で**42試合**。ジョアン・ペドロはリーグ戦で**18得点**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Chelsea_F.C.
   bg: assets/backgrounds/stadium_チェルシー.png
   official: false
 - id: season

@@ -25,15 +25,38 @@ thumbnail:
   tags: []
   points: []
 sections:
+- id: reasons
+  heading: いま見る理由
+  tier: 報道
+  main: true
+  telop: 開幕直前に監督交代。38歳の1年目
+  narrator: キャスター
+  card:
+    type: table
+    title: いま見る理由
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 理由1
+      - 新監督ヤイスレ、38歳の1年目
+    - - 理由2
+      - 昨季12位。開幕5試合で1敗
+  say:
+  - エディ・ハウが去り、**38歳**の新監督マティアス・ヤイスレの1年目です。
+  - 昨季は**12位**。今季は開幕から5試合で負けが1つだけと、滑り出しは上々です。
+  sources:
+  - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Newcastle_United_F.C._season
+  bg: assets/backgrounds/stadium_ニューカッスル.png
+  official: false
 - id: data
   heading: ニューカッスル 基礎DATA
-  main: true
+  main: false
   tier: 背景
   telop: 1881年創立
   narrator: 解説
   say:
-  - short_only: true
-    text: このクラブの、基本のデータです。
   - image: assets/stats/pl_newcastle_data0.png
     text: 創立は**1881年**。1892年に今の名前になりました。
     no_telop: true
@@ -205,31 +228,6 @@ sections:
   - https://en.wikipedia.org/wiki/Rob_Lee
   bg: assets/backgrounds/stadium_ニューカッスル.png
   official: false
-- id: squad
-  heading: 今季の登録選手
-  tier: 報道
-  telop: 今季の登録選手
-  narrator: キャスター
-  say:
-  - text: 今季の登録選手は25人です。
-    image: assets/stats/pl_newcastle_gk.png
-    no_telop: true
-  - image: assets/stats/pl_newcastle_gk_f.png
-    text: ゴールキーパーは4人。ニック・ポープはイングランド代表で**10試合**。
-    no_telop: true
-  - image: assets/stats/pl_newcastle_df_f.png
-    text: ディフェンダーは7人。主将を務めるのが**ダン・バーン**。リーグ戦で**153試合**に出ています。ファビアン・シェアはスイス代表で**86試合**。
-    no_telop: true
-  - image: assets/stats/pl_newcastle_mf_f.png
-    text: ミッドフィールダーは7人。ジェイコブ・マーフィーはリーグ戦で**218試合**。ジョー・ウィロックはリーグ戦で**148試合**。
-    no_telop: true
-  - image: assets/stats/pl_newcastle_fw_f.png
-    text: フォワードは7人。ジョエリントンはリーグ戦で**212試合**。ヨアネ・ウィサはコンゴ民主共和国代表で**43試合**。
-    no_telop: true
-  sources:
-  - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
-  bg: assets/backgrounds/stadium_ニューカッスル.png
-  official: false
 - id: manager
   heading: 今季の監督
   tier: 報道
@@ -255,6 +253,31 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
   - https://en.wikipedia.org/wiki/Matthias_Jaissle
+  bg: assets/backgrounds/stadium_ニューカッスル.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は25人です。
+    image: assets/stats/pl_newcastle_gk.png
+    no_telop: true
+  - image: assets/stats/pl_newcastle_gk_f.png
+    text: ゴールキーパーは4人。ニック・ポープはイングランド代表で**10試合**。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_df_f.png
+    text: ディフェンダーは7人。主将を務めるのが**ダン・バーン**。リーグ戦で**153試合**に出ています。ファビアン・シェアはスイス代表で**86試合**。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_mf_f.png
+    text: ミッドフィールダーは7人。ジェイコブ・マーフィーはリーグ戦で**218試合**。ジョー・ウィロックはリーグ戦で**148試合**。
+    no_telop: true
+  - image: assets/stats/pl_newcastle_fw_f.png
+    text: フォワードは7人。ジョエリントンはリーグ戦で**212試合**。ヨアネ・ウィサはコンゴ民主共和国代表で**43試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
   bg: assets/backgrounds/stadium_ニューカッスル.png
   official: false
 - id: season

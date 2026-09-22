@@ -26,27 +26,41 @@ thumbnail:
   tags: []
   points: []
 sections:
-- id: why
-  heading: 坂元達裕がいるクラブ
+- id: reasons
+  heading: いま見る理由
   tier: 報道
-  telop: 坂元達裕が所属するコヴェントリー
+  main: true
+  telop: 坂元達裕、プレミア初挑戦。25年ぶりの1部
   narrator: キャスター
+  card:
+    type: table
+    title: いま見る理由
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 理由1
+      - 坂元達裕がいる
+    - - 理由2
+      - 25年ぶりの1部
+    - - 理由3
+      - 開幕5試合で1勝
   say:
-  - 坂元達裕は、このクラブでリーグ戦**107試合**に出て、**18得点**を挙げています。
-  - では、どんなクラブなのか。まずは基本のデータから見ていきます。
+  - 坂元達裕が、リーグ戦**107試合**で**18得点**。今季はプレミアで初めてのシーズンです。
+  - 昨季は2部で優勝。1部は、クラブとして**25年ぶり**の舞台です。
+  - 開幕5試合で勝ちは**1つ**。早くも残留争いの中にいます。
   sources:
   - https://en.wikipedia.org/wiki/Coventry_City_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Coventry_City_F.C._season
   bg: assets/backgrounds/stadium_コヴェントリー.png
   official: false
 - id: data
   heading: コヴェントリー 基礎DATA
-  main: true
+  main: false
   tier: 背景
   telop: 1883年創立
   narrator: 解説
   say:
-  - short_only: true
-    text: 坂元達裕の所属クラブを、基本のデータで見ていきます。
   - image: assets/stats/pl_coventry_data0.png
     text: 創立は**1883年**。自転車を作るシンガー社の工員たちが作ったクラブです。
     no_telop: true
@@ -220,31 +234,6 @@ sections:
   - https://en.wikipedia.org/wiki/Gary_McAllister
   bg: assets/backgrounds/stadium_コヴェントリー.png
   official: false
-- id: squad
-  heading: 今季の登録選手
-  tier: 報道
-  telop: 今季の登録選手
-  narrator: キャスター
-  say:
-  - text: 今季の登録選手は28人です。
-    image: assets/stats/pl_coventry_gk.png
-    no_telop: true
-  - image: assets/stats/pl_coventry_gk_f.png
-    text: ゴールキーパーは3人。ベン・ウィルソンはリーグ戦で**97試合**。カール・ラッシュワースはリーグ戦で**51試合**。
-    no_telop: true
-  - image: assets/stats/pl_coventry_df_f.png
-    text: ディフェンダーは10人。ジョエル・ラティボーディエールはジャマイカ代表で**31試合**。ジェイ・ダシルヴァはウェールズ代表で**10試合**。
-    no_telop: true
-  - image: assets/stats/pl_coventry_mf_f.png
-    text: ミッドフィールダーは7人。主将を務めるのが**マット・グライムズ**。リーグ戦で**66試合**に出ています。ジョシュ・エクルズはリーグ戦で**166試合**。
-    no_telop: true
-  - image: assets/stats/pl_coventry_fw_f.png
-    text: フォワードは8人。日本の坂元達裕がいます。ハジ・ライトはアメリカ代表で**22試合**。
-    no_telop: true
-  sources:
-  - https://en.wikipedia.org/wiki/Coventry_City_F.C.
-  bg: assets/backgrounds/stadium_コヴェントリー.png
-  official: false
 - id: manager
   heading: 今季の監督
   tier: 報道
@@ -270,6 +259,31 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Coventry_City_F.C.
   - https://en.wikipedia.org/wiki/Frank_Lampard
+  bg: assets/backgrounds/stadium_コヴェントリー.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は28人です。
+    image: assets/stats/pl_coventry_gk.png
+    no_telop: true
+  - image: assets/stats/pl_coventry_gk_f.png
+    text: ゴールキーパーは3人。ベン・ウィルソンはリーグ戦で**97試合**。カール・ラッシュワースはリーグ戦で**51試合**。
+    no_telop: true
+  - image: assets/stats/pl_coventry_df_f.png
+    text: ディフェンダーは10人。ジョエル・ラティボーディエールはジャマイカ代表で**31試合**。ジェイ・ダシルヴァはウェールズ代表で**10試合**。
+    no_telop: true
+  - image: assets/stats/pl_coventry_mf_f.png
+    text: ミッドフィールダーは7人。主将を務めるのが**マット・グライムズ**。リーグ戦で**66試合**に出ています。ジョシュ・エクルズはリーグ戦で**166試合**。
+    no_telop: true
+  - image: assets/stats/pl_coventry_fw_f.png
+    text: フォワードは8人。日本の坂元達裕がいます。ハジ・ライトはアメリカ代表で**22試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Coventry_City_F.C.
   bg: assets/backgrounds/stadium_コヴェントリー.png
   official: false
 - id: season

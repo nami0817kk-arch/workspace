@@ -26,27 +26,41 @@ thumbnail:
   tags: []
   points: []
 sections:
-- id: why
-  heading: 守田英正がいるクラブ
+- id: reasons
+  heading: いま見る理由
   tier: 報道
-  telop: 守田英正が所属するハル・シティ
+  main: true
+  telop: 守田英正が今夏加入。昇格1年目で8位
   narrator: キャスター
+  card:
+    type: table
+    title: いま見る理由
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 理由1
+      - 守田英正が今夏に加入
+    - - 理由2
+      - 昇格1年目で8位
+    - - 理由3
+      - 初のボスニア人監督
   say:
-  - 日本代表で**40試合**に出た中盤、守田英正がいるのがハル・シティです。
-  - では、どんなクラブなのか。まずは基本のデータから見ていきます。
+  - 日本代表**40試合**の中盤、守田英正が、この夏ここを選びました。
+  - 開幕から5試合で**8位**。1部での最高順位、16位より上にいます。
+  - 指揮を執るのは、ボスニア人として初めてプレミアで勝った監督。**2年目**です。
   sources:
   - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Hull_City_A.F.C._season
   bg: assets/backgrounds/stadium_ハルシティ.png
   official: false
 - id: data
   heading: ハル・シティ 基礎DATA
-  main: true
+  main: false
   tier: 背景
   telop: 1904年創立
   narrator: 解説
   say:
-  - short_only: true
-    text: 守田英正の所属クラブを、基本のデータで見ていきます。
   - image: assets/stats/pl_hull_data0.png
     text: 創立は**1904年**です。
     no_telop: true
@@ -216,6 +230,33 @@ sections:
   - https://en.wikipedia.org/wiki/Nick_Barmby
   bg: assets/backgrounds/stadium_ハルシティ.png
   official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はセルゲイ・ヤキロヴィッチ。2年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - セルゲイ・ヤキロヴィッチ（ボスニア・ヘルツェゴビナ）
+    - - 就任
+      - 2025年6月・2年目
+    - - 前職
+      - カイセリスポル
+  say:
+  - text: 監督はボスニア出身のセルゲイ・ヤキロヴィッチ。**2025年6月**から、2年目です。
+    image: assets/photos/pl/hull_manager_3daf3c84.jpg
+  - プレミアリーグで指揮を執って勝った、史上初のボスニア人監督です。
+  sources:
+  - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
+  - https://en.wikipedia.org/wiki/Sergej_Jakirović
+  bg: assets/backgrounds/stadium_ハルシティ.png
+  official: false
 - id: squad
   heading: 今季の登録選手
   tier: 報道
@@ -242,33 +283,6 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
-  bg: assets/backgrounds/stadium_ハルシティ.png
-  official: false
-- id: manager
-  heading: 今季の監督
-  tier: 報道
-  telop: 監督はセルゲイ・ヤキロヴィッチ。2年目
-  narrator: キャスター
-  card:
-    type: table
-    title: 今季の監督
-    columns:
-    - ''
-    - ''
-    rows:
-    - - 監督
-      - セルゲイ・ヤキロヴィッチ（ボスニア・ヘルツェゴビナ）
-    - - 就任
-      - 2025年6月・2年目
-    - - 前職
-      - カイセリスポル
-  say:
-  - text: 監督はボスニア出身のセルゲイ・ヤキロヴィッチ。**2025年6月**から、2年目です。
-    image: assets/photos/pl/hull_manager_3daf3c84.jpg
-  - プレミアリーグで指揮を執って勝った、史上初のボスニア人監督です。
-  sources:
-  - https://en.wikipedia.org/wiki/Hull_City_A.F.C.
-  - https://en.wikipedia.org/wiki/Sergej_Jakirović
   bg: assets/backgrounds/stadium_ハルシティ.png
   official: false
 - id: season

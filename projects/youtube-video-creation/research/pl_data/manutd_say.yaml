@@ -95,3 +95,20 @@ manager_rows:
   - ミドルズブラ
 manager_sources:
 - https://en.wikipedia.org/wiki/Michael_Carrick
+
+# **いま見る理由**（2026-09-22 指示「今そのクラブを見る理由を最初につけて視聴者の興味を上げたい」）。
+# 冒頭の直後に置き、ショートもここから切る。事実は今季のシーズン記事（2026–27 season: 
+# first appearance in the Champions League since 2023–24、Carrick permanent head coach）と
+# last_season.json（昨季3位）、standings.json（第5節で12位）。あとの節と同じ文・数字は読まない
+reasons:
+- '**3シーズンぶり**のチャンピオンズリーグに、今季は帰ってきました。'
+- 監督は、かつて主将も務めたマイケル・キャリック。今季から正式な監督です。
+- 昨季は**3位**。ところが今季は開幕から足踏みが続き、順位表の真ん中にいます。
+reasons_telop: 3シーズンぶりのチャンピオンズリーグ
+reasons_rows:
+- - 理由1
+  - 3季ぶりのチャンピオンズリーグ
+- - 理由2
+  - キャリック監督が正式就任
+- - 理由3
+  - 昨季3位、今季は12位

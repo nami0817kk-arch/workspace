@@ -100,3 +100,21 @@ manager_rows:
   - ロリアン
 manager_sources:
 - https://en.wikipedia.org/wiki/Régis_Le_Bris
+
+# **いま見る理由**（2026-09-22 指示「今そのクラブを見る理由を最初につけて視聴者の興味を上げたい」）。
+# 冒頭の直後に置き、ショートもここから切る。事実は今季のシーズン記事（the first time in the club's
+# history that they qualified for a European competition through a league position、
+# first European participation since 1973–74）、standings.json（第5節で1勝1分3敗）。
+# 「53年ぶり」「7位」はクラブの話・監督の節で読むので、ここでは「半世紀ぶり」で言う
+reasons:
+- '**半世紀**ぶりにヨーロッパの舞台に戻り、いまヨーロッパリーグを戦っています。'
+- リーグの順位でヨーロッパ行きを勝ち取ったのは、クラブの歴史で**初めて**のことです。
+- リーグは開幕から**3敗**と苦しい出だし。ヨーロッパと国内、二つの戦いを同時に進めています。
+reasons_telop: 半世紀ぶりのヨーロッパの舞台
+reasons_rows:
+- - 理由1
+  - 半世紀ぶりのヨーロッパ
+- - 理由2
+  - 順位での欧州行きは史上初
+- - 理由3
+  - リーグは開幕3敗

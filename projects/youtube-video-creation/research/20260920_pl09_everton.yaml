@@ -25,15 +25,41 @@ thumbnail:
   tags: []
   points: []
 sections:
+- id: reasons
+  heading: いま見る理由
+  tier: 報道
+  main: true
+  telop: 開幕5試合負けなし。グリーリッシュも来た
+  narrator: キャスター
+  card:
+    type: table
+    title: いま見る理由
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 理由1
+      - 開幕5試合負けなしで7位
+    - - 理由2
+      - グリーリッシュが9月に加入
+    - - 理由3
+      - 新本拠地は2シーズン目
+  say:
+  - 開幕**5試合**を負けなしで、上から7番目にいます。
+  - ジャック・グリーリッシュが**9月**、マンチェスター・シティから期限付きで来ました。
+  - 港に建てた新しい本拠地は、まだ**2シーズン目**です。
+  sources:
+  - https://en.wikipedia.org/wiki/Everton_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Everton_F.C._season
+  bg: assets/backgrounds/stadium_エヴァートン.png
+  official: false
 - id: data
   heading: エヴァートン 基礎DATA
-  main: true
+  main: false
   tier: 背景
   telop: 1878年創立
   narrator: 解説
   say:
-  - short_only: true
-    text: このクラブの、基本のデータです。
   - image: assets/stats/pl_everton_data0.png
     text: 創立は**1878年**。街の公園、スタンリー・パークで生まれたクラブです。
     no_telop: true
@@ -203,31 +229,6 @@ sections:
   - https://en.wikipedia.org/wiki/Tim_Cahill
   bg: assets/backgrounds/stadium_エヴァートン.png
   official: false
-- id: squad
-  heading: 今季の登録選手
-  tier: 報道
-  telop: 今季の登録選手
-  narrator: キャスター
-  say:
-  - text: 今季の登録選手は21人です。
-    image: assets/stats/pl_everton_gk.png
-    no_telop: true
-  - image: assets/stats/pl_everton_gk_f.png
-    text: ゴールキーパーは3人。ジョーダン・ピックフォードはイングランド代表で**91試合**。
-    no_telop: true
-  - image: assets/stats/pl_everton_df_f.png
-    text: ディフェンダーは6人。主将を務めるのが**ジェームズ・ターコウスキー**。リーグ戦で**151試合**に出ています。ヴィタリー・ミコレンコはウクライナ代表で**54試合**。
-    no_telop: true
-  - image: assets/stats/pl_everton_mf_f.png
-    text: ミッドフィールダーは8人。ジャック・グリーリッシュはイングランド代表で**39試合**。クリスティアン・ノアゴーはデンマーク代表で**41試合**。
-    no_telop: true
-  - image: assets/stats/pl_everton_fw_f.png
-    text: フォワードは4人。ブレナン・ジョンソンはウェールズ代表で**45試合**。ティエルノ・バリーはリーグ戦で**43試合**。
-    no_telop: true
-  sources:
-  - https://en.wikipedia.org/wiki/Everton_F.C.
-  bg: assets/backgrounds/stadium_エヴァートン.png
-  official: false
 - id: manager
   heading: 今季の監督
   tier: 報道
@@ -253,6 +254,31 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Everton_F.C.
   - https://en.wikipedia.org/wiki/David_Moyes
+  bg: assets/backgrounds/stadium_エヴァートン.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は21人です。
+    image: assets/stats/pl_everton_gk.png
+    no_telop: true
+  - image: assets/stats/pl_everton_gk_f.png
+    text: ゴールキーパーは3人。ジョーダン・ピックフォードはイングランド代表で**91試合**。
+    no_telop: true
+  - image: assets/stats/pl_everton_df_f.png
+    text: ディフェンダーは6人。主将を務めるのが**ジェームズ・ターコウスキー**。リーグ戦で**151試合**に出ています。ヴィタリー・ミコレンコはウクライナ代表で**54試合**。
+    no_telop: true
+  - image: assets/stats/pl_everton_mf_f.png
+    text: ミッドフィールダーは8人。ジャック・グリーリッシュはイングランド代表で**39試合**。クリスティアン・ノアゴーはデンマーク代表で**41試合**。
+    no_telop: true
+  - image: assets/stats/pl_everton_fw_f.png
+    text: フォワードは4人。ブレナン・ジョンソンはウェールズ代表で**45試合**。ティエルノ・バリーはリーグ戦で**43試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Everton_F.C.
   bg: assets/backgrounds/stadium_エヴァートン.png
   official: false
 - id: season

@@ -25,15 +25,41 @@ thumbnail:
   tags: []
   points: []
 sections:
+- id: reasons
+  heading: いま見る理由
+  tier: 報道
+  main: true
+  telop: 22年ぶりの王者、連覇に挑む
+  narrator: キャスター
+  card:
+    type: table
+    title: いま見る理由
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 理由1
+      - 昨季22年ぶりのリーグ優勝
+    - - 理由2
+      - 首位と勝ち点3差で連覇争い
+    - - 理由3
+      - 欧州最高峰の大会も初戦勝利
+  say:
+  - 昨季、**22年**待ったリーグ優勝をつかんだ王者です。
+  - 今季は連覇に挑む立場。首位を勝ち点**3**差で追っています。
+  - 欧州の頂点を争う大会も、初戦はアウェーで勝ちました。
+  sources:
+  - https://en.wikipedia.org/wiki/Arsenal_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Arsenal_F.C._season
+  bg: assets/backgrounds/stadium_アーセナル.png
+  official: false
 - id: data
   heading: アーセナル 基礎DATA
-  main: true
+  main: false
   tier: 背景
   telop: 1886年創立
   narrator: 解説
   say:
-  - short_only: true
-    text: このクラブの、基本のデータです。
   - image: assets/stats/pl_arsenal_data0.png
     text: 創立は**1886年**。兵器工場の作業場、ディアル・スクエアの名で始まりました。
     no_telop: true
@@ -205,31 +231,6 @@ sections:
   - https://en.wikipedia.org/wiki/Tony_Adams
   bg: assets/backgrounds/stadium_アーセナル.png
   official: false
-- id: squad
-  heading: 今季の登録選手
-  tier: 報道
-  telop: 今季の登録選手
-  narrator: キャスター
-  say:
-  - text: 今季の登録選手は25人です。
-    image: assets/stats/pl_arsenal_gk.png
-    no_telop: true
-  - image: assets/stats/pl_arsenal_gk_f.png
-    text: ゴールキーパーは4人。ダビド・ラヤはアーセナルのリーグ戦で**80試合**。ケパ・アリサバラガはスペイン代表で**13試合**。
-    no_telop: true
-  - image: assets/stats/pl_arsenal_df_f.png
-    text: ディフェンダーは9人。ガブリエウ・マガリャンイスはブラジル代表で**22試合**。ウィリアム・サリバはアーセナルのリーグ戦で**131試合**。
-    no_telop: true
-  - image: assets/stats/pl_arsenal_mf_f.png
-    text: ミッドフィールダーは6人。主将を務めるのが**マルティン・ウーデゴール**。リーグ戦で**167試合**に出ています。デクラン・ライスはイングランド代表で**80試合**。
-    no_telop: true
-  - image: assets/stats/pl_arsenal_fw_f.png
-    text: フォワードは6人。ブカヨ・サカはイングランド代表で**56試合**。カイ・ハヴァーツはドイツ代表で**62試合**。
-    no_telop: true
-  sources:
-  - https://en.wikipedia.org/wiki/Arsenal_F.C.
-  bg: assets/backgrounds/stadium_アーセナル.png
-  official: false
 - id: manager
   heading: 今季の監督
   tier: 報道
@@ -255,6 +256,31 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Arsenal_F.C.
   - https://en.wikipedia.org/wiki/Mikel_Arteta
+  bg: assets/backgrounds/stadium_アーセナル.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は25人です。
+    image: assets/stats/pl_arsenal_gk.png
+    no_telop: true
+  - image: assets/stats/pl_arsenal_gk_f.png
+    text: ゴールキーパーは4人。ダビド・ラヤはアーセナルのリーグ戦で**80試合**。ケパ・アリサバラガはスペイン代表で**13試合**。
+    no_telop: true
+  - image: assets/stats/pl_arsenal_df_f.png
+    text: ディフェンダーは9人。ガブリエウ・マガリャンイスはブラジル代表で**22試合**。ウィリアム・サリバはアーセナルのリーグ戦で**131試合**。
+    no_telop: true
+  - image: assets/stats/pl_arsenal_mf_f.png
+    text: ミッドフィールダーは6人。主将を務めるのが**マルティン・ウーデゴール**。リーグ戦で**167試合**に出ています。デクラン・ライスはイングランド代表で**80試合**。
+    no_telop: true
+  - image: assets/stats/pl_arsenal_fw_f.png
+    text: フォワードは6人。ブカヨ・サカはイングランド代表で**56試合**。カイ・ハヴァーツはドイツ代表で**62試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Arsenal_F.C.
   bg: assets/backgrounds/stadium_アーセナル.png
   official: false
 - id: season

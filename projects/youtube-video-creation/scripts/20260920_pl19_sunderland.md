@@ -42,13 +42,26 @@ tags:
 - サッカーニュース
 sources:
 - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
+- https://en.wikipedia.org/wiki/2026–27_Sunderland_A.F.C._season
 - https://en.wikipedia.org/wiki/Kevin_Phillips_(footballer)
 - https://en.wikipedia.org/wiki/Niall_Quinn
 - https://en.wikipedia.org/wiki/Kevin_Ball
 - https://en.wikipedia.org/wiki/Kevin_Phillips_(English_footballer)
 - https://en.wikipedia.org/wiki/Régis_Le_Bris
-- https://en.wikipedia.org/wiki/2026–27_Sunderland_A.F.C._season
 cards:
+  reasons_card:
+    type: table
+    title: いま見る理由
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 理由1
+      - 半世紀ぶりのヨーロッパ
+    - - 理由2
+      - 順位での欧州行きは史上初
+    - - 理由3
+      - リーグは開幕3敗
   fall_card:
     type: table
     title: 落ちて、戻るまで
@@ -170,13 +183,22 @@ cards:
 キャスター: 3部から7年で、ヨーロッパに手が届きました。
   telop: 3部から7年で、ヨーロッパに手が届きました
 
-## サンダーランド 基礎DATA
+## いま見る理由
 @bg: assets/backgrounds/stadium_サンダーランド.png
 @main: true
 
-解説: このクラブの、基本のデータです。
-  only: short
-  telop: このクラブの、基本のデータです
+キャスター: **半世紀**ぶりにヨーロッパの舞台に戻り、いまヨーロッパリーグを戦っています。
+  telop: **半世紀**ぶりにヨーロッパの舞台に戻り、いまヨーロッパリーグを戦っています
+  source: 報道
+  card: reasons_card
+キャスター: リーグの順位でヨーロッパ行きを勝ち取ったのは、クラブの歴史で**初めて**のことです。
+  telop: リーグの順位でヨーロッパ行きを勝ち取ったのは、クラブの歴史で**初めて**のことです
+キャスター: リーグは開幕から**3敗**と苦しい出だし。ヨーロッパと国内、二つの戦いを同時に進めています。
+  telop: リーグは開幕から**3敗**と苦しい出だし。ヨーロッパと国内、二つの戦いを同時に進めています
+
+## サンダーランド 基礎DATA
+@bg: assets/backgrounds/stadium_サンダーランド.png
+
 解説: 創立は**1879年**。地元の先生たちが作ったチームが始まりです。
   no_telop: true
   source: 背景
@@ -283,6 +305,17 @@ cards:
 キャスター: 主将として1996年と99年、クラブを1部へ。引退後も暫定監督を**2度**務めています。
   telop: 主将として1996年と99年、クラブを1部へ。引退後も暫定監督を**2度**務めています
 
+## 今季の監督
+@bg: assets/backgrounds/stadium_サンダーランド.png
+
+キャスター: 監督はフランス人のレジス・ル・ブリ。**2024年7月**から、3年目です。
+  telop: 監督はフランス人のレジス・ル・ブリ。**2024年7月**から、3年目です
+  source: 報道
+  card: manager_card
+  image: assets/photos/pl/sunderland_manager_1ba8b156.jpg
+キャスター: 昇格1年目のクラブを7位に。ヨーロッパリーグへ連れていった監督です。
+  telop: 昇格1年目のクラブを7位に。ヨーロッパリーグへ連れていった監督です
+
 ## 今季の登録選手
 @bg: assets/backgrounds/stadium_サンダーランド.png
 
@@ -302,17 +335,6 @@ cards:
 キャスター: フォワードは8人。ウィルソン・イシドールはリーグ戦で**19得点**。ブライアン・ブロベイはオランダ代表で**16試合**。
   no_telop: true
   image: assets/stats/pl_sunderland_fw_f.png
-
-## 今季の監督
-@bg: assets/backgrounds/stadium_サンダーランド.png
-
-キャスター: 監督はフランス人のレジス・ル・ブリ。**2024年7月**から、3年目です。
-  telop: 監督はフランス人のレジス・ル・ブリ。**2024年7月**から、3年目です
-  source: 報道
-  card: manager_card
-  image: assets/photos/pl/sunderland_manager_1ba8b156.jpg
-キャスター: 昇格1年目のクラブを7位に。ヨーロッパリーグへ連れていった監督です。
-  telop: 昇格1年目のクラブを7位に。ヨーロッパリーグへ連れていった監督です
 
 ## 今季のここまで
 @bg: assets/backgrounds/stadium_サンダーランド.png

@@ -42,13 +42,24 @@ tags:
 - サッカーニュース
 sources:
 - https://en.wikipedia.org/wiki/Newcastle_United_F.C.
+- https://en.wikipedia.org/wiki/2026–27_Newcastle_United_F.C._season
 - https://en.wikipedia.org/wiki/Inter-Cities_Fairs_Cup
 - https://en.wikipedia.org/wiki/Alan_Shearer
 - https://en.wikipedia.org/wiki/Shay_Given
 - https://en.wikipedia.org/wiki/Rob_Lee
 - https://en.wikipedia.org/wiki/Matthias_Jaissle
-- https://en.wikipedia.org/wiki/2026–27_Newcastle_United_F.C._season
 cards:
+  reasons_card:
+    type: table
+    title: いま見る理由
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 理由1
+      - 新監督ヤイスレ、38歳の1年目
+    - - 理由2
+      - 昨季12位。開幕5試合で1敗
   drought_card:
     type: table
     title: タイトルの記録
@@ -166,13 +177,20 @@ cards:
 キャスター: 大きなタイトルが、56年間ゼロだったクラブです。
   telop: 大きなタイトルが、56年間ゼロだったクラブです
 
-## ニューカッスル 基礎DATA
+## いま見る理由
 @bg: assets/backgrounds/stadium_ニューカッスル.png
 @main: true
 
-解説: このクラブの、基本のデータです。
-  only: short
-  telop: このクラブの、基本のデータです
+キャスター: エディ・ハウが去り、**38歳**の新監督マティアス・ヤイスレの1年目です。
+  telop: エディ・ハウが去り、**38歳**の新監督マティアス・ヤイスレの1年目です
+  source: 報道
+  card: reasons_card
+キャスター: 昨季は**12位**。今季は開幕から5試合で負けが1つだけと、滑り出しは上々です。
+  telop: 昨季は**12位**。今季は開幕から5試合で負けが1つだけと、滑り出しは上々です
+
+## ニューカッスル 基礎DATA
+@bg: assets/backgrounds/stadium_ニューカッスル.png
+
 解説: 創立は**1881年**。1892年に今の名前になりました。
   no_telop: true
   source: 背景
@@ -275,6 +293,17 @@ cards:
   card: none
   image: assets/photos/pl/newcastle_legend_69dd2e4f.jpg
 
+## 今季の監督
+@bg: assets/backgrounds/stadium_ニューカッスル.png
+
+キャスター: 今季の監督は、ドイツ人のマティアス・ヤイスレ。**2026年8月**に来た1年目です。
+  telop: 今季の監督は、ドイツ人のマティアス・ヤイスレ。**2026年8月**に来た1年目です
+  source: 報道
+  card: manager_card
+  image: assets/photos/pl/newcastle_manager_37492bb4.jpg
+キャスター: 前はサウジアラビアのアル・アハリ。エディ・ハウが退いた6日後の就任でした。
+  telop: 前はサウジアラビアのアル・アハリ。エディ・ハウが退いた6日後の就任でした
+
 ## 今季の登録選手
 @bg: assets/backgrounds/stadium_ニューカッスル.png
 
@@ -294,17 +323,6 @@ cards:
 キャスター: フォワードは7人。ジョエリントンはリーグ戦で**212試合**。ヨアネ・ウィサはコンゴ民主共和国代表で**43試合**。
   no_telop: true
   image: assets/stats/pl_newcastle_fw_f.png
-
-## 今季の監督
-@bg: assets/backgrounds/stadium_ニューカッスル.png
-
-キャスター: 今季の監督は、ドイツ人のマティアス・ヤイスレ。**2026年8月**に来た1年目です。
-  telop: 今季の監督は、ドイツ人のマティアス・ヤイスレ。**2026年8月**に来た1年目です
-  source: 報道
-  card: manager_card
-  image: assets/photos/pl/newcastle_manager_37492bb4.jpg
-キャスター: 前はサウジアラビアのアル・アハリ。エディ・ハウが退いた6日後の就任でした。
-  telop: 前はサウジアラビアのアル・アハリ。エディ・ハウが退いた6日後の就任でした
 
 ## 今季のここまで
 @bg: assets/backgrounds/stadium_ニューカッスル.png

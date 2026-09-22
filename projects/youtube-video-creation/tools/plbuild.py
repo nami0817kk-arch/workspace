@@ -172,6 +172,12 @@ def build(key: str, number: int, old_file: str) -> Path:
     # 板
     subprocess.run([sys.executable, str(ROOT / "tools" / "clubdata.py"), str(ROOT / f"assets/stats/pl_{key}_data.png"),
                     "--spec", str(DATA / f"{key}.json")], check=True, capture_output=True)
+    # **トロフィーの板も毎回描き直す**（2026-09-22 ユーザー指摘「ヨーロッパ合計になってる
+    # クラブがいくつかある」。`trophies` を直しても、ここで描き直していなかった）
+    if (DATA / f"{key}.json").exists():
+        subprocess.run([sys.executable, str(ROOT / "tools" / "trophies.py"),
+                        str(ROOT / f"assets/stats/pl_{key}_cups.png"),
+                        "--spec", str(DATA / f"{key}.json")], check=True, capture_output=True)
     squad_boards = boards(key, club, facts["colors"], raw["squad"], kana)
 
     japanese = [p for p in raw["squad"] if p["nat"] == "JPN"]
@@ -184,8 +190,21 @@ def build(key: str, number: int, old_file: str) -> Path:
         return kw
 
     sections = []
+    # **いま見る理由**（2026-09-22 指示「今そのクラブを見る理由を最初につけて視聴者の
+    # 興味を上げたい」）。<key>_say.yaml の `reasons`（2〜3行）・`reasons_rows`（板）。
+    # **ショートもここから始める**（この節が main。基礎DATAは main にしない）。
+    # 日本人の入口（why）はこの節に吸収する
+    reasons = list(ov.get("reasons") or [])
+    if reasons:
+        sections.append(sec(id="reasons", heading="いま見る理由", tier="報道", main=True,
+                            telop=str(ov.get("reasons_telop") or "いま、このクラブを見る理由"),
+                            narrator="キャスター",
+                            card={"type": "table", "title": "いま見る理由", "columns": ["", ""],
+                                  "rows": ov.get("reasons_rows") or []},
+                            say=reasons,
+                            sources=[wiki, season_url]))
     # 入口
-    if japanese:
+    if japanese and not reasons:
         who = "と".join(jp_names)
         lines = []
         for p in japanese:
@@ -200,7 +219,7 @@ def build(key: str, number: int, old_file: str) -> Path:
     img = f"assets/stats/pl_{key}_data.png"
     # **ショート専用の前置きも、日本人が2人なら2人とも**（2026-09-22）。題は2人なのに
     # この行だけ1人目で、パレスの鎌田大地がショートから消えていた
-    say = [{"short_only": True, "text": f"{'と'.join(jp_names[:2])}の所属クラブを、基本のデータで見ていきます。" if japanese else "このクラブの、基本のデータです。"}]
+    say = [] if reasons else [{"short_only": True, "text": f"{'と'.join(jp_names[:2])}の所属クラブを、基本のデータで見ていきます。" if japanese else "このクラブの、基本のデータです。"}]
     # **板を出している行に字幕は重ねない**（2026-09-20 指示
     # 「画面と字幕のが同じ場合は、字幕不要」）。基礎DATAの板の上に読み上げ文を
     # 重ねたら、9枚のタイルがほとんど読めなくなっていた
@@ -335,7 +354,7 @@ def build(key: str, number: int, old_file: str) -> Path:
             say.append({"image": shot, "text": text, "no_telop": True} if mute
                        else {"image": shot, "text": text})
             n += 1
-    sections.append(sec(id="data", heading=f"{club} 基礎DATA", main=True, tier="背景",
+    sections.append(sec(id="data", heading=f"{club} 基礎DATA", main=not reasons, tier="背景",
                         telop=facts["tiles"][0][1] + "創立", narrator="解説", say=say,
                         sources=[wiki]))
     # **有名なファンの節は作らない**（2026-09-20 指示「有名なファンは廃止」）。
@@ -398,6 +417,21 @@ def build(key: str, number: int, old_file: str) -> Path:
     # **宿敵の節は作らない**（2026-09-20 指示「宿敵は不要」）。
     # 旧台本には残っているが、20本すべてで落とす。
     # <key>_say.yaml の `rival_sections` も使わない（戻すときのために残してある）。
+    # **今季の監督**（2026-09-22 指示「今季の監督が誰かも加えよう」「選手と監督の紹介は順番逆」→ 登録選手の前）。
+    # <key>_say.yaml の `manager`（読み上げの行）・`manager_rows`（板）・`manager_sources`。
+    # 顔は faces.json の role "manager"（tools/plmanagers.py が集める）
+    if ov.get("manager"):
+        m_face = next((v.get("file", "") for v in faces.values()
+                       if isinstance(v, dict) and v.get("role") == "manager"), "")
+        m_lines = list(ov["manager"])
+        m_say = [{"text": m_lines[0], "image": m_face} if m_face else m_lines[0]] + m_lines[1:]
+        sections.append(sec(id="manager", heading="今季の監督", tier="報道",
+                            telop=str(ov.get("manager_telop") or "今季の監督"),
+                            narrator="キャスター",
+                            card={"type": "table", "title": "今季の監督", "columns": ["", ""],
+                                  "rows": ov.get("manager_rows") or []},
+                            say=m_say,
+                            sources=[wiki] + [u for u in (ov.get("manager_sources") or []) if u != wiki]))
     # 登録選手（2026-09-20 指示「選手紹介をもう少し内容増やしてほしい／
     # 各ポジの有名選手、キャプテンを紹介」）。
     # **「有名」は代表の出場数で決める。**好き嫌いで選ばない。
@@ -470,21 +504,6 @@ def build(key: str, number: int, old_file: str) -> Path:
                      "no_telop": True})
     sections.append(sec(id="squad", heading="今季の登録選手", tier="報道", telop="今季の登録選手",
                         narrator="キャスター", say=ssay, sources=[wiki]))
-    # **今季の監督**（2026-09-22 指示「今季の監督が誰かも加えよう」）。
-    # <key>_say.yaml の `manager`（読み上げの行）・`manager_rows`（板）・`manager_sources`。
-    # 顔は faces.json の role "manager"（tools/plmanagers.py が集める）
-    if ov.get("manager"):
-        m_face = next((v.get("file", "") for v in faces.values()
-                       if isinstance(v, dict) and v.get("role") == "manager"), "")
-        m_lines = list(ov["manager"])
-        m_say = [{"text": m_lines[0], "image": m_face} if m_face else m_lines[0]] + m_lines[1:]
-        sections.append(sec(id="manager", heading="今季の監督", tier="報道",
-                            telop=str(ov.get("manager_telop") or "今季の監督"),
-                            narrator="キャスター",
-                            card={"type": "table", "title": "今季の監督", "columns": ["", ""],
-                                  "rows": ov.get("manager_rows") or []},
-                            say=m_say,
-                            sources=[wiki] + [u for u in (ov.get("manager_sources") or []) if u != wiki]))
     # 今季のここまで（プレミアの節だけ）
     games = pl_games(key)
     if games:

@@ -25,15 +25,41 @@ thumbnail:
   tags: []
   points: []
 sections:
+- id: reasons
+  heading: いま見る理由
+  tier: 報道
+  main: true
+  telop: 創立127年で初めての欧州
+  narrator: キャスター
+  card:
+    type: table
+    title: いま見る理由
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 理由1
+      - 創立127年で初の欧州の舞台
+    - - 理由2
+      - 初戦で久保建英のクラブに勝利
+    - - 理由3
+      - 今夏に監督が交代、1年目
+  say:
+  - 創立から**127年**、欧州の大会に出るのは今季が初めてです。
+  - その初戦は、久保建英が所属するクラブに勝ちました。
+  - 監督も今夏に交代し、新しい体制の**1年目**です。
+  sources:
+  - https://en.wikipedia.org/wiki/AFC_Bournemouth
+  - https://en.wikipedia.org/wiki/2026–27_AFC_Bournemouth_season
+  bg: assets/backgrounds/stadium_ボーンマス.png
+  official: false
 - id: data
   heading: ボーンマス 基礎DATA
-  main: true
+  main: false
   tier: 背景
   telop: 1899年創立
   narrator: 解説
   say:
-  - short_only: true
-    text: このクラブの、基本のデータです。
   - image: assets/stats/pl_bournemouth_data0.png
     text: 創立は**1899年**。ボスコムという地区のクラブが前身です。
     no_telop: true
@@ -248,31 +274,6 @@ sections:
   - https://en.wikipedia.org/wiki/Ryan_Fraser
   bg: assets/backgrounds/stadium_ボーンマス.png
   official: false
-- id: squad
-  heading: 今季の登録選手
-  tier: 報道
-  telop: 今季の登録選手
-  narrator: キャスター
-  say:
-  - text: 今季の登録選手は28人です。
-    image: assets/stats/pl_bournemouth_gk.png
-    no_telop: true
-  - image: assets/stats/pl_bournemouth_gk_f.png
-    text: ゴールキーパーは3人。ジョルジェ・ペトロヴィッチはセルビア代表で**12試合**。
-    no_telop: true
-  - image: assets/stats/pl_bournemouth_df_f.png
-    text: ディフェンダーは10人。主将を務めるのが**アダム・スミス**。リーグ戦で**350試合**に出ています。アントニオ・シウヴァはポルトガル代表で**20試合**。
-    no_telop: true
-  - image: assets/stats/pl_bournemouth_mf_f.png
-    text: ミッドフィールダーは8人。ライアン・クリスティはスコットランド代表で**71試合**。デイヴィッド・ブルックスはウェールズ代表で**45試合**。
-    no_telop: true
-  - image: assets/stats/pl_bournemouth_fw_f.png
-    text: フォワードは7人。ジャスティン・クライファートはオランダ代表で**14試合**。エヴァニウソンは**クラブ最高額の4020万ポンド**で加入しました。
-    no_telop: true
-  sources:
-  - https://en.wikipedia.org/wiki/AFC_Bournemouth
-  bg: assets/backgrounds/stadium_ボーンマス.png
-  official: false
 - id: manager
   heading: 今季の監督
   tier: 報道
@@ -298,6 +299,31 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
   - https://en.wikipedia.org/wiki/Marco_Rose
+  bg: assets/backgrounds/stadium_ボーンマス.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は28人です。
+    image: assets/stats/pl_bournemouth_gk.png
+    no_telop: true
+  - image: assets/stats/pl_bournemouth_gk_f.png
+    text: ゴールキーパーは3人。ジョルジェ・ペトロヴィッチはセルビア代表で**12試合**。
+    no_telop: true
+  - image: assets/stats/pl_bournemouth_df_f.png
+    text: ディフェンダーは10人。主将を務めるのが**アダム・スミス**。リーグ戦で**350試合**に出ています。アントニオ・シウヴァはポルトガル代表で**20試合**。
+    no_telop: true
+  - image: assets/stats/pl_bournemouth_mf_f.png
+    text: ミッドフィールダーは8人。ライアン・クリスティはスコットランド代表で**71試合**。デイヴィッド・ブルックスはウェールズ代表で**45試合**。
+    no_telop: true
+  - image: assets/stats/pl_bournemouth_fw_f.png
+    text: フォワードは7人。ジャスティン・クライファートはオランダ代表で**14試合**。エヴァニウソンは**クラブ最高額の4020万ポンド**で加入しました。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/AFC_Bournemouth
   bg: assets/backgrounds/stadium_ボーンマス.png
   official: false
 - id: season

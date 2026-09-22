@@ -42,14 +42,27 @@ tags:
 - サッカーニュース
 sources:
 - https://en.wikipedia.org/wiki/AFC_Bournemouth
+- https://en.wikipedia.org/wiki/2026–27_AFC_Bournemouth_season
 - https://en.wikipedia.org/wiki/Eddie_Howe
 - https://en.wikipedia.org/wiki/List_of_AFC_Bournemouth_records_and_statistics
 - https://en.wikipedia.org/wiki/Callum_Wilson
 - https://en.wikipedia.org/wiki/Brett_Pitman
 - https://en.wikipedia.org/wiki/Ryan_Fraser
 - https://en.wikipedia.org/wiki/Marco_Rose
-- https://en.wikipedia.org/wiki/2026–27_AFC_Bournemouth_season
 cards:
+  reasons_card:
+    type: table
+    title: いま見る理由
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 理由1
+      - 創立127年で初の欧州の舞台
+    - - 理由2
+      - 初戦で久保建英のクラブに勝利
+    - - 理由3
+      - 今夏に監督が交代、1年目
   history_card:
     type: table
     title: 2008年に起きたこと
@@ -185,13 +198,22 @@ cards:
 キャスター: 消えかけたクラブが、いまヨーロッパで戦っています。
   telop: 消えかけたクラブが、いまヨーロッパで戦っています
 
-## ボーンマス 基礎DATA
+## いま見る理由
 @bg: assets/backgrounds/stadium_ボーンマス.png
 @main: true
 
-解説: このクラブの、基本のデータです。
-  only: short
-  telop: このクラブの、基本のデータです
+キャスター: 創立から**127年**、欧州の大会に出るのは今季が初めてです。
+  telop: 創立から**127年**、欧州の大会に出るのは今季が初めてです
+  source: 報道
+  card: reasons_card
+キャスター: その初戦は、久保建英が所属するクラブに勝ちました。
+  telop: その初戦は、久保建英が所属するクラブに勝ちました
+キャスター: 監督も今夏に交代し、新しい体制の**1年目**です。
+  telop: 監督も今夏に交代し、新しい体制の**1年目**です
+
+## ボーンマス 基礎DATA
+@bg: assets/backgrounds/stadium_ボーンマス.png
+
 解説: 創立は**1899年**。ボスコムという地区のクラブが前身です。
   no_telop: true
   source: 背景
@@ -309,6 +331,17 @@ cards:
   card: none
   image: assets/photos/pl/bournemouth_legend_9f069e9f.jpg
 
+## 今季の監督
+@bg: assets/backgrounds/stadium_ボーンマス.png
+
+キャスター: 今季の監督は、ドイツ人のマルコ・ローゼ。**2026年6月**に来た1年目です。
+  telop: 今季の監督は、ドイツ人のマルコ・ローゼ。**2026年6月**に来た1年目です
+  source: 報道
+  card: manager_card
+  image: assets/photos/pl/bournemouth_manager_19d3b54a.jpg
+キャスター: 前はライプツィヒ。リヴァプールへ去ったイラオラの後任です。
+  telop: 前はライプツィヒ。リヴァプールへ去ったイラオラの後任です
+
 ## 今季の登録選手
 @bg: assets/backgrounds/stadium_ボーンマス.png
 
@@ -328,17 +361,6 @@ cards:
 キャスター: フォワードは7人。ジャスティン・クライファートはオランダ代表で**14試合**。エヴァニウソンは**クラブ最高額の4020万ポンド**で加入しました。
   no_telop: true
   image: assets/stats/pl_bournemouth_fw_f.png
-
-## 今季の監督
-@bg: assets/backgrounds/stadium_ボーンマス.png
-
-キャスター: 今季の監督は、ドイツ人のマルコ・ローゼ。**2026年6月**に来た1年目です。
-  telop: 今季の監督は、ドイツ人のマルコ・ローゼ。**2026年6月**に来た1年目です
-  source: 報道
-  card: manager_card
-  image: assets/photos/pl/bournemouth_manager_19d3b54a.jpg
-キャスター: 前はライプツィヒ。リヴァプールへ去ったイラオラの後任です。
-  telop: 前はライプツィヒ。リヴァプールへ去ったイラオラの後任です
 
 ## 今季のここまで
 @bg: assets/backgrounds/stadium_ボーンマス.png

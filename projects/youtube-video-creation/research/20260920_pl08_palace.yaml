@@ -27,28 +27,41 @@ thumbnail:
   tags: []
   points: []
 sections:
-- id: why
-  heading: 冨安健洋と鎌田大地がいるクラブ
+- id: reasons
+  heading: いま見る理由
   tier: 報道
-  telop: 冨安健洋と鎌田大地が所属するクリスタル・パレス
+  main: true
+  telop: 冨安と鎌田。今季はヨーロッパリーグへ
   narrator: キャスター
+  card:
+    type: table
+    title: いま見る理由
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 理由1
+      - 冨安健洋と鎌田大地
+    - - 理由2
+      - 2年続けて優勝
+    - - 理由3
+      - 今季はヨーロッパリーグ
   say:
-  - 冨安健洋は、日本代表**46試合**のディフェンダー。
-  - 鎌田大地は日本代表**53試合**。このクラブでリーグ戦**66試合**を戦っています。
-  - では、どんなクラブなのか。まずは基本のデータから見ていきます。
+  - 冨安健洋は日本代表**46試合**、鎌田大地は**53試合**。2人が同じクラブにいます。
+  - 鎌田大地はここで優勝を**3回**経験し、冨安健洋はこの夏に加わったばかりです。
+  - '**2年**続けて優勝したクラブが、今季はヨーロッパリーグに出ます。'
   sources:
   - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Crystal_Palace_F.C._season
   bg: assets/backgrounds/stadium_クリスタルパレス.png
   official: false
 - id: data
   heading: クリスタル・パレス 基礎DATA
-  main: true
+  main: false
   tier: 背景
   telop: 1905年創立
   narrator: 解説
   say:
-  - short_only: true
-    text: 冨安健洋と鎌田大地の所属クラブを、基本のデータで見ていきます。
   - image: assets/stats/pl_palace_data0.png
     text: プロのクラブとしての創立は**1905年**。起源は1861年のアマチュアクラブです。
     no_telop: true
@@ -217,31 +230,6 @@ sections:
   - https://en.wikipedia.org/wiki/Andrew_Johnson_(footballer,_born_1981)
   bg: assets/backgrounds/stadium_クリスタルパレス.png
   official: false
-- id: squad
-  heading: 今季の登録選手
-  tier: 報道
-  telop: 今季の登録選手
-  narrator: キャスター
-  say:
-  - text: 今季の登録選手は28人です。
-    image: assets/stats/pl_palace_gk.png
-    no_telop: true
-  - image: assets/stats/pl_palace_gk_f.png
-    text: ゴールキーパーは3人。主将を務めるのが**ディーン・ヘンダーソン**。リーグ戦で**96試合**に出ています。
-    no_telop: true
-  - image: assets/stats/pl_palace_df_f.png
-    text: ディフェンダーは10人。日本の冨安健洋がいます。タイリック・ミッチェルはリーグ戦で**211試合**。
-    no_telop: true
-  - image: assets/stats/pl_palace_mf_f.png
-    text: ミッドフィールダーは6人。日本の鎌田大地がいます。ジェフェルソン・レルマはコロンビア代表で**70試合**。
-    no_telop: true
-  - image: assets/stats/pl_palace_fw_f.png
-    text: フォワードは9人。イスマイラ・サールはセネガル代表で**88試合**。ジャン＝フィリップ・マテタはリーグ戦で**163試合**。
-    no_telop: true
-  sources:
-  - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
-  bg: assets/backgrounds/stadium_クリスタルパレス.png
-  official: false
 - id: manager
   heading: 今季の監督
   tier: 報道
@@ -267,6 +255,31 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
   - https://en.wikipedia.org/wiki/Pierre_Sage
+  bg: assets/backgrounds/stadium_クリスタルパレス.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は28人です。
+    image: assets/stats/pl_palace_gk.png
+    no_telop: true
+  - image: assets/stats/pl_palace_gk_f.png
+    text: ゴールキーパーは3人。主将を務めるのが**ディーン・ヘンダーソン**。リーグ戦で**96試合**に出ています。
+    no_telop: true
+  - image: assets/stats/pl_palace_df_f.png
+    text: ディフェンダーは10人。日本の冨安健洋がいます。タイリック・ミッチェルはリーグ戦で**211試合**。
+    no_telop: true
+  - image: assets/stats/pl_palace_mf_f.png
+    text: ミッドフィールダーは6人。日本の鎌田大地がいます。ジェフェルソン・レルマはコロンビア代表で**70試合**。
+    no_telop: true
+  - image: assets/stats/pl_palace_fw_f.png
+    text: フォワードは9人。イスマイラ・サールはセネガル代表で**88試合**。ジャン＝フィリップ・マテタはリーグ戦で**163試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
   bg: assets/backgrounds/stadium_クリスタルパレス.png
   official: false
 - id: season

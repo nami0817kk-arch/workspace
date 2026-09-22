@@ -43,12 +43,25 @@ tags:
 - サッカーニュース
 sources:
 - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
+- https://en.wikipedia.org/wiki/2026–27_Tottenham_Hotspur_F.C._season
 - https://en.wikipedia.org/wiki/Harry_Kane
 - https://en.wikipedia.org/wiki/Son_Heung-min
 - https://en.wikipedia.org/wiki/Ledley_King
 - https://en.wikipedia.org/wiki/Roberto_De_Zerbi
-- https://en.wikipedia.org/wiki/2026–27_Tottenham_Hotspur_F.C._season
 cards:
+  reasons_card:
+    type: table
+    title: いま見る理由
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 理由1
+      - 高井幸大が所属。いまベルギー
+    - - 理由2
+      - ヨーロッパリーグ王者が最下位
+    - - 理由3
+      - デ・ゼルビ2年目、開幕勝ちなし
   cup1901_card:
     type: table
     title: 最初に立てた記録
@@ -168,20 +181,22 @@ cards:
 キャスター: 高井幸大は、2025年の夏に川崎フロンターレから来ました。
   telop: 高井幸大は、2025年の夏に川崎フロンターレから来ました
 
-## 高井幸大がいるクラブ
-@bg: assets/backgrounds/stadium_トッテナム.png
-
-キャスター: 22歳のセンターバック。トッテナムの選手で、いまは期限付きでベルギーのシント＝トロイデンにいます。
-  telop: 22歳のセンターバック。トッテナムの選手で、いまは期限付きでベルギーのシント＝トロイデンにいます
-  source: 報道
-
-## トッテナム 基礎DATA
+## いま見る理由
 @bg: assets/backgrounds/stadium_トッテナム.png
 @main: true
 
-解説: 高井幸大の所属クラブを、基本のデータで見ていきます。
-  only: short
-  telop: 高井幸大の所属クラブを、基本のデータで見ていきます
+キャスター: 高井幸大は**22歳**のセンターバック。いまは期限付きで、ベルギーのシント＝トロイデンにいます。
+  telop: 高井幸大は**22歳**のセンターバック。いまは期限付きで、ベルギーのシント＝トロイデンにいます
+  source: 報道
+  card: reasons_card
+キャスター: **2025年**にヨーロッパリーグを獲ったクラブが、いま順位表のいちばん下にいます。
+  telop: **2025年**にヨーロッパリーグを獲ったクラブが、いま順位表のいちばん下にいます
+キャスター: 監督は昨季の3月に来たロベルト・デ・ゼルビ。**2年目**は、開幕5試合でまだ勝ちがありません。
+  telop: 監督は昨季の3月に来たロベルト・デ・ゼルビ。**2年目**は、開幕5試合でまだ勝ちがありません
+
+## トッテナム 基礎DATA
+@bg: assets/backgrounds/stadium_トッテナム.png
+
 解説: 創立は**1882年**。ホットスパーという名前で始まりました。
   no_telop: true
   source: 背景
@@ -287,6 +302,17 @@ cards:
   card: none
   image: assets/photos/pl/tottenham_legend_a1b6d580.jpg
 
+## 今季の監督
+@bg: assets/backgrounds/stadium_トッテナム.png
+
+キャスター: 監督はイタリア人のロベルト・デ・ゼルビ。**2026年3月**から、2年目です。
+  telop: 監督はイタリア人のロベルト・デ・ゼルビ。**2026年3月**から、2年目です
+  source: 報道
+  card: manager_card
+  image: assets/photos/pl/tottenham_manager_57aac009.jpg
+キャスター: 前はマルセイユ。就任した昨季は17位で、最終節で残留を決めました。
+  telop: 前はマルセイユ。就任した昨季は17位で、最終節で残留を決めました
+
 ## 今季の登録選手
 @bg: assets/backgrounds/stadium_トッテナム.png
 
@@ -306,17 +332,6 @@ cards:
 キャスター: フォワードは10人。リシャルリソンはブラジル代表で**54試合**。デヤン・クルゼフスキはスウェーデン代表で**45試合**。
   no_telop: true
   image: assets/stats/pl_tottenham_fw_f.png
-
-## 今季の監督
-@bg: assets/backgrounds/stadium_トッテナム.png
-
-キャスター: 監督はイタリア人のロベルト・デ・ゼルビ。**2026年3月**から、2年目です。
-  telop: 監督はイタリア人のロベルト・デ・ゼルビ。**2026年3月**から、2年目です
-  source: 報道
-  card: manager_card
-  image: assets/photos/pl/tottenham_manager_57aac009.jpg
-キャスター: 前はマルセイユ。就任した昨季は17位で、最終節で残留を決めました。
-  telop: 前はマルセイユ。就任した昨季は17位で、最終節で残留を決めました
 
 ## 今季のここまで
 @bg: assets/backgrounds/stadium_トッテナム.png

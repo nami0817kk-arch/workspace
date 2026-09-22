@@ -26,27 +26,41 @@ thumbnail:
   tags: []
   points: []
 sections:
-- id: why
-  heading: 遠藤航がいるクラブ
+- id: reasons
+  heading: いま見る理由
   tier: 報道
-  telop: 遠藤航が所属するリヴァプール
+  main: true
+  telop: 遠藤航がいる。新監督イラオラの1年目
   narrator: キャスター
+  card:
+    type: table
+    title: いま見る理由
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 理由1
+      - 遠藤航が中盤にいる
+    - - 理由2
+      - 新監督イラオラの1年目
+    - - 理由3
+      - サラー退団後、最初の1年
   say:
-  - 遠藤航は、リヴァプールでリーグ戦**57試合**に出ている日本代表の中盤です。
-  - では、どんなクラブなのか。まずは基本のデータから見ていきます。
+  - 日本代表の中盤、遠藤航が、リーグ戦**57試合**を戦ってきたクラブです。
+  - 監督が代わりました。ボーンマスを**6位**まで引き上げたイラオラの、1年目です。
+  - 2シーズン前に**20回目**の優勝、昨季は5位。サラーが去って初めてのシーズンです。
   sources:
   - https://en.wikipedia.org/wiki/Liverpool_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Liverpool_F.C._season
   bg: assets/backgrounds/stadium_リヴァプール.png
   official: false
 - id: data
   heading: リヴァプール 基礎DATA
-  main: true
+  main: false
   tier: 背景
   telop: 1892年創立
   narrator: 解説
   say:
-  - short_only: true
-    text: 遠藤航の所属クラブを、基本のデータで見ていきます。
   - image: assets/stats/pl_liverpool_data0.png
     text: 創立は**1892年**です。
     no_telop: true
@@ -227,31 +241,6 @@ sections:
   - https://en.wikipedia.org/wiki/Mohamed_Salah
   bg: assets/backgrounds/stadium_リヴァプール.png
   official: false
-- id: squad
-  heading: 今季の登録選手
-  tier: 報道
-  telop: 今季の登録選手
-  narrator: キャスター
-  say:
-  - text: 今季の登録選手は35人です。
-    image: assets/stats/pl_liverpool_gk.png
-    no_telop: true
-  - image: assets/stats/pl_liverpool_gk_f.png
-    text: ゴールキーパーは6人。アリソン・ベッカーはブラジル代表で**83試合**。ギオルギ・ママルダシュヴィリはジョージア代表で**38試合**。
-    no_telop: true
-  - image: assets/stats/pl_liverpool_df_f.png
-    text: ディフェンダーは12人。主将を務めるのが**フィルジル・ファン・ダイク**。リーグ戦で**277試合**に出ています。コスタス・ツィミカスはギリシャ代表で**51試合**。
-    no_telop: true
-  - image: assets/stats/pl_liverpool_mf_f.png
-    text: ミッドフィールダーは8人。日本の遠藤航がいます。ドミニク・ソボスライはハンガリー代表で**65試合**。
-    no_telop: true
-  - image: assets/stats/pl_liverpool_fw_f.png
-    text: フォワードは9人。コーディ・ガクポはオランダ代表で**54試合**。アレクサンデル・イサクはスウェーデン代表で**62試合**。
-    no_telop: true
-  sources:
-  - https://en.wikipedia.org/wiki/Liverpool_F.C.
-  bg: assets/backgrounds/stadium_リヴァプール.png
-  official: false
 - id: manager
   heading: 今季の監督
   tier: 報道
@@ -277,6 +266,31 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Liverpool_F.C.
   - https://en.wikipedia.org/wiki/Andoni_Iraola
+  bg: assets/backgrounds/stadium_リヴァプール.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は35人です。
+    image: assets/stats/pl_liverpool_gk.png
+    no_telop: true
+  - image: assets/stats/pl_liverpool_gk_f.png
+    text: ゴールキーパーは6人。アリソン・ベッカーはブラジル代表で**83試合**。ギオルギ・ママルダシュヴィリはジョージア代表で**38試合**。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_df_f.png
+    text: ディフェンダーは12人。主将を務めるのが**フィルジル・ファン・ダイク**。リーグ戦で**277試合**に出ています。コスタス・ツィミカスはギリシャ代表で**51試合**。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_mf_f.png
+    text: ミッドフィールダーは8人。日本の遠藤航がいます。ドミニク・ソボスライはハンガリー代表で**65試合**。
+    no_telop: true
+  - image: assets/stats/pl_liverpool_fw_f.png
+    text: フォワードは9人。コーディ・ガクポはオランダ代表で**54試合**。アレクサンデル・イサクはスウェーデン代表で**62試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Liverpool_F.C.
   bg: assets/backgrounds/stadium_リヴァプール.png
   official: false
 - id: season

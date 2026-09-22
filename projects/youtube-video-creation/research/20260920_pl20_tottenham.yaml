@@ -26,26 +26,41 @@ thumbnail:
   tags: []
   points: []
 sections:
-- id: why
-  heading: 高井幸大がいるクラブ
+- id: reasons
+  heading: いま見る理由
   tier: 報道
-  telop: 高井幸大が所属するトッテナム
+  main: true
+  telop: 高井幸大がいるクラブが、いま最下位
   narrator: キャスター
+  card:
+    type: table
+    title: いま見る理由
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 理由1
+      - 高井幸大が所属。いまベルギー
+    - - 理由2
+      - ヨーロッパリーグ王者が最下位
+    - - 理由3
+      - デ・ゼルビ2年目、開幕勝ちなし
   say:
-  - 22歳のセンターバック。トッテナムの選手で、いまは期限付きでベルギーのシント＝トロイデンにいます。
+  - 高井幸大は**22歳**のセンターバック。いまは期限付きで、ベルギーのシント＝トロイデンにいます。
+  - '**2025年**にヨーロッパリーグを獲ったクラブが、いま順位表のいちばん下にいます。'
+  - 監督は昨季の3月に来たロベルト・デ・ゼルビ。**2年目**は、開幕5試合でまだ勝ちがありません。
   sources:
   - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Tottenham_Hotspur_F.C._season
   bg: assets/backgrounds/stadium_トッテナム.png
   official: false
 - id: data
   heading: トッテナム 基礎DATA
-  main: true
+  main: false
   tier: 背景
   telop: 1882年創立
   narrator: 解説
   say:
-  - short_only: true
-    text: 高井幸大の所属クラブを、基本のデータで見ていきます。
   - image: assets/stats/pl_tottenham_data0.png
     text: 創立は**1882年**。ホットスパーという名前で始まりました。
     no_telop: true
@@ -222,31 +237,6 @@ sections:
   - https://en.wikipedia.org/wiki/Ledley_King
   bg: assets/backgrounds/stadium_トッテナム.png
   official: false
-- id: squad
-  heading: 今季の登録選手
-  tier: 報道
-  telop: 今季の登録選手
-  narrator: キャスター
-  say:
-  - text: 今季の登録選手は35人です。
-    image: assets/stats/pl_tottenham_gk.png
-    no_telop: true
-  - image: assets/stats/pl_tottenham_gk_f.png
-    text: ゴールキーパーは4人。マルティン・ドゥーブラフカはスロバキア代表で**60試合**。グリエルモ・ヴィカーリオはリーグ戦で**93試合**。
-    no_telop: true
-  - image: assets/stats/pl_tottenham_df_f.png
-    text: ディフェンダーは12人。日本の高井幸大がいます。主将を務めるのが**ミッキー・ファン・デ・フェン**。リーグ戦で**79試合**に出ています。ベン・デイヴィスはウェールズ代表で**100試合**。
-    no_telop: true
-  - image: assets/stats/pl_tottenham_mf_f.png
-    text: ミッドフィールダーは9人。ロドリゴ・ベンタンクールはウルグアイ代表で**77試合**。パペ・マタル・サールはセネガル代表で**42試合**。
-    no_telop: true
-  - image: assets/stats/pl_tottenham_fw_f.png
-    text: フォワードは10人。リシャルリソンはブラジル代表で**54試合**。デヤン・クルゼフスキはスウェーデン代表で**45試合**。
-    no_telop: true
-  sources:
-  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
-  bg: assets/backgrounds/stadium_トッテナム.png
-  official: false
 - id: manager
   heading: 今季の監督
   tier: 報道
@@ -272,6 +262,31 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
   - https://en.wikipedia.org/wiki/Roberto_De_Zerbi
+  bg: assets/backgrounds/stadium_トッテナム.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は35人です。
+    image: assets/stats/pl_tottenham_gk.png
+    no_telop: true
+  - image: assets/stats/pl_tottenham_gk_f.png
+    text: ゴールキーパーは4人。マルティン・ドゥーブラフカはスロバキア代表で**60試合**。グリエルモ・ヴィカーリオはリーグ戦で**93試合**。
+    no_telop: true
+  - image: assets/stats/pl_tottenham_df_f.png
+    text: ディフェンダーは12人。日本の高井幸大がいます。主将を務めるのが**ミッキー・ファン・デ・フェン**。リーグ戦で**79試合**に出ています。ベン・デイヴィスはウェールズ代表で**100試合**。
+    no_telop: true
+  - image: assets/stats/pl_tottenham_mf_f.png
+    text: ミッドフィールダーは9人。ロドリゴ・ベンタンクールはウルグアイ代表で**77試合**。パペ・マタル・サールはセネガル代表で**42試合**。
+    no_telop: true
+  - image: assets/stats/pl_tottenham_fw_f.png
+    text: フォワードは10人。リシャルリソンはブラジル代表で**54試合**。デヤン・クルゼフスキはスウェーデン代表で**45試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
   bg: assets/backgrounds/stadium_トッテナム.png
   official: false
 - id: season

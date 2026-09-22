@@ -26,27 +26,41 @@ thumbnail:
   tags: []
   points: []
 sections:
-- id: why
-  heading: 鈴木彩艶がいるクラブ
+- id: reasons
+  heading: いま見る理由
   tier: 報道
-  telop: 鈴木彩艶が所属するアストン・ヴィラ
+  main: true
+  telop: 鈴木彩艶、2560万ポンドの新守護神
   narrator: キャスター
+  card:
+    type: table
+    title: いま見る理由
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 理由1
+      - 鈴木彩艶が今夏パルマから加入
+    - - 理由2
+      - リーグ戦4試合でゴールを守る
+    - - 理由3
+      - 昨季30年ぶりの欧州タイトル
   say:
-  - 鈴木彩艶は今夏、イタリアのパルマから加わりました。移籍金は**2560万ポンド**。
-  - リーグ戦はここまで**4試合**でゴールを守っています。今季はチャンピオンズリーグにも出るクラブです。
+  - 鈴木彩艶が今夏、パルマから**2560万ポンド**で加入しました。
+  - リーグ戦はここまで**4試合**でゴールを守っています。
+  - 昨季は**30年ぶり**に欧州のタイトルを獲り、今季は最高峰の舞台にも立ちます。
   sources:
   - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Aston_Villa_F.C._season
   bg: assets/backgrounds/stadium_アストンヴィラ.png
   official: false
 - id: data
   heading: アストン・ヴィラ 基礎DATA
-  main: true
+  main: false
   tier: 背景
   telop: 1874年創立
   narrator: 解説
   say:
-  - short_only: true
-    text: 鈴木彩艶の所属クラブを、基本のデータで見ていきます。
   - image: assets/stats/pl_villa_data0.png
     text: 礼拝堂に集まった青年4人が始めたクラブ。1888年には、世界初のリーグを作る側に回ります。
     no_telop: true
@@ -218,31 +232,6 @@ sections:
   - https://en.wikipedia.org/wiki/2019_EFL_Championship_play-off_final
   bg: assets/backgrounds/stadium_アストンヴィラ.png
   official: false
-- id: squad
-  heading: 今季の登録選手
-  tier: 報道
-  telop: 今季の登録選手
-  narrator: キャスター
-  say:
-  - text: 今季の登録選手は29人です。
-    image: assets/stats/pl_villa_gk.png
-    no_telop: true
-  - image: assets/stats/pl_villa_gk_f.png
-    text: ゴールキーパーは3人。日本の鈴木彩艶がいます。日本代表で**28試合**に出ています。
-    no_telop: true
-  - image: assets/stats/pl_villa_df_f.png
-    text: ディフェンダーは9人。マティ・キャッシュはポーランド代表で**25試合**。ヴィクトル・リンデロフはスウェーデン代表で**80試合**。
-    no_telop: true
-  - image: assets/stats/pl_villa_mf_f.png
-    text: ミッドフィールダーは11人。主将を務めるのが**ジョン・マッギン**。リーグ戦で**337試合**に出ています。レオン・ゴレツカはドイツ代表で**73試合**。
-    no_telop: true
-  - image: assets/stats/pl_villa_fw_f.png
-    text: フォワードは6人。ニコラス・ジャクソンはセネガル代表で**37試合**。タミー・エイブラハムはイングランド代表で**11試合**。
-    no_telop: true
-  sources:
-  - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
-  bg: assets/backgrounds/stadium_アストンヴィラ.png
-  official: false
 - id: manager
   heading: 今季の監督
   tier: 報道
@@ -268,6 +257,31 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
   - https://en.wikipedia.org/wiki/Unai_Emery
+  bg: assets/backgrounds/stadium_アストンヴィラ.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は29人です。
+    image: assets/stats/pl_villa_gk.png
+    no_telop: true
+  - image: assets/stats/pl_villa_gk_f.png
+    text: ゴールキーパーは3人。日本の鈴木彩艶がいます。日本代表で**28試合**に出ています。
+    no_telop: true
+  - image: assets/stats/pl_villa_df_f.png
+    text: ディフェンダーは9人。マティ・キャッシュはポーランド代表で**25試合**。ヴィクトル・リンデロフはスウェーデン代表で**80試合**。
+    no_telop: true
+  - image: assets/stats/pl_villa_mf_f.png
+    text: ミッドフィールダーは11人。主将を務めるのが**ジョン・マッギン**。リーグ戦で**337試合**に出ています。レオン・ゴレツカはドイツ代表で**73試合**。
+    no_telop: true
+  - image: assets/stats/pl_villa_fw_f.png
+    text: フォワードは6人。ニコラス・ジャクソンはセネガル代表で**37試合**。タミー・エイブラハムはイングランド代表で**11試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
   bg: assets/backgrounds/stadium_アストンヴィラ.png
   official: false
 - id: season

@@ -26,27 +26,41 @@ thumbnail:
   tags: []
   points: []
 sections:
-- id: why
-  heading: 田中碧がいるクラブ
+- id: reasons
+  heading: いま見る理由
   tier: 報道
-  telop: 田中碧が所属するリーズ
+  main: true
+  telop: 田中碧がいる。開幕5試合負けなしの5位
   narrator: キャスター
+  card:
+    type: table
+    title: いま見る理由
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 理由1
+      - 田中碧が中盤にいる
+    - - 理由2
+      - 開幕5試合負けなしの5位
+    - - 理由3
+      - 昨季14位。2年目の挑戦
   say:
-  - 日本代表の田中碧は、リーズでリーグ戦**74試合**、8得点を挙げている中盤です。
-  - では、どんなクラブなのか。まずは基本のデータから見ていきます。
+  - 日本代表の中盤、田中碧が、ここでリーグ戦**74試合**、8得点を挙げています。
+  - 今季はまだ負けていません。開幕から**5試合**、負けなしの5位です。
+  - 昇格1年目の昨季は**14位**で残留。2年目の今季は、監督4年目のファルケが率います。
   sources:
   - https://en.wikipedia.org/wiki/Leeds_United_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Leeds_United_F.C._season
   bg: assets/backgrounds/stadium_リーズ.png
   official: false
 - id: data
   heading: リーズ 基礎DATA
-  main: true
+  main: false
   tier: 背景
   telop: 1919年創立
   narrator: 解説
   say:
-  - short_only: true
-    text: 田中碧の所属クラブを、基本のデータで見ていきます。
   - image: assets/stats/pl_leeds_data1.png
     text: 愛称は「ホワイツ」。真っ白なユニフォームからです。
     no_telop: true
@@ -225,31 +239,6 @@ sections:
   - https://en.wikipedia.org/wiki/Mark_Viduka
   bg: assets/backgrounds/stadium_リーズ.png
   official: false
-- id: squad
-  heading: 今季の登録選手
-  tier: 報道
-  telop: 今季の登録選手
-  narrator: キャスター
-  say:
-  - text: 今季の登録選手は24人です。
-    image: assets/stats/pl_leeds_gk.png
-    no_telop: true
-  - image: assets/stats/pl_leeds_gk.png
-    text: ゴールキーパーは3人。
-    no_telop: true
-  - image: assets/stats/pl_leeds_df_f.png
-    text: ディフェンダーは8人。ジョー・ロドンはウェールズ代表で**62試合**。ヤカ・ビヨルはスロベニア代表で**73試合**。
-    no_telop: true
-  - image: assets/stats/pl_leeds_mf_f.png
-    text: ミッドフィールダーは8人。日本の田中碧がいます。主将を務めるのが**イーサン・アンパドゥ**。リーグ戦で**113試合**に出ています。ダニエル・ジェームズはウェールズ代表で**65試合**。
-    no_telop: true
-  - image: assets/stats/pl_leeds_fw_f.png
-    text: フォワードは5人。ノア・オカフォーはスイス代表で**26試合**。ドミニク・キャルヴァート＝ルーウィンはイングランド代表で**12試合**。
-    no_telop: true
-  sources:
-  - https://en.wikipedia.org/wiki/Leeds_United_F.C.
-  bg: assets/backgrounds/stadium_リーズ.png
-  official: false
 - id: manager
   heading: 今季の監督
   tier: 報道
@@ -275,6 +264,31 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Leeds_United_F.C.
   - https://en.wikipedia.org/wiki/Daniel_Farke
+  bg: assets/backgrounds/stadium_リーズ.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は24人です。
+    image: assets/stats/pl_leeds_gk.png
+    no_telop: true
+  - image: assets/stats/pl_leeds_gk.png
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/pl_leeds_df_f.png
+    text: ディフェンダーは8人。ジョー・ロドンはウェールズ代表で**62試合**。ヤカ・ビヨルはスロベニア代表で**73試合**。
+    no_telop: true
+  - image: assets/stats/pl_leeds_mf_f.png
+    text: ミッドフィールダーは8人。日本の田中碧がいます。主将を務めるのが**イーサン・アンパドゥ**。リーグ戦で**113試合**に出ています。ダニエル・ジェームズはウェールズ代表で**65試合**。
+    no_telop: true
+  - image: assets/stats/pl_leeds_fw_f.png
+    text: フォワードは5人。ノア・オカフォーはスイス代表で**26試合**。ドミニク・キャルヴァート＝ルーウィンはイングランド代表で**12試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Leeds_United_F.C.
   bg: assets/backgrounds/stadium_リーズ.png
   official: false
 - id: season

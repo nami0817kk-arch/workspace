@@ -44,14 +44,27 @@ tags:
 - サッカーニュース
 sources:
 - https://en.wikipedia.org/wiki/Liverpool_F.C.
+- https://en.wikipedia.org/wiki/2026–27_Liverpool_F.C._season
 - https://en.wikipedia.org/wiki/Bill_Shankly
 - https://en.wikipedia.org/wiki/Anfield
 - https://en.wikipedia.org/wiki/Steven_Gerrard
 - https://en.wikipedia.org/wiki/Jamie_Carragher
 - https://en.wikipedia.org/wiki/Mohamed_Salah
 - https://en.wikipedia.org/wiki/Andoni_Iraola
-- https://en.wikipedia.org/wiki/2026–27_Liverpool_F.C._season
 cards:
+  reasons_card:
+    type: table
+    title: いま見る理由
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 理由1
+      - 遠藤航が中盤にいる
+    - - 理由2
+      - 新監督イラオラの1年目
+    - - 理由3
+      - サラー退団後、最初の1年
   birth_card:
     type: table
     title: クラブの成り立ち
@@ -167,22 +180,22 @@ cards:
 キャスター: エヴァートンが出ていったスタジアムで、生まれたクラブです。
   telop: エヴァートンが出ていったスタジアムで、生まれたクラブです
 
-## 遠藤航がいるクラブ
-@bg: assets/backgrounds/stadium_リヴァプール.png
-
-キャスター: 遠藤航は、リヴァプールでリーグ戦**57試合**に出ている日本代表の中盤です。
-  telop: 遠藤航は、リヴァプールでリーグ戦**57試合**に出ている日本代表の中盤です
-  source: 報道
-キャスター: では、どんなクラブなのか。まずは基本のデータから見ていきます。
-  telop: では、どんなクラブなのか。まずは基本のデータから見ていきます
-
-## リヴァプール 基礎DATA
+## いま見る理由
 @bg: assets/backgrounds/stadium_リヴァプール.png
 @main: true
 
-解説: 遠藤航の所属クラブを、基本のデータで見ていきます。
-  only: short
-  telop: 遠藤航の所属クラブを、基本のデータで見ていきます
+キャスター: 日本代表の中盤、遠藤航が、リーグ戦**57試合**を戦ってきたクラブです。
+  telop: 日本代表の中盤、遠藤航が、リーグ戦**57試合**を戦ってきたクラブです
+  source: 報道
+  card: reasons_card
+キャスター: 監督が代わりました。ボーンマスを**6位**まで引き上げたイラオラの、1年目です。
+  telop: 監督が代わりました。ボーンマスを**6位**まで引き上げたイラオラの、1年目です
+キャスター: 2シーズン前に**20回目**の優勝、昨季は5位。サラーが去って初めてのシーズンです。
+  telop: 2シーズン前に**20回目**の優勝、昨季は5位。サラーが去って初めてのシーズンです
+
+## リヴァプール 基礎DATA
+@bg: assets/backgrounds/stadium_リヴァプール.png
+
 解説: 創立は**1892年**です。
   no_telop: true
   source: 背景
@@ -293,6 +306,17 @@ cards:
   card: none
   image: assets/photos/pl/liverpool_legend_bec22eba.jpg
 
+## 今季の監督
+@bg: assets/backgrounds/stadium_リヴァプール.png
+
+キャスター: 今季の監督は、スペイン人のアンドニ・イラオラ。**2026年6月**に来た1年目です。
+  telop: 今季の監督は、スペイン人のアンドニ・イラオラ。**2026年6月**に来た1年目です
+  source: 報道
+  card: manager_card
+  image: assets/photos/pl/liverpool_manager_703e8e97.jpg
+キャスター: 前はボーンマス。クラブ史上最高の6位と、初めてのヨーロッパに連れていきました。
+  telop: 前はボーンマス。クラブ史上最高の6位と、初めてのヨーロッパに連れていきました
+
 ## 今季の登録選手
 @bg: assets/backgrounds/stadium_リヴァプール.png
 
@@ -312,17 +336,6 @@ cards:
 キャスター: フォワードは9人。コーディ・ガクポはオランダ代表で**54試合**。アレクサンデル・イサクはスウェーデン代表で**62試合**。
   no_telop: true
   image: assets/stats/pl_liverpool_fw_f.png
-
-## 今季の監督
-@bg: assets/backgrounds/stadium_リヴァプール.png
-
-キャスター: 今季の監督は、スペイン人のアンドニ・イラオラ。**2026年6月**に来た1年目です。
-  telop: 今季の監督は、スペイン人のアンドニ・イラオラ。**2026年6月**に来た1年目です
-  source: 報道
-  card: manager_card
-  image: assets/photos/pl/liverpool_manager_703e8e97.jpg
-キャスター: 前はボーンマス。クラブ史上最高の6位と、初めてのヨーロッパに連れていきました。
-  telop: 前はボーンマス。クラブ史上最高の6位と、初めてのヨーロッパに連れていきました
 
 ## 今季のここまで
 @bg: assets/backgrounds/stadium_リヴァプール.png

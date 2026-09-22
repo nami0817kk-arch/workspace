@@ -25,15 +25,41 @@ thumbnail:
   tags: []
   points: []
 sections:
+- id: reasons
+  heading: いま見る理由
+  tier: 報道
+  main: true
+  telop: パレスをFAカップに導いた監督が来た
+  narrator: キャスター
+  card:
+    type: table
+    title: いま見る理由
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 理由1
+      - グラスナー監督の1年目
+    - - 理由2
+      - 昨季16位。プレミア5季目
+    - - 理由3
+      - 開幕5試合で1勝、13位
+  say:
+  - 昨年、クリスタル・パレスを初のFAカップに導いたオリバー・グラスナー監督の**1年目**です。
+  - 昨季は**16位**。2022年に戻ってきてから、今季でプレミア5シーズン目になります。
+  - 開幕から**5試合で1勝**。新しい監督の立て直しが、いま始まったところです。
+  sources:
+  - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Nottingham_Forest_F.C._season
+  bg: assets/backgrounds/stadium_ノッティンガムフォレスト.png
+  official: false
 - id: data
   heading: ノッティンガム・フォレスト 基礎DATA
-  main: true
+  main: false
   tier: 背景
   telop: 1865年創立
   narrator: 解説
   say:
-  - short_only: true
-    text: このクラブの、基本のデータです。
   - image: assets/stats/pl_forest_data1.png
     text: 愛称は「トリッキー・トゥリーズ」。ユニフォームの赤から、「ガリバルディス」「レッズ」とも。
     no_telop: true
@@ -211,31 +237,6 @@ sections:
   - https://en.wikipedia.org/wiki/Stan_Collymore
   bg: assets/backgrounds/stadium_ノッティンガムフォレスト.png
   official: false
-- id: squad
-  heading: 今季の登録選手
-  tier: 報道
-  telop: 今季の登録選手
-  narrator: キャスター
-  say:
-  - text: 今季の登録選手は24人です。
-    image: assets/stats/pl_forest_gk.png
-    no_telop: true
-  - image: assets/stats/pl_forest_gk_f.png
-    text: ゴールキーパーは3人。マッツ・セルスはベルギー代表で**13試合**。
-    no_telop: true
-  - image: assets/stats/pl_forest_df_f.png
-    text: ディフェンダーは9人。ネコ・ウィリアムズはウェールズ代表で**57試合**。ニコラ・ミレンコヴィッチはセルビア代表で**71試合**。
-    no_telop: true
-  - image: assets/stats/pl_forest_mf_f.png
-    text: ミッドフィールダーは6人。主将を務めるのが**ライアン・イェーツ**。リーグ戦で**238試合**に出ています。イブラヒム・サンガレはコートジボワール代表で**61試合**。
-    no_telop: true
-  - image: assets/stats/pl_forest_fw_f.png
-    text: フォワードは6人。クリス・ウッドはニュージーランド代表で**93試合**。ダン・ンドイェはスイス代表で**37試合**。
-    no_telop: true
-  sources:
-  - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
-  bg: assets/backgrounds/stadium_ノッティンガムフォレスト.png
-  official: false
 - id: manager
   heading: 今季の監督
   tier: 報道
@@ -261,6 +262,31 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
   - https://en.wikipedia.org/wiki/Oliver_Glasner
+  bg: assets/backgrounds/stadium_ノッティンガムフォレスト.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は24人です。
+    image: assets/stats/pl_forest_gk.png
+    no_telop: true
+  - image: assets/stats/pl_forest_gk_f.png
+    text: ゴールキーパーは3人。マッツ・セルスはベルギー代表で**13試合**。
+    no_telop: true
+  - image: assets/stats/pl_forest_df_f.png
+    text: ディフェンダーは9人。ネコ・ウィリアムズはウェールズ代表で**57試合**。ニコラ・ミレンコヴィッチはセルビア代表で**71試合**。
+    no_telop: true
+  - image: assets/stats/pl_forest_mf_f.png
+    text: ミッドフィールダーは6人。主将を務めるのが**ライアン・イェーツ**。リーグ戦で**238試合**に出ています。イブラヒム・サンガレはコートジボワール代表で**61試合**。
+    no_telop: true
+  - image: assets/stats/pl_forest_fw_f.png
+    text: フォワードは6人。クリス・ウッドはニュージーランド代表で**93試合**。ダン・ンドイェはスイス代表で**37試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Nottingham_Forest_F.C.
   bg: assets/backgrounds/stadium_ノッティンガムフォレスト.png
   official: false
 - id: season

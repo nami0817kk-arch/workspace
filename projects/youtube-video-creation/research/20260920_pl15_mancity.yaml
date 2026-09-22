@@ -25,15 +25,41 @@ thumbnail:
   tags: []
   points: []
 sections:
+- id: reasons
+  heading: いま見る理由
+  tier: 報道
+  main: true
+  telop: 開幕5連勝で首位。新監督マレスカ
+  narrator: キャスター
+  card:
+    type: table
+    title: いま見る理由
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 理由1
+      - 開幕5連勝、首位
+    - - 理由2
+      - 新監督マレスカの1年目
+    - - 理由3
+      - リーグ優勝から2シーズン
+  say:
+  - 開幕から**5連勝**。いま、プレミアの首位にいるクラブです。
+  - 監督はエンツォ・マレスカ。かつてこのクラブの助手だった男の、**1年目**です。
+  - 昨季はリーグ2位で、カップは**2つ**。リーグの優勝からは、2シーズン遠ざかっています。
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_City_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Manchester_City_F.C._season
+  bg: assets/backgrounds/stadium_マンチェスターシティ.png
+  official: false
 - id: data
   heading: マンチェスター・シティ 基礎DATA
-  main: true
+  main: false
   tier: 背景
   telop: 1880年創立
   narrator: 解説
   say:
-  - short_only: true
-    text: このクラブの、基本のデータです。
   - image: assets/stats/pl_mancity_data0.png
     text: 創立は**1880年**。教会のチーム、セント・マークスから、1894年に今の名前になりました。
     no_telop: true
@@ -212,6 +238,33 @@ sections:
   - https://en.wikipedia.org/wiki/David_Silva
   bg: assets/backgrounds/stadium_マンチェスターシティ.png
   official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はエンツォ・マレスカ。1年目
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - エンツォ・マレスカ（イタリア）
+    - - 就任
+      - 2026年6月・1年目
+    - - 前職
+      - チェルシー
+  say:
+  - text: 今季の監督は、イタリア人のエンツォ・マレスカ。**2026年6月**に来た1年目です。
+    image: assets/photos/pl/mancity_manager_71dabf8d.jpg
+  - 前はチェルシー。2022年から23年には、このクラブでグアルディオラの助手でした。
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_City_F.C.
+  - https://en.wikipedia.org/wiki/Enzo_Maresca
+  bg: assets/backgrounds/stadium_マンチェスターシティ.png
+  official: false
 - id: squad
   heading: 今季の登録選手
   tier: 報道
@@ -238,33 +291,6 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Manchester_City_F.C.
-  bg: assets/backgrounds/stadium_マンチェスターシティ.png
-  official: false
-- id: manager
-  heading: 今季の監督
-  tier: 報道
-  telop: 監督はエンツォ・マレスカ。1年目
-  narrator: キャスター
-  card:
-    type: table
-    title: 今季の監督
-    columns:
-    - ''
-    - ''
-    rows:
-    - - 監督
-      - エンツォ・マレスカ（イタリア）
-    - - 就任
-      - 2026年6月・1年目
-    - - 前職
-      - チェルシー
-  say:
-  - text: 今季の監督は、イタリア人のエンツォ・マレスカ。**2026年6月**に来た1年目です。
-    image: assets/photos/pl/mancity_manager_71dabf8d.jpg
-  - 前はチェルシー。2022年から23年には、このクラブでグアルディオラの助手でした。
-  sources:
-  - https://en.wikipedia.org/wiki/Manchester_City_F.C.
-  - https://en.wikipedia.org/wiki/Enzo_Maresca
   bg: assets/backgrounds/stadium_マンチェスターシティ.png
   official: false
 - id: season

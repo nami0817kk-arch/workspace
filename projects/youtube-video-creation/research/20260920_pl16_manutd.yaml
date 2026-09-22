@@ -25,15 +25,41 @@ thumbnail:
   tags: []
   points: []
 sections:
+- id: reasons
+  heading: いま見る理由
+  tier: 報道
+  main: true
+  telop: 3シーズンぶりのチャンピオンズリーグ
+  narrator: キャスター
+  card:
+    type: table
+    title: いま見る理由
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 理由1
+      - 3季ぶりのチャンピオンズリーグ
+    - - 理由2
+      - キャリック監督が正式就任
+    - - 理由3
+      - 昨季3位、今季は12位
+  say:
+  - '**3シーズンぶり**のチャンピオンズリーグに、今季は帰ってきました。'
+  - 監督は、かつて主将も務めたマイケル・キャリック。今季から正式な監督です。
+  - 昨季は**3位**。ところが今季は開幕から足踏みが続き、順位表の真ん中にいます。
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_United_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Manchester_United_F.C._season
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+  official: false
 - id: data
   heading: マンチェスター・ユナイテッド 基礎DATA
-  main: true
+  main: false
   tier: 背景
   telop: 1878年創立
   narrator: 解説
   say:
-  - short_only: true
-    text: このクラブの、基本のデータです。
   - image: assets/stats/pl_manutd_data0.png
     text: 創立は**1878年**。鉄道の操車場で働く人たちの、ニュートン・ヒースというチームでした。
     no_telop: true
@@ -210,31 +236,6 @@ sections:
   - https://en.wikipedia.org/wiki/Paul_Scholes
   bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
   official: false
-- id: squad
-  heading: 今季の登録選手
-  tier: 報道
-  telop: 今季の登録選手
-  narrator: キャスター
-  say:
-  - text: 今季の登録選手は30人です。
-    image: assets/stats/pl_manutd_gk.png
-    no_telop: true
-  - image: assets/stats/pl_manutd_gk_f.png
-    text: ゴールキーパーは4人。セネ・ラメンスはリーグ戦で**37試合**。カール・ダーロウはウェールズ代表で**15試合**。
-    no_telop: true
-  - image: assets/stats/pl_manutd_df_f.png
-    text: ディフェンダーは10人。ハリー・マグワイアはイングランド代表で**66試合**。ルーク・ショーはイングランド代表で**34試合**。
-    no_telop: true
-  - image: assets/stats/pl_manutd_mf_f.png
-    text: ミッドフィールダーは9人。主将を務めるのが**ブルーノ・フェルナンデス**。リーグ戦で**235試合**に出ています。ユーリ・ティーレマンスはベルギー代表で**90試合**。
-    no_telop: true
-  - image: assets/stats/pl_manutd_fw_f.png
-    text: フォワードは7人。マーカス・ラッシュフォードはイングランド代表で**78試合**。ベンヤミン・シェシュコはスロベニア代表で**45試合**。
-    no_telop: true
-  sources:
-  - https://en.wikipedia.org/wiki/Manchester_United_F.C.
-  bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
-  official: false
 - id: manager
   heading: 今季の監督
   tier: 報道
@@ -260,6 +261,31 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Manchester_United_F.C.
   - https://en.wikipedia.org/wiki/Michael_Carrick
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は30人です。
+    image: assets/stats/pl_manutd_gk.png
+    no_telop: true
+  - image: assets/stats/pl_manutd_gk_f.png
+    text: ゴールキーパーは4人。セネ・ラメンスはリーグ戦で**37試合**。カール・ダーロウはウェールズ代表で**15試合**。
+    no_telop: true
+  - image: assets/stats/pl_manutd_df_f.png
+    text: ディフェンダーは10人。ハリー・マグワイアはイングランド代表で**66試合**。ルーク・ショーはイングランド代表で**34試合**。
+    no_telop: true
+  - image: assets/stats/pl_manutd_mf_f.png
+    text: ミッドフィールダーは9人。主将を務めるのが**ブルーノ・フェルナンデス**。リーグ戦で**235試合**に出ています。ユーリ・ティーレマンスはベルギー代表で**90試合**。
+    no_telop: true
+  - image: assets/stats/pl_manutd_fw_f.png
+    text: フォワードは7人。マーカス・ラッシュフォードはイングランド代表で**78試合**。ベンヤミン・シェシュコはスロベニア代表で**45試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Manchester_United_F.C.
   bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
   official: false
 - id: season

@@ -25,15 +25,41 @@ thumbnail:
   tags: []
   points: []
 sections:
+- id: reasons
+  heading: いま見る理由
+  tier: 報道
+  main: true
+  telop: 開幕5戦負けなしで4位
+  narrator: キャスター
+  card:
+    type: table
+    title: いま見る理由
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 理由1
+      - 開幕5試合負けなしで4位
+    - - 理由2
+      - トッテナムとチェルシーに3対0
+    - - 理由3
+      - 保てばクラブ史上初の欧州
+  say:
+  - 開幕**5試合**を負けなしで走り、いまは**4位**にいます。
+  - トッテナムとチェルシーを、どちらも3対0で退けました。
+  - このまま行けば、クラブ史上初めて欧州の舞台に立てます。
+  sources:
+  - https://en.wikipedia.org/wiki/Brentford_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Brentford_F.C._season
+  bg: assets/backgrounds/stadium_ブレントフォード.png
+  official: false
 - id: data
   heading: ブレントフォード 基礎DATA
-  main: true
+  main: false
   tier: 背景
   telop: 1889年創立
   narrator: 解説
   say:
-  - short_only: true
-    text: このクラブの、基本のデータです。
   - image: assets/stats/pl_brentford_data0.png
     text: 創立は**1889年**。ボートを漕ぐクラブの仲間たちが作りました。
     no_telop: true
@@ -197,31 +223,6 @@ sections:
   - https://en.wikipedia.org/wiki/Bryan_Mbeumo
   bg: assets/backgrounds/stadium_ブレントフォード.png
   official: false
-- id: squad
-  heading: 今季の登録選手
-  tier: 報道
-  telop: 今季の登録選手
-  narrator: キャスター
-  say:
-  - text: 今季の登録選手は28人です。
-    image: assets/stats/pl_brentford_gk.png
-    no_telop: true
-  - image: assets/stats/pl_brentford_gk_f.png
-    text: ゴールキーパーは3人。クィービーン・ケレハーはアイルランド代表で**32試合**。ハウコン・ヴァルディマルソンはアイスランド代表で**22試合**。
-    no_telop: true
-  - image: assets/stats/pl_brentford_df_f.png
-    text: ディフェンダーは9人。主将を務めるのが**ネイサン・コリンズ**。リーグ戦で**105試合**に出ています。クリストファー・アイエルはノルウェー代表で**57試合**。
-    no_telop: true
-  - image: assets/stats/pl_brentford_mf_f.png
-    text: ミッドフィールダーは9人。マティアス・イェンセンはデンマーク代表で**32試合**。ミケル・ダムスゴーはデンマーク代表で**40試合**。
-    no_telop: true
-  - image: assets/stats/pl_brentford_fw_f.png
-    text: フォワードは7人。ダンゴ・ワタラはブルキナファソ代表で**44試合**。ケヴィン・シャーデはブレントフォードのリーグ戦で**88試合**。
-    no_telop: true
-  sources:
-  - https://en.wikipedia.org/wiki/Brentford_F.C.
-  bg: assets/backgrounds/stadium_ブレントフォード.png
-  official: false
 - id: manager
   heading: 今季の監督
   tier: 報道
@@ -247,6 +248,31 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Brentford_F.C.
   - https://en.wikipedia.org/wiki/Keith_Andrews_(footballer)
+  bg: assets/backgrounds/stadium_ブレントフォード.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は28人です。
+    image: assets/stats/pl_brentford_gk.png
+    no_telop: true
+  - image: assets/stats/pl_brentford_gk_f.png
+    text: ゴールキーパーは3人。クィービーン・ケレハーはアイルランド代表で**32試合**。ハウコン・ヴァルディマルソンはアイスランド代表で**22試合**。
+    no_telop: true
+  - image: assets/stats/pl_brentford_df_f.png
+    text: ディフェンダーは9人。主将を務めるのが**ネイサン・コリンズ**。リーグ戦で**105試合**に出ています。クリストファー・アイエルはノルウェー代表で**57試合**。
+    no_telop: true
+  - image: assets/stats/pl_brentford_mf_f.png
+    text: ミッドフィールダーは9人。マティアス・イェンセンはデンマーク代表で**32試合**。ミケル・ダムスゴーはデンマーク代表で**40試合**。
+    no_telop: true
+  - image: assets/stats/pl_brentford_fw_f.png
+    text: フォワードは7人。ダンゴ・ワタラはブルキナファソ代表で**44試合**。ケヴィン・シャーデはブレントフォードのリーグ戦で**88試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Brentford_F.C.
   bg: assets/backgrounds/stadium_ブレントフォード.png
   official: false
 - id: season

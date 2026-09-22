@@ -26,27 +26,41 @@ thumbnail:
   tags: []
   points: []
 sections:
-- id: why
-  heading: 前田大然がいるクラブ
+- id: reasons
+  heading: いま見る理由
   tier: 報道
-  telop: 前田大然が所属するイプスウィッチ
+  main: true
+  telop: 前田大然が来た。1年でプレミアに復帰
   narrator: キャスター
+  card:
+    type: table
+    title: いま見る理由
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 理由1
+      - 前田大然が今夏に加入
+    - - 理由2
+      - 1年でプレミアに復帰
+    - - 理由3
+      - 新監督オニールの1年目
   say:
-  - 日本代表で**30試合**に出たフォワード、前田大然がいるのがイプスウィッチ・タウンです。
-  - では、どんなクラブなのか。まずは基本のデータから見ていきます。
+  - 日本代表**30試合**のフォワード、前田大然が、この夏セルティックを離れて選びました。
+  - 降格から**1年**でプレミアに戻ってきた、昇格組のひとつです。
+  - 監督も新顔です。ストラスブールから来たギャリー・オニールの**1年目**です。
   sources:
   - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
+  - https://en.wikipedia.org/wiki/2026–27_Ipswich_Town_F.C._season
   bg: assets/backgrounds/stadium_イプスウィッチ.png
   official: false
 - id: data
   heading: イプスウィッチ 基礎DATA
-  main: true
+  main: false
   tier: 背景
   telop: 1878年創立
   narrator: 解説
   say:
-  - short_only: true
-    text: 前田大然の所属クラブを、基本のデータで見ていきます。
   - image: assets/stats/pl_ipswich_data0.png
     text: 創立は**1878年**です。
     no_telop: true
@@ -208,31 +222,6 @@ sections:
   - https://en.wikipedia.org/wiki/Marcus_Stewart
   bg: assets/backgrounds/stadium_イプスウィッチ.png
   official: false
-- id: squad
-  heading: 今季の登録選手
-  tier: 報道
-  telop: 今季の登録選手
-  narrator: キャスター
-  say:
-  - text: 今季の登録選手は28人です。
-    image: assets/stats/pl_ipswich_gk.png
-    no_telop: true
-  - image: assets/stats/pl_ipswich_gk_f.png
-    text: ゴールキーパーは4人。クリスチャン・ウォルトンはリーグ戦で**125試合**。
-    no_telop: true
-  - image: assets/stats/pl_ipswich_df_f.png
-    text: ディフェンダーは7人。ダラ・オシェイはアイルランド代表で**45試合**。リーフ・デイヴィスはリーグ戦で**160試合**。
-    no_telop: true
-  - image: assets/stats/pl_ipswich_mf_f.png
-    text: ミッドフィールダーは6人。サシャ・ルキッチはセルビア代表で**62試合**。ジャック・テイラーはアイルランド代表で**11試合**。
-    no_telop: true
-  - image: assets/stats/pl_ipswich_fw_f.png
-    text: フォワードは11人。日本の前田大然がいます。フリオ・エンシソはパラグアイ代表で**37試合**。
-    no_telop: true
-  sources:
-  - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
-  bg: assets/backgrounds/stadium_イプスウィッチ.png
-  official: false
 - id: manager
   heading: 今季の監督
   tier: 報道
@@ -258,6 +247,31 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
   - https://en.wikipedia.org/wiki/Gary_O'Neil
+  bg: assets/backgrounds/stadium_イプスウィッチ.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は28人です。
+    image: assets/stats/pl_ipswich_gk.png
+    no_telop: true
+  - image: assets/stats/pl_ipswich_gk_f.png
+    text: ゴールキーパーは4人。クリスチャン・ウォルトンはリーグ戦で**125試合**。
+    no_telop: true
+  - image: assets/stats/pl_ipswich_df_f.png
+    text: ディフェンダーは7人。ダラ・オシェイはアイルランド代表で**45試合**。リーフ・デイヴィスはリーグ戦で**160試合**。
+    no_telop: true
+  - image: assets/stats/pl_ipswich_mf_f.png
+    text: ミッドフィールダーは6人。サシャ・ルキッチはセルビア代表で**62試合**。ジャック・テイラーはアイルランド代表で**11試合**。
+    no_telop: true
+  - image: assets/stats/pl_ipswich_fw_f.png
+    text: フォワードは11人。日本の前田大然がいます。フリオ・エンシソはパラグアイ代表で**37試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
   bg: assets/backgrounds/stadium_イプスウィッチ.png
   official: false
 - id: season

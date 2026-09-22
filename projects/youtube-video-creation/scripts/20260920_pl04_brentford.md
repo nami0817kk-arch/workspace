@@ -42,13 +42,26 @@ tags:
 - サッカーニュース
 sources:
 - https://en.wikipedia.org/wiki/Brentford_F.C.
+- https://en.wikipedia.org/wiki/2026–27_Brentford_F.C._season
 - https://en.wikipedia.org/wiki/1929%E2%80%9330_Brentford_F.C._season
 - https://en.wikipedia.org/wiki/Kevin_O%27Connor_(footballer,_born_1982)
 - https://en.wikipedia.org/wiki/Ivan_Toney
 - https://en.wikipedia.org/wiki/Bryan_Mbeumo
 - https://en.wikipedia.org/wiki/Keith_Andrews_(footballer)
-- https://en.wikipedia.org/wiki/2026–27_Brentford_F.C._season
 cards:
+  reasons_card:
+    type: table
+    title: いま見る理由
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 理由1
+      - 開幕5試合負けなしで4位
+    - - 理由2
+      - トッテナムとチェルシーに3対0
+    - - 理由3
+      - 保てばクラブ史上初の欧州
   history_card:
     type: table
     title: 残してきた記録
@@ -160,13 +173,22 @@ cards:
 キャスター: 昇格プレーオフで9回続けて負けたクラブが、いまプレミアにいます。
   telop: 昇格プレーオフで9回続けて負けたクラブが、いまプレミアにいます
 
-## ブレントフォード 基礎DATA
+## いま見る理由
 @bg: assets/backgrounds/stadium_ブレントフォード.png
 @main: true
 
-解説: このクラブの、基本のデータです。
-  only: short
-  telop: このクラブの、基本のデータです
+キャスター: 開幕**5試合**を負けなしで走り、いまは**4位**にいます。
+  telop: 開幕**5試合**を負けなしで走り、いまは**4位**にいます
+  source: 報道
+  card: reasons_card
+キャスター: トッテナムとチェルシーを、どちらも3対0で退けました。
+  telop: トッテナムとチェルシーを、どちらも3対0で退けました
+キャスター: このまま行けば、クラブ史上初めて欧州の舞台に立てます。
+  telop: このまま行けば、クラブ史上初めて欧州の舞台に立てます
+
+## ブレントフォード 基礎DATA
+@bg: assets/backgrounds/stadium_ブレントフォード.png
+
 解説: 創立は**1889年**。ボートを漕ぐクラブの仲間たちが作りました。
   no_telop: true
   source: 背景
@@ -263,6 +285,17 @@ cards:
 キャスター: 2025年7月、マンチェスター・ユナイテッドへ。移籍金は**6500万ポンド**と報じられました。
   telop: 2025年7月、マンチェスター・ユナイテッドへ。移籍金は**6500万ポンド**と報じられました
 
+## 今季の監督
+@bg: assets/backgrounds/stadium_ブレントフォード.png
+
+キャスター: 監督はアイルランド人のキース・アンドリュース。**2025年6月**から、2年目です。
+  telop: 監督はアイルランド人のキース・アンドリュース。**2025年6月**から、2年目です
+  source: 報道
+  card: manager_card
+  image: assets/photos/pl/brentford_manager_9acd4388.jpg
+キャスター: 前の年まで、このクラブのセットプレー担当のコーチ。中から上がった監督です。
+  telop: 前の年まで、このクラブのセットプレー担当のコーチ。中から上がった監督です
+
 ## 今季の登録選手
 @bg: assets/backgrounds/stadium_ブレントフォード.png
 
@@ -282,17 +315,6 @@ cards:
 キャスター: フォワードは7人。ダンゴ・ワタラはブルキナファソ代表で**44試合**。ケヴィン・シャーデはブレントフォードのリーグ戦で**88試合**。
   no_telop: true
   image: assets/stats/pl_brentford_fw_f.png
-
-## 今季の監督
-@bg: assets/backgrounds/stadium_ブレントフォード.png
-
-キャスター: 監督はアイルランド人のキース・アンドリュース。**2025年6月**から、2年目です。
-  telop: 監督はアイルランド人のキース・アンドリュース。**2025年6月**から、2年目です
-  source: 報道
-  card: manager_card
-  image: assets/photos/pl/brentford_manager_9acd4388.jpg
-キャスター: 前の年まで、このクラブのセットプレー担当のコーチ。中から上がった監督です。
-  telop: 前の年まで、このクラブのセットプレー担当のコーチ。中から上がった監督です
 
 ## 今季のここまで
 @bg: assets/backgrounds/stadium_ブレントフォード.png
