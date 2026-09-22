@@ -168,11 +168,12 @@ void main() {
 
     final player = controller.state!.player;
     // 一番遠いものを見る。届いているものは文言が変わる。
-    final signature = [...Signature.forPosition(player.position)]..sort(
-      (a, b) => player.attributes
-          .detail(a.detail)
-          .compareTo(player.attributes.detail(b.detail)),
-    );
+    final signature = [...Signature.forPosition(player.position)]
+      ..sort(
+        (a, b) => player.attributes
+            .detail(a.detail)
+            .compareTo(player.attributes.detail(b.detail)),
+      );
     final target = signature.first;
     final value = player.attributes.detail(target.detail);
     expect(value, lessThan(Signature.requirement));
@@ -936,5 +937,142 @@ void main() {
       const Offset(0, -200),
     );
     expect(find.text('契約'), findsOneWidget);
+  });
+
+  testWidgets('始められない理由が、ボタンの下に書いてある', (tester) async {
+    // ボタンが灰色なだけでは、2画面ぶんスクロールした先で
+    // 何が足りないのか分からなかった。
+    final controller = CareerController(
+      repository: _MemoryRepository(),
+      careerEngine: CareerEngine(random: Random(1)),
+      matchEngine: MatchEngine(random: Random(1)),
+      random: Random(1),
+    );
+    tester.view.physicalSize = const Size(390, 4000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData(useMaterial3: true),
+        home: CreatePlayerScreen(controller: controller),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.dragUntilVisible(
+      find.text('キャリアを始める'),
+      find.byType(SingleChildScrollView),
+      const Offset(0, -400),
+    );
+    await tester.pumpAndSettle();
+    expect(find.textContaining('選手名を入れる'), findsOneWidget);
+    expect(find.textContaining('代理人を選ぶ'), findsOneWidget);
+
+    await tester.enterText(find.byType(TextField), 'テスト');
+    await tester.pumpAndSettle();
+    expect(find.textContaining('選手名を入れる'), findsNothing);
+    expect(find.textContaining('代理人を選ぶ'), findsOneWidget);
+  });
+
+  testWidgets('試合の途中では「戻る」で抜けられない', (tester) async {
+    // 抜けると次に「試合へ」を押した瞬間に同じ節が引き直され、
+    // 選んだ手が消える（Android の戻るボタン・ブラウザの戻る）。
+    final controller = await newCareer();
+    controller.startNextMatch();
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData(useMaterial3: true),
+        home: Builder(
+          builder: (context) => Scaffold(
+            body: TextButton(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => MatchScreen(controller: controller),
+                ),
+              ),
+              child: const Text('go'),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('go'));
+    await tester.pumpAndSettle();
+    expect(find.byType(MatchScreen), findsOneWidget);
+
+    // maybePop は PopScope が止めたときも true を返す（止めるのも「処理」）。
+    // 見るのは画面が残っているかどうか。
+    final navigator = tester.state<NavigatorState>(find.byType(Navigator));
+    await navigator.maybePop();
+    await tester.pumpAndSettle();
+    expect(find.byType(MatchScreen), findsOneWidget);
+  });
+
+  testWidgets('シーズン終了の画面は「戻る」で抜けられない', (tester) async {
+    // initState で finishSeason() を済ませているので、抜けて入り直すと
+    // 大陸カップの結果が二度確定する。
+    final controller = await newCareer();
+    while (!controller.state!.seasonFinished) {
+      if (controller.pendingEvent != null) {
+        await controller.resolveEvent(controller.pendingEvent!.choices.first);
+      }
+      await controller.simulateMatch();
+    }
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData(useMaterial3: true),
+        home: Builder(
+          builder: (context) => Scaffold(
+            body: TextButton(
+              onPressed: () => Navigator.of(context).push(
+                MaterialPageRoute<void>(
+                  builder: (_) => SeasonEndScreen(controller: controller),
+                ),
+              ),
+              child: const Text('go'),
+            ),
+          ),
+        ),
+      ),
+    );
+    await tester.tap(find.text('go'));
+    await tester.pumpAndSettle();
+    // maybePop は PopScope が止めたときも true を返す（止めるのも「処理」）。
+    // 見るのは画面が残っているかどうか。
+    final navigator = tester.state<NavigatorState>(find.byType(Navigator));
+    await navigator.maybePop();
+    await tester.pumpAndSettle();
+    expect(find.byType(SeasonEndScreen), findsOneWidget);
+  });
+
+  testWidgets('タブを行き来しても、スクロール位置が戻らない', (tester) async {
+    // 鍵が無いと TabBarView が画面外のタブを捨て、育成タブで下まで見て
+    // 試合タブへ戻り、また育成へ行くと先頭に戻されていた。
+    final controller = await newCareer();
+    await pumpHub(tester, controller);
+    await tester.tap(find.widgetWithText(Tab, '育成'));
+    await tester.pumpAndSettle();
+    await tester.drag(find.byType(ListView).first, const Offset(0, -600));
+    await tester.pumpAndSettle();
+    final before = tester
+        .state<ScrollableState>(find.byType(Scrollable).first)
+        .position
+        .pixels;
+    expect(before, greaterThan(0));
+
+    await tester.tap(find.widgetWithText(Tab, '試合'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(Tab, '育成'));
+    await tester.pumpAndSettle();
+    final after = tester
+        .state<ScrollableState>(find.byType(Scrollable).first)
+        .position
+        .pixels;
+    expect(after, before);
   });
 }

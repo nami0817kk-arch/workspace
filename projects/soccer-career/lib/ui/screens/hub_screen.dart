@@ -323,6 +323,10 @@ class _MatchTab extends StatelessWidget {
     final finished = state.seasonFinished;
 
     return ListView(
+      // タブを行き来してもスクロール位置が戻らないように。
+      // 鍵が無いと TabBarView が画面外のタブを捨てるので、育成タブで
+      // 下まで見て試合タブへ戻り、また育成へ行くと先頭に戻されていた。
+      key: const PageStorageKey('tab-match'),
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
       children: [
         // 答えを待っているものが先。埋もれると、そのまま忘れられる。
@@ -350,8 +354,13 @@ class _MatchTab extends StatelessWidget {
                   Text('はじめに', style: theme.textTheme.titleSmall),
                   const SizedBox(height: 6),
                   Text(
-                    '「育成」タブで今週の練習を選び、下の「試合へ」で試合に入る。'
-                    '試合では3つの局面で手を選ぶ。まずは1試合やってみるのが早い。',
+                    // 数字は実装から引く。「3つの局面」と書いたまま
+                    // 2〜6局面に変わっていて、最初に読む文が嘘になっていた。
+                    '下の「試合へ」で試合に入り、局面ごとに3つの手から選ぶ。'
+                    'ふつうの試合は${Formulas.scenariosPerStart}局面、'
+                    'じっくりやる試合は${Formulas.scenariosPerBigStart}局面。'
+                    '今週の練習は、すぐ上の「変える」から。'
+                    'まずは1試合やってみるのが早い。',
                     style: theme.textTheme.bodyMedium,
                   ),
                 ],
@@ -462,7 +471,6 @@ class _MatchTab extends StatelessWidget {
       ],
     );
   }
-
 }
 
 /// 次の相手と、自動で進める手段。
@@ -582,8 +590,8 @@ class _NextMatchCard extends StatelessWidget {
                 ),
                 caption:
                     '${state.isHome(state.matchday) ? 'ホーム' : 'アウェイ'}'
-                    ' ・ ${state.matchday}/$total'
-                    '${Newsroom.isBigFixture(state) ? ' ・ じっくり' : ''}',
+                    ' ・ ${state.matchday} / $total'
+                    '${Newsroom.isBigFixture(state) ? '\nじっくりやる試合' : ''}',
                 progress: (state.matchday - 1) / total,
               ),
             ] else ...[
@@ -973,6 +981,7 @@ class _PlayerTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListView(
+    key: const PageStorageKey('tab-player'),
     padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
     children: [
       _LevelCard(state: state),
@@ -999,6 +1008,7 @@ class _TrainingTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return ListView(
+      key: const PageStorageKey('tab-training'),
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
       children: [
         _WeekPlanCard(state: state, controller: controller),
@@ -1044,6 +1054,7 @@ class _ClubTab extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => ListView(
+    key: const PageStorageKey('tab-club'),
     padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
     children: [
       _ClubLifeCard(state: state, controller: controller),
@@ -1401,6 +1412,9 @@ class _PlayerCard extends StatelessWidget {
                 Theme(
                   data: theme.copyWith(dividerColor: Colors.transparent),
                   child: ExpansionTile(
+                    // 畳んだ/開いたの記憶。タブの ListView に PageStorageKey を付けたので、
+                    // 鍵の無い ExpansionTile はスクロール位置と同じ枠を読んで落ちる。
+                    key: const PageStorageKey('details'),
                     tilePadding: EdgeInsets.zero,
                     childrenPadding: const EdgeInsets.only(bottom: 8),
                     title: Text('詳細能力', style: theme.textTheme.bodySmall),
@@ -1787,6 +1801,9 @@ class _SupportCard extends StatelessWidget {
           // 普段は畳んでおく。毎週触るものではないのに、開いた瞬間に
           // 20個近い選択肢が並ぶと、練習を選ぶ邪魔にしかならない。
           ExpansionTile(
+            // 畳んだ/開いたの記憶。タブの ListView に PageStorageKey を付けたので、
+            // 鍵の無い ExpansionTile はスクロール位置と同じ枠を読んで落ちる。
+            key: const PageStorageKey('staff'),
             title: const Text('専属スタッフ'),
             subtitle: Text(
               staff.isEmpty
@@ -1838,6 +1855,9 @@ class _SupportCard extends StatelessWidget {
             ],
           ),
           ExpansionTile(
+            // 畳んだ/開いたの記憶。タブの ListView に PageStorageKey を付けたので、
+            // 鍵の無い ExpansionTile はスクロール位置と同じ枠を読んで落ちる。
+            key: const PageStorageKey('habits'),
             title: const Text('生活習慣'),
             subtitle: Text(
               '暮らし ${state.finances.lifestyleLabel} ・ '
@@ -2605,11 +2625,7 @@ class _KnackCard extends StatelessWidget {
                     state.development.greatWeeks,
                     Knacks.greatWeeksNeeded,
                   ),
-                  (
-                    '同じ場面での勝負',
-                    Knacks.bestMoments(state),
-                    Knacks.momentsNeeded,
-                  ),
+                  ('同じ場面での勝負', Knacks.bestMoments(state), Knacks.momentsNeeded),
                 ])
                   Padding(
                     padding: const EdgeInsets.only(bottom: 4),
@@ -2815,7 +2831,6 @@ class _TotalsCard extends StatelessWidget {
       ),
     );
   }
-
 }
 
 /// キャリアの推移。数字の羅列より、線1本のほうが形が分かる。
@@ -3400,6 +3415,9 @@ class _WorldLeagueCard extends StatelessWidget {
             Theme(
               data: theme.copyWith(dividerColor: Colors.transparent),
               child: ExpansionTile(
+                // 畳んだ/開いたの記憶。タブの ListView に PageStorageKey を付けたので、
+                // 鍵の無い ExpansionTile はスクロール位置と同じ枠を読んで落ちる。
+                key: const PageStorageKey('world-leagues'),
                 tilePadding: EdgeInsets.zero,
                 childrenPadding: const EdgeInsets.only(bottom: 8),
                 title: Text('世界のリーグ一覧', style: theme.textTheme.bodySmall),
@@ -3573,6 +3591,9 @@ class _FocusCard extends StatelessWidget {
             Theme(
               data: theme.copyWith(dividerColor: Colors.transparent),
               child: ExpansionTile(
+                // 畳んだ/開いたの記憶。タブの ListView に PageStorageKey を付けたので、
+                // 鍵の無い ExpansionTile はスクロール位置と同じ枠を読んで落ちる。
+                key: const PageStorageKey('focus-pick'),
                 tilePadding: EdgeInsets.zero,
                 childrenPadding: const EdgeInsets.only(bottom: 8),
                 title: Text('項目を選ぶ', style: theme.textTheme.bodySmall),
@@ -3710,6 +3731,9 @@ class _SignatureAimCard extends StatelessWidget {
               Theme(
                 data: theme.copyWith(dividerColor: Colors.transparent),
                 child: ExpansionTile(
+                  // 畳んだ/開いたの記憶。タブの ListView に PageStorageKey を付けたので、
+                  // 鍵の無い ExpansionTile はスクロール位置と同じ枠を読んで落ちる。
+                  key: const PageStorageKey('aim-pick'),
                   tilePadding: EdgeInsets.zero,
                   childrenPadding: const EdgeInsets.only(bottom: 8),
                   title: Text(
@@ -3821,8 +3845,7 @@ class _SignatureRow extends StatelessWidget {
                   const SizedBox(width: 6),
                   Text(signature.label, style: theme.textTheme.bodyMedium),
                   const Spacer(),
-                  if (aimed)
-                    Text('狙っている', style: theme.textTheme.labelSmall),
+                  if (aimed) Text('狙っている', style: theme.textTheme.labelSmall),
                 ],
               ),
               const SizedBox(height: 6),
@@ -4463,6 +4486,7 @@ class _CareerTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return ListView(
+      key: const PageStorageKey('tab-career'),
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
       children: [
         _TotalsCard(state: state),
@@ -4620,7 +4644,8 @@ class _ObjectiveCard extends StatelessWidget {
               label: '得点関与',
               now: (stats.goals + stats.assists).toDouble(),
               target: objective.contributions.toDouble(),
-              text: '${stats.goals + stats.assists} / ${objective.contributions}',
+              text:
+                  '${stats.goals + stats.assists} / ${objective.contributions}',
             ),
             StatBar(
               label: '平均評価',
@@ -4643,7 +4668,6 @@ class _ObjectiveCard extends StatelessWidget {
       ),
     );
   }
-
 }
 
 /// 監督との約束。自分から数字を口にして、シーズンの意味を変える。

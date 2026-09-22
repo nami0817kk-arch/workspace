@@ -27,9 +27,11 @@ import 'package:soccer_career/models/development.dart';
 import 'package:soccer_career/state/career_controller.dart';
 import 'package:soccer_career/ui/club_identity.dart';
 import 'package:soccer_career/ui/screens/create_player_screen.dart';
+import 'package:soccer_career/ui/screens/guide_screen.dart';
 import 'package:soccer_career/ui/screens/hall_screen.dart';
 import 'package:soccer_career/ui/screens/hub_screen.dart';
 import 'package:soccer_career/ui/screens/match_screen.dart';
+import 'package:soccer_career/ui/screens/season_end_screen.dart';
 
 import 'ui_test.dart' as ui_test;
 
@@ -44,14 +46,15 @@ class _Repo implements SaveRepository {
   Future<void> clear() async {}
 }
 
-ThemeData themeFor(dynamic club) => ThemeData(
-  fontFamily: 'NotoSansJP',
-  colorScheme: ColorScheme.fromSeed(
-    seedColor: ClubIdentity.of(club).primary,
-    brightness: Brightness.light,
-  ),
-  useMaterial3: true,
-);
+ThemeData themeFor(dynamic club, {Brightness brightness = Brightness.light}) =>
+    ThemeData(
+      fontFamily: 'NotoSansJP',
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: ClubIdentity.of(club).primary,
+        brightness: brightness,
+      ),
+      useMaterial3: true,
+    );
 
 Future<void> pump(WidgetTester tester, Widget home, ThemeData theme) async {
   await tester.pumpWidget(
@@ -192,5 +195,77 @@ void main() {
       ThemeData(useMaterial3: true, fontFamily: 'NotoSansJP'),
     );
     await dump(tester, '07-create');
+  });
+
+  /// 初めて開いた人の目で通す。作った直後・出来事・シーズン終了・
+  /// ガイド・ダークモード。標準の高さ（844）で撮るのは、
+  /// 「開いてすぐ何が見えるか」をそのまま見るため。
+  testWidgets('first run', (tester) async {
+    await loadFont();
+    final controller = await ui_test.newCareer(
+      age: 17,
+      hallRepository: ui_test.MemoryHall(),
+    );
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    final theme = themeFor(controller.state!.club);
+    await pump(tester, HubScreen(controller: controller), theme);
+    await dump(tester, '11-first-hub');
+
+    // ダークモード。撮ったことが一度も無かった。
+    await pump(
+      tester,
+      HubScreen(controller: controller),
+      themeFor(controller.state!.club, brightness: Brightness.dark),
+    );
+    await dump(tester, '12-dark-hub');
+    for (final tab in ['選手', '育成', 'クラブ']) {
+      await tester.tap(find.widgetWithText(Tab, tab));
+      await tester.pumpAndSettle();
+      await dump(tester, '12-dark-$tab');
+    }
+
+    // 出来事が来るまで進める。
+    while (controller.pendingEvent == null &&
+        !controller.state!.seasonFinished) {
+      await controller.simulateMatch();
+    }
+    await pump(tester, HubScreen(controller: controller), theme);
+    // タブは前の撮影の位置が残るので、試合タブへ戻す。
+    await tester.tap(find.widgetWithText(Tab, '試合'));
+    await tester.pumpAndSettle();
+    await dump(tester, '13-event');
+
+    // 代表ウィークやカップの週だと startNextMatch が何もしない。
+    while (controller.state!.pendingInternational ||
+        controller.state!.pendingCup != null) {
+      await controller.simulateMatch();
+    }
+    controller.startNextMatch();
+    if (controller.currentMatch != null) {
+      await pump(
+        tester,
+        MatchScreen(controller: controller),
+        themeFor(controller.state!.club, brightness: Brightness.dark),
+      );
+      await dump(tester, '14-dark-match');
+      await controller.simulateMatch();
+    }
+
+    // シーズン終了まで。
+    while (!controller.state!.seasonFinished) {
+      if (controller.pendingEvent != null) {
+        await controller.resolveEvent(controller.pendingEvent!.choices.first);
+      }
+      await controller.simulateMatch();
+    }
+    tester.view.physicalSize = const Size(390, 2400);
+    await pump(tester, SeasonEndScreen(controller: controller), theme);
+    await dump(tester, '15-season-end');
+
+    await pump(tester, const GuideScreen(), theme);
+    await dump(tester, '16-guide');
   });
 }

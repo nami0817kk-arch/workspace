@@ -62,6 +62,13 @@ class _MatchScreenState extends State<MatchScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // 試合の途中で「戻る」（Android の戻るボタン・ブラウザの戻る）を
+    // 押しても抜けられない。抜けると次に「試合へ」を押した瞬間に
+    // 同じ節が引き直され、選んだ手が消える。結果が出てからは戻れる。
+    return PopScope(canPop: _result != null, child: _body(context));
+  }
+
+  Widget _body(BuildContext context) {
     final match = widget.controller.currentMatch;
     final result = _result;
 
@@ -768,7 +775,9 @@ class _ResolutionCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       resolution.text,
-                      style: theme.textTheme.bodySmall?.copyWith(color: onColor),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: onColor,
+                      ),
                     ),
                   ],
                 ),
