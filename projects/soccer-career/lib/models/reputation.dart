@@ -1,3 +1,5 @@
+import '../game/formulas.dart';
+
 /// 通算のマイルストーンと受賞。
 ///
 /// キャリアの節目を記録に残す。引退画面で並ぶのがご褒美になる。
@@ -137,6 +139,7 @@ class SeasonBudget {
     required this.living,
     required this.staff,
     required this.sponsor,
+    this.appearanceBonus = 0,
   });
 
   /// 年俸（万円）。
@@ -157,8 +160,12 @@ class SeasonBudget {
   /// スポンサー収入。
   final int sponsor;
 
+  /// 出場給。基準の試合数で 0、出るほど増え、欠けるほど減る。
+  final int appearanceBonus;
+
   /// 手取り。マイナスなら貯蓄を削る。
-  int get net => salary + sponsor - agentFee - tax - living - staff;
+  int get net =>
+      salary + sponsor + appearanceBonus - agentFee - tax - living - staff;
 
   /// 出ていくもの。
   int get outgoing => agentFee + tax + living + staff;
@@ -196,6 +203,7 @@ class Finances {
     int staffCost = 0,
     double extraLivingRate = 0,
     int sponsor = 0,
+    int appearances = Formulas.appearanceBaseline,
   }) =>
       SeasonBudget(
         salary: salary,
@@ -204,6 +212,10 @@ class Finances {
         living: livingCostFor(salary) + (salary * extraLivingRate).round(),
         staff: staffCost,
         sponsor: sponsor,
+        appearanceBonus: Formulas.appearanceBonus(
+          salary: salary,
+          appearances: appearances,
+        ),
       );
 
   /// そのシーズンの手取りを貯蓄に足す。
@@ -217,12 +229,14 @@ class Finances {
     required int agentFeePercent,
     int staffCost = 0,
     double extraLivingRate = 0,
+    int appearances = Formulas.appearanceBaseline,
   }) {
     final budget = budgetFor(
       salary: salary,
       agentFeePercent: agentFeePercent,
       staffCost: staffCost,
       extraLivingRate: extraLivingRate,
+      appearances: appearances,
     );
     return Finances(savings: savings + budget.net, lifestyle: lifestyle);
   }
