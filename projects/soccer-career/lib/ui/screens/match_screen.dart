@@ -11,8 +11,9 @@ import '../../models/news.dart';
 import '../../models/season.dart';
 import '../../models/training.dart';
 import '../../state/career_controller.dart';
-import '../club_identity.dart';
+import '../fixture_banner.dart';
 import '../pitch_view.dart';
+import '../stat_tile.dart';
 import '../readable_width.dart';
 
 /// 1試合を進める画面。局面 → 結果 → 次の局面、を繰り返す。
@@ -104,6 +105,7 @@ class _MatchScreenState extends State<MatchScreen> {
                   child: match.isFinished
                       ? _ReadyToFinish(
                           last: _last,
+                          match: match,
                           onFinish: _finish,
                           busy: _busy,
                         )
@@ -146,104 +148,61 @@ class _MatchHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final muted = theme.textTheme.labelSmall?.copyWith(
-      color: theme.colorScheme.onSurfaceVariant,
-    );
+    // 今どうなっているか。1点負けている終盤の1本と、
+    // 3点リードでの1本は、同じ手でも意味が違う。
+    final minute = match.isFinished ? 90 : match.currentMinute;
+    final score = match.home
+        ? match.scoreLine
+        : '${match.concededBy(minute)} - ${match.scoredBy(minute)}';
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // 今どうなっているか。1点負けている終盤の1本と、
-        // 3点リードでの1本は、同じ手でも意味が違う。
-        Row(
-          children: [
-            Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Flexible(
-                    child: Text(
-                      match.home ? match.club.name : match.opponent.name,
-                      style: theme.textTheme.bodyMedium,
-                      overflow: TextOverflow.ellipsis,
-                      textAlign: TextAlign.end,
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  ClubCrest(
-                    club: match.home ? match.club : match.opponent,
-                    size: 26,
-                  ),
-                ],
-              ),
+        FixtureBanner(
+          club: match.club,
+          opponent: match.opponent,
+          home: match.home,
+          centre: Text(
+            score,
+            style: theme.textTheme.headlineMedium?.copyWith(
+              fontWeight: FontWeight.w800,
+              color: const Color(0xFF14140F),
+              height: 1,
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Text(
-                match.home
-                    ? match.scoreLine
-                    : '${match.concededBy(match.isFinished ? 90 : match.currentMinute)} - '
-                          '${match.scoredBy(match.isFinished ? 90 : match.currentMinute)}',
-                style: theme.textTheme.headlineSmall,
-              ),
-            ),
-            Expanded(
-              child: Row(
-                children: [
-                  ClubCrest(
-                    club: match.home ? match.opponent : match.club,
-                    size: 26,
-                  ),
-                  const SizedBox(width: 8),
-                  Flexible(
-                    child: Text(
-                      match.home ? match.opponent.name : match.club.name,
-                      style: theme.textTheme.bodyMedium,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 4),
-        Text(
-          match.home
+          ),
+          caption: match.home
               ? 'ホーム・${match.appearance.label}'
               : 'アウェイ・${match.appearance.label}',
-          style: muted,
-          textAlign: TextAlign.center,
         ),
         const SizedBox(height: 12),
         Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
-            _stat(
-              theme,
-              '局面',
-              '${match.currentIndex}/${match.scenarios.length}',
+            StatTile(
+              small: true,
+              label: '局面',
+              value: '${match.currentIndex}/${match.scenarios.length}',
             ),
-            _stat(theme, '評価点', match.rating.toStringAsFixed(1)),
-            _stat(theme, 'G / A', '${match.goals} / ${match.assists}'),
-            _stat(theme, '調子', '${match.player.condition}'),
+            StatTile(
+              small: true,
+              label: '評価点',
+              value: match.rating.toStringAsFixed(1),
+              accent: ratingColor(theme, match.rating),
+            ),
+            StatTile(
+              small: true,
+              label: 'G / A',
+              value: '${match.goals} / ${match.assists}',
+            ),
+            StatTile(
+              small: true,
+              label: '調子',
+              value: '${match.player.condition}',
+            ),
           ],
         ),
       ],
     );
   }
-
-  Widget _stat(ThemeData theme, String label, String value) => Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        label,
-        style: theme.textTheme.labelSmall?.copyWith(
-          color: theme.colorScheme.onSurfaceVariant,
-        ),
-      ),
-      Text(value, style: theme.textTheme.titleMedium),
-    ],
-  );
 }
 
 class _ScenarioView extends StatelessWidget {
@@ -310,7 +269,7 @@ class _ScenarioView extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          if (last != null) _ResolutionCard(resolution: last!),
+          if (last != null) _ResolutionCard(resolution: last!, match: match),
           if (last != null) const SizedBox(height: 20),
           Card(
             clipBehavior: Clip.antiAlias,
@@ -737,10 +696,15 @@ class _OptionButton extends StatelessWidget {
   }
 }
 
+/// 選んだ手の結果。文字だけだったところに、ボールの行方を描く。
+///
+/// 今の局面の絵に前の結果を重ねると、2つの場所が混ざる。
+/// 結果は結果で、**その局面の場所**に小さなピッチを添えて出す。
 class _ResolutionCard extends StatelessWidget {
-  const _ResolutionCard({required this.resolution});
+  const _ResolutionCard({required this.resolution, required this.match});
 
   final ScenarioResolution resolution;
+  final MatchInProgress match;
 
   @override
   Widget build(BuildContext context) {
@@ -751,32 +715,67 @@ class _ResolutionCard extends StatelessWidget {
     final onColor = resolution.success
         ? theme.colorScheme.onPrimaryContainer
         : theme.colorScheme.onErrorContainer;
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
+    // この結果が出た局面。選んだ瞬間に次へ進んでいるので、1つ前を見る。
+    final index = match.currentIndex - 1;
+    final spot = index >= 0 && index < match.scenarios.length
+        ? match.scenarios[index].spot
+        : null;
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        width: double.infinity,
         color: color,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            resolution.isGoal
-                ? 'ゴール'
-                : resolution.isAssist
-                ? 'アシスト'
-                : resolution.success
-                ? '成功'
-                : '失敗',
-            style: theme.textTheme.labelLarge?.copyWith(color: onColor),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            resolution.text,
-            style: theme.textTheme.bodyMedium?.copyWith(color: onColor),
-          ),
-        ],
+        child: Row(
+          // 高さは中身に任せる。stretch にすると、スクロールの中（高さ無限）で落ちる。
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            if (spot != null)
+              SizedBox(
+                width: 128,
+                height: 128 / 1.45,
+                child: PitchView(
+                  spot: spot,
+                  club: match.club,
+                  opponent: match.opponent,
+                  style: match.opponentStyle,
+                  aspectRatio: 1.45,
+                  outcome: PitchOutcome(
+                    success: resolution.success,
+                    goal: resolution.isGoal,
+                  ),
+                ),
+              ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(14),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      resolution.isGoal
+                          ? 'ゴール'
+                          : resolution.isAssist
+                          ? 'アシスト'
+                          : resolution.success
+                          ? '成功'
+                          : '失敗',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: onColor,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      resolution.text,
+                      style: theme.textTheme.bodySmall?.copyWith(color: onColor),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -785,11 +784,13 @@ class _ResolutionCard extends StatelessWidget {
 class _ReadyToFinish extends StatelessWidget {
   const _ReadyToFinish({
     required this.last,
+    required this.match,
     required this.onFinish,
     required this.busy,
   });
 
   final ScenarioResolution? last;
+  final MatchInProgress match;
   final VoidCallback onFinish;
   final bool busy;
 
@@ -798,7 +799,7 @@ class _ReadyToFinish extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        if (last != null) _ResolutionCard(resolution: last!),
+        if (last != null) _ResolutionCard(resolution: last!, match: match),
         const Spacer(),
         FilledButton(
           onPressed: busy ? null : onFinish,

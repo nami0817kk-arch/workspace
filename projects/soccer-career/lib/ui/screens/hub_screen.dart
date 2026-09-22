@@ -32,6 +32,8 @@ import '../../models/season.dart';
 import '../../state/career_controller.dart';
 import '../club_identity.dart';
 import '../budget_lines.dart';
+import '../fixture_banner.dart';
+import '../stat_tile.dart';
 import '../attribute_shape.dart';
 import '../player_banner.dart';
 import '../readable_width.dart';
@@ -426,15 +428,17 @@ class _MatchTab extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    _stat(theme, '出場', '${stats.appearances}'),
-                    _stat(theme, 'ゴール', '${stats.goals}'),
-                    _stat(theme, 'アシスト', '${stats.assists}'),
-                    _stat(
-                      theme,
-                      '平均評価',
-                      stats.appearances == 0
+                    StatTile(label: '出場', value: '${stats.appearances}'),
+                    StatTile(label: 'ゴール', value: '${stats.goals}'),
+                    StatTile(label: 'アシスト', value: '${stats.assists}'),
+                    StatTile(
+                      label: '平均評価',
+                      value: stats.appearances == 0
                           ? '—'
                           : stats.averageRating.toStringAsFixed(2),
+                      accent: stats.appearances == 0
+                          ? null
+                          : ratingColor(theme, stats.averageRating),
                     ),
                   ],
                 ),
@@ -459,17 +463,6 @@ class _MatchTab extends StatelessWidget {
     );
   }
 
-  Widget _stat(ThemeData theme, String label, String value) => Column(
-    children: [
-      Text(
-        label,
-        style: theme.textTheme.labelSmall?.copyWith(
-          color: theme.colorScheme.onSurfaceVariant,
-        ),
-      ),
-      Text(value, style: theme.textTheme.titleLarge),
-    ],
-  );
 }
 
 /// 次の相手と、自動で進める手段。
@@ -567,39 +560,41 @@ class _NextMatchCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              // **今日はじっくりやる試合か。** 局面の数がここで変わるので、
-              // 入る前に分かるようにしておく。**行は増やさない**——
-              // 次節カードが1行伸びるだけで、スマホの高さでは
-              // 「今の状態」が画面の外に出る（実際に出た）。
-              '${state.pendingCup != null
-                  ? state.pendingCup!.label
-                  : state.pendingInternational
-                  ? '代表ウィーク'
-                  : '第${state.matchday}節 / $total'}'
-              '${Newsroom.isBigFixture(state) ? '  ・  じっくりやる試合' : ''}',
-              style: theme.textTheme.labelMedium?.copyWith(
-                color: theme.colorScheme.primary,
-              ),
-            ),
-            const SizedBox(height: 6),
-            if (!state.pendingInternational) ...[
-              ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(
-                  value: (state.matchday - 1) / total,
-                  minHeight: 4,
-                ),
-              ),
-              const SizedBox(height: 10),
-            ],
-            if (state.pendingCup == null && !state.pendingInternational)
-              _Fixture(
+            // **今日はじっくりやる試合か。** 局面の数がここで変わるので、
+            // 入る前に分かるようにしておく。**行は増やさない**——
+            // 次節カードが1行伸びるだけで、スマホの高さでは
+            // 「今の状態」が画面の外に出る（実際に出た）。
+            if (state.pendingCup == null && !state.pendingInternational) ...[
+              // 対戦カード。両クラブの色を差し込んで、真ん中に節。
+              // エンブレム34pxと文字だけだった頃は、一番見る場所なのに
+              // どれも同じ白いカードに見えた。
+              FixtureBanner(
                 club: state.club,
                 opponent: state.opponentFor(state.matchday),
                 home: state.isHome(state.matchday),
-              )
-            else
+                centre: Text(
+                  '第${state.matchday}節',
+                  style: theme.textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.w800,
+                    color: const Color(0xFF14140F),
+                    height: 1,
+                  ),
+                ),
+                caption:
+                    '${state.isHome(state.matchday) ? 'ホーム' : 'アウェイ'}'
+                    ' ・ ${state.matchday}/$total'
+                    '${Newsroom.isBigFixture(state) ? ' ・ じっくり' : ''}',
+                progress: (state.matchday - 1) / total,
+              ),
+            ] else ...[
+              Text(
+                '${state.pendingCup != null ? state.pendingCup!.label : '代表ウィーク'}'
+                '${Newsroom.isBigFixture(state) ? '  ・  じっくりやる試合' : ''}',
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: theme.colorScheme.primary,
+                ),
+              ),
+              const SizedBox(height: 6),
               Text(
                 state.pendingCup != null
                     ? '${state.pendingCup!.round.neutral
@@ -613,6 +608,7 @@ class _NextMatchCard extends StatelessWidget {
                           : '招集は無かった'),
                 style: theme.textTheme.titleLarge,
               ),
+            ],
             // 2戦合計の第2戦は、第1戦の結果を背負っている。
             if (state.pendingCup?.carriesAggregate ?? false)
               Text(
@@ -2549,90 +2545,6 @@ class _ExperienceCard extends StatelessWidget {
 ///
 /// 一番よく見るカードなのに、相手は文字でしか出ていなかった。
 /// **判定には効かない**——`ClubIdentity` を映しているだけ。
-class _Fixture extends StatelessWidget {
-  const _Fixture({
-    required this.club,
-    required this.opponent,
-    required this.home,
-  });
-
-  final Club club;
-  final Club opponent;
-  final bool home;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    // 左がホーム。並びが試合の見え方と揃う。
-    final left = home ? club : opponent;
-    final right = home ? opponent : club;
-    return Row(
-      children: [
-        Expanded(
-          child: _Side(club: left, mine: left == club, alignEnd: true),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'vs',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-              Text(
-                home ? 'ホーム' : 'アウェイ',
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ],
-          ),
-        ),
-        Expanded(
-          child: _Side(club: right, mine: right == club),
-        ),
-      ],
-    );
-  }
-}
-
-class _Side extends StatelessWidget {
-  const _Side({required this.club, required this.mine, this.alignEnd = false});
-
-  final Club club;
-  final bool mine;
-  final bool alignEnd;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final crest = ClubCrest(club: club, size: 34);
-    final name = Flexible(
-      child: Text(
-        club.name,
-        style: theme.textTheme.titleSmall?.copyWith(
-          // 自分のクラブだけ濃く出す。どちらが自分か迷わせない。
-          fontWeight: mine ? FontWeight.w700 : FontWeight.w400,
-          color: mine ? null : theme.colorScheme.onSurfaceVariant,
-        ),
-        overflow: TextOverflow.ellipsis,
-        textAlign: alignEnd ? TextAlign.end : TextAlign.start,
-      ),
-    );
-    return Row(
-      mainAxisAlignment: alignEnd
-          ? MainAxisAlignment.end
-          : MainAxisAlignment.start,
-      children: alignEnd
-          ? [name, const SizedBox(width: 8), crest]
-          : [crest, const SizedBox(width: 8), name],
-    );
-  }
-}
-
 /// コツ。20年やってきたことが、最後に1つだけ性質になる。
 ///
 /// 特性は生まれ持ったもの、という前提はそのまま。ここで開けるのは
@@ -2830,15 +2742,17 @@ class _TotalsCard extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _total(theme, '試合', '${totals.appearances}'),
-                _total(theme, 'ゴール', '${totals.goals}'),
-                _total(theme, 'アシスト', '${totals.assists}'),
-                _total(
-                  theme,
-                  '平均評価',
-                  totals.appearances == 0
+                StatTile(label: '試合', value: '${totals.appearances}'),
+                StatTile(label: 'ゴール', value: '${totals.goals}'),
+                StatTile(label: 'アシスト', value: '${totals.assists}'),
+                StatTile(
+                  label: '平均評価',
+                  value: totals.appearances == 0
                       ? '—'
                       : totals.averageRating.toStringAsFixed(2),
+                  accent: totals.appearances == 0
+                      ? null
+                      : ratingColor(theme, totals.averageRating),
                 ),
               ],
             ),
@@ -2902,17 +2816,6 @@ class _TotalsCard extends StatelessWidget {
     );
   }
 
-  Widget _total(ThemeData theme, String label, String value) => Column(
-    children: [
-      Text(
-        label,
-        style: theme.textTheme.labelSmall?.copyWith(
-          color: theme.colorScheme.onSurfaceVariant,
-        ),
-      ),
-      Text(value, style: theme.textTheme.titleLarge),
-    ],
-  );
 }
 
 /// キャリアの推移。数字の羅列より、線1本のほうが形が分かる。
@@ -4280,7 +4183,10 @@ class _ResultRow extends StatelessWidget {
         children: [
           Text(
             result.rating?.toStringAsFixed(1) ?? '—',
-            style: theme.textTheme.titleSmall,
+            style: theme.textTheme.titleSmall?.copyWith(
+              color: ratingColor(theme, result.rating),
+              fontWeight: FontWeight.w700,
+            ),
           ),
           const SizedBox(width: 4),
           // 開けることが見た目で分かるように。
@@ -4702,15 +4608,29 @@ class _ObjectiveCard extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 10),
-            _row(theme, '出場', stats.appearances, objective.appearances),
-            _row(
-              theme,
-              '得点関与',
-              stats.goals + stats.assists,
-              objective.contributions,
+            const SizedBox(height: 6),
+            // 「8 / 30」と書くより、棒の長さのほうが早い。
+            StatBar(
+              label: '出場',
+              now: stats.appearances.toDouble(),
+              target: objective.appearances.toDouble(),
+              text: '${stats.appearances} / ${objective.appearances}',
             ),
-            _rowDouble(theme, '平均評価', stats.averageRating, objective.rating),
+            StatBar(
+              label: '得点関与',
+              now: (stats.goals + stats.assists).toDouble(),
+              target: objective.contributions.toDouble(),
+              text: '${stats.goals + stats.assists} / ${objective.contributions}',
+            ),
+            StatBar(
+              label: '平均評価',
+              // 評価は 6.0 が基準なので、そこからの積み上がりで見せる。
+              now: stats.appearances == 0 ? 0 : stats.averageRating - 6.0,
+              target: objective.rating - 6.0,
+              text:
+                  '${stats.appearances == 0 ? '—' : stats.averageRating.toStringAsFixed(2)}'
+                  ' / ${objective.rating.toStringAsFixed(2)}',
+            ),
             const SizedBox(height: 6),
             Text(
               '2つ以上で達成。契約更改の年俸に効く。',
@@ -4724,38 +4644,6 @@ class _ObjectiveCard extends StatelessWidget {
     );
   }
 
-  Widget _row(ThemeData theme, String label, int now, int target) =>
-      _line(theme, label, '$now / $target', now >= target);
-
-  Widget _rowDouble(ThemeData theme, String label, double now, double target) =>
-      _line(
-        theme,
-        label,
-        '${now.toStringAsFixed(2)} / ${target.toStringAsFixed(2)}',
-        now >= target,
-      );
-
-  Widget _line(ThemeData theme, String label, String value, bool met) =>
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: 2),
-        child: Row(
-          children: [
-            Icon(
-              met ? Icons.check_circle : Icons.circle_outlined,
-              size: 16,
-              color: met
-                  ? theme.colorScheme.primary
-                  : theme.colorScheme.outlineVariant,
-            ),
-            const SizedBox(width: 8),
-            SizedBox(
-              width: 76,
-              child: Text(label, style: theme.textTheme.bodySmall),
-            ),
-            Text(value, style: theme.textTheme.bodySmall),
-          ],
-        ),
-      );
 }
 
 /// 監督との約束。自分から数字を口にして、シーズンの意味を変える。
