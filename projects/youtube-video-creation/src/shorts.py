@@ -182,6 +182,12 @@ def _drop_hook(opening: Scene) -> None:
             keep = index + 1
             break
     del opening.lines[keep:]
+    # **一言そのものはショートでは落とし、題の1行から始める**（2026-09-23）。
+    # 20本の実尺で、一言（4〜5秒）のせいで「誰かの言葉」が16秒に届かない回が14本あった
+    # （17〜20秒）。題の行にクラブ名が入るようになった（09-22）ので、一言を落としても
+    # ショートがクラブ名を言わないことはない。本編の一言はそのまま
+    if keep >= 2:
+        del opening.lines[: keep - 1]
 
 
 def _drop_main_mark(scene: Scene) -> None:
