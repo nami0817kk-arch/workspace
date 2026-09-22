@@ -10,7 +10,7 @@ theme:
   kind: other
   topic: 堂安律
   title: '堂安律「めっちゃ叩かれた」サウジを断ったあとに返した言葉'
-  hook: 言われた言葉を、そのまま引き受けると言いました。
+  hook: 「日本を背負うな」と言われて、返した言葉です。
   question: 叩かれたことに、本人は何と答えたのか
 short_title: 堂安律「全部背負ってやろうかな」
 thumbnail:
@@ -26,27 +26,12 @@ sections:
     bg: assets/backgrounds/stock/stadium_night.mp4
     say:
       - 日本代表の10番、堂安律。この夏、サウジアラビアのアル・イテハドが獲得に動きました。
+      - 移籍に前向きだと伝えられると、批判の声が集まりました。
       - 堂安はその誘いを断り、**フランクフルトに残りました。**
       - 代表の練習のあと、その夏のことを自分から話しています。
     sources:
       - https://www.soccer-king.jp/news/japan/national/20260922/2207876.html
       - https://www.footballchannel.jp/2026/09/22/post1016592/
-  - id: after
-    heading: 決めるまでと、決めたあと
-    tier: 報道
-    telop: 「自分の頭がすごいスッキリした」
-    narrator: キャスター
-    bg: assets/backgrounds/stock/stadium_night.mp4
-    say:
-      - ワールドカップが終わってから、迷っていた時間があったそうです。
-      - voice: 堂安律
-        text: 頭の中でギアが入らないような。プレシーズンやってる時もスイッチ入らんなと思っていた
-      - voice: 堂安律
-        text: 決断した後はもうすごいスッキリして、今はまた楽しくエネルギーが湧いてサッカーができてます
-      - voice: 堂安律
-        text: すごい自然体で自信もある。自分の存在意義を見せれたらなと思います
-    sources:
-      - https://www.soccer-king.jp/news/japan/national/20260922/2207876.html
   - id: said
     main: true
     heading: 言ったこと
@@ -72,6 +57,22 @@ sections:
     sources:
       - https://www.soccer-king.jp/news/japan/national/20260922/2207876.html
       - https://www.footballchannel.jp/2026/09/22/post1016592/
+  - id: after
+    heading: 決めるまでと、決めたあと
+    tier: 報道
+    telop: 「自分の頭がすごいスッキリした」
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
+      - ワールドカップが終わってから、迷っていた時間があったそうです。
+      - voice: 堂安律
+        text: 頭の中でギアが入らないような。プレシーズンやってる時もスイッチ入らんなと思っていた
+      - voice: 堂安律
+        text: 決断した後はもうすごいスッキリして、今はまた楽しくエネルギーが湧いてサッカーができてます
+      - voice: 堂安律
+        text: すごい自然体で自信もある。自分の存在意義を見せれたらなと思います
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20260922/2207876.html
   - id: voices
     heading: ネットの声
     tier: 未確認
