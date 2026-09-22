@@ -9,14 +9,14 @@ theme:
   league_name: プレミアリーグ
   kind: other
   topic: リヴァプール
-  title: 'ヴィルツは期待外れなのか。リヴァプールのファンで割れる評価'
+  title: 'ヴィルツはもう見切るべきか。リヴァプールのファンが書いていたこと'
   hook: 見切りをつけるべきか、という声まで出ています。
-  question: ヴィルツは期待外れなのか
+  question: ファンはヴィルツをどう見ているのか
 short_title: ヴィルツ、ファンのあいだで評価が真っ二つ
 thumbnail:
   photo: assets/images/20260923_wirtz/01.jpg
   line1: 約200億円で来て1年
-  line2: ファンの評価は真っ二つ
+  line2: ファンが書いていたこと
 sections:
   - id: what
     heading: いまのヴィルツ
@@ -36,7 +36,7 @@ sections:
       - 相手ゴールに近い位置でボールに触る回数は、レバークーゼンでは1試合50回。リヴァプールでは**35回**です。
       - 監督もフロントも代わった、過渡期のクラブです。
       - ドリブルの成功も、90分あたり3.06回から**1.46回**に減りました。
-      - 代表戦の期間に入って、ファンのあいだで言い合いになっています。
+      - 代表戦の期間に入って、ファンが次々と書き込んでいます。
     sources:
       - https://www.footballchannel.jp/2026/09/22/post1016526/
       - https://www.espn.com/soccer/story/_/id/50000502/liverpool-give-florian-wirtz-already-a-superstar-progress
@@ -48,7 +48,7 @@ sections:
     narrator: キャスター
     bg: assets/backgrounds/stock/stadium_night.mp4
     say:
-      - text: '約200億円で来て1年たったヴィルツを、もう見切るべきか。リヴァプールのファンの声が割れています。'
+      - text: '加入から1年、ヴィルツの数字は落ちたままです。見切るべきかという声も出ています。'
         short_only: true
       - voice: ネット民
         text: 悪いのはヴィルツじゃない。2004年のロナウジーニョを獲ったと思ってるリヴァプールのファンが悪い

@@ -21,15 +21,20 @@ sections:
   - id: what
     heading: いまの状況
     tier: 報道
-    telop: 新しい契約の発表は、まだ無い
+    telop: 2週間前は「本当に悲しい」と話していた
     narrator: キャスター
     bg: assets/backgrounds/stock/stadium_night.mp4
     say:
       - リヴァプールのマック・アリスター。新しい契約を結んだという発表は、まだありません。
-      - 延長がなければ、2年後には移籍金のかからない立場になります。
-      - 残っている契約について聞かれて、こう答えました。
+      - 今月の初め、本人はこう話していました。
+      - voice: アレクシス・マック・アリスター
+        text: 代理人から聞いた話では、僕は契約更新できる立場にはいないということだ。本当に悲しい。
+      - voice: アレクシス・マック・アリスター
+        text: 僕たちはともにリーグ制覇を果たし、困難な時期も乗り越えてきた。僕は常にベストを尽くしてきた。
+      - それから2週間。残っている契約について聞かれて、こう答えました。
     sources:
       - https://x.com/FabrizioRomano/status/2102064636811952337
+      - https://news.yahoo.co.jp/articles/42a8bc7a1c9e6e9fd4a2b7754516462bfa8e220c
   - id: said
     main: true
     heading: 言ったこと
