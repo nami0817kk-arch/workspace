@@ -436,14 +436,23 @@ class MatchInProgress {
   /// （ふつうの試合は2局面）。実測で、中盤の選手は20年で1試合2点を一度も
   /// 取らず、守備の選手は通算0ゴールだった。
   /// ノリが乗っているほど起きる——**自分のしたことが返ってくる形**にする。
-  bool _rollFlowGoal() {
+  bool _rollFlowGoal({int? at}) {
     if (momentum <= 0) return false;
     final share = Formulas.flowGoalShareFor(player.position.family);
     if (share <= 0) return false;
     final chance =
         Formulas.flowGoalChance * share * momentumFactor * turnConversionFactor;
     if (_random.nextDouble() >= chance) return false;
-    return _takeTeammateGoal(currentMinute);
+    if (!_takeTeammateGoal(at ?? currentMinute)) return false;
+    // **決めた1本は、次の1本を呼ぶ。** 流れの中の得点が乗りを下げないので、
+    // 乗っている試合では続けて決まる——ハットトリックはそうやって起きる。
+    // これが無いと得点が試合に均されて、中盤の選手は20年で1度も
+    // 2点取らなかった（実測: 1キャリア 0.8回、最多 2点）。
+    momentum = (momentum + Formulas.momentumFromChance).clamp(
+      0,
+      Formulas.momentumMax,
+    );
+    return true;
   }
 
   void _claimTeammateGoal(int minute) {
@@ -1185,6 +1194,17 @@ class MatchInProgress {
   /// スコアはクラブ間の力量差から作り、そこに自分の得点を足す。
   /// 自分が決めた分は必ずチームの得点に反映される。
   MatchResult finish() {
+    // **乗り切ったまま終わった試合には、もう1本ある。**
+    // 流れの中の1本は局面と局面のあいだにしか無いので、ふつうの試合
+    // （2局面）では機会が2回しかなく、**中盤の選手は20年で2点取る試合が
+    // 0.8回**、ハットトリックは一度も無かった（`flow_sim`）。
+    // 乗り切った試合にだけ1回足すと、得点が平らに散らずに
+    // 「爆発した試合」に集まる——ハットトリックはそうやって起きる。
+    if (appearance.played && momentum >= Formulas.momentumMax) {
+      // 終了間際。局面はもう無いので、時間は試合終了で取る
+      // （`currentMinute` は今の局面の時間なので、ここでは範囲の外に出る）。
+      if (_rollFlowGoal(at: 90)) flowGoals++;
+    }
     final teamGoals = teammateGoalMinutes.length;
     final concededGoals = concededMinutes.length;
 
