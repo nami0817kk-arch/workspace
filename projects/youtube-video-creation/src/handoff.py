@@ -28,6 +28,9 @@ def build_sheet(out_dir: Path) -> str:
     script_json = out_dir / "script.json"
     data = json.loads(script_json.read_text(encoding="utf-8")) if script_json.exists() else {}
     title = str(data.get("title") or out_dir.name)
+    # 公開する題はシリーズ名の後ろ書き（2026-09-23）。`upload` が読む description.txt の1行目と同じ形
+    if data.get("series"):
+        title = f"{title}｜{data['series']}"
     tags = [str(t) for t in (data.get("tags") or [])]
     description = (out_dir / "description.txt").read_text(encoding="utf-8").rstrip()
 

@@ -3,6 +3,7 @@ title: 56年間タイトルゼロ。ニューカッスルが待っていたも�
 format: news
 voice_min: 0.0
 short_title: ニューカッスルが56年待っていたものとは
+series: プレミアリーグチーム紹介
 topic: ニューカッスル
 thumbnail_line1: 56年待って、獲ったもの
 thumbnail_line2: ニューカッスル

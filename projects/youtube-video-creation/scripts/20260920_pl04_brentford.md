@@ -3,6 +3,7 @@ title: プレーオフに9回落ちて、いま4位。ブレントフォード�
 format: news
 voice_min: 0.0
 short_title: ブレントフォードが変わった理由
+series: プレミアリーグチーム紹介
 topic: ブレントフォード
 thumbnail_line1: 9回続けて負けた、その10回目
 thumbnail_line2: ブレントフォード

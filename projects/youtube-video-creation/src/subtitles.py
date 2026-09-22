@@ -5,7 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from . import emphasis
-from .script_model import Script
+from .script_model import Script, published_title
 
 
 # 字幕1枚の上限。日本語の字幕は1秒に4文字前後が読みやすいとされる。
@@ -228,7 +228,8 @@ def write_outputs(script: Script, out_dir: Path, credits: list[str] | None = Non
     }
     files["srt"].write_text(to_srt(script), encoding="utf-8")
     files["description"].write_text(
-        f"{script.title}\n\n{description(script, credits, footnotes)}", encoding="utf-8"
+        # 公開する題（シリーズ名の後ろ書き）。読み上げの1行目は script.title のまま
+        f"{published_title(script)}\n\n{description(script, credits, footnotes)}", encoding="utf-8"
     )
     files["script_json"].write_text(script.to_json(), encoding="utf-8")
     return files

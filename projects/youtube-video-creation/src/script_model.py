@@ -198,6 +198,8 @@ class Script:
     def to_dict(self) -> dict:
         return {
             "title": self.title,
+            # シリーズ名（2026-09-23）。handoff が公開する題を組むのに使う
+            "series": str((self.meta or {}).get("series") or ""),
             "description": self.description,
             "tags": self.tags,
             "scenes": [
@@ -213,6 +215,16 @@ class Script:
 
     def to_json(self) -> str:
         return json.dumps(self.to_dict(), ensure_ascii=False, indent=2)
+
+
+def published_title(script: Script) -> str:
+    """公開する題（2026-09-23 指示「サブタイトルにプレミアリーグチーム紹介として」）。
+
+    front matter に `series:` があれば「題｜シリーズ名」。**読み上げの1行目は `title` のまま**で、
+    変わるのは description.txt の1行目（`upload` が読む）だけ。ショートも同じ後ろ書きになる。
+    """
+    series = str((script.meta or {}).get("series") or "").strip()
+    return f"{script.title}｜{series}" if series and script.title else script.title
 
 
 def load_script(path: str | Path) -> Script:

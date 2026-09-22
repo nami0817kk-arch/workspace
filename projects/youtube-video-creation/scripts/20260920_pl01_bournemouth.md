@@ -3,6 +3,7 @@ title: マイナス17の勝ち点から欧州へ。ボーンマスに何があ�
 format: news
 voice_min: 0.0
 short_title: ボーンマスに何があったのか
+series: プレミアリーグチーム紹介
 topic: ボーンマス
 thumbnail_line1: 勝ち点17を引かれた
 thumbnail_line2: そこから18年で、初の欧州へ

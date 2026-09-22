@@ -3,6 +3,7 @@ title: 高井幸大のトッテナム。リーグの外からFAカップをつ�
 format: news
 voice_min: 0.0
 short_title: 高井幸大のトッテナム、リーグ外でFAカップを獲った結末
+series: プレミアリーグチーム紹介
 topic: トッテナム
 thumbnail_line1: リーグの外から、FAカップ
 thumbnail_line2: トッテナム

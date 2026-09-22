@@ -3,6 +3,7 @@ title: 「イングランド銀行」と呼ばれたサンダーランド。半�
 format: news
 voice_min: 0.0
 short_title: サンダーランド、半世紀ぶりの欧州で何を見せるのか
+series: プレミアリーグチーム紹介
 topic: サンダーランド
 thumbnail_line1: 6回優勝が、3部にいた
 thumbnail_line2: サンダーランド

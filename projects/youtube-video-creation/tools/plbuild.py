@@ -552,6 +552,9 @@ def build(key: str, number: int, old_file: str) -> Path:
         # **題は手で書く**（2026-09-22 指示「タイトルをもっと視聴者が見たいと思うものに」）。
         # <key>_say.yaml の `title`／`short_title`。無ければ「◯◯ってどんなクラブ？」
         "short_title": str(ov.get("short_title") or ov.get("title") or f"{title_head}ってどんなクラブ？")[:40],
+        # **公開する題の後ろにシリーズ名**（2026-09-23 指示「サブタイトルにプレミアリーグチーム紹介として」）。
+        # 「題｜プレミアリーグチーム紹介」。読み上げには入らない（subtitles.write_outputs）
+        "series": "プレミアリーグチーム紹介",
         "theme": {"id": old["theme"]["id"], "league": "england", "league_name": "プレミアリーグ", "kind": "other",
                   # **シリーズの名札は付けない**（2026-09-21 指示「②プレミア20クラブ紹介はいらない」）。
                   # 検索で来る言葉はクラブ名で、連番はタイトルの尺を食うだけだった

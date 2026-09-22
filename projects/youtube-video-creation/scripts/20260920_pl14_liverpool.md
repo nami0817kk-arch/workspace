@@ -3,6 +3,7 @@ title: 遠藤航のリヴァプール。隣のクラブが去った土地で生�
 format: news
 voice_min: 0.0
 short_title: 遠藤航のリヴァプールが生まれた経緯
+series: プレミアリーグチーム紹介
 topic: リヴァプール
 thumbnail_line1: エヴァートンが去った跡地に
 thumbnail_line2: リヴァプール

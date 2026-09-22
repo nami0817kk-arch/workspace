@@ -164,11 +164,14 @@ for key, num in ORDER:
             inner.append(f'<p{" class=so" if pre else ""}>{pre}{rich(l["text"])}</p>')
     n_lines = sum(len(s["lines"]) for s in secs)
     blocks.append(
+        # 公開する題（シリーズ名の後ろ書き。2026-09-23）。読み上げの1行目は title のまま
         f'<details><summary><b>{num}　{html.escape(meta["title"])}</b>'
-        f'<span class="n">{len(secs)}節・{n_lines}行</span></summary>'
+        + (f'<span class="ser">｜{html.escape(str(meta["series"]))}</span>' if meta.get("series") else "")
+        + f'<span class="n">{len(secs)}節・{n_lines}行</span></summary>'
         + "".join(inner) + "</details>")
 
 CSS = """
+.ser{color:var(--mut);font-weight:400}
 :root{--bg:#f5f4f1;--fg:#1c1b19;--mut:#6b6862;--card:#fff;--line:#e2ded6;--acc:#a8321f;--hi:#1f7a5a}
 @media (prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#14120f;--fg:#efece4;--mut:#9d9689;--card:#1f1c17;--line:#332f27;--acc:#e8a08c;--hi:#5fd6a8}}
 :root[data-theme=dark]{--bg:#14120f;--fg:#efece4;--mut:#9d9689;--card:#1f1c17;--line:#332f27;--acc:#e8a08c;--hi:#5fd6a8}
