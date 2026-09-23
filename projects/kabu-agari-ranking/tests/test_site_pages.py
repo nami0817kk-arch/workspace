@@ -273,3 +273,33 @@ def test_並べ替えはJSが無くても困らない形で入る(site):
     # （並べ替えの処理は全ページ共通なので、印が付いた表があるかで見る）
     glossary = (out_dir / "glossary.html").read_text(encoding="utf-8")
     assert '<table class="ranking" data-sortable>' not in glossary
+
+
+def test_相場の振り返りは日ごとの数字を持つ():
+    days = [{
+        "rec_date": "2026-09-18",
+        "gainers": [
+            {"rank": 1, "code": "5131", "name": "リンカーズ", "close": 163.0,
+             "change_pct": 44.25, "metric_value": 1},        # ストップ高
+            {"rank": 2, "code": "7203", "name": "トヨタ", "close": 2500.0,
+             "change_pct": 3.0, "metric_value": 1},
+        ],
+        "losers": [
+            {"rank": 1, "code": "4599", "name": "ステムリム", "close": 239.0,
+             "change_pct": -25.08, "metric_value": 1},       # ストップ安
+        ],
+        "active": [],
+    }]
+    row = render.market_rows(days)[0]
+    assert row == {"rec_date": "2026-09-18", "big": 1, "stop_high": 1,
+                   "stop_low": 1, "top_pct": 44.25}
+
+
+def test_相場の振り返りの一文は最も荒れた日を指す():
+    rows = [
+        {"rec_date": "2026-09-18", "big": 5, "stop_high": 2, "stop_low": 0, "top_pct": 10.0},
+        {"rec_date": "2026-09-17", "big": 12, "stop_high": 3, "stop_low": 1, "top_pct": 20.0},
+    ]
+    s = render.market_summary(rows)
+    assert "2026-09-17" in s and "12銘柄" in s
+    assert "のべ5銘柄" in s

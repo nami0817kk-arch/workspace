@@ -418,6 +418,70 @@ def _build_stock_pages(days: list[dict]) -> list[dict]:
     return stocks
 
 
+def market_rows(days: list[dict]) -> list[dict]:
+    """日ごとの相場の荒さ。新しい日が先。"""
+    out = []
+    for day in days:
+        gainers = day.get("gainers") or []
+        if not gainers:
+            continue
+        losers = day.get("losers") or []
+        out.append({
+            "rec_date": day["rec_date"],
+            "big": sum(1 for r in gainers if abs(r["change_pct"]) >= BIG_MOVE_PCT),
+            "stop_high": sum(
+                1 for r in gainers
+                if price_limit.classify(r.get("close"), r.get("change_pct")) == price_limit.STOP_HIGH
+            ),
+            "stop_low": sum(
+                1 for r in losers
+                if price_limit.classify(r.get("close"), r.get("change_pct")) == price_limit.STOP_LOW
+            ),
+            "top_pct": gainers[0]["change_pct"],
+        })
+    return out
+
+
+def market_summary(rows: list[dict]) -> str:
+    """相場の振り返りの一文。"""
+    if not rows:
+        return ""
+    busiest = max(rows, key=lambda r: r["big"])
+    stops = sum(r["stop_high"] for r in rows)
+    return (
+        f"この期間で最も荒かったのは{busiest['rec_date']}で、"
+        f"上位30銘柄のうち{busiest['big']}銘柄が10%以上動きました。"
+        f"期間を通したストップ高はのべ{stops}銘柄です。"
+    )
+
+
+def _build_market_page(days: list[dict]) -> None:
+    rows = market_rows(days)
+    recent = list(reversed(rows[:TREND_DAYS]))
+
+    def series(key):
+        return [{"label": r["rec_date"][5:].replace("-", "/"), "value": r[key]} for r in recent]
+
+    _write(
+        _OUTPUT_DIR / "market.html",
+        _env.get_template("market.html").render(
+            base_url="",
+            canonical=canonical_url("market.html"),
+            rows=rows,
+            day_count=len(rows),
+            period_from=rows[-1]["rec_date"] if rows else "",
+            period_to=rows[0]["rec_date"] if rows else "",
+            summary=market_summary(rows),
+            big_move_chart=charts.columns(
+                series("big"), aria_label="日ごとの、10%以上動いた銘柄数を示す棒グラフ", unit="銘柄"),
+            stop_chart=charts.columns(
+                series("stop_high"), aria_label="日ごとのストップ高の数を示す棒グラフ", unit="銘柄"),
+            top_chart=charts.columns(
+                series("top_pct"), aria_label="日ごとの首位の上昇率を示す棒グラフ", unit="%"),
+        ),
+    )
+
+
 def _load_all_days() -> list[dict]:
     """data/YYYY-MM-DD.json を全て読み込み、rec_date 降順（新しい順）で返す。
 
@@ -637,6 +701,7 @@ def build_all() -> None:
     _build_ranking_pages(days)
     weeks = _build_weekly_pages(days)
     stocks = _build_stock_pages(days)
+    _build_market_page(days)
 
     search_data = aggregate.search_index(days)
     (_OUTPUT_DIR / "search-index.json").write_text(
