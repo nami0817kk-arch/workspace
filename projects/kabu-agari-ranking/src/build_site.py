@@ -10,6 +10,7 @@
 """
 import json
 import sys
+from datetime import datetime
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -17,13 +18,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import fetcher
 from fetcher import fetch_gainers, fetch_losers, fetch_active
 import render
+import validate
 
 _DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
 _ROW_COLS = ["rank", "code", "name", "close", "change_pct", "metric_value"]
 
 
-def _save_today(gainers, losers, active) -> str | None:
+def _save_today(gainers, losers, active, *, skip_checks: bool = False) -> str | None:
     if gainers.empty:
         print("  本日分のランキングを取得できませんでした(休場日、または取得失敗)。スキップします。")
         return None
@@ -35,6 +37,11 @@ def _save_today(gainers, losers, active) -> str | None:
         "losers": losers[_ROW_COLS].to_dict(orient="records") if not losers.empty else [],
         "active": active[_ROW_COLS].to_dict(orient="records") if not active.empty else [],
     }
+
+    # 保存する前に検査する。data/ は取り直しのきかない資産なので、
+    # おかしなものを書き込むより、その日を落とすほうがまし。
+    if not skip_checks:
+        validate.check(payload, datetime.now(validate.JST))
 
     _DATA_DIR.mkdir(parents=True, exist_ok=True)
     day_path = _DATA_DIR / f"{rec_date}.json"
@@ -50,6 +57,7 @@ def _save_today(gainers, losers, active) -> str | None:
 
 
 def main() -> None:
+    # --force: 妥当性の検査を飛ばして保存する（検査が誤って弾いたときの逃げ道）。
     # --no-fetch: 取得せず data/ の既存データから output/ を作るだけ。
     # kabutan が GitHub Actions の IP をブロックしているため、取得は手元の PC
     # （タスクスケジューラ）が行い、CI はこのモードでビルド・公開だけを担当する。
@@ -65,7 +73,13 @@ def main() -> None:
     losers = fetch_losers(top_n=30)
     active = fetch_active(top_n=30)
 
-    rec_date = _save_today(gainers, losers, active)
+    try:
+        rec_date = _save_today(gainers, losers, active, skip_checks="--force" in sys.argv)
+    except validate.InvalidPayload as e:
+        # 既存のデータには一切触れずに落とす。run-daily.ps1 が通知を出す。
+        print(f"  [ERROR] 取得したデータが妥当ではないため保存しませんでした: {e}")
+        print("  内容を確認したうえで保存するなら --force を付けて実行する。")
+        sys.exit(1)
 
     # 0件の理由が「休場日」ではなく「取得先との通信失敗」なら、正常終了させない。
     # ここを黙って通すと、CIは緑のままサイトの更新だけが止まる。
