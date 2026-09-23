@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../game/formulas.dart';
 import '../../game/match_engine.dart';
+import '../../game/match_target.dart';
 import '../../game/newsroom.dart';
 import '../../game/scenarios.dart';
 import '../../models/attributes.dart';
@@ -76,6 +77,8 @@ class _MatchScreenState extends State<MatchScreen> {
       return _MatchSummary(
         result: result,
         week: widget.controller.lastWeek,
+        // 今節の的を達成したか。試合が終わった場所で言う。
+        targetMet: widget.controller.lastTargetMet,
         // その試合について書かれた見出しがあれば、結果と一緒に見せる。
         headline: widget.controller.news
             .where((n) => n.matchday == result.matchday)
@@ -98,6 +101,21 @@ class _MatchScreenState extends State<MatchScreen> {
       appBar: AppBar(
         title: Text('第${match.matchday}節  vs ${match.opponent.name}'),
         automaticallyImplyLeading: false,
+      ),
+      // **今節の的。** 次節カードには余白が無い（1行増やすと
+      // 「今の状態」が画面の外に出る）ので、試合に入ったここで出す。
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
+          child: Text(
+            '今節の的: ${MatchTarget.of(widget.controller.state!).label}'
+            '（達成で${MatchTarget.reward}万円）',
+            textAlign: TextAlign.center,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ),
       ),
       body: SafeArea(
         child: ReadableWidth(
@@ -883,7 +901,11 @@ class _MatchSummary extends StatelessWidget {
     required this.result,
     required this.week,
     this.headline = const [],
+    this.targetMet = false,
   });
+
+  /// 今節の的を達成したか。
+  final bool targetMet;
 
   final MatchResult result;
 
@@ -918,6 +940,18 @@ class _MatchSummary extends StatelessWidget {
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
+              // **達成したときだけ出す。** 外した回に「外した」と
+              // 言われ続けると、38試合が責められ続ける場所になる。
+              if (targetMet) ...[
+                const SizedBox(height: 10),
+                Text(
+                  '今節の的を達成　+${MatchTarget.reward}万円',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    color: theme.colorScheme.primary,
+                  ),
+                ),
+              ],
               const SizedBox(height: 28),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
