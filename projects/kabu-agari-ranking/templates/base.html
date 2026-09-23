@@ -53,17 +53,30 @@
     color: var(--text);
     text-decoration: none;
   }
+  header.site-header nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.9rem;
+  }
+  /* 「常連銘柄」が行またぎで割れていたので、項目単位で折り返す */
   nav a {
     color: var(--muted);
     text-decoration: none;
-    margin-left: 1rem;
     font-size: 0.9rem;
+    white-space: nowrap;
   }
   nav a:hover { color: var(--accent); }
   main {
     max-width: 800px;
     margin: 0 auto;
     padding: 1rem;
+  }
+  /* スマホでは既定の 2em だと見出しが3行になり、肝心の表が画面の外に出る */
+  h1 { font-size: 1.45rem; line-height: 1.35; margin: 0.6rem 0; }
+  h2 { font-size: 1.15rem; }
+  @media (min-width: 600px) {
+    h1 { font-size: 1.9rem; }
+    h2 { font-size: 1.35rem; }
   }
   .ad-slot {
     max-width: 800px;

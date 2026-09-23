@@ -11,13 +11,15 @@
 <p class="updated">
   最終更新: {{ rec_date_ja }}{% if next_update %} ／ {{ next_update }}{% endif %}
 </p>
-<p>
-  {{ intro }}
-  用語の意味は<a href="{{ base_url }}glossary.html">用語解説</a>、
-  順位の見方は<a href="{{ base_url }}guide.html">ランキングの読み方</a>にまとめています。
-</p>
+{# 説明より先に表を出す。スマホでは前置きが長いだけで肝心の順位が画面の外に出る。 #}
 {% if summary %}<p class="summary">{{ summary }}</p>{% endif %}
 {% include "_ranking_table.html" %}
 {% include "_ad_slot.html" %}
 <p><a href="{{ base_url }}{{ archive_href }}">過去の{{ heading }}を見る →</a></p>
+<p>
+  {{ intro }}
+  用語の意味は<a href="{{ base_url }}glossary.html">用語解説</a>、
+  順位の見方は<a href="{{ base_url }}guide.html">ランキングの読み方</a>にまとめています。
+  銘柄名から過去の登場日を引くには<a href="{{ base_url }}search.html">銘柄検索</a>をお使いください。
+</p>
 {% endblock %}
