@@ -62,6 +62,7 @@ class Playstyle {
     this.ambitious = true,
     this.habits = const Habits(),
     this.offseason = Offseason.sharpen,
+    this.rehab = RehabPlan.standard,
     this.effort = TrainingEffort.normal,
     this.easeFrom,
     this.pick,
@@ -157,6 +158,9 @@ class Playstyle {
 
   /// オフの過ごし方。**1シーズンに1度の選択**をそのまま固定する。
   final Offseason offseason;
+
+  /// 怪我からの戻し方。**テストから一度も呼ばれていなかった**ので足した。
+  final RehabPlan rehab;
 }
 
 /// 1つのキャリアの結末。
@@ -594,6 +598,7 @@ Future<Career> runCareer(
     // 監督が代わると就ける役割が変わる。毎季かけ直す。
     if (style.role != null) await controller.setRole(style.role);
     await controller.setOffseason(style.offseason);
+    await controller.setRehab(style.rehab);
     await controller.advanceSeason(
       accepted: accepted,
       offseason: style.offseason,

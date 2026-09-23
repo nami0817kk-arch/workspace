@@ -474,10 +474,19 @@ class Facilities {
 ///
 /// 早く戻れば試合に出られるが、無理をすれば長く響く。
 /// 怪我を「数試合休むだけ」にしないための選択。
+/// 怪我からの戻し方。
+///
+/// 実測（14キャリアずつ）で、**「慎重に」は選ぶ理由が無かった**——
+/// 標準より離脱が68試合増えるのに、怪我は 18.6 → 21.4 と減りもせず、
+/// 重傷の数（1.71）も同じ。「後を引かない」と書いてあるのに、
+/// 後を引かない仕組みがどこにも無かった。
+///
+/// 重傷の恒久ダメージ（能力とポテンシャルの目減り）を**復帰のときに**、
+/// 戻し方で変える形にした。慎重なら半分、強行なら5割増し。
 enum RehabPlan {
-  cautious('慎重に', '長く休む代わりに、後を引かない'),
+  cautious('慎重に', '長く休む代わりに、重傷が身体に残りにくい'),
   standard('標準', 'クラブの言う通りに進める'),
-  rush('強行', '早く戻るが、再発しやすく、身体に残る');
+  rush('強行', '早く戻るが、再発しやすく、重傷が身体に残る');
 
   const RehabPlan(this.label, this.effect);
 
@@ -486,16 +495,37 @@ enum RehabPlan {
 
   /// 離脱試合数に掛かる倍率。
   double get lengthFactor => switch (this) {
-    RehabPlan.cautious => 1.3,
+    RehabPlan.cautious => 1.15,
     RehabPlan.standard => 1.0,
     RehabPlan.rush => 0.6,
   };
 
   /// 復帰直後の怪我のしやすさ。
   double get relapseFactor => switch (this) {
-    RehabPlan.cautious => 0.7,
+    RehabPlan.cautious => 0.45,
     RehabPlan.standard => 1.0,
     RehabPlan.rush => 1.8,
+  };
+
+  /// 重傷の恒久ダメージに掛かる倍率。**復帰のときに効く。**
+  ///
+  /// ただし能力値の目減りは19シーズンかけて伸び直されるので、
+  /// **ここを厚くしてもピークは動かなかった**（0.5 でも 0.25 でも 75.5）。
+  /// 効き目の中心は下の「衰え」のほうに置いてある。
+  double get damageFactor => switch (this) {
+    RehabPlan.cautious => 0.5,
+    RehabPlan.standard => 1.0,
+    RehabPlan.rush => 1.5,
+  };
+
+  /// **重傷1つが衰え始めを何年早めるか。**
+  ///
+  /// 伸び直せる能力値と違って、衰え始めは戻らない。
+  /// 慎重に戻せば早まらず、強行すれば2年早まる。
+  int get declineYears => switch (this) {
+    RehabPlan.cautious => 0,
+    RehabPlan.standard => 1,
+    RehabPlan.rush => 2,
   };
 
   /// 復帰時のコンディション。

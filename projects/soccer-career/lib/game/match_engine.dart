@@ -1495,8 +1495,7 @@ class MatchEngine {
     final advantage =
         club.strength - opponent.strength + lift + (home ? 6 : -2);
     final teammateGoals = _poissonish(
-      (1.25 + advantage / 40) *
-          Formulas.teammateGoalShareFor(player.position),
+      (1.25 + advantage / 40) * Formulas.teammateGoalShareFor(player.position),
     );
     final conceded = _poissonish(1.25 - advantage / 40);
 
@@ -1746,7 +1745,16 @@ class MatchEngine {
   }
 
   /// 重傷の後遺症。能力とポテンシャルを削る。
-  (Attributes, int) applySevereInjury(Player player, Injury injury) {
+  /// 重傷が身体に残すもの。**復帰のときに効かせる。**
+  ///
+  /// 怪我をした瞬間に確定させていた頃は、そのあと「慎重に戻す」を選んでも
+  /// 何も変わらなかった——画面には戻し方の3択が出ているのに、
+  /// 恒久ダメージはもう決まっていた。
+  (Attributes, int) applySevereInjury(
+    Player player,
+    Injury injury, {
+    double factor = 1.0,
+  }) {
     if (injury.severity != InjurySeverity.severe) {
       return (player.attributes, player.potential);
     }
@@ -1757,10 +1765,10 @@ class MatchEngine {
     return (
       player.attributes.bump(
         kind.affects,
-        -Formulas.severeInjuryAttributeLoss,
+        -(Formulas.severeInjuryAttributeLoss * factor).round(),
         random: _random,
       ),
-      player.potential - Formulas.severeInjuryPotentialLoss,
+      player.potential - (Formulas.severeInjuryPotentialLoss * factor).round(),
     );
   }
 

@@ -190,6 +190,8 @@ class CareerState {
     this.fatigue = const Fatigue(),
     this.form = const Momentum(),
     this.offseason = Offseason.sharpen,
+    this.pendingSevere = false,
+    this.declineYearsLost = 0,
     this.captain = false,
     this.captaincyOffered = false,
     this.squadNumber = 0,
@@ -382,6 +384,16 @@ class CareerState {
   /// 今季のプレシーズンの過ごし方。
   /// オフをどう過ごしたか。開幕時のコンディション・疲労・練習の効きに乗る。
   Offseason offseason;
+
+  /// **まだ身体に残すぶんを払っていない重傷を抱えているか。**
+  ///
+  /// 恒久ダメージは復帰のときに、戻し方の倍率を掛けて効かせる。
+  /// 怪我をした瞬間に確定させていた頃の保存データは false のままなので、
+  /// 更新をまたいだ怪我で二重に削られることはない。
+  bool pendingSevere;
+
+  /// **重傷で早まった衰え始め（年）。** 戻し方で決まり、後から戻らない。
+  int declineYearsLost;
 
   /// キャプテンか。
   bool captain;
@@ -873,6 +885,8 @@ class CareerState {
     'fatigue': fatigue.toJson(),
     'form': form.toJson(),
     'offseason': offseason.name,
+    'pendingSevere': pendingSevere,
+    'declineYearsLost': declineYearsLost,
     'captain': captain,
     'captaincyOffered': captaincyOffered,
     'squadNumber': squadNumber,
@@ -1006,6 +1020,8 @@ class CareerState {
       fatigue: Fatigue.fromJson(json['fatigue'] as Map<String, dynamic>?),
       form: Momentum.fromJson(json['form'] as Map<String, dynamic>?),
       // 肉体改造とプレシーズンを1つに畳む前の保存データは、既定で読む。
+      pendingSevere: json['pendingSevere'] as bool? ?? false,
+      declineYearsLost: json['declineYearsLost'] as int? ?? 0,
       offseason: Offseason.values.any((p) => p.name == json['offseason'])
           ? Offseason.values.byName(json['offseason'] as String)
           : Offseason.sharpen,
