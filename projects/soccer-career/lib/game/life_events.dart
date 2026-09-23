@@ -255,7 +255,7 @@ class LifeEvents {
         LifeChoice(
           label: '何も言わない',
           outcome: '言葉にしなかったぶん、体を動かした。',
-          effect: LifeEffect(fatigue: 2, morale: 3, professionalism: 1),
+          effect: LifeEffect(fatigue: 2, morale: 3, teammates: 2),
         ),
       ],
     ),
@@ -603,7 +603,7 @@ class LifeEvents {
         LifeChoice(
           label: '練習を優先する',
           outcome: 'そういうものだ、と自分に言い聞かせた。',
-          effect: LifeEffect(morale: -8, professionalism: 1),
+          effect: LifeEffect(morale: -8, train: Detail.stamina),
         ),
       ],
     ),
