@@ -155,3 +155,35 @@ def test_ストップ高の回数を数える():
     entry = aggregate.frequent(days)[0]
     assert entry["count"] == 2
     assert entry["stops"] == 1
+
+
+# --- 銘柄ページ -------------------------------------------------------------
+
+def test_登場が少ない銘柄のページは作らない():
+    days = [
+        _day("2026-09-18", [_row("1001", "アルファ"), _row("1002", "ベータ")]),
+        _day("2026-09-17", [_row("1001", "アルファ")]),
+        _day("2026-09-16", [_row("1001", "アルファ")]),
+    ]
+    out = aggregate.stock_histories(days)
+    assert [e["code"] for e in out] == ["1001"]   # ベータは1回だけ
+    assert len(out[0]["rows"]) == 3
+
+
+def test_銘柄ページは種別ごとの回数と最大変動を持つ():
+    days = [
+        {"rec_date": "2026-09-18",
+         "gainers": [_row("1001", "アルファ", 12.0)],
+         "losers": [_row("1001", "アルファ", -20.0)],
+         "active": [_row("1001", "アルファ", 1.0)]},
+    ]
+    e = aggregate.stock_histories(days, min_appearances=3)[0]
+    assert e["counts"] == {"gainers": 1, "losers": 1, "active": 1}
+    assert e["best_pct"] == -20.0   # 絶対値で最大
+    assert e["first"] == "2026-09-18" and e["latest"] == "2026-09-18"
+
+
+def test_銘柄ページの履歴は新しい日が先():
+    days = [_day(f"2026-09-{d}", [_row("1001", "アルファ")]) for d in (18, 17, 16)]
+    rows = aggregate.stock_histories(days)[0]["rows"]
+    assert [r["rec_date"] for r in rows] == ["2026-09-18", "2026-09-17", "2026-09-16"]

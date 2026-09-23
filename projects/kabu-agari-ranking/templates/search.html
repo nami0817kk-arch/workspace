@@ -99,7 +99,11 @@
       }
       if (s.s) { facts.push('ストップ高・安 ' + s.s + '回'); }
       var factLine = facts.length ? '<p class="hit-facts">' + facts.join(' ／ ') + '</p>' : '';
-      return '<section class="hit"><h2>' + escape(s.n) + '（' + escape(s.c) + '）</h2>'
+      var total = (s.g || []).length + (s.l || []).length + (s.a || []).length;
+      var head = total >= 3
+        ? '<a href="stock/' + encodeURIComponent(s.c) + '/">' + escape(s.n) + '（' + escape(s.c) + '）</a>'
+        : escape(s.n) + '（' + escape(s.c) + '）';
+      return '<section class="hit"><h2>' + head + '</h2>'
         + factLine + '<dl>' + blocks + '</dl></section>';
     }).join('');
   }

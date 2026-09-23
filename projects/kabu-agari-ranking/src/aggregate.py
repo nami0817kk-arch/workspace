@@ -161,3 +161,53 @@ def weekly_summaries(days: list[dict]) -> list[dict]:
 
     out.sort(key=lambda w: (w["year"], w["week"]), reverse=True)
     return out
+
+
+# 銘柄ページを作る下限。1〜2回しか出ていない銘柄のページは、表が1行あるだけの
+# 薄いページになる。そういうものを量産すると、サイト全体の評価が落ちる。
+STOCK_PAGE_MIN_APPEARANCES = 3
+
+_KINDS = (("gainers", "値上がり"), ("losers", "値下がり"), ("active", "活況"))
+
+
+def stock_histories(days: list[dict], min_appearances: int = STOCK_PAGE_MIN_APPEARANCES) -> list[dict]:
+    """銘柄ごとの登場履歴。新しい日が先。
+
+    「この銘柄は最近どうだったか」を1ページで見せるためのもの。
+    登場が少ない銘柄は作らない（薄いページを量産しない）。
+    """
+    stocks: dict[str, dict] = {}
+    for day in reversed(days):  # 古い順に見て、名前は新しいもので上書き
+        for key, label in _KINDS:
+            for row in day.get(key, []):
+                e = stocks.setdefault(row["code"], {"code": row["code"], "name": row["name"],
+                                                    "rows": [], "counts": {}})
+                e["name"] = row["name"]
+                e["counts"][key] = e["counts"].get(key, 0) + 1
+                e["rows"].append({
+                    "rec_date": day["rec_date"],
+                    "kind": key,
+                    "kind_label": label,
+                    "rank": row["rank"],
+                    "close": row["close"],
+                    "change_pct": row["change_pct"],
+                    "metric_value": row["metric_value"],
+                    "flag": price_limit.classify(row.get("close"), row.get("change_pct")),
+                })
+
+    out = []
+    for e in stocks.values():
+        if len(e["rows"]) < min_appearances:
+            continue
+        e["rows"].sort(key=lambda r: (r["rec_date"], r["kind"]), reverse=True)
+        moves = [r["change_pct"] for r in e["rows"] if r["kind"] != "active"]
+        e["best_pct"] = max(moves, key=abs) if moves else None
+        e["stops"] = sum(
+            1 for r in e["rows"] if r["flag"] in (price_limit.STOP_HIGH, price_limit.STOP_LOW)
+        )
+        e["first"] = e["rows"][-1]["rec_date"]
+        e["latest"] = e["rows"][0]["rec_date"]
+        out.append(e)
+
+    out.sort(key=lambda e: (-len(e["rows"]), e["code"]))
+    return out

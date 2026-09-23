@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}銘柄別ページの一覧｜値上がり株ランキング{% endblock %}
+{% block description %}ランキングに3回以上登場した銘柄の一覧です。銘柄ごとに、登場した日と騰落率をまとめています。{% endblock %}
+{% block content %}
+<h1>銘柄別ページ</h1>
+<p>
+  掲載期間中にランキングへ<strong>3回以上</strong>登場した{{ stocks|length }}銘柄について、
+  登場した日をまとめたページを用意しています（登場が1〜2回の銘柄は作っていません）。
+</p>
+<div class="archive-list">
+  {% for s in stocks %}
+  <a href="{{ s.code }}/">
+    <span class="archive-date">{{ s.name }}（{{ s.code }}）</span>
+    <span class="archive-top">登場 {{ s.rows|length }}回{% if s.best_pct is not none %} ／ 最大 {{ "%+.2f"|format(s.best_pct) }}%{% endif %}{% if s.stops %} ／ ストップ高・安 {{ s.stops }}回{% endif %}</span>
+  </a>
+  {% endfor %}
+</div>
+{% endblock %}

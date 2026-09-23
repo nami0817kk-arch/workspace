@@ -366,6 +366,58 @@ def _build_weekly_pages(days: list[dict]) -> list[dict]:
     return weeks
 
 
+def stock_summary(stock: dict, day_count: int) -> str:
+    """銘柄ページの一文。数えた事実だけを書く。"""
+    counts = stock["counts"]
+    parts = [f"直近{day_count}営業日のランキングに{len(stock['rows'])}回登場しています（"]
+    detail = []
+    for key, label in (("gainers", "値上がり"), ("losers", "値下がり"), ("active", "活況")):
+        if counts.get(key):
+            detail.append(f"{label}{counts[key]}回")
+    parts.append("、".join(detail) + "）。")
+    if stock["best_pct"] is not None:
+        parts.append(f"この期間の最大の変動は{stock['best_pct']:+.2f}%。")
+    if stock["stops"]:
+        parts.append(f"うち{stock['stops']}回は制限値幅いっぱいまで動いています。")
+    return "".join(parts)
+
+
+def _build_stock_pages(days: list[dict]) -> list[dict]:
+    """銘柄ごとのページ。登場が少ない銘柄は作らない（薄いページを量産しない）。"""
+    stocks = aggregate.stock_histories(days)
+    tmpl = _env.get_template("stock.html")
+    for stock in stocks:
+        points = [
+            {"label": r["rec_date"][5:].replace("-", "/"), "value": abs(r["change_pct"])}
+            for r in reversed(stock["rows"]) if r["kind"] != "active"
+        ]
+        _write(
+            _OUTPUT_DIR / "stock" / stock["code"] / "index.html",
+            tmpl.render(
+                base_url="../../",
+                canonical=canonical_url(f"stock/{stock['code']}/index.html"),
+                s=stock,
+                summary=stock_summary(stock, len(days)),
+                labels=price_limit.LABELS,
+                chart=charts.columns(
+                    points,
+                    aria_label=f"{stock['name']}がランキングに登場した日の騰落率を示す棒グラフ",
+                    unit="%",
+                ),
+            ),
+        )
+
+    _write(
+        _OUTPUT_DIR / "stock" / "index.html",
+        _env.get_template("stock_index.html").render(
+            base_url="../",
+            canonical=canonical_url("stock/index.html"),
+            stocks=stocks,
+        ),
+    )
+    return stocks
+
+
 def _load_all_days() -> list[dict]:
     """data/YYYY-MM-DD.json を全て読み込み、rec_date 降順（新しい順）で返す。
 
@@ -491,7 +543,7 @@ def _write_feed(days: list[dict]) -> None:
     )
 
 
-def _write_sitemap(days: list[dict], weeks: list[dict]) -> None:
+def _write_sitemap(days: list[dict], weeks: list[dict], stocks: list[dict]) -> None:
     latest_date = days[0]["rec_date"]
 
     # データと一緒に毎日変わるページ。lastmod は最新の相場日でよい。
@@ -509,6 +561,9 @@ def _write_sitemap(days: list[dict], weeks: list[dict]) -> None:
              (canonical_url("guide.html"), None),
              (canonical_url("glossary.html"), None)]
     urls.append((canonical_url("weekly/index.html"), latest_date))
+    urls.append((canonical_url("stock/index.html"), latest_date))
+    for stock in stocks:
+        urls.append((canonical_url(f"stock/{stock['code']}/index.html"), stock["latest"]))
     for week in weeks:
         urls.append((canonical_url(f"weekly/{week['slug']}.html"), week["to"]))
 
@@ -552,6 +607,7 @@ def build_all() -> None:
 
     _build_ranking_pages(days)
     weeks = _build_weekly_pages(days)
+    stocks = _build_stock_pages(days)
 
     search_data = aggregate.search_index(days)
     (_OUTPUT_DIR / "search-index.json").write_text(
@@ -605,7 +661,7 @@ def build_all() -> None:
 
     (_OUTPUT_DIR / "robots.txt").write_text(_ROBOTS_TXT, encoding="utf-8")
     (_OUTPUT_DIR / "ads.txt").write_text(_ADS_TXT, encoding="utf-8")
-    _write_sitemap(days, weeks)
+    _write_sitemap(days, weeks, stocks)
     _write_feed(days)
 
     static_dir = _ROOT / "static"

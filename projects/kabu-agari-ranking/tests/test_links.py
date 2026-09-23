@@ -57,7 +57,11 @@ def _local_targets(page: Path, out_dir: Path):
         if not target:
             continue
         base = out_dir if target.startswith("/") else page.parent
-        yield raw, (base / target.lstrip("/")).resolve()
+        resolved = (base / target.lstrip("/")).resolve()
+        # `/stock/1234/` のようなディレクトリ指定は index.html が返る（Cloudflare Pages）
+        if target.endswith("/") or resolved.is_dir():
+            resolved = resolved / "index.html"
+        yield raw, resolved
 
 
 def test_ページ内のリンクが全て存在する(built):
