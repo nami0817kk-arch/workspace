@@ -28,7 +28,6 @@ import 'package:soccer_career/models/look.dart';
 import 'package:soccer_career/models/physique.dart';
 import 'package:soccer_career/models/challenge.dart';
 import 'package:soccer_career/models/entourage.dart';
-import 'package:soccer_career/models/legend.dart';
 import 'package:soccer_career/ui/screens/create_player_screen.dart';
 import 'package:soccer_career/ui/screens/hub_screen.dart';
 import 'package:soccer_career/ui/screens/match_screen.dart';
