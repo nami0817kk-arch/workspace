@@ -217,3 +217,16 @@ def test_暗い地の色が定義されている(site):
     # グラフの2色は明暗それぞれで定義する（片方だけだと暗い地で沈む）
     assert css.count("--chart-gain:") == 2 and css.count("--chart-loss:") == 2
     assert 'name="color-scheme"' in css
+
+
+def test_審査前はadsテキストを置かない(site):
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-09-18")
+    render.build_all()
+    # 中身がコメントだけの ads.txt は「有効なレコードが無い」と報告される
+    assert not (out_dir / "ads.txt").exists()
+
+
+def test_pubIDを入れたら有効なレコードを書く(monkeypatch):
+    monkeypatch.setattr(render, "ADSENSE_CLIENT", "ca-pub-1234567890123456")
+    assert render._ads_txt() == "google.com, pub-1234567890123456, DIRECT, f08c47fec0942fa0\n"

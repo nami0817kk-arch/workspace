@@ -526,9 +526,16 @@ Sitemap: {SITE_URL}/sitemap.xml
 # 検索用の索引はページではないので、リンクされていてもクロールしなくてよい。
 # （robots.txt では触れず、HTML から直接リンクしないことで十分）
 
-_ADS_TXT = """# Google AdSense 審査通過後、下記のコメントを解除し pub-ID を実際の値に置き換える
-# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
-"""
+def _ads_txt() -> str | None:
+    """ads.txt の中身。pub-ID が無いあいだは**置かない**（None を返す）。
+
+    中身がコメントだけの ads.txt は「ファイルはあるが有効なレコードが無い」
+    という報告対象になる。広告枠と同じで、揃うまでは出さないほうがよい。
+    """
+    if not ADSENSE_CLIENT:
+        return None
+    pub_id = ADSENSE_CLIENT.removeprefix("ca-")
+    return f"google.com, {pub_id}, DIRECT, f08c47fec0942fa0\n"
 
 
 def _write_feed(days: list[dict]) -> None:
@@ -660,7 +667,9 @@ def build_all() -> None:
     _write(_OUTPUT_DIR / "404.html", _env.get_template("404.html").render(base_url="/", canonical=""))
 
     (_OUTPUT_DIR / "robots.txt").write_text(_ROBOTS_TXT, encoding="utf-8")
-    (_OUTPUT_DIR / "ads.txt").write_text(_ADS_TXT, encoding="utf-8")
+    ads = _ads_txt()
+    if ads:
+        (_OUTPUT_DIR / "ads.txt").write_text(ads, encoding="utf-8")
     _write_sitemap(days, weeks, stocks)
     _write_feed(days)
 
