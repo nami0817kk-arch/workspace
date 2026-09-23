@@ -42,6 +42,9 @@ def _save_today(gainers, losers, active, *, skip_checks: bool = False) -> str | 
     # おかしなものを書き込むより、その日を落とすほうがまし。
     if not skip_checks:
         validate.check(payload, datetime.now(validate.JST))
+    # 止めるほどではないが、黙って通すと穴に気づけないもの
+    for warning in validate.warnings(payload):
+        print(f"  [WARN] {warning}")
 
     _DATA_DIR.mkdir(parents=True, exist_ok=True)
     day_path = _DATA_DIR / f"{rec_date}.json"

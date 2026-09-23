@@ -116,6 +116,19 @@ if ($LASTEXITCODE -ne 0) {
     Add-Content $log "no new data to commit"
 }
 
+# 半端な取得（値上がりだけ取れて値下がり・活況が空）は build_site.py が
+# ログに [WARN] を残す。止めるほどではないが、続くようなら解析が壊れている。
+# 見るのは**今回の実行ぶんだけ**（ログは追記なので、過去の警告を拾わない）。
+$lines = Get-Content $log -Encoding UTF8
+$startIndex = 0
+for ($i = $lines.Count - 1; $i -ge 0; $i--) {
+    if ($lines[$i] -like "=== *") { $startIndex = $i; break }
+}
+$warnLines = @($lines[$startIndex..($lines.Count - 1)] | Where-Object { $_ -like "*[[]WARN]*" })
+if ($warnLines.Count -gt 0) {
+    Notify "株ランキングの取得が半端です" $warnLines[-1].Trim()
+}
+
 # X への投稿。キーが無ければ何もせず正常終了する（post_to_x.py 側で判定）。
 #
 # CI ではなく手元で投げているのは、重複投稿を防ぐ記録（data/last_tweet.txt）が

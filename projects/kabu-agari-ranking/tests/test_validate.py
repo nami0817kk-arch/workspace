@@ -89,3 +89,25 @@ def test_祝日表の範囲外では日付を判定しない():
     # 表を更新し忘れたときに、取得そのものを止めてしまわないようにする
     assert validate.expected_rec_dates(datetime(2030, 5, 7, 16, 0, tzinfo=JST)) == set()
     validate.check(_payload("2030-05-07"), datetime(2030, 5, 7, 16, 12, tzinfo=JST))
+
+
+# --- 止めないが知らせるもの -------------------------------------------------
+
+def test_値下がりと活況が空なら警告する():
+    p = _payload()
+    assert set(validate.warnings(p)) == {
+        "値下がりランキングが0件です（この日の値下がりのページは作られません）",
+        "活況ランキングが0件です（この日の活況のページは作られません）",
+    }
+
+
+def test_全部揃っていれば黙る():
+    p = _payload()
+    p["losers"] = [{"code": "1", "change_pct": -1.0, "close": 100.0}]
+    p["active"] = [{"code": "2", "change_pct": 0.5, "close": 200.0}]
+    assert validate.warnings(p) == []
+
+
+def test_値上がり自体が無いときは警告を重ねない():
+    # そのケースは check 側が弾くので、ここでは何も言わない
+    assert validate.warnings({"rec_date": "2026-09-18", "gainers": []}) == []

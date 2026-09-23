@@ -46,6 +46,22 @@ def expected_rec_dates(now: datetime) -> set[str]:
         return set()
 
 
+def warnings(payload: dict) -> list[str]:
+    """保存は止めないが、知らせたほうがよいこと。
+
+    値上がりだけ取れて値下がり・活況が空、という半端な取得は起こりうる。
+    落とすほどではない（その日のランキング自体は残せる）が、黙って通すと
+    アーカイブに穴が空いていることに誰も気づかない。
+    """
+    out = []
+    if not payload.get("gainers"):
+        return out
+    for key, label in (("losers", "値下がり"), ("active", "活況")):
+        if not payload.get(key):
+            out.append(f"{label}ランキングが0件です（この日の{label}のページは作られません）")
+    return out
+
+
 def check(payload: dict, now: datetime) -> None:
     """おかしければ InvalidPayload を投げる。問題なければ黙って戻る。"""
     rec_date = payload.get("rec_date")
