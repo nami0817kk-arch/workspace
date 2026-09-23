@@ -29,7 +29,22 @@ def test_投稿文に日付と順位とURLが入る():
     assert "2026-09-18" in text
     assert "1位" in text and "3位" in text
     assert "4位" not in text  # 上位3件だけ
-    assert post_to_x.SITE_URL in text
+    # トップではなくその日のページ（翌日には別の内容になってしまうため）
+    assert "archive/gainers/2026-09-18" in text
+
+
+def test_ストップ高を投稿文に出す():
+    p = _payload(n=3)
+    # 113円 → 163円（値幅50円）はストップ高
+    p["gainers"][0].update(close=163.0, change_pct=44.25)
+    text = post_to_x._build_tweet(p)
+    assert "（S高）" in text
+    assert "ストップ高は1銘柄" in text
+
+
+def test_ストップ高が無ければその行を出さない():
+    text = post_to_x._build_tweet(_payload())
+    assert "ストップ高" not in text
 
 
 def test_長い銘柄名でも280字に収まる():
