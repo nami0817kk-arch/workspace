@@ -100,9 +100,12 @@ Widget _list(BuildContext context, List<(String, String)> rows) {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(name, style: theme.textTheme.titleSmall),
-              Text(description,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant)),
+              Text(
+                description,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
             ],
           ),
         ),
@@ -144,6 +147,10 @@ final List<_GuideSection> _sections = [
         '（途中出場ならもっと少ない）。各局面に3つの手がある。',
     'だいたい「難しいが得点に直結する手」と「安全だが見返りの小さい手」が対になっている。'
         '常に正解になる手は無い。',
+    'じっくりやる試合は局面が多いので、前の局面で布石を打ってから仕留める'
+        '段取りが組める。実測では、その組み立てのほうが'
+        '毎回いちばん確率の高い手を押すよりゴールもタイトルも多い'
+        '（そのぶん平均評価は少し下がる）。',
     '手に出ている％は、その手が通る確率。判定に使う数字そのもので、'
         '何でできているかも画面に出ている。局面の上に並ぶのは'
         '「どの手でも同じだけ効くもの」、手ごとに付くのは「その手にだけ効くもの」。',
@@ -309,62 +316,64 @@ final List<_GuideSection> _sections = [
   const _GuideSection('お金', [
     '年俸からは税・代理人手数料・生活費が引かれ、残りが貯蓄になる。',
     '今季いくら残るかは「育成」タブの「自分への投資」に出ている。'
-    '雇う前に、シーズン末の貯蓄がいくらになるかまで書いてある。',
+        '雇う前に、シーズン末の貯蓄がいくらになるかまで書いてある。',
     '貯蓄が尽きると、専属スタッフとの契約は全部切れる。'
-    '足りなくなりそうなら、雇う人数を減らすか、暮らし方を下げること。',
+        '足りなくなりそうなら、雇う人数を減らすか、暮らし方を下げること。',
     '暮らし方は生活費を決める。下げれば手取りが増え、'
-    '上げれば気持ちが少し上向く。効きは小さい。',
+        '上げれば気持ちが少し上向く。効きは小さい。',
     '知名度が上がるとスパイクのスポンサーが付く。年俸とは別の収入になる。',
   ], extra: _staffKinds),
   const _GuideSection('ピッチの外', [
     '数試合に一度、ピッチの外で何かが起きる。選択肢が出て、選んだことが'
-    '気持ち・監督との関係・ロッカールームの空気・お金に残る。',
+        '気持ち・監督との関係・ロッカールームの空気・お金に残る。',
     '監督・競争相手・相方・メンター・同期・代理人は、名前を持った他人として'
-    '出来事に出てくる。誰が居るかで、起きることが変わる。',
+        '出来事に出てくる。誰が居るかで、起きることが変わる。',
     '練習の中の出来事では、能力が伸びたり、個人技を閃いたりする。'
-    'ただしポテンシャルを超えては伸びない。上限は上限のまま。',
+        'ただしポテンシャルを超えては伸びない。上限は上限のまま。',
     'どの選択肢も、1回でキャリアが決まる大きさにはしていない。'
-    '10年ぶんの積み重ねが、同じ成績の選手を別の人生にする。',
+        '10年ぶんの積み重ねが、同じ成績の選手を別の人生にする。',
   ]),
   const _GuideSection('引退とその後', [
     '33歳から引退を選べる。37歳のシーズンを終えると引退になる。',
     '引退後は通算成績と称号が残り、次に進む道を選ぶ。'
-    '現役でやってきたことが、そのまま次の職業の適性になる。',
+        '現役でやってきたことが、そのまま次の職業の適性になる。',
   ]),
   const _GuideSection('保存と持ち運び', [
     'セーブは端末ごとに独立している。'
-    'PCで進めた内容とスマホの内容は別物になる。',
+        'PCで進めた内容とスマホの内容は別物になる。',
     '右上のメニューから「引き継ぎコード」を出して別の端末に貼り付けると、'
-    '続きから遊べる。読めないコードでは、今のキャリアは消えない。',
+        '続きから遊べる。読めないコードでは、今のキャリアは消えない。',
   ]),
 ];
 
 Widget _trainingMenus(BuildContext context) => _list(context, [
-      for (final menu in TrainingMenu.values)
-        (
-          menu.label,
-          menu.isRest
-              ? '${menu.description}（コンディション +${menu.recovery}）'
-              : '${menu.description}（消耗 ${menu.conditionCost}）',
-        ),
-    ]);
+  for (final menu in TrainingMenu.values)
+    (
+      menu.label,
+      menu.isRest
+          ? '${menu.description}（コンディション +${menu.recovery}）'
+          : '${menu.description}（消耗 ${menu.conditionCost}）',
+    ),
+]);
 
 Widget _traitList(BuildContext context) {
   final theme = Theme.of(context);
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      Text('長所（${Trait.strengths.length}種）',
-          style: theme.textTheme.labelLarge),
+      Text('長所（${Trait.strengths.length}種）', style: theme.textTheme.labelLarge),
       const SizedBox(height: 8),
       _list(context, [
         for (final trait in Trait.strengths)
           (trait.label, '${trait.description}（${trait.effects.join('、')}）'),
       ]),
       const SizedBox(height: 8),
-      Text('欠点（${Trait.flaws.length}種）',
-          style: theme.textTheme.labelLarge
-              ?.copyWith(color: theme.colorScheme.error)),
+      Text(
+        '欠点（${Trait.flaws.length}種）',
+        style: theme.textTheme.labelLarge?.copyWith(
+          color: theme.colorScheme.error,
+        ),
+      ),
       const SizedBox(height: 8),
       _list(context, [
         for (final trait in Trait.flaws)
@@ -377,8 +386,9 @@ Widget _traitList(BuildContext context) {
         '長所は${(Trait.rareChance * 100).round()}%、'
         '欠点は${(Trait.rareFlawChance * 100).round()}%の確率で、'
         '普通の特性の1つと置き換わる。',
-        style: theme.textTheme.bodySmall
-            ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+        style: theme.textTheme.bodySmall?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
       ),
       const SizedBox(height: 8),
       _list(context, [
@@ -393,18 +403,15 @@ Widget _traitList(BuildContext context) {
 }
 
 Widget _directives(BuildContext context) => _list(context, [
-      for (final directive in Directive.values)
-        if (directive != Directive.none) (directive.label, directive.effect),
-    ]);
+  for (final directive in Directive.values)
+    if (directive != Directive.none) (directive.label, directive.effect),
+]);
 
 Widget _staffKinds(BuildContext context) => _list(context, [
-      for (final kind in StaffKind.values) (kind.label, kind.description),
-      for (final level in [1, 2, 3])
-        (
-          StaffTeam.levelLabels[level],
-          '年間 ${StaffTeam.costPerLevel[level]}万円',
-        ),
-    ]);
+  for (final kind in StaffKind.values) (kind.label, kind.description),
+  for (final level in [1, 2, 3])
+    (StaffTeam.levelLabels[level], '年間 ${StaffTeam.costPerLevel[level]}万円'),
+]);
 
 /// ガイドの本文をすべて1つの文字列で。
 ///
@@ -412,5 +419,4 @@ Widget _staffKinds(BuildContext context) => _list(context, [
 /// 仕組みを足すたびにガイドを書き忘れ、9/10 からの2週間で
 /// 載っていない仕組みが10を超えていた。
 @visibleForTesting
-String guideText() =>
-    _sections.expand((s) => [s.title, ...s.body]).join('\n');
+String guideText() => _sections.expand((s) => [s.title, ...s.body]).join('\n');
