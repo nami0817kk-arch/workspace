@@ -679,7 +679,14 @@ class CareerEngine {
     );
     return TransferOffer(
       club: club,
-      reason: '${club.name}が契約更改を提示した。',
+      // **残れば部が変わることを、更改の文に出す。**
+      // 実測で、移籍を選び続けるキャリアは昇格を一度も経験しない（5%）。
+      // 上がる/落ちるクラブに残る意味は、ここでしか伝わらない。
+      reason: switch (fateOf(state)) {
+        ClubFate.promoted => '${club.name}が契約更改を提示した。来季は${club.tier}部で戦う。',
+        ClubFate.relegated => '${club.name}が契約更改を提示した。来季は${club.tier}部に落ちる。',
+        ClubFate.stay => '${club.name}が契約更改を提示した。',
+      },
       salary: salary,
       role: _roleFor(state.player.overall, club),
       years: extras.rollContractYears(),

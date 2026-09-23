@@ -206,7 +206,7 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                         ),
                         if (fate != ClubFate.stay) ...[
                           const SizedBox(height: 6),
-                          _FateChip(fate: fate),
+                          FateChip(fate: fate, tier: state.club.tier),
                         ],
                         if (state.objective != null) ...[
                           const SizedBox(height: 8),
@@ -640,17 +640,24 @@ class _BackupCard extends StatelessWidget {
   }
 }
 
-class _FateChip extends StatelessWidget {
-  const _FateChip({required this.fate});
+/// 昇格・降格の札。**行き先の部を書く。**
+class FateChip extends StatelessWidget {
+  const FateChip({super.key, required this.fate, required this.tier});
 
   final ClubFate fate;
+
+  /// 今季いた部。**行き先はここから決まる。**
+  ///
+  /// 「1部昇格」「2部降格」と決め打ちで書いていたので、
+  /// 3部から2部へ上がったクラブにも「1部昇格」と出ていた。
+  final int tier;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final promoted = fate == ClubFate.promoted;
     return Chip(
-      label: Text(promoted ? '1部昇格' : '2部降格'),
+      label: Text(promoted ? '${tier - 1}部昇格' : '${tier + 1}部降格'),
       backgroundColor: promoted
           ? theme.colorScheme.primaryContainer
           : theme.colorScheme.errorContainer,
