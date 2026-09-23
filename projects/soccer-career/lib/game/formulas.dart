@@ -186,6 +186,18 @@ class Formulas {
   /// 画面にも同じ数字を出す（`_SupportCard`）。
   static const int entrepreneurSavings = 30000;
 
+  /// 引退後、スポーツディレクターに就くのに要る通算出場。
+  static const int directorAppearances = 520;
+
+  /// 引退後、監督になるのに要るプロ意識（腕章も要る）。
+  static const int managerProfessionalism = 12;
+
+  /// 引退後、育成コーチになるのに要るプロ意識。
+  static const int coachProfessionalism = 15;
+
+  /// 引退後、実業家になるのに要る野心。
+  static const int entrepreneurAmbition = 14;
+
   /// 引退後、解説者に呼ばれる知名度の線。
   static const int punditFame = 66;
 

@@ -449,12 +449,20 @@ class CareerController extends ChangeNotifier {
     await _persist();
   }
 
-  /// 引退後の道を選ぶ。
+  /// 引退後の道を選ぶ。**進める道だけ。**
   Future<void> chooseSecondCareer(SecondCareer choice) async {
     final state = _state;
     if (state == null) return;
+    if (_career.blockedReason(state, choice) != null) return;
     state.secondCareer = choice;
     await _persist();
+  }
+
+  /// その道に進めない理由。進めるなら null。
+  String? secondCareerBlocked(SecondCareer path) {
+    final state = _state;
+    if (state == null) return null;
+    return _career.blockedReason(state, path);
   }
 
   /// 引退後の道の見立て。
