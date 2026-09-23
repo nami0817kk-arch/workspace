@@ -170,11 +170,19 @@ class Manager {
 ///
 /// 何を優先したいかを伝える。通る通らないではなく、優先した分だけ
 /// 別のものを諦める形にしてある。
+/// 監督に何を求めるか。
+///
+/// **効きが小さすぎて、選んでも選ばなくても同じだった**（2026-09-23 に実測。
+/// 4種すべてがピーク 73.3〜74.1 で、基準の 74.1 と変わらない）。
+/// しかも「年俸交渉は通りやすく」と書いてある `negotiationBonus` は
+/// **どこからも読まれていなかった**——表示と判定が食い違っていた。
+///
+/// 求めたものは手に入り、**そのぶん別のものを諦める**形に置き直す。
 enum Directive {
-  playingTime('出場機会が欲しい', '序列で優遇されるが、年俸は伸びない'),
-  winning('勝ちたい', '監督の信頼は得やすいが、出番は保証されない'),
-  money('条件を上げたい', '年俸交渉は通りやすく、ロッカールームでは浮く'),
-  develop('育ててほしい', '練習の効きが上がるが、試合では我慢を強いられる'),
+  playingTime('出場機会が欲しい', '身の丈のクラブから声がかかる。出て点も取れるが、上は狙えない'),
+  winning('勝ちたい', '格上から声がかかり、監督の信頼も厚い。そのぶん序列は下から'),
+  money('条件を上げたい', '年俸の提示も交渉も通りやすいが、ロッカールームでは浮く'),
+  develop('育ててほしい', '練習の効きが上がる。若いうちに伸びる代わりに、試合では我慢する'),
   none('特に伝えない', '');
 
   const Directive(this.label, this.effect);
@@ -184,21 +192,56 @@ enum Directive {
 
   double get appearanceBonus => switch (this) {
     Directive.playingTime => 0.12,
-    Directive.develop => -0.08,
+    Directive.winning => -0.06,
+    Directive.develop => -0.20,
     _ => 0,
   };
 
-  double get growthFactor => this == Directive.develop ? 1.15 : 1.0;
+  /// **声がかかるクラブの強さの上限**（自分の総合力からの差）。
+  ///
+  /// 出場の軸は飽和していて、1キャリア550試合のうち531〜538は出ている。
+  /// そこを何%動かしても、選んだ実感は出ない（実測で +0.26 にしても
+  /// 出場は4試合しか増えなかった）。**効かせる先を「行き先」に変える。**
+  /// 出場機会が欲しいと言った選手には、身の丈のクラブから声がかかる。
+  int? get reachCap => this == Directive.playingTime ? 2 : null;
 
-  double get negotiationBonus => this == Directive.money ? 0.08 : 0;
+  /// **声がかかるクラブの強さの下限**（同上）。
+  ///
+  /// 勝ちたいと言えば、格下からの話は来なくなる。出番は保証されない。
+  int? get reachFloor => this == Directive.winning ? -6 : null;
+
+  /// 届く範囲そのものの上乗せ。
+  ///
+  /// 下限を上げるだけでは「弱い話が消える」だけで、**行ける先は増えない**
+  /// （実測でリーグ優勝が 2.8 → 2.3 と、何も言わないより下がった）。
+  /// 勝ちたいと言った選手には、格上からの話が来るようにする。
+  int get reachBonus => this == Directive.winning ? 3 : 0;
+
+  double get growthFactor => this == Directive.develop ? 1.40 : 1.0;
+
+  /// 上乗せ交渉の通りやすさ。**使われていなかったので繋いだ。**
+  double get negotiationBonus => this == Directive.money ? 0.20 : 0;
+
+  /// 契約更改で提示される年俸への倍率。
+  ///
+  /// 出場を優先してくれと言った選手は、序列では優遇されるが
+  /// **条件では後回しになる**。書いてあることを、そのまま数字にする。
+  double get salaryFactor => switch (this) {
+    Directive.playingTime => 0.88,
+    Directive.money => 1.10,
+    _ => 1.0,
+  };
+
+  /// 相方との呼吸の育ちやすさ。条件の話ばかりしていると、深まらない。
+  double get synergyFactor => this == Directive.money ? 0.5 : 1.0;
 
   int get managerDrift => switch (this) {
-    Directive.winning => 4,
-    Directive.money => -3,
+    Directive.winning => 10,
+    Directive.money => -8,
     _ => 0,
   };
 
-  int get teammatesDrift => this == Directive.money ? -3 : 0;
+  int get teammatesDrift => this == Directive.money ? -8 : 0;
 }
 
 /// チームメイトとの関係。
