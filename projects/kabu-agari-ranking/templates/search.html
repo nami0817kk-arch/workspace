@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}銘柄から探す｜値上がり株ランキング{% endblock %}
+{% block description %}銘柄名または証券コードで、直近{{ day_count }}営業日のランキングに何回登場したかを調べられます。登場した日のランキングにそのまま移動できます。{% endblock %}
+{% block content %}
+<h1>銘柄から探す</h1>
+<p>
+  銘柄名または証券コードを入れると、<strong>{{ period_from }} 〜 {{ period_to }}</strong>
+  （{{ day_count }}営業日）のランキングに登場した日が出ます。日付を押すとその日のランキングに移動します。
+</p>
+
+<p class="stock-search">
+  <label for="q">銘柄名・コード</label>
+  <input type="search" id="q" placeholder="例: トヨタ / 7203" autocomplete="off" inputmode="search">
+</p>
+<p id="hint" class="updated">2文字以上（コードなら3桁以上）入れると絞り込みます。</p>
+<div id="results"></div>
+
+<p>
+  ここに出るのは<strong>ランキングに入った日だけ</strong>です。
+  値動きが小さかった日は載りません。指標の意味は<a href="{{ base_url }}glossary.html">用語解説</a>を参照してください。
+</p>
+{% include "_ad_slot.html" %}
+<script>
+(function () {
+  var input = document.getElementById('q');
+  var out = document.getElementById('results');
+  var hint = document.getElementById('hint');
+  var index = null;
+  var loading = false;
+
+  var KINDS = [
+    { key: 'g', label: '値上がり', dir: 'gainers' },
+    { key: 'l', label: '値下がり', dir: 'losers' },
+    { key: 'a', label: '活況', dir: 'active' }
+  ];
+
+  function load(cb) {
+    if (index) { cb(); return; }
+    if (loading) return;
+    loading = true;
+    // 索引は入力があってから取りに行く。開いただけの人に配らない。
+    fetch('search-index.json').then(function (r) { return r.json(); }).then(function (data) {
+      index = data;
+      loading = false;
+      cb();
+    }).catch(function () {
+      loading = false;
+      hint.textContent = '検索用のデータを読み込めませんでした。時間をおいて開き直してください。';
+    });
+  }
+
+  function escape(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function render(q) {
+    var hits = index.stocks.filter(function (s) {
+      return s.n.indexOf(q) >= 0 || s.c.indexOf(q) === 0;
+    }).slice(0, 30);
+
+    if (!hits.length) {
+      out.innerHTML = '';
+      hint.textContent = '「' + escape(q) + '」は、この期間のランキングに登場していません。';
+      return;
+    }
+    hint.textContent = hits.length + '件（上位30件まで）';
+
+    out.innerHTML = hits.map(function (s) {
+      var blocks = KINDS.map(function (k) {
+        var dates = s[k.key] || [];
+        if (!dates.length) return '';
+        var links = dates.slice().reverse().map(function (d) {
+          return '<a href="archive/' + k.dir + '/' + d + '.html">' + d + '</a>';
+        }).join('、');
+        return '<dt>' + k.label + '（' + dates.length + '回）</dt><dd>' + links + '</dd>';
+      }).join('');
+      return '<section class="hit"><h2>' + escape(s.n) + '（' + escape(s.c) + '）</h2><dl>' + blocks + '</dl></section>';
+    }).join('');
+  }
+
+  function onInput() {
+    var q = input.value.trim();
+    if (q.length < 2) {
+      out.innerHTML = '';
+      hint.textContent = '2文字以上（コードなら3桁以上）入れると絞り込みます。';
+      return;
+    }
+    load(function () { render(q); });
+    if (index) render(q);
+  }
+
+  input.addEventListener('input', onInput);
+})();
+</script>
+{% endblock %}

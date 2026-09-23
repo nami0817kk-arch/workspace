@@ -60,3 +60,38 @@ def _longest_run(dates: list[str], all_dates: list[str]) -> int:
         run = run + 1 if cur == prev + 1 else 1
         best = max(best, run)
     return best
+
+
+# 検索用インデックスに載せる営業日数の上限。
+# 全期間を入れると、掲載日が増えるほど JSON が太り、スマホでの読み込みに響く。
+# 「最近どのくらい動いたか」を引くのが目的なので、直近だけで足りる。
+SEARCH_WINDOW_DAYS = 60
+
+
+def search_index(days: list[dict]) -> dict:
+    """銘柄名・コードから登場日を引くための索引。
+
+    { "from": 最古の日, "to": 最新の日,
+      "stocks": [ {"c": コード, "n": 名前, "g": [日...], "l": [...], "a": [...]} ] }
+
+    キーを1文字にしているのは、そのままブラウザに配る JSON だから。
+    銘柄数×日数ぶん繰り返されるので、ここのバイト数がそのまま読み込み時間になる。
+    """
+    window = days[:SEARCH_WINDOW_DAYS]
+    if not window:
+        return {"from": "", "to": "", "stocks": []}
+
+    stocks: dict[str, dict] = {}
+    for day in reversed(window):  # 古い順に見て、名前は新しいもので上書きする
+        for key, short in (("gainers", "g"), ("losers", "l"), ("active", "a")):
+            for row in day.get(key, []):
+                e = stocks.setdefault(row["code"], {"c": row["code"], "n": row["name"],
+                                                    "g": [], "l": [], "a": []})
+                e["n"] = row["name"]
+                e[short].append(day["rec_date"])
+
+    return {
+        "from": window[-1]["rec_date"],
+        "to": window[0]["rec_date"],
+        "stocks": sorted(stocks.values(), key=lambda e: e["c"]),
+    }

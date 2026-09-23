@@ -71,3 +71,32 @@ def test_件数の上限を守る():
 def test_データが空でも落ちない():
     assert aggregate.frequent([]) == []
     assert aggregate.frequent([_day("2026-09-18", [])]) == []
+
+
+# --- 検索用インデックス -----------------------------------------------------
+
+def test_索引は銘柄ごとに種別と日付を持つ():
+    idx = aggregate.search_index(DAYS)
+    by_code = {s["c"]: s for s in idx["stocks"]}
+    assert idx["to"] == "2026-09-18" and idx["from"] == "2026-09-15"
+    assert by_code["1001"]["g"] == ["2026-09-15", "2026-09-17", "2026-09-18"]
+    assert by_code["1001"]["l"] == [] and by_code["1001"]["a"] == []
+
+
+def test_索引は直近の期間だけに絞る():
+    # 上限より多い日数を新しい順に並べる
+    days = [_day(f"2026-{m:02d}-{d:02d}", [_row("1001", "アルファ")])
+            for m in (9, 8, 7) for d in range(28, 0, -1)]
+    assert len(days) > aggregate.SEARCH_WINDOW_DAYS
+    idx = aggregate.search_index(days)
+    assert idx["to"] == days[0]["rec_date"]
+    assert idx["from"] == days[aggregate.SEARCH_WINDOW_DAYS - 1]["rec_date"]
+
+
+def test_索引のキーは短いまま():
+    # そのままブラウザに配る JSON なので、キー名を長くすると読み込みが重くなる
+    assert set(aggregate.search_index(DAYS)["stocks"][0]) == {"c", "n", "g", "l", "a"}
+
+
+def test_索引はデータが無くても形を保つ():
+    assert aggregate.search_index([]) == {"from": "", "to": "", "stocks": []}

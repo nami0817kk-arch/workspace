@@ -262,7 +262,7 @@ def _write_sitemap(days: list[dict]) -> None:
         for name in (
             "index.html", "losers.html", "active.html",
             "about.html", "privacy.html", "guide.html", "glossary.html",
-            "frequent.html",
+            "frequent.html", "search.html",
         )
     ]
     for json_key, dirname, *_rest in _RANKING_TYPES:
@@ -301,6 +301,21 @@ def build_all() -> None:
     _env.globals["GAINERS_DATES_MAX"] = gainers_dates[0] if gainers_dates else ""
 
     _build_ranking_pages(days)
+
+    search_data = aggregate.search_index(days)
+    (_OUTPUT_DIR / "search-index.json").write_text(
+        json.dumps(search_data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8"
+    )
+    _write(
+        _OUTPUT_DIR / "search.html",
+        _env.get_template("search.html").render(
+            base_url="",
+            canonical=canonical_url("search.html"),
+            day_count=min(len(days), aggregate.SEARCH_WINDOW_DAYS),
+            period_from=search_data["from"],
+            period_to=search_data["to"],
+        ),
+    )
 
     _write(
         _OUTPUT_DIR / "frequent.html",
