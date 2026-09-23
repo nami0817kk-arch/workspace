@@ -49,6 +49,21 @@
     });
   }
 
+  // 表記ゆれを吸収してから照合する。銘柄名は全角英字（ＷＨＤＣ）やカタカナが
+  // 混在していて、見たまま打っても当たらないことが多い。
+  //  - NFKC で全角英数と半角カナを普通の形に揃える
+  //  - カタカナをひらがなに寄せる（「トヨタ」と「とよた」を同じに）
+  //  - 大文字小文字と、中黒・空白の有無を無視する
+  function norm(s) {
+    return String(s)
+      .normalize('NFKC')
+      .toLowerCase()
+      .replace(/[ァ-ヶ]/g, function (c) {
+        return String.fromCharCode(c.charCodeAt(0) - 0x60);
+      })
+      .replace(/[・･\s]/g, '');
+  }
+
   function escape(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
@@ -56,8 +71,10 @@
   }
 
   function render(q) {
+    var nq = norm(q);
     var hits = index.stocks.filter(function (s) {
-      return s.n.indexOf(q) >= 0 || s.c.indexOf(q) === 0;
+      if (s._k === undefined) { s._k = norm(s.n); }  // 1度だけ作って使い回す
+      return s._k.indexOf(nq) >= 0 || s.c.indexOf(q) === 0;
     }).slice(0, 30);
 
     if (!hits.length) {
