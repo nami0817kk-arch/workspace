@@ -12,6 +12,7 @@ import 'package:soccer_career/data/save_repository.dart';
 import 'package:soccer_career/dev/admin.dart';
 import 'package:soccer_career/game/career_engine.dart';
 import 'package:soccer_career/game/formulas.dart';
+import 'package:soccer_career/game/world.dart';
 import 'package:soccer_career/game/match_engine.dart';
 import 'package:soccer_career/game/ranking.dart';
 import 'package:soccer_career/models/agent.dart';
@@ -43,7 +44,11 @@ Future<CareerController> started({int seed = 3}) async {
     random: Random(seed),
   );
   await c.startCareer(
-      name: '検証', position: Position.cm, age: 24, agent: Agent.pool.first);
+    name: '検証',
+    position: Position.cm,
+    age: 24,
+    agent: Agent.pool.first,
+  );
   return c;
 }
 
@@ -59,7 +64,10 @@ void main() {
       final line = valueOf(impact, '総合力');
       expect(line, contains('${player.overall}'));
       expect(line, contains(Ranking.gradeFor(player.overall).label));
-      expect(line, contains('${Formulas.callUpOverall - player.overall}'));
+      final callUp = Formulas.callUpLineFor(
+        World.byId(c.state!.nationalTeam).prestige,
+      );
+      expect(line, contains('${callUp - player.overall}'));
     });
 
     test('次の試合の行は SelectionOutlook と同じ見立てと理由', () async {
@@ -76,23 +84,26 @@ void main() {
         baseChance: CareerController.injuryBaseChanceFor(c.state!),
       );
       expect(c.injuryChanceNow, expected);
-      expect(valueOf(AdminImpact.of(c), '練習した週の怪我'),
-          contains((expected * 100).toStringAsFixed(1)));
+      expect(
+        valueOf(AdminImpact.of(c), '練習した週の怪我'),
+        contains((expected * 100).toStringAsFixed(1)),
+      );
     });
 
     test('コンディションの行は conditionModifier と同じ増減', () async {
       final c = await started();
       await AdminActions(c).setCondition(100);
-      final expected =
-          (MatchInProgress.conditionModifier(100) * 100).round();
+      final expected = (MatchInProgress.conditionModifier(100) * 100).round();
       expect(valueOf(AdminImpact.of(c), '局面の成功率'), contains('+$expected%'));
     });
 
     test('お金の行は budget と同じ数字', () async {
       final c = await started();
       final state = c.state!;
-      expect(valueOf(AdminImpact.of(c), '今季のお金'),
-          contains('${state.budget.net}'));
+      expect(
+        valueOf(AdminImpact.of(c), '今季のお金'),
+        contains('${state.budget.net}'),
+      );
     });
   });
 
@@ -107,8 +118,10 @@ void main() {
       expect(changes, isNotEmpty);
       expect(changes.any((s) => s.startsWith('局面の成功率')), isTrue);
       // 「前 → 後」の形になっている。
-      expect(changes.firstWhere((s) => s.startsWith('局面の成功率')),
-          contains(' → '));
+      expect(
+        changes.firstWhere((s) => s.startsWith('局面の成功率')),
+        contains(' → '),
+      );
     });
 
     test('能力を上げると、総合力と水準の行が動く', () async {
@@ -158,13 +171,15 @@ void main() {
       tester.view.physicalSize = const Size(390, 1600);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.reset);
-      await tester.pumpWidget(MaterialApp(
-        theme: ThemeData(useMaterial3: true),
-        home: AnimatedBuilder(
-          animation: controller,
-          builder: (context, _) => HubScreen(controller: controller),
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: ThemeData(useMaterial3: true),
+          home: AnimatedBuilder(
+            animation: controller,
+            builder: (context, _) => HubScreen(controller: controller),
+          ),
         ),
-      ));
+      );
       await tester.pumpAndSettle();
       await tester.tap(find.byIcon(Icons.more_vert));
       await tester.pumpAndSettle();
@@ -194,10 +209,12 @@ void main() {
       tester.view.physicalSize = const Size(390, 1600);
       tester.view.devicePixelRatio = 1.0;
       addTearDown(tester.view.reset);
-      await tester.pumpWidget(MaterialApp(
-        theme: ThemeData(useMaterial3: true),
-        home: AdminScreen(controller: controller),
-      ));
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: ThemeData(useMaterial3: true),
+          home: AdminScreen(controller: controller),
+        ),
+      );
       await tester.pumpAndSettle();
 
       // 天才はここに出ている数字を動かさない（効くのは成長のとき）。

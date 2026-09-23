@@ -205,9 +205,16 @@ class Ranking {
     _ => ('育成中', 'まずは下の部で試合に出るところから'),
   };
 
-  /// 代表招集の目安まで、あといくつか。届いていれば 0。
-  static int toCallUp(int overall) =>
-      overall >= Formulas.callUpOverall ? 0 : Formulas.callUpOverall - overall;
+  /// 代表招集の線まで、あといくつか。届いていれば 0。
+  ///
+  /// **線は国の格で動く**（`Formulas.callUpLineFor`）。国を渡せない場所
+  /// （世界共通の物差しを出すだけの場所）でだけ、格3の国の線を既定にする。
+  /// ここを固定値のままにしていたので、ドイツ人選手の画面に
+  /// 「あと8」と出ながら判定は「あと12」を見ている状態になっていた。
+  static int toCallUp(int overall, {int? line}) {
+    final target = line ?? Formulas.callUpOverall;
+    return overall >= target ? 0 : target - overall;
+  }
 
   /// クラブの中での立ち位置。総合力とクラブの強さの差で決まる。
   static String standingIn(int overall, Club club) {
