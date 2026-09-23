@@ -1458,7 +1458,8 @@ class CareerEngine {
     // 積み上げたものを渡す側へ。プロ意識が要る。
     if (p.professionalism >= 15) return SecondCareer.coach;
     // 稼いで、外の世界を見ていた選手。
-    if (state.finances.savings >= 30000 && p.ambition >= 14) {
+    if (state.finances.savings >= Formulas.entrepreneurSavings &&
+        p.ambition >= 14) {
       return SecondCareer.entrepreneur;
     }
     // 名前が残っている選手は、話す側に呼ばれる。
