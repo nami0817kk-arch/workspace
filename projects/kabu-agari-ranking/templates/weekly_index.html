@@ -6,7 +6,7 @@
 <p>営業日ごとのランキングを、週（月曜〜金曜）単位で集計したものです。</p>
 <div class="archive-list">
   {% for w in weeks %}
-  <a href="{{ w.slug }}.html">{{ w.from }} 〜 {{ w.to }}（{{ w.day_count }}営業日）</a>
+  <a href="{{ w.slug }}.html">{{ w.from_ja }} 〜 {{ w.to_ja }}（{{ w.day_count }}営業日）</a>
   {% endfor %}
 </div>
 {% endblock %}

@@ -74,6 +74,8 @@ python src/build_site.py    # 取得 → data/ 保存 → output/ 生成
   作図の決まりは同ファイルの冒頭にまとめてある。**狭い画面基準（幅360）で
   組む**こと。PC幅で組むとスマホで縮小されて文字が読めなくなる。
   値は必ず同じページの表にも載せる（グラフでしか読めない値を作らない）。
+- **日付の書き方**: 文章の中は `format_date_ja` / `format_date_short_ja`（日本語表記）、
+  表のセル・URL・sitemap は ISO。混ざると読みづらく、直すたびに揺れる。
 - 休場日の判定は `src/market_calendar.py` の祝日表（内閣府CSVから転記）。
   **表は2027年までしか無く、範囲外は例外にしてある**（黙って平日扱いにしない）。
   年末に一度 https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv から追記する。

@@ -302,7 +302,8 @@ def test_相場の振り返りの一文は最も荒れた日を指す():
         {"rec_date": "2026-09-17", "big": 12, "stop_high": 3, "stop_low": 1, "top_pct": 20.0},
     ]
     s = render.market_summary(rows)
-    assert "2026-09-17" in s and "12銘柄" in s
+    # 文章の中の日付は日本語表記に揃える（表や URL は ISO のまま）
+    assert "9月17日（木）" in s and "12銘柄" in s
     assert "のべ5銘柄" in s
 
 
@@ -316,3 +317,10 @@ def test_配信ヘッダが成果物に入る(site):
     text = real_headers.read_text(encoding="utf-8")
     for header in ("X-Content-Type-Options", "X-Frame-Options", "Referrer-Policy"):
         assert header in text
+
+
+def test_日付の書き方の決まり():
+    # 文章の中は日本語表記、表や URL は ISO。混ざると読みづらく、
+    # 直すたびにどちらかへ揺れるので決めておく。
+    assert render.format_date_ja("2026-09-18") == "2026年9月18日（金）"
+    assert render.format_date_short_ja("2026-09-18") == "9月18日（金）"

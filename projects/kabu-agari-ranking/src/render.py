@@ -78,6 +78,12 @@ def format_date_ja(iso: str) -> str:
     return f"{d.year}年{d.month}月{d.day}日（{_WEEKDAY_JA[d.weekday()]}）"
 
 
+def format_date_short_ja(iso: str) -> str:
+    """2026-09-18 → 9月18日（金）。同じ年の日付を並べるときに使う。"""
+    d = date.fromisoformat(iso)
+    return f"{d.month}月{d.day}日（{_WEEKDAY_JA[d.weekday()]}）"
+
+
 def next_update_note(rec_date: str) -> str:
     """「次回更新予定」の一文。休場を挟むときはそれも言う。
 
@@ -321,8 +327,8 @@ def week_summary(week: dict) -> str:
     top = movers[0]
     repeat = len(week["frequent"])
     parts = [
-        f"{week['from']} から {week['to']} までの{week['day_count']}営業日で、"
-        f"最も上昇したのは{top['rec_date']}の{top['name']}（{top['code']}）で"
+        f"{format_date_ja(week['from'])}から{format_date_short_ja(week['to'])}までの{week['day_count']}営業日で、"
+        f"最も上昇したのは{format_date_short_ja(top['rec_date'])}の{top['name']}（{top['code']}）で"
         f"{top['change_pct']:.2f}%でした。"
     ]
     if repeat:
@@ -336,6 +342,8 @@ def _build_weekly_pages(days: list[dict]) -> list[dict]:
     tmpl = _env.get_template("weekly.html")
     for i, week in enumerate(weeks):
         week["summary"] = week_summary(week)
+        week["from_ja"] = format_date_ja(week["from"])
+        week["to_ja"] = format_date_short_ja(week["to"])
         _write(
             _OUTPUT_DIR / "weekly" / f"{week['slug']}.html",
             tmpl.render(
@@ -449,7 +457,7 @@ def market_summary(rows: list[dict]) -> str:
     busiest = max(rows, key=lambda r: r["big"])
     stops = sum(r["stop_high"] for r in rows)
     return (
-        f"この期間で最も荒かったのは{busiest['rec_date']}で、"
+        f"この期間で最も荒かったのは{format_date_short_ja(busiest['rec_date'])}で、"
         f"上位30銘柄のうち{busiest['big']}銘柄が10%以上動きました。"
         f"期間を通したストップ高はのべ{stops}銘柄です。"
     )
@@ -471,6 +479,8 @@ def _build_market_page(days: list[dict]) -> None:
             day_count=len(rows),
             period_from=rows[-1]["rec_date"] if rows else "",
             period_to=rows[0]["rec_date"] if rows else "",
+            period_from_ja=format_date_ja(rows[-1]["rec_date"]) if rows else "",
+            period_to_ja=format_date_short_ja(rows[0]["rec_date"]) if rows else "",
             summary=market_summary(rows),
             big_move_chart=charts.columns(
                 series("big"), aria_label="日ごとの、10%以上動いた銘柄数を示す棒グラフ", unit="銘柄"),
