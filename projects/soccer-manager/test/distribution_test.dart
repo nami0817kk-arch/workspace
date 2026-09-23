@@ -340,6 +340,29 @@ void main() {
           reason: 'legal のページが公開対象から外れている');
     });
 
+    test('app-ads.txt が公開され、AdMob のパブリッシャーIDが書かれている', () {
+      // app-ads.txt が無いと、広告主から「なりすましの在庫」と見なされて
+      // 入札が減る。置き場所はストアに載せた開発者サイトのドメイン直下で、
+      // ここでは soccer-manager.pages.dev/app-ads.txt になる。
+      final file = File('web/app-ads.txt');
+      expect(file.existsSync(), isTrue, reason: 'web/app-ads.txt が無い');
+
+      final line = file.readAsStringSync().trim();
+      expect(
+        line,
+        matches(RegExp(r'^google\.com, pub-\d{16}, DIRECT, [0-9a-f]{16}$')),
+        reason: 'app-ads.txt の書式が AdMob の指定と違う',
+      );
+
+      // web/ の中身は flutter build web が build/web へそのまま複製し、
+      // soccer-pages.yml がそれを dist の直下へ置く。どちらかが変わると
+      // ドメイン直下から消えて、AdMob からは「未設置」と同じに見える。
+      final pages =
+          File('../../.github/workflows/soccer-pages.yml').readAsStringSync();
+      expect(pages, contains('cp -r build/web/* dist/'),
+          reason: 'web/ の中身が公開対象から外れている');
+    });
+
     test('サポート窓口に個人を特定する情報が出ていない', () {
       // 窓口はストアの製品ページから誰でも開ける。個人の名前やアドレスを
       // 載せない方針で、専用のアドレスを用意してある。
