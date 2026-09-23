@@ -30,6 +30,10 @@ _env.globals["SITE_URL"] = SITE_URL
 
 _WEEKDAY_JA = "月火水木金土日"
 
+# プライバシーポリシーの文面を最後に直した日。**文面を変えたらここも変える。**
+# データの更新日を流用すると、毎日「ポリシーを更新しました」と言うことになる。
+POLICY_UPDATED = "2026年9月23日"
+
 # (json_key, dirname, heading, metric_label, output_filename, intro)
 _RANKING_TYPES = [
     (
@@ -330,9 +334,21 @@ def build_all() -> None:
         ),
     )
 
+    # 固定ページにも実データを出す。about の「何日ぶん載っているか」や
+    # privacy の最終更新日が実態と違うと、そこだけで信用を落とす。
+    fixed_context = {
+        "day_count": len(days),
+        "period_from": days[-1]["rec_date"],
+        "period_to": days[0]["rec_date"],
+        # ポリシーの最終更新はデータの日付とは別物。文面を直したときに手で上げる。
+        "policy_updated": POLICY_UPDATED,
+    }
     for name in ("about.html", "privacy.html", "guide.html", "glossary.html"):
         tmpl = _env.get_template(name)
-        _write(_OUTPUT_DIR / name, tmpl.render(base_url="", canonical=canonical_url(name)))
+        _write(
+            _OUTPUT_DIR / name,
+            tmpl.render(base_url="", canonical=canonical_url(name), **fixed_context),
+        )
 
     # 存在しないURL用。Cloudflare Pages は 404 のときこれを返す。
     # canonical を空にすると base.html 側が noindex を出す（404を検索結果に載せない）。
