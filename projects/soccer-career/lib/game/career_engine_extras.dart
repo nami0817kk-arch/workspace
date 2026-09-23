@@ -6,6 +6,7 @@ import '../models/objective.dart';
 import '../models/player.dart';
 import 'formulas.dart';
 import 'national.dart';
+import 'world.dart';
 import 'person.dart';
 
 /// 代表招集と監督の目標。キャリア本体から切り出してある。
@@ -52,8 +53,9 @@ class CareerExtras {
     // 一芸があれば、総合力の線が下がる。総合力はポジションの重みで出すので、
     // 尖らせるほど下がる——ここを開けないと、尖った育成を選んだ時点で
     // 代表が構造的に消える（実測で 代表12 → 0キャップ）。
+    // 線は代表の国の格で動く。小さい国ほど呼ばれやすい。
     final line =
-        Formulas.callUpOverall -
+        Formulas.callUpLineFor(World.byId(state.nationalTeam).prestige) -
         (Person.standoutOf(state.player) > 0
             ? Formulas.standoutCallUpRelief
             : 0);
