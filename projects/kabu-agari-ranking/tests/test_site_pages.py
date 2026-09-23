@@ -192,3 +192,16 @@ def test_総入れ替えならそう書く():
 def test_比較対象が無ければ何も書かない():
     assert render.turnover_note([_row(1)], None) == ""
     assert render.turnover_note([], [_row(1)]) == ""
+
+
+def test_文章だけのページに嘘の更新日を書かない(site):
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-09-18")
+    render.build_all()
+
+    sitemap = (out_dir / "sitemap.xml").read_text(encoding="utf-8")
+    for line in sitemap.splitlines():
+        if "/privacy" in line or "/guide" in line or "/glossary" in line:
+            assert "lastmod" not in line, line
+    # データと一緒に変わるページには入れる
+    assert any("/about" in l and "2026-09-18" in l for l in sitemap.splitlines())

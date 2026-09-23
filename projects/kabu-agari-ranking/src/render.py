@@ -471,6 +471,9 @@ Allow: /
 Sitemap: {SITE_URL}/sitemap.xml
 """
 
+# 検索用の索引はページではないので、リンクされていてもクロールしなくてよい。
+# （robots.txt では触れず、HTML から直接リンクしないことで十分）
+
 _ADS_TXT = """# Google AdSense 審査通過後、下記のコメントを解除し pub-ID を実際の値に置き換える
 # google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
 """
@@ -490,14 +493,21 @@ def _write_feed(days: list[dict]) -> None:
 
 def _write_sitemap(days: list[dict], weeks: list[dict]) -> None:
     latest_date = days[0]["rec_date"]
+
+    # データと一緒に毎日変わるページ。lastmod は最新の相場日でよい。
     urls = [
         (canonical_url(name), latest_date)
         for name in (
             "index.html", "losers.html", "active.html",
-            "about.html", "privacy.html", "guide.html", "glossary.html",
-            "frequent.html", "search.html",
+            "about.html", "frequent.html", "search.html",
         )
     ]
+    # 文章だけのページは毎日変わらない。データの日付を書くと
+    # 「毎日更新している」という嘘になり、そのうち lastmod ごと信用されなくなる。
+    # 正しい日が分からないものは lastmod を書かない（省略してよい）。
+    urls += [(canonical_url("privacy.html"), None),
+             (canonical_url("guide.html"), None),
+             (canonical_url("glossary.html"), None)]
     urls.append((canonical_url("weekly/index.html"), latest_date))
     for week in weeks:
         urls.append((canonical_url(f"weekly/{week['slug']}.html"), week["to"]))
@@ -511,7 +521,10 @@ def _write_sitemap(days: list[dict], weeks: list[dict]) -> None:
                 )
 
     entries = "\n".join(
-        f"  <url><loc>{loc}</loc><lastmod>{lastmod}</lastmod></url>" for loc, lastmod in urls
+        f"  <url><loc>{loc}</loc>"
+        + (f"<lastmod>{lastmod}</lastmod>" if lastmod else "")
+        + "</url>"
+        for loc, lastmod in urls
     )
     xml = (
         '<?xml version="1.0" encoding="UTF-8"?>\n'
