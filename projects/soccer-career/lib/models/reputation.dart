@@ -64,10 +64,10 @@ class Reputation {
       : '$marketValue万円';
 
   Map<String, dynamic> toJson() => {
-        'marketValue': marketValue,
-        'fame': fame,
-        'awards': awards.map((a) => a.name).toList(),
-      };
+    'marketValue': marketValue,
+    'fame': fame,
+    'awards': awards.map((a) => a.name).toList(),
+  };
 
   factory Reputation.fromJson(Map<String, dynamic>? json) {
     if (json == null) return const Reputation();
@@ -94,28 +94,48 @@ class Relations {
   final int teammates;
 
   Relations bump({int manager = 0, int teammates = 0}) => Relations(
-        manager: (this.manager + manager).clamp(0, 100),
-        teammates: (this.teammates + teammates).clamp(0, 100),
-      );
+    manager: (this.manager + manager).clamp(0, 100),
+    teammates: (this.teammates + teammates).clamp(0, 100),
+  );
 
   String get managerLabel => manager >= 75
       ? '厚い信頼'
       : manager >= 50
-          ? '普通'
-          : manager >= 25
-              ? '疑われている'
-              : '構想外';
+      ? '普通'
+      : manager >= 25
+      ? '疑われている'
+      : '構想外';
 
   String get teammatesLabel => teammates >= 75
       ? '中心人物'
       : teammates >= 50
-          ? '馴染んでいる'
-          : teammates >= 25
-              ? '距離がある'
-              : '浮いている';
+      ? '馴染んでいる'
+      : teammates >= 25
+      ? '距離がある'
+      : '浮いている';
 
-  Map<String, dynamic> toJson() =>
-      {'manager': manager, 'teammates': teammates};
+  /// **次の段までの距離。** 言葉だけだと、近いのか遠いのかが分からない。
+  ///
+  /// 一番上の段に居るなら null。
+  static (String, int)? nextStepFor(int value, List<(int, String)> steps) {
+    for (final step in steps) {
+      if (value < step.$1) return (step.$2, step.$1 - value);
+    }
+    return null;
+  }
+
+  /// 監督の信頼の、次の段と残り。
+  (String, int)? get managerNext =>
+      nextStepFor(manager, const [(25, '疑われている'), (50, '普通'), (75, '厚い信頼')]);
+
+  /// ロッカールームの、次の段と残り。
+  (String, int)? get teammatesNext => nextStepFor(teammates, const [
+    (25, '距離がある'),
+    (50, '馴染んでいる'),
+    (75, '中心人物'),
+  ]);
+
+  Map<String, dynamic> toJson() => {'manager': manager, 'teammates': teammates};
 
   factory Relations.fromJson(Map<String, dynamic>? json) => json == null
       ? const Relations()
@@ -184,14 +204,13 @@ class Finances {
   static double taxRateFor(int salary) => salary >= 20000
       ? 0.45
       : salary >= 8000
-          ? 0.38
-          : salary >= 2000
-              ? 0.30
-              : 0.20;
+      ? 0.38
+      : salary >= 2000
+      ? 0.30
+      : 0.20;
 
   /// 1シーズンの生活費。
-  int livingCostFor(int salary) =>
-      (salary * (0.08 + lifestyle * 0.07)).round();
+  int livingCostFor(int salary) => (salary * (0.08 + lifestyle * 0.07)).round();
 
   /// 1シーズンの収支を出す。
   ///
@@ -204,19 +223,18 @@ class Finances {
     double extraLivingRate = 0,
     int sponsor = 0,
     int appearances = Formulas.appearanceBaseline,
-  }) =>
-      SeasonBudget(
-        salary: salary,
-        agentFee: (salary * agentFeePercent / 100).round(),
-        tax: (salary * taxRateFor(salary)).round(),
-        living: livingCostFor(salary) + (salary * extraLivingRate).round(),
-        staff: staffCost,
-        sponsor: sponsor,
-        appearanceBonus: Formulas.appearanceBonus(
-          salary: salary,
-          appearances: appearances,
-        ),
-      );
+  }) => SeasonBudget(
+    salary: salary,
+    agentFee: (salary * agentFeePercent / 100).round(),
+    tax: (salary * taxRateFor(salary)).round(),
+    living: livingCostFor(salary) + (salary * extraLivingRate).round(),
+    staff: staffCost,
+    sponsor: sponsor,
+    appearanceBonus: Formulas.appearanceBonus(
+      salary: salary,
+      appearances: appearances,
+    ),
+  );
 
   /// そのシーズンの手取りを貯蓄に足す。
   ///
@@ -259,17 +277,11 @@ class Finances {
       ? '${(savings / 10000).toStringAsFixed(1)}億円'
       : '$savings万円';
 
-  static const List<String> lifestyleLabels = [
-    '質素',
-    '普通',
-    '派手',
-    '豪奢',
-  ];
+  static const List<String> lifestyleLabels = ['質素', '普通', '派手', '豪奢'];
 
   String get lifestyleLabel => lifestyleLabels[lifestyle.clamp(0, 3)];
 
-  Map<String, dynamic> toJson() =>
-      {'savings': savings, 'lifestyle': lifestyle};
+  Map<String, dynamic> toJson() => {'savings': savings, 'lifestyle': lifestyle};
 
   factory Finances.fromJson(Map<String, dynamic>? json) => json == null
       ? const Finances()
