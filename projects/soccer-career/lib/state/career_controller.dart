@@ -9,6 +9,7 @@ import '../game/match_engine.dart';
 import '../game/dependencies.dart';
 import '../game/life_events.dart';
 import '../game/national.dart';
+import '../game/match_target.dart';
 import '../game/newsroom.dart';
 import '../game/scenarios.dart';
 import '../game/person.dart';
@@ -38,6 +39,7 @@ import '../models/physique.dart';
 import '../models/player.dart';
 import '../models/role.dart';
 import '../models/season.dart';
+import '../models/reputation.dart';
 import '../game/world.dart';
 import '../models/support.dart';
 import '../models/training.dart';
@@ -1201,8 +1203,18 @@ class CareerController extends ChangeNotifier {
     final match = _inProgress;
     if (state == null || match == null) return null;
 
+    // **的は結果を出す前に決める。** 後から決めると、達成する的を選べてしまう。
+    final target = MatchTarget.of(state);
     final result = match.finish();
     _career.applyResult(state, result);
+    // 今節の的。達成すれば小さく払う。
+    lastTargetMet = target.metBy(result);
+    if (lastTargetMet) {
+      state.finances = Finances(
+        savings: state.finances.savings + MatchTarget.reward,
+        lifestyle: state.finances.lifestyle,
+      );
+    }
 
     if (state.rehabWatch > 0) state.rehabWatch--;
     _applyCards(state, result);
@@ -1678,6 +1690,9 @@ class CareerController extends ChangeNotifier {
 
   /// 直前の引退で**初めて**達成した挑戦。引退画面がこれを出す。
   List<Challenge> lastChallenges = const [];
+
+  /// 直前の試合で、今節の的を達成したか。試合結果の画面が出す。
+  bool lastTargetMet = false;
 
   /// 直前の引退で貯まった殿堂ポイントと、宣言していた挑戦。
   int lastLegacyPoints = 0;
