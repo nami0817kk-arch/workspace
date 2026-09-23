@@ -55,6 +55,24 @@ jobs:
       - name: Build site (data/ から。取得はしない)
         run: python src/build_site.py --no-fetch
 
+      - name: Ensure Cloudflare Pages project exists
+        run: |
+          curl -s -o /dev/null -w "%{http_code}\n" -X POST \
+            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/pages/projects" \
+            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            --data '{"name":"kabu-agari-ranking","production_branch":"master"}'
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v4
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: projects/kabu-agari-ranking
+          command: pages deploy output --project-name=kabu-agari-ranking --branch=master
+
+      # **公開のあとに置く。**監視で落とすとそれ以降が走らないので、ここが
+      # 前にあると「データが古い」だけでデプロイまで止まる（2026-09-22 に実際に起きた）。
       # 手元PCの取得タスクが止まっていないかの監視。
       # 失敗そのものは run-daily.ps1 がデスクトップ通知で知らせる。ここが拾うのは
       # 「PCが起動していない」「タスクが実行されなかった」など、手元で通知すら
@@ -92,22 +110,6 @@ jobs:
               )
               sys.exit(1)
           PY
-
-      - name: Ensure Cloudflare Pages project exists
-        run: |
-          curl -s -o /dev/null -w "%{http_code}\n" -X POST \
-            "https://api.cloudflare.com/client/v4/accounts/${{ secrets.CLOUDFLARE_ACCOUNT_ID }}/pages/projects" \
-            -H "Authorization: Bearer ${{ secrets.CLOUDFLARE_API_TOKEN }}" \
-            -H "Content-Type: application/json" \
-            --data '{"name":"kabu-agari-ranking","production_branch":"master"}'
-
-      - name: Deploy to Cloudflare Pages
-        uses: cloudflare/wrangler-action@v4
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          workingDirectory: projects/kabu-agari-ranking
-          command: pages deploy output --project-name=kabu-agari-ranking --branch=master
 
       # GitHub は定期ジョブの失敗を通知しないので、Issue を立てて明示的に鳴らす。
       # 既に開いている失敗 Issue があれば、増やさずコメントを足す。
