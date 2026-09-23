@@ -230,3 +230,18 @@ def test_審査前はadsテキストを置かない(site):
 def test_pubIDを入れたら有効なレコードを書く(monkeypatch):
     monkeypatch.setattr(render, "ADSENSE_CLIENT", "ca-pub-1234567890123456")
     assert render._ads_txt() == "google.com, pub-1234567890123456, DIRECT, f08c47fec0942fa0\n"
+
+
+def test_同じ日の他のランキングへ行ける(site):
+    data_dir, out_dir = site
+    (data_dir / "2026-09-18.json").write_text(json.dumps({
+        "rec_date": "2026-09-18",
+        "gainers": [_row(1)],
+        "losers": [_row(2)],
+        "active": [],          # 無い種別はリンクしない
+    }, ensure_ascii=False), encoding="utf-8")
+    render.build_all()
+
+    html = (out_dir / "archive" / "gainers" / "2026-09-18.html").read_text(encoding="utf-8")
+    assert "archive/losers/2026-09-18.html" in html
+    assert "archive/active/2026-09-18.html" not in html

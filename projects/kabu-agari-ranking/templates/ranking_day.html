@@ -23,6 +23,12 @@
 {% endif %}
 {% include "_ranking_table.html" %}
 {% include "_ad_slot.html" %}
+{% if siblings %}
+<p class="same-day">
+  同じ日の他のランキング:
+  {% for sib in siblings %}<a href="{{ base_url }}archive/{{ sib.dir }}/{{ rec_date }}.html">{{ sib.heading }}</a>{% if not loop.last %} ／ {% endif %}{% endfor %}
+</p>
+{% endif %}
 <nav class="day-nav">
   {% if older %}<a class="prev" href="{{ older }}.html">← {{ older }}</a>{% endif %}
   <a href="index.html">一覧</a>

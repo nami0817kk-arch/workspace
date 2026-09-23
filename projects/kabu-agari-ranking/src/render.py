@@ -440,8 +440,25 @@ def _write(path: Path, content: str) -> None:
     path.write_text(content, encoding="utf-8")
 
 
+def siblings_for(days: list[dict]) -> dict[str, list[dict]]:
+    """日付 → その日にデータがあるランキングの一覧。
+
+    「読み方」では値上がりと値下がりを併せて見るよう書いているのに、
+    その日の別のランキングへ行く道が無かった。
+    """
+    out: dict[str, list[dict]] = {}
+    for day in days:
+        entries = []
+        for json_key, dirname, heading, *_rest in _RANKING_TYPES:
+            if day.get(json_key):
+                entries.append({"kind": json_key, "dir": dirname, "heading": heading})
+        out[day["rec_date"]] = entries
+    return out
+
+
 def _build_ranking_pages(days: list[dict]) -> None:
     latest = days[0]
+    siblings = siblings_for(days)
     today_tmpl = _env.get_template("ranking_today.html")
     day_tmpl = _env.get_template("ranking_day.html")
     archive_index_tmpl = _env.get_template("ranking_archive_index.html")
@@ -494,6 +511,7 @@ def _build_ranking_pages(days: list[dict]) -> None:
                     heading=heading,
                     metric_label=metric_label,
                     summary=day_summary(day_rows, json_key),
+                    siblings=[e for e in siblings[rec] if e["kind"] != json_key],
                     turnover=turnover_note(
                         day_rows, with_data[i + 1][1] if i + 1 < len(with_data) else None
                     ),
