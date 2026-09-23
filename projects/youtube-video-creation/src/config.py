@@ -198,6 +198,9 @@ class ProjectConfig:
     # **匿名の群衆は「同じ人」ではない**（2026-09-07）。ここに書いた名前は
     # 行ごとに声が変わる。「ネット民」が20件つづけて同じ声だと、一人の独白に聞こえる
     voice_crowd: tuple[str, ...] = ()
+    # **読み上げの速さに全体で掛ける倍率**（2026-09-23 指示「1.25倍に」）。
+    # 話者ごとの speed に掛かるので、人ごとの差は残る。代弁のプールにもこの値が入る
+    speech_speed: float = 1.0
     path: Path = DEFAULT_CONFIG_PATH
 
     def resolve_speaker(self, name: str, variant: str = "") -> CastMember:
@@ -257,7 +260,7 @@ class ProjectConfig:
             name=name,
             key=f"voiced_{style}",
             style_id=int(style),
-            speed=1.0,
+            speed=self.speech_speed,
             pitch=0.0,
             intonation=1.05,   # 代弁は少し抑揚を付ける。読み上げと区別が付く
             position="none",
@@ -296,6 +299,7 @@ def build_config(raw: dict, path: Path = DEFAULT_CONFIG_PATH) -> ProjectConfig:
         raise ConfigError(
             f"使わないと決めた声がプールに入っています: {mixed}（voice_banned）"
         )
+    speed_scale = float(raw.get("speech_speed", 1.0))
     voicevox = VoicevoxConfig(**voice_raw)
     audio = AudioConfig(**(raw.get("audio") or {}))
     motion = MotionConfig(**(raw.get("motion") or {}))
@@ -314,7 +318,7 @@ def build_config(raw: dict, path: Path = DEFAULT_CONFIG_PATH) -> ProjectConfig:
             name=name,
             key=values.get("key", name),
             style_id=int(values["style_id"]),
-            speed=float(values.get("speed", 1.0)),
+            speed=float(values.get("speed", 1.0)) * speed_scale,
             pitch=float(values.get("pitch", 0.0)),
             intonation=float(values.get("intonation", 1.0)),
             position=values.get("position", "left"),
@@ -328,6 +332,7 @@ def build_config(raw: dict, path: Path = DEFAULT_CONFIG_PATH) -> ProjectConfig:
         voice_female=tuple(str(v).strip() for v in female if str(v).strip()),
         voice_banned=banned,
         voice_crowd=tuple(str(v).strip() for v in crowd if str(v).strip()),
+        speech_speed=speed_scale,
         video=video,
         voicevox=voicevox,
         cast=cast,

@@ -686,6 +686,14 @@ def test_横長の一覧板は画面いっぱいに敷く(tmp_path):
     renderer._photo_stage(str(four_three))
     assert str(four_three) in renderer._wide_stages, "4:3 が右半分に立てられている"
 
+    # **正方形も全面**（2026-09-23 指摘「レアルの背景の左がぼやけている」）。
+    # 「正方形に近いものも全面にする」と書いてあったのに、条件が1.15倍以上で
+    # **ちょうど正方形が漏れていた**。テバスの写真は 1920x1924 だった
+    square = tmp_path / "square.jpg"
+    Image.new("RGB", (1920, 1924), (90, 40, 40)).save(square)
+    renderer._photo_stage(str(square))
+    assert str(square) in renderer._wide_stages, "正方形が右半分に立てられている"
+
 
 def test_数字は途中で割らない():
     """**「後半38分」が「後半3／8分」に割れていた**（2026-09-18 に画面で見つかった）。

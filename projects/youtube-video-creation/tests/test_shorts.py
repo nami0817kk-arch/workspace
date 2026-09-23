@@ -215,8 +215,8 @@ def test_ショートは話速を1割上げる():
     portrait = shorts.portrait(config)
     for key, member in config.cast.items():
         assert portrait.cast[key].speed == round(member.speed * shorts.SHORT_SPEED, 3)
-    # 元の設定は触らない
-    assert all(m.speed <= 1.1 for m in config.cast.values())
+    # 元の設定は触らない（2026-09-23 に全体の話速を1.25倍にしたので、上限もそのぶん上がる）
+    assert all(m.speed <= 1.1 * config.speech_speed + 1e-9 for m in config.cast.values())
 
 
 def test_ショートの冒頭はタイトルの1行だけ():
@@ -1098,3 +1098,23 @@ def test_一言のあとに題を読む回はショートでは題の行から�
     short = trim(parse_script(body))
     said = [l.text for l in short.scenes[0].lines]
     assert said == ["ボーンマスってどんなクラブ？"]
+
+
+def test_組写真の控えは回ごとに別の名前になる(tmp_path, monkeypatch):
+    """2026-09-23: どの回も写真が `01.jpg` なので、幹だけで名付けると全部ぶつかる。
+    レアルの回（テバスとペレス）に、別の回の2人が映っていた。"""
+    from PIL import Image
+    import src.shorts as shorts
+
+    monkeypatch.setattr(shorts, "STACK_DIR", tmp_path / "_stack")
+    (tmp_path / "a").mkdir(); (tmp_path / "b").mkdir()
+    made = []
+    for d in ("a", "b"):
+        for n in ("01.jpg", "02.jpg"):
+            p = tmp_path / d / n
+            Image.new("RGB", (400, 600), (10, 20, 30)).save(p)
+            made.append(p.as_posix())
+    first = shorts.stacked_photo({"thumbnail_photos": made[0:2]})
+    second = shorts.stacked_photo({"thumbnail_photos": made[2:4]})
+    assert first and second
+    assert first != second, "別の回の組写真が同じ名前になっている"

@@ -11,6 +11,7 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import re
 from dataclasses import replace
 from pathlib import Path
@@ -544,7 +545,12 @@ def stacked_photo(meta: dict) -> str:
 
     from .render import _cover
 
-    name = "__".join(Path(t).stem for t in tiles[:3]) + ".jpg"
+    # **控えの名前は道のり全体から作る**（2026-09-23 指摘「レアルショートの背景が誤っている」）。
+    # それまでは「ファイル名の幹」だけで名付けていたので、写真がどの回も `01.jpg` である以上
+    # `01__01.jpg` が全部の回でぶつかり、**別の回で作った組写真をそのまま使い回していた**。
+    # レアルの回（テバスとペレス）に、まったく別の人が2人映っていた
+    digest = hashlib.sha1("|".join(tiles[:3]).encode("utf-8")).hexdigest()[:10]
+    name = "__".join(Path(t).stem for t in tiles[:3]) + f"_{digest}.jpg"
     out = STACK_DIR / name
     if out.exists():
         return out.as_posix()
