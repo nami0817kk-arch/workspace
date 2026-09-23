@@ -1031,12 +1031,37 @@ class CareerEngine {
   }
 
   /// 起用の見込み。クラブの強さと自分の力の差で決まる。
-  String _roleFor(int overall, Club club) {
+  String _roleFor(int overall, Club club) => roleFor(overall, club);
+
+  /// **起用の約束。** クラブの強さと総合力の差で決まる。
+  ///
+  /// 実測（`test/promise_role_sim.dart`、24歳以上の1538季）では、
+  /// この言葉どおりに出場が並ぶ:
+  ///
+  /// | 約束 | 出場/38 | 先発 | 無出場の季 |
+  /// |---|---|---|---|
+  /// | 絶対的な主力 | 32.5 | 28.5 | 0.0% |
+  /// | 主力 | 29.9 | 25.4 | 0.0% |
+  /// | ローテーション | 28.4 | 23.7 | **4.8%** |
+  ///
+  /// **差が出るのは先発と、1季を棒に振る危険のほう**（出場数は 4 しか
+  /// 違わない）。言葉だけだと「ローテーション」がその危険を含むことが
+  /// 読めないので、`roleNoteFor` で添える。
+  static String roleFor(int overall, Club club) {
     final gap = overall - club.strength;
     if (gap >= 5) return '絶対的な主力';
     if (gap >= -3) return '主力';
     if (gap >= -10) return 'ローテーション';
     return '控え';
+  }
+
+  /// その約束が、実際に何を意味するか。オファーを選ぶ材料。
+  static String roleNoteFor(int overall, Club club) {
+    final gap = overall - club.strength;
+    if (gap >= 5) return 'ほぼ全試合に先発できる';
+    if (gap >= -3) return '先発が基本。外れる試合もある';
+    if (gap >= -10) return '先発と控えを行き来する。出られない季もありうる';
+    return '出番を勝ち取るところから';
   }
 
   /// 上乗せを要求する。

@@ -135,6 +135,7 @@ class MatchInProgress {
     this.sentOffUsMinute,
     this.international = false,
     this.cup,
+    this.big = false,
     Random? random,
   }) : assert(scenarios.length == minutes.length),
        teammateGoalMinutes = [...teammateGoalMinutes],
@@ -603,8 +604,21 @@ class MatchInProgress {
     ScenarioFamily.goalkeeper => '流れの中から決めた。',
   };
 
-  /// 大一番か。格上との対戦と代表戦は、それだけで重い。
-  bool get bigMatch => international || opponent.strength - club.strength >= 8;
+  /// **この試合が重いと、外（`Newsroom.isBigFixture`）で判断されたか。**
+  ///
+  /// 局面の数はこの判断で 2〜6 に変わるのに、**重圧（`bigMatchPressure`）と
+  /// 「大一番に強い／弱い」特性は別の、貧しいほうの定義を読んでいた**
+  /// （格上8以上か代表戦だけ）。実測では、22歳以降そちらが 1〜3% まで
+  /// 落ちる（〜21歳 47.3% / 22-25 3.3% / 26-29 **1.2%** / 34〜 1.1%。
+  /// 1部で 2.9%、2部で 57.6%）。上のリーグに上がると格上がいなくなるので、
+  /// **大一番の特性がキャリアの残り15年ずっと眠る**。
+  /// `test/weight_sim.dart` で測ってある。
+  final bool big;
+
+  /// 大一番か。順位・因縁・勝ち上がり・終盤の山場まで含めて、
+  /// 局面の数を決めているのと同じ判断を読む。
+  bool get bigMatch =>
+      international || big || opponent.strength - club.strength >= 8;
 
   /// 「前半 23分」のような表示用の文字列。
   static String minuteLabel(int minute) =>
@@ -1450,6 +1464,8 @@ class MatchEngine {
     bool big = false,
   }) {
     final count = scenarioCount(appearance, big: big);
+    // 重さの判断は1つ。局面の数だけに使って重圧に渡さないと、
+    // 「大一番に強い」が上のリーグで一度も効かなくなる。
 
     // 試合の骨格は展開に依らない局面から引き、終盤に効く局面は控えに回す。
     final family = player.position.family;
@@ -1534,6 +1550,7 @@ class MatchEngine {
       international: international,
       cup: cup,
       random: _random,
+      big: big,
     );
   }
 

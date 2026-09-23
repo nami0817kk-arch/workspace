@@ -165,4 +165,37 @@ void main() {
       expect(share, lessThan(0.45), reason: '$share が重い＝ただ長いだけ');
     }, timeout: const Timeout(Duration(minutes: 2)));
   });
+  group('重さの判断は1つ', () {
+    test('局面の数と、重圧と特性が、同じ判断を読む', () {
+      // **別々の定義を持っていた。** 局面の数は `Newsroom.isBigFixture`
+      // （順位・因縁・勝ち上がり・終盤の山場まで見る）で決まるのに、
+      // 重圧（`bigMatchPressure`）と「大一番に強い／弱い」特性は
+      // 「格上8以上か代表戦」しか見ていなかった。上のリーグへ行くと
+      // 格上がいなくなるので、実測で 22歳以降は 10% まで落ちていた
+      // （`test/weight_sim.dart`。揃えたあとは 41〜43%）。
+      final engine = MatchEngine(random: Random(1));
+      const club = Club(id: 'a', name: '自軍', strength: 80, tier: 1);
+      const opponent = Club(id: 'b', name: '相手', strength: 78, tier: 1);
+      final player = striker();
+
+      MatchInProgress build({required bool big}) => engine.start(
+        matchday: 30,
+        opponent: opponent,
+        club: club,
+        home: true,
+        player: player,
+        appearance: Appearance.start,
+        big: big,
+      );
+
+      // 相手は格上ではないので、外の判断だけが重さを決める。
+      expect(build(big: false).bigMatch, isFalse);
+      expect(build(big: true).bigMatch, isTrue);
+      // 局面の数も、同じ判断で変わる。
+      expect(
+        build(big: true).scenarios.length,
+        greaterThan(build(big: false).scenarios.length),
+      );
+    });
+  });
 }

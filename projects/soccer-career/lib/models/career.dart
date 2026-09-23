@@ -193,6 +193,7 @@ class CareerState {
     this.pendingSevere = false,
     this.declineYearsLost = 0,
     this.incentiveCut = 0,
+    this.targetStreak = 0,
     this.declaredChallenge,
     this.captain = false,
     this.captaincyOffered = false,
@@ -396,6 +397,14 @@ class CareerState {
 
   /// **重傷で早まった衰え始め（年）。** 戻し方で決まり、後から戻らない。
   int declineYearsLost;
+
+  /// **今節の的を、何試合続けて達成しているか。**
+  ///
+  /// 出た試合だけで数える。外しても、出られなくても切れる。
+  /// シーズンを跨ぐと 0 に戻る（`advanceSeason` が組み直すので自動）。
+  /// お金だけの報酬は年俸で薄まって終盤ただの飾りになっていた
+  /// （`test/target_sim.dart`: 序盤17% → 9季目以降2%）。
+  int targetStreak;
 
   /// **出来高払い契約で今季削られている額（万円）。**
   ///
@@ -902,6 +911,7 @@ class CareerState {
     'pendingSevere': pendingSevere,
     'declineYearsLost': declineYearsLost,
     'incentiveCut': incentiveCut,
+    'targetStreak': targetStreak,
     'declaredChallenge': declaredChallenge,
     'captain': captain,
     'captaincyOffered': captaincyOffered,
@@ -1039,6 +1049,7 @@ class CareerState {
       pendingSevere: json['pendingSevere'] as bool? ?? false,
       declineYearsLost: json['declineYearsLost'] as int? ?? 0,
       incentiveCut: json['incentiveCut'] as int? ?? 0,
+      targetStreak: json['targetStreak'] as int? ?? 0,
       declaredChallenge: json['declaredChallenge'] as String?,
       offseason: Offseason.values.any((p) => p.name == json['offseason'])
           ? Offseason.values.byName(json['offseason'] as String)
