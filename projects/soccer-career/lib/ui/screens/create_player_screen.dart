@@ -8,6 +8,7 @@ import '../../game/career_engine.dart';
 import '../../game/world.dart';
 import '../../models/look.dart';
 import '../../models/agent.dart';
+import '../../models/challenge.dart';
 import '../../models/attributes.dart';
 import '../../models/physique.dart';
 import '../../models/traits.dart';
@@ -206,8 +207,14 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                           Icons.workspace_premium_outlined,
                           size: 18,
                         ),
+                        // **次の選手を作る場所に、追うものを出す。**
+                        // 挑戦は殿堂の中にあるので、開かないと存在に気付かない。
                         label: Text(
-                          'これまでの選手（${widget.controller.hall.legends.length}人）',
+                          'これまでの選手'
+                          '（${widget.controller.hall.legends.length}人）'
+                          ' ・ 挑戦 '
+                          '${Challenge.values.where(widget.controller.hall.isCleared).length}'
+                          '/${Challenge.values.length}',
                         ),
                       ),
                     ),

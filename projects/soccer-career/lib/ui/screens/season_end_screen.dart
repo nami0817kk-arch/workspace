@@ -28,10 +28,8 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
   late List<TransferOffer> _offers;
   bool _busy = false;
 
-  /// オフに身体をどうするか。移籍先を決めるのと同じ画面で選ぶ。
+  /// オフをどう過ごすか。移籍先を決めるのと同じ画面で選ぶ。
   Offseason _offseason = Offseason.sharpen;
-
-  /// プレシーズンの過ごし方。
 
   /// 代理人に一度売り込ませたか。1シーズンに1度だけ。
   bool _solicited = false;
