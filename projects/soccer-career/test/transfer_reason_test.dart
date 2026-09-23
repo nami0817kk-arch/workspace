@@ -3,6 +3,9 @@
 /// 「日本1部から移籍出来ない」という報告の正体は、契約が残り1年になっても
 /// 出場10試合・平均評価6.7に届いていなければ話が来ないのに、画面が
 /// 「話が来る」としか書いていなかったこと。
+///
+/// 続く「自動で進めると移籍できない」は、契約年数そのものだった。
+/// 契約中は行き先が上のクラブに狭まるだけになったので、その線も文に出す。
 library;
 
 import 'dart:math';
@@ -16,6 +19,7 @@ import 'package:soccer_career/game/world.dart';
 import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/attributes.dart';
 import 'package:soccer_career/models/career.dart';
+import 'package:soccer_career/models/club.dart';
 import 'package:soccer_career/models/season.dart';
 import 'package:soccer_career/state/career_controller.dart';
 
@@ -81,10 +85,39 @@ void main() {
     final controller = await _career();
     final state = controller.state!;
     state.contractYears = 1;
+    // クラブの器を超えていると評価の門を通ってしまうので、釣り合わせる。
+    state.club = Club(
+      id: state.club.id,
+      name: state.club.name,
+      strength: state.player.overall,
+      tier: state.club.tier,
+      countryId: state.club.countryId,
+    );
     _play(state, matches: 20, rating: 6.4);
     final label = controller.transferWindowLabel;
     expect(label, contains('6.40'));
     expect(label, contains('${Formulas.transferOfferRating}'));
+  });
+
+  test('契約が残っているときは、上のクラブに限られると書く', () async {
+    final controller = await _career();
+    final state = controller.state!;
+    state.contractYears = 3;
+    _play(state, matches: 20, rating: 7.4);
+    final label = controller.transferWindowLabel;
+    expect(label, contains('契約があと3年'));
+    expect(label, contains('上のクラブ'));
+    expect(label, contains('話が来る'));
+  });
+
+  test('契約が残っていて出来が足りなければ、超える線を書く', () async {
+    final controller = await _career();
+    final state = controller.state!;
+    state.contractYears = 3;
+    _play(state, matches: 20, rating: 6.8);
+    final label = controller.transferWindowLabel;
+    expect(label, contains('6.80'));
+    expect(label, contains('${Formulas.transferUnderContractRating}'));
   });
 
   test('両方満たしていれば「話が来る」と書く', () async {

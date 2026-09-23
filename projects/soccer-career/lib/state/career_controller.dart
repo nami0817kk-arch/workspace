@@ -1449,10 +1449,27 @@ class CareerController extends ChangeNotifier {
       return '${window.label}。違約金を追い越しているので、契約が残っていても話が来る。';
     }
     if (state.contractYears > 1) {
-      return '${window.label}。ただし契約があと${state.contractYears}年ある——'
-          '残り1年になるまで、よそからは動かせない。';
+      final stats = state.seasonStats;
+      final short = Formulas.transferOfferAppearances - stats.appearances;
+      final need = short > 0
+          ? 'あと$short試合出て、平均評価'
+                '${Formulas.transferUnderContractRating}を超えれば'
+          : stats.averageRating < Formulas.transferUnderContractRating
+          ? '今季の平均評価が'
+                '${stats.averageRating.toStringAsFixed(2)}——'
+                '${Formulas.transferUnderContractRating}を超えれば'
+          : '今季の出来なら';
+      return '${window.label}。契約があと${state.contractYears}年あるので、'
+          '動かせるのは移籍金を積む上のクラブだけ。$need話が来る。';
     }
     final stats = state.seasonStats;
+    // クラブの器を超えていれば、評価点の門は通る。
+    final gap = state.player.overall - state.club.strength;
+    if (gap >= Formulas.transferOutgrownGap &&
+        stats.appearances >= Formulas.transferOfferAppearances) {
+      return '${window.label}。クラブの強さを$gap上回っているので、'
+          '今季の出来に関係なく話が来る。';
+    }
     final short = Formulas.transferOfferAppearances - stats.appearances;
     if (short > 0) {
       return '${window.label}。契約は残り${state.contractYears}年だが、'
@@ -1493,9 +1510,7 @@ class CareerController extends ChangeNotifier {
     // 次の一段が最上位なら、その門（代表か知名度）もここで言う。
     // 今いる国の格で見ていたときは、格3の国に居るあいだ出てこなかった。
     if (top + 1 >= worldTop) {
-      needs.add(
-        '最上位の国は代表${Formulas.eliteCaps}キャップか知名度${Formulas.eliteFame}',
-      );
+      needs.add('最上位の国は代表${Formulas.eliteCaps}キャップか知名度${Formulas.eliteFame}');
     }
     return needs.isEmpty
         ? '$reach一段上の国へは、まずこの格の国で実績を積むことになる。'
