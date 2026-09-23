@@ -48,35 +48,6 @@ jobs:
       - name: Run tests
         run: pytest
 
-      # 手元PCの取得タスクが止まっていないかの監視。
-      # 記録開始前は「まだ0日」なので、失敗させず警告だけにする。
-      # ここで毎日赤くすると、本物の停止に気づけなくなる。
-      - name: Check data freshness
-        run: |
-          python - <<'PY'
-          import sys
-          from datetime import date, datetime
-          from pathlib import Path
-
-          snaps = sorted(Path("data/snapshots").glob("*.csv.gz"))
-          if not snaps:
-              print("::warning::まだ価格履歴がありません。"
-                    "config.json の genres を決め、手元PCの取得タスクを登録してください。")
-              sys.exit(0)
-
-          latest = snaps[-1].name.removesuffix(".csv.gz")
-          age = (date.today() - datetime.strptime(latest, "%Y-%m-%d").date()).days
-          print(f"最新の記録 {latest}（{age}日前） / 通算 {len(snaps)}日分")
-          # 毎日走る前提なので、1日空いた時点で異常。3日猶予にしていた間に
-          # IP変更で2日分を静かに取り逃した（2026-09-06, 09-07）。価格は
-          # 後から取り直せないため、猶予を置く意味がない。
-          if age > 1:
-              print(f"::error::価格履歴が{age}日前で止まっています。"
-                    "手元PCの取得タスク(run-daily.ps1)と、楽天アプリの許可IPを確認してください。"
-                    "自宅のグローバルIPが変わると 403 で止まります。")
-              sys.exit(1)
-          PY
-
       # 記録済みデータから静的サイトを作る。build.py は通信せず data/ だけを見る。
       - name: Build site
         run: python build.py
@@ -96,6 +67,41 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           workingDirectory: projects/price-tracker
           command: pages deploy dist --project-name=price-tracker --branch=master
+
+      # **必ず Deploy の後に置く。** 手前にあると、鮮度の警報が出た日は
+      # 公開まで道連れで止まる（kabu で 2026-09-22 に実際に起きた）。
+      # 古いデータでも出ているほうが、サイトが更新されないより損が小さい。
+      # 手元PCの取得タスクが止まっていないかの監視。
+      # 記録開始前は「まだ0日」なので、失敗させず警告だけにする。
+      # ここで毎日赤くすると、本物の停止に気づけなくなる。
+      - name: Check data freshness
+        run: |
+          python - <<'PY'
+          import sys
+          from datetime import datetime, timedelta, timezone
+          from pathlib import Path
+
+          snaps = sorted(Path("data/snapshots").glob("*.csv.gz"))
+          if not snaps:
+              print("::warning::まだ価格履歴がありません。"
+                    "config.json の genres を決め、手元PCの取得タスクを登録してください。")
+              sys.exit(0)
+
+          latest = snaps[-1].name.removesuffix(".csv.gz")
+          # ファイル名は JST の日付。ランナーは UTC なので、そのまま引くと
+          # 日付が1日ずれる時間帯がある。
+          today = datetime.now(timezone(timedelta(hours=9))).date()
+          age = (today - datetime.strptime(latest, "%Y-%m-%d").date()).days
+          print(f"最新の記録 {latest}（{age}日前） / 通算 {len(snaps)}日分")
+          # 毎日走る前提なので、1日空いた時点で異常。3日猶予にしていた間に
+          # IP変更で2日分を静かに取り逃した（2026-09-06, 09-07）。価格は
+          # 後から取り直せないため、猶予を置く意味がない。
+          if age > 1:
+              print(f"::error::価格履歴が{age}日前で止まっています。"
+                    "手元PCの取得タスク(run-daily.ps1)と、楽天アプリの許可IPを確認してください。"
+                    "自宅のグローバルIPが変わると 403 で止まります。")
+              sys.exit(1)
+          PY
 
       # GitHub は定期ジョブの失敗を通知しないので、Issue を立てて明示的に鳴らす。
       # 既に開いている失敗 Issue があれば、増やさずコメントを足す。
