@@ -73,12 +73,37 @@ void main() {
       );
     });
 
-    test('難しい挑戦ほど、宣言の上乗せが重い', () {
-      // 到達率 3% の鉄人は、38% の大器晩成より重い。
+    test('狙っても届かない挑戦ほど、宣言の上乗せが重い', () {
+      // **「普通に遊んだときの到達率」ではなく「狙ったときの到達率」で並ぶ。**
+      // 宣言するのは狙う人なので、狙っても届かないものほど重い。
+      // 順は `test/challenge_sim.dart` の実測（狙ったときの到達率）:
+      // 一途100% > 叩き上げ84% > 大器晩成70% > 鉄人49% > 渡り鳥39%
+      // > 点取り屋33% > 無冠17% > 代表の顔14% > 世界一10%
+      const easiestFirst = [
+        Challenge.oneClub,
+        Challenge.fromBelow,
+        Challenge.lateBloom,
+        Challenge.ironman,
+        Challenge.wanderer,
+        Challenge.marksman,
+        Challenge.uncrowned,
+        Challenge.faceOfTheNation,
+        Challenge.worldChampion,
+      ];
       expect(
-        Challenge.ironman.declaredBonus,
-        greaterThan(Challenge.lateBloom.declaredBonus),
+        easiestFirst.toSet(),
+        Challenge.values.toSet(),
+        reason: '挑戦を足したら、この並びにも足す',
       );
+      for (var i = 1; i < easiestFirst.length; i++) {
+        expect(
+          easiestFirst[i].declaredBonus,
+          greaterThan(easiestFirst[i - 1].declaredBonus),
+          reason:
+              '${easiestFirst[i].label} が ${easiestFirst[i - 1].label} '
+              'より軽い',
+        );
+      }
     });
   });
 

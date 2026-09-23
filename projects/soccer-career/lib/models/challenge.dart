@@ -69,19 +69,37 @@ enum Challenge {
 
   /// **宣言して狙ったときの、引退時の上乗せ（殿堂ポイント）。**
   ///
-  /// 難しいものほど重い。到達率は `tmp_challenge_sim` の実測に合わせてある
-  /// （一途25% / 渡り鳥19% / 叩き上げ31% / 大器晩成38% / 無冠6% /
-  /// 点取り屋22% / 鉄人3% / 世界一9%）。
+  /// **「普通に遊んだときの到達率」ではなく「狙ったときの到達率」で値を付ける。**
+  /// 宣言するのは狙う人なので、狙っても届かないものほど重い。
+  /// `test/challenge_sim.dart` が4つの遊び方（普通／動かない／遅咲き／攻めきる）
+  /// で360キャリアを回し、**その中の一番良い到達率**を出す:
+  ///
+  /// | 挑戦 | 狙ったときの到達率 | 上乗せ |
+  /// |---|---|---|
+  /// | 一途 | 100%（動かない） | 8 |
+  /// | 叩き上げ | 84%（動かない） | 10 |
+  /// | 大器晩成 | 70%（遅咲き） | 12 |
+  /// | 鉄人 | 49%（動かない） | 16 |
+  /// | 渡り鳥 | 39%（遅咲き） | 18 |
+  /// | 点取り屋 | 33%（動かない） | 20 |
+  /// | 無冠の名手 | 17%（動かない） | 26 |
+  /// | 代表の顔 | 14%（動かない） | 28 |
+  /// | 世界一 | 10%（狙っても動かない） | 30 |
+  ///
+  /// 前の表は一度きりの仮設スクリプトで測った値で、**鉄人が 3% のつもりで
+  /// 30pt のまま**だった。実際には通算出場が伸びて 24%（狙えば49%）まで
+  /// 緩んでおり、一途（15pt・狙えば100%）の倍を払う一番おいしい宣言に
+  /// なっていた。測り直す仕組みを残しておかないと、値は静かにずれる。
   int get declaredBonus => switch (this) {
-    Challenge.lateBloom => 10,
-    Challenge.fromBelow => 12,
-    Challenge.oneClub => 15,
-    Challenge.marksman => 15,
+    Challenge.oneClub => 8,
+    Challenge.fromBelow => 10,
+    Challenge.lateBloom => 12,
+    Challenge.ironman => 16,
     Challenge.wanderer => 18,
-    Challenge.faceOfTheNation => 20,
-    Challenge.worldChampion => 25,
-    Challenge.uncrowned => 30,
-    Challenge.ironman => 30,
+    Challenge.marksman => 20,
+    Challenge.uncrowned => 26,
+    Challenge.faceOfTheNation => 28,
+    Challenge.worldChampion => 30,
   };
 
   static Challenge? byName(String name) {
