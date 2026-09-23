@@ -8,12 +8,15 @@ from __future__ import annotations
 
 from collections import defaultdict
 
+import price_limit
+
 
 def _tally(days: list[dict], key: str) -> dict[str, dict]:
     """銘柄コードごとに、登場した日と最大騰落率を集める。"""
     acc: dict[str, dict] = defaultdict(
-        lambda: {"code": "", "name": "", "dates": [], "best_pct": None}
+        lambda: {"code": "", "name": "", "dates": [], "best_pct": None, "stops": 0}
     )
+    stop_key = price_limit.STOP_LOW if key == "losers" else price_limit.STOP_HIGH
     # days は新しい順。集計は古い順に見たほうが「最新の名称」を残しやすい。
     for day in reversed(days):
         for row in day.get(key, []):
@@ -24,6 +27,10 @@ def _tally(days: list[dict], key: str) -> dict[str, dict]:
             pct = row["change_pct"]
             if e["best_pct"] is None or abs(pct) > abs(e["best_pct"]):
                 e["best_pct"] = pct
+            # 「何回ランクインしたか」だけだと、上限まで買われた日と
+            # 少し動いただけの日が同じに見える。
+            if price_limit.classify(row.get("close"), pct) == stop_key:
+                e["stops"] += 1
     return acc
 
 

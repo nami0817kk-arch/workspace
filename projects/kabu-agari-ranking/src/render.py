@@ -175,9 +175,22 @@ def big_move_series(days: list[dict], key: str = "gainers") -> list[dict]:
 
 
 def ranking_chart(rows: list[dict], kind: str, rec_date: str, heading: str) -> str:
-    """ランキング上位の騰落率を横棒にする。活況（約定回数）は対象外。"""
-    if kind not in ("gainers", "losers"):
-        return ""
+    """ランキング上位を横棒にする。
+
+    値上がり・値下がりは騰落率、活況は約定回数。活況で騰落率を描いても
+    そのランキングの意味（取引の活発さ）と対応しない。
+    """
+    if kind == "active":
+        top = [
+            {"label": r["name"], "sub": r["code"], "value": r["metric_value"]}
+            for r in rows[:10]
+        ]
+        return charts.horizontal_bars(
+            top,
+            aria_label=f"{rec_date} の活況銘柄ランキング上位10銘柄の約定回数を示す横棒グラフ",
+            unit="回",
+            signed=False,
+        )
     top = [
         {"label": r["name"], "sub": r["code"], "value": r["change_pct"]}
         for r in rows[:10]

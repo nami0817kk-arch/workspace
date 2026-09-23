@@ -53,6 +53,7 @@
       <th scope="col">銘柄名</th>
       <th scope="col">コード</th>
       <th scope="col">最大上昇率</th>
+      <th scope="col">ストップ高</th>
       <th scope="col">最長連続</th>
     </tr>
   </thead>
@@ -63,6 +64,7 @@
       <td>{{ e.name }}</td>
       <td>{{ e.code }}</td>
       <td class="gain">{{ "%+.2f"|format(e.best_pct) }}%</td>
+      <td>{{ e.stops }}回</td>
       <td>{{ e.streak }}日</td>
     </tr>
     {% endfor %}

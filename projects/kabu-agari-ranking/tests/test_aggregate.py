@@ -130,3 +130,16 @@ def test_週ごとの首位が日別に出る():
     days_out = weeks[0]["days"]
     assert days_out[0]["rec_date"] == "2026-09-18"
     assert days_out[0]["top"]["rank"] == 1
+
+
+def test_ストップ高の回数を数える():
+    # 113円 → 163円（値幅50円）はストップ高。2,500円 → 2,537.5円 は違う
+    days = [
+        _day("2026-09-18", [{"rank": 1, "code": "5131", "name": "リンカーズ",
+                             "close": 163.0, "change_pct": 44.25, "metric_value": 1}]),
+        _day("2026-09-17", [{"rank": 1, "code": "5131", "name": "リンカーズ",
+                             "close": 2537.5, "change_pct": 1.5, "metric_value": 1}]),
+    ]
+    entry = aggregate.frequent(days)[0]
+    assert entry["count"] == 2
+    assert entry["stops"] == 1

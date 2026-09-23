@@ -100,12 +100,20 @@ def _svg(width: int, height: int, label: str, body: str) -> str:
     )
 
 
+def _format_value(value: float, unit: str, negative: bool, signed: bool) -> str:
+    """棒に添える数値。率は符号付きの小数2桁、件数は3桁区切りの整数。"""
+    if signed:
+        return f'{"-" if negative else "+"}{abs(value):.2f}{unit}'
+    return f"{abs(value):,.0f}{unit}"
+
+
 def horizontal_bars(
     rows: list[dict],
     *,
     aria_label: str,
     unit: str = "%",
     negative: bool = False,
+    signed: bool = True,
 ) -> str:
     """銘柄ごとの大きさを比べる横棒。rows は {label, sub, value} の並び。
 
@@ -139,9 +147,10 @@ def horizontal_bars(
         )
         anchor = "start" if t == 0 else ("end" if t == ticks[-1] else "middle")
         sign = "-" if negative and t else ""
+        tick_text = f"{t:,.0f}" if not signed and t >= 1000 else f"{t:g}"
         parts.append(
             f'<text x="{x:.1f}" y="{height - 5}" text-anchor="{anchor}" font-size="10" '
-            f'fill="{COLOR_MUTED}">{sign}{t:g}{escape(unit)}</text>'
+            f'fill="{COLOR_MUTED}">{sign}{tick_text}{escape(unit)}</text>'
         )
 
     for i, r in enumerate(rows):
@@ -150,7 +159,7 @@ def horizontal_bars(
         raw_name = str(r["label"])
         name = escape(_ellipsize(raw_name, NAME_MAX_CHARS))
         sub = escape(str(r.get("sub", "")))
-        value_text = f'{"-" if negative else "+"}{abs(r["value"]):.2f}{unit}'
+        value_text = _format_value(r["value"], unit, negative, signed)
 
         parts.append(
             f'<text x="0" y="{y + name_h - 3}" font-size="11" fill="{COLOR_TEXT}">{name}'
