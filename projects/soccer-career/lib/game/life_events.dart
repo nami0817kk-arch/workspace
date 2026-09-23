@@ -762,7 +762,7 @@ class LifeEvents {
       title: 'スパイクの話',
       body:
           'ブランドから、専属契約の打診が来ている。'
-          '露出は増えるが、拘束も増える。',
+          '年<sponsorAnnual>万円。露出は増えるが、拘束も増える。',
       requirement: LifeRequirement(needsSponsorOffer: true),
       once: false,
       choices: [

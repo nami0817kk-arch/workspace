@@ -281,6 +281,11 @@ class Career {
   /// 達成した挑戦。**「作ってあるのに誰も届かない」を探すために数える。**
   List<Challenge> challenges = const [];
 
+  /// スポンサーが付いていたシーズン数と、受け取った総額。
+  /// **スポンサーはテストに一度も出てこなかった。**
+  int sponsorSeasons = 0;
+  int sponsorIncome = 0;
+
   /// どの項目を何回狙ったか。
   Map<Detail, int> dedication = const {};
   int dedicationOf(Detail detail) => dedication[detail] ?? 0;
@@ -567,6 +572,11 @@ Future<Career> runCareer(
     if (age >= 33) {
       career.lateAppearances += stats.appearances;
       career.lateGoals += stats.goals;
+    }
+    // スポンサーが付いていた季と、その年の受け取り。
+    if (done.sponsor case final sponsor?) {
+      career.sponsorSeasons++;
+      career.sponsorIncome += sponsor.annual;
     }
     career.finalOverall = done.player.overall;
     career.finalAttributes = done.player.attributes;

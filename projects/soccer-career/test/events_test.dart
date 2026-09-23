@@ -401,6 +401,20 @@ void main() {
       }
     });
 
+    test('文中のしるしは、出す前に必ず埋まる', () {
+      // 名前のしるし（`<mentor>` など）は前から埋めていたが、
+      // 数字のしるし（`<sponsorAnnual>`）を足したので、そちらも見張る。
+      const marks = ['<sponsorAnnual>'];
+      for (final event in LifeEvents.catalogue) {
+        for (final mark in marks) {
+          if (!event.body.contains(mark)) continue;
+          final filled = event.withNames(const {}, values: {mark: '1200'});
+          expect(filled.body.contains(mark), isFalse, reason: event.id);
+          expect(filled.body, contains('1200'), reason: event.id);
+        }
+      }
+    });
+
     test('選択肢は2つ以上あり、文が埋まっている', () {
       for (final event in LifeEvents.catalogue) {
         expect(event.choices.length, greaterThanOrEqualTo(2), reason: event.id);

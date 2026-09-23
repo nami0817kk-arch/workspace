@@ -89,24 +89,23 @@ class LifeEffect {
   /// 選ぶ材料が一つも無かった（結果は押した後に初めて出る）。
   /// 伸びる能力だけは「どれだけ」を伏せる — 土台の都合で行き先が変わるので、
   /// 数字を書くと嘘になることがある。
-  List<String> get summary =>
-      _lines.isEmpty ? const ['何も動かない'] : _lines;
+  List<String> get summary => _lines.isEmpty ? const ['何も動かない'] : _lines;
 
   List<String> get _lines => [
-        if (train != null) '${train!.label}が伸びる',
-        if (insight != null) 'ひらめき',
-        if (condition != 0) 'コンディション ${_signed(condition)}',
-        if (totalFatigue != 0) '疲労 ${_signed(totalFatigue)}',
-        if (morale != 0) '気持ち ${_signed(morale)}',
-        if (manager != 0) '監督 ${_signed(manager)}',
-        if (teammates != 0) 'ロッカールーム ${_signed(teammates)}',
-        if (fame != 0) '知名度 ${_signed(fame)}',
-        if (money != 0) '貯蓄 ${_signed(money)}万円',
-        if (confidence != 0) '自信 ${_signed(confidence)}',
-        if (ambition != 0) '野心 ${_signed(ambition)}',
-        if (professionalism != 0) 'プロ意識 ${_signed(professionalism)}',
-        if (temper != 0) '気性 ${_signed(temper)}',
-      ];
+    if (train != null) '${train!.label}が伸びる',
+    if (insight != null) 'ひらめき',
+    if (condition != 0) 'コンディション ${_signed(condition)}',
+    if (totalFatigue != 0) '疲労 ${_signed(totalFatigue)}',
+    if (morale != 0) '気持ち ${_signed(morale)}',
+    if (manager != 0) '監督 ${_signed(manager)}',
+    if (teammates != 0) 'ロッカールーム ${_signed(teammates)}',
+    if (fame != 0) '知名度 ${_signed(fame)}',
+    if (money != 0) '貯蓄 ${_signed(money)}万円',
+    if (confidence != 0) '自信 ${_signed(confidence)}',
+    if (ambition != 0) '野心 ${_signed(ambition)}',
+    if (professionalism != 0) 'プロ意識 ${_signed(professionalism)}',
+    if (temper != 0) '気性 ${_signed(temper)}',
+  ];
 
   static String _signed(int v) => v > 0 ? '+$v' : '$v';
 }
@@ -280,15 +279,25 @@ class LifeEvent {
   /// 条件から引く。出来事ごとに書かせると、書き忘れが必ず出る。
   PersonKind? get person => requirement.needsPerson;
 
-  /// 文中のしるしを、実際の名前に差し替えた出来事を返す。
+  /// 文中のしるしを、実際の名前や数字に差し替えた出来事を返す。
   ///
   /// 画面側で置換すると、選択肢の文と結果の文で書き分けが要る。
   /// 出す前に1度だけ埋める。
-  LifeEvent withNames(Map<PersonKind, String> names) {
+  ///
+  /// [values] は名前以外のしるし（`<sponsorAnnual>` など）。
+  /// **払うものが書いてあるのに、もらうものが書いていない選択肢**があった
+  /// ——スパイクの契約は疲労とコンディションを払うのに、契約金は伏せられていた。
+  LifeEvent withNames(
+    Map<PersonKind, String> names, {
+    Map<String, String> values = const {},
+  }) {
     String fill(String text) {
       var result = text;
       for (final entry in names.entries) {
         result = result.replaceAll(entry.key.token, entry.value);
+      }
+      for (final entry in values.entries) {
+        result = result.replaceAll(entry.key, entry.value);
       }
       return result;
     }
