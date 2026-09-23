@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import aggregate
 import charts
+import feed
 import price_limit
 from market_calendar import CalendarOutOfRange, is_business_day, next_business_day
 
@@ -450,6 +451,18 @@ _ADS_TXT = """# Google AdSense 審査通過後、下記のコメントを解除�
 """
 
 
+def _write_feed(days: list[dict]) -> None:
+    (_OUTPUT_DIR / "feed.xml").write_text(
+        feed.build(
+            days,
+            site_url=SITE_URL,
+            url_for=lambda rec: canonical_url(f"archive/gainers/{rec}.html"),
+            summarize=lambda rows: day_summary(rows, "gainers"),
+        ),
+        encoding="utf-8",
+    )
+
+
 def _write_sitemap(days: list[dict], weeks: list[dict]) -> None:
     latest_date = days[0]["rec_date"]
     urls = [
@@ -554,6 +567,7 @@ def build_all() -> None:
     (_OUTPUT_DIR / "robots.txt").write_text(_ROBOTS_TXT, encoding="utf-8")
     (_OUTPUT_DIR / "ads.txt").write_text(_ADS_TXT, encoding="utf-8")
     _write_sitemap(days, weeks)
+    _write_feed(days)
 
     static_dir = _ROOT / "static"
     if static_dir.exists():

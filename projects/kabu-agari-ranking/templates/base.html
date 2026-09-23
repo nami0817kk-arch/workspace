@@ -230,6 +230,7 @@
   dt { margin-top: 0.75rem; }
   dd { margin: 0.25rem 0 0; color: var(--muted); }
 </style>
+<link rel="alternate" type="application/rss+xml" title="値上がり株ランキングの更新" href="{{ SITE_URL }}/feed.xml">
 {% if canonical %}<link rel="canonical" href="{{ canonical }}">{% else %}<meta name="robots" content="noindex">{% endif %}
 {# AdSense のスクリプトは pub-ID が入ってから読み込む（審査前に空タグを置かない） #}
 {% if ADSENSE_CLIENT %}
@@ -282,6 +283,7 @@
   <a href="{{ base_url }}guide.html">ランキングの読み方</a>
   <a href="{{ base_url }}glossary.html">用語解説</a>
   <a href="{{ base_url }}privacy.html">プライバシーポリシー</a>
+  <a href="{{ base_url }}feed.xml">RSS</a>
 </footer>
 <script>
 (function () {
