@@ -2,7 +2,8 @@
 #
 # kabutan が GitHub Actions の IP を 405 でブロックしているため、
 # 取得だけは手元で行い、data/ を push する。push を受けた CI（kabu-daily.yml）が
-# ビルド・X投稿・Cloudflare Pages への公開を行う。
+# ビルドと Cloudflare Pages への公開を行う。X への投稿はこのスクリプトから
+# 投げる（重複投稿を防ぐ記録の置き場が手元しか無いため）。
 #
 # 失敗したときは Windows のデスクトップ通知で知らせる（Notify 関数）。
 # 失敗の原因はたいていネットワーク断で、そのときは GitHub にもメールにも届かない。
@@ -81,7 +82,8 @@ if ((Test-Path $log) -and ((Get-Item $log).Length -gt 1MB)) {
     Move-Item $log "$log.1" -Force
 }
 
-Add-Content $log "=== $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') ==="
+$started = Get-Date
+Add-Content $log "=== $($started.ToString('yyyy-MM-dd HH:mm:ss')) ==="
 
 if ((RunRetry "git pull --ff-only origin master") -ne 0) {
     Add-Content $log "FAILED: git pull"
@@ -161,4 +163,7 @@ if ((Run "`"$repo\.venv\Scripts\python.exe`" src\check_freshness.py --after-fetc
     Add-Content $log "STALE: 当日分のデータが入っていません"
     Notify "株ランキングが当日分を取れていません" "エラーは出ていませんが、今日のデータが入っていません。今日のうちに src\build_site.py を手で回してください。明日には取れなくなります。"
 }
-Add-Content $log "OK"
+# 所要時間を残す。取得先が重くなってきたときに、打ち切り（15分）に
+# ぶつかる前に気づける唯一の手がかりになる。
+$elapsed = [int]((Get-Date) - $started).TotalSeconds
+Add-Content $log "OK ($elapsed 秒)"

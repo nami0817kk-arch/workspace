@@ -342,3 +342,24 @@ def test_比べる週が無ければ何も書かない():
     assert render.week_comparison({"day_count": 5, "big_moves": 10}, None) == ""
     assert render.week_comparison({"day_count": 5, "big_moves": 10},
                                   {"day_count": 5, "big_moves": 0}) == ""
+
+
+def test_壊れたデータ1件でサイト全体を落とさない(site, capsys):
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-09-18")
+    _write_day(data_dir, "2026-09-17")
+    (data_dir / "2026-09-16.json").write_text("{壊れている", encoding="utf-8")
+
+    render.build_all()   # 例外にしない
+
+    assert (out_dir / "index.html").exists()
+    assert "[WARN]" in capsys.readouterr().out
+    # 読めた2日はちゃんと出る
+    assert (out_dir / "archive" / "gainers" / "2026-09-18.html").exists()
+
+
+def test_データが1件も読めなければ止める(site):
+    data_dir, _ = site
+    (data_dir / "2026-09-18.json").write_text("{壊れている", encoding="utf-8")
+    with pytest.raises(RuntimeError):
+        render.build_all()

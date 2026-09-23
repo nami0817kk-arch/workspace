@@ -526,10 +526,18 @@ def _load_all_days() -> list[dict]:
     アーカイブ全体が「いつのランキングなのか分からないもの」になってしまう。
     """
     days = []
-    for path in _DATA_DIR.glob("????-??-??.json"):
-        with open(path, encoding="utf-8") as f:
-            day = _normalize_day(json.load(f))
-        if day["rec_date"] in UNRELIABLE_DATES:
+    for path in sorted(_DATA_DIR.glob("????-??-??.json")):
+        # 1件が壊れていてもサイト全体を落とさない。落とすと、その日から
+        # ずっと公開が止まる（古いデータで出続けるほうが損が小さい）。
+        # 壊れたファイル自体は CI の整合性テストが必ず赤で知らせる。
+        try:
+            with open(path, encoding="utf-8") as f:
+                day = _normalize_day(json.load(f))
+            rec_date = day["rec_date"]
+        except (json.JSONDecodeError, KeyError, TypeError) as e:
+            print(f"  [WARN] {path.name} を読み飛ばしました（{e}）")
+            continue
+        if rec_date in UNRELIABLE_DATES:
             continue
         days.append(day)
     days.sort(key=lambda d: d["rec_date"], reverse=True)
