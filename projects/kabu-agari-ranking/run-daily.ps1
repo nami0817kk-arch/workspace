@@ -115,4 +115,14 @@ if ($LASTEXITCODE -ne 0) {
 } else {
     Add-Content $log "no new data to commit"
 }
+
+# ここまでは全部成功していても、当日分が入っていないことがある
+# （kabutan が空を返す、日付がずれる等）。2026-09-08 の欠測はこの形で、
+# exit 0 だったため誰も気づかなかった。取り逃した営業日は二度と取れないので、
+# その日のうちに知らせる。休場日なら鳴らない（判定は src\market_calendar.py）。
+# 知らせるだけで、kabutan への自動リトライはしない。
+if ((Run "`"$repo\.venv\Scripts\python.exe`" src\check_freshness.py --after-fetch") -ne 0) {
+    Add-Content $log "STALE: 当日分のデータが入っていません"
+    Notify "株ランキングが当日分を取れていません" "エラーは出ていませんが、今日のデータが入っていません。今日のうちに src\build_site.py を手で回してください。明日には取れなくなります。"
+}
 Add-Content $log "OK"
