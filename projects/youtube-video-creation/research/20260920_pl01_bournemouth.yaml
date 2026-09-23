@@ -19,6 +19,21 @@ theme:
   question: どんなクラブなのか
   hook: 消えかけたクラブが、いまヨーロッパで戦っています。
   lead: プレミアリーグで、いちばん小さなスタジアム。
+  opening_card:
+    type: table
+    title: この動画で分かること
+    columns:
+    - ''
+    - ''
+    rows:
+    - - '1'
+      - いま見る理由
+    - - '2'
+      - 創立・本拠地・タイトル歴
+    - - '3'
+      - 歩んできた道
+    - - '4'
+      - このクラブを語る3人
 thumbnail:
   line1: 勝ち点17を引かれた
   line2: そこから18年で、初の欧州へ
@@ -57,7 +72,7 @@ sections:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
   - https://en.wikipedia.org/wiki/2026–27_AFC_Bournemouth_season
   - https://en.wikipedia.org/wiki/Marco_Rose
-  bg: assets/backgrounds/stadium_ボーンマス.png
+  bg: assets/backgrounds/stadium_ボーンマス_in.png
   official: false
 - id: data
   heading: ボーンマス 基礎DATA
@@ -75,7 +90,7 @@ sections:
   - image: assets/stats/pl_bournemouth_map.png
     text: 町はイングランド南部、ドーセット州の海沿いにあります。
     no_telop: true
-  - image: assets/backgrounds/stadium_ボーンマス_in.png
+  - image: assets/backgrounds/stadium_ボーンマス.png
     text: 本拠地はディーン・コート。**1万2357人**。マンチェスター・ユナイテッドの**6分の1**です。
   - image: assets/photos/pl/bournemouth_owner_cf0347c5.jpg
     text: オーナーはアメリカのビル・フォーリー。2022年に買収。**1億ポンド超**と報じられました。
@@ -89,7 +104,7 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
-  bg: assets/backgrounds/stadium_ボーンマス.png
+  bg: assets/backgrounds/stadium_ボーンマス_in.png
   official: false
 - id: history
   heading: 歩んできた道
@@ -116,7 +131,7 @@ sections:
   - 認めた条件が**勝ち点マイナス17**。当時は4部です。
   sources:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
-  bg: assets/backgrounds/stadium_ボーンマス.png
+  bg: assets/backgrounds/stadium_ボーンマス_in.png
   official: false
 - id: history2
   heading: 31歳の監督
@@ -141,7 +156,7 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
   - https://en.wikipedia.org/wiki/Eddie_Howe
-  bg: assets/backgrounds/stadium_ボーンマス.png
+  bg: assets/backgrounds/stadium_ボーンマス_in.png
   official: false
 - id: history3
   heading: そこから18年
@@ -168,7 +183,7 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
   - https://en.wikipedia.org/wiki/Eddie_Howe
-  bg: assets/backgrounds/stadium_ボーンマス.png
+  bg: assets/backgrounds/stadium_ボーンマス_in.png
   official: false
 - id: features
   heading: このクラブの特徴
@@ -197,7 +212,7 @@ sections:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
   - https://en.wikipedia.org/wiki/Marco_Rose
   - https://en.wikipedia.org/wiki/Dean_Huijsen
-  bg: assets/backgrounds/stadium_ボーンマス.png
+  bg: assets/backgrounds/stadium_ボーンマス_in.png
   official: false
 - id: episode
   heading: ひとりで9点
@@ -221,7 +236,7 @@ sections:
   - そのうち**9点**を、フォワードのテッド・マクドゥーガルがひとりで決めています。
   sources:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
-  bg: assets/backgrounds/stadium_ボーンマス.png
+  bg: assets/backgrounds/stadium_ボーンマス_in.png
   official: false
 - id: legends
   heading: このクラブを語る3人
@@ -250,7 +265,7 @@ sections:
   - https://en.wikipedia.org/wiki/Callum_Wilson
   - https://en.wikipedia.org/wiki/Eddie_Howe
   - https://en.wikipedia.org/wiki/Brett_Pitman
-  bg: assets/backgrounds/stadium_ボーンマス.png
+  bg: assets/backgrounds/stadium_ボーンマス_in.png
   official: false
 - id: legends2
   heading: このクラブを語る3人（2人目）
@@ -279,7 +294,7 @@ sections:
   - https://en.wikipedia.org/wiki/List_of_AFC_Bournemouth_records_and_statistics
   - https://en.wikipedia.org/wiki/Callum_Wilson
   - https://en.wikipedia.org/wiki/Eddie_Howe
-  bg: assets/backgrounds/stadium_ボーンマス.png
+  bg: assets/backgrounds/stadium_ボーンマス_in.png
   official: false
 - id: legends3
   heading: このクラブを語る3人（3人目）
@@ -309,7 +324,7 @@ sections:
   - https://en.wikipedia.org/wiki/Callum_Wilson
   - https://en.wikipedia.org/wiki/Eddie_Howe
   - https://en.wikipedia.org/wiki/Ryan_Fraser
-  bg: assets/backgrounds/stadium_ボーンマス.png
+  bg: assets/backgrounds/stadium_ボーンマス_in.png
   official: false
 - id: manager
   heading: 今季の監督
@@ -336,7 +351,7 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
   - https://en.wikipedia.org/wiki/Marco_Rose
-  bg: assets/backgrounds/stadium_ボーンマス.png
+  bg: assets/backgrounds/stadium_ボーンマス_in.png
   official: false
 - id: squad
   heading: 今季の登録選手
@@ -385,7 +400,7 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
-  bg: assets/backgrounds/stadium_ボーンマス.png
+  bg: assets/backgrounds/stadium_ボーンマス_in.png
   official: false
 - id: season
   heading: 今季のここまで
@@ -422,5 +437,5 @@ sections:
   - アウェーで**2対1**で勝ちました。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_AFC_Bournemouth_season
-  bg: assets/backgrounds/stadium_ボーンマス.png
+  bg: assets/backgrounds/stadium_ボーンマス_in.png
   official: false

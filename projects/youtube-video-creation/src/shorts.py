@@ -126,6 +126,7 @@ def trim(script: Script, section: str = "", max_seconds: float = MAX_SECONDS) ->
     _fit(short, max_seconds - _reserved(script, short, max_seconds) / ESTIMATE_SLACK)
     _add_voices_tail(short, script, max_seconds)
     _add_more_body(short, script, max_seconds)
+    _drop_boards(short)
     _add_face(short)
     _add_subscribe(short)
     if not short.scenes[-1].lines:
@@ -156,6 +157,22 @@ def _retitle(short: Script, body: Scene) -> None:
     # **画面と読み上げは本編のまま。**題名だけ分ける。ここを書き換えると
     # 「読み上げている文」と「画面に出ている文」がずれる
     short.meta = dict(meta)
+
+
+def _drop_boards(short: Script) -> None:
+    """**板はショートに出さない**（2026-09-23 指摘「ショートの背景がおかしい」）。
+
+    基礎DATAや登録選手の板は 16:9 で作ってある。縦（9:16）に敷くと真ん中しか
+    映らず、「マス 基礎DATA」「ブラック・ナイト」のように字が切れて読めない。
+    板を外せば、その回の下地（エンブレムかスタジアムの実写）が出る。
+    **写真は外さない**（顔は縦でも成立する）。
+    """
+    from .render import _is_board
+
+    for scene in short.scenes:
+        for line in scene.lines:
+            if line.image and _is_board(line.image):
+                line.image = None
 
 
 def _drop_hook(opening: Scene) -> None:

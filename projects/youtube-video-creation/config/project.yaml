@@ -26,7 +26,8 @@ video:
   # 実際に見たら、どちらも蛍光イエローの帯1枚に黒＋赤の2行で、上に書き込みの
   # 断片が白い小窓で乗っていた。news（報道番組ふうの下帯）は一覧で沈む
   thumbnail_style: "band"
-  telop_size: 58
+  # **字幕は少し小さく**（2026-09-23 指摘「表を大きくして、字幕を少し小さくする」）
+  telop_size: 52
   name_size: 40
   title_size: 72
   background: "assets/backgrounds/default.png"

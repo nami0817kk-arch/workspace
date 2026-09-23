@@ -571,7 +571,9 @@ class Renderer:
         elif beside:  # 写真と横に並べるぶん、カードは幅を譲る
             width = int(self.layout.width * (0.52 if not self.layout.with_characters else 0.40))
         else:
-            width = int(self.layout.width * (0.64 if not self.layout.with_characters else 0.46))
+            # **表を大きく**（2026-09-23 指摘）。0.64 → 0.74。
+            # 板の字（34px から縮む）が小さく、耳で追えなかった人が目で追えなかった
+            width = int(self.layout.width * (0.74 if not self.layout.with_characters else 0.46))
         target = self.card_dir / f"{cards.card_key(spec, width)}.png"
         if not target.exists():
             cards.render(

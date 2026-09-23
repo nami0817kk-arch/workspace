@@ -165,7 +165,14 @@ def build(key: str, number: int, old_file: str) -> Path:
     club = old["theme"]["topic"]
     wiki = f"https://en.wikipedia.org/wiki/{raw['club_title']}"
     season_url = f"https://en.wikipedia.org/wiki/{raw['season_title']}"
-    bg = f"assets/backgrounds/stadium_{facts['crest'].split('/')[-1].replace('.png', '')}.png"
+    # **下地はスタジアムの「中」の実写**（2026-09-23 指摘「最初の画面が魅力的ではなくて、
+    # 視聴者が離れそう」）。外観は駐車場と建物だけで人が写っておらず、
+    # 最初の12秒がそれ一枚だった。中の写真は満員の客席とピッチが入る。
+    # 外観は「本拠地」のタイルで使うので、画面は節の途中でちゃんと変わる
+    stem = facts['crest'].split('/')[-1].replace('.png', '')
+    bg = f"assets/backgrounds/stadium_{stem}_in.png"
+    if not (ROOT / bg).exists():
+        bg = f"assets/backgrounds/stadium_{stem}.png"
     if not (ROOT / bg).exists():
         bg = None
 
@@ -255,8 +262,9 @@ def build(key: str, number: int, old_file: str) -> Path:
     # 写真は板と違って読ませる絵ではないので、**字幕は出す**
     # （板と同じ字を重ねない、という決まりに反しない）。
     # ほかの行に別の絵を当てたいときは <key>_say.yaml の `screens`（行番号→絵）
-    inside = f"assets/backgrounds/stadium_{facts['crest'].split('/')[-1].replace('.png', '')}_in.png"
-    if not (ROOT / inside).exists():
+    # 下地が「中」になったので、本拠地のタイルは「外観」を出す（同じ絵にしない）
+    inside = f"assets/backgrounds/stadium_{stem}.png"
+    if not (ROOT / inside).exists() or inside == bg:
         inside = ""
     screens = {int(k): v for k, v in (ov.get("screens") or {}).items()}
 
@@ -590,7 +598,14 @@ def build(key: str, number: int, old_file: str) -> Path:
                   # 中身に残っている話へ書き換える（<key>_say.yaml の `hook`）
                   "hook": ov.get("hook") or old["theme"].get("hook", ""),
                   # **クラブを表す一言**（2026-09-21 指示）。タイトルより前に読む
-                  "lead": ov.get("opening", "")},
+                  "lead": ov.get("opening", ""),
+                  # **このあと話すことを冒頭で見せる**（2026-09-23 指摘「最初の15秒で
+                  # 人が離れる可能性があるから、この後の流れを見せるのもあり」）。
+                  # 節の見出しから作るので、中身と食い違わない
+                  "opening_card": {
+                      "type": "table", "title": "この動画で分かること",
+                      "columns": ["", ""],
+                      "rows": _agenda(sections, club)}},
         # **サムネの文字は台本に合わせて書き直す**（2026-09-20）。旧台本のものを
         # そのまま持ってくると、ボーンマスが「FAカップで1人9得点」のままになった。
         # **作り直した台本にその話は無い。**約束したことを中で答えられない
@@ -602,6 +617,34 @@ def build(key: str, number: int, old_file: str) -> Path:
               f"# tools/plbuild.py で組み立て。材料は research/pl_data/{key}*.json と旧台本 {old_file}\n")
     out.write_text(header + yaml.safe_dump(note, allow_unicode=True, sort_keys=False, width=1000), encoding="utf-8")
     return out
+
+
+def _agenda(sections: list, club: str) -> list[list[str]]:
+    """冒頭に出す「この動画で分かること」（2026-09-23 指摘
+    「最初の15秒で人が離れる可能性があるから、この後の流れを見せるのもあり」）。
+
+    節の見出しから作るので中身と食い違わない。**内向きの言葉は置き換える**
+    （「基礎DATA」では何が出るか分からない）。クラブごとに違う話は、
+    その回の見出しをそのまま使う。
+    """
+    label = {"reasons": "いま見る理由", "data": "創立・本拠地・タイトル歴",
+             "features": "プレーの色と運営の型", "episode": "知られていない逸話",
+             "legends": "このクラブを語る3人", "manager": "今季の監督",
+             "squad": "今季の登録選手", "season": "今季のここまで"}
+    want = ["reasons", "data", "_story", "legends", "squad"]
+    story = next((str(s.get("heading", ""))[:16] for s in sections
+                  if str(s.get("id", "")) not in label and s.get("heading")), "")
+    rows = []
+    for key in want:
+        name = story if key == "_story" else label.get(key, "")
+        if not name:
+            continue
+        if key != "_story" and not any(str(s.get("id", "")) == key for s in sections):
+            continue
+        rows.append([f"{len(rows) + 1}", name])
+        if len(rows) >= 4:
+            break
+    return rows
 
 
 PL_TITLES = None

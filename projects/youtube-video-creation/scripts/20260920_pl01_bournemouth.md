@@ -53,6 +53,21 @@ sources:
 - https://en.wikipedia.org/wiki/Brett_Pitman
 - https://en.wikipedia.org/wiki/Ryan_Fraser
 cards:
+  opening_card:
+    type: table
+    title: この動画で分かること
+    columns:
+    - ''
+    - ''
+    rows:
+    - - '1'
+      - いま見る理由
+    - - '2'
+      - 創立・本拠地・タイトル歴
+    - - '3'
+      - 歩んできた道
+    - - '4'
+      - このクラブを語る3人
   reasons_card:
     type: table
     title: いま見る理由
@@ -204,18 +219,19 @@ cards:
 ---
 
 ## オープニング
-@bg: assets/backgrounds/stadium_ボーンマス.png
+@bg: assets/backgrounds/stadium_ボーンマス_in.png
 
 キャスター: プレミアリーグで、いちばん小さなスタジアム。
   telop: プレミアリーグで、いちばん小さなスタジアム
 キャスター: マイナス17の勝ち点から欧州へ。ボーンマスに何があったのか。
   telop: マイナス17の勝ち点から欧州へ。ボーンマスに何があったのか
   se: assets/audio/se_pon.wav
+  card: opening_card
 キャスター: 消えかけたクラブが、いまヨーロッパで戦っています。
   telop: 消えかけたクラブが、いまヨーロッパで戦っています
 
 ## いま見る理由
-@bg: assets/backgrounds/stadium_ボーンマス.png
+@bg: assets/backgrounds/stadium_ボーンマス_in.png
 @main: true
 
 キャスター: 創立から**127年**、欧州の大会に出るのは今季が初めてです。
@@ -232,7 +248,7 @@ cards:
   telop: 17年前は4部、しかもマイナスの勝ち点から始めたクラブです
 
 ## ボーンマス 基礎DATA
-@bg: assets/backgrounds/stadium_ボーンマス.png
+@bg: assets/backgrounds/stadium_ボーンマス_in.png
 
 解説: 創立は**1899年**。ボスコムという地区のクラブが前身です。
   no_telop: true
@@ -246,7 +262,7 @@ cards:
   image: assets/stats/pl_bournemouth_map.png
 解説: 本拠地はディーン・コート。**1万2357人**。マンチェスター・ユナイテッドの**6分の1**です。
   telop: 本拠地はディーン・コート。**1万2357人**。マンチェスター・ユナイテッドの**6分の1**です
-  image: assets/backgrounds/stadium_ボーンマス_in.png
+  image: assets/backgrounds/stadium_ボーンマス.png
 解説: オーナーはアメリカのビル・フォーリー。2022年に買収。**1億ポンド超**と報じられました。
   telop: オーナーはアメリカのビル・フォーリー。2022年に買収。**1億ポンド超**と報じられました
   image: assets/photos/pl/bournemouth_owner_cf0347c5.jpg
@@ -261,7 +277,7 @@ cards:
   image: assets/stats/pl_bournemouth_last.png
 
 ## 歩んできた道
-@bg: assets/backgrounds/stadium_ボーンマス.png
+@bg: assets/backgrounds/stadium_ボーンマス_in.png
 
 解説: 2008年、借金は**400万ポンド**。クラブは倒産寸前でした。
   telop: 2008年、借金は**400万ポンド**。クラブは倒産寸前でした
@@ -276,7 +292,7 @@ cards:
   image: assets/images/pl_bournemouth_story/scene.jpg
 
 ## 31歳の監督
-@bg: assets/backgrounds/stadium_ボーンマス.png
+@bg: assets/backgrounds/stadium_ボーンマス_in.png
 
 解説: 2009年、監督を引き受けたのが**31歳のエディ・ハウ**。
   telop: 2009年、監督を引き受けたのが**31歳のエディ・ハウ**
@@ -288,7 +304,7 @@ cards:
   telop: その年、マイナスから始めて4部に残りました
 
 ## そこから18年
-@bg: assets/backgrounds/stadium_ボーンマス.png
+@bg: assets/backgrounds/stadium_ボーンマス_in.png
 
 解説: そこから3部、2部と上がっていきます。
   telop: そこから3部、2部と上がっていきます
@@ -300,7 +316,7 @@ cards:
   telop: そして昨季、**初めてヨーロッパの切符**をつかみました
 
 ## このクラブの特徴
-@bg: assets/backgrounds/stadium_ボーンマス.png
+@bg: assets/backgrounds/stadium_ボーンマス_in.png
 
 解説: 監督マルコ・ローゼのサッカーは、ボールを奪いに走り、奪ったら最短距離でゴールへ向かう。
   telop: 監督マルコ・ローゼのサッカーは、ボールを奪いに走り、奪ったら最短距離でゴールへ向かう
@@ -315,7 +331,7 @@ cards:
   image: assets/photos/pl/bournemouth_manager_19d3b54a.jpg
 
 ## ひとりで9点
-@bg: assets/backgrounds/stadium_ボーンマス.png
+@bg: assets/backgrounds/stadium_ボーンマス_in.png
 
 解説: 1971年11月、FAカップでマーゲイトに**11対0**で勝ちました。
   telop: 1971年11月、FAカップでマーゲイトに**11対0**で勝ちました
@@ -326,7 +342,7 @@ cards:
   telop: そのうち**9点**を、フォワードのテッド・マクドゥーガルがひとりで決めています
 
 ## このクラブを語る3人
-@bg: assets/backgrounds/stadium_ボーンマス.png
+@bg: assets/backgrounds/stadium_ボーンマス_in.png
 
 キャスター: ブレット・ピットマンはジャージー島の出身。ボーンマス相手に4点を奪って、入団が決まりました。
   telop: ブレット・ピットマンはジャージー島の出身。ボーンマス相手に4点を奪って、入団が決まりました
@@ -341,7 +357,7 @@ cards:
   image: assets/photos/pl/bournemouth_legend_2f36ed97.jpg
 
 ## このクラブを語る3人（2人目）
-@bg: assets/backgrounds/stadium_ボーンマス.png
+@bg: assets/backgrounds/stadium_ボーンマス_in.png
 
 キャスター: カラム・ウィルソンはコヴェントリーから来た1年目、2部で**20得点**。初昇格の得点源です。
   telop: カラム・ウィルソンはコヴェントリーから来た1年目、2部で**20得点**。初昇格の得点源です
@@ -356,7 +372,7 @@ cards:
   image: assets/photos/pl/bournemouth_legend_224f5148.jpg
 
 ## このクラブを語る3人（3人目）
-@bg: assets/backgrounds/stadium_ボーンマス.png
+@bg: assets/backgrounds/stadium_ボーンマス_in.png
 
 キャスター: ライアン・フレイザーは2013年、スコットランドのアバディーンから来た左ウイングです。
   telop: ライアン・フレイザーは2013年、スコットランドのアバディーンから来た左ウイングです
@@ -371,7 +387,7 @@ cards:
   image: assets/photos/pl/bournemouth_legend_9f069e9f.jpg
 
 ## 今季の監督
-@bg: assets/backgrounds/stadium_ボーンマス.png
+@bg: assets/backgrounds/stadium_ボーンマス_in.png
 
 キャスター: 今季の監督は、ドイツ人のマルコ・ローゼ。**2026年6月**に来た1年目です。
   telop: 今季の監督は、ドイツ人のマルコ・ローゼ。**2026年6月**に来た1年目です
@@ -382,7 +398,7 @@ cards:
   telop: 前はライプツィヒ。リヴァプールへ去ったイラオラの後任です
 
 ## 今季の登録選手
-@bg: assets/backgrounds/stadium_ボーンマス.png
+@bg: assets/backgrounds/stadium_ボーンマス_in.png
 
 キャスター: 今季の登録選手は28人です。
   no_telop: true
@@ -426,7 +442,7 @@ cards:
   image: assets/stats/pl_bournemouth_fw_f.png
 
 ## 今季のここまで
-@bg: assets/backgrounds/stadium_ボーンマス.png
+@bg: assets/backgrounds/stadium_ボーンマス_in.png
 
 解説: プレミアリーグは5試合を終えて、**3引き分け2敗**です。
   telop: プレミアリーグは5試合を終えて、**3引き分け2敗**です

@@ -1118,3 +1118,22 @@ def test_組写真の控えは回ごとに別の名前になる(tmp_path, monkey
     second = shorts.stacked_photo({"thumbnail_photos": made[2:4]})
     assert first and second
     assert first != second, "別の回の組写真が同じ名前になっている"
+
+
+def test_板はショートに出さない():
+    """2026-09-23 指摘「ショートの背景がおかしい」。16:9 の板を縦に敷くと
+    真ん中しか映らず、字が切れて読めない。写真は残す。"""
+    from src.script_model import parse_script
+    from src.shorts import trim
+
+    nl = chr(10)
+    script = parse_script(nl.join([
+        "---", "title: T", "---", "",
+        "## オープニング", "", "キャスター: 題です。", "",
+        "## 本編", "",
+        "キャスター: 板の行。", "  image: assets/stats/pl_x_data0.png",
+        "キャスター: 写真の行。", "  image: assets/photos/pl/x_manager.jpg", ""]))
+    short = trim(script)
+    images = [l.image for s in short.scenes for l in s.lines]
+    assert not any(i and "assets/stats/" in i for i in images), "板がショートに残っている"
+    assert any(i and "assets/photos/" in i for i in images), "写真まで落としている"

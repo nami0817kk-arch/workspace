@@ -245,6 +245,10 @@ class Notes:
     # 一言を述べてから始める」）。プレミア20クラブ紹介のために足した。
     # 書いていなければ、その行は出さない（今までどおりタイトルから始まる）
     lead: str = ""
+    # **このあと話すことを、冒頭で見せる**（2026-09-23 指摘「最初の15秒で人が離れる
+    # 可能性があるから、この後の流れを見せるのもあり」）。題を読む行に表を出す。
+    # 取材メモの `theme.opening_card`（{type: table, ...}）に書く
+    opening_card: dict | None = None
     answer: str = ""                 # まとめで返す答え
     watch: str = ""                  # 次に何を見るか
     follow_up: bool = False
@@ -418,6 +422,7 @@ def build_notes(raw: dict) -> Notes:
         prefix=str(theme.get("prefix") or "").strip().strip("【】"),
         hook=str(theme.get("hook") or "").strip(),
         lead=str(theme.get("lead") or "").strip(),
+        opening_card=(dict(theme["opening_card"]) if theme.get("opening_card") else None),
         thumbnail=dict(raw.get("thumbnail") or {}),
         answer=str(raw.get("answer") or "").strip(),
         watch=str(raw.get("watch") or "").strip(),
@@ -1859,6 +1864,10 @@ def to_script(notes: Notes, plan: Plan) -> str:
         f"  telop: {notes.title}",
         "  se: assets/audio/se_pon.wav",
     ]
+    # **このあと話すことを冒頭で見せる**（2026-09-23 指摘）。最初の15秒が
+    # 写真1枚とテロップだけで、読む物が無かった
+    if notes.opening_card:
+        lines.append("  card: opening_card")
     if notes.format == "news":
         # **問いを読み上げない**（2026-09-09）。視聴維持の曲線を読んだら、
         # 捨てられているのは0〜3秒ではなく**4〜9秒**だった（4秒100% → 8秒39.7%）。
@@ -2122,6 +2131,8 @@ def to_script(notes: Notes, plan: Plan) -> str:
 
 def _cards(notes: Notes) -> dict:
     cards: dict = {}
+    if notes.opening_card:
+        cards["opening_card"] = notes.opening_card
     for section in notes.sections:
         if section.card:
             cards[f"{section.id}_card"] = section.card
