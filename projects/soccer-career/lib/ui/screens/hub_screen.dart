@@ -2232,10 +2232,14 @@ class _ClubLifeCard extends StatelessWidget {
                 Text(facilities.label, style: muted),
                 if (state.competitor != null) ...[
                   const SizedBox(height: 10),
+                  // **差を数字で出す。** 「自分が上」だけでは、
+                  // あと少しなのか大差なのかが分からない。
                   Text(
                     '同ポジション: ${state.competitor!.name}'
                     '（${state.competitor!.overall}）'
-                    '${state.player.overall >= state.competitor!.overall ? '  自分が上' : '  向こうが上'}',
+                    ' ・ 差 ${state.player.overall - state.competitor!.overall >= 0 ? '+' : ''}'
+                    '${state.player.overall - state.competitor!.overall}'
+                    '${state.player.overall >= state.competitor!.overall ? '（先発の序列で優位）' : '（超えれば先発に近づく）'}',
                     style: muted,
                   ),
                 ],
@@ -4132,6 +4136,19 @@ class _GrowthRow extends StatelessWidget {
   }
 }
 
+/// **関係の行。** 言葉だけだと、近いのか遠いのかが分からない。
+/// 数字と、次の段までの残りを出す。
+String _relationLine(
+  String title,
+  String label,
+  int value,
+  (String, int)? next,
+) {
+  final line = '$title: $label $value/100';
+  if (next == null) return line;
+  return '$line ・ あと${next.$2}で「${next.$1}」';
+}
+
 class _AttributeBar extends StatelessWidget {
   const _AttributeBar({
     required this.label,
@@ -5188,13 +5205,23 @@ class _PersonCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    '監督: ${state.relations.managerLabel}',
+                    _relationLine(
+                      '監督',
+                      state.relations.managerLabel,
+                      state.relations.manager,
+                      state.relations.managerNext,
+                    ),
                     style: theme.textTheme.bodySmall,
                   ),
                 ),
                 Expanded(
                   child: Text(
-                    'ロッカールーム: ${state.relations.teammatesLabel}',
+                    _relationLine(
+                      'ロッカールーム',
+                      state.relations.teammatesLabel,
+                      state.relations.teammates,
+                      state.relations.teammatesNext,
+                    ),
                     style: theme.textTheme.bodySmall,
                   ),
                 ),
