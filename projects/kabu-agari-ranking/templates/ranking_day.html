@@ -22,5 +22,8 @@
   <a href="index.html">一覧</a>
   {% if newer %}<a class="next" href="{{ newer }}.html">{{ newer }} →</a>{% endif %}
 </nav>
-<p><a href="{{ base_url }}{{ today_href }}">最新の{{ heading }}を見る →</a></p>
+<p>
+  <a href="{{ base_url }}{{ today_href }}">最新の{{ heading }}を見る →</a>
+  ／ <a href="{{ base_url }}weekly/index.html">この週のまとめを見る →</a>
+</p>
 {% endblock %}
