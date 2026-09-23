@@ -6,6 +6,7 @@
 """
 import json
 import re
+from pathlib import Path
 
 import pytest
 
@@ -303,3 +304,15 @@ def test_相場の振り返りの一文は最も荒れた日を指す():
     s = render.market_summary(rows)
     assert "2026-09-17" in s and "12銘柄" in s
     assert "のべ5銘柄" in s
+
+
+def test_配信ヘッダが成果物に入る(site):
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-09-18")
+    # static/ は _ROOT を差し替えると空になるので、本物の静的ファイルを見る
+    render.build_all()
+    real_headers = Path(__file__).resolve().parents[1] / "static" / "_headers"
+    assert real_headers.exists()
+    text = real_headers.read_text(encoding="utf-8")
+    for header in ("X-Content-Type-Options", "X-Frame-Options", "Referrer-Policy"):
+        assert header in text
