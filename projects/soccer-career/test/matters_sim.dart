@@ -26,7 +26,9 @@ void main() {
     // **24本では差が読めない。** 同じ設定を2回回して、平均評価が
     // 7.22 → 7.20、代表が 35 → 33キャップ動いた。比べたい差と
     // 同じ大きさの揺れがあるので、束ねる本数を先に決める。
-    const seeds = 120;
+    // 既定は120。`--dart-define=MATTERS_SEEDS=24` で短く回せる
+    // （手筋の勝ち負けはこの本数でも出る。細かい差は120で見る）。
+    const seeds = int.fromEnvironment('MATTERS_SEEDS', defaultValue: 120);
 
     Future<void> run(
       String name, {
