@@ -25,6 +25,13 @@ on:
         description: "テストを実行するディレクトリ（モノレポ内のPJTパス）"
         type: string
         default: "." 
+      cache-dependency-path:
+        description: >
+          pip のキャッシュに使う依存ファイル（例: projects/foo/requirements.txt）。
+          **省略時はキャッシュしない**。存在しないパスを渡すと setup-python が
+          失敗するため、利用側が明示したときだけ有効にする。
+        type: string
+        default: ""
 
 permissions:
   contents: read
@@ -42,5 +49,8 @@ jobs:
       - uses: actions/setup-python@v7
         with:
           python-version: ${{ inputs.python-version }}
+          # 空文字を渡すとキャッシュ無効。既存の利用側は何も変わらない。
+          cache: ${{ inputs.cache-dependency-path != '' && 'pip' || '' }}
+          cache-dependency-path: ${{ inputs.cache-dependency-path }}
       - run: ${{ inputs.install }}
       - run: pytest
