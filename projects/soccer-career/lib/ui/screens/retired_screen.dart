@@ -182,6 +182,16 @@ class _RetiredScreenState extends State<RetiredScreen> {
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
+              const SizedBox(height: 4),
+              // 選べない道は、なぜ選べないのかまで書く。
+              for (final path in SecondCareer.values)
+                if (controller.secondCareerBlocked(path) case final why?)
+                  Text(
+                    '${path.label}——$why',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
               const SizedBox(height: 10),
               Wrap(
                 spacing: 8,
@@ -189,14 +199,20 @@ class _RetiredScreenState extends State<RetiredScreen> {
                 children: [
                   for (final path in SecondCareer.values)
                     Tooltip(
-                      message: path.description,
+                      message:
+                          controller.secondCareerBlocked(path) ??
+                          path.description,
                       child: ChoiceChip(
                         label: Text(path.label),
                         selected: state.secondCareer == path,
-                        onSelected: (_) async {
-                          await controller.chooseSecondCareer(path);
-                          if (mounted) setState(() {});
-                        },
+                        // **進める道だけ。** 20年のキャリアが結末に効かないなら、
+                        // 「やってきたことが次の適性になる」は文字だけになる。
+                        onSelected: controller.secondCareerBlocked(path) != null
+                            ? null
+                            : (_) async {
+                                await controller.chooseSecondCareer(path);
+                                if (mounted) setState(() {});
+                              },
                       ),
                     ),
                 ],

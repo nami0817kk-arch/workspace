@@ -1458,20 +1458,65 @@ class CareerEngine {
     final p = state.player.personality;
     final totals = state.careerTotals;
     // 腕章を巻いてロッカールームをまとめた選手は、監督へ。
-    if (state.captain && p.professionalism >= 12) return SecondCareer.manager;
+    if (state.captain && p.professionalism >= Formulas.managerProfessionalism) {
+      return SecondCareer.manager;
+    }
     // 積み上げたものを渡す側へ。プロ意識が要る。
-    if (p.professionalism >= 15) return SecondCareer.coach;
+    if (p.professionalism >= Formulas.coachProfessionalism) {
+      return SecondCareer.coach;
+    }
     // 稼いで、外の世界を見ていた選手。
     if (state.finances.savings >= Formulas.entrepreneurSavings &&
-        p.ambition >= 14) {
+        p.ambition >= Formulas.entrepreneurAmbition) {
       return SecondCareer.entrepreneur;
     }
     // 名前が残っている選手は、話す側に呼ばれる。
     if (state.reputation.fame >= Formulas.punditFame) {
       return SecondCareer.pundit;
     }
-    if (totals.appearances >= 520) return SecondCareer.director;
+    if (totals.appearances >= Formulas.directorAppearances) {
+      return SecondCareer.director;
+    }
     return SecondCareer.quiet;
+  }
+
+  /// **その道に進めるか。** 進めないなら、何が足りないかを返す。
+  ///
+  /// 引退画面では6つとも自由に選べていた。「やってきたことが、そのまま
+  /// 次の適性になる」と書いてあるのに、**20年のキャリアが結末に
+  /// 一切効いていなかった**——しかも殿堂の選手が次のキャリアに現れるのは
+  /// 監督とコーチだけなので、毎回監督を選ぶのが正解になっていた。
+  String? blockedReason(CareerState state, SecondCareer path) {
+    final p = state.player.personality;
+    final totals = state.careerTotals;
+    return switch (path) {
+      SecondCareer.manager =>
+        !state.captain
+            ? '腕章を巻いたことが無い'
+            : p.professionalism < Formulas.managerProfessionalism
+            ? 'プロ意識が${Formulas.managerProfessionalism}に届かない'
+            : null,
+      SecondCareer.coach =>
+        p.professionalism < Formulas.coachProfessionalism
+            ? 'プロ意識が${Formulas.coachProfessionalism}に届かない'
+            : null,
+      SecondCareer.entrepreneur =>
+        state.finances.savings < Formulas.entrepreneurSavings
+            ? '貯蓄が${Formulas.entrepreneurSavings ~/ 10000}億円に届かない'
+            : p.ambition < Formulas.entrepreneurAmbition
+            ? '野心が${Formulas.entrepreneurAmbition}に届かない'
+            : null,
+      SecondCareer.pundit =>
+        state.reputation.fame < Formulas.punditFame
+            ? '知名度が${Formulas.punditFame}に届かない'
+            : null,
+      SecondCareer.director =>
+        totals.appearances < Formulas.directorAppearances
+            ? '通算出場が${Formulas.directorAppearances}試合に届かない'
+            : null,
+      // どのキャリアからでも選べる。
+      SecondCareer.quiet => null,
+    };
   }
 
   /// 監督が代わるか。
