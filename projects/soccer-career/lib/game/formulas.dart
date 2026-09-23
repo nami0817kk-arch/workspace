@@ -169,6 +169,13 @@ class Formulas {
     return (salary * appearanceBonusRate * ratio).round();
   }
 
+  /// **引退後に実業家の道へ進むのに要る貯蓄（万円）。**
+  ///
+  /// 貯めた金の行き先はここしかない。**スタッフを雇えば届かなくなる**ので、
+  /// 「強くなる」と「残す」が同じ財布を取り合う形になる。
+  /// 画面にも同じ数字を出す（`_SupportCard`）。
+  static const int entrepreneurSavings = 30000;
+
   /// 引退後、解説者に呼ばれる知名度の線。
   static const int punditFame = 66;
 

@@ -1868,6 +1868,14 @@ class _SupportCard extends StatelessWidget {
                 '払えなければ契約は切れる。',
                 style: muted,
               ),
+              const SizedBox(height: 4),
+              // **強くなる金と、残す金は同じ財布**。片方に寄せれば片方は消える。
+              Text(
+                '貯めた金にも行き先がある——'
+                '${Formulas.entrepreneurSavings ~/ 10000}億円を残して引退すると、'
+                '実業家の道が開く。',
+                style: muted,
+              ),
               const SizedBox(height: 8),
               BudgetLines(state: state),
             ],
