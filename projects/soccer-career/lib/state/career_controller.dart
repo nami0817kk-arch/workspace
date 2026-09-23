@@ -627,6 +627,7 @@ class CareerController extends ChangeNotifier {
     String? countryId,
     Map<AttributeKey, int> tweaks = const {},
     List<Trait>? traits,
+    String? declaredChallenge,
   }) async {
     _state = _career.startCareer(
       name: name,
@@ -640,6 +641,9 @@ class CareerController extends ChangeNotifier {
       countryId: countryId,
       tweaks: tweaks,
       traits: traits,
+      // **前の選手たちが残したものが、そのまま伸びしろになる。**
+      potentialBonus: hall.potentialBonus,
+      declaredChallenge: declaredChallenge,
     );
     _castLegends(_state!);
     _state!.beginSeasonRecord();
@@ -1675,6 +1679,10 @@ class CareerController extends ChangeNotifier {
   /// 直前の引退で**初めて**達成した挑戦。引退画面がこれを出す。
   List<Challenge> lastChallenges = const [];
 
+  /// 直前の引退で貯まった殿堂ポイントと、宣言していた挑戦。
+  int lastLegacyPoints = 0;
+  Challenge? lastDeclared;
+
   Future<void> retire() async {
     final state = _state;
     if (state == null) return;
@@ -1690,7 +1698,13 @@ class CareerController extends ChangeNotifier {
     // **初めて達成した挑戦は、殿堂に入れる前に控える。**
     // 入れた後で見ると、自分自身が達成済みなので「初めて」が消える。
     lastChallenges = hall.firstTimeFor(legend);
-    hall = hall.add(legend);
+    // **宣言した挑戦を達成していれば、そのぶん重く残る。**
+    final declared = retired.declaredChallenge == null
+        ? null
+        : Challenge.byName(retired.declaredChallenge!);
+    lastLegacyPoints = Hall.pointsFor(legend, declared: declared);
+    lastDeclared = declared;
+    hall = hall.add(legend, points: lastLegacyPoints);
     await _hallRepository.save(hall);
     await _persist();
   }

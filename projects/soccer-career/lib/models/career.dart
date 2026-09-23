@@ -193,6 +193,7 @@ class CareerState {
     this.pendingSevere = false,
     this.declineYearsLost = 0,
     this.incentiveCut = 0,
+    this.declaredChallenge,
     this.captain = false,
     this.captaincyOffered = false,
     this.squadNumber = 0,
@@ -401,6 +402,12 @@ class CareerState {
   /// 0 なら普通の契約。シーズンの終わりに、監督の目標をいくつ達成したかで
   /// 戻ってくる（`Formulas.incentivePay`）。
   int incentiveCut;
+
+  /// **今回のキャリアで狙うと宣言した挑戦。** 引退時の殿堂ポイントに乗る。
+  ///
+  /// 挑戦そのものは宣言しなくても達成できる（引退した記録から静かに判定する）。
+  /// ここは「今回はこれを狙う」と決めることで、run に形を与えるためのもの。
+  String? declaredChallenge;
 
   /// キャプテンか。
   bool captain;
@@ -895,6 +902,7 @@ class CareerState {
     'pendingSevere': pendingSevere,
     'declineYearsLost': declineYearsLost,
     'incentiveCut': incentiveCut,
+    'declaredChallenge': declaredChallenge,
     'captain': captain,
     'captaincyOffered': captaincyOffered,
     'squadNumber': squadNumber,
@@ -1031,6 +1039,7 @@ class CareerState {
       pendingSevere: json['pendingSevere'] as bool? ?? false,
       declineYearsLost: json['declineYearsLost'] as int? ?? 0,
       incentiveCut: json['incentiveCut'] as int? ?? 0,
+      declaredChallenge: json['declaredChallenge'] as String?,
       offseason: Offseason.values.any((p) => p.name == json['offseason'])
           ? Offseason.values.byName(json['offseason'] as String)
           : Offseason.sharpen,

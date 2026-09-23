@@ -9,6 +9,7 @@
 /// このかたちのまま持つ。
 library;
 
+import '../game/formulas.dart';
 import 'career.dart';
 import 'challenge.dart';
 import 'competition.dart';
@@ -347,7 +348,17 @@ class Legend {
 
 /// 引退した選手たち。新しい順に並ぶ。
 class Hall {
-  const Hall({this.legends = const [], this.cleared = const {}});
+  const Hall({
+    this.legends = const [],
+    this.cleared = const {},
+    this.legacyPoints = 0,
+  });
+
+  /// **積み上げた殿堂ポイント。** 次の選手の伸びしろになる。
+  ///
+  /// 参考にした野球のキャリアゲームの「殿堂ポイント」。
+  /// 引退のたびに貯まり、**減らない**。使うのではなく、総量が効く。
+  final int legacyPoints;
 
   final List<Legend> legends;
 
@@ -361,10 +372,32 @@ class Hall {
   /// 残しておく数。端末の保存領域を無限には使わない。
   static const int keep = 40;
 
-  Hall add(Legend legend) => Hall(
+  Hall add(Legend legend, {int points = 0}) => Hall(
     legends: [legend, ...legends].take(keep).toList(),
     cleared: {...cleared, ...challengesOf(legend).map((c) => c.name)},
+    legacyPoints: legacyPoints + points,
   );
+
+  /// 次の選手に乗るポテンシャルの上乗せ。
+  int get potentialBonus => Formulas.legacyPotentialBonus(legacyPoints);
+
+  /// **1人ぶんの引退で貯まる点。**
+  ///
+  /// キャリアの中身をそのまま点にする。宣言した挑戦を達成していれば、
+  /// そのぶんが上乗せされる（[declared]）。
+  static int pointsFor(Legend legend, {Challenge? declared}) {
+    var points =
+        legend.appearances ~/ 40 +
+        legend.goals ~/ 20 +
+        legend.caps ~/ 10 +
+        legend.titles * 3 +
+        (legend.worldCupBest == WorldCupStage.winner ? 15 : 0) +
+        challengesOf(legend).length * 5;
+    if (declared != null && declared.clearedBy(legend)) {
+      points += declared.declaredBonus;
+    }
+    return points;
+  }
 
   /// その選手が達成した挑戦。
   static List<Challenge> challengesOf(Legend legend) => [
@@ -437,6 +470,7 @@ class Hall {
 
   Map<String, dynamic> toJson() => {
     'cleared': cleared.toList(),
+    'legacyPoints': legacyPoints,
     'legends': [for (final l in legends) l.toJson()],
   };
 
@@ -445,6 +479,7 @@ class Hall {
       for (final l in (json?['legends'] as List? ?? const []))
         Legend.fromJson(l as Map<String, dynamic>),
     ],
+    legacyPoints: json?['legacyPoints'] as int? ?? 0,
     // 挑戦を持たせる前に保存した殿堂は、残っている選手から読み直す。
     cleared: {
       for (final c in (json?['cleared'] as List? ?? const [])) c as String,

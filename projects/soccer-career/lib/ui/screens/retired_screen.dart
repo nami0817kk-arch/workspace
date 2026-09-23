@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../player_portrait.dart';
 import '../readable_width.dart';
 import 'hall_screen.dart';
+import '../../game/formulas.dart';
 import '../../models/life.dart';
 import '../../state/career_controller.dart';
 
@@ -149,6 +150,32 @@ class _RetiredScreenState extends State<RetiredScreen> {
                     for (final a in state.reputation.awards)
                       Chip(label: Text(a.label)),
                   ],
+                ),
+              ],
+              // **次の選手に残るもの。** 引退が終わりではないと分かる場所。
+              const SizedBox(height: 24),
+              Text('次の選手に残すもの', style: theme.textTheme.titleSmall),
+              const SizedBox(height: 4),
+              Text(
+                '${controller.lastLegacyPoints}pt を残した'
+                '（通算 ${controller.hall.legacyPoints}pt）。'
+                '${Formulas.legacyPerPotential}ptごとに、次の選手の伸びしろが'
+                '+1される（今は+${controller.hall.potentialBonus}、'
+                '上限+${Formulas.legacyPotentialCap}）。',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              if (controller.lastDeclared case final declared?) ...[
+                const SizedBox(height: 4),
+                Text(
+                  declared.clearedBy(controller.hall.legends.first)
+                      ? '宣言していた「${declared.label}」を達成した'
+                            '（+${declared.declaredBonus}pt）。'
+                      : '宣言していた「${declared.label}」には届かなかった。',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ],
               if (controller.lastChallenges.isNotEmpty) ...[

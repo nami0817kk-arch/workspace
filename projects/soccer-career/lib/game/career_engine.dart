@@ -165,6 +165,12 @@ class CareerEngine {
     int? squadNumber,
     Map<AttributeKey, int> tweaks = const {},
     List<Trait>? traits,
+
+    /// 殿堂ポイントで乗る伸びしろ。前の選手たちが残したもの。
+    int potentialBonus = 0,
+
+    /// 今回狙うと宣言した挑戦。
+    String? declaredChallenge,
   }) {
     final home = countryId == null
         ? World.randomHome(_random)
@@ -194,10 +200,9 @@ class CareerEngine {
       // 左右のある役割でなければ、指定されていても中央に倒す。
       side: position.hasSide ? side : Side.center,
       attributes: attributes,
-      potential: (rollPotential(overall) + rolled.potentialBonus).clamp(
-        Formulas.potentialMin,
-        Formulas.maxAttribute,
-      ),
+      potential:
+          (rollPotential(overall) + rolled.potentialBonus + potentialBonus)
+              .clamp(Formulas.potentialMin, Formulas.maxAttribute),
       nationality: _rollNationality(home),
       personality: Personality.roll(_random),
       physique: physique ?? Physique.roll(_random, position),
@@ -223,6 +228,7 @@ class CareerEngine {
       contractYears: extras.rollContractYears(),
       countryId: home.id,
       objective: extras.objectiveFor(player: player, club: club),
+      declaredChallenge: declaredChallenge,
       squadNumber: squadNumber ?? squadNumberFor(position, _random),
       // 最初から練習している状態で始める。休養が既定だと、育成タブを
       // 開かない人は何も伸びないまま1年が過ぎる。
