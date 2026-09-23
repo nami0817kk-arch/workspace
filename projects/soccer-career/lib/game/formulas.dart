@@ -169,6 +169,16 @@ class Formulas {
     return (salary * appearanceBonusRate * ratio).round();
   }
 
+  /// **代理人を変えるのにかかる違約金**（今の年俸に対する割合）。
+  ///
+  /// ただで変えられると、そのときいちばん強い代理人に毎年乗り換えるだけになる。
+  /// 年俸に比例させるので、**名前が付いてからの乗り換えほど重い**。
+  static const double agentSwitchFeeRate = 0.5;
+
+  /// 代理人の違約金（万円）。
+  static int agentSwitchFee(int salary) =>
+      (salary * agentSwitchFeeRate).round();
+
   /// **引退後に実業家の道へ進むのに要る貯蓄（万円）。**
   ///
   /// 貯めた金の行き先はここしかない。**スタッフを雇えば届かなくなる**ので、

@@ -6,6 +6,7 @@ import '../transfer_code.dart';
 import '../../game/career_engine.dart';
 import '../../game/formulas.dart';
 import '../../game/world.dart';
+import '../../models/agent.dart';
 import '../../models/competition.dart';
 import '../../models/life.dart';
 import '../../state/career_controller.dart';
@@ -61,6 +62,49 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
     widget.controller.finishSeason();
     final renewal = widget.controller.renewalOffer;
     _offers = [?renewal, ...widget.controller.offers];
+  }
+
+  /// 代理人を選び直す。違約金は貯蓄から前払いする。
+  Future<void> _changeAgent(BuildContext context) async {
+    final c = widget.controller;
+    final fee = c.agentSwitchFee;
+    final savings = c.state!.finances.savings;
+    final picked = await showDialog<Agent>(
+      context: context,
+      builder: (context) => SimpleDialog(
+        title: const Text('代理人を変える'),
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(24, 0, 24, 12),
+            child: Text(
+              savings < fee
+                  ? '違約金 $fee万円。貯蓄は$savings万円で、足りない。'
+                  : '違約金 $fee万円を貯蓄（$savings万円）から払う。',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ),
+          for (final a in c.agentChoices)
+            SimpleDialogOption(
+              onPressed: savings < fee
+                  ? null
+                  : () => Navigator.of(context).pop(a),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('${a.name}（${a.style}）'),
+                  Text(
+                    a.description,
+                    style: Theme.of(context).textTheme.bodySmall,
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+    if (picked == null) return;
+    c.changeAgent(picked);
+    if (mounted) setState(() {});
   }
 
   Future<void> _accept(TransferOffer offer) async {
@@ -313,6 +357,19 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                   Text(
                     '代理人 ${state.agent.name}（${state.agent.description}）',
                     style: muted,
+                  ),
+                  const SizedBox(height: 6),
+                  // **代理人は変えられる。** 18歳のときに選んだ一人で
+                  // 19シーズンを通していた。欲しいものは時期で変わる。
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: OutlinedButton(
+                      onPressed: _busy ? null : () => _changeAgent(context),
+                      child: Text(
+                        '代理人を変える'
+                        '（違約金 ${widget.controller.agentSwitchFee}万）',
+                      ),
+                    ),
                   ),
                   const SizedBox(height: 12),
                   if (!_solicited) ...[

@@ -803,6 +803,41 @@ class CareerController extends ChangeNotifier {
     await _persist();
   }
 
+  /// **今、代理人を変えられるか。** 動くのはシーズンの終わりだけ。
+  ///
+  /// 試合の合間に乗り換えられると、移籍の窓を作った意味が無くなる。
+  bool get canChangeAgent {
+    final state = _state;
+    if (state == null || state.retired) return false;
+    return state.seasonFinished;
+  }
+
+  /// 代理人の違約金（万円）。今の年俸から決まる。
+  int get agentSwitchFee =>
+      _state == null ? 0 : Formulas.agentSwitchFee(_state!.salary);
+
+  /// 今の代理人以外の候補。
+  List<Agent> get agentChoices => [
+    for (final a in Agent.pool)
+      if (a.name != _state?.agent.name) a,
+  ];
+
+  /// 代理人を変える。違約金は貯蓄から前払いする。
+  ///
+  /// **払えないなら変えられない。** 金の使い道を1つ増やす形にしてある。
+  bool changeAgent(Agent agent) {
+    final state = _state;
+    if (state == null || !canChangeAgent) return false;
+    if (agent.name == state.agent.name) return false;
+    final fee = agentSwitchFee;
+    if (state.finances.savings < fee) return false;
+    state.finances = state.finances.spend(fee);
+    state.agent = agent;
+    _persist();
+    notifyListeners();
+    return true;
+  }
+
   /// クラブに方針を伝える。
   Future<void> setDirective(Directive directive) async {
     final state = _state;
