@@ -44,6 +44,16 @@ def crest_background(script, out_dir) -> str:
     from .thumbnail import _short_crest_stage
 
     meta = script.meta or {}
+    # **そのクラブのスタジアムの実写があるなら、そちらを使う**（2026-09-23）。
+    # エンブレムの下地は 2026-09-16 に決めたが、そのときの既定は
+    # 「ヴォルフスブルクのスタジアム」で、クラブと関係の無い絵だったから。
+    # いまは20クラブぶんの本拠地の実写がある。白地に小さいエンブレムより、
+    # 満員の客席のほうが強い（しかもカードがエンブレムに重ならない）
+    # 下地は front matter ではなく**節の `@bg:`** に入っている（front matter は既定値）
+    backgrounds = [str(getattr(script, "background", "") or "")]
+    backgrounds += [str(getattr(scene, "background", "") or "") for scene in script.scenes]
+    if any(b.startswith("assets/backgrounds/stadium_") for b in backgrounds):
+        return ""
     if str(meta.get("thumbnail_photo") or "").strip():
         return ""
     if [x for x in (meta.get("thumbnail_photos") or []) if str(x).strip()]:
@@ -171,7 +181,12 @@ def _drop_boards(short: Script) -> None:
 
     for scene in short.scenes:
         for line in scene.lines:
-            if line.image and _is_board(line.image):
+            if not line.image:
+                continue
+            # **16:9 のために作った絵は全部外す**（板・地図・スタジアムの実写）。
+            # 板を外したら今度は「本拠地」のスタジアム写真が残り、縦では
+            # 駐車場しか映らなかった（2026-09-23、2度目の指摘）
+            if _is_board(line.image) or line.image.startswith("assets/backgrounds/"):
                 line.image = None
 
 

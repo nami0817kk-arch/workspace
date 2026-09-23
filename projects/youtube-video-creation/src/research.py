@@ -2039,7 +2039,12 @@ def to_script(notes: Notes, plan: Plan) -> str:
                 if not shown and voice and voice not in SPEAKERS:
                     # 代弁は誰の言葉かを頭に付ける。画面だけ見ても分かるように
                     room = max(8, TELOP_LIMIT - len(voice) - 1)
-                    shown = f"{voice}「{_telop(sentence, room)}」"
+                    # **鉤括弧を二重にしない**（2026-09-23 に画面で見つけた）。
+                    # 原文が「…」で始まる発言だと「マルコ・ローゼ「「ボールに…」」」になる
+                    inner = _telop(sentence, room)
+                    if inner.startswith("「") and inner.endswith("」"):
+                        inner = inner[1:-1]
+                    shown = f"{voice}「{inner}」"
                 elif not shown:
                     # **地の文も画面に出す**（2026-09-10 ユーザー指摘で変更）。
                     # それまでは「最初の一文が16字に収まるときだけ」出していた。
