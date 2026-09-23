@@ -47,6 +47,10 @@ void main() {
           ),
           seed,
           onSeason: (state, stats, c) {
+            // **若手を混ぜない。** 「絶対的な主力」の季は、弱いクラブに
+            // 居る若手に偏る。若手はそもそも途中出場が多いので、約束の
+            // 当たり外れと年齢が混ざって読めなくなる。
+            if (state.player.age < 24) return;
             // 季の終わりに、その季の開幕時点の力関係で約束を引き直す。
             final role = _roleFor(state.player.overall, state.club.strength);
             final row = byRole.putIfAbsent(role, () => [0, 0, 0, 0]);

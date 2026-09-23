@@ -156,4 +156,28 @@ void main() {
       contains('${Formulas.eliteCaps}キャップ'),
     );
   });
+  group('起用の約束', () {
+    test('力の差で並び、言葉と添え書きが噛み合う', () {
+      // 実測（test/promise_role_sim.dart、24歳以上の1538季）:
+      // 絶対的な主力 先発28.5 / 主力 25.4 / ローテーション 23.7、
+      // 無出場の季は 0.0% / 0.0% / 4.8%。
+      const club = Club(id: 'x', name: '検証', strength: 70, tier: 1);
+      expect(CareerEngine.roleFor(80, club), '絶対的な主力');
+      expect(CareerEngine.roleFor(70, club), '主力');
+      expect(CareerEngine.roleFor(62, club), 'ローテーション');
+      expect(CareerEngine.roleFor(50, club), '控え');
+    });
+
+    test('添え書きは、約束ごとに違う', () {
+      const club = Club(id: 'x', name: '検証', strength: 70, tier: 1);
+      final notes = {
+        for (final overall in [80, 70, 62, 50])
+          CareerEngine.roleNoteFor(overall, club),
+      };
+      expect(notes.length, 4, reason: '同じ添え書きが2つの約束に付いている');
+      // 出られない季があることは、そこだけに書く。
+      expect(CareerEngine.roleNoteFor(62, club), contains('出られない季'));
+      expect(CareerEngine.roleNoteFor(80, club), isNot(contains('出られない季')));
+    });
+  });
 }
