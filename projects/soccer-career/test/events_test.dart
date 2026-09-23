@@ -39,7 +39,11 @@ Future<CareerController> started({int seed = 3}) async {
     random: Random(seed),
   );
   await c.startCareer(
-      name: '検証', position: Position.cm, age: 24, agent: Agent.pool.first);
+    name: '検証',
+    position: Position.cm,
+    age: 24,
+    agent: Agent.pool.first,
+  );
   return c;
 }
 
@@ -48,19 +52,18 @@ LifeContext context({
   int fame = 30,
   Map<PersonKind, String> people = const {},
   int overall = 70,
-}) =>
-    LifeContext(
-      age: age,
-      fame: fame,
-      savings: 5000,
-      abroad: false,
-      afterInjury: false,
-      sponsorOffered: false,
-      captaincyOffered: false,
-      lowMorale: false,
-      people: people,
-      overall: overall,
-    );
+}) => LifeContext(
+  age: age,
+  fame: fame,
+  savings: 5000,
+  abroad: false,
+  afterInjury: false,
+  sponsorOffered: false,
+  captaincyOffered: false,
+  lowMorale: false,
+  people: people,
+  overall: overall,
+);
 
 void main() {
   group('外から見える節目は見出しに残る', () {
@@ -81,8 +84,7 @@ void main() {
       expect(Newsroom.lifeMoment(state, LifeSpecial.none), isNull);
 
       // 中身は数字まで書く。
-      final sponsor =
-          Newsroom.lifeMoment(state, LifeSpecial.acceptSponsor)!;
+      final sponsor = Newsroom.lifeMoment(state, LifeSpecial.acceptSponsor)!;
       expect(sponsor.kind, NewsKind.life);
       expect(sponsor.headline, contains('アストレア'));
       expect(sponsor.body, contains('500'));
@@ -91,8 +93,7 @@ void main() {
     test('スポンサーが決まっていなければ、記事にしない', () async {
       final c = await started();
       c.state!.sponsor = null;
-      expect(
-          Newsroom.lifeMoment(c.state!, LifeSpecial.acceptSponsor), isNull);
+      expect(Newsroom.lifeMoment(c.state!, LifeSpecial.acceptSponsor), isNull);
     });
 
     test('腕章を受けると、実際に見出しへ積まれる', () async {
@@ -129,16 +130,21 @@ void main() {
         ].join();
         for (final kind in PersonKind.values) {
           if (!text.contains(kind.token)) continue;
-          expect(event.requirement.needsPerson, kind,
-              reason: '${event.id} が ${kind.token} を使っているのに'
-                  '条件になっていない');
+          expect(
+            event.requirement.needsPerson,
+            kind,
+            reason:
+                '${event.id} が ${kind.token} を使っているのに'
+                '条件になっていない',
+          );
         }
       }
     });
 
     test('名前に差し替わる', () {
-      final event = LifeEvents.catalogue
-          .firstWhere((e) => e.requirement.needsPerson == PersonKind.mentor);
+      final event = LifeEvents.catalogue.firstWhere(
+        (e) => e.requirement.needsPerson == PersonKind.mentor,
+      );
       final filled = event.withNames({PersonKind.mentor: '田中 一郎'});
       final text = [
         filled.title,
@@ -166,10 +172,9 @@ void main() {
       final events = LifeEvents(random: Random(2));
       var sawPerson = false;
       for (var i = 0; i < 200 && !sawPerson; i++) {
-        final picked = events.pick(context(people: {
-          PersonKind.mentor: 'M',
-          PersonKind.rival: 'R',
-        }));
+        final picked = events.pick(
+          context(people: {PersonKind.mentor: 'M', PersonKind.rival: 'R'}),
+        );
         if (picked?.requirement.needsPerson != null) sawPerson = true;
       }
       expect(sawPerson, isTrue, reason: '人の出来事が一度も出ない');
@@ -182,22 +187,21 @@ void main() {
       bool promised = false,
       bool lowCondition = false,
       Map<PersonKind, String> people = const {},
-    }) =>
-        LifeContext(
-          age: 26,
-          fame: 40,
-          savings: 5000,
-          abroad: false,
-          afterInjury: false,
-          sponsorOffered: false,
-          captaincyOffered: false,
-          lowMorale: false,
-          overall: 72,
-          people: people,
-          pushingHard: pushingHard,
-          promised: promised,
-          lowCondition: lowCondition,
-        );
+    }) => LifeContext(
+      age: 26,
+      fame: 40,
+      savings: 5000,
+      abroad: false,
+      afterInjury: false,
+      sponsorOffered: false,
+      captaincyOffered: false,
+      lowMorale: false,
+      overall: 72,
+      people: people,
+      pushingHard: pushingHard,
+      promised: promised,
+      lowCondition: lowCondition,
+    );
 
     /// [pick] を何度も引いて、出た ID を数える。
     Map<String, int> draws(
@@ -243,9 +247,7 @@ void main() {
         final counts = draws(context(people: people), with_: with_);
         var total = 0;
         counts.forEach((id, n) {
-          if (LifeEvents.catalogue
-                  .firstWhere((e) => e.id == id)
-                  .person ==
+          if (LifeEvents.catalogue.firstWhere((e) => e.id == id).person ==
               PersonKind.partner) {
             total += n;
           }
@@ -253,17 +255,20 @@ void main() {
         return total;
       }
 
-      expect(partnerDraws(with_: PersonKind.partner),
-          greaterThan(partnerDraws()));
+      expect(
+        partnerDraws(with_: PersonKind.partner),
+        greaterThan(partnerDraws()),
+      );
       expect(LifeEvents.companionWeight, greaterThan(1));
     });
 
     test('直前に出た話は、続けて出さない', () {
       final counts = draws(context());
-      final common = counts.entries.reduce((a, b) => a.value >= b.value ? a : b);
+      final common = counts.entries.reduce(
+        (a, b) => a.value >= b.value ? a : b,
+      );
       final after = draws(context(), recent: [common.key]);
-      expect(after.containsKey(common.key), isFalse,
-          reason: '同じ話が続けて出ている');
+      expect(after.containsKey(common.key), isFalse, reason: '同じ話が続けて出ている');
     });
 
     test('避けた結果ゼロになるなら、そのまま出す', () {
@@ -277,8 +282,11 @@ void main() {
       // 名前だけの三択は、どれを押しても同じに見えて選ぶ材料が無かった。
       for (final event in LifeEvents.catalogue) {
         for (final choice in event.choices) {
-          expect(choice.effect.summary, isNotEmpty,
-              reason: '${event.id} の「${choice.label}」に効きが無い');
+          expect(
+            choice.effect.summary,
+            isNotEmpty,
+            reason: '${event.id} の「${choice.label}」に効きが無い',
+          );
         }
       }
     });
@@ -289,8 +297,11 @@ void main() {
         for (final choice in event.choices) {
           final e = choice.effect;
           if (e.totalFatigue == 0) continue;
-          expect(e.summary, contains('疲労 ${e.totalFatigue > 0 ? '+' : ''}${e.totalFatigue}'),
-              reason: event.id);
+          expect(
+            e.summary,
+            contains('疲労 ${e.totalFatigue > 0 ? '+' : ''}${e.totalFatigue}'),
+            reason: event.id,
+          );
         }
       }
     });
@@ -312,8 +323,10 @@ void main() {
       c.state!.recentEvents = ['a', 'b'];
       final json = c.state!.toJson();
       expect(CareerState.fromJson(json).recentEvents, ['a', 'b']);
-      expect(CareerState.fromJson(json..remove('recentEvents')).recentEvents,
-          isEmpty);
+      expect(
+        CareerState.fromJson(json..remove('recentEvents')).recentEvents,
+        isEmpty,
+      );
     });
 
     test('答えた話は、覚えておく数だけ残る', () async {
@@ -322,8 +335,10 @@ void main() {
       for (var i = 0; i < 40; i++) {
         await c.simulateMatch();
       }
-      expect(state.recentEvents.length,
-          lessThanOrEqualTo(CareerState.recentEventsKept));
+      expect(
+        state.recentEvents.length,
+        lessThanOrEqualTo(CareerState.recentEventsKept),
+      );
     });
   });
 
@@ -362,10 +377,33 @@ void main() {
       }
     });
 
+    test('得るものだけの選択肢を作らない', () {
+      // **本文が失うものを書いているのに、効きが得るものだけ**という
+      // 選択肢があった（スパイクの契約は「拘束も増える」と書いてあるのに、
+      // 受けると金と名前がただで増えるだけだった）。
+      // 特別な効果（スポンサー・腕章）を伴う「受ける」側は、必ず何かを払う。
+      const gains = {LifeSpecial.acceptSponsor, LifeSpecial.takeCaptain};
+      for (final event in LifeEvents.catalogue) {
+        for (final choice in event.choices) {
+          final e = choice.effect;
+          if (!gains.contains(e.special)) continue;
+          final cost =
+              (e.morale < 0 ? -e.morale : 0) +
+              (e.condition < 0 ? -e.condition : 0) +
+              (e.fatigue > 0 ? e.fatigue : 0) +
+              (e.teammates < 0 ? -e.teammates : 0);
+          expect(
+            cost,
+            greaterThan(0),
+            reason: '${event.id} の「${choice.label}」に払うものが無い',
+          );
+        }
+      }
+    });
+
     test('選択肢は2つ以上あり、文が埋まっている', () {
       for (final event in LifeEvents.catalogue) {
-        expect(event.choices.length, greaterThanOrEqualTo(2),
-            reason: event.id);
+        expect(event.choices.length, greaterThanOrEqualTo(2), reason: event.id);
         expect(event.title, isNotEmpty, reason: event.id);
         expect(event.body, isNotEmpty, reason: event.id);
         for (final c in event.choices) {
@@ -383,8 +421,11 @@ void main() {
 
   group('数と中身', () {
     test('人の出来事も、練習の中の出来事も揃っている', () {
-      expect(LifeEvents.catalogue.length, greaterThanOrEqualTo(30),
-          reason: '出来事が少ないと、同じものばかり出る');
+      expect(
+        LifeEvents.catalogue.length,
+        greaterThanOrEqualTo(30),
+        reason: '出来事が少ないと、同じものばかり出る',
+      );
       final withPerson = LifeEvents.catalogue
           .where((e) => e.requirement.needsPerson != null)
           .length;
