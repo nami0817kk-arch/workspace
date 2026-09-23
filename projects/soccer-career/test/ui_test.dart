@@ -26,7 +26,9 @@ import 'package:soccer_career/state/career_controller.dart';
 import 'package:soccer_career/ui/readable_width.dart';
 import 'package:soccer_career/models/look.dart';
 import 'package:soccer_career/models/physique.dart';
+import 'package:soccer_career/models/challenge.dart';
 import 'package:soccer_career/models/entourage.dart';
+import 'package:soccer_career/models/legend.dart';
 import 'package:soccer_career/ui/screens/create_player_screen.dart';
 import 'package:soccer_career/ui/screens/hub_screen.dart';
 import 'package:soccer_career/ui/screens/match_screen.dart';
@@ -478,6 +480,35 @@ void main() {
     expect(find.text(state.opponentFor(state.matchday).name), findsWidgets);
     // 自分と相手で2つ。
     expect(find.byType(ClubCrest), findsWidgets);
+  });
+
+  testWidgets('選手を作る場所に、挑戦の達成数が出る', (tester) async {
+    // 挑戦は殿堂の中にあるので、開かないと存在に気付かない。
+    // 次の選手を作る瞬間が、追うものを見せる場所。
+    final controller = CareerController(
+      repository: _MemoryRepository(),
+      careerEngine: CareerEngine(random: Random(1)),
+      matchEngine: MatchEngine(random: Random(1)),
+      random: Random(1),
+    );
+    controller.hall = const Hall().add(
+      Legend.fromJson({'name': '点取り屋', 'goals': 250}),
+    );
+    tester.view.physicalSize = const Size(390, 3000);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: ThemeData(useMaterial3: true),
+        home: CreatePlayerScreen(controller: controller),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(
+      find.textContaining('挑戦 1/${Challenge.values.length}'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('選手作成で、付く特性を見て引き直せる', (tester) async {
