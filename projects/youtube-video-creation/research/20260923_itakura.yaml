@@ -40,7 +40,7 @@ sections:
     narrator: キャスター
     bg: assets/backgrounds/stock/stadium_night.mp4
     say:
-      - text: 'この夏ボルシア・メンヘングラートバッハに戻った板倉滉。ドイツのリーグはアジアカップの期間も止まらず、辞退が報じられています。'
+      - text: 'この夏ドイツの古巣に戻った板倉滉に、アジアカップの辞退が報じられています。'
         short_only: true
       - voice: 板倉滉
         text: サッカーやってる上でプライオリティが一番高いのは日本代表で、

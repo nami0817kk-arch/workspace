@@ -10,7 +10,7 @@ theme:
   kind: other
   topic: アーセナル
   title: 'アルテタがアーセナルと新たに4年契約。固まる4日前、本人が口にしていたこと'
-  hook: 今季初めて負けた2日後に、話はまとまりました。
+  hook: 今季初めて負けた2日後に、話はまとまりました。コーチ陣も全員が残ります。
   question: 何が決まって、本人はどう話していたのか
 short_title: アルテタ、アーセナルとあと4年
 thumbnail:
@@ -55,15 +55,25 @@ sections:
     narrator: キャスター
     bg: assets/backgrounds/stock/stadium_night.mp4
     say:
-      - text: '今季初黒星の2日後、アーセナルのアルテタ監督が4年の新契約で合意しました。'
+      - text: 'アーセナルのアルテタ監督が、**4年**の新しい契約で合意しました。'
         short_only: true
-      - 契約の話を記者に聞かれて、こう答えたのは合意の4日前でした。
+      - まとまる**4日前**、契約について聞かれた本人は、こう答えていました。
       - voice: アルテタ
         text: 私たちは皆、**完全に同じ方向を向いている。**
       - voice: アルテタ
-        text: 時が来れば、それはやる。心配することは何もない。
+        text: 時が来れば、契約はまとめる。心配することは何もない。
       - voice: アルテタ
         text: 両方が同じ野心と、同じ意志を持っている。だから、時間ができたときに解決する。
+    sources:
+      - https://www.skysports.com/football/news/13588507/mikel-arteta-contract-arsenal-boss-agrees-new-deal-to-extend-stay-at-premier-league-champions
+      - https://x.com/search?q=from%3AFabrizioRomano%20Arteta&f=live
+  - id: loss
+    heading: その2日後の黒星
+    tier: 報道
+    telop: ブライトンに0対2。今季初めての黒星
+    narrator: キャスター
+    bg: assets/backgrounds/stock/stadium_night.mp4
+    say:
       - その2日後、ブライトンに**0対2**。今季初めての黒星でした。試合直後の言葉です。
       - voice: アルテタ
         text: ブライトンのほうが良いチームだった。プレミアリーグでやらなければならない基本から、私たちはかけ離れていた。
@@ -71,7 +81,6 @@ sections:
         text: あれだけの技術的なミス……プレーの原則を、何ひとつ守れなかった。
     sources:
       - https://www.skysports.com/football/news/13588507/mikel-arteta-contract-arsenal-boss-agrees-new-deal-to-extend-stay-at-premier-league-champions
-      - https://x.com/search?q=from%3AFabrizioRomano%20Arteta&f=live
   - id: voices
     heading: ネットの声
     tier: 未確認
