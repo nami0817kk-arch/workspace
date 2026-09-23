@@ -148,14 +148,22 @@ void main() {
   });
 
   group('貯まる', () {
-    test('自動のままなら、その場で伸びて貯まらない', () async {
+    test('自動のままなら、その場で伸びて溜め込まない', () async {
+      // 練習ぶんは貯めずに直接伸ばす。試合で入る経験点（今節の的の連続・
+      // 難しい手）は一度 `points` を通るが、自動なら同じ週に消化される。
+      // **上限やポテンシャルで振れないぶんだけは残る**——ここをゼロで
+      // 縛ると、振り先が無いときに経験点を捨てることになる。
       final c = await started();
       final state = c.state!;
       expect(state.autoSpend, isTrue, reason: '既定が自動でない');
       for (var i = 0; i < 20; i++) {
         await c.simulateMatch();
       }
-      expect(state.development.totalPoints, 0);
+      expect(
+        state.development.totalPoints,
+        lessThan(Formulas.experienceCost(state.player.overall)),
+        reason: '自動なのに、振れるぶんが貯まったままになっている',
+      );
     });
 
     test('自分で振る側に切り替えると、貯まる', () async {

@@ -15,10 +15,17 @@ import 'formulas.dart';
 
 /// 今節の的。
 class MatchTarget {
-  const MatchTarget(this.label, this._met);
+  const MatchTarget(this.label, this.category, this._met);
 
   /// 画面に出す文。「今節の的: 1ゴール」。
   final String label;
+
+  /// その的が問うている能力。**連続の見返りはここへ入る。**
+  ///
+  /// 報酬をお金だけにしていたので、序盤は年俸の17%だったものが
+  /// 9季目以降は2%まで薄まっていた（`test/target_sim.dart` の実測）。
+  /// お金は増え続けるが、経験点の値段は変わらない。
+  final AttributeKey category;
 
   final bool Function(MatchResult) _met;
 
@@ -35,25 +42,51 @@ class MatchTarget {
     final turn = state.matchday % 3;
     if (family == ScenarioFamily.forward) {
       return switch (turn) {
-        0 => MatchTarget('1ゴール', (r) => r.goals >= 1),
-        1 => MatchTarget('得点に絡む', (r) => r.goals + r.assists >= 1),
-        _ => MatchTarget('評価 7.0', (r) => (r.rating ?? 0) >= 7.0),
+        0 => MatchTarget('1ゴール', AttributeKey.shooting, (r) => r.goals >= 1),
+        1 => MatchTarget(
+          '得点に絡む',
+          AttributeKey.dribbling,
+          (r) => r.goals + r.assists >= 1,
+        ),
+        _ => MatchTarget(
+          '評価 7.0',
+          AttributeKey.physical,
+          (r) => (r.rating ?? 0) >= 7.0,
+        ),
       };
     }
     if (family == ScenarioFamily.midfield) {
       return switch (turn) {
-        0 => MatchTarget('1アシスト', (r) => r.assists >= 1),
-        1 => MatchTarget('得点に絡む', (r) => r.goals + r.assists >= 1),
-        _ => MatchTarget('評価 7.0', (r) => (r.rating ?? 0) >= 7.0),
+        0 => MatchTarget('1アシスト', AttributeKey.passing, (r) => r.assists >= 1),
+        1 => MatchTarget(
+          '得点に絡む',
+          AttributeKey.dribbling,
+          (r) => r.goals + r.assists >= 1,
+        ),
+        _ => MatchTarget(
+          '評価 7.0',
+          AttributeKey.physical,
+          (r) => (r.rating ?? 0) >= 7.0,
+        ),
       };
     }
     return switch (turn) {
-      0 => MatchTarget('無失点', (r) => r.conceded == 0),
-      1 => MatchTarget('評価 7.0', (r) => (r.rating ?? 0) >= 7.0),
-      _ => MatchTarget('失点1以内', (r) => r.conceded <= 1),
+      0 => MatchTarget('無失点', AttributeKey.defending, (r) => r.conceded == 0),
+      1 => MatchTarget(
+        '評価 7.0',
+        AttributeKey.physical,
+        (r) => (r.rating ?? 0) >= 7.0,
+      ),
+      _ => MatchTarget('失点1以内', AttributeKey.defending, (r) => r.conceded <= 1),
     };
   }
 
   /// 達成したときの報酬（万円）。
   static int get reward => Formulas.matchTargetReward;
+
+  /// **連続で達成すると、この数ごとに経験点が入る。**
+  static int get streakStep => Formulas.targetStreakStep;
+
+  /// 節目で入る経験点。
+  static int get streakPoints => Formulas.targetStreakPoints;
 }

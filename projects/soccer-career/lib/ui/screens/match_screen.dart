@@ -69,6 +69,17 @@ class _MatchScreenState extends State<MatchScreen> {
     return PopScope(canPop: _result != null, child: _body(context));
   }
 
+  /// 連続の添え書き。切れているあいだは出さない。
+  ///
+  /// 「あと何試合で経験点か」まで書く。**節目が見えないと、続けている
+  /// ことに値打ちが無い**——お金は毎回同じ額しか入らない。
+  String _streakNote(int streak) {
+    if (streak < 1) return '';
+    final toStep = MatchTarget.streakStep - (streak % MatchTarget.streakStep);
+    if (toStep == MatchTarget.streakStep) return ' ・ $streak連続';
+    return ' ・ $streak連続、あと$toStepで経験点';
+  }
+
   Widget _body(BuildContext context) {
     final match = widget.controller.currentMatch;
     final result = _result;
@@ -79,6 +90,8 @@ class _MatchScreenState extends State<MatchScreen> {
         week: widget.controller.lastWeek,
         // 今節の的を達成したか。試合が終わった場所で言う。
         targetMet: widget.controller.lastTargetMet,
+        streak: widget.controller.state?.targetStreak ?? 0,
+        targetPoints: widget.controller.lastTargetPoints,
         // その試合について書かれた見出しがあれば、結果と一緒に見せる。
         headline: widget.controller.news
             .where((n) => n.matchday == result.matchday)
@@ -109,7 +122,8 @@ class _MatchScreenState extends State<MatchScreen> {
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
           child: Text(
             '今節の的: ${MatchTarget.of(widget.controller.state!).label}'
-            '（達成で${MatchTarget.reward}万円）',
+            '（達成で${MatchTarget.reward}万円）'
+            '${_streakNote(widget.controller.state!.targetStreak)}',
             textAlign: TextAlign.center,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
@@ -902,10 +916,18 @@ class _MatchSummary extends StatelessWidget {
     required this.week,
     this.headline = const [],
     this.targetMet = false,
+    this.streak = 0,
+    this.targetPoints = 0,
   });
 
   /// 今節の的を達成したか。
   final bool targetMet;
+
+  /// 今季ここまでの連続達成数（この試合を含む）。
+  final int streak;
+
+  /// 節目で入った経験点。入らなければ 0。
+  final int targetPoints;
 
   final MatchResult result;
 
@@ -945,12 +967,23 @@ class _MatchSummary extends StatelessWidget {
               if (targetMet) ...[
                 const SizedBox(height: 10),
                 Text(
-                  '今節の的を達成　+${MatchTarget.reward}万円',
+                  '今節の的を達成　+${MatchTarget.reward}万円'
+                  '${streak > 1 ? '　$streak連続' : ''}',
                   textAlign: TextAlign.center,
                   style: theme.textTheme.titleSmall?.copyWith(
                     color: theme.colorScheme.primary,
                   ),
                 ),
+                // **節目のぶんは別の行にする。** お金と一緒に並べると、
+                // 値段の上がらない側（経験点）が誤差に見える。
+                if (targetPoints > 0)
+                  Text(
+                    '$streak連続　経験点 +$targetPoints',
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      color: theme.colorScheme.primary,
+                    ),
+                  ),
               ],
               const SizedBox(height: 28),
               Row(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../game/formulas.dart';
 import '../../game/knacks.dart';
+import '../../game/match_target.dart';
 import '../../game/promises.dart';
 import '../../models/development.dart';
 import '../../models/entourage.dart';
@@ -272,6 +273,11 @@ final List<_GuideSection> _sections = [
     '相手には戦い方がある。難しくなる能力が1つ（−${(Formulas.styleMismatch * 100).round()}%、'
         '何度も当たると慣れて薄まる）、代わりに空く能力が1つ'
         '（+${(Formulas.styleOpening * 100).round()}%、こちらは慣れでは動かない）。',
+    '今節の的。節ごとに1つ出て、達成すると${MatchTarget.reward}万円。'
+        'リーグ戦だけで数える（カップ戦は節を進めないので素通り）。'
+        '続けて達成すると連続が伸び、${MatchTarget.streakStep}回ごとに'
+        'その的が問うている能力へ経験点が${MatchTarget.streakPoints}点入る。'
+        '外しても、出られなくても連続は切れる。',
     '自分が出た試合と出なかった試合の成績は、「試合」タブの今シーズンの成績に並ぶ。'
         '居ないと勝てないクラブなら、そこに差が出る。',
     '自分が出る試合は、そのぶんクラブが強い（クラブとの力の差1につき'

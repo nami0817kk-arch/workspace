@@ -180,6 +180,23 @@ class Formulas {
   /// 参考アプリと同じ20万円に下げてある。
   static const int matchTargetReward = 20;
 
+  /// **的を何回続けて達成すると、節目になるか。**
+  ///
+  /// `test/target_sim.dart` の実測で、出た試合の達成率は 35〜75%、
+  /// 3連続は達成のうち25〜29%、5連続は7〜11%、8連続は1〜2%だった。
+  /// 3 なら「狙えば届くが、休めば切れる」幅に入る。
+  static const int targetStreakStep = 3;
+
+  /// 節目で入る経験点。その的が問うている能力に入る。
+  ///
+  /// お金だけの報酬は年俸で薄まる（序盤17% → 9季目以降2%）。経験点の
+  /// 値段（`experienceCost`）は増えないので、**最後まで同じ重さで効く**。
+  ///
+  /// 伸び1回ぶん（`pointsPerGrowth` = 4）を払ったら、ピーク総合力が
+  /// **77.1 → 78.0** まで上がった。狙いは終盤まで意味を残すことで、
+  /// 上限を上げることではない。半分の2点に置く。
+  static const int targetStreakPoints = pointsPerGrowth ~/ 2;
+
   /// **殿堂ポイント。** 引退した選手が次のキャリアに残すもの。
   ///
   /// 参考にした野球のキャリアゲームは「20ptにつき次の選手の才能+1、
@@ -341,6 +358,7 @@ class Formulas {
   /// 手が通るようになった選手の評価点が青天井に上がり、
   /// キャリア平均7.5のような数字になる（実際になっていた）。
   static const double ratingPerSuccess = 0.32;
+
   static const double ratingPerFailure = -0.4;
   static const double ratingPerGoal = 0.95;
   static const double ratingPerAssist = 1.1;

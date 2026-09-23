@@ -42,7 +42,11 @@ Future<CareerController> started({int seed = 3}) async {
     random: Random(seed),
   );
   await c.startCareer(
-      name: '検証', position: Position.cm, age: 24, agent: Agent.pool.first);
+    name: '検証',
+    position: Position.cm,
+    age: 24,
+    agent: Agent.pool.first,
+  );
   return c;
 }
 
@@ -61,8 +65,9 @@ void main() {
           state.mentor = null;
           state.player = state.player.copyWith(age: 25);
           final before = state.player.personality.professionalism;
-          final after =
-              Person(random: Random(seed)).evolve(state).professionalism;
+          final after = Person(random: Random(seed))
+              .evolve(state)
+              .professionalism;
           total += after - before;
         }
         return total;
@@ -86,8 +91,9 @@ void main() {
         state.mentor = null;
         state.player = state.player.copyWith(age: 25);
         final before = state.player.personality.professionalism;
-        final after =
-            Person(random: Random(seed)).evolve(state).professionalism;
+        final after = Person(random: Random(seed))
+            .evolve(state)
+            .professionalism;
         if (after > before) moved++;
       }
       expect(moved, lessThan(40), reason: '毎季必ず上がっている');
@@ -102,8 +108,11 @@ void main() {
         final before = state.player.personality;
         final after = Person(random: Random(seed)).evolve(state);
         for (final axis in PersonalityAxis.values) {
-          expect((after[axis] - before[axis]).abs(), lessThanOrEqualTo(2),
-              reason: '$axis が1シーズンで大きく動いた');
+          expect(
+            (after[axis] - before[axis]).abs(),
+            lessThanOrEqualTo(2),
+            reason: '$axis が1シーズンで大きく動いた',
+          );
         }
       }
     });
@@ -136,25 +145,65 @@ void main() {
     test('Habits の判断は、どれも読まれている', () {
       // 「作ったのに読まれていない」を、次からは自動で気付けるようにする。
       final source = File('lib/models/support.dart').readAsStringSync();
-      final getters = RegExp(r'^  (?:bool|double|int) get ([a-z][A-Za-z]*)',
-              multiLine: true)
-          .allMatches(source)
-          .map((m) => m.group(1)!)
-          .toList();
+      final getters = RegExp(
+        r'^  (?:bool|double|int) get ([a-z][A-Za-z]*)',
+        multiLine: true,
+      ).allMatches(source).map((m) => m.group(1)!).toList();
       expect(getters, contains('disciplined'));
 
       final lib = Directory('lib')
           .listSync(recursive: true)
           .whereType<File>()
           .where((f) => f.path.endsWith('.dart'))
-          .where((f) => !f.path.replaceAll(r'\', '/').endsWith(
-              'lib/models/support.dart'))
+          .where(
+            (f) => !f.path
+                .replaceAll(r'\', '/')
+                .endsWith('lib/models/support.dart'),
+          )
           .map((f) => f.readAsStringSync())
           .join('\n');
 
       for (final getter in getters) {
-        expect(lib, contains(getter),
-            reason: 'Habits.$getter は作ってあるが、どこからも読まれていない');
+        expect(
+          lib,
+          contains(getter),
+          reason: 'Habits.$getter は作ってあるが、どこからも読まれていない',
+        );
+      }
+    });
+
+    test('Offseason の持ち物は、どれも判定に届いている', () {
+      // オフの4択は `injuryFactor` を持ち、画面にも「怪我も増える」
+      // 「怪我が遠のく」と書いてありながら、**どこからも読まれていなかった**。
+      // 実測で 鍛え込む（×1.2）21.5回 / 休む（×0.8）22.6回——倍率が逆に出る。
+      final source = File('lib/models/life.dart').readAsStringSync();
+      final body = source.substring(source.indexOf('enum Offseason'));
+      final fields =
+          RegExp(r'^  final [A-Za-z<>?]+ ([a-z][A-Za-z]*);', multiLine: true)
+              .allMatches(body.substring(0, body.indexOf('\n}')))
+              .map((m) => m.group(1)!)
+              .where((n) => n != 'label' && n != 'description')
+              .toList();
+      expect(fields, contains('injuryFactor'));
+      expect(fields, contains('growthFactor'));
+
+      final lib = Directory('lib')
+          .listSync(recursive: true)
+          .whereType<File>()
+          .where((f) => f.path.endsWith('.dart'))
+          .where(
+            (f) =>
+                !f.path.replaceAll(r'\', '/').endsWith('lib/models/life.dart'),
+          )
+          .map((f) => f.readAsStringSync())
+          .join('\n');
+
+      for (final field in fields) {
+        expect(
+          lib,
+          contains(field),
+          reason: 'Offseason.$field は作ってあるが、どこからも読まれていない',
+        );
       }
     });
   });
