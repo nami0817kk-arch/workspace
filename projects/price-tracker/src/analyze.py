@@ -151,6 +151,35 @@ def effective_drops(rows: list[dict], threshold: float, limit: int | None = None
     return hit[:limit] if limit else hit
 
 
+def change_count(rec_or_row: dict) -> int:
+    """記録している期間に価格が動いた回数。
+
+    追跡5,506件のうち4,189件は一度も動かない。動く商品を見つけること自体が、
+    毎日ためた履歴からしか作れない情報になる。
+    """
+    prices = [e[1] for e in map(_entry, rec_or_row.get("tail") or [])]
+    return sum(1 for i in range(1, len(prices)) if prices[i] != prices[i - 1])
+
+
+def active(rows: list[dict], limit: int | None = None) -> list[dict]:
+    """よく動く商品を、動いた回数の多い順に。"""
+    hit = [r for r in rows if change_count(r) >= 2]
+    hit.sort(key=lambda r: (-change_count(r), r["vs_low_pct"]))
+    return hit[:limit] if limit else hit
+
+
+def new_lows(rows: list[dict], day: str, limit: int | None = None) -> list[dict]:
+    """その日に最安値を更新した商品。
+
+    「最安値圏」は近い価格も含むが、こちらは記録を塗り替えた当日だけ。
+    履歴を持っていないと出せない一覧で、買い手にとっては一番強い合図になる。
+    """
+    hit = [r for r in rows
+           if r.get("at_low") and r.get("trustworthy") and r.get("low_date") == day]
+    hit.sort(key=lambda r: (-r.get("off_high_pct", 0), r["price"]))
+    return hit[:limit] if limit else hit
+
+
 def by_genre(rows: list[dict], genre_id: str, limit: int | None = None) -> list[dict]:
     """取得元ジャンルで絞り、注目すべき順に並べる。
 

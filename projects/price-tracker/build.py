@@ -116,6 +116,29 @@ def build(root: Path, out: Path) -> dict:
                   low, site, base, updated,
                   "価格の記録日数がまだ足りません。判定には最低7日分が必要です。", stats)
 
+    latest_day = max((p.name[:10] for p in (data / "snapshots").glob("*.csv.gz")),
+                     default=updated)
+    write_listing(out, urls, "new-lows/", "今日 最安値を更新した商品",
+                  "記録している期間の最安値を、この日に塗り替えた商品です。"
+                  "近い価格を含む最安値圏とは別に、更新した当日だけを出しています。",
+                  analyze.new_lows(rows, latest_day), site, base, updated,
+                  "この日に最安値を更新した商品はありませんでした。", stats)
+
+    write_listing(out, urls, "active/", "よく動く商品",
+                  "記録している期間に価格が何度も変わった商品です。"
+                  "動かない商品が大半のなかで、追う値打ちがあるのはここに出るものです。",
+                  analyze.active(rows), site, base, updated,
+                  "価格が複数回動いた商品はまだありません。", stats)
+
+    # 日付別アーカイブ。過ぎた日の値下がりを残す。ためた履歴がそのまま増える。
+    for day in sorted((p.name[:10] for p in (data / "snapshots").glob("*.csv.gz")),
+                      reverse=True)[:60]:
+        hit = [r for r in rows if r.get("changed_date") == day and r.get("dropped")]
+        write_listing(out, urls, f"archive/{day}/", f"{day} の値下がり",
+                      f"{day} に価格が下がった商品の記録です。",
+                      hit, site, base, updated,
+                      "この日は記録できる値下がりがありませんでした。", stats)
+
     for page in pages.PAGES:
         write(out / page["slug"] / "index.html", pages.render(page, site, updated))
         urls.append(f'/{page["slug"]}/')
@@ -139,9 +162,15 @@ def build(root: Path, out: Path) -> dict:
           theme.genre_index(listed, site, base + "/genre/", updated, prefix="../"))
     urls.append("/genre/")
 
+    by_gid = {}
+    for r in rows:
+        by_gid.setdefault(str(r.get("source_genre") or ""), []).append(r)
+
     for row in rows:
         s = theme.slug(row["item_code"])
-        write(out / "item" / s / "index.html", theme.item_page(row, site, updated))
+        kin = [r for r in by_gid.get(str(row.get("source_genre") or ""), [])
+               if r["item_code"] != row["item_code"]][:8]
+        write(out / "item" / s / "index.html", theme.item_page(row, site, updated, kin))
         urls.append((f"/item/{s}/", row.get("changed_date") or updated))
 
     # 検索用の索引。数百KBあるので、検索ページで必要になったときだけ読ませる。
@@ -151,6 +180,16 @@ def build(root: Path, out: Path) -> dict:
     write(out / "search" / "index.html",
           theme.search_page(site, base + "/search/", updated, stats))
     urls.append("/search/")
+
+    counts = [analyze.change_count(r) for r in rows]
+    write(out / "stats" / "index.html", theme.stats_page(
+        site, base + "/stats/", updated, stats,
+        {"still": sum(1 for n in counts if n == 0),
+         "once": sum(1 for n in counts if n == 1),
+         "active": sum(1 for n in counts if n >= 2),
+         "pointed": sum(1 for r in rows if int(r.get("point_rate") or 1) > 1)},
+        listed))
+    urls.append("/stats/")
 
     # 共有時の画像・行き先を示す404・値下がりの購読（RSS）。
     write(out / "og.svg", theme.og_image(site, stats))

@@ -350,3 +350,74 @@ class PagingAndExtrasTest(unittest.TestCase):
         mods = set(re.findall(r"<lastmod>(.*?)</lastmod>", s))
 
         self.assertGreater(len(mods), 1, "全ページが同じ更新日になっている")
+
+
+class ActiveAndNewLowsTest(unittest.TestCase):
+    """ためた履歴からしか作れない一覧。"""
+
+    def setUp(self):
+        from src import analyze
+        self.analyze = analyze
+
+    def row(self, code, tail, **kw):
+        base = {"item_code": code, "tail": tail, "vs_low_pct": 0.1, "price": 1000,
+                "at_low": False, "trustworthy": True, "low_date": None,
+                "off_high_pct": 0.0}
+        base.update(kw)
+        return base
+
+    def test_値動きの回数を数える(self):
+        tail = [["d1", 100], ["d2", 100], ["d3", 90], ["d4", 90], ["d5", 95]]
+
+        self.assertEqual(self.analyze.change_count({"tail": tail}), 2)
+
+    def test_2回以上動いた商品だけを拾う(self):
+        rows = [self.row("still", [["d1", 100], ["d2", 100]]),
+                self.row("once", [["d1", 100], ["d2", 90]]),
+                self.row("busy", [["d1", 100], ["d2", 90], ["d3", 80]])]
+
+        out = self.analyze.active(rows)
+
+        self.assertEqual([r["item_code"] for r in out], ["busy"])
+
+    def test_その日に最安値を更新したものだけ(self):
+        rows = [self.row("today", [], at_low=True, low_date="2026-09-23"),
+                self.row("older", [], at_low=True, low_date="2026-09-20"),
+                self.row("thin", [], at_low=True, low_date="2026-09-23",
+                         trustworthy=False)]
+
+        out = self.analyze.new_lows(rows, "2026-09-23")
+
+        self.assertEqual([r["item_code"] for r in out], ["today"])
+
+
+class StaleDataTest(unittest.TestCase):
+    """取得は成功しているのに中身が前日と同じ、という壊れ方を捕まえる。"""
+
+    def rows(self, n, price=1000, rate=1):
+        return [{"item_code": f"c{i}", "price": price, "point_rate": rate}
+                for i in range(n)]
+
+    def test_全件が前回と同一なら止める(self):
+        prev = {f"c{i}": (1000, 1) for i in range(120)}
+
+        errs = validate.check_against_previous(self.rows(120), prev)
+
+        self.assertTrue(errs)
+        self.assertIn("すべてが同一", errs[0])
+
+    def test_1件でも動いていれば通す(self):
+        prev = {f"c{i}": (1000, 1) for i in range(120)}
+        rows = self.rows(120)
+        rows[0]["price"] = 900
+
+        self.assertEqual(validate.check_against_previous(rows, prev), [])
+
+    def test_前回が無ければ何も言わない(self):
+        self.assertEqual(validate.check_against_previous(self.rows(120), {}), [])
+
+    def test_重なりが少なければ判定しない(self):
+        # 商品が入れ替わっただけの日を誤って止めない
+        prev = {f"c{i}": (1000, 1) for i in range(10)}
+
+        self.assertEqual(validate.check_against_previous(self.rows(120), prev), [])

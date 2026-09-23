@@ -69,8 +69,9 @@ FAVICON = ("data:image/svg+xml,"
 AD_NOTICE = ('<p class="ad-notice">本サイトは楽天アフィリエイトを利用しており、'
              'リンク経由の購入により収益を得ています。</p>')
 
-NAV = [("./", "今日の値下がり"), ("points/", "ポイント込み"), ("rises/", "値上がり"),
-       ("lows/", "最安値圏"), ("genre/", "ジャンル別"), ("search/", "商品を探す"),
+NAV = [("./", "今日の値下がり"), ("points/", "ポイント込み"), ("new-lows/", "最安値更新"),
+       ("lows/", "最安値圏"), ("rises/", "値上がり"), ("active/", "よく動く"),
+       ("genre/", "ジャンル別"), ("search/", "商品を探す"), ("stats/", "記録"),
        ("about/", "このサイトについて")]
 
 
@@ -105,6 +106,7 @@ def head(title: str, description: str, canonical: str, site: dict, prefix: str =
 <meta property="og:site_name" content="{esc(site['name'])}">
 <meta name="twitter:card" content="summary_large_image">
 <meta property="og:image" content="{esc(site["base_url"].rstrip("/"))}/og.svg">
+<link rel="alternate" type="application/rss+xml" title="今日の値下がり" href="{prefix}feed.xml">
 <link rel="icon" href="{FAVICON}">
 <link rel="stylesheet" href="{prefix}style.css">
 {extra}
@@ -301,10 +303,50 @@ SEARCH_JS = """
   }
 
   // 一覧は数百KBある。検索する人だけが読み込むよう、触られるまで取りに行かない。
+  // 検索語を URL に残す。共有・ブックマーク・戻るボタンが効くようになる。
+  function syncUrl() {
+    var q = input.value.trim();
+    history.replaceState(null, '', q ? '?q=' + encodeURIComponent(q) : location.pathname);
+  }
+
+  var initial = new URLSearchParams(location.search).get('q');
+  if (initial) { input.value = initial; load(); }
+
   input.addEventListener('focus', load);
-  input.addEventListener('input', function () { if (index) { render(); } else { load(); } });
+  input.addEventListener('input', function () { syncUrl(); if (index) { render(); } else { load(); } });
 })();
 """
+
+
+def stats_page(site: dict, canonical: str, updated: str, stats: dict,
+               buckets: dict, genres: list) -> str:
+    """このサイトが何を持っているかを数字で出す。
+
+    毎日ためた履歴そのものが値打ちなので、その厚みを一覧の裏側だけでなく
+    1ページとして見せる。「動かない商品が大半」という事実も隠さない。
+    """
+    title = "記録の全体像"
+    lead = "当サイトが何をどれだけ記録しているかをまとめています。"
+    rows = [("記録している商品", f'{stats["items"]:,} 件'),
+            ("記録した日数", f'{stats["days"]} 日'),
+            ("価格が一度も動いていない商品", f'{buckets["still"]:,} 件'),
+            ("1回動いた商品", f'{buckets["once"]:,} 件'),
+            ("2回以上動いた商品", f'{buckets["active"]:,} 件'),
+            ("ポイントが通常より高い商品", f'{buckets["pointed"]:,} 件')]
+    table = "".join(f"<tr><th>{esc(k)}</th><td>{v}</td></tr>" for k, v in rows)
+    per_genre = "".join(
+        f'<tr><th><a href="../genre/{esc(str(g["genre_id"]))}/">{esc(g["name"])}</a></th>'
+        f'<td>{g["count"]:,} 件</td></tr>' for g in genres)
+    return (head(f"{title}｜{site['name']}", lead, canonical, site, "../")
+            + breadcrumb(site, title, "../")
+            + f'<h1>{esc(title)}</h1><p class="lead">{esc(lead)}</p>'
+            + AD_NOTICE
+            + f'<table class="facts">{table}</table>'
+            + '<h2>ジャンル別</h2>'
+            + f'<table class="facts">{per_genre}</table>'
+            + '<p class="lead">価格が動かない商品が大半を占めます。'
+            + '毎日記録しているのは、動いた瞬間を取り逃さないためです。</p>'
+            + foot(site, "../", updated))
 
 
 def search_page(site: dict, canonical: str, updated: str, stats: dict) -> str:
@@ -496,7 +538,18 @@ def breadcrumb(site: dict, name: str, prefix: str) -> str:
             f'<script type="application/ld+json">{ld}</script>')
 
 
-def item_page(row: dict, site: dict, updated: str) -> str:
+def related(rows: list, site: dict) -> str:
+    """同じジャンルの商品へ。5,500ページが互いに孤立していると、
+    読み手も検索エンジンも辿れない。"""
+    if not rows:
+        return ""
+    body = "".join(
+        f'<li><a href="../{slug(r["item_code"])}/">{esc(r["name"][:56])}</a>'
+        f'<span class="price">{yen(r["price"])}</span></li>' for r in rows)
+    return f'<h2>同じジャンルの商品</h2><ul class="hits">{body}</ul>'
+
+
+def item_page(row: dict, site: dict, updated: str, kin: list | None = None) -> str:
     prefix = "../../"
     canonical = f'{site["base_url"].rstrip("/")}/item/{slug(row["item_code"])}/'
     title = f'{row["name"]}の価格推移'
@@ -536,5 +589,6 @@ def item_page(row: dict, site: dict, updated: str) -> str:
             + history_table(row)
             + f'<p class="cta">{buy_link(row)}</p>'
             + f'<p class="shop">販売店: {esc(row.get("shop", ""))}</p>'
+            + related(kin or [], site)
             + '</article>'
             + foot(site, prefix, updated))

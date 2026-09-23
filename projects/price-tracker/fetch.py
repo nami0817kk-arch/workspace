@@ -83,11 +83,13 @@ def main() -> int:
 
     # 保存の前に検査する。壊れた1日を履歴に混ぜると、最安値・値下がりの判定が
     # 恒久的に歪み、取り直しもできない。疑わしいときは記録しない方を選ぶ。
-    errors, warnings = validate.check_snapshot(
+    errors = validate.check_against_previous(rows, store.previous_prices(data, args.day))
+    warn2, warnings = validate.check_snapshot(
         # 期待件数は「取得できたジャンル数」から出す。全ジャンル数で見ると、
         # 1ジャンル落ちただけで8割を割り、無事だった残りごと捨てることになる。
         # 落ちたジャンル自体は下の「失敗:」行で残す。
         rows, expected=(len(genres) - len(failed)) * site.get("hits_per_genre", 90))
+    errors = errors + warn2
     for w in warnings:
         print(f"  警告: {w}")
     if errors and not args.no_verify:
