@@ -15,6 +15,9 @@ theme:
 short_title: アルテタ、アーセナルとあと4年
 thumbnail:
   photo: assets/images/20260923_arteta/01.jpg
+  photos:
+    - assets/images/20260923_arteta/02.jpg
+    - assets/images/20260923_arteta/01.jpg
   line1: 優勝の直後にあと4年
   line2: 「心配することは何もない」
   crests: [アーセナル]
