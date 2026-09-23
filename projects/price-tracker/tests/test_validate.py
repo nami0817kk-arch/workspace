@@ -13,7 +13,7 @@ from src import validate  # noqa: E402
 
 def row(**kw):
     base = {"item_code": "shop:1", "name": "テレビ", "price": 39800,
-            "is_affiliate": True, "review_count": 3}
+            "is_affiliate": True, "review_count": 3, "point_rate": 1}
     base.update(kw)
     return base
 
@@ -25,7 +25,9 @@ def rows(n, **kw):
 class CheckSnapshotTest(unittest.TestCase):
 
     def test_正常なデータは何も言わない(self):
-        errors, warnings = validate.check_snapshot(rows(270), expected=270)
+        data = rows(269) + [row(item_code="x", point_rate=10)]
+
+        errors, warnings = validate.check_snapshot(data, expected=270)
 
         self.assertEqual(errors, [])
         self.assertEqual(warnings, [])
@@ -81,6 +83,21 @@ class CheckSnapshotTest(unittest.TestCase):
 
         self.assertTrue(any("アフィリエイトリンクでない" in e for e in errors))
 
+    def test_ポイント倍率が全件1倍なら警告する(self):
+        # 実測では7.3%が2倍以上だった。全件1倍は項目が返らなくなった合図で、
+        # 実質価格の判定が丸ごと死ぬ
+        errors, warnings = validate.check_snapshot(rows(270), expected=270)
+
+        self.assertEqual(errors, [])
+        self.assertTrue(any("ポイント倍率が全件1倍" in w for w in warnings))
+
+    def test_倍率が1つでも高ければ警告しない(self):
+        data = rows(269) + [row(item_code="x", point_rate=10)]
+
+        _, warnings = validate.check_snapshot(data, expected=270)
+
+        self.assertFalse(any("ポイント倍率" in w for w in warnings))
+
     def test_レビューが全件0なら警告だけ出す(self):
         # 価格履歴には影響しないので、止めずに気づけるようにする
         errors, warnings = validate.check_snapshot(
@@ -90,7 +107,9 @@ class CheckSnapshotTest(unittest.TestCase):
         self.assertTrue(any("レビュー件数が全件0" in w for w in warnings))
 
     def test_レビューが1件でもあれば警告しない(self):
-        data = rows(269, review_count=0) + [row(item_code="x", review_count=1)]
+        data = (rows(268, review_count=0) + [row(item_code="x", review_count=1)]
+                + [row(item_code="y", point_rate=10)])
+
         _, warnings = validate.check_snapshot(data, expected=270)
 
         self.assertEqual(warnings, [])
@@ -268,3 +287,66 @@ class EffectivePriceTest(unittest.TestCase):
         from src import store
         self.assertEqual(store.entry(["2026-09-08", 500]), ("2026-09-08", 500, 1))
         self.assertEqual(store.entry(["2026-09-11", 500, 10]), ("2026-09-11", 500, 10))
+
+
+class PagingAndExtrasTest(unittest.TestCase):
+    """ページ送りと、付随して出す成果物。
+
+    最安値圏は4,029件ある（2026-09-24 時点）。100件で打ち切っていた頃は、
+    記録した資産の97%を捨てていた。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        import subprocess
+        import sys
+        import tempfile
+        from pathlib import Path
+
+        cls.root = Path(__file__).resolve().parent.parent
+        cls.tmp = tempfile.TemporaryDirectory()
+        cls.out = Path(cls.tmp.name)
+        subprocess.run([sys.executable, str(cls.root / "build.py"), "--out", str(cls.out)],
+                       cwd=cls.root, check=True, capture_output=True)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def test_100件を超える一覧はページ送りになる(self):
+        pages = sorted(p for p in (self.out / "lows").iterdir() if p.is_dir())
+
+        self.assertTrue(pages, "2ページ目以降が作られていない")
+        self.assertTrue((self.out / "lows" / "2" / "index.html").exists())
+
+    def test_ページ送りは前後に辿れる(self):
+        first = (self.out / "lows" / "index.html").read_text(encoding="utf-8")
+        second = (self.out / "lows" / "2" / "index.html").read_text(encoding="utf-8")
+
+        self.assertIn('rel="next"', first)
+        self.assertIn('rel="prev"', second)
+
+    def test_一覧に構造化データが入る(self):
+        s = (self.out / "index.html").read_text(encoding="utf-8")
+
+        self.assertIn("ItemList", s)
+
+    def test_404と共有画像とフィードを出す(self):
+        for name in ("404.html", "og.svg", "feed.xml"):
+            self.assertTrue((self.out / name).exists(), name)
+
+    def test_フィードは妥当なXML(self):
+        import xml.etree.ElementTree as ET
+
+        root = ET.parse(self.out / "feed.xml").getroot()
+
+        self.assertEqual(root.tag, "rss")
+
+    def test_商品ページの更新日は価格が動いた日(self):
+        # 全ページを「今日更新」と申告すると、変わっていないページまで
+        # 再クロールさせることになる
+        import re
+        s = (self.out / "sitemap.xml").read_text(encoding="utf-8")
+        mods = set(re.findall(r"<lastmod>(.*?)</lastmod>", s))
+
+        self.assertGreater(len(mods), 1, "全ページが同じ更新日になっている")

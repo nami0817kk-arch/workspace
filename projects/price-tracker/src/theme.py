@@ -103,7 +103,8 @@ def head(title: str, description: str, canonical: str, site: dict, prefix: str =
 <meta property="og:description" content="{esc(description)}">
 <meta property="og:url" content="{esc(canonical)}">
 <meta property="og:site_name" content="{esc(site['name'])}">
-<meta name="twitter:card" content="summary">
+<meta name="twitter:card" content="summary_large_image">
+<meta property="og:image" content="{esc(site["base_url"].rstrip("/"))}/og.svg">
 <link rel="icon" href="{FAVICON}">
 <link rel="stylesheet" href="{prefix}style.css">
 {extra}
@@ -337,17 +338,55 @@ def stats_bar(stats: dict) -> str:
     return '<p class="stats">' + '<span class="sep">/</span>'.join(parts) + '</p>'
 
 
+def pager(page: int, pages: int, prefix: str, total: int) -> str:
+    """ページ送り。最安値圏は4,000件を超えるので、1枚に収めると読めない。"""
+    if pages <= 1:
+        return ""
+    def href(n):
+        return prefix if n == 1 else f"{prefix}{n}/"
+    links = []
+    if page > 1:
+        links.append(f'<a rel="prev" href="{href(page - 1)}">前へ</a>')
+    links.append(f'<span class="of">{page} / {pages} ページ（全{total:,}件）</span>')
+    if page < pages:
+        links.append(f'<a rel="next" href="{href(page + 1)}">次へ</a>')
+    return f'<nav class="pager">{"".join(links)}</nav>'
+
+
+def item_list_ld(rows: list, site: dict, prefix: str) -> str:
+    """一覧の構造化データ。検索側に「何の一覧か」を伝える。"""
+    if not rows:
+        return ""
+    base = site["base_url"].rstrip("/")
+    ld = safe_json({
+        "@context": "https://schema.org", "@type": "ItemList",
+        "numberOfItems": len(rows),
+        "itemListElement": [
+            {"@type": "ListItem", "position": i + 1, "name": r["name"],
+             "url": f'{base}/item/{slug(r["item_code"])}/'}
+            for i, r in enumerate(rows[:30])],
+    })
+    return f'<script type="application/ld+json">{ld}</script>'
+
+
 def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
             updated: str, prefix: str = "", empty: str = "該当する商品がありません。",
-            stats: dict | None = None) -> str:
+            stats: dict | None = None, page: int = 1, pages: int = 1,
+            page_prefix: str = "", total: int | None = None) -> str:
     body = ("".join(card(r, prefix) for r in rows) if rows
             else f'<li class="empty">{esc(empty)}</li>')
-    count = f'<span class="count">{len(rows):,}件</span>' if rows else ""
-    return (head(f"{title}｜{site['name']}", lead, canonical, site, prefix)
-            + f'<h1>{esc(title)}{count}</h1><p class="lead">{esc(lead)}</p>'
+    total = len(rows) if total is None else total
+    count = f'<span class="count">{total:,}件</span>' if rows else ""
+    heading = esc(title) + (f"（{page}ページ目）" if page > 1 else "")
+    nav = pager(page, pages, page_prefix, total)
+    return (head(f"{heading}｜{site['name']}", lead, canonical, site, prefix,
+                 extra=item_list_ld(rows, site, prefix))
+            + f'<h1>{heading}{count}</h1><p class="lead">{esc(lead)}</p>'
             + stats_bar(stats or {})
             + AD_NOTICE
+            + nav
             + f'<ul class="cards">{body}</ul>'
+            + nav
             + foot(site, prefix, updated))
 
 
@@ -368,6 +407,93 @@ def genre_index(genres: list[dict], site: dict, canonical: str, updated: str,
             + f'<h1>{esc(title)}</h1><p class="lead">{esc(lead)}</p>'
             + f'<ul class="cards">{links}</ul>'
             + foot(site, prefix, updated))
+
+
+def history_table(row: dict) -> str:
+    """直近の価格を日付つきで出す。
+
+    折れ線は形しか分からない。「いつ・いくらだったか」を読めるようにする。
+    倍率が付いている日はそれも出す（実質いくらだったかを後から確かめられる）。
+    """
+    tail = [store_entry(e) for e in (row.get("tail") or [])][-14:]
+    if len(tail) < 2:
+        return ""
+    body = "".join(
+        f"<tr><th>{esc(day)}</th><td>{yen(price)}</td>"
+        f"<td>{('ポイント' + str(rate) + '倍') if rate > 1 else ''}</td></tr>"
+        for day, price, rate in reversed(tail))
+    return ('<h2>価格の記録</h2>'
+            f'<table class="facts history">{body}</table>')
+
+
+def og_image(site: dict, stats: dict) -> str:
+    """共有時に出る画像。写真素材を持たないので、数字を出す図を自前で描く。"""
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+<rect width="1200" height="630" fill="#fbfbfa"/>
+<rect x="0" y="0" width="1200" height="14" fill="#1f6f5c"/>
+<text x="80" y="210" font-family="sans-serif" font-size="64" font-weight="700"
+      fill="#23211d">{esc(site["name"])}</text>
+<text x="80" y="300" font-family="sans-serif" font-size="34" fill="#6d6a63">
+楽天市場の価格を毎日記録し、値下がりと最安値圏を機械的に判定しています。</text>
+<text x="80" y="430" font-family="sans-serif" font-size="52" font-weight="700"
+      fill="#1f6f5c">{stats.get("items", 0):,} 商品 / {stats.get("days", 0)} 日分の記録</text>
+<text x="80" y="500" font-family="sans-serif" font-size="30" fill="#6d6a63">
+ポイント倍率を含めた実質価格でも判定します</text>
+</svg>"""
+
+
+def not_found(site: dict, updated: str) -> str:
+    """404。5,600ページあり、商品が入れ替われば古いURLも残る。行き先を示す。"""
+    return (head(f"ページが見つかりません｜{site['name']}",
+                 "お探しのページは見つかりませんでした。", site["base_url"], site)
+            + '<h1>ページが見つかりません</h1>'
+            + '<p class="lead">記録から外れた商品のページは、時間がたつと無くなります。'
+            + '商品名で探すか、一覧から辿ってください。</p>'
+            + '<ul class="cards">'
+            + '<li class="card"><div class="body"><a class="name" href="search/">商品を探す</a>'
+            + '<p class="meta">記録している商品を名前で絞り込めます</p></div></li>'
+            + '<li class="card"><div class="body"><a class="name" href="./">今日の値下がり</a>'
+            + '<p class="meta">前回より安くなった商品</p></div></li>'
+            + '<li class="card"><div class="body"><a class="name" href="lows/">最安値圏</a>'
+            + '<p class="meta">記録した中で最も安い価格の商品</p></div></li>'
+            + '</ul>'
+            + foot(site, "", updated))
+
+
+def feed(site: dict, rows: list, updated: str) -> str:
+    """値下がりの RSS。毎日サイトを見に来なくても追える形にする。"""
+    base = site["base_url"].rstrip("/")
+    def one(row):
+        desc = f'{pct(row["drop_pct"])} 下がって {yen(row["price"])}'
+        if int(row.get("point_rate") or 1) > 1:
+            desc += f'（ポイント{row["point_rate"]}倍 / 実質 {yen(row["eff_price"])}）'
+        return (f"<item><title>{esc(row['name'][:90])}</title>"
+                f"<link>{base}/item/{slug(row['item_code'])}/</link>"
+                f"<guid isPermaLink=\"false\">{slug(row['item_code'])}-{updated}</guid>"
+                f"<description>{esc(desc)}</description></item>")
+
+    items = "".join(one(r) for r in rows[:50])
+    return ('<?xml version="1.0" encoding="UTF-8"?>'
+            '<rss version="2.0"><channel>'
+            f'<title>{esc(site["name"])} - 今日の値下がり</title>'
+            f'<link>{base}/</link>'
+            f'<description>{esc(site.get("description", ""))}</description>'
+            f'<language>ja</language>{items}</channel></rss>')
+
+
+def breadcrumb(site: dict, name: str, prefix: str) -> str:
+    """パンくず。5,600ページあるので、いまどこにいるか分かる道しるべを置く。"""
+    base = site["base_url"].rstrip("/")
+    ld = safe_json({
+        "@context": "https://schema.org", "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": site["name"], "item": base + "/"},
+            {"@type": "ListItem", "position": 2, "name": name},
+        ],
+    })
+    return (f'<nav class="crumb"><a href="{prefix}">{esc(site["name"])}</a>'
+            f'<span class="sep">/</span>{esc(name)}</nav>'
+            f'<script type="application/ld+json">{ld}</script>')
 
 
 def item_page(row: dict, site: dict, updated: str) -> str:
@@ -400,12 +526,14 @@ def item_page(row: dict, site: dict, updated: str) -> str:
     extra = f'<script type="application/ld+json">{ld}</script>'
 
     return (head(f"{title}｜{site['name']}", desc, canonical, site, prefix, extra)
+            + breadcrumb(site, "商品の価格推移", prefix)
             + f'<article class="item"><h1>{esc(row["name"])}</h1>'
             + AD_NOTICE
             + f'<p class="headline"><strong>{yen(row["price"])}</strong> {badge(row)}</p>'
             + f'<p class="verdict">{esc(verdict_note(row))}</p>'
             + f'<div class="chart">{sparkline(row.get("tail") or [])}</div>'
             + f'<table class="facts">{table}</table>'
+            + history_table(row)
             + f'<p class="cta">{buy_link(row)}</p>'
             + f'<p class="shop">販売店: {esc(row.get("shop", ""))}</p>'
             + '</article>'

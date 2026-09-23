@@ -66,6 +66,13 @@ def check_snapshot(rows: list[dict], expected: int) -> tuple[list[str], list[str
             f"（{_ratio(no_aff, total):.1%}）あります。"
             "RAKUTEN_AFFILIATE_ID を確認してください。このまま記録しても収益が発生しません。")
 
+    # ポイント倍率は 2026-09-13 時点で 7.3% が2倍以上だった。全件1倍になったら、
+    # 項目が返らなくなったと考えるほうが自然。実質価格の判定が丸ごと死ぬので見張る。
+    if all(int(r.get("point_rate") or 1) == 1 for r in rows):
+        warnings.append(
+            "ポイント倍率が全件1倍です。APIが項目を返さなくなった可能性があります"
+            "（実質価格の判定が効かなくなります）。")
+
     # レビューは元々ほとんど0で返るため、割合ではなく「全滅」だけを見る。
     # 項目そのものが返らなくなった場合の合図として使う。
     if all(int(r.get("review_count") or 0) == 0 for r in rows):
