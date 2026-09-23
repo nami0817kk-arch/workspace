@@ -216,6 +216,12 @@
     color: var(--muted);
   }
   .flag-notes li { margin-top: 0.25rem; }
+  /* 並べ替えは JS が動く環境だけの上乗せ。列見出しは既定では普通の見出し */
+  table.ranking th[data-sort] { cursor: pointer; white-space: nowrap; }
+  table.ranking th[data-sort]:hover { color: var(--accent); }
+  table.ranking th[data-sort]::after { content: " ↕"; opacity: 0.35; font-size: 0.8em; }
+  table.ranking th[aria-sort="ascending"]::after { content: " ↑"; opacity: 1; }
+  table.ranking th[aria-sort="descending"]::after { content: " ↓"; opacity: 1; }
   .crumbs {
     font-size: 0.8rem;
     color: var(--muted);
@@ -354,6 +360,53 @@
     window.location.href = (target === dates[0])
       ? base + "index.html"
       : base + "archive/gainers/" + target + ".html";
+  });
+})();
+</script>
+<script>
+// 表の並べ替え。JS が無い環境では、順位順のまま普通の表として読める
+//（値はすべて HTML に書いてあるので、並べ替えが無くても何も失われない）。
+(function () {
+  function num(text) {
+    // 「+27.94%」「1,234回」「-」などから数値を取り出す
+    var cleaned = text.replace(/[,%円回\s]/g, '').replace(/[＋+]/, '');
+    var value = parseFloat(cleaned);
+    return isNaN(value) ? null : value;
+  }
+  function cellText(row, i) {
+    var cell = row.children[i];
+    return cell ? cell.textContent.trim() : '';
+  }
+  document.querySelectorAll('table.ranking[data-sortable]').forEach(function (table) {
+    var head = table.tHead && table.tHead.rows[0];
+    var body = table.tBodies[0];
+    if (!head || !body) return;
+    var original = Array.prototype.slice.call(body.rows);
+
+    Array.prototype.forEach.call(head.cells, function (th, index) {
+      th.setAttribute('data-sort', '');
+      th.setAttribute('tabindex', '0');
+      function apply() {
+        var current = th.getAttribute('aria-sort');
+        Array.prototype.forEach.call(head.cells, function (o) { o.removeAttribute('aria-sort'); });
+        if (current === 'descending') {           // 3回目で元の並び（順位順）に戻す
+          original.forEach(function (r) { body.appendChild(r); });
+          return;
+        }
+        var dir = current === 'ascending' ? 'descending' : 'ascending';
+        th.setAttribute('aria-sort', dir);
+        var sign = dir === 'ascending' ? 1 : -1;
+        Array.prototype.slice.call(body.rows).sort(function (a, b) {
+          var x = num(cellText(a, index)), y = num(cellText(b, index));
+          if (x !== null && y !== null) return (x - y) * sign;
+          return cellText(a, index).localeCompare(cellText(b, index), 'ja') * sign;
+        }).forEach(function (r) { body.appendChild(r); });
+      }
+      th.addEventListener('click', apply);
+      th.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); apply(); }
+      });
+    });
   });
 })();
 </script>

@@ -258,3 +258,18 @@ def test_パンくずが画面にも出る(site):
     assert 'aria-label="現在位置"' in day
     assert "BreadcrumbList" in day
     assert 'aria-current="page"' in day
+
+
+def test_並べ替えはJSが無くても困らない形で入る(site):
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-09-18")
+    render.build_all()
+
+    html = (out_dir / "index.html").read_text(encoding="utf-8")
+    # 値はすべて HTML に書いてあり、並べ替えは上乗せ（列見出しに印だけ付ける）
+    assert '<table class="ranking" data-sortable>' in html
+    assert "aria-sort" in html
+    # 値幅制限の表のような「並べ替えても意味が無い表」には付けない
+    # （並べ替えの処理は全ページ共通なので、印が付いた表があるかで見る）
+    glossary = (out_dir / "glossary.html").read_text(encoding="utf-8")
+    assert '<table class="ranking" data-sortable>' not in glossary
