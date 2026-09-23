@@ -169,6 +169,31 @@ class Formulas {
     return (salary * appearanceBonusRate * ratio).round();
   }
 
+  /// **出来高払い契約で減らす年俸の割合。**
+  ///
+  /// 監督の目標を的にした賭け。実測（753季）で、目標の達成は
+  /// 0/3 が14% / 1/3 が21% / **2/3 が36% / 3/3 が29%**。
+  /// 2つ達成で減額分が戻り、3つすべてなら [incentiveFull] 倍が乗る。
+  /// 期待値は +1.3% で**ほぼ五分**——下振れ −15%、上振れ +22.5% の幅がある。
+  /// 選ぶ理由は、平均ではなく**自分の今季の見込み**のほうにある。
+  static const double incentiveCut = 0.15;
+
+  /// 2つ達成したときに戻る倍率（減額分に対して）。
+  static const double incentiveMet = 1.0;
+
+  /// 3つすべて達成したときの倍率。
+  static const double incentiveFull = 2.5;
+
+  /// 出来高払いで減らす額（万円）。
+  static int incentiveCutOf(int salary) => (salary * incentiveCut).round();
+
+  /// 出来高払いの支給額（万円）。[count] は目標3つのうち達成した数。
+  static int incentivePay(int cut, int count) => switch (count) {
+    3 => (cut * incentiveFull).round(),
+    2 => (cut * incentiveMet).round(),
+    _ => 0,
+  };
+
   /// **代理人を変えるのにかかる違約金**（今の年俸に対する割合）。
   ///
   /// ただで変えられると、そのときいちばん強い代理人に毎年乗り換えるだけになる。

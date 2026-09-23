@@ -1114,6 +1114,10 @@ class CareerEngine {
     CareerState state, {
     required TransferOffer accepted,
     Offseason offseason = Offseason.sharpen,
+
+    /// 受けた契約を出来高払いにするか。年俸が減る代わりに、
+    /// 監督の目標の達成で戻ってくる。
+    bool incentive = false,
   }) {
     final record = SeasonRecord(
       year: state.year,
@@ -1184,13 +1188,24 @@ class CareerEngine {
       fame: person.fameFor(state),
       marketValue: person.marketValueFor(state),
     );
-    final finances = state.finances.afterSeason(
+    var finances = state.finances.afterSeason(
       salary: state.salary,
       agentFeePercent: state.agent.feePercent,
       staffCost: state.staff.costPerSeason,
       extraLivingRate: state.habits.livingCostExtra,
       appearances: state.seasonStats.appearances,
     );
+    // **出来高払いの清算。** 今季削られていたぶんが、目標の達成数で戻る。
+    if (state.incentiveCut > 0) {
+      final count = state.objective?.achievedCount(state.seasonStats) ?? 0;
+      final pay = Formulas.incentivePay(state.incentiveCut, count);
+      if (pay > 0) {
+        finances = Finances(
+          savings: finances.savings + pay,
+          lifestyle: finances.lifestyle,
+        );
+      }
+    }
     // 払えない専属は契約を切る。金の裏付けの無い環境は続かない。
     final staff = finances.savings < 0 ? const StaffTeam() : state.staff;
     var relations = person.updateRelations(state);
@@ -1271,7 +1286,11 @@ class CareerEngine {
       table: _emptyTable(league),
       history: [...state.history, record],
       agent: state.agent,
-      salary: accepted.salary,
+      // 出来高払いなら、来季の年俸はそのぶん削られる。
+      salary: incentive
+          ? accepted.salary - Formulas.incentiveCutOf(accepted.salary)
+          : accepted.salary,
+      incentiveCut: incentive ? Formulas.incentiveCutOf(accepted.salary) : 0,
       menu: state.menu,
       // 国内カップは毎年ある。大陸カップは前季の順位か、国内カップ優勝で。
       domesticCup: CupRun(kind: CupKind.domestic, round: CupRound.round32),

@@ -192,6 +192,7 @@ class CareerState {
     this.offseason = Offseason.sharpen,
     this.pendingSevere = false,
     this.declineYearsLost = 0,
+    this.incentiveCut = 0,
     this.captain = false,
     this.captaincyOffered = false,
     this.squadNumber = 0,
@@ -394,6 +395,12 @@ class CareerState {
 
   /// **重傷で早まった衰え始め（年）。** 戻し方で決まり、後から戻らない。
   int declineYearsLost;
+
+  /// **出来高払い契約で今季削られている額（万円）。**
+  ///
+  /// 0 なら普通の契約。シーズンの終わりに、監督の目標をいくつ達成したかで
+  /// 戻ってくる（`Formulas.incentivePay`）。
+  int incentiveCut;
 
   /// キャプテンか。
   bool captain;
@@ -887,6 +894,7 @@ class CareerState {
     'offseason': offseason.name,
     'pendingSevere': pendingSevere,
     'declineYearsLost': declineYearsLost,
+    'incentiveCut': incentiveCut,
     'captain': captain,
     'captaincyOffered': captaincyOffered,
     'squadNumber': squadNumber,
@@ -1022,6 +1030,7 @@ class CareerState {
       // 肉体改造とプレシーズンを1つに畳む前の保存データは、既定で読む。
       pendingSevere: json['pendingSevere'] as bool? ?? false,
       declineYearsLost: json['declineYearsLost'] as int? ?? 0,
+      incentiveCut: json['incentiveCut'] as int? ?? 0,
       offseason: Offseason.values.any((p) => p.name == json['offseason'])
           ? Offseason.values.byName(json['offseason'] as String)
           : Offseason.sharpen,

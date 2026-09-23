@@ -107,12 +107,13 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
     if (mounted) setState(() {});
   }
 
-  Future<void> _accept(TransferOffer offer) async {
+  Future<void> _accept(TransferOffer offer, {bool incentive = false}) async {
     if (_busy) return;
     setState(() => _busy = true);
     await widget.controller.advanceSeason(
       accepted: offer,
       offseason: _offseason,
+      incentive: incentive,
     );
     if (!mounted) return;
     Navigator.of(context).pop();
@@ -393,6 +394,10 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                       onNegotiate: _offers[i].negotiated
                           ? null
                           : () => _negotiate(i),
+                      // ローンと復帰には監督の目標が付かないので、賭けようがない。
+                      onIncentive: _offers[i].loan || _offers[i].returning
+                          ? null
+                          : () => _accept(_offers[i], incentive: true),
                     ),
                     const SizedBox(height: 12),
                   ],
@@ -448,6 +453,7 @@ class _OfferCard extends StatelessWidget {
     required this.busy,
     required this.onAccept,
     required this.onNegotiate,
+    required this.onIncentive,
   });
 
   final TransferOffer offer;
@@ -455,6 +461,9 @@ class _OfferCard extends StatelessWidget {
   final bool busy;
   final VoidCallback onAccept;
   final VoidCallback? onNegotiate;
+
+  /// 出来高払いでサインする。目標が無い契約（ローン・復帰）では出さない。
+  final VoidCallback? onIncentive;
 
   @override
   Widget build(BuildContext context) {
@@ -569,6 +578,20 @@ class _OfferCard extends StatelessWidget {
                 ),
               ],
             ),
+            // **出来高払い。** 年俸を削る代わりに、監督の目標を的にして賭ける。
+            if (onIncentive != null) ...[
+              const SizedBox(height: 8),
+              OutlinedButton(
+                onPressed: busy ? null : onIncentive,
+                child: Text(
+                  '出来高払いでサインする'
+                  '（年俸 −${Formulas.incentiveCutOf(offer.salary)}万、'
+                  '目標2つで全額・3つで'
+                  '${(Formulas.incentiveCutOf(offer.salary) * Formulas.incentiveFull).round()}万）',
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
           ],
         ),
       ),
