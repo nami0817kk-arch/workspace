@@ -511,6 +511,7 @@ def _build_ranking_pages(days: list[dict]) -> None:
                     heading=heading,
                     metric_label=metric_label,
                     summary=day_summary(day_rows, json_key),
+                    kind_dir=dirname,
                     siblings=[e for e in siblings[rec] if e["kind"] != json_key],
                     turnover=turnover_note(
                         day_rows, with_data[i + 1][1] if i + 1 < len(with_data) else None

@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% block title %}過去の{{ heading }}一覧｜値上がり株ランキング{% endblock %}
 {% block description %}{{ heading }}の過去掲載日一覧。日付ごとに当日の上位30銘柄を保存しています。{% endblock %}
+{% block breadcrumb %}{% set crumbs = [
+  {"label": "ホーム", "href": "index.html"},
+  {"label": "過去の" ~ heading}
+] %}{% include "_breadcrumb.html" %}{% endblock %}
 {% block content %}
 <h1>過去の{{ heading }}一覧</h1>
 <p>掲載を始めてからの営業日ごとに、当日の上位30銘柄をそのまま残しています。</p>

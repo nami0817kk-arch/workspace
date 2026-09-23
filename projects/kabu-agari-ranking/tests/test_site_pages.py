@@ -245,3 +245,16 @@ def test_同じ日の他のランキングへ行ける(site):
     html = (out_dir / "archive" / "gainers" / "2026-09-18.html").read_text(encoding="utf-8")
     assert "archive/losers/2026-09-18.html" in html
     assert "archive/active/2026-09-18.html" not in html
+
+
+def test_パンくずが画面にも出る(site):
+    data_dir, out_dir = site
+    for d in ("2026-09-17", "2026-09-18"):
+        _write_day(data_dir, d)
+    render.build_all()
+
+    day = (out_dir / "archive" / "gainers" / "2026-09-18.html").read_text(encoding="utf-8")
+    # 構造化データだけ出して画面に無い、という状態にしない
+    assert 'aria-label="現在位置"' in day
+    assert "BreadcrumbList" in day
+    assert 'aria-current="page"' in day

@@ -12,6 +12,11 @@
 {"@type":"ListItem","position":3,"name":{{ (rec_date ~ " " ~ heading)|tojson }},"item":{{ canonical|tojson }}}]}
 </script>
 {% endblock %}
+{% block breadcrumb %}{% set crumbs = [
+  {"label": "ホーム", "href": "index.html"},
+  {"label": "過去の" ~ heading, "href": "archive/" ~ kind_dir ~ "/index.html"},
+  {"label": rec_date}
+] %}{% include "_breadcrumb.html" %}{% endblock %}
 {% block content %}
 <h1>{{ rec_date_ja }} の{{ heading }}</h1>
 {% if summary %}<p class="summary">{{ summary }}{% if turnover %} {{ turnover }}{% endif %}</p>{% endif %}

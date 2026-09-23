@@ -1,0 +1,7 @@
+{# 画面に見えるパンくず。構造化データだけ出して画面に無い、という状態にしない。 #}
+<nav class="crumbs" aria-label="現在位置">
+  {% for c in crumbs %}
+    {% if c.href %}<a href="{{ base_url }}{{ c.href }}">{{ c.label }}</a> ／
+    {% else %}<span aria-current="page">{{ c.label }}</span>{% endif %}
+  {% endfor %}
+</nav>

@@ -9,6 +9,11 @@
 {"@type":"ListItem","position":3,"name":{{ (s.name ~ "（" ~ s.code ~ "）")|tojson }},"item":{{ canonical|tojson }}}]}
 </script>
 {% endblock %}
+{% block breadcrumb %}{% set crumbs = [
+  {"label": "ホーム", "href": "index.html"},
+  {"label": "銘柄別", "href": "stock/index.html"},
+  {"label": s.name ~ "（" ~ s.code ~ "）"}
+] %}{% include "_breadcrumb.html" %}{% endblock %}
 {% block content %}
 <h1>{{ s.name }}（{{ s.code }}）</h1>
 <p class="summary">{{ summary }}</p>
