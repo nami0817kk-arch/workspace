@@ -130,6 +130,8 @@ def archive_problems(data_dir) -> list[str]:
         rec_date = payload.get("rec_date")
         if rec_date != path.stem:
             problems.append(f"{path.name}: 中身の rec_date が {rec_date} でファイル名と違います")
+        # ファイル名と中身は揃っているが、実際の相場日が別だと分かっているもの。
+        # 読み替えは render.DATE_CORRECTIONS が持つ（ここでは矛盾として扱わない）。
         dates.append(path.stem)
 
         rows = payload.get("gainers") or []

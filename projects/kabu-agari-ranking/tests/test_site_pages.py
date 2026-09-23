@@ -363,3 +363,24 @@ def test_データが1件も読めなければ止める(site):
     (data_dir / "2026-09-18.json").write_text("{壊れている", encoding="utf-8")
     with pytest.raises(RuntimeError):
         render.build_all()
+
+
+def test_日付を確定した4日分は公開する():
+    # 株探の日足と突き合わせて実際の相場日を確定させた（tools/verify_rec_date.py）。
+    # 確定できなかったものを入れる仕組み自体は残す。
+    assert render.UNRELIABLE_DATES == frozenset()
+    assert render.DATE_CORRECTIONS == {
+        "2026-08-31": "2026-09-01",
+        "2026-09-01": "2026-09-02",
+    }
+
+
+def test_読み込み時に日付を読み替える(site):
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-08-31")   # 中身の rec_date も 2026-08-31
+    _write_day(data_dir, "2026-09-04")
+    render.build_all()
+
+    # 実際の相場日（2026-09-01）として公開される
+    assert (out_dir / "archive" / "gainers" / "2026-09-01.html").exists()
+    assert not (out_dir / "archive" / "gainers" / "2026-08-31.html").exists()
