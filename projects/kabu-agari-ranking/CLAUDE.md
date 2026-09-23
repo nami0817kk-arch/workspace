@@ -42,6 +42,9 @@ python src/build_site.py    # 取得 → data/ 保存 → output/ 生成
   CI は push された data/ からのビルド・公開と、17:00 JST の鮮度監視を担当する。
   **X への投稿は手元の run-daily.ps1 から**（重複投稿を防ぐ記録 data/last_tweet.txt が
   残る場所が手元しか無いため）。キーが未設定なら何もせず飛ばす。
+- **ページは取れたのに0件、は休場日ではない。** 休場日でも kabutan は直近営業日の
+  ランキングを出すので、0件なら解析が壊れている。`fetcher.parse_failures` に記録し、
+  build_site.py が exit 1 にする（run-daily.ps1 が通知を出す）。
 - **保存の前に `src/validate.py` が検査する。** 日付がその時点で出るはずの相場日と
   違う、件数が少なすぎる、騰落率が全て0、といったものは保存せずに落とす（exit 1）。
   data/ は取り直しがきかないので、疑わしいものを弾いてその日を落とすほうがまし。

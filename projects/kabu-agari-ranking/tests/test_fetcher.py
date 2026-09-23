@@ -140,3 +140,25 @@ def test_active_ranks_by_trade_count_not_by_change(offline):
 def test_empty_source_yields_an_empty_frame_not_an_exception(offline):
     offline(_table([]))
     assert fetch_gainers(top_n=10).empty
+
+
+# --- いちばん危ない壊れ方（ページはあるのに0件） -----------------------------
+
+def test_ページが取れて0件なら解析の故障として記録する(offline):
+    import fetcher
+
+    fetcher.parse_failures.clear()
+    offline(_table([]))          # 表はあるが行が無い
+    assert fetch_gainers(top_n=10).empty
+    assert fetcher.parse_failures, "休場日と区別できないまま素通りしている"
+    assert "構造" in fetcher.parse_failures[0]
+
+
+def test_ページ自体が取れないときは解析の故障にしない(offline, monkeypatch):
+    import fetcher
+
+    fetcher.parse_failures.clear()
+    monkeypatch.setattr(fetcher, "_fetch_market_html", lambda mode, market, retries=3: None)
+    assert fetch_gainers(top_n=10).empty
+    # これは通信の失敗（fetch_errors 側で扱う）
+    assert fetcher.parse_failures == []

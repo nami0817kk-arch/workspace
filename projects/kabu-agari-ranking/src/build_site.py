@@ -90,6 +90,13 @@ def main() -> None:
         print(f"  [ERROR] 取得失敗が {len(fetcher.fetch_errors)} 件あり、当日データを保存できませんでした。")
         sys.exit(1)
 
+    # ページは取れたのに0件、は休場日ではなく解析の故障。
+    # 休場日でも kabutan は直近営業日のランキングを出すので、ここは必ず異常。
+    if fetcher.parse_failures:
+        for message in fetcher.parse_failures:
+            print(f"  [ERROR] {message}")
+        sys.exit(1)
+
     if rec_date is None and not any(_DATA_DIR.glob("????-??-??.json")):
         print("  data/ に既存データも無いため、サイトのビルドを中止します。")
         return
