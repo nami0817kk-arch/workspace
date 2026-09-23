@@ -129,3 +129,38 @@ def test_グラフの色は変数で渡す():
     svg = charts.horizontal_bars(_rows([12.0, 3.0]), aria_label="test")
     assert "var(--chart-gain)" in svg
     assert "#" not in svg, "色を直接書かない（CSS変数で渡す）"
+
+
+# --- 正負のある推移 ---------------------------------------------------------
+
+def _points(values):
+    return [{"label": f"9/{i+1}", "value": v} for i, v in enumerate(values)]
+
+
+def test_下げた日は下向きに描く():
+    svg = charts.columns(_points([12.0, -8.0, 5.0]), aria_label="test", unit="%")
+    root = _parse(svg)
+    # 0 の目盛りと、マイナスの目盛りがある
+    labels = [t.text for t in root.iter("{http://www.w3.org/2000/svg}text")]
+    assert "0" in labels
+    assert any(l.startswith("-") for l in labels if l)
+    # 下落の色が使われている
+    assert charts.COLOR_LOSS in svg and charts.COLOR_GAIN in svg
+
+
+def test_すべて正なら0を下端にする():
+    svg = charts.columns(_points([3.0, 9.0, 4.0]), aria_label="test")
+    assert charts.COLOR_LOSS not in svg
+
+
+def test_目盛りは上下とも覆いきる():
+    ticks = charts._signed_ticks(-12.0, 28.85)
+    assert ticks[0] <= -12.0 and ticks[-1] >= 28.85
+    assert 0.0 in ticks
+
+
+def test_数値は振れ幅が最大の日と直近に付く():
+    root = _parse(charts.columns(_points([2.0, -30.0, 5.0]), aria_label="test", unit="%"))
+    labels = [t.text for t in root.iter("{http://www.w3.org/2000/svg}text")]
+    assert "-30%" in labels and "5%" in labels
+    assert "2%" not in labels

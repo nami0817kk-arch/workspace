@@ -388,7 +388,7 @@ def _build_stock_pages(days: list[dict]) -> list[dict]:
     tmpl = _env.get_template("stock.html")
     for stock in stocks:
         points = [
-            {"label": r["rec_date"][5:].replace("-", "/"), "value": abs(r["change_pct"])}
+            {"label": r["rec_date"][5:].replace("-", "/"), "value": r["change_pct"]}
             for r in reversed(stock["rows"]) if r["kind"] != "active"
         ]
         _write(

@@ -85,6 +85,16 @@ def _rounded_top(x: float, y: float, w: float, h: float, r: float) -> str:
     )
 
 
+def _rounded_bottom(x: float, y: float, w: float, h: float, r: float) -> str:
+    """上端（基線）は直角、下端だけ丸い柱（0より下に伸びるもの）。"""
+    r = max(0.0, min(r, w / 2, h))
+    return (
+        f"M{x:.1f},{y:.1f} H{x + w:.1f} V{y + h - r:.1f} "
+        f"Q{x + w:.1f},{y + h:.1f} {x + w - r:.1f},{y + h:.1f} "
+        f"H{x + r:.1f} Q{x:.1f},{y + h:.1f} {x:.1f},{y + h - r:.1f} Z"
+    )
+
+
 def _ellipsize(text: str, max_chars: int) -> str:
     """名前の欄に収まらない銘柄名を切る。
 
@@ -180,8 +190,26 @@ def horizontal_bars(
     return _svg(width, height, aria_label, "".join(parts))
 
 
+def _signed_ticks(lo: float, hi: float) -> list[float]:
+    """0 を必ず含み、上下それぞれを覆いきる目盛り。"""
+    step = _nice_step(max(abs(lo), abs(hi)))
+    out, v = [], 0.0
+    while v < hi:
+        v += step
+        out.append(round(v, 6))
+    down, v = [], 0.0
+    while v > lo:
+        v -= step
+        down.append(round(v, 6))
+    return sorted(down + [0.0] + out)
+
+
 def columns(points: list[dict], *, aria_label: str, unit: str = "") -> str:
-    """日ごとの推移を見る柱。points は {label, value, href?} の並び（古い順）。"""
+    """日ごとの推移を見る柱。points は {label, value} の並び（古い順）。
+
+    値が負になりうる場合は 0 を基準線にして下向きに描き、色も下落の色にする。
+    絶対値で描くと、下げた日が上げた日と同じ向きの棒になって誤読させる。
+    """
     points = [p for p in points if p.get("value") is not None]
     if len(points) < 3:
         return ""  # 2本以下は推移として読めない
@@ -191,18 +219,28 @@ def columns(points: list[dict], *, aria_label: str, unit: str = "") -> str:
     plot_w = width - left - right
     plot_h = height - top - bottom
 
-    peak = max(p["value"] for p in points) or 1
-    ticks = _ticks(peak)
-    scale = plot_h / (ticks[-1] or 1)
+    values = [p["value"] for p in points]
+    hi, lo = max(max(values), 0), min(min(values), 0)
+    ticks = _signed_ticks(lo, hi) if lo < 0 else _ticks(hi or 1)
+    t_min, t_max = ticks[0], ticks[-1]
+    span = (t_max - t_min) or 1
+    scale = plot_h / span
+
+    def y_of(value: float) -> float:
+        return top + (t_max - value) * scale
+
+    zero_y = y_of(0)
     band = plot_w / len(points)
     bar_w = min(MAX_BAR, max(4.0, band - max(MIN_GAP, band * 0.35)))
 
     parts = []
     for t in ticks:
-        y = top + plot_h - t * scale
+        y = y_of(t)
+        # 0 の線だけは基準線なので、他の目盛りより少しはっきりさせる
+        width_attr = "1.5" if t == 0 and lo < 0 else "1"
         parts.append(
             f'<line x1="{left}" y1="{y:.1f}" x2="{width - right}" y2="{y:.1f}" '
-            f'stroke="{COLOR_GRID}" stroke-width="1"/>'
+            f'stroke="{COLOR_GRID}" stroke-width="{width_attr}"/>'
         )
         parts.append(
             f'<text x="{left - 5}" y="{y + 3.5:.1f}" text-anchor="end" font-size="10" '
@@ -213,12 +251,18 @@ def columns(points: list[dict], *, aria_label: str, unit: str = "") -> str:
     every = max(1, round(len(points) / 7))
     for i, p in enumerate(points):
         cx = left + band * i + band / 2
-        h = p["value"] * scale
-        y = top + plot_h - h
+        value = p["value"]
+        y = y_of(value)
+        h = max(abs(zero_y - y), 1)
         label = escape(str(p["label"]))
+        if value >= 0:
+            path = _rounded_top(cx - bar_w / 2, y, bar_w, h, BAR_RADIUS)
+        else:
+            path = _rounded_bottom(cx - bar_w / 2, zero_y, bar_w, h, BAR_RADIUS)
+        color = COLOR_GAIN if value >= 0 else COLOR_LOSS
         parts.append(
-            f'<path d="{_rounded_top(cx - bar_w / 2, y, bar_w, max(h, 1), BAR_RADIUS)}" '
-            f'fill="{COLOR_GAIN}"><title>{label} {p["value"]:g}{escape(unit)}</title></path>'
+            f'<path d="{path}" fill="{color}">'
+            f'<title>{label} {value:g}{escape(unit)}</title></path>'
         )
         if i == len(points) - 1 or i % every == 0:
             parts.append(
@@ -226,15 +270,16 @@ def columns(points: list[dict], *, aria_label: str, unit: str = "") -> str:
                 f'fill="{COLOR_MUTED}">{label}</text>'
             )
 
-    # 数値を書くのは「直近」と「いちばん高い日」の2本だけ。
+    # 数値を書くのは「直近」と「振れ幅がいちばん大きい日」の2本だけ。
     # 全部に書くと読まれない（そして値は表にある）。
-    peak_i = max(range(len(points)), key=lambda i: points[i]["value"])
+    peak_i = max(range(len(points)), key=lambda i: abs(points[i]["value"]))
     for i in {len(points) - 1, peak_i}:
         p = points[i]
         cx = left + band * i + band / 2
-        y = top + plot_h - p["value"] * scale
+        y = y_of(p["value"])
+        text_y = max(y - 5, 10) if p["value"] >= 0 else min(y + 13, height - bottom)
         parts.append(
-            f'<text x="{cx:.1f}" y="{max(y - 5, 10):.1f}" text-anchor="middle" font-size="11" '
+            f'<text x="{cx:.1f}" y="{text_y:.1f}" text-anchor="middle" font-size="11" '
             f'fill="{COLOR_TEXT}">{p["value"]:g}{escape(unit)}</text>'
         )
     return _svg(width, height, aria_label, "".join(parts))
