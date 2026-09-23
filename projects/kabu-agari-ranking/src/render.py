@@ -2,7 +2,7 @@
 import json
 import shutil
 import sys
-from datetime import date
+from datetime import date, timedelta
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
@@ -12,7 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import aggregate
 import charts
 import price_limit
-from market_calendar import CalendarOutOfRange, next_business_day
+from market_calendar import CalendarOutOfRange, is_business_day, next_business_day
 
 _ROOT = Path(__file__).resolve().parent.parent
 _TEMPLATES_DIR = _ROOT / "templates"
@@ -94,6 +94,27 @@ def next_update_note(rec_date: str) -> str:
     if gap > 1:
         note += "（それまでは東証が休場のため、ランキングは更新されません）"
     return note
+
+
+def missing_business_days(days: list[dict]) -> list[str]:
+    """掲載期間のうち、データが無い営業日。
+
+    黙って抜けていると「そういう日は無かった」ように見える。取得に失敗した日が
+    あることは書いておく（kabutan は当日分しか出さないので後から埋められない）。
+    """
+    if len(days) < 2:
+        return []
+    have = {d["rec_date"] for d in days}
+    start, end = date.fromisoformat(days[-1]["rec_date"]), date.fromisoformat(days[0]["rec_date"])
+    out, cur = [], start
+    try:
+        while cur < end:
+            cur += timedelta(days=1)
+            if is_business_day(cur) and cur.isoformat() not in have:
+                out.append(cur.isoformat())
+    except CalendarOutOfRange:
+        return out
+    return out
 
 
 def annotate_rows(rows: list[dict]) -> list[dict]:
@@ -517,6 +538,7 @@ def build_all() -> None:
         "period_to": days[0]["rec_date"],
         # ポリシーの最終更新はデータの日付とは別物。文面を直したときに手で上げる。
         "policy_updated": POLICY_UPDATED,
+        "missing_days": missing_business_days(days),
     }
     for name in ("about.html", "privacy.html", "guide.html", "glossary.html"):
         tmpl = _env.get_template(name)

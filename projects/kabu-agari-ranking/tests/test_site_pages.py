@@ -152,3 +152,26 @@ def test_表は見出しセルを持つ(site):
     html = (out_dir / "index.html").read_text(encoding="utf-8")
     assert "<caption>" in html
     assert 'scope="col"' in html and 'scope="row"' in html
+
+
+def test_欠測した営業日を数える():
+    days = [
+        {"rec_date": "2026-09-18"}, {"rec_date": "2026-09-17"},
+        # 9/16（水）が抜けている
+        {"rec_date": "2026-09-15"}, {"rec_date": "2026-09-14"},
+    ]
+    assert render.missing_business_days(days) == ["2026-09-16"]
+
+
+def test_休場日は欠測に数えない():
+    # 9/18(金) → 9/24(木) の間は土日とシルバーウィークで休場
+    days = [{"rec_date": "2026-09-24"}, {"rec_date": "2026-09-18"}]
+    assert render.missing_business_days(days) == []
+
+
+def test_欠測を隠さずに書く(site):
+    data_dir, out_dir = site
+    for d in ("2026-09-14", "2026-09-16"):  # 9/15（火）が抜けている
+        _write_day(data_dir, d)
+    render.build_all()
+    assert "2026-09-15" in (out_dir / "about.html").read_text(encoding="utf-8")
