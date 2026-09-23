@@ -103,3 +103,50 @@ def check(payload: dict, now: datetime) -> None:
         raise InvalidPayload(
             f"値上がりランキングの首位が下落しています（{gainers[0]['change_pct']}%）"
         )
+
+
+def archive_problems(data_dir) -> list[str]:
+    """data/ 全体の整合性。おかしなところを文章で返す（空なら問題なし）。
+
+    data/ は追記しかできない資産で、壊れても取り直せない。
+    ファイル名と中身の日付が食い違う、latest.json が最新でない、といった
+    ずれは**見た目には何も起きない**まま、アーカイブの日付をおかしくする。
+    CI から毎回当てる。
+    """
+    import json
+    from pathlib import Path
+
+    data_dir = Path(data_dir)
+    problems = []
+    dates = []
+
+    for path in sorted(data_dir.glob("????-??-??.json")):
+        try:
+            payload = json.loads(path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as e:
+            problems.append(f"{path.name}: JSON として読めません（{e}）")
+            continue
+
+        rec_date = payload.get("rec_date")
+        if rec_date != path.stem:
+            problems.append(f"{path.name}: 中身の rec_date が {rec_date} でファイル名と違います")
+        dates.append(path.stem)
+
+        rows = payload.get("gainers") or []
+        codes = [r.get("code") for r in rows]
+        if len(codes) != len(set(codes)):
+            problems.append(f"{path.name}: 値上がりに同じ銘柄コードが複数あります")
+        ranks = [r.get("rank") for r in rows]
+        if ranks and ranks != sorted(ranks):
+            problems.append(f"{path.name}: 値上がりの順位が昇順になっていません")
+
+    latest_path = data_dir / "latest.json"
+    if latest_path.exists() and dates:
+        latest = json.loads(latest_path.read_text(encoding="utf-8"))
+        if latest.get("rec_date") != max(dates):
+            problems.append(
+                f"latest.json の rec_date が {latest.get('rec_date')} で、"
+                f"最新のファイル {max(dates)} と違います"
+            )
+
+    return problems
