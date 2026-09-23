@@ -205,3 +205,15 @@ def test_文章だけのページに嘘の更新日を書かない(site):
             assert "lastmod" not in line, line
     # データと一緒に変わるページには入れる
     assert any("/about" in l and "2026-09-18" in l for l in sitemap.splitlines())
+
+
+def test_暗い地の色が定義されている(site):
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-09-18")
+    render.build_all()
+
+    css = (out_dir / "index.html").read_text(encoding="utf-8")
+    assert "prefers-color-scheme: dark" in css
+    # グラフの2色は明暗それぞれで定義する（片方だけだと暗い地で沈む）
+    assert css.count("--chart-gain:") == 2 and css.count("--chart-loss:") == 2
+    assert 'name="color-scheme"' in css

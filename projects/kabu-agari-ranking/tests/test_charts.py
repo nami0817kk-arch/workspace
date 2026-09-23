@@ -120,3 +120,12 @@ def test_特殊文字を含む銘柄名でも壊れない():
     )
     _parse(svg)  # XML として読めれば壊れていない
     assert "&amp;" in svg and "&lt;" in svg
+
+
+# --- 明暗の切り替え ---------------------------------------------------------
+
+def test_グラフの色は変数で渡す():
+    # 生の色を焼き込むと、暗い地に切り替わったときだけ沈んで気づけない
+    svg = charts.horizontal_bars(_rows([12.0, 3.0]), aria_label="test")
+    assert "var(--chart-gain)" in svg
+    assert "#" not in svg, "色を直接書かない（CSS変数で渡す）"

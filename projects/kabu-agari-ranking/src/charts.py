@@ -21,13 +21,15 @@ from __future__ import annotations
 
 from html import escape
 
-# サイトの配色。白地に対して、明度帯・彩度・色覚多様性の分離・コントラストを
-# 検証済み（dataviz の validate_palette.js で6項目すべて PASS）。
-COLOR_GAIN = "#d64545"
-COLOR_LOSS = "#2563a8"
-COLOR_GRID = "#e5e7eb"
-COLOR_TEXT = "#1a1a1a"
-COLOR_MUTED = "#6b7280"
+# 色は CSS 変数で渡す。SVG は HTML に直接埋め込まれるので、
+# 明暗の切り替え（prefers-color-scheme）にそのまま追従できる。
+# 明るい地・暗い地それぞれで、明度帯・彩度・色覚多様性の分離・コントラストを
+# 検証済み（dataviz の validate_palette.js で6項目 PASS）。実際の値は base.html。
+COLOR_GAIN = "var(--chart-gain)"
+COLOR_LOSS = "var(--chart-loss)"
+COLOR_GRID = "var(--border)"
+COLOR_TEXT = "var(--text)"
+COLOR_MUTED = "var(--muted)"
 
 BAR_RADIUS = 4
 MAX_BAR = 24

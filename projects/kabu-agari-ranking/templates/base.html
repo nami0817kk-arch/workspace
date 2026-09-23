@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
 <meta name="google-site-verification" content="0hcqlTHZBjIT-I9RKazTzGUVa2pZKmFREjTWbpvXRlk" />
 <title>{% block title %}値上がり株ランキング{% endblock %}</title>
 <meta name="description" content="{% block description %}日本株の値上がり率ランキングを毎日更新して掲載しています。{% endblock %}">
@@ -24,6 +25,34 @@
     --muted: #6b7280;
     --accent: #d64545;
     --border: #e5e7eb;
+    --gain: #d64545;
+    --loss: #2563a8;
+    --chart-gain: #d64545;
+    --chart-loss: #2563a8;
+    --note-bg: #fff8e1;
+    --note-border: #f0e0a0;
+    --link: #1d4ed8;
+    --link-visited: #6d28d9;
+  }
+  /* 暗い地は明るい地の反転ではなく、暗い地に対して選び直した値。
+     グラフの2色は #1b1e24 の上で6項目とも検証済み（明るい地の値は暗いと沈む）。 */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14161a;
+      --card-bg: #1b1e24;
+      --text: #e6e8ea;
+      --muted: #9aa3ad;
+      --accent: #e05a5a;
+      --border: #2b313a;
+      --gain: #e05a5a;
+      --loss: #6aa9e9;
+      --chart-gain: #e05a5a;
+      --chart-loss: #4a90d9;
+      --note-bg: #26231a;
+      --note-border: #4a4326;
+      --link: #7fb4f0;
+      --link-visited: #bda4ef;
+    }
   }
   * { box-sizing: border-box; }
   body {
@@ -66,6 +95,15 @@
     white-space: nowrap;
   }
   nav a:hover { color: var(--accent); }
+  /* 本文のリンクはブラウザ既定のままだと、暗い地で読めない濃い青になる */
+  main a { color: var(--link); }
+  main a:visited { color: var(--link-visited); }
+  main a:hover { text-decoration: none; }
+  /* キーボードで辿っている位置が分かるようにする */
+  a:focus-visible, input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
   main {
     max-width: 800px;
     margin: 0 auto;
@@ -117,8 +155,8 @@
   table.ranking th { color: var(--muted); font-weight: normal; }
   /* 順位は見出しセル（th）だが、見た目はデータとして揃える */
   table.ranking tbody th { color: var(--text); font-weight: normal; text-align: right; }
-  table.ranking td.gain { color: var(--accent); font-weight: bold; }
-  table.ranking td.loss { color: #2563a8; font-weight: bold; }
+  table.ranking td.gain { color: var(--gain); font-weight: bold; }
+  table.ranking td.loss { color: var(--loss); font-weight: bold; }
   .archive-list a {
     display: block;
     padding: 0.5rem 0;
@@ -198,8 +236,8 @@
   .disclaimer {
     margin-top: 2rem;
     padding: 1rem;
-    background: #fff8e1;
-    border: 1px solid #f0e0a0;
+    background: var(--note-bg);
+    border: 1px solid var(--note-border);
     font-size: 0.8rem;
     color: var(--muted);
   }
