@@ -141,7 +141,16 @@ def weekly_summaries(days: list[dict]) -> list[dict]:
                 movers.append({**row, "rec_date": day["rec_date"]})
         movers.sort(key=lambda r: r["change_pct"], reverse=True)
 
+        big = sum(
+            1 for day in group for r in day.get("gainers", []) if abs(r["change_pct"]) >= 10
+        )
+        stops = sum(
+            1 for day in group for r in day.get("gainers", [])
+            if price_limit.classify(r.get("close"), r.get("change_pct")) == price_limit.STOP_HIGH
+        )
         out.append({
+            "big_moves": big,
+            "stop_highs": stops,
             "slug": f"{year}-W{week:02d}",
             "year": year,
             "week": week,

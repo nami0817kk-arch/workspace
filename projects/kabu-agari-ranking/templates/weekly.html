@@ -8,7 +8,7 @@
 ] %}{% include "_breadcrumb.html" %}{% endblock %}
 {% block content %}
 <h1>{{ w.from_ja }} 〜 {{ w.to_ja }} の週まとめ</h1>
-<p class="summary">{{ w.summary }}</p>
+<p class="summary">{{ w.summary }}{% if w.comparison %} {{ w.comparison }}{% endif %}</p>
 
 {% if chart %}
 <figure class="chart-figure">

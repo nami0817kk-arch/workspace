@@ -319,6 +319,31 @@ def archive_index_info(with_data: list[tuple[str, list[dict]]], kind: str) -> di
     return out
 
 
+def week_comparison(week: dict, previous: dict | None) -> str:
+    """前の週との比べ。単独の数字だけでは、荒れた週なのか普通なのか分からない。
+
+    営業日数が違う週（連休など）をそのまま比べると誤解するので、
+    1営業日あたりに直して比べる。
+    """
+    if not previous or not previous["day_count"] or not week["day_count"]:
+        return ""
+    now = week["big_moves"] / week["day_count"]
+    before = previous["big_moves"] / previous["day_count"]
+    if before == 0:
+        return ""
+    ratio = now / before
+    if ratio >= 1.2:
+        judgement = "前の週より荒い動きが増えました"
+    elif ratio <= 0.8:
+        judgement = "前の週より落ち着きました"
+    else:
+        judgement = "前の週と同じくらいの荒さでした"
+    return (
+        f"1営業日あたり10%以上動いた銘柄は{now:.1f}銘柄で、"
+        f"前の週（{before:.1f}銘柄）と比べて{judgement}。"
+    )
+
+
 def week_summary(week: dict) -> str:
     """週まとめの一文。数えた事実だけを書く。"""
     movers = week["top_movers"]
@@ -342,6 +367,8 @@ def _build_weekly_pages(days: list[dict]) -> list[dict]:
     tmpl = _env.get_template("weekly.html")
     for i, week in enumerate(weeks):
         week["summary"] = week_summary(week)
+        # weeks は新しい週が先。ひとつ後ろが前の週になる。
+        week["comparison"] = week_comparison(week, weeks[i + 1] if i + 1 < len(weeks) else None)
         week["from_ja"] = format_date_ja(week["from"])
         week["to_ja"] = format_date_short_ja(week["to"])
         _write(

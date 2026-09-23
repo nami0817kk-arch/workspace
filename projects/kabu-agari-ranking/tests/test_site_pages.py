@@ -324,3 +324,21 @@ def test_日付の書き方の決まり():
     # 直すたびにどちらかへ揺れるので決めておく。
     assert render.format_date_ja("2026-09-18") == "2026年9月18日（金）"
     assert render.format_date_short_ja("2026-09-18") == "9月18日（金）"
+
+
+def test_週の比較は1営業日あたりで見る():
+    # 連休で3日しかない週と5日の週を、そのまま比べると誤解する
+    week = {"day_count": 3, "big_moves": 30}      # 1日あたり10
+    previous = {"day_count": 5, "big_moves": 50}  # 1日あたり10
+    assert "同じくらい" in render.week_comparison(week, previous)
+
+    assert "荒い動きが増え" in render.week_comparison(
+        {"day_count": 5, "big_moves": 75}, previous)
+    assert "落ち着き" in render.week_comparison(
+        {"day_count": 5, "big_moves": 20}, previous)
+
+
+def test_比べる週が無ければ何も書かない():
+    assert render.week_comparison({"day_count": 5, "big_moves": 10}, None) == ""
+    assert render.week_comparison({"day_count": 5, "big_moves": 10},
+                                  {"day_count": 5, "big_moves": 0}) == ""
