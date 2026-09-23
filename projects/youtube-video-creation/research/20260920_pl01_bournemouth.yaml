@@ -27,13 +27,13 @@ theme:
     - ''
     rows:
     - - '1'
-      - いま見る理由
+      - いま見る理由と基礎DATA
     - - '2'
-      - 創立・本拠地・タイトル歴
-    - - '3'
       - 歩んできた道
-    - - '4'
+    - - '3'
       - このクラブを語る3人
+    - - '4'
+      - 今季の登録選手
 thumbnail:
   line1: 勝ち点17を引かれた
   line2: そこから18年で、初の欧州へ
@@ -42,45 +42,28 @@ thumbnail:
   tags: []
   points: []
 sections:
-- id: reasons
-  heading: いま見る理由
-  tier: 報道
+- id: data
+  heading: いま見る理由と基礎DATA
   main: true
+  tier: 背景
   telop: 創立127年で初めての欧州
   narrator: キャスター
-  card:
-    type: table
-    title: いま見る理由
-    columns:
-    - ''
-    - ''
-    rows:
-    - - 理由1
-      - 創立127年で初の欧州の舞台
-    - - 理由2
-      - 新監督ローゼ「たくさん走りたい」
-    - - 理由3
-      - 初戦で久保建英のクラブに勝利
   say:
-  - 創立から**127年**、欧州の大会に出るのは今季が初めてです。
-  - 今夏に来た監督のマルコ・ローゼは、こう言っています。
+  - text: 創立から**127年**、欧州の大会に出るのは今季が初めてです。
+    image: assets/stats/pl_bournemouth_data_r1.png
+    no_telop: true
+  - text: 今夏に来た監督のマルコ・ローゼは、こう言っています。
+    image: assets/stats/pl_bournemouth_data_r2.png
+    no_telop: true
   - voice: マルコ・ローゼ
     text: 「ボールに対して、とても積極的に。たくさん走りたい」
-  - 欧州の初戦は、久保建英が所属するクラブに勝ちました。
-  - 17年前は4部、しかもマイナスの勝ち点から始めたクラブです。
-  sources:
-  - https://en.wikipedia.org/wiki/AFC_Bournemouth
-  - https://en.wikipedia.org/wiki/2026–27_AFC_Bournemouth_season
-  - https://en.wikipedia.org/wiki/Marco_Rose
-  bg: assets/backgrounds/stadium_ボーンマス_in.png
-  official: false
-- id: data
-  heading: ボーンマス 基礎DATA
-  main: false
-  tier: 背景
-  telop: 1899年創立
-  narrator: 解説
-  say:
+    image: assets/stats/pl_bournemouth_data_r2.png
+  - text: 欧州の初戦は、久保建英が所属するクラブに勝ちました。
+    image: assets/stats/pl_bournemouth_data_r3.png
+    no_telop: true
+  - text: 17年前は4部、しかもマイナスの勝ち点から始めたクラブです。
+    image: assets/stats/pl_bournemouth_data_r.png
+    no_telop: true
   - image: assets/stats/pl_bournemouth_data0.png
     text: 創立は**1899年**。ボスコムという地区のクラブが前身です。
     no_telop: true
@@ -104,6 +87,8 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/AFC_Bournemouth
+  - https://en.wikipedia.org/wiki/2026–27_AFC_Bournemouth_season
+  - https://en.wikipedia.org/wiki/Marco_Rose
   bg: assets/backgrounds/stadium_ボーンマス_in.png
   official: false
 - id: history

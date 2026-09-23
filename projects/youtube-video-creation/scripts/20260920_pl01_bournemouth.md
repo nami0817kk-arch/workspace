@@ -61,26 +61,13 @@ cards:
     - ''
     rows:
     - - '1'
-      - いま見る理由
+      - いま見る理由と基礎DATA
     - - '2'
-      - 創立・本拠地・タイトル歴
-    - - '3'
       - 歩んできた道
-    - - '4'
+    - - '3'
       - このクラブを語る3人
-  reasons_card:
-    type: table
-    title: いま見る理由
-    columns:
-    - ''
-    - ''
-    rows:
-    - - 理由1
-      - 創立127年で初の欧州の舞台
-    - - 理由2
-      - 新監督ローゼ「たくさん走りたい」
-    - - 理由3
-      - 初戦で久保建英のクラブに勝利
+    - - '4'
+      - 今季の登録選手
   history_card:
     type: table
     title: 2008年に起きたこと
@@ -230,49 +217,48 @@ cards:
 キャスター: 消えかけたクラブが、いまヨーロッパで戦っています。
   telop: 消えかけたクラブが、いまヨーロッパで戦っています
 
-## いま見る理由
+## いま見る理由と基礎DATA
 @bg: assets/backgrounds/stadium_ボーンマス_in.png
 @main: true
 
 キャスター: 創立から**127年**、欧州の大会に出るのは今季が初めてです。
-  telop: 創立から**127年**、欧州の大会に出るのは今季が初めてです
-  source: 報道
-  card: reasons_card
-キャスター: 今夏に来た監督のマルコ・ローゼは、こう言っています。
-  telop: 今夏に来た監督のマルコ・ローゼは、こう言っています
-マルコ・ローゼ: 「ボールに対して、とても積極的に。たくさん走りたい」
-  telop: マルコ・ローゼ「ボールに対して、とても積極的に。たくさん走りたい」
-キャスター: 欧州の初戦は、久保建英が所属するクラブに勝ちました。
-  telop: 欧州の初戦は、久保建英が所属するクラブに勝ちました
-キャスター: 17年前は4部、しかもマイナスの勝ち点から始めたクラブです。
-  telop: 17年前は4部、しかもマイナスの勝ち点から始めたクラブです
-
-## ボーンマス 基礎DATA
-@bg: assets/backgrounds/stadium_ボーンマス_in.png
-
-解説: 創立は**1899年**。ボスコムという地区のクラブが前身です。
   no_telop: true
   source: 背景
+  image: assets/stats/pl_bournemouth_data_r1.png
+キャスター: 今夏に来た監督のマルコ・ローゼは、こう言っています。
+  no_telop: true
+  image: assets/stats/pl_bournemouth_data_r2.png
+マルコ・ローゼ: 「ボールに対して、とても積極的に。たくさん走りたい」
+  telop: マルコ・ローゼ「ボールに対して、とても積極的に。たくさん走りたい」
+  image: assets/stats/pl_bournemouth_data_r2.png
+キャスター: 欧州の初戦は、久保建英が所属するクラブに勝ちました。
+  no_telop: true
+  image: assets/stats/pl_bournemouth_data_r3.png
+キャスター: 17年前は4部、しかもマイナスの勝ち点から始めたクラブです。
+  no_telop: true
+  image: assets/stats/pl_bournemouth_data_r.png
+キャスター: 創立は**1899年**。ボスコムという地区のクラブが前身です。
+  no_telop: true
   image: assets/stats/pl_bournemouth_data0.png
-解説: 愛称は「ザ・チェリーズ」。さくらんぼです。赤と黒の縦じまは、イタリアのミランが手本です。
+キャスター: 愛称は「ザ・チェリーズ」。さくらんぼです。赤と黒の縦じまは、イタリアのミランが手本です。
   no_telop: true
   image: assets/stats/pl_bournemouth_data1.png
-解説: 町はイングランド南部、ドーセット州の海沿いにあります。
+キャスター: 町はイングランド南部、ドーセット州の海沿いにあります。
   no_telop: true
   image: assets/stats/pl_bournemouth_map.png
-解説: 本拠地はディーン・コート。**1万2357人**。マンチェスター・ユナイテッドの**6分の1**です。
+キャスター: 本拠地はディーン・コート。**1万2357人**。マンチェスター・ユナイテッドの**6分の1**です。
   telop: 本拠地はディーン・コート。**1万2357人**。マンチェスター・ユナイテッドの**6分の1**です
   image: assets/backgrounds/stadium_ボーンマス.png
-解説: オーナーはアメリカのビル・フォーリー。2022年に買収。**1億ポンド超**と報じられました。
+キャスター: オーナーはアメリカのビル・フォーリー。2022年に買収。**1億ポンド超**と報じられました。
   telop: オーナーはアメリカのビル・フォーリー。2022年に買収。**1億ポンド超**と報じられました
   image: assets/photos/pl/bournemouth_owner_cf0347c5.jpg
-解説: 共同オーナーには、ハリウッド俳優の**マイケル・ビー・ジョーダン**もいます。
+キャスター: 共同オーナーには、ハリウッド俳優の**マイケル・ビー・ジョーダン**もいます。
   telop: 共同オーナーには、ハリウッド俳優の**マイケル・ビー・ジョーダン**もいます
   image: assets/photos/pl/bournemouth_owner_07f09a4e.jpg
-解説: 1部の優勝も、FAカップも、リーグカップもゼロ。20クラブで3つとも無いのは**5クラブ**です。
+キャスター: 1部の優勝も、FAカップも、リーグカップもゼロ。20クラブで3つとも無いのは**5クラブ**です。
   no_telop: true
   image: assets/stats/pl_bournemouth_cups.png
-解説: そのボーンマスが昨季、**6位**。クラブ史上最高の順位でした。
+キャスター: そのボーンマスが昨季、**6位**。クラブ史上最高の順位でした。
   no_telop: true
   image: assets/stats/pl_bournemouth_last.png
 

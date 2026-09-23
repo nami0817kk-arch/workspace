@@ -176,9 +176,19 @@ def build(key: str, number: int, old_file: str) -> Path:
     if not (ROOT / bg).exists():
         bg = None
 
-    # 板
+    # 板。**「いま見る理由」も基礎DATAの画面に入れる**（2026-09-23 指示
+    # 「基礎データに今見る理由もいれよう」）。柱の下に3つ並ぶ
+    reason_args = [a for r in (ov.get("reasons_rows") or [])[:3]
+                   if len(r) > 1 for a in ("--reason", str(r[1]))]
     subprocess.run([sys.executable, str(ROOT / "tools" / "clubdata.py"), str(ROOT / f"assets/stats/pl_{key}_data.png"),
-                    "--spec", str(DATA / f"{key}.json")], check=True, capture_output=True)
+                    "--spec", str(DATA / f"{key}.json")] + reason_args, check=True, capture_output=True)
+    # 理由を読み上げている行は、柱だけを明るく残す
+    reasons_board = ""
+    if reason_args:
+        reasons_board = f"assets/stats/pl_{key}_data_r.png"
+        subprocess.run([sys.executable, str(ROOT / "tools" / "clubdata.py"), str(ROOT / reasons_board),
+                        "--spec", str(DATA / f"{key}.json"), "--focus", "reasons"] + reason_args,
+                       check=True, capture_output=True)
     # **トロフィーの板も毎回描き直す**（2026-09-22 ユーザー指摘「ヨーロッパ合計になってる
     # クラブがいくつかある」。`trophies` を直しても、ここで描き直していなかった）
     if (DATA / f"{key}.json").exists():
@@ -198,19 +208,11 @@ def build(key: str, number: int, old_file: str) -> Path:
 
     sections = []
     # **いま見る理由**（2026-09-22 指示「今そのクラブを見る理由を最初につけて視聴者の
-    # 興味を上げたい」）。<key>_say.yaml の `reasons`（2〜3行）・`reasons_rows`（板）。
-    # **ショートもここから始める**（この節が main。基礎DATAは main にしない）。
-    # 日本人の入口（why）はこの節に吸収する
+    # 興味を上げたい」）。<key>_say.yaml の `reasons`（2〜3行）・`reasons_rows`（柱）。
+    # **2026-09-23 指示「基礎データに今見る理由もいれよう」で、独立した節をやめて
+    # 基礎DATAの頭に入れた。**板は最初の10秒から出たまま、柱の3つが明るい状態で
+    # 理由を読み、そのあと1行ずつ右の一覧が明るくなる。ショートはここから始まる
     reasons = list(ov.get("reasons") or [])
-    if reasons:
-        sections.append(sec(id="reasons", heading="いま見る理由", tier="報道", main=True,
-                            telop=str(ov.get("reasons_telop") or "いま、このクラブを見る理由"),
-                            narrator="キャスター",
-                            card={"type": "table", "title": "いま見る理由", "columns": ["", ""],
-                                  "rows": ov.get("reasons_rows") or []},
-                            say=reasons,
-                            sources=[wiki, season_url] + [u for u in (ov.get("reasons_sources") or [])
-                                                          if u not in (wiki, season_url)]))
     # 入口
     if japanese and not reasons:
         who = "と".join(jp_names)
@@ -227,7 +229,37 @@ def build(key: str, number: int, old_file: str) -> Path:
     img = f"assets/stats/pl_{key}_data.png"
     # **ショート専用の前置きも、日本人が2人なら2人とも**（2026-09-22）。題は2人なのに
     # この行だけ1人目で、パレスの鎌田大地がショートから消えていた
-    say = [] if reasons else [{"short_only": True, "text": f"{'と'.join(jp_names[:2])}の所属クラブを、基本のデータで見ていきます。" if japanese else "このクラブの、基本のデータです。"}]
+    # **理由も1つずつ明るくする**（2026-09-23。3つ並べたまま読むと、柱が明るい板が
+    # 18.8秒つづけて出ていた＝12秒→24秒の崖にちょうど重なる）。
+    # どの理由の話かは <key>_say.yaml の `reasons_focus`（1始まり・0はぜんぶ明るい）。
+    # 書いていなければ行数で割り振る
+    r_focus = list(ov.get("reasons_focus") or [])
+    n_reasons = len([r for r in (ov.get("reasons_rows") or [])[:3] if len(r) > 1])
+
+    def reason_board(n: int) -> str:
+        if not reasons_board or not n_reasons:
+            return img
+        k = r_focus[n] if n < len(r_focus) else min(n_reasons, n * n_reasons // max(len(reasons), 1) + 1)
+        if not k:
+            return reasons_board
+        out = f"assets/stats/pl_{key}_data_r{k}.png"
+        subprocess.run([sys.executable, str(ROOT / "tools" / "clubdata.py"), str(ROOT / out),
+                        "--spec", str(DATA / f"{key}.json"), "--focus", f"reasons:{k}"] + reason_args,
+                       check=True, capture_output=True)
+        return out
+
+    say = []
+    if reasons:
+        for rn, r in enumerate(reasons):
+            item = dict(r) if isinstance(r, dict) else {"text": r}
+            item.setdefault("image", reason_board(rn))
+            # 柱に同じ一言が出ているので、語りの行は字幕を重ねない。
+            # **代弁の行だけは残す**（発言は板のどこにも出ていない）
+            if "voice" not in item:
+                item.setdefault("no_telop", True)
+            say.append(item)
+    else:
+        say = [{"short_only": True, "text": f"{'と'.join(jp_names[:2])}の所属クラブを、基本のデータで見ていきます。" if japanese else "このクラブの、基本のデータです。"}]
     # **板を出している行に字幕は重ねない**（2026-09-20 指示
     # 「画面と字幕のが同じ場合は、字幕不要」）。基礎DATAの板の上に読み上げ文を
     # 重ねたら、9枚のタイルがほとんど読めなくなっていた
@@ -363,9 +395,13 @@ def build(key: str, number: int, old_file: str) -> Path:
             say.append({"image": shot, "text": text, "no_telop": True} if mute
                        else {"image": shot, "text": text})
             n += 1
-    sections.append(sec(id="data", heading=f"{club} 基礎DATA", main=not reasons, tier="背景",
-                        telop=facts["tiles"][0][1] + "創立", narrator="解説", say=say,
-                        sources=[wiki]))
+    sections.append(sec(id="data", heading="いま見る理由と基礎DATA" if reasons else f"{club} 基礎DATA",
+                        main=True, tier="背景",
+                        telop=(str(ov.get("reasons_telop") or "いま、このクラブを見る理由") if reasons
+                               else facts["tiles"][0][1] + "創立"),
+                        narrator="キャスター" if reasons else "解説", say=say,
+                        sources=[wiki] + ([season_url] + [u for u in (ov.get("reasons_sources") or [])
+                                                          if u not in (wiki, season_url)] if reasons else [])))
     # **有名なファンの節は作らない**（2026-09-20 指示「有名なファンは廃止」）。
     # <key>.json の `fans` / `fan_story` は残っているが、台本では一切使わない。
     # 板の9枚目も「有名なファン」ではなく「愛称」にしてある（research/pl_data/<key>.json）。
@@ -637,6 +673,9 @@ def _agenda(sections: list, club: str) -> list[list[str]]:
     rows = []
     for key in want:
         name = story if key == "_story" else label.get(key, "")
+        if key == "data" and any(str(s.get("id", "")) == "data"
+                                 and "いま見る理由" in str(s.get("heading", "")) for s in sections):
+            name = "いま見る理由と基礎DATA"
         if not name:
             continue
         if key != "_story" and not any(str(s.get("id", "")) == key for s in sections):
