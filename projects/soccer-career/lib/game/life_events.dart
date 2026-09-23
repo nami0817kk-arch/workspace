@@ -255,7 +255,7 @@ class LifeEvents {
         LifeChoice(
           label: '何も言わない',
           outcome: '言葉にしなかったぶん、体を動かした。',
-          effect: LifeEffect(fatigue: 2, morale: 3),
+          effect: LifeEffect(fatigue: 2, morale: 3, professionalism: 1),
         ),
       ],
     ),
@@ -271,7 +271,7 @@ class LifeEvents {
         LifeChoice(
           label: '納得していないと言う',
           outcome: '空気は張り詰めたが、言いたいことは伝わった。',
-          effect: LifeEffect(manager: -4),
+          effect: LifeEffect(manager: -4, morale: 5),
         ),
         LifeChoice(
           label: '足りないところを聞く',
@@ -281,7 +281,7 @@ class LifeEvents {
         LifeChoice(
           label: '任せますと答える',
           outcome: '何も変わらなかった。',
-          effect: LifeEffect(manager: 2),
+          effect: LifeEffect(manager: 2, teammates: 2),
         ),
       ],
     ),
@@ -343,7 +343,7 @@ class LifeEvents {
         LifeChoice(
           label: 'もう一度やってみる',
           outcome: '再現できた。まぐれではない。',
-          effect: LifeEffect(train: Detail.agility, fatigue: 2),
+          effect: LifeEffect(train: Detail.agility, trainAmount: 2, fatigue: 2),
         ),
         LifeChoice(
           label: '今日はここで止める',
@@ -501,7 +501,7 @@ class LifeEvents {
         LifeChoice(
           label: '当たり障りなく流す',
           outcome: '何も起きなかった。それでいい日もある。',
-          effect: LifeEffect(),
+          effect: LifeEffect(temper: -1),
         ),
         LifeChoice(
           label: 'チームメイトを立てる',
@@ -521,7 +521,7 @@ class LifeEvents {
         LifeChoice(
           label: 'ゴール裏に応える',
           outcome: 'あの日から、ここは自分の場所になった。',
-          effect: LifeEffect(morale: 10, fame: 3, confidence: 1),
+          effect: LifeEffect(morale: 10, fame: 3, confidence: 1, fatigue: 2),
         ),
         LifeChoice(
           label: '照れて手を上げるだけ',
@@ -542,7 +542,13 @@ class LifeEvents {
         LifeChoice(
           label: '前に出て話を聞く',
           outcome: '罵声は止み、代わりに拍手が起きた。長い話になった。',
-          effect: LifeEffect(morale: -4, fame: 3, teammates: 6, confidence: 1),
+          effect: LifeEffect(
+            morale: -4,
+            fame: 3,
+            teammates: 6,
+            confidence: 1,
+            fatigue: 3,
+          ),
         ),
         LifeChoice(
           label: 'バスの窓から見ている',
@@ -552,7 +558,7 @@ class LifeEvents {
         LifeChoice(
           label: 'クラブに任せる',
           outcome: '警備が入って解散した。それが正しい対応ではあった。',
-          effect: LifeEffect(morale: -2, manager: 2),
+          effect: LifeEffect(morale: -2, manager: 2, fame: -1),
         ),
       ],
     ),
@@ -572,7 +578,7 @@ class LifeEvents {
         LifeChoice(
           label: '任せてみる',
           outcome: '数か月、何も進まなかった。授業料だと思うことにした。',
-          effect: LifeEffect(money: -300, morale: -5),
+          effect: LifeEffect(money: -300, morale: 2),
         ),
         LifeChoice(
           label: '電話に出るのをやめる',
@@ -597,7 +603,7 @@ class LifeEvents {
         LifeChoice(
           label: '練習を優先する',
           outcome: 'そういうものだ、と自分に言い聞かせた。',
-          effect: LifeEffect(morale: -8),
+          effect: LifeEffect(morale: -8, professionalism: 1),
         ),
       ],
     ),
@@ -732,7 +738,7 @@ class LifeEvents {
         LifeChoice(
           label: '当たりを避けて組み立てる',
           outcome: '無難にこなした。監督は物足りなさそうだった。',
-          effect: LifeEffect(manager: -3, morale: -2),
+          effect: LifeEffect(manager: -3, morale: -2, fatigue: -3),
         ),
       ],
     ),
@@ -748,7 +754,7 @@ class LifeEvents {
         LifeChoice(
           label: '専門家に相談する',
           outcome: '話すだけで、少し軽くなった。続けることにした。',
-          effect: LifeEffect(morale: 18, condition: 5),
+          effect: LifeEffect(morale: 18, condition: 5, money: -60),
         ),
         LifeChoice(
           label: '誰にも言わない',
@@ -888,7 +894,7 @@ class LifeEvents {
         LifeChoice(
           label: '笑ってかわす',
           outcome: '言葉を薄めた。少しだけ楽になった。',
-          effect: LifeEffect(morale: 3, confidence: -1),
+          effect: LifeEffect(morale: 3, confidence: -1, teammates: 2),
         ),
         LifeChoice(
           label: '結果で見せると答える',
