@@ -1349,6 +1349,10 @@ class CareerEngine {
       injury: state.injury == null || state.injury!.matchesOut <= 4
           ? null
           : state.injury,
+      // **抱えている重傷と、早まった衰えは引き継ぐ。**
+      // ここを落としていたぶん、衰えの累積が毎シーズン消えていた。
+      pendingSevere: state.pendingSevere,
+      declineYearsLost: state.declineYearsLost,
       caps: state.caps,
       internationalGoals: state.internationalGoals,
     );

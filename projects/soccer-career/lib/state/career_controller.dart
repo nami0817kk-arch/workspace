@@ -851,10 +851,50 @@ class CareerController extends ChangeNotifier {
   }
 
   /// 復帰の進め方を決める。
+  /// **重傷が身体に残すぶんを清算する。**
+  ///
+  /// 復帰したときと、シーズンの切れ目で怪我が消えたときの両方から呼ぶ。
+  /// 片方だけに置いていたら、**残り4試合以下でシーズンを跨いだ重傷は
+  /// 復帰の処理を通らずに消え、ダメージが丸ごと落ちていた**
+  /// （`balance_sim` でピークが 77.1 → 77.5 に上がって気付いた）。
+  void _settleSevere(CareerState state, Injury injury) {
+    if (!state.pendingSevere) return;
+    final (attributes, potential) = _match.applySevereInjury(
+      state.player,
+      injury,
+      factor: state.rehab.damageFactor,
+    );
+    state.player = Player.rebuild(
+      state.player,
+      attributes: attributes,
+      potential: potential,
+    );
+    state.pendingSevere = false;
+    // **衰え始めは戻らない。** 能力値の目減りは伸び直せるが、ここは伸び直せない。
+    state.declineYearsLost += state.rehab.declineYears;
+  }
+
+  /// 復帰の進め方を変える。
+  ///
+  /// **離脱中に変えたら、残りの試合数もその場で引き直す。**
+  /// 長さは怪我をした瞬間に決まっていたので、画面に3択が出ている時点では
+  /// もう動かせなかった——選ばせているのに何も起きない状態だった。
   Future<void> setRehab(RehabPlan plan) async {
     final state = _state;
     if (state == null) return;
+    final before = state.rehab;
     state.rehab = plan;
+    final injury = state.injury;
+    if (injury != null && before != plan) {
+      state.injury = Injury(
+        name: injury.name,
+        severity: injury.severity,
+        matchesOut: max(
+          1,
+          (injury.matchesOut * plan.lengthFactor / before.lengthFactor).round(),
+        ),
+      );
+    }
     await _persist();
   }
 
@@ -1231,6 +1271,10 @@ class CareerController extends ChangeNotifier {
       // 離脱中は成長も練習もしない。試合数だけ消化する。
       final next = state.injury!.tick();
       if (next.healed) {
+        // 重傷が身体に残すぶんは、戻し方で変わる。
+        state.player = player;
+        _settleSevere(state, state.injury!);
+        player = state.player;
         state.injury = null;
         recovered = true;
         state.rehabWatch = Formulas.rehabWatchMatches;
@@ -1256,7 +1300,9 @@ class CareerController extends ChangeNotifier {
           // 追い込み続けた身体は早く落ちる。流してきた身体は遅く落ちる。
           declineOffset:
               state.staff.declineAgeOffset +
-              Formulas.declineOffsetForStrain(state.development.strain),
+              Formulas.declineOffsetForStrain(state.development.strain) -
+              // 重傷から無理に戻った身体は、早く落ちる。
+              state.declineYearsLost,
           plateau: state.development.inPlateau,
           environment: _environmentFactor(state),
         ),
@@ -1354,15 +1400,9 @@ class CareerController extends ChangeNotifier {
                 .round(),
           ),
         );
-        final (attributes, potential) = _match.applySevereInjury(
-          player,
-          newInjury,
-        );
-        player = Player.rebuild(
-          player,
-          attributes: attributes,
-          potential: potential,
-        );
+        // **恒久ダメージは復帰のときに効かせる。** ここで確定させると、
+        // そのあと「慎重に戻す」を選んでも何も変わらない。
+        state.pendingSevere = newInjury.severity == InjurySeverity.severe;
         state.injury = newInjury;
       }
       // 組んだ相手との関係は、組んだその週に動く。
@@ -1571,11 +1611,16 @@ class CareerController extends ChangeNotifier {
     // 貯蓄が尽きると専属スタッフは全員離れる。黙って消えると、
     // 翌季から練習が効かなくなった理由が分からない。
     final hadStaff = !state.staff.isEmpty;
+    final carried = state.injury;
     _state = _career.advanceSeason(
       state,
       accepted: accepted,
       offseason: offseason,
     );
+    // **オフの間に消えた怪我も、残すものは残す。**
+    if (carried != null && _state!.injury == null) {
+      _settleSevere(_state!, carried);
+    }
     // **新しい監督が使わない役割は外れる。** ここを開けたままだと、
     // 一番高くなる監督の下で役割に就いて、あとはどこへ移っても持ち続けられる
     // ——監督に紐づけた意味が消える。

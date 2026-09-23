@@ -4620,15 +4620,20 @@ class _InjuryCard extends StatelessWidget {
               runSpacing: 8,
               children: [
                 for (final plan in RehabPlan.values)
-                  Tooltip(
-                    message: plan.effect,
-                    child: ChoiceChip(
-                      label: Text(plan.label),
-                      selected: state.rehab == plan,
-                      onSelected: (_) => controller.setRehab(plan),
-                    ),
+                  ChoiceChip(
+                    label: Text(plan.label),
+                    selected: state.rehab == plan,
+                    onSelected: (_) => controller.setRehab(plan),
                   ),
               ],
+            ),
+            const SizedBox(height: 6),
+            // 説明はツールチップに隠さない。スマホでは長押ししないと読めない。
+            Text(
+              state.rehab.effect,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onErrorContainer,
+              ),
             ),
           ],
         ),
