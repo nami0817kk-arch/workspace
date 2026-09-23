@@ -93,9 +93,20 @@ def search_index(days: list[dict]) -> dict:
         for key, short in (("gainers", "g"), ("losers", "l"), ("active", "a")):
             for row in day.get(key, []):
                 e = stocks.setdefault(row["code"], {"c": row["code"], "n": row["name"],
-                                                    "g": [], "l": [], "a": []})
+                                                    "g": [], "l": [], "a": [],
+                                                    "b": None, "s": 0})
                 e["n"] = row["name"]
                 e[short].append(day["rec_date"])
+                if key == "active":
+                    continue
+                # 「いつ出たか」だけでは、どれくらい動いた日なのかが分からない。
+                pct = row["change_pct"]
+                if e["b"] is None or abs(pct) > abs(e["b"]):
+                    e["b"] = pct
+                if price_limit.classify(row.get("close"), pct) in (
+                    price_limit.STOP_HIGH, price_limit.STOP_LOW
+                ):
+                    e["s"] += 1
 
     return {
         "from": window[-1]["rec_date"],

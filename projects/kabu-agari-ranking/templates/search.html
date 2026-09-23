@@ -76,7 +76,14 @@
         }).join('、');
         return '<dt>' + k.label + '（' + dates.length + '回）</dt><dd>' + links + '</dd>';
       }).join('');
-      return '<section class="hit"><h2>' + escape(s.n) + '（' + escape(s.c) + '）</h2><dl>' + blocks + '</dl></section>';
+      var facts = [];
+      if (s.b !== null && s.b !== undefined) {
+        facts.push('この期間の最大騰落率 ' + (s.b > 0 ? '+' : '') + s.b.toFixed(2) + '%');
+      }
+      if (s.s) { facts.push('ストップ高・安 ' + s.s + '回'); }
+      var factLine = facts.length ? '<p class="hit-facts">' + facts.join(' ／ ') + '</p>' : '';
+      return '<section class="hit"><h2>' + escape(s.n) + '（' + escape(s.c) + '）</h2>'
+        + factLine + '<dl>' + blocks + '</dl></section>';
     }).join('');
   }
 

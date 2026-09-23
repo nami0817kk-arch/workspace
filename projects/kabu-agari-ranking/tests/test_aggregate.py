@@ -95,7 +95,19 @@ def test_索引は直近の期間だけに絞る():
 
 def test_索引のキーは短いまま():
     # そのままブラウザに配る JSON なので、キー名を長くすると読み込みが重くなる
-    assert set(aggregate.search_index(DAYS)["stocks"][0]) == {"c", "n", "g", "l", "a"}
+    assert set(aggregate.search_index(DAYS)["stocks"][0]) == {"c", "n", "g", "l", "a", "b", "s"}
+
+
+def test_索引に最大騰落率とストップ高の回数が入る():
+    days = [
+        _day("2026-09-18", [{"rank": 1, "code": "5131", "name": "リンカーズ",
+                             "close": 163.0, "change_pct": 44.25, "metric_value": 1}]),
+        _day("2026-09-17", [{"rank": 1, "code": "5131", "name": "リンカーズ",
+                             "close": 100.0, "change_pct": 2.0, "metric_value": 1}]),
+    ]
+    entry = aggregate.search_index(days)["stocks"][0]
+    assert entry["b"] == 44.25
+    assert entry["s"] == 1
 
 
 def test_索引はデータが無くても形を保つ():
