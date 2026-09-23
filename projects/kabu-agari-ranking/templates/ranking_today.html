@@ -12,7 +12,7 @@
   最終更新: {{ rec_date_ja }}{% if next_update %} ／ {{ next_update }}{% endif %}
 </p>
 {# 説明より先に表を出す。スマホでは前置きが長いだけで肝心の順位が画面の外に出る。 #}
-{% if summary %}<p class="summary">{{ summary }}</p>{% endif %}
+{% if summary %}<p class="summary">{{ summary }}{% if turnover %} {{ turnover }}{% endif %}</p>{% endif %}
 {% if chart %}
 <figure class="chart-figure">
   {{ chart|safe }}

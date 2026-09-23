@@ -14,7 +14,7 @@
 {% endblock %}
 {% block content %}
 <h1>{{ rec_date_ja }} の{{ heading }}</h1>
-{% if summary %}<p class="summary">{{ summary }}</p>{% endif %}
+{% if summary %}<p class="summary">{{ summary }}{% if turnover %} {{ turnover }}{% endif %}</p>{% endif %}
 {% if chart %}
 <figure class="chart-figure">
   {{ chart|safe }}

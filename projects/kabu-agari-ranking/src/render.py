@@ -140,6 +140,25 @@ def flag_notes(rows: list[dict]) -> list[dict]:
     return seen
 
 
+def turnover_note(rows: list[dict], prev_rows: list[dict] | None) -> str:
+    """前営業日との顔ぶれの入れ替わり。
+
+    毎日見る人が知りたいのは順位そのものより「昨日から何が変わったか」。
+    掲載日が飛んでいる場合は前営業日ではないので、その旨を書く。
+    """
+    if not rows or not prev_rows:
+        return ""
+    prev_codes = {r["code"] for r in prev_rows}
+    stayed = [r for r in rows if r["code"] in prev_codes]
+    fresh = len(rows) - len(stayed)
+    if not stayed:
+        return f"前回の掲載から顔ぶれは総入れ替えで、{len(rows)}銘柄すべてが新しく入りました。"
+    return (
+        f"前回の掲載から続けて入っているのは{len(stayed)}銘柄、"
+        f"新しく入ったのは{fresh}銘柄です。"
+    )
+
+
 def day_summary(rows: list[dict], kind: str) -> str:
     """その日のランキングを一文で説明する。
 
@@ -391,6 +410,9 @@ def _build_ranking_pages(days: list[dict]) -> None:
                 metric_label=metric_label,
                 intro=intro_fmt.format(n=len(rows)),
                 summary=day_summary(rows, json_key),
+                turnover=turnover_note(
+                    rows, annotate_rows(days[1].get(json_key, [])) if len(days) > 1 else None
+                ),
                 chart=ranking_chart(rows, json_key, latest["rec_date"], heading),
                 trend_chart=charts.columns(
                     big_move_series(days, json_key),
@@ -420,6 +442,9 @@ def _build_ranking_pages(days: list[dict]) -> None:
                     heading=heading,
                     metric_label=metric_label,
                     summary=day_summary(day_rows, json_key),
+                    turnover=turnover_note(
+                        day_rows, with_data[i + 1][1] if i + 1 < len(with_data) else None
+                    ),
                     chart=ranking_chart(day_rows, json_key, rec, heading),
                     # 一覧に戻らずに日をたどれるようにする。クロールも深くなる。
                     newer=dates_with_data[i - 1] if i > 0 else None,

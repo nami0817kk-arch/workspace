@@ -175,3 +175,20 @@ def test_欠測を隠さずに書く(site):
         _write_day(data_dir, d)
     render.build_all()
     assert "2026-09-15" in (out_dir / "about.html").read_text(encoding="utf-8")
+
+
+def test_前回からの入れ替わりを数える():
+    prev = [_row(1), _row(2), _row(3)]          # コード 7201..7203
+    now = [_row(1), _row(2), _row(9)]           # 7201, 7202 が継続、7209 が新顔
+    note = render.turnover_note(now, prev)
+    assert "2銘柄" in note and "1銘柄" in note
+
+
+def test_総入れ替えならそう書く():
+    note = render.turnover_note([_row(8), _row(9)], [_row(1), _row(2)])
+    assert "総入れ替え" in note
+
+
+def test_比較対象が無ければ何も書かない():
+    assert render.turnover_note([_row(1)], None) == ""
+    assert render.turnover_note([], [_row(1)]) == ""
