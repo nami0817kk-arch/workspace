@@ -320,7 +320,13 @@ class CareerController extends ChangeNotifier {
               TrainingCompanion.rival => PersonKind.competitor,
             },
           )
-          ?.withNames(people);
+          ?.withNames(
+            people,
+            values: {
+              // **もらう額を伏せない。** 受ければ疲労とコンディションを払う。
+              '<sponsorAnnual>': '${state.sponsorOffer?.annual ?? 0}',
+            },
+          );
     }
   }
 
