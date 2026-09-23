@@ -169,6 +169,26 @@ class Formulas {
     return (salary * appearanceBonusRate * ratio).round();
   }
 
+  /// **殿堂ポイント。** 引退した選手が次のキャリアに残すもの。
+  ///
+  /// 参考にした野球のキャリアゲームは「20ptにつき次の選手の才能+1、
+  /// 最大+80」。こちらはポテンシャルの幅が 71〜90 と狭いので、
+  /// **上限を +6** に抑える。1人ぶんの引退でだいたい 20〜60pt 貯まる。
+  ///
+  /// **積み上げた点は減らない。** 使うのではなく、貯まった総量が
+  /// そのまま次の選手の伸びしろになる。
+  static const int legacyPerPotential = 60;
+
+  /// 持ち越しの上限（ポテンシャル）。
+  static const int legacyPotentialCap = 6;
+
+  /// 貯まった点から、次の選手のポテンシャルへの上乗せ。
+  static int legacyPotentialBonus(int points) =>
+      (points ~/ legacyPerPotential).clamp(0, legacyPotentialCap);
+
+  /// 上限に届くまでに要る点。画面に出す。
+  static int legacyPointsForCap = legacyPerPotential * legacyPotentialCap;
+
   /// **出来高払い契約で減らす年俸の割合。**
   ///
   /// 監督の目標を的にした賭け。実測（753季）で、目標の達成は

@@ -281,6 +281,9 @@ class Career {
   /// 達成した挑戦。**「作ってあるのに誰も届かない」を探すために数える。**
   List<Challenge> challenges = const [];
 
+  /// 引退した記録そのもの。殿堂ポイントの計算に使う。
+  Legend? legend;
+
   /// 監督の目標があった季と、達成した季。
   /// **出来高払い契約の値付けに要る。**
   int objectiveSeasons = 0;
@@ -649,6 +652,7 @@ Future<Career> runCareer(
 
   career.retireAge = controller.state!.player.age;
   if (controller.hall.legends.isNotEmpty) {
+    career.legend = controller.hall.legends.first;
     career.challenges = Hall.challengesOf(controller.hall.legends.first);
   }
   return career;

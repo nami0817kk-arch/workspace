@@ -67,6 +67,23 @@ enum Challenge {
     Challenge.faceOfTheNation => legend.caps >= 60,
   };
 
+  /// **宣言して狙ったときの、引退時の上乗せ（殿堂ポイント）。**
+  ///
+  /// 難しいものほど重い。到達率は `tmp_challenge_sim` の実測に合わせてある
+  /// （一途25% / 渡り鳥19% / 叩き上げ31% / 大器晩成38% / 無冠6% /
+  /// 点取り屋22% / 鉄人3% / 世界一9%）。
+  int get declaredBonus => switch (this) {
+    Challenge.lateBloom => 10,
+    Challenge.fromBelow => 12,
+    Challenge.oneClub => 15,
+    Challenge.marksman => 15,
+    Challenge.wanderer => 18,
+    Challenge.faceOfTheNation => 20,
+    Challenge.worldChampion => 25,
+    Challenge.uncrowned => 30,
+    Challenge.ironman => 30,
+  };
+
   static Challenge? byName(String name) {
     for (final c in Challenge.values) {
       if (c.name == name) return c;
