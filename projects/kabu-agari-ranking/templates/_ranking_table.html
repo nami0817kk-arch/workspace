@@ -1,19 +1,20 @@
 <div class="table-wrap">
 <table class="ranking">
+  <caption>{{ rec_date }} の{{ heading }}（上位{{ rows|length }}銘柄）</caption>
   <thead>
     <tr>
-      <th>順位</th>
-      <th>銘柄名</th>
-      <th>コード</th>
-      <th>終値</th>
-      <th>騰落率</th>
-      <th>{{ metric_label }}</th>
+      <th scope="col">順位</th>
+      <th scope="col">銘柄名</th>
+      <th scope="col">コード</th>
+      <th scope="col">終値</th>
+      <th scope="col">騰落率</th>
+      <th scope="col">{{ metric_label }}</th>
     </tr>
   </thead>
   <tbody>
     {% for row in rows %}
     <tr>
-      <td>{{ row.rank }}</td>
+      <th scope="row">{{ row.rank }}</th>
       <td>{{ row.name }}</td>
       <td>{{ row.code }}</td>
       <td>{{ "{:,.0f}".format(row.close) if row.close is not none else "-" }}</td>

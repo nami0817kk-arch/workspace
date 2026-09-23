@@ -52,6 +52,9 @@ python src/build_site.py    # 取得 → data/ 保存 → output/ 生成
 - **鮮度の警報は Deploy より後に置く。** 以前は手前にあったため、警報が出た日は
   公開まで道連れで止まった（2026-09-22）。古いデータで出続けるほうが、
   サイトが更新されないより損が小さい。
+- **AdSense を有効にするのは `render.ADSENSE_CLIENT` の1箇所**。空のあいだは
+  広告スクリプトも枠も一切描かない。審査前にプレースホルダの `<ins>` を置くと、
+  中身の無い点線の箱が全ページに並ぶだけ。
 - 休場日の判定は `src/market_calendar.py` の祝日表（内閣府CSVから転記）。
   **表は2027年までしか無く、範囲外は例外にしてある**（黙って平日扱いにしない）。
   年末に一度 https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv から追記する。

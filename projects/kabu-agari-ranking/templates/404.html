@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}ページが見つかりません｜値上がり株ランキング{% endblock %}
+{% block description %}お探しのページは見つかりませんでした。最新の値上がり・値下がり・活況ランキングからお探しください。{% endblock %}
+{% block content %}
+<h1>ページが見つかりません</h1>
+<p>
+  お探しのページは移動したか、もともと存在しません。
+  アーカイブは営業日ごとに作られるため、休場日の日付を直接指定するとこの画面になります。
+</p>
+<ul>
+  <li><a href="{{ base_url }}index.html">本日の値上がりランキング</a></li>
+  <li><a href="{{ base_url }}losers.html">本日の値下がりランキング</a></li>
+  <li><a href="{{ base_url }}active.html">本日の活況銘柄ランキング</a></li>
+  <li><a href="{{ base_url }}archive/gainers/index.html">過去の値上がりランキング一覧</a></li>
+  <li><a href="{{ base_url }}guide.html">ランキングの読み方</a></li>
+</ul>
+{% endblock %}

@@ -92,6 +92,14 @@ def previous_business_day(d: date) -> date:
     return cur
 
 
+def next_business_day(d: date) -> date:
+    """d より後で直近の営業日。「次回更新予定」の表示に使う。"""
+    cur = d + timedelta(days=1)
+    while not is_business_day(cur):
+        cur += timedelta(days=1)
+    return cur
+
+
 def business_days_between(start: date, end: date) -> int:
     """start の翌日から end までに何営業日あるか（end を含む）。start >= end なら 0。"""
     count = 0

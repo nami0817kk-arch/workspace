@@ -1,12 +1,22 @@
 {% extends "base.html" %}
 {% block title %}{{ rec_date }} {{ heading }} TOP{{ rows|length }}｜値上がり株ランキング{% endblock %}
-{% block description %}{{ rec_date }}時点の{{ heading }} TOP{{ rows|length }}を掲載。{% endblock %}
+{% block description %}{{ rec_date }}時点の{{ heading }} TOP{{ rows|length }}を掲載。{{ summary }}{% endblock %}
+{% block structured_data %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ItemList","name":{{ (rec_date ~ " " ~ heading)|tojson }},"numberOfItems":{{ rows|length }},"itemListElement":[{% for row in rows %}{"@type":"ListItem","position":{{ row.rank }},"name":{{ (row.name ~ "（" ~ row.code ~ "）")|tojson }}}{{ "," if not loop.last }}{% endfor %}]}
+</script>
+{% endblock %}
 {% block content %}
 <h1>本日の{{ heading }}</h1>
-<p>
-  更新日: {{ rec_date }}。{{ intro }}
-  各項目の意味は<a href="{{ base_url }}about.html">このサイトについて</a>の用語解説をご覧ください。
+<p class="updated">
+  最終更新: {{ rec_date_ja }}{% if next_update %} ／ {{ next_update }}{% endif %}
 </p>
+<p>
+  {{ intro }}
+  用語の意味は<a href="{{ base_url }}glossary.html">用語解説</a>、
+  順位の見方は<a href="{{ base_url }}guide.html">ランキングの読み方</a>にまとめています。
+</p>
+{% if summary %}<p class="summary">{{ summary }}</p>{% endif %}
 {% include "_ranking_table.html" %}
 {% include "_ad_slot.html" %}
 <p><a href="{{ base_url }}{{ archive_href }}">過去の{{ heading }}を見る →</a></p>

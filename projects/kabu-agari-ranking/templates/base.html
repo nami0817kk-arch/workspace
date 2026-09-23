@@ -10,8 +10,12 @@
 <meta property="og:site_name" content="値上がり株ランキング">
 <meta property="og:title" content="{{ self.title() }}">
 <meta property="og:description" content="{{ self.description() }}">
-<meta property="og:image" content="https://kabu-agari-ranking.pages.dev/og-image.png">
+<meta property="og:image" content="{{ SITE_URL }}/og-image.png">
+<meta property="og:url" content="{{ canonical }}">
+<meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ self.title() }}">
+<meta name="twitter:description" content="{{ self.description() }}">
 <style>
   :root {
     --bg: #f7f8fa;
@@ -90,7 +94,16 @@
   table.ranking th:nth-child(3), table.ranking td:nth-child(3) {
     text-align: left;
   }
+  table.ranking caption {
+    caption-side: top;
+    text-align: left;
+    padding: 0.5rem 0.6rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
   table.ranking th { color: var(--muted); font-weight: normal; }
+  /* 順位は見出しセル（th）だが、見た目はデータとして揃える */
+  table.ranking tbody th { color: var(--text); font-weight: normal; text-align: right; }
   table.ranking td.gain { color: var(--accent); font-weight: bold; }
   table.ranking td.loss { color: #2563a8; font-weight: bold; }
   .archive-list a {
@@ -100,6 +113,23 @@
     color: var(--text);
     text-decoration: none;
   }
+  .updated { font-size: 0.85rem; color: var(--muted); margin: 0.25rem 0 1rem; }
+  .summary {
+    background: var(--card-bg);
+    border-left: 3px solid var(--accent);
+    padding: 0.6rem 0.8rem;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+  }
+  .day-nav {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin: 1rem 0;
+    font-size: 0.9rem;
+  }
+  .day-nav a { color: var(--accent); text-decoration: none; }
+  .day-nav a:hover { text-decoration: underline; }
   .disclaimer {
     margin-top: 2rem;
     padding: 1rem;
@@ -136,7 +166,16 @@
   dt { margin-top: 0.75rem; }
   dd { margin: 0.25rem 0 0; color: var(--muted); }
 </style>
-<link rel="canonical" href="{{ canonical }}">
+{% if canonical %}<link rel="canonical" href="{{ canonical }}">{% else %}<meta name="robots" content="noindex">{% endif %}
+{# AdSense のスクリプトは pub-ID が入ってから読み込む（審査前に空タグを置かない） #}
+{% if ADSENSE_CLIENT %}
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ ADSENSE_CLIENT }}" crossorigin="anonymous"></script>
+{% endif %}
+{# 検索結果で「何のページか」を機械にも伝える。表の中身は block structured_data で足す #}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","name":"値上がり株ランキング","url":"{{ SITE_URL }}/","inLanguage":"ja"}
+</script>
+{% block structured_data %}{% endblock %}
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c8d25daf2f614e8c8b4e20694bacc1f8"}'></script><!-- End Cloudflare Web Analytics -->
 </head>
 <body>
@@ -157,9 +196,6 @@
   </div>
 </header>
 
-<!-- TODO: AdSense publisher ID を取得後、下記コメントアウトを外して設置する
-<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
--->
 
 <main>
 {% include "_ad_slot.html" %}

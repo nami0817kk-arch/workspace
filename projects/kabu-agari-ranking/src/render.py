@@ -1,9 +1,15 @@
 """data/*.json を読み込み、Jinja2 テンプレートから output/ に静的HTMLを生成する。"""
 import json
 import shutil
+import sys
+from datetime import date
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from market_calendar import CalendarOutOfRange, next_business_day
 
 _ROOT = Path(__file__).resolve().parent.parent
 _TEMPLATES_DIR = _ROOT / "templates"
@@ -12,7 +18,16 @@ _OUTPUT_DIR = _ROOT / "output"
 
 SITE_URL = "https://kabu-agari-ranking.pages.dev"
 
+# AdSense の審査を通ったら ca-pub-... を入れる。ここが空のあいだは
+# 広告のスクリプトも枠も一切出さない。プレースホルダの <ins> を置いたままだと
+# 中身の無い点線の箱が全ページに出るだけで、審査にも読者にも損しかない。
+ADSENSE_CLIENT = ""
+
 _env = Environment(loader=FileSystemLoader(str(_TEMPLATES_DIR)))
+_env.globals["ADSENSE_CLIENT"] = ADSENSE_CLIENT
+_env.globals["SITE_URL"] = SITE_URL
+
+_WEEKDAY_JA = "月火水木金土日"
 
 # (json_key, dirname, heading, metric_label, output_filename, intro)
 _RANKING_TYPES = [
@@ -49,6 +64,61 @@ def canonical_url(rel_path: str) -> str:
     return f"{SITE_URL}/{rel.removesuffix('.html')}"
 
 
+def format_date_ja(iso: str) -> str:
+    """2026-09-18 → 2026年9月18日（金）。"""
+    d = date.fromisoformat(iso)
+    return f"{d.year}年{d.month}月{d.day}日（{_WEEKDAY_JA[d.weekday()]}）"
+
+
+def next_update_note(rec_date: str) -> str:
+    """「次回更新予定」の一文。休場を挟むときはそれも言う。
+
+    連休中に来た読者が「止まっているサイト」と思って離れるのを防ぐ。
+    最終更新日から次の営業日は決まるので、見る時刻によらず正しい。
+    """
+    d = date.fromisoformat(rec_date)
+    try:
+        nxt = next_business_day(d)
+    except CalendarOutOfRange:
+        # 祝日表の範囲外。嘘の予定を出すより黙る。
+        return ""
+    gap = (nxt - d).days
+    note = f"次回更新予定: {format_date_ja(nxt.isoformat())} の16時ごろ"
+    if gap > 1:
+        note += "（それまでは東証が休場のため、ランキングは更新されません）"
+    return note
+
+
+def day_summary(rows: list[dict], kind: str) -> str:
+    """その日のランキングを一文で説明する。
+
+    アーカイブの各日ページは表しか無いと、どの日も同じ見た目の薄いページに
+    なってしまう（広告審査でいちばん嫌われる形）。数字から言えることだけを
+    書く。ここで相場観や見通しは書かない。
+    """
+    if not rows:
+        return ""
+    top = rows[0]
+    n = len(rows)
+
+    if kind == "active":
+        return (
+            f"約定回数が最も多かったのは{top['name']}（{top['code']}）の"
+            f"{top['metric_value']:,}回でした。上位{n}銘柄を掲載しています。"
+        )
+
+    pct = abs(top["change_pct"])
+    verb = "上昇" if kind == "gainers" else "下落"
+    big = sum(1 for r in rows if abs(r["change_pct"]) >= 10)
+    cheap = sum(1 for r in rows if r["close"] is not None and r["close"] < 1000)
+
+    parts = [f"首位は{top['name']}（{top['code']}）の{pct:.2f}%{verb}。"]
+    parts.append(f"上位{n}銘柄のうち{big}銘柄が10%以上{verb}しました。")
+    if cheap:
+        parts.append(f"終値1,000円未満の低位株が{cheap}銘柄含まれます。")
+    return "".join(parts)
+
+
 def _normalize_day(raw: dict) -> dict:
     """旧形式（値上がりランキングのみ・rows/gain_pct/volumeキー）を新形式に変換する。"""
     if "gainers" in raw:
@@ -77,6 +147,18 @@ def _normalize_day(raw: dict) -> dict:
 # 捨てずに除外にしてあるのは、後から日付を確定できたときに戻せるようにするため。
 # 復帰させるならこの集合から外すだけでよい。
 UNRELIABLE_DATES = frozenset({"2026-08-24", "2026-08-28", "2026-08-31", "2026-09-01"})
+
+
+def group_by_month(dates: list[str]) -> list[dict]:
+    """日付を年月ごとにまとめる。営業日が溜まると平坦な一覧では探せなくなる。"""
+    months: list[dict] = []
+    for iso in dates:
+        d = date.fromisoformat(iso)
+        label = f"{d.year}年{d.month}月"
+        if not months or months[-1]["label"] != label:
+            months.append({"label": label, "dates": []})
+        months[-1]["dates"].append({"iso": iso, "day": f"{d.month}月{d.day}日（{_WEEKDAY_JA[d.weekday()]}）"})
+    return months
 
 
 def _load_all_days() -> list[dict]:
@@ -115,29 +197,38 @@ def _build_ranking_pages(days: list[dict]) -> None:
                 base_url="",
                 canonical=canonical_url(out_name),
                 rec_date=latest["rec_date"],
+                rec_date_ja=format_date_ja(latest["rec_date"]),
+                next_update=next_update_note(latest["rec_date"]),
                 rows=rows,
                 heading=heading,
                 metric_label=metric_label,
                 intro=intro_fmt.format(n=len(rows)),
+                summary=day_summary(rows, json_key),
                 archive_href=f"archive/{dirname}/index.html",
             ),
         )
 
-        dates_with_data = []
-        for day in days:
-            day_rows = day.get(json_key, [])
-            if not day_rows:
-                continue
-            dates_with_data.append(day["rec_date"])
+        # 新しい順。前後ナビを付けるので、先に対象日を確定させてから描く。
+        with_data = [(d["rec_date"], d[json_key]) for d in days if d.get(json_key)]
+        dates_with_data = [rec for rec, _ in with_data]
+
+        for i, (rec, day_rows) in enumerate(with_data):
             _write(
-                _OUTPUT_DIR / "archive" / dirname / f"{day['rec_date']}.html",
+                _OUTPUT_DIR / "archive" / dirname / f"{rec}.html",
                 day_tmpl.render(
                     base_url="../../",
-                    canonical=canonical_url(f"archive/{dirname}/{day['rec_date']}.html"),
-                    rec_date=day["rec_date"],
+                    canonical=canonical_url(f"archive/{dirname}/{rec}.html"),
+                    rec_date=rec,
+                    rec_date_ja=format_date_ja(rec),
                     rows=day_rows,
                     heading=heading,
                     metric_label=metric_label,
+                    summary=day_summary(day_rows, json_key),
+                    # 一覧に戻らずに日をたどれるようにする。クロールも深くなる。
+                    newer=dates_with_data[i - 1] if i > 0 else None,
+                    older=dates_with_data[i + 1] if i + 1 < len(with_data) else None,
+                    is_latest=(i == 0),
+                    today_href=out_name,
                 ),
             )
 
@@ -147,7 +238,7 @@ def _build_ranking_pages(days: list[dict]) -> None:
                 base_url="../../",
                 canonical=canonical_url(f"archive/{dirname}/index.html"),
                 heading=heading,
-                dates=dates_with_data,
+                months=group_by_month(dates_with_data),
             ),
         )
 
@@ -212,6 +303,10 @@ def build_all() -> None:
     for name in ("about.html", "privacy.html", "guide.html", "glossary.html"):
         tmpl = _env.get_template(name)
         _write(_OUTPUT_DIR / name, tmpl.render(base_url="", canonical=canonical_url(name)))
+
+    # 存在しないURL用。Cloudflare Pages は 404 のときこれを返す。
+    # canonical を空にすると base.html 側が noindex を出す（404を検索結果に載せない）。
+    _write(_OUTPUT_DIR / "404.html", _env.get_template("404.html").render(base_url="/", canonical=""))
 
     (_OUTPUT_DIR / "robots.txt").write_text(_ROBOTS_TXT, encoding="utf-8")
     (_OUTPUT_DIR / "ads.txt").write_text(_ADS_TXT, encoding="utf-8")
