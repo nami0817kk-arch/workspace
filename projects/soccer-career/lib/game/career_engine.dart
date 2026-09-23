@@ -664,7 +664,10 @@ class CareerEngine {
         performance *
         objectiveFactor *
         promiseFactor *
-        continentalFactor;
+        continentalFactor *
+        // 監督に何を求めたか。出場を優先してくれと言えば条件は後回しになり、
+        // 条件を上げたいと言えば提示そのものが上がる。
+        state.directive.salaryFactor;
     // 約束は交渉の枠ごと動かす。上限・下限に丸めた後で掛けると、
     // 良いシーズンで上限に張り付いた瞬間に約束の効き目が消える
     // （実測で、果たしても破っても同じ 1350万円になっていた）。
@@ -848,13 +851,22 @@ class CareerEngine {
         // 常に「届く中で一番強いクラブ」を出していた頃は、誰もが最短で
         // 強豪に行き着き、キャリアで平均2回リーグ優勝していた。
         // 大きく格下のクラブは声をかけてこないので、下も切る。
+        // 監督に伝えた方針で、声がかかる範囲そのものが動く。
+        // 出場機会が欲しいと言えば身の丈まで、勝ちたいと言えば格下は来ない。
+        final cap = state.directive.reachCap;
+        final floor = state.directive.reachFloor;
+        final reached = reach + state.directive.reachBonus;
+        final upper = cap == null
+            ? reached
+            : min(reached, state.player.overall + cap);
+        final lower = state.player.overall + (floor ?? -14);
         final clubs =
             World.buildLeague(country.id, tier)
                 .where(
                   (c) =>
                       c.name != state.club.name &&
-                      c.strength <= reach &&
-                      c.strength >= state.player.overall - 14,
+                      c.strength <= upper &&
+                      c.strength >= lower,
                 )
                 .toList()
               ..sort((a, b) => b.strength.compareTo(a.strength));
@@ -1033,6 +1045,8 @@ class CareerEngine {
         (Formulas.negotiationBase +
                 state.agent.negotiation * Formulas.negotiationPerSkill +
                 performance +
+                // 監督に「条件を上げたい」と伝えてあるか。
+                state.directive.negotiationBonus +
                 state.player.personality.negotiationModifier)
             .clamp(0.05, 0.9);
 

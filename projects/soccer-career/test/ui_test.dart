@@ -26,6 +26,7 @@ import 'package:soccer_career/state/career_controller.dart';
 import 'package:soccer_career/ui/readable_width.dart';
 import 'package:soccer_career/models/look.dart';
 import 'package:soccer_career/models/physique.dart';
+import 'package:soccer_career/models/entourage.dart';
 import 'package:soccer_career/ui/screens/create_player_screen.dart';
 import 'package:soccer_career/ui/screens/hub_screen.dart';
 import 'package:soccer_career/ui/screens/match_screen.dart';
@@ -273,6 +274,22 @@ void main() {
       const Offset(0, -200),
     );
     expect(find.text('順位表'), findsOneWidget);
+  });
+
+  testWidgets('選んだ方針の効きが、本文に出る', (tester) async {
+    final controller = await newCareer();
+    await controller.setDirective(Directive.playingTime);
+    await pumpHub(tester, controller);
+
+    await tester.tap(find.widgetWithText(Tab, 'クラブ'));
+    await tester.pumpAndSettle();
+    // ツールチップに隠すと、スマホでは長押ししないと読めない。
+    await tester.dragUntilVisible(
+      find.text(Directive.playingTime.effect),
+      find.byType(ListView).first,
+      const Offset(0, -200),
+    );
+    expect(find.text(Directive.playingTime.effect), findsOneWidget);
   });
 
   testWidgets('世の中の反応が画面に出る', (tester) async {

@@ -1126,8 +1126,12 @@ class CareerController extends ChangeNotifier {
       if (partner != null) {
         // 出ただけで +2 だった頃は、プレイヤーの関与がゼロだった。
         // 味方を活かす手を選んだぶんが、そのまま呼吸になる。
+        // 条件の話ばかりしている選手は、ロッカールームで浮く。
+        // 呼吸はそのぶん深まらない。
         state.partner = partner.withSynergy(
-          partner.synergy + 1 + result.assistAttempts * 2,
+          partner.synergy +
+              ((1 + result.assistAttempts * 2) * state.directive.synergyFactor)
+                  .round(),
         );
       }
       _applyTacticFit(state, result);

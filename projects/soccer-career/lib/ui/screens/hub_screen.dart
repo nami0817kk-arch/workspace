@@ -2259,16 +2259,23 @@ class _ClubLifeCard extends StatelessWidget {
                   runSpacing: 8,
                   children: [
                     for (final d in Directive.values)
-                      Tooltip(
-                        message: d.effect,
-                        child: ChoiceChip(
-                          label: Text(d.label),
-                          selected: state.directive == d,
-                          onSelected: (_) => controller.setDirective(d),
-                        ),
+                      ChoiceChip(
+                        label: Text(d.label),
+                        selected: state.directive == d,
+                        onSelected: (_) => controller.setDirective(d),
                       ),
                   ],
                 ),
+                // 説明はツールチップに隠さない。スマホでは長押ししないと読めない。
+                if (state.directive.effect.isNotEmpty) ...[
+                  const SizedBox(height: 6),
+                  Text(
+                    state.directive.effect,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 12),
                 OutlinedButton(
                   onPressed: () => _convert(context),
