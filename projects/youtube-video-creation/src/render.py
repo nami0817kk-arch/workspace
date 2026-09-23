@@ -343,6 +343,12 @@ class Renderer:
             bed.alpha_composite(shade)
             self._stages[image_path] = bed
             return bed
+        # **左はぼかさず、写真から拾った色のべた塗りにする**（2026-09-23 ユーザー選択）。
+        # サムネは 2026-09-20 に同じ形へ変えてあった（`thumbnail._flat_bed`）のに、
+        # 動画の中だけ「同じ写真をぼかした敷き布」が残っていた。今日2回
+        # 「左がぼやけている」と言われたのは、どちらもこの作りが出たところ。
+        # 別の絵を持ってこないので権利は変わらず、ぼけた絵も出ない
+        bed = _flat_bed(photo, width, height)
         column_w = int(width * 0.5)
         column = _cover(photo, column_w, height)
         # 左端をなじませる。切り口が立つと貼り付けたように見える
@@ -1560,6 +1566,26 @@ def opening_photo(meta: dict) -> str:
     tiles = [str(x).strip() for x in ((meta or {}).get("thumbnail_photos") or [])]
     tiles = [x for x in tiles if x]
     return tiles[0] if tiles else ""
+
+
+def _flat_bed(photo: Image.Image, width: int, height: int) -> Image.Image:
+    """縦写真の左に敷く、**写真から拾った色のべた塗り**（2026-09-23 ユーザー選択）。
+
+    ぼかした敷き布は 2026-09-20 にサムネからは外してあったが、動画の中には
+    残っていた。上から下へのグラデーションにして、写真と地続きの色にする。
+    """
+    small = photo.convert("RGB").resize((24, 24), Image.LANCZOS)
+    pixels = [c for c in small.getdata() if 60 < sum(c) < 720] or list(small.getdata())
+    top = tuple(sum(c[i] for c in pixels) // len(pixels) for i in range(3))
+    top = tuple(int(c * 0.55 + 18) for c in top)
+    bottom = tuple(int(c * 0.45) for c in top)
+    bed = Image.new("RGBA", (width, height), top + (255,))
+    draw = ImageDraw.Draw(bed)
+    for y in range(height):
+        ratio = y / max(1, height)
+        draw.line([(0, y), (width, y)],
+                  fill=tuple(round(a + (b - a) * ratio) for a, b in zip(top, bottom)) + (255,))
+    return bed
 
 
 def _cover(image: Image.Image, width: int, height: int, focus: float | None = None,

@@ -829,3 +829,28 @@ def test_横長の写真を縦に敷くとき横の位置を指定できる():
 
     left = _cover(wide.convert("RGBA"), 1080, 1920, focus_x=0.0)
     assert left.convert("RGB").getpixel((40, 960)) == (0, 0, 0)
+
+
+def test_縦写真の左はぼかさずべた塗りにする(tmp_path):
+    """2026-09-23 ユーザー選択。サムネは 09-20 に直したのに、動画の中だけ
+    「同じ写真をぼかした敷き布」が残っていて、左がぼやけて見えていた。"""
+    from PIL import Image, ImageStat
+
+    from src.config import load_config
+    from src.render import Renderer
+
+    tall = tmp_path / "face.jpg"
+    # 左右で色が違う縦写真。ぼかして敷くと左に絵の形が残る
+    photo = Image.new("RGB", (480, 900), (200, 40, 40))
+    photo.paste(Image.new("RGB", (240, 900), (20, 20, 200)), (0, 0))
+    photo.save(tall)
+
+    renderer = Renderer(load_config(), tmp_path / "work")
+    stage = renderer._photo_stage(str(tall))
+    assert stage is not None
+    width = stage.width
+    # 左1/3の各行は、横方向にほぼ一色（べた塗り）であること
+    left = stage.convert("RGB").crop((0, 0, width // 3, stage.height))
+    for y in (int(stage.height * r) for r in (0.2, 0.4)):
+        row = left.crop((0, y, left.width, y + 1))
+        assert max(ImageStat.Stat(row).stddev) < 6, "左に絵が残っている（ぼかした敷き布）"
