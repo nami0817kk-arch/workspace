@@ -281,6 +281,14 @@ class Career {
   /// 達成した挑戦。**「作ってあるのに誰も届かない」を探すために数える。**
   List<Challenge> challenges = const [];
 
+  /// 監督の目標があった季と、達成した季。
+  /// **出来高払い契約の値付けに要る。**
+  int objectiveSeasons = 0;
+  int objectiveMetSeasons = 0;
+
+  /// 3つのうちいくつ達成したかの内訳。出来高払いの値付けに要る。
+  final List<int> objectiveCounts = [0, 0, 0, 0];
+
   /// スポンサーが付いていたシーズン数と、受け取った総額。
   /// **スポンサーはテストに一度も出てこなかった。**
   int sponsorSeasons = 0;
@@ -572,6 +580,12 @@ Future<Career> runCareer(
     if (age >= 33) {
       career.lateAppearances += stats.appearances;
       career.lateGoals += stats.goals;
+    }
+    if (done.objective != null) {
+      career.objectiveSeasons++;
+      final count = done.objective!.achievedCount(stats);
+      career.objectiveCounts[count]++;
+      if (done.objective!.achieved(stats)) career.objectiveMetSeasons++;
     }
     // スポンサーが付いていた季と、その年の受け取り。
     if (done.sponsor case final sponsor?) {

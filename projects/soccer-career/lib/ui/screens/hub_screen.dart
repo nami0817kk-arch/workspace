@@ -420,7 +420,11 @@ class _MatchTab extends StatelessWidget {
         _StatusCard(state: state),
         const SizedBox(height: 16),
         if (state.objective != null) ...[
-          _ObjectiveCard(objective: state.objective!, stats: stats),
+          _ObjectiveCard(
+            objective: state.objective!,
+            stats: stats,
+            incentiveCut: state.incentiveCut,
+          ),
           const SizedBox(height: 16),
         ],
         // 監督の期待は向こうから降ってくる数字。約束は自分で口にする数字。
@@ -4644,10 +4648,17 @@ class _InjuryCard extends StatelessWidget {
 
 /// 監督から与えられた今季の目標。達成状況を並べて見せる。
 class _ObjectiveCard extends StatelessWidget {
-  const _ObjectiveCard({required this.objective, required this.stats});
+  const _ObjectiveCard({
+    required this.objective,
+    required this.stats,
+    this.incentiveCut = 0,
+  });
 
   final SeasonObjective objective;
   final SeasonStats stats;
+
+  /// 出来高払いで削られている額（万円）。0 なら普通の契約。
+  final int incentiveCut;
 
   @override
   Widget build(BuildContext context) {
@@ -4660,7 +4671,10 @@ class _ObjectiveCard extends StatelessWidget {
           children: [
             Row(
               children: [
-                Text('監督の期待', style: theme.textTheme.titleSmall),
+                Text(
+                  incentiveCut > 0 ? '監督の期待（出来高払い）' : '監督の期待',
+                  style: theme.textTheme.titleSmall,
+                ),
                 const Spacer(),
                 Text(
                   '${objective.achievedCount(stats)} / 3',
@@ -4698,7 +4712,12 @@ class _ObjectiveCard extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             Text(
-              '2つ以上で達成。契約更改の年俸に効く。',
+              incentiveCut > 0
+                  // **賭けている額を、賭けている間ずっと出す。**
+                  ? '2つ以上で達成。今季は年俸を$incentiveCut万削って賭けている——'
+                        '2つで$incentiveCut万、3つで'
+                        '${(incentiveCut * Formulas.incentiveFull).round()}万が戻る。'
+                  : '2つ以上で達成。契約更改の年俸に効く。',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),

@@ -1618,6 +1618,7 @@ class CareerController extends ChangeNotifier {
   Future<void> advanceSeason({
     required TransferOffer accepted,
     Offseason offseason = Offseason.sharpen,
+    bool incentive = false,
   }) async {
     final state = _state;
     if (state == null) return;
@@ -1630,6 +1631,7 @@ class CareerController extends ChangeNotifier {
       state,
       accepted: accepted,
       offseason: offseason,
+      incentive: incentive,
     );
     // **オフの間に消えた怪我も、残すものは残す。**
     if (carried != null && _state!.injury == null) {
