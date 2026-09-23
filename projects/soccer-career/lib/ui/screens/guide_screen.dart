@@ -213,7 +213,8 @@ final List<_GuideSection> _sections = [
         '約${(Formulas.attributeChanceSlope * 100).toStringAsFixed(1)}%通りやすくなる。'
         '試合中の選択肢にも、今季伸びたぶんが↑で付く。',
     '「選手」タブの「選手としての水準」で、総合力が世界のどのあたりかが分かる。'
-        '総合力${Formulas.callUpOverall}が代表に呼ばれる目安。',
+        '代表に呼ばれる線もそこに出る。線は国の格で動き、'
+        '格の高い国ほど高い（格3の国で総合力${Formulas.callUpOverall}）。',
     '「クラブ」タブの「リーグの格付け」で、所属リーグが世界で何位かを見られる。'
         '上のリーグほど相手が強く、同じ手が通らなくなる。',
   ]),

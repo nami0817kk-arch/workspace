@@ -91,7 +91,11 @@ class TrainingSheet {
                         '大成功 ${(odds.great * 100).round()}%'
                         ' ・ 空回り ${(odds.flat * 100).round()}%'
                         ' ・ 消耗 ×${state.effort.cost}'
-                        ' ・ 怪我 ×${state.effort.injury}',
+                        // **倍率ではなく、実際の確率を出す。**
+                        // 「怪我 ×1.8」では、それが何%なのか分からない。
+                        // 判定（`rollInjury`）と同じ式から引く。
+                        ' ・ 怪我 ${(controller.injuryChanceNow * 100).toStringAsFixed(1)}%'
+                        '（×${state.effort.injury}）',
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),

@@ -417,7 +417,7 @@ class _MatchTab extends StatelessWidget {
           _NewsCard(news: controller.news.take(3).toList()),
           const SizedBox(height: 16),
         ],
-        _StatusCard(state: state),
+        _StatusCard(state: state, injuryChance: controller.injuryChanceNow),
         const SizedBox(height: 16),
         if (state.objective != null) ...[
           _ObjectiveCard(
@@ -902,9 +902,12 @@ class _NextMatchCard extends StatelessWidget {
 
 /// 今の状態を1枚に。数字を読まなくても、危ないかどうかが分かるようにする。
 class _StatusCard extends StatelessWidget {
-  const _StatusCard({required this.state});
+  const _StatusCard({required this.state, required this.injuryChance});
 
   final CareerState state;
+
+  /// 今のまま進めた週に怪我をする確率。判定（`rollInjury`）と同じ式から来る。
+  final double injuryChance;
 
   @override
   Widget build(BuildContext context) {
@@ -919,27 +922,40 @@ class _StatusCard extends StatelessWidget {
           children: [
             Text('今の状態', style: theme.textTheme.titleSmall),
             const SizedBox(height: 10),
+            // **数字を1行に並べる。** 言葉だけだと、良いのか悪いのかは
+            // 分かっても、どれくらいなのかが分からない。
+            Row(
+              children: [
+                _Metric(
+                  label: '疲労',
+                  value: '${state.fatigue.value}',
+                  note: state.fatigue.label,
+                  warn: state.fatigue.value >= Formulas.fatigueWarning,
+                ),
+                _Metric(
+                  label: '気持ち',
+                  value: '${state.morale.value}',
+                  note: state.morale.label,
+                  warn: state.morale.needsCare,
+                ),
+                _Metric(
+                  // **倍率ではなく確率。** 判定と同じ式から引く。
+                  label: '怪我',
+                  value: '${(injuryChance * 100).toStringAsFixed(1)}%',
+                  note: '1週あたり',
+                  warn: injuryChance >= 0.05,
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
             _ConditionBar(condition: player.condition),
             const SizedBox(height: 10),
             Wrap(
               spacing: 8,
               runSpacing: 8,
               children: [
-                _tag(
-                  theme,
-                  '気持ち ${state.morale.label}',
-                  warn: state.morale.needsCare,
-                ),
-                _tag(
-                  theme,
-                  // 疲れ切った身体ほど、引くのは重いほうの怪我。
-                  // 「限界まで来ている」だけでは、何が起きるか分からない。
-                  state.fatigue.value >= Formulas.fatigueWarning
-                      ? '疲労 ${state.fatigue.label}'
-                            '（怪我が重くなりやすい）'
-                      : '疲労 ${state.fatigue.label}',
-                  warn: state.fatigue.value >= Formulas.fatigueWarning,
-                ),
+                if (state.fatigue.value >= Formulas.fatigueWarning)
+                  _tag(theme, '怪我が重くなりやすい', warn: true),
                 // 構想外は、落ちてからでは戻せない。落ちる前に出す。
                 if (state.frozenOut)
                   _tag(theme, '構想外', warn: true)
@@ -1463,6 +1479,56 @@ class _PlayerCard extends StatelessWidget {
 
   static String _yen(int man) =>
       man >= 10000 ? '${(man / 10000).toStringAsFixed(1)}億円' : '$man万円';
+}
+
+/// **数字ひとつぶん。** 見出し・数字・一言を縦に積む。
+///
+/// 参考にした野球のキャリアゲームの状態カード
+/// （疲労度20 安全圏 / 調子 普通 / 怪我リスク 1%/週）。
+/// 言葉だけだと、良いのか悪いのかは分かっても**どれくらいなのか**が分からない。
+class _Metric extends StatelessWidget {
+  const _Metric({
+    required this.label,
+    required this.value,
+    required this.note,
+    this.warn = false,
+  });
+
+  final String label;
+  final String value;
+  final String note;
+  final bool warn;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final color = warn ? theme.colorScheme.error : theme.colorScheme.onSurface;
+    return Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+          Text(
+            value,
+            style: theme.textTheme.titleMedium?.copyWith(color: color),
+          ),
+          Text(
+            note,
+            style: theme.textTheme.labelSmall?.copyWith(
+              color: warn
+                  ? theme.colorScheme.error
+                  : theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _ConditionBar extends StatelessWidget {
@@ -3269,7 +3335,10 @@ class _LevelCard extends StatelessWidget {
     final player = state.player;
     final grade = Ranking.gradeFor(player.overall);
     final peak = Ranking.gradeFor(player.potential);
-    final toCallUp = Ranking.toCallUp(player.overall);
+    // 代表の線は国の格で動く。判定（`shouldCallUp`）と同じ数字を引く。
+    final national = World.byId(state.nationalTeam);
+    final callUpLine = Formulas.callUpLineFor(national.prestige);
+    final toCallUp = Ranking.toCallUp(player.overall, line: callUpLine);
 
     return Card(
       child: Padding(
@@ -3349,8 +3418,8 @@ class _LevelCard extends StatelessWidget {
             _LevelLine(
               icon: Icons.flag,
               text: toCallUp == 0
-                  ? '代表に呼ばれる総合力（${Formulas.callUpOverall}）には届いている'
-                  : '代表に呼ばれる総合力（${Formulas.callUpOverall}）まで あと$toCallUp',
+                  ? '${national.name}代表の線（総合力$callUpLine）には届いている'
+                  : '${national.name}代表の線（総合力$callUpLine）まで あと$toCallUp',
             ),
             _LevelLine(
               icon: Icons.trending_up,

@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/data/save_repository.dart';
 import 'package:soccer_career/game/career_engine.dart';
 import 'package:soccer_career/game/formulas.dart';
+import 'package:soccer_career/game/world.dart';
 import 'package:soccer_career/game/impact.dart';
 import 'package:soccer_career/game/match_engine.dart';
 import 'package:soccer_career/game/ranking.dart';
@@ -323,10 +324,11 @@ void main() {
     final grade = Ranking.gradeFor(controller.state!.player.overall);
     expect(find.text(grade.label), findsOneWidget);
     expect(find.textContaining('クラブの主力を上回っている'), findsOneWidget);
-    expect(
-      find.textContaining('代表に呼ばれる総合力（${Formulas.callUpOverall}）'),
-      findsOneWidget,
+    // 代表の線は国の格で動く。判定と同じ数字が出ていること。
+    final line = Formulas.callUpLineFor(
+      World.byId(controller.state!.nationalTeam).prestige,
     );
+    expect(find.textContaining('代表の線（総合力$line）'), findsOneWidget);
   });
 
   testWidgets('クラブのタブで、リーグが世界の何位か分かる', (tester) async {

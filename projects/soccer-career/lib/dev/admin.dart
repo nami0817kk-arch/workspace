@@ -18,6 +18,7 @@ import '../game/formulas.dart';
 import '../game/match_engine.dart';
 import '../game/ranking.dart';
 import '../game/scenarios.dart';
+import '../game/world.dart';
 import '../models/attributes.dart';
 import '../models/career.dart';
 import '../models/injury.dart';
@@ -62,7 +63,9 @@ class AdminImpact {
     final budget = state.budget;
 
     // 代表の線まであといくつか。招集の判定と同じ数字を見る。
-    final toCallUp = Formulas.callUpOverall - player.overall;
+    final toCallUp =
+        Formulas.callUpLineFor(World.byId(state.nationalTeam).prestige) -
+        player.overall;
     // コンディションが局面の成功率に効く量。判定と同じ関数。
     final condition = MatchInProgress.conditionModifier(player.condition);
     // 今のまま練習した週に怪我をする確率。判定と同じ関数。
