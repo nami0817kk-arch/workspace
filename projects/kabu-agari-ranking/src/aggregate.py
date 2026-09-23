@@ -95,3 +95,51 @@ def search_index(days: list[dict]) -> dict:
         "to": window[0]["rec_date"],
         "stocks": sorted(stocks.values(), key=lambda e: e["c"]),
     }
+
+
+def _iso_week(rec_date: str) -> tuple[int, int]:
+    from datetime import date as _date
+
+    y, w, _ = _date.fromisoformat(rec_date).isocalendar()
+    return y, w
+
+
+def weekly_summaries(days: list[dict]) -> list[dict]:
+    """週ごとのまとめ。新しい週が先。
+
+    日ごとの表は毎日増えるが、「その週に何が起きたか」を見る場所が無かった。
+    週の区切りは ISO 週（月曜始まり）。連休で2日しか無い週もそのまま1週として出す。
+    """
+    buckets: dict[tuple[int, int], list[dict]] = {}
+    for day in days:
+        buckets.setdefault(_iso_week(day["rec_date"]), []).append(day)
+
+    out = []
+    for (year, week), group in buckets.items():
+        group = sorted(group, key=lambda d: d["rec_date"], reverse=True)
+        movers = []
+        for day in group:
+            for row in day.get("gainers", []):
+                movers.append({**row, "rec_date": day["rec_date"]})
+        movers.sort(key=lambda r: r["change_pct"], reverse=True)
+
+        out.append({
+            "slug": f"{year}-W{week:02d}",
+            "year": year,
+            "week": week,
+            "from": group[-1]["rec_date"],
+            "to": group[0]["rec_date"],
+            "day_count": len(group),
+            "days": [
+                {
+                    "rec_date": d["rec_date"],
+                    "top": (d.get("gainers") or [None])[0],
+                }
+                for d in group
+            ],
+            "top_movers": movers[:10],
+            "frequent": frequent(group, "gainers", top_n=10),
+        })
+
+    out.sort(key=lambda w: (w["year"], w["week"]), reverse=True)
+    return out

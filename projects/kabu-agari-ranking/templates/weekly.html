@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}{{ w.from }}〜{{ w.to }} の週まとめ｜値上がり株ランキング{% endblock %}
+{% block description %}{{ w.from }}から{{ w.to }}（{{ w.day_count }}営業日）の値上がりランキングを通して集計。最も上昇した銘柄と、複数回ランクインした銘柄をまとめています。{% endblock %}
+{% block content %}
+<h1>{{ w.from }} 〜 {{ w.to }} の週まとめ</h1>
+<p class="summary">{{ w.summary }}</p>
+
+<h2>この週で最も上昇した10銘柄</h2>
+<p>週内の各営業日の値上がりランキングを通して、上昇率の高い順に並べたものです（同じ銘柄が複数回入ることがあります）。</p>
+<div class="table-wrap">
+<table class="ranking">
+  <caption>{{ w.from }}〜{{ w.to }} の上昇率上位10</caption>
+  <thead>
+    <tr>
+      <th scope="col">順位</th>
+      <th scope="col">銘柄名</th>
+      <th scope="col">コード</th>
+      <th scope="col">日付</th>
+      <th scope="col">終値</th>
+      <th scope="col">上昇率</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for row in w.top_movers %}
+    <tr>
+      <th scope="row">{{ loop.index }}</th>
+      <td>{{ row.name }}</td>
+      <td>{{ row.code }}</td>
+      <td><a href="{{ base_url }}archive/gainers/{{ row.rec_date }}.html">{{ row.rec_date }}</a></td>
+      <td>{{ "{:,.0f}".format(row.close) if row.close is not none else "-" }}</td>
+      <td class="gain">{{ "%+.2f"|format(row.change_pct) }}%</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+{% if w.frequent %}
+<h2>この週に複数回ランクインした銘柄</h2>
+<div class="table-wrap">
+<table class="ranking">
+  <caption>{{ w.from }}〜{{ w.to }} に値上がりランキングへ2回以上入った銘柄</caption>
+  <thead>
+    <tr>
+      <th scope="col">回数</th>
+      <th scope="col">銘柄名</th>
+      <th scope="col">コード</th>
+      <th scope="col">最大上昇率</th>
+      <th scope="col">最長連続</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for e in w.frequent %}
+    <tr>
+      <th scope="row">{{ e.count }}回</th>
+      <td>{{ e.name }}</td>
+      <td>{{ e.code }}</td>
+      <td class="gain">{{ "%+.2f"|format(e.best_pct) }}%</td>
+      <td>{{ e.streak }}日</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+
+<h2>日ごとの首位</h2>
+<div class="archive-list">
+  {% for d in w.days %}
+  <a href="{{ base_url }}archive/gainers/{{ d.rec_date }}.html">
+    {{ d.rec_date }}{% if d.top %} — {{ d.top.name }}（{{ d.top.code }}） {{ "%+.2f"|format(d.top.change_pct) }}%{% endif %}
+  </a>
+  {% endfor %}
+</div>
+{% include "_ad_slot.html" %}
+<nav class="day-nav">
+  {% if older %}<a class="prev" href="{{ older }}.html">← {{ older }}</a>{% endif %}
+  <a href="index.html">週まとめ一覧</a>
+  {% if newer %}<a class="next" href="{{ newer }}.html">{{ newer }} →</a>{% endif %}
+</nav>
+{% endblock %}

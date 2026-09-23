@@ -166,6 +166,50 @@ def group_by_month(dates: list[str]) -> list[dict]:
     return months
 
 
+def week_summary(week: dict) -> str:
+    """週まとめの一文。数えた事実だけを書く。"""
+    movers = week["top_movers"]
+    if not movers:
+        return f"{week['day_count']}営業日ぶんのランキングを掲載しています。"
+    top = movers[0]
+    repeat = len(week["frequent"])
+    parts = [
+        f"{week['from']} から {week['to']} までの{week['day_count']}営業日で、"
+        f"最も上昇したのは{top['rec_date']}の{top['name']}（{top['code']}）で"
+        f"{top['change_pct']:.2f}%でした。"
+    ]
+    if repeat:
+        parts.append(f"この週に2回以上ランキングへ入った銘柄は{repeat}銘柄です。")
+    return "".join(parts)
+
+
+def _build_weekly_pages(days: list[dict]) -> list[dict]:
+    """週まとめを書き出し、sitemap 用に slug の一覧を返す。"""
+    weeks = aggregate.weekly_summaries(days)
+    tmpl = _env.get_template("weekly.html")
+    for i, week in enumerate(weeks):
+        week["summary"] = week_summary(week)
+        _write(
+            _OUTPUT_DIR / "weekly" / f"{week['slug']}.html",
+            tmpl.render(
+                base_url="../",
+                canonical=canonical_url(f"weekly/{week['slug']}.html"),
+                w=week,
+                newer=weeks[i - 1]["slug"] if i > 0 else None,
+                older=weeks[i + 1]["slug"] if i + 1 < len(weeks) else None,
+            ),
+        )
+    _write(
+        _OUTPUT_DIR / "weekly" / "index.html",
+        _env.get_template("weekly_index.html").render(
+            base_url="../",
+            canonical=canonical_url("weekly/index.html"),
+            weeks=weeks,
+        ),
+    )
+    return weeks
+
+
 def _load_all_days() -> list[dict]:
     """data/YYYY-MM-DD.json を全て読み込み、rec_date 降順（新しい順）で返す。
 
@@ -259,7 +303,7 @@ _ADS_TXT = """# Google AdSense 審査通過後、下記のコメントを解除�
 """
 
 
-def _write_sitemap(days: list[dict]) -> None:
+def _write_sitemap(days: list[dict], weeks: list[dict]) -> None:
     latest_date = days[0]["rec_date"]
     urls = [
         (canonical_url(name), latest_date)
@@ -269,6 +313,10 @@ def _write_sitemap(days: list[dict]) -> None:
             "frequent.html", "search.html",
         )
     ]
+    urls.append((canonical_url("weekly/index.html"), latest_date))
+    for week in weeks:
+        urls.append((canonical_url(f"weekly/{week['slug']}.html"), week["to"]))
+
     for json_key, dirname, *_rest in _RANKING_TYPES:
         urls.append((canonical_url(f"archive/{dirname}/index.html"), latest_date))
         for day in days:
@@ -305,6 +353,7 @@ def build_all() -> None:
     _env.globals["GAINERS_DATES_MAX"] = gainers_dates[0] if gainers_dates else ""
 
     _build_ranking_pages(days)
+    weeks = _build_weekly_pages(days)
 
     search_data = aggregate.search_index(days)
     (_OUTPUT_DIR / "search-index.json").write_text(
@@ -356,7 +405,7 @@ def build_all() -> None:
 
     (_OUTPUT_DIR / "robots.txt").write_text(_ROBOTS_TXT, encoding="utf-8")
     (_OUTPUT_DIR / "ads.txt").write_text(_ADS_TXT, encoding="utf-8")
-    _write_sitemap(days)
+    _write_sitemap(days, weeks)
 
     static_dir = _ROOT / "static"
     if static_dir.exists():

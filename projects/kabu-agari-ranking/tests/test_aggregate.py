@@ -100,3 +100,33 @@ def test_索引のキーは短いまま():
 
 def test_索引はデータが無くても形を保つ():
     assert aggregate.search_index([]) == {"from": "", "to": "", "stocks": []}
+
+
+# --- 週まとめ ---------------------------------------------------------------
+
+def test_週はISO週で区切る():
+    days = [
+        _day("2026-09-21", [_row("1001", "アルファ", 5.0)]),   # W39（月）
+        _day("2026-09-18", [_row("1002", "ベータ", 9.0)]),     # W38（金）
+        _day("2026-09-14", [_row("1003", "ガンマ", 7.0)]),     # W38（月）
+    ]
+    weeks = aggregate.weekly_summaries(days)
+    assert [w["slug"] for w in weeks] == ["2026-W39", "2026-W38"]
+    assert weeks[1]["from"] == "2026-09-14" and weeks[1]["to"] == "2026-09-18"
+    assert weeks[1]["day_count"] == 2
+
+
+def test_週の上位は日をまたいで上昇率順():
+    weeks = aggregate.weekly_summaries(DAYS)
+    movers = weeks[0]["top_movers"]
+    assert [m["change_pct"] for m in movers] == sorted(
+        (m["change_pct"] for m in movers), reverse=True
+    )
+    assert movers[0]["rec_date"]  # どの日の数字かを持っている
+
+
+def test_週ごとの首位が日別に出る():
+    weeks = aggregate.weekly_summaries(DAYS)
+    days_out = weeks[0]["days"]
+    assert days_out[0]["rec_date"] == "2026-09-18"
+    assert days_out[0]["top"]["rank"] == 1
