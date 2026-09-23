@@ -2,7 +2,8 @@ name: Daily Gainers Site
 
 # 運用: 取得は手元PC（run-daily.ps1、毎平日16:10）が行い data/ を push する。
 # kabutan が GitHub Actions の IP を 405 でブロックしているため、CI からは取得しない。
-# この CI は push された data/ からのビルド・X投稿・公開と、鮮度の監視だけを行う。
+# この CI は push された data/ からのビルド・公開と、鮮度の監視だけを行う。
+# X への投稿は手元の run-daily.ps1 から行う（重複投稿を防ぐ記録の置き場が手元しか無い）。
 on:
   push:
     branches: [master]

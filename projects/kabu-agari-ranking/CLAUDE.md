@@ -39,7 +39,9 @@ python src/build_site.py    # 取得 → data/ 保存 → output/ 生成
   必要なキーは `.env.example` にある。
 - **取得は手元PCのタスクスケジューラ**（run-daily.ps1、毎平日16:10）が行い、data/ を push する。
   kabutan は GitHub Actions の IP を 405 でブロックするため、CI から取得する形に戻さない。
-  CI は push された data/ からのビルド・X投稿・公開と、17:00 JST の鮮度監視を担当する。
+  CI は push された data/ からのビルド・公開と、17:00 JST の鮮度監視を担当する。
+  **X への投稿は手元の run-daily.ps1 から**（重複投稿を防ぐ記録 data/last_tweet.txt が
+  残る場所が手元しか無いため）。キーが未設定なら何もせず飛ばす。
 - **取り逃した営業日は二度と取れない。** kabutan のランキングは当日分しか出さないので、
   取得が失敗した日はその日のうちに再実行する（翌日には次の営業日に切り替わっている）。
   16:10 の自動実行が失敗していたら、気づいた時点で `src/build_site.py` を手で回す。

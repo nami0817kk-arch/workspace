@@ -116,6 +116,22 @@ if ($LASTEXITCODE -ne 0) {
     Add-Content $log "no new data to commit"
 }
 
+# X への投稿。キーが無ければ何もせず正常終了する（post_to_x.py 側で判定）。
+#
+# CI ではなく手元で投げているのは、重複投稿を防ぐ記録（data/last_tweet.txt）が
+# 残る場所がここしか無いため。CI のワークスペースは毎回消える。
+# 投稿の可否は同じ rec_date を二度投げないことだけで判断する。失敗しても
+# サイトの公開には影響しないので、ここでは止めない。
+$envFile = Join-Path $repo ".env"
+if (Test-Path $envFile) {
+    foreach ($line in Get-Content $envFile -Encoding UTF8) {
+        if ($line -match '^\s*([A-Z_]+)\s*=\s*(.+?)\s*$') {
+            [Environment]::SetEnvironmentVariable($matches[1], $matches[2])
+        }
+    }
+}
+Run "`"$repo\.venv\Scripts\python.exe`" src\post_to_x.py" | Out-Null
+
 # ここまでは全部成功していても、当日分が入っていないことがある
 # （kabutan が空を返す、日付がずれる等）。2026-09-08 の欠測はこの形で、
 # exit 0 だったため誰も気づかなかった。取り逃した営業日は二度と取れないので、
