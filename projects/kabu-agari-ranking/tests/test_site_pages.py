@@ -175,7 +175,8 @@ def test_欠測を隠さずに書く(site):
     for d in ("2026-09-14", "2026-09-16"):  # 9/15（火）が抜けている
         _write_day(data_dir, d)
     render.build_all()
-    assert "2026-09-15" in (out_dir / "about.html").read_text(encoding="utf-8")
+    # 画面には日本語表記で出す（文章の中なので）
+    assert "2026年9月15日（火）" in (out_dir / "about.html").read_text(encoding="utf-8")
 
 
 def test_前回からの入れ替わりを数える():
