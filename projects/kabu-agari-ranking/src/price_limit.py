@@ -106,6 +106,23 @@ def classify(close: float | None, change_pct: float | None) -> str:
     return ""
 
 
+def table_rows() -> list[dict]:
+    """制限値幅の表を、そのまま画面に出せる形で返す。
+
+    用語解説のページはこの関数から作る。表を2箇所に書くと必ずずれるため。
+    """
+    rows = []
+    prev = 0
+    for upper, width in _LIMIT_TABLE:
+        rows.append({
+            "range": f"{prev:,}円以上 {upper:,}円未満" if prev else f"{upper:,}円未満",
+            "width": f"上下 {width:,}円",
+        })
+        prev = upper
+    rows.append({"range": f"{prev:,}円以上", "width": f"上下 {_ABOVE_TABLE:,}円"})
+    return rows
+
+
 LABELS = {
     STOP_HIGH: "ストップ高",
     STOP_LOW: "ストップ安",

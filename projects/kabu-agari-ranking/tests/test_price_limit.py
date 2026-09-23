@@ -76,3 +76,12 @@ def test_丸め誤差でストップ高を取りこぼさない():
 def test_印には説明が対応している():
     for key in (pl.STOP_HIGH, pl.STOP_LOW, pl.OVER_LIMIT):
         assert pl.LABELS[key] and pl.DESCRIPTIONS[key]
+
+
+def test_用語解説に出す表は判定と同じ元を見ている():
+    rows = pl.table_rows()
+    assert rows[0] == {"range": "100円未満", "width": "上下 30円"}
+    assert rows[1]["range"] == "100円以上 200円未満"
+    assert rows[-1]["range"] == "50,000,000円以上"
+    # 区分の数は表そのもの＋最後の「以上」
+    assert len(rows) == len(pl._LIMIT_TABLE) + 1

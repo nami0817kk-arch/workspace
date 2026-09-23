@@ -590,6 +590,7 @@ def build_all() -> None:
         # ポリシーの最終更新はデータの日付とは別物。文面を直したときに手で上げる。
         "policy_updated": POLICY_UPDATED,
         "missing_days": missing_business_days(days),
+        "limit_table": price_limit.table_rows(),
     }
     for name in ("about.html", "privacy.html", "guide.html", "glossary.html"):
         tmpl = _env.get_template(name)
