@@ -63,6 +63,8 @@ class Playstyle {
     this.habits = const Habits(),
     this.offseason = Offseason.sharpen,
     this.rehab = RehabPlan.standard,
+    this.eventPick,
+    this.lifestyle,
     this.effort = TrainingEffort.normal,
     this.easeFrom,
     this.pick,
@@ -161,6 +163,16 @@ class Playstyle {
 
   /// 怪我からの戻し方。**テストから一度も呼ばれていなかった**ので足した。
   final RehabPlan rehab;
+
+  /// ピッチ外の出来事で、何番目の選択肢を選ぶか。
+  ///
+  /// null なら無作為。**これまで無作為しか無かった**ので、
+  /// 「どちらを選ぶか」を比べられなかった。
+  final int? eventPick;
+
+  /// 生活水準。null なら既定（普通）のまま。
+  /// **`setLifestyle` はテストから一度も呼ばれていなかった。**
+  final int? lifestyle;
 }
 
 /// 1つのキャリアの結末。
@@ -372,7 +384,10 @@ Future<Career> runCareer(
       if (controller.pendingEvent != null) {
         career.events++;
         final choices = controller.pendingEvent!.choices;
-        await controller.resolveEvent(choices[random.nextInt(choices.length)]);
+        final at = style.eventPick == null
+            ? random.nextInt(choices.length)
+            : style.eventPick!.clamp(0, choices.length - 1);
+        await controller.resolveEvent(choices[at]);
       }
       // 「無傷 → 負傷」の瞬間だけ数える。離脱中は毎試合 Injury が作り直される
       // ので、単に別物かどうかで見ると離脱の長さを数えてしまう。
@@ -594,6 +609,9 @@ Future<Career> runCareer(
 
     // 稼ぎの使い道。
     if (style.invests) _invest(controller);
+    if (style.lifestyle != null) {
+      await controller.setLifestyle(style.lifestyle!);
+    }
 
     // 監督が代わると就ける役割が変わる。毎季かけ直す。
     if (style.role != null) await controller.setRole(style.role);

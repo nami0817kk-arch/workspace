@@ -768,8 +768,18 @@ class LifeEvents {
       choices: [
         LifeChoice(
           label: '契約する',
-          outcome: '自分の名前が入ったスパイクが店頭に並ぶ。',
-          effect: LifeEffect(fame: 5, special: LifeSpecial.acceptSponsor),
+          outcome:
+              '自分の名前が入ったスパイクが店頭に並ぶ。'
+              '撮影とイベントで、オフは短くなった。',
+          // **「拘束も増える」と書いてあるのに、失うものが無かった。**
+          // 受ければ金と名前がただで増えるだけの選択になっていたので、
+          // 本文どおり身体に返す。
+          effect: LifeEffect(
+            fame: 5,
+            fatigue: 8,
+            condition: -6,
+            special: LifeSpecial.acceptSponsor,
+          ),
         ),
         LifeChoice(
           label: '断る',
@@ -788,11 +798,15 @@ class LifeEvents {
       choices: [
         LifeChoice(
           label: '受ける',
-          outcome: 'ロッカールームの空気が、自分に向くようになった。',
+          outcome:
+              'ロッカールームの空気が、自分に向くようになった。'
+              '背負うものも、その日から増えた。',
+          // **「責任は重い」と書いてあるのに、得るものしか無かった。**
+          // 腕章は関係を厚くするが、重圧は自分で引き受ける。
           effect: LifeEffect(
             manager: 8,
             teammates: 10,
-            morale: 5,
+            morale: -4,
             ambition: 1,
             special: LifeSpecial.takeCaptain,
           ),
