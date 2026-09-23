@@ -9,6 +9,7 @@ from jinja2 import Environment, FileSystemLoader
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import aggregate
 from market_calendar import CalendarOutOfRange, next_business_day
 
 _ROOT = Path(__file__).resolve().parent.parent
@@ -261,6 +262,7 @@ def _write_sitemap(days: list[dict]) -> None:
         for name in (
             "index.html", "losers.html", "active.html",
             "about.html", "privacy.html", "guide.html", "glossary.html",
+            "frequent.html",
         )
     ]
     for json_key, dirname, *_rest in _RANKING_TYPES:
@@ -299,6 +301,19 @@ def build_all() -> None:
     _env.globals["GAINERS_DATES_MAX"] = gainers_dates[0] if gainers_dates else ""
 
     _build_ranking_pages(days)
+
+    _write(
+        _OUTPUT_DIR / "frequent.html",
+        _env.get_template("frequent.html").render(
+            base_url="",
+            canonical=canonical_url("frequent.html"),
+            day_count=len(days),
+            period_from=days[-1]["rec_date"],
+            period_to=days[0]["rec_date"],
+            gainers=aggregate.frequent(days, "gainers"),
+            losers=aggregate.frequent(days, "losers"),
+        ),
+    )
 
     for name in ("about.html", "privacy.html", "guide.html", "glossary.html"):
         tmpl = _env.get_template(name)
