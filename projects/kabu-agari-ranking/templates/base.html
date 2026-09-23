@@ -55,6 +55,18 @@
     }
   }
   * { box-sizing: border-box; }
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    background: var(--card-bg);
+    color: var(--text);
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+    z-index: 10;
+  }
+  .skip-link:focus { left: 0.5rem; top: 0.5rem; }
+  main:focus { outline: none; }
   body {
     margin: 0;
     font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
@@ -311,6 +323,8 @@
 <!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c8d25daf2f614e8c8b4e20694bacc1f8"}'></script><!-- End Cloudflare Web Analytics -->
 </head>
 <body>
+{# キーボードや読み上げで来た人が、毎ページ同じナビを通らずに本文へ行けるようにする #}
+<a class="skip-link" href="#main">本文へスキップ</a>
 <header class="site-header">
   <div class="inner">
     <a class="logo" href="{{ base_url }}index.html">値上がり株ランキング</a>
@@ -333,7 +347,7 @@
 </header>
 
 
-<main>
+<main id="main" tabindex="-1">
 {% block breadcrumb %}{% endblock %}
 {% include "_ad_slot.html" %}
 {% block content %}{% endblock %}
