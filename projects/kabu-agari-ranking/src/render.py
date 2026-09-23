@@ -11,6 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import aggregate
 import charts
+import price_limit
 from market_calendar import CalendarOutOfRange, next_business_day
 
 _ROOT = Path(__file__).resolve().parent.parent
@@ -95,6 +96,28 @@ def next_update_note(rec_date: str) -> str:
     return note
 
 
+def annotate_rows(rows: list[dict]) -> list[dict]:
+    """各行に、制限値幅から見た値動きの性質（ストップ高など）を付ける。
+
+    「何%動いたか」だけでは、上限まで買われたのか途中で止まったのかが
+    分からない。前日終値と制限値幅から機械的に決まるので、ここで付ける。
+    """
+    out = []
+    for row in rows:
+        flag = price_limit.classify(row.get("close"), row.get("change_pct"))
+        out.append({**row, "flag": flag, "flag_label": price_limit.LABELS.get(flag, "")})
+    return out
+
+
+def flag_notes(rows: list[dict]) -> list[dict]:
+    """その表に出てくる印の説明だけを返す（出ていない印は説明しない）。"""
+    seen = []
+    for key in (price_limit.STOP_HIGH, price_limit.STOP_LOW, price_limit.OVER_LIMIT):
+        if any(r.get("flag") == key for r in rows):
+            seen.append({"label": price_limit.LABELS[key], "text": price_limit.DESCRIPTIONS[key]})
+    return seen
+
+
 def day_summary(rows: list[dict], kind: str) -> str:
     """その日のランキングを一文で説明する。
 
@@ -120,6 +143,10 @@ def day_summary(rows: list[dict], kind: str) -> str:
 
     parts = [f"首位は{top['name']}（{top['code']}）の{pct:.2f}%{verb}。"]
     parts.append(f"上位{n}銘柄のうち{big}銘柄が10%以上{verb}しました。")
+    stop_key = price_limit.STOP_HIGH if kind == "gainers" else price_limit.STOP_LOW
+    stopped = sum(1 for r in rows if price_limit.classify(r.get("close"), r.get("change_pct")) == stop_key)
+    if stopped:
+        parts.append(f"うち{stopped}銘柄は{price_limit.LABELS[stop_key]}です。")
     if cheap:
         parts.append(f"終値1,000円未満の低位株が{cheap}銘柄含まれます。")
     return "".join(parts)
@@ -286,7 +313,7 @@ def _build_ranking_pages(days: list[dict]) -> None:
     archive_index_tmpl = _env.get_template("ranking_archive_index.html")
 
     for json_key, dirname, heading, metric_label, out_name, intro_fmt in _RANKING_TYPES:
-        rows = latest.get(json_key, [])
+        rows = annotate_rows(latest.get(json_key, []))
         _write(
             _OUTPUT_DIR / out_name,
             today_tmpl.render(
@@ -296,6 +323,7 @@ def _build_ranking_pages(days: list[dict]) -> None:
                 rec_date_ja=format_date_ja(latest["rec_date"]),
                 next_update=next_update_note(latest["rec_date"]),
                 rows=rows,
+                notes=flag_notes(rows),
                 heading=heading,
                 metric_label=metric_label,
                 intro=intro_fmt.format(n=len(rows)),
@@ -313,7 +341,7 @@ def _build_ranking_pages(days: list[dict]) -> None:
         )
 
         # 新しい順。前後ナビを付けるので、先に対象日を確定させてから描く。
-        with_data = [(d["rec_date"], d[json_key]) for d in days if d.get(json_key)]
+        with_data = [(d["rec_date"], annotate_rows(d[json_key])) for d in days if d.get(json_key)]
         dates_with_data = [rec for rec, _ in with_data]
 
         for i, (rec, day_rows) in enumerate(with_data):
@@ -325,6 +353,7 @@ def _build_ranking_pages(days: list[dict]) -> None:
                     rec_date=rec,
                     rec_date_ja=format_date_ja(rec),
                     rows=day_rows,
+                    notes=flag_notes(day_rows),
                     heading=heading,
                     metric_label=metric_label,
                     summary=day_summary(day_rows, json_key),

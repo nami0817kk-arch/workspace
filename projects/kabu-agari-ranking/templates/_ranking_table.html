@@ -18,10 +18,16 @@
       <td>{{ row.name }}</td>
       <td>{{ row.code }}</td>
       <td>{{ "{:,.0f}".format(row.close) if row.close is not none else "-" }}</td>
-      <td class="{{ 'gain' if row.change_pct >= 0 else 'loss' }}">{{ "%+.2f"|format(row.change_pct) }}%</td>
+      <td class="{{ 'gain' if row.change_pct >= 0 else 'loss' }}">{{ "%+.2f"|format(row.change_pct) }}%{% if row.flag_label %}
+        <span class="badge badge-{{ row.flag }}">{{ row.flag_label }}</span>{% endif %}</td>
       <td>{{ "{:,}".format(row.metric_value) if row.metric_value is not none else "-" }}</td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
 </div>
+{% if notes %}
+<ul class="flag-notes">
+  {% for n in notes %}<li><span class="badge">{{ n.label }}</span> {{ n.text }}</li>{% endfor %}
+</ul>
+{% endif %}
