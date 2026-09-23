@@ -538,6 +538,9 @@ def _build_ranking_pages(days: list[dict]) -> None:
 
 _ROBOTS_TXT = f"""User-agent: *
 Allow: /
+# 検索ページが読み込む索引。ページではないので取りに来なくてよい
+# （中身は各ページに載っている情報の写し）。
+Disallow: /search-index.json
 
 Sitemap: {SITE_URL}/sitemap.xml
 """

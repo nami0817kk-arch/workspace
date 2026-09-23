@@ -74,6 +74,13 @@ function RunRetry($cmdline) {
     return 1
 }
 
+# ログは毎日追記されるので、放っておくと際限なく伸びる。
+# 1MB を超えたら1世代だけ残して切り替える（消さないのは、直前の失敗を
+# 追えなくなると原因が分からなくなるため）。
+if ((Test-Path $log) -and ((Get-Item $log).Length -gt 1MB)) {
+    Move-Item $log "$log.1" -Force
+}
+
 Add-Content $log "=== $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') ==="
 
 if ((RunRetry "git pull --ff-only origin master") -ne 0) {

@@ -282,6 +282,17 @@
     background: var(--card-bg);
     color: var(--text);
   }
+  /* 紙に出すときは、操作するものと広告枠を落として表だけ残す */
+  @media print {
+    header.site-header nav, .date-jump, .ad-slot, .day-nav, .crumbs,
+    .stock-search, #results, footer { display: none; }
+    body { background: #fff; color: #000; }
+    main { max-width: none; padding: 0; }
+    table.ranking { min-width: 0; font-size: 10pt; }
+    table.ranking th[data-sort]::after { content: ""; }
+    .summary { border-left: 2px solid #000; }
+    a[href]::after { content: ""; }
+  }
   dl { margin: 0 0 1rem; }
   dt { margin-top: 0.75rem; }
   dd { margin: 0.25rem 0 0; color: var(--muted); }
