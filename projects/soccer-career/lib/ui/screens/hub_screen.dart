@@ -5135,6 +5135,15 @@ class _PersonCard extends StatelessWidget {
             if (state.player.nationality.all.length > 1) ...[
               const SizedBox(height: 12),
               Text('代表を選ぶ', style: theme.textTheme.labelMedium),
+              const SizedBox(height: 2),
+              // **どちらを選ぶかの取引を、数字で出す。**
+              // 小さい国は呼ばれやすく、世界大会では勝ち上がれない。
+              Text(
+                '小さい国ほど呼ばれやすく、強い国ほど世界大会で勝ち上がる。',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
               const SizedBox(height: 4),
               Wrap(
                 spacing: 8,
@@ -5142,7 +5151,10 @@ class _PersonCard extends StatelessWidget {
                 children: [
                   for (final id in state.player.nationality.all)
                     ChoiceChip(
-                      label: Text(World.byId(id).name),
+                      label: Text(
+                        '${World.byId(id).name}'
+                        '（総合力${Formulas.callUpLineFor(World.byId(id).prestige)}〜）',
+                      ),
                       selected:
                           (state.nationalTeamId ??
                               state.player.nationality.primary) ==
