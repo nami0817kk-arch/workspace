@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../models/challenge.dart';
 import '../../models/legend.dart';
 import '../../state/career_controller.dart';
 import '../player_banner.dart';
@@ -69,7 +70,7 @@ class _HallScreenState extends State<HallScreen> {
                 )
               : ListView.builder(
                   padding: const EdgeInsets.all(16),
-                  itemCount: legends.length + 1,
+                  itemCount: legends.length + 2,
                   itemBuilder: (context, i) {
                     // 一番上に歴代の記録。次の選手が追う的が無いと、
                     // 殿堂は過去を眺めるだけの場所になる。
@@ -79,7 +80,15 @@ class _HallScreenState extends State<HallScreen> {
                         child: _RecordsCard(hall: widget.controller.hall),
                       );
                     }
-                    final legend = legends[i - 1];
+                    // 記録は「多いほど良い」ものしかない。**違う形のキャリアを
+                    // 試す理由**は、その下の挑戦のほうに置く。
+                    if (i == 1) {
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 12),
+                        child: _ChallengesCard(hall: widget.controller.hall),
+                      );
+                    }
+                    final legend = legends[i - 2];
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 12),
                       child: _LegendCard(
@@ -88,11 +97,88 @@ class _HallScreenState extends State<HallScreen> {
                         records: legends.length >= 2
                             ? widget.controller.hall.recordsHeldBy(legend)
                             : const [],
-                        onRemove: () => _remove(i - 1, legend),
+                        onRemove: () => _remove(i - 2, legend),
                       ),
                     );
                   },
                 ),
+        ),
+      ),
+    );
+  }
+}
+
+/// 挑戦の一覧。**達成したものと、まだのもの。**
+///
+/// 通算ゴールや通算出場は同じ遊び方を続けるほど伸びるので、
+/// 2人目を作る理由にならない。ここに並ぶのは
+/// **形の違うキャリアでしか届かないもの**だけ。
+class _ChallengesCard extends StatelessWidget {
+  const _ChallengesCard({required this.hall});
+
+  final Hall hall;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.textTheme.bodySmall?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+    );
+    final done = Challenge.values.where(hall.isCleared).length;
+    // **畳んでおく。** 9件を開いたままにすると、殿堂に並ぶ選手が
+    // 画面の外へ押し出される（実際にテストが選手を見つけられなくなった）。
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: Theme(
+        data: theme.copyWith(dividerColor: Colors.transparent),
+        child: ExpansionTile(
+          key: const PageStorageKey('hall-challenges'),
+          title: Text('挑戦', style: theme.textTheme.titleSmall),
+          subtitle: Text(
+            '$done / ${Challenge.values.length} 達成 ・'
+            ' どれも違う形のキャリアでしか届かない',
+            style: muted,
+          ),
+          childrenPadding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+          expandedCrossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (final c in Challenge.values)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      hall.isCleared(c)
+                          ? Icons.check_circle
+                          : Icons.circle_outlined,
+                      size: 18,
+                      color: hall.isCleared(c)
+                          ? theme.colorScheme.primary
+                          : theme.colorScheme.outlineVariant,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            c.label,
+                            style: theme.textTheme.bodyMedium?.copyWith(
+                              color: hall.isCleared(c)
+                                  ? theme.colorScheme.onSurface
+                                  : theme.colorScheme.onSurfaceVariant,
+                            ),
+                          ),
+                          Text(c.requirement, style: muted),
+                          if (c.note.isNotEmpty) Text(c.note, style: muted),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
         ),
       ),
     );

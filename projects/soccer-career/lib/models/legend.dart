@@ -10,6 +10,7 @@
 library;
 
 import 'career.dart';
+import 'challenge.dart';
 import 'competition.dart';
 import 'life.dart';
 import 'look.dart';
@@ -22,6 +23,7 @@ class LegendSpell {
     required this.clubName,
     required this.seasons,
     required this.tier,
+    this.countryId = '',
   });
 
   final String clubName;
@@ -30,16 +32,22 @@ class LegendSpell {
   /// 一番上でプレーした部。
   final int tier;
 
+  /// そのクラブの国。**挑戦は「何か国を渡ったか」を見る**ので要る。
+  /// 持たせる前に引退した選手は空のままで、その挑戦には数えない。
+  final String countryId;
+
   Map<String, dynamic> toJson() => {
     'clubName': clubName,
     'seasons': seasons,
     'tier': tier,
+    'countryId': countryId,
   };
 
   factory LegendSpell.fromJson(Map<String, dynamic> json) => LegendSpell(
     clubName: json['clubName'] as String? ?? '',
     seasons: json['seasons'] as int? ?? 0,
     tier: json['tier'] as int? ?? 1,
+    countryId: json['countryId'] as String? ?? '',
   );
 }
 
@@ -87,6 +95,8 @@ class Legend {
     required this.continentalTitles,
     required this.worldCupBest,
     required this.bestTier,
+    this.firstTier = 0,
+    this.peakAge = 0,
     required this.look,
     required this.squadNumber,
     required this.secondCareer,
@@ -126,6 +136,12 @@ class Legend {
 
   /// 到達した一番上の部。
   final int bestTier;
+
+  /// 初めて所属した部。**「下から上がった」を見るのに要る。**
+  final int firstTier;
+
+  /// 総合力が一番高かったときの年齢。**遅咲きを見るのに要る。**
+  final int peakAge;
 
   final PlayerLook look;
   final int squadNumber;
@@ -169,11 +185,17 @@ class Legend {
             clubName: last.clubName,
             seasons: last.seasons + 1,
             tier: last.tier < record.tier ? last.tier : record.tier,
+            countryId: last.countryId,
           ),
         );
       } else {
         spells.add(
-          LegendSpell(clubName: record.clubName, seasons: 1, tier: record.tier),
+          LegendSpell(
+            clubName: record.clubName,
+            seasons: 1,
+            tier: record.tier,
+            countryId: record.countryId,
+          ),
         );
       }
     }
@@ -181,6 +203,20 @@ class Legend {
     for (final record in state.history) {
       if (record.worldCupStage.points > worldCupBest.points) {
         worldCupBest = record.worldCupStage;
+      }
+    }
+    final peak = [
+      state.player.overall,
+      for (final h in state.history) h.overall,
+    ].reduce((a, b) => a > b ? a : b);
+    // ピークに並んだ最初の季の年齢。**届いた年で見る**
+    // （そのあと同じ数字を維持しても、遅咲きにはならない）。
+    // 年齢は年の差から引く。`SeasonRecord` は年齢を持っていない。
+    var peakAt = state.player.age;
+    for (final h in state.history) {
+      if (h.overall >= peak) {
+        peakAt = state.player.age - (state.year - h.year);
+        break;
       }
     }
     return Legend(
@@ -197,10 +233,14 @@ class Legend {
       internationalGoals: state.internationalGoals,
       // 引退時の総合力ではなく、一番高かったところを残す。
       // 衰えた後の数字だけが残るのは、その選手の記録として正しくない。
-      peakOverall: [
-        state.player.overall,
-        for (final h in state.history) h.overall,
-      ].reduce((a, b) => a > b ? a : b),
+      peakOverall: peak,
+      // **ピークに届いた年齢。** 引退時の年齢から遡って数える。
+      // `history` は古い順なので、最後に peak と並んだ季がピークの季。
+      peakAge: peakAt,
+      // 初めて所属した部。**下から上がったキャリアかどうか**はここで決まる。
+      firstTier: state.history.isEmpty
+          ? state.club.tier
+          : state.history.first.tier,
       potential: state.player.potential,
       spells: spells,
       awards: state.reputation.awards,
@@ -248,6 +288,8 @@ class Legend {
     'continentalTitles': continentalTitles,
     'worldCupBest': worldCupBest.name,
     'bestTier': bestTier,
+    'firstTier': firstTier,
+    'peakAge': peakAge,
     'look': look.toJson(),
     'squadNumber': squadNumber,
     'secondCareer': secondCareer.name,
@@ -291,6 +333,8 @@ class Legend {
         ? WorldCupStage.values.byName(json['worldCupBest'] as String)
         : WorldCupStage.none,
     bestTier: json['bestTier'] as int? ?? 1,
+    firstTier: json['firstTier'] as int? ?? 0,
+    peakAge: json['peakAge'] as int? ?? 0,
     look: PlayerLook.fromJson(json['look'] as Map<String, dynamic>?),
     squadNumber: json['squadNumber'] as int? ?? 0,
     secondCareer: SecondCareer.values.any((v) => v.name == json['secondCareer'])
@@ -303,15 +347,38 @@ class Legend {
 
 /// 引退した選手たち。新しい順に並ぶ。
 class Hall {
-  const Hall({this.legends = const []});
+  const Hall({this.legends = const [], this.cleared = const {}});
 
   final List<Legend> legends;
+
+  /// これまでに達成した挑戦の名前。
+  ///
+  /// **達成は消さない。** 殿堂は40人しか残らないので、
+  /// 達成した選手が押し出されたら記録ごと消える——それでは
+  /// 「追いかけるもの」にならない。人が消えても達成は残す。
+  final Set<String> cleared;
 
   /// 残しておく数。端末の保存領域を無限には使わない。
   static const int keep = 40;
 
-  Hall add(Legend legend) =>
-      Hall(legends: [legend, ...legends].take(keep).toList());
+  Hall add(Legend legend) => Hall(
+    legends: [legend, ...legends].take(keep).toList(),
+    cleared: {...cleared, ...challengesOf(legend).map((c) => c.name)},
+  );
+
+  /// その選手が達成した挑戦。
+  static List<Challenge> challengesOf(Legend legend) => [
+    for (final c in Challenge.values)
+      if (c.clearedBy(legend)) c,
+  ];
+
+  /// その選手が**初めて**達成した挑戦。引退の直後に「初めて達成した」と言うため。
+  List<Challenge> firstTimeFor(Legend legend) => [
+    for (final c in challengesOf(legend))
+      if (!cleared.contains(c.name)) c,
+  ];
+
+  bool isCleared(Challenge challenge) => cleared.contains(challenge.name);
 
   Hall removeAt(int index) => Hall(
     legends: [
@@ -369,6 +436,7 @@ class Hall {
   }
 
   Map<String, dynamic> toJson() => {
+    'cleared': cleared.toList(),
     'legends': [for (final l in legends) l.toJson()],
   };
 
@@ -377,5 +445,14 @@ class Hall {
       for (final l in (json?['legends'] as List? ?? const []))
         Legend.fromJson(l as Map<String, dynamic>),
     ],
+    // 挑戦を持たせる前に保存した殿堂は、残っている選手から読み直す。
+    cleared: {
+      for (final c in (json?['cleared'] as List? ?? const [])) c as String,
+      for (final l in (json?['legends'] as List? ?? const []))
+        for (final c in challengesOf(
+          Legend.fromJson(l as Map<String, dynamic>),
+        ))
+          c.name,
+    },
   );
 }
