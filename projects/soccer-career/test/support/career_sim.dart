@@ -609,8 +609,9 @@ Future<Career> runCareer(
 
     // 稼ぎの使い道。
     if (style.invests) _invest(controller);
-    if (style.lifestyle != null)
+    if (style.lifestyle != null) {
       await controller.setLifestyle(style.lifestyle!);
+    }
 
     // 監督が代わると就ける役割が変わる。毎季かけ直す。
     if (style.role != null) await controller.setRole(style.role);
