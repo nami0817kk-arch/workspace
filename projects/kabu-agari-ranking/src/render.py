@@ -10,6 +10,7 @@ from jinja2 import Environment, FileSystemLoader
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import aggregate
+import charts
 from market_calendar import CalendarOutOfRange, next_business_day
 
 _ROOT = Path(__file__).resolve().parent.parent
@@ -124,6 +125,43 @@ def day_summary(rows: list[dict], kind: str) -> str:
     return "".join(parts)
 
 
+# 「1日に10%以上動いた銘柄が何件あったか」を日ごとに並べたもの。
+# その日の相場がどれだけ荒かったかを、1枚で見られるようにするための数字。
+BIG_MOVE_PCT = 10
+TREND_DAYS = 15
+
+
+def big_move_series(days: list[dict], key: str = "gainers") -> list[dict]:
+    """直近の営業日について、大きく動いた銘柄数を古い順に返す。"""
+    recent = list(reversed(days[:TREND_DAYS]))
+    out = []
+    for day in recent:
+        rows = day.get(key) or []
+        if not rows:
+            continue
+        d = date.fromisoformat(day["rec_date"])
+        out.append({
+            "label": f"{d.month}/{d.day}",
+            "value": sum(1 for r in rows if abs(r["change_pct"]) >= BIG_MOVE_PCT),
+        })
+    return out
+
+
+def ranking_chart(rows: list[dict], kind: str, rec_date: str, heading: str) -> str:
+    """ランキング上位の騰落率を横棒にする。活況（約定回数）は対象外。"""
+    if kind not in ("gainers", "losers"):
+        return ""
+    top = [
+        {"label": r["name"], "sub": r["code"], "value": r["change_pct"]}
+        for r in rows[:10]
+    ]
+    return charts.horizontal_bars(
+        top,
+        aria_label=f"{rec_date} の{heading}上位10銘柄の騰落率を示す横棒グラフ",
+        negative=(kind == "losers"),
+    )
+
+
 def _normalize_day(raw: dict) -> dict:
     """旧形式（値上がりランキングのみ・rows/gain_pct/volumeキー）を新形式に変換する。"""
     if "gainers" in raw:
@@ -195,6 +233,15 @@ def _build_weekly_pages(days: list[dict]) -> list[dict]:
                 base_url="../",
                 canonical=canonical_url(f"weekly/{week['slug']}.html"),
                 w=week,
+                chart=charts.columns(
+                    [
+                        {"label": d["rec_date"][5:].replace("-", "/"),
+                         "value": round(d["top"]["change_pct"], 2) if d["top"] else None}
+                        for d in reversed(week["days"])
+                    ],
+                    aria_label=f"{week['from']}から{week['to']}までの、日ごとの首位の上昇率を示す棒グラフ",
+                    unit="%",
+                ),
                 newer=weeks[i - 1]["slug"] if i > 0 else None,
                 older=weeks[i + 1]["slug"] if i + 1 < len(weeks) else None,
             ),
@@ -253,6 +300,14 @@ def _build_ranking_pages(days: list[dict]) -> None:
                 metric_label=metric_label,
                 intro=intro_fmt.format(n=len(rows)),
                 summary=day_summary(rows, json_key),
+                chart=ranking_chart(rows, json_key, latest["rec_date"], heading),
+                trend_chart=charts.columns(
+                    big_move_series(days, json_key),
+                    aria_label=f"直近{TREND_DAYS}営業日について、"
+                               f"{BIG_MOVE_PCT}%以上動いた銘柄の数を示す棒グラフ",
+                    unit="銘柄",
+                ) if json_key in ("gainers", "losers") else "",
+                trend_days=len(big_move_series(days, json_key)),
                 archive_href=f"archive/{dirname}/index.html",
             ),
         )
@@ -273,6 +328,7 @@ def _build_ranking_pages(days: list[dict]) -> None:
                     heading=heading,
                     metric_label=metric_label,
                     summary=day_summary(day_rows, json_key),
+                    chart=ranking_chart(day_rows, json_key, rec, heading),
                     # 一覧に戻らずに日をたどれるようにする。クロールも深くなる。
                     newer=dates_with_data[i - 1] if i > 0 else None,
                     older=dates_with_data[i + 1] if i + 1 < len(with_data) else None,

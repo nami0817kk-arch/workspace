@@ -15,6 +15,12 @@
 {% block content %}
 <h1>{{ rec_date_ja }} の{{ heading }}</h1>
 {% if summary %}<p class="summary">{{ summary }}</p>{% endif %}
+{% if chart %}
+<figure class="chart-figure">
+  {{ chart|safe }}
+  <figcaption>上位10銘柄の騰落率。全{{ rows|length }}銘柄の数値は下の表にあります。</figcaption>
+</figure>
+{% endif %}
 {% include "_ranking_table.html" %}
 {% include "_ad_slot.html" %}
 <nav class="day-nav">

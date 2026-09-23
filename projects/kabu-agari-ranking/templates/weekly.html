@@ -5,6 +5,13 @@
 <h1>{{ w.from }} 〜 {{ w.to }} の週まとめ</h1>
 <p class="summary">{{ w.summary }}</p>
 
+{% if chart %}
+<figure class="chart-figure">
+  {{ chart|safe }}
+  <figcaption>日ごとの首位の上昇率</figcaption>
+</figure>
+{% endif %}
+
 <h2>この週で最も上昇した10銘柄</h2>
 <p>週内の各営業日の値上がりランキングを通して、上昇率の高い順に並べたものです（同じ銘柄が複数回入ることがあります）。</p>
 <div class="table-wrap">

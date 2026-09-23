@@ -13,8 +13,26 @@
 </p>
 {# 説明より先に表を出す。スマホでは前置きが長いだけで肝心の順位が画面の外に出る。 #}
 {% if summary %}<p class="summary">{{ summary }}</p>{% endif %}
+{% if chart %}
+<figure class="chart-figure">
+  {{ chart|safe }}
+  <figcaption>上位10銘柄の騰落率。全{{ rows|length }}銘柄の数値は下の表にあります。</figcaption>
+</figure>
+{% endif %}
 {% include "_ranking_table.html" %}
 {% include "_ad_slot.html" %}
+{% if trend_chart %}
+<h2>最近の相場の荒さ</h2>
+<p>
+  直近{{ trend_days }}営業日について、その日のランキング上位30銘柄のうち
+  10%以上動いた銘柄がいくつあったかを並べたものです。数が多い日ほど、
+  値動きの大きい銘柄が広がっていたことを示します。
+</p>
+<figure class="chart-figure">
+  {{ trend_chart|safe }}
+  <figcaption>1日あたりの「10%以上動いた銘柄」の数（上位30銘柄のうち）</figcaption>
+</figure>
+{% endif %}
 <p><a href="{{ base_url }}{{ archive_href }}">過去の{{ heading }}を見る →</a></p>
 <p>
   {{ intro }}
