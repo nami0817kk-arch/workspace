@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import '../game/formulas.dart';
 import 'physique.dart';
 
 /// 心の状態。
@@ -180,13 +181,26 @@ class Sponsor {
   ];
 
   /// 知名度に見合うスポンサーを引く。付かないこともある。
+  ///
+  /// **名前が売れた選手にだけ、急に大きくなる。**
+  /// `(知名度 - 30) * 40` の線形だけだと、知名度69と52で 1560 と 880——
+  /// 年俸1億に対して誤差にしかならず、「名前を売る」を選んだ選手は
+  /// 実測で貯蓄 80148 対 絞る 83674 と**金でも負けていた**
+  /// （`test/offseason_sim.dart`）。伸びも出場もタイトルも落として、
+  /// 得るものが「引退後に解説者になりやすい」だけの選択肢になっていた。
+  /// `fameEndorsement` の線を超えたぶんを重ねて、**金だけは一番入る**形にする。
   static Sponsor? offerFor({
     required int fame,
     required Random random,
     int marketValue = 0,
   }) {
     if (fame < 35) return null;
-    final annual = ((fame - 30) * 40 + marketValue * 0.05).round();
+    final annual =
+        ((fame - 30) * 40 +
+                max(0, fame - Formulas.fameEndorsement) *
+                    Formulas.endorsementPerFame +
+                marketValue * 0.05)
+            .round();
     return Sponsor(
       name: brands[random.nextInt(brands.length)],
       annual: (annual / 10).round() * 10,
@@ -301,12 +315,19 @@ enum Offseason {
   ),
   promote(
     '名前を売る',
-    '興行に付き合う。知名度は上がるが、疲れを残して開幕する',
+    '興行に付き合う。名前が売れてスポンサー料が増え、引退後の道も広がるが、'
+        '伸びも出場も落ちる',
     condition: 76,
     fatigue: 16,
     growthFactor: 0.94,
     injuryFactor: 1.1,
-    fame: 8,
+    // **知名度は、届く「扉」に使われる。**
+    // `Formulas.eliteFame` 68 を超えると、代表歴が無くても最上位の国の
+    // クラブが声をかけてくる。8 では届かず、平均の知名度は 61.7 で止まり、
+    // この選択肢は「伸びも出場も落として何も得ない」ものになっていた
+    // （`test/offseason_sim.dart`: ピーク76.0・代表29.4・移籍話19.8 で、
+    //  絞る 77.1/34.6/19.7 にどこも勝てない）。
+    fame: 14,
     body: BodyPlan.maintain,
   );
 

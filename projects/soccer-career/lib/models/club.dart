@@ -1,3 +1,5 @@
+import '../game/formulas.dart';
+
 /// クラブ。実在の名称は使わず、すべて架空。
 class Club {
   const Club({
@@ -21,21 +23,21 @@ class Club {
   final String countryId;
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'strength': strength,
-        'tier': tier,
-        'countryId': countryId,
-      };
+    'id': id,
+    'name': name,
+    'strength': strength,
+    'tier': tier,
+    'countryId': countryId,
+  };
 
   factory Club.fromJson(Map<String, dynamic> json) => Club(
-        id: json['id'] as String,
-        name: json['name'] as String,
-        strength: json['strength'] as int,
-        tier: json['tier'] as int,
-        // 国を持たせる前の保存データは、既定の国のクラブとして読む。
-        countryId: json['countryId'] as String? ?? 'yamato',
-      );
+    id: json['id'] as String,
+    name: json['name'] as String,
+    strength: json['strength'] as int,
+    tier: json['tier'] as int,
+    // 国を持たせる前の保存データは、既定の国のクラブとして読む。
+    countryId: json['countryId'] as String? ?? 'yamato',
+  );
 }
 
 /// リーグ順位表の1行。
@@ -51,7 +53,10 @@ class TableRow {
   int goalsFor = 0;
   int goalsAgainst = 0;
 
-  int get points => won * 3 + drawn;
+  /// 勝点。**数字は `Formulas` から引く。**
+  /// 3 と 1 を直書きしていたので、`Formulas.pointsWin` / `pointsDraw` は
+  /// 定義されているだけで誰も読んでいなかった。
+  int get points => won * Formulas.pointsWin + drawn * Formulas.pointsDraw;
   int get goalDifference => goalsFor - goalsAgainst;
 
   void record({required int scored, required int conceded}) {
@@ -68,15 +73,15 @@ class TableRow {
   }
 
   Map<String, dynamic> toJson() => {
-        'clubId': clubId,
-        'clubName': clubName,
-        'played': played,
-        'won': won,
-        'drawn': drawn,
-        'lost': lost,
-        'goalsFor': goalsFor,
-        'goalsAgainst': goalsAgainst,
-      };
+    'clubId': clubId,
+    'clubName': clubName,
+    'played': played,
+    'won': won,
+    'drawn': drawn,
+    'lost': lost,
+    'goalsFor': goalsFor,
+    'goalsAgainst': goalsAgainst,
+  };
 
   factory TableRow.fromJson(Map<String, dynamic> json) {
     final row = TableRow(

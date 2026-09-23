@@ -32,6 +32,15 @@ void main() {
       var seasons = 0.0;
       var offers = 0.0;
       var moves = 0.0;
+      var top = 0.0;
+      var fameSum = 0.0;
+      var fameSeasons = 0.0;
+      var pundits = 0.0;
+      var prestige = 0.0;
+      var elite = 0.0;
+      var savings = 0.0;
+      var sponsorSum = 0.0;
+      var sponsorSeasons = 0.0;
       for (final position in [Position.st, Position.cm, Position.cb]) {
         for (var seed = 0; seed < seeds; seed++) {
           final c = await runCareer(
@@ -44,6 +53,12 @@ void main() {
               offseason: off,
             ),
             seed,
+            onSeason: (state, stats, c) {
+              fameSum += state.reputation.fame;
+              fameSeasons++;
+              sponsorSum += state.sponsor?.annual ?? 0;
+              sponsorSeasons++;
+            },
           );
           peak += c.peakOverall;
           rating += c.averageRating;
@@ -56,6 +71,11 @@ void main() {
           seasons += c.seasons;
           offers += c.offersSeen;
           moves += c.transfers;
+          top += c.topTierOffers;
+          if (c.secondCareer == SecondCareer.pundit) pundits++;
+          prestige += c.bestPrestige;
+          if (c.bestPrestige >= 5) elite++;
+          savings += c.savings;
         }
       }
       const n = seeds * 3;
@@ -70,7 +90,14 @@ void main() {
         'タイトル ${(titles / n).toStringAsFixed(2)}  '
         '代表 ${(caps / n).toStringAsFixed(1)}  '
         '移籍話 ${(offers / n).toStringAsFixed(1)}  '
-        '移籍 ${(moves / n).toStringAsFixed(1)}',
+        '移籍 ${(moves / n).toStringAsFixed(1)}  '
+        '1部から ${(top / n).toStringAsFixed(1)}  '
+        '知名度 ${(fameSum / fameSeasons).toStringAsFixed(1)}  '
+        '解説者 ${(pundits / n * 100).toStringAsFixed(0)}%  '
+        '最高の国の格 ${(prestige / n).toStringAsFixed(2)}  '
+        '格5到達 ${(elite / n * 100).toStringAsFixed(0)}%  '
+        'スポンサー ${(sponsorSum / sponsorSeasons).round()}万/季  '
+        '貯蓄 ${(savings / n).round()}万',
       );
     }
   }, timeout: const Timeout(Duration(minutes: 60)));

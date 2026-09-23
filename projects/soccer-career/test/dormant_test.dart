@@ -172,6 +172,47 @@ void main() {
       }
     });
 
+    test('Formulas の定数は、どれも読まれている', () {
+      // **数字は `Formulas` から引く**というのがこのプロジェクトの決まりだが、
+      // 逆向きの腐り方がある——後から入った仕組みが古い定数を置き換えても、
+      // 定数だけが残る。実際に4本が誰にも読まれないまま残っていた:
+      // `conditionAfterInjury`（→ `RehabPlan.conditionOnReturn`）、
+      // `trainingConditionCost` / `restRecovery`（→ `TrainingMenu`）、
+      // `pointsDraw`（順位表が `won * 3 + drawn` と直書きしていた）。
+      final source = File('lib/game/formulas.dart').readAsStringSync();
+      final names = <String>{
+        ...RegExp(
+          r'^  static (?:const|final) [\w<>?,\s]+ ([a-z][A-Za-z0-9]*)\s*=',
+          multiLine: true,
+        ).allMatches(source).map((m) => m.group(1)!),
+        ...RegExp(
+          r'^  static [\w<>?,\s]+ ([a-z][A-Za-z0-9]*)\(',
+          multiLine: true,
+        ).allMatches(source).map((m) => m.group(1)!),
+      };
+      expect(names.length, greaterThan(100), reason: '定数を拾えていない');
+
+      final everywhere =
+          [
+                ...Directory('lib').listSync(recursive: true).whereType<File>(),
+                ...Directory('test')
+                    .listSync(recursive: true)
+                    .whereType<File>(),
+              ]
+              .where((f) => f.path.endsWith('.dart'))
+              .map((f) => f.readAsStringSync())
+              .join('\n');
+
+      for (final name in names) {
+        final uses = RegExp(r'\b' + name + r'\b').allMatches(everywhere).length;
+        expect(
+          uses,
+          greaterThan(1),
+          reason: 'Formulas.$name は定義されているだけで、どこからも読まれていない',
+        );
+      }
+    });
+
     test('Offseason の持ち物は、どれも判定に届いている', () {
       // オフの4択は `injuryFactor` を持ち、画面にも「怪我も増える」
       // 「怪我が遠のく」と書いてありながら、**どこからも読まれていなかった**。
