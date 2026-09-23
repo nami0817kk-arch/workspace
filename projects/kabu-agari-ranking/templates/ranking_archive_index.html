@@ -8,7 +8,10 @@
 <h2>{{ month.label }}</h2>
 <div class="archive-list">
   {% for d in month.dates %}
-  <a href="{{ d.iso }}.html">{{ d.day }} の{{ heading }}</a>
+  <a href="{{ d.iso }}.html">
+    <span class="archive-date">{{ d.day }}</span>
+    {% if d.top_name %}<span class="archive-top">首位 {{ d.top_name }}（{{ d.top_code }}） {{ "%+.2f"|format(d.top_pct) }}%{% if d.stops %} ／ {{ d.stop_label }} {{ d.stops }}銘柄{% endif %}</span>{% endif %}
+  </a>
   {% endfor %}
 </div>
 {% endfor %}

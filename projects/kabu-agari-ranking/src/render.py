@@ -219,16 +219,44 @@ def _normalize_day(raw: dict) -> dict:
 UNRELIABLE_DATES = frozenset({"2026-08-24", "2026-08-28", "2026-08-31", "2026-09-01"})
 
 
-def group_by_month(dates: list[str]) -> list[dict]:
-    """日付を年月ごとにまとめる。営業日が溜まると平坦な一覧では探せなくなる。"""
+def group_by_month(dates: list[str], info: dict[str, dict] | None = None) -> list[dict]:
+    """日付を年月ごとにまとめる。営業日が溜まると平坦な一覧では探せなくなる。
+
+    info があれば各日の見出し（その日の首位など）も添える。日付だけの一覧では
+    どの日を開けばよいか分からず、結局トップしか読まれない。
+    """
+    info = info or {}
     months: list[dict] = []
     for iso in dates:
         d = date.fromisoformat(iso)
         label = f"{d.year}年{d.month}月"
         if not months or months[-1]["label"] != label:
             months.append({"label": label, "dates": []})
-        months[-1]["dates"].append({"iso": iso, "day": f"{d.month}月{d.day}日（{_WEEKDAY_JA[d.weekday()]}）"})
+        months[-1]["dates"].append({
+            "iso": iso,
+            "day": f"{d.month}月{d.day}日（{_WEEKDAY_JA[d.weekday()]}）",
+            **info.get(iso, {}),
+        })
     return months
+
+
+def archive_index_info(with_data: list[tuple[str, list[dict]]], kind: str) -> dict[str, dict]:
+    """アーカイブ一覧に添える、その日の一言。"""
+    stop_key = price_limit.STOP_HIGH if kind == "gainers" else price_limit.STOP_LOW
+    out = {}
+    for rec, rows in with_data:
+        if not rows:
+            continue
+        top = rows[0]
+        stops = sum(1 for r in rows if r.get("flag") == stop_key)
+        out[rec] = {
+            "top_name": top["name"],
+            "top_code": top["code"],
+            "top_pct": top["change_pct"],
+            "stops": stops,
+            "stop_label": price_limit.LABELS[stop_key],
+        }
+    return out
 
 
 def week_summary(week: dict) -> str:
@@ -372,7 +400,7 @@ def _build_ranking_pages(days: list[dict]) -> None:
                 base_url="../../",
                 canonical=canonical_url(f"archive/{dirname}/index.html"),
                 heading=heading,
-                months=group_by_month(dates_with_data),
+                months=group_by_month(dates_with_data, archive_index_info(with_data, json_key)),
             ),
         )
 
