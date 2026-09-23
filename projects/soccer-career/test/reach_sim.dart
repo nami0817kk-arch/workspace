@@ -20,6 +20,7 @@ import 'package:soccer_career/models/injury.dart';
 import 'package:soccer_career/models/life.dart';
 import 'package:soccer_career/models/news.dart';
 import 'package:soccer_career/models/season.dart';
+import 'package:soccer_career/models/training.dart';
 import 'package:soccer_career/models/reputation.dart';
 import 'package:soccer_career/models/traits.dart';
 
@@ -58,6 +59,35 @@ void main() {
         sim: SimStyle.safe,
         agent: Agent.pool[0],
       ),
+      // **走力と身体の練習を選ぶ型。**
+      // これが無いと、`sprint` / `strengthWork` / `athletic` を一度も選ばず、
+      // 走る・当たる系の個人技（初速の一歩・伸びる足・跳ぶ間合い）が
+      // **構造的に出ない**。「起きない」と報告していたのは、
+      // このシミュレーション自身の死角だった。
+      Playstyle(
+        name: '走る（WG・スプリント）',
+        position: Position.wg,
+        startAge: 18,
+        sim: SimStyle.balanced,
+        agent: Agent.pool[0],
+        menu: TrainingMenu.sprint,
+      ),
+      Playstyle(
+        name: '当たる（CB・ウェイト）',
+        position: Position.cb,
+        startAge: 18,
+        sim: SimStyle.safe,
+        agent: Agent.pool[0],
+        menu: TrainingMenu.strengthWork,
+      ),
+      Playstyle(
+        name: '走力総合（ST・フィジカル）',
+        position: Position.st,
+        startAge: 18,
+        sim: SimStyle.aggressive,
+        agent: Agent.pool[1],
+        menu: TrainingMenu.athletic,
+      ),
       Playstyle(
         name: '残留志向',
         position: Position.wg,
@@ -95,8 +125,9 @@ void main() {
     survey('NewsKind', [for (final v in NewsKind.values) v.name]);
     survey('FixtureStake', [for (final v in FixtureStake.values) v.name]);
     survey('SquadStatus', [for (final v in SquadStatus.values) v.name]);
-    survey('ContinentalStage',
-        [for (final v in ContinentalStage.values) v.name]);
+    survey('ContinentalStage', [
+      for (final v in ContinentalStage.values) v.name,
+    ]);
     survey('CupStage', [for (final v in CupStage.values) v.name]);
     survey('WorldCupStage', [for (final v in WorldCupStage.values) v.name]);
     survey('CareerStage', [for (final v in CareerStage.values) v.name]);
@@ -115,8 +146,10 @@ void main() {
     gaps.sort();
     print('');
     print('=== クラブの強さとの差（キャリア中の最小）===');
-    print('  最小 ${gaps.first} / 下位1割 ${gaps[gaps.length ~/ 10]} / '
-        '中央 ${gaps[gaps.length ~/ 2]} / 最大 ${gaps.last}');
+    print(
+      '  最小 ${gaps.first} / 下位1割 ${gaps[gaps.length ~/ 10]} / '
+      '中央 ${gaps[gaps.length ~/ 2]} / 最大 ${gaps.last}',
+    );
     print('  いまの登録外の線: ${Formulas.squadRegistrationGap}');
     print('');
     print('=== 引退後の道 ===');
@@ -124,7 +157,7 @@ void main() {
       print('  ${v.name.padRight(14)} ${seen['SecondCareer.${v.name}'] ?? 0}');
     }
     print('');
-  print('=== 起きた回数（少ない順に20件）===');
+    print('=== 起きた回数（少ない順に20件）===');
     final sorted = seen.entries.toList()
       ..sort((a, b) => a.value.compareTo(b.value));
     for (final entry in sorted.take(20)) {
