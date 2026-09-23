@@ -15,6 +15,7 @@ import '../game/person.dart';
 import '../game/weekly_plan.dart';
 import '../models/agent.dart';
 import '../models/attributes.dart';
+import '../models/challenge.dart';
 import '../models/career.dart';
 import '../models/competition.dart';
 import '../models/development.dart';
@@ -428,10 +429,10 @@ class CareerController extends ChangeNotifier {
   }
 
   /// プレシーズンの過ごし方を決める。
-  Future<void> setPreseason(PreseasonPlan plan) async {
+  Future<void> setOffseason(Offseason plan) async {
     final state = _state;
     if (state == null) return;
-    state.preseason = plan;
+    state.offseason = plan;
     state.player = state.player.copyWith(condition: plan.condition);
     state.reputation = state.reputation.copyWith(
       fame: state.reputation.fame + plan.fame,
@@ -549,7 +550,7 @@ class CareerController extends ChangeNotifier {
         (state.mentor?.mentorFactor(state.player.age) ?? 1.0) *
         state.directive.growthFactor *
         state.morale.growthFactor *
-        state.preseason.growthFactor;
+        state.offseason.growthFactor;
   }
 
   CareerState? _state;
@@ -1523,7 +1524,7 @@ class CareerController extends ChangeNotifier {
 
   Future<void> advanceSeason({
     required TransferOffer accepted,
-    BodyPlan bodyPlan = BodyPlan.maintain,
+    Offseason offseason = Offseason.sharpen,
   }) async {
     final state = _state;
     if (state == null) return;
@@ -1534,7 +1535,7 @@ class CareerController extends ChangeNotifier {
     _state = _career.advanceSeason(
       state,
       accepted: accepted,
-      bodyPlan: bodyPlan,
+      offseason: offseason,
     );
     // **新しい監督が使わない役割は外れる。** ここを開けたままだと、
     // 一番高くなる監督の下で役割に就いて、あとはどこへ移っても持ち続けられる
@@ -1571,6 +1572,9 @@ class CareerController extends ChangeNotifier {
     await _persist();
   }
 
+  /// 直前の引退で**初めて**達成した挑戦。引退画面がこれを出す。
+  List<Challenge> lastChallenges = const [];
+
   Future<void> retire() async {
     final state = _state;
     if (state == null) return;
@@ -1579,12 +1583,14 @@ class CareerController extends ChangeNotifier {
     _inProgress = null;
     // **引退した時点で殿堂に写す。**
     // 引退画面のボタンを押したときにすると、押さずに終える人の記録が消える。
-    hall = hall.add(
-      Legend.from(
-        retired,
-        secondCareer: retired.secondCareer ?? _career.secondCareerFor(retired),
-      ),
+    final legend = Legend.from(
+      retired,
+      secondCareer: retired.secondCareer ?? _career.secondCareerFor(retired),
     );
+    // **初めて達成した挑戦は、殿堂に入れる前に控える。**
+    // 入れた後で見ると、自分自身が達成済みなので「初めて」が消える。
+    lastChallenges = hall.firstTimeFor(legend);
+    hall = hall.add(legend);
     await _hallRepository.save(hall);
     await _persist();
   }

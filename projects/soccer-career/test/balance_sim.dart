@@ -10,7 +10,6 @@ import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/attributes.dart';
 import 'package:soccer_career/models/entourage.dart';
 import 'package:soccer_career/models/life.dart';
-import 'package:soccer_career/models/physique.dart';
 import 'package:soccer_career/models/season.dart';
 import 'package:soccer_career/models/support.dart';
 
@@ -94,8 +93,7 @@ void main() {
       sim: SimStyle.balanced,
       agent: Agent.pool[1],
       drills: true,
-      bodyPlan: BodyPlan.bulk,
-      preseason: PreseasonPlan.tour,
+      offseason: Offseason.build,
     ),
   ];
 

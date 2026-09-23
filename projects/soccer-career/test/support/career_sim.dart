@@ -25,12 +25,13 @@ import 'package:soccer_career/models/competition.dart';
 import 'package:soccer_career/models/development.dart';
 import 'package:soccer_career/models/entourage.dart';
 import 'package:soccer_career/models/life.dart';
-import 'package:soccer_career/models/physique.dart';
 import 'package:soccer_career/models/role.dart';
 import 'package:soccer_career/models/season.dart';
 import 'package:soccer_career/models/support.dart';
 import 'package:soccer_career/models/traits.dart';
 import 'package:soccer_career/models/training.dart';
+import 'package:soccer_career/models/challenge.dart';
+import 'package:soccer_career/models/legend.dart';
 import 'package:soccer_career/state/career_controller.dart';
 
 class MemoryRepository implements SaveRepository {
@@ -60,8 +61,7 @@ class Playstyle {
     this.directive = Directive.none,
     this.ambitious = true,
     this.habits = const Habits(),
-    this.bodyPlan = BodyPlan.maintain,
-    this.preseason = PreseasonPlan.camp,
+    this.offseason = Offseason.sharpen,
     this.effort = TrainingEffort.normal,
     this.easeFrom,
     this.pick,
@@ -154,8 +154,9 @@ class Playstyle {
   final bool ambitious;
 
   final Habits habits;
-  final BodyPlan bodyPlan;
-  final PreseasonPlan preseason;
+
+  /// オフの過ごし方。**1シーズンに1度の選択**をそのまま固定する。
+  final Offseason offseason;
 }
 
 /// 1つのキャリアの結末。
@@ -261,6 +262,9 @@ class Career {
   /// 引退時の能力。**選んだことが形に出たか**を見るために残す。
   Attributes? finalAttributes;
 
+  /// 達成した挑戦。**「作ってあるのに誰も届かない」を探すために数える。**
+  List<Challenge> challenges = const [];
+
   /// どの項目を何回狙ったか。
   Map<Detail, int> dedication = const {};
   int dedicationOf(Detail detail) => dedication[detail] ?? 0;
@@ -292,6 +296,7 @@ class Career {
 Future<Career> runCareer(
   Playstyle style,
   int seed, {
+
   /// 出身国を決め打ちにする（特定の国から出られるかを測るため）。
   String? countryId,
   void Function(MatchInProgress match, ScenarioOption option)? onDecision,
@@ -588,14 +593,17 @@ Future<Career> runCareer(
 
     // 監督が代わると就ける役割が変わる。毎季かけ直す。
     if (style.role != null) await controller.setRole(style.role);
-    await controller.setPreseason(style.preseason);
+    await controller.setOffseason(style.offseason);
     await controller.advanceSeason(
       accepted: accepted,
-      bodyPlan: style.bodyPlan,
+      offseason: style.offseason,
     );
   }
 
   career.retireAge = controller.state!.player.age;
+  if (controller.hall.legends.isNotEmpty) {
+    career.challenges = Hall.challengesOf(controller.hall.legends.first);
+  }
   return career;
 }
 

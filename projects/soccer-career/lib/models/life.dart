@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'physique.dart';
+
 /// 心の状態。
 ///
 /// コンディションが身体なら、こちらは頭のほう。出番、怪我、私生活で動く。
@@ -23,18 +25,19 @@ class Morale {
   String get label => value >= 80
       ? '充実している'
       : value >= 55
-          ? '悪くない'
-          : value >= 30
-              ? '沈んでいる'
-              : '限界が近い';
+      ? '悪くない'
+      : value >= 30
+      ? '沈んでいる'
+      : '限界が近い';
 
   /// 助けが要る水準か。ここに落ちたら休ませる判断が要る。
   bool get needsCare => value < 30;
 
   Map<String, dynamic> toJson() => {'value': value};
 
-  factory Morale.fromJson(Map<String, dynamic>? json) =>
-      json == null ? const Morale() : Morale(value: json['value'] as int? ?? 60);
+  factory Morale.fromJson(Map<String, dynamic>? json) => json == null
+      ? const Morale()
+      : Morale(value: json['value'] as int? ?? 60);
 }
 
 /// 累積疲労。
@@ -71,13 +74,14 @@ class Fatigue {
   String get label => value >= 70
       ? '限界まで来ている'
       : value >= 40
-          ? '疲れが抜けない'
-          : '問題ない';
+      ? '疲れが抜けない'
+      : '問題ない';
 
   Map<String, dynamic> toJson() => {'value': value};
 
-  factory Fatigue.fromJson(Map<String, dynamic>? json) =>
-      json == null ? const Fatigue() : Fatigue(value: json['value'] as int? ?? 0);
+  factory Fatigue.fromJson(Map<String, dynamic>? json) => json == null
+      ? const Fatigue()
+      : Fatigue(value: json['value'] as int? ?? 0);
 }
 
 /// 一時的な絶好調と不調。
@@ -125,10 +129,16 @@ class Momentum {
     final average = window.reduce((a, b) => a + b) / window.length;
     final chance = (0.25 * factor).clamp(0.0, 0.6);
     if (average >= 7.3 && random.nextDouble() < chance) {
-      return Momentum(state: MomentumState.zone, matches: 3 + random.nextInt(3));
+      return Momentum(
+        state: MomentumState.zone,
+        matches: 3 + random.nextInt(3),
+      );
     }
     if (average <= 5.8 && random.nextDouble() < chance) {
-      return Momentum(state: MomentumState.slump, matches: 3 + random.nextInt(4));
+      return Momentum(
+        state: MomentumState.slump,
+        matches: 3 + random.nextInt(4),
+      );
     }
     return const Momentum();
   }
@@ -162,7 +172,11 @@ class Sponsor {
   final int years;
 
   static const List<String> brands = [
-    'アストレア', 'ノルディカ', 'ヴェント', 'クロノス', 'ミラージュ',
+    'アストレア',
+    'ノルディカ',
+    'ヴェント',
+    'クロノス',
+    'ミラージュ',
   ];
 
   /// 知名度に見合うスポンサーを引く。付かないこともある。
@@ -180,13 +194,15 @@ class Sponsor {
     );
   }
 
-  Sponsor aged() =>
-      Sponsor(name: name, annual: annual, years: years - 1);
+  Sponsor aged() => Sponsor(name: name, annual: annual, years: years - 1);
 
   bool get expired => years <= 0;
 
-  Map<String, dynamic> toJson() =>
-      {'name': name, 'annual': annual, 'years': years};
+  Map<String, dynamic> toJson() => {
+    'name': name,
+    'annual': annual,
+    'years': years,
+  };
 
   static Sponsor? fromJson(Map<String, dynamic>? json) => json == null
       ? null
@@ -246,37 +262,83 @@ enum SecondCareer {
 ///
 /// シーズンが始まる前の1か月をどう使うか。ここで積んだものは
 /// 開幕からの数試合に効き、手を抜けば秋に響く。
-enum PreseasonPlan {
-  tour('海外ツアー', '興行に付き合う。名前は売れるが、疲れを残して開幕する'),
-  camp('強化合宿', '走り込む。開幕は重いが、身体は出来上がる'),
-  rest('完全休養', '何もしない。疲れは抜けるが、出遅れる');
+/// **オフをどう過ごすか。** 1シーズンに1度だけの選択。
+///
+/// 以前は「肉体改造」と「プレシーズン」の2つに分かれていた。
+/// 実測（10キャリアずつ）で、**どちらもキャリアの結果を動かしていなかった**——
+/// 増量 74.3／減量 74.3／基準 74.1、ツアー 74.1／休養 74.0／合宿 74.1。
+/// 選ばせているのに結果が変わらないなら、それは選択ではない。
+///
+/// 1つにまとめて、**それぞれに失うものを持たせる**。
+/// 鍛えれば開幕は重く怪我も増え、休めば伸びない。名前を売れば疲れが残る。
+enum Offseason {
+  build(
+    '鍛え込む',
+    '走り込んで身体を作る。開幕は重く、怪我も増えるが、一番伸びる',
+    condition: 62,
+    fatigue: 10,
+    growthFactor: 1.18,
+    injuryFactor: 1.2,
+    body: BodyPlan.bulk,
+  ),
+  sharpen(
+    '絞る',
+    '体重を落としてキレを出す。無理はしないぶん、伸びは普通',
+    condition: 86,
+    fatigue: -4,
+    growthFactor: 1.0,
+    injuryFactor: 0.9,
+    body: BodyPlan.cut,
+  ),
+  recover(
+    '休む',
+    '何もしない。溜まった疲れが抜けて怪我が遠のくが、出遅れる',
+    condition: 100,
+    fatigue: -22,
+    growthFactor: 0.82,
+    injuryFactor: 0.8,
+    body: BodyPlan.maintain,
+  ),
+  promote(
+    '名前を売る',
+    '興行に付き合う。知名度は上がるが、疲れを残して開幕する',
+    condition: 76,
+    fatigue: 16,
+    growthFactor: 0.94,
+    injuryFactor: 1.1,
+    fame: 8,
+    body: BodyPlan.maintain,
+  );
 
-  const PreseasonPlan(this.label, this.description);
+  const Offseason(
+    this.label,
+    this.description, {
+    required this.condition,
+    required this.fatigue,
+    required this.growthFactor,
+    required this.injuryFactor,
+    this.fame = 0,
+    required this.body,
+  });
 
   final String label;
   final String description;
 
   /// 開幕時のコンディション。
-  int get condition => switch (this) {
-        PreseasonPlan.tour => 80,
-        PreseasonPlan.camp => 70,
-        PreseasonPlan.rest => 100,
-      };
+  final int condition;
 
-  /// 溜まっている疲労に足す量。
-  int get fatigue => switch (this) {
-        PreseasonPlan.tour => 12,
-        PreseasonPlan.camp => 6,
-        PreseasonPlan.rest => 0,
-      };
-
-  /// 知名度への上乗せ。
-  int get fame => this == PreseasonPlan.tour ? 3 : 0;
+  /// 溜まっている疲労に足す量。負なら抜ける。
+  final int fatigue;
 
   /// そのシーズンの練習の効きへの倍率。
-  double get growthFactor => switch (this) {
-        PreseasonPlan.camp => 1.1,
-        PreseasonPlan.rest => 0.95,
-        PreseasonPlan.tour => 1.0,
-      };
+  final double growthFactor;
+
+  /// そのシーズンの怪我のしやすさへの倍率。
+  final double injuryFactor;
+
+  /// 知名度への上乗せ。
+  final int fame;
+
+  /// 身体の作り方。**選択としては畳んだが、身体の仕組みはそのまま残す。**
+  final BodyPlan body;
 }

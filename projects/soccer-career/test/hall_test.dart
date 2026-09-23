@@ -11,6 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/data/save_repository.dart';
 import 'package:soccer_career/game/career_engine.dart';
+import 'package:soccer_career/models/challenge.dart';
+import 'package:soccer_career/ui/screens/retired_screen.dart';
 import 'package:soccer_career/game/match_engine.dart';
 import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/attributes.dart';
@@ -280,6 +282,42 @@ void main() {
       expect(find.text('$peak'), findsWidgets);
       expect(find.text('ピーク'), findsOneWidget);
       expect(find.text('歴代の記録'), findsOneWidget);
+    });
+
+    testWidgets('挑戦は畳んで置き、開くと中身が出る', (tester) async {
+      final c = await started();
+      c.state!.history.add(record(year: 2030, clubName: 'A'));
+      await c.retire();
+
+      await tester.pumpWidget(MaterialApp(home: HallScreen(controller: c)));
+      await tester.pumpAndSettle();
+      // 畳んだままなら、見出しと達成数だけ。
+      expect(find.text('挑戦'), findsOneWidget);
+      expect(
+        find.textContaining('/ ${Challenge.values.length} 達成'),
+        findsOneWidget,
+      );
+      expect(find.text(Challenge.oneClub.label), findsNothing);
+
+      await tester.tap(find.text('挑戦'));
+      await tester.pumpAndSettle();
+      expect(find.text(Challenge.oneClub.label), findsOneWidget);
+      expect(find.text(Challenge.oneClub.requirement), findsOneWidget);
+    });
+
+    testWidgets('引退画面に、初めて達成した挑戦が出る', (tester) async {
+      final c = await started();
+      c.state!.history.add(record(year: 2030, clubName: 'A'));
+      await c.retire();
+      c.lastChallenges = [Challenge.marksman];
+
+      await tester.pumpWidget(MaterialApp(home: RetiredScreen(controller: c)));
+      await tester.pumpAndSettle();
+      expect(find.text('初めて達成した挑戦'), findsOneWidget);
+      expect(
+        find.textContaining(Challenge.marksman.requirement),
+        findsOneWidget,
+      );
     });
 
     testWidgets('引退した選手が並ぶ', (tester) async {

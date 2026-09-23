@@ -12,6 +12,7 @@ import 'package:soccer_career/models/club.dart';
 import 'package:soccer_career/models/physique.dart';
 import 'package:soccer_career/models/player.dart';
 import 'package:soccer_career/models/reputation.dart';
+import 'package:soccer_career/models/life.dart';
 import 'package:soccer_career/models/season.dart';
 import 'package:soccer_career/models/support.dart';
 import 'package:soccer_career/models/training.dart';
@@ -34,19 +35,21 @@ Player player({
   Physique? physique,
   SetPieceSkills setPieces = const SetPieceSkills(),
   int condition = 100,
-}) =>
-    Player(
-      name: 'P',
-      age: age,
-      position: position,
-      attributes: attributes ?? flat,
-      potential: potential,
-      physique: physique ??
-          const Physique(
-              heightCm: Physique.baseHeight, weightKg: Physique.baseWeight),
-      setPieces: setPieces,
-      condition: condition,
-    );
+}) => Player(
+  name: 'P',
+  age: age,
+  position: position,
+  attributes: attributes ?? flat,
+  potential: potential,
+  physique:
+      physique ??
+      const Physique(
+        heightCm: Physique.baseHeight,
+        weightKg: Physique.baseWeight,
+      ),
+  setPieces: setPieces,
+  condition: condition,
+);
 
 Club club(String id) =>
     Club(id: id, name: id, strength: 60, tier: 1, countryId: 'yamato');
@@ -95,7 +98,11 @@ void main() {
 
     test('保存を往復しても残り、無い保存データは標準体型で読む', () {
       const p = Physique(
-          heightCm: 183, weightKg: 79, foot: Foot.left, weakFoot: 4);
+        heightCm: 183,
+        weightKg: 79,
+        foot: Foot.left,
+        weakFoot: 4,
+      );
       final r = Physique.fromJson(p.toJson());
       expect(r.heightCm, 183);
       expect(r.weightKg, 79);
@@ -139,15 +146,19 @@ void main() {
         Detail.shortPassing: 30,
       });
       for (var i = 0; i < 400; i++) {
-        final week = engine.applyWeek(player(attributes: attrs),
-            menu: TrainingMenu.passingWork, played: false);
+        final week = engine.applyWeek(
+          player(attributes: attrs),
+          menu: TrainingMenu.passingWork,
+          played: false,
+        );
         attrs = week.attributes;
       }
       // 視野は「ショートパス + 余地」までしか伸びない。
       expect(
         attrs.detail(Detail.vision),
         lessThanOrEqualTo(
-            attrs.detail(Detail.shortPassing) + Dependencies.headroom),
+          attrs.detail(Detail.shortPassing) + Dependencies.headroom,
+        ),
       );
     });
   });
@@ -155,15 +166,20 @@ void main() {
   group('練習メニュー', () {
     test('複合メニューは2カテゴリに触れ、そのぶん疲れる', () {
       expect(TrainingMenu.athletic.isCompound, isTrue);
-      expect(TrainingMenu.athletic.conditionCost,
-          greaterThan(TrainingMenu.sprint.conditionCost));
+      expect(
+        TrainingMenu.athletic.conditionCost,
+        greaterThan(TrainingMenu.sprint.conditionCost),
+      );
 
       final engine = MatchEngine(random: Random(9));
       final touched = <AttributeKey>{};
       var attrs = flat;
       for (var i = 0; i < 300; i++) {
-        final week = engine.applyWeek(player(attributes: attrs),
-            menu: TrainingMenu.athletic, played: false);
+        final week = engine.applyWeek(
+          player(attributes: attrs),
+          menu: TrainingMenu.athletic,
+          played: false,
+        );
         if (week.trained != null && !week.redirected) {
           touched.add(week.trained!.category);
         }
@@ -180,7 +196,11 @@ void main() {
     test('カテゴリを持っていた頃の保存データを読める', () {
       final ce = CareerEngine(random: Random(21));
       final s = ce.startCareer(
-          name: 'O', position: Position.cm, age: 20, agent: Agent.pool[1]);
+        name: 'O',
+        position: Position.cm,
+        age: 20,
+        agent: Agent.pool[1],
+      );
       final json = s.toJson();
       json.remove('menu');
       json['training'] = AttributeKey.defending.name;
@@ -191,15 +211,24 @@ void main() {
   group('居残りとセットプレー', () {
     test('居残りで精度が上がり、余分に疲れる', () {
       final engine = MatchEngine(random: Random(11));
-      final week = engine.applyWeek(player(condition: 60),
-          menu: TrainingMenu.rest, drill: SetPiece.freeKick, played: false);
-      expect(week.condition,
-          60 + TrainingMenu.rest.recovery - Formulas.drillConditionCost);
+      final week = engine.applyWeek(
+        player(condition: 60),
+        menu: TrainingMenu.rest,
+        drill: SetPiece.freeKick,
+        played: false,
+      );
+      expect(
+        week.condition,
+        60 + TrainingMenu.rest.recovery - Formulas.drillConditionCost,
+      );
 
       var skills = const SetPieceSkills();
       for (var i = 0; i < 200; i++) {
-        final w = engine.applyWeek(player(setPieces: skills),
-            drill: SetPiece.freeKick, played: false);
+        final w = engine.applyWeek(
+          player(setPieces: skills),
+          drill: SetPiece.freeKick,
+          played: false,
+        );
         skills = w.setPieces;
       }
       expect(skills.freeKick, greaterThan(40));
@@ -233,16 +262,20 @@ void main() {
         return goals;
       }
 
-      expect(goalsOver(const SetPieceSkills(penalty: 95)),
-          greaterThan(goalsOver(const SetPieceSkills())));
+      expect(
+        goalsOver(const SetPieceSkills(penalty: 95)),
+        greaterThan(goalsOver(const SetPieceSkills())),
+      );
     });
 
     test('居残りの成果は保存を往復しても残る', () {
       final p = player(setPieces: const SetPieceSkills(freeKick: 70));
       final r = Player.fromJson(p.toJson());
       expect(r.setPieces.freeKick, 70);
-      expect(Player.fromJson(p.toJson()..remove('setPieces')).setPieces.freeKick,
-          20);
+      expect(
+        Player.fromJson(p.toJson()..remove('setPieces')).setPieces.freeKick,
+        20,
+      );
     });
   });
 
@@ -259,14 +292,21 @@ void main() {
     test('人件費は手取りから引かれる', () {
       const f = Finances(savings: 0);
       final plain = f.afterSeason(salary: 5000, agentFeePercent: 5);
-      final withStaff =
-          f.afterSeason(salary: 5000, agentFeePercent: 5, staffCost: 1500);
+      final withStaff = f.afterSeason(
+        salary: 5000,
+        agentFeePercent: 5,
+        staffCost: 1500,
+      );
       expect(withStaff.savings, plain.savings - 1500);
     });
 
     test('貯蓄が足りなければ雇えない', () {
       final state = CareerEngine(random: Random(2)).startCareer(
-          name: 'S', position: Position.st, age: 18, agent: Agent.pool.first);
+        name: 'S',
+        position: Position.st,
+        age: 18,
+        agent: Agent.pool.first,
+      );
       expect(state.finances.savings, 0);
       expect(state.staff.isEmpty, isTrue);
     });
@@ -280,10 +320,16 @@ void main() {
       expect(careless.reckless, isTrue);
 
       final engine = MatchEngine(random: Random(6));
-      final poor = engine.applyWeek(player(condition: 40),
-          habits: careless, played: false);
-      final good = engine.applyWeek(player(condition: 40),
-          habits: strict, played: false);
+      final poor = engine.applyWeek(
+        player(condition: 40),
+        habits: careless,
+        played: false,
+      );
+      final good = engine.applyWeek(
+        player(condition: 40),
+        habits: strict,
+        played: false,
+      );
       expect(good.condition, greaterThan(poor.condition));
     });
 
@@ -291,16 +337,21 @@ void main() {
       const f = Finances(savings: 0);
       final plain = f.afterSeason(salary: 5000, agentFeePercent: 5);
       final fed = f.afterSeason(
-          salary: 5000,
-          agentFeePercent: 5,
-          extraLivingRate: const Habits(diet: 2).livingCostExtra);
+        salary: 5000,
+        agentFeePercent: 5,
+        extraLivingRate: const Habits(diet: 2).livingCostExtra,
+      );
       expect(fed.savings, lessThan(plain.savings));
     });
 
     test('保存を往復しても残る', () {
       final ce = CareerEngine(random: Random(22));
       final s = ce.startCareer(
-          name: 'O', position: Position.cb, age: 19, agent: Agent.pool[1]);
+        name: 'O',
+        position: Position.cb,
+        age: 19,
+        agent: Agent.pool[1],
+      );
       s.staff = const StaffTeam(coach: 2, trainer: 1);
       s.habits = const Habits(sleep: 2, diet: 0);
       final r = CareerState.fromJson(s.toJson());
@@ -309,11 +360,72 @@ void main() {
       expect(r.habits.sleep, 2);
       expect(r.habits.diet, 0);
 
-      final legacy = CareerState.fromJson(s.toJson()
-        ..remove('staff')
-        ..remove('habits'));
+      final legacy = CareerState.fromJson(
+        s.toJson()
+          ..remove('staff')
+          ..remove('habits'),
+      );
       expect(legacy.staff.isEmpty, isTrue);
       expect(legacy.habits.sleep, 1);
+    });
+  });
+
+  group('オフの過ごし方', () {
+    test('4つの過ごし方は、失うものが違う', () {
+      // **どれかが全面的に良い形にしない。**
+      // 鍛え込めば一番伸びるが、開幕は重く怪我も増える。
+      expect(
+        Offseason.build.growthFactor,
+        greaterThan(Offseason.recover.growthFactor),
+      );
+      expect(Offseason.build.condition, lessThan(Offseason.recover.condition));
+      expect(
+        Offseason.build.injuryFactor,
+        greaterThan(Offseason.recover.injuryFactor),
+      );
+      // 休めば溜まった疲れが抜け、名前を売れば残る。
+      expect(Offseason.recover.fatigue, lessThan(0));
+      expect(Offseason.promote.fatigue, greaterThan(0));
+      // 知名度が上がるのは、名前を売ったときだけ。
+      expect(Offseason.promote.fame, greaterThan(0));
+      for (final o in Offseason.values) {
+        if (o != Offseason.promote) expect(o.fame, 0);
+      }
+    });
+
+    test('休むと、溜まった疲労が余分に抜ける', () {
+      final ce = CareerEngine(random: Random(41));
+      CareerState build() {
+        final s = ce.startCareer(
+          name: 'F',
+          position: Position.cm,
+          age: 24,
+          agent: Agent.pool.first,
+        );
+        s.fatigue = const Fatigue(value: 100);
+        return s;
+      }
+
+      TransferOffer stay(CareerState s) => TransferOffer(
+        club: s.club,
+        reason: '残留',
+        salary: s.salary,
+        role: '主力',
+        years: 3,
+        isRenewal: true,
+      );
+
+      final rested = ce.advanceSeason(
+        build(),
+        accepted: stay(build()),
+        offseason: Offseason.recover,
+      );
+      final pushed = ce.advanceSeason(
+        build(),
+        accepted: stay(build()),
+        offseason: Offseason.build,
+      );
+      expect(rested.fatigue.value, lessThan(pushed.fatigue.value));
     });
   });
 
@@ -328,7 +440,11 @@ void main() {
     test('増量は当たりに強く、キレが落ちる', () {
       final ce = CareerEngine(random: Random(31));
       final state = ce.startCareer(
-          name: 'B', position: Position.st, age: 20, agent: Agent.pool.first);
+        name: 'B',
+        position: Position.st,
+        age: 20,
+        agent: Agent.pool.first,
+      );
       final before = state.player;
       final offer = TransferOffer(
         club: state.club,
@@ -338,13 +454,20 @@ void main() {
         years: 3,
         isRenewal: true,
       );
-      final bulked = ce.advanceSeason(state, accepted: offer, bodyPlan: BodyPlan.bulk);
-      expect(bulked.player.physique.weightKg,
-          before.physique.weightKg + 3);
-      expect(bulked.player.attributes.detail(Detail.strength),
-          before.attributes.detail(Detail.strength) + 2);
-      expect(bulked.player.effective(Detail.acceleration),
-          lessThanOrEqualTo(before.effective(Detail.acceleration)));
+      final bulked = ce.advanceSeason(
+        state,
+        accepted: offer,
+        offseason: Offseason.build,
+      );
+      expect(bulked.player.physique.weightKg, before.physique.weightKg + 3);
+      expect(
+        bulked.player.attributes.detail(Detail.strength),
+        before.attributes.detail(Detail.strength) + 2,
+      );
+      expect(
+        bulked.player.effective(Detail.acceleration),
+        lessThanOrEqualTo(before.effective(Detail.acceleration)),
+      );
     });
   });
 }

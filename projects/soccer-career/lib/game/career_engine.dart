@@ -1092,7 +1092,7 @@ class CareerEngine {
   CareerState advanceSeason(
     CareerState state, {
     required TransferOffer accepted,
-    BodyPlan bodyPlan = BodyPlan.maintain,
+    Offseason offseason = Offseason.sharpen,
   }) {
     final record = SeasonRecord(
       year: state.year,
@@ -1130,8 +1130,8 @@ class CareerEngine {
       condition: Formulas.conditionMax,
       nationality: nationality,
       personality: person.evolve(state),
-      physique: state.player.physique.afterOffseason(bodyPlan),
-      attributes: _afterOffseason(state.player.attributes, bodyPlan),
+      physique: state.player.physique.afterOffseason(offseason.body),
+      attributes: _afterOffseason(state.player.attributes, offseason.body),
     );
     // 限界突破。頭打ちのまま腐らせない代わりに、条件は厳しくしてある。
     var development = state.development;
@@ -1300,8 +1300,8 @@ class CareerEngine {
       // 疲れはオフでだいたい抜けるが、歳を取るほど残る。
       fatigue: state.fatigue
           .afterOffseason(nextPlayer.age)
-          .add(state.preseason.fatigue),
-      preseason: state.preseason,
+          .add(offseason.fatigue),
+      offseason: offseason,
       captain: movedClub ? false : state.captain,
       // 腕章の話は、認められた選手にオフの間に来る。
       captaincyOffered: !movedClub && offersCaptaincy(state),

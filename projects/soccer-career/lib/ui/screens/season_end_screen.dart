@@ -8,7 +8,6 @@ import '../../game/formulas.dart';
 import '../../game/world.dart';
 import '../../models/competition.dart';
 import '../../models/life.dart';
-import '../../models/physique.dart';
 import '../../state/career_controller.dart';
 import '../club_identity.dart';
 
@@ -30,10 +29,9 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
   bool _busy = false;
 
   /// オフに身体をどうするか。移籍先を決めるのと同じ画面で選ぶ。
-  BodyPlan _bodyPlan = BodyPlan.maintain;
+  Offseason _offseason = Offseason.sharpen;
 
   /// プレシーズンの過ごし方。
-  PreseasonPlan _preseason = PreseasonPlan.camp;
 
   /// 代理人に一度売り込ませたか。1シーズンに1度だけ。
   bool _solicited = false;
@@ -70,8 +68,10 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
   Future<void> _accept(TransferOffer offer) async {
     if (_busy) return;
     setState(() => _busy = true);
-    await widget.controller.setPreseason(_preseason);
-    await widget.controller.advanceSeason(accepted: offer, bodyPlan: _bodyPlan);
+    await widget.controller.advanceSeason(
+      accepted: offer,
+      offseason: _offseason,
+    );
     if (!mounted) return;
     Navigator.of(context).pop();
   }
@@ -287,7 +287,7 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                   const SizedBox(height: 4),
                   Text(
                     '${state.player.physique.label}。'
-                    '体重の増減は、当たりの強さと足元のキレを入れ替える。',
+                    'ここで決めたことが、来季まるごとに乗る。',
                     style: muted,
                   ),
                   const SizedBox(height: 10),
@@ -295,44 +295,19 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                     spacing: 8,
                     runSpacing: 8,
                     children: [
-                      for (final plan in BodyPlan.values)
-                        Tooltip(
-                          message: plan.description,
-                          child: ChoiceChip(
-                            label: Text(plan.label),
-                            selected: _bodyPlan == plan,
-                            onSelected: _busy
-                                ? null
-                                : (_) => setState(() => _bodyPlan = plan),
-                          ),
+                      for (final plan in Offseason.values)
+                        ChoiceChip(
+                          label: Text(plan.label),
+                          selected: _offseason == plan,
+                          onSelected: _busy
+                              ? null
+                              : (_) => setState(() => _offseason = plan),
                         ),
                     ],
                   ),
                   const SizedBox(height: 6),
                   // 説明はツールチップに隠さない。スマホでは長押ししないと読めない。
-                  Text(_bodyPlan.description, style: muted),
-                  const SizedBox(height: 16),
-                  Text('プレシーズン', style: theme.textTheme.labelLarge),
-                  const SizedBox(height: 6),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: [
-                      for (final plan in PreseasonPlan.values)
-                        Tooltip(
-                          message: plan.description,
-                          child: ChoiceChip(
-                            label: Text(plan.label),
-                            selected: _preseason == plan,
-                            onSelected: _busy
-                                ? null
-                                : (_) => setState(() => _preseason = plan),
-                          ),
-                        ),
-                    ],
-                  ),
-                  const SizedBox(height: 6),
-                  Text(_preseason.description, style: muted),
+                  Text(_offseason.description, style: muted),
                   const Divider(height: 32),
                   Text('契約', style: theme.textTheme.titleMedium),
                   const SizedBox(height: 2),
