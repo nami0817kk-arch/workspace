@@ -108,7 +108,7 @@ void main() {
     final controller = await newCareer();
     await pumpHub(tester, controller);
 
-    for (final label in ['試合', '選手', '育成', 'クラブ', '記録']) {
+    for (final label in ['今週', '選手', '育成', 'クラブ', '記録']) {
       expect(
         find.widgetWithText(Tab, label),
         findsOneWidget,
@@ -121,7 +121,7 @@ void main() {
     final controller = await newCareer();
     await pumpHub(tester, controller);
 
-    // 試合タブでは、カードの中のボタンが主役。FAB は出さない
+    // 今週タブでは、カードの中のボタンが主役。FAB は出さない
     // （出すと「区切りまで」など下の操作に被さる）。
     expect(find.byType(FloatingActionButton), findsNothing);
     expect(find.widgetWithText(FilledButton, '試合へ'), findsOneWidget);
@@ -745,10 +745,14 @@ void main() {
     }
     await pumpHub(tester, controller, height: 2400);
 
+    // 「直近の試合」は記録タブへ移した（今週の画面は決めることだけにする）。
+    await tester.tap(find.widgetWithText(Tab, '記録'));
+    await tester.pumpAndSettle();
+
     final result = controller.state!.results.last;
     await tester.dragUntilVisible(
       find.text('直近の試合'),
-      find.byType(ListView).first,
+      find.byType(ListView).last,
       const Offset(0, -200),
     );
     await tester.tap(find.text(result.scoreLine).first);
@@ -802,7 +806,7 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    for (final label in ['試合', '選手', '育成', 'クラブ', '記録']) {
+    for (final label in ['今週', '選手', '育成', 'クラブ', '記録']) {
       await tester.tap(find.widgetWithText(Tab, label));
       await tester.pumpAndSettle();
       final list = tester.getSize(find.byType(ListView).first);
@@ -1115,7 +1119,7 @@ void main() {
         .pixels;
     expect(before, greaterThan(0));
 
-    await tester.tap(find.widgetWithText(Tab, '試合'));
+    await tester.tap(find.widgetWithText(Tab, '今週'));
     await tester.pumpAndSettle();
     await tester.tap(find.widgetWithText(Tab, '育成'));
     await tester.pumpAndSettle();
