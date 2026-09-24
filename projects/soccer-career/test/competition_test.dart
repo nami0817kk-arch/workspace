@@ -67,7 +67,16 @@ void main() {
       );
       expect(competitions.registrationFor(state), SquadStatus.registered);
 
-      // 同じ枠の上が定員分埋まっていれば外れる。
+      // 強いクラブで、同じ枠の上が定員分埋まっていれば外れる。
+      // **下位クラブで総合力30なら、名簿の中では下位ではない**
+      // （最初ここで落として、こちらの見立てが違っていた）。
+      state.club = Club(
+        id: state.club.id,
+        name: state.club.name,
+        strength: 85,
+        tier: 1,
+        countryId: state.club.countryId,
+      );
       state.player = state.player.copyWith(
         attributes: Attributes.fromDetails({
           for (final d in Detail.values) d: 30,
@@ -80,7 +89,14 @@ void main() {
       // 以前は「強さの差が -8 を割った」だけで、
       // **誰に押し出されたのかが画面に出せなかった**。
       final state = career();
-      final squad = Squad.of(state.club, year: state.year);
+      final strong = Club(
+        id: state.club.id,
+        name: state.club.name,
+        strength: 85,
+        tier: 1,
+        countryId: state.club.countryId,
+      );
+      final squad = Squad.of(strong, year: state.year);
       final ahead = squad.aheadOf(state.player.position, 30);
       expect(
         ahead,
