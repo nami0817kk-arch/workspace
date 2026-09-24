@@ -603,3 +603,47 @@ class ScriptTimingTest(unittest.TestCase):
     def test_配布用の大きなファイルはクロールさせない(self):
         for name in ("history.csv", "data.csv", "search-index.json"):
             self.assertIn(f"Disallow: /{name}", self.robots)
+
+
+class ShortNameTest(unittest.TestCase):
+    """一覧に出す商品名。
+
+    楽天の商品名は中央値130文字あり、そのまま並べると1件で画面が埋まる。
+    実際に見守り一覧で173文字の名前が出ていた。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def test_先頭の補足を落とす(self):
+        out = self.theme.short_name("【送料無料】テレビ 42型")
+
+        self.assertEqual(out, "テレビ 42型")
+
+    def test_長い名前は切って記号を付ける(self):
+        out = self.theme.short_name("あ" * 80)
+
+        self.assertEqual(len(out), 47)
+        self.assertTrue(out.endswith("…"))
+
+    def test_短い名前はそのまま(self):
+        self.assertEqual(self.theme.short_name("テレビ"), "テレビ")
+
+    def test_補足だけの名前は元に戻す(self):
+        # 【】を外すと空になる場合、切り詰める前の名前を使う
+        self.assertEqual(self.theme.short_name("【特価品】"), "【特価品】")
+
+    def test_空でも壊れない(self):
+        self.assertEqual(self.theme.short_name(""), "")
+        self.assertEqual(self.theme.short_name(None), "")
+
+    def test_一覧には短い名前_全文はtitleに残す(self):
+        row = {"item_code": "a", "name": "【割引】" + "あ" * 80, "price": 1000,
+               "dropped": False, "days": 10, "at_low": False, "near_low": False,
+               "label": "横ばい", "image": "", "shop": "店"}
+
+        html = self.theme.card(row)
+
+        self.assertIn("title=", html)
+        self.assertIn("…", html)

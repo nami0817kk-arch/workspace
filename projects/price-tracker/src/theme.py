@@ -9,6 +9,8 @@ from .analyze import MIN_DAYS_FOR_LOW
 from .store import entry as store_entry
 
 SAFE = re.compile(r"[^a-z0-9]+")
+# 先頭の【クーポン】【送料無料】などの補足。商品の識別には要らない
+BRACKETED = re.compile(r"^[【\[][^】\]]{0,30}[】\]]\s*")
 
 
 def esc(text) -> str:
@@ -29,6 +31,18 @@ def slug(item_code: str) -> str:
     base = SAFE.sub("-", str(item_code).lower()).strip("-")[:60] or "item"
     digest = hashlib.sha1(str(item_code).encode("utf-8")).hexdigest()[:8]
     return f"{base}-{digest}"
+
+
+def short_name(name: str, limit: int = 46) -> str:
+    """一覧に出す用の短い商品名。
+
+    楽天の商品名は中央値130文字あり（実測）、送料・クーポン・対応機種などが
+    末尾に連なる。そのまま並べると1件で画面が埋まって選べない。
+    先頭の【】は補足であることが多いので落とし、残りを切り詰める。
+    """
+    text = BRACKETED.sub("", str(name or "").strip())
+    text = text or str(name or "")
+    return text if len(text) <= limit else text[:limit].rstrip() + "…"
 
 
 def yen(value) -> str:
@@ -105,7 +119,7 @@ def head(title: str, description: str, canonical: str, site: dict, prefix: str =
 <meta property="og:description" content="{esc(description)}">
 <meta property="og:url" content="{esc(canonical)}">
 <meta property="og:site_name" content="{esc(site['name'])}">
-<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:card" content="summary">
 <meta property="og:image" content="{esc(site["base_url"].rstrip("/"))}/og.svg">
 <link rel="alternate" type="application/rss+xml" title="今日の値下がり" href="{prefix}feed.xml">
 <link rel="icon" href="{FAVICON}">
@@ -243,7 +257,7 @@ def card(row: dict, prefix: str = "") -> str:
     data-code="{esc(row["item_code"])}">
   <a class="thumb" href="{href}">{img}</a>
   <div class="body">
-    <a class="name" href="{href}">{esc(row["name"])}</a>
+    <a class="name" href="{href}" title="{esc(row["name"])}">{esc(short_name(row["name"]))}</a>
     <p class="price">{change}<strong>{yen(row["price"])}</strong> {badge(row)}</p>
     <p class="point-line">{point_note(row)}</p>
     <p class="meta">{esc(row.get("shop", ""))}{history_note(row)}
@@ -775,7 +789,8 @@ def same_shop(rows: list, shop: str) -> str:
     if not rows or not shop:
         return ""
     body = "".join(
-        f'<li><a href="../{slug(r["item_code"])}/">{esc(r["name"][:56])}</a>'
+        f'<li><a href="../{slug(r["item_code"])}/" title="{esc(r["name"])}">'
+        f'{esc(short_name(r["name"]))}</a>'
         f'<span class="price">{yen(r["price"])}</span></li>' for r in rows)
     return f'<h2>{esc(shop)} の他の商品</h2><ul class="hits">{body}</ul>'
 
@@ -786,7 +801,8 @@ def related(rows: list, site: dict) -> str:
     if not rows:
         return ""
     body = "".join(
-        f'<li><a href="../{slug(r["item_code"])}/">{esc(r["name"][:56])}</a>'
+        f'<li><a href="../{slug(r["item_code"])}/" title="{esc(r["name"])}">'
+        f'{esc(short_name(r["name"]))}</a>'
         f'<span class="price">{yen(r["price"])}</span></li>' for r in rows)
     return f'<h2>同じジャンルの商品</h2><ul class="hits">{body}</ul>'
 
@@ -961,7 +977,10 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
 
     return (head(f"{title}｜{site['name']}", desc, canonical, site, prefix, extra)
             + breadcrumb(site, "商品の価格推移", prefix)
-            + f'<article class="item"><h1>{esc(row["name"])}</h1>'
+            + f'<article class="item"><h1 title="{esc(row["name"])}">'
+              f'{esc(short_name(row["name"], 70))}</h1>'
+            + (f'<p class="fullname">{esc(row["name"])}</p>'
+               if len(row["name"]) > 70 else '')
             + AD_NOTICE
             + f'<p class="headline"><strong>{yen(row["price"])}</strong> {badge(row)}</p>'
             + f'<p class="verdict">{esc(verdict_note(row))}</p>'
