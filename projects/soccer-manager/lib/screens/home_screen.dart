@@ -35,6 +35,7 @@ import 'scout_report_screen.dart';
 import 'start_screen.dart';
 import 'youth_intake_screen.dart';
 import '../logic/match_factor_engine.dart';
+import '../logic/prematch_check.dart';
 import '../models/club_vision.dart';
 import '../models/preseason_camp.dart';
 import '../l10n/tr.dart';
@@ -757,9 +758,68 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+  /// 試合前の確認。取りこぼしがあるときだけ止める。
+  ///
+  /// 問題が無い週にも確認を挟むと、毎週タップが1回増えるだけになる。
+  /// 戻り値が false なら試合を始めない(利用者がスタメンを直しに行く)。
+  static Future<bool> _confirmLineup(
+      BuildContext context, GameState gameState) async {
+    final warnings = PreMatchCheck.run(gameState.userTeam);
+    if (warnings.isEmpty) return true;
+
+    final proceed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(Tr.pick('このまま試合に入りますか？', 'Go into the match like this?')),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (final w in warnings)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 6),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      w.serious ? Icons.error_outline : Icons.info_outline,
+                      size: 16,
+                      color: w.serious
+                          ? SemanticColors.negative(context)
+                          : SemanticColors.neutral(context),
+                    ),
+                    const SizedBox(width: 6),
+                    Expanded(child: Text(w.message)),
+                  ],
+                ),
+              ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(ctx, false);
+              Navigator.of(context).push(
+                MaterialPageRoute<void>(builder: (_) => const LineupScreen()),
+              );
+            },
+            child: Text(Tr.pick('スタメンを直す', 'Fix the XI')),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(Tr.pick('このまま試合へ', 'Play anyway')),
+          ),
+        ],
+      ),
+    );
+    return proceed ?? false;
+  }
+
   Future<void> _playMatch(BuildContext context) async {
     FeedbackService.tap();
     final gameState = context.read<GameState>();
+    if (!await _confirmLineup(context, gameState)) return;
+    if (!context.mounted) return;
     final HalfResult? firstHalf;
     try {
       firstHalf = await gameState.playNextMatchday(interactive: true);
