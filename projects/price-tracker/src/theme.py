@@ -71,7 +71,8 @@ AD_NOTICE = ('<p class="ad-notice">本サイトは楽天アフィリエイトを
 
 NAV = [("./", "今日の値下がり"), ("points/", "ポイント込み"), ("new-lows/", "最安値更新"),
        ("lows/", "最安値圏"), ("rises/", "値上がり"), ("active/", "よく動く"),
-       ("genre/", "ジャンル別"), ("search/", "商品を探す"), ("stats/", "記録"),
+       ("genre/", "ジャンル別"), ("archive/", "日付別"), ("search/", "商品を探す"),
+       ("stats/", "記録"),
        ("about/", "このサイトについて")]
 
 
@@ -129,6 +130,8 @@ def foot(site: dict, prefix: str = "", updated: str = "") -> str:
     <a href="{prefix}about/">このサイトについて</a>
     <a href="{prefix}privacy/">プライバシーポリシー</a>
     <a href="{prefix}contact/">お問い合わせ</a>
+    <a href="{prefix}stats/">記録の全体像</a>
+    <a href="{prefix}feed.xml">RSS</a>
   </nav>
   {AD_NOTICE}
   <p class="disclaimer">価格は当サイトが取得した時点のものです。実際の価格・在庫は
@@ -319,7 +322,7 @@ SEARCH_JS = """
 
 
 def stats_page(site: dict, canonical: str, updated: str, stats: dict,
-               buckets: dict, genres: list) -> str:
+               buckets: dict, genres: list, examples: list | None = None) -> str:
     """このサイトが何を持っているかを数字で出す。
 
     毎日ためた履歴そのものが値打ちなので、その厚みを一覧の裏側だけでなく
@@ -344,6 +347,12 @@ def stats_page(site: dict, canonical: str, updated: str, stats: dict,
             + f'<table class="facts">{table}</table>'
             + '<h2>ジャンル別</h2>'
             + f'<table class="facts">{per_genre}</table>'
+            + (('<h2>よく動いた商品</h2><ul class="hits">'
+                + "".join(
+                    f'<li class="hit"><a href="../item/{slug(r["item_code"])}/">'
+                    f'{esc(r["name"][:56])}</a><span class="price">{n}回</span></li>'
+                    for r, n in examples)
+                + '</ul>') if examples else '')
             + '<p class="lead">価格が動かない商品が大半を占めます。'
             + '毎日記録しているのは、動いた瞬間を取り逃さないためです。</p>'
             + foot(site, "../", updated))
@@ -389,9 +398,18 @@ def pager(page: int, pages: int, prefix: str, total: int) -> str:
     links = []
     if page > 1:
         links.append(f'<a rel="prev" href="{href(page - 1)}">前へ</a>')
-    links.append(f'<span class="of">{page} / {pages} ページ（全{total:,}件）</span>')
+    # 近辺のページ番号だけ出す。41ページ分を並べても選べない。
+    lo, hi = max(1, page - 2), min(pages, page + 2)
+    if lo > 1:
+        links.append(f'<a href="{href(1)}">1</a><span class="gap">…</span>')
+    for n in range(lo, hi + 1):
+        links.append(f'<span class="now">{n}</span>' if n == page
+                     else f'<a href="{href(n)}">{n}</a>')
+    if hi < pages:
+        links.append(f'<span class="gap">…</span><a href="{href(pages)}">{pages}</a>')
     if page < pages:
         links.append(f'<a rel="next" href="{href(page + 1)}">次へ</a>')
+    links.append(f'<span class="of">全{total:,}件</span>')
     return f'<nav class="pager">{"".join(links)}</nav>'
 
 
@@ -430,6 +448,21 @@ def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
             + f'<ul class="cards">{body}</ul>'
             + nav
             + foot(site, prefix, updated))
+
+
+def archive_index(days: list, site: dict, canonical: str, updated: str) -> str:
+    """日付別の入口。一覧が増えても、どの日を見られるかが分からないと辿れない。"""
+    title = "日付別の値下がり"
+    lead = "記録を始めてからの各日について、その日に安くなった商品を残しています。"
+    body = "".join(
+        f'<li class="hit"><a href="{esc(day)}/">{esc(day)}</a>'
+        f'<span class="price">{n:,}件</span></li>' for day, n in days)
+    return (head(f"{title}｜{site['name']}", lead, canonical, site, "../")
+            + breadcrumb(site, title, "../")
+            + f'<h1>{esc(title)}</h1><p class="lead">{esc(lead)}</p>'
+            + AD_NOTICE
+            + f'<ul class="hits">{body}</ul>'
+            + foot(site, "../", updated))
 
 
 def genre_index(genres: list[dict], site: dict, canonical: str, updated: str,
@@ -502,8 +535,13 @@ def not_found(site: dict, updated: str) -> str:
             + foot(site, "", updated))
 
 
-def feed(site: dict, rows: list, updated: str) -> str:
-    """値下がりの RSS。毎日サイトを見に来なくても追える形にする。"""
+def feed(site: dict, rows: list, updated: str, title: str = "今日の値下がり",
+         path: str = "") -> str:
+    """一覧の RSS。毎日サイトを見に来なくても追える形にする。
+
+    購読したい対象は人によって違う（値下がり・ポイント込み・最安値更新）ので、
+    一覧ごとに出す。
+    """
     base = site["base_url"].rstrip("/")
     def one(row):
         desc = f'{pct(row["drop_pct"])} 下がって {yen(row["price"])}'
@@ -574,7 +612,10 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None) -> s
         "@context": "https://schema.org", "@type": "Product",
         "name": row["name"], "image": row.get("image") or None,
         "offers": {"@type": "Offer", "price": row["price"], "priceCurrency": "JPY",
-                   "url": row.get("url") or canonical},
+                   "url": row.get("url") or canonical,
+                   "availability": "https://schema.org/InStock",
+                   "seller": {"@type": "Organization",
+                              "name": row.get("shop") or ""}},
     })
     extra = f'<script type="application/ld+json">{ld}</script>'
 

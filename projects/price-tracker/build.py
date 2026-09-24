@@ -131,13 +131,20 @@ def build(root: Path, out: Path) -> dict:
                   "価格が複数回動いた商品はまだありません。", stats)
 
     # 日付別アーカイブ。過ぎた日の値下がりを残す。ためた履歴がそのまま増える。
-    for day in sorted((p.name[:10] for p in (data / "snapshots").glob("*.csv.gz")),
-                      reverse=True)[:60]:
-        hit = [r for r in rows if r.get("changed_date") == day and r.get("dropped")]
+    archive_days = sorted((p.name[:10] for p in (data / "snapshots").glob("*.csv.gz")),
+                          reverse=True)[:60]
+    archive_counts = []
+    for day in archive_days:
+        hit = analyze.drops_on(rows, day, site.get("drop_threshold", 0.05))
         write_listing(out, urls, f"archive/{day}/", f"{day} の値下がり",
                       f"{day} に価格が下がった商品の記録です。",
                       hit, site, base, updated,
                       "この日は記録できる値下がりがありませんでした。", stats)
+        archive_counts.append((day, len(hit)))
+
+    write(out / "archive" / "index.html",
+          theme.archive_index(archive_counts, site, base + "/archive/", updated))
+    urls.append("/archive/")
 
     for page in pages.PAGES:
         write(out / page["slug"] / "index.html", pages.render(page, site, updated))
@@ -188,13 +195,20 @@ def build(root: Path, out: Path) -> dict:
          "once": sum(1 for n in counts if n == 1),
          "active": sum(1 for n in counts if n >= 2),
          "pointed": sum(1 for r in rows if int(r.get("point_rate") or 1) > 1)},
-        listed))
+        listed,
+        [(r, analyze.change_count(r)) for r in analyze.active(rows, limit=10)]))
     urls.append("/stats/")
 
     # 共有時の画像・行き先を示す404・値下がりの購読（RSS）。
     write(out / "og.svg", theme.og_image(site, stats))
     write(out / "404.html", theme.not_found(site, updated))
     write(out / "feed.xml", theme.feed(site, dropped, updated))
+    write(out / "points" / "feed.xml", theme.feed(
+        site, analyze.effective_drops(rows, site.get("drop_threshold", 0.05)),
+        updated, "ポイント込みで安くなった商品", "points/"))
+    write(out / "new-lows" / "feed.xml", theme.feed(
+        site, analyze.new_lows(rows, latest_day), updated,
+        "最安値を更新した商品", "new-lows/"))
 
     write(out / "sitemap.xml", sitemap(site, urls, updated))
     write(out / "robots.txt", robots(site))

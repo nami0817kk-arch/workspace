@@ -421,3 +421,50 @@ class StaleDataTest(unittest.TestCase):
         prev = {f"c{i}": (1000, 1) for i in range(10)}
 
         self.assertEqual(validate.check_against_previous(self.rows(120), prev), [])
+
+
+class ArchiveDayTest(unittest.TestCase):
+    """過ぎた日の値下がり。
+
+    最初の実装は「最後に価格が動いたのがその日」かつ「今日の値下がり」の積に
+    なっており、9/20 は本来37件のところ1件しか出ていなかった。
+    """
+
+    def setUp(self):
+        from src import analyze
+        self.analyze = analyze
+
+    def row(self, code, tail):
+        return {"item_code": code, "tail": tail, "price": tail[-1][1],
+                "name": code, "vs_low_pct": 0.0}
+
+    def test_その日に下がったものを拾う(self):
+        rows = [self.row("a", [["d1", 1000], ["d2", 900], ["d3", 900]])]
+
+        out = self.analyze.drops_on(rows, "d2", 0.05)
+
+        self.assertEqual(len(out), 1)
+        self.assertAlmostEqual(out[0]["drop_pct"], 0.1)
+        self.assertEqual(out[0]["price"], 900)
+        self.assertEqual(out[0]["prev"], 1000)
+
+    def test_その後に動いていても当日の下げを出す(self):
+        # 「最後に動いた日」で判定していたときに取りこぼしていた形
+        rows = [self.row("a", [["d1", 1000], ["d2", 900], ["d3", 1200]])]
+
+        self.assertEqual(len(self.analyze.drops_on(rows, "d2", 0.05)), 1)
+
+    def test_閾値に満たない下げは出さない(self):
+        rows = [self.row("a", [["d1", 1000], ["d2", 990]])]
+
+        self.assertEqual(self.analyze.drops_on(rows, "d2", 0.05), [])
+
+    def test_上がった日は出さない(self):
+        rows = [self.row("a", [["d1", 900], ["d2", 1000]])]
+
+        self.assertEqual(self.analyze.drops_on(rows, "d2", 0.05), [])
+
+    def test_記録の初日は前日が無いので出さない(self):
+        rows = [self.row("a", [["d1", 1000], ["d2", 900]])]
+
+        self.assertEqual(self.analyze.drops_on(rows, "d1", 0.05), [])

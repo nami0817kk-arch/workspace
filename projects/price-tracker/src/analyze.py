@@ -168,6 +168,28 @@ def active(rows: list[dict], limit: int | None = None) -> list[dict]:
     return hit[:limit] if limit else hit
 
 
+def drops_on(rows: list[dict], day: str, threshold: float,
+             limit: int | None = None) -> list[dict]:
+    """その日に前日比で下がった商品。
+
+    「最後に価格が動いたのがその日」ではない。過ぎた日の一覧を作るには、
+    履歴のその日と直前を突き合わせて、当日の下げ幅を出し直す必要がある。
+    """
+    hit = []
+    for row in rows:
+        tail = [_entry(e) for e in (row.get("tail") or [])]
+        for i in range(1, len(tail)):
+            if tail[i][0] != day:
+                continue
+            before, now = tail[i - 1][1], tail[i][1]
+            if before and before > now and (before - now) / before >= threshold:
+                hit.append({**row, "drop_pct": (before - now) / before,
+                            "prev": before, "price": now, "dropped": True})
+            break
+    hit.sort(key=lambda r: (-r["drop_pct"], r["price"]))
+    return hit[:limit] if limit else hit
+
+
 def new_lows(rows: list[dict], day: str, limit: int | None = None) -> list[dict]:
     """その日に最安値を更新した商品。
 
