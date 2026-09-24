@@ -674,6 +674,16 @@ class _LiveMatchScreenState extends State<LiveMatchScreen> {
               ),
             ),
             const SizedBox(height: 8),
+            // 試合中の途中経過。画面の下半分が空いたままだったところへ、
+            // 「もう起きたこと」だけを数えて出す。完了後の統計をそのまま
+            // 出すと、まだ起きていない結果が見えてしまう。
+            LiveMatchTally(
+              revealed: _revealed,
+              homeTeamId: home.id,
+              homeTeamName: home.name,
+              awayTeamName: away.name,
+            ),
+            const SizedBox(height: 8),
             Expanded(
               child: ListView(
                 padding: const EdgeInsets.all(16),
