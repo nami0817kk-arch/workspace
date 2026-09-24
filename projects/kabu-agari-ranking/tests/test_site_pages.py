@@ -429,3 +429,31 @@ def test_環境変数でドメインを差し替えられる(monkeypatch):
     assert site_config.SITE_URL == "https://example.test"   # 末尾のスラッシュは落とす
     monkeypatch.delenv("KABU_SITE_URL")
     importlib.reload(site_config)
+
+
+def test_スマホで一番見たい列が横スクロールの外に出ない(site):
+    """騰落率が横スクロールの向こう側にあると、来た人の目的が果たせない。
+
+    狭い画面では出来高（優先度がいちばん低い列）を落とすので、
+    表の最後の列が出来高であることを固定しておく。
+    """
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-09-18")
+    render.build_all()
+
+    html = (out_dir / "index.html").read_text(encoding="utf-8")
+    headers = re.findall(r'<th scope="col">([^<]*)</th>', html)
+    assert headers[:5] == ["順位", "銘柄名", "コード", "終値", "騰落率"]
+    assert headers[5] == "出来高", "最後の列（狭い画面で落とす列）が出来高でなくなっている"
+    assert "max-width: 600px" in html
+
+
+def test_銘柄ページがある銘柄だけ名前をリンクにする(site):
+    data_dir, out_dir = site
+    # 同じ銘柄が3日出れば銘柄ページができる（_write_day は同じ銘柄を並べる）
+    for d in ("2026-09-16", "2026-09-17", "2026-09-18"):
+        _write_day(data_dir, d)
+    render.build_all()
+
+    html = (out_dir / "index.html").read_text(encoding="utf-8")
+    assert 'href="stock/7201/">銘柄1</a>' in html

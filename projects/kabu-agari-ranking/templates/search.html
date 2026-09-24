@@ -10,7 +10,9 @@
 
 <p class="stock-search">
   <label for="q">銘柄名・コード</label>
-  <input type="search" id="q" placeholder="例: トヨタ / 7203" autocomplete="off" inputmode="search">
+  {# このページは入力するためだけにある。開いたらすぐ打てるようにする
+   （スマホでキーボードが勝手に出ないよう、autofocus は画面幅で切り替える） #}
+<input type="search" id="q" placeholder="例: トヨタ / 7203" autocomplete="off" inputmode="search">
 </p>
 <p id="hint" class="updated">2文字以上（コードなら3桁以上）入れると絞り込みます。</p>
 <noscript>
@@ -129,6 +131,9 @@
   }
 
   input.addEventListener('input', onInput);
+  // 広い画面でだけ自動でフォーカスする。スマホでいきなりキーボードが
+  // せり上がると、ページの説明が読めないまま画面が半分になる。
+  if (window.matchMedia('(min-width: 600px)').matches) { input.focus(); }
 })();
 </script>
 {% endblock %}

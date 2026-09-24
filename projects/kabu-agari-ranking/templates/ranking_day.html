@@ -20,13 +20,13 @@
 {% block content %}
 <h1>{{ rec_date_ja }} の{{ heading }}</h1>
 {% if summary %}<p class="summary">{{ summary }}{% if turnover %} {{ turnover }}{% endif %}</p>{% endif %}
+{% include "_ranking_table.html" %}
 {% if chart %}
 <figure class="chart-figure">
   {{ chart|safe }}
-  <figcaption>上位10銘柄の騰落率。全{{ rows|length }}銘柄の数値は下の表にあります。</figcaption>
+  <figcaption>上位10銘柄の騰落率を並べたもの。数値は上の表にあります。</figcaption>
 </figure>
 {% endif %}
-{% include "_ranking_table.html" %}
 {% include "_ad_slot.html" %}
 {% if siblings %}
 <p class="same-day">

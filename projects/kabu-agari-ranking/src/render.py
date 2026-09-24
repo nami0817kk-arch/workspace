@@ -87,6 +87,24 @@ def format_date_short_ja(iso: str) -> str:
     return f"{d.month}月{d.day}日（{_WEEKDAY_JA[d.weekday()]}）"
 
 
+def updated_line(rec_date: str) -> str:
+    """更新のひとこと。スマホで2行に折り返していたので短くする。
+
+    「いつのデータか」と「次はいつか」だけ残す。休場を挟むときは、
+    連休中に来た人が止まったサイトだと思わないよう理由を添える。
+    """
+    line = f"更新: {format_date_ja(rec_date)}"
+    d = date.fromisoformat(rec_date)
+    try:
+        nxt = next_business_day(d)
+    except CalendarOutOfRange:
+        return line
+    line += f" ／ 次回: {format_date_short_ja(nxt.isoformat())} 16時ごろ"
+    if (nxt - d).days > 1:
+        line += "（東証が休場のため）"
+    return line
+
+
 def next_update_note(rec_date: str) -> str:
     """「次回更新予定」の一文。休場を挟むときはそれも言う。
 
@@ -127,16 +145,23 @@ def missing_business_days(days: list[dict]) -> list[str]:
     return out
 
 
-def annotate_rows(rows: list[dict]) -> list[dict]:
+def annotate_rows(rows: list[dict], stock_pages: set[str] | None = None) -> list[dict]:
     """各行に、制限値幅から見た値動きの性質（ストップ高など）を付ける。
 
     「何%動いたか」だけでは、上限まで買われたのか途中で止まったのかが
     分からない。前日終値と制限値幅から機械的に決まるので、ここで付ける。
     """
+    stock_pages = stock_pages or set()
     out = []
     for row in rows:
         flag = price_limit.classify(row.get("close"), row.get("change_pct"))
-        out.append({**row, "flag": flag, "flag_label": price_limit.LABELS.get(flag, "")})
+        out.append({
+            **row,
+            "flag": flag,
+            "flag_label": price_limit.LABELS.get(flag, ""),
+            # 銘柄ページがある銘柄だけリンクにする（無い先へ飛ばさない）
+            "has_page": row["code"] in stock_pages,
+        })
     return out
 
 
@@ -598,7 +623,7 @@ def siblings_for(days: list[dict]) -> dict[str, list[dict]]:
     return out
 
 
-def _build_ranking_pages(days: list[dict]) -> None:
+def _build_ranking_pages(days: list[dict], stock_pages: set[str] | None = None) -> None:
     latest = days[0]
     siblings = siblings_for(days)
     today_tmpl = _env.get_template("ranking_today.html")
@@ -606,7 +631,7 @@ def _build_ranking_pages(days: list[dict]) -> None:
     archive_index_tmpl = _env.get_template("ranking_archive_index.html")
 
     for json_key, dirname, heading, metric_label, out_name, intro_fmt in _RANKING_TYPES:
-        rows = annotate_rows(latest.get(json_key, []))
+        rows = annotate_rows(latest.get(json_key, []), stock_pages)
         _write(
             _OUTPUT_DIR / out_name,
             today_tmpl.render(
@@ -614,7 +639,7 @@ def _build_ranking_pages(days: list[dict]) -> None:
                 canonical=canonical_url(out_name),
                 rec_date=latest["rec_date"],
                 rec_date_ja=format_date_ja(latest["rec_date"]),
-                next_update=next_update_note(latest["rec_date"]),
+                updated_line=updated_line(latest["rec_date"]),
                 rows=rows,
                 notes=flag_notes(rows),
                 heading=heading,
@@ -637,7 +662,7 @@ def _build_ranking_pages(days: list[dict]) -> None:
         )
 
         # 新しい順。前後ナビを付けるので、先に対象日を確定させてから描く。
-        with_data = [(d["rec_date"], annotate_rows(d[json_key])) for d in days if d.get(json_key)]
+        with_data = [(d["rec_date"], annotate_rows(d[json_key], stock_pages)) for d in days if d.get(json_key)]
         dates_with_data = [rec for rec, _ in with_data]
 
         for i, (rec, day_rows) in enumerate(with_data):
@@ -776,9 +801,10 @@ def build_all() -> None:
     _env.globals["GAINERS_DATES_MIN"] = gainers_dates[-1] if gainers_dates else ""
     _env.globals["GAINERS_DATES_MAX"] = gainers_dates[0] if gainers_dates else ""
 
-    _build_ranking_pages(days)
-    weeks = _build_weekly_pages(days)
+    # 銘柄ページを先に確定させてから表を描く（リンクの有無を知るため）
     stocks = _build_stock_pages(days)
+    _build_ranking_pages(days, {s["code"] for s in stocks})
+    weeks = _build_weekly_pages(days)
     _build_market_page(days)
 
     search_data = aggregate.search_index(days)
