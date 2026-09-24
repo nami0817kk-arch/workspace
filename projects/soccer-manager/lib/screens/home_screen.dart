@@ -25,6 +25,7 @@ import '../widgets/responsive_body.dart';
 import 'calendar_screen.dart';
 import 'cup_screen.dart';
 import 'finance_screen.dart';
+import 'glossary_screen.dart';
 import 'lineup_screen.dart';
 import 'live_match_screen.dart';
 import 'match_screen.dart';
@@ -157,10 +158,12 @@ class HomeScreen extends StatelessWidget {
                       label: Tr.pick('平均総合力', 'Average overall'),
                       value: '${userTeam.overallRating}',
                       color: Colors.blue.shade700,
+                      glossaryTerm: Tr.pick('総合力', 'Overall'),
                     ),
                     _StatTile(
                       icon: Icons.shield,
                       label: Tr.pick('監督への信頼度', 'Board confidence'),
+                      glossaryTerm: Tr.pick('監督への信頼度', 'Board confidence'),
                       value: '${save.confidence}',
                       progress: save.confidence / 100,
                       color: save.confidence <= 25
@@ -170,6 +173,7 @@ class HomeScreen extends StatelessWidget {
                     _StatTile(
                       icon: Icons.star,
                       label: Tr.pick('監督としての評価', 'Your reputation'),
+                      glossaryTerm: Tr.pick('監督としての評価', 'Reputation'),
                       value: '${gameState.managerReputation}',
                       progress: gameState.managerReputation / 100,
                       color: Colors.deepPurple,
@@ -177,6 +181,7 @@ class HomeScreen extends StatelessWidget {
                     _StatTile(
                       icon: Icons.groups,
                       label: Tr.pick('観客動員', 'Attendance'),
+                      glossaryTerm: Tr.pick('観客動員', 'Attendance'),
                       value: Tr.pick(
                           '${gameState.lastMatchAttendance ?? gameState.expectedAttendance}人',
                           '${gameState.lastMatchAttendance ?? gameState.expectedAttendance}'),
@@ -1695,6 +1700,10 @@ class _StatTile extends StatelessWidget {
   final Color color;
   final double? progress;
 
+  /// 用語集で引く語。指定すると、タイルを押して意味を読めるようになる。
+  /// 数字の意味が分からないまま画面を眺める時間を無くすためのもの。
+  final String? glossaryTerm;
+
   const _StatTile({
     required this.icon,
     required this.label,
@@ -1702,10 +1711,33 @@ class _StatTile extends StatelessWidget {
     required this.color,
     this.sub,
     this.progress,
+    this.glossaryTerm,
   });
 
   @override
   Widget build(BuildContext context) {
+    final tile = _tile(context);
+    final term = glossaryTerm;
+    if (term == null) return tile;
+    return Semantics(
+      button: true,
+      hint: Tr.pick('用語の説明を開く', 'Open the explanation'),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: () {
+          FeedbackService.tap();
+          Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => GlossaryScreen(initialQuery: term),
+            ),
+          );
+        },
+        child: tile,
+      ),
+    );
+  }
+
+  Widget _tile(BuildContext context) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(

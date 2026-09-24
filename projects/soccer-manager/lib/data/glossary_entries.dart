@@ -482,6 +482,13 @@ List<GlossaryEntry> get glossaryEntries => [
             'What you promise a player about his minutes: key player, first team, rotation or prospect. The higher the billing, the more he resents the bench and the more he asks for in wages. Set from his own page.'),
       ),
       GlossaryEntry(
+        term: Tr.pick('観客動員', 'Attendance'),
+        category: GlossaryCategory.condition,
+        description: Tr.pick(
+            '試合に足を運んだ人数。スタジアムの収容人数に動員率を掛けたもので、動員率は順位・監督への信頼度・チケット価格で上下する。下部ディビジョンほど低い。試合日の収入はここから決まるため、勝てないと資金も細る。',
+            'How many came to the match: your stadium capacity times a turnout rate that moves with your league position, the board\'s confidence and your ticket prices, and which is lower the further down the pyramid you are. Matchday income follows from it, so a bad run thins the bank balance too.'),
+      ),
+      GlossaryEntry(
         term: Tr.pick('週給予算', 'Wage budget'),
         category: GlossaryCategory.club,
         description: Tr.pick(
