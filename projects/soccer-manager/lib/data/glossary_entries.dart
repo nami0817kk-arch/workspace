@@ -377,6 +377,13 @@ List<GlossaryEntry> get glossaryEntries => [
             "A first-team player of 28 or over, paired with an academy prospect. He grows faster in the academy, and it opens the only route to a personality trait while he is still there. A veteran can only look after one player, and cannot mentor a first-teamer at the same time."),
       ),
       GlossaryEntry(
+        term: Tr.pick('スタッフの得意分野', 'Staff specialty'),
+        category: GlossaryCategory.condition,
+        description: Tr.pick(
+            'スタッフが持つ専門(攻撃・守備・GK・フィジカル・万能)。能力値は「どれだけ上手いか」しか表さないため、得意分野が「何を伸ばせるか」を決める。ユースコーチの得意分野は有望株の伸びる能力に直接効き、担当が違う分野(GK専門とフィールドプレーヤーなど)には効かない。候補の半数は万能。',
+            "What a member of staff is specialised in: attacking, defending, goalkeeping, physical or all-round. His attributes say how good he is; the specialty says what he can improve. A youth coach's specialty steers which attributes your prospects gain, and does nothing outside its remit — a goalkeeping coach adds nothing to an outfield player. About half the candidates are all-round."),
+      ),
+      GlossaryEntry(
         term: Tr.pick('ユースリーグ', 'Youth league'),
         category: GlossaryCategory.condition,
         description: Tr.pick(

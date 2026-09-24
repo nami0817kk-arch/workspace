@@ -3,6 +3,7 @@ import 'dart:math';
 import '../models/attributes.dart';
 import '../models/club_infrastructure.dart';
 import '../models/player.dart';
+import '../models/staff_member.dart';
 import 'match_engine.dart';
 import '../models/team.dart';
 import '../models/training_focus.dart';
@@ -579,6 +580,44 @@ class TrainingEngine {
   /// 指導者が付くことの差が大きいため。
   static const double youthMentorGrowthBonus = 1.35;
 
+  /// ユースコーチの得意分野で、重点的に伸びる能力値。
+  ///
+  /// 能力値(1-20)は「どれだけ上手いか」しか表さないため、誰を雇っても
+  /// 育つ能力が同じだった。得意分野を見て伸ばす先を変えると、コーチの
+  /// 人選がそのままユースの色になる。
+  static List<String> specialtyKeys(StaffSpecialty specialty, Player p) {
+    final isKeeper = p.position.group == PositionGroup.gk;
+    switch (specialty) {
+      case StaffSpecialty.balanced:
+        return const [];
+      case StaffSpecialty.attacking:
+        // GKに決定力を教えても意味がない。担当が違う分野は効かない。
+        return isKeeper
+            ? const []
+            : const [
+                AttributeKeys.finishing,
+                AttributeKeys.offTheBall,
+                AttributeKeys.technique,
+              ];
+      case StaffSpecialty.defending:
+        return isKeeper
+            ? const []
+            : const [
+                AttributeKeys.tackling,
+                AttributeKeys.marking,
+                AttributeKeys.positioning,
+              ];
+      case StaffSpecialty.goalkeeping:
+        return isKeeper ? AttributeKeys.goalkeeping : const [];
+      case StaffSpecialty.physical:
+        return const [
+          AttributeKeys.stamina,
+          AttributeKeys.strength,
+          AttributeKeys.acceleration,
+        ];
+    }
+  }
+
   /// メンターが有望株に「教える」能力値。メンター自身が得意な項目の上位
   /// [mentorTeachingCount]件を返す。GK以外の有望株にゴールキーピングを
   /// 教えても意味がないため、担当が違う項目は除く。
@@ -601,6 +640,9 @@ class TrainingEngine {
     /// メンターになりうる一軍の選手。[Player.mentorId]で指名された選手が
     /// ここに居て、かつ[minMentorAge]以上のときだけメンターとして働く。
     List<Player> mentors = const [],
+
+    /// ユースコーチの得意分野。その分野の能力が追加で伸びる。
+    StaffSpecialty coachSpecialty = StaffSpecialty.balanced,
   }) {
     final factor = youthAcademyGrowthFactor(facilityLevel);
     final byId = {for (final m in mentors) m.id: m};
@@ -628,6 +670,11 @@ class TrainingEngine {
         for (final k in mentorTeachingKeys(validMentor, p)) {
           _grow(p, k, 0.5 * factor);
         }
+      }
+
+      // ユースコーチの得意分野。担当が違う分野(GKに決定力など)は効かない。
+      for (final k in specialtyKeys(coachSpecialty, p)) {
+        _grow(p, k, 0.5 * factor);
       }
 
       // 性格特性は練習では身に付かない。ユースに居るあいだに手に入れる道は
