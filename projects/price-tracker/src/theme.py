@@ -86,7 +86,7 @@ AD_NOTICE = ('<p class="ad-notice">本サイトは楽天アフィリエイトを
 NAV = [("./", "今日の値下がり"), ("points/", "ポイント込み"), ("new-lows/", "最安値更新"),
        ("lows/", "最安値圏"), ("rises/", "値上がり"), ("active/", "よく動く"),
        ("genre/", "ジャンル別"), ("archive/", "日付別"), ("search/", "商品を探す"),
-       ("watch/", "見守り"), ("stats/", "記録"),
+       ("watch/", "見守り"), ("ending/", "期限が近い"), ("stats/", "記録"),
        ("about/", "このサイトについて")]
 
 
@@ -200,7 +200,10 @@ def point_note(row: dict) -> str:
     rate = int(row.get("point_rate") or 1)
     if rate <= 1 or not row.get("eff_price"):
         return ""
-    return (f'<span class="point">ポイント{rate}倍</span>'
+    until = str(row.get("point_until") or "")[:10]
+    mark = (f'<span class="until">{esc(until[5:].replace("-", "/"))}まで</span>'
+            if until else "")
+    return (f'<span class="point">ポイント{rate}倍</span>{mark}'
             f'<span class="eff">実質 {yen(row["eff_price"])}<small>（目安）</small></span>')
 
 
@@ -209,6 +212,8 @@ def conditions(row: dict) -> str:
     marks = []
     if row.get("free_shipping"):
         marks.append('<span class="cond free">送料無料</span>')
+    if row.get("next_day"):
+        marks.append('<span class="cond fast">あす楽</span>')
     if row.get("in_stock") is False:
         marks.append('<span class="cond out">在庫切れ</span>')
     return "".join(marks)
@@ -729,6 +734,20 @@ def cheaper_days(row: dict) -> str:
             f'（{n / len(prices):.0%}）。')
 
 
+def caption_block(row: dict) -> str:
+    """商品説明の冒頭。商品ページが画像と表だけで薄かった。
+
+    全文は中央値1,123文字あり、5,500件ぶん持つと数MBになるので冒頭だけ持つ。
+    出典がリンク先であることは必ず書く。
+    """
+    text = str(row.get("caption") or "").strip()
+    if not text:
+        return ""
+    return ('<h2>商品の説明</h2>'
+            f'<p class="caption">{esc(text)}…</p>'
+            '<p class="note">楽天市場の掲載内容の冒頭です。全文はリンク先をご確認ください。</p>')
+
+
 def history_table(row: dict) -> str:
     """直近の価格を日付つきで出す。
 
@@ -1078,6 +1097,7 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
             + f'<div class="chart">{chart(row.get("tail") or [])}</div>'
             + (f'<p class="note">{esc(cheaper_days(row))}</p>' if cheaper_days(row) else '')
             + f'<table class="facts">{table}</table>'
+            + caption_block(row)
             + history_table(row)
             + (WATCH_BUTTON.replace("{code}", esc(row["item_code"]))
                .replace("{price}", str(row["price"]))

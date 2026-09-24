@@ -801,3 +801,56 @@ class ShippingAndStockTest(unittest.TestCase):
 
         self.assertEqual(rows[0]["free_shipping"], "1")
         self.assertEqual(rows[0]["in_stock"], "0")
+
+
+class PointDeadlineTest(unittest.TestCase):
+    """ポイント倍率の期限。「10倍がいつまでか」は待つか今かの判断そのもの。"""
+
+    def setUp(self):
+        from src import analyze, rakuten, theme
+        self.analyze, self.rakuten, self.theme = analyze, rakuten, theme
+
+    def row(self, until, rate=10):
+        return {"item_code": until or "x", "point_rate": rate, "point_until": until,
+                "price": 1000, "eff_price": 900, "name": "X"}
+
+    def test_期限を取り込む(self):
+        r = self.rakuten.parse_items({"Items": [
+            {"itemCode": "a", "itemPrice": 1, "itemName": "X",
+             "pointRateEndTime": "2026-09-28 11:59"}]})[0]
+
+        self.assertEqual(r["point_until"], "2026-09-28 11:59")
+
+    def test_3日以内に終わるものを終わりが早い順に(self):
+        rows = [self.row("2026-09-27 23:59"), self.row("2026-09-25 11:59"),
+                self.row("2026-09-30 23:59")]
+
+        out = self.analyze.ending_soon(rows, "2026-09-24")
+
+        self.assertEqual([r["point_until"][:10] for r in out],
+                         ["2026-09-25", "2026-09-27"])
+
+    def test_倍率が1倍なら期限があっても出さない(self):
+        rows = [self.row("2026-09-25 11:59", rate=1)]
+
+        self.assertEqual(self.analyze.ending_soon(rows, "2026-09-24"), [])
+
+    def test_期限が壊れていても落ちない(self):
+        rows = [self.row("おかしな値"), self.row("")]
+
+        self.assertEqual(self.analyze.ending_soon(rows, "2026-09-24"), [])
+
+    def test_期限を画面に出す(self):
+        html = self.theme.point_note(self.row("2026-09-28 11:59"))
+
+        self.assertIn("09/28まで", html)
+
+    def test_期限が無ければ出さない(self):
+        self.assertNotIn("まで", self.theme.point_note(self.row("")))
+
+    def test_商品説明は出典を添えて出す(self):
+        block = self.theme.caption_block({"caption": "説明の冒頭"})
+
+        self.assertIn("説明の冒頭", block)
+        self.assertIn("リンク先", block)
+        self.assertEqual(self.theme.caption_block({"caption": ""}), "")

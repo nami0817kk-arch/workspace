@@ -202,6 +202,34 @@ def new_lows(rows: list[dict], day: str, limit: int | None = None) -> list[dict]
     return hit[:limit] if limit else hit
 
 
+def ending_soon(rows: list[dict], today: str, days: int = 3,
+                limit: int | None = None) -> list[dict]:
+    """ポイント倍率の期限が近いもの。
+
+    「10倍がいつまでか」は待つか今かの判断そのものなのに、一覧では見えない。
+    期限つきの倍率を持つ商品を、終わりが早い順に出す。
+    """
+    from datetime import date, timedelta
+    try:
+        start = date.fromisoformat(today)
+    except ValueError:
+        return []
+    last = start + timedelta(days=days)
+    hit = []
+    for row in rows:
+        until = str(row.get("point_until") or "")[:10]
+        if not until or int(row.get("point_rate") or 1) <= 1:
+            continue
+        try:
+            end = date.fromisoformat(until)
+        except ValueError:
+            continue
+        if start <= end <= last:
+            hit.append(row)
+    hit.sort(key=lambda r: (str(r.get("point_until")), -int(r.get("point_rate") or 1)))
+    return hit[:limit] if limit else hit
+
+
 def by_genre(rows: list[dict], genre_id: str, limit: int | None = None) -> list[dict]:
     """取得元ジャンルで絞り、注目すべき順に並べる。
 

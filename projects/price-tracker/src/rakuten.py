@@ -143,6 +143,13 @@ def parse_items(payload: dict) -> list[dict]:
             # 記録していなかった。postageFlag は 0=送料込み、1=送料別。
             "free_shipping": str(item.get("postageFlag", "")).strip() == "0",
             "in_stock": int(item.get("availability") or 0) == 1,
+            # ポイント倍率には期限がある（30件中10件に値があった）。
+            # 「10倍がいつまでか」は待つか今買うかの判断そのもの。
+            "point_until": str(item.get("pointRateEndTime") or "").strip()[:16],
+            "next_day": int(item.get("asurakuFlag") or 0) == 1,
+            # 商品ページが画像と表だけで薄い。説明の冒頭を持たせる。
+            # 全文は中央値1,123文字あり、5,500件ぶん持つと数MBになる。
+            "caption": str(item.get("itemCaption") or "").strip()[:200],
         })
     return out
 

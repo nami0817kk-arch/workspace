@@ -69,6 +69,9 @@ def main() -> int:
                 "image": row["image"], "genre_id": row["genre_id"] or gid,
                 "free_shipping": row.get("free_shipping", False),
                 "in_stock": row.get("in_stock", True),
+                "point_until": row.get("point_until", ""),
+                "next_day": row.get("next_day", False),
+                "caption": row.get("caption", ""),
                 # genre_id は商品自身の細かいジャンル（例: 液晶テレビ）で数が多い。
                 # config で狙って取りに行った側も残しておかないと、ジャンル別の
                 # 入口ページが作れない。

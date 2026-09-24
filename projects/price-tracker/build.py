@@ -136,6 +136,12 @@ def build(root: Path, out: Path) -> dict:
                   analyze.new_lows(rows, latest_day), site, base, updated,
                   "この日に最安値を更新した商品はありませんでした。", stats)
 
+    write_listing(out, urls, "ending/", "ポイントの期限が近い商品",
+                  "ポイント倍率には終わりの日時があります。3日以内に終わるものを、"
+                  "終わりが早い順に並べています。待つか今かの判断に使ってください。",
+                  analyze.ending_soon(rows, updated), site, base, updated,
+                  "3日以内に終わるポイント倍率の商品はありませんでした。", stats)
+
     write_listing(out, urls, "active/", "よく動く商品",
                   "記録している期間に価格が何度も変わった商品です。"
                   "動かない商品が大半のなかで、追う値打ちがあるのはここに出るものです。",
