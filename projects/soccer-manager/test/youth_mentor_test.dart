@@ -57,19 +57,19 @@ void main() {
   });
 
   test('若すぎるメンターは効かない', () {
+    // 28歳未満はメンターとして働かない。成長量は乱数なので、総合力を
+    // 突き合わせると同値・逆転が起きる(CIで実際に落ちた)。指導が行われた
+    // ときだけ動く値=メンター側の士気で判定する。
     final p = youngster()..potential = 90;
     final tooYoung = veteran(age: TrainingEngine.minMentorAge - 1);
+    tooYoung.happiness = 50;
     p.mentorId = tooYoung.id;
-    final before = Map<String, int>.from(p.attributes);
 
-    TrainingEngine.applyYouthAcademyGrowth([p], 3, mentors: [tooYoung]);
+    for (var week = 0; week < 10; week++) {
+      TrainingEngine.applyYouthAcademyGrowth([p], 3, mentors: [tooYoung]);
+    }
 
-    // メンター分の上乗せが無いこと(=倍率1.0のときと同じ伸び)を、
-    // 対照と比べて確かめる。
-    final control = youngster()..potential = 90;
-    control.attributes.addAll(before);
-    TrainingEngine.applyYouthAcademyGrowth([control], 3);
-    expect(p.overall, control.overall);
+    expect(tooYoung.happiness, 50, reason: '若すぎる選手がメンターとして働いている');
   });
 
   test('教えたベテランは少し前向きになる', () {

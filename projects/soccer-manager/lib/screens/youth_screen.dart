@@ -565,15 +565,63 @@ class _YouthScreenState extends State<YouthScreen> {
     String playerId,
     String name,
   ) async {
-    final ok = await context.read<GameState>().promoteYouthProspect(playerId);
+    final gameState = context.read<GameState>();
+    // 昇格はプロ契約を結ぶ手続きになった。押した瞬間に契約金が引かれるので、
+    // 条件を見せてから決めさせる。
+    final terms = gameState.youthPromotionTermsFor(playerId);
+    if (terms == null) return;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(Tr.pick('$nameとプロ契約を結びますか？',
+            'Sign $name to a professional contract?')),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(Tr.pick('背番号: ${terms.squadNumber}',
+                'Squad number: ${terms.squadNumber}')),
+            Text(Tr.pick('週俸: ${terms.weeklyWage}万円',
+                'Wage: ${terms.weeklyWage} per week')),
+            Text(Tr.pick('契約金: ${terms.signingBonus}万円(一括)',
+                'Signing fee: ${terms.signingBonus} (one-off)')),
+            Text(Tr.pick('契約年数: ${terms.years}年',
+                'Contract: ${terms.years} years')),
+            const SizedBox(height: 8),
+            Text(
+              Tr.pick('昇格直後は一軍の強度に慣れておらず、実戦感覚が低い状態から始まります。出番を作ると戻ります。',
+                  'He will start short of match sharpness until he adjusts to first-team football. Playing him brings it back.'),
+              style: const TextStyle(fontSize: 12),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(Tr.pick('やめる', 'Cancel')),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(Tr.pick('契約して昇格', 'Sign and promote')),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+
+    final ok = await gameState.promoteYouthProspect(playerId);
     ok ? FeedbackService.success() : FeedbackService.error();
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text(ok
-                ? Tr.pick('$nameをトップチームに昇格させました',
-                    'You promoted $name to the first team')
-                : Tr.pick('昇格できませんでした', 'The promotion did not go through'))),
+          content: Text(ok
+              ? Tr.pick('$nameが背番号${terms.squadNumber}でトップチームに昇格しました',
+                  '$name joined the first team with the number ${terms.squadNumber}')
+              // 失敗の理由は GameState 側が入れている(資金・週給予算・枠)。
+              : gameState.lastSigningBlockReason ??
+                  Tr.pick('昇格できませんでした', 'The promotion did not go through')),
+        ),
       );
     }
   }
