@@ -274,7 +274,7 @@ void main() {
 
     final names = <String>{};
     final pattern = RegExp(
-      r'^  (?:static )?[' + r'\w<>?,\s' + r']*? get ([a-z][A-Za-z0-9]{3,})\b',
+      r'^  (?:static )?[\w<>?,\s]*? get ([a-z][A-Za-z0-9]{3,})\b',
       multiLine: true,
     );
     for (final source in sources.values) {
