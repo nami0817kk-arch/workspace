@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}月ごとのまとめ一覧｜値上がり株ランキング{% endblock %}
+{% block description %}値上がりランキングを月単位で集計したまとめの一覧です。{% endblock %}
+{% block breadcrumb %}{% set crumbs = [
+  {"label": "ホーム", "href": "index.html"},
+  {"label": "月まとめ"}
+] %}{% include "_breadcrumb.html" %}{% endblock %}
+{% block content %}
+<h1>月ごとのまとめ</h1>
+<p>営業日ごとのランキングを、月単位で集計したものです。週の区切りより長い目で見たいときに。</p>
+<div class="archive-list">
+  {% for m in months %}
+  <a href="{{ m.slug }}.html">
+    <span class="archive-date">{{ m.year }}年{{ m.month }}月</span>
+    <span class="archive-top">{{ m.day_count }}営業日 ／ ストップ高 のべ{{ m.stop_highs }}銘柄</span>
+  </a>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -246,6 +246,12 @@
     color: var(--muted);
   }
   .flag-notes li { margin-top: 0.25rem; }
+  .note-scope {
+    font-size: 0.85rem;
+    color: var(--muted);
+    border-left: 3px solid var(--border);
+    padding-left: 0.6rem;
+  }
   /* 並べ替えは JS が動く環境だけの上乗せ。列見出しは既定では普通の見出し */
   table.ranking th[data-sort] { cursor: pointer; white-space: nowrap; }
   table.ranking th[data-sort]:hover { color: var(--accent); }
@@ -276,6 +282,36 @@
     table.ranking th:nth-child(3), table.ranking td:nth-child(3) { display: none; }
   }
   .updated { font-size: 0.85rem; color: var(--muted); margin: 0.25rem 0 1rem; }
+  .highlights {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.5rem;
+    margin: 1rem 0;
+    padding: 0;
+  }
+  .highlights a {
+    display: block;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.6rem 0.7rem;
+    color: inherit;
+    text-decoration: none;
+  }
+  .highlights a:hover { border-color: var(--accent); }
+  .hl-label { display: block; font-size: 0.75rem; color: var(--muted); }
+  .hl-value { display: block; font-size: 1.3rem; font-weight: bold; color: var(--accent); }
+  .hl-note { display: block; font-size: 0.75rem; color: var(--muted); }
+  /* 狭い画面では、ハイライトが2段に折り返して 232px を占め、
+     せっかく上げた表がまた画面の外へ出ていた。1行3枚に詰める。 */
+  @media (max-width: 600px) {
+    .highlights { grid-template-columns: repeat(3, 1fr); gap: 0.35rem; margin: 0.75rem 0; }
+    .highlights a { padding: 0.45rem 0.4rem; text-align: center; }
+    .hl-label { font-size: 0.7rem; }
+    .hl-value { font-size: 1.05rem; }
+    .hl-note { display: none; }   /* 補足は詰めると読めないので落とす */
+  }
   .summary {
     background: var(--card-bg);
     border-left: 3px solid var(--accent);
@@ -337,7 +373,37 @@
     main { max-width: none; padding: 0; }
     table.ranking { min-width: 0; font-size: 10pt; }
     table.ranking th[data-sort]::after { content: ""; }
-    .summary { border-left: 2px solid #000; }
+    .highlights {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.5rem;
+    margin: 1rem 0;
+    padding: 0;
+  }
+  .highlights a {
+    display: block;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.6rem 0.7rem;
+    color: inherit;
+    text-decoration: none;
+  }
+  .highlights a:hover { border-color: var(--accent); }
+  .hl-label { display: block; font-size: 0.75rem; color: var(--muted); }
+  .hl-value { display: block; font-size: 1.3rem; font-weight: bold; color: var(--accent); }
+  .hl-note { display: block; font-size: 0.75rem; color: var(--muted); }
+  /* 狭い画面では、ハイライトが2段に折り返して 232px を占め、
+     せっかく上げた表がまた画面の外へ出ていた。1行3枚に詰める。 */
+  @media (max-width: 600px) {
+    .highlights { grid-template-columns: repeat(3, 1fr); gap: 0.35rem; margin: 0.75rem 0; }
+    .highlights a { padding: 0.45rem 0.4rem; text-align: center; }
+    .hl-label { font-size: 0.7rem; }
+    .hl-value { font-size: 1.05rem; }
+    .hl-note { display: none; }   /* 補足は詰めると読めないので落とす */
+  }
+  .summary { border-left: 2px solid #000; }
     a[href]::after { content: ""; }
   }
   dl { margin: 0 0 1rem; }
@@ -369,8 +435,8 @@
       <a href="{{ base_url }}index.html">値上がり</a>
       <a href="{{ base_url }}losers.html">値下がり</a>
       <a href="{{ base_url }}active.html">活況</a>
+      <a href="{{ base_url }}stop-high/index.html">ストップ高</a>
       <a href="{{ base_url }}search.html">銘柄検索</a>
-      <a href="{{ base_url }}guide.html">読み方</a>
     </nav>
   </div>
 </header>
@@ -398,8 +464,10 @@
   </div>
   <div class="footer-group">
     <strong>まとめて見る</strong>
+    <a href="{{ base_url }}stop-high/index.html">ストップ高の記録</a>
     <a href="{{ base_url }}market.html">相場の振り返り</a>
     <a href="{{ base_url }}weekly/index.html">週まとめ</a>
+    <a href="{{ base_url }}monthly/index.html">月まとめ</a>
     <a href="{{ base_url }}frequent.html">常連銘柄</a>
   </div>
   <div class="footer-group">

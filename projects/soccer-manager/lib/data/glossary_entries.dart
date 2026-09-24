@@ -391,6 +391,13 @@ List<GlossaryEntry> get glossaryEntries => [
             'The summary that appears on the home screen when a season ends: where you finished, your record, the goals, any trophies, the top scorer and a verdict on the year. Close it and it will not come back; past seasons stay in the season history screen.'),
       ),
       GlossaryEntry(
+        term: Tr.pick('試合前の確認', 'Pre-match check'),
+        category: GlossaryCategory.liveMatch,
+        description: Tr.pick(
+            '試合を始める前に、スタメンの取りこぼしを拾って知らせる。出られない選手(負傷・出場停止・代表召集・ローン放出中)がスタメンにいる、11人そろっていない、疲労や実戦感覚が足りない、本職外の配置、控えが3人未満、の5点を見る。問題が無い週は何も出ない。',
+            "Before kick-off, anything left undone in your XI is put in front of you: a man who cannot play (injured, suspended, on international duty, out on loan), fewer than eleven, tired or rusty starters, players out of position, and a bench of fewer than three. On a clean week nothing appears."),
+      ),
+      GlossaryEntry(
         term: Tr.pick('次にやること', 'What to do next'),
         category: GlossaryCategory.club,
         description: Tr.pick(

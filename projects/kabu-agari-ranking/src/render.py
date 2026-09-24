@@ -174,6 +174,62 @@ def flag_notes(rows: list[dict]) -> list[dict]:
     return seen
 
 
+def highlights(days: list[dict], stock_pages: set[str]) -> list[dict]:
+    """トップに出す「今日のハイライト」。
+
+    表の数字だけでは、その日が普通の日なのか特別な日なのかが分からない。
+    数えれば言えることだけを、リンク付きで3つまで並べる。
+    """
+    if not days:
+        return []
+    today = days[0]
+    rows = today.get("gainers", [])
+    out = []
+
+    stops = [
+        r for r in rows
+        if price_limit.classify(r.get("close"), r.get("change_pct")) == price_limit.STOP_HIGH
+    ]
+    if stops:
+        out.append({
+            "label": "ストップ高",
+            "value": f"{len(stops)}銘柄",
+            "note": "、".join(r["name"] for r in stops[:3]) + ("ほか" if len(stops) > 3 else ""),
+            "href": "stop-high/index.html",
+        })
+
+    # 連続でランクインしている銘柄（今日を含む連続日数が2日以上）
+    history = aggregate.stock_histories(days, min_appearances=2)
+    streaks = []
+    order = [d["rec_date"] for d in sorted(days, key=lambda d: d["rec_date"])]
+    for stock in history:
+        dates = sorted({r["rec_date"] for r in stock["rows"] if r["kind"] == "gainers"})
+        if not dates or dates[-1] != today["rec_date"]:
+            continue
+        run, idx = 1, order.index(dates[-1])
+        while idx - run >= 0 and order[idx - run] in dates:
+            run += 1
+        if run >= 2:
+            streaks.append((run, stock))
+    if streaks:
+        run, stock = max(streaks, key=lambda x: x[0])
+        out.append({
+            "label": "連続ランクイン",
+            "value": f"{run}営業日",
+            "note": f"{stock['name']}（{stock['code']}）",
+            "href": f"stock/{stock['code']}/" if stock["code"] in stock_pages else "frequent.html",
+        })
+
+    big = sum(1 for r in rows if abs(r["change_pct"]) >= 10)
+    out.append({
+        "label": "10%以上の上昇",
+        "value": f"{big}銘柄",
+        "note": f"上位{len(rows)}銘柄のうち",
+        "href": "market.html",
+    })
+    return out[:3]
+
+
 def turnover_note(rows: list[dict], prev_rows: list[dict] | None) -> str:
     """前営業日との顔ぶれの入れ替わり。
 
@@ -473,6 +529,7 @@ def _build_stock_pages(days: list[dict]) -> list[dict]:
                 canonical=canonical_url(f"stock/{stock['code']}/index.html"),
                 s=stock,
                 summary=stock_summary(stock, len(days)),
+                together=aggregate.co_occurring(days, stock["code"]),
                 labels=price_limit.LABELS,
                 chart=charts.columns(
                     points,
@@ -527,6 +584,112 @@ def market_summary(rows: list[dict]) -> str:
         f"この期間で最も荒かったのは{format_date_short_ja(busiest['rec_date'])}で、"
         f"上位30銘柄のうち{busiest['big']}銘柄が10%以上動きました。"
         f"期間を通したストップ高はのべ{stops}銘柄です。"
+    )
+
+
+def stop_high_summary(history: dict, day_count: int) -> str:
+    """ストップ高の章の一文。数えた事実だけを書く。"""
+    if not history["total"]:
+        return f"直近{day_count}営業日では、上位30銘柄の中にストップ高はありませんでした。"
+    busiest = max(history["per_day"], key=lambda d: d["count"])
+    parts = [
+        f"直近{day_count}営業日で、のべ{history['total']}銘柄がストップ高になりました"
+        f"（{len({row['code'] for d in history['per_day'] for row in d['rows']})}銘柄）。"
+    ]
+    parts.append(
+        f"最も多かったのは{format_date_short_ja(busiest['rec_date'])}の{busiest['count']}銘柄です。"
+    )
+    if history["stocks"]:
+        top = history["stocks"][0]
+        parts.append(
+            f"最も回数が多いのは{top['name']}（{top['code']}）の{top['count']}回で、"
+            f"最長{top['streak']}営業日連続でした。"
+        )
+    return "".join(parts)
+
+
+def month_summary(month: dict) -> str:
+    """月まとめの一文。"""
+    movers = month["top_movers"]
+    if not movers:
+        return f"{month['day_count']}営業日ぶんのランキングを掲載しています。"
+    top = movers[0]
+    parts = [
+        f"{month['year']}年{month['month']}月は{month['day_count']}営業日ぶんを掲載しています。"
+        f"最も上昇したのは{format_date_short_ja(top['rec_date'])}の{top['name']}"
+        f"（{top['code']}）で{top['change_pct']:.2f}%でした。"
+    ]
+    if month["stop_highs"]:
+        parts.append(f"ストップ高はのべ{month['stop_highs']}銘柄。")
+    if month["frequent"]:
+        parts.append(f"2回以上ランクインした銘柄は{len(month['frequent'])}銘柄です。")
+    return "".join(parts)
+
+
+def _build_monthly_pages(days: list[dict]) -> list[dict]:
+    """月ごとのまとめ。週より長い目で見たいときのため。"""
+    months = aggregate.monthly_summaries(days)
+    tmpl = _env.get_template("monthly.html")
+    for i, month in enumerate(months):
+        month["summary"] = month_summary(month)
+        _write(
+            _OUTPUT_DIR / "monthly" / f"{month['slug']}.html",
+            tmpl.render(
+                base_url="../",
+                canonical=canonical_url(f"monthly/{month['slug']}.html"),
+                m=month,
+                newer=months[i - 1]["slug"] if i > 0 else None,
+                older=months[i + 1]["slug"] if i + 1 < len(months) else None,
+            ),
+        )
+    _write(
+        _OUTPUT_DIR / "monthly" / "index.html",
+        _env.get_template("monthly_index.html").render(
+            base_url="../",
+            canonical=canonical_url("monthly/index.html"),
+            months=months,
+        ),
+    )
+    return months
+
+
+def _build_stop_high_page(days: list[dict], stock_pages: set[str]) -> None:
+    """ストップ高の章。当日のランキングはどこにでもあるが、
+    「いつ・どの銘柄が上限まで買われたか」を日をまたいで残している場所は少ない。"""
+    history = aggregate.stop_high_history(days)
+    per_day = [
+        {
+            **day,
+            "rec_date_ja": format_date_ja(day["rec_date"]),
+            # 一覧の時点で顔ぶれが見えるようにする（3件まで）
+            "names": "、".join(r["name"] for r in day["rows"][:3])
+                     + ("ほか" if len(day["rows"]) > 3 else ""),
+        }
+        for day in history["per_day"]
+    ]
+    stocks = [{**s, "has_page": s["code"] in stock_pages} for s in history["stocks"]]
+    recent = list(reversed(history["per_day"][:TREND_DAYS]))
+
+    _write(
+        _OUTPUT_DIR / "stop-high" / "index.html",
+        _env.get_template("stop_high.html").render(
+            base_url="../",
+            canonical=canonical_url("stop-high/index.html"),
+            day_count=len(days),
+            period_from=days[-1]["rec_date"],
+            period_to=days[0]["rec_date"],
+            period_from_ja=format_date_ja(days[-1]["rec_date"]),
+            period_to_ja=format_date_short_ja(days[0]["rec_date"]),
+            summary=stop_high_summary(history, len(days)),
+            stocks=stocks,
+            per_day=per_day,
+            trend_chart=charts.columns(
+                [{"label": format_date_short_ja(d["rec_date"])[:-3], "value": d["count"]}
+                 for d in recent],
+                aria_label="日ごとのストップ高の数を示す棒グラフ",
+                unit="銘柄",
+            ),
+        ),
     )
 
 
@@ -646,6 +809,7 @@ def _build_ranking_pages(days: list[dict], stock_pages: set[str] | None = None) 
                 metric_label=metric_label,
                 intro=intro_fmt.format(n=len(rows)),
                 summary=day_summary(rows, json_key),
+                highlights=highlights(days, stock_pages or set()) if json_key == "gainers" else [],
                 turnover=turnover_note(
                     rows, annotate_rows(days[1].get(json_key, [])) if len(days) > 1 else None
                 ),
@@ -739,7 +903,8 @@ def _write_feed(days: list[dict]) -> None:
     )
 
 
-def _write_sitemap(days: list[dict], weeks: list[dict], stocks: list[dict]) -> None:
+def _write_sitemap(days: list[dict], weeks: list[dict], stocks: list[dict],
+                   months: list[dict]) -> None:
     latest_date = days[0]["rec_date"]
 
     # データと一緒に毎日変わるページ。lastmod は最新の相場日でよい。
@@ -758,6 +923,10 @@ def _write_sitemap(days: list[dict], weeks: list[dict], stocks: list[dict]) -> N
              (canonical_url("glossary.html"), None)]
     urls.append((canonical_url("weekly/index.html"), latest_date))
     urls.append((canonical_url("stock/index.html"), latest_date))
+    urls.append((canonical_url("stop-high/index.html"), latest_date))
+    urls.append((canonical_url("monthly/index.html"), latest_date))
+    for month in months:
+        urls.append((canonical_url(f"monthly/{month['slug']}.html"), month["to"]))
     for stock in stocks:
         urls.append((canonical_url(f"stock/{stock['code']}/index.html"), stock["latest"]))
     for week in weeks:
@@ -803,7 +972,10 @@ def build_all() -> None:
 
     # 銘柄ページを先に確定させてから表を描く（リンクの有無を知るため）
     stocks = _build_stock_pages(days)
-    _build_ranking_pages(days, {s["code"] for s in stocks})
+    stock_pages = {s["code"] for s in stocks}
+    _build_ranking_pages(days, stock_pages)
+    _build_stop_high_page(days, stock_pages)
+    months = _build_monthly_pages(days)
     weeks = _build_weekly_pages(days)
     _build_market_page(days)
 
@@ -861,7 +1033,7 @@ def build_all() -> None:
     ads = _ads_txt()
     if ads:
         (_OUTPUT_DIR / "ads.txt").write_text(ads, encoding="utf-8")
-    _write_sitemap(days, weeks, stocks)
+    _write_sitemap(days, weeks, stocks, months)
     _write_feed(days)
 
     static_dir = _ROOT / "static"
