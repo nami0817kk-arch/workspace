@@ -120,6 +120,18 @@ class Scenario {
   /// 布石は「無難な手のうち一番易しいもの」。
   /// **仕留めより難しい布石は置かない**——それはただの遠回りになる。
   /// 仕留めが無い局面（3つとも無難な手）には布石も置かない。
+  ///
+  /// **同じ `Outcome` で難易度だけ違う手が、どの局面にもある。**
+  /// `mf-build` の「サイドへ展開」52 と「自分で持ち上がる」66 はどちらも
+  /// `play` で、見返りが同じなら難しいほうを選ぶ理由が無い。実測で、
+  /// 育て方を4つ変えても**答えの決まった23局面が1つも動かなかった**
+  /// （`test/choice_sim.dart`）。
+  ///
+  /// **布石を難しいほうへ移す案は、測って外した**（2026-09-23）。
+  /// 同じ `Outcome` で難しいだけの手に役どころを与える狙いだったが、
+  /// 布石が通りにくくなるぶん繋がる回数が減り、「一手だけ待つ」型の
+  /// ゴールが 88 → 86、タイトルが 4.21 → 3.80 と下がった
+  /// （`test/setup_sim.dart`）。**死んでいる手は、まだ死んでいる。**
   ComboRole roleOf(ScenarioOption option) {
     final scoring = [
       for (final o in options)
@@ -179,7 +191,10 @@ class ScenarioPool {
         ScenarioOption(
           label: '飛び出して距離を詰める',
           key: AttributeKey.goalkeeping,
-          detail: Detail.gkPositioning,
+          // **構えるのと同じ能力では判定しない。** 同じ見返りで難易度だけ
+          // 高い手は、判定する能力まで同じだと逃げ道が無い（尖らせても
+          // 選べない）。飛び出しは間合いの詰め方＝セービングの領分。
+          detail: Detail.reflexes,
           difficulty: 70,
           outcome: Outcome.play,
           successText: '一気に間合いを詰め、足元でシュートを止めた。',
@@ -2398,8 +2413,11 @@ class ScenarioPool {
       options: [
         ScenarioOption(
           label: 'どこまでも付いていく',
-          key: AttributeKey.defending,
-          detail: Detail.marking,
+          // **走って付いていく手は、立ち位置ではなく脚で決まる。**
+          // 「距離を取ってスペースを埋める」と同じマークで判定していたので、
+          // 難しいだけの手になっていた。
+          key: AttributeKey.pace,
+          detail: Detail.sprintSpeed,
           difficulty: 72,
           outcome: Outcome.play,
           successText: '前を向かせず、ボールを引き出す前に潰した。',

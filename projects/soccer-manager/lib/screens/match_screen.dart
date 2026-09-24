@@ -38,7 +38,8 @@ class _MatchScreenState extends State<MatchScreen> {
   @override
   void initState() {
     super.initState();
-    _userTeamId = context.read<GameState>().userTeam.id;
+    final gameState = context.read<GameState>();
+    _userTeamId = gameState.userTeam.id;
     _game = PitchGame(
       events: widget.result.events,
       onEvent: (e) => setState(() => _revealed.add(e)),
@@ -46,6 +47,9 @@ class _MatchScreenState extends State<MatchScreen> {
       onMinuteTick: (m) => setState(() => _currentMinute = m),
       homeTeamId: widget.result.homeTeamId,
       awayTeamId: widget.result.awayTeamId,
+      // 名前に色の語が入っているクラブは、その色でユニフォームを描く。
+      homeTeamName: gameState.teamById(widget.result.homeTeamId)?.name,
+      awayTeamName: gameState.teamById(widget.result.awayTeamId)?.name,
     );
   }
 

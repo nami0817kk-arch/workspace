@@ -340,6 +340,29 @@ void main() {
           reason: 'legal のページが公開対象から外れている');
     });
 
+    test('app-ads.txt が公開され、AdMob のパブリッシャーIDが書かれている', () {
+      // app-ads.txt が無いと、広告主から「なりすましの在庫」と見なされて
+      // 入札が減る。置き場所はストアに載せた開発者サイトのドメイン直下で、
+      // ここでは soccer-manager.pages.dev/app-ads.txt になる。
+      final file = File('web/app-ads.txt');
+      expect(file.existsSync(), isTrue, reason: 'web/app-ads.txt が無い');
+
+      final line = file.readAsStringSync().trim();
+      expect(
+        line,
+        matches(RegExp(r'^google\.com, pub-\d{16}, DIRECT, [0-9a-f]{16}$')),
+        reason: 'app-ads.txt の書式が AdMob の指定と違う',
+      );
+
+      // web/ の中身は flutter build web が build/web へそのまま複製し、
+      // soccer-pages.yml がそれを dist の直下へ置く。どちらかが変わると
+      // ドメイン直下から消えて、AdMob からは「未設置」と同じに見える。
+      final pages =
+          File('../../.github/workflows/soccer-pages.yml').readAsStringSync();
+      expect(pages, contains('cp -r build/web/* dist/'),
+          reason: 'web/ の中身が公開対象から外れている');
+    });
+
     test('サポート窓口に個人を特定する情報が出ていない', () {
       // 窓口はストアの製品ページから誰でも開ける。個人の名前やアドレスを
       // 載せない方針で、専用のアドレスを用意してある。
@@ -420,6 +443,31 @@ void main() {
       // これがないと App Store Connect へのアップロードのたびに
       // 手動での回答を求められ、TestFlight への配信が止まる。
       expect(plist, contains('ITSAppUsesNonExemptEncryption'));
+    });
+
+    test('iOSが対応言語に日本語を宣言している', () {
+      // 宣言しないとストアの「言語」欄が英語だけになる。日本語で遊べるのに
+      // 英語アプリに見えるので、1.0 の公開後に実際に取りこぼしていた。
+      final plist = File('ios/Runner/Info.plist').readAsStringSync();
+      expect(plist, contains('CFBundleLocalizations'),
+          reason: '対応言語が宣言されていない');
+      final block = plist.split('CFBundleLocalizations')[1].split('</array>')[0];
+      expect(block, contains('<string>ja</string>'), reason: '日本語が入っていない');
+      expect(block, contains('<string>en</string>'), reason: '英語が入っていない');
+    });
+
+    test('iOSがSKAdNetworkの広告ネットワークを宣言している', () {
+      // ここに載っていないネットワークからはインストール計測の通知が届かない。
+      // 計測できない在庫は入札が下がるので、収益に直接効く。
+      final plist = File('ios/Runner/Info.plist').readAsStringSync();
+      expect(plist, contains('SKAdNetworkItems'), reason: 'SKAdNetworkの宣言が無い');
+
+      final count = RegExp(r'\.skadnetwork<').allMatches(plist).length;
+      expect(count, greaterThanOrEqualTo(40),
+          reason: '宣言が $count 件しかない。AdMob の一覧から減っていないか確認する');
+
+      // AdMob 自身のID。これが落ちると自社の広告すら計測できない。
+      expect(plist, contains('cstr6suwn9.skadnetwork'));
     });
   });
 }

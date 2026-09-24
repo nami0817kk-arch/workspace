@@ -113,12 +113,21 @@ void main() {
       tester.view.physicalSize = device.logical * device.ratio;
 
       SharedPreferences.setMockInitialValues({});
+
+      addTearDown(() => Tr.language = AppLanguage.system);
+
       late final SettingsController settings;
       late final MonetizationController monetization;
       late final GameState gameState;
       await tester.runAsync(() async {
         settings = SettingsController();
         await settings.init();
+        // **シミュレーションより先に言語を決める。** 記者会見やニュースの文面は
+        // 作られた時点の言語で確定し、セーブにそのまま残る。あとから切り替えても
+        // 遡って訳されない。ここを撮影直前に置いていたため、日本語の画面に英語の
+        // 記者会見が写った画像がストアに載っていた (1.0 の掲載画像が実際にそう)。
+        // init() が保存値(既定=端末準拠)を書き戻すので、その後で決めること。
+        Tr.language = AppLanguage.japanese;
         monetization = MonetizationController(
           adService: NoOpAdService(),
           purchases: _StubPurchaseService(),
@@ -137,8 +146,12 @@ void main() {
         gameState.save!.firstRunGuideDismissed = true;
       });
 
-      Tr.language = AppLanguage.japanese;
-      addTearDown(() => Tr.language = AppLanguage.system);
+      // 生成された文面が日本語になっているか、撮る前に確かめる。掲載画像は
+      // 人が1枚ずつ見返さないので、混ざっていても気づかないまま出てしまう。
+      final press = gameState.save!.pendingPressConference;
+      expect(press, isNotNull, reason: '記者会見が出ていない状態で撮ろうとしている');
+      expect(press!.prompt, matches(RegExp(r'[ぁ-んァ-ヴ一-龠]')),
+          reason: '記者会見が日本語になっていない: ${press.prompt}');
 
       Widget wrap(Widget child) => MultiProvider(
             providers: [

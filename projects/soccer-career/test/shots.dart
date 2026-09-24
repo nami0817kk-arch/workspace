@@ -152,7 +152,7 @@ void main() {
     await dump(tester, '10-aim');
 
     // 今週の練習のシート。毎週触る画面なので、必ず目で見る。
-    await tester.tap(find.widgetWithText(Tab, '試合'));
+    await tester.tap(find.widgetWithText(Tab, '今週'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('変える'));
     await tester.pumpAndSettle();
@@ -174,9 +174,14 @@ void main() {
     await dump(tester, '06-match');
 
     // 手を選んだ直後。結果のカード（ミニピッチにボールの行方）を見る。
-    await tester.tap(find.byType(OutlinedButton).first);
-    await tester.pumpAndSettle();
-    await dump(tester, '06b-result');
+    // **局面が残っていないことがある**（切り札を構えられる局面まで
+    // 進めているので、そこで試合が終わっていることがある）。
+    // 無条件に tap すると「Bad state: No element」で撮影が丸ごと止まる。
+    if (find.byType(OutlinedButton).evaluate().isNotEmpty) {
+      await tester.tap(find.byType(OutlinedButton).first);
+      await tester.pumpAndSettle();
+      await dump(tester, '06b-result');
+    }
 
     // 殿堂。引退させて、記録として残ったところを見る。
     await controller.retire();
@@ -234,7 +239,7 @@ void main() {
     }
     await pump(tester, HubScreen(controller: controller), theme);
     // タブは前の撮影の位置が残るので、試合タブへ戻す。
-    await tester.tap(find.widgetWithText(Tab, '試合'));
+    await tester.tap(find.widgetWithText(Tab, '今週'));
     await tester.pumpAndSettle();
     await dump(tester, '13-event');
 

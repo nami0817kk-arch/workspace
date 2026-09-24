@@ -388,6 +388,10 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                   for (var i = 0; i < _offers.length; i++) ...[
                     _OfferCard(
                       offer: _offers[i],
+                      roleNote: CareerEngine.roleNoteFor(
+                        controller.state!.player.overall,
+                        _offers[i].club,
+                      ),
                       takeHome: controller.takeHome(_offers[i].salary),
                       busy: _busy,
                       onAccept: () => _accept(_offers[i]),
@@ -454,7 +458,11 @@ class _OfferCard extends StatelessWidget {
     required this.onAccept,
     required this.onNegotiate,
     required this.onIncentive,
+    this.roleNote,
   });
+
+  /// 起用の約束が実際に何を意味するか。`CareerEngine.roleNoteFor` から引く。
+  final String? roleNote;
 
   final TransferOffer offer;
   final int takeHome;
@@ -552,6 +560,13 @@ class _OfferCard extends StatelessWidget {
                 ),
               ],
             ),
+            // **約束が何を意味するか。** 言葉だけだと、「ローテーション」に
+            // 1季を棒に振る危険（実測 4.8%）が含まれることが読めない。
+            // 判定と同じ力の差から引く（`CareerEngine.roleNoteFor`）。
+            if (roleNote != null) ...[
+              const SizedBox(height: 2),
+              Text(roleNote!, style: muted, textAlign: TextAlign.right),
+            ],
             const SizedBox(height: 12),
             Row(
               children: [

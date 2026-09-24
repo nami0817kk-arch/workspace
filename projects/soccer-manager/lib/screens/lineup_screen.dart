@@ -20,6 +20,17 @@ import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import '../l10n/tr.dart';
 
+/// 布陣の攻守の偏りを「+5%」「±0%」の形にする。
+///
+/// 1.00 を基準にした倍率のまま出していたが、x1.00 と x1.05 の違いが
+/// どれくらい有利なのか読み取れなかった。四捨五入で 0 になる差は
+/// ±0% とまとめる(布陣そのものが基準どおりという意味)。
+String _biasLabel(double bias) {
+  final percent = ((bias - 1) * 100).round();
+  if (percent == 0) return '±0%';
+  return percent > 0 ? '+$percent%' : '$percent%';
+}
+
 class LineupScreen extends StatelessWidget {
   const LineupScreen({super.key});
 
@@ -90,6 +101,15 @@ class _FormationTab extends StatelessWidget {
                           ),
                         )
                         .toList(),
+                    // 選んだ後は布陣名だけ出す。右隣の「習熟」チップが同じ
+                    // 数字を出しているので、閉じているときは二重になる。
+                    // 開いたときは各布陣の馴染みが要るので、そちらは残す。
+                    selectedItemBuilder: (context) => Formation.values
+                        .map((f) => Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(f.label),
+                            ))
+                        .toList(),
                     onChanged: (f) {
                       if (f != null) {
                         FeedbackService.tap();
@@ -113,18 +133,18 @@ class _FormationTab extends StatelessWidget {
                     ),
                     visualDensity: VisualDensity.compact,
                   ),
+                  // 倍率(x1.05)より増減率(+5%)のほうが、どちら寄りの布陣かが
+                  // ひと目で分かる。x1.00 が並んでいても「何も無い」ことが
+                  // 伝わらなかった。
                   Chip(
-                    label: Text(
-                      Tr.pick('攻撃 x${formation.attackBias.toStringAsFixed(2)}',
-                          'Attack x${formation.attackBias.toStringAsFixed(2)}'),
-                    ),
+                    label: Text(Tr.pick('攻撃 ${_biasLabel(formation.attackBias)}',
+                        'Attack ${_biasLabel(formation.attackBias)}')),
                     visualDensity: VisualDensity.compact,
                   ),
                   Chip(
-                    label: Text(
-                      Tr.pick('守備 x${formation.defenseBias.toStringAsFixed(2)}',
-                          'Defence x${formation.defenseBias.toStringAsFixed(2)}'),
-                    ),
+                    label: Text(Tr.pick(
+                        '守備 ${_biasLabel(formation.defenseBias)}',
+                        'Defence ${_biasLabel(formation.defenseBias)}')),
                     visualDensity: VisualDensity.compact,
                   ),
                   Chip(

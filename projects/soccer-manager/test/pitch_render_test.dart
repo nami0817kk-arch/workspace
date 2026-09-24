@@ -17,6 +17,26 @@ void main() {
       expect(a.kit, b.kit);
     });
 
+    test('名前に色が入っているクラブは、その色で描かれる', () {
+      // 「紅獅子ユナイテッド」が緑、「青嵐フットボールクラブ」が橙で
+      // 描かれていた。名前に書いてある色と無関係だと、作り手が決めた色には
+      // 見えない。
+      double hueOf(String name) =>
+          HSLColor.fromColor(ClubPalette.of('any-id', clubName: name).base).hue;
+
+      expect(ClubPalette.hueDistance(hueOf('紅獅子ユナイテッド'), 0), lessThan(20));
+      expect(ClubPalette.hueDistance(hueOf('青嵐フットボールクラブ'), 215), lessThan(20));
+      expect(ClubPalette.hueDistance(hueOf('黄金アトレティコ'), 45), lessThan(20));
+      expect(ClubPalette.hueDistance(hueOf('Red Lion United'), 0), lessThan(20));
+
+      // 色の語が無ければ従来どおりIDから決まる(全部同じ色にはならない)。
+      final plain = {
+        for (final name in const ['霧の丘FC', '王冠シティ', '鉄橋SC'])
+          ClubPalette.of(name, clubName: name).hue
+      };
+      expect(plain.length, 3);
+    });
+
     test('ユニフォームは芝の上で沈まない明るさになっている', () {
       // 芝は 0xFF20642A〜0xFF2C7C36。エンブレムの地の色をそのまま
       // ピッチに置くと、暗い色のクラブが芝と同化して選手が見えなくなる。
@@ -67,7 +87,7 @@ void main() {
       // エンブレムとピッチが別々に色を決めていると、同じクラブなのに
       // 画面ごとに色が変わる。実際そうなっていたので ClubPalette に寄せた。
       final emblem = File('lib/widgets/club_emblem.dart').readAsStringSync();
-      expect(emblem, contains('ClubPalette.of(teamId)'));
+      expect(emblem, contains('ClubPalette.of(teamId'));
       expect(emblem, isNot(contains('HSLColor.fromAHSL')),
           reason: 'エンブレムが色を自前で計算している(ClubPalette と二重になる)');
     });

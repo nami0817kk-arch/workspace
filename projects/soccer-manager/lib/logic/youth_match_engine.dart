@@ -54,13 +54,19 @@ class YouthMatchEngine {
 
   /// 候補が1人もいなければnullを返す。それ以外は試合をシミュレートし、
   /// 各候補の出場数・得点・直近評点を更新して結果を返す。
-  static YouthMatchReport? playWeekly(List<Player> prospects) {
+  /// [opponentStrength]を渡すとその相手と戦う(ユースリーグの対戦相手)。
+  /// 渡さない場合は従来どおり、自分たちと同水準の相手を毎週作る。
+  static YouthMatchReport? playWeekly(
+    List<Player> prospects, {
+    int? opponentStrength,
+  }) {
     if (prospects.isEmpty) return null;
 
     final avg =
         prospects.fold<int>(0, (s, p) => s + p.overall) / prospects.length;
     // 相手は自分たちと同水準のユースが中心だが、毎週ばらつく。
-    final opponentRating = (avg + _rng.nextInt(11) - 5).round().clamp(20, 90);
+    final opponentRating = opponentStrength ??
+        (avg + _rng.nextInt(11) - 5).round().clamp(20, 90);
     final diff = avg - opponentRating;
 
     int rollGoals(double expected) {

@@ -29,9 +29,14 @@ body {
 a { color: var(--accent); }
 
 .site-head { border-bottom: 1px solid var(--line); background: var(--panel); }
-.site-head .wrap { display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: baseline; padding: 14px 16px; }
+.site-head .wrap { display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: baseline;
+  padding: 14px 16px; min-width: 0; }
 .site-name { font-weight: 700; font-size: 17px; color: var(--ink); text-decoration: none; }
-.site-nav { display: flex; gap: 16px; font-size: 14px; }
+/* 12項目ある。狭い画面では折り返さず横に流す（縦1文字ずつに潰れていた）。 */
+.site-nav { display: flex; gap: 16px; font-size: 14px; overflow-x: auto;
+  -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+.site-nav::-webkit-scrollbar { display: none; }
+.site-nav a { white-space: nowrap; }
 
 main { padding: 24px 16px 48px; }
 h1 { font-size: 24px; line-height: 1.4; margin: 0 0 8px; }
@@ -96,6 +101,45 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 .spark { width: 100%; max-width: 320px; height: auto; }
 .spark-none { color: var(--muted); font-size: 13px; }
 
+/* 一覧の並び替え・絞り込み */
+.tools { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center;
+  margin: 0 0 14px; font-size: 13px; color: var(--muted); }
+.tools select { font-size: 14px; padding: 5px 8px; color: var(--ink);
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+
+/* ページ送り */
+.pager { display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  margin: 14px 0; font-size: 14px; }
+.pager a { padding: 4px 9px; border: 1px solid var(--line); border-radius: 8px;
+  text-decoration: none; }
+.pager .now { padding: 4px 9px; border: 1px solid var(--accent); border-radius: 8px;
+  color: var(--accent); font-weight: 700; }
+.pager .gap { color: var(--muted); }
+.pager .of { margin-left: auto; color: var(--muted); font-size: 13px; }
+
+/* 見守り */
+.watch { margin: 16px 0 8px; }
+.watch button { padding: 9px 20px; font-size: 15px; font-weight: 700; cursor: pointer;
+  color: var(--accent); background: var(--panel);
+  border: 1px solid var(--accent); border-radius: var(--radius); }
+.watch button.on { color: var(--bg); background: var(--accent); }
+.watch .note { margin-left: 10px; font-size: 13px; color: var(--muted); }
+
+/* 一覧から直接見守る。商品ページまで開かせない */
+.watch-mini { margin-left: 10px; padding: 2px 9px; font-size: 12px; cursor: pointer;
+  color: var(--muted); background: none;
+  border: 1px solid var(--line); border-radius: 999px; }
+.watch-mini.on { color: var(--accent); border-color: var(--accent); font-weight: 700; }
+
+.tools .scope { color: var(--muted); font-size: 12px; }
+.hit .since { color: var(--muted); font-size: 12px; margin-left: 8px; }
+.hit .badge { margin-left: 8px; }
+
+/* 商品ページの価格推移 */
+.chart-svg { width: 100%; max-width: 560px; height: auto; color: var(--accent); }
+.note { font-size: 13px; color: var(--muted); }
+.history th { font-variant-numeric: tabular-nums; }
+
 /* 一覧に出す小さな推移。履歴がこのサイトの値打ちなので、開く前に形を見せる。 */
 .card-spark { margin-top: 6px; color: var(--accent); opacity: .8; }
 .card-spark .spark { max-width: 140px; }
@@ -131,11 +175,22 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 .site-foot .disclaimer, .site-foot .copy, .updated { margin: 8px 0 0; }
 .site-foot .ad-notice { background: none; border: 0; padding: 0; margin: 8px 0 0; }
 
-@media (max-width: 480px) {
+.fullname { margin: -4px 0 14px; font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+@media (max-width: 560px) {
   .card { gap: 10px; }
   .card .thumb { flex-basis: 72px; }
   .card img, .card .noimg { width: 72px; height: 72px; }
   h1 { font-size: 21px; }
   .sep { margin: 0 5px; }
   .stats { font-size: 13px; }
+  /* 並び替えは縦に積む。横並びだと選択肢が潰れる。 */
+  .tools { flex-direction: column; align-items: stretch; gap: 8px; }
+  .tools label { display: flex; justify-content: space-between; align-items: center;
+    gap: 10px; }
+  .tools select { flex: 1; min-width: 0; }
+  .site-head .wrap { padding: 12px 16px; }
+  .site-name { font-size: 16px; }
+  .hit { flex-wrap: wrap; }
+  .pager .of { width: 100%; margin-left: 0; }
 }

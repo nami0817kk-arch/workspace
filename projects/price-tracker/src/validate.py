@@ -29,6 +29,25 @@ def _ratio(count: int, total: int) -> float:
     return count / total if total else 0.0
 
 
+def check_against_previous(rows: list[dict], previous: dict) -> list[str]:
+    """前回の記録と突き合わせる。
+
+    取得は成功しているのに中身が前日と1件も違わない場合、こちらのバグか
+    向こうのキャッシュを疑う。5,000件の価格と倍率が丸ごと同一になる確率は
+    実測から見て無視できる（毎日15〜600件は動いている）。
+    """
+    if not previous or not rows:
+        return []
+    same = sum(1 for r in rows
+               if r["item_code"] in previous
+               and previous[r["item_code"]] == (r["price"], int(r.get("point_rate") or 1)))
+    overlap = sum(1 for r in rows if r["item_code"] in previous)
+    if overlap >= 100 and same == overlap:
+        return [f"前回の記録と{overlap}件すべてが同一です。"
+                "取得は成功していますが、中身が更新されていない可能性があります。"]
+    return []
+
+
 def check_snapshot(rows: list[dict], expected: int) -> tuple[list[str], list[str]]:
     """記録前の検査。(止めるべき理由, 気に留める理由) を返す。
 
@@ -65,6 +84,13 @@ def check_snapshot(rows: list[dict], expected: int) -> tuple[list[str], list[str
             f"アフィリエイトリンクでない行が {no_aff}/{total} 件"
             f"（{_ratio(no_aff, total):.1%}）あります。"
             "RAKUTEN_AFFILIATE_ID を確認してください。このまま記録しても収益が発生しません。")
+
+    # ポイント倍率は 2026-09-13 時点で 7.3% が2倍以上だった。全件1倍になったら、
+    # 項目が返らなくなったと考えるほうが自然。実質価格の判定が丸ごと死ぬので見張る。
+    if all(int(r.get("point_rate") or 1) == 1 for r in rows):
+        warnings.append(
+            "ポイント倍率が全件1倍です。APIが項目を返さなくなった可能性があります"
+            "（実質価格の判定が効かなくなります）。")
 
     # レビューは元々ほとんど0で返るため、割合ではなく「全滅」だけを見る。
     # 項目そのものが返らなくなった場合の合図として使う。

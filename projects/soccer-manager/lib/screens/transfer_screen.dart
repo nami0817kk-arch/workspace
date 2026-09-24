@@ -225,6 +225,9 @@ class _TransferScreenState extends State<TransferScreen>
                     return Card(
                       margin: const EdgeInsets.only(bottom: 8),
                       child: ListTile(
+                        // 説明が2行、右端が「移籍金+ボタン」の2段になるため、
+                        // 既定の高さでは縦にはみ出す(実際に12px溢れた)。
+                        isThreeLine: true,
                         leading: PlayerFaceAvatar(
                           playerId: p.id,
                           position: p.position,
@@ -251,11 +254,33 @@ class _TransferScreenState extends State<TransferScreen>
                             ],
                           ],
                         ),
-                        subtitle: Text(
-                          Tr.pick(
-                              '${p.originClubName ?? '所属不明'} / ${p.age}歳 / ${p.position.label} / 総合 ${p.overall} / 潜在 ${p.potential} / 移籍金 ${p.marketValue}万',
-                              "${p.originClubName ?? 'Club unknown'} / age ${p.age} / ${p.position.label} / overall ${p.overall} / potential ${p.potential} / fee ${p.marketValue}"),
+                        // 1行に全部つなげると3行に折り返し、「総/合 69」
+                        // 「移籍/金 1602万」のように語の途中で切れていた。
+                        // 買うかどうかは実力と値段で決めるので、その2つを
+                        // 2行目にまとめ、所属や年齢と分けて読めるようにする。
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              Tr.pick(
+                                  '${p.originClubName ?? '所属不明'} / ${p.age}歳 / ${p.position.label}',
+                                  "${p.originClubName ?? 'Club unknown'} / age ${p.age} / ${p.position.label}"),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            Text(
+                              Tr.pick(
+                                  '総合${p.overall} 潜在${p.potential} 移籍金${p.marketValue}万',
+                                  "Overall ${p.overall} / potential ${p.potential} / fee ${p.marketValue}"),
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(fontWeight: FontWeight.w600),
+                            ),
+                          ],
                         ),
+                        // 値段は説明の2行目に入れる。ボタンの上に積むと、
+                        // タップ領域(48x48)を削るか縦にはみ出すかのどちらかに
+                        // なった(CIのアクセシビリティ検査で両方とも落ちた)。
                         trailing: FilledButton(
                           onPressed: (squadFull || !windowOpen)
                               ? null

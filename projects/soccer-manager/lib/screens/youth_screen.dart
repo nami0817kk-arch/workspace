@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../logic/scouting_engine.dart';
+import '../logic/training_engine.dart';
+import '../logic/youth_departure_engine.dart';
+import '../models/youth_league.dart';
 import '../logic/youth_match_engine.dart';
 import '../models/player.dart';
-import '../models/training_focus.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../widgets/player_face_avatar.dart';
@@ -300,6 +302,37 @@ class _YouthScreenState extends State<YouthScreen> {
                     fontSize: 12, color: SemanticColors.subtleText(context)),
               ),
             ),
+            if (gameState.save!.youthLeague != null)
+              _YouthLeagueTable(league: gameState.save!.youthLeague!),
+            // 今週ユースを去った選手。ニュースにも残るが、ユース画面を開いた
+            // ときに名簿から消えているだけだと、何が起きたのか分からない。
+            if (gameState.lastYouthDepartures.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Card(
+                  color: Theme.of(context).colorScheme.errorContainer,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for (final d in gameState.lastYouthDepartures)
+                          Text(
+                            d.poached
+                                ? Tr.pick(
+                                    '${d.player.name}(${d.player.age}歳)が他クラブに引き抜かれました。育成補償金 ${d.compensation}万円',
+                                    '${d.player.name} (${d.player.age}) was poached by another club. Development fee ${d.compensation}')
+                                : Tr.pick(
+                                    '${d.player.name}(${d.player.age}歳)が出場機会を求めて去りました。育成補償金 ${d.compensation}万円',
+                                    '${d.player.name} (${d.player.age}) left in search of first-team football. Development fee ${d.compensation}'),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
             if (gameState.lastYouthMatchReport != null) ...[
               const SizedBox(height: 8),
               Padding(
@@ -461,6 +494,17 @@ class _YouthScreenState extends State<YouthScreen> {
                               ),
                             ],
                           ),
+                          _MentorRow(prospect: p),
+                          if (YouthDepartureEngine.isAtRisk(p))
+                            Text(
+                              Tr.pick(
+                                  '${p.age}歳。出場機会を求めており、いつ去ってもおかしくありません',
+                                  'Age ${p.age}. He wants first-team football and could leave at any time'),
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: SemanticColors.negative(context),
+                              ),
+                            ),
                         ],
                       ),
                       trailing: Row(
@@ -521,15 +565,63 @@ class _YouthScreenState extends State<YouthScreen> {
     String playerId,
     String name,
   ) async {
-    final ok = await context.read<GameState>().promoteYouthProspect(playerId);
+    final gameState = context.read<GameState>();
+    // 昇格はプロ契約を結ぶ手続きになった。押した瞬間に契約金が引かれるので、
+    // 条件を見せてから決めさせる。
+    final terms = gameState.youthPromotionTermsFor(playerId);
+    if (terms == null) return;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(Tr.pick('$nameとプロ契約を結びますか？',
+            'Sign $name to a professional contract?')),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(Tr.pick('背番号: ${terms.squadNumber}',
+                'Squad number: ${terms.squadNumber}')),
+            Text(Tr.pick('週俸: ${terms.weeklyWage}万円',
+                'Wage: ${terms.weeklyWage} per week')),
+            Text(Tr.pick('契約金: ${terms.signingBonus}万円(一括)',
+                'Signing fee: ${terms.signingBonus} (one-off)')),
+            Text(Tr.pick('契約年数: ${terms.years}年',
+                'Contract: ${terms.years} years')),
+            const SizedBox(height: 8),
+            Text(
+              Tr.pick('昇格直後は一軍の強度に慣れておらず、実戦感覚が低い状態から始まります。出番を作ると戻ります。',
+                  'He will start short of match sharpness until he adjusts to first-team football. Playing him brings it back.'),
+              style: const TextStyle(fontSize: 12),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: Text(Tr.pick('やめる', 'Cancel')),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            child: Text(Tr.pick('契約して昇格', 'Sign and promote')),
+          ),
+        ],
+      ),
+    );
+    if (confirmed != true) return;
+
+    final ok = await gameState.promoteYouthProspect(playerId);
     ok ? FeedbackService.success() : FeedbackService.error();
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text(ok
-                ? Tr.pick('$nameをトップチームに昇格させました',
-                    'You promoted $name to the first team')
-                : Tr.pick('昇格できませんでした', 'The promotion did not go through'))),
+          content: Text(ok
+              ? Tr.pick('$nameが背番号${terms.squadNumber}でトップチームに昇格しました',
+                  '$name joined the first team with the number ${terms.squadNumber}')
+              // 失敗の理由は GameState 側が入れている(資金・週給予算・枠)。
+              : gameState.lastSigningBlockReason ??
+                  Tr.pick('昇格できませんでした', 'The promotion did not go through')),
+        ),
       );
     }
   }
@@ -555,6 +647,161 @@ class _YouthScreenState extends State<YouthScreen> {
             child: Text(Tr.pick('解雇する', 'Release him')),
           ),
         ],
+      ),
+    );
+  }
+}
+
+/// 有望株に付けるメンター(一軍のベテラン)の選択欄。
+///
+/// 性格特性はユースでは練習で身に付かず、メンターを通してしか手に入らない。
+/// 成長も速くなるが、ベテラン1人が見られるのは1人だけなので、誰に付けるかを
+/// 選ぶことになる。
+class _MentorRow extends StatelessWidget {
+  final Player prospect;
+
+  const _MentorRow({required this.prospect});
+
+  @override
+  Widget build(BuildContext context) {
+    final gameState = context.watch<GameState>();
+    final candidates =
+        gameState.youthMentorCandidates(forProspectId: prospect.id);
+    final current = prospect.mentorId == null
+        ? null
+        : gameState.userTeam.players
+            .where((p) => p.id == prospect.mentorId)
+            .firstOrNull;
+
+    // 付けられる相手が1人も居ないときは、空の選択欄を出しても押せるものが
+    // 無いだけなので、理由のほうを出す。
+    if (candidates.isEmpty && current == null) {
+      return Text(
+        Tr.pick('メンター: ${TrainingEngine.minMentorAge}歳以上の手の空いた選手がいません',
+            'Mentor: nobody aged ${TrainingEngine.minMentorAge}+ is free'),
+        style: const TextStyle(fontSize: 12),
+      );
+    }
+
+    return Row(
+      children: [
+        Text(Tr.pick('メンター: ', 'Mentor: '), style: const TextStyle(fontSize: 12)),
+        Flexible(
+          child: DropdownButton<String?>(
+            value: current?.id,
+            isDense: true,
+            isExpanded: true,
+            style: const TextStyle(fontSize: 12, color: Colors.black87),
+            hint: Text(Tr.pick('付けない', 'None'),
+                style: const TextStyle(fontSize: 12)),
+            items: [
+              DropdownMenuItem<String?>(
+                value: null,
+                child: Text(Tr.pick('付けない', 'None')),
+              ),
+              for (final m in [
+                if (current != null && !candidates.contains(current)) current,
+                ...candidates,
+              ])
+                DropdownMenuItem<String?>(
+                  value: m.id,
+                  child: Text(
+                    Tr.pick('${m.name} (${m.age}歳 / 総合${m.overall})',
+                        '${m.name} (${m.age} / ovr ${m.overall})'),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+            ],
+            onChanged: (id) {
+              FeedbackService.tap();
+              context.read<GameState>().setYouthProspectMentor(prospect.id, id);
+            },
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+
+/// ユースリーグの順位表。
+///
+/// 練習試合の勝敗が何にも残らなかったため、年間の積み上がりを出す。
+/// 自クラブの行だけ太字にして、長い表の中でも自分を見失わないようにする。
+class _YouthLeagueTable extends StatelessWidget {
+  final YouthLeague league;
+
+  const _YouthLeagueTable({required this.league});
+
+  @override
+  Widget build(BuildContext context) {
+    final sorted = league.sorted;
+    final next = league.nextOpponent;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                league.isComplete
+                    ? Tr.pick('ユースリーグ 最終順位 (${league.userRank}位)',
+                        'Youth league, final table (${league.userRank})')
+                    : Tr.pick(
+                        'ユースリーグ 第${league.matchday + 1}節 / 全${YouthLeague.matchdayCount}節',
+                        'Youth league, round ${league.matchday + 1} of ${YouthLeague.matchdayCount}'),
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+              if (next != null)
+                Text(
+                  Tr.pick('今節の相手: ${next.name}(強さ ${next.strength})',
+                      'Next up: ${next.name} (strength ${next.strength})'),
+                  style: TextStyle(
+                      fontSize: 12, color: SemanticColors.subtleText(context)),
+                ),
+              const SizedBox(height: 8),
+              for (var i = 0; i < sorted.length; i++)
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 1),
+                  child: Row(
+                    children: [
+                      SizedBox(
+                        width: 20,
+                        child: Text('${i + 1}',
+                            style: const TextStyle(fontSize: 12)),
+                      ),
+                      Expanded(
+                        child: Text(
+                          sorted[i].name,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: sorted[i].isUser
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        Tr.pick(
+                            '${sorted[i].played}試 ${sorted[i].points}点 ${sorted[i].goalDiff >= 0 ? '+' : ''}${sorted[i].goalDiff}',
+                            '${sorted[i].played}P ${sorted[i].points}pts ${sorted[i].goalDiff >= 0 ? '+' : ''}${sorted[i].goalDiff}'),
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: sorted[i].isUser
+                              ? FontWeight.bold
+                              : FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+            ],
+          ),
+        ),
       ),
     );
   }

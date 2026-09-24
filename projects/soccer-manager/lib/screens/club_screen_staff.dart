@@ -103,7 +103,31 @@ class _StaffRow extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('${staff.name} (${staff.age})'),
+                Row(
+                  children: [
+                    Flexible(
+                      child: Text('${staff.name} (${staff.age})',
+                          overflow: TextOverflow.ellipsis),
+                    ),
+                    // 得意分野。ユースコーチなら、ここが有望株の伸びる
+                    // 能力を決める。万能のときは札を出さない(全員に
+                    // 付くと見分けの役に立たない)。
+                    if (staff.specialty != StaffSpecialty.balanced) ...[
+                      const SizedBox(width: 6),
+                      Tooltip(
+                        message: staff.specialty.description,
+                        child: Chip(
+                          label: Text(staff.specialty.label,
+                              style: const TextStyle(fontSize: 10)),
+                          visualDensity: VisualDensity.compact,
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                          padding: EdgeInsets.zero,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
                 Text(
                   [
                     for (final a in weights.keys)

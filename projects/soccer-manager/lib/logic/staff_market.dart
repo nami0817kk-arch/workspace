@@ -98,6 +98,11 @@ class StaffMarket {
       attributes: attrs,
       wage: StaffMember.askingWage(tmp.roleAbility),
       contractYears: 2 + _rng.nextInt(2),
+      // 得意分野。半数は万能で、残りが4つの分野に散る。全員が何かに
+      // 偏っていると、候補を見比べる意味が薄れる(どれを取っても偏る)。
+      specialty: _rng.nextBool()
+          ? StaffSpecialty.balanced
+          : StaffSpecialty.values[1 + _rng.nextInt(StaffSpecialty.values.length - 1)],
     );
   }
 

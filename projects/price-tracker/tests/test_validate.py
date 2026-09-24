@@ -13,7 +13,7 @@ from src import validate  # noqa: E402
 
 def row(**kw):
     base = {"item_code": "shop:1", "name": "テレビ", "price": 39800,
-            "is_affiliate": True, "review_count": 3}
+            "is_affiliate": True, "review_count": 3, "point_rate": 1}
     base.update(kw)
     return base
 
@@ -25,7 +25,9 @@ def rows(n, **kw):
 class CheckSnapshotTest(unittest.TestCase):
 
     def test_正常なデータは何も言わない(self):
-        errors, warnings = validate.check_snapshot(rows(270), expected=270)
+        data = rows(269) + [row(item_code="x", point_rate=10)]
+
+        errors, warnings = validate.check_snapshot(data, expected=270)
 
         self.assertEqual(errors, [])
         self.assertEqual(warnings, [])
@@ -81,6 +83,21 @@ class CheckSnapshotTest(unittest.TestCase):
 
         self.assertTrue(any("アフィリエイトリンクでない" in e for e in errors))
 
+    def test_ポイント倍率が全件1倍なら警告する(self):
+        # 実測では7.3%が2倍以上だった。全件1倍は項目が返らなくなった合図で、
+        # 実質価格の判定が丸ごと死ぬ
+        errors, warnings = validate.check_snapshot(rows(270), expected=270)
+
+        self.assertEqual(errors, [])
+        self.assertTrue(any("ポイント倍率が全件1倍" in w for w in warnings))
+
+    def test_倍率が1つでも高ければ警告しない(self):
+        data = rows(269) + [row(item_code="x", point_rate=10)]
+
+        _, warnings = validate.check_snapshot(data, expected=270)
+
+        self.assertFalse(any("ポイント倍率" in w for w in warnings))
+
     def test_レビューが全件0なら警告だけ出す(self):
         # 価格履歴には影響しないので、止めずに気づけるようにする
         errors, warnings = validate.check_snapshot(
@@ -90,7 +107,9 @@ class CheckSnapshotTest(unittest.TestCase):
         self.assertTrue(any("レビュー件数が全件0" in w for w in warnings))
 
     def test_レビューが1件でもあれば警告しない(self):
-        data = rows(269, review_count=0) + [row(item_code="x", review_count=1)]
+        data = (rows(268, review_count=0) + [row(item_code="x", review_count=1)]
+                + [row(item_code="y", point_rate=10)])
+
         _, warnings = validate.check_snapshot(data, expected=270)
 
         self.assertEqual(warnings, [])
@@ -131,9 +150,12 @@ class VerificationTagTest(unittest.TestCase):
                          self.render(google_site_verification="   "))
 
     def test_値はエスケープする(self):
+        # head には見守りの script が常に入るので、タグの有無では検査できない。
+        # 検証タグの content から抜け出せないことを見る。
         html = self.render(google_site_verification='a"><script>x</script>')
 
-        self.assertNotIn("<script>", html)
+        self.assertNotIn('"><script>x', html)
+        self.assertIn("&quot;&gt;&lt;script&gt;", html)
 
 
 class CardSparkTest(unittest.TestCase):
@@ -158,7 +180,7 @@ class CardSparkTest(unittest.TestCase):
 class SearchIndexTest(unittest.TestCase):
     """商品名で探すための索引。5,000件あると一覧を辿るだけでは見つけられない。"""
 
-    def test_1商品1件で_slugと名前と価格を持つ(self):
+    def test_1商品1件で_slugと名前と価格と商品コードと判定を持つ(self):
         import json
         import subprocess
         import sys
@@ -173,9 +195,10 @@ class SearchIndexTest(unittest.TestCase):
             page = (Path(tmp) / "search" / "index.html").read_text(encoding="utf-8")
 
         self.assertTrue(idx, "索引が空")
-        for slug, name, price in idx[:5]:
-            self.assertTrue(slug and name)
+        for slug, name, price, code, mark in idx[:5]:
+            self.assertTrue(slug and name and code)
             self.assertIsInstance(price, int)
+            self.assertIn(mark, (0, 1, 2, 3))
         self.assertIn('id="q"', page)
         # 索引はページに埋め込まず、必要になってから取りに行く
         self.assertNotIn(idx[0][1], page)
@@ -268,3 +291,359 @@ class EffectivePriceTest(unittest.TestCase):
         from src import store
         self.assertEqual(store.entry(["2026-09-08", 500]), ("2026-09-08", 500, 1))
         self.assertEqual(store.entry(["2026-09-11", 500, 10]), ("2026-09-11", 500, 10))
+
+
+class PagingAndExtrasTest(unittest.TestCase):
+    """ページ送りと、付随して出す成果物。
+
+    最安値圏は4,029件ある（2026-09-24 時点）。100件で打ち切っていた頃は、
+    記録した資産の97%を捨てていた。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        import subprocess
+        import sys
+        import tempfile
+        from pathlib import Path
+
+        cls.root = Path(__file__).resolve().parent.parent
+        cls.tmp = tempfile.TemporaryDirectory()
+        cls.out = Path(cls.tmp.name)
+        subprocess.run([sys.executable, str(cls.root / "build.py"), "--out", str(cls.out)],
+                       cwd=cls.root, check=True, capture_output=True)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def test_100件を超える一覧はページ送りになる(self):
+        pages = sorted(p for p in (self.out / "lows").iterdir() if p.is_dir())
+
+        self.assertTrue(pages, "2ページ目以降が作られていない")
+        self.assertTrue((self.out / "lows" / "2" / "index.html").exists())
+
+    def test_ページ送りは前後に辿れる(self):
+        first = (self.out / "lows" / "index.html").read_text(encoding="utf-8")
+        second = (self.out / "lows" / "2" / "index.html").read_text(encoding="utf-8")
+
+        self.assertIn('rel="next"', first)
+        self.assertIn('rel="prev"', second)
+
+    def test_一覧に構造化データが入る(self):
+        s = (self.out / "index.html").read_text(encoding="utf-8")
+
+        self.assertIn("ItemList", s)
+
+    def test_404と共有画像とフィードを出す(self):
+        for name in ("404.html", "og.svg", "feed.xml"):
+            self.assertTrue((self.out / name).exists(), name)
+
+    def test_フィードは妥当なXML(self):
+        import xml.etree.ElementTree as ET
+
+        root = ET.parse(self.out / "feed.xml").getroot()
+
+        self.assertEqual(root.tag, "rss")
+
+    def test_商品ページの更新日は価格が動いた日(self):
+        # 全ページを「今日更新」と申告すると、変わっていないページまで
+        # 再クロールさせることになる
+        import re
+        s = (self.out / "sitemap.xml").read_text(encoding="utf-8")
+        mods = set(re.findall(r"<lastmod>(.*?)</lastmod>", s))
+
+        self.assertGreater(len(mods), 1, "全ページが同じ更新日になっている")
+
+
+class ActiveAndNewLowsTest(unittest.TestCase):
+    """ためた履歴からしか作れない一覧。"""
+
+    def setUp(self):
+        from src import analyze
+        self.analyze = analyze
+
+    def row(self, code, tail, **kw):
+        base = {"item_code": code, "tail": tail, "vs_low_pct": 0.1, "price": 1000,
+                "at_low": False, "trustworthy": True, "low_date": None,
+                "off_high_pct": 0.0}
+        base.update(kw)
+        return base
+
+    def test_値動きの回数を数える(self):
+        tail = [["d1", 100], ["d2", 100], ["d3", 90], ["d4", 90], ["d5", 95]]
+
+        self.assertEqual(self.analyze.change_count({"tail": tail}), 2)
+
+    def test_2回以上動いた商品だけを拾う(self):
+        rows = [self.row("still", [["d1", 100], ["d2", 100]]),
+                self.row("once", [["d1", 100], ["d2", 90]]),
+                self.row("busy", [["d1", 100], ["d2", 90], ["d3", 80]])]
+
+        out = self.analyze.active(rows)
+
+        self.assertEqual([r["item_code"] for r in out], ["busy"])
+
+    def test_その日に最安値を更新したものだけ(self):
+        rows = [self.row("today", [], at_low=True, low_date="2026-09-23"),
+                self.row("older", [], at_low=True, low_date="2026-09-20"),
+                self.row("thin", [], at_low=True, low_date="2026-09-23",
+                         trustworthy=False)]
+
+        out = self.analyze.new_lows(rows, "2026-09-23")
+
+        self.assertEqual([r["item_code"] for r in out], ["today"])
+
+
+class StaleDataTest(unittest.TestCase):
+    """取得は成功しているのに中身が前日と同じ、という壊れ方を捕まえる。"""
+
+    def rows(self, n, price=1000, rate=1):
+        return [{"item_code": f"c{i}", "price": price, "point_rate": rate}
+                for i in range(n)]
+
+    def test_全件が前回と同一なら止める(self):
+        prev = {f"c{i}": (1000, 1) for i in range(120)}
+
+        errs = validate.check_against_previous(self.rows(120), prev)
+
+        self.assertTrue(errs)
+        self.assertIn("すべてが同一", errs[0])
+
+    def test_1件でも動いていれば通す(self):
+        prev = {f"c{i}": (1000, 1) for i in range(120)}
+        rows = self.rows(120)
+        rows[0]["price"] = 900
+
+        self.assertEqual(validate.check_against_previous(rows, prev), [])
+
+    def test_前回が無ければ何も言わない(self):
+        self.assertEqual(validate.check_against_previous(self.rows(120), {}), [])
+
+    def test_重なりが少なければ判定しない(self):
+        # 商品が入れ替わっただけの日を誤って止めない
+        prev = {f"c{i}": (1000, 1) for i in range(10)}
+
+        self.assertEqual(validate.check_against_previous(self.rows(120), prev), [])
+
+
+class ArchiveDayTest(unittest.TestCase):
+    """過ぎた日の値下がり。
+
+    最初の実装は「最後に価格が動いたのがその日」かつ「今日の値下がり」の積に
+    なっており、9/20 は本来37件のところ1件しか出ていなかった。
+    """
+
+    def setUp(self):
+        from src import analyze
+        self.analyze = analyze
+
+    def row(self, code, tail):
+        return {"item_code": code, "tail": tail, "price": tail[-1][1],
+                "name": code, "vs_low_pct": 0.0}
+
+    def test_その日に下がったものを拾う(self):
+        rows = [self.row("a", [["d1", 1000], ["d2", 900], ["d3", 900]])]
+
+        out = self.analyze.drops_on(rows, "d2", 0.05)
+
+        self.assertEqual(len(out), 1)
+        self.assertAlmostEqual(out[0]["drop_pct"], 0.1)
+        self.assertEqual(out[0]["price"], 900)
+        self.assertEqual(out[0]["prev"], 1000)
+
+    def test_その後に動いていても当日の下げを出す(self):
+        # 「最後に動いた日」で判定していたときに取りこぼしていた形
+        rows = [self.row("a", [["d1", 1000], ["d2", 900], ["d3", 1200]])]
+
+        self.assertEqual(len(self.analyze.drops_on(rows, "d2", 0.05)), 1)
+
+    def test_閾値に満たない下げは出さない(self):
+        rows = [self.row("a", [["d1", 1000], ["d2", 990]])]
+
+        self.assertEqual(self.analyze.drops_on(rows, "d2", 0.05), [])
+
+    def test_上がった日は出さない(self):
+        rows = [self.row("a", [["d1", 900], ["d2", 1000]])]
+
+        self.assertEqual(self.analyze.drops_on(rows, "d2", 0.05), [])
+
+    def test_記録の初日は前日が無いので出さない(self):
+        rows = [self.row("a", [["d1", 1000], ["d2", 900]])]
+
+        self.assertEqual(self.analyze.drops_on(rows, "d1", 0.05), [])
+
+
+class ToolsTest(unittest.TestCase):
+    """使う人ができることを増やした部分。"""
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def tail(self, *prices):
+        return [[f"2026-09-{i + 1:02d}", p] for i, p in enumerate(prices)]
+
+    def test_グラフに最安と最高の目盛りが入る(self):
+        html = self.theme.chart(self.tail(1000, 800, 900))
+
+        self.assertIn("chart-svg", html)
+        self.assertIn("1,000", html)
+        self.assertIn("800", html)
+
+    def test_記録が薄いときはグラフを出さない(self):
+        self.assertIn("記録が足りません", self.theme.chart(self.tail(1000)))
+
+    def test_この価格以下だった日数を出す(self):
+        row = {"price": 800, "tail": self.tail(1000, 900, 800, 800, 1000, 900, 950)}
+
+        note = self.theme.cheaper_days(row)
+
+        self.assertIn("2日", note)
+
+    def test_記録が7日未満なら日数を出さない(self):
+        # 母数が薄いうちに割合を出しても判断材料にならない
+        row = {"price": 800, "tail": self.tail(1000, 800)}
+
+        self.assertEqual(self.theme.cheaper_days(row), "")
+
+    def test_カードに並び替え用の値が入る(self):
+        row = {"item_code": "a", "name": "テレビ", "price": 1000, "dropped": False,
+               "days": 10, "eff_price": 900, "at_low": False, "near_low": False,
+               "label": "横ばい", "image": "", "shop": "店"}
+
+        html = self.theme.card(row)
+
+        self.assertIn('data-price="1000"', html)
+        self.assertIn('data-eff="900"', html)
+        self.assertIn('data-days="10"', html)
+
+
+class WatchAndFeedTest(unittest.TestCase):
+    """見守りとフィード。"""
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+        self.site = {"name": "テスト", "base_url": "https://example.pages.dev",
+                     "description": "説明"}
+
+    def test_見守るボタンに登録時の価格が入る(self):
+        # 価格を控えないと「見始めてから下がったか」が出せない
+        row = {"item_code": "a", "name": "テレビ", "price": 1000, "dropped": False,
+               "days": 10, "at_low": False, "near_low": False, "label": "横ばい",
+               "image": "", "shop": "店", "low": 900, "high": 1100,
+               "vs_low_pct": 0.1, "off_high_pct": 0.0, "trustworthy": True,
+               "tail": [["2026-09-01", 1000], ["2026-09-02", 1000]]}
+
+        html = self.theme.item_page(row, self.site, "2026-09-24")
+
+        self.assertIn('id="watch"', html)
+        self.assertIn('data-price="1000"', html)
+
+    def test_フィードに日付が入る(self):
+        rows = [{"item_code": "a", "name": "テレビ", "price": 900, "drop_pct": 0.1,
+                 "point_rate": 1}]
+
+        xml = self.theme.feed(self.site, rows, "2026-09-24")
+
+        self.assertIn("<pubDate>", xml)
+        self.assertIn("2026", xml)
+
+    def test_日付が壊れていてもフィードは壊さない(self):
+        self.assertEqual(self.theme._rfc822("おかしな値"), "")
+
+    def test_アーカイブの前後移動は端で欠ける(self):
+        both = self.theme.archive_nav("2026-09-20", "2026-09-19", "2026-09-21")
+        newest = self.theme.archive_nav("2026-09-21", "2026-09-20", None)
+
+        self.assertIn("2026-09-19", both)
+        self.assertIn("2026-09-21", both)
+        self.assertNotIn("2026-09-22", newest)
+
+
+class ScriptTimingTest(unittest.TestCase):
+    """一覧より前に置いた script が、DOM を待たずに要素を探していないか。
+
+    2026-09-24 に、並び替えと見守りが公開サイトで丸ごと動いていなかった。
+    script が一覧より前にあり、実行時点で .cards も .watch-mini も存在しな
+    かったため。以後は「前に置くなら待つ」を機械的に守らせる。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        import subprocess
+        import sys
+        import tempfile
+        from pathlib import Path
+
+        root = Path(__file__).resolve().parent.parent
+        cls.tmp = tempfile.TemporaryDirectory()
+        out = Path(cls.tmp.name)
+        subprocess.run([sys.executable, str(root / "build.py"), "--out", str(out)],
+                       cwd=root, check=True, capture_output=True)
+        cls.html = (out / "lows" / "index.html").read_text(encoding="utf-8")
+        cls.robots = (out / "robots.txt").read_text(encoding="utf-8")
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def test_一覧を探す処理はDOMを待ってから動く(self):
+        for target in (".cards", ".watch-mini"):
+            i = self.html.index(f"querySelector") if target == ".cards" else 0
+            self.assertIn(target, self.html)
+        # 一覧より前に script があること自体は許す。待っていることを見る。
+        self.assertLess(self.html.index('id="sort"'), self.html.index('<ul class="cards">'))
+        self.assertGreaterEqual(self.html.count("DOMContentLoaded"), 2)
+
+    def test_見守りの仕組みは1回だけ定義する(self):
+        self.assertEqual(self.html.count("var PTWatch"), 1)
+
+    def test_配布用の大きなファイルはクロールさせない(self):
+        for name in ("history.csv", "data.csv", "search-index.json"):
+            self.assertIn(f"Disallow: /{name}", self.robots)
+
+
+class ShortNameTest(unittest.TestCase):
+    """一覧に出す商品名。
+
+    楽天の商品名は中央値130文字あり、そのまま並べると1件で画面が埋まる。
+    実際に見守り一覧で173文字の名前が出ていた。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def test_先頭の補足を落とす(self):
+        out = self.theme.short_name("【送料無料】テレビ 42型")
+
+        self.assertEqual(out, "テレビ 42型")
+
+    def test_長い名前は切って記号を付ける(self):
+        out = self.theme.short_name("あ" * 80)
+
+        self.assertEqual(len(out), 47)
+        self.assertTrue(out.endswith("…"))
+
+    def test_短い名前はそのまま(self):
+        self.assertEqual(self.theme.short_name("テレビ"), "テレビ")
+
+    def test_補足だけの名前は元に戻す(self):
+        # 【】を外すと空になる場合、切り詰める前の名前を使う
+        self.assertEqual(self.theme.short_name("【特価品】"), "【特価品】")
+
+    def test_空でも壊れない(self):
+        self.assertEqual(self.theme.short_name(""), "")
+        self.assertEqual(self.theme.short_name(None), "")
+
+    def test_一覧には短い名前_全文はtitleに残す(self):
+        row = {"item_code": "a", "name": "【割引】" + "あ" * 80, "price": 1000,
+               "dropped": False, "days": 10, "at_low": False, "near_low": False,
+               "label": "横ばい", "image": "", "shop": "店"}
+
+        html = self.theme.card(row)
+
+        self.assertIn("title=", html)
+        self.assertIn("…", html)

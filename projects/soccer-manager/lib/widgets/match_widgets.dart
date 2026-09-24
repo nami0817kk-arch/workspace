@@ -543,3 +543,109 @@ class TraitActivationBanner extends StatelessWidget {
     );
   }
 }
+
+/// 試合中の途中経過。**その時点までに明らかになった出来事だけ**から数える。
+///
+/// 試合画面は出来事の行が数本あるだけで、下半分が空いていた。完了後の
+/// 統計([MatchStatsBar])をそのまま出すとまだ起きていない結果が見えてしまう
+/// ため、表示してよいのは「もう起きたこと」だけになる。
+class LiveMatchTally extends StatelessWidget {
+  /// いままでに明かされた出来事。
+  final List<MatchEvent> revealed;
+  final String homeTeamId;
+  final String homeTeamName;
+  final String awayTeamName;
+
+  const LiveMatchTally({
+    super.key,
+    required this.revealed,
+    required this.homeTeamId,
+    required this.homeTeamName,
+    required this.awayTeamName,
+  });
+
+  /// [type]の出来事の数を、ホーム/アウェイに分けて返す。
+  (int home, int away) countOf(MatchEventType type) {
+    var home = 0;
+    var away = 0;
+    for (final e in revealed) {
+      if (e.type != type) continue;
+      if (e.teamId == homeTeamId) {
+        home++;
+      } else {
+        away++;
+      }
+    }
+    return (home, away);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final goals = countOf(MatchEventType.goal);
+    final chances = countOf(MatchEventType.chance);
+    final yellows = countOf(MatchEventType.yellowCard);
+    final reds = countOf(MatchEventType.redCard);
+    final cards = (yellows.$1 + reds.$1, yellows.$2 + reds.$2);
+
+    Widget row(String label, (int, int) v) => Padding(
+          padding: const EdgeInsets.symmetric(vertical: 2),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 32,
+                child: Text('${v.$1}',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontWeight: FontWeight.w600)),
+              ),
+              Expanded(
+                child: Text(label,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                        fontSize: 12,
+                        color: SemanticColors.subtleText(context))),
+              ),
+              SizedBox(
+                width: 32,
+                child: Text('${v.$2}',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(fontWeight: FontWeight.w600)),
+              ),
+            ],
+          ),
+        );
+
+    return Card(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(homeTeamName,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.labelMedium),
+                ),
+                Text(Tr.pick('ここまで', 'So far'),
+                    style: TextStyle(
+                        fontSize: 11,
+                        color: SemanticColors.subtleText(context))),
+                Expanded(
+                  child: Text(awayTeamName,
+                      textAlign: TextAlign.right,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.labelMedium),
+                ),
+              ],
+            ),
+            const SizedBox(height: 6),
+            row(Tr.pick('得点', 'Goals'), goals),
+            row(Tr.pick('決定機', 'Chances'), chances),
+            row(Tr.pick('カード', 'Cards'), cards),
+          ],
+        ),
+      ),
+    );
+  }
+}

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../game/formulas.dart';
 import '../../game/knacks.dart';
+import '../../game/match_target.dart';
 import '../../game/promises.dart';
 import '../../models/development.dart';
 import '../../models/entourage.dart';
@@ -122,7 +123,8 @@ Widget _list(BuildContext context, List<(String, String)> rows) {
 /// 傾きを変えたときに黙って古くなった。**ここに数字を直接書かない。**
 final List<_GuideSection> _sections = [
   _GuideSection('1週間の流れ', [
-    '「育成」タブで今週の練習を決め、「試合」タブ（または右下のボタン）から試合に入る。'
+    '「今週」タブで次の相手と今の状態を見て、そこから試合に入る。'
+        '練習はそのカードから、あるいは「育成」タブで決める。'
         '終われば1週間が過ぎ、次の節が来る。',
     '練習は3つを決める。何をするか（メニュー）・どこまで踏み込むか'
         '（${TrainingEffort.values.map((e) => e.label).join('／')}）・'
@@ -189,7 +191,7 @@ final List<_GuideSection> _sections = [
         '落ちる前（信頼${Formulas.trustWarning}を切ったとき）に必ず画面に出る。',
     '荒い手は、失敗すると警告を受けることがある。今季5枚で1試合の出場停止、退場なら2試合。'
         '「止めるための反則」は、選べば必ず警告になる代わりに失点を1つ消す。',
-    '次にどの立場で出られそうかは、「試合」タブの次節のところに出る。',
+    '次にどの立場で出られそうかは、「今週」タブの次節のところに出る。',
   ]),
   _GuideSection('伸ばす', [
     '能力は「練習」と「試合で成功した手」で伸びる。何を選ぶかがそのまま選手の形になる。',
@@ -272,7 +274,12 @@ final List<_GuideSection> _sections = [
     '相手には戦い方がある。難しくなる能力が1つ（−${(Formulas.styleMismatch * 100).round()}%、'
         '何度も当たると慣れて薄まる）、代わりに空く能力が1つ'
         '（+${(Formulas.styleOpening * 100).round()}%、こちらは慣れでは動かない）。',
-    '自分が出た試合と出なかった試合の成績は、「試合」タブの今シーズンの成績に並ぶ。'
+    '今節の的。節ごとに1つ出て、達成すると${MatchTarget.reward}万円。'
+        'リーグ戦だけで数える（カップ戦は節を進めないので素通り）。'
+        '続けて達成すると連続が伸び、${MatchTarget.streakStep}回ごとに'
+        'その的が問うている能力へ経験点が${MatchTarget.streakPoints}点入る。'
+        '外しても、出られなくても連続は切れる。',
+    '自分が出た試合と出なかった試合の成績は、「記録」タブの今シーズンの成績に並ぶ。'
         '居ないと勝てないクラブなら、そこに差が出る。',
     '自分が出る試合は、そのぶんクラブが強い（クラブとの力の差1につき'
         ' +${Formulas.starLift}、最大 +${Formulas.starLiftCap.round()}。途中出場は半分）。'

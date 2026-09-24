@@ -71,6 +71,19 @@ def entry(row) -> tuple:
     return (row[0], row[1], row[2] if len(row) > 2 else 1)
 
 
+def previous_prices(data_dir: Path, day: str) -> dict:
+    """その日より前で、いちばん新しい記録の (価格, 倍率) を返す。"""
+    snaps = sorted(p for p in (data_dir / "snapshots").glob("*.csv.gz")
+                   if p.name[:10] < day)
+    if not snaps:
+        return {}
+    out = {}
+    with gzip.open(snaps[-1], "rt", encoding="utf-8", newline="") as fh:
+        for row in csv.DictReader(fh):
+            out[row["item_code"]] = (int(row["price"]), int(row.get("point_rate") or 1))
+    return out
+
+
 def update_summary(summary: dict, items: list[dict], day: str, tail_days: int) -> dict:
     """その日の価格を履歴に足し込む。
 

@@ -49,8 +49,10 @@ class ForeignRule {
   /// 外国人枠から除外される提携国。
   final List<String> partnerCountries;
 
-  /// 制限が緩いほど、若い外国人が入り込みやすい。
-  bool get isLenient => squadLimit == null || squadLimit! >= 6;
+  // 「制限が緩いほど、若い外国人が入り込みやすい」という getter を
+  // 置いていたが、**どこからも読まれていなかった**（2026-09-24）。
+  // 書いてある効きが無いものは、次に読む人を騙すので消す。
+  // 枠の判定は `Eligibility.report` が `squadLimit` を直接見る。
 
   String get summary {
     final parts = <String>[];
@@ -151,9 +153,9 @@ class Country {
 
   /// 上位大陸カップの出場枠。格が高いほど多い。
   int get continentalSlots => switch (prestige) {
-        5 => 4,
-        4 => 3,
-        3 => 2,
-        _ => 1,
-      };
+    5 => 4,
+    4 => 3,
+    3 => 2,
+    _ => 1,
+  };
 }

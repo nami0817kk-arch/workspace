@@ -659,10 +659,14 @@ void main() {
     await gameState.scoutProspect(candidateId);
     final prospect = gameState.save!.youthProspects.first;
     final beforeCount = gameState.userTeam.players.length;
+    // 昇格はプロ契約(契約金 + 週俸)を結ぶ手続きになった。ここで見たいのは
+    // 名簿が移ることなので、費用と枠は通る状態にしておく。
+    gameState.save!.budget = 100000;
+    gameState.save!.wageBudget = 100000;
 
     final ok = await gameState.promoteYouthProspect(prospect.id);
 
-    expect(ok, isTrue);
+    expect(ok, isTrue, reason: gameState.lastSigningBlockReason ?? '');
     expect(gameState.save!.youthProspects, isEmpty);
     expect(gameState.userTeam.players.length, beforeCount + 1);
   });
@@ -3339,6 +3343,15 @@ void main() {
         {tier2PlayedOrder[3].id, tier2PlayedOrder[4].id});
     expect({finalMatch.homeId, finalMatch.awayId},
         {semiA.winnerId, semiB.winnerId});
+
+    // 決勝のホームは順位が上だった側。準決勝の組み合わせ順で決めていた頃は、
+    // 6位が勝ち上がると4位・5位を差し置いてホームになっていた。
+    final seedOf = {
+      for (int i = 0; i < tier2PlayedOrder.length; i++)
+        tier2PlayedOrder[i].id: i,
+    };
+    expect(seedOf[finalMatch.homeId]!, lessThan(seedOf[finalMatch.awayId]!),
+        reason: '決勝のホームが下位の側になっている');
 
     final newTier1Ids = result.tier1.map((t) => t.id).toSet();
     final newTier2Ids = result.tier2.map((t) => t.id).toSet();
@@ -6297,7 +6310,10 @@ void main() {
       // 時間稼ぎモードによる追加警告は1試合あたり数%〜十数%程度の確率でしか
       // 発生しないため、試行回数が少ないとRNGの偏りだけで平均が逆転しうる。
       // 十分な統計的検出力を持たせるため試行回数を増やしている。
-      const trials = 500;
+      //
+      // 500回では 1.552 対 1.552 の同値が実際に出た(2026-09-24、CI)。
+      // 差そのものが小さいので、同値で落ちない程度まで増やしている。
+      const trials = 1200;
       for (int i = 0; i < trials; i++) {
         final home = PlayerGenerator.generateSquad(
             id: 'home', name: 'Home FC', strengthTier: 60);

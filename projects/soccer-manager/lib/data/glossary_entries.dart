@@ -370,6 +370,41 @@ List<GlossaryEntry> get glossaryEntries => [
             "An older player (28 or over) paired with a young one. The younger man grows faster, and the mentor's own morale lifts a little from the responsibility."),
       ),
       GlossaryEntry(
+        term: Tr.pick('ユースのメンター', 'Academy mentor'),
+        category: GlossaryCategory.condition,
+        description: Tr.pick(
+            'ユースの有望株に付ける一軍のベテラン(28歳以上)。施設での成長が速くなり、ユースでは練習では身に付かない性格特性を習得する道が開ける。1人のベテランが見られるのは1人だけで、一軍の若手のメンターとは兼任できない。',
+            "A first-team player of 28 or over, paired with an academy prospect. He grows faster in the academy, and it opens the only route to a personality trait while he is still there. A veteran can only look after one player, and cannot mentor a first-teamer at the same time."),
+      ),
+      GlossaryEntry(
+        term: Tr.pick('スタッフの得意分野', 'Staff specialty'),
+        category: GlossaryCategory.condition,
+        description: Tr.pick(
+            'スタッフが持つ専門(攻撃・守備・GK・フィジカル・万能)。能力値は「どれだけ上手いか」しか表さないため、得意分野が「何を伸ばせるか」を決める。ユースコーチの得意分野は有望株の伸びる能力に直接効き、担当が違う分野(GK専門とフィールドプレーヤーなど)には効かない。候補の半数は万能。',
+            "What a member of staff is specialised in: attacking, defending, goalkeeping, physical or all-round. His attributes say how good he is; the specialty says what he can improve. A youth coach's specialty steers which attributes your prospects gain, and does nothing outside its remit — a goalkeeping coach adds nothing to an outfield player. About half the candidates are all-round."),
+      ),
+      GlossaryEntry(
+        term: Tr.pick('ユースリーグ', 'Youth league'),
+        category: GlossaryCategory.condition,
+        description: Tr.pick(
+            '自クラブのユースと近隣7クラブのユースで戦う年間リーグ(14節)。毎週の練習試合がこの順位表に積み上がる。全節を終えると順位と得点王がニュースに出る。相手の強さはシーズン開始時に自クラブのユースの水準から決まり、年度ごとに引き直される。',
+            'A 14-round league between your academy and seven neighbouring ones. The weekly youth match feeds this table, and when the rounds are done the finishing position and top scorer make the news. Opponent strength is set from your own academy at the start of each season, and redrawn every year.'),
+      ),
+      GlossaryEntry(
+        term: Tr.pick('プロ契約(昇格)', 'First professional contract'),
+        category: GlossaryCategory.condition,
+        description: Tr.pick(
+            'ユースから一軍へ上げるときに結ぶ契約。背番号が付き、市場価値に見合う週俸と契約金(一括)が発生する。契約金が払えない、または週給予算の枠が無いと昇格できない。昇格直後は一軍の強度に慣れておらず実戦感覚が低い状態から始まるため、出番を作れる時期に上げるかどうかの判断になる。',
+            "The contract you sign when a prospect steps up. He takes a squad number, a wage in line with his market value and a one-off signing fee. Without the fee or the wage room, the promotion does not happen. He starts short of match sharpness until he adjusts, so the timing matters as much as the decision."),
+      ),
+      GlossaryEntry(
+        term: Tr.pick('有望株の流出', 'Losing a prospect'),
+        category: GlossaryCategory.condition,
+        description: Tr.pick(
+            '19歳を過ぎた有望株は出場機会を求め、そのままにしておくとユースを去る。20歳を過ぎるとその確率は上がる。伸びしろの大きい選手は他クラブに引き抜かれ、伸び悩んだ選手は自分から去る。いずれも育成補償金が入る。メンターを付ける、ユース施設を上げる、一軍に昇格させる、のいずれかで引き止められる。',
+            'Past 19, a prospect wants first-team football and will leave the academy if nothing changes; past 20 it happens more often. The ones with room to grow get poached, the ones who stalled walk away. Either way you receive a development fee. A mentor, a better academy or a promotion to the first team will keep him.'),
+      ),
+      GlossaryEntry(
         term: Tr.pick('特訓ドリル', 'Focus drill'),
         category: GlossaryCategory.condition,
         description: Tr.pick(

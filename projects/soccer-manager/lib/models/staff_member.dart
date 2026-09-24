@@ -55,6 +55,39 @@ Map<StaffAttribute, int> staffRoleWeights(StaffRole role) => switch (role) {
         },
     };
 
+
+/// スタッフの得意分野。
+///
+/// 能力値(1-20)は「どれだけ上手いか」しか表さないため、誰を雇っても
+/// 育つ能力が同じだった。得意分野を持たせると、「攻撃を伸ばせる
+/// ユースコーチ」と「守備を仕込めるユースコーチ」のどちらを取るか、という
+/// 判断が生まれる。
+enum StaffSpecialty { balanced, attacking, defending, goalkeeping, physical }
+
+extension StaffSpecialtyInfo on StaffSpecialty {
+  String get label => switch (this) {
+        StaffSpecialty.balanced => Tr.pick('万能', 'All-round'),
+        StaffSpecialty.attacking => Tr.pick('攻撃', 'Attacking'),
+        StaffSpecialty.defending => Tr.pick('守備', 'Defending'),
+        StaffSpecialty.goalkeeping => Tr.pick('GK', 'Goalkeeping'),
+        StaffSpecialty.physical => Tr.pick('フィジカル', 'Physical'),
+      };
+
+  String get description => switch (this) {
+        StaffSpecialty.balanced =>
+          Tr.pick('特定の分野に偏らない。どの選手にも同じだけ効く。',
+              'No particular leaning. Works the same for every player.'),
+        StaffSpecialty.attacking => Tr.pick('得点に関わる能力を重点的に伸ばす。',
+            'Pushes the attributes that put the ball in the net.'),
+        StaffSpecialty.defending => Tr.pick('守備に関わる能力を重点的に伸ばす。',
+            'Pushes the defensive side of the game.'),
+        StaffSpecialty.goalkeeping => Tr.pick('ゴールキーパーの能力を重点的に伸ばす。',
+            'Pushes goalkeeping, and only that.'),
+        StaffSpecialty.physical => Tr.pick('走力・強さ・スタミナを重点的に伸ばす。',
+            'Pushes running power, strength and stamina.'),
+      };
+}
+
 /// クラブに雇うスタッフ1人。
 class StaffMember {
   final String id;
@@ -73,6 +106,9 @@ class StaffMember {
   /// 残り契約年数。0になると契約満了で去る。
   int contractYears;
 
+  /// 得意分野。旧セーブには無いため、読み込み時は[StaffSpecialty.balanced]。
+  final StaffSpecialty specialty;
+
   StaffMember({
     required this.id,
     required this.name,
@@ -81,6 +117,7 @@ class StaffMember {
     required this.attributes,
     required this.wage,
     this.contractYears = 2,
+    this.specialty = StaffSpecialty.balanced,
   });
 
   int attribute(StaffAttribute a) => attributes[a] ?? 1;
@@ -151,6 +188,7 @@ class StaffMember {
         },
         'wage': wage,
         'contractYears': contractYears,
+        'specialty': specialty.name,
       };
 
   static StaffMember fromJson(Map<String, dynamic> json) {
@@ -169,6 +207,10 @@ class StaffMember {
       },
       wage: json['wage'] as int,
       contractYears: json['contractYears'] as int? ?? 2,
+      specialty: StaffSpecialty.values.firstWhere(
+        (v) => v.name == json['specialty'],
+        orElse: () => StaffSpecialty.balanced,
+      ),
     );
   }
 }

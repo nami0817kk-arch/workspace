@@ -32,6 +32,7 @@ import '../models/player.dart';
 import '../models/player_season_stats.dart';
 import '../models/press_question.dart';
 import '../models/news_item.dart';
+import '../models/youth_league.dart';
 import '../models/save_game.dart';
 import '../models/season_award.dart';
 import '../models/season_record.dart';
@@ -75,6 +76,9 @@ import '../logic/super_cup_engine.dart';
 import '../logic/training_engine.dart';
 import '../logic/transfer_market.dart';
 import '../logic/weather_engine.dart';
+import '../logic/youth_departure_engine.dart';
+import '../logic/youth_league_engine.dart';
+import '../logic/youth_promotion_engine.dart';
 import '../logic/youth_match_engine.dart';
 import '../data/name_pool.dart';
 import '../models/first_run_step.dart';
@@ -149,6 +153,11 @@ class GameState extends ChangeNotifier {
 
   static String _slotKey(int slot) => '$_slotKeyPrefix$slot';
 
+  /// 直近に読み込めたセーブの控え。スロットごとに持つと容量を倍使うため、
+  /// 控えは1つだけ持ち、どのスロットのものかを別に覚えておく。
+  static const _backupKey = 'soccer_manager_save_backup';
+  static const _backupSlotKey = 'soccer_manager_save_backup_slot';
+
   int currentSlot = 0;
 
   SaveGame? _save;
@@ -157,6 +166,11 @@ class GameState extends ChangeNotifier {
   /// シーズン開幕・シーズン終了処理など、重い同期計算を行っている間true。
   /// UI側でローディング表示を出すために使う。
   bool isBusy = false;
+
+  /// 壊れたセーブの代わりに控えから復元したときの知らせ。復元が起きた
+  /// ときだけ入る。黙って古い状態に戻すと、進めたはずの数節が消えたように
+  /// 見えるため、必ず伝える。
+  String? lastBackupRestoreNotice;
 
   /// 直近の保存(_persist)が失敗した場合のエラーメッセージ。保存に成功すると
   /// nullに戻る。ブラウザのストレージ容量超過など、プレイ自体は継続できるが
@@ -215,6 +229,10 @@ class GameState extends ChangeNotifier {
   /// 直近の節送りで行われたユース練習試合の結果(候補が0人ならnull)。
   /// ユース画面での直近戦の表示に使う(セーブデータには保存しない)。
   YouthMatchReport? lastYouthMatchReport;
+
+  /// 直近の節送りでユースを去った有望株(セーブには残さない)。
+  /// 画面で1度知らせたら消える、その週だけの出来事として扱う。
+  List<YouthDeparture> lastYouthDepartures = [];
 
   /// 直近のstartNextSeasonで引退した選手名(1回表示したら呼び出し側でクリアする想定)。
   List<String> lastRetirements = [];
@@ -331,6 +349,60 @@ class GameState extends ChangeNotifier {
         'Transfer window: closed (reopens before next season)');
   }
 
+
+  /// 保存文字列からセーブを復元する。壊れていれば null。
+  SaveGame? _decodeSave(String raw) {
+    try {
+      return SaveGame.fromJson(jsonDecode(raw) as Map<String, dynamic>);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// スロットを読み込む。本体が壊れていれば控えから戻す。
+  ///
+  /// セーブが1つしか無いと、書き込みの途中で中断されたときに積み上げた
+  /// 数十シーズンがまとめて消える。読み込めた時点の内容を控えに残しておき、
+  /// 壊れていたらそちらを使う。
+  Future<SaveGame?> _loadSlotData(SharedPreferences prefs, int slot) async {
+    final raw = prefs.getString(_slotKey(slot));
+    if (raw == null) return null;
+    final loaded = _decodeSave(raw);
+    if (loaded != null) {
+      // 読めたものが正。次に壊れたときのために控えを更新する。
+      await prefs.setString(_backupKey, raw);
+      await prefs.setInt(_backupSlotKey, slot);
+      return loaded;
+    }
+
+    final backup = prefs.getString(_backupKey);
+    final backupSlot = prefs.getInt(_backupSlotKey);
+    if (backup == null || backupSlot != slot) return null;
+    final restored = _decodeSave(backup);
+    if (restored == null) return null;
+
+    lastBackupRestoreNotice = Tr.pick(
+        'セーブデータが壊れていたため、直前の控えから復元しました。進行が少し戻っている場合があります。',
+        'Your save was damaged, so the last good copy was restored. You may be a little behind where you left off.');
+    return restored;
+  }
+
+
+  /// いまのセーブを控えとして書き出す。シーズンの切り替わりで呼ぶ。
+  ///
+  /// 控えを読み込み時にしか取らないと、1回の起動で何十シーズン進めた場合に
+  /// 戻る先が起動時点になる。区切りで取り直して、失う量を1シーズン以内に抑える。
+  Future<void> refreshSaveBackup() async {
+    if (_save == null) return;
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_backupKey, jsonEncode(_save!.toJson()));
+      await prefs.setInt(_backupSlotKey, currentSlot);
+    } catch (_) {
+      // 控えが取れなくても進行は止めない(本体の保存が正)。
+    }
+  }
+
   Future<void> init() async {
     final prefs = await SharedPreferences.getInstance();
     // 旧バージョンの単一セーブをスロット0へ移行する(スロット0が未使用の場合のみ)。
@@ -340,14 +412,7 @@ class GameState extends ChangeNotifier {
       await prefs.remove(_legacyPrefsKey);
     }
     currentSlot = prefs.getInt(_currentSlotKey) ?? 0;
-    final raw = prefs.getString(_slotKey(currentSlot));
-    if (raw != null) {
-      try {
-        _save = SaveGame.fromJson(jsonDecode(raw) as Map<String, dynamic>);
-      } catch (_) {
-        _save = null;
-      }
-    }
+    _save = await _loadSlotData(prefs, currentSlot);
     if (_save != null) {
       _reseedPlayerIdCounter(_save!);
       _migrateDivisionPyramidIfNeeded();
@@ -577,16 +642,7 @@ class GameState extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     currentSlot = slot;
     await prefs.setInt(_currentSlotKey, slot);
-    final raw = prefs.getString(_slotKey(slot));
-    if (raw == null) {
-      _save = null;
-    } else {
-      try {
-        _save = SaveGame.fromJson(jsonDecode(raw) as Map<String, dynamic>);
-      } catch (_) {
-        _save = null;
-      }
-    }
+    _save = await _loadSlotData(prefs, slot);
     if (_save != null) {
       _reseedPlayerIdCounter(_save!);
       _migrateDivisionPyramidIfNeeded();

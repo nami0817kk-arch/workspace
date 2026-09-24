@@ -765,6 +765,21 @@ extension GameStateSeason on GameState {
       ),
     );
 
+    // ユースリーグも年度が替わる。前年の順位表を残したままにすると、
+    // 何節まで進んだのかも勝点も前の年のものになる。相手の強さも引き直す
+    // (こちらが育つのに相手が据え置きだと、年を追うごとに楽になる)。
+    _save!.youthLeague = _save!.youthProspects.isEmpty
+        ? null
+        : YouthLeagueEngine.create(
+            prospectAverage:
+                YouthLeagueEngine.prospectAverage(_save!.youthProspects),
+          );
+    // 年間の得点記録も年度ごとに数え直す。
+    for (final p in _save!.youthProspects) {
+      p.youthMatchApps = 0;
+      p.youthMatchGoals = 0;
+    }
+
     // 監督としての世間の評価を更新する(目標達成なら上昇、大きく未達なら下降)。
     if (finalRank <= _save!.boardTargetRank) {
       _save!.managerReputation = (_save!.managerReputation + 8).clamp(0, 100);
@@ -1191,5 +1206,8 @@ extension GameStateSeason on GameState {
     isBusy = false;
     _notify();
     await _persistNow();
+    // シーズンの切り替わりは区切りになる。ここで控えを取り直しておくと、
+    // セーブが壊れても失うのは1シーズン以内で済む。
+    await refreshSaveBackup();
   }
 }

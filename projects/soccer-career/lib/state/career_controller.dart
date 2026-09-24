@@ -504,6 +504,11 @@ class CareerController extends ChangeNotifier {
       state.staff.injuryFactor *
       state.habits.injuryFactor *
       state.fatigue.injuryFactor *
+      // **オフの過ごし方。画面には書いてあったが、読まれていなかった。**
+      // 「鍛え込む（怪我も増える）」と「休む（怪我が遠のく）」で、実測の
+      // 怪我が 21.5 と 22.6 回——倍率（1.2 と 0.8）が逆に出ていた。
+      // 伸びの倍率（`_environmentFactor`）だけが効いていて、代償が無い。
+      state.offseason.injuryFactor *
       // 復帰直後は無理が効かない。強行すればここで返ってくる。
       (state.rehabWatch > 0 ? state.rehab.relapseFactor : 1.0);
 
@@ -711,6 +716,47 @@ class CareerController extends ChangeNotifier {
     return null;
   }
 
+  /// **自動で振る設定のとき、そのカテゴリの経験点を使い切る。**
+  ///
+  /// 振り先は `spendPoint` と同じ決め方（一番安い項目から、土台が
+  /// 足りなければ土台）。別の式にすると、自動と手動で伸び方が変わる。
+  void _spendAll(CareerState state, AttributeKey category) {
+    // 上限・ポテンシャルで振れなくなったら止める。無限に回らないよう
+    // カテゴリの項目数ぶんで打ち切る。
+    for (var i = 0; i < category.details.length + 1; i++) {
+      final have = state.development.points[category] ?? 0;
+      if (have <= 0 || state.player.atPotential) return;
+      final affordable = category.details
+          .where((d) => costOf(d) <= have)
+          .where(
+            (d) =>
+                state.player.attributes.detail(d) < state.player.ceilingFor(d),
+          )
+          .toList();
+      if (affordable.isEmpty) return;
+      // 一番安いところから。高いところを押し上げるのは、自分で振る側の仕事。
+      affordable.sort((a, b) => costOf(a).compareTo(costOf(b)));
+      final detail = affordable.first;
+      final points = {...state.development.points};
+      points[category] = have - costOf(detail);
+      state.development = state.development.copyWith(points: points);
+      state.development = state.development.aiming(detail);
+      final resolved = Dependencies.resolve(
+        detail,
+        state.player.attributes,
+        ceilingOf: state.player.ceilingFor,
+        dedicationOf: state.development.dedicationOf,
+      );
+      state.player = state.player.copyWith(
+        attributes: state.player.attributes.bumpDetail(
+          resolved,
+          1,
+          max: state.player.ceilingFor(resolved),
+        ),
+      );
+    }
+  }
+
   /// 経験点を1つ振る。
   ///
   /// 土台が足りなければ、土台のほうが伸びる（練習と同じ扱い）。
@@ -781,31 +827,34 @@ class CareerController extends ChangeNotifier {
   }
 
   /// 組んだ相手との関係が、その週に動く。
+  /// 組んだ相手のぶんを積む。**何が積まれるかは選択肢が持っている。**
+  ///
+  /// ここに switch で書いていたので、`TrainingCompanion` の表を読んでも
+  /// 何が得られるのか分からなかった。
   void _applyCompanion(CareerState state, TrainingCompanion companion) {
-    switch (companion) {
-      case TrainingCompanion.alone:
-        return;
-      case TrainingCompanion.partner:
-        final partner = state.partner;
-        if (partner == null) return;
+    if (companion.synergyGain > 0) {
+      final partner = state.partner;
+      if (partner != null) {
         state.partner = partner.withSynergy(
-          partner.synergy + Formulas.companionSynergyGain,
+          partner.synergy + companion.synergyGain,
         );
-      case TrainingCompanion.mentor:
-        // 年長者から盗む。プロ意識はゆっくりしか動かない。
-        if (_random.nextDouble() < Formulas.mentorProfessionalismChance) {
-          state.player = state.player.copyWith(
-            personality: state.player.personality.bump(
-              PersonalityAxis.professionalism,
-              1,
-            ),
-          );
-        }
-      case TrainingCompanion.rival:
-        // 張り合うと、ロッカールームでの立場が上がる。
-        state.relations = state.relations.bump(
-          teammates: Formulas.companionTeammatesGain,
-        );
+      }
+    }
+    // 年長者から盗む。プロ意識はゆっくりしか動かない。
+    if (companion.professionalismChance > 0 &&
+        _random.nextDouble() < companion.professionalismChance) {
+      state.player = state.player.copyWith(
+        personality: state.player.personality.bump(
+          PersonalityAxis.professionalism,
+          1,
+        ),
+      );
+    }
+    // 張り合うと、ロッカールームでの立場が上がる。
+    if (companion.teammatesGain > 0) {
+      state.relations = state.relations.bump(
+        teammates: companion.teammatesGain,
+      );
     }
   }
 
@@ -1010,7 +1059,7 @@ class CareerController extends ChangeNotifier {
   /// 節を消化した後にだけ呼ぶ。同じ週に2試合は入れない
   /// （代表ウィークが先に立っていれば、カップはその次の週に回る）。
   void _scheduleCup(CareerState state) {
-    if (state.pendingCup != null || state.pendingInternational) return;
+    if (state.isCupWeek || state.pendingInternational) return;
     if (state.seasonFinished) return;
     final matchday = state.leagueResults.length;
     for (final run in state.liveCups) {
@@ -1140,7 +1189,7 @@ class CareerController extends ChangeNotifier {
     final state = _state;
     if (state == null) return null;
     if (_inProgress == null) {
-      if (state.pendingCup != null) {
+      if (state.isCupWeek) {
         startCupMatch();
       } else {
         startNextMatch();
@@ -1208,12 +1257,38 @@ class CareerController extends ChangeNotifier {
     final result = match.finish();
     _career.applyResult(state, result);
     // 今節の的。達成すれば小さく払う。
-    lastTargetMet = target.metBy(result);
-    if (lastTargetMet) {
+    //
+    // **リーグ戦だけで数える。** カップ戦は節を進めないので、同じ「第7節の
+    // 的」が2回判定されていた（1回目で外すと、まだ来ていないリーグ戦の前に
+    // 連続が切れる）。目標も約束もリーグ戦で数えるという決まりに揃える。
+    lastTargetMet = result.isLeague && target.metBy(result);
+    // **連続は出た試合だけで数える。** 外しても、出られなくても切れる。
+    // 出ていない試合を素通りにすると、ベンチにいるあいだ連続が守られて
+    // しまい、「出続ける」ことの値打ちが消える。
+    lastTargetPoints = 0;
+    if (!result.isLeague) {
+      // カップ戦・代表戦は素通り。伸びも切れもしない。
+    } else if (lastTargetMet) {
+      state.targetStreak++;
       state.finances = Finances(
         savings: state.finances.savings + MatchTarget.reward,
         lifestyle: state.finances.lifestyle,
       );
+      // 節目では、その的が問うている能力に経験点が入る。お金と違って
+      // 経験点の値段は上がらないので、終盤まで同じ重さで効く。
+      if (state.targetStreak % MatchTarget.streakStep == 0) {
+        lastTargetPoints = MatchTarget.streakPoints;
+        final points = Map<AttributeKey, int>.from(state.development.points);
+        points[target.category] =
+            (points[target.category] ?? 0) + lastTargetPoints;
+        state.development = state.development.copyWith(points: points);
+        // **既定（自動で振る）だと、貯めた経験点は誰も使わない。**
+        // 自動のときは貯めずにその場で伸ばしているので、ここへ足すだけでは
+        // 一生眠ったままになる（`balance_sim` が master と 1 も動かなかった）。
+        if (state.autoSpend) _spendAll(state, target.category);
+      }
+    } else {
+      state.targetStreak = 0;
     }
 
     if (state.rehabWatch > 0) state.rehabWatch--;
@@ -1384,9 +1459,11 @@ class CareerController extends ChangeNotifier {
         setPieces: week.setPieces,
         physique: week.physique,
       );
-      // 完全に休んだ週だけ、溜まった疲労が抜ける。リカバリーでは抜けない。
-      if ((tired ? TrainingMenu.rest : state.menu) == TrainingMenu.rest) {
-        state.fatigue = state.fatigue.add(-Formulas.restFatigueRelief);
+      // 溜まった疲労が抜けるのは、メニューが持っているぶんだけ
+      // （完全に休んだ週のみ。リカバリーでは抜けない）。
+      final done = tired ? TrainingMenu.rest : state.menu;
+      if (done.fatigueRelief > 0) {
+        state.fatigue = state.fatigue.add(-done.fatigueRelief);
       }
       // 追い込んだ週の積み上げ。限界突破の条件になる。
       if (week.outcome == TrainingOutcome.great) {
@@ -1693,6 +1770,9 @@ class CareerController extends ChangeNotifier {
 
   /// 直前の試合で、今節の的を達成したか。試合結果の画面が出す。
   bool lastTargetMet = false;
+
+  /// 直前の試合で、連続の節目に入った経験点。入らなければ 0。
+  int lastTargetPoints = 0;
 
   /// 直前の引退で貯まった殿堂ポイントと、宣言していた挑戦。
   int lastLegacyPoints = 0;

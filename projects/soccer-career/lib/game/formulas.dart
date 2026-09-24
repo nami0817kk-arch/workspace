@@ -180,6 +180,23 @@ class Formulas {
   /// 参考アプリと同じ20万円に下げてある。
   static const int matchTargetReward = 20;
 
+  /// **的を何回続けて達成すると、節目になるか。**
+  ///
+  /// `test/target_sim.dart` の実測で、出た試合の達成率は 35〜75%、
+  /// 3連続は達成のうち25〜29%、5連続は7〜11%、8連続は1〜2%だった。
+  /// 3 なら「狙えば届くが、休めば切れる」幅に入る。
+  static const int targetStreakStep = 3;
+
+  /// 節目で入る経験点。その的が問うている能力に入る。
+  ///
+  /// お金だけの報酬は年俸で薄まる（序盤17% → 9季目以降2%）。経験点の
+  /// 値段（`experienceCost`）は増えないので、**最後まで同じ重さで効く**。
+  ///
+  /// 伸び1回ぶん（`pointsPerGrowth` = 4）を払ったら、ピーク総合力が
+  /// **77.1 → 78.0** まで上がった。狙いは終盤まで意味を残すことで、
+  /// 上限を上げることではない。半分の2点に置く。
+  static const int targetStreakPoints = pointsPerGrowth ~/ 2;
+
   /// **殿堂ポイント。** 引退した選手が次のキャリアに残すもの。
   ///
   /// 参考にした野球のキャリアゲームは「20ptにつき次の選手の才能+1、
@@ -341,6 +358,7 @@ class Formulas {
   /// 手が通るようになった選手の評価点が青天井に上がり、
   /// キャリア平均7.5のような数字になる（実際になっていた）。
   static const double ratingPerSuccess = 0.32;
+
   static const double ratingPerFailure = -0.4;
   static const double ratingPerGoal = 0.95;
   static const double ratingPerAssist = 1.1;
@@ -818,6 +836,20 @@ class Formulas {
   static const double fameValue = 0.003;
   static const double fameReach = 0.015;
 
+  /// **スポンサー料が急に大きくなる知名度。**
+  ///
+  /// ここを超えたぶんだけ、`endorsementPerFame` を重ねて払う。
+  /// 線形のままだと知名度の差が年俸に埋もれて、「名前を売る」が
+  /// 金でも負ける選択肢になっていた。
+  static const int fameEndorsement = 60;
+
+  /// 線を超えた知名度1あたりの上乗せ（万円/季）。
+  ///
+  /// 60 だと「名前を売る」の貯蓄が 82665 で、まだ絞る（83940）に負けていた。
+  /// 75 で追い越す。**金だけは一番入る**が、伸びも出場もタイトルも落ちる
+  /// ——という形にして初めて、選ぶ理由のある選択肢になる。
+  static const int endorsementPerFame = 75;
+
   /// 2部でこの順位以内なら昇格。
   static const int promotionPlaces = 2;
 
@@ -852,11 +884,9 @@ class Formulas {
   /// コンディションを戻すならリカバリー、溜まった疲労を抜くなら休養、と分ける。
   static const int restFatigueRelief = 3;
 
-  /// 練習で消耗するコンディション。
-  static const int trainingConditionCost = 10;
-
-  /// 休養で回復するコンディション。
-  static const int restRecovery = 30;
+  // 練習の消耗と休養の回復は `TrainingMenu` が種類ごとに持っている
+  // （`conditionCost` / `recovery`）。ここに一律の数を置いていたが、
+  // メニューを足した時点で読まれなくなっていた。
 
   /// コンディションが成功率に効く傾き。基準値からの差 × 傾き。
   /// 100 なら +6%、20 なら −6%。疲れたまま練習し続けると試合で払う。
@@ -945,7 +975,14 @@ class Formulas {
   /// 積み上げてきた選択に値段が付く。
   /// 戻る道はある（監督が代わる・移籍する・出来事で歩み寄る）が、
   /// 「評価点で戻す」道だけは閉じている。出られないのだから。
-  static const int frozenOutTrust = 12;
+  ///
+  /// **12 では、落ちる穴が埋まっていた**（2026-09-24 に測り直し）。
+  /// 入れた当初は15%のキャリアが一度は落ちていたが、実測では
+  /// 3〜8% まで下がっていた（`test/recover_sim.dart`、120キャリア）。
+  /// 一方で警告の線（`trustWarning` 28）は 20〜48% のキャリアで割っている
+  /// ——**警告ばかり出て、落ちない**。警告が空砲になると、警告そのものが
+  /// 読まれなくなる。18 なら警告と落下のあいだが 10 に縮まる。
+  static const int frozenOutTrust = 18;
 
   /// これを下回ったら、構想外が近いことを画面で知らせる。
   ///
@@ -1094,8 +1131,8 @@ class Formulas {
   static const int severeInjuryAttributeLoss = 3;
   static const int severeInjuryPotentialLoss = 2;
 
-  /// 復帰直後のコンディション。
-  static const int conditionAfterInjury = 45;
+  // 復帰直後のコンディションは `RehabPlan.conditionOnReturn` が持っている
+  // （戻し方を選べるようにした時点で、一律の数は読まれなくなった）。
 
   /// キャプテンの試合ごとの評価点への上乗せ。
   static const double captainRatingBonus = 0.1;
