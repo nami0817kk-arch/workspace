@@ -192,8 +192,8 @@ class SearchIndexTest(unittest.TestCase):
             page = (Path(tmp) / "search" / "index.html").read_text(encoding="utf-8")
 
         self.assertTrue(idx, "索引が空")
-        for slug, name, price, code in idx[:5]:
-            self.assertTrue(slug and name and code)
+        for slug, name, price, code, label, cls in idx[:5]:
+            self.assertTrue(slug and name and code and label and cls)
             self.assertIsInstance(price, int)
         self.assertIn('id="q"', page)
         # 索引はページに埋め込まず、必要になってから取りに行く
@@ -513,3 +513,46 @@ class ToolsTest(unittest.TestCase):
         self.assertIn('data-price="1000"', html)
         self.assertIn('data-eff="900"', html)
         self.assertIn('data-days="10"', html)
+
+
+class WatchAndFeedTest(unittest.TestCase):
+    """見守りとフィード。"""
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+        self.site = {"name": "テスト", "base_url": "https://example.pages.dev",
+                     "description": "説明"}
+
+    def test_見守るボタンに登録時の価格が入る(self):
+        # 価格を控えないと「見始めてから下がったか」が出せない
+        row = {"item_code": "a", "name": "テレビ", "price": 1000, "dropped": False,
+               "days": 10, "at_low": False, "near_low": False, "label": "横ばい",
+               "image": "", "shop": "店", "low": 900, "high": 1100,
+               "vs_low_pct": 0.1, "off_high_pct": 0.0, "trustworthy": True,
+               "tail": [["2026-09-01", 1000], ["2026-09-02", 1000]]}
+
+        html = self.theme.item_page(row, self.site, "2026-09-24")
+
+        self.assertIn('id="watch"', html)
+        self.assertIn('data-price="1000"', html)
+
+    def test_フィードに日付が入る(self):
+        rows = [{"item_code": "a", "name": "テレビ", "price": 900, "drop_pct": 0.1,
+                 "point_rate": 1}]
+
+        xml = self.theme.feed(self.site, rows, "2026-09-24")
+
+        self.assertIn("<pubDate>", xml)
+        self.assertIn("2026", xml)
+
+    def test_日付が壊れていてもフィードは壊さない(self):
+        self.assertEqual(self.theme._rfc822("おかしな値"), "")
+
+    def test_アーカイブの前後移動は端で欠ける(self):
+        both = self.theme.archive_nav("2026-09-20", "2026-09-19", "2026-09-21")
+        newest = self.theme.archive_nav("2026-09-21", "2026-09-20", None)
+
+        self.assertIn("2026-09-19", both)
+        self.assertIn("2026-09-21", both)
+        self.assertNotIn("2026-09-22", newest)

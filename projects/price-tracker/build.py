@@ -141,6 +141,15 @@ def build(root: Path, out: Path) -> dict:
                       hit, site, base, updated,
                       "この日は記録できる値下がりがありませんでした。", stats)
         archive_counts.append((day, len(hit)))
+        pos = archive_days.index(day)
+        newer = archive_days[pos - 1] if pos > 0 else None
+        older = archive_days[pos + 1] if pos + 1 < len(archive_days) else None
+        path = out / "archive" / day / "index.html"
+        path.write_text(
+            path.read_text(encoding="utf-8").replace(
+                '<ul class="cards">', theme.archive_nav(day, older, newer)
+                + '<ul class="cards">', 1),
+            encoding="utf-8")
 
     write(out / "archive" / "index.html",
           theme.archive_index(archive_counts, site, base + "/archive/", updated))
@@ -170,19 +179,26 @@ def build(root: Path, out: Path) -> dict:
     urls.append("/genre/")
 
     by_gid = {}
+    by_shop = {}
     for r in rows:
         by_gid.setdefault(str(r.get("source_genre") or ""), []).append(r)
+        by_shop.setdefault(r.get("shop") or "", []).append(r)
 
     for row in rows:
         s = theme.slug(row["item_code"])
         kin = [r for r in by_gid.get(str(row.get("source_genre") or ""), [])
                if r["item_code"] != row["item_code"]][:8]
-        write(out / "item" / s / "index.html", theme.item_page(row, site, updated, kin))
+        mates = [r for r in by_shop.get(row.get("shop") or "", [])
+                 if r["item_code"] != row["item_code"]][:6]
+        write(out / "item" / s / "index.html",
+              theme.item_page(row, site, updated, kin, mates))
         urls.append((f"/item/{s}/", row.get("changed_date") or updated))
 
     # 検索用の索引。数百KBあるので、検索ページで必要になったときだけ読ませる。
     write(out / "search-index.json", json.dumps(
-        [[theme.slug(r["item_code"]), r["name"], r["price"], r["item_code"]]
+        [[theme.slug(r["item_code"]), r["name"], r["price"], r["item_code"],
+          r["label"], "low" if r["at_low"] else ("near" if r["near_low"]
+                                                 else ("drop" if r["dropped"] else "flat"))]
          for r in rows],
         ensure_ascii=False, separators=(",", ":")))
     write(out / "search" / "index.html",
@@ -193,16 +209,6 @@ def build(root: Path, out: Path) -> dict:
           theme.watch_page(site, base + "/watch/", updated))
     urls.append("/watch/")
 
-    counts = [analyze.change_count(r) for r in rows]
-    write(out / "stats" / "index.html", theme.stats_page(
-        site, base + "/stats/", updated, stats,
-        {"still": sum(1 for n in counts if n == 0),
-         "once": sum(1 for n in counts if n == 1),
-         "active": sum(1 for n in counts if n >= 2),
-         "pointed": sum(1 for r in rows if int(r.get("point_rate") or 1) > 1)},
-        listed,
-        [(r, analyze.change_count(r)) for r in analyze.active(rows, limit=10)]))
-    urls.append("/stats/")
 
     # その日の記録を CSV でも出す。表計算で開いて自分で調べられるようにする。
     csv_rows = ["item_code,name,price,point_rate,effective,low,high,days,shop"]
@@ -213,6 +219,24 @@ def build(root: Path, out: Path) -> dict:
             f'{r["item_code"]},"{name}",{r["price"]},{r.get("point_rate", 1)},'
             f'{r.get("eff_price", r["price"])},{r["low"]},{r["high"]},{r["days"]},"{shop}"')
     write(out / "data.csv", "\n".join(csv_rows) + "\n")
+
+    hist = ["date,item_code,price,point_rate"]
+    for code, rec in summary.items():
+        for e in (store.entry(x) for x in rec.get("tail") or []):
+            hist.append(f"{e[0]},{code},{e[1]},{e[2]}")
+    write(out / "history.csv", "\n".join(hist) + "\n")
+
+    counts = [analyze.change_count(r) for r in rows]
+    write(out / "stats" / "index.html", theme.stats_page(
+        site, base + "/stats/", updated, stats,
+        {"still": sum(1 for n in counts if n == 0),
+         "once": sum(1 for n in counts if n == 1),
+         "active": sum(1 for n in counts if n >= 2),
+         "pointed": sum(1 for r in rows if int(r.get("point_rate") or 1) > 1)},
+        listed,
+        [(r, analyze.change_count(r)) for r in analyze.active(rows, limit=10)],
+        archive_counts[:14]))
+    urls.append("/stats/")
 
     # 共有時の画像・行き先を示す404・値下がりの購読（RSS）。
     write(out / "og.svg", theme.og_image(site, stats))

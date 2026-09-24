@@ -120,6 +120,16 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 .watch button.on { color: var(--bg); background: var(--accent); }
 .watch .note { margin-left: 10px; font-size: 13px; color: var(--muted); }
 
+/* 一覧から直接見守る。商品ページまで開かせない */
+.watch-mini { margin-left: 10px; padding: 2px 9px; font-size: 12px; cursor: pointer;
+  color: var(--muted); background: none;
+  border: 1px solid var(--line); border-radius: 999px; }
+.watch-mini.on { color: var(--accent); border-color: var(--accent); font-weight: 700; }
+
+.tools .scope { color: var(--muted); font-size: 12px; }
+.hit .since { color: var(--muted); font-size: 12px; margin-left: 8px; }
+.hit .badge { margin-left: 8px; }
+
 /* 商品ページの価格推移 */
 .chart-svg { width: 100%; max-width: 560px; height: auto; color: var(--accent); }
 .note { font-size: 13px; color: var(--muted); }

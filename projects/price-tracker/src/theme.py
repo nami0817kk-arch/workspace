@@ -245,7 +245,9 @@ def card(row: dict, prefix: str = "") -> str:
     <a class="name" href="{href}">{esc(row["name"])}</a>
     <p class="price">{change}<strong>{yen(row["price"])}</strong> {badge(row)}</p>
     <p class="point-line">{point_note(row)}</p>
-    <p class="meta">{esc(row.get("shop", ""))}{history_note(row)}</p>
+    <p class="meta">{esc(row.get("shop", ""))}{history_note(row)}
+      <button class="watch-mini" type="button" data-code="{esc(row["item_code"])}"
+              data-price="{row["price"]}" aria-label="この商品を見守る">見守る</button></p>
     {card_spark(row)}
   </div>
 </li>"""
@@ -289,6 +291,12 @@ SEARCH_JS = """
       p.textContent = r[2].toLocaleString() + '円';
       li.appendChild(a);
       li.appendChild(p);
+      if (r[4]) {
+        var b = document.createElement('span');
+        b.className = 'badge ' + (r[5] || 'flat');
+        b.textContent = r[4];
+        li.appendChild(b);
+      }
       out.appendChild(li);
     });
   }
@@ -325,7 +333,8 @@ SEARCH_JS = """
 
 
 def stats_page(site: dict, canonical: str, updated: str, stats: dict,
-               buckets: dict, genres: list, examples: list | None = None) -> str:
+               buckets: dict, genres: list, examples: list | None = None,
+               daily: list | None = None) -> str:
     """このサイトが何を持っているかを数字で出す。
 
     毎日ためた履歴そのものが値打ちなので、その厚みを一覧の裏側だけでなく
@@ -348,6 +357,11 @@ def stats_page(site: dict, canonical: str, updated: str, stats: dict,
             + f'<h1>{esc(title)}</h1><p class="lead">{esc(lead)}</p>'
             + AD_NOTICE
             + f'<table class="facts">{table}</table>'
+            + (('<h2>日ごとの値下がり件数</h2>'
+                + '<table class="facts">'
+                + "".join(f'<tr><th><a href="../archive/{esc(d)}/">{esc(d)}</a></th>'
+                          f'<td>{n:,} 件</td></tr>' for d, n in daily)
+                + '</table>') if daily else '')
             + '<h2>ジャンル別</h2>'
             + f'<table class="facts">{per_genre}</table>'
             + (('<h2>よく動いた商品</h2><ul class="hits">'
@@ -432,6 +446,25 @@ def item_list_ld(rows: list, site: dict, prefix: str) -> str:
     return f'<script type="application/ld+json">{ld}</script>'
 
 
+WATCH_MINI_JS = """
+<script>
+(function () {
+  function label(btn, on) {
+    btn.textContent = on ? '見守り中' : '見守る';
+    btn.classList.toggle('on', on);
+  }
+  var store = PTWatch.read();
+  document.querySelectorAll('.watch-mini').forEach(function (btn) {
+    label(btn, !!store[btn.dataset.code]);
+    btn.addEventListener('click', function () {
+      var s = PTWatch.toggle(btn.dataset.code, parseInt(btn.dataset.price, 10));
+      label(btn, !!s[btn.dataset.code]);
+    });
+  });
+})();
+</script>
+"""
+
 LIST_TOOLS = """
 <div class="tools">
   <label>並び替え <select id="sort">
@@ -451,6 +484,7 @@ LIST_TOOLS = """
     <option value="30000-">30,000円以上</option>
   </select></label>
   <span id="shown" class="of"></span>
+  <span class="scope">このページに出ている分だけを並べ替えます</span>
 </div>
 <script>
 (function () {
@@ -518,10 +552,21 @@ def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
             + stats_bar(stats or {})
             + AD_NOTICE
             + nav
-            + (LIST_TOOLS if rows else "")
+            + (WATCH_JS + LIST_TOOLS + WATCH_MINI_JS if rows else "")
             + f'<ul class="cards">{body}</ul>'
             + nav
             + foot(site, prefix, updated))
+
+
+def archive_nav(day: str, older: str | None, newer: str | None) -> str:
+    """前後の日へ。日付をURLに打ち直させない。"""
+    parts = []
+    if newer:
+        parts.append(f'<a href="../{esc(newer)}/">← {esc(newer)}</a>')
+    parts.append('<a href="../">日付の一覧</a>')
+    if older:
+        parts.append(f'<a href="../{esc(older)}/">{esc(older)} →</a>')
+    return f'<nav class="pager">{"".join(parts)}</nav>'
 
 
 def archive_index(days: list, site: dict, canonical: str, updated: str) -> str:
@@ -666,6 +711,15 @@ def not_found(site: dict, updated: str) -> str:
             + foot(site, "", updated))
 
 
+def _rfc822(day: str) -> str:
+    """RSS の日付。購読側が並べ替えられるよう、規格どおりの形で出す。"""
+    try:
+        d = datetime.strptime(day, "%Y-%m-%d")
+    except ValueError:
+        return ""
+    return d.strftime("%a, %d %b %Y 00:00:00 +0900")
+
+
 def feed(site: dict, rows: list, updated: str, title: str = "今日の値下がり",
          path: str = "") -> str:
     """一覧の RSS。毎日サイトを見に来なくても追える形にする。
@@ -681,7 +735,8 @@ def feed(site: dict, rows: list, updated: str, title: str = "今日の値下が�
         return (f"<item><title>{esc(row['name'][:90])}</title>"
                 f"<link>{base}/item/{slug(row['item_code'])}/</link>"
                 f"<guid isPermaLink=\"false\">{slug(row['item_code'])}-{updated}</guid>"
-                f"<description>{esc(desc)}</description></item>")
+                f"<description>{esc(desc)}</description>"
+                f"<pubDate>{_rfc822(updated)}</pubDate></item>")
 
     items = "".join(one(r) for r in rows[:50])
     return ('<?xml version="1.0" encoding="UTF-8"?>'
@@ -707,6 +762,16 @@ def breadcrumb(site: dict, name: str, prefix: str) -> str:
             f'<script type="application/ld+json">{ld}</script>')
 
 
+def same_shop(rows: list, shop: str) -> str:
+    """同じ店の商品。店ごとにポイント倍率や送料の条件が揃うことが多い。"""
+    if not rows or not shop:
+        return ""
+    body = "".join(
+        f'<li><a href="../{slug(r["item_code"])}/">{esc(r["name"][:56])}</a>'
+        f'<span class="price">{yen(r["price"])}</span></li>' for r in rows)
+    return f'<h2>{esc(shop)} の他の商品</h2><ul class="hits">{body}</ul>'
+
+
 def related(rows: list, site: dict) -> str:
     """同じジャンルの商品へ。5,500ページが互いに孤立していると、
     読み手も検索エンジンも辿れない。"""
@@ -718,29 +783,51 @@ def related(rows: list, site: dict) -> str:
     return f'<h2>同じジャンルの商品</h2><ul class="hits">{body}</ul>'
 
 
-WATCH_BUTTON = """
-<p class="watch"><button id="watch" type="button" data-code="{code}">見守る</button>
+# 見守りの保存は端末の中だけ。登録した時の価格も控えて、次に来たときに
+# 「自分が見始めてから下がったか」を出せるようにする。
+WATCH_JS = """
+<script>
+var PTWatch = (function () {
+  var KEY = 'pt-watch';
+  function read() {
+    try {
+      var v = JSON.parse(localStorage.getItem(KEY) || '{}');
+      // 旧い形（コードの配列）も読めるようにする
+      if (Array.isArray(v)) {
+        var o = {};
+        v.forEach(function (c) { o[c] = {p: 0, d: ''}; });
+        return o;
+      }
+      return v || {};
+    } catch (e) { return {}; }
+  }
+  function save(o) { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) {} }
+  function toggle(code, price) {
+    var o = read();
+    if (o[code]) { delete o[code]; }
+    else { o[code] = {p: price || 0, d: new Date().toISOString().slice(0, 10)}; }
+    save(o);
+    return o;
+  }
+  return {read: read, toggle: toggle};
+})();
+</script>
+"""
+
+WATCH_BUTTON = WATCH_JS + """
+<p class="watch"><button id="watch" type="button" data-code="{code}" data-price="{price}">見守る</button>
 <span class="note">端末に保存します。<a href="{prefix}watch/">見守り中の一覧</a></span></p>
 <script>
 (function () {
-  var KEY = 'pt-watch';
   var btn = document.getElementById('watch');
-  function read() {
-    try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) { return []; }
-  }
-  function draw(list) {
-    var on = list.indexOf(btn.dataset.code) >= 0;
+  function draw(store) {
+    var on = !!store[btn.dataset.code];
     btn.textContent = on ? '見守りを外す' : '見守る';
     btn.classList.toggle('on', on);
   }
-  var list = read();
-  draw(list);
+  draw(PTWatch.read());
   btn.addEventListener('click', function () {
-    var cur = read();
-    var i = cur.indexOf(btn.dataset.code);
-    if (i >= 0) { cur.splice(i, 1); } else { cur.push(btn.dataset.code); }
-    try { localStorage.setItem(KEY, JSON.stringify(cur)); } catch (e) {}
-    draw(cur);
+    draw(PTWatch.toggle(btn.dataset.code, parseInt(btn.dataset.price, 10)));
   });
 })();
 </script>
@@ -750,44 +837,72 @@ WATCH_BUTTON = """
 def watch_page(site: dict, canonical: str, updated: str) -> str:
     """見守り中の商品。
 
-    保存先はその端末の中だけで、こちらには送らない。会員登録もサーバも要らず、
-    次に来たときに自分が見ている商品の今の価格が分かる。
+    保存先はその端末の中だけで、こちらには送らない。見始めた時の価格も控えて
+    あるので、「自分が見始めてから下がったか」を出せる。それが無いと、
+    ただの並び替えにくいブックマークにしかならない。
     """
     title = "見守り中の商品"
-    lead = "商品ページで「見守る」を押した商品を並べます。保存先はお使いの端末の中だけです。"
+    lead = ("商品ページで「見守る」を押した商品を、見始めた時からの差が大きい順に並べます。"
+            "保存先はお使いの端末の中だけです。")
     return (head(f"{title}｜{site['name']}", lead, canonical, site, "../")
+            + WATCH_JS
             + breadcrumb(site, title, "../")
             + f'<h1>{esc(title)}</h1><p class="lead">{esc(lead)}</p>'
             + AD_NOTICE
             + '<p id="note" class="note"></p><ul id="results" class="hits"></ul>'
             + """<script>
 (function () {
-  var KEY = 'pt-watch';
   var out = document.getElementById('results');
   var note = document.getElementById('note');
-  var codes;
-  try { codes = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) { codes = []; }
+  var store = PTWatch.read();
+  var codes = Object.keys(store);
   if (!codes.length) {
     note.textContent = 'まだありません。商品ページの「見守る」を押すとここに並びます。';
     return;
   }
   note.textContent = '読み込んでいます…';
   fetch('../search-index.json').then(function (r) { return r.json(); }).then(function (data) {
-    var want = {};
-    codes.forEach(function (c) { want[c] = true; });
-    var hits = data.filter(function (r) { return want[r[3]]; });
+    var hits = data.filter(function (r) { return store[r[3]]; }).map(function (r) {
+      var was = store[r[3]].p || 0;
+      return {slug: r[0], name: r[1], now: r[2], was: was,
+              diff: was ? (was - r[2]) / was : 0, since: store[r[3]].d || ''};
+    });
+    hits.sort(function (a, b) { return b.diff - a.diff; });
     note.textContent = hits.length + '件';
     out.textContent = '';
-    hits.forEach(function (r) {
+    hits.forEach(function (h) {
       var li = document.createElement('li');
       li.className = 'hit';
       var a = document.createElement('a');
-      a.href = '../item/' + r[0] + '/';
-      a.textContent = r[1];
+      a.href = '../item/' + h.slug + '/';
+      a.textContent = h.name;
+      li.appendChild(a);
       var p = document.createElement('span');
       p.className = 'price';
-      p.textContent = r[2].toLocaleString() + '円';
-      li.appendChild(a); li.appendChild(p); out.appendChild(li);
+      if (h.was && h.diff > 0) {
+        p.innerHTML = '';
+        var d = document.createElement('span');
+        d.className = 'down';
+        d.textContent = '▼' + (h.diff * 100).toFixed(1) + '%';
+        p.appendChild(d);
+        p.appendChild(document.createTextNode(' ' + h.now.toLocaleString() + '円'));
+      } else if (h.was && h.diff < 0) {
+        var u = document.createElement('span');
+        u.className = 'up';
+        u.textContent = '▲' + (-h.diff * 100).toFixed(1) + '%';
+        p.appendChild(u);
+        p.appendChild(document.createTextNode(' ' + h.now.toLocaleString() + '円'));
+      } else {
+        p.textContent = h.now.toLocaleString() + '円';
+      }
+      li.appendChild(p);
+      if (h.since) {
+        var s = document.createElement('span');
+        s.className = 'since';
+        s.textContent = h.since + 'から';
+        li.appendChild(s);
+      }
+      out.appendChild(li);
     });
   }).catch(function () { note.textContent = '一覧を読み込めませんでした。'; });
 })();
@@ -795,7 +910,8 @@ def watch_page(site: dict, canonical: str, updated: str) -> str:
             + foot(site, "../", updated))
 
 
-def item_page(row: dict, site: dict, updated: str, kin: list | None = None) -> str:
+def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
+              shopmates: list | None = None) -> str:
     prefix = "../../"
     canonical = f'{site["base_url"].rstrip("/")}/item/{slug(row["item_code"])}/'
     title = f'{row["name"]}の価格推移'
@@ -837,9 +953,12 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None) -> s
             + (f'<p class="note">{esc(cheaper_days(row))}</p>' if cheaper_days(row) else '')
             + f'<table class="facts">{table}</table>'
             + history_table(row)
-            + WATCH_BUTTON.replace("{code}", esc(row["item_code"])).replace("{prefix}", prefix)
+            + (WATCH_BUTTON.replace("{code}", esc(row["item_code"]))
+               .replace("{price}", str(row["price"]))
+               .replace("{prefix}", prefix))
             + f'<p class="cta">{buy_link(row)}</p>'
             + f'<p class="shop">販売店: {esc(row.get("shop", ""))}</p>'
             + related(kin or [], site)
+            + same_shop(shopmates or [], row.get("shop", ""))
             + '</article>'
             + foot(site, prefix, updated))
