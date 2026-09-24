@@ -4,6 +4,8 @@ import '../budget_lines.dart';
 import '../readable_width.dart';
 import '../transfer_code.dart';
 import '../../game/career_engine.dart';
+import '../../game/squads.dart';
+import '../../models/player.dart';
 import '../../game/formulas.dart';
 import '../../game/world.dart';
 import '../../models/agent.dart';
@@ -388,6 +390,8 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                   for (var i = 0; i < _offers.length; i++) ...[
                     _OfferCard(
                       offer: _offers[i],
+                      player: controller.state!.player,
+                      year: controller.state!.year,
                       roleNote: CareerEngine.roleNoteFor(
                         controller.state!.player.overall,
                         _offers[i].club,
@@ -458,8 +462,14 @@ class _OfferCard extends StatelessWidget {
     required this.onAccept,
     required this.onNegotiate,
     required this.onIncentive,
+    required this.player,
+    required this.year,
     this.roleNote,
   });
+
+  /// 名簿の中での位置を出すために要る。
+  final Player player;
+  final int year;
 
   /// 起用の約束が実際に何を意味するか。`CareerEngine.roleNoteFor` から引く。
   final String? roleNote;
@@ -472,6 +482,23 @@ class _OfferCard extends StatelessWidget {
 
   /// 出来高払いでサインする。目標が無い契約（ローン・復帰）では出さない。
   final VoidCallback? onIncentive;
+
+  /// 行き先の名簿の中で、自分がどこに入るか。
+  ///
+  /// 登録メンバーの判定（`Competitions.registrationFor`）と
+  /// **同じ数え方を読む**——別に書くと、画面の数字と
+  /// 加入した後の扱いがずれる。
+  String _squadLine() {
+    final squad = Squad.of(offer.club, year: year);
+    final ahead = squad.aheadOf(player.position, player.overall);
+    final quota = Squad.quotaFor(player.position.family);
+    final rivals = squad.rivalsFor(player.position);
+    final top = rivals.isEmpty ? null : rivals.first;
+    final head = ahead == 0 ? 'あなたの枠では一番上' : 'あなたの枠に上が $ahead 人';
+    final fate = ahead >= quota ? '（登録外になる）' : '（定員 $quota）';
+    final face = top == null ? '' : ' ・ 筆頭は ${top.name}（${top.overall}）';
+    return '$head $fate$face';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -513,6 +540,13 @@ class _OfferCard extends StatelessWidget {
             ),
             const SizedBox(height: 4),
             Text(offer.reason, style: muted),
+            // **そのクラブに、あなたの枠に誰が居るか。**
+            // 行き先を決める材料は年俸・移籍金・契約年数と
+            // 起用の約束だけで、**誰と先発を争うのかは書いていなかった**。
+            if (!offer.isRenewal) ...[
+              const SizedBox(height: 4),
+              Text(_squadLine(), style: muted),
+            ],
             if (offer.terms.isNotEmpty) ...[
               const SizedBox(height: 4),
               Text(offer.terms, style: muted),

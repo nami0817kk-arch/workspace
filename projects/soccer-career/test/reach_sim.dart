@@ -10,7 +10,6 @@
 library;
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:soccer_career/game/formulas.dart';
 import 'package:soccer_career/models/agent.dart';
 import 'package:soccer_career/models/attributes.dart';
 import 'package:soccer_career/models/competition.dart';
@@ -150,7 +149,7 @@ void main() {
       '  最小 ${gaps.first} / 下位1割 ${gaps[gaps.length ~/ 10]} / '
       '中央 ${gaps[gaps.length ~/ 2]} / 最大 ${gaps.last}',
     );
-    print('  いまの登録外の線: ${Formulas.squadRegistrationGap}');
+    print("  いまの登録外の線: 名簿を数えて決める（Squad.quotaFor）");
     print('');
     print('=== 引退後の道 ===');
     for (final v in SecondCareer.values) {

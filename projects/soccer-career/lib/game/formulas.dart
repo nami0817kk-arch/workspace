@@ -1204,10 +1204,6 @@ class Formulas {
   /// 明らかに良い手を覆すほどではない重さにする。
   static const double tacticPickBonus = 0.06;
 
-  /// 登録メンバーに入るのに必要な、クラブの強さとの差。
-  /// これより大きく劣ると25人枠に入れない。
-  static const int squadRegistrationGap = -8;
-
   /// 大陸カップに出た年の年俸倍率。
   static const double continentalSalaryBonus = 1.1;
 

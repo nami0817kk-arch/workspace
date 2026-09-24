@@ -1,4 +1,5 @@
 import '../models/club.dart';
+import 'squads.dart';
 import '../models/country.dart';
 import '../models/nationality.dart';
 import 'world.dart';
@@ -26,8 +27,8 @@ class PermitCheck {
   String get summary => !required
       ? '労働許可は不要'
       : granted
-          ? '労働許可: 要件を満たす（$points / $needed）'
-          : '労働許可: 不足（$points / $needed）';
+      ? '労働許可: 要件を満たす（$points / $needed）'
+      : '労働許可: 不足（$points / $needed）';
 }
 
 /// 移籍できるかの判定材料。
@@ -54,8 +55,8 @@ class EligibilityReport {
   String get slotSummary => !foreign
       ? '外国人枠の対象外'
       : slotLimit == null
-          ? '外国人枠 制限なし'
-          : '外国人枠 $slotUsed/$slotLimit';
+      ? '外国人枠 制限なし'
+      : '外国人枠 $slotUsed/$slotLimit';
 }
 
 /// 国籍と外国人枠の判定。
@@ -93,7 +94,11 @@ class Eligibility {
     final rule = destination.permitRule;
     if (!rule.isRequired || !isForeignIn(nationality, destination)) {
       return const PermitCheck(
-          required: false, points: 0, needed: 0, reasons: []);
+        required: false,
+        points: 0,
+        needed: 0,
+        reasons: [],
+      );
     }
 
     var points = 0;
@@ -141,13 +146,18 @@ class Eligibility {
   ///
   /// 他の選手を1人ずつ持つとデータが重くなるので、クラブの強さと国の規則から
   /// もっともらしい人数を決める。強いクラブほど枠は埋まっている。
-  static int usedSlots(Club club, Country country) {
+  /// そのクラブが今使っている外国人枠。
+  ///
+  /// **以前はクラブの強さから逆算した見積もりだった**
+  /// （`(limit * (strength-30)/62).round()`）。強さが同じクラブは
+  /// 必ず同じ数だけ埋まっていることになるので、
+  /// **「枠の空いているクラブを探す」が成立しなかった。**
+  /// いまは名簿（`Squad`）を数える。名簿は保存しないので
+  /// 保存データは1バイトも増えない。
+  static int usedSlots(Club club, Country country, {required int year}) {
     final limit = country.foreignRule.squadLimit;
     if (limit == null) return 0;
-    final ratio = (club.strength - 30) / 62; // 0..1
-    // 余裕を持たせすぎると枠が塞がらず、制度が意味を成さなくなる。
-    // 上位クラブは枠を使い切っている前提で見積もる。
-    return (limit * ratio.clamp(0, 1)).round().clamp(0, limit);
+    return Squad.of(club, year: year).foreignCount.clamp(0, limit);
   }
 
   /// 加入できるかをまとめて判定する。
@@ -159,6 +169,7 @@ class Eligibility {
     required int professionalYears,
     required int marketValue,
     required bool continentalExperience,
+    required int year,
   }) {
     final country = World.byId(club.countryId);
     final foreign = isForeignIn(nationality, country);
@@ -173,7 +184,7 @@ class Eligibility {
         marketValue: marketValue,
         continentalExperience: continentalExperience,
       ),
-      slotUsed: foreign ? usedSlots(club, country) : 0,
+      slotUsed: foreign ? usedSlots(club, country, year: year) : 0,
       slotLimit: foreign ? country.foreignRule.squadLimit : null,
     );
   }

@@ -3,7 +3,7 @@ import 'dart:math';
 import '../models/career.dart';
 import '../models/competition.dart';
 import 'eligibility.dart';
-import 'formulas.dart';
+import 'squads.dart';
 import 'world.dart';
 
 /// 大陸カップ・昇格プレーオフ・移籍市場の窓・登録メンバー。
@@ -18,7 +18,10 @@ class Competitions {
   /// 今シーズン、大陸カップでどこまで行ったか。
   ///
   /// 出場していなければ none。クラブの強さと国の格で勝ち上がりが決まる。
-  ContinentalStage runContinental(CareerState state, {required bool qualified}) {
+  ContinentalStage runContinental(
+    CareerState state, {
+    required bool qualified,
+  }) {
     if (!qualified) return ContinentalStage.none;
 
     final country = World.byId(state.club.countryId);
@@ -119,21 +122,32 @@ class Competitions {
   /// のが現実で、それがローンに出る動機になる。
   SquadStatus registrationFor(CareerState state) {
     final country = World.byId(state.club.countryId);
-    final foreign =
-        Eligibility.isForeignIn(state.player.nationality, country);
+    final foreign = Eligibility.isForeignIn(state.player.nationality, country);
 
     if (foreign) {
       final limit = country.foreignRule.squadLimit;
       if (limit != null) {
-        final used = Eligibility.usedSlots(state.club, country);
+        final used = Eligibility.usedSlots(
+          state.club,
+          country,
+          year: state.year,
+        );
         // 自分の分が入らないなら登録外。
         if (used >= limit) return SquadStatus.outOfSquad;
       }
     }
 
-    // クラブの中での力量。大きく劣ると25人に入れない。
-    final gap = state.player.overall - state.club.strength;
-    if (gap < Formulas.squadRegistrationGap) return SquadStatus.outOfSquad;
+    // **クラブの中での力量。名簿を数えて決める。**
+    //
+    // 以前は `overall - club.strength < -8` という線だった。
+    // 当たってはいたが、**落ちた理由が「強さの差」という
+    // 誰も見たことの無い数字だけ**で、誰に押し出されたのかが分からない。
+    // いまは「同じ枠にあなたより上が何人居るか」で見る。
+    final squad = Squad.of(state.club, year: state.year);
+    final ahead = squad.aheadOf(state.player.position, state.player.overall);
+    if (ahead >= Squad.quotaFor(state.player.position.family)) {
+      return SquadStatus.outOfSquad;
+    }
     return SquadStatus.registered;
   }
 
@@ -150,9 +164,9 @@ class Competitions {
   /// 自分のクラブが勝ち上がると、その国のリーグの評価が上がる。
   /// リーグ係数が動くと、翌年以降の出場枠と年俸水準が変わる。
   int coefficientGain(ContinentalStage stage) => switch (stage) {
-        ContinentalStage.winner => 3,
-        ContinentalStage.runnerUp => 2,
-        ContinentalStage.semi => 1,
-        _ => 0,
-      };
+    ContinentalStage.winner => 3,
+    ContinentalStage.runnerUp => 2,
+    ContinentalStage.semi => 1,
+    _ => 0,
+  };
 }

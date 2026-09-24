@@ -134,7 +134,11 @@ void main() {
               final reason = state.squadStatus == SquadStatus.outOfSquad
                   ? (foreign &&
                             country.foreignRule.squadLimit != null &&
-                            Eligibility.usedSlots(state.club, country) >=
+                            Eligibility.usedSlots(
+                                  state.club,
+                                  country,
+                                  year: 2030,
+                                ) >=
                                 country.foreignRule.squadLimit!
                         ? '登録外（外国人枠）'
                         : '登録外（力量差 ${state.player.overall - state.club.strength}）')
@@ -186,9 +190,7 @@ void main() {
       }
 
       print('');
-      print(
-        '--- 出た試合と出なかった試合（勝ち点/試合） ---',
-      );
+      print('--- 出た試合と出なかった試合（勝ち点/試合） ---');
       print(
         '  出た ${(withPts / withN).toStringAsFixed(2)}（$withN試合）  '
         '出なかった ${(withoutPts / withoutN).toStringAsFixed(2)}（$withoutN試合）  '

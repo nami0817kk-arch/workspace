@@ -20,6 +20,7 @@ import '../../game/match_engine.dart';
 import '../../game/newsroom.dart';
 import '../../game/person.dart';
 import '../../game/ranking.dart';
+import '../../game/squads.dart';
 import '../../game/weekly_plan.dart';
 import '../../models/development.dart';
 import '../../models/news.dart';
@@ -2360,6 +2361,25 @@ class _ClubLifeCard extends StatelessWidget {
                         style: muted,
                       ),
                     ],
+                    // **同じ枠の序列。** 登録メンバーはこの数で決まるので、
+                    // 判定と同じ数え方（`Squad.aheadOf`）をそのまま出す。
+                    Builder(
+                      builder: (context) {
+                        final squad = Squad.of(state.club, year: state.year);
+                        final ahead = squad.aheadOf(
+                          state.player.position,
+                          state.player.overall,
+                        );
+                        final quota = Squad.quotaFor(
+                          state.player.position.family,
+                        );
+                        return Text(
+                          '同じ枠: ${ahead + 1}番目 / 登録の定員 $quota'
+                          '${ahead >= quota ? '（今は登録外）' : ''}',
+                          style: muted,
+                        );
+                      },
+                    ),
                     if (state.partner != null)
                       Text(
                         '相方: ${state.partner!.name}  ${state.partner!.synergyLabel}',
