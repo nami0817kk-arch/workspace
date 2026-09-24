@@ -381,6 +381,10 @@ extension GameStateMatch on GameState {
       _save!.infrastructure.facilityLevel(FacilityType.youthFacility),
       // メンターに指名された一軍のベテランは、ユースに足を運んで教える。
       mentors: userTeam.players,
+      coachSpecialty: _save!.infrastructure
+              .staffFor(StaffRole.youthCoach)
+              ?.specialty ??
+          StaffSpecialty.balanced,
     );
 
     // 昇格の見込みが立たない有望株は、ユースを去る。置いておくほど育つので、
