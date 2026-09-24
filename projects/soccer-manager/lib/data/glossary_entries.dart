@@ -377,6 +377,27 @@ List<GlossaryEntry> get glossaryEntries => [
             "A first-team player of 28 or over, paired with an academy prospect. He grows faster in the academy, and it opens the only route to a personality trait while he is still there. A veteran can only look after one player, and cannot mentor a first-teamer at the same time."),
       ),
       GlossaryEntry(
+        term: Tr.pick('生え抜き', 'Academy graduate'),
+        category: GlossaryCategory.club,
+        description: Tr.pick(
+            '自クラブのユースから昇格させた選手に付く印。買ってきた選手と、何年もかけて育てた選手を名簿の上で見分けるためのもの。一度付いたら外れない。',
+            'The mark on a player you brought through your own academy, so the ones you bought and the ones you raised can be told apart at a glance. Once earned it never comes off.'),
+      ),
+      GlossaryEntry(
+        term: Tr.pick('シーズンの振り返り', 'Season review'),
+        category: GlossaryCategory.club,
+        description: Tr.pick(
+            'シーズンが終わった直後にホームへ出るまとめ。順位・勝敗・得失点・獲得タイトル・得点王と、その年の総括が並ぶ。閉じるとそのシーズンについては二度と出ない。過去の年はシーズン成績の画面でいつでも見返せる。',
+            'The summary that appears on the home screen when a season ends: where you finished, your record, the goals, any trophies, the top scorer and a verdict on the year. Close it and it will not come back; past seasons stay in the season history screen.'),
+      ),
+      GlossaryEntry(
+        term: Tr.pick('次にやること', 'What to do next'),
+        category: GlossaryCategory.club,
+        description: Tr.pick(
+            'ホームの先頭に出る提案。資金マイナス・スタメン不足・トレーニング未実施・ユースの流出候補・主力の契約切れ間近を見て、いま手を付けるべきことを1件だけ出す。損が確定しているものが先に来る。',
+            "The prompt at the top of the home screen. It watches for a negative balance, an incomplete XI, untouched training, a prospect about to walk and a key contract running down, and names the single thing worth doing now. Whatever is already costing you comes first."),
+      ),
+      GlossaryEntry(
         term: Tr.pick('スタッフの得意分野', 'Staff specialty'),
         category: GlossaryCategory.condition,
         description: Tr.pick(
