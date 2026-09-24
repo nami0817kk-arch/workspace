@@ -35,6 +35,8 @@ GitHub Actions（kabu-daily.yml）
 | `/` `/losers` `/active` | 本日の値上がり・値下がり・活況（約定回数）ランキング |
 | `/archive/{gainers,losers,active}/` | 営業日ごとのアーカイブと、その一覧 |
 | `/weekly/` | 週ごとのまとめ（日をまたいだ最大上昇・複数回ランクイン） |
+| `/stop-high/` | ストップ高になった銘柄の記録（日別・複数回・連続） |
+| `/monthly/` | 月ごとのまとめ |
 | `/frequent` | 何度もランクインした銘柄 |
 | `/search` | 銘柄名・コードから過去の登場日を引く（索引は `search-index.json`） |
 | `/guide` `/glossary` | ランキングの読み方・用語解説 |
