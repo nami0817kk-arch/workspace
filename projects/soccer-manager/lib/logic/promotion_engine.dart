@@ -153,8 +153,15 @@ class PromotionEngine {
         home: pool[1],
         away: pool[2],
       );
-      final finalHome = pool.firstWhere((t) => t.id == semiA.winnerId);
-      final finalAway = pool.firstWhere((t) => t.id == semiB.winnerId);
+      // 決勝のホームは、順位が上だった側。準決勝の組み合わせ順で決めていた
+      // ため、6位が勝ち上がると4位や5位を差し置いてホームになっていた。
+      // 準決勝は上位がホーム(1位vs4位 / 2位vs3位)なので、決勝だけ順位が
+      // 効かないのは筋が通らない。
+      final winnerA = pool.firstWhere((t) => t.id == semiA.winnerId);
+      final winnerB = pool.firstWhere((t) => t.id == semiB.winnerId);
+      final finalHome =
+          pool.indexOf(winnerA) <= pool.indexOf(winnerB) ? winnerA : winnerB;
+      final finalAway = identical(finalHome, winnerA) ? winnerB : winnerA;
       final finalMatch = _playSingleMatch(
         roundLabel: Tr.pick('昇格プレーオフ 決勝', 'Play-off final'),
         home: finalHome,
