@@ -156,6 +156,15 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 
 /* 商品ページの価格推移 */
 .chart-svg { width: 100%; max-width: 560px; height: auto; color: var(--accent); }
+
+/* 商品ページの画像。一覧にあるのに詳細で消えるのは不親切。 */
+.back { margin: 0 0 14px; font-size: 13px; }
+.hero { margin: 4px 0 16px; }
+.hero img { width: 100%; max-width: 260px; height: auto; border-radius: var(--radius);
+  background: var(--panel); }
+
+/* 全文は補足なので、見出しと同じ強さで出さない。 */
+.fullname { max-width: 62em; }
 .note { font-size: 13px; color: var(--muted); }
 .history th { font-variant-numeric: tabular-nums; }
 

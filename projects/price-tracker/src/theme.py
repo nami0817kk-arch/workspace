@@ -579,7 +579,7 @@ def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
     count = f'<span class="count">{total:,}件</span>' if rows else ""
     heading = esc(title) + (f"（{page}ページ目）" if page > 1 else "")
     nav = pager(page, pages, page_prefix, total)
-    return (head(f"{heading}｜{site['name']}", lead, canonical, site, prefix,
+    return (head(f"{short_name(heading, 30)}｜{site['name']}", lead, canonical, site, prefix,
                  extra=item_list_ld(rows, site, prefix))
             + f'<h1>{heading}{count}</h1><p class="lead">{esc(lead)}</p>'
             + stats_bar(stats or {})
@@ -649,12 +649,17 @@ def chart(tail: list, width: int = 560, height: int = 180) -> str:
     prices = [p for _, p in points]
     low, high = min(prices), max(prices)
     span = (high - low) or 1
+    # 値が動いていないと線が下端に張り付き、余白だけの図に見える。
+    # その場合は中央に引く。
+    flat = high == low
     pad_l, pad_b, pad_t = 64, 22, 10
     w = width - pad_l - 8
     h = height - pad_b - pad_t
     step = w / (len(points) - 1)
 
     def y(v):
+        if flat:
+            return pad_t + h / 2
         return pad_t + h - (v - low) / span * h
 
     coords = " ".join(f"{pad_l + i * step:.1f},{y(p):.1f}" for i, p in enumerate(prices))
@@ -663,7 +668,7 @@ def chart(tail: list, width: int = 560, height: int = 180) -> str:
         f'stroke="currentColor" stroke-opacity=".15"/>'
         f'<text x="{pad_l - 8}" y="{y(v) + 4:.1f}" text-anchor="end" '
         f'font-size="11" fill="currentColor" opacity=".65">{v:,}</text>'
-        for v in ({low, high} if low != high else {low}))
+        for v in sorted({low, high}, reverse=True))
     labels = "".join(
         f'<text x="{pad_l + i * step:.1f}" y="{height - 6}" text-anchor="middle" '
         f'font-size="11" fill="currentColor" opacity=".65">{points[i][0][5:]}</text>'
@@ -687,6 +692,9 @@ def cheaper_days(row: dict) -> str:
     if len(prices) < MIN_DAYS_FOR_LOW:
         return ""
     now = row["price"]
+    if len(set(prices)) == 1:
+        # 一度も動いていない。「100%」と出しても何も伝わらない
+        return f'記録{len(prices)}日のあいだ、価格は{yen(now)}のまま変わっていません。'
     n = sum(1 for p in prices if p <= now)
     if n == 1:
         return f'記録{len(prices)}日のうち、この価格以下だったのは今日だけです。'
@@ -958,9 +966,12 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
               shopmates: list | None = None) -> str:
     prefix = "../../"
     canonical = f'{site["base_url"].rstrip("/")}/item/{slug(row["item_code"])}/'
-    title = f'{row["name"]}の価格推移'
-    desc = (f'{row["name"]} の価格を毎日記録しています。'
-            f'現在 {yen(row["price"])}、記録した中での最安値は {yen(row["low"])}。')
+    # 検索結果でタイトルは30文字前後、説明は120文字前後で切られる。
+    # 商品名をそのまま入れると204文字になり、要点が全部切り落とされる。
+    title = f'{short_name(row["name"], 28)}の価格推移'
+    desc = (f'{short_name(row["name"], 34)} の価格を毎日記録しています。'
+            f'現在 {yen(row["price"])}、記録した中での最安値は {yen(row["low"])}'
+            f'（{row["days"]}日分の記録）。')
 
     rows_html = [("現在の価格", yen(row["price"])),
                  ("記録した中での最安値", f'{yen(row["low"])}（{esc(row.get("low_date") or "-")}）'),
@@ -989,10 +1000,14 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
 
     return (head(f"{title}｜{site['name']}", desc, canonical, site, prefix, extra)
             + breadcrumb(site, "商品の価格推移", prefix)
+            + '<p class="back"><a href="../../">今日の値下がりへ</a><span class="sep">/</span><a href="../../lows/">最安値圏へ</a><span class="sep">/</span><a href="../../search/">商品を探す</a></p>'
             + f'<article class="item"><h1 title="{esc(row["name"])}">'
               f'{esc(short_name(row["name"], 70))}</h1>'
             + (f'<p class="fullname">{esc(row["name"])}</p>'
                if len(row["name"]) > 70 else '')
+            + (f'<p class="hero"><img src="{esc(row["image"])}" '
+               f'alt="{esc(short_name(row["name"], 40))}" width="300" height="300" '
+               f'decoding="async"></p>' if row.get("image") else '')
             + AD_NOTICE
             + f'<p class="headline"><strong>{yen(row["price"])}</strong> {badge(row)}</p>'
             + f'<p class="verdict">{esc(verdict_note(row))}</p>'

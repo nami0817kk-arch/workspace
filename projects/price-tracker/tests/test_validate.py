@@ -679,3 +679,65 @@ class ImageLoadingTest(unittest.TestCase):
         alt = re.search(r'alt="([^"]*)"', html).group(1)
         self.assertLessEqual(len(alt), 41)
         self.assertNotIn("【割引】", alt)
+
+
+class ItemPageTest(unittest.TestCase):
+    """商品ページ。検索結果に出る文字数と、詳細で消えていた情報。"""
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+        self.site = {"name": "テスト", "base_url": "https://e.dev"}
+
+    def row(self, **kw):
+        base = {"item_code": "a", "name": "あ" * 180, "price": 1000, "low": 900,
+                "high": 1100, "days": 19, "vs_low_pct": 0.1, "off_high_pct": 0.0,
+                "at_low": False, "near_low": False, "dropped": False,
+                "trustworthy": True, "label": "横ばい", "shop": "店",
+                "image": "https://e.dev/a.jpg", "low_date": "2026-09-05",
+                "tail": [[f"2026-09-{i + 1:02d}", 1000 + i] for i in range(19)]}
+        base.update(kw)
+        return base
+
+    def html(self, **kw):
+        return self.theme.item_page(self.row(**kw), self.site, "2026-09-24")
+
+    def test_タイトルは検索結果に収まる長さ(self):
+        # 180文字の商品名をそのまま入れると204文字になり、要点が全部切られる
+        import re
+        title = re.search(r"<title>(.*?)</title>", self.html()).group(1)
+
+        self.assertLess(len(title), 60)
+
+    def test_説明も長すぎない(self):
+        import re
+        desc = re.search(r'name="description" content="(.*?)"', self.html()).group(1)
+
+        self.assertLess(len(desc), 130)
+
+    def test_商品画像を出す(self):
+        # 一覧にサムネイルがあるのに詳細で消えるのは不親切だった
+        self.assertIn('class="hero"', self.html())
+
+    def test_画像が無ければ出さない(self):
+        self.assertNotIn('class="hero"', self.html(image=""))
+
+    def test_一度も動いていない商品に割合を出さない(self):
+        # 「この価格以下だったのは19日です（100%）」は情報にならない
+        flat = self.row(tail=[[f"2026-09-{i + 1:02d}", 1000] for i in range(19)])
+
+        note = self.theme.cheaper_days(flat)
+
+        self.assertIn("変わっていません", note)
+        self.assertNotIn("100%", note)
+
+    def test_一覧へ戻れる(self):
+        self.assertIn('class="back"', self.html())
+
+    def test_値が動かなくてもグラフが潰れない(self):
+        flat = [[f"2026-09-{i + 1:02d}", 1000] for i in range(19)]
+
+        svg = self.theme.chart(flat)
+
+        self.assertIn("<svg", svg)
+        self.assertIn("polyline", svg)
