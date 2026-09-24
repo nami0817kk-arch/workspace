@@ -604,6 +604,14 @@ extension GameStateSeason on GameState {
     return teams;
   }
 
+  /// シーズンの振り返りを見せ終えたことを覚える。閉じたら二度と出さない。
+  void markSeasonReviewSeen() {
+    if (_save == null || _save!.seasonHistory.isEmpty) return;
+    _save!.lastReviewedSeason = _save!.seasonHistory.last.season;
+    _notify();
+    _persist();
+  }
+
   Future<void> startNextSeason() async {
     if (_save == null) return;
     isBusy = true;

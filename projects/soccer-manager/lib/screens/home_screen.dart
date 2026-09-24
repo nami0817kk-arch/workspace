@@ -20,6 +20,7 @@ import '../widgets/club_emblem.dart';
 import '../widgets/match_widgets.dart';
 import '../widgets/first_run_guide_card.dart';
 import '../widgets/next_action_card.dart';
+import '../widgets/season_review_card.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import 'calendar_screen.dart';
@@ -91,6 +92,8 @@ class HomeScreen extends StatelessWidget {
               // いま手を付けるべきこと。画面が30以上あり、どこから見れば
               // よいか分からない状態だった。出すのは常に1件だけ。
               const NextActionCard(),
+              // 終わったばかりのシーズンの振り返り。閉じるまで出る。
+              const SeasonReviewCard(),
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(16),
