@@ -130,8 +130,16 @@ class Squad {
   /// 25人枠の内訳そのもの（GK3・守備8・中盤9・前痚5）。
   /// **別の表を作らない**——名簿の形と登録の定員がずれると、
   /// 「あなたより上が何人」という説明が実際の判定と合わなくなる。
-  static int quotaFor(ScenarioFamily family) =>
-      _shape.where((p) => p.family == family).length;
+  static int quotaFor(ScenarioFamily family) {
+    // **名簿の人数と同じにしない。**
+    //
+    // 同じにすると「同じ枠の全員に負けている」ときだけ登録外になるので、
+    // 8人・9人の枠では実質起きない（実測で無出場シーズンが
+    // 0.35 → **0.03**、ローンも 10% → 1% まで消えた）。
+    // **クラブは抱えている全員を登録できない**——枠ごとに1つ少なくする。
+    final held = _shape.where((p) => p.family == family).length;
+    return held <= 2 ? held : held - 1;
+  }
 
   /// 同じ枠で一番強い相手。先発を争うのはこの人。
   SquadPlayer bestRival(Position position) {
@@ -196,9 +204,22 @@ class Squad {
 
     final players = <SquadPlayer>[];
     for (var i = 0; i < _shape.length; i++) {
-      // 上から順に主力。**クラブの強さを主力の水準に合わせる**
-      // （`club.strength` は「そこで主力を張る選手の総合力」）。
-      final depth = i / (_shape.length - 1); // 0..1
+      // **深さはファミリーの中で数える。**
+      //
+      // 並び順で数えていた頃は、`_shape` の先頭に GK を並べていたので
+      // **どのクラブも 3人の GK がチーム内の上位3人**になっていた。
+      // GK で始めた選手は「クラブの上位3人全員」を越えないと登録されず、
+      // 実測で**ベンチ外が 6試合/季**（CB・WG は 0）だった。
+      // ファミリーごとに1番手から控えまで並べるのが正しい形。
+      final family = _shape[i].family;
+      final inFamily = [
+        for (var k = 0; k < _shape.length; k++)
+          if (_shape[k].family == family) k,
+      ];
+      final rank = inFamily.indexOf(i);
+      final depth = inFamily.length <= 1
+          ? 0.0
+          : rank / (inFamily.length - 1); // 0..1
       final peak = (club.strength + 6 - depth * 22 + random.nextInt(7) - 3)
           .round()
           .clamp(32, 94);
