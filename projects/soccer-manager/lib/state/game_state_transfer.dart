@@ -492,6 +492,11 @@ extension GameStateTransfer on GameState {
         );
 
   /// 現在のスカウトのレベル。潜在能力の推定レンジの精度にも影響する。
+  /// ユースコーチのレベル。アカデミーの新人をどれだけ正確に見立てられるかに
+  /// 効く(スカウトのレベルがスカウト候補に効くのと同じ扱い)。
+  int get youthCoachLevel =>
+      _save?.infrastructure.staffLevel(StaffRole.youthCoach) ?? 1;
+
   int get scoutLevel =>
       _save == null ? 1 : _save!.infrastructure.staffLevel(StaffRole.scout);
 
