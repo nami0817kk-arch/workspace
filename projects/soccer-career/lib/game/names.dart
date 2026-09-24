@@ -9,13 +9,6 @@ import 'world.dart';
 class Names {
   const Names._();
 
-  /// 既定の国の1部・2部のクラブ名。
-  static List<String> get firstDivision =>
-      World.buildLeague(World.defaultCountryId, 1).map((c) => c.name).toList();
-
-  static List<String> get secondDivision =>
-      World.buildLeague(World.defaultCountryId, 2).map((c) => c.name).toList();
-
   /// 既定の国のリーグを組み立てる。
   static List<Club> buildLeague(int tier) =>
       World.buildLeague(World.defaultCountryId, tier);

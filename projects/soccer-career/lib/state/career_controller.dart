@@ -827,31 +827,34 @@ class CareerController extends ChangeNotifier {
   }
 
   /// 組んだ相手との関係が、その週に動く。
+  /// 組んだ相手のぶんを積む。**何が積まれるかは選択肢が持っている。**
+  ///
+  /// ここに switch で書いていたので、`TrainingCompanion` の表を読んでも
+  /// 何が得られるのか分からなかった。
   void _applyCompanion(CareerState state, TrainingCompanion companion) {
-    switch (companion) {
-      case TrainingCompanion.alone:
-        return;
-      case TrainingCompanion.partner:
-        final partner = state.partner;
-        if (partner == null) return;
+    if (companion.synergyGain > 0) {
+      final partner = state.partner;
+      if (partner != null) {
         state.partner = partner.withSynergy(
-          partner.synergy + Formulas.companionSynergyGain,
+          partner.synergy + companion.synergyGain,
         );
-      case TrainingCompanion.mentor:
-        // 年長者から盗む。プロ意識はゆっくりしか動かない。
-        if (_random.nextDouble() < Formulas.mentorProfessionalismChance) {
-          state.player = state.player.copyWith(
-            personality: state.player.personality.bump(
-              PersonalityAxis.professionalism,
-              1,
-            ),
-          );
-        }
-      case TrainingCompanion.rival:
-        // 張り合うと、ロッカールームでの立場が上がる。
-        state.relations = state.relations.bump(
-          teammates: Formulas.companionTeammatesGain,
-        );
+      }
+    }
+    // 年長者から盗む。プロ意識はゆっくりしか動かない。
+    if (companion.professionalismChance > 0 &&
+        _random.nextDouble() < companion.professionalismChance) {
+      state.player = state.player.copyWith(
+        personality: state.player.personality.bump(
+          PersonalityAxis.professionalism,
+          1,
+        ),
+      );
+    }
+    // 張り合うと、ロッカールームでの立場が上がる。
+    if (companion.teammatesGain > 0) {
+      state.relations = state.relations.bump(
+        teammates: companion.teammatesGain,
+      );
     }
   }
 
@@ -1056,7 +1059,7 @@ class CareerController extends ChangeNotifier {
   /// 節を消化した後にだけ呼ぶ。同じ週に2試合は入れない
   /// （代表ウィークが先に立っていれば、カップはその次の週に回る）。
   void _scheduleCup(CareerState state) {
-    if (state.pendingCup != null || state.pendingInternational) return;
+    if (state.isCupWeek || state.pendingInternational) return;
     if (state.seasonFinished) return;
     final matchday = state.leagueResults.length;
     for (final run in state.liveCups) {
@@ -1186,7 +1189,7 @@ class CareerController extends ChangeNotifier {
     final state = _state;
     if (state == null) return null;
     if (_inProgress == null) {
-      if (state.pendingCup != null) {
+      if (state.isCupWeek) {
         startCupMatch();
       } else {
         startNextMatch();
@@ -1456,9 +1459,11 @@ class CareerController extends ChangeNotifier {
         setPieces: week.setPieces,
         physique: week.physique,
       );
-      // 完全に休んだ週だけ、溜まった疲労が抜ける。リカバリーでは抜けない。
-      if ((tired ? TrainingMenu.rest : state.menu) == TrainingMenu.rest) {
-        state.fatigue = state.fatigue.add(-Formulas.restFatigueRelief);
+      // 溜まった疲労が抜けるのは、メニューが持っているぶんだけ
+      // （完全に休んだ週のみ。リカバリーでは抜けない）。
+      final done = tired ? TrainingMenu.rest : state.menu;
+      if (done.fatigueRelief > 0) {
+        state.fatigue = state.fatigue.add(-done.fatigueRelief);
       }
       // 追い込んだ週の積み上げ。限界突破の条件になる。
       if (week.outcome == TrainingOutcome.great) {

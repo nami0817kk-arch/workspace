@@ -248,4 +248,45 @@ void main() {
       }
     });
   });
+  test('作った getter が、定義だけで残っていない', () {
+    // 2026-09-24 に4つ見つかった:
+    // `Names.firstDivision` / `secondDivision`（`World.buildLeague` に
+    // 置き換わった旧式の一覧）、`CareerState.isCupWeek`（直書きの比較が
+    // 残っていた）、`Country.isLenient`（「制限が緩いほど若い外国人が
+    // 入り込みやすい」と書いてあるのに、その効きがどこにも無かった）。
+    // **書いてある効きが無いものは、次に読む人を騙す。**
+    final sources = <String, String>{
+      for (final file
+          in Directory('lib')
+              .listSync(recursive: true)
+              .whereType<File>()
+              .where((f) => f.path.endsWith('.dart')))
+        file.path: file.readAsStringSync(),
+    };
+    final everywhere = [
+      ...sources.values,
+      ...Directory('test')
+          .listSync(recursive: true)
+          .whereType<File>()
+          .where((f) => f.path.endsWith('.dart'))
+          .map((f) => f.readAsStringSync()),
+    ].join('\n');
+
+    final names = <String>{};
+    final pattern = RegExp(
+      r'^  (?:static )?[\w<>?,\s]*? get ([a-z][A-Za-z0-9]{3,})\b',
+      multiLine: true,
+    );
+    for (final source in sources.values) {
+      names.addAll(pattern.allMatches(source).map((m) => m.group(1)!));
+    }
+    expect(names.length, greaterThan(150), reason: 'getter を拾えていない');
+
+    final dead = <String>[];
+    for (final name in names) {
+      final uses = RegExp(r'\b' + name + r'\b').allMatches(everywhere).length;
+      if (uses <= 1) dead.add(name);
+    }
+    expect(dead, isEmpty, reason: '定義だけで、どこからも読まれていない: ${dead.join(', ')}');
+  });
 }
