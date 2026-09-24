@@ -3214,7 +3214,9 @@ class _ScorerCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final scorers = ScorerRace.table(state);
+    // 上位3だけ。得点王レースで知りたいのは「追う相手と、自分の位置」だけで、
+    // 4位から6位は別に追っていない。
+    final scorers = ScorerRace.table(state, take: 3);
     // 圏外の自分は末尾に付け足されるので、並び順の番号は本当の順位ではない。
     // 6位まで載せて自分が14位でも「7」と出ていた。
     final myRank = ScorerRace.rankOf(state);
@@ -4455,18 +4457,43 @@ class _DetailStat extends StatelessWidget {
   }
 }
 
-class _TableCard extends StatelessWidget {
+class _TableCard extends StatefulWidget {
   const _TableCard({required this.state});
 
   final CareerState state;
 
   @override
+  State<_TableCard> createState() => _TableCardState();
+}
+
+class _TableCardState extends State<_TableCard> {
+  bool _all = false;
+
+  /// 既定で見せる行。**首位と、自分の上下2つずつ。**
+  ///
+  /// 18クラブを全部並べると 888px（スマホ1.2画面分）あって、
+  /// クラブタブの3割を一つの表が占めていた。毎週見たいのは
+  /// 「自分は今何位で、上と下は誰か」で、全部はたまに見るもの。
+  List<int> _window(int count, int me) {
+    final picked = <int>{0};
+    for (var i = me - 2; i <= me + 2; i++) {
+      if (i >= 0 && i < count) picked.add(i);
+    }
+    return picked.toList()..sort();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final state = widget.state;
     final theme = Theme.of(context);
     final rows = state.sortedTable;
     final muted = theme.textTheme.labelSmall?.copyWith(
       color: theme.colorScheme.onSurfaceVariant,
     );
+    final me = rows.indexWhere((r) => r.clubId == state.club.id);
+    final shown = _all
+        ? [for (var i = 0; i < rows.length; i++) i]
+        : _window(rows.length, me < 0 ? 0 : me);
 
     return Card(
       child: Padding(
@@ -4496,8 +4523,22 @@ class _TableCard extends StatelessWidget {
                 ],
               ),
             ),
-            for (var index = 0; index < rows.length; index++)
-              _TableRowTile(state: state, position: index + 1),
+            for (var i = 0; i < shown.length; i++) ...[
+              // 飛んだところは黙って詰めない。詰めると順位が隣同士に見える。
+              if (i > 0 && shown[i] != shown[i - 1] + 1)
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 2, 16, 2),
+                  child: Text('…', style: muted),
+                ),
+              _TableRowTile(state: state, position: shown[i] + 1),
+            ],
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton(
+                onPressed: () => setState(() => _all = !_all),
+                child: Text(_all ? '近くだけにする' : '順位表を全部見る（${rows.length}クラブ）'),
+              ),
+            ),
           ],
         ),
       ),
@@ -4674,7 +4715,9 @@ class _CareerTab extends StatelessWidget {
             ),
           )
         else
-          for (final r in state.results.reversed.take(8))
+          // 5件まで。8件並べると 512px（スマホ0.7画面）を使う。
+          // それより前は「これまでの話題」の側に残る。
+          for (final r in state.results.reversed.take(5))
             _ResultRow(result: r, state: state),
         const SizedBox(height: 24),
         _TotalsCard(state: state),
