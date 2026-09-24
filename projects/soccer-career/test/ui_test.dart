@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/data/save_repository.dart';
 import 'package:soccer_career/game/career_engine.dart';
@@ -260,6 +261,72 @@ void main() {
     }
     // 回数か「試合の外」かのどちらかが書いてある。
     expect(find.textContaining(RegExp('今季|試合の外で効く')), findsAtLeastNWidgets(1));
+  });
+
+  // **タブの高さは、放っておくと静かに伸びる。**
+  // カードを1枚足すのは安いので、毎回少しずつ伸びて、気付いたときには
+  // 「どのタブもスクロールが多い」になっている。内訳は `test/scroll_sim.dart`。
+  testWidgets('どのタブも、スマホ3画面に収まる', (tester) async {
+    final controller = await newCareer(age: 24);
+    for (var i = 0; i < 9; i++) {
+      if (controller.pendingEvent != null) {
+        await controller.resolveEvent(controller.pendingEvent!.choices.first);
+      }
+      await controller.simulateMatch();
+    }
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+    await pumpHub(tester, controller);
+
+    const keys = {
+      '今週': 'tab-match',
+      '選手': 'tab-player',
+      '育成': 'tab-training',
+      'クラブ': 'tab-club',
+      '記録': 'tab-career',
+    };
+    // タブバーと見出しを引いた、実際に見えている高さは 740px。
+    // 3画面＝2220px を上限に置く。
+    for (final tab in keys.keys) {
+      await tester.tap(find.widgetWithText(Tab, tab));
+      await tester.pumpAndSettle();
+      final list = find.byKey(PageStorageKey(keys[tab]!));
+      final state = tester.state<ScrollableState>(
+        find.descendant(of: list, matching: find.byType(Scrollable)).first,
+      );
+      var last = 0.0;
+      for (var i = 0; i < 40; i++) {
+        final max = state.position.maxScrollExtent;
+        if (max <= last) break;
+        last = max;
+        state.position.jumpTo(max);
+        await tester.pumpAndSettle();
+      }
+      var bottom = 0.0;
+      for (var offset = 0.0; offset <= last; offset += 200) {
+        state.position.jumpTo(offset);
+        await tester.pumpAndSettle();
+        final sliver = tester
+            .renderObject<RenderViewport>(
+              find.descendant(of: list, matching: find.byType(Viewport)),
+            )
+            .firstChild!;
+        final listSliver = sliver is RenderSliverPadding
+            ? sliver.child! as RenderSliverList
+            : sliver as RenderSliverList;
+        RenderBox? child = listSliver.firstChild;
+        while (child != null) {
+          final data = child.parentData! as SliverMultiBoxAdaptorParentData;
+          final foot = (data.layoutOffset ?? 0) + child.size.height;
+          if (foot > bottom) bottom = foot;
+          child = listSliver.childAfter(child);
+        }
+      }
+      expect(16 + bottom + 96, lessThan(2400), reason: '$tab タブがスマホ3画面を超えている');
+      state.position.jumpTo(0);
+      await tester.pumpAndSettle();
+    }
   });
 
   testWidgets('クラブのタブに順位表がある', (tester) async {
