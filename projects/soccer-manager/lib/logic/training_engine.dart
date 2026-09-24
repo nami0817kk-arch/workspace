@@ -579,6 +579,22 @@ class TrainingEngine {
   /// 指導者が付くことの差が大きいため。
   static const double youthMentorGrowthBonus = 1.35;
 
+  /// メンターが有望株に「教える」能力値。メンター自身が得意な項目の上位
+  /// [mentorTeachingCount]件を返す。GK以外の有望株にゴールキーピングを
+  /// 教えても意味がないため、担当が違う項目は除く。
+  static const int mentorTeachingCount = 2;
+
+  static List<String> mentorTeachingKeys(Player mentor, Player prospect) {
+    final prospectIsKeeper = prospect.position.group == PositionGroup.gk;
+    final keys = AttributeKeys.all.where((k) {
+      final isKeeping = AttributeKeys.goalkeeping.contains(k);
+      return prospectIsKeeper ? isKeeping : !isKeeping;
+    }).toList()
+      ..sort((a, b) =>
+          mentor.attributeValue(b).compareTo(mentor.attributeValue(a)));
+    return keys.take(mentorTeachingCount).toList();
+  }
+
   static void applyYouthAcademyGrowth(
     List<Player> prospects,
     int facilityLevel, {
@@ -601,6 +617,17 @@ class TrainingEngine {
       final bonus = validMentor != null ? youthMentorGrowthBonus : 1.0;
       for (final k in _youthGrowthKeysFor(p)) {
         _grow(p, k, 0.5 * factor * bonus);
+      }
+
+      // **倍率だけでは効かない。** _grow は1週1項目につき最大+1で、確率が
+      // 1を超えている選手は倍率を上げても毎週+1のままになる(実測で
+      // メンターの有無に差が出なかった)。そこで、メンターが得意な能力を
+      // 「教わる項目」として追加で伸ばす。伸びる項目が増えるので、確率が
+      // 飽和していても差が出る。
+      if (validMentor != null) {
+        for (final k in mentorTeachingKeys(validMentor, p)) {
+          _grow(p, k, 0.5 * factor);
+        }
       }
 
       // 性格特性は練習では身に付かない。ユースに居るあいだに手に入れる道は

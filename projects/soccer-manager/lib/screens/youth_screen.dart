@@ -301,6 +301,35 @@ class _YouthScreenState extends State<YouthScreen> {
                     fontSize: 12, color: SemanticColors.subtleText(context)),
               ),
             ),
+            // 今週ユースを去った選手。ニュースにも残るが、ユース画面を開いた
+            // ときに名簿から消えているだけだと、何が起きたのか分からない。
+            if (gameState.lastYouthDepartures.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                child: Card(
+                  color: Theme.of(context).colorScheme.errorContainer,
+                  child: Padding(
+                    padding: const EdgeInsets.all(12),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        for (final d in gameState.lastYouthDepartures)
+                          Text(
+                            d.poached
+                                ? Tr.pick(
+                                    '${d.player.name}(${d.player.age}歳)が他クラブに引き抜かれました。育成補償金 ${d.compensation}万円',
+                                    '${d.player.name} (${d.player.age}) was poached by another club. Development fee ${d.compensation}')
+                                : Tr.pick(
+                                    '${d.player.name}(${d.player.age}歳)が出場機会を求めて去りました。育成補償金 ${d.compensation}万円',
+                                    '${d.player.name} (${d.player.age}) left in search of first-team football. Development fee ${d.compensation}'),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
             if (gameState.lastYouthMatchReport != null) ...[
               const SizedBox(height: 8),
               Padding(

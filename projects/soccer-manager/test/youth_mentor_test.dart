@@ -48,7 +48,11 @@ void main() {
       TrainingEngine.applyYouthAcademyGrowth([without], 3, mentors: [mentor]);
     }
 
-    expect(withMentor.overall, greaterThan(without.overall),
+    // 総合力は丸めが入るため、40週では差が出ない週もある(CIで実際に
+    // 同値になった)。伸びそのものを見るため、能力値の合計で比べる。
+    int total(Player p) =>
+        p.attributes.values.fold<int>(0, (s, v) => s + v);
+    expect(total(withMentor), greaterThan(total(without)),
         reason: 'メンターを付けても伸びが変わらない');
   });
 
