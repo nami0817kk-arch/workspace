@@ -6,7 +6,6 @@ import '../logic/training_engine.dart';
 import '../logic/youth_departure_engine.dart';
 import '../logic/youth_match_engine.dart';
 import '../models/player.dart';
-import '../models/training_focus.dart';
 import '../services/feedback_service.dart';
 import '../state/game_state.dart';
 import '../widgets/player_face_avatar.dart';
