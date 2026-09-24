@@ -114,6 +114,7 @@ def archive_problems(data_dir) -> list[str]:
     CI から毎回当てる。
     """
     import json
+    import sys
     from pathlib import Path
 
     data_dir = Path(data_dir)
@@ -130,6 +131,8 @@ def archive_problems(data_dir) -> list[str]:
         rec_date = payload.get("rec_date")
         if rec_date != path.stem:
             problems.append(f"{path.name}: 中身の rec_date が {rec_date} でファイル名と違います")
+        # ファイル名と中身は揃っているが、実際の相場日が別だと分かっているもの。
+        # 読み替えは render.DATE_CORRECTIONS が持つ（ここでは矛盾として扱わない）。
         dates.append(path.stem)
 
         rows = payload.get("gainers") or []
@@ -139,6 +142,25 @@ def archive_problems(data_dir) -> list[str]:
         ranks = [r.get("rank") for r in rows]
         if ranks and ranks != sorted(ranks):
             problems.append(f"{path.name}: 値上がりの順位が昇順になっていません")
+
+    # 日付の読み替え先と同じ名前のファイルが増えると、同じ相場日が二重になる。
+    # サイト側は警告して片方を捨てるが、気づけるようにここでも赤にする。
+    try:
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        from render import DATE_CORRECTIONS
+    except Exception:       # render を読めない文脈（単体で使う場合）では飛ばす
+        DATE_CORRECTIONS = {}
+    # 読み替えは連鎖しうる（08-31→09-01 と 09-01→09-02 が同時にある）ので、
+    # 「読み替えたあとの日付」で重なりを見る。
+    final: dict[str, list[str]] = {}
+    for name in dates:
+        final.setdefault(DATE_CORRECTIONS.get(name, name), []).append(name)
+    for target, sources in sorted(final.items()):
+        if len(sources) > 1:
+            problems.append(
+                f"{target} になるファイルが複数あります（{'、'.join(sources)}）。"
+                "同じ相場日が二重に数えられます"
+            )
 
     latest_path = data_dir / "latest.json"
     if latest_path.exists() and dates:

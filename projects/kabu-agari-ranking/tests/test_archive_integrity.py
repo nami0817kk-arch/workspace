@@ -22,3 +22,14 @@ def test_検査そのものが働いている(tmp_path):
         '{"rec_date": "2026-09-17", "gainers": []}', encoding="utf-8"
     )
     assert validate.archive_problems(tmp_path)
+
+
+def test_読み替え後の日付が重なったら赤にする(tmp_path):
+    # 2026-08-31 は 2026-09-01 に読み替えられる。09-02 のファイルが増えると、
+    # 09-01.json（→09-02）と重なる。読み替えの連鎖を踏まえて見る必要がある。
+    for name, rec in (("2026-09-01", "2026-09-01"), ("2026-09-02", "2026-09-02")):
+        (tmp_path / f"{name}.json").write_text(
+            f'{{"rec_date": "{rec}", "gainers": []}}', encoding="utf-8"
+        )
+    problems = validate.archive_problems(tmp_path)
+    assert any("二重" in p for p in problems), problems

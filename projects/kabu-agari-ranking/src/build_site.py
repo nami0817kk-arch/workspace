@@ -90,6 +90,20 @@ def main() -> None:
         print(f"  [ERROR] 取得失敗が {len(fetcher.fetch_errors)} 件あり、当日データを保存できませんでした。")
         sys.exit(1)
 
+    # ページは取れたのに0件、は休場日ではなく解析の故障。
+    # 休場日でも kabutan は直近営業日のランキングを出すので、ここは必ず異常。
+    #
+    # ただし**当日分が保存できているなら、ここで止めない**。止めると
+    # run-daily.ps1 が commit の手前で終わり、取れている値上がり・値下がりまで
+    # その日公開されなくなる（CI 側で「鮮度の警報を Deploy の後ろへ」と直したのと
+    # 同じ問題）。知らせるのはログの [WARN] とデスクトップ通知で足りる。
+    if fetcher.parse_failures:
+        level = "ERROR" if rec_date is None else "WARN"
+        for message in fetcher.parse_failures:
+            print(f"  [{level}] {message}")
+        if rec_date is None:
+            sys.exit(1)
+
     if rec_date is None and not any(_DATA_DIR.glob("????-??-??.json")):
         print("  data/ に既存データも無いため、サイトのビルドを中止します。")
         return

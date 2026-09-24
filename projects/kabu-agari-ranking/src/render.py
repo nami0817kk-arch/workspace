@@ -78,6 +78,12 @@ def format_date_ja(iso: str) -> str:
     return f"{d.year}年{d.month}月{d.day}日（{_WEEKDAY_JA[d.weekday()]}）"
 
 
+def format_date_short_ja(iso: str) -> str:
+    """2026-09-18 → 9月18日（金）。同じ年の日付を並べるときに使う。"""
+    d = date.fromisoformat(iso)
+    return f"{d.month}月{d.day}日（{_WEEKDAY_JA[d.weekday()]}）"
+
+
 def next_update_note(rec_date: str) -> str:
     """「次回更新予定」の一文。休場を挟むときはそれも言う。
 
@@ -261,16 +267,28 @@ def _normalize_day(raw: dict) -> dict:
     return {"rec_date": raw["rec_date"], "gainers": legacy_rows, "losers": [], "active": []}
 
 
-# 日付が信用できないため公開しない分。ファイルは data/ に残してある。
+# 掲載開始直後の4日分は、as-of 日付をページ先頭の <time>（= NYダウの終値日）から
+# 採っていたため、日付が信用できない状態だった（修正は libs/kabutan の
+# extract_asof_date）。2026-09-24 に、株探の個別銘柄の日足（時系列データ）と
+# 終値・騰落率を突き合わせて、4日分すべての実際の相場日を確定させた。
+# 各ファイルとも上位3銘柄で照合し、3件とも同じ日に一致している。
 #
-# 2026-09-07 まで、as-of 日付をページ先頭の <time>（= NYダウの終値日）から
-# 採っていたため、平日に取得した分は「前営業日のラベル + 当日のデータ」に
-# なっていた（修正は libs/kabutan の extract_asof_date）。どの営業日の
-# ランキングなのかを外部から照合する手段が無い（kabutan は過去分を出さない）。
+#   2026-08-24.json … 2026-08-24（正しかった）
+#   2026-08-28.json … 2026-08-28（正しかった）
+#   2026-08-31.json … 実際は 2026-09-01
+#   2026-09-01.json … 実際は 2026-09-02
 #
-# 捨てずに除外にしてあるのは、後から日付を確定できたときに戻せるようにするため。
-# 復帰させるならこの集合から外すだけでよい。
-UNRELIABLE_DATES = frozenset({"2026-08-24", "2026-08-28", "2026-08-31", "2026-09-01"})
+# ファイル名は変えずに、読み込み時に正しい日付へ読み替える。
+# 名前を変えるとデータの移動になり、取り返しのつかない操作になるため
+# （中身は一切書き換えていない。照合のやり直しは tools/verify_rec_date.py）。
+DATE_CORRECTIONS = {
+    "2026-08-31": "2026-09-01",
+    "2026-09-01": "2026-09-02",
+}
+
+# 日付が確定できず公開しない分。現在は無し（上のとおり4日分とも確定した）。
+# 同じことが起きたときは、ここに入れて公開から外す。
+UNRELIABLE_DATES: frozenset[str] = frozenset()
 
 
 def group_by_month(dates: list[str], info: dict[str, dict] | None = None) -> list[dict]:
@@ -313,6 +331,31 @@ def archive_index_info(with_data: list[tuple[str, list[dict]]], kind: str) -> di
     return out
 
 
+def week_comparison(week: dict, previous: dict | None) -> str:
+    """前の週との比べ。単独の数字だけでは、荒れた週なのか普通なのか分からない。
+
+    営業日数が違う週（連休など）をそのまま比べると誤解するので、
+    1営業日あたりに直して比べる。
+    """
+    if not previous or not previous["day_count"] or not week["day_count"]:
+        return ""
+    now = week["big_moves"] / week["day_count"]
+    before = previous["big_moves"] / previous["day_count"]
+    if before == 0:
+        return ""
+    ratio = now / before
+    if ratio >= 1.2:
+        judgement = "前の週より荒い動きが増えました"
+    elif ratio <= 0.8:
+        judgement = "前の週より落ち着きました"
+    else:
+        judgement = "前の週と同じくらいの荒さでした"
+    return (
+        f"1営業日あたり10%以上動いた銘柄は{now:.1f}銘柄で、"
+        f"前の週（{before:.1f}銘柄）と比べて{judgement}。"
+    )
+
+
 def week_summary(week: dict) -> str:
     """週まとめの一文。数えた事実だけを書く。"""
     movers = week["top_movers"]
@@ -321,8 +364,8 @@ def week_summary(week: dict) -> str:
     top = movers[0]
     repeat = len(week["frequent"])
     parts = [
-        f"{week['from']} から {week['to']} までの{week['day_count']}営業日で、"
-        f"最も上昇したのは{top['rec_date']}の{top['name']}（{top['code']}）で"
+        f"{format_date_ja(week['from'])}から{format_date_short_ja(week['to'])}までの{week['day_count']}営業日で、"
+        f"最も上昇したのは{format_date_short_ja(top['rec_date'])}の{top['name']}（{top['code']}）で"
         f"{top['change_pct']:.2f}%でした。"
     ]
     if repeat:
@@ -336,6 +379,10 @@ def _build_weekly_pages(days: list[dict]) -> list[dict]:
     tmpl = _env.get_template("weekly.html")
     for i, week in enumerate(weeks):
         week["summary"] = week_summary(week)
+        # weeks は新しい週が先。ひとつ後ろが前の週になる。
+        week["comparison"] = week_comparison(week, weeks[i + 1] if i + 1 < len(weeks) else None)
+        week["from_ja"] = format_date_ja(week["from"])
+        week["to_ja"] = format_date_short_ja(week["to"])
         _write(
             _OUTPUT_DIR / "weekly" / f"{week['slug']}.html",
             tmpl.render(
@@ -449,7 +496,7 @@ def market_summary(rows: list[dict]) -> str:
     busiest = max(rows, key=lambda r: r["big"])
     stops = sum(r["stop_high"] for r in rows)
     return (
-        f"この期間で最も荒かったのは{busiest['rec_date']}で、"
+        f"この期間で最も荒かったのは{format_date_short_ja(busiest['rec_date'])}で、"
         f"上位30銘柄のうち{busiest['big']}銘柄が10%以上動きました。"
         f"期間を通したストップ高はのべ{stops}銘柄です。"
     )
@@ -471,6 +518,8 @@ def _build_market_page(days: list[dict]) -> None:
             day_count=len(rows),
             period_from=rows[-1]["rec_date"] if rows else "",
             period_to=rows[0]["rec_date"] if rows else "",
+            period_from_ja=format_date_ja(rows[-1]["rec_date"]) if rows else "",
+            period_to_ja=format_date_short_ja(rows[0]["rec_date"]) if rows else "",
             summary=market_summary(rows),
             big_move_chart=charts.columns(
                 series("big"), aria_label="日ごとの、10%以上動いた銘柄数を示す棒グラフ", unit="銘柄"),
@@ -485,15 +534,41 @@ def _build_market_page(days: list[dict]) -> None:
 def _load_all_days() -> list[dict]:
     """data/YYYY-MM-DD.json を全て読み込み、rec_date 降順（新しい順）で返す。
 
-    UNRELIABLE_DATES は読み飛ばす。日付の当てにならない回を混ぜると、
-    アーカイブ全体が「いつのランキングなのか分からないもの」になってしまう。
+    読み込みながら3つのことをする:
+
+    - `DATE_CORRECTIONS` にあるものは、実際の相場日へ **rec_date を読み替える**
+      （ファイルは触らない。経緯はその定義のところに書いてある）
+    - `UNRELIABLE_DATES` は読み飛ばす（日付の当てにならない回を混ぜると、
+      アーカイブ全体が「いつのランキングなのか分からないもの」になる）
+    - 壊れたファイルは読み飛ばす（1件でサイト全体を落とさない）
+
+    同じ rec_date が2件になったら、後から来たほうを捨てて警告する。
+    読み替え先と同じ日付のファイルが後から増えると起こりうる形で、
+    黙って通すと集計（登場回数・銘柄数）が二重に数えられる。
     """
     days = []
-    for path in _DATA_DIR.glob("????-??-??.json"):
-        with open(path, encoding="utf-8") as f:
-            day = _normalize_day(json.load(f))
-        if day["rec_date"] in UNRELIABLE_DATES:
+    seen: dict[str, str] = {}
+    for path in sorted(_DATA_DIR.glob("????-??-??.json")):
+        # 1件が壊れていてもサイト全体を落とさない。落とすと、その日から
+        # ずっと公開が止まる（古いデータで出続けるほうが損が小さい）。
+        # 壊れたファイル自体は CI の整合性テストが必ず赤で知らせる。
+        try:
+            with open(path, encoding="utf-8") as f:
+                day = _normalize_day(json.load(f))
+            rec_date = DATE_CORRECTIONS.get(day["rec_date"], day["rec_date"])
+            day["rec_date"] = rec_date
+        except (json.JSONDecodeError, KeyError, TypeError) as e:
+            print(f"  [WARN] {path.name} を読み飛ばしました（{e}）")
             continue
+        if rec_date in UNRELIABLE_DATES:
+            continue
+        if rec_date in seen:
+            print(
+                f"  [WARN] {path.name} は {rec_date} の二重登録です"
+                f"（{seen[rec_date]} を採用し、こちらを読み飛ばしました）"
+            )
+            continue
+        seen[rec_date] = path.name
         days.append(day)
     days.sort(key=lambda d: d["rec_date"], reverse=True)
     return days
@@ -739,7 +814,7 @@ def build_all() -> None:
         "period_to": days[0]["rec_date"],
         # ポリシーの最終更新はデータの日付とは別物。文面を直したときに手で上げる。
         "policy_updated": POLICY_UPDATED,
-        "missing_days": missing_business_days(days),
+        "missing_days": [format_date_ja(d) for d in missing_business_days(days)],
         "limit_table": price_limit.table_rows(),
     }
     for name in ("about.html", "privacy.html", "guide.html", "glossary.html"):

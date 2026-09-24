@@ -44,6 +44,22 @@ def fetch_ranking_html(mode: str, market: int, retries: int = 3) -> str | None:
     return None
 
 
+def fetch_daily_html(code: str, page: int = 1) -> str | None:
+    """個別銘柄の日足（時系列）ページの HTML。失敗時は None。
+
+    1ページでおよそ1か月ぶん。**日常的に叩くものではない**（日付の照合用）。
+    """
+    url = f"https://kabutan.jp/stock/kabuka?code={code}&ashi=day&page={page}"
+    try:
+        resp = requests.get(url, headers=HEADERS, timeout=30)
+        resp.raise_for_status()
+        return resp.text
+    except Exception as e:
+        print(f"  [WARN] {code}: 日足ページの取得に失敗しました: {e}")
+        fetch_errors.append(f"daily code={code} page={page}: {e}")
+        return None
+
+
 def fetch_stock_name(code: str) -> str:
     """個別ページから日本語銘柄名を取得する。失敗時はコードをそのまま返す。"""
     try:

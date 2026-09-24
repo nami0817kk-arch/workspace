@@ -7,7 +7,7 @@
 
 import pandas as pd
 
-from kabutan import extract_asof_date, parse_ranking_table
+from kabutan import extract_asof_date, parse_daily_prices, parse_ranking_table
 
 
 def _row(cells: list[str]) -> str:
@@ -108,3 +108,31 @@ def test_asof_date_falls_back_to_the_newest_time_tag():
 def test_asof_date_pads_single_digit_month_and_day():
     html = '<div class="meigara_count"><ul><li>2026年1月5日</li></ul></div>'
     assert extract_asof_date(html) == "2026-01-05"
+
+
+# --- 日足（時系列）の解析 ---------------------------------------------------
+
+_DAILY_PAGE = """
+<html><body>
+<table class="stock_kabuka0">
+<tr><th>日付</th><th>始値</th><th>高値</th><th>安値</th><th>終値</th>
+    <th>前日比</th><th>前日比％</th><th>売買高(株)</th></tr>
+<tr><td>26/09/18</td><td>1300</td><td>1600</td><td>1290</td><td>1591</td>
+    <td>300</td><td>23.24</td><td>1000000</td></tr>
+<tr><td>26/09/17</td><td>1380</td><td>1549</td><td>1283</td><td>1291</td>
+    <td>-118</td><td>-8.37</td><td>1294700</td></tr>
+</table>
+</body></html>
+"""
+
+
+def test_日足を日付つきで読む():
+    df = parse_daily_prices(_DAILY_PAGE)
+    assert list(df.columns) == ["date", "close", "change_pct"]
+    assert df["date"].tolist() == ["2026-09-18", "2026-09-17"]
+    assert df["close"].tolist() == [1591, 1291]
+    assert df["change_pct"].tolist() == [23.24, -8.37]
+
+
+def test_日足の表が無ければ空を返す():
+    assert parse_daily_prices("<html><body>表がありません</body></html>").empty

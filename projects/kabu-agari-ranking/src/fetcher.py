@@ -27,6 +27,14 @@ from kabutan import fetch_stock_name as _fetch_name
 from kabutan import parse_ranking_table as _parse_market_html
 
 
+# ページは取れたのに1行も解析できなかった、という取得をここに記録する。
+#
+# **これはいちばん危ない壊れ方**。先方の表の構造が変わると、通信は成功したまま
+# 0件になり、「休場日でランキングが無い」のと見分けが付かない。休場日でも
+# kabutan は直近営業日のランキングを出すので、ページがあって0件なら解析が壊れている。
+parse_failures: list[str] = []
+
+
 def _fetch_market_html(mode: str, market: int, retries: int = 3) -> str | None:
     # テストが monkeypatch で差し替えるため、モジュール内の関数として残している
     return _lib_fetch_ranking_html(mode, market, retries=retries)
@@ -46,9 +54,11 @@ def _fetch_ranking(mode: str, label: str, top_n: int) -> tuple[pd.DataFrame, str
     print(f"  {label}取得中（kabutan.jp）...")
     all_rows = []
     asof_date = None
+    pages_fetched = 0
     for market in _KABUTAN_MARKETS:
         html = _fetch_market_html(mode, market)
         if html:
+            pages_fetched += 1
             if asof_date is None:
                 asof_date = _extract_asof_date(html)
             df_m = _parse_market_html(html)
@@ -57,6 +67,11 @@ def _fetch_ranking(mode: str, label: str, top_n: int) -> tuple[pd.DataFrame, str
         time.sleep(1)
 
     if not all_rows:
+        if pages_fetched:
+            parse_failures.append(
+                f"{label}: ページは{pages_fetched}件取得できたのに1行も解析できませんでした"
+                "（表の構造が変わった可能性があります）"
+            )
         return pd.DataFrame(), asof_date
 
     df = (

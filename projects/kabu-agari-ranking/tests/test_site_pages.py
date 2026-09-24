@@ -6,6 +6,7 @@
 """
 import json
 import re
+from pathlib import Path
 
 import pytest
 
@@ -174,7 +175,8 @@ def test_欠測を隠さずに書く(site):
     for d in ("2026-09-14", "2026-09-16"):  # 9/15（火）が抜けている
         _write_day(data_dir, d)
     render.build_all()
-    assert "2026-09-15" in (out_dir / "about.html").read_text(encoding="utf-8")
+    # 画面には日本語表記で出す（文章の中なので）
+    assert "2026年9月15日（火）" in (out_dir / "about.html").read_text(encoding="utf-8")
 
 
 def test_前回からの入れ替わりを数える():
@@ -301,5 +303,100 @@ def test_相場の振り返りの一文は最も荒れた日を指す():
         {"rec_date": "2026-09-17", "big": 12, "stop_high": 3, "stop_low": 1, "top_pct": 20.0},
     ]
     s = render.market_summary(rows)
-    assert "2026-09-17" in s and "12銘柄" in s
+    # 文章の中の日付は日本語表記に揃える（表や URL は ISO のまま）
+    assert "9月17日（木）" in s and "12銘柄" in s
     assert "のべ5銘柄" in s
+
+
+def test_配信ヘッダが成果物に入る(site):
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-09-18")
+    # static/ は _ROOT を差し替えると空になるので、本物の静的ファイルを見る
+    render.build_all()
+    real_headers = Path(__file__).resolve().parents[1] / "static" / "_headers"
+    assert real_headers.exists()
+    text = real_headers.read_text(encoding="utf-8")
+    for header in ("X-Content-Type-Options", "X-Frame-Options", "Referrer-Policy"):
+        assert header in text
+
+
+def test_日付の書き方の決まり():
+    # 文章の中は日本語表記、表や URL は ISO。混ざると読みづらく、
+    # 直すたびにどちらかへ揺れるので決めておく。
+    assert render.format_date_ja("2026-09-18") == "2026年9月18日（金）"
+    assert render.format_date_short_ja("2026-09-18") == "9月18日（金）"
+
+
+def test_週の比較は1営業日あたりで見る():
+    # 連休で3日しかない週と5日の週を、そのまま比べると誤解する
+    week = {"day_count": 3, "big_moves": 30}      # 1日あたり10
+    previous = {"day_count": 5, "big_moves": 50}  # 1日あたり10
+    assert "同じくらい" in render.week_comparison(week, previous)
+
+    assert "荒い動きが増え" in render.week_comparison(
+        {"day_count": 5, "big_moves": 75}, previous)
+    assert "落ち着き" in render.week_comparison(
+        {"day_count": 5, "big_moves": 20}, previous)
+
+
+def test_比べる週が無ければ何も書かない():
+    assert render.week_comparison({"day_count": 5, "big_moves": 10}, None) == ""
+    assert render.week_comparison({"day_count": 5, "big_moves": 10},
+                                  {"day_count": 5, "big_moves": 0}) == ""
+
+
+def test_壊れたデータ1件でサイト全体を落とさない(site, capsys):
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-09-18")
+    _write_day(data_dir, "2026-09-17")
+    (data_dir / "2026-09-16.json").write_text("{壊れている", encoding="utf-8")
+
+    render.build_all()   # 例外にしない
+
+    assert (out_dir / "index.html").exists()
+    assert "[WARN]" in capsys.readouterr().out
+    # 読めた2日はちゃんと出る
+    assert (out_dir / "archive" / "gainers" / "2026-09-18.html").exists()
+
+
+def test_データが1件も読めなければ止める(site):
+    data_dir, _ = site
+    (data_dir / "2026-09-18.json").write_text("{壊れている", encoding="utf-8")
+    with pytest.raises(RuntimeError):
+        render.build_all()
+
+
+def test_日付を確定した4日分は公開する():
+    # 株探の日足と突き合わせて実際の相場日を確定させた（tools/verify_rec_date.py）。
+    # 確定できなかったものを入れる仕組み自体は残す。
+    assert render.UNRELIABLE_DATES == frozenset()
+    assert render.DATE_CORRECTIONS == {
+        "2026-08-31": "2026-09-01",
+        "2026-09-01": "2026-09-02",
+    }
+
+
+def test_読み込み時に日付を読み替える(site):
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-08-31")   # 中身の rec_date も 2026-08-31
+    _write_day(data_dir, "2026-09-04")
+    render.build_all()
+
+    # 実際の相場日（2026-09-01）として公開される
+    assert (out_dir / "archive" / "gainers" / "2026-09-01.html").exists()
+    assert not (out_dir / "archive" / "gainers" / "2026-08-31.html").exists()
+
+
+def test_同じ相場日のファイルが2つあれば片方を捨てて警告する(site, capsys):
+    data_dir, out_dir = site
+    # 2026-09-01 は 2026-09-02 に読み替えられるので、09-02 のファイルと重なる。
+    # （08-31 は 09-01 に読み替えられるため、09-01 とは重ならない＝読み替えは連鎖する）
+    _write_day(data_dir, "2026-09-01")
+    _write_day(data_dir, "2026-09-02")
+    _write_day(data_dir, "2026-09-04")
+    render.build_all()
+
+    out = capsys.readouterr().out
+    assert "二重登録" in out
+    # 二重に数えていないこと（3ファイルだが相場日は 09-01 と 09-04 の2日）
+    assert "（2日分）" in out
