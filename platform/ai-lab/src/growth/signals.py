@@ -288,6 +288,14 @@ def _is_generated_doc(rel: str) -> bool:
     return rel.replace("\\", "/").startswith(_GENERATED_DOC_DIRS)
 
 
+# ドキュメントは、モジュールのパスを**ソースルートからの相対**で書くことが多い。
+# 例: Flutter の CLAUDE.md が `ui/pitch_view.dart`（実体は lib/ui/pitch_view.dart）、
+# src レイアウトの Python が `growth/signals.py`（実体は src/growth/signals.py）。
+# ここを見ないと、実在するファイルを「存在しない」と言い続ける誤検知になる
+# （2026-09-21 の点検で soccer-career の6件が該当した）。
+_SOURCE_ROOTS = ("lib", "src", "app")
+
+
 def _reference_signals(root: Path, files: list[str], repo_root: Path) -> dict[str, Any]:
     """ドキュメントが「ある」と書いているのに実在しないパスを拾う。
 
@@ -309,7 +317,9 @@ def _reference_signals(root: Path, files: list[str], repo_root: Path) -> dict[st
                 continue
             # サブPJTのドキュメントから `.github/workflows/...` のような
             # リポジトリ直下のパスを指すことがあるので、そちらも見る。
-            if any((r / target).exists() for r in (root, base, repo_root)):
+            candidates = [root / target, base / target, repo_root / target]
+            candidates += [root / sub / target for sub in _SOURCE_ROOTS]
+            if any(c.exists() for c in candidates):
                 continue
             stale.append(f"{rel} -> {target}")
     return {"stale_references": sorted(set(stale))}
