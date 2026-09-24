@@ -13,6 +13,7 @@ import aggregate
 import charts
 import feed
 import price_limit
+import site_config
 from market_calendar import CalendarOutOfRange, is_business_day, next_business_day
 
 _ROOT = Path(__file__).resolve().parent.parent
@@ -20,7 +21,8 @@ _TEMPLATES_DIR = _ROOT / "templates"
 _DATA_DIR = _ROOT / "data"
 _OUTPUT_DIR = _ROOT / "output"
 
-SITE_URL = "https://kabu-agari-ranking.pages.dev"
+# 公開先は site_config が持つ（ドメインを変えるときはそこだけ触る）
+SITE_URL = site_config.SITE_URL
 
 # AdSense の審査を通ったら ca-pub-... を入れる。ここが空のあいだは
 # 広告のスクリプトも枠も一切出さない。プレースホルダの <ins> を置いたままだと
@@ -30,6 +32,7 @@ ADSENSE_CLIENT = ""
 _env = Environment(loader=FileSystemLoader(str(_TEMPLATES_DIR)))
 _env.globals["ADSENSE_CLIENT"] = ADSENSE_CLIENT
 _env.globals["SITE_URL"] = SITE_URL
+_env.globals["SEARCH_CONSOLE_TOKEN"] = site_config.SEARCH_CONSOLE_TOKEN
 
 _WEEKDAY_JA = "月火水木金土日"
 

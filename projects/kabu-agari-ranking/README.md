@@ -110,6 +110,31 @@ python src/build_site.py --force       # 検査を飛ばして保存（誤検知
 取得先の HTML 構造が変わると、例外ではなく「空のランキング」という形で壊れる。
 `src/fetcher.py` や `libs/kabutan` を触ったらテストも合わせて更新する。
 
+## 独自ドメインへ移す
+
+`pages.dev` は数百万サイトの共有サブドメインで、Google の評価が付きにくい
+（2026-09-24 時点で、sitemap の183URLのうちインデックスは1件だけ）。
+AdSense の審査要件でもあるので、独自ドメインへ移す。
+
+手順（上から順に）:
+
+1. **ドメインを取る。** DNS が Cloudflare にあるので、Cloudflare Registrar が
+   いちばん手数が少ない（原価販売・更新も同額・DNS 設定が自動）。
+2. **Cloudflare Pages にカスタムドメインを追加。**
+   Pages → kabu-agari-ranking → Custom domains → Set up a custom domain。
+   同じ Cloudflare アカウントのドメインなら DNS は自動で入る。
+3. **`src/site_config.py` の `SITE_URL` を新ドメインに変える。** 触るのはここだけ
+   （canonical・sitemap・RSS・OGP・X の投稿文が全部ここを見ている）。
+4. **push してデプロイ。** 生成物の canonical と sitemap が新ドメインになる。
+5. **Search Console に新しいプロパティを登録。** DNS(TXT) で確認すると
+   コードを触らずに済む（meta タグでやるなら `SEARCH_CONSOLE_TOKEN` を差し替える）。
+   登録したら `https://<新ドメイン>/sitemap.xml` を送信する。
+6. **旧URL（pages.dev）はそのまま残る。** Pages の既定サブドメインは無効化できず、
+   ホスト名単位のリダイレクトも Pages 側では書けない。canonical が新ドメインを
+   指しているので重複は避けられる。気になるなら Cloudflare の Redirect Rules で
+   pages.dev → 新ドメインの 301 を1本足す。
+7. **AdSense はこのあと。** 独自ドメインになってから申請する。
+
 ## AdSense（残作業）
 
 - 有効化は `render.ADSENSE_CLIENT` に pub-ID を入れる1箇所だけ。

@@ -19,12 +19,14 @@ from requests_oauthlib import OAuth1Session
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import price_limit
+import site_config
 
 _DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 _LATEST_PATH = _DATA_DIR / "latest.json"
 _LAST_POST_PATH = _DATA_DIR / "last_tweet.txt"
 
-SITE_URL = "https://kabu-agari-ranking.pages.dev/"
+# 公開先は site_config が持つ（ドメインを変えるときはそこだけ触る）
+SITE_URL = site_config.SITE_URL
 _TWEET_URL = "https://api.x.com/2/tweets"
 _TOP_N = 3
 _NAME_MAX_LEN = 10
