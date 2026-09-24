@@ -854,3 +854,45 @@ class PointDeadlineTest(unittest.TestCase):
         self.assertIn("説明の冒頭", block)
         self.assertIn("リンク先", block)
         self.assertEqual(self.theme.caption_block({"caption": ""}), "")
+
+
+class SearchDisplayTest(unittest.TestCase):
+    """検索と見守りの表示。
+
+    索引を4要素に詰め直していたため判定が落ち、3,910件が「記録した中で最安」
+    なのにバッジが1つも出ていなかった（2026-09-24 に公開サイトで確認）。
+    商品名も中央値125文字のままで、一覧だけ詰めて検索を取り残していた。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        import subprocess
+        import sys
+        import tempfile
+        from pathlib import Path
+
+        root = Path(__file__).resolve().parent.parent
+        cls.tmp = tempfile.TemporaryDirectory()
+        out = Path(cls.tmp.name)
+        subprocess.run([sys.executable, str(root / "build.py"), "--out", str(out)],
+                       cwd=root, check=True, capture_output=True)
+        cls.search = (out / "search" / "index.html").read_text(encoding="utf-8")
+        cls.watch = (out / "watch" / "index.html").read_text(encoding="utf-8")
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def test_索引の判定を落とさない(self):
+        # norm した名前で上書きすると判定が消える
+        self.assertIn("r[3], r[4], norm(r[1])", self.search)
+        self.assertIn("index[i][5]", self.search)
+
+    def test_検索結果の名前を詰める(self):
+        self.assertIn("ptShort(r[1], 46)", self.search)
+
+    def test_見守りの名前も詰める(self):
+        self.assertIn("ptShort(h.name, 46)", self.watch)
+
+    def test_短縮処理は1度だけ定義する(self):
+        self.assertEqual(self.search.count("function ptShort"), 1)

@@ -309,7 +309,7 @@ SEARCH_JS = """
     if (!t.length) { out.textContent = ''; note.textContent = ''; return; }
     var hits = [];
     for (var i = 0; i < index.length && hits.length < MAX_SCAN; i++) {
-      var name = index[i][3], ok = true;
+      var name = index[i][5], ok = true;
       for (var k = 0; k < t.length; k++) { if (name.indexOf(t[k]) < 0) { ok = false; break; } }
       if (ok) { hits.push(index[i]); }
     }
@@ -323,7 +323,8 @@ SEARCH_JS = """
       li.className = 'hit';
       var a = document.createElement('a');
       a.href = '../item/' + r[0] + '/';
-      a.textContent = r[1];
+      a.textContent = ptShort(r[1], 46);
+      a.title = r[1];
       var p = document.createElement('span');
       p.className = 'price';
       p.textContent = r[2].toLocaleString() + '円';
@@ -348,7 +349,9 @@ SEARCH_JS = """
     note.textContent = '商品一覧を読み込んでいます…';
     fetch('../search-index.json').then(function (r) { return r.json(); }).then(function (data) {
       // 正規化した名前を持たせておく（入力のたびに作り直さない）
-      index = data.map(function (r) { return [r[0], r[1], r[2], norm(r[1])]; });
+      // 判定(r[4])を残したまま、正規化した名前を末尾に足す。
+      // 4要素に詰め直していたため判定が落ち、バッジが出ていなかった。
+      index = data.map(function (r) { return [r[0], r[1], r[2], r[3], r[4], norm(r[1])]; });
       loading = false;
       render();
     }).catch(function () {
@@ -877,6 +880,12 @@ def related(rows: list, site: dict) -> str:
 # 「自分が見始めてから下がったか」を出せるようにする。
 WATCH_JS = """
 <script>
+function ptShort(name, limit) {
+  // 一覧と同じ見え方にする。先頭の【】は補足なので落とす。
+  var t = String(name || '').replace(/^[【\[][^】\]]{0,30}[】\]]\s*/, '') || String(name || '');
+  return t.length <= limit ? t : t.slice(0, limit).replace(/\s+$/, '') + '…';
+}
+
 var PTWatch = (function () {
   var KEY = 'pt-watch';
   function read() {
@@ -1003,7 +1012,8 @@ def watch_page(site: dict, canonical: str, updated: str) -> str:
       li.className = 'hit';
       var a = document.createElement('a');
       a.href = '../item/' + h.slug + '/';
-      a.textContent = h.name;
+      a.textContent = ptShort(h.name, 46);
+      a.title = h.name;
       li.appendChild(a);
       var p = document.createElement('span');
       p.className = 'price';
