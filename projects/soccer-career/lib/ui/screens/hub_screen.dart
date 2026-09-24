@@ -1001,29 +1001,21 @@ class _TrainingTab extends StatelessWidget {
       children: [
         _WeekPlanCard(state: state, controller: controller),
         const SizedBox(height: 16),
+        if (!state.injured) ...[
+          _TrainingCard(state: state, controller: controller),
+          const SizedBox(height: 16),
+        ],
         _ExperienceCard(state: state, controller: controller),
         const SizedBox(height: 16),
-        _KnackCard(state: state, controller: controller),
-        const SizedBox(height: 16),
-        if (state.injured)
-          Card(
-            color: theme.colorScheme.errorContainer,
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Text(
-                '離脱中は練習ができない。復帰の進め方は「今週」タブで選べる。',
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.onErrorContainer,
-                ),
-              ),
-            ),
-          )
-        else
-          _TrainingCard(state: state, controller: controller),
-        const SizedBox(height: 16),
+        Padding(
+          padding: const EdgeInsets.only(left: 4, bottom: 8),
+          child: Text('長い目で狙うもの', style: theme.textTheme.titleSmall),
+        ),
         _FocusCard(state: state, controller: controller),
         const SizedBox(height: 16),
         _SignatureAimCard(state: state, controller: controller),
+        const SizedBox(height: 16),
+        _KnackCard(state: state, controller: controller),
         const SizedBox(height: 16),
         _TrainingEffectCard(state: state),
         const SizedBox(height: 16),
@@ -1048,8 +1040,6 @@ class _ClubTab extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
       children: [
         _ClubLifeCard(state: state, controller: controller),
-        const SizedBox(height: 16),
-        _RoleCard(state: state, controller: controller),
         const SizedBox(height: 24),
         // **所属の話と、世界の話の境目に見出しを置く。**
         // 8枚のカードが同じ列に並んでいて、どこから「自分のクラブ」の話が
@@ -1083,8 +1073,8 @@ class _ClubTab extends StatelessWidget {
 ///
 /// **選べるのは今の監督が使うものだけ。** 好きに付け替えられると
 /// 「一番高くなる役割を選ぶ」がただの正解になる。
-class _RoleCard extends StatelessWidget {
-  const _RoleCard({required this.state, required this.controller});
+class _RoleSection extends StatelessWidget {
+  const _RoleSection({required this.state, required this.controller});
 
   final CareerState state;
   final CareerController controller;
@@ -1099,76 +1089,71 @@ class _RoleCard extends StatelessWidget {
     final choices = controller.roleChoices;
     final manager = state.manager;
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
           children: [
-            Row(
-              children: [
-                Text('役割', style: theme.textTheme.titleSmall),
-                const Spacer(),
-                Text(
-                  player.role?.label ?? '${player.position.label}の標準',
-                  style: theme.textTheme.bodyMedium,
-                ),
-              ],
-            ),
-            const SizedBox(height: 4),
+            Text('役割', style: theme.textTheme.labelMedium),
+            const Spacer(),
             Text(
-              choices.isEmpty
-                  ? '${manager?.tactic.label ?? '今の監督'}は、'
-                        '${player.position.label}に特別な役割を置いていない。'
-                  : '就いた役割で総合力の測り方が変わる。'
-                        '重く見てもらう代わりに、他は軽く見られる。',
-              style: muted,
+              player.role?.label ?? '${player.position.label}の標準',
+              style: theme.textTheme.bodyMedium,
             ),
-            // **外れたことは必ず書く。** 黙って外すと、総合力だけが下がって
-            // 理由が分からない。
-            if (controller.roleDropped != null) ...[
-              const SizedBox(height: 8),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.errorContainer,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Text(
-                  '新しい監督は「${controller.roleDropped!.label}」を使わない。'
-                  '役割が外れた。',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onErrorContainer,
-                  ),
-                ),
-              ),
-            ],
-            if (choices.isNotEmpty) ...[
-              const SizedBox(height: 10),
-              for (final role in choices)
-                _RoleRow(
-                  role: role,
-                  selected: player.role == role,
-                  overall: player.attributes.overallFor(
-                    player.position,
-                    weights: role.weights,
-                  ),
-                  onTap: () =>
-                      controller.setRole(player.role == role ? null : role),
-                ),
-              _RoleRow(
-                role: null,
-                label: '${player.position.label}の標準',
-                note: 'そのポジションで普通に求められるもの。',
-                selected: player.role == null,
-                overall: player.attributes.overallFor(player.position),
-                onTap: () => controller.setRole(null),
-              ),
-            ],
           ],
         ),
-      ),
+        const SizedBox(height: 4),
+        Text(
+          choices.isEmpty
+              ? '${manager?.tactic.label ?? '今の監督'}は、'
+                    '${player.position.label}に特別な役割を置いていない。'
+              : '就いた役割で総合力の測り方が変わる。'
+                    '重く見てもらう代わりに、他は軽く見られる。',
+          style: muted,
+        ),
+        // **外れたことは必ず書く。** 黙って外すと、総合力だけが下がって
+        // 理由が分からない。
+        if (controller.roleDropped != null) ...[
+          const SizedBox(height: 8),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: theme.colorScheme.errorContainer,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Text(
+              '新しい監督は「${controller.roleDropped!.label}」を使わない。'
+              '役割が外れた。',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onErrorContainer,
+              ),
+            ),
+          ),
+        ],
+        if (choices.isNotEmpty) ...[
+          const SizedBox(height: 10),
+          for (final role in choices)
+            _RoleRow(
+              role: role,
+              selected: player.role == role,
+              overall: player.attributes.overallFor(
+                player.position,
+                weights: role.weights,
+              ),
+              onTap: () =>
+                  controller.setRole(player.role == role ? null : role),
+            ),
+          _RoleRow(
+            role: null,
+            label: '${player.position.label}の標準',
+            note: 'そのポジションで普通に求められるもの。',
+            selected: player.role == null,
+            overall: player.attributes.overallFor(player.position),
+            onTap: () => controller.setRole(null),
+          ),
+        ],
+      ],
     );
   }
 }
@@ -2145,6 +2130,10 @@ class _WeekPlanCard extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             Text(plan.reason, style: muted),
+            if (state.injured) ...[
+              const SizedBox(height: 4),
+              Text('練習はできない。復帰の進め方は「今週」タブで選べる。', style: muted),
+            ],
             if (plan.suggested != null && plan.suggested != state.menu) ...[
               const SizedBox(height: 10),
               Align(
@@ -2337,6 +2326,8 @@ class _ClubLifeCard extends StatelessWidget {
                     ),
                   ),
                 ],
+                const SizedBox(height: 14),
+                _RoleSection(state: state, controller: controller),
                 const SizedBox(height: 12),
                 OutlinedButton(
                   onPressed: () => _convert(context),
