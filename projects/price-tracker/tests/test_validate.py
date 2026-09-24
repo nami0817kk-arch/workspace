@@ -150,9 +150,12 @@ class VerificationTagTest(unittest.TestCase):
                          self.render(google_site_verification="   "))
 
     def test_値はエスケープする(self):
+        # head には見守りの script が常に入るので、タグの有無では検査できない。
+        # 検証タグの content から抜け出せないことを見る。
         html = self.render(google_site_verification='a"><script>x</script>')
 
-        self.assertNotIn("<script>", html)
+        self.assertNotIn('"><script>x', html)
+        self.assertIn("&quot;&gt;&lt;script&gt;", html)
 
 
 class CardSparkTest(unittest.TestCase):
@@ -177,7 +180,7 @@ class CardSparkTest(unittest.TestCase):
 class SearchIndexTest(unittest.TestCase):
     """商品名で探すための索引。5,000件あると一覧を辿るだけでは見つけられない。"""
 
-    def test_1商品1件で_slugと名前と価格と商品コードを持つ(self):
+    def test_1商品1件で_slugと名前と価格と商品コードと判定を持つ(self):
         import json
         import subprocess
         import sys
@@ -192,9 +195,10 @@ class SearchIndexTest(unittest.TestCase):
             page = (Path(tmp) / "search" / "index.html").read_text(encoding="utf-8")
 
         self.assertTrue(idx, "索引が空")
-        for slug, name, price, code, label, cls in idx[:5]:
-            self.assertTrue(slug and name and code and label and cls)
+        for slug, name, price, code, mark in idx[:5]:
+            self.assertTrue(slug and name and code)
             self.assertIsInstance(price, int)
+            self.assertIn(mark, (0, 1, 2, 3))
         self.assertIn('id="q"', page)
         # 索引はページに埋め込まず、必要になってから取りに行く
         self.assertNotIn(idx[0][1], page)
@@ -556,3 +560,46 @@ class WatchAndFeedTest(unittest.TestCase):
         self.assertIn("2026-09-19", both)
         self.assertIn("2026-09-21", both)
         self.assertNotIn("2026-09-22", newest)
+
+
+class ScriptTimingTest(unittest.TestCase):
+    """一覧より前に置いた script が、DOM を待たずに要素を探していないか。
+
+    2026-09-24 に、並び替えと見守りが公開サイトで丸ごと動いていなかった。
+    script が一覧より前にあり、実行時点で .cards も .watch-mini も存在しな
+    かったため。以後は「前に置くなら待つ」を機械的に守らせる。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        import subprocess
+        import sys
+        import tempfile
+        from pathlib import Path
+
+        root = Path(__file__).resolve().parent.parent
+        cls.tmp = tempfile.TemporaryDirectory()
+        out = Path(cls.tmp.name)
+        subprocess.run([sys.executable, str(root / "build.py"), "--out", str(out)],
+                       cwd=root, check=True, capture_output=True)
+        cls.html = (out / "lows" / "index.html").read_text(encoding="utf-8")
+        cls.robots = (out / "robots.txt").read_text(encoding="utf-8")
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def test_一覧を探す処理はDOMを待ってから動く(self):
+        for target in (".cards", ".watch-mini"):
+            i = self.html.index(f"querySelector") if target == ".cards" else 0
+            self.assertIn(target, self.html)
+        # 一覧より前に script があること自体は許す。待っていることを見る。
+        self.assertLess(self.html.index('id="sort"'), self.html.index('<ul class="cards">'))
+        self.assertGreaterEqual(self.html.count("DOMContentLoaded"), 2)
+
+    def test_見守りの仕組みは1回だけ定義する(self):
+        self.assertEqual(self.html.count("var PTWatch"), 1)
+
+    def test_配布用の大きなファイルはクロールさせない(self):
+        for name in ("history.csv", "data.csv", "search-index.json"):
+            self.assertIn(f"Disallow: /{name}", self.robots)

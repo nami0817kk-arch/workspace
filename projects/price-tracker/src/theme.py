@@ -110,6 +110,7 @@ def head(title: str, description: str, canonical: str, site: dict, prefix: str =
 <link rel="alternate" type="application/rss+xml" title="今日の値下がり" href="{prefix}feed.xml">
 <link rel="icon" href="{FAVICON}">
 <link rel="stylesheet" href="{prefix}style.css">
+{WATCH_JS}
 {extra}
 </head>
 <body>
@@ -291,10 +292,13 @@ SEARCH_JS = """
       p.textContent = r[2].toLocaleString() + '円';
       li.appendChild(a);
       li.appendChild(p);
-      if (r[4]) {
+      var MARK = [null, ['drop', '値下がり'], ['near', '最安値に近い'],
+                  ['low', '記録した中で最安']];
+      var m = MARK[r[4]];
+      if (m) {
         var b = document.createElement('span');
-        b.className = 'badge ' + (r[5] || 'flat');
-        b.textContent = r[4];
+        b.className = 'badge ' + m[0];
+        b.textContent = m[1];
         li.appendChild(b);
       }
       out.appendChild(li);
@@ -448,7 +452,8 @@ def item_list_ld(rows: list, site: dict, prefix: str) -> str:
 
 WATCH_MINI_JS = """
 <script>
-(function () {
+// 同じ理由で DOM を待つ。.watch-mini は一覧の中にある。
+document.addEventListener('DOMContentLoaded', function () {
   function label(btn, on) {
     btn.textContent = on ? '見守り中' : '見守る';
     btn.classList.toggle('on', on);
@@ -461,7 +466,7 @@ WATCH_MINI_JS = """
       label(btn, !!s[btn.dataset.code]);
     });
   });
-})();
+});
 </script>
 """
 
@@ -487,7 +492,10 @@ LIST_TOOLS = """
   <span class="scope">このページに出ている分だけを並べ替えます</span>
 </div>
 <script>
-(function () {
+// この script は一覧より前に置かれる。読み込み時点で .cards はまだ無いので、
+// DOM が揃うのを待ってから繋ぐ（待たずに書いたため、並び替えが丸ごと
+// 効いていなかった。2026-09-24 に公開サイトで確認）。
+document.addEventListener('DOMContentLoaded', function () {
   var list = document.querySelector('.cards');
   if (!list) { return; }
   var all = Array.prototype.slice.call(list.children);
@@ -531,7 +539,7 @@ LIST_TOOLS = """
   sort.addEventListener('change', apply);
   range.addEventListener('change', apply);
   if (q.get('sort') || q.get('range')) { apply(); }
-})();
+});
 </script>
 """
 
@@ -552,7 +560,7 @@ def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
             + stats_bar(stats or {})
             + AD_NOTICE
             + nav
-            + (WATCH_JS + LIST_TOOLS + WATCH_MINI_JS if rows else "")
+            + (LIST_TOOLS + WATCH_MINI_JS if rows else "")
             + f'<ul class="cards">{body}</ul>'
             + nav
             + foot(site, prefix, updated))
@@ -809,12 +817,21 @@ var PTWatch = (function () {
     save(o);
     return o;
   }
-  return {read: read, toggle: toggle};
+  function count() { return Object.keys(read()).length; }
+  document.addEventListener('DOMContentLoaded', function () {
+    // ナビに件数を出す。何件見守っているか分からないと戻る動機にならない。
+    var n = count();
+    if (!n) { return; }
+    document.querySelectorAll('.site-nav a[href$="watch/"]').forEach(function (a) {
+      a.textContent = '見守り ' + n;
+    });
+  });
+  return {read: read, toggle: toggle, count: count};
 })();
 </script>
 """
 
-WATCH_BUTTON = WATCH_JS + """
+WATCH_BUTTON = """
 <p class="watch"><button id="watch" type="button" data-code="{code}" data-price="{price}">見守る</button>
 <span class="note">端末に保存します。<a href="{prefix}watch/">見守り中の一覧</a></span></p>
 <script>
@@ -845,7 +862,6 @@ def watch_page(site: dict, canonical: str, updated: str) -> str:
     lead = ("商品ページで「見守る」を押した商品を、見始めた時からの差が大きい順に並べます。"
             "保存先はお使いの端末の中だけです。")
     return (head(f"{title}｜{site['name']}", lead, canonical, site, "../")
-            + WATCH_JS
             + breadcrumb(site, title, "../")
             + f'<h1>{esc(title)}</h1><p class="lead">{esc(lead)}</p>'
             + AD_NOTICE

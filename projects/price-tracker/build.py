@@ -40,7 +40,18 @@ def sitemap(site: dict, urls, updated: str) -> str:
 
 
 def robots(site: dict) -> str:
-    return f"User-agent: *\nAllow: /\n\nSitemap: {site['base_url'].rstrip('/')}/sitemap.xml\n"
+    """配布用の大きなファイルはクロールさせない。
+
+    history.csv は3MB、search-index.json は1.7MB ある。人が取りに来る分には
+    よいが、毎回クロールされても検索結果の役には立たない。
+    """
+    return (
+        "User-agent: *\n"
+        "Allow: /\n"
+        "Disallow: /history.csv\n"
+        "Disallow: /data.csv\n"
+        "Disallow: /search-index.json\n"
+        f"\nSitemap: {site['base_url'].rstrip('/')}/sitemap.xml\n")
 
 
 PER_PAGE = 100
@@ -188,17 +199,18 @@ def build(root: Path, out: Path) -> dict:
         s = theme.slug(row["item_code"])
         kin = [r for r in by_gid.get(str(row.get("source_genre") or ""), [])
                if r["item_code"] != row["item_code"]][:8]
+        seen = {row["item_code"]} | {r["item_code"] for r in kin}
         mates = [r for r in by_shop.get(row.get("shop") or "", [])
-                 if r["item_code"] != row["item_code"]][:6]
+                 if r["item_code"] not in seen][:6]
         write(out / "item" / s / "index.html",
               theme.item_page(row, site, updated, kin, mates))
         urls.append((f"/item/{s}/", row.get("changed_date") or updated))
 
     # 検索用の索引。数百KBあるので、検索ページで必要になったときだけ読ませる。
     write(out / "search-index.json", json.dumps(
+        # 判定は符号1文字で持つ。文字列で持つと索引が数百KB太る
         [[theme.slug(r["item_code"]), r["name"], r["price"], r["item_code"],
-          r["label"], "low" if r["at_low"] else ("near" if r["near_low"]
-                                                 else ("drop" if r["dropped"] else "flat"))]
+          3 if r["at_low"] else (2 if r["near_low"] else (1 if r["dropped"] else 0))]
          for r in rows],
         ensure_ascii=False, separators=(",", ":")))
     write(out / "search" / "index.html",
