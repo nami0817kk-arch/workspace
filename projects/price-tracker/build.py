@@ -94,6 +94,8 @@ def build(root: Path, out: Path) -> dict:
         shutil.rmtree(out)
     out.mkdir(parents=True)
     shutil.copy(ROOT / "src" / "style.css", out / "style.css")
+    # 配信時のヘッダ。Cloudflare Pages は dist/ 直下の _headers を読む。
+    shutil.copy(ROOT / "src" / "_headers", out / "_headers")
 
     base = site["base_url"].rstrip("/")
     # サイトの規模と記録の厚み。値下がりが数件しかない日でも、

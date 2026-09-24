@@ -1,0 +1,19 @@
+# Cloudflare Pages が配信時に付けるヘッダ。dist/ 直下に置くと効く。
+#
+# 静的なページだけで、フォームも認証も無い。守るのは「読む人の安全」と
+# 「配信の無駄」の2つに絞る。リポジトリに置いてあるのは、どこで何を
+# 設定したか分からなくならないようにするため。
+
+/*
+  # MIME の推測で HTML 扱いされるのを防ぐ
+  X-Content-Type-Options: nosniff
+  # 他サイトに枠として埋め込まれない（中身を自分のものとして見せられない）
+  X-Frame-Options: DENY
+  # 外部へ飛ぶときに、どのページから来たかを渡しすぎない
+  Referrer-Policy: strict-origin-when-cross-origin
+  # 使っていない機能は最初から閉じておく
+  Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=(), interest-cohort=()
+
+# スタイルは内容が変わったらファイル名ごと変わるわけではないので、短めに。
+/style.css
+  Cache-Control: public, max-age=3600
