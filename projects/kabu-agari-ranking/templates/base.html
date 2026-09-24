@@ -144,6 +144,7 @@
   table.ranking {
     width: 100%;
     min-width: 560px;
+    table-layout: auto;
     border-collapse: collapse;
     background: var(--card-bg);
     font-size: 0.9rem;
@@ -165,6 +166,23 @@
     color: var(--muted);
   }
   table.ranking th { color: var(--muted); font-weight: normal; }
+  /* 表の中のリンクは本文色のまま。行ごとに青と黒が混ざると、
+     どれが押せるかより先に「ちらつき」が目に付く。 */
+  table.ranking td a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: var(--border);
+    text-underline-offset: 2px;
+  }
+  table.ranking td a:hover { text-decoration-color: var(--accent); color: var(--accent); }
+  /* 30行スクロールすると見出しが消え、どの列を見ているか分からなくなる */
+  table.ranking thead th {
+    position: sticky;
+    top: 0;
+    background: var(--card-bg);
+    z-index: 1;
+    box-shadow: 0 1px 0 var(--border);
+  }
   /* 順位は見出しセル（th）だが、見た目はデータとして揃える */
   table.ranking tbody th { color: var(--text); font-weight: normal; text-align: right; }
   table.ranking td.gain { color: var(--gain); font-weight: bold; }
@@ -244,6 +262,19 @@
   }
   .crumbs a { color: var(--muted); }
   .crumbs span[aria-current] { color: var(--text); }
+  /* 狭い画面では、いちばん見たい騰落率が横スクロールの外に出ていた。
+     出来高（いちばん優先度が低い列）を落として、1画面に収める。 */
+  @media (max-width: 600px) {
+    table.ranking { min-width: 0; font-size: 0.85rem; }
+    table.ranking th, table.ranking td { padding: 0.45rem 0.35rem; }
+    table.ranking th:last-child, table.ranking td:last-child { display: none; }
+    table.ranking caption { font-size: 0.75rem; }
+  }
+  /* 画面がさらに狭いと銘柄名が毎行2行に折り返す。コードは銘柄ページ側にも
+     出ているので、ここでは名前に幅を譲る。 */
+  @media (max-width: 430px) {
+    table.ranking th:nth-child(3), table.ranking td:nth-child(3) { display: none; }
+  }
   .updated { font-size: 0.85rem; color: var(--muted); margin: 0.25rem 0 1rem; }
   .summary {
     background: var(--card-bg);
@@ -278,7 +309,11 @@
     color: var(--muted);
     text-align: center;
   }
-  footer a { color: var(--muted); margin: 0 0.5rem; }
+  footer a { color: var(--muted); margin: 0 0.4rem; }
+  .footer-group { margin-bottom: 0.6rem; }
+  .footer-group strong { display: block; color: var(--text); font-size: 0.8rem; margin-bottom: 0.2rem; }
+  .to-top { margin-top: 1rem; }
+  .to-top a { color: var(--accent); }
   .date-jump {
     display: flex;
     align-items: center;
@@ -328,22 +363,15 @@
 <header class="site-header">
   <div class="inner">
     <a class="logo" href="{{ base_url }}index.html">値上がり株ランキング</a>
+    {# ヘッダに並べるのは毎日見るものだけ。10項目あった頃はスマホで3行を占め、
+       肝心のランキングが1画面ぶん下に押し出されていた。残りはフッタと本文から辿る。 #}
     <nav>
       <a href="{{ base_url }}index.html">値上がり</a>
       <a href="{{ base_url }}losers.html">値下がり</a>
       <a href="{{ base_url }}active.html">活況</a>
       <a href="{{ base_url }}search.html">銘柄検索</a>
-      <a href="{{ base_url }}market.html">相場の振り返り</a>
-      <a href="{{ base_url }}weekly/index.html">週まとめ</a>
-      <a href="{{ base_url }}frequent.html">常連銘柄</a>
-      <a href="{{ base_url }}stock/index.html">銘柄別</a>
       <a href="{{ base_url }}guide.html">読み方</a>
-      <a href="{{ base_url }}about.html">このサイトについて</a>
     </nav>
-    <div class="date-jump">
-      <label for="dateJump">📅 日付から探す</label>
-      <input type="date" id="dateJump" min="{{ GAINERS_DATES_MIN }}" max="{{ GAINERS_DATES_MAX }}">
-    </div>
   </div>
 </header>
 
@@ -362,12 +390,27 @@
 </main>
 
 <footer>
-  <a href="{{ base_url }}about.html">このサイトについて</a>
-  <a href="{{ base_url }}frequent.html">何度もランクインした銘柄</a>
-  <a href="{{ base_url }}guide.html">ランキングの読み方</a>
-  <a href="{{ base_url }}glossary.html">用語解説</a>
-  <a href="{{ base_url }}privacy.html">プライバシーポリシー</a>
-  <a href="{{ base_url }}feed.xml">RSS</a>
+  <div class="footer-group">
+    <strong>探す</strong>
+    <a href="{{ base_url }}search.html">銘柄検索</a>
+    <a href="{{ base_url }}stock/index.html">銘柄別</a>
+    <a href="{{ base_url }}archive/gainers/index.html">過去のランキング</a>
+  </div>
+  <div class="footer-group">
+    <strong>まとめて見る</strong>
+    <a href="{{ base_url }}market.html">相場の振り返り</a>
+    <a href="{{ base_url }}weekly/index.html">週まとめ</a>
+    <a href="{{ base_url }}frequent.html">常連銘柄</a>
+  </div>
+  <div class="footer-group">
+    <strong>このサイト</strong>
+    <a href="{{ base_url }}guide.html">読み方</a>
+    <a href="{{ base_url }}glossary.html">用語解説</a>
+    <a href="{{ base_url }}about.html">概要</a>
+    <a href="{{ base_url }}privacy.html">プライバシーポリシー</a>
+    <a href="{{ base_url }}feed.xml">RSS</a>
+  </div>
+  <p class="to-top"><a href="#main">↑ ページの先頭へ</a></p>
 </footer>
 <script>
 (function () {
