@@ -20,54 +20,41 @@ theme:
   question: どんなクラブなのか
   hook: エヴァートンが出ていったスタジアムで、生まれたクラブです。
   lead: '**1部リーグ20回**。マンチェスター・ユナイテッドと並ぶ最多。'
+  opening_image: assets/stats/pl_liverpool_data_t.png
 thumbnail:
   line1: エヴァートンが去った跡地に
-  line2: リヴァプール
+  line2: 遠藤航のクラブが生まれた経緯
   crest_main:
   - リヴァプール
   tags: []
   points: []
+  board: assets/stats/pl_liverpool_data_t.png
 sections:
-- id: reasons
-  heading: いま見る理由
-  tier: 報道
+- id: data
+  heading: いま見る理由と基礎DATA
   main: true
+  tier: 背景
   telop: 遠藤航がいる。新監督イラオラの1年目
   narrator: キャスター
-  card:
-    type: table
-    title: いま見る理由
-    columns:
-    - ''
-    - ''
-    rows:
-    - - 理由1
-      - 遠藤航が中盤にいる
-    - - 理由2
-      - 新監督イラオラの1年目
-    - - 理由3
-      - サラー退団後、最初の1年
   say:
-  - 日本代表の中盤、遠藤航が、リーグ戦**57試合**を戦ってきたクラブです。
-  - このクラブを作り替えた名将、ビル・シャンクリーの言葉があります。
+  - text: 日本代表の中盤、遠藤航が、リーグ戦**57試合**を戦ってきたクラブです。
+    image: assets/stats/pl_liverpool_data_r1.png
+    no_telop: true
+  - text: このクラブを作り替えた名将、ビル・シャンクリーの言葉があります。
+    image: assets/stats/pl_liverpool_data_r1.png
+    no_telop: true
   - voice: ビル・シャンクリー
     text: 「私の考えは、リヴァプールを無敵の砦に築き上げることだった」
-  - 監督が代わりました。ボーンマスを**6位**まで引き上げたイラオラが、1年目の指揮を執っています。
-  - 2シーズン前に**20回目**の優勝、昨季は5位。サラーが去って初めてのシーズンです。
-  - 生まれたのは1892年。地代でもめたエヴァートンが去り、残った地主がクラブを作りました。
-  sources:
-  - https://en.wikipedia.org/wiki/Liverpool_F.C.
-  - https://en.wikipedia.org/wiki/2026–27_Liverpool_F.C._season
-  - https://en.wikipedia.org/wiki/Bill_Shankly
-  bg: assets/backgrounds/stadium_リヴァプール.png
-  official: false
-- id: data
-  heading: リヴァプール 基礎DATA
-  main: false
-  tier: 背景
-  telop: 1892年創立
-  narrator: 解説
-  say:
+    image: assets/stats/pl_liverpool_data_r1.png
+  - text: 監督が代わりました。ボーンマスを**6位**まで引き上げたイラオラが、1年目の指揮を執っています。
+    image: assets/stats/pl_liverpool_data_r2.png
+    no_telop: true
+  - text: 2シーズン前に**20回目**の優勝、昨季は5位。サラーが去って初めてのシーズンです。
+    image: assets/stats/pl_liverpool_data_r2.png
+    no_telop: true
+  - text: 生まれたのは1892年。地代でもめたエヴァートンが去り、残った地主がクラブを作りました。
+    image: assets/stats/pl_liverpool_data_r2.png
+    no_telop: true
   - image: assets/stats/pl_liverpool_data0.png
     text: 創立は**1892年**です。
     no_telop: true
@@ -77,9 +64,9 @@ sections:
   - image: assets/stats/pl_liverpool_map.png
     text: ホームタウンはリヴァプール。イングランド・マージーサイドです。
     no_telop: true
-  - image: assets/backgrounds/stadium_リヴァプール_in.png
+  - image: assets/backgrounds/stadium_リヴァプール.png
     text: 本拠地はアンフィールド。**約6万1000人**が入ります。2024年に広げたばかりです。
-  - image: assets/backgrounds/stadium_リヴァプール_in.png
+  - image: assets/backgrounds/stadium_リヴァプール.png
     text: 試合前の「ユール・ネヴァー・ウォーク・アローン」も、1960年代の初めから歌われています。
   - image: assets/stats/pl_liverpool_data4.png
     text: 2010年から、大リーグのレッドソックスも持つフェンウェイ・スポーツ・グループがオーナーです。
@@ -101,7 +88,9 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Liverpool_F.C.
-  bg: assets/backgrounds/stadium_リヴァプール.png
+  - https://en.wikipedia.org/wiki/2026–27_Liverpool_F.C._season
+  - https://en.wikipedia.org/wiki/Bill_Shankly
+  bg: assets/backgrounds/stadium_リヴァプール_in.png
   official: false
 - id: birth
   heading: 空になったスタジアム
@@ -111,7 +100,7 @@ sections:
   card:
     type: table
     title: クラブの成り立ち
-    columns:
+    columns: &id001
     - ''
     - ''
     rows:
@@ -119,23 +108,28 @@ sections:
       - 1892年
     - - きっかけ
       - アンフィールドをめぐる対立
-    - - 愛称
-      - The Reds（レッズ）
-    - - 本拠地
-      - アンフィールド／61,276人
   say:
   - text: 生まれたきっかけは、**もめごと**でした。
     image: assets/images/pl_liverpool_story/01.jpg
   - アンフィールドという土地を持っていたのは、ジョン・ホールディングでした。
   - そこを使っていたのが、エヴァートンです。
-  - 両者が対立し、エヴァートンはグディソン・パークへ移っていきました。
+  - text: 両者が対立し、エヴァートンはグディソン・パークへ移っていきました。
+    card:
+      type: table
+      title: クラブの成り立ち
+      columns: *id001
+      rows:
+      - - 愛称
+        - The Reds（レッズ）
+      - - 本拠地
+        - アンフィールド／61,276人
   - '**スタジアムだけが残りました。**'
   - ホールディングは、そこで戦う新しいクラブを作ります。それがリヴァプールです。
   official: false
   sources:
   - https://en.wikipedia.org/wiki/Liverpool_F.C.
   - https://en.wikipedia.org/wiki/Bill_Shankly
-  bg: assets/backgrounds/stadium_リヴァプール.png
+  bg: assets/backgrounds/stadium_リヴァプール_in.png
 - id: features
   heading: このクラブの特徴
   tier: 背景
@@ -164,7 +158,7 @@ sections:
   - https://en.wikipedia.org/wiki/Andoni_Iraola
   - https://en.wikipedia.org/wiki/Fenway_Sports_Group
   - https://en.wikipedia.org/wiki/Michael_Edwards_(football_executive)
-  bg: assets/backgrounds/stadium_リヴァプール.png
+  bg: assets/backgrounds/stadium_リヴァプール_in.png
   official: false
 - id: episode
   heading: 触ってはいけない看板
@@ -174,7 +168,7 @@ sections:
   card:
     type: table
     title: 触ってはいけない看板
-    columns:
+    columns: &id002
     - ''
     - ''
     rows:
@@ -182,18 +176,23 @@ sections:
       - シャンクリーが付けた看板
     - - クロップ監督
       - 獲るまで触るなと禁じる
-    - - 2019年
-      - チャンピオンズリーグ決勝に勝って解禁
   say:
   - text: アンフィールドの選手用トンネルに、「ジス・イズ・アンフィールド」の看板があります。
     image: assets/images/pl_liverpool_episode/01.jpg
   - シャンクリー監督が付けたもので、相手を怖がらせ、味方が触れば運が付く、というものでした。
-  - 2015年に来たクロップ監督は、「タイトルを獲るまで触るな」と禁じました。
+  - text: 2015年に来たクロップ監督は、「タイトルを獲るまで触るな」と禁じました。
+    card:
+      type: table
+      title: 触ってはいけない看板
+      columns: *id002
+      rows:
+      - - 2019年
+        - チャンピオンズリーグ決勝に勝って解禁
   - '**2019年**のチャンピオンズリーグ決勝に勝って、ようやく触ることが許されました。'
   sources:
   - https://en.wikipedia.org/wiki/Anfield
   - https://en.wikipedia.org/wiki/Liverpool_F.C.
-  bg: assets/backgrounds/stadium_リヴァプール.png
+  bg: assets/backgrounds/stadium_リヴァプール_in.png
   official: false
 - id: legends
   heading: このクラブを語る3人
@@ -208,10 +207,10 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id001
+    - &id003
       - スティーヴン・ジェラード
       - 1998-2015
-      - イスタンブールの奇跡の主将
+      - イスタンブールの奇跡の主
   say:
   - text: 中盤のスティーヴン・ジェラードは、9歳でアカデミーに入り、1998年にデビューしました。
     image: assets/photos/pl/liverpool_legend_7c62ed45.jpg
@@ -221,7 +220,7 @@ sections:
   - https://en.wikipedia.org/wiki/Steven_Gerrard
   - https://en.wikipedia.org/wiki/Jamie_Carragher
   - https://en.wikipedia.org/wiki/Mohamed_Salah
-  bg: assets/backgrounds/stadium_リヴァプール.png
+  bg: assets/backgrounds/stadium_リヴァプール_in.png
   official: false
 - id: legends2
   heading: このクラブを語る3人（2人目）
@@ -236,8 +235,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - &id002
+    - *id003
+    - &id004
       - ジェイミー・キャラガー
       - 1996-2013
       - 737試合の生え抜き
@@ -250,7 +249,7 @@ sections:
   - https://en.wikipedia.org/wiki/Steven_Gerrard
   - https://en.wikipedia.org/wiki/Jamie_Carragher
   - https://en.wikipedia.org/wiki/Mohamed_Salah
-  bg: assets/backgrounds/stadium_リヴァプール.png
+  bg: assets/backgrounds/stadium_リヴァプール_in.png
   official: false
 - id: legends3
   heading: このクラブを語る3人（3人目）
@@ -265,11 +264,11 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - *id002
+    - *id003
+    - *id004
     - - モハメド・サラー
       - 2017-2026
-      - プレミア1シーズン32得点
+      - プレミア1シーズン32得
   say:
   - text: モハメド・サラーは2017年、ローマから**3690万ポンド**で来た右ウイングです。
     image: assets/photos/pl/liverpool_legend_bec22eba.jpg
@@ -279,7 +278,7 @@ sections:
   - https://en.wikipedia.org/wiki/Steven_Gerrard
   - https://en.wikipedia.org/wiki/Jamie_Carragher
   - https://en.wikipedia.org/wiki/Mohamed_Salah
-  bg: assets/backgrounds/stadium_リヴァプール.png
+  bg: assets/backgrounds/stadium_リヴァプール_in.png
   official: false
 - id: manager
   heading: 今季の監督
@@ -306,7 +305,7 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Liverpool_F.C.
   - https://en.wikipedia.org/wiki/Andoni_Iraola
-  bg: assets/backgrounds/stadium_リヴァプール.png
+  bg: assets/backgrounds/stadium_リヴァプール_in.png
   official: false
 - id: squad
   heading: 今季の登録選手
@@ -358,7 +357,7 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Liverpool_F.C.
-  bg: assets/backgrounds/stadium_リヴァプール.png
+  bg: assets/backgrounds/stadium_リヴァプール_in.png
   official: false
 - id: season
   heading: 今季のここまで
@@ -394,5 +393,5 @@ sections:
   - 遠藤航は今年7月、契約を**2031年**まで延ばしました。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Liverpool_F.C._season
-  bg: assets/backgrounds/stadium_リヴァプール.png
+  bg: assets/backgrounds/stadium_リヴァプール_in.png
   official: false

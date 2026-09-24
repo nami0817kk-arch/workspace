@@ -20,54 +20,41 @@ theme:
   question: どんなクラブなのか
   hook: ヨーロッパの大会で、ホームでは負けなかったクラブです。
   lead: '**1部リーグ**も、**ウエファカップ**も獲ったことのある古豪。'
+  opening_image: assets/stats/pl_ipswich_data_t.png
 thumbnail:
   line1: 上がった年に、そのまま優勝
-  line2: イプスウィッチ・タウン
+  line2: 前田大然が来た、40年前の王者
   crest_main:
   - イプスウィッチ
   tags: []
   points: []
+  board: assets/stats/pl_ipswich_data_t.png
 sections:
-- id: reasons
-  heading: いま見る理由
-  tier: 報道
+- id: data
+  heading: いま見る理由と基礎DATA
   main: true
+  tier: 背景
   telop: 前田大然が来た。1年でプレミアに復帰
   narrator: キャスター
-  card:
-    type: table
-    title: いま見る理由
-    columns:
-    - ''
-    - ''
-    rows:
-    - - 理由1
-      - 前田大然が今夏に加入
-    - - 理由2
-      - 1年でプレミアに復帰
-    - - 理由3
-      - 新監督オニールの1年目
   say:
-  - 日本代表**30試合**の前田大然が、この夏ここへ来ました。
-  - 1部で優勝させた監督、ラムゼイの言葉です。
+  - text: 日本代表**30試合**の前田大然が、この夏ここへ来ました。
+    image: assets/stats/pl_ipswich_data_r1.png
+    no_telop: true
+  - text: 1部で優勝させた監督、ラムゼイの言葉です。
+    image: assets/stats/pl_ipswich_data_r1.png
+    no_telop: true
   - voice: アルフ・ラムゼイ
     text: 「イプスウィッチへ行ったとき、私には何の計画も無かった」
-  - 降格から**1年**でプレミアに戻ってきた、昇格組のひとつです。
-  - 監督も新顔です。ストラスブールから来たギャリー・オニールの**1年目**です。
-  - 答えは監督です。1962年、ラムゼイが率いて、昇格1年目で1部を制しました。
-  sources:
-  - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
-  - https://en.wikipedia.org/wiki/2026–27_Ipswich_Town_F.C._season
-  - https://en.wikipedia.org/wiki/Alf_Ramsey
-  bg: assets/backgrounds/stadium_イプスウィッチ.png
-  official: false
-- id: data
-  heading: イプスウィッチ 基礎DATA
-  main: false
-  tier: 背景
-  telop: 1878年創立
-  narrator: 解説
-  say:
+    image: assets/stats/pl_ipswich_data_r1.png
+  - text: 降格から**1年**でプレミアに戻ってきた、昇格組のひとつです。
+    image: assets/stats/pl_ipswich_data_r2.png
+    no_telop: true
+  - text: 監督も新顔です。ストラスブールから来たギャリー・オニールの**1年目**です。
+    image: assets/stats/pl_ipswich_data_r3.png
+    no_telop: true
+  - text: 答えは監督です。1962年、ラムゼイが率いて、昇格1年目で1部を制しました。
+    image: assets/stats/pl_ipswich_data_r3.png
+    no_telop: true
   - image: assets/stats/pl_ipswich_data0.png
     text: 創立は**1878年**です。
     no_telop: true
@@ -77,7 +64,7 @@ sections:
   - image: assets/stats/pl_ipswich_map.png
     text: ホームタウンはイプスウィッチ。イングランド東部サフォーク州です。
     no_telop: true
-  - image: assets/backgrounds/stadium_イプスウィッチ_in.png
+  - image: assets/backgrounds/stadium_イプスウィッチ.png
     text: 本拠地はポートマン・ロード。**約3万人**が入ります。
   - image: assets/stats/pl_ipswich_data4.png
     text: オーナーは、アメリカの投資グループ「ゲームチェンジャー・トゥエンティ」。2021年からです。
@@ -93,7 +80,9 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
-  bg: assets/backgrounds/stadium_イプスウィッチ.png
+  - https://en.wikipedia.org/wiki/2026–27_Ipswich_Town_F.C._season
+  - https://en.wikipedia.org/wiki/Alf_Ramsey
+  bg: assets/backgrounds/stadium_イプスウィッチ_in.png
   official: false
 - id: champion
   heading: 上がった年に、優勝した
@@ -103,25 +92,30 @@ sections:
   card:
     type: table
     title: 残してきた記録
-    columns:
+    columns: &id001
     - ''
     - ''
     rows:
     - - 1961-62年
       - 1部初挑戦で優勝
-    - - 1981年
-      - UEFAカップ優勝（AZに5-4）
   say:
   - text: '**1部に上がった、その最初のシーズンに優勝しました。**1961年から62年のことです。'
     image: assets/images/pl_ipswich_story/01.jpg
   - 率いたのはアルフ・ラムゼイ。のちにイングランドを1966年のワールドカップ優勝に導きます。
-  - 1981年には、ウエファカップも制しました。
+  - text: 1981年には、ウエファカップも制しました。
+    card:
+      type: table
+      title: 残してきた記録
+      columns: *id001
+      rows:
+      - - 1981年
+        - UEFAカップ優勝（AZに5-4）
   - 決勝はオランダのエーゼット・アルクマール。2試合合計5対4で勝ちました。
   - この時期に指揮していたのがボビー・ロブソン。1969年から82年まで、**709試合**を指揮しました。
   official: false
   sources:
   - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
-  bg: assets/backgrounds/stadium_イプスウィッチ.png
+  bg: assets/backgrounds/stadium_イプスウィッチ_in.png
 - id: features
   heading: このクラブの特徴
   tier: 背景
@@ -150,7 +144,7 @@ sections:
   - https://www.itfc.co.uk/news/2026/september/18/gary-previews-everton-trip/
   - https://www.itfc.co.uk/news/2026/june/23/gary-oneil-appointed-ipswich-town-manager/
   - https://en.wikipedia.org/wiki/Gary_O%27Neil
-  bg: assets/backgrounds/stadium_イプスウィッチ.png
+  bg: assets/backgrounds/stadium_イプスウィッチ_in.png
   official: false
 - id: episode
   heading: 欧州で、家では負けない
@@ -173,7 +167,7 @@ sections:
     image: assets/images/pl_ipswich_episode/01.jpg
   sources:
   - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
-  bg: assets/backgrounds/stadium_イプスウィッチ.png
+  bg: assets/backgrounds/stadium_イプスウィッチ_in.png
   official: false
 - id: legends
   heading: このクラブを語る3人
@@ -188,10 +182,10 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id001
+    - &id002
       - ジム・マギルトン
       - 1999-2006
-      - プレーオフでハットトリック
+      - プレーオフでハットトリッ
   say:
   - text: ジム・マギルトンは北アイルランド代表の中盤。1999年、約**75万ポンド**で来ました。
     image: assets/photos/pl/ipswich_legend_7557cc62.jpg
@@ -201,7 +195,7 @@ sections:
   - https://en.wikipedia.org/wiki/Matt_Holland
   - https://en.wikipedia.org/wiki/Jim_Magilton
   - https://en.wikipedia.org/wiki/Marcus_Stewart
-  bg: assets/backgrounds/stadium_イプスウィッチ.png
+  bg: assets/backgrounds/stadium_イプスウィッチ_in.png
   official: false
 - id: legends2
   heading: このクラブを語る3人（2人目）
@@ -216,8 +210,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - &id002
+    - *id002
+    - &id003
       - マット・ホランド
       - 1997-2003
       - 223試合連続出場の主将
@@ -230,7 +224,7 @@ sections:
   - https://en.wikipedia.org/wiki/Matt_Holland
   - https://en.wikipedia.org/wiki/Jim_Magilton
   - https://en.wikipedia.org/wiki/Marcus_Stewart
-  bg: assets/backgrounds/stadium_イプスウィッチ.png
+  bg: assets/backgrounds/stadium_イプスウィッチ_in.png
   official: false
 - id: legends3
   heading: このクラブを語る3人（3人目）
@@ -245,8 +239,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
     - *id002
+    - *id003
     - - マーカス・スチュワート
       - 2000-2002
       - 昇格1年目に19得点
@@ -259,7 +253,7 @@ sections:
   - https://en.wikipedia.org/wiki/Matt_Holland
   - https://en.wikipedia.org/wiki/Jim_Magilton
   - https://en.wikipedia.org/wiki/Marcus_Stewart
-  bg: assets/backgrounds/stadium_イプスウィッチ.png
+  bg: assets/backgrounds/stadium_イプスウィッチ_in.png
   official: false
 - id: manager
   heading: 今季の監督
@@ -286,7 +280,7 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
   - https://en.wikipedia.org/wiki/Gary_O'Neil
-  bg: assets/backgrounds/stadium_イプスウィッチ.png
+  bg: assets/backgrounds/stadium_イプスウィッチ_in.png
   official: false
 - id: squad
   heading: 今季の登録選手
@@ -332,7 +326,7 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Ipswich_Town_F.C.
-  bg: assets/backgrounds/stadium_イプスウィッチ.png
+  bg: assets/backgrounds/stadium_イプスウィッチ_in.png
   official: false
 - id: season
   heading: 今季のここまで
@@ -368,5 +362,5 @@ sections:
   - 前田大然は今夏、セルティックから**800万ポンド**で加わりました。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Ipswich_Town_F.C._season
-  bg: assets/backgrounds/stadium_イプスウィッチ.png
+  bg: assets/backgrounds/stadium_イプスウィッチ_in.png
   official: false

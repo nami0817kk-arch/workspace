@@ -20,53 +20,38 @@ theme:
   question: どんなクラブなのか
   hook: 1997年から2011年まで、よそのスタジアムを借りて戦っていました。
   lead: 1部も、FAカップも、リーグカップも。優勝はまだゼロ。
+  opening_image: assets/stats/pl_brighton_data_t.png
 thumbnail:
   line1: 三笘薫と、14年の●●
-  line2: ブライトン
+  line2: 1部もカップも、優勝はまだゼロ
   crest_main:
   - ブライトン
   tags: []
   points: []
+  board: assets/stats/pl_brighton_data_t.png
 sections:
-- id: reasons
-  heading: いま見る理由
-  tier: 報道
+- id: data
+  heading: いま見る理由と基礎DATA
   main: true
+  tier: 背景
   telop: 三笘薫のクラブが、いま3位
   narrator: キャスター
-  card:
-    type: table
-    title: いま見る理由
-    columns:
-    - ''
-    - ''
-    rows:
-    - - 理由1
-      - 三笘薫がリーグ113試合23得点
-    - - 理由2
-      - ヒュルツェラー「なぜ勝てているのか」
-    - - 理由3
-      - 開幕5試合で3勝、順位は3位
   say:
-  - 三笘薫がリーグ戦**113試合**に出て、**23得点**を挙げているクラブです。
-  - 王者アーセナルを破った夜、監督のヒュルツェラーはこう言いました。
+  - text: 三笘薫がリーグ戦**113試合**に出て、**23得点**を挙げているクラブです。
+    image: assets/stats/pl_brighton_data_r1.png
+    no_telop: true
+  - text: 王者アーセナルを破った夜、監督のヒュルツェラーはこう言いました。
+    image: assets/stats/pl_brighton_data_r2.png
+    no_telop: true
   - voice: ファビアン・ヒュルツェラー
     text: 「この瞬間を楽しむのは大事。ただ、なぜ勝てたかも知らないと」
-  - 開幕から5試合で**3勝**を挙げ、順位は**3位**です。
-  - その家を失ったのは1997年、借金を返すためでした。
-  sources:
-  - https://en.wikipedia.org/wiki/Brighton_&_Hove_Albion_F.C.
-  - https://en.wikipedia.org/wiki/2026–27_Brighton_&_Hove_Albion_F.C._season
-  - https://www.brightonandhovealbion.com/media-article/mft-interviews-fabian-hurzeler-bha-arsenal-pl-september-2026
-  bg: assets/backgrounds/stadium_ブライトン.png
-  official: false
-- id: data
-  heading: ブライトン 基礎DATA
-  main: false
-  tier: 背景
-  telop: 1901年創立
-  narrator: 解説
-  say:
+    image: assets/stats/pl_brighton_data_r2.png
+  - text: 開幕から5試合で**3勝**を挙げ、順位は**3位**です。
+    image: assets/stats/pl_brighton_data_r3.png
+    no_telop: true
+  - text: その家を失ったのは1997年、借金を返すためでした。
+    image: assets/stats/pl_brighton_data_r3.png
+    no_telop: true
   - image: assets/stats/pl_brighton_data0.png
     text: 創立は**1901年**。1920年にフットボールリーグに加わりました。
     no_telop: true
@@ -76,7 +61,7 @@ sections:
   - image: assets/stats/pl_brighton_map.png
     text: ホームタウンは、イングランド南の海沿いの町、ブライトン・アンド・ホーヴ。
     no_telop: true
-  - image: assets/backgrounds/stadium_ブライトン_in.png
+  - image: assets/backgrounds/stadium_ブライトン.png
     text: 本拠地はファルマー・スタジアム。**3万2176人**。ようやく持てた、自分たちの家です。
   - image: assets/photos/pl/brighton_owner_dbf32f4e.jpg
     text: オーナーはトニー・ブルーム。2009年に会長になり、株の75%を持っています。
@@ -88,7 +73,9 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Brighton_&_Hove_Albion_F.C.
-  bg: assets/backgrounds/stadium_ブライトン.png
+  - https://en.wikipedia.org/wiki/2026–27_Brighton_&_Hove_Albion_F.C._season
+  - https://www.brightonandhovealbion.com/media-article/mft-interviews-fabian-hurzeler-bha-arsenal-pl-september-2026
+  bg: assets/backgrounds/stadium_ブライトン_in.png
   official: false
 - id: home
   heading: 本拠地を失った14年
@@ -98,7 +85,7 @@ sections:
   card:
     type: table
     title: 家を失っていた期間
-    columns:
+    columns: &id001
     - ''
     - ''
     rows:
@@ -106,22 +93,27 @@ sections:
       - 借金のためゴールドストーン・グラウンドを売却
     - - 1997-1999年
       - ジリンガムの本拠地を借りる
-    - - 1999-2011年
-      - 陸上競技場を改造したウィズディーン
-    - - 2011年
-      - ファルマー・スタジアムへ
   say:
   - image: assets/images/pl_brighton_story/scene.jpg
     text: 1997年、クラブの経営陣が、借金を返すために本拠地のゴールドストーン・グラウンドを売りました。
   - その年は、最終節の引き分けで、ようやく4部に残りました。
-  - 売ってからの2年間は、別のクラブ、ジリンガムの本拠地を借りました。
+  - text: 売ってからの2年間は、別のクラブ、ジリンガムの本拠地を借りました。
+    card:
+      type: table
+      title: 家を失っていた期間
+      columns: *id001
+      rows:
+      - - 1999-2011年
+        - 陸上競技場を改造したウィズディーン
+      - - 2011年
+        - ファルマー・スタジアムへ
   - そのあとの12年は、陸上競技場を改造したウィズディーン・スタジアムです。
   - image: assets/images/pl_brighton/scene.jpg
     text: いまのファルマー・スタジアムに入ったのは2011年です。
   official: false
   sources:
   - https://en.wikipedia.org/wiki/Brighton_%26_Hove_Albion_F.C.
-  bg: assets/backgrounds/stadium_ブライトン.png
+  bg: assets/backgrounds/stadium_ブライトン_in.png
 - id: features
   heading: このクラブの特徴
   tier: 背景
@@ -151,7 +143,7 @@ sections:
   - https://www.brightonandhovealbion.com/media-article/mft-albion-analytics--fabian-hurzeler-october-2024
   - https://en.wikipedia.org/wiki/Mois%C3%A9s_Caicedo
   - https://en.wikipedia.org/wiki/Sussex_by_the_Sea
-  bg: assets/backgrounds/stadium_ブライトン.png
+  bg: assets/backgrounds/stadium_ブライトン_in.png
   official: false
 - id: episode
   heading: 決めるはずだった一撃
@@ -161,7 +153,7 @@ sections:
   card:
     type: table
     title: 決めるはずだった一撃
-    columns:
+    columns: &id002
     - ''
     - ''
     rows:
@@ -169,17 +161,22 @@ sections:
       - マンチェスター・ユナイテッドと2対2
     - - 延長の最後
       - ブライトンのゴードン・スミスが外す
-    - - 再試合
-      - 0対4で敗戦。同じシーズンにリーグ最下位
   say:
   - text: 1983年、初めてFAカップの決勝に立ちました。相手はマンチェスター・ユナイテッド。
     image: assets/backgrounds/stadium_ブライトン_in.png
   - 2対2の引き分けのまま、延長の最後のワンプレーを迎えます。
-  - そこで、ブライトンのゴードン・スミスの決定機が外れました。
+  - text: そこで、ブライトンのゴードン・スミスの決定機が外れました。
+    card:
+      type: table
+      title: 決めるはずだった一撃
+      columns: *id002
+      rows:
+      - - 再試合
+        - 0対4で敗戦。同じシーズンにリーグ最下位
   - 再試合は0対4で敗れました。同じシーズン、リーグでは最下位で降格しています。
   sources:
   - https://en.wikipedia.org/wiki/Brighton_%26_Hove_Albion_F.C.
-  bg: assets/backgrounds/stadium_ブライトン.png
+  bg: assets/backgrounds/stadium_ブライトン_in.png
   official: false
 - id: legends
   heading: このクラブを語る3人
@@ -194,10 +191,10 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id001
+    - &id003
       - ボビー・ザモラ
       - 2000-2003
-      - 136試合83得点。2年続けて優勝
+      - 136試合83得点。2年
   say:
   - text: ボビー・ザモラは2000年、ブリストル・ローヴァーズから期限付きで来て、6試合で6得点。
     image: assets/photos/pl/brighton_legend_17bed45d.jpg
@@ -207,7 +204,7 @@ sections:
   - https://en.wikipedia.org/wiki/Lewis_Dunk
   - https://en.wikipedia.org/wiki/Glenn_Murray
   - https://en.wikipedia.org/wiki/Bobby_Zamora
-  bg: assets/backgrounds/stadium_ブライトン.png
+  bg: assets/backgrounds/stadium_ブライトン_in.png
   official: false
 - id: legends2
   heading: このクラブを語る3人（2人目）
@@ -222,8 +219,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - &id002
+    - *id003
+    - &id004
       - グレン・マレー
       - 2008-2021
       - プレミア初昇格の得点源
@@ -236,7 +233,7 @@ sections:
   - https://en.wikipedia.org/wiki/Lewis_Dunk
   - https://en.wikipedia.org/wiki/Glenn_Murray
   - https://en.wikipedia.org/wiki/Bobby_Zamora
-  bg: assets/backgrounds/stadium_ブライトン.png
+  bg: assets/backgrounds/stadium_ブライトン_in.png
   official: false
 - id: legends3
   heading: このクラブを語る3人（3人目）
@@ -251,11 +248,11 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - *id002
+    - *id003
+    - *id004
     - - ルイス・ダンク
       - 2010-
-      - 2010年のデビュー以来、3部の時代から一筋
+      - 2010年のデビュー以来
   say:
   - text: ルイス・ダンクはブライトン生まれ。2003年に育成組織へ入り、3部だった2010年にデビュー。
     image: assets/photos/pl/brighton_legend_85972114.jpg
@@ -265,7 +262,7 @@ sections:
   - https://en.wikipedia.org/wiki/Lewis_Dunk
   - https://en.wikipedia.org/wiki/Glenn_Murray
   - https://en.wikipedia.org/wiki/Bobby_Zamora
-  bg: assets/backgrounds/stadium_ブライトン.png
+  bg: assets/backgrounds/stadium_ブライトン_in.png
   official: false
 - id: manager
   heading: 今季の監督
@@ -292,7 +289,7 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Brighton_&_Hove_Albion_F.C.
   - https://en.wikipedia.org/wiki/Fabian_Hürzeler
-  bg: assets/backgrounds/stadium_ブライトン.png
+  bg: assets/backgrounds/stadium_ブライトン_in.png
   official: false
 - id: squad
   heading: 今季の登録選手
@@ -344,7 +341,7 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Brighton_&_Hove_Albion_F.C.
-  bg: assets/backgrounds/stadium_ブライトン.png
+  bg: assets/backgrounds/stadium_ブライトン_in.png
   official: false
 - id: season
   heading: 今季のここまで
@@ -381,5 +378,5 @@ sections:
   - 第5節は、昨季王者のアーセナルをホームで3対0で下しました。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Brighton_&_Hove_Albion_F.C._season
-  bg: assets/backgrounds/stadium_ブライトン.png
+  bg: assets/backgrounds/stadium_ブライトン_in.png
   official: false

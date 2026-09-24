@@ -19,53 +19,38 @@ theme:
   question: どんなクラブなのか
   hook: このクラブを語るとき、外せない日があります。
   lead: 収容**7万4158人**。20クラブでいちばん大きなスタジアム。
+  opening_image: assets/stats/pl_manutd_data_t.png
 thumbnail:
   line1: 操車場のチームが、赤い悪魔に
-  line2: ユナイテッド
+  line2: 借金で解散命令を受けた過去
   crest_main:
   - マンチェスターユナイテッド
   tags: []
   points: []
+  board: assets/stats/pl_manutd_data_t.png
 sections:
-- id: reasons
-  heading: いま見る理由
-  tier: 報道
+- id: data
+  heading: いま見る理由と基礎DATA
   main: true
+  tier: 背景
   telop: 3シーズンぶりのチャンピオンズリーグ
   narrator: キャスター
-  card:
-    type: table
-    title: いま見る理由
-    columns:
-    - ''
-    - ''
-    rows:
-    - - 理由1
-      - 3季ぶりのチャンピオンズリーグ
-    - - 理由2
-      - キャリック監督が正式就任
-    - - 理由3
-      - 昨季3位、今季は12位
   say:
-  - '**3シーズンぶり**のチャンピオンズリーグ。この舞台を初めて制した監督、マット・バズビーの言葉があります。'
+  - text: '**3シーズンぶり**のチャンピオンズリーグ。この舞台を初めて制した監督、マット・バズビーの言葉があります。'
+    image: assets/stats/pl_manutd_data_r1.png
+    no_telop: true
   - voice: マット・バズビー
     text: 「マンチェスターは、私の天国だ」
-  - 監督は、かつて主将も務めたマイケル・キャリック。今季から正式な監督です。
-  - 昨季は**3位**。ところが今季は開幕から足踏みが続き、順位表の真ん中にいます。
-  - 1902年、借金で解散を命じられ、救ったのは主将が見つけた4人の実業家でした。
-  sources:
-  - https://en.wikipedia.org/wiki/Manchester_United_F.C.
-  - https://en.wikipedia.org/wiki/2026–27_Manchester_United_F.C._season
-  - https://en.wikipedia.org/wiki/Matt_Busby
-  bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
-  official: false
-- id: data
-  heading: マンチェスター・ユナイテッド 基礎DATA
-  main: false
-  tier: 背景
-  telop: 1878年創立
-  narrator: 解説
-  say:
+    image: assets/stats/pl_manutd_data_r1.png
+  - text: 監督は、かつて主将も務めたマイケル・キャリック。今季から正式な監督です。
+    image: assets/stats/pl_manutd_data_r2.png
+    no_telop: true
+  - text: 昨季は**3位**。ところが今季は開幕から足踏みが続き、順位表の真ん中にいます。
+    image: assets/stats/pl_manutd_data_r3.png
+    no_telop: true
+  - text: 1902年、借金で解散を命じられ、救ったのは主将が見つけた4人の実業家でした。
+    image: assets/stats/pl_manutd_data_r3.png
+    no_telop: true
   - image: assets/stats/pl_manutd_data0.png
     text: 創立は**1878年**。鉄道の操車場で働く人たちの、ニュートン・ヒースというチームでした。
     no_telop: true
@@ -75,7 +60,7 @@ sections:
   - image: assets/stats/pl_manutd_map.png
     text: ホームタウンは、マンチェスターです。
     no_telop: true
-  - image: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
+  - image: assets/backgrounds/stadium_マンチェスターユナイテッド.png
     text: 本拠地はオールド・トラッフォード。1910年から使っています。
   - image: assets/photos/pl/manutd_owner_3345c4b8.jpg
     text: オーナーはアメリカのグレイザー家。2024年からは、イネオスという会社のラトクリフ氏も出資しています。
@@ -96,7 +81,9 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Manchester_United_F.C.
-  bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+  - https://en.wikipedia.org/wiki/2026–27_Manchester_United_F.C._season
+  - https://en.wikipedia.org/wiki/Matt_Busby
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
   official: false
 - id: munich
   heading: 1958年2月6日
@@ -106,7 +93,7 @@ sections:
   card:
     type: table
     title: 事故から、頂点まで
-    columns:
+    columns: &id001
     - ''
     - ''
     rows:
@@ -114,21 +101,26 @@ sections:
       - ミュンヘンでの航空機事故。23人が亡くなる
     - - うち選手
       - 8人
-    - - 1968年
-      - ヨーロッパカップ優勝。イングランド勢で初
   say:
   - text: 1958年2月6日。ヨーロッパの試合の帰り、給油に立ち寄ったミュンヘンでした。
     image: assets/images/pl_manutd_story/scene.jpg
   - チームを乗せた飛行機が墜落し、亡くなったのは**23人**。そのうち**8人**が選手でした。
   - 生き残ったバズビー監督とボビー・チャールトンが、チームを作り直していきます。
-  - そして**10年後**の1968年。ヨーロッパカップ、いまのチャンピオンズリーグの決勝です。
+  - text: そして**10年後**の1968年。ヨーロッパカップ、いまのチャンピオンズリーグの決勝です。
+    card:
+      type: table
+      title: 事故から、頂点まで
+      columns: *id001
+      rows:
+      - - 1968年
+        - ヨーロッパカップ優勝。イングランド勢で初
   - ベンフィカを4対1で下し、**イングランドのクラブとして初めて**ヨーロッパの頂点に立ちました。
   - チャールトンはこの決勝で2点を決め、主将として優勝杯を掲げました。
   official: false
   sources:
   - https://en.wikipedia.org/wiki/Manchester_United_F.C.
   - https://en.wikipedia.org/wiki/Bobby_Charlton
-  bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
 - id: features
   heading: このクラブの特徴
   tier: 背景
@@ -157,7 +149,7 @@ sections:
   - https://www.manutd.com/en/news/detail/what-will-michael-carrick-style-of-play-be-at-man-utd
   - https://www.manutd.com/en/news/detail/man-utd-celebrate-unrivalled-academy-milestone-with-4000th-game
   - https://www.manutd.com/en/news/detail/man-utd-incredible-academy-landmark-reaches-88-years
-  bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
   official: false
 - id: episode
   heading: 解散寸前で生まれた名前
@@ -167,7 +159,7 @@ sections:
   card:
     type: table
     title: 解散寸前で生まれた名前
-    columns:
+    columns: &id002
     - ''
     - ''
     rows:
@@ -175,18 +167,23 @@ sections:
       - 借金2670ポンド。解散の命令
     - - 主将スタッフォード
       - 実業家4人が500ポンドずつ出資
-    - - 1902年4月24日
-      - マンチェスター・ユナイテッド誕生
   say:
   - text: '**1902年**1月、まだニュートン・ヒースだったクラブは、2670ポンドの借金で解散の命令を受けました。'
     image: assets/images/pl_manutd_episode/scene.jpg
   - いまのお金でおよそ28万ポンド、日本円で数千万円の借金です。
-  - 主将のハリー・スタッフォードが、地元の実業家を4人見つけます。
+  - text: 主将のハリー・スタッフォードが、地元の実業家を4人見つけます。
+    card:
+      type: table
+      title: 解散寸前で生まれた名前
+      columns: *id002
+      rows:
+      - - 1902年4月24日
+        - マンチェスター・ユナイテッド誕生
   - 4人が500ポンドずつ出資し、クラブの経営を引き受けました。
   - その年の4月24日、マンチェスター・ユナイテッドという名前が生まれました。
   sources:
   - https://en.wikipedia.org/wiki/Manchester_United_F.C.
-  bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
   official: false
 - id: legends
   heading: このクラブを語る3人
@@ -201,7 +198,7 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id001
+    - &id003
       - ライアン・ギグス
       - 1990-2014
       - クラブ最多の963試合
@@ -214,7 +211,7 @@ sections:
   - https://en.wikipedia.org/wiki/Ryan_Giggs
   - https://en.wikipedia.org/wiki/Wayne_Rooney
   - https://en.wikipedia.org/wiki/Paul_Scholes
-  bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
   official: false
 - id: legends2
   heading: このクラブを語る3人（2人目）
@@ -229,8 +226,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - &id002
+    - *id003
+    - &id004
       - ウェイン・ルーニー
       - 2004-2017
       - クラブ最多の253得点
@@ -243,7 +240,7 @@ sections:
   - https://en.wikipedia.org/wiki/Ryan_Giggs
   - https://en.wikipedia.org/wiki/Wayne_Rooney
   - https://en.wikipedia.org/wiki/Paul_Scholes
-  bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
   official: false
 - id: legends3
   heading: このクラブを語る3人（3人目）
@@ -258,8 +255,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - *id002
+    - *id003
+    - *id004
     - - ポール・スコールズ
       - 1993-2013
       - 3冠を支えた中盤
@@ -272,7 +269,7 @@ sections:
   - https://en.wikipedia.org/wiki/Ryan_Giggs
   - https://en.wikipedia.org/wiki/Wayne_Rooney
   - https://en.wikipedia.org/wiki/Paul_Scholes
-  bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
   official: false
 - id: manager
   heading: 今季の監督
@@ -299,7 +296,7 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Manchester_United_F.C.
   - https://en.wikipedia.org/wiki/Michael_Carrick
-  bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
   official: false
 - id: squad
   heading: 今季の登録選手
@@ -351,7 +348,7 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Manchester_United_F.C.
-  bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
   official: false
 - id: season
   heading: 今季のここまで
@@ -386,5 +383,5 @@ sections:
   - 順位は**12位**、勝ち点は**5**です。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Manchester_United_F.C._season
-  bg: assets/backgrounds/stadium_マンチェスターユナイテッド.png
+  bg: assets/backgrounds/stadium_マンチェスターユナイテッド_in.png
   official: false

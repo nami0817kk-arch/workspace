@@ -190,7 +190,11 @@ def test_見積りの甘さを見込んで手前で切る():
     script = parse_script(nl.join(long))
     _fit(script, MAX_SECONDS)
     assert _estimate(script) <= MAX_SECONDS * ESTIMATE_SLACK
-    assert ESTIMATE_SLACK < 1.0, "見積りをそのまま信じない"
+    # **2026-09-23 に 0.92 → 1.02、2026-09-24 に 1.25。**読み上げが1.25倍なので
+    # 字数からの見積りは実尺の1.2〜1.3倍に出る。実尺で収める `enforce_limit` が
+    # 後ろから落とすので、見積りの側で手前に切る必要は無い。
+    # ただし**見積りの何倍も入れない**（合成する行が無駄に増える）
+    assert ESTIMATE_SLACK <= 1.3, "見積りを当てにして入れすぎない"
 
 
 def test_冒頭は削らない():
@@ -385,7 +389,7 @@ def test_振りだけを残さない():
     body += ["解説: 最後にこう続けました。", ""]
     body += ["ラーセン: 締めの発言です。", ""]
     script = parse_script(nl.join(body))
-    _fit(script, 22.0)
+    _fit(script, 23.0)
     texts = [line.text for line in script.scenes[-1].lines]
     assert texts[-1] == "締めの発言です。", texts
     # 代弁を落とした「本人についてもこう話しています。」は残さない
@@ -613,7 +617,7 @@ def test_語りが2つ続いたら前のほうは振りとして落とす():
     body += ["解説: そのうえで、こう続けました。", ""]
     body += ["イラオラ: 締めの発言です。", ""]
     script = parse_script(nl.join(body))
-    _fit(script, 22.0)
+    _fit(script, 23.0)
     texts = [line.text for line in script.scenes[-1].lines]
     assert texts[-1] == "締めの発言です。", texts
     assert not any(t.startswith("もうひとつ") for t in texts), texts
@@ -727,10 +731,11 @@ def test_発言より先に語りを削る():
     body += ["解説: そのうえで、こう続けました。", ""]
     body += ["イラオラ: みっつめの発言です。", ""]
     script = parse_script(nl.join(body))
-    # **上限は ESTIMATE_SLACK を掛けてから使う。**0.86 → 0.92 にした
-    # （2026-09-16「ショートが不必要に短くなってる」）ので、削りが起きる
-    # ところまで上限を下げて、削る順番そのものを見る
-    _fit(script, 31.0)
+    # **上限は ESTIMATE_SLACK を掛けてから使う。**0.86 → 0.92 → 1.02 → 1.25 と
+    # 上げてきた（2026-09-16「ショートが不必要に短くなってる」／
+    # 2026-09-23「もう少し長くして」）ので、削りが起きるところまで
+    # 上限を下げて、削る順番そのものを見る
+    _fit(script, 23.0)
     texts = [line.text for line in script.scenes[-1].lines]
     said = [t for t in texts if t.startswith(("ひとつめ", "ふたつめ", "みっつめ"))]
     assert len(said) == 3, texts
@@ -1137,3 +1142,39 @@ def test_板はショートに出さない():
     images = [l.image for s in short.scenes for l in s.lines]
     assert not any(i and "assets/stats/" in i for i in images), "板がショートに残っている"
     assert any(i and "assets/photos/" in i for i in images), "写真まで落としている"
+
+
+def test_続き物のショートは本編の中身まで言う():
+    """**「本編はチャンネルから」だけでは、何が続くのか分からない**
+    （2026-09-23 指示「本編に繋いで」）。`series:` のある回は言い方を変える。
+    """
+    from src.shorts import SHORT_SUBSCRIBE, SHORT_SUBSCRIBE_2, SHORT_SUBSCRIBE_SERIES, trim
+
+    plain = trim(parse_script(BODY), "何が起きたか", max_seconds=60.0)
+    assert [l.text for l in plain.scenes[-1].lines][-2:] == [SHORT_SUBSCRIBE, SHORT_SUBSCRIBE_2]
+
+    script = parse_script(BODY)
+    script.meta = dict(script.meta or {}, series="プレミアリーグチーム紹介")
+    series = trim(script, "何が起きたか", max_seconds=60.0)
+    assert [l.text for l in series.scenes[-1].lines][-2:] == [SHORT_SUBSCRIBE_SERIES, SHORT_SUBSCRIBE_2]
+
+
+def test_板は縦版に差し替える():
+    """16:9 の板をそのまま敷くと左右が切れる。縦版があれば使う（2026-09-23）。"""
+    from pathlib import Path
+
+    from src.shorts import _drop_boards
+
+    script = parse_script(BODY)
+    tall = Path(__file__).resolve().parents[1] / "assets/stats/_test_board_v.png"
+    tall.parent.mkdir(parents=True, exist_ok=True)
+    tall.write_bytes(b"x")
+    try:
+        lines = [line for scene in script.scenes for line in scene.lines]
+        lines[0].image = "assets/stats/_test_board.png"
+        lines[-1].image = "assets/stats/_no_twin.png"
+        _drop_boards(script)
+        assert lines[0].image == "assets/stats/_test_board_v.png"
+        assert lines[-1].image is None
+    finally:
+        tall.unlink()

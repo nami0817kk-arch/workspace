@@ -854,3 +854,53 @@ def test_縦写真の左はぼかさずべた塗りにする(tmp_path):
     for y in (int(stage.height * r) for r in (0.2, 0.4)):
         row = left.crop((0, y, left.width, y + 1))
         assert max(ImageStat.Stat(row).stddev) < 6, "左に絵が残っている（ぼかした敷き布）"
+
+
+def test_縦の板は縦の画面いっぱいに敷く(tmp_path):
+    """ショート用の縦版（1080x1920）も板として扱う（2026-09-23）。
+
+    横長かどうかだけで見ていたので、縦版の基礎DATAは写真と同じ扱いになり、
+    **節の名前とカードが板の上に重なっていた**（実物を見て分かった）。
+    """
+    from dataclasses import replace as _replace
+    from pathlib import Path as _Path
+
+    from PIL import Image
+
+    from src.config import load_config
+    from src.render import Renderer
+
+    config = load_config()
+    config = _replace(config, video=_replace(config.video, width=1080, height=1920))
+    board = _Path("assets/stats/_test_tall_v.png")
+    board.parent.mkdir(parents=True, exist_ok=True)
+    Image.new("RGB", (1080, 1920), (20, 20, 24)).save(board)
+    face = tmp_path / "face.jpg"
+    Image.new("RGB", (480, 680), (200, 180, 160)).save(face)
+    try:
+        renderer = Renderer(config, tmp_path / "work")
+        renderer._photo_stage(str(board))
+        renderer._photo_stage(str(face))
+        assert str(board) in renderer._board_stages, "縦の板に文字を重ねてしまう"
+        assert str(face) not in renderer._board_stages, "縦写真まで板にしている"
+    finally:
+        board.unlink()
+
+
+def test_左半分のカードは縮めずにその幅で描く(tmp_path):
+    """**大きく描いてから0.63倍に縮めていた**（2026-09-23 指摘「表をもう少し大きく」）。
+
+    34px で描いた字が 21px になり、写真の横に出る表が読めなかった。
+    """
+    from src.config import load_config
+    from src.render import Renderer
+
+    config = load_config()
+    renderer = Renderer(config, tmp_path / "work")
+    renderer.script_cards = {"t": {"type": "table", "columns": ["名前", "在籍"],
+                                   "rows": [["ブレット・ピットマン", "2005-2015"]]}}
+    wide = renderer._card("t")
+    beside_photo = renderer._card("t", limit=config.video.width // 2 - 30)
+    assert beside_photo is not None and wide is not None
+    assert beside_photo.width == config.video.width // 2 - 30
+    assert beside_photo.width < wide.width

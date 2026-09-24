@@ -15,6 +15,7 @@ thumbnail_band_full: false
 thumbnail_photos: []
 thumbnail_crest_main:
 - ボーンマス
+thumbnail_board: assets/stats/pl_bournemouth_data_t.png
 bg: assets/backgrounds/stadium.png
 date: 2026年9月19日
 intro_title: マイナス17の勝ち点から欧州へ。ボーンマスに何があったのか
@@ -53,34 +54,6 @@ sources:
 - https://en.wikipedia.org/wiki/Brett_Pitman
 - https://en.wikipedia.org/wiki/Ryan_Fraser
 cards:
-  opening_card:
-    type: table
-    title: この動画で分かること
-    columns:
-    - ''
-    - ''
-    rows:
-    - - '1'
-      - いま見る理由
-    - - '2'
-      - 創立・本拠地・タイトル歴
-    - - '3'
-      - 歩んできた道
-    - - '4'
-      - このクラブを語る3人
-  reasons_card:
-    type: table
-    title: いま見る理由
-    columns:
-    - ''
-    - ''
-    rows:
-    - - 理由1
-      - 創立127年で初の欧州の舞台
-    - - 理由2
-      - 新監督ローゼ「たくさん走りたい」
-    - - 理由3
-      - 初戦で久保建英のクラブに勝利
   history_card:
     type: table
     title: 2008年に起きたこと
@@ -153,7 +126,7 @@ cards:
     - &id001
       - ブレット・ピットマン
       - 2005-2015
-      - リーグ267試合96得点。どん底も優勝も
+      - リーグ267試合96得点
   legends2_card:
     type: table
     title: 1990年以降の名選手
@@ -166,7 +139,7 @@ cards:
     - &id002
       - カラム・ウィルソン
       - 2014-2020
-      - 2014-15に2部で20得点。初昇格を決めた得点源
+      - 2014-15に2部で2
   legends3_card:
     type: table
     title: 1990年以降の名選手
@@ -179,7 +152,7 @@ cards:
     - *id002
     - - ライアン・フレイザー
       - 2013-2020
-      - 1シーズン14アシスト。リーグ183試合
+      - 1シーズン14アシスト。
   manager_card:
     type: table
     title: 今季の監督
@@ -223,56 +196,58 @@ cards:
 
 キャスター: プレミアリーグで、いちばん小さなスタジアム。
   telop: プレミアリーグで、いちばん小さなスタジアム
+  image: assets/stats/pl_bournemouth_data_t.png
+  no_telop: true
 キャスター: マイナス17の勝ち点から欧州へ。ボーンマスに何があったのか。
   telop: マイナス17の勝ち点から欧州へ。ボーンマスに何があったのか
   se: assets/audio/se_pon.wav
-  card: opening_card
+  image: assets/stats/pl_bournemouth_data_t.png
 キャスター: 消えかけたクラブが、いまヨーロッパで戦っています。
   telop: 消えかけたクラブが、いまヨーロッパで戦っています
+  image: assets/stats/pl_bournemouth_data_t.png
 
-## いま見る理由
+## いま見る理由と基礎DATA
 @bg: assets/backgrounds/stadium_ボーンマス_in.png
 @main: true
 
 キャスター: 創立から**127年**、欧州の大会に出るのは今季が初めてです。
-  telop: 創立から**127年**、欧州の大会に出るのは今季が初めてです
-  source: 報道
-  card: reasons_card
-キャスター: 今夏に来た監督のマルコ・ローゼは、こう言っています。
-  telop: 今夏に来た監督のマルコ・ローゼは、こう言っています
-マルコ・ローゼ: 「ボールに対して、とても積極的に。たくさん走りたい」
-  telop: マルコ・ローゼ「ボールに対して、とても積極的に。たくさん走りたい」
-キャスター: 欧州の初戦は、久保建英が所属するクラブに勝ちました。
-  telop: 欧州の初戦は、久保建英が所属するクラブに勝ちました
-キャスター: 17年前は4部、しかもマイナスの勝ち点から始めたクラブです。
-  telop: 17年前は4部、しかもマイナスの勝ち点から始めたクラブです
-
-## ボーンマス 基礎DATA
-@bg: assets/backgrounds/stadium_ボーンマス_in.png
-
-解説: 創立は**1899年**。ボスコムという地区のクラブが前身です。
   no_telop: true
   source: 背景
+  image: assets/stats/pl_bournemouth_data_r1.png
+キャスター: 今夏に来た監督のマルコ・ローゼは、こう言っています。
+  no_telop: true
+  image: assets/stats/pl_bournemouth_data_r2.png
+マルコ・ローゼ: 「ボールに対して、とても積極的に。たくさん走りたい」
+  telop: マルコ・ローゼ「ボールに対して、とても積極的に。たくさん走りたい」
+  image: assets/stats/pl_bournemouth_data_r2.png
+キャスター: 欧州の初戦は、久保建英が所属するクラブに勝ちました。
+  no_telop: true
+  image: assets/stats/pl_bournemouth_data_r3.png
+キャスター: 17年前は4部、しかもマイナスの勝ち点から始めたクラブです。
+  no_telop: true
+  image: assets/stats/pl_bournemouth_data_r.png
+キャスター: 創立は**1899年**。ボスコムという地区のクラブが前身です。
+  no_telop: true
   image: assets/stats/pl_bournemouth_data0.png
-解説: 愛称は「ザ・チェリーズ」。さくらんぼです。赤と黒の縦じまは、イタリアのミランが手本です。
+キャスター: 愛称は「ザ・チェリーズ」。さくらんぼです。赤と黒の縦じまは、イタリアのミランが手本です。
   no_telop: true
   image: assets/stats/pl_bournemouth_data1.png
-解説: 町はイングランド南部、ドーセット州の海沿いにあります。
+キャスター: 町はイングランド南部、ドーセット州の海沿いにあります。
   no_telop: true
   image: assets/stats/pl_bournemouth_map.png
-解説: 本拠地はディーン・コート。**1万2357人**。マンチェスター・ユナイテッドの**6分の1**です。
+キャスター: 本拠地はディーン・コート。**1万2357人**。マンチェスター・ユナイテッドの**6分の1**です。
   telop: 本拠地はディーン・コート。**1万2357人**。マンチェスター・ユナイテッドの**6分の1**です
   image: assets/backgrounds/stadium_ボーンマス.png
-解説: オーナーはアメリカのビル・フォーリー。2022年に買収。**1億ポンド超**と報じられました。
+キャスター: オーナーはアメリカのビル・フォーリー。2022年に買収。**1億ポンド超**と報じられました。
   telop: オーナーはアメリカのビル・フォーリー。2022年に買収。**1億ポンド超**と報じられました
   image: assets/photos/pl/bournemouth_owner_cf0347c5.jpg
-解説: 共同オーナーには、ハリウッド俳優の**マイケル・ビー・ジョーダン**もいます。
+キャスター: 共同オーナーには、ハリウッド俳優の**マイケル・ビー・ジョーダン**もいます。
   telop: 共同オーナーには、ハリウッド俳優の**マイケル・ビー・ジョーダン**もいます
   image: assets/photos/pl/bournemouth_owner_07f09a4e.jpg
-解説: 1部の優勝も、FAカップも、リーグカップもゼロ。20クラブで3つとも無いのは**5クラブ**です。
+キャスター: 1部の優勝も、FAカップも、リーグカップもゼロ。20クラブで3つとも無いのは**5クラブ**です。
   no_telop: true
   image: assets/stats/pl_bournemouth_cups.png
-解説: そのボーンマスが昨季、**6位**。クラブ史上最高の順位でした。
+キャスター: そのボーンマスが昨季、**6位**。クラブ史上最高の順位でした。
   no_telop: true
   image: assets/stats/pl_bournemouth_last.png
 
@@ -288,7 +263,6 @@ cards:
   telop: フットボールリーグは、参加そのものを認めないと言いました
 解説: 認めた条件が**勝ち点マイナス17**。当時は4部です。
   telop: 認めた条件が**勝ち点マイナス17**。当時は4部です
-  card: none
   image: assets/images/pl_bournemouth_story/scene.jpg
 
 ## 31歳の監督
@@ -327,7 +301,6 @@ cards:
   telop: 若手を育てて高く手放す型。ディフェンダーのハイセンは1年でレアル・マドリードへ、5000万ポンド
 解説: 1997年と2008年、2度の経営破綻から立ち直ってきた、しぶといクラブです。
   telop: 1997年と2008年、2度の経営破綻から立ち直ってきた、しぶといクラブです
-  card: none
   image: assets/photos/pl/bournemouth_manager_19d3b54a.jpg
 
 ## ひとりで9点
@@ -353,7 +326,6 @@ cards:
   telop: 2009年から10年は**26得点**。5月1日、ポート・ヴェイルに4対0で勝ち、3部へ上げました
 キャスター: 2部を制した2014年から15年にも13得点。リーグ戦で通算**267試合96得点**です。
   telop: 2部を制した2014年から15年にも13得点。リーグ戦で通算**267試合96得点**です
-  card: none
   image: assets/photos/pl/bournemouth_legend_2f36ed97.jpg
 
 ## このクラブを語る3人（2人目）
@@ -368,7 +340,6 @@ cards:
   telop: 2015年8月、プレミア初戦のウェストハム戦でハットトリック。アウェーで4対3の勝ち
 キャスター: ボーンマスの選手として初めてイングランド代表で得点。2020年、ニューカッスルに移りました。
   telop: ボーンマスの選手として初めてイングランド代表で得点。2020年、ニューカッスルに移りました
-  card: none
   image: assets/photos/pl/bournemouth_legend_224f5148.jpg
 
 ## このクラブを語る3人（3人目）
@@ -383,7 +354,6 @@ cards:
   telop: 2016年12月、リヴァプールに4対3で勝ち。途中から出て1点を決め、1点を演出しました
 キャスター: 2018年から19年は7得点**14アシスト**。2020年、ウィルソンと同じ日にニューカッスルへ。
   telop: 2018年から19年は7得点**14アシスト**。2020年、ウィルソンと同じ日にニューカッスルへ
-  card: none
   image: assets/photos/pl/bournemouth_legend_9f069e9f.jpg
 
 ## 今季の監督

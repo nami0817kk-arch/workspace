@@ -19,53 +19,38 @@ theme:
   question: どんなクラブなのか
   hook: 赤いリヴァプールは、このクラブが出ていった家で始まりました。
   lead: リヴァプールの街から、**1部リーグを9回**。
+  opening_image: assets/stats/pl_everton_data_t.png
 thumbnail:
   line1: 133年いた家を、去年出た
-  line2: エヴァートン
+  line2: 出た家から、リヴァプールが生まれた
   crest_main:
   - エヴァートン
   tags: []
   points: []
+  board: assets/stats/pl_everton_data_t.png
 sections:
-- id: reasons
-  heading: いま見る理由
-  tier: 報道
+- id: data
+  heading: いま見る理由と基礎DATA
   main: true
+  tier: 背景
   telop: 開幕5試合負けなし。グリーリッシュも来た
   narrator: キャスター
-  card:
-    type: table
-    title: いま見る理由
-    columns:
-    - ''
-    - ''
-    rows:
-    - - 理由1
-      - 開幕5試合負けなしで7位
-    - - 理由2
-      - グリーリッシュが9月に加入
-    - - 理由3
-      - 新本拠地は2シーズン目
   say:
-  - 開幕**5試合**を負けなしで、上から7番目にいます。
-  - 監督デイヴィッド・モイーズが、最初に来た2002年の言葉です。
+  - text: 開幕**5試合**を負けなしで、上から7番目にいます。
+    image: assets/stats/pl_everton_data_r1.png
+    no_telop: true
+  - text: 監督デイヴィッド・モイーズが、最初に来た2002年の言葉です。
+    image: assets/stats/pl_everton_data_r1.png
+    no_telop: true
   - voice: デイヴィッド・モイーズ
     text: 人々のクラブに加わる。街で会う人の大半がエヴァートンファンだ
-  - ジャック・グリーリッシュが**9月**、シティから期限付きで加入。港の新本拠地は、まだ**2シーズン目**です。
-  - 家を替えた理由は、古い家では席を増やせなかったから。
-  sources:
-  - https://en.wikipedia.org/wiki/Everton_F.C.
-  - https://en.wikipedia.org/wiki/2026–27_Everton_F.C._season
-  - https://en.wikipedia.org/wiki/David_Moyes
-  bg: assets/backgrounds/stadium_エヴァートン.png
-  official: false
-- id: data
-  heading: エヴァートン 基礎DATA
-  main: false
-  tier: 背景
-  telop: 1878年創立
-  narrator: 解説
-  say:
+    image: assets/stats/pl_everton_data_r1.png
+  - text: ジャック・グリーリッシュが**9月**、シティから期限付きで加入。港の新本拠地は、まだ**2シーズン目**です。
+    image: assets/stats/pl_everton_data_r2.png
+    no_telop: true
+  - text: 家を替えた理由は、古い家では席を増やせなかったから。
+    image: assets/stats/pl_everton_data_r2.png
+    no_telop: true
   - image: assets/stats/pl_everton_data0.png
     text: 創立は**1878年**。街の公園、スタンリー・パークで生まれたクラブです。
     no_telop: true
@@ -75,7 +60,7 @@ sections:
   - image: assets/stats/pl_everton_map.png
     text: ホームタウンは、港の街リヴァプール。
     no_telop: true
-  - image: assets/backgrounds/stadium_エヴァートン_in.png
+  - image: assets/backgrounds/stadium_エヴァートン.png
     text: 本拠地はヒル・ディキンソン・スタジアム。**5万2769人**が入ります。
   - image: assets/stats/pl_everton_data4.png
     text: オーナーはアメリカの実業家ダン・フリードキン。2024年12月からクラブを持っています。
@@ -91,7 +76,9 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Everton_F.C.
-  bg: assets/backgrounds/stadium_エヴァートン.png
+  - https://en.wikipedia.org/wiki/2026–27_Everton_F.C._season
+  - https://en.wikipedia.org/wiki/David_Moyes
+  bg: assets/backgrounds/stadium_エヴァートン_in.png
   official: false
 - id: move
   heading: 133年いた家を出た
@@ -101,7 +88,7 @@ sections:
   card:
     type: table
     title: 本拠地
-    columns:
+    columns: &id001
     - ''
     - ''
     rows:
@@ -109,20 +96,25 @@ sections:
       - アンフィールド
     - - 1892年-2025年
       - グディソン・パーク
-    - - 2025-26年から
-      - ヒル・ディキンソン・スタジアム
   say:
   - image: assets/images/pl_everton_story/scene.jpg
     text: '**133年いた家を、去年出ました。**'
   - その家、グディソン・パークは古く、席を増やせなくなっていました。
-  - そこに入ったのは**1892年**。それまではアンフィールドにいました。
+  - text: そこに入ったのは**1892年**。それまではアンフィールドにいました。
+    card:
+      type: table
+      title: 本拠地
+      columns: *id001
+      rows:
+      - - 2025-26年から
+        - ヒル・ディキンソン・スタジアム
   - 地主と家賃でもめて出ていき、残った地主が作ったのがリヴァプールです。
   - 新しい家は、川沿いのドックに建てたヒル・ディキンソン・スタジアム。名前は地元の法律事務所です。
   official: false
   sources:
   - https://en.wikipedia.org/wiki/Everton_F.C.
   - https://en.wikipedia.org/wiki/Hill_Dickinson_Stadium
-  bg: assets/backgrounds/stadium_エヴァートン.png
+  bg: assets/backgrounds/stadium_エヴァートン_in.png
 - id: features
   heading: このクラブの特徴
   tier: 背景
@@ -151,7 +143,7 @@ sections:
   - https://en.wikipedia.org/wiki/David_Moyes
   - https://en.wikipedia.org/wiki/2023%E2%80%9324_Everton_F.C._season
   - https://en.wikipedia.org/wiki/Dan_Friedkin
-  bg: assets/backgrounds/stadium_エヴァートン.png
+  bg: assets/backgrounds/stadium_エヴァートン_in.png
   official: false
 - id: episode
   heading: 1シーズン60ゴールの男
@@ -178,7 +170,7 @@ sections:
   - 100年近くたったいまも、破られていません。
   sources:
   - https://en.wikipedia.org/wiki/Everton_F.C.
-  bg: assets/backgrounds/stadium_エヴァートン.png
+  bg: assets/backgrounds/stadium_エヴァートン_in.png
   official: false
 - id: legends
   heading: このクラブを語る3人
@@ -193,10 +185,10 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id001
+    - &id002
       - ネヴィル・サウスオール
       - 1981-1998
-      - クラブ最多578試合のGK
+      - クラブ最多578試合のG
   say:
   - text: ネヴィル・サウスオールは1981年、ベリーから**15万ポンド**で来たウェールズ人キーパーです。
     image: assets/photos/pl/everton_legend_721f5e76.jpg
@@ -206,7 +198,7 @@ sections:
   - https://en.wikipedia.org/wiki/Neville_Southall
   - https://en.wikipedia.org/wiki/Seamus_Coleman
   - https://en.wikipedia.org/wiki/Tim_Cahill
-  bg: assets/backgrounds/stadium_エヴァートン.png
+  bg: assets/backgrounds/stadium_エヴァートン_in.png
   official: false
 - id: legends2
   heading: このクラブを語る3人（2人目）
@@ -221,8 +213,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - &id002
+    - *id002
+    - &id003
       - シェイマス・コールマン
       - 2009-2026
       - 17年在籍の主将
@@ -236,7 +228,7 @@ sections:
   - https://en.wikipedia.org/wiki/Seamus_Coleman
   - https://en.wikipedia.org/wiki/Tim_Cahill
   - https://en.wikipedia.org/wiki/S%C3%A9amus_Coleman
-  bg: assets/backgrounds/stadium_エヴァートン.png
+  bg: assets/backgrounds/stadium_エヴァートン_in.png
   official: false
 - id: legends3
   heading: このクラブを語る3人（3人目）
@@ -251,8 +243,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
     - *id002
+    - *id003
     - - ティム・ケイヒル
       - 2004-2012
       - 中盤から点を取り続けた
@@ -265,7 +257,7 @@ sections:
   - https://en.wikipedia.org/wiki/Neville_Southall
   - https://en.wikipedia.org/wiki/Seamus_Coleman
   - https://en.wikipedia.org/wiki/Tim_Cahill
-  bg: assets/backgrounds/stadium_エヴァートン.png
+  bg: assets/backgrounds/stadium_エヴァートン_in.png
   official: false
 - id: manager
   heading: 今季の監督
@@ -292,7 +284,7 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Everton_F.C.
   - https://en.wikipedia.org/wiki/David_Moyes
-  bg: assets/backgrounds/stadium_エヴァートン.png
+  bg: assets/backgrounds/stadium_エヴァートン_in.png
   official: false
 - id: squad
   heading: 今季の登録選手
@@ -341,7 +333,7 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Everton_F.C.
-  bg: assets/backgrounds/stadium_エヴァートン.png
+  bg: assets/backgrounds/stadium_エヴァートン_in.png
   official: false
 - id: season
   heading: 今季のここまで
@@ -376,5 +368,5 @@ sections:
   - 順位は**7位**、勝ち点は**9**です。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Everton_F.C._season
-  bg: assets/backgrounds/stadium_エヴァートン.png
+  bg: assets/backgrounds/stadium_エヴァートン_in.png
   official: false

@@ -44,16 +44,10 @@ def crest_background(script, out_dir) -> str:
     from .thumbnail import _short_crest_stage
 
     meta = script.meta or {}
-    # **そのクラブのスタジアムの実写があるなら、そちらを使う**（2026-09-23）。
-    # エンブレムの下地は 2026-09-16 に決めたが、そのときの既定は
-    # 「ヴォルフスブルクのスタジアム」で、クラブと関係の無い絵だったから。
-    # いまは20クラブぶんの本拠地の実写がある。白地に小さいエンブレムより、
-    # 満員の客席のほうが強い（しかもカードがエンブレムに重ならない）
-    # 下地は front matter ではなく**節の `@bg:`** に入っている（front matter は既定値）
-    backgrounds = [str(getattr(script, "background", "") or "")]
-    backgrounds += [str(getattr(scene, "background", "") or "") for scene in script.scenes]
-    if any(b.startswith("assets/backgrounds/stadium_") for b in backgrounds):
-        return ""
+    # **下地はクラブのエンブレム**（2026-09-23 指示「ショートの背景には、チームロゴだそう」）。
+    # 同じ日の朝に一度スタジアムの実写へ替えたが、ユーザーの指定で戻した。
+    # 白っぽい地に小さく置く形ではなく、**クラブの色の地に大きく敷く**
+    # （`_crest_ground`）。基礎DATAの板と同じ暗い地なので、板との行き来で色が飛ばない
     if str(meta.get("thumbnail_photo") or "").strip():
         return ""
     if [x for x in (meta.get("thumbnail_photos") or []) if str(x).strip()]:
@@ -64,14 +58,78 @@ def crest_background(script, out_dir) -> str:
     from .config import load_config
 
     font_path = str(load_config().video.font_path())
-    stage = _short_crest_stage(names, font_path,
-                              str(meta.get("thumbnail_crest_link", "対")))
+    stage = _crest_ground(names)
+    if stage is None:
+        stage = _short_crest_stage(names, font_path,
+                                   str(meta.get("thumbnail_crest_link", "対")))
     if stage is None:
         return ""
     out = Path(out_dir) / "crest_bg.png"
     out.parent.mkdir(parents=True, exist_ok=True)
     stage.convert("RGB").save(out, quality=95)
     return str(out).replace("\\", "/")
+
+
+def _crest_ground(names: list) -> "object | None":
+    """エンブレム1枚を、クラブの色の地に大きく敷いた縦の下地（2026-09-23）。
+
+    **エンブレムの色から地を作る**ので、クラブごとに違う絵になる。
+    後ろに大きくぼかした同じエンブレムを薄く置き、その上にくっきり1枚。
+    白っぽい地に小さく置く形（`_short_crest_stage`）は、20クラブ紹介では
+    「白い画面」に見えていた。2枚並べる回（対戦もの）は、そちらに任せる。
+    """
+    from PIL import Image, ImageDraw, ImageFilter
+
+    from . import crest as crest_mod
+
+    found = [p for p in (crest_mod.find(str(n)) for n in list(names)[:2]) if p is not None]
+    if len(found) != 1:
+        return None
+    with Image.open(found[0]) as source:
+        mark = source.convert("RGBA")
+    width, height = SIZE
+    base = _crest_colour(mark)
+    ground = Image.new("RGB", (width, height))
+    draw = ImageDraw.Draw(ground)
+    for y in range(height):
+        t = y / height
+        draw.line([(0, y), (width, y)],
+                  fill=tuple(round(c + (12 - c) * (0.80 + 0.16 * t)) for c in base))
+    canvas = ground.convert("RGBA")
+
+    big = round(width * 1.5)
+    blur = mark.resize((big, max(1, round(mark.height * big / mark.width))), Image.LANCZOS)
+    blur = blur.filter(ImageFilter.GaussianBlur(70))
+    blur.putalpha(blur.getchannel("A").point(lambda a: int(a * 0.22)))
+    canvas.alpha_composite(blur, ((width - blur.width) // 2, round(height * 0.34) - blur.height // 2))
+
+    room = round(width * 0.56)
+    crisp = mark.resize((room, max(1, round(mark.height * room / mark.width))), Image.LANCZOS)
+    canvas.alpha_composite(crisp, ((width - crisp.width) // 2, round(height * 0.34) - crisp.height // 2))
+    return canvas
+
+
+def _crest_colour(mark) -> tuple:
+    """エンブレムの中でいちばん濃い色。白と黒と透明は数えない。"""
+    small = mark.convert("RGBA").resize((64, 64))
+    best, count = (40, 40, 48), 0
+    tally: dict = {}
+    for r, g, b, a in small.getdata():
+        if a < 200:
+            continue
+        lum = 0.299 * r + 0.587 * g + 0.114 * b
+        if lum > 232 or lum < 26:
+            continue
+        key = (r // 32, g // 32, b // 32)
+        item = tally.setdefault(key, [0, 0, 0, 0])
+        item[0] += r
+        item[1] += g
+        item[2] += b
+        item[3] += 1
+    for item in tally.values():
+        if item[3] > count:
+            count, best = item[3], tuple(v // item[3] for v in item[:3])
+    return best
 
 
 def portrait(config: ProjectConfig) -> ProjectConfig:
@@ -88,7 +146,9 @@ def portrait(config: ProjectConfig) -> ProjectConfig:
         config.video,
         width=SIZE[0],
         height=SIZE[1],
-        telop_size=max(40, int(config.video.telop_size * 0.78)),
+        # **0.78→0.68**（2026-09-23 指示「ショートの字幕はもう少し小さくしてください」）。
+        # 板の上に重ねるようになったので、字幕が大きいと板が隠れる
+        telop_size=max(34, int(config.video.telop_size * 0.68)),
         # 見出しは縮めない。参考チャンネルは画面幅いっぱいの極太2行だった
         headline_size=max(44, int(config.video.headline_size * 0.70)),
         title_size=max(56, int(config.video.title_size * 0.62)),
@@ -170,24 +230,44 @@ def _retitle(short: Script, body: Scene) -> None:
 
 
 def _drop_boards(short: Script) -> None:
-    """**板はショートに出さない**（2026-09-23 指摘「ショートの背景がおかしい」）。
+    """**板は縦版に差し替える。無ければ外す**（2026-09-23 指示「基礎データも見して」）。
 
-    基礎DATAや登録選手の板は 16:9 で作ってある。縦（9:16）に敷くと真ん中しか
-    映らず、「マス 基礎DATA」「ブラック・ナイト」のように字が切れて読めない。
-    板を外せば、その回の下地（エンブレムかスタジアムの実写）が出る。
+    16:9 の板を縦（9:16）に敷くと真ん中しか映らず、「マス 基礎DATA」のように
+    字が切れて読めない（同じ日の朝の指摘「ショートの背景がおかしい」）。
+    そこで一度は**全部外した**が、それだと基礎DATAを読み上げているあいだ
+    画面にその中身が出ない。`tools/clubdata.py --portrait` が同じ中身の
+    縦版（`<名前>_v.png`）を書き出すので、**あれば差し替える**。
     **写真は外さない**（顔は縦でも成立する）。
     """
+    from pathlib import Path as _P
+
     from .render import _is_board
 
     for scene in short.scenes:
         for line in scene.lines:
             if not line.image:
                 continue
-            # **16:9 のために作った絵は全部外す**（板・地図・スタジアムの実写）。
-            # 板を外したら今度は「本拠地」のスタジアム写真が残り、縦では
-            # 駐車場しか映らなかった（2026-09-23、2度目の指摘）
-            if _is_board(line.image) or line.image.startswith("assets/backgrounds/"):
-                line.image = None
+            if not (_is_board(line.image) or line.image.startswith("assets/backgrounds/")):
+                continue
+            # 縦版は隣か、**まとめて assets/stats** に置いてある
+            name = _P(str(line.image))
+            root = _P(__file__).resolve().parents[1]
+            line.image = None
+            for tall in (name.with_name(name.stem + "_v.png"),
+                         _P("assets/stats") / (name.stem + "_v.png")):
+                if (root / tall).exists():
+                    line.image = tall.as_posix()
+                    # **ショートでは字幕を出す**（2026-09-23 指摘「たまに、字幕で
+                    # ないものがある」）。本編は板の字が大きいので重ねない決まり
+                    # （2026-09-20）だが、縦の画面では板の1行が小さく、
+                    # **読み上げているのに画面に何も出ていない**ように見える
+                    line.no_telop = False
+                    # **字幕の中身も入れる**（2026-09-24 指摘「読み上げる文章と
+                    # 字幕が一致してない」）。板の行は `no_telop` なので
+                    # **telop が空**で、印だけ外すと**前の行の字幕が残ったまま**になる
+                    if not str(line.telop or "").strip():
+                        line.telop = line.text
+                    break
 
 
 def _drop_hook(opening: Scene) -> None:
@@ -350,16 +430,22 @@ SHORT_OUTRO = 5.0
 # 2行に分けるのは、読み上げが5秒の枠に収まるようにするため
 SHORT_SUBSCRIBE = "本編はチャンネルから見られます。"
 SHORT_SUBSCRIBE_2 = "チャンネル登録もお願いします。"
+# **続き物の回は、本編に何があるかまで言う**（2026-09-23 指示「本編に繋いで」）。
+# 「本編はチャンネルから」だけだと、何が続くのか分からないまま終わっていた。
+# 使うのは `series:` のある回（いまはプレミア20クラブ紹介）
+SHORT_SUBSCRIBE_SERIES = "クラブの歩みと今季の選手は、本編で見られます。"
 
 # 締めのかたまり（本編への誘い＋登録の依頼）。**2行ある**（2026-09-18 に1行から増やした）
 SHORT_OUTRO_LINES = (SHORT_SUBSCRIBE, SHORT_SUBSCRIBE_2)
+# 締めかどうかを見分けるときは、続き物の言い方も数える
+SHORT_OUTRO_ANY = (SHORT_SUBSCRIBE, SHORT_SUBSCRIBE_SERIES, SHORT_SUBSCRIBE_2)
 
 
 def _outro_count(lines) -> int:
     """末尾にある締めの行数。**0〜2**。"""
     count = 0
     for line in reversed(lines):
-        if (line.text or "").strip() in SHORT_OUTRO_LINES:
+        if (line.text or "").strip() in SHORT_OUTRO_ANY:
             count += 1
         else:
             break
@@ -544,7 +630,14 @@ def _add_subscribe(short: Script) -> None:
         return
     if _has_outro(lines):
         return
-    for words in (SHORT_SUBSCRIBE, SHORT_SUBSCRIBE_2):
+    series = str((short.meta or {}).get("series") or "").strip()
+    if series:
+        # **最後のカードも本編へ向ける**（2026-09-23 指示「本編に繋いで」）。
+        # 続き物の回に「続報は次回お伝えします」は合わない（次回は別のクラブ）
+        short.meta = dict(short.meta or {}, outro_title="続きは本編で",
+                          outro_sub="チャンネルから見られます")
+    first = SHORT_SUBSCRIBE_SERIES if series else SHORT_SUBSCRIBE
+    for words in (first, SHORT_SUBSCRIBE_2):
         last = copy.deepcopy(lines[-1])
         last.text = words
         last.speaker = NARRATORS[0]
@@ -613,7 +706,11 @@ def _add_face(script: Script) -> None:
     if not photo:
         photo = str((script.meta or {}).get("thumbnail_photo") or "").strip()
     if not photo:
-        photo = next((str(line.image) for line in script.lines if line.image), "")
+        # **板は顔の代わりにしない**（2026-09-23）。縦版の板を1枚目に拾うと、
+        # 題を読んでいる冒頭からデータの板になり、エンブレムの下地が出ない
+        from .render import _is_board
+        photo = next((str(line.image) for line in script.lines
+                      if line.image and not _is_board(line.image)), "")
     if not photo:
         return
     for line in script.lines:
@@ -722,7 +819,14 @@ def face_problems(script: Script) -> list[str]:
 # 目標が46秒で、実尺は38〜45秒に収まっていた。**上限まで2割空けていた。**
 # 見積りのずれは回によって +5%〜+18%（実測）なので、0.86 で目標50秒、
 # 最悪でも59秒に収まる
-ESTIMATE_SLACK = 0.92
+# **0.92 → 1.02**（2026-09-23 指示「ショートはもう少し長くして、創立とスタジアム、
+# 本拠地まで軽く説明」）。実尺で収める `enforce_limit` が後ろから落とすので、
+# 見積りの側で手前に切る必要はもう無い。**多めに入れて、実尺で削る**。
+# 0.92 だと47秒で終わり、上限58秒に11秒空いていた
+# **1.02 → 1.25**（2026-09-24）。読み上げを1.25倍にしたので（config.speech_speed）、
+# 字数からの見積りは**実尺の1.2〜1.3倍**に出る。1.02 では見積りが先に上限へ当たり、
+# 実尺43〜48秒で終わっていた。**入れるだけ入れて、`enforce_limit` が実尺で削る**
+ESTIMATE_SLACK = 1.25
 
 
 # 情報を持たない「振り」。**発言の直前に置かれ、2〜4秒を使う**

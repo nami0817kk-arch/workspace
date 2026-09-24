@@ -19,53 +19,38 @@ theme:
   question: どんなクラブなのか
   hook: いまの姿になる前に、3部まで落ちています。
   lead: 1シーズンで**勝ち点100**。この数字を持つのは、ここだけ。
+  opening_image: assets/stats/pl_mancity_data_t.png
 thumbnail:
   line1: ヨーロッパを獲って、3部へ
-  line2: シティ
+  line2: 初優勝の翌季に、降格したクラブ
   crest_main:
   - マンチェスターシティ
   tags: []
   points: []
+  board: assets/stats/pl_mancity_data_t.png
 sections:
-- id: reasons
-  heading: いま見る理由
-  tier: 報道
+- id: data
+  heading: いま見る理由と基礎DATA
   main: true
+  tier: 背景
   telop: 開幕5連勝で首位。新監督マレスカ
   narrator: キャスター
-  card:
-    type: table
-    title: いま見る理由
-    columns:
-    - ''
-    - ''
-    rows:
-    - - 理由1
-      - 開幕5連勝、首位
-    - - 理由2
-      - 新監督マレスカの1年目
-    - - 理由3
-      - リーグ優勝から2シーズン
   say:
-  - 開幕から**5連勝**。いま、プレミアの首位にいるクラブです。
-  - 監督はエンツォ・マレスカ。かつてグアルディオラを支えた助手が、**1年目**の指揮です。
+  - text: 開幕から**5連勝**。いま、プレミアの首位にいるクラブです。
+    image: assets/stats/pl_mancity_data_r1.png
+    no_telop: true
+  - text: 監督はエンツォ・マレスカ。かつてグアルディオラを支えた助手が、**1年目**の指揮です。
+    image: assets/stats/pl_mancity_data_r2.png
+    no_telop: true
   - voice: エンツォ・マレスカ
     text: 「シティは、信じられないほどよく運営されているクラブだ」
-  - 昨季はリーグ2位で、カップは**2つ**。リーグの優勝からは、2シーズン遠ざかっています。
-  - 3部にいたのは1998年。転機は10年後の買収でした。
-  sources:
-  - https://en.wikipedia.org/wiki/Manchester_City_F.C.
-  - https://en.wikipedia.org/wiki/2026–27_Manchester_City_F.C._season
-  - https://en.wikipedia.org/wiki/Enzo_Maresca
-  bg: assets/backgrounds/stadium_マンチェスターシティ.png
-  official: false
-- id: data
-  heading: マンチェスター・シティ 基礎DATA
-  main: false
-  tier: 背景
-  telop: 1880年創立
-  narrator: 解説
-  say:
+    image: assets/stats/pl_mancity_data_r2.png
+  - text: 昨季はリーグ2位で、カップは**2つ**。リーグの優勝からは、2シーズン遠ざかっています。
+    image: assets/stats/pl_mancity_data_r3.png
+    no_telop: true
+  - text: 3部にいたのは1998年。転機は10年後の買収でした。
+    image: assets/stats/pl_mancity_data_r3.png
+    no_telop: true
   - image: assets/stats/pl_mancity_data0.png
     text: 創立は**1880年**。教会のチーム、セント・マークスから、1894年に今の名前になりました。
     no_telop: true
@@ -75,7 +60,7 @@ sections:
   - image: assets/stats/pl_mancity_map.png
     text: ホームタウンはマンチェスター。イングランド北西部です。
     no_telop: true
-  - image: assets/backgrounds/stadium_マンチェスターシティ_in.png
+  - image: assets/backgrounds/stadium_マンチェスターシティ.png
     text: 本拠地はエティハド・スタジアム。**約6万1000人**が入ります。
   - image: assets/photos/pl/mancity_owner_90b48e45.jpg
     text: オーナーは、アブダビの投資グループです。
@@ -93,7 +78,9 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Manchester_City_F.C.
-  bg: assets/backgrounds/stadium_マンチェスターシティ.png
+  - https://en.wikipedia.org/wiki/2026–27_Manchester_City_F.C._season
+  - https://en.wikipedia.org/wiki/Enzo_Maresca
+  bg: assets/backgrounds/stadium_マンチェスターシティ_in.png
   official: false
 - id: fall
   heading: 3部まで落ちたクラブ
@@ -103,7 +90,7 @@ sections:
   card:
     type: table
     title: 落ちて、変わるまで
-    columns:
+    columns: &id001
     - ''
     - ''
     rows:
@@ -111,29 +98,39 @@ sections:
       - 3部へ降格。1990年代に経営が傾いた末
     - - 1970年
       - カップウィナーズカップ優勝
-    - - 2008年8月
-      - アブダビの投資グループが買収
-    - - 2012年 最終節
-      - QPRに3-2。決勝点はアグエロ（追加4分目）
-    - - 同じ日
-      - 1968年以来、44年ぶりの優勝
   say:
   - text: 1998年、このクラブは**3部**まで落ちました。
     image: assets/images/pl_mancity_story/01.jpg
   - 1990年代、経営が傾いた末の降格でした。
   - 1970年にヨーロッパの**カップウィナーズカップ**を獲ったクラブです。
-  - ヨーロッパを制したクラブの3部落ちは、ドイツのマクデブルクに続く**2例目**でした。
+  - text: ヨーロッパを制したクラブの3部落ちは、ドイツのマクデブルクに続く**2例目**でした。
+    card:
+      type: table
+      title: 落ちて、変わるまで
+      columns: *id001
+      rows:
+      - - 2008年8月
+        - アブダビの投資グループが買収
+      - - 2012年 最終節
+        - QPRに3-2。決勝点はアグエロ（追加4分目）
   - 転機は2008年8月。いまのオーナー、アブダビの投資グループがクラブを買い取りました。
   - 2012年の最終節は、クイーンズ・パーク・レンジャーズ戦でした。
   - 1対2で負けたまま、**アディショナルタイム**に入ります。
-  - そこから2点。2点目を決めたのはセルヒオ・アグエロ、試合終了の直前でした。
+  - text: そこから2点。2点目を決めたのはセルヒオ・アグエロ、試合終了の直前でした。
+    card:
+      type: table
+      title: 落ちて、変わるまで
+      columns: *id001
+      rows:
+      - - 同じ日
+        - 1968年以来、44年ぶりの優勝
   - 3対2で勝ち、同じ勝ち点のマンチェスター・ユナイテッドを得失点差で上回りました。
   - 1968年以来、**44年ぶり**の優勝でした。
   official: false
   sources:
   - https://en.wikipedia.org/wiki/Manchester_City_F.C.
   - https://en.wikipedia.org/wiki/Vincent_Kompany
-  bg: assets/backgrounds/stadium_マンチェスターシティ.png
+  bg: assets/backgrounds/stadium_マンチェスターシティ_in.png
 - id: features
   heading: このクラブの特徴
   tier: 背景
@@ -162,7 +159,7 @@ sections:
   - https://en.wikipedia.org/wiki/Enzo_Maresca
   - https://en.wikipedia.org/wiki/History_of_Manchester_City_F.C.
   - https://en.wikipedia.org/wiki/City_Football_Group
-  bg: assets/backgrounds/stadium_マンチェスターシティ.png
+  bg: assets/backgrounds/stadium_マンチェスターシティ_in.png
   official: false
 - id: episode
   heading: 優勝の翌年に降格
@@ -189,7 +186,7 @@ sections:
   - しかも落ちたそのシーズン、リーグでいちばん多くゴールを決めていたのは、マンチェスター・シティでした。
   sources:
   - https://en.wikipedia.org/wiki/Manchester_City_F.C.
-  bg: assets/backgrounds/stadium_マンチェスターシティ.png
+  bg: assets/backgrounds/stadium_マンチェスターシティ_in.png
   official: false
 - id: legends
   heading: このクラブを語る3人
@@ -204,7 +201,7 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id001
+    - &id002
       - セルヒオ・アグエロ
       - 2011-2021
       - クラブ最多の260得点
@@ -217,7 +214,7 @@ sections:
   - https://en.wikipedia.org/wiki/Sergio_Ag%C3%BCero
   - https://en.wikipedia.org/wiki/Vincent_Kompany
   - https://en.wikipedia.org/wiki/David_Silva
-  bg: assets/backgrounds/stadium_マンチェスターシティ.png
+  bg: assets/backgrounds/stadium_マンチェスターシティ_in.png
   official: false
 - id: legends2
   heading: このクラブを語る3人（2人目）
@@ -232,8 +229,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - &id002
+    - *id002
+    - &id003
       - ヴァンサン・コンパニ
       - 2008-2019
       - 8年間の主将
@@ -246,7 +243,7 @@ sections:
   - https://en.wikipedia.org/wiki/Sergio_Ag%C3%BCero
   - https://en.wikipedia.org/wiki/Vincent_Kompany
   - https://en.wikipedia.org/wiki/David_Silva
-  bg: assets/backgrounds/stadium_マンチェスターシティ.png
+  bg: assets/backgrounds/stadium_マンチェスターシティ_in.png
   official: false
 - id: legends3
   heading: このクラブを語る3人（3人目）
@@ -261,8 +258,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
     - *id002
+    - *id003
     - - ダビド・シルバ
       - 2010-2020
       - 4度優勝の司令塔
@@ -275,7 +272,7 @@ sections:
   - https://en.wikipedia.org/wiki/Sergio_Ag%C3%BCero
   - https://en.wikipedia.org/wiki/Vincent_Kompany
   - https://en.wikipedia.org/wiki/David_Silva
-  bg: assets/backgrounds/stadium_マンチェスターシティ.png
+  bg: assets/backgrounds/stadium_マンチェスターシティ_in.png
   official: false
 - id: manager
   heading: 今季の監督
@@ -302,7 +299,7 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Manchester_City_F.C.
   - https://en.wikipedia.org/wiki/Enzo_Maresca
-  bg: assets/backgrounds/stadium_マンチェスターシティ.png
+  bg: assets/backgrounds/stadium_マンチェスターシティ_in.png
   official: false
 - id: squad
   heading: 今季の登録選手
@@ -357,7 +354,7 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Manchester_City_F.C.
-  bg: assets/backgrounds/stadium_マンチェスターシティ.png
+  bg: assets/backgrounds/stadium_マンチェスターシティ_in.png
   official: false
 - id: season
   heading: 今季のここまで
@@ -393,5 +390,5 @@ sections:
   - この順位を保てば、来季のチャンピオンズリーグに出られます。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Manchester_City_F.C._season
-  bg: assets/backgrounds/stadium_マンチェスターシティ.png
+  bg: assets/backgrounds/stadium_マンチェスターシティ_in.png
   official: false

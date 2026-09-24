@@ -45,3 +45,17 @@ def test_手順書の題にもシリーズ名が付く(tmp_path):
         json.dumps({"title": "借金で解散命令", "series": "プレミアリーグチーム紹介", "tags": []},
                    ensure_ascii=False), encoding="utf-8")
     assert "借金で解散命令｜プレミアリーグチーム紹介" in build_sheet(tmp_path)
+
+
+def test_続き物は別の再生リストへ():
+    """**プレミア20クラブ紹介は専用の再生リスト**（2026-09-24 指示）。
+
+    20本が1つのシリーズで並ぶので、ニュースの再生リストに混ぜると
+    自動再生が紹介ものだけになる。振り分けは**公開する題の後ろ書き**で見る。
+    """
+    from src.cli import MAIN_PLAYLIST, SERIES_PLAYLIST
+
+    title = "ボーンマスに何があったのか｜プレミアリーグチーム紹介"
+    series = title.rsplit("｜", 1)[-1]
+    assert SERIES_PLAYLIST.get(series) and SERIES_PLAYLIST[series] != MAIN_PLAYLIST
+    assert SERIES_PLAYLIST.get("久保建英が8番を返した日") is None

@@ -13,9 +13,11 @@ theme:
   question: ワールドカップのあと、番号はどう動いたのか
 short_title: 久保建英、ワールドカップの8番を手放した理由
 thumbnail:
-  photo: assets/images/20260923_endo/03.jpg
+  # 本編に敷く絵は、サムネと同じ3人を横並びにした1枚（2026-09-23 指摘
+  # 「久保建英が8番返した話の画面の左がぼやけている」）。縦写真1枚だと右に立って左がぼける
+  photo: assets/images/20260923_sebango/01.jpg
   photos:
-    - assets/images/20260923_endo/03.jpg
+    - assets/images/20260923_endo/04.jpg
     - assets/images/20260923_kubo/03.jpg
     - assets/images/20260923_matsuki/01.jpg
   line1: 6番は湘南の後輩へ
@@ -94,8 +96,6 @@ sections:
     narrator: キャスター
     bg: assets/backgrounds/stock/stadium_night.mp4
     say:
-      - voice: ネット民
-        text: ヤフコメさんたちはいろいろ理屈を付けてるけど、三笘・南野両選手が代表に戻ってきたときに、番号を戻しやすいような人選としか思えないですが。
       - voice: ネット民
         text: 相馬については三笘が復帰したら外れる前提なのがわかる。クラブでの活躍度が代表に影響するのが本当なら、久保より唯人が序列が上なのも当たり前。日本代表の背番号9が後藤なのは現時点では物足りない。
       - voice: ネット民

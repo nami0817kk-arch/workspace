@@ -20,53 +20,38 @@ theme:
   question: どんなクラブなのか
   hook: 4部まで落ちて、25年かけて戻ってきたクラブです。
   lead: イングランド中部から、**1987年のFAカップ**。
+  opening_image: assets/stats/pl_coventry_data_t.png
 thumbnail:
   line1: 坂元達裕と、追われた本拠地
-  line2: コヴェントリー
+  line2: 4部から25年、戻ってきた古豪
   crest_main:
   - コヴェントリー
   tags: []
   points: []
+  board: assets/stats/pl_coventry_data_t.png
 sections:
-- id: reasons
-  heading: いま見る理由
-  tier: 報道
+- id: data
+  heading: いま見る理由と基礎DATA
   main: true
+  tier: 背景
   telop: 坂元達裕、プレミア初挑戦。25年ぶりの1部
   narrator: キャスター
-  card:
-    type: table
-    title: いま見る理由
-    columns:
-    - ''
-    - ''
-    rows:
-    - - 理由1
-      - 坂元達裕がいる
-    - - 理由2
-      - 25年ぶりの1部
-    - - 理由3
-      - 開幕5試合で1勝
   say:
-  - 坂元達裕は、このクラブでリーグ戦**107試合18得点**です。
-  - 1987年、FAカップの決勝を延長で制した監督の言葉です。
+  - text: 坂元達裕は、このクラブでリーグ戦**107試合18得点**です。
+    image: assets/stats/pl_coventry_data_r1.png
+    no_telop: true
+  - text: 1987年、FAカップの決勝を延長で制した監督の言葉です。
+    image: assets/stats/pl_coventry_data_r1.png
+    no_telop: true
   - voice: ジョン・シレット
     text: 試合が長引くほど、勝てるという確信が強くなっていった
-  - 昨季は2部で優勝し、**25年ぶり**の1部。開幕5試合で勝ちは**1つ**、早くも残留争いの中にいます。
-  - 4部まで落ちたのは2017年。戻れた理由は、2023年に来たオーナーと監督です。
-  sources:
-  - https://en.wikipedia.org/wiki/Coventry_City_F.C.
-  - https://en.wikipedia.org/wiki/2026–27_Coventry_City_F.C._season
-  - https://en.wikipedia.org/wiki/1987_FA_Cup_final
-  bg: assets/backgrounds/stadium_コヴェントリー.png
-  official: false
-- id: data
-  heading: コヴェントリー 基礎DATA
-  main: false
-  tier: 背景
-  telop: 1883年創立
-  narrator: 解説
-  say:
+    image: assets/stats/pl_coventry_data_r1.png
+  - text: 昨季は2部で優勝し、**25年ぶり**の1部。開幕5試合で勝ちは**1つ**、早くも残留争いの中にいます。
+    image: assets/stats/pl_coventry_data_r2.png
+    no_telop: true
+  - text: 4部まで落ちたのは2017年。戻れた理由は、2023年に来たオーナーと監督です。
+    image: assets/stats/pl_coventry_data_r2.png
+    no_telop: true
   - image: assets/stats/pl_coventry_data0.png
     text: 創立は**1883年**。自転車を作るシンガー社の工員たちが作りました。
     no_telop: true
@@ -76,7 +61,7 @@ sections:
   - image: assets/stats/pl_coventry_map.png
     text: ホームタウンはコヴェントリー。ウェスト・ミッドランズの都市です。
     no_telop: true
-  - image: assets/backgrounds/stadium_コヴェントリー_in.png
+  - image: assets/backgrounds/stadium_コヴェントリー.png
     text: 本拠地はシービーエス・アリーナ。**3万2609人**が入ります。
   - image: assets/stats/pl_coventry_data4.png
     text: オーナーは地元の実業家ダグ・キング。2023年からクラブを持っています。
@@ -92,7 +77,9 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Coventry_City_F.C.
-  bg: assets/backgrounds/stadium_コヴェントリー.png
+  - https://en.wikipedia.org/wiki/2026–27_Coventry_City_F.C._season
+  - https://en.wikipedia.org/wiki/1987_FA_Cup_final
+  bg: assets/backgrounds/stadium_コヴェントリー_in.png
   official: false
 - id: exile
   heading: 本拠地を追われた
@@ -102,7 +89,7 @@ sections:
   card:
     type: table
     title: 落ちていった10年
-    columns:
+    columns: &id001
     - ''
     - ''
     rows:
@@ -112,22 +99,27 @@ sections:
       - ノーサンプトンへ間借り（往復113キロ）
     - - 2014年
       - シービーエス・アリーナに帰る
-    - - 2017年
-      - 4部まで落ちる
-    - - 2026年4月17日
-      - 25年ぶりの1部復帰
   say:
   - image: assets/images/pl_coventry_story/scene.jpg
     text: まず**2001年**、34年続いた1部から落ちました。
   - 2013年には、スタジアムの持ち主と家賃でもめて、**家を追われます。**
   - 移った先はノーサンプトン・タウンのスタジアム。往復およそ**113キロ**の道のりを、1シーズン通いました。
-  - 2014年に、いまのシービーエス・アリーナへ帰ります。
+  - text: 2014年に、いまのシービーエス・アリーナへ帰ります。
+    card:
+      type: table
+      title: 落ちていった10年
+      columns: *id001
+      rows:
+      - - 2017年
+        - 4部まで落ちる
+      - - 2026年4月17日
+        - 25年ぶりの1部復帰
   - 落ちるところまで落ちて、2017年には4部にいます。
   - そこから戻ってきました。**2026年4月17日**、25年ぶりのプレミアリーグ昇格が決まります。
   official: false
   sources:
   - https://en.wikipedia.org/wiki/Coventry_City_F.C.
-  bg: assets/backgrounds/stadium_コヴェントリー.png
+  bg: assets/backgrounds/stadium_コヴェントリー_in.png
 - id: features
   heading: このクラブの特徴
   tier: 背景
@@ -157,7 +149,7 @@ sections:
   - https://en.wikipedia.org/wiki/Frank_Lampard
   - https://en.wikipedia.org/wiki/Doug_King_(businessman)
   - https://en.wikipedia.org/wiki/Coventry_Building_Society_Arena
-  bg: assets/backgrounds/stadium_コヴェントリー.png
+  bg: assets/backgrounds/stadium_コヴェントリー_in.png
   official: false
 - id: episode
   heading: 唯一のタイトル
@@ -167,7 +159,7 @@ sections:
   card:
     type: table
     title: 唯一のタイトル
-    columns:
+    columns: &id002
     - ''
     - ''
     rows:
@@ -175,18 +167,23 @@ sections:
       - トッテナムに3対2
     - - 同点ゴール
       - キース・ハウチェンのダイビングヘッド
-    - - 決勝点
-      - 延長、相手のオウンゴール
   say:
   - text: 主要なタイトルは、クラブの歴史で1つだけ。**1987年**のFAカップです。
     image: assets/images/pl_coventry_episode/scene.jpg
   - 決勝の相手はトッテナム。開始2分で先制され、いったん追いつき、また突き放されます。
-  - 後半、キース・ハウチェンのダイビングヘッドで**2対2**。勝負は延長へ。
+  - text: 後半、キース・ハウチェンのダイビングヘッドで**2対2**。勝負は延長へ。
+    card:
+      type: table
+      title: 唯一のタイトル
+      columns: *id002
+      rows:
+      - - 決勝点
+        - 延長、相手のオウンゴール
   - 延長、決勝点は相手のオウンゴール。**3対2**で勝ちました。
   sources:
   - https://en.wikipedia.org/wiki/Coventry_City_F.C.
   - https://en.wikipedia.org/wiki/1987_FA_Cup_final
-  bg: assets/backgrounds/stadium_コヴェントリー.png
+  bg: assets/backgrounds/stadium_コヴェントリー_in.png
   official: false
 - id: legends
   heading: このクラブを語る3人
@@ -201,10 +198,10 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id001
+    - &id003
       - スティーヴ・オグリゾヴィッチ
       - 1984-2000
-      - 1987年FA杯優勝のGK
+      - 1987年FA杯優勝のG
   say:
   - text: スティーヴ・オグリゾヴィッチは1984年、シュルーズベリーから加わったキーパーです。
     image: assets/photos/pl/coventry_legend_c8cbdeab.jpg
@@ -214,7 +211,7 @@ sections:
   - https://en.wikipedia.org/wiki/Steve_Ogrizovic
   - https://en.wikipedia.org/wiki/Dion_Dublin
   - https://en.wikipedia.org/wiki/Gary_McAllister
-  bg: assets/backgrounds/stadium_コヴェントリー.png
+  bg: assets/backgrounds/stadium_コヴェントリー_in.png
   official: false
 - id: legends2
   heading: このクラブを語る3人（2人目）
@@ -229,11 +226,11 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - &id002
+    - *id003
+    - &id004
       - ディオン・ダブリン
       - 1994-1998
-      - クラブ唯一のプレミア得点王
+      - クラブ唯一のプレミア得点
   say:
   - text: ディオン・ダブリンは1994年、マンチェスター・ユナイテッドから来たフォワードです。
     image: assets/photos/pl/coventry_legend_5dd33917.jpg
@@ -243,7 +240,7 @@ sections:
   - https://en.wikipedia.org/wiki/Steve_Ogrizovic
   - https://en.wikipedia.org/wiki/Dion_Dublin
   - https://en.wikipedia.org/wiki/Gary_McAllister
-  bg: assets/backgrounds/stadium_コヴェントリー.png
+  bg: assets/backgrounds/stadium_コヴェントリー_in.png
   official: false
 - id: legends3
   heading: このクラブを語る3人（3人目）
@@ -258,8 +255,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - *id002
+    - *id003
+    - *id004
     - - ゲイリー・マカリスター
       - 1996-2000
       - 残留争いを戦った主将
@@ -272,7 +269,7 @@ sections:
   - https://en.wikipedia.org/wiki/Steve_Ogrizovic
   - https://en.wikipedia.org/wiki/Dion_Dublin
   - https://en.wikipedia.org/wiki/Gary_McAllister
-  bg: assets/backgrounds/stadium_コヴェントリー.png
+  bg: assets/backgrounds/stadium_コヴェントリー_in.png
   official: false
 - id: manager
   heading: 今季の監督
@@ -299,7 +296,7 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Coventry_City_F.C.
   - https://en.wikipedia.org/wiki/Frank_Lampard
-  bg: assets/backgrounds/stadium_コヴェントリー.png
+  bg: assets/backgrounds/stadium_コヴェントリー_in.png
   official: false
 - id: squad
   heading: 今季の登録選手
@@ -351,7 +348,7 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Coventry_City_F.C.
-  bg: assets/backgrounds/stadium_コヴェントリー.png
+  bg: assets/backgrounds/stadium_コヴェントリー_in.png
   official: false
 - id: season
   heading: 今季のここまで
@@ -387,5 +384,5 @@ sections:
   - いまは降格圏にいます。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Coventry_City_F.C._season
-  bg: assets/backgrounds/stadium_コヴェントリー.png
+  bg: assets/backgrounds/stadium_コヴェントリー_in.png
   official: false

@@ -19,53 +19,38 @@ theme:
   question: どんなクラブなのか
   hook: 3部から7年で、ヨーロッパに手が届きました。
   lead: '**1部リーグ優勝6回**。その歴史を持つ、北東部の古豪です。'
+  opening_image: assets/stats/pl_sunderland_data_t.png
 thumbnail:
   line1: 6回優勝が、3部にいた
-  line2: サンダーランド
+  line2: 「イングランド銀行」と呼ばれた頃
   crest_main:
   - サンダーランド
   tags: []
   points: []
+  board: assets/stats/pl_sunderland_data_t.png
 sections:
-- id: reasons
-  heading: いま見る理由
-  tier: 報道
+- id: data
+  heading: いま見る理由と基礎DATA
   main: true
+  tier: 背景
   telop: 半世紀ぶりのヨーロッパの舞台
   narrator: キャスター
-  card:
-    type: table
-    title: いま見る理由
-    columns:
-    - ''
-    - ''
-    rows:
-    - - 理由1
-      - 半世紀ぶりのヨーロッパ
-    - - 理由2
-      - 順位での欧州行きは史上初
-    - - 理由3
-      - リーグは開幕3敗
   say:
-  - '**半世紀**ぶりにヨーロッパの舞台へ。元エースで会長も務めたナイアル・クインの言葉があります。'
+  - text: '**半世紀**ぶりにヨーロッパの舞台へ。元エースで会長も務めたナイアル・クインの言葉があります。'
+    image: assets/stats/pl_sunderland_data_r1.png
+    no_telop: true
   - voice: ナイアル・クイン
     text: 「サンダーランドが本当に名乗りを上げる準備は、すべて整った」
-  - リーグの順位でヨーロッパ行きを勝ち取ったのは、クラブの歴史で**初めて**のことです。
-  - リーグは開幕から**3敗**と苦しい出だし。ヨーロッパと国内、二つの戦いを同時に進めています。
-  - 「イングランド銀行」は、戦後に高い移籍金を使い続けた時代のあだ名です。
-  sources:
-  - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
-  - https://en.wikipedia.org/wiki/2026–27_Sunderland_A.F.C._season
-  - https://en.wikipedia.org/wiki/Niall_Quinn
-  bg: assets/backgrounds/stadium_サンダーランド.png
-  official: false
-- id: data
-  heading: サンダーランド 基礎DATA
-  main: false
-  tier: 背景
-  telop: 1879年創立
-  narrator: 解説
-  say:
+    image: assets/stats/pl_sunderland_data_r1.png
+  - text: リーグの順位でヨーロッパ行きを勝ち取ったのは、クラブの歴史で**初めて**のことです。
+    image: assets/stats/pl_sunderland_data_r1.png
+    no_telop: true
+  - text: リーグは開幕から**3敗**と苦しい出だし。ヨーロッパと国内、二つの戦いを同時に進めています。
+    image: assets/stats/pl_sunderland_data_r3.png
+    no_telop: true
+  - text: 「イングランド銀行」は、戦後に高い移籍金を使い続けた時代のあだ名です。
+    image: assets/stats/pl_sunderland_data_r3.png
+    no_telop: true
   - image: assets/stats/pl_sunderland_data0.png
     text: 創立は**1879年**。地元の先生たちが作ったチームが始まりです。
     no_telop: true
@@ -75,7 +60,7 @@ sections:
   - image: assets/stats/pl_sunderland_map.png
     text: ホームタウンは、サンダーランドの街。
     no_telop: true
-  - image: assets/backgrounds/stadium_サンダーランド_in.png
+  - image: assets/backgrounds/stadium_サンダーランド.png
     text: 本拠地はスタジアム・オブ・ライト。**4万8095人**が入ります。
   - image: assets/stats/pl_sunderland_data4.png
     text: オーナーはキリル・ルイ＝ドレフュス。2021年から、株の64%を持っています。
@@ -91,7 +76,9 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
-  bg: assets/backgrounds/stadium_サンダーランド.png
+  - https://en.wikipedia.org/wiki/2026–27_Sunderland_A.F.C._season
+  - https://en.wikipedia.org/wiki/Niall_Quinn
+  bg: assets/backgrounds/stadium_サンダーランド_in.png
   official: false
 - id: fall
   heading: 6回優勝したクラブが、3部へ
@@ -101,7 +88,7 @@ sections:
   card:
     type: table
     title: 落ちて、戻るまで
-    columns:
+    columns: &id001
     - ''
     - ''
     rows:
@@ -109,32 +96,47 @@ sections:
       - 6回（1892・1893・1895・1902・1913・1936）
     - - 1973年
       - 2部のクラブとしてFAカップ優勝。翌季は欧州へ
-    - - 2018年
-      - 3部へ。2年続けての降格
-    - - 2022年
-      - 2部へ昇格
-    - - 2025年5月24日
-      - プレーオフ決勝でシェフィールド・Uに2-1
-    - - 3部から1部まで
-      - 7年
-    - - 2025-26年
-      - 7位。53年ぶりのヨーロッパ（ヨーロッパリーグ）
   say:
   - text: リーグ優勝6回のうち3回は1890年代で、最後は1936年です。
     image: assets/images/pl_sunderland_story/scene.jpg
   - 1973年には、**2部**のクラブとしてFAカップを獲りました。翌シーズンはヨーロッパにも出ています。
-  - そのクラブが、2018年には**3部**にいました。2年続けて落ちた結果です。
+  - text: そのクラブが、2018年には**3部**にいました。2年続けて落ちた結果です。
+    card:
+      type: table
+      title: 落ちて、戻るまで
+      columns: *id001
+      rows:
+      - - 2018年
+        - 3部へ。2年続けての降格
+      - - 2022年
+        - 2部へ昇格
   - この時期を追った配信番組が、『**サンダーランド・ティル・アイ・ダイ**』です。
   - 題の意味は、「死ぬまでサンダーランド」。
-  - 2022年に2部へ戻りました。
+  - text: 2022年に2部へ戻りました。
+    card:
+      type: table
+      title: 落ちて、戻るまで
+      columns: *id001
+      rows:
+      - - 2025年5月24日
+        - プレーオフ決勝でシェフィールド・Uに2-1
+      - - 3部から1部まで
+        - 7年
   - 2025年5月24日、プレーオフ決勝でシェフィールド・ユナイテッドを2対1で下します。
   - '**3部から1部まで、7年**でした。'
-  - そして昨季は、7位に入りました。
+  - text: そして昨季は、7位に入りました。
+    card:
+      type: table
+      title: 落ちて、戻るまで
+      columns: *id001
+      rows:
+      - - 2025-26年
+        - 7位。53年ぶりのヨーロッパ（ヨーロッパリーグ）
   - 1973年以来、**53年ぶり**のヨーロッパ。今季はヨーロッパリーグに出ます。
   official: false
   sources:
   - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
-  bg: assets/backgrounds/stadium_サンダーランド.png
+  bg: assets/backgrounds/stadium_サンダーランド_in.png
 - id: features
   heading: このクラブの特徴
   tier: 背景
@@ -163,7 +165,7 @@ sections:
   - https://www.safc.com/news/2026/may/15/the-numbers-behind-r-gis-le-bris--premier-league-manager-of-the-season-nomination/
   - https://en.wikipedia.org/wiki/2025%E2%80%9326_Sunderland_A.F.C._season
   - https://en.wikipedia.org/wiki/Kyril_Louis-Dreyfus
-  bg: assets/backgrounds/stadium_サンダーランド.png
+  bg: assets/backgrounds/stadium_サンダーランド_in.png
   official: false
 - id: episode
   heading: イングランド銀行クラブ
@@ -173,7 +175,7 @@ sections:
   card:
     type: table
     title: イングランド銀行クラブ
-    columns:
+    columns: &id002
     - ''
     - ''
     rows:
@@ -181,17 +183,22 @@ sections:
       - 大金で選手を集める。あだ名「イングランド銀行クラブ」
     - - 1957年
       - 上限を超える給料。罰金5000ポンド
-    - - 翌年
-      - 68年で初めて1部から降格
   say:
   - text: 戦後まもなく、大金で選手を集め、「イングランド銀行クラブ」と呼ばれました。
     image: assets/images/pl_sunderland_episode/scene.jpg
   - 当時は選手の給料に上限がありました。ところが**1957年**、それを超える支払いが発覚します。
-  - 5000ポンドの罰金。会長と役員3人が資格停止になりました。
+  - text: 5000ポンドの罰金。会長と役員3人が資格停止になりました。
+    card:
+      type: table
+      title: イングランド銀行クラブ
+      columns: *id002
+      rows:
+      - - 翌年
+        - 68年で初めて1部から降格
   - その翌年、リーグに入って68年で初めて、1部から落ちました。
   sources:
   - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
-  bg: assets/backgrounds/stadium_サンダーランド.png
+  bg: assets/backgrounds/stadium_サンダーランド_in.png
   official: false
 - id: legends
   heading: このクラブを語る3人
@@ -206,10 +213,10 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id001
+    - &id003
       - ケヴィン・フィリップス
       - 1997-2003
-      - プレミア得点王・欧州得点王
+      - プレミア得点王・欧州得点
   say:
   - text: ケヴィン・フィリップスは、ワトフォードから**32万5千ポンド**で来たストライカーです。
     image: assets/photos/pl/sunderland_legend_1bb9e670.jpg
@@ -220,7 +227,7 @@ sections:
   - https://en.wikipedia.org/wiki/Niall_Quinn
   - https://en.wikipedia.org/wiki/Kevin_Ball
   - https://en.wikipedia.org/wiki/Kevin_Phillips_(English_footballer)
-  bg: assets/backgrounds/stadium_サンダーランド.png
+  bg: assets/backgrounds/stadium_サンダーランド_in.png
   official: false
 - id: legends2
   heading: このクラブを語る3人（2人目）
@@ -235,8 +242,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - &id002
+    - *id003
+    - &id004
       - ナイアル・クイン
       - 1996-2002
       - 2トップの柱、のちに会長
@@ -249,7 +256,7 @@ sections:
   - https://en.wikipedia.org/wiki/Kevin_Phillips_(footballer)
   - https://en.wikipedia.org/wiki/Niall_Quinn
   - https://en.wikipedia.org/wiki/Kevin_Ball
-  bg: assets/backgrounds/stadium_サンダーランド.png
+  bg: assets/backgrounds/stadium_サンダーランド_in.png
   official: false
 - id: legends3
   heading: このクラブを語る3人（3人目）
@@ -264,8 +271,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - *id002
+    - *id003
+    - *id004
     - - ケヴィン・ボール
       - 1990-1999
       - 2度の昇格を率いた主将
@@ -278,7 +285,7 @@ sections:
   - https://en.wikipedia.org/wiki/Kevin_Phillips_(footballer)
   - https://en.wikipedia.org/wiki/Niall_Quinn
   - https://en.wikipedia.org/wiki/Kevin_Ball
-  bg: assets/backgrounds/stadium_サンダーランド.png
+  bg: assets/backgrounds/stadium_サンダーランド_in.png
   official: false
 - id: manager
   heading: 今季の監督
@@ -305,7 +312,7 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
   - https://en.wikipedia.org/wiki/Régis_Le_Bris
-  bg: assets/backgrounds/stadium_サンダーランド.png
+  bg: assets/backgrounds/stadium_サンダーランド_in.png
   official: false
 - id: squad
   heading: 今季の登録選手
@@ -351,7 +358,7 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Sunderland_A.F.C.
-  bg: assets/backgrounds/stadium_サンダーランド.png
+  bg: assets/backgrounds/stadium_サンダーランド_in.png
   official: false
 - id: season
   heading: 今季のここまで
@@ -388,5 +395,5 @@ sections:
   - '**1対0**の勝ち。ヨーロッパの初戦を白星で飾りました。'
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Sunderland_A.F.C._season
-  bg: assets/backgrounds/stadium_サンダーランド.png
+  bg: assets/backgrounds/stadium_サンダーランド_in.png
   official: false

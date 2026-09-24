@@ -20,53 +20,38 @@ theme:
   question: どんなクラブなのか
   hook: 高井幸大は、2025年の夏に川崎フロンターレから来ました。
   lead: 北ロンドンから、**FAカップ8回**と**ヨーロッパリーグ3回**。
+  opening_image: assets/stats/pl_tottenham_data_t.png
 thumbnail:
   line1: リーグの外から、FAカップ
-  line2: トッテナム
+  line2: 高井幸大が入った、スパーズの始まり
   crest_main:
   - トッテナム
   tags: []
   points: []
+  board: assets/stats/pl_tottenham_data_t.png
 sections:
-- id: reasons
-  heading: いま見る理由
-  tier: 報道
+- id: data
+  heading: いま見る理由と基礎DATA
   main: true
+  tier: 背景
   telop: 高井幸大がいるクラブが、いま最下位
   narrator: キャスター
-  card:
-    type: table
-    title: いま見る理由
-    columns:
-    - ''
-    - ''
-    rows:
-    - - 理由1
-      - 高井幸大が所属。いまベルギー
-    - - 理由2
-      - ヨーロッパリーグ王者が最下位
-    - - 理由3
-      - デ・ゼルビ2年目、開幕勝ちなし
   say:
-  - 1961年のリーグとカップの2冠を主将として率いた、ブランチフラワーの言葉があります。
+  - text: 1961年のリーグとカップの2冠を主将として率いた、ブランチフラワーの言葉があります。
+    image: assets/stats/pl_tottenham_data_r1.png
+    no_telop: true
   - voice: ダニー・ブランチフラワー
     text: 「サッカーは栄光のためにある。粋に、華やかにやるんだ」
-  - 高井幸大は**22歳**のセンターバック。いまは期限付きで、ベルギーのシント＝トロイデンにいます。
-  - '**2025年**のヨーロッパリーグ王者が、いま最下位。デ・ゼルビ監督の**2年目**は、開幕5試合で勝ちなし。'
-  - 1901年、まだリーグに入っていないのにFAカップを制した、唯一のクラブです。
-  sources:
-  - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
-  - https://en.wikipedia.org/wiki/2026–27_Tottenham_Hotspur_F.C._season
-  - https://en.wikipedia.org/wiki/Danny_Blanchflower
-  bg: assets/backgrounds/stadium_トッテナム.png
-  official: false
-- id: data
-  heading: トッテナム 基礎DATA
-  main: false
-  tier: 背景
-  telop: 1882年創立
-  narrator: 解説
-  say:
+    image: assets/stats/pl_tottenham_data_r1.png
+  - text: 高井幸大は**22歳**のセンターバック。いまは期限付きで、ベルギーのシント＝トロイデンにいます。
+    image: assets/stats/pl_tottenham_data_r1.png
+    no_telop: true
+  - text: '**2025年**のヨーロッパリーグ王者が、いま最下位。デ・ゼルビ監督の**2年目**は、開幕5試合で勝ちなし。'
+    image: assets/stats/pl_tottenham_data_r2.png
+    no_telop: true
+  - text: 1901年、まだリーグに入っていないのにFAカップを制した、唯一のクラブです。
+    image: assets/stats/pl_tottenham_data_r2.png
+    no_telop: true
   - image: assets/stats/pl_tottenham_data0.png
     text: 創立は**1882年**。ホットスパーという名前で始まりました。
     no_telop: true
@@ -76,7 +61,7 @@ sections:
   - image: assets/stats/pl_tottenham_map.png
     text: ホームタウンは、ロンドン北部のトッテナムです。
     no_telop: true
-  - image: assets/backgrounds/stadium_トッテナム_in.png
+  - image: assets/backgrounds/stadium_トッテナム.png
     text: 本拠地はトッテナム・ホットスパー・スタジアム。**6万2850人**が入ります。
   - image: assets/stats/pl_tottenham_data4.png
     text: オーナーは投資会社のイーニック。2001年からクラブを持っています。
@@ -92,7 +77,9 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
-  bg: assets/backgrounds/stadium_トッテナム.png
+  - https://en.wikipedia.org/wiki/2026–27_Tottenham_Hotspur_F.C._season
+  - https://en.wikipedia.org/wiki/Danny_Blanchflower
+  bg: assets/backgrounds/stadium_トッテナム_in.png
   official: false
 - id: cup1901
   heading: リーグに入らないまま、FAカップを獲った
@@ -102,7 +89,7 @@ sections:
   card:
     type: table
     title: 最初に立てた記録
-    columns:
+    columns: &id001
     - ''
     - ''
     rows:
@@ -110,30 +97,40 @@ sections:
       - リーグ外のクラブとしてFAカップ優勝
     - - 以降
       - 同じ例は1つもない
-    - - 1961年
-      - 20世紀で最初の2冠
-    - - 1963年
-      - カップウィナーズカップ。英国勢で初
-    - - 1972年・1984年
-      - UEFAカップ。2種類目も英国勢で初
-    - - 2025年
-      - ヨーロッパリーグ。欧州は4つ目
   say:
   - text: 1888年に、フットボールリーグができました。
     image: assets/images/pl_tottenham_story/scene.jpg
   - それ以来、リーグの外のクラブがFAカップを獲った例は、ひとつだけ。
   - それが1901年のトッテナム。**リーグに属していないまま**の優勝で、125年前のことです。
-  - 1961年には、リーグとカップの両方を獲りました。**20世紀で最初の2冠**です。
+  - text: 1961年には、リーグとカップの両方を獲りました。**20世紀で最初の2冠**です。
+    card:
+      type: table
+      title: 最初に立てた記録
+      columns: *id001
+      rows:
+      - - 1961年
+        - 20世紀で最初の2冠
+      - - 1963年
+        - カップウィナーズカップ。英国勢で初
   - '**イギリスのクラブで、ヨーロッパのタイトルを最初に獲ったのもトッテナム**でした。'
   - 1963年のカップウィナーズカップ。国内カップの王者どうしで争った、いまは無い大会です。
   - 1972年にはウエファカップも獲りました。
-  - 種類の違うヨーロッパのタイトルを2つ獲ったのも、イギリス勢では最初でした。
+  - text: 種類の違うヨーロッパのタイトルを2つ獲ったのも、イギリス勢では最初でした。
+    card:
+      type: table
+      title: 最初に立てた記録
+      columns: *id001
+      rows:
+      - - 1972年・1984年
+        - UEFAカップ。2種類目も英国勢で初
+      - - 2025年
+        - ヨーロッパリーグ。欧州は4つ目
   - ウエファカップは1984年にも獲りました。
   - そして2025年のヨーロッパリーグで、ヨーロッパのタイトルは**4つ**になりました。
   official: false
   sources:
   - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
-  bg: assets/backgrounds/stadium_トッテナム.png
+  bg: assets/backgrounds/stadium_トッテナム_in.png
 - id: features
   heading: このクラブの特徴
   tier: 背景
@@ -160,7 +157,7 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
   - https://en.wikipedia.org/wiki/Roberto_De_Zerbi
-  bg: assets/backgrounds/stadium_トッテナム.png
+  bg: assets/backgrounds/stadium_トッテナム_in.png
   official: false
 - id: episode
   heading: 雄鶏と拍車
@@ -170,7 +167,7 @@ sections:
   card:
     type: table
     title: 雄鶏と拍車
-    columns:
+    columns: &id002
     - ''
     - ''
     rows:
@@ -178,18 +175,23 @@ sections:
       - 馬に拍車を蹴り込んだ人
     - - 拍車
       - 闘鶏の鶏にも付ける
-    - - 1909-10年
-      - 元選手が35ポンドで雄鶏の像を作る
   say:
   - text: クラブ名の由来は、中世の貴族ハリー・ホットスパー。エンブレムの雄鶏も、そこから来ています。
     image: assets/images/pl_tottenham_episode/scene.jpg
   - 戦いで馬に拍車を蹴り込むことから、ホットスパーと呼ばれた人物です。
-  - その拍車は、闘鶏の鶏にも付けるもの。だから雄鶏、というわけです。
+  - text: その拍車は、闘鶏の鶏にも付けるもの。だから雄鶏、というわけです。
+    card:
+      type: table
+      title: 雄鶏と拍車
+      columns: *id002
+      rows:
+      - - 1909-10年
+        - 元選手が35ポンドで雄鶏の像を作る
   - 1909年から10年のシーズンの終わり。元選手が**35ポンド**で、ブロンズの雄鶏を作りました。
   - その雄鶏が、スタンドの屋根に置かれました。
   sources:
   - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
-  bg: assets/backgrounds/stadium_トッテナム.png
+  bg: assets/backgrounds/stadium_トッテナム_in.png
   official: false
 - id: legends
   heading: このクラブを語る3人
@@ -204,7 +206,7 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id001
+    - &id003
       - ハリー・ケイン
       - 2009-2023
       - クラブ最多の280得点
@@ -217,7 +219,7 @@ sections:
   - https://en.wikipedia.org/wiki/Harry_Kane
   - https://en.wikipedia.org/wiki/Son_Heung-min
   - https://en.wikipedia.org/wiki/Ledley_King
-  bg: assets/backgrounds/stadium_トッテナム.png
+  bg: assets/backgrounds/stadium_トッテナム_in.png
   official: false
 - id: legends2
   heading: このクラブを語る3人（2人目）
@@ -232,8 +234,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - &id002
+    - *id003
+    - &id004
       - ソン・フンミン
       - 2015-2025
       - EL優勝の主将
@@ -246,7 +248,7 @@ sections:
   - https://en.wikipedia.org/wiki/Harry_Kane
   - https://en.wikipedia.org/wiki/Son_Heung-min
   - https://en.wikipedia.org/wiki/Ledley_King
-  bg: assets/backgrounds/stadium_トッテナム.png
+  bg: assets/backgrounds/stadium_トッテナム_in.png
   official: false
 - id: legends3
   heading: このクラブを語る3人（3人目）
@@ -261,8 +263,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - *id002
+    - *id003
+    - *id004
     - - レドリー・キング
       - 1999-2012
       - 一筋の主将
@@ -275,7 +277,7 @@ sections:
   - https://en.wikipedia.org/wiki/Harry_Kane
   - https://en.wikipedia.org/wiki/Son_Heung-min
   - https://en.wikipedia.org/wiki/Ledley_King
-  bg: assets/backgrounds/stadium_トッテナム.png
+  bg: assets/backgrounds/stadium_トッテナム_in.png
   official: false
 - id: manager
   heading: 今季の監督
@@ -302,7 +304,7 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
   - https://en.wikipedia.org/wiki/Roberto_De_Zerbi
-  bg: assets/backgrounds/stadium_トッテナム.png
+  bg: assets/backgrounds/stadium_トッテナム_in.png
   official: false
 - id: squad
   heading: 今季の登録選手
@@ -357,7 +359,7 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Tottenham_Hotspur_F.C.
-  bg: assets/backgrounds/stadium_トッテナム.png
+  bg: assets/backgrounds/stadium_トッテナム_in.png
   official: false
 - id: season
   heading: 今季のここまで
@@ -393,5 +395,5 @@ sections:
   - いまは降格圏にいます。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Tottenham_Hotspur_F.C._season
-  bg: assets/backgrounds/stadium_トッテナム.png
+  bg: assets/backgrounds/stadium_トッテナム_in.png
   official: false

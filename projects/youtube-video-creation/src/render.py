@@ -303,6 +303,17 @@ class Renderer:
         photo = Image.open(path).convert("RGBA")
         bed = _cover(photo, width, height).filter(ImageFilter.GaussianBlur(30))
         bed = ImageEnhance.Brightness(bed).enhance(0.55)
+        if self.layout.is_portrait and _is_board(image_path):
+            # **縦の板は、そのまま画面いっぱいに敷く**（2026-09-23）。
+            # ショート用に作った 1080x1920 の基礎DATAの板は「横長」ではないので
+            # 下の網から漏れ、写真と同じ扱いになっていた。その結果、
+            # **板の上に節の名前とカードが重なり**、板の字が読めなかった。
+            # 下を暗く落とすのもやめる（最後の行が沈む）
+            self._wide_stages.add(image_path)
+            self._board_stages.add(image_path)
+            stage = _cover(photo, width, height)
+            self._stages[image_path] = stage
+            return stage
         if self.layout.is_portrait:
             # 縦型は横に並べる余地が無い。**写真で画面を埋める**
             bed.alpha_composite(_cover(photo, width, height, focus=0.18,
@@ -465,7 +476,12 @@ class Renderer:
             if picture is not None:
                 items.append(picture)
         if card_name:
-            card = self._card(card_name, beside=side_by_side)
+            # **縮小して貼らない**（2026-09-23 指摘「表をもう少し大きく」）。
+            # 左半分に置くカードは、大きく描いてから 0.63 倍に縮めていたので、
+            # 34px で描いた字が**21px になっていた**。はじめからその幅で描く
+            # 写真の左90pxはぼかして馴染ませてあるので、そこまで使ってよい
+            limit = (self.layout.width // 2 - 30) if left_half else None
+            card = self._card(card_name, beside=side_by_side, limit=limit)
             if card is not None:
                 items.append(card)
         if not items:
@@ -560,7 +576,7 @@ class Renderer:
         framed.alpha_composite(picture, (8, 8))
         return framed
 
-    def _card(self, name: str, beside: bool = False) -> Image.Image | None:
+    def _card(self, name: str, beside: bool = False, limit: int | None = None) -> Image.Image | None:
         spec = self.script_cards.get(name)
         if not spec:
             return None
@@ -574,6 +590,8 @@ class Renderer:
             # **表を大きく**（2026-09-23 指摘）。0.64 → 0.74。
             # 板の字（34px から縮む）が小さく、耳で追えなかった人が目で追えなかった
             width = int(self.layout.width * (0.74 if not self.layout.with_characters else 0.46))
+        if limit:
+            width = min(width, limit)
         target = self.card_dir / f"{cards.card_key(spec, width)}.png"
         if not target.exists():
             cards.render(

@@ -3133,6 +3133,10 @@ def report_upload_failure(err: Exception) -> None:
 # **本編を入れる再生リスト**（2026-09-15 作成・公開）。
 # 再生リストの中の自動再生は、登録者がいなくても動く唯一の道
 MAIN_PLAYLIST = "PLNEp9wyuYKJk"
+# **続き物は別の再生リストへ**（2026-09-24 指示「プレミアリーグのチーム紹介は
+# 別の再生リストにして」）。`series:` の名前で振り分ける。
+# 20本が1つ並ぶので、ニュースの再生リストに混ぜると自動再生が紹介ものだけになる
+SERIES_PLAYLIST = {"プレミアリーグチーム紹介": "PLEG5zd5gf28Q"}
 
 
 def _cmd_upload(args, config) -> int:
@@ -3281,13 +3285,16 @@ def _cmd_upload(args, config) -> int:
             # この関数には api という名前が無かった（2026-09-17 に実際に落ちた）
             from . import quota as quota_mod
             api = quota_mod.counted(upload_mod.get_service())
+            # シリーズ名は**公開する題の後ろ書き**にある（「◯◯｜プレミアリーグチーム紹介」）
+            series = draft.title.rsplit("｜", 1)[-1].strip() if "｜" in draft.title else ""
+            playlist = SERIES_PLAYLIST.get(series, MAIN_PLAYLIST)
             api.playlistItems().insert(
                 part="snippet",
-                body={"snippet": {"playlistId": MAIN_PLAYLIST,
+                body={"snippet": {"playlistId": playlist,
                                   "resourceId": {"kind": "youtube#video",
                                                  "videoId": video_id}}},
             ).execute()
-            print(f"  再生リストに入れました: {MAIN_PLAYLIST}")
+            print(f"  再生リストに入れました: {playlist}")
         except Exception as err:      # 入らなくても投稿は成功している
             print(f"  ■ 再生リストに入れられませんでした（{err}）。"
                   f"あとで tools/playlist.py で足してください", flush=True)

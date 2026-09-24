@@ -19,53 +19,38 @@ theme:
   question: どんなクラブなのか
   hook: 先にあったのは、クラブではなくスタジアムでした。
   lead: ロンドンから、ヨーロッパの主要な大会を**全制覇**。
+  opening_image: assets/stats/pl_chelsea_data_t.png
 thumbnail:
   line1: 先にあったのはスタジアム
-  line2: チェルシー
+  line2: クラブは、あとから作られた
   crest_main:
   - チェルシー
   tags: []
   points: []
+  board: assets/stats/pl_chelsea_data_t.png
 sections:
-- id: reasons
-  heading: いま見る理由
-  tier: 報道
+- id: data
+  heading: いま見る理由と基礎DATA
   main: true
+  tier: 背景
   telop: アロンソが来た。去年の夏は世界一
   narrator: キャスター
-  card:
-    type: table
-    title: いま見る理由
-    columns:
-    - ''
-    - ''
-    rows:
-    - - 理由1
-      - 新監督シャビ・アロンソ
-    - - 理由2
-      - 去年の夏に世界一
-    - - 理由3
-      - 今季は欧州の大会なし
   say:
-  - レアル・マドリードを率いたシャビ・アロンソが、**4年**契約でこの夏に来ました。
-  - 名選手ディディエ・ドログバが、クラブに戻った日の言葉です。
+  - text: レアル・マドリードを率いたシャビ・アロンソが、**4年**契約でこの夏に来ました。
+    image: assets/stats/pl_chelsea_data_r1.png
+    no_telop: true
+  - text: 名選手ディディエ・ドログバが、クラブに戻った日の言葉です。
+    image: assets/stats/pl_chelsea_data_r1.png
+    no_telop: true
   - voice: ディディエ・ドログバ
     text: このクラブとの特別な関係は皆が知っている。ずっと我が家だった
-  - 去年の夏に世界一を決める大会で優勝し、今季はヨーロッパの大会なし。プレミアだけに力を注げる**1年**です。
-  - 1905年、空いたスタジアムを埋めるために作られたクラブです。
-  sources:
-  - https://en.wikipedia.org/wiki/Chelsea_F.C.
-  - https://en.wikipedia.org/wiki/2026–27_Chelsea_F.C._season
-  - https://en.wikipedia.org/wiki/Didier_Drogba
-  bg: assets/backgrounds/stadium_チェルシー.png
-  official: false
-- id: data
-  heading: チェルシー 基礎DATA
-  main: false
-  tier: 背景
-  telop: 1905年創立
-  narrator: 解説
-  say:
+    image: assets/stats/pl_chelsea_data_r1.png
+  - text: 去年の夏に世界一を決める大会で優勝し、今季はヨーロッパの大会なし。プレミアだけに力を注げる**1年**です。
+    image: assets/stats/pl_chelsea_data_r2.png
+    no_telop: true
+  - text: 1905年、空いたスタジアムを埋めるために作られたクラブです。
+    image: assets/stats/pl_chelsea_data_r2.png
+    no_telop: true
   - image: assets/stats/pl_chelsea_data0.png
     text: 創立は**1905年**。ロンドン西部のクラブです。
     no_telop: true
@@ -75,7 +60,7 @@ sections:
   - image: assets/stats/pl_chelsea_map.png
     text: ホームタウンはロンドンの、チェルシー地区。
     no_telop: true
-  - image: assets/backgrounds/stadium_チェルシー_in.png
+  - image: assets/backgrounds/stadium_チェルシー.png
     text: 本拠地はスタンフォード・ブリッジ。**4万と44人**が入ります。
   - image: assets/stats/pl_chelsea_data4.png
     text: オーナーは投資グループのブルーコ。その中心が、投資会社のクリアレイクです。
@@ -97,7 +82,9 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Chelsea_F.C.
-  bg: assets/backgrounds/stadium_チェルシー.png
+  - https://en.wikipedia.org/wiki/2026–27_Chelsea_F.C._season
+  - https://en.wikipedia.org/wiki/Didier_Drogba
+  bg: assets/backgrounds/stadium_チェルシー_in.png
   official: false
 - id: origin
   heading: 順番が逆だった
@@ -113,7 +100,7 @@ sections:
   official: false
   sources:
   - https://en.wikipedia.org/wiki/Chelsea_F.C.
-  bg: assets/backgrounds/stadium_チェルシー.png
+  bg: assets/backgrounds/stadium_チェルシー_in.png
 - id: features
   heading: このクラブの特徴
   tier: 背景
@@ -142,7 +129,7 @@ sections:
   - https://en.wikipedia.org/wiki/Xabi_Alonso
   - https://en.wikipedia.org/wiki/BlueCo
   - https://en.wikipedia.org/wiki/Chelsea_Pitch_Owners
-  bg: assets/backgrounds/stadium_チェルシー.png
+  bg: assets/backgrounds/stadium_チェルシー_in.png
   official: false
 - id: episode
   heading: あだ名は年金暮らし
@@ -152,7 +139,7 @@ sections:
   card:
     type: table
     title: あだ名は年金暮らし
-    columns:
+    columns: &id001
     - ''
     - ''
     rows:
@@ -160,18 +147,23 @@ sections:
       - 赤い制服の退役軍人
     - - あだ名
       - ペンショナーズ（年金暮らし）
-    - - 替えた人
-      - 1952年、監督テッド・ドレイク。翌年ライオンに
   say:
   - text: あだ名はもともと「ペンショナーズ」、年金暮らしの人たち。近くの王立チェルシー病院の退役軍人です。
     image: assets/images/pl_chelsea_episode/scene.jpg
   - 最初の紋章も、選手でもライオンでもなく、その赤い制服の退役軍人でした。
-  - '**1952年**に監督になったテッド・ドレイクが、これを「古くさい」と言いました。'
+  - text: '**1952年**に監督になったテッド・ドレイクが、これを「古くさい」と言いました。'
+    card:
+      type: table
+      title: あだ名は年金暮らし
+      columns: *id001
+      rows:
+      - - 替えた人
+        - 1952年、監督テッド・ドレイク。翌年ライオンに
   - 翌年、いまのライオンの紋章に替えさせました。
   - 年金暮らしのあだ名も、およそ半世紀でその役目を終えました。
   sources:
   - https://en.wikipedia.org/wiki/Chelsea_F.C.
-  bg: assets/backgrounds/stadium_チェルシー.png
+  bg: assets/backgrounds/stadium_チェルシー_in.png
   official: false
 - id: legends
   heading: このクラブを語る3人
@@ -186,7 +178,7 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id001
+    - &id002
       - フランク・ランパード
       - 2001-2014
       - クラブ最多の211得点
@@ -199,7 +191,7 @@ sections:
   - https://en.wikipedia.org/wiki/Frank_Lampard
   - https://en.wikipedia.org/wiki/John_Terry
   - https://en.wikipedia.org/wiki/Didier_Drogba
-  bg: assets/backgrounds/stadium_チェルシー.png
+  bg: assets/backgrounds/stadium_チェルシー_in.png
   official: false
 - id: legends2
   heading: このクラブを語る3人（2人目）
@@ -214,8 +206,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - &id002
+    - *id002
+    - &id003
       - ジョン・テリー
       - 1998-2017
       - 黄金期を率いた主将
@@ -228,7 +220,7 @@ sections:
   - https://en.wikipedia.org/wiki/Frank_Lampard
   - https://en.wikipedia.org/wiki/John_Terry
   - https://en.wikipedia.org/wiki/Didier_Drogba
-  bg: assets/backgrounds/stadium_チェルシー.png
+  bg: assets/backgrounds/stadium_チェルシー_in.png
   official: false
 - id: legends3
   heading: このクラブを語る3人（3人目）
@@ -243,11 +235,11 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
     - *id002
+    - *id003
     - - ディディエ・ドログバ
       - 2004-2015
-      - 2012年CL決勝の同点弾
+      - 2012年CL決勝の同点
   say:
   - text: ディディエ・ドログバは2004年、マルセイユから**2400万ポンド**で加わったフォワード。
     image: assets/photos/pl/chelsea_legend_cc53b1d9.jpg
@@ -257,7 +249,7 @@ sections:
   - https://en.wikipedia.org/wiki/Frank_Lampard
   - https://en.wikipedia.org/wiki/John_Terry
   - https://en.wikipedia.org/wiki/Didier_Drogba
-  bg: assets/backgrounds/stadium_チェルシー.png
+  bg: assets/backgrounds/stadium_チェルシー_in.png
   official: false
 - id: manager
   heading: 今季の監督
@@ -284,7 +276,7 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Chelsea_F.C.
   - https://en.wikipedia.org/wiki/Xabi_Alonso
-  bg: assets/backgrounds/stadium_チェルシー.png
+  bg: assets/backgrounds/stadium_チェルシー_in.png
   official: false
 - id: squad
   heading: 今季の登録選手
@@ -333,7 +325,7 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Chelsea_F.C.
-  bg: assets/backgrounds/stadium_チェルシー.png
+  bg: assets/backgrounds/stadium_チェルシー_in.png
   official: false
 - id: season
   heading: 今季のここまで
@@ -368,5 +360,5 @@ sections:
   - 順位は**10位**、勝ち点は**7**です。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Chelsea_F.C._season
-  bg: assets/backgrounds/stadium_チェルシー.png
+  bg: assets/backgrounds/stadium_チェルシー_in.png
   official: false

@@ -20,6 +20,7 @@ theme:
   question: どんなクラブなのか
   hook: 世界で初めてのリーグを作ったクラブに、日本代表の守護神が加わりました。
   lead: 創立**1874年**。20クラブのなかで、2番目に古い。
+  opening_image: assets/stats/pl_villa_data_t.png
 thumbnail:
   line1: 鈴木彩艶の新天地
   line2: 世界初のリーグを作ったクラブ
@@ -27,46 +28,30 @@ thumbnail:
   - アストンヴィラ
   tags: []
   points: []
+  board: assets/stats/pl_villa_data_t.png
 sections:
-- id: reasons
-  heading: いま見る理由
-  tier: 報道
+- id: data
+  heading: いま見る理由と基礎DATA
   main: true
+  tier: 背景
   telop: 鈴木彩艶、2560万ポンドの新守護神
   narrator: キャスター
-  card:
-    type: table
-    title: いま見る理由
-    columns:
-    - ''
-    - ''
-    rows:
-    - - 理由1
-      - 鈴木彩艶が今夏パルマから加入
-    - - 理由2
-      - エメリ「ヨーロッパは素晴らしい」
-    - - 理由3
-      - 昨季はヨーロッパリーグ優勝
   say:
-  - 鈴木彩艶が今夏、パルマから**2560万ポンド**で加入しました。
-  - 監督のウナイ・エメリは、ヨーロッパの舞台をこう語ります。
+  - text: 鈴木彩艶が今夏、パルマから**2560万ポンド**で加入しました。
+    image: assets/stats/pl_villa_data_r1.png
+    no_telop: true
+  - text: 監督のウナイ・エメリは、ヨーロッパの舞台をこう語ります。
+    image: assets/stats/pl_villa_data_r2.png
+    no_telop: true
   - voice: ウナイ・エメリ
     text: 「この大会が本当に楽しみだ。ヨーロッパは素晴らしいものだ」
-  - 昨季はヨーロッパリーグを制し、今季は最高峰の舞台にも立ちます。
-  - リーグ戦という仕組みを1888年に言い出したのが、このクラブの重役です。
-  sources:
-  - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
-  - https://en.wikipedia.org/wiki/2026–27_Aston_Villa_F.C._season
-  - https://www.avfc.co.uk/news/2026/september/07/prematch-emery-looks-ahead-to-champions-league-action
-  bg: assets/backgrounds/stadium_アストンヴィラ.png
-  official: false
-- id: data
-  heading: アストン・ヴィラ 基礎DATA
-  main: false
-  tier: 背景
-  telop: 1874年創立
-  narrator: 解説
-  say:
+    image: assets/stats/pl_villa_data_r2.png
+  - text: 昨季はヨーロッパリーグを制し、今季は最高峰の舞台にも立ちます。
+    image: assets/stats/pl_villa_data_r3.png
+    no_telop: true
+  - text: リーグ戦という仕組みを1888年に言い出したのが、このクラブの重役です。
+    image: assets/stats/pl_villa_data_r3.png
+    no_telop: true
   - image: assets/stats/pl_villa_data0.png
     text: 礼拝堂に集まった青年4人が始めたクラブ。1888年には、世界初のリーグを作る側に回ります。
     no_telop: true
@@ -76,7 +61,7 @@ sections:
   - image: assets/stats/pl_villa_map.png
     text: ホームタウンはバーミンガム。イングランド第2の都市です。
     no_telop: true
-  - image: assets/backgrounds/stadium_アストンヴィラ_in.png
+  - image: assets/backgrounds/stadium_アストンヴィラ.png
     text: 本拠地はヴィラ・パーク。4万3205人が入ります。
   - image: assets/stats/pl_villa_cups.png
     text: 1部リーグの優勝は**7回**。FAカップ7回、リーグカップ5回。
@@ -95,7 +80,9 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
-  bg: assets/backgrounds/stadium_アストンヴィラ.png
+  - https://en.wikipedia.org/wiki/2026–27_Aston_Villa_F.C._season
+  - https://www.avfc.co.uk/news/2026/september/07/prematch-emery-looks-ahead-to-champions-league-action
+  bg: assets/backgrounds/stadium_アストンヴィラ_in.png
   official: false
 - id: history
   heading: 歩んできた道
@@ -105,7 +92,7 @@ sections:
   card:
     type: table
     title: 残してきた記録
-    columns:
+    columns: &id001
     - ''
     - ''
     rows:
@@ -113,19 +100,24 @@ sections:
       - ヴィラの重役がフットボールリーグを創設
     - - 1982年
       - ヨーロッパカップ優勝（バイエルンに1-0）
-    - - 2025-26年
-      - ヨーロッパリーグ優勝。30年ぶりのタイトル
   say:
   - text: そのフットボールリーグを立ち上げたのは、ヴィラの重役だったウィリアム・マクレガーです。
     image: assets/images/pl_villa_story/scene.jpg
   - 1982年には、ヨーロッパカップを勝ち取りました。イングランドのクラブでは**4番目**です。
-  - 決勝はロッテルダムで、バイエルン・ミュンヘンに1対0の勝ち。
+  - text: 決勝はロッテルダムで、バイエルン・ミュンヘンに1対0の勝ち。
+    card:
+      type: table
+      title: 残してきた記録
+      columns: *id001
+      rows:
+      - - 2025-26年
+        - ヨーロッパリーグ優勝。30年ぶりのタイトル
   - そして昨季、2025年から26年。ヨーロッパリーグで優勝します。
   - フライブルクを3対0で下しての優勝。1996年のリーグカップ以来、**30年ぶりのタイトル**です。
   official: false
   sources:
   - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
-  bg: assets/backgrounds/stadium_アストンヴィラ.png
+  bg: assets/backgrounds/stadium_アストンヴィラ_in.png
 - id: features
   heading: このクラブの特徴
   tier: 背景
@@ -154,7 +146,7 @@ sections:
   - https://www.avfc.co.uk/news/2026/september/18/prematch-emery-previews-tottenham-tilt
   - https://en.wikipedia.org/wiki/Nassef_Sawiris
   - https://en.wikipedia.org/wiki/Villa_Park
-  bg: assets/backgrounds/stadium_アストンヴィラ.png
+  bg: assets/backgrounds/stadium_アストンヴィラ_in.png
   official: false
 - id: episode
   heading: 前半だけラグビー
@@ -181,7 +173,7 @@ sections:
   - ヴィラは、その試合を1対0で勝っています。
   sources:
   - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
-  bg: assets/backgrounds/stadium_アストンヴィラ.png
+  bg: assets/backgrounds/stadium_アストンヴィラ_in.png
   official: false
 - id: legends
   heading: このクラブを語る3人
@@ -196,10 +188,10 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id001
+    - &id002
       - ガブリエル・アグボンラホー
       - 2005-2018
-      - プレミア74得点。長くクラブ最多
+      - プレミア74得点。長くク
   say:
   - text: ガブリエル・アグボンラホーは地元生まれ。2006年のデビュー戦で、いきなり得点しました。
     image: assets/photos/pl/villa_legend_27411382.jpg
@@ -209,7 +201,7 @@ sections:
   - https://en.wikipedia.org/wiki/Gabriel_Agbonlahor
   - https://en.wikipedia.org/wiki/Ollie_Watkins
   - https://en.wikipedia.org/wiki/Paul_McGrath_(footballer)
-  bg: assets/backgrounds/stadium_アストンヴィラ.png
+  bg: assets/backgrounds/stadium_アストンヴィラ_in.png
   official: false
 - id: legends2
   heading: このクラブを語る3人（2人目）
@@ -224,11 +216,11 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - &id002
+    - *id002
+    - &id003
       - オリー・ワトキンス
       - 2020-2026
-      - アグボンラホーを抜きプレミア最多に
+      - アグボンラホーを抜きプレ
   say:
   - text: オリー・ワトキンスはブレントフォードから当時のクラブ最高額、**2800万ポンド**で加入。
     image: assets/photos/pl/villa_legend_b8954c93.jpg
@@ -238,7 +230,7 @@ sections:
   - https://en.wikipedia.org/wiki/Gabriel_Agbonlahor
   - https://en.wikipedia.org/wiki/Ollie_Watkins
   - https://en.wikipedia.org/wiki/Paul_McGrath_(footballer)
-  bg: assets/backgrounds/stadium_アストンヴィラ.png
+  bg: assets/backgrounds/stadium_アストンヴィラ_in.png
   official: false
 - id: legends3
   heading: このクラブを語る3人（3人目）
@@ -253,11 +245,11 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
     - *id002
+    - *id003
     - - ジャック・グリーリッシュ
       - 2013-2021
-      - 6歳から育成組織。1億ポンドでシティへ
+      - 6歳から育成組織。1億ポ
   say:
   - text: ジャック・グリーリッシュは**6歳**で育成組織に入り、2014年、18歳でデビューしました。
     image: assets/photos/pl/villa_legend_ad97dc28.jpg
@@ -269,7 +261,7 @@ sections:
   - https://en.wikipedia.org/wiki/Paul_McGrath_(footballer)
   - https://en.wikipedia.org/wiki/Jack_Grealish
   - https://en.wikipedia.org/wiki/2019_EFL_Championship_play-off_final
-  bg: assets/backgrounds/stadium_アストンヴィラ.png
+  bg: assets/backgrounds/stadium_アストンヴィラ_in.png
   official: false
 - id: manager
   heading: 今季の監督
@@ -296,7 +288,7 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
   - https://en.wikipedia.org/wiki/Unai_Emery
-  bg: assets/backgrounds/stadium_アストンヴィラ.png
+  bg: assets/backgrounds/stadium_アストンヴィラ_in.png
   official: false
 - id: squad
   heading: 今季の登録選手
@@ -348,7 +340,7 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Aston_Villa_F.C.
-  bg: assets/backgrounds/stadium_アストンヴィラ.png
+  bg: assets/backgrounds/stadium_アストンヴィラ_in.png
   official: false
 - id: season
   heading: 今季のここまで
@@ -385,5 +377,5 @@ sections:
   - チャンピオンズリーグの初戦は、アウェーでクラブ・ブルージュに**3対2**の勝ちです。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Aston_Villa_F.C._season
-  bg: assets/backgrounds/stadium_アストンヴィラ.png
+  bg: assets/backgrounds/stadium_アストンヴィラ_in.png
   official: false

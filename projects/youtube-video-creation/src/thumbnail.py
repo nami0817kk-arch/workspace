@@ -215,8 +215,25 @@ def _short_thumbnail(
     # **エンブレムが主役の回は、まずエンブレム**（2026-09-14 指摘）。
     # 写真が無いと下地（自前で描いた緑のピッチ）が拾われ、
     # エンブレムの3本が同じ絵に見えていた。写真があればそちらを優先する
+    # **板を指定した回は、縦版の板を敷く**（2026-09-24 指摘「ショートのサムネが
+    # おかしい」）。エンブレムだけの地は、**白っぽい面に紋章が1つ**で一覧では
+    # 何の動画か分からなかった。板の縦版（`<名前>_v.png`）があればそれを使う
+    from .render import _is_board
+
     stage = None
-    if not (photos or []) and (crest_main or []):
+    board = str(background or "")
+    if _is_board(board):
+        name = Path(board.replace("\\", "/"))
+        for tall in (name.with_name(name.stem + "_v.png"),
+                     Path("assets/stats") / (name.stem + "_v.png")):
+            if _resolve(tall.as_posix()).exists():
+                background = tall.as_posix()
+                break
+        else:
+            background = None
+    if background is None and not (photos or []) and (crest_main or []):
+        stage = _short_crest_stage(crest_main, font_path, crest_link)
+    elif not _is_board(board) and not (photos or []) and (crest_main or []):
         stage = _short_crest_stage(crest_main, font_path, crest_link)
 
     source = None
@@ -620,9 +637,18 @@ def _band_thumbnail(
     時点で顔が残らない。
     """
     font_path = str(config.video.font_path())
+    # **板を下地に指定した回は、板をそのまま使う**（2026-09-24 指示
+    # 「もっと、背景は、データを利用」）。プレミア20クラブ紹介は基礎DATAの板を
+    # 背景にする。エンブレムの地（`_crest_stage`）を先に作ると板が捨てられ、
+    # **右下のエンブレムも板の字に重なる**ので、どちらも出さない
+    from .render import _is_board
+
+    on_board = _is_board(str(background or ""))
+    if on_board:
+        crests = []
     # **正方形に近い写真も右に置く。**全面に敷くと顔が帯に隠れる
-    stage = _crest_stage(crest_main or [], font_path, crest_link,
-                         note_room=bool(note_red))
+    stage = None if on_board else _crest_stage(crest_main or [], font_path, crest_link,
+                                               note_room=bool(note_red))
     tiles = [] if stage is not None else [q for q in (photos or []) if _resolve(q).exists()]
     if stage is not None:
         canvas = stage

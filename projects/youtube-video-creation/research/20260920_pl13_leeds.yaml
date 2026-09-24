@@ -20,54 +20,41 @@ theme:
   question: どんなクラブなのか
   hook: この白には、手本にしたクラブがあります。
   lead: 創立**1919年**。20クラブのなかで、いちばん新しい。
+  opening_image: assets/stats/pl_leeds_data_t.png
 thumbnail:
   line1: 前のクラブは、消された
-  line2: リーズ・ユナイテッド
+  line2: 田中碧のリーズ、白い理由
   crest_main:
   - リーズ
   tags: []
   points: []
+  board: assets/stats/pl_leeds_data_t.png
 sections:
-- id: reasons
-  heading: いま見る理由
-  tier: 報道
+- id: data
+  heading: いま見る理由と基礎DATA
   main: true
+  tier: 背景
   telop: 田中碧がいる。開幕5試合負けなしの5位
   narrator: キャスター
-  card:
-    type: table
-    title: いま見る理由
-    columns:
-    - ''
-    - ''
-    rows:
-    - - 理由1
-      - 田中碧が中盤にいる
-    - - 理由2
-      - 開幕5試合負けなしの5位
-    - - 理由3
-      - 昨季14位。2年目の挑戦
   say:
-  - 日本代表の中盤、田中碧が、リーグ戦**74試合**を戦っています。
-  - 1970年代の主将ビリー・ブレムナーは、首位を奪われた夜に言いました。
+  - text: 日本代表の中盤、田中碧が、リーグ戦**74試合**を戦っています。
+    image: assets/stats/pl_leeds_data_r1.png
+    no_telop: true
+  - text: 1970年代の主将ビリー・ブレムナーは、首位を奪われた夜に言いました。
+    image: assets/stats/pl_leeds_data_r1.png
+    no_telop: true
   - voice: ビリー・ブレムナー
     text: 「だが、我々は戦い続ける。間違いなく、まだ終わってはいない」
-  - 今季はまだ負けていません。開幕から**5試合**、負けなしの5位です。
-  - 昇格1年目の昨季は**14位**で残留。2年目の今季は、監督4年目のファルケが率います。
-  - 手本にしたのは、1960年代に欧州を5連覇した、スペインの白いクラブです。
-  sources:
-  - https://en.wikipedia.org/wiki/Leeds_United_F.C.
-  - https://en.wikipedia.org/wiki/2026–27_Leeds_United_F.C._season
-  - https://en.wikipedia.org/wiki/Billy_Bremner
-  bg: assets/backgrounds/stadium_リーズ.png
-  official: false
-- id: data
-  heading: リーズ 基礎DATA
-  main: false
-  tier: 背景
-  telop: 1919年創立
-  narrator: 解説
-  say:
+    image: assets/stats/pl_leeds_data_r1.png
+  - text: 今季はまだ負けていません。開幕から**5試合**、負けなしの5位です。
+    image: assets/stats/pl_leeds_data_r2.png
+    no_telop: true
+  - text: 昇格1年目の昨季は**14位**で残留。2年目の今季は、監督4年目のファルケが率います。
+    image: assets/stats/pl_leeds_data_r3.png
+    no_telop: true
+  - text: 手本にしたのは、1960年代に欧州を5連覇した、スペインの白いクラブです。
+    image: assets/stats/pl_leeds_data_r3.png
+    no_telop: true
   - image: assets/stats/pl_leeds_data1.png
     text: 愛称は「ホワイツ」。真っ白なユニフォームからです。
     no_telop: true
@@ -77,7 +64,7 @@ sections:
   - image: assets/stats/pl_leeds_map.png
     text: ホームタウンはリーズ。イングランド・ウェストヨークシャーです。
     no_telop: true
-  - image: assets/backgrounds/stadium_リーズ_in.png
+  - image: assets/backgrounds/stadium_リーズ.png
     text: 本拠地はエランド・ロード。**約3万8000人**が入ります。
   - image: assets/stats/pl_leeds_data4.png
     text: オーナーはアメフト球団、サンフランシスコ・フォーティナイナーズの会社。2023年からです。
@@ -102,7 +89,9 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Leeds_United_F.C.
-  bg: assets/backgrounds/stadium_リーズ.png
+  - https://en.wikipedia.org/wiki/2026–27_Leeds_United_F.C._season
+  - https://en.wikipedia.org/wiki/Billy_Bremner
+  bg: assets/backgrounds/stadium_リーズ_in.png
   official: false
 - id: birth
   heading: 前のクラブは、解散させられた
@@ -112,30 +101,40 @@ sections:
   card:
     type: table
     title: クラブの成り立ち
-    columns:
+    columns: &id001
     - ''
     - ''
     rows:
     - - 創設
       - 1919年10月17日
-    - - 理由
-      - リーズ・シティが強制的に解散
-    - - 同じ日
-      - リーズ・シティの選手16人が競売に
   say:
   - text: 1919年と、ほかより遅く生まれたのには理由があります。
     image: assets/images/pl_leeds_story/01.jpg
   - '**この街には、すでに別のクラブがありました。**リーズ・シティです。'
-  - そのクラブが、リーグから**強制的に解散させられました。**
+  - text: そのクラブが、リーグから**強制的に解散させられました。**
+    card:
+      type: table
+      title: クラブの成り立ち
+      columns: *id001
+      rows:
+      - - 理由
+        - リーズ・シティが強制的に解散
   - 第一次世界大戦中に、選手へ不正な支払いをしていたという疑いでした。
   - 1919年**10月17日**、リーズのホテルで選手16人が競売にかけられました。
-  - 9つのクラブが、合わせて9250ポンドで買っていきました。
+  - text: 9つのクラブが、合わせて9250ポンドで買っていきました。
+    card:
+      type: table
+      title: クラブの成り立ち
+      columns: *id001
+      rows:
+      - - 同じ日
+        - リーズ・シティの選手16人が競売に
   - 同じ日、集まったサポーターが新しいクラブを作ると決めます。それがリーズ・ユナイテッドです。
   official: false
   sources:
   - https://en.wikipedia.org/wiki/Leeds_United_F.C.
   - https://en.wikipedia.org/wiki/Leeds_City_F.C.
-  bg: assets/backgrounds/stadium_リーズ.png
+  bg: assets/backgrounds/stadium_リーズ_in.png
 - id: features
   heading: このクラブの特徴
   tier: 背景
@@ -166,7 +165,7 @@ sections:
   - https://en.wikipedia.org/wiki/49ers_Enterprises
   - https://en.wikipedia.org/wiki/Red_Bull_GmbH
   - https://en.wikipedia.org/wiki/Daniel_Farke
-  bg: assets/backgrounds/stadium_リーズ.png
+  bg: assets/backgrounds/stadium_リーズ_in.png
   official: false
 - id: episode
   heading: 古い1部の最後の王者
@@ -193,7 +192,7 @@ sections:
   - エリック・カントナも、11月に**120万ポンド**でマンチェスター・ユナイテッドへ売られました。
   sources:
   - https://en.wikipedia.org/wiki/History_of_Leeds_United_F.C.
-  bg: assets/backgrounds/stadium_リーズ.png
+  bg: assets/backgrounds/stadium_リーズ_in.png
   official: false
 - id: legends
   heading: このクラブを語る3人
@@ -208,7 +207,7 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id001
+    - &id002
       - ゲイリー・ケリー
       - 1992-2007
       - 15年在籍・531試合
@@ -221,7 +220,7 @@ sections:
   - https://en.wikipedia.org/wiki/Gary_Kelly_(footballer,_born_1974)
   - https://en.wikipedia.org/wiki/Lucas_Radebe
   - https://en.wikipedia.org/wiki/Mark_Viduka
-  bg: assets/backgrounds/stadium_リーズ.png
+  bg: assets/backgrounds/stadium_リーズ_in.png
   official: false
 - id: legends2
   heading: このクラブを語る3人（2人目）
@@ -236,8 +235,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - &id002
+    - *id002
+    - &id003
       - ルーカス・ラデベ
       - 1994-2005
       - 2001年CL4強の主将
@@ -250,7 +249,7 @@ sections:
   - https://en.wikipedia.org/wiki/Gary_Kelly_(footballer,_born_1974)
   - https://en.wikipedia.org/wiki/Lucas_Radebe
   - https://en.wikipedia.org/wiki/Mark_Viduka
-  bg: assets/backgrounds/stadium_リーズ.png
+  bg: assets/backgrounds/stadium_リーズ_in.png
   official: false
 - id: legends3
   heading: このクラブを語る3人（3人目）
@@ -265,8 +264,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
     - *id002
+    - *id003
     - - マーク・ビドゥカ
       - 2000-2004
       - リヴァプール戦で4得点
@@ -279,7 +278,7 @@ sections:
   - https://en.wikipedia.org/wiki/Gary_Kelly_(footballer,_born_1974)
   - https://en.wikipedia.org/wiki/Lucas_Radebe
   - https://en.wikipedia.org/wiki/Mark_Viduka
-  bg: assets/backgrounds/stadium_リーズ.png
+  bg: assets/backgrounds/stadium_リーズ_in.png
   official: false
 - id: manager
   heading: 今季の監督
@@ -306,7 +305,7 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Leeds_United_F.C.
   - https://en.wikipedia.org/wiki/Daniel_Farke
-  bg: assets/backgrounds/stadium_リーズ.png
+  bg: assets/backgrounds/stadium_リーズ_in.png
   official: false
 - id: squad
   heading: 今季の登録選手
@@ -355,7 +354,7 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Leeds_United_F.C.
-  bg: assets/backgrounds/stadium_リーズ.png
+  bg: assets/backgrounds/stadium_リーズ_in.png
   official: false
 - id: season
   heading: 今季のここまで
@@ -390,5 +389,5 @@ sections:
   - 順位は**5位**、勝ち点は**9**です。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Leeds_United_F.C._season
-  bg: assets/backgrounds/stadium_リーズ.png
+  bg: assets/backgrounds/stadium_リーズ_in.png
   official: false

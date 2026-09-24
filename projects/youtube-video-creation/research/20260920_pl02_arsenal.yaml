@@ -19,53 +19,38 @@ theme:
   question: どんなクラブなのか
   hook: 1つも負けずに優勝したシーズンがあります。
   lead: ロンドンでいちばん多い、**14回**のリーグ優勝。
+  opening_image: assets/stats/pl_arsenal_data_t.png
 thumbnail:
-  line1: 38試合、1つも負けずに
-  line2: アーセナル
+  line1: 22年ぶりのリーグ優勝から
+  line2: 連覇に挑む今季のアーセナル
   crest_main:
   - アーセナル
   tags: []
   points: []
+  board: assets/stats/pl_arsenal_data_t.png
 sections:
-- id: reasons
-  heading: いま見る理由
-  tier: 報道
+- id: data
+  heading: いま見る理由と基礎DATA
   main: true
+  tier: 背景
   telop: 22年ぶりの王者、連覇に挑む
   narrator: キャスター
-  card:
-    type: table
-    title: いま見る理由
-    columns:
-    - ''
-    - ''
-    rows:
-    - - 理由1
-      - 昨季22年ぶりのリーグ優勝
-    - - 理由2
-      - アルテタ「情熱とエネルギーを」
-    - - 理由3
-      - 首位と勝ち点3差で連覇争い
   say:
-  - 昨季、**22年**待ったリーグ優勝をつかんだ王者です。
-  - 率いるミケル・アルテタは、就任の日にこう言いました。
+  - text: 昨季、**22年**待ったリーグ優勝をつかんだ王者です。
+    image: assets/stats/pl_arsenal_data_r1.png
+    no_telop: true
+  - text: 率いるミケル・アルテタは、就任の日にこう言いました。
+    image: assets/stats/pl_arsenal_data_r2.png
+    no_telop: true
   - voice: ミケル・アルテタ
     text: 「仕事に責任を持ち、情熱とエネルギーを注ぐ人がほしい」
-  - 今季は連覇に挑む立場。首位を勝ち点**3**差で追っています。
-  - 無敗の記録を残したのは2004年。その先に22年の空白がありました。
-  sources:
-  - https://en.wikipedia.org/wiki/Arsenal_F.C.
-  - https://en.wikipedia.org/wiki/2026–27_Arsenal_F.C._season
-  - https://en.wikipedia.org/wiki/Mikel_Arteta
-  bg: assets/backgrounds/stadium_アーセナル.png
-  official: false
-- id: data
-  heading: アーセナル 基礎DATA
-  main: false
-  tier: 背景
-  telop: 1886年創立
-  narrator: 解説
-  say:
+    image: assets/stats/pl_arsenal_data_r2.png
+  - text: 今季は連覇に挑む立場。首位を勝ち点**3**差で追っています。
+    image: assets/stats/pl_arsenal_data_r3.png
+    no_telop: true
+  - text: 無敗の記録を残したのは2004年。その先に22年の空白がありました。
+    image: assets/stats/pl_arsenal_data_r3.png
+    no_telop: true
   - image: assets/stats/pl_arsenal_data0.png
     text: 創立は**1886年**。兵器工場の作業場、ディアル・スクエアの名で始まりました。
     no_telop: true
@@ -75,7 +60,7 @@ sections:
   - image: assets/stats/pl_arsenal_map.png
     text: ホームタウンは北ロンドン、イズリントン区です。
     no_telop: true
-  - image: assets/backgrounds/stadium_アーセナル_in.png
+  - image: assets/backgrounds/stadium_アーセナル.png
     text: 本拠地はエミレーツ・スタジアム。**6万704人**が入ります。
   - image: assets/photos/pl/arsenal_owner_87703a59.jpg
     text: オーナーはアメリカのスタン・クロエンケ。2018年にほかの株主を買い取り、ひとりで持っています。
@@ -96,7 +81,9 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Arsenal_F.C.
-  bg: assets/backgrounds/stadium_アーセナル.png
+  - https://en.wikipedia.org/wiki/2026–27_Arsenal_F.C._season
+  - https://en.wikipedia.org/wiki/Mikel_Arteta
+  bg: assets/backgrounds/stadium_アーセナル_in.png
   official: false
 - id: history
   heading: 歩んできた道
@@ -106,25 +93,30 @@ sections:
   card:
     type: table
     title: アーセナルの記録
-    columns:
+    columns: &id001
     - ''
     - ''
     rows:
     - - 2003-04年
       - 無敗優勝。連続無敗49試合はイングランド記録
-    - - 2026年5月19日
-      - 14回目のリーグ優勝（22年ぶり）
   say:
   - text: この無敗は、そのシーズンだけで終わっていません。
     image: assets/images/pl_arsenal_story/scene.jpg
   - 2003年5月から2004年10月まで、リーグ戦**49試合**、負けませんでした。
-  - この連続無敗は、いまもイングランド1部の最長記録です。
+  - text: この連続無敗は、いまもイングランド1部の最長記録です。
+    card:
+      type: table
+      title: アーセナルの記録
+      columns: *id001
+      rows:
+      - - 2026年5月19日
+        - 14回目のリーグ優勝（22年ぶり）
   - ただ、そこからリーグ優勝は遠ざかりました。
   - 次の優勝は**2026年5月19日**。**22年ぶり**でした。
   official: false
   sources:
   - https://en.wikipedia.org/wiki/Arsenal_F.C.
-  bg: assets/backgrounds/stadium_アーセナル.png
+  bg: assets/backgrounds/stadium_アーセナル_in.png
 - id: features
   heading: このクラブの特徴
   tier: 背景
@@ -153,7 +145,7 @@ sections:
   - https://en.wikipedia.org/wiki/Mikel_Arteta
   - https://en.wikipedia.org/wiki/Bukayo_Saka
   - https://en.wikipedia.org/wiki/Arsenal_Supporters%27_Trust
-  bg: assets/backgrounds/stadium_アーセナル.png
+  bg: assets/backgrounds/stadium_アーセナル_in.png
   official: false
 - id: episode
   heading: クラブ名の地下鉄駅
@@ -163,7 +155,7 @@ sections:
   card:
     type: table
     title: クラブ名の地下鉄駅
-    columns:
+    columns: &id002
     - ''
     - ''
     rows:
@@ -171,18 +163,23 @@ sections:
       - アーセナル（もとはジレスピー・ロード）
     - - 変わった日
       - 1932年10月31日
-    - - 働きかけた人
-      - 監督ハーバート・チャップマン
   say:
   - text: ロンドンの地下鉄に、「アーセナル」という駅があります。
     image: assets/images/pl_arsenal_episode/scene.jpg
   - もとの名前は、ジレスピー・ロード駅。
-  - 監督のハーバート・チャップマンが働きかけて、**1932年**に名前が変わりました。
+  - text: 監督のハーバート・チャップマンが働きかけて、**1932年**に名前が変わりました。
+    card:
+      type: table
+      title: クラブ名の地下鉄駅
+      columns: *id002
+      rows:
+      - - 働きかけた人
+        - 監督ハーバート・チャップマン
   - クラブの名前をそのまま付けた駅は、ロンドンの地下鉄でここだけです。
   sources:
   - https://en.wikipedia.org/wiki/History_of_Arsenal_F.C._(1886%E2%80%931966)
   - https://en.wikipedia.org/wiki/Arsenal_tube_station
-  bg: assets/backgrounds/stadium_アーセナル.png
+  bg: assets/backgrounds/stadium_アーセナル_in.png
   official: false
 - id: legends
   heading: このクラブを語る3人
@@ -197,7 +194,7 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id001
+    - &id003
       - ティエリ・アンリ
       - 1999-2007
       - クラブ最多の228得点
@@ -210,7 +207,7 @@ sections:
   - https://en.wikipedia.org/wiki/Thierry_Henry
   - https://en.wikipedia.org/wiki/Dennis_Bergkamp
   - https://en.wikipedia.org/wiki/Tony_Adams
-  bg: assets/backgrounds/stadium_アーセナル.png
+  bg: assets/backgrounds/stadium_アーセナル_in.png
   official: false
 - id: legends2
   heading: このクラブを語る3人（2人目）
@@ -225,8 +222,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - &id002
+    - *id003
+    - &id004
       - デニス・ベルカンプ
       - 1995-2006
       - 3度のリーグ優勝の司令塔
@@ -239,7 +236,7 @@ sections:
   - https://en.wikipedia.org/wiki/Thierry_Henry
   - https://en.wikipedia.org/wiki/Dennis_Bergkamp
   - https://en.wikipedia.org/wiki/Tony_Adams
-  bg: assets/backgrounds/stadium_アーセナル.png
+  bg: assets/backgrounds/stadium_アーセナル_in.png
   official: false
 - id: legends3
   heading: このクラブを語る3人（3人目）
@@ -254,11 +251,11 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - *id002
+    - *id003
+    - *id004
     - - トニー・アダムス
       - 1983-2002
-      - 1988-2002年の主将
+      - 1988-2002年の主
   say:
   - text: トニー・アダムスは1983年、17歳でデビュー。引退までこのクラブだけのセンターバックです。
     image: assets/photos/pl/arsenal_legend_2f4344ee.jpg
@@ -268,7 +265,7 @@ sections:
   - https://en.wikipedia.org/wiki/Thierry_Henry
   - https://en.wikipedia.org/wiki/Dennis_Bergkamp
   - https://en.wikipedia.org/wiki/Tony_Adams
-  bg: assets/backgrounds/stadium_アーセナル.png
+  bg: assets/backgrounds/stadium_アーセナル_in.png
   official: false
 - id: manager
   heading: 今季の監督
@@ -295,7 +292,7 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Arsenal_F.C.
   - https://en.wikipedia.org/wiki/Mikel_Arteta
-  bg: assets/backgrounds/stadium_アーセナル.png
+  bg: assets/backgrounds/stadium_アーセナル_in.png
   official: false
 - id: squad
   heading: 今季の登録選手
@@ -347,7 +344,7 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Arsenal_F.C.
-  bg: assets/backgrounds/stadium_アーセナル.png
+  bg: assets/backgrounds/stadium_アーセナル_in.png
   official: false
 - id: season
   heading: 今季のここまで
@@ -386,5 +383,5 @@ sections:
   - 今季のチャンピオンズリーグは、初戦でナポリにアウェーで**1対0**の勝ちです。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Arsenal_F.C._season
-  bg: assets/backgrounds/stadium_アーセナル.png
+  bg: assets/backgrounds/stadium_アーセナル_in.png
   official: false

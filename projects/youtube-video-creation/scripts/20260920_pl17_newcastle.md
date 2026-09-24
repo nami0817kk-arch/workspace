@@ -6,7 +6,7 @@ short_title: ニューカッスルが56年待っていたものとは
 series: プレミアリーグチーム紹介
 topic: ニューカッスル
 thumbnail_line1: 56年待って、獲ったもの
-thumbnail_line2: ニューカッスル
+thumbnail_line2: 5万2千人が待った半世紀
 thumbnail_tags: []
 thumbnail_alt: []
 thumbnail_points: []
@@ -15,6 +15,7 @@ thumbnail_band_full: false
 thumbnail_photos: []
 thumbnail_crest_main:
 - ニューカッスル
+thumbnail_board: assets/stats/pl_newcastle_data_t.png
 bg: assets/backgrounds/stadium.png
 date: 2026年9月19日
 intro_title: 56年間タイトルゼロ。ニューカッスルが待っていたものとは
@@ -53,21 +54,10 @@ sources:
 - https://en.wikipedia.org/wiki/Rob_Lee
 - https://en.wikipedia.org/wiki/Matthias_Jaissle
 cards:
-  reasons_card:
-    type: table
-    title: いま見る理由
-    columns:
-    - ''
-    - ''
-    rows:
-    - - 理由1
-      - 新監督ヤイスレ、38歳の1年目
-    - - 理由2
-      - 昨季12位。開幕5試合で1敗
   drought_card:
     type: table
     title: タイトルの記録
-    columns:
+    columns: &id001
     - ''
     - ''
     rows:
@@ -75,10 +65,20 @@ cards:
       - 4回（うち3回は1904-1910年、最後は1927年）
     - - 1955年
       - FAカップ。国内のタイトルはここまで
+  drought_3_card:
+    type: table
+    title: タイトルの記録
+    columns: *id001
+    rows:
     - - 1969年
       - フェアーズカップ優勝（合計6-2）
     - - 2021年10月7日
       - 持ち主が交代（それまでは14年）
+  drought_6_card:
+    type: table
+    title: タイトルの記録
+    columns: *id001
+    rows:
     - - 2025年
       - リーグカップ優勝。56年ぶりのタイトル
   features_card:
@@ -115,7 +115,7 @@ cards:
     - 在籍
     - 残したもの
     rows:
-    - &id001
+    - &id002
       - アラン・シアラー
       - 1996-2006
       - クラブ最多の206得点
@@ -127,8 +127,8 @@ cards:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - &id002
+    - *id002
+    - &id003
       - シェイ・ギヴン
       - 1997-2009
       - 12年間守ったGK
@@ -140,8 +140,8 @@ cards:
     - 在籍
     - 残したもの
     rows:
-    - *id001
     - *id002
+    - *id003
     - - ロブ・リー
       - 1992-2002
       - エンターテイナーズの中心
@@ -184,62 +184,64 @@ cards:
 ---
 
 ## オープニング
-@bg: assets/backgrounds/stadium_ニューカッスル.png
+@bg: assets/backgrounds/stadium_ニューカッスル_in.png
 
 キャスター: イングランド北東部、白と黒の縞。
   telop: イングランド北東部、白と黒の縞
+  image: assets/stats/pl_newcastle_data_t.png
+  no_telop: true
 キャスター: 56年間タイトルゼロ。ニューカッスルが待っていたものとは。
   telop: 56年間タイトルゼロ。ニューカッスルが待っていたものとは
   se: assets/audio/se_pon.wav
+  image: assets/stats/pl_newcastle_data_t.png
 キャスター: 最後に杯を掲げたのは1969年。次は2025年でした。
   telop: 最後に杯を掲げたのは1969年。次は2025年でした
+  image: assets/stats/pl_newcastle_data_t.png
 
-## いま見る理由
-@bg: assets/backgrounds/stadium_ニューカッスル.png
+## いま見る理由と基礎DATA
+@bg: assets/backgrounds/stadium_ニューカッスル_in.png
 @main: true
 
 キャスター: ハウが去り、**38歳**のヤイスレの1年目。降格危機の2009年に監督を引き受けたシアラーの言葉です。
-  telop: ハウが去り、**38歳**のヤイスレの1年目。降格危機の2009年に監督を引き受けたシアラーの言葉です
-  source: 報道
-  card: reasons_card
-アラン・シアラー: 「愛するクラブだ。落ちてほしくない。できることは全部やる」
-  telop: アラン・シアラー「「愛するクラブだ。落ちてほしくない。できることは全部やる」」
-キャスター: 昨季は**12位**。今季は開幕から5試合で負けが1つだけと、滑り出しは上々です。
-  telop: 昨季は**12位**。今季は開幕から5試合で負けが1つだけと、滑り出しは上々です
-キャスター: 待っていたのは新しいオーナー。2021年に代わって、4年後にリーグカップを獲りました。
-  telop: 待っていたのは新しいオーナー。2021年に代わって、4年後にリーグカップを獲りました
-
-## ニューカッスル 基礎DATA
-@bg: assets/backgrounds/stadium_ニューカッスル.png
-
-解説: 創立は**1881年**。1892年に今の名前になりました。
   no_telop: true
   source: 背景
+  image: assets/stats/pl_newcastle_data_r1.png
+アラン・シアラー: 「愛するクラブだ。落ちてほしくない。できることは全部やる」
+  telop: アラン・シアラー「愛するクラブだ。落ちてほしくない。できることは全部やる」
+  image: assets/stats/pl_newcastle_data_r1.png
+キャスター: 昨季は**12位**。今季は開幕から5試合で負けが1つだけと、滑り出しは上々です。
+  no_telop: true
+  image: assets/stats/pl_newcastle_data_r2.png
+キャスター: 待っていたのは新しいオーナー。2021年に代わって、4年後にリーグカップを獲りました。
+  no_telop: true
+  image: assets/stats/pl_newcastle_data_r2.png
+キャスター: 創立は**1881年**。1892年に今の名前になりました。
+  no_telop: true
   image: assets/stats/pl_newcastle_data0.png
-解説: 愛称は「マグパイズ」。カササギです。白と黒の縞から来ています。
+キャスター: 愛称は「マグパイズ」。カササギです。白と黒の縞から来ています。
   no_telop: true
   image: assets/stats/pl_newcastle_data1.png
-解説: ホームタウンは、ニューカッスル・アポン・タインです。
+キャスター: ホームタウンは、ニューカッスル・アポン・タインです。
   no_telop: true
   image: assets/stats/pl_newcastle_map.png
-解説: 本拠地はセント・ジェームズ・パーク。**5万2729人**が入ります。
+キャスター: 本拠地はセント・ジェームズ・パーク。**5万2729人**が入ります。
   telop: 本拠地はセント・ジェームズ・パーク。**5万2729人**が入ります
-  image: assets/backgrounds/stadium_ニューカッスル_in.png
-解説: オーナーは、サウジアラビアの公共投資基金。
+  image: assets/backgrounds/stadium_ニューカッスル.png
+キャスター: オーナーは、サウジアラビアの公共投資基金。
   telop: オーナーは、サウジアラビアの公共投資基金
   image: assets/photos/pl/newcastle_owner_d7f21670.jpg
-解説: 1部リーグの優勝は**4回**。FAカップはさきほどの6回。
+キャスター: 1部リーグの優勝は**4回**。FAカップはさきほどの6回。
   no_telop: true
   image: assets/stats/pl_newcastle_cups.png
-解説: リーグカップとフェアーズカップが1回ずつ。インタートトカップも1回です。
+キャスター: リーグカップとフェアーズカップが1回ずつ。インタートトカップも1回です。
   no_telop: true
   image: assets/stats/pl_newcastle_cups.png
-解説: プレミアでの最高位は2位。1995年から96年と、その翌年の2回です。
+キャスター: プレミアでの最高位は2位。1995年から96年と、その翌年の2回です。
   no_telop: true
   image: assets/stats/pl_newcastle_last.png
 
 ## 56年待った
-@bg: assets/backgrounds/stadium_ニューカッスル.png
+@bg: assets/backgrounds/stadium_ニューカッスル_in.png
 
 解説: リーグ優勝は、3回が**1904年から1910年**、最後が1927年です。
   telop: リーグ優勝は、3回が**1904年から1910年**、最後が1927年です
@@ -250,35 +252,28 @@ cards:
   telop: FAカップは1955年が最後。国内のタイトルは、そこで止まりました
 解説: ヨーロッパでは1969年のフェアーズカップ。のちのヨーロッパリーグにつながる大会です。
   telop: ヨーロッパでは1969年のフェアーズカップ。のちのヨーロッパリーグにつながる大会です
-  card: none
   image: assets/images/pl_newcastle_story/scene.jpg
 解説: 決勝はハンガリーのウイペシュトに、2試合合計6対2で勝ちました。
   telop: 決勝はハンガリーのウイペシュトに、2試合合計6対2で勝ちました
-  card: none
-  image: assets/images/pl_newcastle_story/scene.jpg
+  card: drought_3_card
 解説: ところが、そこから先が長かった。
   telop: ところが、そこから先が長かった
-  card: none
   image: assets/images/pl_newcastle_story/scene.jpg
 解説: 変わり目は2021年10月。いまのオーナーが買い取り、14年ぶりにオーナーが代わりました。
   telop: 変わり目は2021年10月。いまのオーナーが買い取り、14年ぶりにオーナーが代わりました
-  card: none
   image: assets/images/pl_newcastle_story/scene.jpg
 解説: いまのオーナーが、クラブを買い取った日です。オーナーが代わるのは14年ぶりでした。
   telop: いまのオーナーが、クラブを買い取った日です。オーナーが代わるのは14年ぶりでした
-  card: none
-  image: assets/images/pl_newcastle_story/scene.jpg
+  card: drought_6_card
 解説: そして2025年、リーグカップの決勝でリヴァプールを2対1で下します。
   telop: そして2025年、リーグカップの決勝でリヴァプールを2対1で下します
-  card: none
   image: assets/images/pl_newcastle_story/scene.jpg
 解説: 1969年から数えて、**56年ぶり**のタイトルでした。
   telop: 1969年から数えて、**56年ぶり**のタイトルでした
-  card: none
   image: assets/images/pl_newcastle_story/scene.jpg
 
 ## このクラブの特徴
-@bg: assets/backgrounds/stadium_ニューカッスル.png
+@bg: assets/backgrounds/stadium_ニューカッスル_in.png
 
 解説: ヤイスレ監督のサッカーは、前へ前へ。奪ってすぐに、速く攻めます。
   telop: ヤイスレ監督のサッカーは、前へ前へ。奪ってすぐに、速く攻めます
@@ -289,11 +284,10 @@ cards:
   telop: オーナーの資金で買う型。買収額は3億500万ポンドで、そこから4年でタイトルに届きました
 解説: 街にクラブは一つだけ。2部に落ちた2016年からの1年も、平均5万人を超えるお客さんが来ました。
   telop: 街にクラブは一つだけ。2部に落ちた2016年からの1年も、平均5万人を超えるお客さんが来ました
-  card: none
   image: assets/photos/pl/newcastle_manager_37492bb4.jpg
 
 ## 最初は赤いシャツだった
-@bg: assets/backgrounds/stadium_ニューカッスル.png
+@bg: assets/backgrounds/stadium_ニューカッスル_in.png
 
 解説: いまは白と黒の縞が有名ですが、最初のユニフォームは**赤いシャツ**に白いパンツ、赤いソックスでした。
   telop: いまは白と黒の縞が有名ですが、最初のユニフォームは**赤いシャツ**に白いパンツ、赤いソックスでした
@@ -304,7 +298,7 @@ cards:
   telop: 白黒の縞に変えたのは**1894年**。もともとは、リザーブチームの色でした
 
 ## このクラブを語る3人
-@bg: assets/backgrounds/stadium_ニューカッスル.png
+@bg: assets/backgrounds/stadium_ニューカッスル_in.png
 
 キャスター: アラン・シアラーは地元生まれのフォワード。世界最高額の**1500万ポンド**で帰ってきました。
   telop: アラン・シアラーは地元生まれのフォワード。世界最高額の**1500万ポンド**で帰ってきました
@@ -315,11 +309,10 @@ cards:
   telop: 2006年の201点目で、1950年代のエース、ミルバーンの記録を**49年ぶり**に抜きました
 キャスター: クラブ史上最多の**206得点**。タイトルは獲れませんでしたが、スタジアムの前に銅像があります。
   telop: クラブ史上最多の**206得点**。タイトルは獲れませんでしたが、スタジアムの前に銅像があります
-  card: none
   image: assets/photos/pl/newcastle_legend_f4f90b59.jpg
 
 ## このクラブを語る3人（2人目）
-@bg: assets/backgrounds/stadium_ニューカッスル.png
+@bg: assets/backgrounds/stadium_ニューカッスル_in.png
 
 キャスター: シェイ・ギヴンは、アイルランド代表で**134試合**のキーパー。ブラックバーンから来ました。
   telop: シェイ・ギヴンは、アイルランド代表で**134試合**のキーパー。ブラックバーンから来ました
@@ -330,11 +323,10 @@ cards:
   telop: **150万ポンド**で加入し、リーグ戦で354試合。年間ベストイレブンにも2度選ばれました
 キャスター: 2009年にマンチェスター・シティへ。クラブの最多出場記録まで、あと**34試合**でした。
   telop: 2009年にマンチェスター・シティへ。クラブの最多出場記録まで、あと**34試合**でした
-  card: none
   image: assets/photos/pl/newcastle_legend_03981f93.jpg
 
 ## このクラブを語る3人（3人目）
-@bg: assets/backgrounds/stadium_ニューカッスル.png
+@bg: assets/backgrounds/stadium_ニューカッスル_in.png
 
 キャスター: ロブ・リーは、チャールトンから来た中盤。「ロンドンに近い」とキーガン監督に口説かれました。
   telop: ロブ・リーは、チャールトンから来た中盤。「ロンドンに近い」とキーガン監督に口説かれました
@@ -345,11 +337,10 @@ cards:
   telop: 2位になった年の11月、リーグの月間最優秀選手に選ばれています
 キャスター: 主将も務め、リーグ戦で**303試合**44得点。2019年にはクラブの殿堂入りを果たしました。
   telop: 主将も務め、リーグ戦で**303試合**44得点。2019年にはクラブの殿堂入りを果たしました
-  card: none
   image: assets/photos/pl/newcastle_legend_69dd2e4f.jpg
 
 ## 今季の監督
-@bg: assets/backgrounds/stadium_ニューカッスル.png
+@bg: assets/backgrounds/stadium_ニューカッスル_in.png
 
 キャスター: 今季の監督は、ドイツ人のマティアス・ヤイスレ。**2026年8月**に来た1年目です。
   telop: 今季の監督は、ドイツ人のマティアス・ヤイスレ。**2026年8月**に来た1年目です
@@ -360,7 +351,7 @@ cards:
   telop: 前はサウジアラビアのアル・アハリ。エディ・ハウが退いた6日後の就任でした
 
 ## 今季の登録選手
-@bg: assets/backgrounds/stadium_ニューカッスル.png
+@bg: assets/backgrounds/stadium_ニューカッスル_in.png
 
 キャスター: 今季の登録選手は25人です。
   no_telop: true
@@ -404,7 +395,7 @@ cards:
   image: assets/stats/pl_newcastle_fw_f.png
 
 ## 今季のここまで
-@bg: assets/backgrounds/stadium_ニューカッスル.png
+@bg: assets/backgrounds/stadium_ニューカッスル_in.png
 
 解説: プレミアリーグは5試合を終えて、**2勝2引き分け1敗**です。
   telop: プレミアリーグは5試合を終えて、**2勝2引き分け1敗**です

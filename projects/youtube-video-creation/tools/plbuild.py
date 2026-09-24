@@ -152,6 +152,39 @@ def lit_board(board: dict, names: list[str]) -> str:
     return out
 
 
+def split_card(section: dict, per_card: int = 3) -> dict:
+    """長い節の表カードを2〜3枚に割る（2026-09-24）。
+
+    **1枚のカードが20〜56秒そのまま出ていた**（review の「カードの持ち」が
+    18クラブで鳴った）。ボーンマスは `story_sections` で手で割ってあるので通る。
+    残りは旧台本の節をそのまま使うため、7〜12行が1枚のカードで通っていた。
+
+    割るのは**行**ではなく**表の中身**。話が進むにつれて表も進むので、
+    「まだ話していない行が先に画面へ出る」（2026-09-20 に手割りを選んだ理由）も薄まる。
+    表以外のカード（引用・箇条書き）は割らない。
+    """
+    card = dict(section.get("card") or {})
+    say = list(section.get("say") or [])
+    rows = list(card.get("rows") or [])
+    # **4行でも割る**（2026-09-24 の2回目。6行以上にしていたら、5行の節が
+    # 21〜28秒で残った）。3行の節（18秒）は割らない
+    if str(card.get("type")) != "table" or len(say) < 4 or len(rows) < 2:
+        return section
+    # 10行を超える節は4枚まで（フォレストのクラフは12行で、3枚でも21.8秒あった）
+    chunks = min(4, max(2, -(-len(say) // per_card)), len(rows))
+    size = -(-len(rows) // chunks)
+    parts = [rows[i:i + size] for i in range(0, len(rows), size)]
+    step = len(say) / len(parts)
+    marks = {int(round(k * step)): parts[k] for k in range(1, len(parts))}
+    out = []
+    for index, item in enumerate(say):
+        if index in marks:
+            item = dict(item) if isinstance(item, dict) else {"text": item}
+            item["card"] = dict(card, rows=marks[index])
+        out.append(item)
+    return dict(section, say=out, card=dict(card, rows=parts[0]))
+
+
 def build(key: str, number: int, old_file: str) -> Path:
     facts = json.loads((DATA / f"{key}.json").read_text(encoding="utf-8"))
     raw = json.loads((DATA / f"{key}_raw.json").read_text(encoding="utf-8"))
@@ -176,9 +209,34 @@ def build(key: str, number: int, old_file: str) -> Path:
     if not (ROOT / bg).exists():
         bg = None
 
-    # 板
-    subprocess.run([sys.executable, str(ROOT / "tools" / "clubdata.py"), str(ROOT / f"assets/stats/pl_{key}_data.png"),
-                    "--spec", str(DATA / f"{key}.json")], check=True, capture_output=True)
+    # 板。**「いま見る理由」も基礎DATAの画面に入れる**（2026-09-23 指示
+    # 「基礎データに今見る理由もいれよう」）。柱の下に3つ並ぶ
+    reason_args = [a for r in (ov.get("reasons_rows") or [])[:3]
+                   if len(r) > 1 for a in ("--reason", str(r[1]))]
+    # **クラブのキャッチコピーを板に入れる**（2026-09-23 指示「データにチームの
+    # キャッチコピーを入れてそこを読もう」）。読み上げの1行目（`opening`）と同じ文。
+    # どの板にも薄く入っていて、**1行目を読んでいるあいだだけ明るい**
+    tagline = str(ov.get("opening") or "").strip().rstrip("。")
+    if tagline:
+        reason_args += ["--tagline", tagline]
+
+    def data_board(rel: str, *extra: str) -> str:
+        """基礎DATAの板を書き出す。**縦版（<名前>_v.png）も一緒に作る**（2026-09-23）。
+
+        ショートは 16:9 の板を敷くと左右が切れて読めない。`shorts._drop_boards` が
+        `_v` の付いた縦版を探して差し替えるので、ここで両方そろえておく
+        """
+        for args, out in (((), rel), (("--portrait",), rel.replace(".png", "_v.png"))):
+            subprocess.run([sys.executable, str(ROOT / "tools" / "clubdata.py"), str(ROOT / out),
+                            "--spec", str(DATA / f"{key}.json")] + list(extra) + reason_args + list(args),
+                           check=True, capture_output=True)
+        return rel
+
+    data_board(f"assets/stats/pl_{key}_data.png")
+    # 理由を読み上げている行は、柱だけを明るく残す
+    reasons_board = ""
+    if reason_args:
+        reasons_board = data_board(f"assets/stats/pl_{key}_data_r.png", "--focus", "reasons")
     # **トロフィーの板も毎回描き直す**（2026-09-22 ユーザー指摘「ヨーロッパ合計になってる
     # クラブがいくつかある」。`trophies` を直しても、ここで描き直していなかった）
     if (DATA / f"{key}.json").exists():
@@ -198,19 +256,11 @@ def build(key: str, number: int, old_file: str) -> Path:
 
     sections = []
     # **いま見る理由**（2026-09-22 指示「今そのクラブを見る理由を最初につけて視聴者の
-    # 興味を上げたい」）。<key>_say.yaml の `reasons`（2〜3行）・`reasons_rows`（板）。
-    # **ショートもここから始める**（この節が main。基礎DATAは main にしない）。
-    # 日本人の入口（why）はこの節に吸収する
+    # 興味を上げたい」）。<key>_say.yaml の `reasons`（2〜3行）・`reasons_rows`（柱）。
+    # **2026-09-23 指示「基礎データに今見る理由もいれよう」で、独立した節をやめて
+    # 基礎DATAの頭に入れた。**板は最初の10秒から出たまま、柱の3つが明るい状態で
+    # 理由を読み、そのあと1行ずつ右の一覧が明るくなる。ショートはここから始まる
     reasons = list(ov.get("reasons") or [])
-    if reasons:
-        sections.append(sec(id="reasons", heading="いま見る理由", tier="報道", main=True,
-                            telop=str(ov.get("reasons_telop") or "いま、このクラブを見る理由"),
-                            narrator="キャスター",
-                            card={"type": "table", "title": "いま見る理由", "columns": ["", ""],
-                                  "rows": ov.get("reasons_rows") or []},
-                            say=reasons,
-                            sources=[wiki, season_url] + [u for u in (ov.get("reasons_sources") or [])
-                                                          if u not in (wiki, season_url)]))
     # 入口
     if japanese and not reasons:
         who = "と".join(jp_names)
@@ -227,7 +277,55 @@ def build(key: str, number: int, old_file: str) -> Path:
     img = f"assets/stats/pl_{key}_data.png"
     # **ショート専用の前置きも、日本人が2人なら2人とも**（2026-09-22）。題は2人なのに
     # この行だけ1人目で、パレスの鎌田大地がショートから消えていた
-    say = [] if reasons else [{"short_only": True, "text": f"{'と'.join(jp_names[:2])}の所属クラブを、基本のデータで見ていきます。" if japanese else "このクラブの、基本のデータです。"}]
+    # **理由も1つずつ明るくする**（2026-09-23。3つ並べたまま読むと、柱が明るい板が
+    # 18.8秒つづけて出ていた＝12秒→24秒の崖にちょうど重なる）。
+    # どの理由の話かは <key>_say.yaml の `reasons_focus`（1始まり・0はぜんぶ明るい）。
+    # 書いていなければ行数で割り振る
+    r_focus = list(ov.get("reasons_focus") or [])
+    n_reasons = len([r for r in (ov.get("reasons_rows") or [])[:3] if len(r) > 1])
+
+    r_rows = [str(r[1]) for r in (ov.get("reasons_rows") or [])[:3] if len(r) > 1]
+    r_last = 1
+
+    def reason_of(text: str) -> int:
+        """その行はどの理由の話か。**読み上げ文と柱の一言を突き合わせる**（2026-09-24）。
+
+        行数で割り振っていたら、**明るい理由と読み上げがずれた**
+        （指摘「読み上げとズレてる」。アーセナルは「連覇争い」を読んでいるのに②が明るい）。
+        当たらない行（「こう話しています」のような振り）は**前の行のまま**にする。
+        """
+        nonlocal r_last
+        pairs = {text[i:i + 2] for i in range(len(text) - 1)}
+        best, score = 0, 0
+        for index, row in enumerate(r_rows, start=1):
+            hit = len(pairs & {row[i:i + 2] for i in range(len(row) - 1)})
+            if hit > score:
+                best, score = index, hit
+        # **2つでは当たらない行まで動く**（「22年」だけが重なって①へ戻った）
+        if score >= 3:
+            r_last = best
+        return r_last
+
+    def reason_board(n: int, text: str = "") -> str:
+        if not reasons_board or not n_reasons:
+            return img
+        k = r_focus[n] if n < len(r_focus) else reason_of(text)
+        if not k:
+            return reasons_board
+        return data_board(f"assets/stats/pl_{key}_data_r{k}.png", "--focus", f"reasons:{k}")
+
+    say = []
+    if reasons:
+        for rn, r in enumerate(reasons):
+            item = dict(r) if isinstance(r, dict) else {"text": r}
+            item.setdefault("image", reason_board(rn, str(item.get("text") or "")))
+            # 柱に同じ一言が出ているので、語りの行は字幕を重ねない。
+            # **代弁の行だけは残す**（発言は板のどこにも出ていない）
+            if "voice" not in item:
+                item.setdefault("no_telop", True)
+            say.append(item)
+    else:
+        say = [{"short_only": True, "text": f"{'と'.join(jp_names[:2])}の所属クラブを、基本のデータで見ていきます。" if japanese else "このクラブの、基本のデータです。"}]
     # **板を出している行に字幕は重ねない**（2026-09-20 指示
     # 「画面と字幕のが同じ場合は、字幕不要」）。基礎DATAの板の上に読み上げ文を
     # 重ねたら、9枚のタイルがほとんど読めなくなっていた
@@ -250,11 +348,7 @@ def build(key: str, number: int, old_file: str) -> Path:
     def board_for(i: int | None) -> str:
         if i is None:
             return img
-        out = f"assets/stats/pl_{key}_data{i}.png"
-        subprocess.run([sys.executable, str(ROOT / "tools" / "clubdata.py"), str(ROOT / out),
-                        "--spec", str(DATA / f"{key}.json"), "--focus", str(i)],
-                       check=True, capture_output=True)
-        return out
+        return data_board(f"assets/stats/pl_{key}_data{i}.png", "--focus", str(i))
 
     # **話している題材の画面にする**（2026-09-20 指示「各題材ごとに別画面に
     # 映るようにしたい」「スタジアムの話では、スタジアムに映る感じに」）。
@@ -323,6 +417,24 @@ def build(key: str, number: int, old_file: str) -> Path:
             return last, True
         return board_for(i), True
 
+    # **ショートでは、どの行でも基礎DATAの縦版が出るようにする**（2026-09-23）。
+    # 地図・トロフィー・昨季の順位表も 16:9 なので、縦では読めない。
+    # `shorts._drop_boards` は `<名前>_v.png` を探すので、**その名前で
+    # 縦版の板（その行を明るくしたもの）**を置いておく。中身は違ってよい——
+    # ショートで見せたいのは「いまどのデータの話か」だから
+    _picture = picture
+
+    def picture(n: int, i: int | None) -> tuple[str, bool]:  # noqa: F811
+        shot, mute = _picture(n, i)
+        if i is not None and shot.endswith(".png") and not shot.startswith(f"assets/stats/pl_{key}_data"):
+            # 置き場は **assets/stats**（下地の置き場に縦版を置くと、
+            # `_add_face` が「写真」と見て冒頭から敷いてしまう）
+            twin = f"assets/stats/{Path(shot).stem}_v.png"
+            subprocess.run([sys.executable, str(ROOT / "tools" / "clubdata.py"), str(ROOT / twin),
+                            "--spec", str(DATA / f"{key}.json"), "--focus", str(i), "--portrait"]
+                           + reason_args, check=True, capture_output=True)
+        return shot, mute
+
     picks = list(ov.get("data_focus") or [])
     # **ホームタウンの行が無いクラブが多い**（2026-09-20）。手で書いた読み上げは
     # 本拠地とまとめてしまっていて、20クラブのうち17クラブに「ホームタウンは〜」の
@@ -363,9 +475,13 @@ def build(key: str, number: int, old_file: str) -> Path:
             say.append({"image": shot, "text": text, "no_telop": True} if mute
                        else {"image": shot, "text": text})
             n += 1
-    sections.append(sec(id="data", heading=f"{club} 基礎DATA", main=not reasons, tier="背景",
-                        telop=facts["tiles"][0][1] + "創立", narrator="解説", say=say,
-                        sources=[wiki]))
+    sections.append(sec(id="data", heading="いま見る理由と基礎DATA" if reasons else f"{club} 基礎DATA",
+                        main=True, tier="背景",
+                        telop=(str(ov.get("reasons_telop") or "いま、このクラブを見る理由") if reasons
+                               else facts["tiles"][0][1] + "創立"),
+                        narrator="キャスター" if reasons else "解説", say=say,
+                        sources=[wiki] + ([season_url] + [u for u in (ov.get("reasons_sources") or [])
+                                                          if u not in (wiki, season_url)] if reasons else [])))
     # **有名なファンの節は作らない**（2026-09-20 指示「有名なファンは廃止」）。
     # <key>.json の `fans` / `fan_story` は残っているが、台本では一切使わない。
     # 板の9枚目も「有名なファン」ではなく「愛称」にしてある（research/pl_data/<key>.json）。
@@ -376,12 +492,14 @@ def build(key: str, number: int, old_file: str) -> Path:
     # しないため（機械に割らせると、話していない行が画面に先に出る）
     if ov.get("story_sections"):
         for s in ov["story_sections"]:
-            sections.append(sec(**s))
+            # **手で割った節の表も、長ければさらに割る**（2026-09-24）。
+            # ハルの逸話は story_sections の中にあり、ここだけ割られずに25.8秒あった
+            sections.append(split_card(sec(**s)))
     elif story_sec:
         story_sec = {k: v for k, v in story_sec.items() if k != "main"}
         if bg:
             story_sec["bg"] = bg
-        sections.append(story_sec)
+        sections.append(split_card(story_sec))
     # **このクラブの特徴**（2026-09-23 指示「チームの特徴とかも加えられる？」→「三つの要素入れたい！」）。
     # プレーの色（監督のサッカーを一言。陣形の数字は言わない。9/16「戦術の節は入れない」はそのまま）・
     # 運営の型・クラブの気質の3行。<key>_say.yaml の `features`／`features_rows`／`features_telop`／
@@ -413,11 +531,15 @@ def build(key: str, number: int, old_file: str) -> Path:
         ep.setdefault("narrator", "解説")
         if bg:
             ep["bg"] = bg
-        sections.append(sec(**ep))
+        sections.append(split_card(sec(**ep)))
     # 名選手（1990年以降）
     leg = next((c for c in legends_all if c["club"].replace("・", "").replace("AFC", "") in club.replace("・", "") or club.replace("・", "") in c["club"].replace("・", "")), None)
     if leg:
         rows = ov.get("legend_rows") or [[l["name"], l["era"], l["why"][:24]] for l in leg["legends"]]
+        # **3列目は12字まで**（2026-09-23 指摘「表をもう少し大きく」）。写真の横に置く
+        # カードは幅900pxしかなく、24字だと字が22pxまで縮んで「…」で切れていた。
+        # 中身は読み上げとテロップで言っているので、表は見出しの役でよい
+        rows = [[str(r[0]), str(r[1]), str(r[2])[:12]] if len(r) > 2 else list(r) for r in rows]
         lsay = ov.get("legends") or [f"{l['name']}。{l['numbers'].split('。')[0]}。" for l in leg["legends"]]
         # **1人ずつ節を分け、カードは名前が出たぶんだけ増やす**（2026-09-20）。
         # 3人を1枚のカードでまとめると**22秒**、同じ絵のまま出っぱなしになった（上限20秒）。
@@ -578,6 +700,11 @@ def build(key: str, number: int, old_file: str) -> Path:
     # **日本人が2人いるクラブは2人とも題に出す**（2026-09-21）。
     # 1人目だけだと、パレスが「冨安健洋がいる」になって鎌田大地が消えていた
     title_head = (f"{'と'.join(jp_names[:2])}がいる{club}" if japanese else club)
+    # キャッチコピーを明るくした板（＝最初の画面）
+    opening_board = ""
+    if tagline:
+        opening_board = data_board(f"assets/stats/pl_{key}_data_t.png", "--focus", "tagline")
+
     note = {
         "format": "news", "voice_min": 0, "slot": "premier_1", "date": "2026年9月19日",
         # `people_extra`: 本人の言葉を読ませる人（監督・名選手）。声の割り当てと、言葉の早さの点検に使う
@@ -599,17 +726,21 @@ def build(key: str, number: int, old_file: str) -> Path:
                   "hook": ov.get("hook") or old["theme"].get("hook", ""),
                   # **クラブを表す一言**（2026-09-21 指示）。タイトルより前に読む
                   "lead": ov.get("opening", ""),
-                  # **このあと話すことを冒頭で見せる**（2026-09-23 指摘「最初の15秒で
-                  # 人が離れる可能性があるから、この後の流れを見せるのもあり」）。
-                  # 節の見出しから作るので、中身と食い違わない
-                  "opening_card": {
-                      "type": "table", "title": "この動画で分かること",
-                      "columns": ["", ""],
-                      "rows": _agenda(sections, club)}},
+                  # **最初の画面は基礎DATAの板**（2026-09-23 指摘「最初の画面が
+                  # データではない」）。キャッチコピーを明るくした板を当てる。
+                  # **「この動画で分かること」は置かない**（同じ日の指摘
+                  # 「データでわかるから不要」）。板に9項目と理由3つが出ているので、
+                  # 流れの一覧は同じことの二度出しだった
+                  "opening_image": opening_board},
         # **サムネの文字は台本に合わせて書き直す**（2026-09-20）。旧台本のものを
         # そのまま持ってくると、ボーンマスが「FAカップで1人9得点」のままになった。
         # **作り直した台本にその話は無い。**約束したことを中で答えられない
-        "thumbnail": dict(old["thumbnail"], **(ov.get("thumbnail") or {})),
+        # **サムネの背景は基礎DATAの板**（2026-09-24 指示「もっと、背景は、データを利用」）。
+        # 動画の1コマ目と同じ絵になるので、開いた人が「これで合っている」と分かる。
+        # `crest_main` は残す（**縦のサムネ**はエンブレムの地のまま。板は 16:9 で、
+        # 縦に切ると読めない）
+        "thumbnail": dict(old["thumbnail"], **(ov.get("thumbnail") or {}),
+                          **({"board": opening_board} if opening_board else {})),
         "sections": sections,
     }
     out = ROOT / "research" / f"20260920_pl{number:02d}_{key}.yaml"
@@ -617,34 +748,6 @@ def build(key: str, number: int, old_file: str) -> Path:
               f"# tools/plbuild.py で組み立て。材料は research/pl_data/{key}*.json と旧台本 {old_file}\n")
     out.write_text(header + yaml.safe_dump(note, allow_unicode=True, sort_keys=False, width=1000), encoding="utf-8")
     return out
-
-
-def _agenda(sections: list, club: str) -> list[list[str]]:
-    """冒頭に出す「この動画で分かること」（2026-09-23 指摘
-    「最初の15秒で人が離れる可能性があるから、この後の流れを見せるのもあり」）。
-
-    節の見出しから作るので中身と食い違わない。**内向きの言葉は置き換える**
-    （「基礎DATA」では何が出るか分からない）。クラブごとに違う話は、
-    その回の見出しをそのまま使う。
-    """
-    label = {"reasons": "いま見る理由", "data": "創立・本拠地・タイトル歴",
-             "features": "プレーの色と運営の型", "episode": "知られていない逸話",
-             "legends": "このクラブを語る3人", "manager": "今季の監督",
-             "squad": "今季の登録選手", "season": "今季のここまで"}
-    want = ["reasons", "data", "_story", "legends", "squad"]
-    story = next((str(s.get("heading", ""))[:16] for s in sections
-                  if str(s.get("id", "")) not in label and s.get("heading")), "")
-    rows = []
-    for key in want:
-        name = story if key == "_story" else label.get(key, "")
-        if not name:
-            continue
-        if key != "_story" and not any(str(s.get("id", "")) == key for s in sections):
-            continue
-        rows.append([f"{len(rows) + 1}", name])
-        if len(rows) >= 4:
-            break
-    return rows
 
 
 PL_TITLES = None

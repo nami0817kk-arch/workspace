@@ -21,53 +21,38 @@ theme:
   question: どんなクラブなのか
   hook: 最初の大きなタイトルまで、120年かかりました。
   lead: 南ロンドンから、**昨季のカンファレンスリーグ**。
+  opening_image: assets/stats/pl_palace_data_t.png
 thumbnail:
   line1: 120年待った初タイトル
-  line2: クリスタル・パレス
+  line2: 冨安健洋と鎌田大地がいるクラブ
   crest_main:
   - クリスタルパレス
   tags: []
   points: []
+  board: assets/stats/pl_palace_data_t.png
 sections:
-- id: reasons
-  heading: いま見る理由
-  tier: 報道
+- id: data
+  heading: いま見る理由と基礎DATA
   main: true
+  tier: 背景
   telop: 冨安と鎌田。今季はヨーロッパリーグへ
   narrator: キャスター
-  card:
-    type: table
-    title: いま見る理由
-    columns:
-    - ''
-    - ''
-    rows:
-    - - 理由1
-      - 冨安健洋と鎌田大地
-    - - 理由2
-      - 2年続けて優勝
-    - - 理由3
-      - 今季はヨーロッパリーグ
   say:
-  - 冨安健洋と鎌田大地。日本代表の**2人**が、同じクラブにいます。
-  - 名キーパー、スペローニが38歳のときの言葉です。
+  - text: 冨安健洋と鎌田大地。日本代表の**2人**が、同じクラブにいます。
+    image: assets/stats/pl_palace_data_r1.png
+    no_telop: true
+  - text: 名キーパー、スペローニが38歳のときの言葉です。
+    image: assets/stats/pl_palace_data_r1.png
+    no_telop: true
   - voice: フリアン・スペローニ
     text: 38歳はキーパーなら悪くない。いまが一番いい状態だ
-  - 鎌田大地はこのクラブで**3つ**の杯を掲げ、冨安健洋は今夏に加入。今季はヨーロッパリーグです。
-  - 去年のFAカップが1つ目、昨季のカンファレンスリーグが2つ目のタイトル。
-  sources:
-  - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
-  - https://en.wikipedia.org/wiki/2026–27_Crystal_Palace_F.C._season
-  - https://en.wikipedia.org/wiki/Juli%C3%A1n_Speroni
-  bg: assets/backgrounds/stadium_クリスタルパレス.png
-  official: false
-- id: data
-  heading: クリスタル・パレス 基礎DATA
-  main: false
-  tier: 背景
-  telop: 1905年創立
-  narrator: 解説
-  say:
+    image: assets/stats/pl_palace_data_r1.png
+  - text: 鎌田大地はこのクラブで**3つ**の杯を掲げ、冨安健洋は今夏に加入。今季はヨーロッパリーグです。
+    image: assets/stats/pl_palace_data_r3.png
+    no_telop: true
+  - text: 去年のFAカップが1つ目、昨季のカンファレンスリーグが2つ目のタイトル。
+    image: assets/stats/pl_palace_data_r3.png
+    no_telop: true
   - image: assets/stats/pl_palace_data0.png
     text: プロのクラブとしての創立は**1905年**。起源は1861年のアマチュアクラブです。
     no_telop: true
@@ -77,7 +62,7 @@ sections:
   - image: assets/stats/pl_palace_map.png
     text: ホームタウンは南ロンドンの、クロイドン区セルハースト。
     no_telop: true
-  - image: assets/backgrounds/stadium_クリスタルパレス_in.png
+  - image: assets/backgrounds/stadium_クリスタルパレス.png
     text: 本拠地はセルハースト・パーク。**2万5194人**が入ります。
   - image: assets/photos/pl/palace_owner_51aa6fad.jpg
     text: オーナーは、アメリカンフットボールのニューヨーク・ジェッツの会長、ウッディ・ジョンソン。
@@ -94,7 +79,9 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
-  bg: assets/backgrounds/stadium_クリスタルパレス.png
+  - https://en.wikipedia.org/wiki/2026–27_Crystal_Palace_F.C._season
+  - https://en.wikipedia.org/wiki/Juli%C3%A1n_Speroni
+  bg: assets/backgrounds/stadium_クリスタルパレス_in.png
   official: false
 - id: trophy
   heading: 120年待ったタイトル
@@ -104,29 +91,39 @@ sections:
   card:
     type: table
     title: FAカップ決勝の記録
-    columns:
+    columns: &id001
     - ''
     - ''
     rows:
     - - 1990年
       - 3-3のあと再試合で敗れる
-    - - 2016年
-      - 1-2で敗れる
-    - - 2025年
-      - 1-0。クラブ史上初のタイトル
   say:
   - image: assets/images/pl_palace_story/scene.jpg
     text: はじめて大きなタイトルを獲ったのは、**2025年**のFAカップでした。
   - FAカップの決勝には、それまで2度立って、2度負けていました。
-  - どちらもマンチェスター・ユナイテッドに負けました。
+  - text: どちらもマンチェスター・ユナイテッドに負けました。
+    card:
+      type: table
+      title: FAカップ決勝の記録
+      columns: *id001
+      rows:
+      - - 2016年
+        - 1-2で敗れる
   - 1990年は引き分けのあとの再試合で0対1、2016年は1対2でした。
   - 3度目の決勝、相手はマンチェスター・シティです。
-  - エベレチ・エゼの1点を守り切り、1対0で勝ちました。
+  - text: エベレチ・エゼの1点を守り切り、1対0で勝ちました。
+    card:
+      type: table
+      title: FAカップ決勝の記録
+      columns: *id001
+      rows:
+      - - 2025年
+        - 1-0。クラブ史上初のタイトル
   - このタイトルで初めてヨーロッパに出て、翌シーズン、その大会も獲りました。
   official: false
   sources:
   - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
-  bg: assets/backgrounds/stadium_クリスタルパレス.png
+  bg: assets/backgrounds/stadium_クリスタルパレス_in.png
 - id: features
   heading: このクラブの特徴
   tier: 背景
@@ -157,7 +154,7 @@ sections:
   - https://en.wikipedia.org/wiki/2025%E2%80%9326_RC_Lens_season
   - https://en.wikipedia.org/wiki/Michael_Olise
   - https://en.wikipedia.org/wiki/Glad_All_Over
-  bg: assets/backgrounds/stadium_クリスタルパレス.png
+  bg: assets/backgrounds/stadium_クリスタルパレス_in.png
   official: false
 - id: episode
   heading: 万博の会社が作ったクラブ
@@ -167,7 +164,7 @@ sections:
   card:
     type: table
     title: 万博の会社が作ったクラブ
-    columns:
+    columns: &id002
     - ''
     - ''
     rows:
@@ -175,17 +172,22 @@ sections:
       - 万博の建物「水晶宮」
     - - 1905年
       - 建物の会社がクラブを作る
-    - - 最初のユニフォーム
-      - ヴィラと同じえんじ色と青
   say:
   - text: クリスタル・パレスは、もともと「水晶宮」と呼ばれた万博の建物の名前です。
     image: assets/images/pl_palace_episode/scene.jpg
   - '**1905年**、その建物を持つ会社が、来場者を増やすために自分たちでプロのクラブを作りました。'
-  - 会社が立ち上げを任せたのは、アストン・ヴィラの職員でした。
+  - text: 会社が立ち上げを任せたのは、アストン・ヴィラの職員でした。
+    card:
+      type: table
+      title: 万博の会社が作ったクラブ
+      columns: *id002
+      rows:
+      - - 最初のユニフォーム
+        - ヴィラと同じえんじ色と青
   - だから最初のユニフォームは、ヴィラと同じえんじ色と青です。
   sources:
   - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
-  bg: assets/backgrounds/stadium_クリスタルパレス.png
+  bg: assets/backgrounds/stadium_クリスタルパレス_in.png
   official: false
 - id: legends
   heading: このクラブを語る3人
@@ -200,7 +202,7 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id001
+    - &id003
       - ウィルフリード・ザハ
       - 2010-2023
       - クラブのプレミア最多得点
@@ -213,7 +215,7 @@ sections:
   - https://en.wikipedia.org/wiki/Wilfried_Zaha
   - https://en.wikipedia.org/wiki/Julian_Speroni
   - https://en.wikipedia.org/wiki/Andrew_Johnson_(footballer,_born_1981)
-  bg: assets/backgrounds/stadium_クリスタルパレス.png
+  bg: assets/backgrounds/stadium_クリスタルパレス_in.png
   official: false
 - id: legends2
   heading: このクラブを語る3人（2人目）
@@ -228,8 +230,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - &id002
+    - *id003
+    - &id004
       - フリアン・スペローニ
       - 2004-2019
       - 年間最優秀選手4回のGK
@@ -243,7 +245,7 @@ sections:
   - https://en.wikipedia.org/wiki/Julian_Speroni
   - https://en.wikipedia.org/wiki/Andrew_Johnson_(footballer,_born_1981)
   - https://en.wikipedia.org/wiki/Juli%C3%A1n_Speroni
-  bg: assets/backgrounds/stadium_クリスタルパレス.png
+  bg: assets/backgrounds/stadium_クリスタルパレス_in.png
   official: false
 - id: legends3
   heading: このクラブを語る3人（3人目）
@@ -258,8 +260,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id001
-    - *id002
+    - *id003
+    - *id004
     - - アンドリュー・ジョンソン
       - 2002-2006
       - プレミアで21得点
@@ -272,7 +274,7 @@ sections:
   - https://en.wikipedia.org/wiki/Wilfried_Zaha
   - https://en.wikipedia.org/wiki/Julian_Speroni
   - https://en.wikipedia.org/wiki/Andrew_Johnson_(footballer,_born_1981)
-  bg: assets/backgrounds/stadium_クリスタルパレス.png
+  bg: assets/backgrounds/stadium_クリスタルパレス_in.png
   official: false
 - id: manager
   heading: 今季の監督
@@ -299,7 +301,7 @@ sections:
   sources:
   - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
   - https://en.wikipedia.org/wiki/Pierre_Sage
-  bg: assets/backgrounds/stadium_クリスタルパレス.png
+  bg: assets/backgrounds/stadium_クリスタルパレス_in.png
   official: false
 - id: squad
   heading: 今季の登録選手
@@ -348,7 +350,7 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Crystal_Palace_F.C.
-  bg: assets/backgrounds/stadium_クリスタルパレス.png
+  bg: assets/backgrounds/stadium_クリスタルパレス_in.png
   official: false
 - id: season
   heading: 今季のここまで
@@ -383,5 +385,5 @@ sections:
   - 順位は**15位**、勝ち点は**4**です。
   sources:
   - https://en.wikipedia.org/wiki/2026–27_Crystal_Palace_F.C._season
-  bg: assets/backgrounds/stadium_クリスタルパレス.png
+  bg: assets/backgrounds/stadium_クリスタルパレス_in.png
   official: false

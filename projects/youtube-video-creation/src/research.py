@@ -249,6 +249,10 @@ class Notes:
     # 可能性があるから、この後の流れを見せるのもあり」）。題を読む行に表を出す。
     # 取材メモの `theme.opening_card`（{type: table, ...}）に書く
     opening_card: dict | None = None
+    # **最初の画面を指定する**（2026-09-23 指摘「最初の画面がデータではない」）。
+    # オープニングの3行（一言・題・つかみ）にこの絵を当てる。板を指定したときは、
+    # 「この動画で分かること」は板に焼き込んである（板の上にカードは重ねない決まり）
+    opening_image: str = ""
     answer: str = ""                 # まとめで返す答え
     watch: str = ""                  # 次に何を見るか
     follow_up: bool = False
@@ -423,6 +427,7 @@ def build_notes(raw: dict) -> Notes:
         hook=str(theme.get("hook") or "").strip(),
         lead=str(theme.get("lead") or "").strip(),
         opening_card=(dict(theme["opening_card"]) if theme.get("opening_card") else None),
+        opening_image=str(theme.get("opening_image") or "").strip(),
         thumbnail=dict(raw.get("thumbnail") or {}),
         answer=str(raw.get("answer") or "").strip(),
         watch=str(raw.get("watch") or "").strip(),
@@ -1854,19 +1859,22 @@ def to_script(notes: Notes, plan: Plan) -> str:
     # **タイトルの前に、そのクラブを表す一言**（2026-09-21 指示）。
     # 「1行目はタイトル」の決まりは残す（クリックした人が確かめられる）ので、
     # **一言 → タイトル**の順。書いていない回は今までどおりタイトルから始まる
+    # **最初の画面を指定できる**（2026-09-23）。プレミア20クラブ紹介は、
+    # 1行目のキャッチコピーを**基礎DATAの板の中**に置いて、そこを読む
+    _open_image = [f"  image: {notes.opening_image}"] if notes.opening_image else []
     if notes.lead and _bare_text(notes.lead) != _bare_text(notes.title):
         lines += [
             f"キャスター: {_ends_sentence(notes.lead)}",
             f"  telop: {_telop(notes.lead, TELOP_LIMIT)}",
-        ]
+        ] + _open_image + (["  no_telop: true"] if notes.opening_image else [])
     lines += [
         f"キャスター: {_ends_sentence(notes.title)}",
         f"  telop: {notes.title}",
         "  se: assets/audio/se_pon.wav",
-    ]
+    ] + _open_image
     # **このあと話すことを冒頭で見せる**（2026-09-23 指摘）。最初の15秒が
     # 写真1枚とテロップだけで、読む物が無かった
-    if notes.opening_card:
+    if notes.opening_card and not notes.opening_image:
         lines.append("  card: opening_card")
     if notes.format == "news":
         # **問いを読み上げない**（2026-09-09）。視聴維持の曲線を読んだら、
@@ -1883,11 +1891,12 @@ def to_script(notes: Notes, plan: Plan) -> str:
                 # 画面は2〜3行に折り返せる。20字で切ると「…当の監督…」のように
                 # 途中で切れた文字がそのまま出ていた（2026-09-07 に書き出して確認）
                 f"  telop: {_telop(notes.hook, TELOP_LIMIT)}",
-            ]
+            ] + _open_image
     elif notes.hook:
         # 反応・本人の言葉の型は、つかみが書いてあれば1行だけ。問いは立てない。
         # 参考（サッカーラボ 25.5万回）は 0:02 でタイトル、0:11 から事実だった
         lines.append(f"キャスター: {_ends_sentence(notes.hook)}")
+        lines += _open_image
     lines.append("")
 
     # **カードを消したあとに置く絵**（2026-09-12）。カードを消しただけだと
@@ -2086,9 +2095,10 @@ def to_script(notes: Notes, plan: Plan) -> str:
                     if photo_on and fallback_image:
                         lines.append("  card: none")
                     elif showed_photo and not own_image and last_image and number >= 2:
-                        # 3行目から下ろす（2行の節は板を最後まで出す。20秒に届かない）。
-                        # カードを下ろし、直前の写真をそのまま出しておく
-                        lines.append("  card: none")
+                        # **表は下ろさない**（2026-09-23 指摘「左の表が消える」）。
+                        # 9/22 は「3行目でカードを下ろして顔だけにする」としていたが、
+                        # **表が消えると、誰の何の話かが画面から無くなる。**
+                        # 写真だけ引き継いで、表はそのまま出しておく
                         own_image = last_image
                     shown_for = 0
                 # **絵の切り替えは1本につき1回だけ**（2026-09-14 指示
