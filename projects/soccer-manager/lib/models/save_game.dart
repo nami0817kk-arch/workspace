@@ -10,6 +10,7 @@ import 'installment.dart';
 import 'investment.dart';
 import 'league.dart';
 import 'news_item.dart';
+import 'youth_league.dart';
 import 'player.dart';
 import 'press_question.dart';
 import 'season_award.dart';
@@ -93,6 +94,10 @@ class SaveGame {
 
   /// シーズン終了時に一括生成された、選抜待ちのユースインテーク候補。
   List<Player> pendingYouthIntake;
+
+  /// ユースの年間リーグ。古いセーブには無いため null を許す
+  /// (次の週次処理で作られる)。
+  YouthLeague? youthLeague;
 
   /// 若手有望株ランキングで追跡対象に指定した選手のID一覧
   /// (自クラブ以外の選手も含む、閲覧専用のウォッチリスト)。
@@ -310,6 +315,7 @@ class SaveGame {
     List<Player>? youthProspects,
     List<Player>? transferMarketPlayers,
     List<Player>? pendingYouthIntake,
+    this.youthLeague,
     List<String>? watchlistPlayerIds,
     List<String>? firstRunStepsSeen,
     this.firstRunGuideDismissed = false,
@@ -419,6 +425,7 @@ class SaveGame {
             transferMarketPlayers.map((p) => p.toJson()).toList(),
         'pendingYouthIntake':
             pendingYouthIntake.map((p) => p.toJson()).toList(),
+        'youthLeague': youthLeague?.toJson(),
         'watchlistPlayerIds': watchlistPlayerIds,
         'firstRunStepsSeen': firstRunStepsSeen,
         'firstRunGuideDismissed': firstRunGuideDismissed,
@@ -508,6 +515,10 @@ class SaveGame {
                 ?.map((e) => Player.fromJson(e as Map<String, dynamic>))
                 .toList() ??
             [],
+        youthLeague: json['youthLeague'] == null
+            ? null
+            : YouthLeague.fromJson(
+                json['youthLeague'] as Map<String, dynamic>),
         watchlistPlayerIds: (json['watchlistPlayerIds'] as List?)
                 ?.map((e) => e as String)
                 .toList() ??

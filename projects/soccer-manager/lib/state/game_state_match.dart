@@ -409,9 +409,57 @@ extension GameStateMatch on GameState {
       );
     }
 
+    // ユースリーグ: 練習試合を年間の順位表にまとめる。勝敗が何にも残らないと、
+    // ユースで勝たせて育てるという選び方ができない。候補が居ない年は作らない。
+    if (_save!.youthProspects.isNotEmpty) {
+      _save!.youthLeague ??= YouthLeagueEngine.create(
+        prospectAverage:
+            YouthLeagueEngine.prospectAverage(_save!.youthProspects),
+      );
+    }
+    final youthLeague = _save!.youthLeague;
+    final leagueOpponent = youthLeague == null || youthLeague.isComplete
+        ? null
+        : YouthLeagueEngine.opponentStrengthFor(youthLeague);
+
     // ユース練習試合: 昇格候補たちが毎週実戦を経験し、出場数・得点・評点を
     // 積み重ねる。大活躍(複数得点・高評点)はクラブニュースに届く。
-    lastYouthMatchReport = YouthMatchEngine.playWeekly(_save!.youthProspects);
+    lastYouthMatchReport = YouthMatchEngine.playWeekly(
+      _save!.youthProspects,
+      opponentStrength: leagueOpponent,
+    );
+
+    // リーグ戦として記録する。全節終わったら、その年の結果を知らせる。
+    if (youthLeague != null &&
+        !youthLeague.isComplete &&
+        lastYouthMatchReport != null) {
+      final md = YouthLeagueEngine.recordUserResult(
+        youthLeague,
+        goalsFor: lastYouthMatchReport!.teamGoals,
+        goalsAgainst: lastYouthMatchReport!.opponentGoals,
+      );
+      if (md != null && youthLeague.isComplete) {
+        final rank = youthLeague.userRank;
+        _logNews(
+          rank == 1
+              ? Tr.pick('ユースリーグ優勝! 全${YouthLeague.matchdayCount}節を終えて1位',
+                  'Your academy won the youth league, top after ${YouthLeague.matchdayCount} rounds')
+              : Tr.pick(
+                  'ユースリーグが終了。$rank位(勝点${youthLeague.userStanding.points})',
+                  'The youth league finished. You came $rank (${youthLeague.userStanding.points} pts)'),
+          context: Tr.pick('ユース', 'Youth'),
+        );
+        final scorer = YouthLeagueEngine.topScorer(_save!.youthProspects);
+        if (scorer != null) {
+          _logNews(
+            Tr.pick(
+                'ユースの得点王は${scorer.name}(${scorer.youthMatchGoals}得点)',
+                'Academy top scorer: ${scorer.name} (${scorer.youthMatchGoals} goals)'),
+            context: Tr.pick('ユース', 'Youth'),
+          );
+        }
+      }
+    }
     final youthReport = lastYouthMatchReport;
     if (youthReport != null) {
       for (final perf in youthReport.performances) {
