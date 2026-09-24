@@ -118,6 +118,60 @@ void main() {
       }
     });
 
+    test('どの枠も、1番手から控えまで並ぶ', () {
+      // **これを見張っていなかったので、GK がチーム内の上位3人になっていた。**
+      // `_shape` の先頭に GK を並べて、能力を並び順の深さで配っていたため。
+      // GK で始めた選手はベンチ外が 6試合/季（CB・WG は 0）だった。
+      final squad = Squad.of(clubOf('albion-t1-c3', strength: 70), year: 2030);
+      final tops = ([...squad.players]
+            ..sort((a, b) => b.overall.compareTo(a.overall)))
+          .take(5)
+          .map((p) => p.position.family)
+          .toSet();
+      expect(
+        tops.length,
+        greaterThan(1),
+        reason: '上位5人が1つの枠に偏っている',
+      );
+      for (final family in ScenarioFamily.values) {
+        final inFamily = squad.players
+            .where((p) => p.position.family == family)
+            .map((p) => p.overall)
+            .toList();
+        expect(
+          inFamily.reduce((a, b) => a > b ? a : b) -
+              inFamily.reduce((a, b) => a < b ? a : b),
+          greaterThan(4),
+          reason: '$family に1番手と控えの差が無い',
+        );
+      }
+    });
+
+    test('登録外は、起きうる', () {
+      // 定員を名簿の人数と同じにしていた頃は、
+      // 「同じ枠の全員に負けている」ときだけ外れるので、
+      // 8人9人の枠では実質起きなかった（無出場シーズン 0.03）。
+      for (final family in ScenarioFamily.values) {
+        expect(
+          Squad.quotaFor(family),
+          lessThan(
+            Position.values
+                .where((p) => p.family == family)
+                .fold<int>(0, (a, p) => a + 1) *
+                4,
+          ),
+        );
+      }
+      final squad = Squad.of(clubOf('albion-t1-c3', strength: 80), year: 2030);
+      for (final position in Position.values) {
+        expect(
+          squad.aheadOf(position, 40),
+          greaterThanOrEqualTo(Squad.quotaFor(position.family)),
+          reason: '強さ80のクラブで、総合力40 が${position.label}で登録される',
+        );
+      }
+    });
+
     test('外国人の使用数は、クラブごとに違う', () {
       // 見積もりの頃は強さから一意に決まっていたので、同じ強さなら必ず同じ数だった。
       final counts = {
