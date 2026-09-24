@@ -400,3 +400,32 @@ def test_同じ相場日のファイルが2つあれば片方を捨てて警告�
     assert "二重登録" in out
     # 二重に数えていないこと（3ファイルだが相場日は 09-01 と 09-04 の2日）
     assert "（2日分）" in out
+
+
+def test_ドメインを持つのは1箇所だけ():
+    """ドメインの直書きを増やさない。
+
+    canonical・sitemap・RSS・OGP・X の投稿文が別々にドメインを持つと、
+    移したときに直し漏れて「canonical は旧、sitemap は新」という
+    矛盾した指示を検索エンジンに出すことになる。
+    """
+    src = Path(__file__).resolve().parents[1] / "src"
+    offenders = []
+    for path in src.glob("*.py"):
+        if path.name == "site_config.py":
+            continue
+        if "pages.dev" in path.read_text(encoding="utf-8"):
+            offenders.append(path.name)
+    assert not offenders, f"ドメインを直書きしている: {offenders}"
+
+
+def test_環境変数でドメインを差し替えられる(monkeypatch):
+    # 本番と手元で別のドメインを見たいときのため
+    monkeypatch.setenv("KABU_SITE_URL", "https://example.test/")
+    import importlib
+
+    import site_config
+    importlib.reload(site_config)
+    assert site_config.SITE_URL == "https://example.test"   # 末尾のスラッシュは落とす
+    monkeypatch.delenv("KABU_SITE_URL")
+    importlib.reload(site_config)
