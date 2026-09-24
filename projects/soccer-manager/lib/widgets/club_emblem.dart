@@ -23,7 +23,7 @@ class ClubEmblem extends StatelessWidget {
     final seed = teamId.hashCode;
     // 色の導出は ClubPalette に置いてある。ピッチ上のユニフォームも
     // 同じ値を引くので、ここで独自に計算すると画面ごとに色がずれる。
-    final palette = ClubPalette.of(teamId);
+    final palette = ClubPalette.of(teamId, clubName: teamName);
     final base = palette.base;
     final accent = palette.accent;
     final shapeIndex = seed.abs() % _EmblemPainter.shapeCount;
