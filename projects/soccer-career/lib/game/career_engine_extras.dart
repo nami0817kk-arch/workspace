@@ -83,7 +83,8 @@ class CareerExtras {
       0,
       (a, r) => a + r.decisiveFor(state.player.position),
     );
-    return acts / played.length >= Formulas.callUpProduction;
+    return acts / played.length >=
+        Formulas.callUpProductionFor(state.player.position);
   }
 
   /// この節を終えたあとに代表ウィークが来るか。
