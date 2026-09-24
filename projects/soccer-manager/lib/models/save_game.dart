@@ -150,6 +150,10 @@ class SaveGame {
   /// 銀行に預け入れている定期預金(資金運用)。満期まで引き出せない。
   List<FixedDeposit> fixedDeposits;
 
+  /// 振り返りを見せ終えたシーズン。ここより新しい記録があるときだけ、
+  /// ホームに「今年はどうだったか」を出す。旧セーブは0(未読)。
+  int lastReviewedSeason;
+
   /// シーズンごとに確定した個人タイトル(得点王・年間MVP)の履歴。
   List<SeasonAward> seasonAwards;
 
@@ -333,6 +337,7 @@ class SaveGame {
     List<BankLoan>? bankLoans,
     List<FixedDeposit>? fixedDeposits,
     List<SeasonAward>? seasonAwards,
+    this.lastReviewedSeason = 0,
     List<StaffMember>? staffCandidates,
     this.preseasonCampPending = false,
     this.clubVision = ClubVision.none,
@@ -451,6 +456,7 @@ class SaveGame {
         'staffCandidates':
             staffCandidates.map((s) => s.toJson()).toList(),
         'seasonAwards': seasonAwards.map((a) => a.toJson()).toList(),
+        'lastReviewedSeason': lastReviewedSeason,
         'rivalTeamId': rivalTeamId,
         'rivalTeamName': rivalTeamName,
         'pendingPressConference': pendingPressConference?.toJson(),
@@ -584,6 +590,7 @@ class SaveGame {
                 ?.map((e) => SeasonAward.fromJson(e as Map<String, dynamic>))
                 .toList() ??
             [],
+        lastReviewedSeason: json['lastReviewedSeason'] as int? ?? 0,
         preseasonCampPending: json['preseasonCampPending'] as bool? ?? false,
         // 旧セーブは路線なし。順位だけで評価される従来の挙動。
         clubVision: ClubVision.values.firstWhere(
