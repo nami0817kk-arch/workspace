@@ -19,6 +19,7 @@ import '../widgets/busy_overlay.dart';
 import '../widgets/club_emblem.dart';
 import '../widgets/match_widgets.dart';
 import '../widgets/first_run_guide_card.dart';
+import '../widgets/next_action_card.dart';
 import '../widgets/quick_access_drawer.dart';
 import '../widgets/responsive_body.dart';
 import 'calendar_screen.dart';
@@ -86,6 +87,9 @@ class HomeScreen extends StatelessWidget {
               // 初見の人を週次サイクルに一周させるガイド。
               // 4ステップ終えるか閉じられると自動的に消える。
               const FirstRunGuideCard(),
+              // いま手を付けるべきこと。画面が30以上あり、どこから見れば
+              // よいか分からない状態だった。出すのは常に1件だけ。
+              const NextActionCard(),
               Card(
                 child: Padding(
                   padding: const EdgeInsets.all(16),
