@@ -105,3 +105,31 @@ def test_取得直後でも休場日なら鳴らさない():
         date(2026, 9, 18), datetime(2026, 9, 23, 16, 12, tzinfo=JST), after_fetch=True
     )
     assert behind == 0
+
+
+def test_祝日表の範囲外では判定できないと分かる():
+    """表は2027年までしか無い。範囲外は黙って平日扱いにせず例外にする。"""
+    import check_freshness
+
+    with pytest.raises(CalendarOutOfRange):
+        check_freshness.check(date(2028, 1, 4), datetime(2028, 1, 5, 17, 0, tzinfo=JST))
+
+
+def test_祝日表が切れたら何をすべきか言う(monkeypatch, tmp_path, capsys):
+    """例外の生ログだけ出しても「データが古い」と読めてしまい、伝わらない。"""
+    import check_freshness
+
+    data = tmp_path / "data"
+    data.mkdir()
+    (data / "latest.json").write_text('{"rec_date": "2026-09-18"}', encoding="utf-8")
+    monkeypatch.setattr(check_freshness, "_DATA_DIR", data)
+    monkeypatch.setattr(check_freshness.sys, "argv", ["check_freshness.py"])
+
+    def _raise(*_args, **_kwargs):
+        raise CalendarOutOfRange("2028-01-05 は祝日表の範囲外です。")
+
+    monkeypatch.setattr(check_freshness, "check", _raise)
+
+    assert check_freshness.main() == 1
+    out = capsys.readouterr().out
+    assert "祝日表" in out and "内閣府" in out

@@ -26,7 +26,12 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from market_calendar import business_days_between, is_business_day, previous_business_day
+from market_calendar import (
+    CalendarOutOfRange,
+    business_days_between,
+    is_business_day,
+    previous_business_day,
+)
 
 JST = timezone(timedelta(hours=9))
 
@@ -73,7 +78,14 @@ def main() -> int:
 
     rec_date = date.fromisoformat(json.loads(latest.read_text(encoding="utf-8"))["rec_date"])
     now = datetime.now(JST)
-    behind, message = check(rec_date, now, after_fetch=args.after_fetch)
+    try:
+        behind, message = check(rec_date, now, after_fetch=args.after_fetch)
+    except CalendarOutOfRange as e:
+        # 祝日表は2027年までしか無い。切れた瞬間に例外の生ログだけが出ても、
+        # 何をすればよいか分からない（しかも「データが古い」と読めてしまう）。
+        print(f"::error::休場日の判定ができません: {e}")
+        print("::error::src/market_calendar.py の祝日表を、内閣府CSVから追記してください。")
+        return 1
     print(message)
 
     if behind >= 1:
