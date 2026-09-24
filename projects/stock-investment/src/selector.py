@@ -191,6 +191,18 @@ def _fix_unescaped_quotes(text: str) -> str:
     return ''.join(result)
 
 
+def _give_up_json(text: str) -> None:
+    """JSON を取り出せなかったことを残す。
+
+    ここで黙って None を返すと、呼び出し側は「候補0件」の結果を作る。
+    応答が来ていないのか、形が違ったのかが後から分からなくなるので、
+    最初の部分だけログに出す（応答全文は長いので載せない）。
+    """
+    snippet = " ".join(text.split())[:120]
+    print(f"  [WARN] 応答から JSON を取り出せませんでした: {snippet}…")
+    return None
+
+
 def _extract_json_obj(text: str) -> dict | None:
     """テキストからバランスブレースで最初のJSONオブジェクトを安全に抽出する"""
     # マークダウンコードブロックを除去
@@ -208,7 +220,7 @@ def _extract_json_obj(text: str) -> dict | None:
     # バランスブレースで抽出
     start = text.find("{")
     if start < 0:
-        return None
+        return _give_up_json(text)
     depth = 0
     in_string = False
     escape_next = False
@@ -235,8 +247,8 @@ def _extract_json_obj(text: str) -> dict | None:
                         try:
                             return json.loads(_fix_unescaped_quotes(chunk))
                         except json.JSONDecodeError:
-                            return None
-    return None
+                            return _give_up_json(text)
+    return _give_up_json(text)
 
 
 def _parse_judge(raw: str, tech_list: list[dict]) -> tuple[list[dict], str, str]:
