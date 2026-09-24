@@ -647,3 +647,35 @@ class ShortNameTest(unittest.TestCase):
 
         self.assertIn("title=", html)
         self.assertIn("…", html)
+
+
+class ImageLoadingTest(unittest.TestCase):
+    """画面に最初から見えている画像を、自分で遅らせない。"""
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def row(self, code):
+        return {"item_code": code, "name": "【割引】" + "あ" * 90, "price": 1000,
+                "dropped": False, "days": 10, "at_low": False, "near_low": False,
+                "label": "横ばい", "image": "https://example.com/a.jpg", "shop": "店"}
+
+    def test_先頭は先に読み_あとは遅らせる(self):
+        rows = [self.row(f"c{i}") for i in range(6)]
+
+        html = self.theme.listing("題", "説明", rows,
+                                  {"name": "T", "base_url": "https://e.dev"},
+                                  "https://e.dev/", "2026-09-24")
+
+        self.assertEqual(html.count('loading="eager"'), 3)
+        self.assertEqual(html.count('loading="lazy"'), 3)
+
+    def test_altは短い名前にする(self):
+        # 173文字の商品名をそのまま読み上げさせない
+        html = self.theme.card(self.row("a"))
+
+        import re
+        alt = re.search(r'alt="([^"]*)"', html).group(1)
+        self.assertLessEqual(len(alt), 41)
+        self.assertNotIn("【割引】", alt)

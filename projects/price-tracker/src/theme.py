@@ -251,7 +251,11 @@ def card(row: dict, prefix: str = "", eager: bool = False) -> str:
         # 都合のいい情報だけを並べるサイトになる。
         change = (f'<span class="up">▲{pct(row["rise_pct"])}</span>'
                   f'<span class="was">{yen(row["prev"])} → </span>')
-    img = (f'<img src="{esc(row["image"])}" alt="" loading="lazy" width="120" height="120">'
+    # 最初の数件は画面に出た時点で見えている。遅延させると自分で表示を遅らせる
+    # ことになるので、そこだけ先に読む。alt は短い名前にする（173文字の読み上げを避ける）。
+    img = (f'<img src="{esc(row["image"])}" alt="{esc(short_name(row["name"], 40))}" '
+           f'loading="{"eager" if eager else "lazy"}" decoding="async" '
+           f'width="120" height="120">'
            if row.get("image") else '<span class="noimg"></span>')
     return f"""<li class="card" data-price="{row["price"]}" data-drop="{row.get("drop_pct", 0):.4f}"
     data-days="{row.get("days", 0)}" data-eff="{row.get("eff_price") or row["price"]}"
