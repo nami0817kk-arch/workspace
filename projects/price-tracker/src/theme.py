@@ -72,7 +72,7 @@ AD_NOTICE = ('<p class="ad-notice">本サイトは楽天アフィリエイトを
 NAV = [("./", "今日の値下がり"), ("points/", "ポイント込み"), ("new-lows/", "最安値更新"),
        ("lows/", "最安値圏"), ("rises/", "値上がり"), ("active/", "よく動く"),
        ("genre/", "ジャンル別"), ("archive/", "日付別"), ("search/", "商品を探す"),
-       ("stats/", "記録"),
+       ("watch/", "見守り"), ("stats/", "記録"),
        ("about/", "このサイトについて")]
 
 
@@ -132,6 +132,7 @@ def foot(site: dict, prefix: str = "", updated: str = "") -> str:
     <a href="{prefix}contact/">お問い合わせ</a>
     <a href="{prefix}stats/">記録の全体像</a>
     <a href="{prefix}feed.xml">RSS</a>
+    <a href="{prefix}data.csv">記録をCSVで取得</a>
   </nav>
   {AD_NOTICE}
   <p class="disclaimer">価格は当サイトが取得した時点のものです。実際の価格・在庫は
@@ -236,7 +237,9 @@ def card(row: dict, prefix: str = "") -> str:
                   f'<span class="was">{yen(row["prev"])} → </span>')
     img = (f'<img src="{esc(row["image"])}" alt="" loading="lazy" width="120" height="120">'
            if row.get("image") else '<span class="noimg"></span>')
-    return f"""<li class="card">
+    return f"""<li class="card" data-price="{row["price"]}" data-drop="{row.get("drop_pct", 0):.4f}"
+    data-days="{row.get("days", 0)}" data-eff="{row.get("eff_price") or row["price"]}"
+    data-code="{esc(row["item_code"])}">
   <a class="thumb" href="{href}">{img}</a>
   <div class="body">
     <a class="name" href="{href}">{esc(row["name"])}</a>
@@ -429,6 +432,76 @@ def item_list_ld(rows: list, site: dict, prefix: str) -> str:
     return f'<script type="application/ld+json">{ld}</script>'
 
 
+LIST_TOOLS = """
+<div class="tools">
+  <label>並び替え <select id="sort">
+    <option value="">既定のまま</option>
+    <option value="price">価格が安い順</option>
+    <option value="-price">価格が高い順</option>
+    <option value="-drop">下げ幅が大きい順</option>
+    <option value="-eff">実質が高い順</option>
+    <option value="eff">実質が安い順</option>
+    <option value="-days">記録が長い順</option>
+  </select></label>
+  <label>価格帯 <select id="range">
+    <option value="">すべて</option>
+    <option value="0-3000">3,000円まで</option>
+    <option value="3000-10000">3,000〜10,000円</option>
+    <option value="10000-30000">10,000〜30,000円</option>
+    <option value="30000-">30,000円以上</option>
+  </select></label>
+  <span id="shown" class="of"></span>
+</div>
+<script>
+(function () {
+  var list = document.querySelector('.cards');
+  if (!list) { return; }
+  var all = Array.prototype.slice.call(list.children);
+  var sort = document.getElementById('sort');
+  var range = document.getElementById('range');
+  var shown = document.getElementById('shown');
+  var q = new URLSearchParams(location.search);
+
+  function num(li, key) { return parseFloat(li.dataset[key] || '0'); }
+
+  function apply() {
+    var r = (range.value || '').split('-');
+    var lo = r[0] ? parseFloat(r[0]) : -Infinity;
+    var hi = r.length > 1 && r[1] ? parseFloat(r[1]) : Infinity;
+    var keep = all.filter(function (li) {
+      var p = num(li, 'price');
+      return p >= lo && p <= hi;
+    });
+    var key = sort.value;
+    if (key) {
+      var desc = key.charAt(0) === '-';
+      var field = desc ? key.slice(1) : key;
+      keep.sort(function (a, b) {
+        return (num(a, field) - num(b, field)) * (desc ? -1 : 1);
+      });
+    }
+    list.textContent = '';
+    keep.forEach(function (li) { list.appendChild(li); });
+    shown.textContent = keep.length === all.length
+      ? '' : keep.length + ' / ' + all.length + ' 件を表示';
+    // 並びと価格帯を URL に残す。共有したときに同じ画面が出る。
+    var p = new URLSearchParams();
+    if (sort.value) { p.set('sort', sort.value); }
+    if (range.value) { p.set('range', range.value); }
+    var s = p.toString();
+    history.replaceState(null, '', s ? '?' + s : location.pathname);
+  }
+
+  if (q.get('sort')) { sort.value = q.get('sort'); }
+  if (q.get('range')) { range.value = q.get('range'); }
+  sort.addEventListener('change', apply);
+  range.addEventListener('change', apply);
+  if (q.get('sort') || q.get('range')) { apply(); }
+})();
+</script>
+"""
+
+
 def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
             updated: str, prefix: str = "", empty: str = "該当する商品がありません。",
             stats: dict | None = None, page: int = 1, pages: int = 1,
@@ -445,6 +518,7 @@ def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
             + stats_bar(stats or {})
             + AD_NOTICE
             + nav
+            + (LIST_TOOLS if rows else "")
             + f'<ul class="cards">{body}</ul>'
             + nav
             + foot(site, prefix, updated))
@@ -482,6 +556,63 @@ def genre_index(genres: list[dict], site: dict, canonical: str, updated: str,
             + f'<h1>{esc(title)}</h1><p class="lead">{esc(lead)}</p>'
             + f'<ul class="cards">{links}</ul>'
             + foot(site, prefix, updated))
+
+
+def chart(tail: list, width: int = 560, height: int = 180) -> str:
+    """商品ページの価格推移。日付と価格の目盛りを付ける。
+
+    一覧の小さな線は形が分かればよいが、商品ページでは「いつ・いくら」まで
+    読めないと判断に使えない。
+    """
+    points = [(e[0], e[1]) for e in map(store_entry, tail) if e[1]]
+    if len(points) < 2:
+        return '<span class="spark-none">記録が足りません</span>'
+    prices = [p for _, p in points]
+    low, high = min(prices), max(prices)
+    span = (high - low) or 1
+    pad_l, pad_b, pad_t = 64, 22, 10
+    w = width - pad_l - 8
+    h = height - pad_b - pad_t
+    step = w / (len(points) - 1)
+
+    def y(v):
+        return pad_t + h - (v - low) / span * h
+
+    coords = " ".join(f"{pad_l + i * step:.1f},{y(p):.1f}" for i, p in enumerate(prices))
+    grid = "".join(
+        f'<line x1="{pad_l}" y1="{y(v):.1f}" x2="{width - 8}" y2="{y(v):.1f}" '
+        f'stroke="currentColor" stroke-opacity=".15"/>'
+        f'<text x="{pad_l - 8}" y="{y(v) + 4:.1f}" text-anchor="end" '
+        f'font-size="11" fill="currentColor" opacity=".65">{v:,}</text>'
+        for v in ({low, high} if low != high else {low}))
+    labels = "".join(
+        f'<text x="{pad_l + i * step:.1f}" y="{height - 6}" text-anchor="middle" '
+        f'font-size="11" fill="currentColor" opacity=".65">{points[i][0][5:]}</text>'
+        for i in ({0, len(points) - 1} if len(points) > 1 else {0}))
+    return (f'<svg class="chart-svg" viewBox="0 0 {width} {height}" role="img" '
+            f'aria-label="{len(points)}日分の価格推移。最安 {low:,}円、最高 {high:,}円">'
+            f'{grid}{labels}'
+            f'<polyline points="{coords}" fill="none" stroke="currentColor" '
+            f'stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'
+            f'<circle cx="{pad_l + (len(points) - 1) * step:.1f}" '
+            f'cy="{y(prices[-1]):.1f}" r="3.5" fill="currentColor"/></svg>')
+
+
+def cheaper_days(row: dict) -> str:
+    """いまの価格以下だった日が、記録のうち何日あったか。
+
+    「安い」と言われても、過去にどれだけあった水準なのかが分からないと
+    判断できない。回数で出す。
+    """
+    prices = [e[1] for e in map(store_entry, row.get("tail") or []) if e[1]]
+    if len(prices) < MIN_DAYS_FOR_LOW:
+        return ""
+    now = row["price"]
+    n = sum(1 for p in prices if p <= now)
+    if n == 1:
+        return f'記録{len(prices)}日のうち、この価格以下だったのは今日だけです。'
+    return (f'記録{len(prices)}日のうち、この価格以下だったのは{n}日です'
+            f'（{n / len(prices):.0%}）。')
 
 
 def history_table(row: dict) -> str:
@@ -587,6 +718,83 @@ def related(rows: list, site: dict) -> str:
     return f'<h2>同じジャンルの商品</h2><ul class="hits">{body}</ul>'
 
 
+WATCH_BUTTON = """
+<p class="watch"><button id="watch" type="button" data-code="{code}">見守る</button>
+<span class="note">端末に保存します。<a href="{prefix}watch/">見守り中の一覧</a></span></p>
+<script>
+(function () {
+  var KEY = 'pt-watch';
+  var btn = document.getElementById('watch');
+  function read() {
+    try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) { return []; }
+  }
+  function draw(list) {
+    var on = list.indexOf(btn.dataset.code) >= 0;
+    btn.textContent = on ? '見守りを外す' : '見守る';
+    btn.classList.toggle('on', on);
+  }
+  var list = read();
+  draw(list);
+  btn.addEventListener('click', function () {
+    var cur = read();
+    var i = cur.indexOf(btn.dataset.code);
+    if (i >= 0) { cur.splice(i, 1); } else { cur.push(btn.dataset.code); }
+    try { localStorage.setItem(KEY, JSON.stringify(cur)); } catch (e) {}
+    draw(cur);
+  });
+})();
+</script>
+"""
+
+
+def watch_page(site: dict, canonical: str, updated: str) -> str:
+    """見守り中の商品。
+
+    保存先はその端末の中だけで、こちらには送らない。会員登録もサーバも要らず、
+    次に来たときに自分が見ている商品の今の価格が分かる。
+    """
+    title = "見守り中の商品"
+    lead = "商品ページで「見守る」を押した商品を並べます。保存先はお使いの端末の中だけです。"
+    return (head(f"{title}｜{site['name']}", lead, canonical, site, "../")
+            + breadcrumb(site, title, "../")
+            + f'<h1>{esc(title)}</h1><p class="lead">{esc(lead)}</p>'
+            + AD_NOTICE
+            + '<p id="note" class="note"></p><ul id="results" class="hits"></ul>'
+            + """<script>
+(function () {
+  var KEY = 'pt-watch';
+  var out = document.getElementById('results');
+  var note = document.getElementById('note');
+  var codes;
+  try { codes = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch (e) { codes = []; }
+  if (!codes.length) {
+    note.textContent = 'まだありません。商品ページの「見守る」を押すとここに並びます。';
+    return;
+  }
+  note.textContent = '読み込んでいます…';
+  fetch('../search-index.json').then(function (r) { return r.json(); }).then(function (data) {
+    var want = {};
+    codes.forEach(function (c) { want[c] = true; });
+    var hits = data.filter(function (r) { return want[r[3]]; });
+    note.textContent = hits.length + '件';
+    out.textContent = '';
+    hits.forEach(function (r) {
+      var li = document.createElement('li');
+      li.className = 'hit';
+      var a = document.createElement('a');
+      a.href = '../item/' + r[0] + '/';
+      a.textContent = r[1];
+      var p = document.createElement('span');
+      p.className = 'price';
+      p.textContent = r[2].toLocaleString() + '円';
+      li.appendChild(a); li.appendChild(p); out.appendChild(li);
+    });
+  }).catch(function () { note.textContent = '一覧を読み込めませんでした。'; });
+})();
+</script>"""
+            + foot(site, "../", updated))
+
+
 def item_page(row: dict, site: dict, updated: str, kin: list | None = None) -> str:
     prefix = "../../"
     canonical = f'{site["base_url"].rstrip("/")}/item/{slug(row["item_code"])}/'
@@ -625,9 +833,11 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None) -> s
             + AD_NOTICE
             + f'<p class="headline"><strong>{yen(row["price"])}</strong> {badge(row)}</p>'
             + f'<p class="verdict">{esc(verdict_note(row))}</p>'
-            + f'<div class="chart">{sparkline(row.get("tail") or [])}</div>'
+            + f'<div class="chart">{chart(row.get("tail") or [])}</div>'
+            + (f'<p class="note">{esc(cheaper_days(row))}</p>' if cheaper_days(row) else '')
             + f'<table class="facts">{table}</table>'
             + history_table(row)
+            + WATCH_BUTTON.replace("{code}", esc(row["item_code"])).replace("{prefix}", prefix)
             + f'<p class="cta">{buy_link(row)}</p>'
             + f'<p class="shop">販売店: {esc(row.get("shop", ""))}</p>'
             + related(kin or [], site)

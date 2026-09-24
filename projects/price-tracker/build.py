@@ -182,11 +182,16 @@ def build(root: Path, out: Path) -> dict:
 
     # 検索用の索引。数百KBあるので、検索ページで必要になったときだけ読ませる。
     write(out / "search-index.json", json.dumps(
-        [[theme.slug(r["item_code"]), r["name"], r["price"]] for r in rows],
+        [[theme.slug(r["item_code"]), r["name"], r["price"], r["item_code"]]
+         for r in rows],
         ensure_ascii=False, separators=(",", ":")))
     write(out / "search" / "index.html",
           theme.search_page(site, base + "/search/", updated, stats))
     urls.append("/search/")
+
+    write(out / "watch" / "index.html",
+          theme.watch_page(site, base + "/watch/", updated))
+    urls.append("/watch/")
 
     counts = [analyze.change_count(r) for r in rows]
     write(out / "stats" / "index.html", theme.stats_page(
@@ -198,6 +203,16 @@ def build(root: Path, out: Path) -> dict:
         listed,
         [(r, analyze.change_count(r)) for r in analyze.active(rows, limit=10)]))
     urls.append("/stats/")
+
+    # その日の記録を CSV でも出す。表計算で開いて自分で調べられるようにする。
+    csv_rows = ["item_code,name,price,point_rate,effective,low,high,days,shop"]
+    for r in rows:
+        name = (r["name"] or "").replace('"', "'")
+        shop = (r.get("shop") or "").replace('"', "'")
+        csv_rows.append(
+            f'{r["item_code"]},"{name}",{r["price"]},{r.get("point_rate", 1)},'
+            f'{r.get("eff_price", r["price"])},{r["low"]},{r["high"]},{r["days"]},"{shop}"')
+    write(out / "data.csv", "\n".join(csv_rows) + "\n")
 
     # 共有時の画像・行き先を示す404・値下がりの購読（RSS）。
     write(out / "og.svg", theme.og_image(site, stats))

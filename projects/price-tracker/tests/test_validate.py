@@ -177,7 +177,7 @@ class CardSparkTest(unittest.TestCase):
 class SearchIndexTest(unittest.TestCase):
     """商品名で探すための索引。5,000件あると一覧を辿るだけでは見つけられない。"""
 
-    def test_1商品1件で_slugと名前と価格を持つ(self):
+    def test_1商品1件で_slugと名前と価格と商品コードを持つ(self):
         import json
         import subprocess
         import sys
@@ -192,8 +192,8 @@ class SearchIndexTest(unittest.TestCase):
             page = (Path(tmp) / "search" / "index.html").read_text(encoding="utf-8")
 
         self.assertTrue(idx, "索引が空")
-        for slug, name, price in idx[:5]:
-            self.assertTrue(slug and name)
+        for slug, name, price, code in idx[:5]:
+            self.assertTrue(slug and name and code)
             self.assertIsInstance(price, int)
         self.assertIn('id="q"', page)
         # 索引はページに埋め込まず、必要になってから取りに行く
@@ -468,3 +468,48 @@ class ArchiveDayTest(unittest.TestCase):
         rows = [self.row("a", [["d1", 1000], ["d2", 900]])]
 
         self.assertEqual(self.analyze.drops_on(rows, "d1", 0.05), [])
+
+
+class ToolsTest(unittest.TestCase):
+    """使う人ができることを増やした部分。"""
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def tail(self, *prices):
+        return [[f"2026-09-{i + 1:02d}", p] for i, p in enumerate(prices)]
+
+    def test_グラフに最安と最高の目盛りが入る(self):
+        html = self.theme.chart(self.tail(1000, 800, 900))
+
+        self.assertIn("chart-svg", html)
+        self.assertIn("1,000", html)
+        self.assertIn("800", html)
+
+    def test_記録が薄いときはグラフを出さない(self):
+        self.assertIn("記録が足りません", self.theme.chart(self.tail(1000)))
+
+    def test_この価格以下だった日数を出す(self):
+        row = {"price": 800, "tail": self.tail(1000, 900, 800, 800, 1000, 900, 950)}
+
+        note = self.theme.cheaper_days(row)
+
+        self.assertIn("2日", note)
+
+    def test_記録が7日未満なら日数を出さない(self):
+        # 母数が薄いうちに割合を出しても判断材料にならない
+        row = {"price": 800, "tail": self.tail(1000, 800)}
+
+        self.assertEqual(self.theme.cheaper_days(row), "")
+
+    def test_カードに並び替え用の値が入る(self):
+        row = {"item_code": "a", "name": "テレビ", "price": 1000, "dropped": False,
+               "days": 10, "eff_price": 900, "at_low": False, "near_low": False,
+               "label": "横ばい", "image": "", "shop": "店"}
+
+        html = self.theme.card(row)
+
+        self.assertIn('data-price="1000"', html)
+        self.assertIn('data-eff="900"', html)
+        self.assertIn('data-days="10"', html)
