@@ -1423,8 +1423,19 @@ class CareerEngine {
   bool breaksThrough(CareerState state) {
     final player = state.player;
     if (!player.atPotential) return false;
-    if (player.age > Formulas.peakAge + 2) return false;
-    if (player.personality.professionalism < 14) return false;
+    // **ポテンシャルを広げたときに、ここが黙って死んだ。**
+    // 上限に届くのが遅くなったのに歳の門を 27+2 のままにしていたので、
+    // 届いた頃にはもう門を過ぎていた（実測で 追い込む 25% → 5%）。
+    if (player.age > Formulas.peakAge + Formulas.breakthroughAgeGrace) {
+      return false;
+    }
+    // **この 14 は、全員がプロ意識 20 に張り付いていた頃の数字だった。**
+    // 性格を生まれ持った値へ寄せる形にしてから平均は 10.8 なので、
+    // この門だけで**ほぼ全員が弾かれていた**。
+    if (player.personality.professionalism <
+        Formulas.breakthroughProfessionalism) {
+      return false;
+    }
     // 追い込んだ週の積み上げ。ここが週の選択と上限を繋ぐ唯一の線。
     // **殻を破る選手は、条件そのものが軽い。** 確率の倍率だけでは、
     // 条件に届かないキャリアに何も返らない。
