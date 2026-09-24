@@ -11,8 +11,14 @@ import json
 import os
 from pathlib import Path
 
+import sys
+
 import requests
 from requests_oauthlib import OAuth1Session
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+import price_limit
 
 _DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 _LATEST_PATH = _DATA_DIR / "latest.json"
@@ -28,13 +34,34 @@ def _truncate(name: str, max_len: int = _NAME_MAX_LEN) -> str:
     return name if len(name) <= max_len else name[:max_len] + "…"
 
 
+def _day_url(rec_date: str) -> str:
+    """その日のページ。
+
+    トップを貼ると、翌日には別の日の内容に変わってしまう。投稿は後からも
+    読まれるので、投稿した日の中身がそのまま残る URL を貼る。
+    """
+    return f"{SITE_URL.rstrip('/')}/archive/gainers/{rec_date}"
+
+
 def _build_tweet(payload: dict) -> str:
+    gainers = payload["gainers"]
     lines = [f"📈 {payload['rec_date']} 値上がりランキング"]
-    for row in payload["gainers"][:_TOP_N]:
-        lines.append(f"{row['rank']}位 {_truncate(row['name'])} +{row['change_pct']:.2f}%")
+    for row in gainers[:_TOP_N]:
+        stop = ""
+        if price_limit.classify(row.get("close"), row.get("change_pct")) == price_limit.STOP_HIGH:
+            stop = "（S高）"
+        lines.append(f"{row['rank']}位 {_truncate(row['name'])} +{row['change_pct']:.2f}%{stop}")
+
+    stops = sum(
+        1 for r in gainers
+        if price_limit.classify(r.get("close"), r.get("change_pct")) == price_limit.STOP_HIGH
+    )
+    if stops:
+        lines.append(f"上位{len(gainers)}銘柄のうちストップ高は{stops}銘柄")
+
     lines.append("")
-    lines.append("全ランキングはこちら👇")
-    lines.append(SITE_URL)
+    lines.append(_day_url(payload["rec_date"]))
+    lines.append("#日本株 #株式投資")
     return "\n".join(lines)
 
 

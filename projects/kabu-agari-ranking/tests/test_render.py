@@ -94,9 +94,12 @@ def test_build_generates_every_expected_page(site):
     })
     render.build_all()
 
+    # ads.txt は pub-ID が入るまで作らない（test_site_pages.py 側で見ている）
     for name in ("index.html", "losers.html", "active.html",
                  "about.html", "privacy.html", "guide.html", "glossary.html",
-                 "robots.txt", "ads.txt", "sitemap.xml"):
+                 "frequent.html", "search.html", "404.html",
+                 "weekly/index.html", "stock/index.html",
+                 "robots.txt", "sitemap.xml", "feed.xml"):
         assert (out_dir / name).exists(), name
     for kind in ("gainers", "losers", "active"):
         assert (out_dir / "archive" / kind / "2026-01-05.html").exists()

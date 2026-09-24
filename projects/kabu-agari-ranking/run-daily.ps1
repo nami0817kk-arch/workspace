@@ -74,6 +74,13 @@ function RunRetry($cmdline) {
     return 1
 }
 
+# ログは毎日追記されるので、放っておくと際限なく伸びる。
+# 1MB を超えたら1世代だけ残して切り替える（消さないのは、直前の失敗を
+# 追えなくなると原因が分からなくなるため）。
+if ((Test-Path $log) -and ((Get-Item $log).Length -gt 1MB)) {
+    Move-Item $log "$log.1" -Force
+}
+
 Add-Content $log "=== $(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') ==="
 
 if ((RunRetry "git pull --ff-only origin master") -ne 0) {
@@ -114,5 +121,44 @@ if ($LASTEXITCODE -ne 0) {
     Add-Content $log "pushed new data"
 } else {
     Add-Content $log "no new data to commit"
+}
+
+# 半端な取得（値上がりだけ取れて値下がり・活況が空）は build_site.py が
+# ログに [WARN] を残す。止めるほどではないが、続くようなら解析が壊れている。
+# 見るのは**今回の実行ぶんだけ**（ログは追記なので、過去の警告を拾わない）。
+$lines = Get-Content $log -Encoding UTF8
+$startIndex = 0
+for ($i = $lines.Count - 1; $i -ge 0; $i--) {
+    if ($lines[$i] -like "=== *") { $startIndex = $i; break }
+}
+$warnLines = @($lines[$startIndex..($lines.Count - 1)] | Where-Object { $_ -like "*[[]WARN]*" })
+if ($warnLines.Count -gt 0) {
+    Notify "株ランキングの取得が半端です" $warnLines[-1].Trim()
+}
+
+# X への投稿。キーが無ければ何もせず正常終了する（post_to_x.py 側で判定）。
+#
+# CI ではなく手元で投げているのは、重複投稿を防ぐ記録（data/last_tweet.txt）が
+# 残る場所がここしか無いため。CI のワークスペースは毎回消える。
+# 投稿の可否は同じ rec_date を二度投げないことだけで判断する。失敗しても
+# サイトの公開には影響しないので、ここでは止めない。
+$envFile = Join-Path $repo ".env"
+if (Test-Path $envFile) {
+    foreach ($line in Get-Content $envFile -Encoding UTF8) {
+        if ($line -match '^\s*([A-Z_]+)\s*=\s*(.+?)\s*$') {
+            [Environment]::SetEnvironmentVariable($matches[1], $matches[2])
+        }
+    }
+}
+Run "`"$repo\.venv\Scripts\python.exe`" src\post_to_x.py" | Out-Null
+
+# ここまでは全部成功していても、当日分が入っていないことがある
+# （kabutan が空を返す、日付がずれる等）。2026-09-08 の欠測はこの形で、
+# exit 0 だったため誰も気づかなかった。取り逃した営業日は二度と取れないので、
+# その日のうちに知らせる。休場日なら鳴らない（判定は src\market_calendar.py）。
+# 知らせるだけで、kabutan への自動リトライはしない。
+if ((Run "`"$repo\.venv\Scripts\python.exe`" src\check_freshness.py --after-fetch") -ne 0) {
+    Add-Content $log "STALE: 当日分のデータが入っていません"
+    Notify "株ランキングが当日分を取れていません" "エラーは出ていませんが、今日のデータが入っていません。今日のうちに src\build_site.py を手で回してください。明日には取れなくなります。"
 }
 Add-Content $log "OK"

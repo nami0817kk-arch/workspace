@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}{{ s.name }}（{{ s.code }}）のランキング登場履歴｜値上がり株ランキング{% endblock %}
+{% block description %}{{ s.name }}（{{ s.code }}）が{{ s.first }}以降のランキングに登場した日の一覧。{{ summary }}{% endblock %}
+{% block structured_data %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+{"@type":"ListItem","position":1,"name":"ホーム","item":"{{ SITE_URL }}/"},
+{"@type":"ListItem","position":2,"name":"何度もランクインした銘柄","item":"{{ SITE_URL }}/frequent"},
+{"@type":"ListItem","position":3,"name":{{ (s.name ~ "（" ~ s.code ~ "）")|tojson }},"item":{{ canonical|tojson }}}]}
+</script>
+{% endblock %}
+{% block breadcrumb %}{% set crumbs = [
+  {"label": "ホーム", "href": "index.html"},
+  {"label": "銘柄別", "href": "stock/index.html"},
+  {"label": s.name ~ "（" ~ s.code ~ "）"}
+] %}{% include "_breadcrumb.html" %}{% endblock %}
+{% block content %}
+<h1>{{ s.name }}（{{ s.code }}）</h1>
+<p class="summary">{{ summary }}</p>
+
+{% if chart %}
+<figure class="chart-figure">
+  {{ chart|safe }}
+  <figcaption>ランキングに登場した日の騰落率</figcaption>
+</figure>
+{% endif %}
+
+<h2>登場した日</h2>
+<div class="table-wrap">
+<table class="ranking">
+  <caption>{{ s.name }}（{{ s.code }}）がランキングに登場した日</caption>
+  <thead>
+    <tr>
+      <th scope="col">日付</th>
+      <th scope="col">ランキング</th>
+      <th scope="col">順位</th>
+      <th scope="col">終値</th>
+      <th scope="col">騰落率</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in s.rows %}
+    <tr>
+      <th scope="row"><a href="{{ base_url }}archive/{{ r.kind }}/{{ r.rec_date }}.html">{{ r.rec_date }}</a></th>
+      <td>{{ r.kind_label }}</td>
+      <td>{{ r.rank }}位</td>
+      <td>{{ "{:,.0f}".format(r.close) if r.close is not none else "-" }}</td>
+      <td class="{{ 'gain' if r.change_pct >= 0 else 'loss' }}">{{ "%+.2f"|format(r.change_pct) }}%{% if r.flag %}
+        <span class="badge badge-{{ r.flag }}">{{ labels[r.flag] }}</span>{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+<p>
+  ここに出るのは<strong>ランキングに入った日だけ</strong>で、株価の連続した推移ではありません。
+  値動きが小さかった日は載らないため、日付が飛びます。
+  ランキングの読み方は<a href="{{ base_url }}guide.html">こちら</a>、
+  ほかの銘柄は<a href="{{ base_url }}search.html">銘柄検索</a>から探せます。
+</p>
+{% include "_ad_slot.html" %}
+{% endblock %}

@@ -23,3 +23,4 @@ jobs:
     with:
       workdir: "projects/kabu-agari-ranking"
       install: "pip install -e ../../libs/kabutan -r requirements.txt pytest"
+      cache-dependency-path: "projects/kabu-agari-ranking/requirements.txt"

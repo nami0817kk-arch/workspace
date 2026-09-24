@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}週ごとのまとめ一覧｜値上がり株ランキング{% endblock %}
+{% block description %}値上がりランキングを週単位で集計したまとめの一覧です。週ごとの最大上昇銘柄と複数回ランクインした銘柄を掲載しています。{% endblock %}
+{% block content %}
+<h1>週ごとのまとめ</h1>
+<p>営業日ごとのランキングを、週（月曜〜金曜）単位で集計したものです。</p>
+<div class="archive-list">
+  {% for w in weeks %}
+  <a href="{{ w.slug }}.html">{{ w.from }} 〜 {{ w.to }}（{{ w.day_count }}営業日）</a>
+  {% endfor %}
+</div>
+{% endblock %}

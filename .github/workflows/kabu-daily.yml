@@ -2,7 +2,8 @@ name: Daily Gainers Site
 
 # 運用: 取得は手元PC（run-daily.ps1、毎平日16:10）が行い data/ を push する。
 # kabutan が GitHub Actions の IP を 405 でブロックしているため、CI からは取得しない。
-# この CI は push された data/ からのビルド・X投稿・公開と、鮮度の監視だけを行う。
+# この CI は push された data/ からのビルド・公開と、鮮度の監視だけを行う。
+# X への投稿は手元の run-daily.ps1 から行う（重複投稿を防ぐ記録の置き場が手元しか無い）。
 on:
   push:
     branches: [master]
@@ -78,38 +79,11 @@ jobs:
       # 「PCが起動していない」「タスクが実行されなかった」など、手元で通知すら
       # 出ない止まり方。1営業日ぶん遅れたら鳴らす（2026-09-06 に4日→1営業日）。
       #
-      # 祝日は考慮していない。休場日を挟むと1回だけ空振りするが、祝日表を
-      # 抱えて誤って「鳴らさない」より、空振りする側に倒す。空振りかどうかは
-      # 下のメッセージで判断できるようにしてある。
+      # 休場日を数えないのが要点。土日しか見ていなかった頃は、シルバーウィーク
+      # （2026-09-21〜23）で3日続けて誤検知した。鳴りっぱなしの警報は読まれなくなる。
+      # 判定は src/check_freshness.py（祝日表は src/market_calendar.py が持つ）。
       - name: Check data freshness
-        run: |
-          python - <<'PY'
-          import json, sys
-          from datetime import datetime, timedelta, timezone
-          d = json.load(open("data/latest.json", encoding="utf-8"))
-          rec = datetime.strptime(d["rec_date"], "%Y-%m-%d").date()
-          # 相場の日付なので JST で数える
-          today = datetime.now(timezone(timedelta(hours=9))).date()
-
-          business_days = 0
-          cur = rec
-          while cur < today:
-              cur += timedelta(days=1)
-              if cur.weekday() < 5:
-                  business_days += 1
-
-          print(f"latest rec_date={rec} / today={today} / 営業日で{business_days}日ぶん遅れ")
-          # 16:10 の取得のあとに走るので、平日なら当日分があるはず。
-          # 「> 1」だと2日続けて欠けるまで鳴らず、9/08 の1日欠測が素通りした。
-          if business_days >= 1:
-              print(
-                  f"::error::ランキングデータが{business_days}営業日ぶん古いままです"
-                  f"（最新 {rec}）。手元PCの取得タスク run-daily.ps1 が動いたか、"
-                  "同ディレクトリの run-daily.log を確認してください。"
-                  "この間に東証の休場日があったなら空振りです。"
-              )
-              sys.exit(1)
-          PY
+        run: python src/check_freshness.py
 
       # GitHub は定期ジョブの失敗を通知しないので、Issue を立てて明示的に鳴らす。
       # 既に開いている失敗 Issue があれば、増やさずコメントを足す。
