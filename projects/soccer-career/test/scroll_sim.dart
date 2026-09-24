@@ -44,16 +44,26 @@ void main() {
     print('viewport ${viewport.toStringAsFixed(0)}px');
     print('');
     print('tab      extent  screens');
+    // 節に割ったタブは、札を押して両方測る。
     const keys = {
       '今週': 'tab-match',
-      '選手': 'tab-player',
-      '育成': 'tab-training',
-      'クラブ': 'tab-club',
-      '記録': 'tab-career',
+      '選手|能力': 'tab-player',
+      '選手|人となり': 'tab-player-person',
+      '育成|今週決める': 'tab-training',
+      '育成|長い目で狙う': 'tab-training-aim',
+      'クラブ|立ち位置': 'tab-club',
+      'クラブ|この国と、世界': 'tab-club-world',
+      '記録|今季': 'tab-career',
+      '記録|これまで': 'tab-career-total',
     };
     for (final tab in keys.keys) {
-      await tester.tap(find.widgetWithText(Tab, tab));
+      final parts = tab.split('|');
+      await tester.tap(find.widgetWithText(Tab, parts.first));
       await tester.pumpAndSettle();
+      if (parts.length > 1) {
+        await tester.tap(find.text(parts[1]));
+        await tester.pumpAndSettle();
+      }
       final list = find.byKey(PageStorageKey(keys[tab]!));
       final state = tester.state<ScrollableState>(
         find.descendant(of: list, matching: find.byType(Scrollable)).first,

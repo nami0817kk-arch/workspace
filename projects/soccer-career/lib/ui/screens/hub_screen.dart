@@ -953,6 +953,91 @@ class _StatusCard extends StatelessWidget {
   }
 }
 
+/// タブの中を、押して切り替える節に割る。
+///
+/// 縦に積むと画面何枚ぶんにもなるものを、**読む目的ごと**に分ける。
+/// 削るのと違って中身は減らないが、一度に見る量が半分になる。
+///
+/// **二段目のタブバーにはしない**——上のタブと見分けが付かなくなるので、
+/// 本文の上に置く札（`SegmentedButton`）にする。
+///
+/// **選んだ節は `PageStorage` に残す。** `TabBarView` は画面外のタブを
+/// 捨てるので、手元の state だけだとタブを往復するたびに1つ目へ戻る
+/// （スクロール位置で先に踏んだのと同じ形）。
+/// **`identifier` を必ず渡す**——渡さないと一番近い `PageStorageKey` の枠を
+/// 読んで、スクロール位置（double）を int として読んで落ちる。
+class _Sectioned extends StatefulWidget {
+  const _Sectioned({
+    required this.storageId,
+    required this.labels,
+    required this.sections,
+  });
+
+  /// `PageStorage` の鍵。タブごとに違うものを渡す。
+  final String storageId;
+  final List<String> labels;
+
+  /// 節の中身。それぞれ自分の `PageStorageKey` を持つ `ListView`。
+  final List<Widget> sections;
+
+  @override
+  State<_Sectioned> createState() => _SectionedState();
+}
+
+class _SectionedState extends State<_Sectioned> {
+  int? _index;
+
+  int get _current => _index ?? 0;
+
+  @override
+  void initState() {
+    super.initState();
+    // build の中ではなくここで読む。
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      final saved = PageStorage.maybeOf(context)
+          ?.readState(context, identifier: widget.storageId);
+      if (saved is int && saved != _current && saved < widget.sections.length) {
+        setState(() => _index = saved);
+      }
+    });
+  }
+
+  void _select(int value) {
+    setState(() => _index = value);
+    PageStorage.maybeOf(context)
+        ?.writeState(context, value, identifier: widget.storageId);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 10, 16, 2),
+          child: SizedBox(
+            width: double.infinity,
+            child: SegmentedButton<int>(
+              showSelectedIcon: false,
+              style: const ButtonStyle(
+                visualDensity: VisualDensity.compact,
+                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+              segments: [
+                for (var i = 0; i < widget.labels.length; i++)
+                  ButtonSegment(value: i, label: Text(widget.labels[i])),
+              ],
+              selected: {_current},
+              onSelectionChanged: (value) => _select(value.first),
+            ),
+          ),
+        ),
+        Expanded(child: widget.sections[_current]),
+      ],
+    );
+  }
+}
+
 /// 選手そのもの。能力・身体・積み上げ。
 class _PlayerTab extends StatelessWidget {
   const _PlayerTab({required this.state, required this.controller});
@@ -963,24 +1048,35 @@ class _PlayerTab extends StatelessWidget {
   final CareerState state;
 
   @override
-  Widget build(BuildContext context) => ListView(
-    key: const PageStorageKey('tab-player'),
-    padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
-    children: [
-      _LevelCard(state: state),
-      const SizedBox(height: 16),
-      _PlayerCard(state: state),
-
-      const SizedBox(height: 16),
-      _TraitsCard(state: state),
-      const SizedBox(height: 16),
-      _BodyCard(state: state),
-      const SizedBox(height: 16),
-      _DevelopmentCard(state: state), const SizedBox(height: 16),
-      // **「人となり」は自分のこと。** 性格・監督との信頼・ロッカールーム・
-      // 称号・代表の選択が入っているのに、クラブタブに置いてあった。
-      // クラブタブは所属先と世界の話に絞る。
-      _PersonCard(state: state, controller: controller),
+  Widget build(BuildContext context) => _Sectioned(
+    storageId: 'section-player',
+    labels: const ['能力', '人となり'],
+    sections: [
+      ListView(
+        key: const PageStorageKey('tab-player'),
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 96),
+        children: [
+          _LevelCard(state: state),
+          const SizedBox(height: 16),
+          _PlayerCard(state: state),
+          const SizedBox(height: 16),
+          _BodyCard(state: state),
+        ],
+      ),
+      ListView(
+        key: const PageStorageKey('tab-player-person'),
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 96),
+        children: [
+          _TraitsCard(state: state),
+          const SizedBox(height: 16),
+          _DevelopmentCard(state: state),
+          const SizedBox(height: 16),
+          // **「人となり」は自分のこと。** 性格・監督との信頼・ロッカールーム・
+          // 称号・代表の選択が入っているのに、クラブタブに置いてあった。
+          // クラブタブは所属先と世界の話に絞る。
+          _PersonCard(state: state, controller: controller),
+        ],
+      ),
     ],
   );
 }
@@ -993,36 +1089,41 @@ class _TrainingTab extends StatelessWidget {
   final CareerController controller;
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return ListView(
-      key: const PageStorageKey('tab-training'),
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
-      children: [
-        _WeekPlanCard(state: state, controller: controller),
-        const SizedBox(height: 16),
-        if (!state.injured) ...[
-          _TrainingCard(state: state, controller: controller),
+  Widget build(BuildContext context) => _Sectioned(
+    storageId: 'section-training',
+    // 見出しで割っていた境目を、そのまま札にした。
+    labels: const ['今週決める', '長い目で狙う'],
+    sections: [
+      ListView(
+        key: const PageStorageKey('tab-training'),
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 96),
+        children: [
+          _WeekPlanCard(state: state, controller: controller),
           const SizedBox(height: 16),
+          if (!state.injured) ...[
+            _TrainingCard(state: state, controller: controller),
+            const SizedBox(height: 16),
+          ],
+          _ExperienceCard(state: state, controller: controller),
         ],
-        _ExperienceCard(state: state, controller: controller),
-        const SizedBox(height: 16),
-        Padding(
-          padding: const EdgeInsets.only(left: 4, bottom: 8),
-          child: Text('長い目で狙うもの', style: theme.textTheme.titleSmall),
-        ),
-        _FocusCard(state: state, controller: controller),
-        const SizedBox(height: 16),
-        _SignatureAimCard(state: state, controller: controller),
-        const SizedBox(height: 16),
-        _KnackCard(state: state, controller: controller),
-        const SizedBox(height: 16),
-        _TrainingEffectCard(state: state),
-        const SizedBox(height: 16),
-        _SupportCard(state: state, controller: controller),
-      ],
-    );
-  }
+      ),
+      ListView(
+        key: const PageStorageKey('tab-training-aim'),
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 96),
+        children: [
+          _FocusCard(state: state, controller: controller),
+          const SizedBox(height: 16),
+          _SignatureAimCard(state: state, controller: controller),
+          const SizedBox(height: 16),
+          _KnackCard(state: state, controller: controller),
+          const SizedBox(height: 16),
+          _TrainingEffectCard(state: state),
+          const SizedBox(height: 16),
+          _SupportCard(state: state, controller: controller),
+        ],
+      ),
+    ],
+  );
 }
 
 /// クラブと、その中での立ち位置。
@@ -1033,35 +1134,35 @@ class _ClubTab extends StatelessWidget {
   final CareerController controller;
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return ListView(
-      key: const PageStorageKey('tab-club'),
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
-      children: [
-        _ClubLifeCard(state: state, controller: controller),
-        const SizedBox(height: 24),
-        // **所属の話と、世界の話の境目に見出しを置く。**
-        // 8枚のカードが同じ列に並んでいて、どこから「自分のクラブ」の話が
-        // 終わって「世界」の話になるのかが読めなかった。
-        Padding(
-          padding: const EdgeInsets.only(left: 4, bottom: 8),
-          child: Text('この国と、世界', style: theme.textTheme.titleSmall),
-        ),
-        _LeagueCard(state: state),
-        const SizedBox(height: 16),
-        _WorldLeagueCard(state: state),
-        const SizedBox(height: 16),
-        if (state.domesticCup != null || state.continentalCup != null) ...[
-          _CupCard(state: state),
+  Widget build(BuildContext context) => _Sectioned(
+    storageId: 'section-club',
+    // 見出しで割っていた境目を、そのまま札にした。
+    labels: const ['立ち位置', 'この国と、世界'],
+    sections: [
+      ListView(
+        key: const PageStorageKey('tab-club'),
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 96),
+        children: [_ClubLifeCard(state: state, controller: controller)],
+      ),
+      ListView(
+        key: const PageStorageKey('tab-club-world'),
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 96),
+        children: [
+          _LeagueCard(state: state),
           const SizedBox(height: 16),
+          _WorldLeagueCard(state: state),
+          const SizedBox(height: 16),
+          if (state.domesticCup != null || state.continentalCup != null) ...[
+            _CupCard(state: state),
+            const SizedBox(height: 16),
+          ],
+          _ScorerCard(state: state),
+          const SizedBox(height: 16),
+          _TableCard(state: state),
         ],
-        _ScorerCard(state: state),
-        const SizedBox(height: 16),
-        _TableCard(state: state),
-      ],
-    );
-  }
+      ),
+    ],
+  );
 }
 
 /// 役割。同じポジションでも、求められるものが違う。
@@ -4632,145 +4733,156 @@ class _CareerTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final impact = Impact.of(state.leagueResults);
-    return ListView(
-      key: const PageStorageKey('tab-career'),
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
-      children: [
-        // **今季の目標と、その達成を並べる。**
-        // 監督の期待と約束は「試合」タブの下のほうに積んであった。
-        // 毎週の判断に使うものではなく**今季どう見られているか**なので、
-        // 今季の成績のすぐ上に置く（次節カードには残りが1行出ている）。
-        // 監督の期待と約束は「試合」タブの下のほうに積んであった。
-        // 毎試合の判断に使うものではなく、**自分が今季どう見られているか**なので、
-        // 水準・選手証の次に置く。
-        if (state.objective != null) ...[
-          _ObjectiveCard(
-            objective: state.objective!,
-            stats: stats,
-            incentiveCut: state.incentiveCut,
-          ),
-          const SizedBox(height: 16),
-        ],
-        // 監督の期待は向こうから降ってくる数字。約束は自分で口にする数字。
-        if (state.promise != null || PromiseOffers.canPromise(state)) ...[
-          _PromiseCard(controller: controller),
-          const SizedBox(height: 16),
-        ],
-        // **今季の数字は、記録の一番上に置く。**
-        // 「試合」タブの下に積んであったので、毎週スクロールで通り過ぎる
-        // だけだった。積み上がっていくものは全部ここに集める。
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text('今シーズンの成績', style: theme.textTheme.titleSmall),
-                const SizedBox(height: 12),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    return _Sectioned(
+      storageId: 'section-career',
+      labels: const ['今季', 'これまで'],
+      sections: [
+        ListView(
+          key: const PageStorageKey('tab-career'),
+          padding: const EdgeInsets.fromLTRB(16, 14, 16, 96),
+          children: [
+            // **今季の目標と、その達成を並べる。**
+            // 監督の期待と約束は「試合」タブの下のほうに積んであった。
+            // 毎週の判断に使うものではなく**今季どう見られているか**なので、
+            // 今季の成績のすぐ上に置く（次節カードには残りが1行出ている）。
+            // 監督の期待と約束は「試合」タブの下のほうに積んであった。
+            // 毎試合の判断に使うものではなく、**自分が今季どう見られているか**なので、
+            // 水準・選手証の次に置く。
+            if (state.objective != null) ...[
+              _ObjectiveCard(
+                objective: state.objective!,
+                stats: stats,
+                incentiveCut: state.incentiveCut,
+              ),
+              const SizedBox(height: 16),
+            ],
+            // 監督の期待は向こうから降ってくる数字。約束は自分で口にする数字。
+            if (state.promise != null || PromiseOffers.canPromise(state)) ...[
+              _PromiseCard(controller: controller),
+              const SizedBox(height: 16),
+            ],
+            // **今季の数字は、記録の一番上に置く。**
+            // 「試合」タブの下に積んであったので、毎週スクロールで通り過ぎる
+            // だけだった。積み上がっていくものは全部ここに集める。
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    StatTile(label: '出場', value: '${stats.appearances}'),
-                    StatTile(label: 'ゴール', value: '${stats.goals}'),
-                    StatTile(label: 'アシスト', value: '${stats.assists}'),
-                    StatTile(
-                      label: '平均評価',
-                      value: stats.appearances == 0
-                          ? '—'
-                          : stats.averageRating.toStringAsFixed(2),
-                      accent: stats.appearances == 0
-                          ? null
-                          : ratingColor(theme, stats.averageRating),
+                    Text('今シーズンの成績', style: theme.textTheme.titleSmall),
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        StatTile(label: '出場', value: '${stats.appearances}'),
+                        StatTile(label: 'ゴール', value: '${stats.goals}'),
+                        StatTile(label: 'アシスト', value: '${stats.assists}'),
+                        StatTile(
+                          label: '平均評価',
+                          value: stats.appearances == 0
+                              ? '—'
+                              : stats.averageRating.toStringAsFixed(2),
+                          accent: stats.appearances == 0
+                              ? null
+                              : ratingColor(theme, stats.averageRating),
+                        ),
+                      ],
                     ),
+                    // 出た試合と出なかった試合。持ち上げが数字で見える唯一の場所。
+                    if (impact.comparable) ...[
+                      const SizedBox(height: 12),
+                      Text(
+                        '出た試合 ${impact.with_.label}（勝ち点 '
+                        '${impact.with_.pointsPerGame.toStringAsFixed(1)}/試合）',
+                        style: theme.textTheme.bodySmall,
+                      ),
+                      Text(
+                        '出なかった試合 ${impact.without.label}（勝ち点 '
+                        '${impact.without.pointsPerGame.toStringAsFixed(1)}/試合）',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
                   ],
                 ),
-                // 出た試合と出なかった試合。持ち上げが数字で見える唯一の場所。
-                if (impact.comparable) ...[
-                  const SizedBox(height: 12),
-                  Text(
-                    '出た試合 ${impact.with_.label}（勝ち点 '
-                    '${impact.with_.pointsPerGame.toStringAsFixed(1)}/試合）',
-                    style: theme.textTheme.bodySmall,
-                  ),
-                  Text(
-                    '出なかった試合 ${impact.without.label}（勝ち点 '
-                    '${impact.without.pointsPerGame.toStringAsFixed(1)}/試合）',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ],
+              ),
             ),
-          ),
+            const SizedBox(height: 24),
+            Text('直近の試合', style: theme.textTheme.titleSmall),
+            const SizedBox(height: 8),
+            if (state.results.isEmpty)
+              Text(
+                'まだ試合をしていない。',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              )
+            else
+              // 5件まで。8件並べると 512px（スマホ0.7画面）を使う。
+              // それより前は「これまでの話題」の側に残る。
+              for (final r in state.results.reversed.take(5))
+                _ResultRow(result: r, state: state),
+          ],
         ),
-        const SizedBox(height: 24),
-        Text('直近の試合', style: theme.textTheme.titleSmall),
-        const SizedBox(height: 8),
-        if (state.results.isEmpty)
-          Text(
-            'まだ試合をしていない。',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          )
-        else
-          // 5件まで。8件並べると 512px（スマホ0.7画面）を使う。
-          // それより前は「これまでの話題」の側に残る。
-          for (final r in state.results.reversed.take(5))
-            _ResultRow(result: r, state: state),
-        const SizedBox(height: 24),
-        _TotalsCard(state: state),
-        const SizedBox(height: 16),
-        if (state.news.isNotEmpty) ...[
-          _NewsCard(news: state.news, title: 'これまでの話題', limit: 12),
-          const SizedBox(height: 16),
-        ],
-        if (state.history.length >= 2) ...[
-          _CareerChartCard(state: state),
-          const SizedBox(height: 16),
-        ],
-        if (state.history.isEmpty)
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Text(
-              'シーズンを終えると、ここに1年ずつ積み上がる。',
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+        ListView(
+          key: const PageStorageKey('tab-career-total'),
+          padding: const EdgeInsets.fromLTRB(16, 14, 16, 96),
+          children: [
+            _TotalsCard(state: state),
+            const SizedBox(height: 16),
+            if (state.news.isNotEmpty) ...[
+              _NewsCard(news: state.news, title: 'これまでの話題', limit: 12),
+              const SizedBox(height: 16),
+            ],
+            if (state.history.length >= 2) ...[
+              _CareerChartCard(state: state),
+              const SizedBox(height: 16),
+            ],
+            if (state.history.isEmpty)
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Text(
+                  'シーズンを終えると、ここに1年ずつ積み上がる。',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
               ),
-            ),
-          ),
-        for (final record in state.history.reversed)
-          Card(
-            child: ListTile(
-              title: Text('${record.year}  ${record.clubName}'),
-              subtitle: Text(
-                '${record.tier}部 ${record.leaguePosition}位 ・ '
-                '${record.stats.appearances}試合 '
-                '${record.stats.goals}G ${record.stats.assists}A ・ '
-                '年俸 ${record.salary}万円'
-                '${record.onLoan ? ' ・ ローン' : ''}'
-                '${record.caps > 0 ? ' ・ 代表${record.caps}' : ''}'
-                '${record.continentalStage.participated ? ' ・ 大陸${record.continentalStage.label}' : ''}'
-                '${record.cupStage.participated ? ' ・ 国内杯${record.cupStage.label}' : ''}'
-                '${record.worldCupStage.participated ? ' ・ 世界大会${record.worldCupStage.label}' : ''}'
-                '${record.objectiveMet ? ' ・ 目標達成' : ''}'
-                // 口にした約束は、果たしても破っても記録に残る。
-                '${record.promiseLabel == null
-                    ? ''
-                    : record.promiseKept
-                    ? ' ・ 約束を果たした'
-                    : ' ・ 約束を破った'}',
+            for (final record in state.history.reversed)
+              Card(
+                child: ListTile(
+                  title: Text('${record.year}  ${record.clubName}'),
+                  subtitle: Text(
+                    '${record.tier}部 ${record.leaguePosition}位 ・ '
+                    '${record.stats.appearances}試合 '
+                    '${record.stats.goals}G ${record.stats.assists}A ・ '
+                    '年俸 ${record.salary}万円'
+                    '${record.onLoan ? ' ・ ローン' : ''}'
+                    '${record.caps > 0 ? ' ・ 代表${record.caps}' : ''}'
+                    '${record.continentalStage.participated ? ' ・ 大陸${record.continentalStage.label}' : ''}'
+                    '${record.cupStage.participated ? ' ・ 国内杯${record.cupStage.label}' : ''}'
+                    '${record.worldCupStage.participated ? ' ・ 世界大会${record.worldCupStage.label}' : ''}'
+                    '${record.objectiveMet ? ' ・ 目標達成' : ''}'
+                    // 口にした約束は、果たしても破っても記録に残る。
+                    '${record.promiseLabel == null
+                        ? ''
+                        : record.promiseKept
+                        ? ' ・ 約束を果たした'
+                        : ' ・ 約束を破った'}',
+                  ),
+                  trailing: Text(
+                    record.stats.appearances == 0
+                        ? '—'
+                        : record.stats.averageRating.toStringAsFixed(2),
+                    style: theme.textTheme.titleMedium,
+                  ),
+                ),
               ),
-              trailing: Text(
-                record.stats.appearances == 0
-                    ? '—'
-                    : record.stats.averageRating.toStringAsFixed(2),
-                style: theme.textTheme.titleMedium,
-              ),
-            ),
-          ),
+          ],
+        ),
       ],
     );
   }
