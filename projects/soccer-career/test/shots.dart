@@ -128,11 +128,24 @@ void main() {
     await pump(tester, HubScreen(controller: controller), theme);
     await dump(tester, '01-hub-match');
 
-    const tabs = ['選手', '育成', 'クラブ', '記録'];
-    for (var i = 0; i < tabs.length; i++) {
-      await tester.tap(find.widgetWithText(Tab, tabs[i]));
+    // 節に割ってあるタブは、札ごとに撮る。
+    // 片方だけ撮っていると、もう片方の崩れは一生見えない。
+    const tabs = {
+      '選手': ['能力', '人となり'],
+      '育成': ['今週決める', '長い目で狙う'],
+      'クラブ': ['立ち位置', 'この国と、世界'],
+      '記録': ['今季', 'これまで'],
+    };
+    var n = 2;
+    for (final entry in tabs.entries) {
+      await tester.tap(find.widgetWithText(Tab, entry.key));
       await tester.pumpAndSettle();
-      await dump(tester, '0${i + 2}-${tabs[i]}');
+      for (final section in entry.value) {
+        await tester.tap(find.text(section));
+        await tester.pumpAndSettle();
+        await dump(tester, '0$n-${entry.key}-$section');
+      }
+      n++;
     }
 
     // 個人技を狙うカード。育成タブの下のほうにあるので、標準の高さでは

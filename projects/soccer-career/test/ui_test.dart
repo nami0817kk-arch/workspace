@@ -104,6 +104,16 @@ Future<void> pumpHub(
   await tester.pumpAndSettle();
 }
 
+/// タブを開き、節に割れているタブでは札も押す。
+Future<void> openTab(WidgetTester tester, String tab, {String? section}) async {
+  await tester.tap(find.widgetWithText(Tab, tab));
+  await tester.pumpAndSettle();
+  if (section != null) {
+    await tester.tap(find.text(section));
+    await tester.pumpAndSettle();
+  }
+}
+
 void main() {
   testWidgets('拠点は5つのタブに分かれている', (tester) async {
     final controller = await newCareer();
@@ -154,8 +164,7 @@ void main() {
     final controller = await newCareer();
     await pumpHub(tester, controller, height: 2000);
 
-    await tester.tap(find.widgetWithText(Tab, '育成'));
-    await tester.pumpAndSettle();
+    await openTab(tester, '育成', section: '長い目で狙う');
 
     expect(find.text('個人技を狙う'), findsOneWidget);
 
@@ -217,9 +226,11 @@ void main() {
       find.textContaining('消耗 ${TrainingMenu.athletic.conditionCost}'),
       findsOneWidget,
     );
-    // 専属スタッフと生活習慣は畳んである。
+    // 専属スタッフと生活習慣は畳んである（「長い目で狙う」の側）。
     // **高さ決め打ちで探さない。** タブにカードを足すたびに下端が
     // 画面から出て、この検査が「畳んである」と無関係に落ちる。
+    await tester.tap(find.text('長い目で狙う'));
+    await tester.pumpAndSettle();
     await tester.dragUntilVisible(
       find.text('専属スタッフ'),
       find.byType(ListView).first,
@@ -239,6 +250,9 @@ void main() {
 
     expect(find.text('詳細能力'), findsOneWidget);
     expect(find.text('身体'), findsOneWidget);
+    // 積み上げは「人となり」の側。同じタブの中にあることは変わらない。
+    await tester.tap(find.text('人となり'));
+    await tester.pumpAndSettle();
     expect(find.text('積み上げ'), findsOneWidget);
   });
 
@@ -246,8 +260,7 @@ void main() {
     final controller = await newCareer();
     await pumpHub(tester, controller, height: 2400);
 
-    await tester.tap(find.widgetWithText(Tab, '選手'));
-    await tester.pumpAndSettle();
+    await openTab(tester, '選手', section: '人となり');
 
     expect(find.text('特性の効き'), findsOneWidget);
     final traits = controller.state!.player.traits;
@@ -266,7 +279,7 @@ void main() {
   // **タブの高さは、放っておくと静かに伸びる。**
   // カードを1枚足すのは安いので、毎回少しずつ伸びて、気付いたときには
   // 「どのタブもスクロールが多い」になっている。内訳は `test/scroll_sim.dart`。
-  testWidgets('どのタブも、スマホ3画面に収まる', (tester) async {
+  testWidgets('どのタブも節も、スマホ2画面に収まる', (tester) async {
     final controller = await newCareer(age: 24);
     for (var i = 0; i < 9; i++) {
       if (controller.pendingEvent != null) {
@@ -279,18 +292,28 @@ void main() {
     addTearDown(tester.view.reset);
     await pumpHub(tester, controller);
 
+    // 節に割ってあるタブは、札ごとに見る。
     const keys = {
       '今週': 'tab-match',
-      '選手': 'tab-player',
-      '育成': 'tab-training',
-      'クラブ': 'tab-club',
-      '記録': 'tab-career',
+      '選手|能力': 'tab-player',
+      '選手|人となり': 'tab-player-person',
+      '育成|今週決める': 'tab-training',
+      '育成|長い目で狙う': 'tab-training-aim',
+      'クラブ|立ち位置': 'tab-club',
+      'クラブ|この国と、世界': 'tab-club-world',
+      '記録|今季': 'tab-career',
+      '記録|これまで': 'tab-career-total',
     };
-    // タブバーと見出しを引いた、実際に見えている高さは 740px。
-    // 3画面＝2220px を上限に置く。
+    // タブバーと見出しを引いた見えている高さは 740px、
+    // 札のあるタブは 688px。2画面弱＝1600px を上限に置く。
     for (final tab in keys.keys) {
-      await tester.tap(find.widgetWithText(Tab, tab));
+      final parts = tab.split('|');
+      await tester.tap(find.widgetWithText(Tab, parts.first));
       await tester.pumpAndSettle();
+      if (parts.length > 1) {
+        await tester.tap(find.text(parts[1]));
+        await tester.pumpAndSettle();
+      }
       final list = find.byKey(PageStorageKey(keys[tab]!));
       final state = tester.state<ScrollableState>(
         find.descendant(of: list, matching: find.byType(Scrollable)).first,
@@ -323,7 +346,7 @@ void main() {
           child = listSliver.childAfter(child);
         }
       }
-      expect(16 + bottom + 96, lessThan(2400), reason: '$tab タブがスマホ3画面を超えている');
+      expect(16 + bottom + 96, lessThan(1600), reason: '$tab がスマホ2画面を超えている');
       state.position.jumpTo(0);
       await tester.pumpAndSettle();
     }
@@ -333,10 +356,12 @@ void main() {
     final controller = await newCareer();
     await pumpHub(tester, controller);
 
-    await tester.tap(find.widgetWithText(Tab, 'クラブ'));
-    await tester.pumpAndSettle();
-
+    await openTab(tester, 'クラブ');
+    // 既定は「立ち位置」の側。
     expect(find.text('クラブでの立ち位置'), findsOneWidget);
+
+    await tester.tap(find.text('この国と、世界'));
+    await tester.pumpAndSettle();
     await tester.dragUntilVisible(
       find.text('順位表'),
       find.byType(ListView).first,
@@ -374,8 +399,7 @@ void main() {
     expect(find.textContaining('デビュー'), findsWidgets);
 
     // クラブのタブには得点ランキング。
-    await tester.tap(find.widgetWithText(Tab, 'クラブ'));
-    await tester.pumpAndSettle();
+    await openTab(tester, 'クラブ', section: 'この国と、世界');
     expect(find.text('得点ランキング'), findsOneWidget);
   });
 
@@ -402,8 +426,7 @@ void main() {
     final controller = await newCareer();
     await pumpHub(tester, controller, height: 2400);
 
-    await tester.tap(find.widgetWithText(Tab, 'クラブ'));
-    await tester.pumpAndSettle();
+    await openTab(tester, 'クラブ', section: 'この国と、世界');
 
     await tester.dragUntilVisible(
       find.text('リーグの格付け'),
@@ -425,8 +448,7 @@ void main() {
     final controller = await newCareer();
     await pumpHub(tester, controller, height: 3200);
 
-    await tester.tap(find.widgetWithText(Tab, '育成'));
-    await tester.pumpAndSettle();
+    await openTab(tester, '育成', section: '長い目で狙う');
     await tester.dragUntilVisible(
       find.text('育てる方向'),
       find.byType(ListView).first,
@@ -453,8 +475,7 @@ void main() {
     }
     await pumpHub(tester, controller, height: 3000);
 
-    await tester.tap(find.widgetWithText(Tab, '育成'));
-    await tester.pumpAndSettle();
+    await openTab(tester, '育成', section: '長い目で狙う');
 
     await tester.dragUntilVisible(
       find.text('練習の成果（今季）'),
@@ -749,8 +770,7 @@ void main() {
     final controller = await newCareer();
     await pumpHub(tester, controller, height: 2600);
 
-    await tester.tap(find.widgetWithText(Tab, '育成'));
-    await tester.pumpAndSettle();
+    await openTab(tester, '育成', section: '長い目で狙う');
     await tester.dragUntilVisible(
       find.text('自分への投資'),
       find.byType(ListView).first,
@@ -904,8 +924,7 @@ void main() {
     final controller = await newCareer();
     await pumpHub(tester, controller);
 
-    await tester.tap(find.widgetWithText(Tab, '記録'));
-    await tester.pumpAndSettle();
+    await openTab(tester, '記録', section: 'これまで');
 
     expect(find.text('通算'), findsOneWidget);
     expect(find.text('試合'), findsWidgets);
@@ -917,8 +936,7 @@ void main() {
     final controller = await newCareer(age: 24);
     // 1シーズン目は出さない（点が1つでは形が分からない）。
     await pumpHub(tester, controller, height: 2000);
-    await tester.tap(find.widgetWithText(Tab, '記録'));
-    await tester.pumpAndSettle();
+    await openTab(tester, '記録', section: 'これまで');
     expect(find.text('推移'), findsNothing);
 
     // 2シーズン分積むと出る。
