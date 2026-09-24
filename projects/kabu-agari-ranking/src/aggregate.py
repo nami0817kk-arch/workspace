@@ -220,3 +220,119 @@ def stock_histories(days: list[dict], min_appearances: int = STOCK_PAGE_MIN_APPE
 
     out.sort(key=lambda e: (-len(e["rows"]), e["code"]))
     return out
+
+
+# --- ストップ高 -------------------------------------------------------------
+#
+# 当日のランキングはどこにでもあるが、「いつ・どの銘柄が上限まで買われたか」を
+# 日をまたいで残している場所はほとんど無い。**このサイトの持ち札はここ**なので、
+# 独立した章として出せる形にまとめる。
+#
+# 対象は値上がりランキングの上位30銘柄に限られる（取得しているのがそこまで）。
+# 「東証の全ストップ高」ではないので、見せる側でその旨を必ず書く。
+
+def stop_high_history(days: list[dict]) -> dict:
+    """ストップ高の日別・銘柄別のまとめ。
+
+    returns:
+        per_day … 新しい日が先。{rec_date, count, rows}
+        stocks  … 複数回ストップ高になった銘柄（回数の多い順）
+        total   … のべ件数
+    """
+    per_day, by_code = [], {}
+    order = [d["rec_date"] for d in sorted(days, key=lambda d: d["rec_date"])]
+
+    for day in days:
+        rows = [
+            r for r in day.get("gainers", [])
+            if price_limit.classify(r.get("close"), r.get("change_pct")) == price_limit.STOP_HIGH
+        ]
+        per_day.append({"rec_date": day["rec_date"], "count": len(rows), "rows": rows})
+        for row in rows:
+            entry = by_code.setdefault(row["code"], {"code": row["code"], "name": row["name"],
+                                                     "dates": [], "best_pct": None})
+            entry["name"] = row["name"]
+            entry["dates"].append(day["rec_date"])
+            pct = row["change_pct"]
+            if entry["best_pct"] is None or pct > entry["best_pct"]:
+                entry["best_pct"] = pct
+
+    stocks = []
+    for entry in by_code.values():
+        if len(entry["dates"]) < 2:
+            continue
+        entry["dates"].sort(reverse=True)
+        entry["count"] = len(entry["dates"])
+        entry["streak"] = _longest_run(entry["dates"], order)
+        entry["latest"] = entry["dates"][0]
+        stocks.append(entry)
+    stocks.sort(key=lambda e: (-e["count"], -e["streak"], e["code"]))
+
+    per_day.sort(key=lambda d: d["rec_date"], reverse=True)
+    return {
+        "per_day": per_day,
+        "stocks": stocks,
+        "total": sum(d["count"] for d in per_day),
+    }
+
+
+# --- 月ごと -----------------------------------------------------------------
+
+def monthly_summaries(days: list[dict]) -> list[dict]:
+    """月ごとのまとめ。新しい月が先。
+
+    週まとめは「その週に何が起きたか」を見るためのもので、月をまたいだ
+    傾向は追えない。営業日が20日たまると、月の単位が意味を持ち始める。
+    """
+    buckets: dict[str, list[dict]] = {}
+    for day in days:
+        buckets.setdefault(day["rec_date"][:7], []).append(day)
+
+    out = []
+    for month, group in buckets.items():
+        group = sorted(group, key=lambda d: d["rec_date"], reverse=True)
+        movers = [
+            {**row, "rec_date": day["rec_date"]}
+            for day in group for row in day.get("gainers", [])
+        ]
+        movers.sort(key=lambda r: r["change_pct"], reverse=True)
+        stops = sum(
+            1 for day in group for r in day.get("gainers", [])
+            if price_limit.classify(r.get("close"), r.get("change_pct")) == price_limit.STOP_HIGH
+        )
+        out.append({
+            "slug": month,
+            "year": int(month[:4]),
+            "month": int(month[5:7]),
+            "from": group[-1]["rec_date"],
+            "to": group[0]["rec_date"],
+            "day_count": len(group),
+            "stop_highs": stops,
+            "top_movers": movers[:20],
+            "frequent": frequent(group, "gainers", top_n=20),
+        })
+    out.sort(key=lambda m: m["slug"], reverse=True)
+    return out
+
+
+# --- 同じ日に一緒にランクインした銘柄 ---------------------------------------
+
+def co_occurring(days: list[dict], code: str, top_n: int = 10) -> list[dict]:
+    """その銘柄が載った日に、一緒に載っていた銘柄。
+
+    同じ日に動いた銘柄には、同じ材料（テーマ・指数のイベント）が効いている
+    ことがある。ランキングを日ごとに持っているからこそ出せる切り口。
+    因果は言えないので、数えた回数だけを出す。
+    """
+    target_days = [d for d in days if any(r["code"] == code for r in d.get("gainers", []))]
+    counts: dict[str, dict] = {}
+    for day in target_days:
+        for row in day.get("gainers", []):
+            if row["code"] == code:
+                continue
+            entry = counts.setdefault(row["code"], {"code": row["code"], "name": row["name"], "count": 0})
+            entry["name"] = row["name"]
+            entry["count"] += 1
+    out = [e for e in counts.values() if e["count"] >= 2]
+    out.sort(key=lambda e: (-e["count"], e["code"]))
+    return out[:top_n]

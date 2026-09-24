@@ -53,6 +53,27 @@
 </table>
 </div>
 
+{% if together %}
+<h2>同じ日に一緒にランクインした銘柄</h2>
+<p>
+  この銘柄が載った日に、同じランキングへ一緒に入っていた銘柄です（2回以上のものだけ）。
+  同じ材料やテーマが効いていることがありますが、<strong>数えた回数以上のことは言えません</strong>。
+</p>
+<div class="table-wrap">
+<table class="ranking" data-sortable>
+  <caption>{{ s.name }}（{{ s.code }}）と同じ日にランクインした銘柄</caption>
+  <thead>
+    <tr><th scope="col">回数</th><th scope="col">銘柄名</th><th scope="col">コード</th></tr>
+  </thead>
+  <tbody>
+    {% for e in together %}
+    <tr><th scope="row">{{ e.count }}回</th><td>{{ e.name }}</td><td>{{ e.code }}</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% endif %}
+
 <p>
   この銘柄が「なぜ動いたか」は、ランキングの数字には含まれません。
   当サイトのデータ取得元である

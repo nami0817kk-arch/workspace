@@ -10,6 +10,17 @@
 <h1>本日の{{ heading }}</h1>
 <p class="updated">{{ updated_line }}</p>
 {# 説明より先に表を出す。スマホでは前置きが長いだけで肝心の順位が画面の外に出る。 #}
+{% if highlights %}
+<ul class="highlights">
+  {% for h in highlights %}
+  <li><a href="{{ base_url }}{{ h.href }}">
+    <span class="hl-label">{{ h.label }}</span>
+    <span class="hl-value">{{ h.value }}</span>
+    <span class="hl-note">{{ h.note }}</span>
+  </a></li>
+  {% endfor %}
+</ul>
+{% endif %}
 {% if summary %}<p class="summary">{{ summary }}{% if turnover %} {{ turnover }}{% endif %}</p>{% endif %}
 {% include "_ranking_table.html" %}
 {% if chart %}
