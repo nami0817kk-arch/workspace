@@ -195,7 +195,7 @@ class HubScreen extends StatelessWidget {
               child: TabBar(
                 labelPadding: EdgeInsets.symmetric(horizontal: 2),
                 tabs: [
-                  Tab(text: '試合'),
+                  Tab(text: '今週'),
                   Tab(text: '選手'),
                   Tab(text: '育成'),
                   Tab(text: 'クラブ'),
@@ -207,7 +207,7 @@ class HubScreen extends StatelessWidget {
         ),
         // 一番よく押すものは、どのタブに居ても手の届く場所に置く。
         // 以前は画面を6つ分スクロールしないと試合に入れなかった。
-        // ただし試合タブには同じボタンがカードの中にあるので、そこでは出さない。
+        // ただし今週タブには同じボタンがカードの中にあるので、そこでは出さない。
         // 出すと「区切りまで」など下の操作に被さる。
         floatingActionButton: Builder(
           builder: (context) {
@@ -241,7 +241,7 @@ class HubScreen extends StatelessWidget {
               _PlayerTab(state: state),
               _TrainingTab(state: state, controller: controller),
               _ClubTab(state: state, controller: controller),
-              _CareerTab(state: state),
+              _CareerTab(state: state, stats: stats, controller: controller),
             ],
           ),
         ),
@@ -322,12 +322,11 @@ class _MatchTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final finished = state.seasonFinished;
-    final impact = Impact.of(state.leagueResults);
 
     return ListView(
       // タブを行き来してもスクロール位置が戻らないように。
       // 鍵が無いと TabBarView が画面外のタブを捨てるので、育成タブで
-      // 下まで見て試合タブへ戻り、また育成へ行くと先頭に戻されていた。
+      // 下まで見て今週タブへ戻り、また育成へ行くと先頭に戻されていた。
       key: const PageStorageKey('tab-match'),
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
       children: [
@@ -413,83 +412,15 @@ class _MatchTab extends StatelessWidget {
             onSimStyle: onSimStyle,
           ),
         const SizedBox(height: 16),
+        // **決める → 状態 → 起きたこと、の順に置く。**
+        // 以前は「最近の話題」（読むだけのもの）が「今の状態」より上に
+        // あった。休むか押すかを決める材料が、読み物の下に埋もれていた。
+        _StatusCard(state: state, injuryChance: controller.injuryChanceNow),
+        const SizedBox(height: 16),
         if (controller.news.isNotEmpty) ...[
           _NewsCard(news: controller.news.take(3).toList()),
           const SizedBox(height: 16),
         ],
-        _StatusCard(state: state, injuryChance: controller.injuryChanceNow),
-        const SizedBox(height: 16),
-        if (state.objective != null) ...[
-          _ObjectiveCard(
-            objective: state.objective!,
-            stats: stats,
-            incentiveCut: state.incentiveCut,
-          ),
-          const SizedBox(height: 16),
-        ],
-        // 監督の期待は向こうから降ってくる数字。約束は自分で口にする数字。
-        if (state.promise != null || PromiseOffers.canPromise(state)) ...[
-          _PromiseCard(controller: controller),
-          const SizedBox(height: 16),
-        ],
-        Card(
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text('今シーズンの成績', style: theme.textTheme.titleSmall),
-                const SizedBox(height: 12),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    StatTile(label: '出場', value: '${stats.appearances}'),
-                    StatTile(label: 'ゴール', value: '${stats.goals}'),
-                    StatTile(label: 'アシスト', value: '${stats.assists}'),
-                    StatTile(
-                      label: '平均評価',
-                      value: stats.appearances == 0
-                          ? '—'
-                          : stats.averageRating.toStringAsFixed(2),
-                      accent: stats.appearances == 0
-                          ? null
-                          : ratingColor(theme, stats.averageRating),
-                    ),
-                  ],
-                ),
-                // 出た試合と出なかった試合。持ち上げが数字で見える唯一の場所。
-                if (impact.comparable) ...[
-                  const SizedBox(height: 12),
-                  Text(
-                    '出た試合 ${impact.with_.label}（勝ち点 '
-                    '${impact.with_.pointsPerGame.toStringAsFixed(1)}/試合）',
-                    style: theme.textTheme.bodySmall,
-                  ),
-                  Text(
-                    '出なかった試合 ${impact.without.label}（勝ち点 '
-                    '${impact.without.pointsPerGame.toStringAsFixed(1)}/試合）',
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ),
-        const SizedBox(height: 24),
-        Text('直近の試合', style: theme.textTheme.titleSmall),
-        const SizedBox(height: 8),
-        if (state.results.isEmpty)
-          Text(
-            'まだ試合をしていない。',
-            style: theme.textTheme.bodyMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          )
-        else
-          for (final r in state.results.reversed.take(8))
-            _ResultRow(result: r, state: state),
       ],
     );
   }
@@ -769,7 +700,18 @@ class _NextMatchCard extends StatelessWidget {
             // 今日の1本が何に効くのか。監督・目標・順位・得点王・相手が
             // 4つの画面に散っていたので、試合に入る直前に1枚で見せる。
             ..._brief(context),
-            const SizedBox(height: 12),
+            // **見るものと、決めることを分ける。**
+            // 1枚に 対戦カード・出場の見通し・今日の意味・今週の練習・
+            // 試合へ・自動で進める、の6つを積んでいた。一番押すボタンが
+            // 真ん中に埋もれていて、上下に何があるのか読まないと分からない。
+            //
+            // **カードを2枚に割る案も、見出しを足す案も、高さで諦めた**
+            // ——390×844 では2枚で 76px、見出しだけでも 20px 増え、
+            // 「今の状態」が画面の外に出る（`ui_test`。この制約に
+            // 当たるのは5回目）。**入るのは区切り線1本**（+5px）。
+            const SizedBox(height: 8),
+            Divider(height: 1, color: theme.colorScheme.outlineVariant),
+            const SizedBox(height: 8),
             // 練習は毎週決めるものなのに、育成タブを開かないと今の設定が
             // 見えなかった。試合に入る直前に置けば、忘れようがない。
             InkWell(
@@ -1061,7 +1003,7 @@ class _TrainingTab extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(16),
               child: Text(
-                '離脱中は練習ができない。復帰の進め方は「試合」タブで選べる。',
+                '離脱中は練習ができない。復帰の進め方は「今週」タブで選べる。',
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onErrorContainer,
                 ),
@@ -4603,17 +4545,110 @@ class _TableRowTile extends StatelessWidget {
 }
 
 class _CareerTab extends StatelessWidget {
-  const _CareerTab({required this.state});
+  const _CareerTab({
+    required this.state,
+    required this.stats,
+    required this.controller,
+  });
 
   final CareerState state;
+
+  /// 約束を口にするため。
+  final CareerController controller;
+
+  /// 今季の成績。記録の一番上に出す。
+  final SeasonStats stats;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final impact = Impact.of(state.leagueResults);
     return ListView(
       key: const PageStorageKey('tab-career'),
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 96),
       children: [
+        // **今季の目標と、その達成を並べる。**
+        // 監督の期待と約束は「試合」タブの下のほうに積んであった。
+        // 毎週の判断に使うものではなく**今季どう見られているか**なので、
+        // 今季の成績のすぐ上に置く（次節カードには残りが1行出ている）。
+        // 監督の期待と約束は「試合」タブの下のほうに積んであった。
+        // 毎試合の判断に使うものではなく、**自分が今季どう見られているか**なので、
+        // 水準・選手証の次に置く。
+        if (state.objective != null) ...[
+          _ObjectiveCard(
+            objective: state.objective!,
+            stats: stats,
+            incentiveCut: state.incentiveCut,
+          ),
+          const SizedBox(height: 16),
+        ],
+        // 監督の期待は向こうから降ってくる数字。約束は自分で口にする数字。
+        if (state.promise != null || PromiseOffers.canPromise(state)) ...[
+          _PromiseCard(controller: controller),
+          const SizedBox(height: 16),
+        ],
+        // **今季の数字は、記録の一番上に置く。**
+        // 「試合」タブの下に積んであったので、毎週スクロールで通り過ぎる
+        // だけだった。積み上がっていくものは全部ここに集める。
+        Card(
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text('今シーズンの成績', style: theme.textTheme.titleSmall),
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    StatTile(label: '出場', value: '${stats.appearances}'),
+                    StatTile(label: 'ゴール', value: '${stats.goals}'),
+                    StatTile(label: 'アシスト', value: '${stats.assists}'),
+                    StatTile(
+                      label: '平均評価',
+                      value: stats.appearances == 0
+                          ? '—'
+                          : stats.averageRating.toStringAsFixed(2),
+                      accent: stats.appearances == 0
+                          ? null
+                          : ratingColor(theme, stats.averageRating),
+                    ),
+                  ],
+                ),
+                // 出た試合と出なかった試合。持ち上げが数字で見える唯一の場所。
+                if (impact.comparable) ...[
+                  const SizedBox(height: 12),
+                  Text(
+                    '出た試合 ${impact.with_.label}（勝ち点 '
+                    '${impact.with_.pointsPerGame.toStringAsFixed(1)}/試合）',
+                    style: theme.textTheme.bodySmall,
+                  ),
+                  Text(
+                    '出なかった試合 ${impact.without.label}（勝ち点 '
+                    '${impact.without.pointsPerGame.toStringAsFixed(1)}/試合）',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(height: 24),
+        Text('直近の試合', style: theme.textTheme.titleSmall),
+        const SizedBox(height: 8),
+        if (state.results.isEmpty)
+          Text(
+            'まだ試合をしていない。',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          )
+        else
+          for (final r in state.results.reversed.take(8))
+            _ResultRow(result: r, state: state),
+        const SizedBox(height: 24),
         _TotalsCard(state: state),
         const SizedBox(height: 16),
         if (state.news.isNotEmpty) ...[
