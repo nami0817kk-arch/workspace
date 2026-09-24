@@ -128,11 +128,12 @@ def head(title: str, description: str, canonical: str, site: dict, prefix: str =
 {extra}
 </head>
 <body>
+<a class="skip" href="#main">本文へ</a>
 <header class="site-head"><div class="wrap">
   <a class="site-name" href="{prefix or './'}">{esc(site['name'])}</a>
   <nav class="site-nav">{"".join(f'<a href="{prefix}{href}">{esc(label)}</a>' for href, label in NAV)}</nav>
 </div></header>
-<main class="wrap">"""
+<main class="wrap" id="main">"""
 
 
 def foot(site: dict, prefix: str = "", updated: str = "") -> str:
@@ -239,7 +240,7 @@ def card_spark(row: dict) -> str:
     return f'<div class="card-spark">{sparkline(row.get("tail") or [], width=140, height=30)}</div>'
 
 
-def card(row: dict, prefix: str = "") -> str:
+def card(row: dict, prefix: str = "", eager: bool = False) -> str:
     href = f'{prefix}item/{slug(row["item_code"])}/'
     change = ""
     if row["dropped"]:
@@ -502,6 +503,7 @@ LIST_TOOLS = """
     <option value="10000-30000">10,000〜30,000円</option>
     <option value="30000-">30,000円以上</option>
   </select></label>
+  <button id="reset" type="button" class="reset" hidden>条件を外す</button>
   <span id="shown" class="of"></span>
   <span class="scope">このページに出ている分だけを並べ替えます</span>
 </div>
@@ -540,6 +542,7 @@ document.addEventListener('DOMContentLoaded', function () {
     keep.forEach(function (li) { list.appendChild(li); });
     shown.textContent = keep.length === all.length
       ? '' : keep.length + ' / ' + all.length + ' 件を表示';
+    reset.hidden = !(sort.value || range.value);
     // 並びと価格帯を URL に残す。共有したときに同じ画面が出る。
     var p = new URLSearchParams();
     if (sort.value) { p.set('sort', sort.value); }
@@ -550,6 +553,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
   if (q.get('sort')) { sort.value = q.get('sort'); }
   if (q.get('range')) { range.value = q.get('range'); }
+  var reset = document.getElementById('reset');
+  reset.addEventListener('click', function () {
+    sort.value = ''; range.value = ''; apply();
+  });
   sort.addEventListener('change', apply);
   range.addEventListener('change', apply);
   if (q.get('sort') || q.get('range')) { apply(); }
@@ -562,7 +569,7 @@ def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
             updated: str, prefix: str = "", empty: str = "該当する商品がありません。",
             stats: dict | None = None, page: int = 1, pages: int = 1,
             page_prefix: str = "", total: int | None = None) -> str:
-    body = ("".join(card(r, prefix) for r in rows) if rows
+    body = ("".join(card(r, prefix, eager=i < 3) for i, r in enumerate(rows)) if rows
             else f'<li class="empty">{esc(empty)}</li>')
     total = len(rows) if total is None else total
     count = f'<span class="count">{total:,}件</span>' if rows else ""
@@ -577,6 +584,7 @@ def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
             + (LIST_TOOLS + WATCH_MINI_JS if rows else "")
             + f'<ul class="cards">{body}</ul>'
             + nav
+            + ('<a class="to-top" href="#main">▲ ページの先頭へ</a>' if len(rows) > 10 else '')
             + foot(site, prefix, updated))
 
 

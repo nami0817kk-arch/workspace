@@ -20,6 +20,16 @@
 }
 
 * { box-sizing: border-box; }
+
+/* 読み上げとキーボード操作のための飛ばしリンク。ナビは12項目ある。 */
+.skip { position: absolute; left: -9999px; top: 0; z-index: 10;
+  padding: 10px 16px; background: var(--accent); color: var(--bg);
+  text-decoration: none; border-radius: 0 0 var(--radius) 0; }
+.skip:focus { left: 0; }
+
+/* キーボードで今どこにいるか分かるようにする。 */
+a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible {
+  outline: 2px solid var(--accent); outline-offset: 2px; }
 body {
   margin: 0; background: var(--bg); color: var(--ink);
   font: 16px/1.7 -apple-system, "Hiragino Kaku Gothic ProN", "Noto Sans JP", Meiryo, sans-serif;
@@ -70,7 +80,8 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 .card .body { min-width: 0; }
 .card .name { display: block; font-weight: 600; text-decoration: none; color: var(--ink); }
 .card .name:hover { color: var(--accent); }
-.card .price { margin: 6px 0 2px; font-size: 15px; }
+.card .price { margin: 6px 0 2px; font-size: 15px;
+  font-variant-numeric: tabular-nums; }
 .card .price strong { font-size: 19px; }
 .card .meta { margin: 0; font-size: 13px; color: var(--muted); }
 .was { color: var(--muted); text-decoration: line-through; margin-right: 4px; }
@@ -132,6 +143,14 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 .watch-mini.on { color: var(--accent); border-color: var(--accent); font-weight: 700; }
 
 .tools .scope { color: var(--muted); font-size: 12px; }
+.reset { padding: 5px 12px; font-size: 13px; cursor: pointer; color: var(--accent);
+  background: var(--panel); border: 1px solid var(--accent); border-radius: 8px; }
+
+/* 押せる場所を広げる。携帯では文字だけだと当てにくい。 */
+.card .name { padding: 2px 0; }
+.watch-mini, .reset, .pager a { min-height: 32px; display: inline-flex;
+  align-items: center; }
+.to-top { display: inline-block; margin: 8px 0 0; font-size: 13px; }
 .hit .since { color: var(--muted); font-size: 12px; margin-left: 8px; }
 .hit .badge { margin-left: 8px; }
 
@@ -154,7 +173,8 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
   padding: 10px 0; border-bottom: 1px solid var(--line); }
 .hit a { color: var(--ink); text-decoration: none; }
 .hit a:hover { color: var(--accent); }
-.hit .price { white-space: nowrap; font-weight: 600; }
+.hit .price { white-space: nowrap; font-weight: 600;
+  font-variant-numeric: tabular-nums; }
 
 .facts { border-collapse: collapse; width: 100%; margin: 0 0 20px;
   background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }

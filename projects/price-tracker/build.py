@@ -54,7 +54,8 @@ def robots(site: dict) -> str:
         f"\nSitemap: {site['base_url'].rstrip('/')}/sitemap.xml\n")
 
 
-PER_PAGE = 100
+# 1ページ100件だと携帯で縦24,000px（約31画面分）になり、末尾まで届かない。
+PER_PAGE = 50
 
 
 def write_listing(out: Path, urls: list, path: str, title: str, lead: str,
