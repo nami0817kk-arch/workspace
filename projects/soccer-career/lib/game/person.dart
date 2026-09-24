@@ -112,7 +112,19 @@ class Person {
     // リーグでの露出は「出場していること」が前提。試合に出ない選手は
     // どんなに格の高いリーグに籍を置いていても忘れられていく。
     if (stats.appearances > 0) {
-      gained += (stats.goals + stats.assists) ~/ 3;
+      // **無失点は守備者にとってのゴール**——評価点と代表の入口では
+      // そう扱っているのに、**知名度だけが得点とアシストしか見ていなかった**。
+      // GK はここが永久に 0 なので名前が上がらず、届く先（`fameReach`）も
+      // 値札も伸びず、**自分より弱いクラブに留まる**。
+      // 実測で GK だけが「総合力−クラブの強さ +0.8」（他は −3〜−4）で、
+      // 代表は 21.9キャップ（WG は 42.9）だった。
+      // 判定に既にある「決定的な仕事」をそのまま読む——
+      // 前線の選手にとっては得点＋アシストと同じ値なので、そちらは動かない。
+      final output = state.leagueResults.fold<int>(
+        0,
+        (a, r) => a + r.decisiveFor(state.player.position),
+      );
+      gained += output ~/ 3;
       if (state.club.tier == 1) gained += 2;
       gained += World.byId(state.club.countryId).prestige;
     }

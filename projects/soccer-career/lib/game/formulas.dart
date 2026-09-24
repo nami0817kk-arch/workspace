@@ -580,6 +580,19 @@ class Formulas {
   /// 「6.8だが25ゴール」のシーズンが代表から締め出されるのはおかしい。
   static const double callUpProduction = 0.55;
 
+  /// 代表の「決めているなら呼ばれる」線は、そのポジションの通貨で見る。
+  ///
+  /// **前線は得点＋アシストを積めるが、GK の通貨は無失点しか無い**。
+  /// 実測で無失点は 1試合あたり 0.35 なので、0.55 を一律に要求すると
+  /// **GK だけがこの道を永久に使えない**——評価点の1本だけで戦うことになり、
+  /// 代表 21.9キャップ（WG は 42.9）だった。そしてキャップが足りないと
+  /// 最上位の国の扉（`eliteCaps`）も開かないので、弱いクラブに留まる。
+  static double callUpProductionFor(Position position) =>
+      position.family == ScenarioFamily.goalkeeper ||
+          position.family == ScenarioFamily.defence
+      ? 0.35
+      : callUpProduction;
+
   /// 引退させた選手が、次のキャリアの監督・メンターとして現れる確率。
   ///
   /// 1.0 にすると毎回同じ顔が出て、世界が自分の過去だけで埋まる。
@@ -1063,9 +1076,22 @@ class Formulas {
   ///
   /// 追い込み続けた選手だけが上限を破る。ここを通さないと、週の選択は
   /// ピークに着く速さを変えるだけで、届く高さは変わらない。
-  static const int breakthroughGreatWeeks = 18;
+  static const int breakthroughGreatWeeks = 24;
 
   static const double breakthroughChance = 0.25;
+
+  /// 限界突破が起きうるのは、ピーク年齢から何年後までか。
+  ///
+  /// **上限に届く歳と連動する数字**。ポテンシャルの幅を広げたとき、
+  /// ここを 2 のままにしていたので**限界突破が黙って死んだ**。
+  static const int breakthroughAgeGrace = 5;
+
+  /// 限界突破に要るプロ意識。
+  ///
+  /// **性格の幅と連動する数字**。生まれ持った値は 5〜15で、
+  /// 実測の平均は 10.8——固定で 14 を要求していた頃は
+  /// 上位の尾だけが通る門になっていた。
+  static const int breakthroughProfessionalism = 12;
   static const int breakthroughGain = 3;
 
   /// 上乗せ要求が通る確率 = 基本 + 交渉力 × 係数 + 成績の補正。

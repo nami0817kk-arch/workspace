@@ -218,7 +218,7 @@ class Attributes {
     Position.dm: [2, 1, 4, 2, 5, 4, 0],
     Position.cm: [2, 2, 5, 4, 3, 3, 0],
     Position.am: [3, 4, 5, 5, 1, 2, 0],
-    Position.wg: [5, 3, 3, 5, 1, 2, 0],
+    Position.wg: [4, 4, 3, 5, 1, 2, 0],
     Position.st: [3, 6, 2, 3, 0, 4, 0],
   };
 

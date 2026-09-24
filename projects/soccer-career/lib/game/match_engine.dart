@@ -1273,9 +1273,15 @@ class MatchInProgress {
   /// 失点の少なさをどれだけ自分の評価に乗せるか。
   ///
   /// GK と最終ラインは丸ごと、守備的MFは半分。前の選手は乗らない。
+  /// 無失点が評価点に乗る割合。
+  ///
+  /// **DM は二重取りになっていた**（2026-09-24 に測って直した）。
+  /// 中盤の局面を引くので得点も積み（実測で 38Gと CM の 34G より多い）、
+  /// その上で守る選手の無失点まで半分受け取っていた。
+  /// 結果、平均評価が 7.61 で、「どのポジションも 7.0〜7.4」を外れていた。
   static double _defensiveWeight(Position position) => switch (position) {
     Position.gk || Position.cb || Position.sb => 1.0,
-    Position.dm => 0.5,
+    Position.dm => 0.2,
     _ => 0.0,
   };
 }

@@ -838,6 +838,14 @@ void report(String title, List<Career> careers) {
   final loaned =
       careers.where((c) => c.loans > 0).length * 100 / careers.length;
   final league = careers.fold(0, (s, c) => s + c.leagueTitles);
+  // **合計だけだと、「誰もが平らに取る」のか
+  // 「一握りが独り占めする」のかが区別できない。**
+  final titles = Stat();
+  for (final c in careers) {
+    titles.add(c.leagueTitles);
+  }
+  final titleless =
+      careers.where((c) => c.leagueTitles == 0).length * 100 / careers.length;
   final cup = careers.fold(0, (s, c) => s + c.cupTitles);
   final wc =
       careers.where((c) => c.worldCups > 0).length * 100 / careers.length;
@@ -881,7 +889,11 @@ void report(String title, List<Career> careers) {
     'ローン ${loaned.toStringAsFixed(0)}%  '
     'W杯 ${wc.toStringAsFixed(0)}%',
   );
-  print('  リーグ優勝 $league回  国内カップ優勝 $cup回');
+  print(_row('リーグ優勝', titles, digits: 1));
+  print(
+    '  リーグ優勝 $league回  国内カップ優勝 $cup回  '
+    '無冠のキャリア ${titleless.toStringAsFixed(0)}%',
+  );
 }
 
 /// 自動進行と同じ手を選びながら、選ぶ直前に覗かせる。
