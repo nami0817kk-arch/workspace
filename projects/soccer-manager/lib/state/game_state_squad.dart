@@ -29,6 +29,41 @@ extension GameStateSquad on GameState {
     _persist();
   }
 
+  /// ユースの有望株のメンターになれる一軍の選手。
+  ///
+  /// 条件は2つ。[TrainingEngine.minMentorAge]以上であること、そして
+  /// **一軍の若手のメンターを兼ねていないこと**。兼任を許すと、ベテランを
+  /// 1人抱えるだけでクラブ中の若手が速く育ち、誰を誰に付けるかという判断が
+  /// 無くなる。指導の時間は有限、という扱いにしてある。
+  List<Player> youthMentorCandidates({String? forProspectId}) {
+    if (_save == null) return const [];
+    final takenInFirstTeam = {
+      for (final p in userTeam.players)
+        if (p.mentorId != null) p.mentorId!,
+    };
+    final takenInYouth = {
+      for (final p in _save!.youthProspects)
+        if (p.mentorId != null && p.id != forProspectId) p.mentorId!,
+    };
+    return userTeam.players
+        .where((p) =>
+            p.age >= TrainingEngine.minMentorAge &&
+            !takenInFirstTeam.contains(p.id) &&
+            !takenInYouth.contains(p.id))
+        .toList()
+      ..sort((a, b) => b.overall.compareTo(a.overall));
+  }
+
+  /// ユースの有望株にメンターを付ける。nullで解除。
+  void setYouthProspectMentor(String prospectId, String? mentorId) {
+    if (_save == null) return;
+    final prospect =
+        _save!.youthProspects.firstWhere((p) => p.id == prospectId);
+    prospect.mentorId = mentorId;
+    _notify();
+    _persist();
+  }
+
   /// 現在のディビジョンに応じた特典資金の額(万円)。
   /// ボタンに「いくら貰えるか」を出すため、受け取り前に参照できるようにする。
   int get rewardFundsAmount =>
