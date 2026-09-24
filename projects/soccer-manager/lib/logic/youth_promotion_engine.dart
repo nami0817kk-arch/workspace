@@ -74,6 +74,9 @@ class YouthPromotionEngine {
     player.wage = terms.weeklyWage;
     player.contractYearsRemaining = terms.years;
     player.squadNumber = terms.squadNumber;
+    // 買ってきた選手ではなく、自分のクラブで育てた選手だという印。
+    // 外れることは無い(他クラブへ移っても出身は変わらない)。
+    player.academyGraduate = true;
     player.appearanceFee = ContractEngine.appearanceFeeFor(player);
     // 一軍の強度に慣れるまでの期間。出番が無ければ上がらないので、
     // 上げたあとに使う必要がある。

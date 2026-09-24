@@ -555,6 +555,20 @@ class _SquadScreenState extends State<SquadScreen> {
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 ),
+                                // 生え抜き(自クラブのユース出身)。買ってきた
+                                // 選手と育てた選手を見分けられるようにする。
+                                if (p.academyGraduate) ...[
+                                  const SizedBox(width: 6),
+                                  Tooltip(
+                                    message: Tr.pick('生え抜き(自クラブのユース出身)',
+                                        'Came through your academy'),
+                                    child: Icon(
+                                      Icons.eco,
+                                      size: 14,
+                                      color: SemanticColors.positive(context),
+                                    ),
+                                  ),
+                                ],
                                 if (team.captainId == p.id) ...[
                                   const SizedBox(width: 6),
                                   Tooltip(
