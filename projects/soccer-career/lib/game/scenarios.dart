@@ -191,7 +191,10 @@ class ScenarioPool {
         ScenarioOption(
           label: '飛び出して距離を詰める',
           key: AttributeKey.goalkeeping,
-          detail: Detail.gkPositioning,
+          // **構えるのと同じ能力では判定しない。** 同じ見返りで難易度だけ
+          // 高い手は、判定する能力まで同じだと逃げ道が無い（尖らせても
+          // 選べない）。飛び出しは間合いの詰め方＝セービングの領分。
+          detail: Detail.reflexes,
           difficulty: 70,
           outcome: Outcome.play,
           successText: '一気に間合いを詰め、足元でシュートを止めた。',
@@ -2410,8 +2413,11 @@ class ScenarioPool {
       options: [
         ScenarioOption(
           label: 'どこまでも付いていく',
-          key: AttributeKey.defending,
-          detail: Detail.marking,
+          // **走って付いていく手は、立ち位置ではなく脚で決まる。**
+          // 「距離を取ってスペースを埋める」と同じマークで判定していたので、
+          // 難しいだけの手になっていた。
+          key: AttributeKey.pace,
+          detail: Detail.sprintSpeed,
           difficulty: 72,
           outcome: Outcome.play,
           successText: '前を向かせず、ボールを引き出す前に潰した。',

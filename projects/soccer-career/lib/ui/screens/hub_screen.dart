@@ -57,7 +57,7 @@ class HubScreen extends StatelessWidget {
 
   Future<void> _playNext(BuildContext context) async {
     // カップ戦の週なら、そちらへ。1週1試合の刻みは変えない。
-    if (controller.state?.pendingCup != null) {
+    if (controller.state?.isCupWeek ?? false) {
       controller.startCupMatch();
     } else {
       controller.startNextMatch();

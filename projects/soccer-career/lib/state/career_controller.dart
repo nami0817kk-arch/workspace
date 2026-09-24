@@ -1059,7 +1059,7 @@ class CareerController extends ChangeNotifier {
   /// 節を消化した後にだけ呼ぶ。同じ週に2試合は入れない
   /// （代表ウィークが先に立っていれば、カップはその次の週に回る）。
   void _scheduleCup(CareerState state) {
-    if (state.pendingCup != null || state.pendingInternational) return;
+    if (state.isCupWeek || state.pendingInternational) return;
     if (state.seasonFinished) return;
     final matchday = state.leagueResults.length;
     for (final run in state.liveCups) {
@@ -1189,7 +1189,7 @@ class CareerController extends ChangeNotifier {
     final state = _state;
     if (state == null) return null;
     if (_inProgress == null) {
-      if (state.pendingCup != null) {
+      if (state.isCupWeek) {
         startCupMatch();
       } else {
         startNextMatch();
