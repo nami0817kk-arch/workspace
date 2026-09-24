@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'squads.dart';
 import 'formulas.dart';
 import '../models/career.dart';
 import '../models/club.dart';
@@ -675,33 +676,6 @@ class Scorer {
 class ScorerRace {
   const ScorerRace._();
 
-  static const List<String> _names = [
-    'ルイス・カルモナ',
-    '沢渡 玲司',
-    'オマール・ベンサイド',
-    'ヤン・コヴァル',
-    'ディエゴ・ロメロ',
-    '結城 隼人',
-    'マティアス・ケラー',
-    'サム・アディヤ',
-    'ラウル・ナバス',
-    '桐生 湊',
-    'アンドレス・ピント',
-    'ヨナス・ヴィーク',
-    'イリヤ・ソローキン',
-    '真柴 篤',
-    'ファン・デル・メイ',
-    'カルロ・ベルティ',
-    'エミル・ラーション',
-    '南雲 廉',
-    'タデウス・ノヴァク',
-    'ジョアン・シルヴァ',
-    'ミゲル・アロンソ',
-    '早乙女 匠',
-    'ペーター・ハウゼン',
-    'ニコラ・ミラン',
-  ];
-
   /// 順位表。自分を含めて、上から [take] 人。
   static List<Scorer> table(CareerState state, {int take = 6}) {
     final played = state.leagueResults.length;
@@ -709,7 +683,11 @@ class ScorerRace {
       for (final club in state.league)
         if (club.id != state.club.id)
           Scorer(
-            name: _nameFor(club),
+            // **そのクラブに実際に居る選手の名前。**
+            // 以前は名前の一覧からIDで1つ引いていたので、
+            // 得点王レースに出てくる相手と、移籍先に居る選手が
+            // 別の世界の人だった。
+            name: Squad.of(club, year: state.year).topScorer.name,
             clubName: club.name,
             goals: _goalsFor(club, played),
           ),
@@ -756,8 +734,6 @@ class ScorerRace {
     if (gap > left) return null;
     return '得点王まであと$gap点（いま$rank位）';
   }
-
-  static String _nameFor(Club club) => _names[_seed(club.id) % _names.length];
 
   /// そのクラブのエースが、その時点までに決めている数。
   static int _goalsFor(Club club, int matchdays) {

@@ -894,6 +894,7 @@ class CareerEngine {
           professionalYears: state.professionalYears,
           marketValue: state.reputation.marketValue,
           continentalExperience: state.continentalExperience,
+          year: state.year,
         );
         // 枠が空いていない、または許可が下りない移籍は成立しない。
         if (!eligibility.canJoin) continue;

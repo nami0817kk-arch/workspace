@@ -305,6 +305,18 @@ class Teammate {
     fromLegend: true,
   );
 
+  /// 名簿の中の1人を、そのままこの役に据える。
+  ///
+  /// 競争相手だけは**別の世界の人では困る**——同じクラブの
+  /// 同じポジションで先発を争っているはずなのに、
+  /// 名簿とは無関係に引いた人だった。
+  factory Teammate.fromSquad({
+    required String name,
+    required TeammateKind kind,
+    required int overall,
+    required int age,
+  }) => Teammate(name: name, kind: kind, overall: overall, age: age);
+
   factory Teammate.roll(
     Random random, {
     required TeammateKind kind,

@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/game/career_engine.dart';
 import 'package:soccer_career/game/competitions.dart';
+import 'package:soccer_career/game/squads.dart';
 import 'package:soccer_career/game/formulas.dart';
 import 'package:soccer_career/game/world.dart';
 import 'package:soccer_career/models/agent.dart';
@@ -23,16 +24,16 @@ CareerState career({int seed = 1, String countryId = 'yamato'}) =>
     );
 
 MatchResult played({int matchday = 1}) => MatchResult(
-      matchday: matchday,
-      opponentName: 'X',
-      home: true,
-      scored: 1,
-      conceded: 0,
-      appearance: Appearance.start,
-      rating: 7.0,
-      goals: 0,
-      assists: 0,
-    );
+  matchday: matchday,
+  opponentName: 'X',
+  home: true,
+  scored: 1,
+  conceded: 0,
+  appearance: Appearance.start,
+  rating: 7.0,
+  goals: 0,
+  assists: 0,
+);
 
 /// 自分のクラブを指定順位に置いた状態を作る。
 void placeAt(CareerState state, int position) {
@@ -53,19 +54,8 @@ void placeAt(CareerState state, int position) {
 }
 
 void main() {
-  group('登録メンバーの線が、届く範囲にある', () {
-    test('オファーで来る強さの差の範囲に、線が入っている', () {
-      // 線を -18 に置いていた頃、この制度は**一度も起きなかった**。
-      // オファーはクラブの強さが「総合力 -14」までしか来ないので、
-      // 加入した時点の差は -14 より下にならず、その後も基本は縮む。
-      // 実測でキャリア中の最悪が -11、下位1割が -8 だった。
-      expect(Formulas.squadRegistrationGap, greaterThan(-14),
-          reason: 'オファーの範囲より下だと、制度が死ぬ');
-      expect(Formulas.squadRegistrationGap, lessThan(0),
-          reason: '格上のクラブに移れなくなる');
-    });
-
-    test('大きく劣ると登録外、見合っていれば登録される', () {
+  group('登録メンバーは、名簿を数えて決まる', () {
+    test('同じ枠の上が定員分居れば外れ、見合っていれば登録される', () {
       final state = career();
       final competitions = Competitions(random: Random(1));
 
@@ -77,14 +67,41 @@ void main() {
       );
       expect(competitions.registrationFor(state), SquadStatus.registered);
 
-      // 線を割ると外れる。
+      // 強いクラブで、同じ枠の上が定員分埋まっていれば外れる。
+      // **下位クラブで総合力30なら、名簿の中では下位ではない**
+      // （最初ここで落として、こちらの見立てが違っていた）。
+      state.club = Club(
+        id: state.club.id,
+        name: state.club.name,
+        strength: 85,
+        tier: 1,
+        countryId: state.club.countryId,
+      );
       state.player = state.player.copyWith(
         attributes: Attributes.fromDetails({
-          for (final d in Detail.values)
-            d: state.club.strength + Formulas.squadRegistrationGap - 6,
+          for (final d in Detail.values) d: 30,
         }),
       );
       expect(competitions.registrationFor(state), SquadStatus.outOfSquad);
+    });
+
+    test('外れた理由が、人数で説明できる', () {
+      // 以前は「強さの差が -8 を割った」だけで、
+      // **誰に押し出されたのかが画面に出せなかった**。
+      final state = career();
+      final strong = Club(
+        id: state.club.id,
+        name: state.club.name,
+        strength: 85,
+        tier: 1,
+        countryId: state.club.countryId,
+      );
+      final squad = Squad.of(strong, year: state.year);
+      final ahead = squad.aheadOf(state.player.position, 30);
+      expect(
+        ahead,
+        greaterThanOrEqualTo(Squad.quotaFor(state.player.position.family)),
+      );
     });
   });
 
@@ -109,7 +126,12 @@ void main() {
         final c = Competitions(random: Random(3));
         final s = career();
         s.club = Club(
-            id: 'x', name: 'X', strength: strength, tier: 1, countryId: 'yamato');
+          id: 'x',
+          name: 'X',
+          strength: strength,
+          tier: 1,
+          countryId: 'yamato',
+        );
         var sum = 0;
         for (var i = 0; i < 60; i++) {
           sum += c.runContinental(s, qualified: true).points;
@@ -126,7 +148,7 @@ void main() {
       s.club = World.buildLeague('albion', 1).first;
       s.league = World.buildLeague('albion', 1);
       s.table = [
-        for (final c in s.league) TableRow(clubId: c.id, clubName: c.name)
+        for (final c in s.league) TableRow(clubId: c.id, clubName: c.name),
       ];
       placeAt(s, 1);
       expect(engine.inContinental(s), isTrue);
@@ -155,7 +177,7 @@ void main() {
       s.club = World.buildLeague('albion', 1).first;
       s.league = World.buildLeague('albion', 1);
       s.table = [
-        for (final c in s.league) TableRow(clubId: c.id, clubName: c.name)
+        for (final c in s.league) TableRow(clubId: c.id, clubName: c.name),
       ];
       placeAt(s, 1);
       expect(s.continentalExperience, isFalse);
@@ -166,8 +188,10 @@ void main() {
 
     test('優勝ほど国の格への貢献が大きい', () {
       final c = Competitions(random: Random(8));
-      expect(c.coefficientGain(ContinentalStage.winner),
-          greaterThan(c.coefficientGain(ContinentalStage.semi)));
+      expect(
+        c.coefficientGain(ContinentalStage.winner),
+        greaterThan(c.coefficientGain(ContinentalStage.semi)),
+      );
       expect(c.coefficientGain(ContinentalStage.group), 0);
     });
   });
@@ -192,7 +216,7 @@ void main() {
       s.club = World.buildLeague('yamato', 1).first;
       s.league = World.buildLeague('yamato', 1);
       s.table = [
-        for (final c in s.league) TableRow(clubId: c.id, clubName: c.name)
+        for (final c in s.league) TableRow(clubId: c.id, clubName: c.name),
       ];
       placeAt(s, 4);
       expect(engine.inPromotionPlayoff(s), isFalse);
@@ -243,8 +267,10 @@ void main() {
     });
 
     test('冬は夏より条件が悪い', () {
-      expect(TransferWindow.winter.strength,
-          lessThan(TransferWindow.summer.strength));
+      expect(
+        TransferWindow.winter.strength,
+        lessThan(TransferWindow.summer.strength),
+      );
       expect(TransferWindow.closed.isOpen, isFalse);
       expect(TransferWindow.summer.isOpen, isTrue);
     });
@@ -257,8 +283,13 @@ void main() {
       final s = career(countryId: 'yamato');
       s.player = s.player.copyWith(
         attributes: Attributes(
-            pace: 70, shooting: 70, passing: 70, dribbling: 70,
-            defending: 70, physical: 70),
+          pace: 70,
+          shooting: 70,
+          passing: 70,
+          dribbling: 70,
+          defending: 70,
+          physical: 70,
+        ),
       );
       expect(c.registrationFor(s), SquadStatus.registered);
     });
@@ -266,11 +297,21 @@ void main() {
     test('クラブに対して力が足りないと登録外', () {
       final s = career(countryId: 'yamato');
       s.club = Club(
-          id: 'x', name: 'X', strength: 90, tier: 1, countryId: 'yamato');
+        id: 'x',
+        name: 'X',
+        strength: 90,
+        tier: 1,
+        countryId: 'yamato',
+      );
       s.player = s.player.copyWith(
         attributes: Attributes(
-            pace: 40, shooting: 40, passing: 40, dribbling: 40,
-            defending: 40, physical: 40),
+          pace: 40,
+          shooting: 40,
+          passing: 40,
+          dribbling: 40,
+          defending: 40,
+          physical: 40,
+        ),
       );
       expect(c.registrationFor(s), SquadStatus.outOfSquad);
     });
@@ -283,8 +324,13 @@ void main() {
       s.player = s.player.copyWith(
         nationality: const Nationality(primary: 'serena'),
         attributes: Attributes(
-            pace: 80, shooting: 80, passing: 80, dribbling: 80,
-            defending: 80, physical: 80),
+          pace: 80,
+          shooting: 80,
+          passing: 80,
+          dribbling: 80,
+          defending: 80,
+          physical: 80,
+        ),
       );
       final country = World.byId('iberica');
       expect(country.foreignRule.squadLimit, 3);
@@ -302,8 +348,10 @@ void main() {
     test('登録状況は保存を往復しても残る', () {
       final s = career(seed: 13);
       s.squadStatus = SquadStatus.outOfSquad;
-      expect(CareerState.fromJson(s.toJson()).squadStatus,
-          SquadStatus.outOfSquad);
+      expect(
+        CareerState.fromJson(s.toJson()).squadStatus,
+        SquadStatus.outOfSquad,
+      );
     });
 
     test('登録の項目が無い保存データは登録済みとして読む', () {
@@ -331,7 +379,10 @@ void main() {
         return engine.renewalOffer(s).salary;
       }
 
-      expect(salary(continental: true), greaterThan(salary(continental: false)));
+      expect(
+        salary(continental: true),
+        greaterThan(salary(continental: false)),
+      );
       expect(Formulas.continentalSalaryBonus, greaterThan(1.0));
     });
   });
