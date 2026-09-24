@@ -30,6 +30,30 @@ _TOP_N = 3
 _NAME_MAX_LEN = 10
 
 
+# X の文字数は「素の文字数」ではない。ラテン系の一部だけが1文字、
+# 日本語を含むそれ以外は2文字として数え、URL は長さによらず23文字になる。
+# （X の weighted length。配分は v3 の既定値）
+# ここを素の len() で見ていると、名前が長い日に上限を超えて 403 で弾かれる。
+# 投稿の失敗は警告を出すだけでサイトには影響しないので、**気づきにくい**。
+_TWEET_LIMIT = 280
+_URL_WEIGHT = 23
+_LIGHT_RANGES = ((0, 4351), (8192, 8205), (8208, 8223), (8242, 8247))
+
+
+def weighted_length(text: str) -> int:
+    """X が数える長さ。URL は23文字として扱う。"""
+    total = 0
+    for token in text.split():
+        if token.startswith(("http://", "https://")):
+            total += _URL_WEIGHT + 1   # 前後の空白ぶん
+            continue
+        for ch in token:
+            o = ord(ch)
+            total += 1 if any(lo <= o <= hi for lo, hi in _LIGHT_RANGES) else 2
+        total += 1
+    return max(total - 1, 0)   # 最後の空白は数えない
+
+
 def _truncate(name: str, max_len: int = _NAME_MAX_LEN) -> str:
     return name if len(name) <= max_len else name[:max_len] + "…"
 

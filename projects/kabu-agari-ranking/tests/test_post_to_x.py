@@ -47,10 +47,32 @@ def test_ストップ高が無ければその行を出さない():
     assert "ストップ高" not in text
 
 
-def test_長い銘柄名でも280字に収まる():
-    # 全角も1字として数える X の仕様に対し、余裕をもって収まることを見る
+def test_長い銘柄名でもXの数え方で上限に収まる():
+    # X は日本語を2文字、URL を23文字として数える。素の len() で見ていると
+    # 上限を超えたまま気づけず、投稿が 403 で弾かれる（警告が出るだけ）。
     text = post_to_x._build_tweet(_payload())
-    assert len(text) <= 280, text
+    assert post_to_x.weighted_length(text) <= 280, post_to_x.weighted_length(text)
+
+
+def test_Xの数え方():
+    assert post_to_x.weighted_length("abc") == 3          # ラテンは1文字
+    assert post_to_x.weighted_length("あいう") == 6        # 日本語は2文字
+    # URL は長さによらず23文字
+    short = post_to_x.weighted_length("https://a.jp/x")
+    long = post_to_x.weighted_length("https://kabu-agari-ranking.pages.dev/archive/gainers/2026-09-18")
+    assert short == long == 23
+
+
+def test_上限を超えたら後ろから削る():
+    payload = _payload()
+    payload["gainers"] = [
+        {**row, "name": "ながいなまえのかぶしきがいしゃ" * 2} for row in payload["gainers"]
+    ]
+    # 無理やり長くする（本来は _truncate が効くが、削る側の動きを見る）
+    payload["rec_date"] = "2026-09-18"
+    text = post_to_x._build_tweet(payload)
+    assert post_to_x.weighted_length(text) <= 280
+    assert "kabu-agari-ranking" in text, "URL は最後まで残す"
 
 
 def test_銘柄名は途中で切る():
