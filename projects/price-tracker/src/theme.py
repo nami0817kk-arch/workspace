@@ -131,7 +131,7 @@ def head(title: str, description: str, canonical: str, site: dict, prefix: str =
 <a class="skip" href="#main">本文へ</a>
 <header class="site-head"><div class="wrap">
   <a class="site-name" href="{prefix or './'}">{esc(site['name'])}</a>
-  <nav class="site-nav">{"".join(f'<a href="{prefix}{href}">{esc(label)}</a>' for href, label in NAV)}</nav>
+  <nav class="site-nav">{"".join(f'<a href="{(prefix + href).replace("/./", "/")}">{esc(label)}</a>' for href, label in NAV)}</nav>
 </div></header>
 <main class="wrap" id="main">"""
 
@@ -664,7 +664,7 @@ def genre_index(genres: list[dict], site: dict, canonical: str, updated: str,
     lead = "記録している商品をジャンルごとに、値下がりの大きい順で並べています。"
     links = "".join(
         f'<li class="genre"><a href="{prefix}genre/{esc(str(g["genre_id"]))}/">'
-        f'{esc(g["name"])}</a><span class="count">{g["count"]}商品</span></li>'
+        f'{esc(g["name"])}</a><span class="count">{g["count"]:,}商品</span></li>'
         for g in genres)
     return (head(f"{title}｜{site['name']}", lead, canonical, site, prefix)
             + f'<h1>{esc(title)}</h1><p class="lead">{esc(lead)}</p>'
@@ -784,22 +784,41 @@ def og_image(site: dict, stats: dict) -> str:
 </svg>"""
 
 
+def root_prefix(site: dict) -> str:
+    """公開URLの根。404 だけはここから絶対パスで書く必要がある。
+
+    404 は存在しないパスすべてに返され、URL は要求されたまま
+    （例 /item/存在しない/更に深い/）。相対パスだと CSS もリンクも壊れる。
+    一方でサブディレクトリ配信だと "/" 決め打ちも壊れるので、設定から導く。
+    """
+    from urllib.parse import urlsplit
+    path = urlsplit(site.get("base_url", "")).path.rstrip("/")
+    return (path or "") + "/"
+
+
 def not_found(site: dict, updated: str) -> str:
-    """404。5,600ページあり、商品が入れ替われば古いURLも残る。行き先を示す。"""
+    """404。
+
+    Cloudflare Pages は存在しないパスすべてにこのページを返し、URL は
+    要求されたまま（例 /item/存在しない/更に深い/）。相対パスだと CSS も
+    リンクも壊れるので、ルートからの絶対パスで書く。
+    """
+    root = root_prefix(site)
     return (head(f"ページが見つかりません｜{site['name']}",
-                 "お探しのページは見つかりませんでした。", site["base_url"], site)
+                 "お探しのページは見つかりませんでした。", site["base_url"], site,
+                 prefix=root_prefix(site))
             + '<h1>ページが見つかりません</h1>'
             + '<p class="lead">記録から外れた商品のページは、時間がたつと無くなります。'
             + '商品名で探すか、一覧から辿ってください。</p>'
             + '<ul class="cards">'
-            + '<li class="card"><div class="body"><a class="name" href="search/">商品を探す</a>'
+            + f'<li class="card"><div class="body"><a class="name" href="{root}search/">商品を探す</a>'
             + '<p class="meta">記録している商品を名前で絞り込めます</p></div></li>'
-            + '<li class="card"><div class="body"><a class="name" href="./">今日の値下がり</a>'
+            + f'<li class="card"><div class="body"><a class="name" href="{root}">今日の値下がり</a>'
             + '<p class="meta">前回より安くなった商品</p></div></li>'
-            + '<li class="card"><div class="body"><a class="name" href="lows/">最安値圏</a>'
+            + f'<li class="card"><div class="body"><a class="name" href="{root}lows/">最安値圏</a>'
             + '<p class="meta">記録した中で最も安い価格の商品</p></div></li>'
             + '</ul>'
-            + foot(site, "", updated))
+            + foot(site, root_prefix(site), updated))
 
 
 def _rfc822(day: str) -> str:

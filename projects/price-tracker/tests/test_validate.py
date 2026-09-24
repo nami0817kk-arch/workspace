@@ -896,3 +896,54 @@ class SearchDisplayTest(unittest.TestCase):
 
     def test_短縮処理は1度だけ定義する(self):
         self.assertEqual(self.search.count("function ptShort"), 1)
+
+
+class SitePagesAuditTest(unittest.TestCase):
+    """全ページを実機で操作して見つけた取りこぼし。
+
+    2026-09-24 の点検で3件見つかった。404 が深い階層で崩れること、
+    サイトの仕組みの説明がプライバシーポリシーに紛れ込んでいたこと、
+    ジャンル索引の件数だけ桁区切りが無かったこと。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        import subprocess
+        import sys
+        import tempfile
+        from pathlib import Path
+
+        root = Path(__file__).resolve().parent.parent
+        cls.tmp = tempfile.TemporaryDirectory()
+        cls.out = Path(cls.tmp.name)
+        subprocess.run([sys.executable, str(root / "build.py"), "--out", str(cls.out)],
+                       cwd=root, check=True, capture_output=True)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def read(self, *parts):
+        from pathlib import Path
+        return (self.out.joinpath(*parts)).read_text(encoding="utf-8")
+
+    def test_404はどの深さでも壊れない(self):
+        # Cloudflare Pages は存在しないパスすべてにこれを返し、URL は要求のまま
+        html = self.read("404.html")
+
+        self.assertIn('href="/style.css"', html)
+        for href in ('"/search/"', '"/lows/"'):
+            self.assertIn(href, html)
+        self.assertNotIn('href="search/"', html)
+
+    def test_仕組みの説明はサイト紹介に置く(self):
+        self.assertIn("実質価格", self.read("about", "index.html"))
+        self.assertNotIn("実質価格", self.read("privacy", "index.html"))
+
+    def test_件数は桁区切りで出す(self):
+        self.assertIn("商品", self.read("genre", "index.html"))
+        self.assertRegex(self.read("genre", "index.html"), r"\d,\d{3}商品")
+
+    def test_ナビのリンクに余分な階層を挟まない(self):
+        for path in (("index.html",), ("lows", "index.html"), ("404.html",)):
+            self.assertNotIn("/./", self.read(*path), path)

@@ -137,9 +137,20 @@ class BuildTest(unittest.TestCase):
                       self.read("item", theme.slug("shop:cheap"), "index.html"))
 
     def test_no_absolute_asset_paths_anywhere(self):
+        """404 だけは例外。存在しないパスすべてに返され、URL は要求されたまま
+        （例 /item/存在しない/更に深い/）なので、相対では CSS もリンクも壊れる。
+        その 404 も "/" 決め打ちではなく base_url から導いている（root_prefix）。"""
         for path in self.out.rglob("*.html"):
+            if path.name == "404.html":
+                continue
             with self.subTest(path=path.name):
                 self.assertNotIn('href="/style.css"', path.read_text(encoding="utf-8"))
+
+    def test_404_uses_the_site_root_not_a_hardcoded_slash(self):
+        # サブディレクトリ配信では "/" 決め打ちが壊れる
+        html = self.read("404.html")
+        self.assertIn('href="/price/style.css"', html)
+        self.assertIn('href="/price/lows/"', html)
 
     def test_canonical_uses_the_public_url(self):
         self.assertIn('<link rel="canonical" href="https://example.test/price/">',
