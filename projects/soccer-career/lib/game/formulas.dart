@@ -407,6 +407,13 @@ class Formulas {
   static const double growthRatingThreshold = 6.5;
 
   /// 成長のピーク年齢。これを過ぎると伸びにくくなり、衰え始める。
+  /// リーグの上に置く強豪の上乗せ。上から3クラブ。
+  ///
+  /// **等間隔の梯子だと、リーグの上に「手の届かない相手」が居ない。**
+  /// 現実のリーグは上の2〜3が抜けていて、残りは団子になっている。
+  /// ここを平らにしていたため、中位のクラブに居ても優勝できていた。
+  static const List<int> leagueGiants = [8, 5, 2];
+
   static const int peakAge = 27;
   static const int declineAge = 31;
 
