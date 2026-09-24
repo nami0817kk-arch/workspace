@@ -947,3 +947,61 @@ class SitePagesAuditTest(unittest.TestCase):
     def test_ナビのリンクに余分な階層を挟まない(self):
         for path in (("index.html",), ("lows", "index.html"), ("404.html",)):
             self.assertNotIn("/./", self.read(*path), path)
+
+
+class ConditionScoreTest(unittest.TestCase):
+    """条件のそろい具合。推奨ではなく、満たした条件の合計。"""
+
+    def setUp(self):
+        from src import analyze
+        self.analyze = analyze
+
+    def row(self, **kw):
+        base = {"vs_low_pct": 1.0, "eff_drop_pct": 0.0, "drop_pct": 0.0,
+                "free_shipping": False, "tail": [], "trustworthy": True,
+                "in_stock": True, "item_code": "a"}
+        base.update(kw)
+        return base
+
+    def test_条件が何も無ければ0点(self):
+        self.assertEqual(self.analyze.condition_score(self.row()), 0)
+
+    def test_すべて満たせば100点(self):
+        r = self.row(vs_low_pct=0.0, eff_drop_pct=0.2, drop_pct=0.2,
+                     free_shipping=True,
+                     tail=[["d%d" % i, 100 + i * 10] for i in range(6)])
+
+        self.assertEqual(self.analyze.condition_score(r), 100)
+
+    def test_内訳の合計が点数と一致する(self):
+        # 画面に出す内訳と合計がずれると根拠にならない
+        r = self.row(vs_low_pct=0.15, eff_drop_pct=0.1, free_shipping=True)
+
+        parts = self.analyze.score_breakdown(r)
+
+        self.assertEqual(sum(p for _, p in parts),
+                         self.analyze.condition_score(r))
+
+    def test_各項目に上限がある(self):
+        # 1つの条件だけで上位を占めないようにする
+        r = self.row(drop_pct=5.0, eff_drop_pct=5.0, vs_low_pct=0.0)
+
+        for name, pt in self.analyze.score_breakdown(r):
+            self.assertLessEqual(pt, dict(self.analyze.SCORE_PARTS)[name])
+
+    def test_記録が薄いものと在庫切れは並べない(self):
+        rows = [self.row(item_code="ok", vs_low_pct=0.0),
+                self.row(item_code="thin", trustworthy=False, vs_low_pct=0.0),
+                self.row(item_code="out", in_stock=False, vs_low_pct=0.0)]
+
+        out = self.analyze.well_stocked(rows)
+
+        self.assertEqual([r["item_code"] for r in out], ["ok"])
+
+    def test_点の高い順に並ぶ(self):
+        rows = [self.row(item_code="low", vs_low_pct=0.3),
+                self.row(item_code="high", vs_low_pct=0.0, free_shipping=True)]
+
+        out = self.analyze.well_stocked(rows)
+
+        self.assertEqual([r["item_code"] for r in out], ["high", "low"])

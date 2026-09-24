@@ -60,7 +60,7 @@ PER_PAGE = 50
 
 def write_listing(out: Path, urls: list, path: str, title: str, lead: str,
                   rows: list, site: dict, base: str, updated: str, empty: str,
-                  stats: dict) -> None:
+                  stats: dict, show_score: bool = False) -> None:
     """一覧をページ送りで書き出す。
 
     最安値圏は4,000件を超える。1枚に詰めると読めないうえ、100件で打ち切ると
@@ -75,7 +75,8 @@ def write_listing(out: Path, urls: list, path: str, title: str, lead: str,
               theme.listing(title, lead, rows[i * PER_PAGE:(i + 1) * PER_PAGE],
                             site, base + "/" + rel, updated, prefix=prefix,
                             empty=empty, stats=stats, page=i + 1, pages=pages,
-                            page_prefix=prefix + path, total=len(rows)))
+                            page_prefix=prefix + path, total=len(rows),
+                            show_score=show_score))
         urls.append("/" + rel)
 
 
@@ -107,6 +108,14 @@ def build(root: Path, out: Path) -> dict:
     low = analyze.lows(rows)
 
     urls = []
+    write_listing(out, urls, "now/", "いま条件がそろっている商品",
+                  "最安値への近さ・ポイント込みの下げ幅・価格の下げ幅・送料・"
+                  "値動きの多さを、それぞれ上限を決めて足した順に並べています。"
+                  "買うべきかは決めません。どの条件がいくつ満たされたかを出すだけです。",
+                  analyze.well_stocked(rows, limit=600), site, base, updated,
+                  "条件がそろった商品はまだありません。記録が7日分たまってからになります。",
+                  stats, show_score=True)
+
     write_listing(out, urls, "", "今日の値下がり",
                   "毎日記録している楽天市場の価格から、前回より安くなった商品を並べています。",
                   dropped, site, base, updated,

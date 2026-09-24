@@ -83,7 +83,7 @@ FAVICON = ("data:image/svg+xml,"
 AD_NOTICE = ('<p class="ad-notice">本サイトは楽天アフィリエイトを利用しており、'
              'リンク経由の購入により収益を得ています。</p>')
 
-NAV = [("./", "今日の値下がり"), ("points/", "ポイント込み"), ("new-lows/", "最安値更新"),
+NAV = [("now/", "いま条件がそろう"), ("./", "今日の値下がり"), ("points/", "ポイント込み"), ("new-lows/", "最安値更新"),
        ("lows/", "最安値圏"), ("rises/", "値上がり"), ("active/", "よく動く"),
        ("genre/", "ジャンル別"), ("archive/", "日付別"), ("search/", "商品を探す"),
        ("watch/", "見守り"), ("ending/", "期限が近い"), ("stats/", "記録"),
@@ -255,7 +255,22 @@ def card_spark(row: dict) -> str:
     return f'<div class="card-spark">{sparkline(row.get("tail") or [], width=140, height=30)}</div>'
 
 
-def card(row: dict, prefix: str = "", eager: bool = False) -> str:
+def score_bar(row: dict) -> str:
+    """条件のそろい具合と、その内訳。
+
+    数字だけ出すと「何点かは分かるが理由が分からない」道具になる。
+    満たした条件を名前で並べ、点の根拠を画面から読めるようにする。
+    """
+    from .analyze import condition_score, score_breakdown
+    total = condition_score(row)
+    if total <= 0:
+        return ""
+    parts = [f'{name} {pt}' for name, pt in score_breakdown(row) if pt]
+    return (f'<p class="score"><span class="num">{total}</span><span class="max">/100</span>'
+            f'<span class="parts">{esc(" ・ ".join(parts))}</span></p>')
+
+
+def card(row: dict, prefix: str = "", eager: bool = False, show_score: bool = False) -> str:
     href = f'{prefix}item/{slug(row["item_code"])}/'
     change = ""
     if row["dropped"]:
@@ -286,6 +301,7 @@ def card(row: dict, prefix: str = "", eager: bool = False) -> str:
     <p class="meta">{esc(row.get("shop", ""))}{history_note(row)}
       <button class="watch-mini" type="button" data-code="{esc(row["item_code"])}"
               data-price="{row["price"]}" aria-label="この商品を見守る">見守る</button></p>
+    {score_bar(row) if show_score else ""}
     {card_spark(row)}
   </div>
 </li>"""
@@ -607,8 +623,10 @@ document.addEventListener('DOMContentLoaded', function () {
 def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
             updated: str, prefix: str = "", empty: str = "該当する商品がありません。",
             stats: dict | None = None, page: int = 1, pages: int = 1,
-            page_prefix: str = "", total: int | None = None) -> str:
-    body = ("".join(card(r, prefix, eager=i < 3) for i, r in enumerate(rows)) if rows
+            page_prefix: str = "", total: int | None = None,
+            show_score: bool = False) -> str:
+    body = ("".join(card(r, prefix, eager=i < 3, show_score=show_score)
+                    for i, r in enumerate(rows)) if rows
             else f'<li class="empty">{esc(empty)}</li>')
     total = len(rows) if total is None else total
     count = f'<span class="count">{total:,}件</span>' if rows else ""

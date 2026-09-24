@@ -230,6 +230,50 @@ def ending_soon(rows: list[dict], today: str, days: int = 3,
     return hit[:limit] if limit else hit
 
 
+# 条件のそろい具合。四則演算だけで出し、内訳を必ず画面に出す。
+# 「買うべき」とは言わない。どの条件がいくつ満たされたかを並べるだけ。
+SCORE_PARTS = (
+    ("最安値への近さ", 40),
+    ("ポイント込みの下げ幅", 25),
+    ("価格の下げ幅", 20),
+    ("送料無料", 10),
+    ("値動きの多さ", 5),
+)
+
+
+def score_breakdown(row: dict) -> list[tuple[str, int]]:
+    """条件ごとの点を返す。合計ではなく内訳で持つ（根拠を出せる形にする）。"""
+    near = max(0.0, 1 - min(row.get("vs_low_pct", 1.0), 0.3) / 0.3)
+    eff = min(max(row.get("eff_drop_pct", 0.0), 0.0), 0.2) / 0.2
+    drop = min(max(row.get("drop_pct", 0.0), 0.0), 0.2) / 0.2
+    moves = min(change_count(row), 5) / 5
+    return [
+        ("最安値への近さ", round(near * 40)),
+        ("ポイント込みの下げ幅", round(eff * 25)),
+        ("価格の下げ幅", round(drop * 20)),
+        ("送料無料", 10 if row.get("free_shipping") else 0),
+        ("値動きの多さ", round(moves * 5)),
+    ]
+
+
+def condition_score(row: dict) -> int:
+    return sum(p for _, p in score_breakdown(row))
+
+
+def well_stocked(rows: list[dict], limit: int | None = None) -> list[dict]:
+    """条件がそろっている順。
+
+    値下がり・最安値圏・ポイント・送料を別々の一覧で出してきたが、
+    読む側は「結局どれか」を知りたい。判断は代わりにしないまま、
+    満たした条件の数で並べ替えるところまでを引き受ける。
+    記録が7日に満たないものと在庫切れは、比べる土俵に乗らないので外す。
+    """
+    hit = [r for r in rows
+           if r.get("trustworthy") and r.get("in_stock") is not False]
+    hit.sort(key=lambda r: (-condition_score(r), r.get("vs_low_pct", 1.0)))
+    return hit[:limit] if limit else hit
+
+
 def by_genre(rows: list[dict], genre_id: str, limit: int | None = None) -> list[dict]:
     """取得元ジャンルで絞り、注目すべき順に並べる。
 

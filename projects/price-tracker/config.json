@@ -21,9 +21,25 @@
     {
       "genre_id": "101205",
       "name": "テレビゲーム"
+    },
+    {
+      "genre_id": "112493",
+      "name": "楽器・音響機器"
+    },
+    {
+      "genre_id": "510915",
+      "name": "ビール・洋酒"
+    },
+    {
+      "genre_id": "101213",
+      "name": "ペット・ペットグッズ"
+    },
+    {
+      "genre_id": "100804",
+      "name": "インテリア・寝具・収納"
     }
   ],
-  "hits_per_genre": 1250,
+  "hits_per_genre": 1500,
   "drop_threshold": 0.05,
   "near_low_threshold": 0.02,
   "history_tail_days": 90,
