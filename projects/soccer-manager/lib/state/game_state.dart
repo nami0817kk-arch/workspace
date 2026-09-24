@@ -78,6 +78,7 @@ import '../logic/transfer_market.dart';
 import '../logic/weather_engine.dart';
 import '../logic/youth_departure_engine.dart';
 import '../logic/youth_league_engine.dart';
+import '../logic/youth_promotion_engine.dart';
 import '../logic/youth_match_engine.dart';
 import '../data/name_pool.dart';
 import '../models/first_run_step.dart';

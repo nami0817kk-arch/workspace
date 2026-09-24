@@ -552,13 +552,57 @@ extension GameStateTransfer on GameState {
     return true;
   }
 
+  /// 昇格の条件(週俸・契約金・年数・背番号)。押す前に見せるため、
+  /// 実行と分けて計算できるようにしてある。
+  YouthPromotionTerms? youthPromotionTermsFor(String playerId) {
+    if (_save == null) return null;
+    final player = _save!.youthProspects
+        .where((p) => p.id == playerId)
+        .firstOrNull;
+    if (player == null) return null;
+    return YouthPromotionEngine.termsFor(userTeam, player);
+  }
+
+  /// ユースから一軍へ上げる。プロ契約を結ぶので、契約金と週給予算の枠が
+  /// 必要になる。足りない場合は[lastSigningBlockReason]に理由を入れて
+  /// false を返す(押しても何も起きない状態にしない)。
   Future<bool> promoteYouthProspect(String playerId) async {
     if (_save == null) return false;
-    if (userTeam.players.length >= maxSquadSize) return false;
+    lastSigningBlockReason = null;
+    if (userTeam.players.length >= maxSquadSize) {
+      lastSigningBlockReason = Tr.pick(
+          'スカッドが上限です。誰かを放出してから昇格させてください。',
+          'Your squad is full. Release someone before promoting him.');
+      _notify();
+      return false;
+    }
     final idx = _save!.youthProspects.indexWhere((p) => p.id == playerId);
     if (idx < 0) return false;
-    final player = _save!.youthProspects.removeAt(idx);
+    final player = _save!.youthProspects[idx];
+    final terms = YouthPromotionEngine.termsFor(userTeam, player);
+
+    if (_save!.budget < terms.signingBonus) {
+      lastSigningBlockReason = Tr.pick(
+          '契約金${terms.signingBonus}万円が払えません(資金${_save!.budget}万円)。',
+          'You cannot cover the ${terms.signingBonus} signing fee (funds ${_save!.budget}).');
+      _notify();
+      return false;
+    }
+    if (!_wageBudgetAllowsSigning(terms.weeklyWage)) {
+      _notify();
+      return false;
+    }
+
+    _save!.youthProspects.removeAt(idx);
+    YouthPromotionEngine.applyPromotion(player, terms);
+    _save!.budget -= terms.signingBonus;
     userTeam.players.add(player);
+    _logNews(
+      Tr.pick(
+          'ユースの${player.name}がプロ契約(背番号${terms.squadNumber}・週俸${terms.weeklyWage}万円・${terms.years}年)を結び、一軍に昇格しました',
+          '${player.name} signed his first professional contract (no. ${terms.squadNumber}, wage ${terms.weeklyWage}, ${terms.years} years) and joined the first team'),
+      context: Tr.pick('ユース', 'Youth'),
+    );
     _notify();
     await _persist();
     return true;

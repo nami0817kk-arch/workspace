@@ -1,3 +1,5 @@
+import 'dart:ui' show FontFeature;
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -534,6 +536,21 @@ class _SquadScreenState extends State<SquadScreen> {
                                   ),
                             title: Row(
                               children: [
+                                // 背番号。ユースから上げた選手と移籍加入の
+                                // 選手に付く。旧セーブでは未設定なので出さない。
+                                if (p.squadNumber != null) ...[
+                                  Text(
+                                    '${p.squadNumber}',
+                                    style: TextStyle(
+                                      fontFeatures: const [
+                                        FontFeature.tabularFigures()
+                                      ],
+                                      color:
+                                          SemanticColors.subtleText(context),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 8),
+                                ],
                                 Flexible(
                                   child: Text(
                                     p.name,

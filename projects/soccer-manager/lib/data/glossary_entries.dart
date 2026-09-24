@@ -377,6 +377,20 @@ List<GlossaryEntry> get glossaryEntries => [
             "A first-team player of 28 or over, paired with an academy prospect. He grows faster in the academy, and it opens the only route to a personality trait while he is still there. A veteran can only look after one player, and cannot mentor a first-teamer at the same time."),
       ),
       GlossaryEntry(
+        term: Tr.pick('ユースリーグ', 'Youth league'),
+        category: GlossaryCategory.condition,
+        description: Tr.pick(
+            '自クラブのユースと近隣7クラブのユースで戦う年間リーグ(14節)。毎週の練習試合がこの順位表に積み上がる。全節を終えると順位と得点王がニュースに出る。相手の強さはシーズン開始時に自クラブのユースの水準から決まり、年度ごとに引き直される。',
+            'A 14-round league between your academy and seven neighbouring ones. The weekly youth match feeds this table, and when the rounds are done the finishing position and top scorer make the news. Opponent strength is set from your own academy at the start of each season, and redrawn every year.'),
+      ),
+      GlossaryEntry(
+        term: Tr.pick('プロ契約(昇格)', 'First professional contract'),
+        category: GlossaryCategory.condition,
+        description: Tr.pick(
+            'ユースから一軍へ上げるときに結ぶ契約。背番号が付き、市場価値に見合う週俸と契約金(一括)が発生する。契約金が払えない、または週給予算の枠が無いと昇格できない。昇格直後は一軍の強度に慣れておらず実戦感覚が低い状態から始まるため、出番を作れる時期に上げるかどうかの判断になる。',
+            "The contract you sign when a prospect steps up. He takes a squad number, a wage in line with his market value and a one-off signing fee. Without the fee or the wage room, the promotion does not happen. He starts short of match sharpness until he adjusts, so the timing matters as much as the decision."),
+      ),
+      GlossaryEntry(
         term: Tr.pick('有望株の流出', 'Losing a prospect'),
         category: GlossaryCategory.condition,
         description: Tr.pick(

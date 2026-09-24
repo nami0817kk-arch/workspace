@@ -1163,6 +1163,10 @@ class Player {
   /// 直近のユース練習試合の評点(10点満点)。未出場・旧セーブは0。
   double lastYouthMatchRating;
 
+  /// 背番号。ユースから一軍へ昇格したとき、または移籍で加入したときに
+  /// 割り当てる。旧セーブ・ユース在籍中は null。
+  int? squadNumber;
+
   /// ローン放出(武者修行)を開始した時点の総合力。復帰時の成長レポート
   /// に使い、復帰後は0に戻す。0はローン中でない(旧セーブ含む)ことを表す。
   int loanStartOverall;
@@ -1298,6 +1302,7 @@ class Player {
     this.loanStartOverall = 0,
     List<int>? overallHistory,
     this.youthMatchGoals = 0,
+    this.squadNumber,
     this.lastYouthMatchRating = 0,
     this.mentorId,
     this.drillAttributeKey,
@@ -1548,6 +1553,7 @@ class Player {
     put('youthMatchGoals', youthMatchGoals, 0);
     put('lastYouthMatchRating', lastYouthMatchRating, 0);
     put('mentorId', mentorId, null);
+    put('squadNumber', squadNumber, null);
     put('drillAttributeKey', drillAttributeKey, null);
     put('drillAttributeKey2', drillAttributeKey2, null);
     put('traitTrainingTarget', traitTrainingTarget?.name, null);
@@ -1677,6 +1683,7 @@ class Player {
           (json['overallHistory'] as List?)?.map((e) => e as int).toList() ??
               [],
       youthMatchGoals: json['youthMatchGoals'] as int? ?? 0,
+      squadNumber: json['squadNumber'] as int?,
       lastYouthMatchRating:
           (json['lastYouthMatchRating'] as num?)?.toDouble() ?? 0,
       mentorId: json['mentorId'] as String?,
