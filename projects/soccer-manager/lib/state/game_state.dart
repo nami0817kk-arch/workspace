@@ -75,6 +75,7 @@ import '../logic/super_cup_engine.dart';
 import '../logic/training_engine.dart';
 import '../logic/transfer_market.dart';
 import '../logic/weather_engine.dart';
+import '../logic/youth_departure_engine.dart';
 import '../logic/youth_match_engine.dart';
 import '../data/name_pool.dart';
 import '../models/first_run_step.dart';
@@ -215,6 +216,10 @@ class GameState extends ChangeNotifier {
   /// 直近の節送りで行われたユース練習試合の結果(候補が0人ならnull)。
   /// ユース画面での直近戦の表示に使う(セーブデータには保存しない)。
   YouthMatchReport? lastYouthMatchReport;
+
+  /// 直近の節送りでユースを去った有望株(セーブには残さない)。
+  /// 画面で1度知らせたら消える、その週だけの出来事として扱う。
+  List<YouthDeparture> lastYouthDepartures = [];
 
   /// 直近のstartNextSeasonで引退した選手名(1回表示したら呼び出し側でクリアする想定)。
   List<String> lastRetirements = [];

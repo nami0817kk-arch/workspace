@@ -370,6 +370,20 @@ List<GlossaryEntry> get glossaryEntries => [
             "An older player (28 or over) paired with a young one. The younger man grows faster, and the mentor's own morale lifts a little from the responsibility."),
       ),
       GlossaryEntry(
+        term: Tr.pick('ユースのメンター', 'Academy mentor'),
+        category: GlossaryCategory.condition,
+        description: Tr.pick(
+            'ユースの有望株に付ける一軍のベテラン(28歳以上)。施設での成長が速くなり、ユースでは練習では身に付かない性格特性を習得する道が開ける。1人のベテランが見られるのは1人だけで、一軍の若手のメンターとは兼任できない。',
+            "A first-team player of 28 or over, paired with an academy prospect. He grows faster in the academy, and it opens the only route to a personality trait while he is still there. A veteran can only look after one player, and cannot mentor a first-teamer at the same time."),
+      ),
+      GlossaryEntry(
+        term: Tr.pick('有望株の流出', 'Losing a prospect'),
+        category: GlossaryCategory.condition,
+        description: Tr.pick(
+            '19歳を過ぎた有望株は出場機会を求め、そのままにしておくとユースを去る。20歳を過ぎるとその確率は上がる。伸びしろの大きい選手は他クラブに引き抜かれ、伸び悩んだ選手は自分から去る。いずれも育成補償金が入る。メンターを付ける、ユース施設を上げる、一軍に昇格させる、のいずれかで引き止められる。',
+            'Past 19, a prospect wants first-team football and will leave the academy if nothing changes; past 20 it happens more often. The ones with room to grow get poached, the ones who stalled walk away. Either way you receive a development fee. A mentor, a better academy or a promotion to the first team will keep him.'),
+      ),
+      GlossaryEntry(
         term: Tr.pick('特訓ドリル', 'Focus drill'),
         category: GlossaryCategory.condition,
         description: Tr.pick(

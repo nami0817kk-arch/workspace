@@ -574,14 +574,81 @@ class TrainingEngine {
   /// 高いほど伸びが早く、昇格のタイミングを見極めるゲーム性が生まれる。
   /// [Player.individualFocus]を設定した選手は、その方針に沿った属性群が
   /// 優先的に伸びる(第一チームのトレーニング方針と同じ仕組みを流用)。
+  /// ユースの有望株にメンター(一軍のベテラン)を付けたときの成長倍率。
+  /// 一軍内のメンター(1.2倍)より高いのは、施設での育成が実戦から遠く、
+  /// 指導者が付くことの差が大きいため。
+  static const double youthMentorGrowthBonus = 1.35;
+
+  /// メンターが有望株に「教える」能力値。メンター自身が得意な項目の上位
+  /// [mentorTeachingCount]件を返す。GK以外の有望株にゴールキーピングを
+  /// 教えても意味がないため、担当が違う項目は除く。
+  static const int mentorTeachingCount = 2;
+
+  static List<String> mentorTeachingKeys(Player mentor, Player prospect) {
+    final prospectIsKeeper = prospect.position.group == PositionGroup.gk;
+    final keys = AttributeKeys.all.where((k) {
+      final isKeeping = AttributeKeys.goalkeeping.contains(k);
+      return prospectIsKeeper ? isKeeping : !isKeeping;
+    }).toList()
+      ..sort((a, b) =>
+          mentor.attributeValue(b).compareTo(mentor.attributeValue(a)));
+    return keys.take(mentorTeachingCount).toList();
+  }
+
   static void applyYouthAcademyGrowth(
     List<Player> prospects,
-    int facilityLevel,
-  ) {
+    int facilityLevel, {
+    /// メンターになりうる一軍の選手。[Player.mentorId]で指名された選手が
+    /// ここに居て、かつ[minMentorAge]以上のときだけメンターとして働く。
+    List<Player> mentors = const [],
+  }) {
     final factor = youthAcademyGrowthFactor(facilityLevel);
+    final byId = {for (final m in mentors) m.id: m};
+    final mentorIdsUsed = <String>{};
+
     for (final p in prospects) {
+      final mentor = p.mentorId == null ? null : byId[p.mentorId];
+      final validMentor =
+          (mentor != null && mentor.id != p.id && mentor.age >= minMentorAge)
+              ? mentor
+              : null;
+      if (validMentor != null) mentorIdsUsed.add(validMentor.id);
+
+      final bonus = validMentor != null ? youthMentorGrowthBonus : 1.0;
       for (final k in _youthGrowthKeysFor(p)) {
-        _grow(p, k, 0.5 * factor);
+        _grow(p, k, 0.5 * factor * bonus);
+      }
+
+      // **倍率だけでは効かない。** _grow は1週1項目につき最大+1で、確率が
+      // 1を超えている選手は倍率を上げても毎週+1のままになる(実測で
+      // メンターの有無に差が出なかった)。そこで、メンターが得意な能力を
+      // 「教わる項目」として追加で伸ばす。伸びる項目が増えるので、確率が
+      // 飽和していても差が出る。
+      if (validMentor != null) {
+        for (final k in mentorTeachingKeys(validMentor, p)) {
+          _grow(p, k, 0.5 * factor);
+        }
+      }
+
+      // 性格特性は練習では身に付かない。ユースに居るあいだに手に入れる道は
+      // メンターだけで、一軍のように監督が直接声をかけることはできない。
+      if (validMentor != null &&
+          p.trait == null &&
+          p.personalityTraitTrainingTarget != null) {
+        _rollPersonalityTraitAcquisition(
+          p,
+          p.personalityTraitTrainingTarget!,
+          true,
+          false,
+        );
+      }
+    }
+
+    // 一軍内のメンターと同じく、教える側も少し前向きになる。
+    for (final id in mentorIdsUsed) {
+      final mentor = byId[id];
+      if (mentor != null) {
+        mentor.happiness = (mentor.happiness + 1).clamp(0, 100);
       }
     }
   }
