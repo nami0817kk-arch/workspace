@@ -534,10 +534,20 @@ def _build_market_page(days: list[dict]) -> None:
 def _load_all_days() -> list[dict]:
     """data/YYYY-MM-DD.json を全て読み込み、rec_date 降順（新しい順）で返す。
 
-    UNRELIABLE_DATES は読み飛ばす。日付の当てにならない回を混ぜると、
-    アーカイブ全体が「いつのランキングなのか分からないもの」になってしまう。
+    読み込みながら3つのことをする:
+
+    - `DATE_CORRECTIONS` にあるものは、実際の相場日へ **rec_date を読み替える**
+      （ファイルは触らない。経緯はその定義のところに書いてある）
+    - `UNRELIABLE_DATES` は読み飛ばす（日付の当てにならない回を混ぜると、
+      アーカイブ全体が「いつのランキングなのか分からないもの」になる）
+    - 壊れたファイルは読み飛ばす（1件でサイト全体を落とさない）
+
+    同じ rec_date が2件になったら、後から来たほうを捨てて警告する。
+    読み替え先と同じ日付のファイルが後から増えると起こりうる形で、
+    黙って通すと集計（登場回数・銘柄数）が二重に数えられる。
     """
     days = []
+    seen: dict[str, str] = {}
     for path in sorted(_DATA_DIR.glob("????-??-??.json")):
         # 1件が壊れていてもサイト全体を落とさない。落とすと、その日から
         # ずっと公開が止まる（古いデータで出続けるほうが損が小さい）。
@@ -552,6 +562,13 @@ def _load_all_days() -> list[dict]:
             continue
         if rec_date in UNRELIABLE_DATES:
             continue
+        if rec_date in seen:
+            print(
+                f"  [WARN] {path.name} は {rec_date} の二重登録です"
+                f"（{seen[rec_date]} を採用し、こちらを読み飛ばしました）"
+            )
+            continue
+        seen[rec_date] = path.name
         days.append(day)
     days.sort(key=lambda d: d["rec_date"], reverse=True)
     return days

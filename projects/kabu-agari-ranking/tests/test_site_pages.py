@@ -385,3 +385,18 @@ def test_読み込み時に日付を読み替える(site):
     # 実際の相場日（2026-09-01）として公開される
     assert (out_dir / "archive" / "gainers" / "2026-09-01.html").exists()
     assert not (out_dir / "archive" / "gainers" / "2026-08-31.html").exists()
+
+
+def test_同じ相場日のファイルが2つあれば片方を捨てて警告する(site, capsys):
+    data_dir, out_dir = site
+    # 2026-09-01 は 2026-09-02 に読み替えられるので、09-02 のファイルと重なる。
+    # （08-31 は 09-01 に読み替えられるため、09-01 とは重ならない＝読み替えは連鎖する）
+    _write_day(data_dir, "2026-09-01")
+    _write_day(data_dir, "2026-09-02")
+    _write_day(data_dir, "2026-09-04")
+    render.build_all()
+
+    out = capsys.readouterr().out
+    assert "二重登録" in out
+    # 二重に数えていないこと（3ファイルだが相場日は 09-01 と 09-04 の2日）
+    assert "（2日分）" in out
