@@ -695,8 +695,11 @@ class _SquadScreenState extends State<SquadScreen> {
                                                       '${p.loanedOutToClubName}へローン放出中（あと${p.loanedOutWeeksRemaining}週）',
                                                       'On loan at ${p.loanedOutToClubName} (${Tr.plural(p.loanedOutWeeksRemaining, 'week')} left)')
                                                   : Tr.pick(
-                                                      '${p.age}歳 / ${p.position.label} / 総合 ${p.overall}${lastRatings?[p.id] != null ? ' / 前節 ${lastRatings![p.id]!.toStringAsFixed(1)}' : ''}${p.isLoan ? '' : ' / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}'}',
-                                                      "Age ${p.age} / ${p.position.label} / overall ${p.overall}${lastRatings?[p.id] != null ? ' / last ${lastRatings![p.id]!.toStringAsFixed(1)}' : ''}${p.isLoan ? '' : ' / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}'}"),
+                                                      // 総合力は右端に大きく出している。ここに重ねて書くと、
+                                                      // 同じ数字が1行に2回並ぶうえ、行が長くなって
+                                                      // 「契約残り3年」が途中で折り返していた。
+                                                      '${p.age}歳 / ${p.position.label}${lastRatings?[p.id] != null ? ' / 前節 ${lastRatings![p.id]!.toStringAsFixed(1)}' : ''}${p.isLoan ? '' : ' / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}'}',
+                                                      "Age ${p.age} / ${p.position.label}${lastRatings?[p.id] != null ? ' / last ${lastRatings![p.id]!.toStringAsFixed(1)}' : ''}${p.isLoan ? '' : ' / ${ContractEngine.yearsLabel(p.contractYearsRemaining)}'}"),
                                   style: (p.isInjured ||
                                           p.isSuspended ||
                                           p.isOnInternationalDuty ||

@@ -3340,6 +3340,15 @@ void main() {
     expect({finalMatch.homeId, finalMatch.awayId},
         {semiA.winnerId, semiB.winnerId});
 
+    // 決勝のホームは順位が上だった側。準決勝の組み合わせ順で決めていた頃は、
+    // 6位が勝ち上がると4位・5位を差し置いてホームになっていた。
+    final seedOf = {
+      for (int i = 0; i < tier2PlayedOrder.length; i++)
+        tier2PlayedOrder[i].id: i,
+    };
+    expect(seedOf[finalMatch.homeId]!, lessThan(seedOf[finalMatch.awayId]!),
+        reason: '決勝のホームが下位の側になっている');
+
     final newTier1Ids = result.tier1.map((t) => t.id).toSet();
     final newTier2Ids = result.tier2.map((t) => t.id).toSet();
 
