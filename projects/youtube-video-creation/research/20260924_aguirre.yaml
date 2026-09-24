@@ -1,0 +1,93 @@
+date: 2026年9月24日
+slot: laliga_1
+format: news
+voice_min: 0.3
+people: [ハビエル・アギーレ, 佐藤龍之介, カルロス・コルベラン]
+theme:
+  id: valencia_aguirre
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: バレンシア
+  title: '佐藤龍之介のバレンシアに、アギーレ。14年で24人目の監督が来た'
+  hook: 呼ばれたのは、日本を率いたことのある67歳です。
+  question: なぜアギーレだったのか
+short_title: バレンシアにアギーレ。14年で24人目
+thumbnail:
+  crest_main: [バレンシア]
+  line1: 19位、勝ち点4からの立て直し
+  line2: 14年で24人目の監督
+sections:
+  - id: what
+    heading: 19位で監督が代わった
+    tier: 報道
+    telop: バレンシアがアギーレ監督の就任を発表
+    narrator: キャスター
+    card:
+      type: table
+      title: いまのバレンシア
+      columns: ['', '']
+      rows:
+        - [順位, 19位（降格圏）]
+        - [勝ち点, 4]
+        - [成績, 1勝1分5敗]
+        - [契約, 今季末まで＋1年]
+    say:
+      - バレンシアはリーグ7試合を終えて**1勝1分け5敗、勝ち点4で19位**。降格圏です。開幕のあと、4連敗もありました。
+      - 前の監督カルロス・コルベランは解任され、Bチームのオスカル・サンチェスが一時的に指揮を執っていました。
+      - そして9月23日、**ハビエル・アギーレの監督就任**が発表されました。67歳です。
+      - 契約は**今季終了まで**。1年の延長オプションが付いています。
+      - voice: ネット民
+        text: 彼の運は、俺たちの運だ
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?459589-459589-fl
+  - id: who
+    main: true
+    heading: どんな監督か
+    tier: 背景
+    telop: 日本代表・メキシコ代表・アトレティコを率いた67歳
+    narrator: 解説
+    say:
+      - text: 'バレンシアは勝ち点4の19位で前の監督を解任し、9月23日にアギーレの就任を発表しました。'
+        short_only: true
+      - アギーレは**日本代表**のほか、メキシコ代表、アトレティコ・マドリー、エスパニョール、マジョルカなどを率いてきました。
+      - 2026年のワールドカップでは、母国メキシコを**ベスト16**へ導いています。
+      - マジョルカの監督だったとき、**久保建英を指導**しています。
+      - そしていまのバレンシアには、**佐藤龍之介**がいます。日本と縁のある監督が、日本人のいるクラブへ来たことになります。
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?459589-459589-fl
+  - id: club
+    heading: クラブの側の事情
+    tier: 報道
+    telop: 14年で24人目。監督が代わり続けている
+    narrator: キャスター
+    say:
+      - ただ、その椅子は長く座れる椅子ではありません。アギーレはバレンシアにとって、**14年で24人目**の監督です。
+      - 平均すると**7か月に1人**替わっている計算になります。
+      - 腰を据えて仕事をできた監督は、多くありません。
+    sources:
+      - https://www.vi.nl/nieuws/getroebleerd-valencia-presenteert-24ste-trainer-in-veertien-jaar
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: バレンシアのファンからは歓迎の声
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 彼の運は、俺たちの運だ
+      - voice: ネット民
+        text: すごいことが起きるぞ
+      - voice: ネット民
+        text: 俺の心の健康は、この人にかかってる
+      - voice: ネット民
+        text: バスコ、頼むからこれを立て直してくれ
+      - voice: ネット民
+        text: おめでとうアギーレ、バレンシアへようこそ
+      - voice: ネット民
+        text: ウイスキー片手に、1部残留だ
+      - voice: ネット民
+        text: メキシコ人監督はいい補強だ、きっと合うはずだ
+        short_voice: true
+    sources:
+      - https://www.excelsior.com.mx/deportes/javier-aguirre-valencia-aficionados-reaccionan
+      - https://www.foxsports.com.mx/2026/09/23/reacciones-aficion-valencia-javier-aguirre-nuevo-dt-descenso-laliga/

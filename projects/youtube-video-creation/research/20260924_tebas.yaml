@@ -1,0 +1,69 @@
+date: 2026年9月24日
+slot: laliga_2
+format: quote
+voice_min: 0.55
+people: [ハビエル・テバス, フロレンティーノ・ペレス]
+theme:
+  id: tebas_florentino
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: ラ・リーガ
+  title: 'テバス会長が語った、レアル・マドリードとの関係「修復不能」'
+  hook: 相手は、リーグでいちばん大きなクラブです。
+  question: 何が修復不能なのか
+short_title: テバス「フロレンティーノがいる限り」
+thumbnail:
+  crest_main: [レアル・マドリード]
+  line1: リーグ会長が口にした一言
+  line2: 「子どもの頃からの私のチームだ」
+sections:
+  - id: what
+    heading: どこでの発言か
+    tier: 報道
+    telop: ラ・リーガ会長テバスが、催しの場で語った
+    narrator: キャスター
+    say:
+      - ラ・リーガの会長、ハビエル・テバスが9月23日、ある催しの場で記者に囲まれました。
+      - きっかけは、レアル・マドリードが出した声明でした。強い言葉の応酬が続いています。
+      - voice: テバス
+        text: フロレンティーノがレアル・マドリードの会長でいる限り、関係は修復不能だ
+    sources:
+      - https://www.marca.com/futbol/primera-division/2026/09/23/tebas-reaccionamos-ataques-seriamos-imbeciles.html
+  - id: said
+    main: true
+    heading: 言ったこと
+    tier: 報道
+    telop: 「問題はフロレンティーノのフットボールのモデルだ」
+    narrator: キャスター
+    say:
+      - text: 'ラ・リーガの会長ハビエル・テバスが、レアル・マドリードとの応酬のなかで、関係は修復不能だと言い切りました。'
+        short_only: true
+      - voice: テバス
+        text: 問題はフロレンティーノのフットボールのモデルであり、我々はそのモデルを擁護しない
+      - voice: テバス
+        text: 将来、別の会長になれば、そのときに見てみよう
+      - voice: テバス
+        text: 今の首脳陣にはまったく同意できない。だがレアル・マドリードそのものに恨みはない
+      - voice: テバス
+        text: 子どもの頃からの私のチームだ
+    sources:
+      - https://www.marca.com/futbol/primera-division/2026/09/23/tebas-reaccionamos-ataques-seriamos-imbeciles.html
+  - id: why
+    heading: なぜ黙らないのか
+    tier: 報道
+    telop: 「反応しないなら、我々はバカ者だ」
+    narrator: キャスター
+    say:
+      - 黙っているべきではないか、という声にも答えました。
+      - voice: テバス
+        text: 私は12年ここにいて、今もここにいる
+      - voice: テバス
+        text: ラ・リーガを攻撃するとき、それは全クラブを攻撃している
+      - リーグそのものが歪められている、という批判にも答えました。
+      - voice: テバス
+        text: コンペティションが改ざんされていると言うのは理解できない
+      - voice: テバス
+        text: ラ・リーガ会長は黙っていなければならないと思うなら、これに反応しないなら、我々はバカ者ということになる
+    sources:
+      - https://www.marca.com/futbol/primera-division/2026/09/23/tebas-reaccionamos-ataques-seriamos-imbeciles.html

@@ -1,0 +1,94 @@
+date: 2026年9月24日
+slot: japan_1
+format: quote
+voice_min: 0.45
+people: [鈴木唯人]
+theme:
+  id: suzuki_yuito_freiburg
+  league: germany
+  league_name: ブンデスリーガ
+  kind: other
+  topic: フライブルク
+  title: '鈴木唯人、ブンデス開幕4戦4発。本人が挙げた理由はワールドカップだった'
+  hook: 12分しか出られなかった大会の話をしました。
+  question: なぜ今、点が取れているのか
+short_title: 鈴木唯人、4戦4発の理由
+thumbnail:
+  photo: ''
+  crest_main: [フライブルク]
+  line1: 開幕から4戦4発
+  line2: 本人が挙げたのはW杯の12分
+sections:
+  - id: what
+    heading: 何が起きているか
+    tier: 報道
+    telop: フライブルクの鈴木唯人が、開幕4試合で4得点
+    narrator: キャスター
+    say:
+      - フライブルクの鈴木唯人が、ブンデスリーガの**開幕4試合で4得点**しています。
+      - 代表の活動に合流したあと、この好調について本人が話しました。
+      - voice: 鈴木唯人
+        text: やり続けている結果として表れてきているのかなと思っています
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20260924/2208253.html
+  - id: why
+    main: true
+    heading: 本人が挙げた理由
+    tier: 報道
+    telop: 「ワールドカップがあったおかげで今こうなれている」
+    narrator: キャスター
+    say:
+      - text: 'フライブルクの鈴木唯人が、開幕4試合で4得点。その理由を本人が話しました。'
+        short_only: true
+      - voice: 鈴木唯人
+        text: 悔しいというか不完全燃焼に終わった
+      - 鈴木がワールドカップで立ったのは、**チュニジア戦の12分間だけ**でした。
+      - voice: 鈴木唯人
+        text: そのパワーをうまく今シーズンにつなげられていると思います
+      - voice: 鈴木唯人
+        text: ワールドカップがあったおかげで今、こうなれていることは間違いないので
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20260924/2208253.html
+  - id: next
+    heading: これから
+    tier: 報道
+    telop: 新しい代表でも、やり方は変えない
+    narrator: 解説
+    say:
+      - その鈴木は、いま日本代表に合流しています。森保一監督が三度目の指揮を執る、最初の試合です。相手はウルグアイ。
+      - 新しい始まりについて、鈴木はこう言いました。
+      - voice: 鈴木唯人
+        text: 特別ガラリと変わることはないと思うので
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20260924/2208253.html
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 4戦4発に、驚きと注文が並んだ
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 鈴木選手の決定力すごいねー
+      - voice: ネット民
+        text: 次のワールドカップのシャドーは確実に鈴木唯人
+      - voice: ネット民
+        text: 鈴木唯人はワールドカップで俺を使えよと言ってたけど伊達じゃなかったか
+      - voice: ネット民
+        text: 4節にしてもう昨シーズンのゴール数に並んでる
+      - voice: ネット民
+        text: アジアカップ前に2桁取っときたいな
+      - voice: ネット民
+        text: 乗りに乗っているとダイレクトボレーも決まる
+      - voice: ネット民
+        text: なんかひょっこりボレーよく決めるよね
+      - voice: ネット民
+        text: 鈴木唯人がW杯で万全だったら
+      - voice: ネット民
+        text: 正直、得点以外は微妙
+      - voice: ネット民
+        text: 周りとの関係の中で点は取れてるが
+      - voice: ネット民
+        text: 鈴木自身の仕掛けとかで攻撃にスイッチ入れられる訳じゃないから
+        short_voice: true
+    sources:
+      - https://footballnet.2chblog.jp/archives/60062179.html

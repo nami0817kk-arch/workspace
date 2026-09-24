@@ -1,0 +1,100 @@
+date: 2026年9月24日
+slot: premier_1
+format: news
+voice_min: 0.3
+people: [オマール・ベラダ, ジム・ラトクリフ]
+theme:
+  id: manutd_accounts
+  league: england
+  league_name: プレミアリーグ
+  kind: other
+  topic: マンチェスター・ユナイテッド
+  title: 'マンチェスター・ユナイテッド、記録的な収入。それでも残る1000億円超の負債'
+  hook: 同じ日に、ピッチの芝が売りに出されました。
+  question: 収入が過去最高なのに、何が苦しいのか
+short_title: マンU、記録的収入の裏で芝を売る
+thumbnail:
+  crest_main: [マンチェスター・ユナイテッド]
+  line1: 収入は過去最高。それでも
+  line2: 芝を1片125ポンドで売った
+sections:
+  - id: what
+    heading: 何が出たか
+    tier: 報道
+    telop: 負債は10億ポンド超。収入は過去最高の6億7700万ポンド
+    narrator: キャスター
+    card:
+      type: table
+      title: 2024-25シーズンの決算
+      columns: ['', '']
+      rows:
+        - [収入, 6億7700万ポンド（過去最高）]
+        - [営業利益, 2260万ポンド]
+        - [前の年, 1億1320万ポンドの赤字]
+        - [負債, 10億ポンド超]
+    say:
+      - マンチェスター・ユナイテッドが、水曜日に決算を出しました。
+      - 収入は**6億7700万ポンド**。クラブの記録です。日本円でおよそ1300億円になります。
+      - 営業利益は2260万ポンド。**前の年は赤字**でしたから、数字は大きく戻りました。
+      - 責任者のオマール・ベラダは、こう話しています。
+      - voice: オマール・ベラダ
+        text: 記録的な収入を挙げられてうれしい。この2年でやってきたことの強さと、その効きめを示している
+      - ただ、積み上がった**負債は10億ポンドを超えたまま**です。
+      - 去年の12月には13億ポンドを超えていたので、少しは減りました。それでも桁は変わっていません。
+    sources:
+      - https://www.marca.com/futbol/premier-league/2026/09/23/united-presenta-cuentas-deuda-mil-millones-vende-trozos-cesped-145-euros.html
+  - id: pitch
+    main: true
+    heading: 芝を売る
+    tier: 報道
+    telop: 芝の1片が125ポンド。前に売ったのは2012-13
+    narrator: 解説
+    say:
+      - text: 'マンチェスター・ユナイテッドは過去最高の収入を発表しましたが、負債は10億ポンドを超えたままです。'
+        short_only: true
+      - 売りに出したのは、夏に張り替えた**オールド・トラッフォードの芝**です。値段は**125ポンド**、日本円でおよそ2万5000円。
+      - 透明なガラスに封じ込め、スタジアムの写真と一緒に箱へ収めた形で届きます。
+      - クラブはこれを「ユナイテッドのファンへの完璧な贈り物」と呼んでいます。
+      - 前に芝を会員へ売ったのは、**2012年から13年のシーズン**でした。
+    sources:
+      - https://www.marca.com/futbol/premier-league/2026/09/23/united-presenta-cuentas-deuda-mil-millones-vende-trozos-cesped-145-euros.html
+  - id: why
+    heading: 何が起きているか
+    tier: 報道
+    telop: リーグは12位。夏の補強は1億5000万ポンド
+    narrator: キャスター
+    say:
+      - では、芝を売るクラブのピッチの上はどうか。プレミアリーグは**5試合で1勝、12位**です。
+      - リーグカップでは、オールド・トラッフォードで2対0とリードしながら**ブライトンに敗れました**。
+      - 夏に使ったのは**1億5000万ポンド**。バレバ、アンドレイ・サントス、ティーレマンスの3人です。
+      - 2024年のクリスマスにジム・ラトクリフが加わってから、クラブは人を減らし、待遇も削ってきました。**人件費は1年で1100万ポンド減っています**。
+      - スタジアムの周りには、すでにクラブの持ち主に抗議する人が集まっています。
+    sources:
+      - https://www.marca.com/futbol/premier-league/2026/09/23/united-presenta-cuentas-deuda-mil-millones-vende-trozos-cesped-145-euros.html
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 過去最高の収入を喜ぶ声は、ほとんど無かった
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: また借入金増えててワロタ。イネオスさぁ
+      - voice: ネット民
+        text: なんか現地はスポンサーに抗議して圧力かけようとしてんのか、だいぶうっぷん溜まってんな
+      - voice: ネット民
+        text: ラトクリフの功績ってキャリントン改修、新スタ建築計画、後はせいぜいコストカットぐらいか
+      - voice: ネット民
+        text: 何でコイツ、グレイザーを残してまで買収したんだよ
+      - voice: ネット民
+        text: 最早降格した方が後々のためになるんじゃないかと思えてきた
+      - voice: ネット民
+        text: ブランド価値下がってグレイザーも手放すだろうし
+      - voice: ネット民
+        text: ユナイテッドは復活はしない。落ちていくのを見守るだけ
+      - voice: ネット民
+        text: 3万の芝生買うの？
+      - voice: ネット民
+        text: 明けない夜はない。100年後とかには返り咲くさ
+        short_voice: true
+    sources:
+      - https://kizuna.5ch.io/test/read.cgi/football/1789920038/

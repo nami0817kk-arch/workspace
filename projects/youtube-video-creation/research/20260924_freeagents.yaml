@@ -1,0 +1,95 @@
+date: 2026年9月24日
+slot: world_5
+format: news
+voice_min: 0.3
+people: [ダビド・アラバ, 伊藤涼太郎, カリム・ベンゼマ]
+theme:
+  id: free_agents_31
+  league: italy
+  league_name: 移籍市場
+  kind: other
+  topic: 移籍市場
+  title: '移籍市場は閉じても、まだ31人が無所属のまま'
+  hook: いちばん高く見られているのは、サンチョです。
+  question: 誰が残っているのか
+short_title: まだ31人がフリーのまま
+thumbnail:
+  crest_main: [ユヴェントス]
+  line1: 市場は閉じた。それでも
+  line2: 31人が、まだ無所属
+sections:
+  - id: what
+    heading: 何が起きているか
+    tier: 報道
+    telop: 市場が閉じても、契約の無い選手は動ける
+    narrator: キャスター
+    say:
+      - 移籍市場は閉じました。ただ、**契約を持たない選手には関係ありません**。どのクラブとも、移籍金なしで契約できます。
+      - 今週も2人が決まりました。ダビド・アラバが**ウディネーゼ**へ、ネトが**ユヴェントス**へ。どちらもセリエAです。
+      - アラバはレアル・マドリードとの関係を終え、ネトはボタフォゴを出ていました。
+      - voice: ネット民
+        text: クラシックなファンタジスタだよなw
+    sources:
+      - https://www.abola.pt/noticias/alaba-e-neto-ja-nao-contam-mas-ainda-ha-31-craques-livres-no-mercado-fotos-2026092318472520722
+  - id: who
+    main: true
+    heading: 誰が残っているか
+    tier: 報道
+    telop: サンチョ、ベンゼマ、マフレズ…そして伊藤涼太郎
+    narrator: 解説
+    card:
+      type: table
+      title: 無所属のまま残っている選手
+      columns: [名前, 前所属, 市場価値]
+      rows:
+        - [ジェイドン・サンチョ, マンチェスター・ユナイテッド, 1800万ユーロ]
+        - [ジンチェンコ, アヤックス, 800万ユーロ]
+        - [伊藤涼太郎, シント＝トロイデン, 600万ユーロ]
+        - [ディアッタ, モナコ, 600万ユーロ]
+        - [ベンゼマ（38歳）, アル・ヒラル, 500万ユーロ]
+    say:
+      - text: '移籍市場は閉じましたが、契約を持たない選手はいまでも、どのクラブとも移籍金なしで契約できます。'
+        short_only: true
+      - 移籍金はかかりませんが、評価額は付いています。いちばん高いのは**ジェイドン・サンチョ**。マンチェスター・ユナイテッドを出て、1800万ユーロです。
+      - 左サイドバックの**ジンチェンコ**はアヤックスを出て、評価額は800万ユーロです。
+      - 3番目に出てくるのが、**日本の伊藤涼太郎**です。シント＝トロイデンを出た攻撃的MFで、600万ユーロ。
+      - "**カリム・ベンゼマは38歳**。アル・ヒラルとの契約を解除して、500万ユーロです。"
+      - ほかにも、バイエルンを出たゲレイロ、アル・アハリと契約を解除したマフレズ、レアル・マドリードを出た**カルバハル**が並びます。
+    sources:
+      - https://www.abola.pt/noticias/alaba-e-neto-ja-nao-contam-mas-ainda-ha-31-craques-livres-no-mercado-fotos-2026092318472520722
+  - id: why
+    heading: なぜ決まらないのか
+    tier: 背景
+    telop: 給与と出番。市場が閉じてからのほうが決まりやすい面もある
+    narrator: キャスター
+    say:
+      - 無償で獲れるのに決まらないのは、移籍金以外の条件が重いからです。
+      - 名前の大きい選手ほど、**給与と出番**の折り合いがつきません。
+      - 一方で、けが人が出たクラブにとっては、**市場が閉じたあとに動ける数少ない手**でもあります。
+      - ネトがユヴェントスへ向かったのは、**ゴールキーパーのグラバラがひざを痛めた**あとでした。
+    sources:
+      - https://www.abola.pt/noticias/alaba-e-neto-ja-nao-contam-mas-ainda-ha-31-craques-livres-no-mercado-fotos-2026092318472520722
+      - https://football-italia.net/done-deal-neto-will-be-new-juventus-goalkeeper/
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 日本人の名前が出ると、声が割れた
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: クラシックなファンタジスタだよなw
+      - voice: ネット民
+        text: ドイツあたりで拾ってくれないもんかね
+      - voice: ネット民
+        text: なんか上手くいかないもんだな、ベルギーで結構やれてたんじゃないのか？
+      - voice: ネット民
+        text: フリー移籍狙って契約更新しなかった選手をまた迎え入れるのか
+      - voice: ネット民
+        text: これは中々のクソダサムーブ
+      - voice: ネット民
+        text: 欧州で行き場をなくした日本人選手の駆け込み寺みたいになってるな
+      - voice: ネット民
+        text: メディカルで撥ねられた話が流れたら、もう移籍はほぼ無理よな
+        short_voice: true
+    sources:
+      - https://footballnet.2chblog.jp/archives/60064214.html

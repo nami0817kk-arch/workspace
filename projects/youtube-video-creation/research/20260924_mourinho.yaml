@@ -1,0 +1,132 @@
+date: 2026年9月24日
+slot: laliga_3
+format: news
+voice_min: 0.4
+people: [ジョゼ・モウリーニョ, フロレンティーノ・ペレス]
+theme:
+  id: mourinho_madrid_mission
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: レアル・マドリード
+  title: 'モウリーニョがレアル・マドリードで持っている、ベンチの外の権限'
+  hook: 本人は「マドリードのために来た」と言いました。
+  question: ベンチの外で何を任されているのか
+short_title: モウリーニョ、ベンチの外の仕事
+thumbnail:
+  crest_main: [レアル・マドリード]
+  line1: 「マドリードのために来た」
+  line2: 任されたのはベンチの外にもある
+sections:
+  - id: what
+    heading: どういう立場か
+    tier: 報道
+    telop: ファーガソンやヴェンゲルのような立場にある
+    narrator: キャスター
+    say:
+      - レアル・マドリードに戻ったジョゼ・モウリーニョは、ベンチの仕事だけを預かっているのではありません。
+      - 立場としては、**マンチェスター・ユナイテッドのファーガソンや、アーセナルのヴェンゲル**に近いものです。
+      - voice: モウリーニョ
+        text: 私はマドリードのために働きに来たのであって、マドリードで働きに来たのではない
+    sources:
+      - https://as.com/futbol/primera/la-mision-de-mourinho-en-el-madrid-trasciende-al-banquillo-f202609-n/
+  - id: power
+    main: true
+    heading: 任されている範囲
+    tier: 報道
+    telop: 広報・下部組織・人事・移籍の4つ
+    narrator: 解説
+    card:
+      type: table
+      title: ベンチの外で見ているもの
+      columns: ['', '']
+      rows:
+        - [広報, クラブの言葉を出す役]
+        - [下部組織, 一軍への橋渡し]
+        - [人事, 練習場の一軍スタッフ]
+        - [移籍, 市場の方針を監督する]
+    say:
+      - text: '二度目の就任です。モウリーニョがレアル・マドリードで預かっているのは、試合のことだけではありません。'
+        short_only: true
+      - 任されているのは4つです。**クラブの広報役、下部組織と一軍の橋渡し、練習場の一軍スタッフの人事、そして移籍市場の方針**。
+      - voice: モウリーニョ
+        text: 私の場合、ただ練習して試合をするという話ではない
+      - voice: モウリーニョ
+        text: 監督の仕事はもっと全体的なもので、クラブの構築に対してもっと大きな影響力を持つ
+      - voice: モウリーニョ
+        text: 練習をして、誰が出るかを選んで、交代を行う。それは私には少なすぎる。とても基本的なことだ
+    sources:
+      - https://as.com/futbol/primera/la-mision-de-mourinho-en-el-madrid-trasciende-al-banquillo-f202609-n/
+  - id: market
+    heading: 補強の変わり方
+    tier: 報道
+    telop: 30歳前後の選手を獲るようになった
+    narrator: キャスター
+    card:
+      type: table
+      title: 今季の補強（年齢）
+      columns: ['', '']
+      rows:
+        - [デュムフリース, 30歳]
+        - [コナテ, 27歳]
+        - [ククレジャ, 28歳]
+        - [ベルナルド・シウヴァ, 32歳]
+    say:
+      - 以前のレアル・マドリードでは、**30歳前後の選手にお金を使うことは考えられませんでした**。
+      - 今季はデュムフリース30歳、コナテ27歳、ククレジャ28歳、ベルナルド・シウヴァ32歳を獲っています。
+      - 一方で、**将来はあるが、今はまだ出番の少ない選手**も抱えています。マスタントゥオーノ、エンドリッキ、ギュレル、カレーラス、ハイセン。
+      - 下部組織については、前の移籍市場で**2億ユーロを超える売却益**を得ました。
+    sources:
+      - https://as.com/futbol/primera/la-mision-de-mourinho-en-el-madrid-trasciende-al-banquillo-f202609-n/
+  - id: vini
+    heading: ヴィニシウスのこと
+    tier: 報道
+    telop: ダービーで後半早々に交代。本人がSNSで不振を認めた
+    narrator: キャスター
+    say:
+      - 誰を使うかという話は、ひとりの選手にはっきり出ています。ヴィニシウス・ジュニオールです。
+      - 日曜のメトロポリターノでのダービー。**後半が始まってまもなく交代**しました。レアル・マドリードに来てから、いちばん重い90分だったはずです。
+      - 勝負がまだ決まっていない時間に下げられたのは、**初めてのことでした**。
+      - 本人も、自分のSNSで不振を認めました。
+      - "**モウリーニョはヴィニシウスを信頼しています。ただし、先発が保証されているわけではありません。**"
+      - このあとヴィニシウスは、ブラジル代表で2週間、オーストラリアとインドを回ります。
+    sources:
+      - https://as.com/futbol/primera/vinicius-busca-el-cambio-tras-tocar-fondo-f202609-n/
+  - id: past
+    heading: 1度目のときは
+    tier: 背景
+    telop: 23年の在任で、解任されなかった唯一の監督
+    narrator: 解説
+    say:
+      - 1度目の在任を振り返ります。モウリーニョは、フロレンティーノ・ペレスの23年の在任で**解任されなかった唯一の監督**です。3シーズンのあと、2013年に話し合って別れました。
+      - 1度目のとき、一軍に近づけた若手は30人近くいましたが、**公式戦に出たのは17人**でした。
+      - そこから根付いたのは、**ナチョとモラタ**の2人です。
+      - 練習場には、到着時刻の前倒し、食事の習慣、けがの処置、遅刻への罰則といった決まりを持ち込みました。
+    sources:
+      - https://as.com/futbol/primera/la-mision-de-mourinho-en-el-madrid-trasciende-al-banquillo-f202609-n/
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 交代を歓迎する声と、監督への不安が並んだ
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: これでヴィニ外せるならこれまでなんだったんだってなるな
+      - voice: ネット民
+        text: 2シーズン無駄になったわ
+      - voice: ネット民
+        text: ヴィニはなんでこんなに悪くなったんや
+      - voice: ネット民
+        text: エムバペはヴィニシウスより数字残しちゃってるから余計に外せないからな
+      - voice: ネット民
+        text: 半年も持つのか？　モウリーニョ
+      - voice: ネット民
+        text: 補強失敗・監督選び失敗・不要な契約延長。暗黒期の始まりって感じだな
+      - voice: ネット民
+        text: そもそもマドリー相手だとアトレティコはバフ掛かるからな
+      - voice: ネット民
+        text: それがサクッと勝つから意味わからないんだよな
+        short_voice: true
+    sources:
+      - https://kizuna.5ch.io/test/read.cgi/football/1789986617/
+      - https://worldfn.net/archives/63502075.html

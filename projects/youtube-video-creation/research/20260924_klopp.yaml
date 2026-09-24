@@ -1,0 +1,103 @@
+date: 2026年9月24日
+slot: world_1
+format: news
+voice_min: 0.35
+people: [ユルゲン・クロップ, シャビ・エルナンデス, ヨシュア・キミッヒ]
+theme:
+  id: klopp_germany_debut
+  league: germany
+  league_name: ネーションズリーグ
+  kind: other
+  topic: ドイツ代表
+  title: 'クロップのドイツ代表初陣。名簿を2つ作って臨む4試合'
+  hook: 初めての試合が、アムステルダムです。
+  question: なぜ名簿を2つ作ったのか
+short_title: クロップのドイツ、初陣はオランダ
+thumbnail:
+  crest_main: [ドイツ]
+  line1: 4年契約で就任、初陣は敵地
+  line2: 初陣の相手はシャビのオランダ
+sections:
+  - id: what
+    heading: 今夜、初めての試合
+    tier: 報道
+    telop: クロップのドイツ代表が、今夜オランダと戦う
+    narrator: キャスター
+    say:
+      - ユルゲン・クロップが率いるドイツ代表が、今夜アムステルダムでオランダと戦います。
+      - 就任は8月15日。ワールドカップのあとに退いたナーゲルスマンの後任で、**契約は4年**です。
+      - 相手のオランダも、シャビ・エルナンデスが就任したばかり。**どちらも初陣**になります。
+      - そのシャビについて、クロップは前日にこう言いました。
+      - voice: クロップ
+        text: オランダの選手のほうを、シャビより個人的によく知っている
+    sources:
+      - https://www.bundesliga.com/en/bundesliga/news/netherlands-germany-live-blog-nations-league-klopp-musiala-gakpo-van-dijk-39296
+      - https://onefootball.com/en/news/juergen-klopp-era-begins-for-germany-with-netherlands-nations-league-test-43509053
+  - id: squads
+    main: true
+    heading: 名簿を2つ作った
+    tier: 報道
+    telop: 22人の名簿を2つ。A代表未出場が16人
+    narrator: 解説
+    card:
+      type: table
+      title: クロップが組んだ日程
+      columns: ['', '']
+      rows:
+        - [9月, オランダ（敵地）]
+        - [10月, ギリシャ・セルビア]
+        - [名簿, 22人を2組]
+        - [未出場, 16人]
+    say:
+      - text: 'ユルゲン・クロップが8月にドイツ代表の監督に就き、今夜オランダとの初陣を迎えます。'
+        short_only: true
+      - ネーションズリーグは、9月と10月で**4試合**あります。オランダ、ギリシャと2度、そしてセルビア。
+      - クロップはこの4試合に、**22人ずつ、2つの名簿**を作りました。
+      - 理由は2つ挙げています。ひとりでも多くの選手を見ること。そして、**日程が詰まっていて、選手を休ませる必要があること**。
+      - 2つの名簿を合わせると、**A代表でまだ試合に出ていない選手が16人**入っています。
+    sources:
+      - https://www.bundesliga.com/en/bundesliga/news/jurgen-klopp-two-squads-debutants-germany-uefa-nations-league-39191
+  - id: said
+    heading: 監督と選手が言ったこと
+    tier: 報道
+    telop: クロップ「オランダの選手のほうをよく知っている」
+    narrator: キャスター
+    say:
+      - シャビについてのその言葉には、続きがあります。
+      - voice: クロップ
+        text: それが有利かどうかは分からないけれど、事実ではある
+      - ドイツの主将、ヨシュア・キミッヒは新しい監督についてこう話しています。
+      - voice: キミッヒ
+        text: 彼はたくさんのエネルギーと勢い、そして期待を持ち込んでくれた
+    sources:
+      - https://onefootball.com/en/news/i-know-more-dutch-players-personally-klopp-makes-cheeky-xavi-admission-ahead-of-germanys-clash-with-netherlands-43508324
+      - https://onefootball.com/en/news/he-brings-a-lot-of-energy-drive-and-anticipation-with-him-kimmich-feels-klopp-effect-ahead-of-netherlands-clash-43508703
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 2つの名簿と、初戦の相手に反応が集まった
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 2チーム制とか凄いな、こんなやり方初めて見たわ
+      - voice: ネット民
+        text: これ許されるん？
+      - voice: ネット民
+        text: とりあえずサネとか外して若手増えてよかった
+      - voice: ネット民
+        text: アデイェミ、ヴィルツ、ビショフ、エルマラのチームとかくそ楽しみだわ
+      - voice: ネット民
+        text: なんでバイアー呼ばれなかったか説明がほしいわ
+      - voice: ネット民
+        text: ハヴァーツのワントップやめてほしい。勝てる気がしない
+      - voice: ネット民
+        text: AとBにそれぞれ主力置いてるドイツだしネーションズだからお試し過ぎるけど
+      - voice: ネット民
+        text: 負けた方の監督めちゃくちゃ煽られそう
+      - voice: ネット民
+        text: 初戦がオランダというのが何ともまあ
+      - voice: ネット民
+        text: クロップいきなりガクポ、ファン・ダイク、フラーフェンベルフと再会するやん
+        short_voice: true
+    sources:
+      - https://kizuna.5ch.io/test/read.cgi/football/1789429953/

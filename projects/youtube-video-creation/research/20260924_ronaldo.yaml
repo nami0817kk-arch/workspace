@@ -1,0 +1,86 @@
+date: 2026年9月24日
+slot: world_3
+format: quote
+voice_min: 0.6
+people: [クリスティアーノ・ロナウド, ジョルジェ・ジェズス]
+theme:
+  id: ronaldo_retirement_thought
+  league: spain
+  league_name: ポルトガル代表
+  kind: other
+  topic: ポルトガル代表
+  title: 'クリスティアーノ・ロナウド、ワールドカップのあとに考えていたこと'
+  hook: 会見で、自分から切り出しました。
+  question: 大会のあと、何を考えていたのか
+short_title: ロナウド「引退を考えた」
+thumbnail:
+  crest_main: [ポルトガル]
+  line1: ワールドカップのあと
+  line2: 本人が明かした、迷いの中身
+sections:
+  - id: what
+    heading: どこでの話か
+    tier: 報道
+    telop: ウェールズ戦の前日、会見で語った
+    narrator: キャスター
+    say:
+      - ポルトガル代表のクリスティアーノ・ロナウドが、ウェールズ戦の前日に会見へ出ました。
+      - 会見場は満員でした。ロナウドは、夏の大会のあとに考えたことから話し始めます。
+      - voice: ロナウド
+        text: ワールドカップのあと、代表からの引退を考えた
+    sources:
+      - https://x.com/FabrizioRomano
+  - id: said
+    main: true
+    heading: 話したこと
+    tier: 報道
+    telop: 「会長と監督と話して、残った」
+    narrator: キャスター
+    say:
+      - text: 'クリスティアーノ・ロナウドが、ワールドカップのあと代表からの引退を考えたと明かしました。'
+        short_only: true
+      - voice: ロナウド
+        text: でも会長と、監督と話した。そして私はまだここにいる
+      - voice: ロナウド
+        text: 私は戦力だ。まだ力になれる
+      - 1000ゴールへの構え方も、自分から説明しています。
+      - voice: ロナウド
+        text: いまの使命は2つ。ネーションズリーグを勝つことと、通算1000ゴールに届くこと
+      - voice: ロナウド
+        text: 到達したいし、到達する。でも執念かと言われれば、違う
+      - voice: ロナウド
+        text: 執念でやることはない。執念になった瞬間、物事は思うように運ばなくなるから
+    sources:
+      - https://x.com/FabrizioRomano
+  - id: press
+    heading: 批判について
+    tier: 報道
+    telop: 「私を潰そうとしてきた人たちがいる」
+    narrator: キャスター
+    say:
+      - その報じられ方についても、自分から触れました。
+      - voice: ロナウド
+        text: 私を叩くのを楽しんでいる媒体があり、何年も私を潰そうとしてきたのはよく分かっている
+      - voice: ロナウド
+        text: でも、それがうまくいくことは決してない
+      - voice: ロナウド
+        text: 記憶に残るのは、私を好きでいてくれる人たちのほうだ
+      - 監督の判断には従う、とも話しています。
+      - voice: ロナウド
+        text: ポルトガルがもう私を必要としないなら、今日にでも離れられる。それで何の問題もない
+    sources:
+      - https://x.com/FabrizioRomano
+  - id: next
+    heading: 今夜の試合
+    tier: 報道
+    telop: ジェズス監督「彼は我々の象徴だ」
+    narrator: 解説
+    say:
+      - 代表を率いるのは、今季就いたばかりの**ジョルジェ・ジェズス**です。ロナウドがウェールズ戦に先発すると明言しました。
+      - voice: ジェズス
+        text: 彼は我々の象徴だ
+      - ロナウド自身は、4試合を15日で戦う日程に触れてこう言っています。
+      - voice: ロナウド
+        text: この4試合すべてで90分出ることはない。それは確かだ
+    sources:
+      - https://x.com/FabrizioRomano
