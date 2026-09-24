@@ -81,9 +81,9 @@ class SeasonReviewEngine {
           'Trophies: ${r.cupsWon.join(', ')}'));
     }
     final scorer = award?.topScorerName;
-    if (scorer != null) {
-      lines.add(Tr.pick('リーグ得点王: $scorer(${award!.topScorerGoals}得点)',
-          'League top scorer: $scorer (${award!.topScorerGoals})'));
+    if (award != null && scorer != null) {
+      lines.add(Tr.pick('リーグ得点王: $scorer(${award.topScorerGoals}得点)',
+          'League top scorer: $scorer (${award.topScorerGoals})'));
     }
     return lines;
   }
