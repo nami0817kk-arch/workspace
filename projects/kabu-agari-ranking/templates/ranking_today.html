@@ -8,18 +8,16 @@
 {% endblock %}
 {% block content %}
 <h1>本日の{{ heading }}</h1>
-<p class="updated">
-  最終更新: {{ rec_date_ja }}{% if next_update %} ／ {{ next_update }}{% endif %}
-</p>
+<p class="updated">{{ updated_line }}</p>
 {# 説明より先に表を出す。スマホでは前置きが長いだけで肝心の順位が画面の外に出る。 #}
 {% if summary %}<p class="summary">{{ summary }}{% if turnover %} {{ turnover }}{% endif %}</p>{% endif %}
+{% include "_ranking_table.html" %}
 {% if chart %}
 <figure class="chart-figure">
   {{ chart|safe }}
-  <figcaption>上位10銘柄の騰落率。全{{ rows|length }}銘柄の数値は下の表にあります。</figcaption>
+  <figcaption>上位10銘柄の騰落率を並べたもの。数値は上の表にあります。</figcaption>
 </figure>
 {% endif %}
-{% include "_ranking_table.html" %}
 {% include "_ad_slot.html" %}
 {% if trend_chart %}
 <h2>最近の相場の荒さ</h2>

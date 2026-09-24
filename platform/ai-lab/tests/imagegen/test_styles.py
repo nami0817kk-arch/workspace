@@ -34,6 +34,19 @@ def test_builtin_styles_are_usable():
         assert description and prompt
 
 
+def test_builtin_styles_stay_short():
+    """指定は3〜4語まで。長いと主題を押しのけて消す（2026-09-01 実測）。"""
+    for name, (_description, prompt) in styles.BUILTIN_STYLES.items():
+        phrases = [part for part in prompt.split(",") if part.strip()]
+        assert len(phrases) <= styles.MAX_STYLE_PHRASES, f"{name} の指定が長すぎます"
+
+
+def test_icon_style_points_at_iconify():
+    """単純な物体の生成は直せないので、取ってくる先を説明に書いておく。"""
+    description, _prompt = styles.BUILTIN_STYLES["icon"]
+    assert "iconify" in description
+
+
 def test_user_styles_can_be_added(tmp_path, monkeypatch):
     path = tmp_path / "styles.json"
     path.write_text(json.dumps({"ukiyoe": "浮世絵風、木版画の質感"}), encoding="utf-8")
