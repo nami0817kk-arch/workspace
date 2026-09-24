@@ -10,6 +10,7 @@ import json
 from pathlib import Path
 
 SNAPSHOT_FIELDS = ["date", "item_code", "price", "point_rate",
+                   "free_shipping", "in_stock",
                    "review_count", "review_average"]
 
 
@@ -30,6 +31,8 @@ def write_snapshot(data_dir: Path, day: str, items: list[dict]) -> Path:
                 "item_code": item["item_code"],
                 "price": item["price"],
                 "point_rate": item.get("point_rate", 1),
+                "free_shipping": int(bool(item.get("free_shipping"))),
+                "in_stock": int(bool(item.get("in_stock", True))),
                 "review_count": item.get("review_count", 0),
                 "review_average": item.get("review_average", 0),
             })

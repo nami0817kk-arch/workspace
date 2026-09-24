@@ -741,3 +741,63 @@ class ItemPageTest(unittest.TestCase):
 
         self.assertIn("<svg", svg)
         self.assertIn("polyline", svg)
+
+
+class ShippingAndStockTest(unittest.TestCase):
+    """送料と在庫。買うかどうかに直結するのに記録していなかった。"""
+
+    def setUp(self):
+        from src import rakuten, theme
+        self.rakuten = rakuten
+        self.theme = theme
+
+    def parse(self, **kw):
+        item = {"itemCode": "a", "itemPrice": 1000, "itemName": "X"}
+        item.update(kw)
+        return self.rakuten.parse_items({"Items": [item]})[0]
+
+    def test_postageFlagの0は送料込み(self):
+        self.assertTrue(self.parse(postageFlag=0)["free_shipping"])
+        self.assertFalse(self.parse(postageFlag=1)["free_shipping"])
+
+    def test_在庫の有無を読む(self):
+        self.assertTrue(self.parse(availability=1)["in_stock"])
+        self.assertFalse(self.parse(availability=0)["in_stock"])
+
+    def test_値が無ければ送料別_在庫なしに倒す(self):
+        # 分からないものを「送料無料」と表示すると誤解を与える
+        row = self.parse()
+        self.assertFalse(row["free_shipping"])
+        self.assertFalse(row["in_stock"])
+
+    def test_送料無料と在庫切れを表示する(self):
+        self.assertIn("送料無料", self.theme.conditions({"free_shipping": True}))
+        self.assertIn("在庫切れ", self.theme.conditions({"in_stock": False}))
+        self.assertEqual(self.theme.conditions({"in_stock": True}), "")
+
+    def test_下げ幅を円でも出す(self):
+        # 高額品は率が小さくても金額は大きい
+        row = {"item_code": "a", "name": "テレビ", "price": 90000, "prev": 100000,
+               "drop_pct": 0.1, "dropped": True, "days": 10, "at_low": False,
+               "near_low": False, "label": "値下がり", "image": "", "shop": "店"}
+
+        html = self.theme.card(row)
+
+        self.assertIn("10,000円", html)
+
+    def test_日次の記録に送料と在庫が残る(self):
+        import csv
+        import gzip
+        import tempfile
+        from pathlib import Path
+        from src import store
+
+        with tempfile.TemporaryDirectory() as tmp:
+            store.write_snapshot(Path(tmp), "2026-09-24",
+                                 [{"item_code": "a", "price": 100, "point_rate": 1,
+                                   "free_shipping": True, "in_stock": False}])
+            rows = list(csv.DictReader(gzip.open(
+                store.snapshot_path(Path(tmp), "2026-09-24"), "rt", encoding="utf-8")))
+
+        self.assertEqual(rows[0]["free_shipping"], "1")
+        self.assertEqual(rows[0]["in_stock"], "0")

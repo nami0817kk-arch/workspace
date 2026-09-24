@@ -204,6 +204,16 @@ def point_note(row: dict) -> str:
             f'<span class="eff">実質 {yen(row["eff_price"])}<small>（目安）</small></span>')
 
 
+def conditions(row: dict) -> str:
+    """送料と在庫。買うかどうかの判断に直結するのに出していなかった。"""
+    marks = []
+    if row.get("free_shipping"):
+        marks.append('<span class="cond free">送料無料</span>')
+    if row.get("in_stock") is False:
+        marks.append('<span class="cond out">在庫切れ</span>')
+    return "".join(marks)
+
+
 def badge(row: dict) -> str:
     if row["at_low"]:
         cls = "low"
@@ -244,7 +254,9 @@ def card(row: dict, prefix: str = "", eager: bool = False) -> str:
     href = f'{prefix}item/{slug(row["item_code"])}/'
     change = ""
     if row["dropped"]:
-        change = (f'<span class="down">▼{pct(row["drop_pct"])}</span>'
+        cut = int(row["prev"]) - int(row["price"])
+        change = (f'<span class="down">▼{pct(row["drop_pct"])}'
+                  f'<small>（{cut:,}円）</small></span>'
                   f'<span class="was">{yen(row["prev"])} → </span>')
     elif row.get("rise_pct"):
         # 値上がりも同じ形で出す。下がったときだけ変化を見せると、
@@ -259,11 +271,12 @@ def card(row: dict, prefix: str = "", eager: bool = False) -> str:
            if row.get("image") else '<span class="noimg"></span>')
     return f"""<li class="card" data-price="{row["price"]}" data-drop="{row.get("drop_pct", 0):.4f}"
     data-days="{row.get("days", 0)}" data-eff="{row.get("eff_price") or row["price"]}"
-    data-code="{esc(row["item_code"])}">
+    data-code="{esc(row["item_code"])}" data-free="{1 if row.get("free_shipping") else 0}"
+    data-stock="{0 if row.get("in_stock") is False else 1}">
   <a class="thumb" href="{href}">{img}</a>
   <div class="body">
     <a class="name" href="{href}" title="{esc(row["name"])}">{esc(short_name(row["name"]))}</a>
-    <p class="price">{change}<strong>{yen(row["price"])}</strong> {badge(row)}</p>
+    <p class="price">{change}<strong>{yen(row["price"])}</strong> {badge(row)}{conditions(row)}</p>
     <p class="point-line">{point_note(row)}</p>
     <p class="meta">{esc(row.get("shop", ""))}{history_note(row)}
       <button class="watch-mini" type="button" data-code="{esc(row["item_code"])}"
@@ -500,6 +513,8 @@ LIST_TOOLS = """
     <option value="eff">実質が安い順</option>
     <option value="-days">記録が長い順</option>
   </select></label>
+  <label class="check"><input type="checkbox" id="freeonly"> 送料無料だけ</label>
+  <label class="check"><input type="checkbox" id="instock"> 在庫ありだけ</label>
   <label>価格帯 <select id="range">
     <option value="">すべて</option>
     <option value="0-3000">3,000円まで</option>
@@ -532,7 +547,10 @@ document.addEventListener('DOMContentLoaded', function () {
     var hi = r.length > 1 && r[1] ? parseFloat(r[1]) : Infinity;
     var keep = all.filter(function (li) {
       var p = num(li, 'price');
-      return p >= lo && p <= hi;
+      if (p < lo || p > hi) { return false; }
+      if (freeonly.checked && li.dataset.free !== '1') { return false; }
+      if (instock.checked && li.dataset.stock === '0') { return false; }
+      return true;
     });
     var key = sort.value;
     if (key) {
@@ -546,24 +564,33 @@ document.addEventListener('DOMContentLoaded', function () {
     keep.forEach(function (li) { list.appendChild(li); });
     shown.textContent = keep.length === all.length
       ? '' : keep.length + ' / ' + all.length + ' 件を表示';
-    reset.hidden = !(sort.value || range.value);
+    reset.hidden = !(sort.value || range.value || freeonly.checked || instock.checked);
     // 並びと価格帯を URL に残す。共有したときに同じ画面が出る。
     var p = new URLSearchParams();
     if (sort.value) { p.set('sort', sort.value); }
     if (range.value) { p.set('range', range.value); }
+    if (freeonly.checked) { p.set('free', '1'); }
+    if (instock.checked) { p.set('stock', '1'); }
     var s = p.toString();
     history.replaceState(null, '', s ? '?' + s : location.pathname);
   }
 
   if (q.get('sort')) { sort.value = q.get('sort'); }
   if (q.get('range')) { range.value = q.get('range'); }
+  if (q.get('free')) { freeonly.checked = true; }
+  if (q.get('stock')) { instock.checked = true; }
+  var freeonly = document.getElementById('freeonly');
+  var instock = document.getElementById('instock');
   var reset = document.getElementById('reset');
   reset.addEventListener('click', function () {
-    sort.value = ''; range.value = ''; apply();
+    sort.value = ''; range.value = '';
+    freeonly.checked = false; instock.checked = false; apply();
   });
   sort.addEventListener('change', apply);
   range.addEventListener('change', apply);
-  if (q.get('sort') || q.get('range')) { apply(); }
+  freeonly.addEventListener('change', apply);
+  instock.addEventListener('change', apply);
+  if (q.get('sort') || q.get('range') || q.get('free') || q.get('stock')) { apply(); }
 });
 </script>
 """
@@ -853,6 +880,13 @@ var PTWatch = (function () {
     save(o);
     return o;
   }
+  function setTarget(code, target) {
+    var o = read();
+    if (!o[code]) { return o; }
+    if (target > 0) { o[code].t = target; } else { delete o[code].t; }
+    save(o);
+    return o;
+  }
   function count() { return Object.keys(read()).length; }
   document.addEventListener('DOMContentLoaded', function () {
     // ナビに件数を出す。何件見守っているか分からないと戻る動機にならない。
@@ -862,7 +896,7 @@ var PTWatch = (function () {
       a.textContent = '見守り ' + n;
     });
   });
-  return {read: read, toggle: toggle, count: count};
+  return {read: read, toggle: toggle, count: count, setTarget: setTarget};
 })();
 </script>
 """
@@ -870,6 +904,12 @@ var PTWatch = (function () {
 WATCH_BUTTON = """
 <p class="watch"><button id="watch" type="button" data-code="{code}" data-price="{price}">見守る</button>
 <span class="note">端末に保存します。<a href="{prefix}watch/">見守り中の一覧</a></span></p>
+<p class="target" id="targetbox" hidden>
+  <label>この値段以下になったら知りたい
+    <input id="target" type="number" inputmode="numeric" min="0" step="100"
+           placeholder="例 {price}"></label>
+  <span class="note">次に見守り一覧を開いたとき、達したものを先頭に出します。</span>
+</p>
 <script>
 (function () {
   var btn = document.getElementById('watch');
@@ -878,9 +918,20 @@ WATCH_BUTTON = """
     btn.textContent = on ? '見守りを外す' : '見守る';
     btn.classList.toggle('on', on);
   }
-  draw(PTWatch.read());
+  var box = document.getElementById('targetbox');
+  var input = document.getElementById('target');
+  function sync(store) {
+    draw(store);
+    var on = !!store[btn.dataset.code];
+    box.hidden = !on;
+    if (on && store[btn.dataset.code].t) { input.value = store[btn.dataset.code].t; }
+  }
+  sync(PTWatch.read());
   btn.addEventListener('click', function () {
-    draw(PTWatch.toggle(btn.dataset.code, parseInt(btn.dataset.price, 10)));
+    sync(PTWatch.toggle(btn.dataset.code, parseInt(btn.dataset.price, 10)));
+  });
+  input.addEventListener('change', function () {
+    PTWatch.setTarget(btn.dataset.code, parseInt(input.value, 10) || 0);
   });
 })();
 </script>
@@ -915,12 +966,18 @@ def watch_page(site: dict, canonical: str, updated: str) -> str:
   note.textContent = '読み込んでいます…';
   fetch('../search-index.json').then(function (r) { return r.json(); }).then(function (data) {
     var hits = data.filter(function (r) { return store[r[3]]; }).map(function (r) {
-      var was = store[r[3]].p || 0;
-      return {slug: r[0], name: r[1], now: r[2], was: was,
-              diff: was ? (was - r[2]) / was : 0, since: store[r[3]].d || ''};
+      var e = store[r[3]];
+      var was = e.p || 0;
+      return {slug: r[0], name: r[1], now: r[2], was: was, target: e.t || 0,
+              hit: e.t ? r[2] <= e.t : false,
+              diff: was ? (was - r[2]) / was : 0, since: e.d || ''};
     });
-    hits.sort(function (a, b) { return b.diff - a.diff; });
-    note.textContent = hits.length + '件';
+    // 目標に達したものを先に。次が下げ幅の大きい順。
+    hits.sort(function (a, b) { return (b.hit - a.hit) || (b.diff - a.diff); });
+    var reached = hits.filter(function (h) { return h.hit; }).length;
+    note.textContent = reached
+      ? hits.length + '件のうち ' + reached + '件が目標の値段に達しています'
+      : hits.length + '件';
     out.textContent = '';
     hits.forEach(function (h) {
       var li = document.createElement('li');
@@ -948,6 +1005,13 @@ def watch_page(site: dict, canonical: str, updated: str) -> str:
         p.textContent = h.now.toLocaleString() + '円';
       }
       li.appendChild(p);
+      if (h.hit) {
+        li.classList.add('reached');
+        var t = document.createElement('span');
+        t.className = 'badge low';
+        t.textContent = '目標 ' + h.target.toLocaleString() + '円 に到達';
+        li.appendChild(t);
+      }
       if (h.since) {
         var s = document.createElement('span');
         s.className = 'since';

@@ -103,6 +103,25 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 .badge.low { color: var(--low); } .badge.near { color: var(--near); }
 .badge.drop { color: var(--down); } .badge.flat { color: var(--flat); }
 
+/* 送料と在庫。買うかどうかに直結するので、判定と並べて出す。 */
+.cond { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px;
+  font-size: 12px; white-space: nowrap; }
+.cond.free { color: var(--low); border: 1px solid currentColor; }
+.cond.out { color: var(--down); border: 1px solid currentColor; }
+
+.tools .check { display: flex; align-items: center; gap: 6px; font-size: 13px;
+  color: var(--ink); white-space: nowrap; }
+.tools .check input { width: 18px; height: 18px; }
+
+/* 目標の値段。通知は出せないので、次に来たときに拾えるようにする。 */
+.target { margin: 6px 0 14px; font-size: 14px; }
+.target label { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.target input { width: 130px; padding: 7px 10px; font-size: 15px; color: var(--ink);
+  background: var(--panel); border: 1px solid var(--line); border-radius: 8px; }
+.target .note { display: block; margin-top: 4px; }
+.hit.reached { background: color-mix(in srgb, var(--low) 8%, transparent); }
+.down small { font-weight: 400; font-size: 12px; }
+
 /* いまの価格が履歴のどこにあるかを一文で。高いときは高いと書く。 */
 .verdict { margin: 0 0 14px; font-size: 15px; color: var(--ink); }
 

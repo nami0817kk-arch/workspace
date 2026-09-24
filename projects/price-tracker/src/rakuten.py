@@ -139,6 +139,10 @@ def parse_items(payload: dict) -> list[dict]:
             # 動く商品は1日0.31%しかない一方、ポイント2倍以上の商品は27%あった。
             # 実質いくらかを出すために倍率も記録する。
             "point_rate": _point_rate(item),
+            # 送料と在庫は買うかどうかの判断に直結する。楽天は返しているのに
+            # 記録していなかった。postageFlag は 0=送料込み、1=送料別。
+            "free_shipping": str(item.get("postageFlag", "")).strip() == "0",
+            "in_stock": int(item.get("availability") or 0) == 1,
         })
     return out
 
