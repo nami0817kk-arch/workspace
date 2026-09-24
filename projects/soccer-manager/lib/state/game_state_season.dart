@@ -1206,5 +1206,8 @@ extension GameStateSeason on GameState {
     isBusy = false;
     _notify();
     await _persistNow();
+    // シーズンの切り替わりは区切りになる。ここで控えを取り直しておくと、
+    // セーブが壊れても失うのは1シーズン以内で済む。
+    await refreshSaveBackup();
   }
 }
