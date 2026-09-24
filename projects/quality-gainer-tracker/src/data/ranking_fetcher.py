@@ -113,6 +113,7 @@ def _kdragon_page_date(html: str) -> str | None:
 # HTML の取得・解析は 共有パッケージ kabutan-client に一本化してある
 # （kabu-agari-ranking と共通）。構造の変化は kabutan-client 側で直す。
 from kabutan import MARKETS as _KABUTAN_MARKETS  # noqa: E402
+from kabutan import extract_asof_date as _lib_extract_asof_date  # noqa: E402
 from kabutan import MODE_GAINERS as _MODE_GAINERS  # noqa: E402
 from kabutan import fetch_ranking_html as _lib_fetch_ranking_html  # noqa: E402
 from kabutan import fetch_stock_name as _lib_fetch_stock_name  # noqa: E402
@@ -157,11 +158,20 @@ def _fill_names_kabutan(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def _fetch_kabutan(top_n: int = 50) -> pd.DataFrame:
-    """kabutan.jp 3市場を集約して上位 top_n を返す。記録日=今日。"""
+    """kabutan.jp 3市場を集約して上位 top_n を返す。
+
+    記録日は**実行日ではなくページ上の終値日**にする。記録日は d01〜d14
+    （n営業日後の終値）の起点なので、1日ずれると追跡の検証が丸ごと狂う。
+    休場日や大引け前に回すと、実行日と終値日は普通にずれる。
+    ページから読めなかったときだけ実行日に落とす。
+    """
     all_rows = []
+    asof_date = None
     for market in _KABUTAN_MARKETS:
         html = _kabutan_fetch_market(market)
         if html:
+            if asof_date is None:
+                asof_date = _lib_extract_asof_date(html)
             df_m = _kabutan_parse(html)
             if not df_m.empty:
                 all_rows.append(df_m)
@@ -181,7 +191,9 @@ def _fetch_kabutan(top_n: int = 50) -> pd.DataFrame:
     # スタンダード/グロース銘柄の名前を kabutan 個別ページで補完
     df = _fill_names_kabutan(df)
 
-    df["記録日"] = str(date.today())
+    if asof_date is None:
+        print("  [WARN] ページから終値日を読めませんでした。実行日を記録日にします。")
+    df["記録日"] = asof_date or str(date.today())
     return df
 
 
