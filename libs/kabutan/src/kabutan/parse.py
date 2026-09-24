@@ -5,6 +5,7 @@
 """
 from __future__ import annotations
 
+import io
 import re
 
 import pandas as pd
@@ -97,3 +98,35 @@ def parse_ranking_table(html: str) -> pd.DataFrame:
             continue
 
     return pd.DataFrame(rows) if rows else pd.DataFrame()
+
+
+def parse_daily_prices(html: str) -> pd.DataFrame:
+    """個別銘柄の「日々株価（日足）」ページを DataFrame にする。
+
+    ランキングは当日分しか出ないので、**過去の相場日を確かめられる唯一の窓口**が
+    この表になる（終値と前日比が日付つきで並んでいる）。
+    保存済みデータの日付が疑わしいとき、同じ数字がある日を探して照合する。
+
+    Returns:
+        columns: date（YYYY-MM-DD）, close, change_pct
+        表が無ければ空の DataFrame。
+    """
+    try:
+        # flavor を指定しないと、表が無いときに html5lib を探しに行って
+        # ImportError になる（依存を増やさないため lxml に固定する）。
+        tables = pd.read_html(io.StringIO(html), flavor="lxml")
+    except ValueError:
+        return pd.DataFrame()
+
+    for table in tables:
+        columns = [str(c) for c in table.columns]
+        if not any("日付" in c for c in columns):
+            continue
+        out = pd.DataFrame({
+            # ページは「26/09/18」の2桁年。西暦に直す。
+            "date": "20" + table["日付"].astype(str).str.replace("/", "-", regex=False),
+            "close": pd.to_numeric(table["終値"], errors="coerce"),
+            "change_pct": pd.to_numeric(table["前日比％"], errors="coerce"),
+        })
+        return out.dropna(subset=["close"]).reset_index(drop=True)
+    return pd.DataFrame()

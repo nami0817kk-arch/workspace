@@ -14,6 +14,10 @@ data/ のファイル名（＝ rec_date）が本当にその日の相場なの�
 
 読み替えは render.DATE_CORRECTIONS に入れてある。
 
+HTML の取得と解析は共有パッケージ kabutan-client に置いた
+（構造が変わったときに直す場所を1つにするため）。ここにあるのは、
+保存済みデータと突き合わせる手順だけ。
+
 使い方（先方に負荷をかけないよう、1銘柄ごとに間を空ける）:
 
     python tools/verify_rec_date.py 2026-08-31 2026-09-01
@@ -23,19 +27,17 @@ data/ のファイル名（＝ rec_date）が本当にその日の相場なの�
 """
 from __future__ import annotations
 
-import io
 import json
 import sys
 import time
 from pathlib import Path
 
 import pandas as pd
-import requests
-from kabutan.client import HEADERS
+from kabutan import fetch_daily_html, parse_daily_prices
 
 _DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
-# 1銘柄あたりの照合に使う日足のページ数（1ページでおよそ1か月）
+# 1銘柄あたりに見る日足のページ数（1ページでおよそ1か月）
 _PAGES = 2
 # 先方への間隔。ランキング取得と同じ程度に抑える。
 _SLEEP = 1.5
@@ -46,17 +48,15 @@ _SAMPLES = 3
 def daily_prices(code: str) -> pd.DataFrame:
     frames = []
     for page in range(1, _PAGES + 1):
-        url = f"https://kabutan.jp/stock/kabuka?code={code}&ashi=day&page={page}"
-        resp = requests.get(url, headers=HEADERS, timeout=30)
-        resp.raise_for_status()
-        for table in pd.read_html(io.StringIO(resp.text)):
-            if any("日付" in str(c) for c in table.columns):
-                frames.append(table)
-                break
+        html = fetch_daily_html(code, page=page)
+        if html:
+            df = parse_daily_prices(html)
+            if not df.empty:
+                frames.append(df)
         time.sleep(_SLEEP)
-    df = pd.concat(frames, ignore_index=True).drop_duplicates("日付")
-    df["日付"] = "20" + df["日付"].astype(str).str.replace("/", "-", regex=False)
-    return df
+    if not frames:
+        return pd.DataFrame()
+    return pd.concat(frames, ignore_index=True).drop_duplicates("date")
 
 
 def verify(rec_date: str) -> list[str]:
@@ -68,8 +68,11 @@ def verify(rec_date: str) -> list[str]:
         pct = float(row.get("change_pct", row.get("gain_pct")))
         close = float(row["close"])
         df = daily_prices(row["code"])
-        hit = df[(df["終値"] == close) & (df["前日比％"].round(2) == round(pct, 2))]
-        dates = hit["日付"].tolist()
+        if df.empty:
+            print(f"  {row['code']} {row['name'][:12]:14s} 日足を取得できませんでした")
+            continue
+        hit = df[(df["close"] == close) & (df["change_pct"].round(2) == round(pct, 2))]
+        dates = hit["date"].tolist()
         print(f"  {row['code']} {row['name'][:12]:14s} 終値{close:>9,.0f} {pct:+6.2f}% → "
               f"{dates or '該当なし'}")
         found.extend(dates)
