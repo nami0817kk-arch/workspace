@@ -444,5 +444,30 @@ void main() {
       // 手動での回答を求められ、TestFlight への配信が止まる。
       expect(plist, contains('ITSAppUsesNonExemptEncryption'));
     });
+
+    test('iOSが対応言語に日本語を宣言している', () {
+      // 宣言しないとストアの「言語」欄が英語だけになる。日本語で遊べるのに
+      // 英語アプリに見えるので、1.0 の公開後に実際に取りこぼしていた。
+      final plist = File('ios/Runner/Info.plist').readAsStringSync();
+      expect(plist, contains('CFBundleLocalizations'),
+          reason: '対応言語が宣言されていない');
+      final block = plist.split('CFBundleLocalizations')[1].split('</array>')[0];
+      expect(block, contains('<string>ja</string>'), reason: '日本語が入っていない');
+      expect(block, contains('<string>en</string>'), reason: '英語が入っていない');
+    });
+
+    test('iOSがSKAdNetworkの広告ネットワークを宣言している', () {
+      // ここに載っていないネットワークからはインストール計測の通知が届かない。
+      // 計測できない在庫は入札が下がるので、収益に直接効く。
+      final plist = File('ios/Runner/Info.plist').readAsStringSync();
+      expect(plist, contains('SKAdNetworkItems'), reason: 'SKAdNetworkの宣言が無い');
+
+      final count = RegExp(r'\.skadnetwork<').allMatches(plist).length;
+      expect(count, greaterThanOrEqualTo(40),
+          reason: '宣言が $count 件しかない。AdMob の一覧から減っていないか確認する');
+
+      // AdMob 自身のID。これが落ちると自社の広告すら計測できない。
+      expect(plist, contains('cstr6suwn9.skadnetwork'));
+    });
   });
 }
