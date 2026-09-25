@@ -35,6 +35,7 @@ import 'scout_report_screen.dart';
 import 'start_screen.dart';
 import 'youth_intake_screen.dart';
 import '../logic/match_factor_engine.dart';
+import '../logic/board_target_progress.dart';
 import '../logic/prematch_check.dart';
 import '../models/club_vision.dart';
 import '../models/preseason_camp.dart';
@@ -123,6 +124,35 @@ class HomeScreen extends StatelessWidget {
                             '目標: ${save.boardTargetRank}位以内${gameState.boardCupTargetLabel != null ? '・カップ${gameState.boardCupTargetLabel}進出' : ''}',
                             "Target: top ${save.boardTargetRank}${gameState.boardCupTargetLabel != null ? ' • reach the ${gameState.boardCupTargetLabel} in the cup' : ''}"),
                         style: TextStyle(color: scheme.onSurfaceVariant),
+                      ),
+                      // 目標だけでは、いま届いているのかが分からない。
+                      // 順位・勝点差・残り節数を添えて、あと何が要るかを言う。
+                      Builder(
+                        builder: (context) {
+                          final progress =
+                              BoardTargetProgressEngine.evaluate(
+                            league: league,
+                            userTeamId: save.userTeamId,
+                            targetRank: save.boardTargetRank,
+                            matchdaysLeft:
+                                gameState.remainingMatchdaysThisSeason,
+                          );
+                          if (progress == null) return const SizedBox.shrink();
+                          return Padding(
+                            padding: const EdgeInsets.only(top: 2),
+                            child: Text(
+                              progress.label,
+                              style: TextStyle(
+                                fontSize: 12,
+                                color: progress.onTrack && !progress.tight
+                                    ? SemanticColors.positive(context)
+                                    : progress.tight
+                                        ? SemanticColors.negative(context)
+                                        : scheme.onSurfaceVariant,
+                              ),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
