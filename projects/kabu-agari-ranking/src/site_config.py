@@ -11,7 +11,7 @@ import os
 
 # 末尾のスラッシュは付けない（URL の組み立て側で付ける）。
 # 環境変数があればそちらを優先する（本番と手元で別ドメインを見たいときのため）。
-SITE_URL = os.environ.get("KABU_SITE_URL", "https://kabu-agari-ranking.pages.dev").rstrip("/")
+SITE_URL = os.environ.get("KABU_SITE_URL", "https://kabu.dailyquarry.com").rstrip("/")
 
 # Search Console の所有確認タグ。**ドメインごとに値が変わる**。
 # 新しいドメインを Search Console に登録したら、ここを差し替えるか、

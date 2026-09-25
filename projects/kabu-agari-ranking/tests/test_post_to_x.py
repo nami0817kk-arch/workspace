@@ -59,7 +59,7 @@ def test_Xの数え方():
     assert post_to_x.weighted_length("あいう") == 6        # 日本語は2文字
     # URL は長さによらず23文字
     short = post_to_x.weighted_length("https://a.jp/x")
-    long = post_to_x.weighted_length("https://kabu-agari-ranking.pages.dev/archive/gainers/2026-09-18")
+    long = post_to_x.weighted_length("https://example.com/archive/gainers/2026-09-18")
     assert short == long == 23
 
 
@@ -72,7 +72,8 @@ def test_上限を超えたら後ろから削る():
     payload["rec_date"] = "2026-09-18"
     text = post_to_x._build_tweet(payload)
     assert post_to_x.weighted_length(text) <= 280
-    assert "kabu-agari-ranking" in text, "URL は最後まで残す"
+    # ドメイン名ではなく公開設定を見る。移転のたびにテストが落ちるのを避ける。
+    assert post_to_x.SITE_URL in text, "URL は最後まで残す"
 
 
 def test_銘柄名は途中で切る():
