@@ -278,7 +278,8 @@ void main() {
       final assist = m.current.options
           .where((o) => o.outcome == Outcome.assist)
           .toList();
-      if (assist.isEmpty) return;
+      // 無ければ素通りではなく、落として知らせる。
+      expect(assist, isNotEmpty, reason: '味方を活かす手が局面に出ていない');
       m.choose(assist.first);
       expect(m.assistAttempts, 1);
       expect(m.finish().assistAttempts, 1);
