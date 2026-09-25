@@ -1035,6 +1035,24 @@ void main() {
     // 局面がピッチの絵になっていて、その場所が言葉でも添えてある。
     expect(find.byType(PitchView), findsOneWidget);
     expect(find.text(match.current.spot.label), findsOneWidget);
+
+    // **局面のカードは、スクロールできる枠の3分の2までに収める。**
+    // ここが太ると、3つの手が丸ごと画面の外に出る——実測で
+    // 433px（枠の81%）あった頃は、18の手のうち16が外に出ていた
+    // （`test/scroll_sim.dart` の「match screen fold」）。
+    // カードを1行増やすのは安いので、放っておくと静かに伸びる。
+    final view = tester.renderObject<RenderBox>(
+      find.byType(SingleChildScrollView).first,
+    );
+    final card = tester.renderObject<RenderBox>(
+      find.descendant(of: find.byType(Card), matching: find.byType(PitchView)),
+    );
+    final cardBox = card.parent! as RenderBox;
+    expect(
+      cardBox.size.height,
+      lessThan(view.size.height * 2 / 3),
+      reason: '局面のカードが枠の3分の2を超えている',
+    );
   });
 
   testWidgets('シーズン終了の画面が、スマホの幅で崩れない', (tester) async {
