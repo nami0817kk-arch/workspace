@@ -159,10 +159,17 @@
     "playlistItems.delete": 10
   },
   "2026-09-24": {
-    "videos.list": 21,
+    "videos.list": 41,
     "videos.update": 18,
-    "channels.list": 18,
-    "playlistItems.list": 18,
+    "channels.list": 20,
+    "playlistItems.list": 38,
+    "videos.insert": 9,
+    "thumbnails.set": 9,
+    "playlistItems.insert": 9
+  },
+  "2026-09-25": {
+    "channels.list": 9,
+    "playlistItems.list": 9,
     "videos.insert": 9,
     "thumbnails.set": 9,
     "playlistItems.insert": 9

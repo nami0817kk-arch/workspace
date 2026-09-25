@@ -3,7 +3,7 @@
 #   python -m src.cli sources --new
 sites:
 - host: derbyderbyderby.it
-  seen: 36
+  seen: 37
   days:
   - '2026-09-02'
   - '2026-09-03'
@@ -20,6 +20,7 @@ sites:
   - '2026-09-19'
   - '2026-09-21'
   - '2026-09-22'
+  - '2026-09-25'
   examples:
   - https://www.derbyderbyderby.it/calcio-italiano/monza-juric-dopo-la-vittoria-sul-torino-se-ci-salviamo-sara-un-grande-risultato/?intcmp=gazzanet-derbyderbyderby
   - https://www.derbyderbyderby.it/calcio-estero/monza-ecco-zeballos-in-italia-per-il-mito-di-maradona-e-i-consigli-di-paredes/?intcmp=gazzanet-derbyderbyderby
@@ -59,6 +60,24 @@ sites:
   - https://www.forzaroma.info/news-as-roma/rodrigo-mora-gasperini-fondamentale-nella-mia-scelta-e-un-sogno-giocare-con-dybala/?intcmp=gazzanet-forzaroma
   - https://www.forzaroma.info/news-as-roma/fenerbahce-guendouzi-squalificato-salta-la-roma-greenwood-ci-sara-ecco-perche/?intcmp=gazzanet-forzaroma
   - https://www.forzaroma.info/news-as-roma/conti-omaggia-totti-ricordando-il-suo-primo-gol-sei-la-storia-della-roma-foto/?intcmp=gazzanet-forzaroma
+- host: mondoudinese.it
+  seen: 13
+  days:
+  - '2026-09-04'
+  - '2026-09-05'
+  - '2026-09-07'
+  - '2026-09-10'
+  - '2026-09-14'
+  - '2026-09-15'
+  - '2026-09-17'
+  - '2026-09-18'
+  - '2026-09-20'
+  - '2026-09-23'
+  - '2026-09-25'
+  examples:
+  - https://www.mondoudinese.it/udinese/news-udinese/udinese-unai-gomez-voglio-migliorare-e-aumentare-i-miei-numeri/?intcmp=gazzanet-mondoudinese
+  - https://www.mondoudinese.it/udinese/news-udinese/conferenza-runjaic-bayo-puo-giocare-titolare-ma-non-vi-diro-lundici/?intcmp=gazzanet-mondoudinese
+  - https://www.mondoudinese.it/udinese/news-udinese/palma-il-posto-da-titolare-me-lo-dovro-riguadagnare/?intcmp=gazzanet-mondoudinese
 - host: tuttobolognaweb.it
   seen: 12
   days:
@@ -71,23 +90,6 @@ sites:
   - https://www.tuttobolognaweb.it/mercato/tedesco/?intcmp=gazzanet-tuttobolognaweb
   - https://www.tuttobolognaweb.it/news/dovbyk-emozionato-per-il-gol-ma-dobbiamo-migliorare/?intcmp=gazzanet-tuttobolognaweb
   - https://www.tuttobolognaweb.it/mercato/il-ritorno-di-theate-oggi-il-bologna-e-diverso-tedesco-grande-mister/?intcmp=gazzanet-tuttobolognaweb
-- host: mondoudinese.it
-  seen: 12
-  days:
-  - '2026-09-04'
-  - '2026-09-05'
-  - '2026-09-07'
-  - '2026-09-10'
-  - '2026-09-14'
-  - '2026-09-15'
-  - '2026-09-17'
-  - '2026-09-18'
-  - '2026-09-20'
-  - '2026-09-23'
-  examples:
-  - https://www.mondoudinese.it/udinese/news-udinese/udinese-unai-gomez-voglio-migliorare-e-aumentare-i-miei-numeri/?intcmp=gazzanet-mondoudinese
-  - https://www.mondoudinese.it/udinese/news-udinese/conferenza-runjaic-bayo-puo-giocare-titolare-ma-non-vi-diro-lundici/?intcmp=gazzanet-mondoudinese
-  - https://www.mondoudinese.it/udinese/news-udinese/palma-il-posto-da-titolare-me-lo-dovro-riguadagnare/?intcmp=gazzanet-mondoudinese
 - host: samuraigoal.doorblog.jp
   seen: 10
   days:
@@ -158,12 +160,13 @@ sites:
   - https://www.cittaceleste.it/news/lazio-pinamonti-gattuso-molto-esigente-a-immobile-chiederei/
   - https://www.cittaceleste.it/news/lazio-diogo-leite-primi-minuti-e-adesso/
 - host: pianetamilan.it
-  seen: 7
+  seen: 8
   days:
   - '2026-09-08'
   - '2026-09-09'
   - '2026-09-12'
   - '2026-09-16'
+  - '2026-09-25'
   examples:
   - https://www.pianetamilan.it/news-milan/interviste/fofana-qui-per-riportare-il-siviglia-ad-alti-livelli-spero-di-ritrovare-il-piacere-di-giocare-a-calcio/?intcmp=gazzanet-pianetamilan
   - http://pianetamilan.it/news-milan/ultime-notizie/ex-milan-taarabt-appende-gli-scarpini-al-chiodo-non-cambierei-nulla-di-questo-viaggio/
@@ -662,3 +665,9 @@ sites:
   - '2026-09-21'
   examples:
   - https://www.yorkshirepost.co.uk/sport/football/-9116221
+- host: golssip.it
+  seen: 1
+  days:
+  - '2026-09-25'
+  examples:
+  - https://www.golssip.it/gossip/calcio/hakimi-rinviato-giudizio-stupro/?intcmp=gazzanet-golssip
