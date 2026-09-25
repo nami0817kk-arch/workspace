@@ -70,7 +70,7 @@ sections:
     narrator: キャスター
     say:
       - text: 'キミッヒは、遅い失点を悔しがりました。'
-        image: assets/images/20260925_sp_kimmich/01.jpg
+        image: assets/images/20260925_pair_kimmich_klopp/01.jpg
       - voice: ヨシュア・キミッヒ
         text: リード後に2点目を取るべきだった。最終的には内容通りだが、あんなに遅い時間に失点するのは極めて腹立たしい
       - text: 'クロップ監督は、試合そのものについてはこう言いました。'

@@ -13,7 +13,7 @@ theme:
   question: 誰にキスをしたのか
 short_title: ハーランド、決勝点のあとにキス
 thumbnail:
-  photo: assets/images/20260925_haaland_vg/01.jpg
+  photo: assets/images/20260925_haaland_vg2/01.jpg
   crests: [ノルウェー]
   line1: ハーランドが決勝点のあと
   line2: 真っ先にキスをした●●
@@ -54,7 +54,7 @@ sections:
       - voice: ポール・フィエルデ
         text: ハーフタイムにエルリングが、高く打つか低く打つか聞いてきた。低くと言ったのに、高く決めた
       - text: 'ソルバッケン監督も、フィエルデの手柄だと言いました。'
-        image: assets/images/20260925_sp_solbakken/01.jpg
+        image: assets/images/20260925_pair_solbakken_haaland/01.jpg
       - voice: ストーレ・ソルバッケン
         text: フィエルデは0対1で負けていた。仕事を守るためにあれが必要だった。だから良かった
       - voice: ストーレ・ソルバッケン
@@ -78,13 +78,13 @@ sections:
         - [直近16公式戦, 15試合で得点]
     say:
       - text: '代表通算は**56試合で64ゴール**。ワールドカップのあとも、直近16の公式戦で15試合に得点しています。'
-        image: assets/images/20260925_haaland_vg/01.jpg
+        image: assets/images/20260925_haaland_vg2/01.jpg
       - この日の1点目が、代表の63点目。イブラヒモビッチの62点を抜いて、北欧の歴代最多になりました。
       - ウーデゴールはひとこと。
       - voice: マルティン・ウーデゴール
         text: いい味だ。隣人に勝つのは気持ちいい
       - text: '負けたデンマークのリーマー監督は、こう言いました。'
-        image: assets/images/20260925_sp_riemer2/01.jpg
+        image: assets/images/20260925_pair_riemer_haaland/01.jpg
       - voice: リーマー監督
         text: 2対2で流れはこっちで、勝てると感じていた。でも、ハーランドを誰も見ていなかったミスを罰せられた
     sources:
@@ -99,7 +99,7 @@ sections:
     say:
       - voice: ネット民
         text: これで代表通算56試合64得点。サッカー大国とはいえないノルウェーでこの記録は凄まじいな
-        image: assets/images/20260925_haaland_vg/01.jpg
+        image: assets/images/20260925_haaland_vg2/01.jpg
       - voice: ネット民
         text: 最強ホットラインは健在。ウーデゴールが意表をつくアシスト、エース・ハーランドの勝ち越しゴール
       - voice: ネット民

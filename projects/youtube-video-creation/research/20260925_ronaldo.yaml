@@ -47,7 +47,7 @@ sections:
     narrator: キャスター
     say:
       - text: '試合直後、ジェズス監督はこう説明しました。'
-        image: assets/images/20260925_sp_jesus/01.jpg
+        image: assets/images/20260925_pair_jesus_ronaldo/01.jpg
       - voice: ジョルジェ・ジェズス
         text: 試合の流れがそうさせた。残り25分、前から追いかけられる元気な選手が必要だった
       - voice: ジョルジェ・ジェズス
@@ -83,7 +83,7 @@ sections:
     narrator: キャスター
     say:
       - text: '同じ67分に交代したルベン・ネヴェスは、こう庇いました。'
-        image: assets/images/20260925_sp_neves/01.jpg
+        image: assets/images/20260925_pair_neves_ronaldo/01.jpg
       - voice: ルベン・ネヴェス
         text: クリスティアーノのことは知ってるだろう。点を取れない時は、取った時と同じではない
       - voice: ルベン・ネヴェス
