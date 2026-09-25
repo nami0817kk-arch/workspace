@@ -1,0 +1,302 @@
+title: 9月24日の題材
+lead: 候補534件＋ロマーノのXから36件（25番から下が3巡目）
+note: |
+  <b>代表ウィークです。</b>9月23日に欧州7リーグの試合はありませんでした（試合結果の枠は空けます）。
+  そのぶん、代表の話と移籍まわりが厚い日です。<br>
+  <b>投稿の枠について。</b>今日と明日はプレミア20クラブ紹介でショートが10本ずつ埋まっています
+  （1日に配られるのは10本まで）。ここで選んだ回は、<b>本編は今日〜明日の空き時間、ショートは9月26日</b>に
+  回すのがよいと考えています。<br>
+  <b>2巡目を足しました（13〜24）。</b>1巡目で○が2つ（⑥アギーレ・⑧クロップ）だったので、
+  同じ筋（監督・新体制・クラブの経営）と、1巡目に無かった話を中心に探し直しています。<br>
+  <b>3巡目（25〜36）。</b>ロマーノのXを読み直し（13時間で C・ロナウドの会見が20投稿）、
+  スペイン・イタリア・ポルトガルの媒体からも拾いました。
+items:
+  - num: 1
+    slot: 日本人
+    head: 堂安律がサウジ移籍騒動を語る「叩いている奴らの百倍ぐらい僕は考えてる」
+    why: 本人の言葉がそのまま強い。**本人が長く語っている**ので quote の型に向く
+    src: まとめ（footballnet）。引用元の記事まで当たってから使う
+    url: https://footballnet.2chblog.jp/archives/60066708.html
+    fmt: quote
+  - num: 2
+    slot: 日本人
+    head: 久保建英の苦境、現地紙が分析「ソシエダ加入以来、最も厳しい時期」
+    why: 検索で来る言葉の2位が久保建英。**原因をW杯のケガと書いている**ので、事実を掘れる
+    src: サッカーキング（9月24日）
+    url: https://www.soccer-king.jp/news/japan/national/20260924/2208460.html
+    fmt: news
+  - num: 3
+    slot: 日本人
+    head: 三笘薫、ブライトンで定位置争い「スタメンを失う可能性も」
+    why: 監督の方針が出ている。**移籍の話につながる**
+    src: フットボールトライブ（9月24日）
+    url: https://football-tribe.com/japan/2026/09/24/359652/
+    fmt: news
+  - num: 4
+    slot: 日本人
+    head: 鈴木彩艶の代表招集に「アストン・ヴィラが疑問」。脇腹痛で別メニュー
+    why: クラブと代表の食い違い。**当事者の言い分が2つある**
+    src: フットボールトライブ（9月24日）
+    url: https://football-tribe.com/japan/2026/09/24/359654/
+    fmt: news
+  - num: 5
+    slot: 日本人
+    head: 第3次森保ジャパン初陣。松木玖生ら4人がA代表デビューを狙う
+    why: "**群れの回**（4人）。サムネも並べる。ウルグアイ戦の前日"
+    src: ゲキサカ（9月24日）
+    url: https://web.gekisaka.jp/photonews/japan/detail/?459600-459600-pn
+    fmt: news
+  - num: 6
+    slot: 日本人
+    head: 佐藤龍之介のバレンシア、アギーレ新監督が就任
+    why: 元日本代表監督が、日本人のいるクラブへ。**接点が二重**
+    src: ゲキサカ（9月24日）
+    url: https://web.gekisaka.jp/news/world/detail/?459589-459589-fl
+    fmt: news
+  - num: 7
+    slot: 日本人
+    head: 板倉滉のボルシアMG、最下位で新監督を発表
+    why: 立て直しの話。**板倉の出番に直に響く**
+    src: ゲキサカ（9月24日）
+    url: https://web.gekisaka.jp/news/world/detail/?459548-459548-fl
+    fmt: news
+    weak: true
+  - num: 8
+    slot: 海外
+    head: クロップのドイツ代表初陣。選手に課した4つの規則
+    why: "**今日いちばん大きい話**。オランダ（シャビ）との対戦で、両方が初陣"
+    src: デイリーメール。まとめ群なので確度は未確認どまり。ドイツの媒体で裏を取る
+    url: https://www.dailymail.com/sport/football/article-16154761/Jurgen-Klopp-four-rules-Germany-stars-WAGs-told-stay-away-barbers-BANNED-new-professional-standards.html
+    fmt: news
+  - num: 9
+    slot: ラ・リーガ
+    head: ロドリ「レアル・マドリードは全力で獲りに来た」
+    why: 本人が夏の移籍騒動を明かした。**言葉がそのまま見出しになる**
+    src: マルカ（9月23日）
+    url: https://www.marca.com/futbol/seleccion/2026/09/23/rodri-madrid-mi.html
+    fmt: quote
+  - num: 10
+    slot: プレミア
+    head: マンU、コンテ招へいの噂。カリックの後任に
+    why: 移籍の噂としては大きい。**確度は未確認**（紙面のまとめ）
+    src: スカイスポーツ（Paper Talk）
+    url: https://www.skysports.com/football/news/12691/13591219/man-utd-antonio-conte-lined-up-for-sensational-premier-league-return-as-replacement-for-michael-carrick-paper-talk
+    fmt: news
+    weak: true
+  - num: 11
+    slot: 海外
+    head: ケイン、バイエルンと新契約へ。その先はアメフト？
+    why: 本人が「驚きの行き先」に触れている。**引きになる**
+    src: フットバル・インターナショナル（オランダ）
+    url: https://www.vi.nl/nieuws/kane-dicht-bij-nieuw-bayern-contract-daarna-mogelijk-american-football-avontuur
+    fmt: news
+  - num: 12
+    slot: 海外
+    head: エンドリッキ、ローマとミランがレンタルを狙い続ける
+    why: レアルでの序列。**移籍市場の続報**
+    src: フットボール・イタリア
+    url: https://football-italia.net/endrick-still-wanted-roma-milan-real-madrid/
+    fmt: news
+    weak: true
+  - num: 13
+    slot: 海外
+    head: フォルラン、ウルグアイ代表監督デビュー「ウルグアイをあるべき場所へ戻す」
+    why: "**日本戦の相手**。監督としての初陣で、本人が抱負を語っている"
+    src: マルカ（9月24日）
+    url: https://www.marca.com/futbol/2026/09/24/forlan-debuta-seleccionador-hay-devolver-uruguay-lugar-merece.html
+    fmt: news
+    new: true
+  - num: 14
+    slot: プレミア
+    head: マンU、負債1000億円超を発表。芝生を1片145ユーロで売る
+    why: "**数字が強い**。負債とピッチ切り売りが同じ決算発表から出ている"
+    src: マルカ（9月23日）
+    url: https://www.marca.com/futbol/premier-league/2026/09/23/united-presenta-cuentas-deuda-mil-millones-vende-trozos-cesped-145-euros.html
+    fmt: news
+    new: true
+  - num: 15
+    slot: 海外
+    head: ファン・ダイク、代表続行を決めたシャビとの「10秒の会話」
+    why: 本人が明かした短い話。**quote の型に向く**
+    src: マルカ（9月23日）
+    url: https://www.marca.com/futbol/nations-league/2026/09/23/10-segundos-conversacion-xavi-cambiaron-destino-dijk-video.html
+    fmt: quote
+    new: true
+  - num: 16
+    slot: 海外
+    head: デ・ラウレンティス、スパレッティに激怒「監督は自分が従業員だと忘れる」
+    why: "**会長の言葉がそのまま強い**。ナポリの新スタジアム計画も同じ会見から"
+    src: フットボール・イタリア（9月24日）
+    url: https://football-italia.net/de-laurentiis-anger-spalletti-coach-employees/
+    fmt: quote
+    new: true
+  - num: 17
+    slot: ラ・リーガ
+    head: テバス「問題はフロレンティーノのサッカーの形だ」
+    why: リーグ会長とレアル会長の対立。**言い分がはっきり食い違う**
+    src: マルカ（9月23日）
+    url: https://www.marca.com/futbol/primera-division/2026/09/23/tebas-reaccionamos-ataques-seriamos-imbeciles.html
+    fmt: news
+    new: true
+  - num: 18
+    slot: 海外
+    head: C・ロナウド「多くの人が、もう辞めてほしいと思っているのは分かっている」
+    why: "**本人の言葉**。通算1000ゴールと代表タイトルを目標に挙げている"
+    src: マルカ（9月23日）
+    url: https://www.marca.com/futbol/nations-league/2026/09/23/cristiano-ronaldo-gente-quiere-me-vaya.html
+    fmt: quote
+    new: true
+  - num: 19
+    slot: 海外
+    head: ユヴェントス、ネトをフリーで獲得。GK問題に決着
+    why: 移籍が**確定**した話（Done Deal）。噂ではない
+    src: フットボール・イタリア（9月24日）
+    url: https://football-italia.net/done-deal-neto-will-be-new-juventus-goalkeeper/
+    fmt: news
+    new: true
+    weak: true
+  - num: 20
+    slot: 海外
+    head: アラバ、34歳でウディネーゼへ。メディカル通過
+    why: フリーの大物が中堅クラブへ。**レアルを出たあとの行き先**
+    src: フットボール・イタリア（9月24日）
+    url: https://football-italia.net/alaba-medical-successful-34-year-old-udinese/
+    fmt: news
+    new: true
+  - num: 21
+    slot: 日本人
+    head: 鈴木唯人、ブンデス4戦4発「W杯のおかげで今こうなれている」
+    why: "**いい流れの日本人**。1巡目に無かった向き（不調・落選の話ではない）"
+    src: サッカーキング（9月24日）
+    url: https://www.soccer-king.jp/news/japan/national/20260924/2208253.html
+    fmt: news
+    new: true
+  - num: 22
+    slot: ラ・リーガ
+    head: 開幕5戦連発のオーバメヤン、右ひざ手術で2か月離脱
+    why: 好調のさなかの離脱。**数字がはっきりしている**
+    src: サッカーキング（9月24日）
+    url: https://www.soccer-king.jp/news/world/esp/20260924/2208333.html
+    fmt: news
+    new: true
+  - num: 23
+    slot: 海外
+    head: ムバッペのバロンドール運動に、フランス国内で拒否反応
+    why: "**世の中の声が割れている**。voices の型に向く"
+    src: マルカ（9月24日）
+    url: https://www.marca.com/futbol/balon-oro/2026/09/24/rechazo-francia-campana-mbappe-ganar-balon-oro-parece-coche-robado.html
+    fmt: voices
+    new: true
+  - num: 24
+    slot: 海外
+    head: ヤマル「あの4対3は、インテルが二度と勝てない試合」
+    why: 本人の挑発めいた一言。**反応が集まりやすい**
+    src: フットボール・イタリア（9月24日）
+    url: https://football-italia.net/lamine-yamal-inter-4-3-barcelona-semi-final/
+    fmt: voices
+    new: true
+  - num: 25
+    slot: ロマーノ
+    head: C・ロナウド「W杯のあと、代表引退を考えた」
+    why: "**1時間前の発言**。⑱と同じ会見だが、こちらが芯。「会長と監督と話して残った」"
+    src: ロマーノのX（57分前）
+    url: https://x.com/FabrizioRomano
+    fmt: quote
+    new: true
+  - num: 26
+    slot: ロマーノ
+    head: ロドリ「フリックのやり方はグアルディオラと全く違う。ジムで本当に厳しい」
+    why: "**2人の名将を比べた本人の言葉**。ペップのもとで長くやった選手が言っている"
+    src: ロマーノのX（1時間前・COPE）
+    url: https://x.com/FabrizioRomano
+    fmt: quote
+    new: true
+  - num: 27
+    slot: 海外
+    head: バロンドール30人に賛否。フェリックス「ヤマルこそ」／ロドリ「ペドリが入るべきだった」
+    why: "**声が割れている**。voices の型に向く。ノミネートは9月8日に発表済み"
+    src: AS ／ ロマーノのX
+    url: https://as.com/futbol/internacional/joao-felix-se-moja-en-as-sobre-el-balon-de-oro-lamine-es-futbol-f202609-n/
+    fmt: voices
+    new: true
+  - num: 28
+    slot: ラ・リーガ
+    head: モウリーニョのレアルでの任務は、ベンチの外にもある
+    why: "**いまレアルを率いているのがモウリーニョ**。クラブの立て直しの話"
+    src: AS（9月24日）
+    url: https://as.com/futbol/primera/la-mision-de-mourinho-en-el-madrid-trasciende-al-banquillo-f202609-n/
+    fmt: news
+    new: true
+  - num: 29
+    slot: ラ・リーガ
+    head: ヴィニシウス、どん底から変わろうとしている
+    why: 序列が落ちた選手の立て直し。**ディオマンデが定位置を脅かしている**
+    src: AS（9月24日）
+    url: https://as.com/futbol/primera/vinicius-busca-el-cambio-tras-tocar-fondo-f202609-n/
+    fmt: news
+    new: true
+  - num: 30
+    slot: 海外
+    head: リネカー、FIFAと離れた理由「プーチンと会えと言われた」
+    why: "**強い一言**。放送の顔だった人が、離れた事情を語っている"
+    src: ア・ボラ（9月23日）
+    url: https://www.abola.pt/noticias/lineker-revela-porque-se-afastou-da-fifa-queriam-que-me-encontrasse-com-putin-2026092321232203758
+    fmt: quote
+    new: true
+  - num: 31
+    slot: ラ・リーガ
+    head: バルセロナ、16歳のポルトガル人を獲得（公式）
+    why: "**クラブの公式発表**なので確度は確定。若手の青田買いの話"
+    src: ア・ボラ（9月23日）
+    url: https://www.abola.pt/noticias/oficial-barcelona-anuncia-contratacao-de-perola-portuguesa-de-16-anos-2026092318543903777
+    fmt: news
+    new: true
+    weak: true
+  - num: 32
+    slot: ラ・リーガ
+    head: マドリード・ダービーで制裁の雨。レアルには特別な警告
+    why: 処分の中身がはっきり出ている。**数字で語れる**
+    src: ア・ボラ（9月23日）
+    url: https://www.abola.pt/noticias/derbi-de-madrid-resulta-em-chuva-de-sancoes-e-um-aviso-especial-ao-real-2026092315372852641
+    fmt: news
+    new: true
+  - num: 33
+    slot: 海外
+    head: アラバとネトが決まっても、まだ31人の大物がフリーで残っている
+    why: "**一覧で見せられる**。表を出す回に向く"
+    src: ア・ボラ（9月23日）
+    url: https://www.abola.pt/noticias/alaba-e-neto-ja-nao-contam-mas-ainda-ha-31-craques-livres-no-mercado-fotos-2026092318472520722
+    fmt: news
+    new: true
+  - num: 34
+    slot: ラ・リーガ
+    head: バレンシア、14年で24人目の監督。アギーレはその24人目
+    why: "**⑥と同じ話の裏側**。数字が効く（14年で24人）"
+    src: フットバル・インターナショナル（9月23日）
+    url: https://www.vi.nl/nieuws/getroebleerd-valencia-presenteert-24ste-trainer-in-veertien-jaar
+    fmt: news
+    new: true
+  - num: 35
+    slot: 海外
+    head: ユヴェントスの後ろ盾エクソール、手元資金4000億円超
+    why: クラブの経営の話。**⑭マンUの負債と対になる**
+    src: ガゼッタ（9月23日）
+    url: https://www.gazzetta.it/Calcio/Calciomercato/Juventus/23-09-2026/juventus-exor-garantisce-la-solidita-finanziaria.shtml
+    fmt: news
+    new: true
+  - num: 36
+    slot: 海外
+    head: ジダンがムバッペに用意した驚きの計画
+    why: 代表の並びの話。**本人同士の関係に踏み込む**
+    src: AS（9月24日）
+    url: https://as.com/futbol/internacional/plan-zidane-para-mbappe-f202609-n/
+    fmt: news
+    new: true
+    weak: true
+drops:
+  - [FC町田ゼルビアの小川航基が決勝弾, Jリーグは扱わない（2026-09-07 決定）]
+  - [浦和レッズ・山根視来のコラム, Jリーグは扱わない]
+  - [女子チャンピオンズリーグ（バルセロナ・チェルシー）, 女子サッカーは扱わない（2026-09-16 指示）]
+  - [元日本代表・稲本潤一が妻との2ショットを公開, サッカーの話ではない]
+  - [PSGのハキミ、上訴棄却で裁判へ（性的暴行疑惑）, 係争中の性犯罪。チャンネルの性格に合わないので外しました。採るなら言ってください]
+  - [2026-09-23 の試合結果, 欧州7リーグの試合はありませんでした（代表ウィーク）]

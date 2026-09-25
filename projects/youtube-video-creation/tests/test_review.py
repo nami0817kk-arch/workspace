@@ -1522,3 +1522,29 @@ def test_疑問符で終わる題は問いかけとして通す():
     assert check_title_hook(SimpleNamespace(title="フリーキックだけなら歴代何位？")).ok
     assert check_title_hook(SimpleNamespace(title="デンベレとのあいだで起きたこと")).ok
     assert not check_title_hook(SimpleNamespace(title="メッシが930点目を決めた")).ok
+
+
+def test_連体形のあとに名詞で止める題は隠している():
+    """2026-09-25、7度目。「…売り出したもの」「…思いがけない場所」が弾かれた。
+
+    「場所」「もの」を一覧に足しても、次は「値段」「相手」で鳴る。
+    **形で見る**——連体形の動詞のすぐ後ろで名詞に止めていれば体言止め。
+    """
+    from types import SimpleNamespace
+
+    from src.review import check_title_hook
+
+    def hook(title):
+        return check_title_hook(SimpleNamespace(title=title)).ok
+
+    assert hook("ジェイドン・サンチョが練習していた、思いがけない場所")
+    assert hook("マンチェスター・ユナイテッド、過去最高の収入。その同じ日に売り出したもの")
+    # 動詞で言い切る題は、これまでどおり止める
+    assert not hook("佐藤龍之介のバレンシアに、アギーレ。14年で24人目の監督が来た")
+    assert not hook("ジンチェンコ、膝を痛めた日から7か月。まだどこにも所属していない")
+    # 濁音の連体形（呼んだ／読んだ）も同じ
+    assert hook("佐藤龍之介のバレンシアが、19位からの立て直しに呼んだ監督")
+    # 形式名詞で止める形も同じ（「2つのこと」は直前が動詞ではない）
+    assert hook("ジダンからムバッペへの電話。そこで伝えられた2つのこと")
+    # 名詞で終わっても、前が動詞でなければ言い切り
+    assert not hook("サンチョ、ドルトムントへ移籍")

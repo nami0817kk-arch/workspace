@@ -1,0 +1,81 @@
+date: 2026年9月24日
+slot: other_3
+format: voices
+voice_min: 0.7
+people: [オレクサンドル・ジンチェンコ]
+theme:
+  id: zinchenko_free
+  league: england
+  league_name: プレミアリーグ
+  kind: transfer
+  topic: マンチェスター・ユナイテッド
+  title: 'ジンチェンコ、膝を痛めた日から7か月。いま置かれている場所'
+  question: なぜ冷たいのか
+short_title: ジンチェンコ、地元の反応が冷たい
+thumbnail:
+  photo: assets/images/20260924_zinchenko_w/01.jpg
+  line1: ジンチェンコ、膝から7か月
+  line2: まだ、どこにも所属していない
+  points:
+    - 出場は通算25分
+    - 代表は本大会を逃した
+sections:
+  - id: what
+    main: true
+    heading: 25分で終わった半年
+    tier: 未確認
+    telop: アヤックスでの出場は通算25分。いまも無所属
+    narrator: キャスター
+    card:
+      type: table
+      title: この1年のジンチェンコ
+      columns: ['', '']
+      rows:
+        - [今年1月, アーセナルからアヤックスへ]
+        - [2月14日, 2試合目で前十字靭帯を断裂]
+        - [出場, 通算25分]
+        - [3月, 代表を欠場。ウクライナは本大会を逃す]
+        - [6月30日, 契約満了。いまも無所属]
+    say:
+      - text: '25分しか出られないまま契約が切れたジンチェンコに、マンチェスター・ユナイテッド移籍の話が出ました。'
+        short_only: true
+      - "**9月16日**。「マンチェスター・ユナイテッドが代理人と接触した」と伝えられました。"
+      - 本人はフリーでの加入に前向きだ、とも。ただし、クラブからも本人からも、何も出ていません。
+      - 返ってきたのは、こういう声でした。
+      - voice: ネット民
+        text: 「ジンチェンコはマンチェスター・ユナイテッド移籍の用意がある」。ただしマンチェスター・ユナイテッドの方に、ジンチェンコを受け入れる用意がない
+      - こう言われるまでに、何があったか。
+      - 今年1月、アーセナルから**アヤックス**へ。ところが**2月14日、2試合目で前十字靭帯を断裂**します。
+      - アヤックスでの出場は、**合わせて25分**でした。
+      - この怪我で、ワールドカップ予選の最終盤を欠場します。
+      - "**ウクライナはスウェーデンに1対3で敗れ、本大会を逃しました**。"
+      - 6月末で契約は切れます。**それから3か月**、どこにも所属していません。
+      - 膝を痛めた日から数えると、**7か月**です。
+      - まだ**29歳**です。マンチェスター・シティでは**4回のリーグ優勝**に加わり、アーセナルでも**2位を2度**経験しました。
+    sources:
+      - https://sport-express.ua/football/48573-novii-viklik-dlya-zinchenka-italiiskii-grand-mozhe-pidpisati-gravcya-zbirnoyi-ukrayini-u-statusi-vilnogo-agenta
+      - https://sport.ua/uk/news/907268-zinchenko-obrav-klub-u-yakomu-prodovzhit-karieru-dzherelo
+      - https://english.nv.ua/nation/oleksandr-zinchenko-is-leaving-ajax-his-contract-will-not-be-renewed-at-club-s-discretion-50606539.html
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「マンUの方に、受け入れる用意がない」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: ただの妄想だろ
+      - voice: ネット民
+        text: で、マンUはそれを知ってるの？
+      - voice: ネット民
+        text: マンUがもう移籍を締め切ったことを知らないらしい
+      - voice: ネット民
+        text: 次はどのチームを食い物にするか探してるんだろ。シーズンに1、2試合出て、契約期間まるごとの金をもらうために
+      - voice: ネット民
+        text: ジンチェンコ、70分からなら全然使えるでしょ
+      - voice: ネット民
+        text: 70分からでもヤバいロストと拙いディフェンスするから却下
+        short_voice: true
+    sources:
+      - https://sport.ua/uk/news/907268-zinchenko-obrav-klub-u-yakomu-prodovzhit-karieru-dzherelo
+      - https://sport.ua/uk/news/904798-kariera-zinchenka-na-rozdorizhzhi-agenti-gravtsya-uhvalili-rishennya
+      - https://sakarabo.blog.jp/archives/1084481153.html

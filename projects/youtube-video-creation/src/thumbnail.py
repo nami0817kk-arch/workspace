@@ -1357,20 +1357,51 @@ def _flat_bed(background: str | None, tags: list[str] | None = None) -> Image.Im
             return base
         with Image.open(path) as opened:
             source_image = opened.convert("RGB")
-    small = source_image.resize((24, 24), Image.LANCZOS)
-    pixels = [c for c in small.getdata() if sum(c) > 60 and sum(c) < 720]
-    if not pixels:
-        pixels = list(small.getdata())
-    top = tuple(sum(c[i] for c in pixels) // len(pixels) for i in range(3))
-    # 文字が乗るので、拾った色をそのままではなく落ち着かせる
-    top = tuple(int(c * 0.55 + 18) for c in top)
-    bottom = tuple(int(c * 0.45) for c in top)
+    top = _vivid_color(source_image)
+    bottom = _with_lightness(top, 0.13)
     draw = ImageDraw.Draw(base)
     for y in range(SIZE[1]):
         t = y / SIZE[1]
         draw.line([(0, y), (SIZE[0], y)],
                   fill=tuple(round(a + (b - a) * t) for a, b in zip(top, bottom)) + (255,))
     return base
+
+
+
+def _vivid_color(image: Image.Image) -> tuple[int, int, int]:
+    """その絵の中で、いちばん「色らしい」色を1つ選ぶ（2026-09-24）。
+
+    **平均を取ってはいけない。**平均は必ず灰色に寄る。実際、9/24 のサムネは
+    べた塗りの面が全部くすんだ灰色になり、ユーザーに「ぐれーはダメだよ」と言われた。
+    色の数を8つに減らしてから、**鮮やかさ×面積**でいちばん強いものを取る。
+    黒に近い色と白に近い色は、地の色にならないので外す。
+    """
+    import colorsys
+
+    small = image.convert("RGB").resize((48, 48), Image.LANCZOS)
+    counts: dict[tuple[int, int, int], int] = {}
+    for color in small.quantize(colors=8, method=Image.MEDIANCUT).convert("RGB").getdata():
+        counts[color] = counts.get(color, 0) + 1
+
+    def strength(color: tuple[int, int, int], n: int) -> float:
+        _, light, sat = colorsys.rgb_to_hls(*[v / 255 for v in color])
+        if light < 0.12 or light > 0.92:
+            return 0.0
+        return (sat ** 1.5) * n
+
+    best = max(counts, key=lambda c: strength(c, counts[c]))
+    if strength(best, counts[best]) <= 0:
+        return (18, 26, 42)          # 色らしい色が無い絵。濃紺に逃がす
+    return _with_lightness(best, 0.27)
+
+
+def _with_lightness(color: tuple[int, int, int], light: float) -> tuple[int, int, int]:
+    """色みは残したまま、明るさだけ決める。文字が乗るので暗く、でも灰色にしない。"""
+    import colorsys
+
+    hue, _, sat = colorsys.rgb_to_hls(*[v / 255 for v in color])
+    sat = max(sat, 0.45)
+    return tuple(int(round(v * 255)) for v in colorsys.hls_to_rgb(hue, light, sat))
 
 
 def _paste_side(canvas: Image.Image, background: str | None) -> None:

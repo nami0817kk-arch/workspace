@@ -1,0 +1,130 @@
+date: 2026年9月24日
+slot: laliga_1
+format: quote
+voice_min: 0.55
+people: [ダニ・カルバハル]
+theme:
+  id: carvajal_farewell
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: レアル・マドリード
+  title: 'ダニ・カルバハル、レアルでの23年の最後に、会長について語ったこと'
+  question: 何を語ったのか
+short_title: カルバハル「あの24時間後に、会長は」
+thumbnail:
+  photo: assets/images/20260924_carvajal2/01.jpg
+  crests: [レアルマドリード]
+  tags: [レアル・マドリード, ダニ・カルバハル, ラ・リーガ]
+  line1: カルバハル、レアルで23年
+  line2: 別れの日に選んだ一つの思い出
+  points:
+    - 10歳で入った
+    - タイトル26個
+sections:
+  - id: what
+    heading: 23年でベルナベウを出た
+    tier: 報道
+    telop: 2002年に入り、トップで13年。450試合、26冠
+    narrator: キャスター
+    card:
+      type: table
+      title: レアル・マドリードでの23年
+      columns: ['', '']
+      rows:
+        - [入団, 2002年（10歳）]
+        - [下部組織, 10年]
+        - [トップチーム, 13年]
+        - [公式戦, およそ450試合]
+        - [タイトル, 26個]
+    say:
+      - ダニ・カルバハルがレアル・マドリードに入ったのは**2002年**。10歳のときです。
+      - 下部組織で10年、トップチームで13年でした。
+      - 公式戦はおよそ**450試合**。タイトルは**26個**です。
+      - チャンピオンズリーグは**6回**。2014年、クラブが10回目の優勝を果たした**デシマ**の夜にも、ピッチに立っていました。
+    sources:
+      - https://sports.yahoo.com/articles/official-dani-carvajal-leaves-real-110800972.html
+  - id: leave
+    heading: 5月23日、最後の試合
+    tier: 報道
+    telop: 82分に交代。両チームの選手が並んで送り出した
+    narrator: キャスター
+    say:
+      - 今年5月、新しい契約は結ばれず、**契約満了**が決まります。
+      - 5月23日、ホームでの最後の試合。**82分に交代**すると、両チームの選手が並んで送り出しました。
+      - 主将として、ベルナベウを出ました。
+    sources:
+      - https://sports.yahoo.com/articles/official-dani-carvajal-leaves-real-110800972.html
+      - https://www.eldebate.com/deportes/20260524/palabras-despedida-carvajal-mi-salida-ponemos-fin_420961.html
+  - id: said
+    main: true
+    heading: 別れの言葉
+    tier: 報道
+    telop: 「僕が膝を大怪我した24時間後に、会長は契約を延長してくれた」
+    narrator: キャスター
+    say:
+      - text: 'レアル・マドリードで23年を過ごしたダニ・カルバハルが、ベルナベウでの別れの日に話したことです。'
+        short_only: true
+      - voice: カルバハル
+        text: 僕にとって、簡単な瞬間ではありません。この素晴らしいお別れに、とても胸がいっぱいです
+      - ひとつだけ挙げたのは、勝った試合ではありませんでした。
+      - voice: カルバハル
+        text: 僕は会長とともに成長してきました。一緒に数えきれないほどのチャンピオンズリーグを勝ち取りました
+      - voice: カルバハル
+        text: でも、ひとつだけ選ぶとすれば、僕が重い膝の怪我をした24時間後に、会長が契約を延長してくれたことです
+      - voice: カルバハル
+        text: チームメイト全員に感謝を伝えたい。いまの仲間にも、かつての仲間にも
+      - voice: カルバハル
+        text: ありえない逆転劇をありがとう。良いときも悪いときも、ここにいてくれてありがとう
+      - voice: カルバハル
+        text: 僕を思い出すときは、誇りとともに、そして『あいつはこのユニフォームにすべてを捧げた』という感覚とともに思い出してほしい
+      - voice: カルバハル
+        text: 僕の退団をもって、僕たちは素晴らしいひとつの時代に幕を下ろします
+      - この先については、こう言っていました。
+      - voice: カルバハル
+        text: いまは夏を少し楽しむつもりですが、現役は続けます。それははっきりしています
+    sources:
+      - https://www.eldebate.com/deportes/20260524/palabras-despedida-carvajal-mi-salida-ponemos-fin_420961.html
+  - id: now
+    heading: あれから4か月
+    tier: 未確認
+    telop: 9月7日に3クラブへ売り込み。以降、続報は無い
+    narrator: キャスター
+    say:
+      - あれから4か月。いまも、所属クラブはありません。
+      - "**9月7日**、代理人が**リヴァプール、マンチェスター・シティ、フラム**の3クラブに売り込んだと伝えられました。"
+      - リヴァプールは選手の登録枠が埋まっていて、いまは獲れません。マンチェスター・シティには枠がありましたが、動きませんでした。
+      - 実際に動いたのは、フラムだけです。
+      - フラムを率いているのは、レアル時代のチームメイト、**アルベロア**です。
+      - それから**2週間以上、続報はありません**。
+    sources:
+      - https://www.sportbible.com/football/premier-league/dani-carvajal-transfer-offer-premier-league-real-madrid-224937-20260907
+      - https://www.eldesmarque.com/futbol/mercado-de-fichajes/20260908/arbeloa-carvajal-equipos-tantean-fichaje_18_020116934.html
+      - https://www.infobae.com/espana/deportes/2026/09/02/los-jugadores-que-se-han-quedado-sin-equipo-tras-el-cierre-del-mercado-de-fichajes-de-carvajal-a-parejo-o-sergio-ramos/
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 送り出す声と、いまの状況を見る声
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 今後レアルからカルバハル級の生え抜きの選手は出てこないでしょうね
+      - voice: ネット民
+        text: 出場すれば素晴らしいプレーでチームを助けてくれるけど、近年は怪我が多くて稼働率が計算出来なかった
+      - voice: ネット民
+        text: まさか当初はマルセロよりも長く残ると思ってもみなかったなー
+      - voice: ネット民
+        text: 伝説のリスボンでのデシマを経験している選手が、ついにいなくなるのか
+      - voice: ネット民
+        text: そもそもレアルからの退団決まってから、オファーがないってのがそういう事なんじゃない
+      - voice: ネット民
+        text: 2年前ロドリがバロンドール取ったとき、バロンドール候補としてあがってくらいの選手だったのにな
+      - voice: ネット民
+        text: 実績を見れば、フットボール史上最高の右サイドバックだった
+      - voice: ネット民
+        text: これまでの功績に見合ったリスペクトとともに送り出したい
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/63c2af1f11819b2ad3bae021cb1ed5a2077aa414/comments
+      - https://news.yahoo.co.jp/articles/b75364f8afe34f39047f594e7900bb26d35b31ee/comments
+      - https://news.yahoo.co.jp/articles/4a2a91e37740007785b1c70a7a52e701edbec8ae/comments

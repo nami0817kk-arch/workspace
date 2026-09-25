@@ -185,10 +185,14 @@ def test_名前ごとに声を決め打ちできる():
     from src.config import load_config
 
     config = load_config()
-    assert config.voice_fixed["メッシ"] != config.voice_fixed["モウリーニョ"]
-    assert config.resolve_speaker("メッシ").style_id == config.voice_fixed["メッシ"]
-    assert (config.resolve_speaker("モウリーニョ").style_id
-            == config.voice_fixed["モウリーニョ"])
+    # **見るのは「同じ声にならないこと」で、両方が決め打ちされていることではない**
+    # （2026-09-24）。決め打ちを増やすと匿名の反応に残る声が減るので、
+    # 片方を動かして逃がすのが正しい直し方になる
+    assert (config.resolve_speaker("メッシ").style_id
+            != config.resolve_speaker("モウリーニョ").style_id)
+    for name in ("メッシ", "モウリーニョ"):
+        if name in config.voice_fixed:
+            assert config.resolve_speaker(name).style_id == config.voice_fixed[name]
     # 書いていない人は、これまでどおり名前から決まる（動画をまたいで変わらない）
     assert (config.resolve_speaker("キャラガー").style_id
             == config.resolve_speaker("キャラガー").style_id)

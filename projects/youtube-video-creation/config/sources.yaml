@@ -121,20 +121,24 @@ domains:
              www.chunichi.co.jp, www.jsports.co.jp]
 
   # 複数媒体を横断できる。見出しに媒体名が入る
-  aggregator: [news.yahoo.co.jp]
+  # 2026-09-24 に追加。他社の記事をそのまま載せる形なので、**元がどこか**を見てから使う
+  aggregator: [news.yahoo.co.jp, sports.yahoo.com, uk.sports.yahoo.com]
 
   # 現地語の報道機関。その国のリーグの話はここが速い。
   # 検索はその言語で書く（kicker をドイツ語以外で引いても返らない）
   german: [kicker.de, sport1.de]
   italian: [football-italia.net, calciomercato.com, tuttomercatoweb.com,
             gazzetta.it]
-  french: [footmercato.net, eurosport.fr, lequipe.fr, sofoot.com]
+  french: [footmercato.net, eurosport.fr, lequipe.fr, sofoot.com, lyonfoot.com]
   dutch: [voetbalzone.nl, vi.nl]
   # ポルトガル。日本人選手が多く、欧州ビッグクラブへの経由地になる
   portuguese: [abola.pt, record.pt]
   # スペイン語圏。南米(ole / tycsports)もここで引く。検索はスペイン語で書く
   spanish: [besoccer.com, marca.com, as.com, mundodeportivo.com, relevo.com,
-            sport.es, ole.com.ar, tycsports.com]
+            sport.es, ole.com.ar, tycsports.com, eldebate.com]
+
+  # ウクライナ。代表と、東欧に散った選手の話はここでしか出ない（2026-09-24 に追加）
+  ukrainian: [sport.ua, sport-express.ua, ukrfootball.ua, nv.ua, english.nv.ua]
 
   social: [x.com]
 
@@ -161,7 +165,12 @@ domains:
            # そこから辿れるまとめ。反応の取り出しは実測済み（下の注記）
            www.footballtopic.com, football-2ch.com, worldfn.net,
            # 2026-09-07 に追加。海外の反応まとめ。同種のブログに合わせて未確認どまり
-           nofootynolife.net]
+           nofootynolife.net,
+           # 2026-09-24 に追加。移籍の集約サイト。元記事の引き写しなので未確認どまり
+           fichajes.net, yardbarker.com, sportbible.com, eldesmarque.com,
+           bavarianfootballworks.com, romapress.net, africafoot.com,
+           africasoccer.com, insidefutbol.com, voetbalprimeur.be,
+           voetbalkrant.com, qoly.jp]
 
   # 取得できないサイト。ここを検索しても結果は返らない。
   #
@@ -345,6 +354,7 @@ domain_tiers:
   dutch: 報道
   portuguese: 報道
   spanish: 報道
+  ukrainian: 報道
   social: 未確認
   rumour: 未確認
 

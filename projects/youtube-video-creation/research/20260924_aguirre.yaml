@@ -1,0 +1,112 @@
+date: 2026年9月24日
+slot: laliga_1
+format: news
+voice_min: 0.3
+people: [ハビエル・アギーレ, 佐藤龍之介, カルロス・コルベラン]
+theme:
+  id: valencia_aguirre
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: バレンシア
+  title: '佐藤龍之介のバレンシアが、19位からの立て直しに呼んだ監督'
+  question: なぜアギーレだったのか
+short_title: バレンシアにアギーレ。14年で24人目
+thumbnail:
+  photo: assets/images/20260924_aguirre/01.jpg
+  crests: [バレンシア]
+  line1: かつて日本代表を率いた監督が
+  line2: バレンシアへ。19位・勝ち点4
+sections:
+  - id: what
+    heading: 7試合で1勝、降格圏
+    tier: 報道
+    telop: バレンシアがアギーレ監督の就任を発表
+    narrator: キャスター
+    card:
+      type: table
+      title: いまのバレンシア
+      columns: ['', '']
+      rows:
+        - [順位, 19位（降格圏）]
+        - [勝ち点, 4]
+        - [成績, 1勝1分5敗]
+        - [契約, 今季末まで＋1年]
+    say:
+      - 7試合で**1勝1分け5敗**。勝ち点4の19位、**降格圏**です。開幕からは4連敗もありました。
+      - 監督のカルロス・コルベランは解任。下部のチームを率いるオスカル・サンチェスが、代わりに指揮を執っていました。
+      - そこへ9月23日、**ハビエル・アギーレ**の就任が発表されます。契約は**今季いっぱい**。延長できるのが1年です。
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?459589-459589-fl
+  - id: club
+    heading: 14年で24人目
+    tier: 報道
+    telop: 14年で24人目。監督が代わり続けている
+    narrator: キャスター
+    say:
+      - ただ、その椅子は長く座れる椅子ではありません。アギーレはバレンシアにとって、**14年で24人目**の監督です。
+      - 平均すると**7か月に1人**替わっている計算になります。
+    sources:
+      - https://www.vi.nl/nieuws/getroebleerd-valencia-presenteert-24ste-trainer-in-veertien-jaar
+  - id: said
+    main: true
+    heading: 本人が語った理由
+    tier: 報道
+    telop: 「全部やめてしまうか、続けるか。その狭間にいた」
+    narrator: キャスター
+    say:
+      - text: 'リーグ19位のバレンシアが、ハビエル・アギーレを呼びました。監督はこの14年で24人替わっています。'
+        short_only: true
+      - ワールドカップのあと、本人は辞めることを考えていました。
+      - voice: ハビエル・アギーレ
+        text: 全部やめてしまうか、続けるか。その狭間にいた
+      - voice: ハビエル・アギーレ
+        text: メキシコからのものも含めて、いろいろな国から来た4つの話を断っていた
+      - voice: ハビエル・アギーレ
+        text: でも最後にこれを選んだ。スペインには長くいたし、根を張っている
+      - voice: ハビエル・アギーレ
+        text: 子どもたちもそこにいたし、自分も15シーズンいた。だからキャリアの良い締めくくりになると思った
+      - 話が決まるまでは、あっという間だったといいます。
+      - voice: ハビエル・アギーレ
+        text: 向こうから電話が来て、5分で話はまとまった
+      - voice: ハビエル・アギーレ
+        text: バレンシアは歴史あるクラブだ。うまくやろうと思う。良いときに来たチャンスだ
+    sources:
+      - https://www.infobae.com/espana/agencias/2026/09/23/javier-aguirre-feliz-por-el-reto-de-entrenar-al-valencia-en-el-final-de-su-carrera/
+  - id: who
+    heading: 日本を率いた男
+    tier: 背景
+    telop: 日本代表・メキシコ代表・アトレティコを率いてきた
+    narrator: 解説
+    say:
+      - アギーレが率いてきたのは、**日本代表**のほか、メキシコ代表、アトレティコ・マドリー、エスパニョール、マジョルカ。
+      - 2026年のワールドカップでは、母国メキシコを**ベスト16**へ導いています。
+      - 現地では**バスコ**と呼ばれます。
+      - マジョルカの監督だったとき、**久保建英を指導**しています。
+      - そしていまのバレンシアでプレーしているのが、**佐藤龍之介**です。日本を知っている監督が、日本人のいるクラブへ来ました。
+    sources:
+      - https://web.gekisaka.jp/news/world/detail/?459589-459589-fl
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: バレンシアのファンからは歓迎の声
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 彼の運は、俺たちの運だ
+      - voice: ネット民
+        text: すごいことが起きるぞ
+      - voice: ネット民
+        text: 俺の心の健康は、この人にかかってる
+      - voice: ネット民
+        text: バスコ、頼むからこれを立て直してくれ
+      - voice: ネット民
+        text: おめでとうアギーレ、バレンシアへようこそ
+      - voice: ネット民
+        text: ウイスキー片手に、1部残留だ
+      - voice: ネット民
+        text: メキシコ人監督はいい補強だ、きっと合うはずだ
+        short_voice: true
+    sources:
+      - https://www.excelsior.com.mx/deportes/javier-aguirre-valencia-aficionados-reaccionan
+      - https://www.foxsports.com.mx/2026/09/23/reacciones-aficion-valencia-javier-aguirre-nuevo-dt-descenso-laliga/

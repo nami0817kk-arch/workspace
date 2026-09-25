@@ -1,0 +1,127 @@
+date: 2026年9月24日
+slot: other_1
+format: news
+voice_min: 0.3
+people: [カリム・ベンゼマ]
+theme:
+  id: benzema_free
+  league: france
+  league_name: リーグ・アン
+  kind: transfer
+  topic: オリンピック・リヨン
+  title: 'カリム・ベンゼマ、育ったクラブへ帰る話が消えた理由'
+  question: 何が止めたのか
+short_title: ベンゼマ「無給でいい」が通らなかった
+thumbnail:
+  photo: assets/images/20260924_benzema/01.jpg
+  line1: ベンゼマ「給料は要らない」
+  line2: 止めたのは、クラブではない
+  points:
+    - 38歳
+    - 契約は1年残っていた
+  points:
+    - 契約は1年残っていた
+    - 行き先は育ったクラブ
+sections:
+  - id: what
+    heading: 38歳で、所属が無くなった
+    tier: 報道
+    telop: 8月31日、アル・ヒラルと合意解除。契約は1年残っていた
+    narrator: キャスター
+    card:
+      type: table
+      title: 8月31日に起きたこと
+      columns: ['', '']
+      rows:
+        - [契約解除, 合意のうえ]
+        - [残っていた契約, 1年]
+        - [年齢, 38歳]
+    say:
+      - 8月31日、カリム・ベンゼマが**アル・ヒラルとの契約を解除**しました。**契約は1年残っていました**。
+      - 本人は、こう言っています。
+      - voice: ベンゼマ
+        text: 私のキャリアのひとつの章が、ここで終わりを迎えます
+      - voice: ベンゼマ
+        text: アル・ヒラルに、チームメイトに、スタッフに、ファンに、そしてクラブのすべての人に、共に過ごした時間を感謝します
+      - 38歳。バロンドールを獲り、チャンピオンズリーグを5回勝った選手が、行き先の無いまま9月を迎えました。
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49783743/karim-benzema-al-hilal-saudi-pro-league-transfers
+      - https://www.goal.com/en/news/retirement-or-what-benzema-issues-his-first-comment-after-the-al-hilal-blow/blt425f8fc7a6136d78
+  - id: lyon
+    main: true
+    heading: 給料は要らない、と言った
+    tier: 報道
+    telop: 17年ぶりのリヨン復帰。無給でプレーする用意があった
+    narrator: キャスター
+    card:
+      type: table
+      title: 消えた移籍
+      columns: ['', '']
+      rows:
+        - [行き先, 育ったクラブ（2009年に退団）]
+        - [17年ぶり, の復帰になるはずだった]
+        - [提示していた条件, 1シーズン無給]
+        - [止めたもの, サウジとの2030年6月までの契約]
+    say:
+      - text: '38歳のカリム・ベンゼマが、8月31日にアル・ヒラルとの契約を1年残して解除し、所属の無いまま残っています。'
+        short_only: true
+      - text: 'その行き先をめぐって、伝えられたことがあります。'
+        short_only: true
+      - 行き先として、実際に検討されていたのが**オリンピック・リヨン**でした。ベンゼマが育ち、2009年に出ていったクラブです。**17年ぶり**の復帰になります。
+      - そして、こう伝えられました。**本人は1シーズン、無給でプレーする用意があった**。
+      - それでも、話は進みませんでした。止めたのは、クラブでも本人でもありません。
+      - ベンゼマはサウジアラビアと、もうひとつ契約を持っています。観光の顔として、そして2034年のワールドカップ招致の顔として。**2030年6月まで**の契約です。
+      - その契約が、**サウジのリーグ以外でプレーすることを禁じていました**。
+    sources:
+      - https://www.lyonfoot.com/article/14088/ol-karim-benzema-etait-pret-a-revenir-gratuitement-cet-ete-pourquoi-le-retour-a-ete-bloque
+      - https://www.fichajes.net/en/news/benzemas-dream-is-shattered-20260906.html
+  - id: next
+    heading: そのあと、何も出ていない
+    tier: 未確認
+    telop: 引退の発表も、新しいクラブの発表も無い
+    narrator: キャスター
+    say:
+      - 現地の司会者、アル・ファラジは、引退に傾いているという見方を示しました。
+      - voice: アル・ファラジ
+        text: ベンゼマにはアル・シャバブ行きやアル・イテハド復帰を含むいくつかの選択肢が示されたが、彼はそのどちらも断った
+      - voice: アル・ファラジ
+        text: 決断が彼の手に委ねられたとき、彼は現役引退に傾いていることを示した
+      - voice: アル・ファラジ
+        text: 引退が彼にとって、選択肢としてテーブルの上にあるかもしれない
+      - それから半月。**引退の発表も、新しいクラブの発表も出ていません。**
+    sources:
+      - https://www.goal.com/en/news/video-waleed-al-farraj-drops-a-bombshell-this-is-why-benzema-decided-to-retire/blt3bc8d237bb2bb87c
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 契約の強さに、驚く声が並んだ
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: サウジリーグのチームが契約しないから他リーグ行こうとしてんのに、サウジリーグ以外でプレーできないって……
+      - voice: ネット民
+        text: こんな契約が存在すんのか
+      - voice: ネット民
+        text: 争えば無効にできる可能性あるんじゃないかってくらい拘束力が強すぎる気がする
+      - voice: ネット民
+        text: 安易にアンバサダー就任するものじゃないんだな
+      - voice: ネット民
+        text: この場合、ベンゼマが例外措置を得られる条件はなんだろうか
+      - voice: ネット民
+        text: サウジアラビアの政府系ファンドが金をせびる訳ないだろうし。中々想像し辛いな
+      - voice: ネット民
+        text: サウジではなく主要リーグでまたみたい。まだまだ出きるでしょ
+      - voice: ネット民
+        text: 残りの給与を支払っても辞めてほしいんだな
+      - voice: ネット民
+        text: サウジって以外とあっさり退団させてくれるな
+      - voice: ネット民
+        text: フィールド上では文句のつけようがないけど、一歩外に出るとなかなか問題だらけだったからなぁ
+      - voice: ネット民
+        text: 選手としてはすごくても、いい形で引退できるかは人柄による所が大きい気がするなぁ
+      - voice: ネット民
+        text: どんなスーパースターでも、権力とルールの前ではただの人なんやな
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/53e43102746d0c9b88552e3ce9c54c05cd4534b6/comments
+      - https://news.yahoo.co.jp/articles/403aa41d535807f7ff8da9669e26562a3c2971d4/comments

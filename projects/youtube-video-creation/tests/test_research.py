@@ -219,7 +219,8 @@ def test_breaking_prefix_is_fine_with_a_confirmed_section():
     # 2026-09-07: 他人の声が足りないヒントは、どの取材メモにも出るようになった
     # （参考3チャンネルは尺の58%が他人の声、こちらは14%だった）。札の点検とは別の話
     # 2026-09-08: 中身の量（数字・出典）のヒントも同様にどのメモにも出る
-    volume = ("他人の声", "数字を含む行", "出典が")
+    # 2026-09-25: サムネに名前を入れる決まりも、名前を書いていないメモには必ず出る
+    volume = ("他人の声", "数字を含む行", "出典が", "クラブ名も人名も")
     assert [h for h in advise(build_notes(raw)) if not any(v in h for v in volume)] == []
 
 
@@ -742,7 +743,7 @@ def test_サムネに答えを書いたら知らせる():
                   answer="クヴァラツヘリア、ハリー・ケイン、ムバッペの3人です",
                   thumbnail={"line1": "見出し",
                              "points": ["ハリー・ケイン", "1人目 ●●●"]})
-    said = [w for w in advise(notes) if "サムネの" in w]
+    said = [w for w in advise(notes) if "そのまま入っています" in w]
     assert len(said) == 1 and "ハリー・ケイン" in said[0]
 
 
@@ -752,7 +753,7 @@ def test_伏せ字なら知らせない():
     notes = Notes(date="2026年9月8日", title="題", question="問い",
                   answer="クヴァラツヘリア、ハリー・ケイン、ムバッペの3人です",
                   thumbnail={"line1": "見出し", "points": ["1人目 ●●●●", "2人目 ●●●"]})
-    assert not [w for w in advise(notes) if "サムネの" in w]
+    assert not [w for w in advise(notes) if "そのまま入っています" in w]
 
 
 # ---- 型（format）2026-09-08 ------------------------------------------------
@@ -1646,3 +1647,69 @@ def test_耳で分からない言い回しを知らせる():
     raw["sections"][0]["say"] = ["アウェーで2対1の勝ち。初めての欧州の試合でした。"]
     raw["sections"][1]["say"] = ["創立は1899年です。", "愛称はチェリーズ。", "本拠地はディーン・コートです。"]
     assert _advise_ear(build_notes(raw)) == []
+
+
+def test_引用の型でもつかみの行に字幕を付ける():
+    """quote / voices の型では、つかみの1行にテロップが付いていなかった
+    （2026-09-24 に発見）。「読み上げた文は、画面にも出す」が型で抜けていた。"""
+    say = [
+        "かいけんで、ほんにんがはなしました。",
+        {"voice": "ほんにん", "text": "わたしはまだここにいる"},
+        {"voice": "ほんにん", "text": "まだちからになれる"},
+        {"voice": "ほんにん", "text": "とうたつしたいし、とうたつする"},
+    ]
+    raw = _raw(format="quote",
+               sections=[_section(say=say, main=True)])
+    raw["theme"]["hook"] = "記者に聞かれる前の、一言目でした。"
+    script = to_script(build_notes(raw), _plan())
+    head = script.split("## ", 2)[1]
+    assert "キャスター: 記者に聞かれる前の、一言目でした。" in head
+    assert "  telop: 記者に聞かれる前の、一言目でした" in head
+
+
+def test_サムネの文字にクラブ名か人名を入れる():
+    """2026-09-25 指示「さむねには、クラブ名か人名入れてね」。
+
+    一覧に並ぶのは題ではなく絵なので、絵の中に名前が無いと誰の話か分からない。
+    """
+    from src.research import _advise_thumbnail_name
+
+    def notes(line1, line2, people, topic):
+        n = build_notes(_raw())
+        n.people, n.topic = people, topic
+        n.thumbnail = {"line1": line1, "line2": line2}
+        return n
+
+    assert _advise_thumbnail_name(
+        notes("19位、勝ち点4からの立て直し", "14年で24人目の監督", ["ハビエル・アギーレ"], "バレンシア"))
+    assert not _advise_thumbnail_name(
+        notes("バレンシア、19位・勝ち点4", "呼んだのは14年で24人目の男", ["ハビエル・アギーレ"], "バレンシア"))
+    # 「マンチェスター・ユナイテッド」を「マンU」と略しても通す
+    assert not _advise_thumbnail_name(
+        notes("マンU、1300億円を稼いだ日", "同じ日に売り出したのは●●", [], "マンチェスター・ユナイテッド"))
+
+
+def test_入れ替えた写真は次の行にも残る():
+    """2026-09-25 指摘「ジダン 背景がジダンだけとなっている」。
+
+    行に写真を指定しても、次の行でサムネの写真へ戻っていた。
+    2枚目が1行で消え、画面は「ジダン → ムバッペ → ジダン」と2回動いていた
+    （絵の入れ替えは1本1回までの決まり）。
+    """
+    raw = _raw()
+    raw["thumbnail"] = {"line1": "みだし", "photo": "assets/images/a/01.jpg"}
+    raw["sections"] = [
+        _section(id="what", main=True, say=[
+            "さいしょのぎょうです。",
+            {"text": "ここからべつのひとのはなしです。", "image": "assets/images/b/01.jpg"},
+            "そのつぎのぎょうです。",
+            "さらにつぎのぎょうです。",
+        ]),
+        _section(id="why", heading="なぜ", say=["あとのせつです。", "もういちぎょう。"]),
+        _section(id="next", heading="これから", say=["さいごのせつです。"]),
+    ]
+    script = to_script(build_notes(raw), _plan())
+    used = [ln.split(": ", 1)[1] for ln in script.splitlines() if ln.startswith("  image: ")]
+    assert used, "写真が1枚も出ていません"
+    # b に替わったら、そのあとは a へ戻らない
+    assert "assets/images/a/01.jpg" not in used[used.index("assets/images/b/01.jpg"):]

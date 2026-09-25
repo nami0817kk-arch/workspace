@@ -110,11 +110,19 @@ def _search(text: str, name: str) -> int:
 
 
 def _katakana_runs_on(text: str, at: int, length: int) -> bool:
-    """カタカナの名前の直後に、カタカナが続いているか。"""
+    """カタカナの名前が、別の語の途中を拾っていないか。
+
+    **前と後ろの両方を見る**（2026-09-24）。2026-09-20 に後ろだけ見るようにしたが、
+    「ダニ・**カルバハル**」の回に **#ハル・シティ** が付いた。「バ」＋「ハル」で、
+    **名前の途中から**当たっていて、後ろは読点なので素通りしていた。
+    「ポルトガル代表」に #ポルト が付いたのと同じ壊れ方で、見る向きが逆だった。
+    """
     if not KATAKANA.fullmatch(text[at:at + length]):
         return False
+    before = text[at - 1:at] if at > 0 else ""
     after = text[at + length:at + length + 1]
-    return bool(after and KATAKANA.match(after))
+    return bool((after and KATAKANA.match(after))
+                or (before and KATAKANA.match(before)))
 
 
 def _ascii(name: str) -> bool:

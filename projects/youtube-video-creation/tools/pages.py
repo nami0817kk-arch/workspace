@@ -43,6 +43,39 @@ from pick_block import PICK_CSS, PICK_JS  # noqa: E402
 
 e = html.escape
 
+sys.path.insert(0, str(ROOT))
+from src.script_model import BASE_SECONDS, MIN_SECONDS, SECONDS_PER_CHAR  # noqa: E402
+
+# 見積りと実尺のずれ（直近の実測で 0.92〜1.07）。**分どまりで出す**ので丸めに吸わせる
+BARE = re.compile(r"\*\*|[（(].*?[）)]")
+
+
+def say_seconds(text: str) -> float:
+    """1行の読み上げの見積り。script_model と同じ式。"""
+    return max(MIN_SECONDS, BASE_SECONDS + len(BARE.sub("", text)) * SECONDS_PER_CHAR)
+
+
+def real_seconds(stem: str) -> float | None:
+    """書き出し済みなら実尺を返す（見積りより、こちらが正しい）。"""
+    import json
+    meta = ROOT / "output" / stem / "script.json"
+    if not meta.exists():
+        return None
+    try:
+        data = json.loads(meta.read_text(encoding="utf-8"))
+    except Exception:
+        return None
+    total = 0.0
+    for scene in data.get("scenes", []):
+        for line in scene.get("lines", []):
+            total += float(line.get("duration") or 0.0)
+    return total or None
+
+
+def mmss(seconds: float) -> str:
+    m, sec = divmod(int(round(seconds)), 60)
+    return f"{m}分{sec:02d}秒"
+
 BASE_CSS = """
 :root{--paper:#f5f4f1;--panel:#fff;--ink:#1c1b19;--ink-soft:#4a4842;--ink-faint:#8a867e;
       --line:#e2ded6;--pitch:#1f7a5a;--bg:#f5f4f1;--fg:#1c1b19;--mut:#6b6862;--card:#fff;--acc:#a8321f;--hi:#1f7a5a}
@@ -82,7 +115,12 @@ figcaption{color:var(--hi);font-size:.76rem;margin-top:2px}
 
 
 def rich(text: str) -> str:
-    return re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", e(str(text or "")))
+    """`**太字**` を太字に。HTML は書けないので、改行はそのまま改行にする。
+
+    題材の理由は数行になるので、1段落に流し込むと読めない（2026-09-24）。
+    """
+    out = re.sub(r"\*\*(.+?)\*\*", r"<b>\1</b>", e(str(text or "")))
+    return out.strip().replace("\n", "<br>")
 
 
 def ja_date(date: str) -> str:
@@ -190,14 +228,20 @@ def data_uri(path: Path, width: int = 420) -> str:
 
 def scripts(date: str, images: bool = False) -> Path:
     paths = sorted(p for p in (ROOT / "scripts").glob(f"{date}_*.md"))
-    chunks, toc, stats = [], [], []
+    chunks, toc, stats, est_all = [], [], [], []
     for path in paths:
         key = path.stem[len(date) + 1:]
         meta, sections = parse(path)
         cards = meta.get("cards") or {}
         nline = sum(len(s["lines"]) for s in sections)
         chars = sum(len(l["text"]) for s in sections for l in s["lines"])
-        stats.append((meta.get("title", key), len(sections), nline, chars))
+        # **本編の尺**。ショートだけの行（only: short）は本編で読まないので数えない
+        est = sum(say_seconds(l["text"]) for s in sections for l in s["lines"]
+                  if l["attr"].get("only") != "short")
+        got = real_seconds(path.stem)
+        length = mmss(got) if got else "およそ " + mmss(est)
+        est_all.append(got or est)
+        stats.append((meta.get("title", key), len(sections), nline, chars, length))
         toc.append(f'<a href="#{e(key)}">{e(str(meta.get("title", key))[:18])}</a>')
         body = []
         for sec in sections:
@@ -228,16 +272,18 @@ def scripts(date: str, images: bool = False) -> Path:
         th = (f'<figure class="thumb"><img src="{data_uri(thumb, 640)}" alt=""><figcaption>サムネイル</figcaption></figure>'
               if thumb.exists() else "")
         chunks.append(f'<details id="{e(key)}"><summary><span class="t">{e(str(meta.get("title", key)))}</span>'
-                      f'<span class="d">{len(sections)}節 {nline}行</span></summary>{th}'
+                      f'<span class="d">{e(length)} ／ {len(sections)}節</span></summary>{th}'
                       + "".join(body) + src + "</details>")
-    rows = "".join(f"<tr><td>{e(str(n))}</td><td>{s}</td><td>{l}</td><td>{c}</td></tr>" for n, s, l, c in stats)
+    total_est = sum(est_all)
+    rows = "".join(f"<tr><td>{e(str(n))}</td><td>{e(ln)}</td><td>{s}</td><td>{l}</td><td>{c}</td></tr>"
+                   for n, s, l, c, ln in stats)
     title = f"{ja_date(date)}の台本"
     page = (f"<title>{e(title)}</title><style>{BASE_CSS}</style><main>"
             f"<h1>{e(title)}（{len(paths)}本）</h1>"
-            f'<p class="lead">{date[:4]}-{date[4:6]}-{date[6:]} ／ 読み上げの全文。太字は画面で強調する数字</p>'
+            f'<p class="lead">{date[:4]}-{date[4:6]}-{date[6:]} ／ 読み上げの全文。太字は画面で強調する数字。<b>尺は本編の見込み</b>（ショートは別に58秒まで）</p>'
             '<div class="toc">' + " ".join(toc) + "</div>" + "".join(chunks)
-            + '<details><summary><span class="t">分量</span><span class="d">節・行・文字</span></summary>'
-              '<div class="tbl"><table><tr><th>題材</th><th>節</th><th>行</th><th>文字</th></tr>' + rows
+            + f'<details><summary><span class="t">分量</span><span class="d">合計 {e(mmss(total_est))}</span></summary>'
+              '<div class="tbl"><table><tr><th>題材</th><th>尺</th><th>節</th><th>行</th><th>文字</th></tr>' + rows
             + "</table></div></details></main>")
     out = ROOT / "output" / "pages" / f"scripts_{date}" / "index.html"
     out.parent.mkdir(parents=True, exist_ok=True)

@@ -1151,6 +1151,33 @@ def _advise_group_thumbnail(notes: Notes) -> list[str]:
             "thumbnail.photos に取り上げた人を並べてください（5枚まで）"]
 
 
+def _advise_thumbnail_name(notes: Notes) -> list[str]:
+    """**サムネの言葉に、クラブ名か人名を入れる**（2026-09-25 指示）。
+
+    一覧に並ぶのは題ではなく絵なので、絵の中に名前が無いと、
+    誰の話か分からないまま流れる。タイトルの頭に名前を置く決まり
+    （2026-09-07）と同じ筋で、そちらは検索、こちらは一覧に効く。
+    エンブレムは絵なので、**読める文字として**入っているかを見る。
+    """
+    thumb = notes.thumbnail or {}
+    words = " ".join(str(thumb.get(k) or "") for k in ("line1", "line2"))
+    words += " " + " ".join(str(x) for x in (thumb.get("points") or []))
+    if not words.strip():
+        return []
+    names = [str(x).strip() for x in (notes.people or []) if str(x).strip()]
+    names += [str(notes.topic or "").strip()]
+    names += [str(x).strip() for x in (thumb.get("crests") or [])]
+    names += [str(x).strip() for x in (thumb.get("crest_main") or [])]
+    for name in [n for n in names if n]:
+        # 「マンチェスター・ユナイテッド」を「マンU」と書くので、頭の2文字でも当てる
+        for form in {name, name.replace("・", ""), name.split("・")[0], name[:3], name[:2]}:
+            if len(form) >= 2 and form in words:
+                return []
+    return ["サムネの文字に、クラブ名も人名も入っていません"
+            f"（『{str(thumb.get('line1') or '')}』『{str(thumb.get('line2') or '')}』）。"
+            "**一覧に並ぶのは絵なので、絵の中に名前が要ります**（2026-09-25 指示）"]
+
+
 def _advise_thumbnail_promise(notes: Notes) -> list[str]:
     """**サムネが、本編で言っていないことを約束していないか**（2026-09-21）。
 
@@ -1505,6 +1532,7 @@ def _advise_voices(notes: Notes) -> list[str]:
     hints: list[str] = (_advise_volume(notes) + _advise_material(notes) + _advise_cards(notes)
                         + _advise_hook(notes) + _advise_thumbnail_repeat(notes)
                         + _advise_thumbnail_promise(notes)
+                        + _advise_thumbnail_name(notes)
                         + _advise_repeats(notes) + _advise_short_repeats(notes)
                         + _advise_title(notes) + _advise_group_thumbnail(notes)
                         + _advise_ear(notes) + _advise_readings(notes))
@@ -1896,6 +1924,10 @@ def to_script(notes: Notes, plan: Plan) -> str:
         # 反応・本人の言葉の型は、つかみが書いてあれば1行だけ。問いは立てない。
         # 参考（サッカーラボ 25.5万回）は 0:02 でタイトル、0:11 から事実だった
         lines.append(f"キャスター: {_ends_sentence(notes.hook)}")
+        # **テロップを付け忘れていた**（2026-09-24 に発見）。news の型には付けて
+        # いたのに、quote / voices の型ではこの1行だけ声だけで流れていた。
+        # 「読み上げた文は、画面にも出す」（2026-09-10）が、型で抜けていた形。
+        lines.append(f"  telop: {_telop(notes.hook, TELOP_LIMIT)}")
         lines += _open_image
     lines.append("")
 
@@ -2034,6 +2066,12 @@ def to_script(notes: Notes, plan: Plan) -> str:
                     own_image = fallback_image
                 if own_image:
                     lines.append(f"  image: {own_image}")
+                    # **入れ替えた写真は、そのあとの行にも残す**（2026-09-25 指摘
+                    # 「ジダン 背景がジダンだけとなっている」）。行に写真を指定しても、
+                    # 次の行でサムネの写真へ戻っていたので、**2枚目が一度も出ないか、
+                    # 出ても1行で消える**（画面は「ジダン→ムバッペ→ジダン」と2回動く）。
+                    # 入れ替えは1本1回までの決まりなので、**新しい写真を既定にする**
+                    fallback_image = own_image
                     # **行に写真があれば、そのあとの行でカードを下ろせる**（2026-09-22）。
                     # 名選手の節が1人3行になり、顔写真はあるのに、サムネ写真の無い回
                     # （プレミア20クラブ紹介）は photo_on が立たず、同じカードが22秒続いた
@@ -2111,6 +2149,7 @@ def to_script(notes: Notes, plan: Plan) -> str:
                     own_image = fallback_image
                 if own_image:
                     lines.append(f"  image: {own_image}")
+                    fallback_image = own_image      # 上と同じ（2026-09-25）
         lines.append("")
 
     # **まとめは答えの1行だけにする**（2026-09-07）。参考3チャンネルの直近4本に
