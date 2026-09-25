@@ -41,6 +41,9 @@ class FixturesScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(Tr.pick('日程・順位表', 'Fixtures & table')),
+          // いまは下タブ専用だが、スタメン・スカッドと同じ作り(ドロワーあり)
+          // なので、どこかから開かれた瞬間に戻れなくなる。先に塞いでおく。
+          leading: Navigator.of(context).canPop() ? const BackButton() : null,
           bottom: TabBar(
             isScrollable: otherDivisions.isNotEmpty,
             tabs: [
@@ -142,9 +145,18 @@ class FixturesScreen extends StatelessWidget {
         ),
       ),
     );
-    final results = await gameState.simulateAheadMatchdays(choice);
+    // 閉じる手段の無い進行中ダイアログを出しているので、**何があっても
+    // 必ず閉じる**。途中で例外が出ると、ぐるぐる回る円だけが残って操作が
+    // 一切できなくなる(アプリを再起動するしかない)。
+    final List<MatchResult> results;
+    try {
+      results = await gameState.simulateAheadMatchdays(choice);
+    } finally {
+      if (context.mounted) {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
+    }
     if (!context.mounted) return;
-    Navigator.of(context, rootNavigator: true).pop();
 
     final league = gameState.save!.league;
     final userTeamId = gameState.userTeam.id;
