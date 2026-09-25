@@ -1042,16 +1042,48 @@ class CleanNameTest(unittest.TestCase):
 
         self.assertEqual(out, "ピアノ用イス 高低自在")
 
-    def test_削りすぎたら元に戻す(self):
-        # 宣伝しか書かれていない名前を空にしてしまうと、何の商品か分からなくなる
+    def test_短い商品名は残す(self):
+        # 下限を6文字にしていたとき、この4件を宣伝付きの元の名前へ戻していた
+        for name in ("＼送料無料／白メダカ", "【P5倍】ミートピア"):
+            with self.subTest(name=name):
+                self.assertNotIn("／", self.theme.clean_name(name))
+
+    def test_宣伝しか書かれていない名前を空にしない(self):
+        # 空にすると何の商品か分からなくなる。3文字を割ったら元へ戻す
         self.assertEqual(self.theme.clean_name("【送料無料】"), "【送料無料】")
-        self.assertEqual(self.theme.clean_name("★特価★"), "★特価★")
+        self.assertIn("特価", self.theme.clean_name("★特価★"))
 
     def test_商品名の途中は触らない(self):
         # 「送料無料」が名前の中に出てくるのは残す。落としてよいのは先頭だけ
         out = self.theme.clean_name("プリンター インク 5本セット 送料無料 純正")
 
         self.assertEqual(out, "プリンター インク 5本セット 送料無料 純正")
+
+    def test_囲みの中がブランド名なら残す(self):
+        # 中身を見ずに囲みを落とすと、題が型番だけになって何の商品か分からない
+        # （実測で33件が元の3割未満まで削れていた）
+        out = self.theme.clean_name(
+            "【ゆうパケット・送料無料】*【松岡良治】【クラシックギター用弦セット】　MC1000MT")
+
+        self.assertEqual(out, "【松岡良治】【クラシックギター用弦セット】　MC1000MT")
+
+    def test_割引と締切の書き方を落とす(self):
+        # トップの先頭に出ていた形
+        out = self.theme.clean_name(
+            "20%OFF!1点1280円!25(金)23:59迄 nintendo switch カバー")
+
+        self.assertEqual(out, "nintendo switch カバー")
+
+    def test_全品割引クーポンの配布告知を落とす(self):
+        out = self.theme.clean_name(
+            "全品50％OFFクーポン配布中 09/25(金)23:59まで 羽毛掛け布団 シングル")
+
+        self.assertEqual(out, "羽毛掛け布団 シングル")
+
+    def test_順位の自慢を落とす(self):
+        out = self.theme.clean_name("楽天ランキング1位受賞 逆鱗マイバチ")
+
+        self.assertEqual(out, "逆鱗マイバチ")
 
     def test_空でも壊れない(self):
         self.assertEqual(self.theme.clean_name(""), "")
