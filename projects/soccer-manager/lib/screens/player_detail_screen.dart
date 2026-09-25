@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../logic/attribute_context_engine.dart';
+import '../logic/development_advisor.dart';
 import '../logic/contract_engine.dart';
 import '../logic/retirement_engine.dart';
 import '../logic/dynamics_engine.dart';
@@ -84,6 +85,13 @@ class PlayerDetailScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
+          // この選手について、いま手を打つべきこと。
+          // 同じ判定をトレーニング画面の提案カードでも使っている。選手を
+          // 開いた人は、その画面まで見に行かないので、ここにも出す。
+          _AdviceCard(advices: [
+            for (final a in DevelopmentAdvisor.advise(team))
+              if (a.playerId == p.id) a,
+          ]),
           Row(
             children: [
               PlayerFaceAvatar(
@@ -1308,6 +1316,58 @@ class _KeyAttributesCard extends StatelessWidget {
                       style: TextStyle(
                         fontSize: 11,
                         color: SemanticColors.subtleText(context),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+/// 選手1人ぶんの育成アドバイス。手を打つことが無ければ何も出さない。
+///
+/// 「問題ありません」と毎回書くと、本当に手を打つべきときの一行が埋もれる。
+class _AdviceCard extends StatelessWidget {
+  final List<DevelopmentAdvice> advices;
+
+  const _AdviceCard({required this.advices});
+
+  @override
+  Widget build(BuildContext context) {
+    if (advices.isEmpty) return const SizedBox.shrink();
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      color: Theme.of(context).colorScheme.secondaryContainer,
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (final a in advices)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 2),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(Icons.tips_and_updates_outlined,
+                        size: 16,
+                        color:
+                            Theme.of(context).colorScheme.onSecondaryContainer),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        '${a.kind.label}: ${a.message}',
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSecondaryContainer,
+                        ),
                       ),
                     ),
                   ],
