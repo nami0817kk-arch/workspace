@@ -1,0 +1,189 @@
+title: 9月26日の題材
+lead: 候補541件と代表戦・移籍の記事から18件
+note: |
+  <b>○×を付けてください。</b>代表ウィークで、クラブの試合はありません。午前（9:00〜14:00）は予約で埋まっているので、<b>午後から出す本編</b>の題材です。<br><br>
+  <b>⑥ジダンと⑦イタリアは、試合が日本時間の今朝3時45分から。</b>結果はこのページを見るころには出ています。作るなら結果を足して書きます。<br><br>
+  昨日と同じ人の題材は外しています（塩貝の反響・ラフィーニャ・ハーランド・ロナウド）。
+  ⑫だけは<b>昨日のシャビの回と同じ試合</b>ですが、別の話（取り消しの本当の理由）なので残しました。
+  なでしこ（アジア大会）とJリーグの話は、決まりどおり入れていません。
+items:
+  - num: 1
+    slot: 日本人
+    head: 鈴木彩艶に元ヴィラのスカウトが「またオナナだ」「いつもミスが混じる」
+    why: |
+      英国の記事で、アストン・ヴィラの元スカウト、ブライアン・キングが鈴木彩艶について
+      **"he's another Onana"「there's always a mistake in there with him」**。
+      日本代表の正GKへの辛い評価で、**反応が集まりやすい**。ヴィラで起用を推す声に反対した形。
+      元の記事は**9/23**なので少し古い。
+    src: Football Insider（9/23）/ Football Tribe Japan（9/25）
+    url: https://football-tribe.com/japan/2026/09/25/359713/
+    fmt: voices
+  - num: 2
+    slot: 日本人
+    head: 前田大然は古橋亨梧と「同じ苦境に陥るおそれ」。イプスウィッチでの今を英国紙が心配
+    why: |
+      英国の記事。**古橋はバーミンガムで公式戦3得点**に終わり、今はLAギャラクシー。
+      前田にも「残念な共通点が見える」という見立て。スコットランドから来た2人を並べて語っている。
+      記事の見立てが中心で、本人の言葉は無い。
+    src: Football League World / Football Tribe Japan（9/25）
+    url: https://football-tribe.com/japan/2026/09/25/359715/
+    fmt: news
+    weak: true
+  - num: 3
+    slot: 日本人
+    head: 町野修斗、新監督の前で2ゴール。「期待外れに終わった」から復活なるか
+    why: |
+      ボルシアMG。**9/24の練習試合（4部ジーゲンに3-0）で、後半から出て2得点**。
+      ブレッシン新監督へのアピール。現地では「戦力として期待されなくなっていた」とも書かれていた。
+      練習試合なので、話としては小さい。
+    src: GladbachLIVE / Football Tribe Japan（9/25）
+    url: https://football-tribe.com/japan/2026/09/25/359717/
+    fmt: news
+    weak: true
+  - num: 4
+    slot: 日本人
+    head: 19歳の佐藤龍之介、久保建英と同じ便で帰国。「ラ・リーガはいいDFが多い、攻撃で課題を感じる」
+    why: |
+      **W杯落選からバレンシアへ移籍した19歳**を、ゲキサカが本人取材。
+      久保と同じ便で帰国し、バレンシアの新監督アギーレの人柄を**久保から聞いた**という話も。
+      本人の言葉が主役にできる。
+    src: ゲキサカ（9/25）
+    url: https://web.gekisaka.jp/news/japan/detail/?459718-459718-fl
+    fmt: quote
+  - num: 5
+    slot: 日本人
+    head: U21の小杉啓太が語った堂安律。現地は「A代表入りも」
+    why: |
+      フランクフルトのDF小杉が、同僚の**堂安律について語った**（ドイツの媒体）。
+      「A代表入りの可能性」は媒体の見立て。堂安の話として作るか、小杉の話として作るか。
+    src: absolut fussball / Football Tribe Japan（9/24〜25）
+    url: https://football-tribe.com/japan/2026/09/25/359707/
+    fmt: quote
+    weak: true
+  - num: 6
+    slot: その他
+    head: ジダン、フランス代表監督デビュー戦。「選手のデビューより上だ。とてつもない感動」
+    why: |
+      **日本時間の今朝3時45分、トルコ戦（イズミット）**。会見では「選手時代のデビューと同じくらい特別か」に
+      **「それ以上だ。32年前は遠い」**。結果と試合後の言葉を足して作る。
+    src: Onze Mondial / kicker（9/24〜26）
+    url: https://www.onzemondial.com/equipe-de-france/turquie-france-mystere-emotion-et-moment-detente-avec-un-journaliste-un-zidane-heureux-avant-ses-grands-debuts-avec-les-bleus-1000747
+    fmt: quote
+  - num: 7
+    slot: その他
+    head: マンチーニ復帰のイタリア、ベルギー戦。34人から10人を外して臨んだ再出発
+    why: |
+      **日本時間の今朝3時45分、ローマ**。マンチーニ「ボスニアのことはすぐに乗り越えなければ」。
+      ザニオーロ、エスポジトらを外した。結果を足して作る。日本での関心は⑥より低い。
+    src: Football Italia / ESPN（9/24〜25）
+    url: https://sports.yahoo.com/articles/mancini-drops-10-italy-players-083000865.html
+    fmt: news
+    weak: true
+  - num: 8
+    slot: プレミア
+    head: マンC、115件のうち114件で違反認定と報道。勝ち点剥奪からタイトル剥奪まで
+    why: |
+      The Athletic と BBC が**「115件中114件で違反認定」**。罰はまだ決まっていない。
+      kicker は、罰金・勝ち点剥奪・大会除外、規定の上では**タイトル剥奪もあり得る**と書く。
+      クラブは「手続きは続いており、守秘の対象だ」。**日本でも「115件」は有名。**
+    src: Sky Sports / kicker / BBC（9/25）
+    url: https://www.skysports.com/football/news/13591827/man-city-premier-league-charges-inquiry-moves-to-appeal-stage-amid-reports-majority-of-charges-proven
+    fmt: voices
+  - num: 9
+    slot: その他
+    head: メッシ、最後のアルゼンチン代表戦は10月6日。特別ユニフォームに「5月の太陽」と「M」
+    why: |
+      **10月6日、ブエノスアイレスのモヌメンタル、ベナン戦**。代表208試合目。8万5千枚は2時間で完売。
+      ユニフォームは胸と背に「5月の太陽」、adidas の位置にメッシの「M」、名前と10番は金。
+      本人「最後の一試合。一生のユニフォーム」。**「最後」の言葉が強い。**
+    src: ESPN / メッシのInstagram（9/25）
+    url: https://www.espn.com/soccer/story/_/id/50026144/lionel-messi-special-kit-final-argentina-match-unveiled
+    fmt: voices
+  - num: 10
+    slot: プレミア
+    head: ベリンガム、2年連続でイングランド年間最優秀選手。W杯7ゴールは1大会の最多
+    why: |
+      ファン投票。W杯で**7得点、イングランド人の1大会最多**。イングランドは準決勝でアルゼンチンに敗れ3位。
+      本人「素晴らしい夏に添えられた、ささやかで美しいおまけ」、トゥヘル「重圧の中でこそ力を出す」。
+    src: ESPN（9/25）
+    url: https://www.espn.com/soccer/story/_/id/50026543/jude-bellingham-england-player-year
+    fmt: quote
+  - num: 11
+    slot: プレミア
+    head: ハヴァーツが負傷でアーセナルへ。ギョケレスは今季プレミア29分・シュート1本
+    why: |
+      オランダ戦でティンバーとの接触で交代、アーセナルで治療。**次は10/10のリーズ戦**。
+      Sky は後釜を議論。**ギョケレスは今季プレミア29分・シュート1本**で、メリーノを前線に置く案も。
+      クロップ「大したことでないことを願う」。
+    src: Sky Sports（9/25）
+    url: https://www.skysports.com/football/news/13591713/kai-havertz-returning-to-arsenal-to-be-assessed-after-suffering-injury-for-germany-against-netherlands
+    fmt: news
+  - num: 12
+    slot: その他
+    head: ファン・ダイクの取り消しゴール、本当の理由はファウルではなかった
+    why: |
+      クロップのドイツ代表デビュー戦（1-1）の前半13分。誰もが「ブロビーのGK妨害のファウル」だと思っていたが、
+      **実はブロビーのオフサイド**（DFBが確認）。クロップ「新ルールならファウルだ」、
+      ファン・ダイク「ブライアンは何もしていない」。**昨日のシャビの回と同じ試合。**
+    src: kicker（9/25）
+    url: https://www.kicker.de/doch-kein-foul-warum-van-dijks-treffer-wirklich-aberkannt-wurde-1255870/artikel
+    fmt: quote
+  - num: 13
+    slot: ラリーガ
+    head: バルサのゴードン「僕たちは彼らではない」。スペインを真似るイングランドへの一言
+    why: |
+      バルセロナ所属のアンソニー・ゴードン。「他国を見て真似し続けるのはやめるべきだ。**僕たちは彼らではない**」
+      「イングランドのDNAにはない」。**土曜にウェンブリーでスペイン戦**があり、その前の話。
+      発言は9/24で少し古い。
+    src: BBC（9/24）
+    url: https://www.bbc.com/sport/football/articles/c90kly6kelk1o
+    fmt: quote
+  - num: 14
+    slot: その他
+    head: ケイン、バイエルンとの契約延長は「かなり近い。発表まで長くはかからない」
+    why: |
+      今の契約は2027年6月まで。本人「かなり近い。まだ詰める点はあるが、何らかの発表まで長くはかからないと思う」。
+      発言は二次引用で、同じ趣旨は9/23から出ている。
+    src: Yahoo Sports / bulinews（9/23〜25）
+    url: https://sports.yahoo.com/articles/harry-kane-contract-talks-won-113000624.html
+    fmt: quote
+    weak: true
+  - num: 15
+    slot: ラリーガ
+    head: バイエルンがダニ・オルモを狙う。バルサでは今季先発3試合、評価額7000万ユーロ
+    why: |
+      W杯優勝メンバーのオルモ（28歳）。**今季バルサでは先発3試合**。ムシアラやオリーセが引き抜かれた場合の
+      候補として、1月の獲得を検討という報道。報じたのは Sky Sports。
+    src: Sky Sports / Bayern Strikes（9/24〜25）
+    url: https://sports.yahoo.com/articles/bayern-munich-eyeing-move-barcelona-060500901.html
+    fmt: news
+    weak: true
+  - num: 16
+    slot: ロマーノ
+    head: ロマーノが明かした「Here we go 寸前で破談した3件」。ケシエ、カマラ、ボニフェイス
+    why: |
+      ケシエ→ユベントス、L.カマラ→チェルシー、ボニフェイス→ミラン。ロマーノ「契約にサインするのは記者ではない」。
+      **ロマーノ本人の X は読めなかった**（Chrome の接続が落ちている）。これはイタリア紙の引用。9/24。
+    src: Calciomercato（9/24）
+    url: https://www.calciomercato.com/liste/romano-kessie-camara-e-boniface-tre-trattative-saltate-a-un-passo-dall-here-we-go/blt65b0418446738f3c
+    fmt: news
+    weak: true
+  - num: 17
+    slot: その他
+    head: 欧州4大リーグがFIFAに共同声明。「会長は搾取的な考えを推し進めてきた」
+    why: |
+      プレミア・ブンデス・ラ・リーガ・セリエAが共同で、FIFAの意思決定と商業部門の分離などを要求。
+      2027年3月の会長選の候補に改革案の公表を求めた。**話が硬く、顔の写真が作りにくい。**
+    src: Sky Sports（9/25）
+    url: https://www.skysports.com/football/news/13591689/fifa-gianni-infantino-exploitative-ideas-criticised-as-premier-league-bundesliga-laliga-and-serie-a-unite-to-call-for-reform
+    fmt: news
+    weak: true
+  - num: 18
+    slot: その他
+    head: アモリム、マンUの「散髪男」に「ごめんね」。5連勝まで髪を切らないと誓ったファン
+    why: |
+      「マンUが5連勝するまで髪を切らない」ファン、フランク・イレットにポルトガルで会い、髪を指さして "sorry about that!"。
+      **アモリムはマンUで63試合25勝、5連勝は一度も無かった**（今はミラン監督）。軽い話。
+    src: Football Italia（9/25）
+    url: https://football-italia.net/amorim-apologises-man-utd-haircut-guy-3-words/
+    fmt: voices
