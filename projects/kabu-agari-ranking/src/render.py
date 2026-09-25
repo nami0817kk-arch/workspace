@@ -683,6 +683,12 @@ def _build_stop_high_page(days: list[dict], stock_pages: set[str]) -> None:
             period_from_ja=format_date_ja(days[-1]["rec_date"]),
             period_to_ja=format_date_short_ja(days[0]["rec_date"]),
             summary=stop_high_summary(history, len(days)),
+            has_recorded=history["has_recorded"],
+            has_estimated=history["has_estimated"],
+            recorded_from=format_date_ja(min(
+                (d["rec_date"] for d in history["per_day"] if d["source"] == "recorded"),
+                default=days[0]["rec_date"],
+            )),
             stocks=stocks,
             per_day=per_day,
             trend_chart=charts.columns(

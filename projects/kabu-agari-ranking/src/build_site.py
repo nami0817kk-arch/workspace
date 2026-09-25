@@ -16,16 +16,19 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import fetcher
-from fetcher import fetch_gainers, fetch_losers, fetch_active
+from fetcher import fetch_active, fetch_gainers, fetch_losers, fetch_stop_high
 import render
 import validate
 
 _DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
 _ROW_COLS = ["rank", "code", "name", "close", "change_pct", "metric_value"]
+# ストップ高の一覧には出来高が無い（その列がニュース欄になっている）代わりに、
+# 引けで上限に張り付いていたかの印がある。
+_STOP_COLS = ["rank", "code", "name", "close", "change_pct", "at_limit"]
 
 
-def _save_today(gainers, losers, active, *, skip_checks: bool = False) -> str | None:
+def _save_today(gainers, losers, active, stop_high=None, *, skip_checks: bool = False) -> str | None:
     if gainers.empty:
         print("  本日分のランキングを取得できませんでした(休場日、または取得失敗)。スキップします。")
         return None
@@ -33,6 +36,12 @@ def _save_today(gainers, losers, active, *, skip_checks: bool = False) -> str | 
     rec_date = gainers["rec_date"].iloc[0]
     payload = {
         "rec_date": rec_date,
+        # その日ストップ高をつけた銘柄の全件。上位30銘柄からの推定ではない。
+        # 0件の日もある（相場が穏やかな日）。取得できなかった日はキーごと無い。
+        "stop_high": (
+            stop_high[_STOP_COLS].to_dict(orient="records")
+            if stop_high is not None and not stop_high.empty else []
+        ),
         "gainers": gainers[_ROW_COLS].to_dict(orient="records"),
         "losers": losers[_ROW_COLS].to_dict(orient="records") if not losers.empty else [],
         "active": active[_ROW_COLS].to_dict(orient="records") if not active.empty else [],
@@ -54,7 +63,8 @@ def _save_today(gainers, losers, active, *, skip_checks: bool = False) -> str | 
     )
     print(
         f"  {day_path} に保存しました"
-        f"(値上がり{len(payload['gainers'])}/値下がり{len(payload['losers'])}/活況{len(payload['active'])}件)"
+        f"(値上がり{len(payload['gainers'])}/値下がり{len(payload['losers'])}"
+        f"/活況{len(payload['active'])}/ストップ高{len(payload['stop_high'])}件)"
     )
     return rec_date
 
@@ -75,9 +85,11 @@ def main() -> None:
     gainers = fetch_gainers(top_n=30)
     losers = fetch_losers(top_n=30)
     active = fetch_active(top_n=30)
+    stop_high = fetch_stop_high()
 
     try:
-        rec_date = _save_today(gainers, losers, active, skip_checks="--force" in sys.argv)
+        rec_date = _save_today(gainers, losers, active, stop_high,
+                               skip_checks="--force" in sys.argv)
     except validate.InvalidPayload as e:
         # 既存のデータには一切触れずに落とす。run-daily.ps1 が通知を出す。
         print(f"  [ERROR] 取得したデータが妥当ではないため保存しませんでした: {e}")
