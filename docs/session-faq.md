@@ -38,10 +38,10 @@ A. 意図的。モノレポでは動かないため削除した。ワークフ�
 
 **Q. soccer の web.yml が無い**
 A. GitHub Pages が private リポジトリで使えないため意図的に未移植。
-Cloudflare Pages 方式の `soccer-pages.yml` として作り直す（tool-factory-pages.yml が先例。
+Cloudflare Pages 方式の `soccer-pages.yml` として作り直す（kabu-daily.yml が先例。
 Flutter ビルドは `--base-href "/"` に変更が必要）。担当セッションが作業中。
 
-**Q. kabu-daily / tool-factory-pages がデプロイ段で failure**
+**Q. kabu-daily がデプロイ段で failure**
 A. 既知。Cloudflare の Secrets（CLOUDFLARE_API_TOKEN / CLOUDFLARE_ACCOUNT_ID）の
 ユーザー登録待ち。デプロイ以外のステップが緑なら正常。
 `gh secret list` が空かどうかで、まだ未登録かを判定できる。
@@ -1019,7 +1019,7 @@ python scripts/find-mangled-chars.py
 **古い実行が「キャンセル」で終わっているのは正常**。失敗ではない。
 
 **打ち切らないもの**: 公開・リリース・通知（kabu-daily / price-tracker-daily /
-tool-factory-pages / soccer の各 release / ci-alert）。**途中で止めると害がある**ので、
+soccer の各 release / ci-alert）。**途中で止めると害がある**ので、
 重複は避けつつ最後まで走らせる。
 
 ### 公開リポジトリになった影響

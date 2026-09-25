@@ -118,7 +118,7 @@ adsite ideas --dry-run        # 次に作るツールの案（人がレビュー
 ```
 
 デプロイ先は Cloudflare Pages です（モノレポが private のため GitHub Pages は使えません）。
-先例はルートの `.github/workflows/tool-factory-pages.yml`。ai-lab 単体のサイトを配信する
+先例はルートの `.github/workflows/kabu-daily.yml`。ai-lab 単体のサイトを配信する
 ワークフローはまだ無いので、手順は `docs/runbook.md` を見てください。
 
 ## ツールを増やす順番

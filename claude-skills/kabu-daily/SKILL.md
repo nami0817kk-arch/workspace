@@ -73,7 +73,7 @@ cd "C:/Users/なみ/dev/workspace" && gh run list --workflow kabu-daily.yml --li
 **200 が返ることではなく、出ている日付が直近営業日か**を見る。
 
 > Cloudflare の Secrets は登録済みで、デプロイまで通る（2026-09-02 解消。
-> kabu-agari-ranking / seisan-kanri-tools / soccer-manager の3サイトとも公開中）。
+> kabu-agari-ranking / soccer-manager の2サイトとも公開中）。
 > デプロイ段が failure になったら、今は本物の異常として報告する。
 
 ## 報告の書き方

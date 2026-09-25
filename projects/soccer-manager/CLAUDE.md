@@ -4,7 +4,7 @@
 
 Web版: https://soccer-manager.pages.dev/
 （Cloudflare Pages。workspace リポジトリに CLOUDFLARE_API_TOKEN と
-CLOUDFLARE_ACCOUNT_ID を登録するまでデプロイは動かない。tool-factory と
+CLOUDFLARE_ACCOUNT_ID を登録するまでデプロイは動かない。kabu-daily と
 同じ値でよい。GitHub Pages は非公開 + Free だとサイトを作成できず、
 統合前は毎回失敗していた）
 
