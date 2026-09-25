@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light dark">
+<meta name="google-site-verification" content="{{ SEARCH_CONSOLE_TOKEN }}" />
+<title>{% block title %}社会保険 加入判定チェッカー{% endblock %}</title>
+<meta name="description" content="{% block description %}パート・アルバイトの社会保険（健康保険・厚生年金）の加入対象かどうかを、週の労働時間・月収・勤務先の人数から判定します。2026年10月からの適用拡大に対応。{% endblock %}">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="社会保険 加入判定チェッカー">
+<meta property="og:title" content="{{ self.title() }}">
+<meta property="og:description" content="{{ self.description() }}">
+<meta property="og:url" content="{{ canonical }}">
+<meta property="og:locale" content="ja_JP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="{{ self.title() }}">
+<meta name="twitter:description" content="{{ self.description() }}">
+<style>
+  :root {
+    --bg: #f5f7f8;
+    --card-bg: #ffffff;
+    --text: #1a1a1a;
+    --muted: #63707a;
+    --accent: #0d7a6c;
+    --border: #dde3e5;
+    --ok-bg: #e6f5ef;
+    --ok-border: #b6e3cf;
+    --ok-text: #0d7a4d;
+    --ng-bg: #fdeeee;
+    --ng-border: #f3c6c6;
+    --ng-text: #b3261e;
+    --note-bg: #fff8e1;
+    --note-border: #f0e0a0;
+    --link: #0f6e9e;
+    --link-visited: #6d4c9e;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #14171a;
+      --card-bg: #1b1f22;
+      --text: #e8eaec;
+      --muted: #9aa7ad;
+      --accent: #3fbfa8;
+      --border: #2c3236;
+      --ok-bg: #12291f;
+      --ok-border: #1f4a34;
+      --ok-text: #6fd7a8;
+      --ng-bg: #2c1c1c;
+      --ng-border: #4d2b2b;
+      --ng-text: #ec8f8a;
+      --note-bg: #26231a;
+      --note-border: #4a4326;
+      --link: #6fb7de;
+      --link-visited: #b39be0;
+    }
+  }
+  * { box-sizing: border-box; }
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    background: var(--card-bg);
+    color: var(--text);
+    padding: 0.5rem 0.75rem;
+    border: 1px solid var(--border);
+    z-index: 10;
+  }
+  .skip-link:focus { left: 0.5rem; top: 0.5rem; }
+  main:focus { outline: none; }
+  body {
+    margin: 0;
+    font-family: "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+  }
+  header.site-header {
+    background: var(--card-bg);
+    border-bottom: 1px solid var(--border);
+    padding: 1rem;
+  }
+  header.site-header .inner {
+    max-width: 760px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  header.site-header a.logo {
+    font-weight: bold;
+    font-size: 1.05rem;
+    color: var(--text);
+    text-decoration: none;
+  }
+  header.site-header nav { display: flex; flex-wrap: wrap; gap: 0.25rem 0.9rem; }
+  nav a { color: var(--muted); text-decoration: none; font-size: 0.9rem; white-space: nowrap; }
+  nav a:hover { color: var(--accent); }
+  main a { color: var(--link); }
+  main a:visited { color: var(--link-visited); }
+  a:focus-visible, input:focus-visible, select:focus-visible, button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 1rem; }
+  h1 { font-size: 1.4rem; line-height: 1.35; margin: 0.6rem 0; }
+  h2 { font-size: 1.1rem; margin-top: 1.75rem; }
+  h3 { font-size: 1rem; }
+  @media (min-width: 600px) {
+    h1 { font-size: 1.8rem; }
+    h2 { font-size: 1.3rem; }
+  }
+  .ad-slot {
+    max-width: 760px;
+    margin: 1rem auto;
+    padding: 0.5rem;
+    text-align: center;
+    color: var(--muted);
+    font-size: 0.75rem;
+    border: 1px dashed var(--border);
+  }
+  table.plain {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card-bg);
+    font-size: 0.9rem;
+    margin: 1rem 0;
+  }
+  table.plain th, table.plain td {
+    padding: 0.5rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+  }
+  table.plain th { color: var(--muted); font-weight: normal; background: var(--bg); }
+  table.plain tr.current { background: var(--ok-bg); }
+  .table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem 1.1rem;
+    margin: 1rem 0;
+  }
+  .field { margin: 0.9rem 0; }
+  .field label { display: block; font-weight: bold; margin-bottom: 0.3rem; font-size: 0.92rem; }
+  .field .hint { font-size: 0.8rem; color: var(--muted); margin-top: 0.25rem; }
+  .field input[type="number"], .field select {
+    width: 100%;
+    font-size: 1rem;
+    padding: 0.55rem 0.6rem;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--card-bg);
+    color: var(--text);
+  }
+  .field .checkbox-row { display: flex; align-items: center; gap: 0.5rem; }
+  .field .checkbox-row input { width: auto; }
+  .field .checkbox-row label { font-weight: normal; margin: 0; }
+  #result { margin-top: 1.25rem; }
+  .verdict {
+    border-radius: 8px;
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--border);
+    font-size: 1.05rem;
+    font-weight: bold;
+  }
+  .verdict.ok { background: var(--ok-bg); border-color: var(--ok-border); color: var(--ok-text); }
+  .verdict.ng { background: var(--ng-bg); border-color: var(--ng-border); color: var(--ng-text); }
+  ul.criteria { list-style: none; padding: 0; margin: 0.75rem 0; }
+  ul.criteria li {
+    padding: 0.4rem 0 0.4rem 1.6rem;
+    position: relative;
+    font-size: 0.92rem;
+    border-bottom: 1px solid var(--border);
+  }
+  ul.criteria li:last-child { border-bottom: none; }
+  ul.criteria li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.55rem;
+    width: 0.9rem;
+    height: 0.9rem;
+    border-radius: 50%;
+  }
+  ul.criteria li.pass::before { background: var(--ok-text); }
+  ul.criteria li.fail::before { background: var(--ng-text); }
+  .note-scope {
+    font-size: 0.85rem;
+    color: var(--muted);
+    border-left: 3px solid var(--border);
+    padding-left: 0.6rem;
+  }
+  .crumbs { font-size: 0.8rem; color: var(--muted); margin: 0 0 0.25rem; display: flex; flex-wrap: wrap; gap: 0.25rem 0.4rem; }
+  .crumbs a { color: var(--muted); }
+  .crumbs span[aria-current] { color: var(--text); }
+  .updated { font-size: 0.85rem; color: var(--muted); margin: 0.25rem 0 1rem; }
+  .milestone-nav { display: flex; justify-content: space-between; gap: 0.5rem; margin: 1.5rem 0; font-size: 0.9rem; }
+  .milestone-nav a { color: var(--accent); text-decoration: none; }
+  .milestone-nav a:hover { text-decoration: underline; }
+  .milestone-list { list-style: none; padding: 0; margin: 1rem 0; }
+  .milestone-list li { margin-bottom: 0.6rem; }
+  .milestone-list a {
+    display: block;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.7rem 0.9rem;
+    color: inherit;
+    text-decoration: none;
+  }
+  .milestone-list a:hover { border-color: var(--accent); }
+  .milestone-date { display: block; font-weight: bold; color: var(--accent); font-size: 0.95rem; }
+  .milestone-label { display: block; font-size: 0.85rem; color: var(--muted); margin-top: 0.15rem; }
+  .disclaimer {
+    margin-top: 2rem;
+    padding: 1rem;
+    background: var(--note-bg);
+    border: 1px solid var(--note-border);
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  footer {
+    max-width: 760px;
+    margin: 2rem auto 1rem;
+    padding: 1rem;
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-align: center;
+  }
+  footer a { color: var(--muted); margin: 0 0.4rem; }
+  .footer-group { margin-bottom: 0.6rem; }
+  .footer-group strong { display: block; color: var(--text); font-size: 0.8rem; margin-bottom: 0.2rem; }
+  .to-top { margin-top: 1rem; }
+  .to-top a { color: var(--accent); }
+  dl { margin: 0 0 1rem; }
+  dt { margin-top: 0.75rem; }
+  dd { margin: 0.25rem 0 0; color: var(--muted); }
+  @media print {
+    header.site-header nav, .ad-slot, .crumbs, footer { display: none; }
+    body { background: #fff; color: #000; }
+    main { max-width: none; padding: 0; }
+  }
+</style>
+{% if canonical %}<link rel="canonical" href="{{ canonical }}">{% else %}<meta name="robots" content="noindex">{% endif %}
+{% if ADSENSE_CLIENT %}
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ ADSENSE_CLIENT }}" crossorigin="anonymous"></script>
+{% endif %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"WebSite","name":"社会保険 加入判定チェッカー","url":"{{ SITE_URL }}/","inLanguage":"ja"}
+</script>
+{% block structured_data %}{% endblock %}
+<!-- Cloudflare Web Analytics --><script type='module' src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "c8d25daf2f614e8c8b4e20694bacc1f8"}'></script><!-- End Cloudflare Web Analytics -->
+</head>
+<body>
+<a class="skip-link" href="#main">本文へスキップ</a>
+<header class="site-header">
+  <div class="inner">
+    <a class="logo" href="{{ base_url }}index.html">社会保険 加入判定チェッカー</a>
+    <nav>
+      <a href="{{ base_url }}index.html">計算機</a>
+      <a href="{{ base_url }}year/index.html">年次の変化</a>
+      <a href="{{ base_url }}faq.html">よくある誤解</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+{% block breadcrumb %}{% endblock %}
+{% include "_ad_slot.html" %}
+{% block content %}{% endblock %}
+
+<div class="disclaimer">
+  本サイトの判定・試算は、厚生労働省・日本年金機構が公表している基準に照らした一般的な結果であり、
+  加入の可否を確定するものではありません。複数事業所での勤務や特殊な雇用形態など個別の事情がある場合は、
+  最終的に年金事務所または社会保険労務士にご確認ください。詳しくは<a href="{{ base_url }}about.html">このサイトについて</a>をご覧ください。
+</div>
+</main>
+
+<footer>
+  <div class="footer-group">
+    <strong>使う</strong>
+    <a href="{{ base_url }}index.html">加入判定チェッカー</a>
+    <a href="{{ base_url }}year/index.html">年次の変化を見る</a>
+  </div>
+  <div class="footer-group">
+    <strong>このサイト</strong>
+    <a href="{{ base_url }}faq.html">よくある誤解</a>
+    <a href="{{ base_url }}about.html">このサイトについて</a>
+    <a href="{{ base_url }}operator.html">運営者情報</a>
+    <a href="{{ base_url }}contact.html">お問い合わせ</a>
+    <a href="{{ base_url }}privacy.html">プライバシーポリシー</a>
+  </div>
+  <p class="to-top"><a href="#main">↑ ページの先頭へ</a></p>
+</footer>
+</body>
+</html>
