@@ -44,7 +44,13 @@ class NextActionCard extends StatelessWidget {
     final save = gameState.save;
     if (save == null) return const SizedBox.shrink();
 
-    final action = NextActionAdvisor.top(save, gameState.userTeam);
+    final action = NextActionAdvisor.top(
+      save,
+      gameState.userTeam,
+      transferDeadlineMatchdaysLeft: gameState.isTransferWindowOpen
+          ? gameState.transferWindowMatchdaysLeft
+          : null,
+    );
     if (action == null) return const SizedBox.shrink();
 
     return Card(
