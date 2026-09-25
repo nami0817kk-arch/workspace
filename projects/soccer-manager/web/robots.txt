@@ -1,0 +1,16 @@
+# クローラーへの指示。全部許可する。
+#
+# 置く理由は app-ads.txt のため。このサイトは存在しないパスにアプリ本体の
+# HTML を返す設定(SPA)なので、robots.txt を置かないと /robots.txt にも
+# HTML が返る。クローラーから見ると「robots.txt がある(200)のに中身が
+# 読めない」状態で、app-ads.txt の取得まで止まりうる。
+#
+# 隠したいものは無いので、素直に全部許可する。
+User-agent: *
+Allow: /
+
+# app-ads.txt を読みにくる Google のクローラー。AdMob のヘルプが、
+# この2行をそのまま置くよう指示している(空の Disallow = 何も禁じない)。
+# https://support.google.com/admob/answer/9776740
+User-agent: Google-adstxt
+Disallow:

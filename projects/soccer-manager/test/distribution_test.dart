@@ -363,6 +363,27 @@ void main() {
           reason: 'web/ の中身が公開対象から外れている');
     });
 
+    test('robots.txt が実体として置かれている', () {
+      // このサイトは存在しないパスにアプリのHTMLを返す(SPA)。robots.txt を
+      // 置かないと /robots.txt にも HTML が返り、クローラーから見ると
+      // 「200 なのに読めない robots.txt」になる。app-ads.txt の取得が
+      // それで止まると、広告在庫の正当性を示せない。
+      final file = File('web/robots.txt');
+      expect(file.existsSync(), isTrue, reason: 'web/robots.txt が無い');
+
+      final body = file.readAsStringSync();
+      expect(body, contains('User-agent: *'));
+      expect(body, contains('Allow: /'),
+          reason: '全許可になっていない(隠すものは無い)');
+      expect(body, isNot(contains('Disallow: /')),
+          reason: 'サイト全体を拒否している');
+
+      // AdMob のヘルプが指示している、app-ads.txt 専用クローラーへの許可。
+      // これが無いと「app-ads.txt が見つかりません」と判定されうる。
+      expect(body, contains('User-agent: Google-adstxt'),
+          reason: 'app-ads.txt のクローラーへの記述が無い');
+    });
+
     test('サポート窓口に個人を特定する情報が出ていない', () {
       // 窓口はストアの製品ページから誰でも開ける。個人の名前やアドレスを
       // 載せない方針で、専用のアドレスを用意してある。
