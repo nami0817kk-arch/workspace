@@ -721,6 +721,14 @@ def _add_face(script: Script) -> None:
                       if line.image and not _is_board(line.image)), "")
     if not photo:
         return
+    # **冒頭に敷く写真も、縦版（`_v.jpg`）があれば差し替える**（2026-09-25 指摘
+    # 「子供が主役になってる」）。佐野兄弟の横長を縦に敷いたら、2人の間の
+    # マスコットの子供だけが真ん中に残った。`tools/pairphoto.py` の縦版は上下に2人
+    from pathlib import Path as _P
+    _name = _P(photo)
+    _tall = _name.with_name(_name.stem + "_v" + _name.suffix)
+    if (_P(__file__).resolve().parents[1] / _tall).exists():
+        photo = _tall.as_posix()
     for line in script.lines:
         if not line.image or photo.startswith(STACK_DIR.as_posix()):
             line.image = photo

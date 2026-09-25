@@ -1195,3 +1195,21 @@ def test_横に並べた写真はショートで縦版に差し替える(tmp_pat
     short = Script(title="t", scenes=[Scene(title="s", lines=[line])])
     _drop_boards(short)
     assert line.image == "assets/images/20260925_pair_x/01_v.jpg"
+
+
+def test_冒頭の写真も縦版に差し替える(tmp_path, monkeypatch):
+    """2026-09-25 指摘「子供が主役になってる」。横長の2枚並べを縦に敷くと真ん中しか映らない。"""
+    from PIL import Image
+    from src.shorts import _add_face
+    from src.script_model import Line, Scene, Script
+    d = tmp_path / "assets" / "images" / "20260925_pair_y"
+    d.mkdir(parents=True)
+    Image.new("RGB", (1920, 1080), "gray").save(d / "01.jpg")
+    Image.new("RGB", (1080, 1920), "gray").save(d / "01_v.jpg")
+    (tmp_path / "src").mkdir()
+    monkeypatch.setattr("src.shorts.__file__", str(tmp_path / "src" / "shorts.py"))
+    line = Line(speaker="キャスター", text="a")
+    short = Script(title="t", scenes=[Scene(title="s", lines=[line])])
+    short.meta = {"thumbnail_photo": "assets/images/20260925_pair_y/01.jpg"}
+    _add_face(short)
+    assert line.image == "assets/images/20260925_pair_y/01_v.jpg"
