@@ -159,6 +159,41 @@
 4. **案2 補助金・案3 車・案1 不動産** — 案4で作った仕組みを使い回す。案1は利用申請（5営業日）を早めに出す
 5. **案7 英語版** — 案1か案4が公開されてから
 
+## 方式8 Apify の状況（2026-09-26、調査中）
+
+**利用者への対応義務: 無い。** Apify Store Publishing Terms 上、Community Actor
+（既定の公開形態）の作者に保守・issue対応の義務は無い（作者自身が明示しない限り）。
+不具合が直ったまま直らずに30日続くと、Apify 側が一方的に「under maintenance」→
+「deprecated」・ストア除外にするだけで、除外されても作者に返金は無い。これは
+利用者への対応を義務づける規約ではないので、`_common.md` の受託の線には当たらない。
+出典: [Apify Store Publishing Terms and Conditions](https://docs.apify.com/legal/store-publishing-terms-and-conditions)
+（WebSearch 経由の要約で確認。下記のネットワーク制約により全文は未読）。
+
+**当たりの分布は上位カテゴリに強く偏っている。** ストアは70,000超のActor
+（2026-09-09時点）があるが、利用者数の上位は Google Maps Scraper 596K・
+Instagram Scraper 388K・TikTok Scraper 275K・Instagram Profile Scraper 214K・
+Google Search Results Scraper 179K などに集中しており、Google Maps・Instagram・
+TikTok・LinkedIn・リード生成の5カテゴリが最も使われている。出典: 第三者の集計サイト
+[use-apify.com「Top 25 Most Popular Apify Actors」](https://use-apify.com/docs/best-apify-actors/most-popular-actors)
+（Apify Store API を2026-09-09に集計したもの。一次情報の Apify 公式統計ではない）。
+
+**課金形態が移行期。** rental方式は2026-04-01で新規publish・価格変更が停止済み、
+2026-10-01（このセッションの4日後）で完全廃止され、pay-per-event に一本化される。
+今から作るなら最初から pay-per-event 前提で設計する。
+
+**この環境からの制約。** このセッションのネットワークポリシーが apify.com・
+use-apify.com を含む一般サイトへの直接アクセス（WebFetch・curl とも）を塞いでいる。
+WebSearch の要約経由でしか裏取りできておらず、Apify Store を自分で巡回する・
+規約全文を読む・実物のActorページを見る、といった検証ができていない。
+続けるなら、ユーザー側でこのセッションのネットワーク設定を広げる（環境設定の
+Network access）か、ローカルで動くセッションにこの調査を引き継ぐ必要がある。
+
+**ユーザー判断待ち。** 当たりが少数の大手プラットフォーム定番スクレイパーに
+集中しており、どれも数十万ユーザーの先行が既にいる。新規参入で同じ土俵に立っても
+伸びにくい。続けるなら (a) 同じ定番カテゴリの隙間（大手が手薄な国・言語・付随データ）
+を狙う、(b) 手薄なニッチを探す、(c) 畳む、の3択。ネットワーク制約の解消と合わせて
+ユーザーに出す。
+
 ## 状態の書き方
 
 担当セッションは、着手したら自分の行の「状態」を次のどれかにする。
