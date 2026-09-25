@@ -931,7 +931,7 @@ class SitePagesAuditTest(unittest.TestCase):
         # Cloudflare Pages は存在しないパスすべてにこれを返し、URL は要求のまま
         html = self.read("404.html")
 
-        self.assertIn('href="/style.css"', html)
+        self.assertIn('href="/style.', html)
         for href in ('"/search/"', '"/lows/"'):
             self.assertIn(href, html)
         self.assertNotIn('href="search/"', html)

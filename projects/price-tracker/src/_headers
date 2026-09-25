@@ -14,6 +14,9 @@
   # 使っていない機能は最初から閉じておく
   Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=(), interest-cohort=()
 
-# スタイルは内容が変わったらファイル名ごと変わるわけではないので、短めに。
-/style.css
-  Cache-Control: public, max-age=3600
+# スタイルの名前には中身の指紋が入っている（style.<8桁>.css）。
+# 中身が変われば名前も変わるので、この名前のものは変わらない。長く持たせる。
+# 以前は style.css 固定で max-age=3600 にしていたが、Cloudflare 側の設定に
+# 上書きされて実測4時間キャッシュされ、直した見た目が読み手に届かなかった。
+/style.*.css
+  Cache-Control: public, max-age=31536000, immutable

@@ -200,7 +200,7 @@ def head(title: str, description: str, canonical: str, site: dict, prefix: str =
 <meta property="og:image" content="{esc(site["base_url"].rstrip("/"))}/og.svg">
 <link rel="alternate" type="application/rss+xml" title="今日の値下がり" href="{prefix}feed.xml">
 <link rel="icon" href="{FAVICON}">
-<link rel="stylesheet" href="{prefix}style.css">
+<link rel="stylesheet" href="{prefix}{site.get("css", "style.css")}">
 {WATCH_JS}
 {extra}
 </head>

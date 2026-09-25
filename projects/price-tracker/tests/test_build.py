@@ -69,11 +69,30 @@ class BuildTest(unittest.TestCase):
     def read(self, *parts) -> str:
         return (self.out.joinpath(*parts)).read_text(encoding="utf-8")
 
+    def css_name(self) -> str:
+        """配信するスタイルの名前。中身の指紋が入るので毎回変わる。"""
+        found = [p.name for p in self.out.glob("style.*.css")]
+        self.assertEqual(len(found), 1, found)
+        return found[0]
+
     # --- 構成 ---
+    def test_スタイルの名前に中身の指紋が入る(self):
+        """style.css 固定だと、直しても Cloudflare のキャッシュ（実測4時間）が
+        切れるまで読み手に届かない。名前が変われば即座に取りに来る。"""
+        css = self.css_name()
+
+        self.assertRegex(css, r"^style\.[0-9a-f]{8}\.css$")
+        # 全ページが実在するファイルを指していること
+        for path in list(self.out.rglob("*.html"))[:20]:
+            with self.subTest(path=path.name):
+                ref = re.search(r'rel="stylesheet" href="([^"]+)"',
+                                path.read_text(encoding="utf-8")).group(1)
+                self.assertTrue(ref.endswith(css), ref)
+
     def test_expected_pages_exist(self):
         for path in ("index.html", "lows/index.html", "about/index.html",
                      "privacy/index.html", "contact/index.html",
-                     "sitemap.xml", "robots.txt", "style.css"):
+                     "sitemap.xml", "robots.txt"):
             with self.subTest(path=path):
                 self.assertTrue((self.out / path).exists(), path)
 
@@ -134,9 +153,10 @@ class BuildTest(unittest.TestCase):
     # --- 配信 ---
     def test_asset_paths_are_relative(self):
         """GitHub Pages のサブディレクトリ配信で絶対パスは 404 になる。"""
-        self.assertIn('href="style.css"', self.read("index.html"))
-        self.assertIn('href="../style.css"', self.read("lows", "index.html"))
-        self.assertIn('href="../../style.css"',
+        css = self.css_name()
+        self.assertIn(f'href="{css}"', self.read("index.html"))
+        self.assertIn(f'href="../{css}"', self.read("lows", "index.html"))
+        self.assertIn(f'href="../../{css}"',
                       self.read("item", theme.slug("shop:cheap"), "index.html"))
 
     def test_no_absolute_asset_paths_anywhere(self):
@@ -147,12 +167,12 @@ class BuildTest(unittest.TestCase):
             if path.name == "404.html":
                 continue
             with self.subTest(path=path.name):
-                self.assertNotIn('href="/style.css"', path.read_text(encoding="utf-8"))
+                self.assertNotIn('href="/style.', path.read_text(encoding="utf-8"))
 
     def test_404_uses_the_site_root_not_a_hardcoded_slash(self):
         # サブディレクトリ配信では "/" 決め打ちが壊れる
         html = self.read("404.html")
-        self.assertIn('href="/price/style.css"', html)
+        self.assertIn('href="/price/style.', html)
         self.assertIn('href="/price/lows/"', html)
 
     def test_canonical_uses_the_public_url(self):

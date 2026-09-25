@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """記録済みのデータから静的サイトを生成する。ネットワークへは一切アクセスしない。"""
 import argparse
+import hashlib
 import json
 import shutil
 import sys
@@ -100,7 +101,13 @@ def build(root: Path, out: Path) -> dict:
     if out.exists():
         shutil.rmtree(out)
     out.mkdir(parents=True)
-    shutil.copy(ROOT / "src" / "style.css", out / "style.css")
+    # スタイルは中身の指紋を名前に入れる。style.css のままだと、直しても
+    # Cloudflare のエッジキャッシュ（実測4時間）が切れるまで読み手に届かない。
+    # 名前が変われば即座に新しい方を読みに来るので、逆に長く持たせてよい。
+    css_text = (ROOT / "src" / "style.css").read_text(encoding="utf-8")
+    css_name = f"style.{hashlib.sha1(css_text.encode('utf-8')).hexdigest()[:8]}.css"
+    write(out / css_name, css_text)
+    site["css"] = css_name
     # 配信時のヘッダ。Cloudflare Pages は dist/ 直下の _headers を読む。
     shutil.copy(ROOT / "src" / "_headers", out / "_headers")
 
