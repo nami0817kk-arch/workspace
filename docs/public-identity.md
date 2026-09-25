@@ -22,6 +22,12 @@ kabu-agari-ranking には、生成した全HTMLを走査して混入を止める
 **転送先アドレスはリポジトリに書かない**（workspace は public）。受け側だけを置く。
 2サイトで同じ窓口を共有しているのは、転送規則を増やさないため。
 
+**ページに書くときは `mailto:` を使わない。** Cloudflare の Email Address
+Obfuscation が `mailto:` のリンクを `[email protected]` に差し替え、JS で復号する形に
+変える。JS が動かない相手からは連絡先が読めず、**AdSense の審査はまさにそこを見る**。
+`@` を `[at]` に割った素のテキストで書き、「送信時は @ に置き換えてください」と
+添える（2サイトともこの形）。2026-09-25 に kabu で実際に化けているのを見て直した。
+
 ## ドメイン
 
 `dailyquarry.com` を 2026-09-25 に **Cloudflare Registrar** で取得した。
