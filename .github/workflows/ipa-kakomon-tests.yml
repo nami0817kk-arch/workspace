@@ -1,0 +1,24 @@
+name: ipa-kakomon tests
+
+on:
+  push:
+    branches: ["**"]
+    paths: ["projects/ipa-kakomon/**", ".github/workflows/ipa-kakomon-tests.yml"]
+  pull_request:
+    paths: ["projects/ipa-kakomon/**", ".github/workflows/ipa-kakomon-tests.yml"]
+  workflow_dispatch: {}
+
+# 同じブランチで新しい実行が始まったら、古い方は打ち切る。
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    uses: ./.github/workflows/python-tests.yml
+    with:
+      workdir: "projects/ipa-kakomon"
+      cache-dependency-path: "projects/ipa-kakomon/requirements.txt"
