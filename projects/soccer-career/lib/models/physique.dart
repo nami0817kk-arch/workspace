@@ -192,8 +192,9 @@ class Physique {
 
   /// 身体データを持たせる前の保存データは、標準体型として読む。
   factory Physique.fromJson(Map<String, dynamic>? json) {
-    if (json == null)
+    if (json == null) {
       return const Physique(heightCm: baseHeight, weightKg: baseWeight);
+    }
     return Physique(
       heightCm: json['heightCm'] as int? ?? baseHeight,
       weightKg: json['weightKg'] as int? ?? baseWeight,
