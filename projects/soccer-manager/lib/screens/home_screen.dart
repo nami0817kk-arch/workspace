@@ -1171,7 +1171,8 @@ class HomeScreen extends StatelessWidget {
     // ことは、その節のうちに知らせる。
     final departures = gameState.lastYouthDepartures;
     if (departures.isNotEmpty) {
-      final names = departures.map((d) => d.player.name).join('、');
+      final names =
+          departures.map((d) => d.player.name).join(Tr.pick('、', ', '));
       final compensation =
           departures.fold<int>(0, (sum, d) => sum + d.compensation);
       messages.add((
