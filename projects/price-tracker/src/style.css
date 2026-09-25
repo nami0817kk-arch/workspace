@@ -317,6 +317,11 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 @media (max-width: 560px) {
   .site-nav { gap: 0 12px; }
   .site-nav > a, .nav-more > summary { padding: 9px 0; }
+  .foot-nav { gap: 4px 16px; }
+  .foot-nav a { padding: 8px 0; }
+  .tools select { padding: 9px 10px; }
+  .tools .check { padding: 6px 0; }
+  .to-top { display: inline-block; padding: 9px 0; }
   .pager a, .pager .now { padding: 9px 13px; }
   .jump a { padding: 7px 11px; }
   /* 小さすぎる字を13pxへ。12pxは日本語では読みにくい。 */
