@@ -1,0 +1,162 @@
+title: 9月26日の題材（追加）
+lead: 朝7時までの12時間に出た見出しから14件
+note: '<b>○×を付けてください。</b>夜のうちに出た話です。午前0時に出した18件（マンC・メッシ・FIFA・ジダン・イタリアを選んだもの）とは別の一覧です。<br><br>
+
+  <b>ジダンとイタリアは取材中</b>（フランスはトルコに1-0でムバッペが負傷交代、イタリアはベルギーに0-2）。ここには入れていません。<br><br>
+
+  中身はまだ<b>見出しだけ</b>です。○が付いたものから記事本文で裏を取ります。ロマーノの X は今も読めません。
+
+  '
+items:
+- num: 1
+  slot: 日本人
+  head: 久保建英、ソシエダでベンチが続く。スペイン紙「過去最低の久保」「日本代表での発言は軽率だ」
+  why: 'スペイン紙が、ソシエダでの久保の立場を「非常に厳しい」と書き、代表での発言まで批判した、という見出し。
+
+    **久保は日本で一番検索される名前**の一つ。代表での発言が何だったかは、記事で確かめる。
+
+    '
+  src: DAZN News / Yahoo!ニュース（9/25〜26）
+  url: https://news.google.com/rss/articles/CBMif0FVX3lxTE51ejNhUkxTNkxRUzdnY05ZdU11OUNFYlBPYU56NURHU1ZvYlhPNHZoUUZxVHRKcVg0UUcxUkhXM1B1T1d4VHI4NDNLQXFuNG5sWkxQcDZPTHRuS1kwV3BhQThZWWR5Y1A5SkpEc1JIemNWcnRzQ2dWLVhBUWo5bzg?oc=5
+  fmt: voices
+- num: 2
+  slot: 日本人
+  head: 「もう隠れた逸材ではない」デビュー弾の松木玖生に海外メディアが熱視線
+  why: 'ウルグアイ戦のデビュー弾のあと、海外の媒体が松木を取り上げている、という見出し。
+
+    **昨日の松木の回の続き**。「海外でどう見られているか」の回にできる。
+
+    '
+  src: SOCCER DIGEST Web / Yahoo!ニュース（9/26）
+  url: https://news.google.com/rss/articles/CBMiY0FVX3lxTE1kYlJQT3FkMDMydkhoaFNITW05U0ZwQ3ljLUI1U3JPSk5BU045am1jVU4tUEd2SEpwdnpQcUl6NDRVRElmcjltNjJvVjhtUU9jcENpaXdybzhPb0lzdWs3OW5VUdIBc0FVX3lxTE1CeVFrekF3WWpYYlozaWRzOVhEUmszdnVPZE5PS3NoNXJ3bjRST1VJRU1IUDEzak5TUVVLZ3N6dlNYUFphSTB6cDUxeDdfZGxPSWk5Vk5HLWpYRG9JSVhZSGNLVGlCamJ1RUlsdVZGWko5VHM?oc=5
+  fmt: voices
+  weak: true
+- num: 3
+  slot: 日本人
+  head: 久保建英、一触即発の塩貝健人を護った「大人の対応」。「完全に弟扱い」
+  why: 'ウルグアイ戦で、挑発された塩貝を久保がなだめた場面が反響、という見出し。
+
+    **昨日の塩貝の回と同じ試合**。久保を主役にした別の切り口。
+
+    '
+  src: 千葉テレビ放送（9/25）
+  url: https://news.google.com/rss/articles/CBMif0FVX3lxTFBpaHBpdTJuMkQ4OU9Fc3ZmVUc1MTE5WlNGLTBJcDJ6RElDbkRHdXdwUlBYbkdIMnFNdXhHbkNWNzF3WWloWEt6ZFhTUzBKbmdZOEVldXFHUzZUekQza0NYV25sZkJnSGdzM21tZjNEZy1xUGltc3BNTktFSWhST28?oc=5
+  fmt: voices
+  weak: true
+- num: 4
+  slot: 日本人
+  head: 日本代表、次は28日のベネズエラ戦（広島）。地元の中野就斗「ピッチで恩返しを」
+  why: '9・10月の4連戦の2戦目。中野は広島所属で、本拠地でのデビューを狙う。
+
+    **試合の前の話**なので、試合後のほうが強い。
+
+    '
+  src: サッカーキング / dメニューニュース（9/25〜26）
+  url: https://news.google.com/rss/articles/CBMijAFBVV95cUxNd2JRY2RwSDlUNFI2OS1lV0dGTHNrdHNFQnVFV1E2VE9qSjhBMmVmaU9zTjdLcVdMMEMzY1daUDlrVjJCLWJlRWltMzJDMERZUlBhS2V6eWd1ZHhMdWJWb3FaOTV3T0dUeVNtUmdCeHdhTTd0eFhoT2ZXUm4tWjd6MnpKcklWYm0zOTl2QQ?oc=5
+  fmt: news
+  weak: true
+- num: 5
+  slot: プレミア
+  head: マンCの判決に、ロドリ「信じている」、ロバートソン「選手のせいではない」
+  why: '判決の翌朝、選手たちの反応が出ている。シティのロドリと、リヴァプールのロバートソン。
+
+    **⑧（マンCの115件）を作るなら、その続き**。1本にまとめるか、別に出すか。
+
+    '
+  src: Evening Standard / Guardian（9/26）
+  url: https://news.google.com/rss/articles/CBMipAFBVV95cUxQRlVjN1pmb3diT29ZNnoxeWtUc0czYjdmTGw3SF9xMEItRTZKd2F0cWxiS3A4VVhscFpiRE1NUWhYOHNJbHRGVm42VnBtYlZBbDJ1OXVqb3JGS3dyM2VzVGhNSnhoa1lOSG4xOTJlU3VXYVNwSTl4eTRkbDYyZlFwWjE0ejdMc3h3UldaODV5QVpVUk9vbmtuWVRrcTJMZFBhUXJKcw?oc=5
+  fmt: quote
+- num: 6
+  slot: プレミア
+  head: マンC判決で、4クラブが2億ポンド超の補償を狙う。プレミアの他クラブは法的措置も
+  why: '違反の期間にシティに順位を奪われたクラブが、補償を求める動き、という見出し。
+
+    マンUの判断にも触れている。**⑤と同じく、⑧の続き**。
+
+    '
+  src: Independent / LiveScore / OneFootball（9/26）
+  url: https://news.google.com/rss/articles/CBMiyAFBVV95cUxPWXFDaW5zVzNHSXlZMkV6RXE1bng4VGNhcVRNZjd1R243bmVNOW9GdU16c0ZKb2ZqQXUwejFCZTRybWVlTWxXUk55UGRQc3pSdnNoWEFzYlFZZXdDa2d4cXU5a01USDctaW1qbEtfR2RIYURhdEhmNDY3QzFYc2tIQ1pRYTlod0FQQThZOVROU3dRNXpaREtmZXp3X2N1YzIyZVl5WFB4Y3VUUExmZlFqTC1nRE8xeF9VaFBWNVlWRlB2cFdNNEVBSA?oc=5
+  fmt: news
+- num: 7
+  slot: ラリーガ
+  head: ムバッペの膝、レアルが検査のため呼び戻す。「負傷の場所がレアルを慌てさせている」
+  why: 'ジダンの初陣で先制点を決めたあと、膝を押さえて交代。レアルはスペインで検査する。
+
+    **フランスの回と重なる**ので、フランスの回に入れるか、レアル側の回にするか。
+
+    '
+  src: The New York Times / LiveScore / レアル公式（9/26）
+  url: https://news.google.com/rss/articles/CBMipwFBVV95cUxQWkxrbl9heUFEd2R3OFJjbWtFeTZBamJyejd1RHVTQkV5X29TcXVINlk1N0RQOFRKUFZFM2x2R3BVbC02TWs3UmhiSXNYTWtRREFfYUJJdE5YTl9ybmhMaWtpUEdqbVBIbHh5RTA1OVdiMVpPMU9fdmd4VHltbXRUSW9ob1FHZlB1S2J1M2FCYldIdGc4SkFmYlpOcVYwV1hROUNLNThfWQ?oc=5
+  fmt: news
+- num: 8
+  slot: その他
+  head: ムシアラは右太ももの筋繊維断裂、ハヴァーツは張りで離脱。ドイツはヴィルツを前倒しで追加招集
+  why: 'クロップ初陣で負傷した2人の診断が出た。**昨日のクロップの回の続き**（「失った2人」の答え）。
+
+    '
+  src: DAZN News / Yahoo!ニュース（9/26）
+  url: https://news.google.com/rss/articles/CBMif0FVX3lxTE42Q005YzlsT1pLNXUxN2NzNUhxMi10aVp5LTV4R3ZkbHZZbGtuc0dJSzJoVlItelhnNU0xZVJRMUtsV2loNUdqY0hRZ08tcXhhdEw3eGhncktSTlU4UU1VUHcwSTc0TUY4MzZmZFpJV2paVkRERDZlbVlQQ1phZm8?oc=5
+  fmt: news
+- num: 9
+  slot: その他
+  head: ベルギーのファン・ボメル新監督、初陣でイタリアに2-0。一昨日デビューした息子ルベンの父
+  why: 'ベルギーの監督はマルク・ファン・ボメル。息子ルベンは一昨日、オランダ代表デビューで同点弾をアシストしたばかり。
+
+    **イタリアの回と同じ試合**。勝った側から見る回にもできる。
+
+    '
+  src: Goal.com / DAZN News（9/26）
+  url: https://news.google.com/rss/articles/CBMif0FVX3lxTE9OYnc3TDRKUmxEVmtCalpNVjVFRy1RSzVqZjJGQ203ekNvZXJxeFBoVDlNR3ViVkxfOTdCUzdDbFZLMDVEMDVUTzVhTTNXRHdBcHhCVjZSdXVGR0ZQbXBid0s4c3l3d3M5TjdTWEp1Rjg1WFplVEtFUmhoTU5xdVE?oc=5
+  fmt: news
+- num: 10
+  slot: プレミア
+  head: 主将ケイン、スペイン戦の前に「僕たちのプレスやデュエルのやり方は」。明日ウェンブリー
+  why: '9/27、イングランド対スペイン。W杯王者との初戦。
+
+    試合の前の話。**試合後に作るほうが強い**。
+
+    '
+  src: Yahoo!ニュース / VAVEL（9/26）
+  url: https://news.google.com/rss/articles/CBMif0FVX3lxTE1BVC1Sckw5UDJkQlZtMWpYMGVNVm9MQUxsaVQwdkc1ZWpfMzI0bTFQNmhtMXBLaDVxWjdXSHo3Z3pnTkp2T3JRNzU1SmNXdElZZTRsOTY5Y3FjU1pHdWpvM0VPaGR4aUdjamh0NXUzejRyUjBPQWtBTi1GMm9jeGs?oc=5
+  fmt: quote
+  weak: true
+- num: 11
+  slot: ラリーガ
+  head: モウリーニョ、レアルの選手に「私を裏切るな」。信頼を求めた言葉
+  why: 'レアル・マドリードに戻ったモウリーニョが、選手との信頼について話した、という見出し。いつの発言かは記事で確かめる。
+
+    '
+  src: FotMob（9/26）
+  url: https://news.google.com/rss/articles/CBMiuwFBVV95cUxQNTY3X0Nfak4yaldqYTZvMzdNUlBva1JSakpNYjlXNXVlWGpCSm5VaHhoQUoxTXY5ODdVU0NtZmhQZWc3R2lUTnpIcWdLNUxIa2ZqcUJVTUlwTlNWOTN2eVlhY0pZdVJQUHhJRW9vd3luRnd1UlR6Z0dlcTZESmdpWmM3ZGw2WlBHclFUaUJkcjlVZVJOeEZxZFF6S3RVV3I2UnM5VnJuZ3lBLWVlZ0Itd0hWR2lsZ2lxQS1v?oc=5
+  fmt: quote
+  weak: true
+- num: 12
+  slot: ラリーガ
+  head: エトー、ヤマルのバロンドールを強く支持。「幸運を祈る」
+  why: 'バロンドールの発表を前に、エトーがヤマルを推した。候補には、W杯決勝まで行ったメッシも入っている。
+
+    '
+  src: サッカーキング（9/25〜26）
+  url: https://news.google.com/rss/articles/CBMicEFVX3lxTE84YWZnYjZpN0UtXzBrb09SdEU4b3FpYThJX0t1b1JxbE9ac2ZlVGV6ZU8waG1xNUN5WWN2NTZUd0NHTWRkUHBHQ0l6N0ozXzZod09XakxKNXg1bkh6RXVnWEdMRVZJSUxVeTdfWWp1eFA?oc=5
+  fmt: quote
+  weak: true
+- num: 13
+  slot: プレミア
+  head: マンUの16歳JJガブリエルに、レアルとバイエルンが関心。バルサは否定
+  why: 'マンUの16歳。レアルとバイエルンが関心、バルサは関心を否定、マンUは本人の要望に戸惑っている、という見出し。
+
+    '
+  src: TNT Sports / ESPN（9/25〜26）
+  url: https://news.google.com/rss/articles/CBMi-wFBVV95cUxPUUpGYTBzN0diQk1RcmhXRDN5aDJOeUVSM0xyd2dXWFY3TjgxRkhSeVZnYzN0NlVUWW9lVjBmWWdKSTdtQ2JWOHBPVjNKanMta3czakNocHlIanRBazZ0NUY2cEdSMU5kSERfdlBrSGxqdC02UlNnbWc0MEJoc3lsaXVDcEFLeDdKUmI5Q3psVnM3X3M4Wm9hZU0zd1ZpS2UyaWt6aUtjRWlLX25XOWp2QURaSnhUX3JnWENkTm1QOE16bU5aUTFzQ3NybXQtMWE2YXpkU3Y1RjNJOFZodTBnWkViRG8xd2w2T1YtV3RuM0dfbkdYeWEzYkJWYw?oc=5
+  fmt: news
+  weak: true
+- num: 14
+  slot: 日本人
+  head: 堂安律、ゴール前で神トラップから「ノールック股抜き」の今季初アシスト
+  why: '見出しは「日本人選手ハイライト」。**いつの試合かは記事で確かめる**（代表ウィーク中なので、前の週の試合の可能性）。
+
+    '
+  src: テレ朝NEWS（9/26）
+  url: https://news.google.com/rss/articles/CBMicEFVX3lxTE53VHZxMUl2RDdFdVhWbnBRSW9nUExjRmhvdWxwWjNWLXhILUVDSks1d0VvQmFJMzZRWFNEd0tWT0ZFTWlBNnpVQmd5TEFfU3V3YVJUdXhJZmF4bDlVNS1QbWFHdUZTQ1VSUHljeEh6enA?oc=5
+  fmt: news
+  weak: true
