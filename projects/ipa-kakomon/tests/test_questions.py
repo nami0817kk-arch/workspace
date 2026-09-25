@@ -208,3 +208,80 @@ def test_本文の大きさはページごとに数えて決める():
         ("ここが本文でいちばん字数が多い行です", 30.0, 9.0),   # 18文字
     ])
     assert questions._body_size(page) == 9.0
+
+
+# --- ページの組み立て -------------------------------------------------------
+
+import pages  # noqa: E402
+
+
+def _source(**kw):
+    base = dict(year_label="令和7年度", exam="sg", number=1,
+                pdf_url="https://www.ipa.go.jp/example.pdf")
+    base.update(kw)
+    return pages.Source(**base)
+
+
+def _page(**kw):
+    q = parse(_q(1, "これは何か。", ("あ", "い", "う", "え")))[0]
+    args = dict(question=q, answer="ア", explanation="正解はアである。", source=_source())
+    args.update(kw)
+    return pages.question_page(**args)
+
+
+def test_ページに出典が必ず入る():
+    """出典の明記は IPA が付けている利用条件。欠けたら条件違反になる。"""
+    html = _page()
+    assert "令和7年度 情報セキュリティマネジメント試験 問1" in html
+    assert "https://www.ipa.go.jp/example.pdf" in html
+    assert "改変していません" in html
+
+
+def test_出典が欠けていたら作らせない():
+    with pytest.raises(ValueError, match="出典にyear_label"):
+        _source(year_label="")
+    with pytest.raises(ValueError, match="出典にpdf_url"):
+        _source(pdf_url="")
+    with pytest.raises(ValueError, match="試験区分が不明"):
+        _source(exam="ap")
+
+
+def test_要確認の問はページにしない():
+    """図や表が落ちた問題文を出すのは致命的。呼び出し側の心がけに任せない。"""
+    q = parse(_q(1, "表を見て答えよ。"), [Shape(page=0, top=5.0)])[0]
+    with pytest.raises(ValueError, match="要確認"):
+        _page(question=q)
+
+
+def test_解説が空ならページにしない():
+    with pytest.raises(ValueError, match="解説が空"):
+        _page(explanation="   ")
+
+
+def test_正解が選択肢の範囲外なら落とす():
+    with pytest.raises(ValueError, match="範囲外"):
+        _page(answer="オ")
+
+
+def test_正解は開くまで見せない():
+    """来た人はまず自分で解きたい。開いた瞬間に答えが見えると用が済んでしまう。"""
+    html = _page()
+    # 見るのは本文だけ。CSS には正解用の飾りの定義が先に出てくるが、
+    # それが効くのは details の中だけなので、閉じているあいだは現れない。
+    body = html.split("<body>")[1]
+    before = body.split("<details>")[0]
+    assert "正解" not in before
+    assert "<details>" in html and "正解と解説を見る" in html
+
+
+def test_正解を色だけで示さない():
+    """色が見えない人に伝わらない。文字でも出す。"""
+    html = _page()
+    assert "← 正解" in html
+
+
+def test_問題文と選択肢はHTMLとして無害化する():
+    q = parse(_q(1, "<script>alert(1)</script> はどれか。"))[0]
+    html = _page(question=q)
+    assert "<script>alert(1)</script>" not in html
+    assert "&lt;script&gt;" in html
