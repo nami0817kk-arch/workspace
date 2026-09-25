@@ -154,8 +154,7 @@ class Person {
     // 今は「広まるほど広まりにくく、有名なほど早く忘れられる」形にして、
     // 今の露出に見合う高さへ寄っていく（露出 20 で 60 前後に落ち着く）。
     final now = state.reputation.fame;
-    final gain =
-        gained * state.player.traits.fameFactor * (100 - now) / 100;
+    final gain = gained * state.player.traits.fameFactor * (100 - now) / 100;
     final fade = now * Formulas.fameFade;
     return (now + gain - fade).round().clamp(0, 100);
   }

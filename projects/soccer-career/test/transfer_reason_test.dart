@@ -32,7 +32,7 @@ class _Repo implements SaveRepository {
   Future<void> clear() async {}
 }
 
-Future<CareerController> _career({String? country}) async {
+Future<CareerController> _career({String? country, int age = 26}) async {
   final controller = CareerController(
     repository: _Repo(),
     careerEngine: CareerEngine(random: Random(3)),
@@ -42,7 +42,7 @@ Future<CareerController> _career({String? country}) async {
   await controller.startCareer(
     name: 'T',
     position: Position.cm,
-    age: 26,
+    age: age,
     agent: Agent.pool.first,
     countryId: country,
   );
@@ -137,7 +137,12 @@ void main() {
   });
 
   test('どこまで声がかかるかと、一段上げるのに要るものを書く', () async {
-    final controller = await _career(country: 'yamato');
+    // **年齢は遊べる範囲（16〜21）で作る。** ここだけ 26歳で作っていて、
+    // 初期能力の基準（`startingBaseFor`）を揃えたときに総合力が 71 → 73 と
+    // `reachableCountries` の線をまたぎ、このテストだけが落ちた。
+    // 26歳から始められる画面はどこにも無いので、線の話を
+    // 遊べない年齢で確かめていたことになる。
+    final controller = await _career(country: 'yamato', age: 21);
     final state = controller.state!;
     expect(World.byId(state.club.countryId).prestige, 3);
 
