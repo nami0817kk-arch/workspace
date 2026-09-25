@@ -30,17 +30,6 @@ sections:
     sources:
       - https://web.gekisaka.jp/news/japan/detail/?459641-459641-fl
       - https://web.gekisaka.jp/news/japan/detail/?459637-459637-fl
-  - id: uruguay
-    heading: 抑えられなかった側
-    tier: 報道
-    telop: ウルグアイ紙「めまいがするような速さ」
-    narrator: キャスター
-    say:
-      - 対面だった左サイドバックのサナブリアについて、ウルグアイ紙「オバシオン」はこう書きました。
-      - voice: オバシオン紙の記者
-        text: このサイドでの容赦ないプレッシャーにもっとも苦しめられた選手だった。右サイドから切り込んだ松木を抑えきれず、見事なゴールを許してしまった
-    sources:
-      - https://news.yahoo.co.jp/articles/012c8e2aa399908cfccb483b4832574ef847745e
   - id: matsuki
     heading: 本人の言葉
     tier: 報道
@@ -64,17 +53,20 @@ sections:
     say:
       - text: '松木玖生の代表デビュー弾について、久保建英が試合後にこう言いました。'
         short_only: true
-      - 後半から入った久保建英は、松木についてこう言いました。
+      - text: '後半から入った久保建英は、松木についてこう言いました。'
+        image: assets/images/20260923_kubod/01.jpg
       - voice: 久保建英
         text: 持ってる側の人間だなと思いました。中村敬斗、小川航基の系統かなと
       - voice: 久保建英
         text: 守備もハードワークできて、一発持っていて、身体も強い。イングランドでもまれてすごく良い選手になっている
       - voice: 久保建英
         text: 僕も何度か一緒にFC東京でトレーニングをしたけど、競争も激しくなるなと思いました
-      - 同じ右サイドで組んだ堂安律は、伊東純也と比べてこう言いました。
+      - text: '同じ右サイドで組んだ堂安律は、伊東純也と比べてこう言いました。'
+        image: assets/images/20260923_doan/01.jpg
       - voice: 堂安律
         text: 特徴が今までやってきた選手とは違う。純也くんだと1対1を好むけど、玖生はもう少しコンビネーションが欲しい選手なので
-      - 高校時代に対戦した佐野航大は。
+      - text: '高校時代に対戦した佐野航大は。'
+        image: assets/images/20260925_sano/01.jpg
       - voice: 佐野航大
         text: 玖生はあそこのコースがすごく上手いのは高校時代から知っていたので、持った瞬間に決めるとなんとなく感じていた
     sources:
@@ -89,6 +81,7 @@ sections:
     say:
       - voice: ネット民
         text: 松木玖生すげぇ。ナイスシュート！　W杯でも見たかったよ
+        image: assets/images/20260925_matsuki_face/01.jpg
       - voice: ネット民
         text: 絶対自分で決めるって意思が伝わるのが良い
       - voice: ネット民

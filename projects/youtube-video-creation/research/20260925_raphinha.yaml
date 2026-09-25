@@ -9,8 +9,8 @@ theme:
   league_name: ブラジル代表
   kind: other
   topic: バルセロナ
-  title: 'ラフィーニャが10番を受け取った日、ロドリが「理解しがたい」と言ったのは'
-  question: 誰が10番を継いだのか
+  title: 'ラフィーニャがブラジルの10番を受け取った日、初めて起きたこと'
+  question: 10番のラフィーニャはどうだったのか
 short_title: ネイマールの10番を継いだ男
 thumbnail:
   photo: assets/images/20260925_raphinha2/01.jpg
@@ -41,11 +41,14 @@ sections:
       - https://www.cnnbrasil.com.br/esportes/futebol/selecao-brasileira/quem-e-o-novo-camisa-10-da-selecao-brasileira-confira-a-numeracao-completa/
       - https://www.lance.com.br/selecao-brasileira/nem-vini-jr-nem-estevao-saiba-que-e-o-novo-camisa-10-da-selecao.html
   - id: neymar
+    main: true
     heading: 脱いだ人の言葉
     tier: 報道
     telop: ネイマールは7月28日に代表を退くと言っていた
     narrator: キャスター
     say:
+      - text: 'ブラジル代表の新しい背番号が発表され、ネイマールの10番をラフィーニャが引き継ぎました。'
+        short_only: true
       - ネイマールは、ワールドカップのベスト16で敗れたあと、代表を退くことを口にしていました。
       - 7月28日、サントスでの試合のあと、はっきり言っています。
       - voice: ネイマールJr
@@ -55,30 +58,6 @@ sections:
       - 代表で**130試合80得点**。その番号を、ラフィーニャが引き継ぎました。
     sources:
       - https://exame.com/esporte/neymar-confirma-aposentadoria-da-selecao-brasileira-apos-copa-do-mundo-de-2026/
-  - id: rodri
-    main: true
-    heading: 同じ日に、ロドリが言ったこと
-    tier: 報道
-    telop: 「ラフィーニャが30人の候補に入っていないのは理解しがたい」
-    narrator: キャスター
-    say:
-      - text: 'ブラジル代表の新しい背番号が発表され、ラフィーニャがネイマールの10番を引き継ぎました。同じ週、同僚のロドリが言ったことです。'
-        short_only: true
-      - 同じ週、バルセロナの同僚ロドリがスペインのラジオで、バロンドールの話をしました。30人の候補に、ラフィーニャは入っていません。
-      - voice: ロドリ
-        text: ペドリとラフィーニャは、疑いなくバロンドールにノミネートされるべきだ
-      - voice: ロドリ
-        text: ペドリは世界最高の選手の一人で、ラフィーニャは私を最も驚かせた選手だ
-      - voice: ロドリ
-        text: ラフィーニャが30人の候補に入っていないのは、理解しがたい
-      - 前日の会見で、ヴィニシウスと並べて聞かれたアンチェロッティ監督は。
-      - voice: アンチェロッティ
-        text: 2人の状況は違う。ラフィーニャは自分のものではなかったポジションで素晴らしいことをしている。今はもう彼のポジションのようだ
-      - voice: アンチェロッティ
-        text: ヴィニは最高の状態ではないかもしれないが、2人とも将来の中心選手になるという確信がある
-    sources:
-      - https://www.cope.es/programas/el-partidazo-de-cope/entrevistas-de-juanma-castano/noticias/rodri-partidazo-cope-real-madrid-mostro-interes-primer-momento-20260923_3442533.html
-      - https://www.cnnbrasil.com.br/esportes/futebol/selecao-brasileira/ancelotti-defende-vinicius-jr-e-exalta-momento-de-raphinha-espetacular/
   - id: voices
     heading: ネットの反応
     tier: 未確認

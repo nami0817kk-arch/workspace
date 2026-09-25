@@ -53,21 +53,6 @@ sections:
     sources:
       - https://www.infobae.com/espana/agencias/2026/09/24/xavi-satisfecho-en-su-debut-como-seleccionador-de-unos-paises-bajos-con-ambicion/
       - https://www.vi.nl/nieuws/xavi-is-heel-blij-met-tweede-helft-en-gaat-vervanger-voor-brobbey-oproepen
-  - id: vanbommel
-    heading: 三世代目のデビュー
-    tier: 報道
-    telop: ファン・ボメル「コディがファーで完全にフリーなのが見えた」
-    narrator: キャスター
-    say:
-      - 同点弾を作ったルベン・ファン・ボメルは、父マルク、祖父ファン・マルワイクに続く代表入りです。
-      - voice: ファン・ボメル
-        text: ボールを奪って走った。コディがファーで完全にフリーなのが見えて、何とかしてそこへ届けようと思った
-      - voice: ファン・ボメル
-        text: ガクポはなかなか上手くやったけど、パスも悪くなかったよ
-      - voice: ファン・ボメル
-        text: 三世代というのはとても美しいこと
-    sources:
-      - https://www.voetbalprimeur.nl/nieuws/2139539/van-bommel-blijft-koel-na-oranje-debuut.html
   - id: gakpo
     main: true
     heading: ガクポが怒った場面
@@ -82,13 +67,16 @@ sections:
         text: あいつらのゴールから始まった。僕らからすれば、あれは単純に非スポーツ的だ
       - voice: ガクポ
         text: ルールはない。でも、誰かが負傷して倒れていてプレーが続いているなら、止めるのが普通だと思う。彼らはそうしないと決めた
-      - ファン・ダイクも。
+      - text: 'ファン・ダイクも。'
+        image: assets/images/20260925_sp_vandijk2/01.webp
       - voice: ファン・ダイク
         text: 最初は戻したのに、結局続けた。ボールは出すべきだと思うが、そうならなかった。不運だった
-      - ドイツ側は、逆のことを言っています。
+      - text: 'ドイツ側は、逆のことを言っています。'
+        image: assets/images/20260925_sp_kimmich/01.jpg
       - voice: ヨシュア・キミッヒ
         text: 毎年審判講習で、ああいう場面は続けろと教わっている。ボールを外に蹴り出すルールなんて、単純に存在しない
       - voice: ユルゲン・クロップ
+        image: assets/images/20260925_klopp/01.jpg
         text: ルールもそうなっている。続行される。選手はボールを外に出すなと指示されている。あの状況を見事に使った
     sources:
       - https://www.fcupdate.nl/voetbalnieuws/2026/09/gakpo-hekelt-onsportieve-actie-duitsland-dat-scoorde-terwijl-brobbey-geblesseerd-was
@@ -103,6 +91,7 @@ sections:
     say:
       - voice: ネット民
         text: ガクポのボレーがスーパーすぎる。まさにフライングダッチマン
+        image: assets/images/20260925_xavi_vi/01.webp
       - voice: ネット民
         text: ファンボメル息子、短い出場時間ながらいいシュートと見事な同点アシスト
       - voice: ネット民

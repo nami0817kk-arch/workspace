@@ -43,14 +43,15 @@ sections:
   - id: flash
     heading: 試合直後の説明
     tier: 報道
-    telop: 「試合が決めたことだ」
+    telop: 「試合の流れがそうさせた」
     narrator: キャスター
     say:
-      - 試合直後、ジェズス監督はこう説明しました。
+      - text: '試合直後、ジェズス監督はこう説明しました。'
+        image: assets/images/20260925_sp_jesus/01.jpg
       - voice: ジョルジェ・ジェズス
-        text: 試合が決めたことだ。残り25分、プレスをかけられるフレッシュな選手が必要だった
+        text: 試合の流れがそうさせた。残り25分、前から追いかけられる元気な選手が必要だった
       - voice: ジョルジェ・ジェズス
-        text: 技術的にはクリスティアーノの質は無いかもしれないが、ゴンサロが守備のスピードをくれると分かっていた
+        text: 技術ではクリスティアーノに及ばないかもしれないが、ゴンサロなら守備で走り回れると分かっていた
     sources:
       - https://sapo.pt/artigo/jorge-jesus-a-substituicao-do-ronaldo-foi-o-que-o-jogo-ditou-6ab59137c5a3f84d7f311de9
       - https://www.record.pt/internacional/competicoes-de-selecoes/liga-das-nacoes/detalhe/jesus-gostou-do-que-viu-e-explica-substituicao-de-ronaldo-precisavamos-de-alguem-fresquinho-para-pressionar
@@ -61,17 +62,17 @@ sections:
     telop: 「前から計画していた」
     narrator: キャスター
     say:
-      - text: 'ジェズス監督は、ロナウドを交代させた理由を試合直後、「試合が決めたことだ」と説明していました。'
+      - text: 'ジェズス監督は、ロナウドを交代させた理由を試合直後、「試合の流れがそうさせた」と説明していました。'
         short_only: true
       - そのあとの会見では、前から決めていたと言い直しています。
       - voice: ジョルジェ・ジェズス
-        text: 残り25分でロナウドを下げたのは、フレッシュな選手がいることが大事だと思ったからだ
+        text: 残り25分でロナウドを下げたのは、元気な選手を入れることが大事だと思ったからだ
       - voice: ジョルジェ・ジェズス
-        text: クリスはもう少し、あと5分、長くて10分は出られたのも分かっていた
+        text: クリスがあと5分、長くて10分は出られることも分かっていた
       - voice: ジョルジェ・ジェズス
         text: 試合中に下げるつもりで、それは前から計画していた
       - voice: ジョルジェ・ジェズス
-        text: ゴンサロならそれができると分かっていた。技術面で失うものはあっても、別の局面で得るものがあった
+        text: ゴンサロならそれができると分かっていた。技術で失うものはあっても、別の場面で得るものがあった
     sources:
       - https://www.record.pt/internacional/competicoes-de-selecoes/liga-das-nacoes/detalhe/conferencia-de-imprensa-de-jorge-jesus-em-direto
       - https://www.abola.pt/video/jorge-jesus-ja-tinha-planeado-tirar-cristiano-ronaldo-do-jogo-2026092422411377570
@@ -81,12 +82,14 @@ sections:
     telop: ネヴェス「ゴールは出てくる」
     narrator: キャスター
     say:
-      - 同じ67分に交代したルベン・ネヴェスは、こう庇いました。
+      - text: '同じ67分に交代したルベン・ネヴェスは、こう庇いました。'
+        image: assets/images/20260925_sp_neves/01.jpg
       - voice: ルベン・ネヴェス
         text: クリスティアーノのことは知ってるだろう。点を取れない時は、取った時と同じではない
       - voice: ルベン・ネヴェス
         text: 素晴らしい仕事をしたし、彼を通じてチャンスを作れた。ゴールは出てくる
-      - ロナウド本人は試合のあと、一言だけ投稿しています。
+      - text: 'ロナウド本人は試合のあと、一言だけ投稿しています。'
+        image: assets/images/20260925_ronaldo/01.jpg
       - voice: ロナウド
         text: 最初の一歩は踏み出した。行こう、ポルトガル
     sources:

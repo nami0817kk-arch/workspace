@@ -38,17 +38,6 @@ sections:
     sources:
       - https://web.gekisaka.jp/news/japan/detail/?459655-459655-fl
       - https://www.soccer-king.jp/news/japan/national/20260924/2209037.html
-  - id: history
-    heading: 33年前の兄弟
-    tier: 報道
-    telop: 兄弟の同時先発は、三浦泰年と三浦知良以来
-    narrator: キャスター
-    say:
-      - 兄弟が一緒に先発したこと自体も、**33年ぶり**。
-      - その前は1993年10月、ワールドカップ予選のイラン戦の三浦泰年と三浦知良でした。
-    sources:
-      - https://news.yahoo.co.jp/articles/40be303cbd0f92606b7ca8314f007fe435ce79d7
-      - https://news.yahoo.co.jp/articles/9edfd0b3cffe498bb1da7528759eeca88debb4f7
   - id: kaishu
     main: true
     heading: 兄の言葉
