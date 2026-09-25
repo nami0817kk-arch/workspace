@@ -1113,6 +1113,39 @@ def _check_line_images_wide(notes: Notes) -> list[str]:
     return problems
 
 
+TABLE_ROWS_WITH_LONG_LINE = 4     # これより多い行の表と
+LONG_TELOP_CHARS = 40             # これより長い1行（テロップが3行になる）を同じ節に置かない
+
+
+def _advise_card_telop_overlap(notes: Notes) -> list[str]:
+    """**表とテロップが重ならないか**（2026-09-25、ラフィーニャの山場で表の下半分が隠れた）。
+
+    表は画面の上から伸び、テロップは下から上へ伸びる。行の多い表と3行になるテロップが
+    同じ節にあると、真ん中でぶつかる。review は画面を見ないので通っていた（4コマで見つけた）。
+    直し方は、長い行を2つに割るか、表の行を減らす。
+    """
+    hints: list[str] = []
+    for section in notes.sections:
+        card = section.card or {}
+        if str(card.get("type", "")).lower() != "table":
+            continue
+        rows = len(card.get("rows") or [])
+        if rows < TABLE_ROWS_WITH_LONG_LINE:
+            continue
+        for number, sentence in enumerate(section.say):
+            only = section.line_onlys[number] if number < len(section.line_onlys) else ""
+            if only == "short":
+                continue
+            text = _bare_text(sentence if isinstance(sentence, str) else str((sentence or {}).get("text", "")))
+            if len(text) > LONG_TELOP_CHARS:
+                hints.append(
+                    f"節『{section.heading}』: 表が{rows}行あり、{len(text)}字の行（『{text[:16]}…』）の"
+                    "テロップが3行になって表の下にかかります。行を2つに割るか、表を減らしてください"
+                    "（2026-09-25 ラフィーニャ）")
+                break
+    return hints
+
+
 def _advise_offtopic_section(notes: Notes) -> list[str]:
     """**主役の名前が一度も出ない節は、題に答えていない疑いがある**（2026-09-25）。
 
@@ -1638,6 +1671,7 @@ def _advise_voices(notes: Notes) -> list[str]:
                         + _advise_thumbnail_name(notes)
                         + _advise_wide_photo(notes)
                         + _advise_offtopic_section(notes)
+                        + _advise_card_telop_overlap(notes)
                         + _advise_repeats(notes) + _advise_short_repeats(notes)
                         + _advise_title(notes) + _advise_group_thumbnail(notes)
                         + _advise_ear(notes) + _advise_readings(notes))

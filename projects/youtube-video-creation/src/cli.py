@@ -765,6 +765,9 @@ def _cmd_short(args, config) -> int:
     # **題名に答えているか**（2026-09-17。同じ日に2回やった）
     for problem in shorts.subject_problems(short, script):
         print(f"  ! {problem}", file=sys.stderr)
+    # **冒頭の写真が横長で縦版が無いか**（2026-09-25「子供が主役になってる」）
+    for problem in shorts.photo_problems(script):
+        print(f"  ! {problem}", file=sys.stderr)
 
     # 冒頭で捨てられていないか、その場で見る。review は --out を渡さないと
     # ショートの出力先を見ないので、作った直後に必ず出るようにしておく

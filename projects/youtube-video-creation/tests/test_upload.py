@@ -504,3 +504,13 @@ def test_同じ行を二度足さない(tmp_path):
     once = _with_main_link("リード\n\n本文", link)
     assert once.count(MAIN_LINK_HEADING) == 1
     assert _with_main_link(once, link) == once
+
+
+def test_日付つきの時刻を受ける():
+    """2026-09-26。23:56 に翌朝の枠を並べて、途中で0時をまたいだ。日付を書けば狂わない。"""
+    from datetime import datetime, timedelta, timezone
+    from src.upload import when_to_publish
+    jst = timezone(timedelta(hours=9))
+    now = datetime(2026, 9, 25, 23, 56, tzinfo=jst)
+    assert when_to_publish("09-26 09:00", now=now) == "2026-09-26T00:00:00Z"
+    assert when_to_publish("2026-09-26 14:00", now=now) == "2026-09-26T05:00:00Z"

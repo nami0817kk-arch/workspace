@@ -771,6 +771,35 @@ def quote_problems(script: Script) -> list[str]:
     return []
 
 
+def photo_problems(script: Script) -> list[str]:
+    """**冒頭の写真が横長で、縦版（`_v.jpg`）が無いなら知らせる**（2026-09-25）。
+
+    縦に敷くと真ん中しか映らない。同じ日に3回踏んだ：ロナウドの山場がジェズスの
+    横顔の帯、佐野兄弟で「子供が主役になってる」、ラフィーニャで2人の間の背景だけ。
+    主役がどこにいるかは機械では分からないので、止めずに知らせる。
+    直し方は、主役を中心に切った縦版を写真の隣に `01_v.jpg` で置く（2人なら `tools/pairphoto.py`）。
+    """
+    from pathlib import Path as _P
+    photo = str((script.meta or {}).get("thumbnail_photo") or "").strip()
+    if not photo or (script.meta or {}).get("thumbnail_photos"):
+        return []
+    root = _P(__file__).resolve().parents[1]
+    name = _P(photo)
+    if (root / name.with_name(name.stem + "_v" + name.suffix)).exists():
+        return []
+    try:
+        from PIL import Image
+        with Image.open(root / name) as im:
+            w, h = im.size
+    except Exception:
+        return []
+    if w <= h:
+        return []
+    return [f"冒頭の写真 {name.name} は横長（{w}×{h}）で、縦に敷くと真ん中しか映りません。"
+            "`tools/frames.py` で冒頭を見て、主役が外れていたら主役中心の縦版を "
+            f"{name.stem}_v{name.suffix} として隣に置いてください（2026-09-25「子供が主役になってる」）"]
+
+
 def subject_problems(short: Script, script: Script) -> list[str]:
     """**ショートが、自分の題名に答えているか**（2026-09-17）。
 

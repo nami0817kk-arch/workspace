@@ -1793,3 +1793,17 @@ def test_本人が語る節は主役の節とみなす():
         _section(id="own", heading="本人の言葉", say=[{"voice": "松木玖生", "text": "ほっとしています"}]),
     ]
     assert _advise_offtopic_section(build_notes(raw)) == []
+
+
+def test_行の多い表と長い行は重なりを知らせる():
+    """2026-09-25 ラフィーニャ。5行の表に45字の行を重ね、表の下半分が隠れた。"""
+    from src.research import _advise_card_telop_overlap
+    raw = _raw()
+    raw["sections"] = [_section(id="what", main=True,
+        card={"type": "table", "title": "t", "columns": ["", ""], "rows": [[1, "a"], [2, "b"], [3, "c"], [4, "d"], [5, "e"]]},
+        say=["あ" * 45])]
+    assert _advise_card_telop_overlap(build_notes(raw))
+    raw["sections"] = [_section(id="what", main=True,
+        card={"type": "table", "title": "t", "columns": ["", ""], "rows": [[1, "a"], [2, "b"], [3, "c"], [4, "d"], [5, "e"]]},
+        say=["あ" * 30])]
+    assert not _advise_card_telop_overlap(build_notes(raw))

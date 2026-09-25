@@ -263,6 +263,24 @@ def when_to_publish(clock: str, now=None) -> str:
     now = now.astimezone(jst)
 
     text = str(clock).strip()
+    # **日付つき（`09-26 09:00` / `2026-09-26 09:00`）も受ける**（2026-09-26）。
+    # 23:56 に `09:00` で11本を投げて全部止まり、`明日09:00` で投げ直したら
+    # 途中で0時をまたいだ。「明日」は投げた瞬間の日付で決まるので、夜中に並べて
+    # 予約するときは**日付を書く**のがいちばん狂わない
+    import re as _re
+    dated = _re.fullmatch(r"(?:(\d{4})-)?(\d{1,2})-(\d{1,2})[ T](\d{1,2}):(\d{2})", text)
+    if dated:
+        year = int(dated.group(1) or now.year)
+        target = now.replace(year=year, month=int(dated.group(2)), day=int(dated.group(3)),
+                             hour=int(dated.group(4)), minute=int(dated.group(5)),
+                             second=0, microsecond=0)
+        if target <= now + timedelta(minutes=1):
+            raise UploadError(f"{text} はもう過ぎています（いま {now:%m-%d %H:%M}）")
+        if not (OPEN_HOUR <= target.hour < CLOSE_HOUR):
+            raise UploadError(
+                f"{target:%m-%d %H:%M} は投稿の枠の外です"
+                f"（公開は{OPEN_HOUR}時から{CLOSE_HOUR}時のあいだ）")
+        return target.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     plus_day = 0
     for head in ("明日", "翌日", "翌"):
         if text.startswith(head):
