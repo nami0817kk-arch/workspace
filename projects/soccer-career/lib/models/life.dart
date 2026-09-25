@@ -32,7 +32,11 @@ class Morale {
       : '限界が近い';
 
   /// 助けが要る水準か。ここに落ちたら休ませる判断が要る。
-  bool get needsCare => value < 30;
+  /// これを割ると「気にかけたほうがいい」。**画面の線と同じ数字から出す**
+  /// ——手で書き写すと、片方を触ったときにもう片方が黙って古くなる。
+  static const int careLine = 30;
+
+  bool get needsCare => value < careLine;
 
   Map<String, dynamic> toJson() => {'value': value};
 
