@@ -14,6 +14,7 @@ updates:
       - "/projects/stock-investment"
       - "/projects/youtube-video-creation"
       - "/projects/gemini-api"
+      - "/projects/ipa-kakomon"
       - "/libs/kabutan"
       - "/platform/ai-lab"
     schedule: { interval: weekly, day: monday }
