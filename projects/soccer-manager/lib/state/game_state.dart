@@ -198,6 +198,30 @@ class GameState extends ChangeNotifier {
   /// スカウトが見つけてきた、獲得可能な候補選手一覧(閲覧専用・未確定)。
   List<Player> scoutCandidates = [];
 
+  /// IDから選手を探す。自軍だけでなく、ユースの有望株・スカウト候補・
+  /// 移籍市場・フリーエージェントまで見る。
+  ///
+  /// 比較や詳細の画面が自軍しか見ていないと、市場の選手を開いた瞬間に
+  /// 落ちる(firstWhere が要素なしで投げる)。見つからないときは null を
+  /// 返し、画面側で「もう居ない」と伝えられるようにする。
+  Player? playerById(String id) {
+    final save = _save;
+    if (save == null) return null;
+    for (final pool in [
+      userTeam.players,
+      save.youthProspects,
+      save.pendingYouthIntake,
+      scoutCandidates,
+      transferMarket,
+      freeAgents,
+    ]) {
+      for (final p in pool) {
+        if (p.id == id) return p;
+      }
+    }
+    return null;
+  }
+
   /// 直近のplayNextMatchdayでローン期間満了により契約元クラブへ復帰した選手名、
   /// または直近のstartNextSeasonで契約(年単位)満了により退団した選手名
   /// （1回表示したら呼び出し側でクリアする想定）。
