@@ -6,6 +6,7 @@ import '../models/career.dart';
 import '../models/traits.dart';
 import '../models/training.dart';
 import '../state/career_controller.dart';
+import 'stat_tile.dart';
 
 /// 今週の練習を、画面を移らずに変える。
 ///
@@ -395,16 +396,12 @@ class _StrainBar extends StatelessWidget {
           builder: (context, box) => Stack(
             alignment: Alignment.centerLeft,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(
-                  value: strain / 100,
-                  minHeight: 8,
-                  backgroundColor: theme.colorScheme.surfaceContainerHighest,
-                  color: strain >= Formulas.strainWorn
-                      ? theme.colorScheme.error
-                      : theme.colorScheme.primary,
-                ),
+              GaugeBar(
+                value: strain / 100,
+                height: 8,
+                color: strain >= Formulas.strainWorn
+                    ? theme.colorScheme.error
+                    : theme.colorScheme.primary,
               ),
               // 今の選び方を続けたときの行き先。
               Positioned(

@@ -25,6 +25,7 @@ import 'package:soccer_career/models/attributes.dart';
 import 'package:soccer_career/models/career.dart';
 import 'package:soccer_career/models/development.dart';
 import 'package:soccer_career/state/career_controller.dart';
+import 'package:soccer_career/ui/app_theme.dart';
 import 'package:soccer_career/ui/club_identity.dart';
 import 'package:soccer_career/ui/screens/create_player_screen.dart';
 import 'package:soccer_career/ui/screens/guide_screen.dart';
@@ -50,14 +51,13 @@ class _Repo implements SaveRepository {
   Future<void> clear() async {}
 }
 
+/// **アプリと同じテーマを使う。** 自前で `ThemeData` を組んでいた頃、
+/// テーマに足したもの（カードの影）が書き出した絵に出なかった。
 ThemeData themeFor(dynamic club, {Brightness brightness = Brightness.light}) =>
-    ThemeData(
+    appTheme(
+      ClubIdentity.of(club).primary,
+      brightness,
       fontFamily: 'NotoSansJP',
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: ClubIdentity.of(club).primary,
-        brightness: brightness,
-      ),
-      useMaterial3: true,
     );
 
 Future<void> pump(WidgetTester tester, Widget home, ThemeData theme) async {
@@ -259,16 +259,20 @@ void main() {
     await pump(
       tester,
       CreatePlayerScreen(controller: fresh),
-      ThemeData(useMaterial3: true, fontFamily: 'NotoSansJP'),
+      appTheme(
+        const Color(0xFF1B5E3F),
+        Brightness.light,
+        fontFamily: 'NotoSansJP',
+      ),
     );
     await dump(tester, '07-create');
     await pump(
       tester,
       CreatePlayerScreen(controller: fresh),
-      ThemeData(
-        useMaterial3: true,
+      appTheme(
+        const Color(0xFF1B5E3F),
+        Brightness.dark,
         fontFamily: 'NotoSansJP',
-        brightness: Brightness.dark,
       ),
     );
     await dump(tester, '12-dark-create');

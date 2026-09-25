@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 
 import '../models/club.dart';
@@ -130,6 +132,30 @@ class _PitchPainter extends CustomPainter {
         stripe,
       );
     }
+    // **照明と、四隅の落ち込み。** 単色の板に丸を置いただけだと、
+    // 絵ではなく図表に見える。中央が明るく縁が落ちるだけで、
+    // 「上から照らされた平面」として読めるようになる。
+    canvas.drawRect(
+      rect,
+      Paint()
+        ..shader = ui.Gradient.radial(
+          Offset(size.width * 0.5, size.height * 0.34),
+          size.width * 0.72,
+          const [Color(0x1AFFFFFF), Color(0x00FFFFFF), Color(0x33000000)],
+          const [0.0, 0.55, 1.0],
+        ),
+    );
+    // 上端と下端は、スタンドの影でわずかに沈む。
+    canvas.drawRect(
+      rect,
+      Paint()
+        ..shader = ui.Gradient.linear(
+          Offset(0, rect.top),
+          Offset(0, rect.bottom),
+          const [Color(0x40000000), Color(0x00000000), Color(0x2E000000)],
+          const [0.0, 0.3, 1.0],
+        ),
+    );
 
     // 余白を取ってからラインを引く。ピッチの縁とカードの縁が
     // 重なると、絵ではなく枠に見える。
@@ -163,7 +189,27 @@ class _PitchPainter extends CustomPainter {
     if (result == null) {
       // まだ選んでいない。足元にボール。
       final at = from + Offset(r * 2.2, r * 1.6);
+      canvas.drawOval(
+        Rect.fromCenter(
+          center: at + Offset(r * 0.1, r * 0.55),
+          width: r * 1.9,
+          height: r * 0.9,
+        ),
+        Paint()
+          ..color = const Color(0x4D000000)
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 1.6),
+      );
       canvas.drawCircle(at, r, white);
+      canvas.drawCircle(
+        at,
+        r,
+        Paint()
+          ..shader = ui.Gradient.radial(
+            at + Offset(-r * 0.3, -r * 0.35),
+            r * 1.6,
+            const [Color(0x00FFFFFF), Color(0x4D000000)],
+          ),
+      );
       canvas.drawCircle(at, r, dark);
       return;
     }
@@ -272,26 +318,85 @@ class _PitchPainter extends CustomPainter {
   void _goals(Canvas canvas, Rect p) {
     final h = p.height * 0.22;
     final w = p.width * 0.016;
-    canvas.drawRect(
+    // **ゴールは箱として描く。** 短冊1枚だと、ピッチに貼った色のテープに
+    // 見える。正面の面と、奥へ伸びる側面を分けて、明るさを変える。
+    void goal(Rect mouth, Color color, {required bool toLeft}) {
+      final depth = w * 2.2;
+      final dx = toLeft ? -depth : depth;
+      // 奥の面（暗い）。台形で奥行きを出す。
+      final back = Path()
+        ..moveTo(mouth.left, mouth.top)
+        ..lineTo(mouth.left + dx, mouth.top + mouth.height * 0.1)
+        ..lineTo(mouth.left + dx, mouth.bottom - mouth.height * 0.1)
+        ..lineTo(mouth.left, mouth.bottom)
+        ..close();
+      canvas.drawPath(back, Paint()..color = _shade(color, 0.55));
+      // 正面のポスト（明るい）。
+      canvas.drawRect(mouth, Paint()..color = color);
+      canvas.drawRect(
+        Rect.fromLTWH(mouth.left, mouth.top, mouth.width, mouth.height * 0.18),
+        Paint()..color = _shade(color, 1.45),
+      );
+    }
+
+    goal(
       Rect.fromLTWH(p.left - w, p.center.dy - h / 2, w, h),
-      Paint()..color = home.primary,
+      home.primary,
+      toLeft: true,
     );
-    canvas.drawRect(
+    goal(
       Rect.fromLTWH(p.right, p.center.dy - h / 2, w, h),
-      Paint()..color = away.primary,
+      away.primary,
+      toLeft: false,
+    );
+  }
+
+  /// 色を明るく／暗くする。**新しい色は作らない**——クラブの色から出す。
+  static Color _shade(Color base, double factor) => Color.fromARGB(
+    (base.a * 255).round(),
+    ((base.r * 255) * factor).clamp(0, 255).round(),
+    ((base.g * 255) * factor).clamp(0, 255).round(),
+    ((base.b * 255) * factor).clamp(0, 255).round(),
+  );
+
+  /// ピッチに立つ駒。**平らな丸を球にする。**
+  ///
+  /// 落ち影で床から浮かせ、上からの光で丸みを出す。
+  /// 光の向きは芝の照明（上）と揃える——別々の向きから照らすと、
+  /// 同じ絵の中に2つの太陽があることになる。
+  void _marker(Canvas canvas, Offset at, double r, Color color) {
+    // 床に落ちる影。真下ではなく少し下へ（光は上から）。
+    canvas.drawOval(
+      Rect.fromCenter(
+        center: at + Offset(r * 0.12, r * 0.46),
+        width: r * 2.0,
+        height: r * 1.05,
+      ),
+      Paint()
+        ..color = const Color(0x4D000000)
+        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 2.2),
+    );
+    // 縁は白。相手の色が芝と近い緑のこともあるので、
+    // 色に頼らず形で分かるようにしておく。
+    canvas.drawCircle(at, r + 1.4, Paint()..color = const Color(0xE6FFFFFF));
+    canvas.drawCircle(at, r, Paint()..color = color);
+    // 上からの光。球の上半分が明るく、下端が落ちる。
+    canvas.drawCircle(
+      at,
+      r,
+      Paint()
+        ..shader = ui.Gradient.radial(
+          at + Offset(-r * 0.32, -r * 0.4),
+          r * 1.5,
+          const [Color(0x73FFFFFF), Color(0x00FFFFFF), Color(0x59000000)],
+          const [0.0, 0.5, 1.0],
+        ),
     );
   }
 
   /// 相手のブロック。後ろに4人、前に3人。
   void _opponents(Canvas canvas, Rect p) {
     final block = _block;
-    final fill = Paint()..color = away.primary;
-    // 縁は白。相手の色が芝と近い緑のこともあるので、
-    // 色に頼らず形で分かるようにしておく。
-    final ring = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.4
-      ..color = const Color(0xCCFFFFFF);
     void row(double along, int count, double spread) {
       final x = p.left + p.width * along;
       for (var i = 0; i < count; i++) {
@@ -299,8 +404,7 @@ class _PitchPainter extends CustomPainter {
         final y = p.center.dy + (t - 0.5) * p.height * spread;
         // 端は少し下がって構える。並びが直線だと絵が硬い。
         final at = Offset(x + (t - 0.5).abs() * p.width * 0.04, y);
-        canvas.drawCircle(at, p.height * 0.05, fill);
-        canvas.drawCircle(at, p.height * 0.05, ring);
+        _marker(canvas, at, p.height * 0.05, away.primary);
       }
     }
 
@@ -315,9 +419,17 @@ class _PitchPainter extends CustomPainter {
       p.top + p.height * spot.across,
     );
     final r = p.height * 0.058;
-    canvas.drawCircle(at, r * 2.1, Paint()..color = const Color(0x33FFFFFF));
-    canvas.drawCircle(at, r + 1.6, Paint()..color = Colors.white);
-    canvas.drawCircle(at, r, Paint()..color = home.primary);
+    // 自分の足元だけ、芝が明るい（スポットライト）。
+    canvas.drawCircle(
+      at,
+      r * 2.3,
+      Paint()
+        ..shader = ui.Gradient.radial(at, r * 2.3, const [
+          Color(0x40FFFFFF),
+          Color(0x00FFFFFF),
+        ]),
+    );
+    _marker(canvas, at, r, home.primary);
     if (home.striped) {
       canvas.drawCircle(at, r * 0.45, Paint()..color = home.secondary);
     }

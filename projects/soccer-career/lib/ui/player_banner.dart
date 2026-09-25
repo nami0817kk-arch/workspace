@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 
 import '../models/career.dart';
@@ -217,6 +219,9 @@ class _KitPainter extends CustomPainter {
     );
     if (striped) {
       final stripe = Paint()..color = secondary.withValues(alpha: 0.16);
+      // 縞の片側に細い光を入れる。**織りの段差**が出て、
+      // 塗り分けた板ではなく布に見える。
+      final edge = Paint()..color = const Color(0x1FFFFFFF);
       const width = 14.0;
       for (var x = -size.height; x < size.width; x += width * 2) {
         canvas.drawPath(
@@ -228,8 +233,38 @@ class _KitPainter extends CustomPainter {
             ..close(),
           stripe,
         );
+        canvas.drawPath(
+          Path()
+            ..moveTo(x + width, size.height)
+            ..lineTo(x + size.height + width, 0)
+            ..lineTo(x + size.height + width + 2, 0)
+            ..lineTo(x + width + 2, size.height)
+            ..close(),
+          edge,
+        );
       }
     }
+
+    // **上端の光と、下端の落ち込み。** 斜めのグラデーションだけだと
+    // 「色の違う板」に見える。縁に光と影を置くと、面に厚みが出る。
+    canvas.drawRect(
+      Rect.fromLTWH(0, 0, size.width, size.height * 0.34),
+      Paint()
+        ..shader = ui.Gradient.linear(
+          Offset.zero,
+          Offset(0, size.height * 0.34),
+          const [Color(0x2EFFFFFF), Color(0x00FFFFFF)],
+        ),
+    );
+    canvas.drawRect(
+      Rect.fromLTWH(0, size.height * 0.62, size.width, size.height * 0.38),
+      Paint()
+        ..shader = ui.Gradient.linear(
+          Offset(0, size.height * 0.62),
+          Offset(0, size.height),
+          const [Color(0x00000000), Color(0x3D000000)],
+        ),
+    );
   }
 
   @override

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'state/career_controller.dart';
+import 'ui/app_theme.dart';
 import 'ui/club_identity.dart';
 import 'ui/screens/create_player_screen.dart';
 import 'ui/screens/hub_screen.dart';
@@ -41,14 +42,8 @@ class _SoccerCareerAppState extends State<SoccerCareerApp> {
   /// 既定の色。まだクラブが決まっていないときに使う。
   static const Color _defaultSeed = Color(0xFF1B5E3F);
 
-  ThemeData _themeFor(Color seed, Brightness brightness) => ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: seed,
-          brightness: brightness,
-        ),
-        useMaterial3: true,
-        fontFamily: _fontFamily,
-      );
+  ThemeData _themeFor(Color seed, Brightness brightness) =>
+      appTheme(seed, brightness, fontFamily: _fontFamily);
 
   @override
   Widget build(BuildContext context) {
@@ -60,8 +55,9 @@ class _SoccerCareerAppState extends State<SoccerCareerApp> {
         // 所属クラブの色でアプリ全体を染める。移籍すれば色が変わるので、
         // 「どこに居るのか」が画面を開いた瞬間に分かる。
         final club = _controller.state?.club;
-        final seed =
-            club == null ? _defaultSeed : ClubIdentity.of(club).primary;
+        final seed = club == null
+            ? _defaultSeed
+            : ClubIdentity.of(club).primary;
         return MaterialApp(
           title: '選手キャリア',
           debugShowCheckedModeBanner: false,

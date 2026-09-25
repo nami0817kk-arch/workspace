@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 
 import '../models/club.dart';
@@ -88,15 +90,21 @@ class _PortraitPainter extends CustomPainter {
     canvas.save();
     canvas.clipRRect(rounded);
 
-    // 背景。上を明るく、下を落として奥行きを出す。
+    // 背景。**点光源にする**——上下のグラデーションだけだと壁紙に見える。
+    // 左上から照らして、右下が落ちる。以下ぜんぶ光の向きはここに揃える。
     canvas.drawRect(
       frame,
       Paint()
-        ..shader = LinearGradient(
-          begin: Alignment.topCenter,
-          end: Alignment.bottomCenter,
-          colors: [Color.lerp(backdrop, Colors.white, 0.35)!, backdrop],
-        ).createShader(frame),
+        ..shader = ui.Gradient.radial(
+          Offset(s * 0.30, s * 0.16),
+          s * 1.05,
+          [
+            Color.lerp(backdrop, Colors.white, 0.45)!,
+            backdrop,
+            Color.lerp(backdrop, Colors.black, 0.22)!,
+          ],
+          const [0.0, 0.55, 1.0],
+        ),
     );
 
     // 首。肩より先に描いて、襟で隠す。
@@ -118,6 +126,17 @@ class _PortraitPainter extends CustomPainter {
       ..lineTo(s * 0.90, s)
       ..close();
     canvas.drawPath(torso, Paint()..color = kit);
+    // 布の丸み。肩の頂点が明るく、脇と裾が落ちる。
+    canvas.drawPath(
+      torso,
+      Paint()
+        ..shader = ui.Gradient.radial(
+          Offset(s * 0.36, s * 0.66),
+          s * 0.62,
+          const [Color(0x3DFFFFFF), Color(0x00FFFFFF), Color(0x4D000000)],
+          const [0.0, 0.5, 1.0],
+        ),
+    );
 
     if (striped) {
       canvas.save();
@@ -139,6 +158,14 @@ class _PortraitPainter extends CustomPainter {
       ..lineTo(s * 0.62, s * 0.635)
       ..close();
     canvas.drawPath(collar, Paint()..color = trim);
+    // 襟の縁。下側に影を入れて、布が重なっていることにする。
+    canvas.drawPath(
+      collar,
+      Paint()
+        ..color = const Color(0x38000000)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = s * 0.012,
+    );
 
     // 頭。
     final head = Rect.fromCenter(
@@ -146,9 +173,33 @@ class _PortraitPainter extends CustomPainter {
       width: s * 0.38,
       height: s * 0.44,
     );
+    // 顎の影。頭が胸の手前にあることは、この1枚でしか伝わらない。
+    canvas.save();
+    canvas.clipPath(torso);
+    canvas.drawOval(
+      Rect.fromCenter(
+        center: Offset(s * 0.5, s * 0.66),
+        width: s * 0.40,
+        height: s * 0.13,
+      ),
+      Paint()
+        ..color = const Color(0x4D000000)
+        ..maskFilter = MaskFilter.blur(BlurStyle.normal, s * 0.035),
+    );
+    canvas.restore();
+
+    final headRRect = RRect.fromRectAndRadius(head, Radius.circular(s * 0.17));
+    canvas.drawRRect(headRRect, Paint()..color = skin);
+    // 頭の丸み。左上から光、右下が落ちる（背景と同じ向き）。
     canvas.drawRRect(
-      RRect.fromRectAndRadius(head, Radius.circular(s * 0.17)),
-      Paint()..color = skin,
+      headRRect,
+      Paint()
+        ..shader = ui.Gradient.radial(
+          Offset(head.left + head.width * 0.3, head.top + head.height * 0.26),
+          head.width * 1.15,
+          const [Color(0x3DFFFFFF), Color(0x00FFFFFF), Color(0x4D000000)],
+          const [0.0, 0.45, 1.0],
+        ),
     );
     // 耳。
     for (final dx in [-0.20, 0.20]) {
