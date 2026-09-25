@@ -1193,3 +1193,77 @@ class SellerPraiseTest(unittest.TestCase):
                 ("大人気！究極のレジスター CLOVER", "究極のレジスター CLOVER")):
             with self.subTest(name=name):
                 self.assertEqual(self.theme.clean_name(name), want)
+
+
+class LayoutTest(unittest.TestCase):
+    """画面の作り。実測で見つけた詰まりを、元に戻らないように固定する。"""
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+        self.site = {"name": "S", "base_url": "https://e.test",
+                     "owner": "o", "contact_email": "c@e.test"}
+
+    def row(self, code="a"):
+        return {"item_code": code, "name": "テスト商品 の名前", "price": 1000,
+                "low": 900, "high": 1200, "days": 20, "vs_low_pct": 0.1,
+                "at_low": False, "near_low": False, "dropped": False,
+                "label": "横ばい", "image": "", "shop": "店", "url": "",
+                "low_date": "2026-09-20", "tail": []}
+
+    def test_ナビは主要5つを出し残りを畳む(self):
+        # 14項目を横に流していたとき、携帯では3項目しか見えていなかった
+        html = self.theme.nav_html("")
+
+        head = html.split("<details")[0]
+        self.assertEqual(head.count("<a "), 5)
+        for _, label in self.theme.NAV_MORE:
+            with self.subTest(label=label):
+                self.assertIn(label, html)   # 畳んでも消さない
+
+    def test_絞り込みは畳んだ状態で出す(self):
+        # 開いたまま置くと、携帯では1件目の商品が730px下にあった
+        html = self.theme.listing("題", "説明", [self.row()], self.site,
+                                  "https://e.test/", "2026-09-26")
+
+        self.assertIn('<details class="tools-box">', html)
+        self.assertNotIn('<details class="tools-box" open', html)
+
+    def test_上のページ送りには飛び先と件数を出さない(self):
+        # どちらも下にあれば足りる。上に積むと最初の商品が画面の外へ出る
+        top = self.theme.pager(1, 81, "lows/", 4023, jumps=False)
+        bottom = self.theme.pager(1, 81, "lows/", 4023)
+
+        self.assertNotIn("飛ぶ", top)
+        self.assertNotIn("全4,023件", top)   # 件数は見出しにも出ている
+        self.assertIn("飛ぶ", bottom)
+        self.assertIn("全4,023件", bottom)
+
+    def test_点の内訳は条件ごとに分ける(self):
+        # 1つの span に「・」で繋いでいたため、画面では
+        # 「100/100最安値への近さ 40・…」と地続きに見えていた
+        row = dict(self.row(), at_low=True, free_shipping=True)
+        html = self.theme.score_bar(row)
+
+        self.assertGreaterEqual(html.count('class="part"'), 2)
+        self.assertNotIn("・", html)
+
+    def test_商品ページの正式名称は畳む(self):
+        # 題から外した宣伝が、本文の先頭に戻ってこないこと
+        row = dict(self.row(), name="【送料無料】" + "あ" * 80)
+        html = self.theme.item_page(row, self.site, "2026-09-26")
+
+        self.assertIn('<details class="fullname">', html)
+        # 見出しに出る文字（title 属性の控えは別物なので中身だけ見る）
+        import re as _re
+        h1 = _re.search(r"<h1[^>]*>(.*?)</h1>", html, _re.S).group(1)
+        self.assertNotIn("【送料無料】", h1)
+
+    def test_ジャンル索引は名前と件数を分ける(self):
+        # CSSが当たっておらず「パソコン・周辺機器1,524商品」と繋がっていた
+        html = self.theme.genre_index(
+            [{"genre_id": "1", "name": "家電", "count": 1538}],
+            self.site, "https://e.test/genre/", "2026-09-26")
+
+        self.assertIn('<ul class="genres">', html)
+        self.assertIn('<span class="count">1,538商品</span>', html)

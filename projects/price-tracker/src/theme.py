@@ -184,11 +184,26 @@ FAVICON = ("data:image/svg+xml,"
 AD_NOTICE = ('<p class="ad-notice">本サイトは楽天アフィリエイトを利用しており、'
              'リンク経由の購入により収益を得ています。</p>')
 
-NAV = [("./", "いま条件がそろう"), ("drops/", "今日の値下がり"), ("points/", "ポイント込み"), ("new-lows/", "最安値更新"),
-       ("lows/", "最安値圏"), ("rises/", "値上がり"), ("active/", "よく動く"),
-       ("genre/", "ジャンル別"), ("archive/", "日付別"), ("search/", "商品を探す"),
-       ("watch/", "見守り"), ("ending/", "期限が近い"), ("stats/", "記録"),
-       ("about/", "このサイトについて")]
+# ナビは14項目を1行に並べていた。実測で携帯（375px）では 1,187px 中 844px が
+# 画面の外にあり、見えていたのは3項目だけだった。横スクロールできる印も無い。
+# よく使う5つを出し、残りは「ほかの一覧」に畳む。どれも1タップで届く。
+NAV_MAIN = [("./", "いま条件がそろう"), ("drops/", "今日の値下がり"),
+            ("lows/", "最安値圏"), ("search/", "商品を探す"), ("watch/", "見守り")]
+NAV_MORE = [("points/", "ポイント込み"), ("new-lows/", "最安値更新"),
+            ("rises/", "値上がり"), ("active/", "よく動く"), ("ending/", "期限が近い"),
+            ("genre/", "ジャンル別"), ("archive/", "日付別"), ("stats/", "記録"),
+            ("about/", "このサイトについて")]
+NAV = NAV_MAIN + NAV_MORE
+
+
+def nav_html(prefix: str) -> str:
+    def link(href, label):
+        return f'<a href="{(prefix + href).replace("/./", "/")}">{esc(label)}</a>'
+    main = "".join(link(h, l) for h, l in NAV_MAIN)
+    more = "".join(link(h, l) for h, l in NAV_MORE)
+    return (f'<nav class="site-nav">{main}'
+            f'<details class="nav-more"><summary>ほかの一覧</summary>'
+            f'<div class="nav-more-list">{more}</div></details></nav>')
 
 
 def _verification(site: dict) -> str:
@@ -234,7 +249,7 @@ def head(title: str, description: str, canonical: str, site: dict, prefix: str =
 <a class="skip" href="#main">本文へ</a>
 <header class="site-head"><div class="wrap">
   <a class="site-name" href="{prefix or './'}">{esc(site['name'])}</a>
-  <nav class="site-nav">{"".join(f'<a href="{(prefix + href).replace("/./", "/")}">{esc(label)}</a>' for href, label in NAV)}</nav>
+  {nav_html(prefix)}
 </div></header>
 <main class="wrap" id="main">"""
 
@@ -368,9 +383,14 @@ def score_bar(row: dict) -> str:
     total = condition_score(row)
     if total <= 0:
         return ""
-    parts = [f'{name} {pt}' for name, pt in score_breakdown(row) if pt]
-    return (f'<p class="score"><span class="num">{total}</span><span class="max">/100</span>'
-            f'<span class="parts">{esc(" ・ ".join(parts))}</span></p>')
+    # 1つの span に「・」で繋いで入れていたため、点と内訳が地続きの文字列に
+    # なっていた（画面では「100/100最安値への近さ 40・…」と読めた）。
+    # 条件ごとに分けて、名前と点の対が目で拾えるようにする。
+    parts = "".join(f'<span class="part">{esc(name)}<b>{pt}</b></span>'
+                    for name, pt in score_breakdown(row) if pt)
+    return (f'<p class="score"><span class="num">{total}</span>'
+            f'<span class="max">/100</span>'
+            f'<span class="parts">{parts}</span></p>')
 
 
 def card(row: dict, prefix: str = "", eager: bool = False, show_score: bool = False) -> str:
@@ -569,7 +589,8 @@ def stats_bar(stats: dict) -> str:
     return '<p class="stats">' + '<span class="sep">/</span>'.join(parts) + '</p>'
 
 
-def pager(page: int, pages: int, prefix: str, total: int) -> str:
+def pager(page: int, pages: int, prefix: str, total: int,
+          jumps: bool = True) -> str:
     """ページ送り。最安値圏は4,000件を超えるので、1枚に収めると読めない。"""
     if pages <= 1:
         return ""
@@ -589,17 +610,19 @@ def pager(page: int, pages: int, prefix: str, total: int) -> str:
         links.append(f'<span class="gap">…</span><a href="{href(pages)}">{pages}</a>')
     if page < pages:
         links.append(f'<a rel="next" href="{href(page + 1)}">次へ</a>')
-    links.append(f'<span class="of">全{total:,}件</span>')
+    # 件数は見出しにも出ている。上にも出すと同じ数が2行続く
+    if jumps:
+        links.append(f'<span class="of">全{total:,}件</span>')
     nav = f'<nav class="pager">{"".join(links)}</nav>'
     # 近辺しか出さないと、81ページある一覧の40ページ目まで20回押すことになる。
     # 読み手が奥まで行けないのと同じ理由で、クロールも奥まで届かない。
     # 飛び先は5ページ刻み。近辺が±2なので、この間隔なら取りこぼしが出ない
     # （10刻みにしたら14〜18ページ目だけ1手多くかかった）。
-    if pages > 10:
-        jumps = "".join(
+    if jumps and pages > 10:
+        spots = "".join(
             f'<a href="{href(n)}">{n}</a>' for n in range(6, pages + 1, 5)
             if n != page)
-        nav += f'<nav class="jump"><span>飛ぶ</span>{jumps}</nav>'
+        nav += f'<nav class="jump"><span>飛ぶ</span>{spots}</nav>'
     return nav
 
 
@@ -640,6 +663,8 @@ document.addEventListener('DOMContentLoaded', function () {
 """
 
 LIST_TOOLS = r"""
+<details class="tools-box">
+<summary>絞り込み・並び替え</summary>
 <div class="tools">
   <label>並び替え <select id="sort">
     <option value="">既定のまま</option>
@@ -663,6 +688,7 @@ LIST_TOOLS = r"""
   <span id="shown" class="of"></span>
   <span class="scope">このページに出ている分だけを並べ替えます</span>
 </div>
+</details>
 <script>
 // この script は一覧より前に置かれる。読み込み時点で .cards はまだ無いので、
 // DOM が揃うのを待ってから繋ぐ（待たずに書いたため、並び替えが丸ごと
@@ -675,6 +701,14 @@ document.addEventListener('DOMContentLoaded', function () {
   var range = document.getElementById('range');
   var shown = document.getElementById('shown');
   var q = new URLSearchParams(location.search);
+  // 条件がURLに入って来たときは畳んだままにしない。
+  // 絞り込まれた理由が画面から読めないと、件数が合わない故障に見える。
+  // 見るのはこの道具が書く4つだけ。何か付いていれば開く形にすると、
+  // 広告の計測用の ?utm_source= でも開いてしまう。
+  if (['sort', 'range', 'free', 'stock'].some(function (k) { return q.has(k); })) {
+    var box = document.querySelector('.tools-box');
+    if (box) { box.open = true; }
+  }
 
   function num(li, key) { return parseFloat(li.dataset[key] || '0'); }
 
@@ -752,13 +786,16 @@ def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
         f'{lead}（{total:,}件のうち'
         f'{(page - 1) * 50 + 1:,}件目から{min(page * 50, total):,}件目）')
     heading = esc(title) + (f"（{page}ページ目）" if page > 1 else "")
+    # 上は現在地だけ、飛び先は下に置く。上に積むと最初の商品が
+    # 画面の外へ出る（実測で携帯では1件目が730px下にあった）
+    nav_top = pager(page, pages, page_prefix, total, jumps=False)
     nav = pager(page, pages, page_prefix, total)
     return (head(f"{short_name(heading, 30)}｜{site['name']}", desc, canonical, site, prefix,
                  extra=item_list_ld(rows, site, prefix))
             + f'<h1>{heading}{count}</h1><p class="lead">{esc(lead)}</p>'
             + stats_bar(stats or {})
             + AD_NOTICE
-            + nav
+            + nav_top
             + (f'<p class="thin">この一覧は前回の記録との比較なので、'
                f'動きが少ない日は少なくなります。'
                f'<a href="{prefix}">いま条件がそろっている商品</a>もご覧ください。</p>'
@@ -811,7 +848,7 @@ def genre_index(genres: list[dict], site: dict, canonical: str, updated: str,
         for g in genres)
     return (head(f"{title}｜{site['name']}", lead, canonical, site, prefix)
             + f'<h1>{esc(title)}</h1><p class="lead">{esc(lead)}</p>'
-            + f'<ul class="cards">{links}</ul>'
+            + f'<ul class="genres">{links}</ul>'
             + foot(site, prefix, updated))
 
 
@@ -1283,8 +1320,13 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
             + '<p class="back"><a href="../../">今日の値下がりへ</a><span class="sep">/</span><a href="../../lows/">最安値圏へ</a><span class="sep">/</span><a href="../../search/">商品を探す</a></p>'
             + f'<article class="item"><h1 title="{esc(row["name"])}">'
               f'{esc(short_name(row["name"], 70))}</h1>'
-            + (f'<p class="fullname">{esc(row["name"])}</p>'
-               if len(row["name"]) > 70 else '')
+            # 楽天での正式名称。宣伝込みで200文字あることもあり、そのまま
+            # 出すと題から外した売り文句が本文の先頭に戻ってくる。
+            # 消しはしない（買う前に正式名称を確かめたい人がいる）が、畳む。
+            + (f'<details class="fullname"><summary>楽天での商品名を見る</summary>'
+               f'<p>{esc(row["name"])}</p></details>'
+               if clean_name(row["name"]) != row["name"]
+               or len(row["name"]) > 70 else '')
             + (f'<p class="hero"><img src="{esc(row["image"])}" '
                f'alt="{esc(short_name(row["name"], 40))}" width="300" height="300" '
                f'decoding="async"></p>' if row.get("image") else '')

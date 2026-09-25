@@ -42,11 +42,24 @@ a { color: var(--accent); }
 .site-head .wrap { display: flex; flex-wrap: wrap; gap: 8px 20px; align-items: baseline;
   padding: 14px 16px; min-width: 0; }
 .site-name { font-weight: 700; font-size: 17px; color: var(--ink); text-decoration: none; }
-/* 12項目ある。狭い画面では折り返さず横に流す（縦1文字ずつに潰れていた）。 */
-.site-nav { display: flex; gap: 16px; font-size: 14px; overflow-x: auto;
-  -webkit-overflow-scrolling: touch; scrollbar-width: none; }
-.site-nav::-webkit-scrollbar { display: none; }
-.site-nav a { white-space: nowrap; }
+/* よく使う5つを出し、残りは「ほかの一覧」に畳む。14項目を横に流していたとき、
+   携帯では 1,187px 中 844px が画面の外にあり、見えていたのは3項目だった。 */
+.site-nav { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 14px;
+  font-size: 14px; min-width: 0; }
+.site-nav > a { white-space: nowrap; padding: 6px 0; }
+.nav-more { position: relative; }
+.nav-more > summary { cursor: pointer; white-space: nowrap; padding: 6px 0;
+  color: var(--accent); list-style: none; }
+.nav-more > summary::-webkit-details-marker { display: none; }
+.nav-more > summary::after { content: " ▾"; }
+.nav-more[open] > summary::after { content: " ▴"; }
+/* 開いた一覧は上に重ねる。押し広げると本文が飛ぶ。 */
+.nav-more-list { position: absolute; z-index: 20; top: 100%; left: 0;
+  display: grid; gap: 2px; min-width: 190px; padding: 8px 4px;
+  background: var(--panel); border: 1px solid var(--line); border-radius: 10px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, .12); }
+.nav-more-list a { padding: 9px 12px; border-radius: 7px; white-space: nowrap; }
+.nav-more-list a:hover { background: var(--bg); }
 
 main { padding: 24px 16px 48px; }
 h1 { font-size: 24px; line-height: 1.4; margin: 0 0 8px; }
@@ -185,9 +198,18 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 .hero { margin: 4px 0 16px; }
 .hero img { width: 100%; max-width: 260px; height: auto; border-radius: var(--radius);
   background: var(--panel); }
+/* 広い画面では値段と横に並べる。縦に積むと、開いて最初に見たいものが下がる。 */
+@media (min-width: 720px) {
+  .item .hero { float: right; margin: 0 0 12px 20px; }
+  .item .hero img { max-width: 220px; }
+}
 
-/* 全文は補足なので、見出しと同じ強さで出さない。 */
-.fullname { max-width: 62em; }
+/* 楽天での正式名称。題から外した宣伝が本文の先頭に戻らないよう畳む。 */
+.fullname { max-width: 62em; margin: -2px 0 14px; }
+.fullname > summary { cursor: pointer; font-size: 13px; color: var(--muted); }
+.fullname > p { margin: 8px 0 0; padding: 10px 12px; font-size: 13px;
+  color: var(--muted); line-height: 1.7; background: var(--panel);
+  border: 1px solid var(--line); border-radius: var(--radius); }
 .note { font-size: 13px; color: var(--muted); }
 .history th { font-variant-numeric: tabular-nums; }
 
@@ -227,7 +249,6 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 .site-foot .disclaimer, .site-foot .copy, .updated { margin: 8px 0 0; }
 .site-foot .ad-notice { background: none; border: 0; padding: 0; margin: 8px 0 0; }
 
-.fullname { margin: -4px 0 14px; font-size: 13px; color: var(--muted); line-height: 1.6; }
 
 @media (max-width: 560px) {
   .card { gap: 10px; }
@@ -254,3 +275,56 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 .jump a { padding: 2px 7px; border: 1px solid var(--line); border-radius: 7px;
           color: var(--muted); text-decoration: none; }
 .jump a:hover { color: var(--accent); border-color: var(--accent); }
+
+/* --- 条件のそろい具合。CSSが無く、点と内訳が地続きの文字列に見えていた
+   （画面では「100/100最安値への近さ 40・…」）。点を先に、内訳は札で。 */
+.score { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px;
+  margin: 8px 0 0; }
+.score .num { font-size: 17px; font-weight: 700; color: var(--accent);
+  font-variant-numeric: tabular-nums; }
+.score .max { margin-right: 4px; font-size: 12px; color: var(--muted); }
+.score .parts { display: flex; flex-wrap: wrap; gap: 3px; }
+.score .part { display: inline-flex; align-items: baseline; gap: 5px;
+  padding: 1px 8px; font-size: 12px; line-height: 1.6; color: var(--muted);
+  background: var(--bg); border: 1px solid var(--line); border-radius: 999px; }
+.score .part b { color: var(--ink); font-variant-numeric: tabular-nums; }
+
+/* --- ジャンル索引。CSSが無く「パソコン・周辺機器1,524商品」と繋がっていた。 */
+.genres { list-style: none; margin: 8px 0 0; padding: 0;
+  display: grid; gap: 8px; }
+.genre { display: flex; align-items: baseline; justify-content: space-between;
+  gap: 12px; padding: 12px 14px; background: var(--panel);
+  border: 1px solid var(--line); border-radius: var(--radius); }
+.genre a { font-weight: 600; text-decoration: none; }
+.genre a:hover { color: var(--accent); }
+.genre .count { flex: none; font-size: 13px; color: var(--muted);
+  font-variant-numeric: tabular-nums; }
+@media (min-width: 720px) {
+  .genres { grid-template-columns: 1fr 1fr; }
+}
+
+/* --- 絞り込みは畳んでおく。開いたまま置くと、携帯では1件目の商品が
+   730px下（画面まるごと1枚ぶん先）にあった。 */
+.tools-box { margin: 10px 0 14px; }
+.tools-box > summary { display: inline-block; cursor: pointer;
+  padding: 8px 14px; font-size: 14px; color: var(--accent);
+  border: 1px solid var(--line); border-radius: 999px; }
+.tools-box > summary::after { content: " ▾"; }
+.tools-box[open] > summary::after { content: " ▴"; }
+.tools-box > .tools { margin-top: 10px; }
+
+/* --- 押す場所は指で届く大きさにする。ナビは24pxしかなかった。 */
+@media (max-width: 560px) {
+  .site-nav { gap: 0 12px; }
+  .site-nav > a, .nav-more > summary { padding: 9px 0; }
+  .pager a, .pager .now { padding: 9px 13px; }
+  .jump a { padding: 7px 11px; }
+  /* 小さすぎる字を13pxへ。12pxは日本語では読みにくい。 */
+  .badge, .cond, .down small, .watch-mini, .tools .scope,
+  .hit .since { font-size: 13px; }
+  /* 印と説明が画面の両端に離れていて、どちらの話か分かりにくかった */
+  .tools .check { justify-content: flex-start; }
+  .tools label { justify-content: flex-start; gap: 8px; }
+  /* 商品ページの画像が画面の高さの3分の1を占め、値段を画面の外へ押していた */
+  .item .hero img { max-width: 180px; }
+}
