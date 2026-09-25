@@ -77,6 +77,9 @@ python src/build_site.py    # 取得 → data/ 保存 → output/ 生成
 - **運営者情報（operator.html）と問い合わせ（contact.html）は AdSense の前提**。
   「誰が運営し、どこへ連絡できるか」が読めないと審査に出せない。
   問い合わせフォームは置かない（静的サイトなので送信先を外部に預けることになる）。
+  **メールアドレスを `mailto:` で書かない。** Cloudflare の Email Address
+  Obfuscation が「[email protected]」に差し替えてしまい、JS が動かない相手には
+  連絡先が読めなくなる（審査はそこを見る）。`@` を `[at]` に割った素のテキストで書く。
 - **AdSense を有効にするのは `render.ADSENSE_CLIENT` の1箇所**。空のあいだは
   広告スクリプトも枠も一切描かない。審査前にプレースホルダの `<ins>` を置くと、
   中身の無い点線の箱が全ページに並ぶだけ。

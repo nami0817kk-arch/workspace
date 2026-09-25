@@ -11,8 +11,15 @@
   お問い合わせフォームは設けていません。
 </p>
 
+{# mailto: で書くと Cloudflare の Email Address Obfuscation が
+   「[email protected]」に差し替えてしまい、JS が動かない相手には
+   アドレスが読めない（AdSense の審査もそこを見る）。
+   @ を [at] に割った素のテキストなら書き換えられず、収集にも強い。 #}
 <p style="font-size:1.15rem; font-weight:bold; margin:1.25rem 0;">
-  <a href="mailto:{{ CONTACT_EMAIL }}">{{ CONTACT_EMAIL }}</a>
+  {{ CONTACT_EMAIL.replace("@", "[at]") }}
+</p>
+<p style="font-size:0.85rem; color:var(--muted); margin-top:-0.75rem;">
+  迷惑メール対策のため <code>[at]</code> と書いています。送信時は <code>@</code> に置き換えてください。
 </p>
 
 <h2>お受けできる内容</h2>

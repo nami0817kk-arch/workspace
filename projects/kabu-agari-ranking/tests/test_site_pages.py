@@ -473,8 +473,12 @@ def test_運営者情報と問い合わせが名義と連絡先を出す(site):
     contact = (out_dir / "contact.html").read_text(encoding="utf-8")
 
     assert site_config.OWNER and site_config.OWNER in operator
-    assert site_config.CONTACT_EMAIL and site_config.CONTACT_EMAIL in contact
-    assert f"mailto:{site_config.CONTACT_EMAIL}" in contact
+    # mailto: では書かない。Cloudflare の Email Address Obfuscation が
+    # 「[email protected]」に差し替えてしまい、JS が動かない相手には読めなくなる。
+    shown = site_config.CONTACT_EMAIL.replace("@", "[at]")
+    assert site_config.CONTACT_EMAIL
+    assert shown in contact
+    assert "mailto:" not in contact
     # 行き止まりにしない（審査は「たどり着けるか」も見る）
     assert 'href="contact.html"' in operator
     assert 'href="operator.html"' in contact
