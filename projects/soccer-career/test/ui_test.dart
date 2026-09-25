@@ -24,6 +24,10 @@ import 'package:soccer_career/models/career.dart';
 import 'package:soccer_career/models/development.dart';
 import 'package:soccer_career/models/training.dart';
 import 'package:soccer_career/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:soccer_career/monetize/monetization.dart';
+import 'package:soccer_career/monetize/ad_service.dart';
+import 'package:soccer_career/monetize/purchase_service.dart';
 import 'package:soccer_career/state/career_controller.dart';
 import 'package:soccer_career/ui/readable_width.dart';
 import 'package:soccer_career/models/look.dart';
@@ -88,6 +92,7 @@ Future<void> pumpHub(
   WidgetTester tester,
   CareerController controller, {
   double height = 844,
+  Monetization? monetization,
 }) async {
   tester.view.physicalSize = Size(390, height);
   tester.view.devicePixelRatio = 1.0;
@@ -98,7 +103,8 @@ Future<void> pumpHub(
       theme: ThemeData(useMaterial3: true),
       home: AnimatedBuilder(
         animation: controller,
-        builder: (context, _) => HubScreen(controller: controller),
+        builder: (context, _) =>
+            HubScreen(controller: controller, monetization: monetization),
       ),
     ),
   );
@@ -1293,4 +1299,44 @@ void main() {
     }
   });
 
+
+  testWidgets('広告と課金は、渡したときだけメニューに出る', (tester) async {
+    // **ブラウザ版とテストには広告も課金も無い。** 出す仕組みを
+    // 無条件に置くと、繋がらないストアのボタンが並ぶことになる。
+    final controller = await newCareer();
+    await pumpHub(tester, controller);
+    await tester.tap(find.byIcon(Icons.more_vert));
+    await tester.pumpAndSettle();
+    expect(find.text('広告・応援'), findsNothing);
+  });
+
+  testWidgets('広告・応援の画面が開き、売り物は2つだけ', (tester) async {
+    SharedPreferences.setMockInitialValues({});
+    final money = Monetization(
+      ads: NoAdService(),
+      purchases: NoPurchaseService(),
+    );
+    await money.initialize();
+    final controller = await newCareer();
+    await pumpHub(tester, controller, monetization: money);
+    await tester.tap(find.byIcon(Icons.more_vert));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('広告・応援'));
+    await tester.pumpAndSettle();
+
+    // 見出しとボタンで2つ出る。
+    expect(find.text('広告を消す'), findsWidgets);
+    expect(find.text('応援する'), findsWidgets);
+    expect(find.widgetWithText(FilledButton, '広告を消す'), findsOneWidget);
+    expect(find.widgetWithText(OutlinedButton, '応援する'), findsOneWidget);
+    // iOS の審査要件。
+    expect(find.text('購入を復元'), findsOneWidget);
+    // 強くなるものを売っていないことを、最初に書く。
+    expect(find.textContaining('強くなるものは売っていない'), findsOneWidget);
+    // ストアに繋がらない環境では押せない。
+    final buy = tester.widget<FilledButton>(
+      find.widgetWithText(FilledButton, '広告を消す'),
+    );
+    expect(buy.onPressed, isNull);
+  });
 }
