@@ -3,15 +3,11 @@
 PDF も通信も使わない。壊れ方はどれも「間違った問題文を黙って公開する」形なので、
 実物の PDF で見つけたものを1件ずつ固定してある。
 """
-import sys
-from pathlib import Path
-
 import pytest
 
-sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
-
-import questions  # noqa: E402
-from questions import Line, Shape, parse  # noqa: E402
+import pages
+import questions
+from questions import Line, Shape, parse
 
 
 def _q(number: int, body: str, choices=("あ", "い", "う", "え"), page=0, top=0.0):
@@ -211,8 +207,6 @@ def test_本文の大きさはページごとに数えて決める():
 
 
 # --- ページの組み立て -------------------------------------------------------
-
-import pages  # noqa: E402
 
 
 def _source(**kw):
