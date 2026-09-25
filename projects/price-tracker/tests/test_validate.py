@@ -1167,3 +1167,29 @@ class PagerReachTest(unittest.TestCase):
 
     def test_1ページだけなら何も出さない(self):
         self.assertEqual(self.theme.pager(1, 1, "drops/", 10), "")
+
+
+class SellerPraiseTest(unittest.TestCase):
+    """売り手の自賛は商品名ではない。
+
+    トップの1件目が「20%OFF!1点1000円!25(金)23:59迄 高評価★4.59 …」で
+    始まっていた。何の商品かが見える位置に出てこない。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def test_評点と締切を落として商品名から始める(self):
+        out = self.theme.clean_name(
+            "20%OFF!1点1000円!25(金)23:59迄 高評価★4.59 Nintendo Switch 収納ケース")
+
+        self.assertEqual(out, "Nintendo Switch 収納ケース")
+
+    def test_販売実績の自慢を落とす(self):
+        for name, want in (
+                ("シリーズ累計160万台突破！ 防湿庫 カメラ", "防湿庫 カメラ"),
+                ("累計販売数6万突破！シェーバー メンズ", "シェーバー メンズ"),
+                ("大人気！究極のレジスター CLOVER", "究極のレジスター CLOVER")):
+            with self.subTest(name=name):
+                self.assertEqual(self.theme.clean_name(name), want)
