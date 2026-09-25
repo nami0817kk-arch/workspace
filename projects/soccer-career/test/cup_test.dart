@@ -478,6 +478,27 @@ void main() {
       expect(c.state!.continentalCup, isNull);
     });
 
+    test('1シーズン戦い切れば、国内カップは必ず決着する', () async {
+      // **これが見張れていなかったせいで、戦った結果が捨てられていた。**
+      // 16強・準々・準決勝が2戦合計だった頃は決勝まで8試合が要り、
+      // 日程（5試合）が先に尽きる。季末に `running` のまま残った大会は
+      // `runDomesticCup` が結果を振り直すので、**5連勝したシーズンが
+      // 「1回戦敗退」になっていた**（実測113シーズン中18回）。
+      for (var seed = 1; seed <= 3; seed++) {
+        final c = await started(seed: seed);
+        while (!c.state!.seasonFinished) {
+          await c.simulateMatch();
+        }
+        final run = c.state!.domesticCup!;
+        expect(
+          run.running,
+          isFalse,
+          reason: '種$seed: 季末に ${run.label} のまま残っている'
+              '（戦った結果が振り直される）',
+        );
+      }
+    });
+
     test('到達ラウンドは、戦った結果から決まる', () async {
       final c = await started();
       final state = c.state!;
