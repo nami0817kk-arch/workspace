@@ -1044,6 +1044,41 @@ THUMB_STRETCH_MAX = 1.6
 THUMB_SIZE = (1280, 720)
 
 
+def _advise_wide_photo(notes: Notes) -> list[str]:
+    """**本文に敷く写真は横に広いものを使う**（2026-09-25 指摘）。
+
+    縦の写真は右に立てて左にべた塗りの面が残る。ユーザーの「左がグレー」は
+    **色の話ではなく、その面があること**への指摘だった（私は色を直して読み違えた）。
+    1枚のときは横長を探す。縦しか無ければ2枚並べて1枚にする（`tools/pairphoto.py`）。
+    2枚並べた回（`photos`）は、冒頭の絵が1枚目だけになるので、**並べた1枚を
+    `photo` に置く**（`photos` はサムネ用で、本文と冒頭には1枚目しか届かない）。
+    """
+    thumb = notes.thumbnail or {}
+    photos = [str(x) for x in (thumb.get("photos") or []) if str(x).strip()]
+    single = str(thumb.get("photo") or "").strip()
+    body = single or (photos[0] if photos else "")
+    if not body:
+        return []
+    file = Path(body)
+    if not file.exists():
+        return []
+    try:
+        from PIL import Image
+
+        with Image.open(file) as im:
+            w, h = im.size
+    except Exception:
+        return []
+    if w >= h * 0.95:
+        return []
+    hint = ("`tools/pairphoto.py` で2枚を横に並べた1枚を作り、`thumbnail.photo` に置いてください"
+            if photos else
+            "記事の写真（`tools/articlephoto.py`）か Commons の横長のファイル（`portrait --file`）を探すか、"
+            "`tools/pairphoto.py` で2枚並べてください")
+    return [f"本文と冒頭に敷く写真 {file.name} が縦長（{w}×{h}）です。右に立てると**左に面が残ります**。"
+            f"{hint}（2026-09-25 指摘「ちゃんと横に広い写真を使う」）"]
+
+
 def _check_thumbnail_resolution(notes: Notes) -> list[str]:
     thumb = notes.thumbnail or {}
     photos = [str(x) for x in (thumb.get("photos") or []) if str(x).strip()]
@@ -1533,6 +1568,7 @@ def _advise_voices(notes: Notes) -> list[str]:
                         + _advise_hook(notes) + _advise_thumbnail_repeat(notes)
                         + _advise_thumbnail_promise(notes)
                         + _advise_thumbnail_name(notes)
+                        + _advise_wide_photo(notes)
                         + _advise_repeats(notes) + _advise_short_repeats(notes)
                         + _advise_title(notes) + _advise_group_thumbnail(notes)
                         + _advise_ear(notes) + _advise_readings(notes))

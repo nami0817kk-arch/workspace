@@ -1713,3 +1713,27 @@ def test_入れ替えた写真は次の行にも残る():
     assert used, "写真が1枚も出ていません"
     # b に替わったら、そのあとは a へ戻らない
     assert "assets/images/a/01.jpg" not in used[used.index("assets/images/b/01.jpg"):]
+
+
+def test_本文に敷く写真が縦長なら知らせる(tmp_path):
+    """2026-09-25 指摘「左がグレーだめは色の話ではなくて、ちゃんと横に広い写真を使うという意味」。
+
+    縦の写真を右に立てると左に面が残る。面の色を良くするのではなく、面を作らない。
+    """
+    from PIL import Image
+
+    from src.research import _advise_wide_photo
+
+    tall = tmp_path / "tall.jpg"
+    Image.new("RGB", (600, 900), (90, 20, 20)).save(tall)
+    wide = tmp_path / "wide.jpg"
+    Image.new("RGB", (1600, 900), (20, 20, 90)).save(wide)
+
+    n = build_notes(_raw())
+    n.thumbnail = {"photo": str(tall)}
+    assert _advise_wide_photo(n)
+    n.thumbnail = {"photo": str(wide)}
+    assert not _advise_wide_photo(n)
+    # 2枚並べた回は、冒頭に届くのが1枚目だけなので、その1枚目を見る
+    n.thumbnail = {"photos": [str(tall), str(wide)]}
+    assert "pairphoto" in _advise_wide_photo(n)[0]
