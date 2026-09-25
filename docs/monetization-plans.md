@@ -63,6 +63,43 @@
 この案の持ち札で、一次情報の改定に合わせて再点火する。後の山ほど対象が増えて有利になる。
 企画書: https://claude.ai/artifact/JvCm7MmGbxE1y7gz9jEgcH
 
+## 方式2 の採算調査（2026-09-25、方式2セッション）
+
+**状態: 調査中（ユーザー判断待ち）。** 「何枚で採算が合うか」を一次情報から出した。まだ画像は1枚も作っていない（このセッションはクラウドで画像生成の鍵が無いため、調査止まり）。
+
+### 素材（ストック）サイト — 5社中、AI画像を受け付けるのは実質Adobe Stockのみ
+
+| サイト | AI画像 | 状況 | 出典 |
+|---|---|---|---|
+| Adobe Stock | 申告制で可 | 取り分33%（動画35%）。単価は$0.33〜0.83/DL程度。支払い下限$25（初回売上から45日後） | [Generative AI Content Guidelines](https://helpx.adobe.com/stock/contributor/submit-your-content/submit-generative-ai-content/generative-ai-content-guidelines.html) |
+| Shutterstock | **不可** | 方針として受付拒否 | [AI-generated Content Contributor FAQ](https://submit.shutterstock.com/help/en/articles/10594676-ai-generated-content-on-shutterstock-contributor-faq) |
+| iStock/Getty | **不可** | 方針として受付拒否 | [AI-Free Imagery Policy](https://www.istockphoto.com/legal/ai-free-imagery-policy) |
+| PIXTA | **不可** | 2026-04-20に新規受付終了、2026-05-22に販売自体も終了済み | [PIXTA公式ニュース](https://pixta.co.jp/news/2075) |
+| 写真AC/イラストAC | **不可（一時）** | 2025-10-10から新規投稿受付を停止、再開時期未定 | 複数の二次情報（公式ヘルプは直接アクセス不可） |
+
+### グッズ（POD）サイト — 6社とも購入者対応義務なし、AI画像もほぼ可
+
+| サイト | AI画像 | 1点あたりの取り分目安 | 参入障壁 | 購入者対応義務 |
+|---|---|---|---|---|
+| SUZURI | 規約範囲内で可 | 自由設定（目安300円） | 審査なし、即出品 | なし |
+| BOOTH | 申告推奨（大量/模倣は監視強化） | 目安300〜500円 | 審査なし | なし |
+| Redbubble | 可（**説明欄での開示が必須**） | 約600円（20%設定） | 数営業日のレビュー | なし |
+| TeePublic | 制限なし | 約450〜600円 | ほぼ即時 | なし（公式に明記） |
+| Society6 | 制限なし | 約270円（固定10%） | **事前審査（応募制）** | なし |
+| Amazon Merch on Demand | 制限なし | 約300〜600円 | **事前審査（2〜8週間）** | 建前はAmazon窓口だが、対応不備で出品者責任を問われる余地あり（唯一の要注意点） |
+
+### 採算ライン（逆算）
+
+- 素材（Adobe Stock）: 月1万円 ≈ 80〜200ダウンロード、月3万円 ≈ 240〜600ダウンロード
+- グッズ（SUZURI/BOOTH中心）: 月1万円 ≈ 20〜35点、月3万円 ≈ 60〜100点
+
+**単価より露出が壁。** ストックもPODも1点あたりの月間販売期待値はごく小さく、上の枚数を安定して出すには数百〜数千点規模のポートフォリオを継続的に積み増す前提になる。少数作って様子見できる規模ではない。
+
+### ユーザー判断待ちの点
+
+1. このまま進めるか、ここで畳むか（素材は実質Adobe Stock一本、グッズも単価200〜600円/点で物量前提）
+2. 進める場合、グッズは国内（SUZURI/BOOTH）中心か、海外（Redbubble/TeePublic、PayPal等海外決済の登録が要る）まで広げるか
+
 ## 着手前に裏を取ること — **2026-09-25 に全件済み**
 
 **どれも塞がっていなかった。** 全件を一次情報で確かめた結果が下の表。
