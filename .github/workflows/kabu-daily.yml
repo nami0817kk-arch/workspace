@@ -8,8 +8,12 @@ on:
   push:
     branches: [master]
     paths:
+      # **公開物になるものは全部並べる。** templates/ が抜けていて、
+      # 文面だけ直しても再公開されない期間があった（2026-09-25 に気づいた）。
       - "projects/kabu-agari-ranking/data/**"
       - "projects/kabu-agari-ranking/src/**"
+      - "projects/kabu-agari-ranking/templates/**"
+      - "projects/kabu-agari-ranking/static/**"
       - "libs/kabutan/**"
       - ".github/workflows/kabu-daily.yml"
   schedule:
