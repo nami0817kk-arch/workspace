@@ -516,3 +516,39 @@ def test_運営者情報と問い合わせがsitemapに載る(site):
     # 配信される形（.html なし）で載る。canonical_url がそこを揃えている。
     assert f"<loc>{site_config.SITE_URL}/operator</loc>" in xml
     assert f"<loc>{site_config.SITE_URL}/contact</loc>" in xml
+
+
+def test_トップと当日アーカイブのタイトルが別物(site):
+    """同じ中身が2つのURLにある日は、タイトルまで同じだと重複が強く出る。
+
+    トップは「今日のランキングを探している人」の入口、アーカイブは
+    「その日付の記録」。狙う言葉が違うので、書き分ける。
+    """
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-09-18")
+    render.build_all()
+
+    def title(path):
+        return re.search(r"<title>(.*?)</title>",
+                         (out_dir / path).read_text(encoding="utf-8")).group(1)
+
+    top = title("index.html")
+    archive = title("archive/gainers/2026-09-18.html")
+    assert top != archive
+    assert top.startswith("本日の")          # 日付を先頭に置かない
+    assert "2026-09-18" in archive           # 日付で引ける
+
+
+def test_タイトルが長すぎない(site):
+    """検索結果で切られると、何のページか読めなくなる。"""
+    data_dir, out_dir = site
+    for d in ("2026-09-16", "2026-09-17", "2026-09-18"):
+        _write_day(data_dir, d)
+    render.build_all()
+
+    too_long = []
+    for page in out_dir.rglob("*.html"):
+        t = re.search(r"<title>(.*?)</title>", page.read_text(encoding="utf-8")).group(1)
+        if len(t) > 40:
+            too_long.append(f"{page.relative_to(out_dir)} ({len(t)}字) {t}")
+    assert not too_long, "タイトルが長すぎる:\n" + "\n".join(too_long)

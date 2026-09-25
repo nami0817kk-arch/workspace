@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}相場の振り返り（直近{{ day_count }}営業日）｜値上がり株ランキング{% endblock %}
 {% block description %}直近{{ day_count }}営業日について、10%以上動いた銘柄数・ストップ高とストップ安の数・首位の上昇率の推移をまとめています。{% endblock %}
+{% block structured_data %}{% set crumbs = [{"label": "ホーム", "url": SITE_URL ~ "/"}, {"label": "相場の振り返り", "url": canonical}] %}{% include "_breadcrumb_data.html" %}{% endblock %}
 {% block breadcrumb %}{% set crumbs = [
   {"label": "ホーム", "href": "index.html"},
   {"label": "相場の振り返り"}
