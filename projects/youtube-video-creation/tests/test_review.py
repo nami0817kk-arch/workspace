@@ -1548,3 +1548,11 @@ def test_連体形のあとに名詞で止める題は隠している():
     assert hook("ジダンからムバッペへの電話。そこで伝えられた2つのこと")
     # 名詞で終わっても、前が動詞でなければ言い切り
     assert not hook("サンチョ、ドルトムントへ移籍")
+
+
+def test_名前の途中に普通名詞があっても名前とみなす():
+    """2026-09-26。「インファンティーノ」の中の「ファン」で、頭に名前が無いと判定されていた。"""
+    from src.review import check_title_subject
+    from src.script_model import Script
+    assert check_title_subject(Script(title="ジャンニ・インファンティーノ会長に、欧州4大リーグが突きつけたもの")).ok
+    assert check_title_subject(Script(title="インファンティーノ会長に、欧州4大リーグが突きつけたもの")).ok

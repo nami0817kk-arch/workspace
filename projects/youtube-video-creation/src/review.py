@@ -1360,7 +1360,10 @@ def check_title_subject(script: Script) -> Finding:
     # 3文字まで下げて、3文字の普通名詞は COMMON_KATAKANA で落とす
     for run in re.findall(r"[ァ-ヶー・]{3,}", head):
         # 頭で切れた語も落とす（「ウォームア」は「ウォームアップ」の途中）
-        if not any(word in run or run in word for word in COMMON_KATAKANA):
+        # **普通名詞が名前の途中に入っているだけなら名前**（2026-09-26）。
+        # 「インファンティーノ」の中の「ファン」で落ちていた。普通名詞とみなすのは、
+        # 同じ語か、普通名詞で始まるか（「ファンの声」）、普通名詞の途中で切れたとき
+        if not any(run == word or run.startswith(word) or run in word for word in COMMON_KATAKANA):
             return Finding(True, "タイトルの主語", f"頭に名前: {run[:10]}")
     # 漢字の名前。**文頭にあって助詞か読点が続くもの**だけを見る。
     # 「南野拓実が」「旗手怜央、」は名前、「移籍市場が」は名前ではない
