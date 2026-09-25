@@ -19,6 +19,10 @@ from kabutan.parse import extract_asof_date, parse_daily_prices, parse_ranking_t
 MODE_GAINERS = "2_1"  # 今日の上昇率（値上がり率ランキング）
 MODE_LOSERS = "2_2"   # 今日の下落率（値下がり率ランキング）
 MODE_ACTIVE = "2_9"   # 本日の活況銘柄（約定回数。出来高そのものではない）
+# 「その日ストップ高（安）をつけた銘柄」。引けまで保ったとは限らない
+# （場中につけて下げた銘柄も載る）。引けで保ったかは at_limit で分かる。
+MODE_STOP_HIGH = "3_1"
+MODE_STOP_LOW = "3_2"
 
 MARKETS = (1, 2, 3)   # プライム, スタンダード, グロース
 
@@ -28,6 +32,8 @@ __all__ = [
     "MODE_ACTIVE",
     "MODE_GAINERS",
     "MODE_LOSERS",
+    "MODE_STOP_HIGH",
+    "MODE_STOP_LOW",
     "extract_asof_date",
     "fetch_daily_html",
     "fetch_errors",

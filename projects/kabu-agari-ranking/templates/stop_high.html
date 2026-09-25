@@ -17,9 +17,21 @@
   当サイトは終値と騰落率から前営業日の終値を割り出し、上限に達していた銘柄を毎営業日記録しています。
 </p>
 <p class="note-scope">
+  {% if has_recorded and not has_estimated %}
+  <strong>取得元のストップ高一覧をそのまま記録したものです。</strong>
+  「その日ストップ高をつけた銘柄」のうち、<strong>引けまで上限を保った銘柄</strong>を数えています
+  （場中につけたあと下げた銘柄は含みません）。
+  {% elif has_recorded %}
+  <strong>{{ recorded_from }} 以降は、取得元のストップ高一覧をそのまま記録しています</strong>
+  （引けまで上限を保った銘柄を数えます）。
+  それ以前は値上がりランキングの上位30銘柄から推定したもので、
+  <strong>上位30銘柄の外にあったストップ高は含みません</strong>。
+  件数を日付をまたいで比べるときは、この違いに注意してください。
+  {% else %}
   <strong>対象は値上がりランキングの上位30銘柄です。</strong>
   東証のすべてのストップ高銘柄を網羅したものではありません
   （当サイトが毎日取得しているのが上位30銘柄までのため）。
+  {% endif %}
 </p>
 
 {% if trend_chart %}
@@ -69,6 +81,7 @@
     <span class="archive-date">{{ day.rec_date_ja }}</span>
     <span class="archive-top">
       {% if day.count %}ストップ高 {{ day.count }}銘柄 ／ {{ day.names }}{% else %}ストップ高なし{% endif %}
+      {% if day.source == "estimated" %}<span class="badge">上位30銘柄から推定</span>{% endif %}
     </span>
   </a>
   {% endfor %}

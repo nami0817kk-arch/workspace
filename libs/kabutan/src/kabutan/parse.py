@@ -41,6 +41,23 @@ def extract_asof_date(html: str) -> str | None:
     return max(dates) if dates else None
 
 
+# 「いま制限値幅の上限（下限）に張り付いている」ことを示す印。
+# 株価の隣のセルに単独で S が入る。市場の列は「東Ｓ」のように全角なので、
+# 半角1文字と完全一致させれば取り違えない。
+# 銘柄コード。2024年から英文字を含むもの（例: 627A）が割り当てられている。
+# 「4桁の数字」に限っていた間、新しい形式の銘柄を1件も保存できていなかった
+# （2026-09-25 に発覚。保存済み1,260行中0件で、その日の値上がり上位にも載っていた）。
+_CODE_RE = re.compile(r"^[0-9][0-9A-Z]{3}$")
+
+_AT_LIMIT_MARK = "S"
+# 印を探す範囲。銘柄名やPERの側まで見ると誤検出が増える。
+_AT_LIMIT_SCAN = 8
+
+
+def _at_limit(texts: list[str]) -> bool:
+    return any(t == _AT_LIMIT_MARK for t in texts[:_AT_LIMIT_SCAN])
+
+
 def parse_ranking_table(html: str) -> pd.DataFrame:
     """stock_table を中立な列名の DataFrame にする。
 
@@ -51,8 +68,16 @@ def parse_ranking_table(html: str) -> pd.DataFrame:
     metric 列は値上がり/値下がりランキングでは出来高、活況ランキングでは約定回数。
     12列版には銘柄名が無いので、いったんコードで埋める（利用側で補完する）。
 
+    ``at_limit`` は「その時点で制限値幅の上限（下限）に張り付いているか」。
+    ストップ高／安のランキング（mode 3_1 / 3_2）では、大引け後に取れば
+    「引けでストップ高だったか」がそのまま分かる。値上がりランキングにも
+    同じ印が出るので、推定ではなく事実として使える。
+
+    なお 3_1 / 3_2 では ``metric_value``（出来高）の位置がニュース欄に
+    置き換わっているため None になる。
+
     Returns:
-        columns: ticker, code, name, close, change_pct, metric_value
+        columns: ticker, code, name, close, change_pct, metric_value, at_limit
         テーブルが無い・行が壊れている場合は該当行を飛ばし、最悪でも空の DataFrame。
     """
     soup = BeautifulSoup(html, "lxml")
@@ -70,8 +95,13 @@ def parse_ranking_table(html: str) -> pd.DataFrame:
 
         try:
             code = texts[0]
-            if not re.match(r"^\d{4}$", code):
+            if not _CODE_RE.match(code):
                 continue
+
+            # 銘柄名は行の見出しセル（th）にある。ここを読まずに個別ページへ
+            # 取りに行くと、1銘柄につき1リクエスト余計に叩くことになる。
+            heading = tr.find("th")
+            heading_name = heading.get_text(strip=True) if heading else ""
 
             if n >= 13:
                 name = texts[1]
@@ -79,7 +109,8 @@ def parse_ranking_table(html: str) -> pd.DataFrame:
                 change_s = texts[8]
                 metric_s = texts[9].replace(",", "")
             else:
-                name = code
+                # 見出しセルに名前があればそれを使う（無い版のページもある）
+                name = heading_name or code
                 close = texts[4].replace(",", "")
                 change_s = texts[7]
                 metric_s = texts[8].replace(",", "")
@@ -93,6 +124,7 @@ def parse_ranking_table(html: str) -> pd.DataFrame:
                 "close": float(close) if close.replace(".", "").isdigit() else None,
                 "change_pct": change_pct,
                 "metric_value": int(metric_s) if metric_s.isdigit() else None,
+                "at_limit": _at_limit(texts),
             })
         except (IndexError, ValueError):
             continue

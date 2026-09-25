@@ -231,23 +231,42 @@ def stock_histories(days: list[dict], min_appearances: int = STOCK_PAGE_MIN_APPE
 # 対象は値上がりランキングの上位30銘柄に限られる（取得しているのがそこまで）。
 # 「東証の全ストップ高」ではないので、見せる側でその旨を必ず書く。
 
+def stop_high_rows(day: dict) -> tuple[list[dict], str]:
+    """その日のストップ高銘柄と、その出どころ。
+
+    - recorded … 取得元の専用ランキングをそのまま記録したもの（全件）
+    - estimated … 値上がり上位30銘柄から、終値と騰落率で推定したもの
+
+    2026-09-28 以降は recorded。それ以前は専用ランキングを取っていなかったので
+    estimated しか無い。**出どころが違うものを混ぜて数えると、件数の増減が
+    相場の変化なのか取り方の変化なのか分からなくなる**ので、区別して持つ。
+    """
+    recorded = day.get("stop_high")
+    if recorded is not None:
+        # 引けまで上限を保った銘柄だけを数える（場中につけて下げた分は除く）。
+        return [r for r in recorded if r.get("at_limit")], "recorded"
+    return [
+        r for r in day.get("gainers", [])
+        if price_limit.classify(r.get("close"), r.get("change_pct")) == price_limit.STOP_HIGH
+    ], "estimated"
+
+
 def stop_high_history(days: list[dict]) -> dict:
     """ストップ高の日別・銘柄別のまとめ。
 
     returns:
-        per_day … 新しい日が先。{rec_date, count, rows}
+        per_day … 新しい日が先。{rec_date, count, rows, source}
         stocks  … 複数回ストップ高になった銘柄（回数の多い順）
         total   … のべ件数
+        has_estimated … 推定の日が混じっているか（画面で断るために使う）
     """
     per_day, by_code = [], {}
     order = [d["rec_date"] for d in sorted(days, key=lambda d: d["rec_date"])]
 
     for day in days:
-        rows = [
-            r for r in day.get("gainers", [])
-            if price_limit.classify(r.get("close"), r.get("change_pct")) == price_limit.STOP_HIGH
-        ]
-        per_day.append({"rec_date": day["rec_date"], "count": len(rows), "rows": rows})
+        rows, source = stop_high_rows(day)
+        per_day.append({"rec_date": day["rec_date"], "count": len(rows),
+                        "rows": rows, "source": source})
         for row in rows:
             entry = by_code.setdefault(row["code"], {"code": row["code"], "name": row["name"],
                                                      "dates": [], "best_pct": None})
@@ -273,6 +292,8 @@ def stop_high_history(days: list[dict]) -> dict:
         "per_day": per_day,
         "stocks": stocks,
         "total": sum(d["count"] for d in per_day),
+        "has_estimated": any(d["source"] == "estimated" for d in per_day),
+        "has_recorded": any(d["source"] == "recorded" for d in per_day),
     }
 
 

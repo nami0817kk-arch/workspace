@@ -131,3 +131,52 @@ def test_新しい章がsitemapに載る(site):
     sitemap = (site / "sitemap.xml").read_text(encoding="utf-8")
     assert "/stop-high/" in sitemap
     assert "/monthly/" in sitemap and "/monthly/2026-09" in sitemap
+
+
+# --- 取得元のストップ高一覧を使う -------------------------------------------
+
+def test_記録があればそれを正として使う():
+    """推定（上位30銘柄から逆算）より、取得元の一覧が優先される。"""
+    day = {
+        "rec_date": "2026-09-28",
+        # 推定だとこの1件しか拾えない
+        "gainers": [_row("5131", "リンカーズ")],
+        # 記録には上位30銘柄の外の銘柄も入る
+        "stop_high": [
+            {"rank": 1, "code": "5131", "name": "リンカーズ", "close": 163.0,
+             "change_pct": 44.25, "at_limit": True},
+            {"rank": 2, "code": "9999", "name": "圏外の銘柄", "close": 500.0,
+             "change_pct": 19.0, "at_limit": True},
+            {"rank": 3, "code": "8888", "name": "場中につけて下げた", "close": 400.0,
+             "change_pct": 3.0, "at_limit": False},
+        ],
+    }
+    rows, source = aggregate.stop_high_rows(day)
+    assert source == "recorded"
+    # 引けまで保った2件だけ（場中につけて下げた分は数えない）
+    assert [r["code"] for r in rows] == ["5131", "9999"]
+
+
+def test_記録が無い日は推定に落ちる():
+    day = _day("2026-09-18", [_row("5131", "リンカーズ")])
+    rows, source = aggregate.stop_high_rows(day)
+    assert source == "estimated"
+    assert [r["code"] for r in rows] == ["5131"]
+
+
+def test_記録が0件でも推定に戻さない():
+    """穏やかな日は本当に0件。推定に落ちると、件数が増えて見える。"""
+    day = {"rec_date": "2026-09-28", "gainers": [_row("5131", "リンカーズ")], "stop_high": []}
+    rows, source = aggregate.stop_high_rows(day)
+    assert source == "recorded" and rows == []
+
+
+def test_出どころが混ざっていることを画面で断る():
+    days = [
+        {"rec_date": "2026-09-28", "gainers": [], "stop_high": [
+            {"code": "9999", "name": "圏外", "close": 500.0, "change_pct": 19.0, "at_limit": True}]},
+        _day("2026-09-25", [_row("5131", "リンカーズ")]),
+    ]
+    h = aggregate.stop_high_history(days)
+    assert h["has_recorded"] and h["has_estimated"]
+    assert [d["source"] for d in h["per_day"]] == ["recorded", "estimated"]
