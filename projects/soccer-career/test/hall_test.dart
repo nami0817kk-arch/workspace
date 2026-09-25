@@ -12,6 +12,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/data/save_repository.dart';
 import 'package:soccer_career/game/career_engine.dart';
 import 'package:soccer_career/models/challenge.dart';
+import 'package:soccer_career/ui/player_portrait.dart';
 import 'package:soccer_career/ui/screens/retired_screen.dart';
 import 'package:soccer_career/game/match_engine.dart';
 import 'package:soccer_career/models/agent.dart';
@@ -331,6 +332,38 @@ void main() {
       expect(find.text('検証'), findsWidgets);
       expect(find.textContaining('アルバ04'), findsWidgets);
       expect(find.textContaining('引退後'), findsOneWidget);
+    });
+
+    testWidgets('額の似顔は、テーマの明暗で色が変わらない', (tester) async {
+      // **引退した選手が `theme.colorScheme.primary` を着ていた。**
+      // 明るいテーマと暗いテーマで同じ選手が別の色になる——
+      // ダークモードで撮って初めて見えた（`test/shots.dart`）。
+      final c = await started();
+      await c.retire();
+
+      for (final brightness in [Brightness.light, Brightness.dark]) {
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: ThemeData(useMaterial3: true, brightness: brightness),
+            home: HallScreen(controller: c),
+          ),
+        );
+        await tester.pumpAndSettle();
+        final portrait = tester.widget<PlayerPortrait>(
+          find.byType(PlayerPortrait).first,
+        );
+        // 着るものはクラブから、背は帯から。どちらもテーマを見ない。
+        expect(
+          portrait.club,
+          isNotNull,
+          reason: 'クラブを渡さないと、テーマの色を着る',
+        );
+        expect(
+          portrait.backdrop,
+          isNotNull,
+          reason: '色の付いた帯の上では、背もテーマから取らない',
+        );
+      }
     });
   });
 }

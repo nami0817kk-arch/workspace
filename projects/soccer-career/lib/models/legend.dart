@@ -98,6 +98,7 @@ class Legend {
     required this.bestTier,
     this.firstTier = 0,
     this.peakAge = 0,
+    this.clubId = '',
     required this.look,
     required this.squadNumber,
     required this.secondCareer,
@@ -107,6 +108,11 @@ class Legend {
 
   final String name;
   final String positionLabel;
+
+  /// 最後に在籍したクラブのID。**似顔はクラブの色を着る**ので、
+  /// これが無いと引退した選手はテーマの色（明暗で反転する）を着てしまう。
+  /// 持たせる前に引退した選手は空のままで、そのときは今までどおり。
+  final String clubId;
 
   /// 引退した年と、そのときの年齢。
   final int retiredYear;
@@ -222,6 +228,7 @@ class Legend {
     }
     return Legend(
       name: state.player.name,
+      clubId: state.club.id,
       positionLabel: state.player.positionLabel,
       retiredYear: state.year,
       retiredAge: state.player.age,
@@ -269,6 +276,7 @@ class Legend {
 
   Map<String, dynamic> toJson() => {
     'name': name,
+    'clubId': clubId,
     'positionLabel': positionLabel,
     'retiredYear': retiredYear,
     'retiredAge': retiredAge,
@@ -300,6 +308,7 @@ class Legend {
 
   factory Legend.fromJson(Map<String, dynamic> json) => Legend(
     name: json['name'] as String? ?? '名無し',
+    clubId: json['clubId'] as String? ?? '',
     positionLabel: json['positionLabel'] as String? ?? '',
     retiredYear: json['retiredYear'] as int? ?? 0,
     retiredAge: json['retiredAge'] as int? ?? 0,

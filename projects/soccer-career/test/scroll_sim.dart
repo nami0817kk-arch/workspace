@@ -10,6 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:soccer_career/ui/screens/hub_screen.dart';
+import 'package:soccer_career/ui/fixture_banner.dart';
+import 'package:soccer_career/ui/pitch_view.dart';
+import 'package:soccer_career/ui/screens/match_screen.dart';
+import 'package:soccer_career/ui/stat_tile.dart';
 
 import 'ui_test.dart' as ui_test;
 
@@ -133,5 +137,98 @@ void main() {
       state.position.jumpTo(0);
       await tester.pumpAndSettle();
     }
+  });
+
+  /// 試合画面で、**3つの手がスクロールせずに全部見えるか**。
+  ///
+  /// このゲームの中核は「試合中の選択」なのに、比べる相手が画面の外にあると
+  /// 比べようがない。見えている高さ（844 − 下の帯）に対して、
+  /// 各手の上端・下端がどこに来るかを測る。
+  testWidgets('match screen fold', (tester) async {
+    final controller = await ui_test.newCareer(
+      age: 24,
+      hallRepository: ui_test.MemoryHall(),
+    );
+    for (var i = 0; i < 9; i++) {
+      if (controller.pendingEvent != null) {
+        await controller.resolveEvent(controller.pendingEvent!.choices.first);
+      }
+      await controller.simulateMatch();
+    }
+
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    // 出られない週だと局面が立たない（shots.dart と同じ穴）。
+    for (var i = 0; i < 80; i++) {
+      while (controller.state!.pendingInternational ||
+          controller.state!.pendingCup != null) {
+        await controller.simulateMatch();
+      }
+      controller.startNextMatch();
+      final m = controller.currentMatch;
+      if (m != null && !m.isFinished) break;
+      await controller.simulateMatch();
+    }
+
+    var folded = 0;
+    var samples = 0;
+    final match = controller.currentMatch!;
+    while (!match.isFinished) {
+      await tester.pumpWidget(
+        MaterialApp(home: MatchScreen(controller: controller)),
+      );
+      await tester.pumpAndSettle();
+      final buttons = find.byType(OutlinedButton).evaluate().toList();
+      if (buttons.length >= 3) {
+        samples++;
+        if (true) {
+          // 手より上に、何が何px積まれているか。
+          for (final part in {
+            '対戦カード': find.byType(FixtureBanner),
+            '数字の行': find.byType(StatTile),
+            'ピッチ': find.byType(PitchView),
+            '局面のカード': find.byType(Card),
+          }.entries) {
+            final found = part.value.evaluate();
+            if (found.isEmpty) continue;
+            final box = found.first.renderObject! as RenderBox;
+            print(
+              '  ${part.key.padRight(8)} '
+              '上${box.localToGlobal(Offset.zero).dy.toStringAsFixed(0).padLeft(4)} '
+              '高${box.size.height.toStringAsFixed(0).padLeft(4)}px',
+            );
+          }
+        }
+        print(
+          '局面 ${match.currentIndex + 1}/${match.scenarios.length}'
+          '',
+        );
+        for (var i = 0; i < buttons.length; i++) {
+          final box = buttons[i].renderObject! as RenderBox;
+          final top = box.localToGlobal(Offset.zero).dy;
+          final foot = top + box.size.height;
+          // **見えている高さは測る。** 「下の帯でおよそ90px」と当て推量で
+          // 置いていたが、実際に見えているのはスクロールの枠そのもの
+          // （指標そのものを疑う）。
+          final view = tester.renderObject<RenderBox>(
+            find.byType(SingleChildScrollView).first,
+          );
+          final fold = view.localToGlobal(Offset.zero).dy + view.size.height;
+          final hidden = foot > fold;
+          if (hidden) folded++;
+          print(
+            '  手${i + 1}  上${top.toStringAsFixed(0).padLeft(4)} '
+            '下${foot.toStringAsFixed(0).padLeft(4)} '
+            '高${box.size.height.toStringAsFixed(0).padLeft(3)}px'
+            '${hidden ? '  ← 画面の外' : ''}',
+          );
+        }
+      }
+      controller.choose(0);
+    }
+    print('');
+    print('局面 $samples 個のうち、画面の外に出た手 $folded');
   });
 }

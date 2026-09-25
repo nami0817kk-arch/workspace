@@ -13,6 +13,8 @@ import '../../models/competition.dart';
 import '../../models/life.dart';
 import '../../state/career_controller.dart';
 import '../club_identity.dart';
+import '../player_banner.dart';
+import '../../models/career.dart';
 
 /// シーズン終了。成績を振り返り、契約更改・移籍・引退を決める。
 ///
@@ -198,101 +200,111 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
               padding: const EdgeInsets.all(20),
               children: [
                 Card(
-                  child: Padding(
-                    padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          '${state.club.name}  ${state.leaguePosition}位',
-                          style: theme.textTheme.titleLarge,
-                        ),
-                        if (fate != ClubFate.stay) ...[
-                          const SizedBox(height: 6),
-                          FateChip(fate: fate, tier: state.club.tier),
-                        ],
-                        if (state.objective != null) ...[
-                          const SizedBox(height: 8),
-                          Text(
-                            state.objective!.achieved(stats)
-                                ? '監督の期待に応えた（${state.objective!.achievedCount(stats)}/3）'
-                                : '監督の期待には届かなかった（${state.objective!.achievedCount(stats)}/3）',
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: state.objective!.achieved(stats)
-                                  ? theme.colorScheme.primary
-                                  : theme.colorScheme.error,
-                            ),
-                          ),
-                        ],
-                        if (state.promise != null) ...[
-                          const SizedBox(height: 4),
-                          Text(
-                            state.promiseKept!
-                                ? '約束を果たした（${state.promise!.label}）'
-                                : '約束に届かなかった（${state.promise!.label}）',
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: state.promiseKept!
-                                  ? theme.colorScheme.primary
-                                  : theme.colorScheme.error,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                        if (state.seasonCaps > 0) ...[
-                          const SizedBox(height: 4),
-                          Text('代表 ${state.seasonCaps}試合', style: muted),
-                        ],
-                        if (state.cupStage.participated) ...[
-                          const SizedBox(height: 6),
-                          Chip(
-                            label: Text('国内カップ ${state.cupStage.label}'),
-                            backgroundColor: state.cupStage == CupStage.winner
-                                ? theme.colorScheme.primaryContainer
-                                : null,
-                            visualDensity: VisualDensity.compact,
-                          ),
-                        ],
-                        if (state.worldCupStage.participated) ...[
-                          const SizedBox(height: 6),
-                          Chip(
-                            label: Text('世界大会 ${state.worldCupStage.label}'),
-                            backgroundColor:
-                                theme.colorScheme.tertiaryContainer,
-                            visualDensity: VisualDensity.compact,
-                          ),
-                        ],
-                        if (state.continentalStage.participated) ...[
-                          const SizedBox(height: 6),
-                          Chip(
-                            label: Text(
-                              '大陸カップ ${state.continentalStage.label}',
-                            ),
-                            backgroundColor:
-                                state.continentalStage ==
-                                    ContinentalStage.winner
-                                ? theme.colorScheme.primaryContainer
-                                : null,
-                            visualDensity: VisualDensity.compact,
-                          ),
-                        ],
-                        const SizedBox(height: 16),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  clipBehavior: Clip.antiAlias,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      // **1年の結末に、クラブの色が一つも無かった。**
+                      // 38試合の締めくくりが白いカードの小さな文字で、
+                      // 選手証にも対戦カードにもクラブタブにも帯があるのに、
+                      // ここだけ「どこで戦った1年か」が文字の中に埋もれていた。
+                      _SeasonBand(
+                        state: state,
+                        fate: fate,
+                        position: state.leaguePosition,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _stat(theme, '出場', '${stats.appearances}'),
-                            _stat(theme, 'ゴール', '${stats.goals}'),
-                            _stat(theme, 'アシスト', '${stats.assists}'),
-                            _stat(
-                              theme,
-                              '平均評価',
-                              stats.appearances == 0
-                                  ? '—'
-                                  : stats.averageRating.toStringAsFixed(2),
+                            if (state.objective != null) ...[
+                              const SizedBox(height: 8),
+                              Text(
+                                state.objective!.achieved(stats)
+                                    ? '監督の期待に応えた（${state.objective!.achievedCount(stats)}/3）'
+                                    : '監督の期待には届かなかった（${state.objective!.achievedCount(stats)}/3）',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: state.objective!.achieved(stats)
+                                      ? theme.colorScheme.primary
+                                      : theme.colorScheme.error,
+                                ),
+                              ),
+                            ],
+                            if (state.promise != null) ...[
+                              const SizedBox(height: 4),
+                              Text(
+                                state.promiseKept!
+                                    ? '約束を果たした（${state.promise!.label}）'
+                                    : '約束に届かなかった（${state.promise!.label}）',
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: state.promiseKept!
+                                      ? theme.colorScheme.primary
+                                      : theme.colorScheme.error,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                            if (state.seasonCaps > 0) ...[
+                              const SizedBox(height: 4),
+                              Text('代表 ${state.seasonCaps}試合', style: muted),
+                            ],
+                            if (state.cupStage.participated) ...[
+                              const SizedBox(height: 6),
+                              Chip(
+                                label: Text('国内カップ ${state.cupStage.label}'),
+                                backgroundColor:
+                                    state.cupStage == CupStage.winner
+                                    ? theme.colorScheme.primaryContainer
+                                    : null,
+                                visualDensity: VisualDensity.compact,
+                              ),
+                            ],
+                            if (state.worldCupStage.participated) ...[
+                              const SizedBox(height: 6),
+                              Chip(
+                                label: Text(
+                                  '世界大会 ${state.worldCupStage.label}',
+                                ),
+                                backgroundColor:
+                                    theme.colorScheme.tertiaryContainer,
+                                visualDensity: VisualDensity.compact,
+                              ),
+                            ],
+                            if (state.continentalStage.participated) ...[
+                              const SizedBox(height: 6),
+                              Chip(
+                                label: Text(
+                                  '大陸カップ ${state.continentalStage.label}',
+                                ),
+                                backgroundColor:
+                                    state.continentalStage ==
+                                        ContinentalStage.winner
+                                    ? theme.colorScheme.primaryContainer
+                                    : null,
+                                visualDensity: VisualDensity.compact,
+                              ),
+                            ],
+                            const SizedBox(height: 16),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                _stat(theme, '出場', '${stats.appearances}'),
+                                _stat(theme, 'ゴール', '${stats.goals}'),
+                                _stat(theme, 'アシスト', '${stats.assists}'),
+                                _stat(
+                                  theme,
+                                  '平均評価',
+                                  stats.appearances == 0
+                                      ? '—'
+                                      : stats.averageRating.toStringAsFixed(2),
+                                ),
+                              ],
                             ),
                           ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -739,6 +751,93 @@ class FateChip extends StatelessWidget {
             : theme.colorScheme.onErrorContainer,
       ),
       visualDensity: VisualDensity.compact,
+    );
+  }
+}
+
+/// シーズンの結末の帯。**クラブの色・エンブレム・順位を大きく出す。**
+///
+/// 選手証（`PlayerBanner`）と同じ `KitBackground` を使う——見た目のために
+/// 別の色を作らない。順位は「38試合の答え」なので、この画面で一番大きい数字。
+class _SeasonBand extends StatelessWidget {
+  const _SeasonBand({
+    required this.state,
+    required this.fate,
+    required this.position,
+  });
+
+  final CareerState state;
+  final ClubFate fate;
+  final int position;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final identity = ClubIdentity.of(state.club);
+    final on = readableOn(identity.primary);
+    return KitBackground(
+      primary: identity.primary,
+      secondary: identity.secondary,
+      striped: identity.striped,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+        child: Row(
+          children: [
+            ClubCrest(club: state.club, size: 44),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    state.club.name,
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      color: on,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  Text(
+                    '${World.byId(state.club.countryId).name} '
+                    '${state.club.tier}部 ・ ${state.year}シーズン',
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: on.withValues(alpha: 0.75),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 10),
+            // 順位は 38試合の答え。この画面で一番大きい数字にする。
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  '$position',
+                  style: theme.textTheme.displaySmall?.copyWith(
+                    color: on,
+                    fontWeight: FontWeight.w800,
+                    height: 1,
+                  ),
+                ),
+                Text(
+                  '位 / ${state.league.length}',
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: on.withValues(alpha: 0.75),
+                  ),
+                ),
+                // 昇格・降格の札。順位のすぐ下が居場所。
+                if (fate != ClubFate.stay) ...[
+                  const SizedBox(height: 6),
+                  FateChip(fate: fate, tier: state.club.tier),
+                ],
+              ],
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

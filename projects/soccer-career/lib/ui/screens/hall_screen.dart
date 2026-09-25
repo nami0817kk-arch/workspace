@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/challenge.dart';
+import '../../models/club.dart';
 import '../../models/legend.dart';
 import '../../state/career_controller.dart';
 import '../player_banner.dart';
@@ -304,10 +305,27 @@ class _LegendCard extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(14, 12, 4, 12),
               child: Row(
                 children: [
+                  // **額の中の似顔は、テーマではなくクラブの色を着る。**
+                  // クラブを渡していなかったので、引退した選手は
+                  // `theme.colorScheme.primary` を着ていた——明るいテーマと
+                  // 暗いテーマで、同じ選手が別の色になっていた。
+                  // IDを控えていない古い記録は、今までどおり。
                   PlayerPortrait(
                     look: legend.look,
+                    club: legend.clubId.isEmpty
+                        ? null
+                        : Club(
+                            id: legend.clubId,
+                            name: legend.spells.isEmpty
+                                ? ''
+                                : legend.spells.last.clubName,
+                            strength: 0,
+                            tier: 1,
+                          ),
                     squadNumber: legend.squadNumber,
                     size: 60,
+                    // 背は帯の上に乗るので、テーマではなく帯から決める。
+                    backdrop: const Color(0xFFF2F0E6),
                   ),
                   const SizedBox(width: 12),
                   Expanded(

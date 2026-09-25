@@ -35,12 +35,15 @@ class StatTile extends StatelessWidget {
       children: [
         Text(
           value,
-          style: (small ? theme.textTheme.titleLarge : theme.textTheme.headlineMedium)
-              ?.copyWith(
-                fontWeight: FontWeight.w700,
-                color: accent,
-                height: 1.1,
-              ),
+          style:
+              (small
+                      ? theme.textTheme.titleLarge
+                      : theme.textTheme.headlineMedium)
+                  ?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: accent,
+                    height: 1.1,
+                  ),
         ),
         const SizedBox(height: 2),
         Text(
@@ -76,6 +79,7 @@ class StatBar extends StatelessWidget {
     required this.now,
     required this.target,
     required this.text,
+    this.labelWidth = 68,
   });
 
   final String label;
@@ -84,6 +88,9 @@ class StatBar extends StatelessWidget {
 
   /// 棒の右に出す文字（「8 / 30」など）。数字の書き方は呼ぶ側が決める。
   final String text;
+
+  /// 見出しの幅。長い見出し（「同じ場面での勝負」）を切らないため。
+  final double labelWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +102,7 @@ class StatBar extends StatelessWidget {
       child: Row(
         children: [
           SizedBox(
-            width: 68,
+            width: labelWidth,
             child: Text(label, style: theme.textTheme.bodySmall),
           ),
           Expanded(

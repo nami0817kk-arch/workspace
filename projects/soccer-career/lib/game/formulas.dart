@@ -1012,6 +1012,10 @@ class Formulas {
   /// ここを超えたら、疲労を警告として出す。`Fatigue.label` の段と揃える。
   static const int fatigueWarning = 70;
 
+  /// 1週あたりの怪我の確率が、これを超えたら赤く出す。
+  /// 「今の状態」の目盛りに引く線も同じ数字から出す。
+  static const double injuryWarnChance = 0.05;
+
   /// 溜まった疲労が、重傷の割合に与える傾き。
   ///
   /// 数だけ増えて軽傷ばかりなら、無理を通すのはまだ得な賭けになる。

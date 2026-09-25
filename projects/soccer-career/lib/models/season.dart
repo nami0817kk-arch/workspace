@@ -34,6 +34,7 @@ class MatchResult {
   const MatchResult({
     required this.matchday,
     required this.opponentName,
+    this.opponentId = '',
     required this.home,
     required this.scored,
     required this.conceded,
@@ -67,6 +68,12 @@ class MatchResult {
 
   final int matchday;
   final String opponentName;
+
+  /// 相手クラブのID。**エンブレムの色と形はIDから決まる**
+  /// （`ClubIdentity.of`）ので、名前だけでは絵が出せない。
+  /// 古い保存データには無いので空文字。そのときは絵を出さない
+  /// （知らないIDで別の色を描くと、同じクラブが2つの顔を持つ）。
+  final String opponentId;
   final bool home;
   final int scored;
   final int conceded;
@@ -123,6 +130,7 @@ class MatchResult {
   Map<String, dynamic> toJson() => {
     'matchday': matchday,
     'opponentName': opponentName,
+    'opponentId': opponentId,
     'home': home,
     'scored': scored,
     'conceded': conceded,
@@ -141,6 +149,7 @@ class MatchResult {
   factory MatchResult.fromJson(Map<String, dynamic> json) => MatchResult(
     matchday: json['matchday'] as int,
     opponentName: json['opponentName'] as String,
+    opponentId: json['opponentId'] as String? ?? '',
     home: json['home'] as bool,
     scored: json['scored'] as int,
     conceded: json['conceded'] as int,

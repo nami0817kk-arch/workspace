@@ -134,12 +134,12 @@ class _MatchScreenState extends State<MatchScreen> {
       body: SafeArea(
         child: ReadableWidth(
           child: Padding(
-            padding: const EdgeInsets.all(20),
+            padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _MatchHeader(match: match),
-                const SizedBox(height: 20),
+                const SizedBox(height: 12),
                 Expanded(
                   child: match.isFinished
                       ? _ReadyToFinish(
@@ -212,7 +212,7 @@ class _MatchHeader extends StatelessWidget {
               ? 'ホーム・${match.appearance.label}'
               : 'アウェイ・${match.appearance.label}',
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 6),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -321,9 +321,10 @@ class _ScenarioView extends StatelessWidget {
                   club: match.club,
                   opponent: match.opponent,
                   style: match.opponentStyle,
+                  aspectRatio: 2.7,
                 ),
                 Padding(
-                  padding: const EdgeInsets.all(20),
+                  padding: const EdgeInsets.fromLTRB(20, 14, 20, 14),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -339,85 +340,72 @@ class _ScenarioView extends StatelessWidget {
                         scenario.situation,
                         style: theme.textTheme.titleMedium,
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 8),
                       Wrap(
                         spacing: 6,
-                        runSpacing: 6,
+                        runSpacing: 4,
                         children: [
                           // 絵の中の白い丸がどこなのかを、言葉でも1つだけ添える。
-                          Chip(
-                            label: Text(scenario.spot.label),
-                            backgroundColor:
-                                theme.colorScheme.surfaceContainerHighest,
-                            visualDensity: VisualDensity.compact,
-                          ),
-                          Chip(
-                            label: Text(match.opponentStyle.label),
-                            visualDensity: VisualDensity.compact,
-                          ),
+                          _Tag(scenario.spot.label),
+                          _Tag(match.opponentStyle.label),
                           // ノリ。成功を重ねるほど決まるようになる。
                           // 出さないと「なぜ決まったのか」が分からない。
                           if (match.momentum > 0)
-                            Chip(
-                              label: Text(
-                                'ノリ ${'●' * match.momentum}'
-                                '${'○' * (Formulas.momentumMax - match.momentum)}'
-                                ' 決まる確率 ×'
-                                '${match.momentumFactor.toStringAsFixed(2)}',
-                              ),
-                              backgroundColor:
-                                  theme.colorScheme.tertiaryContainer,
-                              visualDensity: VisualDensity.compact,
+                            _Tag(
+                              'ノリ ${'●' * match.momentum}'
+                              '${'○' * (Formulas.momentumMax - match.momentum)}'
+                              ' 決まる確率 ×'
+                              '${match.momentumFactor.toStringAsFixed(2)}',
+                              background: theme.colorScheme.tertiaryContainer,
+                              foreground: theme.colorScheme.onTertiaryContainer,
                             ),
                           if (match.situationLabel != null)
-                            Chip(
-                              label: Text(match.situationLabel!),
-                              backgroundColor: match.margin < 0
+                            _Tag(
+                              match.situationLabel!,
+                              background: match.margin < 0
                                   ? theme.colorScheme.errorContainer
                                   : theme.colorScheme.secondaryContainer,
-                              visualDensity: VisualDensity.compact,
+                              foreground: match.margin < 0
+                                  ? theme.colorScheme.onErrorContainer
+                                  : theme.colorScheme.onSecondaryContainer,
                             ),
                           // 監督の期待にあと一歩なら、局面の側に出す。
                           // 終盤の1本が「シーズンの1本」になる。
                           if (objectiveReach != null)
-                            Chip(
-                              label: Text(objectiveReach!),
-                              backgroundColor:
-                                  theme.colorScheme.primaryContainer,
-                              visualDensity: VisualDensity.compact,
+                            _Tag(
+                              objectiveReach!,
+                              background: theme.colorScheme.primaryContainer,
+                              foreground: theme.colorScheme.onPrimaryContainer,
                             ),
                           if (scorerChase != null)
-                            Chip(
-                              label: Text(scorerChase!),
-                              backgroundColor:
-                                  theme.colorScheme.primaryContainer,
-                              visualDensity: VisualDensity.compact,
+                            _Tag(
+                              scorerChase!,
+                              background: theme.colorScheme.primaryContainer,
+                              foreground: theme.colorScheme.onPrimaryContainer,
                             ),
                           if (promiseReach != null)
-                            Chip(
-                              label: Text(promiseReach!),
-                              backgroundColor:
-                                  theme.colorScheme.tertiaryContainer,
-                              visualDensity: VisualDensity.compact,
+                            _Tag(
+                              promiseReach!,
+                              background: theme.colorScheme.tertiaryContainer,
+                              foreground: theme.colorScheme.onTertiaryContainer,
                             ),
                           if (match.bigMatch)
-                            Chip(
-                              label: const Text('大一番'),
-                              backgroundColor:
-                                  theme.colorScheme.tertiaryContainer,
-                              visualDensity: VisualDensity.compact,
+                            _Tag(
+                              '大一番',
+                              background: theme.colorScheme.tertiaryContainer,
+                              foreground: theme.colorScheme.onTertiaryContainer,
                             ),
                           if (match.weakFootMoment)
-                            Chip(
-                              label: const Text('逆足で対応'),
-                              backgroundColor: theme.colorScheme.errorContainer,
-                              visualDensity: VisualDensity.compact,
+                            _Tag(
+                              '逆足で対応',
+                              background: theme.colorScheme.errorContainer,
+                              foreground: theme.colorScheme.onErrorContainer,
                             ),
                         ],
                       ),
                       // どの手にも同じだけ効いているもの。手ごとには出さない。
                       if (shared.isNotEmpty) ...[
-                        const SizedBox(height: 8),
+                        const SizedBox(height: 6),
                         Wrap(
                           spacing: 10,
                           runSpacing: 2,
@@ -442,10 +430,10 @@ class _ScenarioView extends StatelessWidget {
           ),
           // 切り札。積み上げた個人技を、ここで出すと決める手。
           if (match.armable.isNotEmpty) ...[
-            const SizedBox(height: 16),
+            const SizedBox(height: 12),
             _TrumpCard(match: match, onArm: onArm),
           ],
-          const SizedBox(height: 16),
+          const SizedBox(height: 12),
           for (var i = 0; i < scenario.options.length; i++) ...[
             _OptionButton(
               option: scenario.options[i],
@@ -462,7 +450,7 @@ class _ScenarioView extends StatelessWidget {
               factors: match.distinctFactorsFor(scenario.options[i]),
               onPressed: () => onChoose(i),
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
           ],
         ],
       ),
@@ -497,35 +485,66 @@ class _TrumpCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('切り札（この試合に1回）', style: theme.textTheme.labelMedium),
+          // **見出しと但し書きを1行に畳む。** 2行の説明を下に置いていた頃、
+          // このカードは 140px あって、出た局面では3つの手が全部
+          // 画面の外に出ていた（`scroll_sim` の「match screen fold」）。
+          // 毎回同じ文を2行読ませるより、決める材料を見せるほうが先。
+          Text(
+            armed == null
+                ? '切り札（この試合に1回）'
+                      '　乗る手に +${(Formulas.signatureArmedBonus * 100).round()}%'
+                      ' / 外すと残り -${(Formulas.signatureMissPenalty * 100).round()}%'
+                : '${armed.label}を構えた。${armed.detail.label}の手に乗る。',
+            style: theme.textTheme.labelMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
           const SizedBox(height: 6),
           Wrap(
             spacing: 8,
-            runSpacing: 8,
+            runSpacing: 6,
             children: [
               for (final signature in match.armable)
                 ChoiceChip(
                   label: Text(signature.label),
                   selected: armed == signature,
                   visualDensity: VisualDensity.compact,
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   onSelected: (on) => onArm(on ? signature : null),
                 ),
             ],
           ),
-          const SizedBox(height: 6),
-          Text(
-            armed == null
-                ? '構えると、その技が出る手に'
-                      ' +${(Formulas.signatureArmedBonus * 100).round()}%。'
-                      '外すと、その試合の残りが'
-                      ' -${(Formulas.signatureMissPenalty * 100).round()}%。'
-                : '${armed.label}を構えた。'
-                      '${armed.detail.label}の手に乗る。',
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
         ],
+      ),
+    );
+  }
+}
+
+/// 局面に添える札。**`Chip` は押せる部品なので、押せない札に使うと
+/// タップ領域のぶんだけ縦に太る**（1行 32px）。読むだけの札は、
+/// 文字の周りの余白だけでいい（1行 22px）。
+/// 局面の札は最大3行並ぶので、ここが 10px 違うと 30px 効く。
+class _Tag extends StatelessWidget {
+  const _Tag(this.label, {this.background, this.foreground});
+
+  final String label;
+  final Color? background;
+  final Color? foreground;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: background ?? theme.colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        label,
+        style: theme.textTheme.labelMedium?.copyWith(
+          color: foreground ?? theme.colorScheme.onSurfaceVariant,
+        ),
       ),
     );
   }
@@ -605,7 +624,7 @@ class _OptionButton extends StatelessWidget {
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
         alignment: Alignment.centerLeft,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -618,18 +637,16 @@ class _OptionButton extends StatelessWidget {
               if (option.outcome != Outcome.play)
                 // 手が通る確率と、それが点になる確率は別。
                 // 「決まるのは半分ほど」を数字で見せておく。
-                Chip(
-                  label: Text(
-                    option.outcome == Outcome.goal
-                        ? 'ゴール ${(chance * Formulas.goalConversion * 100).round()}%'
-                        : 'アシスト ${(chance * assistConversion * 100).round()}%',
-                  ),
-                  visualDensity: VisualDensity.compact,
-                  backgroundColor: theme.colorScheme.secondaryContainer,
+                _Tag(
+                  option.outcome == Outcome.goal
+                      ? 'ゴール ${(chance * Formulas.goalConversion * 100).round()}%'
+                      : 'アシスト ${(chance * assistConversion * 100).round()}%',
+                  background: theme.colorScheme.secondaryContainer,
+                  foreground: theme.colorScheme.onSecondaryContainer,
                 ),
             ],
           ),
-          const SizedBox(height: 6),
+          const SizedBox(height: 4),
           Row(
             children: [
               SizedBox(
@@ -712,7 +729,7 @@ class _OptionButton extends StatelessWidget {
             ],
           ),
           if (shown.isNotEmpty) ...[
-            const SizedBox(height: 6),
+            const SizedBox(height: 4),
             Wrap(
               spacing: 10,
               runSpacing: 2,

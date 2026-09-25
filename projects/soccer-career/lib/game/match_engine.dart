@@ -1240,6 +1240,7 @@ class MatchInProgress {
     return MatchResult(
       matchday: matchday,
       opponentName: opponent.name,
+      opponentId: opponent.id,
       home: home,
       scored: scored,
       conceded: max(0, concededGoals),

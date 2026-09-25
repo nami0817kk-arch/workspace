@@ -873,12 +873,16 @@ class _StatusCard extends StatelessWidget {
                   label: '疲労',
                   value: '${state.fatigue.value}',
                   note: state.fatigue.label,
+                  fill: state.fatigue.value / 100,
+                  line: Formulas.fatigueWarning / 100,
                   warn: state.fatigue.value >= Formulas.fatigueWarning,
                 ),
                 _Metric(
                   label: '気持ち',
                   value: '${state.morale.value}',
                   note: state.morale.label,
+                  fill: state.morale.value / 100,
+                  line: Morale.careLine / 100,
                   warn: state.morale.needsCare,
                 ),
                 _Metric(
@@ -886,7 +890,10 @@ class _StatusCard extends StatelessWidget {
                   label: '怪我',
                   value: '${(injuryChance * 100).toStringAsFixed(1)}%',
                   note: '1週あたり',
-                  warn: injuryChance >= 0.05,
+                  // 目盛りは 0〜10%。普段は 1〜5% に収まる。
+                  fill: injuryChance / 0.10,
+                  line: Formulas.injuryWarnChance / 0.10,
+                  warn: injuryChance >= Formulas.injuryWarnChance,
                 ),
               ],
             ),
@@ -1536,6 +1543,8 @@ class _Metric extends StatelessWidget {
     required this.label,
     required this.value,
     required this.note,
+    required this.fill,
+    required this.line,
     this.warn = false,
   });
 
@@ -1543,6 +1552,14 @@ class _Metric extends StatelessWidget {
   final String value;
   final String note;
   final bool warn;
+
+  /// 目盛りの中のどこに居るか（0〜1）。
+  final double fill;
+
+  /// 悪くなる線がどこにあるか（0〜1）。**判定と同じ線から出す。**
+  /// 数字だけだと「70」が近いのか遠いのか分からない——
+  /// コンディションにだけ棒があって、他の3つには無かった。
+  final double line;
 
   @override
   Widget build(BuildContext context) {
@@ -1561,6 +1578,58 @@ class _Metric extends StatelessWidget {
           Text(
             value,
             style: theme.textTheme.titleMedium?.copyWith(color: color),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(right: 14, top: 2, bottom: 3),
+            child: SizedBox(
+              height: 10,
+              child: LayoutBuilder(
+                builder: (context, box) => Stack(
+                  children: [
+                    Positioned(
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      height: 5,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: theme.colorScheme.surfaceContainerHighest,
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      left: 0,
+                      bottom: 0,
+                      height: 5,
+                      width: box.maxWidth * fill.clamp(0.0, 1.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: color,
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                      ),
+                    ),
+                    // 悪くなる線。**あとどれだけ余裕があるか**は、
+                    // 線が引いてあって初めて読める。
+                    // **棒の上へ出す**——塗りの中に埋めると、線を越えた側では
+                    // 同じ色に沈んで見えなくなる（気持ち59 で実際に消えた）。
+                    Positioned(
+                      left: (box.maxWidth * line.clamp(0.0, 1.0) - 1).clamp(
+                        0.0,
+                        box.maxWidth - 2,
+                      ),
+                      width: 2,
+                      top: 0,
+                      bottom: 0,
+                      child: ColoredBox(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ),
           Text(
             note,
@@ -1878,12 +1947,25 @@ class _BodyCard extends StatelessWidget {
             const SizedBox(height: 6),
             Text(physique.label, style: theme.textTheme.bodyMedium),
             const SizedBox(height: 8),
-            Text(
-              physique.effects.isEmpty
-                  ? '平均的な体格。得手不得手は無い。'
-                  : '試合での補正: ${physique.effects.join('  ')}',
-              style: muted,
-            ),
+            // **文の壁だった。** 「試合での補正: 加速 +3 最高速 +1
+            // シュート力 -1 ヘディング -2 敏捷性 +2 …」と9項目が
+            // 地の文で折り返していて、**得手と不得手が同じ色で並んでいた**。
+            // 身体は「何を買って、何を諦めたか」なので、符号で色を分けて
+            // 大きいものから並べる（`Physique.effectValues`）。
+            if (physique.effectValues.isEmpty)
+              Text('平均的な体格。得手不得手は無い。', style: muted)
+            else ...[
+              Text('試合での補正', style: muted),
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: [
+                  for (final e in physique.effectValues)
+                    _BonusTag(label: e.$1, value: e.$2),
+                ],
+              ),
+            ],
           ],
         ),
       ),
@@ -2827,22 +2909,16 @@ class _KnackCard extends StatelessWidget {
                   ),
                   ('同じ場面での勝負', Knacks.bestMoments(state), Knacks.momentsNeeded),
                 ])
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 4),
-                    child: Row(
-                      children: [
-                        Icon(
-                          line.$2 >= line.$3
-                              ? Icons.check_circle
-                              : Icons.radio_button_unchecked,
-                          size: 14,
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                        const SizedBox(width: 6),
-                        Expanded(child: Text(line.$1, style: muted)),
-                        Text('${line.$2} / ${line.$3}', style: muted),
-                      ],
-                    ),
+                  // **棒で出す。** 「8 / 350」と数字だけ並べていた頃は、
+                  // キャリアで1つだけのものが**どれくらい遠いのか**が
+                  // 読めなかった（監督の期待には棒があるのに、ここには
+                  // 無かった）。判定と同じ `Knacks` の線から出す。
+                  StatBar(
+                    label: line.$1,
+                    labelWidth: 108,
+                    now: line.$2.toDouble(),
+                    target: line.$3.toDouble(),
+                    text: '${line.$2} / ${line.$3}',
                   ),
               ],
             ] else ...[
@@ -4411,12 +4487,37 @@ class _ResultRow extends StatelessWidget {
           ],
         ),
       ),
-      title: Text(
-        result.international
-            ? '代表  ${result.opponentName}'
-            : result.cup != null
-            ? '${result.cup!.label}  ${result.opponentName}'
-            : '${result.home ? "H" : "A"}  ${result.opponentName}',
+      // **相手が名前だけで並んでいた。** 順位表にも次節カードにも
+      // エンブレムがあるのに、5試合ぶんの記録はここだけ文字だった
+      // （「名前だけが並ぶ画面は、自分がどこに居るのか分からなくなる」）。
+      // IDを控えていない古い記録では、絵を出さずに今までどおりにする。
+      title: Row(
+        children: [
+          if (result.opponentId.isNotEmpty) ...[
+            // 色と形はIDと名前だけで決まる（`ClubIdentity.of`）。
+            // 強さと部は見ていないので、ここでは持たせない。
+            ClubCrest(
+              club: Club(
+                id: result.opponentId,
+                name: result.opponentName,
+                strength: 0,
+                tier: 1,
+              ),
+              size: 20,
+            ),
+            const SizedBox(width: 8),
+          ],
+          Expanded(
+            child: Text(
+              result.international
+                  ? '代表  ${result.opponentName}'
+                  : result.cup != null
+                  ? '${result.cup!.label}  ${result.opponentName}'
+                  : '${result.home ? "H" : "A"}  ${result.opponentName}',
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
       ),
       subtitle: Text(result.appearance.label),
       trailing: Row(
@@ -5561,6 +5662,38 @@ class _PersonCard extends StatelessWidget {
               ),
             ],
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 身体の補正1つ。**符号で色を分ける**——得手と不得手が同じ色で
+/// 並んでいると、身体が何を買って何を諦めたのかが読めない。
+class _BonusTag extends StatelessWidget {
+  const _BonusTag({required this.label, required this.value});
+
+  final String label;
+  final int value;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final up = value > 0;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: up
+            ? theme.colorScheme.primaryContainer
+            : theme.colorScheme.errorContainer,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        '$label ${up ? '+' : ''}$value',
+        style: theme.textTheme.labelMedium?.copyWith(
+          color: up
+              ? theme.colorScheme.onPrimaryContainer
+              : theme.colorScheme.onErrorContainer,
         ),
       ),
     );

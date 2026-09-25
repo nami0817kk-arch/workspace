@@ -20,6 +20,7 @@ class PlayerPortrait extends StatelessWidget {
     this.club,
     this.squadNumber = 0,
     this.size = 72,
+    this.backdrop,
   });
 
   final PlayerLook look;
@@ -31,6 +32,11 @@ class PlayerPortrait extends StatelessWidget {
   final int squadNumber;
 
   final double size;
+
+  /// 似顔の背。**色の付いた帯の上に置くときは、呼ぶ側が渡す。**
+  /// 既定（テーマの色）のままだと、額の中の似顔が明暗で反転して、
+  /// 同じ選手が明るいテーマと暗いテーマで別人の色を着る。
+  final Color? backdrop;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +52,7 @@ class PlayerPortrait extends StatelessWidget {
           trim: identity?.secondary ?? theme.colorScheme.onPrimary,
           striped: identity?.striped ?? false,
           squadNumber: squadNumber,
-          backdrop: theme.colorScheme.surfaceContainerHighest,
+          backdrop: backdrop ?? theme.colorScheme.surfaceContainerHighest,
         ),
       ),
     );
@@ -89,10 +95,7 @@ class _PortraitPainter extends CustomPainter {
         ..shader = LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
-          colors: [
-            Color.lerp(backdrop, Colors.white, 0.35)!,
-            backdrop,
-          ],
+          colors: [Color.lerp(backdrop, Colors.white, 0.35)!, backdrop],
         ).createShader(frame),
     );
 
@@ -213,12 +216,15 @@ class _PortraitPainter extends CustomPainter {
       case HairStyle.bald:
         // 剃り上げ。輪郭にうっすら残るだけ。
         canvas.save();
-        canvas.clipRRect(
-            RRect.fromRectAndRadius(head, radius));
+        canvas.clipRRect(RRect.fromRectAndRadius(head, radius));
         canvas.drawRRect(
           RRect.fromRectAndRadius(
-            Rect.fromLTRB(head.left, head.top, head.right,
-                head.top + head.height * 0.34),
+            Rect.fromLTRB(
+              head.left,
+              head.top,
+              head.right,
+              head.top + head.height * 0.34,
+            ),
             radius,
           ),
           Paint()..color = hair.withValues(alpha: 0.28),
@@ -261,7 +267,8 @@ class _PortraitPainter extends CustomPainter {
           canvas.drawCircle(
             Offset(
               head.center.dx + cos(angle) * head.width * 0.54,
-              head.center.dy - head.height * 0.10 -
+              head.center.dy -
+                  head.height * 0.10 -
                   sin(angle) * head.height * 0.42,
             ),
             s * 0.052,
