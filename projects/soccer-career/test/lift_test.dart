@@ -125,4 +125,81 @@ void main() {
       expect(engine.offersFor(state).where((o) => !o.loan), isNotEmpty);
     });
   });
+
+  group('在籍が長いほど、クラブを引き上げられる', () {
+    // **移籍を全部断る遊び方は、20人中19人が無冠で終わっていた。**
+    // 総合力74の選手が強さ38.6のクラブに居て、その国の首位は72.9
+    // ——力の差 35 に傾き 0.5 を掛けても 17.4 で、構造的に届かない。
+    // 1つのクラブを引き上げるのはキャリアものの筋のひとつなので、
+    // 在籍が長いほど傾きが立つ形にした。
+    int liftAt(int seasons) => MatchEngine.starLift(
+      overall: 74,
+      clubStrength: 40,
+      appearance: Appearance.start,
+      seasonsAtClub: seasons,
+    ).round();
+
+    test('年を重ねるほど持ち上げが大きくなり、どこかで止まる', () {
+      expect(liftAt(1), lessThan(liftAt(4)));
+      expect(liftAt(4), lessThan(liftAt(8)));
+      // 止まらないと、居続けるだけで世界が壊れる。
+      expect(liftAt(12), liftAt(20));
+    });
+
+    test('出ていない試合には効かない', () {
+      expect(
+        MatchEngine.starLift(
+          overall: 74,
+          clubStrength: 40,
+          appearance: Appearance.benched,
+          seasonsAtClub: 15,
+        ),
+        0,
+      );
+    });
+
+    test('在籍年数は履歴から数える（保存に項目を足していない）', () async {
+      final state = _career(age: 24);
+      expect(CareerEngine.seasonsAtClub(state), 1);
+      state.history.add(
+        SeasonRecord(
+          year: 2026,
+          clubName: state.club.name,
+          tier: state.club.tier,
+          leaguePosition: 5,
+          stats: const SeasonStats(
+            appearances: 0,
+            goals: 0,
+            assists: 0,
+            averageRating: 0,
+          ),
+          salary: 1000,
+          caps: 0,
+          objectiveMet: false,
+          countryId: state.countryId,
+        ),
+      );
+      expect(CareerEngine.seasonsAtClub(state), 2);
+      state.history.add(
+        SeasonRecord(
+          year: 2027,
+          clubName: 'よそのクラブ',
+          tier: state.club.tier,
+          leaguePosition: 5,
+          stats: const SeasonStats(
+            appearances: 0,
+            goals: 0,
+            assists: 0,
+            averageRating: 0,
+          ),
+          salary: 1000,
+          caps: 0,
+          objectiveMet: false,
+          countryId: state.countryId,
+        ),
+      );
+      // 直近が別のクラブなら、そこで途切れる。
+      expect(CareerEngine.seasonsAtClub(state), 1);
+    });
+  });
 }

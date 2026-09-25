@@ -921,7 +921,9 @@ class MatchInProgress {
       }
     }
 
-    var delta = success ? Formulas.ratingPerSuccess : Formulas.ratingPerFailure;
+    var delta = success
+        ? Formulas.ratingPerSuccess * Formulas.ratingSuccessWeight(chance)
+        : Formulas.ratingPerFailure * Formulas.ratingFailureWeight(chance);
     var outcome = option.outcome;
     var text = success ? option.successText : option.failureText;
 
@@ -1062,7 +1064,7 @@ class MatchInProgress {
   /// 実際の価値より高く買ってしまう。
   double expectedDelta(ScenarioOption option) {
     final p = chanceFor(option);
-    var gain = Formulas.ratingPerSuccess;
+    var gain = Formulas.ratingPerSuccess * Formulas.ratingSuccessWeight(p);
     if (option.outcome != Outcome.play) gain += Formulas.ratingPerChance;
     if (comboLands(option)) gain += Formulas.ratingPerCombo;
     // 自動進行にもノリを見せる。見ないと、自動で進めるだけでは
@@ -1090,7 +1092,10 @@ class MatchInProgress {
     final prevented = option.preventsGoal
         ? p * Formulas.ratingPerGoalPrevented
         : 0.0;
-    return p * gain + (1 - p) * Formulas.ratingPerFailure + card + prevented;
+    return p * gain +
+        (1 - p) * Formulas.ratingPerFailure * Formulas.ratingFailureWeight(p) +
+        card +
+        prevented;
   }
 
   /// スタイルに沿って手を1つ選ぶ。
@@ -1469,6 +1474,9 @@ class MatchEngine {
     int fatigue = 0,
     List<Scenario>? forcedScenarios,
     bool big = false,
+
+    /// 同じクラブに居続けた季数（今季を含む）。持ち上げの上限に効く。
+    int seasonsAtClub = 1,
   }) {
     final count = scenarioCount(appearance, big: big);
     // 重さの判断は1つ。局面の数だけに使って重圧に渡さないと、
@@ -1514,6 +1522,7 @@ class MatchEngine {
       overall: player.overall,
       clubStrength: club.strength,
       appearance: appearance,
+      seasonsAtClub: seasonsAtClub,
     );
     final advantage =
         club.strength - opponent.strength + lift + (home ? 6 : -2);
@@ -1568,6 +1577,9 @@ class MatchEngine {
     required int overall,
     required int clubStrength,
     required Appearance appearance,
+
+    /// 同じクラブに居続けた季数（今季を含む）。長いほど上限が上がる。
+    int seasonsAtClub = 1,
   }) {
     final share = switch (appearance) {
       Appearance.start => 1.0,
@@ -1575,10 +1587,8 @@ class MatchEngine {
       _ => 0.0,
     };
     if (share == 0) return 0;
-    final raw = ((overall - clubStrength) * Formulas.starLift).clamp(
-      Formulas.starLiftFloor,
-      Formulas.starLiftCap,
-    );
+    final raw = ((overall - clubStrength) * Formulas.starLiftFor(seasonsAtClub))
+        .clamp(Formulas.starLiftFloor, Formulas.starLiftCapFor(seasonsAtClub));
     return raw * share;
   }
 
@@ -1714,7 +1724,17 @@ class MatchEngine {
   ///
   /// 画面（管理画面の「効き」）と判定が同じ式を読むために切り出してある。
   /// 別に書くと、数字を触ったときに画面が嘘をつく。
-  static double injuryChance(Player player, {required double baseChance}) {
+  /// [factor] は**式全体に掛かる**倍率。
+  ///
+  /// `baseChance` に掛ける形だと、倍率は確率の一部にしか効かない。
+  /// 実測（8キャリア・5754週）で内訳は 基準 46.6% / 消耗 33.8% / 歳 19.6%
+  /// ——復帰直後の倍率 0.45 を基準にだけ掛けても、怪我の数は 2〜3% しか
+  /// 動かず、通算では誤差に沈んでいた。**選ばせているものはここを通す。**
+  static double injuryChance(
+    Player player, {
+    required double baseChance,
+    double factor = 1.0,
+  }) {
     final worn = (Formulas.conditionBaseline - player.condition)
         .clamp(0, Formulas.conditionMax)
         .toDouble();
@@ -1722,7 +1742,8 @@ class MatchEngine {
     return (baseChance +
             worn * Formulas.injuryConditionSlope +
             age * Formulas.injuryPerAgeYear) *
-        player.traits.injuryFactor;
+        player.traits.injuryFactor *
+        factor;
   }
 
   /// 溜まった疲労で、重傷の割合がどこまで上がるか。
@@ -1742,10 +1763,11 @@ class MatchEngine {
   Injury? rollInjury(
     Player player, {
     required double baseChance,
+    double factor = 1.0,
     int fatigue = 0,
     double strain = Formulas.strainNeutral,
   }) {
-    final chance = injuryChance(player, baseChance: baseChance);
+    final chance = injuryChance(player, baseChance: baseChance, factor: factor);
 
     if (_random.nextDouble() >= chance) return null;
 
@@ -2032,8 +2054,8 @@ class MatchEngine {
                 effort.injury *
                 companion.injury *
                 staff.injuryFactor *
-                habits.injuryFactor *
-                relapse,
+                habits.injuryFactor,
+            factor: relapse,
             fatigue: fatigue,
             strain: development.strain,
           );
