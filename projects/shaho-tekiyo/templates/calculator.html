@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% block title %}社会保険 加入判定チェッカー｜パート・アルバイトの106万円の壁{% endblock %}
+{% block description %}週の労働時間・月収・勤務先の従業員数を入れると、社会保険（健康保険・厚生年金）の加入対象かどうかを判定します。2026年10月の賃金要件撤廃、2027〜2035年の企業規模要件拡大に対応。{% endblock %}
+{% block content %}
+<h1>社会保険 加入判定チェッカー</h1>
+<p>
+  パート・アルバイトで働く人が、社会保険（健康保険・厚生年金）の加入対象になるかどうかを、
+  公表されている基準に沿って判定します。<strong>2026年10月から賃金要件（月額8.8万円＝いわゆる「106万円の壁」）が撤廃</strong>され、
+  企業規模の要件も2035年まで段階的に広がります。時点を選んで確かめてください。
+</p>
+
+<form id="calc-form" class="card" novalidate>
+  <div class="field">
+    <label for="as-of">確かめる時点</label>
+    <select id="as-of">
+      <option value="today" id="today-option">今日時点</option>
+      {% for m in milestones %}
+      <option value="{{ m.effective_from.isoformat() }}">{{ m.effective_from.year }}年{{ m.effective_from.month }}月以降</option>
+      {% endfor %}
+    </select>
+    <p class="hint">企業規模の要件は時点によって変わります。将来の時点を選ぶと「今は対象外でも、その頃には対象になるか」を確かめられます。</p>
+  </div>
+
+  <div class="field">
+    <label for="hours">1週間の所定労働時間</label>
+    <input type="number" id="hours" min="0" max="80" step="0.5" value="20" inputmode="decimal">
+    <p class="hint">シフト表・雇用契約書に書かれている時間です（残業は含みません）。要件は「{{ hours_requirement }}時間以上」。</p>
+  </div>
+
+  <div class="field">
+    <label for="wage">1か月の賃金（基本給＋諸手当。賞与・残業代・通勤手当などは除く）</label>
+    <input type="number" id="wage" min="0" step="1000" value="90000" inputmode="numeric">
+    <p class="hint">円単位で入力してください（例: 90000）。2026年10月以降はこの金額が低くても対象になりえます。</p>
+  </div>
+
+  <div class="field">
+    <label for="employer-size">勤務先の従業員数（厚生年金保険の被保険者数のめやす）</label>
+    <input type="number" id="employer-size" min="0" step="1" value="60" inputmode="numeric">
+    <p class="hint">正確な人数が分からない場合は、およその人数で構いません。この人数が要件未満でも、労使の合意があれば任意に加入対象にできる制度があります。</p>
+  </div>
+
+  <div class="field">
+    <div class="checkbox-row">
+      <input type="checkbox" id="is-student">
+      <label for="is-student">学生である</label>
+    </div>
+    <p class="hint">夜間部・定時制課程・休学中の学生は、この「学生」の除外に当たらないのが一般的な取り扱いです（最終確認は日本年金機構へ）。</p>
+  </div>
+</form>
+
+<div id="result"></div>
+
+<script id="schedule-data" type="application/json">{{ schedule_json|safe }}</script>
+<script>
+(function () {
+  "use strict";
+  var SCHEDULE = JSON.parse(document.getElementById('schedule-data').textContent);
+  var HOURS_REQUIREMENT = {{ hours_requirement }};
+
+  function regimeFor(asOfIso) {
+    var applicable = SCHEDULE[0];
+    for (var i = 0; i < SCHEDULE.length; i++) {
+      if (SCHEDULE[i].effective_from <= asOfIso) {
+        applicable = SCHEDULE[i];
+      } else {
+        break;
+      }
+    }
+    return applicable;
+  }
+
+  function evaluate(asOfIso, weeklyHours, monthlyWageYen, isStudent, employerSize) {
+    var regime = regimeFor(asOfIso);
+    var hoursOk = weeklyHours >= HOURS_REQUIREMENT;
+    var wageOk = regime.wage_requirement_yen === null || monthlyWageYen >= regime.wage_requirement_yen;
+    var notStudentOk = !isStudent;
+    var employerSizeOk = regime.company_size_threshold === null || employerSize >= regime.company_size_threshold;
+    return {
+      regime: regime,
+      hoursOk: hoursOk,
+      wageOk: wageOk,
+      notStudentOk: notStudentOk,
+      employerSizeOk: employerSizeOk,
+      eligible: hoursOk && wageOk && notStudentOk && employerSizeOk
+    };
+  }
+
+  function criterionLine(pass, text) {
+    return '<li class="' + (pass ? 'pass' : 'fail') + '">' + text + '</li>';
+  }
+
+  // "today" はビルド時刻ではなく、閲覧している端末の今日の日付に解決する。
+  // ビルド時刻を埋め込むと、次にビルドするまで「今日」が過去の日付に固定されたままになる
+  // （2026年10月を過ぎてもビルドし直さない限り9月時点の判定のままになってしまう）。
+  function todayIso() {
+    var d = new Date();
+    var mm = String(d.getMonth() + 1).padStart(2, '0');
+    var dd = String(d.getDate()).padStart(2, '0');
+    return d.getFullYear() + '-' + mm + '-' + dd;
+  }
+
+  function resolveAsOf(rawValue) {
+    return rawValue === 'today' ? todayIso() : rawValue;
+  }
+
+  function render() {
+    var asOf = resolveAsOf(document.getElementById('as-of').value);
+    var hours = parseFloat(document.getElementById('hours').value);
+    var wage = parseInt(document.getElementById('wage').value, 10);
+    var employerSize = parseInt(document.getElementById('employer-size').value, 10);
+    var isStudent = document.getElementById('is-student').checked;
+
+    var out = document.getElementById('result');
+    if (isNaN(hours) || isNaN(wage) || isNaN(employerSize)) {
+      out.innerHTML = '';
+      return;
+    }
+
+    var r = evaluate(asOf, hours, wage, isStudent, employerSize);
+    var wageLabel = r.regime.wage_requirement_yen === null
+      ? '賃金要件は撤廃されています（この時点では金額を問いません）'
+      : (r.wageOk ? '月額賃金が' + r.regime.wage_requirement_yen.toLocaleString() + '円以上あります' : '月額賃金が' + r.regime.wage_requirement_yen.toLocaleString() + '円未満です');
+    var sizeLabel = r.regime.company_size_threshold === null
+      ? '企業規模の要件は撤廃されています（会社の人数を問いません）'
+      : (r.employerSizeOk ? '勤務先が' + r.regime.company_size_threshold + '人以上です' : '勤務先が' + r.regime.company_size_threshold + '人未満です（労使合意があれば任意加入の余地あり）');
+
+    var html = '';
+    html += '<div class="verdict ' + (r.eligible ? 'ok' : 'ng') + '">';
+    html += r.eligible ? '加入対象になる見込みです' : '今回の入力では加入対象になりません';
+    html += '</div>';
+    html += '<p class="updated">' + r.regime.label + '（この時点の基準）</p>';
+    html += '<ul class="criteria">';
+    html += criterionLine(r.hoursOk, '週の労働時間: ' + hours + '時間（要件は' + HOURS_REQUIREMENT + '時間以上）');
+    html += criterionLine(r.wageOk, '賃金要件: ' + wageLabel);
+    html += criterionLine(r.notStudentOk, isStudent ? '学生のため対象外です（夜間部・定時制・休学中は除く）' : '学生ではありません');
+    html += criterionLine(r.employerSizeOk, '企業規模要件: ' + sizeLabel);
+    html += '</ul>';
+    html += '<p class="hint">この判定は「継続して2か月を超える雇用が見込まれること」を満たしている前提です。'
+      + '短期のアルバイトなど見込みが2か月以下の場合は対象外です。</p>';
+    out.innerHTML = html;
+  }
+
+  document.getElementById('calc-form').addEventListener('input', render);
+
+  // 「今日時点」の選択肢に、閲覧している端末の実際の日付を出す。
+  try {
+    document.getElementById('today-option').textContent = '今日（' + todayIso() + '）時点';
+  } catch (e) { /* 失敗しても "今日時点" のまま動く */ }
+
+  // 年次ページの「この時点で確かめる」リンク（?as_of=2027-10-01）から来た場合、
+  // その時点をあらかじめ選んでおく。
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var wanted = params.get('as_of');
+    if (wanted) {
+      var select = document.getElementById('as-of');
+      for (var i = 0; i < select.options.length; i++) {
+        if (select.options[i].value === wanted) {
+          select.selectedIndex = i;
+          break;
+        }
+      }
+    }
+  } catch (e) { /* URLSearchParams非対応の環境では既定値のまま */ }
+
+  render();
+})();
+</script>
+
+<h2>この5段階で対象が広がります</h2>
+<ul class="milestone-list">
+  {% for m in milestones %}
+  <li>
+    <a href="year/{{ m.effective_from.year }}-{{ '%02d'|format(m.effective_from.month) }}.html">
+      <span class="milestone-date">{{ m.effective_from.year }}年{{ m.effective_from.month }}月〜</span>
+      <span class="milestone-label">{{ m.label }}</span>
+    </a>
+  </li>
+  {% endfor %}
+</ul>
+<p>
+  出典: <a href="https://www.mhlw.go.jp/tekiyoukakudai/jugyouin/taisho/" rel="nofollow noopener" target="_blank">厚生労働省 社会保険適用拡大特設サイト</a>
+</p>
+{% endblock %}

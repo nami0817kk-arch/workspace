@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}年次の変化｜社会保険 加入判定チェッカー{% endblock %}
+{% block description %}社会保険の適用拡大は2026年10月から2035年まで5段階で進みます。各段階で何が変わるかをまとめています。{% endblock %}
+{% block breadcrumb %}
+<nav class="crumbs" aria-label="パンくずリスト">
+  <a href="{{ base_url }}index.html">計算機</a>
+  <span>›</span>
+  <span aria-current="page">年次の変化</span>
+</nav>
+{% endblock %}
+{% block content %}
+<h1>5段階で対象が広がります</h1>
+<p>
+  社会保険（健康保険・厚生年金）の短時間労働者への適用拡大は、2026年10月の賃金要件撤廃を皮切りに、
+  2035年10月まで段階的に進みます。回を追うごとに対象になる会社の規模が広がります。
+</p>
+<ul class="milestone-list">
+  {% for p in pages %}
+  <li>
+    <a href="{{ p.slug }}.html">
+      <span class="milestone-date">{{ p.regime.effective_from.year }}年{{ p.regime.effective_from.month }}月〜</span>
+      <span class="milestone-label">{{ p.regime.label }}</span>
+    </a>
+  </li>
+  {% endfor %}
+</ul>
+<p>
+  出典: <a href="https://www.mhlw.go.jp/tekiyoukakudai/jugyouin/taisho/" rel="nofollow noopener" target="_blank">厚生労働省 社会保険適用拡大特設サイト</a>
+</p>
+{% endblock %}

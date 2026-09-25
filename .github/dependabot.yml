@@ -15,6 +15,7 @@ updates:
       - "/projects/youtube-video-creation"
       - "/projects/gemini-api"
       - "/projects/ipa-kakomon"
+      - "/projects/shaho-tekiyo"
       - "/libs/kabutan"
       - "/platform/ai-lab"
     schedule: { interval: weekly, day: monday }
