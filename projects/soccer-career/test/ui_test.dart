@@ -31,6 +31,7 @@ import 'package:soccer_career/models/physique.dart';
 import 'package:soccer_career/models/challenge.dart';
 import 'package:soccer_career/models/entourage.dart';
 import 'package:soccer_career/ui/screens/create_player_screen.dart';
+import 'package:soccer_career/ui/app_theme.dart';
 import 'package:soccer_career/ui/screens/hub_screen.dart';
 import 'package:soccer_career/ui/screens/match_screen.dart';
 import 'package:soccer_career/ui/screens/season_end_screen.dart';
@@ -1005,6 +1006,33 @@ void main() {
       ),
       findsOneWidget,
     );
+  });
+
+  test('テーマの書体が、文字の表まで届いている', () {
+    // **`ThemeData(textTheme: ...)` を明示すると `fontFamily` はそこに
+    // 適用されない。** 自前で組んだ表を渡した瞬間、全部が既定の書体に
+    // 落ちて**日本語がまるごと豆腐（□）になる**（実際になった）。
+    // `font_test` は「その文字がフォントにあるか」しか見ないので拾えない
+    // ——書き出して目で見るまで分からなかった。
+    for (final brightness in [Brightness.light, Brightness.dark]) {
+      final theme = appTheme(
+        const Color(0xFF1B5E3F),
+        brightness,
+        fontFamily: 'NotoSansJP',
+      );
+      for (final style in [
+        theme.textTheme.bodyMedium,
+        theme.textTheme.titleLarge,
+        theme.textTheme.labelSmall,
+        theme.textTheme.headlineSmall,
+      ]) {
+        expect(
+          style?.fontFamily,
+          'NotoSansJP',
+          reason: '文字の表に書体が乗っていない（豆腐になる）',
+        );
+      }
+    }
   });
 
   testWidgets('試合の画面は、3つの手を見比べられる', (tester) async {
