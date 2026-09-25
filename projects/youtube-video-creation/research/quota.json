@@ -171,7 +171,7 @@
     "channels.list": 9,
     "playlistItems.list": 9,
     "videos.insert": 9,
-    "thumbnails.set": 9,
+    "thumbnails.set": 10,
     "playlistItems.insert": 9
   }
 }
