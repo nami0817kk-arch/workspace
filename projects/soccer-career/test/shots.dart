@@ -235,10 +235,20 @@ void main() {
       await dump(tester, '06c-armed');
     }
 
+    // **記録タブは、ダークモードで一度も撮っていなかった。**
+    // 暗いほうで崩れていても、明るいほうの絵を見ている限り分からない。
+    final dark = themeFor(controller.state!.club, brightness: Brightness.dark);
+    await pump(tester, HubScreen(controller: controller), dark);
+    await tester.tap(find.widgetWithText(Tab, '記録'));
+    await tester.pumpAndSettle();
+    await dump(tester, '12-dark-記録');
+
     // 殿堂。引退させて、記録として残ったところを見る。
     await controller.retire();
     await pump(tester, HallScreen(controller: controller), theme);
     await dump(tester, '08-hall');
+    await pump(tester, HallScreen(controller: controller), dark);
+    await dump(tester, '12-dark-殿堂');
 
     final fresh = CareerController(
       repository: _Repo(),
@@ -252,6 +262,16 @@ void main() {
       ThemeData(useMaterial3: true, fontFamily: 'NotoSansJP'),
     );
     await dump(tester, '07-create');
+    await pump(
+      tester,
+      CreatePlayerScreen(controller: fresh),
+      ThemeData(
+        useMaterial3: true,
+        fontFamily: 'NotoSansJP',
+        brightness: Brightness.dark,
+      ),
+    );
+    await dump(tester, '12-dark-create');
 
     requireShots([
       '01-hub-match',
@@ -269,6 +289,9 @@ void main() {
       '08-hall',
       '09-week',
       '10-aim',
+      '12-dark-記録',
+      '12-dark-殿堂',
+      '12-dark-create',
     ]);
   });
 
@@ -332,6 +355,12 @@ void main() {
     tester.view.physicalSize = const Size(390, 2400);
     await pump(tester, SeasonEndScreen(controller: controller), theme);
     await dump(tester, '15-season-end');
+    await pump(
+      tester,
+      SeasonEndScreen(controller: controller),
+      themeFor(controller.state!.club, brightness: Brightness.dark),
+    );
+    await dump(tester, '12-dark-season-end');
 
     await pump(tester, const GuideScreen(), theme);
     await dump(tester, '16-guide');
@@ -342,6 +371,7 @@ void main() {
       '13-event',
       '14-dark-match',
       '15-season-end',
+      '12-dark-season-end',
       '16-guide',
     ]);
   });

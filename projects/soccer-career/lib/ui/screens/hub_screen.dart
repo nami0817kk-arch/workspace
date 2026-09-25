@@ -1947,12 +1947,25 @@ class _BodyCard extends StatelessWidget {
             const SizedBox(height: 6),
             Text(physique.label, style: theme.textTheme.bodyMedium),
             const SizedBox(height: 8),
-            Text(
-              physique.effects.isEmpty
-                  ? '平均的な体格。得手不得手は無い。'
-                  : '試合での補正: ${physique.effects.join('  ')}',
-              style: muted,
-            ),
+            // **文の壁だった。** 「試合での補正: 加速 +3 最高速 +1
+            // シュート力 -1 ヘディング -2 敏捷性 +2 …」と9項目が
+            // 地の文で折り返していて、**得手と不得手が同じ色で並んでいた**。
+            // 身体は「何を買って、何を諦めたか」なので、符号で色を分けて
+            // 大きいものから並べる（`Physique.effectValues`）。
+            if (physique.effectValues.isEmpty)
+              Text('平均的な体格。得手不得手は無い。', style: muted)
+            else ...[
+              Text('試合での補正', style: muted),
+              const SizedBox(height: 6),
+              Wrap(
+                spacing: 6,
+                runSpacing: 6,
+                children: [
+                  for (final e in physique.effectValues)
+                    _BonusTag(label: e.$1, value: e.$2),
+                ],
+              ),
+            ],
           ],
         ),
       ),
@@ -5649,6 +5662,38 @@ class _PersonCard extends StatelessWidget {
               ),
             ],
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 身体の補正1つ。**符号で色を分ける**——得手と不得手が同じ色で
+/// 並んでいると、身体が何を買って何を諦めたのかが読めない。
+class _BonusTag extends StatelessWidget {
+  const _BonusTag({required this.label, required this.value});
+
+  final String label;
+  final int value;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final up = value > 0;
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: up
+            ? theme.colorScheme.primaryContainer
+            : theme.colorScheme.errorContainer,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Text(
+        '$label ${up ? '+' : ''}$value',
+        style: theme.textTheme.labelMedium?.copyWith(
+          color: up
+              ? theme.colorScheme.onPrimaryContainer
+              : theme.colorScheme.onErrorContainer,
         ),
       ),
     );

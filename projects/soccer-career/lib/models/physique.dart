@@ -103,8 +103,8 @@ class Physique {
     final foot = roll < 0.22
         ? Foot.left
         : roll < 0.25
-            ? Foot.both
-            : Foot.right;
+        ? Foot.both
+        : Foot.right;
     return Physique(
       heightCm: height,
       weightKg: weight,
@@ -151,38 +151,49 @@ class Physique {
   }
 
   /// 画面に出す用。効いているものだけを並べる。
+  /// 試合の判定に効いている補正を、能力と数で返す。
+  /// **画面は色を付けて出す**ので、文にする前の形が要る。
+  /// 大きいものから並べる（±4 と ±1 が同じ重さに見えると読めない）。
+  List<(String, int)> get effectValues {
+    final all = [
+      for (final d in Detail.values)
+        if (bonusFor(d) != 0) (d.label, bonusFor(d)),
+    ];
+    all.sort((a, b) => b.$2.abs().compareTo(a.$2.abs()));
+    return all;
+  }
+
   List<String> get effects => [
-        for (final d in Detail.values)
-          if (bonusFor(d) != 0)
-            '${d.label} ${bonusFor(d) > 0 ? '+' : ''}${bonusFor(d)}',
-      ];
+    for (final e in effectValues) '${e.$1} ${e.$2 > 0 ? '+' : ''}${e.$2}',
+  ];
 
   /// オフの肉体改造。体重だけが動く。
   Physique afterOffseason(BodyPlan plan) => switch (plan) {
-        BodyPlan.bulk => copyWith(weightKg: weightKg + 3),
-        BodyPlan.cut => copyWith(weightKg: max(55, weightKg - 3)),
-        BodyPlan.maintain => this,
-      };
+    BodyPlan.bulk => copyWith(weightKg: weightKg + 3),
+    BodyPlan.cut => copyWith(weightKg: max(55, weightKg - 3)),
+    BodyPlan.maintain => this,
+  };
 
   Physique copyWith({int? weightKg, int? weakFoot}) => Physique(
-        heightCm: heightCm,
-        weightKg: weightKg ?? this.weightKg,
-        foot: foot,
-        weakFoot: (weakFoot ?? this.weakFoot).clamp(1, 5),
-      );
+    heightCm: heightCm,
+    weightKg: weightKg ?? this.weightKg,
+    foot: foot,
+    weakFoot: (weakFoot ?? this.weakFoot).clamp(1, 5),
+  );
 
   String get label => '$heightCm cm ・ $weightKg kg ・ ${foot.label}';
 
   Map<String, dynamic> toJson() => {
-        'heightCm': heightCm,
-        'weightKg': weightKg,
-        'foot': foot.name,
-        'weakFoot': weakFoot,
-      };
+    'heightCm': heightCm,
+    'weightKg': weightKg,
+    'foot': foot.name,
+    'weakFoot': weakFoot,
+  };
 
   /// 身体データを持たせる前の保存データは、標準体型として読む。
   factory Physique.fromJson(Map<String, dynamic>? json) {
-    if (json == null) return const Physique(heightCm: baseHeight, weightKg: baseWeight);
+    if (json == null)
+      return const Physique(heightCm: baseHeight, weightKg: baseWeight);
     return Physique(
       heightCm: json['heightCm'] as int? ?? baseHeight,
       weightKg: json['weightKg'] as int? ?? baseWeight,
