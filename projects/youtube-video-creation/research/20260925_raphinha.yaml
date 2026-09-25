@@ -10,13 +10,13 @@ theme:
   kind: other
   topic: バルセロナ
   title: 'ラフィーニャがブラジルの10番を受け取った日、初めて起きたこと'
-  question: 10番のラフィーニャはどうだったのか
-short_title: ネイマールの10番を継いだ男
+  question: 10番の初戦に何が起きたのか
+short_title: 10番ラフィーニャ、初戦で起きたこと
 thumbnail:
   photo: assets/images/20260925_raphinha2/01.jpg
   crests: [ブラジル]
-  line1: ネイマールが脱いだ10番を
-  line2: 受け取ったのはラフィーニャ
+  line1: 10番を着けたラフィーニャ
+  line2: 初戦で●●できなかった
 sections:
   - id: what
     heading: 9月24日の発表
@@ -41,14 +41,11 @@ sections:
       - https://www.cnnbrasil.com.br/esportes/futebol/selecao-brasileira/quem-e-o-novo-camisa-10-da-selecao-brasileira-confira-a-numeracao-completa/
       - https://www.lance.com.br/selecao-brasileira/nem-vini-jr-nem-estevao-saiba-que-e-o-novo-camisa-10-da-selecao.html
   - id: neymar
-    main: true
     heading: 脱いだ人の言葉
     tier: 報道
     telop: ネイマールは7月28日に代表を退くと言っていた
     narrator: キャスター
     say:
-      - text: 'ブラジル代表の新しい背番号が発表され、ネイマールの10番をラフィーニャが引き継ぎました。'
-        short_only: true
       - ネイマールは、ワールドカップのベスト16で敗れたあと、代表を退くことを口にしていました。
       - 7月28日、サントスでの試合のあと、はっきり言っています。
       - voice: ネイマールJr
@@ -58,33 +55,80 @@ sections:
       - 代表で**130試合80得点**。その番号を、ラフィーニャが引き継ぎました。
     sources:
       - https://exame.com/esporte/neymar-confirma-aposentadoria-da-selecao-brasileira-apos-copa-do-mundo-de-2026/
+  - id: match
+    main: true
+    heading: 10番の初戦
+    tier: 報道
+    telop: オーストラリアに1対1。ラフィーニャはフル出場で0点、最後にアシスト
+    narrator: キャスター
+    card:
+      type: table
+      title: 10番のラフィーニャ（オーストラリア戦）
+      columns: ['', '']
+      rows:
+        - [前半17分, シュートがポストをかすめる]
+        - [前半37分, シュートをブロックされる]
+        - [後半17分, 最大の決定機を外す]
+        - [後半23分, 直接FKで失点]
+        - [90＋5分, 左CKからハイアンが同点]
+    say:
+      - text: 'ラフィーニャが新しい番号で初めて試合に出ました。相手はオーストラリア、タウンズビルです。'
+        short_only: true
+      - 同じ日、10番を着けた最初の試合がありました。オーストラリア戦、タウンズビル。結果は**1対1**です。
+      - ラフィーニャはトップ下でフル出場。前半17分にポストをかすめ、37分はブロックされ、後半17分には最大の決定機を外しました。
+      - 後半23分に直接フリーキックで失点。90分を過ぎて、ラフィーニャの左コーナーキックをハイアンが頭で合わせ、同点で終わりました。
+      - "**10番の初戦は、0点、1アシスト。**ブラジルのコラムニストは、こう書きました。"
+      - voice: アリアッチ
+        text: 欧州で今季いちばんの選手ラフィーニャでさえ、ブラジルの凡庸さの網に落ちた。ほぼ何も生まなかった
+      - アンチェロッティ監督は前日、ラフィーニャをこう評していました。
+      - voice: アンチェロッティ
+        text: ラフィーニャは本来のものではないポジションで驚異的なことをやっているが、今はそこも彼のポジションになったようだ
+      - 試合後は、こう言っています。
+      - voice: アンチェロッティ
+        text: 引き分けだから敗北の味ではない。勝てたと思うし、チャンスはあった。テストなのだから辛抱が要る
+      - voice: アンチェロッティ
+        text: サポーターは辛抱してほしい。公式戦のときには、チームは準備できている
+    sources:
+      - https://www.lance.com.br/selecao-brasileira/rayan-salva-brasil-em-jogo-sem-nenhum-encanto-com-australia.html
+      - https://www.espn.com.br/futebol/selecao-brasileira/artigo/_/id/17300493/rayan-entra-bem-salva-novo-brasil-ancelotti-derrota-australia-inicio-ciclo-copa-2030
+      - https://www.lance.com.br/selecao-brasileira/gol-perdido-em-australia-x-brasil-gera-revolta-nao-consegue.html
+      - https://www.cnnbrasil.com.br/esportes/futebol/selecao-brasileira/ancelotti-defende-vinicius-jr-e-exalta-momento-de-raphinha-espetacular/
+      - https://www.lance.com.br/selecao-brasileira/ancelotti-pede-paciencia-a-torcida-apos-jogo-ruim-e-confirma-mudancas-no-brasil.html
   - id: voices
     heading: ネットの反応
     tier: 未確認
-    telop: 「10番似合う」と、ネイマール抜きで作れなかった代表への注文
+    telop: 「10番似合ってる」と「フルで使われてて鬱」
     narrator: キャスター
     say:
       - voice: ネット民
-        text: まじかよラフィーニャ10番かよ。張り切ってまうやんけ
+        text: まじかよラフィーニャ10番かよ。張り切ってまうやんけ、なんしてんねんアンチェロッティ
       - voice: ネット民
-        text: ららら、ラフィーニャ？！　新10番？！　マジですか？！
+        text: ラフィーニャ10番いいね似合ってる
       - voice: ネット民
-        text: ラフィーニャが次の10番とか激あつ
+        text: ラフィーニャは素晴らしい選手！　セレソンの10番を背負うのも納得！　ただ、個人的にはヴィニシウスに背負って欲しかった
       - voice: ネット民
-        text: セレソンの10番はラフィーニャしかいない！
+        text: ラフィーニャみたいなタイプに10番は似合わない
       - voice: ネット民
-        text: ラフィーニャがネイマールから10番引き継いでくれるなんて。10番似合う！
+        text: 今シーズンのクラブでのパフォーマンスをみてると納得だわな
       - voice: ネット民
-        text: うおおお！！　ラフィーニャがセレソンの10番！　こんな日が来るなんて！
+        text: トップ下でもアシストをつけてしまう男ラフィーニャ
       - voice: ネット民
-        text: ラフィーニャが次の10番か。代表で無茶しないように
+        text: 背番号10は嬉しいけどフルで使われてて鬱。ヴィニは休ませてるんだしハフィーニャは次節ベンチな
       - voice: ネット民
-        text: ブラジルはハフィニャとジェズスで4年粘りたい
+        text: お願いです。ハフィーニャを過重労働させないでください。しかし、交代したら負けてたかもしれないと思うとなんとも…
       - voice: ネット民
-        text: そもそもネイマールはW杯まで2年以上もセレソンを離れていた。ネイマールなしのセレソンをしっかり作れずに、今更新しい10番とかいう論点がおかしいわ
+        text: なぜラフィーニャ叩かれてるのか分からん。叩くならトップ下で起用し9番やらせなかったアンチェロッティやろ
       - voice: ネット民
-        text: 正直今のバルセロナ強すぎてラリーガで1強だから、クレとしてはオモロでしかない。ラフィーニャも調子乗ってるし。バロンドールに選ばれなかったのは謎
+        text: どう考えてもハフィーニャ以外のやつらのカスっぷりのほうが酷かったわ
+      - voice: ネット民
+        text: セレソン全部ダメ。相手が豪州。牧草地で豪州戦。牧草地で豪州相手にひどい試合、しかも情けないW杯の後に
+      - voice: ネット民
+        text: ブラジル最大の失敗は、ラフィーニャでなくヴィニ中心にチームを作ったこと
+      - voice: ネット民
+        text: とりあえずラフィーニャ怪我しなくてよかった
         short_voice: true
     sources:
-      - https://search.yahoo.co.jp/realtime/search?p=ラフィーニャ+10番
-      - https://news.yahoo.co.jp/articles/f2b950fec89bab113db66c846712f99aa353f3bb/comments
+      - https://search.yahoo.co.jp/realtime/search?p=ラフィーニャ
+      - https://search.yahoo.co.jp/realtime/search?p=ハフィーニャ
+      - https://www.cnnbrasil.com.br/esportes/futebol/selecao-brasileira/torcedores-criticam-estado-do-gramado-de-australia-x-brasil/
+      - https://x.com/Bri_an2
