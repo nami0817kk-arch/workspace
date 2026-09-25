@@ -473,13 +473,34 @@ class _TrumpCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final armed = match.armed;
+    // 窪んだ受け皿。周りのカードが紙として浮いたので、ここだけ平らな箱だと
+    // 貼り付けた色紙に見える。切り札は「盤にはめ込んである」ほうが、
+    // 構えるものらしい。
+    final tray = armed != null
+        ? theme.colorScheme.tertiaryContainer
+        : theme.colorScheme.surfaceContainerHighest;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(14),
+      // **窪んだ受け皿にする。** 周りのカードが紙として浮いたので、
+      // ここだけ平らな箱だと貼り付けた色紙に見える。切り札は
+      // 「盤にはめ込んである」ほうが、構えるものらしい。
+      // **`BoxDecoration` は `color` と `gradient` を併記すると色が捨てられる。**
+      // 下地の色をグラデーションの中に混ぜて作る。
       decoration: BoxDecoration(
-        color: armed != null
-            ? theme.colorScheme.tertiaryContainer
-            : theme.colorScheme.surfaceContainerHighest,
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color.alphaBlend(const Color(0x1F000000), tray),
+            tray,
+            Color.alphaBlend(
+              theme.colorScheme.surface.withValues(alpha: 0.30),
+              tray,
+            ),
+          ],
+          stops: const [0.0, 0.4, 1.0],
+        ),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
@@ -657,14 +678,7 @@ class _OptionButton extends StatelessWidget {
                 ),
               ),
               Expanded(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(3),
-                  child: LinearProgressIndicator(
-                    value: chance,
-                    minHeight: 6,
-                    color: color,
-                  ),
-                ),
+                child: GaugeBar(value: chance, height: 6, color: color),
               ),
               const SizedBox(width: 10),
               Text(

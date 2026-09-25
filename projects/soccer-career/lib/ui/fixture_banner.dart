@@ -1,3 +1,5 @@
+import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
 
 import '../models/club.dart';
@@ -188,6 +190,18 @@ class _BannerPainter extends CustomPainter {
     final w = size.width;
     final h = size.height;
     canvas.drawRect(Offset.zero & size, Paint()..color = _paper);
+    // 真ん中の生成りを、わずかに窪ませる。スコアが板に印刷された文字
+    // ではなく、はめ込んだ板の上に乗っているように見える。
+    canvas.drawRect(
+      Offset.zero & size,
+      Paint()
+        ..shader = ui.Gradient.linear(
+          Offset.zero,
+          Offset(0, h),
+          const [Color(0x1F000000), Color(0x00000000), Color(0x0F000000)],
+          const [0.0, 0.35, 1.0],
+        ),
+    );
 
     // 斜めに切った帯。まっすぐに割ると表に見える。
     // 帯は 0.35 ずつ。0.40 だと真ん中の生成りが上端で 37px しか無く、
@@ -225,6 +239,17 @@ class _BannerPainter extends CustomPainter {
 
   void _band(Canvas canvas, Path path, ClubIdentity id, Size size) {
     canvas.drawPath(path, Paint()..color = id.primary);
+    // 帯の面。上が明るく、下が落ちる（光は上から）。
+    canvas.drawPath(
+      path,
+      Paint()
+        ..shader = ui.Gradient.linear(
+          Offset.zero,
+          Offset(0, size.height),
+          const [Color(0x2EFFFFFF), Color(0x00FFFFFF), Color(0x47000000)],
+          const [0.0, 0.42, 1.0],
+        ),
+    );
     if (id.striped) {
       canvas.save();
       canvas.clipPath(path);
@@ -250,6 +275,14 @@ class _BannerPainter extends CustomPainter {
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2
         ..color = id.secondary.withValues(alpha: 0.5),
+    );
+    // 切り口の光。斜めに切った縁が**厚みのある布の折り返し**に見える。
+    canvas.drawPath(
+      path,
+      Paint()
+        ..color = const Color(0x33FFFFFF)
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 1.2,
     );
   }
 

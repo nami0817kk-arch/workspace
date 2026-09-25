@@ -1669,14 +1669,7 @@ class _ConditionBar extends StatelessWidget {
           child: Text('$condition', style: theme.textTheme.bodySmall),
         ),
         Expanded(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(999),
-            child: LinearProgressIndicator(
-              value: condition / 100,
-              minHeight: 12,
-              color: color,
-            ),
-          ),
+          child: GaugeBar(value: condition / 100, height: 12, color: color),
         ),
       ],
     );
@@ -4130,15 +4123,13 @@ class _SignatureRow extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 6),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: LinearProgressIndicator(
-                  // 覚えたあとは、能力ではなく磨いた段を出す。
-                  value: learned
-                      ? mastery / Signature.maxMastery
-                      : (value / Signature.requirement).clamp(0.0, 1.0),
-                  minHeight: 4,
-                ),
+              GaugeBar(
+                // 覚えたあとは、能力ではなく磨いた段を出す。
+                value: learned
+                    ? mastery / Signature.maxMastery
+                    : (value / Signature.requirement).clamp(0.0, 1.0),
+                height: 5,
+                color: theme.colorScheme.primary,
               ),
               const SizedBox(height: 6),
               Text(condition, style: muted),
@@ -4214,12 +4205,10 @@ class _FocusProgress extends StatelessWidget {
               Text('$value', style: theme.textTheme.titleSmall),
               const SizedBox(width: 10),
               Expanded(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(3),
-                  child: LinearProgressIndicator(
-                    value: (value / Signature.requirement).clamp(0.0, 1.0),
-                    minHeight: 6,
-                  ),
+                child: GaugeBar(
+                  value: (value / Signature.requirement).clamp(0.0, 1.0),
+                  height: 6,
+                  color: theme.colorScheme.primary,
                 ),
               ),
             ],
@@ -4427,12 +4416,10 @@ class _AttributeBar extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(4),
-              child: LinearProgressIndicator(
-                value: (value / Formulas.maxAttribute).clamp(0.0, 1.0),
-                minHeight: thin ? 4 : 6,
-              ),
+            child: GaugeBar(
+              value: (value / Formulas.maxAttribute).clamp(0.0, 1.0),
+              height: thin ? 5 : 6,
+              color: theme.colorScheme.primary,
             ),
           ),
         ],
@@ -5564,12 +5551,10 @@ class _PersonCard extends StatelessWidget {
                         ),
                       ),
                       Expanded(
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: LinearProgressIndicator(
-                            value: p[axis] / Personality.max,
-                            minHeight: 4,
-                          ),
+                        child: GaugeBar(
+                          value: p[axis] / Personality.max,
+                          height: 5,
+                          color: theme.colorScheme.primary,
                         ),
                       ),
                     ],
