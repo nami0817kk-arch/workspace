@@ -42,8 +42,27 @@ class NextActionAdvisor {
   /// 控えの契約まで急かすことになる。
   static const int keyPlayerMargin = 0;
 
-  static List<NextAction> all(SaveGame save, Team team) {
+  /// [transferDeadlineMatchdaysLeft] は移籍ウィンドウが閉じるまでの残り節数
+  /// (閉じている・期限なしのときは null)。締切は移籍画面を開かないと
+  /// 見えないので、ホームからも知らせる。
+  static List<NextAction> all(
+    SaveGame save,
+    Team team, {
+    int? transferDeadlineMatchdaysLeft,
+  }) {
     final actions = <NextAction>[];
+
+    // 移籍の締切。過ぎると次のウィンドウまで動けない。
+    final left = transferDeadlineMatchdaysLeft;
+    if (left != null && left <= deadlineWarningMatchdays) {
+      actions.add(NextAction(
+        message: left <= 1
+            ? Tr.pick('移籍ウィンドウは今節で締切です。', 'The transfer window shuts this matchday.')
+            : Tr.pick('移籍ウィンドウの締切まであと$left節です。',
+                'The transfer window shuts in $left matchdays.'),
+        target: NextActionTarget.transfer,
+      ));
+    }
 
     // 資金がマイナス。放置すると理事会の信頼度が毎週削られる。
     if (save.budget < 0) {
@@ -99,9 +118,17 @@ class NextActionAdvisor {
     return actions;
   }
 
+  /// 締切の何節前から知らせるか。早すぎると毎週の雑音になる。
+  static const int deadlineWarningMatchdays = 3;
+
   /// いま出すべき1件。何も無ければ null。
-  static NextAction? top(SaveGame save, Team team) {
-    final actions = all(save, team);
+  static NextAction? top(
+    SaveGame save,
+    Team team, {
+    int? transferDeadlineMatchdaysLeft,
+  }) {
+    final actions = all(save, team,
+        transferDeadlineMatchdaysLeft: transferDeadlineMatchdaysLeft);
     if (actions.isEmpty) return null;
     // 損が確定しているものを先に出す。
     final urgent = actions.where((a) => a.urgent);

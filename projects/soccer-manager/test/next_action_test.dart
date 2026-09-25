@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:soccer_manager/l10n/tr.dart';
 import 'package:soccer_manager/logic/next_action_advisor.dart';
 import 'package:soccer_manager/logic/player_generator.dart';
 import 'package:soccer_manager/logic/youth_departure_engine.dart';
@@ -12,7 +13,11 @@ import 'package:soccer_manager/state/game_state.dart';
 /// 画面は30以上あり、何から手を付ければよいか分からない。出すのは常に1件
 /// だけで、損が確定しているものが先に来ること、無駄な催促をしないことを見る。
 void main() {
-  setUp(() => SharedPreferences.setMockInitialValues({}));
+  setUp(() {
+    SharedPreferences.setMockInitialValues({});
+    Tr.language = AppLanguage.japanese;
+  });
+  tearDown(() => Tr.language = AppLanguage.system);
 
   Future<GameState> newGame() async {
     final game = GameState();
@@ -97,6 +102,46 @@ void main() {
     best.contractYearsRemaining = 1;
     final action = NextActionAdvisor.top(game.save!, game.userTeam);
     expect(action?.target, NextActionTarget.squad);
+  });
+
+  test('移籍の締切が近いと知らせる', () async {
+    final game = await newGame();
+    game.save!.trainingDoneThisWeek = true;
+    game.save!.budget = 5000;
+    for (final p in game.userTeam.players) {
+      p.contractYearsRemaining = 3;
+    }
+    game.save!.youthProspects.clear();
+
+    // 締切まで遠いうちは黙っている(毎週の雑音にしない)。
+    expect(
+      NextActionAdvisor.top(game.save!, game.userTeam,
+          transferDeadlineMatchdaysLeft:
+              NextActionAdvisor.deadlineWarningMatchdays + 1),
+      isNull,
+    );
+
+    final soon = NextActionAdvisor.top(game.save!, game.userTeam,
+        transferDeadlineMatchdaysLeft: 1);
+    expect(soon?.target, NextActionTarget.transfer);
+    expect(soon?.message, contains('今節'));
+  });
+
+  test('ウィンドウが閉じているときは締切の話をしない', () async {
+    final game = await newGame();
+    game.save!.trainingDoneThisWeek = true;
+    game.save!.budget = 5000;
+    for (final p in game.userTeam.players) {
+      p.contractYearsRemaining = 3;
+    }
+    game.save!.youthProspects.clear();
+
+    // 閉じているときは null を渡す約束。
+    expect(
+      NextActionAdvisor.top(game.save!, game.userTeam,
+          transferDeadlineMatchdaysLeft: null),
+      isNull,
+    );
   });
 
   test('出すのは常に1件', () async {
