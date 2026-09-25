@@ -41,6 +41,14 @@ class LineupScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(Tr.pick('スタメン・戦術', 'Squad & tactics')),
+          // この画面は下タブの一員でもあり、ホームやガイドから直接
+          // 開かれもする。開かれた場合は戻る手段が要る。
+          //
+          // ドロワーがあると、AppBar は既定でハンバーガーを出して戻るボタンを
+          // 出さない。しかも iOS では左端スワイプをドロワーが横取りするため、
+          // 戻る手段が本当に無くなる(「はじめの一歩」から開くと詰んだ)。
+          leading: Navigator.of(context).canPop() ? const BackButton() : null,
+          actions: const [QuickAccessMenuButton()],
           bottom: TabBar(
             tabs: [
               Tab(text: Tr.pick('フォーメーション', 'Formation')),
