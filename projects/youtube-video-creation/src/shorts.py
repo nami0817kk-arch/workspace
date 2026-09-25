@@ -248,6 +248,14 @@ def _drop_boards(short: Script) -> None:
             if not line.image:
                 continue
             if not (_is_board(line.image) or line.image.startswith("assets/backgrounds/")):
+                # **写真も、縦版（`_v.jpg`）があれば差し替える**（2026-09-25）。語る人と主役を
+                # 横に並べた1枚は、縦に敷くと真ん中の帯しか映らない。`tools/pairphoto.py` が
+                # 上下に割った縦版を隣に書くので、ショートはそちらを使う
+                name = _P(str(line.image))
+                root = _P(__file__).resolve().parents[1]
+                tall = name.with_name(name.stem + "_v" + name.suffix)
+                if (root / tall).exists():
+                    line.image = tall.as_posix()
                 continue
             # 縦版は隣か、**まとめて assets/stats** に置いてある
             name = _P(str(line.image))

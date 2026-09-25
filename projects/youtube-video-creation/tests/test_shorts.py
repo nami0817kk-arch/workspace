@@ -1178,3 +1178,20 @@ def test_板は縦版に差し替える():
         assert lines[-1].image is None
     finally:
         tall.unlink()
+
+
+def test_横に並べた写真はショートで縦版に差し替える(tmp_path, monkeypatch):
+    """2026-09-25。ロナウドのショートで、ジェズス＋ロナウドの横長がジェズスの横顔の帯になっていた。"""
+    from PIL import Image
+    from src.shorts import _drop_boards
+    from src.script_model import Line, Scene, Script
+    d = tmp_path / "assets" / "images" / "20260925_pair_x"
+    d.mkdir(parents=True)
+    Image.new("RGB", (1920, 1080), "gray").save(d / "01.jpg")
+    Image.new("RGB", (1080, 1920), "gray").save(d / "01_v.jpg")
+    monkeypatch.setattr("src.shorts.__file__", str(tmp_path / "src" / "shorts.py"))
+    (tmp_path / "src").mkdir()
+    line = Line(speaker="キャスター", text="a", image="assets/images/20260925_pair_x/01.jpg")
+    short = Script(title="t", scenes=[Scene(title="s", lines=[line])])
+    _drop_boards(short)
+    assert line.image == "assets/images/20260925_pair_x/01_v.jpg"

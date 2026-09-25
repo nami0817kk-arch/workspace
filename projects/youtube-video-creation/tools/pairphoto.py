@@ -23,6 +23,7 @@ from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 SIZE = (1920, 1080)
+SIZE_V = (1080, 1920)        # ショート用の縦版（上に1枚目、下に2枚目）
 GAP = 6                     # 継ぎ目。0 だと2枚が1枚の絵に見える
 
 
@@ -49,6 +50,15 @@ def pair(paths: list[Path], out_dir: Path, focus: float = 0.38) -> Path:
         sheet.paste(_fill(path, (width, SIZE[1]), focus), (i * (width + GAP), 0))
     out = out_dir / "01.jpg"
     sheet.save(out, quality=92)
+
+    # **縦版も並べて書く**（2026-09-25）。横長の1枚をショート（9:16）に敷くと真ん中しか映らず、
+    # ロナウドの山場でジェズスの横顔の細い帯になっていた。サムネの2枚並べを上下に割るのと同じ形
+    # （`shorts.stacked_photo`）。`shorts._drop_boards` が `_v.jpg` があれば差し替える
+    height = (SIZE_V[1] - GAP * (n - 1)) // n
+    tall = Image.new("RGB", SIZE_V, (12, 12, 12))
+    for i, path in enumerate(paths):
+        tall.paste(_fill(path, (SIZE_V[0], height), focus), (0, i * (height + GAP)))
+    tall.save(out_dir / "01_v.jpg", quality=92)
 
     # 出典は消さない。CC BY / BY-SA は表示が条件で、報道写真も出どころを残す決まり
     credits: list[dict] = []
