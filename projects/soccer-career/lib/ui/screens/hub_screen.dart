@@ -4411,12 +4411,37 @@ class _ResultRow extends StatelessWidget {
           ],
         ),
       ),
-      title: Text(
-        result.international
-            ? '代表  ${result.opponentName}'
-            : result.cup != null
-            ? '${result.cup!.label}  ${result.opponentName}'
-            : '${result.home ? "H" : "A"}  ${result.opponentName}',
+      // **相手が名前だけで並んでいた。** 順位表にも次節カードにも
+      // エンブレムがあるのに、5試合ぶんの記録はここだけ文字だった
+      // （「名前だけが並ぶ画面は、自分がどこに居るのか分からなくなる」）。
+      // IDを控えていない古い記録では、絵を出さずに今までどおりにする。
+      title: Row(
+        children: [
+          if (result.opponentId.isNotEmpty) ...[
+            // 色と形はIDと名前だけで決まる（`ClubIdentity.of`）。
+            // 強さと部は見ていないので、ここでは持たせない。
+            ClubCrest(
+              club: Club(
+                id: result.opponentId,
+                name: result.opponentName,
+                strength: 0,
+                tier: 1,
+              ),
+              size: 20,
+            ),
+            const SizedBox(width: 8),
+          ],
+          Expanded(
+            child: Text(
+              result.international
+                  ? '代表  ${result.opponentName}'
+                  : result.cup != null
+                  ? '${result.cup!.label}  ${result.opponentName}'
+                  : '${result.home ? "H" : "A"}  ${result.opponentName}',
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
       ),
       subtitle: Text(result.appearance.label),
       trailing: Row(
