@@ -21,3 +21,12 @@ SITE_URL = os.environ.get("KABU_SITE_URL", "https://kabu.dailyquarry.com").rstri
 SEARCH_CONSOLE_TOKEN = os.environ.get(
     "KABU_SEARCH_CONSOLE_TOKEN", "JLPv6DMxv7h91q8Hzvo-YfdQx6mz-_zZ-MhHaNzPs4c"
 )
+
+# 公開名義と連絡先。**個人名は出さない**（屋号で通す）。
+# AdSense の審査は「誰が運営し、どこへ連絡できるか」が分かることを求めるので、
+# この2つが空のまま審査に出さない。
+OWNER = os.environ.get("KABU_OWNER", "つるはし社")
+
+# Cloudflare の Email Routing（無料）で受けて、個人のメールへ転送する。
+# 転送先はここに書かない（公開リポジトリなので、転送元だけを置く）。
+CONTACT_EMAIL = os.environ.get("KABU_CONTACT_EMAIL", "info@dailyquarry.com")

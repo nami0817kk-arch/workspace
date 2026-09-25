@@ -33,6 +33,8 @@ _env = Environment(loader=FileSystemLoader(str(_TEMPLATES_DIR)))
 _env.globals["ADSENSE_CLIENT"] = ADSENSE_CLIENT
 _env.globals["SITE_URL"] = SITE_URL
 _env.globals["SEARCH_CONSOLE_TOKEN"] = site_config.SEARCH_CONSOLE_TOKEN
+_env.globals["OWNER"] = site_config.OWNER
+_env.globals["CONTACT_EMAIL"] = site_config.CONTACT_EMAIL
 
 _WEEKDAY_JA = "月火水木金土日"
 
@@ -919,6 +921,8 @@ def _write_sitemap(days: list[dict], weeks: list[dict], stocks: list[dict],
     # 「毎日更新している」という嘘になり、そのうち lastmod ごと信用されなくなる。
     # 正しい日が分からないものは lastmod を書かない（省略してよい）。
     urls += [(canonical_url("privacy.html"), None),
+             (canonical_url("operator.html"), None),
+             (canonical_url("contact.html"), None),
              (canonical_url("guide.html"), None),
              (canonical_url("glossary.html"), None)]
     urls.append((canonical_url("weekly/index.html"), latest_date))
@@ -1018,7 +1022,8 @@ def build_all() -> None:
         "missing_days": [format_date_ja(d) for d in missing_business_days(days)],
         "limit_table": price_limit.table_rows(),
     }
-    for name in ("about.html", "privacy.html", "guide.html", "glossary.html"):
+    for name in ("about.html", "privacy.html", "operator.html", "contact.html",
+                 "guide.html", "glossary.html"):
         tmpl = _env.get_template(name)
         _write(
             _OUTPUT_DIR / name,

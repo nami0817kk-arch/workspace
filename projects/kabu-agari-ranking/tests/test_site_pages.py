@@ -11,6 +11,7 @@ from pathlib import Path
 import pytest
 
 import render
+import site_config
 
 
 @pytest.fixture
@@ -457,3 +458,57 @@ def test_銘柄ページがある銘柄だけ名前をリンクにする(site):
 
     html = (out_dir / "index.html").read_text(encoding="utf-8")
     assert 'href="stock/7201/">銘柄1</a>' in html
+
+
+def test_運営者情報と問い合わせが名義と連絡先を出す(site):
+    """AdSense は「誰が運営し、どこへ連絡できるか」が読めることを求める。
+
+    どちらかが空のまま審査に出すと落ちるので、中身が入っていることを固定する。
+    """
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-09-18")
+    render.build_all()
+
+    operator = (out_dir / "operator.html").read_text(encoding="utf-8")
+    contact = (out_dir / "contact.html").read_text(encoding="utf-8")
+
+    assert site_config.OWNER and site_config.OWNER in operator
+    assert site_config.CONTACT_EMAIL and site_config.CONTACT_EMAIL in contact
+    assert f"mailto:{site_config.CONTACT_EMAIL}" in contact
+    # 行き止まりにしない（審査は「たどり着けるか」も見る）
+    assert 'href="contact.html"' in operator
+    assert 'href="operator.html"' in contact
+
+
+def test_どのページからも運営者情報と問い合わせへ行ける(site):
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-09-18")
+    render.build_all()
+
+    for name in ("index.html", "privacy.html", "about.html"):
+        html = (out_dir / name).read_text(encoding="utf-8")
+        assert 'href="operator.html"' in html, name
+        assert 'href="contact.html"' in html, name
+
+
+def test_公開ページに個人名を出さない(site):
+    """名義は屋号だけ。Windows のユーザー名がパスごと混ざるのも防ぐ。"""
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-09-18")
+    render.build_all()
+
+    for path in out_dir.rglob("*.html"):
+        text = path.read_text(encoding="utf-8")
+        for leak in ("なみ", "nami", "0817"):
+            assert leak not in text, f"{path.name} に {leak} が出ている"
+
+
+def test_運営者情報と問い合わせがsitemapに載る(site):
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-09-18")
+    render.build_all()
+
+    xml = (out_dir / "sitemap.xml").read_text(encoding="utf-8")
+    # 配信される形（.html なし）で載る。canonical_url がそこを揃えている。
+    assert f"<loc>{site_config.SITE_URL}/operator</loc>" in xml
+    assert f"<loc>{site_config.SITE_URL}/contact</loc>" in xml

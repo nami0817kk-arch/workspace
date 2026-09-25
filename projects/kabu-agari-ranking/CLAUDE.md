@@ -3,7 +3,7 @@
 日本株の値上がり/値下がり/活況ランキングを平日毎日取得し、静的サイトとして公開する。
 広告による収益化が目的なので、**サイトが止まること・中身が空になることが一番の損失**。
 
-公開URL: https://kabu-agari-ranking.pages.dev/
+公開URL: https://kabu.dailyquarry.com/（`*.pages.dev` は 2026-09-25 に卒業）
 
 ## 前提
 
@@ -70,6 +70,13 @@ python src/build_site.py    # 取得 → data/ 保存 → output/ 生成
 - **公開URLを持つのは `src/site_config.py` だけ**。canonical・sitemap・RSS・OGP・
   X の投稿文が全部ここを見ている。別の場所にドメインを直書きするとテストが落ちる
   （移したときに片方だけ古いまま、という矛盾を防ぐため）。
+- **公開名義と連絡先も `src/site_config.py`**（`OWNER` / `CONTACT_EMAIL`）。
+  名義は屋号「つるはし社」だけを出す。**個人名・ユーザー名は公開ページに出さない**
+  （`test_公開ページに個人名を出さない` が全HTMLを見て止める）。
+  連絡先は Cloudflare の Email Routing で受けて転送する。転送先はリポジトリに書かない。
+- **運営者情報（operator.html）と問い合わせ（contact.html）は AdSense の前提**。
+  「誰が運営し、どこへ連絡できるか」が読めないと審査に出せない。
+  問い合わせフォームは置かない（静的サイトなので送信先を外部に預けることになる）。
 - **AdSense を有効にするのは `render.ADSENSE_CLIENT` の1箇所**。空のあいだは
   広告スクリプトも枠も一切描かない。審査前にプレースホルダの `<ins>` を置くと、
   中身の無い点線の箱が全ページに並ぶだけ。

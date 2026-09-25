@@ -3,7 +3,7 @@
 日本株（東証プライム/スタンダード/グロース）の値上がり率・値下がり率・活況銘柄ランキングを
 東証の営業日ごとに取得し、静的サイトとして公開する。広告（Google AdSense 想定）による収益化が目的。
 
-公開URL: https://kabu-agari-ranking.pages.dev/
+公開URL: https://kabu.dailyquarry.com/
 
 ## 動かし方（誰が何をやるか）
 

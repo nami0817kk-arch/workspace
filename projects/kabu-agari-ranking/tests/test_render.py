@@ -96,7 +96,8 @@ def test_build_generates_every_expected_page(site):
 
     # ads.txt は pub-ID が入るまで作らない（test_site_pages.py 側で見ている）
     for name in ("index.html", "losers.html", "active.html",
-                 "about.html", "privacy.html", "guide.html", "glossary.html",
+                 "about.html", "privacy.html", "operator.html", "contact.html",
+                 "guide.html", "glossary.html",
                  "frequent.html", "search.html", "404.html",
                  "weekly/index.html", "stock/index.html",
                  "robots.txt", "sitemap.xml", "feed.xml"):
