@@ -1031,6 +1031,19 @@ class CareerEngine {
     ];
   }
 
+  /// **同じクラブに居続けた季数（今季を含む）。**
+  ///
+  /// 別に持たずに履歴から数える。項目を足すと古い保存データで 0 に戻り、
+  /// 続きから遊ぶ人の在籍年数だけが消える。
+  static int seasonsAtClub(CareerState state) {
+    var seasons = 1;
+    for (var i = state.history.length - 1; i >= 0; i--) {
+      if (state.history[i].clubName != state.club.name) break;
+      seasons++;
+    }
+    return seasons;
+  }
+
   /// 起用の見込み。クラブの強さと自分の力の差で決まる。
   String _roleFor(int overall, Club club) => roleFor(overall, club);
 

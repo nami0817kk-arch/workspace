@@ -507,7 +507,9 @@ enum RehabPlan {
 
   /// 離脱試合数に掛かる倍率。
   double get lengthFactor => switch (this) {
-    RehabPlan.cautious => 1.15,
+    // **1.15 では、払うものが出場に現れなかった**（48キャリアずつで
+    // 通算出場 554 対 554）。長く休むぶんは試合数で払う。
+    RehabPlan.cautious => 1.35,
     RehabPlan.standard => 1.0,
     RehabPlan.rush => 0.6,
   };

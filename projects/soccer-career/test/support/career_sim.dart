@@ -267,6 +267,9 @@ class Career {
   int overallAt25 = 0;
   int overallAt29 = 0;
 
+  /// **衰えはここで見る。** ピークも29歳も、まだ落ちる前のことが多い。
+  int overallAt33 = 0;
+
   /// 引退したときの総合力と、33歳以降の出場・ゴール。
   ///
   /// 「流す」の見返りは**ピークの高さではなく、落ちるのが遅いこと**なので、
@@ -337,6 +340,12 @@ Future<Career> runCareer(
   onWeek,
   void Function(CareerState state, SeasonStats stats, CareerController c)?
   onSeason,
+
+  /// 1週ごとに、コントローラーごと覗かせる。
+  ///
+  /// `onWeek` は選手の能力しか渡さないので、確率の内訳のように
+  /// 状態を跨いで見たいものが測れなかった。
+  void Function(CareerController c)? onWeekState,
 }) async {
   final controller = CareerController(
     repository: MemoryRepository(),
@@ -428,6 +437,7 @@ Future<Career> runCareer(
         await _playWatched(controller, style, onDecision);
       }
       if (style.spendsPoints) await _spendPoints(controller);
+      onWeekState?.call(controller);
       if (onWeek != null) {
         final p = controller.state!.player;
         final dev = controller.state!.development;
@@ -584,6 +594,7 @@ Future<Career> runCareer(
     if (age <= 21) career.overallAt21 = done.player.overall;
     if (age <= 25) career.overallAt25 = done.player.overall;
     if (age <= 29) career.overallAt29 = done.player.overall;
+    if (age <= 33) career.overallAt33 = done.player.overall;
     if (age >= 33) {
       career.lateAppearances += stats.appearances;
       career.lateGoals += stats.goals;
@@ -795,6 +806,7 @@ void report(String title, List<Career> careers) {
   final at21 = Stat();
   final at25 = Stat();
   final at29 = Stat();
+  final at33 = Stat();
   final offersSeen = Stat();
   final topOffers = Stat();
   final prestige = Stat();
@@ -825,6 +837,7 @@ void report(String title, List<Career> careers) {
     at21.add(c.overallAt21);
     at25.add(c.overallAt25);
     at29.add(c.overallAt29);
+    at33.add(c.overallAt33);
     offersSeen.add(c.offersSeen);
     topOffers.add(c.topTierOffers);
     prestige.add(c.bestPrestige);
@@ -876,6 +889,7 @@ void report(String title, List<Career> careers) {
   print(_row('21歳の総合力', at21));
   print(_row('25歳の総合力', at25));
   print(_row('29歳の総合力', at29));
+  print(_row('33歳の総合力', at33));
   print(_row('届いた移籍話', offersSeen, digits: 2));
   print(_row('うち1部から', topOffers, digits: 2));
   print(_row('伸び幅', growth));

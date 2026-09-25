@@ -199,10 +199,12 @@ void main() {
       if (assist.isNotEmpty) {
         final p = m.chanceFor(assist.first);
         final expected = p *
-                (Formulas.ratingPerSuccess +
+                (Formulas.ratingPerSuccess * Formulas.ratingSuccessWeight(p) +
                     Formulas.ratingPerChance +
                     Formulas.ratingPerAssist * m.assistConversionAt(10)) +
-            (1 - p) * Formulas.ratingPerFailure;
+            (1 - p) *
+                Formulas.ratingPerFailure *
+                Formulas.ratingFailureWeight(p);
         expect(m.expectedDelta(assist.first), closeTo(expected, 1e-9));
       }
     });

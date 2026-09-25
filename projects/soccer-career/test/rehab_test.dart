@@ -214,7 +214,7 @@ void main() {
   test('復帰直後の窓は、怪我の重さで広がる', () {
     expect(
       Formulas.rehabWatchFor(InjurySeverity.light),
-      Formulas.rehabWatchMatches,
+      greaterThanOrEqualTo(Formulas.rehabWatchMatches),
     );
     expect(
       Formulas.rehabWatchFor(InjurySeverity.moderate),
@@ -224,6 +224,32 @@ void main() {
       Formulas.rehabWatchFor(InjurySeverity.severe),
       greaterThan(Formulas.rehabWatchFor(InjurySeverity.moderate)),
     );
+  });
+
+  test('再発しやすさは、確率の全体に掛かる', () {
+    // **基準の項にだけ掛けていた。** 実測（8キャリア・5754週）で、
+    // 怪我の確率の内訳は 基準 46.6% / 消耗 33.8% / 歳 19.6%。
+    // 基準にだけ掛けると、0.45 を掛けても確率は 24% しか下がらず、
+    // 復帰直後は週の1割しかないので通算では誤差に沈んでいた。
+    final worn = Player(
+      name: 'P',
+      age: 33,
+      position: Position.cm,
+      condition: 30,
+      attributes: Attributes(
+        pace: 70,
+        shooting: 70,
+        passing: 70,
+        dribbling: 70,
+        defending: 70,
+        physical: 70,
+        goalkeeping: 30,
+      ),
+      potential: 90,
+    );
+    final full = MatchEngine.injuryChance(worn, baseChance: 0.011);
+    final half = MatchEngine.injuryChance(worn, baseChance: 0.011, factor: 0.5);
+    expect(half, closeTo(full * 0.5, 1e-9), reason: '倍率が一部にしか効いていない');
   });
 
   test('再発しやすさは、練習中の負傷にも届いている', () {

@@ -281,6 +281,39 @@ class Formulas {
   /// 持ち上げる上限。差 34 で頭打ち（強さ35のクラブに 69 の選手で +12）。
   static const double starLiftCap = 16;
 
+  /// **1つのクラブに居続けると、クラブがその選手に合わせて作られていく。**
+  ///
+  /// 持ち上げの上限が 16 で固定だった頃、移籍を全部断る遊び方は
+  /// **20人中19人が無冠**で終わっていた（`balance_sim`）。実測すると、
+  /// 総合力74の選手が強さ 38.6 のクラブに居て、その国の首位は 72.9
+  /// ——力の差 35 に対して持ち上げは 16 で頭打ちなので、
+  /// **どれだけ長く尽くしても、順位は構造的に届かない**（優勝 0.4%）。
+  ///
+  /// 「1つのクラブを引き上げる」はキャリアものの筋のひとつなので、
+  /// 在籍が長いほど上限を上げる。移籍すれば 0 に戻る。
+  /// **上限ではなく傾きを動かす。** 上限だけ上げても何も起きなかった
+  /// （3位以内 10.6% / 優勝 1.3%）——力の差 34.8 に傾き 0.5 を掛けた 17.4 は
+  /// **もともと 16 の上限をほとんど越えていない**ので、頭打ちは効いていなかった。
+  /// 背負っている差が大きいほど、在籍年数がよく効く形にする。
+  static const int loyaltyLiftFrom = 3;
+  static const double loyaltyLiftPerSeason = 0.05;
+  static const double loyaltyLiftMax = 0.3;
+
+  /// 在籍が長いほど、持ち上げの傾きが立つ（0.5 → 最大 0.8）。
+  static double starLiftFor(int seasonsAtClub) =>
+      starLift +
+      ((seasonsAtClub - loyaltyLiftFrom + 1) * loyaltyLiftPerSeason).clamp(
+        0.0,
+        loyaltyLiftMax,
+      );
+
+  /// 傾きが立つぶん、頭打ちも上げる。上げないと傾きが届かない。
+  static const double loyaltyCapMax = 12;
+
+  static double starLiftCapFor(int seasonsAtClub) =>
+      starLiftCap +
+      (starLiftFor(seasonsAtClub) - starLift) / loyaltyLiftMax * loyaltyCapMax;
+
   /// 弱いほうへの下限。クラブより下の選手が先発しても、落とすのはここまで。
   static const double starLiftFloor = 0;
 
@@ -361,6 +394,36 @@ class Formulas {
   static const double ratingPerSuccess = 0.32;
 
   static const double ratingPerFailure = -0.4;
+
+  /// **難しい手を通したぶんは重く、難しい手を外したぶんは軽く。**
+  ///
+  /// 成否を成功率と無関係に一律で採点していたため、**局面プールの
+  /// 難しいポジションが構造的に損をしていた**。実測（6キャリアずつ）で、
+  /// 選んだ手の成功率は ST 0.649 / WG 0.728 / CM 0.779。ST と WG は
+  /// **同じ前線のプールを共有している**のに、ST は自分の一番の能力
+  /// （シュート）が効く手＝一番難しい手へ寄り、WG は通る手へ寄る。
+  /// 結果として平均評価が ST 7.14 / WG 7.53 と、帯（7.0〜7.4）の
+  /// 上下に割れていた。局面データを触ると両方が動くので、
+  /// **採点のほうを難易度に合わせる。**
+  ///
+  /// 基準は [ratingDifficultyPivot]。これより難しい手は成功が重く失敗が軽い。
+  /// 振れ幅を [ratingDifficultyLimit] で止めるのは、**外しても損をしない手**を
+  /// 作らないため（作れば「常に難しい手を選ぶ」が正解になる）。
+  static const double ratingDifficultyPivot = 0.7;
+  static const double ratingDifficultySlope = 1.4;
+  static const double ratingDifficultyLimit = 0.4;
+
+  static double ratingSuccessWeight(double chance) =>
+      (1 + ratingDifficultySlope * (ratingDifficultyPivot - chance)).clamp(
+        1 - ratingDifficultyLimit,
+        1 + ratingDifficultyLimit,
+      );
+
+  static double ratingFailureWeight(double chance) =>
+      (1 - ratingDifficultySlope * (ratingDifficultyPivot - chance)).clamp(
+        1 - ratingDifficultyLimit,
+        1 + ratingDifficultyLimit,
+      );
   static const double ratingPerGoal = 0.95;
   static const double ratingPerAssist = 1.1;
 
@@ -413,7 +476,7 @@ class Formulas {
   /// **等間隔の梯子だと、リーグの上に「手の届かない相手」が居ない。**
   /// 現実のリーグは上の2〜3が抜けていて、残りは団子になっている。
   /// ここを平らにしていたため、中位のクラブに居ても優勝できていた。
-  static const List<int> leagueGiants = [8, 5, 2];
+  static const List<int> leagueGiants = [9, 6, 3];
 
   static const int peakAge = 27;
   static const int declineAge = 31;
@@ -1188,10 +1251,14 @@ class Formulas {
   /// 復帰した時点では必ず 1 になっていて、元の長さはどこにも残っていない。
   static const int rehabWatchMatches = 3;
 
+  /// **窓が狭すぎると、戻し方は選択にならない。** 一律3試合だった頃、
+  /// 復帰直後は1キャリアの週の **10.0%** しかなく、そこへ 0.45 を掛けても
+  /// 怪我の総数は 2〜3% しか動かなかった（48キャリアずつで 1.13 / 1.14 / 1.12）。
+  /// 重傷なら半季ぶん危ない、という長さにして初めて選択になる。
   static int rehabWatchFor(InjurySeverity severity) => switch (severity) {
-    InjurySeverity.light => rehabWatchMatches,
-    InjurySeverity.moderate => 6,
-    InjurySeverity.severe => 10,
+    InjurySeverity.light => 4,
+    InjurySeverity.moderate => 10,
+    InjurySeverity.severe => 19,
   };
 
   /// 代表に招集される最低総合力。
