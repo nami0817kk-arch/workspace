@@ -85,9 +85,11 @@ python src/build_site.py    # 取得 → data/ 保存 → output/ 生成
   **メールアドレスを `mailto:` で書かない。** Cloudflare の Email Address
   Obfuscation が「[email protected]」に差し替えてしまい、JS が動かない相手には
   連絡先が読めなくなる（審査はそこを見る）。`@` を `[at]` に割った素のテキストで書く。
-- **AdSense を有効にするのは `render.ADSENSE_CLIENT` の1箇所**。空のあいだは
-  広告スクリプトも枠も一切描かない。審査前にプレースホルダの `<ins>` を置くと、
-  中身の無い点線の箱が全ページに並ぶだけ。
+- **AdSense は `src/site_config.py` の `ADSENSE_CLIENT` の1箇所で有効になる**。
+  空のあいだは広告のスクリプトも枠も一切描かない。手順は `docs/adsense.md`。
+  **本文の先頭に広告を置かない**（表の位置を 849px → 469px まで詰めた意味が消える）。
+  **枠IDが無いまま `<ins>` を出さない**（作り物の枠は審査でも配信でも通らない）。
+  どちらもテストで固定してある。
 - **ストップ高／ストップ安の判定は `src/price_limit.py`。** 東証の制限値幅の表を
   持っていて、終値と騰落率から前日終値を逆算して判定する。表の出典は
   https://www.jpx.co.jp/equities/trading/domestic/06.html （取引所が変えうる）。

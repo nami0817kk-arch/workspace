@@ -552,3 +552,45 @@ def test_タイトルが長すぎない(site):
         if len(t) > 40:
             too_long.append(f"{page.relative_to(out_dir)} ({len(t)}字) {t}")
     assert not too_long, "タイトルが長すぎる:\n" + "\n".join(too_long)
+
+
+def test_pubIDを入れると審査に必要なスクリプトだけが出る(site, monkeypatch):
+    """審査に要るのは head のスクリプト。枠は自動広告が置く。
+
+    枠ID が無いまま <ins data-ad-slot="0000000000"> のような作り物を置くと、
+    審査でも配信でも通らない。
+    """
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-09-18")
+    monkeypatch.setitem(render._env.globals, "ADSENSE_CLIENT", "ca-pub-1234567890123456")
+    monkeypatch.setitem(render._env.globals, "ADSENSE_SLOT", "")
+    render.build_all()
+
+    html = (out_dir / "index.html").read_text(encoding="utf-8")
+    assert "adsbygoogle.js?client=ca-pub-1234567890123456" in html   # head のスクリプト
+    assert "<ins" not in html                                        # 枠は出さない
+
+
+def test_枠IDを入れたときだけ枠を出す(site, monkeypatch):
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-09-18")
+    monkeypatch.setitem(render._env.globals, "ADSENSE_CLIENT", "ca-pub-1234567890123456")
+    monkeypatch.setitem(render._env.globals, "ADSENSE_SLOT", "9876543210")
+    render.build_all()
+
+    html = (out_dir / "index.html").read_text(encoding="utf-8")
+    assert 'data-ad-slot="9876543210"' in html
+    assert "0000000000" not in html
+
+
+def test_広告を本文の先頭に置かない(site, monkeypatch):
+    """ここに広告が入ると、見に来たランキングが1画面ぶん下へ押し出される。"""
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-09-18")
+    monkeypatch.setitem(render._env.globals, "ADSENSE_CLIENT", "ca-pub-1234567890123456")
+    monkeypatch.setitem(render._env.globals, "ADSENSE_SLOT", "9876543210")
+    render.build_all()
+
+    html = (out_dir / "index.html").read_text(encoding="utf-8")
+    body = html[html.index("<main"):]
+    assert body.index("<table") < body.index("<ins"), "表より先に広告が出ている"

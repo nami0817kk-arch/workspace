@@ -137,7 +137,12 @@ AdSense の審査要件でもあるので、独自ドメインへ移す。
    pages.dev → 新ドメインの 301 を1本足す。
 7. **AdSense はこのあと。** 独自ドメインになってから申請する。
 
-## AdSense（残作業）
+## AdSense
+
+手順と、いまの要件の充足状況は `docs/adsense.md` にまとめてある。
+**有効化は `src/site_config.py` の `ADSENSE_CLIENT` に pub-ID を入れる1箇所だけ。**
+
+## AdSense（旧・残作業）
 
 - 有効化は `render.ADSENSE_CLIENT` に pub-ID を入れる1箇所だけ。
   空のあいだは広告スクリプトも枠も描かない（審査前に空の枠を置かない）。
