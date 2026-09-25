@@ -179,8 +179,14 @@ class EmptyDataTest(unittest.TestCase):
             out = root / "dist"
             stats = builder.build(root, out)
             self.assertEqual(stats["items"], 0)
+            # トップは「いま条件がそろっている商品」（2026-09-25 に入れ替え）。
+            # 値下がりは動きの少ない日にほぼ空になるため、入口に置かない。
+            top = (out / "index.html").read_text(encoding="utf-8")
+            self.assertIn("条件がそろった商品はまだありません", top)
             self.assertIn("判定できるほどの値下がりはありません",
-                          (out / "index.html").read_text(encoding="utf-8"))
+                          (out / "drops" / "index.html").read_text(encoding="utf-8"))
+            # 空でも行き止まりにしない
+            self.assertIn("商品を探す", top)
 
 
 if __name__ == "__main__":

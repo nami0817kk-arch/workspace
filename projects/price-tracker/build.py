@@ -108,7 +108,7 @@ def build(root: Path, out: Path) -> dict:
     low = analyze.lows(rows)
 
     urls = []
-    write_listing(out, urls, "now/", "いま条件がそろっている商品",
+    write_listing(out, urls, "", "いま条件がそろっている商品",
                   "最安値への近さ・ポイント込みの下げ幅・価格の下げ幅・送料・"
                   "値動きの多さを、それぞれ上限を決めて足した順に並べています。"
                   "買うべきかは決めません。どの条件がいくつ満たされたかを出すだけです。",
@@ -116,7 +116,7 @@ def build(root: Path, out: Path) -> dict:
                   "条件がそろった商品はまだありません。記録が7日分たまってからになります。",
                   stats, show_score=True)
 
-    write_listing(out, urls, "", "今日の値下がり",
+    write_listing(out, urls, "drops/", "今日の値下がり",
                   "毎日記録している楽天市場の価格から、前回より安くなった商品を並べています。",
                   dropped, site, base, updated,
                   "今日の記録では、判定できるほどの値下がりはありませんでした。", stats)

@@ -83,7 +83,7 @@ FAVICON = ("data:image/svg+xml,"
 AD_NOTICE = ('<p class="ad-notice">本サイトは楽天アフィリエイトを利用しており、'
              'リンク経由の購入により収益を得ています。</p>')
 
-NAV = [("now/", "いま条件がそろう"), ("./", "今日の値下がり"), ("points/", "ポイント込み"), ("new-lows/", "最安値更新"),
+NAV = [("./", "いま条件がそろう"), ("drops/", "今日の値下がり"), ("points/", "ポイント込み"), ("new-lows/", "最安値更新"),
        ("lows/", "最安値圏"), ("rises/", "値上がり"), ("active/", "よく動く"),
        ("genre/", "ジャンル別"), ("archive/", "日付別"), ("search/", "商品を探す"),
        ("watch/", "見守り"), ("ending/", "期限が近い"), ("stats/", "記録"),
@@ -627,7 +627,10 @@ def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
             show_score: bool = False) -> str:
     body = ("".join(card(r, prefix, eager=i < 3, show_score=show_score)
                     for i, r in enumerate(rows)) if rows
-            else f'<li class="empty">{esc(empty)}</li>')
+            else ('<li class="empty">' + esc(empty)
+                  + f'<span class="go"><a href="{prefix}">いま条件がそろっている商品</a>'
+                  + f'<a href="{prefix}lows/">最安値圏</a>'
+                  + f'<a href="{prefix}search/">商品を探す</a></span></li>'))
     total = len(rows) if total is None else total
     count = f'<span class="count">{total:,}件</span>' if rows else ""
     heading = esc(title) + (f"（{page}ページ目）" if page > 1 else "")
@@ -638,6 +641,10 @@ def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
             + stats_bar(stats or {})
             + AD_NOTICE
             + nav
+            + (f'<p class="thin">この一覧は前回の記録との比較なので、'
+               f'動きが少ない日は少なくなります。'
+               f'<a href="{prefix}">いま条件がそろっている商品</a>もご覧ください。</p>'
+               if 0 < len(rows) < 10 and page == 1 else '')
             + (LIST_TOOLS + WATCH_MINI_JS if rows else "")
             + f'<ul class="cards">{body}</ul>'
             + nav
