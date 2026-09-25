@@ -147,7 +147,7 @@ def topics(date: str, spec_path: Path) -> Path:
 </div></div>''')
     drops = "".join(f"<li><b>{e(str(a))}</b> … {rich(b)}</li>" for a, b in (spec.get("drops") or []))
     title = spec.get("title") or f"{ja_date(date)}の題材"
-    page = (f"<title>{e(title)}</title>" + PICK_CSS + f"<style>{BASE_CSS}</style>"
+    page = (f"<meta charset=\"utf-8\"><title>{e(title)}</title>" + PICK_CSS + f"<style>{BASE_CSS}</style>"
             f"<script>window.PICK_KEY='{date}';</script>"
             f"<main><h1>{e(title)}</h1>"
             f'<p class="lead">{e(str(spec.get("lead", "")))} ／ ○△✖を押すと残ります</p>'
@@ -278,7 +278,7 @@ def scripts(date: str, images: bool = False) -> Path:
     rows = "".join(f"<tr><td>{e(str(n))}</td><td>{e(ln)}</td><td>{s}</td><td>{l}</td><td>{c}</td></tr>"
                    for n, s, l, c, ln in stats)
     title = f"{ja_date(date)}の台本"
-    page = (f"<title>{e(title)}</title><style>{BASE_CSS}</style><main>"
+    page = (f"<meta charset=\"utf-8\"><title>{e(title)}</title><style>{BASE_CSS}</style><main>"
             f"<h1>{e(title)}（{len(paths)}本）</h1>"
             f'<p class="lead">{date[:4]}-{date[4:6]}-{date[6:]} ／ 読み上げの全文。太字は画面で強調する数字。<b>尺は本編の見込み</b>（ショートは別に58秒まで）</p>'
             '<div class="toc">' + " ".join(toc) + "</div>" + "".join(chunks)

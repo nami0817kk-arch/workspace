@@ -1,0 +1,110 @@
+date: 2026年9月25日
+slot: japan_2
+format: quote
+voice_min: 0.55
+people: [塩貝健人, 久保建英, 上田綺世]
+theme:
+  id: shiogai_finger
+  league: germany
+  league_name: 日本代表
+  kind: match
+  topic: 日本代表
+  title: '塩貝健人が6か月ぶりのゴールのあと、口に指を当てた理由'
+  question: なぜ指を当てたのか
+short_title: 塩貝「黙らせるというわけじゃないけど」
+thumbnail:
+  photo: assets/images/20260925_shiogai/01.jpg
+  crests: [日本]
+  line1: 塩貝健人が決めたあと
+  line2: 口に指を当てた●●
+sections:
+  - id: what
+    heading: 2回奪われて、3回目
+    tier: 報道
+    telop: 90＋1分、GKの股を抜いた
+    narrator: キャスター
+    say:
+      - 日本対ウルグアイ。1対1で迎えた後半アディショナルタイムに、83分に途中出場した塩貝健人が決勝点を決めました。
+      - その直前、強引なドリブルで2回ボールを奪われています。
+      - それでも3回目、上田綺世のパスから抜け出し、滑り込みながら右足でGKの股の下へ。
+      - 決めたあと、笑わずに、口に人差し指を当てました。直後に上田綺世が3点目を決め、3対1で勝っています。
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?459637-459637-fl
+      - https://www.ronspo.com/articles/2026/2026092503/
+  - id: shiogai
+    main: true
+    heading: 指の意味
+    tier: 報道
+    telop: 「黙らせるというわけじゃないけど、そんな感じの意味があった」
+    narrator: キャスター
+    say:
+      - text: '塩貝健人が決勝点のあとに口へ指を当てた理由を、本人がこう説明しました。'
+        short_only: true
+      - ワールドカップ前のブラジルについての発言で批判を浴び、家族にも中傷が及んでいました。本人は、こう説明しています。
+      - voice: 塩貝健人
+        text: 2部でプレーしていること、今回の選出、W杯でのいろんなことがあって、僕自身にもいろんなメッセージが来て、すごく悔しい思いをしながら日々を過ごしてきた
+      - voice: 塩貝健人
+        text: そういうのを僕のあの1点で黙らせるというわけじゃないけど、そんな感じの意味があった
+      - voice: 塩貝健人
+        text: 僕はこのスタイルを変えるつもりはない。結果が出ている時に大きいことを言うのは誰でもできる
+      - voice: 塩貝健人
+        text: 6か月くらい点が取れていない状況で久しぶりに点が取れて、身体もメンタル的にも軽くなった
+      - 一方で、上田綺世を見てこうも言いました。
+      - voice: 塩貝健人
+        text: 上田綺世選手がああやって3点目を決めて、なんか涼しい表情をしてたんで、俺もこの1点で喜んでいる場合じゃない
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?459649-459649-fl
+      - https://news.yahoo.co.jp/articles/d3cb7e7c050d90bc926546c53999cb2c3ae59a08
+  - id: kubo
+    heading: 久保と上田の見方
+    tier: 報道
+    telop: 久保「あれは出さなきゃダメよって」
+    narrator: キャスター
+    say:
+      - 2回奪われた場面について、久保建英は。
+      - voice: 久保建英
+        text: それは言いましたよ。入ったからいいけど、あれは出さなきゃダメよって
+      - voice: 久保建英
+        text: ああやって自分で正解に持っていくのがストライカーとして大事なメンタリティだと思う。ちょっと格好いいなと思いますね
+      - パスを出した上田綺世は。
+      - voice: 上田綺世
+        text: メディアでは強気なことを言ったり、振る舞いもそういうふうに見えることもあると思うけど、頭もいいし、考えながらサッカーをやっていることが僕には伝わってくる
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?459652-459652-fl
+      - https://web.gekisaka.jp/news/japan/detail/?459650-459650-fl
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「戦犯になりかけた」と「こういう選手がいてもいい」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 塩貝すげぇ。ブラジルを舐めてただけはある
+      - voice: ネット民
+        text: 塩貝の2連続のクソドリブルからの点決めてるの面白い。パルプンテかよ
+      - voice: ネット民
+        text: 囲まれてもパス出さないのは頭おかしいと思ってレスしようと思ったら得点決めてビビったわ
+      - voice: ネット民
+        text: 戦犯になりかけたなw。ゴール決めてなかったらめちゃくちゃ叩かれたぞ、あのエゴいすと
+      - voice: ネット民
+        text: 日本が長い間待ち望んでいたエゴの強いストライカー
+      - voice: ネット民
+        text: 自己中プレーの連続だった塩貝に絶妙なパス出した上田綺世って良いやつだろな…ってなった
+      - voice: ネット民
+        text: まだ若いのに、批判に晒された時も、毅然とした態度を貫き通していたのは立派だったと思います
+      - voice: ネット民
+        text: 俺が俺がなエゴを持ったストライカーを嫌いになれる訳がない。そのままのスタイルを貫き通して欲しい
+      - voice: ネット民
+        text: 周りへの視野が狭すぎる。綺世の良さが際立つばかりでした
+      - voice: ネット民
+        text: 「笑えよ」って堂安選手の声かけが最高すぎる。ピッチでは厳つい顔してたのに、先輩たちにいじられて愛されてるギャップがたまらん
+      - voice: ネット民
+        text: 大きな言葉を使うのは実績を上げてからでは無いのかな？　今期はヴォルフスブルクでまだ無得点
+      - voice: ネット民
+        text: 次はマジで黙らせるくらいの1点ぜひ見せてほしいです
+        short_voice: true
+    sources:
+      - https://hayabusa9.5ch.net/test/read.cgi/mnewsplus/1790251701/
+      - https://news.yahoo.co.jp/articles/a81427e19019835161855d3653554d0be2aa50d0/comments
+      - https://news.yahoo.co.jp/articles/7a9992873e07bdc49c0f3691dced56c77be35bb5/comments
+      - https://news.yahoo.co.jp/articles/d3cb7e7c050d90bc926546c53999cb2c3ae59a08/comments

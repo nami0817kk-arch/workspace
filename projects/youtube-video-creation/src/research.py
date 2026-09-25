@@ -1205,7 +1205,8 @@ def _advise_thumbnail_name(notes: Notes) -> list[str]:
     names += [str(x).strip() for x in (thumb.get("crest_main") or [])]
     for name in [n for n in names if n]:
         # 「マンチェスター・ユナイテッド」を「マンU」と書くので、頭の2文字でも当てる
-        for form in {name, name.replace("・", ""), name.split("・")[0], name[:3], name[:2]}:
+        # 「アーリング・ハーランド」を「ハーランド」と書くので、後ろの語でも当てる
+        for form in {name, name.replace("・", ""), name.split("・")[0], name.split("・")[-1], name[:3], name[:2]}:
             if len(form) >= 2 and form in words:
                 return []
     return ["サムネの文字に、クラブ名も人名も入っていません"

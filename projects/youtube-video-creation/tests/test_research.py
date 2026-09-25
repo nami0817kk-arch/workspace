@@ -1737,3 +1737,15 @@ def test_本文に敷く写真が縦長なら知らせる(tmp_path):
     # 2枚並べた回は、冒頭に届くのが1枚目だけなので、その1枚目を見る
     n.thumbnail = {"photos": [str(tall), str(wide)]}
     assert "pairphoto" in _advise_wide_photo(n)[0]
+
+
+def test_サムネの名前は姓だけでも通る():
+    """「アーリング・ハーランド」の回で line1 に「ハーランド」と書けば名前は入っている（2026-09-25）。"""
+    from src.research import _advise_thumbnail_name, Notes
+    notes = Notes.__new__(Notes)
+    notes.people = ["アーリング・ハーランド"]
+    notes.topic = "マンチェスター・シティ"
+    notes.thumbnail = {"line1": "ハーランドが決勝点のあと", "line2": "真っ先にキスをした●●"}
+    assert _advise_thumbnail_name(notes) == []
+    notes.thumbnail = {"line1": "決勝点のあと", "line2": "真っ先にキスをした●●"}
+    assert _advise_thumbnail_name(notes)

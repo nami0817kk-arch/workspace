@@ -1,0 +1,119 @@
+date: 2026年9月25日
+slot: laliga_1
+format: quote
+voice_min: 0.55
+people: [デコ, ラウタロ・マルティネス, フリアン・アルバレス, ジョゼ・モウリーニョ]
+theme:
+  id: deco_summit
+  league: spain
+  league_name: ラ・リーガ
+  kind: transfer
+  topic: バルセロナ
+  title: 'バルサのデコが、獲れなかったフリアン・アルバレスについて初めて口にしたのは'
+  question: 何が起きていたのか
+short_title: デコ「フリアンはもう過去だ」
+thumbnail:
+  photo: assets/images/20260925_deco/01.jpg
+  crests: [バルセロナ]
+  line1: バルサのデコがフリアンを
+  line2: 「●●だ」と言い切った
+sections:
+  - id: what
+    heading: 責任者が口を開いた
+    tier: 報道
+    telop: 9月24日、ポルトガルの催しで、複数の媒体に話した
+    narrator: キャスター
+    say:
+      - バルセロナのスポーツディレクター、デコ。9月24日、ポルトガルのサッカーの催しの場で、記者に囲まれました。
+      - 話したのは、この夏に**獲ろうとして獲れなかった2人**のことです。
+      - 1人目は、インテルの主将、ラウタロ・マルティネス。
+    sources:
+      - https://sport.sky.it/calciomercato/2026/09/24/deco-barcellona-lautaro-martinez-inter-intervista-video
+      - https://www.fcinter1908.it/calciomercato/mercato-inter/deco-vero-volevamo-lautaro-verita-inter/
+  - id: lautaro
+    heading: ラウタロのこと
+    tier: 報道
+    telop: 「クラブが売れないと言った時点で、それ以上は話さなかった」
+    narrator: キャスター
+    say:
+      - voice: デコＳＤ
+        text: まずラウタロはインテルの偶像で、我々はそこに大きな敬意を持っている
+      - voice: デコＳＤ
+        text: 我々の会長がインテルの会長と話して、売れないと言われた時点で、敬意から二度と話さなかった
+      - voice: デコＳＤ
+        text: 選手にも代理人にも接触していない。ただ、好きだった選手だし、今も好きだ
+    sources:
+      - https://www.fcinter1908.it/calciomercato/mercato-inter/deco-vero-volevamo-lautaro-verita-inter/
+      - https://www.gianlucadimarzio.com/news-calcio/deco-intervista-barcellona-inter-lautaro-martinez-497627
+  - id: julian
+    main: true
+    heading: フリアンのこと
+    tier: 報道
+    telop: 「フリアンは過去だ。我々は前を向かなければならない」
+    narrator: キャスター
+    say:
+      - text: 'バルセロナが夏に獲ろうとして獲れなかったフリアン・アルバレスについて、デコが初めて口を開きました。'
+        short_only: true
+      - 2人目は、アトレティコ・マドリードのフリアン・アルバレス。夏のあいだ、移籍の話が続いていました。
+      - voice: デコＳＤ
+        text: 実現しなかった。オファーは出したが、クラブはずっと売らないと言っていたので、別の解決策を探すしかなかった
+      - voice: デコＳＤ
+        text: 成立しない取引、成立しない補強はたくさんある
+      - voice: デコＳＤ
+        text: フリアンは過去だ。我々は前を向かなければならない
+      - voice: デコＳＤ
+        text: 他の選手たちには満足している。彼も元気で、自分のクラブの力になっていることを願う
+      - ラフィーニャが9番で当たったから諦めたのか、という見方には、こう答えました。
+      - voice: デコＳＤ
+        text: フリアンの件は、ラフィーニャの件とは何の関係もない
+    sources:
+      - https://www.elnacional.cat/es/deportes/deco-rebaja-tensiones-atletico-julian-pasado-tenemos-mirar-hacia-delante_1700314_102.html
+      - https://www.infobae.com/deportes/2026/09/24/el-director-deportivo-del-barcelona-hablo-por-primera-vez-sobre-el-frustrado-pase-de-julian-alvarez-su-contundente-sentencia/
+  - id: mourinho
+    heading: 敵になった旧友
+    tier: 報道
+    telop: 「常に敵だ。でも決して敵対者ではない」
+    narrator: キャスター
+    say:
+      - 聞かれたのは、2人のことだけではありません。レアル・マドリードに戻ったモウリーニョについても。
+      - ポルト時代に、一緒にチャンピオンズリーグを獲った仲です。
+      - voice: デコＳＤ
+        text: 常に敵だ、ライバル関係は当たり前だから。でも決して敵対者ではない。我々は友人で、私は彼にとても大きな愛着がある
+      - voice: デコＳＤ
+        text: モウリーニョを敵に回すのはより厄介だが、世界最大のクラブの一つでの新しい挑戦を嬉しく思う
+    sources:
+      - https://www.abola.pt/noticias/deco-vinha-para-o-benfica-mas-o-fc-porto-foi-amor-a-primeira-vista-2026092417161976973
+      - https://www.futbolfantasy.com/laliga/noticias/151840-deco-habla-lautaro-martinez-rodri-gabriel-jesus-raphinha-julian-alvarez-joao-cancelo-y-mourin
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: バルサのやり方を責める声が並んだ
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 本当に選手が欲しいならちゃんと筋を通してアトレティコに話を持って行かずに、後から適当なオファーを出してアトレティコを怒らせて混乱に陥れるようなことをやったバルセロナは本当におかしいと思う
+      - voice: ネット民
+        text: 相手が長期契約交わしているのがわかっているのに、相手クラブを飛び越して、選手をそそのかして
+      - voice: ネット民
+        text: その選手もつらい立場になって最後にこれ。本当に酷いと思う
+      - voice: ネット民
+        text: メディアに移籍願望なんて話さなきゃいいのに。そもそもなんでアトレティコと長期契約結んだの？
+      - voice: ネット民
+        text: ハフィーニャがハマったらもうお払い箱か。だから最近のバルサには良いイメージがないのよ
+      - voice: ネット民
+        text: だとしても公の場でこういうことをわざわざ発言する必要ないよね。要らない火種を生むだけ
+      - voice: ネット民
+        text: ハフィーニャの9番起用はめちゃくちゃ当たりましたね。寧ろフリアンが獲得できなかったことでより強力なフォメになってしまった感もある
+      - voice: ネット民
+        text: 反対にフリアンには同情の念を抱いてしまいます
+      - voice: ネット民
+        text: 最低限アルバレスとアトレティコの関係性を破綻させるという離間の策は功を成したからな
+      - voice: ネット民
+        text: こんなチームに行きたいと思ったのが間違いだったね。アトレティコで頑張って信頼を取り戻しましょう
+      - voice: ネット民
+        text: 不意に出たデコの「過去」発言。すなわち、話は終わったという事です
+      - voice: ネット民
+        text: ハシゴを外されたと考えるか、これで吹っ切れるか。アルバレス次第。今の自分に出来ることに集中するしかない
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/06b633fe201866132681ede6a86267cefb6bd004/comments

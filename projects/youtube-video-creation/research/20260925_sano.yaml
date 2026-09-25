@@ -1,0 +1,123 @@
+date: 2026年9月25日
+slot: japan_4
+format: news
+voice_min: 0.4
+people: [佐野海舟, 佐野航大]
+theme:
+  id: sano_brothers
+  league: germany
+  league_name: 日本代表
+  kind: match
+  topic: 日本代表
+  title: '佐野海舟と佐野航大が並んだ日、日本代表で起きた史上初'
+  question: 何が史上初なのか
+short_title: 佐野兄弟、史上初のダブルボランチ
+thumbnail:
+  photo: assets/images/20260925_sano/01.jpg
+  crests: [日本]
+  line1: 佐野海舟と佐野航大
+  line2: 日本代表で史上初の●●
+sections:
+  - id: what
+    heading: 並んだ2人
+    tier: 報道
+    telop: 兄弟でダブルボランチ。日本代表で史上初
+    narrator: キャスター
+    card:
+      type: table
+      title: 佐野兄弟
+      columns: [所属, 名前, 位置, 年齢]
+      rows:
+        - [マインツ, 佐野海舟, MF, 25]
+        - [PSV, 佐野航大, MF, 23]
+    say:
+      - ウルグアイ戦の先発に、佐野海舟と佐野航大が並びました。
+      - 兄はマインツ、弟はピーエスブイ。出身も同じ岡山県津山市、高校も同じ米子北です。
+      - 2人でダブルボランチを組みました。
+      - 日本代表で**兄弟がダブルボランチ**を組んだのは、史上初めてです。
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?459655-459655-fl
+      - https://www.soccer-king.jp/news/japan/national/20260924/2209037.html
+  - id: history
+    heading: 33年前の兄弟
+    tier: 報道
+    telop: 兄弟の同時先発は、三浦泰年と三浦知良以来
+    narrator: キャスター
+    say:
+      - 兄弟が一緒に先発したこと自体も、**33年ぶり**。
+      - その前は1993年10月、ワールドカップ予選のイラン戦の三浦泰年と三浦知良でした。
+    sources:
+      - https://news.yahoo.co.jp/articles/40be303cbd0f92606b7ca8314f007fe435ce79d7
+      - https://news.yahoo.co.jp/articles/9edfd0b3cffe498bb1da7528759eeca88debb4f7
+  - id: kaishu
+    main: true
+    heading: 兄の言葉
+    tier: 報道
+    telop: 「言葉がなくても分かり合える部分がある」
+    narrator: キャスター
+    say:
+      - text: '佐野海舟と佐野航大が、日本代表で史上初めて兄弟でダブルボランチを組みました。手応えと課題を、兄が話しています。'
+        short_only: true
+      - 兄の海舟は、こう話しています。
+      - voice: 佐野海舟
+        text: 一緒に出られたのはシンプルに嬉しかった
+      - voice: 佐野海舟
+        text: 兄弟というよりはいちサッカー選手としてお互いに刺激しあえて、サッカーの話もよくするし、仲はいいと思う
+      - voice: 佐野海舟
+        text: 言葉がなくても分かり合える部分があるし、でも今日の試合はもっともっとよくできることがあった
+      - voice: 佐野海舟
+        text: 2人ともまだまだこれからかな
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?459655-459655-fl
+      - https://www.soccer-king.jp/news/japan/national/20260924/2209037.html
+  - id: kodai
+    heading: 弟の言葉
+    tier: 報道
+    telop: 「あの人がいるぶん、自由に動けるな」
+    narrator: キャスター
+    say:
+      - 弟の航大は、試合前に役割を決めていたそうです。
+      - voice: 佐野航大
+        text: 一つ落ちるんだったら「俺がアンカーに行くね」という話をしたし、あの人がいるぶん、自由に動けるなというのは感じた
+      - voice: 佐野航大
+        text: 考える余裕がなかったし、自分のやるべきことをやる意識で入った
+      - voice: 佐野航大
+        text: 全然まだまだ。守備の強度だったり、奪えるところがあればもっと攻撃に繋げられたと思う
+      - 航大はハーフタイムに鎌田大地と交代。45分間の兄弟ボランチでした。
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?459657-459657-fl
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「兄弟で横並びはあちーぜ」と「代えるの早すぎない？」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 兄弟ダブルボランチがアツい
+      - voice: ネット民
+        text: 兄弟で横並びはあちーぜ
+      - voice: ネット民
+        text: 広大なエリアをくまなくカバーして回収しまくる兄弟
+      - voice: ネット民
+        text: 佐野は弟の方が高校時代から才能上だったから楽しみだ
+      - voice: ネット民
+        text: 弟は、前回初招集された時よりもはるかに良いプレーをしていたね。これだけのプレーをしたら、今後は常連でしょう
+      - voice: ネット民
+        text: 潰し屋の兄と比べたら攻撃スキルめちゃ高いけど、ボックストゥボックスタイプ。ビッグクラブでレギュラー取るのは航大が一番近いかもしれん
+      - voice: ネット民
+        text: 航大はもうちょっと見たかったな。代えるの早すぎない？？
+      - voice: ネット民
+        text: 佐野兄弟の相性はイマイチなのか
+      - voice: ネット民
+        text: 鈴木唯人と中村敬斗と佐野航大の左サイドいいですね。このトリオに新しい風を感じる
+      - voice: ネット民
+        text: 稲葉浩志、佐野兄弟を輩出する何て町だ岡山県津山市
+      - voice: ネット民
+        text: いつか代表で兄から弟、もしくは弟から兄でゴールを決める姿が見たい
+        short_voice: true
+    sources:
+      - https://hayabusa9.5ch.net/test/read.cgi/mnewsplus/1790241265/
+      - https://hayabusa9.5ch.net/test/read.cgi/mnewsplus/1790251701/
+      - https://news.yahoo.co.jp/articles/dbe834c75a2362655458de5fcab11c7af27fffa0/comments
+      - https://news.yahoo.co.jp/articles/40be303cbd0f92606b7ca8314f007fe435ce79d7/comments
+      - https://news.yahoo.co.jp/articles/9edfd0b3cffe498bb1da7528759eeca88debb4f7/comments

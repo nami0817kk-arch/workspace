@@ -1,0 +1,120 @@
+date: 2026年9月25日
+slot: japan_1
+format: quote
+voice_min: 0.5
+people: [松木玖生, 久保建英, 堂安律, 佐野航大]
+theme:
+  id: matsuki_debut
+  league: england
+  league_name: 日本代表
+  kind: match
+  topic: 日本代表
+  title: '松木玖生がデビュー戦で決めたあと、久保建英が口にした一言'
+  question: 久保は何と言ったのか
+short_title: 久保「持ってる側の人間」
+thumbnail:
+  photo: assets/images/20260925_matsuki_face/01.jpg
+  crests: [日本]
+  line1: 松木玖生のデビュー弾に
+  line2: 久保建英「●●側の人間」
+sections:
+  - id: what
+    heading: 11分の左足
+    tier: 報道
+    telop: 初出場で初ゴール。史上40人目
+    narrator: キャスター
+    say:
+      - 日本がウルグアイに3対1で勝ちました。その先制点が、11分の松木玖生でした。
+      - 中村敬斗が右へ大きく蹴り出したボールを、松木が胸で止め、カットインして左足。ゴール左隅に決めました。
+      - 代表初出場で初ゴールは、**史上40人目**です。
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?459641-459641-fl
+      - https://web.gekisaka.jp/news/japan/detail/?459637-459637-fl
+  - id: uruguay
+    heading: 抑えられなかった側
+    tier: 報道
+    telop: ウルグアイ紙「めまいがするような速さ」
+    narrator: キャスター
+    say:
+      - 対面だった左サイドバックのサナブリアについて、ウルグアイ紙「オバシオン」はこう書きました。
+      - voice: オバシオン紙の記者
+        text: このサイドでの容赦ないプレッシャーにもっとも苦しめられた選手だった。右サイドから切り込んだ松木を抑えきれず、見事なゴールを許してしまった
+    sources:
+      - https://news.yahoo.co.jp/articles/012c8e2aa399908cfccb483b4832574ef847745e
+  - id: matsuki
+    heading: 本人の言葉
+    tier: 報道
+    telop: 「サウサンプトンで毎日練習していること」
+    narrator: キャスター
+    say:
+      - voice: 松木玖生
+        text: カットインしたときにシュートのイメージがあった。サウサンプトンで毎日練習していることが試合に結びついて良かった
+      - voice: 松木玖生
+        text: 初出場の中で先輩たちがみんな「お前ならできる」と言ってくれていた。ゴールという形で恩返しできて良かった
+      - voice: 松木玖生
+        text: インパクトは残せたと思うけど、それ以外のところはまだまだだ
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?459648-459648-fl
+  - id: kubo
+    main: true
+    heading: 久保が言ったこと
+    tier: 報道
+    telop: 「持ってる側の人間」
+    narrator: キャスター
+    say:
+      - text: '松木玖生の代表デビュー弾について、久保建英が試合後にこう言いました。'
+        short_only: true
+      - 後半から入った久保建英は、松木についてこう言いました。
+      - voice: 久保建英
+        text: 持ってる側の人間だなと思いました。中村敬斗、小川航基の系統かなと
+      - voice: 久保建英
+        text: 守備もハードワークできて、一発持っていて、身体も強い。イングランドでもまれてすごく良い選手になっている
+      - voice: 久保建英
+        text: 僕も何度か一緒にFC東京でトレーニングをしたけど、競争も激しくなるなと思いました
+      - 同じ右サイドで組んだ堂安律は、伊東純也と比べてこう言いました。
+      - voice: 堂安律
+        text: 特徴が今までやってきた選手とは違う。純也くんだと1対1を好むけど、玖生はもう少しコンビネーションが欲しい選手なので
+      - 高校時代に対戦した佐野航大は。
+      - voice: 佐野航大
+        text: 玖生はあそこのコースがすごく上手いのは高校時代から知っていたので、持った瞬間に決めるとなんとなく感じていた
+    sources:
+      - https://web.gekisaka.jp/news/japan/detail/?459652-459652-fl
+      - https://web.gekisaka.jp/news/japan/detail/?459656-459656-fl
+      - https://web.gekisaka.jp/news/japan/detail/?459657-459657-fl
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「久保より上」ではなく「堂安が追い込まれた」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 松木玖生すげぇ。ナイスシュート！　W杯でも見たかったよ
+      - voice: ネット民
+        text: 絶対自分で決めるって意思が伝わるのが良い
+      - voice: ネット民
+        text: 本田圭佑を彷彿させる勝負強さを感じる
+      - voice: ネット民
+        text: 松木はゴラッソだったなぁ。あの手のミドルシュートを入れる日本人が増えてきているのが感慨深い
+      - voice: ネット民
+        text: 序列という訳ではなく、層の厚みが増したと考えるべきだろうね
+      - voice: ネット民
+        text: 松木のライバルは堂安ですね。久保は全然プレースタイルが違う
+      - voice: ネット民
+        text: 今回の松木の活躍で完全に追い込まれたのは堂安。同じプレースタイルでフィジカルも運動量も松木のほうが上
+      - voice: ネット民
+        text: 松木はまだ初代表だからちゃんとした評価はしないが、見た感じだとプレースピードが遅い
+      - voice: ネット民
+        text: 得点シーンは素晴らしかったけど、連携面に久保との差は感じた。ただ、やっぱり久保は唯一無二
+      - voice: ネット民
+        text: 松木の適性ポジションは結局どこなんだろ。もう現代のフィリップ・コクーだろこいつ
+      - voice: ネット民
+        text: 松木にはメガクラブ行きまで頑張って欲しい
+      - voice: ネット民
+        text: 生意気な塩貝と礼儀正しい松木。実に対照的な2人が初得点
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/bf0f8b757c6c9af15693ec43a5cd9e594922a50f/comments
+      - https://news.yahoo.co.jp/articles/4170331904628412c02e3674ffad98092428e69a/comments
+      - https://hayabusa9.5ch.net/test/read.cgi/mnewsplus/1790254626/
+      - https://hayabusa9.5ch.net/test/read.cgi/mnewsplus/1790248108/
+      - https://news.yahoo.co.jp/articles/a56af6e17234220befe954edd1cf748a5e54c42d/comments
