@@ -1211,7 +1211,9 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
             f'{jp_date(updated)}時点 {yen(row["price"])}、'
             f'記録した中での最安値は {yen(row["low"])}'
             f'（{jp_date(row.get("low_date") or "")}）。'
-            f'{row["days"]}日分の記録では{state}です。')
+            + ('記録を始めたばかりで、まだ値動きを比べられません。'
+               if int(row.get("days") or 0) < 2
+               else f'{row["days"]}日分の記録では{state}です。'))
 
     rows_html = [("現在の価格", yen(row["price"])),
                  ("記録した中での最安値", f'{yen(row["low"])}（{esc(row.get("low_date") or "-")}）'),
