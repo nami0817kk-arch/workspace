@@ -1,0 +1,93 @@
+date: 2026年9月26日
+slot: other_2
+format: news
+voice_min: 0.45
+people: [ジャンニ・インファンティーノ]
+theme:
+  id: fifa_reform
+  league: england
+  league_name: FIFA
+  kind: other
+  topic: FIFA
+  title: 'インファンティーノ会長に、欧州4大リーグが突きつけたもの'
+  question: 何を求めたのか
+short_title: 欧州4大リーグ、FIFA会長に3つの要求
+thumbnail:
+  photo: assets/images/20260926_infantino_c/01.jpg
+  line1: インファンティーノ会長に
+  line2: 欧州4大リーグが●●を要求
+sections:
+  - id: what
+    heading: 4つのリーグが連名で
+    tier: 報道
+    telop: プレミア・ブンデス・ラ・リーガ・セリエAの共同声明
+    narrator: キャスター
+    say:
+      - プレミア、ブンデスリーガ、ラ・リーガ、セリエA。欧州の4大リーグが連名で、国際サッカー連盟のインファンティーノ会長に向けた声明を出しました。
+      - 背景にあるのは2つ。ワールドカップの事業を子会社にまとめて、民間に売ろうとした計画。
+      - そしてワールドカップで、退場したアメリカのバログンの出場停止が、トランプ大統領が会長に電話したあとで猶予された件です。
+      - voice: 4大リーグの声明
+        text: 連盟の会長は搾取的な考えから守るどころか、それを積極的に推し進めてきた
+      - voice: 4大リーグの声明
+        text: またしても、サッカーは連盟の史上最大級の権力の乱用を被った
+    sources:
+      - https://www.skysports.com/football/news/13591689/fifa-gianni-infantino-exploitative-ideas-criticised-as-premier-league-bundesliga-laliga-and-serie-a-unite-to-call-for-reform
+      - https://www.theguardian.com/football/2026/sep/25/gianni-infantino-fifa-pressure-reform-premier-league-bundesliga-la-liga-serie-a
+  - id: demands
+    main: true
+    heading: 3つの要求
+    tier: 報道
+    telop: 決める場に関係者を入れる、根拠を公表する、商売と規制を分ける
+    narrator: キャスター
+    card:
+      type: points
+      title: 4大リーグの3つの要求
+      items:
+        - 協会・リーグ・クラブ・選手が入る、常設の意思決定機関
+        - 大きな決定は根拠を示し、理由を公表する
+        - 稼ぐ部門と、取り締まる部門を分ける
+    say:
+      - text: 'プレミアなど欧州の4大リーグが、会長選を前に、国際サッカー連盟のインファンティーノ会長に改革を求める声明を出しました。'
+        short_only: true
+      - 求めたのは3つ。
+      - 1つめ、協会・リーグ・クラブ・選手の代表が入る、常設の意思決定の場を連盟の中に作ること。
+      - 2つめ、大きな決定は根拠を示して、理由を公表すること。
+      - 3つめ、大会でお金を稼ぐ部門と、ルールを決めて取り締まる部門を分けること。
+      - 会長選は2027年3月。いま名乗り出ているのは、インファンティーノ会長だけです。
+      - voice: 4大リーグの声明
+        text: 今こそ、誰が連盟を率いるかだけでなく、連盟をどう率いるべきかを決める時だ
+    sources:
+      - https://www.skysports.com/football/news/13591689/fifa-gianni-infantino-exploitative-ideas-criticised-as-premier-league-bundesliga-laliga-and-serie-a-unite-to-call-for-reform
+      - https://www.theguardian.com/football/2026/sep/25/gianni-infantino-fifa-pressure-reform-premier-league-bundesliga-la-liga-serie-a
+      - https://www.sport.es/es/noticias/futbol/laliga-premier-bundesliga-serie-a-contra-fifa-134667217
+      - https://www.independent.co.uk/bulletin/sport/premier-league-infantino-fifa-reform-b3056311.html
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「フットボールを皆に返せ」と「それでも再選が現実」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: インファンティーノになってサッカー界は悪い方向にしか進んでいない気がします。さっさとお引き取り願いましょう
+      - voice: ネット民
+        text: そもそも代表ってクラブの善意で選手を「貸してもらってる」っていう前提を忘れちゃいけんよな
+      - voice: ネット民
+        text: 仮に再選されてもスタジアムに現れたらブーイングされる会長なんて嫌
+      - voice: ネット民
+        text: 詐欺師に牛耳られた腐敗組織。フットボールを皆に返せ
+      - voice: ネット民
+        text: UEFAが中心の新しいサッカー団体が出来たら面白い
+      - voice: ネット民
+        text: 仮に続投となった場合、本当にW杯にヨーロッパ勢は出なくなると思う
+      - voice: ネット民
+        text: 残念ながら小さい協会への分配金を増やす政策なので、資金的に厳しい協会の支持で再選が現実
+      - voice: ネット民
+        text: 再選したら、どこかのタイミングでまた例の計画を動かそうとしそう。絶対諦めてなさそうだもん
+      - voice: ネット民
+        text: 利益追求し過ぎてやりたい放題してたら、ファンも離れて行く。サッカーを私物化しすぎ
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/481e5eb1c07b1c854c43c326ecc38fd1f41535c3/comments
+      - https://news.yahoo.co.jp/articles/d7d608e1ae76ef2466caa0bdfc7a119840dab487/comments
+      - https://news.yahoo.co.jp/articles/2c5716552f30074a5645773a8a14c196fef724f2/comments
+      - https://news.yahoo.co.jp/articles/2f3f72ad30706bcbc7ca7d1717eb8add68c9739b/comments
