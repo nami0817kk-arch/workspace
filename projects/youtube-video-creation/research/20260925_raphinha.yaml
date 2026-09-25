@@ -2,7 +2,7 @@ date: 2026年9月25日
 slot: other_1
 format: news
 voice_min: 0.3
-people: [ラフィーニャ, ネイマール, ロドリ, カルロ・アンチェロッティ]
+people: [ラフィーニャ, カルロ・アンチェロッティ]
 theme:
   id: raphinha_ten
   league: spain
@@ -37,24 +37,13 @@ sections:
       - 9月24日、ブラジルサッカー連盟が、オーストラリア戦とインド戦の背番号を発表しました。
       - "**10番は、ラフィーニャ**。ネイマールが着けてきた番号です。"
       - 11番はエステヴァン、9番はエンドリッキ、7番はヴィニシウス。
+      - text: 'アンチェロッティ監督は前日の会見で、10番を託す理由をこう話していました。'
+        image: assets/images/20260925_pair_ancelotti_raphinha/01.jpg
+      - voice: アンチェロッティ
+        text: ラフィーニャは本来のものではないポジションで驚異的なことをやっているが、今はそこも彼のポジションになったようだ
     sources:
       - https://www.cnnbrasil.com.br/esportes/futebol/selecao-brasileira/quem-e-o-novo-camisa-10-da-selecao-brasileira-confira-a-numeracao-completa/
       - https://www.lance.com.br/selecao-brasileira/nem-vini-jr-nem-estevao-saiba-que-e-o-novo-camisa-10-da-selecao.html
-  - id: neymar
-    heading: 脱いだ人の言葉
-    tier: 報道
-    telop: ネイマールは7月28日に代表を退くと言っていた
-    narrator: キャスター
-    say:
-      - ネイマールは、ワールドカップのベスト16で敗れたあと、代表を退くことを口にしていました。
-      - 7月28日、サントスでの試合のあと、はっきり言っています。
-      - voice: ネイマールJr
-        text: 代表での私の時間はもう過ぎた。歴史を作った。とても幸せだった。血を、人生を捧げた
-      - voice: ネイマールJr
-        text: いつも黄色のシャツのために戦ってきた。でも、もう望んでいないと思う
-      - 代表で**130試合80得点**の10番でした。
-    sources:
-      - https://exame.com/esporte/neymar-confirma-aposentadoria-da-selecao-brasileira-apos-copa-do-mundo-de-2026/
   - id: match
     main: true
     heading: 10番の初戦
@@ -74,17 +63,15 @@ sections:
     say:
       - text: 'ラフィーニャが新しい番号で初めて試合に出た日のことです。'
         short_only: true
-      - 翌日、10番を着けた最初の試合がありました。オーストラリア戦、タウンズビル。結果は**1対1**です。
+      - text: '翌日、10番を着けた最初の試合がありました。オーストラリア戦、タウンズビル。結果は**1対1**です。'
+        image: assets/images/20260925_raphinha2/01.jpg
       - ラフィーニャはトップ下でフル出場。前半17分にポストをかすめ、37分はブロックされ、後半17分には最大の決定機を外しました。
       - 後半23分に直接フリーキックで失点。90分を過ぎて、ラフィーニャの左コーナーキックをハイアンが頭で合わせ、同点で終わりました。
       - "**10番の初戦は、0点、1アシスト。**ブラジルのコラムニストは、こう書きました。"
       - voice: アリアッチ
         text: 欧州で今季いちばんの選手ラフィーニャでさえ、ブラジルの凡庸さの網に落ちた。ほぼ何も生まなかった
-      - text: 'アンチェロッティ監督は前日、ラフィーニャをこう評していました。'
+      - text: '試合後、アンチェロッティ監督はこう言っています。'
         image: assets/images/20260925_pair_ancelotti_raphinha/01.jpg
-      - voice: アンチェロッティ
-        text: ラフィーニャは本来のものではないポジションで驚異的なことをやっているが、今はそこも彼のポジションになったようだ
-      - 試合後は、こう言っています。
       - voice: アンチェロッティ
         text: 引き分けだから敗北の味ではない。勝てたと思うし、チャンスはあった
       - voice: アンチェロッティ
