@@ -9,5 +9,8 @@
 User-agent: *
 Allow: /
 
-# 広告の認定販売者一覧。AdMob のクローラーがここを読む。
-Allow: /app-ads.txt
+# app-ads.txt を読みにくる Google のクローラー。AdMob のヘルプが、
+# この2行をそのまま置くよう指示している(空の Disallow = 何も禁じない)。
+# https://support.google.com/admob/answer/9776740
+User-agent: Google-adstxt
+Disallow:

@@ -377,6 +377,11 @@ void main() {
           reason: '全許可になっていない(隠すものは無い)');
       expect(body, isNot(contains('Disallow: /')),
           reason: 'サイト全体を拒否している');
+
+      // AdMob のヘルプが指示している、app-ads.txt 専用クローラーへの許可。
+      // これが無いと「app-ads.txt が見つかりません」と判定されうる。
+      expect(body, contains('User-agent: Google-adstxt'),
+          reason: 'app-ads.txt のクローラーへの記述が無い');
     });
 
     test('サポート窓口に個人を特定する情報が出ていない', () {
