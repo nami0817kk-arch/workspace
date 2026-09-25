@@ -1828,6 +1828,13 @@ class MatchEngine {
     int fatigue = 0,
     void Function(Detail detail)? aimed,
     void Function(AttributeKey key, int step)? toPoints,
+    /// 復帰直後の再発しやすさ（`RehabPlan.relapseFactor`）。
+    ///
+    /// **練習中の負傷はここを読んでいなかった。** 試合まわりの判定
+    /// （`injuryBaseChanceFor`）だけが戻し方を見ていて、
+    /// 「再発しやすい／しにくい」と書いてある選択が、怪我の数を
+    /// 1つも動かしていなかった（48キャリアずつで 1.08 / 1.06 / 1.16）。
+    double relapse = 1.0,
     required bool played,
   }) {
     final costFactor = player.traits.conditionCostFactor;
@@ -2025,7 +2032,8 @@ class MatchEngine {
                 effort.injury *
                 companion.injury *
                 staff.injuryFactor *
-                habits.injuryFactor,
+                habits.injuryFactor *
+                relapse,
             fatigue: fatigue,
             strain: development.strain,
           );

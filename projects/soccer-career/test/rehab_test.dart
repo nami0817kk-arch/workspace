@@ -21,6 +21,7 @@ import 'package:soccer_career/models/career.dart';
 import 'package:soccer_career/models/entourage.dart';
 import 'package:soccer_career/models/injury.dart';
 import 'package:soccer_career/models/player.dart';
+import 'package:soccer_career/models/training.dart';
 import 'package:soccer_career/state/career_controller.dart';
 
 class _Repo implements SaveRepository {
@@ -208,6 +209,61 @@ void main() {
       c.state!.toJson()..remove('declineYearsLost'),
     );
     expect(legacy.declineYearsLost, 0);
+  });
+
+  test('復帰直後の窓は、怪我の重さで広がる', () {
+    expect(
+      Formulas.rehabWatchFor(InjurySeverity.light),
+      Formulas.rehabWatchMatches,
+    );
+    expect(
+      Formulas.rehabWatchFor(InjurySeverity.moderate),
+      greaterThan(Formulas.rehabWatchFor(InjurySeverity.light)),
+    );
+    expect(
+      Formulas.rehabWatchFor(InjurySeverity.severe),
+      greaterThan(Formulas.rehabWatchFor(InjurySeverity.moderate)),
+    );
+  });
+
+  test('再発しやすさは、練習中の負傷にも届いている', () {
+    // **試合まわりの判定だけが戻し方を見ていた。** 練習の負傷は
+    // `applyWeek` の中で別に振られていて、そこには倍率が渡っていなかった
+    // ——「再発しやすい」と書いてある選択が、片方の扉にしか効かない。
+    final player = Player(
+      name: 'P',
+      age: 24,
+      position: Position.cm,
+      attributes: Attributes(
+        pace: 70,
+        shooting: 70,
+        passing: 70,
+        dribbling: 70,
+        defending: 70,
+        physical: 70,
+        goalkeeping: 30,
+      ),
+      potential: 90,
+    );
+    int injuriesWith(double relapse) {
+      var count = 0;
+      for (var i = 0; i < 4000; i++) {
+        final week = MatchEngine(random: Random(i)).applyWeek(
+          player,
+          menu: TrainingMenu.tactical,
+          relapse: relapse,
+          played: true,
+        );
+        if (week.injury != null) count++;
+      }
+      return count;
+    }
+
+    final safe = injuriesWith(RehabPlan.cautious.relapseFactor);
+    final normal = injuriesWith(1.0);
+    final reckless = injuriesWith(RehabPlan.rush.relapseFactor);
+    expect(safe, lessThan(normal), reason: '慎重が練習の負傷を減らしていない');
+    expect(reckless, greaterThan(normal), reason: '強行が練習の負傷を増やしていない');
   });
 
   test('抱えている重傷は保存を往復しても残り、無い保存データは false', () async {

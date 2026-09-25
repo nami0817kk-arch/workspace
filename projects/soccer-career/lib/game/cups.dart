@@ -76,7 +76,17 @@ class Cups {
     final league = World.buildLeague(state.club.countryId, tier);
     final pool = league.where((c) => c.id != state.club.id).toList();
     if (pool.isEmpty) return state.club;
-    return pool[_random.nextInt(pool.length)];
+    // **勝ち残っているのは強いクラブ。** 部を上げるだけでは足りない。
+    // 部だけ見ていた頃は、決勝の相手が1部から**無作為**に引かれていて、
+    // 中位のクラブでも決勝が五分だった。`drawContinental` と同じように、
+    // ラウンドが進むほど名簿の上から引く（`buildLeague` は強い順）。
+    final depth = switch (round) {
+      CupRound.round32 || CupRound.round16 => pool.length,
+      CupRound.quarter => max(2, pool.length * 2 ~/ 3),
+      CupRound.semi => max(2, pool.length ~/ 2),
+      _ => max(1, pool.length ~/ 3),
+    };
+    return pool[_random.nextInt(depth)];
   }
 
   /// 大陸カップの相手。同じ連盟の、別の国のクラブ。
@@ -122,6 +132,7 @@ class Cups {
         groupMatch: run.groupPlayed + 1,
       );
     }
+    final twoLegged = run.round.twoLeggedIn(run.kind);
     return CupTie(
       kind: run.kind,
       round: run.round,
@@ -129,7 +140,13 @@ class Cups {
       opponentStrength: opponent.strength,
       // 2戦合計の第1戦はアウェイから（現実の組み方に寄せる）。
       // 決勝は中立地なので、ホームアドバンテージは付けない。
-      home: run.round.neutral ? false : !run.round.twoLegged,
+      // **国内カップは一発勝負なので、どちらで戦うかは抽選で決まる。**
+      // 決め打ちで自宅にすると、カップが「必ずホームの5試合」になる。
+      home: run.round.neutral
+          ? false
+          : twoLegged
+          ? false
+          : _random.nextBool(),
     );
   }
 
@@ -155,7 +172,7 @@ class Cups {
     }
 
     // --- 2戦合計 ---
-    if (tie.round.twoLegged && tie.leg == 1) {
+    if (tie.twoLegged && tie.leg == 1) {
       return CupTie(
         kind: tie.kind,
         round: tie.round,

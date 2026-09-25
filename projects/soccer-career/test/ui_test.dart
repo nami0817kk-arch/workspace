@@ -1263,17 +1263,34 @@ void main() {
 
   testWidgets('今シーズンの成績に、出た試合と出なかった試合が出る', (tester) async {
     // 自分が出る試合はそのぶんクラブが強いのに、それが見える場所が無かった。
+    //
+    // **このテストは長いあいだ何も見ていなかった。** カードは記録タブに
+    // あるのに開かないまま探していて、しかも「出なかった試合がまだ無い種
+    // もある」と `return` していたので、その種では**素通りして緑になる**。
+    // 実際その種は出なかった試合が 0 で、毎回 return していた。
+    // 開く・出る側も出ない側も必ず見る、の2つを直した。
     final controller = await newCareer();
     for (var i = 0; i < 20; i++) {
       await controller.simulateMatch();
     }
     await pumpHub(tester, controller, height: 2400);
+    await openTab(tester, '記録');
+    expect(find.textContaining('今シーズンの成績'), findsOneWidget);
+
     final impact = Impact.of(controller.state!.leagueResults);
-    if (!impact.comparable) return; // 出なかった試合がまだ無い種もある。
-    expect(find.textContaining('出た試合 ${impact.with_.label}'), findsOneWidget);
-    expect(
-      find.textContaining('出なかった試合 ${impact.without.label}'),
-      findsOneWidget,
-    );
+    if (impact.comparable) {
+      expect(
+        find.textContaining('出た試合 ${impact.with_.label}'),
+        findsOneWidget,
+      );
+      expect(
+        find.textContaining('出なかった試合 ${impact.without.label}'),
+        findsOneWidget,
+      );
+    } else {
+      // 比べるだけの材料が無いなら、**出さない**のが正しい。
+      expect(find.textContaining('出なかった試合'), findsNothing);
+    }
   });
+
 }

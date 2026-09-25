@@ -245,11 +245,25 @@ void main() {
     });
 
     test('決勝だけは1試合（中立地）', () {
-      expect(CupRound.finalRound.twoLegged, isFalse);
+      expect(CupRound.finalRound.twoLeggedIn(CupKind.continental), isFalse);
       expect(CupRound.finalRound.neutral, isTrue);
-      expect(CupRound.round16.twoLegged, isTrue);
-      expect(CupRound.quarter.twoLegged, isTrue);
-      expect(CupRound.semi.twoLegged, isTrue);
+      expect(CupRound.round16.twoLeggedIn(CupKind.continental), isTrue);
+      expect(CupRound.quarter.twoLeggedIn(CupKind.continental), isTrue);
+      expect(CupRound.semi.twoLeggedIn(CupKind.continental), isTrue);
+    });
+
+    test('国内カップは、どのラウンドも一発勝負', () {
+      // ここを 2戦合計にすると決勝まで8試合が要る。日程は
+      // `Cups.domesticMatches` = 5 しか取っていないので、勝ち続けた
+      // シーズンは準決勝で日程が尽き、季末に結果が振り直されていた。
+      for (final round in CupRound.domesticPath) {
+        expect(
+          round.twoLeggedIn(CupKind.domestic),
+          isFalse,
+          reason: '$round が2戦合計だと、国内カップが決勝まで届かない',
+        );
+      }
+      expect(CupRound.domesticPath.length, Cups.domesticMatches);
     });
   });
 

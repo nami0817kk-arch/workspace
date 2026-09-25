@@ -1377,12 +1377,14 @@ class CareerController extends ChangeNotifier {
       final next = state.injury!.tick();
       if (next.healed) {
         // 重傷が身体に残すぶんは、戻し方で変わる。
+        final severity = state.injury!.severity;
         state.player = player;
         _settleSevere(state, state.injury!);
         player = state.player;
         state.injury = null;
         recovered = true;
-        state.rehabWatch = Formulas.rehabWatchMatches;
+        // 重い怪我ほど、戻ってからの窓も長い。
+        state.rehabWatch = Formulas.rehabWatchFor(severity);
         player = player.copyWith(condition: state.rehab.conditionOnReturn);
       } else {
         state.injury = next;
@@ -1451,6 +1453,8 @@ class CareerController extends ChangeNotifier {
         fatigue: state.fatigue.value,
         aimed: (detail) => state.development = state.development.aiming(detail),
         toPoints: state.autoSpend ? null : _awardTo(state),
+        // 戻ったばかりの身体は、練習でも壊れやすい。
+        relapse: state.rehabWatch > 0 ? state.rehab.relapseFactor : 1.0,
         played: result.appearance != Appearance.benched,
       );
       player = player.copyWith(
