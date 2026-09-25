@@ -17,5 +17,5 @@ SITE_URL = os.environ.get("KABU_SITE_URL", "https://kabu.dailyquarry.com").rstri
 # 新しいドメインを Search Console に登録したら、ここを差し替えるか、
 # DNS(TXT) で確認する（DNS のほうがコードを触らずに済む）。
 SEARCH_CONSOLE_TOKEN = os.environ.get(
-    "KABU_SEARCH_CONSOLE_TOKEN", "0hcqlTHZBjIT-I9RKazTzGUVa2pZKmFREjTWbpvXRlk"
+    "KABU_SEARCH_CONSOLE_TOKEN", "JLPv6DMxv7h91q8Hzvo-YfdQx6mz-_zZ-MhHaNzPs4c"
 )
