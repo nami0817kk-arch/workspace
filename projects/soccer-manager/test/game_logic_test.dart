@@ -29,6 +29,7 @@ import 'package:soccer_manager/logic/rotation_engine.dart';
 import 'package:soccer_manager/logic/super_cup_engine.dart';
 import 'package:soccer_manager/logic/scout_report_engine.dart';
 import 'package:soccer_manager/logic/scouting_engine.dart';
+import 'package:soccer_manager/logic/youth_departure_engine.dart';
 import 'package:soccer_manager/logic/season_projection_engine.dart';
 import 'package:soccer_manager/logic/sponsor_engine.dart';
 import 'package:soccer_manager/logic/tactics_ai.dart';
@@ -6023,6 +6024,10 @@ void main() {
       prospect.setAttributeValue(k, 50);
     }
     prospect.potential = 99;
+    // 19歳を過ぎた有望株は出場機会を求めてユースを去る。ここで見たいのは
+    // 「置いている間に伸びるか」なので、去らない年齢に固定しておく
+    // (固定せずに20節回して、途中で居なくなり CI が落ちた)。
+    prospect.age = YouthDepartureEngine.restlessAge - 1;
     final overallBefore = prospect.overall;
 
     for (int i = 0; i < 20; i++) {
@@ -6032,8 +6037,11 @@ void main() {
       }
     }
 
-    expect(gameState.save!.youthProspects.first.overall,
-        greaterThan(overallBefore));
+    final stillThere = gameState.save!.youthProspects
+        .where((p) => p.id == prospect.id)
+        .toList();
+    expect(stillThere, isNotEmpty, reason: '去らないはずの年齢なのに居なくなっている');
+    expect(stillThere.first.overall, greaterThan(overallBefore));
   });
 
   test(
