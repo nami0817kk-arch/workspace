@@ -1,0 +1,97 @@
+date: 2026年9月26日
+slot: world_1
+format: quote
+voice_min: 0.55
+people: [ジネディーヌ・ジダン, キリアン・ムバッペ]
+theme:
+  id: zidane_debut
+  league: france
+  league_name: フランス代表
+  kind: match
+  topic: フランス代表
+  title: 'ジダンのフランス代表初陣は1-0。先制したムバッペに起きたこと'
+  question: ムバッペに何が起きたのか
+short_title: ジダン初陣、ムバッペ先制のあと
+thumbnail:
+  photo: assets/images/20260926_pair_zidane_mbappe/01.jpg
+  crests: [フランス]
+  line1: ジダン初陣、ムバッペ先制
+  line2: その直後に起きた●●
+sections:
+  - id: what
+    heading: 初陣は1-0
+    tier: 報道
+    telop: トルコに1-0。新監督の初戦勝利は1994年以来
+    narrator: キャスター
+    say:
+      - ジダン監督のフランス代表での初陣は、アウェーのトルコ戦。1対0で勝ちました。
+      - 国歌にはトルコの観客からブーイング。ジダンは国歌の始まりに遅れ、途中から加わりました。
+      - voice: ジネディーヌ・ジダン
+        text: 式典の進行が予定より早かった。ちょっとエンジンのかかりが遅れたね。最初からいたかったよ
+      - voice: ジネディーヌ・ジダン
+        text: 感慨深い。初陣は成功だ。ピッチも雰囲気も難しかったが、やるべき試合はできたと思う
+      - 新しい監督が初戦に勝ったのは、1994年以来です。
+    sources:
+      - https://www.lefigaro.fr/sports/football/ligue-des-nations/ligue-des-nations-sans-briller-les-bleus-de-zinedine-zidane-s-imposent-en-turquie-mais-perdent-kylian-mbappe-20260925
+      - https://rmcsport.bfmtv.com/football/ligue-des-nations/turquie-france-un-petit-retard-a-l-allumage-zidane-explique-pourquoi-il-a-rate-le-debut-de-la-marseillaise_AP-202609250819.html
+      - https://www.sudouest.fr/sport/football/zinedine-zidane/turquie-france-les-reactions-de-zidane-kounde-et-dembele-apres-le-succes-des-bleus-30788566.php
+  - id: mbappe
+    main: true
+    heading: 決めた直後に
+    tier: 報道
+    telop: シュートの動作で左膝を痛め、59分に交代
+    narrator: キャスター
+    say:
+      - text: 'ジダン監督のフランス代表初陣は、トルコに1対0。決めたのはムバッペでしたが、その直後です。'
+        short_only: true
+      - 54分、オリーズのパスを受けたムバッペが右足で決めました。代表67点目です。
+      - ところが、そのシュートの動作で左膝を痛めました。ゴールを喜ばずに顔をしかめ、59分に交代。
+      - 連盟の発表は腱の損傷。マドリードに戻って治療します。ジダンは、こう話しています。
+      - voice: ジネディーヌ・ジダン
+        text: 残念ながら状態は良くない。帰すことになると思う。リスクは冒さない
+      - voice: ジネディーヌ・ジダン
+        text: シュートの際に膝を伸ばしすぎた。続けられる見込みは明るくない
+      - それでも初陣は勝ち。シェルキは、この勝利をジダンに捧げました。
+      - voice: ラヤン・シェルキ
+        text: 純粋に喜びだ。この勝利は彼のためのものだ
+    sources:
+      - https://www.lefigaro.fr/sports/football/ligue-des-nations/turquie-france-ca-ne-va-pas-bien-zinedine-zidane-s-exprime-sur-l-etat-d-un-kylian-mbappe-appele-a-rentrer-a-madrid-20260925
+      - https://rmcsport.bfmtv.com/football/ligue-des-nations/turquie-france-ca-ne-va-pas-bien-zidane-donne-de-mauvaises-nouvelles-concernant-mbappe-sorti-blesse-apres-son-but_AV-202609250810.html
+      - https://rmcsport.bfmtv.com/football/ligue-des-nations/turquie-france-nous-memes-on-etait-assez-surpris-cherki-content-du-jeu-des-bleus-malgre-l-etat-du-terrain_AV-202609250820.html
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「初陣勝ててよかった」と「リーグ再開のころには治ってる」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: ジダン初陣勝ててよかった
+      - voice: ネット民
+        text: ジダン政権初ゴール！で、怪我。シーズン始まったばかりなのに辛いですね。軽傷であれ
+      - voice: ネット民
+        text: なんであんなに簡単にゴールを決めることができるんだろう。ほんと凄いな
+      - voice: ネット民
+        text: 奇しくもヴィニとエンバペの共存問題は、片方が離脱すれば解決しそうな気がするわ
+      - voice: ネット民
+        text: こういうのがキッカケでマドリーの控えフォワードが日の目を浴びる絶好のチャンス
+      - voice: ネット民
+        text: はいはいレアルに戻ってリーグ戦が再開したらピンピンして普通にプレーするよくあるパターンですね？
+      - voice: ネット民
+        text: 不思議とタイミングよくマドリーの試合が再開する頃に復帰できそう
+      - voice: ネット民
+        text: 選手たちがボール回しをふざけ気味にやっていたらジダンが一喝して、スーパースター軍団の表情が一変した。そういう指揮官
+      - voice: ネット民
+        text: まさに「憧れるのをやめましょう」な監督。サイン色紙持って挨拶に行きたい
+      - voice: ネット民
+        text: 今夜のムバッペは空っぽ。左でプレーするのは気に入らないらしい
+      - voice: ネット民
+        text: レ・ブルーにジ・ジダンが来たからには、全部ぶっ壊すぞ…えーと…
+      - voice: ネット民
+        text: なんてことだ、勝っても否定と批判に浸るこのフランス人気質
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/f4e4f90bc014a6ba81986cd2bcff8332214f69d7/comments
+      - https://news.yahoo.co.jp/articles/f0700fd421339fe78a4676d1947a8c78c69004a2/comments
+      - https://news.yahoo.co.jp/articles/b9738002ba941c49c27b028bc67849d007da0bb4/comments
+      - https://search.yahoo.co.jp/realtime/search?p=ジダン
+      - https://www.lefigaro.fr/sports/football/ligue-des-nations/les-notes-des-bleus-face-a-la-turquie-kylian-mbappe-agacant-puis-tranchant-ousmane-dembele-trop-neutre-20260925

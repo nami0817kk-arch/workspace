@@ -1,0 +1,98 @@
+date: 2026年9月26日
+slot: world_2
+format: news
+voice_min: 0.45
+people: [ロベルト・マンチーニ, ロメル・ルカク, ジャンルイジ・ドンナルンマ]
+theme:
+  id: italy_belgium
+  league: italy
+  league_name: イタリア代表
+  kind: match
+  topic: イタリア代表
+  title: 'マンチーニのイタリア、ベルギーに0-2。試合後にルカクがした仕草'
+  question: ルカクは何をしたのか
+short_title: イタリア0-2、ルカクの仕草
+thumbnail:
+  photo: assets/images/20260926_pair_lukaku_donnarumma/01.jpg
+  crests: [イタリア]
+  line1: ルカクがドンナルンマに
+  line2: 試合後に見せた●●
+sections:
+  - id: what
+    heading: 復帰戦は0-2
+    tier: 報道
+    telop: ローマでベルギーに0-2。前半も終了時もブーイング
+    narrator: キャスター
+    card:
+      type: table
+      title: イタリア 0-2 ベルギー（9月25日・ローマ）
+      columns: ['', '']
+      rows:
+        - [20分, ゴッツ]
+        - [69分, ルカクバキオ]
+    say:
+      - マンチーニ監督が戻ってきたイタリア代表。3大会続けてワールドカップを逃したあとの最初の試合です。
+      - ホームのローマで、ベルギーに0対2で負けました。
+      - 前半が終わったときも、試合が終わったときも、スタンドからはブーイング。マンチーニは、こう言いました。
+      - voice: ロベルト・マンチーニ
+        text: 負ければ誰も喜ばない。ブーイングは当然だ
+      - voice: ロベルト・マンチーニ
+        text: 期待を下回ったのは前半だけで、後半はベルギーの2点目のカウンターまでとても良かった
+      - 3大会続けてワールドカップを逃したことについては。
+      - voice: ロベルト・マンチーニ
+        text: 少しは重くのしかかっているが、手放さなければならない
+      - voice: ロベルト・マンチーニ
+        text: エベレストの頂上に着いたときのほうが素晴らしい。結末はもっと素晴らしいものになる
+    sources:
+      - https://www.gazzetta.it/Calcio/Nazionale/25-09-2026/italia-belgio-live-risultato-e-gol-in-diretta-nations-league.shtml
+      - https://www.ansa.it/sito/notizie/sport/calcio/2026/09/25/mancini-fischi-ci-stanno-ma-nel-secondo-tempo-meglio-noi_7936ea15-4403-4d12-98cf-a859b3b80998.html
+  - id: lukaku
+    main: true
+    heading: 試合のあとで
+    tier: 報道
+    telop: 指で「0-2」、そして口に指。ドンナルンマが詰め寄った
+    narrator: キャスター
+    say:
+      - text: 'マンチーニ監督が戻ったイタリアは、ベルギーに0対2で負けました。騒ぎは、試合が終わってから起きています。'
+        short_only: true
+      - 試合が終わった直後。ベルギーのルカクが、ドンナルンマに向けて指で「0対2」を作り、口に指を当てました。
+      - 怒ったドンナルンマがセンターサークルまで詰め寄りました。
+      - ドンナルンマとルカクの2人に警告。イタリアのマルディーニにも警告が出ました。
+      - ベルギーのファン・ボメル監督は、そのドンナルンマについて、こう話しています。
+      - voice: マルク・ファン・ボメル
+        text: ジジは本当にいいやつだ。私はユニフォームを集めていて、彼が自分のをくれた
+    sources:
+      - https://www.gazzetta.it/Calcio/Nazionale/25-09-2026/italia-belgio-donnarumma-lukaku.shtml
+      - https://www.tuttomercatoweb.com/serie-a/lukaku-provoca-donnarumma-italia-belgio-finisce-quasi-rissa-ricostruzione-2277465
+      - https://www.tuttomercatoweb.com/serie-a/van-bommel-de-bruyne-migliore-donnarumma-dato-maglietta-2277469
+      - https://www.tuttomercatoweb.com/serie-a/italia-conferenza-stampa-roberto-mancini-2277437
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「サンドバッグ状態」と「今のイタリアなら日本は」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 完敗でしたな。ビルドアップもろくにできない。中盤スッカスカ、サンドバッグ状態。よく2点ですんだよねって出来
+      - voice: ネット民
+        text: イタリア弱くなったな。流石に3大会もワールドカップ逃している訳だから理由があるはず
+      - voice: ネット民
+        text: 完敗ですね。相手にブーイングしても勝てませんよ。自国の鼓舞に声を出すべきでしたね
+      - voice: ネット民
+        text: ドンナルンマって主将のような選手じゃないよね？　メンタルが強いわけでもないしプレーもムラあり過ぎるし…
+      - voice: ネット民
+        text: 今のイタリアなら日本はもう全然余裕なのか、それともそれでも勝てないのか。こんな日が来るとは思ってなかった
+      - voice: ネット民
+        text: 何も出来なかった。いくら初戦とはいえ酷い。こんなお粗末ぶりでは、2030年も無理だろうな
+      - voice: ネット民
+        text: 長いトンネルに入ってから、なかなか抜け出せないようだなぁ
+      - voice: ネット民
+        text: 黙ってレテギ呼ぶべき。エスポージトとケーンが相性悪く見えた
+      - voice: ネット民
+        text: ジダンの頭突き事件ぶりにイタリアのサッカー観たけど、めちゃくちゃ弱くなってね？
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/ea3d2c2b6fcc4057d4641fb983cd5a538bd51525/comments
+      - https://news.yahoo.co.jp/articles/2069ccb946f86f851c0d51eee5a28416e7f572b5/comments
+      - https://news.yahoo.co.jp/articles/3ed6366a0996b297421eaaa29b9cd74597158fc4/comments
+      - https://search.yahoo.co.jp/realtime/search?p=イタリア+ベルギー
