@@ -55,6 +55,15 @@ jobs:
       # 無ければ作る。既にあれば重複エラーが返るだけで、後続には影響しない。
       # production_branch を master に固定するのが要点。デプロイ時の --branch と
       # ずれると本番ではなくプレビュー用の別URLに出てしまう。
+      # 法務ページ。**アプリから開く先なので、本番と同じ所に無いと404になる。**
+      # `flutter build web` は build/web を作り直すので、ビルドの後に足す。
+      # （web/ に置いてある app-ads.txt はビルドがそのまま運ぶ。）
+      - name: Add legal pages
+        working-directory: projects/soccer-career
+        run: |
+          mkdir -p build/web/legal
+          cp legal/*.html build/web/legal/
+
       - name: Ensure Cloudflare Pages project exists
         run: |
           curl -s -o /dev/null -w "%{http_code}\n" -X POST \

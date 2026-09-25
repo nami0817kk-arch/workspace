@@ -44,17 +44,23 @@ import '../trait_row.dart';
 import '../training_sheet.dart';
 import '../transfer_code.dart';
 import '../../dev/admin.dart';
+import '../../monetize/monetization.dart';
 import 'admin_screen.dart';
 import 'guide_screen.dart';
 import 'hall_screen.dart';
 import 'match_screen.dart';
 import 'season_end_screen.dart';
+import 'support_screen.dart';
 
 /// キャリアの拠点。次の試合・練習・成績・順位表・これまでの記録をここから見る。
 class HubScreen extends StatelessWidget {
-  const HubScreen({super.key, required this.controller});
+  const HubScreen({super.key, required this.controller, this.monetization});
 
   final CareerController controller;
+
+  /// 広告と課金。**渡されなければ何も出さない**（テストと、まだ
+  /// 初期化が終わっていない起動直後）。
+  final Monetization? monetization;
 
   Future<void> _playNext(BuildContext context) async {
     // カップ戦の週なら、そちらへ。1週1試合の刻みは変えない。
@@ -100,6 +106,22 @@ class HubScreen extends StatelessWidget {
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => SeasonEndScreen(controller: controller),
+      ),
+    );
+    // **広告はシーズンの画面を閉じたあと。** 画面の中に挟むと、契約を
+    // 選んでいる途中で割り込むことになる。ここなら1シーズンの区切りそのもの。
+    // 出すかどうかは `Monetization` が決める（買った人・序盤・連発は出ない）。
+    await monetization?.showSeasonAd(
+      seasonsPlayed: controller.state?.history.length ?? 0,
+    );
+  }
+
+  void _openSupport(BuildContext context) {
+    final money = monetization;
+    if (money == null) return;
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (_) => SupportScreen(monetization: money),
       ),
     );
   }
@@ -166,6 +188,8 @@ class HubScreen extends StatelessWidget {
                     );
                   case 'delete':
                     _confirmDelete(context);
+                  case 'support':
+                    _openSupport(context);
                   // 参照そのものを kAdmin で囲む。メニュー項目だけを囲んでも、
                   // ここが AdminScreen を名指ししているぶん画面が残ってしまう
                   // （公開ビルドに管理画面の文字列が入っていた）。
@@ -182,6 +206,9 @@ class HubScreen extends StatelessWidget {
                 const PopupMenuItem(value: 'import', child: Text('セーブを読み込む')),
                 const PopupMenuItem(value: 'hall', child: Text('これまでの選手')),
                 const PopupMenuItem(value: 'delete', child: Text('キャリアを削除')),
+                // 広告も課金もない環境（ブラウザ版・テスト）では出さない。
+                if (monetization != null)
+                  const PopupMenuItem(value: 'support', child: Text('広告・応援')),
                 // 管理画面は公開ビルドに入らない（kAdmin は const false）。
                 if (kAdmin)
                   const PopupMenuItem(value: 'admin', child: Text('管理')),
