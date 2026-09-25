@@ -81,10 +81,28 @@ class Person {
   /// 詳細1つで測ると、尖っていない選手でも「視野98・総合力75」のように
   /// 構造的に差が開くので、**全員に一芸が付いてしまう**（実際に付いた）。
   /// 総合力はカテゴリの重み付き平均なので、同じ土俵で比べる。
+  /// **ただし GK は分野では測れない。**
+  ///
+  /// GK の総合力はほぼ GK 能力そのもの（重みがそこに寄っている）なので、
+  /// 分野は総合力から離れられない。実測（16キャリアずつ・289シーズン）で
+  /// **GK の最高分野は 83.1 止まりで、`standoutFloor` の 88 に構造的に
+  /// 届かない**——一芸が付いたのは 8%（CB 75% / WG 74%）。
+  /// 一芸は代表の線を `standoutCallUpRelief` ぶん下げるので、
+  /// **GK だけ線が 78.1（CB 74.1）になり、代表キャップが半分だった**
+  /// （GK 21.7 / CB 41.8）。
+  ///
+  /// GK にとっての「突き抜けた1つ」はセービングやハンドリングのほう。
+  /// 実測で最高の詳細は 90.2 で、分野と違って 88 を越えられる。
+  /// **守る選手の入口をその通貨で測ったのと同じこと**（`callUpProductionFor`）。
   static int standoutOf(Player player) {
-    final best = AttributeKey.values
-        .map((k) => player.attributes[k])
-        .reduce((a, b) => a > b ? a : b);
+    final key = AttributeKey.values.reduce(
+      (a, b) => player.attributes[a] >= player.attributes[b] ? a : b,
+    );
+    final best = player.position.family == ScenarioFamily.goalkeeper
+        ? key.details
+              .map(player.attributes.detail)
+              .reduce((a, b) => a > b ? a : b)
+        : player.attributes[key];
     if (best < Formulas.standoutFloor) return 0;
     return (best - player.overall - Formulas.standoutGap).clamp(0, 40);
   }
@@ -136,8 +154,7 @@ class Person {
     // 今は「広まるほど広まりにくく、有名なほど早く忘れられる」形にして、
     // 今の露出に見合う高さへ寄っていく（露出 20 で 60 前後に落ち着く）。
     final now = state.reputation.fame;
-    final gain =
-        gained * state.player.traits.fameFactor * (100 - now) / 100;
+    final gain = gained * state.player.traits.fameFactor * (100 - now) / 100;
     final fade = now * Formulas.fameFade;
     return (now + gain - fade).round().clamp(0, 100);
   }

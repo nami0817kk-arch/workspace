@@ -235,6 +235,7 @@ class Career {
   int continentalSeasons = 0;
   int cupTitles = 0;
   int leagueTitles = 0;
+  int continentalTitles = 0;
   int worldCups = 0;
   int breakthroughs = 0;
   int greatWeeks = 0;
@@ -573,6 +574,9 @@ Future<Career> runCareer(
     if (!done.squadStatus.canPlay) career.outOfSquadSeasons++;
     if (done.continentalStage.participated) career.continentalSeasons++;
     if (done.cupStage == CupStage.winner) career.cupTitles++;
+    if (done.continentalStage == ContinentalStage.winner) {
+      career.continentalTitles++;
+    }
     if (done.leaguePosition == 1 && done.club.tier == 1) career.leagueTitles++;
     if (done.worldCupStage.participated) career.worldCups++;
     if (done.player.atPotential) career.reachedPotential = true;
@@ -847,6 +851,21 @@ void report(String title, List<Career> careers) {
   final titleless =
       careers.where((c) => c.leagueTitles == 0).length * 100 / careers.length;
   final cup = careers.fold(0, (s, c) => s + c.cupTitles);
+  final continental = careers.fold(0, (s, c) => s + c.continentalTitles);
+  // **「無冠」がリーグ優勝だけを見ていた。** カップを5つ獲った選手が
+  // 無冠に数えられていて、カップの数を動かしても この行は動かなかった
+  // ——動かない数字を見て「効いていない」と読む罠になる。
+  final trophyless =
+      careers
+          .where(
+            (c) =>
+                c.leagueTitles == 0 &&
+                c.cupTitles == 0 &&
+                c.continentalTitles == 0,
+          )
+          .length *
+      100 /
+      careers.length;
   final wc =
       careers.where((c) => c.worldCups > 0).length * 100 / careers.length;
 
@@ -891,8 +910,11 @@ void report(String title, List<Career> careers) {
   );
   print(_row('リーグ優勝', titles, digits: 1));
   print(
-    '  リーグ優勝 $league回  国内カップ優勝 $cup回  '
-    '無冠のキャリア ${titleless.toStringAsFixed(0)}%',
+    '  リーグ優勝 $league回  国内カップ優勝 $cup回  大陸カップ優勝 $continental回',
+  );
+  print(
+    '  リーグ無冠 ${titleless.toStringAsFixed(0)}%  '
+    '無冠（リーグもカップも） ${trophyless.toStringAsFixed(0)}%',
   );
 }
 

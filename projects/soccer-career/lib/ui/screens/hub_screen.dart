@@ -584,7 +584,7 @@ class _NextMatchCard extends StatelessWidget {
             if (state.pendingCup != null &&
                 state.pendingCup!.round != CupRound.group)
               Text(
-                state.pendingCup!.round.twoLegged
+                state.pendingCup!.twoLegged
                     ? '2戦合計で決まる。'
                     : '負ければそこで終わり。引き分けならPK戦。',
                 style: theme.textTheme.bodySmall?.copyWith(

@@ -245,11 +245,25 @@ void main() {
     });
 
     test('決勝だけは1試合（中立地）', () {
-      expect(CupRound.finalRound.twoLegged, isFalse);
+      expect(CupRound.finalRound.twoLeggedIn(CupKind.continental), isFalse);
       expect(CupRound.finalRound.neutral, isTrue);
-      expect(CupRound.round16.twoLegged, isTrue);
-      expect(CupRound.quarter.twoLegged, isTrue);
-      expect(CupRound.semi.twoLegged, isTrue);
+      expect(CupRound.round16.twoLeggedIn(CupKind.continental), isTrue);
+      expect(CupRound.quarter.twoLeggedIn(CupKind.continental), isTrue);
+      expect(CupRound.semi.twoLeggedIn(CupKind.continental), isTrue);
+    });
+
+    test('国内カップは、どのラウンドも一発勝負', () {
+      // ここを 2戦合計にすると決勝まで8試合が要る。日程は
+      // `Cups.domesticMatches` = 5 しか取っていないので、勝ち続けた
+      // シーズンは準決勝で日程が尽き、季末に結果が振り直されていた。
+      for (final round in CupRound.domesticPath) {
+        expect(
+          round.twoLeggedIn(CupKind.domestic),
+          isFalse,
+          reason: '$round が2戦合計だと、国内カップが決勝まで届かない',
+        );
+      }
+      expect(CupRound.domesticPath.length, Cups.domesticMatches);
     });
   });
 
@@ -462,6 +476,27 @@ void main() {
       expect(c.state!.domesticCup!.round, CupRound.round32);
       // 前季が無いので、大陸カップには出られない。
       expect(c.state!.continentalCup, isNull);
+    });
+
+    test('1シーズン戦い切れば、国内カップは必ず決着する', () async {
+      // **これが見張れていなかったせいで、戦った結果が捨てられていた。**
+      // 16強・準々・準決勝が2戦合計だった頃は決勝まで8試合が要り、
+      // 日程（5試合）が先に尽きる。季末に `running` のまま残った大会は
+      // `runDomesticCup` が結果を振り直すので、**5連勝したシーズンが
+      // 「1回戦敗退」になっていた**（実測113シーズン中18回）。
+      for (var seed = 1; seed <= 3; seed++) {
+        final c = await started(seed: seed);
+        while (!c.state!.seasonFinished) {
+          await c.simulateMatch();
+        }
+        final run = c.state!.domesticCup!;
+        expect(
+          run.running,
+          isFalse,
+          reason: '種$seed: 季末に ${run.label} のまま残っている'
+              '（戦った結果が振り直される）',
+        );
+      }
     });
 
     test('到達ラウンドは、戦った結果から決まる', () async {

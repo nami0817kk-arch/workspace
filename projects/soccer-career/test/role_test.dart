@@ -179,7 +179,7 @@ void main() {
     test('監督が使っている役割には就ける。もう一度選べば外れる', () async {
       final controller = await started();
       final offered = controller.roleChoices;
-      if (offered.isEmpty) return;
+      expect(offered, isNotEmpty, reason: '監督が使っている役割が1つも無い');
       await controller.setRole(offered.first);
       expect(controller.state!.player.role, offered.first);
       await controller.setRole(null);
@@ -189,7 +189,7 @@ void main() {
     test('役割は、保存して読み直しても残る', () async {
       final controller = await started();
       final offered = controller.roleChoices;
-      if (offered.isEmpty) return;
+      expect(offered, isNotEmpty, reason: '監督が使っている役割が1つも無い');
       await controller.setRole(offered.first);
       final state = controller.state!;
       expect(

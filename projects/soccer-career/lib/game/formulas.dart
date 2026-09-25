@@ -1,4 +1,5 @@
 import '../models/attributes.dart';
+import '../models/injury.dart';
 
 /// ゲームの数値定義を1か所に集めたもの。
 ///
@@ -1175,7 +1176,23 @@ class Formulas {
   static const double captainRatingBonus = 0.1;
 
   /// 復帰してから、再発の危険が高い試合数。
+  ///
+  /// **重い怪我ほど、戻ってからが長く危ない。**
+  ///
+  /// 一律3試合だった頃、`RehabPlan.relapseFactor` は 38節のうち
+  /// 3試合、**8%の判定にしか掛からなかった**。実測（48キャリアずつ）で
+  /// 慎重（0.45）の怪我は 1.08、標準（1.0）は 1.06 と**逆に多い**——
+  /// 「再発しにくい」と書いてある側に、再発しにくい仕組みが届いていなかった。
+  ///
+  /// 残り試合数ではなく重さで決める。`Injury.matchesOut` は毎節減るので、
+  /// 復帰した時点では必ず 1 になっていて、元の長さはどこにも残っていない。
   static const int rehabWatchMatches = 3;
+
+  static int rehabWatchFor(InjurySeverity severity) => switch (severity) {
+    InjurySeverity.light => rehabWatchMatches,
+    InjurySeverity.moderate => 6,
+    InjurySeverity.severe => 10,
+  };
 
   /// 代表に招集される最低総合力。
   ///

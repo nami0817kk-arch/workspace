@@ -179,7 +179,9 @@ void main() {
         (o) => o.key == hard,
         orElse: () => green.current.options.first,
       );
-      if (option.key != hard) return;
+      // **`return` で逃げない。** 逃がすと、選択肢の並びが変わった日に
+      // このテストは黙って素通りして緑になる。
+      expect(option.key, hard, reason: '苦手の手が選択肢に出ていない');
       expect(used.chanceFor(option), greaterThan(green.chanceFor(option)));
     });
   });
