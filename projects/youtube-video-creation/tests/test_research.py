@@ -1749,3 +1749,47 @@ def test_サムネの名前は姓だけでも通る():
     assert _advise_thumbnail_name(notes) == []
     notes.thumbnail = {"line1": "決勝点のあと", "line2": "真っ先にキスをした●●"}
     assert _advise_thumbnail_name(notes)
+
+
+def test_行に差し込む縦長の写真は止める(tmp_path):
+    """2026-09-25 指摘「久保とかの写真が映るとき、左がグレー」。語る人の写真は2枚並べにする。"""
+    from PIL import Image
+    from src.research import _check_line_images_wide, Notes
+    tall = tmp_path / "tall.jpg"; Image.new("RGB", (300, 400), "gray").save(tall)
+    wide = tmp_path / "wide.jpg"; Image.new("RGB", (1920, 1080), "gray").save(wide)
+    raw = _raw()
+    raw["sections"] = [
+        _section(id="what", main=True, say=[
+            "さいしょのぎょうです。",
+            {"text": "くぼがかたります。", "image": str(tall)},
+        ]),
+        _section(id="next", heading="つぎ", say=[{"text": "べつのひと。", "image": str(wide)}]),
+    ]
+    problems = _check_line_images_wide(build_notes(raw))
+    assert len(problems) == 1 and "tall.jpg" in problems[0] and "pairphoto" in problems[0]
+
+
+def test_主役の名前が出ない節は知らせる():
+    """2026-09-25 に4本で「この節は不要」と言われた。機械で取れるのは名前の有無だけ。"""
+    from src.research import _advise_offtopic_section
+    raw = _raw()
+    raw["people"] = ["松木玖生"]
+    raw["sections"] = [
+        _section(id="what", main=True, say=["松木玖生が決めました。"]),
+        _section(id="side", heading="抑えられなかった側", say=["相手の左サイドバックはこう書かれました。"]),
+        _section(id="voices", heading="ネットの反応", tier="未確認", say=["すごい。"]),
+    ]
+    hints = _advise_offtopic_section(build_notes(raw))
+    assert len(hints) == 1 and "抑えられなかった側" in hints[0]
+
+
+def test_本人が語る節は主役の節とみなす():
+    """松木の「本人の言葉」（voice が松木）で鳴っていた。声の主も名前に数える。"""
+    from src.research import _advise_offtopic_section
+    raw = _raw()
+    raw["people"] = ["松木玖生"]
+    raw["sections"] = [
+        _section(id="what", main=True, say=["松木玖生が決めました。"]),
+        _section(id="own", heading="本人の言葉", say=[{"voice": "松木玖生", "text": "ほっとしています"}]),
+    ]
+    assert _advise_offtopic_section(build_notes(raw)) == []

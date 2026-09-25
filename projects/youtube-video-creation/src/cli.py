@@ -3270,7 +3270,7 @@ def _cmd_upload(args, config) -> int:
             return 1
         report_upload_failure(err)
         return 1
-    posted.record(build_dir, video_id)
+    posted.record(build_dir, video_id, publish_at=publish_at)
     print(f"\n投稿しました: https://youtu.be/{video_id} ({draft.privacy})")
 
     # **本編は再生リストへ入れる**（2026-09-17 ユーザー指示

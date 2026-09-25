@@ -104,10 +104,18 @@ def folder_of(video_id: str, root: Path | str = "output",
 
 
 def record(build_dir: Path | str, video_id: str, path: Path = LEDGER,
-           now: datetime | None = None) -> dict:
+           now: datetime | None = None, publish_at: str = "") -> dict:
+    """控えに1行足す。`publish_at` は予約公開の時刻（UTC の ISO）。
+
+    **予約した時刻を控えていなかった**ので、次の枠を提案するときに
+    「18時40分までは設定済みだよ」と言われるまで埋まっている時刻が分からなかった
+    （2026-09-25）。`tools/slots.py` がここを読んで、その日の埋まった枠を出す。
+    """
     now = now or datetime.now(timezone.utc)
     row = {"build": key(build_dir), "video_id": video_id,
            "at": now.astimezone(timezone.utc).isoformat(timespec="seconds")}
+    if publish_at:
+        row["publish_at"] = publish_at
     rows = _load(path)
     rows.append(row)
     path.parent.mkdir(parents=True, exist_ok=True)

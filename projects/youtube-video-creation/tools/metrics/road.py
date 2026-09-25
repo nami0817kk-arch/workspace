@@ -39,7 +39,12 @@ out = dict(channel=dict(title=ch["snippet"]["title"],
                         subs=int(ch["statistics"].get("subscriberCount",0)),
                         views=int(ch["statistics"].get("viewCount",0)),
                         videos=int(ch["statistics"].get("videoCount",0)),
-                        started=ch["snippet"]["publishedAt"]),
+                        # **数え始めは「動画を出し始めた日」**（2026-09-25）。チャンネルの作成日
+                        # （1月）から数えて「51人まで50日」と書き、「50日とは？」と聞かれた。
+                        # 正しくは 9/5 から20日。公開済みの動画のいちばん古い公開日を使う
+                        started=min((x["at"] for x in vids if x["privacy"] == "public"),
+                                    default=ch["snippet"]["publishedAt"]),
+                        channel_created=ch["snippet"]["publishedAt"]),
            videos=vids)
 io.open(sys.argv[1], "w", encoding="utf-8").write(json.dumps(out, ensure_ascii=False, indent=1))
 print("動画", len(vids), "本 / 登録", out["channel"]["subs"])

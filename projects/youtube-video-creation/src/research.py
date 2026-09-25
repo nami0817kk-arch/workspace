@@ -484,6 +484,7 @@ def verify(notes: Notes, plan: Plan) -> list[str]:
     problems += _check_voices_last(notes)
     problems += _check_quote_timing(notes)
     problems += _check_thumbnail_resolution(notes)
+    problems += _check_line_images_wide(notes)
     if notes.format == "voices" and not _has_crowd(notes):
         problems.append(
             "型『voices』なのに、反応の行（voice: ネット民 など）がありません。"
@@ -1079,6 +1080,72 @@ def _advise_wide_photo(notes: Notes) -> list[str]:
             f"{hint}（2026-09-25 指摘「ちゃんと横に広い写真を使う」）"]
 
 
+def _check_line_images_wide(notes: Notes) -> list[str]:
+    """**行に差し込む写真も横に広いものにする**（2026-09-25 指摘「久保とかの写真が映るとき、左がグレー」）。
+
+    語る人の写真を行の `image:` に置いたら、縦の写真がそのまま右に立って、
+    サムネで直したのと同じ「左に面」が本文に出た。**同じ日に同じ指摘を2回受けた。**
+    語る人（左）＋主役（右）の2枚並べ（`tools/pairphoto.py`）にする。縦長なら止める。
+    """
+    problems: list[str] = []
+    seen: set[str] = set()
+    for section in notes.sections:
+        for image in (section.line_images or []):
+            path = str(image or "").strip()
+            if not path or path in seen:
+                continue
+            seen.add(path)
+            file = Path(path)
+            if not file.exists():
+                continue
+            try:
+                from PIL import Image
+
+                with Image.open(file) as im:
+                    w, h = im.size
+            except Exception:
+                continue
+            if w < h * 0.95:
+                problems.append(
+                    f"節『{section.heading}』の行に差し込む写真 {file.name} が縦長（{w}×{h}）です。"
+                    "右に立てると**左に面が残ります**。`tools/pairphoto.py` で「語る人（左）＋主役（右）」の"
+                    "2枚並べを作って、その1枚を置いてください（2026-09-25 指摘「左がグレー」）")
+    return problems
+
+
+def _advise_offtopic_section(notes: Notes) -> list[str]:
+    """**主役の名前が一度も出ない節は、題に答えていない疑いがある**（2026-09-25）。
+
+    同じ日に4本で、題に答えない節を落とすよう言われた。松木「抑えられなかった側」
+    （相手紙の評価）、佐野「33年前の兄弟」（歴史のおさらい）、シャビ「三世代目の
+    デビュー」（脇役の紹介）、ラフィーニャ「ロドリの言葉」（別の話題）。
+    機械で取れるのは「主役の名前が節に出てこない」ことだけなので、知らせるだけにする。
+    落とす判断は「この節を落としても題の答えは変わらないか」で、人がする。
+    """
+    people = [str(x).strip() for x in (notes.people or []) if str(x).strip()]
+    if not people:
+        return []
+    lead = people[0]
+    forms = {lead, lead.replace("・", ""), lead.split("・")[0], lead.split("・")[-1]}
+    if len(lead) >= 4 and "・" not in lead:
+        forms.add(lead[:2])          # 「久保建英」→「久保」
+    forms = {f for f in forms if len(f) >= 2}
+    hints: list[str] = []
+    for section in notes.sections:
+        card = section.card or {}
+        if str(card.get("type", "")).lower() == "reactions" or section.heading == "ネットの反応":
+            continue
+        # 本人が語る節は、地の文に名前が無くても主役の節（`voices` に本人がいる）
+        text = "".join(section.say or []) + "".join(str(v) for v in (section.voices or []))
+        if any(f in text for f in forms):
+            continue
+        hints.append(
+            f"節『{section.heading}』に主役（{lead}）の名前が一度も出ません。"
+            "題に答えない節（相手側の評価・歴史のおさらい・脇役の紹介・別の話題）なら落としてください。"
+            "**この節を落としても題の答えが変わらないなら、要らない節です**（2026-09-25 に4本で指摘）")
+    return hints
+
+
 def _check_thumbnail_resolution(notes: Notes) -> list[str]:
     thumb = notes.thumbnail or {}
     photos = [str(x) for x in (thumb.get("photos") or []) if str(x).strip()]
@@ -1570,6 +1637,7 @@ def _advise_voices(notes: Notes) -> list[str]:
                         + _advise_thumbnail_promise(notes)
                         + _advise_thumbnail_name(notes)
                         + _advise_wide_photo(notes)
+                        + _advise_offtopic_section(notes)
                         + _advise_repeats(notes) + _advise_short_repeats(notes)
                         + _advise_title(notes) + _advise_group_thumbnail(notes)
                         + _advise_ear(notes) + _advise_readings(notes))
