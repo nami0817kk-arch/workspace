@@ -54,8 +54,9 @@ CI と Dependabot の増殖）を、この1本で構造的に解消する。
   （平日16:10、run-daily.ps1）が行う。kabutan は GitHub Actions の IP を 405 で
   ブロックするため、CI から取得する形に戻さない。CI は data/ push でビルド・公開、
   17:00 JST に鮮度監視（1営業日の欠測で Issue。休場日は数えない）。
-- 公開サイトは **Cloudflare Pages** 配信（kabu-agari-ranking）。独自ドメインは
-  `kabu.dailyquarry.com`（2026-09-25 取得。サブドメインで他サイトも順次ぶら下げる）。
+- 公開サイトは **Cloudflare Pages** 配信。独自ドメインは `dailyquarry.com` で、
+  サイトごとにサブドメインを足す（kabu / kakaku）。**名義・連絡先・Search Console・
+  AdSense の前提は `docs/public-identity.md` が正**。外向きの文字列を書く前に読む。
   **このリポジトリは 2026-09-08 から public**。実行ログも誰でも読めるので、
   ログや issue に書く内容に注意する。鍵は必ず Secrets（`CLOUDFLARE_API_TOKEN` /
   `CLOUDFLARE_ACCOUNT_ID` ほか）に置き、コードにも data/ にも残さない。
