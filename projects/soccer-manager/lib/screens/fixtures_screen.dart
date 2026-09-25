@@ -41,6 +41,9 @@ class FixturesScreen extends StatelessWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(Tr.pick('日程・順位表', 'Fixtures & table')),
+          // いまは下タブ専用だが、スタメン・スカッドと同じ作り(ドロワーあり)
+          // なので、どこかから開かれた瞬間に戻れなくなる。先に塞いでおく。
+          leading: Navigator.of(context).canPop() ? const BackButton() : null,
           bottom: TabBar(
             isScrollable: otherDivisions.isNotEmpty,
             tabs: [
