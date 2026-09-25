@@ -30,8 +30,8 @@ python build.py       # data/ から静的サイトを生成（通信しない�
   GitHub Actions からは取得できない。**CI から取得する形に戻さない。**
 - CI（`price-tracker-daily.yml`）は push された `data/` を検証し、ビルドして
   Cloudflare Pages へ公開する。あわせて鮮度を監視し、3日以上止まれば Issue を立てる。
-- 公開URL: https://price-tracker-bpe.pages.dev
-  （`price-tracker.pages.dev` は Cloudflare 全体で先に使われており、サブドメインが自動採番された）
+- 公開URL: https://kakaku.dailyquarry.com（2026-09-25 に独自ドメインへ移した。
+  `*.pages.dev` は Cloudflare 側の割り当てで、`price-tracker-bpe` という読めない名前だった）
 - 対象ジャンルは `explore.py` の実測で決めた3つ（パソコン・周辺機器 / TV・オーディオ・カメラ / 家電）。
   価格が動き、型番が安定し、買い手が価格を比較する習慣を持つことを基準にした。
   見直すときは `run-explore.ps1` を使う。
@@ -40,10 +40,16 @@ python build.py       # data/ から静的サイトを生成（通信しない�
   2026-09-23 の名前解決の失敗は、この仕組みで当日中に取り返した。
 - 公開ページは約5,600枚。一覧は100件ごとのページ送り（最安値圏だけで4,000件超）。
 
-## まだ決まっていないこと
+## 公開名義と連絡先
 
-- `config.json` の `owner` と `contact_email` が空。アフィリエイトサイトには
-  運営者情報の表示が要るため、`build.py` が毎回警告する。公開名義はユーザーが決める。
+- 名義は**屋号「つるはし社」だけ**を出す（`config.json` の `owner`）。
+  **個人名・ユーザー名を公開ページに出さない。**
+- 連絡先は `info@dailyquarry.com`（`config.json` の `contact_email`）。
+  Cloudflare の Email Routing（無料）で受けて個人のメールへ転送する。
+  **転送先はリポジトリに書かない**（public なので受け側だけを置く）。
+  kabu-agari-ranking と同じ窓口を共有している（転送規則を1本に保つため）。
+- 公開URL は `https://kakaku.dailyquarry.com`（`config.json` の `base_url`）。
+  canonical・OGP・robots.txt・sitemap が全部そこを見ている。
 
 ## 手を入れるときに気をつけること
 
