@@ -508,9 +508,13 @@ class CareerController extends ChangeNotifier {
       // 「鍛え込む（怪我も増える）」と「休む（怪我が遠のく）」で、実測の
       // 怪我が 21.5 と 22.6 回——倍率（1.2 と 0.8）が逆に出ていた。
       // 伸びの倍率（`_environmentFactor`）だけが効いていて、代償が無い。
-      state.offseason.injuryFactor *
-      // 復帰直後は無理が効かない。強行すればここで返ってくる。
-      (state.rehabWatch > 0 ? state.rehab.relapseFactor : 1.0);
+      state.offseason.injuryFactor;
+
+  /// 復帰直後の再発しやすさ。**式全体に掛ける**（`MatchEngine.injuryChance`）。
+  ///
+  /// 基準の項にだけ掛けていた頃は、確率の半分弱にしか届かなかった。
+  static double injuryRelapseFactorFor(CareerState state) =>
+      state.rehabWatch > 0 ? state.rehab.relapseFactor : 1.0;
 
   /// 今のまま練習した週に怪我をする確率。
   double get injuryChanceNow {
@@ -519,6 +523,7 @@ class CareerController extends ChangeNotifier {
     return MatchEngine.injuryChance(
       state.player,
       baseChance: injuryBaseChanceFor(state),
+      factor: injuryRelapseFactorFor(state),
     );
   }
 
@@ -1039,6 +1044,7 @@ class CareerController extends ChangeNotifier {
       favoured: state.manager?.tactic.favours ?? const [],
       // 累積疲労は終盤の落ち込みに効く。ここまで試合の中では何も起きなかった。
       fatigue: state.fatigue.value,
+      seasonsAtClub: CareerEngine.seasonsAtClub(state),
       appearance: state.suspended
           ? Appearance.suspended
           : state.injured
@@ -1112,6 +1118,7 @@ class CareerController extends ChangeNotifier {
       extraRating: state.captain ? Formulas.captainRatingBonus : 0,
       favoured: state.manager?.tactic.favours ?? const [],
       fatigue: state.fatigue.value,
+      seasonsAtClub: CareerEngine.seasonsAtClub(state),
       cup: tie.kind,
       appearance: blocked ?? _cupSelectionFor(state, tie),
     );
@@ -1497,6 +1504,7 @@ class CareerController extends ChangeNotifier {
           _match.rollInjury(
             player,
             baseChance: injuryBaseChanceFor(state),
+            factor: injuryRelapseFactorFor(state),
             fatigue: state.fatigue.value,
             strain: state.development.strain,
           );

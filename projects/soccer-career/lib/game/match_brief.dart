@@ -11,6 +11,7 @@ library;
 
 import '../models/career.dart';
 import '../models/season.dart';
+import 'career_engine.dart';
 import 'match_engine.dart';
 import '../models/development.dart';
 import 'newsroom.dart';
@@ -108,6 +109,7 @@ class MatchBrief {
         overall: state.player.overall,
         clubStrength: state.club.strength,
         appearance: Appearance.start,
+        seasonsAtClub: CareerEngine.seasonsAtClub(state),
       );
       if (lift >= 1) {
         lines.add(BriefLine(
