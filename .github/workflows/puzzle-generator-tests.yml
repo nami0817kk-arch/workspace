@@ -1,0 +1,24 @@
+name: puzzle-generator tests
+
+on:
+  push:
+    branches: ["**"]
+    paths: ["libs/puzzle-generator/**", ".github/workflows/puzzle-generator-tests.yml"]
+  pull_request:
+    paths: ["libs/puzzle-generator/**", ".github/workflows/puzzle-generator-tests.yml"]
+  workflow_dispatch: {}
+
+# 同じブランチで新しい実行が始まったら、古い方は打ち切る。
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  pytest:
+    uses: ./.github/workflows/python-tests.yml
+    with:
+      workdir: "libs/puzzle-generator"
+      install: "pip install -e .[dev]"

@@ -1,0 +1,7 @@
+# 生成器はモノレポ内の共有ライブラリを直接参照する（別リポジトリ化していない）。
+# モノレポ内参照: pip install -e ../../libs/puzzle-generator
+-e ../../libs/puzzle-generator
+
+# KDP入稿用PDF(ベクター)の組版に使う。システム側の追加ライブラリ(cairo等)が
+# 要らない点を優先して選んだ。
+reportlab==5.0.1
