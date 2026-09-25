@@ -60,12 +60,18 @@ PER_PAGE = 50
 
 def write_listing(out: Path, urls: list, path: str, title: str, lead: str,
                   rows: list, site: dict, base: str, updated: str, empty: str,
-                  stats: dict, show_score: bool = False) -> None:
+                  stats: dict, show_score: bool = False,
+                  linked: set | None = None) -> None:
     """一覧をページ送りで書き出す。
 
     最安値圏は4,000件を超える。1枚に詰めると読めないうえ、100件で打ち切ると
     記録した資産のほとんどを捨てることになる。
+
+    linked には載せた商品コードを控える。どの一覧にも載らない商品は、
+    検索結果にだけ出る行き止まりのページになるので索引に載せない。
     """
+    if linked is not None:
+        linked.update(r["item_code"] for r in rows)
     pages = max(1, -(-len(rows) // PER_PAGE))
     for i in range(pages):
         rel = path if i == 0 else f"{path}{i + 1}/"
@@ -108,36 +114,39 @@ def build(root: Path, out: Path) -> dict:
     low = analyze.lows(rows)
 
     urls = []
+    # 一覧に載せた商品。ここに入らないものは検索結果にだけ出る行き止まり
+    linked = set()
     write_listing(out, urls, "", "いま条件がそろっている商品",
                   "最安値への近さ・ポイント込みの下げ幅・価格の下げ幅・送料・"
                   "値動きの多さを、それぞれ上限を決めて足した順に並べています。"
                   "買うべきかは決めません。どの条件がいくつ満たされたかを出すだけです。",
                   analyze.well_stocked(rows, limit=600), site, base, updated,
                   "条件がそろった商品はまだありません。記録が7日分たまってからになります。",
-                  stats, show_score=True)
+                  stats, show_score=True, linked=linked)
 
     write_listing(out, urls, "drops/", "今日の値下がり",
                   "毎日記録している楽天市場の価格から、前回より安くなった商品を並べています。",
                   dropped, site, base, updated,
-                  "今日の記録では、判定できるほどの値下がりはありませんでした。", stats)
+                  "今日の記録では、判定できるほどの値下がりはありませんでした。", stats, linked=linked)
 
     write_listing(out, urls, "points/", "ポイント込みで安くなった商品",
                   "価格が据え置きでも、ポイント倍率が上がれば実質は安くなります。"
                   "その分を引いた金額で下がったものを並べています。",
                   analyze.effective_drops(rows, site.get("drop_threshold", 0.05)),
                   site, base, updated,
-                  "今日の記録では、ポイントを含めても目立った値下がりはありませんでした。", stats)
+                  "今日の記録では、ポイントを含めても目立った値下がりはありませんでした。", stats,
+                  linked=linked)
 
     write_listing(out, urls, "rises/", "値上がりした商品",
                   "前回の記録より高くなった商品です。買い時ではないことも同じ基準で出しています。",
                   analyze.rises(rows, site.get("drop_threshold", 0.05)),
                   site, base, updated,
-                  "今日の記録では、目立った値上がりはありませんでした。", stats)
+                  "今日の記録では、目立った値上がりはありませんでした。", stats, linked=linked)
 
     write_listing(out, urls, "lows/", "最安値圏の商品",
                   "当サイトが記録している期間の最安値と同じか、それに近い価格の商品です。",
                   low, site, base, updated,
-                  "価格の記録日数がまだ足りません。判定には最低7日分が必要です。", stats)
+                  "価格の記録日数がまだ足りません。判定には最低7日分が必要です。", stats, linked=linked)
 
     latest_day = max((p.name[:10] for p in (data / "snapshots").glob("*.csv.gz")),
                      default=updated)
@@ -145,19 +154,19 @@ def build(root: Path, out: Path) -> dict:
                   "記録している期間の最安値を、この日に塗り替えた商品です。"
                   "近い価格を含む最安値圏とは別に、更新した当日だけを出しています。",
                   analyze.new_lows(rows, latest_day), site, base, updated,
-                  "この日に最安値を更新した商品はありませんでした。", stats)
+                  "この日に最安値を更新した商品はありませんでした。", stats, linked=linked)
 
     write_listing(out, urls, "ending/", "ポイントの期限が近い商品",
                   "ポイント倍率には終わりの日時があります。3日以内に終わるものを、"
                   "終わりが早い順に並べています。待つか今かの判断に使ってください。",
                   analyze.ending_soon(rows, updated), site, base, updated,
-                  "3日以内に終わるポイント倍率の商品はありませんでした。", stats)
+                  "3日以内に終わるポイント倍率の商品はありませんでした。", stats, linked=linked)
 
     write_listing(out, urls, "active/", "よく動く商品",
                   "記録している期間に価格が何度も変わった商品です。"
                   "動かない商品が大半のなかで、追う値打ちがあるのはここに出るものです。",
                   analyze.active(rows), site, base, updated,
-                  "価格が複数回動いた商品はまだありません。", stats)
+                  "価格が複数回動いた商品はまだありません。", stats, linked=linked)
 
     # 日付別アーカイブ。過ぎた日の値下がりを残す。ためた履歴がそのまま増える。
     archive_days = sorted((p.name[:10] for p in (data / "snapshots").glob("*.csv.gz")),
@@ -168,7 +177,7 @@ def build(root: Path, out: Path) -> dict:
         write_listing(out, urls, f"archive/{day}/", f"{day} の値下がり",
                       f"{day} に価格が下がった商品の記録です。",
                       hit, site, base, updated,
-                      "この日は記録できる値下がりがありませんでした。", stats)
+                      "この日は記録できる値下がりがありませんでした。", stats, linked=linked)
         archive_counts.append((day, len(hit)))
         pos = archive_days.index(day)
         newer = archive_days[pos - 1] if pos > 0 else None
@@ -200,7 +209,7 @@ def build(root: Path, out: Path) -> dict:
         write_listing(out, urls, f"genre/{gid}/", f'{g["name"]}の値下がり',
                       f'{g["name"]}の商品を毎日記録し、値下がりの大きい順に並べています。',
                       hit, site, base, updated,
-                      "このジャンルはまだ記録が始まったばかりです。", stats)
+                      "このジャンルはまだ記録が始まったばかりです。", stats, linked=linked)
         listed.append({**g, "count": len(hit)})
 
     write(out / "genre" / "index.html",
@@ -213,6 +222,9 @@ def build(root: Path, out: Path) -> dict:
         by_gid.setdefault(str(r.get("source_genre") or ""), []).append(r)
         by_shop.setdefault(r.get("shop") or "", []).append(r)
 
+    # 題は全商品をまとめて決める。同じ題が並ばないようにするため（page_titles）
+    titles = theme.page_titles(rows)
+
     for row in rows:
         s = theme.slug(row["item_code"])
         kin = [r for r in by_gid.get(str(row.get("source_genre") or ""), [])
@@ -220,14 +232,20 @@ def build(root: Path, out: Path) -> dict:
         seen = {row["item_code"]} | {r["item_code"] for r in kin}
         mates = [r for r in by_shop.get(row.get("shop") or "", [])
                  if r["item_code"] not in seen][:6]
+        in_list = row["item_code"] in linked
         write(out / "item" / s / "index.html",
-              theme.item_page(row, site, updated, kin, mates))
-        urls.append((f"/item/{s}/", row.get("changed_date") or updated))
+              theme.item_page(row, site, updated, kin, mates,
+                              titles.get(row["item_code"], ""), indexable=in_list))
+        # 一覧に載らない商品は noindex なので、サイトマップにも載せない
+        if in_list:
+            urls.append((f"/item/{s}/", row.get("changed_date") or updated))
 
     # 検索用の索引。数百KBあるので、検索ページで必要になったときだけ読ませる。
     write(out / "search-index.json", json.dumps(
-        # 判定は符号1文字で持つ。文字列で持つと索引が数百KB太る
-        [[theme.slug(r["item_code"]), r["name"], r["price"], r["item_code"],
+        # 判定は符号1文字で持つ。文字列で持つと索引が数百KB太る。
+        # 名前は宣伝を落としてから積む。検索窓で「9/25限定」に当たっても仕方ない
+        [[theme.slug(r["item_code"]), theme.clean_name(r["name"]), r["price"],
+          r["item_code"],
           3 if r["at_low"] else (2 if r["near_low"] else (1 if r["dropped"] else 0))]
          for r in rows],
         ensure_ascii=False, separators=(",", ":")))

@@ -21,13 +21,16 @@ CONFIG = {
 
 
 def make_data(tmp: Path, items: dict, series: dict):
-    """series: {item_code: [価格を古い順に]} から履歴を組み立てる。"""
+    """series: {item_code: [価格を古い順に]} から履歴を組み立てる。
+
+    None を挟むとその日は記録しない。途中から追跡し始めた商品を作るのに使う。
+    """
     summary = {}
     days = max(len(v) for v in series.values())
     for i in range(days):
         day = f"2026-07-{i + 1:02d}"
         rows = [{"item_code": c, "price": p[i], "review_count": 0, "review_average": 0.0}
-                for c, p in series.items() if i < len(p)]
+                for c, p in series.items() if i < len(p) and p[i] is not None]
         summary = store.update_summary(summary, rows, day, 90)
     store.save_json(tmp / "data" / "summary.json", summary)
     store.save_json(tmp / "data" / "items.json", items)
@@ -191,3 +194,97 @@ class EmptyDataTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
+
+class ThinItemTest(unittest.TestCase):
+    """記録が1日しかない商品は索引に載せない。
+
+    どの一覧にも載らないまま検索結果にだけ出るページになる（実測270件）。
+    推移も最安値も示せないので、載せても読み手の役に立たない。
+    ページ自体は残す。見守りや外の記事からの行き先になっている。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.TemporaryDirectory()
+        cls.root = Path(cls.tmp.name)
+        make_data(cls.root, {
+            "shop:old": {"name": "記録のある商品", "shop": "店A",
+                         "url": "https://hb.afl.rakuten.co.jp/x/1", "image": "",
+                         "genre_id": "1"},
+            "shop:new": {"name": "今日から記録した商品", "shop": "店B",
+                         "url": "https://hb.afl.rakuten.co.jp/x/2", "image": "",
+                         "genre_id": "1"},
+        }, {
+            "shop:old": [9000] * 9 + [8000],
+            "shop:new": [None] * 9 + [5000],
+        })
+        cls.out = cls.root / "dist"
+        builder.build(cls.root, cls.out)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def page(self, code: str) -> str:
+        return (self.out / "item" / theme.slug(code) / "index.html").read_text(
+            encoding="utf-8")
+
+    def test_1日だけの商品はnoindex(self):
+        self.assertIn('content="noindex,follow"', self.page("shop:new"))
+
+    def test_1日だけの商品はサイトマップに載せない(self):
+        sitemap = (self.out / "sitemap.xml").read_text(encoding="utf-8")
+
+        self.assertNotIn(theme.slug("shop:new"), sitemap)
+
+    def test_ページ自体は残す(self):
+        self.assertTrue((self.out / "item" / theme.slug("shop:new")).exists())
+
+    def test_記録のある商品は索引に載せる(self):
+        sitemap = (self.out / "sitemap.xml").read_text(encoding="utf-8")
+
+        self.assertIn('content="index,follow', self.page("shop:old"))
+        self.assertIn(theme.slug("shop:old"), sitemap)
+
+
+class SearchAppearanceTest(unittest.TestCase):
+    """検索結果に出る文字列。題と説明が他のページと区別が付くこと。"""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.TemporaryDirectory()
+        cls.root = Path(cls.tmp.name)
+        make_data(cls.root, {
+            "shop:a": {"name": "【9/25限定！抽選で最大100%P還元※要エントリー】"
+                               "ロイヤルカナン インドア 4kg",
+                       "shop": "店A", "url": "https://hb.afl.rakuten.co.jp/x/1",
+                       "image": "", "genre_id": "1"},
+        }, {"shop:a": [5000] * 9 + [4000]})
+        cls.out = cls.root / "dist"
+        builder.build(cls.root, cls.out)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def test_題は宣伝ではなく商品名から始まる(self):
+        page = (self.out / "item" / theme.slug("shop:a") / "index.html").read_text(
+            encoding="utf-8")
+        title = re.search(r"<title>([^<]*)</title>", page).group(1)
+
+        self.assertTrue(title.startswith("ロイヤルカナン"), title)
+
+    def test_説明に値段と日付を入れる(self):
+        page = (self.out / "item" / theme.slug("shop:a") / "index.html").read_text(
+            encoding="utf-8")
+        desc = re.search(r'name="description" content="([^"]*)"', page).group(1)
+
+        # 商品名を繰り返すだけでは、検索結果に並んだとき見分けが付かない
+        self.assertIn("4,000円", desc)
+        self.assertIn("月", desc)
+
+    def test_検索の索引にも宣伝を積まない(self):
+        index = json.loads((self.out / "search-index.json").read_text(encoding="utf-8"))
+
+        self.assertTrue(index[0][1].startswith("ロイヤルカナン"), index[0][1])

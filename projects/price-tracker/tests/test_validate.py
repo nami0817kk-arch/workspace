@@ -1005,3 +1005,133 @@ class ConditionScoreTest(unittest.TestCase):
         out = self.analyze.well_stocked(rows)
 
         self.assertEqual([r["item_code"] for r in out], ["high", "low"])
+
+
+class CleanNameTest(unittest.TestCase):
+    """商品名の頭に積まれた宣伝を落とす。
+
+    落とさないと、検索結果に出る28文字が商品名ではなく宣伝で埋まる。
+    実測（12,593件・2026-09-25）で 1,940件が記号か煽りで始まっていて、
+    文言が同一のため別商品なのに同じ題になっていたものが 1,531件あった。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def test_長い断り書きも落とす(self):
+        # 旧実装は【】の中身を30文字までしか見ておらず、これが素通りしていた
+        out = self.theme.clean_name(
+            "【9/25限定！抽選で最大100%P還元※要エントリー｜楽天カード新規入会】"
+            "ロイヤルカナン インドア 4kg")
+
+        self.assertEqual(out, "ロイヤルカナン インドア 4kg")
+
+    def test_煽りの囲みを落とす(self):
+        out = self.theme.clean_name("＼★高評価★累計販売数4,000個突破／犬用キーホルダー")
+
+        self.assertEqual(out, "犬用キーホルダー")
+
+    def test_積み重なった宣伝を全部落とす(self):
+        out = self.theme.clean_name("【送料無料】＼楽天1位獲得／★P5倍★ SDカードリーダー")
+
+        self.assertEqual(out, "SDカードリーダー")
+
+    def test_期間のうたい文句を落とす(self):
+        out = self.theme.clean_name("9/25〜9/27までP5倍 ピアノ用イス 高低自在")
+
+        self.assertEqual(out, "ピアノ用イス 高低自在")
+
+    def test_削りすぎたら元に戻す(self):
+        # 宣伝しか書かれていない名前を空にしてしまうと、何の商品か分からなくなる
+        self.assertEqual(self.theme.clean_name("【送料無料】"), "【送料無料】")
+        self.assertEqual(self.theme.clean_name("★特価★"), "★特価★")
+
+    def test_商品名の途中は触らない(self):
+        # 「送料無料」が名前の中に出てくるのは残す。落としてよいのは先頭だけ
+        out = self.theme.clean_name("プリンター インク 5本セット 送料無料 純正")
+
+        self.assertEqual(out, "プリンター インク 5本セット 送料無料 純正")
+
+    def test_空でも壊れない(self):
+        self.assertEqual(self.theme.clean_name(""), "")
+        self.assertEqual(self.theme.clean_name(None), "")
+
+
+class PageTitleTest(unittest.TestCase):
+    """商品ページの題は重ならないようにする。
+
+    28文字で切ると容量違い・色違いが全部同じ題になり、検索側で区別できない。
+    実測で 1,580件が同じ題だった。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def test_ぶつかった分だけ後ろへ伸ばす(self):
+        rows = [{"item_code": "a", "name": "あ" * 28 + "16GB"},
+                {"item_code": "b", "name": "あ" * 28 + "32GB"},
+                {"item_code": "c", "name": "まったく別の商品"}]
+
+        out = self.theme.page_titles(rows)
+
+        self.assertNotEqual(out["a"], out["b"])
+        self.assertEqual(out["c"], "まったく別の商品")
+
+    def test_ぶつからないものは28文字のまま(self):
+        rows = [{"item_code": "a", "name": "あ" * 60},
+                {"item_code": "b", "name": "い" * 60}]
+
+        out = self.theme.page_titles(rows)
+
+        self.assertEqual(len(out["a"]), 29)  # 28文字 + …
+
+    def test_名前が完全に同じなら諦める(self):
+        # 店だけ違う同一商品。無限に伸ばしても分かれないので止まること
+        rows = [{"item_code": "a", "name": "テレビ壁掛け金具"},
+                {"item_code": "b", "name": "テレビ壁掛け金具"}]
+
+        out = self.theme.page_titles(rows)
+
+        self.assertEqual(len(out), 2)
+
+    def test_宣伝を落としてから題を決める(self):
+        rows = [{"item_code": "a", "name": "【9/25限定】" + "あ" * 30}]
+
+        self.assertFalse(self.theme.page_titles(rows)["a"].startswith("【"))
+
+
+class PagerReachTest(unittest.TestCase):
+    """ページ送りの奥まで届くこと。
+
+    近辺しか出さないと、81ページある一覧の40ページ目へ行くのに20回押す。
+    読み手が着けない場所は、クロールも同じ理由で着かない。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def test_深い一覧には飛び先を出す(self):
+        out = self.theme.pager(1, 81, "lows/", 4023)
+
+        self.assertIn("飛ぶ", out)
+        for n in (6, 41, 81):
+            with self.subTest(page=n):
+                self.assertIn(f'href="lows/{n}/"', out)
+
+    def test_どのページからも3回で着く(self):
+        # 飛び先（5刻み）→ 近辺（±2）→ 目的 の3手で全ページに届くこと
+        pages = 81
+        jumps = {1} | set(range(6, pages + 1, 5))
+        for target in range(1, pages + 1):
+            with self.subTest(page=target):
+                self.assertTrue(any(abs(j - target) <= 2 or j == target
+                                    for j in jumps), target)
+
+    def test_浅い一覧には出さない(self):
+        self.assertNotIn("飛ぶ", self.theme.pager(1, 5, "drops/", 210))
+
+    def test_1ページだけなら何も出さない(self):
+        self.assertEqual(self.theme.pager(1, 1, "drops/", 10), "")

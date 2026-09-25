@@ -3,14 +3,52 @@ import hashlib
 import html
 import json
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from .analyze import MIN_DAYS_FOR_LOW
 from .store import entry as store_entry
 
 SAFE = re.compile(r"[^a-z0-9]+")
-# 先頭の【クーポン】【送料無料】などの補足。商品の識別には要らない
-BRACKETED = re.compile(r"^[【\[][^】\]]{0,30}[】\]]\s*")
+# 先頭に付く宣伝。商品の識別には要らないうえ、検索結果でここだけが見えてしまう。
+# 【】で囲まれた断り書き、＼…／の煽り、記号の連なり、期間限定のうたい文句の4種。
+LEAD_BLOCK = re.compile(r"^\s*(?:[【\[][^】\]]{0,60}[】\]]"
+                        r"|＼[^／\\/]{0,60}[／\\/]|《[^》]{0,60}》)\s*")
+LEAD_MARK = re.compile(r"^[\s★☆◆◇■□●○◎▼▲▽△※・!！?？＼\\／/｜|:：、,，\-ー－_＿~〜+＋*＊]+")
+LEAD_PROMO = re.compile(
+    r"^\s*(?:"
+    r"\d{1,2}/\d{1,2}(?:\s*[〜~ー\-]\s*\d{0,2}/?\d{1,2})?(?:まで|限定)?"
+    r"|期間限定|タイムセール|スーパーSALE|お買い物マラソン|楽天スーパーSALE"
+    r"|\d+点以上で[^\s]{0,12}(?:OFF|オフ|クーポン)"
+    r"|(?:ポイント|P|ポイント最大|最大)\s*\d+(?:\.\d+)?\s*(?:倍|%|％)(?:還元)?"
+    r"|最大\s*\d+(?:\.\d+)?\s*(?:%|％)\s*(?:OFF|オフ|P還元|ポイント還元)"
+    r"|(?:先着)?\d+(?:,\d{3})?円?\s*(?:OFF|オフ)(?:クーポン)?"
+    r"|楽天\d+位(?:獲得)?|レビュー(?:投稿)?で[^\s]{0,12}"
+    r"|送料無料|あす楽|即納|新品未開封|正規品保証"
+    r")\s*[｜|/／・、,，\s]*")
+
+
+def clean_name(name: str) -> str:
+    """商品名の頭に積まれた宣伝文句を落とし、商品そのものの名前を先頭に出す。
+
+    楽天の商品名は先頭に「【9/25限定！抽選で最大100%P還元…】」のような
+    売り文句が付く。実測（12,593件・2026-09-25）では 1,940件が記号か煽りで
+    始まり、うち多数は文言が同一だったため、検索結果に出る28文字が
+    商品名ではなく宣伝で埋まり、別商品なのに同じ題になっていた。
+
+    宣伝は日替わりで書き換わるので、落とさないと題が毎日変わることにもなる。
+    削りすぎて何の商品か分からなくなるのは避けたいので、6文字を割るときは
+    元の名前に戻す。
+    """
+    text = original = str(name or "").strip()
+    for _ in range(8):  # 「【…】＼…／★」のように積まれるので繰り返す
+        before = text
+        text = LEAD_BLOCK.sub("", text)
+        text = LEAD_PROMO.sub("", text)
+        text = LEAD_MARK.sub("", text)
+        if text == before:
+            break
+    text = text.strip()
+    return text if len(text) >= 6 else original
 
 
 def esc(text) -> str:
@@ -38,11 +76,48 @@ def short_name(name: str, limit: int = 46) -> str:
 
     楽天の商品名は中央値130文字あり（実測）、送料・クーポン・対応機種などが
     末尾に連なる。そのまま並べると1件で画面が埋まって選べない。
-    先頭の【】は補足であることが多いので落とし、残りを切り詰める。
+    先頭の宣伝を clean_name で落とし、残りを切り詰める。
     """
-    text = BRACKETED.sub("", str(name or "").strip())
-    text = text or str(name or "")
+    text = clean_name(name)
     return text if len(text) <= limit else text[:limit].rstrip() + "…"
+
+
+def page_titles(rows: list, limit: int = 28, cap: int = 64) -> dict:
+    """商品ページの題を商品コードごとに決める。
+
+    題は検索結果で30文字前後に切られるので既定は28文字だが、それだと
+    「同じ商品の容量違い・色違い」が全部同じ題になる（実測で1,580件）。
+    区別の付く語はたいてい後ろにあるので、ぶつかったものだけ切る位置を
+    後ろへずらす。ずらすのはぶつかった分だけで、大半は28文字のまま。
+    """
+    out, pending, width = {}, list(rows), limit
+    while pending and width <= cap:
+        groups = {}
+        for row in pending:
+            groups.setdefault(short_name(row["name"], width), []).append(row)
+        rest = []
+        for title, members in groups.items():
+            if len(members) == 1 or width + 6 > cap:
+                out.update({r["item_code"]: title for r in members})
+            else:
+                rest.extend(members)
+        pending, width = rest, width + 6
+    return out
+
+
+def next_day(value: str) -> str:
+    """翌日の日付。構造化データの priceValidUntil に使う。"""
+    try:
+        base = datetime.strptime(str(value), "%Y-%m-%d")
+    except (ValueError, TypeError):
+        return str(value or "")
+    return (base + timedelta(days=1)).strftime("%Y-%m-%d")
+
+
+def jp_date(value: str) -> str:
+    """2026-09-25 を 9月25日 にする。読み手に見せるのは月日だけで足りる。"""
+    parts = str(value or "").split("-")
+    return f"{int(parts[1])}月{int(parts[2])}日" if len(parts) == 3 else str(value or "")
 
 
 def yen(value) -> str:
@@ -104,7 +179,9 @@ def _verification(site: dict) -> str:
 
 
 def head(title: str, description: str, canonical: str, site: dict, prefix: str = "",
-         extra: str = "") -> str:
+         extra: str = "", indexable: bool = True) -> str:
+    robots = ("index,follow,max-image-preview:large" if indexable
+              else "noindex,follow")
     return f"""<!doctype html>
 <html lang="ja">
 <head>
@@ -113,7 +190,7 @@ def head(title: str, description: str, canonical: str, site: dict, prefix: str =
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(description)}">
 <link rel="canonical" href="{esc(canonical)}">
-<meta name="robots" content="index,follow,max-image-preview:large">{_verification(site)}
+<meta name="robots" content="{robots}">{_verification(site)}
 <meta property="og:type" content="website">
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(description)}">
@@ -307,7 +384,7 @@ def card(row: dict, prefix: str = "", eager: bool = False, show_score: bool = Fa
 </li>"""
 
 
-SEARCH_JS = """
+SEARCH_JS = r"""
 (function () {
   var input = document.getElementById('q');
   var out = document.getElementById('results');
@@ -487,7 +564,17 @@ def pager(page: int, pages: int, prefix: str, total: int) -> str:
     if page < pages:
         links.append(f'<a rel="next" href="{href(page + 1)}">次へ</a>')
     links.append(f'<span class="of">全{total:,}件</span>')
-    return f'<nav class="pager">{"".join(links)}</nav>'
+    nav = f'<nav class="pager">{"".join(links)}</nav>'
+    # 近辺しか出さないと、81ページある一覧の40ページ目まで20回押すことになる。
+    # 読み手が奥まで行けないのと同じ理由で、クロールも奥まで届かない。
+    # 飛び先は5ページ刻み。近辺が±2なので、この間隔なら取りこぼしが出ない
+    # （10刻みにしたら14〜18ページ目だけ1手多くかかった）。
+    if pages > 10:
+        jumps = "".join(
+            f'<a href="{href(n)}">{n}</a>' for n in range(6, pages + 1, 5)
+            if n != page)
+        nav += f'<nav class="jump"><span>飛ぶ</span>{jumps}</nav>'
+    return nav
 
 
 def item_list_ld(rows: list, site: dict, prefix: str) -> str:
@@ -506,7 +593,7 @@ def item_list_ld(rows: list, site: dict, prefix: str) -> str:
     return f'<script type="application/ld+json">{ld}</script>'
 
 
-WATCH_MINI_JS = """
+WATCH_MINI_JS = r"""
 <script>
 // 同じ理由で DOM を待つ。.watch-mini は一覧の中にある。
 document.addEventListener('DOMContentLoaded', function () {
@@ -526,7 +613,7 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 """
 
-LIST_TOOLS = """
+LIST_TOOLS = r"""
 <div class="tools">
   <label>並び替え <select id="sort">
     <option value="">既定のまま</option>
@@ -633,9 +720,14 @@ def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
                   + f'<a href="{prefix}search/">商品を探す</a></span></li>'))
     total = len(rows) if total is None else total
     count = f'<span class="count">{total:,}件</span>' if rows else ""
+    # ページ送りの2枚目以降も同じ説明だと、検索結果に同じ文が81枚並ぶ。
+    # 何件目を載せた枚かを足して、どれを開けばよいか分かるようにする。
+    desc = lead if page == 1 else (
+        f'{lead}（{total:,}件のうち'
+        f'{(page - 1) * 50 + 1:,}件目から{min(page * 50, total):,}件目）')
     heading = esc(title) + (f"（{page}ページ目）" if page > 1 else "")
     nav = pager(page, pages, page_prefix, total)
-    return (head(f"{short_name(heading, 30)}｜{site['name']}", lead, canonical, site, prefix,
+    return (head(f"{short_name(heading, 30)}｜{site['name']}", desc, canonical, site, prefix,
                  extra=item_list_ld(rows, site, prefix))
             + f'<h1>{heading}{count}</h1><p class="lead">{esc(lead)}</p>'
             + stats_bar(stats or {})
@@ -922,11 +1014,12 @@ def related(rows: list, site: dict) -> str:
 
 # 見守りの保存は端末の中だけ。登録した時の価格も控えて、次に来たときに
 # 「自分が見始めてから下がったか」を出せるようにする。
-WATCH_JS = """
+WATCH_JS = r"""
 <script>
 function ptShort(name, limit) {
-  // 一覧と同じ見え方にする。先頭の【】は補足なので落とす。
-  var t = String(name || '').replace(/^[【\[][^】\]]{0,30}[】\]]\s*/, '') || String(name || '');
+  // 索引に積む時点で宣伝は落としてある（build.py の clean_name）ので、
+  // ここは切り詰めるだけ。同じ規則を二か所に書くと必ずずれる。
+  var t = String(name || '');
   return t.length <= limit ? t : t.slice(0, limit).replace(/\s+$/, '') + '…';
 }
 
@@ -973,7 +1066,7 @@ var PTWatch = (function () {
 </script>
 """
 
-WATCH_BUTTON = """
+WATCH_BUTTON = r"""
 <p class="watch"><button id="watch" type="button" data-code="{code}" data-price="{price}">見守る</button>
 <span class="note">端末に保存します。<a href="{prefix}watch/">見守り中の一覧</a></span></p>
 <p class="target" id="targetbox" hidden>
@@ -1100,15 +1193,25 @@ def watch_page(site: dict, canonical: str, updated: str) -> str:
 
 
 def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
-              shopmates: list | None = None) -> str:
+              shopmates: list | None = None, title_name: str = "",
+              indexable: bool = True) -> str:
     prefix = "../../"
     canonical = f'{site["base_url"].rstrip("/")}/item/{slug(row["item_code"])}/'
     # 検索結果でタイトルは30文字前後、説明は120文字前後で切られる。
     # 商品名をそのまま入れると204文字になり、要点が全部切り落とされる。
-    title = f'{short_name(row["name"], 28)}の価格推移'
-    desc = (f'{short_name(row["name"], 34)} の価格を毎日記録しています。'
-            f'現在 {yen(row["price"])}、記録した中での最安値は {yen(row["low"])}'
-            f'（{row["days"]}日分の記録）。')
+    title = f'{title_name or short_name(row["name"], 28)}の価格推移・最安値'
+    # 説明には値と日付を入れる。商品名を繰り返しても、検索結果に並んだとき
+    # 他のページと見分けが付かない。
+    state = ("いまが記録上の最安値" if row.get("at_low") else
+             "最安値に近い" if row.get("near_low") else
+             "前回より値下がり" if row.get("dropped") else
+             f'最安値より{pct(row["vs_low_pct"])}高い' if row.get("vs_low_pct") else
+             "価格は横ばい")
+    desc = (f'{short_name(row["name"], 26)} の価格推移。'
+            f'{jp_date(updated)}時点 {yen(row["price"])}、'
+            f'記録した中での最安値は {yen(row["low"])}'
+            f'（{jp_date(row.get("low_date") or "")}）。'
+            f'{row["days"]}日分の記録では{state}です。')
 
     rows_html = [("現在の価格", yen(row["price"])),
                  ("記録した中での最安値", f'{yen(row["low"])}（{esc(row.get("low_date") or "-")}）'),
@@ -1126,16 +1229,28 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
     # 商品情報の構造化データ。価格は当サイトの取得値であることを本文で明示している。
     ld = safe_json({
         "@context": "https://schema.org", "@type": "Product",
-        "name": row["name"], "image": row.get("image") or None,
+        "name": clean_name(row["name"]), "image": row.get("image") or None,
+        "description": (row.get("caption") or "")[:200] or None,
+        "sku": row.get("item_code") or None,
         "offers": {"@type": "Offer", "price": row["price"], "priceCurrency": "JPY",
                    "url": row.get("url") or canonical,
-                   "availability": "https://schema.org/InStock",
+                   # 在庫は取得している。InStock と書き切ると、売り切れの商品まで
+                   # 「在庫あり」として検索結果に出てしまう
+                   "availability": ("https://schema.org/InStock"
+                                    if row.get("in_stock", True)
+                                    else "https://schema.org/OutOfStock"),
+                   # 毎日取り直すので、この値段が言えるのは次の取得までとする
+                   "priceValidUntil": next_day(updated),
                    "seller": {"@type": "Organization",
                               "name": row.get("shop") or ""}},
     })
     extra = f'<script type="application/ld+json">{ld}</script>'
 
-    return (head(f"{title}｜{site['name']}", desc, canonical, site, prefix, extra)
+    # indexable はどの一覧からも辿れるかで build が決める（実測で270件が該当なし）。
+    # 辿れない商品は検索結果にだけ出る行き止まりになるので索引に載せない。
+    # ページ自体は残す。見守りや外からのリンクの行き先になっている。
+    return (head(f"{title}｜{site['name']}", desc, canonical, site, prefix, extra,
+                 indexable=indexable)
             + breadcrumb(site, "商品の価格推移", prefix)
             + '<p class="back"><a href="../../">今日の値下がりへ</a><span class="sep">/</span><a href="../../lows/">最安値圏へ</a><span class="sep">/</span><a href="../../search/">商品を探す</a></p>'
             + f'<article class="item"><h1 title="{esc(row["name"])}">'

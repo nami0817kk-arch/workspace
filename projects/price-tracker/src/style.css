@@ -246,3 +246,11 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
   .hit { flex-wrap: wrap; }
   .pager .of { width: 100%; margin-left: 0; }
 }
+
+/* 10ページごとの飛び先。近辺だけだと81ページの奥まで20回押すことになる */
+.jump { display: flex; flex-wrap: wrap; gap: 6px; align-items: center;
+        margin: -6px 0 14px; font-size: 13px; }
+.jump span { color: var(--muted); }
+.jump a { padding: 2px 7px; border: 1px solid var(--line); border-radius: 7px;
+          color: var(--muted); text-decoration: none; }
+.jump a:hover { color: var(--accent); border-color: var(--accent); }
