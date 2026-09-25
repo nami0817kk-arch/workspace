@@ -21,9 +21,25 @@ class PlayerCompareScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final gameState = context.watch<GameState>();
-    final team = gameState.userTeam;
-    final a = team.players.firstWhere((p) => p.id == playerAId);
-    final b = team.players.firstWhere((p) => p.id == playerBId);
+    // 自軍だけを見ていると、市場やスカウト候補の選手を渡された瞬間に落ちる
+    // (firstWhere が要素なしで投げる)。移籍で居なくなった選手でも同じ。
+    final a = gameState.playerById(playerAId);
+    final b = gameState.playerById(playerBId);
+    if (a == null || b == null) {
+      return Scaffold(
+        appBar: AppBar(title: Text(Tr.pick('選手比較', 'Compare players'))),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Text(
+              Tr.pick('比較する選手が見つかりませんでした。移籍などで居なくなった可能性があります。',
+                  'One of the players could not be found. He may have moved on.'),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(title: Text(Tr.pick('選手比較', 'Compare players'))),
