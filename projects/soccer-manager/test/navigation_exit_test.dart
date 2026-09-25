@@ -8,7 +8,11 @@ import 'package:soccer_manager/l10n/app_localizations.dart';
 import 'package:soccer_manager/l10n/tr.dart';
 import 'package:soccer_manager/monetization/ad_service.dart';
 import 'package:soccer_manager/monetization/monetization_controller.dart';
+import 'package:soccer_manager/screens/analysis_screen.dart';
 import 'package:soccer_manager/screens/fixtures_screen.dart';
+import 'package:soccer_manager/screens/player_compare_screen.dart';
+import 'package:soccer_manager/screens/player_detail_screen.dart';
+import 'package:soccer_manager/screens/scout_report_screen.dart';
 import 'package:soccer_manager/screens/lineup_screen.dart';
 import 'package:soccer_manager/screens/squad_screen.dart';
 import 'package:soccer_manager/screens/youth_intake_screen.dart';
@@ -54,6 +58,18 @@ void main() {
       'ユースインテーク': (_) => const YouthIntakeScreen(),
       // いまは下タブ専用。将来どこかから開かれたときに備えて一緒に見る。
       '日程・順位表': (_) => const FixturesScreen(),
+      // 画面の中のボタンから開かれるもの。引数が要るので実データを渡す。
+      '選手詳細': (_) => PlayerDetailScreen(playerId: game.userTeam.players.first.id),
+      '選手比較': (_) => PlayerCompareScreen(
+            playerAId: game.userTeam.players[0].id,
+            playerBId: game.userTeam.players[1].id,
+          ),
+      'スカウティングレポート': (_) => ScoutReportScreen(
+            opponent: game.save!.league.teams
+                .firstWhere((t) => t.id != game.userTeam.id),
+            userTeam: game.userTeam,
+          ),
+      '分析': (_) => const AnalysisScreen(),
     };
 
     // 画面は tap ではなく Navigator から直接開く。ボタンを押す形にすると、
