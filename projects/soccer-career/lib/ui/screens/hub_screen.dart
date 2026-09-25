@@ -463,48 +463,43 @@ class _NextMatchCard extends StatelessWidget {
     if (lines.isEmpty) return const [];
     return [
       const SizedBox(height: 8),
-      Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
+      // **灰色のベタ塗りの表をやめる。** 白い紙の上に一段暗い板を置くと、
+      // そこだけ「あとから貼った表」に見える——画面で一番安っぽい部品だった。
+      // 見出しは小さく字間を開けて、値は本文の濃さで。区切りは細い線1本。
+      for (var i = 0; i < lines.length; i++) ...[
+        if (i > 0)
+          Divider(
+            height: 9,
+            thickness: 1,
+            color: theme.colorScheme.outlineVariant,
+          ),
+        Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            for (final line in lines)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 1),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      width: 48,
-                      child: Text(
-                        line.label,
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Text(
-                        line.text,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: line.urgent
-                              ? theme.colorScheme.primary
-                              : theme.colorScheme.onSurface,
-                          fontWeight: line.urgent ? FontWeight.w600 : null,
-                        ),
-                      ),
-                    ),
-                  ],
+            SizedBox(
+              width: 52,
+              child: Text(
+                lines[i].label,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
+            ),
+            Expanded(
+              child: Text(
+                lines[i].text,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: lines[i].urgent
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.onSurface,
+                  fontWeight: lines[i].urgent ? FontWeight.w700 : null,
+                ),
+              ),
+            ),
           ],
         ),
-      ),
+      ],
+      const SizedBox(height: 2),
     ];
   }
 
@@ -1575,12 +1570,17 @@ class _Metric extends StatelessWidget {
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ),
+          // **数字を、見出しより明らかに大きくする。** 同じ大きさで
+          // 並んでいると、どれが読むべき数字なのか決まらない。
           Text(
             value,
-            style: theme.textTheme.titleMedium?.copyWith(color: color),
+            style: theme.textTheme.headlineSmall?.copyWith(
+              color: color,
+              height: 1.1,
+            ),
           ),
           Padding(
-            padding: const EdgeInsets.only(right: 14, top: 2, bottom: 3),
+            padding: const EdgeInsets.only(right: 14, top: 3, bottom: 4),
             child: SizedBox(
               height: 10,
               child: LayoutBuilder(
