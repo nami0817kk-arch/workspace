@@ -24,13 +24,12 @@ _OUTPUT_DIR = _ROOT / "output"
 # 公開先は site_config が持つ（ドメインを変えるときはそこだけ触る）
 SITE_URL = site_config.SITE_URL
 
-# AdSense の審査を通ったら ca-pub-... を入れる。ここが空のあいだは
-# 広告のスクリプトも枠も一切出さない。プレースホルダの <ins> を置いたままだと
-# 中身の無い点線の箱が全ページに出るだけで、審査にも読者にも損しかない。
-ADSENSE_CLIENT = ""
+# AdSense の設定は site_config にある（公開URLと同じく1箇所にまとめる）
+ADSENSE_CLIENT = site_config.ADSENSE_CLIENT
 
 _env = Environment(loader=FileSystemLoader(str(_TEMPLATES_DIR)))
 _env.globals["ADSENSE_CLIENT"] = ADSENSE_CLIENT
+_env.globals["ADSENSE_SLOT"] = site_config.ADSENSE_SLOT
 _env.globals["SITE_URL"] = SITE_URL
 _env.globals["SEARCH_CONSOLE_TOKEN"] = site_config.SEARCH_CONSOLE_TOKEN
 _env.globals["OWNER"] = site_config.OWNER

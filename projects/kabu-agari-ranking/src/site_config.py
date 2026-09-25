@@ -22,6 +22,14 @@ SEARCH_CONSOLE_TOKEN = os.environ.get(
     "KABU_SEARCH_CONSOLE_TOKEN", "JLPv6DMxv7h91q8Hzvo-YfdQx6mz-_zZ-MhHaNzPs4c"
 )
 
+# AdSense。**審査を通すまでは両方とも空のまま。**
+#   ADSENSE_CLIENT … "ca-pub-..."。入れると head にスクリプトが出る（自動広告が動く）。
+#     審査を申し込むときは、これだけ入っていればよい。
+#   ADSENSE_SLOT   … 手で置く枠の ID。自動広告に任せるなら空のままでよい。
+# 空のあいだは広告のスクリプトも枠も一切描かない。
+ADSENSE_CLIENT = os.environ.get("KABU_ADSENSE_CLIENT", "")
+ADSENSE_SLOT = os.environ.get("KABU_ADSENSE_SLOT", "")
+
 # 公開名義と連絡先。**個人名は出さない**（屋号で通す）。
 # AdSense の審査は「誰が運営し、どこへ連絡できるか」が分かることを求めるので、
 # この2つが空のまま審査に出さない。

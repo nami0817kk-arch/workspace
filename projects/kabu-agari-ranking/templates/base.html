@@ -444,7 +444,9 @@
 
 <main id="main" tabindex="-1">
 {% block breadcrumb %}{% endblock %}
-{% include "_ad_slot.html" %}
+{# 本文の先頭に広告を置かない。ここに入れると、来た人が見に来たランキングが
+   1画面ぶん下へ押し出される（表の位置は実測して 849px → 469px まで詰めた）。
+   広告は各ページの本文の後ろにだけ置く。 #}
 {% block content %}{% endblock %}
 
 <div class="disclaimer">
