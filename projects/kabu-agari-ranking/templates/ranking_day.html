@@ -1,6 +1,6 @@
 {% extends "base.html" %}
-{% block title %}{{ rec_date }} {{ heading }}｜値上がり株ランキング{% endblock %}
-{% block description %}{{ rec_date }}時点の{{ heading }}のアーカイブ。{{ summary }}{% endblock %}
+{% block title %}{{ rec_date }}の{{ heading }} 上位{{ rows|length }}銘柄{% endblock %}
+{% block description %}{{ rec_date_ja }}の{{ heading }}上位{{ rows|length }}銘柄の記録。{{ summary }}{% endblock %}
 {% block structured_data %}
 <script type="application/ld+json">
 {"@context":"https://schema.org","@type":"ItemList","name":{{ (rec_date ~ " " ~ heading)|tojson }},"numberOfItems":{{ rows|length }},"itemListElement":[{% for row in rows %}{"@type":"ListItem","position":{{ row.rank }},"name":{{ (row.name ~ "（" ~ row.code ~ "）")|tojson }}}{{ "," if not loop.last }}{% endfor %}]}

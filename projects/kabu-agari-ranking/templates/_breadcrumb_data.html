@@ -1,0 +1,6 @@
+{# 画面のパンくず（_breadcrumb.html）と同じ階層を構造化データでも出す。
+   検索結果に階層が出るかどうかは検索側の判断だが、画面と食い違わないことが前提。 #}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+{% for c in crumbs %}{"@type":"ListItem","position":{{ loop.index }},"name":{{ c.label|tojson }}{% if c.url %},"item":{{ c.url|tojson }}{% endif %}}{{ "," if not loop.last }}{% endfor %}]}
+</script>

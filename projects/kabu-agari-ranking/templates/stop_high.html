@@ -1,6 +1,10 @@
 {% extends "base.html" %}
-{% block title %}ストップ高になった銘柄の記録（{{ day_count }}営業日）｜値上がり株ランキング{% endblock %}
-{% block description %}値上がりランキング上位30銘柄のうち、制限値幅の上限まで買われた（ストップ高）銘柄を日ごとに記録しています。何度もストップ高になった銘柄と、日別の件数の推移。{% endblock %}
+{% block title %}ストップ高の銘柄一覧と記録｜{{ period_to_ja }}まで{% endblock %}
+{% block description %}{{ period_to_ja }}までの{{ day_count }}営業日に、制限値幅の上限まで買われた（ストップ高）銘柄の一覧。日別の件数、何度もストップ高になった銘柄、最長の連続記録。{% endblock %}
+{% block structured_data %}{% set crumbs = [{"label": "ホーム", "url": SITE_URL ~ "/"}, {"label": "ストップ高の記録", "url": canonical}] %}{% include "_breadcrumb_data.html" %}
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ItemList","name":"複数回ストップ高になった銘柄","numberOfItems":{{ stocks|length }},"itemListElement":[{% for s in stocks %}{"@type":"ListItem","position":{{ loop.index }},"name":{{ (s.name ~ "（" ~ s.code ~ "）")|tojson }}}{{ "," if not loop.last }}{% endfor %}]}
+</script>{% endblock %}
 {% block breadcrumb %}{% set crumbs = [
   {"label": "ホーム", "href": "index.html"},
   {"label": "ストップ高の記録"}

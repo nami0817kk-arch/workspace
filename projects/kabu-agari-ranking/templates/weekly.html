@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}{{ w.from }}〜{{ w.to }} の週まとめ｜値上がり株ランキング{% endblock %}
 {% block description %}{{ w.from }}から{{ w.to }}（{{ w.day_count }}営業日）の値上がりランキングを通して集計。最も上昇した銘柄と、複数回ランクインした銘柄をまとめています。{% endblock %}
+{% block structured_data %}{% set crumbs = [{"label": "ホーム", "url": SITE_URL ~ "/"}, {"label": "週まとめ", "url": SITE_URL ~ "/weekly/"}, {"label": w.from ~ "〜" ~ w.to, "url": canonical}] %}{% include "_breadcrumb_data.html" %}{% endblock %}
 {% block breadcrumb %}{% set crumbs = [
   {"label": "ホーム", "href": "index.html"},
   {"label": "週まとめ", "href": "weekly/index.html"},
