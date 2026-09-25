@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../logic/scouting_engine.dart';
 import '../logic/training_engine.dart';
 import '../logic/youth_departure_engine.dart';
-import '../models/youth_league.dart';
 import '../logic/youth_match_engine.dart';
 import '../models/player.dart';
 import '../services/feedback_service.dart';
