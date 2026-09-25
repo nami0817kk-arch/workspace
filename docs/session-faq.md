@@ -1143,3 +1143,26 @@ Google は 2012 年の EMD アップデートでこれを打ち消している�
 
 Windows のユーザー名は**パスの一部として混入する**（例外のトレースバックや
 ファイル一覧をページに出したとき）。名前を書かないよう気をつけるだけでは足りない。
+
+## 手元は `python -m pytest`、CI は `pytest`。読み込み先が違う（2026-09-25 実測）
+
+**手元だけ緑で CI が赤くなる**組み合わせがある。
+
+`python -m pytest` は**今いるディレクトリを `sys.path` に足す**が、`pytest` は足さない。
+共通ワークフロー（`python-tests.yml`）は後者で走るので、`from src.foo import ...` の
+ような書き方は手元で通って CI で `ModuleNotFoundError: No module named 'src'` になる。
+
+PJT の直下に `conftest.py` を置いて明示する。テストごとに `sys.path.insert` を
+書くより、**呼び方が変わっても同じになる**ぶん確実。
+
+```python
+import sys
+from pathlib import Path
+
+_ROOT = Path(__file__).resolve().parent
+for path in (_ROOT, _ROOT / "src"):
+    if str(path) not in sys.path:
+        sys.path.insert(0, str(path))
+```
+
+手元で確かめるときは `pytest`（`python -m` を付けない）で回すと、CI と同じ条件になる。
