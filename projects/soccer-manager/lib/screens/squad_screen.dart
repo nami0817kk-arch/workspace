@@ -380,6 +380,9 @@ class _SquadScreenState extends State<SquadScreen> {
         title: Text(_compareMode
             ? Tr.pick('選手を2人選択', 'Pick two players')
             : Tr.pick('スカッド', 'Squad')),
+        // 下タブの一員でもあり、ホームやガイドから直接開かれもする。
+        // 開かれた場合は戻るボタンを出す(ドロワーがあると既定では出ない)。
+        leading: Navigator.of(context).canPop() ? const BackButton() : null,
         actions: [
           if (!_compareMode) ...[
             IconButton(
