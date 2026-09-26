@@ -674,8 +674,8 @@
      "label": "えび（海老）"
     },
     {
-     "answer": "たまご",
-     "label": "たまご（玉子）"
+     "answer": "ほたて",
+     "label": "ほたて（帆立）"
     },
     {
      "answer": "いか",
@@ -686,8 +686,8 @@
      "label": "あなご（穴子）"
     },
     {
-     "answer": "かっぱまき",
-     "label": "かっぱまき（かっぱ巻き）"
+     "answer": "てっかまき",
+     "label": "てっかまき（鉄火巻き）"
     }
    ],
    "icon": "1f363"
@@ -973,6 +973,46 @@
    "icon": "2614"
   },
   {
+   "theme": "西日本の府県",
+   "difficulty": "medium",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "こうち",
+     "label": "こうち（高知）"
+    },
+    {
+     "answer": "きょうと",
+     "label": "きょうと（京都）"
+    },
+    {
+     "answer": "ひろしま",
+     "label": "ひろしま（広島）"
+    },
+    {
+     "answer": "おかやま",
+     "label": "おかやま（岡山）"
+    },
+    {
+     "answer": "ふくおか",
+     "label": "ふくおか（福岡）"
+    },
+    {
+     "answer": "えひめ",
+     "label": "えひめ（愛媛）"
+    },
+    {
+     "answer": "かごしま",
+     "label": "かごしま（鹿児島）"
+    },
+    {
+     "answer": "おきなわ",
+     "label": "おきなわ（沖縄）"
+    }
+   ],
+   "icon": "1f419"
+  },
+  {
    "theme": "東日本の県",
    "difficulty": "medium",
    "script": "hiragana",
@@ -1011,46 +1051,6 @@
     }
    ],
    "icon": "1f5fe"
-  },
-  {
-   "theme": "朝ごはん",
-   "difficulty": "medium",
-   "script": "hiragana",
-   "words": [
-    {
-     "answer": "ごはん",
-     "label": "ごはん（ご飯）"
-    },
-    {
-     "answer": "みそしる",
-     "label": "みそしる（味噌汁）"
-    },
-    {
-     "answer": "なっとう",
-     "label": "なっとう（納豆）"
-    },
-    {
-     "answer": "たまごやき",
-     "label": "たまごやき（卵焼き）"
-    },
-    {
-     "answer": "しらす",
-     "label": "しらす"
-    },
-    {
-     "answer": "つけもの",
-     "label": "つけもの（漬物）"
-    },
-    {
-     "answer": "やきざかな",
-     "label": "やきざかな（焼き魚）"
-    },
-    {
-     "answer": "おちゃ",
-     "label": "おちゃ（お茶）"
-    }
-   ],
-   "icon": "1f359"
   },
   {
    "theme": "海辺",
@@ -1093,44 +1093,44 @@
    "icon": "1f3d6"
   },
   {
-   "theme": "西日本の府県",
+   "theme": "朝ごはん",
    "difficulty": "medium",
    "script": "hiragana",
    "words": [
     {
-     "answer": "おおさか",
-     "label": "おおさか（大阪）"
+     "answer": "ごはん",
+     "label": "ごはん（ご飯）"
     },
     {
-     "answer": "きょうと",
-     "label": "きょうと（京都）"
+     "answer": "めだまやき",
+     "label": "めだまやき（目玉焼き）"
     },
     {
-     "answer": "ひろしま",
-     "label": "ひろしま（広島）"
+     "answer": "なっとう",
+     "label": "なっとう（納豆）"
     },
     {
-     "answer": "おかやま",
-     "label": "おかやま（岡山）"
+     "answer": "たまごやき",
+     "label": "たまごやき（卵焼き）"
     },
     {
-     "answer": "ふくおか",
-     "label": "ふくおか（福岡）"
+     "answer": "しらす",
+     "label": "しらす"
     },
     {
-     "answer": "くまもと",
-     "label": "くまもと（熊本）"
+     "answer": "つけもの",
+     "label": "つけもの（漬物）"
     },
     {
-     "answer": "かごしま",
-     "label": "かごしま（鹿児島）"
+     "answer": "やきざかな",
+     "label": "やきざかな（焼き魚）"
     },
     {
-     "answer": "おきなわ",
-     "label": "おきなわ（沖縄）"
+     "answer": "おちゃ",
+     "label": "おちゃ（お茶）"
     }
    ],
-   "icon": "1f419"
+   "icon": "1f359"
   },
   {
    "theme": "夏祭り",
@@ -1173,46 +1173,6 @@
    "icon": "1f3ee"
   },
   {
-   "theme": "おでん",
-   "difficulty": "medium",
-   "script": "hiragana",
-   "words": [
-    {
-     "answer": "ぎゅうすじ",
-     "label": "ぎゅうすじ（牛すじ）"
-    },
-    {
-     "answer": "つみれ",
-     "label": "つみれ"
-    },
-    {
-     "answer": "こんにゃく",
-     "label": "こんにゃく"
-    },
-    {
-     "answer": "ちくわ",
-     "label": "ちくわ"
-    },
-    {
-     "answer": "はんぺん",
-     "label": "はんぺん"
-    },
-    {
-     "answer": "がんもどき",
-     "label": "がんもどき"
-    },
-    {
-     "answer": "ごぼうまき",
-     "label": "ごぼうまき（ごぼう巻き）"
-    },
-    {
-     "answer": "しらたき",
-     "label": "しらたき"
-    }
-   ],
-   "icon": "1f362"
-  },
-  {
    "theme": "お漬物",
    "difficulty": "medium",
    "script": "hiragana",
@@ -1238,8 +1198,8 @@
      "label": "らっきょう"
     },
     {
-     "answer": "なすづけ",
-     "label": "なすづけ（なす漬け）"
+     "answer": "たかな",
+     "label": "たかな（高菜）"
     },
     {
      "answer": "べったらづけ",
@@ -1291,6 +1251,46 @@
     }
    ],
    "icon": "1fa81"
+  },
+  {
+   "theme": "おでん",
+   "difficulty": "medium",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "ぎゅうすじ",
+     "label": "ぎゅうすじ（牛すじ）"
+    },
+    {
+     "answer": "つみれ",
+     "label": "つみれ"
+    },
+    {
+     "answer": "こんにゃく",
+     "label": "こんにゃく"
+    },
+    {
+     "answer": "ちくわ",
+     "label": "ちくわ"
+    },
+    {
+     "answer": "はんぺん",
+     "label": "はんぺん"
+    },
+    {
+     "answer": "がんもどき",
+     "label": "がんもどき"
+    },
+    {
+     "answer": "もちきんちゃく",
+     "label": "もちきんちゃく（餅きんちゃく）"
+    },
+    {
+     "answer": "しらたき",
+     "label": "しらたき"
+    }
+   ],
+   "icon": "1f362"
   },
   {
    "theme": "春の行事",
@@ -1638,8 +1638,8 @@
      "label": "かきつばた（杜若）"
     },
     {
-     "answer": "さつき",
-     "label": "さつき（皐月）"
+     "answer": "すずらん",
+     "label": "すずらん（鈴蘭）"
     }
    ],
    "icon": "1f337"
@@ -1787,54 +1787,6 @@
     }
    ],
    "icon": "26bd"
-  },
-  {
-   "theme": "年中行事",
-   "difficulty": "hard",
-   "script": "hiragana",
-   "words": [
-    {
-     "answer": "しょうがつ",
-     "label": "しょうがつ（正月）"
-    },
-    {
-     "answer": "せつぶん",
-     "label": "せつぶん（節分）"
-    },
-    {
-     "answer": "たんごのせっく",
-     "label": "たんごのせっく（端午の節句）"
-    },
-    {
-     "answer": "たなばた",
-     "label": "たなばた（七夕）"
-    },
-    {
-     "answer": "おぼん",
-     "label": "おぼん（お盆）"
-    },
-    {
-     "answer": "つきみ",
-     "label": "つきみ（月見）"
-    },
-    {
-     "answer": "しちごさん",
-     "label": "しちごさん（七五三）"
-    },
-    {
-     "answer": "おおみそか",
-     "label": "おおみそか（大晦日）"
-    },
-    {
-     "answer": "とうじ",
-     "label": "とうじ（冬至）"
-    },
-    {
-     "answer": "もちつき",
-     "label": "もちつき（餅つき）"
-    }
-   ],
-   "icon": "1f38b"
   },
   {
    "theme": "秋の野山",
@@ -2219,6 +2171,54 @@
     }
    ],
    "icon": "1f3e0"
+  },
+  {
+   "theme": "年中行事",
+   "difficulty": "hard",
+   "script": "hiragana",
+   "words": [
+    {
+     "answer": "とうろうながし",
+     "label": "とうろうながし（灯籠流し）"
+    },
+    {
+     "answer": "せつぶん",
+     "label": "せつぶん（節分）"
+    },
+    {
+     "answer": "たんごのせっく",
+     "label": "たんごのせっく（端午の節句）"
+    },
+    {
+     "answer": "たなばた",
+     "label": "たなばた（七夕）"
+    },
+    {
+     "answer": "おぼん",
+     "label": "おぼん（お盆）"
+    },
+    {
+     "answer": "つきみ",
+     "label": "つきみ（月見）"
+    },
+    {
+     "answer": "しちごさん",
+     "label": "しちごさん（七五三）"
+    },
+    {
+     "answer": "おおみそか",
+     "label": "おおみそか（大晦日）"
+    },
+    {
+     "answer": "とうじ",
+     "label": "とうじ（冬至）"
+    },
+    {
+     "answer": "もちつき",
+     "label": "もちつき（餅つき）"
+    }
+   ],
+   "icon": "1f38b"
   },
   {
    "theme": "お茶の時間",

@@ -135,3 +135,18 @@ def test_cover_text_inside_safe_area(built):
         inside_x = any(lo + margin <= x0 and x1 <= hi - margin for lo, hi in (back, front))
         assert inside_x, sp["text"]
         assert bleed + margin <= y0 and y1 <= top - margin, sp["text"]
+
+
+def test_no_word_is_another_word_plus_a_suffix():
+    """「ごぼう」と「ごぼうまき」のように、語に「巻き・漬け・焼き・汁・城」を足しただけの語が
+    別の問題にあると、読む人には繰り返しに見える（2026-09-26 に8組見つけて入れ替えた）。"""
+    spec = KotobaSpec.load(_SPEC)
+    where = {w["answer"]: t["theme"] for t in spec.themes for w in t["words"]}
+    suffixes = ("まき", "づけ", "やき", "しる", "じょう")
+    bad = [
+        (a, b)
+        for a in where
+        for b in where
+        if a != b and where[a] != where[b] and any(b == a + sfx for sfx in suffixes)
+    ]
+    assert not bad, bad
