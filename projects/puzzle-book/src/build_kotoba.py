@@ -250,10 +250,7 @@ def build_pdf(puzzles: list[dict], output_path: str, spec: KotobaSpec) -> int:
         c.drawString(pg.left, y, f"{spec.edition_date}　初版発行")
         y -= 20
     c.drawString(pg.left, y, f"発行　{spec.publisher}")
-    y -= 30
-    c.setFont(FONT_REGULAR, 10)
-    c.drawString(pg.left, y, "本書の問題はプログラムで作成し、どの言葉も盤面にちょうど1回だけ出ることを機械で確かめています。")
-    y -= 18
+    y -= 20
     year = spec.edition_date[:4] if spec.edition_date[:4].isdigit() else ""
     c.drawString(pg.left, y, " ".join(t for t in ("Copyright", year, spec.publisher) if t))
     pg.next(folio=False)
