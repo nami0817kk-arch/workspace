@@ -49,7 +49,7 @@ class YouthIntakeScreen extends StatelessWidget {
                       final p = candidates[i];
                       final range = ScoutingEngine.estimatedPotentialRange(
                         p,
-                        scoutLevel: gameState.youthCoachLevel,
+                        scoutLevel: gameState.youthCoachJudgingLevel,
                       );
                       return Card(
                         margin: const EdgeInsets.only(bottom: 8),

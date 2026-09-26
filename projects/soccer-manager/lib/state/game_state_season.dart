@@ -769,7 +769,9 @@ extension GameStateSeason on GameState {
     _save!.pendingYouthIntake = List.generate(
       intakeCount,
       (_) => ScoutingEngine.generateAcademyGraduate(
-        youthCoachLevel: infra.staffLevel(StaffRole.youthCoach),
+        // 有望な子を見つけてこられるかは見極めの仕事。
+        youthCoachLevel: infra.staffAttributeLevel(
+            StaffRole.youthCoach, StaffAttribute.judging),
       ),
     );
 
