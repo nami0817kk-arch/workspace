@@ -251,3 +251,78 @@ def test_銘柄ページに市場区分と業種が出る(breakdown_site):
     assert "東証グロース／情報・通信業／売買単位100株" in html
     # meta description には売買単位まで入れない（文が長くなる）
     assert "（1111／東証グロース／情報・通信業）" in html
+
+
+# --- ストップ安 -------------------------------------------------------------
+
+def _low_row(code, name, close=239.0, pct=-25.08, rank=1):
+    """既定は 319円 → 239円（値幅80円）＝ストップ安。"""
+    return {"rank": rank, "code": code, "name": name, "close": close,
+            "change_pct": pct, "metric_value": 100}
+
+
+def test_ストップ安も記録があればそれを正として使う():
+    day = {
+        "rec_date": "2026-09-28",
+        "losers": [_low_row("4599", "ステムリム")],
+        "stop_low": [
+            {"rank": 1, "code": "4599", "name": "ステムリム", "close": 239.0,
+             "change_pct": -25.08, "at_limit": True},
+            {"rank": 2, "code": "9999", "name": "上位外", "close": 100.0,
+             "change_pct": -20.0, "at_limit": True},
+            {"rank": 3, "code": "8888", "name": "場中だけ", "close": 200.0,
+             "change_pct": -18.0, "at_limit": False},
+        ],
+    }
+    rows, source = aggregate.stop_low_rows(day)
+    assert source == "recorded"
+    # 引けまで下限を保った2件だけ。上位30銘柄の外にあった9999も数える。
+    assert [r["code"] for r in rows] == ["4599", "9999"]
+
+
+def test_ストップ安の記録が無い日は値下がり上位から推定する():
+    day = {"rec_date": "2026-09-18", "losers": [_low_row("4599", "ステムリム")]}
+    rows, source = aggregate.stop_low_rows(day)
+    assert source == "estimated"
+    assert [r["code"] for r in rows] == ["4599"]
+
+
+def test_ストップ安の最大は最も下げた日を指す():
+    """下落率は負の値なので、最大を取ると最も下げていない日になってしまう。"""
+    days = [
+        {"rec_date": "2026-09-29", "losers": [], "stop_low": [
+            {"code": "4599", "name": "ステムリム", "close": 239.0,
+             "change_pct": -25.08, "at_limit": True}]},
+        {"rec_date": "2026-09-28", "losers": [], "stop_low": [
+            {"code": "4599", "name": "ステムリム", "close": 300.0,
+             "change_pct": -15.0, "at_limit": True}]},
+    ]
+    h = aggregate.stop_low_history(days)
+    assert h["stocks"][0]["best_pct"] == -25.08
+
+
+def test_ストップ安の章が作られる(site):
+    html = (site / "stop-low" / "index.html").read_text(encoding="utf-8")
+    assert "ストップ安の記録" in html
+    # 上位30銘柄に限られることを必ず断る（全ストップ安だと誤解させない）
+    assert "上位30銘柄です" in html
+    # 日ごとの記録は値下がりのアーカイブへ（値上がりではない）
+    assert "archive/losers/" in html
+
+
+def test_ストップ安がsitemapに載る(site):
+    assert "/stop-low/" in (site / "sitemap.xml").read_text(encoding="utf-8")
+
+
+def test_ストップ高とストップ安は別の章として作られる(site):
+    high = (site / "stop-high" / "index.html").read_text(encoding="utf-8")
+    low = (site / "stop-low" / "index.html").read_text(encoding="utf-8")
+    assert "<h1>ストップ高の記録</h1>" in high
+    assert "<h1>ストップ安の記録</h1>" in low
+    # 語彙が混ざっていないこと（1枚のテンプレートを共用しているため、
+    # 片方の語をベタ書きすると、もう片方のページに紛れ込む）
+    import re
+    headings = re.findall(r"<(?:h1|h2|h3|caption|figcaption)>(.*?)</", low, re.S)
+    assert headings, "見出しが1つも無い"
+    assert not [h for h in headings if "ストップ高" in h]
+    assert [h for h in headings if "ストップ安" in h]

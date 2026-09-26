@@ -17,7 +17,13 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import aggregate
 import fetcher
-from fetcher import fetch_active, fetch_gainers, fetch_losers, fetch_stop_high
+from fetcher import (
+    fetch_active,
+    fetch_gainers,
+    fetch_losers,
+    fetch_stop_high,
+    fetch_stop_low,
+)
 import render
 import stock_profile
 import validate
@@ -25,12 +31,30 @@ import validate
 _DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 
 _ROW_COLS = ["rank", "code", "name", "close", "change_pct", "metric_value"]
-# ストップ高の一覧には出来高が無い（その列がニュース欄になっている）代わりに、
-# 引けで上限に張り付いていたかの印がある。
+# ストップ高・ストップ安の一覧には出来高が無い（その列がニュース欄になっている）
+# 代わりに、引けで上限（下限）に張り付いていたかの印がある。
 _STOP_COLS = ["rank", "code", "name", "close", "change_pct", "at_limit"]
 
 
-def _save_today(gainers, losers, active, stop_high=None, *, skip_checks: bool = False) -> str | None:
+def _stop_rows(df, label):
+    """ストップ高／ストップ安の一覧を保存する形に直す。
+
+    **1ページも取得できなかった日は `None` を返す**（呼び出し側がキーごと落とす）。
+    空リスト（その日は本当に0件だった）と区別するため。0件は相場が穏やかなだけで
+    異常ではないが、取れなかった日を0件として記録すると、あとから見たときに
+    「その日はストップ高が無かった」という嘘になる。
+    """
+    if not fetcher.pages_fetched.get(label):
+        return None
+    return df[_STOP_COLS].to_dict(orient="records") if df is not None and not df.empty else []
+
+
+def _count(payload, key):
+    return len(payload[key]) if key in payload else "取得なし"
+
+
+def _save_today(gainers, losers, active, stop_high=None, stop_low=None, *,
+                skip_checks: bool = False) -> str | None:
     if gainers.empty:
         print("  本日分のランキングを取得できませんでした(休場日、または取得失敗)。スキップします。")
         return None
@@ -40,14 +64,19 @@ def _save_today(gainers, losers, active, stop_high=None, *, skip_checks: bool = 
         "rec_date": rec_date,
         # その日ストップ高をつけた銘柄の全件。上位30銘柄からの推定ではない。
         # 0件の日もある（相場が穏やかな日）。取得できなかった日はキーごと無い。
-        "stop_high": (
-            stop_high[_STOP_COLS].to_dict(orient="records")
-            if stop_high is not None and not stop_high.empty else []
-        ),
+        "stop_high": _stop_rows(stop_high, fetcher.STOP_HIGH_LABEL),
+        # ストップ安も同じ形で全件記録する。値下がり上位30銘柄からの推定では
+        # 30位の外にあったストップ安が数えられない（ストップ高と同じ理由）。
+        "stop_low": _stop_rows(stop_low, fetcher.STOP_LOW_LABEL),
         "gainers": gainers[_ROW_COLS].to_dict(orient="records"),
         "losers": losers[_ROW_COLS].to_dict(orient="records") if not losers.empty else [],
         "active": active[_ROW_COLS].to_dict(orient="records") if not active.empty else [],
     }
+
+    # 取れなかったランキングはキーごと落とす（0件と取り違えさせない）
+    for key in ("stop_high", "stop_low"):
+        if payload[key] is None:
+            del payload[key]
 
     # 保存する前に検査する。data/ は取り直しのきかない資産なので、
     # おかしなものを書き込むより、その日を落とすほうがまし。
@@ -88,9 +117,10 @@ def main() -> None:
     losers = fetch_losers(top_n=30)
     active = fetch_active(top_n=30)
     stop_high = fetch_stop_high()
+    stop_low = fetch_stop_low()
 
     try:
-        rec_date = _save_today(gainers, losers, active, stop_high,
+        rec_date = _save_today(gainers, losers, active, stop_high, stop_low,
                                skip_checks="--force" in sys.argv)
     except validate.InvalidPayload as e:
         # 既存のデータには一切触れずに落とす。run-daily.ps1 が通知を出す。

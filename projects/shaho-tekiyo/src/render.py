@@ -45,6 +45,7 @@ _env.globals["SEARCH_CONSOLE_TOKEN"] = site_config.SEARCH_CONSOLE_TOKEN
 _env.globals["OWNER"] = site_config.OWNER
 _env.globals["CONTACT_EMAIL"] = site_config.CONTACT_EMAIL
 _env.globals["pref_full"] = extras.pref_full
+_env.globals["era"] = f"令和{premium.TABLES[-1].fiscal_year - 2018}年度"
 
 
 def canonical_url(rel_path: str) -> str:
@@ -164,6 +165,20 @@ def size_timeline(as_of: date | None = None, here: str = "いまの段階") -> s
     return charts.stages_timeline(stages, f"社会保険に入る会社の規模（従業員数）は、2035年までに4段階で広がる。濃い色が{here}")
 
 
+def _quick_amounts() -> list[dict]:
+    """トップの早見表。8万〜20万円を2万円刻み（細かい一覧は月収別のページ）。"""
+    table = premium.TABLES[-1]
+    as_of = table.valid_from
+    rows = []
+    for man in range(8, 21, 2):
+        pay = man * 10_000
+        r = premium.estimate(as_of=as_of, prefecture="東京", monthly_pay_yen=pay, age_40_to_64=False)
+        koyo = extras.employment_yen(as_of, pay)
+        tax = extras.income_tax_yen(as_of, pay - r.total_yen - koyo, 0) or 0
+        rows.append({"man": man, "slug": f"{man}man", "total": r.total_yen, "net": pay - r.total_yen - koyo - tax})
+    return rows
+
+
 def _build_calculator_page() -> None:
     tmpl = _env.get_template("calculator.html")
     _write(
@@ -176,6 +191,8 @@ def _build_calculator_page() -> None:
             milestones=eligibility.MILESTONES,
             prefectures=premium.PREFECTURES,
             timeline=size_timeline(),
+            quick_amounts=_quick_amounts(),
+            kabe_example=kabe.analyze(max(premium.TABLES[-1].valid_from, date(2026, 10, 1)), 1100),
             rates_json=premium.tables_json(),
             extras_json=extras.extras_json(),
         ),
@@ -339,6 +356,7 @@ def _build_kabe_pages() -> None:
                 k=k,
                 be_hours=f"{k.breakeven_hours_x10 / 10:g}",
                 chart=chart,
+                near_amount=min(AMOUNTS_MAN, key=lambda m: abs(m * 10_000 - k.pay_20)),
                 rows=rows,
                 others=results,
                 era=era,
@@ -365,12 +383,17 @@ def amount_page_paths() -> list[str]:
 
 # 更新履歴（新しい順）。計算や料率を変えたら、ここに1行足す。
 HISTORY: tuple[tuple[str, str], ...] = (
+    ("2026-09-27", "トップに月収別の早見表と週20時間の壁の要約を追加。よくある質問を質問の形に直し、10月の変更・週20時間ちょうど・8.8万円未満の3問を追加。各ページに最終更新日"),
     ("2026-09-26", "週20時間の壁（週19時間から増やしたときの手取りと、元に戻る時間）のページと計算を追加"),
     ("2026-09-26", "所得税（国税庁の月額表・甲欄の電算機計算の特例、令和8年分）を手取りの目安に追加。通勤手当と残業代を分けて入力できるように"),
     ("2026-09-26", "雇用保険料・手取りの目安、加入前との比べ方、将来の年金と傷病手当金の目安、時給での入力を追加"),
     ("2026-09-26", "月収別の保険料のページ（8万〜25万円）を追加"),
     ("2026-09-26", "公開。賃金要件の撤廃日を令和8年政令第275号（2026年10月1日）で確認し、協会けんぽ 令和8年度の料率で保険料の目安を追加"),
 )
+
+# 最終更新日（全ページの下と sitemap の lastmod に出す）。HISTORY の先頭の日付。
+UPDATED: str = HISTORY[0][0]
+_env.globals["updated"] = f"{int(UPDATED[:4])}年{int(UPDATED[5:7])}月{int(UPDATED[8:10])}日"
 
 
 def _build_keisan_page() -> None:
@@ -442,6 +465,7 @@ def _write_sitemap() -> None:
         slug = _milestone_slug(regime)
         urls.append((canonical_url(f"year/{slug}.html"), None))
 
+    urls = [(loc, lastmod or UPDATED) for loc, lastmod in urls]
     entries = "\n".join(
         f"  <url><loc>{loc}</loc>"
         + (f"<lastmod>{lastmod}</lastmod>" if lastmod else "")

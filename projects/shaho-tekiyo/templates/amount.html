@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}月収{{ man }}万円のパートの社会保険料はいくら？｜{{ era }}の料率で{{ "{:,}".format(tokyo.total_yen) }}円（東京）{% endblock %}
+{% block title %}月収{{ man }}万円（年収{{ man * 12 }}万円）のパートの社会保険料はいくら？｜{{ era }}で月{{ "{:,}".format(tokyo.total_yen) }}円{% endblock %}
 {% block description %}月収{{ man }}万円で社会保険に入ると、引かれるのは東京で月{{ "{:,}".format(tokyo.total_yen) }}円（健康保険・子ども・子育て支援金・厚生年金、{{ era }}の料率）。47都道府県の額と、40〜64歳の額、残る額を円単位で。{% endblock %}
 {% block breadcrumb %}
 <nav class="crumbs" aria-label="パンくずリスト">
@@ -12,6 +12,7 @@
 {% endblock %}
 {% block content %}
 <h1>月収{{ man }}万円のパートの社会保険料はいくら？</h1>
+<p class="subtitle-plain">年収に直すと{{ man * 12 }}万円（賞与なし）</p>
 <p class="updated">{{ era }}の料率（{{ period }}）で計算</p>
 
 <div class="verdict ok">東京なら月 {{ "{:,}".format(tokyo.total_yen) }}円 引かれて、残りは {{ "{:,}".format(tokyo.take_home_yen) }}円</div>
@@ -89,6 +90,13 @@
   </tbody>
 </table>
 </div>
+
+<h2>時給で考えるなら</h2>
+<p>
+  月収{{ man }}万円は、週20時間なら時給およそ{{ "{:,}".format(((man * 10000 * 12 / 52 / 20) / 10)|round|int * 10) }}円、
+  週30時間なら時給およそ{{ "{:,}".format(((man * 10000 * 12 / 52 / 30) / 10)|round|int * 10) }}円です。
+  扶養に入って週19時間で働いている人が週20時間に増やすと手取りがどう変わるかは、<a href="{{ base_url }}kabe/index.html">週20時間の壁</a>にまとめています。
+</p>
 
 <h2>そもそも加入の対象になるか</h2>
 <p>
