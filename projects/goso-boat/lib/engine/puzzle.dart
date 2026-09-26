@@ -64,6 +64,9 @@ class Board {
     return Board._(c, Place.left);
   }
 
+  /// 場所×役の人数（`place.index * Role.values.length + role.index`）から作る。
+  factory Board.fromCounts(List<int> counts, Place boat) => Board._(List.unmodifiable(counts), boat);
+
   /// [place] 行の [role] 列。
   final List<int> counts;
   final Place boat;
