@@ -81,6 +81,29 @@ void main() {
       );
     });
 
+    /// **どの出方でも、1つの成否だけで試合が決まらない。**
+    ///
+    /// 途中出場のふつうの試合が1局面だった頃、その1つが外れれば評価は
+    /// そのまま 6.0 を割った——**コイン投げ1回**。実測で駆け出しの
+    /// 「6.0未満」が 先発 19% 対 途中出場 44%（ST）と倍以上開き、
+    /// 最初の15節の 3〜6割が途中出場なので、新規の人はそこで
+    /// 「何をしても下手」に見えていた。
+    ///
+    /// **倍率（`ratingScale`）では直らない**——基準点が 6.0 なので、
+    /// 掛け算では 6.0 をまたぐ割合が動かない（測って外した）。
+    test('どの出方でも、局面は2つ以上ある', () {
+      for (final big in [false, true]) {
+        for (final appearance in [Appearance.start, Appearance.sub]) {
+          expect(
+            MatchEngine.scenarioCount(appearance, big: big),
+            greaterThanOrEqualTo(2),
+            reason: '$appearance（big: $big）が1局面だと、'
+                'その1つの成否がそのまま評価点になる',
+          );
+        }
+      }
+    });
+
     test('出ていない試合に局面は無い', () {
       for (final appearance in [
         Appearance.benched,
