@@ -27,4 +27,4 @@ jobs:
     uses: ./.github/workflows/python-tests.yml
     with:
       workdir: "projects/puzzle-book-maze"
-      install: "pip install -r requirements.txt pypdf pytest"
+      install: "pip install -r requirements.txt pypdf pytest fonttools"
