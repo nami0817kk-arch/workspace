@@ -374,6 +374,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
         child: Semantics(
           button: true,
           label: '${p.role.label}${p.role.weight > 0 ? p.order + 1 : ''}、${p.aboard ? '舟の上' : placeName(p.place)}',
+          excludeSemantics: true,
           child: GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () => _tap(p),
@@ -433,7 +434,7 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     return Positioned(
       left: 16,
       right: 16,
-      bottom: g.bankH + 10,
+      top: (g.riverTop + g.riverBottom) / 2 - 24,
       child: IgnorePointer(
         child: Center(
           child: Container(
@@ -462,7 +463,7 @@ extension on Widget {
 class _Geo {
   _Geo(this.size, this.level) {
     final units = math.max(guardUnits, captiveUnits).toDouble();
-    s = math.min(size.width / (units + 1.2), 62.0);
+    s = math.min(size.width / (units + 1.2), 78.0);
     // 高さ: 岸2つ（各 2.5s+34）＋舟の通り道（中州の面は中州 2.5s+24 も）
     s = math.min(s, (size.height - (level.island ? 110 : 80)) / (level.island ? 10.6 : 7.8));
     figH = s * 1.25;
@@ -512,7 +513,7 @@ class _Geo {
     final riderRoom = figH * 0.62;
     return switch (p) {
       Place.left => Offset(laneCx, riverBottom - boatH - 6),
-      Place.right => Offset(laneCx, riverTop + riderRoom + 4),
+      Place.right => Offset(laneCx, riverTop + math.min(riderRoom * 0.35, 14)),
       Place.island => Offset(laneCx, island.center.dy - boatH / 2 + riderRoom / 2),
     };
   }

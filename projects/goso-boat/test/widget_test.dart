@@ -55,7 +55,6 @@ void main() {
     tester.view.devicePixelRatio = 3;
     addTearDown(tester.view.reset);
     final semantics = tester.ensureSemantics();
-    addTearDown(semantics.dispose);
     final progress = await _progress({'intro.1': true});
     await tester.pumpWidget(GosoBoatApp(progress: progress));
     await tester.tap(find.text('はじめる'));
@@ -76,16 +75,17 @@ void main() {
     await tester.tap(find.text('一手戻す').last);
     await tester.pump(const Duration(milliseconds: 400));
     expect(find.text('脱走された'), findsNothing);
+    semantics.dispose();
   });
 
   testWidgets('ステージ選択: 1面目だけ開いている', (tester) async {
     final semantics = tester.ensureSemantics();
-    addTearDown(semantics.dispose);
     final progress = await _progress();
     await tester.pumpWidget(GosoBoatApp(progress: progress));
     await tester.tap(find.text('ステージを選ぶ'));
     await tester.pumpAndSettle();
     expect(find.bySemanticsLabel('1-1'), findsOneWidget);
     expect(find.bySemanticsLabel('1-2、まだ遊べない'), findsOneWidget);
+    semantics.dispose();
   });
 }

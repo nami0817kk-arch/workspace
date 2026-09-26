@@ -24,7 +24,7 @@ class Intro {
 }
 
 const worlds = [
-  WorldInfo(1, '川べり', Intro('囚人を向こう岸へ', '警官をタップして舟に乗せ、「出発」で渡す。\n岸でも舟の上でも、囚人より警官が少ないと逃げる。\n警官のいない岸に囚人を残しても逃げる。', role: Role.police)),
+  WorldInfo(1, '川べり', Intro('囚人を向こう岸へ', '警官や囚人をタップして舟に乗せ、「向こう岸へ」で渡す。\n岸でも舟の上でも、囚人より警官が少ないと逃げる。\n警官のいない岸に囚人を残しても逃げる。', role: Role.police)),
   WorldInfo(2, '看守長', Intro('看守長が来た', '看守長は1人で囚人2人分を見張れる。舟も漕げる。', role: Role.chief)),
   WorldInfo(3, '手錠', Intro('手錠の2人', '2人はつながっていて離れられない。見張りは2人分、舟の席も2つ使う。', role: Role.cuffed)),
   WorldInfo(4, 'ボス', Intro('ボスが来た', 'ボスは1人でも見張りが2人分いる。舟の上でも同じ。', role: Role.boss)),

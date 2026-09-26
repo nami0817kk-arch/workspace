@@ -191,6 +191,7 @@ class _LevelTile extends StatelessWidget {
       button: true,
       enabled: open,
       label: '${level.id}${open ? '' : '、まだ遊べない'}${stars > 0 ? '、星$stars' : ''}',
+      excludeSemantics: true,
       child: GestureDetector(
         onTap: open ? () => Navigator.of(context).push(_fade(GameScreen(level: level, progress: progress))) : null,
         child: Container(
