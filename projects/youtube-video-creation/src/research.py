@@ -1090,6 +1090,11 @@ def _check_line_images_wide(notes: Notes) -> list[str]:
     problems: list[str] = []
     seen: set[str] = set()
     for section in notes.sections:
+        # **表のある節は見ない**（2026-09-26 ラ・リーガ版の見本）。表は画面の左に出て、
+        # 写真は右に並ぶ（名選手・監督・逸話の節。プレミア版ボーンマスで見せて通った形）。
+        # 左に面は残らない。止めるべきは、表の無い節で縦の写真が1枚だけ立つ場合
+        if section.card and str(section.card.get("type")) == "table":
+            continue
         for image in (section.line_images or []):
             path = str(image or "").strip()
             if not path or path in seen:

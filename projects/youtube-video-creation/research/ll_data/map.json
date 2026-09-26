@@ -1,0 +1,122 @@
+{
+ "bounds": {
+  "left": -9.9,
+  "right": 4.8,
+  "top": 44.4,
+  "bottom": 34.7,
+  "inset": {
+   "split": -10.0,
+   "left": -26.925,
+   "right": -13.2,
+   "top": 38.1,
+   "bottom": 27.4
+  },
+  "image": "Spain adm location map.svg"
+ },
+ "clubs": {
+  "athletic": {
+   "ground": "San Mamés Stadium (2013)",
+   "lat": 43.26416667,
+   "lon": -2.94936111
+  },
+  "atletico": {
+   "ground": "Metropolitano Stadium",
+   "lat": 40.43611111,
+   "lon": -3.59944444
+  },
+  "barcelona": {
+   "ground": "Camp Nou",
+   "lat": 41.3808,
+   "lon": 2.1228
+  },
+  "celta": {
+   "ground": "Balaídos Stadium",
+   "lat": 42.21183333,
+   "lon": -8.73969444
+  },
+  "elche": {
+   "ground": "Estadio Martínez Valero",
+   "lat": 38.26694444,
+   "lon": -0.66333333
+  },
+  "espanyol": {
+   "ground": "RCDE Stadium",
+   "lat": 41.34777778,
+   "lon": 2.07555556
+  },
+  "getafe": {
+   "ground": "Estadio Coliseum",
+   "lat": 40.32555556,
+   "lon": -3.71472222
+  },
+  "levante": {
+   "ground": "Estadi Ciutat de València",
+   "lat": 39.49472222,
+   "lon": -0.36416667
+  },
+  "malaga": {
+   "ground": "La Rosaleda Stadium",
+   "lat": 36.7342,
+   "lon": -4.4266
+  },
+  "racing": {
+   "ground": "Campos de Sport de El Sardinero",
+   "lat": 43.47638889,
+   "lon": -3.79333333
+  },
+  "rayo": {
+   "ground": "Vallecas Stadium",
+   "lat": 40.39194444,
+   "lon": -3.65888889
+  },
+  "betis": {
+   "ground": "Estadio La Cartuja",
+   "lat": 37.41723611,
+   "lon": -6.00456389
+  },
+  "realmadrid": {
+   "ground": "Bernabéu (stadium)",
+   "lat": 40.45306,
+   "lon": -3.68835
+  },
+  "realsociedad": {
+   "ground": "Anoeta Stadium",
+   "lat": 43.30138889,
+   "lon": -1.97361111
+  },
+  "sevilla": {
+   "ground": "Ramón Sánchez-Pizjuán Stadium",
+   "lat": 37.384,
+   "lon": -5.9705
+  },
+  "villarreal": {
+   "ground": "Estadio de la Cerámica",
+   "lat": 39.94416667,
+   "lon": -0.10361111
+  },
+  "alaves": {
+   "ground": "Mendizorrotza Stadium",
+   "lat": 42.837222,
+   "lon": -2.688056,
+   "note": "座標は clubs.json（取材で各スタジアム記事から控えた値）"
+  },
+  "deportivo": {
+   "ground": "Estadio Riazor",
+   "lat": 43.3687,
+   "lon": -8.4175,
+   "note": "座標は clubs.json（取材で各スタジアム記事から控えた値）"
+  },
+  "osasuna": {
+   "ground": "El Sadar Stadium",
+   "lat": 42.796667,
+   "lon": -1.636944,
+   "note": "座標は clubs.json（取材で各スタジアム記事から控えた値）"
+  },
+  "valencia": {
+   "ground": "Mestalla Stadium",
+   "lat": 39.474722,
+   "lon": -0.358333,
+   "note": "座標は clubs.json（取材で各スタジアム記事から控えた値）"
+  }
+ }
+}

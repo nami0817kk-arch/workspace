@@ -257,6 +257,14 @@ def main() -> int:
     for key, _t in CLUBS:
         # **基礎DATAの板がまだ無いクラブは紋章だけ探す**（ラ・リーガは見本の1クラブから作る）
         if not (DATA / f"{key}.json").exists():
+            # 紋章だけは clubs.json の日本語名で探す（地図に20クラブ全部を置くため）
+            ja = next((r.get("name_ja") for r in (_rows if clubleague.name() != "premier" else [])
+                       if r["key"] == key), "")
+            sys.path.insert(0, str(ROOT))
+            from src import crest as _crest
+            found = _crest.find(ja, ROOT) if ja else None
+            if found:
+                crests[key] = Image.open(found).convert("RGBA")
             continue
         facts[key] = json.loads((DATA / f"{key}.json").read_text(encoding="utf-8"))
         path = ROOT / facts[key]["crest"]

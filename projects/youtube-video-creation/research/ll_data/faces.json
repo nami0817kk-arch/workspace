@@ -1,0 +1,29 @@
+{
+ "realsociedad": {
+  "シャビ・アロンソ": {
+   "role": "legend",
+   "file": "assets/photos/ll/realsociedad_legend_5f5bf55b.jpg",
+   "page": "Xabi Alonso"
+  },
+  "アントワーヌ・グリーズマン": {
+   "role": "legend",
+   "file": "assets/photos/ll/realsociedad_legend_03ab89bf.jpg",
+   "page": "Antoine Griezmann"
+  },
+  "マルティン・スビメンディ": {
+   "role": "legend",
+   "file": "assets/photos/ll/realsociedad_legend_b9a4fac9.jpg",
+   "page": "Martín Zubimendi"
+  },
+  "ペッレグリーノ・マタラッツォ": {
+   "role": "manager",
+   "file": "assets/photos/ll/realsociedad_manager_ab923e7e.jpg",
+   "page": "Pellegrino Matarazzo"
+  },
+  "ホキン・アペリバイ": {
+   "role": "owner",
+   "file": "",
+   "note": "Commons に自由に使える写真が無い（2026-09-26 取材）"
+  }
+ }
+}

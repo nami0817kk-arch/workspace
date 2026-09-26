@@ -44,7 +44,7 @@ LEAGUES = {
         "league": "spain",
         "league_name": "ラ・リーガ",
         "league_short": "ラ・リーガ",
-        "best_label": "ラ・リーガ最高位",
+        "best_label": "昨季の順位",
         "slot": "laliga_1",
         "page_title": "ラ・リーガ20クラブの台本",
         "map_module": "Spain",

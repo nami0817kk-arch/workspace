@@ -72,7 +72,7 @@ NAT = {"JPN": "日本", "ENG": "イングランド", "SCO": "スコットラン�
        "NED": "オランダ", "BEL": "ベルギー", "ITA": "イタリア", "SUI": "スイス", "AUT": "オーストリア",
        "DEN": "デンマーク", "SWE": "スウェーデン", "NOR": "ノルウェー", "POL": "ポーランド", "CZE": "チェコ",
        "CRO": "クロアチア", "SRB": "セルビア", "SVN": "スロベニア", "SVK": "スロバキア", "HUN": "ハンガリー",
-       "UKR": "ウクライナ", "GRE": "ギリシャ", "TUR": "トルコ", "BRA": "ブラジル", "ARG": "アルゼンチン",
+       "UKR": "ウクライナ", "RUS": "ロシア", "GRE": "ギリシャ", "TUR": "トルコ", "BRA": "ブラジル", "ARG": "アルゼンチン",
        "URU": "ウルグアイ", "COL": "コロンビア", "ECU": "エクアドル", "PAR": "パラグアイ", "CHI": "チリ",
        "PER": "ペルー", "VEN": "ベネズエラ", "MEX": "メキシコ", "USA": "アメリカ", "CAN": "カナダ",
        "JAM": "ジャマイカ", "SEN": "セネガル", "CIV": "コートジボワール", "GHA": "ガーナ", "NGA": "ナイジェリア",
@@ -835,7 +835,12 @@ def club_matches(team: str, club_title: str) -> bool:
             .replace(" CF", "").replace(" C.F.", "").replace(" FC", "").replace(" de Fútbol", ""))
     t = team.replace("AFC ", "").strip()
     # 頭の1語で比べると、マンチェスター・シティとユナイテッドを取り違える
-    return base == t or base in t or t in base
+    if base == t or base in t or t in base:
+        return True
+    # **略した書き方も拾う**（2026-09-26 ラ・リーガ版）。試合の表は「Celta Vigo」、
+    # クラブ記事は「RC Celta de Vigo」。3字以上の語が全部クラブ名に入っていれば同じ
+    words = [w for w in t.split() if len(w) >= 3]
+    return bool(words) and len(words) >= 2 and all(w in base.split() for w in words)
 
 
 def main() -> int:

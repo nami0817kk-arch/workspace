@@ -1769,6 +1769,21 @@ def test_行に差し込む縦長の写真は止める(tmp_path):
     assert len(problems) == 1 and "tall.jpg" in problems[0] and "pairphoto" in problems[0]
 
 
+def test_表のある節の縦長の写真は止めない(tmp_path):
+    """2026-09-26 ラ・リーガ版。名選手・監督・逸話の節は表が左、写真が右に並ぶので左に面は残らない。"""
+    from PIL import Image
+    from src.research import _check_line_images_wide
+    tall = tmp_path / "tall.jpg"; Image.new("RGB", (300, 400), "gray").save(tall)
+    raw = _raw()
+    raw["sections"] = [
+        _section(id="what", main=True, say=["さいしょのぎょうです。"]),
+        _section(id="legend", heading="語る人", card={"type": "table", "title": "名選手",
+                                                   "columns": ["", ""], "rows": [["a", "b"]]},
+                 say=[{"text": "このひとです。", "image": str(tall)}]),
+    ]
+    assert _check_line_images_wide(build_notes(raw)) == []
+
+
 def test_主役の名前が出ない節は知らせる():
     """2026-09-25 に4本で「この節は不要」と言われた。機械で取れるのは名前の有無だけ。"""
     from src.research import _advise_offtopic_section

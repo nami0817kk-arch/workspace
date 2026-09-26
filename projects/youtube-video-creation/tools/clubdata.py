@@ -90,6 +90,11 @@ def _fit(draw: ImageDraw.ImageDraw, text: str, path: str, size: int, width: int,
 def _wrap(draw: ImageDraw.ImageDraw, text: str, font: ImageFont.FreeTypeFont, width: int) -> list[str]:
     lines, cur = [], ""
     for ch in text:
+        # **句読点を行頭に置かない**（2026-09-26 ラ・リーガ版の見本。「、スペインを2度制」と
+        # 読点から始まる行が出た）。はみ出しても前の行にぶら下げる
+        if ch in "、。，．」』）！？" and cur:
+            cur += ch
+            continue
         if draw.textlength(cur + ch, font=font) > width and cur:
             lines.append(cur)
             cur = ch

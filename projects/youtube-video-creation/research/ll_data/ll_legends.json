@@ -1,0 +1,28 @@
+[
+ {
+  "club": "レアル・ソシエダ",
+  "legends": [
+   {
+    "name": "シャビ・アロンソ",
+    "era": "1999-2004",
+    "numbers": "リーグ114試合9得点",
+    "why": "20歳で主将。2002-03の2位の中心",
+    "source": "https://en.wikipedia.org/wiki/Xabi_Alonso"
+   },
+   {
+    "name": "アントワーヌ・グリーズマン",
+    "era": "2009-2014",
+    "numbers": "リーグ180試合46得点",
+    "why": "2部優勝と昇格、CL出場を決めた得点",
+    "source": "https://en.wikipedia.org/wiki/Antoine_Griezmann"
+   },
+   {
+    "name": "マルティン・スビメンディ",
+    "era": "2019-2025",
+    "numbers": "リーグ180試合9得点",
+    "why": "地元育ちの中盤。国王杯優勝",
+    "source": "https://en.wikipedia.org/wiki/Mart%C3%ADn_Zubimendi"
+   }
+  ]
+ }
+]

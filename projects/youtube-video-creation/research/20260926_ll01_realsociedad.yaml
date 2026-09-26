@@ -1,0 +1,465 @@
+# プレミアリーグ20クラブ紹介 ①レアル・ソシエダ（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/ll_data/realsociedad*.json と旧台本 -
+format: news
+voice_min: 0
+slot: laliga_1
+date: 2026年9月19日
+people:
+- 久保建英
+- レアル・ソシエダ
+- ペッレグリーノ・マタラッツォ
+short_title: 久保建英のソシエダってどんなクラブ？
+series: ラ・リーガチーム紹介
+theme:
+  id: realsociedad_intro
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: レアル・ソシエダ
+  title: 久保建英のレアル・ソシエダ。バスクの選手だけで頂点に立った過去
+  question: どんなクラブなのか
+  hook: あと2試合で、無敗の優勝を逃したシーズンもあります。
+  lead: バスクの選手だけで、スペイン王者に2度。
+  opening_image: assets/stats/ll_realsociedad_data_t.png
+thumbnail:
+  line1: バスクの選手だけで連覇
+  line2: 久保建英のいるソシエダ
+  crest_main:
+  - レアル・ソシエダ
+  board: assets/stats/ll_realsociedad_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 久保建英と、4か月で国王杯を取った監督
+  narrator: キャスター
+  say:
+  - text: 日本の**久保建英**は、ここで**5シーズン目**を迎えています。
+    image: assets/stats/ll_realsociedad_data_r1.png
+    no_telop: true
+  - text: 率いるのは、アメリカ出身のマタラッツォ監督。こう話しています。
+    image: assets/stats/ll_realsociedad_data_r2.png
+    no_telop: true
+  - voice: ペッレグリーノ・マタラッツォ
+    text: もっと攻撃的なチームになりたい。野心はあるし、勝ちたいのは疑いようがない
+    image: assets/stats/ll_realsociedad_data_r2.png
+  - text: 就任から**4か月**で、国王杯を制しました。今季はヨーロッパリーグにも出ています。
+    image: assets/stats/ll_realsociedad_data_r2.png
+    no_telop: true
+  - text: そしてこのクラブは、バスク出身の選手だけで、スペインの頂点に**2度**立っています。
+    image: assets/stats/ll_realsociedad_data_r3.png
+    no_telop: true
+  - image: assets/stats/ll_realsociedad_data0.png
+    text: 創立は**1909年**。その年の国王杯を制した面々が、クラブを作りました。
+    no_telop: true
+  - image: assets/stats/ll_realsociedad_data1.png
+    text: 愛称は「チュリ・ウルディン」。バスク語で**白と青**。町の旗の色です。
+    no_telop: true
+  - image: assets/stats/ll_realsociedad_map.png
+    text: ホームタウンはサン・セバスティアン。フランス国境まで**20キロ**の港町です。
+    no_telop: true
+  - image: assets/backgrounds/stadium_レアルソシエダ.png
+    text: 本拠地はアノエタ。クラブの発表では、**4万人**が入ります。
+  - image: assets/stats/ll_realsociedad_data4.png
+    text: 会長は**2008年**からホキン・アペリバイ。クラブは株式会社の形です。
+    no_telop: true
+  - image: assets/stats/ll_realsociedad_cups.png
+    text: 1部の優勝は**2回**。国王杯は**4回**、スーペルコパは**1回**。
+    no_telop: true
+  - image: assets/stats/ll_realsociedad_data6.png
+    text: 最多出場は、センターバックのアルベルト・ゴリス。このクラブだけで**599試合**です。
+    no_telop: true
+  - image: assets/stats/ll_realsociedad_data7.png
+    text: 直近のタイトルは昨季の国王杯。アトレティコと2対2のあと、ピーケー戦を**4対3**で制しました。
+    no_telop: true
+  - image: assets/stats/ll_realsociedad_last.png
+    text: 昨季のリーグ戦は**10位**。勝ち点は**46**でした。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Real_Sociedad
+  - https://en.wikipedia.org/wiki/2026–27_Real_Sociedad_season
+  - https://www.marca.com/futbol/real-sociedad/2026/09/19/matarazzo-mestalla-sera-importante-empezar-fuertes-ganar-daria-confianza.html
+  - https://en.wikipedia.org/wiki/Takefusa_Kubo
+  - https://en.wikipedia.org/wiki/2026_Copa_del_Rey_final
+  bg: assets/backgrounds/stadium_レアルソシエダ_in.png
+  official: false
+- id: history
+  heading: バスクの選手だけで
+  tier: 背景
+  telop: 長いあいだ、バスクの選手だけで戦った
+  narrator: 解説
+  card:
+    type: table
+    title: バスクの選手だけで
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 方針
+      - バスクの選手だけ
+    - - 同じ方針
+      - アスレティック・ビルバオ
+  say:
+  - このクラブは長いあいだ、**バスクで生まれ育った選手**しか獲りませんでした。
+  - 隣のアスレティック・ビルバオと同じ方針で、選手は自前で育てました。
+  - その形のまま、1980年代の初めにスペインの頂点へ向かいます。
+  sources:
+  - https://en.wikipedia.org/wiki/Real_Sociedad
+  - https://es.wikipedia.org/wiki/Historia_de_la_Real_Sociedad_de_F%C3%BAtbol
+  bg: assets/backgrounds/stadium_レアルソシエダ_in.png
+  official: false
+- id: history2
+  heading: 38試合で止まった
+  tier: 背景
+  telop: 38試合無敗。残り2節で優勝を逃す
+  narrator: 解説
+  card:
+    type: table
+    title: 1979年から80年のシーズン
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - リーグ戦
+      - 32節続けて負けなし
+    - - 前のシーズンから
+      - 38試合無敗
+  say:
+  - 1979年に始まったシーズン、リーグ戦で**32節**続けて負けなし。
+  - 前のシーズンの終わりから数えると、**38試合**です。
+  - text: ところが残り2節、セビージャに**1対2**で敗れます。
+    card:
+      type: table
+      title: 1979年から80年のシーズン
+      columns: *id001
+      rows:
+      - - 残り2節
+        - セビージャに1対2で敗戦
+  - 勝ち点1の差で、優勝を逃しました。
+  sources:
+  - https://es.wikipedia.org/wiki/Historia_de_la_Real_Sociedad_de_F%C3%BAtbol
+  - https://en.wikipedia.org/wiki/Alberto_Ormaetxea
+  bg: assets/backgrounds/stadium_レアルソシエダ_in.png
+  official: false
+- id: history3
+  heading: 2年続けて頂点に
+  tier: 背景
+  telop: 1981年に初優勝、翌年に連覇
+  narrator: 解説
+  card:
+    type: table
+    title: 2年続けて頂点に
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1980-81
+      - 初優勝。残り10節で7位から
+    - - 1981-82
+      - 連覇。最後はバスク・ダービー
+  say:
+  - 翌シーズン、残り10節で7位から追い上げ、**初優勝**。
+  - その次も勝って**連覇**。最後はホームでアスレティックに勝って決めました。
+  sources:
+  - https://en.wikipedia.org/wiki/Real_Sociedad
+  - https://es.wikipedia.org/wiki/Historia_de_la_Real_Sociedad_de_F%C3%BAtbol
+  bg: assets/backgrounds/stadium_レアルソシエダ_in.png
+  official: false
+- id: history4
+  heading: 1989年の転換
+  tier: 背景
+  telop: 1989年、方針を変える
+  narrator: 解説
+  card:
+    type: table
+    title: 1989年の転換
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - - 1989年
+      - バスク以外の選手を獲る
+    - - ジョン・オルドリッジ
+      - リヴァプールから100万ポンド
+  say:
+  - 方針を変えたのは**1989年**です。
+  - リヴァプールから、アイルランド代表のジョン・オルドリッジを獲りました。
+  - text: 数十年ぶりのバスク以外の選手で、移籍金は**100万ポンド**。
+    card:
+      type: table
+      title: 1989年の転換
+      columns: *id002
+      rows:
+      - - 1シーズン目
+        - リーグ16得点
+  - 1シーズン目に**16得点**。それでも、受け入れないファンがいました。
+  sources:
+  - https://en.wikipedia.org/wiki/John_Aldridge
+  - https://en.wikipedia.org/wiki/Real_Sociedad
+  bg: assets/backgrounds/stadium_レアルソシエダ_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 走る。育てて売る。県ぐるみのクラブ
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - よく走る
+    - - 運営の型
+      - 育てて売る
+    - - クラブの気質
+      - 県の5%が年間シート
+  say:
+  - text: マタラッツォ監督のチームは、よく走る。時速21キロを超えて走った距離は、リーグで**2番目**です。
+    image: assets/photos/ll/realsociedad_manager_ab923e7e.jpg
+  - ピッチの外は、育てて売る型。
+  - オドリオソラは2018年、レアル・マドリードへ**3000万ユーロ**。今は戻っています。
+  - スタンドは県ぐるみ。2022年の年間シートは**3万7584人**、県の人口の5パーセントを超えます。
+  sources:
+  - https://en.wikipedia.org/wiki/Real_Sociedad
+  - https://www.realsociedad.eus/es/noticias/detalle/un-equipo-de-alta-velocidad
+  - https://en.wikipedia.org/wiki/Real_Sociedad_Cantera
+  - https://es.wikipedia.org/wiki/Real_Sociedad_de_F%C3%BAtbol
+  bg: assets/backgrounds/stadium_レアルソシエダ_in.png
+  official: false
+- id: episode
+  heading: 胸のエンブレムが顔に
+  tier: 背景
+  telop: 最後の試合、エンブレムがその選手の顔に
+  narrator: 解説
+  card:
+    type: table
+    title: 胸のエンブレムが顔に
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 2018年 最終節
+      - シャビ・プリエトの最後の試合
+    - - 胸のエンブレム
+      - プリエトの顔に
+  say:
+  - text: 生え抜きのシャビ・プリエト。**15年**、このクラブだけでプレーしました。
+    image: assets/images/ll_realsociedad_episode/scene.jpg
+  - 最後の試合、ユニフォームの胸のエンブレムが、**プリエトの顔**に替わりました。
+  sources:
+  - https://en.wikipedia.org/wiki/Xabi_Prieto
+  bg: assets/backgrounds/stadium_レアルソシエダ_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id003
+      - シャビ・アロンソ
+      - 1999-2004
+      - 20歳で主将
+  say:
+  - text: シャビ・アロンソは、ソシエダのセカンドチームから上がった中盤の選手です。
+    image: assets/photos/ll/realsociedad_legend_5f5bf55b.jpg
+  - 2001年、最下位のチームを任されたトシャック監督が、**20歳**の彼を主将に指名しました。
+  - 2002年から03年は**2位**。そのあとリヴァプールへ移り、今はチェルシーの監督です。
+  sources:
+  - https://en.wikipedia.org/wiki/Xabi_Alonso
+  - https://en.wikipedia.org/wiki/Antoine_Griezmann
+  - https://en.wikipedia.org/wiki/Mart%C3%ADn_Zubimendi
+  bg: assets/backgrounds/stadium_レアルソシエダ_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - &id004
+      - アントワーヌ・グリーズマン
+      - 2009-2014
+      - 昇格と欧州の得点
+  say:
+  - text: グリーズマンはフランス人。国境の向こうの学校に通いながら、ここで育ちました。
+    image: assets/photos/ll/realsociedad_legend_03ab89bf.jpg
+  - 2009年、18歳でトップに上がり、2部優勝と昇格に貢献しました。
+  - 2013年の最終節で決勝点。チャンピオンズリーグへの切符を取りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Xabi_Alonso
+  - https://en.wikipedia.org/wiki/Antoine_Griezmann
+  - https://en.wikipedia.org/wiki/Mart%C3%ADn_Zubimendi
+  bg: assets/backgrounds/stadium_レアルソシエダ_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - *id004
+    - - マルティン・スビメンディ
+      - 2019-2025
+      - 地元育ちの中盤
+  say:
+  - text: スビメンディはサン・セバスティアン生まれ。11歳で、県のチェスの王者になった中盤です。
+    image: assets/photos/ll/realsociedad_legend_b9a4fac9.jpg
+  - 延期された2020年の国王杯の決勝を、2021年4月に制しました。
+  - 2025年にアーセナルへ。1年目でプレミアリーグを制しました。
+  sources:
+  - https://en.wikipedia.org/wiki/Xabi_Alonso
+  - https://en.wikipedia.org/wiki/Antoine_Griezmann
+  - https://en.wikipedia.org/wiki/Mart%C3%ADn_Zubimendi
+  bg: assets/backgrounds/stadium_レアルソシエダ_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はマタラッツォ。2028年まで延長
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ペッレグリーノ・マタラッツォ（アメリカ）
+    - - 就任
+      - 2025年12月
+    - - 前職
+      - ホッフェンハイム
+  say:
+  - text: 今季の監督はペッレグリーノ・マタラッツォ。**2025年12月**の就任です。
+    image: assets/photos/ll/realsociedad_manager_ab923e7e.jpg
+  - 前はドイツのホッフェンハイム。7月には、**2028年**までの延長を決めました。
+  sources:
+  - https://en.wikipedia.org/wiki/Real_Sociedad
+  - https://en.wikipedia.org/wiki/Pellegrino_Matarazzo
+  - https://www.realsociedad.eus/en/news/details/pellegrino-matarazzo-new-real-sociedad-coach
+  - https://www.realsociedad.eus/es/noticias/detalle/seguimos-sin-hacerle-caso-al-algoritmo
+  bg: assets/backgrounds/stadium_レアルソシエダ_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は24人です。
+    image: assets/stats/ll_realsociedad_gk.png
+    no_telop: true
+  - image: assets/stats/ll_realsociedad_gk_f.png
+    text: ゴールキーパーは2人。
+    no_telop: true
+  - image: assets/stats/ll_realsociedad_gk_f.png
+    text: アレックス・レミーロはリーグ戦で**252試合**。
+    no_telop: true
+  - image: assets/stats/ll_realsociedad_gk_f.png
+    text: ウナイ・マレーロはリーグ戦で**49試合**。
+    no_telop: true
+  - image: assets/stats/ll_realsociedad_df_f.png
+    text: ディフェンダーは8人。
+    no_telop: true
+  - image: assets/stats/ll_realsociedad_df_f.png
+    text: イゴール・スベルディアはリーグ戦で**265試合**。
+    no_telop: true
+  - image: assets/stats/ll_realsociedad_df_f.png
+    text: アイエン・ムニョスはリーグ戦で**192試合**。
+    no_telop: true
+  - image: assets/stats/ll_realsociedad_mf_f.png
+    text: ミッドフィールダーは9人。
+    no_telop: true
+  - image: assets/stats/ll_realsociedad_mf_f.png
+    text: 日本の久保建英がいます。
+    no_telop: true
+  - image: assets/stats/ll_realsociedad_mf_f.png
+    text: 久保建英は、リーグ戦で**130試合23得点**。
+    no_telop: true
+  - image: assets/stats/ll_realsociedad_fw_f.png
+    text: フォワードは5人。
+    no_telop: true
+  - image: assets/stats/ll_realsociedad_fw_f.png
+    text: 主将を務めるのが**ミケル・オヤルサバル**。
+    no_telop: true
+  - image: assets/stats/ll_realsociedad_fw_f.png
+    text: リーグ戦で**356試合**に出ています。
+    no_telop: true
+  - image: assets/stats/ll_realsociedad_fw_f.png
+    text: アンデル・バレネチェアはリーグ戦で**189試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Real_Sociedad
+  bg: assets/backgrounds/stadium_レアルソシエダ_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 7試合で3勝1引き分け3敗。8位
+  narrator: 解説
+  card:
+    type: table
+    title: ラ・リーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - レアル・マドリード（アウェー）
+      - 1対4
+    - - 第2節
+      - レアル・ベティス（アウェー）
+      - 0対1
+    - - 第3節
+      - エスパニョール（ホーム）
+      - 2対1
+    - - 第4節
+      - エルチェ（アウェー）
+      - 3対2
+    - - 第5節
+      - アトレティコ・マドリード（ホーム）
+      - 0対3
+    - - 第6節
+      - セルタ（ホーム）
+      - 0対0
+    - - 第7節
+      - バレンシア（アウェー）
+      - 3対2
+  say:
+  - ラ・リーガは7試合を終えて、**3勝1引き分け3敗**です。
+  - 順位は**8位**、勝ち点は**10**です。
+  - ヨーロッパリーグの初戦は、プレミアリーグのボーンマスに**1対2**で敗れました。
+  sources:
+  - https://en.wikipedia.org/wiki/2026–27_Real_Sociedad_season
+  bg: assets/backgrounds/stadium_レアルソシエダ_in.png
+  official: false

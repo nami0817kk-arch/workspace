@@ -32,6 +32,14 @@ CLUBS = [
     (11, "hull"), (12, "ipswich"), (13, "leeds"), (14, "liverpool"), (15, "mancity"),
     (16, "manutd"), (17, "newcastle"), (18, "forest"), (19, "sunderland"), (20, "tottenham"),
 ]
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import clubleague  # noqa: E402
+
+# **リーグは CLUB_LEAGUE で切り替える**（2026-09-26 ラ・リーガ版）。基準の形は同じ（ボーンマス）
+LEAGUE = clubleague.current()
+if clubleague.name() != "premier":
+    CLUBS = sorted({(int(m.group(1)), m.group(2)) for f in (ROOT / "research").glob(f"{LEAGUE['note_prefix']}*_*.yaml")
+                    if (m := re.search(r"(\d\d)_([a-z]+)\.yaml$", f.name))})
 
 # ショートの尺。上限58秒（`shorts.MAX_SECONDS`）、下限は「短くなりすぎない」ための目安
 SHORT_MIN = 46.0
@@ -51,7 +59,7 @@ def _lines(script_json: dict) -> list[dict]:
 
 def check(number: int, key: str, with_review: bool) -> list[str]:
     """× の一覧を返す。空なら通っている。"""
-    stem = f"20260920_pl{number:02d}_{key}"
+    stem = f"{LEAGUE['note_prefix']}{number:02d}_{key}"
     bad: list[str] = []
     note_path = ROOT / "research" / f"{stem}.yaml"
     script_path = ROOT / "scripts" / f"{stem}.md"
