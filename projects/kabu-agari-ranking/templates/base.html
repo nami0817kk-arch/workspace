@@ -426,6 +426,46 @@
     font-size: 0.9rem;
   }
   .same-day { font-size: 0.9rem; margin: 1rem 0 0.5rem; }
+  /* 市場区分・業種・売買単位。見出しの直下に小さく置く（本文の邪魔をしない） */
+  .stock-profile {
+    margin: -0.4rem 0 0.8rem;
+    font-size: 0.85rem;
+    color: var(--muted);
+  }
+  /* 市場別・業種別の内訳。広い画面では2つ並べ、狭い画面では縦に積む。
+     **ランキングの表（table.ranking）の見た目は使い回さない。** あちらは
+     狭い画面で最後の列を消す・最低幅560pxを持つ、という前提で組んであり、
+     3列しかないこの表に当てると割合の列が消え、2列に並べたときにはみ出す。 */
+  .breakdown { display: grid; gap: 1rem; margin: 0 0 1.5rem; }
+  .breakdown h3 { font-size: 0.95rem; margin: 0 0 0.4rem; }
+  table.breakdown-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 0.85rem;
+  }
+  table.breakdown-table caption {
+    caption-side: top;
+    text-align: left;
+    padding: 0.5rem 0.6rem 0;
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+  table.breakdown-table th, table.breakdown-table td {
+    padding: 0.4rem 0.6rem;
+    border-bottom: 1px solid var(--border);
+  }
+  table.breakdown-table th[scope="row"] { text-align: left; font-weight: normal; }
+  table.breakdown-table thead th { text-align: right; font-size: 0.8rem; color: var(--muted); }
+  table.breakdown-table thead th:first-child { text-align: left; }
+  table.breakdown-table td { text-align: right; font-variant-numeric: tabular-nums; }
+  table.breakdown-table tbody tr:last-child th,
+  table.breakdown-table tbody tr:last-child td { border-bottom: none; }
+  @media (min-width: 720px) {
+    .breakdown { grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  }
   .day-nav {
     display: flex;
     justify-content: space-between;

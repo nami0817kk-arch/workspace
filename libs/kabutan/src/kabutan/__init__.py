@@ -10,11 +10,17 @@ kabutan の HTML 構造が変わったときに直す場所はこのパッケー
 from kabutan.client import (
     HEADERS,
     fetch_daily_html,
+    fetch_stock_page,
     fetch_errors,
     fetch_ranking_html,
     fetch_stock_name,
 )
-from kabutan.parse import extract_asof_date, parse_daily_prices, parse_ranking_table
+from kabutan.parse import (
+    extract_asof_date,
+    parse_daily_prices,
+    parse_ranking_table,
+    parse_stock_profile,
+)
 
 MODE_GAINERS = "2_1"  # 今日の上昇率（値上がり率ランキング）
 MODE_LOSERS = "2_2"   # 今日の下落率（値下がり率ランキング）
@@ -36,9 +42,11 @@ __all__ = [
     "MODE_STOP_LOW",
     "extract_asof_date",
     "fetch_daily_html",
+    "fetch_stock_page",
     "fetch_errors",
     "fetch_ranking_html",
     "fetch_stock_name",
     "parse_daily_prices",
+    "parse_stock_profile",
     "parse_ranking_table",
 ]

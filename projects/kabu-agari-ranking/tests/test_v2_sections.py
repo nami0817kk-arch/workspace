@@ -180,3 +180,74 @@ def test_出どころが混ざっていることを画面で断る():
     h = aggregate.stop_high_history(days)
     assert h["has_recorded"] and h["has_estimated"]
     assert [d["source"] for d in h["per_day"]] == ["recorded", "estimated"]
+
+
+# --- 市場区分・業種の内訳 ---------------------------------------------------
+
+def _recorded_day(rec_date, codes):
+    """取得元のストップ高一覧から記録した日。"""
+    return {
+        "rec_date": rec_date,
+        "gainers": [_row(c, f"銘柄{c}") for c in codes],
+        "losers": [], "active": [],
+        "stop_high": [
+            {"rank": i + 1, "code": c, "name": f"銘柄{c}", "close": 163.0,
+             "change_pct": 44.25, "at_limit": True}
+            for i, c in enumerate(codes)
+        ],
+    }
+
+
+@pytest.fixture
+def breakdown_site(tmp_path, monkeypatch):
+    data_dir = tmp_path / "data"
+    out_dir = tmp_path / "output"
+    data_dir.mkdir()
+    monkeypatch.setattr(render, "_DATA_DIR", data_dir)
+    monkeypatch.setattr(render, "_OUTPUT_DIR", out_dir)
+    monkeypatch.setattr(render, "_ROOT", tmp_path)
+    (data_dir / "stocks.json").write_text(json.dumps({"stocks": {
+        "1111": {"market": "東証グロース", "industry": "情報・通信業", "unit": "100株"},
+        "2222": {"market": "東証グロース", "industry": "サービス業", "unit": "100株"},
+        "3333": {"market": "東証プライム", "industry": "情報・通信業", "unit": "100株"},
+    }}, ensure_ascii=False), encoding="utf-8")
+    for d in ("2026-09-28", "2026-09-29", "2026-09-30"):
+        (data_dir / f"{d}.json").write_text(
+            json.dumps(_recorded_day(d, ["1111", "2222", "3333"]), ensure_ascii=False),
+            encoding="utf-8")
+    render.build_all()
+    return out_dir
+
+
+def test_ストップ高の市場別業種別の内訳が出る(breakdown_site):
+    html = (breakdown_site / "stop-high" / "index.html").read_text(encoding="utf-8")
+    assert "どの市場・どの業種で起きているか" in html
+    # 3営業日 × グロース2銘柄 = のべ6件（66.7%）
+    assert ">6<" in html and "66.7%" in html
+    assert "情報・通信業" in html
+
+
+def test_内訳は推定の日を数えない(tmp_path, monkeypatch):
+    """推定の日を混ぜると「上位30銘柄の中の数」と「全ストップ高」が同じ数に見える。"""
+    data_dir = tmp_path / "data"
+    data_dir.mkdir()
+    monkeypatch.setattr(render, "_DATA_DIR", data_dir)
+    monkeypatch.setattr(render, "_OUTPUT_DIR", tmp_path / "output")
+    monkeypatch.setattr(render, "_ROOT", tmp_path)
+    (data_dir / "stocks.json").write_text(
+        json.dumps({"stocks": {"1111": {"market": "東証グロース"}}}, ensure_ascii=False),
+        encoding="utf-8")
+    # stop_high キーを持たない日＝推定しかできない日
+    (data_dir / "2026-09-18.json").write_text(
+        json.dumps(_day("2026-09-18", [_row("1111", "銘柄1111")]), ensure_ascii=False),
+        encoding="utf-8")
+    render.build_all()
+    html = (tmp_path / "output" / "stop-high" / "index.html").read_text(encoding="utf-8")
+    assert "どの市場・どの業種で起きているか" not in html
+
+
+def test_銘柄ページに市場区分と業種が出る(breakdown_site):
+    html = (breakdown_site / "stock" / "1111" / "index.html").read_text(encoding="utf-8")
+    assert "東証グロース／情報・通信業／売買単位100株" in html
+    # meta description には売買単位まで入れない（文が長くなる）
+    assert "（1111／東証グロース／情報・通信業）" in html

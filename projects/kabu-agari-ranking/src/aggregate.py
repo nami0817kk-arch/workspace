@@ -357,3 +357,27 @@ def co_occurring(days: list[dict], code: str, top_n: int = 10) -> list[dict]:
     out = [e for e in counts.values() if e["count"] >= 2]
     out.sort(key=lambda e: (-e["count"], e["code"]))
     return out[:top_n]
+
+
+def profile_breakdown(codes, profiles: dict[str, dict], key: str) -> list[dict]:
+    """銘柄の属性ごとの内訳。多い順。
+
+    **属性が取れていない銘柄は数えない。** 「不明」を1項目として混ぜると、
+    取得の進み具合が相場の話のように見えてしまう。代わりに呼び出し側が
+    `covered` で「何銘柄ぶんを数えたか」を断る。
+
+    Returns:
+        [{"label": 表記, "count": 銘柄数, "share": 全体に対する割合(%)}]
+    """
+    counts: dict[str, int] = {}
+    for code in codes:
+        value = (profiles.get(str(code)) or {}).get(key)
+        if value:
+            counts[value] = counts.get(value, 0) + 1
+    total = sum(counts.values())
+    if not total:
+        return []
+    return [
+        {"label": label, "count": count, "share": round(count * 100 / total, 1)}
+        for label, count in sorted(counts.items(), key=lambda kv: (-kv[1], kv[0]))
+    ]

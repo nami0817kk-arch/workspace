@@ -7,7 +7,12 @@
 
 import pandas as pd
 
-from kabutan import extract_asof_date, parse_daily_prices, parse_ranking_table
+from kabutan import (
+    extract_asof_date,
+    parse_daily_prices,
+    parse_ranking_table,
+    parse_stock_profile,
+)
 
 
 def _row(cells: list[str]) -> str:
@@ -199,3 +204,41 @@ def test_名前が無ければコードで代替する():
                              "-", "-", "-"]) + "</tr>")
     df = parse_ranking_table(_table([row]))
     assert df.iloc[0]["name"] == "4935"
+
+
+_STOCK_PAGE = """
+<html><body>
+<div id="stock_info">
+  <div id="stockinfo_i1"><h2>ブレインズテクノロジー</h2><span class="market">東証Ｇ</span></div>
+  <div id="stockinfo_i2">
+    <dl><dt>業績</dt><dd><a href="/themes/">情報・通信業</a></dd></dl>
+    <dl><dt>単位</dt><dd>100株</dd></dl>
+  </div>
+</div>
+</body></html>
+"""
+
+
+def test_基本属性を取る():
+    assert parse_stock_profile(_STOCK_PAGE) == {
+        "market": "東証グロース",
+        "industry": "情報・通信業",
+        "unit": "100株",
+    }
+
+
+def test_市場の略号は開いて出す():
+    """取得元は1文字に略している（東証Ｐ＝プライム）。読み手には通じない。"""
+    html = _STOCK_PAGE.replace("東証Ｇ", "名証Ｎ")
+    assert parse_stock_profile(html)["market"] == "名証ネクスト"
+
+
+def test_知らない市場表記はそのまま出す():
+    """勝手に当てると、別の市場の名前を書くことになる。"""
+    html = _STOCK_PAGE.replace("東証Ｇ", "新市場Ｘ")
+    assert parse_stock_profile(html)["market"] == "新市場Ｘ"
+
+
+def test_取れなかった項目はキーごと入れない():
+    """空文字で埋めると「無い」と「空」を区別できない。"""
+    assert parse_stock_profile("<html><body></body></html>") == {}

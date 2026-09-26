@@ -46,6 +46,43 @@
 </figure>
 {% endif %}
 
+{% if by_market %}
+<h2>どの市場・どの業種で起きているか</h2>
+<p>
+  取得元の一覧をそのまま記録した{{ recorded_count }}件の内訳です。
+  同じ銘柄が別の日にストップ高になれば2件と数えています。
+  {%- if market_total < recorded_count or industry_total < recorded_count %}
+  市場区分や業種が分からない銘柄は数えていません（表ごとの合計は見出しの横にあります）。
+  {%- endif %}
+</p>
+<div class="breakdown">
+  <div>
+    <h3>市場区分</h3>
+    <table class="breakdown-table">
+      <caption>ストップ高の市場区分別の内訳（{{ market_total }}件）</caption>
+      <thead><tr><th scope="col">市場</th><th scope="col">件数</th><th scope="col">割合</th></tr></thead>
+      <tbody>
+        {% for row in by_market %}
+        <tr><th scope="row">{{ row.label }}</th><td>{{ row.count }}</td><td>{{ row.share }}%</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div>
+    <h3>業種{% if industry_count > by_industry|length %}（多い順に{{ by_industry|length }}業種）{% endif %}</h3>
+    <table class="breakdown-table">
+      <caption>ストップ高の業種別の内訳（{{ industry_total }}件）</caption>
+      <thead><tr><th scope="col">業種</th><th scope="col">件数</th><th scope="col">割合</th></tr></thead>
+      <tbody>
+        {% for row in by_industry %}
+        <tr><th scope="row">{{ row.label }}</th><td>{{ row.count }}</td><td>{{ row.share }}%</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endif %}
+
 {% if stocks %}
 <h2>複数回ストップ高になった銘柄</h2>
 <p>この期間に2回以上ストップ高になった{{ stocks|length }}銘柄です。「連続」はカレンダーの連日ではなく、当サイトの掲載日の並びで数えています。</p>
