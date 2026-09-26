@@ -1479,6 +1479,45 @@ void main() {
     await open(controller, await money(store: false));
     expect(find.widgetWithText(OutlinedButton, '広告を消す'), findsNothing);
   });
+
+  /// **iPad の幅で、中身が細い1列に縮こまらない。**
+  ///
+  /// 掲載用の絵を iPad 13インチ（論理1032幅）で撮ったら、中身が真ん中の
+  /// 520px に収まって左右が大きく空いていた。崩れてはいないが、13インチの
+  /// 絵として間が持たない。`soccer-manager` は同じ役の `ResponsiveBody` を
+  /// 720 にしていて、あちらの iPad の絵は幅が埋まっている（2026-09-26 に
+  /// 揃えた）。
+  ///
+  /// スマホでは何も変わらない（390〜430 はどちらの値より狭い）。だから
+  /// **スマホだけ見ていると、520 に戻しても誰も気付かない。**
+  testWidgets('iPad の幅では、中身が細い1列に縮こまらない', (tester) async {
+    final controller = await newCareer();
+    tester.view.physicalSize = const Size(1032, 1376);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      MaterialApp(home: HubScreen(controller: controller)),
+    );
+    await tester.pumpAndSettle();
+
+    final body = tester.getSize(
+      find
+          .descendant(
+            of: find.byType(ReadableWidth).first,
+            matching: find.byType(ConstrainedBox),
+          )
+          .first,
+    );
+    expect(
+      body.width,
+      greaterThanOrEqualTo(700),
+      reason: 'iPad で中身が ${body.width} 幅しかない。'
+          'ReadableWidth.maxContentWidth を狭めていないか',
+    );
+    // 逆に、広げすぎて1行が伸び切っていないこと（読めなくなる）。
+    expect(body.width, lessThan(1032));
+  });
 }
 
 /// 価格まで返す偽のストア。`monetize_test` の偽物は本文側に置いてあるので、
