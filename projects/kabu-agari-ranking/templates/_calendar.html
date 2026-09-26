@@ -14,7 +14,7 @@
         {% for week in month.weeks %}
         <tr>
           {% for cell in week %}
-          <td class="cal-{{ cell.state }}">
+          <td class="cal-{{ cell.state }}{% if cell.is_current %} cal-current{% endif %}">
             {% if cell.state == "data" %}<a href="{{ base_url }}{{ cell.href }}" title="{{ cell.label }}のランキング">{{ cell.day }}</a>
             {% elif cell.state == "missing" %}<span title="{{ cell.label }}は取得に失敗したため掲載がありません">{{ cell.day }}</span>
             {% elif cell.state == "blank" %}&nbsp;
@@ -32,4 +32,5 @@
   <span class="cal-key cal-data">10</span> 掲載あり（押せます）
   <span class="cal-key cal-missing">10</span> 取得に失敗した日
   <span class="cal-key cal-closed">10</span> 休場日（土日・祝日）
+  {% if calendar and calendar[0].weeks|length and current_note %}<span class="cal-note">{{ current_note }}</span>{% endif %}
 </p>

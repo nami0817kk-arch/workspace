@@ -61,3 +61,21 @@ def test_ランキングの種別ごとに行き先が変わる():
 
 def test_掲載が無ければ何も作らない():
     assert render.calendar_months([], "gainers") == []
+
+
+# --- トップに出すとき -------------------------------------------------------
+
+def test_出す月の数を絞れる():
+    """トップは直近1か月だけ。全期間はアーカイブ一覧にある。"""
+    dates = ["2026-07-31", "2026-08-28", "2026-09-25"]
+    assert len(render.calendar_months(dates, "gainers")) == 3
+    months = render.calendar_months(dates, "gainers", limit=1)
+    assert [m["label"] for m in months] == ["2026年9月"]
+
+
+def test_いま見ている日に印を付ける():
+    months = render.calendar_months(["2026-09-24", "2026-09-25"], "gainers",
+                                    current="2026-09-25")
+    cells = {c["iso"]: c for w in months[0]["weeks"] for c in w if c.get("iso")}
+    assert cells["2026-09-25"]["is_current"] is True
+    assert cells["2026-09-24"]["is_current"] is False

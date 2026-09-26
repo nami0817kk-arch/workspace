@@ -405,8 +405,12 @@ CAL_OUTSIDE = "outside"  # 掲載を始める前／これから来る日
 CAL_BLANK = "blank"      # 月初・月末の空き升
 
 
-def calendar_months(dates: list[str], dirname: str) -> list[dict]:
+def calendar_months(dates: list[str], dirname: str, *, limit: int | None = None,
+                    current: str | None = None) -> list[dict]:
     """掲載日を月ごとのカレンダーにする。
+
+    limit … 出す月の数（新しい月から）。トップに置くときは直近1か月だけにする。
+    current … いま見ている日。その升目だけ印を付ける。
 
     日付から探すのに、入力欄へ打ち込ませるより「押せる升目」のほうが早い。
     休場日と、取得に失敗した日（営業日なのに掲載が無い日）を見分けられる形にする
@@ -451,6 +455,7 @@ def calendar_months(dates: list[str], dirname: str) -> list[dict]:
                 "iso": iso,
                 "href": f"archive/{dirname}/{iso}.html" if state == CAL_DATA else "",
                 "label": format_date_ja(iso),
+                "is_current": iso == current,
             })
             day += timedelta(days=1)
         while len(cells) % 7:
@@ -464,7 +469,7 @@ def calendar_months(dates: list[str], dirname: str) -> list[dict]:
         cursor = nxt
 
     months.reverse()   # 新しい月が先
-    return months
+    return months[:limit] if limit else months
 
 
 def archive_index_info(with_data: list[tuple[str, list[dict]]], kind: str) -> dict[str, dict]:
@@ -891,6 +896,11 @@ def _build_ranking_pages(days: list[dict], stock_pages: set[str] | None = None) 
                     rows, annotate_rows(days[1].get(json_key, [])) if len(days) > 1 else None
                 ),
                 chart=ranking_chart(rows, json_key, latest["rec_date"], heading),
+                # トップは直近1か月だけ。全期間はアーカイブ一覧にある。
+                calendar=calendar_months(
+                    [d["rec_date"] for d in days if d.get(json_key)],
+                    dirname, limit=1, current=latest["rec_date"],
+                ),
                 trend_chart=charts.columns(
                     big_move_series(days, json_key),
                     aria_label=f"直近{TREND_DAYS}営業日について、"

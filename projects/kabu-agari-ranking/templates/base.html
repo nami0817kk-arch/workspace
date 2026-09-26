@@ -371,6 +371,8 @@
     background: var(--accent); color: #fff; text-decoration: none; font-weight: bold;
   }
   .cal-data a:hover { filter: brightness(1.1); }
+  /* いま見ている日。押せる升目の中で、どれを見ているのかが分かるようにする */
+  .cal-current a { outline: 2px solid var(--text); outline-offset: 1px; }
   .cal-missing span { color: var(--loss); text-decoration: line-through; }
   .cal-closed span, .cal-outside span { color: var(--muted); opacity: 0.55; }
   .cal-legend { font-size: 0.8rem; color: var(--muted); display: flex; flex-wrap: wrap; gap: 0.3rem 0.9rem; align-items: center; }
