@@ -454,6 +454,8 @@
   footer a { color: var(--muted); margin: 0 0.4rem; }
   .footer-group { margin-bottom: 0.6rem; }
   .footer-group strong { display: block; color: var(--text); font-size: 0.8rem; margin-bottom: 0.2rem; }
+  .sibling a { display: inline-block; margin: 0.15rem 0.4rem; }
+  .sibling-note { display: block; font-size: 0.7rem; opacity: 0.8; }
   .to-top { margin-top: 1rem; }
   .to-top a { color: var(--accent); }
   .date-jump {
@@ -594,6 +596,14 @@
     <a href="{{ base_url }}privacy.html">プライバシーポリシー</a>
     <a href="{{ base_url }}feed.xml">RSS</a>
   </div>
+  {% if SIBLING_SITES %}
+  <div class="footer-group sibling">
+    <strong>同じ運営者のサイト</strong>
+    {% for site in SIBLING_SITES %}
+    <a href="{{ site.url }}">{{ site.name }}<span class="sibling-note">{{ site.note }}</span></a>
+    {% endfor %}
+  </div>
+  {% endif %}
   <p class="to-top"><a href="#main">↑ ページの先頭へ</a></p>
 </footer>
 <script>

@@ -643,3 +643,19 @@ def test_トップのカレンダーは表より後ろ(site):
     assert html.index("<table") < html.index('class="calendar"')
     # トップは直近1か月だけ（全期間はアーカイブ一覧）
     assert html.count('class="cal-month"') == 1
+
+
+def test_姉妹サイトへ戻る線がある(site):
+    """入口からは3サイトへリンクされているのに、こちらから戻る線が無かった。
+
+    読み手が他のものを見つけられないうえ、検索側から見ても一群のサイトとして
+    繋がっていない状態になる。
+    """
+    data_dir, out_dir = site
+    _write_day(data_dir, "2026-09-18")
+    render.build_all()
+
+    html = (out_dir / "index.html").read_text(encoding="utf-8")
+    assert 'href="https://dailyquarry.com/"' in html
+    # 自分自身は姉妹サイトに並べない
+    assert html.count('href="https://kabu.dailyquarry.com/"') <= 1

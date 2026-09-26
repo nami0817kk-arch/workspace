@@ -32,6 +32,7 @@ _env.globals["ADSENSE_CLIENT"] = ADSENSE_CLIENT
 _env.globals["ADSENSE_SLOT"] = site_config.ADSENSE_SLOT
 _env.globals["SITE_URL"] = SITE_URL
 _env.globals["SEARCH_CONSOLE_TOKEN"] = site_config.SEARCH_CONSOLE_TOKEN
+_env.globals["SIBLING_SITES"] = site_config.SIBLING_SITES
 _env.globals["OWNER"] = site_config.OWNER
 _env.globals["CONTACT_EMAIL"] = site_config.CONTACT_EMAIL
 
