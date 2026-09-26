@@ -8,10 +8,7 @@ updates:
     directories:
       - "/projects/kabu-agari-ranking"
       - "/projects/price-tracker"
-      - "/projects/quality-gainer-tracker"
-      - "/projects/ir-analysis"
       - "/projects/ai-side-business"
-      - "/projects/stock-investment"
       - "/projects/youtube-video-creation"
       - "/projects/gemini-api"
       - "/projects/ipa-kakomon"
