@@ -630,3 +630,16 @@ def test_列幅の指定は広い画面だけに当てる(site):
     css = (out_dir / "index.html").read_text(encoding="utf-8")
     block = css[css.index("余った幅は銘柄名に回し"):]
     assert "@media (min-width: 601px)" in block[:400]
+
+
+def test_トップのカレンダーは表より後ろ(site):
+    """カレンダーが表より上に来ると、見に来たランキングが押し出される。"""
+    data_dir, out_dir = site
+    for d in ("2026-09-17", "2026-09-18"):
+        _write_day(data_dir, d)
+    render.build_all()
+
+    html = (out_dir / "index.html").read_text(encoding="utf-8")
+    assert html.index("<table") < html.index('class="calendar"')
+    # トップは直近1か月だけ（全期間はアーカイブ一覧）
+    assert html.count('class="cal-month"') == 1

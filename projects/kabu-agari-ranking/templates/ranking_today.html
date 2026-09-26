@@ -42,7 +42,11 @@
   <figcaption>1日あたりの「10%以上動いた銘柄」の数（上位30銘柄のうち）</figcaption>
 </figure>
 {% endif %}
-<p><a href="{{ base_url }}{{ archive_href }}">過去の{{ heading }}を見る →</a></p>
+{% if calendar %}
+<h2>日付から探す</h2>
+{% include "_calendar.html" %}
+{% endif %}
+<p><a href="{{ base_url }}{{ archive_href }}">過去の{{ heading }}をすべて見る →</a></p>
 <p>
   {{ intro }}
   用語の意味は<a href="{{ base_url }}glossary.html">用語解説</a>、
