@@ -1,0 +1,160 @@
+date: 2026年9月27日
+slot: match_1
+format: news
+voice_min: 0.45
+people: [アンソニー・ゴードン, ハリー・ケイン, ミケル・オヤルサバル]
+theme:
+  id: eng_spa_nations
+  league: england
+  league_name: ネーションズリーグ
+  kind: match
+  topic: イングランド代表
+  title: 'ゴードン「スペインとの差は無い」。試合を分けた、ケインの足もと'
+  question: イングランドとスペインの差はどこにあったのか
+short_title: ゴードン「差は無い」、分けたのはケインの足もと
+thumbnail:
+  photo: assets/images/20260927_pair_gordon_kane/01.jpg
+  line1: ゴードン「差は無い」
+  line2: 分けたのはケインの●●●
+sections:
+  - id: game
+    heading: 2分の先制から
+    tier: 報道
+    telop: ネーションズリーグ、イングランド2対3スペイン
+    narrator: キャスター
+    card:
+      type: table
+      title: 前半の得点
+      columns: [所属, 名前, 位置, 年齢]
+      rows:
+        - [バルセロナ, ラミン・ヤマル（2分）, FW, 19歳]
+        - [バルセロナ, アンソニー・ゴードン（36分）, FW, 25歳]
+        - [バイエルン, ハリー・ケイン（40分）, FW, 33歳]
+    say:
+      - text: 開始2分、スペインのヤマルが、イングランドのグエイからボールを奪って先制します。
+        image: assets/images/20260927_pair_gordon_kane/01.jpg
+      - 試合のあと、イングランドのトゥヘル監督はこう振り返りました。
+      - voice: トーマス・トゥヘル
+        text: ひどい立ち上がり。考えられる最悪のスタートだった
+      - そこからイングランドが押し返します。36分にゴードン、40分にはケインのヘディング。
+      - ケインの一撃は、スペインのククレジャに当たって入りました。
+      - イングランドが逆転し、2対1で前半を折り返します。
+    sources:
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/uefa.nations/summary?event=401861066
+      - https://www.bbc.co.uk/sport/football/live/c9j3dpkxe5vdt
+  - id: penalty
+    main: true
+    heading: ケインの足もと
+    tier: 報道
+    telop: 54分のPK。ケインが軸足を滑らせ、クロスバー
+    narrator: キャスター
+    card:
+      type: table
+      title: 後半
+      columns: [分, 出来事]
+      rows:
+        - [54分, ケインのPKがクロスバー（二度蹴り）]
+        - [60分, 途中出場のバエナが同点弾]
+        - [74分, 途中出場のオヤルサバルが決勝点]
+    say:
+      - text: 'イングランドが2対1でリードしたまま、54分にPKを得ます。'
+        short_only: true
+      - text: 蹴ったのはケイン。その瞬間、軸足が滑りました。
+        image: assets/images/20260927_pair_kane_oyarzabal/01.jpg
+      - ボールは軸足にも当たってクロスバーへ。蹴った人が2回触れた反則で、スペインのボールになります。
+      - 同じイングランドのゴードンは、こう話しました。
+      - voice: アンソニー・ゴードン
+        text: PKを外すことはある。彼はほとんど外さないから、今回は大目に見るよ
+      - その直後、スペインは2人を入れ替えます。入ったのはバエナとオヤルサバル。
+      - 5分後にバエナが同点。74分には、オヤルサバルがループで決勝点を決めました。
+      - 決めたオヤルサバルは、ケインのPKをこう振り返ります。
+      - voice: ミケル・オヤルサバル
+        text: あのPKが、彼らにとっても僕らにとっても分かれ目になった。やれると気づいて、実際にやれた
+      - オヤルサバルは2年前のヨーロッパ選手権の決勝でも、イングランドから決勝点を奪っています。
+    sources:
+      - https://www.bbc.co.uk/sport/football/live/c9j3dpkxe5vdt
+      - https://www.mundodeportivo.com/seleccion-espanola/20260926/1004231637/oyarzabal-penalti-sido-punto-inflexion.html
+      - https://www.mundodeportivo.com/futbol/uefa-nations-league/20260926/1004231630/triunfo-luis-fuente-intervencionista.html
+  - id: gap
+    heading: 差は無いのか
+    tier: 報道
+    telop: ゴードン「差は無い」。トゥヘル監督「あれはカウンターだった」
+    narrator: キャスター
+    card:
+      type: table
+      title: この試合の数字
+      columns: ['', '']
+      rows:
+        - [スペイン, 国際Aマッチ39試合無敗]
+        - [イングランド, 前半リードで負けたのは2019年以来]
+    say:
+      - text: 36分に決めたゴードンは、試合前に続いて、試合のあともスペインとの力の差を否定しました。
+        image: assets/images/20260927_gordon/01.jpg
+      - voice: アンソニー・ゴードン
+        text: 差は無いと思うし、もし決勝で当たっていても、自信を持てたと思う
+      - 自分の得点も、縦に速い、イングランドらしい形だったと話しています。
+      - ところがトゥヘル監督の見方は、違いました。
+      - voice: トーマス・トゥヘル
+        text: いや、ゴードンの得点はカウンターだった
+      - スペインは、国際Aマッチで**39試合**負けなし。
+      - イングランドが前半のリードをひっくり返されたのは、**2019年6月**以来です。
+    sources:
+      - https://www.bbc.co.uk/sport/football/live/c9j3dpkxe5vdt
+      - https://www.skysports.com/football/news/13591676/
+      - https://www.footballchannel.jp/2026/09/27/post1020267/
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「結局勝つスペイン」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 結局勝つスペイン。
+      - voice: ネット民
+        text: 強いねぇ。
+        cont: true
+      - voice: ネット民
+        text: ケインのPK失敗は痛かったな。まさかあそこで滑るとは。
+      - voice: ネット民
+        text: 決まってれば3-1だったし、勝てる流れだったね
+        cont: true
+      - voice: ネット民
+        text: 90分通せばスペインが上。でもケインがPKで3対1にしていたら、たぶんイングランドが勝っていた
+      - voice: ネット民
+        text: スペインとイングランドの差は、ベンチに控えている選手の差なのかも、です。
+      - voice: ネット民
+        text: 同点と逆転のゴールを決めたのは、結局、途中から入って来たこの2人なので。
+        cont: true
+      - voice: ネット民
+        text: 気迫とスピードで、ゴードンが間違いなくイングランドで一番良かったのに、なぜ下げる？
+      - voice: ネット民
+        text: 期待してたよりめちゃくちゃ面白いゲームだった。
+      - voice: ネット民
+        text: スペインの試合巧者ぶりが凄い。イングランドにあれほど押されながら隙をつきまくる。
+        cont: true
+      - voice: ネット民
+        text: イングランドは近づいている。PK失敗と守備のミス2つ。
+      - voice: ネット民
+        text: 確かにスペインにもチャンスはあったが、相手は欧州王者で世界王者。負けたけどよくやった
+        cont: true
+      - voice: ネット民
+        text: イングランドに住むスペイン人です。イングランドのクラブも代表も、スペインのスタイルをまねしようとしているのを見てきた。
+      - voice: ネット民
+        text: でも、上手くはなれても、スペインより上にはなれないと気づくべきだ
+        cont: true
+      - voice: ネット民
+        text: 追い付かれてしまったが、ゴードンのゴールなので実質バルサ優勝
+      - voice: ネット民
+        text: オヤルサバル、代表に行くとバロンドール級になる男
+      - voice: ネット民
+        text: スペインの無敗記録続いて良かったなって気持ちもあるけど...イングランドまた逆転されて負けるのちょっと悲しいな
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/32352c9197a0fe0934d0b71a6890b5b66922c518/comments
+      - https://news.yahoo.co.jp/articles/42b7979aaa55d6c553e8421ac09e0d1502884586/comments
+      - https://x.com/y_yt/status/2103951731487019221
+      - https://x.com/KI_SA_SA/status/2103929613764472971
+      - https://x.com/rreeamad/status/2103950124896670039
+      - https://x.com/tsku_u/status/2103950089370948027
+      - https://bsky.app/profile/sundersays.bsky.social/post/3mwh5m5pgjk2b
+      - https://www.bbc.co.uk/sport/football/live/c9j3dpkxe5vdt
