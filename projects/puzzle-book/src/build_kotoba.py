@@ -29,6 +29,13 @@ from build_cover import CREAM, NAVY, ORANGE, WHITE
 from art import FONT_ROUNDED, ICON_CREDIT, draw_icon, outlined_text
 
 ANSWERS_PER_PAGE = 4
+# コピー利用の許可（2026-09-27 ユーザー決定）。範囲を狭く書く: 家庭内と、施設での利用者への配布まで
+COPY_PERMISSION = [
+    "【コピーについて】",
+    "ご家庭内、および介護施設・デイサービス・病院などで利用者さまに配ってお使いいただく場合に限り、",
+    "本書の問題ページをコピーしてお使いいただけます。",
+    "コピーしたものの販売、有料での配布、インターネット上への掲載はご遠慮ください。",
+]
 # 矢印の字形（↘など）は同梱フォントに無いものがあるので、向きは言葉で書く
 DIR_WORDS = {"E": "よこ（左から右へ）", "S": "たて（上から下へ）", "SE": "ななめ（左上から右下へ）"}
 _COVER_SEED_OFFSET = 9_000_000  # 表紙の見本は本文と別の盤面にする（問題1の答えを表紙で見せない）
@@ -85,6 +92,7 @@ class KotobaSpec:
     publisher: str = "つるはし社"
     edition_date: str = ""
     ink: str = "black"  # "black" か "premium"（プレミアムカラー）
+    copy_ok: bool = False  # 施設などでのコピー利用を許可するか
     cover_theme: str = ""  # 表紙の見本に使うテーマ（省略時は最初のテーマ）
     preview_themes: tuple[str, ...] = ()  # 裏表紙の見本ページ（2つ）
 
@@ -558,6 +566,16 @@ def build_pdf(puzzles: list[dict], output_path: str, spec: KotobaSpec) -> int:
     pg.next()
     while pg.number < total:
         pg.next(folio=False)
+    if spec.copy_ok:
+        box_top = pg.bottom + 330
+        box_h = 22 + 17 * len(COPY_PERMISSION)
+        c.setStrokeColorCMYK(*pal.accent)
+        c.setLineWidth(1)
+        c.roundRect(pg.left, box_top - box_h, pg.content_w, box_h, 8, stroke=1, fill=0)
+        c.setFillColorCMYK(*BLACK)
+        for k, line in enumerate(COPY_PERMISSION):
+            c.setFont(FONT_BOLD if k == 0 else FONT_REGULAR, 10.5 if k == 0 else 9.5)
+            c.drawString(pg.left + 14, box_top - 20 - k * 17, line)
     c.setFillColorCMYK(*BLACK)
     y = pg.bottom + 190
     c.setFont(FONT_BOLD, 16)
@@ -798,7 +816,7 @@ def build_cover(spec: KotobaSpec, puzzles: list[dict], output_path: str, *, pape
         y -= 22
     c.setFillColorCMYK(*NAVY)
     c.setFont(FONT_REGULAR, 12)
-    c.drawString(bx0, y - 6, "答えは巻末に、言葉ごとに色を分けてまとめてあります。")
+    c.drawString(bx0, y - 6, "答えは巻末に、色分けしてまとめてあります。")
 
     # こんな方に（買う人の多くは家族や介護の現場の人）。答えの一文の下、左の列に置く
     boxx, boxw = bx0 - 10, 290
@@ -816,6 +834,20 @@ def build_cover(spec: KotobaSpec, puzzles: list[dict], output_path: str, *, pape
         yy = box_top - 50 - k * 28
         draw_icon(c, code, boxx + 14, yy - 5, 20)
         c.drawString(boxx + 42, yy, text)
+    if spec.copy_ok:
+        # 難易度の内訳の右側に置く（右下はバーコードの白い箱なので空けておく）
+        tx0 = b + tw / 2 + 10
+        tw0 = (b + tw - safe - 14) - tx0
+        ttop = my0 - 22
+        c.setFillColorCMYK(*ORANGE)
+        c.roundRect(tx0, ttop - 30, tw0, 30, 15, stroke=0, fill=1)
+        c.setFillColorCMYK(*WHITE)
+        c.setFont(FONT_ROUNDED, 15)
+        c.drawCentredString(tx0 + tw0 / 2, ttop - 20, "施設内のコピーOK")
+        c.setFillColorCMYK(*NAVY)
+        c.setFont(FONT_REGULAR, 11)
+        for k, line in enumerate(["介護施設・デイサービスなどで、", "利用者さまへの配布にお使いいただけます。"]):
+            c.drawString(tx0 + 6, ttop - 48 - k * 17, line)
 
     bw, bh = (v * inch for v in kdp_spec.BARCODE_BOX_IN)
     c.setFillColorCMYK(*WHITE)

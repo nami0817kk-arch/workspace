@@ -160,3 +160,31 @@ def test_interior_text_inside_margins(built):
         x0, y0, x1, y1 = sp["bbox"]
         w, h = page.rect.width, page.rect.height
         assert edge <= x0 and x1 <= w - edge and edge <= y0 and y1 <= h - edge, (page.number + 1, sp["text"])
+
+
+def test_barcode_box_is_empty(built):
+    """裏表紙の右下（Amazon がバーコードを刷る 2 x 1.2 in の箱）に文字を置かない。"""
+    spec, _, _, cover, _ = built
+    trim = kdp_spec.TRIMS[spec.trim]
+    bleed, safe = 0.125 * 72, 0.25 * 72
+    bw, bh = (v * 72 for v in kdp_spec.BARCODE_BOX_IN)
+    right = bleed + trim.width_in * 72 - safe
+    bottom = bleed + trim.height_in * 72 - safe  # pymupdf は上が原点
+    box = (right - bw, bottom - bh, right, bottom)
+    for page, sp in _spans(cover):
+        x0, y0, x1, y1 = sp["bbox"]
+        overlap = x0 < box[2] and x1 > box[0] and y0 < box[3] and y1 > box[1]
+        assert not overlap, sp["text"]
+
+
+def test_cover_texts_do_not_overlap(built):
+    """表紙の文字どうしが重ならない（案内を足したときに、となりの文と重なったことがある）。"""
+    _, _, _, cover, _ = built
+    boxes = [(sp["bbox"], sp["text"]) for _, sp in _spans(cover)]
+    for i, (a, ta) in enumerate(boxes):
+        for b, tb in boxes[i + 1 :]:
+            if ta == tb and all(abs(p - q) < 0.5 for p, q in zip(a, b)):
+                continue  # 縁取りの文字（同じ文字を同じ位置に、縁と塗りで2回描いている）
+            ox = min(a[2], b[2]) - max(a[0], b[0])
+            oy = min(a[3], b[3]) - max(a[1], b[1])
+            assert not (ox > 1 and oy > 1), (ta, tb)
