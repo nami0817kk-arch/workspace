@@ -1,0 +1,478 @@
+# プレミアリーグ20クラブ紹介 ⑬マラガ（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/ll_data/malaga*.json と旧台本 -
+format: news
+voice_min: 0
+slot: laliga_1
+date: 2026年9月19日
+people:
+- マラガ
+- フアン・フランシスコ・フネス
+short_title: マラガってどんなクラブ？
+series: ラ・リーガチーム紹介
+theme:
+  id: malaga_intro
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: マラガ
+  title: マラガ。ヨーロッパ8強から、3部まで落ちた理由
+  question: どんなクラブなのか
+  hook: ヨーロッパの4強まで、残り数分だった夜があります。
+  lead: アンダルシアで最初に、ヨーロッパの公式タイトル。
+  opening_image: assets/stats/ll_malaga_data_t.png
+thumbnail:
+  line1: ヨーロッパ8強から3部へ
+  line2: 8年ぶりに1部のマラガ
+  crest_main:
+  - マラガ
+  board: assets/stats/ll_malaga_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 8年ぶりの1部と、初勝利を待つ監督
+  narrator: キャスター
+  say:
+  - text: マラガは今シーズン、**8年**ぶりに1部へ戻ってきました。
+    image: assets/stats/ll_malaga_data_r1.png
+    no_telop: true
+  - text: 率いるフネス監督は、まだ1勝目を待っています。こう話しています。
+    image: assets/stats/ll_malaga_data_r2.png
+    no_telop: true
+  - voice: フアン・フランシスコ・フネス
+    text: 勝利は必ず来る。最初の1勝が来れば、あとは続いてくる
+    image: assets/stats/ll_malaga_data_r2.png
+  - text: '**2013年**には、チャンピオンズリーグで**8強**まで進みました。'
+    image: assets/stats/ll_malaga_data_r3.png
+    no_telop: true
+  - text: そこから3部へ転げ落ちた理由は、お金。持ち主が、新たなお金を出さなくなったのです。
+    image: assets/stats/ll_malaga_data_r3.png
+    no_telop: true
+  - image: assets/stats/ll_malaga_data0.png
+    text: 創立は**1948年**。前身のクラブの、控えのチームとして生まれました。
+    no_telop: true
+  - image: assets/stats/ll_malaga_data1.png
+    text: 愛称は「ボケロネス」。小さな魚、カタクチイワシのことです。
+    no_telop: true
+  - image: assets/stats/ll_malaga_data2.png
+    text: ホームタウンはマラガ。アンダルシアで**2番目**に大きな、地中海の町です。
+    no_telop: true
+  - image: assets/backgrounds/stadium_マラガ.png
+    text: 本拠地はラ・ロサレダ。1982年のワールドカップの会場で、収容は**3万778人**。
+  - image: assets/stats/ll_malaga_data4.png
+    text: オーナーはカタールの王族、アブドゥラー・アル・サーニ。ただ今は、経営から外されています。
+    no_telop: true
+  - image: assets/stats/ll_malaga_cups.png
+    text: 1部、国王杯、スーペルコパの優勝はありません。ヨーロッパの大会で**1回**。
+    no_telop: true
+  - image: assets/stats/ll_malaga_data6.png
+    text: 最多出場は、中盤のミゲリ。前身のクラブの時代を含めて**405試合**です。
+    no_telop: true
+  - image: assets/stats/ll_malaga_data7.png
+    text: 直近のタイトルは**2002年**のインタートトカップ。決勝でビジャレアルを破りました。
+    no_telop: true
+  - image: assets/stats/ll_malaga_data8.png
+    text: 昨シーズンは2部で**4位**、勝ち点**73**。プレーオフを勝ち抜いての昇格です。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Málaga_CF
+  - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
+  - https://www.marca.com/futbol/malaga/2026/09/20/funes-ganemos-primero-cambiar.html
+  - https://en.wikipedia.org/wiki/2026_Segunda_Divisi%C3%B3n_play-offs
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_Segunda_Divisi%C3%B3n
+  - https://en.wikipedia.org/wiki/M%C3%A1laga_CF
+  bg: assets/backgrounds/stadium_マラガ_in.png
+  official: false
+- id: history
+  heading: 控えのチームが残った
+  tier: 背景
+  telop: 前身のクラブが消え、控えのチームが残った
+  narrator: 解説
+  card:
+    type: table
+    title: 控えのチームが残った
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1959年
+      - 控えのチームが独立
+    - - 1992年
+      - 前身のクラブが消滅
+    - - 1999年
+      - 4部から1部へ
+  say:
+  - 1959年、前身のクラブと同じ3部に並び、控えのチームは独立を選びます。
+  - 1992年、前身のクラブは借金で消滅。独立していた控えのチームが残りました。
+  - 1994年に今の名前へ。4部から駆け上がり、**1999年**には1部に届きます。
+  sources:
+  - https://en.wikipedia.org/wiki/M%C3%A1laga_CF
+  - https://es.wikipedia.org/wiki/M%C3%A1laga_Club_de_F%C3%BAtbol
+  bg: assets/backgrounds/stadium_マラガ_in.png
+  official: false
+- id: history2
+  heading: 王族が来た
+  tier: 背景
+  telop: 2010年、カタールの王族がクラブを買う
+  narrator: 解説
+  card:
+    type: table
+    title: 王族が来た
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 2010年
+      - カタールの王族が買う
+    - - 2011年
+      - カソルラを2100万ユーロで
+    - - 2011-12
+      - 4位。クラブ最高の順位
+  say:
+  - 2010年、カタールの王族がクラブを買いました。
+  - 翌年、ビジャレアルからカソルラを**2100万ユーロ**で。クラブ史上最高の補強です。
+  - ファン・ニステルローイやホアキンも加わり、2012年に**4位**。クラブ最高の順位でした。
+  sources:
+  - https://en.wikipedia.org/wiki/M%C3%A1laga_CF
+  - https://es.wikipedia.org/wiki/Anexo:Estad%C3%ADsticas_del_M%C3%A1laga_Club_de_F%C3%BAtbol
+  bg: assets/backgrounds/stadium_マラガ_in.png
+  official: false
+- id: history3
+  heading: ドルトムントの夜
+  tier: 背景
+  telop: 準決勝まで、あと数分だった
+  narrator: 解説
+  card:
+    type: table
+    title: 2013年4月9日 ドルトムント
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - グループ
+      - 負けなしの首位
+    - - 準々決勝の第2戦
+      - 90分まで2対1でリード
+  say:
+  - 2012年、初めてのチャンピオンズリーグ。グループを負けなしの首位で抜けました。
+  - 準々決勝はドルトムント。敵地の第2戦、90分の時点で**2対1**とリードしていました。
+  - text: ところが追加時間に、ロイスとサンタナが2点。最後の1点は、オフサイドの位置からでした。
+    card:
+      type: table
+      title: 2013年4月9日 ドルトムント
+      columns: *id001
+      rows:
+      - - 追加時間
+        - 2点を奪われ、2対3
+  - 4強の座は、目の前で消えました。
+  sources:
+  - https://en.wikipedia.org/wiki/M%C3%A1laga_CF
+  - https://es.wikipedia.org/wiki/M%C3%A1laga_Club_de_F%C3%BAtbol
+  bg: assets/backgrounds/stadium_マラガ_in.png
+  official: false
+- id: history4
+  heading: 3部からの帰り道
+  tier: 背景
+  telop: 処分、売却、3部。そして1部へ
+  narrator: 解説
+  card:
+    type: table
+    title: 3部からの帰り道
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - - 2013年
+      - 処分で欧州の権利を失う
+    - - 2020年
+      - 裁判所が持ち主を外す
+  say:
+  - 8強と同じシーズンにリーグ6位。それでも借金の処分で、翌シーズンの欧州には出られません。
+  - 2013年の夏から主力が次々に去り、**2018年**には2部へ落ちます。
+  - text: '**2020年**、裁判所は持ち主を経営から外し、運営を別の人に任せます。'
+    card:
+      type: table
+      title: 3部からの帰り道
+      columns: *id002
+      rows:
+      - - 2023年
+        - 25年ぶりに3部へ
+      - - 2026年
+        - 1部に戻る
+  - 3年後には、**25年**ぶりの3部でした。
+  - text: そこから2度の昇格を重ね、**2026年6月**に1部へ戻りました。
+    image: assets/images/ll_malaga_history4/scene.jpg
+  sources:
+  - https://en.wikipedia.org/wiki/M%C3%A1laga_CF
+  - https://es.wikipedia.org/wiki/M%C3%A1laga_Club_de_F%C3%BAtbol
+  - https://en.wikipedia.org/wiki/Abdullah_bin_Nasser_Al_Thani_(businessman)
+  - https://en.wikipedia.org/wiki/2026_Segunda_Divisi%C3%B3n_play-offs
+  bg: assets/backgrounds/stadium_マラガ_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 回して崩す。下部組織。満員のスタンド
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - ボールを回して崩す
+    - - 運営の型
+      - 28人中13人が下部組織
+    - - クラブの気質
+      - 昇格の決勝に3万83人
+  say:
+  - フネス監督のチームは、ボールを回して崩す。敵地のセルタ戦でも、支配率は7割近く。
+  - 運営の型は、下部組織。登録**28人**のうち**13人**が、ここで育ちました。
+  - スタンドは熱い。昇格を決めたプレーオフの決勝では、ホームに**3万83人**。
+  sources:
+  - https://en.wikipedia.org/wiki/Málaga_CF
+  - https://www.marca.com/futbol/malaga/2026/09/14/charla-viral-funes-pausa-hidratacion-suicidarnos-eh.html
+  - https://www.marca.com/futbol/malaga/2026/09/13/funes-esperar-solucione-cosas.html
+  - https://es.wikipedia.org/wiki/M%C3%A1laga_Club_de_F%C3%BAtbol
+  - https://en.wikipedia.org/wiki/2026_Segunda_Divisi%C3%B3n_play-offs
+  bg: assets/backgrounds/stadium_マラガ_in.png
+  official: false
+- id: episode
+  heading: 開始8秒のゴール
+  tier: 背景
+  telop: 開始8秒。当時のリーグ最速のゴール
+  narrator: 解説
+  card:
+    type: table
+    title: 開始8秒のゴール
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 2000年12月10日
+      - ホームのバリャドリード戦
+    - - ダリオ・シルバ
+      - 開始8秒でゴール
+    - - 2008年1月まで
+      - リーグ最速の記録
+  say:
+  - 2000年12月のバリャドリード戦。ダリオ・シルバが、開始**8秒**で決めました。
+  - 当時のリーグで、いちばん早いゴール。2008年まで破られませんでした。
+  sources:
+  - https://es.wikipedia.org/wiki/Anexo:Estad%C3%ADsticas_del_M%C3%A1laga_Club_de_F%C3%BAtbol
+  - http://archivo.marca.com/edicion/marca/futbol/1a_division/valladolid/es/desarrollo/1080190.html
+  bg: assets/backgrounds/stadium_マラガ_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id003
+      - イスコ
+      - 2011-2013
+      - ゴールデンボーイ賞
+  say:
+  - text: イスコはマラガ県の生まれ。**2011年**、バレンシアから地元のクラブへ来ました。
+    image: assets/photos/ll/malaga/malaga_legend_614b57c4.jpg
+  - 2012年のゼニト戦で2得点。その年、欧州の若手に贈られるゴールデンボーイ賞に。
+  - リーグ戦で**69試合14得点**。2013年、レアル・マドリードへ移りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Isco
+  - https://en.wikipedia.org/wiki/Willy_Caballero
+  - https://en.wikipedia.org/wiki/Jes%C3%BAs_G%C3%A1mez
+  bg: assets/backgrounds/stadium_マラガ_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - &id004
+      - ウィリー・カバジェロ
+      - 2011-2014
+      - 480分無失点
+  say:
+  - text: カバジェロはアルゼンチンのゴールキーパー。**2011年**、けが人が出て急いで獲りました。
+    image: assets/photos/ll/malaga/malaga_legend_94544b16.jpg
+  - その年の10月、**480分**続けて無失点。クラブの記録を塗り替えました。
+  - リーグ戦で**117試合**。2014年、マンチェスター・シティへ移りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Isco
+  - https://en.wikipedia.org/wiki/Willy_Caballero
+  - https://en.wikipedia.org/wiki/Jes%C3%BAs_G%C3%A1mez
+  - https://es.wikipedia.org/wiki/Anexo:Estad%C3%ADsticas_del_M%C3%A1laga_Club_de_F%C3%BAtbol
+  bg: assets/backgrounds/stadium_マラガ_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - *id004
+    - - ヘスス・ガメス
+      - 2005-2014
+      - 地元育ちの主将
+  say:
+  - text: ガメスは右サイドバック。地元の下部組織から、**2005年**に1部の舞台へ上がりました。
+    image: assets/photos/ll/malaga/malaga_legend_b2e1feae.jpg
+  - チームが2部に落ちても残り、**2008年**の1部復帰を主力として支えました。
+  - 2011年からは主将。リーグ戦で**266試合**に出ました。
+  sources:
+  - https://en.wikipedia.org/wiki/Isco
+  - https://en.wikipedia.org/wiki/Willy_Caballero
+  - https://en.wikipedia.org/wiki/Jes%C3%BAs_G%C3%A1mez
+  bg: assets/backgrounds/stadium_マラガ_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はフネス。若手チームから昇格
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - フアン・フランシスコ・フネス（スペイン）
+    - - 就任
+      - 2025年11月
+    - - 前職
+      - アトレティコ・マラゲーニョ（マラガの若手チーム）
+  say:
+  - 監督はフアン・フランシスコ・フネス。**2025年11月**、2部の途中に就任しました。
+  - 前はクラブの若手チームを**5シーズン**。3月に、**2028年**までの延長を決めています。
+  sources:
+  - https://en.wikipedia.org/wiki/Málaga_CF
+  - https://en.wikipedia.org/wiki/Juan_Francisco_Funes
+  - https://es.wikipedia.org/wiki/Juan_Funes
+  bg: assets/backgrounds/stadium_マラガ_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は28人です。
+    image: assets/stats/ll_malaga_gk.png
+    no_telop: true
+  - image: assets/stats/ll_malaga_gk_f.png
+    text: ゴールキーパーは2人。
+    no_telop: true
+  - image: assets/stats/ll_malaga_gk_f.png
+    text: アルフォンソ・エレーロはリーグ戦で**122試合**。
+    no_telop: true
+  - image: assets/stats/ll_malaga_df_f.png
+    text: ディフェンダーは10人。
+    no_telop: true
+  - image: assets/stats/ll_malaga_df_f.png
+    text: エイナル・ガリレアはリーグ戦で**76試合**。
+    no_telop: true
+  - image: assets/stats/ll_malaga_df_f.png
+    text: カルロス・プーガは、3部の時代に加わった右サイドバック。
+    no_telop: true
+  - image: assets/stats/ll_malaga_mf1_f.png
+    text: ミッドフィールダーは13人。
+    no_telop: true
+  - image: assets/stats/ll_malaga_mf1_f.png
+    text: 主将を務めるのが**ラモン**。
+    no_telop: true
+  - image: assets/stats/ll_malaga_mf1_f.png
+    text: リーグ戦で**103試合**に出ています。
+    no_telop: true
+  - image: assets/stats/ll_malaga_mf1_f.png
+    text: ダビド・ラルビアはリーグ戦で**121試合**。
+    no_telop: true
+  - image: assets/stats/ll_malaga_mf2.png
+    text: ミッドフィールダーの残りは6人です。
+    no_telop: true
+  - image: assets/stats/ll_malaga_fw_f.png
+    text: フォワードは3人。
+    no_telop: true
+  - image: assets/stats/ll_malaga_fw_f.png
+    text: チュペテはリーグ戦で**28得点**。
+    no_telop: true
+  - image: assets/stats/ll_malaga_fw_f.png
+    text: アドリアン・ニーニョはリーグ戦で**30試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Málaga_CF
+  bg: assets/backgrounds/stadium_マラガ_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 7試合で3引き分け4敗。20位
+  narrator: 解説
+  card:
+    type: table
+    title: ラ・リーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - アトレティコ・マドリード（アウェー）
+      - 0対2
+    - - 第2節
+      - デポルティーボ・ラ・コルーニャ（ホーム）
+      - 1対1
+    - - 第3節
+      - レアル・マドリード（アウェー）
+      - 0対4
+    - - 第4節
+      - レバンテ（ホーム）
+      - 0対0
+    - - 第5節
+      - セルタ（アウェー）
+      - 1対1
+    - - 第6節
+      - ビジャレアル（ホーム）
+      - 1対3
+    - - 第7節
+      - ヘタフェ（アウェー）
+      - 0対1
+  say:
+  - ラ・リーガは7試合を終えて、**3引き分け4敗**です。
+  - 順位は**20位**、勝ち点は**3**です。
+  - いまは降格圏にいます。
+  sources:
+  - https://www.espn.com/soccer/team/results/_/name/malaga
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
+  - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
+  bg: assets/backgrounds/stadium_マラガ_in.png
+  official: false

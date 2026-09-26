@@ -1,0 +1,473 @@
+# プレミアリーグ20クラブ紹介 ⑮ラシン・サンタンデール（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/ll_data/racing*.json と旧台本 -
+format: news
+voice_min: 0
+slot: laliga_1
+date: 2026年9月19日
+people:
+- ラシン・サンタンデール
+- ホセ・アルベルト
+short_title: ラシン・サンタンデール、選手が動かなかった日
+series: ラ・リーガチーム紹介
+theme:
+  id: racing_intro
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: ラシン・サンタンデール
+  title: ラシン・サンタンデール。センターサークルから、選手たちが動かなかった日
+  question: どんなクラブなのか
+  hook: ひげを伸ばしたまま、負けずに進んだシーズンもあります。
+  lead: 今シーズンの1部で、いちばん長い留守からの帰還。
+  opening_image: assets/stats/ll_racing_data_t.png
+thumbnail:
+  line1: 選手が動かなかった日
+  line2: 14年ぶり1部のラシン
+  crest_main:
+  - ラシン・サンタンデール
+  board: assets/stats/ll_racing_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: カナレスの帰還と、守りを課題にする監督
+  narrator: キャスター
+  say:
+  - text: 地元サンタンデール育ちのカナレスが、**16年**ぶりに帰ってきました。
+    image: assets/stats/ll_racing_data_r1.png
+    no_telop: true
+  - text: 率いるのはホセ・アルベルト監督。大敗のあと、こう話しました。
+    image: assets/stats/ll_racing_data_r2.png
+    no_telop: true
+  - voice: ホセ・アルベルト
+    text: 自分たちは、ひと目で分かる色とスタイルを持ったチームだ
+    image: assets/stats/ll_racing_data_r2.png
+  - voice: ホセ・アルベルト
+    text: だが、もっと競り合って、もっと良く守らないといけない
+    image: assets/stats/ll_racing_data_r2.png
+  - text: そしてこのクラブの選手たちは**2014年**、給料が止まった抗議で、
+    image: assets/stats/ll_racing_data_r3.png
+    no_telop: true
+  - text: 国王杯の試合を拒み、センターサークルから動かなかったことがあります。
+    image: assets/stats/ll_racing_data_r3.png
+    no_telop: true
+  - image: assets/stats/ll_racing_data0.png
+    text: 創立は**1913年**。最初の試合は、地元のクラブに**1対2**で負けました。
+    no_telop: true
+  - image: assets/stats/ll_racing_data1.png
+    text: 愛称は「ベルディブランコス」。スペイン語で、緑と白のことです。
+    no_telop: true
+  - image: assets/stats/ll_racing_data2.png
+    text: ホームタウンはサンタンデール。カンタブリア州の州都で、大きな銀行が生まれた港町。
+    no_telop: true
+  - image: assets/backgrounds/stadium_ラシンサンタンデール.png
+    text: 本拠地はエル・サルディネーロ。クラブの発表では、**2万2514人**が入ります。
+  - image: assets/stats/ll_racing_data4.png
+    text: オーナーはセバスティアン・セリア。**2023年**に、会長と2人で株の**74パーセント**を得ました。
+    no_telop: true
+  - image: assets/stats/ll_racing_cups.png
+    text: 1部も国王杯も、まだ優勝がありません。1部の最高は、**1931年**の2位です。
+    no_telop: true
+  - image: assets/stats/ll_racing_data6.png
+    text: 最多出場は、地元生まれのキーパー、セバージョス。このクラブだけで**460試合**。
+    no_telop: true
+  - image: assets/stats/ll_racing_data7.png
+    text: 直近のタイトルは昨シーズンの2部優勝。最終節は、カディスに**4対1**で勝ちました。
+    no_telop: true
+  - image: assets/stats/ll_racing_data8.png
+    text: 昨シーズンは2部で**1位**。勝ち点**82**で、2位に**5**差をつけています。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Racing_de_Santander
+  - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
+  - https://www.realracingclub.es/noticias/somos-un-equipo-con-un-estilo-muy-reconocible-pero-tenemos-que-competir-y-defender-mejor
+  - https://en.wikipedia.org/wiki/Sergio_Canales
+  bg: assets/backgrounds/stadium_ラシンサンタンデール_in.png
+  official: false
+- id: history
+  heading: 1部を作った10クラブ
+  tier: 背景
+  telop: 最初の1部、10クラブの1つ
+  narrator: 解説
+  card:
+    type: table
+    title: 1部を作った10クラブ
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1929年
+      - 最初の1部は10クラブ
+    - - 最後の1枠
+      - バレンシア・ベティス・セビージャを破る
+    - - 1部
+      - 通算45シーズン
+  say:
+  - '**1929年**に始まったスペインの1部。最初の**10クラブ**に、このクラブがいました。'
+  - 最後の1枠をかけた勝ち抜きで、バレンシア、ベティス、セビージャを破っています。
+  - 1部で戦ったのは通算**45シーズン**。カンタブリアから1部に出たクラブは、ここだけです。
+  sources:
+  - https://en.wikipedia.org/wiki/Racing_de_Santander
+  - https://es.wikipedia.org/wiki/Real_Racing_Club_de_Santander
+  bg: assets/backgrounds/stadium_ラシンサンタンデール_in.png
+  official: false
+- id: history2
+  heading: ユニフォームに会社の名前
+  tier: 背景
+  telop: スペインで初めて、ユニフォームに会社の名前
+  narrator: 解説
+  card:
+    type: table
+    title: ユニフォームに会社の名前
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1981年12月27日
+      - レアル・マドリードとのアウェー戦
+    - - 入れた名前
+      - ドイツの電機メーカー、テカ
+    - - 1990年代の初め
+      - テカはマドリードのスポンサーに
+  say:
+  - スペインで初めて、ユニフォームに会社の名前を入れたのも、このクラブです。
+  - '**1981年**の暮れ、レアル・マドリードとのアウェー戦。名前はドイツのテカでした。'
+  - そのテカは、1990年代の初めに、マドリードのスポンサーになります。
+  sources:
+  - https://en.wikipedia.org/wiki/Racing_de_Santander
+  - https://es.wikipedia.org/wiki/Real_Racing_Club_de_Santander
+  bg: assets/backgrounds/stadium_ラシンサンタンデール_in.png
+  official: false
+- id: history3
+  heading: 給料が止まった3部で
+  tier: 背景
+  telop: 2014年、給料が半年止まったまま国王杯へ
+  narrator: 解説
+  card:
+    type: table
+    title: 給料が止まった3部で
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 2012年・2013年
+      - 2年続けて降格
+    - - 2014年1月
+      - 3部から国王杯の準々決勝
+  say:
+  - 2012年から2年続けて降格し、3部まで落ちます。
+  - 2014年1月、3部のまま国王杯の準々決勝へ。相手はレアル・ソシエダでした。
+  - text: このとき選手の給料は、**半年**止まっていました。
+    card:
+      type: table
+      title: 給料が止まった3部で
+      columns: *id001
+      rows:
+      - - 選手の給料
+        - 半年止まったまま
+  - ホームの2戦目。選手たちはキックオフのあと、センターサークルに集まったまま動きません。
+  - 試合は**1分**で止められ、クラブは次の国王杯に出られなくなりました。
+  sources:
+  - https://en.wikipedia.org/wiki/Racing_de_Santander
+  - https://es.wikipedia.org/wiki/Historia_del_Real_Racing_Club_de_Santander
+  bg: assets/backgrounds/stadium_ラシンサンタンデール_in.png
+  official: false
+- id: history4
+  heading: 14年ぶりの1部
+  tier: 背景
+  telop: 2026年5月、14年ぶりの1部が決まる
+  narrator: 解説
+  card:
+    type: table
+    title: 14年ぶりの1部
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 2022年
+      - 3部を制して2部へ
+    - - 2026年5月16日
+      - バジャドリードに4対1
+    - - 1部
+      - 14年ぶりに復帰
+  say:
+  - text: 2部と3部を行き来したあと、**2022年**に3部を制して2部へ戻ります。
+    image: assets/images/ll_racing_history4/scene.jpg
+  - そして**2026年5月16日**、ホームでバジャドリードに**4対1**で勝ちます。
+  - 1部への復帰が決まり、次の日、選手を乗せたバスを大勢の人が囲みました。
+  sources:
+  - https://en.wikipedia.org/wiki/Racing_de_Santander
+  - https://es.wikipedia.org/wiki/Real_Racing_Club_de_Santander
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_La_Liga
+  - https://commons.wikimedia.org/wiki/File:Real_Racing_Club_de_Santander_-_Liga_celebration_01.jpg
+  bg: assets/backgrounds/stadium_ラシンサンタンデール_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 攻める。見いだして売る。地元の歌で応援
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 攻めて取る
+    - - 運営の型
+      - 見いだして売る
+    - - クラブの気質
+      - 地元の民謡で応援
+  say:
+  - text: ホセ・アルベルト監督のチームは、攻めて取る。昨シーズンの2部で**90得点**、リーグ最多です。
+    image: assets/photos/ll/racing/racing_manager_ca76efd7.jpg
+  - ピッチの外は、見いだして売る型。
+  - ガライは**2008年**、レアル・マドリードへ**1000万ユーロ**で移りました。
+  - スタンドで歌うのは、地元の民謡「カチョの泉」。
+  - '**25**あるサポーターの会のうち、**22**がカンタブリアにあります。'
+  sources:
+  - https://en.wikipedia.org/wiki/Racing_de_Santander
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_Segunda_Divisi%C3%B3n
+  - https://es.wikipedia.org/wiki/Real_Racing_Club_de_Santander
+  - https://en.wikipedia.org/wiki/Ezequiel_Garay
+  bg: assets/backgrounds/stadium_ラシンサンタンデール_in.png
+  official: false
+- id: episode
+  heading: 負けるまで剃らない
+  tier: 背景
+  telop: 口ひげは、負けるまで剃らない
+  narrator: 解説
+  card:
+    type: table
+    title: 負けるまで剃らない
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - - 1972年から73年
+      - 2部で昇格争い
+    - - 選手たちの約束
+      - 負けるまで口ひげを剃らない
+  say:
+  - 1972年に始まったシーズン。2部にいたチームの選手たちが、ある約束をします。
+  - 負けるまで、口ひげは剃らない。相手はどこも、本気で止めに来たといいます。
+  - text: 初めての負けは、マドリードでのラージョ戦。監督も含め、全員がひげを剃りました。
+    card:
+      type: table
+      title: 負けるまで剃らない
+      columns: *id002
+      rows:
+      - - 初めての負け
+        - ラージョ・バジェカーノ戦
+  - チームはそのまま、1部に上がっています。
+  sources:
+  - https://es.wikipedia.org/wiki/Real_Racing_Club_de_Santander
+  - https://es.wikipedia.org/wiki/Historia_del_Real_Racing_Club_de_Santander
+  bg: assets/backgrounds/stadium_ラシンサンタンデール_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id003
+      - ペドロ・ムニティス
+      - 1995-2012
+      - 地元育ちの攻撃役
+  say:
+  - text: ムニティスは、この町で生まれた小柄なアタッカー。3度このクラブでプレーしました。
+    image: assets/photos/ll/racing/racing_legend_b01f6daf.jpg
+  - '**2002年**、貸し出し元のレアル・マドリード相手に点を取り、喜んでみせました。'
+  - リーグ戦で**304試合34得点**。2008年、クラブ初のヨーロッパ行きに貢献しました。
+  sources:
+  - https://en.wikipedia.org/wiki/Pedro_Munitis
+  - https://en.wikipedia.org/wiki/Nikola_%C5%BDigi%C4%87
+  - https://en.wikipedia.org/wiki/Quique_Seti%C3%A9n
+  bg: assets/backgrounds/stadium_ラシンサンタンデール_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - &id004
+      - ニコラ・ジギッチ
+      - 2006-2009
+      - 2メートルの点取り屋
+  say:
+  - text: ジギッチはセルビアのフォワード。身長は**2メートル2センチ**あります。
+    image: assets/photos/ll/racing/racing_legend_c5eaa2cb.jpg
+  - 2006年に加入。小柄なムニティスとの2人組で、ファンの人気者になりました。
+  - 一度出て、2009年に貸し出しで戻ると**19試合13得点**。リーグ戦で計**51試合24得点**。
+  sources:
+  - https://en.wikipedia.org/wiki/Pedro_Munitis
+  - https://en.wikipedia.org/wiki/Nikola_%C5%BDigi%C4%87
+  - https://en.wikipedia.org/wiki/Quique_Seti%C3%A9n
+  bg: assets/backgrounds/stadium_ラシンサンタンデール_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - *id004
+    - - キケ・セティエン
+      - 1992-1996
+      - ファン投票で史上最高
+  say:
+  - text: セティエンは、この町が生んだ司令塔。**1992年**、34歳で2度目の在籍に入ります。
+    image: assets/photos/ll/racing/racing_legend_d4675bb9.jpg
+  - その年に**11得点**で1部復帰。リーグ戦は2度の在籍で計**328試合68得点**です。
+  - '**2001年**、ファンの投票でクラブ史上最高の選手に。のちにバルセロナの監督も務めました。'
+  sources:
+  - https://en.wikipedia.org/wiki/Pedro_Munitis
+  - https://en.wikipedia.org/wiki/Nikola_%C5%BDigi%C4%87
+  - https://en.wikipedia.org/wiki/Quique_Seti%C3%A9n
+  bg: assets/backgrounds/stadium_ラシンサンタンデール_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はホセ・アルベルト。2022年12月から
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ホセ・アルベルト・ロペス（スペイン）
+    - - 就任
+      - 2022年12月
+    - - 前職
+      - マラガ
+  say:
+  - text: 今シーズンの監督はホセ・アルベルト。**2022年12月**の就任です。
+    image: assets/photos/ll/racing/racing_manager_ca76efd7.jpg
+  - 前はマラガを率いていました。**1982年**、アストゥリアスのオビエド生まれ。
+  sources:
+  - https://en.wikipedia.org/wiki/Racing_de_Santander
+  - https://en.wikipedia.org/wiki/Jos%C3%A9_Alberto_(footballer)
+  - https://es.wikipedia.org/wiki/Jos%C3%A9_Alberto_L%C3%B3pez
+  bg: assets/backgrounds/stadium_ラシンサンタンデール_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は24人です。
+    image: assets/stats/ll_racing_gk.png
+    no_telop: true
+  - image: assets/stats/ll_racing_gk.png
+    text: ゴールキーパーは2人。
+    no_telop: true
+  - image: assets/stats/ll_racing_df_f.png
+    text: ディフェンダーは8人。
+    no_telop: true
+  - image: assets/stats/ll_racing_df_f.png
+    text: アルバロ・マンティージャはリーグ戦で**126試合**。
+    no_telop: true
+  - image: assets/stats/ll_racing_df_f.png
+    text: マヌ・エルナンドはリーグ戦で**86試合**。
+    no_telop: true
+  - image: assets/stats/ll_racing_mf_f.png
+    text: ミッドフィールダーは7人。
+    no_telop: true
+  - image: assets/stats/ll_racing_mf_f.png
+    text: 主将を務めるのが**イニゴ・サインスマサ**。
+    no_telop: true
+  - image: assets/stats/ll_racing_mf_f.png
+    text: リーグ戦で**153試合**に出ています。
+    no_telop: true
+  - image: assets/stats/ll_racing_mf_f.png
+    text: イニゴ・ビセンテはリーグ戦で**162試合**。
+    no_telop: true
+  - image: assets/stats/ll_racing_fw_f.png
+    text: フォワードは7人。
+    no_telop: true
+  - image: assets/stats/ll_racing_fw_f.png
+    text: アンドレス・マルティンはリーグ戦で**105試合**。
+    no_telop: true
+  - image: assets/stats/ll_racing_fw_f.png
+    text: フアン・カルロス・アラナはリーグ戦で**84試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Racing_de_Santander
+  bg: assets/backgrounds/stadium_ラシンサンタンデール_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 7試合で2勝1引き分け4敗。16位
+  narrator: 解説
+  card:
+    type: table
+    title: ラ・リーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - ビジャレアル（ホーム）
+      - 2対2
+    - - 第2節
+      - ヘタフェ（アウェー）
+      - 0対1
+    - - 第3節
+      - エルチェ（ホーム）
+      - 3対2
+    - - 第4節
+      - ラージョ・バジェカーノ（アウェー）
+      - 2対3
+    - - 第5節
+      - アラベス（ホーム）
+      - 2対1
+    - - 第6節
+      - バルセロナ（アウェー）
+      - 2対7
+    - - 第7節
+      - セルタ（アウェー）
+      - 0対5
+  say:
+  - ラ・リーガは7試合を終えて、**2勝1引き分け4敗**です。
+  - 順位は**16位**、勝ち点は**7**です。
+  sources:
+  - https://www.espn.com/soccer/team/results/_/name/racing
+  - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
+  - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
+  bg: assets/backgrounds/stadium_ラシンサンタンデール_in.png
+  official: false

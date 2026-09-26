@@ -1,0 +1,213 @@
+# ラ・リーガ チーム紹介 ⑧デポルティーボ・ラ・コルーニャ（形は realsociedad_say.yaml と同じ）。
+# 事実はすべて research/ll_data/deportivo_research.md（出典付き）から。
+# 「季」は合成音声が「き」と読むので使わない。アルファベットは読み上げに残さない（PK→ピーケー）
+title: デポルティーボ・ラ・コルーニャ。リーグ王者が3部で過ごした年月
+short_title: デポルティーボってどんなクラブ？
+# クラブを表す一言（体言止め）。1部優勝はガリシアでこのクラブだけ（西語版 Palmarés「el único de Galicia」。セルタは0）
+opening: "ガリシアでただひとつの、スペイン王者。"
+# 回収先は story_sections の history2（1994年最終節の89分のピーケー）
+hook: 決めれば初優勝のピーケーを、止められたシーズンもあります。
+thumbnail:
+  line1: 3部に落ちたリーグ王者
+  line2: デポルティーボの帰還
+  crest_main: [デポルティーボ・ラ・コルーニャ]
+
+# いま見る理由。監督の言葉は EFE（Mundo Deportivo 2026-09-04、ビジャレアル戦の前日会見）の原文
+# 「Somos un recién ascendido, vamos a tener que luchar, sufrir, competir cada día al límite
+#   para conseguir los 42 o 43 puntos que te den la salvación.」
+reasons:
+- "**37歳**のオーバメヤンが、開幕から**5節**連続ゴール。いまは右ひざの手術で離脱中。"
+- "率いるヒダルゴ監督は、目標をこう話します。"
+- {voice: アントニオ・ヒダルゴ, text: "僕らは昇格組。残留の勝ち点42か43へ、毎日限界まで戦い、苦しまないといけない"}
+- "そしてこのクラブは、**2000年**のリーグ優勝チーム。3部まで落ちて、はい上がってきました。"
+reasons_focus: [1, 2, 2, 3]
+reasons_telop: 37歳のエースと、残留を見すえる監督
+reasons_rows:
+- ["理由1", "37歳オーバメヤン、5節連続弾"]
+- ["理由2", "昇格させたヒダルゴ監督"]
+- ["理由3", "王者が3部からはい上がった"]
+reasons_sources:
+- https://www.mundodeportivo.com/futbol/deportivo-coruna/20260904/1004223310/hidalgo-deja-claro-objetivo-deportivo-temporada.html
+- https://www.mundodeportivo.com/futbol/deportivo-coruna/20260913/1004226817/aubameyang-vuelve-cinco-jornadas-seguidas-marcando-record-tiro.html
+- https://www.mundodeportivo.com/futbol/deportivo-coruna/20260924/1004230823/aubameyang-pasado-quirofano.html
+- https://en.wikipedia.org/wiki/Pierre-Emerick_Aubameyang
+people_extra:
+- アントニオ・ヒダルゴ
+
+# 基礎DATA。話す順は20クラブ共通（創立→愛称→ホームタウン→本拠地→オーナー→タイトル歴→記録→直近→昨季）
+data:
+- 創立は**1906年**。体育館サラ・カルベットの仲間たちが作りました。
+- 愛称は「エルクリーノス」。町に立つローマの灯台、ヘラクレスの塔から来ています。
+- ホームタウンはア・コルーニャ。大西洋に面したガリシアの町で、**約25万人**が暮らします。
+- 本拠地はリアソール。浜辺のすぐそばに建ち、クラブの発表では**3万2490人**が入ります。
+- オーナーはガリシアの銀行、アバンカ。株の**99パーセント**以上を持っています。
+- 1部の優勝は**1回**。国王杯**2回**、スーペルコパ**3回**、インタートトカップ**1回**。
+- 最多出場は、中盤のフラン。このクラブひと筋で**700試合**に出ました。
+- 直近のタイトルは、2023年から24年のシーズンに取った、3部の優勝です。
+- 昨シーズンは2部で**2位**。勝ち点**77**で、1部への昇格を決めました。
+data_focus: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+
+# クラブの話。1枚のカードを20秒以上出さないため、4つに割る
+story_sections:
+  - id: history
+    heading: 18年ぶりの1部
+    tier: 背景
+    telop: 18年ぶりに1部へ。2シーズン目に3位
+    narrator: 解説
+    card:
+      type: table
+      title: 18年ぶりの1部
+      columns: ["", ""]
+      rows:
+        - ["1973年", "1部から降格"]
+        - ["1991年", "18年ぶりに1部へ"]
+        - ["1992-93", "3位。初めてヨーロッパへ"]
+    say:
+      - 1973年に1部から落ちると、そこから**18年**、上がれませんでした。
+      - 1988年、借金を抱えたクラブに新しい会長が就き、1991年に1部へ戻ります。
+      - 戻って2シーズン目に**3位**。スーペル・デポルと呼ばれるチームの始まりです。
+    sources:
+      - https://en.wikipedia.org/wiki/Deportivo_de_A_Coru%C3%B1a
+      - https://es.wikipedia.org/wiki/Real_Club_Deportivo_de_La_Coru%C3%B1a
+  - id: history2
+    heading: 89分のピーケー
+    tier: 背景
+    telop: 勝てば初優勝の最終節、89分のピーケー
+    narrator: 解説
+    card:
+      type: table
+      title: 1994年の最終節
+      columns: ["", ""]
+      rows:
+        - ["相手", "ホームでバレンシア"]
+        - ["条件", "勝てば初優勝"]
+        - ["89分", "ピーケーを止められ0対0"]
+    say:
+      - 1994年、首位で迎えた最終節。ホームでバレンシアに勝てば、初めての優勝でした。
+      - 得点のないまま**89分**、ピーケーを得ます。蹴ったのはセンターバックのジュキッチ。
+      - キーパーに止められて引き分け。優勝はバルセロナにさらわれました。
+    sources:
+      - https://es.wikipedia.org/wiki/Real_Club_Deportivo_de_La_Coru%C3%B1a
+      - https://en.wikipedia.org/wiki/Deportivo_de_A_Coru%C3%B1a
+      - https://en.wikipedia.org/wiki/Bebeto
+  - id: history3
+    heading: 6年後の初優勝
+    tier: 背景
+    telop: 2000年、最終節に勝って初優勝
+    narrator: 解説
+    card:
+      type: table
+      title: 6年後の初優勝
+      columns: ["", ""]
+      rows:
+        - ["2000年5月19日", "最終節、ホームでエスパニョール"]
+        - ["結果", "2対0で初めてのリーグ優勝"]
+    say:
+      - 6年後の**2000年**、優勝はまた最終節までもつれます。
+      - 今度はホームでエスパニョールに**2対0**。初めて、リーグを制しました。
+    sources:
+      - https://es.wikipedia.org/wiki/Real_Club_Deportivo_de_La_Coru%C3%B1a
+      - https://en.wikipedia.org/wiki/Deportivo_de_A_Coru%C3%B1a
+  - id: history4
+    heading: 3部の4シーズン
+    tier: 背景
+    telop: 3部に落ちた王者が、8年ぶりに1部へ
+    narrator: 解説
+    card:
+      type: table
+      title: 3部から1部へ
+      columns: ["", ""]
+      rows:
+        - ["2018年", "1部から降格"]
+        - ["2020年", "39年ぶりに3部へ"]
+        - ["2024年", "2部へ"]
+        - ["2026年", "8年ぶりに1部へ"]
+    say:
+      - 2018年に降格すると、2020年には**39年ぶり**に3部へ。
+      - 3部で**4シーズン**を過ごし、2024年に2部へ戻ります。
+      - そして昨シーズン、セカンドチームから上がった**21歳**の2得点で、1部行きを決めました。
+    sources:
+      - https://en.wikipedia.org/wiki/Deportivo_de_A_Coru%C3%B1a
+      - https://es.wikipedia.org/wiki/Real_Club_Deportivo_de_La_Coru%C3%B1a
+      - https://english.news.cn/20260525/fc81914e2eaa4624a0798a764d5b7aa1/c.html
+
+# このクラブの特徴（プレーの色・運営の型・クラブの気質）
+features:
+- "ヒダルゴ監督のチームは、守って好機を待つ。昇格したシーズンも、この戦い方でした。"
+- "ピッチの外は、借金を消しての出直し。"
+- "1部を離れた頃の借金は**1億ユーロ**超。2024年の夏に**ゼロ**になったと、クラブは言います。"
+- "3部でも、ファンは離れませんでした。2022年から23年の年間シートは**2万5001人**です。"
+features_telop: 守って待つ。借金ゼロ。3部でも離れないファン
+features_rows:
+- ["プレーの色", "守って好機を待つ"]
+- ["運営の型", "借金ゼロからの出直し"]
+- ["クラブの気質", "3部でも年間シート2万5千"]
+features_sources:
+- https://www.mundodeportivo.com/en/soccer/20260818/1004217118/1-1-depor-and-elche-share-the-points-after-stunning-goals-from-aubameyang-and-aguado.html
+- https://www.lavozdegalicia.es/noticia/torremarathon/2024/06/12/benassi-primera-vez-deportivo-va-tener-euro-deuda/00031718216294562963830.htm
+- https://en.wikipedia.org/wiki/Deportivo_de_A_Coru%C3%B1a
+
+# 「へえ」の逸話。英語版クラブ記事と 2002 Copa del Rey final の記事で裏を取った
+episode:
+  id: episode
+  heading: 100歳の誕生日に
+  tier: 背景
+  telop: マドリードの100歳の誕生日、決勝で勝ったのは
+  narrator: 解説
+  card:
+    type: table
+    title: 2002年の国王杯決勝
+    columns: ["", ""]
+    rows:
+      - ["2002年3月6日", "マドリードの創立100周年"]
+      - ["舞台", "サンティアゴ・ベルナベウ"]
+      - ["結果", "2対1でデポルティーボ"]
+  say:
+    - {text: "2002年3月6日、国王杯の決勝。舞台はレアル・マドリードの本拠地でした。", image: assets/images/ll_deportivo_episode/scene.jpg}
+    - その日は、マドリードの**100歳**の誕生日。勝って祝うはずの夜でした。
+    - 勝ったのはデポルティーボ、**2対1**。この試合は「センテナリアソ」と呼ばれています。
+  sources:
+    - https://en.wikipedia.org/wiki/Deportivo_de_A_Coru%C3%B1a
+    - https://en.wikipedia.org/wiki/2002_Copa_del_Rey_final
+
+# このクラブを語る3人（1人3行）。数字は英語版 infobox のリーグ戦のみ
+legends:
+- - ベベットはブラジル代表のフォワード。**1992年**に加わりました。
+  - その年のホームのレアル・マドリード戦、0対2から2点を決め、**3対2**の逆転勝ち。
+  - 1年目はリーグ戦**29得点**で得点王。在籍中の1994年には、ワールドカップも制しました。
+- - ロイ・マカーイはオランダのフォワード。**1999年**、テネリフェから来ました。
+  - デビュー戦でハットトリック。2002年から03年は、ヨーロッパの得点王になりました。
+  - リーグ戦で**79得点**。2003年、当時のバイエルンの最高額で移りました。
+- - ルーカス・ペレスはア・コルーニャ生まれのフォワード。**4度**、このクラブに来ました。
+  - 2022年の暮れ、3部のこのクラブへ移るため、自分で**49万3000ユーロ**を払いました。
+  - 2024年、フリーキックで2部復帰を決めた1点。リーグ戦は4度の在籍で**162試合56得点**です。
+legend_rows:
+- ["ベベット", "1992-1996", "1年目に得点王"]
+- ["ロイ・マカーイ", "1999-2003", "ヨーロッパの得点王"]
+- ["ルーカス・ペレス", "4度在籍", "自腹で3部へ"]
+legend_sources:
+- - https://en.wikipedia.org/wiki/Bebeto
+  - https://es.wikipedia.org/wiki/Real_Club_Deportivo_de_La_Coru%C3%B1a
+- - https://en.wikipedia.org/wiki/Roy_Makaay
+- - https://en.wikipedia.org/wiki/Lucas_P%C3%A9rez
+
+# 今季の監督
+manager:
+- 今季の監督はアントニオ・ヒダルゴ。スペインの人で、**2025年6月**に就任しました。
+- 前はウエスカ。このクラブでは1年目で1部に上げ、**2028年**まで延長しました。
+manager_telop: 監督はヒダルゴ。2028年まで延長
+manager_rows:
+- ["監督", "アントニオ・ヒダルゴ（スペイン）"]
+- ["就任", "2025年6月"]
+- ["前職", "ウエスカ"]
+manager_sources:
+- https://en.wikipedia.org/wiki/Antonio_Hidalgo_(footballer,_born_1979)
+- https://www.rcdeportivo.es/noticias/antonio-hidalgo-nuevo-entrenador-del-rc-deportivo
+- https://www.mundodeportivo.com/futbol/deportivo-coruna/20260813/1004215797/antonio-hidalgo-renueva-depor-2028.html
+
+# 冒頭のオーバメヤンを回収する。9月24日に右ひざを手術、離脱は約2か月の見込み（MD 2026-09-24。クラブは期間を出していない）
+season:
+- エースのオーバメヤンが戻るのは、2か月ほど先になる見込みです。
+
+squad_about:
+  レオ・ロマン: レオ・ロマンは、違約金**900万ユーロ**でマジョルカから獲ったゴールキーパー。

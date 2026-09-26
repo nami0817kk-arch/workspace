@@ -1,0 +1,24 @@
+{
+ "deportivo": {
+  "ベベット": {
+   "role": "legend",
+   "file": "assets/photos/ll/deportivo/deportivo_legend_f91c5c83.jpg",
+   "page": "Bebeto"
+  },
+  "ロイ・マカーイ": {
+   "role": "legend",
+   "file": "assets/photos/ll/deportivo/deportivo_legend_ceb4cbe2.jpg",
+   "page": "Roy Makaay"
+  },
+  "ルーカス・ペレス": {
+   "role": "legend",
+   "file": "assets/photos/ll/deportivo/deportivo_legend_4255fe39.jpg",
+   "page": "Lucas Pérez"
+  },
+  "アントニオ・ヒダルゴ": {
+   "role": "manager",
+   "file": "assets/photos/ll/deportivo/deportivo_manager_7a979908.jpg",
+   "page": "Antonio Hidalgo (footballer, born 1979)"
+  }
+ }
+}

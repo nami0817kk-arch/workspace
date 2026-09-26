@@ -35,10 +35,10 @@ sections:
   telop: 世界王者3人と、欧州の決勝を知る新監督
   narrator: キャスター
   say:
-  - text: 今年のワールドカップを制したスペイン。決勝に出た**3人**が、このクラブの選手です。
+  - text: 今年のワールドカップを制したスペイン。決勝の**3人**が、ここの選手です。
     image: assets/stats/ll_athletic_data_r1.png
     no_telop: true
-  - text: そのひとり、ニコ・ウィリアムズはこう話しています。
+  - text: シモン、ラポルト、ニコ・ウィリアムズ。ニコはこう話します。
     image: assets/stats/ll_athletic_data_r2.png
     no_telop: true
   - voice: ニコ・ウィリアムズ
@@ -74,7 +74,7 @@ sections:
     text: 直近のタイトルは**2024年**の国王杯。マジョルカとの決勝は、ピーケー戦までもつれました。
     no_telop: true
   - image: assets/stats/ll_athletic_data8.png
-    text: 昨季のリーグ戦は**12位**、勝ち点**45**。チャンピオンズリーグにも出ています。
+    text: 昨季のリーグ戦は**12位**、勝ち点**45**。その前の年の**4位**で、チャンピオンズリーグにも出ました。
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Athletic_Bilbao
@@ -82,6 +82,7 @@ sections:
   - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_final
   - https://en.wikipedia.org/wiki/Edin_Terzi%C4%87
   - https://www.deia.eus/athletic/2026/09/25/nico-williams-espinita-san-mames-titulo-europeo-11585395.html
+  - https://en.wikipedia.org/wiki/2024%E2%80%9325_Athletic_Bilbao_season
   bg: assets/backgrounds/stadium_アスレティックビルバオ_in.png
   official: false
 - id: history
@@ -102,8 +103,9 @@ sections:
       - 連盟が国籍の規則
   say:
   - このクラブが地元の選手だけで戦うようになったのは、**1911年**からです。
-  - 国王杯で、イングランド人選手の出場をめぐり、ソシエダと揉めたのがきっかけ。
-  - text: 連盟は、選手をスペイン国籍に限ると決めます。
+  - 国王杯で、このクラブが使ったイングランド人選手の資格に、ソシエダが抗議したのがきっかけ。
+  - 連盟は、選手をスペイン国籍に限ると決めます。
+  - text: 国籍の規則がゆるんだあとも、クラブは地元の選手に限るやり方を続けました。
     card:
       type: table
       title: 地元の選手だけ
@@ -111,10 +113,14 @@ sections:
       rows:
       - - それ以来
         - 地元の選手だけで戦う
-  - 規則がゆるんだあとも、クラブはそのやり方を変えませんでした。
+      - - 1929年から
+        - 一度も降格なし
+  - この形のまま、**1929年**のリーグ創設から一度も2部に落ちていません。
+  - ほかにはレアル・マドリードとバルセロナしかない記録です。
   sources:
   - https://en.wikipedia.org/wiki/Athletic_Bilbao_signing_policy
   - https://es.wikipedia.org/wiki/Athletic_Club
+  - https://en.wikipedia.org/wiki/Athletic_Bilbao
   bg: assets/backgrounds/stadium_アスレティックビルバオ_in.png
   official: false
 - id: history2
@@ -218,7 +224,7 @@ sections:
     - - クラブの気質
       - 7万人が決勝の地へ
   say:
-  - text: テルジッチが求めるのは、守備の背後への走り。走れなければ、ボールを速く動かします。
+  - text: テルジッチが求めるのは、相手の守備の背後への走り。走れなければ、ボールを速く動かします。
     image: assets/photos/ll/athletic/athletic_manager_b9e7b490.jpg
   - ピッチの外は、育てた選手を手放さない型。
   - ニコ・ウィリアムズとは2025年、**2035年**まで契約を延ばしました。
@@ -335,7 +341,7 @@ sections:
   - text: イケル・ムニアインは**16歳**でデビュー。プロの公式戦では、クラブ最年少です。
     image: assets/photos/ll/athletic/athletic_legend_df27c65b.jpg
   - 2024年、国王杯の決勝に延長から出てピーケーを決め、主将として杯を掲げました。
-  - 違約金を付けない契約を選び、リーグ戦で**434試合56得点**。
+  - 売り物になりたくないと、違約金の無い契約を選び、リーグ戦で**434試合56得点**。
   sources:
   - https://en.wikipedia.org/wiki/Julen_Guerrero
   - https://en.wikipedia.org/wiki/Aritz_Aduriz
@@ -453,6 +459,7 @@ sections:
   say:
   - ラ・リーガは6試合を終えて、**2勝2引き分け2敗**です。
   - 順位は**10位**、勝ち点は**8**です。
+  - 第6節のレバンテ戦は、悪天候で**10月21日**に延期されています。
   sources:
   - https://www.espn.com/soccer/team/results/_/name/athletic
   - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard

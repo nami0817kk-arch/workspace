@@ -34,19 +34,16 @@ sections:
   telop: 通算100得点のエースと、1部が初めての監督
   narrator: キャスター
   say:
-  - text: クロアチア代表のブディミルは9月、ラ・リーガ通算**100得点**に届きました。
+  - text: クロアチア代表のブディミルは9月、1部通算**100得点**に届きました。
     image: assets/stats/ll_osasuna_data_r1.png
     no_telop: true
-  - text: 率いるのは、1部が初めてのラミス監督。こう話しています。
+  - text: '**5連敗**で終えた昨シーズン。1部が初めてのラミス新監督は、こう求めます。'
     image: assets/stats/ll_osasuna_data_r2.png
     no_telop: true
   - voice: ルイス・ミゲル・ラミス
     text: 前に出るのは一歩ではなく三歩だ。一歩で済む状況ではない
     image: assets/stats/ll_osasuna_data_r2.png
-  - text: 昨シーズンは終盤に**5連敗**。この夏に、監督を替えたばかりです。
-    image: assets/stats/ll_osasuna_data_r2.png
-    no_telop: true
-  - text: そしてこのクラブは、3部で戦ったシーズンから、わずか**9シーズン**でヨーロッパに出ています。
+  - text: オサスナは**1977年**まで3部。そこから**9シーズン**後の**1985年**、ヨーロッパの舞台へ。
     image: assets/stats/ll_osasuna_data_r3.png
     no_telop: true
   - image: assets/stats/ll_osasuna_data0.png
@@ -77,7 +74,7 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/CA_Osasuna
-  - https://en.wikipedia.org/wiki/2026–27_CA_Osasuna_season
+  - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
   - https://www.osasuna.es/cronica-osasunarayo-2026/27
   - https://www.osasuna.es/rueda-prensa-osasuna-rayo-2026-27
   - https://www.osasuna.es/luis-miguel-ramis-nuevo-entrenador-de-osasuna
@@ -166,7 +163,7 @@ sections:
     - - 準々決勝
       - レバークーゼンに敵地で3対0
   say:
-  - 回ったのは、いまのヨーロッパリーグにあたる大会です。
+  - 予選で敗れて回ったのは、いまのヨーロッパリーグにあたる大会です。
   - 準々決勝では、ドイツのレバークーゼンに、敵地で**3対0**。
   - text: 準決勝はセビージャ。ホームで勝ったものの、敵地で**0対2**と敗れました。
     card:

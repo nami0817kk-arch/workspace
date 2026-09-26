@@ -228,13 +228,13 @@ sections:
       - 白いシャツと黒いパンツを買いに
     - - 店にあったのは
       - 黄色だけ
-    - - パンツ
-      - 選手の投票で青に
+    - - いま
+      - 上下とも黄色
   say:
   - text: 1947年、当時の会長の息子が、ユニフォームを買いにバレンシアへ行きました。
     image: assets/images/ll_villarreal_episode/scene.jpg
   - 欲しかったのは白いシャツと黒いパンツ。店にどちらも無く、あったのは黄色だけ。
-  - 黒いパンツは選手に嫌われ、白を買って、投票で青に染めました。
+  - 黄色いシャツはそのまま定着し、いまは上下とも黄色です。
   sources:
   - https://en.wikipedia.org/wiki/Villarreal_CF
   bg: assets/backgrounds/stadium_ビジャレアル_in.png
@@ -259,7 +259,7 @@ sections:
   say:
   - text: リケルメはアルゼンチンの司令塔。バルセロナで外国人枠からあふれ、期限付きで来ました。
     image: assets/photos/ll/villarreal/villarreal_legend_a75286ad.jpg
-  - 2006年、チャンピオンズリーグの準決勝。決めれば延長のピーケーを、止められました。
+  - 2006年、チャンピオンズリーグ準決勝。試合中のピーケーを止められ、延長を逃しました。
   - リーグ戦で**106試合36得点**。いまは母国ボカ・ジュニアーズの会長です。
   sources:
   - https://en.wikipedia.org/wiki/Juan_Rom%C3%A1n_Riquelme
@@ -317,7 +317,7 @@ sections:
   say:
   - text: カソルラは、地元オビエドの財政難で、18歳になる前にここへ来た中盤です。
     image: assets/photos/ll/villarreal/villarreal_legend_4ca6fa77.jpg
-  - 2008年、レアル・マドリードの誘いを断り、「ノーと言うことはできる」。
+  - 2008年、レアル・マドリードの誘いを断り、「ノーと言うことはできる」と話しました。
   - 大けがから**636日**ぶりの試合を、ここで迎えました。リーグ戦は**251試合40得点**。
   sources:
   - https://en.wikipedia.org/wiki/Juan_Rom%C3%A1n_Riquelme

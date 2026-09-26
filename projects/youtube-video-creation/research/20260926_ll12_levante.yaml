@@ -47,7 +47,7 @@ sections:
     image: assets/stats/ll_levante_data_r3.png
     no_telop: true
   - image: assets/stats/ll_levante_data0.png
-    text: 創立は**1909年**。いまの形は**1939年**、同じ年に生まれた2つのクラブの合併です。
+    text: 創立は**1909年**。**1939年**に2つのクラブが合併して、いまの形になりました。
     no_telop: true
   - image: assets/stats/ll_levante_data1.png
     text: 愛称は「グラノタ」。バレンシア語で**カエル**。川の中にあった、昔の球場から来た名前。
@@ -220,7 +220,8 @@ sections:
   - カストロ監督は、ボールを失わないことを求めます。前へ急ぐだけでは勝てない、と話します。
   - ピッチの外は、安く見つけて高く売る型。
   - レルマは**60万ユーロ**で獲り、**3000万ユーロ**で売れました。
-  - 昇格と降格をくり返す「エレベーター」。1部は**18**シーズン目、2部は**41**シーズンです。
+  - 昇格と降格をくり返す「エレベーター」です。
+  - 1部は、今シーズンが**18**回目。2部では**41**シーズン戦いました。
   sources:
   - https://en.wikipedia.org/wiki/Levante_UD
   - https://www.marca.com/futbol/levante/2026/09/20/luis-castro-son-buenos-calidad.html
@@ -248,7 +249,7 @@ sections:
       - 失速して9位
   say:
   - 1981年3月、2部のレバンテで、あのヨハン・クライフがデビューしました。
-  - 好調だったチームは、そこから失速して**9位**。約束のお金も、一部しか出ませんでした。
+  - 好調だったチームはそこから失速して**9位**。クライフへの約束のお金も、一部しか出ませんでした。
   sources:
   - https://es.wikipedia.org/wiki/Levante_Uni%C3%B3n_Deportiva
   - https://en.wikipedia.org/wiki/Johan_Cruyff
@@ -276,7 +277,7 @@ sections:
   - text: アルナ・コネは、2011年にセビージャから借りたフォワード。リーグ戦で**34試合15得点**。
     image: assets/photos/ll/levante/levante_legend_edd31707.jpg
   - マドリードを**1対0**で破った試合でも、ただ1つのゴールを決めました。
-  - 公式戦で**18点**に届くと、セビージャへ戻る契約。最後の3試合は休みました。
+  - '**18点**でセビージャへ戻る契約。あと1点に迫り、けがもあって最後の3試合は休みました。'
   sources:
   - https://en.wikipedia.org/wiki/Arouna_Kon%C3%A9
   - https://en.wikipedia.org/wiki/Keylor_Navas

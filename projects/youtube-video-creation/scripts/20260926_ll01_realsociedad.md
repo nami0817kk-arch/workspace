@@ -261,13 +261,13 @@ cards:
 ペッレグリーノ・マタラッツォ: もっと攻撃的なチームになりたい。野心はあるし、勝ちたいのは疑いようがない
   telop: ペッレグリーノ・マタラッツォ「もっと攻撃的なチームになりたい。野心はあるし、勝ちたいのは疑いようがない」
   image: assets/stats/ll_realsociedad_data_r2.png
-キャスター: 就任から**4か月**で、国王杯を制しました。今季はヨーロッパリーグにも出ています。
+キャスター: 就任から**4か月**で、昨季の国王杯を制しました。今季はヨーロッパリーグにも出ています。
   no_telop: true
   image: assets/stats/ll_realsociedad_data_r2.png
-キャスター: そしてこのクラブは、バスク出身の選手だけで、スペインの頂点に**2度**立っています。
+キャスター: さかのぼると、このクラブはバスク出身の選手だけで、スペインの頂点に**2度**立っています。
   no_telop: true
   image: assets/stats/ll_realsociedad_data_r3.png
-キャスター: 創立は**1909年**。その年の国王杯を制した面々が、クラブを作りました。
+キャスター: 創立は**1909年**。その年、別の名前で国王杯を取った面々が、クラブを作りました。
   no_telop: true
   image: assets/stats/ll_realsociedad_data0.png
 キャスター: 愛称は「チュリ・ウルディン」。バスク語で**白と青**。町の旗の色です。
@@ -288,7 +288,7 @@ cards:
 キャスター: 最多出場は、センターバックのアルベルト・ゴリス。このクラブだけで**599試合**です。
   no_telop: true
   image: assets/stats/ll_realsociedad_data6.png
-キャスター: 直近のタイトルは昨季の国王杯。アトレティコと2対2のあと、ピーケー戦を**4対3**で制しました。
+キャスター: 直近のタイトルは、先ほどの国王杯。アトレティコとのピーケー戦を**4対3**で制しました。
   no_telop: true
   image: assets/stats/ll_realsociedad_data7.png
 キャスター: 昨季のリーグ戦は**10位**。勝ち点は**46**でした。
@@ -346,22 +346,30 @@ cards:
   card: history4_2_card
 解説: 1シーズン目に**16得点**。それでも、受け入れないファンがいました。
   telop: 1シーズン目に**16得点**。それでも、受け入れないファンがいました
+解説: スタジアムには彼を侮辱する落書き。道で、唾を吐きかけられたこともあります。
+  telop: スタジアムには彼を侮辱する落書き。道で、唾を吐きかけられたこともあります
 
 ## このクラブの特徴
 @bg: assets/backgrounds/stadium_レアルソシエダ_in.png
 
-解説: マタラッツォ監督のチームは、よく走る。時速21キロを超えて走った距離は、リーグで**2番目**です。
-  telop: マタラッツォ監督のチームは、よく走る。時速21キロを超えて走った距離は、リーグで**2番目**です
+解説: マタラッツォ監督のチームは、よく走る。
+  telop: マタラッツォ監督のチームは、よく走る
   source: 背景
   card: features_card
   image: assets/photos/ll/realsociedad_manager_ab923e7e.jpg
+解説: 時速21キロを超える全力の走りで、走った距離がリーグで**2番目**です。
+  telop: 時速21キロを超える全力の走りで、走った距離がリーグで**2番目**です
 解説: ピッチの外は、育てて売る型。
   telop: ピッチの外は、育てて売る型
+  image: assets/photos/ll/realsociedad_manager_ab923e7e.jpg
 解説: オドリオソラは2018年、レアル・マドリードへ**3000万ユーロ**。今は戻っています。
   telop: オドリオソラは2018年、レアル・マドリードへ**3000万ユーロ**。今は戻っています
   image: assets/photos/ll/realsociedad_manager_ab923e7e.jpg
-解説: スタンドは県ぐるみ。2022年の年間シートは**3万7584人**、県の人口の5パーセントを超えます。
-  telop: スタンドは県ぐるみ。2022年の年間シートは**3万7584人**、県の人口の5パーセントを超えます
+解説: スタンドは、ギプスコア県ぐるみ。
+  telop: スタンドは、ギプスコア県ぐるみ
+  image: assets/photos/ll/realsociedad_manager_ab923e7e.jpg
+解説: 2022年の年間シートは**3万7584人**。県の人口の5パーセントを超えます。
+  telop: 2022年の年間シートは**3万7584人**。県の人口の5パーセントを超えます
   image: assets/photos/ll/realsociedad_manager_ab923e7e.jpg
 
 ## 胸のエンブレムが顔に
@@ -411,8 +419,8 @@ cards:
   source: 背景
   card: legends3_card
   image: assets/photos/ll/realsociedad_legend_b9a4fac9.jpg
-キャスター: 延期された2020年の国王杯の決勝を、2021年4月に制しました。
-  telop: 延期された2020年の国王杯の決勝を、2021年4月に制しました
+キャスター: 2021年4月、延期された国王杯の決勝で、彼のいたソシエダがアスレティックを破ります。
+  telop: 2021年4月、延期された国王杯の決勝で、彼のいたソシエダがアスレティックを破ります
 キャスター: 2025年にアーセナルへ。1年目でプレミアリーグを制しました。
   telop: 2025年にアーセナルへ。1年目でプレミアリーグを制しました
   image: assets/photos/ll/realsociedad_legend_b9a4fac9.jpg
@@ -459,7 +467,7 @@ cards:
 キャスター: 日本の久保建英がいます。
   no_telop: true
   image: assets/stats/ll_realsociedad_mf_f.png
-キャスター: 久保建英は、リーグ戦で**130試合23得点**。
+キャスター: その久保は、リーグ戦で**130試合23得点**。
   no_telop: true
   image: assets/stats/ll_realsociedad_mf_f.png
 キャスター: フォワードは5人。

@@ -34,7 +34,7 @@ sections:
   telop: 初めての欧州の決勝と、7試合7得点のエース
   narrator: キャスター
   say:
-  - text: 去年の5月、初めての欧州の決勝。鎌田大地のいたクリスタル・パレスに**0対1**。
+  - text: 昨シーズン、クラブ初の欧州の決勝へ。鎌田大地のいたクリスタル・パレスに**0対1**。
     image: assets/stats/ll_rayo_data_r1.png
     no_telop: true
   - text: 新しいサン・ホセ監督は、町を歩いたあと、こう話しました。
@@ -83,7 +83,7 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Rayo_Vallecano
-  - https://en.wikipedia.org/wiki/2026–27_Rayo_Vallecano_season
+  - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
   - https://en.wikipedia.org/wiki/2026_UEFA_Conference_League_final
   - https://www.marca.com/futbol/rayo/2026/09/14/benat-san-jose-ojala-camello-vaya-seleccion-nosotros-estaremos-encantados.html
   - https://www.marca.com/futbol/rayo/2026/09/19/sergio-camello-paron-record.html
@@ -175,7 +175,7 @@ sections:
   say:
   - 2011年の初め、クラブを持つ企業グループが経営に行き詰まります。
   - 選手たちは、シーズンのあいだずっと給料を受け取れませんでした。
-  - text: ファンは寄付を集める「0列目」を作り、働く人たちの給料に回しました。
+  - text: ファンは寄付やシャツの売り上げを集め、働く人たちの給料に回しました。
     card:
       type: table
       title: 給料が出ないまま1部へ
@@ -183,7 +183,7 @@ sections:
       rows:
       - - 2011年5月
         - 8年ぶりの1部昇格
-  - それでも2位を守り、**8年**ぶりに1部へ戻りました。
+  - それでも2部で2位を守り、**8年**ぶりに1部へ戻りました。
   sources:
   - https://es.wikipedia.org/wiki/Rayo_Vallecano_de_Madrid
   - https://en.wikipedia.org/wiki/Rayo_Vallecano
@@ -324,8 +324,8 @@ sections:
   say:
   - text: ファルカオは**2021年**、35歳で加入。亡くなった父と同じ背番号**3**を選びました。
     image: assets/photos/ll/rayo/rayo_legend_9bf16262.jpg
-  - 10月、バルセロナ戦で決勝点を決めて**1対0**。相手はこの試合のあと、監督を解任しました。
-  - 3シーズンで、リーグ戦**71試合9得点**。デビュー戦でも、いきなり点を取っています。
+  - 9月のデビュー戦で、いきなり得点。10月にはバルセロナを**1対0**で破る決勝点です。
+  - 相手はこの試合のあと監督を解任。3シーズンで、リーグ戦**71試合9得点**でした。
   sources:
   - https://en.wikipedia.org/wiki/M%C3%ADchel_(footballer,_born_1975)
   - https://en.wikipedia.org/wiki/Diego_Costa

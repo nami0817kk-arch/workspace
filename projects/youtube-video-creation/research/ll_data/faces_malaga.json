@@ -1,0 +1,19 @@
+{
+ "malaga": {
+  "イスコ": {
+   "role": "legend",
+   "file": "assets/photos/ll/malaga/malaga_legend_614b57c4.jpg",
+   "page": "Isco"
+  },
+  "ウィリー・カバジェロ": {
+   "role": "legend",
+   "file": "assets/photos/ll/malaga/malaga_legend_94544b16.jpg",
+   "page": "Willy Caballero"
+  },
+  "ヘスス・ガメス": {
+   "role": "legend",
+   "file": "assets/photos/ll/malaga/malaga_legend_b2e1feae.jpg",
+   "page": "Jesús Gámez"
+  }
+ }
+}

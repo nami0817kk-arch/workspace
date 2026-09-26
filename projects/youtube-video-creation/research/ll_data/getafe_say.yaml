@@ -18,16 +18,16 @@ thumbnail:
 # 「están haciendo un esfuerzo titánico, muchos están aguantando en el campo con las fuerzas justas」
 reasons:
 - "ヨーロッパは**2020年**以来。パルチザンを合計**4対3**で破りました。"
-- "就任**10シーズン目**のボルダラス監督は、こう話します。"
+- "通算**10シーズン目**のボルダラス監督は、こう話します。"
 - {voice: ホセ・ボルダラス, text: "選手たちは、とてつもない努力をしている"}
 - {voice: ホセ・ボルダラス, text: "多くの選手が、ぎりぎりの力でピッチに立っている"}
-- "そしてこのクラブは、あのバイエルンを、10人で延長の最後まで追い詰めました。"
+- "**2008年**には、あのバイエルンを10人で延長の最後まで追い詰めました。"
 reasons_focus: [1, 2, 2, 2, 3]
 reasons_telop: 2020年以来の欧州と、10シーズン目の監督
 reasons_rows:
 - ["理由1", "2020年以来のヨーロッパ"]
-- ["理由2", "就任10シーズン目の監督"]
-- ["理由3", "10人でバイエルンを追い詰めた"]
+- ["理由2", "通算10シーズン目の監督"]
+- ["理由3", "2008年、10人でバイエルンを追い詰めた"]
 reasons_sources:
 - https://www.marca.com/futbol/getafe/2026/09/20/bordalas-contento-esto-sinvivir.html
 - https://www.marca.com/futbol/getafe/2026/09/26/decada-futbol-papa.html
@@ -88,7 +88,7 @@ story_sections:
     say:
       - 2004年6月、2部の最終節。勝てば、初めての1部です。
       - 敵地のテネリフェで**5対3**の勝ち。セルヒオ・パチョンが、**5点**すべてを決めました。
-      - 首都の外にあるマドリード州のクラブで、1部に上がったのは初めて。
+      - マドリード州では、市の外のクラブとして初めての1部です。
       - この日は、いまも「サン・パチョン」と呼ばれています。
     sources:
       - https://en.wikipedia.org/wiki/Getafe_CF
@@ -153,13 +153,17 @@ episode:
       - ["結果", "アウェーゴールの差で敗退"]
   say:
     - {text: "2008年、ヨーロッパの大会の準々決勝。相手はバイエルンでした。", image: assets/images/ll_getafe_episode/scene.jpg}
+    - 1戦目は、敵地で**1対1**の引き分けでした。
     - ホームの2戦目は、開始早々に1人が退場。それでも延長で**3対1**、勝ちが見えていました。
-    - ところが**115分**と**120分**にトニの2点。アウェーゴールの差で敗れました。
-    - 試合後、カーンは「40年で、こんな経験は無かった」と話しました。
+    - ところが**115分**と**120分**に、バイエルンのトニが2点。アウェーゴールの差で敗れました。
+    - 試合後、バイエルンのキーパー、カーンはこう話しました。
+    - 「今夜のことは信じられない。40年で、こんな経験は無かった」
   sources:
     - https://en.wikipedia.org/wiki/Getafe_CF
     - https://en.wikipedia.org/wiki/2007%E2%80%9308_UEFA_Cup_knockout_stage
     - http://www.elmundo.es/elmundodeporte/2008/04/11/futbol/1207865743.html
+    - https://en.wikipedia.org/wiki/Oliver_Kahn
+    - https://en.wikipedia.org/wiki/Luca_Toni
 
 # このクラブを語る3人（1人3行）。数字は英語版 infobox のリーグ戦のみ
 legends:

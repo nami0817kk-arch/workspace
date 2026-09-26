@@ -42,6 +42,7 @@
 | 通算最多得点（参考） | Telmo Zarra 335 | [EN-AB] |
 | 直近のタイトル | **2023–24 国王杯**。決勝 2024年4月6日、セビリア・ラ・カルトゥーハ、対マジョルカ 1–1（延長）、PK 4–2。40年ぶりの主要タイトル。観衆57,619。最優秀選手 Nico Williams | [EN-FINAL24] |
 | 昨季（2025-26） | **12位、勝ち点45**（13勝6分19敗、得点43・失点58）。CL リーグフェーズに出場（2014–15以来）。国王杯・スーペルコパは準決勝 | [LL-TABLE]／[EN-2526] infobox |
+| CL 出場権の出どころ（2026-09-27 追記） | **2024–25 のリーグ戦4位**（19勝13分6敗、勝ち点70）。第36節ヘタフェ戦2–0で、2014–15以来のCL出場を決めた（原文「Following a 2–0 victory over Getafe in the 36th round of La Liga, Athletic Bilbao successfully qualified for the UEFA Champions League for the first time since the 2014–15 season」） | https://en.wikipedia.org/wiki/2024%E2%80%9325_Athletic_Bilbao_season |
 
 ---
 

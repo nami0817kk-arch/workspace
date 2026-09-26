@@ -161,3 +161,8 @@ AS（as.com）の記事は 403 で読めなかった（JS 必須）。クラブ�
 - 合言葉が広まった時代（1930年代か、3部の時代か）。上の【食い違い】のとおり。
 - 監督の契約の年（2027／2028）。
 - AS の記事（「La marca Pellegrini」ほか）は 403 で読めなかった。
+
+## 流れの点検で足した事実（2026-09-27）
+- **最も古いペーニャ（冒頭の一言の根拠）**: 西語版クラブ記事（action=raw で原文確認）「La peña bética "Puerta de la Carne", fundada el 13 de octubre de 1927 constituye la más antigua de todas las existentes del fútbol español」。出典は Marca 2017-12-18「La Peña más longeva de España cumple 90 años」https://www.marca.com/futbol/2017/12/18/5a3805d4ca4741b77a8b45ea.html ／[ES-RB]
+- **5位でチャンピオンズリーグに出られた理由**: Template:2025–26 La Liga table（action=raw で原文確認）の note_res_CLLS「La Liga gained an additional Champions League place as a result of Spain gaining one of the two European Performance Spots (EPS) awarded to the two associations with the highest UEFA coefficient points in 2025–26」。https://en.wikipedia.org/wiki/Template:2025%E2%80%9326_La_Liga_table （research/ll_data/last_season.json の cl5 も同じ）
+- **2009年のデモの相手**: 英語版クラブ記事「to let the majority owner Ruiz de Lopera know that it was time to put his 54% share of the club on the market ... and remove Lopera from the day-to-day operations of the club」。[EN-RB]

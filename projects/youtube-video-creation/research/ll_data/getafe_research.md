@@ -81,6 +81,7 @@
    - 英語版クラブ記事: 初めて前売りでコリセウムが完売した試合
    - **カーンの談話**（El Mundo 2008-04-11、見出し「Kahn: 'En 40 años no viví nada igual'」、SAT 1 への談話）: 「He jugado 140 partidos de Copa de Europa, he estado en todas partes -Madrid, Milán, Londres, Barcelona- pero lo de esta noche es increíble. No había vivido algo así en 40 años」＝「ヨーロッパの大会で140試合やり、マドリードにもミラノにもロンドンにもバルセロナにも行った。だが今夜のことは信じられない。40年で、こんな経験は無かった」。「10人になった相手が120分、狂ったように戦った」とも。試合後、カーンは手袋をヘタフェのファンに渡した。http://www.elmundo.es/elmundodeporte/2008/04/11/futbol/1207865743.html
    - 同じページの見出しにヒッツフェルト「Fueron mejores y casi nos humillan」、ラウドルップ「Este partido quedará para la memoria del fútbol español」
+   - 【追記 2026-09-27】カーンはバイエルンのキーパー（英語版 Oliver Kahn の infobox「position = Goalkeeper」 https://en.wikipedia.org/wiki/Oliver_Kahn）、トニは2007〜2010年にバイエルンのストライカー（英語版 Luca Toni の infobox https://en.wikipedia.org/wiki/Luca_Toni）
    - 【注意】カーンは当時38歳で「40年」は本人の言い回しのまま。記事の本文（地の文）は「20年の選手生活で」と書く
 2. 「Getafinder」（2015年）: クラブが作った、コリセウムでファンどうしが出会うためのアプリ（Marca 2015-10-15「la aplicación que el club ha inventado para que sus seguidores liguen en el Coliseum」）。西語版は「コリセウムの中でしか使えない」と書く。→ **特徴の節（クラブの気質）で使った**。https://www.marca.com/2015/10/15/futbol/equipos/getafe/1444939561.html
 3. 型破りな宣伝の系譜（西語版 Publicidad y mercadotecnia）: 2007年「Primero está mi equipo」（聖書の場面をもじり、司教区が撤回を求めた）、2011〜12年の会員集めの広告（英語版・ガーディアン）。**性的な内容を含むので動画では触れない**

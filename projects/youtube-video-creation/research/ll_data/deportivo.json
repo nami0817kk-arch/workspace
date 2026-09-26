@@ -1,0 +1,82 @@
+{
+ "title": "デポルティーボ・ラ・コルーニャ 基礎DATA",
+ "colors": [
+  "#1B4B9B",
+  "#FFFFFF"
+ ],
+ "crest": "assets/crests/デポルティーボラコルーニャ.png",
+ "tiles": [
+  [
+   "クラブ創立",
+   "1906年",
+   "体育館サラ・カルベットの仲間が創立"
+  ],
+  [
+   "愛称",
+   "エルクリーノス",
+   "町に立つローマの灯台「ヘラクレスの塔」から"
+  ],
+  [
+   "ホームタウン",
+   "ア・コルーニャ",
+   "ガリシアの大西洋岸、人口約25万"
+  ],
+  [
+   "本拠地",
+   "リアソール",
+   "収容 32,490人（クラブ発表）"
+  ],
+  [
+   "オーナー",
+   "アバンカ",
+   "ガリシアの銀行。株の99%超を保有"
+  ],
+  [
+   "タイトル歴",
+   "1部優勝 1回",
+   "国王杯2・スーペルコパ3"
+  ],
+  [
+   "最多出場",
+   "700試合",
+   "フラン、1988〜2005年に出場"
+  ],
+  [
+   "直近のタイトル",
+   "3部優勝",
+   "2023-24シーズン"
+  ],
+  [
+   "昨季の順位",
+   "2部 2位",
+   "勝ち点77。8年ぶりに1部へ昇格"
+  ]
+ ],
+ "trophies": [
+  [
+   "ラ・リーガ",
+   1
+  ],
+  [
+   "国王杯",
+   2
+  ],
+  [
+   "スーペルコパ",
+   3
+  ],
+  [
+   "インタートトカップ",
+   1
+  ]
+ ],
+ "sources": [
+  "https://en.wikipedia.org/wiki/Deportivo_de_A_Coru%C3%B1a",
+  "https://es.wikipedia.org/wiki/Real_Club_Deportivo_de_La_Coru%C3%B1a",
+  "https://en.wikipedia.org/wiki/Estadio_Riazor",
+  "https://en.wikipedia.org/wiki/Fran_(footballer,_born_1969)",
+  "https://www.laliga.com/en-GB/news/why-are-rc-deportivo-de-la-coruna-players-called-herculinos",
+  "https://en.wikipedia.org/wiki/2025%E2%80%9326_Segunda_Divisi%C3%B3n"
+ ],
+ "notes": "取材の控えは research/ll_data/deportivo_research.md。創立日は 1906年12月8日（英語版）／3月2日（西語版本文）／3月28日（西語版冒頭）と割れるので年だけ。収容は 32,490（英語版・西語版、出典はクラブ公式）／32,660（2026-27 La Liga の表）で、クラブ発表を採った。オーナーの持ち分は 99%（英語版）／99.99%（西語版・AS）なので「99%超」。最多出場 700 は英語版 Fran 記事の本文（全公式戦）。西語版も最多と書くが数は無く、出典の BDFutbol は読めなかった。インタートトカップ 2008 は英語版 Honours に「joint winners」として載るが、西語版の表はタイトルに数えていない。セルタ・ビジャレアルと同じ扱いで載せた。直近のタイトルは 2023-24 Primera Federación（3部）優勝。昨季は 2025-26 Segunda の2位（22勝11分9敗、勝ち点77）で自動昇格。"
+}

@@ -1,0 +1,24 @@
+{
+ "racing": {
+  "ペドロ・ムニティス": {
+   "role": "legend",
+   "file": "assets/photos/ll/racing/racing_legend_b01f6daf.jpg",
+   "page": "Pedro Munitis"
+  },
+  "ニコラ・ジギッチ": {
+   "role": "legend",
+   "file": "assets/photos/ll/racing/racing_legend_c5eaa2cb.jpg",
+   "page": "Nikola Žigić"
+  },
+  "キケ・セティエン": {
+   "role": "legend",
+   "file": "assets/photos/ll/racing/racing_legend_d4675bb9.jpg",
+   "page": "Quique Setién"
+  },
+  "ホセ・アルベルト": {
+   "role": "manager",
+   "file": "assets/photos/ll/racing/racing_manager_ca76efd7.jpg",
+   "page": "José Alberto (footballer)"
+  }
+ }
+}

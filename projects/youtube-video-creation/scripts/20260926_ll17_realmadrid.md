@@ -5,7 +5,7 @@ voice_min: 0.0
 short_title: レアル・マドリードってどんなクラブ？
 series: ラ・リーガチーム紹介
 topic: レアル・マドリード
-thumbnail_line1: 欧州一の大会、生みの親
+thumbnail_line1: 欧州一の大会を作ったのは●●
 thumbnail_line2: 名門レアル・マドリード
 thumbnail_tags: []
 thumbnail_alt: []
@@ -58,6 +58,7 @@ sources:
 - https://en.wikipedia.org/wiki/Zinedine_Zidane
 - https://en.wikipedia.org/wiki/Cristiano_Ronaldo
 - https://en.wikipedia.org/wiki/Sergio_Ramos
+- https://es.wikipedia.org/wiki/Cristiano_Ronaldo
 - https://www.realmadrid.com/es-ES/noticias/club/ultimas-noticias/comunicado-oficial-mourinho-11-06-2026
 - https://www.espn.com/soccer/team/results/_/name/realmadrid
 - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard
@@ -80,28 +81,10 @@ cards:
     rows:
     - - 国王杯
       - バルセロナに1対5と0対3
-  kit2_card:
-    type: table
-    title: 白をまねたリーズ
-    columns: &id002
-    - ''
-    - ''
-    rows:
-    - - 1960年
-      - ヨーロッパの決勝で7対3
-    - - スタンドに
-      - のちのリーズ監督ドン・レヴィー
-  kit2_2_card:
-    type: table
-    title: 白をまねたリーズ
-    columns: *id002
-    rows:
-    - - そのあと
-      - リーズは上下とも白に
   bernabeu_card:
     type: table
     title: 大会を作った会長
-    columns: &id003
+    columns: &id002
     - ''
     - ''
     rows:
@@ -112,12 +95,30 @@ cards:
   bernabeu_2_card:
     type: table
     title: 大会を作った会長
-    columns: *id003
+    columns: *id002
     rows:
     - - 1955年
       - パリで大会の立ち上げに加わる
     - - 1956年から60年
       - 5連覇
+  kit2_card:
+    type: table
+    title: 白をまねたリーズ
+    columns: &id003
+    - ''
+    - ''
+    rows:
+    - - 1960年
+      - ヨーロッパの決勝で7対3
+    - - スタンドに
+      - のちのリーズ監督ドン・レヴィー
+  kit2_2_card:
+    type: table
+    title: 白をまねたリーズ
+    columns: *id003
+    rows:
+    - - そのあと
+      - リーズは上下とも白に
   galacticos_card:
     type: table
     title: 毎年、1人のスター
@@ -283,7 +284,7 @@ cards:
 キャスター: 本拠地はベルナベウ。**8万3186人**が入り、20クラブでいちばん大きい。
   telop: 本拠地はベルナベウ。**8万3186人**が入り、20クラブでいちばん大きい
   image: assets/backgrounds/stadium_レアルマドリード.png
-キャスター: 会長は、2009年から2度目のフロレンティーノ・ペレス。クラブは会員が持つ形です。
+キャスター: 会長はフロレンティーノ・ペレス。2009年に返り咲きました。クラブは会員が持つ形です。
   no_telop: true
   image: assets/stats/ll_realmadrid_data4.png
 キャスター: 1部の優勝は最多の**36回**。国王杯は**20回**、スーペルコパは**13回**。
@@ -314,26 +315,11 @@ cards:
 解説: 会長は「縁起が悪い」と怒り、白に戻させました。
   telop: 会長は「縁起が悪い」と怒り、白に戻させました
 
-## 白をまねたリーズ
-@bg: assets/backgrounds/stadium_レアルマドリード_in.png
-
-解説: 逆に、白をまねたクラブもあります。
-  telop: 逆に、白をまねたクラブもあります
-  source: 背景
-  card: kit2_card
-解説: 1960年、ヨーロッパの決勝で、フランクフルトに**7対3**。
-  telop: 1960年、ヨーロッパの決勝で、フランクフルトに**7対3**
-解説: スタンドにいたドン・レヴィーは、翌年リーズの監督になると、青と黄色をやめます。
-  telop: スタンドにいたドン・レヴィーは、翌年リーズの監督になると、青と黄色をやめます
-  card: kit2_2_card
-解説: 上下とも白に。いちばん多く勝っているクラブの色だから、という理由でした。
-  telop: 上下とも白に。いちばん多く勝っているクラブの色だから、という理由でした
-
 ## 大会を作った会長
 @bg: assets/backgrounds/stadium_レアルマドリード_in.png
 
-解説: その決勝は、各国の王者が集まる大会でした。
-  telop: その決勝は、各国の王者が集まる大会でした
+解説: いまのチャンピオンズリーグは、各国の王者を集める大会として始まりました。
+  telop: いまのチャンピオンズリーグは、各国の王者を集める大会として始まりました
   source: 背景
   card: bernabeu_card
 解説: 作った一人が、**35年**近く会長を務めたサンティアゴ・ベルナベウです。
@@ -341,8 +327,23 @@ cards:
 解説: 1955年、フランスの記者の案を受け、パリのホテルで立ち上げを決めました。
   telop: 1955年、フランスの記者の案を受け、パリのホテルで立ち上げを決めました
   card: bernabeu_2_card
-解説: その大会で、最初から**5連覇**。いまのチャンピオンズリーグです。
-  telop: その大会で、最初から**5連覇**。いまのチャンピオンズリーグです
+解説: レアルはその大会で、最初から**5連覇**します。
+  telop: レアルはその大会で、最初から**5連覇**します
+
+## 白をまねたリーズ
+@bg: assets/backgrounds/stadium_レアルマドリード_in.png
+
+解説: この強さを見て、白をまねたクラブもあります。
+  telop: この強さを見て、白をまねたクラブもあります
+  source: 背景
+  card: kit2_card
+解説: 5度目の優勝を決めた1960年の決勝は、フランクフルトに**7対3**。
+  telop: 5度目の優勝を決めた1960年の決勝は、フランクフルトに**7対3**
+解説: スタンドにいたドン・レヴィーは、翌年リーズの監督になると、青と黄色をやめます。
+  telop: スタンドにいたドン・レヴィーは、翌年リーズの監督になると、青と黄色をやめます
+  card: kit2_2_card
+解説: 上下とも白に。いちばん多く勝っているクラブの色だから、という理由でした。
+  telop: 上下とも白に。いちばん多く勝っているクラブの色だから、という理由でした
 
 ## 毎年、1人のスター
 @bg: assets/backgrounds/stadium_レアルマドリード_in.png
@@ -351,8 +352,8 @@ cards:
   telop: 2000年、会長選挙に勝ったペレスの公約は、バルセロナのフィーゴを獲ることでした
   source: 背景
   card: galacticos_card
-解説: さらに練習場を売って、**2億7000万ユーロ**の借金を返します。
-  telop: さらに練習場を売って、**2億7000万ユーロ**の借金を返します
+解説: 公約どおりフィーゴを獲り、練習場を売って、**2億7000万ユーロ**の借金も返します。
+  telop: 公約どおりフィーゴを獲り、練習場を売って、**2億7000万ユーロ**の借金も返します
 解説: そこから毎年の夏、世界的なスターを1人ずつ。ベッカムもその1人です。
   telop: そこから毎年の夏、世界的なスターを1人ずつ。ベッカムもその1人です
 
@@ -409,8 +410,8 @@ cards:
   source: 背景
   card: legends2_card
   image: assets/photos/ll/realmadrid/realmadrid_legend_972c9872.jpg
-キャスター: 2015年9月、ラウルを抜いて、クラブの歴代最多得点者になりました。
-  telop: 2015年9月、ラウルを抜いて、クラブの歴代最多得点者になりました
+キャスター: 2015年10月、ラウルを抜いて、公式戦のクラブ歴代最多得点者になりました。
+  telop: 2015年10月、ラウルを抜いて、公式戦のクラブ歴代最多得点者になりました
 キャスター: 公式戦で**450得点**を残し、2018年にユヴェントスへ移りました。
   telop: 公式戦で**450得点**を残し、2018年にユヴェントスへ移りました
   image: assets/photos/ll/realmadrid/realmadrid_legend_972c9872.jpg
@@ -437,8 +438,8 @@ cards:
   source: 報道
   card: manager_card
   image: assets/photos/ll/realmadrid/realmadrid_manager_56b64b8a.jpg
-キャスター: 前はベンフィカ。2010年から13年に続く2度目で、契約は**2029年**までです。
-  telop: 前はベンフィカ。2010年から13年に続く2度目で、契約は**2029年**までです
+キャスター: 2010年から13年までに続いて2度目。前はベンフィカで、契約は**2029年**まで。
+  telop: 2010年から13年までに続いて2度目。前はベンフィカで、契約は**2029年**まで
 
 ## 今季の登録選手
 @bg: assets/backgrounds/stadium_レアルマドリード_in.png

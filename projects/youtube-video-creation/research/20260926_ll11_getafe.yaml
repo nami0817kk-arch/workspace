@@ -37,7 +37,7 @@ sections:
   - text: ヨーロッパは**2020年**以来。パルチザンを合計**4対3**で破りました。
     image: assets/stats/ll_getafe_data_r1.png
     no_telop: true
-  - text: 就任**10シーズン目**のボルダラス監督は、こう話します。
+  - text: 通算**10シーズン目**のボルダラス監督は、こう話します。
     image: assets/stats/ll_getafe_data_r2.png
     no_telop: true
   - voice: ホセ・ボルダラス
@@ -46,7 +46,7 @@ sections:
   - voice: ホセ・ボルダラス
     text: 多くの選手が、ぎりぎりの力でピッチに立っている
     image: assets/stats/ll_getafe_data_r2.png
-  - text: そしてこのクラブは、あのバイエルンを、10人で延長の最後まで追い詰めました。
+  - text: '**2008年**には、あのバイエルンを10人で延長の最後まで追い詰めました。'
     image: assets/stats/ll_getafe_data_r3.png
     no_telop: true
   - image: assets/stats/ll_getafe_data0.png
@@ -130,7 +130,7 @@ sections:
   say:
   - 2004年6月、2部の最終節。勝てば、初めての1部です。
   - 敵地のテネリフェで**5対3**の勝ち。セルヒオ・パチョンが、**5点**すべてを決めました。
-  - text: 首都の外にあるマドリード州のクラブで、1部に上がったのは初めて。
+  - text: マドリード州では、市の外のクラブとして初めての1部です。
     card:
       type: table
       title: 2004年6月19日
@@ -232,8 +232,9 @@ sections:
   say:
   - text: 2008年、ヨーロッパの大会の準々決勝。相手はバイエルンでした。
     image: assets/images/ll_getafe_episode/scene.jpg
+  - 1戦目は、敵地で**1対1**の引き分けでした。
   - ホームの2戦目は、開始早々に1人が退場。それでも延長で**3対1**、勝ちが見えていました。
-  - text: ところが**115分**と**120分**にトニの2点。アウェーゴールの差で敗れました。
+  - text: ところが**115分**と**120分**に、バイエルンのトニが2点。アウェーゴールの差で敗れました。
     card:
       type: table
       title: 2008年 ヨーロッパの準々決勝
@@ -241,11 +242,14 @@ sections:
       rows:
       - - 結果
         - アウェーゴールの差で敗退
-  - 試合後、カーンは「40年で、こんな経験は無かった」と話しました。
+  - 試合後、バイエルンのキーパー、カーンはこう話しました。
+  - 「今夜のことは信じられない。40年で、こんな経験は無かった」
   sources:
   - https://en.wikipedia.org/wiki/Getafe_CF
   - https://en.wikipedia.org/wiki/2007%E2%80%9308_UEFA_Cup_knockout_stage
   - http://www.elmundo.es/elmundodeporte/2008/04/11/futbol/1207865743.html
+  - https://en.wikipedia.org/wiki/Oliver_Kahn
+  - https://en.wikipedia.org/wiki/Luca_Toni
   bg: assets/backgrounds/stadium_ヘタフェ_in.png
   official: false
 - id: legends

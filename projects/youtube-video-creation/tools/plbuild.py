@@ -132,7 +132,8 @@ def boards(key: str, club: str, colors: list[str], squad: list[dict], kana: dict
             # **同じ引数をとっておく**。あとで「話している選手だけ明るい板」を
             # 作り直すのに要る。ここで作れないのは、誰を紹介するかが
             # 読み上げを組み立てるときに決まるから
-            made.append({"out": out, "label": label, "count": len(people), "args": args})
+            # count は位置全体の人数（「◯◯は13人」と読む）、shown はこの板に載っている人数
+            made.append({"out": out, "label": label, "count": len(people), "shown": len(chunk), "args": args})
     return made
 
 
@@ -212,7 +213,11 @@ def build(key: str, number: int, old_file: str) -> Path:
     ov = yaml.safe_load(ov_path.read_text(encoding="utf-8")) if ov_path.exists() else {}
     club = old["theme"]["topic"]
     wiki = f"https://en.wikipedia.org/wiki/{raw['club_title']}"
-    season_url = f"https://en.wikipedia.org/wiki/{raw['season_title']}"
+    season_url = f"https://en.wikipedia.org/wiki/{raw['season_title'].strip()}"
+    # **シーズン記事の無いクラブがある**（2026-09-27、ラ・リーガのラシン・エスパニョールなど）。
+    # 記事から1試合も読めなかったときは、実在しないURLを出典に載せず、順位表の出典にする
+    if not raw.get("results") and (DATA / "standings.json").exists():
+        season_url = json.loads((DATA / "standings.json").read_text(encoding="utf-8"))["source"]
     # **下地はスタジアムの「中」の実写**（2026-09-23 指摘「最初の画面が魅力的ではなくて、
     # 視聴者が離れそう」）。外観は駐車場と建物だけで人が写っておらず、
     # 最初の12秒がそれ一枚だった。中の写真は満員の客席とピッチが入る。
@@ -630,7 +635,8 @@ def build(key: str, number: int, old_file: str) -> Path:
     for board in squad_boards:
         out, label, n = board["out"], board["label"], board["count"]
         if label in seen:
-            ssay.append({"image": out, "text": f"{label}の続きです。", "no_telop": True})
+            # 「◯◯の続きです。」だけだと中身の無い行になる（2026-09-27 流れの点検）。人数を言う
+            ssay.append({"image": out, "text": f"{label}の残りは{board.get('shown', n)}人です。", "no_telop": True})
             continue
         seen.add(label)
         here = [p for p in raw["squad"]
@@ -720,6 +726,9 @@ def build(key: str, number: int, old_file: str) -> Path:
             say_season.append(f"順位は**{stand['rank']}位**、勝ち点は**{stand['points']}**です。")
             if stand["rank"] >= 18:
                 say_season.append("いまは降格圏にいます。")
+            elif stand["rank"] == 1:
+                # 首位に「この順位を保てば、来季のチャンピオンズリーグ」は筋が合わない（2026-09-27）
+                pass   # 直前の行で「1位」と言っている。言い直さない
             elif stand["rank"] <= 4:
                 say_season.append("この順位を保てば、来季のチャンピオンズリーグに出られます。")
         sections.append(sec(id="season", heading="今季のここまで", tier="報道",

@@ -103,7 +103,7 @@
 **② Cristiano Ronaldo（クリスティアーノ・ロナウド）** https://en.wikipedia.org/wiki/Cristiano_Ronaldo
 - 在籍 2009–2018。**リーグ 292試合311得点**（infobox）。全公式戦 438試合450得点（本人記事の成績表の合計・[EN-REC]）。
 - 2009年、マンチェスター・ユナイテッドから9400万ユーロ（8000万ポンド、当時の史上最高額）。
-- 2015年9月12日のエスパニョール戦で Raúl を抜きクラブ歴代最多得点者に。CL 4回（2014〜2018）。
+- 2015年9月12日のエスパニョール戦で Raúl を抜きクラブのリーグ戦の歴代最多得点者に（230点）。**公式戦の通算で抜いたのは2015年10月17日のレバンテ戦（324点目。Raúl は323）**。西語版「El 12 de septiembre anotó cinco goles al Espanyol, superando la marca de Raúl con 230 goles en Liga. Un mes después, el 17 de octubre volvió a superar a Raúl cuando anotó el segundo gol al Levante para superar su total histórico, con 324 goles.」 https://es.wikipedia.org/wiki/Cristiano_Ronaldo （2026-09-27 流れの点検の指摘で確認。台本は「2015年10月、公式戦の」に直した）。CL 4回（2014〜2018）。
 - 2018年7月10日、ユヴェントスへ1億1700万ユーロ（クラブ最高額の売却。[EN-RM]）。
 - 写真候補: [EN-RM] の `Cristiano Ronaldo 4609.jpg`、`Cristiano Ronaldo (163461621).jpeg`。
 

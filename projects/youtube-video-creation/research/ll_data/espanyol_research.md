@@ -68,7 +68,7 @@
 - 中村俊輔: 2009年6月22日に2年契約で合意、2009–10 開幕戦（対アスレティック）でフル出場、リーグ13試合0得点、2010年2月に横浜F・マリノスへ（100万ユーロ）。https://en.wikipedia.org/wiki/Shunsuke_Nakamura
 
 ### ほかの候補（使わなかった）
-- ポチェッティーノ監督の初采配期、2009年2月にカンプ・ノウで2–1（27年ぶり）→名選手の節でデ・ラ・ペーニャの2得点として使った
+- ポチェッティーノ監督の初采配期、2009年2月にカンプ・ノウで2–1（27年ぶり）→デ・ラ・ペーニャを外したので、いまは使っていない
 - 2008–09 のタムードの主将剥奪など、人の対立の話は入れない
 - 宿敵（バルセロナ）の節は作らない決まりなので、ダービーの記録（1951年の6–0 など）は使わない
 
@@ -78,6 +78,7 @@
 - 2009年8月8日、主将 Daniel Jarque（26歳）がイタリア遠征中、コヴェルチャーノで心臓発作により死去。主将に就いて1か月。生涯エスパニョール一筋。[EN-ESP]／https://en.wikipedia.org/wiki/Daniel_Jarque
 - 「in the 21st minute – his former shirt number – of every Espanyol match, an ovation is made in his honour for a full minute」[EN-ESP]。西語版も「cada minuto 21 ... aplaudiendo y cantando su nombre」
 - 2010年7月11日、親友イニエスタがW杯決勝の116分の決勝点のあと、シャツを脱いで「Dani Jarque siempre con nosotros」の下着を見せた。[Daniel Jarque 英語版]
+  - 2026-09-27 に原文（`action=raw`）で再確認: 「Iniesta celebrated his 116th-minute winner ... by removing his jersey to reveal an undershirt with the sentence "Dani Jarque siempre con nosotros" ("Dani Jarque, always with us")」。決勝点はイニエスタ自身のもの。台本は「自分の決勝点のあと、ユニフォームを脱ぎます」「下のシャツには『ダニ・ハルケはいつも一緒に』」（流れの点検で「名前を胸に見せた」が耳で絵にならないと指摘されたため）
 - 練習場は Ciutat Esportiva Dani Jarque と改名。[ES-ESP]
 - 写真: `File:DaniJarque.JPG`（CC BY 3.0、Elemaki、2009-08-02、主将マークのハルケ）→ `assets/images/ll_espanyol_episode/scene.jpg`（目で確認済み）
 
@@ -93,17 +94,25 @@
 - 2009年1月、降格圏のチームで監督に（初のトップチームの監督職）。今は米国代表監督（2026年8月、2030年まで延長）。
 - 写真: `File:Pochettino 2012.jpg`（CC BY 2.0、Víctor Gutiérrez Navarro、2012-11-17、エスパニョール監督としての会見）→ 取り込み・目で確認済み
 
-**② Iván de la Peña（イバン・デ・ラ・ペーニャ）** https://en.wikipedia.org/wiki/Iv%C3%A1n_de_la_Pe%C3%B1a
-- 在籍: 2002–2011。リーグ **179試合8得点**。バルセロナの下部組織出身。愛称「El Pequeño Buda（小さなブッダ）」。
-- 2006年国王杯決勝で2得点に直接関与（FKのこぼれをタムードが頭で／タムードと組んでルイス・ガルシアの得点）。2009年2月21日、カンプ・ノウで2得点し2–1。ハルケの死後に主将。2011年5月22日引退。
-- 写真: `File:DelaPeña1.JPG`（CC BY 3.0、Elemaki、2009-05-31、エスパニョールのユニフォーム。292x497 と小さい）→ 取り込み・目で確認済み
+**② Sergio García（セルヒオ・ガルシア）** https://en.wikipedia.org/wiki/Sergio_Garc%C3%ADa_(footballer,_born_1983) （2026-09-27 差し替え。原文は `action=raw`）
+- 在籍: 2010–2015、2017–2019。リーグ 145+62＝**207試合**、得点 41+4＝**45**【数えた・infobox の2行の合計】。バルセロナ生まれ、バルセロナの下部組織出身。本文冒頭「serving as captain of the latter（Espanyol）」
+- 2010年8月、5年契約で加入。「as a replacement to veteran Raúl Tamudo who left after nearly 20 years of service」→台本では名前を出さず「エースの後継ぎ」（タムードは基礎DATAで出るため）
+- 2013年11月24日、敵地のラージョ戦（4–1）で初のハットトリック（うち2点はPK）。2014–15 にリーグ **14得点**「career-best (in Spain)」→台本は「次のシーズンには、リーグ戦で14得点」
+- 2015年6月 Al-Rayyan へ、2017年6月16日に復帰、2019年6月に退団。ユーロ2008優勝メンバー（台本では使わず）
+- 2026年7月7日、エスパニョールB の監督に就任（2年契約。クラブ公式 https://www.rcdespanyol.com/ca/noticia/sergio-garcia-es-el-nou-entrenador-de-lespanyol-b/20433 を英語版が出典に挙げる。公式の記事そのものは開いていない）→「今はクラブの若手チームの監督」
+- 写真: `File:(Sergio García) Espanyol v Rayo Vallecano (cropped).jpg`（CC BY 2.0、Daniel Thornton、Flickr、2012-03-11、エスパニョールのユニフォーム）。927x1236 の元画像から 310,60,640,500 を切り出し（330x440、顔は枠の高さの約4割）→ 取り込み・目で確認済み
 
-**③ Carlos Kameni（カルロス・カメニ）** https://en.wikipedia.org/wiki/Carlos_Kameni
-- 在籍: 2004–2012。リーグ **222試合**（英語版冒頭は公式戦229）。2004年7月、20歳でル・アーヴルから60万ドルで。
-- 2008–09、カメルーンの先輩 Thomas N'Kono の無失点時間の記録を破り **498分**に。
-- 写真: `File:Idriss Carlos Kameni 2009.jpg`（CC BY 2.0、mustapha_ennaimi、2009-11-14、カメルーン代表）→ 取り込み・目で確認済み。エスパニョール時代は `File:Kameni (4275189982).jpg`（217x468 と小さすぎ）
+**③ Wu Lei（ウー・レイ）** https://en.wikipedia.org/wiki/Wu_Lei （2026-09-27 差し替え）
+- 在籍: 2019–2022。リーグ **103試合10得点**（infobox）。2019年1月28日、上海SIPG（現 Shanghai Port）から移籍（報道で200万ユーロ）。2019年2月3日ビジャレアル戦でデビュー。英語版「It was watched by more than 40 million people in China」（出典 Marca 2019-02-07 の見出し「More than 40 million people watched Wu Lei's Espanyol debut in China」）→台本「デビュー戦は中国で4000万人以上が見ました」
+- 2019年3月2日、バリャドリード戦（3–1）で「the first Chinese footballer to score in La Liga」。英語版「more than 25 million fans in China watched ... in which Wu scored his first goal」（出典は ESPN、数字は中国の放映権者 PPTV のもの）→**台本では使わない**（特徴の節のジョアン・ガルシアの「2500万ユーロ」と数字が重なるため）。台本は「中国の選手として初めて、スペインの1部で得点」
+- 2020年1月4日、バルセロナ戦で88分に同点弾（2–2）。「the first Chinese player to score against Barcelona」。2019–20 に降格、2020–21 に2部優勝で1年で復帰。2021年8月15日に通算100試合
+- 写真: `File:Wu Lei 20191101.jpg`（CC BY 4.0、El Loko Foto「Own work」、2019年1月アジア杯、**中国代表**の7番）。800x1200 から 230,0,530,420 を切り出し（300x420）→ 取り込み・目で確認済み。エスパニョール時代の自由な写真は Commons のカテゴリに無かった（カテゴリは3枚、いずれも2019年アジア杯）
 
-候補（使わず）: Raúl Tamudo（基礎DATAで出る）、Daniel Jarque（逸話で出る）、Luis García Fernández、Walter Pandiani、Wu Lei
+**外した2人（2026-09-27）**: Iván de la Peña と Carlos Kameni は、Commons に顔がはっきり写った自由な写真が無いと判断された（デ・ラ・ペーニャは 292x497、カメニは代表の全身写真。クラブ時代は 217x468）。決まり「写真の無い人は名選手に選ばない」に従って差し替え。faces_espanyol.json・credits.json・画像ファイルからも外した。2人の原文メモは下に残す
+- （旧②）Iván de la Peña: 在籍 2002–2011、リーグ 179試合8得点。2006年国王杯決勝で2得点に関与、2009年2月21日カンプ・ノウで2得点
+- （旧③）Carlos Kameni: 在籍 2004–2012、リーグ 222試合。無失点 498分
+
+候補（使わず）: Raúl Tamudo（基礎DATAで出る）、Daniel Jarque（逸話で出る）、Luis García Fernández、Walter Pandiani、Joan Verdú（写真はカタルーニャ選抜）、Kiko Casilla（リーグ115試合、写真はカタルーニャ選抜）、Iván Alonso
 
 ---
 
@@ -111,7 +120,7 @@
 - **Manolo González（マノロ・ゴンサレス）**（José Manuel González Álvarez、1979年1月14日、ガリシア州ルーゴ県 Folgoso do Courel 生まれ、3歳でバルセロナへ）。https://en.wikipedia.org/wiki/Manolo_Gonz%C3%A1lez
 - 若いころ膝のけがで選手を引退。サン・ガブリエルの育成年代を9季指導しながら**市バスの運転手**をしていた（英語版「also working as an urban bus driver」、西語版「trabajando como conductor de autobuses urbanos」）。https://es.wikipedia.org/wiki/Manolo_Gonz%C3%A1lez_(entrenador)
 - 2023年7月 エスパニョールB → **2024年3月12日** トップの監督（Ramis の後任）。同年6月に昇格、2024–25残留、2025年7月に2027年まで延長。月間最優秀監督 2025年4月・12月
-- 2025–26: 西語版「llegó al parón de invierno en puestos europeos ... cerró el año con cinco victorias consecutivas」。【数えた】[EN-2526] の試合表で第13〜17節が5連勝、第17節終了時点10勝3分4敗・勝ち点33。第18〜35節は勝ちなし（第34節の結果欄は原文に無く、最終成績との差から敗戦）。台本では「5連勝で年を越し、ヨーロッパを狙える順位」までを言う
+- 2025–26: 西語版「llegó al parón de invierno en puestos europeos ... cerró el año con cinco victorias consecutivas」。【数えた】[EN-2526] の試合表で第13〜17節が5連勝、第17節終了時点10勝3分4敗・勝ち点33。第18〜35節は勝ちなし（第34節の結果欄は原文に無く、最終成績との差から敗戦）。台本では「5連勝で年を越し、ヨーロッパを狙える順位」→「年明けからリーグ戦で18試合勝てず、11位まで」（2026-09-27、流れの点検で「年明けにどうなったかが無い」と指摘されて足した。18試合＝第18〜35節）
 - **100試合**: クラブ公式 2026-09-18「Manolo González por haber cumplido 100 partidos en el banquillo blanquiazul」 https://www.rcdespanyol.com/es/noticia/13-derrota-en-el-rcde-stadium/20781
 - 本人の言葉（クラブ公式 2026-09-18、エルチェに1–3で敗れた後の会見） https://www.rcdespanyol.com/es/noticia/tenemos-que-volver-a-competir-como-toca/20782
   - 使った: 「tenemos que cambiar el chip urgentemente, la responsabilidad es mía」＝「すぐにでも頭を切り替えないといけない。責任は私にある」
@@ -150,8 +159,10 @@
 | 用途 | ファイル | ライセンス | 作者 | 撮影 | 目で見た結果 |
 |---|---|---|---|---|---|
 | 名選手 ポチェッティーノ | `Pochettino 2012.jpg` | CC BY 2.0 | Víctor Gutiérrez Navarro | 2012-11-17 | ○ エスパニョール監督の会見。顔が大きい |
-| 名選手 デ・ラ・ペーニャ | `DelaPeña1.JPG` | CC BY 3.0 | Elemaki | 2009-05-31 | ○ エスパニョールのユニフォーム。小さめ（292x497） |
-| 名選手 カメニ | `Idriss Carlos Kameni 2009.jpg` | CC BY 2.0 | mustapha_ennaimi | 2009-11-14 | ○ カメルーン代表の全身。顔は上部 |
+| 名選手 セルヒオ・ガルシア | `(Sergio García) Espanyol v Rayo Vallecano (cropped).jpg` | CC BY 2.0 | Daniel Thornton | 2012-03-11 | ○ エスパニョールのユニフォーム。310,60,640,500 を切り出し（330x440） |
+| 名選手 ウー・レイ | `Wu Lei 20191101.jpg` | CC BY 4.0 | El Loko Foto | 2019-01 | ○ 中国代表。230,0,530,420 を切り出し（300x420） |
+| （外した）デ・ラ・ペーニャ | `DelaPeña1.JPG` | CC BY 3.0 | Elemaki | 2009-05-31 | × 顔がはっきり写っていないとして外した（2026-09-27） |
+| （外した）カメニ | `Idriss Carlos Kameni 2009.jpg` | CC BY 2.0 | mustapha_ennaimi | 2009-11-14 | × 全身で顔が小さい（2026-09-27 に外した） |
 | 監督 | `Manolo González 2020.png` | CC BY 3.0 | Valencia CF | 2020-02-23 | × 135x224、顔が潰れている。取り消した |
 | 逸話 | `DaniJarque.JPG` | CC BY 3.0 | Elemaki | 2009-08-02 | ○ 主将マークのハルケ |
 | 参考（未使用） | `Espanyolfans.JPG`（CC BY-SA 3.0、2012）、`EstadioRCDE Pano.jpg`（CC BY 3.0、2009）、`RCDE Stadium-2026.png`（CC BY 4.0、2026-09-18）、`Sarrià.jpg`（PD） | | | | 中身は見ていない |

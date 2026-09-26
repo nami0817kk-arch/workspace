@@ -21,7 +21,7 @@ theme:
   lead: ヨーロッパ王者に、史上最多の15回。
   opening_image: assets/stats/ll_realmadrid_data_t.png
 thumbnail:
-  line1: 欧州一の大会、生みの親
+  line1: 欧州一の大会を作ったのは●●
   line2: 名門レアル・マドリード
   crest_main:
   - レアル・マドリード
@@ -58,7 +58,7 @@ sections:
   - image: assets/backgrounds/stadium_レアルマドリード.png
     text: 本拠地はベルナベウ。**8万3186人**が入り、20クラブでいちばん大きい。
   - image: assets/stats/ll_realmadrid_data4.png
-    text: 会長は、2009年から2度目のフロレンティーノ・ペレス。クラブは会員が持つ形です。
+    text: 会長はフロレンティーノ・ペレス。2009年に返り咲きました。クラブは会員が持つ形です。
     no_telop: true
   - image: assets/stats/ll_realmadrid_cups.png
     text: 1部の優勝は最多の**36回**。国王杯は**20回**、スーペルコパは**13回**。
@@ -113,39 +113,6 @@ sections:
   - https://en.wikipedia.org/wiki/Real_Madrid_CF
   bg: assets/backgrounds/stadium_レアルマドリード_in.png
   official: false
-- id: kit2
-  heading: 白をまねたリーズ
-  tier: 背景
-  telop: 今度は、イングランドのクラブが白をまねた
-  narrator: 解説
-  card:
-    type: table
-    title: 白をまねたリーズ
-    columns: &id002
-    - ''
-    - ''
-    rows:
-    - - 1960年
-      - ヨーロッパの決勝で7対3
-    - - スタンドに
-      - のちのリーズ監督ドン・レヴィー
-  say:
-  - 逆に、白をまねたクラブもあります。
-  - 1960年、ヨーロッパの決勝で、フランクフルトに**7対3**。
-  - text: スタンドにいたドン・レヴィーは、翌年リーズの監督になると、青と黄色をやめます。
-    card:
-      type: table
-      title: 白をまねたリーズ
-      columns: *id002
-      rows:
-      - - そのあと
-        - リーズは上下とも白に
-  - 上下とも白に。いちばん多く勝っているクラブの色だから、という理由でした。
-  sources:
-  - https://es.wikipedia.org/wiki/Real_Madrid_Club_de_F%C3%BAtbol
-  - https://en.wikipedia.org/wiki/Real_Madrid_CF
-  bg: assets/backgrounds/stadium_レアルマドリード_in.png
-  official: false
 - id: bernabeu
   heading: 大会を作った会長
   tier: 背景
@@ -154,7 +121,7 @@ sections:
   card:
     type: table
     title: 大会を作った会長
-    columns: &id003
+    columns: &id002
     - ''
     - ''
     rows:
@@ -163,21 +130,54 @@ sections:
     - - 在任
       - 1943年から78年に亡くなるまで
   say:
-  - その決勝は、各国の王者が集まる大会でした。
+  - いまのチャンピオンズリーグは、各国の王者を集める大会として始まりました。
   - 作った一人が、**35年**近く会長を務めたサンティアゴ・ベルナベウです。
   - text: 1955年、フランスの記者の案を受け、パリのホテルで立ち上げを決めました。
     card:
       type: table
       title: 大会を作った会長
-      columns: *id003
+      columns: *id002
       rows:
       - - 1955年
         - パリで大会の立ち上げに加わる
       - - 1956年から60年
         - 5連覇
-  - その大会で、最初から**5連覇**。いまのチャンピオンズリーグです。
+  - レアルはその大会で、最初から**5連覇**します。
   sources:
   - https://en.wikipedia.org/wiki/Santiago_Bernab%C3%A9u
+  - https://en.wikipedia.org/wiki/Real_Madrid_CF
+  bg: assets/backgrounds/stadium_レアルマドリード_in.png
+  official: false
+- id: kit2
+  heading: 白をまねたリーズ
+  tier: 背景
+  telop: イングランドのクラブが、白をまねた
+  narrator: 解説
+  card:
+    type: table
+    title: 白をまねたリーズ
+    columns: &id003
+    - ''
+    - ''
+    rows:
+    - - 1960年
+      - ヨーロッパの決勝で7対3
+    - - スタンドに
+      - のちのリーズ監督ドン・レヴィー
+  say:
+  - この強さを見て、白をまねたクラブもあります。
+  - 5度目の優勝を決めた1960年の決勝は、フランクフルトに**7対3**。
+  - text: スタンドにいたドン・レヴィーは、翌年リーズの監督になると、青と黄色をやめます。
+    card:
+      type: table
+      title: 白をまねたリーズ
+      columns: *id003
+      rows:
+      - - そのあと
+        - リーズは上下とも白に
+  - 上下とも白に。いちばん多く勝っているクラブの色だから、という理由でした。
+  sources:
+  - https://es.wikipedia.org/wiki/Real_Madrid_Club_de_F%C3%BAtbol
   - https://en.wikipedia.org/wiki/Real_Madrid_CF
   bg: assets/backgrounds/stadium_レアルマドリード_in.png
   official: false
@@ -201,7 +201,7 @@ sections:
       - 借金2億7000万ユーロを返す
   say:
   - 2000年、会長選挙に勝ったペレスの公約は、バルセロナのフィーゴを獲ることでした。
-  - さらに練習場を売って、**2億7000万ユーロ**の借金を返します。
+  - 公約どおりフィーゴを獲り、練習場を売って、**2億7000万ユーロ**の借金も返します。
   - そこから毎年の夏、世界的なスターを1人ずつ。ベッカムもその1人です。
   sources:
   - https://en.wikipedia.org/wiki/Real_Madrid_CF
@@ -316,12 +316,13 @@ sections:
   say:
   - text: クリスティアーノ・ロナウドは2009年に来ました。リーグ戦**292試合**で、**311得点**。
     image: assets/photos/ll/realmadrid/realmadrid_legend_972c9872.jpg
-  - 2015年9月、ラウルを抜いて、クラブの歴代最多得点者になりました。
+  - 2015年10月、ラウルを抜いて、公式戦のクラブ歴代最多得点者になりました。
   - 公式戦で**450得点**を残し、2018年にユヴェントスへ移りました。
   sources:
   - https://en.wikipedia.org/wiki/Zinedine_Zidane
   - https://en.wikipedia.org/wiki/Cristiano_Ronaldo
   - https://en.wikipedia.org/wiki/Sergio_Ramos
+  - https://es.wikipedia.org/wiki/Cristiano_Ronaldo
   bg: assets/backgrounds/stadium_レアルマドリード_in.png
   official: false
 - id: legends3
@@ -374,7 +375,7 @@ sections:
   say:
   - text: 今季の監督はジョゼ・モウリーニョ。ポルトガル出身で、**2026年7月**の就任です。
     image: assets/photos/ll/realmadrid/realmadrid_manager_56b64b8a.jpg
-  - 前はベンフィカ。2010年から13年に続く2度目で、契約は**2029年**までです。
+  - 2010年から13年までに続いて2度目。前はベンフィカで、契約は**2029年**まで。
   sources:
   - https://en.wikipedia.org/wiki/Real_Madrid_CF
   - https://en.wikipedia.org/wiki/Jos%C3%A9_Mourinho

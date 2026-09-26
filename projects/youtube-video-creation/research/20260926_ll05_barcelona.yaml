@@ -61,7 +61,10 @@ sections:
     text: 持ち主は**15万人**を超える会員。会長のラポルタは、**2026年3月**に再選されました。
     no_telop: true
   - image: assets/stats/ll_barcelona_cups.png
-    text: 1部優勝は**29回**、国王杯は最多の**32回**。チャンピオンズリーグは**5回**。
+    text: 1部優勝は**29回**、国王杯は最多の**32回**、スーペルコパも最多の**16回**。
+    no_telop: true
+  - image: assets/stats/ll_barcelona_cups.png
+    text: ほかの杯も合わせた国内タイトルは、どこよりも多い数です。チャンピオンズリーグは**5回**。
     no_telop: true
   - image: assets/stats/ll_barcelona_data6.png
     text: 最多出場はリオネル・メッシの**778試合**。得点も、クラブ最多の**672**。
@@ -107,7 +110,7 @@ sections:
       rows:
       - - 最初の会長
         - スイス人のワルター・ヴィルト
-  - 最初の会長は、その場でいちばん年上だったスイス人です。
+  - 最初の会長はガンペルではなく、最年長のスイス人、ワルター・ヴィルトでした。
   sources:
   - https://en.wikipedia.org/wiki/FC_Barcelona
   - https://es.wikipedia.org/wiki/F%C3%BAtbol_Club_Barcelona
@@ -289,7 +292,7 @@ sections:
   say:
   - text: イニエスタは**12歳**のとき、ラ・マンチャの小さな村からやって来ました。
     image: assets/photos/ll/barcelona/barcelona_legend_d3a59960.jpg
-  - 2009年、チェルシーとの準決勝。試合終了間際の同点弾で、決勝へ進みました。
+  - 2009年、チェルシーとの準決勝。終了間際に同点弾、アウェーゴールの差で決勝へ。
   - リーグ戦で**442試合35得点**。2018年に、日本のヴィッセル神戸へ渡りました。
   sources:
   - https://en.wikipedia.org/wiki/Xavi_(footballer,_born_1980)
@@ -443,9 +446,8 @@ sections:
   say:
   - ラ・リーガは7試合を終えて、**7勝**です。
   - 順位は**1位**、勝ち点は**21**です。
-  - この順位を保てば、来季のチャンピオンズリーグに出られます。
   - 欧州の大会の初戦は、ホームでフェイエノールトに**5対1**で勝ちました。
-  - 2015年に欧州を制した顔ぶれは、もう一人も残っていません。
+  - 顔ぶれも変わりました。このクラブで欧州王者になった選手は、もう一人もいません。
   sources:
   - https://www.espn.com/soccer/team/results/_/name/barcelona
   - https://site.api.espn.com/apis/site/v2/sports/soccer/esp.1/scoreboard

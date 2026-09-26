@@ -139,8 +139,8 @@ cards:
       - 白いシャツと黒いパンツを買いに
     - - 店にあったのは
       - 黄色だけ
-    - - パンツ
-      - 選手の投票で青に
+    - - いま
+      - 上下とも黄色
   legends_card:
     type: table
     title: 1990年以降の名選手
@@ -358,8 +358,8 @@ cards:
   image: assets/images/ll_villarreal_episode/scene.jpg
 解説: 欲しかったのは白いシャツと黒いパンツ。店にどちらも無く、あったのは黄色だけ。
   telop: 欲しかったのは白いシャツと黒いパンツ。店にどちらも無く、あったのは黄色だけ
-解説: 黒いパンツは選手に嫌われ、白を買って、投票で青に染めました。
-  telop: 黒いパンツは選手に嫌われ、白を買って、投票で青に染めました
+解説: 黄色いシャツはそのまま定着し、いまは上下とも黄色です。
+  telop: 黄色いシャツはそのまま定着し、いまは上下とも黄色です
   image: assets/images/ll_villarreal_episode/scene.jpg
 
 ## このクラブを語る3人
@@ -370,8 +370,8 @@ cards:
   source: 背景
   card: legends_card
   image: assets/photos/ll/villarreal/villarreal_legend_a75286ad.jpg
-キャスター: 2006年、チャンピオンズリーグの準決勝。決めれば延長のピーケーを、止められました。
-  telop: 2006年、チャンピオンズリーグの準決勝。決めれば延長のピーケーを、止められました
+キャスター: 2006年、チャンピオンズリーグ準決勝。試合中のピーケーを止められ、延長を逃しました。
+  telop: 2006年、チャンピオンズリーグ準決勝。試合中のピーケーを止められ、延長を逃しました
 キャスター: リーグ戦で**106試合36得点**。いまは母国ボカ・ジュニアーズの会長です。
   telop: リーグ戦で**106試合36得点**。いまは母国ボカ・ジュニアーズの会長です
   image: assets/photos/ll/villarreal/villarreal_legend_a75286ad.jpg
@@ -398,8 +398,8 @@ cards:
   source: 背景
   card: legends3_card
   image: assets/photos/ll/villarreal/villarreal_legend_4ca6fa77.jpg
-キャスター: 2008年、レアル・マドリードの誘いを断り、「ノーと言うことはできる」。
-  telop: 2008年、レアル・マドリードの誘いを断り、「ノーと言うことはできる」
+キャスター: 2008年、レアル・マドリードの誘いを断り、「ノーと言うことはできる」と話しました。
+  telop: 2008年、レアル・マドリードの誘いを断り、「ノーと言うことはできる」と話しました
 キャスター: 大けがから**636日**ぶりの試合を、ここで迎えました。リーグ戦は**251試合40得点**。
   telop: 大けがから**636日**ぶりの試合を、ここで迎えました。リーグ戦は**251試合40得点**
   image: assets/photos/ll/villarreal/villarreal_legend_4ca6fa77.jpg

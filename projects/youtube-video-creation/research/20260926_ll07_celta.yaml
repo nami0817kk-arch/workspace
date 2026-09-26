@@ -35,7 +35,7 @@ sections:
   telop: 昨シーズンは欧州8強。率いるのは地元の監督
   narrator: キャスター
   say:
-  - text: 昨シーズンは、ヨーロッパリーグで**ベスト8**。準々決勝の相手は、鈴木唯人のフライブルク。
+  - text: 昨シーズンは、ヨーロッパリーグで**ベスト8**。鈴木唯人のフライブルクに、合計**1対6**で敗退。
     image: assets/stats/ll_celta_data_r1.png
     no_telop: true
   - text: 率いるヒラルデス監督は、こう話しています。
@@ -62,7 +62,7 @@ sections:
   - image: assets/backgrounds/stadium_セルタ.png
     text: 本拠地はバライードス。改修中のいまは、**2万3432人**が入ります。
   - image: assets/stats/ll_celta_data4.png
-    text: オーナーはモウリーニョ家。**2023年**から、娘のマリアンが初の女性会長です。
+    text: オーナーはモウリーニョ家の企業グループ。**2023年**から、娘のマリアンが会長です。
     no_telop: true
   - image: assets/stats/ll_celta_cups.png
     text: リーグも国王杯も、優勝はありません。国王杯は、決勝で**3度**敗れました。
@@ -202,7 +202,7 @@ sections:
   - 昨シーズン、敵地で取った勝ち点**31**は、クラブの記録です。
   - ピッチの外は、育てて売る型。
   - 生え抜きのガブリ・ベイガは**2023年**、**4000万ユーロ**でサウジアラビアのクラブへ。
-  - スタンドは町ぐるみ。会員証は**4万5812人**、町の人口の15パーセントを超えます。
+  - スタンドは町ぐるみ。席の無い会員も含め、会員証は**4万5812人**。町の人口の15パーセント超です。
   sources:
   - https://en.wikipedia.org/wiki/RC_Celta_de_Vigo
   - https://en.wikipedia.org/wiki/Gabri_Veiga
@@ -285,7 +285,7 @@ sections:
   say:
   - text: モストヴォイはロシアの司令塔。ファンは「バライードスの皇帝」と呼びました。
     image: assets/photos/ll/celta/celta_legend_7cad411f.jpg
-  - 2000年、故郷のクラブ、ゼニトを決勝で破って、タイトルを手にしました。
+  - 2000年、インタートトカップの決勝で、故郷のクラブ、ゼニトを破りました。
   - リーグ戦で**235試合56得点**。降格した2004年まで、ここでプレーしました。
   sources:
   - https://en.wikipedia.org/wiki/Vladimir_Gudelj
@@ -312,10 +312,10 @@ sections:
       - 2013-2022
       - 2度在籍したウイング
   say:
-  - text: ノリートはアンダルシア出身のウイング。**2013年**、ルイス・エンリケ監督の下へ来ました。
+  - text: ノリートはアンダルシア出身のウイング。**2013年**、ルイス・エンリケ監督が率いるセルタへ。
     image: assets/photos/ll/celta/celta_legend_52e66466.jpg
   - 2015年、古巣バルセロナに**4対1**で勝利。自ら1点を決め、アスパスの2点も演出。
-  - シティなどを経て**2020年**に復帰。リーグ戦は2度で**175試合50得点**。
+  - シティなどを経て**2020年**に復帰。リーグ戦は2度の在籍で**175試合50得点**。
   sources:
   - https://en.wikipedia.org/wiki/Vladimir_Gudelj
   - https://en.wikipedia.org/wiki/Aleksandr_Mostovoi

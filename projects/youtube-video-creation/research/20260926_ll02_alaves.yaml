@@ -34,7 +34,7 @@ sections:
   telop: 史上最高の滑り出し。率いるのはキケ監督
   narrator: キャスター
   say:
-  - text: 今シーズンは、クラブ史上最高の滑り出し。**4節**で**2位**に立ちました。
+  - text: 今シーズンは**4節**で**2位**。クラブ史上最高の滑り出しで、**7節**を終えて**6位**です。
     image: assets/stats/ll_alaves_data_r1.png
     no_telop: true
   - text: 率いるキケ・サンチェス・フローレス監督は、こう話します。
@@ -46,7 +46,10 @@ sections:
   - voice: キケ・サンチェス・フローレス
     text: 人生はダンス。踊らなければ
     image: assets/stats/ll_alaves_data_r2.png
-  - text: 監督が替わってからの**16節**で、勝ち点**26**。上回ったのはバルセロナとレアル・マドリードだけ。
+  - text: 昨シーズンの途中、3月に監督が替わってから**16節**で、勝ち点**26**。
+    image: assets/stats/ll_alaves_data_r2.png
+    no_telop: true
+  - text: 上回ったのは、バルセロナとレアル・マドリードだけです。
     image: assets/stats/ll_alaves_data_r2.png
     no_telop: true
   - text: そしてこのクラブは、初めての欧州の大会で決勝へ。延長の末、オウンゴールで敗れています。
@@ -80,7 +83,7 @@ sections:
     no_telop: true
   sources:
   - https://en.wikipedia.org/wiki/Deportivo_Alavés
-  - https://en.wikipedia.org/wiki/2026–27_Deportivo_Alavés_season
+  - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
   - https://www.marca.com/futbol/alaves/2026/09/06/quique-dinamica-merece-equipo-aficion.html
   - https://www.marca.com/futbol/alaves/2026/09/08/mejor-alaves-historia.html
   - https://en.wikipedia.org/wiki/2001_UEFA_Cup_final
@@ -94,19 +97,27 @@ sections:
   card:
     type: table
     title: 3部から6年で
-    columns:
+    columns: &id001
     - ''
     - ''
     rows:
+    - - 1930年
+      - 2部から最初の1部昇格
     - - 1995年
       - 3部から2部へ
-    - - 1998年
-      - 2部優勝。42年ぶりの1部
-    - - 2000年
-      - 1部で6位。欧州の大会へ
   say:
-  - 1990年代の半ばまで、このクラブは3部で戦っていました。
-  - '**1995年**に2部へ上がると、**1998年**には2部で優勝。**42年**ぶりに1部へ戻ります。'
+  - 1929年から30年の2部で優勝。2部から1部へ上がった、最初のクラブです。
+  - その後は長く低迷し、1990年代の半ばまで3部で戦っていました。
+  - text: '**1995年**に2部へ上がると、**1998年**には2部で優勝。**42年**ぶりに1部へ戻ります。'
+    card:
+      type: table
+      title: 3部から6年で
+      columns: *id001
+      rows:
+      - - 1998年
+        - 2部優勝。42年ぶりの1部
+      - - 2000年
+        - 1部で6位。欧州の大会へ
   - 戻って2シーズン目は**6位**。クラブ最高の順位で、ヨーロッパへの切符を得ました。
   sources:
   - https://en.wikipedia.org/wiki/Deportivo_Alav%C3%A9s
@@ -121,7 +132,7 @@ sections:
   card:
     type: table
     title: 2001年 ヨーロッパの決勝
-    columns: &id001
+    columns: &id002
     - ''
     - ''
     rows:
@@ -136,13 +147,13 @@ sections:
     card:
       type: table
       title: 2001年 ヨーロッパの決勝
-      columns: *id001
+      columns: *id002
       rows:
       - - 決勝
         - リヴァプールに4対5
       - - 延長116分
         - オウンゴールで決着
-  - 終わり間際、相手のフリーキックが味方の頭に当たり、そのままゴールへ。
+  - 延長の残り**4分**。相手のフリーキックが、アラベスの選手の頭に当たってゴールへ。
   - '**4対5**。クラブ初の欧州の大会は、準優勝で終わりました。'
   sources:
   - https://en.wikipedia.org/wiki/2001_UEFA_Cup_final
@@ -195,8 +206,9 @@ sections:
     - - クラブの気質
       - 5分遅れて入る抗議
   say:
-  - text: キケ監督のチームは、走りすぎずに守る。失点**6**は、リーグで最も少ない数に並びます。
+  - text: キケ監督のチームは、走る距離がリーグで**4番目**に短い。
     image: assets/photos/ll/alaves/alaves_manager_9f0d84e4.jpg
+  - それでも失点**6**は、リーグで最も少ない数に並びます。
   - ピッチの外は、系列のクラブで選手を回す型。
   - '**2018年**、クロアチアのイストラの株を**85%**取得。守備の要のコスキも、そこから来ました。'
   - スタンドは物を言う。**2019年**、月曜夜の試合に抗議し、ファンは**5分**遅れて席に着きました。
@@ -246,7 +258,7 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - &id002
+    - &id003
       - コスミン・コントラ
       - 1999-2001
       - 決勝で2点を演出
@@ -275,16 +287,16 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id002
-    - &id003
+    - *id003
+    - &id004
       - テオ・エルナンデス
       - 2016-2017
       - 国王杯決勝で同点弾
   say:
   - text: テオ・エルナンデスは**18歳**のとき、アトレティコから期限付きで来た左サイドバック。
     image: assets/photos/ll/alaves/alaves_legend_fde608ec.jpg
-  - 創立**96年目**で初めての国王杯の決勝。バルセロナを相手に、直接フリーキックで同点にしました。
-  - プロのデビューもこのクラブ。リーグ戦**32試合1得点**で、翌年レアル・マドリードへ。
+  - プロのデビューもこのクラブ。1年で、リーグ戦**32試合1得点**。
+  - クラブ初の国王杯決勝では、バルセロナから直接フリーキックで同点弾。**1対3**で敗れました。
   sources:
   - https://en.wikipedia.org/wiki/Cosmin_Contra
   - https://en.wikipedia.org/wiki/Th%C3%A9o_Hernandez
@@ -305,8 +317,8 @@ sections:
     - 在籍
     - 残したもの
     rows:
-    - *id002
     - *id003
+    - *id004
     - - ホセル
       - 2019-2022
       - ベルナベウで20年ぶり
