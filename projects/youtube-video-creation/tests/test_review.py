@@ -331,9 +331,25 @@ def test_止まりすぎる画面を弾く(tmp_path):
     assert not _still_length(path).ok
 
 
-def test_写真のクレジットが足りなければ弾く(tmp_path):
+
+
+def _endo_credit(root):
+    """**写真と控えをテストの中で作る**（2026-09-26）。`assets/images/` は git に入らないので、
+    手元の写真に頼ったテストは CI で前提が無くなり、9/18 から落ち続けていた。"""
+    import json
+    folder = root / "assets" / "images" / "endo"
+    folder.mkdir(parents=True, exist_ok=True)
+    (folder / "03.jpg").write_bytes(b"")
+    (folder / "credits.json").write_text(json.dumps([{
+        "file": "03.jpg", "source": "wikimedia", "title": "File:Wataru endo.jpg",
+        "page_url": "https://commons.wikimedia.org/wiki/File:Wataru_endo.jpg",
+        "license": "CC BY 3.0", "author": "Jeollo von VfB-exklusiv.de"}], ensure_ascii=False), encoding="utf-8")
+
+def test_写真のクレジットが足りなければ弾く(tmp_path, monkeypatch):
     from src.review import _photo_credits
 
+    _endo_credit(tmp_path)
+    monkeypatch.chdir(tmp_path)
     (tmp_path / "description.txt").write_text("本文だけ", encoding="utf-8")
     script = _script("## S\nキャスター: 遠藤選手です。\n  image: assets/images/endo/03.jpg\n")
     assert not _photo_credits(script, tmp_path).ok
@@ -408,7 +424,7 @@ def test_サムネに実在する写真があれば通る(tmp_path, monkeypatch)
     body = "---\ntitle: 見出し\nthumbnail_photo: assets/images/x/face.jpg\n---\n\n## S\nキャスター: あ。\n"
     assert review._thumbnail_face(parse_script(body)).ok
 
-def test_サムネの写真もクレジットが要る(tmp_path):
+def test_サムネの写真もクレジットが要る(tmp_path, monkeypatch):
     """**サムネイルも配布物。**動画本体に出ないからと数えていなかった。
 
     2026-09-06 に、公開済みの5本がクレジット無しで出ていた。
@@ -416,6 +432,8 @@ def test_サムネの写真もクレジットが要る(tmp_path):
     from src.review import _photo_credits
     from src.tts import image_details
 
+    _endo_credit(tmp_path)
+    monkeypatch.chdir(tmp_path)
     nl = chr(10)
     # **動画の行には写真を1枚も出さない。**サムネだけに使う
     script = _script("## S" + nl + "キャスター: 遠藤選手の話です。" + nl)

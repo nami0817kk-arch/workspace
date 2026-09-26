@@ -1363,7 +1363,8 @@ def check_title_subject(script: Script) -> Finding:
         # **普通名詞が名前の途中に入っているだけなら名前**（2026-09-26）。
         # 「インファンティーノ」の中の「ファン」で落ちていた。普通名詞とみなすのは、
         # 同じ語か、普通名詞で始まるか（「ファンの声」）、普通名詞の途中で切れたとき
-        if not any(run == word or run.startswith(word) or run in word for word in COMMON_KATAKANA):
+        if not any(run == word or run.startswith(word) or run.endswith(word) or run in word
+                   for word in COMMON_KATAKANA):
             return Finding(True, "タイトルの主語", f"頭に名前: {run[:10]}")
     # 漢字の名前。**文頭にあって助詞か読点が続くもの**だけを見る。
     # 「南野拓実が」「旗手怜央、」は名前、「移籍市場が」は名前ではない

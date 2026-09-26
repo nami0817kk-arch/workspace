@@ -33,7 +33,7 @@ def diagnose(plan, now: datetime | None = None) -> list[Note]:
     notes = [
         _network(plan, now),
         _index(plan, now),
-        _searches(),
+        _searches(now),
         _reporters(plan),
     ]
     notes.append(_feeds(plan))
@@ -160,11 +160,13 @@ def _index(plan, now: datetime) -> Note:
     return Note(True, "索引の記録", f"{len(entries)}行。ペースが出せるサイト {len(paces)}件")
 
 
-def _searches() -> Note:
+def _searches(now: datetime | None = None) -> Note:
+    # **診断の「いま」を渡す**（2026-09-26）。実時間で数えていたので、
+    # テストが固定の日付で作った記録が30日の窓から外れ、日がたつと落ちるようになっていた
     runs = queries.load()
     if not runs:
         return Note(True, "検索の実績", "まだ記録がありません（collect --from で貯まります）")
-    rows = queries.tally(runs)
+    rows = queries.tally(runs, now=now)
     empty = queries.dead(rows)
     if empty:
         return Note(False, "検索の実績", f"1件も返していない検索が{len(empty)}本: {' / '.join(empty)}")
