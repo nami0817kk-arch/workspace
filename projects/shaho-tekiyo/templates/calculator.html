@@ -102,6 +102,7 @@
 <script id="rates-data" type="application/json">{{ rates_json|safe }}</script>
 <script id="extras-data" type="application/json">{{ extras_json|safe }}</script>
 <script src="{{ base_url }}static/calc.js"></script>
+<script src="{{ base_url }}static/charts.js"></script>
 <script>
 (function () {
   "use strict";
@@ -158,6 +159,14 @@
       html += '<tr><th>' + yen(pay) + 'から引いた残り</th><td>' + yen(p.takeHome) + '</td></tr>';
     }
     html += '</table></div>';
+    if (koyo !== null) {
+      html += window.ShahoCharts.breakdownBar([
+        ['手取り', net, 's1'],
+        ['厚生年金保険料', p.pension, 's2'],
+        ['健康保険料・子ども・子育て支援金', p.health + p.kodomo, 's3'],
+        ['雇用保険料・所得税', koyo + (tax || 0), 's4']
+      ], pay, yen(pay) + 'の行き先');
+    }
     html += '<p class="hint">会社も同じ額の社会保険料を負担しています（労使折半）。</p>';
 
     html += '<h2>加入する前と比べると</h2><ul class="compare">';
@@ -203,6 +212,13 @@
     if (k.pay19 * 12 >= 1300000) {
       html += '<p class="note">この時給だと週19時間でも年収' + yen(k.pay19 * 12) + 'で130万円を超えるため、もともと扶養からは外れます。この比べ方は当てはまりません。</p>';
     }
+    var hoursList = [190, 200, 210, 220, 225, 230, 240, 250];
+    if (hoursList.indexOf(k.breakeven.hoursX10) < 0) { hoursList.push(k.breakeven.hoursX10); hoursList.sort(function (a, b) { return a - b; }); }
+    var chartRows = calc.kabeRows(TABLES, EXTRAS, asOf, hourly, prefecture, age, hoursList).map(function (row) {
+      return { short: String(row.hoursX10 / 10), label: '週' + (row.hoursX10 / 10) + '時間', net: row.net, base: row.hoursX10 === 190,
+               labelValue: row.hoursX10 === 190 || row.hoursX10 === 200 || row.hoursX10 === k.breakeven.hoursX10 };
+    });
+    html += window.ShahoCharts.wallColumns(chartRows, k.net19, '時給' + yen(hourly) + '・週の時間ごとの手取り');
     html += '<p class="hint">週19時間は社会保険・雇用保険なし、週20時間以上はどちらもありで、所得税（扶養0人）を引いた額。住民税・通勤手当は含みません。'
       + '配偶者の会社の配偶者手当が止まる場合もあります。<a href="kabe/index.html">時給別の一覧</a></p>';
     return html;
@@ -289,6 +305,7 @@
 </script>
 
 <h2>この5段階で対象が広がります</h2>
+{{ timeline|safe }}
 <ul class="milestone-list">
   {% for m in milestones %}
   <li>

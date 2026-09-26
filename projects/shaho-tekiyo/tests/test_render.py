@@ -232,3 +232,21 @@ def test_共有画像とパンくずの構造化データ(site):
     assert [i["name"] for i in items] == ["計算機", "月収別の保険料", "月収10万円"]
     assert items[-1]["item"] == f"{site_config.SITE_URL}/getsushu/10man"
     assert items[1]["item"] == f"{site_config.SITE_URL}/getsushu/"
+
+
+def test_図が入っている(site):
+    amount = (site / "getsushu" / "10man.html").read_text(encoding="utf-8")
+    assert 'class="bar100"' in amount and "手取り <strong>85,594円</strong>" in amount  # 月収の行き先
+    assert 'class="hbars"' in amount and "国民年金（自分で払う）" in amount  # 国民年金と厚生年金
+    wall = (site / "kabe" / "1100yen.html").read_text(encoding="utf-8")
+    assert wall.count('class="fill-s2"') + wall.count('class="fill-s1"') + wall.count('class="fill-base"') >= 8
+    assert "週20時間: 手取り 80,950円（週19時間より−9,617円）" in wall  # 棒にマウスを乗せたときの値
+    for name in ("index.html", "year/2029-10.html"):
+        assert 'class="timeline"' in (site / name).read_text(encoding="utf-8"), name
+    assert (site / "static" / "charts.js").exists()
+    assert 'src="static/charts.js"' in (site / "index.html").read_text(encoding="utf-8")
+
+
+def test_図の色はライトとダークの両方で決めてある(site):
+    html = (site / "index.html").read_text(encoding="utf-8")
+    assert html.count("--s1:") == 2  # ライトとダーク
