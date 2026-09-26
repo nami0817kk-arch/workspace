@@ -613,6 +613,60 @@ abstract class AppLocalizations {
   /// In ja, this message translates to:
   /// **'全部の組み合わせを解いて選び抜いた、最難関だけの舞台。\n最短で渡れたら本物。'**
   String get intro8Body;
+
+  /// No description provided for @hintWithAd.
+  ///
+  /// In ja, this message translates to:
+  /// **'ヒント（動画）'**
+  String get hintWithAd;
+
+  /// No description provided for @hintDeclined.
+  ///
+  /// In ja, this message translates to:
+  /// **'動画を最後まで見るとヒントが出る'**
+  String get hintDeclined;
+
+  /// No description provided for @removeAds.
+  ///
+  /// In ja, this message translates to:
+  /// **'広告を消す（{price}）'**
+  String removeAds(String price);
+
+  /// No description provided for @restorePurchases.
+  ///
+  /// In ja, this message translates to:
+  /// **'購入を復元'**
+  String get restorePurchases;
+
+  /// No description provided for @adFreeOn.
+  ///
+  /// In ja, this message translates to:
+  /// **'広告なし'**
+  String get adFreeOn;
+
+  /// No description provided for @purchaseThanks.
+  ///
+  /// In ja, this message translates to:
+  /// **'広告を消しました。ありがとう！'**
+  String get purchaseThanks;
+
+  /// No description provided for @purchaseRestored.
+  ///
+  /// In ja, this message translates to:
+  /// **'購入を復元しました'**
+  String get purchaseRestored;
+
+  /// No description provided for @purchaseNothing.
+  ///
+  /// In ja, this message translates to:
+  /// **'復元できる購入が見つからなかった'**
+  String get purchaseNothing;
+
+  /// No description provided for @purchaseFailed.
+  ///
+  /// In ja, this message translates to:
+  /// **'購入できなかった。時間をおいてもう一度'**
+  String get purchaseFailed;
 }
 
 class _AppLocalizationsDelegate
