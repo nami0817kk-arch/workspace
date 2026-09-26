@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../budget_lines.dart';
@@ -704,6 +705,11 @@ class _OfferCard extends StatelessWidget {
 /// 保存は端末の中にしか無い。ブラウザのデータを消せば消えるし、
 /// iOS はしばらく開かないサイトの保存領域を自分で消す。
 /// 「⋮」の奥に置いてあるだけでは、気付かないまま何年も進んでしまう。
+///
+/// **何を消すと消えるかは、動いている先で違う。** Web なら「ブラウザの
+/// データ」だが、アプリで遊んでいる人にブラウザの話をしても通じない
+/// （掲載用の絵を撮ったときに、iPhone の画面に「ブラウザのデータを消すと
+/// 消える」と出ていた）。
 class _BackupCard extends StatelessWidget {
   const _BackupCard({
     required this.years,
@@ -718,10 +724,14 @@ class _BackupCard extends StatelessWidget {
   /// これだけ控えていなければ、色を変えて促す。
   static const int warnAfterYears = 3;
 
+  /// 何をすると消えるか。動いている先で言い方を変える。
+  static String get erases => kIsWeb ? 'ブラウザのデータを消す' : 'アプリを消す';
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final warn = years >= warnAfterYears;
+    final erases = _BackupCard.erases;
     return Card(
       color: warn ? theme.colorScheme.errorContainer : null,
       child: Padding(
@@ -738,10 +748,10 @@ class _BackupCard extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               everBackedUp
-                  ? '前に控えてから$years年。ブラウザのデータを消すと、'
+                  ? '前に控えてから$years年。$erasesと、'
                         'そこから先のキャリアは戻せない。'
                   : 'この記録は、この端末の中にしか無い。'
-                        'ブラウザのデータを消すと消える。1度だけ控えておけば、'
+                        '$erasesと消える。1度だけ控えておけば、'
                         '別の端末でも続きから遊べる。',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: warn ? theme.colorScheme.onErrorContainer : null,
