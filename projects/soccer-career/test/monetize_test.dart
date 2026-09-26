@@ -127,17 +127,30 @@ void main() {
     test('始めたばかりのうちは出さない', () async {
       final ads = FakeAds();
       final money = await started(ads: ads);
-      for (var season = 0; season < Monetization.freeSeasons; season++) {
+      for (var season = 0; season < Monetization.adsFromSeason; season++) {
         await money.showSeasonAd(seasonsPlayed: season);
       }
       expect(ads.shown, 0, reason: '序盤で広告が出ている');
     });
 
-    test('数シーズン過ぎたら出る', () async {
+    test('出し始める季から出る', () async {
       final ads = FakeAds();
       final money = await started(ads: ads);
-      await money.showSeasonAd(seasonsPlayed: Monetization.freeSeasons);
+      await money.showSeasonAd(seasonsPlayed: Monetization.adsFromSeason);
       expect(ads.shown, 1);
+    });
+
+    test('出る場所が季末しか無いので、無料の季はそのまま上限を削る', () async {
+      // **1キャリアは 18.6季**（`balance_sim`）。広告の機会はその季末だけ
+      // なので、無料にした季はそのまま機会から消える。
+      // 3 だった頃は 16.6回、1 にして 18.6回（2026-09-26）。
+      const seasonsPerCareer = 18.6;
+      final slots = seasonsPerCareer - (Monetization.adsFromSeason - 1);
+      expect(
+        slots,
+        greaterThan(17.0),
+        reason: '無料の季を増やすと、広告の機会がそのまま減る',
+      );
     });
 
     test('間隔が空いていなければ出さない', () async {
