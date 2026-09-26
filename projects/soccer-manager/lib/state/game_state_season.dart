@@ -614,8 +614,25 @@ extension GameStateSeason on GameState {
 
   Future<void> startNextSeason() async {
     if (_save == null) return;
+    // 二重に呼ばれると、賞金・理事会の報奨金・昇格ボーナスがもう一度
+    // 支払われ、シーズンも2つ進む。ボタンは isBusy の覆いで塞がるが、
+    // 覆いが描かれるのは次のフレームなので、その前の連打は素通りする。
+    // playNextMatchday には同じ理由の防止が入っている。
+    if (isBusy) return;
     isBusy = true;
     _notify();
+    try {
+      await _rollSeasonOver();
+    } catch (_) {
+      // 途中で落ちたら覆いを外しておく。外さないと上の多重実行の防止に
+      // 引っかかり続け、二度と次のシーズンへ進めなくなる。
+      isBusy = false;
+      _notify();
+      rethrow;
+    }
+  }
+
+  Future<void> _rollSeasonOver() async {
     // ローディング表示を1フレーム描画させてから、裏ディビジョンの1シーズン分の
     // シミュレーションなど重い処理に入る。
     await Future<void>.delayed(Duration.zero);

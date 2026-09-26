@@ -88,7 +88,29 @@ extension GameStateTransfer on GameState {
     if (_save?.pendingContractNegotiation?.playerId == playerId) {
       _save!.pendingContractNegotiation = null;
     }
-    _save?.pendingInstallments.removeWhere((i) => i.playerId == playerId);
+    _settleInstallmentsFor(playerId);
+  }
+
+  /// 手放した選手の分割払いが残っていれば、その場で残金を精算する。
+  ///
+  /// 以前は残金を破棄していた。そのため「分割で買って(頭金30%)すぐ売る
+  /// (市場価値の70%)」を繰り返すだけで資金が増えた。実測で1回あたり
+  /// 市場価値の21%が手元に残り、市場の選手全員に対して何度でもできた。
+  /// 資金のやりくりという土台が無くなるうえ、資金パックを買う理由も消える。
+  ///
+  /// 売った相手が誰であれ、買ったときの残金は元のクラブに支払う。
+  void _settleInstallmentsFor(String playerId) {
+    if (_save == null) return;
+    final rows =
+        _save!.pendingInstallments.where((i) => i.playerId == playerId).toList();
+    if (rows.isEmpty) return;
+    final outstanding = rows.fold<int>(
+        0, (sum, i) => sum + i.weeklyAmount * i.weeksRemaining);
+    _save!.pendingInstallments.removeWhere((i) => i.playerId == playerId);
+    if (outstanding <= 0) return;
+    _save!.budget -= outstanding;
+    _logNews(Tr.pick('移籍に伴い、分割払いの残金$outstanding万円を一括で精算した。',
+        'The remaining $outstanding of the instalment plan was settled in full on his departure.'));
   }
 
   /// 放出により実際に得られる(あるいは支払う)純額。移籍金収入から
