@@ -15,7 +15,7 @@ docs/session-briefs/method1.md を読んで、そこに書いてある担当を�
 | `method3.md` | 方式3 ブラウザゲーム — **2026-09-26 に畳んだ**（理由は台帳） |
 | `method5.md` | 方式5 パズル本（Amazon KDP） |
 | `method6.md` | 方式6 Notion テンプレート |
-| `method7.md` | 方式7 Reddit の日替わりパズル |
+| `method7.md` | ~~方式7 Reddit の日替わりパズル~~（2026-09-26 に畳んだ。調査結果は `docs/method7-reddit-communities.md`） |
 | `method8.md` | 方式8 Apify の道具（**2026-09-26 畳んだ**。理由は台帳） |
 
 方式4（受託）と方式9（有料通知）は廃止済み。指示書は無い。
