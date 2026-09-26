@@ -7,6 +7,9 @@ robots.txt の作り方はそちらの先例に合わせてある）。データ
 from __future__ import annotations
 
 import json
+import re
+from datetime import date
+from urllib.parse import urljoin
 import shutil
 import sys
 from pathlib import Path
@@ -17,6 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import eligibility
 import extras
+import kabe
 import premium
 import site_config
 
@@ -57,8 +61,41 @@ def canonical_url(rel_path: str) -> str:
     return f"{SITE_URL}/{rel.removesuffix('.html')}"
 
 
+_CRUMBS = re.compile(r'<nav class="crumbs"[^>]*>(.*?)</nav>', re.S)
+_CRUMB_LINK = re.compile(r'<a href="([^"]+)">([^<]+)</a>')
+_CRUMB_HERE = re.compile(r'<span aria-current="page">([^<]+)</span>')
+
+
+def breadcrumb_ld(html: str, rel_path: str) -> str | None:
+    """ページのパンくず（nav.crumbs）から、検索エンジン向けの BreadcrumbList（JSON-LD）を作る。
+    見た目のパンくずと中身がずれないように、HTML から読み取って作る。"""
+    m = _CRUMBS.search(html)
+    if not m:
+        return None
+    base = f"{SITE_URL}/{rel_path}"
+    items = []
+    for href, name in _CRUMB_LINK.findall(m.group(1)):
+        target = urljoin(base, href)
+        items.append((name.strip(), canonical_url(target.removeprefix(SITE_URL + "/"))))
+    here = _CRUMB_HERE.search(m.group(1))
+    if here:
+        items.append((here.group(1).strip(), canonical_url(rel_path)))
+    data = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {"@type": "ListItem", "position": i + 1, "name": name, "item": url} for i, (name, url) in enumerate(items)
+        ],
+    }
+    return '<script type="application/ld+json">' + json.dumps(data, ensure_ascii=False) + "</script>"
+
+
 def _write(path: Path, content: str) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
+    if path.suffix == ".html" and path.name != "404.html":
+        ld = breadcrumb_ld(content, path.relative_to(_OUTPUT_DIR).as_posix())
+        if ld:
+            content = content.replace("</head>", ld + "\n</head>", 1)
     path.write_text(content, encoding="utf-8")
 
 
@@ -224,12 +261,62 @@ def _build_amount_pages() -> None:
     )
 
 
+# 週20時間の壁のページ（/kabe/1100yen.html）。週19時間でも年収130万円を超えない時給まで。
+KABE_HOURLY: tuple[int, ...] = tuple(range(1050, 1301, 50))
+_KABE_ROWS_X10: tuple[int, ...] = (190, 200, 210, 220, 225, 230, 240, 250, 300)
+
+
+def _build_kabe_pages() -> None:
+    table = premium.TABLES[-1]
+    # 賃金要件が無くなった後（2026-10-01 以降）の話。料率表の最初の日がそれより後ならそちら。
+    as_of = max(table.valid_from, date(2026, 10, 1))
+    era = _era(table.fiscal_year)
+    results = [kabe.analyze(as_of, h) for h in KABE_HOURLY]
+    if any(r is None or r.breakeven_hours_x10 is None for r in results):
+        raise RuntimeError("週20時間の壁のページに必要な料率・税額がそろっていない")
+    tmpl = _env.get_template("kabe.html")
+    for k in results:
+        rows = []
+        for hx10 in _KABE_ROWS_X10:
+            pay = kabe.monthly_pay(k.hourly, hx10)
+            net = k.net_19 if hx10 == 190 else kabe.net_covered(as_of, pay, "東京", False)
+            rows.append({"hx10": hx10, "label": f"週{hx10 / 10:g}時間", "pay": pay, "net": net})
+        p20 = premium.estimate(as_of=as_of, prefecture="東京", monthly_pay_yen=k.pay_20, age_40_to_64=False)
+        rel = f"kabe/{k.hourly}yen.html"
+        _write(
+            _OUTPUT_DIR / rel,
+            tmpl.render(
+                base_url="../",
+                canonical=canonical_url(rel),
+                k=k,
+                be_hours=f"{k.breakeven_hours_x10 / 10:g}",
+                rows=rows,
+                others=results,
+                era=era,
+                pension_inc=extras.pension_increase_per_year(p20.pension_standard),
+                sick=extras.sickness_daily_yen(p20.health_standard),
+            ),
+        )
+    common = max(set(r.breakeven_hours_x10 for r in results), key=[r.breakeven_hours_x10 for r in results].count)
+    _write(
+        _OUTPUT_DIR / "kabe" / "index.html",
+        _env.get_template("kabe_index.html").render(
+            base_url="../", canonical=canonical_url("kabe/index.html"), others=results, era=era, common_be=f"{common / 10:g}"
+        ),
+    )
+
+
+def kabe_page_paths() -> list[str]:
+    return ["kabe/index.html"] + [f"kabe/{h}yen.html" for h in KABE_HOURLY]
+
+
 def amount_page_paths() -> list[str]:
     return ["getsushu/index.html"] + [f"getsushu/{m}man.html" for m in AMOUNTS_MAN]
 
 
 # 更新履歴（新しい順）。計算や料率を変えたら、ここに1行足す。
 HISTORY: tuple[tuple[str, str], ...] = (
+    ("2026-09-26", "週20時間の壁（週19時間から増やしたときの手取りと、元に戻る時間）のページと計算を追加"),
     ("2026-09-26", "所得税（国税庁の月額表・甲欄の電算機計算の特例、令和8年分）を手取りの目安に追加。通勤手当と残業代を分けて入力できるように"),
     ("2026-09-26", "雇用保険料・手取りの目安、加入前との比べ方、将来の年金と傷病手当金の目安、時給での入力を追加"),
     ("2026-09-26", "月収別の保険料のページ（8万〜25万円）を追加"),
@@ -301,7 +388,7 @@ def _write_sitemap() -> None:
         (canonical_url("year/index.html"), None),
         (canonical_url("keisan.html"), None),
     ]
-    urls += [(canonical_url(p), None) for p in amount_page_paths()]
+    urls += [(canonical_url(p), None) for p in amount_page_paths() + kabe_page_paths()]
     for regime in eligibility.MILESTONES:
         slug = _milestone_slug(regime)
         urls.append((canonical_url(f"year/{slug}.html"), None))
@@ -330,6 +417,7 @@ def build_all() -> None:
     _build_calculator_page()
     _build_year_pages()
     _build_amount_pages()
+    _build_kabe_pages()
     _build_keisan_page()
     _build_static_pages()
     _write_robots()

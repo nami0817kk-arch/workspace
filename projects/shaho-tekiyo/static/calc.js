@@ -139,6 +139,37 @@
     return Math.floor((num + 500000) / 1000000) * 10;
   }
 
+  // ---- kabe.py の写し（週20時間の壁） ----
+  function kabePay(hourly, hoursX10) {
+    return Math.floor((hourly * hoursX10 * 52 * 2 + 120) / 240);
+  }
+
+  function netCovered(tables, extras, asOfIso, pay, prefecture, age) {
+    var p = estimate(tables, asOfIso, prefecture, pay, age);
+    if (!p) return null;
+    var koyo = employmentYen(extras, asOfIso, pay);
+    if (koyo === null) return null;
+    var tax = incomeTaxYen(extras, asOfIso, pay - p.total - koyo, 0);
+    if (tax === null) return null;
+    return pay - p.total - koyo - tax;
+  }
+
+  function kabeAnalyze(tables, extras, asOfIso, hourly, prefecture, age) {
+    var pay19 = kabePay(hourly, 190);
+    var tax19 = incomeTaxYen(extras, asOfIso, pay19, 0);
+    var pay20 = kabePay(hourly, 200);
+    var net20 = netCovered(tables, extras, asOfIso, pay20, prefecture, age);
+    if (tax19 === null || net20 === null) return null;
+    var net19 = pay19 - tax19;
+    var be = null;
+    for (var h = 200; h <= 400; h += 5) {
+      var pay = kabePay(hourly, h);
+      var net = netCovered(tables, extras, asOfIso, pay, prefecture, age);
+      if (net !== null && net >= net19) { be = { hoursX10: h, pay: pay, net: net }; break; }
+    }
+    return { pay19: pay19, net19: net19, pay20: pay20, net20: net20, loss: net19 - net20, breakeven: be };
+  }
+
   function prefFull(short) {
     if (short === '北海道') return short;
     if (short === '東京') return '東京都';
@@ -149,7 +180,7 @@
   var api = {
     regimeFor: regimeFor, evaluate: evaluate, tableFor: tableFor, estimate: estimate,
     employmentYen: employmentYen, kokuminNenkinYen: kokuminNenkinYen,
-    pensionIncreasePerYear: pensionIncreasePerYear, sicknessDailyYen: sicknessDailyYen, incomeTaxYen: incomeTaxYen, prefFull: prefFull
+    pensionIncreasePerYear: pensionIncreasePerYear, sicknessDailyYen: sicknessDailyYen, incomeTaxYen: incomeTaxYen, kabeAnalyze: kabeAnalyze, prefFull: prefFull
   };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.ShahoCalc = api;

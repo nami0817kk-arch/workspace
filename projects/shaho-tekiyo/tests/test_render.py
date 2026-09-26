@@ -211,3 +211,24 @@ def test_月収20万円のページに所得税と手取り(site):
 def test_計算機に通勤手当と扶養の人数(site):
     html = (site / "index.html").read_text(encoding="utf-8")
     assert 'id="commute"' in html and 'id="dependents"' in html
+
+
+def test_週20時間の壁のページ(site):
+    for h in render.KABE_HOURLY:
+        assert (site / "kabe" / f"{h}yen.html").exists(), h
+    html = (site / "kabe" / "1100yen.html").read_text(encoding="utf-8")
+    assert "週20時間にすると手取りは月 9,617円 減る。週22.5時間で元に戻る" in html
+    xml = (site / "sitemap.xml").read_text(encoding="utf-8")
+    assert f"<loc>{site_config.SITE_URL}/kabe/1100yen</loc>" in xml
+
+
+def test_共有画像とパンくずの構造化データ(site):
+    assert (site / "static" / "og.png").exists()
+    html = (site / "getsushu" / "10man.html").read_text(encoding="utf-8")
+    assert f'<meta property="og:image" content="{site_config.SITE_URL}/static/og.png">' in html
+    m = re.search(r'<script type="application/ld\+json">(\{"@context": "https://schema.org", "@type": "BreadcrumbList".*?)</script>', html)
+    assert m, "BreadcrumbList が無い"
+    items = json.loads(m.group(1))["itemListElement"]
+    assert [i["name"] for i in items] == ["計算機", "月収別の保険料", "月収10万円"]
+    assert items[-1]["item"] == f"{site_config.SITE_URL}/getsushu/10man"
+    assert items[1]["item"] == f"{site_config.SITE_URL}/getsushu/"

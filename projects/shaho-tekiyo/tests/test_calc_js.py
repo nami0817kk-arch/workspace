@@ -111,3 +111,24 @@ process.stdout.write(JSON.stringify(out));
     assert got["pref"] == [extras.pref_full(p) for p in premium.PREFECTURES]
     assert got["tax"] == [extras.income_tax_yen(date(2026, 10, 1), a, d) for a, d in TAX_CASES]
     assert got["taxOut"] is None
+
+
+def test_週20時間の壁もpythonと一致する():
+    import kabe
+
+    cases = [(h, pref, age) for h in (1016, 1050, 1100, 1226, 1300, 1500) for pref in ("東京", "佐賀", "北海道") for age in (False, True)]
+    script = f"""
+const calc = require({json.dumps(str(_CALC_JS))});
+const tables = {premium.tables_json()};
+const ex = {extras.extras_json()};
+const cases = {json.dumps(cases, ensure_ascii=False)};
+process.stdout.write(JSON.stringify(cases.map(c => {{
+  const k = calc.kabeAnalyze(tables, ex, '2026-10-01', c[0], c[1], c[2]);
+  return k && [k.pay19, k.net19, k.pay20, k.net20, k.breakeven ? k.breakeven.hoursX10 : null, k.breakeven ? k.breakeven.net : null];
+}})));
+"""
+    res = subprocess.run(["node", "-e", script], capture_output=True, text=True, encoding="utf-8", check=True)
+    got = json.loads(res.stdout)
+    for (h, pref, age), g in zip(cases, got):
+        k = kabe.analyze(date(2026, 10, 1), h, pref, age)
+        assert g == [k.pay_19, k.net_19, k.pay_20, k.net_20, k.breakeven_hours_x10, k.breakeven_net], (h, pref, age)
