@@ -97,14 +97,15 @@ def wall_columns(rows: list[dict], baseline: int, caption: str) -> str:
 def stages_timeline(stages: list[tuple[str, str, bool]], caption: str) -> str:
     """企業規模要件の段階。stages: (時期, 対象になる会社, いまの段階か)。横に5つ並べ、矢印でつなぐ。"""
     n = len(stages)
-    w, h = 640, 150
+    w, h = 640, 180
     box_w = (w - (n - 1) * 14) / n
     out = [f'<svg viewBox="0 0 {w} {h}" role="img" aria-label="{escape(caption)}" class="timeline">']
     for i, (when, who, now) in enumerate(stages):
         x = i * (box_w + 14)
         # 段が進むほど対象が広がる → 帯の高さを伸ばして「広がり」を見せる
         bar_h = 18 + i * 10
-        out.append(f'<rect x="{x:.1f}" y="{h - 22 - bar_h}" width="{box_w:.1f}" height="{bar_h}" rx="4" class="fill-{"s1" if now else "step"}">'
+        # 棒の下端は下の名前（スマホでは24px）と重ならないように h-46 まで
+        out.append(f'<rect x="{x:.1f}" y="{h - 46 - bar_h}" width="{box_w:.1f}" height="{bar_h}" rx="4" class="fill-{"s1" if now else "step"}">'
                    f"<title>{escape(when)}: {escape(who)}</title></rect>")
         # 「2027年10月」は2行に分ける（スマホで横にあふれないように）
         if "年" in when:
@@ -118,7 +119,7 @@ def stages_timeline(stages: list[tuple[str, str, bool]], caption: str) -> str:
         out.append(f'<text x="{x + box_w / 2:.1f}" y="{h - 6}" text-anchor="middle" class="axis">{escape(who)}</text>')
         if i < n - 1:
             ax = x + box_w + 2
-            out.append(f'<path d="M{ax + 9:.1f},{h - 40} l-8,-5 v10 z" class="arrow"/>')
+            out.append(f'<path d="M{ax + 9:.1f},{h - 60} l-8,-5 v10 z" class="arrow"/>')
     out.append("</svg>")
     return f'<figure class="viz">{"".join(out)}<figcaption>{escape(caption)}</figcaption></figure>'
 
