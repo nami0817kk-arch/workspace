@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'l10n/app_localizations.dart';
 import 'l10n/tr.dart';
+import 'monetization/funds_delivery.dart';
 import 'monetization/monetization_controller.dart';
 import 'package:provider/provider.dart';
 
@@ -219,7 +220,9 @@ class SoccerManagerApp extends StatelessWidget {
                 // 保存の失敗はどの画面の操作でも起きるので、個々の画面では
                 // なくここで拾って知らせる。
                 child: SaveErrorNotifier(
-                  child: _SaveOnPause(child: child!),
+                  child: _DeliverPendingPurchases(
+                    child: _SaveOnPause(child: child!),
+                  ),
                 ),
               );
             },
@@ -250,6 +253,59 @@ class _RootScreen extends StatelessWidget {
       );
     }
     return const StartScreen();
+  }
+}
+
+/// 預かっている購入ぶんを、セーブが開いたら渡す。
+///
+/// 資金パックはクラブ資金に入るので、タイトル画面に居るあいだや、セーブを
+/// 開く前に決済が通ったぶんは渡しようがない。窓口は端末側に預かるだけに
+/// してあり([MonetizationController.undeliveredFundsPacks])、実際に移すのは
+/// ここ。セーブが開いた瞬間に渡るよう、両方を見張る。
+class _DeliverPendingPurchases extends StatefulWidget {
+  final Widget child;
+
+  const _DeliverPendingPurchases({required this.child});
+
+  @override
+  State<_DeliverPendingPurchases> createState() =>
+      _DeliverPendingPurchasesState();
+}
+
+class _DeliverPendingPurchasesState extends State<_DeliverPendingPurchases> {
+  /// 渡している最中に再描画されても二重に渡さないための札。
+  bool _delivering = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final money = context.watch<MonetizationController>();
+    final gameState = context.watch<GameState>();
+
+    if (!_delivering &&
+        gameState.hasSave &&
+        money.undeliveredFundsPacks.isNotEmpty) {
+      _delivering = true;
+      // 描画の最中にセーブを書き換えない。
+      // 渡し終えてから context を触らない。取り出しておく。
+      final messenger = ScaffoldMessenger.maybeOf(context);
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        try {
+          final granted = await deliverPendingFunds(money, gameState);
+          if (granted > 0 && mounted) {
+            // 買った直後なら購入画面が自分で知らせる。ここで出るのは
+            // 「アプリを落としている間に決済が通った」ぶん。黙って資金が
+            // 増えていると、何が起きたのか分からない。
+            messenger?.showSnackBar(SnackBar(
+              content: Text(Tr.pick('購入ぶんの$granted万円をクラブ資金に追加しました',
+                  'Added $granted to the club budget from your purchase')),
+            ));
+          }
+        } finally {
+          _delivering = false;
+        }
+      });
+    }
+    return widget.child;
   }
 }
 
