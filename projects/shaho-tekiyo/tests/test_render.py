@@ -250,3 +250,42 @@ def test_図が入っている(site):
 def test_図の色はライトとダークの両方で決めてある(site):
     html = (site / "index.html").read_text(encoding="utf-8")
     assert html.count("--s1:") == 2  # ライトとダーク
+
+
+def test_トップに早見表と週20時間の壁とよくある質問(site):
+    html = (site / "index.html").read_text(encoding="utf-8")
+    assert "<title>パートの社会保険 計算" in html
+    assert 'href="getsushu/10man.html">10万円</a><span class="sub">年収120万円</span>' in html
+    assert "月9,617円減り" in html and "週22.5時間" in html
+    faq = (site / "faq.html").read_text(encoding="utf-8")
+    for anchor in ("q-106", "q-130", "q-student", "q-small", "q-takehome", "q-oct", "q-20h", "q-low"):
+        assert f'id="{anchor}"' in faq, anchor
+    for anchor in re.findall(r'faq\.html#([\w-]+)', html):
+        assert f'id="{anchor}"' in faq, anchor  # トップからのリンク先が faq にある
+
+
+def test_最終更新日とsitemapのlastmod(site):
+    assert f"最終更新 {render._env.globals['updated']}" in (site / "getsushu" / "10man.html").read_text(encoding="utf-8")
+    xml = (site / "sitemap.xml").read_text(encoding="utf-8")
+    assert xml.count("<lastmod>") == xml.count("<loc>")
+    assert f"<lastmod>{render.UPDATED}</lastmod>" in xml
+
+
+def test_月収別と週20時間の壁が互いにリンクする(site):
+    amount = (site / "getsushu" / "10man.html").read_text(encoding="utf-8")
+    assert "年収120万円" in amount and 'kabe/index.html' in amount
+    wall = (site / "kabe" / "1100yen.html").read_text(encoding="utf-8")
+    assert 'getsushu/10man.html">月収10万円の保険料の内訳' in wall
+
+
+def test_説明文とタイトルの長さ(site):
+    # 検索で呼び込むページだけ見る（404・問い合わせ・運営者・プライバシーは対象外）
+    skip = {"404.html", "contact.html", "operator.html", "privacy.html"}
+    for path in site.rglob("*.html"):
+        if path.name in skip:
+            continue
+        html = path.read_text(encoding="utf-8")
+        m = re.search(r'<meta name="description" content="([^"]*)"', html)
+        assert m and 40 <= len(m.group(1)) <= 160, (path, len(m.group(1)) if m else None)
+        t = re.search(r"<title>(.*?)</title>", html, re.S).group(1)
+        assert len(t) <= 70, (path, len(t))

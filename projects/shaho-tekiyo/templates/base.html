@@ -213,6 +213,11 @@
   #result .hint { font-size: 0.8rem; color: var(--muted); }
   table.premium td, table.num td { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
   .month-links { line-height: 2; }
+  ul.faq-links { padding-left: 1.2rem; }
+  .subtitle-plain { color: var(--muted); margin: -0.3rem 0 0.6rem; }
+  .updated-footer { font-size: 0.78rem; color: var(--muted); text-align: center; }
+  ul.faq-links li { margin: 0.35rem 0; }
+  h2[id] { scroll-margin-top: 1rem; }
   /* 図 */
   figure.viz { margin: 1rem 0 1.25rem; }
   figure.viz svg { width: 100%; height: auto; display: block; overflow: visible; }
@@ -318,7 +323,7 @@
       <a href="{{ base_url }}getsushu/index.html">月収別の保険料</a>
       <a href="{{ base_url }}kabe/index.html">週20時間の壁</a>
       <a href="{{ base_url }}year/index.html">年次の変化</a>
-      <a href="{{ base_url }}faq.html">よくある誤解</a>
+      <a href="{{ base_url }}faq.html">よくある質問</a>
     </nav>
   </div>
 </header>
@@ -345,13 +350,14 @@
   </div>
   <div class="footer-group">
     <strong>このサイト</strong>
-    <a href="{{ base_url }}faq.html">よくある誤解</a>
+    <a href="{{ base_url }}faq.html">よくある質問</a>
     <a href="{{ base_url }}about.html">このサイトについて</a>
     <a href="{{ base_url }}keisan.html">計算方法と出典</a>
     <a href="{{ base_url }}operator.html">運営者情報</a>
     <a href="{{ base_url }}contact.html">お問い合わせ</a>
     <a href="{{ base_url }}privacy.html">プライバシーポリシー</a>
   </div>
+  <p class="updated-footer">最終更新 {{ updated }}（{{ era }}の料率）・<a href="{{ base_url }}keisan.html">計算方法と更新履歴</a></p>
   <p class="to-top"><a href="#main">↑ ページの先頭へ</a></p>
 </footer>
 </body>
