@@ -31,6 +31,11 @@
 3. `src/premium.py` の `RATE_FILES` に1行足す。古い年度のファイルは消さない
 4. `tests/test_premium.py` の期待値（北海道の額表の数字）を新しい額表で足す
 
+**4月にもう1つ**: 雇用保険料率と国民年金保険料は4月から変わる。`data/other_rates.json` の
+`employment` と `kokumin_nenkin` に新しい年度を1件ずつ足す（出典の URL も）。やらないと4月以降は
+雇用保険料・手取り・国民年金との比較が出なくなる（間違った額は出さない作り）。
+`src/render.py` の `HISTORY`（計算方法と出典のページの更新履歴）にも1行足す。
+
 等級表（標準報酬月額の区切りと上限）も額表から読むので、制度改正で等級が変わっても
 取り込みで入る。ただし import は全都道府県で等級表が同じことを前提にしている。
 
@@ -50,6 +55,8 @@
   **JS は Python（`eligibility.py`・`premium.py`）の写し。** `tests/test_calc_js.py` が node で
   calc.js を動かし、判定と保険料が Python と全件一致することを確かめている。
   片方を直したら、もう片方も同じように直すこと。
+- `src/extras.py` と `data/other_rates.json` — 雇用保険料・国民年金保険料・将来の年金（報酬比例 5.481/1000）・
+  傷病手当金（標準報酬月額÷30×2/3）。calc.js に同じ計算があり、`tests/test_calc_js.py` が突き合わせる
 - `data/kyoukaikenpo_<年度>.json` — 料率の正。手で書き換えない（`tools/import_kyoukaikenpo.py` で作る）。
   料率は 1/100000 単位の整数（10.28% → 10280）。端数処理は「50銭以下切り捨て・超えたら切り上げ」
 - 年次ページ（`templates/year.html`、5ページ）は `eligibility.MILESTONES`

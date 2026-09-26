@@ -15,11 +15,12 @@
 <p class="updated">{{ era }}の料率（{{ period }}）で計算</p>
 
 <div class="verdict ok">東京なら月 {{ "{:,}".format(tokyo.total_yen) }}円 引かれて、残りは {{ "{:,}".format(tokyo.take_home_yen) }}円</div>
+{% set net = tokyo.take_home_yen - koyo %}
 
 <p>
   月収{{ man }}万円（{{ "{:,}".format(pay) }}円）で勤務先の社会保険に入ると、給与から引かれる保険料（本人負担分）は、
   東京の会社で<strong>月{{ "{:,}".format(tokyo.total_yen) }}円</strong>、年に直すと約{{ "{:,}".format(tokyo.total_yen * 12) }}円です。
-  都道府県によって{{ "{:,}".format(cheapest.total_yen) }}円（{{ cheapest.prefecture }}）〜{{ "{:,}".format(dearest.total_yen) }}円（{{ dearest.prefecture }}）の差があります。
+  都道府県によって{{ "{:,}".format(cheapest.total_yen) }}円（{{ pref_full(cheapest.prefecture) }}）〜{{ "{:,}".format(dearest.total_yen) }}円（{{ pref_full(dearest.prefecture) }}）の差があります。
   40〜64歳の人は介護保険料が加わり、東京で月{{ "{:,}".format(tokyo_care.total_yen) }}円です。
 </p>
 
@@ -30,9 +31,26 @@
   <tr><th>子ども・子育て支援金</th><td>{{ "{:,}".format(tokyo.kodomo_yen) }}円</td></tr>
   <tr><th>厚生年金保険料</th><td>{{ "{:,}".format(tokyo.pension_yen) }}円</td></tr>
   <tr class="current"><th>合計</th><td><strong>{{ "{:,}".format(tokyo.total_yen) }}円</strong></td></tr>
-  <tr><th>月収から引いた残り</th><td>{{ "{:,}".format(tokyo.take_home_yen) }}円</td></tr>
+  <tr><th>雇用保険料<span class="sub">週20時間以上なら加入前から引かれている分</span></th><td>{{ "{:,}".format(koyo) }}円</td></tr>
+  <tr><th>手取りの目安<span class="sub">所得税・住民税は含まない</span></th><td><strong>{{ "{:,}".format(net) }}円</strong></td></tr>
 </table>
 </div>
+<p class="hint">会社も同じ額の社会保険料を負担しています（労使折半）。</p>
+
+<h2>加入する前と比べると</h2>
+<ul class="compare">
+  <li><strong>配偶者や親の扶養に入っていた人</strong>: それまで0円だった保険料が、月{{ "{:,}".format(tokyo.total_yen) }}円（年{{ "{:,}".format(tokyo.total_yen * 12) }}円）増えます。</li>
+  {% set d = kokumin - tokyo.pension_yen %}
+  <li><strong>自分で国民年金を払っていた人</strong>: 国民年金保険料（月{{ "{:,}".format(kokumin) }}円）がなくなり、厚生年金保険料（月{{ "{:,}".format(tokyo.pension_yen) }}円）に替わります。
+    年金の分だけで月{{ "{:,}".format(d|abs) }}円{{ "安く" if d > 0 else "高く" }}なります。国民健康保険も勤務先の健康保険に替わります（国民健康保険料は市区町村で違うので、ここでは比べていません）。</li>
+</ul>
+
+<h2>加入すると受けられるもの</h2>
+<ul class="compare">
+  <li><strong>将来の年金が増える</strong>: 1年加入するごとに、65歳から受け取る年金（老齢厚生年金）が年約{{ "{:,}".format(pension_inc) }}円増えます。10年なら年約{{ "{:,}".format(pension_inc * 10) }}円。一生受け取れる額です。</li>
+  <li><strong>病気やけがで休んだときの手当</strong>: 仕事を休んで給与が出ないとき、4日目から1日約{{ "{:,}".format(sick) }}円（傷病手当金。最長で通算1年6か月）。</li>
+</ul>
+<p class="hint">年金は今の価値での目安（実際は物価などで再評価されます）。傷病手当金は加入から1年たつ前は計算の元が変わることがあります。計算式は<a href="{{ base_url }}keisan.html">計算方法と出典</a>に。</p>
 <p class="hint">
   保険料は月収そのものではなく「標準報酬月額」で決まります。月収{{ "{:,}".format(pay) }}円は、健康保険で{{ "{:,}".format(tokyo.health_standard) }}円、
   厚生年金で{{ "{:,}".format(tokyo.pension_standard) }}円の等級に当たります。<strong>通勤手当や残業代の見込みも月収に含めて</strong>等級が決まるので、
@@ -47,7 +65,7 @@
   <thead><tr><th>勤務先</th><th>39歳以下</th><th>40〜64歳</th><th>残り（39歳以下）</th></tr></thead>
   <tbody>
     {% for r, rc in rows %}
-    <tr{% if r.prefecture == "東京" %} class="current"{% endif %}><th>{{ r.prefecture }}</th><td>{{ "{:,}".format(r.total_yen) }}円</td><td>{{ "{:,}".format(rc.total_yen) }}円</td><td>{{ "{:,}".format(r.take_home_yen) }}円</td></tr>
+    <tr{% if r.prefecture == "東京" %} class="current"{% endif %}><th>{{ pref_full(r.prefecture) }}</th><td>{{ "{:,}".format(r.total_yen) }}円</td><td>{{ "{:,}".format(rc.total_yen) }}円</td><td>{{ "{:,}".format(r.take_home_yen) }}円</td></tr>
     {% endfor %}
   </tbody>
 </table>

@@ -6,6 +6,7 @@ from pathlib import Path
 import pytest
 
 import eligibility
+import extras
 import premium
 import render
 import site_config
@@ -175,9 +176,27 @@ def test_月収10万円_東京の保険料が円単位で出る(site):
     html = (site / "getsushu" / "10man.html").read_text(encoding="utf-8")
     assert "東京なら月 13,906円 引かれて、残りは 86,094円" in html
     for pref in premium.PREFECTURES:
-        assert f"<th>{pref}</th>" in html, pref
+        assert f"<th>{extras.pref_full(pref)}</th>" in html, pref
+    assert "<strong>85,594円" in html  # 雇用保険料 500円（5/1,000）も引いた手取りの目安
+    assert "年約6,445円増えます" in html
+    assert "月8,953円安く" in html  # 国民年金 17,920円 − 厚生年金 8,967円
 
 
 def test_どのページからも月収別の一覧へ行ける(site):
     for name in ("index.html", "faq.html"):
         assert "getsushu/index.html" in (site / name).read_text(encoding="utf-8")
+
+
+def test_計算方法と更新履歴のページ(site):
+    html = (site / "keisan.html").read_text(encoding="utf-8")
+    for src in ("kyoukaikenpo.or.jp", "mhlw.go.jp/content/001692566.pdf", "nenkin.go.jp"):
+        assert src in html, src
+    assert "更新履歴" in html
+    assert "keisan.html" in (site / "index.html").read_text(encoding="utf-8")
+
+
+def test_計算機に時給の入力と正式な都道府県名(site):
+    html = (site / "index.html").read_text(encoding="utf-8")
+    assert 'id="hourly"' in html
+    assert '<option value="東京" selected>東京都</option>' in html
+    assert 'id="extras-data"' in html

@@ -82,7 +82,52 @@
     };
   }
 
-  var api = { regimeFor: regimeFor, evaluate: evaluate, tableFor: tableFor, estimate: estimate };
+  // ---- extras.py の写し（雇用保険料・国民年金保険料・将来の年金・都道府県名） ----
+  function periodFor(entries, asOfIso) {
+    for (var i = 0; i < entries.length; i++) {
+      if (entries[i].valid_from <= asOfIso && asOfIso <= entries[i].valid_until) return entries[i];
+    }
+    return null;
+  }
+
+  // 50銭以下切り捨て・超えたら切り上げ（premium.payroll_round と同じ）。num/den を整数で。
+  function payrollRound(num, den) {
+    var whole = Math.floor(num / den);
+    var rem = num - whole * den;
+    return whole + (2 * rem > den ? 1 : 0);
+  }
+
+  function employmentYen(extras, asOfIso, grossPay) {
+    var e = periodFor(extras.employment, asOfIso);
+    return e ? payrollRound(grossPay * e.worker_per_mille, 1000) : null;
+  }
+
+  function kokuminNenkinYen(extras, asOfIso) {
+    var e = periodFor(extras.kokumin_nenkin, asOfIso);
+    return e ? e.monthly_yen : null;
+  }
+
+  function pensionIncreasePerYear(extras, pensionStandard) {
+    return Math.floor(pensionStandard * extras.pension_accrual.per_mille_x1000 * 12 / 1000000);
+  }
+
+  function sicknessDailyYen(healthStandard) {
+    var perDay = Math.floor((healthStandard + 150) / 300) * 10;
+    return Math.floor((4 * perDay + 3) / 6);
+  }
+
+  function prefFull(short) {
+    if (short === '北海道') return short;
+    if (short === '東京') return '東京都';
+    if (short === '京都' || short === '大阪') return short + '府';
+    return short + '県';
+  }
+
+  var api = {
+    regimeFor: regimeFor, evaluate: evaluate, tableFor: tableFor, estimate: estimate,
+    employmentYen: employmentYen, kokuminNenkinYen: kokuminNenkinYen,
+    pensionIncreasePerYear: pensionIncreasePerYear, sicknessDailyYen: sicknessDailyYen, prefFull: prefFull
+  };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.ShahoCalc = api;
 })(this);
