@@ -170,6 +170,21 @@
     return { pay19: pay19, net19: net19, pay20: pay20, net20: net20, loss: net19 - net20, breakeven: be };
   }
 
+  // 週の時間ごとの手取り（図に使う）。hoursX10 の並びを受け取る。190 は加入なしで計算する。
+  function kabeRows(tables, extras, asOfIso, hourly, prefecture, age, hoursList) {
+    return hoursList.map(function (h) {
+      var pay = kabePay(hourly, h);
+      var net;
+      if (h < 200) {
+        var tax = incomeTaxYen(extras, asOfIso, pay, 0);
+        net = tax === null ? null : pay - tax;
+      } else {
+        net = netCovered(tables, extras, asOfIso, pay, prefecture, age);
+      }
+      return { hoursX10: h, pay: pay, net: net };
+    });
+  }
+
   function prefFull(short) {
     if (short === '北海道') return short;
     if (short === '東京') return '東京都';
@@ -180,7 +195,7 @@
   var api = {
     regimeFor: regimeFor, evaluate: evaluate, tableFor: tableFor, estimate: estimate,
     employmentYen: employmentYen, kokuminNenkinYen: kokuminNenkinYen,
-    pensionIncreasePerYear: pensionIncreasePerYear, sicknessDailyYen: sicknessDailyYen, incomeTaxYen: incomeTaxYen, kabeAnalyze: kabeAnalyze, prefFull: prefFull
+    pensionIncreasePerYear: pensionIncreasePerYear, sicknessDailyYen: sicknessDailyYen, incomeTaxYen: incomeTaxYen, kabeAnalyze: kabeAnalyze, kabeRows: kabeRows, prefFull: prefFull
   };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.ShahoCalc = api;

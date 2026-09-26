@@ -18,6 +18,7 @@ from jinja2 import Environment, FileSystemLoader
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+import charts
 import eligibility
 import extras
 import kabe
@@ -147,6 +148,22 @@ _MILESTONE_NOTES: dict[str, str] = {
 }
 
 
+def size_timeline(as_of: date | None = None, here: str = "いまの段階") -> str:
+    """企業規模要件の段階の図。いま（as_of）がどの段階かを濃い色で示す。"""
+    stages = []
+    today_size = eligibility.regime_for(as_of or date.today()).company_size_threshold
+    seen = set()
+    for r in eligibility.SCHEDULE:
+        size = r.company_size_threshold
+        if size in seen:
+            continue  # 2026年10月は賃金要件だけの変化なので、規模の図には出さない
+        seen.add(size)
+        when = "いま" if r is eligibility.SCHEDULE[0] else f"{r.effective_from.year}年{r.effective_from.month}月"
+        who = f"{size}人以上" if size else "すべて"
+        stages.append((when, who, size == today_size))
+    return charts.stages_timeline(stages, f"社会保険に入る会社の規模（従業員数）は、2035年までに4段階で広がる。濃い色が{here}")
+
+
 def _build_calculator_page() -> None:
     tmpl = _env.get_template("calculator.html")
     _write(
@@ -158,6 +175,7 @@ def _build_calculator_page() -> None:
             hours_requirement=eligibility.WEEKLY_HOURS_REQUIREMENT,
             milestones=eligibility.MILESTONES,
             prefectures=premium.PREFECTURES,
+            timeline=size_timeline(),
             rates_json=premium.tables_json(),
             extras_json=extras.extras_json(),
         ),
@@ -190,6 +208,7 @@ def _build_year_pages() -> None:
                 current_index=eligibility.SCHEDULE.index(regime),
                 prev_page=pages[i - 1] if i > 0 else None,
                 next_page=pages[i + 1] if i + 1 < len(pages) else None,
+                timeline=size_timeline(regime.effective_from, "このページの段階"),
             ),
         )
 
@@ -229,6 +248,24 @@ def _build_amount_pages() -> None:
         pay = a["man"] * 10_000
         rows = [(est(p, pay), est(p, pay, True)) for p in premium.PREFECTURES]
         by_total = sorted((r for r, _ in rows), key=lambda r: r.total_yen)
+        koyo = extras.employment_yen(as_of, pay)
+        tax = extras.income_tax_yen(as_of, pay - a["r"].total_yen - koyo, 0) or 0
+        r = a["r"]
+        chart = charts.breakdown_bar(
+            [
+                ("手取り", pay - r.total_yen - koyo - tax, "s1"),
+                ("厚生年金保険料", r.pension_yen, "s2"),
+                ("健康保険料・子ども・子育て支援金", r.health_yen + r.kodomo_yen, "s3"),
+                ("雇用保険料・所得税", koyo + tax, "s4"),
+            ],
+            pay,
+            f"月収{a['man']}万円の行き先（東京・39歳以下・扶養0人）",
+        )
+        kokumin = extras.kokumin_nenkin_yen(as_of)
+        pension_chart = charts.hbars(
+            [("国民年金（自分で払う）", kokumin, "s2"), ("厚生年金（本人負担）", r.pension_yen, "s1")],
+            f"年金の保険料（1か月）。厚生年金は会社も同じ額を払い、将来の年金は国民年金に上乗せされる",
+        )
         rel = f"getsushu/{a['slug']}.html"
         _write(
             _OUTPUT_DIR / rel,
@@ -243,6 +280,8 @@ def _build_amount_pages() -> None:
                 dearest=by_total[-1],
                 rows=rows,
                 neighbors=all_amounts[max(0, i - 1): i + 2],
+                chart=chart,
+                pension_chart=pension_chart,
                 koyo=extras.employment_yen(as_of, pay),
                 tax=extras.income_tax_yen(
                     as_of, pay - a["r"].total_yen - extras.employment_yen(as_of, pay), 0
@@ -281,6 +320,15 @@ def _build_kabe_pages() -> None:
             pay = kabe.monthly_pay(k.hourly, hx10)
             net = k.net_19 if hx10 == 190 else kabe.net_covered(as_of, pay, "東京", False)
             rows.append({"hx10": hx10, "label": f"週{hx10 / 10:g}時間", "pay": pay, "net": net})
+        chart_rows = []
+        for row in rows:
+            if row["hx10"] > 250:
+                continue
+            chart_rows.append({
+                "label": row["label"], "short": f'{row["hx10"] / 10:g}', "net": row["net"], "base": row["hx10"] == 190,
+                "label_value": row["hx10"] in (190, 200, k.breakeven_hours_x10),
+            })
+        chart = charts.wall_columns(chart_rows, k.net_19, f"時給{k.hourly:,}円・週の時間ごとの手取り（東京・39歳以下・扶養に入っている人）")
         p20 = premium.estimate(as_of=as_of, prefecture="東京", monthly_pay_yen=k.pay_20, age_40_to_64=False)
         rel = f"kabe/{k.hourly}yen.html"
         _write(
@@ -290,6 +338,7 @@ def _build_kabe_pages() -> None:
                 canonical=canonical_url(rel),
                 k=k,
                 be_hours=f"{k.breakeven_hours_x10 / 10:g}",
+                chart=chart,
                 rows=rows,
                 others=results,
                 era=era,

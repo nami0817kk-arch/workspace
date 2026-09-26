@@ -24,6 +24,8 @@
   40〜64歳の人は介護保険料が加わり、東京で月{{ "{:,}".format(tokyo_care.total_yen) }}円です。
 </p>
 
+{{ chart|safe }}
+
 <h2>内訳（東京・39歳以下）</h2>
 <div class="table-wrap">
 <table class="plain premium">
@@ -39,6 +41,7 @@
 <p class="hint">会社も同じ額の社会保険料を負担しています（労使折半）。</p>
 
 <h2>加入する前と比べると</h2>
+{{ pension_chart|safe }}
 <ul class="compare">
   <li><strong>配偶者や親の扶養に入っていた人</strong>: それまで0円だった保険料が、月{{ "{:,}".format(tokyo.total_yen) }}円（年{{ "{:,}".format(tokyo.total_yen * 12) }}円）増えます。</li>
   {% set d = kokumin - tokyo.pension_yen %}
