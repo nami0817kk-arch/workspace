@@ -194,6 +194,17 @@ void main() {
       await shoot('01_home', const HomeScreen());
       await shoot('02_squad', const SquadScreen());
       await shoot('03_lineup', const LineupScreen());
+      // 移籍ウィンドウが閉じている時期に撮ると、「クローズ中」の帯が出て
+      // 「獲得する」が全部灰色の画面になる。何もできない画面をストアの
+      // 移籍市場として載せていた(1.1.0 の撮り直しで気づいた)。
+      // ウィンドウが開く時期まで進めてから撮る。
+      await tester.runAsync(() async {
+        while (!gameState.isTransferWindowOpen) {
+          await gameState.simulateAheadMatchdays(1);
+        }
+      });
+      expect(gameState.isTransferWindowOpen, isTrue,
+          reason: '移籍ウィンドウが閉じたまま移籍市場を撮ろうとしている');
       await shoot('04_transfer', const TransferScreen());
       // 日程・順位表。LeagueRankingScreen は得点王ランキングで、順位表ではない。
       await shoot('05_standings', const FixturesScreen());
