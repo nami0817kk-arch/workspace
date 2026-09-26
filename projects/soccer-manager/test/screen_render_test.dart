@@ -170,6 +170,13 @@ void main() {
 
 /// ストアに触らない差し替え。画面の描画にはストアの応答は要らない。
 class _StubPurchaseService implements PurchaseService {
+  /// 受け取り口。本物は待っているかどうかに関係なく呼ぶ。
+  @override
+  set onDelivered(Future<void> Function(String productId)? callback) =>
+      onDeliveredCallback = callback;
+
+  Future<void> Function(String productId)? onDeliveredCallback;
+
   @override
   Future<void> initialize() async {}
 
