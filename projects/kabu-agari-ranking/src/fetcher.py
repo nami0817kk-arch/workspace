@@ -2,7 +2,7 @@
 当日の株価ランキングを kabutan.jp から取得する。
 
 HTML の取得・解析は 共有パッケージ kabutan-client に一本化してある
-（quality-gainer-tracker と共通）。kabutan.jp の構造が変わったときに
+（もう1つの利用側だった quality-gainer-tracker は 2026-09-26 に廃止）。kabutan.jp の構造が変わったときに
 直すのは kabutan-client 側で、このファイルはランキングの組み立てだけを持つ。
 
 kabutan.jp/warning/ の各ランキングの mode:

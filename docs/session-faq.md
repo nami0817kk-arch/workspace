@@ -10,7 +10,7 @@ workspace で作業する Claude セッション向け。**ここに無い疑問
 
 - **全PJTはモノレポ `C:\Users\なみ\dev\workspace`**（private、nami0817kk-arch/workspace）。
   旧 dev/ 直下の個別フォルダ・個別リポジトリは**もう使わない**（アーカイブ待ち）。
-- レイアウト: `projects/<pjt>`（採番なし: stock-investment / ai-blog 等）、`libs/kabutan`、
+- レイアウト: `projects/<pjt>`（採番なし: kabu-agari-ranking / price-tracker 等）、`libs/kabutan`、
   `platform/ai-lab`、ルート `.github/workflows`（**必ず paths: で絞る**）。
 - 新しいPJTを足したら: `projects/<name>/` に置き、`<name>-tests.yml` を既存パターン
   （python-tests.yml の workflow_call）で作り、ルート `.github/dependabot.yml` の
@@ -491,7 +491,7 @@ CP932 のコンソールに `Perú` の `ú` を出そうとすると UnicodeEnc
 
 | 系統 | 置く場所 | 実例 |
 |---|---|---|
-| **A. `sys.stdout` を直接差し替える** | `if __name__ == "__main__":` ブロック | `projects/{ai-side-business,ir-analysis,quality-gainer-tracker}/main.py` |
+| **A. `sys.stdout` を直接差し替える** | `if __name__ == "__main__":` ブロック | `projects/ai-side-business/main.py`（ir-analysis・quality-gainer-tracker も同じだったが 2026-09-26 に廃止） |
 | **B. 付け替える関数を呼ぶ**（`reconfigure`） | `main()` 冒頭 | `platform/ai-lab/src/browser/control.py`、`src/docparse/cli.py`、`projects/youtube-video-creation/src/cli.py` |
 
 **A を main() の中に置いてはいけない。** `sys.stdout = io.TextIOWrapper(...)` は

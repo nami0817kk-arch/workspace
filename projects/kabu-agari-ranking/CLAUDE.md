@@ -26,7 +26,7 @@ python src/build_site.py    # 取得 → data/ 保存 → output/ 生成
 ## 手を入れるときに気をつけること
 
 - kabutan の HTML 取得・解析は **共有パッケージ [kabutan-client](https://github.com/nami0817kk-arch/kabutan-client)** にある
-  （quality-gainer-tracker と共通）。列位置の依存・解析の修正は kabutan-client 側で行い、
+  （もう1つの利用側だった quality-gainer-tracker は 2026-09-26 に廃止）。列位置の依存・解析の修正は kabutan-client 側で行い、
   こちらは requirements.txt のコミット固定を進めて取り込む。
   `src/fetcher.py` に残っているのはランキングの組み立て（絞り込み・順位付け）だけ。
 - `_extract_asof_date` は休場日対策。取得日ではなくページ上の終値日付を使う。
