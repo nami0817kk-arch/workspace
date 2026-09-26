@@ -23,11 +23,16 @@ import requests
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "research" / "pl_data"
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import clubleague  # noqa: E402
+
+# リーグは CLUB_LEAGUE で切り替える（2026-09-26 ラ・リーガ版）
+LEAGUE = clubleague.current()
+DATA = clubleague.data_dir()
 UA = {"User-Agent": "kaigai-soccer-riyuu/1.0 (nami.0817.kk@gmail.com)"}
 API = "https://en.wikipedia.org/w/api.php"
 # Module:Location map/data/England の値（下の fetch_bounds で取り直して控える）
-MAP_FILE = "United Kingdom England adm location map.svg"
+MAP_FILE = LEAGUE["map_file"]
 
 CLUBS = [
     ("bournemouth", "AFC Bournemouth"), ("arsenal", "Arsenal F.C."),
@@ -41,6 +46,14 @@ CLUBS = [
     ("newcastle", "Newcastle United F.C."), ("forest", "Nottingham Forest F.C."),
     ("sunderland", "Sunderland A.F.C."), ("tottenham", "Tottenham Hotspur F.C."),
 ]
+# **ラ・リーガは clubs.json から**（2026-09-26）。プレミアの一覧は上の決め打ちのまま
+if clubleague.name() != "premier" and (DATA / "clubs.json").exists():
+    _got = json.loads((DATA / "clubs.json").read_text(encoding="utf-8"))
+    _rows = _got.get("clubs", _got) if isinstance(_got, dict) else _got
+    if isinstance(_rows, dict):
+        _rows = [dict(v, key=k) for k, v in _rows.items()]
+    CLUBS = [(r["key"], str(r.get("wiki") or r.get("wiki_title") or r.get("club_title") or r.get("title")).replace("_", " "))
+             for r in _rows]
 
 
 def _rgb(code: str) -> tuple[int, int, int]:
@@ -58,8 +71,25 @@ def raw(title: str) -> str:
 def fetch_bounds() -> dict:
     """白地図の四隅（緯度経度）を Wikipedia の元データから取る。**覚えで書かない。**"""
     # England は別ページへの転送なので、実体のほうを読む
-    text = raw("Module:Location map/data/UK England")
+    text = raw(f"Module:Location map/data/{LEAGUE['map_module']}")
     got = {}
+    # **スペインは四隅ではなく式で書いてある**（2026-09-26）。カナリア諸島を左下に
+    # はめ込んだ地図で、経度 -10 を境に式が2つに分かれる:
+    #   x = 100*(($2 < -10)*($2+26.925)/(-13.2+26.925) + ($2 >= -10)*($2+9.9)/(4.8+9.9))
+    #   y = 100*(($2 < -10)*(38.1-$1)/(38.1-27.4) + ($2 >= -10)*(44.4-$1)/(44.4-34.7))
+    # 本土の四隅と、はめ込みの四隅を両方控える
+    xf = re.search(r"x\s*=\s*'([^']+)'", text)
+    yf = re.search(r"y\s*=\s*'([^']+)'", text)
+    if xf and yf and "$2 <" in xf.group(1):
+        nums = lambda f: [float(n) for n in re.findall(r"-?\d+\.?\d*", re.sub(r"\$\d", "", f))]
+        xs, ys = nums(xf.group(1)), nums(yf.group(1))
+        # xs: 100, -10, 26.925, -13.2, 26.925, -10, 9.9, 4.8, 9.9
+        # ys: 100, -10, 38.1, 38.1, 27.4, -10, 44.4, 44.4, 34.7
+        got = {"left": -xs[6], "right": xs[7], "top": ys[6], "bottom": abs(ys[8]),
+               "inset": {"split": xs[1], "left": -xs[2], "right": xs[3], "top": ys[2], "bottom": abs(ys[4])}}
+        m = re.search(r"image\s*=\s*[\"']([^\"']+)[\"']", text)
+        got["image"] = m.group(1) if m else MAP_FILE
+        return got
     for key in ("top", "bottom", "left", "right"):
         m = re.search(rf"{key}\s*=\s*(-?[\d.]+)", text)
         if not m:
@@ -157,8 +187,12 @@ def draw(key: str, spec: dict, base: Image.Image, crests: dict, facts: dict, out
     card.paste(shot.convert("RGB"), (map_x, top), shot)
 
     def xy(lat, lon):
-        x = (lon - bounds["left"]) / (bounds["right"] - bounds["left"]) * shot.width
-        y = (bounds["top"] - lat) / (bounds["top"] - bounds["bottom"]) * shot.height
+        b = bounds
+        # カナリア諸島ははめ込みの枠で測る（スペインの地図だけ）
+        if b.get("inset") and lon < b["inset"]["split"]:
+            b = b["inset"]
+        x = (lon - b["left"]) / (b["right"] - b["left"]) * shot.width
+        y = (b["top"] - lat) / (b["top"] - b["bottom"]) * shot.height
         return map_x + round(x), top + round(y)
 
     for other, at in spec["clubs"].items():
@@ -217,30 +251,35 @@ def main() -> int:
         collect()
         return 0
     spec = json.loads((DATA / "map.json").read_text(encoding="utf-8"))
-    base = Image.open(DATA / "england.png")
+    base = Image.open(DATA / LEAGUE["map_png"])
     facts = {}
     crests = {}
     for key, _t in CLUBS:
+        # **基礎DATAの板がまだ無いクラブは紋章だけ探す**（ラ・リーガは見本の1クラブから作る）
+        if not (DATA / f"{key}.json").exists():
+            continue
         facts[key] = json.loads((DATA / f"{key}.json").read_text(encoding="utf-8"))
         path = ROOT / facts[key]["crest"]
         if path.exists():
             crests[key] = Image.open(path).convert("RGBA")
     made = []
     for key in spec["clubs"]:
+        if key not in facts:
+            continue
         made.append(draw(key, spec, base, crests, facts[key],
-                         ROOT / f"assets/stats/pl_{key}_map.png"))
+                         ROOT / f"assets/stats/{LEAGUE['prefix']}{key}_map.png"))
         print(made[-1])
     # **白地図は CC BY-SA。**書き出した1枚ごとに控えを残さないと、
     # 概要欄に撮影者が出ない（review の「写真のクレジット」もここを見る）
     cred = ROOT / "assets" / "stats" / "credits.json"
     rows = json.loads(cred.read_text(encoding="utf-8")) if cred.exists() else []
-    src = next((r for r in rows if r.get("file") == "pl_map_base.png"), None)
+    src = next((r for r in rows if r.get("file") == f"{LEAGUE['prefix']}map_base.png"), None)
     if src:
         names = {out.name for out in made}
         rows = [r for r in rows if r.get("file") not in names]
         for out in made:
             rows.append(dict(src, file=out.name,
-                             note="イングランドの白地図に20クラブの紋章を置いたもの"))
+                             note=LEAGUE["map_note"]))
         cred.write_text(json.dumps(rows, ensure_ascii=False, indent=1), encoding="utf-8")
         print(f"控え: {cred}（{len(rows)}件）")
     return 0

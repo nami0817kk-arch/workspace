@@ -20,7 +20,11 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import plfaces  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "research" / "pl_data"
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import clubleague  # noqa: E402
+
+# リーグは CLUB_LEAGUE で切り替える（2026-09-26）
+DATA = clubleague.data_dir()
 OUT = ROOT / "assets" / "photos" / "pl"
 
 

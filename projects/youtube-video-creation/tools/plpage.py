@@ -43,24 +43,39 @@ def fig(path: str, caption: str, cls: str = "") -> str:
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "output" / "pages" / "pl20"
-THUMBS = ROOT / "output" / "pages" / "pl20thumbs"
+import sys as _sys
+_sys.path.insert(0, str(Path(__file__).resolve().parent))
+import clubleague  # noqa: E402
+
+# リーグは CLUB_LEAGUE で切り替える（2026-09-26 ラ・リーガ版）
+LEAGUE = clubleague.current()
+PFX = LEAGUE["prefix"]              # "pl_" / "ll_"
+TAG = PFX.rstrip("_")               # 台本名の "pl01" / "ll01"
+OUT = ROOT / "output" / "pages" / f"{TAG}20"
+THUMBS = ROOT / "output" / "pages" / f"{TAG}20thumbs"
 OUT.mkdir(parents=True, exist_ok=True)
 import subprocess
 import sys
 if "--thumbs" in sys.argv:
     THUMBS.mkdir(parents=True, exist_ok=True)
-    for _key, _num in [("bournemouth", "01"), ("arsenal", "02"), ("villa", "03"), ("brentford", "04"), ("brighton", "05"), ("chelsea", "06"), ("coventry", "07"), ("palace", "08"), ("everton", "09"), ("fulham", "10"), ("hull", "11"), ("ipswich", "12"), ("leeds", "13"), ("liverpool", "14"), ("mancity", "15"), ("manutd", "16"), ("newcastle", "17"), ("forest", "18"), ("sunderland", "19"), ("tottenham", "20")]:
-        _hits = sorted((ROOT / "scripts").glob(f"*pl{_num}_{_key}.md"))
+    for _key, _num in (PL_ORDER if clubleague.name() == "premier" else sorted(
+            {(m.group(2), m.group(1)) for f in (ROOT / "scripts").glob(f"*{TAG}*_*.md")
+             if (m := re.search(rf"{TAG}(\d\d)_([a-z]+)\.md$", f.name))}, key=lambda x: x[1])):
+        _hits = sorted((ROOT / "scripts").glob(f"*{TAG}{_num}_{_key}.md"))
         if _hits:
             subprocess.run([sys.executable, "-m", "src.cli", "thumbnail", str(_hits[-1]), "--out", str(THUMBS / f"{_key}.png")], cwd=ROOT, capture_output=True)
     print("thumbs", len(list(THUMBS.glob("*.png"))))
 
-ORDER = [("bournemouth", "01"), ("arsenal", "02"), ("villa", "03"), ("brentford", "04"),
+PL_ORDER = [("bournemouth", "01"), ("arsenal", "02"), ("villa", "03"), ("brentford", "04"),
          ("brighton", "05"), ("chelsea", "06"), ("coventry", "07"), ("palace", "08"),
          ("everton", "09"), ("fulham", "10"), ("hull", "11"), ("ipswich", "12"),
          ("leeds", "13"), ("liverpool", "14"), ("mancity", "15"), ("manutd", "16"),
          ("newcastle", "17"), ("forest", "18"), ("sunderland", "19"), ("tottenham", "20")]
+ORDER = PL_ORDER
+if clubleague.name() != "premier":
+    # 組んだ台本（scripts/*ll<番号>_<key>.md）から並べる。見本の1クラブから始めるため
+    ORDER = sorted({(m.group(2), m.group(1)) for f in (ROOT / "scripts").glob(f"*{TAG}*_*.md")
+                    if (m := re.search(rf"{TAG}(\d\d)_([a-z]+)\.md$", f.name))}, key=lambda x: x[1])
 
 LINE = re.compile(r"^(キャスター|解説|ナレーター|[^\s:：]+): (.*)$")
 ATTR = re.compile(r"^  ([a-z_]+): (.*)$")
@@ -82,13 +97,13 @@ def screen_name(path: str, key: str) -> str:
         return "クラブの話の実写"
     if "_episode/" in path:
         return "逸話の実写"
-    if "/photos/pl/" in path:
+    if f"/photos/{TAG}/" in path or "/photos/pl/" in path:
         return "オーナーの顔写真" if "owner" in n else "監督の顔写真" if "manager" in n else "名選手の顔写真"
-    m = re.match(rf"pl_{key}_data(\d)$", n)
+    m = re.match(rf"{PFX}{key}_data(\d)$", n)
     if m:
-        spec = json.loads((ROOT / f"research/pl_data/{key}.json").read_text(encoding="utf-8"))
+        spec = json.loads((clubleague.data_dir() / f"{key}.json").read_text(encoding="utf-8"))
         return f"基礎DATAの板（{spec['tiles'][int(m.group(1))][0]} が明るい）"
-    m = re.match(rf"pl_{key}_(gk|df|mf|fw)\d?(_f)?$", n)
+    m = re.match(rf"{PFX}{key}_(gk|df|mf|fw)\d?(_f)?$", n)
     if m:
         who = {"gk": "ゴールキーパー", "df": "ディフェンダー",
                "mf": "ミッドフィールダー", "fw": "フォワード"}[m.group(1)]
@@ -115,7 +130,7 @@ def card_html(c):
 
 blocks, missing = [], []
 for key, num in ORDER:
-    hits = sorted((ROOT / "scripts").glob(f"*pl{num}_{key}.md"))
+    hits = sorted((ROOT / "scripts").glob(f"*{TAG}{num}_{key}.md"))
     if not hits:
         missing.append(key)
         continue
@@ -193,12 +208,17 @@ figcaption{color:var(--hi);font-size:.76rem;margin-top:2px}
 td,th{border:1px solid var(--line);padding:3px 9px;text-align:left;font-variant-numeric:tabular-nums}
 """
 
+NOTE_LL = ('<div class="note"><b>プレミア版と同じ形です。</b>クラブを表す一言 → 題 → いま見る理由と基礎DATA → '
+           'クラブの話 → 特徴 → 逸話 → 語る3人 → 監督 → 登録選手 → 今季。<br>'
+           '<span style="color:#1f7a5a">→</span> の行は、そこから画面が変わるものです。'
+           '<b>画像は実際に画面に出るものを縮めて載せています。</b></div>')
 warn = (f'<br><b style="color:#a8321f">まだ組めていないクラブ: {"、".join(missing)}</b>'
         if missing else "")
-page = ("<title>プレミア20クラブの台本</title><style>" + CSS + "</style><main>"
-        "<h1>プレミア20クラブの台本</h1>"
+page = (f"<title>{LEAGUE['page_title']}</title><style>" + CSS + "</style><main>"
+        f"<h1>{LEAGUE['page_title']}</h1>"
         f'<p class="lead">2026-09-22 ／ {len(blocks)}クラブ ／ クラブ名を押すと開きます</p>'
-        '<div class="note"><b>クラブを表す一言から始まります。</b>タイトルはその次に読みます。<br><span style="color:#1f7a5a">→</span> の行は、そこから画面が変わるものです。<br>画面：<b>昨季の最終順位表</b>（自分の行だけ白い）／<b>トロフィーの板</b>／<b>ホームタウンの地図</b>／オーナーと名選手の<b>顔写真</b>／<b>登録選手の板は話している選手だけ明るい</b>。<br><b>画像は実際に画面に出るものを縮めて載せています</b>（下地・板・写真・順位表・サムネイル）。<br><b>9/22 夜に直したもの</b>：⑪耳で分からない言い回し（勝敗の無いスコア、48字を超える行、「です」が3行続く、アルファベット）を機械の点検に足し、20本すべて直しました。登録選手の節は1文ずつに割っています。⑨冒頭に「いま見る理由」の節（2〜3行）を足し、ショートはそこから始まります。日本人のいる回は1つ目がその選手。⑩監督の節を登録選手の前に移しました。⑧「今季の監督」の節を登録選手のあとに足しました（名前・就任・前職と顔写真。20人とも本人の記事で裏取り、写真は目で確認）。⑦「このクラブを語る3人」を1人1行から1人3行に（来た経緯・決定的な場面・残したもの。各選手の Wikipedia で裏取り）。1本の尺は4分〜4分50秒になりました。⑤トロフィーの板を20クラブすべて描き直し、ヨーロッパ合計ではなく大会ごと（チャンピオンズリーグ／ヨーロッパリーグ／カップウィナーズカップ／カンファレンスリーグ／フェアーズカップ／スーパーカップ／クラブワールドカップ／インタートトカップ）にしました。読み上げも同じ内訳です。⑥基礎DATAは20クラブとも同じ順（創立 → 愛称 → ホームタウン → 本拠地 → オーナー → タイトル歴 → クラブ記録 → 直近のタイトル → 昨季の順位）で話し、板もその並びです。<br><b>9/22 昼に直したもの</b>：①クラブごとに「へえ」となる逸話の節を1つ足しました（Wikipedia のクラブ記事で裏を取ったものだけ。例：フォレストが1886年にアーセナルへユニフォームを贈った／ハルが「ハル・タイガース」に改名されかけた）。②新しい読み手に20本を通しで読ませ、勝敗の無いスコア・冒頭で約束して答えていないこと・同じ数字の二度読み・耳で分からない言い回し（「季」「UEFA」）を直しました。③本の中の言い直し8本を直しました。④日本人選手が題にある回は、その選手の具体的な1行（出場数など）を足しました。構成（基礎DATA→クラブの話→逸話→名選手→登録選手→今季）と登録選手の節は変えていません。' + warn + '</div>'
+        + (NOTE_LL if clubleague.name() != "premier" else "")
+        + ('' if clubleague.name() != "premier" else '<div class="note"><b>クラブを表す一言から始まります。</b>タイトルはその次に読みます。<br><span style="color:#1f7a5a">→</span> の行は、そこから画面が変わるものです。<br>画面：<b>昨季の最終順位表</b>（自分の行だけ白い）／<b>トロフィーの板</b>／<b>ホームタウンの地図</b>／オーナーと名選手の<b>顔写真</b>／<b>登録選手の板は話している選手だけ明るい</b>。<br><b>画像は実際に画面に出るものを縮めて載せています</b>（下地・板・写真・順位表・サムネイル）。<br><b>9/22 夜に直したもの</b>：⑪耳で分からない言い回し（勝敗の無いスコア、48字を超える行、「です」が3行続く、アルファベット）を機械の点検に足し、20本すべて直しました。登録選手の節は1文ずつに割っています。⑨冒頭に「いま見る理由」の節（2〜3行）を足し、ショートはそこから始まります。日本人のいる回は1つ目がその選手。⑩監督の節を登録選手の前に移しました。⑧「今季の監督」の節を登録選手のあとに足しました（名前・就任・前職と顔写真。20人とも本人の記事で裏取り、写真は目で確認）。⑦「このクラブを語る3人」を1人1行から1人3行に（来た経緯・決定的な場面・残したもの。各選手の Wikipedia で裏取り）。1本の尺は4分〜4分50秒になりました。⑤トロフィーの板を20クラブすべて描き直し、ヨーロッパ合計ではなく大会ごと（チャンピオンズリーグ／ヨーロッパリーグ／カップウィナーズカップ／カンファレンスリーグ／フェアーズカップ／スーパーカップ／クラブワールドカップ／インタートトカップ）にしました。読み上げも同じ内訳です。⑥基礎DATAは20クラブとも同じ順（創立 → 愛称 → ホームタウン → 本拠地 → オーナー → タイトル歴 → クラブ記録 → 直近のタイトル → 昨季の順位）で話し、板もその並びです。<br><b>9/22 昼に直したもの</b>：①クラブごとに「へえ」となる逸話の節を1つ足しました（Wikipedia のクラブ記事で裏を取ったものだけ。例：フォレストが1886年にアーセナルへユニフォームを贈った／ハルが「ハル・タイガース」に改名されかけた）。②新しい読み手に20本を通しで読ませ、勝敗の無いスコア・冒頭で約束して答えていないこと・同じ数字の二度読み・耳で分からない言い回し（「季」「UEFA」）を直しました。③本の中の言い直し8本を直しました。④日本人選手が題にある回は、その選手の具体的な1行（出場数など）を足しました。構成（基礎DATA→クラブの話→逸話→名選手→登録選手→今季）と登録選手の節は変えていません。' + warn + '</div>')
         + "".join(blocks) + "</main>"
         + "<script>const IM=" + json.dumps(IMAGES, ensure_ascii=False)
         + ";for(const i of document.querySelectorAll('img[data-k]')){i.src=IM[i.dataset.k]||'';}</script>")

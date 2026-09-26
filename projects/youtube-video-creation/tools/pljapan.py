@@ -18,11 +18,16 @@ import argparse
 import json
 import time
 from pathlib import Path
+import sys
 
 import requests
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "research" / "pl_data"
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import clubleague  # noqa: E402
+
+# リーグは CLUB_LEAGUE で切り替える（2026-09-26）
+DATA = clubleague.data_dir()
 # カテゴリ名は記事名から作れない（Hull City A.F.C. → "Hull City A.F.C. players"）ので書く
 CLUBS = {
     "arsenal": "Arsenal F.C.", "bournemouth": "AFC Bournemouth", "brentford": "Brentford F.C.",

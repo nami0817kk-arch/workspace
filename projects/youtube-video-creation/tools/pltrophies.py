@@ -26,9 +26,14 @@ import argparse
 import json
 import re
 from pathlib import Path
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-DATA = ROOT / "research" / "pl_data"
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import clubleague  # noqa: E402
+
+# リーグは CLUB_LEAGUE で切り替える（2026-09-26）
+DATA = clubleague.data_dir()
 KEYS = ("arsenal bournemouth brentford brighton chelsea coventry everton forest "
         "fulham hull ipswich leeds liverpool mancity manutd newcastle palace "
         "sunderland tottenham villa").split()

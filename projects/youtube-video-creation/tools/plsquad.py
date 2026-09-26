@@ -16,7 +16,11 @@ import time
 import urllib.parse
 from pathlib import Path
 
-OUT = Path(__file__).resolve().parents[1] / "research" / "pl_data"
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import clubleague  # noqa: E402
+
+# リーグは CLUB_LEAGUE で切り替える（2026-09-26）
+OUT = clubleague.data_dir()
 
 
 def raw(title: str) -> str:
@@ -37,6 +41,12 @@ def raw(title: str) -> str:
 
 
 YOUTH = re.compile(r"U-?\d|Under-?\d|Youth|B team|Olympic", re.I)
+# **地域の代表は A代表に数えない**（2026-09-26 ラ・リーガ版）。FIFA に属さないので、
+# 「バスク代表で1試合」を「有名な選手」の物差しにできない。オヤルサバルは
+# いちばん下の行がバスク代表で、スペイン代表の61試合が消えていた
+REGIONAL = re.compile(r"Basque|Catalonia|Galicia|Andalusia|Canary|Asturias|Aragon|Valencian|Castile", re.I)
+MONTHS = {m: i for i, m in enumerate(["january", "february", "march", "april", "may", "june", "july",
+                                       "august", "september", "october", "november", "december"], 1)}
 
 
 def captain_label(other: str) -> str:
@@ -48,14 +58,18 @@ def captain_label(other: str) -> str:
 def senior_caps(text: str) -> tuple[str, int | None]:
     """A代表の名前と出場数。**年代別（U-21 など）は飛ばし、いちばん下の行を採る。**"""
     teams, caps = {}, {}
-    for m in re.finditer(r"^\s*\|\s*nationalteam(\d+)\s*=\s*(.+)$", text, re.M):
+    # **1行に何項目も書く記事がある**（2026-09-26。オヤルサバルは
+    # `| nationalyears5 = … | nationalteam5 = … | nationalcaps5 = 61` が1行）。
+    # 行頭で縛らず、リンクの `|` を先に潰してから項目で切る
+    flat = re.sub(r"\[\[[^\]|]*\|([^\]]*)\]\]", r"[[\1]]", text)
+    for m in re.finditer(r"\|\s*nationalteam(\d+)\s*=\s*([^|\n]*)", flat):
         name = re.sub(r"[\[\]']", "", m.group(2))
-        name = re.sub(r"\{\{[^}]*\}\}", "", name).split("|")[-1].strip()
+        name = re.sub(r"\{\{[^}]*\}\}", "", name).strip()
         teams[int(m.group(1))] = name
-    for m in re.finditer(r"^\s*\|\s*nationalcaps(\d+)\s*=\s*(\d+)", text, re.M):
+    for m in re.finditer(r"\|\s*nationalcaps(\d+)\s*=\s*(\d+)", flat):
         caps[int(m.group(1))] = int(m.group(2))
     for n in sorted(teams, reverse=True):
-        if teams[n] and not YOUTH.search(teams[n]):
+        if teams[n] and not YOUTH.search(teams[n]) and not REGIONAL.search(teams[n]):
             return teams[n], caps.get(n)
     return "", None
 
@@ -82,7 +96,11 @@ def squad(club_title: str) -> list[dict]:
         name = re.sub(r"\s*\(.*\)", "", (link.group(2) or link.group(1)) if link else nm.strip())
         page = raw(title)
         m = re.search(r"birth[_ ]date(?: and age)?\s*\|(?:\s*df=\w+\s*\|)?(?:\s*mf=\w+\s*\|)?"
-                      r"\s*(\d{4})\s*\|\s*(\d{1,2})\s*\|\s*(\d{1,2})", page, re.I)
+                      r"\s*(\d{4})\s*\|\s*(\d{1,2}|[A-Za-z]+)\s*\|\s*(\d{1,2})", page, re.I)
+        # **月を英語の名前で書く記事がある**（2026-09-26。オッリ・オスカルソンは
+        # `{{Birth date and age|2004|August|29|df=y}}` で、生年月日が空になっていた）
+        month = (m.group(2) if m and m.group(2).isdigit()
+                 else str(MONTHS.get(m.group(2).lower(), 0)) if m else "0")
         # **`|` で切ってはいけない**（2026-09-20 に根っこが分かった）。
         # 原文は `other=[[Captain (association football)|vice-captain]]` で、
         # `|` の手前だけ見ると副主将が「Captain」に見える。
@@ -93,7 +111,7 @@ def squad(club_title: str) -> list[dict]:
         players.append({
             "no": get("no"), "pos": get("pos"), "nat": get("nat"), "name": name,
             "page": title,
-            "dob": "%s-%02d-%02d" % (m.group(1), int(m.group(2)), int(m.group(3))) if m else "",
+            "dob": "%s-%02d-%02d" % (m.group(1), int(month), int(m.group(3))) if m and int(month) else "",
             # **副主将を主将に数えない**（2026-09-19 にリヴァプールで4人が「主将」になった）。
             # 原文は `other=[[Captain (association football)|vice-captain]]` のように書く
             # **見出しの字そのもので決める。**原文は

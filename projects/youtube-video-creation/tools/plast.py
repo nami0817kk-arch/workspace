@@ -33,7 +33,11 @@ LINE = (255, 255, 255, 26)
 # 左の色帯。原文の result1..20 に合わせた（CL / EL / カンファレンス / 降格）
 BANDS = {"cl": (46, 168, 79), "el": (26, 63, 160), "ecl": (79, 168, 224),
          "rel": (206, 47, 47)}
-DATA = Path("research/pl_data/last_season.json")
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import clubleague  # noqa: E402
+
+# リーグは CLUB_LEAGUE で切り替える（2026-09-26）
+DATA = clubleague.data_dir() / "last_season.json"
 
 
 def _rgb(code: str) -> tuple[int, int, int]:
