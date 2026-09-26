@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{% block title %}{% endblock %}</title>
 <meta name="description" content="{% block description %}{% endblock %}">
-{% if page != "404.html" %}<link rel="canonical" href="{{ SITE_URL }}/{% if page != 'index.html' %}{{ page }}{% endif %}">{% endif %}
+{% if page != "404.html" %}<link rel="canonical" href="{{ SITE_URL }}/{% if page != 'index.html' %}{{ page[:-5] }}{% endif %}">{% endif %}
 <meta name="google-site-verification" content="{{ SEARCH_CONSOLE_TOKEN }}">
 {% if ADSENSE_CLIENT %}
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client={{ ADSENSE_CLIENT }}" crossorigin="anonymous"></script>
@@ -42,9 +42,9 @@
 </main>
 <footer>
   <nav>
-    <a href="/operator.html">運営者情報</a>
-    <a href="/privacy.html">プライバシーポリシー</a>
-    <a href="/contact.html">お問い合わせ</a>
+    <a href="/operator">運営者情報</a>
+    <a href="/privacy">プライバシーポリシー</a>
+    <a href="/contact">お問い合わせ</a>
   </nav>
   <p>© 2026 {{ OWNER }}</p>
 </footer>
