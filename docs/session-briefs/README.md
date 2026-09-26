@@ -12,11 +12,11 @@ docs/session-briefs/method1.md を読んで、そこに書いてある担当を�
 |---|---|
 | `method1.md` | 方式1 公的データのサイト群（社会保険・IPA 過去問・旅行×気候・補助金・車・不動産） |
 | `method2.md` | 方式2 AI 画像の素材とグッズ |
-| `method3.md` | 方式3 ブラウザゲーム |
+| `method3.md` | 方式3 ブラウザゲーム — **2026-09-26 に畳んだ**（理由は台帳） |
 | `method5.md` | 方式5 パズル本（Amazon KDP） |
 | `method6.md` | 方式6 Notion テンプレート |
 | `method7.md` | 方式7 Reddit の日替わりパズル |
-| `method8.md` | 方式8 Apify の道具 |
+| `method8.md` | 方式8 Apify の道具（**2026-09-26 畳んだ**。理由は台帳） |
 
 方式4（受託）と方式9（有料通知）は廃止済み。指示書は無い。
 
