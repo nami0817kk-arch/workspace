@@ -80,7 +80,7 @@ class _SupportScreenState extends State<SupportScreen> {
                       Text(
                         '広告はシーズンの切れ目に1回だけ出る。'
                         '試合中やメニューには割り込まない。'
-                        '始めてから${Monetization.freeSeasons}シーズンのあいだは出ない。',
+                        'バナーも出さない。',
                         style: muted,
                       ),
                       const SizedBox(height: 12),
