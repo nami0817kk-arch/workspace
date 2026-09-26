@@ -116,6 +116,29 @@
     return Math.floor((4 * perDay + 3) / 6);
   }
 
+  function band(rows, amount) {
+    for (var i = 0; i < rows.length; i++) {
+      if (amount >= rows[i][0] && (rows[i][1] === null || amount <= rows[i][1])) return rows[i];
+    }
+    return null;
+  }
+
+  // 所得税（月額表・甲欄の電算機計算の特例、令和8年分）。extras.income_tax_yen と同じ。
+  function incomeTaxYen(extras, asOfIso, afterSocial, dependents) {
+    var w = periodFor(extras.withholding, asOfIso);
+    if (!w) return null;
+    var a = Math.max(afterSocial, 0);
+    var e = band(w.employment_deduction, a);
+    var kyuyo = Math.ceil(a * e[2] / 100000) + e[3];
+    var basic = band(w.basic_deduction, a)[2];
+    var b = a - kyuyo - w.dependent_deduction * (dependents || 0) - basic;
+    if (b <= 0) return 0;
+    var r = band(w.rates, b);
+    var num = b * r[2] - r[3] * 100000;
+    if (num <= 0) return 0;
+    return Math.floor((num + 500000) / 1000000) * 10;
+  }
+
   function prefFull(short) {
     if (short === '北海道') return short;
     if (short === '東京') return '東京都';
@@ -126,7 +149,7 @@
   var api = {
     regimeFor: regimeFor, evaluate: evaluate, tableFor: tableFor, estimate: estimate,
     employmentYen: employmentYen, kokuminNenkinYen: kokuminNenkinYen,
-    pensionIncreasePerYear: pensionIncreasePerYear, sicknessDailyYen: sicknessDailyYen, prefFull: prefFull
+    pensionIncreasePerYear: pensionIncreasePerYear, sicknessDailyYen: sicknessDailyYen, incomeTaxYen: incomeTaxYen, prefFull: prefFull
   };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.ShahoCalc = api;

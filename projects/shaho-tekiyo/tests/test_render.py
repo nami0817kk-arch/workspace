@@ -189,7 +189,7 @@ def test_どのページからも月収別の一覧へ行ける(site):
 
 def test_計算方法と更新履歴のページ(site):
     html = (site / "keisan.html").read_text(encoding="utf-8")
-    for src in ("kyoukaikenpo.or.jp", "mhlw.go.jp/content/001692566.pdf", "nenkin.go.jp"):
+    for src in ("kyoukaikenpo.or.jp", "mhlw.go.jp/content/001692566.pdf", "nenkin.go.jp", "nta.go.jp"):
         assert src in html, src
     assert "更新履歴" in html
     assert "keisan.html" in (site / "index.html").read_text(encoding="utf-8")
@@ -200,3 +200,14 @@ def test_計算機に時給の入力と正式な都道府県名(site):
     assert 'id="hourly"' in html
     assert '<option value="東京" selected>東京都</option>' in html
     assert 'id="extras-data"' in html
+
+
+def test_月収20万円のページに所得税と手取り(site):
+    html = (site / "getsushu" / "20man.html").read_text(encoding="utf-8")
+    assert "</span></th><td>3,290円" in html  # 所得税
+    assert "<strong>167,330円</strong>" in html  # 200,000 − 28,380 − 1,000 − 3,290
+
+
+def test_計算機に通勤手当と扶養の人数(site):
+    html = (site / "index.html").read_text(encoding="utf-8")
+    assert 'id="commute"' in html and 'id="dependents"' in html

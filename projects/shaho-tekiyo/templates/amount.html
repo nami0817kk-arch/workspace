@@ -15,7 +15,7 @@
 <p class="updated">{{ era }}の料率（{{ period }}）で計算</p>
 
 <div class="verdict ok">東京なら月 {{ "{:,}".format(tokyo.total_yen) }}円 引かれて、残りは {{ "{:,}".format(tokyo.take_home_yen) }}円</div>
-{% set net = tokyo.take_home_yen - koyo %}
+{% set net = tokyo.take_home_yen - koyo - (tax or 0) %}
 
 <p>
   月収{{ man }}万円（{{ "{:,}".format(pay) }}円）で勤務先の社会保険に入ると、給与から引かれる保険料（本人負担分）は、
@@ -32,7 +32,8 @@
   <tr><th>厚生年金保険料</th><td>{{ "{:,}".format(tokyo.pension_yen) }}円</td></tr>
   <tr class="current"><th>合計</th><td><strong>{{ "{:,}".format(tokyo.total_yen) }}円</strong></td></tr>
   <tr><th>雇用保険料<span class="sub">週20時間以上なら加入前から引かれている分</span></th><td>{{ "{:,}".format(koyo) }}円</td></tr>
-  <tr><th>手取りの目安<span class="sub">所得税・住民税は含まない</span></th><td><strong>{{ "{:,}".format(net) }}円</strong></td></tr>
+  {% if tax is not none %}<tr><th>所得税<span class="sub">扶養0人。給与から天引きされる額の目安</span></th><td>{{ "{:,}".format(tax) }}円</td></tr>{% endif %}
+  <tr><th>手取りの目安<span class="sub">{% if tax is none %}所得税・{% endif %}住民税は含まない</span></th><td><strong>{{ "{:,}".format(net) }}円</strong></td></tr>
 </table>
 </div>
 <p class="hint">会社も同じ額の社会保険料を負担しています（労使折半）。</p>

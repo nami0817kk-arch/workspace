@@ -78,6 +78,11 @@ def test_保険料がpythonと一致する():
     assert not mismatches, mismatches[:5]
 
 
+# 所得税の突き合わせ: 区切りの前後（給与所得控除・基礎控除・税率の境目）を含めて広く。
+TAX_CASES = [[a, d] for a in (0, 50_000, 100_000, 158_333, 158_334, 170_620, 299_999, 300_000, 549_999, 550_000,
+                              708_330, 708_331, 900_000, 2_120_833, 2_120_834, 2_300_000, 5_000_000) for d in (0, 1, 3)]
+
+
 def test_雇用保険料_年金_傷病手当金_県名もpythonと一致する():
     pays = [0, 88_000, 100_000, 100_100, 100_101, 153_333, 250_000]
     standards = [58_000, 88_000, 98_000, 170_000, 650_000, 1_390_000]
@@ -91,6 +96,8 @@ const out = {{
   inc: {json.dumps(standards)}.map(s => calc.pensionIncreasePerYear(ex, s)),
   sick: {json.dumps(standards)}.map(s => calc.sicknessDailyYen(s)),
   pref: {json.dumps(list(premium.PREFECTURES), ensure_ascii=False)}.map(calc.prefFull),
+  tax: {json.dumps(TAX_CASES)}.map(c => calc.incomeTaxYen(ex, '2026-10-01', c[0], c[1])),
+  taxOut: calc.incomeTaxYen(ex, '2027-01-01', 200000, 0),
 }};
 process.stdout.write(JSON.stringify(out));
 """
@@ -102,3 +109,5 @@ process.stdout.write(JSON.stringify(out));
     assert got["inc"] == [extras.pension_increase_per_year(s) for s in standards]
     assert got["sick"] == [extras.sickness_daily_yen(s) for s in standards]
     assert got["pref"] == [extras.pref_full(p) for p in premium.PREFECTURES]
+    assert got["tax"] == [extras.income_tax_yen(date(2026, 10, 1), a, d) for a, d in TAX_CASES]
+    assert got["taxOut"] is None

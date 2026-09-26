@@ -67,9 +67,24 @@
   </div>
 
   <div class="field">
-    <label for="extra">通勤手当・残業代などの見込み（1か月）</label>
+    <label for="commute">通勤手当（1か月）</label>
+    <input type="number" id="commute" min="0" step="1000" value="0" inputmode="numeric">
+    <p class="hint">社会保険料・雇用保険料の計算には含めます（標準報酬月額は通勤手当も含めた報酬で決まるため）。所得税はかかりません。</p>
+  </div>
+
+  <div class="field">
+    <label for="extra">残業代などの見込み（1か月）</label>
     <input type="number" id="extra" min="0" step="1000" value="0" inputmode="numeric">
-    <p class="hint">加入するかどうかの判定には含めませんが、保険料の計算には含めます（標準報酬月額は通勤手当なども含めた報酬で決まるため）。</p>
+    <p class="hint">加入するかどうかの判定には含めませんが、保険料と所得税の計算には含めます。</p>
+  </div>
+
+  <div class="field">
+    <label for="dependents">扶養している家族の人数（所得税の計算用）</label>
+    <select id="dependents">
+      <option value="0" selected>0人</option><option value="1">1人</option><option value="2">2人</option>
+      <option value="3">3人</option><option value="4">4人</option><option value="5">5人</option>
+    </select>
+    <p class="hint">年末調整の書類（扶養控除等申告書）に書く、配偶者・16歳以上の扶養親族などの数です。配偶者や親の扶養に入っている人は0人。</p>
   </div>
 
   <div class="field">
@@ -115,10 +130,10 @@
     return rawValue === 'today' ? todayIso() : rawValue;
   }
 
-  function premiumHtml(asOf, wage, extra) {
+  function premiumHtml(asOf, wage, extra, commute, dependents) {
     var prefecture = document.getElementById('prefecture').value;
     var age = document.getElementById('age-40-64').checked;
-    var pay = wage + extra;
+    var pay = wage + extra + commute;
     var p = calc.estimate(TABLES, asOf, prefecture, pay, age);
     var html = '<h2>引かれる額の目安（1か月・本人負担分）</h2>';
     if (!p) {
@@ -126,7 +141,8 @@
         + '（健康保険料率は毎年3月分から改定されます）。「今日時点」を選ぶと、いまの料率での目安を出します。</p>';
     }
     var koyo = calc.employmentYen(EXTRAS, asOf, pay);
-    var net = p.takeHome - (koyo || 0);
+    var tax = koyo === null ? null : calc.incomeTaxYen(EXTRAS, asOf, pay - commute - p.total - koyo, dependents);
+    var net = p.takeHome - (koyo || 0) - (tax || 0);
     html += '<div class="table-wrap"><table class="plain premium">';
     html += '<tr><th>健康保険料' + (age ? '（介護保険料を含む）' : '') + '</th><td>' + yen(p.health) + '</td></tr>';
     html += '<tr><th>子ども・子育て支援金</th><td>' + yen(p.kodomo) + '</td></tr>';
@@ -134,7 +150,10 @@
     html += '<tr class="current"><th>社会保険料の合計</th><td><strong>' + yen(p.total) + '</strong>（年 ' + yen(p.total * 12) + '）</td></tr>';
     if (koyo !== null) {
       html += '<tr><th>雇用保険料<span class="sub">週20時間以上なら加入前から引かれている分</span></th><td>' + yen(koyo) + '</td></tr>';
-      html += '<tr><th>手取りの目安<span class="sub">' + yen(pay) + 'から上の全部を引いた額。所得税・住民税は含まない</span></th><td><strong>' + yen(net) + '</strong></td></tr>';
+      if (tax !== null) {
+        html += '<tr><th>所得税<span class="sub">扶養' + dependents + '人。給与から天引きされる額の目安</span></th><td>' + yen(tax) + '</td></tr>';
+      }
+      html += '<tr><th>手取りの目安<span class="sub">' + yen(pay) + 'から上の全部を引いた額' + (tax === null ? '。所得税・' : '。') + '住民税は含まない</span></th><td><strong>' + yen(net) + '</strong></td></tr>';
     } else {
       html += '<tr><th>' + yen(pay) + 'から引いた残り</th><td>' + yen(p.takeHome) + '</td></tr>';
     }
@@ -184,6 +203,9 @@
     var isStudent = document.getElementById('is-student').checked;
     var extra = parseInt(document.getElementById('extra').value, 10);
     if (isNaN(extra) || extra < 0) extra = 0;
+    var commute = parseInt(document.getElementById('commute').value, 10);
+    if (isNaN(commute) || commute < 0) commute = 0;
+    var dependents = parseInt(document.getElementById('dependents').value, 10) || 0;
 
     var out = document.getElementById('result');
     if (isNaN(hours) || isNaN(wage) || isNaN(employerSize)) {
@@ -216,7 +238,7 @@
     html += '</ul>';
     html += '<p class="hint">この判定は「継続して2か月を超える雇用が見込まれること」を満たしている前提です。'
       + '短期のアルバイトなど見込みが2か月以下の場合は対象外です。</p>';
-    if (r.eligible) html += premiumHtml(asOf, wage, extra);
+    if (r.eligible) html += premiumHtml(asOf, wage, extra, commute, dependents);
     out.innerHTML = html;
   }
 

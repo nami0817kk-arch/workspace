@@ -35,3 +35,23 @@ def test_傷病手当金の日額(standard, expected):
 @pytest.mark.parametrize("short, full", [("北海道", "北海道"), ("東京", "東京都"), ("大阪", "大阪府"), ("京都", "京都府"), ("沖縄", "沖縄県")])
 def test_都道府県の正式名(short, full):
     assert extras.pref_full(short) == full
+
+
+@pytest.mark.parametrize(
+    "after_social, dependents, expected",
+    [
+        # 国税庁「電算機計算の特例について（令和8年分）」の計算例（配偶者も1人と数える）
+        (175_000, 2, 210),
+        (446_000, 8, 940),
+        (775_200, 3, 59_470),
+        # 月収20万円・東京: 200,000 − 社保28,380 − 雇用1,000 = 170,620 → 給与所得控除57,853・基礎控除48,334 → ×5.105% = 3,289.3
+        (170_620, 0, 3_290),
+        (85_594, 0, 0),  # 控除のほうが大きい
+    ],
+)
+def test_所得税は国税庁の計算例と一致する(after_social, dependents, expected):
+    assert extras.income_tax_yen(_AS_OF, after_social, dependents) == expected
+
+
+def test_所得税は令和8年分だけ():
+    assert extras.income_tax_yen(date(2027, 1, 1), 200_000) is None

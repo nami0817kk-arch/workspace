@@ -207,6 +207,9 @@ def _build_amount_pages() -> None:
                 rows=rows,
                 neighbors=all_amounts[max(0, i - 1): i + 2],
                 koyo=extras.employment_yen(as_of, pay),
+                tax=extras.income_tax_yen(
+                    as_of, pay - a["r"].total_yen - extras.employment_yen(as_of, pay), 0
+                ),
                 kokumin=extras.kokumin_nenkin_yen(as_of),
                 pension_inc=extras.pension_increase_per_year(a["r"].pension_standard),
                 sick=extras.sickness_daily_yen(a["r"].health_standard),
@@ -227,6 +230,7 @@ def amount_page_paths() -> list[str]:
 
 # 更新履歴（新しい順）。計算や料率を変えたら、ここに1行足す。
 HISTORY: tuple[tuple[str, str], ...] = (
+    ("2026-09-26", "所得税（国税庁の月額表・甲欄の電算機計算の特例、令和8年分）を手取りの目安に追加。通勤手当と残業代を分けて入力できるように"),
     ("2026-09-26", "雇用保険料・手取りの目安、加入前との比べ方、将来の年金と傷病手当金の目安、時給での入力を追加"),
     ("2026-09-26", "月収別の保険料のページ（8万〜25万円）を追加"),
     ("2026-09-26", "公開。賃金要件の撤廃日を令和8年政令第275号（2026年10月1日）で確認し、協会けんぽ 令和8年度の料率で保険料の目安を追加"),
