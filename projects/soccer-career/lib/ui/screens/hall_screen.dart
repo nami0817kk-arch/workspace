@@ -223,8 +223,29 @@ class _RecordsCard extends StatelessWidget {
     final theme = Theme.of(context);
     final records = hall.records;
     if (records.isEmpty) return const SizedBox.shrink();
-    return Card(
-      color: theme.colorScheme.surfaceContainerHighest,
+    // **窪んだ受け皿にする。** 一段暗いだけの板だと、白いカードの列に
+    // 「あとから貼った灰色の紙」として浮く（切り札の受け皿で先に踏んだのと
+    // 同じ形）。記録は盤にはめ込んであるほうが、追う的らしい。
+    final tray = theme.colorScheme.surfaceContainerHighest;
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Color.alphaBlend(const Color(0x3D000000), tray),
+            tray,
+            Color.alphaBlend(
+              theme.colorScheme.surface.withValues(alpha: 0.45),
+              tray,
+            ),
+          ],
+          stops: const [0.0, 0.35, 1.0],
+        ),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: theme.colorScheme.outlineVariant),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(

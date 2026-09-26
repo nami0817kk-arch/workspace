@@ -346,12 +346,12 @@ class _ScenarioView extends StatelessWidget {
                         runSpacing: 4,
                         children: [
                           // 絵の中の白い丸がどこなのかを、言葉でも1つだけ添える。
-                          _Tag(scenario.spot.label),
-                          _Tag(match.opponentStyle.label),
+                          Tag(scenario.spot.label),
+                          Tag(match.opponentStyle.label),
                           // ノリ。成功を重ねるほど決まるようになる。
                           // 出さないと「なぜ決まったのか」が分からない。
                           if (match.momentum > 0)
-                            _Tag(
+                            Tag(
                               'ノリ ${'●' * match.momentum}'
                               '${'○' * (Formulas.momentumMax - match.momentum)}'
                               ' 決まる確率 ×'
@@ -360,7 +360,7 @@ class _ScenarioView extends StatelessWidget {
                               foreground: theme.colorScheme.onTertiaryContainer,
                             ),
                           if (match.situationLabel != null)
-                            _Tag(
+                            Tag(
                               match.situationLabel!,
                               background: match.margin < 0
                                   ? theme.colorScheme.errorContainer
@@ -372,31 +372,31 @@ class _ScenarioView extends StatelessWidget {
                           // 監督の期待にあと一歩なら、局面の側に出す。
                           // 終盤の1本が「シーズンの1本」になる。
                           if (objectiveReach != null)
-                            _Tag(
+                            Tag(
                               objectiveReach!,
                               background: theme.colorScheme.primaryContainer,
                               foreground: theme.colorScheme.onPrimaryContainer,
                             ),
                           if (scorerChase != null)
-                            _Tag(
+                            Tag(
                               scorerChase!,
                               background: theme.colorScheme.primaryContainer,
                               foreground: theme.colorScheme.onPrimaryContainer,
                             ),
                           if (promiseReach != null)
-                            _Tag(
+                            Tag(
                               promiseReach!,
                               background: theme.colorScheme.tertiaryContainer,
                               foreground: theme.colorScheme.onTertiaryContainer,
                             ),
                           if (match.bigMatch)
-                            _Tag(
+                            Tag(
                               '大一番',
                               background: theme.colorScheme.tertiaryContainer,
                               foreground: theme.colorScheme.onTertiaryContainer,
                             ),
                           if (match.weakFootMoment)
-                            _Tag(
+                            Tag(
                               '逆足で対応',
                               background: theme.colorScheme.errorContainer,
                               foreground: theme.colorScheme.onErrorContainer,
@@ -558,36 +558,6 @@ class _TrumpCard extends StatelessWidget {
   }
 }
 
-/// 局面に添える札。**`Chip` は押せる部品なので、押せない札に使うと
-/// タップ領域のぶんだけ縦に太る**（1行 32px）。読むだけの札は、
-/// 文字の周りの余白だけでいい（1行 22px）。
-/// 局面の札は最大3行並ぶので、ここが 10px 違うと 30px 効く。
-class _Tag extends StatelessWidget {
-  const _Tag(this.label, {this.background, this.foreground});
-
-  final String label;
-  final Color? background;
-  final Color? foreground;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-      decoration: BoxDecoration(
-        color: background ?? theme.colorScheme.surfaceContainerHighest,
-        borderRadius: BorderRadius.circular(6),
-      ),
-      child: Text(
-        label,
-        style: theme.textTheme.labelMedium?.copyWith(
-          color: foreground ?? theme.colorScheme.onSurfaceVariant,
-        ),
-      ),
-    );
-  }
-}
-
 class _OptionButton extends StatelessWidget {
   const _OptionButton({
     required this.option,
@@ -670,7 +640,12 @@ class _OptionButton extends StatelessWidget {
       style: OutlinedButton.styleFrom(
         alignment: Alignment.centerLeft,
         padding: const EdgeInsets.fromLTRB(0, 0, 16, 0),
-        backgroundColor: theme.colorScheme.surfaceContainerLowest,
+        // **カードと同じ面を使う。** `surfaceContainerLowest` を直に書いて
+        // いたら、暗いほうで地（#121210）より暗い面（#0B0B09）になり、
+        // 明るいほうと逆に沈んで見えた。`cardTheme` から引けば、
+        // テーマを触ったときに勝手に付いてくる。
+        backgroundColor:
+            theme.cardTheme.color ?? theme.colorScheme.surfaceContainerLowest,
         shadowColor: theme.colorScheme.shadow,
         elevation: 1,
         side: BorderSide(color: theme.colorScheme.outlineVariant),
@@ -731,7 +706,7 @@ class _OptionButton extends StatelessWidget {
               if (option.outcome != Outcome.play)
                 // 手が通る確率と、それが点になる確率は別。
                 // 「決まるのは半分ほど」を数字で見せておく。
-                _Tag(
+                Tag(
                   option.outcome == Outcome.goal
                       ? 'ゴール ${(chance * Formulas.goalConversion * 100).round()}%'
                       : 'アシスト ${(chance * assistConversion * 100).round()}%',
