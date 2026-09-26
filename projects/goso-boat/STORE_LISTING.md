@@ -39,58 +39,78 @@
 
 ## English description
 
-Transporting prisoners across the river — but if the guards are outnumbered, they escape!
+You're the escort: ferry prisoners across the river — but if the guards are outnumbered, they escape!
 Load officers and prisoners into the boat and get everyone to the far bank without losing a single one.
 
 ■ One simple rule
 On a bank or in the boat, prisoners escape if they outnumber the guards. Leave prisoners with no guard, and they escape too.
 
+■ Plan your moves on a river island
+Leave people on an island mid-river. The boat can't go straight across — it stops at the island on the way.
+But the island needs guards too. Who stays where?
+
 ■ New helpers, tougher prisoners
-• Chief — guards two prisoners alone
-• Police dog — guards, but can't row
 • Boss — needs two guards alone
+• Police dog — guards, but can't row
+• Chief — guards two prisoners alone
 • Cuffed pair — chained together, takes two seats
-• Island — leave people mid-river, but it needs guards too
 
 ■ 60 levels, 3 stars for the shortest route
 Every level is solvable. Cross in the fewest trips to earn 3 stars.
 Stuck? A hint shows your next move. Undo and restart any time. Plays offline.
 
-Promotional text: Get the prisoners across the river — without letting a single one escape. 60 brain-teasing levels with chiefs, bosses, cuffed pairs, police dogs and an island.
+Promotional text: Escort prisoners across the river without letting one escape. A river island, a boss, a police dog and cuffed pairs. 60 levels; the shortest route earns 3 stars.
 
 ## カテゴリ
 
 ゲーム ＞ パズル（主）、ゲーム ＞ ボード（副）。年齢区分は 4+ を目指す（暴力の表現は無し。警棒は持っているだけ）。
 
+## 似たアプリ（2026-09-26 調査、iTunes Search API）
+
+| アプリ | 評価件数 | 中身 | こちらとの違い |
+|---|---|---|---|
+| ぷくぷく川渡り（BEAK、日本、2026-06） | 0 | 動物の川渡り32面。「2席使う子」「漕げる子」「人数の釣り合い」がある | **いちばん近い。** こちらは題材が護送、**中州・ボス・警察犬**が向こうに無い、60面、英語あり |
+| River Crossing IQ（米国、2017〜） | 529 | 狼・羊・キャベツ、夫婦などの古典集。絵は簡素 | 古典の詰め合わせ。こちらは1つの世界観で段階的に仕掛けが増える |
+| River Crossing IQ Logic（米国、2017〜） | 213 | 古典の詰め合わせ＋新作 | 同上 |
+
+- **「警官が囚人を逃がさず護送する」川渡りは、App Store に見当たらない。** 広告ではよく見る遊びなのに、それを遊べるアプリが無い。ここを1枚目で見せる
+- 川渡りの分野は探す人も競合も少ない（米国最大でも評価529件）。人は「脳トレ」「論理パズル」「脱獄」の検索から呼ぶ
+- **Apple 4.3（似たアプリ）への備え:** 掲載文・画像では、向こうに無い要素（護送の題材・中州・ボス・警察犬・最短手数の星）を前に出す。
+  動物・食べられる、といった向こうの言葉や絵は使わない。審査で聞かれたら、面は自前の探索で作り全面を機械で検査している、と答えられる
+
 ## スクリーンショット（6.9インチ縦、最初の3枚が検索結果に出るので勝負はそこ）
 
-1. 「囚人を向こう岸へ。逃がすな！」 … 舟に警官と囚人が乗って渡っている場面
+1. 「警官が囚人を護送。1人も逃がすな！」 … 舟に警官と囚人が乗って渡っている場面（**ほかに無い題材を一目で**）
 2. 「見張りが足りないと…脱走！」 … 囚人に「!」が出て逃げる場面と「脱走された」の札
-3. 「看守長・ボス・手錠・警察犬」 … 役の紹介を並べる
-4. 「全60面。最短で渡れば★3」 … ステージ選択
-5. 「ヒントつき。通信なしで遊べる」 … ヒントで光っている場面
+3. 「川の中州で作戦を立てろ」 … 中州のある面（**ほかの川渡りアプリに無い仕掛け**）
+4. 「ボス・警察犬・看守長・手錠の2人」 … 役の紹介を並べる
+5. 「全60面。最短で渡れば★3」 … ステージ選択（ヒントで光っている場面を添える）
 
 広告で見た人が「あの広告のゲームだ」と気づけるよう、1枚目は広告と同じ構図（川・舟・警官と囚人）にする。
 ただし広告の絵柄そのものは真似しない（Apple 4.3 と著作権の両方のため）。
 
 ## プロモーションテキスト（170字まで・審査なしで差し替えられる）
 
-囚人を舟で向こう岸へ。でも見張りが足りないと、すぐに脱獄！ 看守長・ボス・手錠の2人・警察犬、そして川の中州。全60面の川渡りパズルに挑戦しよう。
+警官が囚人を舟で護送する川渡りパズル。見張りが足りないと、すぐに脱走！ 川の中州、ボス、警察犬、手錠の2人。全60面、最短で渡れば★3。
 
 ## 説明文
 
-囚人を向こう岸へ運ぶ護送の仕事。でも見張りが足りないと、囚人はすぐに逃げ出してしまう――。
-警官と囚人を舟に乗せ、誰も逃がさずに全員を向こう岸へ渡しきる、頭を使う川渡りパズルです。
+あなたの仕事は、囚人を舟で向こう岸へ運ぶ「護送」。
+でも見張りが足りないと、囚人はすぐに逃げ出してしまう――。
+警官と囚人を舟に乗せ、1人も逃がさずに全員を向こう岸へ渡しきる、頭を使う川渡りパズルです。
 
 ■ 決まりはひとつ
 岸でも舟の上でも、見張りが囚人より少ないと逃げる。見張りのいない所に囚人を残しても逃げる。
 
+■ 川の中州で作戦を立てる
+川の途中にある中州に、人を残しておける。岸から岸へ直接は行けず、中州を経由して1区間ずつ運ぶ。
+でも中州でも見張りが要る。誰をどこに残すか、先を読む力が試される。
+
 ■ 新しい仲間と、やっかいな囚人
-・看守長 … 1人で2人分を見張れる
-・警察犬 … 見張れるけれど舟は漕げない
 ・ボス … 1人でも見張りが2人分いる
+・警察犬 … 見張れるけれど舟は漕げない
+・看守長 … 1人で2人分を見張れる
 ・手錠の2人 … 離れられず、舟の席も2つ使う
-・中州 … 川の途中に人を残せる。でも中州でも見張りが要る
 
 ■ 全60面・最短クリアで★3
 すべての面は必ず解けます。最短の回数で渡りきれば星3つ。
