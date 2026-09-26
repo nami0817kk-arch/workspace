@@ -24,5 +24,57 @@
     "source": "https://en.wikipedia.org/wiki/Mart%C3%ADn_Zubimendi"
    }
   ]
+ },
+ {
+  "club": "バルセロナ",
+  "legends": [
+   {
+    "name": "シャビ・エルナンデス",
+    "era": "1998-2015",
+    "numbers": "リーグ505試合58得点",
+    "why": "3冠の中心",
+    "source": "https://en.wikipedia.org/wiki/Xavi_(footballer,_born_1980)"
+   },
+   {
+    "name": "アンドレス・イニエスタ",
+    "era": "2002-2018",
+    "numbers": "リーグ442試合35得点",
+    "why": "終了間際の同点弾",
+    "source": "https://en.wikipedia.org/wiki/Andr%C3%A9s_Iniesta"
+   },
+   {
+    "name": "ロナウジーニョ",
+    "era": "2003-2008",
+    "numbers": "リーグ145試合70得点",
+    "why": "敵地で拍手",
+    "source": "https://en.wikipedia.org/wiki/Ronaldinho"
+   }
+  ]
+ },
+ {
+  "club": "アトレティコ・マドリード",
+  "legends": [
+   {
+    "name": "フェルナンド・トーレス",
+    "era": "2001-07, 2015-18",
+    "numbers": "リーグ321試合109得点",
+    "why": "19歳で主将。最後の試合で2得点",
+    "source": "https://en.wikipedia.org/wiki/Fernando_Torres"
+   },
+   {
+    "name": "ディエゴ・ゴディン",
+    "era": "2010-2019",
+    "numbers": "リーグ277試合17得点",
+    "why": "2014年の優勝を決めた同点弾",
+    "source": "https://en.wikipedia.org/wiki/Diego_God%C3%ADn"
+   },
+   {
+    "name": "アントワーヌ・グリーズマン",
+    "era": "2014-19, 2021-26",
+    "numbers": "リーグ349試合143得点",
+    "why": "クラブ歴代最多得点",
+    "source": "https://en.wikipedia.org/wiki/Antoine_Griezmann"
+   }
+  ]
  }
 ]

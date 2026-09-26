@@ -1,0 +1,24 @@
+{
+ "valencia": {
+  "ガイスカ・メンディエタ": {
+   "role": "legend",
+   "file": "assets/photos/ll/valencia/valencia_legend_b13e7c87.jpg",
+   "page": "Gaizka Mendieta"
+  },
+  "ダビド・アルベルダ": {
+   "role": "legend",
+   "file": "assets/photos/ll/valencia/valencia_legend_a622fa72.jpg",
+   "page": "David Albelda"
+  },
+  "ダビド・ビジャ": {
+   "role": "legend",
+   "file": "assets/photos/ll/valencia/valencia_legend_e6568f32.jpg",
+   "page": "David Villa"
+  },
+  "ハビエル・アギーレ": {
+   "role": "manager",
+   "file": "assets/photos/ll/valencia/valencia_manager_200422af.jpg",
+   "page": "Javier Aguirre"
+  }
+ }
+}

@@ -28,11 +28,16 @@ def raw(title: str) -> str:
            + urllib.parse.quote(title.replace(" ", "_")) + "&action=raw")
     # **続けて叩くと弾かれる**（2026-09-19、マンUの27人ぶん生年月日が空で返った）。
     # HTML が返ったら間をあけて取り直す
-    for wait in (0, 3, 10, 30):
+    # **HTML だけでなく、中身の無い返事も取り直す**（2026-09-27）。下請けが並んで
+    # Wikipedia を読んでいた夜、オサスナとベティスが0人、試合結果が0試合で返った。
+    # 記事の原文なら必ず `{{` を含むので、それが無ければ弾かれたとみなす
+    for wait in (0, 5, 20, 60, 120):
         time.sleep(wait)
         text = subprocess.run(["curl", "-sL", "-A", "kaigai-soccer-research/1.0 (nami.0817.kk@gmail.com)", url],
                               capture_output=True).stdout.decode("utf-8", "replace")
-        if not text.lstrip().startswith("<"):
+        if text.lower().startswith("#redirect"):
+            break
+        if not text.lstrip().startswith("<") and "{{" in text:
             break
     if text.lower().startswith("#redirect"):
         target = re.search(r"\[\[([^]|#]*)", text).group(1)
@@ -77,12 +82,19 @@ def senior_caps(text: str) -> tuple[str, int | None]:
 def squad(club_title: str) -> list[dict]:
     text = raw(club_title)
     # 見出しで探す。本文に同じ言葉があると、そこから読み始めて0人になった
-    head = re.search(r"^=+[^\n]*(First[- ]team squad|Current squad)[^\n]*=+\s*$", text, re.M)
-    start = head.end() if head else 0
-    # 次の見出しで止める（「貸し出し中」「U-21」を混ぜない。リヴァプールで42人になった）
-    nxt = re.search(r"^=+[^\n]+=+\s*$", text[start:], re.M)
-    end = start + nxt.start() if nxt else start + 20000
-    block = text[start:end if end > 0 else start + 20000]
+    # **選手の並びを実際に含む見出しを選ぶ**（2026-09-27）。ラ・リーガで2通りの0人が出た。
+    # ベティスは見出しが `=== First-team ===` だけ（squad が付かない）。
+    # オサスナは `==Current squad==` の直下に `===First team squad===` があり、
+    # 上の見出しから次の見出しまでが空だった
+    block = ""
+    for head in re.finditer(r"^=+[^\n]*(First[- ]team|Current squad)[^\n]*=+\s*$", text, re.M | re.I):
+        start = head.end()
+        # 次の見出しで止める（「貸し出し中」「U-21」を混ぜない。リヴァプールで42人になった）
+        nxt = re.search(r"^=+[^\n]+=+\s*$", text[start:], re.M)
+        end = start + nxt.start() if nxt else start + 20000
+        if re.search(r"\{\{(?:[Ff]s|[Ff]ootball squad) player\|", text[start:end]):
+            block = text[start:end]
+            break
     players = []
     # **行末で切らない**（2026-09-20）。フラムの主将の行は
     # `{{Fs player|…|other=[[Captain…|captain]]}}<ref>…` と続いていて、
@@ -127,12 +139,55 @@ def squad(club_title: str) -> list[dict]:
     return players
 
 
+def _boxes(text: str) -> list[str]:
+    """`{{Football box ...}}` の中身を、**かっこの数を数えて**切り出す（2026-09-26）。
+
+    閉じの `}}` を行頭だけで探していたので、`|result=W}}` のように行末で閉じる記事
+    （ラ・リーガのバルサ・アトレティコ・セルタ）で1試合も取れず、隣の箱まで
+    つながって読んでいた（ソシエダの親善試合）。
+    """
+    out = []
+    for m in re.finditer(r"\{\{\s*[Ff]ootball ?box(?: collapsible)?", text):
+        depth, i = 0, m.start()
+        while i < len(text) - 1:
+            pair = text[i:i + 2]
+            if pair == "{{":
+                depth += 1
+                i += 2
+                continue
+            if pair == "}}":
+                depth -= 1
+                i += 2
+                if depth == 0:
+                    break
+                continue
+            i += 1
+        out.append(text[m.end():i - 2])
+    return out
+
+
 def results(season_title: str) -> list[list[str]]:
     text = raw(season_title)
     games = []
-    for box in re.findall(r"\{\{\s*[Ff]ootball ?box(?: collapsible)?(.*?)\n\}\}", text, re.S):
-        g = lambda k: re.sub(r"\[\[(?:[^]|]*\|)?([^]]*)\]\]", r"\1",
-                             re.sub(r"\{\{[^}]*\}\}", "", (re.search(r"\|\s*" + k + r"\s*=\s*(.*)", box) or [None, ""])[1])).strip()
+    # **親善試合の節は読まない**（2026-09-27）。アスレティックの記事は親善試合にも
+    # `round=1..8` を振っていて、相手がラ・リーガのクラブ（ラシン）だとリーグ戦に数わった
+    parts = re.split(r"(?m)^(=+[^=\n]+=+)\s*$", text)
+    kept, skip = [], False
+    for part in parts:
+        if re.match(r"=+[^=\n]+=+$", part.strip()):
+            skip = bool(re.search(r"(?i)friendl|pre-?season|tour\b|trophy", part))
+            continue
+        if not skip:
+            kept.append(part)
+    for box in _boxes("\n".join(kept)):
+        # **1行に何項目も書く記事がある**（2026-09-27、アスレティック）。
+        # `|date=…|round=1|score=0–3|team1=…` を行末まで取ると、隣の項目まで値に入った。
+        # リンクとひな形を先に畳んでから、次の `|` までを値にする
+        flat = re.sub(r"\[\[(?:[^]|]*\|)?([^]]*)\]\]", r"\1", box)
+        # `{{score link|…|1–3}}` は最後の引数がスコア。消す前に中身を残す
+        flat = re.sub(r"\{\{\s*[Ss]core ?link\|(?:[^{}|]*\|)*([^{}|]*)\}\}", r"\1", flat)
+        flat = re.sub(r"\{\{[^{}]*\}\}", "", flat)
+        g = lambda k: (re.search(r"\|\s*" + k + r"\s*=\s*([^|\n]*)", flat) or [None, ""])[1].strip()
         games.append([g("date"), g("round"), g("team1"), g("score"), g("team2")])
     return games
 

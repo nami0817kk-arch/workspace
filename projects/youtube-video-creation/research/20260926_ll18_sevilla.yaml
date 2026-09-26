@@ -1,0 +1,426 @@
+# プレミアリーグ20クラブ紹介 ⑱セビージャ（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/ll_data/sevilla*.json と旧台本 -
+format: news
+voice_min: 0
+slot: laliga_1
+date: 2026年9月19日
+people:
+- セビージャ
+- ルイス・ガルシア・プラサ
+short_title: セビージャ、100周年の歌のあとに始まったもの
+series: ラ・リーガチーム紹介
+theme:
+  id: sevilla_intro
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: セビージャ
+  title: セビージャ。100周年の歌が生まれた翌年、何が始まったのか
+  question: どんなクラブなのか
+  hook: ゴールキーパーが、ヨーロッパの大会で点を取ったこともあります。
+  lead: 創立**1890年**。20クラブのなかで、いちばん古い。
+  opening_image: assets/stats/ll_sevilla_data_t.png
+thumbnail:
+  line1: 100周年の歌の翌年から●●
+  line2: いちばん古いセビージャ
+  crest_main:
+  - セビージャ
+  board: assets/stats/ll_sevilla_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 5位の好発進と、降格圏から残した監督
+  narrator: キャスター
+  say:
+  - text: 今シーズンは7試合を終えて、勝ち点**13**の5位です。
+    image: assets/stats/ll_sevilla_data_r1.png
+    no_telop: true
+  - text: 率いるのは、3月に来たルイス・ガルシア監督。こう話しています。
+    image: assets/stats/ll_sevilla_data_r2.png
+    no_telop: true
+  - voice: ルイス・ガルシア・プラサ
+    text: 夢のような出だしだ。ただ、リーグはとても厳しい
+    image: assets/stats/ll_sevilla_data_r2.png
+  - text: 昨シーズンは残り5試合で、降格圏の18位。そこから3連勝で残しました。
+    image: assets/stats/ll_sevilla_data_r2.png
+    no_telop: true
+  - text: そしてこのクラブは、100周年の歌ができた翌年から、ヨーロッパリーグを**7度**制しています。
+    image: assets/stats/ll_sevilla_data_r3.png
+    no_telop: true
+  - image: assets/stats/ll_sevilla_data0.png
+    text: 創立の日は、スコットランドの詩人をしのぶ夜。カフェに集まった若者たちが作りました。
+    no_telop: true
+  - image: assets/stats/ll_sevilla_data1.png
+    text: 愛称はネルビオネンセス。本拠地のある、ネルビオン地区から来た呼び名です。
+    no_telop: true
+  - image: assets/stats/ll_sevilla_data2.png
+    text: ホームタウンはセビリア。アンダルシア州の州都で、スペインで**5番目**に大きな町です。
+    no_telop: true
+  - image: assets/backgrounds/stadium_セビージャ.png
+    text: 本拠地はラモン・サンチェス・ピスフアン。**4万3000人**あまりが入ります。
+  - image: assets/stats/ll_sevilla_data4.png
+    text: 会長はホセ・マリア・デル・ニド・カラスコ。クラブは株式会社で、株主が会長を選びます。
+    no_telop: true
+  - image: assets/stats/ll_sevilla_cups.png
+    text: 1部優勝**1回**、国王杯**5回**、スーペルコパ**1回**。ヨーロッパリーグ**7回**、スーパーカップ**1回**。
+    no_telop: true
+  - image: assets/stats/ll_sevilla_data6.png
+    text: 最多出場は地元育ちのヘスス・ナバス。2024年までに、**705試合**に出ました。
+    no_telop: true
+  - image: assets/stats/ll_sevilla_data7.png
+    text: 直近のタイトルは2023年のヨーロッパリーグ。ローマとの決勝を、ピーケー戦で制しました。
+    no_telop: true
+  - image: assets/stats/ll_sevilla_data8.png
+    text: 昨シーズンは**13位**。降格したマジョルカとは、勝ち点**1**の差でした。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Sevilla_FC
+  - "https://en.wikipedia.org/wiki/2026–27_Sevilla_FC_season\r"
+  - https://www.marca.com/futbol/sevilla/2026/09/16/luis-garcia-plaza-respeto-hemos-quedado-cortos.html
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Sevilla_FC_season
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_Sevilla_FC_season
+  - https://es.wikipedia.org/wiki/Sevilla_F%C3%BAtbol_Club
+  bg: assets/backgrounds/stadium_セビージャ_in.png
+  official: false
+- id: history
+  heading: 初代会長は副領事
+  tier: 背景
+  telop: 初代会長は、スコットランド生まれの副領事
+  narrator: 解説
+  card:
+    type: table
+    title: 初代会長
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 名前
+      - エドワード・ジョンストン
+    - - 仕事
+      - 英国の副領事と船会社
+    - - 運んだもの
+      - セビリアのオレンジ
+  say:
+  - 初代会長は、スコットランド生まれのエドワード・ジョンストン。英国の副領事でした。
+  - 本業は船会社で、セビリアの苦いオレンジを、スコットランドへ運んでいました。
+  - 向こうでマーマレードの原料になる、あのオレンジです。
+  sources:
+  - https://en.wikipedia.org/wiki/Edward_F._Johnston
+  - https://en.wikipedia.org/wiki/Sevilla_FC
+  bg: assets/backgrounds/stadium_セビージャ_in.png
+  official: false
+- id: history2
+  heading: スペイン最初の公式戦
+  tier: 背景
+  telop: スペイン最初の公式戦に、2対0で勝つ
+  narrator: 解説
+  card:
+    type: table
+    title: 1890年3月8日
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 相手
+      - ウエルバのクラブ
+    - - 笛を吹いた人
+      - セビージャの会長
+  say:
+  - 創立の年の3月、ウエルバのクラブを招いて、スペインで最初の公式戦を行います。
+  - 笛を吹いたのは、なんと自分たちの会長のジョンストン。
+  - text: 左ウイングはパジャマのような服で現れて笑われ、その選手もゴールを決めました。
+    card:
+      type: table
+      title: 1890年3月8日
+      columns: *id001
+      rows:
+      - - 結果
+        - 2対0で勝利
+  - 結果は**2対0**。スペインのサッカーで、最初に勝ったチームになりました。
+  sources:
+  - https://en.wikipedia.org/wiki/First_official_football_match_in_Spain
+  - https://en.wikipedia.org/wiki/Edward_F._Johnston
+  bg: assets/backgrounds/stadium_セビージャ_in.png
+  official: false
+- id: history3
+  heading: ただ一度のリーグ優勝
+  tier: 背景
+  telop: 前線は「スツーカ」。1946年にリーグ優勝
+  narrator: 解説
+  card:
+    type: table
+    title: ただ一度のリーグ優勝
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 内戦のあと
+      - 前線は「スツーカ」
+    - - 4シーズンで
+      - 216得点
+    - - 1945-46
+      - 初めてのリーグ優勝
+  say:
+  - 内戦のあと、前線はドイツの急降下爆撃機になぞらえて「スツーカ」と呼ばれます。
+  - 4シーズンで**216得点**。バルセロナに、**11対1**で勝った試合もあります。
+  - そして1945年から46年のシーズン、バルセロナを勝ち点1差でかわして初優勝。
+  sources:
+  - https://en.wikipedia.org/wiki/Sevilla_FC
+  - https://es.wikipedia.org/wiki/Sevilla_F%C3%BAtbol_Club
+  bg: assets/backgrounds/stadium_セビージャ_in.png
+  official: false
+- id: history4
+  heading: 決勝は7戦7勝
+  tier: 背景
+  telop: ヨーロッパリーグの決勝は、7戦7勝
+  narrator: 解説
+  card:
+    type: table
+    title: 決勝は7戦7勝
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - - 2006年
+      - 初優勝。ミドルズブラに4対0
+    - - 2014〜16年
+      - 大会ただ一つの3連覇
+  say:
+  - ヨーロッパの初タイトルは2006年。ミドルズブラに**4対0**で勝ちました。
+  - クラブにとって、58年ぶりの主要タイトルでした。
+  - text: 2014年からは、この大会でただ一つの**3連覇**。
+    card:
+      type: table
+      title: 決勝は7戦7勝
+      columns: *id002
+      rows:
+      - - 2023年
+        - 7回目の優勝
+  - 決勝に出た**7回**は、ひとつも負けていません。
+  sources:
+  - https://en.wikipedia.org/wiki/Sevilla_FC
+  - https://en.wikipedia.org/wiki/2023_UEFA_Europa_League_final
+  - https://en.wikipedia.org/wiki/UEFA_Europa_League
+  bg: assets/backgrounds/stadium_セビージャ_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 球際に強い。見つけて売る。アンダルシアの盟主
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 球際に強い
+    - - 運営の型
+      - 見つけて、売る
+    - - クラブの気質
+      - アンダルシアの盟主
+  say:
+  - text: ルイス・ガルシア監督のチームは、球際に強い。競り合いとボール奪取で、リーグの先頭です。
+    image: assets/photos/ll/sevilla/sevilla_manager_46745b5c.jpg
+  - ピッチの外は、見つけて売る型。
+  - 強化部長だったモンチは、世界に**700人**を超えるスカウト網を作りました。
+  - 移籍で出した利益は、およそ**2億ユーロ**です。
+  - そしてアンダルシアの盟主。国際タイトルを持つのは、州でここだけです。
+  sources:
+  - https://en.wikipedia.org/wiki/Sevilla_FC
+  - https://www.diariodesevilla.es/sevillafc/ecuacion-complica-sevilla-garcia-plaza-laliga_0_2008056663.html
+  - https://en.wikipedia.org/wiki/Monchi
+  - https://sevillafc.es/el-club/la-entidad/sevilla-fc
+  bg: assets/backgrounds/stadium_セビージャ_in.png
+  official: false
+- id: episode
+  heading: 100周年の歌
+  tier: 背景
+  telop: 100周年の歌が、シングル売り上げ1位に
+  narrator: 解説
+  card:
+    type: table
+    title: 100周年の歌
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 2005年
+      - 歌手エル・アレバトが作る
+    - - 売り上げ
+      - スペインのシングル1位
+    - - 呼び名
+      - お守りの歌
+  say:
+  - text: 2005年、歌手のエル・アレバトが、クラブの100周年を祝う歌を作りました。
+    image: assets/images/ll_sevilla_episode/scene.jpg
+  - スペインのシングル売り上げで**1位**。サッカークラブの歌で、いちばん売れました。
+  - ファンのあいだでは、いまも「お守りの歌」と呼ばれています。
+  sources:
+  - https://en.wikipedia.org/wiki/Sevilla_FC
+  - https://es.wikipedia.org/wiki/Sevilla_F%C3%BAtbol_Club
+  bg: assets/backgrounds/stadium_セビージャ_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id003
+      - アンドレス・パロップ
+      - 2005-2013
+      - 点も取った守護神
+  say:
+  - text: パロップはバレンシアで控えが長かったゴールキーパー。2005年、**31歳**で来ました。
+    image: assets/photos/ll/sevilla/sevilla_legend_d36378f0.jpg
+  - 2007年、ウエファカップのシャフタール戦。ロスタイムに、自分で同点ゴールを決めます。
+  - その年の決勝は、ピーケー戦で**3本**止めて優勝。リーグ戦では**217試合**に出ました。
+  sources:
+  - https://en.wikipedia.org/wiki/Andr%C3%A9s_Palop
+  - https://en.wikipedia.org/wiki/Fr%C3%A9d%C3%A9ric_Kanout%C3%A9
+  - https://en.wikipedia.org/wiki/Ivan_Rakiti%C4%87
+  bg: assets/backgrounds/stadium_セビージャ_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - &id004
+      - フレデリック・カヌーテ
+      - 2005-2012
+      - 外国人の最多得点
+  say:
+  - text: カヌーテはフランス生まれのマリ代表。2005年に、トッテナムから来たストライカーです。
+    image: assets/photos/ll/sevilla/sevilla_legend_2a86ec4f.jpg
+  - 2006年のウエファカップ決勝で1点。翌年の国王杯決勝では、1対0の決勝点を挙げました。
+  - リーグ戦で**209試合89得点**。外国人選手では、クラブ最多の得点です。
+  sources:
+  - https://en.wikipedia.org/wiki/Andr%C3%A9s_Palop
+  - https://en.wikipedia.org/wiki/Fr%C3%A9d%C3%A9ric_Kanout%C3%A9
+  - https://en.wikipedia.org/wiki/Ivan_Rakiti%C4%87
+  bg: assets/backgrounds/stadium_セビージャ_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - *id004
+    - - イヴァン・ラキティッチ
+      - 2011-2024
+      - 主将で欧州制覇
+  say:
+  - text: ラキティッチはスイス生まれのクロアチア代表。2011年に、シャルケから来ました。
+    image: assets/photos/ll/sevilla/sevilla_legend_7bd34f11.jpg
+  - 2014年、主将としてヨーロッパリーグを制し、決勝の最優秀選手にも選ばれます。
+  - 2020年に戻って、2023年に2度目の優勝。リーグ戦は2度の在籍で、通算**238試合**。
+  sources:
+  - https://en.wikipedia.org/wiki/Andr%C3%A9s_Palop
+  - https://en.wikipedia.org/wiki/Fr%C3%A9d%C3%A9ric_Kanout%C3%A9
+  - https://en.wikipedia.org/wiki/Ivan_Rakiti%C4%87
+  bg: assets/backgrounds/stadium_セビージャ_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はルイス・ガルシア。2026年3月に就任
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ルイス・ガルシア・プラサ（スペイン）
+    - - 就任
+      - 2026年3月
+    - - 前職
+      - アラベス
+  say:
+  - text: 今シーズンの監督はルイス・ガルシア・プラサ。スペイン出身で、**2026年3月**の就任です。
+    image: assets/photos/ll/sevilla/sevilla_manager_46745b5c.jpg
+  - 前はアラベス。2部から昇格させ、翌シーズンは1部に残しました。
+  sources:
+  - https://en.wikipedia.org/wiki/Sevilla_FC
+  - https://en.wikipedia.org/wiki/Luis_Garc%C3%ADa_(footballer,_born_1972)
+  bg: assets/backgrounds/stadium_セビージャ_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は24人です。
+    image: assets/stats/ll_sevilla_gk.png
+    no_telop: true
+  - image: assets/stats/ll_sevilla_gk_f.png
+    text: ゴールキーパーは2人。
+    no_telop: true
+  - image: assets/stats/ll_sevilla_gk_f.png
+    text: オディセアス・ヴラホディモスはギリシャ代表で**53試合**。
+    no_telop: true
+  - image: assets/stats/ll_sevilla_df_f.png
+    text: ディフェンダーは8人。
+    no_telop: true
+  - image: assets/stats/ll_sevilla_df_f.png
+    text: 主将を務めるのが**ガブリエル・スアソ**。
+    no_telop: true
+  - image: assets/stats/ll_sevilla_df_f.png
+    text: キケ・サラスはリーグ戦で**89試合**。
+    no_telop: true
+  - image: assets/stats/ll_sevilla_mf_f.png
+    text: ミッドフィールダーは6人。
+    no_telop: true
+  - image: assets/stats/ll_sevilla_mf_f.png
+    text: リュシアン・アグメはリーグ戦で**81試合**。
+    no_telop: true
+  - image: assets/stats/ll_sevilla_mf_f.png
+    text: ギオルギ・コチョラシュヴィリはジョージア代表で**27試合**。
+    no_telop: true
+  - image: assets/stats/ll_sevilla_fw_f.png
+    text: フォワードは8人。
+    no_telop: true
+  - image: assets/stats/ll_sevilla_fw_f.png
+    text: ルベン・バルガスはスイス代表で**67試合**。
+    no_telop: true
+  - image: assets/stats/ll_sevilla_fw_f.png
+    text: チデラ・エジュケはナイジェリア代表で**14試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Sevilla_FC
+  bg: assets/backgrounds/stadium_セビージャ_in.png
+  official: false

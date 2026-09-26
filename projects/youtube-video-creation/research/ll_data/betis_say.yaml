@@ -1,0 +1,191 @@
+# ラ・リーガ チーム紹介 ⑥レアル・ベティス（2026-09-27）。形は見本のレアル・ソシエダと同じ。
+# 事実はすべて research/ll_data/betis_research.md（出典付き）から。
+# 「季」は合成音声が「き」と読むので使わない。アルファベットは読み上げに残さない（PK→ピーケー）
+title: レアル・ベティス。3部まで落ちたクラブが掲げる言葉
+short_title: レアル・ベティスが掲げる言葉
+# クラブを表す一言（体言止め）。1927年創設のペーニャ「Puerta de la Carne」はスペインで最も古いペーニャ
+# （西語版クラブ記事「la más antigua de todas las existentes del fútbol español」／Marca 2017-12-18「la peña más longeva del país」）
+opening: "スペインで、いちばん古いファンの会。"
+# 逸話（1977年の国王杯決勝。両チームのキーパーがピーケーを蹴った）で回収する
+hook: 両チームのキーパーまでピーケーを蹴った決勝があります。
+thumbnail:
+  line1: 3部まで落ちたクラブ
+  line2: ベティスが掲げる言葉
+  crest_main: [レアル・ベティス]
+
+# いま見る理由。監督の言葉は Marca 2026-09-16（ゲタフェ戦の前日会見。本人の73歳の誕生日）の原文
+# 「soy el único de 73 años que está trabajando a este nivel en este momento」
+reasons:
+- "今季は**21シーズン**ぶりに、チャンピオンズリーグへ。"
+- "率いるペジェグリーニ監督は、誕生日にこう話しました。"
+- {voice: マヌエル・ペジェグリーニ, text: "いま、このレベルで働いている73歳は、わたしだけだ"}
+- "そしてファンの合言葉は、「負けても、ベティス万歳」。"
+reasons_focus: [1, 2, 2, 3]
+reasons_telop: 21シーズンぶりの舞台と、73歳の監督
+reasons_rows:
+- ["理由1", "21シーズンぶりの欧州最高峰"]
+- ["理由2", "73歳の監督ペジェグリーニ"]
+- ["理由3", "「負けても、ベティス万歳」"]
+reasons_sources:
+- https://www.marca.com/futbol/betis/2026/09/16/pellegrini-mi-mejor-regalo-cumpleanos-seria-ganar-manana.html
+- https://en.wikipedia.org/wiki/2025%E2%80%9326_Real_Betis_season
+- https://en.wikipedia.org/wiki/Manuel_Pellegrini
+- https://en.wikipedia.org/wiki/Real_Betis
+people_extra:
+- マヌエル・ペジェグリーニ
+
+# 基礎DATA。話す順は20クラブ共通（創立→愛称→ホームタウン→本拠地→会長→タイトル歴→記録→直近→昨季）
+data:
+- 創立は**1907年**。名前のベティスは、町を流れる川の、ローマ時代の呼び名です。
+- 愛称は「エリオポリタノス」。本拠地のある地区の名で、意味は**太陽の町**。
+- ホームタウンはセビージャ。アンダルシアの州都で、スペインで**5番目**に大きな町です。
+- 本拠地はラ・カルトゥーハ。いつもの競技場を改修するあいだの仮住まいで、**7万人**が入ります。
+- 会長は**2016年**からアンヘル・アロ。株主が選ぶ形の株式会社です。
+- 1部の優勝は**1回**。国王杯は**3回**。スーペルコパとヨーロッパの大会は、まだ優勝がありません。
+- 最多出場は、2度在籍したホアキン。**528試合**に出ました。
+- 直近のタイトルは2022年の国王杯。いまの本拠地で、ピーケー戦を**5対4**で制しました。
+- 昨季のリーグ戦は**5位**。勝ち点は**60**でした。
+data_focus: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+
+# クラブの話。1枚のカードを20秒以上出さないため、3つに割る
+story_sections:
+  - id: history
+    heading: 1935年の頂点
+    tier: 背景
+    telop: 1935年、ただ一度の1部優勝
+    narrator: 解説
+    card:
+      type: table
+      title: 1935年の頂点
+      columns: ["", ""]
+      rows:
+        - ["監督", "アイルランド人のオコンネル"]
+        - ["決めた試合", "サンタンデールで5対0"]
+        - ["2位との差", "勝ち点1"]
+    say:
+      - 1部の頂点に立ったのは**1935年**。率いたのはアイルランド人のオコンネル監督です。
+      - 決めたのは北の町サンタンデール。**5対0**で勝ち、マドリードを勝ち点1差でかわしました。
+      - その日のセビージャは春祭り。知らせは、祭りの小屋の黒板で伝えられました。
+    sources:
+      - https://en.wikipedia.org/wiki/Real_Betis
+      - https://es.wikipedia.org/wiki/Real_Betis_Balomp%C3%A9
+  - id: history2
+    heading: 同じ町で3部へ
+    tier: 背景
+    telop: 優勝を決めた町で、12年後に3部へ
+    narrator: 解説
+    card:
+      type: table
+      title: 同じ町で3部へ
+      columns: ["", ""]
+      rows:
+        - ["1936年から", "内戦。優勝した選手が散る"]
+        - ["1947年", "サンタンデールで1対4。3部へ"]
+        - ["1954年", "3部で優勝し、2部へ戻る"]
+    say:
+      - ところが翌年から内戦。優勝した顔ぶれは散り、残ったのは**2人**だけでした。
+      - 1947年には、あの優勝を決めたサンタンデールで**1対4**。3部へ落ちます。
+      - 3部には7年。1954年に3部で優勝し、1部から3部まで、すべての優勝を持つクラブに。
+      - 負けても応援をやめない、あの合言葉がファンに根づいたのは、この苦しい時代です。
+    sources:
+      - https://es.wikipedia.org/wiki/Historia_del_Real_Betis_Balomp%C3%A9
+      - https://en.wikipedia.org/wiki/Real_Betis
+  - id: history3
+    heading: ファンが取り戻したクラブ
+    tier: 背景
+    telop: ファンが集めたお金と、筆頭株主との対立
+    narrator: 解説
+    card:
+      type: table
+      title: ファンが取り戻したクラブ
+      columns: ["", ""]
+      rows:
+        - ["1992年", "株式会社に。ファンが4億ペセタ"]
+        - ["2009年", "2部へ。6万人を超える抗議"]
+        - ["2017年", "株をファンと株主へ売り出す"]
+    say:
+      - 1992年、法律で株式会社になるとき、ファンは3か月で**4億ペセタ**を集めました。
+      - それでも足りず、残りを出した副会長のロペラが、筆頭株主になります。
+      - 2009年に2部へ落ちると、**6万人**を超えるファンが町を歩き、身を引くよう求めました。
+      - 2017年、株は1株**120ユーロ**でファンと株主に売り出され、ロペラはクラブを離れました。
+    sources:
+      - https://en.wikipedia.org/wiki/Real_Betis
+      - https://es.wikipedia.org/wiki/Historia_del_Real_Betis_Balomp%C3%A9
+      - https://es.wikipedia.org/wiki/Real_Betis_Balomp%C3%A9
+
+# このクラブの特徴（プレーの色・運営の型・クラブの気質）
+features:
+- "ペジェグリーニ監督のチームは、とにかく打つ。リーグ戦の開幕5試合で、シュートは**89本**です。"
+- "ピッチの外は、行き場を失った実力者を拾う型。"
+- "イスコは2023年に加入。そのシーズン、試合の最優秀選手に**19回**。リーグ最多でした。"
+- "そして、落ちても戻ってくる。2部での優勝は**7回**あります。"
+features_telop: とにかく打つ。実力者を拾う。落ちても戻る
+features_rows:
+- ["プレーの色", "とにかく打つ"]
+- ["運営の型", "行き場を失った実力者を拾う"]
+- ["クラブの気質", "2部優勝7回。落ちても戻る"]
+features_sources:
+- https://www.marca.com/futbol/betis/2026/09/16/bombardeo-ofensivo-betis-100-remates-seis-partidos.html
+- https://en.wikipedia.org/wiki/Isco
+- https://en.wikipedia.org/wiki/Real_Betis
+
+# 「へえ」の逸話。1977年の国王杯決勝（英語版 1977 Copa del Rey final の出場表で裏を取った）
+# 場面写真は1975年の先発の集合写真（エスナオラ・カルデニョサ・ロペスらが写る。Public domain）
+episode:
+  id: episode
+  heading: キーパーも蹴った決勝
+  tier: 背景
+  telop: 1977年の国王杯決勝、キーパーどうしのピーケー
+  narrator: 解説
+  card:
+    type: table
+    title: キーパーも蹴った決勝
+    columns: ["", ""]
+    rows:
+      - ["1977年 国王杯決勝", "アスレティックと2対2"]
+      - ["ピーケー戦", "キーパーのエスナオラも成功"]
+      - ["10人目", "相手のキーパーが失敗。8対7"]
+  say:
+    - {text: "1977年、国王杯の決勝。アスレティックと**2対2**のまま、ピーケー戦に入りました。", image: assets/images/ll_betis_episode/scene.jpg}
+    - 決着は10人目まで持ち越し。ベティスは、キーパーのエスナオラも決めていました。
+    - 最後に外したのは、相手のキーパーのイリバル。**8対7**で勝ち、クラブ初の国王杯です。
+  sources:
+    - https://en.wikipedia.org/wiki/1977_Copa_del_Rey_final
+    - https://en.wikipedia.org/wiki/Real_Betis
+
+# このクラブを語る3人（1人3行）。数字は英語版 infobox のリーグ戦のみ
+legends:
+- - デニウソンは1998年、サンパウロから加わったブラジル代表のドリブラーです。
+  - 移籍金は**2150万ポンド**で、当時の世界最高額。それでも2年目、チームは2部へ落ちます。
+  - 残ってリーグ戦で**185試合**。在籍中の2002年、日韓ワールドカップで優勝しました。
+- - ルベン・カストロは2010年、2部にいたベティスに加わった点取り屋です。
+  - 再び2部で戦った2014年からのシーズン、リーグ戦**31得点**。1年で1部へ戻しました。
+  - リーグ戦で**260試合135得点**。公式戦の**148得点**は、クラブの歴代最多です。
+- - ボルハ・イグレシアスは2019年、**2800万ユーロ**で来たセンターフォワード。
+  - 2022年、国王杯の決勝で先制点。大会の得点王で、決勝の最優秀選手にも選ばれました。
+  - リーグ戦で**142試合39得点**。在籍中に、スペイン代表にも初めて呼ばれました。
+legend_rows:
+- ["デニウソン", "1998-2005", "当時の世界最高額"]
+- ["ルベン・カストロ", "2010-2018", "クラブ最多148得点"]
+- ["ボルハ・イグレシアス", "2019-2025", "決勝の先制点"]
+legend_sources:
+- - https://en.wikipedia.org/wiki/Den%C3%ADlson_(footballer,_born_1977)
+- - https://en.wikipedia.org/wiki/Rub%C3%A9n_Castro
+- - https://en.wikipedia.org/wiki/Borja_Iglesias
+
+# 今季の監督
+manager:
+- 今季の監督はマヌエル・ペジェグリーニ。**2020年7月**の就任です。
+- 前はイングランドのウェストハム。ベティスでは**319試合**を率い、クラブで最も多い数です。
+manager_telop: 監督はペジェグリーニ。クラブ最多の319試合
+manager_rows:
+- ["監督", "マヌエル・ペジェグリーニ（チリ）"]
+- ["就任", "2020年7月"]
+- ["前職", "ウェストハム"]
+manager_sources:
+- https://en.wikipedia.org/wiki/Manuel_Pellegrini
+- https://es.wikipedia.org/wiki/Historia_del_Real_Betis_Balomp%C3%A9
+
+# 今季。欧州の初戦（2026–27 Real Betis season と 2026–27 UEFA Champions League league phase の両方で確認）
+season:
+- チャンピオンズリーグの初戦は、上田綺世に先制されたリールに、**3対2**で逆転勝ちでした。

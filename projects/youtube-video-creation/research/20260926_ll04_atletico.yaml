@@ -1,0 +1,432 @@
+# プレミアリーグ20クラブ紹介 ④アトレティコ・マドリード（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/ll_data/atletico*.json と旧台本 -
+format: news
+voice_min: 0
+slot: laliga_1
+date: 2026年9月19日
+people:
+- アトレティコ・マドリード
+- ディエゴ・シメオネ
+short_title: アトレティコ・マドリードの始まりは、ある街の支店
+series: ラ・リーガチーム紹介
+theme:
+  id: atletico_intro
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: アトレティコ・マドリード
+  title: アトレティコ・マドリード。最初は、どこのクラブの支店だったのか
+  question: どんなクラブなのか
+  hook: 赤と白の縞には、寝具にまつわる呼び名があります。
+  lead: 20クラブでいちばん長い、15年目の監督。
+  opening_image: assets/stats/ll_atletico_data_t.png
+thumbnail:
+  line1: 始まりは●●の支店
+  line2: アトレティコ・マドリード
+  crest_main:
+  - アトレティコ・マドリード
+  board: assets/stats/ll_atletico_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: ダービーに勝ち、首位を追う。始まりは支店
+  narrator: キャスター
+  say:
+  - text: ダービーでレアル・マドリードに勝ち、首位を追っています。
+    image: assets/stats/ll_atletico_data_r1.png
+    no_telop: true
+  - text: シメオネ監督は、34歳の主将をこう褒めました。
+    image: assets/stats/ll_atletico_data_r2.png
+    no_telop: true
+  - voice: ディエゴ・シメオネ
+    text: コケの試合を見たでしょう。34歳で後半から入って、全部を変えてみせた
+    image: assets/stats/ll_atletico_data_r2.png
+  - voice: ディエゴ・シメオネ
+    text: 私たちはそういうチームで、もっと良くなろうとしている
+    cont: true
+    image: assets/stats/ll_atletico_data_r2.png
+  - text: そしてこのクラブの始まりは、ビルバオのクラブのマドリード支店でした。
+    image: assets/stats/ll_atletico_data_r3.png
+    no_telop: true
+  - image: assets/stats/ll_atletico_data0.png
+    text: 創立は**1903年**の4月。123年の歴史を持つクラブです。
+    no_telop: true
+  - image: assets/stats/ll_atletico_data1.png
+    text: 愛称はコルチョネロス、マットレス職人。縞が、昔のマットレスの布と同じ色でした。
+    no_telop: true
+  - image: assets/stats/ll_atletico_data2.png
+    text: ホームタウンは首都マドリード。今シーズンの1部には、この街から**3クラブ**。
+    no_telop: true
+  - image: assets/backgrounds/stadium_アトレティコマドリード.png
+    text: 本拠地はメトロポリターノ。**7万813人**が入り、20クラブで**2番目**の大きさ。
+  - image: assets/stats/ll_atletico_data4.png
+    text: オーナーはアメリカの投資会社、アポロ。今年3月に株の**55パーセント**を握りました。
+    no_telop: true
+  - image: assets/stats/ll_atletico_cups.png
+    text: 1部の優勝は**11回**、国王杯は**10回**。ヨーロッパリーグとスーパーカップは**3回**ずつ。
+    no_telop: true
+  - image: assets/stats/ll_atletico_data6.png
+    text: 最多出場は主将のコケ。公式戦の**748試合**は、クラブの記録です。
+    no_telop: true
+  - image: assets/stats/ll_atletico_data7.png
+    text: 直近のタイトルは2021年のリーグ優勝。最終節、バリャドリードに**2対1**で決めました。
+    no_telop: true
+  - image: assets/stats/ll_atletico_data8.png
+    text: 昨シーズンは**4位**で勝ち点**69**。国王杯は決勝で、ソシエダにピーケー戦で敗れました。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Atlético_Madrid
+  - "https://en.wikipedia.org/wiki/2026–27_Atlético_Madrid_season\r"
+  - https://www.mundodeportivo.com/futbol/atletico-madrid/20260920/1004229492/no-dejar-hablar-gran-partido-equipo-puedan-hablar-otros.html
+  - https://www.mundodeportivo.com/futbol/atletico-madrid/20260922/1004230171/record-metropolitano.html
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Atl%C3%A9tico_Madrid_season
+  - https://en.wikipedia.org/wiki/Atl%C3%A9tico_Madrid
+  bg: assets/backgrounds/stadium_アトレティコマドリード_in.png
+  official: false
+- id: history
+  heading: ビルバオの支店
+  tier: 背景
+  telop: 1903年、ビルバオのクラブの支店として生まれた
+  narrator: 解説
+  card:
+    type: table
+    title: ビルバオの支店
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 1903年4月
+      - マドリードで創立
+    - - 作った人
+      - バスクの学生たち
+  say:
+  - 1903年、ビルバオのアスレティック・クラブが、マドリードで国王杯の決勝に勝ちます。
+  - それを見た、マドリードで学ぶバスクの学生たちが、本家の**支店**を作りました。
+  - text: ユニフォームも本家と同じ、青と白の半々でした。
+    card:
+      type: table
+      title: ビルバオの支店
+      columns: *id001
+      rows:
+      - - 最初の名前
+        - アスレティック・クラブ（マドリード支店）
+  - マドリードの側が独り立ちしたのは、1920年代に入ってからです。
+  sources:
+  - https://en.wikipedia.org/wiki/Atl%C3%A9tico_Madrid
+  - https://es.wikipedia.org/wiki/Club_Atl%C3%A9tico_de_Madrid
+  bg: assets/backgrounds/stadium_アトレティコマドリード_in.png
+  official: false
+- id: history2
+  heading: 赤と白は買い物の失敗
+  tier: 背景
+  telop: 探しに行ったのは青と白。持ち帰ったのは赤と白
+  narrator: 解説
+  card:
+    type: table
+    title: 赤と白の縞
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - - 1909年の暮れ
+      - 選手がイングランドへ買い出し
+    - - 探したもの
+      - ブラックバーンの青と白
+  say:
+  - 赤と白には、もう一つの説があります。
+  - 1909年の暮れ、選手の一人が、両方のクラブのシャツを買いにイングランドへ渡りました。
+  - text: 探したのはブラックバーンの青と白。見つからず、サウサンプトンの赤と白を持ち帰ります。
+    card:
+      type: table
+      title: 赤と白の縞
+      columns: *id002
+      rows:
+      - - 持ち帰ったもの
+        - サウサンプトンの赤と白
+  - ビルバオはパンツを黒に替え、マドリードは青のまま。ここで2つの色が分かれました。
+  sources:
+  - https://en.wikipedia.org/wiki/Atl%C3%A9tico_Madrid
+  - https://es.wikipedia.org/wiki/Club_Atl%C3%A9tico_de_Madrid
+  bg: assets/backgrounds/stadium_アトレティコマドリード_in.png
+  official: false
+- id: history3
+  heading: アトレティコという名前
+  tier: 背景
+  telop: 空軍のクラブと組み、名前がアトレティコに
+  narrator: 解説
+  card:
+    type: table
+    title: アトレティコという名前
+    columns: &id003
+    - ''
+    - ''
+    rows:
+    - - 1939年
+      - 空軍のクラブと組む
+    - - 1940年代の初め
+      - 外国語の名前が禁止に
+  say:
+  - 内戦のあと、1939年に空軍のクラブと組み、名前にアビアシオン、航空が付きます。
+  - さらに外国語の名前が禁じられ、英語のアスレティックは、スペイン語のアトレティコに。
+  - text: この時代に、リーグで初めての優勝と連覇を果たしました。
+    card:
+      type: table
+      title: アトレティコという名前
+      columns: *id003
+      rows:
+      - - 1947年
+        - 今の名前に
+  - 航空の名前が外れ、今の名前になったのは**1947年**です。
+  sources:
+  - https://es.wikipedia.org/wiki/Club_Atl%C3%A9tico_de_Madrid
+  - https://en.wikipedia.org/wiki/Atl%C3%A9tico_Madrid
+  bg: assets/backgrounds/stadium_アトレティコマドリード_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 守って速く攻める。大きく使う。合言葉は1試合ずつ
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 守って、速く攻める
+    - - 運営の型
+      - 大きく使う
+    - - クラブの気質
+      - 熱いスタンドと「1試合ずつ」
+  say:
+  - text: シメオネ監督のチームは、まず守って、速く攻める。
+    image: assets/photos/ll/atletico/atletico_manager_b58576f1.jpg
+  - 2015年から16年のシーズンは38試合で失点**18**。ヨーロッパ5大リーグで最少でした。
+  - 運営は、大きく使う型。クラブ最高額の補強は、ジョアン・フェリックスの**1億2600万ユーロ**。
+  - この夏も、移籍金に合わせて**1億3000万ユーロ**を使いました。
+  - スタンドも熱い。20日のダービーの観客**7万514人**は、今の本拠地の新記録。
+  - 合言葉は「パルティード・ア・パルティード」。1試合ずつ、という意味です。
+  sources:
+  - https://en.wikipedia.org/wiki/Atlético_Madrid
+  - https://en.wikipedia.org/wiki/Diego_Simeone
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Atl%C3%A9tico_Madrid_season
+  - https://es.wikipedia.org/wiki/Club_Atl%C3%A9tico_de_Madrid
+  - https://www.mundodeportivo.com/futbol/atletico-madrid/20260922/1004230171/record-metropolitano.html
+  bg: assets/backgrounds/stadium_アトレティコマドリード_in.png
+  official: false
+- id: episode
+  heading: 手放した15歳
+  tier: 背景
+  telop: 1992年、下部組織を閉じ、15歳のラウールを手放す
+  narrator: 解説
+  card:
+    type: table
+    title: 手放した15歳
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1992年
+      - 会長が下部組織を閉じる
+    - - 15歳のラウール
+      - レアル・マドリードへ
+  say:
+  - 1992年、会長のヘスス・ヒルは、お金を理由に下部組織を閉じます。
+  - そこにいた15歳のラウールは、レアル・マドリードへ移りました。
+  - ヒルはテレビで、この少年を未来の看板だと自慢していたのです。
+  sources:
+  - https://en.wikipedia.org/wiki/Atl%C3%A9tico_Madrid
+  - https://en.wikipedia.org/wiki/Ra%C3%BAl_Gonz%C3%A1lez
+  - https://es.wikipedia.org/wiki/Ra%C3%BAl_Gonz%C3%A1lez_Blanco
+  bg: assets/backgrounds/stadium_アトレティコマドリード_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id004
+      - フェルナンド・トーレス
+      - 2001-07, 2015-18
+      - 19歳で主将
+  say:
+  - text: フェルナンド・トーレスは、11歳からこのクラブで育ったフォワードです。
+    image: assets/photos/ll/atletico/atletico_legend_2934f684.jpg
+  - 19歳でクラブ最年少の主将に。2015年に戻り、2018年の最後の試合で2得点しました。
+  - そのあと日本のサガン鳥栖へ。アトレティコではリーグ戦で**321試合109得点**を残しました。
+  sources:
+  - https://en.wikipedia.org/wiki/Fernando_Torres
+  - https://en.wikipedia.org/wiki/Diego_God%C3%ADn
+  - https://en.wikipedia.org/wiki/Antoine_Griezmann
+  bg: assets/backgrounds/stadium_アトレティコマドリード_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id004
+    - &id005
+      - ディエゴ・ゴディン
+      - 2010-2019
+      - 優勝を決めた頭
+  say:
+  - text: ディエゴ・ゴディンは、ウルグアイのセンターバック。2010年にビジャレアルから来ました。
+    image: assets/photos/ll/atletico/atletico_legend_383107cc.jpg
+  - 2014年の最終節、カンプ・ノウで同点のヘディング。18年ぶりのリーグ優勝を決めます。
+  - 2019年、主将の腕章をコケに渡して退団。リーグ戦で**277試合17得点**でした。
+  sources:
+  - https://en.wikipedia.org/wiki/Fernando_Torres
+  - https://en.wikipedia.org/wiki/Diego_God%C3%ADn
+  - https://en.wikipedia.org/wiki/Antoine_Griezmann
+  bg: assets/backgrounds/stadium_アトレティコマドリード_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id004
+    - *id005
+    - - アントワーヌ・グリーズマン
+      - 2014-19, 2021-26
+      - 歴代最多得点
+  say:
+  - text: アントワーヌ・グリーズマンは、クラブの歴代最多得点者。2014年にソシエダから来ました。
+    image: assets/photos/ll/atletico/atletico_legend_03ab89bf.jpg
+  - 2018年のヨーロッパリーグ決勝で2得点。一度バルセロナへ出て、2021年に戻ります。
+  - リーグ戦で**349試合143得点**。この夏、アメリカのオーランド・シティへ移りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Fernando_Torres
+  - https://en.wikipedia.org/wiki/Diego_God%C3%ADn
+  - https://en.wikipedia.org/wiki/Antoine_Griezmann
+  bg: assets/backgrounds/stadium_アトレティコマドリード_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はシメオネ。指揮は808試合
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ディエゴ・シメオネ（アルゼンチン）
+    - - 就任
+      - 2011年12月
+    - - 前職
+      - ラシン・クラブ（アルゼンチン）
+  say:
+  - text: 今シーズンの監督はディエゴ・シメオネ。アルゼンチン出身で、**2011年12月**の就任です。
+    image: assets/photos/ll/atletico/atletico_manager_b58576f1.jpg
+  - 前はアルゼンチンのラシン。ここで指揮した試合は、**808**を数えます。
+  sources:
+  - https://en.wikipedia.org/wiki/Atlético_Madrid
+  - https://en.wikipedia.org/wiki/Diego_Simeone
+  bg: assets/backgrounds/stadium_アトレティコマドリード_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は24人です。
+    image: assets/stats/ll_atletico_gk.png
+    no_telop: true
+  - image: assets/stats/ll_atletico_gk_f.png
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/ll_atletico_gk_f.png
+    text: ヤン・オブラクはスロベニア代表で**85試合**。
+    no_telop: true
+  - image: assets/stats/ll_atletico_df_f.png
+    text: ディフェンダーは6人。
+    no_telop: true
+  - image: assets/stats/ll_atletico_df_f.png
+    text: ダビド・ハンツコはスロバキア代表で**59試合**。
+    no_telop: true
+  - image: assets/stats/ll_atletico_df_f.png
+    text: クリスティアン・ロメロはアルゼンチン代表で**58試合**。
+    no_telop: true
+  - image: assets/stats/ll_atletico_mf_f.png
+    text: ミッドフィールダーは11人。
+    no_telop: true
+  - image: assets/stats/ll_atletico_mf_f.png
+    text: 主将を務めるのが**コケ**。
+    no_telop: true
+  - image: assets/stats/ll_atletico_mf_f.png
+    text: リーグ戦で**526試合**に出ています。
+    no_telop: true
+  - image: assets/stats/ll_atletico_mf_f.png
+    text: マルコス・ジョレンテはスペイン代表で**27試合**。
+    no_telop: true
+  - image: assets/stats/ll_atletico_fw_f.png
+    text: フォワードは4人。
+    no_telop: true
+  - image: assets/stats/ll_atletico_fw_f.png
+    text: アレクサンダー・セルロートはノルウェー代表で**77試合**。
+    no_telop: true
+  - image: assets/stats/ll_atletico_fw_f.png
+    text: ジョナサン・デイヴィッドはカナダ代表で**82試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Atlético_Madrid
+  bg: assets/backgrounds/stadium_アトレティコマドリード_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 1試合で1勝。2位
+  narrator: 解説
+  card:
+    type: table
+    title: ラ・リーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第5節
+      - レアル・ソシエダ（アウェー）
+      - 3対0
+  say:
+  - ラ・リーガは1試合を終えて、**1勝**です。
+  - 順位は**2位**、勝ち点は**16**です。
+  - この順位を保てば、来季のチャンピオンズリーグに出られます。
+  sources:
+  - "https://en.wikipedia.org/wiki/2026–27_Atlético_Madrid_season\r"
+  bg: assets/backgrounds/stadium_アトレティコマドリード_in.png
+  official: false

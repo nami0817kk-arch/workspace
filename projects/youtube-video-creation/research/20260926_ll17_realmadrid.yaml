@@ -1,0 +1,460 @@
+# プレミアリーグ20クラブ紹介 ⑰レアル・マドリード（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/ll_data/realmadrid*.json と旧台本 -
+format: news
+voice_min: 0
+slot: laliga_1
+date: 2026年9月19日
+people:
+- レアル・マドリード
+- ジョゼ・モウリーニョ
+short_title: レアル・マドリードってどんなクラブ？
+series: ラ・リーガチーム紹介
+theme:
+  id: realmadrid_intro
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: レアル・マドリード
+  title: レアル・マドリード。ヨーロッパ一を決める大会は、誰が作ったのか
+  question: どんなクラブなのか
+  hook: 上下白のユニフォームを、1シーズンだけやめたことがあります。
+  lead: ヨーロッパ王者に、史上最多の15回。
+  opening_image: assets/stats/ll_realmadrid_data_t.png
+thumbnail:
+  line1: 欧州一の大会、生みの親
+  line2: 名門レアル・マドリード
+  crest_main:
+  - レアル・マドリード
+  board: assets/stats/ll_realmadrid_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 無冠の翌シーズン、モウリーニョが帰ってきた
+  narrator: キャスター
+  say:
+  - text: 無冠に終わった昨季のあと、**13年**ぶりに戻ったのがモウリーニョ監督です。
+    image: assets/stats/ll_realmadrid_data_r1.png
+    no_telop: true
+  - voice: ジョゼ・モウリーニョ
+    text: ベンフィカで、ポルトガルで幸せだった。
+    image: assets/stats/ll_realmadrid_data_r2.png
+  - voice: ジョゼ・モウリーニョ
+    text: それでもレアル・マドリードは、レアル・マドリードだ
+    image: assets/stats/ll_realmadrid_data_r2.png
+  - text: そしてヨーロッパの王者を決める大会。作った一人は、当時の会長でした。
+    image: assets/stats/ll_realmadrid_data_r3.png
+    no_telop: true
+  - image: assets/stats/ll_realmadrid_data0.png
+    text: 創立は**1902年**。1920年、国王から「レアル」、つまり王立の称号を受けました。
+    no_telop: true
+  - image: assets/stats/ll_realmadrid_data1.png
+    text: 愛称は「ロス・ブランコス」。スペイン語で、**白い人たち**という意味です。
+    no_telop: true
+  - image: assets/stats/ll_realmadrid_data2.png
+    text: ホームタウンは首都マドリード。人口およそ**348万人**、スペインでいちばん大きな町。
+    no_telop: true
+  - image: assets/backgrounds/stadium_レアルマドリード.png
+    text: 本拠地はベルナベウ。**8万3186人**が入り、20クラブでいちばん大きい。
+  - image: assets/stats/ll_realmadrid_data4.png
+    text: 会長は、2009年から2度目のフロレンティーノ・ペレス。クラブは会員が持つ形です。
+    no_telop: true
+  - image: assets/stats/ll_realmadrid_cups.png
+    text: 1部の優勝は最多の**36回**。国王杯は**20回**、スーペルコパは**13回**。
+    no_telop: true
+  - image: assets/stats/ll_realmadrid_data6.png
+    text: 最多出場はラウル・ゴンサレス。1994年から2010年までに、**741試合**です。
+    no_telop: true
+  - image: assets/stats/ll_realmadrid_data7.png
+    text: 直近のタイトルは2024年12月のインターコンチネンタルカップ。パチューカに**3対0**の勝ち。
+    no_telop: true
+  - image: assets/stats/ll_realmadrid_data8.png
+    text: 昨季のリーグ戦は**2位**。優勝したバルセロナに、勝ち点**8**届きませんでした。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Real_Madrid_CF
+  - "https://en.wikipedia.org/wiki/2026–27_Real_Madrid_CF_season\r"
+  - https://www.marca.com/futbol/real-madrid/2026/09/25/mourinho-esclarece-decidio-volver-madrid-me-dijeron-necesitamos-inicies-decada-prodigiosa-video.html
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_Real_Madrid_CF_season
+  - https://en.wikipedia.org/wiki/Santiago_Bernab%C3%A9u
+  bg: assets/backgrounds/stadium_レアルマドリード_in.png
+  official: false
+- id: kit
+  heading: 1シーズンだけの黒
+  tier: 背景
+  telop: 白をやめた1シーズン
+  narrator: 解説
+  card:
+    type: table
+    title: 1925年から26年のシーズン
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - まねた相手
+      - イングランドのコリンシアン
+    - - 変えたもの
+      - 黒いパンツ
+  say:
+  - 1925年に始まったシーズン、パンツを**黒**に変えました。
+  - 手本は、イングランドの名門アマチュアクラブ、コリンシアンです。
+  - text: ところが国王杯で、バルセロナに**1対5**と**0対3**で負けました。
+    card:
+      type: table
+      title: 1925年から26年のシーズン
+      columns: *id001
+      rows:
+      - - 国王杯
+        - バルセロナに1対5と0対3
+  - 会長は「縁起が悪い」と怒り、白に戻させました。
+  sources:
+  - https://es.wikipedia.org/wiki/Real_Madrid_Club_de_F%C3%BAtbol
+  - https://en.wikipedia.org/wiki/Real_Madrid_CF
+  bg: assets/backgrounds/stadium_レアルマドリード_in.png
+  official: false
+- id: kit2
+  heading: 白をまねたリーズ
+  tier: 背景
+  telop: 今度は、イングランドのクラブが白をまねた
+  narrator: 解説
+  card:
+    type: table
+    title: 白をまねたリーズ
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - - 1960年
+      - ヨーロッパの決勝で7対3
+    - - スタンドに
+      - のちのリーズ監督ドン・レヴィー
+  say:
+  - 逆に、白をまねたクラブもあります。
+  - 1960年、ヨーロッパの決勝で、フランクフルトに**7対3**。
+  - text: スタンドにいたドン・レヴィーは、翌年リーズの監督になると、青と黄色をやめます。
+    card:
+      type: table
+      title: 白をまねたリーズ
+      columns: *id002
+      rows:
+      - - そのあと
+        - リーズは上下とも白に
+  - 上下とも白に。いちばん多く勝っているクラブの色だから、という理由でした。
+  sources:
+  - https://es.wikipedia.org/wiki/Real_Madrid_Club_de_F%C3%BAtbol
+  - https://en.wikipedia.org/wiki/Real_Madrid_CF
+  bg: assets/backgrounds/stadium_レアルマドリード_in.png
+  official: false
+- id: bernabeu
+  heading: 大会を作った会長
+  tier: 背景
+  telop: 会長が、ヨーロッパの大会を作った
+  narrator: 解説
+  card:
+    type: table
+    title: 大会を作った会長
+    columns: &id003
+    - ''
+    - ''
+    rows:
+    - - 会長
+      - サンティアゴ・ベルナベウ
+    - - 在任
+      - 1943年から78年に亡くなるまで
+  say:
+  - その決勝は、各国の王者が集まる大会でした。
+  - 作った一人が、**35年**近く会長を務めたサンティアゴ・ベルナベウです。
+  - text: 1955年、フランスの記者の案を受け、パリのホテルで立ち上げを決めました。
+    card:
+      type: table
+      title: 大会を作った会長
+      columns: *id003
+      rows:
+      - - 1955年
+        - パリで大会の立ち上げに加わる
+      - - 1956年から60年
+        - 5連覇
+  - その大会で、最初から**5連覇**。いまのチャンピオンズリーグです。
+  sources:
+  - https://en.wikipedia.org/wiki/Santiago_Bernab%C3%A9u
+  - https://en.wikipedia.org/wiki/Real_Madrid_CF
+  bg: assets/backgrounds/stadium_レアルマドリード_in.png
+  official: false
+- id: galacticos
+  heading: 毎年、1人のスター
+  tier: 背景
+  telop: 練習場を売って、毎年スターを買った
+  narrator: 解説
+  card:
+    type: table
+    title: 毎年、1人のスター
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 2000年
+      - ペレスが会長に
+    - - 公約
+      - バルセロナのフィーゴを獲る
+    - - 練習場を売却
+      - 借金2億7000万ユーロを返す
+  say:
+  - 2000年、会長選挙に勝ったペレスの公約は、バルセロナのフィーゴを獲ることでした。
+  - さらに練習場を売って、**2億7000万ユーロ**の借金を返します。
+  - そこから毎年の夏、世界的なスターを1人ずつ。ベッカムもその1人です。
+  sources:
+  - https://en.wikipedia.org/wiki/Real_Madrid_CF
+  - https://en.wikipedia.org/wiki/Florentino_P%C3%A9rez
+  bg: assets/backgrounds/stadium_レアルマドリード_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 速く攻める。稼いで戦う。世界中にファン
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 守って速く攻める
+    - - 運営の型
+      - 売上10億ユーロ超
+    - - クラブの気質
+      - 92か国に公認ファン
+  say:
+  - text: モウリーニョのチームは、守ってから速く攻める。リーグ戦7試合で**18得点**です。
+    image: assets/photos/ll/realmadrid/realmadrid_manager_56b64b8a.jpg
+  - ピッチの外は、稼いだぶんで戦う型。
+  - 2023年から24年のシーズン、サッカークラブで初めて、売上が**10億ユーロ**を超えました。
+  - 応援は世界規模。公認のファンクラブ「ペーニャ」は、**92か国**に2452あります。
+  sources:
+  - https://en.wikipedia.org/wiki/Real_Madrid_CF
+  - https://en.wikipedia.org/wiki/Jos%C3%A9_Mourinho
+  - https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
+  - https://es.wikipedia.org/wiki/Real_Madrid_Club_de_F%C3%BAtbol
+  bg: assets/backgrounds/stadium_レアルマドリード_in.png
+  official: false
+- id: episode
+  heading: ビートルズになった4人
+  tier: 背景
+  telop: 4人がビートルズのまねをして、呼び名が決まった
+  narrator: 解説
+  card:
+    type: table
+    title: ビートルズになった4人
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1966年
+      - スペインの選手だけで欧州一
+    - - 呼び名
+      - イエイエ
+    - - 由来
+      - シー・ラブズ・ユーの歌声
+  say:
+  - text: 1966年、スペインの選手だけのチームで、**6度目**のヨーロッパの頂点へ。
+    image: assets/images/ll_realmadrid_episode/scene.jpg
+  - 若い4人がビートルズのまねをして、新聞の写真に写りました。
+  - シー・ラブズ・ユーの「イエー、イエー、イエー」から、チームは「イエイエ」と呼ばれます。
+  sources:
+  - https://en.wikipedia.org/wiki/Y%C3%A9-y%C3%A9_(Real_Madrid)
+  - https://en.wikipedia.org/wiki/Real_Madrid_CF
+  bg: assets/backgrounds/stadium_レアルマドリード_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id004
+      - ジネディーヌ・ジダン
+      - 2001-2006
+      - 決勝のボレー
+  say:
+  - text: ジダンは2001年、当時の世界最高額でユヴェントスから。リーグ戦は**155試合37得点**。
+    image: assets/photos/ll/realmadrid/realmadrid_legend_fcd5d1e5.jpg
+  - 2002年のチャンピオンズリーグ決勝、左足のボレーで、レバークーゼンを破る決勝点。
+  - 監督としても、チャンピオンズリーグを3連覇。今はフランス代表を率いています。
+  sources:
+  - https://en.wikipedia.org/wiki/Zinedine_Zidane
+  - https://en.wikipedia.org/wiki/Cristiano_Ronaldo
+  - https://en.wikipedia.org/wiki/Sergio_Ramos
+  bg: assets/backgrounds/stadium_レアルマドリード_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id004
+    - &id005
+      - クリスティアーノ・ロナウド
+      - 2009-2018
+      - 歴代最多450得点
+  say:
+  - text: クリスティアーノ・ロナウドは2009年に来ました。リーグ戦**292試合**で、**311得点**。
+    image: assets/photos/ll/realmadrid/realmadrid_legend_972c9872.jpg
+  - 2015年9月、ラウルを抜いて、クラブの歴代最多得点者になりました。
+  - 公式戦で**450得点**を残し、2018年にユヴェントスへ移りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Zinedine_Zidane
+  - https://en.wikipedia.org/wiki/Cristiano_Ronaldo
+  - https://en.wikipedia.org/wiki/Sergio_Ramos
+  bg: assets/backgrounds/stadium_レアルマドリード_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id004
+    - *id005
+    - - セルヒオ・ラモス
+      - 2005-2021
+      - 93分の同点弾
+  say:
+  - text: セルヒオ・ラモスは2005年、セビージャから。守備の選手で、リーグ戦**469試合72得点**。
+    image: assets/photos/ll/realmadrid/realmadrid_legend_e9e63b5b.jpg
+  - 2014年の決勝、アトレティコ戦の**93分**に頭で同点。延長で勝ち、10度目の優勝。
+  - 主将も務め、2021年にパリ・サンジェルマンへ移りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Zinedine_Zidane
+  - https://en.wikipedia.org/wiki/Cristiano_Ronaldo
+  - https://en.wikipedia.org/wiki/Sergio_Ramos
+  bg: assets/backgrounds/stadium_レアルマドリード_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はモウリーニョ。2029年までの契約
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ジョゼ・モウリーニョ（ポルトガル）
+    - - 就任
+      - 2026年7月（2度目）
+    - - 前職
+      - ベンフィカ
+  say:
+  - text: 今季の監督はジョゼ・モウリーニョ。ポルトガル出身で、**2026年7月**の就任です。
+    image: assets/photos/ll/realmadrid/realmadrid_manager_56b64b8a.jpg
+  - 前はベンフィカ。2010年から13年に続く2度目で、契約は**2029年**までです。
+  sources:
+  - https://en.wikipedia.org/wiki/Real_Madrid_CF
+  - https://en.wikipedia.org/wiki/Jos%C3%A9_Mourinho
+  - https://www.realmadrid.com/es-ES/noticias/club/ultimas-noticias/comunicado-oficial-mourinho-11-06-2026
+  bg: assets/backgrounds/stadium_レアルマドリード_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は26人です。
+    image: assets/stats/ll_realmadrid_gk.png
+    no_telop: true
+  - image: assets/stats/ll_realmadrid_gk_f.png
+    text: ゴールキーパーは2人。
+    no_telop: true
+  - image: assets/stats/ll_realmadrid_gk_f.png
+    text: ティボー・クルトワはベルギー代表で**115試合**。
+    no_telop: true
+  - image: assets/stats/ll_realmadrid_gk_f.png
+    text: アンドリー・ルニンはウクライナ代表で**16試合**。
+    no_telop: true
+  - image: assets/stats/ll_realmadrid_df_f.png
+    text: ディフェンダーは10人。
+    no_telop: true
+  - image: assets/stats/ll_realmadrid_df_f.png
+    text: アントニオ・リュディガーはドイツ代表で**86試合**。
+    no_telop: true
+  - image: assets/stats/ll_realmadrid_df_f.png
+    text: エデル・ミリトンはブラジル代表で**38試合**。
+    no_telop: true
+  - image: assets/stats/ll_realmadrid_mf_f.png
+    text: ミッドフィールダーは7人。
+    no_telop: true
+  - image: assets/stats/ll_realmadrid_mf_f.png
+    text: 主将を務めるのが**フェデリコ・バルベルデ**。
+    no_telop: true
+  - image: assets/stats/ll_realmadrid_mf_f.png
+    text: リーグ戦で**251試合**に出ています。
+    no_telop: true
+  - image: assets/stats/ll_realmadrid_mf_f.png
+    text: ベルナルド・シウバはポルトガル代表で**113試合**。
+    no_telop: true
+  - image: assets/stats/ll_realmadrid_fw_f.png
+    text: フォワードは7人。
+    no_telop: true
+  - image: assets/stats/ll_realmadrid_fw_f.png
+    text: ヴィニシウス・ジュニオールはブラジル代表で**55試合**。
+    no_telop: true
+  - image: assets/stats/ll_realmadrid_fw_f.png
+    text: キリアン・エムバペはフランス代表で**107試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Real_Madrid_CF
+  bg: assets/backgrounds/stadium_レアルマドリード_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 1試合で1勝。4位
+  narrator: 解説
+  card:
+    type: table
+    title: ラ・リーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - レアル・ソシエダ（ホーム）
+      - 4対1
+  say:
+  - ラ・リーガは1試合を終えて、**1勝**です。
+  - 順位は**4位**、勝ち点は**15**です。
+  - この順位を保てば、来季のチャンピオンズリーグに出られます。
+  - チャンピオンズリーグの初戦は、ホームでインテルに**2対1**で勝ちました。
+  sources:
+  - "https://en.wikipedia.org/wiki/2026–27_Real_Madrid_CF_season\r"
+  bg: assets/backgrounds/stadium_レアルマドリード_in.png
+  official: false

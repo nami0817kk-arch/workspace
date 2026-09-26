@@ -1,0 +1,189 @@
+# ラ・リーガ チーム紹介 ⑳ビジャレアル（見本はレアル・ソシエダ）。
+# 事実はすべて research/ll_data/villarreal_research.md（出典付き）から。
+# 「季」は合成音声が「き」と読むので使わない。アルファベットは読み上げに残さない（PK→ピーケー）
+title: ビジャレアル。人口5万の町が、ヨーロッパを制した夜
+short_title: ビジャレアル、人口5万の町の黄色い潜水艦
+# クラブを表す一言（体言止め）。20クラブのホームタウンで人口がいちばん少ない（53,623、2番目の Cornellà は 92,237）
+opening: "ラ・リーガの20クラブで、いちばん人口の少ない町。"
+# 逸話（1947年、店に黄色しかなかった）で回収する
+hook: あの黄色いユニフォームは、ある店の品切れから生まれました。
+thumbnail:
+  line1: 5万人の町が欧州制覇
+  line2: 黄色い潜水艦ビジャレアル
+  crest_main: [ビジャレアル]
+
+# いま見る理由。監督の言葉はクラブ公式 2026-06-02（就任会見）の原文
+# 「Me gusta mucho poder dirigir en la Champions League. Llevo toda la vida viéndola.」
+reasons:
+- "今季はチャンピオンズリーグ。2シーズン続けて、ヨーロッパの最高峰で戦っています。"
+- "率いるのは、今季から指揮をとるイニゴ・ペレス監督。就任の日に、こう話しました。"
+- {voice: イニゴ・ペレス, text: "チャンピオンズリーグで指揮をとれるのは、とてもうれしい。ずっと見てきた大会だ"}
+- "そしてこのクラブは、人口**5万**ほどの町から、ヨーロッパの大会を制しています。"
+reasons_focus: [1, 2, 2, 3]
+reasons_telop: 2年続けて欧州の最高峰。新監督はイニゴ・ペレス
+reasons_rows:
+- ["理由1", "2年続けて欧州の最高峰"]
+- ["理由2", "新監督イニゴ・ペレス"]
+- ["理由3", "5万人の町が欧州制覇"]
+reasons_sources:
+- https://villarrealcf.es/presentacion-de-inigo-perez-villarreal-cf/
+- https://en.wikipedia.org/wiki/2026%E2%80%9327_Villarreal_CF_season
+- https://en.wikipedia.org/wiki/2021_UEFA_Europa_League_final
+people_extra:
+- イニゴ・ペレス
+
+# 基礎DATA。話す順は20クラブ共通（創立→愛称→ホームタウン→本拠地→オーナー→タイトル歴→記録→直近→昨季）
+data:
+- 創立は**1923年**。入場料は男性が半ペセタで、女性は無料でした。
+- 愛称は「黄色い潜水艦」。**1967年**の昇格を、ビートルズの曲で祝ったのが始まりです。
+- ホームタウンはビジャレアル。人口**5万3623人**、タイル作りが盛んな町です。
+- 本拠地はエスタディオ・デ・ラ・セラミカ。クラブの発表では、**2万3173人**が入ります。
+- オーナーは**1997年**からフェルナンド・ロイグ。陶磁器の会社も持つ実業家です。
+- 1部も国王杯も、優勝はまだ**0回**。ヨーロッパリーグ**1回**、インタートトカップ**2回**。
+- 最多出場は、中盤のマヌ・トリゲロス。このクラブで**477試合**に出ました。
+- 直近のタイトルは、**2021年**のヨーロッパリーグです。
+- 昨季のリーグ戦は**3位**。勝ち点は**72**でした。
+data_focus: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+
+# クラブの話。1枚のカードを20秒以上出さないため、3つに割る
+story_sections:
+  - id: history
+    heading: 下のリーグから1部へ
+    tier: 背景
+    telop: 1998年、初めて1部へ
+    narrator: 解説
+    card:
+      type: table
+      title: 下のリーグから1部へ
+      columns: ["", ""]
+      rows:
+        - ["1970年", "初めて2部へ"]
+        - ["1998年", "初めて1部へ"]
+        - ["決め手", "アウェーゴールの差"]
+    say:
+      - 歴史の大半は、下のリーグでした。初めて2部に上がったのは**1970年**です。
+      - 1998年、1部への昇格をかけた2試合は、どちらも引き分け。
+      - アウェーゴールの差で、クラブ史上初めて1部に上がりました。
+      - 1部の最初の試合はベルナベウ。**3分**で先制し、1対4で敗れました。
+    sources:
+      - https://en.wikipedia.org/wiki/Villarreal_CF
+      - https://es.wikipedia.org/wiki/Villarreal_Club_de_F%C3%BAtbol
+  - id: history2
+    heading: 1年で戻った
+    tier: 背景
+    telop: 2012年に2部へ。1年で戻る
+    narrator: 解説
+    card:
+      type: table
+      title: 1年で戻った
+      columns: ["", ""]
+      rows:
+        - ["2012年", "18位で2部へ"]
+        - ["2013年", "2部で2位、1部へ"]
+        - ["今季", "14シーズン続けて1部"]
+    say:
+      - 2012年、最終節でアトレティコに敗れ、2部に落ちます。
+      - 決めたのはファルカオ。終了間際の1点でした。
+      - 翌シーズンは2部で2位。最後の試合で昇格を決め、1年で戻りました。
+      - そこから一度も落ちず、今季で**14シーズン**続けて1部です。
+    sources:
+      - https://en.wikipedia.org/wiki/Villarreal_CF
+      - https://es.wikipedia.org/wiki/Villarreal_Club_de_F%C3%BAtbol
+      - https://en.wikipedia.org/wiki/2026%E2%80%9327_Villarreal_CF_season
+  - id: history3
+    heading: ゴールキーパーのピーケー
+    tier: 背景
+    telop: ピーケー戦11対10。初めてのタイトル
+    narrator: 解説
+    card:
+      type: table
+      title: 2021年 ヨーロッパリーグ決勝
+      columns: ["", ""]
+      rows:
+        - ["相手", "マンチェスター・ユナイテッド"]
+        - ["試合", "延長まで1対1"]
+        - ["ピーケー戦", "11対10"]
+    say:
+      - 2021年、ヨーロッパリーグの決勝。相手はマンチェスター・ユナイテッドでした。
+      - 1対1のままピーケー戦へ。両チームの10人ずつが、全員決めます。
+      - 最後はゴールキーパーの番。ルリが決め、デ・ヘアのキックを止めました。
+      - "**11対10**。創立から98年で、初めてのタイトルでした。"
+    sources:
+      - https://en.wikipedia.org/wiki/2021_UEFA_Europa_League_final
+      - https://es.wikipedia.org/wiki/Villarreal_Club_de_F%C3%BAtbol
+
+# このクラブの特徴（プレーの色・運営の型・クラブの気質）
+features:
+- "イニゴ・ペレス監督のチームは、試合を支配して攻める。課題は決め切ること、と本人。"
+- "ピッチの外は、主力を売っても崩れない型。"
+- "昨シーズンの前、中盤のバエナを**4200万ユーロ**でアトレティコへ売りました。"
+- "それでも終わってみれば、そのアトレティコより上でした。"
+- "スタンドは町ぐるみ。年間シートは**1万9000人**を超え、町の人口の3分の1より多い数です。"
+features_telop: 支配する。売っても崩れない。町ぐるみのクラブ
+features_rows:
+- ["プレーの色", "試合を支配して攻める"]
+- ["運営の型", "主力を売っても崩れない"]
+- ["クラブの気質", "町の3分の1が年間シート"]
+features_sources:
+- https://villarrealcf.es/inigo-perez-el-triunfo-nos-va-a-venir-muy-bien-para-el-paron/
+- https://en.wikipedia.org/wiki/2025%E2%80%9326_Atl%C3%A9tico_Madrid_season
+- https://villarrealcf.es/mas-de-19-000-razones-para-luchar/
+
+# 「へえ」の逸話。英語版クラブ記事の Club colours（出典: Phil Ball『Morbo』）で裏を取った
+episode:
+  id: episode
+  heading: 黄色は品切れから
+  tier: 背景
+  telop: 店にあったのは、黄色だけ
+  narrator: 解説
+  card:
+    type: table
+    title: 黄色は品切れから
+    columns: ["", ""]
+    rows:
+      - ["1947年", "白いシャツと黒いパンツを買いに"]
+      - ["店にあったのは", "黄色だけ"]
+      - ["パンツ", "選手の投票で青に"]
+  say:
+    - {text: "1947年、当時の会長の息子が、ユニフォームを買いにバレンシアへ行きました。", image: assets/images/ll_villarreal_episode/scene.jpg}
+    - 欲しかったのは白いシャツと黒いパンツ。店にどちらも無く、あったのは黄色だけ。
+    - 黒いパンツは選手に嫌われ、白を買って、投票で青に染めました。
+  sources:
+    - https://en.wikipedia.org/wiki/Villarreal_CF
+
+# このクラブを語る3人（1人3行）。数字は英語版 infobox のリーグ戦のみ
+legends:
+- - リケルメはアルゼンチンの司令塔。バルセロナで外国人枠からあふれ、期限付きで来ました。
+  - 2006年、チャンピオンズリーグの準決勝。決めれば延長のピーケーを、止められました。
+  - リーグ戦で**106試合36得点**。いまは母国ボカ・ジュニアーズの会長です。
+- - マルコス・セナはブラジル生まれの中盤。2002年に来て、11シーズンを過ごしました。
+  - スペイン代表として、2008年のヨーロッパ選手権を制しています。
+  - リーグ戦で**292試合25得点**。お別れの試合は、背番号と同じ**19分**から1分間の拍手。
+- - カソルラは、地元オビエドの財政難で、18歳になる前にここへ来た中盤です。
+  - 2008年、レアル・マドリードの誘いを断り、「ノーと言うことはできる」。
+  - 大けがから**636日**ぶりの試合を、ここで迎えました。リーグ戦は**251試合40得点**。
+legend_rows:
+- ["フアン・ロマン・リケルメ", "2003-2007", "初の欧州4強の司令塔"]
+- ["マルコス・セナ", "2002-2013", "欧州王者になった中盤"]
+- ["サンティ・カソルラ", "2003-2020", "3度在籍した中盤"]
+legend_sources:
+- - https://en.wikipedia.org/wiki/Juan_Rom%C3%A1n_Riquelme
+- - https://en.wikipedia.org/wiki/Marcos_Senna
+- - https://en.wikipedia.org/wiki/Santi_Cazorla
+
+# 今季の監督
+manager:
+- 今季の監督はイニゴ・ペレス。スペイン出身で、**2026年6月**の就任です。
+- 前はラージョ・バジェカーノ。昨シーズン、カンファレンスリーグの決勝まで進みました。
+manager_telop: 監督はイニゴ・ペレス。前はラージョ
+manager_rows:
+- ["監督", "イニゴ・ペレス（スペイン）"]
+- ["就任", "2026年6月"]
+- ["前職", "ラージョ・バジェカーノ"]
+manager_sources:
+- https://en.wikipedia.org/wiki/I%C3%B1igo_P%C3%A9rez
+- https://villarrealcf.es/presentacion-de-inigo-perez-villarreal-cf/
+
+# 今季。欧州の初戦（2026–27 Villarreal CF season の原文で負けを確認）
+season:
+- チャンピオンズリーグの初戦は、ドルトムントに**2対3**で敗れました。

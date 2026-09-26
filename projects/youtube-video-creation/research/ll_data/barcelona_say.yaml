@@ -1,0 +1,197 @@
+# ラ・リーガ チーム紹介 ⑤バルセロナ（形は realsociedad_say.yaml と同じ）。
+# 事実はすべて research/ll_data/barcelona_research.md（出典付き）から。
+# 「季」は合成音声が「き」と読むので使わない。アルファベットは読み上げに残さない
+title: バルセロナ。107年空けておいた胸に、最初に入れた名前
+short_title: バルセロナ、107年空けた胸に入れた名前
+# クラブを表す一言（体言止め）。英語版冒頭「Domestically, Barcelona has won a record 82 trophies」
+opening: "スペインで、いちばん多い国内タイトル**82**個。"
+# フリックは2023年9月10日、日本に1-4で敗れた翌日にドイツ代表を解任（英語版 Hansi Flick）。監督の節で回収
+hook: いまの監督は、日本代表との一戦が、前の仕事の最後の試合でした。
+thumbnail:
+  line1: 107年、胸は空けたまま
+  line2: バルセロナが最初に入れた名前
+  crest_main: [バルセロナ]
+
+# いま見る理由。監督の言葉はクラブ公式 2026-09-18（セビージャ戦の前日会見）の原文
+# 「We are at a different level from a year ago, and every game starts at 0–0」
+reasons:
+- "今季は公式戦**8戦8勝**。クラブの歴史で、いちばんの滑り出しです。"
+- "率いるのは、ドイツのフリック監督。こう話しています。"
+- {voice: ハンジ・フリック, text: "1年前とはレベルが違う。それでも、どの試合も0対0から始まる"}
+- "そしてこのクラブが、107年後に胸へ入れたのはユニセフ。お金は、クラブが払う側でした。"
+reasons_focus: [1, 2, 2, 3]
+reasons_telop: 史上最高の出だしと、107年後の胸
+reasons_rows:
+- ["理由1", "公式戦8戦8勝、史上最高"]
+- ["理由2", "監督「どの試合も0対0から」"]
+- ["理由3", "107年後、胸にユニセフ"]
+reasons_sources:
+- https://www.fcbarcelona.com/en/football/first-team/news/4578296/hansi-flick-were-focused-on-our-own-job
+- https://www.fcbarcelona.com/en/football/first-team/news/4579409/flicks-barca-is-a-goal-machine
+- https://en.wikipedia.org/wiki/FC_Barcelona
+- https://es.wikipedia.org/wiki/F%C3%BAtbol_Club_Barcelona
+people_extra:
+- ハンジ・フリック
+
+# 基礎DATA。話す順は20クラブ共通（創立→愛称→ホームタウン→本拠地→会長→タイトル歴→記録→直近→昨季）
+data:
+- 創立は**1899年**。スイスから来たジョアン・ガンペルが、仲間を集めました。
+- 愛称は「ブラウグラナ」。カタルーニャ語で、**青とえんじ**のことです。
+- ホームタウンはバルセロナ。地中海に面した、カタルーニャ州の州都。
+- 本拠地はカンプ・ノウ。改修中で、いまは**6万2652人**。完成すれば**10万5000人**です。
+- 持ち主は**15万人**を超える会員。会長のラポルタは、**2026年3月**に再選されました。
+- 1部優勝は**29回**、国王杯は最多の**32回**。チャンピオンズリーグは**5回**。
+- 最多出場はリオネル・メッシの**778試合**。得点も、クラブ最多の**672**。
+- 直近のタイトルは昨シーズンのリーグ。クラシコの勝利で決めたのは、初めてでした。
+- 昨シーズンは**1位**で、勝ち点**94**。ホームのリーグ戦は、**19戦全勝**でした。
+data_focus: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+
+# クラブの話。1枚のカードを20秒以上出さないため、3つに割る
+story_sections:
+  - id: history
+    heading: スポーツ誌の広告から
+    tier: 背景
+    telop: 始まりは、スポーツ誌に出した広告
+    narrator: 解説
+    card:
+      type: table
+      title: 1899年の呼びかけ
+      columns: ["", ""]
+      rows:
+        - ["10月22日", "ガンペルが広告を出す"]
+        - ["11月29日", "集まった面々で創立"]
+        - ["最初の会長", "スイス人のワルター・ヴィルト"]
+    say:
+      - 始まりは、スポーツ誌に載った1本の広告でした。
+      - "**1899年10月**、ガンペルは、この競技が好きな人は連絡を、と呼びかけます。"
+      - "**11月29日**、集まった面々でクラブが生まれました。"
+      - 最初の会長は、その場でいちばん年上だったスイス人です。
+    sources:
+      - https://en.wikipedia.org/wiki/FC_Barcelona
+      - https://es.wikipedia.org/wiki/F%C3%BAtbol_Club_Barcelona
+      - https://en.wikipedia.org/wiki/Joan_Gamper
+  - id: history2
+    heading: クライフが来て
+    tier: 背景
+    telop: 1992年、初めてヨーロッパの頂点へ
+    narrator: 解説
+    card:
+      type: table
+      title: クライフとヨーロッパ
+      columns: ["", ""]
+      rows:
+        - ["1973年", "選手クライフ、世界最高額で加入"]
+        - ["1988年", "監督として戻る"]
+        - ["1992年", "初めて欧州王者に"]
+    say:
+      - "**1973年**、オランダのヨハン・クライフが、当時の世界最高額で加わります。"
+      - "**1988年**には監督として戻り、ドリームチームと呼ばれるチームを作りました。"
+      - "**1992年**、延長の末、クーマンのフリーキックでサンプドリアに**1対0**の勝ち。"
+      - 創立から90年以上、届かなかったヨーロッパの頂点でした。
+    sources:
+      - https://en.wikipedia.org/wiki/FC_Barcelona
+      - https://en.wikipedia.org/wiki/1992_European_Cup_final
+  - id: history3
+    heading: 空けておいた胸
+    tier: 背景
+    telop: 胸にスポンサー名を入れなかった107年
+    narrator: 解説
+    card:
+      type: table
+      title: ユニフォームの胸
+      columns: ["", ""]
+      rows:
+        - ["2006年まで", "胸にスポンサー名なし"]
+        - ["2006年", "ユニセフ。クラブが寄付する側"]
+        - ["2011年", "初めて、お金を受け取る広告"]
+    say:
+      - スペインのクラブが胸にスポンサー名を入れ始めたのは、**1981年**。
+      - それでもこのクラブは、胸を空けたままにしました。
+      - "**2006年**、ついに入った名前は、国連の子どもの機関、ユニセフ。"
+      - クラブは毎年**150万ユーロ**以上を寄付し、お金を受け取る広告は**2011年**からです。
+    sources:
+      - https://en.wikipedia.org/wiki/FC_Barcelona
+      - https://es.wikipedia.org/wiki/F%C3%BAtbol_Club_Barcelona
+
+# このクラブの特徴（プレーの色・運営の型・クラブの気質）
+features:
+- "フリック監督のチームは、前から奪って点を取る。就任から**125試合**で**354得点**です。"
+- "運営の型は、育てて使う。育成組織のラ・マシアには、**300人**を超える若手がいます。"
+- "2010年のバロンドールは、最終候補の**3人**とも、ラ・マシアの出身でした。"
+- "気質を表す合言葉は「クラブ以上の存在」。カタルーニャの誇りを背負ってきました。"
+features_telop: 前から奪う。育てて使う。クラブ以上の存在
+features_rows:
+- ["プレーの色", "前から奪って点を取る"]
+- ["運営の型", "ラ・マシアで育てる"]
+- ["クラブの気質", "「クラブ以上の存在」"]
+features_sources:
+- https://www.fcbarcelona.com/en/football/first-team/news/4579409/flicks-barca-is-a-goal-machine
+- https://www.fcbarcelona.com/en/football/first-team/news/4578296/hansi-flick-were-focused-on-our-own-job
+- https://en.wikipedia.org/wiki/La_Masia
+- https://en.wikipedia.org/wiki/FC_Barcelona
+
+# 「へえ」の逸話。Camp de la Indústria の記事と、クラブ記事（英・西）で裏を取った
+episode:
+  id: episode
+  heading: ファンの呼び名は「お尻」
+  tier: 背景
+  telop: ファンの呼び名「クレ」は、お尻から
+  narrator: 解説
+  card:
+    type: table
+    title: 「クレ」の始まり
+    columns: ["", ""]
+    rows:
+      - ["1909〜1922年", "最初の本拠地、インドゥストリア通り"]
+      - ["満員の日", "塀の上に座って観戦"]
+      - ["通りから見えたのは", "ずらりと並んだお尻"]
+  say:
+    - {text: "ファンは「クレ」と呼ばれます。もとは、カタルーニャ語のお尻です。", image: assets/images/ll_barcelona_episode/scene.jpg}
+    - 最初の競技場は満員になると、塀の上に座って見る人が並びました。
+    - 通りから見えたのは、ずらりと並んだお尻。それが、そのまま呼び名になりました。
+  sources:
+    - https://en.wikipedia.org/wiki/Camp_de_la_Ind%C3%BAstria
+    - https://en.wikipedia.org/wiki/FC_Barcelona
+    - https://es.wikipedia.org/wiki/F%C3%BAtbol_Club_Barcelona
+
+# このクラブを語る3人（1人3行）。数字は英語版 infobox のリーグ戦のみ。
+# メッシは基礎DATAの最多出場で出るので、同じ人を2つの節に出さない
+legends:
+- - シャビ・エルナンデスはカタルーニャの生まれ。**11歳**で育成組織に入った中盤です。
+  - リーグ戦で**505試合58得点**。2009年と2015年の3冠で、中盤の中心にいました。
+  - 2021年には監督で戻り、2023年にリーグを制覇。今はオランダ代表の監督です。
+- - イニエスタは**12歳**のとき、ラ・マンチャの小さな村からやって来ました。
+  - 2009年、チェルシーとの準決勝。試合終了間際の同点弾で、決勝へ進みました。
+  - リーグ戦で**442試合35得点**。2018年に、日本のヴィッセル神戸へ渡りました。
+- - ロナウジーニョは**2003年**、パリ・サンジェルマンから**3000万ユーロ**で来ました。
+  - 2005年11月、敵地ベルナベウで2得点。レアルのファンが、拍手を送りました。
+  - その年は、バロンドールにも選ばれました。リーグ戦で**145試合70得点**。
+legend_rows:
+- ["シャビ・エルナンデス", "1998-2015", "3冠の中心"]
+- ["アンドレス・イニエスタ", "2002-2018", "終了間際の同点弾"]
+- ["ロナウジーニョ", "2003-2008", "敵地で拍手"]
+legend_sources:
+- - https://en.wikipedia.org/wiki/Xavi_(footballer,_born_1980)
+- - https://en.wikipedia.org/wiki/Andr%C3%A9s_Iniesta
+- - https://en.wikipedia.org/wiki/Ronaldinho
+
+# 今季の監督
+manager:
+- 今季の監督はハンジ・フリック。ドイツ出身で、**2024年5月**に就任しました。
+- 前はドイツ代表の監督。日本に**1対4**で敗れた翌日、職を解かれています。
+manager_telop: 監督はフリック。前はドイツ代表
+manager_rows:
+- ["監督", "ハンジ・フリック（ドイツ）"]
+- ["就任", "2024年5月"]
+- ["前職", "ドイツ代表"]
+manager_sources:
+- https://en.wikipedia.org/wiki/Hansi_Flick
+- https://en.wikipedia.org/wiki/2025%E2%80%9326_FC_Barcelona_season
+
+squad_about:
+  ロドリ: ロドリは今夏、マンチェスター・シティから加入。バロンドールを**2024年**に受けた中盤です。
+
+# 今季。欧州の初戦（2026–27 FC Barcelona season の原文）
+season:
+- 欧州の大会の初戦は、ホームでフェイエノールトに**5対1**で勝ちました。
+- 2015年に欧州を制した顔ぶれは、もう一人も残っていません。

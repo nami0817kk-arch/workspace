@@ -1,0 +1,402 @@
+# プレミアリーグ20クラブ紹介 ⑥レアル・ベティス（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/ll_data/betis*.json と旧台本 -
+format: news
+voice_min: 0
+slot: laliga_1
+date: 2026年9月19日
+people:
+- レアル・ベティス
+- マヌエル・ペジェグリーニ
+short_title: レアル・ベティスが掲げる言葉
+series: ラ・リーガチーム紹介
+theme:
+  id: betis_intro
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: レアル・ベティス
+  title: レアル・ベティス。3部まで落ちたクラブが掲げる言葉
+  question: どんなクラブなのか
+  hook: 両チームのキーパーまでピーケーを蹴った決勝があります。
+  lead: スペインで、いちばん古いファンの会。
+  opening_image: assets/stats/ll_betis_data_t.png
+thumbnail:
+  line1: 3部まで落ちたクラブ
+  line2: ベティスが掲げる言葉
+  crest_main:
+  - レアル・ベティス
+  board: assets/stats/ll_betis_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 21シーズンぶりの舞台と、73歳の監督
+  narrator: キャスター
+  say:
+  - text: 今季は**21シーズン**ぶりに、チャンピオンズリーグへ。
+    image: assets/stats/ll_betis_data_r1.png
+    no_telop: true
+  - text: 率いるペジェグリーニ監督は、誕生日にこう話しました。
+    image: assets/stats/ll_betis_data_r2.png
+    no_telop: true
+  - voice: マヌエル・ペジェグリーニ
+    text: いま、このレベルで働いている73歳は、わたしだけだ
+    image: assets/stats/ll_betis_data_r2.png
+  - text: そしてファンの合言葉は、「負けても、ベティス万歳」。
+    image: assets/stats/ll_betis_data_r3.png
+    no_telop: true
+  - image: assets/stats/ll_betis_data0.png
+    text: 創立は**1907年**。名前のベティスは、町を流れる川の、ローマ時代の呼び名です。
+    no_telop: true
+  - image: assets/stats/ll_betis_data1.png
+    text: 愛称は「エリオポリタノス」。本拠地のある地区の名で、意味は**太陽の町**。
+    no_telop: true
+  - image: assets/stats/ll_betis_data2.png
+    text: ホームタウンはセビージャ。アンダルシアの州都で、スペインで**5番目**に大きな町です。
+    no_telop: true
+  - image: assets/backgrounds/stadium_レアルベティス.png
+    text: 本拠地はラ・カルトゥーハ。いつもの競技場を改修するあいだの仮住まいで、**7万人**が入ります。
+  - image: assets/stats/ll_betis_data4.png
+    text: 会長は**2016年**からアンヘル・アロ。株主が選ぶ形の株式会社です。
+    no_telop: true
+  - image: assets/stats/ll_betis_cups.png
+    text: 1部の優勝は**1回**。国王杯は**3回**。スーペルコパとヨーロッパの大会は、まだ優勝がありません。
+    no_telop: true
+  - image: assets/stats/ll_betis_data6.png
+    text: 最多出場は、2度在籍したホアキン。**528試合**に出ました。
+    no_telop: true
+  - image: assets/stats/ll_betis_data7.png
+    text: 直近のタイトルは2022年の国王杯。いまの本拠地で、ピーケー戦を**5対4**で制しました。
+    no_telop: true
+  - image: assets/stats/ll_betis_data8.png
+    text: 昨季のリーグ戦は**5位**。勝ち点は**60**でした。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Real_Betis
+  - "https://en.wikipedia.org/wiki/2026–27_Real_Betis_season\r"
+  - https://www.marca.com/futbol/betis/2026/09/16/pellegrini-mi-mejor-regalo-cumpleanos-seria-ganar-manana.html
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_Real_Betis_season
+  - https://en.wikipedia.org/wiki/Manuel_Pellegrini
+  bg: assets/backgrounds/stadium_レアルベティス_in.png
+  official: false
+- id: history
+  heading: 1935年の頂点
+  tier: 背景
+  telop: 1935年、ただ一度の1部優勝
+  narrator: 解説
+  card:
+    type: table
+    title: 1935年の頂点
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - アイルランド人のオコンネル
+    - - 決めた試合
+      - サンタンデールで5対0
+    - - 2位との差
+      - 勝ち点1
+  say:
+  - 1部の頂点に立ったのは**1935年**。率いたのはアイルランド人のオコンネル監督です。
+  - 決めたのは北の町サンタンデール。**5対0**で勝ち、マドリードを勝ち点1差でかわしました。
+  - その日のセビージャは春祭り。知らせは、祭りの小屋の黒板で伝えられました。
+  sources:
+  - https://en.wikipedia.org/wiki/Real_Betis
+  - https://es.wikipedia.org/wiki/Real_Betis_Balomp%C3%A9
+  bg: assets/backgrounds/stadium_レアルベティス_in.png
+  official: false
+- id: history2
+  heading: 同じ町で3部へ
+  tier: 背景
+  telop: 優勝を決めた町で、12年後に3部へ
+  narrator: 解説
+  card:
+    type: table
+    title: 同じ町で3部へ
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 1936年から
+      - 内戦。優勝した選手が散る
+    - - 1947年
+      - サンタンデールで1対4。3部へ
+  say:
+  - ところが翌年から内戦。優勝した顔ぶれは散り、残ったのは**2人**だけでした。
+  - 1947年には、あの優勝を決めたサンタンデールで**1対4**。3部へ落ちます。
+  - text: 3部には7年。1954年に3部で優勝し、1部から3部まで、すべての優勝を持つクラブに。
+    card:
+      type: table
+      title: 同じ町で3部へ
+      columns: *id001
+      rows:
+      - - 1954年
+        - 3部で優勝し、2部へ戻る
+  - 負けても応援をやめない、あの合言葉がファンに根づいたのは、この苦しい時代です。
+  sources:
+  - https://es.wikipedia.org/wiki/Historia_del_Real_Betis_Balomp%C3%A9
+  - https://en.wikipedia.org/wiki/Real_Betis
+  bg: assets/backgrounds/stadium_レアルベティス_in.png
+  official: false
+- id: history3
+  heading: ファンが取り戻したクラブ
+  tier: 背景
+  telop: ファンが集めたお金と、筆頭株主との対立
+  narrator: 解説
+  card:
+    type: table
+    title: ファンが取り戻したクラブ
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - - 1992年
+      - 株式会社に。ファンが4億ペセタ
+    - - 2009年
+      - 2部へ。6万人を超える抗議
+  say:
+  - 1992年、法律で株式会社になるとき、ファンは3か月で**4億ペセタ**を集めました。
+  - それでも足りず、残りを出した副会長のロペラが、筆頭株主になります。
+  - text: 2009年に2部へ落ちると、**6万人**を超えるファンが町を歩き、身を引くよう求めました。
+    card:
+      type: table
+      title: ファンが取り戻したクラブ
+      columns: *id002
+      rows:
+      - - 2017年
+        - 株をファンと株主へ売り出す
+  - 2017年、株は1株**120ユーロ**でファンと株主に売り出され、ロペラはクラブを離れました。
+  sources:
+  - https://en.wikipedia.org/wiki/Real_Betis
+  - https://es.wikipedia.org/wiki/Historia_del_Real_Betis_Balomp%C3%A9
+  - https://es.wikipedia.org/wiki/Real_Betis_Balomp%C3%A9
+  bg: assets/backgrounds/stadium_レアルベティス_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: とにかく打つ。実力者を拾う。落ちても戻る
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - とにかく打つ
+    - - 運営の型
+      - 行き場を失った実力者を拾う
+    - - クラブの気質
+      - 2部優勝7回。落ちても戻る
+  say:
+  - text: ペジェグリーニ監督のチームは、とにかく打つ。リーグ戦の開幕5試合で、シュートは**89本**です。
+    image: assets/photos/ll/betis/betis_manager_56bb9280.jpg
+  - ピッチの外は、行き場を失った実力者を拾う型。
+  - イスコは2023年に加入。そのシーズン、試合の最優秀選手に**19回**。リーグ最多でした。
+  - そして、落ちても戻ってくる。2部での優勝は**7回**あります。
+  sources:
+  - https://en.wikipedia.org/wiki/Real_Betis
+  - https://www.marca.com/futbol/betis/2026/09/16/bombardeo-ofensivo-betis-100-remates-seis-partidos.html
+  - https://en.wikipedia.org/wiki/Isco
+  bg: assets/backgrounds/stadium_レアルベティス_in.png
+  official: false
+- id: episode
+  heading: キーパーも蹴った決勝
+  tier: 背景
+  telop: 1977年の国王杯決勝、キーパーどうしのピーケー
+  narrator: 解説
+  card:
+    type: table
+    title: キーパーも蹴った決勝
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1977年 国王杯決勝
+      - アスレティックと2対2
+    - - ピーケー戦
+      - キーパーのエスナオラも成功
+    - - 10人目
+      - 相手のキーパーが失敗。8対7
+  say:
+  - text: 1977年、国王杯の決勝。アスレティックと**2対2**のまま、ピーケー戦に入りました。
+    image: assets/images/ll_betis_episode/scene.jpg
+  - 決着は10人目まで持ち越し。ベティスは、キーパーのエスナオラも決めていました。
+  - 最後に外したのは、相手のキーパーのイリバル。**8対7**で勝ち、クラブ初の国王杯です。
+  sources:
+  - https://en.wikipedia.org/wiki/1977_Copa_del_Rey_final
+  - https://en.wikipedia.org/wiki/Real_Betis
+  bg: assets/backgrounds/stadium_レアルベティス_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id003
+      - デニウソン
+      - 1998-2005
+      - 当時の世界最高額
+  say:
+  - text: デニウソンは1998年、サンパウロから加わったブラジル代表のドリブラーです。
+    image: assets/photos/ll/betis/betis_legend_62f14409.jpg
+  - 移籍金は**2150万ポンド**で、当時の世界最高額。それでも2年目、チームは2部へ落ちます。
+  - 残ってリーグ戦で**185試合**。在籍中の2002年、日韓ワールドカップで優勝しました。
+  sources:
+  - https://en.wikipedia.org/wiki/Den%C3%ADlson_(footballer,_born_1977)
+  - https://en.wikipedia.org/wiki/Rub%C3%A9n_Castro
+  - https://en.wikipedia.org/wiki/Borja_Iglesias
+  bg: assets/backgrounds/stadium_レアルベティス_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - &id004
+      - ルベン・カストロ
+      - 2010-2018
+      - クラブ最多148得点
+  say:
+  - text: ルベン・カストロは2010年、2部にいたベティスに加わった点取り屋です。
+    image: assets/photos/ll/betis/betis_legend_db788c4e.jpg
+  - 再び2部で戦った2014年からのシーズン、リーグ戦**31得点**。1年で1部へ戻しました。
+  - リーグ戦で**260試合135得点**。公式戦の**148得点**は、クラブの歴代最多です。
+  sources:
+  - https://en.wikipedia.org/wiki/Den%C3%ADlson_(footballer,_born_1977)
+  - https://en.wikipedia.org/wiki/Rub%C3%A9n_Castro
+  - https://en.wikipedia.org/wiki/Borja_Iglesias
+  bg: assets/backgrounds/stadium_レアルベティス_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - *id004
+    - - ボルハ・イグレシアス
+      - 2019-2025
+      - 決勝の先制点
+  say:
+  - text: ボルハ・イグレシアスは2019年、**2800万ユーロ**で来たセンターフォワード。
+    image: assets/photos/ll/betis/betis_legend_d078226b.jpg
+  - 2022年、国王杯の決勝で先制点。大会の得点王で、決勝の最優秀選手にも選ばれました。
+  - リーグ戦で**142試合39得点**。在籍中に、スペイン代表にも初めて呼ばれました。
+  sources:
+  - https://en.wikipedia.org/wiki/Den%C3%ADlson_(footballer,_born_1977)
+  - https://en.wikipedia.org/wiki/Rub%C3%A9n_Castro
+  - https://en.wikipedia.org/wiki/Borja_Iglesias
+  bg: assets/backgrounds/stadium_レアルベティス_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はペジェグリーニ。クラブ最多の319試合
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - マヌエル・ペジェグリーニ（チリ）
+    - - 就任
+      - 2020年7月
+    - - 前職
+      - ウェストハム
+  say:
+  - text: 今季の監督はマヌエル・ペジェグリーニ。**2020年7月**の就任です。
+    image: assets/photos/ll/betis/betis_manager_56bb9280.jpg
+  - 前はイングランドのウェストハム。ベティスでは**319試合**を率い、クラブで最も多い数です。
+  sources:
+  - https://en.wikipedia.org/wiki/Real_Betis
+  - https://en.wikipedia.org/wiki/Manuel_Pellegrini
+  - https://es.wikipedia.org/wiki/Historia_del_Real_Betis_Balomp%C3%A9
+  bg: assets/backgrounds/stadium_レアルベティス_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - 今季の登録選手は0人です。
+  sources:
+  - https://en.wikipedia.org/wiki/Real_Betis
+  bg: assets/backgrounds/stadium_レアルベティス_in.png
+  official: false
+- id: season
+  heading: 今季のここまで
+  tier: 報道
+  telop: 7試合で5勝1引き分け1敗。3位
+  narrator: 解説
+  card:
+    type: table
+    title: ラ・リーガの結果
+    columns:
+    - 節
+    - 相手
+    - 結果
+    rows:
+    - - 第1節
+      - バレンシア（アウェー）
+      - 1対0
+    - - 第2節
+      - レアル・ソシエダ（ホーム）
+      - 1対0
+    - - 第3節
+      - レバンテ（アウェー）
+      - 2対5
+    - - 第4節
+      - レアル・マドリード（ホーム）
+      - 1対0
+    - - 第5節
+      - ビジャレアル（アウェー）
+      - 2対1
+    - - 第6節
+      - ヘタフェ（ホーム）
+      - 1対0
+    - - 第7節
+      - デポルティーボ・ラ・コルーニャ（アウェー）
+      - 1対1
+  say:
+  - ラ・リーガは7試合を終えて、**5勝1引き分け1敗**です。
+  - 順位は**3位**、勝ち点は**16**です。
+  - この順位を保てば、来季のチャンピオンズリーグに出られます。
+  - チャンピオンズリーグの初戦は、上田綺世に先制されたリールに、**3対2**で逆転勝ちでした。
+  sources:
+  - "https://en.wikipedia.org/wiki/2026–27_Real_Betis_season\r"
+  bg: assets/backgrounds/stadium_レアルベティス_in.png
+  official: false

@@ -552,6 +552,16 @@ def build(key: str, number: int, old_file: str) -> Path:
         sections.append(split_card(sec(**ep)))
     # 名選手（1990年以降）
     leg = next((c for c in legends_all if c["club"].replace("・", "").replace("AFC", "") in club.replace("・", "") or club.replace("・", "") in c["club"].replace("・", "")), None)
+    # **共有の一覧に無くても、<key>_say.yaml に書いてあれば組む**（2026-09-27）。
+    # ラ・リーガは下請けが並んで書くので、1つのファイルに足させるとぶつかる。
+    # アスレティックはここが無くて、名選手の節が黙って消えていた
+    if not leg and ov.get("legend_rows") and ov.get("legends"):
+        extra = ov.get("legend_sources") or []
+        leg = {"club": club, "legends": [
+            {"name": str(r[0]), "era": str(r[1]) if len(r) > 1 else "", "numbers": "",
+             "why": str(r[2]) if len(r) > 2 else "",
+             "source": (list(extra[i])[0] if i < len(extra) and extra[i] else "")}
+            for i, r in enumerate(ov["legend_rows"])]}
     if leg:
         rows = ov.get("legend_rows") or [[l["name"], l["era"], l["why"][:24]] for l in leg["legends"]]
         # **3列目は12字まで**（2026-09-23 指摘「表をもう少し大きく」）。写真の横に置く
@@ -562,7 +572,7 @@ def build(key: str, number: int, old_file: str) -> Path:
         # **1人ずつ節を分け、カードは名前が出たぶんだけ増やす**（2026-09-20）。
         # 3人を1枚のカードでまとめると**22秒**、同じ絵のまま出っぱなしになった（上限20秒）。
         # 増やす形なら、**まだ話していない選手が先に画面に出ることがない**
-        srcs = [l["source"] for l in leg["legends"]]
+        srcs = [l["source"] for l in leg["legends"] if l.get("source")]
         # **1人に何行でも書ける**（2026-09-22 指示「このクラブの3人の内容をもう少し濃くしたい」）。
         # <key>_say.yaml の `legends` の要素が list なら、その行を全部その選手の節に置く。
         # 顔写真は1行目に付け、あとの行にも残る（hold_photo）。

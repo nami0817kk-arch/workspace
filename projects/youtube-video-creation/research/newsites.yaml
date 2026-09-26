@@ -49,13 +49,14 @@ sites:
   - https://www.transfermarkt.co.uk/barcola-4th-rodri-19th-cucurella-29th-top-50-most-expensive-transfers-this-summer-ranked/view/news/483667
   - https://www.transfermarkt.co.uk/club-record-sale-why-arsenal-were-right-to-sell-gabriel-martinelli-to-al-hilal/view/news/484606
 - host: forzaroma.info
-  seen: 13
+  seen: 14
   days:
   - '2026-09-02'
   - '2026-09-05'
   - '2026-09-09'
   - '2026-09-12'
   - '2026-09-24'
+  - '2026-09-27'
   examples:
   - https://www.forzaroma.info/news-as-roma/rodrigo-mora-gasperini-fondamentale-nella-mia-scelta-e-un-sogno-giocare-con-dybala/?intcmp=gazzanet-forzaroma
   - https://www.forzaroma.info/news-as-roma/fenerbahce-guendouzi-squalificato-salta-la-roma-greenwood-ci-sara-ecco-perche/?intcmp=gazzanet-forzaroma
@@ -117,6 +118,33 @@ sites:
   - https://www.violanews.com/news-viola/ultime-notizie/commisso-giocatori-vanno-e-vengono-noi-qua-per-costruire-altri-100-anni-insieme/?refresh_ce&intcmp=gazzanet-violanews
   - https://www.violanews.com/news-viola/conferenze-stampa/vanoli-conf-non-so-qua-per-rivincita-questa-la-fiorentina-che-voglio/?intcmp=gazzanet-violanews
   - https://www.violanews.com/news-viola/conferenze-stampa/si-presenta-gnonto-dalle-14-30-il-live-della-conferenza-stampa/?intcmp=gazzanet-violanews
+- host: calcionapoli1926.it
+  seen: 11
+  days:
+  - '2026-09-02'
+  - '2026-09-03'
+  - '2026-09-04'
+  - '2026-09-05'
+  - '2026-09-12'
+  - '2026-09-13'
+  - '2026-09-27'
+  examples:
+  - https://www.calcionapoli1926.it/ultimissime-calcio-napoli/mazzocchi-laddio-al-napoli-e-da-brividi-sono-stato-un-napoletano-con-quella-maglia-addosso/?intcmp=gazzanet-calcionapoli1926
+  - https://www.calcionapoli1926.it/altro/jorginho-agente-santos-proposte-serie-a/?intcmp=gazzanet-calcionapoli1926
+  - https://www.calcionapoli1926.it/photogallery/giovane-infortunio-napoli-seriea-intervento-ernia-inguinale-post-social-instagram-photogallery-ultime/?refresh_ce&intcmp=gazzanet-calcionapoli1926
+- host: blog.domesoccer.jp
+  seen: 11
+  days:
+  - '2026-09-04'
+  - '2026-09-05'
+  - '2026-09-14'
+  - '2026-09-16'
+  - '2026-09-21'
+  - '2026-09-27'
+  examples:
+  - https://blog.domesoccer.jp/archives/60253571.html
+  - https://blog.domesoccer.jp/archives/60253934.html
+  - https://blog.domesoccer.jp/archives/60253949.html
 - host: samuraigoal.doorblog.jp
   seen: 10
   days:
@@ -125,38 +153,14 @@ sites:
   examples:
   - https://samuraigoal.doorblog.jp/archives/63437489.html
   - https://samuraigoal.doorblog.jp/archives/63450028.html
-- host: calcionapoli1926.it
-  seen: 10
-  days:
-  - '2026-09-02'
-  - '2026-09-03'
-  - '2026-09-04'
-  - '2026-09-05'
-  - '2026-09-12'
-  - '2026-09-13'
-  examples:
-  - https://www.calcionapoli1926.it/ultimissime-calcio-napoli/mazzocchi-laddio-al-napoli-e-da-brividi-sono-stato-un-napoletano-con-quella-maglia-addosso/?intcmp=gazzanet-calcionapoli1926
-  - https://www.calcionapoli1926.it/altro/jorginho-agente-santos-proposte-serie-a/?intcmp=gazzanet-calcionapoli1926
-  - https://www.calcionapoli1926.it/photogallery/giovane-infortunio-napoli-seriea-intervento-ernia-inguinale-post-social-instagram-photogallery-ultime/?refresh_ce&intcmp=gazzanet-calcionapoli1926
-- host: blog.domesoccer.jp
-  seen: 10
-  days:
-  - '2026-09-04'
-  - '2026-09-05'
-  - '2026-09-14'
-  - '2026-09-16'
-  - '2026-09-21'
-  examples:
-  - https://blog.domesoccer.jp/archives/60253571.html
-  - https://blog.domesoccer.jp/archives/60253934.html
-  - https://blog.domesoccer.jp/archives/60253949.html
 - host: cittaceleste.it
-  seen: 9
+  seen: 10
   days:
   - '2026-09-10'
   - '2026-09-12'
   - '2026-09-14'
   - '2026-09-24'
+  - '2026-09-26'
   examples:
   - https://www.cittaceleste.it/news/lazio-fabiani-leuropa-e-lobiettivo-mercato-i-voti-a-fine-anno-lanno-scorso/?refresh_ce
   - https://www.cittaceleste.it/news/lazio-pinamonti-gattuso-molto-esigente-a-immobile-chiederei/
@@ -198,6 +202,17 @@ sites:
   - https://www.genoaoggi.it/calciomercato/mercato-genoa/ehizibue-al-genoa-anni-fa-dissi-no-oggi-e-il-modo-migliore-per-chiedere-perdono/?intcmp=gazzanet-genoaoggi
   - https://www.genoaoggi.it/notizie/genoa-de-rossi-pari-frosinone/?intcmp=gazzanet-genoaoggi
   - https://www.genoaoggi.it/coppa-italia/de-rossi-promuove-il-genoa-risposte-positive-traore-ed-el-shaarawy-possono-fare-la-differenza/?intcmp=gazzanet-genoaoggi
+- host: sportsmole.co.uk
+  seen: 7
+  days:
+  - '2026-09-05'
+  - '2026-09-16'
+  - '2026-09-21'
+  - '2026-09-27'
+  examples:
+  - https://www.sportsmole.co.uk/football/barcelona/race-for-the-la-liga-title/predicted-lineups/any-changes-for-flick-how-barca-could-line-up-against-valencia_604504.html
+  - https://www.sportsmole.co.uk/football/arsenal/league-cup/news/far-too-good-dowman-breaks-arsenal-record-as-gunners-reach-next-round_605207.html
+  - https://www.sportsmole.co.uk/football/real-madrid/race-for-the-la-liga-title/news/mourinho-rant-real-boss-on-justice-after-atletico-defeat-as-barca-pull-away_605532.html
 - host: bbc.co.uk
   seen: 6
   days:
@@ -214,16 +229,6 @@ sites:
   - https://www.vavel.com/en/football/2026/09/05/premier-league/1270194-brentford-vs-sunderland-can-the-bees-break-the-black-cats.html
   - https://www.vavel.com/en/football/2026/09/05/premier-league/1270256-daniel-farke-commends-the-work-done-in-the-transfer-market.html
   - https://www.vavel.com/en/football/2026/09/15/sunderland/1271588-xhaka-expects-the-stadium-of-light-to-be-on-fire-against-az-alkmaar.html
-- host: sportsmole.co.uk
-  seen: 6
-  days:
-  - '2026-09-05'
-  - '2026-09-16'
-  - '2026-09-21'
-  examples:
-  - https://www.sportsmole.co.uk/football/barcelona/race-for-the-la-liga-title/predicted-lineups/any-changes-for-flick-how-barca-could-line-up-against-valencia_604504.html
-  - https://www.sportsmole.co.uk/football/arsenal/league-cup/news/far-too-good-dowman-breaks-arsenal-record-as-gunners-reach-next-round_605207.html
-  - https://www.sportsmole.co.uk/football/real-madrid/race-for-the-la-liga-title/news/mourinho-rant-real-boss-on-justice-after-atletico-defeat-as-barca-pull-away_605532.html
 - host: espn.co.uk
   seen: 5
   days:
@@ -251,12 +256,14 @@ sites:
   - https://www.cagliaricalcio-news.it/notizie/pisacane-cagliari-atalanta-romano/?intcmp=gazzanet-cagliaricalcionews
   - https://www.cagliaricalcio-news.it/notizie/cagliari-pisacane-maldini-mendy-adopo/?intcmp=gazzanet-cagliaricalcionews
 - host: ilmilanista.it
-  seen: 4
+  seen: 5
   days:
   - '2026-09-04'
   - '2026-09-05'
+  - '2026-09-27'
   examples:
   - https://www.ilmilanista.it/news-milan/il-padre-di-gimenez-al-milan-giocava-anche-infortunato-ora-deve-ripartire/?intcmp=gazzanet-ilmilanista
+  - https://www.ilmilanista.it/news-milan/cisse-show-con-litalia-under-21-tripletta-nel-15-0-allempoli-primavera/?intcmp=gazzanet-ilmilanista
 - host: thesun.my
   seen: 4
   days:
@@ -335,6 +342,36 @@ sites:
   examples:
   - https://www.atalantaoggi.it/notizie/atalanta-sarri-cagliari-partita-sarri/?intcmp=gazzanet-atalantaoggi
   - https://www.atalantaoggi.it/notizie/de-ketelaere-conferma-il-psg-si-e-mosso-per-me-ma-non-si-e-fatto-nulla/?intcmp=gazzanet-atalantaoggi
+- host: newcastleworld.com
+  seen: 3
+  days:
+  - '2026-09-05'
+  - '2026-09-14'
+  - '2026-09-27'
+  examples:
+  - https://www.newcastleworld.com/sport/football/newcastle-united/-8961947
+  - https://www.newcastleworld.com/sport/football/newcastle-united/-9021269
+  - https://www.newcastleworld.com/sport/football/newcastle-united/-9173326
+- host: thehardtackle.com
+  seen: 3
+  days:
+  - '2026-09-16'
+  - '2026-09-26'
+  - '2026-09-27'
+  examples:
+  - https://thehardtackle.com/round-up/2026/09/16/coventry-city-vs-aston-villa-preview-prediction-probable-lineups-tactics-team-news-key-stats/
+  - https://thehardtackle.com/transfer-news/2026/09/26/michael-olise-prefers-la-liga-move-to-premier-league-return/
+  - https://thehardtackle.com/transfer-news/2026/09/26/julian-ward-could-target-aurelien-tchouameni-as-first-liverpool-signing-next-year/
+- host: teamtalk.com
+  seen: 3
+  days:
+  - '2026-09-16'
+  - '2026-09-26'
+  - '2026-09-27'
+  examples:
+  - https://www.teamtalk.com/manchester-united/fabrizio-romano-reveals-chances-jj-gabriel-uturn-united-exit
+  - https://www.teamtalk.com/manchester-united/harry-kane-bayern-munich-man-utd-2027-transfer-decision-rule-change
+  - https://www.teamtalk.com/manchester-city/man-city-ffp-latest-premier-league-reaches-decision-stripping-titles-guilty-verdict
 - host: today.rtl.lu
   seen: 2
   days:
@@ -378,14 +415,6 @@ sites:
   examples:
   - https://www.rangersreview.co.uk/interviews/26525050.rangers-two-latest-signings-not-xi-motherwell/
   - https://www.rangersreview.co.uk/interviews/26546674.outstanding-rangers-star-compared-club-legend-celtic-win/
-- host: newcastleworld.com
-  seen: 2
-  days:
-  - '2026-09-05'
-  - '2026-09-14'
-  examples:
-  - https://www.newcastleworld.com/sport/football/newcastle-united/-8961947
-  - https://www.newcastleworld.com/sport/football/newcastle-united/-9021269
 - host: aljazeera.com
   seen: 2
   days:
@@ -424,6 +453,61 @@ sites:
   examples:
   - https://www.bavarianfootballworks.com/bayern-munich-transfer-rumors-news/253916/pundit-lauds-nathaniel-browns-versatility-as-big-asset-to-bayern-munich
   - https://www.bavarianfootballworks.com/bayern-munich-finances-board/256752/bayern-munich-exec-talks-history-with-bradley-barcola
+- host: glasgowtimes.co.uk
+  seen: 2
+  days:
+  - '2026-09-05'
+  - '2026-09-26'
+  examples:
+  - https://www.glasgowtimes.co.uk/sport/26525075.mcinnes-explains-rangers-xi-deadline-day-arrivals-miss/
+  - https://www.glasgowtimes.co.uk/sport/26584042.managing-proper-rangers-star-get-back-team/
+- host: mancity.com
+  seen: 2
+  days:
+  - '2026-09-05'
+  - '2026-09-27'
+  examples:
+  - https://www.mancity.com/citytv/eds-academy/u18s-stoke-city-highlights-63924206
+  - https://www.mancity.com/news/womens/beth-mead-charlton-athletic-man-city-reaction-63926030
+- host: yorkshireeveningpost.co.uk
+  seen: 2
+  days:
+  - '2026-09-05'
+  - '2026-09-27'
+  examples:
+  - https://www.yorkshireeveningpost.co.uk/sport/football/leeds-united/-8962041
+  - https://www.yorkshireeveningpost.co.uk/sport/football/leeds-united/-9191281
+- host: metro.co.uk
+  seen: 2
+  days:
+  - '2026-09-16'
+  - '2026-09-27'
+  examples:
+  - https://metro.co.uk/2026/09/15/its-not-easy-mikel-arteta-makes-honest-max-dowman-admission-arsenal-beat-ipswich-29616996/?ito=newsnow-feed
+  - https://metro.co.uk/2026/09/26/kylian-mbappe-injury-latest-real-madrid-star-leaves-france-squad-29655377/?ito=newsnow-feed
+- host: barcauniversal.com
+  seen: 2
+  days:
+  - '2026-09-16'
+  - '2026-09-27'
+  examples:
+  - https://barcauniversal.com/barcelona-executive-does-not-rule-out-camp-nou-reaching-full-capacity-in-2027-if-were-lucky/
+  - https://barcauniversal.com/eric-garcia-addresses-comparisons-between-flick-and-guardiolas-barcelona-we-play-in-a-different-way/
+- host: 3addedminutes.com
+  seen: 2
+  days:
+  - '2026-09-26'
+  - '2026-09-27'
+  examples:
+  - https://www.3addedminutes.com/international-football/scotland/-9187264
+- host: footballinsider247.com
+  seen: 2
+  days:
+  - '2026-09-26'
+  - '2026-09-27'
+  examples:
+  - https://www.footballinsider247.com/celtic/next-manager/celtic-consider-return-of-former-boss-to-replace-martin-oneill-it-beggars-belief
+  - https://www.footballinsider247.com/efl-championship-news/sources-birmingham-city-in-advanced-talks-to-agree-john-murtough-deal
 - host: guardian.ng
   seen: 1
   days:
@@ -466,30 +550,12 @@ sites:
   - '2026-09-05'
   examples:
   - https://www.irishnews.com/sport/soccer/maisie-adam-unable-to-support-leeds-at-brighton-due-to-mother-in-laws-party-RHP62CSLUVJLFD7WNHDCNJKYDI/
-- host: mancity.com
-  seen: 1
-  days:
-  - '2026-09-05'
-  examples:
-  - https://www.mancity.com/citytv/eds-academy/u18s-stoke-city-highlights-63924206
-- host: glasgowtimes.co.uk
-  seen: 1
-  days:
-  - '2026-09-05'
-  examples:
-  - https://www.glasgowtimes.co.uk/sport/26525075.mcinnes-explains-rangers-xi-deadline-day-arrivals-miss/
 - host: sportbible.com
   seen: 1
   days:
   - '2026-09-05'
   examples:
   - https://www.sportbible.com/football/premier-league/liverpool-var-penalty-pgmol-chief-ipswich-town-darren-england-referee-255230-20260905
-- host: yorkshireeveningpost.co.uk
-  seen: 1
-  days:
-  - '2026-09-05'
-  examples:
-  - https://www.yorkshireeveningpost.co.uk/sport/football/leeds-united/-8962041
 - host: tntsports.co.uk
   seen: 1
   days:
@@ -568,42 +634,18 @@ sites:
   - '2026-09-16'
   examples:
   - https://www.fulhamfc.com/news/2026/september/15/west-ham-highlights/
-- host: metro.co.uk
-  seen: 1
-  days:
-  - '2026-09-16'
-  examples:
-  - https://metro.co.uk/2026/09/15/its-not-easy-mikel-arteta-makes-honest-max-dowman-admission-arsenal-beat-ipswich-29616996/?ito=newsnow-feed
 - host: football360.com.au
   seen: 1
   days:
   - '2026-09-16'
   examples:
   - https://football360.com.au/man-utd-jj-gabriel-details-premier-league/
-- host: thehardtackle.com
-  seen: 1
-  days:
-  - '2026-09-16'
-  examples:
-  - https://thehardtackle.com/round-up/2026/09/16/coventry-city-vs-aston-villa-preview-prediction-probable-lineups-tactics-team-news-key-stats/
-- host: teamtalk.com
-  seen: 1
-  days:
-  - '2026-09-16'
-  examples:
-  - https://www.teamtalk.com/manchester-united/fabrizio-romano-reveals-chances-jj-gabriel-uturn-united-exit
 - host: fss.rs
   seen: 1
   days:
   - '2026-09-16'
   examples:
   - https://fss.rs/en/belgrade-to-host-2029-uefa-europa-league-final-european-football-spectacle-at-the-national-stadium/
-- host: barcauniversal.com
-  seen: 1
-  days:
-  - '2026-09-16'
-  examples:
-  - https://barcauniversal.com/barcelona-executive-does-not-rule-out-camp-nou-reaching-full-capacity-in-2027-if-were-lucky/
 - host: the4thofficial.net
   seen: 1
   days:
@@ -676,3 +718,63 @@ sites:
   - '2026-09-25'
   examples:
   - https://www.golssip.it/gossip/calcio/hakimi-rinviato-giudizio-stupro/?intcmp=gazzanet-golssip
+- host: bristolpost.co.uk
+  seen: 1
+  days:
+  - '2026-09-26'
+  examples:
+  - https://www.bristolpost.co.uk/sport/football/football-news/bristol-city-women-targets-detailed-11172160
+- host: independent.com.mt
+  seen: 1
+  days:
+  - '2026-09-26'
+  examples:
+  - https://www.independent.com.mt/articles/2026-09-25/local-news/France-coach-Zinedine-Zidane-s-first-win-soured-by-Mbappe-s-knee-injury-Italy-lose-to-Belgium-6736293212
+- host: theargus.co.uk
+  seen: 1
+  days:
+  - '2026-09-26'
+  examples:
+  - https://www.theargus.co.uk/sport/26583973.sunderlands-dan-ballard-faces-late-hamstring-injury-concern/
+- host: hayters.com
+  seen: 1
+  days:
+  - '2026-09-26'
+  examples:
+  - https://hayters.com/sunderland-handed-another-major-injury-concern-following-brobbey-blow/
+- host: celticway.co.uk
+  seen: 1
+  days:
+  - '2026-09-26'
+  examples:
+  - https://www.celticway.co.uk/interviews/26583948.hassan-plays-egypt-despite-manager-seemingly-ruling/
+- host: newsletter.co.uk
+  seen: 1
+  days:
+  - '2026-09-26'
+  examples:
+  - https://www.newsletter.co.uk/sport/football/northern-ireland/-9183334
+- host: irishexaminer.com
+  seen: 1
+  days:
+  - '2026-09-26'
+  examples:
+  - https://www.irishexaminer.com/sport/soccer/arid-41915995.html
+- host: timeslive.co.za
+  seen: 1
+  days:
+  - '2026-09-27'
+  examples:
+  - https://www.timeslive.co.za/sport/soccer/2026-09-26-mosimane-era-starts-strong-as-bafana-beat-guinea-at-orlando/
+- host: footballleagueworld.co.uk
+  seen: 1
+  days:
+  - '2026-09-27'
+  examples:
+  - https://footballleagueworld.co.uk/how-nottingham-forest-derby-county-home-attendances-compare-so-far/
+- host: scotsman.com
+  seen: 1
+  days:
+  - '2026-09-27'
+  examples:
+  - https://www.scotsman.com/sport/football/international/-9190191

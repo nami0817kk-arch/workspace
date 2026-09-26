@@ -1,0 +1,210 @@
+# ラ・リーガ チーム紹介 ⑰レアル・マドリード（2026-09-27）。形は見本 realsociedad_say.yaml と同じ。
+# 事実はすべて research/ll_data/realmadrid_research.md（出典付き）から。
+# 「季」は合成音声が「き」と読むので使わない。アルファベットは読み上げに残さない
+title: レアル・マドリード。ヨーロッパ一を決める大会は、誰が作ったのか
+short_title: レアル・マドリードってどんなクラブ？
+# クラブを表す一言。チャンピオンズリーグ（欧州チャンピオンズカップ）15回は大会の最多（英語版クラブ記事）
+opening: "ヨーロッパ王者に、史上最多の15回。"
+# 回収先: story_sections の kit（1925-26 の黒いパンツ）
+hook: 上下白のユニフォームを、1シーズンだけやめたことがあります。
+thumbnail:
+  line1: 欧州一の大会、生みの親
+  line2: 名門レアル・マドリード
+  crest_main: [レアル・マドリード]
+
+# いま見る理由。監督の言葉は Marca 2026-09-25 の原文（インタビュー番組での発言をスペイン語で載せたもの）
+# 「Yo estaba feliz en el Benfica, feliz en Portugal. ... Pero el Real Madrid es el Real Madrid.」
+reasons:
+- "無冠に終わった昨季のあと、**13年**ぶりに戻ったのがモウリーニョ監督です。"
+- {voice: ジョゼ・モウリーニョ, text: "ベンフィカで、ポルトガルで幸せだった。"}
+- {voice: ジョゼ・モウリーニョ, text: "それでもレアル・マドリードは、レアル・マドリードだ"}
+- "そしてヨーロッパの王者を決める大会。作った一人は、当時の会長でした。"
+reasons_focus: [1, 2, 2, 3]
+reasons_telop: 無冠の翌シーズン、モウリーニョが帰ってきた
+reasons_rows:
+- ["理由1", "昨季はタイトルなし"]
+- ["理由2", "モウリーニョが13年ぶり"]
+- ["理由3", "欧州一の大会の生みの親"]
+reasons_sources:
+- https://www.marca.com/futbol/real-madrid/2026/09/25/mourinho-esclarece-decidio-volver-madrid-me-dijeron-necesitamos-inicies-decada-prodigiosa-video.html
+- https://en.wikipedia.org/wiki/2025%E2%80%9326_Real_Madrid_CF_season
+- https://en.wikipedia.org/wiki/Santiago_Bernab%C3%A9u
+people_extra:
+- ジョゼ・モウリーニョ
+
+# 基礎DATA。話す順は20クラブ共通（創立→愛称→ホームタウン→本拠地→会長→タイトル歴→記録→直近→昨季）
+data:
+- 創立は**1902年**。1920年、国王から「レアル」、つまり王立の称号を受けました。
+- 愛称は「ロス・ブランコス」。スペイン語で、**白い人たち**という意味です。
+- ホームタウンは首都マドリード。人口およそ**348万人**、スペインでいちばん大きな町。
+- 本拠地はベルナベウ。**8万3186人**が入り、20クラブでいちばん大きい。
+- 会長は、2009年から2度目のフロレンティーノ・ペレス。クラブは会員が持つ形です。
+- 1部の優勝は最多の**36回**。国王杯は**20回**、スーペルコパは**13回**。
+- 最多出場はラウル・ゴンサレス。1994年から2010年までに、**741試合**です。
+- 直近のタイトルは2024年12月のインターコンチネンタルカップ。パチューカに**3対0**の勝ち。
+- 昨季のリーグ戦は**2位**。優勝したバルセロナに、勝ち点**8**届きませんでした。
+data_focus: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+
+# クラブの話。1枚のカードを20秒以上出さないため、3つに割る
+story_sections:
+  - id: kit
+    heading: 1シーズンだけの黒
+    tier: 背景
+    telop: 白をやめた1シーズン
+    narrator: 解説
+    card:
+      type: table
+      title: 1925年から26年のシーズン
+      columns: ["", ""]
+      rows:
+        - ["まねた相手", "イングランドのコリンシアン"]
+        - ["変えたもの", "黒いパンツ"]
+        - ["国王杯", "バルセロナに1対5と0対3"]
+    say:
+      - 1925年に始まったシーズン、パンツを**黒**に変えました。
+      - 手本は、イングランドの名門アマチュアクラブ、コリンシアンです。
+      - ところが国王杯で、バルセロナに**1対5**と**0対3**で負けました。
+      - 会長は「縁起が悪い」と怒り、白に戻させました。
+    sources:
+      - https://es.wikipedia.org/wiki/Real_Madrid_Club_de_F%C3%BAtbol
+      - https://en.wikipedia.org/wiki/Real_Madrid_CF
+  - id: kit2
+    heading: 白をまねたリーズ
+    tier: 背景
+    telop: 今度は、イングランドのクラブが白をまねた
+    narrator: 解説
+    card:
+      type: table
+      title: 白をまねたリーズ
+      columns: ["", ""]
+      rows:
+        - ["1960年", "ヨーロッパの決勝で7対3"]
+        - ["スタンドに", "のちのリーズ監督ドン・レヴィー"]
+        - ["そのあと", "リーズは上下とも白に"]
+    say:
+      - 逆に、白をまねたクラブもあります。
+      - 1960年、ヨーロッパの決勝で、フランクフルトに**7対3**。
+      - スタンドにいたドン・レヴィーは、翌年リーズの監督になると、青と黄色をやめます。
+      - 上下とも白に。いちばん多く勝っているクラブの色だから、という理由でした。
+    sources:
+      - https://es.wikipedia.org/wiki/Real_Madrid_Club_de_F%C3%BAtbol
+      - https://en.wikipedia.org/wiki/Real_Madrid_CF
+  - id: bernabeu
+    heading: 大会を作った会長
+    tier: 背景
+    telop: 会長が、ヨーロッパの大会を作った
+    narrator: 解説
+    card:
+      type: table
+      title: 大会を作った会長
+      columns: ["", ""]
+      rows:
+        - ["会長", "サンティアゴ・ベルナベウ"]
+        - ["在任", "1943年から78年に亡くなるまで"]
+        - ["1955年", "パリで大会の立ち上げに加わる"]
+        - ["1956年から60年", "5連覇"]
+    say:
+      - その決勝は、各国の王者が集まる大会でした。
+      - 作った一人が、**35年**近く会長を務めたサンティアゴ・ベルナベウです。
+      - 1955年、フランスの記者の案を受け、パリのホテルで立ち上げを決めました。
+      - その大会で、最初から**5連覇**。いまのチャンピオンズリーグです。
+    sources:
+      - https://en.wikipedia.org/wiki/Santiago_Bernab%C3%A9u
+      - https://en.wikipedia.org/wiki/Real_Madrid_CF
+  - id: galacticos
+    heading: 毎年、1人のスター
+    tier: 背景
+    telop: 練習場を売って、毎年スターを買った
+    narrator: 解説
+    card:
+      type: table
+      title: 毎年、1人のスター
+      columns: ["", ""]
+      rows:
+        - ["2000年", "ペレスが会長に"]
+        - ["公約", "バルセロナのフィーゴを獲る"]
+        - ["練習場を売却", "借金2億7000万ユーロを返す"]
+    say:
+      - 2000年、会長選挙に勝ったペレスの公約は、バルセロナのフィーゴを獲ることでした。
+      - さらに練習場を売って、**2億7000万ユーロ**の借金を返します。
+      - そこから毎年の夏、世界的なスターを1人ずつ。ベッカムもその1人です。
+    sources:
+      - https://en.wikipedia.org/wiki/Real_Madrid_CF
+      - https://en.wikipedia.org/wiki/Florentino_P%C3%A9rez
+
+# このクラブの特徴（プレーの色・運営の型・クラブの気質）
+features:
+- "モウリーニョのチームは、守ってから速く攻める。リーグ戦7試合で**18得点**です。"
+- "ピッチの外は、稼いだぶんで戦う型。"
+- "2023年から24年のシーズン、サッカークラブで初めて、売上が**10億ユーロ**を超えました。"
+- "応援は世界規模。公認のファンクラブ「ペーニャ」は、**92か国**に2452あります。"
+features_telop: 速く攻める。稼いで戦う。世界中にファン
+features_rows:
+- ["プレーの色", "守って速く攻める"]
+- ["運営の型", "売上10億ユーロ超"]
+- ["クラブの気質", "92か国に公認ファン"]
+features_sources:
+- https://en.wikipedia.org/wiki/Jos%C3%A9_Mourinho
+- https://en.wikipedia.org/wiki/Template:2026%E2%80%9327_La_Liga_table
+- https://en.wikipedia.org/wiki/Real_Madrid_CF
+- https://es.wikipedia.org/wiki/Real_Madrid_Club_de_F%C3%BAtbol
+
+# 「へえ」の逸話。英語版の Yé-yé の記事とクラブ記事で裏を取った
+episode:
+  id: episode
+  heading: ビートルズになった4人
+  tier: 背景
+  telop: 4人がビートルズのまねをして、呼び名が決まった
+  narrator: 解説
+  card:
+    type: table
+    title: ビートルズになった4人
+    columns: ["", ""]
+    rows:
+      - ["1966年", "スペインの選手だけで欧州一"]
+      - ["呼び名", "イエイエ"]
+      - ["由来", "シー・ラブズ・ユーの歌声"]
+  say:
+    - {text: "1966年、スペインの選手だけのチームで、**6度目**のヨーロッパの頂点へ。", image: assets/images/ll_realmadrid_episode/scene.jpg}
+    - 若い4人がビートルズのまねをして、新聞の写真に写りました。
+    - シー・ラブズ・ユーの「イエー、イエー、イエー」から、チームは「イエイエ」と呼ばれます。
+  sources:
+    - https://en.wikipedia.org/wiki/Y%C3%A9-y%C3%A9_(Real_Madrid)
+    - https://en.wikipedia.org/wiki/Real_Madrid_CF
+
+# このクラブを語る3人（1人3行）。数字は英語版 infobox のリーグ戦のみ
+legends:
+- - ジダンは2001年、当時の世界最高額でユヴェントスから。リーグ戦は**155試合37得点**。
+  - 2002年のチャンピオンズリーグ決勝、左足のボレーで、レバークーゼンを破る決勝点。
+  - 監督としても、チャンピオンズリーグを3連覇。今はフランス代表を率いています。
+- - クリスティアーノ・ロナウドは2009年に来ました。リーグ戦**292試合**で、**311得点**。
+  - 2015年9月、ラウルを抜いて、クラブの歴代最多得点者になりました。
+  - 公式戦で**450得点**を残し、2018年にユヴェントスへ移りました。
+- - セルヒオ・ラモスは2005年、セビージャから。守備の選手で、リーグ戦**469試合72得点**。
+  - 2014年の決勝、アトレティコ戦の**93分**に頭で同点。延長で勝ち、10度目の優勝。
+  - 主将も務め、2021年にパリ・サンジェルマンへ移りました。
+legend_rows:
+- ["ジネディーヌ・ジダン", "2001-2006", "決勝のボレー"]
+- ["クリスティアーノ・ロナウド", "2009-2018", "歴代最多450得点"]
+- ["セルヒオ・ラモス", "2005-2021", "93分の同点弾"]
+legend_sources:
+- - https://en.wikipedia.org/wiki/Zinedine_Zidane
+- - https://en.wikipedia.org/wiki/Cristiano_Ronaldo
+- - https://en.wikipedia.org/wiki/Sergio_Ramos
+
+# 今季の監督
+manager:
+- 今季の監督はジョゼ・モウリーニョ。ポルトガル出身で、**2026年7月**の就任です。
+- 前はベンフィカ。2010年から13年に続く2度目で、契約は**2029年**までです。
+manager_telop: 監督はモウリーニョ。2029年までの契約
+manager_rows:
+- ["監督", "ジョゼ・モウリーニョ（ポルトガル）"]
+- ["就任", "2026年7月（2度目）"]
+- ["前職", "ベンフィカ"]
+manager_sources:
+- https://en.wikipedia.org/wiki/Jos%C3%A9_Mourinho
+- https://www.realmadrid.com/es-ES/noticias/club/ultimas-noticias/comunicado-oficial-mourinho-11-06-2026
+
+# 今季。欧州の初戦（2026–27 Real Madrid CF season の原文で確認）
+season:
+- チャンピオンズリーグの初戦は、ホームでインテルに**2対1**で勝ちました。

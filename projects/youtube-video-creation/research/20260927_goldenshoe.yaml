@@ -1,0 +1,130 @@
+date: 2026年9月27日
+slot: popular_1
+format: news
+voice_min: 0.3
+people: [ジョセフ・エデ・オロコ, ラフィーニャ]
+theme:
+  id: goldenshoe_oloko
+  league: spain
+  league_name: ラ・リーガ
+  kind: record
+  topic: ラフィーニャ
+  title: 'ラフィーニャを1ポイント上回る、ゴールデンシュー首位の男'
+  question: ゴールデンシューの首位は誰か
+short_title: ラフィーニャより上にいる、ゴールデンシュー首位
+thumbnail:
+  photo: assets/images/20260927_pair_oloko_raphinha/01.jpg
+  line1: ゴールデンシュー首位は
+  line2: ラフィーニャではなく●●●
+sections:
+  - id: race
+    heading: ラフィーニャは2位
+    tier: 報道
+    telop: ゴールデンシューは、得点に国ごとの係数を掛けたポイントで争う
+    narrator: キャスター
+    card:
+      type: table
+      title: 欧州ゴールデンシュー（9月25日時点）
+      columns: [順位, 名前（所属）, 計算, ポイント]
+      rows:
+        - [1位, ？？？, ？？？, 25]
+        - [2位, ラフィーニャ（バルセロナ）, 12点×2, 24]
+        - [3位, リエン（ユールゴーデン）, 16点×1.5, 24]
+    say:
+      - ゴールデンシューは、ヨーロッパのリーグ戦の得点王に贈られる賞。
+      - ゴールの数に、リーグごとの係数を掛けて競います。
+      - 5大リーグは、1点が**2ポイント**。ラフィーニャは**12点**で**24ポイント**、いま2位です。
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50010819/european-golden-shoe-whos-leading-raphinha-mbappe-haaland
+      - https://now.core.api.espn.com/v1/sports/news/50010819
+  - id: oloko
+    main: true
+    heading: 首位はラトビアにいる
+    tier: 報道
+    telop: 首位はジョセフ・エデ・オロコ。ラトビア1部で25点、25ポイント
+    narrator: キャスター
+    card:
+      type: table
+      title: 首位の選手
+      columns: [所属, 名前, 位置, 年齢]
+      rows:
+        - [FKリエパーヤ（ラトビア）, ジョセフ・エデ・オロコ, FW, 25歳]
+    say:
+      - text: 'ゴールデンシューの首位は、ラフィーニャでもハーランドでもありません。'
+        short_only: true
+      - text: 首位は、ラトビア1部のジョセフ・エデ・オロコ。**25点**を取っています。
+        image: assets/images/20260927_oloko2/01.jpg
+      - チームメイトは、オロコをこう評します。
+      - voice: ダニーラ・パティイチュク
+        text: 僕にとって、オロコは宇宙だよ。彼がやっていることは、ファンタジーだ
+      - ラトビアのリーグは係数が低く、1点は**1ポイント**。25点で、**25ポイント**です。
+      - ラフィーニャの倍以上の点を取って、差は**1ポイント**しかありません。
+      - ラトビアのリーグは春に始まり、11月に終わります。
+      - ヨーロッパの主なリーグより、ずっと先に進んでいるんです。
+      - 本人は、点を取ることについて、こう語っています。
+      - voice: ジョセフ・エデ・オロコ
+        text: ストライカーは、ピッチの上である意味エゴイストでないといけない。そうでなければ、たくさん点は取れない
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50010819/european-golden-shoe-whos-leading-raphinha-mbappe-haaland
+      - https://fkliepaja.lv/lv/2026/09/15/danila-patijcuks-oloko-tas-ir-kosmoss-vina-speli-vajag-redzet/
+      - https://fkliepaja.lv/lv/2026/07/02/oloko-ede-futbola-nekas-nav-viegli/
+      - https://fkliepaja.lv/lv/2026/09/11/oloko-25-uzbrucejs-izglabj-mums-speli/
+  - id: who
+    heading: ナイジェリア生まれ、ベナン代表
+    tier: 報道
+    telop: 9月25日、ベナン代表でデビュー
+    narrator: キャスター
+    say:
+      - オロコは2001年、ナイジェリア生まれ。ベナンとチェコを経て、ラトビアに来ました。
+      - 今年は開幕から別のクラブへ貸し出され、そこで**16試合16点**。
+      - 6月にリエパーヤへ戻ってからも、点を取り続けています。
+      - この活躍で、ベナン代表に初めて呼ばれました。
+      - 9月25日のアフリカ杯予選で、88分から出てデビュー。
+      - ベナンを選んだ理由は、母でした。
+      - voice: ジョセフ・エデ・オロコ
+        text: 母がベナン人なので、ずっとベナンとのつながりがあった。母の国を代表できるのは、とても特別なことだ
+    sources:
+      - https://soccernet.ng/2026/09/super-eagles-oloko-rohr-nigeria-benin.html
+      - https://sportacentrs.com/futbols/virsliga/09092026-liepajnieks_ede_domine_augusta_un_virslig
+      - https://africatopsports.com/football/elim-can-2027-joseph-ede-oloko-explique-son-choix-du-benin/
+      - https://site.api.espn.com/apis/site/v2/sports/soccer/caf.nations_qual/summary?event=401920037
+  - id: rest
+    heading: 残りは5試合
+    tier: 報道
+    telop: オロコは残り5試合。5大リーグは始まったばかり
+    narrator: キャスター
+    say:
+      - ただ、オロコのリーグは残り**5試合**。ラフィーニャたちのシーズンは、まだ始まったばかりです。
+      - リエパーヤの監督の言葉です。
+      - voice: クーロ・トーレス
+        text: オロコがどれだけ点を取ったか、皆が知っている。だが我々は、ピッチでもっと彼を助けないといけない
+      - チームメイトは、こんな目標を口にしました。
+      - voice: ベクナズ・アルマズベコフ
+        text: オロコには30点取ってほしい。僕も必ず手伝う
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50010819/european-golden-shoe-whos-leading-raphinha-mbappe-haaland
+      - https://fkliepaja.lv/lv/2026/09/12/curro-torres-japalidz-oloko-vel-vairak/
+      - https://fkliepaja.lv/lv/2026/09/23/beknazs-almazbekovs-mums-obligati-jaspele-eirokausos/
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「ゴールデンシューいけるレベルじゃない？」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: ジョセフ・エデ・オロコ、ヴィルスリーガでの量産でベナン代表初招集。
+      - voice: ネット民
+        text: エデ・オロコ、爆発的な8月で、またも月間最優秀選手
+      - voice: ネット民
+        text: ラフィーニャ、欧州ゴールデンシューの有力候補に浮上
+      - voice: ネット民
+        text: ラフィーニャドブレテ！！やっと裏抜けに出してもらえたな。しかしこんな決定力高い人だったっけ？
+      - voice: ネット民
+        text: 怪我しなけりゃゴールデンシューいけるレベルじゃない？
+        cont: true
+        short_voice: true
+    sources:
+      - https://bsky.app/profile/balticfootball.bsky.social/post/3mvq4ilvqzl2u
+      - https://bsky.app/profile/kristil.bsky.social/post/3mv5yhzixjx2l
+      - https://bsky.app/profile/fcbarcelona-news.bsky.social/post/3mw2xw2qdon2l
+      - https://x.com/Montaito3/status/2097748137637003317

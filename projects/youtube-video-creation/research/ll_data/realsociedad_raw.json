@@ -341,13 +341,6 @@
  ],
  "results": [
   [
-   "18 July 2026|time=|round=1|score=1–1|report=https://www.mundodeportivo.com/futbol/real-sociedad/20260718/1004207838/real-sociedad-racing.html|team1=Real Sociedad|goals1=Óskarsson |team2=Racing Santander|goals2=Gabriel |stadium=Campo José Luis Orbegozo|location=Zubieta, Spain|attendance=|referee=|note=The match was played behind closed doors|result=D}}|round=2|score=1–2|report=https://www.mundodeportivo.com/futbol/real-sociedad/20260725/1004210111/wolverhampton-real-sociedad.html|team1=Wolverhampton Wanderers|goals1=*Gomes |team2=Real Sociedad|goals2=*Óskarsson",
-   "1|score=1–1|report=https://www.mundodeportivo.com/futbol/real-sociedad/20260718/1004207838/real-sociedad-racing.html|team1=Real Sociedad|goals1=Óskarsson |team2=Racing Santander|goals2=Gabriel |stadium=Campo José Luis Orbegozo|location=Zubieta, Spain|attendance=|referee=|note=The match was played behind closed doors|result=D}}|round=2|score=1–2|report=https://www.mundodeportivo.com/futbol/real-sociedad/20260725/1004210111/wolverhampton-real-sociedad.html|team1=Wolverhampton Wanderers|goals1=*Gomes |team2=Real Sociedad|goals2=*Óskarsson",
-   "Real Sociedad|goals1=Óskarsson |team2=Racing Santander|goals2=Gabriel |stadium=Campo José Luis Orbegozo|location=Zubieta, Spain|attendance=|referee=|note=The match was played behind closed doors|result=D}}|round=2|score=1–2|report=https://www.mundodeportivo.com/futbol/real-sociedad/20260725/1004210111/wolverhampton-real-sociedad.html|team1=Wolverhampton Wanderers|goals1=*Gomes |team2=Real Sociedad|goals2=*Óskarsson",
-   "1–1|report=https://www.mundodeportivo.com/futbol/real-sociedad/20260718/1004207838/real-sociedad-racing.html|team1=Real Sociedad|goals1=Óskarsson |team2=Racing Santander|goals2=Gabriel |stadium=Campo José Luis Orbegozo|location=Zubieta, Spain|attendance=|referee=|note=The match was played behind closed doors|result=D}}|round=2|score=1–2|report=https://www.mundodeportivo.com/futbol/real-sociedad/20260725/1004210111/wolverhampton-real-sociedad.html|team1=Wolverhampton Wanderers|goals1=*Gomes |team2=Real Sociedad|goals2=*Óskarsson",
-   "Racing Santander|goals2=Gabriel |stadium=Campo José Luis Orbegozo|location=Zubieta, Spain|attendance=|referee=|note=The match was played behind closed doors|result=D}}|round=2|score=1–2|report=https://www.mundodeportivo.com/futbol/real-sociedad/20260725/1004210111/wolverhampton-real-sociedad.html|team1=Wolverhampton Wanderers|goals1=*Gomes |team2=Real Sociedad|goals2=*Óskarsson"
-  ],
-  [
    "21 August 2026",
    "2",
    "Real Betis",
@@ -400,8 +393,225 @@
    "11 October 2026",
    "8",
    "Real Sociedad",
-   "|report=",
+   "",
    "Deportivo A Coruña"
+  ],
+  [
+   "18 October 2026",
+   "9",
+   "Málaga",
+   "",
+   "Real Sociedad"
+  ],
+  [
+   "25 October 2026",
+   "10",
+   "Real Sociedad",
+   "",
+   "Levante"
+  ],
+  [
+   "1 November 2026",
+   "11",
+   "Athletic Bilbao",
+   "",
+   "Real Sociedad"
+  ],
+  [
+   "8 November 2026",
+   "12",
+   "Real Sociedad",
+   "",
+   "Rayo Vallecano"
+  ],
+  [
+   "22 November 2026",
+   "13",
+   "Racing Santander",
+   "",
+   "Real Sociedad"
+  ],
+  [
+   "29 November 2026",
+   "14",
+   "Real Sociedad",
+   "",
+   "Sevilla"
+  ],
+  [
+   "6 December 2026",
+   "15",
+   "Villarreal",
+   "",
+   "Real Sociedad"
+  ],
+  [
+   "13 December 2026",
+   "16",
+   "Real Sociedad",
+   "",
+   "Getafe"
+  ],
+  [
+   "20 December 2026",
+   "17",
+   "Barcelona",
+   "",
+   "Real Sociedad"
+  ],
+  [
+   "3 January 2027",
+   "18",
+   "Real Sociedad",
+   "",
+   "Osasuna"
+  ],
+  [
+   "10 January 2027",
+   "19",
+   "Alavés",
+   "",
+   "Real Sociedad"
+  ],
+  [
+   "17 January 2027",
+   "20",
+   "Atlético Madrid",
+   "",
+   "Real Sociedad"
+  ],
+  [
+   "24 January 2027",
+   "21",
+   "Real Sociedad",
+   "",
+   "Málaga"
+  ],
+  [
+   "31 January 2027",
+   "22",
+   "Levante",
+   "",
+   "Real Sociedad"
+  ],
+  [
+   "7 February 2027",
+   "23",
+   "Real Sociedad",
+   "",
+   "Real Madrid"
+  ],
+  [
+   "14 February 2027",
+   "24",
+   "Real Sociedad",
+   "",
+   "Betis"
+  ],
+  [
+   "21 February 2027",
+   "25",
+   "Deportivo A Coruña",
+   "",
+   "Real Sociedad"
+  ],
+  [
+   "28 February 2027",
+   "26",
+   "Real Sociedad",
+   "",
+   "Elche"
+  ],
+  [
+   "7 March 2027",
+   "27",
+   "Sevilla",
+   "",
+   "Real Sociedad"
+  ],
+  [
+   "14 March 2027",
+   "28",
+   "Getafe",
+   "",
+   "Real Sociedad"
+  ],
+  [
+   "21 March 2027",
+   "29",
+   "Real Sociedad",
+   "",
+   "Alavés"
+  ],
+  [
+   "4 April 2027",
+   "30",
+   "Real Sociedad",
+   "",
+   "Valencia"
+  ],
+  [
+   "11 April 2027",
+   "31",
+   "Rayo Vallecano",
+   "",
+   "Real Sociedad"
+  ],
+  [
+   "18 April 2027",
+   "32",
+   "Real Sociedad",
+   "",
+   "Racing Santander"
+  ],
+  [
+   "21 April 2027",
+   "33",
+   "Espanyol",
+   "",
+   "Real Sociedad"
+  ],
+  [
+   "2 May 2027",
+   "34",
+   "Real Sociedad",
+   "",
+   "Athletic Bilbao"
+  ],
+  [
+   "9 May 2027",
+   "35",
+   "Osasuna",
+   "",
+   "Real Sociedad"
+  ],
+  [
+   "16 May 2027",
+   "36",
+   "Real Sociedad",
+   "",
+   "Barcelona"
+  ],
+  [
+   "23 May 2027",
+   "37",
+   "Celta Vigo",
+   "",
+   "Real Sociedad"
+  ],
+  [
+   "30 May 2027",
+   "38",
+   "Real Sociedad",
+   "",
+   "Villarreal"
+  ],
+  [
+   "2 February 2027",
+   "Semi-finals",
+   "Real Sociedad",
+   "",
+   "Real Madrid"
   ],
   [
    "17 September 2026",
@@ -409,6 +619,55 @@
    "Real Sociedad",
    "1–2",
    "Bournemouth"
+  ],
+  [
+   "15 October 2026",
+   "2",
+   "Union Saint-Gilloise",
+   "",
+   "Real Sociedad"
+  ],
+  [
+   "22 October 2026",
+   "3",
+   "Lillestrøm",
+   "",
+   "Real Sociedad"
+  ],
+  [
+   "5 November 2026",
+   "4",
+   "Real Sociedad",
+   "",
+   "Lyon"
+  ],
+  [
+   "26 November 2026",
+   "5",
+   "Crystal Palace",
+   "",
+   "Real Sociedad"
+  ],
+  [
+   "10 December 2026",
+   "6",
+   "Real Sociedad",
+   "",
+   "Torreense"
+  ],
+  [
+   "21 January 2027",
+   "7",
+   "Real Sociedad",
+   "",
+   "Viktoria Plzeň"
+  ],
+  [
+   "28 January 2027",
+   "8",
+   "Juventus",
+   "",
+   "Real Sociedad"
   ]
  ]
 }

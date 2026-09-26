@@ -1,0 +1,24 @@
+{
+ "athletic": {
+  "フレン・ゲレーロ": {
+   "role": "legend",
+   "file": "assets/photos/ll/athletic/athletic_legend_fd694d07.jpg",
+   "page": "Julen Guerrero"
+  },
+  "アリツ・アドゥリス": {
+   "role": "legend",
+   "file": "assets/photos/ll/athletic/athletic_legend_e20b5704.jpg",
+   "page": "Aritz Aduriz"
+  },
+  "イケル・ムニアイン": {
+   "role": "legend",
+   "file": "assets/photos/ll/athletic/athletic_legend_df27c65b.jpg",
+   "page": "Iker Muniain"
+  },
+  "エディン・テルジッチ": {
+   "role": "manager",
+   "file": "assets/photos/ll/athletic/athletic_manager_b9e7b490.jpg",
+   "page": "Edin Terzić"
+  }
+ }
+}

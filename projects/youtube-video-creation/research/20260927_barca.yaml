@@ -1,0 +1,140 @@
+date: 2026年9月27日
+slot: laliga_1
+format: news
+voice_min: 0.45
+people: [ラフィーニャ, ルイス・ガルシア]
+theme:
+  id: barca_start
+  league: spain
+  league_name: ラ・リーガ
+  kind: match
+  topic: バルセロナ
+  title: 'バルセロナの開幕8連勝。これより上は、ヨーロッパに1チームしかいない'
+  question: バルサの出だしは、どれほどのものか
+short_title: バルセロナ8連勝、上には1チームだけ
+thumbnail:
+  photo: assets/images/20260927_barca/01.jpg
+  line1: バルサ8戦全勝
+  line2: 上にいるのは●●年前の1チーム
+sections:
+  - id: run
+    heading: 8戦全勝、36得点
+    tier: 報道
+    telop: 公式戦8試合で8勝。36得点8失点
+    narrator: キャスター
+    card:
+      type: table
+      title: バルセロナ 今季の公式戦
+      columns: ['', '']
+      rows:
+        - [ラ・リーガ, 7試合7勝・31得点7失点]
+        - [チャンピオンズリーグ, 1試合1勝・5対1]
+        - [合計, 8試合8勝・36得点8失点]
+    say:
+      - 今季のバルセロナは、公式戦8試合で8勝。点は**36**取って、取られたのは**8**です。
+      - 5点以上を取った試合が、8試合のうち**5回**あります。
+      - ラ・リーガは7連勝で首位。2位のアトレティコに、勝ち点で**5**の差をつけています。
+      - 8試合目の相手、セビージャのルイス・ガルシア監督は、こう話しています。
+      - voice: ルイス・ガルシア
+        text: バルサは最高の水準でプレーしている。ただ、私の関心はセビージャだ
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50004145/why-barcelona-start-season-laliga-champions-league-best-europe-top-5-leagues-almost-100-years
+      - https://site.api.espn.com/apis/v2/sports/soccer/esp.1/standings
+      - https://www.espn.com/soccer/story/_/id/49983111/raphinha-ballon-dor-sevilla-luis-garcia-joke-barcelona-hat-trick
+  - id: century
+    main: true
+    heading: 上にいるのは98年前の1チーム
+    tier: 報道
+    telop: 最初の8試合の得失点差で、1928-29年のレアル・マドリード以来の数字
+    narrator: キャスター
+    card:
+      type: table
+      title: 最初の8試合の得失点差（5大リーグ）
+      columns: [国, クラブ, 得失点差]
+      rows:
+        - [スペイン, レアル・マドリード 1928-29, ＋31]
+        - [スペイン, バルセロナ 2026-27, ＋28]
+        - [ドイツ, バイエルン 2016-17, ＋26]
+    say:
+      - text: 'バルセロナが、公式戦8連勝。ヨーロッパの5大リーグで、ほぼ100年ぶりの滑り出しです。'
+        short_only: true
+      - 比べたのは、最初の8試合の得失点差。バルサは**プラス28**。
+      - 5大リーグでこれを上回るのは、98年前のレアル・マドリードだけ。**プラス31**でした。
+      - その8試合は、すべて国王杯。リーグ戦が始まる前のことです。
+      - ドイツの最高は、2016年のバイエルンで**プラス26**。
+      - イングランドは1894年のエヴァートン、**プラス23**が最高です。
+    sources:
+      - https://www.espn.com/soccer/story/_/id/50004145/why-barcelona-start-season-laliga-champions-league-best-europe-top-5-leagues-almost-100-years
+      - https://now.core.api.espn.com/v1/sports/news/50004145
+      - https://www.espn.com/soccer/story/_/id/49983111/raphinha-ballon-dor-sevilla-luis-garcia-joke-barcelona-hat-trick
+  - id: raphinha
+    heading: センターフォワードのラフィーニャ
+    tier: 報道
+    telop: ラフィーニャは公式戦8試合で14得点。2試合続けてハットトリック
+    narrator: キャスター
+    card:
+      type: table
+      title: 点を取っている2人
+      columns: [所属, 名前, 位置, 年齢]
+      rows:
+        - [バルセロナ, ラフィーニャ, FW, 29歳]
+        - [バルセロナ, ラミン・ヤマル, FW, 19歳]
+    say:
+      - 36点のうち**14点**は、主将のラフィーニャ。ラミン・ヤマルも**8点**です。
+      - 本来は右のウイング。今季はセンターフォワードで使われ、2試合続けてハットトリックを決めました。
+      - ルイス・ガルシア監督は、ラフィーニャについてもこう話しました。
+      - voice: ルイス・ガルシア
+        text: 彼がバロンドールの候補にすら入っていないのは、冗談だ
+      - ラフィーニャ本人は、センターフォワードについて、こう語っています。
+      - voice: ラフィーニャ
+        text: 本来の右ウイングでやりたいと言ったら、試合に出られない。だから合わせないといけない
+      - voice: ラフィーニャ
+        text: このポジションが、こんなに心地いいとは思っていなかった
+    sources:
+      - https://www.espn.com/soccer/story/_/id/49983111/raphinha-ballon-dor-sevilla-luis-garcia-joke-barcelona-hat-trick
+      - https://www.fotmob.com/it/news/10px5awsan9951jge923q17t72-flick-hat-trick-hero-raphinha-best-captain-barcelona-could-have
+      - https://www.fcbarcelona.com/en/news/4578857/sevilla-1-3-fc-barcelona-raphinha-does-it-again
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「強すぎるんだよ、まじで」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 強すぎるんだよ、まじで。バランスもいいし穴がない
+      - voice: ネット民
+        text: ２試合連続ハット。しかも強敵セビージャのアウェー
+      - voice: ネット民
+        text: この価値は凄いね。
+        cont: true
+      - voice: ネット民
+        text: フリックになってからラフィーニャ覚醒したって言ってたけど、さらに覚醒してとんでもないバケモノになっちまった
+      - voice: ネット民
+        text: リーズにいた頃にまさかこんなに大化けするとは全く思わんかったわ。
+      - voice: ネット民
+        text: 本人の才能も凄いが指導者との相性がいかに大事かがよくわかった
+        cont: true
+      - voice: ネット民
+        text: ラフィーニャ何なら本職のWGより、CFの方が生き生きしてる
+      - voice: ネット民
+        text: 一時メッシ超えの記録も11-12の50ゴールが異次元と再認識させられるのか記録に迫ってラフィーニャすげえってなるのか楽しみ
+      - voice: ネット民
+        text: 18分の18……。バルサはラシンを7対2で粉砕して全勝を伸ばし、クラブ史上最高のシーズンスタートを記録。
+      - voice: ネット民
+        text: 7連勝したバルサは、これまでなかった。
+        cont: true
+      - voice: ネット民
+        text: またラフィーニャのハットトリック！ 14得点。まだ9月半ばだ
+      - voice: ネット民
+        text: フリックのバルサは、全員をバックミラー越しに見ている
+      - voice: ネット民
+        text: 難所攻略。こりゃバルサもハフィーニャも止まらんな。
+      - voice: ネット民
+        text: バルサファンは向こう数年は楽しそうだね
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/a6bb22e3326063510d500e7af3192ade338732c2/comments
+      - https://news.yahoo.co.jp/articles/98e8d5103daf41f679caf88457b3ed54b96515fd/comments
+      - https://bsky.app/profile/tercertiempo.bsky.social/post/3mvpi5wr43k2n
+      - https://bsky.app/profile/fabrizioromano.yopro20.com/post/3mvvjvypncb25
+      - https://bsky.app/profile/trendjpnews.bsky.social/post/3mvo45ia67g2z

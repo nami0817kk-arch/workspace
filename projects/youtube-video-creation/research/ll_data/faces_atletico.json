@@ -1,0 +1,24 @@
+{
+ "atletico": {
+  "フェルナンド・トーレス": {
+   "role": "legend",
+   "file": "assets/photos/ll/atletico/atletico_legend_2934f684.jpg",
+   "page": "Fernando Torres"
+  },
+  "ディエゴ・ゴディン": {
+   "role": "legend",
+   "file": "assets/photos/ll/atletico/atletico_legend_383107cc.jpg",
+   "page": "Diego Godín"
+  },
+  "アントワーヌ・グリーズマン": {
+   "role": "legend",
+   "file": "assets/photos/ll/atletico/atletico_legend_03ab89bf.jpg",
+   "page": "Antoine Griezmann"
+  },
+  "ディエゴ・シメオネ": {
+   "role": "manager",
+   "file": "assets/photos/ll/atletico/atletico_manager_b58576f1.jpg",
+   "page": "Diego Simeone"
+  }
+ }
+}

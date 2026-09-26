@@ -1,0 +1,421 @@
+# プレミアリーグ20クラブ紹介 ③アスレティック・ビルバオ（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/ll_data/athletic*.json と旧台本 -
+format: news
+voice_min: 0
+slot: laliga_1
+date: 2026年9月19日
+people:
+- アスレティック・ビルバオ
+- ニコ・ウィリアムズ
+- エディン・テルジッチ
+short_title: アスレティック・ビルバオに、まだ無いもの
+series: ラ・リーガチーム紹介
+theme:
+  id: athletic_intro
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: アスレティック・ビルバオ
+  title: アスレティック・ビルバオ。世界王者を3人抱えても、まだ届かないもの
+  question: どんなクラブなのか
+  hook: 優勝を祝う船が、40年も出番を待った時代もあります。
+  lead: バスクの選手だけで、降格は一度も無し。
+  opening_image: assets/stats/ll_athletic_data_t.png
+thumbnail:
+  line1: 世界王者3人でも届かない
+  line2: アスレティック・ビルバオ
+  crest_main:
+  - アスレティック・ビルバオ
+  board: assets/stats/ll_athletic_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 世界王者3人と、欧州の決勝を知る新監督
+  narrator: キャスター
+  say:
+  - text: 今年のワールドカップを制したスペイン。決勝に出た**3人**が、このクラブの選手です。
+    image: assets/stats/ll_athletic_data_r1.png
+    no_telop: true
+  - text: そのひとり、ニコ・ウィリアムズはこう話しています。
+    image: assets/stats/ll_athletic_data_r2.png
+    no_telop: true
+  - voice: ニコ・ウィリアムズ
+    text: アスレティックで欧州のタイトルを取りたい。まだ誰も取っていないから、歴史に残れる
+    image: assets/stats/ll_athletic_data_r2.png
+  - text: 今季からは、ドルトムントを欧州の決勝へ導いたテルジッチ監督が率います。
+    image: assets/stats/ll_athletic_data_r3.png
+    no_telop: true
+  - text: 決勝までは進んだことがあります。それでも、欧州の大会の優勝には**一度も**届いていません。
+    image: assets/stats/ll_athletic_data_r3.png
+    no_telop: true
+  - image: assets/stats/ll_athletic_data0.png
+    text: 創立は**1898年**。バスクの学生7人が、ボールを蹴り始めた年です。
+    no_telop: true
+  - image: assets/stats/ll_athletic_data1.png
+    text: 愛称は「レオネス」。ライオンの前に投げられた聖人、マメスにちなむ呼び名。
+    no_telop: true
+  - image: assets/stats/ll_athletic_data2.png
+    text: ホームタウンはビルバオ。人口**34万**を超える、バスクでいちばん大きな町です。
+    no_telop: true
+  - image: assets/backgrounds/stadium_アスレティックビルバオ.png
+    text: 本拠地はサン・マメス。**5万3289人**が入り、「大聖堂」と呼ばれます。
+  - image: assets/stats/ll_athletic_data4.png
+    text: 会長は**2022年**からジョン・ウリアルテ。クラブは会員のもので、会長も選挙で決まります。
+    no_telop: true
+  - image: assets/stats/ll_athletic_cups.png
+    text: 1部の優勝は**8回**。国王杯は**24回**、スーペルコパは**3回**。
+    no_telop: true
+  - image: assets/stats/ll_athletic_data6.png
+    text: 最多出場は、ゴールキーパーのホセ・アンヘル・イリバル。**614試合**に出ました。
+    no_telop: true
+  - image: assets/stats/ll_athletic_data7.png
+    text: 直近のタイトルは**2024年**の国王杯。マジョルカとの決勝は、ピーケー戦までもつれました。
+    no_telop: true
+  - image: assets/stats/ll_athletic_data8.png
+    text: 昨季のリーグ戦は**12位**、勝ち点**45**。チャンピオンズリーグにも出ています。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Athletic_Bilbao
+  - "https://en.wikipedia.org/wiki/2026–27_Athletic_Bilbao_season\r"
+  - https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_final
+  - https://en.wikipedia.org/wiki/Edin_Terzi%C4%87
+  - https://www.deia.eus/athletic/2026/09/25/nico-williams-espinita-san-mames-titulo-europeo-11585395.html
+  bg: assets/backgrounds/stadium_アスレティックビルバオ_in.png
+  official: false
+- id: history
+  heading: 1911年の揉め事
+  tier: 背景
+  telop: 地元の選手だけ、は揉め事から始まった
+  narrator: 解説
+  card:
+    type: table
+    title: 地元の選手だけ
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 1911年
+      - 出場資格でソシエダと対立
+    - - その後
+      - 連盟が国籍の規則
+  say:
+  - このクラブが地元の選手だけで戦うようになったのは、**1911年**からです。
+  - 国王杯で、イングランド人選手の出場をめぐり、ソシエダと揉めたのがきっかけ。
+  - text: 連盟は、選手をスペイン国籍に限ると決めます。
+    card:
+      type: table
+      title: 地元の選手だけ
+      columns: *id001
+      rows:
+      - - それ以来
+        - 地元の選手だけで戦う
+  - 規則がゆるんだあとも、クラブはそのやり方を変えませんでした。
+  sources:
+  - https://en.wikipedia.org/wiki/Athletic_Bilbao_signing_policy
+  - https://es.wikipedia.org/wiki/Athletic_Club
+  bg: assets/backgrounds/stadium_アスレティックビルバオ_in.png
+  official: false
+- id: history2
+  heading: アトレティコは支部だった
+  tier: 背景
+  telop: アトレティコは、このクラブの支部として生まれた
+  narrator: 解説
+  card:
+    type: table
+    title: マドリードの支部
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - - 1903年
+      - 支部としてアトレティコ誕生
+    - - 1909年の暮れ
+      - サウサンプトンの赤白を50枚
+  say:
+  - アトレティコ・マドリードは**1903年**、このクラブの支部として生まれました。
+  - 国王杯の優勝をマドリードで見届けた、バスクの学生3人が作ったチームです。
+  - text: 1909年の暮れ、サウサンプトンの赤白のシャツを、イングランドで**50枚**買いました。
+    card:
+      type: table
+      title: マドリードの支部
+      columns: *id002
+      rows:
+      - - その半分
+        - マドリードへ
+  - 半分はマドリードへ。2つのクラブは、いまも赤白の縦じまです。
+  sources:
+  - https://en.wikipedia.org/wiki/Atl%C3%A9tico_Madrid
+  - https://en.wikipedia.org/wiki/Athletic_Bilbao
+  bg: assets/backgrounds/stadium_アスレティックビルバオ_in.png
+  official: false
+- id: history3
+  heading: 欧州の決勝で
+  tier: 背景
+  telop: 1977年と2012年、欧州の決勝で敗れる
+  narrator: 解説
+  card:
+    type: table
+    title: 欧州の決勝
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1977年
+      - ユヴェントスにアウェーゴール差
+    - - 2012年
+      - アトレティコに0対3
+  say:
+  - 欧州で初めて決勝に進んだのは**1977年**。ユヴェントスに、アウェーゴールの差で敗れます。
+  - 2012年は、ビエルサ監督のもとで決勝へ。相手はかつての支部、アトレティコでした。
+  - 結果は**0対3**。同じシーズンの国王杯の決勝も落としています。
+  sources:
+  - https://en.wikipedia.org/wiki/Athletic_Bilbao
+  bg: assets/backgrounds/stadium_アスレティックビルバオ_in.png
+  official: false
+- id: history4
+  heading: 決勝は自分の家で
+  tier: 背景
+  telop: 決勝の舞台は、自分たちの本拠地だった
+  narrator: 解説
+  card:
+    type: table
+    title: 2025年、決勝は自分の家で
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 決勝の会場
+      - サン・マメス
+    - - 準決勝
+      - マンチェスター・ユナイテッドに合計1対7
+  say:
+  - 2025年、ヨーロッパリーグの決勝の舞台は、このクラブの本拠地でした。
+  - 準決勝まで勝ち進みましたが、マンチェスター・ユナイテッドに2試合で**1対7**。
+  - 自分たちの家での決勝は、イングランドの2クラブが戦いました。
+  sources:
+  - https://en.wikipedia.org/wiki/2025_UEFA_Europa_League_final
+  - https://www.deia.eus/athletic/2026/09/25/nico-williams-espinita-san-mames-titulo-europeo-11585395.html
+  bg: assets/backgrounds/stadium_アスレティックビルバオ_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 背後へ走る。手放さない。どこへでも行く
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 背後へ走る
+    - - 運営の型
+      - 育てた選手を手放さない
+    - - クラブの気質
+      - 7万人が決勝の地へ
+  say:
+  - text: テルジッチが求めるのは、守備の背後への走り。走れなければ、ボールを速く動かします。
+    image: assets/photos/ll/athletic/athletic_manager_b9e7b490.jpg
+  - ピッチの外は、育てた選手を手放さない型。
+  - ニコ・ウィリアムズとは2025年、**2035年**まで契約を延ばしました。
+  - ファンは、どこへでも付いていきます。
+  - 2015年の国王杯の決勝の前には、約**7万人**がバルセロナへ向かいました。
+  sources:
+  - https://en.wikipedia.org/wiki/Athletic_Bilbao
+  - https://www.marca.com/futbol/athletic/2026/09/12/terzic-paso-atras.html
+  - https://en.wikipedia.org/wiki/Nico_Williams
+  - https://es.wikipedia.org/wiki/Athletic_Club
+  bg: assets/backgrounds/stadium_アスレティックビルバオ_in.png
+  official: false
+- id: episode
+  heading: 優勝は船で祝う
+  tier: 背景
+  telop: 優勝すると、選手は船で川を下る
+  narrator: 解説
+  card:
+    type: table
+    title: 優勝は船で祝う
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1983年
+      - 初めて船で優勝を祝う
+    - - 次に出たのは
+      - 2024年。大潮で木曜に延期
+  say:
+  - text: 優勝すると、選手たちは平らな船に乗って、ビルバオの川を下ります。
+    image: assets/images/ll_athletic_episode/scene.jpg
+  - 始まりは**1983年**。沿道に**100万人**が出たと言われ、選手がひとり川に落ちました。
+  - 1984年のあと、次に船が出たのは**2024年**。大潮のため、祝う日は木曜にずれました。
+  sources:
+  - https://es.wikipedia.org/wiki/Gabarra_del_Athletic
+  bg: assets/backgrounds/stadium_アスレティックビルバオ_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id003
+      - フレン・ゲレーロ
+      - 1992-2006
+      - 10年契約で残る
+  say:
+  - text: フレン・ゲレーロは**8歳**で入団。**18歳**でトップに上がった、攻撃的な中盤です。
+    image: assets/photos/ll/athletic/athletic_legend_fd694d07.jpg
+  - 大きなクラブに誘われても残り、1997年にクラブ最長となる10年の契約を結びました。
+  - このクラブだけでプレーし、リーグ戦で**372試合101得点**。
+  sources:
+  - https://en.wikipedia.org/wiki/Julen_Guerrero
+  - https://en.wikipedia.org/wiki/Aritz_Aduriz
+  - https://en.wikipedia.org/wiki/Iker_Muniain
+  bg: assets/backgrounds/stadium_アスレティックビルバオ_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - &id004
+      - アリツ・アドゥリス
+      - 2002-2020
+      - 3度在籍の点取り屋
+  say:
+  - text: アリツ・アドゥリスは、3度にわたってこのクラブに在籍したストライカーです。
+    image: assets/photos/ll/athletic/athletic_legend_e20b5704.jpg
+  - 2015年のスーペルコパ、バルセロナからハットトリック。**4対0**で勝ち、優勝へ導きます。
+  - 38歳でもゴールを決め、リーグ戦で**316試合118得点**を残しました。
+  sources:
+  - https://en.wikipedia.org/wiki/Julen_Guerrero
+  - https://en.wikipedia.org/wiki/Aritz_Aduriz
+  - https://en.wikipedia.org/wiki/Iker_Muniain
+  bg: assets/backgrounds/stadium_アスレティックビルバオ_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id003
+    - *id004
+    - - イケル・ムニアイン
+      - 2009-2024
+      - 16歳でデビュー
+  say:
+  - text: イケル・ムニアインは**16歳**でデビュー。プロの公式戦では、クラブ最年少です。
+    image: assets/photos/ll/athletic/athletic_legend_df27c65b.jpg
+  - 2024年、国王杯の決勝に延長から出てピーケーを決め、主将として杯を掲げました。
+  - 違約金を付けない契約を選び、リーグ戦で**434試合56得点**。
+  sources:
+  - https://en.wikipedia.org/wiki/Julen_Guerrero
+  - https://en.wikipedia.org/wiki/Aritz_Aduriz
+  - https://en.wikipedia.org/wiki/Iker_Muniain
+  bg: assets/backgrounds/stadium_アスレティックビルバオ_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はテルジッチ。2028年までの契約
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - エディン・テルジッチ（ドイツ）
+    - - 就任
+      - 2026年7月
+    - - 前職
+      - ドルトムント
+  say:
+  - text: 今季の監督は、ドイツのエディン・テルジッチ。**2026年7月**に就任しました。
+    image: assets/photos/ll/athletic/athletic_manager_b9e7b490.jpg
+  - 前はドルトムント。**2021年**にドイツカップを制しました。契約は**2028年**まで。
+  sources:
+  - https://en.wikipedia.org/wiki/Athletic_Bilbao
+  - https://en.wikipedia.org/wiki/Edin_Terzi%C4%87
+  - https://en.wikipedia.org/wiki/2026%E2%80%9327_Athletic_Bilbao_season
+  bg: assets/backgrounds/stadium_アスレティックビルバオ_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は26人です。
+    image: assets/stats/ll_athletic_gk.png
+    no_telop: true
+  - image: assets/stats/ll_athletic_gk_f.png
+    text: ゴールキーパーは2人。
+    no_telop: true
+  - image: assets/stats/ll_athletic_gk_f.png
+    text: ウナイ・シモンはスペイン代表で**66試合**。
+    no_telop: true
+  - image: assets/stats/ll_athletic_df_f.png
+    text: ディフェンダーは9人。
+    no_telop: true
+  - image: assets/stats/ll_athletic_df_f.png
+    text: アイメリク・ラポルトはスペイン代表で**54試合**。
+    no_telop: true
+  - image: assets/stats/ll_athletic_df_f.png
+    text: ユーリ・ベルチシェはリーグ戦で**228試合**。
+    no_telop: true
+  - image: assets/stats/ll_athletic_mf_f.png
+    text: ミッドフィールダーは7人。
+    no_telop: true
+  - image: assets/stats/ll_athletic_mf_f.png
+    text: オイアン・サンセトはリーグ戦で**197試合**。
+    no_telop: true
+  - image: assets/stats/ll_athletic_mf_f.png
+    text: イニゴ・ルイス・デ・ガラレタはリーグ戦で**97試合**。
+    no_telop: true
+  - image: assets/stats/ll_athletic_fw_f.png
+    text: フォワードは8人。
+    no_telop: true
+  - image: assets/stats/ll_athletic_fw_f.png
+    text: 主将を務めるのが**イニャキ・ウィリアムズ**。
+    no_telop: true
+  - image: assets/stats/ll_athletic_fw_f.png
+    text: リーグ戦で**413試合**に出ています。
+    no_telop: true
+  - image: assets/stats/ll_athletic_fw_f.png
+    text: ニコ・ウィリアムズはスペイン代表で**36試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/Athletic_Bilbao
+  bg: assets/backgrounds/stadium_アスレティックビルバオ_in.png
+  official: false

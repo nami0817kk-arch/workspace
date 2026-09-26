@@ -1,0 +1,24 @@
+{
+ "barcelona": {
+  "シャビ・エルナンデス": {
+   "role": "legend",
+   "file": "assets/photos/ll/barcelona/barcelona_legend_a504da84.jpg",
+   "page": "Xavi (footballer, born 1980)"
+  },
+  "アンドレス・イニエスタ": {
+   "role": "legend",
+   "file": "assets/photos/ll/barcelona/barcelona_legend_d3a59960.jpg",
+   "page": "Andrés Iniesta"
+  },
+  "ロナウジーニョ": {
+   "role": "legend",
+   "file": "assets/photos/ll/barcelona/barcelona_legend_92cbb0d2.jpg",
+   "page": "Ronaldinho"
+  },
+  "ハンジ・フリック": {
+   "role": "manager",
+   "file": "assets/photos/ll/barcelona/barcelona_manager_6a0f8bd9.jpg",
+   "page": "Hansi Flick"
+  }
+ }
+}

@@ -1,0 +1,408 @@
+# プレミアリーグ20クラブ紹介 ⑤バルセロナ（2026-09-20 ヴィラの見本の形で作り直し）
+# tools/plbuild.py で組み立て。材料は research/ll_data/barcelona*.json と旧台本 -
+format: news
+voice_min: 0
+slot: laliga_1
+date: 2026年9月19日
+people:
+- バルセロナ
+- ハンジ・フリック
+short_title: バルセロナ、107年空けた胸に入れた名前
+series: ラ・リーガチーム紹介
+theme:
+  id: barcelona_intro
+  league: spain
+  league_name: ラ・リーガ
+  kind: other
+  topic: バルセロナ
+  title: バルセロナ。107年空けておいた胸に、最初に入れた名前
+  question: どんなクラブなのか
+  hook: いまの監督は、日本代表との一戦が、前の仕事の最後の試合でした。
+  lead: スペインで、いちばん多い国内タイトル**82**個。
+  opening_image: assets/stats/ll_barcelona_data_t.png
+thumbnail:
+  line1: 107年、胸は空けたまま
+  line2: バルセロナが最初に入れた名前
+  crest_main:
+  - バルセロナ
+  board: assets/stats/ll_barcelona_data_t.png
+sections:
+- id: data
+  heading: いま見る理由と基礎DATA
+  main: true
+  tier: 背景
+  telop: 史上最高の出だしと、107年後の胸
+  narrator: キャスター
+  say:
+  - text: 今季は公式戦**8戦8勝**。クラブの歴史で、いちばんの滑り出しです。
+    image: assets/stats/ll_barcelona_data_r1.png
+    no_telop: true
+  - text: 率いるのは、ドイツのフリック監督。こう話しています。
+    image: assets/stats/ll_barcelona_data_r2.png
+    no_telop: true
+  - voice: ハンジ・フリック
+    text: 1年前とはレベルが違う。それでも、どの試合も0対0から始まる
+    image: assets/stats/ll_barcelona_data_r2.png
+  - text: そしてこのクラブが、107年後に胸へ入れたのはユニセフ。お金は、クラブが払う側でした。
+    image: assets/stats/ll_barcelona_data_r3.png
+    no_telop: true
+  - image: assets/stats/ll_barcelona_data0.png
+    text: 創立は**1899年**。スイスから来たジョアン・ガンペルが、仲間を集めました。
+    no_telop: true
+  - image: assets/stats/ll_barcelona_data1.png
+    text: 愛称は「ブラウグラナ」。カタルーニャ語で、**青とえんじ**のことです。
+    no_telop: true
+  - image: assets/stats/ll_barcelona_data2.png
+    text: ホームタウンはバルセロナ。地中海に面した、カタルーニャ州の州都。
+    no_telop: true
+  - image: assets/backgrounds/stadium_バルセロナ.png
+    text: 本拠地はカンプ・ノウ。改修中で、いまは**6万2652人**。完成すれば**10万5000人**です。
+  - image: assets/stats/ll_barcelona_data4.png
+    text: 持ち主は**15万人**を超える会員。会長のラポルタは、**2026年3月**に再選されました。
+    no_telop: true
+  - image: assets/stats/ll_barcelona_cups.png
+    text: 1部優勝は**29回**、国王杯は最多の**32回**。チャンピオンズリーグは**5回**。
+    no_telop: true
+  - image: assets/stats/ll_barcelona_data6.png
+    text: 最多出場はリオネル・メッシの**778試合**。得点も、クラブ最多の**672**。
+    no_telop: true
+  - image: assets/stats/ll_barcelona_data7.png
+    text: 直近のタイトルは昨シーズンのリーグ。クラシコの勝利で決めたのは、初めてでした。
+    no_telop: true
+  - image: assets/stats/ll_barcelona_data8.png
+    text: 昨シーズンは**1位**で、勝ち点**94**。ホームのリーグ戦は、**19戦全勝**でした。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/FC_Barcelona
+  - "https://en.wikipedia.org/wiki/2026–27_FC_Barcelona_season\r"
+  - https://www.fcbarcelona.com/en/football/first-team/news/4578296/hansi-flick-were-focused-on-our-own-job
+  - https://www.fcbarcelona.com/en/football/first-team/news/4579409/flicks-barca-is-a-goal-machine
+  - https://es.wikipedia.org/wiki/F%C3%BAtbol_Club_Barcelona
+  bg: assets/backgrounds/stadium_バルセロナ_in.png
+  official: false
+- id: history
+  heading: スポーツ誌の広告から
+  tier: 背景
+  telop: 始まりは、スポーツ誌に出した広告
+  narrator: 解説
+  card:
+    type: table
+    title: 1899年の呼びかけ
+    columns: &id001
+    - ''
+    - ''
+    rows:
+    - - 10月22日
+      - ガンペルが広告を出す
+    - - 11月29日
+      - 集まった面々で創立
+  say:
+  - 始まりは、スポーツ誌に載った1本の広告でした。
+  - '**1899年10月**、ガンペルは、この競技が好きな人は連絡を、と呼びかけます。'
+  - text: '**11月29日**、集まった面々でクラブが生まれました。'
+    card:
+      type: table
+      title: 1899年の呼びかけ
+      columns: *id001
+      rows:
+      - - 最初の会長
+        - スイス人のワルター・ヴィルト
+  - 最初の会長は、その場でいちばん年上だったスイス人です。
+  sources:
+  - https://en.wikipedia.org/wiki/FC_Barcelona
+  - https://es.wikipedia.org/wiki/F%C3%BAtbol_Club_Barcelona
+  - https://en.wikipedia.org/wiki/Joan_Gamper
+  bg: assets/backgrounds/stadium_バルセロナ_in.png
+  official: false
+- id: history2
+  heading: クライフが来て
+  tier: 背景
+  telop: 1992年、初めてヨーロッパの頂点へ
+  narrator: 解説
+  card:
+    type: table
+    title: クライフとヨーロッパ
+    columns: &id002
+    - ''
+    - ''
+    rows:
+    - - 1973年
+      - 選手クライフ、世界最高額で加入
+    - - 1988年
+      - 監督として戻る
+  say:
+  - '**1973年**、オランダのヨハン・クライフが、当時の世界最高額で加わります。'
+  - '**1988年**には監督として戻り、ドリームチームと呼ばれるチームを作りました。'
+  - text: '**1992年**、延長の末、クーマンのフリーキックでサンプドリアに**1対0**の勝ち。'
+    card:
+      type: table
+      title: クライフとヨーロッパ
+      columns: *id002
+      rows:
+      - - 1992年
+        - 初めて欧州王者に
+  - 創立から90年以上、届かなかったヨーロッパの頂点でした。
+  sources:
+  - https://en.wikipedia.org/wiki/FC_Barcelona
+  - https://en.wikipedia.org/wiki/1992_European_Cup_final
+  bg: assets/backgrounds/stadium_バルセロナ_in.png
+  official: false
+- id: history3
+  heading: 空けておいた胸
+  tier: 背景
+  telop: 胸にスポンサー名を入れなかった107年
+  narrator: 解説
+  card:
+    type: table
+    title: ユニフォームの胸
+    columns: &id003
+    - ''
+    - ''
+    rows:
+    - - 2006年まで
+      - 胸にスポンサー名なし
+    - - 2006年
+      - ユニセフ。クラブが寄付する側
+  say:
+  - スペインのクラブが胸にスポンサー名を入れ始めたのは、**1981年**。
+  - それでもこのクラブは、胸を空けたままにしました。
+  - text: '**2006年**、ついに入った名前は、国連の子どもの機関、ユニセフ。'
+    card:
+      type: table
+      title: ユニフォームの胸
+      columns: *id003
+      rows:
+      - - 2011年
+        - 初めて、お金を受け取る広告
+  - クラブは毎年**150万ユーロ**以上を寄付し、お金を受け取る広告は**2011年**からです。
+  sources:
+  - https://en.wikipedia.org/wiki/FC_Barcelona
+  - https://es.wikipedia.org/wiki/F%C3%BAtbol_Club_Barcelona
+  bg: assets/backgrounds/stadium_バルセロナ_in.png
+  official: false
+- id: features
+  heading: このクラブの特徴
+  tier: 背景
+  telop: 前から奪う。育てて使う。クラブ以上の存在
+  narrator: 解説
+  card:
+    type: table
+    title: このクラブの特徴
+    columns:
+    - ''
+    - ''
+    rows:
+    - - プレーの色
+      - 前から奪って点を取る
+    - - 運営の型
+      - ラ・マシアで育てる
+    - - クラブの気質
+      - 「クラブ以上の存在」
+  say:
+  - text: フリック監督のチームは、前から奪って点を取る。就任から**125試合**で**354得点**です。
+    image: assets/photos/ll/barcelona/barcelona_manager_6a0f8bd9.jpg
+  - 運営の型は、育てて使う。育成組織のラ・マシアには、**300人**を超える若手がいます。
+  - 2010年のバロンドールは、最終候補の**3人**とも、ラ・マシアの出身でした。
+  - 気質を表す合言葉は「クラブ以上の存在」。カタルーニャの誇りを背負ってきました。
+  sources:
+  - https://en.wikipedia.org/wiki/FC_Barcelona
+  - https://www.fcbarcelona.com/en/football/first-team/news/4579409/flicks-barca-is-a-goal-machine
+  - https://www.fcbarcelona.com/en/football/first-team/news/4578296/hansi-flick-were-focused-on-our-own-job
+  - https://en.wikipedia.org/wiki/La_Masia
+  bg: assets/backgrounds/stadium_バルセロナ_in.png
+  official: false
+- id: episode
+  heading: ファンの呼び名は「お尻」
+  tier: 背景
+  telop: ファンの呼び名「クレ」は、お尻から
+  narrator: 解説
+  card:
+    type: table
+    title: 「クレ」の始まり
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 1909〜1922年
+      - 最初の本拠地、インドゥストリア通り
+    - - 満員の日
+      - 塀の上に座って観戦
+    - - 通りから見えたのは
+      - ずらりと並んだお尻
+  say:
+  - text: ファンは「クレ」と呼ばれます。もとは、カタルーニャ語のお尻です。
+    image: assets/images/ll_barcelona_episode/scene.jpg
+  - 最初の競技場は満員になると、塀の上に座って見る人が並びました。
+  - 通りから見えたのは、ずらりと並んだお尻。それが、そのまま呼び名になりました。
+  sources:
+  - https://en.wikipedia.org/wiki/Camp_de_la_Ind%C3%BAstria
+  - https://en.wikipedia.org/wiki/FC_Barcelona
+  - https://es.wikipedia.org/wiki/F%C3%BAtbol_Club_Barcelona
+  bg: assets/backgrounds/stadium_バルセロナ_in.png
+  official: false
+- id: legends
+  heading: このクラブを語る3人
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - &id004
+      - シャビ・エルナンデス
+      - 1998-2015
+      - 3冠の中心
+  say:
+  - text: シャビ・エルナンデスはカタルーニャの生まれ。**11歳**で育成組織に入った中盤です。
+    image: assets/photos/ll/barcelona/barcelona_legend_a504da84.jpg
+  - リーグ戦で**505試合58得点**。2009年と2015年の3冠で、中盤の中心にいました。
+  - 2021年には監督で戻り、2023年にリーグを制覇。今はオランダ代表の監督です。
+  sources:
+  - https://en.wikipedia.org/wiki/Xavi_(footballer,_born_1980)
+  - https://en.wikipedia.org/wiki/Andr%C3%A9s_Iniesta
+  - https://en.wikipedia.org/wiki/Ronaldinho
+  bg: assets/backgrounds/stadium_バルセロナ_in.png
+  official: false
+- id: legends2
+  heading: このクラブを語る3人（2人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id004
+    - &id005
+      - アンドレス・イニエスタ
+      - 2002-2018
+      - 終了間際の同点弾
+  say:
+  - text: イニエスタは**12歳**のとき、ラ・マンチャの小さな村からやって来ました。
+    image: assets/photos/ll/barcelona/barcelona_legend_d3a59960.jpg
+  - 2009年、チェルシーとの準決勝。試合終了間際の同点弾で、決勝へ進みました。
+  - リーグ戦で**442試合35得点**。2018年に、日本のヴィッセル神戸へ渡りました。
+  sources:
+  - https://en.wikipedia.org/wiki/Xavi_(footballer,_born_1980)
+  - https://en.wikipedia.org/wiki/Andr%C3%A9s_Iniesta
+  - https://en.wikipedia.org/wiki/Ronaldinho
+  bg: assets/backgrounds/stadium_バルセロナ_in.png
+  official: false
+- id: legends3
+  heading: このクラブを語る3人（3人目）
+  tier: 背景
+  telop: 1990年以降の名選手
+  narrator: キャスター
+  card:
+    type: table
+    title: 1990年以降の名選手
+    columns:
+    - 名前
+    - 在籍
+    - 残したもの
+    rows:
+    - *id004
+    - *id005
+    - - ロナウジーニョ
+      - 2003-2008
+      - 敵地で拍手
+  say:
+  - text: ロナウジーニョは**2003年**、パリ・サンジェルマンから**3000万ユーロ**で来ました。
+    image: assets/photos/ll/barcelona/barcelona_legend_92cbb0d2.jpg
+  - 2005年11月、敵地ベルナベウで2得点。レアルのファンが、拍手を送りました。
+  - その年は、バロンドールにも選ばれました。リーグ戦で**145試合70得点**。
+  sources:
+  - https://en.wikipedia.org/wiki/Xavi_(footballer,_born_1980)
+  - https://en.wikipedia.org/wiki/Andr%C3%A9s_Iniesta
+  - https://en.wikipedia.org/wiki/Ronaldinho
+  bg: assets/backgrounds/stadium_バルセロナ_in.png
+  official: false
+- id: manager
+  heading: 今季の監督
+  tier: 報道
+  telop: 監督はフリック。前はドイツ代表
+  narrator: キャスター
+  card:
+    type: table
+    title: 今季の監督
+    columns:
+    - ''
+    - ''
+    rows:
+    - - 監督
+      - ハンジ・フリック（ドイツ）
+    - - 就任
+      - 2024年5月
+    - - 前職
+      - ドイツ代表
+  say:
+  - text: 今季の監督はハンジ・フリック。ドイツ出身で、**2024年5月**に就任しました。
+    image: assets/photos/ll/barcelona/barcelona_manager_6a0f8bd9.jpg
+  - 前はドイツ代表の監督。日本に**1対4**で敗れた翌日、職を解かれています。
+  sources:
+  - https://en.wikipedia.org/wiki/FC_Barcelona
+  - https://en.wikipedia.org/wiki/Hansi_Flick
+  - https://en.wikipedia.org/wiki/2025%E2%80%9326_FC_Barcelona_season
+  bg: assets/backgrounds/stadium_バルセロナ_in.png
+  official: false
+- id: squad
+  heading: 今季の登録選手
+  tier: 報道
+  telop: 今季の登録選手
+  narrator: キャスター
+  say:
+  - text: 今季の登録選手は27人です。
+    image: assets/stats/ll_barcelona_gk.png
+    no_telop: true
+  - image: assets/stats/ll_barcelona_gk_f.png
+    text: ゴールキーパーは3人。
+    no_telop: true
+  - image: assets/stats/ll_barcelona_gk_f.png
+    text: ヴォイチェフ・シュチェスニーはポーランド代表で**84試合**。
+    no_telop: true
+  - image: assets/stats/ll_barcelona_gk_f.png
+    text: ドミニク・リヴァコヴィッチはクロアチア代表で**79試合**。
+    no_telop: true
+  - image: assets/stats/ll_barcelona_df_f.png
+    text: ディフェンダーは8人。
+    no_telop: true
+  - image: assets/stats/ll_barcelona_df_f.png
+    text: アンドレアス・クリステンセンはデンマーク代表で**81試合**。
+    no_telop: true
+  - image: assets/stats/ll_barcelona_df_f.png
+    text: ジュール・クンデはフランス代表で**57試合**。
+    no_telop: true
+  - image: assets/stats/ll_barcelona_mf_f.png
+    text: ミッドフィールダーは8人。
+    no_telop: true
+  - image: assets/stats/ll_barcelona_mf_f.png
+    text: フレンキー・デ・ヨングはオランダ代表で**70試合**。
+    no_telop: true
+  - image: assets/stats/ll_barcelona_mf_f.png
+    text: ペドリはスペイン代表で**49試合**。
+    no_telop: true
+  - image: assets/stats/ll_barcelona_fw_f.png
+    text: フォワードは8人。
+    no_telop: true
+  - image: assets/stats/ll_barcelona_fw_f.png
+    text: 主将を務めるのが**ラフィーニャ**。
+    no_telop: true
+  - image: assets/stats/ll_barcelona_fw_f.png
+    text: リーグ戦で**129試合**に出ています。
+    no_telop: true
+  - image: assets/stats/ll_barcelona_fw_f.png
+    text: ラミン・ヤマルはスペイン代表で**33試合**。
+    no_telop: true
+  sources:
+  - https://en.wikipedia.org/wiki/FC_Barcelona
+  bg: assets/backgrounds/stadium_バルセロナ_in.png
+  official: false
