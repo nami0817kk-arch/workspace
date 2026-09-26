@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}{{ OWNER }}｜公開データを毎日まとめる小さなサイト群{% endblock %}
+{% block description %}{{ OWNER }}が運営しているサイトの一覧。株価ランキング・社会保険の加入判定・楽天の価格記録を公開しています。{% endblock %}
+{% block content %}
+<h1>{{ OWNER }}が運営しているサイト</h1>
+<p>
+  公的機関や取引所・通販サイトが公開しているデータを自動で集め、
+  読みやすい形にまとめ直したサイトを運営しています。
+  どのサイトも会員登録は不要で、無料で使えます。
+</p>
+
+<ul class="sites">
+{% for s in SITES %}
+  <li>
+    <a href="{{ s.url }}">{{ s.name }}</a>
+    <p>{{ s.summary }}</p>
+  </li>
+{% endfor %}
+</ul>
+
+<h2>運営について</h2>
+<p>
+  個人で運営しています。掲載している数値はすべて公開データからの計算で、
+  運営者による予想や推奨は含みません。
+  運営の方針と連絡先は<a href="/operator.html">運営者情報</a>にまとめています。
+</p>
+{% endblock %}
