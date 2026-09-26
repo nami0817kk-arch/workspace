@@ -13,6 +13,14 @@ import '../readable_width.dart';
 class SupportScreen extends StatefulWidget {
   const SupportScreen({super.key, required this.monetization});
 
+  /// 法務ページの置き場所。
+  ///
+  /// **`soccer-career.pages.dev` は他人のサイト**（同じ着想の別アプリが先に
+  /// 取っている）。Cloudflare が後ろに `-49p` を足したのはそのためで、
+  /// 「短いほうが正しそう」と直すと、審査で他人のページを見せることになる。
+  /// `test/distribution_test.dart` が STORE_LISTING.md と突き合わせている。
+  static const String legalBase = 'https://soccer-career-49p.pages.dev/legal';
+
   final Monetization monetization;
 
   @override
@@ -175,9 +183,9 @@ class _SupportScreenState extends State<SupportScreen> {
               Text('決まりごと', style: theme.textTheme.titleSmall),
               const SizedBox(height: 6),
               SelectableText(
-                '$legalBase/privacy.html  プライバシーポリシー\n'
-                '$legalBase/terms.html  利用規約\n'
-                '$legalBase/support.html  サポート',
+                '${SupportScreen.legalBase}/privacy.html  プライバシーポリシー\n'
+                '${SupportScreen.legalBase}/terms.html  利用規約\n'
+                '${SupportScreen.legalBase}/support.html  サポート',
                 style: muted,
               ),
             ],
@@ -186,7 +194,4 @@ class _SupportScreenState extends State<SupportScreen> {
       ),
     );
   }
-
-  /// 法務ページの置き場所。Web 版と同じ所に出している。
-  static const String legalBase = 'https://soccer-career-49p.pages.dev/legal';
 }

@@ -88,3 +88,15 @@ def test_no_word_repeats_across_the_book():
     assert not dup, dup
     themes = [t["theme"] for t in spec.themes]
     assert len(set(themes)) == len(themes)
+
+
+def test_every_theme_icon_exists():
+    spec = KotobaSpec.load(_SPEC)
+    for t in spec.themes:
+        assert (_ROOT / "assets" / "emoji" / f"emoji_u{t['icon']}.svg").exists(), t["theme"]
+
+
+def test_colophon_credits_icons(built):
+    _, _, interior, _, _ = built
+    last = PdfReader(str(interior)).pages[-1].extract_text()
+    assert "Noto Emoji" in last

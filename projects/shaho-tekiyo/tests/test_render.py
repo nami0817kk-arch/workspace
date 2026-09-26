@@ -189,7 +189,7 @@ def test_どのページからも月収別の一覧へ行ける(site):
 
 def test_計算方法と更新履歴のページ(site):
     html = (site / "keisan.html").read_text(encoding="utf-8")
-    for src in ("kyoukaikenpo.or.jp", "mhlw.go.jp/content/001692566.pdf", "nenkin.go.jp"):
+    for src in ("kyoukaikenpo.or.jp", "mhlw.go.jp/content/001692566.pdf", "nenkin.go.jp", "nta.go.jp"):
         assert src in html, src
     assert "更新履歴" in html
     assert "keisan.html" in (site / "index.html").read_text(encoding="utf-8")
@@ -200,3 +200,53 @@ def test_計算機に時給の入力と正式な都道府県名(site):
     assert 'id="hourly"' in html
     assert '<option value="東京" selected>東京都</option>' in html
     assert 'id="extras-data"' in html
+
+
+def test_月収20万円のページに所得税と手取り(site):
+    html = (site / "getsushu" / "20man.html").read_text(encoding="utf-8")
+    assert "</span></th><td>3,290円" in html  # 所得税
+    assert "<strong>167,330円</strong>" in html  # 200,000 − 28,380 − 1,000 − 3,290
+
+
+def test_計算機に通勤手当と扶養の人数(site):
+    html = (site / "index.html").read_text(encoding="utf-8")
+    assert 'id="commute"' in html and 'id="dependents"' in html
+
+
+def test_週20時間の壁のページ(site):
+    for h in render.KABE_HOURLY:
+        assert (site / "kabe" / f"{h}yen.html").exists(), h
+    html = (site / "kabe" / "1100yen.html").read_text(encoding="utf-8")
+    assert "週20時間にすると手取りは月 9,617円 減る。週22.5時間で元に戻る" in html
+    xml = (site / "sitemap.xml").read_text(encoding="utf-8")
+    assert f"<loc>{site_config.SITE_URL}/kabe/1100yen</loc>" in xml
+
+
+def test_共有画像とパンくずの構造化データ(site):
+    assert (site / "static" / "og.png").exists()
+    html = (site / "getsushu" / "10man.html").read_text(encoding="utf-8")
+    assert f'<meta property="og:image" content="{site_config.SITE_URL}/static/og.png">' in html
+    m = re.search(r'<script type="application/ld\+json">(\{"@context": "https://schema.org", "@type": "BreadcrumbList".*?)</script>', html)
+    assert m, "BreadcrumbList が無い"
+    items = json.loads(m.group(1))["itemListElement"]
+    assert [i["name"] for i in items] == ["計算機", "月収別の保険料", "月収10万円"]
+    assert items[-1]["item"] == f"{site_config.SITE_URL}/getsushu/10man"
+    assert items[1]["item"] == f"{site_config.SITE_URL}/getsushu/"
+
+
+def test_図が入っている(site):
+    amount = (site / "getsushu" / "10man.html").read_text(encoding="utf-8")
+    assert 'class="bar100"' in amount and "手取り <strong>85,594円</strong>" in amount  # 月収の行き先
+    assert 'class="hbars"' in amount and "国民年金（自分で払う）" in amount  # 国民年金と厚生年金
+    wall = (site / "kabe" / "1100yen.html").read_text(encoding="utf-8")
+    assert wall.count('class="fill-s2"') + wall.count('class="fill-s1"') + wall.count('class="fill-base"') >= 8
+    assert "週20時間: 手取り 80,950円（週19時間より−9,617円）" in wall  # 棒にマウスを乗せたときの値
+    for name in ("index.html", "year/2029-10.html"):
+        assert 'class="timeline"' in (site / name).read_text(encoding="utf-8"), name
+    assert (site / "static" / "charts.js").exists()
+    assert 'src="static/charts.js"' in (site / "index.html").read_text(encoding="utf-8")
+
+
+def test_図の色はライトとダークの両方で決めてある(site):
+    html = (site / "index.html").read_text(encoding="utf-8")
+    assert html.count("--s1:") == 2  # ライトとダーク

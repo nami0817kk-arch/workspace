@@ -13,11 +13,18 @@
 <meta property="og:description" content="{{ self.description() }}">
 <meta property="og:url" content="{{ canonical }}">
 <meta property="og:locale" content="ja_JP">
-<meta name="twitter:card" content="summary">
+<meta property="og:image" content="{{ SITE_URL }}/static/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="{{ SITE_URL }}/static/og.png">
 <meta name="twitter:title" content="{{ self.title() }}">
 <meta name="twitter:description" content="{{ self.description() }}">
 <style>
   :root {
+    /* 図の色（dataviz 既定パレットの1〜4番。この順で隣り合っても色覚の違いで見分けられる） */
+    --s1: #2a78d6; --s2: #eb6834; --s3: #1baf7a; --s4: #eda100;
+    --viz-base: #9aa3a8; --viz-step: #9ec5f4; --viz-grid: #e3e7e9;
     --bg: #f5f7f8;
     --card-bg: #ffffff;
     --text: #1a1a1a;
@@ -37,6 +44,8 @@
   }
   @media (prefers-color-scheme: dark) {
     :root {
+      --s1: #3987e5; --s2: #d95926; --s3: #199e70; --s4: #c98500;
+      --viz-base: #5d676d; --viz-step: #184f95; --viz-grid: #2c3236;
       --bg: #14171a;
       --card-bg: #1b1f22;
       --text: #e8eaec;
@@ -204,6 +213,35 @@
   #result .hint { font-size: 0.8rem; color: var(--muted); }
   table.premium td, table.num td { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
   .month-links { line-height: 2; }
+  /* 図 */
+  figure.viz { margin: 1rem 0 1.25rem; }
+  figure.viz svg { width: 100%; height: auto; display: block; overflow: visible; }
+  figure.viz figcaption { font-size: 0.78rem; color: var(--muted); margin-top: 0.35rem; }
+  .fill-s1 { fill: var(--s1); background: var(--s1); }
+  .fill-s2 { fill: var(--s2); background: var(--s2); }
+  .fill-s3 { fill: var(--s3); background: var(--s3); }
+  .fill-s4 { fill: var(--s4); background: var(--s4); }
+  .fill-base { fill: var(--viz-base); background: var(--viz-base); }
+  .fill-step { fill: var(--viz-step); background: var(--viz-step); }
+  svg .in-s1, svg .in-s2 { fill: #fff; font-size: 13px; font-weight: bold; }
+  svg .in-s3, svg .in-s4 { fill: #0b0b0b; font-size: 13px; font-weight: bold; }
+  svg .grid { stroke: var(--viz-grid); stroke-width: 1; }
+  svg .axis { fill: var(--muted); font-size: 12px; }
+  svg .axis.strong { fill: var(--text); font-weight: bold; }
+  svg .val { fill: var(--text); font-size: 12px; font-weight: bold; }
+  svg .ref { stroke: var(--text); stroke-width: 1.5; stroke-dasharray: 5 4; }
+  svg .ref-label { fill: var(--text); font-size: 12px; }
+  svg .arrow { fill: var(--muted); }
+  svg rect:hover, svg path[class^="fill"]:hover { opacity: 0.85; }
+  /* 図は viewBox 640 幅。スマホでは半分ほどに縮むので、図の中の文字を大きくして読める大きさを保つ */
+  @media (max-width: 600px) {
+    svg .axis, svg .val, svg .ref-label { font-size: 21px; }
+    svg .in-s1, svg .in-s2, svg .in-s3, svg .in-s4 { font-size: 22px; }
+    svg.timeline .axis { font-size: 24px; }
+  }
+  ul.legend { list-style: none; padding: 0; margin: 0.5rem 0 0; display: flex; flex-wrap: wrap; gap: 0.3rem 1rem; font-size: 0.85rem; }
+  ul.legend .sw-line { display: inline-block; width: 1.2rem; border-top: 2px dashed var(--text); margin-right: 0.35rem; vertical-align: 4px; }
+  ul.legend .sw { display: inline-block; width: 0.8rem; height: 0.8rem; border-radius: 3px; margin-right: 0.35rem; vertical-align: -1px; }
   th .sub { display: block; font-size: 0.75rem; color: var(--muted); font-weight: normal; }
   ul.compare { padding-left: 1.2rem; }
   ul.compare li { margin: 0.5rem 0; }
@@ -278,6 +316,7 @@
     <nav>
       <a href="{{ base_url }}index.html">計算機</a>
       <a href="{{ base_url }}getsushu/index.html">月収別の保険料</a>
+      <a href="{{ base_url }}kabe/index.html">週20時間の壁</a>
       <a href="{{ base_url }}year/index.html">年次の変化</a>
       <a href="{{ base_url }}faq.html">よくある誤解</a>
     </nav>
@@ -301,6 +340,7 @@
     <strong>使う</strong>
     <a href="{{ base_url }}index.html">加入判定チェッカー</a>
     <a href="{{ base_url }}getsushu/index.html">月収別の保険料</a>
+    <a href="{{ base_url }}kabe/index.html">週20時間の壁</a>
     <a href="{{ base_url }}year/index.html">年次の変化を見る</a>
   </div>
   <div class="footer-group">

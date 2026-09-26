@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}時給{{ "{:,}".format(k.hourly) }}円で週20時間の壁を越えると手取りはいくら減る？｜週{{ be_hours }}時間で元に戻る{% endblock %}
+{% block description %}時給{{ "{:,}".format(k.hourly) }}円・扶養内のパートが週19時間から週20時間に増やして社会保険に入ると、手取りは月{{ "{:,}".format(k.loss_at_20) }}円減ります（東京・{{ era }}）。週{{ be_hours }}時間まで増やすと元の手取りに戻ります。{% endblock %}
+{% block breadcrumb %}
+<nav class="crumbs" aria-label="パンくずリスト">
+  <a href="{{ base_url }}index.html">計算機</a>
+  <span>›</span>
+  <a href="{{ base_url }}kabe/index.html">週20時間の壁</a>
+  <span>›</span>
+  <span aria-current="page">時給{{ "{:,}".format(k.hourly) }}円</span>
+</nav>
+{% endblock %}
+{% block content %}
+<h1>時給{{ "{:,}".format(k.hourly) }}円で「週20時間の壁」を越えると</h1>
+<p class="updated">{{ era }}の料率・税額で計算（東京・39歳以下・扶養に入っている人）</p>
+
+<div class="verdict ng">週20時間にすると手取りは月 {{ "{:,}".format(k.loss_at_20) }}円 減る。週{{ be_hours }}時間で元に戻る</div>
+
+<p>
+  2026年10月からは月収の条件が無くなり、従業員51人以上の会社では<strong>週20時間以上</strong>働くと社会保険に入ります。
+  配偶者などの扶養に入って週19時間で働いている人が、週20時間に増やすと、社会保険料と雇用保険料が引かれ始めるので、
+  働く時間が増えたのに手取りは減ります。
+</p>
+
+{{ chart|safe }}
+
+<div class="table-wrap">
+<table class="plain num">
+  <thead><tr><th>週の時間</th><th>月収</th><th>手取り</th><th>週19時間との差</th></tr></thead>
+  <tbody>
+    {% for row in rows %}
+    <tr{% if row.hx10 == k.breakeven_hours_x10 %} class="current"{% endif %}>
+      <th>{{ row.label }}</th><td>{{ "{:,}".format(row.pay) }}円</td><td>{{ "{:,}".format(row.net) }}円</td>
+      <td>{% if row.hx10 == 190 %}—{% else %}{{ "+" if row.net >= k.net_19 else "−" }}{{ "{:,}".format((row.net - k.net_19)|abs) }}円{% endif %}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+<p class="hint">
+  月収 = 時給 × 週の時間 × 52週 ÷ 12か月。週19時間は社会保険・雇用保険なし、週20時間以上はどちらもあり。
+  どちらも所得税（扶養0人）を引き、住民税は含みません。通勤手当・残業代は無いものとして計算しています。
+</p>
+
+<h2>減った手取りの代わりに受けられるもの</h2>
+<ul class="compare">
+  <li><strong>将来の年金</strong>: 週20時間（月収{{ "{:,}".format(k.pay_20) }}円）で1年働くと、65歳から受け取る年金が年約{{ "{:,}".format(pension_inc) }}円増えます。10年なら年約{{ "{:,}".format(pension_inc * 10) }}円で、一生続きます。</li>
+  <li><strong>病気やけがで休んだとき</strong>: 1日約{{ "{:,}".format(sick) }}円の傷病手当金（最長で通算1年6か月）。扶養に入っているあいだは出ません。</li>
+</ul>
+<p>目先の手取りだけなら週{{ be_hours }}時間以上、将来の年金も含めて考えるなら週20時間から意味がある、というのが数字の上での見方です。どちらが良いかは働き方と家計しだいです。</p>
+
+<h2>ほかの時給</h2>
+<div class="table-wrap">
+<table class="plain num">
+  <thead><tr><th>時給</th><th>週20時間での減り方</th><th>元に戻る時間</th></tr></thead>
+  <tbody>
+    {% for o in others %}
+    <tr{% if o.hourly == k.hourly %} class="current"{% endif %}>
+      <th>{% if o.hourly == k.hourly %}{{ "{:,}".format(o.hourly) }}円{% else %}<a href="{{ o.hourly }}yen.html">{{ "{:,}".format(o.hourly) }}円</a>{% endif %}</th>
+      <td>月{{ "{:,}".format(o.loss_at_20) }}円</td><td>週{{ "%g"|format(o.breakeven_hours_x10 / 10) }}時間</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+<h2>気をつけること</h2>
+<ul class="compare">
+  <li>このページは<strong>従業員51人以上の会社</strong>の場合です（2027年10月からは36人以上）。それより小さい会社では、週20時間を超えても加入しないことがあります。</li>
+  <li>配偶者の会社の<strong>配偶者手当（家族手当）</strong>が止まる場合があります。会社ごとに条件が違うので、ここには入れていません。</li>
+  <li>年収が130万円以上になると、週の時間にかかわらず配偶者などの扶養から外れます（{{ "{:,}".format(k.hourly) }}円なら週19時間で年約{{ "{:,}".format(k.pay_19 * 12) }}円）。
+    出典: <a href="https://www.kyoukaikenpo.or.jp/about/business/dependent_status/001/index.html" rel="nofollow noopener" target="_blank">協会けんぽ「被扶養者資格の再確認について」</a></li>
+  <li>自分の条件（都道府県・年齢・通勤手当・扶養の人数）で確かめるなら<a href="{{ base_url }}index.html">計算機</a>に時給を入れてください。</li>
+</ul>
+
+<p class="hint">計算式と出典は<a href="{{ base_url }}keisan.html">計算方法と出典</a>に。</p>
+{% endblock %}

@@ -17,11 +17,13 @@ from pathlib import Path
 
 from puzzle_generator import DIRS, build_wordsearch, validate_record
 from reportlab.lib.units import inch
+from reportlab.lib.colors import CMYKColor
 from reportlab.pdfgen import canvas
 
 import kdp_spec
 from build_book import DIFFICULTY_LABEL_JA, DIFFICULTY_STARS, FONT_BOLD, FONT_REGULAR, _Pager
 from build_cover import CREAM, NAVY, ORANGE, WHITE
+from art import FONT_ROUNDED, ICON_CREDIT, draw_icon, outlined_text
 
 ANSWERS_PER_PAGE = 4
 # 矢印の字形（↘など）は同梱フォントに無いものがあるので、向きは言葉で書く
@@ -165,20 +167,76 @@ def draw_grid(
     return size * cell
 
 
-def _header_band(c: canvas.Canvas, pg: _Pager, color: CMYK, left_text: str, right_text: str) -> float:
+def _header_band(
+    c: canvas.Canvas, left: float, right: float, top: float, color: CMYK, left_text: str, right_text: str
+) -> float:
     """ページ上端の色帯。帯の下端の y を返す。"""
-    top = pg.page_h - pg.top
     h = 34
     c.saveState()
     c.setFillColorCMYK(*color)
-    c.roundRect(pg.left, top - h, pg.content_w, h, 8, stroke=0, fill=1)
+    c.roundRect(left, top - h, right - left, h, 8, stroke=0, fill=1)
     c.setFillColorCMYK(*WHITE)
     c.setFont(FONT_BOLD, 20)
-    c.drawString(pg.left + 14, top - h + 10, left_text)
+    c.drawString(left + 14, top - h + 10, left_text)
     c.setFont(FONT_REGULAR, 15)
-    c.drawRightString(pg.right - 14, top - h + 11, right_text)
+    c.drawRightString(right - 14, top - h + 11, right_text)
     c.restoreState()
     return top - h
+
+
+def draw_problem_page(
+    c: canvas.Canvas,
+    record: dict,
+    number: int,
+    icon: str | None,
+    *,
+    left: float,
+    right: float,
+    top: float,
+    bottom: float,
+    palette: Palette,
+) -> None:
+    """問題1ページ分。本文と、裏表紙の見本の両方で使う。"""
+    pal = palette
+    d = record["difficulty"]
+    mid = (left + right) / 2
+    band_bottom = _header_band(c, left, right, top, pal.main[d], f"問題 {number}", f"{DIFFICULTY_STARS[d]} {DIFFICULTY_LABEL_JA[d]}")
+    title = f"テーマ　{record['board']['theme']}"
+    c.setFillColorCMYK(*pal.main[d])
+    c.setFont(FONT_BOLD, 26)
+    tw_ = c.stringWidth(title, FONT_BOLD, 26)
+    icon_size = 34 if icon else 0
+    tx = mid - (tw_ + icon_size + (8 if icon else 0)) / 2
+    if icon:
+        draw_icon(c, icon, tx, band_bottom - 46, icon_size)
+    c.drawString(tx + icon_size + (8 if icon else 0), band_bottom - 38, title)
+
+    labels = [w["label"] for w in record["board"]["words"]]
+    cols = _word_columns(labels)
+    rows = -(-len(labels) // cols)
+    word_fs = 19
+    list_h = rows * word_fs * 1.75 + 10
+    grid_top = band_bottom - 60
+    avail_h = grid_top - (bottom + 30 + list_h + 20)
+    gw = min(right - left, avail_h)
+    gx = mid - gw / 2
+    gh = draw_grid(c, record, x=gx, y=grid_top, w=gw, show_answer=False, palette=pal)
+
+    ly = grid_top - gh - 30
+    col_w = gw / cols
+    c.setFont(FONT_REGULAR, word_fs)
+    c.setLineWidth(1.4)
+    for k, label in enumerate(labels):
+        col, row = k // rows, k % rows
+        lx = gx + col * col_w
+        yy = ly - row * word_fs * 1.75
+        c.setStrokeColorCMYK(*pal.main[d])
+        c.setFillColorCMYK(*WHITE)
+        c.roundRect(lx, yy - 2, word_fs * 0.8, word_fs * 0.8, 2, stroke=1, fill=1)
+        c.setFillColorCMYK(*BLACK)
+        c.drawString(lx + word_fs * 1.2, yy, label)
+    c.setFont(FONT_REGULAR, 12)
+    c.drawRightString(right, bottom + 6, "できた日　　月　　日　　かかった時間　　　分")
 
 
 def _word_columns(labels: list[str]) -> int:
@@ -204,13 +262,26 @@ def build_pdf(puzzles: list[dict], output_path: str, spec: KotobaSpec) -> int:
     mid = lambda: (pg.left + pg.right) / 2  # noqa: E731
 
     # 1. 表題
+    # 表紙と同じ題字（丸ゴシック）。白黒の本では色を黒に置き換える
+    title_main, _, count = spec.title.rpartition(" ")
+    lead, _, main_word = (title_main or spec.title).partition(" ")
+    if not main_word:
+        lead, main_word = "", title_main or spec.title
+    c.setFillColorCMYK(*(ORANGE if spec.ink == "premium" else BLACK))
+    if lead:
+        c.setFont(FONT_ROUNDED, 44)
+        c.drawCentredString(mid(), pg.page_h * 0.66, lead)
     c.setFillColorCMYK(*pal.accent)
-    c.roundRect(pg.left, pg.page_h * 0.52, pg.content_w, 150, 14, stroke=0, fill=1)
-    c.setFillColorCMYK(*WHITE)
-    c.setFont(FONT_BOLD, 38)
-    c.drawCentredString(mid(), pg.page_h * 0.52 + 88, spec.title)
-    c.setFont(FONT_REGULAR, 18)
-    c.drawCentredString(mid(), pg.page_h * 0.52 + 40, spec.subtitle)
+    c.setFont(FONT_ROUNDED, min(84, pg.content_w / max(1, len(main_word))))
+    c.drawCentredString(mid(), pg.page_h * 0.66 - 96, main_word)
+    c.setFont(FONT_BOLD, 18)
+    c.drawCentredString(mid(), pg.page_h * 0.66 - 140, f"全{count}　{spec.subtitle}" if count else spec.subtitle)
+    if any(t.get("icon") for t in spec.themes):
+        row = ["1f338", "1f33b", "1f341", "26c4", "1f361"]
+        size = 46
+        x0 = mid() - (len(row) * size + (len(row) - 1) * 20) / 2
+        for k, code in enumerate(row):
+            draw_icon(c, code, x0 + k * (size + 20), pg.page_h * 0.66 - 230, size)
     c.setFillColorCMYK(*BLACK)
     c.setFont(FONT_REGULAR, 14)
     c.drawCentredString(mid(), pg.page_h * 0.18, spec.publisher)
@@ -281,7 +352,10 @@ def build_pdf(puzzles: list[dict], output_path: str, spec: KotobaSpec) -> int:
         c.circle(x0 + 5, yy + 4.5, 4.5, stroke=0, fill=1)
         c.setFillColorCMYK(*BLACK)
         c.setFont(FONT_REGULAR, 13)
-        c.drawString(x0 + 16, yy, f"{i + 1:>2}　{record['board']['theme']}")
+        c.drawString(x0 + 16, yy, f"{i + 1:>2}")
+        if spec.themes[i].get("icon"):
+            draw_icon(c, spec.themes[i]["icon"], x0 + 38, yy - 3, 15)
+        c.drawString(x0 + 58, yy, record["board"]["theme"])
         c.drawRightString(x0 + col_w - 18, yy, str(first_page + i))
     c.setFont(FONT_REGULAR, 11)
     legend_y = pg.bottom + 4
@@ -297,45 +371,19 @@ def build_pdf(puzzles: list[dict], output_path: str, spec: KotobaSpec) -> int:
 
     # 3. 問題（1ページ1問）
     for i, record in enumerate(puzzles, start=1):
-        d = record["difficulty"]
-        band_bottom = _header_band(c, pg, pal.main[d], f"問題 {i}", f"{DIFFICULTY_STARS[d]} {DIFFICULTY_LABEL_JA[d]}")
-        c.setFillColorCMYK(*pal.main[d])
-        c.setFont(FONT_BOLD, 26)
-        c.drawCentredString(mid(), band_bottom - 38, f"テーマ　{record['board']['theme']}")
-
-        labels = [w["label"] for w in record["board"]["words"]]
-        cols = _word_columns(labels)
-        rows = -(-len(labels) // cols)
-        word_fs = 19
-        list_h = rows * word_fs * 1.75 + 10
-        grid_top = band_bottom - 60
-        avail_h = grid_top - (pg.bottom + 30 + list_h + 20)
-        gw = min(pg.content_w, avail_h)
-        gx = mid() - gw / 2
-        gh = draw_grid(c, record, x=gx, y=grid_top, w=gw, show_answer=False, palette=pal)
-
-        ly = grid_top - gh - 30
-        col_w = gw / cols
-        c.setFont(FONT_REGULAR, word_fs)
-        c.setLineWidth(1.4)
-        for k, label in enumerate(labels):
-            col, row = k // rows, k % rows
-            lx = gx + col * col_w
-            yy = ly - row * word_fs * 1.75
-            c.setStrokeColorCMYK(*pal.main[d])
-            c.setFillColorCMYK(*WHITE)
-            c.roundRect(lx, yy - 2, word_fs * 0.8, word_fs * 0.8, 2, stroke=1, fill=1)
-            c.setFillColorCMYK(*BLACK)
-            c.drawString(lx + word_fs * 1.2, yy, label)
-        c.setFont(FONT_REGULAR, 12)
-        c.drawRightString(pg.right, pg.bottom + 6, "できた日　　月　　日　　かかった時間　　　分")
+        draw_problem_page(
+            c, record, i, spec.themes[i - 1].get("icon"),
+            left=pg.left, right=pg.right, top=pg.page_h - pg.top, bottom=pg.bottom, palette=pal,
+        )
         pg.next()
 
     # 4. 答え（1ページ4問）
     gap = 0.35 * inch
     for start in range(0, len(puzzles), ANSWERS_PER_PAGE):
         chunk = puzzles[start : start + ANSWERS_PER_PAGE]
-        band_bottom = _header_band(c, pg, pal.accent, "答え", f"問題 {start + 1}〜{start + len(chunk)}")
+        band_bottom = _header_band(
+            c, pg.left, pg.right, pg.page_h - pg.top, pal.accent, "答え", f"問題 {start + 1}〜{start + len(chunk)}"
+        )
         cw = (pg.content_w - gap) / 2
         area_top = band_bottom - 16
         ch = (area_top - (pg.bottom + 20) - gap) / 2
@@ -368,6 +416,10 @@ def build_pdf(puzzles: list[dict], output_path: str, spec: KotobaSpec) -> int:
     y -= 20
     year = spec.edition_date[:4] if spec.edition_date[:4].isdigit() else ""
     c.drawString(pg.left, y, " ".join(t for t in ("Copyright", year, spec.publisher) if t))
+    if any(t.get("icon") for t in spec.themes):
+        y -= 20
+        c.setFont(FONT_REGULAR, 9)
+        c.drawString(pg.left, y, ICON_CREDIT)
     pg.next(folio=False)
     c.save()
     return total
@@ -376,7 +428,26 @@ def build_pdf(puzzles: list[dict], output_path: str, spec: KotobaSpec) -> int:
 # --- 表紙 ------------------------------------------------------------------
 
 
+def _seal(c: canvas.Canvas, cx: float, cy: float, r: float, color: CMYK, lines: list[str]) -> None:
+    """丸い札（表紙の売り文句）。白い縁で囲む。"""
+    c.setFillColorCMYK(*WHITE)
+    c.circle(cx, cy, r + 4, stroke=0, fill=1)
+    c.setFillColorCMYK(*color)
+    c.circle(cx, cy, r, stroke=0, fill=1)
+    c.setFillColorCMYK(*WHITE)
+    fs = r * 0.42 if len(lines) > 1 else r * 0.5
+    c.setFont(FONT_ROUNDED, fs)
+    y0 = cy + (len(lines) - 1) * fs * 0.6 - fs * 0.36
+    for k, line in enumerate(lines):
+        c.drawCentredString(cx, y0 - k * fs * 1.2, line)
+
+
 def build_cover(spec: KotobaSpec, puzzles: list[dict], output_path: str, *, paper: str = "white") -> tuple[float, float]:
+    """表紙（裏表紙・背・表表紙を1枚）。
+
+    Amazon の検索結果では表紙が小さく出るので、題字を大きく、売りは丸い札で。
+    絵は Noto Emoji の図版（art.py）。見本の盤面は本文と別の盤面にする。
+    """
     pages = page_count(spec)
     trim = kdp_spec.TRIMS[spec.trim]
     spine = kdp_spec.spine_width_in(pages, paper, spec.ink)
@@ -385,13 +456,22 @@ def build_cover(spec: KotobaSpec, puzzles: list[dict], output_path: str, *, pape
     W, H = total_w * inch, total_h * inch
     tw, th, sp, b = trim.width_in * inch, trim.height_in * inch, spine * inch, bleed * inch
     safe = kdp_spec.COVER_SAFE_IN * inch
+    warm: CMYK = (0.0, 0.05, 0.20, 0.0)
+    red: CMYK = (0.0, 0.85, 0.75, 0.0)
+    green: CMYK = (0.70, 0.0, 0.80, 0.10)
+    blue: CMYK = (0.90, 0.55, 0.0, 0.10)
+    shadow: CMYK = (0.0, 0.10, 0.25, 0.12)  # 影は濃い地色で描く（透明度は使わない）
 
     c = canvas.Canvas(output_path, pagesize=(W, H))
     c.setTitle(f"{spec.title}（表紙）")
     c.setAuthor(spec.publisher)
-    c.setFillColorCMYK(*CREAM)
+    c.setFillColorCMYK(*warm)
     c.rect(0, 0, W, H, stroke=0, fill=1)
-    spine_x0, front_x0 = b + tw, b + tw + sp
+    spine_x0, fx = b + tw, b + tw + sp
+    cx = fx + tw / 2
+    top = b + th
+
+    # --- 背 ---
     c.setFillColorCMYK(*NAVY)
     c.rect(spine_x0, 0, sp, H, stroke=0, fill=1)
     usable = sp - 2 * kdp_spec.SPINE_TEXT_SIDE_MARGIN_IN * inch
@@ -405,70 +485,147 @@ def build_cover(spec: KotobaSpec, puzzles: list[dict], output_path: str, *, pape
         c.drawCentredString(0, -spine_font / 3, f"{spec.title}　{spec.publisher}")
         c.restoreState()
 
-    # 表表紙: 上に題名の帯、中央に見本の盤面
-    band_h = th * 0.30
-    c.setFillColorCMYK(*NAVY)
-    c.rect(front_x0, b + th - band_h, tw + b, band_h + b, stroke=0, fill=1)
-    cx = front_x0 + tw / 2
+    # --- 表表紙 ---
+    # 飾りの淡い円（地に奥行きを出す）
+    c.setFillColorCMYK(0.0, 0.10, 0.32, 0.0)
+    c.circle(fx + tw * 0.92, top - th * 0.06, tw * 0.28, stroke=0, fill=1)
+    c.circle(fx + tw * 0.05, b + th * 0.30, tw * 0.22, stroke=0, fill=1)
+
     title_main, _, count = spec.title.rpartition(" ")
-    c.setFillColorCMYK(*WHITE)
-    c.setFont(FONT_BOLD, 52)
-    c.drawCentredString(cx, b + th - band_h * 0.48, title_main or spec.title)
-    c.setFont(FONT_REGULAR, 20)
-    sub = f"全{count}　{spec.subtitle}" if count else spec.subtitle
-    c.drawCentredString(cx, b + th - band_h * 0.80, sub)
+    title_main = title_main or spec.title
+    lead, _, main_word = title_main.partition(" ")
+    if not main_word:
+        lead, main_word = "", title_main
 
-    # Amazon の検索結果では表紙が小さく出る。売りを大きな札で並べて、縮んでも読めるようにする
-    badges = ["大きな文字", "1ページ1問", "答えつき"] + (["オールカラー"] if spec.ink == "premium" else [])
-    badge_fs = 18
-    badge_w = [len(t) * badge_fs + 24 for t in badges]
-    bgap = 12
-    bx0 = cx - (sum(badge_w) + bgap * (len(badges) - 1)) / 2
-    by0 = b + th - band_h - 0.75 * inch
-    for t, bw_ in zip(badges, badge_w):
-        c.setFillColorCMYK(*ORANGE)
-        c.roundRect(bx0, by0, bw_, badge_fs + 18, (badge_fs + 18) / 2, stroke=0, fill=1)
-        c.setFillColorCMYK(*WHITE)
-        c.setFont(FONT_BOLD, badge_fs)
-        c.drawCentredString(bx0 + bw_ / 2, by0 + 10, t)
-        bx0 += bw_ + bgap
+    cap = "大きな文字で、目にやさしい"
+    cap_y = top - 0.80 * inch
+    c.setFillColorCMYK(*NAVY)
+    c.setFont(FONT_BOLD, 20)
+    c.drawCentredString(cx, cap_y, cap)
+    cap_w = c.stringWidth(cap, FONT_BOLD, 20)
+    c.setStrokeColorCMYK(*NAVY)
+    c.setLineWidth(2)
+    c.line(cx - cap_w / 2 - 40, cap_y + 7, cx - cap_w / 2 - 12, cap_y + 7)
+    c.line(cx + cap_w / 2 + 12, cap_y + 7, cx + cap_w / 2 + 40, cap_y + 7)
 
-    panel = min(tw - 2 * safe - 80, th - band_h - 3.4 * inch)
-    px, py_top = front_x0 + (tw - panel) / 2, b + th - band_h - 1.55 * inch
+    white = CMYKColor(0, 0, 0, 0)
+    if lead:
+        outlined_text(c, lead, cx, top - 1.85 * inch, font=FONT_ROUNDED, size=62,
+                      fill=CMYKColor(*ORANGE), outline=white, outline_width=10)
+    main_size = min(108, (tw - 2 * safe - 30) / max(1, len(main_word)))
+    outlined_text(c, main_word, cx, top - 3.30 * inch, font=FONT_ROUNDED, size=main_size,
+                  fill=CMYKColor(*NAVY), outline=white, outline_width=14)
+
+    # 副題のリボン
+    rib_w, rib_h = tw * 0.78, 42
+    rib_y = top - 4.05 * inch
+    c.setFillColorCMYK(*ORANGE)
+    c.roundRect(cx - rib_w / 2, rib_y, rib_w, rib_h, rib_h / 2, stroke=0, fill=1)
     c.setFillColorCMYK(*WHITE)
-    c.roundRect(px - 24, py_top - panel - 24, panel + 48, panel + 48, 14, stroke=0, fill=1)
+    c.setFont(FONT_BOLD, 21)
+    c.drawCentredString(cx, rib_y + 13, spec.subtitle)
+
+    # 見本の盤面（少し傾けたカード）と虫めがね
+    card = 4.3 * inch
+    ccy = top - 6.75 * inch
     t0 = spec.themes[0]
     sample = build_wordsearch(
         t0["words"], t0["difficulty"], spec.seed_start + _COVER_SEED_OFFSET, theme=t0["theme"], script=t0["script"]
     )
-    draw_grid(c, sample, x=px, y=py_top, w=panel, show_answer=True, palette=COLOR)
-    c.setFillColorCMYK(*NAVY)
-    c.setFont(FONT_BOLD, 18)
-    c.drawCentredString(cx, b + 0.62 * inch, spec.publisher)
+    c.saveState()
+    c.translate(cx, ccy)
+    c.rotate(-3)
+    c.setFillColorCMYK(*shadow)
+    c.roundRect(-card / 2 + 8, -card / 2 - 10, card, card, 18, stroke=0, fill=1)
+    c.setFillColorCMYK(*WHITE)
+    c.roundRect(-card / 2, -card / 2, card, card, 18, stroke=0, fill=1)
+    pad = 26
+    draw_grid(c, sample, x=-card / 2 + pad, y=card / 2 - pad, w=card - 2 * pad, show_answer=True, palette=COLOR)
+    c.restoreState()
+    draw_icon(c, "1f50d", cx + card * 0.20, ccy - card * 0.62, 1.7 * inch)
 
-    # 裏表紙
-    lines = [
-        "A4の大きな紙面に、1ページ1問。",
-        "大きな文字で、目にやさしいことば探しです。",
+    # 季節の絵
+    ico = 0.95 * inch
+    # 題字（ことば探し）はほぼ全幅なので、花と紅葉は上の「ゆったり」の段の左右に置く
+    draw_icon(c, "1f338", fx + safe + 30, top - 1.95 * inch, ico * 0.9, rotate=-12)
+    draw_icon(c, "1f341", fx + tw - safe - ico * 0.9 - 30, top - 1.95 * inch, ico * 0.9, rotate=15)
+    draw_icon(c, "1f33b", fx + safe - 4, ccy + 0.2 * inch, ico)
+    draw_icon(c, "1f361", fx + tw - safe - ico + 4, ccy + 0.55 * inch, ico, rotate=10)
+    draw_icon(c, "26c4", fx + safe - 2, ccy - 1.55 * inch, ico)
+    draw_icon(c, "1f375", fx + tw - safe - ico, ccy - 0.75 * inch, ico * 0.85)
+
+    # 売りの丸い札
+    seals = [
+        (red, [f"全{count}" if count else "ことば探し"]),
+        (green, ["大きな", "文字"]),
+        (blue, ["答え", "つき"]),
     ]
     if spec.ink == "premium":
-        lines.append("オールカラーで、見やすく楽しい紙面です。")
-    lines.append("")
+        seals.insert(2, (ORANGE, ["オール", "カラー"]))
+    r = 0.56 * inch
+    gap = (tw - 2 * safe - 2 * r * len(seals)) / (len(seals) + 1)
+    sy = b + 1.45 * inch
+    for k, (col, lines) in enumerate(seals):
+        _seal(c, fx + safe + gap * (k + 1) + r * (2 * k + 1), sy, r, col, lines)
+
+    c.setFillColorCMYK(*NAVY)
+    c.setFont(FONT_BOLD, 16)
+    c.drawCentredString(cx, b + 0.50 * inch, spec.publisher)
+
+    # --- 裏表紙 ---
+    bx0 = b + safe + 24
+    c.setFillColorCMYK(*NAVY)
+    c.setFont(FONT_ROUNDED, 30)
+    c.drawString(bx0, top - safe - 50, title_main)
+    c.setFont(FONT_BOLD, 15)
+    c.drawString(bx0, top - safe - 80, f"全{count}　{spec.subtitle}" if count else spec.subtitle)
+    lines = [
+        "A4の大きな紙面に、1ページ1問。",
+        "ます目の中から言葉をさがして、丸でかこむだけ。",
+        "季節の花、昭和のくらし、ふるさとの味……",
+        "なつかしい言葉が、おしゃべりのきっかけにもなります。",
+    ]
+    c.setFont(FONT_REGULAR, 13)
+    y = top - safe - 120
+    for line in lines:
+        c.drawString(bx0, y, line)
+        y -= 24
+
+    # 中のページの見本（2ページ）
+    page_w, page_h = trim.width_in * inch, trim.height_in * inch
+    scale = 0.36
+    mini_w, mini_h = page_w * scale, page_h * scale
+    mgap = 22
+    mx0 = b + (tw - 2 * mini_w - mgap) / 2
+    my0 = y - 20 - mini_h
+    for k, idx in enumerate((0, 44)):
+        px = mx0 + k * (mini_w + mgap)
+        c.setFillColorCMYK(*shadow)
+        c.rect(px + 5, my0 - 5, mini_w, mini_h, stroke=0, fill=1)
+        c.setFillColorCMYK(*WHITE)
+        c.rect(px, my0, mini_w, mini_h, stroke=0, fill=1)
+        c.saveState()
+        c.translate(px, my0)
+        c.scale(scale, scale)
+        m = 0.6 * inch
+        draw_problem_page(c, puzzles[idx], idx + 1, spec.themes[idx].get("icon"),
+                          left=m, right=page_w - m, top=page_h - m, bottom=m, palette=spec.palette)
+        c.restoreState()
+
+    # 難易度の内訳
     counts: dict[str, int] = {}
     for t in spec.themes:
         counts[t["difficulty"]] = counts.get(t["difficulty"], 0) + 1
+    y = my0 - 34
+    c.setFont(FONT_BOLD, 14)
     for d, n in counts.items():
-        lines.append(f"{DIFFICULTY_STARS[d]} {DIFFICULTY_LABEL_JA[d]}　{n}問")
-    lines += ["", "季節の花、昭和のくらし、ふるさとの味。", "なつかしい言葉をさがしながら、", "おしゃべりも弾みます。", "", "答えは巻末にまとめてあります。"]
+        c.setFillColorCMYK(*spec.palette.main[d])
+        c.drawString(bx0, y, f"{DIFFICULTY_STARS[d]} {DIFFICULTY_LABEL_JA[d]}　{n}問")
+        y -= 22
     c.setFillColorCMYK(*NAVY)
-    c.setFont(FONT_BOLD, 20)
-    y = b + th - safe - 60
-    c.drawString(b + safe + 20, y, spec.title)
-    c.setFont(FONT_REGULAR, 14)
-    y -= 44
-    for line in lines:
-        c.drawString(b + safe + 20, y, line)
-        y -= 28
+    c.setFont(FONT_REGULAR, 12)
+    c.drawString(bx0, y - 6, "答えは巻末に、言葉ごとに色を分けてまとめてあります。")
+
     bw, bh = (v * inch for v in kdp_spec.BARCODE_BOX_IN)
     c.setFillColorCMYK(*WHITE)
     c.rect(spine_x0 - safe - bw, b + safe, bw, bh, stroke=0, fill=1)

@@ -72,6 +72,10 @@ flutter build ipa --release \
 
 ### 2. App Store Connect
 
+**画面に何を入力するかは [`../STORE_LISTING.md`](../STORE_LISTING.md) が正**
+（App 名・サブタイトル・説明・キーワード・レビュー用メモ・スクリーンショット・
+App プライバシーの申告・申請チェックリスト）。ここは仕組みの側だけを書く。
+
 1. 新しい App を作る。**Bundle ID は `com.namiki.soccercareer`**
    （`ios/Runner.xcodeproj` に既に入っている）。
 2. **App内課金を2つ**登録する。IDは上の表のとおりで、1文字でも違うと
