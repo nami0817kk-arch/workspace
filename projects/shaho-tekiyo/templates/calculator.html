@@ -28,6 +28,12 @@
   </div>
 
   <div class="field">
+    <label for="hourly">時給（分かる人は入れてください）</label>
+    <input type="number" id="hourly" min="0" step="10" placeholder="例: 1100" inputmode="numeric">
+    <p class="hint">入れると、時給 × 週の時間 × 52週 ÷ 12か月 で、下の「1か月の賃金」を自動で計算します。</p>
+  </div>
+
+  <div class="field">
     <label for="wage">1か月の賃金（基本給＋諸手当。賞与・残業代・通勤手当などは除く）</label>
     <input type="number" id="wage" min="0" step="1000" value="90000" inputmode="numeric">
     <p class="hint">円単位で入力してください（例: 90000）。2026年10月以降はこの金額が低くても対象になりえます。</p>
@@ -54,7 +60,7 @@
     <label for="prefecture">勤務先の所在地（都道府県）</label>
     <select id="prefecture">
       {% for p in prefectures %}
-      <option value="{{ p }}"{% if p == "東京" %} selected{% endif %}>{{ p }}</option>
+      <option value="{{ p }}"{% if p == "東京" %} selected{% endif %}>{{ pref_full(p) }}</option>
       {% endfor %}
     </select>
     <p class="hint">健康保険料率は、住んでいる所ではなく勤務先（事業所）の都道府県で決まります。</p>
@@ -79,12 +85,14 @@
 
 <script id="schedule-data" type="application/json">{{ schedule_json|safe }}</script>
 <script id="rates-data" type="application/json">{{ rates_json|safe }}</script>
+<script id="extras-data" type="application/json">{{ extras_json|safe }}</script>
 <script src="{{ base_url }}static/calc.js"></script>
 <script>
 (function () {
   "use strict";
   var SCHEDULE = JSON.parse(document.getElementById('schedule-data').textContent);
   var TABLES = JSON.parse(document.getElementById('rates-data').textContent);
+  var EXTRAS = JSON.parse(document.getElementById('extras-data').textContent);
   var HOURS_REQUIREMENT = {{ hours_requirement }};
   var calc = window.ShahoCalc;
 
@@ -112,32 +120,65 @@
     var age = document.getElementById('age-40-64').checked;
     var pay = wage + extra;
     var p = calc.estimate(TABLES, asOf, prefecture, pay, age);
-    var html = '<h2>保険料の目安（1か月・本人負担分）</h2>';
+    var html = '<h2>引かれる額の目安（1か月・本人負担分）</h2>';
     if (!p) {
       return html + '<p class="note">この時点の保険料率はまだ公表されていないため、金額は出していません'
         + '（健康保険料率は毎年3月分から改定されます）。「今日時点」を選ぶと、いまの料率での目安を出します。</p>';
     }
+    var koyo = calc.employmentYen(EXTRAS, asOf, pay);
+    var net = p.takeHome - (koyo || 0);
     html += '<div class="table-wrap"><table class="plain premium">';
     html += '<tr><th>健康保険料' + (age ? '（介護保険料を含む）' : '') + '</th><td>' + yen(p.health) + '</td></tr>';
     html += '<tr><th>子ども・子育て支援金</th><td>' + yen(p.kodomo) + '</td></tr>';
     html += '<tr><th>厚生年金保険料</th><td>' + yen(p.pension) + '</td></tr>';
-    html += '<tr class="current"><th>合計</th><td><strong>' + yen(p.total) + '</strong></td></tr>';
-    html += '<tr><th>報酬月額（' + yen(pay) + '）から引いた残り</th><td>' + yen(p.takeHome) + '</td></tr>';
+    html += '<tr class="current"><th>社会保険料の合計</th><td><strong>' + yen(p.total) + '</strong>（年 ' + yen(p.total * 12) + '）</td></tr>';
+    if (koyo !== null) {
+      html += '<tr><th>雇用保険料<span class="sub">週20時間以上なら加入前から引かれている分</span></th><td>' + yen(koyo) + '</td></tr>';
+      html += '<tr><th>手取りの目安<span class="sub">' + yen(pay) + 'から上の全部を引いた額。所得税・住民税は含まない</span></th><td><strong>' + yen(net) + '</strong></td></tr>';
+    } else {
+      html += '<tr><th>' + yen(pay) + 'から引いた残り</th><td>' + yen(p.takeHome) + '</td></tr>';
+    }
     html += '</table></div>';
+    html += '<p class="hint">会社も同じ額の社会保険料を負担しています（労使折半）。</p>';
+
+    html += '<h2>加入する前と比べると</h2><ul class="compare">';
+    html += '<li><strong>配偶者や親の扶養に入っていた人</strong>: それまで0円だった保険料が、月' + yen(p.total) + '増えます。</li>';
+    var kokumin = calc.kokuminNenkinYen(EXTRAS, asOf);
+    if (kokumin !== null) {
+      var diff = kokumin - p.pension;
+      html += '<li><strong>自分で国民年金を払っていた人</strong>: 国民年金保険料（月' + yen(kokumin) + '）がなくなり、厚生年金保険料（月'
+        + yen(p.pension) + '）に替わります。年金の分だけで月' + yen(Math.abs(diff)) + (diff > 0 ? '安く' : '高く')
+        + 'なります。国民健康保険も勤務先の健康保険に替わります（国民健康保険料は市区町村で違うので、ここでは比べていません）。</li>';
+    }
+    html += '</ul>';
+
+    var inc = calc.pensionIncreasePerYear(EXTRAS, p.pensionStandard);
+    var sick = calc.sicknessDailyYen(p.healthStandard);
+    html += '<h2>加入すると受けられるもの</h2><ul class="compare">';
+    html += '<li><strong>将来の年金が増える</strong>: 1年加入するごとに、65歳から受け取る年金（老齢厚生年金）が年約' + yen(inc)
+      + '増えます。10年なら年約' + yen(inc * 10) + '。一生受け取れる額です。</li>';
+    html += '<li><strong>病気やけがで休んだときの手当</strong>: 仕事を休んで給与が出ないとき、4日目から1日約' + yen(sick)
+      + '（傷病手当金。最長で通算1年6か月）。</li>';
+    html += '</ul>';
+    html += '<p class="hint">年金は標準報酬月額 × 5.481/1000 × 加入月数で出した今の価値での目安（実際は物価などで再評価されます）。'
+      + '傷病手当金は加入から1年たつ前は計算の元が変わることがあります。どちらも個別の額は年金事務所・協会けんぽへ。</p>';
+
     html += '<p class="hint">標準報酬月額: 健康保険 ' + yen(p.healthStandard) + '・厚生年金 ' + yen(p.pensionStandard)
-      + '。' + prefecture + 'の料率（' + p.table.source.title + '）で、労使折半・端数は50銭以下切り捨てで計算しています。'
-      + '所得税・住民税・雇用保険料の変化は含みません。健康保険組合に入っている会社では料率が違います。</p>';
+      + '。' + calc.prefFull(prefecture) + 'の料率（' + p.table.source.title + '）で、労使折半・端数は50銭以下切り捨てで計算しています。'
+      + '健康保険組合に入っている会社では料率が違います。計算のしかたは<a href="keisan.html">計算方法と出典</a>に。</p>';
     html += '<p class="hint">企業規模要件を満たさない会社で任意に加入する場合などには、'
       + '勤務先が本人負担の一部を持つと国の支援を受けられる3年間の制度（保険料調整制度）があります。'
       + 'この目安は労使折半のままの額です。</p>';
-    html += '<p class="hint">出典: <a href="' + p.table.source.page + '" rel="nofollow noopener" target="_blank">'
-      + p.table.source.name + '「' + p.table.source.title + '」</a>（料率をもとに当サイトで計算）</p>';
     return html;
   }
 
   function render() {
     var asOf = resolveAsOf(document.getElementById('as-of').value);
     var hours = parseFloat(document.getElementById('hours').value);
+    var hourly = parseFloat(document.getElementById('hourly').value);
+    if (!isNaN(hourly) && hourly > 0 && !isNaN(hours)) {
+      document.getElementById('wage').value = Math.round(hourly * hours * 52 / 12);
+    }
     var wage = parseInt(document.getElementById('wage').value, 10);
     var employerSize = parseInt(document.getElementById('employer-size').value, 10);
     var isStudent = document.getElementById('is-student').checked;

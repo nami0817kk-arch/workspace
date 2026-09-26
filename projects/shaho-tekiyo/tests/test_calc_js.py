@@ -13,6 +13,7 @@ from pathlib import Path
 import pytest
 
 import eligibility
+import extras
 import premium
 import render
 
@@ -75,3 +76,29 @@ def test_保険料がpythonと一致する():
     got = _run_node(cases)
     mismatches = [(c, g, e) for c, g, e in zip(cases, got, expected) if g != e]
     assert not mismatches, mismatches[:5]
+
+
+def test_雇用保険料_年金_傷病手当金_県名もpythonと一致する():
+    pays = [0, 88_000, 100_000, 100_100, 100_101, 153_333, 250_000]
+    standards = [58_000, 88_000, 98_000, 170_000, 650_000, 1_390_000]
+    script = f"""
+const calc = require({json.dumps(str(_CALC_JS))});
+const ex = {extras.extras_json()};
+const out = {{
+  koyo: {json.dumps(pays)}.map(p => calc.employmentYen(ex, '2026-10-01', p)),
+  koyoOut: calc.employmentYen(ex, '2027-04-01', 100000),
+  kokumin: calc.kokuminNenkinYen(ex, '2026-10-01'),
+  inc: {json.dumps(standards)}.map(s => calc.pensionIncreasePerYear(ex, s)),
+  sick: {json.dumps(standards)}.map(s => calc.sicknessDailyYen(s)),
+  pref: {json.dumps(list(premium.PREFECTURES), ensure_ascii=False)}.map(calc.prefFull),
+}};
+process.stdout.write(JSON.stringify(out));
+"""
+    res = subprocess.run(["node", "-e", script], capture_output=True, text=True, encoding="utf-8", check=True)
+    got = json.loads(res.stdout)
+    assert got["koyo"] == [extras.employment_yen(date(2026, 10, 1), p) for p in pays]
+    assert got["koyoOut"] is None
+    assert got["kokumin"] == extras.kokumin_nenkin_yen(date(2026, 10, 1))
+    assert got["inc"] == [extras.pension_increase_per_year(s) for s in standards]
+    assert got["sick"] == [extras.sickness_daily_yen(s) for s in standards]
+    assert got["pref"] == [extras.pref_full(p) for p in premium.PREFECTURES]
