@@ -2,7 +2,7 @@
 """ユーザーに見せるページを作る（2026-09-22、別セッションからも同じ形で出せるように）。
 
     python tools/pages.py topics <日付> <候補.yaml>     # ○△✖ を押せる題材の一覧
-    python tools/pages.py scripts <日付> [--images]      # その日の台本を1枚に（読み上げ全文・板・写真の名前）
+    python tools/pages.py scripts <日付> [--images] [--skip 中止した鍵,…]  # その日の台本を1枚に
 
 出力は output/pages/topics_<日付>/index.html と output/pages/scripts_<日付>/index.html。
 それを Artifact として出す（題材ページは `capabilities: {db: {}}` を付けると ○△✖ が保存される）。
@@ -226,8 +226,10 @@ def data_uri(path: Path, width: int = 420) -> str:
     return "data:image/jpeg;base64," + base64.b64encode(buf.getvalue()).decode("ascii")
 
 
-def scripts(date: str, images: bool = False) -> Path:
-    paths = sorted(p for p in (ROOT / "scripts").glob(f"{date}_*.md"))
+def scripts(date: str, images: bool = False, skip: tuple[str, ...] = ()) -> Path:
+    # 中止した題材の台本は残っていても載せない（--skip rodri,foo）。9/26 のロドリが残っていた
+    paths = sorted(p for p in (ROOT / "scripts").glob(f"{date}_*.md")
+                   if p.stem[len(date) + 1:] not in skip)
     chunks, toc, stats, est_all = [], [], [], []
     for path in paths:
         key = path.stem[len(date) + 1:]
@@ -299,7 +301,10 @@ def main(argv: list[str]) -> int:
         print(topics(argv[1], Path(argv[2])))
         return 0
     if argv[0] == "scripts":
-        print(scripts(argv[1], images="--images" in argv))
+        skip: tuple[str, ...] = ()
+        if "--skip" in argv:
+            skip = tuple(k for k in argv[argv.index("--skip") + 1].split(",") if k)
+        print(scripts(argv[1], images="--images" in argv, skip=skip))
         return 0
     print(__doc__)
     return 2

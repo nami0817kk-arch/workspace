@@ -1,0 +1,109 @@
+date: 2026年9月26日
+slot: world_2
+format: news
+voice_min: 0.45
+people: [ヴィクトル・ギョケレス, アレクサンデル・イサク, グレアム・ポッター]
+theme:
+  id: sweden_romania
+  league: england
+  league_name: スウェーデン代表
+  kind: match
+  topic: スウェーデン代表
+  title: 'ギョケレス、アーセナルでは29分。イサクと並んだスウェーデンで漏らした言葉'
+  question: ギョケレスは代表で何を口にしたのか
+short_title: ギョケレス、代表で今季初ゴール
+thumbnail:
+  photo: assets/images/20260926_pair_isak_gyokeres/01.jpg
+  line1: ギョケレス、プレミア29分
+  line2: 代表で漏らした●●
+sections:
+  - id: what
+    heading: 2トップが揃って得点
+    tier: 報道
+    telop: ルーマニアに2-1。イサクとギョケレスが1点ずつ
+    narrator: キャスター
+    card:
+      type: table
+      title: スウェーデン 2-1 ルーマニア（9月25日）
+      columns: ['', '']
+      rows:
+        - [20分, イサク]
+        - [29分, マン（ルーマニア）]
+        - [43分, ギョケレス]
+    say:
+      - ネーションズリーグの初戦。スウェーデンはホームでルーマニアに2対1で勝ちました。
+      - ポッター監督はイサクとギョケレスを2トップに並べ、その2人が1点ずつ決めています。
+      - 前半20分、イサクがアヤリのスルーパスに抜け出し、ダイレクトで決めました。
+      - voice: アレクサンデル・イサク
+        text: 完璧なお膳立てだった。素晴らしいパスだ
+      - 前半43分にはギョケレスです。ベリヴァルのミドルシュートをキーパーが弾き、こぼれ球を押し込みました。
+      - voice: グレアム・ポッター
+        text: イサクとヴィクトルが2人とも点を取ってくれたのは素晴らしい
+    sources:
+      - https://www.fotbollskanalen.se/artiklar/sverige/just-nu-sverige-moter-rumanien-i-nations-league
+      - https://www.aftonbladet.se/sportbladet/fotboll/a/d4VymA/alexander-isak-blodig-efter-sverigerumanien
+      - https://www.beinsports.com/en-us/soccer/uefa-nations-league/articles/sweden-2-1-romania-isak-and-gyokeres-on-target-in-nations-league-win-2026-09-25
+      - https://www.bbc.com/sport/football/live/crgqdp3dngqqt
+  - id: arsenal
+    main: true
+    heading: アーセナルでは29分
+    tier: 報道
+    telop: プレミアは途中出場2回、計29分。代表で今季初ゴール
+    narrator: キャスター
+    say:
+      - text: 'アーセナルのギョケレスが、ネーションズリーグのスウェーデン代表の試合で、イサクと揃って得点しました。'
+        short_only: true
+      - ギョケレスにとっては、クラブと代表を通じて今季初めてのゴールです。
+      - アーセナルでは、プレミアリーグの途中出場2回、合わせて29分間にとどまっています。
+      - ルーマニア戦の前日、アーセナルのハヴァーツがドイツ代表の試合で負傷しました。
+      - ハヴァーツはクラブに戻って検査を受けます。残る純粋なセンターフォワードは、ギョケレスだけです。
+      - リーグ戦が再開すれば、プレミアで今季初めての先発になる可能性が出てきました。
+      - ルーマニア戦のあと、ギョケレスはこう話しました。
+      - voice: ヴィクトル・ギョケレス
+        text: ホームで代表とプレーするのは居心地がいい。今日はプレーしていて楽しかった
+      - voice: ヴィクトル・ギョケレス
+        text: 手応えはよかった。けっこう試合に関われていたし、ボールもたくさん受けられた
+      - 次のポーランド戦について聞かれると、こう答えています。
+      - voice: ヴィクトル・ギョケレス
+        text: 対戦するのが楽しみだ。僕はいつだって試合に出たい
+    sources:
+      - https://www.msn.com/sv-se/sport/fotboll/stj%C3%A4rnorna-visade-v%C3%A4gen-kul-att-spela-i-dag/ar-AA2cZbET
+      - https://www.fotbollskanalen.se/artiklar/sverige/just-nu-sverige-moter-rumanien-i-nations-league
+      - https://www.skysports.com/football/news/13591713/kai-havertz-returning-to-arsenal-to-be-assessed-after-suffering-injury-for-germany-against-netherlands
+      - https://www.skysports.com/football/video/13591711/viktor-gyokeres-needs-to-do-better-will-mikel-arteta-turn-to-mikel-merino-to-cover-havertzs-injury
+      - https://arsenalnews.co.uk/2026/09/25/viktor-gyokeres-could-make-his-first-premier-league-start-this-season-vs-leeds-united-after-kai-havertz-injury-blow/
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「覚醒の合図」と「史上最高の2トップ？」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: うおーギョケレシュ決めた 復調しろマジで
+      - voice: ネット民
+        text: イサクに続いてギョケレシュまで やっぱスウェーデン強いし、華がある！
+      - voice: ネット民
+        text: ギョケレシュは、やっぱり自分中心にしてくれるシンプルなチーム向きやなぁ。彼が悪いわけじゃなく、今季のアーセナルには合ってない。ただハヴァーツが代表で怪我したし、次はスタメンのチャンスかもしれません。
+      - voice: ネット民
+        text: 絶対そうすべきだ。前に見せていたサカとの連係を、また積み上げていくところが見たい
+      - voice: ネット民
+        text: ハヴァーツが怪我した今、ギョケの力がリーグ戦再開後絶対必要になる。また仮面ポーズを見せてくれ！！
+      - voice: ネット民
+        text: メディアが持ち上げまくっているラフィーニャは、今日のオーストラリア戦でひどかった。一方、「アーセナルの失敗作」ギョケレスは、今日のルーマニア戦で素晴らしかった
+      - voice: ネット民
+        text: 2トップで戦った。イサクはよく下がり、ギョケレスは前線に残る。昔ながらの4-4-2だ
+      - voice: ネット民
+        text: ギョケレスとイサクをスウェーデン史上最高の2トップと呼ぶ人は、ケネット・アンデションとマルティン・ダーリンを覚えていないんだろう。でも、そうなってくれたらいいと思う
+      - voice: ネット民
+        text: イサク復活してきてるっぽいしギョケレシュもアーセナルで復調するといいね。
+      - voice: ネット民
+        text: ギョケレシュは人としてはめちゃナイスガイで好きなんですけど、あまりにも下手なのが悲しいところです
+      - voice: ネット民
+        text: こういうチームがW杯で同組になったのは日本にとって不運だったな
+      - voice: ネット民
+        text: ギョケレシュ覚醒の合図
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/b1bf8eb9c959e8a9791f6988f1dbe5c9b95e9a68/comments
+      - https://search.yahoo.co.jp/realtime/search?p=ギョケレシュ
+      - https://bsky.app/search?q=Gyokeres
