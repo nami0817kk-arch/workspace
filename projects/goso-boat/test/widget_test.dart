@@ -88,4 +88,16 @@ void main() {
     expect(find.bySemanticsLabel('1-2、まだ遊べない'), findsOneWidget);
     semantics.dispose();
   });
+
+  test('評価のお願い: 舞台の最後の面を星2以上で解いたときだけ、舞台ごとに1回', () async {
+    final progress = await _progress();
+    final w1 = progress.levels.where((l) => l.world == 1).toList();
+    expect(progress.shouldAskReview(w1.first, 3), isFalse, reason: '舞台の途中');
+    expect(progress.shouldAskReview(w1.last, 1), isFalse, reason: '星1');
+    expect(progress.shouldAskReview(w1.last, 2), isTrue);
+    await progress.markReviewAsked(1);
+    expect(progress.shouldAskReview(w1.last, 3), isFalse, reason: '同じ舞台では1回だけ');
+    final w4 = progress.levels.where((l) => l.world == 4).toList();
+    expect(progress.shouldAskReview(w4.last, 3), isFalse, reason: '舞台4以降は出さない');
+  });
 }

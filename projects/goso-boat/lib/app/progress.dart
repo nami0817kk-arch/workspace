@@ -73,6 +73,15 @@ class Progress extends ChangeNotifier {
     }
   }
 
+  /// 評価のお願いを出してよいか。舞台の最後の面を星2つ以上で解いた直後だけ、舞台ごとに1回。
+  /// （Apple 側でも年3回までに絞られる。気持ちよく解けた瞬間に出すと評価が高くなりやすい）
+  bool shouldAskReview(Level l, int stars) {
+    final ws = levels.where((x) => x.world == l.world);
+    return stars >= 2 && ws.last == l && l.world <= 3 && !(_prefs.getBool('review.${l.world}') ?? false);
+  }
+
+  Future<void> markReviewAsked(int world) => _prefs.setBool('review.$world', true);
+
   bool seenIntro(int world) => _prefs.getBool('intro.$world') ?? false;
   Future<void> markIntro(int world) => _prefs.setBool('intro.$world', true);
 

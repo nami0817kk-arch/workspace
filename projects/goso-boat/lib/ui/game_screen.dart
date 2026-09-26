@@ -3,6 +3,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:in_app_review/in_app_review.dart';
 
 import '../app/progress.dart';
 import '../engine/puzzle.dart';
@@ -187,6 +188,13 @@ class _GameScreenState extends State<GameScreen> with TickerProviderStateMixin {
     HapticFeedback.mediumImpact();
     _confetti.forward(from: 0);
     setState(() => phase = _Phase.won);
+    if (widget.progress.shouldAskReview(level, _earnedStars)) {
+      await widget.progress.markReviewAsked(level.world);
+      _later(const Duration(milliseconds: 1400), () async {
+        final review = InAppReview.instance;
+        if (await review.isAvailable()) await review.requestReview();
+      });
+    }
   }
 
   void _undo() {
