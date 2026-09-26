@@ -16,6 +16,7 @@ import 'support_screen.dart';
 import '../../state/career_controller.dart';
 import '../club_identity.dart';
 import '../player_banner.dart';
+import '../stat_tile.dart';
 import '../../models/career.dart';
 
 /// シーズン終了。成績を振り返り、契約更改・移籍・引退を決める。
@@ -280,38 +281,39 @@ class _SeasonEndScreenState extends State<SeasonEndScreen> {
                             ],
                             if (state.cupStage.participated) ...[
                               const SizedBox(height: 6),
-                              Chip(
-                                label: Text('国内カップ ${state.cupStage.label}'),
-                                backgroundColor:
-                                    state.cupStage == CupStage.winner
+                              Tag(
+                                '国内カップ ${state.cupStage.label}',
+                                background: state.cupStage == CupStage.winner
                                     ? theme.colorScheme.primaryContainer
                                     : null,
-                                visualDensity: VisualDensity.compact,
+                                foreground: state.cupStage == CupStage.winner
+                                    ? theme.colorScheme.onPrimaryContainer
+                                    : null,
                               ),
                             ],
                             if (state.worldCupStage.participated) ...[
                               const SizedBox(height: 6),
-                              Chip(
-                                label: Text(
-                                  '世界大会 ${state.worldCupStage.label}',
-                                ),
-                                backgroundColor:
-                                    theme.colorScheme.tertiaryContainer,
-                                visualDensity: VisualDensity.compact,
+                              Tag(
+                                '世界大会 ${state.worldCupStage.label}',
+                                background: theme.colorScheme.tertiaryContainer,
+                                foreground:
+                                    theme.colorScheme.onTertiaryContainer,
                               ),
                             ],
                             if (state.continentalStage.participated) ...[
                               const SizedBox(height: 6),
-                              Chip(
-                                label: Text(
-                                  '大陸カップ ${state.continentalStage.label}',
-                                ),
-                                backgroundColor:
+                              Tag(
+                                '大陸カップ ${state.continentalStage.label}',
+                                background:
                                     state.continentalStage ==
                                         ContinentalStage.winner
                                     ? theme.colorScheme.primaryContainer
                                     : null,
-                                visualDensity: VisualDensity.compact,
+                                foreground:
+                                    state.continentalStage ==
+                                        ContinentalStage.winner
+                                    ? theme.colorScheme.onPrimaryContainer
+                                    : null,
                               ),
                             ],
                             const SizedBox(height: 16),

@@ -1042,6 +1042,45 @@ void main() {
     }
   });
 
+  testWidgets('局面の3択は、どちらのテーマでもカードと同じ面で浮く', (tester) async {
+    // **暗いほうだけ逆に沈んでいた。** 面の色を `surfaceContainerLowest` と
+    // 直に書いていたので、暗いテーマでは地（#121210）より暗い面（#0B0B09）に
+    // なり、明るいほうでは浮いて見えるボタンが暗いほうでは窪んで見えた。
+    // 書き出して並べるまで気付けない（`font_test` も `ui_test` も見ない）。
+    for (final brightness in [Brightness.light, Brightness.dark]) {
+      final controller = await newCareer();
+      controller.startNextMatch();
+      final theme = appTheme(const Color(0xFF1B5E3F), brightness);
+
+      tester.view.physicalSize = const Size(390, 844);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+      await tester.pumpWidget(
+        MaterialApp(theme: theme, home: MatchScreen(controller: controller)),
+      );
+      await tester.pumpAndSettle();
+
+      final button = tester.widget<OutlinedButton>(
+        find.byType(OutlinedButton).first,
+      );
+      final face = button.style?.backgroundColor?.resolve(const {});
+      expect(
+        face,
+        theme.cardTheme.color,
+        reason: '$brightness で、手の面がカードと違う',
+      );
+      // **どちらのテーマでも、面は地より明るい＝浮いている。**
+      // 「面の明るさで前後を分けて、影はその裏付けに留める」という
+      // 決まりが、暗いほうでも同じ向きで成り立っていること。
+      final ground = theme.colorScheme.surface;
+      expect(
+        face!.computeLuminance(),
+        greaterThan(ground.computeLuminance()),
+        reason: '$brightness で、手の面が地より暗い（沈んで見える）',
+      );
+    }
+  });
+
   testWidgets('試合の画面は、3つの手を見比べられる', (tester) async {
     final controller = await newCareer();
     controller.startNextMatch();

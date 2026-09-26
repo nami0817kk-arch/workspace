@@ -539,328 +539,339 @@ class _NextMatchCard extends StatelessWidget {
     );
     final total = state.fixtures.length;
 
+    // **対戦カードは、カードの上端いっぱいに敷く。**
+    // 余白の内側に置いていた頃は、紙の上に貼った帯に見えていた
+    // （上下に白い隙間が残る）。角まで流し込むと、カードそのものが
+    // 「その試合のカード」になる。ついでに上の余白 16px が浮く。
+    //
+    // **今日はじっくりやる試合か。** 局面の数がここで変わるので、
+    // 入る前に分かるようにしておく。**行は増やさない**——
+    // 次節カードが1行伸びるだけで、スマホの高さでは
+    // 「今の状態」が画面の外に出る（実際に出た）。
+    final fixture = state.pendingCup == null && !state.pendingInternational
+        ? FixtureBanner(
+            club: state.club,
+            opponent: state.opponentFor(state.matchday),
+            home: state.isHome(state.matchday),
+            centre: Text(
+              '第${state.matchday}節',
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w800,
+                color: const Color(0xFF14140F),
+                height: 1,
+              ),
+            ),
+            caption:
+                '${state.isHome(state.matchday) ? 'ホーム' : 'アウェイ'}'
+                ' ・ ${state.matchday} / $total'
+                '${Newsroom.isBigFixture(state) ? '\nじっくりやる試合' : ''}',
+            progress: (state.matchday - 1) / total,
+          )
+        : null;
+
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // **今日はじっくりやる試合か。** 局面の数がここで変わるので、
-            // 入る前に分かるようにしておく。**行は増やさない**——
-            // 次節カードが1行伸びるだけで、スマホの高さでは
-            // 「今の状態」が画面の外に出る（実際に出た）。
-            if (state.pendingCup == null && !state.pendingInternational) ...[
-              // 対戦カード。両クラブの色を差し込んで、真ん中に節。
-              // エンブレム34pxと文字だけだった頃は、一番見る場所なのに
-              // どれも同じ白いカードに見えた。
-              FixtureBanner(
-                club: state.club,
-                opponent: state.opponentFor(state.matchday),
-                home: state.isHome(state.matchday),
-                centre: Text(
-                  '第${state.matchday}節',
-                  style: theme.textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.w800,
-                    color: const Color(0xFF14140F),
-                    height: 1,
-                  ),
-                ),
-                caption:
-                    '${state.isHome(state.matchday) ? 'ホーム' : 'アウェイ'}'
-                    ' ・ ${state.matchday} / $total'
-                    '${Newsroom.isBigFixture(state) ? '\nじっくりやる試合' : ''}',
-                progress: (state.matchday - 1) / total,
-              ),
-            ] else ...[
-              Text(
-                '${state.pendingCup != null ? state.pendingCup!.label : '代表ウィーク'}'
-                '${Newsroom.isBigFixture(state) ? '  ・  じっくりやる試合' : ''}',
-                style: theme.textTheme.labelMedium?.copyWith(
-                  color: theme.colorScheme.primary,
-                ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                state.pendingCup != null
-                    ? '${state.pendingCup!.round.neutral
-                              ? "中立地"
-                              : state.pendingCup!.home
-                              ? "ホーム"
-                              : "アウェイ"}  '
-                          'vs ${state.pendingCup!.opponentName}'
-                    : (state.calledUp && !state.injured
-                          ? '代表に招集された'
-                          : '招集は無かった'),
-                style: theme.textTheme.titleLarge,
-              ),
-            ],
-            // 2戦合計の第2戦は、第1戦の結果を背負っている。
-            if (state.pendingCup?.carriesAggregate ?? false)
-              Text(
-                '第1戦は ${state.pendingCup!.aggregateFor}-'
-                '${state.pendingCup!.aggregateAgainst}。'
-                '${state.pendingCup!.aggregateMargin > 0
-                    ? "リードして迎える"
-                    : state.pendingCup!.aggregateMargin < 0
-                    ? "追いかける"
-                    : "五分"}',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.primary,
-                ),
-              ),
-            // 一発勝負。負ければそこで終わる。
-            if (state.pendingCup != null &&
-                state.pendingCup!.round != CupRound.group)
-              Text(
-                state.pendingCup!.twoLegged
-                    ? '2戦合計で決まる。'
-                    : '負ければそこで終わり。引き分けならPK戦。',
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-            if (state.suspended || state.yellowCards > 0) ...[
-              const SizedBox(height: 8),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 2, right: 6),
-                    child: Icon(
-                      Icons.style,
-                      size: 16,
-                      color: state.suspended
-                          ? theme.colorScheme.error
-                          : theme.colorScheme.onSurfaceVariant,
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          ?fixture,
+          Padding(
+            padding: EdgeInsets.fromLTRB(16, fixture != null ? 12 : 16, 16, 16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                if (fixture == null) ...[
+                  Text(
+                    '${state.pendingCup != null ? state.pendingCup!.label : '代表ウィーク'}'
+                    '${Newsroom.isBigFixture(state) ? '  ・  じっくりやる試合' : ''}',
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: theme.colorScheme.primary,
                     ),
                   ),
-                  Expanded(
-                    child: Text(
-                      state.suspended
-                          ? '出場停止。あと${state.suspension}試合は出られない。'
-                          : '今季の警告 ${state.yellowCards}枚。'
-                                '${Formulas.yellowCardsForBan}枚で1試合の出場停止。',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: state.suspended
-                            ? theme.colorScheme.error
-                            : theme.colorScheme.onSurfaceVariant,
-                      ),
-                    ),
+                  const SizedBox(height: 6),
+                  Text(
+                    state.pendingCup != null
+                        ? '${state.pendingCup!.round.neutral
+                                  ? "中立地"
+                                  : state.pendingCup!.home
+                                  ? "ホーム"
+                                  : "アウェイ"}  '
+                              'vs ${state.pendingCup!.opponentName}'
+                        : (state.calledUp && !state.injured
+                              ? '代表に招集された'
+                              : '招集は無かった'),
+                    style: theme.textTheme.titleLarge,
                   ),
                 ],
-              ),
-            ],
-            if (!state.pendingInternational && outlook != null) ...[
-              const SizedBox(height: 8),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.only(top: 2, right: 6),
-                    child: Icon(
-                      switch (outlook!.likely) {
-                        Appearance.start => Icons.check_circle_outline,
-                        Appearance.sub => Icons.timelapse,
-                        _ => Icons.remove_circle_outline,
-                      },
-                      size: 16,
-                      color: outlook!.likely == Appearance.start
-                          ? theme.colorScheme.primary
-                          : theme.colorScheme.onSurfaceVariant,
+                // 2戦合計の第2戦は、第1戦の結果を背負っている。
+                if (state.pendingCup?.carriesAggregate ?? false)
+                  Text(
+                    '第1戦は ${state.pendingCup!.aggregateFor}-'
+                    '${state.pendingCup!.aggregateAgainst}。'
+                    '${state.pendingCup!.aggregateMargin > 0
+                        ? "リードして迎える"
+                        : state.pendingCup!.aggregateMargin < 0
+                        ? "追いかける"
+                        : "五分"}',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.primary,
                     ),
                   ),
-                  Expanded(
+                // 一発勝負。負ければそこで終わる。
+                if (state.pendingCup != null &&
+                    state.pendingCup!.round != CupRound.group)
+                  Text(
+                    state.pendingCup!.twoLegged
+                        ? '2戦合計で決まる。'
+                        : '負ければそこで終わり。引き分けならPK戦。',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                if (state.suspended || state.yellowCards > 0) ...[
+                  const SizedBox(height: 8),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2, right: 6),
+                        child: Icon(
+                          Icons.style,
+                          size: 16,
+                          color: state.suspended
+                              ? theme.colorScheme.error
+                              : theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                      Expanded(
+                        child: Text(
+                          state.suspended
+                              ? '出場停止。あと${state.suspension}試合は出られない。'
+                              : '今季の警告 ${state.yellowCards}枚。'
+                                    '${Formulas.yellowCardsForBan}枚で1試合の出場停止。',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: state.suspended
+                                ? theme.colorScheme.error
+                                : theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+                if (!state.pendingInternational && outlook != null) ...[
+                  const SizedBox(height: 8),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 2, right: 6),
+                        child: Icon(
+                          switch (outlook!.likely) {
+                            Appearance.start => Icons.check_circle_outline,
+                            Appearance.sub => Icons.timelapse,
+                            _ => Icons.remove_circle_outline,
+                          },
+                          size: 16,
+                          color: outlook!.likely == Appearance.start
+                              ? theme.colorScheme.primary
+                              : theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              outlook!.headline,
+                              style: theme.textTheme.bodyMedium?.copyWith(
+                                color: outlook!.likely == Appearance.start
+                                    ? theme.colorScheme.primary
+                                    : theme.colorScheme.onSurface,
+                              ),
+                            ),
+                            Text(
+                              outlook!.reason,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+                if (!state.pendingInternational && stake.isSpecial) ...[
+                  const SizedBox(height: 8),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.tertiaryContainer,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          outlook!.headline,
-                          style: theme.textTheme.bodyMedium?.copyWith(
-                            color: outlook!.likely == Appearance.start
-                                ? theme.colorScheme.primary
-                                : theme.colorScheme.onSurface,
+                          stake.label,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            color: theme.colorScheme.onTertiaryContainer,
                           ),
                         ),
                         Text(
-                          outlook!.reason,
+                          stake.description,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant,
+                            color: theme.colorScheme.onTertiaryContainer,
                           ),
                         ),
                       ],
                     ),
                   ),
                 ],
-              ),
-            ],
-            if (!state.pendingInternational && stake.isSpecial) ...[
-              const SizedBox(height: 8),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.tertiaryContainer,
-                  borderRadius: BorderRadius.circular(10),
+                // 今日の1本が何に効くのか。監督・目標・順位・得点王・相手が
+                // 4つの画面に散っていたので、試合に入る直前に1枚で見せる。
+                ..._brief(context),
+                // **見るものと、決めることを分ける。**
+                // 1枚に 対戦カード・出場の見通し・今日の意味・今週の練習・
+                // 試合へ・自動で進める、の6つを積んでいた。一番押すボタンが
+                // 真ん中に埋もれていて、上下に何があるのか読まないと分からない。
+                //
+                // **カードを2枚に割る案も、見出しを足す案も、高さで諦めた**
+                // ——390×844 では2枚で 76px、見出しだけでも 20px 増え、
+                // 「今の状態」が画面の外に出る（`ui_test`。この制約に
+                // 当たるのは5回目）。**入るのは区切り線1本**（+5px）。
+                const SizedBox(height: 8),
+                Divider(height: 1, color: theme.colorScheme.outlineVariant),
+                const SizedBox(height: 8),
+                // 練習は毎週決めるものなのに、育成タブを開かないと今の設定が
+                // 見えなかった。試合に入る直前に置けば、忘れようがない。
+                InkWell(
+                  onTap: onOpenTraining,
+                  borderRadius: BorderRadius.circular(8),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6),
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.fitness_center,
+                          size: 16,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          '今週の練習',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            '${state.menu.label}'
+                            '${state.menu.isRest ? '' : ' ・ ${state.effort.label}'}'
+                            '${state.companion == TrainingCompanion.alone ? '' : ' ・ ${state.companion.label}'}'
+                            '${state.drill != null ? '（居残り ${state.drill!.label}）' : ''}',
+                            style: theme.textTheme.bodyMedium,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        if (state.shouldAutoRest(state.player.condition))
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: Text(
+                              '自動で休養',
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: theme.colorScheme.error,
+                              ),
+                            ),
+                          )
+                        // 元気なのに休んでいると、その週は何も伸びない。
+                        // 実際に遊んで、コンディション100のまま9節「休養」で
+                        // 進んでいたのに、どこにもそう書いていなかった。
+                        else if (state.restingWhileFresh)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 8),
+                            child: Text(
+                              '伸びない',
+                              style: theme.textTheme.labelSmall?.copyWith(
+                                color: theme.colorScheme.error,
+                              ),
+                            ),
+                          ),
+                        Text(
+                          '変える',
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            color: theme.colorScheme.primary,
+                          ),
+                        ),
+                        Icon(
+                          Icons.chevron_right,
+                          size: 18,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                const SizedBox(height: 8),
+                FilledButton(
+                  onPressed: onPlay,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Text(
+                      state.pendingInternational
+                          ? (state.calledUp && !state.injured
+                                ? '代表戦へ'
+                                : '代表ウィークを飛ばす')
+                          : state.injured
+                          ? '欠場する'
+                          : '試合へ',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text('自動で進める', style: muted),
+                const SizedBox(height: 6),
+                Wrap(
+                  spacing: 8,
                   children: [
-                    Text(
-                      stake.label,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        color: theme.colorScheme.onTertiaryContainer,
+                    for (final s in SimStyle.values)
+                      Tooltip(
+                        message: s.description,
+                        child: ChoiceChip(
+                          label: Text(s.label),
+                          selected: state.simStyle == s,
+                          onSelected: (_) => onSimStyle(s),
+                        ),
                       ),
-                    ),
-                    Text(
-                      stake.description,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onTertiaryContainer,
-                      ),
-                    ),
                   ],
                 ),
-              ),
-            ],
-            // 今日の1本が何に効くのか。監督・目標・順位・得点王・相手が
-            // 4つの画面に散っていたので、試合に入る直前に1枚で見せる。
-            ..._brief(context),
-            // **見るものと、決めることを分ける。**
-            // 1枚に 対戦カード・出場の見通し・今日の意味・今週の練習・
-            // 試合へ・自動で進める、の6つを積んでいた。一番押すボタンが
-            // 真ん中に埋もれていて、上下に何があるのか読まないと分からない。
-            //
-            // **カードを2枚に割る案も、見出しを足す案も、高さで諦めた**
-            // ——390×844 では2枚で 76px、見出しだけでも 20px 増え、
-            // 「今の状態」が画面の外に出る（`ui_test`。この制約に
-            // 当たるのは5回目）。**入るのは区切り線1本**（+5px）。
-            const SizedBox(height: 8),
-            Divider(height: 1, color: theme.colorScheme.outlineVariant),
-            const SizedBox(height: 8),
-            // 練習は毎週決めるものなのに、育成タブを開かないと今の設定が
-            // 見えなかった。試合に入る直前に置けば、忘れようがない。
-            InkWell(
-              onTap: onOpenTraining,
-              borderRadius: BorderRadius.circular(8),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 6),
-                child: Row(
+                const SizedBox(height: 8),
+                Row(
                   children: [
-                    Icon(
-                      Icons.fitness_center,
-                      size: 16,
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      '今週の練習',
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: onSimulate,
+                        child: const Text('この試合'),
                       ),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
-                      child: Text(
-                        '${state.menu.label}'
-                        '${state.menu.isRest ? '' : ' ・ ${state.effort.label}'}'
-                        '${state.companion == TrainingCompanion.alone ? '' : ' ・ ${state.companion.label}'}'
-                        '${state.drill != null ? '（居残り ${state.drill!.label}）' : ''}',
-                        style: theme.textTheme.bodyMedium,
-                        overflow: TextOverflow.ellipsis,
+                      child: OutlinedButton(
+                        onPressed: onSimulateUntilEvent,
+                        child: const Text('区切りまで'),
                       ),
-                    ),
-                    if (state.shouldAutoRest(state.player.condition))
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: Text(
-                          '自動で休養',
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: theme.colorScheme.error,
-                          ),
-                        ),
-                      )
-                    // 元気なのに休んでいると、その週は何も伸びない。
-                    // 実際に遊んで、コンディション100のまま9節「休養」で
-                    // 進んでいたのに、どこにもそう書いていなかった。
-                    else if (state.restingWhileFresh)
-                      Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: Text(
-                          '伸びない',
-                          style: theme.textTheme.labelSmall?.copyWith(
-                            color: theme.colorScheme.error,
-                          ),
-                        ),
-                      ),
-                    Text(
-                      '変える',
-                      style: theme.textTheme.labelMedium?.copyWith(
-                        color: theme.colorScheme.primary,
-                      ),
-                    ),
-                    Icon(
-                      Icons.chevron_right,
-                      size: 18,
-                      color: theme.colorScheme.primary,
                     ),
                   ],
                 ),
-              ),
-            ),
-            const SizedBox(height: 8),
-            FilledButton(
-              onPressed: onPlay,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                child: Text(
-                  state.pendingInternational
-                      ? (state.calledUp && !state.injured
-                            ? '代表戦へ'
-                            : '代表ウィークを飛ばす')
-                      : state.injured
-                      ? '欠場する'
-                      : '試合へ',
-                ),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text('自動で進める', style: muted),
-            const SizedBox(height: 6),
-            Wrap(
-              spacing: 8,
-              children: [
-                for (final s in SimStyle.values)
-                  Tooltip(
-                    message: s.description,
-                    child: ChoiceChip(
-                      label: Text(s.label),
-                      selected: state.simStyle == s,
-                      onSelected: (_) => onSimStyle(s),
-                    ),
-                  ),
+                const SizedBox(height: 4),
+                Text('負傷・代表ウィーク・シーズン終了で止まる。', style: muted),
               ],
             ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: onSimulate,
-                    child: const Text('この試合'),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: onSimulateUntilEvent,
-                    child: const Text('区切りまで'),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Text('負傷・代表ウィーク・シーズン終了で止まる。', style: muted),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
