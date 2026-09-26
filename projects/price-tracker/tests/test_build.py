@@ -640,3 +640,78 @@ class OfferFieldsTest(unittest.TestCase):
 
         self.assertNotIn('"gtin', page)
         self.assertNotIn('"brand"', page)
+
+
+class SharedScriptTest(unittest.TestCase):
+    """JavaScript は外に出して使い回す。
+
+    以前は全ページに同じ本文を直書きしていた（商品ページ2.5KB × 12,658枚、
+    一覧5.7KB × 約200枚）。ページを移るたび読み直させていて、
+    キャッシュも効かなかった。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.TemporaryDirectory()
+        cls.root = Path(cls.tmp.name)
+        make_data(cls.root, {
+            "shop:a": {"name": "商品A", "shop": "店A",
+                       "url": "https://hb.afl.rakuten.co.jp/x/1", "image": "",
+                       "genre_id": "1"},
+        }, {"shop:a": [9000] * 9 + [8000]})
+        cls.out = cls.root / "dist"
+        builder.build(cls.root, cls.out)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def names(self, pattern):
+        return sorted(p.name for p in self.out.glob(pattern))
+
+    def test_指紋付きで書き出す(self):
+        for pattern, head in (("app.*.js", "app."), ("list.*.js", "list.")):
+            with self.subTest(pattern=pattern):
+                got = self.names(pattern)
+                self.assertEqual(len(got), 1, got)
+                self.assertRegex(got[0], r"^%s[0-9a-f]{8}\.js$" % re.escape(head))
+
+    def test_全ページが共有の本文を指す(self):
+        app = self.names("app.*.js")[0]
+        for rel in ("index.html", "lows/index.html",
+                    f"item/{theme.slug('shop:a')}/index.html"):
+            with self.subTest(rel=rel):
+                page = (self.out / rel).read_text(encoding="utf-8")
+                self.assertIn(app, page)
+
+    def test_見守りの本文をページに直書きしない(self):
+        page = (self.out / "item" / theme.slug("shop:a") / "index.html").read_text(
+            encoding="utf-8")
+
+        self.assertNotIn("var PTWatch", page)
+        self.assertNotIn("PTWatch.toggle", page)
+
+    def test_共有の本文はheadで先に読む(self):
+        # 本文側が PTWatch を使うので、後から読ませると壊れる。
+        # defer にもしない（読み込み終わりまで待たれると順序が変わる）
+        page = (self.out / "index.html").read_text(encoding="utf-8")
+        tag = re.search(r'<script src="[^"]*app\.[0-9a-f]{8}\.js"[^>]*>', page).group(0)
+
+        self.assertNotIn("defer", tag)
+        self.assertNotIn("async", tag)
+        self.assertLess(page.index(tag), page.index("<body"))
+
+    def test_一覧の本文は一覧にだけ読ませる(self):
+        lst = self.names("list.*.js")[0]
+
+        self.assertIn(lst, (self.out / "lows" / "index.html").read_text(encoding="utf-8"))
+        # 商品ページには並び替えも絞り込みも無い
+        self.assertNotIn(lst, (self.out / "item" / theme.slug("shop:a")
+                               / "index.html").read_text(encoding="utf-8"))
+
+    def test_深い階層からも辿れる(self):
+        app = self.names("app.*.js")[0]
+        page = (self.out / "item" / theme.slug("shop:a") / "index.html").read_text(
+            encoding="utf-8")
+
+        self.assertIn(f'src="../../{app}"', page)

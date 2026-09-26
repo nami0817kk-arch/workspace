@@ -585,21 +585,33 @@ class ScriptTimingTest(unittest.TestCase):
                        cwd=root, check=True, capture_output=True)
         cls.html = (out / "lows" / "index.html").read_text(encoding="utf-8")
         cls.robots = (out / "robots.txt").read_text(encoding="utf-8")
+        # 本文は共有ファイルへ移した（2026-09-27）。検査先もそちらへ。
+        cls.app = next(out.glob("app.*.js")).read_text(encoding="utf-8")
+        cls.list_js = next(out.glob("list.*.js")).read_text(encoding="utf-8")
 
     @classmethod
     def tearDownClass(cls):
         cls.tmp.cleanup()
 
     def test_一覧を探す処理はDOMを待ってから動く(self):
+        # 本文は list.js に移した。読み込みは一覧より前なので、
+        # 要素を探す処理が DOM を待っていることを見る。
         for target in (".cards", ".watch-mini"):
-            i = self.html.index(f"querySelector") if target == ".cards" else 0
-            self.assertIn(target, self.html)
-        # 一覧より前に script があること自体は許す。待っていることを見る。
+            with self.subTest(target=target):
+                self.assertIn(target, self.list_js)
         self.assertLess(self.html.index('id="sort"'), self.html.index('<ul class="cards">'))
-        self.assertGreaterEqual(self.html.count("DOMContentLoaded"), 2)
+        self.assertGreaterEqual(self.list_js.count("DOMContentLoaded"), 2)
+
+    def test_商品ページの見守りもDOMを待つ(self):
+        # 共有ファイルは head で読むので、この時点では #watch がまだ無い
+        after = self.app.split("DOMContentLoaded")[-1]
+
+        self.assertIn("getElementById('watch')", after)
 
     def test_見守りの仕組みは1回だけ定義する(self):
-        self.assertEqual(self.html.count("var PTWatch"), 1)
+        # ページごとに直書きしていた頃の名残が残っていないこと
+        self.assertEqual(self.app.count("var PTWatch"), 1)
+        self.assertNotIn("var PTWatch", self.html)
 
     def test_配布用の大きなファイルはクロールさせない(self):
         for name in ("history.csv", "data.csv", "search-index.json"):
@@ -905,7 +917,8 @@ class SearchDisplayTest(unittest.TestCase):
         self.assertIn("ptShort(h.name, 46)", self.watch)
 
     def test_短縮処理は1度だけ定義する(self):
-        self.assertEqual(self.search.count("function ptShort"), 1)
+        # 本文は共有ファイルに1つだけ置く。ページ側には持たせない
+        self.assertEqual(self.search.count("function ptShort"), 0)
 
 
 class SitePagesAuditTest(unittest.TestCase):
@@ -1666,3 +1679,39 @@ class RelatedByNameTest(unittest.TestCase):
         combos = {tuple(r["item_code"] for r in v) for v in out.values() if v}
 
         self.assertGreaterEqual(len(combos), 10)
+
+
+class StatsConsistencyTest(unittest.TestCase):
+    """記録ページの数え方を、商品ページとそろえる。
+
+    「動いたか」を商品ページはポイント込みの実質価格で見るのに、記録ページだけ
+    価格しか見ていなかった。同じサイトで数え方が2つある状態で、11,172件を
+    「一度も動いていない」と出していた（実質で見ると10,406件）。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def render(self, buckets):
+        return self.theme.stats_page(
+            {"name": "S", "base_url": "https://e.test", "owner": "o",
+             "contact_email": "c@e.test"},
+            "https://e.test/stats/", "2026-09-26",
+            {"items": 12658, "days": 21}, buckets, [])
+
+    def test_価格と実質の両方を出す(self):
+        # 片方だけ出すと、動いている商品を少なく見せることになる
+        html = self.render({"price_moved": 1486, "eff_moved": 2252,
+                            "active": 985, "still": 10406, "pointed": 1325})
+
+        self.assertIn("1,486 件", html)
+        self.assertIn("2,252 件", html)
+        self.assertIn("ポイント込みの実質価格が動いた商品", html)
+
+    def test_動いていない数は実質で数える(self):
+        html = self.render({"price_moved": 1486, "eff_moved": 2252,
+                            "active": 985, "still": 10406, "pointed": 1325})
+
+        self.assertIn("10,406 件", html)
+        self.assertNotIn("11,172", html)

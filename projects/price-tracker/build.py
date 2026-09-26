@@ -115,6 +115,15 @@ def build(root: Path, out: Path) -> dict:
     css_name = f"style.{hashlib.sha1(css_text.encode('utf-8')).hexdigest()[:8]}.css"
     write(out / css_name, css_text)
     site["css"] = css_name
+
+    # JavaScript も同じ扱い。以前は全ページに直書きしていたため、
+    # 同じ本文を12,658枚ぶん配っていて、ページを移るたび読み直させていた。
+    # 外に出すと1回読めば使い回せる（指紋付きなので長く持たせられる）。
+    for key, text in (("app_js", theme.WATCH_JS), ("list_js", theme.LIST_JS)):
+        stem = key.split("_")[0]
+        name = f"{stem}.{hashlib.sha1(text.encode('utf-8')).hexdigest()[:8]}.js"
+        write(out / name, text)
+        site[key] = name
     # 配信時のヘッダ。Cloudflare Pages は dist/ 直下の _headers を読む。
     shutil.copy(ROOT / "src" / "_headers", out / "_headers")
 
@@ -292,12 +301,18 @@ def build(root: Path, out: Path) -> dict:
             hist.append(f"{e[0]},{code},{e[1]},{e[2]}")
     write(out / "history.csv", "\n".join(hist) + "\n")
 
+    # 「動いたか」は商品ページと同じ数え方（ポイント込みの実質価格）にそろえる。
+    # 価格だけで数えていたため、記録ページだけ 11,172件が「一度も動いていない」
+    # と出ていた。実質で見ると動いたのは2,252件で、同じサイトで数え方が
+    # 2つある状態になっていた。
     counts = [analyze.change_count(r) for r in rows]
+    eff_counts = [analyze.effective_change_count(r) for r in rows]
     write(out / "stats" / "index.html", theme.stats_page(
         site, base + "/stats/", updated, stats,
-        {"still": sum(1 for n in counts if n == 0),
-         "once": sum(1 for n in counts if n == 1),
-         "active": sum(1 for n in counts if n >= 2),
+        {"still": sum(1 for n in eff_counts if n == 0),
+         "price_moved": sum(1 for n in counts if n >= 1),
+         "eff_moved": sum(1 for n in eff_counts if n >= 1),
+         "active": sum(1 for n in eff_counts if n >= 2),
          "pointed": sum(1 for r in rows if int(r.get("point_rate") or 1) > 1)},
         listed,
         [(r, analyze.change_count(r)) for r in analyze.active(rows, limit=10)],

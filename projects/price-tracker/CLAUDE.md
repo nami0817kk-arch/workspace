@@ -135,6 +135,12 @@ python build.py       # data/ から静的サイトを生成（通信しない�
   （依存を足さない方針のため）。
 - **サイト名は WebSite の構造化データで渡す（`site_ld`、トップだけ）。**
   渡していないと検索結果に「kakaku.dailyquarry.com」と生のドメインが出る。
+- **JavaScript も CSS と同じで、外に出して指紋を付ける。** `app.<8桁>.js`（全ページ・
+  `head` で**同期**読み込み）と `list.<8桁>.js`（一覧だけ・`defer`）。全ページに
+  直書きしていたとき、配信物は285MBで商品ページ1枚が21.1KBだった（→251MB・18.7KB）。
+  **app.js は defer/async にしない。** 本文側が `PTWatch` を使うので、
+  読み込みを遅らせると順序が変わって壊れる。逆に app.js の中で要素を触る処理は
+  `DOMContentLoaded` を待つ（head で読む時点では要素がまだ無い）。
 - **`src/style.css` を直したら、配信されているか名前で確かめる。**
   中身の指紋をファイル名に入れている（`style.<8桁>.css`）。以前は名前が
   固定で、`_headers` の max-age=3600 も Cloudflare 側に 14400 へ上書きされ、

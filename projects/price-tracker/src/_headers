@@ -20,3 +20,9 @@
 # 上書きされて実測4時間キャッシュされ、直した見た目が読み手に届かなかった。
 /style.*.css
   Cache-Control: public, max-age=31536000, immutable
+
+/app.*.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/list.*.js
+  Cache-Control: public, max-age=31536000, immutable

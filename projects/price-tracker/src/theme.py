@@ -262,7 +262,7 @@ def head(title: str, description: str, canonical: str, site: dict, prefix: str =
 <link rel="icon" href="{prefix}{ICON_PNG}" sizes="192x192" type="image/png">
 <link rel="apple-touch-icon" href="{prefix}{ICON_PNG}">
 <link rel="stylesheet" href="{prefix}{site.get("css", "style.css")}">
-{WATCH_JS}
+<script src="{prefix}{site.get("app_js", "app.js")}"></script>
 {extra}
 </head>
 <body>
@@ -563,9 +563,14 @@ def stats_page(site: dict, canonical: str, updated: str, stats: dict,
     lead = "当サイトが何をどれだけ記録しているかをまとめています。"
     rows = [("記録している商品", f'{stats["items"]:,} 件'),
             ("記録した日数", f'{stats["days"]} 日'),
-            ("価格が一度も動いていない商品", f'{buckets["still"]:,} 件'),
-            ("1回動いた商品", f'{buckets["once"]:,} 件'),
-            ("2回以上動いた商品", f'{buckets["active"]:,} 件'),
+            # 楽天の値引きは倍率で動くので、価格だけの数と実質の数を並べて出す。
+            # 価格だけで数えていたとき、この表だけが11,172件を
+            # 「一度も動いていない」と書いていて、商品ページの判定とずれていた。
+            ("価格が動いた商品", f'{buckets["price_moved"]:,} 件'),
+            ("ポイント込みの実質価格が動いた商品", f'{buckets["eff_moved"]:,} 件'),
+            ("そのうち2回以上動いた商品", f'{buckets["active"]:,} 件'),
+            ("一度も動いていない商品（ポイント込みで見て）",
+             f'{buckets["still"]:,} 件'),
             ("ポイントが通常より高い商品", f'{buckets["pointed"]:,} 件')]
     table = "".join(f"<tr><th>{esc(k)}</th><td>{v}</td></tr>" for k, v in rows)
     per_genre = "".join(
@@ -691,56 +696,10 @@ def item_list_ld(rows: list, site: dict, prefix: str) -> str:
     return f'<script type="application/ld+json">{ld}</script>'
 
 
-WATCH_MINI_JS = r"""
-<script>
-// 同じ理由で DOM を待つ。.watch-mini は一覧の中にある。
-document.addEventListener('DOMContentLoaded', function () {
-  function label(btn, on) {
-    btn.textContent = on ? '見守り中' : '見守る';
-    btn.classList.toggle('on', on);
-  }
-  var store = PTWatch.read();
-  document.querySelectorAll('.watch-mini').forEach(function (btn) {
-    label(btn, !!store[btn.dataset.code]);
-    btn.addEventListener('click', function () {
-      var s = PTWatch.toggle(btn.dataset.code, parseInt(btn.dataset.price, 10));
-      label(btn, !!s[btn.dataset.code]);
-    });
-  });
-});
-</script>
-"""
 
-LIST_TOOLS = r"""
-<div class="quick">
-  <label class="chip"><input type="checkbox" id="freeonly"> 送料無料だけ</label>
-  <label class="chip"><input type="checkbox" id="instock"> 在庫ありだけ</label>
-  <span id="shown" class="of"></span>
-</div>
-<details class="tools-box">
-<summary>並び替え・価格帯</summary>
-<div class="tools">
-  <label>並び替え <select id="sort">
-    <option value="">既定のまま</option>
-    <option value="price">価格が安い順</option>
-    <option value="-price">価格が高い順</option>
-    <option value="-drop">下げ幅が大きい順</option>
-    <option value="-eff">実質が高い順</option>
-    <option value="eff">実質が安い順</option>
-    <option value="-days">記録が長い順</option>
-  </select></label>
-  <label>価格帯 <select id="range">
-    <option value="">すべて</option>
-    <option value="0-3000">3,000円まで</option>
-    <option value="3000-10000">3,000〜10,000円</option>
-    <option value="10000-30000">10,000〜30,000円</option>
-    <option value="30000-">30,000円以上</option>
-  </select></label>
-  <button id="reset" type="button" class="reset" hidden>条件を外す</button>
-  <span class="scope">このページに出ている分だけを並べ替えます</span>
-</div>
-</details>
-<script>
+# 一覧の動き（並び替え・絞り込み・見守りの小ボタン）。以前は一覧ページ1枚ごとに
+# 直書きしていた（5.7KB × 約200枚）。外に出すと1回読めば使い回せる。
+LIST_JS = r"""
 // この script は一覧より前に置かれる。読み込み時点で .cards はまだ無いので、
 // DOM が揃うのを待ってから繋ぐ（待たずに書いたため、並び替えが丸ごと
 // 効いていなかった。2026-09-24 に公開サイトで確認）。
@@ -814,7 +773,53 @@ document.addEventListener('DOMContentLoaded', function () {
   instock.addEventListener('change', apply);
   if (q.get('sort') || q.get('range') || q.get('free') || q.get('stock')) { apply(); }
 });
-</script>
+
+// 同じ理由で DOM を待つ。.watch-mini は一覧の中にある。
+document.addEventListener('DOMContentLoaded', function () {
+  function label(btn, on) {
+    btn.textContent = on ? '見守り中' : '見守る';
+    btn.classList.toggle('on', on);
+  }
+  var store = PTWatch.read();
+  document.querySelectorAll('.watch-mini').forEach(function (btn) {
+    label(btn, !!store[btn.dataset.code]);
+    btn.addEventListener('click', function () {
+      var s = PTWatch.toggle(btn.dataset.code, parseInt(btn.dataset.price, 10));
+      label(btn, !!s[btn.dataset.code]);
+    });
+  });
+});
+"""
+
+LIST_TOOLS = r"""
+<div class="quick">
+  <label class="chip"><input type="checkbox" id="freeonly"> 送料無料だけ</label>
+  <label class="chip"><input type="checkbox" id="instock"> 在庫ありだけ</label>
+  <span id="shown" class="of"></span>
+</div>
+<details class="tools-box">
+<summary>並び替え・価格帯</summary>
+<div class="tools">
+  <label>並び替え <select id="sort">
+    <option value="">既定のまま</option>
+    <option value="price">価格が安い順</option>
+    <option value="-price">価格が高い順</option>
+    <option value="-drop">下げ幅が大きい順</option>
+    <option value="-eff">実質が高い順</option>
+    <option value="eff">実質が安い順</option>
+    <option value="-days">記録が長い順</option>
+  </select></label>
+  <label>価格帯 <select id="range">
+    <option value="">すべて</option>
+    <option value="0-3000">3,000円まで</option>
+    <option value="3000-10000">3,000〜10,000円</option>
+    <option value="10000-30000">10,000〜30,000円</option>
+    <option value="30000-">30,000円以上</option>
+  </select></label>
+  <button id="reset" type="button" class="reset" hidden>条件を外す</button>
+  <span class="scope">このページに出ている分だけを並べ替えます</span>
+</div>
+</details>
 """
 
 
@@ -847,6 +852,8 @@ def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
     nav = pager(page, pages, page_prefix, total)
     return (head(f"{short_name(heading, 30)}｜{site['name']}", desc, canonical, site, prefix,
                  extra=item_list_ld(rows, site, prefix))
+            + (f'<script defer src="{prefix}{site.get("list_js", "list.js")}">'
+               f'</script>' if rows else "")
             + f'<h1>{heading}{count}</h1><p class="lead">{esc(lead)}</p>'
             + stats_bar(stats or {})
             + AD_NOTICE
@@ -855,7 +862,7 @@ def listing(title: str, lead: str, rows: list, site: dict, canonical: str,
                f'動きが少ない日は少なくなります。'
                f'<a href="{prefix}now/">いま条件がそろっている商品</a>もご覧ください。</p>'
                if 0 < len(rows) < 10 and page == 1 else '')
-            + (LIST_TOOLS + WATCH_MINI_JS if rows else "")
+            + (LIST_TOOLS if rows else "")
             + f'<ul class="cards">{body}</ul>'
             + nav
             + ('<a class="to-top" href="#main">▲ ページの先頭へ</a>' if len(rows) > 10 else '')
@@ -1262,7 +1269,6 @@ def related(rows: list, site: dict) -> str:
 # 見守りの保存は端末の中だけ。登録した時の価格も控えて、次に来たときに
 # 「自分が見始めてから下がったか」を出せるようにする。
 WATCH_JS = r"""
-<script>
 function ptShort(name, limit) {
   // 索引に積む時点で宣伝は落としてある（build.py の clean_name）ので、
   // ここは切り詰めるだけ。同じ規則を二か所に書くと必ずずれる。
@@ -1310,28 +1316,20 @@ var PTWatch = (function () {
   });
   return {read: read, toggle: toggle, count: count, setTarget: setTarget};
 })();
-</script>
-"""
 
-WATCH_BUTTON = r"""
-<p class="watch"><button id="watch" type="button" data-code="{code}" data-price="{price}">見守る</button>
-<span class="note">端末に保存します。<a href="{prefix}watch/">見守り中の一覧</a></span></p>
-<p class="target" id="targetbox" hidden>
-  <label>この値段以下になったら知りたい
-    <input id="target" type="number" inputmode="numeric" min="0" step="100"
-           placeholder="例 {price}"></label>
-  <span class="note">次に見守り一覧を開いたとき、達したものを先頭に出します。</span>
-</p>
-<script>
-(function () {
+// 商品ページの見守りボタン。以前は商品ページ1枚ごとに同じ本文を直書きしていた
+// （12,658枚 × 1.4KB）。共有ファイルは head で読むのでこの時点では要素がまだ
+// 無く、DOM が揃うのを待つ必要がある。
+document.addEventListener('DOMContentLoaded', function () {
   var btn = document.getElementById('watch');
+  if (!btn) { return; }          // 商品ページ以外
+  var box = document.getElementById('targetbox');
+  var input = document.getElementById('target');
   function draw(store) {
     var on = !!store[btn.dataset.code];
     btn.textContent = on ? '見守りを外す' : '見守る';
     btn.classList.toggle('on', on);
   }
-  var box = document.getElementById('targetbox');
-  var input = document.getElementById('target');
   function sync(store) {
     draw(store);
     var on = !!store[btn.dataset.code];
@@ -1345,8 +1343,18 @@ WATCH_BUTTON = r"""
   input.addEventListener('change', function () {
     PTWatch.setTarget(btn.dataset.code, parseInt(input.value, 10) || 0);
   });
-})();
-</script>
+});
+"""
+
+WATCH_BUTTON = r"""
+<p class="watch"><button id="watch" type="button" data-code="{code}" data-price="{price}">見守る</button>
+<span class="note">端末に保存します。<a href="{prefix}watch/">見守り中の一覧</a></span></p>
+<p class="target" id="targetbox" hidden>
+  <label>この値段以下になったら知りたい
+    <input id="target" type="number" inputmode="numeric" min="0" step="100"
+           placeholder="例 {price}"></label>
+  <span class="note">次に見守り一覧を開いたとき、達したものを先頭に出します。</span>
+</p>
 """
 
 
