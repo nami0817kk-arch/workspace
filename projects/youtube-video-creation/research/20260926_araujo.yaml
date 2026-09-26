@@ -1,0 +1,132 @@
+date: 2026年9月26日
+slot: premier_1
+format: news
+voice_min: 0.45
+people: [ロナルド・アラウホ, アンドニ・イラオラ]
+theme:
+  id: araujo_liverpool
+  league: england
+  league_name: プレミアリーグ
+  kind: transfer
+  topic: リヴァプール
+  title: 'アラウホを借りて2か月。リヴァプールで早くも出てきた話'
+  question: リヴァプールはアラウホをどうするのか
+short_title: アラウホとリヴァプールの5500万ユーロ
+thumbnail:
+  photo: assets/images/20260926_pair_araujo_iraola/01.jpg
+  line1: アラウホ、リヴァプールで
+  line2: 早くも出てきた●●●●の話
+sections:
+  - id: loan
+    heading: バルサから1年のレンタル
+    tier: 報道
+    telop: 2027年6月まで。買い取りオプションは5500万ユーロ
+    narrator: キャスター
+    card:
+      type: table
+      title: アラウホのレンタル
+      columns: ['', '']
+      rows:
+        - [期間, 2027年6月30日まで]
+        - [買い取りオプション, 5500万ユーロ（義務ではない）]
+        - [給料, リヴァプールが全額]
+    say:
+      - 8月、アラウホがバルセロナからリヴァプールへ。2027年6月までの、1年のレンタルです。
+      - 買い取りのオプションは**5500万ユーロ**。行使するかどうかは、リヴァプールが決められます。
+      - 加入したとき、アラウホはこう話していました。
+      - voice: アラウホ
+        text: キャリアの今の段階で、理想的な移籍だった。自分に必要な移籍だった
+      - 呼んだのは、この夏から指揮を執るイラオラ監督です。
+    sources:
+      - https://www.liverpoolfc.com/news/liverpool-agree-deal-sign-ronald-araujo-loan
+      - https://cadenaser.com/nacional/2026/08/10/oficial-ronald-araujo-llega-cedido-al-liverpool-de-andoni-iraola-cadena-ser/
+      - https://www.liverpoolfc.com/news/liverpool-fc-appoint-andoni-iraola-new-head-coach
+  - id: form
+    heading: 右サイドバックで
+    tier: 報道
+    telop: 公式戦7試合で先発5。プレミアでは出た時間に失点ゼロ
+    narrator: キャスター
+    card:
+      type: table
+      title: 今季のアラウホ
+      columns: ['', '']
+      rows:
+        - [公式戦, 7試合・先発5]
+        - [チャンピオンズリーグ, アトレティコ戦でアシスト]
+        - [プレミアリーグ, 出場した約285分で失点ゼロ]
+    say:
+      - 本職はセンターバックですが、リヴァプールでは主に右サイドバック。公式戦7試合で、先発は5試合です。
+      - チャンピオンズリーグのアトレティコ戦では、かかとでアシスト。クラブが選ぶ試合の最優秀選手になりました。
+      - プレミアリーグでは、アラウホが出場した**およそ285分**、1点も取られていません。
+      - 24日には、ウルグアイ代表として日本戦に先発。日本でも強い印象を残しました。
+    sources:
+      - https://www.mundodeportivo.com/futbol/fc-barcelona/20260925/1004231176/cedido-fichaje-araujo-empieza-convencer-liverpool.html
+      - https://www.sport.es/es/noticias/barca/araujo-brilla-liverpool-club-dudas-134628610
+      - https://news.yahoo.co.jp/articles/7c2f1d818c876688a195f8f21af7802fa58485f2
+  - id: buy
+    main: true
+    heading: 買い取りの話
+    tier: 報道
+    telop: 「この調子なら、買い取りを真剣に考えるかもしれない」と報道
+    narrator: キャスター
+    say:
+      - text: 'バルサからリヴァプールに貸し出され、出場した時間は無失点のアラウホに、早くも買い取りの話が出ています。'
+        short_only: true
+      - イラオラ監督とクラブは、アラウホの出だしにとても満足している、と伝えられています。
+      - この調子を最後まで保てば、買い取りを真剣に考えるかもしれない、という内容です。
+      - ただ、地元の報道は「確実とは程遠い」。
+      - リヴァプールがレンタルの選手を完全移籍で獲ったのは、過去に2回だけです。
+      - イラオラ監督は、アラウホについてこう話しています。
+      - voice: アンドニ・イラオラ
+        image: assets/images/20260926_pair_iraola_araujo/01.jpg
+        text: ビッグクラブから来た経験のある選手なのに、謙虚にやって来た。こういう変化が必要だったんだと思う
+      - voice: アンドニ・イラオラ
+        text: 右サイドバックが必要なら右サイドバック、センターバックが必要ならセンターバック。どこでもやる準備ができている
+    sources:
+      - https://www.mundodeportivo.com/futbol/fc-barcelona/20260925/1004231176/cedido-fichaje-araujo-empieza-convencer-liverpool.html
+      - https://www.mirror.co.uk/sport/football/news/liverpool-ronald-araujo-transfer-barcelona-37699630
+      - https://sports.yahoo.com/articles/iraola-praises-humble-araujo-impact-183500912.html
+      - https://www.daveockop.com/latest-news/andoni-iraola-sets-new-target-for-ronald-araujo/
+      - https://www.liverpoolfc.com/news/liverpool-agree-deal-sign-ronald-araujo-loan
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「5500万ユーロはバーゲン」と「買い取らないと思う」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: そりゃ買い取るでしょう。 バルサじゃなきゃ世界最高レベルですよ。 どこかのチームと違って ちゃんと買い取りやすい価格に 設定もしてある。
+      - voice: ネット民
+        text: プレミアだとフィジカルを活かしたパワープレーで凄く良い選手。元々プレーがリーガよりプレミア向きだと思ってたけど環境でここまで評価は変わるんだなと。
+      - voice: ネット民
+        text: アラウホ最後まで出てたら日本も勝てたかどうかって感じだしすごいよ
+      - voice: ネット民
+        text: 壊してバルサに返却だけはやめてね
+      - voice: ネット民
+        text: ヴィニシウスをひとりで対応できるディフェンダー　バルサの今のハイラインでなければ強靱かつスピードのある選手　仲間思いなのも良い
+      - voice: ネット民
+        text: 気が変わらないうちに早めの振り込みお願い致します
+      - voice: ネット民
+        text: このパフォーマンスなら買取一択だろう。5500万€はむしろバーゲンレベル。 ジャケとアラウホの右サイドはリーグ屈指の鉄壁ぶり。長年ここの守備に悩まされてきたチームとは思えない安定感だよ。
+      - voice: ネット民
+        text: 買い取った瞬間に怪我だらけもあり得るから、もう少し様子みた方がいい
+      - voice: ネット民
+        text: 正直リバプールはアラウホ買い取らないと思うわ、、、 値段、年齢はもちろんだけど、そもそもリバプールがローンから買い取るイメージ0、
+      - voice: ネット民
+        text: あとアラウホのおかげで右SBというポジションはDFであるという事を改めて再認識させられましたね 我々長年右SBに守備的な安心感を抱いた事がほぼ皆無でございますから。 アラウホ様には心から感謝申し上げます
+      - voice: ネット民
+        text: みんな、5500万ユーロ入るぞ。あっちは彼を愛してる
+      - voice: ネット民
+        text: 正直嬉しい。みんな幸せになる。うちで上手くいかなかったのは悲しい。スタイルには完璧に合っていたのに、ミスが重なって、次のミスのことしか考えられなくなっていたんだと思う
+      - voice: ネット民
+        text: 思っていたよりずっと動けて、ボールも丁寧。バルサ出身なんだから、もっと評価しておくべきだった。最高の補強
+      - voice: ネット民
+        text: アラウホが右サイドバックになって、最終ラインにずっと自信が持てる。イラオラは正しい手を打っている
+        short_voice: true
+    sources:
+      - https://news.yahoo.co.jp/articles/591e2dca367ed2846ef66556d9c5fceb83e68b78/comments
+      - https://x.com/elU8gzM4VxgrGiC/status/2103121961845248228
+      - https://x.com/Mt8EDG6188eEovq/status/2101693699474477456
+      - https://www.liverpoolecho.co.uk/sport/football/transfer-news/ronald-araujo-liverpool-barcelona-transfer-34599370
+      - https://bsky.app/profile/gobb.ie/post/3mvxggh6wis2i
+      - https://bsky.app/profile/pearlbullets.bsky.social/post/3mv4tojjqsk2n

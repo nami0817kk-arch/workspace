@@ -1,0 +1,95 @@
+date: 2026年9月26日
+slot: japanese_3
+format: quote
+voice_min: 0.55
+people: [田中碧]
+theme:
+  id: tanaka_silence
+  league: england
+  league_name: 日本代表
+  kind: other
+  topic: 日本代表
+  title: '田中碧が、W杯のあと表で語らなかった理由'
+  question: 田中碧はなぜW杯のあと表で語らなかったのか
+short_title: 田中碧、W杯のあとの沈黙
+thumbnail:
+  photo: assets/images/20260926_tanaka_sp/01.jpg
+  line1: 田中碧、W杯のあと沈黙
+  line2: 「●●になりたかった」
+sections:
+  - id: brazil
+    heading: ブラジル戦のあと
+    tier: 報道
+    telop: W杯ブラジル戦、終盤に奪われた場面から決勝点
+    narrator: キャスター
+    say:
+      - ワールドカップの決勝トーナメント1回戦、ブラジル戦。
+      - 途中から入った田中碧は、終了間際にボールを奪われ、その流れから決勝点を許しました。
+      - 日本は敗退。田中は、タオルで顔を覆って泣きました。
+      - そのあと、オフのあいだは表にほとんど出ていません。
+    sources:
+      - https://news.yahoo.co.jp/articles/9e21f972a5ac9dd3ca5c80c808bc60557f20d932
+      - https://www.nikkansports.com/soccer/worldcup2026/news/202607010000593.html
+  - id: sorry
+    heading: 「心をえぐられる」
+    tier: 報道
+    telop: 「感動した」と言われるたびに、心をえぐられる
+    narrator: キャスター
+    say:
+      - 9月20日、W杯のあと初めて受けたテレビの独占取材で、田中はこう話しています。
+      - voice: 田中碧
+        text: 会う人に「お疲れ」とか「感動した」と言われるたびに、もう1試合2試合見たかっただろうなと思ってしまう
+      - voice: 田中碧
+        text: その言葉をかけられるたびに、心をえぐられるんじゃないかなって。申し訳ないってずっと感じ続けてます
+    sources:
+      - https://news.yahoo.co.jp/articles/9e21f972a5ac9dd3ca5c80c808bc60557f20d932
+  - id: why
+    main: true
+    heading: ひとりになりたかった
+    tier: 報道
+    telop: 「リフレッシュする意味でも、ひとりになりたかった」
+    narrator: キャスター
+    say:
+      - text: 'W杯で、奪われたボールが決勝点につながった田中碧。表に出なかった理由を話しました。'
+        short_only: true
+      - 日本代表に合流した直後のインタビューでは、W杯のあと語る場面が少なかったことを聞かれました。
+      - voice: 田中碧
+        text: やっぱり悔しさってのもありましたし、そこが一番大きかったですかね
+      - voice: 田中碧
+        text: 休みの期間ではありましたけど、すごくずっとそこが、自分の頭の中にはずっとあったので
+      - voice: 田中碧
+        text: リフレッシュするって意味でも、ひとりになりたかったっていう部分もあったんで
+      - voice: 田中碧
+        text: そういう機会はあまり取らずに、オフは過ごしてましたね
+    sources:
+      - https://www.youtube.com/watch?v=yHhR-3hFNBY
+      - https://football-tribe.com/japan/2026/09/26/359731/
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「話してる姿が見られて嬉しい」と「田中のせいではない」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: W杯を終えて、田中碧選手がメディアに話してる姿をほとんど観なかったので、嬉しかったです。次は三笘選手と一緒に。応援してます！
+      - voice: ネット民
+        text: 田中選手、待ってましたよ。私は心配してましたよ。顔を見れて良かった
+      - voice: ネット民
+        text: アジアカップ獲って笑顔で終わってほしい。碧くん、頑張って
+      - voice: ネット民
+        text: 碧くんのすぽるとインタビュー泣いちゃった、、、「やるかやらないか、100か0か」だからあの日とも向き合えたし、リーズで中々使われなくても折れずに頑張れるんだね
+      - voice: ネット民
+        text: 田中の責任というより、PK戦まで守り抜くというベンチワークに問題有りだと思います
+      - voice: ネット民
+        text: あの試合展開で田中を責める人は居ないと思う。責められるべきは監督だろう。良くやったと讃えられ、誰も責めないけど
+      - voice: ネット民
+        text: 4年間全てをかけて、日本を代表して戦ってくれた選手を、私は批判できない
+      - voice: ネット民
+        text: 碧を擁護する声が圧倒的に多いが、それで碧が浮かばれることはない、スコア、時間帯、ペナ、力関係を考えれば泥臭くともハッキリしたプレーでセーフティに行くべきだった、なので碧この悔しさをバネ更に成長して欲しい。個人的には主力が4人もいない状態で日本はブラジル相手にあそこまでよく戦ったと思う。個々の力の差は歴然としてたが、それでもよく耐えた。一方でまだまだ層が薄いことが露呈した。2チーム分の戦力は有してなかった、ここが課題だと思う
+      - voice: ネット民
+        text: 次のワールドカップ、主役は君だよ
+        short_voice: true
+    sources:
+      - https://www.youtube.com/watch?v=yHhR-3hFNBY
+      - https://x.com/oshikososhikou/status/2101830752547770789
+      - https://news.yahoo.co.jp/articles/9e21f972a5ac9dd3ca5c80c808bc60557f20d932/comments

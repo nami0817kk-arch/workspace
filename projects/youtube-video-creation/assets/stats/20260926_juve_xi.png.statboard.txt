@@ -1,0 +1,3 @@
+title: ユヴェントスの先発（9月13日 サッスオーロ戦）
+kind: squadboard（tools/squadboard.py で自作した一覧。写真は使っていない）
+source: クラブ公式の試合記録 https://www.juventus.com/it/news/articoli/serie-a-sassuolo-juventus-la-partita と ANSA 9/21 の代表招集

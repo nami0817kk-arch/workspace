@@ -1,0 +1,97 @@
+date: 2026年9月26日
+slot: japanese_2
+format: quote
+voice_min: 0.55
+people: [伊東純也]
+theme:
+  id: ito_eldest
+  league: netherlands
+  league_name: 日本代表
+  kind: other
+  topic: 日本代表
+  title: '伊東純也が、33歳で代表最年長になって口にした本音'
+  question: 最年長について伊東純也はどう話したのか
+short_title: 伊東純也、最年長の自覚
+thumbnail:
+  photo: assets/images/20260926_ito_sd/01.jpg
+  line1: 伊東純也、代表最年長
+  line2: 「あんまり●●ないですし」
+sections:
+  - id: eldest
+    main: true
+    heading: 最年長の自覚
+    tier: 報道
+    telop: 今回の代表で最年長。本人は「あんまり自覚ない」
+    narrator: キャスター
+    say:
+      - text: '伊東純也が、日本代表での自分の立場について本音を語りました。'
+        short_only: true
+      - 9月の日本代表で、いちばん年上は**33歳**の伊東純也です。
+      - 合流した直後のインタビューで、そのことを聞かれました。
+      - voice: 伊東純也
+        text: そうですね。あんまり自覚ないですし、周りもそんな思ってないと思います
+      - チームの中での役割を聞かれると、こう答えています。
+      - voice: 伊東純也
+        text: 積極的に声を出すタイプではないので、プレーで引っ張っていければいいかなと思ってます
+      - voice: 伊東純也
+        text: 新しい選手が入ってきて、新しい競争が始まる。今までいた選手も安泰じゃないよっていうのはあると思います
+    sources:
+      - https://www.youtube.com/watch?v=yHhR-3hFNBY
+      - https://football-tribe.com/japan/2026/09/26/359729/
+      - https://news.yahoo.co.jp/articles/8c3c9bb49e15a683cae1493597117f3fc6c1f074
+  - id: uruguay
+    heading: その夜のウルグアイ戦
+    tier: 報道
+    telop: 途中出場で2点に絡む。90+6分に上田へのアシスト
+    narrator: キャスター
+    card:
+      type: table
+      title: ウルグアイ戦の伊東純也
+      columns: ['', '']
+      rows:
+        - [63分, 途中から出場]
+        - [2点目, 起点のパス]
+        - [90+6分, 上田綺世へのアシスト]
+    say:
+      - このインタビューが公開された日の夜、ウルグアイ戦。
+      - 伊東は63分から出て、塩貝健人と上田綺世のゴールに絡みました。
+      - 試合終了間際、上田へのパスでダメ押しの3点目。試合のあと、こう振り返っています。
+      - voice: 伊東純也
+        text: 綺世が完全に見えたので、いいボールを出したら抜けるんじゃないかなと思った。そこはやれる自信もありました
+      - 報道では、これで代表通算**28アシスト**。長友佑都、遠藤保仁と並ぶ歴代最多タイです。
+    sources:
+      - https://www.soccer-king.jp/news/japan/national/20260924/2209051.html
+      - https://football-tribe.com/japan/2026/09/26/359729/
+  - id: voices
+    heading: ネットの反応
+    tier: 未確認
+    telop: 「最年長に見えない」と「伊東の代わりは存在しない」
+    narrator: キャスター
+    say:
+      - voice: ネット民
+        text: 純也くんもぜんぜん若い
+      - voice: ネット民
+        text: 「最年長の自覚もあまりない」「周りもそんな思ってない」ニコッ。それすごく聞きたかったやつだよ
+      - voice: ネット民
+        text: 後輩達に最年長だと思われない伊東純也
+      - voice: ネット民
+        text: 伊東純也が最年長だと思われてないの面白すぎる。あの見た目と雰囲気でベテラン枠なの反則だろwww 後輩たちの中に混ざってても違和感ゼロ。気付いたら代表の最年長になってるの、なんか信じられないんだよな
+      - voice: ネット民
+        text: サムネ、純也選手が1番若く見える。可愛い
+      - voice: ネット民
+        text: 4年後のジョーカー伊東純也でいいやろ
+      - voice: ネット民
+        text: 日本は長らく戦術伊東であったことを忘れてはいけない。久保、堂安など良い選手はたくさんいるが、伊東は替えがきかない。前回のアジアカップで負けたのも、伊東が不当なことで離脱を余儀なくされたから
+      - voice: ネット民
+        text: 三苫の代わりは怪我もなくていつも安定している中村になったけど、伊東の代わりだけは存在しないんだよね。出たら試合をひっくり返すほどの力は年齢なんか関係ないと思わせる。メッシが40でW杯出たから次も出てくれないかな
+      - voice: ネット民
+        text: 伊東と三笘はドリブルやスピードに注目が行きがちだけど、何気にパスのスキルがめちゃくちゃ高いよね。上田綺世に通したアシストは絶品でした
+      - voice: ネット民
+        text: 塩貝がゴール後、無表情でいたけど、伊東純也が近づいた時に少し笑顔になったような(気のせい？)最年長の愛されキャラは人間力、人格者じゃなきゃ出来ない。戦力的にも必要だし長く頑張って欲しい
+        short_voice: true
+    sources:
+      - https://www.youtube.com/watch?v=yHhR-3hFNBY
+      - https://x.com/momox3161/status/2103330498399612989
+      - https://x.com/robotadviser1/status/2103702075398099294
+      - https://news.yahoo.co.jp/articles/8c3c9bb49e15a683cae1493597117f3fc6c1f074/comments
+      - https://news.yahoo.co.jp/articles/2f38642a7fde6898c4f299d1e1f12610761a3387/comments
