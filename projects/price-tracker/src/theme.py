@@ -194,11 +194,11 @@ def sparkline(tail: list, width: int = 220, height: int = 44) -> str:
             f'</svg>')
 
 
-FAVICON = ("data:image/svg+xml,"
-           "%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E"
-           "%3Crect width='32' height='32' rx='7' fill='%231f6f5c'/%3E"
-           "%3Cpath d='M16 7v13m0 0l-6-6m6 6l6-6' stroke='%23fff' stroke-width='3' "
-           "fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+# 印は data: ではなくファイルで置く。ブラウザのタブには data: でも出るが、
+# Google の検索結果はクロールできるURLからしか取りに行かない。
+# 実際、携帯の検索結果では3件とも地球儀の代替アイコンになっていた
+# （2026-09-26 にユーザーの画面で確認）。
+ICON_PNG = "icon.png"
 
 AD_NOTICE = ('<p class="ad-notice">本サイトは楽天アフィリエイトを利用しており、'
              'リンク経由の購入により収益を得ています。</p>')
@@ -259,7 +259,8 @@ def head(title: str, description: str, canonical: str, site: dict, prefix: str =
 <meta name="twitter:card" content="summary">
 <meta property="og:image" content="{esc(site["base_url"].rstrip("/"))}/og.svg">
 <link rel="alternate" type="application/rss+xml" title="今日の値下がり" href="{prefix}feed.xml">
-<link rel="icon" href="{FAVICON}">
+<link rel="icon" href="{prefix}{ICON_PNG}" sizes="192x192" type="image/png">
+<link rel="apple-touch-icon" href="{prefix}{ICON_PNG}">
 <link rel="stylesheet" href="{prefix}{site.get("css", "style.css")}">
 {WATCH_JS}
 {extra}
@@ -892,6 +893,30 @@ def home_search(prefix: str = "") -> str:
             f'<button type="submit">探す</button></form>')
 
 
+def site_ld(site: dict) -> str:
+    """サイトそのものの構造化データ。
+
+    検索結果はサイト名を「kakaku.dailyquarry.com」という生のドメインで
+    出していた（2026-09-26 にユーザーの画面で確認）。読める名前を出すには、
+    トップで WebSite の name を渡す必要がある。
+    あわせて検索の入口も知らせる（サイト内検索として使われることがある）。
+    """
+    base = site["base_url"].rstrip("/")
+    ld = safe_json({
+        "@context": "https://schema.org", "@type": "WebSite",
+        "name": site["name"], "url": base + "/",
+        "description": site.get("description", ""),
+        "publisher": {"@type": "Organization", "name": site.get("owner", "")},
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": {"@type": "EntryPoint",
+                       "urlTemplate": base + "/search/?q={search_term_string}"},
+            "query-input": "required name=search_term_string",
+        },
+    })
+    return f'<script type="application/ld+json">{ld}</script>'
+
+
 def home_page(site: dict, canonical: str, updated: str, stats: dict,
               views: list, genres: list) -> str:
     """トップ。商品は並べず、入口だけを置く。
@@ -909,7 +934,8 @@ def home_page(site: dict, canonical: str, updated: str, stats: dict,
     genre_links = "".join(
         f'<li><a href="genre/{esc(str(g["genre_id"]))}/">{esc(g["name"])}</a>'
         f'<span class="count">{g["count"]:,}商品</span></li>' for g in genres)
-    return (head(site["name"], site.get("description", ""), canonical, site, "")
+    return (head(site["name"], site.get("description", ""), canonical, site, "",
+                 extra=site_ld(site))
             + f'<h1>{esc(site["name"])}</h1><p class="lead">{esc(lead)}</p>'
             + home_search()
             + stats_bar(stats)

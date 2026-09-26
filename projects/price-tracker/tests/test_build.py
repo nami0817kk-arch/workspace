@@ -482,3 +482,84 @@ class LandingPageTest(unittest.TestCase):
 
     def test_ナビの先頭はnowを指す(self):
         self.assertIn('<a href="now/">いま条件がそろう</a>', self.home)
+
+
+class FaviconTest(unittest.TestCase):
+    """検索結果に出る印。
+
+    data: の URI を <link rel="icon"> に直接書いていた。ブラウザのタブには
+    出るが、Google は取りに行けるURLからしか印を拾わない。実際、携帯の
+    検索結果では3件とも地球儀の代替アイコンになっていた（2026-09-26）。
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tmp = tempfile.TemporaryDirectory()
+        cls.root = Path(cls.tmp.name)
+        make_data(cls.root, {
+            "shop:a": {"name": "商品A", "shop": "店A", "url": "", "image": "",
+                       "genre_id": "1"},
+        }, {"shop:a": [1000] * 10})
+        cls.out = cls.root / "dist"
+        builder.build(cls.root, cls.out)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.tmp.cleanup()
+
+    def test_印をファイルとして置く(self):
+        for name in ("icon.png", "favicon.ico"):
+            with self.subTest(name=name):
+                self.assertTrue((self.out / name).exists(), name)
+
+    def test_dataURIで指定しない(self):
+        # 取りに行けない形だと検索結果には出ない
+        page = (self.out / "index.html").read_text(encoding="utf-8")
+        tag = re.search(r'<link rel="icon"[^>]*>', page).group(0)
+
+        self.assertNotIn("data:", tag)
+        self.assertIn("icon.png", tag)
+
+    def test_深い階層からも辿れる(self):
+        # 商品ページは2階層下。相対で書くので prefix が要る
+        page = (self.out / "item" / theme.slug("shop:a") / "index.html").read_text(
+            encoding="utf-8")
+
+        self.assertIn('href="../../icon.png"', page)
+
+    def test_PNGとして妥当(self):
+        import struct
+        import zlib
+
+        data = (self.out / "icon.png").read_bytes()
+
+        self.assertEqual(data[:8], b"\x89PNG\r\n\x1a\n")
+        w, h, depth, color = struct.unpack(">IIBB", data[16:26])
+        self.assertEqual((w, h), (192, 192))   # 48の倍数の正方形
+        self.assertEqual((depth, color), (8, 6))
+        off = 8
+        while off < len(data):
+            ln = struct.unpack(">I", data[off:off + 4])[0]
+            kind = data[off + 4:off + 8]
+            body = data[off + 8:off + 8 + ln]
+            crc = struct.unpack(">I", data[off + 8 + ln:off + 12 + ln])[0]
+            with self.subTest(chunk=kind):
+                self.assertEqual(zlib.crc32(kind + body) & 0xFFFFFFFF, crc)
+            off += 12 + ln
+
+    def test_サイト名を検索側に渡す(self):
+        # 検索結果が「kakaku.dailyquarry.com」と生のドメインで出ていた
+        page = (self.out / "index.html").read_text(encoding="utf-8")
+        block = re.search(r'\{"@context": "https://schema\.org", "@type": "WebSite".*?\}'
+                          r'</script>', page, re.S).group(0)[:-9]
+        data = json.loads(block.replace("\u003c", "<").replace("\u003e", ">")
+                          .replace("\u0026", "&"))
+
+        self.assertEqual(data["name"], CONFIG["name"])
+        self.assertEqual(data["url"], "https://example.test/price/")
+
+    def test_WebSiteはトップにだけ置く(self):
+        # サイト全体の情報なので、全ページに撒くものではない
+        listing = (self.out / "lows" / "index.html").read_text(encoding="utf-8")
+
+        self.assertNotIn('"@type": "WebSite"', listing)

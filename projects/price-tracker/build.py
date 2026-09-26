@@ -11,7 +11,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT))
 
-from src import analyze, pages, relate, store, theme  # noqa: E402
+from src import analyze, icon, pages, relate, store, theme  # noqa: E402
 
 JST = timezone(timedelta(hours=9))
 
@@ -339,6 +339,11 @@ def build(root: Path, out: Path) -> dict:
     write(out / "index.html",
           theme.home_page(site, base + "/", updated, stats, views, listed))
     urls.append("/")
+
+    # 検索結果に出る印。ブラウザは指定が無くても /favicon.ico を取りに来るので
+    # 両方置く（実測でその404が出ていた）。
+    (out / "icon.png").write_bytes(icon.png())
+    (out / "favicon.ico").write_bytes(icon.ico())
 
     write(out / "sitemap.xml", sitemap(site, urls, updated))
     write(out / "robots.txt", robots(site))
