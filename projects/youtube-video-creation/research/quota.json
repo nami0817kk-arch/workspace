@@ -38,5 +38,12 @@
     "commentThreads.insert": 7,
     "videos.insert": 4,
     "thumbnails.set": 8
+  },
+  "2026-09-22": {
+    "videos.list": 1
+  },
+  "2026-09-24": {
+    "videos.list": 8,
+    "channels.list": 1
   }
 }
