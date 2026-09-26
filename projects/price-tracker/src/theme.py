@@ -5,7 +5,7 @@ import json
 import re
 from datetime import datetime, timedelta
 
-from .analyze import MIN_DAYS_FOR_LOW
+from .analyze import MIN_DAYS_FOR_LOW, change_count
 from .store import entry as store_entry
 
 SAFE = re.compile(r"[^a-z0-9]+")
@@ -73,9 +73,20 @@ def clean_name(name: str) -> str:
     for _ in range(8):  # 「【…】＼…／★」のように積まれるので繰り返す
         before = text
         text = LEAD_SHOUT.sub("", text)
-        hit = LEAD_BRACKET.match(text)
-        if hit and PROMO_HINT.search(hit.group(1)):
-            text = text[hit.end():]
+        # 囲みは並ぶ。宣伝でない囲みで止めると、その後ろの宣伝が残る
+        # （「【純正】［レビューキャンペーン中］PS3…」実測132件）。
+        # 残す囲みは飛ばして、宣伝の囲みだけ抜く。
+        head, rest = "", text
+        while True:
+            hit = LEAD_BRACKET.match(rest)
+            if not hit:
+                break
+            if PROMO_HINT.search(hit.group(1)):
+                rest = rest[hit.end():]
+            else:
+                head += rest[:hit.end()]
+                rest = rest[hit.end():]
+        text = head + rest
         text = LEAD_PROMO.sub("", text)
         text = LEAD_MARK.sub("", text)
         if text == before:
@@ -255,7 +266,8 @@ def head(title: str, description: str, canonical: str, site: dict, prefix: str =
 <body>
 <a class="skip" href="#main">本文へ</a>
 <header class="site-head"><div class="wrap">
-  <a class="site-name" href="{prefix or './'}">{esc(site['name'])}</a>
+  <a class="site-name" href="{prefix or './'}"><span class="mark" aria-hidden="true"></span>{esc(site['name'])}</a>
+  <p class="tagline">{esc(site.get('description', ''))}</p>
   {nav_html(prefix)}
 </div></header>
 <main class="wrap" id="main">"""
@@ -395,7 +407,9 @@ def score_bar(row: dict) -> str:
     # 条件ごとに分けて、名前と点の対が目で拾えるようにする。
     parts = "".join(f'<span class="part">{esc(name)}<b>{pt}</b></span>'
                     for name, pt in score_breakdown(row) if pt)
-    return (f'<p class="score"><span class="num">{total}</span>'
+    # 帯の長さは点そのもの。数字だけだと 97 と 62 の差が目に入らない
+    return (f'<p class="score" style="--fill:{min(total, 100)}%">'
+            f'<span class="num">{total}</span>'
             f'<span class="max">/100</span>'
             f'<span class="parts">{parts}</span></p>')
 
@@ -518,6 +532,16 @@ SEARCH_JS = r"""
 
   input.addEventListener('focus', load);
   input.addEventListener('input', function () { syncUrl(); if (index) { render(); } else { load(); } });
+
+  // 例の語。押したら入力欄に入れてそのまま探す
+  document.querySelectorAll('.examples button').forEach(function (b) {
+    b.addEventListener('click', function () {
+      input.value = b.dataset.q;
+      syncUrl();
+      if (index) { render(); } else { load(); }
+      input.focus();
+    });
+  });
 })();
 """
 
@@ -565,6 +589,13 @@ def stats_page(site: dict, canonical: str, updated: str, stats: dict,
             + foot(site, "../", updated))
 
 
+# 検索の例。実際の索引に当てて件数を数えてから選んだ（2026-09-26 実測）。
+# イヤホン439 / ビール485 / インク641 / テレビ425 / ギター348 / ドッグフード188 /
+# ノートパソコン208 / 掃除機136。8ジャンルから当たりの多いものを1つずつ取る。
+SEARCH_EXAMPLES = ("イヤホン", "ノートパソコン", "テレビ", "インク",
+                   "ギター", "ビール", "ドッグフード", "掃除機")
+
+
 def search_page(site: dict, canonical: str, updated: str, stats: dict) -> str:
     """商品名で絞り込む。通信は検索用データの取得だけで、サーバは要らない。"""
     title = "商品を探す"
@@ -575,6 +606,12 @@ def search_page(site: dict, canonical: str, updated: str, stats: dict) -> str:
             + AD_NOTICE
             + '<input id="q" type="search" class="q" placeholder="例: モニター 27インチ" '
               'autocomplete="off" aria-label="商品名で検索">'
+            # 入力欄だけ置くと、何を打てば当たるのかが分からない。
+            # 実際に記録しているジャンルから、当たる語を並べて押せるようにする。
+            + ('<p class="examples"><span>よく使われる言葉</span>'
+               + "".join(f'<button type="button" data-q="{esc(w)}">{esc(w)}</button>'
+                         for w in SEARCH_EXAMPLES)
+               + '</p>')
             + '<p id="note" class="note"></p><ul id="results" class="hits"></ul>'
             + f'<script>{SEARCH_JS}</script>'
             + foot(site, "../", updated))
@@ -823,6 +860,24 @@ def archive_nav(day: str, older: str | None, newer: str | None) -> str:
     if older:
         parts.append(f'<a href="../{esc(older)}/">{esc(older)} →</a>')
     return f'<nav class="pager">{"".join(parts)}</nav>'
+
+
+def views_map(counts: list, prefix: str = "") -> str:
+    """どの一覧が何を出すのかの索引。
+
+    一覧は14ある。ナビに名前が並ぶだけで、「よく動く」と「最安値更新」を
+    どう使い分けるのかがどこにも書いていなかった。名前・件数・何を出すかを
+    1行ずつ並べて、選べるようにする。
+    """
+    if not counts:
+        return ""
+    body = "".join(
+        f'<li><a href="{prefix}{esc(path)}">{esc(name)}</a>'
+        f'<span class="n">{count:,}件</span>'
+        f'<span class="what">{esc(what)}</span></li>'
+        for path, name, count, what in counts)
+    return ('<section class="views"><h2>どの一覧を見るか</h2>'
+            f'<ul>{body}</ul></section>')
 
 
 def archive_index(days: list, site: dict, canonical: str, updated: str) -> str:
@@ -1195,7 +1250,10 @@ def watch_page(site: dict, canonical: str, updated: str) -> str:
   var store = PTWatch.read();
   var codes = Object.keys(store);
   if (!codes.length) {
-    note.textContent = 'まだありません。商品ページの「見守る」を押すとここに並びます。';
+    // 空のときに文だけ置くと行き止まりになる。探しに行く先を出す。
+    note.innerHTML = 'まだありません。商品ページの「見守る」を押すとここに並びます。'
+      + '<span class="go"><a href="../">いま条件がそろっている商品</a>'
+      + '<a href="../lows/">最安値圏</a><a href="../search/">商品を探す</a></span>';
     return;
   }
   note.textContent = '読み込んでいます…';
@@ -1324,7 +1382,6 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
     return (head(f"{title}｜{site['name']}", desc, canonical, site, prefix, extra,
                  indexable=indexable)
             + breadcrumb(site, "商品の価格推移", prefix)
-            + '<p class="back"><a href="../../">今日の値下がりへ</a><span class="sep">/</span><a href="../../lows/">最安値圏へ</a><span class="sep">/</span><a href="../../search/">商品を探す</a></p>'
             + f'<article class="item"><h1 title="{esc(row["name"])}">'
               f'{esc(short_name(row["name"], 70))}</h1>'
             # 楽天での正式名称。宣伝込みで200文字あることもあり、そのまま
@@ -1340,8 +1397,15 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
             + AD_NOTICE
             + f'<p class="headline"><strong>{yen(row["price"])}</strong> {badge(row)}</p>'
             + f'<p class="verdict">{esc(verdict_note(row))}</p>'
-            + f'<div class="chart">{chart(row.get("tail") or [])}</div>'
             + (f'<p class="note">{esc(cheaper_days(row))}</p>' if cheaper_days(row) else '')
+            # 追跡中の88%（11,172件）は一度も価格が動いていない。その図は
+            # 横一直線で、180pxを使って「何も起きていない」としか言わない。
+            # 動いた商品の図と同じ扱いにすると、動いた回のほうが埋もれる。
+            + (f'<div class="chart">{chart(row.get("tail") or [])}</div>'
+               if change_count(row) else
+               # 動いていないことは直前の注記が書いている。ここは入口だけ
+               f'<details class="chart flat"><summary>記録{row["days"]}日分の図を見る'
+               f'</summary>{chart(row.get("tail") or [])}</details>')
             + f'<table class="facts">{table}</table>'
             + caption_block(row)
             + history_table(row)
@@ -1352,5 +1416,14 @@ def item_page(row: dict, site: dict, updated: str, kin: list | None = None,
             + f'<p class="shop">販売店: {esc(row.get("shop", ""))}</p>'
             + related(kin or [], site)
             + same_shop(shopmates or [], row.get("shop", ""))
+            # 次の行き先はページの終わりに置く。見出しの上にパンくずと二段に
+            # 積んでいたため、本題の前に案内が2行あった。
+            # 先頭の札は「今日の値下がりへ」のまま ../../ を指していて、
+            # トップを値下がりから入れ替えた時に直し忘れていた。
+            + '<nav class="onward"><span>ほかの一覧を見る</span>'
+              '<a href="../../">いま条件がそろっている商品</a>'
+              '<a href="../../drops/">今日の値下がり</a>'
+              '<a href="../../lows/">最安値圏</a>'
+              '<a href="../../search/">商品を探す</a></nav>'
             + '</article>'
             + foot(site, prefix, updated))

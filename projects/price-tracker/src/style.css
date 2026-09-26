@@ -110,7 +110,7 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
 .eff small { font-weight: 400; color: var(--muted); font-size: 11px; }
 .empty { padding: 24px; text-align: center; color: var(--muted); list-style: none;
   border: 1px dashed var(--line); border-radius: var(--radius); }
-.empty .go { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center;
+.go { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center;
   margin-top: 12px; }
 .thin { margin: 0 0 14px; padding: 10px 12px; font-size: 13px; color: var(--muted);
   background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); }
@@ -333,3 +333,75 @@ h1 .count { margin-left: 10px; font-size: 16px; font-weight: 500; color: var(--m
   /* 商品ページの画像が画面の高さの3分の1を占め、値段を画面の外へ押していた */
   .item .hero img { max-width: 180px; }
 }
+
+/* ===== 構成とデザイン（2026-09-26） ===== */
+
+/* ヘッダに手がかりを置く。サイト名だけでは何のサイトか分からなかった。
+   説明は config.json の description を出しているので二重に書かない。 */
+.site-head .wrap { align-items: center; }
+.site-name { display: inline-flex; align-items: center; gap: 8px; }
+.site-name .mark { width: 18px; height: 18px; flex: none; border-radius: 5px;
+  background: var(--accent); position: relative; }
+.site-name .mark::after { content: ""; position: absolute; left: 50%; top: 4px;
+  width: 2px; height: 7px; margin-left: -1px; background: var(--panel);
+  box-shadow: 0 7px 0 -1px var(--panel), -3px 5px 0 -1px var(--panel),
+              3px 5px 0 -1px var(--panel); }
+.tagline { flex: 1 1 100%; order: 3; margin: 0; font-size: 13px; color: var(--muted); }
+.site-nav { order: 2; }
+
+/* 広い画面でカードの右側が空いていた。値段を右へ回すと商品名が潰れたので、
+   推移の図をそこへ持っていく。図は下に置くより値段の隣にある方が読める。 */
+@media (min-width: 760px) {
+  .card .body { display: grid; grid-template-columns: 1fr 150px;
+    column-gap: 20px; align-items: start; }
+  .card .name, .card .price, .card .point-line, .card .meta { grid-column: 1; }
+  .card .card-spark { grid-column: 2; grid-row: 1 / span 4;
+    margin-top: 0; align-self: center; }
+  .card .score { grid-column: 1 / -1; }
+}
+
+/* 点は札の集まりに埋もれていた。満点に対する位置を帯で見せる。 */
+.score { position: relative; padding-top: 10px; }
+.score::before { content: ""; position: absolute; top: 0; left: 0; right: 0;
+  height: 3px; border-radius: 2px; background: var(--line); }
+.score::after { content: ""; position: absolute; top: 0; left: 0;
+  width: var(--fill, 0%); height: 3px; border-radius: 2px; background: var(--accent); }
+
+/* 動いていない商品の図は畳む。88%（11,172件）が一直線だった。 */
+.chart.flat > summary { cursor: pointer; font-size: 13px; color: var(--muted); }
+.chart.flat[open] > summary { margin-bottom: 8px; }
+
+/* 読み終えた先の行き先。見出しの上ではなく本文の終わりに置く。 */
+.onward { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 14px;
+  margin: 28px 0 0; padding-top: 16px; border-top: 1px solid var(--line);
+  font-size: 14px; }
+.onward > span { color: var(--muted); }
+
+/* 見出しの強弱。h1 と h2 が近すぎて、どこで話が変わるのか読めなかった。 */
+h2 { padding-bottom: 6px; border-bottom: 1px solid var(--line); }
+.item h2 { margin-top: 32px; }
+
+/* 一覧の索引。名前が並ぶだけでは「よく動く」と「最安値更新」を使い分けられない。 */
+.views { margin: 36px 0 0; }
+.views ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.views li { display: grid; grid-template-columns: auto auto 1fr; gap: 4px 12px;
+  align-items: baseline; padding: 10px 14px; background: var(--panel);
+  border: 1px solid var(--line); border-radius: var(--radius); }
+.views a { font-weight: 600; text-decoration: none; white-space: nowrap; }
+.views a:hover { color: var(--accent); }
+.views .n { font-size: 13px; color: var(--muted);
+  font-variant-numeric: tabular-nums; white-space: nowrap; }
+.views .what { font-size: 13px; color: var(--muted); }
+@media (max-width: 560px) {
+  .views li { grid-template-columns: 1fr auto; }
+  .views .what { grid-column: 1 / -1; }
+}
+
+/* 検索の例。入力欄だけだと何を打てば当たるのか分からなかった。 */
+.examples { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px;
+  margin: 12px 0 0; }
+.examples > span { font-size: 13px; color: var(--muted); }
+.examples button { padding: 6px 12px; font-size: 14px; cursor: pointer;
+  color: var(--ink); background: var(--panel); border: 1px solid var(--line);
+  border-radius: 999px; font-family: inherit; }
+.examples button:hover { color: var(--accent); border-color: var(--accent); }

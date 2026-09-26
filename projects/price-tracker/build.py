@@ -309,6 +309,30 @@ def build(root: Path, out: Path) -> dict:
         site, analyze.new_lows(rows, latest_day), updated,
         "最安値を更新した商品", "new-lows/"))
 
+    # どの一覧を見ればよいかの索引。件数が全部そろうのは最後なので、
+    # 書き上がったトップに差し込む（アーカイブの日付送りと同じやり方）。
+    views = [
+        ("drops/", "今日の値下がり", len(dropped), "前回の記録より安くなったもの"),
+        ("points/", "ポイント込み", len(analyze.effective_drops(
+            rows, site.get("drop_threshold", 0.05))), "ポイント分を引くと安いもの"),
+        ("new-lows/", "最安値更新", len(analyze.new_lows(rows, latest_day)),
+         "記録した最安値をこの日に塗り替えたもの"),
+        ("lows/", "最安値圏", len(low), "記録した最安値と同じか、それに近いもの"),
+        ("rises/", "値上がり", len(analyze.rises(
+            rows, site.get("drop_threshold", 0.05))), "前回より高くなったもの"),
+        ("active/", "よく動く", len(analyze.active(rows)),
+         "記録のあいだに価格が何度も変わったもの"),
+        ("ending/", "期限が近い", len(analyze.ending_soon(rows, updated)),
+         "ポイント倍率が3日以内に終わるもの"),
+        ("genre/", "ジャンル別", len(listed), "ジャンルごとに値下がりの大きい順"),
+        ("archive/", "日付別", len(archive_counts), "過ぎた日の値下がりの記録"),
+    ]
+    home = out / "index.html"
+    home.write_text(
+        home.read_text(encoding="utf-8").replace(
+            '<footer', theme.views_map(views) + '<footer', 1),
+        encoding="utf-8")
+
     write(out / "sitemap.xml", sitemap(site, urls, updated))
     write(out / "robots.txt", robots(site))
 

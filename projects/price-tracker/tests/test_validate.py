@@ -732,7 +732,15 @@ class ItemPageTest(unittest.TestCase):
         self.assertNotIn("100%", note)
 
     def test_一覧へ戻れる(self):
-        self.assertIn('class="back"', self.html())
+        # 行き先は見出しの上（class="back"）から本文の終わり（class="onward"）へ
+        # 移した。パンくずと二段に積んでいて、本題の前に案内が2行あったため。
+        html = self.html()
+
+        self.assertIn('class="onward"', html)
+        for href in ('href="../../"', 'href="../../drops/"', 'href="../../lows/"',
+                     'href="../../search/"'):
+            with self.subTest(href=href):
+                self.assertIn(href, html.split('class="onward"')[1])
 
     def test_値が動かなくてもグラフが潰れない(self):
         flat = [[f"2026-09-{i + 1:02d}", 1000] for i in range(19)]
@@ -1311,3 +1319,67 @@ class BracketKindTest(unittest.TestCase):
         self.assertEqual(self.theme.clean_name("［メール便OK]ワリオランドシェイク"),
                          "ワリオランドシェイク")
         self.assertEqual(self.theme.clean_name("【送料無料] テレビ 42型"), "テレビ 42型")
+
+
+class ViewsMapTest(unittest.TestCase):
+    """どの一覧を見るかの索引。
+
+    一覧は14ある。ナビに名前が並ぶだけで「よく動く」と「最安値更新」を
+    どう使い分けるのかがどこにも書いていなかった。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+
+    def test_名前と件数と何を出すかを並べる(self):
+        html = self.theme.views_map([
+            ("drops/", "今日の値下がり", 52, "前回の記録より安くなったもの"),
+            ("lows/", "最安値圏", 3988, "記録した最安値と同じか、それに近いもの")])
+
+        self.assertIn('href="drops/"', html)
+        self.assertIn("3,988件", html)          # 桁区切りを付ける
+        self.assertIn("前回の記録より安くなったもの", html)
+
+    def test_何も無ければ出さない(self):
+        self.assertEqual(self.theme.views_map([]), "")
+
+
+class FlatChartTest(unittest.TestCase):
+    """価格が動いていない商品の図は畳む。
+
+    追跡している12,658件のうち11,172件（88%）は一度も動いていない。
+    その図は横一直線で、180pxを使って何も言わない。
+    """
+
+    def setUp(self):
+        from src import theme
+        self.theme = theme
+        self.site = {"name": "S", "base_url": "https://e.test",
+                     "owner": "o", "contact_email": "c@e.test"}
+
+    def row(self, prices):
+        tail = [[f"2026-09-{i + 1:02d}", p] for i, p in enumerate(prices)]
+        return {"item_code": "a", "name": "テスト商品", "price": prices[-1],
+                "low": min(prices), "high": max(prices), "days": len(prices),
+                "vs_low_pct": 0, "at_low": True, "near_low": False,
+                "dropped": False, "label": "横ばい", "image": "", "shop": "店",
+                "url": "", "low_date": "2026-09-01", "tail": tail}
+
+    def test_動いていなければ畳む(self):
+        html = self.theme.item_page(self.row([1000] * 20), self.site, "2026-09-26")
+
+        self.assertIn('<details class="chart flat">', html)
+
+    def test_動いていれば開いたまま出す(self):
+        html = self.theme.item_page(self.row([1000] * 19 + [900]),
+                                    self.site, "2026-09-26")
+
+        self.assertNotIn('class="chart flat"', html)
+        self.assertIn('<div class="chart">', html)
+
+    def test_畳んでも図そのものは入れておく(self):
+        # 開けば見られること。載せないのとは違う
+        html = self.theme.item_page(self.row([1000] * 20), self.site, "2026-09-26")
+
+        self.assertIn("<svg", html.split('class="chart flat"')[1])
