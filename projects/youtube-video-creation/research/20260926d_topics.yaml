@@ -1,0 +1,151 @@
+title: 9月26日の題材（4回目）
+lead: 16時までに出た見出しから15件
+note: <b>○×を付けてください。</b>今日すでに出した題材（ジダンとムバッペ・イタリア・マンC・メッシ・FIFA）と、やめた題材（ロドリ・ククレジャ・スウェーデン）は入れていません。<br><br>ロマーノの投稿は、手元の Chrome に接続できず今回は読めませんでした。移籍の話はフィードから拾っています。<br><br>⑤⑦は<b>今夜の試合</b>なので、○なら試合のあとに作ります。<br><br>中身はまだ<b>見出しだけ</b>です。○が付いたものから記事本文で裏を取ります。
+items:
+- num: 1
+  slot: 日本人
+  head: 久保建英、4万人超えの観衆に「むしろブーイングをして」。異例の注文
+  why: '「こっちの後押しをしてほしい」と前置きしたうえでの言葉、という見出し。**本人の言葉**がある。
+
+    元記事はまだ当たっていない（まとめサイトの見出し）。
+
+    '
+  src: まとめサイト（9/26）
+  url: https://footballnet.2chblog.jp/archives/60071103.html
+  fmt: quote
+- num: 2
+  slot: 日本人
+  head: 伊東純也「自覚はあまりない」。日本代表の歴代アシストで首位タイに並んだ本人の本音
+  why: '歴代アシスト数で首位タイ。その記録について本人が語った、という見出し。**本人の言葉**がある。
+
+    '
+  src: Football Tribe（9/26）
+  url: https://football-tribe.com/japan/2026/09/26/359729/
+  fmt: quote
+- num: 3
+  slot: 日本人
+  head: 田中碧、W杯のあと表で語らなかった理由。「ひとりで…」
+  why: 'W杯後にメディアで話す場面が少なかったことを突っ込まれて、本人が答えた、という見出し。**本人の言葉**がある。
+
+    '
+  src: Football Tribe（9/26）
+  url: https://football-tribe.com/japan/2026/09/26/359731/
+  fmt: quote
+- num: 4
+  slot: 日本人
+  head: 中国メディア「日本の勝利は運ではなく技術。我々には運の要素すらない」。ウルグアイ戦を見て
+  why: '日本のウルグアイ戦を、中国の媒体が自国と比べて書いた、という見出し。**海外の反応**の回にできる。
+
+    元記事はまだ当たっていない（まとめサイトの見出し）。
+
+    '
+  src: まとめサイト（9/26）
+  url: https://footballnet.2chblog.jp/archives/60071136.html
+  fmt: voices
+- num: 5
+  slot: 日本人
+  head: U-21日本代表、今夜アジア大会の準々決勝で北朝鮮と。韓国紙は「悪縁のリターンマッチ」
+  why: '3年前の対戦では日本の選手が殴られかけた相手、と韓国紙が注目、という見出し。勝てば準決勝でウズベキスタン。
+
+    **今夜の試合なので、○なら試合のあとに作る。**若い選手は顔写真が取れないことがある。
+
+    '
+  src: フットボールチャンネル（9/26）
+  url: https://www.footballchannel.jp/2026/09/26/post1019865/
+  fmt: news
+- num: 6
+  slot: その他
+  head: ヤマル「サッカーは機械的になった。でも僕のような選手には特別な火花がある」
+  why: 'イングランド戦の前、英紙の単独インタビューで語った、という見出し。**本人の言葉**がある。
+
+    '
+  src: The Guardian（9/26）
+  url: https://www.theguardian.com/football/2026/sep/26/lamine-yamal-football-special-spark-spain-world-cup-barcelona
+  fmt: quote
+- num: 7
+  slot: 試合結果
+  head: イングランド対スペイン（今夜ウェンブリー）。W杯王者を迎えるネーションズリーグ
+  why: '日本時間で明日の朝3時45分キックオフ。**○なら試合のあとに作る。**
+
+    '
+  src: ―
+  url: https://www.theguardian.com/football/2026/sep/26/lamine-yamal-football-special-spark-spain-world-cup-barcelona
+  fmt: news
+- num: 8
+  slot: その他
+  head: ユヴェントスの先発からイタリア人が消えた。129年の歴史で初めて
+  why: 'フィールドプレーヤーにイタリア人が1人もいない先発は、クラブ史上初、という見出し。
+
+    '
+  src: フットボールチャンネル（9/26）
+  url: https://www.footballchannel.jp/2026/09/26/post1019385/
+  fmt: news
+- num: 9
+  slot: その他
+  head: スイス代表、ジャカに続いてエンボロも外す。理由は「偽造した証明書」
+  why: '代表の主将格2人が、同じ理由で相次いで外された、という見出し。何の証明書かは、まだ当たっていない。
+
+    '
+  src: Voetbal International（9/26）
+  url: https://www.vi.nl/nieuws/na-xhaka-ook-embolo-uit-zwitserse-selectie-gezet-voor-vervalste-certificaten
+  fmt: news
+- num: 10
+  slot: その他
+  head: ディバラ、メッシの代表ラストマッチに行けない？ ローマのガスペリーニが渡航に待った
+  why: 'メッシの最後のアルゼンチン代表戦に招かれたディバラを、クラブの監督が止めた、という見出し。
+
+    今日出したメッシの回（ユニフォーム）とは別の切り口。
+
+    '
+  src: Goal（9/26）
+  url: https://www.goal.com/en-gb/lists/paulo-dybala-faces-roma-dilemma-as-gian-piero-gasperini-vetoes-travel-for-lionel-messi-s-argentina-f/blt7d85f6e0d732ae36
+  fmt: news
+- num: 11
+  slot: プレミア
+  head: アーセナルのコーチ「ヴィニシウスの名前はテーブルに乗っていた」。この夏の補強で
+  why: 'アルテタの右腕ミゲル・モリーナが、夏にヴィニシウス獲得を検討していたと認めた、という見出し。**本人の言葉**がある。
+
+    '
+  src: Goal ほか（9/26）
+  url: https://www.goal.com/en-gb/lists/arsenal-assistant-miguel-molina-confirms-vinicius-junior-s-name-was-on-the-table-during-summer-windo/blta8614f58693ffbc1
+  fmt: quote
+- num: 12
+  slot: プレミア
+  head: リヴァプール、バルサから借りたアラウホの買い取りを早くも検討。イラオラ監督が高く評価
+  why: '今夏レンタルで加わったアラウホについて、買い取りの話が出てきた、という見出し。
+
+    '
+  src: CaughtOffside ほか（9/26）
+  url: https://www.caughtoffside.com/2026/09/26/ronald-araujo-transfer-update-liverpool-buy-option/
+  fmt: news
+  weak: true
+- num: 13
+  slot: その他
+  head: ブラジル、オーストラリアと引き分け。アンチェロッティはピッチに不満、ヴィニシウスはフェイントでボールを置き去り
+  why: '10番ラフィーニャの2試合目。監督の不満と、ネットで笑われた場面、という見出し。
+
+    '
+  src: ESPN／まとめサイト（9/26）
+  url: https://www.espn.com/soccer/story/_/id/50028484/brazil-australia-friendly-townsville-pitch-carlo-ancelotti
+  fmt: voices
+- num: 14
+  slot: プレミア
+  head: ガルナチョ、ヴィラで苦戦。「本当は誰が獲ったのか」という疑問まで
+  why: 'チェルシーから来たガルナチョがヴィラで振るわず、獲得を決めた人まで問われている、という見出し。
+
+    '
+  src: Daily Mail（9/26）
+  url: https://www.dailymail.com/sport/football/article-16160055/alejandro-garnacho-aston-villa-struggles.html
+  fmt: news
+  weak: true
+- num: 15
+  slot: その他
+  head: クンデ、デンベレとムバッペについて「気になる発言」。ジダンの初陣のあとで
+  why: 'フランス代表のクンデが、2人の関係について口にした言葉が注目された、という見出し。**本人の言葉**がある。
+
+    9/25 の一覧に出した「ムバッペとデンベレの冷えた関係」の続き。
+
+    '
+  src: Foot Mercato（9/26）
+  url: https://www.footmercato.net/a4868925626346685008-edf-la-sortie-troublante-de-jules-kounde-sur-ousmane-dembele-et-kylian-mbappe
+  fmt: quote
