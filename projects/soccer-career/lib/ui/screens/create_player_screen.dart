@@ -169,6 +169,41 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
     );
 
     return Scaffold(
+      // **始めるボタンは画面の下に固定する。**
+      // 決めることが11あって全体は3画面ぶんあるが、始めるのに要るのは
+      // 名前と代理人だけ（残りは既定で埋まっている）。下まで送ると、
+      // こだわらない人まで3画面スクロールしてからでないと始められない。
+      bottomNavigationBar: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(24, 8, 24, 12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (!_busy && _missing.isNotEmpty) ...[
+                Text(
+                  'あと: ${_missing.join(' ・ ')}',
+                  textAlign: TextAlign.center,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.error,
+                  ),
+                ),
+                const SizedBox(height: 8),
+              ],
+              SizedBox(
+                width: double.infinity,
+                child: FilledButton(
+                  onPressed: _ready ? _start : null,
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 12),
+                    child: Text('キャリアを始める'),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -262,12 +297,6 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                       ),
                     ),
                   ],
-                  const SizedBox(height: 12),
-                  _DeclareCard(
-                    hall: widget.controller.hall,
-                    declared: _declared,
-                    onPick: (c) => setState(() => _declared = c),
-                  ),
                   const SizedBox(height: 20),
                   TextField(
                     controller: _name,
@@ -345,6 +374,19 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                                 '内へ切り込む形になる。',
                       style: muted,
                     ),
+                  ],
+                  const SizedBox(height: 24),
+                  Text('代理人', style: theme.textTheme.labelLarge),
+                  const SizedBox(height: 4),
+                  Text('契約交渉と移籍先の開拓を任せる。交渉力・人脈・手数料が違う。', style: muted),
+                  const SizedBox(height: 8),
+                  for (final agent in _agents) ...[
+                    _AgentCard(
+                      agent: agent,
+                      selected: _agent == agent,
+                      onTap: () => setState(() => _agent = agent),
+                    ),
+                    const SizedBox(height: 8),
                   ],
                   const SizedBox(height: 24),
                   Text('年齢  $_age', style: theme.textTheme.labelLarge),
@@ -605,36 +647,11 @@ class _CreatePlayerScreenState extends State<CreatePlayerScreen> {
                     ),
                   ),
                   const SizedBox(height: 24),
-                  Text('代理人', style: theme.textTheme.labelLarge),
-                  const SizedBox(height: 4),
-                  Text('契約交渉と移籍先の開拓を任せる。交渉力・人脈・手数料が違う。', style: muted),
-                  const SizedBox(height: 8),
-                  for (final agent in _agents) ...[
-                    _AgentCard(
-                      agent: agent,
-                      selected: _agent == agent,
-                      onTap: () => setState(() => _agent = agent),
-                    ),
-                    const SizedBox(height: 8),
-                  ],
-                  const SizedBox(height: 20),
-                  FilledButton(
-                    onPressed: _ready ? _start : null,
-                    child: const Padding(
-                      padding: EdgeInsets.symmetric(vertical: 12),
-                      child: Text('キャリアを始める'),
-                    ),
+                  _DeclareCard(
+                    hall: widget.controller.hall,
+                    declared: _declared,
+                    onPick: (c) => setState(() => _declared = c),
                   ),
-                  if (!_busy && _missing.isNotEmpty) ...[
-                    const SizedBox(height: 8),
-                    Text(
-                      'あと: ${_missing.join(' ・ ')}',
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.error,
-                      ),
-                    ),
-                  ],
                 ],
               ),
             ),
