@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}計算方法と出典・更新履歴｜社会保険 加入判定チェッカー{% endblock %}
+{% block description %}社会保険 加入判定チェッカーが、どの料率・計算式・端数処理で保険料や手取りを出しているか。出典と更新履歴。{% endblock %}
+{% block breadcrumb %}
+<nav class="crumbs" aria-label="パンくずリスト">
+  <a href="{{ base_url }}index.html">計算機</a>
+  <span>›</span>
+  <span aria-current="page">計算方法と出典</span>
+</nav>
+{% endblock %}
+{% block content %}
+<h1>計算方法と出典</h1>
+<p>このサイトの数字は、すべて下の料率と計算式から出しています。料率が改定されたら取り込み直し、下の更新履歴に書きます。</p>
+
+<h2>計算のしかた</h2>
+<div class="table-wrap">
+<table class="plain">
+  <thead><tr><th>項目</th><th>本人が払う額の出し方</th><th>出典</th></tr></thead>
+  <tbody>
+    <tr><th>健康保険料</th><td>標準報酬月額 × 勤務先の都道府県の料率 ÷ 2（40〜64歳は介護保険料率1.62%を足す）</td><td><a href="{{ rates.source.page }}" rel="nofollow noopener" target="_blank">{{ rates.source.name }}「{{ rates.source.title }}」</a></td></tr>
+    <tr><th>子ども・子育て支援金</th><td>標準報酬月額 × 0.23% ÷ 2（2026年4月分から）</td><td>同上</td></tr>
+    <tr><th>厚生年金保険料</th><td>標準報酬月額 × 18.3% ÷ 2</td><td>同上</td></tr>
+    <tr><th>雇用保険料</th><td>総支給額（通勤手当を含む）× {{ koyo.worker_per_mille }}/1,000（{{ koyo.note }}）</td><td><a href="{{ koyo.source.page }}" rel="nofollow noopener" target="_blank">{{ koyo.source.name }}「{{ koyo.source.title }}」</a></td></tr>
+    <tr><th>将来の年金の増え方</th><td>標準報酬月額 × 5.481/1,000 × 加入月数（老齢厚生年金の報酬比例部分。今の価値での目安）</td><td><a href="{{ other.pension_accrual.source.page }}" rel="nofollow noopener" target="_blank">{{ other.pension_accrual.source.name }}「{{ other.pension_accrual.source.title }}」</a></td></tr>
+    <tr><th>傷病手当金（1日）</th><td>標準報酬月額 ÷ 30（10円未満四捨五入）× 2/3（1円未満四捨五入）</td><td><a href="{{ other.sickness_allowance.source.page }}" rel="nofollow noopener" target="_blank">{{ other.sickness_allowance.source.name }}「{{ other.sickness_allowance.source.title }}」</a></td></tr>
+    <tr><th>国民年金保険料</th><td>月{{ "{:,}".format(kokumin.monthly_yen) }}円（令和8年度）。加入前と比べるのに使う</td><td><a href="{{ kokumin.source.page }}" rel="nofollow noopener" target="_blank">{{ kokumin.source.name }}「{{ kokumin.source.title }}」</a></td></tr>
+  </tbody>
+</table>
+</div>
+
+<h2>標準報酬月額と端数</h2>
+<ul>
+  <li>保険料は、月収そのものではなく「標準報酬月額」の等級で決まります。等級は、通勤手当や残業代の見込みも含めた月の報酬で決まります。</li>
+  <li>健康保険は50等級（5.8万〜139万円）、厚生年金は32等級（8.8万〜65万円）で、区切りと上限が違います。</li>
+  <li>給与から天引きするときの端数は、<strong>50銭以下は切り捨て、50銭を超えたら切り上げ</strong>です（協会けんぽの保険料額表の注記どおり）。</li>
+  <li>料率は協会けんぽのものです。健康保険組合に入っている会社では料率が違います。</li>
+</ul>
+
+<h2>計算していないもの</h2>
+<ul>
+  <li>所得税・住民税（前の年の所得や扶養の人数で変わるため）</li>
+  <li>国民健康保険料（市区町村ごとに計算のしかたが違うため）</li>
+  <li>賞与にかかる保険料</li>
+</ul>
+
+<h2>検査</h2>
+<p>
+  取り込んだ料率は、協会けんぽの保険料額表に載っている全都道府県・全等級の本人負担額と、1円未満まで一致することを確かめています。
+  画面で動く計算とサーバー側の計算が同じ答えになることも、公開のたびに自動で確かめています。
+</p>
+
+<h2>更新履歴</h2>
+<ul class="history">
+  {% for date, text in history %}<li><time>{{ date }}</time> {{ text }}</li>{% endfor %}
+</ul>
+{% endblock %}

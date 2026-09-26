@@ -1,0 +1,27 @@
+{
+ "employment": [
+  {
+   "valid_from": "2026-04-01",
+   "valid_until": "2027-03-31",
+   "worker_per_mille": 5,
+   "note": "一般の事業。農林水産・清酒製造・建設の事業は 6/1,000",
+   "source": {"name": "厚生労働省", "title": "令和8（2026）年度 雇用保険料率のご案内", "page": "https://www.mhlw.go.jp/content/001692566.pdf"}
+  }
+ ],
+ "kokumin_nenkin": [
+  {
+   "valid_from": "2026-04-01",
+   "valid_until": "2027-03-31",
+   "monthly_yen": 17920,
+   "source": {"name": "日本年金機構", "title": "国民年金保険料", "page": "https://www.nenkin.go.jp/service/kokunen/hokenryo/hokenryo.html"}
+  }
+ ],
+ "pension_accrual": {
+  "per_mille_x1000": 5481,
+  "note": "報酬比例部分の乗率（平成15年4月以降の加入期間）5.481/1000。再評価率は考えない（今の価値での目安）",
+  "source": {"name": "日本年金機構", "title": "用語集「報酬比例部分」", "page": "https://www.nenkin.go.jp/service/yougo/hagyo/hoshuhirei.html"}
+ },
+ "sickness_allowance": {
+  "source": {"name": "協会けんぽ", "title": "傷病手当金", "page": "https://www.kyoukaikenpo.or.jp/benefit/injury_and_sickness_allowance/index.html"}
+ }
+}

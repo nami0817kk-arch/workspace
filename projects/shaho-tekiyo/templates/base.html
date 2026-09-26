@@ -202,7 +202,13 @@
   }
   .form-subhead { font-size: 1rem; margin: 1.5rem 0 0.25rem; padding-top: 1rem; border-top: 1px solid var(--border); }
   #result .hint { font-size: 0.8rem; color: var(--muted); }
-  table.premium td { text-align: right; white-space: nowrap; }
+  table.premium td, table.num td { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .month-links { line-height: 2; }
+  th .sub { display: block; font-size: 0.75rem; color: var(--muted); font-weight: normal; }
+  ul.compare { padding-left: 1.2rem; }
+  ul.compare li { margin: 0.5rem 0; }
+  ul.history { list-style: none; padding: 0; }
+  ul.history time { color: var(--muted); font-variant-numeric: tabular-nums; margin-right: 0.5rem; }
   .crumbs { font-size: 0.8rem; color: var(--muted); margin: 0 0 0.25rem; display: flex; flex-wrap: wrap; gap: 0.25rem 0.4rem; }
   .crumbs a { color: var(--muted); }
   .crumbs span[aria-current] { color: var(--text); }
@@ -271,6 +277,7 @@
     <a class="logo" href="{{ base_url }}index.html">社会保険 加入判定チェッカー</a>
     <nav>
       <a href="{{ base_url }}index.html">計算機</a>
+      <a href="{{ base_url }}getsushu/index.html">月収別の保険料</a>
       <a href="{{ base_url }}year/index.html">年次の変化</a>
       <a href="{{ base_url }}faq.html">よくある誤解</a>
     </nav>
@@ -293,12 +300,14 @@
   <div class="footer-group">
     <strong>使う</strong>
     <a href="{{ base_url }}index.html">加入判定チェッカー</a>
+    <a href="{{ base_url }}getsushu/index.html">月収別の保険料</a>
     <a href="{{ base_url }}year/index.html">年次の変化を見る</a>
   </div>
   <div class="footer-group">
     <strong>このサイト</strong>
     <a href="{{ base_url }}faq.html">よくある誤解</a>
     <a href="{{ base_url }}about.html">このサイトについて</a>
+    <a href="{{ base_url }}keisan.html">計算方法と出典</a>
     <a href="{{ base_url }}operator.html">運営者情報</a>
     <a href="{{ base_url }}contact.html">お問い合わせ</a>
     <a href="{{ base_url }}privacy.html">プライバシーポリシー</a>

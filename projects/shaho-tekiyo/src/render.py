@@ -16,6 +16,7 @@ from jinja2 import Environment, FileSystemLoader
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import eligibility
+import extras
 import premium
 import site_config
 
@@ -38,6 +39,7 @@ _env.globals["SITE_URL"] = SITE_URL
 _env.globals["SEARCH_CONSOLE_TOKEN"] = site_config.SEARCH_CONSOLE_TOKEN
 _env.globals["OWNER"] = site_config.OWNER
 _env.globals["CONTACT_EMAIL"] = site_config.CONTACT_EMAIL
+_env.globals["pref_full"] = extras.pref_full
 
 
 def canonical_url(rel_path: str) -> str:
@@ -120,6 +122,7 @@ def _build_calculator_page() -> None:
             milestones=eligibility.MILESTONES,
             prefectures=premium.PREFECTURES,
             rates_json=premium.tables_json(),
+            extras_json=extras.extras_json(),
         ),
     )
 
@@ -159,6 +162,89 @@ def _build_year_pages() -> None:
             base_url="../",
             canonical=canonical_url("year/index.html"),
             pages=pages,
+        ),
+    )
+
+
+# 月収別のページ（/getsushu/10man.html）。8万〜25万円を1万円刻みで。
+AMOUNTS_MAN: tuple[int, ...] = tuple(range(8, 26))
+
+
+def _era(fiscal_year: int) -> str:
+    return f"令和{fiscal_year - 2018}年度"
+
+
+def _build_amount_pages() -> None:
+    table = premium.TABLES[-1]
+    as_of = table.valid_from
+    period = f"{table.valid_from.year}年{table.valid_from.month}月分〜{table.valid_until.year}年{table.valid_until.month}月分"
+    era = _era(table.fiscal_year)
+
+    def est(pref: str, pay: int, care: bool = False) -> premium.PremiumResult:
+        return premium.estimate(as_of=as_of, prefecture=pref, monthly_pay_yen=pay, age_40_to_64=care)
+
+    all_amounts = [
+        {"man": m, "slug": f"{m}man", "r": est("東京", m * 10_000)} for m in AMOUNTS_MAN
+    ]
+    common = dict(era=era, period=period, source=table.source, all_amounts=all_amounts, other=extras.RATES)
+    tmpl = _env.get_template("amount.html")
+    for i, a in enumerate(all_amounts):
+        pay = a["man"] * 10_000
+        rows = [(est(p, pay), est(p, pay, True)) for p in premium.PREFECTURES]
+        by_total = sorted((r for r, _ in rows), key=lambda r: r.total_yen)
+        rel = f"getsushu/{a['slug']}.html"
+        _write(
+            _OUTPUT_DIR / rel,
+            tmpl.render(
+                base_url="../",
+                canonical=canonical_url(rel),
+                man=a["man"],
+                pay=pay,
+                tokyo=a["r"],
+                tokyo_care=est("東京", pay, True),
+                cheapest=by_total[0],
+                dearest=by_total[-1],
+                rows=rows,
+                neighbors=all_amounts[max(0, i - 1): i + 2],
+                koyo=extras.employment_yen(as_of, pay),
+                kokumin=extras.kokumin_nenkin_yen(as_of),
+                pension_inc=extras.pension_increase_per_year(a["r"].pension_standard),
+                sick=extras.sickness_daily_yen(a["r"].health_standard),
+                **common,
+            ),
+        )
+    _write(
+        _OUTPUT_DIR / "getsushu" / "index.html",
+        _env.get_template("amount_index.html").render(
+            base_url="../", canonical=canonical_url("getsushu/index.html"), **common
+        ),
+    )
+
+
+def amount_page_paths() -> list[str]:
+    return ["getsushu/index.html"] + [f"getsushu/{m}man.html" for m in AMOUNTS_MAN]
+
+
+# 更新履歴（新しい順）。計算や料率を変えたら、ここに1行足す。
+HISTORY: tuple[tuple[str, str], ...] = (
+    ("2026-09-26", "雇用保険料・手取りの目安、加入前との比べ方、将来の年金と傷病手当金の目安、時給での入力を追加"),
+    ("2026-09-26", "月収別の保険料のページ（8万〜25万円）を追加"),
+    ("2026-09-26", "公開。賃金要件の撤廃日を令和8年政令第275号（2026年10月1日）で確認し、協会けんぽ 令和8年度の料率で保険料の目安を追加"),
+)
+
+
+def _build_keisan_page() -> None:
+    table = premium.TABLES[-1]
+    _write(
+        _OUTPUT_DIR / "keisan.html",
+        _env.get_template("keisan.html").render(
+            base_url="",
+            canonical=canonical_url("keisan.html"),
+            rates=table,
+            koyo=extras.RATES["employment"][-1],
+            kokumin=extras.RATES["kokumin_nenkin"][-1],
+            other=extras.RATES,
+            history=HISTORY,
         ),
     )
 
@@ -209,7 +295,9 @@ def _write_sitemap() -> None:
         (canonical_url("contact.html"), None),
         (canonical_url("privacy.html"), None),
         (canonical_url("year/index.html"), None),
+        (canonical_url("keisan.html"), None),
     ]
+    urls += [(canonical_url(p), None) for p in amount_page_paths()]
     for regime in eligibility.MILESTONES:
         slug = _milestone_slug(regime)
         urls.append((canonical_url(f"year/{slug}.html"), None))
@@ -237,6 +325,8 @@ def build_all() -> None:
 
     _build_calculator_page()
     _build_year_pages()
+    _build_amount_pages()
+    _build_keisan_page()
     _build_static_pages()
     _write_robots()
     _write_sitemap()
