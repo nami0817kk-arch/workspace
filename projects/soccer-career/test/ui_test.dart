@@ -1450,10 +1450,9 @@ class _FakeStoreForUi implements PurchaseService {
   final bool available;
 
   @override
-  set onDelivered(void Function(Product product)? callback) {}
-
-  @override
-  Future<void> initialize() async {}
+  Future<void> initialize({
+    required void Function(Product product) onDelivered,
+  }) async {}
 
   @override
   Future<bool> isAvailable() async => available;
